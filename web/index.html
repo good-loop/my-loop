@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+
+		<title>Good-Loop Portal</title>
+		<link rel="shortcut icon" href="/favicon-32.png" />
+
+		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" 
+			integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+		<!--<link href="/lib/bootstrap.min.css" rel="stylesheet" />-->
+
+		<link rel="stylesheet" type="text/css" href="/style/main.css">
+		<link rel="stylesheet" type="text/css" href="/style/print.css" media="print">		
+	</head>
+	<body>
+		<div id="mainDiv"></div>
+
+		<footer class="footer">
+			<div class="col-md-12">
+				<center>
+					<p class="text-muted">
+						&copy; 2017 Good-Loop <a href="mailto:daniel@sodash.com?Subject=Good-Loop%20Portal" target="_top">Contact Us</a>
+						<br>
+						<a href='https://good-loop.com' target='_blank'>Good-Loop Ltd</a>
+						<!-- <a href='privacy-policy.html'>Privacy policy</a> -->
+					</p>
+				</center>
+			</div>
+		</footer>
+
+		<!-- Scripts -->
+		<script src="//code.jquery.com/jquery-3.1.0.min.js"></script>
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<!-- script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.1/less.min.js"></script -->
+		<!-- everything else comes via webpack -->
+		<script>
+			// never cache in dev
+			var cachebuster = '';
+			if (window.location.host.indexOf('local') !== -1 || window.location.host.indexOf('test') !== -1) {
+				cachebuster = Math.round(Math.random()*100000);
+			}
+			let script = document.createElement('script');
+			script.type = 'text/javascript';
+			script.src = "/build/js/bundle.js?cachebuster="+cachebuster;
+			var head = document.getElementsByTagName("head")[0];
+			(head || document.body).appendChild(script);
+		</script>
+
+		<script type="text/javascript">
+window._urq = window._urq || [];
+_urq.push(['initSite', '5b5204fc-2937-404f-b11a-b09830ff7edd']);
+(function() {
+var ur = document.createElement('script'); ur.type = 'text/javascript'; ur.async = true;
+ur.src = ('https:' == document.location.protocol ? 'https://cdn.userreport.com/userreport.js' : 'http://cdn.userreport.com/userreport.js');
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ur, s);
+})();
+</script>
+
+
+	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+	<script>
+		/*!
+ 		* IE10 viewport hack for Surface/desktop Windows 8 bug
+		* Copyright 2014-2015 Twitter, Inc.
+		* Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+		*/
+
+		// See the Getting Started docs for more information:
+		// http://getbootstrap.com/getting-started/#support-ie10-width
+
+		(function () {
+		  'use strict';
+
+		  if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+		    var msViewportStyle = document.createElement('style')
+		    msViewportStyle.appendChild(
+		      document.createTextNode(
+		        '@-ms-viewport{width:auto!important}'
+		      )
+		    )
+		    document.querySelector('head').appendChild(msViewportStyle)
+		  }
+
+		})();
+	</script>
+
+	</body>
+</html>

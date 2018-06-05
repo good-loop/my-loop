@@ -1,0 +1,231 @@
+import React from 'react';
+import { assert, assMatch } from 'sjtest';
+import { XId, modifyHash, stopEvent, encURI } from 'wwutils';
+import pivot from 'data-pivot';
+
+import C from '../C';
+import printer from '../base/utils/printer';
+import ServerIO from '../plumbing/ServerIO';
+import DataStore from '../base/plumbing/DataStore';
+import ChartWidget from '../base/components/ChartWidget';
+import Misc from '../base/components/Misc';
+import SearchQuery from '../searchquery';
+import md5 from 'md5';
+import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
+
+// TODO document trkids
+const MyReport = ({uid, trkids = []}) => {
+	// paths for storing data
+	const basePath = ['widget', 'MyReport'];
+	const donationsPath = basePath.concat('donations');
+	const consentPath = basePath.concat('consent');
+
+	// "user:trkid1@trk OR user:trkid2@trk OR ..."
+	const allIds = trkids.map(trkid => 'user:' + trkid).join(' OR ');
+
+	// Get donations by user (including all registered tracking IDs)
+	let pDonationData = DataStore.fetch(donationsPath, () => {
+		const donationReq = {
+			dataspace: 'gl',
+			q: `evt:donation AND (${allIds})`,
+			breakdown: ['cid{"count": "sum"}'],
+			start: '2018-05-01T00:00:00.000Z'
+		};
+		return ServerIO.getDataLogData(donationReq, null, 'my-donations').then(res => res.cargo);
+	});
+
+	const donationData = pDonationData.value;
+	const donationsByCharity = donationData && donationData.by_cid ? (
+		pivot(donationData.by_cid.buckets, "bi -> {key, 'count' -> 'sum' -> n}", "key -> n")
+	) : null;
+
+	const donationBreakdown = donationsByCharity ? (
+		<BreakdownWidget data={donationsByCharity} param={'Charity ID'} />
+	) : '';
+
+	// Get consent given/denied events
+	let pConsentData = DataStore.fetch(consentPath, () => {
+		const consentReq = {
+			dataspace: 'gl',
+			q: `(evt:consent-yes OR evt:consent-no) AND (${allIds})`,
+		};
+		return ServerIO.getDataLogData(consentReq, null, 'my-consent').then(res => res.cargo);
+	});
+
+
+	const consentData = pConsentData.value;
+	// possible values after reduction:
+	// null (never answered)
+	// 'consent-yes' (only ever said yes)
+	// 'consent-no' (only ever said no)
+	// 'mixed' (has said yes and no at different times)
+	const consentGiven = consentData ? (
+		consentData.examples.reduce((soFar, {_source: val}) => {
+			const trueFalse = {	'consent-yes': true, 'consent-no': false }[val.evt];
+			if (soFar != null && trueFalse !== soFar) { return 'mixed'; }
+			return trueFalse;
+		}, null)
+	) : null;
+
+	let consentReport = uid ? (
+		<ConsentWidget uid={uid} consentGiven={consentGiven} />
+	) : (
+		<ReadOnlyConsentWidget consentGiven={consentGiven} />
+	);
+
+
+	// no data
+	if ( !donationBreakdown && !consentReport) {
+		return (
+			<div className="MyReport">
+				<h3>Fetching your data...</h3>
+				<Misc.Loading />
+			</div>
+		);
+	}
+
+	// display...
+	return (
+		<div>
+			<h2>My Report</h2>
+			<Misc.CardAccordion widgetName='MyReport' multiple >
+				<ReportWidget title={'Donations'}>
+					{ donationBreakdown }
+				</ReportWidget>
+				<ReportWidget title={'Consent To Track'}>
+					{ consentReport }
+				</ReportWidget>
+			</Misc.CardAccordion>
+		</div>
+	);
+}; // ./TrafficReport
+
+const ConsentWidget = ({uid, consentGiven}) => {
+	const recordConsent = (consentAnswer) => ServerIO.putProfile({id: uid, 'gl.consent': consentAnswer});
+	const consentMessage = {
+		true: <ConsentGiven recordConsent={recordConsent} />,
+		false: <ConsentDenied recordConsent={recordConsent} />,
+		mixed: <ConsentMixed recordConsent={recordConsent} />,
+		null: <ConsentNone recordConsent={recordConsent} />,
+	};
+	return (
+		<div>
+			<p>Good-Loop can track the ads you view on our network and use this information to show you more relevant ads.</p>
+			<p>Targeted ads are more valuable to advertisers - so you can boost the value of your donations without doing anything else.</p>
+			{ consentMessage[consentGiven] }
+			<p>You can change your mind and opt in or out at any time on this page.</p>
+		</div>
+	);
+};
+
+const ConsentGiven = ({recordConsent}) => (
+	<div>
+		<p>You've said it's OK for us to use your tracking data.</p>
+		<button onClick={() => recordConsent(false)}>
+			I changed my mind - please don't.
+		</button>
+	</div>
+);
+
+const ConsentDenied = ({recordConsent}) => (
+	<div>
+		<p>You've said you prefer we didn't use your tracking data.</p>
+		<button onClick={() => recordConsent(true)}>
+			I changed my mind - you can use my tracking data.
+		</button>
+	</div>
+);
+
+const ConsentMixed = ({recordConsent}) => (
+	<div>
+		<p>You've previously given multiple different answers when we asked you if it's OK to use your tracking data. Would you like to clarify?</p>
+		<button onClick={() => recordConsent(true)}>
+			Yes, you can use my tracking data.
+		</button>
+		<button onClick={() => recordConsent(false)}>
+			Please don't.
+		</button>
+	</div>
+);
+
+const ConsentNone = ({recordConsent}) => (
+	<div>
+		<p>Is it OK for us to use your tracking data?</p>
+		<button onClick={() => recordConsent(true)}>
+			Yes, this is OK.
+		</button>
+		<button onClick={() => recordConsent(false)}>
+			Please don't.
+		</button>
+	</div>
+);
+
+
+const ReadOnlyConsentWidget = ({consentGiven}) => {
+	const consentMessage = {
+		true: <p>You've said it's OK for us to use your tracking data.</p>,
+		false: <p>You've said you prefer we didn't use your tracking data.</p>,
+		mixed: <p>You've given multiple different answers when we asked you if it's OK to use your tracking data.</p>,
+		null: <p>You've never told us whether it's OK for us to use your tracking data.</p>,
+	};
+	return (
+		<div>
+			<p>Good-Loop can track the ads you view on our network and use this information to show you more relevant ads.</p>
+			<p>Targeted ads are more valuable to advertisers - so you can boost the value of your donations without doing anything else.</p>
+			{ consentMessage[consentGiven] }
+		</div>
+	);
+};
+
+const ReportWidget = ({ children, ...stuff }) => (
+	<Misc.Card {...stuff}>
+		{children}
+	</Misc.Card>
+);
+// ./ReportWidget
+
+
+/**
+ * 
+ * @param {data: key -> Number}
+ * @param {param: String} The breakdown-by parameter, e.g. "list by publisher".
+ */
+const BreakdownWidget = ({data, param}) => {
+	assMatch(param, String);
+	if ( ! data) return null;
+
+	let columns = [
+		{
+			Header: C.TYPES.Charity,
+			accessor: 'key',
+			Cell: k => {
+				let nk = k;
+				let item = DataStore.getValue('data', C.TYPES.Charity, k);
+				if (item) nk = item.name || k;
+				return nk;
+			}
+		},
+		{
+			Header: 'Amount',
+			accessor: 'value',
+			Cell: displayValue
+		}
+	];
+	return <div><SimpleTable columns={columns} dataObject={data} addTotalRow csv /></div>;
+};
+
+/**
+ * nice looking numbers
+ * @param {*} v
+ */
+const displayValue = (v) => {
+	if (_.isNumber(v)) {
+		// 1 decimal place
+		v = Math.round(v*10)/10;
+		// commas
+		v = printer.prettyNumber(v, 10);
+	}
+	return v;
+};
+
+export default MyReport;
