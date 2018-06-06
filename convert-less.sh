@@ -13,7 +13,7 @@ TOPLESS[1]=print.less;
 for file in "${TOPLESS[@]}"; do
 		if [ -e "$SRC/$file" ]; then
 			echo -e "converting $file"
-			lessc "$SRC/$file" "$SRC/${file%.less}.css"
+			lessc "$SRC/$file" "$WEB/${file%.less}.css"
 		else
 			echo "less file not found: $file"				
 		fi
