@@ -5,10 +5,11 @@
   "author": "Roscoe McInerney",
   "license": "AGPL-3.0",
   "repository": {
-	  "type": "git",
-		"url": "https://github.com/goodloop/my-loop"
-  },  
+    "type": "git",
+    "url": "https://github.com/goodloop/my-loop"
+  },
   "dependencies": {
+    "babel-preset-stage-2": "^6.24.1",
     "chart.js": "^2.7.2",
     "d3-queue": "^3.0.3",
     "data-pivot": "^0.3.1",
@@ -41,19 +42,19 @@
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
-	 "babel-polyfill": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
-	 "eslint": "^4.5.0",
+    "eslint": "^4.5.0",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-plugin-flowtype": "^2.35.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.3.0",
-	 "flow-bin": "^0.53.1",
-	 "webpack": "^3.12.0"
+    "flow-bin": "^0.53.1",
+    "webpack": "^3.12.0"
   }
 }
