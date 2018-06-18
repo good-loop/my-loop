@@ -14,14 +14,14 @@ import md5 from 'md5';
 import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
 
 // TODO document trkids
-const MyReport = ({uid, trkids = []}) => {
+const MyReport = ({uid, trkIds = []}) => {
 	// paths for storing data
 	const basePath = ['widget', 'MyReport'];
 	const donationsPath = basePath.concat('donations');
 	const consentPath = basePath.concat('consent');
 
 	// "user:trkid1@trk OR user:trkid2@trk OR ..."
-	const allIds = trkids.map(trkid => 'user:' + trkid).join(' OR ');
+	const allIds = trkIds.map(trkid => 'user:' + trkid).join(' OR ');
 
 	// Get donations by user (including all registered tracking IDs)
 	let pDonationData = DataStore.fetch(donationsPath, () => {

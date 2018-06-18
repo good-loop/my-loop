@@ -8,6 +8,7 @@ import ActionMan from '../plumbing/ActionMan';
 
 import Misc from '../base/components/Misc';
 import MyReport from './MyReport';
+import { LoginWidgetEmbed } from '../base/components/LoginWidget';
 
 const trkIdPath = ['misc', 'trkids'];
 
@@ -34,7 +35,8 @@ const MyPage = () => {
 			<div>
 				<p>Your current Good-Loop tracking ID is {currentTrkId}.</p>
 				<p>Log in or sign up to see the donations you've made across all your devices!</p>
-				<p>(put login form here)</p>
+				<LoginWidgetEmbed services={['twitter','facebook']}/>
+
 				<MyReport trkIds={[currentTrkId]} />
 			</div>
 		);
