@@ -49,10 +49,7 @@ const MyPage = () => {
 			trkIds = []; // Pull these from response
 
 			// do we need to add the current tracking id to the list?
-			if (!currentTrkId || trkIds.includes(currentTrkId)) {
-				console.log('tracking id already recorded');
-			} else {
-				// yes we do~
+			if (currentTrkId && !trkIds.includes(currentTrkId)) {
 				ServerIO.putProfile({id: uid, [FIELDS.trackIds]: trkIds.concat(currentTrkId)});
 			}
 			// put them in datastore whether we've updated profile or not
