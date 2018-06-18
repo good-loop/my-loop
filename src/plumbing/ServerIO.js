@@ -82,9 +82,9 @@ ServerIO.getDataLogData = (filters, breakdowns, name) => {
 };
 
 ServerIO.getProfile = ({id, fields}) => {
-	return ServerIO.load(`${ServerIO.PROFILER_ENDPOINT}/test/${id}`, {data: {fields}});
+	return ServerIO.load(`${ServerIO.PROFILER_ENDPOINT}/person/${id}`, {data: {fields}});
 };
 
 ServerIO.putProfile = ({id, ...doc}) => {
-return ServerIO.put(`${ServerIO.PROFILER_ENDPOINT}/test/${id}`, {action: 'put', doc: JSON.stringify(doc)});
+	return ServerIO.post(`${ServerIO.PROFILER_ENDPOINT}/person/${id}`, {action: 'put', doc: JSON.stringify(doc)});
 };

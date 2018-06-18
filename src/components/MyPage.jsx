@@ -8,7 +8,7 @@ import ActionMan from '../plumbing/ActionMan';
 
 import Misc from '../base/components/Misc';
 import MyReport from './MyReport';
-import { LoginWidgetEmbed } from '../base/components/LoginWidget';
+import { LoginLink } from '../base/components/LoginWidget';
 
 const trkIdPath = ['misc', 'trkids'];
 
@@ -33,20 +33,21 @@ const MyPage = () => {
 		// User is NOT logged in, just show records for current tracking ID
 		pageContent = (
 			<div>
-				<p>Your current Good-Loop tracking ID is {currentTrkId}.</p>
-				<p>Log in or sign up to see the donations you've made across all your devices!</p>
-				<LoginWidgetEmbed services={['twitter','facebook']}/>
+				<Misc.Card>
+					<h3>You're in control</h3>
+					<p>Find out and manage all the data we hold on you</p>
+					<p>Your current Good-Loop tracking ID is {currentTrkId}.</p>
+					<p>Log in or sign up to see the donations you've made across all your devices!</p>
+					<LoginLink isButton />
+				</Misc.Card>
 
 				<MyReport trkIds={[currentTrkId]} />
 			</div>
 		);
 	} else if (!trkIds) {
 		// User is logged in but we haven't retrieved tracking IDs from shares yet
-
-		ServerIO.getProfile({id: uid, fields: profileFields}).then(response => {
-			console.log('profiler response for ' + uid + ':', response);
-
-			trkIds = []; // Pull these from response
+		ServerIO.getProfile({id: uid, fields: profileFields}).then(({cargo}) => {
+			trkIds = cargo[FIELDS.trackIds] || [];
 
 			// do we need to add the current tracking id to the list?
 			if (currentTrkId && !trkIds.includes(currentTrkId)) {

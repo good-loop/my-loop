@@ -87,12 +87,11 @@ const MyReport = ({uid, trkIds = []}) => {
 	// display...
 	return (
 		<div>
-			<h2>My Report</h2>
 			<Misc.CardAccordion widgetName='MyReport' multiple >
-				<ReportWidget title={'Donations'}>
+				<ReportWidget title={'Donations'} defaultOpen>
 					{ donationBreakdown }
 				</ReportWidget>
-				<ReportWidget title={'Consent To Track'}>
+				<ReportWidget title={'Consent To Track'} defaultOpen>
 					{ consentReport }
 				</ReportWidget>
 			</Misc.CardAccordion>
