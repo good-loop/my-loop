@@ -5,7 +5,7 @@ server {
 	root /home/daniel/winterwell/my-loop/web;
 	index index.html;
 
-	server_name local.sogive.org;
+	server_name localmy.good-loop.com;
 
 	location / {
 			try_files $uri $uri/ @backend;

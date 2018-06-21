@@ -25,39 +25,17 @@ ServerIO.APIBASE = ''; // Normally use this for "my server"!
 
 ServerIO.DATALOG_ENDPOINT = C.HTTPS+'://'+C.SERVER_TYPE+'lg.good-loop.com/data';
 // ServerIO.DATALOG_ENDPOINT = 'https://testlg.good-loop.com/data';
-// ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';
+ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';
 
 ServerIO.PROFILER_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}profiler.winterwell.com/profile`;
+ServerIO.PROFILER_ENDPOINT = 'https://profiler.winterwell.com/profile';
 
 ServerIO.checkBase();
-
-ServerIO.saveGlobal = function(global) {
-	let params = {
-		method: 'POST',
-		data: {
-			action: 'save',			
-			global: JSON.stringify(global)
-		}
-	};
-	return ServerIO.load('/global/'+global.id+'.json', params);
-};
-
-// override for (ad)vert
-ServerIO.getServletForType = (type) => {
-	if (C.TYPES.isAdvert(type)) return 'vert';
-	if (C.TYPES.isBudget(type)) return 'vert';
-	if (C.TYPES.isAdvertiser(type)) return 'vertiser';
-	return type.toLowerCase();
-};
 
 // override for NGO -> SoGive, and Budget
 ServerIO.getUrlForItem = ({type, id, status}) => {
 	let servlet = ServerIO.getServletForType(type);
 	let url = '/'+servlet+'/'+encURI(id)+'.json';
-	if (C.TYPES.isBudget(type)) {
-		// HACK: chop budget_ and call (ad)vert		
-		url = '/'+servlet+'/'+encURI(id.substr(7))+'/budget.json';
-	}
 	if (C.TYPES.isNGO(type)) {
 		// HACK: call SoGive
 		url = 'https://app.sogive.org/charity/'+encURI(id)+'.json';

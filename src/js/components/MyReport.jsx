@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import { assert, assMatch } from 'sjtest';
 import { XId, modifyHash, stopEvent, encURI } from 'wwutils';
 import pivot from 'data-pivot';
@@ -17,11 +18,27 @@ import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
 const MyReport = ({uid, trkIds = []}) => {
 	// paths for storing data
 	const basePath = ['widget', 'MyReport'];
-	const donationsPath = basePath.concat('donations');
-	const consentPath = basePath.concat('consent');
 
 	// "user:trkid1@trk OR user:trkid2@trk OR ..."
 	const allIds = trkIds.map(trkid => 'user:' + trkid).join(' OR ');
+
+	// display...
+	return (
+		<div>
+			<Misc.CardAccordion widgetName='MyReport' multiple >
+
+				<DonationCard allIds={allIds} />
+			
+				<ConsentWidget allIds={allIds} />				
+			
+			</Misc.CardAccordion>
+		</div>
+	);
+}; // ./TrafficReport
+
+
+const DonationCard = ({allIds}) => {
+	const donationsPath = ['widget', 'MyReport', 'donations'];
 
 	// Get donations by user (including all registered tracking IDs)
 	let pDonationData = DataStore.fetch(donationsPath, () => {
@@ -34,72 +51,58 @@ const MyReport = ({uid, trkIds = []}) => {
 		return ServerIO.getDataLogData(donationReq, null, 'my-donations').then(res => res.cargo);
 	});
 
+	if ( ! pDonationData.resolved) {
+		return <Misc.Card title='Donations' defaultOpen><Misc.Loading /></Misc.Card>;
+	}
+
 	const donationData = pDonationData.value;
+	window.pivot = pivot; // for debug
 	const donationsByCharity = donationData && donationData.by_cid ? (
-		pivot(donationData.by_cid.buckets, "bi -> {key, 'count' -> 'sum' -> n}", "key -> n")
+		pivot(donationData.by_cid.buckets, "$bi.{key, count.sum.$n}", "$key.$n")
 	) : null;
 
-	const donationBreakdown = donationsByCharity ? (
+	return (<Misc.Card title='Donations' defaultOpen>
 		<BreakdownWidget data={donationsByCharity} param={'Charity ID'} />
-	) : '';
+	</Misc.Card>);
+};
 
+
+const ConsentWidget = ({uid, allIds}) => {
+	const consentPath = ['widget', 'MyReport', 'consent'];
 	// Get consent given/denied events
 	let pConsentData = DataStore.fetch(consentPath, () => {
 		const consentReq = {
 			dataspace: 'gl',
 			q: `(evt:consent-yes OR evt:consent-no) AND (${allIds})`,
 		};
-		return ServerIO.getDataLogData(consentReq, null, 'my-consent').then(res => res.cargo);
+		return ServerIO.getDataLogData(consentReq, null, 'my-consent');
 	});
+	if ( ! pConsentData.resolved) {
+		return <Misc.Card title='Consent To Track' defaultOpen><Misc.Loading /></Misc.Card>;
+	}
 
-
-	const consentData = pConsentData.value;
+	let consentData = pConsentData.value;
+	if ( ! consentData || ! consentData.examples) {
+		// no data, or an error getting it
+		consentData = {examples: []};
+	}
 	// possible values after reduction:
 	// null (never answered)
 	// 'consent-yes' (only ever said yes)
 	// 'consent-no' (only ever said no)
 	// 'mixed' (has said yes and no at different times)
-	const consentGiven = consentData ? (
+	const consentGiven = (
 		consentData.examples.reduce((soFar, {_source: val}) => {
 			const trueFalse = {	'consent-yes': true, 'consent-no': false }[val.evt];
 			if (soFar != null && trueFalse !== soFar) { return 'mixed'; }
 			return trueFalse;
 		}, null)
-	) : null;
-
-	let consentReport = uid ? (
-		<ConsentWidget uid={uid} consentGiven={consentGiven} />
-	) : (
-		<ReadOnlyConsentWidget consentGiven={consentGiven} />
 	);
 
-
-	// no data
-	if ( !donationBreakdown && !consentReport) {
-		return (
-			<div className="MyReport">
-				<h3>Fetching your data...</h3>
-				<Misc.Loading />
-			</div>
-		);
+	if ( ! uid) {
+		return <Misc.Card title='Consent To Track' defaultOpen><ReadOnlyConsentWidget consentGiven={consentGiven} /></Misc.Card>;
 	}
 
-	// display...
-	return (
-		<div>
-			<Misc.CardAccordion widgetName='MyReport' multiple >
-				<ReportWidget title={'Donations'} defaultOpen>
-					{ donationBreakdown }
-				</ReportWidget>
-				<ReportWidget title={'Consent To Track'} defaultOpen>
-					{ consentReport }
-				</ReportWidget>
-			</Misc.CardAccordion>
-		</div>
-	);
-}; // ./TrafficReport
-
-const ConsentWidget = ({uid, consentGiven}) => {
 	const recordConsent = (consentAnswer) => ServerIO.putProfile({id: uid, 'gl.consent': consentAnswer});
 	const consentMessage = {
 		true: <ConsentGiven recordConsent={recordConsent} />,
@@ -107,14 +110,14 @@ const ConsentWidget = ({uid, consentGiven}) => {
 		mixed: <ConsentMixed recordConsent={recordConsent} />,
 		null: <ConsentNone recordConsent={recordConsent} />,
 	};
-	return (
+	return (<Misc.Card title='Consent To Track' defaultOpen>
 		<div>
 			<p>Good-Loop can track the ads you view on our network and use this information to show you more relevant ads.</p>
-			<p>Targeted ads are more valuable to advertisers - so you can boost the value of your donations without doing anything else.</p>
+			<p>Targeted ads are more valuable - so you can boost the value of your donations without doing anything else.</p>
 			{ consentMessage[consentGiven] }
 			<p>You can change your mind and opt in or out at any time on this page.</p>
 		</div>
-	);
+	</Misc.Card>);
 };
 
 const ConsentGiven = ({recordConsent}) => (

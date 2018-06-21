@@ -23,14 +23,9 @@ import E404Page from '../base/components/E404Page';
 
 DataStore.update({
 	data: {
-		Variants: [],
-		Global: {},
-		Publisher: {},
 		NGO: {},
 		Advert: {},
 		Advertiser: {},
-		Budget: {},
-		Bid: {},
 		Person: {},
 		User: {}
 	},
@@ -38,22 +33,9 @@ DataStore.update({
 
 	},
 	draft: {
-		Publisher: {},			
-		NGO: {},
-		Advert: {},
-		Advertiser: {},
 		Person: {},
 		User: {},
-		Budget: {},
-		Bid: {}
 	},
-	focus: {
-		Publisher: null,
-		Advertiser: null,
-		NGO: null,
-		Person: null,
-		User: null,
-	},	
 	widget: {},
 	misc: {
 	},
@@ -126,23 +108,14 @@ class MainDiv extends Component {
 				<p>{this.state.error.message}<br /><small>{this.state.error.stack}</small></p>
 			</div>);
 		}
-		// must login and be an admin for most pages
+		// must login for most pages
 		if ( ! Login.isLoggedIn()) {
-			if (page !== 'my' && page !== 'tagtest') {
+			if (page !== 'my') {
 				Page = JoinUsPage;
 			}
-		}
-		if ( ! Roles.iCan('admin').value) {
-			if (page !== 'account' && page !== 'my' && page !== 'pubdash' && page !== 'tagtest') {
-				Page = JoinUsPage;
-			}
-		}
-		
+		}		
 		// nav
 		let pages = ['my'];
-		if (Roles.iCan(C.CAN.admin).value) {
-			pages = pages.concat(['system']);
-		}
 		
 		return (
 			<div>
