@@ -9,7 +9,6 @@
     "url": "https://github.com/goodloop/my-loop"
   },
   "dependencies": {
-    "babel-preset-stage-2": "^6.24.1",
     "chart.js": "^2.7.2",
     "d3-queue": "^3.0.3",
     "data-pivot": "^0.3.1",
@@ -32,13 +31,9 @@
     "you-again": "^0.7.0"
   },
   "scripts": {
-    "test-watch": "webpack --config webpack.config.test.js --progress --colors --watch",
     "compile-watch": "webpack --config webpack.config.dev.js --progress --colors --watch",
-    "compile-watch-as": "webpack --config webpack.config.as.js --progress --colors --watch",
     "compile": "webpack -p",
-    "compile-dev": "webpack --config webpack.config.dev.js",
-    "compile-mocha": "webpack --config webpack.config.mocha.js",
-    "flow": "flow; test $? -eq 0 -o $? -eq 2"
+    "compile-dev": "webpack --config webpack.config.dev.js"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -48,13 +43,13 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
+	"babel-preset-stage-2": "^6.24.1",
     "eslint": "^4.5.0",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-plugin-flowtype": "^2.35.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.3.0",
-    "flow-bin": "^0.53.1",
     "webpack": "^3.12.0"
   }
 }
