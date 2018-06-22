@@ -22,7 +22,7 @@ ServerIO.APIBASE = ''; // Normally use this for "my server"!
 // Comment out the lines below when deploying!
 // ServerIO.APIBASE = 'https://testportal.good-loop.com'; // uncomment to let local use the test server's backend
 // ServerIO.APIBASE = 'https://portal.good-loop.com'; // use in testing to access live data
-
+	
 ServerIO.DATALOG_ENDPOINT = C.HTTPS+'://'+C.SERVER_TYPE+'lg.good-loop.com/data';
 // ServerIO.DATALOG_ENDPOINT = 'https://testlg.good-loop.com/data';
 ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';

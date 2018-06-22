@@ -8,7 +8,7 @@ import ActionMan from '../plumbing/ActionMan';
 
 import Misc from '../base/components/Misc';
 import MyReport from './MyReport';
-import { LoginLink } from '../base/components/LoginWidget';
+import { LoginWidgetEmbed, LoginLink } from '../base/components/LoginWidget';
 
 const trkIdPath = ['misc', 'trkids'];
 
@@ -27,25 +27,9 @@ const MyPage = () => {
 
 	let trkIds = DataStore.getValue(trkIdPath);
 
-	let pageContent = '';
-
-	if (!uid) {
-		// User is NOT logged in, just show records for current tracking ID
-		pageContent = (
-			<div>
-				<Misc.Card>
-					<h3>You're in control</h3>
-					<p>Find out and manage all the data we hold on you</p>
-					<p>Your current Good-Loop tracking ID is {currentTrkId}.</p>
-					<p>Log in or sign up to see the donations you've made across all your devices!</p>
-					<LoginLink isButton />
-				</Misc.Card>
-
-				<MyReport trkIds={[currentTrkId]} />
-			</div>
-		);
-	} else if (!trkIds) {
+	if ( ! trkIds) {
 		// User is logged in but we haven't retrieved tracking IDs from shares yet
+		// TODO wrap getProfile in DataStore.fetch to avoid react making repeated server calls
 		ServerIO.getProfile({id: uid, fields: profileFields}).then(({cargo}) => {
 			trkIds = cargo[FIELDS.trackIds] || [];
 
@@ -56,36 +40,37 @@ const MyPage = () => {
 			// put them in datastore whether we've updated profile or not
 			DataStore.setValue(trkIdPath, trkIds);
 		});
-
-		pageContent = (
-			<div>
-				<p>You are logged in as { uname || uid }.</p>
-				<p>Now fetching your donations from the server...</p>
-				<p><Misc.Loading /></p>
-			</div>
-		);
-	} else {
-		pageContent = (
-			<div>
-				<p>You are logged in as { uname || uid }.</p>
-				<p>
-					Your known tracking IDs are: { trkIds ? (
-						trkIds.map(id => id).join(', ')
-					) : 'none'}
-				</p>
-				{<MyReport uid={uid} trkids={[currentTrkId]} />}
-			</div>
-		);
+		// use the current one?
+		if (currentTrkId) trkIds=[currentTrkId];
 	}
-
 
 	// display...
 	return (
 		<div className="page MyPage">
 			<h2>My Good-Loop</h2>
-			{ pageContent }
+			<Misc.Card title="You're in control">
+				<WelcomeCard currentTrkId={currentTrkId} trkIds={trkIds} />
+			</Misc.Card>
+			<MyReport uid={uid} trkIds={trkIds} />
 		</div>
 	);
 }; // ./DashboardPage
+
+
+const WelcomeCard = ({trkIds}) => {
+	return (<div>
+		<p>Find out and manage all the data we hold on you</p>
+
+		{trkIds? <p>Your Good-Loop tracking IDs are: {trkIds.join(', ')}</p> : null}
+		
+		{Login.isLoggedIn()? 
+			<p>You are logged in as { Login.getUser().name || Login.getUser().xid }.</p> :
+			<div>
+				<p>Log in or sign up to see the donations you've made across all your devices!</p>
+				<LoginWidgetEmbed services={['twitter','facebook']} />
+			</div>
+		}
+	</div>);
+};
 
 export default MyPage;

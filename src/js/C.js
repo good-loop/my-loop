@@ -9,7 +9,7 @@ export default C;
  */
 C.app = {
 	name: "the My-Loop Portal",
-	service: "my-loop",
+	service: "goodloop",
 	logo: "/img/logo.png",
 	facebookAppId: "320927325010346"
 };

@@ -13,9 +13,12 @@ import Misc from '../base/components/Misc';
 import SearchQuery from '../searchquery';
 import md5 from 'md5';
 import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
+import Login from 'you-again';
+import {LoginLink} from '../base/components/LoginWidget';
 
 // TODO document trkids
-const MyReport = ({uid, trkIds = []}) => {
+const MyReport = ({uid, trkIds}) => {
+	if ( ! trkIds) trkIds=[];
 	// paths for storing data
 	const basePath = ['widget', 'MyReport'];
 
@@ -27,9 +30,9 @@ const MyReport = ({uid, trkIds = []}) => {
 		<div>
 			<Misc.CardAccordion widgetName='MyReport' multiple >
 
-				<DonationCard allIds={allIds} />
+				<Misc.Card title='Donations' defaultOpen><DonationCard allIds={allIds} /></Misc.Card>
 			
-				<ConsentWidget allIds={allIds} />				
+				<Misc.Card title='Consent To Track' defaultOpen><ConsentWidget allIds={allIds} /></Misc.Card>
 			
 			</Misc.CardAccordion>
 		</div>
@@ -37,7 +40,14 @@ const MyReport = ({uid, trkIds = []}) => {
 }; // ./TrafficReport
 
 
+
 const DonationCard = ({allIds}) => {
+	if ( ! Login.isLoggedIn()) {
+		return <LoginToSee />;
+	}
+	if ( ! allIds) {
+		return <div>No tracking IDs to check -- Do you have Do-Not-Track switched on?</div>;
+	}
 	const donationsPath = ['widget', 'MyReport', 'donations'];
 
 	// Get donations by user (including all registered tracking IDs)
@@ -52,7 +62,7 @@ const DonationCard = ({allIds}) => {
 	});
 
 	if ( ! pDonationData.resolved) {
-		return <Misc.Card title='Donations' defaultOpen><Misc.Loading /></Misc.Card>;
+		return <Misc.Loading text='Charity Donations' />;
 	}
 
 	const donationData = pDonationData.value;
@@ -61,11 +71,10 @@ const DonationCard = ({allIds}) => {
 		pivot(donationData.by_cid.buckets, "$bi.{key, count.sum.$n}", "$key.$n")
 	) : null;
 
-	return (<Misc.Card title='Donations' defaultOpen>
-		<BreakdownWidget data={donationsByCharity} param={'Charity ID'} />
-	</Misc.Card>);
+	return <BreakdownWidget data={donationsByCharity} param={'Charity ID'} />;
 };
 
+const LoginToSee = ({desc}) => <div>Please login to see {desc||'this'}. <LoginLink className='btn btn-default' /></div>;
 
 const ConsentWidget = ({uid, allIds}) => {
 	const consentPath = ['widget', 'MyReport', 'consent'];
@@ -78,7 +87,7 @@ const ConsentWidget = ({uid, allIds}) => {
 		return ServerIO.getDataLogData(consentReq, null, 'my-consent');
 	});
 	if ( ! pConsentData.resolved) {
-		return <Misc.Card title='Consent To Track' defaultOpen><Misc.Loading /></Misc.Card>;
+		return <Misc.Loading text='Consent Settings' />;
 	}
 
 	let consentData = pConsentData.value;
@@ -100,7 +109,7 @@ const ConsentWidget = ({uid, allIds}) => {
 	);
 
 	if ( ! uid) {
-		return <Misc.Card title='Consent To Track' defaultOpen><ReadOnlyConsentWidget consentGiven={consentGiven} /></Misc.Card>;
+		return <ReadOnlyConsentWidget consentGiven={consentGiven} />;
 	}
 
 	const recordConsent = (consentAnswer) => ServerIO.putProfile({id: uid, 'gl.consent': consentAnswer});
@@ -110,14 +119,13 @@ const ConsentWidget = ({uid, allIds}) => {
 		mixed: <ConsentMixed recordConsent={recordConsent} />,
 		null: <ConsentNone recordConsent={recordConsent} />,
 	};
-	return (<Misc.Card title='Consent To Track' defaultOpen>
+	return (
 		<div>
 			<p>Good-Loop can track the ads you view on our network and use this information to show you more relevant ads.</p>
 			<p>Targeted ads are more valuable - so you can boost the value of your donations without doing anything else.</p>
 			{ consentMessage[consentGiven] }
 			<p>You can change your mind and opt in or out at any time on this page.</p>
-		</div>
-	</Misc.Card>);
+		</div>);
 };
 
 const ConsentGiven = ({recordConsent}) => (
@@ -178,13 +186,6 @@ const ReadOnlyConsentWidget = ({consentGiven}) => {
 		</div>
 	);
 };
-
-const ReportWidget = ({ children, ...stuff }) => (
-	<Misc.Card {...stuff}>
-		{children}
-	</Misc.Card>
-);
-// ./ReportWidget
 
 
 /**

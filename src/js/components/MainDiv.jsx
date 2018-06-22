@@ -15,7 +15,7 @@ import LoginWidget from '../base/components/LoginWidget';
 // Pages
 import JoinUsPage from './JoinUsPage';
 import MyPage from './MyPage';
-import BasicAccountPage from '../base/components/AccountPageWidgets';
+import {BasicAccountPage} from '../base/components/AccountPageWidgets';
 import E404Page from '../base/components/E404Page';
 
 
