@@ -10,7 +10,6 @@ import C from './../C';
 
 // Templates
 import MessageBar from '../base/components/MessageBar';
-import NavBar from '../base/components/NavBar';
 import LoginWidget from '../base/components/LoginWidget';
 // Pages
 import JoinUsPage from './JoinUsPage';
@@ -119,7 +118,6 @@ class MainDiv extends Component {
 		
 		return (
 			<div>
-				<NavBar page={page} pages={pages} />
 				<div className="container avoid-navbar">
 					<MessageBar />
 					<div className='page' id={page}>
