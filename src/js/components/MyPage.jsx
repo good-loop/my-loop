@@ -8,7 +8,7 @@ import ActionMan from '../plumbing/ActionMan';
 
 import Misc from '../base/components/Misc';
 import MyReport from './MyReport';
-import { LoginWidgetEmbed, LoginLink } from '../base/components/LoginWidget';
+import { LoginWidgetEmbed, LoginLink, LoginButton } from '../base/components/LoginWidget';
 
 const trkIdPath = ['misc', 'trkids'];
 
@@ -48,29 +48,28 @@ const MyPage = () => {
 	return (
 		<div className="page MyPage">
 			<h2>My Good-Loop</h2>
-			<Misc.Card title="You're in control">
+			<Misc.Card>
 				<WelcomeCard currentTrkId={currentTrkId} trkIds={trkIds} />
 			</Misc.Card>
 			<MyReport uid={uid} trkIds={trkIds} />
 		</div>
 	);
 }; // ./DashboardPage
-
+``
 
 const WelcomeCard = ({trkIds}) => {
-	return (<div>
-		<p><b>Take control of your data!</b></p>
-		<p>You choose what data you give us and what we do with it.</p>
-
+	return (<center><div class="header">
 		
+		<p><b>Take control of your data!</b></p>
+		<p>You choose what data you give us<br/> and what we do with it.</p>
+	
 		{Login.isLoggedIn()? 
 			<p>You are logged in as { Login.getUser().name || Login.getUser().xid }.</p> :
-			<div>
-				<p>Log in or sign up to access your portal:</p>
-				<LoginWidgetEmbed services={['twitter','facebook']} />
+			<div>				
+				<LoginButton />
 			</div>
 		}
-	</div>);
+	</div></center>);
 };
 
 export default MyPage;

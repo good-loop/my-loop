@@ -11,6 +11,7 @@ import C from './../C';
 // Templates
 import MessageBar from '../base/components/MessageBar';
 import LoginWidget from '../base/components/LoginWidget';
+
 // Pages
 import MyPage from './MyPage';
 import {BasicAccountPage} from '../base/components/AccountPageWidgets';
@@ -116,6 +117,7 @@ class MainDiv extends Component {
 					</div>
 				</div>
 				<LoginWidget logo={C.app.service} title={'Welcome to '+C.app.name} />
+				
 			</div>
 		);
 	} // ./render()
