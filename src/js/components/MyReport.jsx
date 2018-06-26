@@ -29,10 +29,11 @@ const MyReport = ({uid, trkIds}) => {
 	return (
 		<div>
 			<Misc.CardAccordion widgetName='MyReport' multiple >
+	
+				<Misc.Card defaultOpen><ConsentWidget allIds={allIds} /></Misc.Card>
 
-				<Misc.Card title='Donations' defaultOpen><DonationCard allIds={allIds} /></Misc.Card>
+				<Misc.Card defaultOpen><DonationCard allIds={allIds} /></Misc.Card>
 			
-				<Misc.Card title='Consent To Track' defaultOpen><ConsentWidget allIds={allIds} /></Misc.Card>
 			
 			</Misc.CardAccordion>
 		</div>
@@ -180,7 +181,7 @@ const ReadOnlyConsentWidget = ({consentGiven}) => {
 	};
 	return (
 		<div>
-			<p>Good-Loop can track the ads you view on our network and use this information to show you more relevant ads.</p>
+			<p><b>Boost your contributions to your favourite causes by enabling targeted ads.</b></p>
 			<p>Targeted ads are more valuable to advertisers - so you can boost the value of your donations without doing anything else.</p>
 			{ consentMessage[consentGiven] }
 		</div>
