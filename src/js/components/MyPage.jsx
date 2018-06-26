@@ -59,14 +59,14 @@ const MyPage = () => {
 
 const WelcomeCard = ({trkIds}) => {
 	return (<div>
-		<p>Find out and manage all the data we hold on you</p>
+		<p><b>Take control of your data!</b></p>
+		<p>You choose what data you give us and what we do with it.</p>
 
-		{trkIds? <p>Your Good-Loop tracking IDs are: {trkIds.join(', ')}</p> : null}
 		
 		{Login.isLoggedIn()? 
 			<p>You are logged in as { Login.getUser().name || Login.getUser().xid }.</p> :
 			<div>
-				<p>Log in or sign up to see the donations you've made across all your devices!</p>
+				<p>Log in or sign up to access your portal:</p>
 				<LoginWidgetEmbed services={['twitter','facebook']} />
 			</div>
 		}
