@@ -47,7 +47,7 @@ const MyPage = () => {
 	// display...
 	return (
 		<div className="page MyPage">
-			<h2>My Good-Loop</h2>
+			<h2></h2>
 			<Misc.Card>
 				<WelcomeCard currentTrkId={currentTrkId} trkIds={trkIds} />
 			</Misc.Card>
@@ -58,9 +58,9 @@ const MyPage = () => {
 ``
 
 const WelcomeCard = ({trkIds}) => {
-	return (<center><div class="header">
+	return (<div>
 		
-		<p><b>Take control of your data!</b></p>
+		<p>TAKE CONTROL OF YOUR DATA</p>
 		<p>You choose what data you give us<br/> and what we do with it.</p>
 	
 		{Login.isLoggedIn()? 
@@ -69,7 +69,7 @@ const WelcomeCard = ({trkIds}) => {
 				<LoginButton />
 			</div>
 		}
-	</div></center>);
+	</div>);
 };
 
 export default MyPage;
