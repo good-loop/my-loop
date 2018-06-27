@@ -60,15 +60,17 @@ const MyPage = () => {
 const WelcomeCard = ({trkIds}) => {
 	return (<div>
 		
-		<p>TAKE CONTROL OF YOUR DATA</p>
-		<p>You choose what data you give us<br/> and what we do with it.</p>
-	
-		{Login.isLoggedIn()? 
-			<p>You are logged in as { Login.getUser().name || Login.getUser().xid }.</p> :
-			<div>				
-				<LoginButton />
-			</div>
-		}
+		<p className="header">
+			<p>TAKE CONTROL OF YOUR DATA</p>
+			<p className="subtitle">You choose what data you give us<br/> and what we do with it.</p>
+		
+			{Login.isLoggedIn()? 
+				<p>You are logged in as { Login.getUser().name || Login.getUser().xid }.</p> :
+				<div>				
+					<LoginButton />
+				</div>
+			}
+		</p>
 	</div>);
 };
 
