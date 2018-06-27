@@ -10,10 +10,9 @@ import C from './../C';
 
 // Templates
 import MessageBar from '../base/components/MessageBar';
-import NavBar from '../base/components/NavBar';
 import LoginWidget from '../base/components/LoginWidget';
+
 // Pages
-import JoinUsPage from './JoinUsPage';
 import MyPage from './MyPage';
 import {BasicAccountPage} from '../base/components/AccountPageWidgets';
 import E404Page from '../base/components/E404Page';
@@ -108,18 +107,9 @@ class MainDiv extends Component {
 				<p>{this.state.error.message}<br /><small>{this.state.error.stack}</small></p>
 			</div>);
 		}
-		// must login for most pages
-		if ( ! Login.isLoggedIn()) {
-			if (page !== 'my') {
-				Page = JoinUsPage;
-			}
-		}		
-		// nav
-		let pages = ['my'];
-		
+	
 		return (
 			<div>
-				<NavBar page={page} pages={pages} />
 				<div className="container avoid-navbar">
 					<MessageBar />
 					<div className='page' id={page}>
@@ -127,6 +117,7 @@ class MainDiv extends Component {
 					</div>
 				</div>
 				<LoginWidget logo={C.app.service} title={'Welcome to '+C.app.name} />
+				
 			</div>
 		);
 	} // ./render()

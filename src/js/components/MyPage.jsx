@@ -8,7 +8,7 @@ import ActionMan from '../plumbing/ActionMan';
 
 import Misc from '../base/components/Misc';
 import MyReport from './MyReport';
-import { LoginWidgetEmbed, LoginLink } from '../base/components/LoginWidget';
+import { LoginWidgetEmbed, LoginLink, LoginButton } from '../base/components/LoginWidget';
 
 const trkIdPath = ['misc', 'trkids'];
 
@@ -47,29 +47,30 @@ const MyPage = () => {
 	// display...
 	return (
 		<div className="page MyPage">
-			<h2>My Good-Loop</h2>
-			<Misc.Card title="You're in control">
+			<h2></h2>
+			<Misc.Card>
 				<WelcomeCard currentTrkId={currentTrkId} trkIds={trkIds} />
 			</Misc.Card>
 			<MyReport uid={uid} trkIds={trkIds} />
 		</div>
 	);
 }; // ./DashboardPage
-
+``
 
 const WelcomeCard = ({trkIds}) => {
 	return (<div>
-		<p>Find out and manage all the data we hold on you</p>
-
-		{trkIds? <p>Your Good-Loop tracking IDs are: {trkIds.join(', ')}</p> : null}
 		
-		{Login.isLoggedIn()? 
-			<p>You are logged in as { Login.getUser().name || Login.getUser().xid }.</p> :
-			<div>
-				<p>Log in or sign up to see the donations you've made across all your devices!</p>
-				<LoginWidgetEmbed services={['twitter','facebook']} />
-			</div>
-		}
+		<p className="header">
+			<p>TAKE CONTROL OF YOUR DATA</p>
+			<p className="subtitle">You choose what data you give us<br/> and what we do with it.</p>
+		
+			{Login.isLoggedIn()? 
+				<p>You are logged in as { Login.getUser().name || Login.getUser().xid }.</p> :
+				<div>				
+					<LoginButton />
+				</div>
+			}
+		</p>
 	</div>);
 };
 
