@@ -19,7 +19,7 @@ export default ActionMan;
  */
 ActionMan.getProfile = ({xid}) => {
 	if ( ! xid) {
-		return PV(null);
+		return PV({});
 	}
 	let path = DataStore.getPath(C.KStatus.PUBLISHED, C.TYPES.Person, xid);
 	return DataStore.fetch(path, () => {
