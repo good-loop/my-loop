@@ -59,10 +59,10 @@ ServerIO.getDataLogData = (filters, breakdowns, name) => {
 	return ServerIO.load(endpoint+(name? '?name='+encURI(name) : ''), {data: specs});
 };
 
-ServerIO.getProfile = ({id, fields}) => {
-	return ServerIO.load(`${ServerIO.PROFILER_ENDPOINT}/person/${id}`, {data: {fields}});
+ServerIO.getProfile = ({xid, fields}) => {
+	return ServerIO.load(`${ServerIO.PROFILER_ENDPOINT}/person/${xid}`, {data: {fields}});
 };
 
-ServerIO.putProfile = ({id, ...doc}) => {
-	return ServerIO.post(`${ServerIO.PROFILER_ENDPOINT}/person/${id}`, {action: 'put', doc: JSON.stringify(doc)});
+ServerIO.putProfile = ({xid, ...doc}) => {
+	return ServerIO.post(`${ServerIO.PROFILER_ENDPOINT}/person/${xid}`, {action: 'put', doc: JSON.stringify(doc)});
 };

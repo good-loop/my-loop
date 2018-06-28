@@ -12,33 +12,33 @@ import { LoginWidgetEmbed, LoginLink, LoginButton } from '../base/components/Log
 
 const trkIdPath = ['misc', 'trkids'];
 
-const FIELDS = {
-	trackIds: 'gl.trkids',
-	consent: 'gl.consent',
-};
+// const FIELDS = {
+// 	trackIds: 'gl.trkids',
+// 	consent: 'gl.consent',
+// };
 
-const profileFields = [FIELDS.trackIds, FIELDS.consent];
+// const profileFields = [FIELDS.trackIds, FIELDS.consent];
 
 const MyPage = () => {
 	const trkIdMatches = document.cookie.match('trkid=([^;]+)');
 	const currentTrkId = trkIdMatches && trkIdMatches[1];
 
-	let {xid: uid, name: uname} = Login.getUser() || {};
+	let {xid, name} = Login.getUser() || {};
 
 	let trkIds = DataStore.getValue(trkIdPath);
 
 	if ( ! trkIds) {
 		// User is logged in but we haven't retrieved tracking IDs from shares yet
 		// TODO wrap getProfile in DataStore.fetch to avoid react making repeated server calls
-		ServerIO.getProfile({id: uid, fields: profileFields}).then(({cargo}) => {
-			trkIds = cargo[FIELDS.trackIds] || [];
-
-			// do we need to add the current tracking id to the list?
-			if (currentTrkId && !trkIds.includes(currentTrkId)) {
-				ServerIO.putProfile({id: uid, [FIELDS.trackIds]: trkIds.concat(currentTrkId)});
-			}
-			// put them in datastore whether we've updated profile or not
-			DataStore.setValue(trkIdPath, trkIds);
+		let pvProfile = ActionMan.getProfile({xid});
+		pvProfile.promise.then(res => {
+			console.warn("store trkIds from ", res);
+			// // do we need to add the current tracking id to the list?
+			// if (currentTrkId && !trkIds.includes(currentTrkId)) {
+			// 	ServerIO.putProfile({id: uid, [FIELDS.trackIds]: trkIds.concat(currentTrkId)});
+			// }
+			// // put them in datastore whether we've updated profile or not
+			// DataStore.setValue(trkIdPath, trkIds);	
 		});
 		// use the current one?
 		if (currentTrkId) trkIds=[currentTrkId];
@@ -47,15 +47,14 @@ const MyPage = () => {
 	// display...
 	return (
 		<div className="page MyPage">
-			<h2></h2>
 			<Misc.Card>
 				<WelcomeCard currentTrkId={currentTrkId} trkIds={trkIds} />
 			</Misc.Card>
-			<MyReport uid={uid} trkIds={trkIds} />
+			<MyReport uid={xid} trkIds={trkIds} />
 		</div>
 	);
 }; // ./DashboardPage
-``
+
 
 const WelcomeCard = ({trkIds}) => {
 	return (<div>

@@ -24,6 +24,7 @@ const MyReport = ({uid, trkIds}) => {
 	// paths for storing data
 	const basePath = ['widget', 'MyReport'];
 
+	// TODO pass around lists and turn into strings later
 	// "user:trkid1@trk OR user:trkid2@trk OR ..."
 	const allIds = trkIds.map(trkid => 'user:' + trkid).join(' OR ');
 
@@ -36,9 +37,9 @@ const MyReport = ({uid, trkIds}) => {
 
 				<Misc.Card defaultOpen><DonationCard allIds={allIds} /></Misc.Card>
 			
-				<Misc.Card defaultOpen><FBCard allIds={allIds} /></Misc.Card>
+				<Misc.Card defaultOpen><FBCard allIds={trkIds} /></Misc.Card>
 
-				<Misc.Card defaultOpen><TwitterCard allIds={allIds} /></Misc.Card>
+				<Misc.Card defaultOpen><TwitterCard allIds={trkIds} /></Misc.Card>
 			
 			</Misc.CardAccordion>
 		</div>
@@ -240,7 +241,7 @@ const displayValue = (v) => {
 /**
  * Facebook card
  */
-const FBCard = ({allIds}) => {
+const FBCard = ({allIds=[]}) => {
 	let fbid = allIds.filter(id => XId.service(id)==='facebook')[0];
 	if ( ! fbid) {
 		return <div><SocialSignInButton service='facebook' verb='connect' /></div>;
@@ -249,7 +250,7 @@ const FBCard = ({allIds}) => {
 };
 
 
-const TwitterCard = ({allIds}) => {
+const TwitterCard = ({allIds=[]}) => {
 	let fbid = allIds.filter(id => XId.service(id)==='twitter')[0];
 	if ( ! fbid) {
 		return <div><SocialSignInButton service='twitter' verb='connect' /></div>;
