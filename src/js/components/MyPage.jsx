@@ -66,7 +66,7 @@ const WelcomeCard = ({trkIds}) => {
 			{Login.isLoggedIn()? 
 				<p>You are logged in as { Login.getUser().name || Login.getUser().xid }.</p> :
 				<div>				
-					<LoginButton />
+					<LoginLink className='btn btn-lg btn-red' />
 				</div>
 			}
 		</div>

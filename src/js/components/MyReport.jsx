@@ -33,9 +33,9 @@ const MyReport = ({uid, trkIds}) => {
 		<div>
 			<Misc.CardAccordion widgetName='MyReport' multiple >
 	
-				<Misc.Card defaultOpen><ConsentWidget allIds={allIds} /></Misc.Card>
+				<Misc.Card title='Consent To Track' defaultOpen><ConsentWidget allIds={allIds} /></Misc.Card>
 
-				<Misc.Card defaultOpen><DonationCard allIds={allIds} /></Misc.Card>
+				<Misc.Card title='Donations' defaultOpen><DonationCard allIds={allIds} /></Misc.Card>
 			
 				<Misc.Card defaultOpen><FBCard allIds={trkIds} /></Misc.Card>
 
