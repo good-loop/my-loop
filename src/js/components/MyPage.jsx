@@ -57,10 +57,10 @@ const MyPage = () => {
 
 
 const WelcomeCard = ({trkIds}) => {
-	return (<div>
+	return (<div className="header">
 		
-		<p className="header">
-			<p>TAKE CONTROL OF YOUR DATA</p>
+		<div className="header-text">
+			<p className="title">TAKE CONTROL OF YOUR DATA</p>
 			<p className="subtitle">You choose what data you give us<br/> and what we do with it.</p>
 		
 			{Login.isLoggedIn()? 
@@ -69,7 +69,7 @@ const WelcomeCard = ({trkIds}) => {
 					<LoginButton />
 				</div>
 			}
-		</p>
+		</div>
 	</div>);
 };
 
