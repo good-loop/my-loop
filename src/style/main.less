@@ -29,3 +29,119 @@
 	color: white;
 	border-color: white;
 }
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	background: url(http://subtlepatterns.subtlepatterns.netdna-cdn.com/patterns/bedge_grunge.png) repeat;
+}
+
+body {
+	color: #222;
+}
+
+.intro {
+	text-align: center;
+	display: block;
+	padding-bottom: .25em;
+	margin: 0 auto;
+}
+
+hr {
+	margin-bottom: 2em;
+}
+
+h1 {
+	font-family: 'Oleo Script';
+	text-shadow: white 1px 1px 0;
+	color: #274b6a;
+}
+
+p > a {
+	color: #274b6a;
+	text-decoration: none;
+	border-bottom: 1px dashed;
+}
+
+p > a:hover {
+	border-bottom: 1px dotted;
+}
+
+.content {
+	width: 90%;
+	margin: 0 auto;
+}
+
+.spinner_wrapper {
+	width: 72em;
+	margin: 0 auto;
+}
+
+.spinner {
+	width: 20em;
+	height: 20em;
+	margin: 0 2em;
+	cursor: pointer;
+	position: relative;
+	float: left;
+}
+
+.inner_spin {
+	width: 20em;
+	height: 20em;
+	border: 9px solid #105B63;
+	border-right-color: #FFD34E;
+	border-bottom-color: #FFD34E;
+	border-radius: 50%;
+	transition: transform 1s;
+  /* Hardware acceleration FTW! */
+	transform: translateZ(0);
+}
+
+.level {
+	transform: translateZ(0) rotate(45deg);
+}
+
+.fullie, .halfie {
+	display: block;
+	margin: 0 auto;
+	position: absolute;
+}
+
+.fullie {
+	width: 19em;
+	height: 19em;
+	background: #930a1e;
+	border-radius: 19em;
+	z-index: 2;
+	top: 50%;
+	left: 50%;
+	margin-top: -9.5em;
+	margin-left: -9.5em;
+}
+
+.spinner:hover {
+	opacity: .95;
+}
+
+.spinner:hover .inner_spin {
+	transform: rotate(180deg);
+}
+
+.spinner:hover .level {
+	transform: rotate(225deg);
+}
+
+.spinner:hover img {
+	opacity: .25;
+}
+
+img {
+	width: 20em-1;
+	height: 20em-1;
+	border-radius: 20em-1;
+	opacity: 1;
+	-webkit-transition: all 1s;
+}

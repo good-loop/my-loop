@@ -35,7 +35,7 @@ const MyReport = ({uid, trkIds}) => {
 	
 				<Misc.Card title='Consent To Track' defaultOpen><ConsentWidget allIds={allIds} /></Misc.Card>
 
-				<Misc.Card title='Donations' defaultOpen><DonationCard allIds={allIds} /></Misc.Card>
+				<Misc.Card title='Donations' defaultOpen><DonationCardUpdated allIds={allIds} /></Misc.Card>
 			
 				<Misc.Card defaultOpen><FBCard allIds={trkIds} /></Misc.Card>
 
@@ -79,6 +79,33 @@ const DonationCard = ({allIds}) => {
 	) : null;
 
 	return <BreakdownWidget data={donationsByCharity} param={'Charity ID'} />;
+};
+
+const DonationCardUpdated = ({allIds}) => {
+	if ( ! Login.isLoggedIn()) {
+		return <LoginToSee />;
+	}
+	if ( ! allIds) {
+		return <div>No tracking IDs to check -- Do you have Do-Not-Track switched on?</div>;
+	}
+	
+	return 	(<div className='content'>
+		<div className='spinner_wrapper'>
+			<div className='spinner'>
+				<div className='inner_spin'></div>
+				<span className='fullie'>
+					<img src='http://www.eie-invest.com/wp-content/uploads/2017/12/good-loop.png' />
+				</span>
+			</div>
+			<div className='spinner'>
+				<div className='inner_spin'></div>
+				<span className='fullie'>
+					<img src='https://i.imgur.com/wo32xfk.png' />
+				</span>
+			</div>
+		</div>
+	</div>
+	);
 };
 
 const LoginToSee = ({desc}) => <div>Please login to see {desc||'this'}. <LoginLink className='btn btn-default' /></div>;
