@@ -14,7 +14,9 @@ import SearchQuery from '../searchquery';
 import md5 from 'md5';
 import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
 import Login from 'you-again';
-import {LoginLink} from '../base/components/LoginWidget';
+import {LoginLink, SocialSignInButton} from '../base/components/LoginWidget';
+
+// TODO merge with MyPage??
 
 // TODO document trkids
 const MyReport = ({uid, trkIds}) => {
@@ -34,6 +36,9 @@ const MyReport = ({uid, trkIds}) => {
 
 				<Misc.Card defaultOpen><DonationCard allIds={allIds} /></Misc.Card>
 			
+				<Misc.Card defaultOpen><FBCard allIds={allIds} /></Misc.Card>
+
+				<Misc.Card defaultOpen><TwitterCard allIds={allIds} /></Misc.Card>
 			
 			</Misc.CardAccordion>
 		</div>
@@ -230,6 +235,26 @@ const displayValue = (v) => {
 		v = printer.prettyNumber(v, 10);
 	}
 	return v;
+};
+
+/**
+ * Facebook card
+ */
+const FBCard = ({allIds}) => {
+	let fbid = allIds.filter(id => XId.service(id)==='facebook')[0];
+	if ( ! fbid) {
+		return <div><SocialSignInButton service='facebook' verb='connect' /></div>;
+	}
+	return <div>Facebook ID: {XId.name(fbid)}</div>; // TODO show some data about them from FB
+};
+
+
+const TwitterCard = ({allIds}) => {
+	let fbid = allIds.filter(id => XId.service(id)==='twitter')[0];
+	if ( ! fbid) {
+		return <div><SocialSignInButton service='twitter' verb='connect' /></div>;
+	}
+	return <div>Twitter username: {XId.name(fbid)}</div>; // TODO show some data about them from FB
 };
 
 export default MyReport;
