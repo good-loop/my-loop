@@ -86,7 +86,17 @@ const DonationCardUpdated = ({allIds}) => {
 		return <LoginToSee />;
 	}
 	if ( ! allIds) {
-		return <div>No tracking IDs to check -- Do you have Do-Not-Track switched on?</div>;
+		let dnt = null;
+		try {
+			if (navigator.doNotTrack == "1") dnt = true;
+			if (navigator.doNotTrack == "0") dnt = false;
+		} catch (err) {
+			console.warn("DNT check failed", err);
+		}
+		if (dnt) {
+			return <div>No tracking IDs to check - You have Do-Not-Track switched on, so we're not tracking you!</div>;	
+		}
+		return <div>No tracking IDs to check {dnt===null? " - Do you have Do-Not-Track switched on?" : null}</div>;
 	}
 	
 	return 	(<div className='content'>
