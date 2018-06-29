@@ -11,7 +11,9 @@ C.app = {
 	name: "the My-Loop Portal",
 	service: "good-loop",
 	logo: "/img/logo.png",
-	facebookAppId: "320927325010346" // https://developers.facebook.com/apps/320927325010346/dashboard/
+	facebookAppId: "320927325010346", // https://developers.facebook.com/apps/320927325010346/dashboard/
+	privacyPolicy: "",
+	tsncs: "",
 };
 
 // NB: MonetaryAmount is deprecated - left here for old data
