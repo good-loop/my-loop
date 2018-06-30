@@ -6,6 +6,7 @@ import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
 
+import {stopEvent} from 'wwutils';
 import Misc from '../base/components/Misc';
 import MyReport from './MyReport';
 import { LoginWidgetEmbed, LoginLink, LoginButton } from '../base/components/LoginWidget';
@@ -62,12 +63,13 @@ const WelcomeCard = ({trkIds}) => {
 		<div className="header-text">
 			<p className="title">TAKE CONTROL OF YOUR DATA</p>
 			<p className="subtitle">You choose what data you give us<br/> and what we do with it.</p>
-		
+			
 			{Login.isLoggedIn()? 
-				<p>You are logged in as { Login.getUser().name || Login.getUser().xid }.</p> :
-				<div>				
-					<LoginLink className='btn btn-lg btn-red' />
+				<div>
+					<p>You are logged in as { Login.getUser().name || Login.getUser().xid }.</p>
+					<small><a href="#my" onClick={e => stopEvent(e) && Login.logout()}>Log out</a></small>
 				</div>
+				: <LoginLink className='btn btn-lg btn-red' />				
 			}
 		</div>
 	</div>);
