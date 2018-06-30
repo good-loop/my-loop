@@ -5,7 +5,7 @@ import Login from 'you-again';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
-
+import Person from '../base/data/Person';
 import {stopEvent} from 'wwutils';
 import Misc from '../base/components/Misc';
 import MyReport from './MyReport';
@@ -27,11 +27,18 @@ const MyPage = () => {
 	let {xid, name} = Login.getUser() || {};
 
 	let trkIds = DataStore.getValue(trkIdPath);
+	// all the users IDs
+	let xids = trkIds || [];
+	if (Login.getId()) xids.push(Login.getId());
+	// fetch profile
+	let pvProfile = ActionMan.getProfile({xid});
+	let peep = pvProfile.value || {};	
+	// linked IDs?
+	let linkedIds = Person.linkedIds(peep);
+	xids = xids.concat(linkedIds);
 
 	if ( ! trkIds) {
-		// User is logged in but we haven't retrieved tracking IDs from shares yet
-		// TODO wrap getProfile in DataStore.fetch to avoid react making repeated server calls
-		let pvProfile = ActionMan.getProfile({xid});
+		// User is logged in but we haven't retrieved tracking IDs from shares yet		
 		pvProfile.promise.then(res => {
 			console.warn("store trkIds from ", res);
 			// // do we need to add the current tracking id to the list?
@@ -51,7 +58,7 @@ const MyPage = () => {
 			<Misc.Card>
 				<WelcomeCard currentTrkId={currentTrkId} trkIds={trkIds} />
 			</Misc.Card>
-			<MyReport uid={xid} trkIds={trkIds} />
+			<MyReport uid={xid} xids={xids} />
 		</div>
 	);
 }; // ./DashboardPage

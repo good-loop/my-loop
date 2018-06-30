@@ -17,7 +17,7 @@ C.app = {
 };
 
 // NB: MonetaryAmount is deprecated - left here for old data
-C.TYPES = new Enum("Charity Variants Global Publisher NGO Advert Advertiser Budget Bid User Person Money MonetaryAmount");
+C.TYPES = new Enum("Publisher NGO Advert Advertiser User Person Money MonetaryAmount");
 
 C.ROLES = new Enum("user admin");
 C.CAN = new Enum("view edit admin sudo");

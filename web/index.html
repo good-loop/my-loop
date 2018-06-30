@@ -42,6 +42,26 @@
 		
 		<img src='//lg.good-loop.com/pxl' style='position:absolute;bottom:0px;left:0px;width:1;height:1;' />
 
+		<!-- FB pre-load to give nice FB login TODO replace this - see notes in youagain.js -->
+		<script>
+			window.fbAsyncInit = function() {
+			    FB.init({
+			      appId      : '320927325010346',
+			      xfbml      : true,
+			      version    : 'v2.9'
+			    });
+		    //FB.AppEvents.logPageView();
+			};
+
+			(function(d, s, id){
+	    		var js, fjs = d.getElementsByTagName(s)[0];
+				if (d.getElementById(id)) {return;}
+				js = d.createElement(s); js.id = id;
+				js.src = "//connect.facebook.net/en_US/sdk.js";
+				fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));
+		</script>
+
 	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 	<script>
 		/*!

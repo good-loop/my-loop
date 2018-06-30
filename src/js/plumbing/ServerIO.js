@@ -27,8 +27,8 @@ ServerIO.DATALOG_ENDPOINT = C.HTTPS+'://'+C.SERVER_TYPE+'lg.good-loop.com/data';
 // ServerIO.DATALOG_ENDPOINT = 'https://testlg.good-loop.com/data';
 ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';
 
-ServerIO.PROFILER_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}profiler.winterwell.com/profile`;
-ServerIO.PROFILER_ENDPOINT = 'https://profiler.winterwell.com/profile';
+ServerIO.PROFILER_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}profiler.good-loop.com/profile`;
+// ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com/profile';
 
 ServerIO.checkBase();
 
@@ -59,10 +59,21 @@ ServerIO.getDataLogData = (filters, breakdowns, name) => {
 	return ServerIO.load(endpoint+(name? '?name='+encURI(name) : ''), {data: specs});
 };
 
-ServerIO.getProfile = ({xid, fields}) => {
-	return ServerIO.load(`${ServerIO.PROFILER_ENDPOINT}/person/${xid}`, {data: {fields}});
+/**
+ * Get the total donated by Good-Loop users.
+ * (copy-pasta from adserver's landing-page frame.js)
+ *
+ * TODO wire up a which-charity parameter
+ */
+ServerIO.getCommunityTotal = function(params) {		
+	let data = {
+		// // TBH none of this is needed
+		// d: params.dataspace,
+		// app: params.app,
+		// t: params.tag
+	};
+
+	return ServerIO.load('/datafn/sum', {data});
 };
 
-ServerIO.putProfile = ({xid, ...doc}) => {
-	return ServerIO.post(`${ServerIO.PROFILER_ENDPOINT}/person/${xid}`, {action: 'put', doc: JSON.stringify(doc)});
-};
+// Profiler API: see Profiler.js

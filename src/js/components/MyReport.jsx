@@ -10,23 +10,25 @@ import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
 import ChartWidget from '../base/components/ChartWidget';
 import Misc from '../base/components/Misc';
+import ActionMan from '../plumbing/ActionMan';
 import SearchQuery from '../searchquery';
 import md5 from 'md5';
 import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
 import Login from 'you-again';
 import {LoginLink, SocialSignInButton} from '../base/components/LoginWidget';
+import {putProfile} from '../base/Profiler';
 
 // TODO merge with MyPage??
 
 // TODO document trkids
-const MyReport = ({uid, trkIds}) => {
-	if ( ! trkIds) trkIds=[];
+const MyReport = ({uid, xids}) => {
+	if ( ! xids) xids=[];
 	// paths for storing data
 	const basePath = ['widget', 'MyReport'];
 
 	// TODO pass around lists and turn into strings later
 	// "user:trkid1@trk OR user:trkid2@trk OR ..."
-	const allIds = trkIds.map(trkid => 'user:' + trkid).join(' OR ');
+	const allIds = xids.map(trkid => 'user:' + trkid).join(' OR ');
 
 	// display...
 	return (
@@ -35,11 +37,11 @@ const MyReport = ({uid, trkIds}) => {
 	
 				<Misc.Card title='Consent To Track' defaultOpen><ConsentWidget allIds={allIds} /></Misc.Card>
 
-				<Misc.Card title='Donations' defaultOpen><DonationCardUpdated allIds={allIds} /></Misc.Card>
+				<Misc.Card title='Donations' defaultOpen><DonationCard allIds={allIds} /></Misc.Card>
 			
-				<Misc.Card defaultOpen><FBCard allIds={trkIds} /></Misc.Card>
+				<Misc.Card defaultOpen><FBCard allIds={xids} /></Misc.Card>
 
-				<Misc.Card defaultOpen><TwitterCard allIds={trkIds} /></Misc.Card>
+				<Misc.Card defaultOpen><TwitterCard allIds={xids} /></Misc.Card>
 			
 			</Misc.CardAccordion>
 		</div>
@@ -52,39 +54,7 @@ const DonationCard = ({allIds}) => {
 	if ( ! Login.isLoggedIn()) {
 		return <LoginToSee />;
 	}
-	if ( ! allIds) {
-		return <div>No tracking IDs to check -- Do you have Do-Not-Track switched on?</div>;
-	}
-	const donationsPath = ['widget', 'MyReport', 'donations'];
-
-	// Get donations by user (including all registered tracking IDs)
-	let pDonationData = DataStore.fetch(donationsPath, () => {
-		const donationReq = {
-			dataspace: 'gl',
-			q: `evt:donation AND (${allIds})`,
-			breakdown: ['cid{"count": "sum"}'],
-			start: '2018-05-01T00:00:00.000Z'
-		};
-		return ServerIO.getDataLogData(donationReq, null, 'my-donations').then(res => res.cargo);
-	});
-
-	if ( ! pDonationData.resolved) {
-		return <Misc.Loading text='Charity Donations' />;
-	}
-
-	const donationData = pDonationData.value;
-	window.pivot = pivot; // for debug
-	const donationsByCharity = donationData && donationData.by_cid ? (
-		pivot(donationData.by_cid.buckets, "$bi.{key, count.sum.$n}", "$key.$n")
-	) : null;
-
-	return <BreakdownWidget data={donationsByCharity} param={'Charity ID'} />;
-};
-
-const DonationCardUpdated = ({allIds}) => {
-	if ( ! Login.isLoggedIn()) {
-		return <LoginToSee />;
-	}
+	// No IDs?
 	if ( ! allIds) {
 		let dnt = null;
 		try {
@@ -98,7 +68,60 @@ const DonationCardUpdated = ({allIds}) => {
 		}
 		return <div>No tracking IDs to check {dnt===null? " - Do you have Do-Not-Track switched on?" : null}</div>;
 	}
+
+	const donationsPath = ['widget', 'MyReport', 'donations'];
+	// Get donations by user (including all registered tracking IDs)
+	let pvDonationData = DataStore.fetch(donationsPath, () => {
+		const donationReq = {
+			dataspace: 'gl',
+			q: `evt:donation AND (${allIds})`,
+			breakdown: ['cid{"count": "sum"}'],
+			start: '2018-05-01T00:00:00.000Z'
+		};
+		return ServerIO.getDataLogData(donationReq, null, 'my-donations').then(res => res.cargo);
+	});
+
+	// load the community total total
+	let pvCommunityTotalTotal = DataStore.fetch(['widget','DonationCard','community','all'], () => {
+		return ServerIO.getCommunityTotal();
+	});
+
+	if ( ! pvDonationData.resolved) {
+		return <Misc.Loading text='Charity Donations' />;
+	}
+
+	// unwrap the ES aggregation format
+	let donationsByCharity = null;
+	if (pvDonationData.value && pvDonationData.value.by_cid) {
+		donationsByCharity = pivot(pvDonationData.value.by_cid.buckets, "$bi.{key, count.sum.$n}", "$key.$n");
+	}
+	// no user donations?
+	if ( ! donationsByCharity) {
+		if ( ! pvCommunityTotalTotal.value) {
+			// huh?
+			return <div>(Fail Whale) We could not load the data. Sorry.</div>;
+		}
+		// TODO Just show the community total
+		return <div>{JSON.stringify(pvCommunityTotalTotal.value)}</div>;
+	}
+
+	// whats their main charity?
+	let topCharityValue = {cid:null, v:0};
+	Object.keys(donationsByCharity).forEach(cid => {
+		let dv = donationsByCharity[cid];
+		if (dv <= topCharityValue.v) return;
+		topCharityValue.cid = cid;
+		topCharityValue.v = dv;
+	});
+	// load the community total for this charity
+	let pvCommunityCharityTotal = DataStore.fetch(['widget','DonationCard','community',topCharityValue.cid], () => {
+		return ServerIO.getCommunityTotal({cid: topCharityValue.cid}); // TODO
+	});
 	
+	// TODO load charity info from SoGive
+	let pvTopCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:topCharityValue.cid, status:C.KStatus.PUBLISHED});
+
+	// TODO display their charity + community donations
 	return 	(<div className='content'>
 		<div className='spinner_wrapper'>
 			<div className='spinner'>
@@ -156,7 +179,7 @@ const ConsentWidget = ({uid, allIds}) => {
 		return <ReadOnlyConsentWidget consentGiven={consentGiven} />;
 	}
 
-	const recordConsent = (consentAnswer) => ServerIO.putProfile({id: uid, 'gl.consent': consentAnswer});
+	const recordConsent = (consentAnswer) => putProfile({id: uid, 'gl.consent': consentAnswer});
 	const consentMessage = {
 		true: <ConsentGiven recordConsent={recordConsent} />,
 		false: <ConsentDenied recordConsent={recordConsent} />,
@@ -283,7 +306,7 @@ const FBCard = ({allIds=[]}) => {
 	if ( ! fbid) {
 		return <div><SocialSignInButton service='facebook' verb='connect' /></div>;
 	}
-	return <div>Facebook ID: {XId.name(fbid)}</div>; // TODO show some data about them from FB
+	return <div>Facebook ID: {XId.id(fbid)}</div>; // TODO show some data about them from FB
 };
 
 
@@ -292,7 +315,7 @@ const TwitterCard = ({allIds=[]}) => {
 	if ( ! fbid) {
 		return <div><SocialSignInButton service='twitter' verb='connect' /></div>;
 	}
-	return <div>Twitter username: {XId.name(fbid)}</div>; // TODO show some data about them from FB
+	return <div>Twitter username: {XId.id(fbid)}</div>; // TODO show some data about them from FB
 };
 
 export default MyReport;

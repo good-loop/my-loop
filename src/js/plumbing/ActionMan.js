@@ -8,6 +8,7 @@ import C from '../C';
 import ServerIO from './ServerIO';
 import DataStore from '../base/plumbing/DataStore';
 import {getId, getType} from '../base/data/DataClass';
+import {getProfile} from '../base/Profiler';
 
 import ActionMan from '../base/plumbing/ActionManBase';
 export default ActionMan;
@@ -23,6 +24,6 @@ ActionMan.getProfile = ({xid}) => {
 	}
 	let path = DataStore.getPath(C.KStatus.PUBLISHED, C.TYPES.Person, xid);
 	return DataStore.fetch(path, () => {
-		return ServerIO.getProfile({xid});
-	});
+		return getProfile({xid});
+	}, false); // no error message on 404 failure
 };

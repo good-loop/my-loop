@@ -7,6 +7,7 @@ import { modifyHash } from 'wwutils';
 import DataStore from './../base/plumbing/DataStore';
 import Roles from './../base/Roles';
 import C from './../C';
+import Crud from './../base/plumbing/Crud'; // Crud is loaded here (but not used here)
 
 // Templates
 import MessageBar from '../base/components/MessageBar';
