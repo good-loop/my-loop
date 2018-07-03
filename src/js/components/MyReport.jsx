@@ -35,9 +35,9 @@ const MyReport = ({uid, xids}) => {
 		<div>
 			<Misc.CardAccordion widgetName='MyReport' multiple >
 	
-				<Misc.Card title='Consent To Track' defaultOpen><ConsentWidget allIds={allIds} /></Misc.Card>
-
 				<Misc.Card title='Donations' defaultOpen><DonationCard allIds={allIds} /></Misc.Card>
+
+				<Misc.Card title='Consent To Track' defaultOpen><ConsentWidget allIds={allIds} /></Misc.Card>
 			
 				<Misc.Card defaultOpen><FBCard allIds={xids} /></Misc.Card>
 
@@ -47,7 +47,6 @@ const MyReport = ({uid, xids}) => {
 		</div>
 	);
 }; // ./TrafficReport
-
 
 
 const DonationCard = ({allIds}) => {
@@ -69,6 +68,8 @@ const DonationCard = ({allIds}) => {
 		return <div>No tracking IDs to check {dnt===null? " - Do you have Do-Not-Track switched on?" : null}</div>;
 	}
 
+	let communityTotal = ServerIO.getDataFnData('sum'); // CORS error, must be resolved server side at as.good-loop.com
+
 	const donationsPath = ['widget', 'MyReport', 'donations'];
 	// Get donations by user (including all registered tracking IDs)
 	let pvDonationData = DataStore.fetch(donationsPath, () => {
@@ -79,12 +80,7 @@ const DonationCard = ({allIds}) => {
 			start: '2018-05-01T00:00:00.000Z'
 		};
 		return ServerIO.getDataLogData(donationReq, null, 'my-donations').then(res => res.cargo);
-	});
-
-	// load the community total total
-	let pvCommunityTotalTotal = DataStore.fetch(['widget','DonationCard','community','all'], () => {
-		return ServerIO.getCommunityTotal();
-	});
+	});	
 
 	if ( ! pvDonationData.resolved) {
 		return <Misc.Loading text='Charity Donations' />;
@@ -95,14 +91,15 @@ const DonationCard = ({allIds}) => {
 	if (pvDonationData.value && pvDonationData.value.by_cid) {
 		donationsByCharity = pivot(pvDonationData.value.by_cid.buckets, "$bi.{key, count.sum.$n}", "$key.$n");
 	}
+
 	// no user donations?
 	if ( ! donationsByCharity) {
-		if ( ! pvCommunityTotalTotal.value) {
+		if ( ! communityTotal.value) {
 			// huh?
 			return <div>(Fail Whale) We could not load the data. Sorry.</div>;
 		}
 		// TODO Just show the community total
-		return <div>{JSON.stringify(pvCommunityTotalTotal.value)}</div>;
+		return <div>{JSON.stringify(communityTotal.value)}</div>;
 	}
 
 	// whats their main charity?
@@ -120,6 +117,7 @@ const DonationCard = ({allIds}) => {
 	
 	// TODO load charity info from SoGive
 	let pvTopCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:topCharityValue.cid, status:C.KStatus.PUBLISHED});
+
 
 	// TODO display their charity + community donations
 	return 	(<div className='content'>

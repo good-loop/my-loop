@@ -30,6 +30,9 @@ ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';
 ServerIO.PROFILER_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}profiler.good-loop.com/profile`;
 // ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com/profile';
 
+ServerIO.AS_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}as.good-loop.com`;
+ServerIO.AS_ENDPOINT = `${C.HTTPS}://as.good-loop.com`;
+
 ServerIO.checkBase();
 
 // override for NGO -> SoGive, and Budget
@@ -57,6 +60,14 @@ ServerIO.getDataLogData = (filters, breakdowns, name) => {
 		endpoint = '/data';
 	}
 	return ServerIO.load(endpoint+(name? '?name='+encURI(name) : ''), {data: specs});
+};
+
+/**
+ * Right now: just get sum of all spending (NB multiply by 0.5 to get charity donations - this may change in future)
+ * @param {operator}
+ */
+ServerIO.getDataFnData = ({operator = 'sum'}) => {
+	return ServerIO.load(`${ServerIO.AS_ENDPOINT}/datafn/${operator}`);
 };
 
 /**
