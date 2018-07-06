@@ -18,6 +18,8 @@ import Login from 'you-again';
 import {LoginLink, SocialSignInButton} from '../base/components/LoginWidget';
 import {putProfile} from '../base/Profiler';
 
+const loginResponsePath = ['misc', 'login', 'response'];
+
 // TODO merge with MyPage??
 
 // TODO document trkids
@@ -68,75 +70,84 @@ const DonationCard = ({allIds}) => {
 		return <div>No tracking IDs to check {dnt===null? " - Do you have Do-Not-Track switched on?" : null}</div>;
 	}
 
-	let communityTotal = ServerIO.getDataFnData('sum'); // CORS error, must be resolved server side at as.good-loop.com
-
-	const donationsPath = ['widget', 'MyReport', 'donations'];
-	// Get donations by user (including all registered tracking IDs)
-	let pvDonationData = DataStore.fetch(donationsPath, () => {
-		const donationReq = {
-			dataspace: 'gl',
-			q: `evt:donation AND (${allIds})`,
-			breakdown: ['cid{"count": "sum"}'],
-			start: '2018-05-01T00:00:00.000Z'
-		};
-		return ServerIO.getDataLogData(donationReq, null, 'my-donations').then(res => res.cargo);
-	});	
-
-	if ( ! pvDonationData.resolved) {
+	const loginVerifySuccess = DataStore.getValue(loginResponsePath);
+	console.log(loginVerifySuccess);
+	if (loginVerifySuccess === null || loginVerifySuccess === undefined) {
+		// verification hasn't got an answer yet - just show a loading spinner
 		return <Misc.Loading text='Charity Donations' />;
-	}
+	} else if (loginVerifySuccess === false) {
+		return (<div>Please login to see {desc||'this'}. <LoginLink className='btn btn-default' /></div>);
+		// verification has got an answer - the user isn't logged in. So either say "log in to see this" or show them some simpler data which they don't need to be logged in for
+	} else if (loginVerifySuccess) {
+		// verification has got an answer - the user IS logged in! So you can load + display the full data in this case
+		let communityTotal = ServerIO.getDataFnData('sum'); // CORS error, must be resolved server side at as.good-loop.com
 
-	// unwrap the ES aggregation format
-	let donationsByCharity = null;
-	if (pvDonationData.value && pvDonationData.value.by_cid) {
-		donationsByCharity = pivot(pvDonationData.value.by_cid.buckets, "$bi.{key, count.sum.$n}", "$key.$n");
-	}
+		const donationsPath = ['widget', 'MyReport', 'donations'];
+		// Get donations by user (including all registered tracking IDs)
+		let pvDonationData = DataStore.fetch(donationsPath, () => {
+			const donationReq = {
+				dataspace: 'gl',
+				q: `evt:donation AND (${allIds})`,
+				breakdown: ['cid{"count": "sum"}'],
+				start: '2018-05-01T00:00:00.000Z'
+			};
+			return ServerIO.getDataLogData(donationReq, null, 'my-donations').then(res => res.cargo);
+		});	
 
-	// no user donations?
-	if ( ! donationsByCharity) {
-		if ( ! communityTotal.value) {
-			// huh?
-			return <div>(Fail Whale) We could not load the data. Sorry.</div>;
+		// unwrap the ES aggregation format
+		let donationsByCharity = null;
+		if (pvDonationData.value && pvDonationData.value.by_cid) {
+			donationsByCharity = pivot(pvDonationData.value.by_cid.buckets, "$bi.{key, count.sum.$n}", "$key.$n");
 		}
-		// TODO Just show the community total
-		return <div>{JSON.stringify(communityTotal.value)}</div>;
-	}
 
-	// whats their main charity?
-	let topCharityValue = {cid:null, v:0};
-	Object.keys(donationsByCharity).forEach(cid => {
-		let dv = donationsByCharity[cid];
-		if (dv <= topCharityValue.v) return;
-		topCharityValue.cid = cid;
-		topCharityValue.v = dv;
-	});
-	// load the community total for this charity
-	let pvCommunityCharityTotal = DataStore.fetch(['widget','DonationCard','community',topCharityValue.cid], () => {
-		return ServerIO.getCommunityTotal({cid: topCharityValue.cid}); // TODO
-	});
-	
-	// TODO load charity info from SoGive
-	let pvTopCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:topCharityValue.cid, status:C.KStatus.PUBLISHED});
+		// no user donations?
+		if ( ! donationsByCharity) {
+			if ( ! communityTotal.value) {
+				// huh?
+				return <div>(Fail Whale) We could not load the data. Sorry.</div>;
+			}
+			// TODO Just show the community total
+			return <div>{JSON.stringify(communityTotal.value)}</div>;
+		}
+
+		// whats their main charity?
+		let topCharityValue = {cid:null, v:0};
+		Object.keys(donationsByCharity).forEach(cid => {
+			let dv = donationsByCharity[cid];
+			if (dv <= topCharityValue.v) return;
+			topCharityValue.cid = cid;
+			topCharityValue.v = dv;
+		});
+		
+		// load the community total for this charity
+		let pvCommunityCharityTotal = DataStore.fetch(['widget','DonationCard','community',topCharityValue.cid], () => {
+			return ServerIO.getCommunityTotal({cid: topCharityValue.cid}); // TODO
+		});
+		
+		// TODO load charity info from SoGive
+		let pvTopCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:topCharityValue.cid, status:C.KStatus.PUBLISHED});
 
 
-	// TODO display their charity + community donations
-	return 	(<div className='content'>
-		<div className='spinner_wrapper'>
-			<div className='spinner'>
-				<div className='inner_spin'></div>
-				<span className='fullie'>
-					<img src='http://www.eie-invest.com/wp-content/uploads/2017/12/good-loop.png' />
-				</span>
-			</div>
-			<div className='spinner'>
-				<div className='inner_spin'></div>
-				<span className='fullie'>
-					<img src='https://i.imgur.com/wo32xfk.png' />
-				</span>
+		// TODO display their charity + community donations
+		return 	(<div className='content'>
+			<div className='spinner_wrapper'>
+				<div className='spinner'>
+					<div className='inner_spin'></div>
+					<span className='fullie'>
+						<img src='http://www.eie-invest.com/wp-content/uploads/2017/12/good-loop.png' />
+					</span>
+				</div>
+				<div className='spinner'>
+					<div className='inner_spin'></div>
+					<span className='fullie'>
+						<img src='https://i.imgur.com/wo32xfk.png' />
+					</span>
+				</div>
 			</div>
 		</div>
-	</div>
-	);
+		);
+	}
+	return;
 };
 
 const LoginToSee = ({desc}) => <div>Please login to see {desc||'this'}. <LoginLink className='btn btn-default' /></div>;

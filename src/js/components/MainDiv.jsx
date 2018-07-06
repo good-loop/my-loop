@@ -55,6 +55,8 @@ const PAGES = {
 
 const DEFAULT_PAGE = 'my';
 
+const loginResponsePath = ['misc', 'login', 'response'];
+
 /**
 		Top-level: tabs
 */
@@ -80,7 +82,14 @@ class MainDiv extends Component {
 		});
 
 		// Are we logged in?
-		Login.verify();
+		//Login.verify();
+		Login.verify().then((response) => {
+			let success = response.success;
+			console.log(success);
+			DataStore.setValue(loginResponsePath, success, true);
+			// Store response.cargo.success somewhere in datastore so other components can check (a) if it's finished and (b) if it was successful before trying to talk to lg.good-loop.com
+		});
+
 	}
 
 	componentDidCatch(error, info) {
