@@ -72,16 +72,23 @@ const MyPage = () => {
 const WelcomeCard = ({trkIds}) => {
 	return (<div className="header">
 		{Login.isLoggedIn()? 
-			<div className="pull-right logged-in">
-				<p>Hi { Login.getUser().name || Login.getUser().xid }</p>
-				<small className="pull-right"><a href="#my" onClick={e => stopEvent(e) && Login.logout()}>Log out</a></small>
+			<div>
+				<div className="pull-right logged-in">
+					<p>Hi { Login.getUser().name || Login.getUser().xid }</p>
+					<small className="pull-right"><a href="#my" onClick={e => stopEvent(e) && Login.logout()}>Log out</a></small>
+				</div>
+				<div className="header-text">
+					<p className="title">TAKE CONTROL OF YOUR DATA</p>
+					<p className="subtitle">You choose what data you give us<br/> and what we do with it.</p>
+				</div>
 			</div>
-			: <LoginLink className='btn btn-lg btn-red' />				
+			:
+			<div className="header-text">
+				<p className="title">TAKE CONTROL OF YOUR DATA</p>
+				<p className="subtitle">You choose what data you give us<br/> and what we do with it.</p>
+				<LoginLink className='btn btn-lg btn-red' />				
+			</div>
 		}
-		<div className="header-text">
-			<p className="title">TAKE CONTROL OF YOUR DATA</p>
-			<p className="subtitle">You choose what data you give us<br/> and what we do with it.</p>
-		</div>
 	</div>);
 };
 
