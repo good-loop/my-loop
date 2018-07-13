@@ -12,6 +12,13 @@
 	padding-top: 240px;
 	vertical-align: middle; 
 	text-align: center;
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+								  supported by Chrome and Opera */
 }
 
 .title {
@@ -22,12 +29,19 @@
 .subtitle {	
 	letter-spacing: 6px;
 	font-weight: normal;
+	padding-bottom: 10px;
 }
 
 .btn-red{
 	background-color: #B01229;
 	color: white;
 	border-color: white;
+}
+
+.btn.btn-red.focus, .btn.btn-red:focus, .btn.btn-red:hover {
+	background-color: #a50d23;
+	text-decoration: none;
+	color: white;
 }
 
 * {
