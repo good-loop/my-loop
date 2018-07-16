@@ -80,7 +80,12 @@ const DonationCard = ({allIds}) => {
 		// verification has got an answer - the user isn't logged in. So either say "log in to see this" or show them some simpler data which they don't need to be logged in for
 	} else if (loginVerifySuccess) {
 		// verification has got an answer - the user IS logged in! So you can load + display the full data in this case
-		let communityTotal = ServerIO.getDataFnData('sum'); // CORS error, must be resolved server side at as.good-loop.com
+		let communityTotal = DataStore.fetch(['misc','communityTotal'], () => {	
+			return ServerIO.getDataFnData('sum');
+		});
+
+
+
 
 		const donationsPath = ['widget', 'MyReport', 'donations'];
 		// Get donations by user (including all registered tracking IDs)
@@ -103,6 +108,9 @@ const DonationCard = ({allIds}) => {
 		// no user donations?
 		if ( ! donationsByCharity) {
 			if ( ! communityTotal.value) {
+				if ( ! communityTotal.resolved) {
+					return <Misc.Loading />;
+				}
 				// huh?
 				return <div>(Fail Whale) We could not load the data. Sorry.</div>;
 			}
@@ -125,8 +133,9 @@ const DonationCard = ({allIds}) => {
 		});
 		
 		// TODO load charity info from SoGive
+		console.log("HERE");
 		let pvTopCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:topCharityValue.cid, status:C.KStatus.PUBLISHED});
-
+		console.log(pvTopCharity);
 
 		// TODO display their charity + community donations
 		return 	(<div className='content'>
