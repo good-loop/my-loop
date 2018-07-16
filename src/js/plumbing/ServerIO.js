@@ -70,21 +70,5 @@ ServerIO.getDataFnData = ({operator = 'sum'}) => {
 	return ServerIO.load(`${ServerIO.AS_ENDPOINT}/datafn/${operator}`);
 };
 
-/**
- * Get the total donated by Good-Loop users.
- * (copy-pasta from adserver's landing-page frame.js)
- *
- * TODO wire up a which-charity parameter
- */
-ServerIO.getCommunityTotal = function(params) {		
-	let data = {
-		// // TBH none of this is needed
-		// d: params.dataspace,
-		// app: params.app,
-		// t: params.tag
-	};
-
-	return ServerIO.load('/datafn/sum', {data});
-};
 
 // Profiler API: see Profiler.js
