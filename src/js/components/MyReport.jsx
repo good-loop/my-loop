@@ -37,7 +37,11 @@ const MyReport = ({uid, xids}) => {
 		<div>
 			<Misc.CardAccordion widgetName='MyReport' multiple >
 	
-				<Misc.Card title='Donations' defaultOpen><DonationCard allIds={allIds} /></Misc.Card>
+				<Misc.Card title='How It Works' defaultOpen><OnboardingCard allIds={allIds} /></Misc.Card>
+
+				<Misc.Card title='Statistics' defaultOpen><StatisticsCard allIds={allIds} /></Misc.Card>
+
+				<Misc.Card title='Your Donations' defaultOpen><DonationCard allIds={allIds} /></Misc.Card>
 
 				<Misc.Card title='Consent To Track' defaultOpen><ConsentWidget allIds={allIds} /></Misc.Card>
 			
@@ -50,6 +54,89 @@ const MyReport = ({uid, xids}) => {
 	);
 }; // ./TrafficReport
 
+const StatisticsCard = ({allIds}) => {
+	return (<div>
+		<section className="statistics statistics-what section-half section-padding text-center">
+			<div className="statistics-content">
+				<div>
+					<div className="row">
+						<div>
+							<h2 className="h2 text-center">Over half a million pounds raised for charity</h2>
+							<div className="statistics-item statistics-item-central hidden-desktop">
+							</div>
+							<ul className="statistics-list">
+								<li className="statistics-item">
+									<div className="statistics-value" tx-content="exclude">                                  </div>
+								</li>
+								<li className="statistics-item">
+									<div className="statistics-value" tx-content="exclude">
+										<strong tx-content="include">over</strong>
+										<b className="statistics-value-highlight">10,000 <span tx-content="include"></span></b>
+										<strong className="statistics-subtext" tx-content="include">people reached</strong>
+									</div>
+								</li>
+								<li className="statistics-item statistics-item-central">
+									<div className="statistics-value" tx-content="exclude">
+										<strong tx-content="include">over</strong>
+										<b className="statistics-value-highlight">553,000 <span tx-content="include"></span></b>
+										<strong className="statistics-subtext" tx-content="include">pounds raised</strong>
+									</div>
+								</li>
+								<li className="statistics-item">
+									<div className="statistics-value" tx-content="exclude">
+										<strong tx-content="include"> over </strong>
+										<b className="statistics-value-highlight">100</b>
+										<strong className="statistics-subtext" tx-content="include">charities donated towards</strong>
+									</div>
+								</li>
+								<li className="statistics-item">
+									<div className="statistics-value" tx-content="exclude">
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>);
+};
+
+const OnboardingCard = ({allIds}) => {
+	return 	(<div id="howitworks">
+		<section className="how text-center section-padding section-scrolled-to section-half">
+			<div className="how-content">
+				<div className="container-fluid">
+					<div className="row">
+						<div className="offset-xl-2 col-xl-8">
+							<div className="how-list">
+								<ul className="how-steps js-how-steps">
+									<li className="how-step">
+										<span className="how-image">
+											<img className="how-img" src="https://s3-eu-west-1.amazonaws.com/tpd/logos/5a2e64c6c8408508dc743520/0x0.png"/>
+										</span>
+										<span className="how-text">You click on one of our Ads For Good banners</span>
+									</li>
+									<li className="how-step">
+										<span className="how-image">
+											<img className="how-img" src="https://s3-eu-west-1.amazonaws.com/tpd/logos/5a2e64c6c8408508dc743520/0x0.png"/>
+										</span>
+										<span className="how-text">A video ad plays for 15 seconds</span>
+									</li>
+									<li className="how-step">
+										<span className="how-image"><img className="how-img" src="https://s3-eu-west-1.amazonaws.com/tpd/logos/5a2e64c6c8408508dc743520/0x0.png"/></span>
+										<span className="how-text">We donate half the revenue from the ad to your chosen charity</span>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+	);
+};
 
 const DonationCard = ({allIds}) => {
 	if ( ! Login.isLoggedIn()) {
@@ -71,7 +158,7 @@ const DonationCard = ({allIds}) => {
 	}
 
 	const loginVerifySuccess = DataStore.getValue(loginResponsePath);
-	console.log(loginVerifySuccess);
+
 	if (loginVerifySuccess === null || loginVerifySuccess === undefined) {
 		// verification hasn't got an answer yet - just show a loading spinner
 		return <Misc.Loading text='Charity Donations' />;
@@ -83,9 +170,6 @@ const DonationCard = ({allIds}) => {
 		let communityTotal = DataStore.fetch(['misc','communityTotal'], () => {	
 			return ServerIO.getDataFnData('sum');
 		});
-
-
-
 
 		const donationsPath = ['widget', 'MyReport', 'donations'];
 		// Get donations by user (including all registered tracking IDs)
