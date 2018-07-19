@@ -56,6 +56,7 @@ const MyReport = ({uid, xids}) => {
 
 const StatisticsCard = ({allIds}) => {
 	// ??Oh - What's tx-content? ^Dan W
+	// This upsets react - see https://reactjs.org/warnings/unknown-prop.html
 	return (<div>
 		<section className="statistics statistics-what section-half section-padding text-center">
 			<div className="statistics-content">
@@ -204,7 +205,7 @@ const DonationCard = ({allIds}) => {
 		}
 
 		// whats their main charity?
-		let topCharityValue = {cid:null, v:0};
+		const topCharityValue = {cid:null, v:0};
 		Object.keys(donationsByCharity).forEach(cid => {
 			let dv = donationsByCharity[cid];
 			if (dv <= topCharityValue.v) return;
@@ -213,14 +214,16 @@ const DonationCard = ({allIds}) => {
 		});
 		
 		// load the community total for this charity
-		let pvCommunityCharityTotal = DataStore.fetch(['widget','DonationCard','community',topCharityValue.cid], () => {
-			return ServerIO.getDataFnData({cid: topCharityValue.cid});
+		let pvCommunityCharityTotal = DataStore.fetch(['widget','DonationCard','community','allIds'], () => {
+			return ServerIO.getDataFnData();
 		});
 		
-		// TODO load charity info from SoGive
-		console.log("HERE");
-		let pvTopCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:topCharityValue.cid, status:C.KStatus.PUBLISHED});
-		console.log(pvTopCharity);
+		// load charity info from SoGive
+		if (topCharityValue.cid) {
+			let pvTopCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:topCharityValue.cid, status:C.KStatus.PUBLISHED});
+			console.log(pvTopCharity);
+			// {cid: topCharityValue.cid}
+		}		
 
 		// TODO display their charity + community donations
 		return 	(<div className='content'>
