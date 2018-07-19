@@ -45,7 +45,7 @@ const MyPage = () => {
 		// use the current one?
 		if (currentTrkId) trkIds=[currentTrkId];
 		// put them in datastore whether we've updated profile or not
-		DataStore.setValue(trkIdPath, trkIds);
+		DataStore.setValue(trkIdPath, trkIds, false);
 	}
 
 

@@ -66,8 +66,8 @@ ServerIO.getDataLogData = (filters, breakdowns, name) => {
  * Right now: just get sum of all spending (NB multiply by 0.5 to get charity donations - this may change in future)
  * @param {operator}
  */
-ServerIO.getDataFnData = ({operator = 'sum'}) => {
-	return ServerIO.load(`${ServerIO.AS_ENDPOINT}/datafn/${operator}`);
+ServerIO.getDataFnData = ({operator = 'sum', cid}) => {
+	return ServerIO.load(`${ServerIO.AS_ENDPOINT}/datafn/${operator}`, {data: {cid}} );
 };
 
 

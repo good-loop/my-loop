@@ -55,6 +55,7 @@ const MyReport = ({uid, xids}) => {
 }; // ./TrafficReport
 
 const StatisticsCard = ({allIds}) => {
+	// ??Oh - What's tx-content? ^Dan W
 	return (<div>
 		<section className="statistics statistics-what section-half section-padding text-center">
 			<div className="statistics-content">
@@ -213,7 +214,7 @@ const DonationCard = ({allIds}) => {
 		
 		// load the community total for this charity
 		let pvCommunityCharityTotal = DataStore.fetch(['widget','DonationCard','community',topCharityValue.cid], () => {
-			return ServerIO.getCommunityTotal({cid: topCharityValue.cid}); // TODO
+			return ServerIO.getDataFnData({cid: topCharityValue.cid});
 		});
 		
 		// TODO load charity info from SoGive
