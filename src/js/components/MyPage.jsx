@@ -1,25 +1,32 @@
-/* global Login */
 import React from 'react';
-import Login from 'you-again';
+import _ from 'lodash';
+import { assert, assMatch } from 'sjtest';
+import { XId, modifyHash, stopEvent, encURI } from 'wwutils';
+import pivot from 'data-pivot';
 
+import C from '../C';
+import printer from '../base/utils/printer';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
-import ActionMan from '../plumbing/ActionMan';
+import ChartWidget from '../base/components/ChartWidget';
 import Person from '../base/data/Person';
-import {stopEvent} from 'wwutils';
 import Misc from '../base/components/Misc';
-import MyReport from './MyReport';
-import { LoginWidgetEmbed, LoginLink, LoginButton } from '../base/components/LoginWidget';
+import CardAccordion, {Card} from '../base/components/CardAccordion';
+import ActionMan from '../plumbing/ActionMan';
+import SearchQuery from '../searchquery';
+import md5 from 'md5';
+import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
+import Login from 'you-again';
+import {LoginLink, SocialSignInButton} from '../base/components/LoginWidget';
+import ConsentWidget from './ConsentWidget';
+
+const loginResponsePath = ['misc', 'login', 'response'];
 
 const trkIdPath = ['misc', 'trkids'];
 
-// const FIELDS = {
-// 	trackIds: 'gl.trkids',
-// 	consent: 'gl.consent',
-// };
+// TODO merge with MyPage??
 
-// const profileFields = [FIELDS.trackIds, FIELDS.consent];
-
+// TODO document trkids
 const MyPage = () => {
 	const trkIdMatches = document.cookie.match('trkid=([^;]+)');
 	const currentTrkId = trkIdMatches && trkIdMatches[1];
@@ -57,16 +64,40 @@ const MyPage = () => {
 	let linkedIds = Person.linkedIds(peep);
 	xids = xids.concat(linkedIds);
 
+
+	if ( ! xids) xids=[];
+	// paths for storing data
+	const basePath = ['widget', 'MyReport'];
+
+	// TODO pass around lists and turn into strings later
+	// "user:trkid1@trk OR user:trkid2@trk OR ..."
+	const allIds = xids.map(trkid => 'user:' + trkid).join(' OR ');
+
 	// display...
 	return (
 		<div className="page MyPage">
-			<Misc.Card>
-				<WelcomeCard currentTrkId={currentTrkId} trkIds={trkIds} />
-			</Misc.Card>
-			<MyReport uid={xid} xids={xids} trkids={trkIds} />
+			<Misc.CardAccordion widgetName='MyReport' multiple >
+	
+				<Misc.Card defaultOpen>
+					<WelcomeCard currentTrkId={currentTrkId} trkIds={trkIds} />
+				</Misc.Card>
+
+				<Misc.Card title='Statistics' defaultOpen><StatisticsCard allIds={allIds} /></Misc.Card>
+
+				<Misc.Card title='How Good-Loop Ads Work' defaultOpen><OnboardingCard allIds={allIds} /></Misc.Card>				
+
+				<Misc.Card title='Your Donations' defaultOpen><DonationCard allIds={allIds} /></Misc.Card>
+
+				<Misc.Card title='Consent To Track' defaultOpen><ConsentWidget allIds={allIds} /></Misc.Card>
+			
+				<Misc.Card defaultOpen><FBCard allIds={xids} /></Misc.Card>
+
+				<Misc.Card defaultOpen><TwitterCard allIds={xids} /></Misc.Card>
+			
+			</Misc.CardAccordion>
 		</div>
 	);
-}; // ./DashboardPage
+}; // ./MyPage
 
 
 const WelcomeCard = ({trkIds}) => {
@@ -90,6 +121,200 @@ const WelcomeCard = ({trkIds}) => {
 			</div>
 		}
 	</div>);
+};
+
+const StatisticsCard = ({allIds}) => {
+	// ??Oh - What's tx-content? ^Dan W
+	// This upsets react - see https://reactjs.org/warnings/unknown-prop.html
+	return (<div>
+		<section className="statistics statistics-what section-half section-padding text-center">
+			<div className="statistics-content">
+				<div>
+					<div className="row">
+						<div>
+							<h2 className="h2 text-center">Over half a million pounds raised for charity</h2>
+							<div className="statistics-item statistics-item-central hidden-desktop">
+							</div>
+							<ul className="statistics-list">
+								<li className="statistics-item">
+									<div className="statistics-value" tx-content="exclude">                                  </div>
+								</li>
+								<li className="statistics-item">
+									<div className="statistics-value" tx-content="exclude">
+										<strong tx-content="include">over</strong>
+										<b className="statistics-value-highlight">10,000 <span tx-content="include"></span></b>
+										<strong className="statistics-subtext" tx-content="include">people reached</strong>
+									</div>
+								</li>
+								<li className="statistics-item statistics-item-central">
+									<div className="statistics-value" tx-content="exclude">
+										<strong tx-content="include">over</strong>
+										<b className="statistics-value-highlight">553,000 <span tx-content="include"></span></b>
+										<strong className="statistics-subtext" tx-content="include">pounds raised</strong>
+									</div>
+								</li>
+								<li className="statistics-item">
+									<div className="statistics-value" tx-content="exclude">
+										<strong tx-content="include"> over </strong>
+										<b className="statistics-value-highlight">100</b>
+										<strong className="statistics-subtext" tx-content="include">charities donated towards</strong>
+									</div>
+								</li>
+								<li className="statistics-item">
+									<div className="statistics-value" tx-content="exclude">
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>);
+};
+
+const OnboardingCard = ({allIds}) => {
+	return 	(<div id="howitworks">
+		<section className="how text-center section-padding section-scrolled-to section-half">
+			<div className="how-content">
+				<div className="container-fluid">
+					<div className="row">
+						<div className="offset-xl-2 col-xl-8">
+							<div className="how-list">
+								<ul className="how-steps js-how-steps">
+									<li className="how-step">
+										<span className="how-image">
+											<img className="how-img" src="https://s3-eu-west-1.amazonaws.com/tpd/logos/5a2e64c6c8408508dc743520/0x0.png"/>
+										</span>
+										<span className="how-text">You click on one of our Ads For Good banners</span>
+									</li>
+									<li className="how-step">
+										<span className="how-image">
+											<img className="how-img" src="https://s3-eu-west-1.amazonaws.com/tpd/logos/5a2e64c6c8408508dc743520/0x0.png"/>
+										</span>
+										<span className="how-text">A video ad plays for 15 seconds</span>
+									</li>
+									<li className="how-step">
+										<span className="how-image"><img className="how-img" src="https://s3-eu-west-1.amazonaws.com/tpd/logos/5a2e64c6c8408508dc743520/0x0.png"/></span>
+										<span className="how-text">We donate half the revenue from the ad to your chosen charity</span>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+	);
+};
+
+
+const DonationCard = ({allIds}) => {
+	if ( ! Login.isLoggedIn()) {
+		return <LoginToSee />;
+	}
+	// No IDs?
+	if ( ! allIds) {
+		let dnt = null;
+		try {
+			if (navigator.doNotTrack == "1") dnt = true;
+			if (navigator.doNotTrack == "0") dnt = false;
+		} catch (err) {
+			console.warn("DNT check failed", err);
+		}
+		if (dnt) {
+			return <div>No tracking IDs to check - You have Do-Not-Track switched on, so we're not tracking you!</div>;	
+		}
+		return <div>No tracking IDs to check {dnt===null? " - Do you have Do-Not-Track switched on?" : null}</div>;
+	}
+
+	const donationsPath = ['widget', 'MyReport', 'donations'];
+	// Get donations by user (including all registered tracking IDs)
+	let pvDonationData = DataStore.fetch(donationsPath, () => {
+		const donationReq = {
+			dataspace: 'gl',
+			q: `evt:donation AND (${allIds})`,
+			breakdown: ['cid{"count": "sum"}'],
+			start: '2018-05-01T00:00:00.000Z'
+		};
+		return ServerIO.getDataLogData(donationReq, null, 'my-donations').then(res => res.cargo);
+	});	
+
+	// unwrap the ES aggregation format
+	let donationsByCharity = null;
+	if (pvDonationData.value && pvDonationData.value.by_cid) {
+		donationsByCharity = pivot(pvDonationData.value.by_cid.buckets, "$bi.{key, count.sum.$n}", "$key.$n");
+	}
+
+	// no user donations?
+	if ( ! donationsByCharity) {
+		return <Misc.Loading />;
+	}
+
+	// whats their main charity?
+	const topCharityValue = {cid:null, v:0};
+	Object.keys(donationsByCharity).forEach(cid => {
+		let dv = donationsByCharity[cid];
+		if (dv <= topCharityValue.v) return;
+		topCharityValue.cid = cid;
+		topCharityValue.v = dv;
+	});
+	
+	// load the community total for this charity
+	let pvCommunityCharityTotal = DataStore.fetch(['widget','DonationCard','community','allIds'], () => {
+		return ServerIO.getDataFnData();
+	});
+	
+	// load charity info from SoGive
+	if (topCharityValue.cid) {
+		let pvTopCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:topCharityValue.cid, status:C.KStatus.PUBLISHED});
+		console.log(pvTopCharity);
+		// {cid: topCharityValue.cid}
+	}		
+
+	// TODO display their charity + community donations
+	return 	(<div className='content'>
+		<div className='spinner_wrapper'>
+			<div className='spinner'>
+				<div className='inner_spin'></div>
+				<span className='fullie'>
+					<img src='http://www.eie-invest.com/wp-content/uploads/2017/12/good-loop.png' />
+				</span>
+			</div>
+			<div className='spinner'>
+				<div className='inner_spin'></div>
+				<span className='fullie'>
+					<img src='https://i.imgur.com/wo32xfk.png' />
+				</span>
+			</div>
+		</div>
+	</div>
+	);
+}; // ./DonationsCard
+
+
+const LoginToSee = ({desc}) => <div>Please login to see {desc||'this'}. <LoginLink className='btn btn-default' /></div>;
+
+
+/**
+ * Facebook card
+ */
+const FBCard = ({allIds=[]}) => {
+	let fbid = allIds.filter(id => XId.service(id)==='facebook')[0];
+	if ( ! fbid) {
+		return <div><SocialSignInButton service='facebook' verb='connect' /></div>;
+	}
+	return <div>Facebook ID: {XId.id(fbid)}</div>; // TODO show some data about them from FB
+};
+
+
+const TwitterCard = ({allIds=[]}) => {
+	let fbid = allIds.filter(id => XId.service(id)==='twitter')[0];
+	if ( ! fbid) {
+		return <div><SocialSignInButton service='twitter' verb='connect' /></div>;
+	}
+	return <div>Twitter username: {XId.id(fbid)}</div>; // TODO show some data about them from FB
 };
 
 export default MyPage;

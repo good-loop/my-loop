@@ -152,6 +152,7 @@ p > a:hover {
 	opacity: .25;
 }
 
+// ?? What is this for? Thanks. ^Dan
 img {
 	width: 20em-1;
 	height: 20em-1;
@@ -226,30 +227,21 @@ img {
 	width: 120px;
 }
 
-.statistics-what {
-	width: 100%;
-	display: table;
-}
-
 .section-padding {
     padding-top: 20px;
     padding-bottom: 20px;
 }
   
 .statistics-list {
-    display: table;
-    width: 100%;
-    margin-bottom: 30px;
-    max-width: 100%;
-    padding: 0 !important;
+	display: table;
+	width: 100%;
+	margin-bottom: 30px;
+	max-width: 100%;
+	padding: 0 !important;
 	margin: 35px auto 0;
-}
- 
-.statistics-what .statistics-list {
 	margin-top: 30px;
 	min-height: 100px;
 	height: 100px;
-	margin-bottom: 5px;
 	vertical-align: bottom;
 }
 
@@ -264,31 +256,23 @@ img {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     overflow: hidden;
-} 
- 
-.statistics-what .statistics-value {
-    text-transform: uppercase;
-}
 
-.statistics-value {
-    vertical-align: middle;
-}
-
-.statistics-what .statistics-value-highlight {
-    margin-top: 5px;
-}
-
-.statistics-value-highlight {
-    position: relative;
-    display: block;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    font-size: 24px;
-    text-transform: none;
-    color: #4a4a4a;
-}
-
-.statistics-what .statistics-subtext {
-    display: block;
-    min-height: 36px;
-}
+	.statistics-value {
+		text-transform: uppercase;
+		vertical-align: middle;
+		.statistics-value-highlight {
+			margin-top: 5px;
+			position: relative;
+			display: block;
+			padding-bottom: 10px;
+			margin-bottom: 10px;
+			font-size: 24px;
+			text-transform: none;
+			color: #4a4a4a;	
+		}
+	}
+	.statistics-subtext {
+		display: block;
+		min-height: 36px;
+  }
+} // ./statistics-item
