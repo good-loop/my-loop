@@ -128,6 +128,14 @@ const WelcomeCard = ({trkIds}) => {
 const StatisticsCard = ({allIds}) => {
 	// ??Oh - What's tx-content? ^Dan W
 	// This upsets react - see https://reactjs.org/warnings/unknown-prop.html
+
+	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
+		return ServerIO.getDataFnData({});
+	});
+	if ( ! pvSum.resolved) {
+		return <Misc.Loading text='...counting kittens...' />;
+	}
+
 	return (<div>
 		<section className="statistics statistics-what section-half section-padding text-center">
 			<div className="statistics-content">
@@ -176,6 +184,7 @@ const StatisticsCard = ({allIds}) => {
 };
 
 const OnboardingCard = ({allIds}) => {
+	let step1Img = 'https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,fl_lossy,h_1440,w_720,f_auto,q_auto/v1/722207/banner-illustration-publisher-no-hearts_lppr8a.jpg';
 	return 	(<div id="howitworks">
 		<section className="how text-center section-padding section-scrolled-to section-half">
 			<div className="how-content">
@@ -186,7 +195,7 @@ const OnboardingCard = ({allIds}) => {
 								<ul className="how-steps js-how-steps">
 									<li className="how-step">
 										<span className="how-image">
-											<img className="how-img" src="https://s3-eu-west-1.amazonaws.com/tpd/logos/5a2e64c6c8408508dc743520/0x0.png"/>
+											<img className="how-img" src={step1Img} alt='banners in a web page' />
 										</span>
 										<span className="how-text">You click on one of our Ads For Good banners</span>
 									</li>
@@ -216,6 +225,12 @@ const DonationCard = ({allIds}) => {
 	if ( ! Login.isLoggedIn()) {
 		return <LoginToSee />;
 	}
+	if ( ! Login.getUser().jwt) {
+		DataStore.fetch(['transient','jwt',Login.getId()], () => {
+			return Login.verify();
+		});
+		return <Misc.Loading text='Clearing security' />;
+	}
 	// No IDs?
 	if ( ! allIds) {
 		let dnt = null;
@@ -233,25 +248,27 @@ const DonationCard = ({allIds}) => {
 
 	const donationsPath = ['widget', 'MyReport', 'donations'];
 	// Get donations by user (including all registered tracking IDs)
+	let start = '2018-05-01T00:00:00.000Z'; // ??is there a data issue if older??
 	let pvDonationData = DataStore.fetch(donationsPath, () => {
 		const donationReq = {
 			dataspace: 'gl',
 			q: `evt:donation AND (${allIds})`,
 			breakdown: ['cid{"count": "sum"}'],
-			start: '2018-05-01T00:00:00.000Z'
+			start
 		};
 		return ServerIO.getDataLogData(donationReq, null, 'my-donations').then(res => res.cargo);
 	});	
 
-	// unwrap the ES aggregation format
-	let donationsByCharity = null;
-	if (pvDonationData.value && pvDonationData.value.by_cid) {
-		donationsByCharity = pivot(pvDonationData.value.by_cid.buckets, "$bi.{key, count.sum.$n}", "$key.$n");
+	if ( ! pvDonationData.resolved) {
+		return <Misc.Loading text='Donations data' />;
 	}
+
+	// unwrap the ES aggregation format
+	let donationsByCharity = pivot(pvDonationData.value.by_cid.buckets, "$bi.{key, count.sum.$n}", "$key.$n");
 
 	// no user donations?
 	if ( ! donationsByCharity) {
-		return <Misc.Loading />;
+		return <p>No charity data for {allIds}</p>;
 	}
 
 	// whats their main charity?
@@ -263,19 +280,27 @@ const DonationCard = ({allIds}) => {
 		topCharityValue.v = dv;
 	});
 	
+	if ( ! topCharityValue.cid) {
+		return <p>No top charity</p>;
+	}
+
 	// load the community total for this charity
-	let pvCommunityCharityTotal = DataStore.fetch(['widget','DonationCard','community','allIds'], () => {
-		return ServerIO.getDataFnData();
-	});
+	let pvCommunityCharityTotal = DataStore.fetch(['widget','DonationCard','community'], () => {
+		const donationReq = {
+			dataspace: 'gl',
+			q: 'evt:donation AND cid:'+topCharityValue.cid,
+			breakdown: ['cid{"count": "sum"}'],
+			start
+		};
+		return ServerIO.getDataLogData(donationReq, null, 'community-donations').then(res => res.cargo);
+	});	
+
 	
 	// load charity info from SoGive
-	if (topCharityValue.cid) {
-		let pvTopCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:topCharityValue.cid, status:C.KStatus.PUBLISHED});
-		console.log(pvTopCharity);
-		// {cid: topCharityValue.cid}
-	}		
+	let pvTopCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:topCharityValue.cid, status:C.KStatus.PUBLISHED});
+	console.log(pvTopCharity);
 
-	// TODO display their charity + community donations
+	// Display their charity + community donations
 	return 	(<div className='content'>
 		<div className='spinner_wrapper'>
 			<div className='spinner'>
