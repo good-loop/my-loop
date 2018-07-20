@@ -90,9 +90,11 @@ const MyPage = () => {
 
 				<Misc.Card title='Consent To Track' defaultOpen><ConsentWidget allIds={allIds} /></Misc.Card>
 			
-				<Misc.Card defaultOpen><FBCard allIds={xids} /></Misc.Card>
+				<Misc.Card title='Email' defaultOpen><EmailCard allIds={xids} /></Misc.Card>
 
-				<Misc.Card defaultOpen><TwitterCard allIds={xids} /></Misc.Card>
+				<Misc.Card title='Facebook' defaultOpen><FBCard allIds={xids} /></Misc.Card>
+
+				<Misc.Card title='Twitter' defaultOpen><TwitterCard allIds={xids} /></Misc.Card>
 			
 			</Misc.CardAccordion>
 		</div>
@@ -295,6 +297,16 @@ const DonationCard = ({allIds}) => {
 
 
 const LoginToSee = ({desc}) => <div>Please login to see {desc||'this'}. <LoginLink className='btn btn-default' /></div>;
+
+
+const EmailCard = ({allIds=[]}) => {
+	let fbid = allIds.filter(id => XId.service(id)==='email')[0];
+	if (fbid) {
+		// verified??
+		return null;
+	}
+	return <div>TODO email capture</div>;	
+};
 
 
 /**
