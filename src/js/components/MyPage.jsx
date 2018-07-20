@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import { assert, assMatch } from 'sjtest';
-import { XId, modifyHash, stopEvent, encURI } from 'wwutils';
+import { XId, modifyHash, stopEvent, encURI, yessy } from 'wwutils';
 import pivot from 'data-pivot';
 
 import C from '../C';
@@ -31,7 +31,7 @@ const MyPage = () => {
 	const trkIdMatches = document.cookie.match('trkid=([^;]+)');
 	const currentTrkId = trkIdMatches && trkIdMatches[1];
 
-	let {xid, name} = Login.getUser() || {};
+	let xid = Login.getId(); // NB: can be null
 
 	// fetch profile
 	let pvProfile = ActionMan.getProfile({xid});
@@ -55,7 +55,6 @@ const MyPage = () => {
 		DataStore.setValue(trkIdPath, trkIds, false);
 	}
 
-
 	// all the users IDs
 	let xids = trkIds || [];
 	if (Login.getId()) xids.push(Login.getId());
@@ -64,10 +63,7 @@ const MyPage = () => {
 	let linkedIds = Person.linkedIds(peep);
 	xids = xids.concat(linkedIds);
 
-
 	if ( ! xids) xids=[];
-	// paths for storing data
-	const basePath = ['widget', 'MyReport'];
 
 	// TODO pass around lists and turn into strings later
 	// "user:trkid1@trk OR user:trkid2@trk OR ..."
@@ -79,10 +75,10 @@ const MyPage = () => {
 			<Misc.CardAccordion widgetName='MyReport' multiple >
 	
 				<Misc.Card defaultOpen>
-					<WelcomeCard currentTrkId={currentTrkId} trkIds={trkIds} />
+					<WelcomeCard />
 				</Misc.Card>
 
-				<Misc.Card title='Statistics' defaultOpen><StatisticsCard allIds={allIds} /></Misc.Card>
+				<Misc.Card title='Our Achievements Together' defaultOpen><StatisticsCard allIds={allIds} /></Misc.Card>
 
 				<Misc.Card title='How Good-Loop Ads Work' defaultOpen><OnboardingCard allIds={allIds} /></Misc.Card>				
 
@@ -102,7 +98,7 @@ const MyPage = () => {
 }; // ./MyPage
 
 
-const WelcomeCard = ({trkIds}) => {
+const WelcomeCard = () => {
 	return (<div className="header">
 		{Login.isLoggedIn()? 
 			<div>
@@ -232,14 +228,15 @@ const DonationCard = ({allIds}) => {
 		return <Misc.Loading text='Clearing security' />;
 	}
 	// No IDs?
+	let dnt = null;
+	try {
+		if (navigator.doNotTrack == "1") dnt = true;
+		if (navigator.doNotTrack == "0") dnt = false;
+	} catch (err) {
+		console.warn("DNT check failed", err);
+	}
+
 	if ( ! allIds) {
-		let dnt = null;
-		try {
-			if (navigator.doNotTrack == "1") dnt = true;
-			if (navigator.doNotTrack == "0") dnt = false;
-		} catch (err) {
-			console.warn("DNT check failed", err);
-		}
 		if (dnt) {
 			return <div>No tracking IDs to check - You have Do-Not-Track switched on, so we're not tracking you!</div>;	
 		}
@@ -267,8 +264,11 @@ const DonationCard = ({allIds}) => {
 	let donationsByCharity = pivot(pvDonationData.value.by_cid.buckets, "$bi.{key, count.sum.$n}", "$key.$n");
 
 	// no user donations?
-	if ( ! donationsByCharity) {
-		return <p>No charity data for {allIds}</p>;
+	if ( ! yessy(donationsByCharity)) {
+		if (dnt) {
+			return <div>No charity data... You have Do-Not-Track switched on, so we're not tracking you!</div>;
+		}
+		return <p>No charity data for {allIds}. </p>;
 	}
 
 	// whats their main charity?
