@@ -37,7 +37,7 @@ const ConsentWidget = ({person}) => {
 
 			<p>It's your data: You can change your mind at any time (just edit these settings). 
 			You can see and control your profile data.
-			For more details see our Privacy Manifesto.</p>
+			For more details see our <a href="https://www.good-loop.com/privacy-policy">Privacy Manifesto</a>.</p>
 		</div>
 	);
 };
