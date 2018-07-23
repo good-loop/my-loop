@@ -41,9 +41,23 @@ ServerIO.getUrlForItem = ({type, id, status}) => {
 	let url = '/'+servlet+'/'+encURI(id)+'.json';
 	if (C.TYPES.isNGO(type)) {
 		// HACK: call SoGive
-		url = 'https://app.sogive.org/charity/'+encURI(id)+'.json';
+		// HACK: id matching
+		let sogiveId = getSoGiveID(id);
+		url = 'https://app.sogive.org/charity/'+encURI(sogiveId)+'.json';
 	}
 	return url;
+};
+
+/**
+ * HACK replace known mis-matches
+ * @param {!String} id 
+ */
+const getSoGiveID = id => {
+	let sid = {
+		// known mis-matched IDs
+	}[id];
+	if (sid) return sid;
+	return id;
 };
 
 /**

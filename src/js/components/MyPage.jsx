@@ -301,7 +301,8 @@ const DonationCard = ({allIds}) => {
 
 	
 	// load charity info from SoGive
-	let pvTopCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:topCharityValue.cid, status:C.KStatus.PUBLISHED});
+	// NB: can 404
+	let pvTopCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:topCharityValue.cid, status:C.KStatus.PUBLISHED, swallow:true});
 	console.log(pvTopCharity);
 
 	// Display their charity + community donations
