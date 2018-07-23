@@ -149,7 +149,7 @@ const StatisticsCard = ({allIds}) => {
 								<li className="statistics-item">
 									<div className="statistics-value" tx-content="exclude">
 										<strong tx-content="include">over</strong>
-										<b className="statistics-value-highlight">10,000 <span tx-content="include"></span></b>
+										<b className="statistics-value-highlight">100,000 <span tx-content="include"></span></b>
 										<strong className="statistics-subtext" tx-content="include">people reached</strong>
 									</div>
 								</li>
