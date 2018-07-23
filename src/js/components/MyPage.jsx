@@ -85,6 +85,8 @@ const MyPage = () => {
 				<Misc.Card title='Your Donations' defaultOpen><DonationCard allIds={allIds} /></Misc.Card>
 
 				<Misc.Card title='Consent To Track' defaultOpen><ConsentWidget allIds={allIds} /></Misc.Card>
+
+				<Misc.Card title='Boost Your Impact' defaultOpen><SocialMediaCard allIds={xids} /></Misc.Card>
 			
 				<Misc.Card title='Email' defaultOpen><EmailCard allIds={xids} /></Misc.Card>
 
@@ -316,35 +318,29 @@ const DonationCard = ({allIds}) => {
 
 const LoginToSee = ({desc}) => <div>Please login to see {desc||'this'}. <LoginLink className='btn btn-default' /></div>;
 
-
-const EmailCard = ({allIds=[]}) => {
-	let fbid = allIds.filter(id => XId.service(id)==='email')[0];
-	if (fbid) {
-		// verified??
-		return null;
-	}
-	return <div>TODO email capture</div>;	
-};
-
-
-/**
- * Facebook card
- */
-const FBCard = ({allIds=[]}) => {
+const SocialMediaCard = ({allIds=[]}) => {
+	let emailID = allIds.filter(id => XId.service(id)==='email')[0];
+	let twitterID = allIds.filter(id => XId.service(id)==='twitter')[0];
 	let fbid = allIds.filter(id => XId.service(id)==='facebook')[0];
-	if ( ! fbid) {
-		return <div><SocialSignInButton service='facebook' verb='connect' /></div>;
-	}
-	return <div>Facebook ID: {XId.id(fbid)}</div>; // TODO show some data about them from FB
-};
 
-
-const TwitterCard = ({allIds=[]}) => {
-	let fbid = allIds.filter(id => XId.service(id)==='twitter')[0];
-	if ( ! fbid) {
-		return <div><SocialSignInButton service='twitter' verb='connect' /></div>;
-	}
-	return <div>Twitter username: {XId.id(fbid)}</div>; // TODO show some data about them from FB
+	return (<div>
+		{emailID ? 
+			null
+			: 
+			<div> TODO: email capture </div>
+		}
+		{twitterID ? 
+			<div>Twitter username: {XId.id(fbid)}</div> // TODO show some data about them from Twitter
+			: 
+			<div><SocialSignInButton service='twitter' verb='connect' /></div>
+		}
+		{fbid ? 
+			<div>Facebook ID: {XId.id(fbid)}</div> // TODO show some data about them from FB
+			: 
+			<div><SocialSignInButton service='facebook' verb='connect' /></div>
+		} 
+	</div>
+	);
 };
 
 const ContactCard = () => {
