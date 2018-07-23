@@ -87,12 +87,6 @@ const MyPage = () => {
 				<Misc.Card title='Consent To Track' defaultOpen><ConsentWidget allIds={allIds} /></Misc.Card>
 
 				<Misc.Card title='Boost Your Impact' defaultOpen><SocialMediaCard allIds={xids} /></Misc.Card>
-			
-				<Misc.Card title='Email' defaultOpen><EmailCard allIds={xids} /></Misc.Card>
-
-				<Misc.Card title='Facebook' defaultOpen><FBCard allIds={xids} /></Misc.Card>
-
-				<Misc.Card title='Twitter' defaultOpen><TwitterCard allIds={xids} /></Misc.Card>
 
 				<Misc.Card title='Get In Touch' defaultOpen><ContactCard allIds={allIds} /></Misc.Card>
 			
