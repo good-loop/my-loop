@@ -2,14 +2,15 @@
 
 .header {
 	background-color: #B01229;
-	min-height: 600px;
+	min-height: 500px;
 	font-family: 'Actor';
 	font-size: 25px;
 	color: white;
+	padding: 0px;
 }
 
 .header-text{
-	padding-top: 240px;
+	padding-top: 180px;
 	vertical-align: middle; 
 	text-align: center;
 	-webkit-touch-callout: none; /* iOS Safari */
@@ -48,13 +49,6 @@
 	box-sizing: border-box;
 }
 
-html {
-	background: url(http://subtlepatterns.subtlepatterns.netdna-cdn.com/patterns/bedge_grunge.png) repeat;
-}
-
-body {
-	color: #222;
-}
 
 .intro {
 	text-align: center;
@@ -83,83 +77,6 @@ p > a:hover {
 	border-bottom: 1px dotted;
 }
 
-.content {
-	width: 90%;
-	margin: 0 auto;
-}
-
-.spinner_wrapper {
-	width: 72em;
-	margin: 0 auto;
-}
-
-.spinner {
-	width: 20em;
-	height: 20em;
-	margin: 0 2em;
-	cursor: pointer;
-	position: relative;
-	float: left;
-}
-
-.inner_spin {
-	width: 20em;
-	height: 20em;
-	border: 9px solid #105B63;
-	border-right-color: #FFD34E;
-	border-bottom-color: #FFD34E;
-	border-radius: 50%;
-	transition: transform 1s;
-  /* Hardware acceleration FTW! */
-	transform: translateZ(0);
-}
-
-.level {
-	transform: translateZ(0) rotate(45deg);
-}
-
-.fullie, .halfie {
-	display: block;
-	margin: 0 auto;
-	position: absolute;
-}
-
-.fullie {
-	width: 19em;
-	height: 19em;
-	background: #930a1e;
-	border-radius: 19em;
-	z-index: 2;
-	top: 50%;
-	left: 50%;
-	margin-top: -9.5em;
-	margin-left: -9.5em;
-}
-
-.spinner:hover {
-	opacity: .95;
-}
-
-.spinner:hover .inner_spin {
-	transform: rotate(180deg);
-}
-
-.spinner:hover .level {
-	transform: rotate(225deg);
-}
-
-.spinner:hover img {
-	opacity: .25;
-}
-
-// ?? What is this for? Thanks. It should probably be a more targetted rule ^Dan
-// img {
-// 	width: 20em-1;
-// 	height: 20em-1;
-// 	border-radius: 20em-1;
-// 	opacity: 1;
-// 	-webkit-transition: all 1s;
-// }
 
 .logged-in {
 	padding-right: 10px;
@@ -260,6 +177,7 @@ p > a:hover {
 	.statistics-value {
 		text-transform: uppercase;
 		vertical-align: middle;
+
 		.statistics-value-highlight {
 			margin-top: 5px;
 			position: relative;
@@ -269,6 +187,19 @@ p > a:hover {
 			font-size: 24px;
 			text-transform: none;
 			color: #4a4a4a;	
+			font-weight: bold;
+		}
+
+		.statistics-value-highlight::after {
+			display: block;
+			position: absolute;
+			content: "";
+			bottom: 0;
+			left: 50%;
+			margin-left: -51px;
+			width: 102px;
+			height: 5px;
+			background: #930a1e;
 		}
 	}
 	.statistics-subtext {
@@ -276,3 +207,8 @@ p > a:hover {
 		min-height: 36px;
   }
 } // ./statistics-item
+
+.text-stat {
+	font-size: 19px;
+	padding-bottom: 2px;
+}
