@@ -91,6 +91,8 @@ const MyPage = () => {
 				<Misc.Card title='Facebook' defaultOpen><FBCard allIds={xids} /></Misc.Card>
 
 				<Misc.Card title='Twitter' defaultOpen><TwitterCard allIds={xids} /></Misc.Card>
+
+				<Misc.Card title='Get In Touch' defaultOpen><ContactCard allIds={allIds} /></Misc.Card>
 			
 			</Misc.CardAccordion>
 		</div>
@@ -121,7 +123,7 @@ const WelcomeCard = () => {
 	</div>);
 };
 
-const StatisticsCard = ({allIds}) => {
+const StatisticsCard = ({allIds}) => { 
 
 	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
 		return ServerIO.getDataFnData({});
@@ -147,16 +149,16 @@ const StatisticsCard = ({allIds}) => {
 								</li>
 								<li className="statistics-item">
 									<div className="statistics-value">
-										<strong>over</strong>
-										<b className="statistics-value-highlight">100,000 <span></span></b>
+										<strong></strong>
+										<div className="statistics-value-highlight">10,000 <span></span></div>
 										<strong className="statistics-subtext">people reached</strong>
 									</div>
 								</li>
 								<li className="statistics-item statistics-item-central">
 									<div className="statistics-value">
-										<strong>over</strong>
+										<strong> </strong>
 										<div className="statistics-value-highlight">
-											<Misc.Money amount={ttl} />										
+											<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={2} showCurrencySymbol={false} />										
 											<span></span>
 										</div>
 										<strong className="statistics-subtext">pounds raised</strong>
@@ -164,9 +166,9 @@ const StatisticsCard = ({allIds}) => {
 								</li>
 								<li className="statistics-item">
 									<div className="statistics-value">
-										<strong> over </strong>
-										<b className="statistics-value-highlight">10 ??show some logos instead</b>
-										<strong className="statistics-subtext">charities donated towards</strong>
+										<strong></strong>
+										<div className="statistics-value-highlight"><div className="text-stat">No compromises</div></div>
+										<strong className="statistics-subtext">on your privacy</strong>
 									</div>
 								</li>
 								<li className="statistics-item">
@@ -306,20 +308,7 @@ const DonationCard = ({allIds}) => {
 
 	// Display their charity + community donations
 	return 	(<div className='content'>
-		<div className='spinner_wrapper'>
-			<div className='spinner'>
-				<div className='inner_spin'></div>
-				<span className='fullie'>
-					<img src='http://www.eie-invest.com/wp-content/uploads/2017/12/good-loop.png' />
-				</span>
-			</div>
-			<div className='spinner'>
-				<div className='inner_spin'></div>
-				<span className='fullie'>
-					<img src='https://i.imgur.com/wo32xfk.png' />
-				</span>
-			</div>
-		</div>
+
 	</div>
 	);
 }; // ./DonationsCard
@@ -356,6 +345,14 @@ const TwitterCard = ({allIds=[]}) => {
 		return <div><SocialSignInButton service='twitter' verb='connect' /></div>;
 	}
 	return <div>Twitter username: {XId.id(fbid)}</div>; // TODO show some data about them from FB
+};
+
+const ContactCard = () => {
+	return (<div>
+		<div>
+			<p>Are you interested in hosting Ads For Good on your blog or website? <a href="https://www.good-loop.com/book-a-call">Let us know.</a></p>
+		</div>
+	</div>);
 };
 
 export default MyPage;
