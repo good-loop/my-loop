@@ -121,7 +121,7 @@ const WelcomeCard = () => {
 	</div>);
 };
 
-const StatisticsCard = ({allIds}) => { 
+const StatisticsCard = ({allIds}) => {
 
 	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
 		return ServerIO.getDataFnData({});
@@ -147,16 +147,16 @@ const StatisticsCard = ({allIds}) => {
 								</li>
 								<li className="statistics-item">
 									<div className="statistics-value">
-										<strong></strong>
-										<div className="statistics-value-highlight">10,000 <span></span></div>
+										<strong>over</strong>
+										<b className="statistics-value-highlight">100,000 <span></span></b>
 										<strong className="statistics-subtext">people reached</strong>
 									</div>
 								</li>
 								<li className="statistics-item statistics-item-central">
 									<div className="statistics-value">
-										<strong> </strong>
+										<strong>over</strong>
 										<div className="statistics-value-highlight">
-											<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={2} showCurrencySymbol={false} />										
+											<Misc.Money amount={ttl} />										
 											<span></span>
 										</div>
 										<strong className="statistics-subtext">pounds raised</strong>
@@ -164,9 +164,9 @@ const StatisticsCard = ({allIds}) => {
 								</li>
 								<li className="statistics-item">
 									<div className="statistics-value">
-										<strong></strong>
-										<div className="statistics-value-highlight"><div className="text-stat">No compromises</div></div>
-										<strong className="statistics-subtext">on your privacy</strong>
+										<strong> over </strong>
+										<b className="statistics-value-highlight">10 ??show some logos instead</b>
+										<strong className="statistics-subtext">charities donated towards</strong>
 									</div>
 								</li>
 								<li className="statistics-item">
