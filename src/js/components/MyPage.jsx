@@ -131,6 +131,7 @@ const StatisticsCard = ({allIds}) => {
 	if ( ! pvSum.resolved) {
 		return <Misc.Loading text='...counting kittens...' />;
 	}
+	let ttl = pvSum.value && pvSum.value.total;
 
 	return (<div>
 		<section className="statistics statistics-what section-half section-padding text-center">
@@ -138,7 +139,7 @@ const StatisticsCard = ({allIds}) => {
 				<div>
 					<div className="row">
 						<div>
-							<h2 className="h2 text-center">Over half a million pounds raised for charity</h2>
+							<h2 className="h2 text-center">Thousands each month raised for charity</h2>
 							<div className="statistics-item statistics-item-central hidden-desktop">
 							</div>
 							<ul className="statistics-list">
@@ -155,14 +156,17 @@ const StatisticsCard = ({allIds}) => {
 								<li className="statistics-item statistics-item-central">
 									<div className="statistics-value" tx-content="exclude">
 										<strong tx-content="include">over</strong>
-										<b className="statistics-value-highlight">553,000 <span tx-content="include"></span></b>
+										<div className="statistics-value-highlight">
+											<Misc.Money amount={ttl} />										
+											<span tx-content="include"></span>
+										</div>
 										<strong className="statistics-subtext" tx-content="include">pounds raised</strong>
 									</div>
 								</li>
 								<li className="statistics-item">
 									<div className="statistics-value" tx-content="exclude">
 										<strong tx-content="include"> over </strong>
-										<b className="statistics-value-highlight">100</b>
+										<b className="statistics-value-highlight">10 ??show some logos instead</b>
 										<strong className="statistics-subtext" tx-content="include">charities donated towards</strong>
 									</div>
 								</li>
