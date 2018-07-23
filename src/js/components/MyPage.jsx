@@ -122,8 +122,6 @@ const WelcomeCard = () => {
 };
 
 const StatisticsCard = ({allIds}) => {
-	// ??Oh - What's tx-content? ^Dan W
-	// This upsets react - see https://reactjs.org/warnings/unknown-prop.html
 
 	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
 		return ServerIO.getDataFnData({});
@@ -144,34 +142,35 @@ const StatisticsCard = ({allIds}) => {
 							</div>
 							<ul className="statistics-list">
 								<li className="statistics-item">
-									<div className="statistics-value" tx-content="exclude">                                  </div>
+									<div className="statistics-value">                                
+									</div>
 								</li>
 								<li className="statistics-item">
-									<div className="statistics-value" tx-content="exclude">
-										<strong tx-content="include">over</strong>
-										<b className="statistics-value-highlight">100,000 <span tx-content="include"></span></b>
-										<strong className="statistics-subtext" tx-content="include">people reached</strong>
+									<div className="statistics-value">
+										<strong>over</strong>
+										<b className="statistics-value-highlight">100,000 <span></span></b>
+										<strong className="statistics-subtext">people reached</strong>
 									</div>
 								</li>
 								<li className="statistics-item statistics-item-central">
-									<div className="statistics-value" tx-content="exclude">
-										<strong tx-content="include">over</strong>
+									<div className="statistics-value">
+										<strong>over</strong>
 										<div className="statistics-value-highlight">
 											<Misc.Money amount={ttl} />										
-											<span tx-content="include"></span>
+											<span></span>
 										</div>
-										<strong className="statistics-subtext" tx-content="include">pounds raised</strong>
+										<strong className="statistics-subtext">pounds raised</strong>
 									</div>
 								</li>
 								<li className="statistics-item">
-									<div className="statistics-value" tx-content="exclude">
-										<strong tx-content="include"> over </strong>
+									<div className="statistics-value">
+										<strong> over </strong>
 										<b className="statistics-value-highlight">10 ??show some logos instead</b>
-										<strong className="statistics-subtext" tx-content="include">charities donated towards</strong>
+										<strong className="statistics-subtext">charities donated towards</strong>
 									</div>
 								</li>
 								<li className="statistics-item">
-									<div className="statistics-value" tx-content="exclude">
+									<div className="statistics-value">
 									</div>
 								</li>
 							</ul>
