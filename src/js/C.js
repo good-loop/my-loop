@@ -1,5 +1,5 @@
 import Enum from 'easy-enums';
-import Roles from './base/Roles';
+import Roles, {defineRole} from './base/Roles';
 import C from './base/CBase';
 
 export default C;
@@ -22,5 +22,5 @@ C.TYPES = new Enum("Publisher NGO Advert Advertiser User Person Money MonetaryAm
 C.ROLES = new Enum("user admin");
 C.CAN = new Enum("view edit admin sudo");
 // setup roles
-Roles.defineRole(C.ROLES.user, [C.CAN.view]);
-Roles.defineRole(C.ROLES.admin, C.CAN.values);
+defineRole(C.ROLES.user, [C.CAN.view]);
+defineRole(C.ROLES.admin, C.CAN.values);

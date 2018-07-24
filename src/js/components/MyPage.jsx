@@ -69,6 +69,8 @@ const MyPage = () => {
 	// "user:trkid1@trk OR user:trkid2@trk OR ..."
 	const allIds = xids.map(trkid => 'user:' + trkid).join(' OR ');
 
+	let person = null;
+
 	// display...
 	return (
 		<div className="page MyPage">
@@ -84,7 +86,7 @@ const MyPage = () => {
 
 				<Misc.Card title='Your Donations' defaultOpen><DonationCard allIds={allIds} /></Misc.Card>
 
-				<Misc.Card title='Consent To Track' defaultOpen><ConsentWidget allIds={allIds} /></Misc.Card>
+				<Misc.Card title='Consent Controls' defaultOpen>{person? <ConsentWidget person={person} /> : <LoginToSee />}</Misc.Card>
 
 				<Misc.Card title='Boost Your Impact' defaultOpen><SocialMediaCard allIds={xids} /></Misc.Card>
 
@@ -146,7 +148,7 @@ const StatisticsCard = ({allIds}) => {
 								<li className="statistics-item">
 									<div className="statistics-value">
 										<strong></strong>
-										<div className="statistics-value-highlight">10,000 <span></span></div>
+										<div className="statistics-value-highlight">100,000 <span></span></div>
 										<strong className="statistics-subtext">people reached</strong>
 									</div>
 								</li>
@@ -346,6 +348,7 @@ const SocialMediaCard = ({allIds=[]}) => {
 const ContactCard = () => {
 	return (<div>
 		<div>
+			<p>Let us know what you think of this site, and your ideas for improving it.</p>
 			<p>Are you interested in hosting Ads For Good on your blog or website? <a href="https://www.good-loop.com/book-a-call">Let us know.</a></p>
 		</div>
 	</div>);
