@@ -11,32 +11,54 @@ import Person from '../base/data/Person';
 import Misc from '../base/components/Misc';
 import ActionMan from '../plumbing/ActionMan';
 import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
+import {getPermissions, setPermissions, saveProfile, getProfile} from '../base/Profiler';
 
 /**
  * @param person {Person} the user profile
  */
-const ConsentWidget = ({person}) => {
+const ConsentWidget = ({person, xids}) => {
 	let path = ['widget', 'TODO'];
-
+	if ( ! person) {
+		if ( ! xids || ! xids.length) return null;		
+		let xid = xids[0];
+		let pvPerson = DataStore.fetch(['data', 'Person', xid], () => {
+			return getProfile({xid});
+		});
+		if (pvPerson.value) {
+			person = pvPerson.value;			
+		} else {
+			return <Misc.Loading />;
+		}
+	}
 	// where is this info stored on Profiles?
 	// how is it set in Profiler.js??
+	
+	const togglePerm = (x) => {
+		console.warn("saveFn", x);
+		let dataspace = ServerIO.dataspace; // ??
+		let perms = getPermissions({person, dataspace});
+		setPermissions({person, dataspace, perms});
+	};
 
 	return (
 		<div>
-			<p>Your data can really boost the money you raise for charity.</p>
+			<p>Help us boost the money raised for charity using your data - without compromising your privacy.</p>
 			<p>Please can we:</p>
 			
-			<Misc.PropControl path={path} prop='personaliseAds' label='Pick ads that fit your profile' type='yesNo' />
+			<Misc.PropControl path={path} prop='personaliseAds' label='Pick ads that fit your profile' type='yesNo' 
+				saveFn={togglePerm}
+			/>
 			
-			<Misc.PropControl path={path} prop='recordDonations' label='Record your charity donations' type='checkbox' />
+			<Misc.PropControl path={path} prop='recordDonations' label='Record your charity donations' type='yesNo' />
 
 			<Misc.PropControl path={path} prop='recordAdsBehaviour' label='Record which ads we show you and how you react to them (e.g. click / ignore / vomit)' 
-				type='checkbox' />			
+				type='yesNo' />			
 
 			Sell your data: Hell No
 
 			<p>It's your data: You can change your mind at any time (just edit these settings). 
-			You can see and control your profile data.
+			You can see and control your profile data - we're working on easy-to-use online tools for that, 
+			but in the meantime you can contact us, and our heroic support team will help.
 			For more details see our <a href="https://www.good-loop.com/privacy-policy">Privacy Manifesto</a>.</p>
 		</div>
 	);
