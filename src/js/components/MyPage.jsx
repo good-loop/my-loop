@@ -182,6 +182,10 @@ const StatisticsCard = ({allIds}) => {
 
 const OnboardingCard = ({allIds}) => {
 	let step1Img = 'https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,fl_lossy,h_1440,w_720,f_auto,q_auto/v1/722207/banner-illustration-publisher-no-hearts_lppr8a.jpg';
+	let step2Img = 'https://i.imgur.com/dwvVB2s.jpg';
+	let step3Img = 'https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,fl_lossy,h_1440,w_720,f_auto,q_auto/v1/722207/banner-illustration-publisher_jp1obr.png';
+
+
 	return 	(<div id="howitworks">
 		<section className="how text-center section-padding section-scrolled-to section-half">
 			<div className="how-content">
@@ -198,13 +202,15 @@ const OnboardingCard = ({allIds}) => {
 									</li>
 									<li className="how-step">
 										<span className="how-image">
-											<img className="how-img" src="https://s3-eu-west-1.amazonaws.com/tpd/logos/5a2e64c6c8408508dc743520/0x0.png"/>
+											<img className="how-img" src={step2Img} alt='banners in a web page' />
 										</span>
 										<span className="how-text">A video ad plays for 15 seconds</span>
 									</li>
 									<li className="how-step">
-										<span className="how-image"><img className="how-img" src="https://s3-eu-west-1.amazonaws.com/tpd/logos/5a2e64c6c8408508dc743520/0x0.png"/></span>
-										<span className="how-text">We donate half the revenue from the ad to your chosen charity</span>
+										<span className="how-image">
+											<img className="how-img" src={step3Img} alt='banners in a web page' />
+										</span>
+										<span className="how-text">We donate half the ad revenue to your chosen charity</span>
 									</li>
 								</ul>
 							</div>
