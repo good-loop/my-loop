@@ -14,30 +14,28 @@ import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
 import {getPermissions, setPermissions, saveProfile, getProfile} from '../base/Profiler';
 
 /**
- * @param person {Person} the user profile
  */
-const ConsentWidget = ({person, xids}) => {
+const ConsentWidget = ({xids}) => {
+	assert(xids.length, "ConsentWidget.jsx");
 	let path = ['widget', 'TODO'];
-	if ( ! person) {
-		if ( ! xids || ! xids.length) return null;		
-		let xid = xids[0];
-		let pvPerson = DataStore.fetch(['data', 'Person', xid], () => {
-			return getProfile({xid});
-		});
-		if (pvPerson.value) {
-			person = pvPerson.value;			
-		} else {
-			return <Misc.Loading />;
-		}
+	const fetcher = xid => DataStore.fetch(['data', 'Person', xid], () => {
+		return getProfile({xid});
+	});
+	let pvsPeep = xids.map(fetcher);
+	if ( ! pvsPeep[0].value) {
+		return <Misc.Loading />;
 	}
+	
 	// where is this info stored on Profiles?
 	// how is it set in Profiler.js??
 	
 	const togglePerm = (x) => {
 		console.warn("saveFn", x);
 		let dataspace = ServerIO.dataspace; // ??
-		let perms = getPermissions({person, dataspace});
-		setPermissions({person, dataspace, perms});
+		pvsPeep.forEach(pv => {
+			let perms = getPermissions({person, dataspace});
+			setPermissions({person, dataspace, perms});
+		});
 	};
 
 	return (
@@ -49,10 +47,10 @@ const ConsentWidget = ({person, xids}) => {
 				saveFn={togglePerm}
 			/>
 			
-			<Misc.PropControl path={path} prop='recordDonations' label='Record your charity donations' type='yesNo' />
+			<Misc.PropControl path={path} prop='recordDonations' label='Record your charity donations' type='yesNo' saveFn={togglePerm} />
 
 			<Misc.PropControl path={path} prop='recordAdsBehaviour' label='Record which ads we show you and how you react to them (e.g. click / ignore / vomit)' 
-				type='yesNo' />			
+				type='yesNo' saveFn={togglePerm} />			
 
 			Sell your data: Hell No
 

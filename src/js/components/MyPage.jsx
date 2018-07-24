@@ -26,6 +26,15 @@ const trkIdPath = ['misc', 'trkids'];
 
 // TODO merge with MyPage??
 
+/**
+ * @returns PV(XId[])
+ */
+const getAllXIds = () => {
+	return DataStore.fetch([], () => {
+		return xids; TODO
+	});
+};
+
 // TODO document trkids
 const MyPage = () => {
 	const trkIdMatches = document.cookie.match('trkid=([^;]+)');
@@ -86,7 +95,7 @@ const MyPage = () => {
 
 				<Misc.Card title='Your Donations' defaultOpen><DonationCard allIds={allIds} /></Misc.Card>
 
-				<Misc.Card title='Consent Controls' defaultOpen>{person? <ConsentWidget person={person} /> : <LoginToSee />}</Misc.Card>
+				<Misc.Card title='Consent Controls' defaultOpen>{Login.isLoggedIn()? <ConsentWidget xids={xids} /> : <LoginToSee />}</Misc.Card>
 
 				<Misc.Card title='Boost Your Impact' defaultOpen><SocialMediaCard allIds={xids} /></Misc.Card>
 
