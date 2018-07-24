@@ -311,9 +311,12 @@ const DonationCard = ({allIds}) => {
 	console.log(pvTopCharity);
 
 	// Display their charity + community donations
-	return 	(<div className='content'>
-
-	</div>
+	return 	(<div className="content">
+			<div className="partial-circle big top"><img src="https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,h_630,w_1200,f_auto,q_90/v1/722207/gl-logo-red-bkgrnd_qipkwt.jpg" /></div>
+			<div className="partial-circle big bottom"><p className="stats"><span>£500,000</span></p></div>
+			<div className="partial-circle2 small top"><img src="http://scotlandjs.com/assets/speakers/irina-preda-e8f1d6ce56f84ecaf4b6c64be7312b56.jpg" /></div>
+			<div className="partial-circle2 small bottom"><p className="stats"><span>£5</span></p></div>
+		</div>
 	);
 }; // ./DonationsCard
 
