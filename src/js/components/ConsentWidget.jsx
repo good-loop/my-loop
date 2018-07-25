@@ -56,10 +56,12 @@ const ConsentWidget = ({xids}) => {
 
 			Sell your data: Hell No
 
-			<p>It's your data: You can change your mind at any time (just edit these settings). 
-			You can see and control your profile data - we're working on easy-to-use online tools for that, 
-			but in the meantime you can contact us, and our heroic support team will help.
-			For more details see our <a href="https://www.good-loop.com/privacy-policy">Privacy Manifesto</a>.</p>
+			<p>
+				It's your data: You can change your mind at any time (just edit these settings). 
+				You can see and control your profile data - we're working on easy-to-use online tools for that, 
+				but in the meantime you can contact us, and our heroic support team will help.
+				For more details see our <a href="https://www.good-loop.com/privacy-policy" target="_blank">Privacy Manifesto</a>.
+			</p>
 		</div>
 	);
 };

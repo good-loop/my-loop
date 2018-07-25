@@ -71,9 +71,7 @@ const MyPage = () => {
 		<div className="page MyPage">
 			<Misc.CardAccordion widgetName='MyReport' multiple >
 	
-				<Misc.Card defaultOpen>
-					<WelcomeCard />
-				</Misc.Card>
+				<Misc.Card defaultOpen><WelcomeCard xids={xids} /></Misc.Card>
 
 				<Misc.Card title='Our Achievements Together' defaultOpen><StatisticsCard allIds={allIds} /></Misc.Card>
 
@@ -93,13 +91,14 @@ const MyPage = () => {
 }; // ./MyPage
 
 
-const WelcomeCard = () => {
+const WelcomeCard = ({xids}) => {
 	return (<div className="header">
 		{Login.isLoggedIn()? 
 			<div>
 				<div className="pull-right logged-in">
 					<p>Hi { Login.getUser().name || Login.getUser().xid }</p>
 					<small className="pull-right"><a href="#my" onClick={e => stopEvent(e) && Login.logout()}>Log out</a></small>
+					<div><small>{xids? xids.join(", ") : null}</small></div>
 				</div>
 				<div className="header-text">
 					<p className="title">TAKE CONTROL OF YOUR DATA</p>

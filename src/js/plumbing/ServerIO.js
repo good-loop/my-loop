@@ -28,7 +28,7 @@ ServerIO.DATALOG_ENDPOINT = C.HTTPS+'://'+C.SERVER_TYPE+'lg.good-loop.com/data';
 ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';
 
 ServerIO.PROFILER_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}profiler.good-loop.com/profile`;
-// ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com/profile';
+ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com/profile';
 
 ServerIO.AS_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}as.good-loop.com`;
 ServerIO.AS_ENDPOINT = `${C.HTTPS}://as.good-loop.com`;
