@@ -13,6 +13,8 @@ import ActionMan from '../plumbing/ActionMan';
 import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
 import {getPermissions, setPermissions, saveProfile, getProfile} from '../base/Profiler';
 
+const saveProfileDebounced = _.debounce(person => saveProfile(person), 2000);
+
 /**
  */
 const ConsentWidget = ({xids}) => {
@@ -34,15 +36,17 @@ const ConsentWidget = ({xids}) => {
 		pvsPeep.forEach(pv => {
 			if ( ! pv.value) return;
 			let person = pv.value;
-			let perms = getPermissions({person, dataspace});			
+			let permissions = getPermissions({person, dataspace});			
 			if (value) {
 				// add consent
-				if (perms.indexOf(prop) === -1) perms = perms.concat(prop);
+				if (permissions.indexOf(prop) === -1) permissions = permissions.concat(prop);
 			} else {
 				// remove consent
-				perms = perms.filter(p => p !== prop);
+				permissions = permissions.filter(p => p !== prop);
 			}
-			setPermissions({person, dataspace, perms});
+			setPermissions({person, dataspace, permissions});
+			// save (after a second)
+			saveProfileDebounced(person);
 		});
 	};
 
