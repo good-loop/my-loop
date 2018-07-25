@@ -19,66 +19,52 @@ import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
 import Login from 'you-again';
 import {LoginLink, SocialSignInButton} from '../base/components/LoginWidget';
 import ConsentWidget from './ConsentWidget';
-
-const loginResponsePath = ['misc', 'login', 'response'];
-
-const trkIdPath = ['misc', 'trkids'];
-
-// TODO merge with MyPage??
+import Cookies from 'js-cookie';
+import {getProfile} from '../base/Profiler';
 
 /**
- * @returns PV(XId[])
+ * @returns PV(XId[])??
  */
 const getAllXIds = () => {
-	return DataStore.fetch([], () => {
-		return xids; TODO
+	let all =[]; // String[]
+	// cookie tracker
+	let cookies = Cookies.get();
+	const trkIdMatches = document.cookie.match('trkid=([^;]+)');
+	console.warn("trkIdMatches", trkIdMatches, "cookies", cookies);
+	const currentTrkId = trkIdMatches && trkIdMatches[1];
+	if (currentTrkId) all.push(currentTrkId);
+	// aliases
+	let axids = null;
+	if (Login.aliases) {
+		axids = Login.aliases.map(a => a.xid);
+		all = all.concat(axids);
+	}
+	// linked IDs?
+	// ...fetch profiles
+	const fetcher = xid => DataStore.fetch(['data', 'Person', xid], () => {
+		return getProfile({xid});
 	});
+	let pvsPeep = all.map(fetcher);
+	pvsPeep.filter(pvp => pvp.value).forEach(pvp => {
+		let peep = pvp.value;
+		let linkedIds = Person.linkedIds(peep);	
+		if (linkedIds) linkedIds.forEach(li => all.push(li));
+	});
+	// de dupe
+	all = Array.from(new Set(all));
+	return all;
 };
+// for debug
+window.getAllXIds = getAllXIds;
 
 // TODO document trkids
 const MyPage = () => {
-	const trkIdMatches = document.cookie.match('trkid=([^;]+)');
-	const currentTrkId = trkIdMatches && trkIdMatches[1];
 
-	let xid = Login.getId(); // NB: can be null
+	let xids = getAllXIds();
 
-	// fetch profile
-	let pvProfile = ActionMan.getProfile({xid});
-	let peep = pvProfile.value || {};
-
-	let trkIds = DataStore.getValue(trkIdPath);
-
-	if ( ! trkIds) {
-		// User is logged in but we haven't retrieved tracking IDs from shares yet		
-		pvProfile.promise.then(res => {
-			console.warn("store trkIds from ", res);
-			// // do we need to add the current tracking id to the list?
-			// if (currentTrkId && !trkIds.includes(currentTrkId)) {
-			// 	ServerIO.putProfile({id: uid, [FIELDS.trackIds]: trkIds.concat(currentTrkId)});
-			// }
-			
-		});
-		// use the current one?
-		if (currentTrkId) trkIds=[currentTrkId];
-		// put them in datastore whether we've updated profile or not
-		DataStore.setValue(trkIdPath, trkIds, false);
-	}
-
-	// all the users IDs
-	let xids = trkIds || [];
-	if (Login.getId()) xids.push(Login.getId());
-
-	// linked IDs?
-	let linkedIds = Person.linkedIds(peep);
-	xids = xids.concat(linkedIds);
-
-	if ( ! xids) xids=[];
-
-	// TODO pass around lists and turn into strings later
-	// "user:trkid1@trk OR user:trkid2@trk OR ..."
+	// TODO pass around xids and turn into strings later
+	// HACK DataLog query string: "user:trkid1@trk OR user:trkid2@trk OR ..."
 	const allIds = xids.map(trkid => 'user:' + trkid).join(' OR ');
-
-	let person = null;
 
 	// display...
 	return (
@@ -226,6 +212,11 @@ const OnboardingCard = ({allIds}) => {
 								</ul>
 							</div>
 						</div>
+					</div>
+					<div className="row">
+						<center>
+							<a className='btn btn-default' href='https://as.good-loop.com/?site=my.good-loop.com'>Try it now: Watch an Ad-for-Good!</a>
+						</center>
 					</div>
 				</div>
 			</div>

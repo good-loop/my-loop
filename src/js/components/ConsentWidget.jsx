@@ -33,7 +33,9 @@ const ConsentWidget = ({xids}) => {
 		console.warn("saveFn", x);
 		let dataspace = ServerIO.dataspace; // ??
 		pvsPeep.forEach(pv => {
-			let perms = getPermissions({person, dataspace});
+			if ( ! pv.value) return;
+			let person = pv.value;
+			let perms = getPermissions({person, dataspace});			
 			setPermissions({person, dataspace, perms});
 		});
 	};
