@@ -28,11 +28,11 @@ import {getProfile} from '../base/Profiler';
 const getAllXIds = () => {
 	let all =[]; // String[]
 	// cookie tracker
-	let cookies = Cookies.get();
-	const trkIdMatches = document.cookie.match('trkid=([^;]+)');
-	console.warn("trkIdMatches", trkIdMatches, "cookies", cookies);
-	const currentTrkId = trkIdMatches && trkIdMatches[1];
-	if (currentTrkId) all.push(currentTrkId);
+	let trkid = Cookies.get("trkid");
+	// const trkIdMatches = document.cookie.match('trkid=([^;]+)');
+	// console.warn("trkIdMatches", trkIdMatches, "cookies", cookies);
+	// const currentTrkId = trkIdMatches && trkIdMatches[1];
+	if (trkid) all.push(trkid);
 	// aliases
 	let axids = null;
 	if (Login.aliases) {

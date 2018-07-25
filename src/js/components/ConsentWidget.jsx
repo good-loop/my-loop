@@ -29,13 +29,19 @@ const ConsentWidget = ({xids}) => {
 	// where is this info stored on Profiles?
 	// how is it set in Profiler.js??
 	
-	const togglePerm = (x) => {
-		console.warn("saveFn", x);
+	const togglePerm = ({prop, value, ...x}) => {
 		let dataspace = ServerIO.dataspace; // ??
 		pvsPeep.forEach(pv => {
 			if ( ! pv.value) return;
 			let person = pv.value;
 			let perms = getPermissions({person, dataspace});			
+			if (value) {
+				// add consent
+				if (perms.indexOf(prop) === -1) perms = perms.concat(prop);
+			} else {
+				// remove consent
+				perms = perms.filter(p => p !== prop);
+			}
 			setPermissions({person, dataspace, perms});
 		});
 	};
