@@ -12,8 +12,26 @@ import Misc from '../base/components/Misc';
 import ActionMan from '../plumbing/ActionMan';
 import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
 import {getPermissions, setPermissions, saveProfile, getProfile} from '../base/Profiler';
+import { getId } from '../base/data/DataClass';
 
-const saveProfileDebounced = _.debounce(person => saveProfile(person), 2000);
+/**
+ * Cache the debounce function.
+ * This allows you to use "overlapping" debounces
+ * 
+ * @param {!String} key 
+ * @param {!Function} fn 
+ * @param other extra _.debounce args
+ */
+const debounceForSameInput = (key, fn, ...other) => {
+	assMatch(key, String, "debounceForSameInput");
+	assMatch(fn, Function, "debounceForSameInput "+key);
+	let dbfn = _debounceFnForKey[key];
+	if (dbfn) return dbfn;
+	dbfn = _.debounce(person => saveProfile(person), ...other);
+	_debounceFnForKey[key] = dbfn;
+	return dbfn;
+};
+const _debounceFnForKey = {};
 
 /**
  */
@@ -53,6 +71,8 @@ const ConsentWidget = ({xids}) => {
 			let person = pv.value;
 			setPermissions({person, dataspace, permissions});
 			// save (after a second)
+			let pid = getId(person);
+			let saveProfileDebounced = debounceForSameInput(pid, saveProfile, 2000);
 			saveProfileDebounced(person);
 		});
 	};
