@@ -11,9 +11,10 @@ import Person from '../base/data/Person';
 import Misc from '../base/components/Misc';
 import ActionMan from '../plumbing/ActionMan';
 import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
-import {getPermissions, setPermissions, saveProfile, getProfile} from '../base/Profiler';
+import {getPermissions, setPermissions, saveProfile, getProfile, getProfilesNow} from '../base/Profiler';
 import { getId } from '../base/data/DataClass';
 
+const _debounceFnForKey = {};
 /**
  * Cache the debounce function.
  * This allows you to use "overlapping" debounces
@@ -31,21 +32,13 @@ const debounceForSameInput = (key, fn, ...other) => {
 	_debounceFnForKey[key] = dbfn;
 	return dbfn;
 };
-const _debounceFnForKey = {};
 
 /**
  */
 const ConsentWidget = ({xids}) => {
 	assert(xids.length, "ConsentWidget.jsx");
-	let path = ['widget', 'ConsentWIdget', 'perms'];
-	const fetcher = xid => DataStore.fetch(['data', 'Person', xid], () => {
-		return getProfile({xid});
-	});
-	let pvsPeep = xids.map(fetcher);
-	if ( ! pvsPeep[0].value) {
-		return <Misc.Loading />;
-	}
-	let peeps = pvsPeep.filter(pvp => pvp.value).map(pvp => pvp.value);
+	let path = ['widget', 'ConsentWidget', 'perms'];
+	let peeps = getProfilesNow(xids);
 	// get and combine the permissions
 	let perms = DataStore.getValue(path) || {};
 	peeps.forEach(person => {
@@ -66,9 +59,7 @@ const ConsentWidget = ({xids}) => {
 		let permissions = DataStore.getValue(path);
 		assert(permissions[prop] === value, "ConsentWidget.jsx - mismatch",permissions,prop,value);
 		// set each
-		pvsPeep.forEach(pv => {
-			if ( ! pv.value) return;
-			let person = pv.value;
+		peeps.forEach(person => {
 			setPermissions({person, dataspace, permissions});
 			// save (after a second)
 			let pid = getId(person);

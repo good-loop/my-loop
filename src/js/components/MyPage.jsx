@@ -20,10 +20,10 @@ import Login from 'you-again';
 import {LoginLink, SocialSignInButton} from '../base/components/LoginWidget';
 import ConsentWidget from './ConsentWidget';
 import Cookies from 'js-cookie';
-import {getProfile} from '../base/Profiler';
+import {getProfile, getProfilesNow} from '../base/Profiler';
 
 /**
- * @returns PV(XId[])??
+ * @returns String[] xids
  */
 const getAllXIds = () => {
 	let all =[]; // String[]
@@ -77,7 +77,7 @@ const MyPage = () => {
 
 				<Misc.Card title='How Good-Loop Ads Work' defaultOpen><OnboardingCard allIds={allIds} /></Misc.Card>				
 
-				<Misc.Card title='Your Donations' defaultOpen><DonationCard allIds={allIds} /></Misc.Card>
+				<Misc.Card title='Your Donations' defaultOpen><DonationCard xids={xids} allIds={allIds} /></Misc.Card>
 
 				<Misc.Card title='Consent Controls' defaultOpen>{Login.isLoggedIn()? <ConsentWidget xids={xids} /> : <LoginToSee />}</Misc.Card>
 
@@ -225,7 +225,7 @@ const OnboardingCard = ({allIds}) => {
 };
 
 
-const DonationCard = ({allIds}) => {
+const DonationCard = ({xids, allIds}) => {
 	if ( ! Login.isLoggedIn()) {
 		return <LoginToSee />;
 	}
@@ -251,13 +251,15 @@ const DonationCard = ({allIds}) => {
 		return <div>No tracking IDs to check {dnt===null? " - Do you have Do-Not-Track switched on?" : null}</div>;
 	}
 
-	const donationsPath = ['widget', 'MyReport', 'donations'];
+	let qAllIds = xids.map(xid => 'user:'+xid).join(' OR ');
+	// NB: if xids changes (eg extra linking is added)	then this will reload
+	const donationsPath = ['widget', 'MyReport', 'donations', qAllIds];
 	// Get donations by user (including all registered tracking IDs)
 	let start = '2018-05-01T00:00:00.000Z'; // ??is there a data issue if older??
 	let pvDonationData = DataStore.fetch(donationsPath, () => {
 		const donationReq = {
 			dataspace: 'gl',
-			q: `evt:donation AND (${allIds})`,
+			q: `evt:donation AND (${qAllIds})`,
 			breakdown: ['cid{"count": "sum"}'],
 			start
 		};
@@ -309,12 +311,23 @@ const DonationCard = ({allIds}) => {
 	let pvTopCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:topCharityValue.cid, status:C.KStatus.PUBLISHED, swallow:true});
 	console.log(pvTopCharity);
 
+	// TODO fetch peeps, use Person.img, use Login.getUser(), use gravatar and Facebook standards to get an image
+	let peeps = getProfilesNow(xids);
+	console.warn("image", peeps, Login.getUser(), Login.aliases);
+	let profileImg = (Login.getUser() && Login.getUser().img)
+		// TODO a fallback image
+		|| "http://scotlandjs.com/assets/speakers/irina-preda-e8f1d6ce56f84ecaf4b6c64be7312b56.jpg";
+
 	// Display their charity + community donations
 	return 	(<div className="content">
 			<div className="partial-circle big top"><img src="https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,h_630,w_1200,f_auto,q_90/v1/722207/gl-logo-red-bkgrnd_qipkwt.jpg" /></div>
 			<div className="partial-circle big bottom"><p className="stats"><span>£500,000</span></p></div>
-			<div className="partial-circle2 small top"><img src="http://scotlandjs.com/assets/speakers/irina-preda-e8f1d6ce56f84ecaf4b6c64be7312b56.jpg" /></div>
-			<div className="partial-circle2 small bottom"><p className="stats"><span>£5</span></p></div>
+			<div className="partial-circle2 small top">
+				<img src={profileImg} />
+			</div>
+			<div className="partial-circle2 small bottom"><p className="stats">
+				<Misc.Money amount={} />
+			</p></div>
 		</div>
 	);
 }; // ./DonationsCard
