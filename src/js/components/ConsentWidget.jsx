@@ -19,7 +19,7 @@ const saveProfileDebounced = _.debounce(person => saveProfile(person), 2000);
  */
 const ConsentWidget = ({xids}) => {
 	assert(xids.length, "ConsentWidget.jsx");
-	let path = ['widget', 'TODO'];
+	let path = ['widget', 'ConsentWIdget', 'perms'];
 	const fetcher = xid => DataStore.fetch(['data', 'Person', xid], () => {
 		return getProfile({xid});
 	});
@@ -27,6 +27,14 @@ const ConsentWidget = ({xids}) => {
 	if ( ! pvsPeep[0].value) {
 		return <Misc.Loading />;
 	}
+	let peeps = pvsPeep.filter(pvp => pvp.value).map(pvp => pvp.value);
+	// get the permissions
+	let perms = DataStore.getValue(path);
+	peeps.forEach(peep => {
+		// hm - orefer true/false/most-recent??
+		getPermissions(peep);
+		perms = Object.assign(perms, );
+	});
 	
 	// where is this info stored on Profiles?
 	// how is it set in Profiler.js??
