@@ -28,30 +28,27 @@ const ConsentWidget = ({xids}) => {
 		return <Misc.Loading />;
 	}
 	let peeps = pvsPeep.filter(pvp => pvp.value).map(pvp => pvp.value);
-	// get the permissions
+	// get and combine the permissions
 	let perms = DataStore.getValue(path);
 	peeps.forEach(peep => {
 		// hm - orefer true/false/most-recent??
-		getPermissions(peep);
-		perms = Object.assign(perms, );
+		let peepPerms = getPermissions(peep);
+		perms = Object.assign(perms, peepPerms);
 	});
+	// update DataStore
+	DataStore.setValue(path, perms, false);
 	
-	// where is this info stored on Profiles?
-	// how is it set in Profiler.js??
-	
+	// handle an edit
 	const togglePerm = ({prop, value, ...x}) => {
 		let dataspace = ServerIO.dataspace; // ??
+		// full perms set
+		// NB: this also means perm settings are synchronised across linked profiles by an edit.
+		let permissions = DataStore.getValue(path);
+		assert(permissions[prop] === value, "ConsentWidget.jsx - mismatch",permissions,prop,value);
+		// set each
 		pvsPeep.forEach(pv => {
 			if ( ! pv.value) return;
 			let person = pv.value;
-			let permissions = getPermissions({person, dataspace});			
-			if (value) {
-				// add consent
-				if (permissions.indexOf(prop) === -1) permissions = permissions.concat(prop);
-			} else {
-				// remove consent
-				permissions = permissions.filter(p => p !== prop);
-			}
 			setPermissions({person, dataspace, permissions});
 			// save (after a second)
 			saveProfileDebounced(person);
