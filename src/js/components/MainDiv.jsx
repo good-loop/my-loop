@@ -74,10 +74,11 @@ class MainDiv extends Component {
 			if (Login.isLoggedIn()) {
 				// close the login dialog on success
 				LoginWidget.hide();
-			} else {
-				// poke React via DataStore (e.g. for Login.error)
-				DataStore.update({});
 			}
+			// Link profiles? No - done by the YA server
+			// poke React via DataStore (e.g. for Login.error)
+			DataStore.update({});			
+			// is this needed??
 			this.setState({});
 		});
 

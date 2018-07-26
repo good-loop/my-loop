@@ -150,7 +150,7 @@ const StatisticsCard = ({allIds}) => {
 									<div className="statistics-value">
 										<strong> </strong>
 										<div className="statistics-value-highlight">
-											<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={2} showCurrencySymbol={false} />										
+											<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={3} showCurrencySymbol={false} />										
 											<span></span>
 										</div>
 										<strong className="statistics-subtext">pounds raised</strong>

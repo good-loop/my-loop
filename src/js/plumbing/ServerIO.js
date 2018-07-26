@@ -17,6 +17,8 @@ import Messaging, {notifyUser} from '../base/plumbing/Messaging';
 import ServerIO from '../base/plumbing/ServerIOBase';
 export default ServerIO;
 
+ServerIO.dataspace = 'gl'; // This is the dataspace used in unit.js for reproting events
+
 /** The initial part of an API call. Allows for local to point at live for debugging */
 ServerIO.APIBASE = ''; // Normally use this for "my server"!
 // Comment out the lines below when deploying!
@@ -25,40 +27,15 @@ ServerIO.APIBASE = ''; // Normally use this for "my server"!
 	
 ServerIO.DATALOG_ENDPOINT = C.HTTPS+'://'+C.SERVER_TYPE+'lg.good-loop.com/data';
 // ServerIO.DATALOG_ENDPOINT = 'https://testlg.good-loop.com/data';
-ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';
+// ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';
 
-ServerIO.PROFILER_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}profiler.good-loop.com/profile`;
-ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com/profile';
+ServerIO.PROFILER_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}profiler.good-loop.com`;
+ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com';
 
 ServerIO.AS_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}as.good-loop.com`;
 ServerIO.AS_ENDPOINT = `${C.HTTPS}://as.good-loop.com`;
 
 ServerIO.checkBase();
-
-// override for NGO -> SoGive, and Budget
-ServerIO.getUrlForItem = ({type, id, status}) => {
-	let servlet = ServerIO.getServletForType(type);
-	let url = '/'+servlet+'/'+encURI(id)+'.json';
-	if (C.TYPES.isNGO(type)) {
-		// HACK: call SoGive
-		// HACK: id matching
-		let sogiveId = getSoGiveID(id);
-		url = 'https://app.sogive.org/charity/'+encURI(sogiveId)+'.json';
-	}
-	return url;
-};
-
-/**
- * HACK replace known mis-matches
- * @param {!String} id 
- */
-const getSoGiveID = id => {
-	let sid = {
-		// known mis-matched IDs
-	}[id];
-	if (sid) return sid;
-	return id;
-};
 
 /**
  * 

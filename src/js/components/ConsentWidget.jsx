@@ -29,11 +29,13 @@ const ConsentWidget = ({xids}) => {
 	}
 	let peeps = pvsPeep.filter(pvp => pvp.value).map(pvp => pvp.value);
 	// get and combine the permissions
-	let perms = DataStore.getValue(path);
-	peeps.forEach(peep => {
+	let perms = DataStore.getValue(path) || {};
+	peeps.forEach(person => {
 		// hm - orefer true/false/most-recent??
-		let peepPerms = getPermissions(peep);
-		perms = Object.assign(perms, peepPerms);
+		let peepPerms = getPermissions({person});
+		if (peepPerms) {
+			Object.assign(perms, peepPerms);
+		}
 	});
 	// update DataStore
 	DataStore.setValue(path, perms, false);
