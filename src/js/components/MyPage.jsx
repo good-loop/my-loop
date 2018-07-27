@@ -2,19 +2,14 @@ import React from 'react';
 import _ from 'lodash';
 import { assert, assMatch } from 'sjtest';
 import { XId, modifyHash, stopEvent, encURI, yessy } from 'wwutils';
-import pivot from 'data-pivot';
 
 import C from '../C';
-import printer from '../base/utils/printer';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
-import ChartWidget from '../base/components/ChartWidget';
 import Person from '../base/data/Person';
 import Misc from '../base/components/Misc';
 import CardAccordion, {Card} from '../base/components/CardAccordion';
 import ActionMan from '../plumbing/ActionMan';
-import SearchQuery from '../searchquery';
-import md5 from 'md5';
 import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
 import Login from 'you-again';
 import {LoginLink, SocialSignInButton} from '../base/components/LoginWidget';
@@ -115,7 +110,7 @@ const WelcomeCard = ({xids}) => {
 	</div>);
 };
 
-const StatisticsCard = ({allIds}) => { 
+const StatisticsCard = () => { 
 
 	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
 		return ServerIO.getDataFnData({});
@@ -180,7 +175,6 @@ const OnboardingCard = ({allIds}) => {
 	let step1Img = 'https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,fl_lossy,h_1440,w_720,f_auto,q_auto/v1/722207/banner-illustration-publisher-no-hearts_lppr8a.jpg';
 	let step2Img = 'https://i.imgur.com/dwvVB2s.jpg';
 	let step3Img = 'https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,fl_lossy,h_1440,w_720,f_auto,q_auto/v1/722207/banner-illustration-publisher_jp1obr.png';
-
 
 	return 	(<div id="howitworks">
 		<section className="how text-center section-padding section-scrolled-to section-half">
@@ -320,13 +314,17 @@ const DonationCard = ({xids, allIds}) => {
 
 	// Display their charity + community donations
 	return 	(<div className="content">
-			<div className="partial-circle big top"><img src="https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,h_630,w_1200,f_auto,q_90/v1/722207/gl-logo-red-bkgrnd_qipkwt.jpg" /></div>
-			<div className="partial-circle big bottom"><p className="stats"><span>£500,000</span></p></div>
+			<div className="partial-circle big top">
+				<img src="https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,h_630,w_1200,f_auto,q_90/v1/722207/gl-logo-red-bkgrnd_qipkwt.jpg" />
+			</div>
+			<div className="partial-circle big bottom"><p className="stats">
+				<Misc.Money amount={1} />
+			</p></div>
 			<div className="partial-circle2 small top">
 				<img src={profileImg} />
 			</div>
 			<div className="partial-circle2 small bottom"><p className="stats">
-				<Misc.Money amount={} />
+				<Misc.Money amount={1} />
 			</p></div>
 		</div>
 	);

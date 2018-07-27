@@ -1,7 +1,7 @@
 /** Data model functions for the NGO data-type. */
 import {assert} from 'sjtest';
 
-import {isa, defineType} from '../base/data/DataClass';
+import {defineType} from '../base/data/DataClass';
 import C from '../C';
 
 const NGO = defineType(C.TYPES.NGO);
