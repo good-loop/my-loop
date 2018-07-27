@@ -14,8 +14,11 @@ import ActionMan from '../plumbing/ActionMan';
 import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
 import Login from 'you-again';
 import {LoginLink, SocialSignInButton} from '../base/components/LoginWidget';
+import {LoginToSee} from './Bits';
 import {getProfile, getProfilesNow} from '../base/Profiler';
 import ConsentWidget from './ConsentWidget';
+import printer from '../base/utils/printer';
+import DonationCard from './DonationCard';
 
 /**
  * @returns String[] xids
@@ -72,7 +75,7 @@ const MyPage = () => {
 
 				<Card title='How Good-Loop Ads Work' defaultOpen><OnboardingCard allIds={allIds} /></Card>				
 
-				<Card title='Your Donations' defaultOpen><DonationCard xids={xids} allIds={allIds} /></Card>
+				<Card title='Your Donations' defaultOpen><DonationCard xids={xids} /></Card>
 
 				<Card title='Consent Controls' defaultOpen>{Login.isLoggedIn()? <ConsentWidget xids={xids} /> : <LoginToSee />}</Card>
 
@@ -119,6 +122,7 @@ const StatisticsCard = () => {
 		return <Misc.Loading text='...counting kittens...' />;
 	}
 	let ttl = pvSum.value && pvSum.value.total;
+	let cnt = (pvSum.value && pvSum.value.count) || 100000;
 
 	return (<div>
 		<section className="statistics statistics-what section-half section-padding text-center">
@@ -137,7 +141,7 @@ const StatisticsCard = () => {
 								<li className="statistics-item">
 									<div className="statistics-value">
 										<strong></strong>
-										<div className="statistics-value-highlight">100,000 <span></span></div>
+										<div className="statistics-value-highlight"><span>{printer.prettyNumber(cnt)}</span></div>
 										<strong className="statistics-subtext">people reached</strong>
 									</div>
 								</li>
@@ -145,7 +149,7 @@ const StatisticsCard = () => {
 									<div className="statistics-value">
 										<strong> </strong>
 										<div className="statistics-value-highlight">
-											<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={3} showCurrencySymbol={false} />										
+											<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={10} showCurrencySymbol={false} />										
 											<span></span>
 										</div>
 										<strong className="statistics-subtext">pounds raised</strong>
@@ -217,132 +221,6 @@ const OnboardingCard = ({allIds}) => {
 	</div>
 	);
 };
-
-
-const DonationCard = ({xids, allIds}) => {
-	if ( ! Login.isLoggedIn()) {
-		return <LoginToSee />;
-	}
-	if ( ! Login.getUser().jwt) {
-		DataStore.fetch(['transient','jwt',Login.getId()], () => {
-			return Login.verify();
-		});
-		return <Misc.Loading text='Clearing security' />;
-	}
-	// No IDs?
-	let dnt = null;
-	try {
-		if (navigator.doNotTrack == "1") dnt = true;
-		if (navigator.doNotTrack == "0") dnt = false;
-	} catch (err) {
-		console.warn("DNT check failed", err);
-	}
-
-	if ( ! allIds) {
-		if (dnt) {
-			return <div>No tracking IDs to check - You have Do-Not-Track switched on, so we're not tracking you!</div>;	
-		}
-		return <div>No tracking IDs to check {dnt===null? " - Do you have Do-Not-Track switched on?" : null}</div>;
-	}
-
-	let qAllIds = xids.map(xid => 'user:'+xid).join(' OR ');
-	// NB: if xids changes (eg extra linking is added)	then this will reload
-	const donationsPath = ['widget', 'MyReport', 'donations', qAllIds];
-	// Get donations by user (including all registered tracking IDs)
-	let start = '2018-05-01T00:00:00.000Z'; // ??is there a data issue if older??
-	const dntn = "count"; // TODO! count is what we used to log, but it not reliable for grouped-by-session events, so we should use dntn. See adserver goodloop.act.donate
-	let pvDonationData = DataStore.fetch(donationsPath, () => {
-		const donationReq = {
-			dataspace: 'gl',
-			q: `evt:donation AND (${qAllIds})`,
-			breakdown: ['cid{"'+dntn+'": "sum"}'], 
-			start
-		};
-		return ServerIO.getDataLogData(donationReq, null, 'my-donations').then(res => res.cargo);
-	});	
-
-	if ( ! pvDonationData.resolved) {
-		return <Misc.Loading text='Donations data' />;
-	}
-	let userTotal = pvDonationData.value[dntn] && pvDonationData.value[dntn].sum;
-
-	// unwrap the ES aggregation format
-	let donationsByCharity = pivot(pvDonationData.value.by_cid.buckets, "$bi.{key, "+dntn+".sum.$n}", "$key.$n");
-
-	// no user donations?
-	if ( ! yessy(donationsByCharity)) {
-		if (dnt) {
-			return <div>No charity data... You have Do-Not-Track switched on, so we're not tracking you!</div>;
-		}
-		return <p>No charity data for {allIds}. </p>;
-	}
-
-	// whats their main charity?
-	const topCharityValue = {cid:null, v:0};
-	Object.keys(donationsByCharity).forEach(cid => {
-		let dv = donationsByCharity[cid];
-		if (dv <= topCharityValue.v) return;
-		topCharityValue.cid = cid;
-		topCharityValue.v = dv;
-	});
-	
-	if ( ! topCharityValue.cid) {
-		return <p>No top charity</p>;
-	}
-
-	// load the community total for this charity
-	let pvCommunityCharityTotal = DataStore.fetch(['widget','DonationCard','community'], () => {
-		const donationReq = {
-			dataspace: 'gl',
-			q: 'evt:donation AND cid:'+topCharityValue.cid,
-			breakdown: ['cid{"'+dntn+'": "sum"}'],
-			start
-		};
-		return ServerIO.getDataLogData(donationReq, null, 'community-donations').then(res => res.cargo);
-	});	
-
-	
-	// load charity info from SoGive
-	// NB: can 404
-	let pvTopCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:topCharityValue.cid, status:C.KStatus.PUBLISHED, swallow:true});
-	console.log(pvTopCharity);
-
-	// TODO fetch peeps, use Person.img, use Login.getUser(), use gravatar and Facebook standards to get an image
-	let peeps = getProfilesNow(xids);
-	console.warn("image", peeps, Login.getUser(), Login.aliases);
-	let profileImg = (Login.getUser() && Login.getUser().img)
-		// TODO a fallback image
-		|| "http://scotlandjs.com/assets/speakers/irina-preda-e8f1d6ce56f84ecaf4b6c64be7312b56.jpg";
-
-	// Display their charity + community donations
-	return 	(<div>
-		<div className="content">
-			<div className="partial-circle big top">
-				<img src="https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,h_630,w_1200,f_auto,q_90/v1/722207/gl-logo-red-bkgrnd_qipkwt.jpg" />
-			</div>
-			<div className="partial-circle big bottom"><p className="stats">
-				<Misc.Money amount={1} />
-			</p></div>
-			<div className="partial-circle2 small top">
-				<img src={profileImg} />
-			</div>
-			<div className="partial-circle2 small bottom"><p className="stats">
-				<Misc.Money amount={userTotal} />
-			</p></div>
-		</div>
-		{pvTopCharity.value? <CharityBlurb charity={pvTopCharity.value} /> : null}
-	</div>);
-}; // ./DonationsCard
-
-const CharityBlurb = ({charity}) => {
-	return (<div>
-		<h4>Your Top Charity</h4>
-		<h4>{charity.name}</h4>
-		<Misc.Thumbnail item={charity} />
-	</div>);
-};
-
-const LoginToSee = ({desc}) => <div>Please login to see {desc||'this'}. <LoginLink className='btn btn-default' /></div>;
 
 const SocialMediaCard = ({allIds=[]}) => {
 	let emailID = allIds.filter(id => XId.service(id)==='email')[0];
