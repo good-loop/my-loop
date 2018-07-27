@@ -226,20 +226,23 @@ const SocialMediaCard = ({allIds=[]}) => {
 	let emailID = allIds.filter(id => XId.service(id)==='email')[0];
 	let twitterID = allIds.filter(id => XId.service(id)==='twitter')[0];
 	let fbid = allIds.filter(id => XId.service(id)==='facebook')[0];
+	let fbpeep = getProfilesNow([fbid])[0];	
 
 	return (<div>
+		<p>Connect your social media - you can use this to boost the donations you generate!</p>
 		{emailID ? 
 			null
 			: 
 			<div> TODO: email capture </div>
 		}
 		{twitterID ? 
-			<div>Twitter username: {XId.id(fbid)}</div> // TODO show some data about them from Twitter
+			<div>Twitter username: {XId.id(twitterID)}</div> // TODO show some data about them from Twitter
 			: 
 			<div><SocialSignInButton service='twitter' verb='connect' /></div>
 		}
 		{fbid ? 
-			<div>Facebook ID: {XId.id(fbid)}</div> // TODO show some data about them from FB
+			<div> 
+				Facebook ID: {XId.id(fbid)} {fbpeep? fbpeep.name : null}</div> // TODO show some data about them from FB
 			: 
 			<div><SocialSignInButton service='facebook' verb='connect' /></div>
 		} 
