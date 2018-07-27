@@ -6,6 +6,7 @@ import pivot from 'data-pivot';
 import C from '../C';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
+import {getId} from '../base/data/DataClass';
 import Person from '../base/data/Person';
 import Misc from '../base/components/Misc';
 import ActionMan from '../plumbing/ActionMan';
@@ -117,7 +118,7 @@ const DonationCard = ({xids}) => {
 	// render
 	return(<div>
 		<You xids ={xids} />
-		{rows.map(row => <CharityDonation {...row} />)}
+		{rows.map(row => <CharityDonation key={row.cid} {...row} />)}
 	</div>);
 };
 
@@ -130,35 +131,35 @@ const You = ({xids}) => {
 };
 
 // TODO move to Profiler
-const getImage = peeps => {
-		// any with an image?
-		let peepsWithImg = peeps.filter(peep => peep.img);
-		if (peepsWithImg.length) {
-			// TODO use the claim data to pick the most recent
-			return peepsWithImg[0].img;
+const getImage = peeps => {	
+	// any with an image?
+	let peepsWithImg = peeps.filter(peep => peep.img);
+	if (peepsWithImg.length) {
+		// TODO use the claim data to pick the most recent
+		return peepsWithImg[0].img;
+	}
+	// Facebook?
+	// use http://graph.facebook.com/" + facebookId + "/picture?type=square For instance:
+	let fbpeeps = peeps.filter(peep => XId.service(getId(peep)) === 'facebook');
+	if (fbpeeps.length) {
+		// TODO an ajax request to https://graph.facebook.com/{id}?fields=picture.width(720).height(720)&redirect=false
+		// will get a json blob with picture.data.url
+		// a redirect??
+		let xid = fbpeeps[0].xid;
+		let pvImg = DataStore.fetch(['transient', 'fb', xid], () => {
+			return $.get('https://graph.facebook.com/' + XId.id(fbpeeps[0].xid) + "/picture?type=square");
+		});
+		if (pvImg.resolved) {
+			console.warn("FB img", pvImg.value);
 		}
-		// Facebook?
-		// use http://graph.facebook.com/" + facebookId + "/picture?type=square For instance:
-		let fbpeeps = peeps.filter(peep => XId.service(peep.xid) === 'facebook');
-		if (fbpeeps.length) {
-			// TODO an ajax request to https://graph.facebook.com/{id}?fields=picture.width(720).height(720)&redirect=false
-			// will get a json blob with picture.data.url
-			// a redirect??
-			let xid = fbpeeps[0].xid;
-			let pvImg = DataStore.fetch(['transient', 'fb', xid], () => {
-				return $.get('https://graph.facebook.com/' + XId.id(fbpeeps[0].xid) + "/picture?type=square");
-			});
-			if (pvImg.resolved) {
-				console.warn("FB img", pvImg.value);
-			}
-		}
-		// TODO email - gravatar
-		// ?? is there a gmail??
-		// https://stackoverflow.com/questions/9128700/getting-google-profile-picture-url-with-user-id
-		// <script src="https://www.avatarapi.com/js.aspx?email=peter.smith@gmail.com&size=128"></script>
-		// https://picasaweb.google.com/data/feed/api/user/daniel.winterstein@gmail.com?kind=album&alt=json
-		// then profilePic = myArr["feed"]["entry"][0]["media$group"]["media$thumbnail"][0]["url"]; 
-		return null;
+	}
+	// TODO email - gravatar
+	// ?? is there a gmail??
+	// https://stackoverflow.com/questions/9128700/getting-google-profile-picture-url-with-user-id
+	// <script src="https://www.avatarapi.com/js.aspx?email=peter.smith@gmail.com&size=128"></script>
+	// https://picasaweb.google.com/data/feed/api/user/daniel.winterstein@gmail.com?kind=album&alt=json
+	// then profilePic = myArr["feed"]["entry"][0]["media$group"]["media$thumbnail"][0]["url"]; 
+	return null;
 };
 
 const CharityDonation = ({cid, userTotal, communityTotal}) => {
