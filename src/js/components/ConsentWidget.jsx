@@ -63,7 +63,7 @@ const ConsentWidget = ({xids}) => {
 			setPermissions({person, dataspace, permissions});
 			// save (after a second)
 			let pid = getId(person);
-			let saveProfileDebounced = debounceForSameInput(pid, saveProfile, 2000);
+			let saveProfileDebounced = debounceForSameInput(pid, saveProfile, 1000);
 			saveProfileDebounced(person);
 		});
 	};

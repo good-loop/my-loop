@@ -27,7 +27,7 @@ ServerIO.APIBASE = ''; // Normally use this for "my server"!
 	
 ServerIO.DATALOG_ENDPOINT = C.HTTPS+'://'+C.SERVER_TYPE+'lg.good-loop.com/data';
 // ServerIO.DATALOG_ENDPOINT = 'https://testlg.good-loop.com/data';
-// ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';
+ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';
 
 ServerIO.PROFILER_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}profiler.good-loop.com`;
 ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com';

@@ -1,8 +1,9 @@
 import React from 'react';
+import Cookies from 'js-cookie';
 import _ from 'lodash';
 import { assert, assMatch } from 'sjtest';
 import { XId, modifyHash, stopEvent, encURI, yessy } from 'wwutils';
-
+import pivot from 'data-pivot';
 import C from '../C';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
@@ -13,9 +14,8 @@ import ActionMan from '../plumbing/ActionMan';
 import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
 import Login from 'you-again';
 import {LoginLink, SocialSignInButton} from '../base/components/LoginWidget';
-import ConsentWidget from './ConsentWidget';
-import Cookies from 'js-cookie';
 import {getProfile, getProfilesNow} from '../base/Profiler';
+import ConsentWidget from './ConsentWidget';
 
 /**
  * @returns String[] xids
@@ -64,23 +64,23 @@ const MyPage = () => {
 	// display...
 	return (
 		<div className="page MyPage">
-			<Misc.CardAccordion widgetName='MyReport' multiple >
+			<CardAccordion widgetName='MyReport' multiple >
 	
-				<Misc.Card defaultOpen><WelcomeCard xids={xids} /></Misc.Card>
+				<Card defaultOpen><WelcomeCard xids={xids} /></Card>
 
-				<Misc.Card title='Our Achievements Together' defaultOpen><StatisticsCard allIds={allIds} /></Misc.Card>
+				<Card title='Our Achievements Together' defaultOpen><StatisticsCard allIds={allIds} /></Card>
 
-				<Misc.Card title='How Good-Loop Ads Work' defaultOpen><OnboardingCard allIds={allIds} /></Misc.Card>				
+				<Card title='How Good-Loop Ads Work' defaultOpen><OnboardingCard allIds={allIds} /></Card>				
 
-				<Misc.Card title='Your Donations' defaultOpen><DonationCard xids={xids} allIds={allIds} /></Misc.Card>
+				<Card title='Your Donations' defaultOpen><DonationCard xids={xids} allIds={allIds} /></Card>
 
-				<Misc.Card title='Consent Controls' defaultOpen>{Login.isLoggedIn()? <ConsentWidget xids={xids} /> : <LoginToSee />}</Misc.Card>
+				<Card title='Consent Controls' defaultOpen>{Login.isLoggedIn()? <ConsentWidget xids={xids} /> : <LoginToSee />}</Card>
 
-				<Misc.Card title='Boost Your Impact' defaultOpen><SocialMediaCard allIds={xids} /></Misc.Card>
+				<Card title='Boost Your Impact' defaultOpen><SocialMediaCard allIds={xids} /></Card>
 
-				<Misc.Card title='Get In Touch' defaultOpen><ContactCard allIds={allIds} /></Misc.Card>
+				<Card title='Get In Touch' defaultOpen><ContactCard allIds={allIds} /></Card>
 			
-			</Misc.CardAccordion>
+			</CardAccordion>
 		</div>
 	);
 }; // ./MyPage
@@ -250,11 +250,12 @@ const DonationCard = ({xids, allIds}) => {
 	const donationsPath = ['widget', 'MyReport', 'donations', qAllIds];
 	// Get donations by user (including all registered tracking IDs)
 	let start = '2018-05-01T00:00:00.000Z'; // ??is there a data issue if older??
+	const dntn = "count"; // TODO! count is what we used to log, but it not reliable for grouped-by-session events, so we should use dntn. See adserver goodloop.act.donate
 	let pvDonationData = DataStore.fetch(donationsPath, () => {
 		const donationReq = {
 			dataspace: 'gl',
 			q: `evt:donation AND (${qAllIds})`,
-			breakdown: ['cid{"count": "sum"}'],
+			breakdown: ['cid{"'+dntn+'": "sum"}'], 
 			start
 		};
 		return ServerIO.getDataLogData(donationReq, null, 'my-donations').then(res => res.cargo);
@@ -263,9 +264,10 @@ const DonationCard = ({xids, allIds}) => {
 	if ( ! pvDonationData.resolved) {
 		return <Misc.Loading text='Donations data' />;
 	}
+	let userTotal = pvDonationData.value[dntn] && pvDonationData.value[dntn].sum;
 
 	// unwrap the ES aggregation format
-	let donationsByCharity = pivot(pvDonationData.value.by_cid.buckets, "$bi.{key, count.sum.$n}", "$key.$n");
+	let donationsByCharity = pivot(pvDonationData.value.by_cid.buckets, "$bi.{key, "+dntn+".sum.$n}", "$key.$n");
 
 	// no user donations?
 	if ( ! yessy(donationsByCharity)) {
@@ -293,7 +295,7 @@ const DonationCard = ({xids, allIds}) => {
 		const donationReq = {
 			dataspace: 'gl',
 			q: 'evt:donation AND cid:'+topCharityValue.cid,
-			breakdown: ['cid{"count": "sum"}'],
+			breakdown: ['cid{"'+dntn+'": "sum"}'],
 			start
 		};
 		return ServerIO.getDataLogData(donationReq, null, 'community-donations').then(res => res.cargo);
@@ -313,7 +315,8 @@ const DonationCard = ({xids, allIds}) => {
 		|| "http://scotlandjs.com/assets/speakers/irina-preda-e8f1d6ce56f84ecaf4b6c64be7312b56.jpg";
 
 	// Display their charity + community donations
-	return 	(<div className="content">
+	return 	(<div>
+		<div className="content">
 			<div className="partial-circle big top">
 				<img src="https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,h_630,w_1200,f_auto,q_90/v1/722207/gl-logo-red-bkgrnd_qipkwt.jpg" />
 			</div>
@@ -324,12 +327,20 @@ const DonationCard = ({xids, allIds}) => {
 				<img src={profileImg} />
 			</div>
 			<div className="partial-circle2 small bottom"><p className="stats">
-				<Misc.Money amount={1} />
+				<Misc.Money amount={userTotal} />
 			</p></div>
 		</div>
-	);
+		{pvTopCharity.value? <CharityBlurb charity={pvTopCharity.value} /> : null}
+	</div>);
 }; // ./DonationsCard
 
+const CharityBlurb = ({charity}) => {
+	return (<div>
+		<h4>Your Top Charity</h4>
+		<h4>{charity.name}</h4>
+		<Misc.Thumbnail item={charity} />
+	</div>);
+};
 
 const LoginToSee = ({desc}) => <div>Please login to see {desc||'this'}. <LoginLink className='btn btn-default' /></div>;
 
