@@ -20,6 +20,10 @@ import ConsentWidget from './ConsentWidget';
 import printer from '../base/utils/printer';
 import DonationCard from './DonationCard';
 
+const fetcher = xid => DataStore.fetch(['data', 'Person', xid], () => {
+	return getProfile({xid});
+});
+
 /**
  * @returns String[] xids
  */
@@ -38,20 +42,32 @@ const getAllXIds = () => {
 		all = all.concat(axids);
 	}
 	// linked IDs?
-	// ...fetch profiles
-	const fetcher = xid => DataStore.fetch(['data', 'Person', xid], () => {
-		return getProfile({xid});
-	});
-	let pvsPeep = all.map(fetcher);
-	pvsPeep.filter(pvp => pvp.value).forEach(pvp => {
-		let peep = pvp.value;
-		let linkedIds = Person.linkedIds(peep);	
-		if (linkedIds) linkedIds.forEach(li => all.push(li));
-	});
+	getAllXIds2(all, all);
 	// de dupe
 	all = Array.from(new Set(all));
 	return all;
 };
+/**
+ * @param all {String[]} all XIds -- modify this!
+ * @param agendaXIds {String[]} XIds to investigate
+ */
+const getAllXIds2 = (all, agendaXIds) => {
+	// ...fetch profiles from the agenda
+	let pvsPeep = agendaXIds.map(fetcher);
+	// races the fetches -- so the output can change as more data comes in!
+	// It can be considered done when DataStore holds a profile for each xid
+	pvsPeep.filter(pvp => pvp.value).forEach(pvp => {
+		let peep = pvp.value;
+		let linkedIds = Person.linkedIds(peep);	
+		if ( ! linkedIds) return;
+		// loop test and recurse
+		linkedIds.filter(li => all.indexOf(li) === -1).forEach(li => {
+			all.push(li);
+			getAllXIds2(all, [li]);					
+		});
+	});
+};
+
 // for debug
 window.getAllXIds = getAllXIds;
 
