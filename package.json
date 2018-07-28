@@ -28,7 +28,7 @@
     "react-dropzone": "^4.2.9",
     "sjtest": "^0.4.7",
     "wwutils": "^0.9.2",
-    "you-again": "^0.7.5"
+    "you-again": "^0.7.7"
   },
   "scripts": {
     "compile-watch": "webpack --config webpack.config.dev.js --progress --colors --watch",
