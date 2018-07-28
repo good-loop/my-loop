@@ -112,7 +112,7 @@ const WelcomeCard = ({xids}) => {
 				<div className="pull-right logged-in">
 					<p>Hi { Login.getUser().name || Login.getUser().xid }</p>
 					<small className="pull-right"><a href="#my" onClick={e => stopEvent(e) && Login.logout()}>Log out</a></small>
-					<div><small>{xids? xids.join(", ") : null}</small></div>
+					<div><small>{Login.getId()} + {xids? xids.join(", ") : null}</small></div>
 				</div>
 				<div className="header-text">
 					<p className="title">TAKE CONTROL OF YOUR DATA</p>
