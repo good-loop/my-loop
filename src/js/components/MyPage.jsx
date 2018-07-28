@@ -233,7 +233,7 @@ const SocialMediaCard = ({allIds=[]}) => {
 		{emailID ? 
 			null
 			: 
-			<div> TODO: email capture </div>
+			null // <div> TODO: email capture </div>
 		}
 		{twitterID ? 
 			<div>Twitter username: {XId.id(twitterID)}</div> // TODO show some data about them from Twitter
