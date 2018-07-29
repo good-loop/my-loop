@@ -34,14 +34,15 @@ const DonationCard = ({xids}) => {
 	if ( ! Login.isLoggedIn()) {
 		return <LoginToSee />;
 	}
-	if ( ! Login.getUser().jwt) {
+	let hasjwts = Login.aliases? Login.aliases.filter(u => u.jwt) : [];
+	if ( ! hasjwts.length) {
 		DataStore.fetch(['transient','jwt',Login.getId()], () => {
 			return Login.verify();
 		});
 		return <Misc.Loading text='Clearing security' />;
-	}	
+	}
 	
-	// Do noot track?
+	// Do not track?
 	let dnt = doNotTrack();
 
 	if ( ! xids) {

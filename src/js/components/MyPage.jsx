@@ -98,7 +98,8 @@ const MyPage = () => {
 				<Card title='Boost Your Impact' defaultOpen><SocialMediaCard allIds={xids} /></Card>
 
 				<Card title='Get In Touch' defaultOpen><ContactCard allIds={allIds} /></Card>
-			
+				
+				<Card title='Linked Profiles' defaultOpen><LinkedProfilesCard xids={xids} /></Card>
 			</CardAccordion>
 		</div>
 	);
@@ -112,7 +113,6 @@ const WelcomeCard = ({xids}) => {
 				<div className="pull-right logged-in">
 					<p>Hi { Login.getUser().name || Login.getUser().xid }</p>
 					<small className="pull-right"><a href="#my" onClick={e => stopEvent(e) && Login.logout()}>Log out</a></small>
-					<div><small>{Login.getId()} + {xids? xids.join(", ") : null}</small></div>
 				</div>
 				<div className="header-text">
 					<p className="title">TAKE CONTROL OF YOUR DATA</p>
@@ -272,6 +272,20 @@ const ContactCard = () => {
 			<p>Let us know what you think of this site, and your ideas for improving it.</p>
 			<p>Are you interested in hosting Ads For Good on your blog or website? <a href="https://www.good-loop.com/book-a-call">Let us know.</a></p>
 		</div>
+	</div>);
+};
+
+const LinkedProfilesCard = ({xids}) => {
+	if ( ! xids) return null;
+	let trackers = xids.filter(xid => XId.service(xid) === 'trk');
+	let nonTrackers = xids.filter(xid => XId.service(xid) !== 'trk');
+	let authd = Login.aliases? Login.aliases.filter( u => u.jwt).map(u => u.xid) : [];
+	return (<div>
+		<p>We all have several online identities -- e.g. emails, social media, and with retail companies. 
+		This card lists the IDs Good-Loop recognises as you.</p>
+		IDs: {nonTrackers}<br/>
+		Trackers: {trackers}<br/>
+		Active authorisation token: {authd}<br/>
 	</div>);
 };
 
