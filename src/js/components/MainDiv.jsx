@@ -127,7 +127,7 @@ class MainDiv extends Component {
 						<Page />
 					</div>
 				</div>
-				<LoginWidget logo={C.app.service} title={'Welcome to '+C.app.name} />
+				<LoginWidget logo={C.app.service} title={'Welcome to '+C.app.name} services={[]} />
 				
 			</div>
 		);
