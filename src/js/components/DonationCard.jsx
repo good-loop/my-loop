@@ -170,6 +170,9 @@ const CharityDonation = ({cid, userTotal, communityTotal}) => {
 	// HACK: avoid any dodgy numbers from old/new donation counters
 	if (communityTotal > 20000) communityTotal = communityTotal*0.06;
 
+	// TODO show the users donations - if they're above a threshold, e.g. £1
+	// Below that and users will feel dispirited 
+
 	// load charity info from SoGive
 	// NB: can 404
 	let pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:cid, status:C.KStatus.PUBLISHED, swallow:true});
