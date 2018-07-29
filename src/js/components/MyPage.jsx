@@ -253,8 +253,9 @@ const SocialMediaCard = ({allIds=[]}) => {
 const ContactCard = () => {
 	return (<div>
 		<div>
-			<p>Let us know what you think of this site, and your ideas for improving it.</p>
-			<p>Are you interested in hosting Ads For Good on your blog or website? <a href="https://www.good-loop.com/book-a-call">Let us know.</a></p>
+			<p>Let us know what you think of this web-app, and your ideas for improving it.</p>
+			<p>Are you interested in hosting Ads For Good on your blog or website?</p>
+			<p><a href="https://www.good-loop.com/book-a-call">Let us know.</a></p>
 		</div>
 	</div>);
 };
