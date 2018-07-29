@@ -266,8 +266,8 @@ const LinkedProfilesCard = ({xids}) => {
 	let authd = Login.aliases? Login.aliases.filter( u => u.jwt).map(u => u.xid) : [];
 	return (<div>
 		<p>We all have multiple online identities -- e.g. emails, social media, and with retail companies. 
-		This card lists the IDs Good-Loop recognises as you.</p>
-		IDs: {nonTrackers.map(xid => XId.service(xid)+': '+XId.id(xid)).join(", ")}<br/>
+		Here are the IDs Good-Loop recognises as you:</p>
+		{ nonTrackers.map(xid => <div key={xid}>{XId.service(xid)+': '+XId.id(xid)}</div>) }
 		Good-Loop cookies (random IDs, used by us to record your donations and avoid repeating ads): {trackers.map(xid => XId.id(xid)).join(", ")}<br/>
 		Currently logged into Good-Loop via: {authd.map(xid => XId.service(xid)+': '+XId.id(xid)).join(", ")}<br/>
 	</div>);
