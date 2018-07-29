@@ -18,12 +18,13 @@
 		<link rel="stylesheet" type="text/css" href="/style/print.css" media="print">		
 	</head>
 	<body>
+		
 		<div id="mainDiv"></div>
 
 		<footer class="footer">
 			<div class="col-md-12">
 				<center>
-					<p class="text-muted">
+					<p>
 						&copy; 2017-18 Good-Loop <a href="mailto:daniel@good-loop.com?Subject=Good-Loop%20Portal" target="_top">Contact Us</a>
 						&nbsp;&nbsp;&nbsp; This web-app is open-source on <a target='_blank' href='https://github.com/good-loop/my-loop'>GitHub</a>.
 						<br>
@@ -32,62 +33,60 @@
 					</p>
 				</center>
 			</div>
-		</footer>
+			<!-- Scripts -->
+			<script src="//code.jquery.com/jquery-3.1.0.min.js"></script>
+			<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+			<!-- everything else comes via webpack -->
+			<script src="/build/js/bundle.js"></script>
+			<script src="https://d3js.org/d3.v5.min.js"></script>
+			<img src='//lg.good-loop.com/pxl' style='position:absolute;bottom:0px;left:0px;width:1px;height:1px;' />
 
-		<!-- Scripts -->
-		<script src="//code.jquery.com/jquery-3.1.0.min.js"></script>
-		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<!-- everything else comes via webpack -->
-		<script src="/build/js/bundle.js"></script>
-		<script src="https://d3js.org/d3.v5.min.js"></script>
-		<img src='//lg.good-loop.com/pxl' style='position:absolute;bottom:0px;left:0px;width:1px;height:1px;' />
+			<!-- FB pre-load to give nice FB login TODO replace this - see notes in youagain.js -->
+			<script>
+				window.fbAsyncInit = function() {
+					FB.init({
+					appId      : '320927325010346',
+					xfbml      : true,
+					version    : 'v2.9'
+					});
+				//FB.AppEvents.logPageView();
+				};
 
-		<!-- FB pre-load to give nice FB login TODO replace this - see notes in youagain.js -->
+				(function(d, s, id){
+					var js, fjs = d.getElementsByTagName(s)[0];
+					if (d.getElementById(id)) {return;}
+					js = d.createElement(s); js.id = id;
+					js.src = "//connect.facebook.net/en_US/sdk.js";
+					fjs.parentNode.insertBefore(js, fjs);
+				}(document, 'script', 'facebook-jssdk'));
+			</script>
+
+		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 		<script>
-			window.fbAsyncInit = function() {
-			    FB.init({
-			      appId      : '320927325010346',
-			      xfbml      : true,
-			      version    : 'v2.9'
-			    });
-		    //FB.AppEvents.logPageView();
-			};
+			/*!
+			* IE10 viewport hack for Surface/desktop Windows 8 bug
+			* Copyright 2014-2015 Twitter, Inc.
+			* Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+			*/
 
-			(function(d, s, id){
-	    		var js, fjs = d.getElementsByTagName(s)[0];
-				if (d.getElementById(id)) {return;}
-				js = d.createElement(s); js.id = id;
-				js.src = "//connect.facebook.net/en_US/sdk.js";
-				fjs.parentNode.insertBefore(js, fjs);
-			}(document, 'script', 'facebook-jssdk'));
+			// See the Getting Started docs for more information:
+			// http://getbootstrap.com/getting-started/#support-ie10-width
+
+			(function () {
+			'use strict';
+
+			if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+				var msViewportStyle = document.createElement('style')
+				msViewportStyle.appendChild(
+				document.createTextNode(
+					'@-ms-viewport{width:auto!important}'
+				)
+				)
+				document.querySelector('head').appendChild(msViewportStyle)
+			}
+
+			})();
 		</script>
-
-	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-	<script>
-		/*!
- 		* IE10 viewport hack for Surface/desktop Windows 8 bug
-		* Copyright 2014-2015 Twitter, Inc.
-		* Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
-		*/
-
-		// See the Getting Started docs for more information:
-		// http://getbootstrap.com/getting-started/#support-ie10-width
-
-		(function () {
-		  'use strict';
-
-		  if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
-		    var msViewportStyle = document.createElement('style')
-		    msViewportStyle.appendChild(
-		      document.createTextNode(
-		        '@-ms-viewport{width:auto!important}'
-		      )
-		    )
-		    document.querySelector('head').appendChild(msViewportStyle)
-		  }
-
-		})();
-	</script>
-
+		</footer>
 	</body>
 </html>

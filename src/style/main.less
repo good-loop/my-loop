@@ -1,5 +1,9 @@
 @import "../js/base/style/main-base.less";
 
+.avoid-navbar {
+	margin-top:0px; // no navbar (yet)
+}
+
 .header {
 	background-color: #B01229;
 	min-height: 500px;
@@ -88,20 +92,9 @@ p > a:hover {
 	font-size: 16px;
 }
 
-.text-center {
-	text-align: center;
-}
-
-.how {
-	position: relative;
-	width: 100%;
-	display: table;
-}
-
-.row {
-	margin-right: -20px;
-	margin-left: -20px;
-}
+// .text-center {
+// 	text-align: center;
+// }
 
 .h2, .text-intro {
 	color: #4a4a4a;
@@ -110,22 +103,8 @@ p > a:hover {
 	line-height: 1.5em;
 }
 
-.how-steps {
-	padding: 0 !important;
-	list-style-type: none;
-	vertical-align: top;
-}
-
-.how-step {
-	margin: 0 3.9%;
-	max-width: 33%;
-	display: inline-block;
-	overflow: hidden;
-	min-height: 230px;
-}
-
 .how-text {
-	width: 220px;
+	// width: 220px;
 	padding-top: 23px;
 	display: block;
 	width: 160px;
@@ -140,38 +119,18 @@ p > a:hover {
 
 .how-img {
 	height: 132px;
-	width: 200px;
+	max-width: 200px;
 }
 
 .section-padding {
     padding-top: 20px;
     padding-bottom: 20px;
 }
-  
-.statistics-list {
-	display: table;
-	width: 100%;
-	margin-bottom: 30px;
-	max-width: 100%;
-	padding: 0 !important;
-	margin: 35px auto 0;
-	margin-top: 30px;
-	min-height: 100px;
-	height: 100px;
-	vertical-align: bottom;
-}
 
 .statistics-item {
-    width: 18%;
-    padding: 0 3%;
-    display: table-cell;
     text-align: center;
     font-size: 13px;
     color: #9b9b9b;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    overflow: hidden;
 
 	.statistics-value {
 		text-transform: uppercase;

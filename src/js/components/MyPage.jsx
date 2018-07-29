@@ -129,8 +129,24 @@ const WelcomeCard = ({xids}) => {
 	</div>);
 };
 
-const StatisticsCard = () => { 
+/**
+ * Convenience hack for 3-items, bit-o-spacing-if-large-screen
+ */
+const Row3 = ({children}) => {
+	return (<div className="row">
+		<div className="col-md-4 col-lg-3 col-lg-offset-1">
+			{children[0]}
+		</div>
+		<div className="col-md-4">
+			{children[1]}
+		</div>
+		<div className="col-md-4 col-lg-3">
+			{children[2]}
+		</div>
+</div>);
+};
 
+const StatisticsCard = () => { 
 	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
 		return ServerIO.getDataFnData({});
 	});
@@ -140,55 +156,40 @@ const StatisticsCard = () => {
 	let ttl = pvSum.value && pvSum.value.total;
 	let cnt = (pvSum.value && pvSum.value.count) || 100000;
 
-	return (<div>
-		<section className="statistics statistics-what section-half section-padding text-center">
-			<div className="statistics-content">
-				<div>
-					<div className="row">
-						<div>
-							<h2 className="h2 text-center">Thousands each month raised for charity</h2>
-							<div className="statistics-item statistics-item-central hidden-desktop">
-							</div>
-							<ul className="statistics-list">
-								<li className="statistics-item">
-									<div className="statistics-value">                                
-									</div>
-								</li>
-								<li className="statistics-item">
-									<div className="statistics-value">
-										<strong></strong>
-										<div className="statistics-value-highlight"><span>{printer.prettyNumber(cnt)}</span></div>
-										<strong className="statistics-subtext">people reached</strong>
-									</div>
-								</li>
-								<li className="statistics-item statistics-item-central">
-									<div className="statistics-value">
-										<strong> </strong>
-										<div className="statistics-value-highlight">
-											<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={10} showCurrencySymbol={false} />										
-											<span></span>
-										</div>
-										<strong className="statistics-subtext">pounds raised</strong>
-									</div>
-								</li>
-								<li className="statistics-item">
-									<div className="statistics-value">
-										<strong></strong>
-										<div className="statistics-value-highlight"><div className="text-stat">No compromises</div></div>
-										<strong className="statistics-subtext">on your privacy</strong>
-									</div>
-								</li>
-								<li className="statistics-item">
-									<div className="statistics-value">
-									</div>
-								</li>
-							</ul>
-						</div>
+	return (<section className="statistics statistics-what text-center">
+		<div className="statistics-content">
+			<div className="row">
+				<h2 className="h2 text-center">Thousands each month raised for charity</h2>
+				<div>&nbsp;</div>
+			</div>
+			<Row3>
+				<div className="statistics-item">
+					<div className="statistics-value">
+						<strong></strong>
+						<div className="statistics-value-highlight"><span>{printer.prettyNumber(cnt)}</span></div>
+						<strong className="statistics-subtext">people reached</strong>
 					</div>
 				</div>
-			</div>
-		</section>
-	</div>);
+				<div className="statistics-item">
+					<div className="statistics-value">
+						<strong> </strong>
+						<div className="statistics-value-highlight">
+							<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={10} showCurrencySymbol={false} />										
+							<span></span>
+						</div>
+						<strong className="statistics-subtext">pounds raised</strong>
+					</div>
+				</div>
+				<div className="statistics-item">
+					<div className="statistics-value">
+						<strong></strong>
+						<div className="statistics-value-highlight"><div className="text-stat">No compromises</div></div>
+						<strong className="statistics-subtext">on your privacy</strong>
+					</div>
+				</div>
+			</Row3>
+		</div>
+	</section>);
 };
 
 const OnboardingCard = ({allIds}) => {
@@ -196,46 +197,29 @@ const OnboardingCard = ({allIds}) => {
 	let step2Img = 'https://i.imgur.com/dwvVB2s.jpg';
 	let step3Img = 'https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,fl_lossy,h_1440,w_720,f_auto,q_auto/v1/722207/banner-illustration-publisher_jp1obr.png';
 
-	return 	(<div id="howitworks">
-		<section className="how text-center section-padding section-scrolled-to section-half">
-			<div className="how-content">
-				<div className="container-fluid">
-					<div className="row">
-						<div className="offset-xl-2 col-xl-8">
-							<div className="how-list">
-								<ul className="how-steps js-how-steps">
-									<li className="how-step">
-										<span className="how-image">
-											<img className="how-img" src={step1Img} alt='banners in a web page' />
-										</span>
-										<span className="how-text">You click on one of our Ads For Good banners</span>
-									</li>
-									<li className="how-step">
-										<span className="how-image">
-											<img className="how-img" src={step2Img} alt='banners in a web page' />
-										</span>
-										<span className="how-text">A video ad plays for 15 seconds</span>
-									</li>
-									<li className="how-step">
-										<span className="how-image">
-											<img className="how-img" src={step3Img} alt='banners in a web page' />
-										</span>
-										<span className="how-text">We donate half the ad revenue to your chosen charity</span>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div className="row">
-						<center>
-							<a className='btn btn-default' href='https://as.good-loop.com/?site=my.good-loop.com'>Try it now: Watch an Ad-for-Good!</a>
-						</center>
-					</div>
+	return 	(<section id="howitworks" className="how text-center section-padding">
+		<div className="how-content container-fluid">
+			<Row3>
+				<div className="how-step">
+					<img className="how-img" src={step1Img} alt='banners in a web page' />
+					<span className="how-text">You click on one of our Ads For Good banners</span>
 				</div>
+				<div className="how-step">
+					<img className="how-img" src={step2Img} alt='banners in a web page' />
+					<span className="how-text">A video ad plays for 15 seconds</span>
+				</div>
+				<div className="how-step">
+					<img className="how-img" src={step3Img} alt='banners in a web page' />
+					<span className="how-text">We donate half the ad revenue to your chosen charity</span>
+				</div>
+			</Row3>
+			<div className="row">
+				<center>
+					<a className='btn btn-default' href='https://as.good-loop.com/?site=my.good-loop.com'>Try it now: Watch an Ad-for-Good!</a>
+				</center>
 			</div>
-		</section>
-	</div>
-	);
+		</div>
+	</section>);
 };
 
 const SocialMediaCard = ({allIds=[]}) => {
@@ -281,11 +265,11 @@ const LinkedProfilesCard = ({xids}) => {
 	let nonTrackers = xids.filter(xid => XId.service(xid) !== 'trk');
 	let authd = Login.aliases? Login.aliases.filter( u => u.jwt).map(u => u.xid) : [];
 	return (<div>
-		<p>We all have several online identities -- e.g. emails, social media, and with retail companies. 
+		<p>We all have multiple online identities -- e.g. emails, social media, and with retail companies. 
 		This card lists the IDs Good-Loop recognises as you.</p>
-		IDs: {nonTrackers}<br/>
-		Trackers: {trackers}<br/>
-		Active authorisation token: {authd}<br/>
+		IDs: {nonTrackers.map(xid => XId.service(xid)+': '+XId.id(xid)).join(", ")}<br/>
+		Good-Loop cookies (random IDs, used by us to record your donations and avoid repeating ads): {trackers.map(xid => XId.id(xid)).join(", ")}<br/>
+		Currently logged into Good-Loop via: {authd.map(xid => XId.service(xid)+': '+XId.id(xid)).join(", ")}<br/>
 	</div>);
 };
 

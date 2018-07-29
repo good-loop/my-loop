@@ -35,6 +35,11 @@ ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com';
 ServerIO.AS_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}as.good-loop.com`;
 ServerIO.AS_ENDPOINT = `${C.HTTPS}://as.good-loop.com`;
 
+/**
+ * My Loop has no backend, so use profiler
+ */
+ServerIO.LOGENDPOINT = ServerIO.PROFILER_ENDPOINT+'/log';
+
 ServerIO.checkBase();
 
 /**

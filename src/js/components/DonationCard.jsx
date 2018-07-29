@@ -117,18 +117,19 @@ const DonationCard = ({xids}) => {
 	// sort by value??
 	
 	// render
-	return(<div>
-		<You xids ={xids} />
+	// TODO <You xids={xids} />
+	return(<div>		
 		{rows.map(row => <CharityDonation key={row.cid} {...row} />)}
 	</div>);
 };
 
 const You = ({xids}) => {
+	console.warn("You...", xids);
 	let peeps = getProfilesNow(xids);
 	// get image	
 	let img = getImage(peeps);	
 	console.warn("You img", img);
-	return null;
+	return (<div></div>);
 };
 
 // TODO move to Profiler
@@ -147,12 +148,13 @@ const getImage = peeps => {
 		// will get a json blob with picture.data.url
 		// a redirect??
 		let xid = fbpeeps[0].xid;
-		let pvImg = DataStore.fetch(['transient', 'fb', xid], () => {
-			return $.get('https://graph.facebook.com/' + XId.id(fbpeeps[0].xid) + "/picture?type=square");
-		});
-		if (pvImg.resolved) {
-			console.warn("FB img", pvImg.value);
-		}
+		// FIXME this kills react?!
+		// let pvImg = DataStore.fetch(['transient', 'fb', xid], () => {
+		// 	return $.get('https://graph.facebook.com/' + XId.id(fbpeeps[0].xid) + "/picture?type=square");
+		// });
+		// if (pvImg.resolved) {
+		// 	console.warn("FB img", pvImg.value);
+		// }
 	}
 	// TODO email - gravatar
 	// ?? is there a gmail??
