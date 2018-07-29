@@ -112,13 +112,14 @@ const DonationCard = ({xids}) => {
 	
 	// make rows
 	let rows = cids.map(cid => {
-			return {cid, userTotal: donationsByCharity[cid], communityTotal: communityDonationsByCharity[cid]};
+		return {cid, userTotal: donationsByCharity[cid], communityTotal: communityDonationsByCharity[cid]};
 	});
 	// sort by value??
 	
 	// render
 	// TODO <You xids={xids} />
-	return(<div>		
+	return(<div>
+		<p>What we've raised together for your charities.</p>
 		{rows.map(row => <CharityDonation key={row.cid} {...row} />)}
 	</div>);
 };
