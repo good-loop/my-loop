@@ -87,11 +87,11 @@ const MyPage = () => {
 		<div className="page MyPage">
 			<CardAccordion widgetName='MyReport' multiple >
 
+				<Card defaultOpen><WelcomeCard xids={xids} /></Card>
+
 				<Card title='Our Achievements Together' defaultOpen><StatisticsCard allIds={allIds} /></Card>
 
-				<Card title='How Good-Loop Ads Work' defaultOpen><OnboardingCard allIds={allIds} /></Card>				
-	
-				<Card defaultOpen><WelcomeCard xids={xids} /></Card>
+				<Card title='How Good-Loop Ads Work' defaultOpen><OnboardingCard allIds={allIds} /></Card>								
 
 				<Card title='Your Donations' defaultOpen><DonationCard xids={xids} /></Card>
 
@@ -125,7 +125,7 @@ const WelcomeCard = ({xids}) => {
 			<div className="header-text">
 				<p className="title">TAKE CONTROL OF YOUR DATA</p>
 				<p className="subtitle">You choose what data you give us<br/> and what we do with it.</p>
-				<LoginLink className='btn btn-lg btn-red' />				
+				<LoginLink className='btn btn-lg btn-red' verb='Sign Up' />				
 			</div>
 		}
 	</div>);
@@ -204,7 +204,7 @@ const OnboardingCard = ({allIds}) => {
 			<Row3>
 				<div className="how-step">
 					<img className="how-img" src={step1Img} alt='banners in a web page' />
-					<span className="how-text">You click on one of our Ads For Good banners</span>
+					<span className="how-text">You see one of our Ads For Good on a website</span>
 				</div>
 				<div className="how-step">
 					<img className="how-img" src={step2Img} alt='banners in a web page' />
