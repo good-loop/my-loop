@@ -86,12 +86,12 @@ const MyPage = () => {
 	return (
 		<div className="page MyPage">
 			<CardAccordion widgetName='MyReport' multiple >
-	
-				<Card defaultOpen><WelcomeCard xids={xids} /></Card>
 
 				<Card title='Our Achievements Together' defaultOpen><StatisticsCard allIds={allIds} /></Card>
 
 				<Card title='How Good-Loop Ads Work' defaultOpen><OnboardingCard allIds={allIds} /></Card>				
+	
+				<Card defaultOpen><WelcomeCard xids={xids} /></Card>
 
 				<Card title='Your Donations' defaultOpen><DonationCard xids={xids} /></Card>
 
