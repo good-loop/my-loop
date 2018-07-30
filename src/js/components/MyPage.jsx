@@ -80,8 +80,8 @@ const MyPage = () => {
 	// HACK DataLog query string: "user:trkid1@trk OR user:trkid2@trk OR ..."
 	const allIds = xids.map(trkid => 'user:' + trkid).join(' OR ');
 
-// TODO
-				// <Card title='Boost Your Impact' defaultOpen><SocialMediaCard allIds={xids} /></Card>
+	const locn = ""+window.location;
+
 	// display...
 	return (
 		<div className="page MyPage">
@@ -94,6 +94,8 @@ const MyPage = () => {
 				<Card defaultOpen><WelcomeCard xids={xids} /></Card>
 
 				<Card title='Your Donations' defaultOpen><DonationCard xids={xids} /></Card>
+
+				{locn.indexOf('dev=')!==-1? <Card title='Boost Your Impact' defaultOpen><SocialMediaCard allIds={xids} /></Card> : null}
 
 				<Card title='Consent Controls' defaultOpen>{Login.isLoggedIn()? <ConsentWidget xids={xids} /> : <LoginToSee />}</Card>
 
