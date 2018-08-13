@@ -9,6 +9,8 @@ import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
 import Person from '../base/data/Person';
 import Misc from '../base/components/Misc';
+import PropControl from '../base/components/Input';
+import BS from '../base/components/BS3';
 import ActionMan from '../plumbing/ActionMan';
 import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
 import {getPermissions, setPermissions, saveProfile, getProfile, getProfilesNow} from '../base/Profiler';
@@ -73,13 +75,13 @@ const ConsentWidget = ({xids}) => {
 			<p>Help us boost the money raised for charity using your data - without compromising your privacy.</p>
 			<p>Please can we:</p>
 			
-			<Misc.PropControl path={path} prop='personaliseAds' label='Pick ads that fit your profile' type='yesNo' 
+			<PropControl path={path} prop='personaliseAds' label='Pick ads that fit your profile' type='yesNo' 
 				saveFn={togglePerm}
 			/>
 			
-			<Misc.PropControl path={path} prop='recordDonations' label='Record your charity donations' type='yesNo' saveFn={togglePerm} />
+			<PropControl path={path} prop='recordDonations' label='Record your charity donations' type='yesNo' saveFn={togglePerm} />
 
-			<Misc.PropControl path={path} prop='recordAdsBehaviour' label='Record which ads we show you and how you react to them (e.g. click / ignore / vomit)' 
+			<PropControl path={path} prop='recordAdsBehaviour' label='Record which ads we show you and how you react to them (e.g. click / ignore / vomit)' 
 				type='yesNo' saveFn={togglePerm} />			
 
 			Sell your data: Hell No
