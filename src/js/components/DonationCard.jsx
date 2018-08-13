@@ -177,8 +177,8 @@ const CharityDonation = ({cid, userTotal, communityTotal}) => {
 	// NB: can 404
 	let pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:cid, status:C.KStatus.PUBLISHED, swallow:true});
 	const charity = pvCharity.value || {};
-	let img = charity.logo || charity.img || "https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,h_630,w_1200,f_auto,q_90/v1/722207/gl-logo-red-bkgrnd_qipkwt.jpg";
-	return (<div>
+	let img = charity.logo || charity.img || "https://doc-0g-38-docs.googleusercontent.com/docs/securesc/v7di1f7jlfirkfas89p1pn1mgr4tq3rp/gbtvi74np1cisss15ogb772iqmmvnk7e/1534161600000/18321203187876902173/18321203187876902173/1He8DRVrKqsUxzqoWoSV5KFjVXUPIErjx?e=view&nonce=ljlm3mkoikfeg&user=18321203187876902173&hash=2dsrfcg691rj5gjs1h0qlp0njjc67sms";
+	return (<div className="col-md-4">
 		<div className="partial-circle big top">
 			<img src={img} className='mx-auto' />
 		</div>
