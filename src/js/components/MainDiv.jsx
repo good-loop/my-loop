@@ -86,7 +86,6 @@ class MainDiv extends Component {
 		//Login.verify();
 		Login.verify().then((response) => {
 			let success = response.success;
-			console.log(success);
 			DataStore.setValue(loginResponsePath, success, true);
 			// Store response.cargo.success somewhere in datastore so other components can check (a) if it's finished and (b) if it was successful before trying to talk to lg.good-loop.com
 		});
@@ -123,7 +122,7 @@ class MainDiv extends Component {
 			<div>
 				<div className="container avoid-navbar">
 					<MessageBar />
-					<div className='page' id={page}>
+					<div className='page' id={page}>						
 						<Page />
 					</div>
 				</div>
