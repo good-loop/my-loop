@@ -85,24 +85,26 @@ const MyPage = () => {
 	// display...
 	return (
 		<div className="page MyPage">
-			<CardAccordion widgetName='MyReport' multiple >
+			<div className="container avoid-navbar">
+				<CardAccordion widgetName='MyReport' multiple >
 
-				<Card defaultOpen><WelcomeCard xids={xids} /></Card>
+					<Card defaultOpen><WelcomeCard xids={xids} /></Card>
 
-				<Card title='Our Achievements Together' defaultOpen><StatisticsCard allIds={allIds} /></Card>
+					<Card title='Our Achievements Together' defaultOpen><StatisticsCard allIds={allIds} /></Card>
 
-				<Card title='How Good-Loop Ads Work' defaultOpen><OnboardingCard allIds={allIds} /></Card>								
+					<Card title='How Good-Loop Ads Work' defaultOpen><OnboardingCard allIds={allIds} /></Card>								
 
-				<Card title='Your Donations' defaultOpen><DonationCard xids={xids} /></Card>
+					<Card title='Your Donations' defaultOpen><DonationCard xids={xids} /></Card>
 
-				{locn.indexOf('dev=')!==-1? <Card title='Boost Your Impact' defaultOpen><SocialMediaCard allIds={xids} /></Card> : null}
+					{locn.indexOf('dev=')!==-1? <Card title='Boost Your Impact' defaultOpen><SocialMediaCard allIds={xids} /></Card> : null}
 
-				<Card title='Consent Controls' defaultOpen>{Login.isLoggedIn()? <ConsentWidget xids={xids} /> : <LoginToSee />}</Card>
+					<Card title='Consent Controls' defaultOpen>{Login.isLoggedIn()? <ConsentWidget xids={xids} /> : <LoginToSee />}</Card>
 
-				<Card title='Get In Touch' defaultOpen><ContactCard allIds={allIds} /></Card>
-				
-				<Card title='Linked Profiles' defaultOpen><LinkedProfilesCard xids={xids} /></Card>
-			</CardAccordion>
+					<Card title='Get In Touch' defaultOpen><ContactCard allIds={allIds} /></Card>
+					
+					<Card title='Linked Profiles' defaultOpen><LinkedProfilesCard xids={xids} /></Card>
+				</CardAccordion>
+			</div>
 		</div>
 	);
 }; // ./MyPage

@@ -52,6 +52,7 @@ DataStore.update({
 const PAGES = {
 	account: BasicAccountPage,
 	my: MyPage,
+	campaign: CampaignPage,
 };
 
 const DEFAULT_PAGE = 'my';
@@ -121,7 +122,7 @@ class MainDiv extends Component {
 	
 		return (
 			<div>
-				<div className="container avoid-navbar">
+				<div>
 					<MessageBar />
 					<div className='page' id={page}>						
 						<Page />

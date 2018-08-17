@@ -24,15 +24,60 @@ import DonationCard from './DonationCard';
 
 
 const CampaignPage = () => {
+	let campaignPage = {
+		// bg: http;klsw
+	};
 	// TODO advert & campaign from the path
 	const lpath = DataStore.getValue(['location','path']);
 	let vertId = lpath[1];
-	return (<div>
-		TODO Kit Kat landing page
-
-		with an email / login CTA
-
-		with MyPage widgets below.
+	return (<div className="campaign-page">
+		<div className="wrapper">
+			<div className="one">
+				<p className="title">
+					£15,563.80<br/> 
+					RAISED SO FAR
+				</p>
+				<div className="arrow">
+					<span></span>
+					<span></span>
+				</div>
+			</div>
+		</div>
+		<div className="wrapper">
+			<div className="two">
+				<p className="title">
+					OUR COMMITMENT
+				</p>
+				<p className="subtitle">
+					At Nestlé we’re committed to improving the lives of cocoa farmers.<br/>
+			So we have committed to donating half of our KITKAT® advertising money to
+			support the NESTLÉ® COCOA PLAN®, through the ‘Ads for Good’ player.
+				</p>
+				<p className="link">
+					<a href=''>
+					WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH NESTLÉ® COCOA PLAN® PROJECT YOU WOULD LIKE TO FUND.
+					</a>
+				</p>
+			</div>
+		</div>
+		<div className="wrapper">
+			<div className="three"></div>
+		</div>
+		<div className="wrapper">
+			<div className="four">
+				<div className="wrapper">
+					<p>
+					KITKAT®
+					</p>
+					<p>
+					NESTLÉ® COCOA PLAN®
+					</p>
+					<p>
+					GOOD LOOP
+					</p>
+				</div>
+			</div>
+		</div>
 	</div>);
 };
 
