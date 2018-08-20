@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import Cookies from 'js-cookie';
 import _ from 'lodash';
@@ -38,13 +36,17 @@ const CampaignPage = () => {
 					RAISED SO FAR
 				</p>
 				<div className="arrow">
-					<span></span>
-					<span></span>
+					<a href="#page2">
+						<span></span>
+						<span></span>
+					</a>
 				</div>
 			</div>
 		</div>
 		<div className="wrapper">
 			<div className="two">
+				<a name="page2">
+				</a> 
 				<p className="title">
 					OUR COMMITMENT
 				</p>
@@ -58,23 +60,58 @@ const CampaignPage = () => {
 					WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH NESTLÉ® COCOA PLAN® PROJECT YOU WOULD LIKE TO FUND.
 					</a>
 				</p>
+				<div className="donation-circles">
+					<div className="circle">
+						<p><span>26%</span><br/> HAS BEEN DONATED TO...</p>
+						<img src="https://www.musthavegifts.org/media/catalog/product/cache/1/small_image/400x400/17f82f742ffe127f42dca9de82fb58b1/d/4/d485-0770-36_870901_1200x1200.jpg" />
+						<div className="charity-name">
+							Vegetable Growing Kit
+						</div>
+					</div>
+					<div className="circle">
+						<p><span>36%</span><br/> HAS BEEN DONATED TO...</p>
+						<img src="https://www.musthavegifts.org/media/catalog/product/cache/1/small_image/400x400/17f82f742ffe127f42dca9de82fb58b1/d/4/d485-0770-36_870901_1200x1200.jpg" />
+						<div className="charity-name">
+							Solar Chargers
+						</div>
+					</div>
+					<div className="circle">
+						<p><span>
+						38%</span><br/> HAS BEEN DONATED TO...</p>
+						<img src="https://www.musthavegifts.org/media/catalog/product/cache/1/small_image/400x400/17f82f742ffe127f42dca9de82fb58b1/d/4/d485-0770-36_870901_1200x1200.jpg" />
+						<div className="charity-name">
+							School Kits
+						</div>
+					</div>
+
+				</div>
 			</div>
 		</div>
 		<div className="wrapper">
-			<div className="three"></div>
+			<div className="three">
+			</div>
 		</div>
 		<div className="wrapper">
 			<div className="four">
 				<div className="wrapper">
-					<p>
-					KITKAT®
-					</p>
-					<p>
-					NESTLÉ® COCOA PLAN®
-					</p>
-					<p>
-					GOOD LOOP
-					</p>
+					<div>
+						<p>KITKAT®</p>
+						<img src="https://i.imgur.com/6JwS1Tj.png"/>
+						<img src="https://i.imgur.com/sLaWazJ.png"/>
+						<img src="https://i.imgur.com/5rDki1U.png"/>
+					</div>
+					<div>
+						<p>NESTLÉ® COCOA PLAN®</p>
+						<img src="https://i.imgur.com/6JwS1Tj.png"/>
+						<img src="https://i.imgur.com/sLaWazJ.png"/>
+						<img src="https://i.imgur.com/5rDki1U.png"/>
+					</div>
+					<div>
+						<p>GOOD LOOP</p>
+						<img src="https://i.imgur.com/6JwS1Tj.png"/>
+						<img src="https://i.imgur.com/sLaWazJ.png"/>
+						<img src="https://i.imgur.com/5rDki1U.png"/>
+					</div>
 				</div>
 			</div>
 		</div>
