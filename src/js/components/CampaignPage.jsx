@@ -19,7 +19,7 @@ import {getProfile, getProfilesNow} from '../base/Profiler';
 import ConsentWidget from './ConsentWidget';
 import printer from '../base/utils/printer';
 import DonationCard from './DonationCard';
-
+import { Link, Element } from "react-scroll";
 
 const CampaignPage = () => {
 	let campaignPage = {
@@ -36,57 +36,58 @@ const CampaignPage = () => {
 					RAISED SO FAR
 				</p>
 				<div className="arrow">
-					<a href="#page2">
-						<span></span>
-						<span></span>
-					</a>
+					<Link activeClass="active" className="arrowhead" to="arrowhead" spy={true} smooth={true} duration={2000}>
+							<span></span>
+							<span></span>
+					</Link>
 				</div>
 			</div>
 		</div>
-		<div className="wrapper">
-			<div className="two">
-				<a name="page2">
-				</a> 
-				<p className="title">
-					OUR COMMITMENT
-				</p>
-				<p className="subtitle">
-					At Nestlé we’re committed to improving the lives of cocoa farmers.<br/>
-			So we have committed to donating half of our KITKAT® advertising money to
-			support the NESTLÉ® COCOA PLAN®, through the ‘Ads for Good’ player.
-				</p>
-				<p className="link">
-					<a href=''>
-					WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH NESTLÉ® COCOA PLAN® PROJECT YOU WOULD LIKE TO FUND.
-					</a>
-				</p>
-				<div className="donation-circles">
-					<div className="circle">
-						<p><span>26%</span><br/> HAS BEEN DONATED TO...</p>
-						<img src="https://www.musthavegifts.org/media/catalog/product/cache/1/small_image/400x400/17f82f742ffe127f42dca9de82fb58b1/d/4/d485-0770-36_870901_1200x1200.jpg" />
-						<div className="charity-name">
-							Vegetable Growing Kit
-						</div>
-					</div>
-					<div className="circle">
-						<p><span>36%</span><br/> HAS BEEN DONATED TO...</p>
-						<img src="https://www.musthavegifts.org/media/catalog/product/cache/1/small_image/400x400/17f82f742ffe127f42dca9de82fb58b1/d/4/d485-0770-36_870901_1200x1200.jpg" />
-						<div className="charity-name">
-							Solar Chargers
-						</div>
-					</div>
-					<div className="circle">
-						<p><span>
-						38%</span><br/> HAS BEEN DONATED TO...</p>
-						<img src="https://www.musthavegifts.org/media/catalog/product/cache/1/small_image/400x400/17f82f742ffe127f42dca9de82fb58b1/d/4/d485-0770-36_870901_1200x1200.jpg" />
-						<div className="charity-name">
-							School Kits
-						</div>
-					</div>
+		<Element name="arrowhead" className="element">
+			<div className="wrapper">
+				<div className="two">
+						<p className="title">
+							OUR COMMITMENT
+						</p>
+						<p className="subtitle">
+							At Nestlé we’re committed to improving the lives of cocoa farmers.<br/>
+					So we have committed to donating half of our KITKAT® advertising money to
+					support the NESTLÉ® COCOA PLAN®, through the ‘Ads for Good’ player.
+						</p>
+						<p className="link">
+							<a href=''>
+							WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH NESTLÉ® COCOA PLAN® PROJECT YOU WOULD LIKE TO FUND.
+							</a>
+						</p>
+						<div className="donation-circles">
+							<div className="circle">
+								<p><span>26%</span><br/> HAS BEEN DONATED TO...</p>
+								<img src="https://www.musthavegifts.org/media/catalog/product/cache/1/small_image/400x400/17f82f742ffe127f42dca9de82fb58b1/d/4/d485-0770-36_870901_1200x1200.jpg" />
+								<div className="charity-name">
+									Vegetable Growing Kit
+								</div>
+							</div>
+							<div className="circle">
+								<p><span>36%</span><br/> HAS BEEN DONATED TO...</p>
+								<img src="https://www.musthavegifts.org/media/catalog/product/cache/1/small_image/400x400/17f82f742ffe127f42dca9de82fb58b1/d/4/d485-0770-36_870901_1200x1200.jpg" />
+								<div className="charity-name">
+									Solar Chargers
+								</div>
+							</div>
+							<div className="circle">
+								<p><span>
+								38%</span><br/> HAS BEEN DONATED TO...</p>
+								<img src="https://www.musthavegifts.org/media/catalog/product/cache/1/small_image/400x400/17f82f742ffe127f42dca9de82fb58b1/d/4/d485-0770-36_870901_1200x1200.jpg" />
+								<div className="charity-name">
+									School Kits
+								</div>
+							</div>
 
+						</div>
 				</div>
 			</div>
-		</div>
+		</Element>
+
 		<div className="wrapper">
 			<div className="three">
 			</div>
