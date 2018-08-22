@@ -314,16 +314,14 @@ height: 20em;
 
 	.wrapper {
 		display: grid;
-		grid-template-columns: 1fr;
 		grid-template-rows: 1fr;
-		grid-gap: 10px;
-		width: 100vw;
-		height: 100vh;
 	}
 
 	.one {
 		background: #BA0017;
 		grid-row: 1 / 3;
+		width: 100vw;
+		height: 100vh;
 
 		.title {
 		color: white;
@@ -337,99 +335,103 @@ height: 20em;
 	.two {
 		background: #ffd2c9;
 		grid-row: 1 / 3;
+		min-height: 700px;
 
-		.title {
-			color: #BA0017;
-			font-weight: bold;
-			font-style: italic;
-			font-size: 35px;
-			margin-top: 10%; 
-		}
+		.inside {
+			padding-top: 100px;
+			padding-bottom: 100px;
 
-		.subtitle {
-			margin-top: 2%;
-			margin-left: 27%;
-			margin-right: 27%;
-			color: #592e25;
-		}
-
-		.link {
-			margin-top: 2%;
-			margin-left: 27%;
-			margin-right: 27%;
-
-			a {
-				text-decoration: none;
-				font-weight: bold;
+			.title {
 				color: #BA0017;
+				font-weight: bold;
+				font-style: italic;
+				font-size: 35px;
 			}
-		}
-		.donation-circles {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-			grid-gap: 1px;
 
-			.circle {
-				grid-column: 1 / 3;
-				margin: 2em 2em;
-				position: relative;
-				float: left;
-				text-align: center;
-				p {
-					position: absolute;
-					top: 60px;
-					width: 100%;
+			.subtitle {
+				margin-top: 2%;
+				margin-left: 27%;
+				margin-right: 27%;
+				color: #592e25;
+			}
+
+			.link {
+				margin-top: 2%;
+				margin-left: 27%;
+				margin-right: 27%;
+
+				a {
+					text-decoration: none;
+					font-weight: bold;
+					color: #BA0017;
+				}
+			}
+			.donation-circles {
+				display: grid;
+				justify-content: center;
+				grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+				grid-gap: 80px;
+				justify-items: center;
+				margin-left: 20%;
+				margin-right: 20%;
+
+				.circle {
+					grid-column: 1 / 3;
+					margin: 2em 2em;
+					position: relative;
+					float: left;
 					text-align: center;
-					font-size: 1.5rem;
-					font-weight: bold;
-					color: white;
-					font-size: 12px;
-					z-index: 1;
-				}
-				span {
-					font-size: 70px;
-					font-family: Geneva, Tahoma, Verdana, sans-serif;
-				}
-				img {
-					width: 20em;
-					height: 20em;
-					border-radius: 20em;
-				}
-				.charity-name {
-					margin-top: 30px;
-					padding: 0.8em;
-					font-weight: bold;
-					font-style: italic;
-					font-size: 18px;
-					color: white;
-					background: #BA0017;
-				}
+					p {
+						position: absolute;
+						top: 60px;
+						width: 100%;
+						text-align: center;
+						font-size: 1.5rem;
+						font-weight: bold;
+						color: white;
+						font-size: 12px;
+						z-index: 1;
+					}
+					span {
+						font-size: 70px;
+						font-family: Geneva, Tahoma, Verdana, sans-serif;
+					}
+					img {
+						width: 20em;
+						height: 20em;
+						border-radius: 20em;
+					}
+					.charity-name {
+						margin-top: 30px;
+						padding: 0.8em;
+						font-weight: bold;
+						font-style: italic;
+						font-size: 18px;
+						color: white;
+						background: #BA0017;
+					}
+				} 
 			} 
-		} 
-	}
-
-	.three {
-		background: white;
-		grid-row: 1 / 3;
+		}
 	}
 
 	.four {
-		background: #BA0017;
 		grid-row: 1 / 3;
+		background: #BA0017;
+		min-height: 100px;
 
-		.wrapper {
+		.foot {
 			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+			grid-template-columns: repeat(auto-fit, minmax(422px, 1fr));
 			grid-gap: 1px;
-			width: 100vw;
-			height: 100vh;
 
 			div {
 				grid-column: 1 / 3;
 				color: white;
 				font-weight: bold;
 				font-size: 35px;
-				margin-top: 50%;     
+				margin-top: 20%;     
+				margin-bottom: 20%;     
 			} 
 		} 
 	}

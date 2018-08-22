@@ -42,79 +42,73 @@ const CampaignPage = () => {
 					</Link>
 				</div>
 			</div>
-		</div>
-		<Element name="arrowhead" className="element">
-			<div className="wrapper">
 				<div className="two">
-						<p className="title">
-							OUR COMMITMENT
-						</p>
-						<p className="subtitle">
-							At Nestlé we’re committed to improving the lives of cocoa farmers.<br/>
-					So we have committed to donating half of our KITKAT® advertising money to
-					support the NESTLÉ® COCOA PLAN®, through the ‘Ads for Good’ player.
-						</p>
-						<p className="link">
-							<a href=''>
-							WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH NESTLÉ® COCOA PLAN® PROJECT YOU WOULD LIKE TO FUND.
-							</a>
-						</p>
-						<div className="donation-circles">
-							<div className="circle">
-								<p><span>26%</span><br/> HAS BEEN DONATED TO...</p>
-								<img src="https://www.musthavegifts.org/media/catalog/product/cache/1/small_image/400x400/17f82f742ffe127f42dca9de82fb58b1/d/4/d485-0770-36_870901_1200x1200.jpg" />
-								<div className="charity-name">
-									Vegetable Growing Kit
-								</div>
+				<Element name="arrowhead" className="element">
+					<div className="inside">
+					<p className="title">
+						OUR COMMITMENT
+					</p>
+					<p className="subtitle">
+						At Nestlé we’re committed to improving the lives of cocoa farmers.<br/>
+				So we have committed to donating half of our KITKAT® advertising money to
+				support the NESTLÉ® COCOA PLAN®, through the ‘Ads for Good’ player.
+					</p>
+					<p className="link">
+						<a href=''>
+						WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH NESTLÉ® COCOA PLAN® PROJECT YOU WOULD LIKE TO FUND.
+						</a>
+					</p>
+					<div className="donation-circles">
+						<div className="circle">
+							<p><span>26%</span><br/> HAS BEEN DONATED TO...</p>
+							<img src="https://www.musthavegifts.org/media/catalog/product/cache/1/small_image/400x400/17f82f742ffe127f42dca9de82fb58b1/d/4/d485-0770-36_870901_1200x1200.jpg" />
+							<div className="charity-name">
+								Vegetable Growing Kit
 							</div>
-							<div className="circle">
-								<p><span>36%</span><br/> HAS BEEN DONATED TO...</p>
-								<img src="https://www.musthavegifts.org/media/catalog/product/cache/1/small_image/400x400/17f82f742ffe127f42dca9de82fb58b1/d/4/d485-0770-36_870901_1200x1200.jpg" />
-								<div className="charity-name">
-									Solar Chargers
-								</div>
-							</div>
-							<div className="circle">
-								<p><span>
-								38%</span><br/> HAS BEEN DONATED TO...</p>
-								<img src="https://www.musthavegifts.org/media/catalog/product/cache/1/small_image/400x400/17f82f742ffe127f42dca9de82fb58b1/d/4/d485-0770-36_870901_1200x1200.jpg" />
-								<div className="charity-name">
-									School Kits
-								</div>
-							</div>
-
 						</div>
+						<div className="circle">
+							<p><span>36%</span><br/> HAS BEEN DONATED TO...</p>
+							<img src="https://www.musthavegifts.org/media/catalog/product/cache/1/small_image/400x400/17f82f742ffe127f42dca9de82fb58b1/d/4/d485-0770-36_870901_1200x1200.jpg" />
+							<div className="charity-name">
+								Solar Chargers
+							</div>
+						</div>
+						<div className="circle">
+							<p><span>
+							38%</span><br/> HAS BEEN DONATED TO...</p>
+							<img src="https://www.musthavegifts.org/media/catalog/product/cache/1/small_image/400x400/17f82f742ffe127f42dca9de82fb58b1/d/4/d485-0770-36_870901_1200x1200.jpg" />
+							<div className="charity-name">
+								School Kits
+							</div>
+						</div>
+						</div>
+					</div>
+					</Element>
 				</div>
-			</div>
-		</Element>
 
-		<div className="wrapper">
-			<div className="three">
-			</div>
-		</div>
-		<div className="wrapper">
-			<div className="four">
-				<div className="wrapper">
-					<div>
-						<p>KITKAT®</p>
-						<img src="https://i.imgur.com/6JwS1Tj.png"/>
-						<img src="https://i.imgur.com/sLaWazJ.png"/>
-						<img src="https://i.imgur.com/5rDki1U.png"/>
-					</div>
-					<div>
-						<p>NESTLÉ® COCOA PLAN®</p>
-						<img src="https://i.imgur.com/6JwS1Tj.png"/>
-						<img src="https://i.imgur.com/sLaWazJ.png"/>
-						<img src="https://i.imgur.com/5rDki1U.png"/>
-					</div>
-					<div>
-						<p>GOOD LOOP</p>
-						<img src="https://i.imgur.com/6JwS1Tj.png"/>
-						<img src="https://i.imgur.com/sLaWazJ.png"/>
-						<img src="https://i.imgur.com/5rDki1U.png"/>
+
+				<div className="four">
+					<div className="foot">
+						<div className="social">
+							<p>KITKAT®</p>
+							<img src="https://i.imgur.com/6JwS1Tj.png"/>
+							<img src="https://i.imgur.com/sLaWazJ.png"/>
+							<img src="https://i.imgur.com/5rDki1U.png"/>
+						</div>
+						<div className="social">
+							<p>NESTLÉ® COCOA PLAN®</p>
+							<img src="https://i.imgur.com/6JwS1Tj.png"/>
+							<img src="https://i.imgur.com/sLaWazJ.png"/>
+							<img src="https://i.imgur.com/5rDki1U.png"/>
+						</div>
+						<div className="social">
+							<p>GOOD LOOP</p>
+							<img src="https://i.imgur.com/6JwS1Tj.png"/>
+							<img src="https://i.imgur.com/sLaWazJ.png"/>
+							<img src="https://i.imgur.com/5rDki1U.png"/>
+						</div>
 					</div>
 				</div>
-			</div>
 		</div>
 	</div>);
 };
