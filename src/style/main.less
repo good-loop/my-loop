@@ -1,7 +1,37 @@
 @import "../js/base/style/main-base.less";
 
+@font-face {
+	font-family: 'FrankGothItalicBT';
+	src: url('franklin_gothic_italic_bt.woff2') format('woff2'),
+		url('franklin_gothic_italic_bt.woff') format('woff'),
+		url('/fonts/franklin_gothic_italic_bt.ttf') format('truetype');	
+}
+
+@font-face {
+	font-family: 'HelveticaNeue';
+	src: url('/fonts/HelveticaNeue.ttc') format('truetype');	
+}
+
+@font-face {
+	font-family: 'BebasNeue';
+	src: url('/fonts/BebasNeue.otf') format('truetype');	
+}
+
+// font definition
+.frank-font {
+	font-family: 'FrankGothItalicBT', Fallback, sans-serif;
+}
+
+.helvetica-font {
+	font-family: 'HelveticaNeue', Fallback, sans-serif;
+}
+
+.bebas-font {
+	font-family: 'BebasNeue', Fallback, sans-serif;
+}
+
 .footer {
-	color: #333;
+	color: #B01229;
 }
 
 .avoid-navbar {
@@ -264,6 +294,7 @@ p > a:hover {
 width: 20em;
 height: 20em;
 }
+
 .big img {
 	opacity: 0.8;
 	width: 20em;
@@ -306,12 +337,10 @@ height: 20em;
 	z-index: 1;
 	font-family: Geneva, Tahoma, Verdana, sans-serif;
 }
-
-  
+ 
 .campaign-page {
 	overflow-x: hidden;
 	text-align: center;
-	font-family: Geneva, Tahoma, Verdana, sans-serif;
 
 	.wrapper {
 		display: grid;
@@ -324,12 +353,52 @@ height: 20em;
 		width: 100vw;
 		height: 100vh;
 
+		.darken-overlay {
+			background-color: rgba(62, 0, 0, 0.3);
+			height: 100vh;
+		}
 		.title {
-		color: white;
-		font-weight: bold;
-		font-style: italic;
-		font-size: 50px;
-		margin-top: 20%; 
+			color: white;
+			font-size: 65px;
+			padding-top: 1.5em;
+
+			p:first-child {
+				font-size: 75px;
+			}
+
+			p:second-child {
+				font-size: 65px;
+			}
+		}
+		.header-img {
+			min-height: 100%;
+			background: url(/img/header.jpg) no-repeat center center fixed; 
+			-webkit-background-size: cover;
+			-moz-background-size: cover;
+			-o-background-size: cover;
+			background-size: cover;
+		}
+		.kitkat {
+			background: #BA0017;
+			padding-top: 1em;
+			padding-bottom: 0.5em;
+			color: white;
+			font-size: 30px;
+
+			img {
+				height: 90px;
+			}
+
+			span {
+				padding-left: 0.6em;
+			}
+		}
+		.ads-for-good {
+			background: #BA0017;
+			padding-top: 0.1em;
+			margin-top: 3.2em;
+			color: white;
+			font-size: 50px;
 		}
 	}
 
@@ -344,29 +413,28 @@ height: 20em;
 
 			.title {
 				color: #BA0017;
-				font-weight: bold;
-				font-style: italic;
 				font-size: 35px;
 			}
 
 			.subtitle {
 				margin-top: 2%;
-				margin-left: 27%;
-				margin-right: 27%;
+				margin-left: 33%;
+				margin-right: 33%;	
 				color: #592e25;
 			}
 
 			.link {
 				margin-top: 2%;
-				margin-left: 27%;
-				margin-right: 27%;
-
+				margin-left: 33%;
+				margin-right: 33%;
+	
 				a {
+					font-size: 20px;
 					text-decoration: none;
-					font-weight: bold;
 					color: #BA0017;
 				}
 			}
+			
 			.donation-circles {
 				display: grid;
 				justify-content: center;
@@ -382,32 +450,30 @@ height: 20em;
 					position: relative;
 					float: left;
 					text-align: center;
+
 					p {
 						position: absolute;
-						top: 60px;
+						top: 70px;
 						width: 100%;
 						text-align: center;
 						font-size: 1.5rem;
-						font-weight: bold;
 						color: white;
-						font-size: 12px;
+						font-size: 20px;
 						z-index: 1;
 					}
 					span {
 						font-size: 70px;
-						font-family: Geneva, Tahoma, Verdana, sans-serif;
 					}
 					img {
 						width: 20em;
 						height: 20em;
 						border-radius: 20em;
+						object-fit: cover;
 					}
-					.charity-name {
+					.project-name {
 						margin-top: 30px;
 						padding: 0.8em;
-						font-weight: bold;
-						font-style: italic;
-						font-size: 18px;
+						font-size: 20px;
 						color: white;
 						background: #BA0017;
 					}
@@ -429,8 +495,7 @@ height: 20em;
 			div {
 				grid-column: 1 / 3;
 				color: white;
-				font-weight: bold;
-				font-size: 35px;
+				font-size: 50px;
 				margin-top: 20%;     
 				margin-bottom: 20%;     
 			} 
