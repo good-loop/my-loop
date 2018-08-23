@@ -31,7 +31,8 @@
 }
 
 .footer {
-	color: #B01229;
+	color: white;
+	background-color: #B01229;
 }
 
 .avoid-navbar {
@@ -361,6 +362,7 @@ height: 20em;
 			color: white;
 			font-size: 65px;
 			padding-top: 1.5em;
+			text-shadow: black 2px 2px 0;
 
 			p:first-child {
 				font-size: 75px;
@@ -395,21 +397,23 @@ height: 20em;
 		}
 		.ads-for-good {
 			background: #BA0017;
-			padding-top: 0.1em;
-			margin-top: 3.2em;
-			color: white;
-			font-size: 50px;
+			margin-top: 10em;
+			padding: 10px;
+
+			img {
+				height: 50px;
+			}
 		}
 	}
 
 	.two {
-		background: #ffd2c9;
+		background: #f0e7d0;
 		grid-row: 1 / 3;
 		min-height: 700px;
 
 		.inside {
 			padding-top: 100px;
-			padding-bottom: 100px;
+			padding-bottom: 10px;
 
 			.title {
 				color: #BA0017;
@@ -425,8 +429,8 @@ height: 20em;
 
 			.link {
 				margin-top: 2%;
-				margin-left: 33%;
-				margin-right: 33%;
+				margin-left: 35%;
+				margin-right: 35%;
 	
 				a {
 					font-size: 20px;
@@ -480,7 +484,59 @@ height: 20em;
 				} 
 			} 
 		}
+
+		.arrow-up {
+			width: 0;
+			height: 0;
+			margin-left: 25%;
+			border-left: 50px solid transparent;
+			border-right: 50px solid transparent;
+			border-bottom: 50px solid white;
+		}
 	}
+
+	.three {
+		min-height: 400px;
+		background-color: white;
+		justify-items: center;
+
+		.details {
+			margin: 4%;
+
+			div {  
+				margin: 3%;
+			} 
+
+			.top {
+				color: #BA0017;
+				font-size: 20px;
+			}
+
+			.title {
+				color: #BA0017;
+				font-size: 35px;
+			}
+
+			.description {
+				margin-left: 30%;
+				margin-right: 30%;
+				color: #592e25;
+			}
+
+			.link {
+				margin-left: 40%;
+				margin-right: 40%;
+				padding: 10px 0px 10px 0px;
+				background-color: #BA0017;
+
+				a {
+					font-size: 20px;
+					text-decoration: none;
+					color: white;
+				}
+			}
+		}
+	} 
 
 	.four {
 		grid-row: 1 / 3;
