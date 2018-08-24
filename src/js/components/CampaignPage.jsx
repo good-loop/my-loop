@@ -22,17 +22,24 @@ import DonationCard from './DonationCard';
 import { Link, Element } from 'react-scroll';
 
 let handleClick = (param) => {
+	let dList = ['d1','d2','d3'];
 	let d = document.getElementsByClassName(param)[0];
-	if (d.style.display === 'none' || d.classList.contains('hidden')) {
-		if (d.classList.contains('hidden')) {
-			d.classList.remove('hidden');
-		}
-		d.style.display = 'block';
+	if (d.classList.contains('hidden')) {
+		console.log("gonna wanna show " + param);
+		dList.forEach(function(val,index) { 
+			console.log("looking at " + val);
+			let temp = document.getElementsByClassName(val)[0];
+			if (!temp.classList.contains('hidden')) {
+				console.log("but first let's hide " + val);
+				temp.classList.add('hidden');
+			}
+		});
+		d.classList.remove('hidden');
+		//d.style.display = 'block';
 	} else {
-		if (!d.classList.contains('hidden')) {
-			d.classList.add('hidden');
-		}
-		d.style.display = 'none';
+		console.log("gonna hide " + param);
+		d.classList.add('hidden');
+		//d.style.display = 'none';
 	}
 };
 
