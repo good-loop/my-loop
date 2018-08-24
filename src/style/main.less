@@ -30,11 +30,6 @@
 	font-family: 'BebasNeue', Fallback, sans-serif;
 }
 
-.footer {
-	color: white;
-	background-color: #B01229;
-}
-
 .avoid-navbar {
 	margin-top:0px; // no navbar (yet)
 }
@@ -42,6 +37,7 @@
 .CardAccordion {
 	margin-top:30px;
 }
+
 
 .header {
 	background-color: #B01229;
@@ -338,7 +334,123 @@ height: 20em;
 	z-index: 1;
 	font-family: Geneva, Tahoma, Verdana, sans-serif;
 }
- 
+
+.c1 { grid-area: c1; }
+.c2 { grid-area: c2; }
+.c3 { grid-area: c3; }
+.d1 { grid-area: d1; }
+.d2 { grid-area: d2; }
+.d3 { grid-area: d3; }
+
+.donation-circles {
+	display: grid;
+	justify-content: center;
+	grid-gap: 0px 80px;
+	justify-items: center;
+	margin: 0 auto;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-areas: 
+	"c1 c2 c3"
+	"d1 d2 d3";  
+
+	.circle {
+		grid-column: 1 / 3;
+		margin: 2em 2em;
+		position: relative;
+		float: left;
+		text-align: center;
+
+		p {
+			position: absolute;
+			top: 70px;
+			width: 100%;
+			text-align: center;
+			font-size: 1.5rem;
+			color: white;
+			font-size: 20px;
+			z-index: 1;
+		}
+		span {
+			font-size: 70px;
+		}
+		img {
+			width: 20em;
+			height: 20em;
+			border-radius: 20em;
+			object-fit: cover;
+		}
+		.project-name {
+			margin-top: 30px;
+			padding: 0.8em;
+			font-size: 20px;
+			color: white;
+			background: #BA0017;
+		}
+	}
+	.details {
+		.arrow-up {
+			width: 0;
+			height: 0;
+			margin-left: 40%;
+			border-left: 50px solid transparent;
+			border-right: 50px solid transparent;
+			border-bottom: 50px solid white;
+		}
+		.innards {
+			background-color: white;
+			padding-top: 20px;
+			padding-bottom: 20px;
+
+			div {  
+				margin: 3%;
+			} 
+
+			.top {
+				color: #BA0017;
+				font-size: 20px;
+			}
+
+			.title {
+				color: #BA0017;
+				font-size: 35px;
+			}
+
+			.description {
+				color: #592e25;
+			}
+
+			.btnlink {
+				padding: 10px 0px 10px 0px;
+				background-color: #BA0017;
+
+				a {
+					font-size: 20px;
+					text-decoration: none;
+					color: white;
+				}
+			}
+		}
+	}
+	.hidden {
+		display: none;
+	} 
+
+} 
+
+@media only screen and (max-width: 1200px) {
+
+	.donation-circles {
+		grid-template-columns: 1fr;
+		grid-template-areas: 
+		"c1"
+		"d1"
+		"c2" 
+		"d2"
+		"c3"
+		"d3";  
+	}
+}
+
 .campaign-page {
 	overflow-x: hidden;
 	text-align: center;
@@ -438,106 +550,9 @@ height: 20em;
 					color: #BA0017;
 				}
 			}
-			
-			.donation-circles {
-				display: grid;
-				justify-content: center;
-				grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-				grid-gap: 80px;
-				justify-items: center;
-				margin-left: 20%;
-				margin-right: 20%;
-
-				.circle {
-					grid-column: 1 / 3;
-					margin: 2em 2em;
-					position: relative;
-					float: left;
-					text-align: center;
-
-					p {
-						position: absolute;
-						top: 70px;
-						width: 100%;
-						text-align: center;
-						font-size: 1.5rem;
-						color: white;
-						font-size: 20px;
-						z-index: 1;
-					}
-					span {
-						font-size: 70px;
-					}
-					img {
-						width: 20em;
-						height: 20em;
-						border-radius: 20em;
-						object-fit: cover;
-					}
-					.project-name {
-						margin-top: 30px;
-						padding: 0.8em;
-						font-size: 20px;
-						color: white;
-						background: #BA0017;
-					}
-				} 
-			} 
 		}
 
-		.arrow-up {
-			width: 0;
-			height: 0;
-			margin-left: 25%;
-			border-left: 50px solid transparent;
-			border-right: 50px solid transparent;
-			border-bottom: 50px solid white;
-		}
 	}
-
-	.three {
-		min-height: 400px;
-		background-color: white;
-		justify-items: center;
-
-		.details {
-			margin: 4%;
-
-			div {  
-				margin: 3%;
-			} 
-
-			.top {
-				color: #BA0017;
-				font-size: 20px;
-			}
-
-			.title {
-				color: #BA0017;
-				font-size: 35px;
-			}
-
-			.description {
-				margin-left: 30%;
-				margin-right: 30%;
-				color: #592e25;
-			}
-
-			.link {
-				margin-left: 40%;
-				margin-right: 40%;
-				padding: 10px 0px 10px 0px;
-				background-color: #BA0017;
-
-				a {
-					font-size: 20px;
-					text-decoration: none;
-					color: white;
-				}
-			}
-		}
-	} 
-
 	.four {
 		grid-row: 1 / 3;
 		background: #BA0017;

@@ -21,6 +21,21 @@ import printer from '../base/utils/printer';
 import DonationCard from './DonationCard';
 import { Link, Element } from 'react-scroll';
 
+let handleClick = (param) => {
+	let d = document.getElementsByClassName(param)[0];
+	if (d.style.display === 'none' || d.classList.contains('hidden')) {
+		if (d.classList.contains('hidden')) {
+			d.classList.remove('hidden');
+		}
+		d.style.display = 'block';
+	} else {
+		if (!d.classList.contains('hidden')) {
+			d.classList.add('hidden');
+		}
+		d.style.display = 'none';
+	}
+};
+
 const CampaignPage = () => {
 	let campaignPage = {
 		// bg: http;klsw
@@ -71,53 +86,100 @@ const CampaignPage = () => {
 							</a>
 						</p>
 						<div className='donation-circles'>
-							<div className='circle'>
+							<div className='circle c1' onClick={(e) => handleClick('d1')}>
 								<p className='bebas-font'><span className='frank-font'>26%</span><br/> HAS BEEN DONATED TO...</p>
 								<img alt='Vegetable Growing Kit' src='/img/stats1.jpg' />
 								<div className='project-name frank-font'>
 									Vegetable Growing Kit
 								</div>
 							</div>
-							<div className='circle'>
+							<div className='circle c2' onClick={(e) => handleClick('d2')}>
 								<p className='bebas-font'><span className='frank-font'>36%</span><br/> HAS BEEN DONATED TO...</p>
 								<img alt='Solar Chargers' src='/img/stats2.jpg' />
 								<div className='project-name frank-font'>
 									Solar Chargers
 								</div>
 							</div>
-							<div className='circle'>
+							<div className='circle c3' onClick={(e) => handleClick('d3')}>
 								<p className='bebas-font'><span className='frank-font'>38%</span><br/> HAS BEEN DONATED TO...</p>
 								<img alt='School Kits' src='/img/stats3.jpg' />
 								<div className='project-name frank-font'>
 									School Kits
 								</div>
 							</div>
+							<div className='details d1'>
+								<div className='arrow-up'></div>
+								<div className='innards'>
+									<div className='top bebas-font'>
+										MORE INFORMATION ABOUT THIS CAUSE
+									</div>
+									<div className='title frank-font'>Vegetable Growing Kit</div>
+									<div className='description helvetica-font'>
+										Lorem ipsum dolor sit amet, consectetuer adipiscing
+										elit, sed diam nonummy Lorem ipsum dolor sit amet,
+										consectetuer adipiscing elit, sed diam nonummy nibh
+										euismod tincidunt ut laoreet dolore magna aliquam erat
+										volutpat. Ut wisi enim ad minim veniam, quis nostrud
+										exerci tation ullamcorper suscipit lobortis nisl ut aliquip
+										ex ea commodo consequat.
+									</div>
+									<div className='btnlink frank-font'>
+										<a href='http://www.nestlecocoaplan.com/'>
+											Find out more about the<br/> Nestlé® Cocoa Plan®
+										</a>
+									</div>
+								</div>
+							</div>
+							<div className='details d2 hidden'>
+								<div className='arrow-up'></div>
+								<div className='innards'>
+									<div className='top bebas-font'>
+										MORE INFORMATION ABOUT THIS CAUSE
+									</div>
+									<div className='title frank-font'>Solar Chargers</div>
+									<div className='description helvetica-font'>
+										Lorem ipsum dolor sit amet, consectetuer adipiscing
+										elit, sed diam nonummy Lorem ipsum dolor sit amet,
+										consectetuer adipiscing elit, sed diam nonummy nibh
+										euismod tincidunt ut laoreet dolore magna aliquam erat
+										volutpat. Ut wisi enim ad minim veniam, quis nostrud
+										exerci tation ullamcorper suscipit lobortis nisl ut aliquip
+										ex ea commodo consequat.
+									</div>
+									<div className='btnlink frank-font'>
+										<a href='http://www.nestlecocoaplan.com/'>
+											Find out more about the<br/> Nestlé® Cocoa Plan®
+										</a>
+									</div>
+								</div>
+							</div>
+							<div className='details d3 hidden'>
+								<div className='arrow-up'></div>
+								<div className='innards'>
+									<div className='top bebas-font'>
+										MORE INFORMATION ABOUT THIS CAUSE
+									</div>
+									<div className='title frank-font'>School Kits</div>
+									<div className='description helvetica-font'>
+										Lorem ipsum dolor sit amet, consectetuer adipiscing
+										elit, sed diam nonummy Lorem ipsum dolor sit amet,
+										consectetuer adipiscing elit, sed diam nonummy nibh
+										euismod tincidunt ut laoreet dolore magna aliquam erat
+										volutpat. Ut wisi enim ad minim veniam, quis nostrud
+										exerci tation ullamcorper suscipit lobortis nisl ut aliquip
+										ex ea commodo consequat.
+									</div>
+									<div className='btnlink frank-font'>
+										<a href='http://www.nestlecocoaplan.com/'>
+											Find out more about the<br/> Nestlé® Cocoa Plan®
+										</a>
+									</div>
+								</div>
+							</div>
+
 						</div>
 					</div>
 				</Element>
-				<div className="arrow-up"></div>
-			</div>
-			<div className='three'>
-				<div className='details'>
-					<div className='top bebas-font'>
-						MORE INFORMATION ABOUT THIS CAUSE
-					</div>
-					<div className='title frank-font'>Vegetable Growing Kit</div>
-					<div className='description helvetica-font'>
-						Lorem ipsum dolor sit amet, consectetuer adipiscing
-						elit, sed diam nonummy Lorem ipsum dolor sit amet,
-						consectetuer adipiscing elit, sed diam nonummy nibh
-						euismod tincidunt ut laoreet dolore magna aliquam erat
-						volutpat. Ut wisi enim ad minim veniam, quis nostrud
-						exerci tation ullamcorper suscipit lobortis nisl ut aliquip
-						ex ea commodo consequat.
-					</div>
-					<div className='link frank-font'>
-						<a href="http://www.nestlecocoaplan.com/">
-							Find out more about the<br/> Nestlé® Cocoa Plan®
-						</a>
-					</div>
-				</div>
 			</div>
 			<div className='four bebas-font'>
 				<div className='foot'>
