@@ -53,7 +53,7 @@ const CampaignPage = () => {
 	return (<div className='campaign-page'>
 		<div className='wrapper'>
 			<div className='one'>
-				<p className='kitkat frank-font'>
+				<p className='kitkat-head frank-font'>
 					<img alt='Kitkat Logo' src='/img/kitkat-logo.png' />
 					<span> Supports </span>
 					<img alt='Cocoa Plan Logo' src='/img/cocoa-plan-logo.png' />

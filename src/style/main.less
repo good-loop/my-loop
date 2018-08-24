@@ -533,7 +533,7 @@ p > a:hover {
 			-o-background-size: cover;
 			background-size: cover;
 		}
-		.kitkat {
+		.kitkat-head {
 			background: #BA0017;
 			padding-top: 1em;
 			padding-bottom: 0.5em;
@@ -613,7 +613,7 @@ p > a:hover {
 		margin: 100px auto 0;
 		position: absolute;
 		bottom: 50px;
-		left: calc(50%);
+		left: calc(49%);
 		/*background: red;*/
 		cursor: pointer;
 	}
@@ -761,6 +761,16 @@ p > a:hover {
 
 @media only screen and (max-width: 450px) {
 	.campaign-page .one {
+		.kitkat-head {
+			font-size: 15px;
+
+			img:nth-child(1) {
+				height: 40px;
+			}
+			img:nth-child(3) {
+				height: 40px;
+			}
+		}
 		.title {
 			font-size: 35px;
 			p:first-child {
@@ -769,6 +779,13 @@ p > a:hover {
 		}
 		.ads-for-good {
 			margin-top: 18%;
+			img {
+				height: 30px;
+			}
+		}
+		.header-img .darken-overlay .arrow {
+			left: calc(45%);
 		}
 	}
+	
 }
