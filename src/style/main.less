@@ -288,8 +288,8 @@ p > a:hover {
 }
 
 .big {
-width: 20em;
-height: 20em;
+	width: 20em;
+	height: 20em;
 }
 
 .big img {
@@ -341,7 +341,7 @@ height: 20em;
 .d1 { 
 	grid-area: d1; 
 	.arrow-up {
-		margin-left: 11%;
+		margin-left: 25%;
 	}
 }
 .d2 { 
@@ -353,17 +353,17 @@ height: 20em;
 .d3 { 
 	grid-area: d3; 
 	.arrow-up {
-		margin-left: 82%;
+		margin-left: 68%;
 	}
 }
 
 .donation-circles {
 	display: grid;
 	justify-content: center;
-	grid-gap: 0px 80px;
+	grid-gap: 0px 40px;
 	justify-items: center;
 	margin: 0 auto;
-	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-columns: 250px 250px 250px;
 	grid-template-areas: 
 	"c1 c2 c3"
 	"d1 d1 d1"
@@ -391,9 +391,9 @@ height: 20em;
 			font-size: 70px;
 		}
 		img {
-			width: 20em;
-			height: 20em;
-			border-radius: 20em;
+			width: 250px;
+			height: 250px;
+			border-radius: 250px;
 			object-fit: cover;
 		}
 		.project-name {
@@ -414,12 +414,29 @@ height: 20em;
 		}
 		.innards {
 			background-color: white;
-			padding-top: 20px;
+			padding-top: 50px;
 			padding-bottom: 20px;
-
+			width: 100vw;
+			display: grid;
+			grid-template-columns: 400px 450px;
+			justify-content: center;
+			grid-gap: 20px;
+			
 			div {  
-				margin: 3%;
+				margin: 0% 5% 5% 5%;
 			} 
+			 
+			img {
+				grid-column: 1 / 2;
+				width: 400px;
+				height: 400px;
+				border-radius: 400px;
+				object-fit: cover;
+			}
+
+			.text {
+				grid-column: 1 / 2;
+			}
 
 			.top {
 				color: #BA0017;
@@ -451,24 +468,29 @@ height: 20em;
 		display: none;
 	} 
 
+}
+
+.four {
+	grid-row: 1 / 3;
+	background: #BA0017;
+	min-height: 100px;
+
+	.foot {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		grid-template-areas: "kitkat nestle goodloop";  
+		grid-gap: 1px;
+
+		div {
+			grid-column: 1 / 3;
+			color: white;
+			font-size: 50px;
+			margin-top: 20%;     
+			margin-bottom: 20%;     
+		} 
+	} 
 } 
 
-@media only screen and (max-width: 1200px) {
-
-	.d1 .arrow-up, .d2 .arrow-up, .d3 .arrow-up {
-		margin: auto;
-	}
-	.donation-circles {
-		grid-template-columns: 1fr;
-		grid-template-areas: 
-		"c1"
-		"d1"
-		"c2" 
-		"d2"
-		"c3"
-		"d3";  
-	}
-}
 
 .campaign-page {
 	overflow-x: hidden;
@@ -528,8 +550,8 @@ height: 20em;
 		}
 		.ads-for-good {
 			background: #BA0017;
-			margin-top: 10em;
 			padding: 10px;
+			margin-top: 8%;
 
 			img {
 				height: 50px;
@@ -543,8 +565,7 @@ height: 20em;
 		min-height: 700px;
 
 		.inside {
-			padding-top: 100px;
-			padding-bottom: 40px;
+			padding-top: 35px;
 
 			.title {
 				color: #BA0017;
@@ -552,44 +573,22 @@ height: 20em;
 			}
 
 			.subtitle {
-				margin-top: 2%;
-				margin-left: 33%;
-				margin-right: 33%;	
 				color: #592e25;
 			}
 
-			.link {
+			.subtitle, .link {
 				margin-top: 2%;
 				margin-left: 35%;
 				margin-right: 35%;
-	
-				a {
-					font-size: 20px;
-					text-decoration: none;
-					color: #BA0017;
-				}
 			}
+			a {
+				font-size: 20px;
+				text-decoration: none;
+				color: #BA0017;
+			}
+			
 		}
 
-	}
-	.four {
-		grid-row: 1 / 3;
-		background: #BA0017;
-		min-height: 100px;
-
-		.foot {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(422px, 1fr));
-			grid-gap: 1px;
-
-			div {
-				grid-column: 1 / 3;
-				color: white;
-				font-size: 50px;
-				margin-top: 20%;     
-				margin-bottom: 20%;     
-			} 
-		} 
 	}
 
 	@keyframes bounceArrow {
@@ -648,5 +647,128 @@ height: 20em;
 		transform-origin: right;
 		transform: rotate(-30deg);
 		right: 3px;
+	}
+}
+
+
+@media only screen and (max-width: 1200px) {
+	.donation-circles {
+		grid-gap: 0px 30px;
+	}
+
+	.campaign-page .two .inside {
+		.subtitle, .link {
+			margin-left: 33%;
+			margin-right: 33%;
+		}	
+	}
+}
+
+@media only screen and (max-width: 1100px) {
+	.donation-circles {
+		grid-gap: 0px 20px;
+	}
+	.campaign-page .two .inside {
+		.subtitle, .link {
+			margin-left: 30%;
+			margin-right: 30%;
+		}	
+	}
+}
+
+@media only screen and (max-width: 1050px) {
+	.donation-circles {
+		grid-gap: 0px 15px;
+	}
+	.campaign-page .two .inside {
+		.subtitle, .link {
+			margin-left: 25%;
+			margin-right: 25%;
+		}	
+	}
+}
+
+@media only screen and (max-width: 1000px) {
+	.donation-circles {
+		grid-gap: 0px 10px;
+	}
+	.campaign-page .two .inside {
+		.subtitle, .link {
+			margin-left: 20%;
+			margin-right: 20%;
+		}	
+	}
+}
+
+@media only screen and (max-width: 950px) {
+	.donation-circles {
+		grid-gap: 0px 5px;
+	}
+	.donation-circles .details .innards {
+		img {
+			margin-left: 40px;
+		}
+		.text {
+			margin-right: 40px;
+		}
+	}
+}
+
+@media only screen and (max-width: 800px) {
+	.donation-circles .details .innards {
+		display: block;
+		width: 100vw;
+		img {
+			display: none;
+		}
+	}
+
+	.d1 .arrow-up, .d2 .arrow-up, .d3 .arrow-up {
+		margin: auto;
+	}
+
+	.donation-circles {
+		grid-template-columns: 1fr;
+		grid-template-areas: 
+		"c1"
+		"d1"
+		"c2" 
+		"d2"
+		"c3"
+		"d3";  
+	}
+
+	.four .foot {
+		grid-template-columns: 1fr;
+		grid-template-areas: 
+		"kitkat" 
+		"nestle" 
+		"goodloop";  
+	}
+
+	.campaign-page .one {
+		.title {
+			font-size: 45px;
+			p:first-child {
+				font-size: 55px;
+			}
+		}
+		.ads-for-good {
+			margin-top: 18%;
+		}
+	}
+}
+
+@media only screen and (max-width: 450px) {
+	.campaign-page .one {
+		.title {
+			font-size: 35px;
+			p:first-child {
+				font-size: 45px;
+			}
+		}
+		.ads-for-good {
+			margin-top: 18%;
+		}
 	}
 }

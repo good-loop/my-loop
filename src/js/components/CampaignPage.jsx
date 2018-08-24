@@ -83,9 +83,9 @@ const CampaignPage = () => {
 							OUR COMMITMENT
 						</p>
 						<p className='subtitle helvetica-font'>
-							At Nestlé we’re committed to improving the lives of cocoa farmers.<br/>
-					So we have committed to donating half of our KITKAT® advertising money to
-					support the NESTLÉ® COCOA PLAN®, through the ‘Ads for Good’ player.
+							At Nestlé we’re committed to improving the lives of cocoa farmers. So 
+							we have committed to donating half of our KITKAT® advertising money to
+							support the NESTLÉ® COCOA PLAN®, through the ‘Ads for Good’ player.
 						</p>
 						<p className='link bebas-font'>
 							<a href='http://as.good-loop.com/' target='_blank'>
@@ -117,69 +117,78 @@ const CampaignPage = () => {
 							<div className='details d1'>
 								<div className='arrow-up'></div>
 								<div className='innards'>
-									<div className='top bebas-font'>
-										MORE INFORMATION ABOUT THIS CAUSE
-									</div>
-									<div className='title frank-font'>Vegetable Growing Kit</div>
-									<div className='description helvetica-font'>
-										Lorem ipsum dolor sit amet, consectetuer adipiscing
-										elit, sed diam nonummy Lorem ipsum dolor sit amet,
-										consectetuer adipiscing elit, sed diam nonummy nibh
-										euismod tincidunt ut laoreet dolore magna aliquam erat
-										volutpat. Ut wisi enim ad minim veniam, quis nostrud
-										exerci tation ullamcorper suscipit lobortis nisl ut aliquip
-										ex ea commodo consequat.
-									</div>
-									<div className='btnlink frank-font'>
-										<a href='http://www.nestlecocoaplan.com/'>
-											Find out more about the<br/> Nestlé® Cocoa Plan®
-										</a>
+									<img alt='Vegetable Growing Kit' src='/img/stats1.jpg' />
+									<div className="text">
+										<div className='top bebas-font'>
+											MORE INFORMATION ABOUT THIS CAUSE
+										</div>
+										<div className='title frank-font'>Vegetable Growing Kit</div>
+										<div className='description helvetica-font'>
+											Lorem ipsum dolor sit amet, consectetuer adipiscing
+											elit, sed diam nonummy Lorem ipsum dolor sit amet,
+											consectetuer adipiscing elit, sed diam nonummy nibh
+											euismod tincidunt ut laoreet dolore magna aliquam erat
+											volutpat. Ut wisi enim ad minim veniam, quis nostrud
+											exerci tation ullamcorper suscipit lobortis nisl ut aliquip
+											ex ea commodo consequat.
+										</div>
+										<div className='btnlink frank-font'>
+											<a href='http://www.nestlecocoaplan.com/'>
+												Find out more about the<br/> Nestlé® Cocoa Plan®
+											</a>
+										</div>	
 									</div>
 								</div>
 							</div>
 							<div className='details d2 hidden'>
 								<div className='arrow-up'></div>
 								<div className='innards'>
-									<div className='top bebas-font'>
-										MORE INFORMATION ABOUT THIS CAUSE
-									</div>
-									<div className='title frank-font'>Solar Chargers</div>
-									<div className='description helvetica-font'>
-										Lorem ipsum dolor sit amet, consectetuer adipiscing
-										elit, sed diam nonummy Lorem ipsum dolor sit amet,
-										consectetuer adipiscing elit, sed diam nonummy nibh
-										euismod tincidunt ut laoreet dolore magna aliquam erat
-										volutpat. Ut wisi enim ad minim veniam, quis nostrud
-										exerci tation ullamcorper suscipit lobortis nisl ut aliquip
-										ex ea commodo consequat.
-									</div>
-									<div className='btnlink frank-font'>
-										<a href='http://www.nestlecocoaplan.com/'>
-											Find out more about the<br/> Nestlé® Cocoa Plan®
-										</a>
+									<img alt='Solar Chargers' src='/img/stats2.jpg' />
+									<div className="text">
+										<div className='top bebas-font'>
+											MORE INFORMATION ABOUT THIS CAUSE
+										</div>
+										<div className='title frank-font'>Solar Chargers</div>
+										<div className='description helvetica-font'>
+											Lorem ipsum dolor sit amet, consectetuer adipiscing
+											elit, sed diam nonummy Lorem ipsum dolor sit amet,
+											consectetuer adipiscing elit, sed diam nonummy nibh
+											euismod tincidunt ut laoreet dolore magna aliquam erat
+											volutpat. Ut wisi enim ad minim veniam, quis nostrud
+											exerci tation ullamcorper suscipit lobortis nisl ut aliquip
+											ex ea commodo consequat.
+										</div>
+										<div className='btnlink frank-font'>
+											<a href='http://www.nestlecocoaplan.com/'>
+												Find out more about the<br/> Nestlé® Cocoa Plan®
+											</a>
+										</div>
 									</div>
 								</div>
 							</div>
 							<div className='details d3 hidden'>
 								<div className='arrow-up'></div>
 								<div className='innards'>
-									<div className='top bebas-font'>
-										MORE INFORMATION ABOUT THIS CAUSE
-									</div>
-									<div className='title frank-font'>School Kits</div>
-									<div className='description helvetica-font'>
-										Lorem ipsum dolor sit amet, consectetuer adipiscing
-										elit, sed diam nonummy Lorem ipsum dolor sit amet,
-										consectetuer adipiscing elit, sed diam nonummy nibh
-										euismod tincidunt ut laoreet dolore magna aliquam erat
-										volutpat. Ut wisi enim ad minim veniam, quis nostrud
-										exerci tation ullamcorper suscipit lobortis nisl ut aliquip
-										ex ea commodo consequat.
-									</div>
-									<div className='btnlink frank-font'>
-										<a href='http://www.nestlecocoaplan.com/'>
-											Find out more about the<br/> Nestlé® Cocoa Plan®
-										</a>
+									<img alt='School Kits' src='/img/stats3.jpg' />
+									<div className="text">
+										<div className='top bebas-font'>
+											MORE INFORMATION ABOUT THIS CAUSE
+										</div>
+										<div className='title frank-font'>School Kits</div>
+										<div className='description helvetica-font'>
+											Lorem ipsum dolor sit amet, consectetuer adipiscing
+											elit, sed diam nonummy Lorem ipsum dolor sit amet,
+											consectetuer adipiscing elit, sed diam nonummy nibh
+											euismod tincidunt ut laoreet dolore magna aliquam erat
+											volutpat. Ut wisi enim ad minim veniam, quis nostrud
+											exerci tation ullamcorper suscipit lobortis nisl ut aliquip
+											ex ea commodo consequat.
+										</div>
+										<div className='btnlink frank-font'>
+											<a href='http://www.nestlecocoaplan.com/'>
+												Find out more about the<br/> Nestlé® Cocoa Plan®
+											</a>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -190,19 +199,19 @@ const CampaignPage = () => {
 			</div>
 			<div className='four bebas-font'>
 				<div className='foot'>
-					<div className='social'>
+					<div className='social kitkat'>
 						<p>KITKAT®</p>
 						<a href='https://www.facebook.com/kitkatuk/' target='_blank'><img src='\img\facebook.png' /></a>
 						<a href='https://twitter.com/KITKAT' target='_blank'><img src='\img\twitter.png' /></a>
 						<a href='https://www.instagram.com/kitkat' target='_blank'><img src='\img\instagram.png' /></a>
 					</div>
-					<div className='social'>
+					<div className='social nestle'>
 						<p>NESTLÉ® COCOA PLAN®</p>
 						<a href='https://www.facebook.com/Nestle' target='_blank'><img src='\img\facebook.png' /></a>
 						<a href='https://twitter.com/Nestle' target='_blank'><img src='\img\twitter.png' /></a>
 						<a href='https://www.instagram.com/nestlecocoaplan' target='_blank'><img src='\img\instagram.png' /></a>
 					</div>
-					<div className='social'>
+					<div className='social goodloop'>
 						<p>GOOD LOOP</p>
 						<a href='https://www.facebook.com/the.good.loop/' target='_blank'><img src='\img\facebook.png' /></a>
 						<a href='https://twitter.com/goodloophq' target='_blank'><img src='\img\twitter.png' /></a>
