@@ -192,21 +192,21 @@ const CampaignPage = () => {
 				<div className='foot'>
 					<div className='social'>
 						<p>KITKAT®</p>
-						<img src='https://i.imgur.com/6JwS1Tj.png'/>
-						<img src='https://i.imgur.com/sLaWazJ.png'/>
-						<img src='https://i.imgur.com/5rDki1U.png'/>
+						<a href='https://www.facebook.com/kitkatuk/' target='_blank'><img src='\img\facebook.png' /></a>
+						<a href='https://twitter.com/KITKAT' target='_blank'><img src='\img\twitter.png' /></a>
+						<a href='https://www.instagram.com/kitkat' target='_blank'><img src='\img\instagram.png' /></a>
 					</div>
 					<div className='social'>
 						<p>NESTLÉ® COCOA PLAN®</p>
-						<img src='https://i.imgur.com/6JwS1Tj.png'/>
-						<img src='https://i.imgur.com/sLaWazJ.png'/>
-						<img src='https://i.imgur.com/5rDki1U.png'/>
+						<a href='https://www.facebook.com/Nestle' target='_blank'><img src='\img\facebook.png' /></a>
+						<a href='https://twitter.com/Nestle' target='_blank'><img src='\img\twitter.png' /></a>
+						<a href='https://www.instagram.com/nestlecocoaplan' target='_blank'><img src='\img\instagram.png' /></a>
 					</div>
 					<div className='social'>
 						<p>GOOD LOOP</p>
-						<img src='https://i.imgur.com/6JwS1Tj.png'/>
-						<img src='https://i.imgur.com/sLaWazJ.png'/>
-						<img src='https://i.imgur.com/5rDki1U.png'/>
+						<a href='https://www.facebook.com/the.good.loop/' target='_blank'><img src='\img\facebook.png' /></a>
+						<a href='https://twitter.com/goodloophq' target='_blank'><img src='\img\twitter.png' /></a>
+						<a href='' target='_blank'><img src='\img\instagram.png' /></a>
 					</div>
 				</div>
 			</div>
