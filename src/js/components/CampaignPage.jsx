@@ -21,11 +21,12 @@ import printer from '../base/utils/printer';
 import DonationCard from './DonationCard';
 import { Link, Element } from 'react-scroll';
 
-let handleClick = (param) => {
+let handleClick = (targetArrow, targetDetails) => {
+	let aList = ['a1','a2','a3'];
 	let dList = ['d1','d2','d3'];
-	let d = document.getElementsByClassName(param)[0];
+	let d = document.getElementsByClassName(targetDetails)[0];
+	let a = document.getElementsByClassName(targetArrow)[0];
 	if (d.classList.contains('hidden')) {
-		console.log("gonna wanna show " + param);
 		dList.forEach(function(val,index) { 
 			console.log("looking at " + val);
 			let temp = document.getElementsByClassName(val)[0];
@@ -35,11 +36,17 @@ let handleClick = (param) => {
 			}
 		});
 		d.classList.remove('hidden');
-		//d.style.display = 'block';
+
+		aList.forEach(function(val,index) { 
+			let temp2 = document.getElementsByClassName(val)[0];
+			if (!temp2.classList.contains('hidden')) {
+				temp2.classList.add('hidden');
+			}
+		});
+		a.classList.remove('hidden');
 	} else {
-		console.log("gonna hide " + param);
 		d.classList.add('hidden');
-		//d.style.display = 'none';
+		a.classList.add('hidden');
 	}
 };
 
@@ -93,29 +100,31 @@ const CampaignPage = () => {
 							</a>
 						</p>
 						<div className='donation-circles'>
-							<div className='circle c1' onClick={(e) => handleClick('d1')}>
+							<div className='circle c1' onClick={(e) => handleClick('a1','d1')}>
 								<p className='bebas-font'><span className='frank-font'>26%</span><br/> HAS BEEN DONATED TO...</p>
 								<img alt='Vegetable Growing Kit' src='/img/stats1.jpg' />
 								<div className='project-name frank-font'>
 									Vegetable Growing Kit
 								</div>
+								<div className='arrow-up a1'></div>
 							</div>
-							<div className='circle c2' onClick={(e) => handleClick('d2')}>
+							<div className='circle c2' onClick={(e) => handleClick('a2','d2')}>
 								<p className='bebas-font'><span className='frank-font'>36%</span><br/> HAS BEEN DONATED TO...</p>
 								<img alt='Solar Chargers' src='/img/stats2.jpg' />
 								<div className='project-name frank-font'>
 									Solar Chargers
 								</div>
+								<div className='arrow-up a2 hidden'></div>
 							</div>
-							<div className='circle c3' onClick={(e) => handleClick('d3')}>
+							<div className='circle c3' onClick={(e) => handleClick('a3','d3')}>
 								<p className='bebas-font'><span className='frank-font'>38%</span><br/> HAS BEEN DONATED TO...</p>
 								<img alt='School Kits' src='/img/stats3.jpg' />
 								<div className='project-name frank-font'>
 									School Kits
 								</div>
+								<div className='arrow-up a3 hidden'></div>
 							</div>
 							<div className='details d1'>
-								<div className='arrow-up'></div>
 								<div className='innards'>
 									<img alt='Vegetable Growing Kit' src='/img/stats1.jpg' />
 									<div className="text">
@@ -141,7 +150,6 @@ const CampaignPage = () => {
 								</div>
 							</div>
 							<div className='details d2 hidden'>
-								<div className='arrow-up'></div>
 								<div className='innards'>
 									<img alt='Solar Chargers' src='/img/stats2.jpg' />
 									<div className="text">
@@ -167,7 +175,6 @@ const CampaignPage = () => {
 								</div>
 							</div>
 							<div className='details d3 hidden'>
-								<div className='arrow-up'></div>
 								<div className='innards'>
 									<img alt='School Kits' src='/img/stats3.jpg' />
 									<div className="text">
