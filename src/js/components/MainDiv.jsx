@@ -18,6 +18,7 @@ import MyPage from './MyPage';
 import CampaignPage from './CampaignPage';
 import {BasicAccountPage} from '../base/components/AccountPageWidgets';
 import E404Page from '../base/components/E404Page';
+import TestPage from '../base/components/TestPage';
 
 
 // DataStore
@@ -53,6 +54,8 @@ const PAGES = {
 	account: BasicAccountPage,
 	my: MyPage,
 	campaign: CampaignPage,
+	test: TestPage,
+
 };
 
 const DEFAULT_PAGE = 'my';

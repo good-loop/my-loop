@@ -507,33 +507,10 @@ p > a:hover {
 		width: 100vw;
 		height: 100vh;
 
-		.darken-overlay {
-			background-color: rgba(62, 0, 0, 0.3);
-			height: 100vh;
-		}
-		.title {
-			color: white;
-			font-size: 65px;
-			padding-top: 1.5em;
-			text-shadow: black 2px 2px 0;
-
-			p:first-child {
-				font-size: 75px;
-			}
-
-			p:second-child {
-				font-size: 65px;
-			}
-		}
-		.header-img {
-			min-height: 100%;
-			background: url(/img/header.jpg) no-repeat center center fixed; 
-			-webkit-background-size: cover;
-			-moz-background-size: cover;
-			-o-background-size: cover;
-			background-size: cover;
-		}
 		.kitkat-head {
+			position: absolute;
+			width: 100%;
+			text-align: center;
 			background: #BA0017;
 			padding-top: 1em;
 			padding-bottom: 0.5em;
@@ -548,13 +525,47 @@ p > a:hover {
 				padding-left: 0.6em;
 			}
 		}
-		.ads-for-good {
-			background: #BA0017;
-			padding: 10px;
-			margin-top: 8%;
 
-			img {
-				height: 50px;
+		.header-img {
+			min-height: 100%;
+			background: url(/img/header.jpg) no-repeat center center fixed; 
+			-webkit-background-size: cover;
+			-moz-background-size: cover;
+			-o-background-size: cover;
+			background-size: cover;
+			
+			.darken-overlay {
+				background-color: rgba(62, 0, 0, 0.3);
+				height: 100vh;
+				display: flex;
+				justify-content: center;
+				flex-direction: column;
+				text-align: center;
+
+				.title {
+					color: white;
+					font-size: 65px;
+					text-shadow: black 2px 2px 0;
+	
+					p:first-child {
+						font-size: 75px;
+					}
+	
+					p:second-child {
+						font-size: 65px;
+					}
+				}
+	
+				.ads-for-good {
+					background: #BA0017;
+					bottom: 20%;
+					position: absolute;
+					width: 100%;
+					padding: 8px;
+					img {
+						height: 50px;
+					}
+				}
 			}
 		}
 	}
@@ -612,7 +623,7 @@ p > a:hover {
 	.arrow {
 		margin: 100px auto 0;
 		position: absolute;
-		bottom: 50px;
+		bottom: 8%;
 		left: calc(49%);
 		/*background: red;*/
 		cursor: pointer;
@@ -714,7 +725,34 @@ p > a:hover {
 	}
 }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 900px) {
+	.campaign-page .one {
+		.kitkat-head {
+			font-size: 20px;
+
+			img:nth-child(1) {
+				height: 70px;
+			}
+			img:nth-child(3) {
+				height: 70px;
+			}
+		}
+		.header-img .darken-overlay {
+			div.title:nth-child(1) > div:nth-child(1) {
+				font-size: 55px;
+			}
+			div.title:nth-child(1) > div:nth-child(2) {
+				font-size: 45px;
+			}
+			.ads-for-good {
+				margin-top: 18%;
+				img {
+					height: 50px;
+				}
+			}
+		}
+	}
+
 	.donation-circles .details .innards {
 		display: block;
 		width: 100vw;
@@ -747,45 +785,112 @@ p > a:hover {
 	}
 
 	.campaign-page .one {
+				
 		.title {
 			font-size: 45px;
 			p:first-child {
 				font-size: 55px;
 			}
 		}
+
 		.ads-for-good {
 			margin-top: 18%;
 		}
 	}
 }
 
-@media only screen and (max-width: 450px) {
+@media only screen and (max-width: 750px) {
+	.campaign-page .one {
+		.kitkat-head {
+			font-size: 18px;
+
+			img:nth-child(1) {
+				height: 60px;
+			}
+			img:nth-child(3) {
+				height: 60px;
+			}
+		}
+		.header-img .darken-overlay {
+			div.title:nth-child(1) > div:nth-child(1) {
+				font-size: 45px;
+			}
+			div.title:nth-child(1) > div:nth-child(2) {
+				font-size: 35px;
+			}
+			.ads-for-good {
+				margin-top: 18%;
+				img {
+					height: 40px;
+				}
+			}
+			.arrow {
+				left: calc(45%);
+			}
+		}
+	}
+}
+
+@media only screen and (max-width: 600px) {
+	.campaign-page .one {
+		.kitkat-head {
+			font-size: 18px;
+
+			img:nth-child(1) {
+				height: 60px;
+			}
+			img:nth-child(3) {
+				height: 60px;
+			}
+		}
+		.header-img .darken-overlay {
+			div.title:nth-child(1) > div:nth-child(1) {
+				font-size: 45px;
+			}
+			div.title:nth-child(1) > div:nth-child(2) {
+				font-size: 35px;
+			}
+			.ads-for-good {
+				margin-top: 18%;
+				img {
+					height: 40px;
+				}
+			}
+			.arrow {
+				left: calc(45%);
+			}
+		}
+	}
+}
+
+@media only screen and (max-width: 400px) {
 	.campaign-page .one {
 		.kitkat-head {
 			font-size: 15px;
 
 			img:nth-child(1) {
-				height: 40px;
+				height: 50px;
 			}
 			img:nth-child(3) {
-				height: 40px;
+				height: 50px;
 			}
 		}
-		.title {
-			font-size: 35px;
-			p:first-child {
+		.header-img .darken-overlay {
+			div.title:nth-child(1) > div:nth-child(1) {
 				font-size: 45px;
 			}
-		}
-		.ads-for-good {
-			margin-top: 18%;
-			img {
-				height: 30px;
+			div.title:nth-child(1) > div:nth-child(2) {
+				font-size: 35px;
+			}
+			.ads-for-good {
+				margin-top: 18%;
+				img {
+					height: 30px;
+				}
+			}
+			.arrow {
+				left: calc(45%);
 			}
 		}
-		.header-img .darken-overlay .arrow {
-			left: calc(45%);
-		}
 	}
-	
 }

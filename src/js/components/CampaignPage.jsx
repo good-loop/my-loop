@@ -53,20 +53,20 @@ const CampaignPage = () => {
 	return (<div className='campaign-page'>
 		<div className='wrapper'>
 			<div className='one'>
-				<p className='kitkat-head frank-font'>
+				<div className='kitkat-head frank-font'>
 					<img alt='Kitkat Logo' src='/img/kitkat-logo.png' />
 					<span> Supports </span>
 					<img alt='Cocoa Plan Logo' src='/img/cocoa-plan-logo.png' />
-				</p>
+				</div>
 				<div className='header-img'>
 					<div className='darken-overlay'>
-						<p className='title frank-font'>
-							<p>£15,563.80</p>
-							<p>RAISED SO FAR</p>
-						</p>
-						<p className='ads-for-good'>
-							<img alt='Good Loop Ads For Good Logo' src='/img/ads-for-good.png' />
-						</p>
+						<div className='title frank-font'>
+							<div>£15,563.80</div>
+							<div>RAISED SO FAR</div>
+						</div>
+						<div className='ads-for-good'>
+								<img alt='Good Loop Ads For Good Logo' src='/img/ads-for-good.png' />
+							</div>
 						<div className='arrow'>
 							<Link activeClass='active' className='arrowhead' to='arrowhead' spy={true} smooth={true} duration={2000}>
 									<span></span>
@@ -74,7 +74,7 @@ const CampaignPage = () => {
 							</Link>
 						</div>
 					</div>	
-  				</div>
+				</div>
 			</div>
 			<div className='two'>
 				<Element name='arrowhead' className='element'>
