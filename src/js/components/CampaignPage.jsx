@@ -61,9 +61,9 @@ const CampaignPage = () => {
 		<div className='wrapper'>
 			<div className='one'>
 				<div className='kitkat-head frank-font'>
-					<img alt='Kitkat Logo' src='/img/kitkat-logo.png' />
+					<img alt='Kitkat Logo' src='/img/kitkat-logo-scaled.png' />
 					<span> Supports </span>
-					<img alt='Cocoa Plan Logo' src='/img/cocoa-plan-logo.png' />
+					<img alt='Cocoa Plan Logo' src='/img/cocoa-plan-logo-scaled.png' />
 				</div>
 				<div className='header-img'>
 					<div className='darken-overlay'>
