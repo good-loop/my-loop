@@ -227,7 +227,7 @@ const CampaignPage = () => {
 						<p>GOOD LOOP</p>
 						<a href='https://www.facebook.com/the.good.loop/' target='_blank'><img src='\img\facebook.png' /></a>
 						<a href='https://twitter.com/goodloophq' target='_blank'><img src='\img\twitter.png' /></a>
-						<a href='' target='_blank'><img src='\img\instagram.png' /></a>
+						<a href='https://www.instagram.com/good.loop.ads/' target='_blank'><img src='\img\instagram.png' /></a>
 					</div>
 				</div>
 			</div>
