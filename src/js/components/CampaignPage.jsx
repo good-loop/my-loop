@@ -102,7 +102,7 @@ const CampaignPage = () => {
 						<div className='donation-circles'>
 							<div className='circle c1' onClick={(e) => handleClick('a1','d1')}>
 								<p className='bebas-font'><span className='frank-font'>26%</span><br/> HAS BEEN DONATED TO...</p>
-								<img alt='Vegetable Growing Kit' src='/img/stats1.jpg' />
+								<img alt='Cocoa Plan Vegetable Growing Kit project' src='/img/stats1.jpg' />
 								<div className='project-name frank-font'>
 									Vegetable Growing Kit
 								</div>
@@ -110,7 +110,7 @@ const CampaignPage = () => {
 							</div>
 							<div className='circle c2' onClick={(e) => handleClick('a2','d2')}>
 								<p className='bebas-font'><span className='frank-font'>36%</span><br/> HAS BEEN DONATED TO...</p>
-								<img alt='Solar Chargers' src='/img/stats2.jpg' />
+								<img alt='Cocoa Plan Solar Chargers project' src='/img/stats2.jpg' />
 								<div className='project-name frank-font'>
 									Solar Chargers
 								</div>
@@ -118,7 +118,7 @@ const CampaignPage = () => {
 							</div>
 							<div className='circle c3' onClick={(e) => handleClick('a3','d3')}>
 								<p className='bebas-font'><span className='frank-font'>38%</span><br/> HAS BEEN DONATED TO...</p>
-								<img alt='School Kits' src='/img/stats3.jpg' />
+								<img alt='Cocoa Plan School Kits project' src='/img/stats3.jpg' />
 								<div className='project-name frank-font'>
 									School Kits
 								</div>
@@ -131,7 +131,7 @@ const CampaignPage = () => {
 										<div className='top bebas-font'>
 											MORE INFORMATION ABOUT THIS CAUSE
 										</div>
-										<div className='title frank-font'>Vegetable-Growing Kits</div>
+										<div className='title frank-font'>VEGETABLE GROWING KITS</div>
 										<div className='description helvetica-font'>
 										Poverty affects many cocoa-growing households in Côte d’Ivoire. 
 										Overreliance on cocoa makes some farmers vulnerable to global 
@@ -141,7 +141,7 @@ const CampaignPage = () => {
 										with skills, tools, seedlings, and fertilizers to grow and 
 										market plantain, rice or peppers. Thanks for helping us make 
 										this possible!
-											<p>Average cost: 619$ / group or 155$ / individual women</p>
+											<p>Average cost: 619$ / group or 155$ / woman</p>
 										</div>
 										<div className='btnlink frank-font'>
 											<a href='http://www.nestlecocoaplan.com/'>
@@ -158,7 +158,7 @@ const CampaignPage = () => {
 										<div className='top bebas-font'>
 											MORE INFORMATION ABOUT THIS CAUSE
 										</div>
-										<div className='title frank-font'>Solar Chargers</div>
+										<div className='title frank-font'>SOLAR CHARGERS</div>
 										<div className='description helvetica-font'>
 										Poverty affects many cocoa-growing households. This is 
 										why Nestlé and the International Cocoa Initiative have 
@@ -181,12 +181,12 @@ const CampaignPage = () => {
 							</div>
 							<div className='details d3 hidden'>
 								<div className='innards'>
-									<img alt='School Kits' src='/img/stats3.jpg' />
+									<img alt='School Kits' src='/img/stats3-scaled.jpg' />
 									<div className="text">
 										<div className='top bebas-font'>
 											MORE INFORMATION ABOUT THIS CAUSE
 										</div>
-										<div className='title frank-font'>School Kits</div>
+										<div className='title frank-font'>SCHOOL KITS</div>
 										<div className='description helvetica-font'>
 										While primary school is free in cocoa-growing communities of Côte d’Ivoire, 
 										some of Nestlé Cocoa Plan farmers struggle to pay for the books and school 
