@@ -131,15 +131,17 @@ const CampaignPage = () => {
 										<div className='top bebas-font'>
 											MORE INFORMATION ABOUT THIS CAUSE
 										</div>
-										<div className='title frank-font'>Vegetable Growing Kit</div>
+										<div className='title frank-font'>Vegetable-Growing Kits</div>
 										<div className='description helvetica-font'>
-											Lorem ipsum dolor sit amet, consectetuer adipiscing
-											elit, sed diam nonummy Lorem ipsum dolor sit amet,
-											consectetuer adipiscing elit, sed diam nonummy nibh
-											euismod tincidunt ut laoreet dolore magna aliquam erat
-											volutpat. Ut wisi enim ad minim veniam, quis nostrud
-											exerci tation ullamcorper suscipit lobortis nisl ut aliquip
-											ex ea commodo consequat.
+										Poverty affects many cocoa-growing households in Côte d’Ivoire. 
+										Overreliance on cocoa makes some farmers vulnerable to global 
+										market price fluctuations. In order to increase and help 
+										diversify their income, Nestlé and the International Cocoa 
+										Initiative engage women in vegetable growing, equipping them 
+										with skills, tools, seedlings, and fertilizers to grow and 
+										market plantain, rice or peppers. Thanks for helping us make 
+										this possible!
+											<p>Average cost: 619$ / group or 155$ / individual women</p>
 										</div>
 										<div className='btnlink frank-font'>
 											<a href='http://www.nestlecocoaplan.com/'>
@@ -158,13 +160,16 @@ const CampaignPage = () => {
 										</div>
 										<div className='title frank-font'>Solar Chargers</div>
 										<div className='description helvetica-font'>
-											Lorem ipsum dolor sit amet, consectetuer adipiscing
-											elit, sed diam nonummy Lorem ipsum dolor sit amet,
-											consectetuer adipiscing elit, sed diam nonummy nibh
-											euismod tincidunt ut laoreet dolore magna aliquam erat
-											volutpat. Ut wisi enim ad minim veniam, quis nostrud
-											exerci tation ullamcorper suscipit lobortis nisl ut aliquip
-											ex ea commodo consequat.
+										Poverty affects many cocoa-growing households. This is 
+										why Nestlé and the International Cocoa Initiative have 
+										united forces to increase and diversify women’s income, 
+										while at the same time addressing the lack of electric 
+										grid in large parts of rural Côte d’Ivoire. Thanks to 
+										you, we will help women earn an additional income by 
+										equipping them with a small solar charging station 
+										offering their services to mobile phone owners in their 
+										community.
+											<p>Average cost: 103$ / unit</p>
 										</div>
 										<div className='btnlink frank-font'>
 											<a href='http://www.nestlecocoaplan.com/'>
@@ -183,13 +188,13 @@ const CampaignPage = () => {
 										</div>
 										<div className='title frank-font'>School Kits</div>
 										<div className='description helvetica-font'>
-											Lorem ipsum dolor sit amet, consectetuer adipiscing
-											elit, sed diam nonummy Lorem ipsum dolor sit amet,
-											consectetuer adipiscing elit, sed diam nonummy nibh
-											euismod tincidunt ut laoreet dolore magna aliquam erat
-											volutpat. Ut wisi enim ad minim veniam, quis nostrud
-											exerci tation ullamcorper suscipit lobortis nisl ut aliquip
-											ex ea commodo consequat.
+										While primary school is free in cocoa-growing communities of Côte d’Ivoire, 
+										some of Nestlé Cocoa Plan farmers struggle to pay for the books and school 
+										supplies for their children. Thanks to you, Nestlé and the International 
+										Cocoa Initiative will provide school kits so that more children can go to 
+										school. School kits contain exercise books, note books, pens, ruler, 
+										eraser, chalk and slate.
+											<p>Cost: 26$ / unit</p>
 										</div>
 										<div className='btnlink frank-font'>
 											<a href='http://www.nestlecocoaplan.com/'>
