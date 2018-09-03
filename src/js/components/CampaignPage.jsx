@@ -118,7 +118,7 @@ const CampaignPage = () => {
 							</div>
 							<div className='circle c3' onClick={(e) => handleClick('a3','d3')}>
 								<p className='bebas-font'><span className='frank-font'>38%</span><br/> HAS BEEN DONATED TO...</p>
-								<img alt='Cocoa Plan School Kits project' src='/img/stats3.jpg' />
+								<img alt='Cocoa Plan School Kits project' src='/img/stats3-scaled.jpg' />
 								<div className='project-name frank-font'>
 									School Kits
 								</div>
