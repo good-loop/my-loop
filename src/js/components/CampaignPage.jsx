@@ -95,7 +95,7 @@ const CampaignPage = () => {
 							support the NESTLÉ® COCOA PLAN®, through the ‘Ads for Good’ player.
 						</p>
 						<p className='link bebas-font'>
-							<a href='http://as.good-loop.com/' target='_blank'>
+							<a href='http://as.good-loop.com/?status=ALL_BAR_TRASH&gl.vert=HSSI0nvg' target='_blank'>
 							WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH NESTLÉ® COCOA PLAN® PROJECT YOU WOULD LIKE TO FUND.
 							</a>
 						</p>
