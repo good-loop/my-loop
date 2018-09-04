@@ -383,6 +383,7 @@ p > a:hover {
 			color: white;
 			font-size: 20px;
 			z-index: 1;
+			cursor: pointer;
 		}
 		span {
 			font-size: 70px;
@@ -392,6 +393,7 @@ p > a:hover {
 			height: 250px;
 			border-radius: 250px;
 			object-fit: cover;
+			cursor: pointer;
 		}
 		.project-name {
 			margin-top: 20px;
@@ -399,6 +401,7 @@ p > a:hover {
 			font-size: 20px;
 			color: white;
 			background: @main-color;
+			cursor: pointer;
 		}
 		.arrow-up {
 			width: 0;
@@ -459,12 +462,10 @@ p > a:hover {
 			.btnlink {
 				padding: 10px 0px 10px 0px;
 				background-color: @main-color;
-
-				a {
-					font-size: 20px;
-					text-decoration: none;
-					color: white;
-				}
+				cursor: pointer;
+				font-size: 20px;
+				text-decoration: none;
+				color: white;
 			}
 		}
 	}
@@ -484,9 +485,18 @@ p > a:hover {
 		div {
 			grid-column: 1 / 3;
 			color: white;
-			font-size: 50px;
 			margin-top: 15%;     
-			margin-bottom: 15%;     
+			margin-bottom: 15%;   
+			
+			p {
+				font-size: 50px;
+
+				span {
+					font-size: 18px;
+					position: relative;
+    				top: -1.1em;
+				}
+			}
 		} 
 	} 
 } 

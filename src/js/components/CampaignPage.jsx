@@ -143,10 +143,8 @@ const CampaignPage = () => {
 										this possible!
 											<p>Average cost: 619$ / group or 155$ / woman</p>
 										</div>
-										<div className='btnlink frank-font'>
-											<a href='http://www.nestlecocoaplan.com/'>
-												Find out more about the<br/> Nestlé® Cocoa Plan®
-											</a>
+										<div className='btnlink frank-font'  onClick={(e) => window.open('http://www.nestlecocoaplan.com/', '_blank')}>
+											Find out more about the<br/> Nestlé® Cocoa Plan®
 										</div>	
 									</div>
 								</div>
@@ -171,10 +169,8 @@ const CampaignPage = () => {
 										community.
 											<p>Average cost: 103$ / unit</p>
 										</div>
-										<div className='btnlink frank-font'>
-											<a href='http://www.nestlecocoaplan.com/'>
-												Find out more about the<br/> Nestlé® Cocoa Plan®
-											</a>
+										<div className='btnlink frank-font' onClick={(e) => window.open('http://www.nestlecocoaplan.com/', '_blank')}>
+											Find out more about the<br/> Nestlé® Cocoa Plan®
 										</div>
 									</div>
 								</div>
@@ -196,10 +192,8 @@ const CampaignPage = () => {
 										eraser, chalk and slate.
 											<p>Cost: 26$ / unit</p>
 										</div>
-										<div className='btnlink frank-font'>
-											<a href='http://www.nestlecocoaplan.com/'>
-												Find out more about the<br/> Nestlé® Cocoa Plan®
-											</a>
+										<div className='btnlink frank-font' onClick={(e) => window.open('http://www.nestlecocoaplan.com/', '_blank')}>
+											Find out more about the<br/> Nestlé® Cocoa Plan®
 										</div>
 									</div>
 								</div>
@@ -212,13 +206,13 @@ const CampaignPage = () => {
 			<div className='four bebas-font'>
 				<div className='foot'>
 					<div className='social kitkat'>
-						<p>KITKAT®</p>
+						<p>KITKAT<span>®</span></p>
 						<a href='https://www.facebook.com/kitkatuk/' target='_blank'><img src='\img\facebook.png' /></a>
 						<a href='https://twitter.com/KITKAT' target='_blank'><img src='\img\twitter.png' /></a>
 						<a href='https://www.instagram.com/kitkat' target='_blank'><img src='\img\instagram.png' /></a>
 					</div>
 					<div className='social nestle'>
-						<p>NESTLÉ® COCOA PLAN®</p>
+						<p>NESTLÉ<span>®</span> COCOA PLAN<span>®</span></p>
 						<a href='https://www.facebook.com/Nestle' target='_blank'><img src='\img\facebook.png' /></a>
 						<a href='https://twitter.com/Nestle' target='_blank'><img src='\img\twitter.png' /></a>
 						<a href='https://www.instagram.com/nestlecocoaplan' target='_blank'><img src='\img\instagram.png' /></a>
