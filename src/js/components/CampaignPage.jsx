@@ -52,6 +52,10 @@ let handleClick = (targetArrow, targetDetails) => {
 
 const CampaignPage = () => {
 
+	let footer = document.getElementsByClassName("footer")[0]; 
+	footer.style.background = '#BA0017';
+	footer.style.color = 'white';
+
 	// charities 
 	let cids = ["streets_of_london", "wateraid", "mps"];
 
