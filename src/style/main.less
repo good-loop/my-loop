@@ -565,8 +565,8 @@ p > a:hover {
 			-ms-grid-column: 1;
 			-ms-grid-column-span: 2;
 			color: white;
-			margin-top: 15%;     
-			margin-bottom: 10%;   
+			padding-top: 15%;     
+			padding-bottom: 10%;   
 			
 			p {
 				font-size: 50px;
@@ -909,6 +909,15 @@ p > a:hover {
 
 	}
 
+	.four .foot {
+		-ms-grid-columns: 1fr;
+		grid-template-columns: 1fr;
+		grid-template-areas: 
+		"kitkat" 
+		"nestle" 
+		"goodloop";  
+	}
+
 	.campaign-page .one {
 				
 		.title {
@@ -1047,6 +1056,25 @@ p > a:hover {
 	}
 }
 
+// hack to target IE10+ and replace css grid with flexbox
+@media screen and (-ms-high-contrast:active), (-ms-high-contrast:none) {
+
+	.donation-circles {
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	.foot {
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	.social {
+		flex-basis: calc(33.333%-20px);
+	}
+}
+
+// my-loop default footer style
 .footer {
 	border-top: 0px;
 	background: white;
