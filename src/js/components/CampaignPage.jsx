@@ -174,7 +174,7 @@ const CampaignPage = () => {
 										with skills, tools, seedlings, and fertilizers to grow and 
 										market plantain, rice or peppers. Thanks for helping us make 
 										this possible!
-											<p>Average cost: 619$ / group or 155$ / woman</p>
+											<p>Average cost: $619 / group or $155 / woman</p>
 										</div>
 										<div className='btnlink frank-font'  onClick={(e) => window.open('http://www.nestlecocoaplan.com/', '_blank')}>
 											Find out more about the<br/> Nestlé® Cocoa Plan®
@@ -200,7 +200,7 @@ const CampaignPage = () => {
 										equipping them with a small solar charging station 
 										offering their services to mobile phone owners in their 
 										community.
-											<p>Average cost: 103$ / unit</p>
+											<p>Average cost: $103 / unit</p>
 										</div>
 										<div className='btnlink frank-font' onClick={(e) => window.open('http://www.nestlecocoaplan.com/', '_blank')}>
 											Find out more about the<br/> Nestlé® Cocoa Plan®
@@ -223,7 +223,7 @@ const CampaignPage = () => {
 										Cocoa Initiative will provide school kits so that more children can go to 
 										school. School kits contain exercise books, note books, pens, ruler, 
 										eraser, chalk and slate.
-											<p>Cost: 26$ / unit</p>
+											<p>Cost: $26 / unit</p>
 										</div>
 										<div className='btnlink frank-font' onClick={(e) => window.open('http://www.nestlecocoaplan.com/', '_blank')}>
 											Find out more about the<br/> Nestlé® Cocoa Plan®
