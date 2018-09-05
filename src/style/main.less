@@ -1062,6 +1062,41 @@ p > a:hover {
 	.donation-circles {
 		display: flex;
 		flex-wrap: wrap;
+
+		.circle {
+			padding-left: 20px;
+		}
+
+		.details {
+			.innards {
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				// position: relative;
+				// overflow: hidden;
+				width: 20rem;
+				height: 20rem;
+
+				.text {
+					display: flex;
+					flex-direction: column;
+					flex-basis: calc(33.333% - 20px);	
+				}
+
+				img {
+					position: absolute;
+					top: -9999px;
+					right: -9999px;
+					bottom: -9999px;
+					left: -9999px;
+					margin: auto;
+					min-width: 100%;
+					min-height: 100%;
+				}
+			}
+		}
+
+
 	}
 
 	.foot {
