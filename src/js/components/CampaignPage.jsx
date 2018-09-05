@@ -128,9 +128,6 @@ const CampaignPage = () => {
 								<div className='innards'>
 									<img alt='Vegetable Growing Kit' src='/img/stats1.jpg' />
 									<div className="text">
-										<div className='top bebas-font'>
-											MORE INFORMATION ABOUT THIS CAUSE
-										</div>
 										<div className='title frank-font'>VEGETABLE GROWING KITS</div>
 										<div className='description helvetica-font'>
 										Poverty affects many cocoa-growing households in Côte d’Ivoire. 
@@ -141,7 +138,7 @@ const CampaignPage = () => {
 										with skills, tools, seedlings, and fertilizers to grow and 
 										market plantain, rice or peppers. Thanks for helping us make 
 										this possible!
-											<p>Average cost: 619$ / group or 155$ / woman</p>
+											<p>Average cost: $619 / group or $155 / woman</p>
 										</div>
 										<div className='btnlink frank-font'  onClick={(e) => window.open('http://www.nestlecocoaplan.com/', '_blank')}>
 											Find out more about the<br/> Nestlé® Cocoa Plan®
@@ -153,9 +150,6 @@ const CampaignPage = () => {
 								<div className='innards'>
 									<img alt='Solar Chargers' src='/img/stats2.jpg' />
 									<div className="text">
-										<div className='top bebas-font'>
-											MORE INFORMATION ABOUT THIS CAUSE
-										</div>
 										<div className='title frank-font'>SOLAR CHARGERS</div>
 										<div className='description helvetica-font'>
 										Poverty affects many cocoa-growing households. This is 
@@ -167,7 +161,7 @@ const CampaignPage = () => {
 										equipping them with a small solar charging station 
 										offering their services to mobile phone owners in their 
 										community.
-											<p>Average cost: 103$ / unit</p>
+											<p>Average cost: $103 / unit</p>
 										</div>
 										<div className='btnlink frank-font' onClick={(e) => window.open('http://www.nestlecocoaplan.com/', '_blank')}>
 											Find out more about the<br/> Nestlé® Cocoa Plan®
@@ -179,9 +173,6 @@ const CampaignPage = () => {
 								<div className='innards'>
 									<img alt='School Kits' src='/img/stats3-scaled.jpg' />
 									<div className="text">
-										<div className='top bebas-font'>
-											MORE INFORMATION ABOUT THIS CAUSE
-										</div>
 										<div className='title frank-font'>SCHOOL KITS</div>
 										<div className='description helvetica-font'>
 										While primary school is free in cocoa-growing communities of Côte d’Ivoire, 
@@ -190,7 +181,7 @@ const CampaignPage = () => {
 										Cocoa Initiative will provide school kits so that more children can go to 
 										school. School kits contain exercise books, note books, pens, ruler, 
 										eraser, chalk and slate.
-											<p>Cost: 26$ / unit</p>
+											<p>Cost: $26 / unit</p>
 										</div>
 										<div className='btnlink frank-font' onClick={(e) => window.open('http://www.nestlecocoaplan.com/', '_blank')}>
 											Find out more about the<br/> Nestlé® Cocoa Plan®
@@ -213,12 +204,9 @@ const CampaignPage = () => {
 					</div>
 					<div className='social nestle'>
 						<p>NESTLÉ<span>®</span> COCOA PLAN<span>®</span></p>
-						<a href='https://www.facebook.com/Nestle' target='_blank'><img src='\img\facebook.png' /></a>
-						<a href='https://twitter.com/Nestle' target='_blank'><img src='\img\twitter.png' /></a>
-						<a href='https://www.instagram.com/nestlecocoaplan' target='_blank'><img src='\img\instagram.png' /></a>
 					</div>
 					<div className='social goodloop'>
-						<p>GOOD LOOP</p>
+						<p>GOOD-LOOP</p>
 						<a href='https://www.facebook.com/the.good.loop/' target='_blank'><img src='\img\facebook.png' /></a>
 						<a href='https://twitter.com/goodloophq' target='_blank'><img src='\img\twitter.png' /></a>
 						<a href='https://www.instagram.com/good.loop.ads/' target='_blank'><img src='\img\instagram.png' /></a>
