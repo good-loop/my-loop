@@ -51,9 +51,42 @@ let handleClick = (targetArrow, targetDetails) => {
 };
 
 const CampaignPage = () => {
-	let campaignPage = {
-		// bg: http;klsw
-	};
+
+	// charities 
+	let cids = ["streets_of_london", "wateraid", "mps"];
+
+	// // Get donations by user (including all registered tracking IDs)
+	let start = '2018-05-01T00:00:00.000Z'; // ??is there a data issue if older??
+	const dntn = "count"; // TODO! count is what we used to log, but it not reliable for grouped-by-session events, so we should use dntn. See adserver goodloop.act.donate
+	// load the community total for the charity
+	let pvCommunityTotal = DataStore.fetch(['widget','CampaignPage','communityTotal'], () => {
+		let qcids = cids.map(xid => 'cid:'+xid).join(' OR ');
+		const donationReq = {
+			dataspace: 'gl',
+			q: 'evt:donation AND ('+qcids+")",
+			breakdown: ['cid{"'+dntn+'": "sum"}'],
+			start
+		};
+		return ServerIO.getDataLogData(donationReq, null, 'community-donations').then(res => res.cargo);
+	});
+
+	if ( ! pvCommunityTotal.resolved ) {
+		return <Misc.Loading text='Donations data' />;
+	}
+
+	let communityDonationsByCharity = pvCommunityTotal.value? pivot(pvCommunityTotal.value.by_cid.buckets, "$bi.{key, "+dntn+".sum.$n}", "$key.$n") : {};
+
+	// make rows
+	let rows = cids.map(cid => {
+		return {cid, userTotal: cids[cid], communityTotal: communityDonationsByCharity[cid]};
+	});
+
+	let communityDonations = rows.reduce((acc, current) => acc + current.communityTotal, 0);
+
+	let campaignTotalSlice = rows.map(row => {
+		return {charityName: row.cid, percentageTotal: Math.round(row.communityTotal/communityDonations*100)};
+	});
+
 	// TODO advert & campaign from the path
 	const lpath = DataStore.getValue(['location','path']);
 	let vertId = lpath[1];
@@ -68,7 +101,7 @@ const CampaignPage = () => {
 				<div className='header-img'>
 					<div className='darken-overlay'>
 						<div className='title frank-font'>
-							<div>£15,563.80</div>
+							<div><Misc.Money amount={communityDonations} /></div>
 							<div>RAISED SO FAR</div>
 						</div>
 						<div className='ads-for-good'>
@@ -101,7 +134,7 @@ const CampaignPage = () => {
 						</p>
 						<div className='donation-circles'>
 							<div className='circle c1' onClick={(e) => handleClick('a1','d1')}>
-								<p className='bebas-font'><span className='frank-font'>26%</span><br/> HAS BEEN DONATED TO...</p>
+								<p className='bebas-font'><span className='frank-font'>{campaignTotalSlice[0].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p>
 								<img alt='Cocoa Plan Vegetable Growing Kit project' src='/img/stats1.jpg' />
 								<div className='project-name frank-font'>
 									Vegetable Growing Kit
@@ -109,7 +142,7 @@ const CampaignPage = () => {
 								<div className='arrow-up a1'></div>
 							</div>
 							<div className='circle c2' onClick={(e) => handleClick('a2','d2')}>
-								<p className='bebas-font'><span className='frank-font'>36%</span><br/> HAS BEEN DONATED TO...</p>
+								<p className='bebas-font'><span className='frank-font'>{campaignTotalSlice[1].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p>
 								<img alt='Cocoa Plan Solar Chargers project' src='/img/stats2.jpg' />
 								<div className='project-name frank-font'>
 									Solar Chargers
@@ -117,7 +150,7 @@ const CampaignPage = () => {
 								<div className='arrow-up a2 hidden'></div>
 							</div>
 							<div className='circle c3' onClick={(e) => handleClick('a3','d3')}>
-								<p className='bebas-font'><span className='frank-font'>38%</span><br/> HAS BEEN DONATED TO...</p>
+								<p className='bebas-font'><span className='frank-font'>{campaignTotalSlice[2].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p>
 								<img alt='Cocoa Plan School Kits project' src='/img/stats3-scaled.jpg' />
 								<div className='project-name frank-font'>
 									School Kits
