@@ -98,9 +98,9 @@ const CampaignPage = () => {
 		<div className='wrapper'>
 			<div className='one'>
 				<div className='kitkat-head frank-font'>
-					<img alt='Kitkat Logo' src='/img/kitkat-logo-scaled.png' />
+					<img alt='Kitkat Logo' src='https://lg.good-loop.com/cdn/images/kitkat-logo-scaled.png' />
 					<span> Supports </span>
-					<img alt='Cocoa Plan Logo' src='/img/cocoa-plan-logo-scaled.png' />
+					<img alt='Cocoa Plan Logo' src='https://lg.good-loop.com/cdn/images/cocoa-plan-logo-scaled.png' />
 				</div>
 				<div className='header-img'>
 					<div className='darken-overlay'>
@@ -109,7 +109,7 @@ const CampaignPage = () => {
 							<div>RAISED SO FAR</div>
 						</div>
 						<div className='ads-for-good'>
-								<img alt='Good Loop Ads For Good Logo' src='/img/ads-for-good.png' />
+								<img alt='Good Loop Ads For Good Logo' src='https://lg.good-loop.com/cdn/images/ads-for-good.png' />
 							</div>
 						<div className='arrow'>
 							<Link activeClass='active' className='arrowhead' to='arrowhead' spy={true} smooth={true} duration={2000}>
@@ -139,7 +139,7 @@ const CampaignPage = () => {
 						<div className='donation-circles'>
 							<div className='circle c1' onClick={(e) => handleClick('a1','d1')}>
 								<p className='bebas-font'><span className='frank-font'>{campaignTotalSlice[0].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p>
-								<img alt='Cocoa Plan Vegetable Growing Kit project' src='/img/stats1.jpg' />
+								<img alt='Cocoa Plan Vegetable Growing Kit project' src='https://lg.good-loop.com/cdn/images/stats1.jpg' />
 								<div className='project-name frank-font'>
 									Vegetable Growing Kit
 								</div>
@@ -147,7 +147,7 @@ const CampaignPage = () => {
 							</div>
 							<div className='circle c2' onClick={(e) => handleClick('a2','d2')}>
 								<p className='bebas-font'><span className='frank-font'>{campaignTotalSlice[1].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p>
-								<img alt='Cocoa Plan Solar Chargers project' src='/img/stats2.jpg' />
+								<img alt='Cocoa Plan Solar Chargers project' src='https://lg.good-loop.com/cdn/images/stats2.jpg' />
 								<div className='project-name frank-font'>
 									Solar Chargers
 								</div>
@@ -155,7 +155,7 @@ const CampaignPage = () => {
 							</div>
 							<div className='circle c3' onClick={(e) => handleClick('a3','d3')}>
 								<p className='bebas-font'><span className='frank-font'>{campaignTotalSlice[2].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p>
-								<img alt='Cocoa Plan School Kits project' src='/img/stats3-scaled.jpg' />
+								<img alt='Cocoa Plan School Kits project' src='https://lg.good-loop.com/cdn/images/stats3-scaled.jpg' />
 								<div className='project-name frank-font'>
 									School Kits
 								</div>
@@ -163,7 +163,7 @@ const CampaignPage = () => {
 							</div>
 							<div className='details d1'>
 								<div className='innards'>
-									<img alt='Vegetable Growing Kit' src='/img/stats1.jpg' />
+									<img alt='Vegetable Growing Kit' src='https://lg.good-loop.com/cdn/images/stats1.jpg' />
 									<div className="text">
 										<div className='title frank-font'>VEGETABLE GROWING KITS</div>
 										<div className='description helvetica-font'>
@@ -185,7 +185,7 @@ const CampaignPage = () => {
 							</div>
 							<div className='details d2 hidden'>
 								<div className='innards'>
-									<img alt='Solar Chargers' src='/img/stats2.jpg' />
+									<img alt='Solar Chargers' src='https://lg.good-loop.com/cdn/images/stats2.jpg' />
 									<div className="text">
 										<div className='title frank-font'>SOLAR CHARGERS</div>
 										<div className='description helvetica-font'>
@@ -208,7 +208,7 @@ const CampaignPage = () => {
 							</div>
 							<div className='details d3 hidden'>
 								<div className='innards'>
-									<img alt='School Kits' src='/img/stats3-scaled.jpg' />
+									<img alt='School Kits' src='https://lg.good-loop.com/cdn/images/stats3-scaled.jpg' />
 									<div className="text">
 										<div className='title frank-font'>SCHOOL KITS</div>
 										<div className='description helvetica-font'>
@@ -235,18 +235,18 @@ const CampaignPage = () => {
 				<div className='foot'>
 					<div className='social kitkat'>
 						<p>KITKAT<span>®</span></p>
-						<a href='https://www.facebook.com/kitkatuk/' target='_blank'><img src='\img\facebook.png' /></a>
-						<a href='https://twitter.com/KITKAT' target='_blank'><img src='\img\twitter.png' /></a>
-						<a href='https://www.instagram.com/kitkat' target='_blank'><img src='\img\instagram.png' /></a>
+						<a href='https://www.facebook.com/kitkatuk/' target='_blank'><img src='https://lg.good-loop.com/cdn/images/facebook.png' /></a>
+						<a href='https://twitter.com/KITKAT' target='_blank'><img src='https://lg.good-loop.com/cdn/images/twitter.png' /></a>
+						<a href='https://www.instagram.com/kitkat' target='_blank'><img src='https://lg.good-loop.com/cdn/images/instagram.png' /></a>
 					</div>
 					<div className='social nestle'>
 						<p>NESTLÉ<span>®</span> COCOA PLAN<span>®</span></p>
 					</div>
 					<div className='social goodloop'>
 						<p>GOOD-LOOP</p>
-						<a href='https://www.facebook.com/the.good.loop/' target='_blank'><img src='\img\facebook.png' /></a>
-						<a href='https://twitter.com/goodloophq' target='_blank'><img src='\img\twitter.png' /></a>
-						<a href='https://www.instagram.com/good.loop.ads/' target='_blank'><img src='\img\instagram.png' /></a>
+						<a href='https://www.facebook.com/the.good.loop/' target='_blank'><img src='https://lg.good-loop.com/cdn/images/facebook.png' /></a>
+						<a href='https://twitter.com/goodloophq' target='_blank'><img src='https://lg.good-loop.com/cdn/images/twitter.png' /></a>
+						<a href='https://www.instagram.com/good.loop.ads/' target='_blank'><img src='https://lg.good-loop.com/cdn/images/instagram.png' /></a>
 					</div>
 				</div>
 			</div>
