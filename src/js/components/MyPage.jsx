@@ -240,7 +240,10 @@ const SocialMediaCard = ({allIds=[]}) => {
 			null // <div> TODO: email capture </div>
 		}
 		{twitterID ? 
-			<div>Twitter username: {XId.id(twitterID)}</div> // TODO show some data about them from Twitter
+			<div className='wrapper'>
+				<div>Twitter username: {XId.id(twitterID)}</div>
+				<button className='btn btn-default' onClick={ e => ServerIO.load(ServerIO.PROFILER_ENDPOINT + '/analyze-data/' + escape(twitterID))}>Refresh</button>
+			</div>
 			: 
 			<div><SocialSignInButton service='twitter' verb='connect' /></div>
 		}
