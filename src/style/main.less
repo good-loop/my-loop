@@ -784,12 +784,6 @@ p > a:hover {
 	}
 }
 
-.footerText {
-	text-align: center;
-	margin: 0px;
-	padding: 10px;
-}
-
 // responsive scaling 
 @media only screen and (max-width: 1200px) {
 	.donation-circles {
@@ -1097,5 +1091,28 @@ p > a:hover {
 	border-top: 0px;
 	background: white;
 	color: #333;
+	display: table;
+	margin: 0px;
+	padding: 10px;
 
+	div {
+		float: none;
+		display: table-cell;
+		vertical-align: bottom;
+		width: 33vw;
+	}
+
+	.mainFooter {
+		text-align: center;
+	}
+	
+	.leftFooter {
+		text-align: left;
+		font-size: 12px;
+	}
+	
+	.rightFooter {
+		text-align: right;
+		font-size: 12px;
+	}
 }

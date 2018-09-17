@@ -12,6 +12,7 @@ import Crud from './../base/plumbing/Crud'; // Crud is loaded here (but not used
 // Templates
 import MessageBar from '../base/components/MessageBar';
 import LoginWidget from '../base/components/LoginWidget';
+import Footer from '../components/Footer';
 
 // Pages
 import MyPage from './MyPage';
@@ -132,7 +133,7 @@ class MainDiv extends Component {
 					</div>
 				</div>
 				<LoginWidget logo={C.app.service} title={'Welcome to '+C.app.name} services={['twitter', 'facebook']} />
-				
+				<Footer />
 			</div>
 		);
 	} // ./render()

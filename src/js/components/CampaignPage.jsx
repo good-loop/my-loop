@@ -52,9 +52,17 @@ let handleClick = (targetArrow, targetDetails) => {
 
 const CampaignPage = () => {
 
-	let footer = document.getElementsByClassName("footer")[0]; 
+	let footer = document.getElementsByClassName('footer')[0]; 
 	footer.style.background = '#BA0017';
 	footer.style.color = 'white';
+	
+	let leftFooter = document.getElementsByClassName('leftFooter')[0]; 
+	leftFooter.innerHTML = 'This campaign started on the 17th of September 2018';
+	leftFooter.style.color = '#d89e9e';
+
+	let rightFooter = document.getElementsByClassName('rightFooter')[0]; 
+	rightFooter.innerHTML = 'Reg. Trademark of Société des Produits Nestlé S.A.';
+	rightFooter.style.color = '#d89e9e';
 
 	// charities 
 	let cids = ["streets_of_london", "wateraid", "mps"];
@@ -132,7 +140,7 @@ const CampaignPage = () => {
 							support the NESTLÉ® COCOA PLAN®, through the ‘Ads for Good’ player.
 						</p>
 						<p className='link bebas-font'>
-							<a href='http://as.good-loop.com/?status=ALL_BAR_TRASH&gl.vert=HSSI0nvg' target='_blank'>
+							<a href='http://as.good-loop.com/?status=ALL_BAR_TRASH&gl.vert=xsINEuJV' target='_blank'>
 							WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH NESTLÉ® COCOA PLAN® PROJECT YOU WOULD LIKE TO FUND.
 							</a>
 						</p>
