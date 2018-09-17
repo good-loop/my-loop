@@ -59,6 +59,7 @@ const DonationCard = ({xids}) => {
 	// Get donations by user (including all registered tracking IDs)
 	let start = '2018-05-01T00:00:00.000Z'; // ??is there a data issue if older??
 	const dntn = "count"; // TODO! count is what we used to log, but it not reliable for grouped-by-session events, so we should use dntn. See adserver goodloop.act.donate
+	??
 	let pvDonationData = DataStore.fetch(donationsPath, () => {
 		const donationReq = {
 			dataspace: 'gl',

@@ -49,12 +49,10 @@ ServerIO.checkBase();
  * @param {?String} name Just for debugging - makes it easy to spot in the network tab
  */
 ServerIO.getDataLogData = (filters, breakdowns, name) => {
+	?? check all uses
 	if ( ! filters.dataspace) console.warn("No dataspace?!", filters);
 	let specs = Object.assign({}, filters);
 	let endpoint = ServerIO.DATALOG_ENDPOINT;
-	if (filters.dataspace === 'money') { // HACK 'cos money isnt logged from adserver to lg
-		endpoint = '/data';
-	}
 	return ServerIO.load(endpoint+(name? '?name='+encURI(name) : ''), {data: specs});
 };
 

@@ -53,13 +53,14 @@ let handleClick = (targetArrow, targetDetails) => {
 
 const CampaignPage = () => {
 
-	// charities 
+	// charities FIXME
 	let cids = ["streets_of_london", "wateraid", "mps"];
 
 	// // Get donations by user (including all registered tracking IDs)
 	let start = '2018-05-01T00:00:00.000Z'; // ??is there a data issue if older??
 	const dntn = "count"; // TODO! count is what we used to log, but it not reliable for grouped-by-session events, so we should use dntn. See adserver goodloop.act.donate
 	// load the community total for the charity
+	??
 	let pvCommunityTotal = DataStore.fetch(['widget','CampaignPage','communityTotal'], () => {
 		let qcids = cids.map(xid => 'cid:'+xid).join(' OR ');
 		const donationReq = {

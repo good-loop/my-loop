@@ -160,7 +160,8 @@ const StatisticsCard = () => {
 		return <Misc.Loading text='...counting kittens...' />;
 	}
 	let ttl = pvSum.value && pvSum.value.total;
-	let cnt = (pvSum.value && pvSum.value.count) || 100000;
+	let cnt = ttl? Math.round(ttl / 0.12) : 100000; // HACK assume 12p per ad
+	// TODO use a call to lg to get a count of minviews
 
 	return (<section className="statistics statistics-what text-center">
 		<div className="statistics-content">
@@ -171,24 +172,20 @@ const StatisticsCard = () => {
 			<Row3>
 				<div className="statistics-item">
 					<div className="statistics-value">
-						<strong></strong>
 						<div className="statistics-value-highlight"><span>{printer.prettyNumber(cnt)}</span></div>
 						<strong className="statistics-subtext">people reached</strong>
 					</div>
 				</div>
 				<div className="statistics-item">
 					<div className="statistics-value">
-						<strong> </strong>
 						<div className="statistics-value-highlight">
 							<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={10} showCurrencySymbol={false} />										
-							<span></span>
 						</div>
 						<strong className="statistics-subtext">pounds raised</strong>
 					</div>
 				</div>
 				<div className="statistics-item">
 					<div className="statistics-value">
-						<strong></strong>
 						<div className="statistics-value-highlight"><div className="text-stat">No compromises</div></div>
 						<strong className="statistics-subtext">on your privacy</strong>
 					</div>
