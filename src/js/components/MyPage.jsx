@@ -19,6 +19,7 @@ import {getProfile, getProfilesNow} from '../base/Profiler';
 import ConsentWidget from './ConsentWidget';
 import printer from '../base/utils/printer';
 import DonationCard from './DonationCard';
+import Footer from '../components/Footer';
 
 const fetcher = xid => DataStore.fetch(['data', 'Person', xid], () => {
 	return getProfile({xid});
@@ -105,6 +106,7 @@ const MyPage = () => {
 					<Card title='Linked Profiles' defaultOpen><LinkedProfilesCard xids={xids} /></Card>
 				</CardAccordion>
 			</div>
+			<Footer />
 		</div>
 	);
 }; // ./MyPage

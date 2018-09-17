@@ -38,6 +38,37 @@
 	margin-top:0px; // no navbar (yet)
 }
 
+// my-loop default footer style
+.footer {
+	border-top: 0px;
+	background: white;
+	color: #333;
+	display: table;
+	margin: 0px;
+	padding: 10px;
+
+	div {
+		float: none;
+		display: table-cell;
+		vertical-align: bottom;
+		width: 33vw;
+	}
+
+	.mainFooter {
+		text-align: center;
+	}
+	
+	.leftFooter {
+		text-align: left;
+		font-size: 12px;
+	}
+	
+	.rightFooter {
+		text-align: right;
+		font-size: 12px;
+	}
+}
+
 .CardAccordion {
 	margin-top:30px;
 }
@@ -782,6 +813,16 @@ p > a:hover {
 		        transform: rotate(-30deg);
 		right: 3px;
 	}
+
+	// campaign page footer
+	.footer {
+		background: #BA0017;
+		color: white;
+		
+		.leftFooter, .rightFooter {
+			color: #d89e9e;
+		}
+	}
 }
 
 // responsive scaling 
@@ -1086,33 +1127,3 @@ p > a:hover {
 	}
 }
 
-// my-loop default footer style
-.footer {
-	border-top: 0px;
-	background: white;
-	color: #333;
-	display: table;
-	margin: 0px;
-	padding: 10px;
-
-	div {
-		float: none;
-		display: table-cell;
-		vertical-align: bottom;
-		width: 33vw;
-	}
-
-	.mainFooter {
-		text-align: center;
-	}
-	
-	.leftFooter {
-		text-align: left;
-		font-size: 12px;
-	}
-	
-	.rightFooter {
-		text-align: right;
-		font-size: 12px;
-	}
-}

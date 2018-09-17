@@ -19,6 +19,7 @@ import {getProfile, getProfilesNow} from '../base/Profiler';
 import ConsentWidget from './ConsentWidget';
 import printer from '../base/utils/printer';
 import DonationCard from './DonationCard';
+import Footer from '../components/Footer';
 import { Link, Element } from 'react-scroll';
 
 let handleClick = (targetArrow, targetDetails) => {
@@ -51,18 +52,6 @@ let handleClick = (targetArrow, targetDetails) => {
 };
 
 const CampaignPage = () => {
-
-	let footer = document.getElementsByClassName('footer')[0]; 
-	footer.style.background = '#BA0017';
-	footer.style.color = 'white';
-	
-	let leftFooter = document.getElementsByClassName('leftFooter')[0]; 
-	leftFooter.innerHTML = 'This campaign started on the 17th of September 2018';
-	leftFooter.style.color = '#d89e9e';
-
-	let rightFooter = document.getElementsByClassName('rightFooter')[0]; 
-	rightFooter.innerHTML = 'Reg. Trademark of Société des Produits Nestlé S.A.';
-	rightFooter.style.color = '#d89e9e';
 
 	// charities 
 	let cids = ["streets_of_london", "wateraid", "mps"];
@@ -249,6 +238,8 @@ const CampaignPage = () => {
 					</div>
 					<div className='social nestle'>
 						<p>NESTLÉ<span>®</span> COCOA PLAN<span>®</span></p>
+						<a href='https://www.youtube.com/channel/UC-iTNwTrdA4IXpGAFC3WsMg' target='_blank'><img src='/img/youtube.png' /></a>
+						<a href='https://www.instagram.com/nestlecocoaplan/' target='_blank'><img src='https://lg.good-loop.com/cdn/images/instagram.png' /></a>
 					</div>
 					<div className='social goodloop'>
 						<p>GOOD-LOOP</p>
@@ -259,6 +250,7 @@ const CampaignPage = () => {
 				</div>
 			</div>
 		</div>
+		<Footer leftFooter='This campaign started on the 17th of September 2018' rightFooter='Reg. Trademark of Société des Produits Nestlé S.A.' />
 	</div>);
 };
 

@@ -21,16 +21,15 @@ import printer from '../base/utils/printer';
 import DonationCard from './DonationCard';
 import { Link, Element } from 'react-scroll';
 
-const Footer = () => {
-    
+const Footer = ({leftFooter, rightFooter}) => {
     return (<div className='footer'>
-                <div className='leftFooter'></div>
+                <div className='leftFooter'>{leftFooter}</div>
                 <div className='mainFooter'>        
                     Ads for Good is a Good-Loop Ltd ethical ad product.<br/>
                     &copy; 2017-18 Good-Loop <a href="mailto:daniel@good-loop.com?Subject=Good-Loop%20Portal" target="_top">Contact Us</a>
                     &nbsp;&nbsp;&nbsp; This web-app is open-source on <a target='_blank' href='https://github.com/good-loop/my-loop'>GitHub</a>.						
                 </div>
-                <div className='rightFooter'></div>
+                <div className='rightFooter'>{rightFooter}</div>
         </div>
         );
 };
