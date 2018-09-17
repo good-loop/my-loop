@@ -825,7 +825,8 @@ p > a:hover {
 	}
 }
 
-// responsive scaling 
+// hack for responsive scaling of donation circles
+// (minmax alternative doesn't work for some reason)
 @media only screen and (max-width: 1200px) {
 	.donation-circles {
 		grid-gap: 0px 30px;
@@ -875,6 +876,8 @@ p > a:hover {
 	}
 }
 
+// responsive scaling of grid gap and fixing margins for small screens
+// TODO: margins could maybe be standardized across viewport sizes
 @media only screen and (max-width: 950px) {
 	.donation-circles {
 		grid-gap: 0px 5px;
@@ -889,6 +892,8 @@ p > a:hover {
 	}
 }
 
+// using css grid to change the template of the grid to a column based one 
+// only applies on phone-sized devices
 @media only screen and (max-width: 900px) {
 	.campaign-page .one {
 		.kitkat-head {
@@ -940,8 +945,6 @@ p > a:hover {
 				display: none;
 			}
 		}
-
-
 	}
 
 	.four .foot {
@@ -1126,4 +1129,3 @@ p > a:hover {
 		flex-basis: calc(33.333% - 20px);
 	}
 }
-

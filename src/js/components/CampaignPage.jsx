@@ -106,7 +106,7 @@ const CampaignPage = () => {
 							<div>RAISED SO FAR</div>
 						</div>
 						<div className='ads-for-good'>
-								<img alt='Good Loop Ads For Good Logo' src='https://lg.good-loop.com/cdn/images/ads-for-good.png' />
+								<img alt='Good Loop Ads For Good Logo' src='/img/for-good.png' />
 							</div>
 						<div className='arrow'>
 							<Link activeClass='active' className='arrowhead' to='arrowhead' spy={true} smooth={true} duration={2000}>
