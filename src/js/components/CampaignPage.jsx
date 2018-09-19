@@ -29,10 +29,8 @@ let handleClick = (targetArrow, targetDetails) => {
 	let a = document.getElementsByClassName(targetArrow)[0];
 	if (d.classList.contains('hidden')) {
 		dList.forEach(function(val,index) { 
-			console.log("looking at " + val);
 			let temp = document.getElementsByClassName(val)[0];
 			if (!temp.classList.contains('hidden')) {
-				console.log("but first let's hide " + val);
 				temp.classList.add('hidden');
 			}
 		});
@@ -53,14 +51,26 @@ let handleClick = (targetArrow, targetDetails) => {
 
 const CampaignPage = () => {
 
-	// charities FIXME
-	let cids = ["streets_of_london", "wateraid", "mps"];
+	let adid = 'GZM4Y2Fp';
+	let pvAdvert = ActionMan.getDataItem({type:C.TYPES.Advert, id:adid, status:C.KStatus.DRAFT, domain: ServerIO.PORTAL_DOMAIN});
+	if ( ! pvAdvert.resolved ) {
+		return <Misc.Loading text='Loading campaign data' />;	
+	}
+
+	console.log(pvAdvert.value);
+
+	let cadvertiser = pvAdvert.value.name;
+	let cparent = pvAdvert.value.charities.parent.name;
+	let cids = pvAdvert.value.charities.list.map(x => x.id);
+	let cnames = pvAdvert.value.charities.list.map(x => x.name);
+	let cphotos = pvAdvert.value.charities.list.map(x => x.photo);
+	let curls = pvAdvert.value.charities.list.map(x => x.url);
 
 	// // Get donations by user (including all registered tracking IDs)
 	let start = '2018-05-01T00:00:00.000Z'; // ??is there a data issue if older??
 	const dntn = "count"; // TODO! count is what we used to log, but it not reliable for grouped-by-session events, so we should use dntn. See adserver goodloop.act.donate
 	// load the community total for the charity
-	??
+	//??
 	let pvCommunityTotal = DataStore.fetch(['widget','CampaignPage','communityTotal'], () => {
 		let qcids = cids.map(xid => 'cid:'+xid).join(' OR ');
 		const donationReq = {
@@ -130,40 +140,40 @@ const CampaignPage = () => {
 							support the NESTLÉ® COCOA PLAN®, through the ‘Ads for Good’ player.
 						</p>
 						<p className='link bebas-font'>
-							<a href='http://as.good-loop.com/?status=ALL_BAR_TRASH&gl.vert=xsINEuJV' target='_blank'>
+							<a href={'http://as.good-loop.com/?status=ALL_BAR_TRASH&gl.vert='.concat(adid)} target='_blank'>
 							WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH NESTLÉ® COCOA PLAN® PROJECT YOU WOULD LIKE TO FUND.
 							</a>
 						</p>
 						<div className='donation-circles'>
 							<div className='circle c1' onClick={(e) => handleClick('a1','d1')}>
 								<p className='bebas-font'><span className='frank-font'>{campaignTotalSlice[0].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p>
-								<img alt='Cocoa Plan Vegetable Growing Kit project' src='https://lg.good-loop.com/cdn/images/stats1.jpg' />
+								<img alt={cparent+' '+cnames[0]} src={cphotos[0]} />
 								<div className='project-name frank-font'>
-									Vegetable Growing Kit
+									{cnames[0]}
 								</div>
 								<div className='arrow-up a1'></div>
 							</div>
 							<div className='circle c2' onClick={(e) => handleClick('a2','d2')}>
 								<p className='bebas-font'><span className='frank-font'>{campaignTotalSlice[1].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p>
-								<img alt='Cocoa Plan Solar Chargers project' src='https://lg.good-loop.com/cdn/images/stats2.jpg' />
+								<img alt={cparent+' '+cnames[1]} src={cphotos[1]} />
 								<div className='project-name frank-font'>
-									Solar Chargers
+									{cnames[1]}
 								</div>
 								<div className='arrow-up a2 hidden'></div>
 							</div>
 							<div className='circle c3' onClick={(e) => handleClick('a3','d3')}>
 								<p className='bebas-font'><span className='frank-font'>{campaignTotalSlice[2].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p>
-								<img alt='Cocoa Plan School Kits project' src='https://lg.good-loop.com/cdn/images/stats3-scaled.jpg' />
+								<img alt={cparent+' '+cnames[2]} src={cphotos[2]} />
 								<div className='project-name frank-font'>
-									School Kits
+									{cnames[2]}
 								</div>
 								<div className='arrow-up a3 hidden'></div>
 							</div>
 							<div className='details d1'>
 								<div className='innards'>
-									<img alt='Vegetable Growing Kit' src='https://lg.good-loop.com/cdn/images/stats1.jpg' />
+									<img alt={cparent+' '+cnames[0]} src={cphotos[0]} />
 									<div className="text">
-										<div className='title frank-font'>VEGETABLE GROWING KITS</div>
+										<div className='title frank-font'>{cnames[0].toUpperCase()}</div>
 										<div className='description helvetica-font'>
 										Poverty affects many cocoa-growing households in Côte d’Ivoire. 
 										Overreliance on cocoa makes some farmers vulnerable to global 
@@ -175,17 +185,17 @@ const CampaignPage = () => {
 										this possible!
 											<p>Average cost: $619 / group or $155 / woman</p>
 										</div>
-										<div className='btnlink frank-font'  onClick={(e) => window.open('http://www.nestlecocoaplan.com/', '_blank')}>
-											Find out more about the<br/> Nestlé® Cocoa Plan®
+										<div className='btnlink frank-font' onClick={(e) => window.open(curls[0], '_blank')}>
+											Find out more about the<br/> {cparent}
 										</div>	
 									</div>
 								</div>
 							</div>
 							<div className='details d2 hidden'>
 								<div className='innards'>
-									<img alt='Solar Chargers' src='https://lg.good-loop.com/cdn/images/stats2.jpg' />
+									<img alt={cparent+' '+cnames[1]} src={cphotos[1]} />
 									<div className="text">
-										<div className='title frank-font'>SOLAR CHARGERS</div>
+										<div className='title frank-font'>{cnames[1].toUpperCase()}</div>
 										<div className='description helvetica-font'>
 										Poverty affects many cocoa-growing households. This is 
 										why Nestlé and the International Cocoa Initiative have 
@@ -198,17 +208,17 @@ const CampaignPage = () => {
 										community.
 											<p>Average cost: $103 / unit</p>
 										</div>
-										<div className='btnlink frank-font' onClick={(e) => window.open('http://www.nestlecocoaplan.com/', '_blank')}>
-											Find out more about the<br/> Nestlé® Cocoa Plan®
+										<div className='btnlink frank-font' onClick={(e) => window.open(curls[1], '_blank')}>
+											Find out more about the<br/> {cparent}
 										</div>
 									</div>
 								</div>
 							</div>
 							<div className='details d3 hidden'>
 								<div className='innards'>
-									<img alt='School Kits' src='https://lg.good-loop.com/cdn/images/stats3-scaled.jpg' />
+									<img alt={cparent+' '+cnames[2]} src={cphotos[2]} />
 									<div className="text">
-										<div className='title frank-font'>SCHOOL KITS</div>
+										<div className='title frank-font'>{cnames[2].toUpperCase()}</div>
 										<div className='description helvetica-font'>
 										While primary school is free in cocoa-growing communities of Côte d’Ivoire, 
 										some of Nestlé Cocoa Plan farmers struggle to pay for the books and school 
@@ -218,8 +228,8 @@ const CampaignPage = () => {
 										eraser, chalk and slate.
 											<p>Cost: $26 / unit</p>
 										</div>
-										<div className='btnlink frank-font' onClick={(e) => window.open('http://www.nestlecocoaplan.com/', '_blank')}>
-											Find out more about the<br/> Nestlé® Cocoa Plan®
+										<div className='btnlink frank-font' onClick={(e) => window.open(curls[2], '_blank')}>
+											Find out more about the<br/> {cparent}
 										</div>
 									</div>
 								</div>
@@ -232,13 +242,13 @@ const CampaignPage = () => {
 			<div className='four bebas-font'>
 				<div className='foot'>
 					<div className='social kitkat'>
-						<p>KITKAT<span>®</span></p>
+						<p>{cadvertiser}</p>
 						<a href='https://www.facebook.com/kitkatuk/' target='_blank'><img src='https://lg.good-loop.com/cdn/images/facebook.png' /></a>
 						<a href='https://twitter.com/KITKAT' target='_blank'><img src='https://lg.good-loop.com/cdn/images/twitter.png' /></a>
 						<a href='https://www.instagram.com/kitkat' target='_blank'><img src='https://lg.good-loop.com/cdn/images/instagram.png' /></a>
 					</div>
 					<div className='social nestle'>
-						<p>NESTLÉ<span>®</span> COCOA PLAN<span>®</span></p>
+						<p>{cparent}</p>
 						<a href='https://www.youtube.com/channel/UC-iTNwTrdA4IXpGAFC3WsMg' target='_blank'><img src='/img/youtube.png' /></a>
 						<a href='https://www.instagram.com/nestlecocoaplan/' target='_blank'><img src='https://lg.good-loop.com/cdn/images/instagram.png' /></a>
 					</div>

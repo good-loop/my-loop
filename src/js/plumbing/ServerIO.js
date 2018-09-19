@@ -24,7 +24,9 @@ ServerIO.APIBASE = ''; // Normally use this for "my server"!
 // Comment out the lines below when deploying!
 // ServerIO.APIBASE = 'https://testportal.good-loop.com'; // uncomment to let local use the test server's backend
 // ServerIO.APIBASE = 'https://portal.good-loop.com'; // use in testing to access live data
-	
+
+ServerIO.PORTAL_DOMAIN = C.HTTPS+'://'+C.SERVER_TYPE+'portal.good-loop.com';
+
 ServerIO.DATALOG_ENDPOINT = C.HTTPS+'://'+C.SERVER_TYPE+'lg.good-loop.com/data';
 // ServerIO.DATALOG_ENDPOINT = 'https://testlg.good-loop.com/data';
 ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';
@@ -49,7 +51,7 @@ ServerIO.checkBase();
  * @param {?String} name Just for debugging - makes it easy to spot in the network tab
  */
 ServerIO.getDataLogData = (filters, breakdowns, name) => {
-	?? check all uses
+	//?? check all uses
 	if ( ! filters.dataspace) console.warn("No dataspace?!", filters);
 	let specs = Object.assign({}, filters);
 	let endpoint = ServerIO.DATALOG_ENDPOINT;
