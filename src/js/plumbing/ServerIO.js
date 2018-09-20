@@ -59,27 +59,35 @@ ServerIO.getDataLogData = (filters, breakdowns, name) => {
 };
 
 /**
- * Right now: just get sum of all spending (NB multiply by 0.5 to get charity donations - this may change in future)
- * @param operator {String} sum|donat
+ * 
+ * @param q {String} e.g. pub:myblog
+ * @returns Promise {
+ * 	by_cid: {String: Money}
+ * 	total: {Money},
+ * 	stats: {}
+ * }
  */
-ServerIO.getDataFnData = ({operator = 'sum', cid, uxids}) => {
+ServerIO.getDonationsData = ({q, start, end}) => {
+	let url = ServerIO.AS_ENDPOINT+'/datafn/donations';
+	const params = {
+		data: {q, start, end}
+	};
+	return ServerIO.load(url, params);
+};
 
-		// Get donations by user (including all registered tracking IDs)
-		let start = '2018-05-01T00:00:00.000Z'; // ??is there a data issue if older??
-		const dntn = "dntn";
-		let pvDonationData = DataStore.fetch(donationsPath, () => {
-			const donationReq = {
-				dataspace: 'gl',
-				q: `evt:donation AND (${qAllIds})`,
-				breakdown: ['cid{"'+dntn+'": "sum"}'], 
-				numRows: 5,
-				start
-			};
-			return ServerIO.getDataLogData(donationReq, null, 'my-donations').then(res => res.cargo);
-		});	
-	
-
-	return ServerIO.load(`${ServerIO.AS_ENDPOINT}/datafn/${operator}`, {data: {cid}} );
+/**
+ * @param vert {?String} Advert ID. If unset, sum all.
+ * @returns Promise {
+ * 	total: Number,
+ * 	money: Money
+ * }
+ */
+ServerIO.getAllSpend = ({vert}) => {
+	let url = ServerIO.AS_ENDPOINT+'/datafn/sum';
+	const params = {
+		data: {vert}
+	};
+	return ServerIO.load(url, params);
 };
 
 

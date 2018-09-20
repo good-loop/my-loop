@@ -154,14 +154,14 @@ const Row3 = ({children}) => {
 
 const StatisticsCard = () => { 
 	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
-		return ServerIO.getDataFnData({});
+		return ServerIO.getAllSpend({});
 	});
 	if ( ! pvSum.resolved) {
 		return <Misc.Loading text='...counting kittens...' />;
 	}
 	let ttl = pvSum.value && pvSum.value.total;
 	let cnt = ttl? Math.round(ttl / 0.12) : 100000; // HACK assume 12p per ad
-	// TODO use a call to lg to get a count of minviews
+	// TODO use a call to lg to get a count of minviews for cnt
 
 	return (<section className="statistics statistics-what text-center">
 		<div className="statistics-content">

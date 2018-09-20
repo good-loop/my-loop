@@ -52,27 +52,22 @@ const DonationCard = ({xids}) => {
 		return <div>No tracking IDs to check {dnt===null? " - Do you have Do-Not-Track switched on?" : null}</div>;
 	}
 
-	// Assemble the data: top 5 of: charity, user-donation, community-donation
-	let qAllIds = xids.map(xid => 'user:'+xid).join(' OR ');
+	// Assemble the data: top 5 of: charity, user-donation, community-donation	
 	// NB: if xids changes (eg extra linking is added)	then this will reload
 	const donationsPath = ['widget', 'MyReport', 'user-donations', qAllIds];
 	// Get donations by user (including all registered tracking IDs)
-	let start = '2018-05-01T00:00:00.000Z'; // ??is there a data issue if older??
 	const dntn = "dntn";
+	let qAllIds = xids.map(xid => 'user:'+xid).join(' OR ');
+	let q = qAllIds;
 	let pvDonationData = DataStore.fetch(donationsPath, () => {
-		const donationReq = {
-			dataspace: 'gl',
-			q: `evt:donation AND (${qAllIds})`,
-			breakdown: ['cid{"'+dntn+'": "sum"}'], 
-			numRows: 5,
-			start
-		};
-		return ServerIO.getDataLogData(donationReq, null, 'my-donations').then(res => res.cargo);
+		return ServerIO.getDonationsData({q});
 	});	
 
 	if ( ! pvDonationData.resolved) {
 		return <Misc.Loading text='Donations data' />;
 	}
+
+	// TODO Warning: possibly broken by changes to returned data Sept 2018 ^DW
 	let userTotal = pvDonationData.value[dntn] && pvDonationData.value[dntn].sum;
 
 	// no user donations?
@@ -83,8 +78,7 @@ const DonationCard = ({xids}) => {
 		return <p>No charity data for {xids}. <a href='https://as.good-loop.com'>Watch a Good-Loop ad to donate</a></p>;
 	}
 
-	// unwrap the ES aggregation format
-	let donationsByCharity = pivot(pvDonationData.value.by_cid.buckets, "$bi.{key, "+dntn+".sum.$n}", "$key.$n");
+	let donationsByCharity = pvDonationData.value.by_cid;
 
 	const cids = Object.keys(donationsByCharity);
 
@@ -99,16 +93,10 @@ const DonationCard = ({xids}) => {
 	
 	// load the community total for these charities	
 	let pvCommunityCharityTotal = DataStore.fetch(['widget','DonationCard','community'], () => {
-		let qcids = cids.map(xid => 'cid:'+xid).join(' OR ');
-		const donationReq = {
-			dataspace: 'gl',
-			q: 'evt:donation AND ('+qcids+")",
-			breakdown: ['cid{"'+dntn+'": "sum"}'],
-			start
-		};
-		return ServerIO.getDataLogData(donationReq, null, 'community-donations').then(res => res.cargo);
+		let qcids = cids.map(xid => 'cid:'+xid).join(' OR ');		
+		return ServerIO.getDonationsData({q:qcids});
 	});
-	let communityDonationsByCharity = pvCommunityCharityTotal.value? pivot(pvCommunityCharityTotal.value.by_cid.buckets, "$bi.{key, "+dntn+".sum.$n}", "$key.$n") : {};
+	let communityDonationsByCharity = pvCommunityCharityTotal.value? pvCommunityCharityTotal.value.by_cid : {};
 	
 	// make rows
 	let rows = cids.map(cid => {
@@ -123,7 +111,8 @@ const DonationCard = ({xids}) => {
 		<p>What we've raised together for your charities.</p>
 		{rows.slice(0, 3).map(row => <CharityDonation key={row.cid} {...row} />)}
 	</div>);
-};
+}; // ./DonationCard
+
 
 const You = ({xids}) => {
 	console.warn("You...", xids);
