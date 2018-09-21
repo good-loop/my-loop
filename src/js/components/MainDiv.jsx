@@ -105,7 +105,7 @@ class MainDiv extends Component {
 	}
 
 	render() {
-		let path = DataStore.getValue('location', 'path');		
+		let path = DataStore.getValue('location', 'path');	
 		let page = (path && path[0]);
 		if ( ! page) {
 			modifyHash([DEFAULT_PAGE]);
@@ -128,7 +128,7 @@ class MainDiv extends Component {
 				<div>
 					<MessageBar />
 					<div className='page' id={page}>						
-						<Page />
+						<Page path={path} />
 					</div>
 				</div>
 				<LoginWidget logo={C.app.service} title={'Welcome to '+C.app.name} services={['twitter', 'facebook']} />

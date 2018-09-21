@@ -21,6 +21,7 @@ import printer from '../base/utils/printer';
 import DonationCard from './DonationCard';
 import Footer from '../components/Footer';
 import { Link, Element } from 'react-scroll';
+import MDText from '../base/components/MDText';
 
 let handleClick = (targetArrow, targetDetails) => {
 	let aList = ['a1','a2','a3'];
@@ -49,9 +50,28 @@ let handleClick = (targetArrow, targetDetails) => {
 	}
 };
 
-const CampaignPage = () => {
+const CampaignHeader = ({cparentLogo, brandLogo}) => {
+	console.log(cparentLogo);
+	if (cparentLogo) {
+		return (
+			<div>
+				<img alt='KitKat Logo' src={brandLogo} />
+				<span> Supports </span>
+				<img alt='Nestle Cocoa Plan Logo' src={cparentLogo} />
+			</div>
+		);
+	}
+	return (<img alt='KitKat Logo' src={brandLogo} />);
+};
 
-	let adid = 'GZM4Y2Fp';
+const CampaignPage = ({path}) => {
+
+	let adid = path ? path[1] : '';
+	
+	if (!path[1]){
+		return <Misc.Loading text='Unable to find campaign' />;	
+	}
+
 	let pvAdvert = ActionMan.getDataItem({type:C.TYPES.Advert, id:adid, status:C.KStatus.DRAFT, domain: ServerIO.PORTAL_DOMAIN});
 	if ( ! pvAdvert.resolved ) {
 		return <Misc.Loading text='Loading campaign data' />;	
@@ -59,12 +79,53 @@ const CampaignPage = () => {
 
 	console.log(pvAdvert.value);
 
+	// advertiser data
 	let cadvertiser = pvAdvert.value.name;
-	let cparent = pvAdvert.value.charities.parent.name;
-	let cids = pvAdvert.value.charities.list.map(x => x.id);
-	let cnames = pvAdvert.value.charities.list.map(x => x.name);
-	let cphotos = pvAdvert.value.charities.list.map(x => x.photo);
-	let curls = pvAdvert.value.charities.list.map(x => x.url);
+
+	// branding
+	let brand = pvAdvert.value.branding;
+	let brandColor = brand.color;
+	let brandLogo = brand.logo;
+	let tw_url = brand.tw_url ? brand.tw_url : '';
+	let fb_url = brand.fb_url ? brand.fb_url : '';
+	let insta_url = brand.insta_url ? brand.insta_url : '';
+	let yt_url = brand.yt_url ? brand.yt_url : '';
+
+	// campaign 
+	let campaign = pvAdvert.value.campaignPage;
+	let startDate = '';
+	if (pvAdvert.value.start) {
+		startDate = 'This campaign started on '.concat(pvAdvert.value.start.substring(0, 10));
+	}
+	let smallPrint = campaign.smallPrint ? campaign.smallPrint : '';
+	let bg = campaign.bg;
+	let headerStyle = {
+		backgroundImage: 'url(' + bg + ')',
+		backgroundSize: 'cover',
+		backgroundRepeat: 'no-repeat',
+		backgroundPosition: 'center',
+		backgroundAttachment: 'fixed'
+	};
+	console.log(headerStyle);
+	let desc_title = campaign.desc_title;
+	let desc_body = campaign.desc_body;
+	let camp_tw_url = campaign.tw_url ? campaign.tw_url : '';
+	let camp_fb_url = campaign.fb_url ? campaign.fb_url : '';
+	let camp_insta_url = campaign.insta_url ? campaign.insta_url : '';
+	let camp_yt_url = campaign.yt_url ? campaign.yt_url : '';
+
+	// parent charity data 
+	let parent = pvAdvert.value.charities.parent;
+	let cparent = parent.name;
+	let cparentLogo = parent.logo;
+
+	// individual charity data
+	let clist = pvAdvert.value.charities.list;
+	let cids = clist.map(x => x.id);
+	let cnames = clist.map(x => x.name);
+	let cphotos = clist.map(x => x.photo);
+	let curls = clist.map(x => x.url);
+	let cdescs = clist.map(x => x.description);
 
 	// // Get donations by user (including all registered tracking IDs)
 	let start = '2018-05-01T00:00:00.000Z'; // ??is there a data issue if older??
@@ -106,11 +167,9 @@ const CampaignPage = () => {
 		<div className='wrapper'>
 			<div className='one'>
 				<div className='kitkat-head frank-font'>
-					<img alt='Kitkat Logo' src='https://lg.good-loop.com/cdn/images/kitkat-logo-scaled.png' />
-					<span> Supports </span>
-					<img alt='Cocoa Plan Logo' src='https://lg.good-loop.com/cdn/images/cocoa-plan-logo-scaled.png' />
+					<CampaignHeader cparentLogo={cparentLogo} brandLogo={brandLogo} />
 				</div>
-				<div className='header-img'>
+				<div className='header-img' style={headerStyle} >
 					<div className='darken-overlay'>
 						<div className='title frank-font'>
 							<div><Misc.Money amount={communityDonations} /></div>
@@ -131,16 +190,14 @@ const CampaignPage = () => {
 			<div className='two'>
 				<Element name='arrowhead' className='element'>
 					<div className='inside'>
-						<p className='title frank-font'>
-							OUR COMMITMENT
-						</p>
-						<p className='subtitle helvetica-font'>
-							At Nestlé we’re committed to improving the lives of cocoa farmers. So 
-							we have committed to donating half of our KITKAT® advertising money to
-							support the NESTLÉ® COCOA PLAN®, through the ‘Ads for Good’ player.
-						</p>
+						<div className='title frank-font'>
+							<MDText source={desc_title} />							
+						</div>
+						<div className='subtitle helvetica-font'>
+							<MDText source={desc_body} />							
+						</div>
 						<p className='link bebas-font'>
-							<a href={'http://as.good-loop.com/?status=ALL_BAR_TRASH&gl.vert='.concat(adid)} target='_blank'>
+							<a href={'http://as.good-loop.com/?status=PUBLISHED&gl.vert='.concat(adid)} target='_blank'>
 							WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH NESTLÉ® COCOA PLAN® PROJECT YOU WOULD LIKE TO FUND.
 							</a>
 						</p>
@@ -175,15 +232,7 @@ const CampaignPage = () => {
 									<div className="text">
 										<div className='title frank-font'>{cnames[0].toUpperCase()}</div>
 										<div className='description helvetica-font'>
-										Poverty affects many cocoa-growing households in Côte d’Ivoire. 
-										Overreliance on cocoa makes some farmers vulnerable to global 
-										market price fluctuations. In order to increase and help 
-										diversify their income, Nestlé and the International Cocoa 
-										Initiative engage women in vegetable growing, equipping them 
-										with skills, tools, seedlings, and fertilizers to grow and 
-										market plantain, rice or peppers. Thanks for helping us make 
-										this possible!
-											<p>Average cost: $619 / group or $155 / woman</p>
+											<MDText source={cdescs[0]} />
 										</div>
 										<div className='btnlink frank-font' onClick={(e) => window.open(curls[0], '_blank')}>
 											Find out more about the<br/> {cparent}
@@ -197,16 +246,7 @@ const CampaignPage = () => {
 									<div className="text">
 										<div className='title frank-font'>{cnames[1].toUpperCase()}</div>
 										<div className='description helvetica-font'>
-										Poverty affects many cocoa-growing households. This is 
-										why Nestlé and the International Cocoa Initiative have 
-										united forces to increase and diversify women’s income, 
-										while at the same time addressing the lack of electric 
-										grid in large parts of rural Côte d’Ivoire. Thanks to 
-										you, we will help women earn an additional income by 
-										equipping them with a small solar charging station 
-										offering their services to mobile phone owners in their 
-										community.
-											<p>Average cost: $103 / unit</p>
+											<MDText source={cdescs[1]} />
 										</div>
 										<div className='btnlink frank-font' onClick={(e) => window.open(curls[1], '_blank')}>
 											Find out more about the<br/> {cparent}
@@ -220,13 +260,7 @@ const CampaignPage = () => {
 									<div className="text">
 										<div className='title frank-font'>{cnames[2].toUpperCase()}</div>
 										<div className='description helvetica-font'>
-										While primary school is free in cocoa-growing communities of Côte d’Ivoire, 
-										some of Nestlé Cocoa Plan farmers struggle to pay for the books and school 
-										supplies for their children. Thanks to you, Nestlé and the International 
-										Cocoa Initiative will provide school kits so that more children can go to 
-										school. School kits contain exercise books, note books, pens, ruler, 
-										eraser, chalk and slate.
-											<p>Cost: $26 / unit</p>
+											<MDText source={cdescs[2]} />
 										</div>
 										<div className='btnlink frank-font' onClick={(e) => window.open(curls[2], '_blank')}>
 											Find out more about the<br/> {cparent}
@@ -243,14 +277,14 @@ const CampaignPage = () => {
 				<div className='foot'>
 					<div className='social kitkat'>
 						<p>{cadvertiser}</p>
-						<a href='https://www.facebook.com/kitkatuk/' target='_blank'><img src='https://lg.good-loop.com/cdn/images/facebook.png' /></a>
-						<a href='https://twitter.com/KITKAT' target='_blank'><img src='https://lg.good-loop.com/cdn/images/twitter.png' /></a>
-						<a href='https://www.instagram.com/kitkat' target='_blank'><img src='https://lg.good-loop.com/cdn/images/instagram.png' /></a>
+						<a href={fb_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/facebook.png' /></a>
+						<a href={tw_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/twitter.png' /></a>
+						<a href={insta_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/instagram.png' /></a>
 					</div>
 					<div className='social nestle'>
 						<p>{cparent}</p>
-						<a href='https://www.youtube.com/channel/UC-iTNwTrdA4IXpGAFC3WsMg' target='_blank'><img src='/img/youtube.png' /></a>
-						<a href='https://www.instagram.com/nestlecocoaplan/' target='_blank'><img src='https://lg.good-loop.com/cdn/images/instagram.png' /></a>
+						<a href={camp_yt_url} target='_blank'><img src='/img/youtube.png' /></a>
+						<a href={camp_insta_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/instagram.png' /></a>
 					</div>
 					<div className='social goodloop'>
 						<p>GOOD-LOOP</p>
@@ -261,7 +295,7 @@ const CampaignPage = () => {
 				</div>
 			</div>
 		</div>
-		<Footer leftFooter='This campaign started on the 17th of September 2018' rightFooter='Reg. Trademark of Société des Produits Nestlé S.A.' />
+		<Footer leftFooter={startDate} rightFooter={smallPrint} />
 	</div>);
 };
 

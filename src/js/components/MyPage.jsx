@@ -97,7 +97,7 @@ const MyPage = () => {
 
 					<Card title='Your Donations' defaultOpen><DonationCard xids={xids} /></Card>
 
-					{locn.indexOf('dev=')!==-1? <Card title='Boost Your Impact' defaultOpen><SocialMediaCard allIds={xids} /></Card> : null}
+					<Card title='Boost Your Impact' defaultOpen><SocialMediaCard allIds={xids} /></Card> 
 
 					<Card title='Consent Controls' defaultOpen>{Login.isLoggedIn()? <ConsentWidget xids={xids} /> : <LoginToSee />}</Card>
 
