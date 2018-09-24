@@ -24,6 +24,10 @@ import { Link, Element } from 'react-scroll';
 import MDText from '../base/components/MDText';
 
 let handleClick = (targetArrow, targetDetails) => {
+	// @Irina -- This needs documentation.
+	// Please always document code that is not self-explanatory (even if its temporary code).
+	// There is also almost certainly a better way to do it within React.
+	// -- ask me or Roscoe to help you refactor it. ^Dan W
 	let aList = ['a1','a2','a3'];
 	let dList = ['d1','d2','d3'];
 	let d = document.getElementsByClassName(targetDetails)[0];
@@ -55,15 +59,18 @@ const CampaignHeader = ({cparentLogo, brandLogo}) => {
 	if (cparentLogo) {
 		return (
 			<div>
-				<img alt='KitKat Logo' src={brandLogo} />
+				<img alt='Sponsor Logo' src={brandLogo} />
 				<span> Supports </span>
-				<img alt='Nestle Cocoa Plan Logo' src={cparentLogo} />
+				<img alt='Charity Logo' src={cparentLogo} />
 			</div>
 		);
 	}
-	return (<img alt='KitKat Logo' src={brandLogo} />);
+	return (<img alt='Sponsor Logo' src={brandLogo} />);
 };
 
+/**
+ * @param path {!String[]} The deciphered url path - e.g. ['campaign', 'kitkatadid']
+ */
 const CampaignPage = ({path}) => {
 
 	let adid = path ? path[1] : '';
@@ -72,7 +79,9 @@ const CampaignPage = ({path}) => {
 		return <Misc.Loading text='Unable to find campaign' />;	
 	}
 
-	let pvAdvert = ActionMan.getDataItem({type:C.TYPES.Advert, id:adid, status:C.KStatus.DRAFT, domain: ServerIO.PORTAL_DOMAIN});
+	// get the ad for display (so status:published - unless this is a preview, as set by the url)
+	let status = DataStore.getUrlValue("gl.status") || C.KStatus.PUBLISHED;
+	let pvAdvert = ActionMan.getDataItem({type:C.TYPES.Advert, id:adid, status});
 	if ( ! pvAdvert.resolved ) {
 		return <Misc.Loading text='Loading campaign data' />;	
 	}
@@ -80,6 +89,7 @@ const CampaignPage = ({path}) => {
 	console.log(pvAdvert.value);
 
 	// advertiser data
+	const ad = pvAdvert.value;
 	let cadvertiser = pvAdvert.value.name;
 
 	// branding
@@ -127,20 +137,11 @@ const CampaignPage = ({path}) => {
 	let curls = clist.map(x => x.url);
 	let cdescs = clist.map(x => x.description);
 
-	// // Get donations by user (including all registered tracking IDs)
-	let start = '2018-05-01T00:00:00.000Z'; // ??is there a data issue if older??
-	const dntn = "count"; // TODO! count is what we used to log, but it not reliable for grouped-by-session events, so we should use dntn. See adserver goodloop.act.donate
-	// load the community total for the charity
-	//??
-	let pvCommunityTotal = DataStore.fetch(['widget','CampaignPage','communityTotal'], () => {
-		let qcids = cids.map(xid => 'cid:'+xid).join(' OR ');
-		const donationReq = {
-			dataspace: 'gl',
-			q: 'evt:donation AND ('+qcids+")",
-			breakdown: ['cid{"'+dntn+'": "sum"}'],
-			start
-		};
-		return ServerIO.getDataLogData(donationReq, null, 'community-donations').then(res => res.cargo);
+	// load the community total for the ad
+	let pvCommunityTotal = DataStore.fetch(['widget','CampaignPage','communityTotal', adid], () => {
+		let q = ad.campaign? 'campaign:'+ad.campaign : 'vert:'+ad.vert;
+		// TODO "" csv encoding for bits of q (e.g. campaign might have a space)
+		return ServerIO.getDonationsData({q});
 	});
 
 	if ( ! pvCommunityTotal.resolved ) {
@@ -160,12 +161,11 @@ const CampaignPage = ({path}) => {
 		return {charityName: row.cid, percentageTotal: Math.round(row.communityTotal/communityDonations*100)};
 	});
 
-	// TODO advert & campaign from the path
-	const lpath = DataStore.getValue(['location','path']);
-	let vertId = lpath[1];
+	// @Irina - PLease break the html below up into smaller jsx widgets.
 	return (<div className='campaign-page'>
 		<div className='wrapper'>
-			<div className='one'>
+			<div className='one'> @Irina "wrapper" and "one" are ambiguous and a bit cryptic. 
+			Please use more specific and descriptive names.
 				<div className='kitkat-head frank-font'>
 					<CampaignHeader cparentLogo={cparentLogo} brandLogo={brandLogo} />
 				</div>
@@ -176,12 +176,12 @@ const CampaignPage = ({path}) => {
 							<div>RAISED SO FAR</div>
 						</div>
 						<div className='ads-for-good'>
-								<img alt='Good Loop Ads For Good Logo' src='/img/for-good.png' />
-							</div>
+							<img alt='Good Loop Ads For Good Logo' src='/img/for-good.png' />
+						</div>
 						<div className='arrow'>
 							<Link activeClass='active' className='arrowhead' to='arrowhead' spy={true} smooth={true} duration={2000}>
-									<span></span>
-									<span></span>
+								<span></span>
+								<span></span>
 							</Link>
 						</div>
 					</div>	
@@ -197,11 +197,24 @@ const CampaignPage = ({path}) => {
 							<MDText source={desc_body} />							
 						</div>
 						<p className='link bebas-font'>
-							<a href={'http://as.good-loop.com/?status=PUBLISHED&gl.vert='.concat(adid)} target='_blank'>
+							@Irina Please encode url parameters like adid. 
+							encURI is our wrapper for the built-in escape() / encodeURIComponent()
+							This allows for non-url-safe values, and protects against injection attacks.					
+							<a href={'http://as.good-loop.com/?gl.vert='+encURI(adid)+"&status="+encURI(status)} target='_blank'>
+							TODO s/Nestle|KitKat/a variable/
+
 							WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH NESTLÉ® COCOA PLAN® PROJECT YOU WOULD LIKE TO FUND.
 							</a>
 						</p>
 						<div className='donation-circles'>
+							@Irina c1/a1/d1 -- this is cryptic. 
+							Please use meaningful css class names.
+
+							For functions like handleCLick()
+							 -- pass in a model-level value in preference to a display-level css name
+							(e.g. elsewhere we typically use cid for charity/project ID)
+
+							For repeated code -- consider making a jsx widget function, which you can call 3 times.
 							<div className='circle c1' onClick={(e) => handleClick('a1','d1')}>
 								<p className='bebas-font'><span className='frank-font'>{campaignTotalSlice[0].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p>
 								<img alt={cparent+' '+cnames[0]} src={cphotos[0]} />
@@ -277,7 +290,9 @@ const CampaignPage = ({path}) => {
 				<div className='foot'>
 					<div className='social kitkat'>
 						<p>{cadvertiser}</p>
-						<a href={fb_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/facebook.png' /></a>
+						@Irina - you can use the ? : null pattern to easily handle missing values.
+						e.g.
+						{fb_url? <a href={fb_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/facebook.png' /></a> : null}
 						<a href={tw_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/twitter.png' /></a>
 						<a href={insta_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/instagram.png' /></a>
 					</div>

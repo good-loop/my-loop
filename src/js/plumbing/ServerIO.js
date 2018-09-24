@@ -45,6 +45,7 @@ ServerIO.LOGENDPOINT = ServerIO.PROFILER_ENDPOINT+'/log';
 ServerIO.checkBase();
 
 /**
+ * @deprecated Use getDonationsData or getAllSpend for preference
  * 
  * @param {*} filters 
  * @param {*} breakdowns TODO
@@ -59,6 +60,7 @@ ServerIO.getDataLogData = (filters, breakdowns, name) => {
 };
 
 /**
+ * NB: Copy-pasta from Portal ServerIO.js
  * 
  * @param q {String} e.g. pub:myblog
  * @returns Promise {
@@ -68,14 +70,16 @@ ServerIO.getDataLogData = (filters, breakdowns, name) => {
  * }
  */
 ServerIO.getDonationsData = ({q, start, end}) => {
-	let url = ServerIO.AS_ENDPOINT+'/datafn/donations';
+	let url = ServerIO.APIBASE+'/datafn/donations';
 	const params = {
 		data: {q, start, end}
 	};
 	return ServerIO.load(url, params);
 };
 
-/**
+/** 
+ * NB: Copy-pasta from Portal ServerIO.js
+ * 
  * @param vert {?String} Advert ID. If unset, sum all.
  * @returns Promise {
  * 	total: Number,
@@ -83,7 +87,7 @@ ServerIO.getDonationsData = ({q, start, end}) => {
  * }
  */
 ServerIO.getAllSpend = ({vert}) => {
-	let url = ServerIO.AS_ENDPOINT+'/datafn/sum';
+	let url = ServerIO.APIBASE+'/datafn/sum';
 	const params = {
 		data: {vert}
 	};
