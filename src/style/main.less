@@ -373,22 +373,22 @@ p > a:hover {
 	font-family: Geneva, Tahoma, Verdana, sans-serif;
 }
 
-.c1 { -ms-grid-row: 1; -ms-grid-column: 1; grid-area: c1; }
-.c2 { -ms-grid-row: 1; -ms-grid-column: 3; grid-area: c2; }
-.c3 { -ms-grid-row: 1; -ms-grid-column: 5; grid-area: c3; }
-.d1 { 
+.circle.left { -ms-grid-row: 1; -ms-grid-column: 1; grid-area: c1; }
+.circle.middle { -ms-grid-row: 1; -ms-grid-column: 3; grid-area: c2; }
+.circle.right { -ms-grid-row: 1; -ms-grid-column: 5; grid-area: c3; }
+.details.left { 
 	-ms-grid-row: 3; 
 	-ms-grid-column: 1; 
 	-ms-grid-column-span: 5; 
 	grid-area: d1; 
 }
-.d2 { 
+.details.middle { 
 	-ms-grid-row: 5; 
 	-ms-grid-column: 1; 
 	-ms-grid-column-span: 5; 
 	grid-area: d2; 
 }
-.d3 { 
+.details.right { 
 	-ms-grid-row: 7; 
 	-ms-grid-column: 1; 
 	-ms-grid-column-span: 5; 
@@ -396,42 +396,42 @@ p > a:hover {
 }
 @media only screen and (max-width: 900px) {
 
-	.c1 {
+	.circle.left {
 		-ms-grid-row: 1;
 		-ms-grid-column: 1
 
 
 	}
 
-	.c2 {
+	.circle.middle {
 		-ms-grid-row: 3;
 		-ms-grid-column: 1
 
 
 	}
 
-	.c3 {
+	.circle.right {
 		-ms-grid-row: 5;
 		-ms-grid-column: 1
 
 
 	}
 
-	.d1 {
+	.details.left {
 		-ms-grid-row: 2;
 		-ms-grid-column: 1
 
 
 	}
 
-	.d2 {
+	.details.middle {
 		-ms-grid-row: 4;
 		-ms-grid-column: 1
 
 
 	}
 
-	.d3 {
+	.details.right {
 		-ms-grid-row: 6;
 		-ms-grid-column: 1
 
@@ -570,7 +570,7 @@ p > a:hover {
 	}
 }
 
-.four {
+.grid-tile.bottom {
 	grid-row: 1 / 3;
 	-ms-grid-row: 1;
 	-ms-grid-row-span: 2;
@@ -581,7 +581,7 @@ p > a:hover {
 		display: grid;
 		-ms-grid-columns: 1fr 1px 1fr 1px 1fr;
 		grid-template-columns: 1fr 1fr 1fr;
-		    grid-template-areas: "kitkat nestle goodloop";  
+		    grid-template-areas: "vertiser campaign goodloop";  
 		grid-gap: 1px;
 
 		div {
@@ -610,13 +610,13 @@ p > a:hover {
 	overflow-x: hidden;
 	text-align: center;
 
-	.wrapper {
+	.grid {
 		display: grid;
 		grid-template-rows: 1fr;
 		-ms-grid-rows: 1fr;
 	}
 
-	.one {
+	.grid-tile.top {
 		background: @main-color;
 		grid-row: 1 / 3;
 		-ms-grid-row: 1;
@@ -624,7 +624,7 @@ p > a:hover {
 		width: 100vw;
 		height: 100vh;
 
-		.kitkat-head {
+		.vertiser-head {
 			position: absolute;
 			width: 100%;
 			text-align: center;
@@ -683,7 +683,7 @@ p > a:hover {
 		}
 	}
 
-	.two {
+	.grid-tile.middle {
 		background: #f0e7d0;
 		grid-row: 1 / 3;
 		-ms-grid-row: 1;
@@ -824,7 +824,7 @@ p > a:hover {
 		grid-gap: 0px 30px;
 	}
 
-	.campaign-page .two .inside {
+	.campaign-page .grid-tile.middle .inside {
 		.subtitle, .link {
 			margin-left: 33%;
 			margin-right: 33%;
@@ -836,7 +836,7 @@ p > a:hover {
 	.donation-circles {
 		grid-gap: 0px 20px;
 	}
-	.campaign-page .two .inside {
+	.campaign-page .grid-tile.middle .inside {
 		.subtitle, .link {
 			margin-left: 30%;
 			margin-right: 30%;
@@ -848,7 +848,7 @@ p > a:hover {
 	.donation-circles {
 		grid-gap: 0px 15px;
 	}
-	.campaign-page .two .inside {
+	.campaign-page .grid-tile.middle .inside {
 		.subtitle, .link {
 			margin-left: 25%;
 			margin-right: 25%;
@@ -860,7 +860,7 @@ p > a:hover {
 	.donation-circles {
 		grid-gap: 0px 10px;
 	}
-	.campaign-page .two .inside {
+	.campaign-page .grid-tile.middle .inside {
 		.subtitle, .link {
 			margin-left: 20%;
 			margin-right: 20%;
@@ -887,8 +887,8 @@ p > a:hover {
 // using css grid to change the template of the grid to a column based one 
 // only applies on phone-sized devices
 @media only screen and (max-width: 900px) {
-	.campaign-page .one {
-		.kitkat-head {
+	.campaign-page .grid-tile.top {
+		.vertiser-head {
 			font-size: 20px;
 
 			img:nth-child(1) {
@@ -939,16 +939,16 @@ p > a:hover {
 		}
 	}
 
-	.four .foot {
+	.grid-tile.bottom .foot {
 		-ms-grid-columns: 1fr;
 		grid-template-columns: 1fr;
 		grid-template-areas: 
-		"kitkat" 
-		"nestle" 
+		"vertiser" 
+		"campaign" 
 		"goodloop";  
 	}
 
-	.campaign-page .one {
+	.campaign-page .grid-tile.top {
 				
 		.title {
 			font-size: 45px;
@@ -964,8 +964,8 @@ p > a:hover {
 }
 
 @media only screen and (max-width: 750px) {
-	.campaign-page .one {
-		.kitkat-head {
+	.campaign-page .grid-tile.top {
+		.vertiser-head {
 			font-size: 18px;
 
 			img:nth-child(1) {
@@ -996,8 +996,8 @@ p > a:hover {
 }
 
 @media only screen and (max-width: 600px) {
-	.campaign-page .one {
-		.kitkat-head {
+	.campaign-page .grid-tile.top {
+		.vertiser-head {
 			font-size: 18px;
 
 			img:nth-child(1) {
@@ -1028,8 +1028,8 @@ p > a:hover {
 }
 
 @media only screen and (max-width: 400px) {
-	.campaign-page .one {
-		.kitkat-head {
+	.campaign-page .grid-tile.top {
+		.vertiser-head {
 			font-size: 15px;
 
 			img:nth-child(1) {
@@ -1061,7 +1061,7 @@ p > a:hover {
 
 
 @media only screen and (max-width: 360px) {
-	.campaign-page .one {
+	.campaign-page .grid-tile.top {
 		.header-img .darken-overlay {
 			div.title:nth-child(1) > div:nth-child(1) {
 				font-size: 45px;
@@ -1074,7 +1074,7 @@ p > a:hover {
 }
 
 @media only screen and (max-width: 350px) {
-	.campaign-page .one {
+	.campaign-page .grid-tile.top {
 		.header-img .darken-overlay {
 			div.title:nth-child(1) > div:nth-child(1) {
 				font-size: 40px;

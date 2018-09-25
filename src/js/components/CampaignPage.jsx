@@ -23,39 +23,7 @@ import Footer from '../components/Footer';
 import { Link, Element } from 'react-scroll';
 import MDText from '../base/components/MDText';
 
-let handleClick = (targetArrow, targetDetails) => {
-	// @Irina -- This needs documentation.
-	// Please always document code that is not self-explanatory (even if its temporary code).
-	// There is also almost certainly a better way to do it within React.
-	// -- ask me or Roscoe to help you refactor it. ^Dan W
-	let aList = ['a1','a2','a3'];
-	let dList = ['d1','d2','d3'];
-	let d = document.getElementsByClassName(targetDetails)[0];
-	let a = document.getElementsByClassName(targetArrow)[0];
-	if (d.classList.contains('hidden')) {
-		dList.forEach(function(val,index) { 
-			let temp = document.getElementsByClassName(val)[0];
-			if (!temp.classList.contains('hidden')) {
-				temp.classList.add('hidden');
-			}
-		});
-		d.classList.remove('hidden');
-
-		aList.forEach(function(val,index) { 
-			let temp2 = document.getElementsByClassName(val)[0];
-			if (!temp2.classList.contains('hidden')) {
-				temp2.classList.add('hidden');
-			}
-		});
-		a.classList.remove('hidden');
-	} else {
-		d.classList.add('hidden');
-		a.classList.add('hidden');
-	}
-};
-
-const CampaignHeader = ({cparentLogo, brandLogo}) => {
-	console.log(cparentLogo);
+const CampaignHeaderWidget = ({cparentLogo, brandLogo}) => {
 	if (cparentLogo) {
 		return (
 			<div>
@@ -68,6 +36,95 @@ const CampaignHeader = ({cparentLogo, brandLogo}) => {
 	return (<img alt='Sponsor Logo' src={brandLogo} />);
 };
 
+const SocialMediaFooterWidget = ({type, name, src}) => {
+	return (
+		<div className={'social '.concat(type)}>
+			<p>{name}</p>
+			{src.fb_url? <a href={src.fb_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/facebook.png' /></a> : null}
+			{src.tw_url? <a href={src.tw_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/twitter.png' /></a> : null}
+			{src.insta_url? <a href={src.insta_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/instagram.png' /></a> : null}
+			{src.yt_url? <a href={src.yt_url} target='_blank'><img src='/img/youtube.png' /></a> : null}
+		</div>
+	);
+};
+
+// TODO fix handleClick
+let _handleClick = (circleIndex) => {
+	let toggle = [false, false, false];
+	toggle[circleIndex] = true;
+	return toggle;
+};
+
+const DonationCircleWidget = ({cparent, clist, campaignTotalSlice, index=0, name='left', shown}) => {
+	let cids = clist.map(x => x.id);
+	let cnames = clist.map(x => x.name);
+	let cphotos = clist.map(x => x.photo);
+
+	return (
+		<div className={'circle '.concat(name)} onClick={(e) => _handleClick(index)}>
+			<p className='bebas-font'><span className='frank-font'>{campaignTotalSlice[index].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p>
+			<img alt={cparent+' '+cnames[index]} src={cphotos[index]} />
+			<div className='project-name frank-font'>
+				{cnames[index]}
+			</div>
+			{ shown ? <div className='arrow-up' /> : null }
+		</div>
+	);
+};
+
+const DonationDetailsWidget = ({cparent, clist, index=0, name='left'}) => {
+	let cnames = clist.map(x => x.name);
+	let cphotos = clist.map(x => x.photo);
+	let curls = clist.map(x => x.url);
+	let cdescs = clist.map(x => x.description);
+
+	return (
+		<div className={'details '.concat(name)}>
+			<div className='innards'>
+				<img alt={cparent+' '+cnames[0]} src={cphotos[0]} />
+				<div className="text">
+					<div className='title frank-font'>{cnames[0].toUpperCase()}</div>
+					<div className='description helvetica-font'>
+						<MDText source={cdescs[0]} />
+					</div>
+					<div className='btnlink frank-font' onClick={(e) => window.open(curls[0], '_blank')}>
+						Find out more about the<br/> {cparent}
+					</div>	
+				</div>
+			</div>
+		</div>
+	);
+};
+
+const DonationCirclesWidget = ({cparent, clist, campaignTotalSlice}) => {
+	let toggle = [true, false, false];
+
+	return (
+		<div className='donation-circles'>
+			{						
+			//	For functions like handleCLick()
+			//	 -- pass in a model-level value in preference to a display-level css name
+			//	(e.g. elsewhere we typically use cid for charity/project ID)
+			}
+			<DonationCircleWidget cparent={cparent} clist={clist} campaignTotalSlice={campaignTotalSlice} index={0} name={'left'} shown={toggle[0]} />
+			<DonationCircleWidget cparent={cparent} clist={clist} campaignTotalSlice={campaignTotalSlice} index={1} name={'middle'} shown={toggle[1]} />
+			<DonationCircleWidget cparent={cparent} clist={clist} campaignTotalSlice={campaignTotalSlice} index={2} name={'right'} shown={toggle[2]} />
+			{ toggle[0] ? 
+				<DonationDetailsWidget cparent={cparent} clist={clist} index={0} name={'left'} />
+				: null
+			}
+			{ toggle[1] ? 
+				<DonationDetailsWidget cparent={cparent} clist={clist} index={1} name={'middle'} />
+				: null
+			}
+			{ toggle[2] ? 
+				<DonationDetailsWidget cparent={cparent} clist={clist} index={2} name={'right'} />
+				: null
+			}
+		</div>
+	);
+};
+
 /**
  * @param path {!String[]} The deciphered url path - e.g. ['campaign', 'kitkatadid']
  */
@@ -75,13 +132,13 @@ const CampaignPage = ({path}) => {
 
 	let adid = path ? path[1] : '';
 	
-	if (!path[1]){
+	if (!path[1]) {
 		return <Misc.Loading text='Unable to find campaign' />;	
 	}
 
 	// get the ad for display (so status:published - unless this is a preview, as set by the url)
 	let status = DataStore.getUrlValue("gl.status") || C.KStatus.PUBLISHED;
-	let pvAdvert = ActionMan.getDataItem({type:C.TYPES.Advert, id:adid, status});
+	let pvAdvert = ActionMan.getDataItem({type:C.TYPES.Advert, id:adid, status:C.KStatus.DRAFT, domain: ServerIO.PORTAL_DOMAIN});
 	if ( ! pvAdvert.resolved ) {
 		return <Misc.Loading text='Loading campaign data' />;	
 	}
@@ -96,10 +153,13 @@ const CampaignPage = ({path}) => {
 	let brand = pvAdvert.value.branding;
 	let brandColor = brand.color;
 	let brandLogo = brand.logo;
-	let tw_url = brand.tw_url ? brand.tw_url : '';
-	let fb_url = brand.fb_url ? brand.fb_url : '';
-	let insta_url = brand.insta_url ? brand.insta_url : '';
-	let yt_url = brand.yt_url ? brand.yt_url : '';
+
+	// goodloop social
+	let gl_social = {
+		fb_url: 'https://www.facebook.com/the.good.loop/',
+		tw_url: 'https://twitter.com/goodloophq',
+		insta_url: 'https://www.instagram.com/good.loop.ads/',
+	};
 
 	// campaign 
 	let campaign = pvAdvert.value.campaignPage;
@@ -119,10 +179,6 @@ const CampaignPage = ({path}) => {
 	console.log(headerStyle);
 	let desc_title = campaign.desc_title;
 	let desc_body = campaign.desc_body;
-	let camp_tw_url = campaign.tw_url ? campaign.tw_url : '';
-	let camp_fb_url = campaign.fb_url ? campaign.fb_url : '';
-	let camp_insta_url = campaign.insta_url ? campaign.insta_url : '';
-	let camp_yt_url = campaign.yt_url ? campaign.yt_url : '';
 
 	// parent charity data 
 	let parent = pvAdvert.value.charities.parent;
@@ -132,21 +188,17 @@ const CampaignPage = ({path}) => {
 	// individual charity data
 	let clist = pvAdvert.value.charities.list;
 	let cids = clist.map(x => x.id);
-	let cnames = clist.map(x => x.name);
-	let cphotos = clist.map(x => x.photo);
-	let curls = clist.map(x => x.url);
-	let cdescs = clist.map(x => x.description);
 
 	// load the community total for the ad
 	let pvCommunityTotal = DataStore.fetch(['widget','CampaignPage','communityTotal', adid], () => {
-		let q = ad.campaign? 'campaign:'+ad.campaign : 'vert:'+ad.vert;
+		let q = ad.campaign? 'campaign: '+ad.campaign : 'vert: '+ad.vert;
 		// TODO "" csv encoding for bits of q (e.g. campaign might have a space)
 		return ServerIO.getDonationsData({q});
 	});
-
-	if ( ! pvCommunityTotal.resolved ) {
-		return <Misc.Loading text='Donations data' />;
-	}
+	// TODO: fix datafn fetching
+	// if ( ! pvCommunityTotal.resolved ) {
+	// 	return <Misc.Loading text='Donations data' />;
+	// }
 
 	let communityDonationsByCharity = pvCommunityTotal.value? pivot(pvCommunityTotal.value.by_cid.buckets, "$bi.{key, "+dntn+".sum.$n}", "$key.$n") : {};
 
@@ -161,13 +213,11 @@ const CampaignPage = ({path}) => {
 		return {charityName: row.cid, percentageTotal: Math.round(row.communityTotal/communityDonations*100)};
 	});
 
-	// @Irina - PLease break the html below up into smaller jsx widgets.
 	return (<div className='campaign-page'>
-		<div className='wrapper'>
-			<div className='one'> @Irina "wrapper" and "one" are ambiguous and a bit cryptic. 
-			Please use more specific and descriptive names.
-				<div className='kitkat-head frank-font'>
-					<CampaignHeader cparentLogo={cparentLogo} brandLogo={brandLogo} />
+		<div className='grid'>
+			<div className='grid-tile top'> 
+				<div className='vertiser-head frank-font'>
+					<CampaignHeaderWidget cparentLogo={cparentLogo} brandLogo={brandLogo} />
 				</div>
 				<div className='header-img' style={headerStyle} >
 					<div className='darken-overlay'>
@@ -187,7 +237,7 @@ const CampaignPage = ({path}) => {
 					</div>	
 				</div>
 			</div>
-			<div className='two'>
+			<div className='grid-tile middle'>
 				<Element name='arrowhead' className='element'>
 					<div className='inside'>
 						<div className='title frank-font'>
@@ -197,116 +247,19 @@ const CampaignPage = ({path}) => {
 							<MDText source={desc_body} />							
 						</div>
 						<p className='link bebas-font'>
-							@Irina Please encode url parameters like adid. 
-							encURI is our wrapper for the built-in escape() / encodeURIComponent()
-							This allows for non-url-safe values, and protects against injection attacks.					
 							<a href={'http://as.good-loop.com/?gl.vert='+encURI(adid)+"&status="+encURI(status)} target='_blank'>
-							TODO s/Nestle|KitKat/a variable/
-
 							WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH NESTLÉ® COCOA PLAN® PROJECT YOU WOULD LIKE TO FUND.
 							</a>
 						</p>
-						<div className='donation-circles'>
-							@Irina c1/a1/d1 -- this is cryptic. 
-							Please use meaningful css class names.
-
-							For functions like handleCLick()
-							 -- pass in a model-level value in preference to a display-level css name
-							(e.g. elsewhere we typically use cid for charity/project ID)
-
-							For repeated code -- consider making a jsx widget function, which you can call 3 times.
-							<div className='circle c1' onClick={(e) => handleClick('a1','d1')}>
-								<p className='bebas-font'><span className='frank-font'>{campaignTotalSlice[0].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p>
-								<img alt={cparent+' '+cnames[0]} src={cphotos[0]} />
-								<div className='project-name frank-font'>
-									{cnames[0]}
-								</div>
-								<div className='arrow-up a1'></div>
-							</div>
-							<div className='circle c2' onClick={(e) => handleClick('a2','d2')}>
-								<p className='bebas-font'><span className='frank-font'>{campaignTotalSlice[1].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p>
-								<img alt={cparent+' '+cnames[1]} src={cphotos[1]} />
-								<div className='project-name frank-font'>
-									{cnames[1]}
-								</div>
-								<div className='arrow-up a2 hidden'></div>
-							</div>
-							<div className='circle c3' onClick={(e) => handleClick('a3','d3')}>
-								<p className='bebas-font'><span className='frank-font'>{campaignTotalSlice[2].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p>
-								<img alt={cparent+' '+cnames[2]} src={cphotos[2]} />
-								<div className='project-name frank-font'>
-									{cnames[2]}
-								</div>
-								<div className='arrow-up a3 hidden'></div>
-							</div>
-							<div className='details d1'>
-								<div className='innards'>
-									<img alt={cparent+' '+cnames[0]} src={cphotos[0]} />
-									<div className="text">
-										<div className='title frank-font'>{cnames[0].toUpperCase()}</div>
-										<div className='description helvetica-font'>
-											<MDText source={cdescs[0]} />
-										</div>
-										<div className='btnlink frank-font' onClick={(e) => window.open(curls[0], '_blank')}>
-											Find out more about the<br/> {cparent}
-										</div>	
-									</div>
-								</div>
-							</div>
-							<div className='details d2 hidden'>
-								<div className='innards'>
-									<img alt={cparent+' '+cnames[1]} src={cphotos[1]} />
-									<div className="text">
-										<div className='title frank-font'>{cnames[1].toUpperCase()}</div>
-										<div className='description helvetica-font'>
-											<MDText source={cdescs[1]} />
-										</div>
-										<div className='btnlink frank-font' onClick={(e) => window.open(curls[1], '_blank')}>
-											Find out more about the<br/> {cparent}
-										</div>
-									</div>
-								</div>
-							</div>
-							<div className='details d3 hidden'>
-								<div className='innards'>
-									<img alt={cparent+' '+cnames[2]} src={cphotos[2]} />
-									<div className="text">
-										<div className='title frank-font'>{cnames[2].toUpperCase()}</div>
-										<div className='description helvetica-font'>
-											<MDText source={cdescs[2]} />
-										</div>
-										<div className='btnlink frank-font' onClick={(e) => window.open(curls[2], '_blank')}>
-											Find out more about the<br/> {cparent}
-										</div>
-									</div>
-								</div>
-							</div>
-
-						</div>
+						<DonationCirclesWidget cparent={cparent} clist={clist} campaignTotalSlice={campaignTotalSlice} />
 					</div>
 				</Element>
 			</div>
-			<div className='four bebas-font'>
-				<div className='foot'>
-					<div className='social kitkat'>
-						<p>{cadvertiser}</p>
-						@Irina - you can use the ? : null pattern to easily handle missing values.
-						e.g.
-						{fb_url? <a href={fb_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/facebook.png' /></a> : null}
-						<a href={tw_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/twitter.png' /></a>
-						<a href={insta_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/instagram.png' /></a>
-					</div>
-					<div className='social nestle'>
-						<p>{cparent}</p>
-						<a href={camp_yt_url} target='_blank'><img src='/img/youtube.png' /></a>
-						<a href={camp_insta_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/instagram.png' /></a>
-					</div>
-					<div className='social goodloop'>
-						<p>GOOD-LOOP</p>
-						<a href='https://www.facebook.com/the.good.loop/' target='_blank'><img src='https://lg.good-loop.com/cdn/images/facebook.png' /></a>
-						<a href='https://twitter.com/goodloophq' target='_blank'><img src='https://lg.good-loop.com/cdn/images/twitter.png' /></a>
-						<a href='https://www.instagram.com/good.loop.ads/' target='_blank'><img src='https://lg.good-loop.com/cdn/images/instagram.png' /></a>
-					</div>
+			<div className='grid-tile bottom'>
+				<div className='foot bebas-font'>			
+					<SocialMediaFooterWidget type={'vertiser'} name={cadvertiser} src={brand} />
+					<SocialMediaFooterWidget type={'campaign'} name={cparent} src={campaign} />
+					<SocialMediaFooterWidget type={'goodloop'} name={'GOOD-LOOP'} src={gl_social} />
 				</div>
 			</div>
 		</div>
