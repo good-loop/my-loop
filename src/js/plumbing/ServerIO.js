@@ -29,13 +29,13 @@ ServerIO.PORTAL_DOMAIN = C.HTTPS+'://'+C.SERVER_TYPE+'portal.good-loop.com';
 
 ServerIO.DATALOG_ENDPOINT = C.HTTPS+'://'+C.SERVER_TYPE+'lg.good-loop.com/data';
 // ServerIO.DATALOG_ENDPOINT = 'https://testlg.good-loop.com/data';
-ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';
+// ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';
 
 ServerIO.PROFILER_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}profiler.good-loop.com`;
 //ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com';
 
 ServerIO.AS_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}as.good-loop.com`;
-ServerIO.AS_ENDPOINT = `${C.HTTPS}://as.good-loop.com`;
+//ServerIO.AS_ENDPOINT = `${C.HTTPS}://as.good-loop.com`;
 
 /**
  * My Loop has no backend, so use profiler
@@ -70,7 +70,7 @@ ServerIO.getDataLogData = (filters, breakdowns, name) => {
  * }
  */
 ServerIO.getDonationsData = ({q, start, end}) => {
-	let url = ServerIO.APIBASE+'/datafn/donations';
+	let url = ServerIO.AS_ENDPOINT+'/datafn/donations';
 	const params = {
 		data: {q, start, end}
 	};
@@ -87,7 +87,7 @@ ServerIO.getDonationsData = ({q, start, end}) => {
  * }
  */
 ServerIO.getAllSpend = ({vert}) => {
-	let url = ServerIO.APIBASE+'/datafn/sum';
+	let url = ServerIO.AS_ENDPOINT+'/datafn/sum';
 	const params = {
 		data: {vert}
 	};

@@ -48,11 +48,10 @@ const SocialMediaFooterWidget = ({type, name, src}) => {
 	);
 };
 
-// TODO fix handleClick
 let _handleClick = (circleIndex) => {
 	let toggle = [false, false, false];
 	toggle[circleIndex] = true;
-	return toggle;
+	DataStore.setValue(['widget', 'donationCircles', 'active'], toggle);
 };
 
 const DonationCircleWidget = ({cparent, clist, campaignTotalSlice, index=0, name='left', shown}) => {
@@ -81,13 +80,13 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left'}) => {
 	return (
 		<div className={'details '.concat(name)}>
 			<div className='innards'>
-				<img alt={cparent+' '+cnames[0]} src={cphotos[0]} />
+				<img alt={cparent+' '+cnames[index]} src={cphotos[index]} />
 				<div className="text">
-					<div className='title frank-font'>{cnames[0].toUpperCase()}</div>
+					<div className='title frank-font'>{cnames[index].toUpperCase()}</div>
 					<div className='description helvetica-font'>
-						<MDText source={cdescs[0]} />
+						<MDText source={cdescs[index]} />
 					</div>
-					<div className='btnlink frank-font' onClick={(e) => window.open(curls[0], '_blank')}>
+					<div className='btnlink frank-font' onClick={(e) => window.open(curls[index], '_blank')}>
 						Find out more about the<br/> {cparent}
 					</div>	
 				</div>
@@ -97,15 +96,10 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left'}) => {
 };
 
 const DonationCirclesWidget = ({cparent, clist, campaignTotalSlice}) => {
-	let toggle = [true, false, false];
-
+	let toggle = DataStore.getValue(['widget', 'donationCircles', 'active']) || [true, false, false]; // toggles the info charity box to display one at a time
+	
 	return (
 		<div className='donation-circles'>
-			{						
-			//	For functions like handleCLick()
-			//	 -- pass in a model-level value in preference to a display-level css name
-			//	(e.g. elsewhere we typically use cid for charity/project ID)
-			}
 			<DonationCircleWidget cparent={cparent} clist={clist} campaignTotalSlice={campaignTotalSlice} index={0} name={'left'} shown={toggle[0]} />
 			<DonationCircleWidget cparent={cparent} clist={clist} campaignTotalSlice={campaignTotalSlice} index={1} name={'middle'} shown={toggle[1]} />
 			<DonationCircleWidget cparent={cparent} clist={clist} campaignTotalSlice={campaignTotalSlice} index={2} name={'right'} shown={toggle[2]} />
@@ -148,20 +142,18 @@ const CampaignPage = ({path}) => {
 	// advertiser data
 	const ad = pvAdvert.value;
 	let cadvertiser = pvAdvert.value.name;
-
-	// branding
 	let brand = pvAdvert.value.branding;
 	let brandColor = brand.color;
 	let brandLogo = brand.logo;
 
-	// goodloop social
+	// goodloop data
 	let gl_social = {
 		fb_url: 'https://www.facebook.com/the.good.loop/',
 		tw_url: 'https://twitter.com/goodloophq',
 		insta_url: 'https://www.instagram.com/good.loop.ads/',
 	};
 
-	// campaign 
+	// campaign data
 	let campaign = pvAdvert.value.campaignPage;
 	let startDate = '';
 	if (pvAdvert.value.start) {
@@ -176,7 +168,6 @@ const CampaignPage = ({path}) => {
 		backgroundPosition: 'center',
 		backgroundAttachment: 'fixed'
 	};
-	console.log(headerStyle);
 	let desc_title = campaign.desc_title;
 	let desc_body = campaign.desc_body;
 
@@ -191,27 +182,29 @@ const CampaignPage = ({path}) => {
 
 	// load the community total for the ad
 	let pvCommunityTotal = DataStore.fetch(['widget','CampaignPage','communityTotal', adid], () => {
-		let q = ad.campaign? 'campaign: '+ad.campaign : 'vert: '+ad.vert;
+		let q = ad.campaign? 'campaign:'+ad.campaign : 'vert:'+ad.vert;
 		// TODO "" csv encoding for bits of q (e.g. campaign might have a space)
 		return ServerIO.getDonationsData({q});
 	});
-	// TODO: fix datafn fetching
-	// if ( ! pvCommunityTotal.resolved ) {
-	// 	return <Misc.Loading text='Donations data' />;
-	// }
-
-	let communityDonationsByCharity = pvCommunityTotal.value? pivot(pvCommunityTotal.value.by_cid.buckets, "$bi.{key, "+dntn+".sum.$n}", "$key.$n") : {};
+	if ( ! pvCommunityTotal.resolved ) {
+		return <Misc.Loading text='Donations data' />;
+	}
+	console.log('communityTotal', pvCommunityTotal.value)
 
 	// make rows
 	let rows = cids.map(cid => {
-		return {cid, userTotal: cids[cid], communityTotal: communityDonationsByCharity[cid]};
+		return {cid, communityTotal: (pvCommunityTotal.value[cid] || {value:0}).value};
 	});
 
 	let communityDonations = rows.reduce((acc, current) => acc + current.communityTotal, 0);
+	console.log(communityDonations);
 
 	let campaignTotalSlice = rows.map(row => {
-		return {charityName: row.cid, percentageTotal: Math.round(row.communityTotal/communityDonations*100)};
+		const rawFraction = row.communityTotal / communityDonations || 0;
+		return {cid: row.cid, percentageTotal: Math.round(rawFraction*100)};
 	});
+
+	console.log(campaignTotalSlice);
 
 	return (<div className='campaign-page'>
 		<div className='grid'>
