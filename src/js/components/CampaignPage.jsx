@@ -54,7 +54,7 @@ let _handleClick = (circleIndex) => {
 	DataStore.setValue(['widget', 'donationCircles', 'active'], toggle);
 };
 
-const DonationCircleWidget = ({cparent, clist, campaignTotalSlice, index=0, name='left', shown}) => {
+const DonationCircleWidget = ({cparent, clist, campaignTotalSlice, index=0, name='left', shown, brandColorBgStyle}) => {
 	let cids = clist.map(x => x.id);
 	let cnames = clist.map(x => x.name);
 	let cphotos = clist.map(x => x.photo);
@@ -63,7 +63,7 @@ const DonationCircleWidget = ({cparent, clist, campaignTotalSlice, index=0, name
 		<div className={'circle '.concat(name)} onClick={(e) => _handleClick(index)}>
 			<p className='bebas-font'><span className='frank-font'>{campaignTotalSlice[index].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p>
 			<img alt={cparent+' '+cnames[index]} src={cphotos[index]} />
-			<div className='project-name frank-font'>
+			<div className='project-name frank-font' style={brandColorBgStyle}>
 				{cnames[index]}
 			</div>
 			{ shown ? <div className='arrow-up' /> : null }
@@ -71,7 +71,7 @@ const DonationCircleWidget = ({cparent, clist, campaignTotalSlice, index=0, name
 	);
 };
 
-const DonationDetailsWidget = ({cparent, clist, index=0, name='left'}) => {
+const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColorBgStyle, brandColorTxtStyle}) => {
 	let cnames = clist.map(x => x.name);
 	let cphotos = clist.map(x => x.photo);
 	let curls = clist.map(x => x.url);
@@ -82,11 +82,11 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left'}) => {
 			<div className='innards'>
 				<img alt={cparent+' '+cnames[index]} src={cphotos[index]} />
 				<div className="text">
-					<div className='title frank-font'>{cnames[index].toUpperCase()}</div>
+					<div className='title frank-font' style={brandColorTxtStyle}>{cnames[index].toUpperCase()}</div>
 					<div className='description helvetica-font'>
 						<MDText source={cdescs[index]} />
 					</div>
-					<div className='btnlink frank-font' onClick={(e) => window.open(curls[index], '_blank')}>
+					<div className='btnlink frank-font' style={brandColorBgStyle} onClick={(e) => window.open(curls[index], '_blank')}>
 						Find out more about the<br/> {cparent}
 					</div>	
 				</div>
@@ -95,24 +95,24 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left'}) => {
 	);
 };
 
-const DonationCirclesWidget = ({cparent, clist, campaignTotalSlice}) => {
+const DonationInfoWidget = ({cparent, clist, campaignTotalSlice, brandColorBgStyle, brandColorTxtStyle}) => {
 	let toggle = DataStore.getValue(['widget', 'donationCircles', 'active']) || [true, false, false]; // toggles the info charity box to display one at a time
 	
 	return (
 		<div className='donation-circles'>
-			<DonationCircleWidget cparent={cparent} clist={clist} campaignTotalSlice={campaignTotalSlice} index={0} name={'left'} shown={toggle[0]} />
-			<DonationCircleWidget cparent={cparent} clist={clist} campaignTotalSlice={campaignTotalSlice} index={1} name={'middle'} shown={toggle[1]} />
-			<DonationCircleWidget cparent={cparent} clist={clist} campaignTotalSlice={campaignTotalSlice} index={2} name={'right'} shown={toggle[2]} />
+			<DonationCircleWidget cparent={cparent} clist={clist} campaignTotalSlice={campaignTotalSlice} index={0} name={'left'} shown={toggle[0]} brandColorBgStyle={brandColorBgStyle} />
+			<DonationCircleWidget cparent={cparent} clist={clist} campaignTotalSlice={campaignTotalSlice} index={1} name={'middle'} shown={toggle[1]} brandColorBgStyle={brandColorBgStyle} />
+			<DonationCircleWidget cparent={cparent} clist={clist} campaignTotalSlice={campaignTotalSlice} index={2} name={'right'} shown={toggle[2]} brandColorBgStyle={brandColorBgStyle} />
 			{ toggle[0] ? 
-				<DonationDetailsWidget cparent={cparent} clist={clist} index={0} name={'left'} />
+				<DonationDetailsWidget cparent={cparent} clist={clist} index={0} name={'left'} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle}/>
 				: null
 			}
 			{ toggle[1] ? 
-				<DonationDetailsWidget cparent={cparent} clist={clist} index={1} name={'middle'} />
+				<DonationDetailsWidget cparent={cparent} clist={clist} index={1} name={'middle'} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle}/>
 				: null
 			}
 			{ toggle[2] ? 
-				<DonationDetailsWidget cparent={cparent} clist={clist} index={2} name={'right'} />
+				<DonationDetailsWidget cparent={cparent} clist={clist} index={2} name={'right'} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle}/>
 				: null
 			}
 		</div>
@@ -145,6 +145,18 @@ const CampaignPage = ({path}) => {
 	let brand = pvAdvert.value.branding;
 	let brandColor = brand.color;
 	let brandLogo = brand.logo;
+	let brandColorBgStyle = {
+		backgroundColor: brandColor,
+		color: 'white'
+	};
+	let brandColorTxtStyle = {
+		color: brandColor
+	};
+	// TODO (optional): change portal to allow for complimentary color to be modified
+	let complimentaryColor = '#f0e7d0'; // color for the middle tile that contains donations info
+	let compliColorBgStyle = {
+		backgroundColor: complimentaryColor,
+	};
 
 	// goodloop data
 	let gl_social = {
@@ -209,7 +221,7 @@ const CampaignPage = ({path}) => {
 	return (<div className='campaign-page'>
 		<div className='grid'>
 			<div className='grid-tile top'> 
-				<div className='vertiser-head frank-font'>
+				<div className='vertiser-head frank-font' style={brandColorBgStyle} >
 					<CampaignHeaderWidget cparentLogo={cparentLogo} brandLogo={brandLogo} />
 				</div>
 				<div className='header-img' style={headerStyle} >
@@ -218,7 +230,7 @@ const CampaignPage = ({path}) => {
 							<div><Misc.Money amount={communityDonations} /></div>
 							<div>RAISED SO FAR</div>
 						</div>
-						<div className='ads-for-good'>
+						<div className='ads-for-good' style={brandColorBgStyle}>
 							<img alt='Good Loop Ads For Good Logo' src='/img/for-good.png' />
 						</div>
 						<div className='arrow'>
@@ -230,25 +242,25 @@ const CampaignPage = ({path}) => {
 					</div>	
 				</div>
 			</div>
-			<div className='grid-tile middle'>
+			<div className='grid-tile middle' style={compliColorBgStyle}>
 				<Element name='arrowhead' className='element'>
 					<div className='inside'>
-						<div className='title frank-font'>
+						<div className='title frank-font' style={brandColorTxtStyle}>
 							<MDText source={desc_title} />							
 						</div>
 						<div className='subtitle helvetica-font'>
 							<MDText source={desc_body} />							
 						</div>
 						<p className='link bebas-font'>
-							<a href={'http://as.good-loop.com/?gl.vert='+encURI(adid)+"&status="+encURI(status)} target='_blank'>
+							<a href={'http://as.good-loop.com/?gl.vert='+encURI(adid)+"&status="+encURI(status)} target='_blank' style={brandColorTxtStyle}>
 							WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH NESTLÉ® COCOA PLAN® PROJECT YOU WOULD LIKE TO FUND.
 							</a>
 						</p>
-						<DonationCirclesWidget cparent={cparent} clist={clist} campaignTotalSlice={campaignTotalSlice} />
+						<DonationInfoWidget cparent={cparent} clist={clist} campaignTotalSlice={campaignTotalSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle}/>
 					</div>
 				</Element>
 			</div>
-			<div className='grid-tile bottom'>
+			<div className='grid-tile bottom' style={brandColorBgStyle}>
 				<div className='foot bebas-font'>			
 					<SocialMediaFooterWidget type={'vertiser'} name={cadvertiser} src={brand} />
 					<SocialMediaFooterWidget type={'campaign'} name={cparent} src={campaign} />
@@ -256,7 +268,7 @@ const CampaignPage = ({path}) => {
 				</div>
 			</div>
 		</div>
-		<Footer leftFooter={startDate} rightFooter={smallPrint} />
+		<Footer leftFooter={startDate} rightFooter={smallPrint} brandColorBgStyle={brandColorBgStyle} />
 	</div>);
 };
 

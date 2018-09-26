@@ -21,8 +21,8 @@ import printer from '../base/utils/printer';
 import DonationCard from './DonationCard';
 import { Link, Element } from 'react-scroll';
 
-const Footer = ({leftFooter, rightFooter}) => {
-    return (<div className='footer'>
+const Footer = ({leftFooter, rightFooter, brandColorBgStyle}) => {
+    return (<div className='footer' style={brandColorBgStyle}>
                 <div className='leftFooter'>{leftFooter}</div>
                 <div className='mainFooter'>        
                     Ads for Good is a Good-Loop Ltd ethical ad product.<br/>
