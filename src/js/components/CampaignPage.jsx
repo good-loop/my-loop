@@ -40,10 +40,10 @@ const SocialMediaFooterWidget = ({type, name, src}) => {
 	return (
 		<div className={'social '.concat(type)}>
 			<p>{name}</p>
-			{src.fb_url? <a href={src.fb_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/facebook.png' /></a> : null}
-			{src.tw_url? <a href={src.tw_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/twitter.png' /></a> : null}
-			{src.insta_url? <a href={src.insta_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/instagram.png' /></a> : null}
-			{src.yt_url? <a href={src.yt_url} target='_blank'><img src='/img/youtube.png' /></a> : null}
+			{src && src.fb_url? <a href={src.fb_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/facebook.png' /></a> : null}
+			{src && src.tw_url? <a href={src.tw_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/twitter.png' /></a> : null}
+			{src && src.insta_url? <a href={src.insta_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/instagram.png' /></a> : null}
+			{src && src.yt_url? <a href={src.yt_url} target='_blank'><img src='/img/youtube.png' /></a> : null}
 		</div>
 	);
 };
@@ -131,7 +131,8 @@ const CampaignPage = ({path}) => {
 	}
 
 	// get the ad for display (so status:published - unless this is a preview, as set by the url)
-	let status = DataStore.getUrlValue("gl.status") || C.KStatus.PUBLISHED;
+	let status = DataStore.getUrlValue("gl.status") || C.KStatus.PUBLISHED; 
+	console.log(status);
 	let pvAdvert = ActionMan.getDataItem({type:C.TYPES.Advert, id:adid, status:C.KStatus.DRAFT, domain: ServerIO.PORTAL_DOMAIN});
 	if ( ! pvAdvert.resolved ) {
 		return <Misc.Loading text='Loading campaign data' />;	
@@ -171,22 +172,27 @@ const CampaignPage = ({path}) => {
 	if (pvAdvert.value.start) {
 		startDate = 'This campaign started on '.concat(pvAdvert.value.start.substring(0, 10));
 	}
-	let smallPrint = campaign.smallPrint ? campaign.smallPrint : '';
-	let bg = campaign.bg;
-	let headerStyle = {
-		backgroundImage: 'url(' + bg + ')',
-		backgroundSize: 'cover',
-		backgroundRepeat: 'no-repeat',
-		backgroundPosition: 'center',
-		backgroundAttachment: 'fixed'
-	};
-	let desc_title = campaign.desc_title;
-	let desc_body = campaign.desc_body;
-
+	let smallPrint = campaign && campaign.smallPrint ? campaign.smallPrint : '';
+	let bg = '';
+	let headerStyle = {};
+	let desc_title = '';
+	let desc_body = '';
+	if(campaign) {
+		bg = campaign.bg;
+		headerStyle = {
+			backgroundImage: 'url(' + bg + ')',
+			backgroundSize: 'cover',
+			backgroundRepeat: 'no-repeat',
+			backgroundPosition: 'center',
+			backgroundAttachment: 'fixed'
+		};
+		desc_title = campaign.desc_title;
+		desc_body = campaign.desc_body;
+	}
 	// parent charity data 
 	let parent = pvAdvert.value.charities.parent;
-	let cparent = parent.name;
-	let cparentLogo = parent.logo;
+	let cparent = parent && parent.name ? parent.name : '';
+	let cparentLogo = parent && parent.logo ? parent.logo : '';
 
 	// individual charity data
 	let clist = pvAdvert.value.charities.list;
