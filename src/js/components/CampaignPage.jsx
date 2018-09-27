@@ -201,7 +201,7 @@ const CampaignPage = ({path}) => {
 	if ( ! pvCommunityTotal.resolved ) {
 		return <Misc.Loading text='Donations data' />;
 	}
-	console.log('communityTotal', pvCommunityTotal.value)
+	console.log('communityTotal', pvCommunityTotal.value);
 
 	// make rows
 	let rows = cids.map(cid => {

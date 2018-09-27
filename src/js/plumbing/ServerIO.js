@@ -17,7 +17,7 @@ import Messaging, {notifyUser} from '../base/plumbing/Messaging';
 import ServerIO from '../base/plumbing/ServerIOBase';
 export default ServerIO;
 
-ServerIO.dataspace = 'gl'; // This is the dataspace used in unit.js for reproting events 
+ServerIO.dataspace = ''; // This is the dataspace used in unit.js for reproting events 
 
 /** The initial part of an API call. Allows for local to point at live for debugging */
 ServerIO.APIBASE = ''; // Normally use this for "my server"!
