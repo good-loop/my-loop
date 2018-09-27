@@ -8,6 +8,7 @@ import C from '../C';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
 import Person from '../base/data/Person';
+import Money from '../base/data/Money';
 import Misc from '../base/components/Misc';
 import CardAccordion, {Card} from '../base/components/CardAccordion';
 import ActionMan from '../plumbing/ActionMan';
@@ -209,14 +210,15 @@ const CampaignPage = ({path}) => {
 	}
 	console.log('communityTotal', pvCommunityTotal.value);
 
+	// ?? (minor) the data manipulation code below could prob now be simplified a little
 	// make rows
 	let rows = cids.map(cid => {
-		return {cid, communityTotal: (pvCommunityTotal.value[cid] || {value:0}).value};
+		return {cid, communityTotal: Money.value(pvCommunityTotal.value[cid])};
 	});
-
 	let communityDonations = rows.reduce((acc, current) => acc + current.communityTotal, 0);
 	console.log(communityDonations);
 
+	// TODO preferably use names that describe the data format
 	let campaignTotalSlice = rows.map(row => {
 		const rawFraction = row.communityTotal / communityDonations || 0;
 		return {cid: row.cid, percentageTotal: Math.round(rawFraction*100)};
@@ -240,7 +242,7 @@ const CampaignPage = ({path}) => {
 							<img alt='Good Loop Ads For Good Logo' src='/img/for-good.png' />
 						</div>
 						<div className='arrow'>
-							<Link activeClass='active' className='arrowhead' to='arrowhead' spy={true} smooth={true} duration={2000}>
+							<Link activeClass='active' className='arrowhead' to='arrowhead' spy smooth duration={2000}>
 								<span></span>
 								<span></span>
 							</Link>
