@@ -55,14 +55,14 @@ let _handleClick = (circleIndex) => {
 	DataStore.setValue(['widget', 'donationCircles', 'active'], toggle);
 };
 
-const DonationCircleWidget = ({cparent, clist, campaignTotalSlice, index=0, name='left', shown, brandColorBgStyle}) => {
+const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='left', shown, brandColorBgStyle}) => {
 	let cids = clist.map(x => x.id);
 	let cnames = clist.map(x => x.name);
 	let cphotos = clist.map(x => x.photo);
 
 	return (
 		<div className={'circle '.concat(name)} onClick={(e) => _handleClick(index)}>
-			<p className='bebas-font'><span className='frank-font'>{campaignTotalSlice[index].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p>
+			<p className='bebas-font'><span className='frank-font'>{campaignSlice[cids[index]].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p>
 			<img alt={cparent+' '+cnames[index]} src={cphotos[index]} />
 			<div className='project-name frank-font' style={brandColorBgStyle}>
 				{cnames[index]}
@@ -96,14 +96,14 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColor
 	);
 };
 
-const DonationInfoWidget = ({cparent, clist, campaignTotalSlice, brandColorBgStyle, brandColorTxtStyle}) => {
+const DonationInfoWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, brandColorTxtStyle}) => {
 	let toggle = DataStore.getValue(['widget', 'donationCircles', 'active']) || [true, false, false]; // toggles the info charity box to display one at a time
 	
 	return (
 		<div className='donation-circles'>
-			<DonationCircleWidget cparent={cparent} clist={clist} campaignTotalSlice={campaignTotalSlice} index={0} name={'left'} shown={toggle[0]} brandColorBgStyle={brandColorBgStyle} />
-			<DonationCircleWidget cparent={cparent} clist={clist} campaignTotalSlice={campaignTotalSlice} index={1} name={'middle'} shown={toggle[1]} brandColorBgStyle={brandColorBgStyle} />
-			<DonationCircleWidget cparent={cparent} clist={clist} campaignTotalSlice={campaignTotalSlice} index={2} name={'right'} shown={toggle[2]} brandColorBgStyle={brandColorBgStyle} />
+			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={0} name={'left'} shown={toggle[0]} brandColorBgStyle={brandColorBgStyle} />
+			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={1} name={'middle'} shown={toggle[1]} brandColorBgStyle={brandColorBgStyle} />
+			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={2} name={'right'} shown={toggle[2]} brandColorBgStyle={brandColorBgStyle} />
 			{ toggle[0] ? 
 				<DonationDetailsWidget cparent={cparent} clist={clist} index={0} name={'left'} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle}/>
 				: null
@@ -200,32 +200,24 @@ const CampaignPage = ({path}) => {
 	let cids = clist.map(x => x.id);
 
 	// load the community total for the ad
-	let pvCommunityTotal = DataStore.fetch(['widget','CampaignPage','communityTotal', adid], () => {
-		let q = 'vert:'+ad.vert; // ad.campaign? 'campaign:'+ad.campaign : TODO campaign would be nicer 'cos we could combine different ad variants... but its not logged reliably
+	let pvDonationsBreakdown = DataStore.fetch(['widget','CampaignPage','communityTotal', adid], () => {
+		let q = 'vert:'+adid; // ad.campaign? 'campaign:'+ad.campaign : TODO campaign would be nicer 'cos we could combine different ad variants... but its not logged reliably
 		// TODO "" csv encoding for bits of q (e.g. campaign might have a space)
 		return ServerIO.getDonationsData({q});
 	});
-	if ( ! pvCommunityTotal.resolved ) {
+	if ( ! pvDonationsBreakdown.resolved ) {
 		return <Misc.Loading text='Loading campaign donations...' />;
 	}
-	console.log('communityTotal', pvCommunityTotal.value);
+	console.log(pvDonationsBreakdown.value);
 
-	// ?? (minor) the data manipulation code below could prob now be simplified a little
-	// make rows
-	let rows = cids.map(cid => {
-		return {cid, communityTotal: Money.value(pvCommunityTotal.value[cid])};
+	let filteredBreakdown = cids.map(cid => ({cid: cid, value100p: pvDonationsBreakdown.value.by_cid[cid].value100p}));
+	let campaignTotal = filteredBreakdown.reduce((acc, current) => acc + current.value100p, 0);
+	let campaignSlice = {}; // campaignSlice is of the form { cid: {percentageTotal: ...} } so as to ensure the correct values are extracted later (checking for cid rather than index)
+	filteredBreakdown.forEach(function(obj) {
+		const rawFraction = obj.value100p / campaignTotal || 0; 
+		campaignSlice[obj.cid] = {percentageTotal: Math.round(rawFraction*100)}; 
 	});
-	let communityDonations = rows.reduce((acc, current) => acc + current.communityTotal, 0);
-	console.log(communityDonations);
-
-	// TODO preferably use names that describe the data format
-	let campaignTotalSlice = rows.map(row => {
-		const rawFraction = row.communityTotal / communityDonations || 0;
-		return {cid: row.cid, percentageTotal: Math.round(rawFraction*100)};
-	});
-
-	console.log(campaignTotalSlice);
-
+	console.log(campaignSlice);
 	return (<div className='campaign-page'>
 		<div className='grid'>
 			<div className='grid-tile top'> 
@@ -235,7 +227,7 @@ const CampaignPage = ({path}) => {
 				<div className='header-img' style={headerStyle} >
 					<div className='darken-overlay'>
 						<div className='title frank-font'>
-							<div><Misc.Money amount={communityDonations} /></div>
+							<div><Misc.Money amount={campaignTotal/10000} minimumFractionDigits={2} /></div>
 							<div>RAISED SO FAR</div>
 						</div>
 						<div className='ads-for-good' style={brandColorBgStyle}>
@@ -264,7 +256,7 @@ const CampaignPage = ({path}) => {
 							WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH NESTLÉ® COCOA PLAN® PROJECT YOU WOULD LIKE TO FUND.
 							</a>
 						</p>
-						<DonationInfoWidget cparent={cparent} clist={clist} campaignTotalSlice={campaignTotalSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle}/>
+						<DonationInfoWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle}/>
 					</div>
 				</Element>
 			</div>
