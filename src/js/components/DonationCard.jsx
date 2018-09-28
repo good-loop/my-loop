@@ -39,7 +39,7 @@ const DonationCard = ({xids}) => {
 		DataStore.fetch(['transient','jwt',Login.getId()], () => {
 			return Login.verify();
 		});
-		return <Misc.Loading text='Clearing security' />;
+		return <Misc.Loading text='Checking your login...' />;
 	}
 	
 	// Do not track?
@@ -54,21 +54,21 @@ const DonationCard = ({xids}) => {
 
 	// Assemble the data: top 5 of: charity, user-donation, community-donation	
 	// NB: if xids changes (eg extra linking is added)	then this will reload
-	const donationsPath = ['widget', 'MyReport', 'user-donations', qAllIds];
+
 	// Get donations by user (including all registered tracking IDs)
-	const dntn = "dntn";
 	let qAllIds = xids.map(xid => 'user:'+xid).join(' OR ');
+	const donationsPath = ['widget', 'MyReport', 'user-donations', qAllIds];
 	let q = qAllIds;
 	let pvDonationData = DataStore.fetch(donationsPath, () => {
 		return ServerIO.getDonationsData({q});
 	});	
 
 	if ( ! pvDonationData.resolved) {
-		return <Misc.Loading text='Donations data' />;
+		return <Misc.Loading text='Loading your donations...' />;
 	}
 
 	// TODO Warning: possibly broken by changes to returned data Sept 2018 ^DW
-	let userTotal = pvDonationData.value[dntn] && pvDonationData.value[dntn].sum;
+	let userTotal = pvDonationData.value.total && pvDonationData.value.total;
 
 	// no user donations?
 	if ( ! userTotal) {
@@ -165,20 +165,29 @@ const CharityDonation = ({cid, userTotal, communityTotal}) => {
 
 	// load charity info from SoGive
 	// NB: can 404
-	let pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:cid, status:C.KStatus.PUBLISHED, swallow:true});
-	const charity = pvCharity.value || {};
-	let img = charity.logo || charity.img || "https://i.imgur.com/3ozwXRh.png";
-	return (<div className="col-md-4">
-		<div className="partial-circle big top">
-			<img src={img} className='mx-auto' />
+
+	let charity = {};
+	if (cid === 'unset') {
+		charity = { name: 'No benefactor chosen' };
+	} else {
+		const pvCharity = ActionMan.getDataItem({type: C.TYPES.NGO, id: cid, status: C.KStatus.PUBLISHED, swallow: true});
+		charity = pvCharity.value || {};
+	}
+	
+	const img = charity.logo || charity.img || "/img/logo-grey.png";
+	return (
+		<div className="col-md-4">
+			<div className="partial-circle big top">
+				<img src={img} className='mx-auto' />
+			</div>
+			<div className="partial-circle big bottom">
+				<p className="stats">
+					<Misc.Money amount={communityTotal} />
+				</p>
+			</div>
+			<div className='partial-circle-caption'>{charity.name || cid}</div>
 		</div>
-		<div className="partial-circle big bottom">
-			<p className="stats">
-				<Misc.Money amount={communityTotal} />
-			</p>
-		</div>
-		<div className='partial-circle-caption'>{charity.name || cid}</div>
-	</div>);
+	);
 };
 
 	// // TODO fetch peeps, use Person.img, use Login.getUser(), use gravatar and Facebook standards to get an image

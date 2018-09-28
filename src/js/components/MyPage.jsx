@@ -157,7 +157,7 @@ const StatisticsCard = () => {
 		return ServerIO.getAllSpend({});
 	});
 	if ( ! pvSum.resolved) {
-		return <Misc.Loading text='...counting kittens...' />;
+		return <Misc.Loading text='Loading donation data...' />;
 	}
 	let ttl = pvSum.value && pvSum.value.total;
 	let cnt = ttl? Math.round(ttl / 0.12) : 100000; // HACK assume 12p per ad

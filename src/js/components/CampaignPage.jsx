@@ -136,7 +136,7 @@ const CampaignPage = ({path}) => {
 	console.log(status);
 	let pvAdvert = ActionMan.getDataItem({type:C.TYPES.Advert, id:adid, status:C.KStatus.DRAFT, domain: ServerIO.PORTAL_DOMAIN});
 	if ( ! pvAdvert.resolved ) {
-		return <Misc.Loading text='Loading campaign data' />;	
+		return <Misc.Loading text='Loading campaign data...' />;
 	}
 
 	console.log(pvAdvert.value);
@@ -206,7 +206,7 @@ const CampaignPage = ({path}) => {
 		return ServerIO.getDonationsData({q});
 	});
 	if ( ! pvCommunityTotal.resolved ) {
-		return <Misc.Loading text='Donations data' />;
+		return <Misc.Loading text='Loading campaign donations...' />;
 	}
 	console.log('communityTotal', pvCommunityTotal.value);
 

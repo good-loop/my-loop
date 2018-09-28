@@ -17,30 +17,32 @@ import Messaging, {notifyUser} from '../base/plumbing/Messaging';
 import ServerIO from '../base/plumbing/ServerIOBase';
 export default ServerIO;
 
-ServerIO.dataspace = ''; // This is the dataspace used in unit.js for reproting events 
+ServerIO.dataspace = ''; // This is the dataspace used in unit.js for reporting events 
+
+ServerIO.PORTAL_DOMAIN = `${C.HTTPS}://${C.SERVER_TYPE}portal.good-loop.com`;
 
 /** The initial part of an API call. Allows for local to point at live for debugging */
-ServerIO.APIBASE = ''; // Normally use this for "my server"!
+ServerIO.APIBASE = ServerIO.PORTAL_DOMAIN; // My-Loop has no backend of its own - just use portal domain matching local/test/prod
 // Comment out the lines below when deploying!
 // ServerIO.APIBASE = 'https://testportal.good-loop.com'; // uncomment to let local use the test server's backend
 // ServerIO.APIBASE = 'https://portal.good-loop.com'; // use in testing to access live data
 
-ServerIO.PORTAL_DOMAIN = C.HTTPS+'://'+C.SERVER_TYPE+'portal.good-loop.com';
-
-ServerIO.DATALOG_ENDPOINT = C.HTTPS+'://'+C.SERVER_TYPE+'lg.good-loop.com/data';
+ServerIO.DATALOG_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}lg.good-loop.com/data`;
 // ServerIO.DATALOG_ENDPOINT = 'https://testlg.good-loop.com/data';
 // ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';
 
 ServerIO.PROFILER_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}profiler.good-loop.com`;
-//ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com';
+// ServerIO.PROFILER_ENDPOINT = 'https://testprofiler.good-loop.com';
+// ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com';
 
 ServerIO.AS_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}as.good-loop.com`;
-//ServerIO.AS_ENDPOINT = `${C.HTTPS}://as.good-loop.com`;
+// ServerIO.AS_ENDPOINT = `https://testas.good-loop.com`;
+// ServerIO.AS_ENDPOINT = `https://as.good-loop.com`;
 
 /**
  * My Loop has no backend, so use profiler
  */
-ServerIO.LOGENDPOINT = ServerIO.PROFILER_ENDPOINT+'/log';
+ServerIO.LOGENDPOINT = ServerIO.PROFILER_ENDPOINT + '/log';
 
 ServerIO.checkBase();
 
