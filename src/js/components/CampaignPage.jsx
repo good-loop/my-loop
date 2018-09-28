@@ -201,7 +201,7 @@ const CampaignPage = ({path}) => {
 
 	// load the community total for the ad
 	let pvCommunityTotal = DataStore.fetch(['widget','CampaignPage','communityTotal', adid], () => {
-		let q = ad.campaign? 'campaign:'+ad.campaign : 'vert:'+ad.vert;
+		let q = 'vert:'+ad.vert; // ad.campaign? 'campaign:'+ad.campaign : TODO campaign would be nicer 'cos we could combine different ad variants... but its not logged reliably
 		// TODO "" csv encoding for bits of q (e.g. campaign might have a space)
 		return ServerIO.getDonationsData({q});
 	});
