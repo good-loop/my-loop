@@ -208,13 +208,14 @@ const CampaignPage = ({path}) => {
 	if ( ! pvDonationsBreakdown.resolved ) {
 		return <Misc.Loading text='Loading campaign donations...' />;
 	}
-	console.log(pvDonationsBreakdown.value);
+	console.log(Money.value(pvDonationsBreakdown.value.total));
 
 	let filteredBreakdown = cids.map(cid => ({cid: cid, value100p: pvDonationsBreakdown.value.by_cid[cid].value100p}));
-	let campaignTotal = filteredBreakdown.reduce((acc, current) => acc + current.value100p, 0);
+	let campaignTotal = pvDonationsBreakdown.value.total;
+	let charityTotal = filteredBreakdown.reduce((acc, current) => acc + current.value100p, 0);
 	let campaignSlice = {}; // campaignSlice is of the form { cid: {percentageTotal: ...} } so as to ensure the correct values are extracted later (checking for cid rather than index)
 	filteredBreakdown.forEach(function(obj) {
-		const rawFraction = obj.value100p / campaignTotal || 0; 
+		const rawFraction = obj.value100p / charityTotal || 0; 
 		campaignSlice[obj.cid] = {percentageTotal: Math.round(rawFraction*100)}; 
 	});
 	console.log(campaignSlice);
@@ -227,7 +228,7 @@ const CampaignPage = ({path}) => {
 				<div className='header-img' style={headerStyle} >
 					<div className='darken-overlay'>
 						<div className='title frank-font'>
-							<div><Misc.Money amount={campaignTotal/10000} minimumFractionDigits={2} /></div>
+							<div><Misc.Money amount={campaignTotal} minimumFractionDigits={2} /></div>
 							<div>RAISED SO FAR</div>
 						</div>
 						<div className='ads-for-good' style={brandColorBgStyle}>
