@@ -20,13 +20,14 @@ import ConsentWidget from './ConsentWidget';
 import printer from '../base/utils/printer';
 import DonationCard from './DonationCard';
 import { Link, Element } from 'react-scroll';
+import MDText from '../base/components/MDText';
 
 // usign css grid (and flex in ie10+) to make the footer mobile responsive & had to create innerFooter divs to align content to the bottom using display:table
 const Footer = ({leftFooter, rightFooter, brandColorBgStyle}) => {
     return (<div className='footer' style={brandColorBgStyle}>
                 <div className='footer-col leftFooter'>
                     <div className='innerLeftFooter'> 
-                        {leftFooter}
+                        <MDText source={leftFooter} />
                     </div>
                 </div>    
                 <div className='footer-col mainFooter'>        
@@ -36,7 +37,7 @@ const Footer = ({leftFooter, rightFooter, brandColorBgStyle}) => {
                 </div>
                 <div className='footer-col rightFooter'>
                     <div className='innerRightFooter'>
-                        {rightFooter}
+                        <MDText source={rightFooter} />
                     </div>
                 </div>
         </div>

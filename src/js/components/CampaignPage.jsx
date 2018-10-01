@@ -40,7 +40,7 @@ const CampaignHeaderWidget = ({cparentLogo, brandLogo}) => {
 const SocialMediaFooterWidget = ({type, name, src}) => {
 	return (
 		<div className={'social '.concat(type)}>
-			<p>{name}</p>
+			<MDText source={name} />
 			{src && src.fb_url? <a href={src.fb_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/facebook.png' /></a> : null}
 			{src && src.tw_url? <a href={src.tw_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/twitter.png' /></a> : null}
 			{src && src.insta_url? <a href={src.insta_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/instagram.png' /></a> : null}
@@ -83,12 +83,14 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColor
 			<div className='innards'>
 				<img alt={cparent+' '+cnames[index]} src={cphotos[index]} />
 				<div className="text">
-					<div className='title frank-font' style={brandColorTxtStyle}>{cnames[index].toUpperCase()}</div>
+					<div className='title frank-font' style={brandColorTxtStyle}>
+						<MDText source={cnames[index].toUpperCase()} />
+					</div>
 					<div className='description helvetica-font'>
 						<MDText source={cdescs[index]} />
 					</div>
 					<div className='btnlink frank-font' style={brandColorBgStyle} onClick={(e) => window.open(curls[index], '_blank')}>
-						Find out more about the<br/> {cparent}
+						Find out more about the<br/> <MDText source={cparent} />							
 					</div>	
 				</div>
 			</div>
@@ -117,6 +119,22 @@ const DonationInfoWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, b
 				: null
 			}
 		</div>
+	);
+};
+
+const LinkToAdWidget = ({cparent, adid, status, brandColorTxtStyle}) => {
+	function LinkRenderer(props) {
+		return <a href={props.href} target="_blank" style={brandColorTxtStyle}>{props.children}</a>;
+	}
+
+	let msg = 'WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH ' + cparent + ' PROJECT YOU WOULD LIKE TO FUND.';
+	let url = 'https://demo.good-loop.com/?gl.vert='+encURI(adid)+"&gl.status="+encURI(status);
+	let html = "[" + msg + "](" + url + ")";
+	
+	return (
+		<p className='link bebas-font'>
+			<MDText source={html} renderers={{link: LinkRenderer}} />
+		</p>
 	);
 };
 
@@ -208,7 +226,7 @@ const CampaignPage = ({path}) => {
 	if ( ! pvDonationsBreakdown.resolved ) {
 		return <Misc.Loading text='Loading campaign donations...' />;
 	}
-	console.log(Money.value(pvDonationsBreakdown.value.total));
+	console.log(pvDonationsBreakdown.value);
 
 	let filteredBreakdown = cids.map(cid => {
 		const value100p = (pvDonationsBreakdown.value.by_cid[cid] && 
@@ -258,11 +276,7 @@ const CampaignPage = ({path}) => {
 						<div className='subtitle helvetica-font'>
 							<MDText source={desc_body} />							
 						</div>
-						<p className='link bebas-font'>
-							<a href={'https://demo.good-loop.com/?gl.vert='+encURI(adid)+"&gl.status="+encURI(status)} target='_blank' style={brandColorTxtStyle}>
-							WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH {cparent} PROJECT YOU WOULD LIKE TO FUND.
-							</a>
-						</p>
+						<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
 						<DonationInfoWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle}/>
 					</div>
 				</Element>
