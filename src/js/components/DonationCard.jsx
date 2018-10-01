@@ -185,7 +185,7 @@ const CharityDonation = ({cid, userTotal, communityTotal}) => {
 					<Misc.Money amount={communityTotal} />
 				</p>
 			</div>
-			<div className='partial-circle-caption'>{charity.name || cid}</div>
+			<div className='partial-circle-caption'>{charity.displayName || charity.name || cid}</div>
 		</div>
 	);
 };
