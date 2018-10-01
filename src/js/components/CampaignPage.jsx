@@ -254,7 +254,7 @@ const CampaignPage = ({path}) => {
 						</div>
 						<p className='link bebas-font'>
 							<a href={'http://as.good-loop.com/?gl.vert='+encURI(adid)+"&gl.status="+encURI(status)} target='_blank' style={brandColorTxtStyle}>
-							WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH NESTLÉ® COCOA PLAN® PROJECT YOU WOULD LIKE TO FUND.
+							WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH {cparent} PROJECT YOU WOULD LIKE TO FUND.
 							</a>
 						</p>
 						<DonationInfoWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle}/>
