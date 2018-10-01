@@ -66,17 +66,25 @@
 	}
 	
 	.leftFooter {
+		display: table;
 		text-align: left;
 		font-size: 12px;
-		display: table-cell;
-		vertical-align: bottom;
+
+		.innerLeftFooter {
+			vertical-align: bottom;
+			display: table-cell;
+		}
 	}
 	
 	.rightFooter {
+		display: table;
 		text-align: right;
 		font-size: 12px;
-		display: table-cell;
-		vertical-align: bottom;
+
+		.innerRightFooter {
+			vertical-align: bottom;
+			display: table-cell;
+		}
 	}
 }
 
@@ -956,7 +964,7 @@ p > a:hover {
 		}
 	}
 
-
+	// using css grid to display footer vertically on mobile
 	.footer {
 		-ms-grid-columns: 1fr;
 		grid-template-columns: 1fr;
@@ -965,8 +973,26 @@ p > a:hover {
 		"mainFooter" 
 		"rightFooter";  
 
-		.leftFooter, .rightFooter {
+		// left footer and right footer no longer need to be fixed to the bottom and to the sides
+		// instead they look better moved to the center and reverting the vertical alignment
+		.leftFooter {
+			display: block;
 			text-align: center;
+	
+			.innerLeftFooter {
+				vertical-align: initial;
+				display: inherit;
+			}
+		}
+		
+		.rightFooter {
+			display: block;
+			text-align: center;
+	
+			.innerRightFooter {
+				vertical-align: initial;
+				display: inherit;
+			}
 		}
 	}
 }
