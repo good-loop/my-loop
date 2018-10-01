@@ -58,12 +58,12 @@ let _handleClick = (circleIndex) => {
 const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='left', shown, brandColorBgStyle}) => {
 	let cids = clist.map(x => x.id);
 	let cnames = clist.map(x => x.name);
-	let cphotos = clist.map(x => x.photo);
+	let clogos = clist.map(x => x.logo);
 
 	return (
 		<div className={'circle '.concat(name)} onClick={(e) => _handleClick(index)}>
 			<p className='bebas-font'><span className='frank-font'>{campaignSlice[cids[index]].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p>
-			<img alt={cparent+' '+cnames[index]} src={cphotos[index]} />
+			<img alt={cparent+' '+cnames[index]} src={clogos[index]} />
 			<div className='project-name frank-font' style={brandColorBgStyle}>
 				{cnames[index]}
 			</div>
@@ -73,21 +73,25 @@ const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='lef
 };
 
 const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColorBgStyle, brandColorTxtStyle}) => {
+	function LinkRenderer(props) {
+		return <a href={props.href} target="_blank" style={brandColorTxtStyle}>{props.children}</a>;
+	}
+
 	let cnames = clist.map(x => x.name);
-	let cphotos = clist.map(x => x.photo);
+	let clogos = clist.map(x => x.logo);
 	let curls = clist.map(x => x.url);
 	let cdescs = clist.map(x => x.description);
 
 	return (
 		<div className={'details '.concat(name)}>
 			<div className='innards'>
-				<img alt={cparent+' '+cnames[index]} src={cphotos[index]} />
+				<img alt={cparent+' '+cnames[index]} src={clogos[index]} />
 				<div className="text">
 					<div className='title frank-font' style={brandColorTxtStyle}>
 						<MDText source={cnames[index].toUpperCase()} />
 					</div>
 					<div className='description helvetica-font'>
-						<MDText source={cdescs[index]} />
+						<MDText source={cdescs[index]} renderers={{link: LinkRenderer}} />
 					</div>
 					<div className='btnlink frank-font' style={brandColorBgStyle} onClick={(e) => window.open(curls[index], '_blank')}>
 						Find out more about the<br/> <MDText source={cparent} />							
