@@ -21,15 +21,24 @@ import printer from '../base/utils/printer';
 import DonationCard from './DonationCard';
 import { Link, Element } from 'react-scroll';
 
+// usign css grid (and flex in ie10+) to make the footer mobile responsive & had to create innerFooter divs to align content to the bottom using display:table
 const Footer = ({leftFooter, rightFooter, brandColorBgStyle}) => {
     return (<div className='footer' style={brandColorBgStyle}>
-                <div className='footer-col leftFooter'>{leftFooter}</div>
+                <div className='footer-col leftFooter'>
+                    <div className='innerLeftFooter'> 
+                        {leftFooter}
+                    </div>
+                </div>    
                 <div className='footer-col mainFooter'>        
                     Ads for Good is a Good-Loop Ltd ethical ad product.<br/>
                     &copy; 2017-18 Good-Loop <a href="mailto:daniel@good-loop.com?Subject=Good-Loop%20Portal" target="_top">Contact Us</a>
                     &nbsp;&nbsp;&nbsp; This web-app is open-source on <a target='_blank' href='https://github.com/good-loop/my-loop'>GitHub</a>.						
                 </div>
-                <div className='footer-col rightFooter'>{rightFooter}</div>
+                <div className='footer-col rightFooter'>
+                    <div className='innerRightFooter'>
+                        {rightFooter}
+                    </div>
+                </div>
         </div>
         );
 };
