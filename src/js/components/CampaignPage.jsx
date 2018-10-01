@@ -210,7 +210,13 @@ const CampaignPage = ({path}) => {
 	}
 	console.log(Money.value(pvDonationsBreakdown.value.total));
 
-	let filteredBreakdown = cids.map(cid => ({cid: cid, value100p: pvDonationsBreakdown.value.by_cid[cid].value100p}));
+	let filteredBreakdown = cids.map(cid => {
+		const value100p = (pvDonationsBreakdown.value.by_cid[cid] && 
+			pvDonationsBreakdown.value.by_cid[cid].value100p
+		) || 0;
+		return { cid, value100p };
+	});
+	
 	let campaignTotal = pvDonationsBreakdown.value.total;
 	let charityTotal = filteredBreakdown.reduce((acc, current) => acc + current.value100p, 0);
 	let campaignSlice = {}; // campaignSlice is of the form { cid: {percentageTotal: ...} } so as to ensure the correct values are extracted later (checking for cid rather than index)
