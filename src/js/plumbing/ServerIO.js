@@ -19,6 +19,8 @@ export default ServerIO;
 
 ServerIO.dataspace = ''; // This is the dataspace used in unit.js for reporting events 
 
+ServerIO.NO_API_AT_THIS_HOST = true;
+
 ServerIO.PORTAL_DOMAIN = `${C.HTTPS}://${C.SERVER_TYPE}portal.good-loop.com`;
 
 /** The initial part of an API call. Allows for local to point at live for debugging */
