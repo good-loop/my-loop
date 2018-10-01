@@ -41,10 +41,10 @@ const SocialMediaFooterWidget = ({type, name, src}) => {
 	return (
 		<div className={'social '.concat(type)}>
 			<MDText source={name} />
-			{src && src.fb_url? <a href={src.fb_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/facebook.png' /></a> : null}
-			{src && src.tw_url? <a href={src.tw_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/twitter.png' /></a> : null}
-			{src && src.insta_url? <a href={src.insta_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/instagram.png' /></a> : null}
-			{src && src.yt_url? <a href={src.yt_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/youtube.png' /></a> : null}
+			{src && src.fb_url? <a href={src.fb_url} target='_blank'><img src='https://gl-es-03.good-loop.com/cdn/images/facebook.png' /></a> : null}
+			{src && src.tw_url? <a href={src.tw_url} target='_blank'><img src='https://gl-es-04.good-loop.com/cdn/images/twitter.png' /></a> : null}
+			{src && src.insta_url? <a href={src.insta_url} target='_blank'><img src='https://gl-es-05.good-loop.com/cdn/images/instagram.png' /></a> : null}
+			{src && src.yt_url? <a href={src.yt_url} target='_blank'><img src='https://gl-es-03.good-loop.com/cdn/images/youtube.png' /></a> : null}
 		</div>
 	);
 };
@@ -265,7 +265,7 @@ const CampaignPage = ({path}) => {
 							<div>RAISED SO FAR</div>
 						</div>
 						<div className='ads-for-good' style={brandColorBgStyle}>
-							<img alt='Good Loop Ads For Good Logo' src='https://lg.good-loop.com/cdn/images/for-good.png' />
+							<img alt='Good Loop Ads For Good Logo' src='https://gl-es-04.good-loop.com/cdn/images/for-good.png' />
 						</div>
 						<div className='arrow'>
 							<Link activeClass='active' className='arrowhead' to='arrowhead' spy smooth duration={2000}>
