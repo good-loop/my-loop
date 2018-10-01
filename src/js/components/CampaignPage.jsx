@@ -123,6 +123,7 @@ const DonationInfoWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, b
 };
 
 const LinkToAdWidget = ({cparent, adid, status, brandColorTxtStyle}) => {
+	// this is needed to be able to both control the look of the link as well as wrap the text in a mdText wrapper (which allows special characters, such as french accents)
 	function LinkRenderer(props) {
 		return <a href={props.href} target="_blank" style={brandColorTxtStyle}>{props.children}</a>;
 	}
