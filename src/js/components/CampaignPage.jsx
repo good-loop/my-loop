@@ -44,7 +44,7 @@ const SocialMediaFooterWidget = ({type, name, src}) => {
 			{src && src.fb_url? <a href={src.fb_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/facebook.png' /></a> : null}
 			{src && src.tw_url? <a href={src.tw_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/twitter.png' /></a> : null}
 			{src && src.insta_url? <a href={src.insta_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/instagram.png' /></a> : null}
-			{src && src.yt_url? <a href={src.yt_url} target='_blank'><img src='/img/youtube.png' /></a> : null}
+			{src && src.yt_url? <a href={src.yt_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/youtube.png' /></a> : null}
 		</div>
 	);
 };
