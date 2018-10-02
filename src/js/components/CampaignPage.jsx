@@ -41,10 +41,10 @@ const SocialMediaFooterWidget = ({type, name, src}) => {
 	return (
 		<div className={'social '.concat(type)}>
 			<MDText source={name} />
-			{src && src.fb_url? <a href={src.fb_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/facebook.png' /></a> : null}
-			{src && src.tw_url? <a href={src.tw_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/twitter.png' /></a> : null}
-			{src && src.insta_url? <a href={src.insta_url} target='_blank'><img src='https://lg.good-loop.com/cdn/images/instagram.png' /></a> : null}
-			{src && src.yt_url? <a href={src.yt_url} target='_blank'><img src='/img/youtube.png' /></a> : null}
+			{src && src.fb_url? <a href={src.fb_url} target='_blank'><img src='https://gl-es-05.good-loop.com/cdn/images/facebook.png' /></a> : null}
+			{src && src.tw_url? <a href={src.tw_url} target='_blank'><img src='https://gl-es-04.good-loop.com/cdn/images/twitter.png' /></a> : null}
+			{src && src.insta_url? <a href={src.insta_url} target='_blank'><img src='https://gl-es-05.good-loop.com/cdn/images/instagram.png' /></a> : null}
+			{src && src.yt_url? <a href={src.yt_url} target='_blank'><img src='https://gl-es-04.good-loop.com/cdn/images/youtube.png' /></a> : null}
 		</div>
 	);
 };
@@ -58,12 +58,12 @@ let _handleClick = (circleIndex) => {
 const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='left', shown, brandColorBgStyle}) => {
 	let cids = clist.map(x => x.id);
 	let cnames = clist.map(x => x.name);
-	let cphotos = clist.map(x => x.photo);
+	let clogos = clist.map(x => x.logo);
 
 	return (
 		<div className={'circle '.concat(name)} onClick={(e) => _handleClick(index)}>
 			<p className='bebas-font'><span className='frank-font'>{campaignSlice[cids[index]].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p>
-			<img alt={cparent+' '+cnames[index]} src={cphotos[index]} />
+			<img alt={cparent+' '+cnames[index]} src={clogos[index]} />
 			<div className='project-name frank-font' style={brandColorBgStyle}>
 				{cnames[index]}
 			</div>
@@ -73,21 +73,25 @@ const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='lef
 };
 
 const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColorBgStyle, brandColorTxtStyle}) => {
+	function LinkRenderer(props) {
+		return <a href={props.href} target="_blank" style={brandColorTxtStyle}>{props.children}</a>;
+	}
+
 	let cnames = clist.map(x => x.name);
-	let cphotos = clist.map(x => x.photo);
+	let clogos = clist.map(x => x.logo);
 	let curls = clist.map(x => x.url);
 	let cdescs = clist.map(x => x.description);
 
 	return (
 		<div className={'details '.concat(name)}>
 			<div className='innards'>
-				<img alt={cparent+' '+cnames[index]} src={cphotos[index]} />
+				<img alt={cparent+' '+cnames[index]} src={clogos[index]} />
 				<div className="text">
 					<div className='title frank-font' style={brandColorTxtStyle}>
 						<MDText source={cnames[index].toUpperCase()} />
 					</div>
 					<div className='description helvetica-font'>
-						<MDText source={cdescs[index]} />
+						<MDText source={cdescs[index]} renderers={{link: LinkRenderer}} />
 					</div>
 					<div className='btnlink frank-font' style={brandColorBgStyle} onClick={(e) => window.open(curls[index], '_blank')}>
 						Find out more about the<br/> <MDText source={cparent} />							
@@ -123,6 +127,7 @@ const DonationInfoWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, b
 };
 
 const LinkToAdWidget = ({cparent, adid, status, brandColorTxtStyle}) => {
+	// this is needed to be able to both control the look of the link as well as wrap the text in a mdText wrapper (which allows special characters, such as french accents)
 	function LinkRenderer(props) {
 		return <a href={props.href} target="_blank" style={brandColorTxtStyle}>{props.children}</a>;
 	}
@@ -260,7 +265,7 @@ const CampaignPage = ({path}) => {
 							<div>RAISED SO FAR</div>
 						</div>
 						<div className='ads-for-good' style={brandColorBgStyle}>
-							<img alt='Good Loop Ads For Good Logo' src='/img/for-good.png' />
+							<img alt='Good Loop Ads For Good Logo' src='https://gl-es-04.good-loop.com/cdn/images/for-good.png' />
 						</div>
 						<div className='arrow'>
 							<Link activeClass='active' className='arrowhead' to='arrowhead' spy smooth duration={2000}>
