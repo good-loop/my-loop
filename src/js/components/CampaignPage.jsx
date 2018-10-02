@@ -129,11 +129,11 @@ const LinkToAdWidget = ({cparent, adid, status, brandColorTxtStyle}) => {
 
 	let msg = 'WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH ' + cparent + ' PROJECT YOU WOULD LIKE TO FUND.';
 	let url = 'https://demo.good-loop.com/?gl.vert='+encURI(adid)+"&gl.status="+encURI(status);
-	let html = "[" + msg + "](" + url + ")";
+	let md = "[" + msg + "](" + url + ")";
 	
 	return (
 		<p className='link bebas-font'>
-			<MDText source={html} renderers={{link: LinkRenderer}} />
+			<MDText source={md} renderers={{link: LinkRenderer}} />
 		</p>
 	);
 };
