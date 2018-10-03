@@ -43,8 +43,11 @@ ln -s /home/winterwell/TeamCity/buildAgent/work/9307b27f248c307/base $PROJECT_LO
 if [[ -f web/manifest.html ]]; then
     rm -rf web/manifest.html
 fi
-GITINFO=$(git log -1)
-printf "<HTML>\n\t<BODY>\n\t\t<H1>This site was built on the following repo commit:</H1>\n\t\t<p>$GITINFO</p>\n\t</BODY>\n</HTML>" >> web/manifest.html
+GITINFOLN1=$(git log -1 | awk NR==1)
+GITINFOLN2=$(git log -1 | awk NR==2)
+GITINFOLN3=$(git log -1 | awk NR==3)
+GITINFOLN4=$(git log -1 | awk NR==5)
+printf "<HTML>\n\t<BODY>\n\t\t<H1>This site was built on the following repo commit:</H1>\n\t\t<H3>$GITINFOLN1</H3>\n\t\t<H3>$GITINFOLN2</H3>\n\t\t<H3>$GITINFOLN3</H3>\n\t\t<H3>$GITINFOLN4</H3>\n\t</BODY>\n</HTML>" >> web/manifest.html
 
 
 
