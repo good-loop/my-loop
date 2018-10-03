@@ -58,7 +58,7 @@ let _handleClick = (circleIndex) => {
 const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='left', shown, brandColorBgStyle}) => {
 	let cids = clist.map(x => x.id);
 	let cnames = clist.map(x => x.name);
-	let chighResPhotos = clist.map(x => x.highResPhoto);
+	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo);
 
 	return (
 		<div className={'circle '.concat(name)} onClick={(e) => _handleClick(index)}>
@@ -78,7 +78,7 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColor
 	}
 
 	let cnames = clist.map(x => x.name);
-	let chighResPhotos = clist.map(x => x.highResPhoto);
+	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo);
 	let curls = clist.map(x => x.url);
 	let cdescs = clist.map(x => x.description);
 
