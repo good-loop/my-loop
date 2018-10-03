@@ -37,6 +37,17 @@ rm -rf $PROJECT_LOCATION/src/js/base
 printf "\nSymlinking 'base' from where TeamCity keeps it's wwappbase.js repo\n"
 ln -s /home/winterwell/TeamCity/buildAgent/work/9307b27f248c307/base $PROJECT_LOCATION/src/js/base
 
+######################
+### Section 01: ESOTERIC TO TEAMCITY:: Creating a manifest html page
+######################
+if [[ -f web/manifest.html ]]; then
+    rm -rf web/manifest.html
+fi
+GITINFO=$(git log -1)
+printf "<HTML>\n\t<BODY>\n\t\t<H1>This site was built on the following repo commit:</H1>\n\t\t<p>$GITINFO</p>\n\t</BODY>\n</HTML>" >> web/manifest.html
+
+
+
 #####################
 ### Section 01: Create the list of target servers, and create the list of excluded items that should be preserved
 #####################
