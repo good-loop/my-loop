@@ -95,7 +95,7 @@ const MyPage = () => {
 
 					<Card title='How Good-Loop Ads Work' defaultOpen><OnboardingCard allIds={allIds} /></Card>								
 
-					<Card title='Your Donations' defaultOpen><DonationCard xids={xids} /></Card>
+					<Card title='Your Charities' defaultOpen><DonationCard xids={xids} /></Card>
 
 					<Card title='Your Digital Mirror (design @Irina)' defaultOpen><DigitalMirrorCardDesign /></Card> 
 
