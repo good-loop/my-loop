@@ -96,7 +96,11 @@ const MyPage = () => {
 
 					<Card title='How Good-Loop Ads Work' defaultOpen><OnboardingCard allIds={allIds} /></Card>								
 
-					<Card title='Your Donations' defaultOpen><DonationCard xids={xids} /></Card>
+					<Card title='Your Charities' defaultOpen><DonationCard xids={xids} /></Card>
+
+					<Card title='Your Digital Mirror (design @Irina)' defaultOpen><DigitalMirrorCardDesign /></Card> 
+
+					<Card title='Your Digital Mirror (functional @Mark & Dan W)' defaultOpen><DigitalMirrorCard /></Card> 
 
 					<Card title='Boost Your Impact' defaultOpen><SocialMediaCard allIds={xids} /></Card> 
 
@@ -112,6 +116,20 @@ const MyPage = () => {
 	);
 }; // ./MyPage
 
+/**
+ * TODO Assuming we have their Twitter profile and we're interrogated it to extract info...
+ */
+const DigitalMirrorCardDesign = () => {
+	return (<div>
+		TODO Assuming we have their Twitter profile and we're interrogated it to extract info...
+	</div>);
+};
+
+const DigitalMirrorCard = () => {
+	return (<div>
+		TODO a functional version
+	</div>);
+};
 
 const WelcomeCard = ({xids}) => {
 	return (<div className="header">
