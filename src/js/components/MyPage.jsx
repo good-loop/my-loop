@@ -20,6 +20,7 @@ import ConsentWidget from './ConsentWidget';
 import printer from '../base/utils/printer';
 import DonationCard from './DonationCard';
 import Footer from '../components/Footer';
+import TwitterShare from '../components/TwitterShare';
 
 const fetcher = xid => DataStore.fetch(['data', 'Person', xid], () => {
 	return getProfile({xid});
@@ -251,7 +252,8 @@ const SocialMediaCard = ({allIds=[]}) => {
 				Facebook ID: {XId.id(fbid)} {fbpeep? fbpeep.name : null}</div> // TODO show some data about them from FB
 			: 
 			<div><SocialSignInButton service='facebook' verb='connect' /></div>
-		} 
+		}
+		<TwitterShare />
 	</div>
 	);
 };
