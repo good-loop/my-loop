@@ -132,7 +132,7 @@ const DigitalMirrorCard = () => {
 };
 
 const WelcomeCard = ({xids}) => {
-	return (<div className="header">
+	return (<div className="WelcomeCard">
 		{Login.isLoggedIn()? 
 			<div>
 				<div className="pull-right logged-in">
@@ -219,7 +219,7 @@ const OnboardingCard = ({allIds}) => {
 	let step2Img = 'https://i.imgur.com/dwvVB2s.jpg';
 	let step3Img = 'https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,fl_lossy,h_1440,w_720,f_auto,q_auto/v1/722207/banner-illustration-publisher_jp1obr.png';
 
-	return 	(<section id="howitworks" className="how text-center section-padding">
+	return 	(<section id="howitworks" className="how text-center">
 		<div className="how-content container-fluid">
 			<Row3>
 				<div className="how-step">
