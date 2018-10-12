@@ -173,7 +173,8 @@ const Row3 = ({children}) => {
 
 const StatisticsCard = () => { 
 	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
-		return ServerIO.getAllSpend({});
+		const name = "total-spend"; // dummy parameter: helps identify request in network tab
+		return ServerIO.getAllSpend({name});
 	});
 	if ( ! pvSum.resolved) {
 		return <Misc.Loading text='Loading donation data...' />;

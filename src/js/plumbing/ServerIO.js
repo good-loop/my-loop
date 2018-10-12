@@ -72,11 +72,12 @@ ServerIO.getDataLogData = (filters, breakdowns, name) => {
  * 	total: {Money},
  * 	stats: {}
  * }
+ * @param {?String} name Just for debugging - makes it easy to spot in the network tab 
  */
-ServerIO.getDonationsData = ({q, start, end}) => {
+ServerIO.getDonationsData = ({q, start, end, name}) => {
 	let url = ServerIO.AS_ENDPOINT+'/datafn/donations';
 	const params = {
-		data: {q, start, end}
+		data: {name, q, start, end}
 	};
 	return ServerIO.load(url, params);
 };
@@ -90,10 +91,10 @@ ServerIO.getDonationsData = ({q, start, end}) => {
  * 	money: Money
  * }
  */
-ServerIO.getAllSpend = ({vert}) => {
+ServerIO.getAllSpend = ({vert, name}) => {
 	let url = ServerIO.AS_ENDPOINT+'/datafn/sum';
 	const params = {
-		data: {vert}
+		data: {name, vert}
 	};
 	return ServerIO.load(url, params);
 };

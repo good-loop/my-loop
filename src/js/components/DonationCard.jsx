@@ -60,7 +60,8 @@ const DonationCard = ({xids}) => {
 	const donationsPath = ['widget', 'MyReport', 'user-donations', qAllIds];
 	let q = qAllIds;
 	let pvDonationData = DataStore.fetch(donationsPath, () => {
-		return ServerIO.getDonationsData({q});
+		const name = "user-donations"; // dummy parameter: helps identify request in network tab
+		return ServerIO.getDonationsData({q, name});
 	});	
 
 	if ( ! pvDonationData.resolved) {
@@ -93,8 +94,9 @@ const DonationCard = ({xids}) => {
 	
 	// load the community total for these charities	
 	let pvCommunityCharityTotal = DataStore.fetch(['widget','DonationCard','community'], () => {
-		let qcids = cids.map(xid => 'cid:'+xid).join(' OR ');		
-		return ServerIO.getDonationsData({q:qcids});
+		let qcids = cids.map(xid => 'cid:'+xid).join(' OR ');	
+		const name = "total-donations"; // dummy parameter: helps identify request in network tab
+		return ServerIO.getDonationsData({q:qcids, name});
 	});
 	let communityDonationsByCharity = pvCommunityCharityTotal.value? pvCommunityCharityTotal.value.by_cid : {};
 	
