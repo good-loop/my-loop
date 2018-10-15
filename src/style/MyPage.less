@@ -1,0 +1,135 @@
+
+.WelcomeCard {
+	min-height: 500px;
+	font-size: 25px;
+	color: white;
+	background-color: @gl-color;
+
+	.header-text{
+		padding-top: 180px;
+		vertical-align: middle; 
+		text-align: center;
+		// made text unselectable for hypothetical problems on mobile (it being near a button)
+		-webkit-touch-callout: none; /* iOS Safari */
+		-webkit-user-select: none; /* Safari */ /* Konqueror HTML */
+		-moz-user-select: none; /* Firefox */
+			-ms-user-select: none; /* Internet Explorer/Edge */
+				user-select: none; /* Non-prefixed version, currently
+									supported by Chrome and Opera */
+	}
+
+	.title {
+		letter-spacing: 9px;
+		font-weight: 900;
+	}
+
+	.subtitle {	
+		letter-spacing: 6px;
+		font-weight: normal;
+		padding-bottom: 10px;
+	}
+
+	/* for red button on red background */
+	.btn-red{
+		background-color: @gl-color;
+		color: white;
+		border-color: white;
+	}
+
+	.btn.btn-red.focus, .btn.btn-red:focus, .btn.btn-red:hover {
+		background-color: #a50d23;
+		text-decoration: none;
+		color: white;
+	}
+}
+
+// appears in the top-right of the big red welcome card
+.logged-in {
+	padding-right: 10px;
+	padding-top: 10px;
+}
+
+//OnboardingCard styles how good loop ads work section 
+#howitworks {
+	line-height: 1.4;
+	font-family: "campton-book",sans-serif;
+	font-size: 16px;
+}
+
+.how-text {
+	padding-top: 23px;
+	display: block;
+	width: 160px;
+	max-width: 100%;
+	min-height: 70px;
+	padding-top: 12px;
+	padding-bottom: 20px;
+	margin: 0 auto;
+	color: #4a4a4a;
+	vertical-align: top;
+}
+
+.how-img {
+	height: 132px;
+	max-width: 200px;
+}
+// end of OnboardingCard
+
+// StatisticsCard shows e.g. 1,470,000 people reached
+.statistics-content {
+    h2 {
+        color: #4a4a4a;
+        font-size: 36px;
+        margin-bottom: 0;
+        line-height: 1.5em;
+    }
+
+    .statistics-item {
+        text-align: center;
+        font-size: 13px;
+        color: #9b9b9b;
+
+        .statistics-value {
+            text-transform: uppercase;
+            vertical-align: middle;
+
+            .statistics-value-highlight {
+                margin-top: 5px;
+                position: relative;
+                display: block;
+                padding-bottom: 10px;
+                margin-bottom: 10px;
+                font-size: 24px;
+                text-transform: none;
+                color: #4a4a4a;	
+                font-weight: bold;
+            }
+
+            .statistics-value-highlight::after {
+                display: block;
+                position: absolute;
+                content: "";
+                bottom: 0;
+                left: 50%;
+                margin-left: -51px;
+                width: 102px;
+                height: 5px;
+                background: @gl-color;
+            }
+        }
+        .statistics-subtext {
+            display: block;
+            min-height: 36px;
+        }
+    }
+}  // ./statistics-content (aka Our Achievements Together card)
+
+// this is used for the achievement text-based messages in StatisticsCard
+.text-stat {
+	font-size: 19px;
+	padding-bottom: 2px;
+}
+
+
+
+

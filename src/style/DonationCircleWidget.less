@@ -1,0 +1,82 @@
+// this is for the donation circles on the my-loop page
+
+.partial-circle {
+	width: 20em;
+	height: 20em;
+	margin: 0 2em;
+	position: relative;
+	overflow: hidden;
+	z-index: 2;
+}
+
+.partial-circle img {
+	opacity: 0.8;
+	width: 20em;
+	height: 20em;
+	-o-object-fit: contain;
+	   object-fit: contain;
+    padding: 3em; 
+	display: block;
+}
+
+// TODO: remove :before potentially, seems like a hack to deal with layering instead of z-index?
+// styles the bottom part of the circle
+.partial-circle:before {
+	content: "";
+	position: absolute;
+	width: 20em;
+	height: 20em;
+	border-radius: 50%;
+}
+.partial-circle.top:before {
+	top: 0;
+	background: #d64a5f;
+}
+
+.partial-circle.bottom:before {
+	bottom: 0;
+	background: @gl-color;
+}
+
+.partial-circle.top {
+	height: 16.8em;
+}
+
+.partial-circle.bottom {
+	height: 3.2em;
+}
+
+// caption underneath the circle with the title of the charity e.g. Multiple Sclerosis Society
+.partial-circle-caption {
+	width: 20em;
+	text-align: center;
+	margin-left: 2em;
+	margin-top: 0.5rem;
+}
+
+// TODO: rename to be more specific e.g. donation-circle-number
+.stats {
+	position: absolute;
+	top: 25%;
+	width: 100%;
+	text-align: center;
+	font-size: 2.1rem;
+	font-weight: bold;
+	-webkit-transition: all 1s;
+	-o-transition: all 1s;
+	transition: all 1s;
+	margin-top: -0.75rem;
+	color: black;
+	z-index: 1;
+	font-family: Geneva, Tahoma, Verdana, sans-serif;
+}
+
+// old code for the donation circles' wrapper??
+// .content {
+// 	margin-top: 20px;
+// 	-ms-flex-line-pack: center;
+// 	    align-content: center;
+// 	-webkit-box-align: center;
+// 	    -ms-flex-align: center;
+// 	        align-items: center;
+// }
