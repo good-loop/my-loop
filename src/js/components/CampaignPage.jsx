@@ -261,8 +261,10 @@ const CampaignPage = ({path}) => {
 				<div className='header-img' style={headerStyle} >
 					<div className='darken-overlay'>
 						<div className='title frank-font'>
+							<div>{cadvertiser}</div>
+							<div>are donating</div>							
 							<div><Misc.Money amount={campaignTotal} minimumFractionDigits={2} /></div>
-							<div>RAISED SO FAR</div>
+							<div>to charity</div>
 						</div>
 						<div className='ads-for-good' style={brandColorBgStyle}>
 							<img alt='Good Loop Ads For Good Logo' src='https://gl-es-04.good-loop.com/cdn/images/for-good.png' />
