@@ -263,7 +263,7 @@ const CampaignPage = ({path}) => {
 						<div className='title frank-font'>
 							<div>{cadvertiser}</div>
 							<div>are donating</div>							
-							<div><Misc.Money amount={campaignTotal} minimumFractionDigits={2} /></div>
+							<div><Misc.Money amount={16549} minimumFractionDigits={2} /></div>
 							<div>to charity</div>
 						</div>
 						<div className='ads-for-good' style={brandColorBgStyle}>
