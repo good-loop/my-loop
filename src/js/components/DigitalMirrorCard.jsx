@@ -2,6 +2,8 @@
 // social media data linked by the user
 import React from 'react';
 import Misc from '../base/components/Misc';
+import ServerIO from '../plumbing/ServerIO';
+import DataStore from '../base/plumbing/DataStore';
 
 // @param dataFields: data that we would like to pull from corresponding social media site's API
 // Just Twitter for the moment.
@@ -13,6 +15,14 @@ const socialMedia = [
 	}
 ];
 
+// Save updated parameters to user's Profiler space
+// Note that this 
+const saveFn = ({xid}) => {
+	let data = DataStore.getValue(['data', 'Person', xid]);
+
+	return ServerIO.post(`${ServerIO.PROFILER_ENDPOINT}/profile/${encodeURIComponent(xid)}`, {doc: JSON.stringify(data), action: 'put'});	
+};
+
 /** Checkboxes for all items in 'dataFields' */
 const PermissionSwitches = ({xidObj}) => {
 	if(!xidObj || !xidObj.xid || !xidObj.dataFields) return null;
@@ -23,7 +33,7 @@ const PermissionSwitches = ({xidObj}) => {
 	return (
 		<div>
 			<h5>Controls for {xidObj.service}</h5>
-			{dataFields.map( field => <Misc.PropControl type="checkbox" path={permissionPath} prop={field} label={field} key={field} />)}
+			{dataFields.map( field => <Misc.PropControl type="checkbox" path={permissionPath} prop={field} label={field} key={field} saveFn={() => saveFn({xid})} />)}
 		</div>
 	);
 };
