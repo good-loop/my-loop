@@ -20,7 +20,7 @@ import ConsentWidget from './ConsentWidget';
 import printer from '../base/utils/printer';
 import DonationCard from './DonationCard';
 import Footer from '../components/Footer';
-import TwitterShare from '../components/TwitterShare';
+import ShareAnAd from '../components/ShareAnAd';
 import {DigitalMirrorCard} from '../components/DigitalMirrorCard';
 
 const fetcher = xid => DataStore.fetch(['data', 'Person', xid], () => {
@@ -267,7 +267,7 @@ const SocialMediaCard = ({allIds=[]}) => {
 			: 
 			<div><SocialSignInButton service='facebook' verb='connect' /></div>
 		}
-		<TwitterShare />
+		<ShareAnAd />
 	</div>
 	);
 };
