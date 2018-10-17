@@ -34,19 +34,36 @@ class ShareAnAd extends React.Component {
 
 		const {adID} = this.state;
 
+		const iframe = document.createElement('iframe');
+
+		/** Elements to place in Good-Loop iframe */
+		const $script = document.createElement('script');
+		$script.setAttribute('src', adID ? '//as.good-loop.com/unit.js?gl.vert=' + adID : '//as.good-loop.com/unit.js');
+
+		const $div = document.createElement('div');
+		$div.setAttribute('class', 'goodloopad');
+
+
+		iframe.setAttribute('id', 'good-loop-iframe');
+
+		iframe.style.height = '250px';
+		iframe.style.width = '300px';
+
+		iframe.addEventListener('load', () => {
+			window.iframe = iframe;
+			iframe.contentDocument.body.style.overflow = 'hidden';
+			iframe.contentDocument.body.appendChild($script);
+			iframe.contentDocument.body.appendChild($div);
+		});
+		/** */
+		this.adunitRef.appendChild(iframe);
+
 		if( !adID ) {
 			// No ad ID provided
-			// Going to load the adunit, let it pick an ad
-			// pull the relevant ad ID out of the iframe,
-			// then trigger TwitterShare to reload, with the Tweet
-			// button now linking to the specific ad shown
-			const iframe = document.createElement('iframe');
+			// Going to load the adunit, let it pick an ad,
+			// then pull the relevant ad ID out of the iframe
 
 			const adIDPV = new Promise( (resolve, reject) => {
-				/** Elements to place in Good-Loop iframe */
-				const $script = document.createElement('script');
-				$script.setAttribute('src', '//as.good-loop.com/unit.js?gl.variant=rectangle');
-
 				$script.addEventListener('load', () => {
 					resolve(iframe.contentWindow);
 				});
@@ -55,26 +72,9 @@ class ShareAnAd extends React.Component {
 					reject(false);
 				});
 
-				const $div = document.createElement('div');
-				$div.setAttribute('class', 'goodloopad');
-				/** */
-
-				iframe.setAttribute('id', 'good-loop-iframe');
-
-				iframe.style.height = '250px';
-				iframe.style.width = '300px';
-	
-				iframe.addEventListener('load', () => {
-					window.iframe = iframe;
-					iframe.contentDocument.body.style.overflow = 'hidden';
-					iframe.contentDocument.body.appendChild($script);
-					iframe.contentDocument.body.appendChild($div);
-				});
 				iframe.addEventListener('error', () => {
 					reject(false);
 				});
-
-				this.adunitRef.appendChild(iframe);
 			});
 
 			// Grab ad ID chosen by adunit and place in to DataStore/state
