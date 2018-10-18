@@ -20,33 +20,8 @@ import {BasicAccountPage} from '../base/components/AccountPageWidgets';
 import E404Page from '../base/components/E404Page';
 import TestPage from '../base/components/TestPage';
 
-
 // DataStore
-
-DataStore.update({
-	data: {
-		NGO: {},
-		Advert: {},
-		Advertiser: {},
-		Person: {},
-		User: {}
-	},
-	list: {
-
-	},
-	draft: {
-		Person: {},
-		User: {},
-	},
-	widget: {},
-	misc: {
-	},
-	/** status of server requests, for displaying 'loading' spinners 
-	 * Normally: transient.$item_id.status
-	*/
-	transient: {}
-});
-
+C.setupDataStore();
 
 // Actions
 

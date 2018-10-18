@@ -69,7 +69,7 @@ const DonationCard = ({xids}) => {
 	}
 
 	// TODO Warning: possibly broken by changes to returned data Sept 2018 ^DW
-	let userTotal = pvDonationData.value.total && pvDonationData.value.total;
+	let userTotal = pvDonationData.value && pvDonationData.value.total;
 
 	// no user donations?
 	if ( ! userTotal) {
