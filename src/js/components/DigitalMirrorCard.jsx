@@ -1,11 +1,12 @@
 // Collection of controls for managing
 // social media data linked by the user
 import React from 'react';
+import {assMatch} from 'sjtest';
+import _ from 'lodash';
 import PropControl from '../base/components/PropControl';
 import DataStore from '../base/plumbing/DataStore';
 import {createClaim, saveProfile, saveProfileClaims} from '../base/Profiler';
-import {assMatch} from 'sjtest';
-import _ from 'lodash';
+import InteractiveMap from '../components/InteractiveMap';
 
 // @param dataFields: data that we would like to pull from corresponding social media site's API
 // Just Twitter for the moment.
@@ -64,6 +65,7 @@ const DigitalMirrorCard = ({xids}) => {
 
 	return (
 		<div>
+			{/* <InteractiveMap /> */}
 			{
 				socialXIds && socialXIds.length > 0
 					? socialXIds.map( xidObj => <PermissionControls xidObj={xidObj} key={xidObj.xid} />)
@@ -107,6 +109,7 @@ const label = ({field, editMode, path}) => {
 
 	return (
 		<div>
+			{field}
 			<img style={{height: '200px', width: '200px'}} alt={field} src='https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,fl_lossy,h_1440,w_720,f_auto,q_auto/v1/722207/banner-illustration-publisher-no-hearts_lppr8a.jpg' />
 			{
 				editMode 
@@ -123,7 +126,7 @@ const label = ({field, editMode, path}) => {
 const saveFn = (xid, fields) => {
 	if(_.isString(fields)) fields = [fields];
 
-	// let claims = [];
+	let claims = [];
 
 	// TODO: Set this back to sending an array of claims up to the back-end
 	// Appears that it currently can only process one claim at a time
@@ -135,12 +138,12 @@ const saveFn = (xid, fields) => {
 		const {value, permission} = data;
 	
 		const claim = createClaim({key: field, value, from: xid, p: permission});
-		// claims = claims.concat(claim);
+		claims = claims.concat(claim);
 
-		saveProfileClaims(xid, [claim]);
+		// saveProfileClaims(xid, [claim]);
 	});
 
-	// saveProfileClaims(xid, claims);
+	saveProfileClaims(xid, claims);
 };
 
 /** 
