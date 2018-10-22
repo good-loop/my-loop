@@ -1,5 +1,4 @@
 import React from 'react';
-import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
 
 /**
  * DO NOT USE THIS YET (19/10/18)
