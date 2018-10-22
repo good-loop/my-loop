@@ -7,6 +7,8 @@ import PropControl from '../base/components/PropControl';
 import DataStore from '../base/plumbing/DataStore';
 import {createClaim, saveProfile, getClaimsForXId, saveProfileClaims} from '../base/Profiler';
 import ServerIO from '../plumbing/ServerIO';
+import Misc from '../base/components/Misc';
+import Map from '../components/InteractiveMap';
 // import InteractiveMap from '../components/InteractiveMap';
 
 // @param dataFields: data that we would like to pull from corresponding social media site's API
@@ -15,11 +17,18 @@ const socialMedia = [
 	{
 		service: 'twitter',
 		idHandle: '@twitter',
-		dataFields: ['location', 'relationship', 'job', 'gender', 'desc'] // keys should match back-end/Datastore
+		dataFields: ['name', 'location', 'relationship', 'job', 'gender'] // keys should match back-end/Datastore
 	}
 ];
 
-const appStatePath = ['widget', 'DigitalMirror'];
+const ImageFromField = {
+	name: 'https://amazonfashionweektokyo.com/en/wp-content/uploads/2016/01/Name_logo.jpg',
+	location: 'https://images.idgesg.net/images/article/2017/07/location-pixabay-1200x800-100728584-large.jpg',
+	relationship: 'https://s3.amazonaws.com/skinner-production/stories/featured_images/000/029/872/large/manage-work-relationship.jpg?1525026134',
+	job: 'https://www.bing.com/th?id=OIP.PPBMLiYljuluJZtFxAZwDQHaHa&w=204&h=196&c=7&o=5&pid=1.7',
+	gender: 'https://www.bing.com/th?id=OIP.i9b5MNDSvtAjd-u2Q8zPIwHaGE&w=241&h=193&c=7&o=5&pid=1.7'
+};
+
 const userdataPath = ['widget', 'DigitalMirror', 'userdata'];
 
 const DigitalMirrorCard = ({xids}) => {
@@ -40,6 +49,8 @@ const DigitalMirrorCard = ({xids}) => {
 		const data = DataStore.getValue(writePath);
 
 		if( !data ) {
+			// We are currently just reading from Claims
+			// Might want to pay more attention to std, custom after we've added multiple data sources
 			const {std, custom} = DataStore.getValue(readPath) || {std: null, custom: null};
 			let writeData = null;//std && custom ? Object.assign(std, custom) : null;
 
@@ -83,41 +94,51 @@ const PermissionControls = ({xidObj}) => {
 	if(!xidObj || !xidObj.xid || !xidObj.dataFields) return null;
 
 	const {xid, dataFields} = xidObj;
-	// User can select/deselect to enable/disable editing of data we hold on them
-	const editMode = DataStore.getValue(appStatePath.concat('edit-mode'));
 	const path = userdataPath.concat(xid);
 
 	return (
 		<div className="social-media-permissions">
-			<PropControl type='checkbox' path={appStatePath} prop={'edit-mode'} label={'Toggle edit mode'} />
-			<h5>Controls for {xidObj.service}</h5>
-			{
-				dataFields.map( field => {
-					return <PropControl type="checkbox" path={path.concat(field)} prop={'permission'} label={label({field, editMode, path})} key={field} saveFn={() => saveFn(xid, field)} />;
-				})
-			}
-			{/* Probably want some kind of input checking for this? Could also leave that up to the back-end */}
-			{editMode ? <button className="btn btn-primary" type="button" onClick={() => saveFn(xid, dataFields)}> Save changes </button> : null}
+			<div className="container">
+				<h5 className='text-muted'> This data was taken from {xidObj.service}</h5>
+				<div className="col-md-6 controls">
+					{
+						dataFields.map( field => {
+							return (
+								<div className='row data-control equal-column-height' key={'data-control-' + field}> 
+									<div className='col-md-6'>
+										<PropControl type="checkbox" path={path.concat(field)} prop={'permission'} label={label({xid, field, path})} key={field} saveFn={() => saveFn(xid, field)} />
+									</div>
+									<div className='col-md-6'>
+										<PropControl type='text' path={path.concat(field)} prop={'value'} placeholder={field} style={{width: 'auto'}} />		
+										<Misc.Icon glyph='floppy-save' size='large' className="text-success" onClick={() => saveFn(xid, field)} style={{marginRight: '15px', cursor: 'pointer'}} />			
+										<Misc.Icon glyph='remove' size='large' className="text-danger" onClick={() => deleteFn(xid, field)} style={{cursor: 'pointer'}} />	
+									</div>
+								</div>
+							);
+						})
+					}
+				</div>
+				<div className='col-md-6 map'>
+				</div>
+			</div>
+			<div className='crud-buttons pull-right'>
+				<button className="btn btn-success" type="button" onClick={() => saveFn(xid, dataFields)}> Save changes </button>
+				<button className="btn btn-danger" type="button" onClick={() => deleteFn(xid, dataFields)}> Delete all </button>
+			</div>
 		</div>
 	);
 };
 
 // This is just a proof of concept.
 // If we end up going with this method, would want to use images that represent the relevant data field
-const label = ({field, editMode, path}) => {
+const label = ({xid, field, path}) => {
 	const objPath = path.concat([field]);	
-	const fieldValue = DataStore.getValue(objPath.concat('value'));
 
 	return (
-		<div>
-			{field}
-			<img style={{height: '200px', width: '200px'}} alt={field} src='https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,fl_lossy,h_1440,w_720,f_auto,q_auto/v1/722207/banner-illustration-publisher-no-hearts_lppr8a.jpg' />
-			{
-				editMode 
-					? <PropControl type='text' path={objPath} prop={'value'} /> 
-					: fieldValue || 'No data available'
-			}
-		</div>);
+		<div className="input-label">
+			<img style={{height: 'auto', width: '150px', marginRight: '15px'}} alt={field} src={ImageFromField[field] || 'https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,fl_lossy,h_1440,w_720,f_auto,q_auto/v1/722207/banner-illustration-publisher-no-hearts_lppr8a.jpg'} />
+		</div>
+	);
 };
 
 // Save updated parameters to user's Profiler space
@@ -132,7 +153,8 @@ const saveFn = (xid, fields) => {
 	fields.forEach( field => {
 		const data = DataStore.getValue(userdataPath.concat([xid, field]));
 
-		if( ! data ) return;
+		// Allow blank string
+		if( ! data && data !== '' ) return;
 	
 		const {value, permission} = data;
 	
@@ -141,6 +163,14 @@ const saveFn = (xid, fields) => {
 	});
 
 	saveProfileClaims(xid, claims, ServerIO.getJWTForService('twitter'));
+};
+
+// Clears all values from DataStore, then pushes Claims back up
+const deleteFn = (xid, fields) => {
+	if(!_.isArray(fields)) fields = [fields];
+
+	fields.forEach( field => DataStore.setValue(userdataPath.concat([xid, field]), ''));
+	saveFn(xid, fields);
 };
 
 module.exports = {
