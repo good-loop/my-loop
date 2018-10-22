@@ -6,7 +6,7 @@ import _ from 'lodash';
 import PropControl from '../base/components/PropControl';
 import DataStore from '../base/plumbing/DataStore';
 import {createClaim, saveProfile, saveProfileClaims} from '../base/Profiler';
-import InteractiveMap from '../components/InteractiveMap';
+// import InteractiveMap from '../components/InteractiveMap';
 
 // @param dataFields: data that we would like to pull from corresponding social media site's API
 // Just Twitter for the moment.
