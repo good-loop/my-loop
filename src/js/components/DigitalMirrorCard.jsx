@@ -109,21 +109,14 @@ const PermissionControls = ({xidObj}) => {
 										<PropControl type="checkbox" path={path.concat(field)} prop={'permission'} label={label({xid, field, path})} key={field} saveFn={() => saveFn(xid, field)} />
 									</div>
 									<div className='col-md-6'>
-										<PropControl type='text' path={path.concat(field)} prop={'value'} placeholder={field} style={{width: 'auto'}} />		
-										<Misc.Icon glyph='floppy-save' size='large' className="text-success" onClick={() => saveFn(xid, field)} style={{marginRight: '15px', cursor: 'pointer'}} />			
-										<Misc.Icon glyph='remove' size='large' className="text-danger" onClick={() => deleteFn(xid, field)} style={{cursor: 'pointer'}} />	
+										<PropControl type='text' path={path.concat(field)} prop={'value'} placeholder={field} style={{width: 'auto'}} />
 									</div>
 								</div>
 							);
 						})
 					}
 				</div>
-				<div className='col-md-6 map'>
-				</div>
-			</div>
-			<div className='crud-buttons pull-right'>
-				<button className="btn btn-success" type="button" onClick={() => saveFn(xid, dataFields)}> Save changes </button>
-				<button className="btn btn-danger" type="button" onClick={() => deleteFn(xid, dataFields)}> Delete all </button>
+				<div className='col-md-6 map' />
 			</div>
 		</div>
 	);
