@@ -6,6 +6,7 @@ import _ from 'lodash';
 import PropControl from '../base/components/PropControl';
 import DataStore from '../base/plumbing/DataStore';
 import {createClaim, saveProfile, getClaimsForXId, saveProfileClaims} from '../base/Profiler';
+import ServerIO from '../plumbing/ServerIO';
 // import InteractiveMap from '../components/InteractiveMap';
 
 // @param dataFields: data that we would like to pull from corresponding social media site's API
@@ -139,7 +140,7 @@ const saveFn = (xid, fields) => {
 		claims = claims.concat(claim);
 	});
 
-	saveProfileClaims(xid, claims);
+	saveProfileClaims(xid, claims, ServerIO.getJWTForService('twitter'));
 };
 
 module.exports = {
