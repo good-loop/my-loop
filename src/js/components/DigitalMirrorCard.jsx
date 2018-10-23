@@ -5,7 +5,8 @@ import {assMatch} from 'sjtest';
 import _ from 'lodash';
 import PropControl from '../base/components/PropControl';
 import DataStore from '../base/plumbing/DataStore';
-import {createClaim, saveProfile, getClaimsForXId, saveProfileClaims} from '../base/Profiler';
+import Claim from '../base/data/Claim';
+import {saveProfile, getClaimsForXId, saveProfileClaims} from '../base/Profiler';
 import ServerIO from '../plumbing/ServerIO';
 import Misc from '../base/components/Misc';
 import Map from '../components/InteractiveMap';
@@ -162,7 +163,7 @@ const saveFn = (xid, fields) => {
 	
 		const {value, permission} = data;
 	
-		const claim = createClaim({key: field, value, from: xid, p: permission});
+		const claim = Claim.make({key: field, value, from: xid, p: permission});
 		claims = claims.concat(claim);
 	});
 
