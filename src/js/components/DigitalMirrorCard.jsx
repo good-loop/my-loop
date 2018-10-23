@@ -96,6 +96,21 @@ const PermissionControls = ({xidObj}) => {
 	const {xid, dataFields} = xidObj;
 	const path = userdataPath.concat(xid);
 
+	// Save function. Can only be called once every 5 seconds
+	// Important that this be stored somewhere more permanent than the component body
+	// If you don't, a debounce function will be created on each redraw,
+	// causing a save to fire on every key stroke.
+	let debounceSaveFn = DataStore.getValue(['widget', 'DigitalMirror', xid, 'debounceSaveFn']);
+
+	if( !debounceSaveFn ) {
+		debounceSaveFn = _.debounce(() => saveFn(xid, dataFields), 5000);
+		DataStore.setValue(['widget', 'DigitalMirror', xid, 'debounceSaveFn'], debounceSaveFn);
+	}
+	// Will be called every time that DigitalMirrorCard is redrawn,
+	// that is to say whenever user modifies data field
+	// Could become an issue if we begin to extend functionality
+	debounceSaveFn();
+
 	return (
 		<div className="social-media-permissions">
 			<div className="container">
@@ -106,7 +121,7 @@ const PermissionControls = ({xidObj}) => {
 							return (
 								<div className='row data-control equal-column-height' key={'data-control-' + field}> 
 									<div className='col-md-6'>
-										<PropControl type="checkbox" path={path.concat(field)} prop={'permission'} label={label({xid, field, path})} key={field} saveFn={() => saveFn(xid, field)} />
+										<PropControl type="checkbox" path={path.concat(field)} prop={'permission'} label={label(field)} key={field} saveFn={() => saveFn(xid, field)} />
 									</div>
 									<div className='col-md-6'>
 										<PropControl type='text' path={path.concat(field)} prop={'value'} placeholder={field} style={{width: 'auto'}} />
@@ -124,15 +139,11 @@ const PermissionControls = ({xidObj}) => {
 
 // This is just a proof of concept.
 // If we end up going with this method, would want to use images that represent the relevant data field
-const label = ({xid, field, path}) => {
-	const objPath = path.concat([field]);	
-
-	return (
-		<div className="input-label">
-			<img style={{height: 'auto', width: '150px', marginRight: '15px'}} alt={field} src={ImageFromField[field] || 'https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,fl_lossy,h_1440,w_720,f_auto,q_auto/v1/722207/banner-illustration-publisher-no-hearts_lppr8a.jpg'} />
-		</div>
-	);
-};
+const label = (field) => (	
+	<div className="input-label">
+		<img style={{height: 'auto', width: '150px', marginRight: '15px'}} alt={field} src={ImageFromField[field]} />
+	</div>
+);
 
 // Save updated parameters to user's Profiler space
 // Note that this 
@@ -156,14 +167,6 @@ const saveFn = (xid, fields) => {
 	});
 
 	saveProfileClaims(xid, claims, ServerIO.getJWTForService('twitter'));
-};
-
-// Clears all values from DataStore, then pushes Claims back up
-const deleteFn = (xid, fields) => {
-	if(!_.isArray(fields)) fields = [fields];
-
-	fields.forEach( field => DataStore.setValue(userdataPath.concat([xid, field]), ''));
-	saveFn(xid, fields);
 };
 
 module.exports = {
