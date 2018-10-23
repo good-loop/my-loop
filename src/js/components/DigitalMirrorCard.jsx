@@ -166,7 +166,7 @@ const saveFn = (xid, fields) => {
 		claims = claims.concat(claim);
 	});
 
-	saveProfileClaims(xid, claims, ServerIO.getJWTForService('twitter'));
+	saveProfileClaims(xid, claims);
 };
 
 module.exports = {
