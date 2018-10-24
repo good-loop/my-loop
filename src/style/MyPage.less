@@ -24,8 +24,23 @@
 	border-color: transparent;
 }
 
+/* gl button: white button on red background */
+.btn-gl {
+	background-color: white;
+	color: @gl-color;
+	border-color: white;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+	font-weight: bold;
+}
+
+.btn.btn-gl:hover {
+	background-color: #a50d23;
+	text-decoration: none;
+	color: white;
+} // end of gl button
+
 .WelcomeCard {
-	min-height: 500px;
+	//min-height: 500px;
 	font-size: 25px;
 	color: white;
 	background-color: @gl-color;
@@ -58,21 +73,6 @@
 		letter-spacing: 6px;
 		font-weight: normal;
 		padding-bottom: 10px;
-	}
-
-	/* for red button on red background */
-	.btn-red{
-		background-color: white;
-		color: @gl-color;
-		border-color: white;
-		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
-		font-weight: bold;
-	}
-
-	.btn.btn-red.focus, .btn.btn-red:focus, .btn.btn-red:hover {
-		background-color: #a50d23;
-		text-decoration: none;
-		color: white;
 	}
 }
 
@@ -177,11 +177,11 @@
 	}
 }
 
-// DigitalMirrorCardDesign
+// DigitalMirrorCardDesign (experimental)
 .mirror {
 	font-size: 22px;
 	line-height: 6vmin;
-	// padding-left: 6vmin;
+	padding-left: 6vmin;
 
 	.header {
 		height: 100%;
@@ -226,4 +226,11 @@
 	flex-direction: row;
 	flex-wrap: wrap;
 	align-items: center;
+}
+
+// MiniCard (experimental)
+.MiniCard { 
+	.statistics-item {
+		margin: 36px auto;
+	}
 }
