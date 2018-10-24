@@ -168,7 +168,7 @@
 		display: none;
 	}
 
-	input[type="checkbox"]:not(:checked)+div > img{
+	input[type="checkbox"]:not(:checked)+div{
         filter: grayscale(100%);
 	}
 	.form-control {
@@ -177,20 +177,14 @@
 	}
 }
 
-.equal-column-height {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	align-items: center;
-}
-
 // DigitalMirrorCardDesign
 .mirror {
 	font-size: 22px;
 	line-height: 6vmin;
-	padding-left: 6vmin;
+	// padding-left: 6vmin;
 
 	.header {
+		height: 100%;
 		font-size: 39px;
 	}
 
@@ -210,4 +204,26 @@
 		font-size: 2.5vmin;
 		margin-right: 25vmin;
 	}
+
+	input[type="checkbox"] {
+		display: none;
+	}
+
+	.input-label {
+		height: 25px;
+		width: 25px;
+		text-align: center;
+
+		i{
+			width: 100%;
+			height: auto;
+		}
+	}
 } // end of DigitalMirrorCardDesign
+
+.vertical-align {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
+}

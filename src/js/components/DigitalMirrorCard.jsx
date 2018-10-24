@@ -20,12 +20,13 @@ const socialMedia = [
 	}
 ];
 
-const ImageFromField = {
-	name: 'https://amazonfashionweektokyo.com/en/wp-content/uploads/2016/01/Name_logo.jpg',
-	location: 'https://images.idgesg.net/images/article/2017/07/location-pixabay-1200x800-100728584-large.jpg',
-	relationship: 'https://s3.amazonaws.com/skinner-production/stories/featured_images/000/029/872/large/manage-work-relationship.jpg?1525026134',
-	job: 'https://www.bing.com/th?id=OIP.PPBMLiYljuluJZtFxAZwDQHaHa&w=204&h=196&c=7&o=5&pid=1.7',
-	gender: 'https://www.bing.com/th?id=OIP.i9b5MNDSvtAjd-u2Q8zPIwHaGE&w=241&h=193&c=7&o=5&pid=1.7'
+const IconFromField = {
+	// No icon for this
+	name: null,
+	gender: <i className="fa fa-venus"></i>,
+	location: <i className="fa fa-map-marker-alt"></i>,
+	job: <i className="fa fa-briefcase"></i>,
+	relationship: <i className="fa fa-heart"></i>
 };
 
 const userdataPath = ['widget', 'DigitalMirror', 'userdata'];
@@ -119,27 +120,28 @@ const PermissionControls = ({xidObj}) => {
 	}
 
 	return (
-		<div className="social-media-permissions">
-			<div className="container">
-				<h5 className='text-muted'> This data was taken from {xidObj.service}</h5>
-				<div className="col-md-6 controls">
-					{
-						dataFields.map( field => {
-							return (
-								<div className='row data-control equal-column-height' key={'data-control-' + field}> 
-									<div className='col-md-6'>
-										<PropControl type="checkbox" path={path.concat(field)} prop={'permission'} label={label(field)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} />
+		<div>
+			<div className="mirror container">
+				<div className='row'>
+					<div className="col-md-6 main">
+						{
+							dataFields.map( field => {
+								// Hard-set 'name' to be header
+								const isHeader = field === 'name';
+
+								return (
+									<div className='row vertical-align' key={'data-control-' + field}> 
+										{isHeader ? null : <div className='col-md-2'><PropControl type="checkbox" path={path.concat(field)} prop={'permission'} label={label(field)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>}
+										<div className={'col-md-8'}><PropControl className={isHeader ? 'header' : ''} type='text' path={path.concat(field)} prop={'value'} placeholder={field} style={{width: 'auto'}} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>
 									</div>
-									<div className='col-md-6'>
-										<PropControl type='text' path={path.concat(field)} prop={'value'} placeholder={field} style={{width: 'auto'}} saveFn={() => debounceSaveFn(field, 'myloop@app')} />
-									</div>
-								</div>
-							);
-						})
-					}
-				</div>
-				<div className='col-md-6 map' />
+								);
+							})
+						}
+					</div>
+					<div className='col-md-5 map' />
+				</div>				
 			</div>
+			<div className='text-right info'> <i className="fas fa-info-circle" /> This data was taken from {capitalise(xidObj.service)}</div>			
 		</div>
 	);
 };
@@ -147,9 +149,11 @@ const PermissionControls = ({xidObj}) => {
 // This is just a proof of concept.
 // If we end up going with this method, would want to use images that represent the relevant data field
 const label = (field) => (	
-	<div className="input-label">
-		<img style={{height: 'auto', width: '150px', marginRight: '15px'}} alt={field} src={ImageFromField[field]} />
-	</div>
+	IconFromField[field] ? (
+		<div className="input-label">
+			{IconFromField[field]}
+		</div>
+	): null
 );
 
 // Save updated parameters to user's Profiler space
@@ -188,6 +192,16 @@ const saveFn = (xid, fields, from) => {
 	});
 
 	saveProfileClaims(xid, claims);
+};
+
+/** Little helper method to capitalise first character in a given string */
+const capitalise = (string) => {
+	return string[0].toUpperCase() + string.slice(1);
+};
+
+/** Convenience for styling, first item is displayed a bit differently from the rest*/
+const HeaderField = (field) => {
+
 };
 
 module.exports = {
