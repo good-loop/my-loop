@@ -5,12 +5,10 @@ import {assMatch} from 'sjtest';
 import _ from 'lodash';
 import PropControl from '../base/components/PropControl';
 import DataStore from '../base/plumbing/DataStore';
-import {createClaim, saveProfile, getClaimsForXId, saveProfileClaims} from '../base/Profiler';
+import Claim from '../base/data/Claim';
+import {saveProfile, getClaimsForXId, saveProfileClaims} from '../base/Profiler';
 import ServerIO from '../plumbing/ServerIO';
 import Misc from '../base/components/Misc';
-import Map from '../components/InteractiveMap';
-import { LoginLink } from '../base/components/LoginWidget';
-// import InteractiveMap from '../components/InteractiveMap';
 
 // @param dataFields: data that we would like to pull from corresponding social media site's API
 // Just Twitter for the moment.
@@ -45,6 +43,8 @@ const userdataPath = ['widget', 'DigitalMirror', 'userdata'];
 const DigitalMirrorCard = ({xids}) => {
 	if(!xids) return null;
 
+	// ??Switch to using [draft, Person, xid] as the storage for edits
+	// -- and hence reuse some existing Crud code.
 	/** HACK: Grab data from [data, Person, xid] (which we treat as read-only),
 	 *  process, and put in to state
 	 *  Assumes that a fetch request has already been made to put the data in to the above location
@@ -172,8 +172,8 @@ const saveFn = (xid, fields) => {
 		if( ! data && data !== '' ) return;
 	
 		const {value, permission} = data;
-		// User generated claims always belong to the user account
-		const claim = createClaim({key: field, value, p: permission, from: xid});
+	
+		const claim = Claim.make({key: field, value, from: xid, p: permission});
 		claims = claims.concat(claim);
 	});
 

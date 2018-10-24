@@ -46,6 +46,8 @@ class InteractiveMap extends React.Component {
 		leafletPV.then( () => geocoderPV)
 			.then(() => {
 				const {L} = window;
+				// Minor TODO: avoid using "map" as a variable name -- 'cos of similarity to the built-in
+				// Array.map() and Map
 				const map = L.map('mapid').setView([55.953251, -3.188267], 13);
 				L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 					attribution: '&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors',

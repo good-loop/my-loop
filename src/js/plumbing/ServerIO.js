@@ -2,7 +2,6 @@
  * Wrapper for server calls.
  *
  */
-import _ from 'lodash';
 import $ from 'jquery';
 import {SJTest, assert, assMatch} from 'sjtest';
 import {XId, encURI} from 'wwutils';
@@ -16,7 +15,6 @@ import DataStore from '../base/plumbing/DataStore';
 import Messaging, {notifyUser} from '../base/plumbing/Messaging';
 
 import ServerIO from '../base/plumbing/ServerIOBase';
-import { Server } from 'http';
 export default ServerIO;
 
 ServerIO.dataspace = ''; // This is the dataspace used in unit.js for reporting events 
@@ -100,5 +98,6 @@ ServerIO.getAllSpend = ({vert, name}) => {
 	};
 	return ServerIO.load(url, params);
 };
+
 
 // Profiler API: see Profiler.js
