@@ -16,7 +16,7 @@ const socialMedia = [
 	{
 		service: 'twitter',
 		idHandle: '@twitter',
-		dataFields: ['name', 'location', 'relationship', 'job', 'gender'] // keys should match back-end/Datastore
+		dataFields: ['name', 'gender', 'location', 'job', 'relationship'] // keys should match back-end/Datastore
 	}
 ];
 
