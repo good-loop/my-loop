@@ -1,5 +1,29 @@
 @gl-color: #A20F15;
 
+.headerCard .panel-body {
+    padding: 0px;
+}
+
+.page.MyPage {
+	background-color: #F6C390;
+}
+
+.panel-body {
+	background-color: #E6E4D6;
+	box-shadow: 0 3px 5px rgba(0,0,0,0.3);
+}
+
+.panel-title {
+	font-family: 'BebasNeue', Fallback, sans-serif;
+	font-size: 18px;
+	letter-spacing: 1px;
+}
+
+.panel-default, .panel-default > .panel-heading{
+	background-color: #F5AA57;
+	border-color: transparent;
+}
+
 .WelcomeCard {
 	min-height: 500px;
 	font-size: 25px;
@@ -7,7 +31,7 @@
 	background-color: @gl-color;
 
 	.header-text{
-		padding-top: 180px;
+		padding: 14vmin 2.5vmin;
 		vertical-align: middle; 
 		text-align: center;
 		// made text unselectable for hypothetical problems on mobile (it being near a button)
@@ -18,10 +42,16 @@
 				user-select: none; /* Non-prefixed version, currently
 									supported by Chrome and Opera */
 	}
+	.header-img{
+		margin-top:35px;
+	}
 
 	.title {
+		margin-bottom: 45px;
+		text-transform: uppercase;
 		letter-spacing: 9px;
 		font-weight: 900;
+		line-height: 45px;
 	}
 
 	.subtitle {	
@@ -32,9 +62,11 @@
 
 	/* for red button on red background */
 	.btn-red{
-		background-color: @gl-color;
-		color: white;
+		background-color: white;
+		color: @gl-color;
 		border-color: white;
+		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+		font-weight: bold;
 	}
 
 	.btn.btn-red.focus, .btn.btn-red:focus, .btn.btn-red:hover {
@@ -151,3 +183,31 @@
 	flex-wrap: wrap;
 	align-items: center;
 }
+
+// DigitalMirrorCardDesign
+.mirror {
+	font-size: 22px;
+	line-height: 6vmin;
+	padding-left: 6vmin;
+
+	.header {
+		font-size: 39px;
+	}
+
+	.header, .map {
+		margin: 2vmin 0;
+	}
+	
+	.map img {
+		border-style: dotted;
+		border-width: 1px;
+		height: 220px;
+		width: 350px;
+		margin-top: 10px;
+	}
+	
+	.info {
+		font-size: 2.5vmin;
+		margin-right: 25vmin;
+	}
+} // end of DigitalMirrorCardDesign
