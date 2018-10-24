@@ -7,8 +7,13 @@
 // but that didn't make any difference. Appears the only way to get this component to update properly
 // would be to have it delete the contents of a given div, then create a Twitter button
 
-// As clearing out components isn't very "React", I've decided to just not call TwitterShare until an adID is loaded
-// Not the worst, as the adunit should only load once anyway, but it is quite annoying
+// Believe answer to this problem can be found in post by chrisf: https://stackoverflow.com/questions/10486354/dynamically-change-tweet-button-data-text-contents
+// Think that Twitter's JavaScript function is updating the DOM in a way that React can't handle
+// Watched it go through a few update cycles. Appears that the Twitter script, after loading, mutates all suitably labeled <a> tags
+// in to iframes that host the Tweet button code. Problem is, that React doesn't reset this iframe to an <a>. Means that telling Twitter to rerun
+// its mutation has no effect: there aren't any <a> tags to mutate.
+
+// And that is why we're stuck with the current behaviour where the Tweet button does not update upon receiving new props.
 import React from 'react';
 
 // Having users share our ads would actually 
@@ -55,27 +60,32 @@ class TwitterShare extends React.Component {
 	}
 
 	componentDidMount() {
-		const {adID, twttrPV} = this.state; 
-		
+		const {twttrPV} = this.state; 
+
 		this.focusRef('twitterShareRef'); // resolve DOM element that Tweet button will be loaded in to
 
-		twttrPV.then( scriptLoaded => {
-			if(scriptLoaded) {
-				insertTweetButton(adID, this);
+		twttrPV.then( () => {
+			const {twttr} = window;
+
+			if(twttr) {
+				twttr.widgets.load();
 			}
 		});
 	} 
 
-	// Handles updating the twitter widget when a new adID is passed in
+	// componentWillUpdate(nextProps, nextState) {
+	// 	if(nextProps.adID !== this.state.adID) this.setState({adID: nextProps.adID});
+	// }
+
 	componentWillReceiveProps(nextProps) {
-		// Can't imagine that this would be called before twitterShareRef
-		// is instantiated, but put check in for safety
-		if( (nextProps.adID !== this.props.adID) && this.twitterShareRef) {
-			this.twitterShareRef.innerHTML = '';
+		if( nextProps.adID !== this.adID) this.setState({adID: nextProps.adID});
+	}
 
-			insertTweetButton(nextProps.adID, this);
-
-			this.setState({adID: nextProps.adID});
+	componentDidUpdate() {
+		// Force Tweet button to update
+		const {twttr} = window;
+		if(twttr) {
+			twttr.widgets.load();
 		}
 	}
 
@@ -83,22 +93,20 @@ class TwitterShare extends React.Component {
 		// Dan had requested that there be some sort of "positive feedback" from share the ad
 		// Was the mention of adding some sort of tracking URL so that users would be able
 		// to see how many of their followers watched the ad that they shared.
+		// return <div className="TwitterShare" ref={e => this.setRef('twitterShareRef', e)} />;
+		const {adID} = this.state;
+
 		return (
-			<div className="TwitterShare">
-				<div ref={e => this.setRef('twitterShareRef', e)} />
-			</div>);
+			<a className="twitter-share-button"
+				href="https://twitter.com/intent/tweet"
+				data-dnt="true"
+				data-size="large"
+				data-text="I just gave to charity by watching a @GoodLoopHQ ad :)"
+				data-url={adID ? 'https://as.good-loop.com/?gl.vert=' + adID : 'https://as.good-loop.com'}
+			>
+					Tweet
+			</a>);
 	}
 }
-
-const insertTweetButton = (adID, context) => {
-	const {twttr} = window; // placed in to window by file loaded from Twitter CDN (https://platform.twitter.com/widgets.js)
-	const src = adID ? 'https://as.good-loop.com/?gl.vert=' + adID : 'https://as.good-loop.com';
-
-	twttr.widgets.createShareButton(src, context.twitterShareRef, {
-		text: 'I just gave to charity by watching a @GoodLoopHQ ad :)',
-		size: 'large',
-		dnt: 'true' // Do Not Track
-	});
-};
 
 module.exports = TwitterShare;
