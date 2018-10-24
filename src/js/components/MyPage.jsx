@@ -256,7 +256,7 @@ const SocialMediaCard = ({allIds=[]}) => {
 		{twitterID ? 
 			<div className='wrapper'>
 				<div>Twitter username: {XId.id(twitterID)}</div>
-				<button className='btn btn-default' type='button' onClick={ e => ServerIO.load(ServerIO.PROFILER_ENDPOINT + '/analyze-data/' + escape(twitterID), {}, ServerIO.getJWTForService('twitter'))}>
+				<button className='btn btn-default' type='button' onClick={() => ServerIO.load(ServerIO.PROFILER_ENDPOINT + '/analyze-data/' + escape(twitterID), {})}>
 					Refresh
 				</button>
 			</div>
