@@ -9,6 +9,7 @@ import {createClaim, saveProfile, getClaimsForXId, saveProfileClaims} from '../b
 import ServerIO from '../plumbing/ServerIO';
 import Misc from '../base/components/Misc';
 import Map from '../components/InteractiveMap';
+import { LoginLink } from '../base/components/LoginWidget';
 // import InteractiveMap from '../components/InteractiveMap';
 
 // @param dataFields: data that we would like to pull from corresponding social media site's API
@@ -30,6 +31,16 @@ const ImageFromField = {
 };
 
 const userdataPath = ['widget', 'DigitalMirror', 'userdata'];
+
+// TODO: Think that this will need to change significantly in future
+// Rough form: can open menu to see specific data we've found and where it's come from
+// Separate input fields that allow user to set override
+
+// Is currently not an issue as we are only working with data from one social media source (Twitter)
+// Need to set things up so that user provided data (regardless of the form that this comes in)
+// is shown rather than whatever data has come from Twitter.
+// Editing these fields always modifies the user provided data on the back-end
+// rather than the data held for that specific social media source 
 
 const DigitalMirrorCard = ({xids}) => {
 	if(!xids) return null;
@@ -161,12 +172,12 @@ const saveFn = (xid, fields) => {
 		if( ! data && data !== '' ) return;
 	
 		const {value, permission} = data;
-	
-		const claim = createClaim({key: field, value, from: xid, p: permission});
+		// User generated claims always belong to the user account
+		const claim = createClaim({key: field, value, p: permission, from: xid});
 		claims = claims.concat(claim);
 	});
 
-	saveProfileClaims(xid, claims, ServerIO.getJWTForService('twitter'));
+	saveProfileClaims(xid, claims);
 };
 
 module.exports = {
