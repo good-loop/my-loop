@@ -159,11 +159,15 @@ const label = (field) => (
 /**
  * @param from optional
  */
-const saveFn = ({xid, fields, from}) => {
+const saveFn = (xid, fields, from) => {
 	if( _.isString(fields) ) fields = [fields];
 
+	// This is really just a bit of paranoia 
+	// While this should only ever be saving Claims that have been edited by the user,
+	// wanted to be absolutely sure that unmodified Twitter data was not being marked as
+	// having come from 'myloop@app'
 	if( !from ) from = [xid];
-	else from = xid.concat(from);
+	else from = [xid].concat(from);
 
 	let claims = [];
 
