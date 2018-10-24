@@ -156,7 +156,7 @@ const DigitalMirrorCardDesign = () => {
 					</div>
 					<div className="row">
 						<div className="col-md-1">
-							<i className="fa fa-hand-holding-heart"></i>
+							<i className="fa fa-heart"></i>
 						</div>
 						<div className="col-md-8">
 						Unknown Relationship Status
