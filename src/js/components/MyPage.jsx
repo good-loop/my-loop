@@ -179,7 +179,7 @@ const WelcomeCard = ({xids}) => {
 						<p className="subtitle">Find out below how to boost your contribution</p>
 					</div>
 					<div className="col-md-1 header-img">
-						<img src="https://image.ibb.co/eWpfwV/hero7.png" />
+						<img src="https://image.ibb.co/mCSVVq/hero8.png" />
 					</div>
 				</div>
 			</div>

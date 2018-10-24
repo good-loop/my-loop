@@ -16,7 +16,7 @@ const socialMedia = [
 	{
 		service: 'twitter',
 		idHandle: '@twitter',
-		dataFields: ['name', 'location', 'relationship', 'job', 'gender'] // keys should match back-end/Datastore
+		dataFields: ['name', 'gender', 'location', 'job', 'relationship'] // keys should match back-end/Datastore
 	}
 ];
 
@@ -125,6 +125,8 @@ const PermissionControls = ({xidObj}) => {
 				<div className='row'>
 					<div className="col-md-6 main">
 						{
+							// TODO: (24/10/18) isHeader is a hack. Wanted first item in the list to appear larger
+							// come back and clean this up
 							dataFields.map( field => {
 								// Hard-set 'name' to be header
 								const isHeader = field === 'name';
