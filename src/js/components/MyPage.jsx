@@ -91,7 +91,7 @@ const MyPage = () => {
 			<div className="container avoid-navbar">
 				<CardAccordion widgetName='MyReport' multiple >
 
-					<Card defaultOpen><WelcomeCard xids={xids} /></Card>
+					<Card defaultOpen className="headerCard"><WelcomeCard xids={xids} /></Card>
 
 					<Card title='Our Achievements Together' defaultOpen><StatisticsCard allIds={allIds} /></Card>
 
@@ -122,7 +122,54 @@ const MyPage = () => {
  */
 const DigitalMirrorCardDesign = () => {
 	return (<div>
-		TODO Assuming we have their Twitter profile and we're interrogated it to extract info...
+		<div className="mirror">
+			<div className="row">
+				<div className="col-md-6 main">
+					<div className="row">
+						<div className="col-md-8 header">
+							Irina Preda
+						</div>
+					</div>
+					<div className="row">
+						<div className="col-md-1">
+							<i className="fa fa-venus"></i>
+						</div>
+						<div className="col-md-8">
+						Female
+						</div>
+					</div>
+					<div className="row">
+						<div className="col-md-1">
+							<i className="fa fa-map-marker-alt"></i>
+						</div>
+						<div className="col-md-8">
+						London, UK
+						</div>
+					</div>
+					<div className="row">
+						<div className="col-md-1">
+							<i className="fa fa-briefcase"></i>
+						</div>
+						<div className="col-md-8">
+						Software Developer
+						</div>
+					</div>
+					<div className="row">
+						<div className="col-md-1">
+							<i className="fa fa-heart"></i>
+						</div>
+						<div className="col-md-8">
+						Unknown Relationship Status
+						</div>
+					</div>
+				
+				</div>
+				<div className="col-md-5 map">
+					<img src="https://www.evernote.com/shard/s333/nl/177379658/9582cf85-8671-4f45-adfe-05510ba72481//res/d5d4ea75-e779-45df-80f5-11b084ec4f76/preview.jpg?resizeSmall&width=832" />
+				</div>
+			</div>
+		</div>
+		<div className="pull-right info"><i className="fas fa-info-circle"></i> This data is from Twitter</div>
 	</div>);
 };
 
@@ -140,10 +187,15 @@ const WelcomeCard = ({xids}) => {
 				</div>
 			</div>
 			:
-			<div className="header-text">
-				<p className="title">TAKE CONTROL OF YOUR DATA</p>
-				<p className="subtitle">You choose what data you give us<br/> and what we do with it.</p>
-				<LoginLink className='btn btn-lg btn-red' verb='Sign Up' />				
+			<div className="row">
+				<div className="col-md-1"></div>
+				<div className="col-md-6 header-text frank-font">
+						<p className="title"><span> Become a superhero </span> for the causes you care about</p>
+						<LoginLink className='btn btn-lg btn-red helvetica-font' verb='Sign Up' />			
+				</div>
+				<div className="col-md-5 header-img">
+					<img src="https://image.ibb.co/nuPgJA/hero6.png" />
+				</div>
 			</div>
 		}
 	</div>);
@@ -181,7 +233,7 @@ const StatisticsCard = () => {
 	return (<section className="statistics statistics-what text-center">
 		<div className="statistics-content">
 			<div className="row">
-				<h2 className="h2 text-center">Thousands each month raised for charity</h2>
+				<h2 className="h2 text-center frank-font">Thousands each month raised for charity</h2>
 				<div>&nbsp;</div>
 			</div>
 			<Row3>
