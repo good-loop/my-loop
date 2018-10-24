@@ -92,18 +92,16 @@ const MyPage = () => {
 				<CardAccordion widgetName='MyReport' multiple >
 
 					<Card defaultOpen className="headerCard"><WelcomeCard xids={xids} /></Card>
-
-					<Card title='Our Achievements Together' defaultOpen><StatisticsCard allIds={allIds} /></Card>
-
-					<Card title='How Good-Loop Ads Work' defaultOpen><OnboardingCard allIds={allIds} /></Card>								
-
+					<CardRow3>
+						<Card title='Our Achievements Together' className="MiniCard" defaultOpen><StatisticsCardMini allIds={allIds} /></Card>
+						<Card title='How Good-Loop Ads Work' className="MiniCard" defaultOpen><OnboardingCardMini allIds={allIds} /></Card>								
+						<Card title='Boost Your Impact' defaultOpen><SocialMediaCard allIds={xids} /></Card> 
+					</CardRow3>
 					<Card title='Your Charities' defaultOpen><DonationCard xids={xids} /></Card>
 
 					<Card title='Your Digital Mirror (design @Irina)' defaultOpen><DigitalMirrorCardDesign /></Card> 
 
 					<Card title='Your Digital Mirror (functional @Mark & Dan W)' defaultOpen><DigitalMirrorCard xids={xids} /></Card> 
-
-					<Card title='Boost Your Impact' defaultOpen><SocialMediaCard allIds={xids} /></Card> 
 
 					<Card title='Consent Controls' defaultOpen>{Login.isLoggedIn()? <ConsentWidget xids={xids} /> : <LoginToSee />}</Card>
 
@@ -177,21 +175,29 @@ const WelcomeCard = ({xids}) => {
 	return (<div className="WelcomeCard">
 		{Login.isLoggedIn()? 
 			<div>
-				<div className="pull-right logged-in">
-					<p>Hi { Login.getUser().name || Login.getUser().xid }</p>
-					<small className="pull-right"><a href="#my" onClick={e => stopEvent(e) && Login.logout()}>Log out</a></small>
-				</div>
-				<div className="header-text">
-					<p className="title">TAKE CONTROL OF YOUR DATA</p>
-					<p className="subtitle">You choose what data you give us<br/> and what we do with it.</p>
+				<div className="row">
+					<div className="col-md-1"></div>
+					<div className="col-md-6 header-text">
+						<p className="title frank-font">You're a champion!</p>
+						<p className="subtitle">Find out below how to boost your contribution</p>
+					</div>
+					<div className="col-md-1 header-img">
+						<img src="https://image.ibb.co/nuPgJA/hero6.png" />
+					</div>
+					<div className="col-md-4">
+						<div className="pull-right logged-in">
+							<p>Hi { Login.getUser().name || Login.getUser().xid }</p>
+							<small className="pull-right"><a href="#my" onClick={e => stopEvent(e) && Login.logout()}>Log out</a></small>
+						</div>
+					</div>
 				</div>
 			</div>
 			:
 			<div className="row">
 				<div className="col-md-1"></div>
 				<div className="col-md-6 header-text frank-font">
-						<p className="title"><span> Become a superhero </span> for the causes you care about</p>
-						<LoginLink className='btn btn-lg btn-red helvetica-font' verb='Sign Up' />			
+					<p className="title"><span> Become a superhero </span> for the causes you care about</p>
+					<LoginLink className='btn btn-lg btn-default btn-gl helvetica-font' verb='Sign Up' />			
 				</div>
 				<div className="col-md-5 header-img">
 					<img src="https://image.ibb.co/nuPgJA/hero6.png" />
@@ -199,6 +205,23 @@ const WelcomeCard = ({xids}) => {
 			</div>
 		}
 	</div>);
+};
+
+/**
+ * Convenience hack for 3-cards in a row
+ */
+const CardRow3 = ({children}) => {
+	return (<div className="row">
+		<div className="col-md-4">
+			{children[0]}
+		</div>
+		<div className="col-md-4">
+			{children[1]}
+		</div>
+		<div className="col-md-4">
+			{children[2]}
+		</div>
+</div>);
 };
 
 /**
@@ -233,7 +256,7 @@ const StatisticsCard = () => {
 	return (<section className="statistics statistics-what text-center">
 		<div className="statistics-content">
 			<div className="row">
-				<h2 className="h2 text-center frank-font">Thousands each month raised for charity</h2>
+				<h2 className="h2 text-center helvetica-font">Thousands each month raised for charity</h2>
 				<div>&nbsp;</div>
 			</div>
 			<Row3>
@@ -262,10 +285,51 @@ const StatisticsCard = () => {
 	</section>);
 };
 
+const StatisticsCardMini = () => { 
+	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
+		const name = "total-spend"; // dummy parameter: helps identify request in network tab
+		return ServerIO.getAllSpend({name});
+	});
+	if ( ! pvSum.resolved) {
+		return <Misc.Loading text='Loading donation data...' />;
+	}
+	let ttl = pvSum.value && pvSum.value.total;
+	let cnt = ttl? Math.round(ttl / 0.12) : 100000; // HACK assume 12p per ad
+	// TODO use a call to lg to get a count of minviews for cnt
+
+	return (<section className="statistics statistics-what text-center">
+		<div className="statistics-content">
+			<div className="row">
+				<h2 className="h2 text-center helvetica-font">Thousands each month raised for charity</h2>
+			</div>
+			<div className="row statistics-item">
+				<div className="statistics-value">
+					<div className="statistics-value-highlight"><span>{printer.prettyNumber(cnt)}</span></div>
+					<strong className="statistics-subtext">people reached</strong>
+				</div>
+			</div>
+			<div className="row statistics-item">
+				<div className="statistics-value">
+					<div className="statistics-value-highlight">
+						<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={10} showCurrencySymbol={false} />										
+					</div>
+					<strong className="statistics-subtext">pounds raised</strong>
+				</div>
+			</div>
+			<div className="row statistics-item">
+				<div className="statistics-value">
+					<div className="statistics-value-highlight"><div className="text-stat">No compromises</div></div>
+					<strong className="statistics-subtext">on your privacy</strong>
+				</div>
+			</div>
+		</div>
+	</section>);
+};
+
 const OnboardingCard = ({allIds}) => {
-	let step1Img = 'https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,fl_lossy,h_1440,w_720,f_auto,q_auto/v1/722207/banner-illustration-publisher-no-hearts_lppr8a.jpg';
-	let step2Img = 'https://i.imgur.com/dwvVB2s.jpg';
-	let step3Img = 'https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,fl_lossy,h_1440,w_720,f_auto,q_auto/v1/722207/banner-illustration-publisher_jp1obr.png';
+	let step1Img = 'https://image.ibb.co/nnGOgV/153970313184640369.png';
+	let step2Img = 'https://image.ibb.co/jJm3Fq/153970315675413631.png';
+	let step3Img = 'https://image.ibb.co/fMRQTA/153970316087031793.png';
 
 	return 	(<section id="howitworks" className="how text-center">
 		<div className="how-content container-fluid">
@@ -283,6 +347,34 @@ const OnboardingCard = ({allIds}) => {
 					<span className="how-text">We donate half the ad revenue to your chosen charity</span>
 				</div>
 			</Row3>
+			<div className="row">
+				<center>
+					<a className='btn btn-default' href='https://as.good-loop.com/?site=my.good-loop.com'>Try it now: Watch an Ad-for-Good!</a>
+				</center>
+			</div>
+		</div>
+	</section>);
+};
+
+const OnboardingCardMini = ({allIds}) => {
+	let step1Img = 'https://image.ibb.co/nnGOgV/153970313184640369.png';
+	let step2Img = 'https://image.ibb.co/jJm3Fq/153970315675413631.png';
+	let step3Img = 'https://image.ibb.co/fMRQTA/153970316087031793.png';
+
+	return 	(<section id="howitworks" className="how text-center">
+		<div className="how-content container-fluid">
+			<div className="row how-step">
+				<img className="how-img" src={step1Img} alt='banners in a web page' />
+				<span className="how-text">You see one of our Ads For Good on a website</span>
+			</div>
+			<div className="row how-step">
+				<img className="how-img" src={step2Img} alt='banners in a web page' />
+				<span className="how-text">A video ad plays for 15 seconds</span>
+			</div>
+			<div className="row how-step">
+				<img className="how-img" src={step3Img} alt='banners in a web page' />
+				<span className="how-text">We donate half the ad revenue to your chosen charity</span>
+			</div>
 			<div className="row">
 				<center>
 					<a className='btn btn-default' href='https://as.good-loop.com/?site=my.good-loop.com'>Try it now: Watch an Ad-for-Good!</a>
