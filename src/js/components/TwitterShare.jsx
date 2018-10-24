@@ -61,17 +61,23 @@ class TwitterShare extends React.Component {
 
 		twttrPV.then( scriptLoaded => {
 			if(scriptLoaded) {
-				const {twttr} = window; // placed in to window by file loaded from Twitter CDN (https://platform.twitter.com/widgets.js)
-				const src = adID ? 'https://as.good-loop.com/?gl.vert=' + adID : 'https://as.good-loop.com';
-
-				twttr.widgets.createShareButton(src, this.twitterShareRef, {
-					text: 'I just gave to charity by watching a @GoodLoopHQ ad :)',
-					size: 'large',
-					dnt: 'true' // Do Not Track
-				});
+				insertTweetButton(adID, this);
 			}
 		});
 	} 
+
+	// Handles updating the twitter widget when a new adID is passed in
+	componentWillReceiveProps(nextProps) {
+		// Can't imagine that this would be called before twitterShareRef
+		// is instantiated, but put check in for safety
+		if( (nextProps.adID !== this.props.adID) && this.twitterShareRef) {
+			this.twitterShareRef.innerHTML = '';
+
+			insertTweetButton(nextProps.adID, this);
+
+			this.setState({adID: nextProps.adID});
+		}
+	}
 
 	render() {
 		// Dan had requested that there be some sort of "positive feedback" from share the ad
@@ -83,5 +89,16 @@ class TwitterShare extends React.Component {
 			</div>);
 	}
 }
+
+const insertTweetButton = (adID, context) => {
+	const {twttr} = window; // placed in to window by file loaded from Twitter CDN (https://platform.twitter.com/widgets.js)
+	const src = adID ? 'https://as.good-loop.com/?gl.vert=' + adID : 'https://as.good-loop.com';
+
+	twttr.widgets.createShareButton(src, context.twitterShareRef, {
+		text: 'I just gave to charity by watching a @GoodLoopHQ ad :)',
+		size: 'large',
+		dnt: 'true' // Do Not Track
+	});
+};
 
 module.exports = TwitterShare;

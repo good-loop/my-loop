@@ -96,7 +96,7 @@ class ShareAnAd extends React.Component {
 			<div className="ShareAd">
 				<h2> Share this ad on social media </h2>
 				<div ref={e => this.setRef('adunitRef', e)} />
-				{ adID ? <TwitterShare adID={this.state.adID} /> : null}
+				<TwitterShare adID={this.state.adID} />
 			</div>
 		);
 	}
