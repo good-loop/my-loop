@@ -179,18 +179,19 @@ const WelcomeCard = ({xids}) => {
 						<p className="subtitle">Find out below how to boost your contribution</p>
 					</div>
 					<div className="col-md-1 header-img">
-						<img src="https://image.ibb.co/nuPgJA/hero6.png" />
+						<img src="https://image.ibb.co/eWpfwV/hero7.png" />
 					</div>
 				</div>
 			</div>
 			:
 			<div className="row header">
+				<div className="row blank-row"></div>
 				<div className="col-md-7 header-text frank-font">
 					<p className="title"><span> Become a superhero </span> for the causes you care about</p>
 					<LoginLink className='btn btn-lg btn-default btn-gl helvetica-font' verb='Sign Up' />			
 				</div>
 				<div className="col-md-1 header-img">
-					<img src="https://image.ibb.co/nuPgJA/hero6.png" />
+					<img src="https://image.ibb.co/eWpfwV/hero7.png" />
 				</div>
 			</div>
 		}

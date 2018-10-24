@@ -1,16 +1,23 @@
 @gl-color: #A20F15;
 
-.headerCard .panel-body {
-    padding: 0px;
-}
-
 .page.MyPage {
 	background-color: #F6C390;
 }
 
+// hack to pad out header only pre-sign up 
+.row.blank-row {
+    min-height: 6vmin;
+} // end of hack
+
+// hack to remove panel's default padding
+.headerCard .panel-body {
+    padding: 0px;
+}
+
+// prettify cards
 .panel-body {
 	background-color: #E6E4D6;
-	box-shadow: 0 3px 5px rgba(0,0,0,0.3);
+	box-shadow: 0 3px 5px rgba(0,0,0,0.3); 
 }
 
 .panel-title {
@@ -22,7 +29,7 @@
 .panel-default, .panel-default > .panel-heading{
 	background-color: #F5AA57;
 	border-color: transparent;
-}
+} // end of prettify cards
 
 /* gl button: white button on red background */
 .btn-gl {
@@ -39,13 +46,14 @@
 	color: white;
 } // end of gl button
 
+// card at the head of the page welcoming the user
 .WelcomeCard {
 	//min-height: 500px;
 	color: white;
 	background-color: @gl-color;
 
 	.header {
-		padding: 2vmin 0 6vmin 6vmin;
+		padding: 2vmin 0 6vmin 4vmin;
 	}
 
 	.header-text{
@@ -63,7 +71,7 @@
 	.header-img img {
 		height: 35vmin;
 		width: 35vmin;
-		margin: 0 28%;
+		margin: 0 30%;
 	}
 
 	.title {
@@ -83,6 +91,12 @@
 		padding-bottom: 3vmin;
 		width: 85%;
 		margin: 0 auto;
+	}
+
+	// hack to add some padding and proper size for mobile between sign in button and hero image
+	.btn-gl {
+		margin-bottom: 5vmin;
+		font-size: 2.5vmin;
 	}
 }
 
@@ -192,7 +206,7 @@
 	}
 }
 
-// DigitalMirrorCardDesign (experimental)
+// DigitalMirrorCardDesign: a card for showing the user their twitter data (experimental)
 .mirror {
 	font-size: 22px;
 	line-height: 50px;
@@ -240,6 +254,8 @@
 	}
 } // end of DigitalMirrorCardDesign
 
+// Mark's code for DigitalMirrorCard 
+// TODO: combine DigitalMirrorCard and DigitalMirrorCardDesign and tidy up code
 .vertical-align {
 	display: flex;
 	flex-direction: row;
@@ -247,7 +263,7 @@
 	align-items: center;
 }
 
-// MiniCard (experimental)
+// MiniCard: shrink width of cards to fit 3 in a row (experimental)
 .MiniCard { 
 	.statistics-item {
 		margin: 36px auto;
