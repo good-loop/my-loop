@@ -41,12 +41,15 @@
 
 .WelcomeCard {
 	//min-height: 500px;
-	font-size: 25px;
 	color: white;
 	background-color: @gl-color;
 
+	.header {
+		padding: 2vmin 0 6vmin 6vmin;
+	}
+
 	.header-text{
-		padding: 14vmin 2.5vmin;
+		//padding: 14vmin 0 0 0;
 		vertical-align: middle; 
 		text-align: center;
 		// made text unselectable for hypothetical problems on mobile (it being near a button)
@@ -57,29 +60,41 @@
 				user-select: none; /* Non-prefixed version, currently
 									supported by Chrome and Opera */
 	}
-	.header-img{
-		margin-top:35px;
+	.header-img img {
+		height: 35vmin;
+		width: 35vmin;
+		margin: 0 28%;
 	}
 
 	.title {
-		margin-bottom: 45px;
+		font-size: 3.7vmin;
 		text-transform: uppercase;
 		letter-spacing: 9px;
 		font-weight: 900;
-		line-height: 45px;
+		width: 100%;
+		margin: 0 auto;
+		padding: 6vmin 0 3vmin 0;
 	}
 
 	.subtitle {	
+		font-size: 4vmin;
 		letter-spacing: 6px;
 		font-weight: normal;
-		padding-bottom: 10px;
+		padding-bottom: 3vmin;
+		width: 85%;
+		margin: 0 auto;
 	}
 }
 
 // appears in the top-right of the big red welcome card
 .logged-in {
-	padding-right: 10px;
+	font-size: 25px;
+	padding-right: 30px;
 	padding-top: 10px;
+	
+	p {
+		margin: 0 0 0px;
+	}
 }
 
 //OnboardingCard styles how good loop ads work section 
@@ -112,7 +127,7 @@
 .statistics-content {
     h2 {
         color: #4a4a4a;
-        font-size: 36px;
+		font-size: 28px;
         margin-bottom: 0;
         line-height: 1.5em;
     }
@@ -180,23 +195,27 @@
 // DigitalMirrorCardDesign (experimental)
 .mirror {
 	font-size: 22px;
-	line-height: 6vmin;
+	line-height: 50px;
 	padding-left: 6vmin;
 
 	.header {
 		height: 100%;
-		font-size: 39px;
+		font-size: 30px;
 	}
 
 	.header, .map {
 		margin: 2vmin 0;
 	}
+
+	.fa {
+			padding-right: 20px;
+	}
 	
 	.map img {
 		border-style: dotted;
 		border-width: 1px;
-		height: 220px;
-		width: 350px;
+		height: 70%;
+		width: 84%;
 		margin-top: 10px;
 	}
 	

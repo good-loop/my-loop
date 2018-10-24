@@ -129,35 +129,27 @@ const DigitalMirrorCardDesign = () => {
 						</div>
 					</div>
 					<div className="row">
-						<div className="col-md-1">
+						<div className="col-md-8">
 							<i className="fa fa-venus"></i>
-						</div>
-						<div className="col-md-8">
-						Female
+							Female
 						</div>
 					</div>
 					<div className="row">
-						<div className="col-md-1">
+						<div className="col-md-8">
 							<i className="fa fa-map-marker-alt"></i>
-						</div>
-						<div className="col-md-8">
-						London, UK
+							London, UK
 						</div>
 					</div>
 					<div className="row">
-						<div className="col-md-1">
+						<div className="col-md-8">
 							<i className="fa fa-briefcase"></i>
-						</div>
-						<div className="col-md-8">
-						Software Developer
+							Software Developer
 						</div>
 					</div>
 					<div className="row">
-						<div className="col-md-1">
-							<i className="fa fa-heart"></i>
-						</div>
 						<div className="col-md-8">
-						Unknown Relationship Status
+							<i className="fa fa-heart"></i>
+							Unknown Relationship Status
 						</div>
 					</div>
 				
@@ -176,30 +168,28 @@ const WelcomeCard = ({xids}) => {
 		{Login.isLoggedIn()? 
 			<div>
 				<div className="row">
-					<div className="col-md-1"></div>
-					<div className="col-md-6 header-text">
+					<div className="pull-right logged-in">
+						<p>Hi { Login.getUser().name || Login.getUser().xid }</p>
+						<small className="pull-right"><a href="#my" onClick={e => stopEvent(e) && Login.logout()}>Log out</a></small>
+					</div>
+				</div>
+				<div className="row header">
+					<div className="col-md-7 header-text">
 						<p className="title frank-font">You're a champion!</p>
 						<p className="subtitle">Find out below how to boost your contribution</p>
 					</div>
 					<div className="col-md-1 header-img">
 						<img src="https://image.ibb.co/nuPgJA/hero6.png" />
 					</div>
-					<div className="col-md-4">
-						<div className="pull-right logged-in">
-							<p>Hi { Login.getUser().name || Login.getUser().xid }</p>
-							<small className="pull-right"><a href="#my" onClick={e => stopEvent(e) && Login.logout()}>Log out</a></small>
-						</div>
-					</div>
 				</div>
 			</div>
 			:
-			<div className="row">
-				<div className="col-md-1"></div>
-				<div className="col-md-6 header-text frank-font">
+			<div className="row header">
+				<div className="col-md-7 header-text frank-font">
 					<p className="title"><span> Become a superhero </span> for the causes you care about</p>
 					<LoginLink className='btn btn-lg btn-default btn-gl helvetica-font' verb='Sign Up' />			
 				</div>
-				<div className="col-md-5 header-img">
+				<div className="col-md-1 header-img">
 					<img src="https://image.ibb.co/nuPgJA/hero6.png" />
 				</div>
 			</div>
