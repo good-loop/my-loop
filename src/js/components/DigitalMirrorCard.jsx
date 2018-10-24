@@ -114,13 +114,9 @@ const PermissionControls = ({xidObj}) => {
 	let debounceSaveFn = DataStore.getValue(['widget', 'DigitalMirror', xid, 'debounceSaveFn']);
 
 	if( !debounceSaveFn ) {
-		debounceSaveFn = _.debounce(() => saveFn(xid, dataFields), 5000);
+		debounceSaveFn = _.debounce((field, from) => saveFn(xid, field, from), 5000);
 		DataStore.setValue(['widget', 'DigitalMirror', xid, 'debounceSaveFn'], debounceSaveFn);
 	}
-	// Will be called every time that DigitalMirrorCard is redrawn,
-	// that is to say whenever user modifies data field
-	// Could become an issue if we begin to extend functionality
-	debounceSaveFn();
 
 	return (
 		<div className="social-media-permissions">
@@ -132,10 +128,10 @@ const PermissionControls = ({xidObj}) => {
 							return (
 								<div className='row data-control equal-column-height' key={'data-control-' + field}> 
 									<div className='col-md-6'>
-										<PropControl type="checkbox" path={path.concat(field)} prop={'permission'} label={label(field)} key={field} saveFn={() => saveFn(xid, field)} />
+										<PropControl type="checkbox" path={path.concat(field)} prop={'permission'} label={label(field)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} />
 									</div>
 									<div className='col-md-6'>
-										<PropControl type='text' path={path.concat(field)} prop={'value'} placeholder={field} style={{width: 'auto'}} />
+										<PropControl type='text' path={path.concat(field)} prop={'value'} placeholder={field} style={{width: 'auto'}} saveFn={() => debounceSaveFn(field, 'myloop@app')} />
 									</div>
 								</div>
 							);
@@ -160,8 +156,14 @@ const label = (field) => (
 // Note that this 
 // Want to deal be a able to deal with an array of fields
 // Important for editing data held where we use a "Save" button
-const saveFn = (xid, fields) => {
-	if(_.isString(fields)) fields = [fields];
+/**
+ * @param from optional
+ */
+const saveFn = ({xid, fields, from}) => {
+	if( _.isString(fields) ) fields = [fields];
+
+	if( !from ) from = [xid];
+	else from = xid.concat(from);
 
 	let claims = [];
 
@@ -169,11 +171,15 @@ const saveFn = (xid, fields) => {
 		const data = DataStore.getValue(userdataPath.concat([xid, field]));
 
 		// Allow blank string
-		if( ! data && data !== '' ) return;
+		if( !data && data !== '' ) return;
 	
-		const {value, permission} = data;
-	
-		const claim = Claim.make({key: field, value, from: xid, p: permission});
+		let {value, permission} = data;
+
+		// Make sure this is true OR false
+		// Found this was 'undefined' where no data was loaded for a particular field
+		if( !permission ) permission = false;
+
+		const claim = Claim.make({key: field, value, from, p: permission});
 		claims = claims.concat(claim);
 	});
 
