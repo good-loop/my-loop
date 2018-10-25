@@ -43,11 +43,17 @@ class ShareAnAd extends React.Component {
 		const $div = document.createElement('div');
 		$div.setAttribute('class', 'goodloopad');
 
+		// Choose stickyfooter because it looks ok at any width/height
+		$div.setAttribute('data-format', 'stickyfooter');
+		$div.setAttribute('data-mobile-format', 'stickyfooter');
 
 		iframe.setAttribute('id', 'good-loop-iframe');
-
-		iframe.style.height = '250px';
-		iframe.style.width = '300px';
+		iframe.setAttribute('frameborder', 0);
+		iframe.setAttribute('scrolling', 'auto');
+		
+		iframe.style.height = '102px';
+		iframe.style.width = '100%';
+		iframe.style.display = 'block';
 
 		iframe.addEventListener('load', () => {
 			window.iframe = iframe;
