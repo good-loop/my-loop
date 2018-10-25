@@ -99,9 +99,9 @@ const MyPage = () => {
 					</CardRow3>
 					<Card title='Your Charities' defaultOpen><DonationCard xids={xids} /></Card>
 
-					<Card title='Your Digital Mirror (design @Irina)' defaultOpen><DigitalMirrorCardDesign /></Card> 
+					<Card title='Your Digital Mirror (design @Irina)'><DigitalMirrorCardDesign /></Card> 
 
-					<Card title='Your Digital Mirror (functional @Mark & Dan W)' defaultOpen><DigitalMirrorCard xids={xids} /></Card> 
+					<Card title='Your Digital Mirror (functional @Mark & Dan W)'><DigitalMirrorCard xids={xids} /></Card> 
 
 					<Card title='Consent Controls' defaultOpen>{Login.isLoggedIn()? <ConsentWidget xids={xids} /> : <LoginToSee />}</Card>
 
@@ -136,7 +136,7 @@ const DigitalMirrorCardDesign = () => {
 					</div>
 					<div className="row">
 						<div className="col-md-8">
-							<i className="fa fa-map-marker-alt"></i>
+							<i className="fa fa-globe"></i>
 							London, UK
 						</div>
 					</div>
@@ -155,15 +155,16 @@ const DigitalMirrorCardDesign = () => {
 				
 				</div>
 				<div className="col-md-5 map">
-					<img src="https://www.evernote.com/shard/s333/nl/177379658/9582cf85-8671-4f45-adfe-05510ba72481//res/d5d4ea75-e779-45df-80f5-11b084ec4f76/preview.jpg?resizeSmall&width=832" />
+					<img src="https://image.ibb.co/fL2AWV/preview.jpg" />
 				</div>
 			</div>
 		</div>
-		<div className="pull-right info"><i className="fas fa-info-circle"></i> This data is from Twitter</div>
+		<div className="pull-right info"><i className="fa fa-info-circle"></i> This data is from Twitter</div>
 	</div>);
 };
 
 const WelcomeCard = ({xids}) => {
+	let heroImage = 'https://image.ibb.co/eWpfwV/hero7.png';
 	return (<div className="WelcomeCard">
 		{Login.isLoggedIn()? 
 			<div>
@@ -179,7 +180,7 @@ const WelcomeCard = ({xids}) => {
 						<p className="subtitle">Find out below how to boost your contribution</p>
 					</div>
 					<div className="col-md-1 header-img">
-						<img src="https://image.ibb.co/mCSVVq/hero8.png" />
+						<img src={heroImage} alt="Superhero" />
 					</div>
 				</div>
 			</div>
@@ -191,7 +192,7 @@ const WelcomeCard = ({xids}) => {
 					<LoginLink className='btn btn-lg btn-default btn-gl helvetica-font' verb='Sign Up' />			
 				</div>
 				<div className="col-md-1 header-img">
-					<img src="https://image.ibb.co/eWpfwV/hero7.png" />
+					<img src={heroImage} alt="Superhero" />
 				</div>
 			</div>
 		}
