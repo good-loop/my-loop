@@ -119,6 +119,11 @@ const PermissionControls = ({xidObj}) => {
 		DataStore.setValue(['widget', 'DigitalMirror', xid, 'debounceSaveFn'], debounceSaveFn);
 	}
 
+	const editModeEnabled = DataStore.getValue(['widget', 'DigitalMirror', 'editModeEnabled']);
+	const toggleEditMode = () => {
+		DataStore.setValue(['widget', 'DigitalMirror', 'editModeEnabled'], !editModeEnabled);
+	};
+
 	return (
 		<div>
 			<div className="mirror container">
@@ -127,23 +132,14 @@ const PermissionControls = ({xidObj}) => {
 						{
 							// TODO: (24/10/18) isHeader is a hack. Wanted first item in the list to appear larger
 							// come back and clean this up
-							dataFields.map( field => {
-								// Hard-set 'name' to be header
-								const isHeader = field === 'name';
-
-								return (
-									<div className='row vertical-align' key={'data-control-' + field}> 
-										{isHeader ? null : <div className='col-md-2'><PropControl type="checkbox" path={path.concat(field)} prop={'permission'} label={label(field)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>}
-										<div className={'col-md-8'}><PropControl className={isHeader ? 'header' : ''} type='text' path={path.concat(field)} prop={'value'} placeholder={field} style={{width: 'auto'}} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>
-									</div>
-								);
-							})
+							dataFields.map( field => PermissionControlRow(path, field, debounceSaveFn, editModeEnabled))
 						}
 					</div>
 					<div className='col-md-5 map' />
 				</div>				
 			</div>
-			<div className='text-right info'> <i className="fas fa-info-circle" /> This data was taken from {capitalise(xidObj.service)}</div>			
+			<div className='text-right info'> <i className="fas fa-info-circle" /> This data was taken from {capitalise(xidObj.service)}</div>		
+			<button className='text-left' onClick={toggleEditMode} type='button'> Edit </button>
 		</div>
 	);
 };
@@ -201,9 +197,27 @@ const capitalise = (string) => {
 	return string[0].toUpperCase() + string.slice(1);
 };
 
-/** Convenience for styling, first item is displayed a bit differently from the rest*/
-const HeaderField = (field) => {
+/**TODO: clean this up */
+const PermissionControlRow = (path, field, debounceSaveFn, editModeEnabled) => {
+	// Hard-set 'name' to be header
+	const isHeader = field === 'name';
+	let contents;
 
+	if(editModeEnabled) {
+		return (
+			<div className='row vertical-align' key={'data-control-' + field}> 
+				{isHeader ? null : <div className='col-md-2'><PropControl type="checkbox" path={path.concat(field)} prop={'permission'} label={label(field)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>}
+				<div className={'col-md-8'}><PropControl className={isHeader ? 'header' : ''} type='text' path={path.concat(field)} prop={'value'} placeholder={field} style={{width: 'auto'}} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>
+			</div>	
+		);
+	}
+
+	return (
+		<div className='row vertical-align' key={'data-control-' + field}> 
+			{isHeader ? null : <div className='col-md-2'>{label(field)}</div>}
+			<div className={'col-md-8' + (isHeader ? ' header' : '')}>{DataStore.getValue(path.concat([field, 'value'])) || 'Unknown ' + field}</div>
+		</div>
+	);
 };
 
 module.exports = {
