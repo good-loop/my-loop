@@ -140,8 +140,8 @@ const PermissionControls = ({xidObj}) => {
 					<div className='col-md-5 map' />
 				</div>				
 			</div>
-			<div className='text-right info'> <i className="fas fa-info-circle" /> This data was taken from {capitalise(xidObj.service)}</div>		
-			<button className='text-left' onClick={toggleEditMode} type='button'> Edit </button>
+			<span className='pull-right info'> <i className="fas fa-info-circle" /> This data was taken from {capitalise(xidObj.service)}</span>		
+			<button className='pull-left' onClick={toggleEditMode} type='button'> Edit </button>
 		</div>
 	);
 };
