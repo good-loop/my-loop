@@ -217,7 +217,7 @@ const PermissionControlRow = (path, field, debounceSaveFn, editModeEnabled) => {
 	return (
 		<div className='row vertical-align' key={'data-control-' + field}> 
 			{isHeader ? null : <div className='col-md-1'>{label(field)}</div>}
-			<div className={'col-md-8' + (isHeader ? ' header' : '')}>{DataStore.getValue(path.concat([field, 'value'])) || 'Unknown ' + field}</div>
+			<div className={'col-md-8' + (isHeader ? ' header' : '')}>{DataStore.getValue(path.concat([field, 'value'])) || capitalise(field)}</div>
 		</div>
 	);
 };
