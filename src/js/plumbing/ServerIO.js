@@ -17,7 +17,9 @@ import Messaging, {notifyUser} from '../base/plumbing/Messaging';
 import ServerIO from '../base/plumbing/ServerIOBase';
 export default ServerIO;
 
-ServerIO.dataspace = ''; // This is the dataspace used in unit.js for reporting events 
+/** dataspace = data-controller = (usually) app
+ * This is the dataspace used in unit.js for reporting events */
+ServerIO.dataspace = 'gl';
 
 ServerIO.NO_API_AT_THIS_HOST = true;
 
