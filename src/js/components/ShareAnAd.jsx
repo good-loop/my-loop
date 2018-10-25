@@ -51,7 +51,7 @@ class ShareAnAd extends React.Component {
 		iframe.setAttribute('frameborder', 0);
 		iframe.setAttribute('scrolling', 'auto');
 		
-		iframe.style.height = '100%';
+		iframe.style.height = '102px';
 		iframe.style.width = '100%';
 		iframe.style.display = 'block';
 
