@@ -101,7 +101,7 @@ const MyPage = () => {
 
 					<Card title='Your Digital Mirror (design @Irina)'><DigitalMirrorCardDesign /></Card> 
 
-					<Card title='Your Digital Mirror (functional @Mark & Dan W)'><DigitalMirrorCard xids={xids} /></Card> 
+					<Card title='Your Digital Mirror (functional @Mark & Dan W)' defaultOpen><DigitalMirrorCard xids={xids} /></Card> 
 
 					<Card title='Consent Controls' defaultOpen>{Login.isLoggedIn()? <ConsentWidget xids={xids} /> : <LoginToSee />}</Card>
 

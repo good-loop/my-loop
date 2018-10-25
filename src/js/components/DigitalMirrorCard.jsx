@@ -24,7 +24,7 @@ const IconFromField = {
 	// No icon for this
 	name: null,
 	gender: <i className="fa fa-venus"></i>,
-	location: <i className="fa fa-map-marker-alt"></i>,
+	location: <i className="fa fa-globe"></i>,
 	job: <i className="fa fa-briefcase"></i>,
 	relationship: <i className="fa fa-heart"></i>
 };
@@ -99,6 +99,28 @@ const DigitalMirrorCard = ({xids}) => {
 	);
 };
 
+/**TODO: clean this up */
+const PermissionControlRow = (path, field, debounceSaveFn, editModeEnabled) => {
+	// Hard-set 'name' to be header
+	const isHeader = field === 'name';
+
+	if(editModeEnabled) {
+		return (
+			<div className='row vertical-align' key={'data-control-' + field}> 
+				{isHeader ? null : <div className='col-md-1'><PropControl type="checkbox" path={path.concat(field)} prop={'permission'} label={label(field)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>}
+				<div className={'col-md-8'}><PropControl className={isHeader ? 'header' : ''} type='text' path={path.concat(field)} prop={'value'} placeholder={field} style={{width: 'auto'}} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>
+			</div>	
+		);
+	}
+
+	return (
+		<div className='row vertical-align' key={'data-control-' + field}> 
+			{isHeader ? null : <div className='col-md-1'>{label(field)}</div>}
+			<div className={'col-md-8' + (isHeader ? ' header' : '')}>{DataStore.getValue(path.concat([field, 'value'])) || capitalise(field)}</div>
+		</div>
+	);
+};
+
 /** Checkboxes for all items in 'dataFields'
  *  Can also edit data field when 'edit mode' is enabled.
  */
@@ -115,6 +137,9 @@ const PermissionControls = ({xidObj}) => {
 	// If you don't, a debounce function will be created on each redraw,
 	// causing a save to fire on every key stroke.
 	let debounceSaveFn = DataStore.getValue(['widget', 'DigitalMirror', xid, 'debounceSaveFn']);
+
+	// TODO: fix autosave 
+	let visible = DataStore.getValue(['widget','DigitalMirror','autosaveTriggered']);
 
 	if( !debounceSaveFn ) {
 		debounceSaveFn = _.debounce((field, from) => saveFn(xid, field, from), 5000);
@@ -142,6 +167,7 @@ const PermissionControls = ({xidObj}) => {
 			</div>
 			<span className='pull-right info'> <i className="fas fa-info-circle" /> This data was taken from {capitalise(xidObj.service)}</span>		
 			<button className='pull-left' onClick={toggleEditMode} type='button'> Edit </button>
+			{visible === true ? <div><p>Saved Successfully</p></div> : null}
 		</div>
 	);
 };
@@ -164,6 +190,9 @@ const label = (field) => (
  * @param from optional
  */
 const saveFn = (xid, fields, from) => {
+	// to inform the user that an autosave event happened
+	DataStore.setValue(['widget','DigitalMirror', 'autosaveTriggered'], true);
+	
 	if( _.isString(fields) ) fields = [fields];
 
 	// This is really just a bit of paranoia 
@@ -197,29 +226,6 @@ const saveFn = (xid, fields, from) => {
 /** Little helper method to capitalise first character in a given string */
 const capitalise = (string) => {
 	return string[0].toUpperCase() + string.slice(1);
-};
-
-/**TODO: clean this up */
-const PermissionControlRow = (path, field, debounceSaveFn, editModeEnabled) => {
-	// Hard-set 'name' to be header
-	const isHeader = field === 'name';
-	let contents;
-
-	if(editModeEnabled) {
-		return (
-			<div className='row vertical-align' key={'data-control-' + field}> 
-				{isHeader ? null : <div className='col-md-1'><PropControl type="checkbox" path={path.concat(field)} prop={'permission'} label={label(field)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>}
-				<div className={'col-md-8'}><PropControl className={isHeader ? 'header' : ''} type='text' path={path.concat(field)} prop={'value'} placeholder={field} style={{width: 'auto'}} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>
-			</div>	
-		);
-	}
-
-	return (
-		<div className='row vertical-align' key={'data-control-' + field}> 
-			{isHeader ? null : <div className='col-md-1'>{label(field)}</div>}
-			<div className={'col-md-8' + (isHeader ? ' header' : '')}>{DataStore.getValue(path.concat([field, 'value'])) || capitalise(field)}</div>
-		</div>
-	);
 };
 
 module.exports = {
