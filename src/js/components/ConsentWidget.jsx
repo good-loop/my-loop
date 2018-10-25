@@ -3,7 +3,7 @@ import React from 'react';
 import _ from 'lodash';
 import { assert, assMatch } from 'sjtest';
 import { XId, modifyHash, stopEvent, encURI, yessy } from 'wwutils';
-
+import Cookies from 'js-cookie';
 import C from '../C';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
@@ -39,10 +39,10 @@ const debounceForSameInput = (key, fn, ...other) => {
  */
 const ConsentWidget = ({xids}) => {
 	assert(xids.length, "ConsentWidget.jsx");
-	let path = ['widget', 'ConsentWidget', 'perms'];
+	let path = ['widget', 'ConsentWidget', 'perms'];	
 	let peeps = getProfilesNow(xids);
 	// get and combine the permissions
-	let perms = DataStore.getValue(path) || {};
+	const perms = DataStore.getValue(path) || DataStore.setValue(path, {});
 	peeps.forEach(person => {
 		// hm - orefer true/false/most-recent??
 		let peepPerms = getPermissions({person});
@@ -70,19 +70,32 @@ const ConsentWidget = ({xids}) => {
 		});
 	};
 
+	// The cookie setting is managed by a cookie, as its needed at add-time -- c.f. in unit.js.
+	let dnt = Cookies.get('DNT');
+	perms.cookies = dnt !== '1'; // allow cookies unless DNT=1
+	const toggleDNT = ({value}) => {
+		perms.cookies = value;
+		dnt = value? '0' : '1';
+		Cookies.set('DNT', dnt, {path:'/', domain:'good-loop.com', expires:365});
+	};
+
 	return (
 		<div>
 			<p>Help us boost the money raised for charity using your data - without compromising your privacy.</p>
 			<p>Please can we:</p>
-			
+
+			<PropControl path={path} prop='cookies' 
+				label='Use cookies to record your charity donations, which ads we show you, and how you react to them (e.g. click / ignore / vomit)' 
+				type='yesNo' saveFn={toggleDNT} />
+			{perms.cookies === false? <small>OK - no cookies. Except ironically this has to set a cookie to work.</small> : null}
+
 			<PropControl path={path} prop='personaliseAds' label='Pick ads that fit your profile' type='yesNo' 
 				saveFn={togglePerm}
 			/>
-			
-			<PropControl path={path} prop='recordDonations' label='Record your charity donations' type='yesNo' saveFn={togglePerm} />
 
-			<PropControl path={path} prop='recordAdsBehaviour' label='Record which ads we show you and how you react to them (e.g. click / ignore / vomit)' 
-				type='yesNo' saveFn={togglePerm} />			
+			<PropControl path={path} prop='sendMessages' label='Send updates and commercial messages' type='yesNo' 
+				saveFn={togglePerm}
+			/>
 
 			Sell your data: Hell No
 
