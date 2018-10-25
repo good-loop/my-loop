@@ -139,7 +139,7 @@ const PermissionControls = ({xidObj}) => {
 	let debounceSaveFn = DataStore.getValue(['widget', 'DigitalMirror', xid, 'debounceSaveFn']);
 
 	// TODO: fix autosave 
-	//let visible = DataStore.fetch(['widget','DigitalMirror','autosaveTriggered']) || null;
+	let visible = DataStore.getValue(['widget','DigitalMirror','autosaveTriggered']);
 
 	if( !debounceSaveFn ) {
 		debounceSaveFn = _.debounce((field, from) => saveFn(xid, field, from), 5000);
@@ -167,7 +167,7 @@ const PermissionControls = ({xidObj}) => {
 			</div>
 			<span className='pull-right info'> <i className="fas fa-info-circle" /> This data was taken from {capitalise(xidObj.service)}</span>		
 			<button className='pull-left' onClick={toggleEditMode} type='button'> Edit </button>
-			{/* {visible === true ? <div><p>Saved Successfully</p></div> : null} */}
+			{visible === true ? <div><p>Saved Successfully</p></div> : null}
 		</div>
 	);
 };
@@ -191,7 +191,7 @@ const label = (field) => (
  */
 const saveFn = (xid, fields, from) => {
 	// to inform the user that an autosave event happened
-	DataStore.setValue(['widget','DigitalMirror', xid,'autosaveTriggered'], true);
+	DataStore.setValue(['widget','DigitalMirror', 'autosaveTriggered'], true);
 	
 	if( _.isString(fields) ) fields = [fields];
 
