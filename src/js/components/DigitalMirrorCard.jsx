@@ -108,6 +108,8 @@ const PermissionControls = ({xidObj}) => {
 	const {xid, dataFields} = xidObj;
 	const path = userdataPath.concat(xid);
 
+	// Move debounceSaveFn and editMode in to PermissionControlRow?
+
 	// Save function. Can only be called once every 5 seconds
 	// Important that this be stored somewhere more permanent than the component body
 	// If you don't, a debounce function will be created on each redraw,
@@ -206,7 +208,7 @@ const PermissionControlRow = (path, field, debounceSaveFn, editModeEnabled) => {
 	if(editModeEnabled) {
 		return (
 			<div className='row vertical-align' key={'data-control-' + field}> 
-				{isHeader ? null : <div className='col-md-2'><PropControl type="checkbox" path={path.concat(field)} prop={'permission'} label={label(field)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>}
+				{isHeader ? null : <div className='col-md-1'><PropControl type="checkbox" path={path.concat(field)} prop={'permission'} label={label(field)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>}
 				<div className={'col-md-8'}><PropControl className={isHeader ? 'header' : ''} type='text' path={path.concat(field)} prop={'value'} placeholder={field} style={{width: 'auto'}} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>
 			</div>	
 		);
@@ -214,7 +216,7 @@ const PermissionControlRow = (path, field, debounceSaveFn, editModeEnabled) => {
 
 	return (
 		<div className='row vertical-align' key={'data-control-' + field}> 
-			{isHeader ? null : <div className='col-md-2'>{label(field)}</div>}
+			{isHeader ? null : <div className='col-md-1'>{label(field)}</div>}
 			<div className={'col-md-8' + (isHeader ? ' header' : '')}>{DataStore.getValue(path.concat([field, 'value'])) || 'Unknown ' + field}</div>
 		</div>
 	);
