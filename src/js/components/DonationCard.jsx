@@ -179,15 +179,18 @@ const CharityDonation = ({cid, userTotal, communityTotal}) => {
 	const img = charity.logo || charity.img || "/img/logo-grey.png";
 	return (
 		<div className="col-md-4">
-			<div className="partial-circle big top">
-				<img src={img} className='mx-auto' />
+			<div className="charity-circle">
+				<div className="top">
+					<img src={img} alt={`Logo for ${charity.name}`} className='charity-logo mx-auto' />
+				</div>
+				<div className="bottom">
+					<p className="stats">
+						<Misc.Money amount={communityTotal} />
+					</p>
+				</div>
 			</div>
-			<div className="partial-circle big bottom">
-				<p className="stats">
-					<Misc.Money amount={communityTotal} />
-				</p>
-			</div>
-			<div className='partial-circle-caption'>{charity.displayName || charity.name || cid}</div>
+			
+			<div className='charity-circle-caption'>{charity.displayName || charity.name || cid}</div>
 		</div>
 	);
 };

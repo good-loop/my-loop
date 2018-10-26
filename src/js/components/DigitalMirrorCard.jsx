@@ -6,7 +6,7 @@ import _ from 'lodash';
 import PropControl from '../base/components/PropControl';
 import DataStore from '../base/plumbing/DataStore';
 import Claim from '../base/data/Claim';
-import {saveProfile, getClaimsForXId, saveProfileClaims} from '../base/Profiler';
+import Profiler, {saveProfile, getClaimsForXId, saveProfileClaims} from '../base/Profiler';
 import ServerIO from '../plumbing/ServerIO';
 import Misc from '../base/components/Misc';
 import { XId } from 'wwutils';
@@ -73,7 +73,7 @@ const DigitalMirrorCard = ({xids}) => {
 	xids.forEach(xid => {
 		if (XId.service(xid) !== 'twitter') return; // TODO Facebook etc too
 		DataStore.fetch(['widget','DigitalMirrorCard','analyzeData', xid], () => {
-			return ServerIO.load(ServerIO.PROFILER_ENDPOINT + '/analyze-data/' + escape(xid));
+			return Profiler.requestAnalyzeData(xid);
 		});
 	});	
 
@@ -144,7 +144,7 @@ const PermissionControlRow = (path, field, debounceSaveFn, editModeEnabled) => {
 				{isHeader ? null : <div className='col-md-1'><PropControl type="checkbox" path={fieldPath} prop={'permission'} label={label(field, fieldPath)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>}
 				<div className={'col-md-8'}>
 					<PropControl className={isHeader ? 'header' : ''} type='text' path={fieldPath} prop={'value'} placeholder={field} 
-						style={{width: 'auto'}} saveFn={() => debounceSaveFn(field, 'myloop@app')}
+						saveFn={() => debounceSaveFn(field, 'myloop@app')}
 					/>
 				</div>
 			</div>	
