@@ -165,9 +165,9 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 
 	if(editModeEnabled) {
 		return (
-			<div className='row vertical-align h-50px' key={'data-control-' + field}> 
-				<div className='col-xs-1'><PropControl type="checkbox" path={fieldPath} prop={'permission'} label={label(field, fieldPath)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>
-				<div className={'col-xs-8'}>
+			<div className='row vertical-align revertHeight' key={'data-control-' + field}> 
+				<div className='col-md-1'><PropControl type="checkbox" path={fieldPath} prop={'permission'} label={label(field, fieldPath)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>
+				<div className={'col-md-8'}>
 					<PropControl type={type} options={options} className={isHeader ? 'profile-name' : ''} path={fieldPath} prop={'value'} placeholder={field} 
 						saveFn={() => debounceSaveFn(field, 'myloop@app')}
 					/>
@@ -224,7 +224,7 @@ const PermissionControls = ({xidObj}) => {
 				</div>
 				<div className='container'>
 					<div className='row'>
-						<div className="col-md-6 profile-details">
+						<div className="col-md-4 profile-details">
 							{dataFields.map( fieldObj => PermissionControlRow(path, fieldObj, debounceSaveFn, editModeEnabled))}
 						</div>
 						<div className='col-md-5 profile-photo'>

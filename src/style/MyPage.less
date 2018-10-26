@@ -242,6 +242,11 @@
 		button, input, select, textarea {
 			background: transparent;
 		}
+
+		// hack to allow more space between icon and value (applied to all except profile-name, eg gender, relationship,  etc)
+		.col-md-8:not(.profile-name) {
+			padding-left: 3vmin;
+		}
 	}
 
 	// aligning profile photo with profile details
@@ -252,7 +257,7 @@
 	.profile-name  {
 		height: 100%;
 		font-size: 30px !important;
-		width: 94%;
+		width: 94%; // align it with the value below (relevant when in edit mode)
 	}
 
 	// TODO If you're putting in tweaks, say why -- is this an aesthetic tweak, or fixing a layout bug?
@@ -322,7 +327,7 @@
 
 //  edit button
 .edit {
-	margin: 1.5vmin 0 3.5vmin 0;
+	margin: 1.5vmin 0 3.5vmin 1.3vmin;
 }
 
 // end of DigitalMirrorCardDesign
@@ -335,10 +340,10 @@
 	align-items: center;
 }
 
-// Used to limit height of bootstrap rows in DigitalMirror
-// Setting a fixed height make toggling 'Edit' mode much less jarring
-.h-50px {
-	height: 50px;
+// Used to reset line-height of bootstrap rows in DigitalMirror
+// makes toggling 'Edit' mode much less jarring
+.revertHeight {
+	line-height: initial;
 }
 
 // MiniCard: shrink width of cards to fit 3 in a row (experimental)
