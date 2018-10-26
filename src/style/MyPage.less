@@ -101,92 +101,97 @@
 		margin-bottom: 5vmin;
 		font-size: 2.5vmin;
 	}
-}
 
-// appears in the top-right of the big red welcome card
-.logged-in {
-	font-size: 25px;
-	padding-right: 30px;
-	padding-top: 10px;
-	
-	p {
-		margin: 0 0 0px;
+	// appears in the top-right of the big red welcome card
+	.logged-in {
+		font-size: 25px;
+		padding-right: 30px;
+		padding-top: 10px;
+		
+		p {
+			margin: 0 0 0px;
+		}
 	}
 }
+
 
 //OnboardingCard styles how good loop ads work section 
 #howitworks {
 	line-height: 1.4;
-	font-family: "campton-book",sans-serif;
+	font-family: "campton-book", sans-serif;
 	font-size: 16px;
+
+	.how-text {
+		padding-top: 23px;
+		display: block;
+		width: 160px;
+		max-width: 100%;
+		min-height: 70px;
+		padding-top: 12px;
+		padding-bottom: 20px;
+		margin: 0 auto;
+		color: #4a4a4a;
+		vertical-align: top;
+	}
+	
+	.how-img {
+		height: 132px;
+		max-width: 200px;
+	}
+
+
 }
 
-.how-text {
-	padding-top: 23px;
-	display: block;
-	width: 160px;
-	max-width: 100%;
-	min-height: 70px;
-	padding-top: 12px;
-	padding-bottom: 20px;
-	margin: 0 auto;
-	color: #4a4a4a;
-	vertical-align: top;
-}
 
-.how-img {
-	height: 132px;
-	max-width: 200px;
-}
 // end of OnboardingCard
 
 // StatisticsCard shows e.g. 1,470,000 people reached
 .statistics-content {
-		h2 {
-				color: #4a4a4a;
-		font-size: 28px;
-				margin-bottom: 0;
-				line-height: 1.5em;
+	h2 {
+		color: #4a4a4a;
+	font-size: 28px;
+		margin-bottom: 0;
+		line-height: 1.5em;
+	}
+
+	.statistics-item {
+		text-align: center;
+		font-size: 13px;
+		color: #9b9b9b;
+
+		.statistics-value {
+			text-transform: uppercase;
+			vertical-align: middle;
+
+			.statistics-value-highlight {
+				margin-top: 5px;
+				position: relative;
+				display: block;
+				padding-bottom: 10px;
+				margin-bottom: 10px;
+				font-size: 24px;
+				text-transform: none;
+				color: #4a4a4a;	
+				font-weight: bold;
+			}
+
+			.statistics-value-highlight::after {
+				display: block;
+				position: absolute;
+				content: "";
+				bottom: 0;
+				left: 50%;
+				margin-left: -51px;
+				width: 102px;
+				height: 5px;
+				background: @gl-color;
+			}
 		}
-
-		.statistics-item {
-				text-align: center;
-				font-size: 13px;
-				color: #9b9b9b;
-
-				.statistics-value {
-						text-transform: uppercase;
-						vertical-align: middle;
-
-						.statistics-value-highlight {
-								margin-top: 5px;
-								position: relative;
-								display: block;
-								padding-bottom: 10px;
-								margin-bottom: 10px;
-								font-size: 24px;
-								text-transform: none;
-								color: #4a4a4a;	
-								font-weight: bold;
-						}
-
-						.statistics-value-highlight::after {
-								display: block;
-								position: absolute;
-								content: "";
-								bottom: 0;
-								left: 50%;
-								margin-left: -51px;
-								width: 102px;
-								height: 5px;
-								background: @gl-color;
-						}
-				}
-				.statistics-subtext {
-						display: block;
-						min-height: 36px;
-				}
+		.statistics-subtext {
+			display: block;
+			min-height: 36px;
 		}
+	}
 }  // ./statistics-content (aka Our Achievements Together card)
 
 // this is used for the achievement text-based messages in StatisticsCard

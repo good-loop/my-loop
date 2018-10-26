@@ -86,27 +86,48 @@ const MyPage = () => {
 	return (
 		<div className="page MyPage">
 			<div className="container avoid-navbar">
-				<CardAccordion widgetName='MyReport' multiple >
+				<CardAccordion widgetName="MyReport" multiple >
 
 					<Card defaultOpen className="headerCard"><WelcomeCard xids={xids} /></Card>
 					<CardRow3>
-						<Card title='Our Achievements Together' className="MiniCard" defaultOpen><StatisticsCardMini allIds={allIds} /></Card>
-						<Card title='How Good-Loop Ads Work' className="MiniCard" defaultOpen><OnboardingCardMini allIds={allIds} /></Card>								
-						<Card title='Boost Your Impact' defaultOpen><SocialMediaCard allIds={xids} /></Card> 
+						<Card title="Our Achievements Together" className="StatisticsCard MiniCard" defaultOpen>
+							<StatisticsCardMini allIds={allIds} />
+						</Card>
+						<Card title="How Good-Loop Ads Work" className="StatisticsCard MiniCard" defaultOpen>
+							<OnboardingCardMini allIds={allIds} />
+						</Card>								
+						<Card title="Boost Your Impact" className="SocialMediaCard" defaultOpen>
+							<SocialMediaCard allIds={xids} />
+						</Card> 
 					</CardRow3>
-					<Card title='Your Charities' defaultOpen><DonationCard xids={xids} /></Card>
 
-					<Card title='Your Digital Mirror (design @Irina)'><DigitalMirrorCardDesign /></Card> 
+					<Card title="Your Charities" defaultOpen>
+						<DonationCard xids={xids} />
+					</Card>
 
-					<Card title='Your Digital Mirror (functional @Mark & Dan W)' defaultOpen>
+					<Card title="Your Digital Mirror (design @Irina)">
+						<DigitalMirrorCardDesign />
+					</Card> 
+
+					<Card title="Your Digital Mirror (functional @Mark & Dan W)" defaultOpen>
 						<DigitalMirrorCard xids={xids} />
 					</Card> 
 
-					<Card title='Consent Controls' defaultOpen>{Login.isLoggedIn()? <ConsentWidget xids={xids} /> : <LoginToSee />}</Card>
+					<Card title="Consent Controls" defaultOpen>
+						{Login.isLoggedIn() ? (
+							<ConsentWidget xids={xids} />
+						) : (
+							<LoginToSee />
+						)}
+					</Card>
 
-					<Card title='Get In Touch' defaultOpen><ContactCard allIds={allIds} /></Card>
+					<Card title="Get In Touch" defaultOpen>
+						<ContactCard allIds={allIds} />
+					</Card>
 					
-					<Card title='Linked Profiles' defaultOpen><LinkedProfilesCard xids={xids} /></Card>
+					<Card title="Linked Profiles" defaultOpen>
+						<LinkedProfilesCard xids={xids} />
+					</Card>
 				</CardAccordion>
 			</div>
 			<Footer />
@@ -163,39 +184,46 @@ const DigitalMirrorCardDesign = () => {
 };
 
 const WelcomeCard = ({xids}) => {
-	let heroImage = 'https://image.ibb.co/eWpfwV/hero7.png';
-	return (<div className="WelcomeCard">
-		{Login.isLoggedIn()? 
-			<div>
-				<div className="row">
-					<div className="pull-right logged-in">
-						<p>Hi { Login.getUser().name || Login.getUser().xid }</p>
-						<small className="pull-right"><a href="#my" onClick={e => stopEvent(e) && Login.logout()}>Log out</a></small>
-					</div>
-				</div>
-				<div className="row header">
-					<div className="col-md-7 header-text">
-						<p className="title frank-font">You're a champion!</p>
-						<p className="subtitle">Find out below how to boost your contribution</p>
-					</div>
-					<div className="col-md-1 header-img">
-						<img src={heroImage} alt="Superhero" />
-					</div>
+	const heroImage = 'https://image.ibb.co/eWpfwV/hero7.png';
+
+	const content = Login.isLoggedIn() ? (
+		<div>
+			<div className="row">
+				<div className="pull-right logged-in">
+					<p>Hi { Login.getUser().name || Login.getUser().xid }</p>
+					<small className="pull-right">
+						<a className="logout-link" href="#my" onClick={e => stopEvent(e) && Login.logout()}>&Log out</a>
+					</small>
 				</div>
 			</div>
-			:
 			<div className="row header">
-				<div className="row blank-row"></div>
-				<div className="col-md-7 header-text frank-font">
-					<p className="title"><span> Become a superhero </span> for the causes you care about</p>
-					<LoginLink className='btn btn-lg btn-default btn-gl helvetica-font' verb='Sign Up' />			
+				<div className="col-md-7 header-text">
+					<p className="title frank-font">You're a champion!</p>
+					<p className="subtitle">Find out below how to boost your contribution</p>
 				</div>
 				<div className="col-md-1 header-img">
 					<img src={heroImage} alt="Superhero" />
 				</div>
 			</div>
-		}
-	</div>);
+		</div>
+	) : (
+		<div className="row header">
+			<div className="row blank-row"></div>
+			<div className="col-md-7 header-text frank-font">
+				<p className="title"><span> Become a superhero </span> for the causes you care about</p>
+				<LoginLink className='btn btn-lg btn-default btn-gl helvetica-font' verb='Sign Up' />			
+			</div>
+			<div className="col-md-1 header-img">
+				<img src={heroImage} alt="Superhero" />
+			</div>
+		</div>
+	);
+
+	return (
+		<div className="WelcomeCard">
+			{ content }
+		</div>
+	);
 };
 
 /**
@@ -347,33 +375,37 @@ const StatisticsCardMini = () => {
 // 	</section>);
 // };
 
-const OnboardingCardMini = ({allIds}) => {
-	let step1Img = 'https://image.ibb.co/nnGOgV/153970313184640369.png';
-	let step2Img = 'https://image.ibb.co/jJm3Fq/153970315675413631.png';
-	let step3Img = 'https://image.ibb.co/fMRQTA/153970316087031793.png';
 
-	return 	(<section id="howitworks" className="how text-center">
-		<div className="how-content container-fluid">
-			<div className="row how-step">
-				<img className="how-img" src={step1Img} alt='banners in a web page' />
-				<span className="how-text">You see one of our Ads For Good on a website</span>
+const OnboardingCardMini = () => {
+	const step1Img = 'https://image.ibb.co/nnGOgV/153970313184640369.png';
+	const step2Img = 'https://image.ibb.co/jJm3Fq/153970315675413631.png';
+	const step3Img = 'https://image.ibb.co/fMRQTA/153970316087031793.png';
+
+	return (
+		<section id="howitworks" className="how text-center">
+			<div className="how-content container-fluid">
+				<div className="row how-step">
+					<img className="how-img" src={step1Img} alt='banners in a web page' />
+					<span className="how-text">You see one of our Ads For Good on a website</span>
+				</div>
+				<div className="row how-step">
+					<img className="how-img" src={step2Img} alt='banners in a web page' />
+					<span className="how-text">A video ad plays for 15 seconds</span>
+				</div>
+				<div className="row how-step">
+					<img className="how-img" src={step3Img} alt='banners in a web page' />
+					<span className="how-text">We donate half the ad revenue to your chosen charity</span>
+				</div>
+				<div className="row">
+					<center>
+						<a className='btn btn-default' href='https://as.good-loop.com/?site=my.good-loop.com'>Try it now: Watch an Ad For Good!</a>
+					</center>
+				</div>
 			</div>
-			<div className="row how-step">
-				<img className="how-img" src={step2Img} alt='banners in a web page' />
-				<span className="how-text">A video ad plays for 15 seconds</span>
-			</div>
-			<div className="row how-step">
-				<img className="how-img" src={step3Img} alt='banners in a web page' />
-				<span className="how-text">We donate half the ad revenue to your chosen charity</span>
-			</div>
-			<div className="row">
-				<center>
-					<a className='btn btn-default' href='https://as.good-loop.com/?site=my.good-loop.com'>Try it now: Watch an Ad-for-Good!</a>
-				</center>
-			</div>
-		</div>
-	</section>);
+		</section>
+	);
 };
+
 
 /**
  * Social CTAs: Share on social / connect
@@ -384,39 +416,38 @@ const SocialMediaCard = ({allIds=[]}) => {
 	let fbid = allIds.filter(id => XId.service(id)==='facebook')[0];
 	let fbpeep = getProfilesNow([fbid])[0];	
 
-	return (<div>
-		<p>Connect your social media - you can use this to boost the donations you generate!</p>
-		{emailID ? 
-			null
-			: 
-			null // <div> TODO: email capture </div>
-		}
-		{twitterID ? 
-			<div className='wrapper'>
-				<div>Twitter username: {XId.id(twitterID)}</div>
-			</div>
-			: 
-			<div><SocialSignInButton service='twitter' verb='connect' /></div>
-		}
-		{fbid ? 
-			<div> 
-				Facebook ID: {XId.id(fbid)} {fbpeep? fbpeep.name : null}</div> // TODO show some data about them from FB
-			: 
-			<div><SocialSignInButton service='facebook' verb='connect' /></div>
-		}
-		<ShareAnAd />
-	</div>
+	return (
+		<div>
+			<p>Connect your social media - you can use this to boost the donations you generate!</p>
+			{emailID ? '' : '' /* <div> TODO: email capture </div> */	}
+			{twitterID ? (
+				<div className='wrapper'>
+					<div>Twitter username: {XId.id(twitterID)}</div>
+				</div>
+			) : (
+				<div><SocialSignInButton service='twitter' verb='connect' /></div>
+			)}
+			{fbid ? (
+				// TODO show some data about them from FB
+				<div>Facebook ID: {XId.id(fbid)} {fbpeep? fbpeep.name : ''}</div>
+			) : (
+				<div><SocialSignInButton service='facebook' verb='connect' /></div>
+			)}
+			<ShareAnAd />
+		</div>
 	);
 };
 
 const ContactCard = () => {
-	return (<div>
+	return (
 		<div>
-			<p>Let us know what you think of this web-app, and your ideas for improving it.</p>
-			<p>Are you interested in hosting Ads For Good on your blog or website?</p>
-			<p><a href="https://www.good-loop.com/book-a-call">Let us know.</a></p>
+			<div>
+				<p>Let us know what you think of this web-app, and your ideas for improving it.</p>
+				<p>Are you interested in hosting Ads For Good on your blog or website?</p>
+				<p><a href="https://www.good-loop.com/book-a-call">Let us know.</a></p>
+			</div>
 		</div>
-	</div>);
+	);
 };
 
 const LinkedProfilesCard = ({xids}) => {
