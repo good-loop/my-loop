@@ -98,6 +98,7 @@ const MyPage = () => {
 						</Card>								
 						<Card title="Boost Your Impact" className="SocialMediaCard" defaultOpen>
 							<SocialMediaCard allIds={xids} />
+							<ShareAnAd />
 						</Card> 
 					</CardRow3>
 
@@ -110,6 +111,7 @@ const MyPage = () => {
 					</Card> 
 
 					<Card title="Your Digital Mirror (functional @Mark & Dan W)" defaultOpen>
+						<SocialMediaCard allIds={xids} />						
 						<DigitalMirrorCard xids={xids} />
 					</Card> 
 
@@ -433,7 +435,6 @@ const SocialMediaCard = ({allIds=[]}) => {
 			) : (
 				<div><SocialSignInButton service='facebook' verb='connect' /></div>
 			)}
-			<ShareAnAd />
 		</div>
 	);
 };
