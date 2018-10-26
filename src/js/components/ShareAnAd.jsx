@@ -112,12 +112,21 @@ class ShareAnAd extends React.Component {
 	} 
 
 	render() {
+		// Think we can safely assume that there will always be a 'video' for us to latch on to
 		const {adID, mobileVideo, video} = this.state;
+
+		// COPIED FROM UNIT.JS
+		// Identify if we're on mobile or not
+		let isMobile;
+		if( mobileVideo ) {
+			const userAgent = window.navigator.userAgent || window.navigator.vendor || window.opera;
+			isMobile = !!(userAgent.match('/mobile|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i'));
+		}
 
 		return (
 			<div className="ShareAd">
 				<h2> Share this ad on social media </h2>
-				<video controls="true" width="100%" height="auto" src={video}> An error occured </video>
+				<video controls="true" width="100%" height="auto" src={isMobile? mobileVideo : video}> An error occured </video>
 				<div ref={e => this.setRef('adunitRef', e)} />
 				{ adID ? <TwitterShare adID={this.state.adID} /> : null}
 			</div>
