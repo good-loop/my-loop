@@ -18,6 +18,7 @@ const socialMedia = [
 		service: 'twitter',
 		idHandle: '@twitter',
 		// type should match PropControl type
+		// dictates what sort of input field will be used
 		dataFields: [
 			{
 				field: 'name',
@@ -25,7 +26,7 @@ const socialMedia = [
 			}, 
 			{
 				field: 'gender',
-				type:'select',
+				type:'select', // Drop-down menu
 				options: ['Male', 'Female', 'Other', 'Not specified']
 			}, 
 			{
@@ -164,8 +165,8 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 
 	if(editModeEnabled) {
 		return (
-			<div className='row vertical-align' key={'data-control-' + field}> 
-				{isHeader ? null : <div className='col-md-1'><PropControl type="checkbox" path={fieldPath} prop={'permission'} label={label(field, fieldPath)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>}
+			<div className='row vertical-align h-50px' key={'data-control-' + field}> 
+				<div className='col-md-1'><PropControl type="checkbox" path={fieldPath} prop={'permission'} label={label(field, fieldPath)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>
 				<div className={'col-md-8'}>
 					<PropControl type={type} options={options} className={isHeader ? 'header' : ''} path={fieldPath} prop={'value'} placeholder={field} 
 						saveFn={() => debounceSaveFn(field, 'myloop@app')}

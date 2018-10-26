@@ -216,6 +216,8 @@
 		line-height: 50px;
 
 		// TODO doc - What is this achieving? Why not show/hide in React??
+		// This hides the little tickbox that comes with the standard HTML "Checkbox"
+		// React object is set up such that the label is clickable instead.
 		input[type="checkbox"] {
 			display: none;
 		}
@@ -267,8 +269,17 @@
 	}
 
 	// Why?? And why not do this in React??
+	// This hides the little tickbox that comes with the standard HTML "Checkbox"
+	// React object is set up such that the label is clickable instead.
 	input[type="checkbox"] {
 		display: none;
+	}
+
+	// Override PropControl class
+	// Checkbox adding padding to left of checkbox
+	// was resulting in jarring transition between display and edit mode
+	.checkbox label {
+		padding-left: 0;
 	}
 
 	.input-label {
@@ -310,6 +321,12 @@
 	flex-direction: row;
 	flex-wrap: wrap;
 	align-items: center;
+}
+
+// Used to limit height of bootstrap rows in DigitalMirror
+// Setting a fixed height make toggling 'Edit' mode much less jarring
+.h-50px {
+	height: 50px;
 }
 
 // MiniCard: shrink width of cards to fit 3 in a row (experimental)
