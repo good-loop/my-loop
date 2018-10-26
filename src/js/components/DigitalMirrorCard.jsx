@@ -149,7 +149,7 @@ const DigitalMirrorCard = ({xids}) => {
 			{
 				socialXIds && socialXIds.length > 0
 					? socialXIds.map( xidObj => <PermissionControls xidObj={xidObj} key={xidObj.xid} />)
-					: 'Connect your social media - you can use this to boost the donations you generate!' 
+					: 'You do not appear to have shared any social media data with us' 
 			}
 		</div>
 	);
@@ -237,7 +237,6 @@ const PermissionControls = ({xidObj}) => {
 					<button className='edit' onClick={toggleEditMode} type='button'> Edit </button>
 					{ visible === true ? <span className='autosave'>Saved Successfully</span> : null }
 				</div>
-				<div className='info'> <i className="fa fa-info-circle" /> This data was taken from {capitalise(xidObj.service)}</div>		
 			</div>
 		</div>
 	);

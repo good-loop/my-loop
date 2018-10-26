@@ -424,7 +424,7 @@ const SocialMediaCard = ({allIds=[]}) => {
 			{emailID ? '' : '' /* <div> TODO: email capture </div> */	}
 			{twitterID ? (
 				<div className='wrapper'>
-					{/* <div>Twitter username: {XId.id(twitterID)}</div> */}
+					<p className="connected" ><i className="fa fa-handshake-o" /> Twitter id: {XId.id(twitterID)}</p>
 				</div>
 				) : (
 				<div>

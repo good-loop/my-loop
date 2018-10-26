@@ -198,11 +198,18 @@
 		}
 	}
 }  // ./statistics-content (aka Our Achievements Together card)
-
 // this is used for the achievement text-based messages in StatisticsCard
 
 
-// DigitalMirrorCardDesign: a card for showing the user their twitter data (experimental)
+// SocialMediaCard: a widget for showing connected social media accounts or buttons to connect
+// fixing odd margins on the twitter id display
+.wrapper .connected {
+	margin-left: 0.5vmin;
+}
+// ./SocialMediaCard 
+
+
+// DigitalMirrorCard: a widget for showing the user their twitter data (experimental)
 .mirror {
 	margin-left: 2vmin;
 
@@ -292,14 +299,7 @@
 
 //  edit button
 .edit {
-	margin-left: 2vmin;
-	margin-top: 0.5vmin;
-}
-
-// info message to let the user know the social media source of the data shown
-.info {
-	font-size: 1.5vmin;
-	margin: 3.5vmin 0 1.5vmin 0.5vmin;
+	margin: 0.5vmin 0 3.5vmin 2vmin;
 }
 
 // end of DigitalMirrorCardDesign
@@ -318,3 +318,4 @@
 		margin: 36px auto;
 	}
 }
+
