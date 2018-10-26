@@ -195,29 +195,36 @@
 	padding-bottom: 2px;
 }
 
-.social-media-permissions {
-	input[type="checkbox"] {
-		display: none;
-	}
-
-	input[type="checkbox"]:not(:checked)+div{
-				filter: grayscale(100%);
-	}
-	.form-control {
-		display: inline-block;
-		font-size: 125%;
-	}
-}
-
 // DigitalMirrorCardDesign: a card for showing the user their twitter data (experimental)
 .mirror {
 	font-size: 22px;
 	line-height: 50px;
 	margin-left: 6vmin;
 
-	.header {
+	.main {
+		input[type="checkbox"] {
+			display: none;
+		}
+	
+		input[type="checkbox"]:not(:checked)+div{
+			filter: grayscale(100%);
+		}
+		.form-control {
+			display: inline-block;
+			font-size: 125%;
+			background-color: transparent;
+			width: 80%;
+		}
+	}
+
+	.header  {
 		height: 100%;
 		font-size: 30px !important;
+		width: 94%;
+	}
+
+	.header.form-control  {
+		width: 94%;
 	}
 
 	.header, .map {
@@ -243,6 +250,7 @@
 	
 	input[type="text"] {
 		font-size: 22px;
+		width: 80%;
 	}
 
 	input[type="checkbox"] {

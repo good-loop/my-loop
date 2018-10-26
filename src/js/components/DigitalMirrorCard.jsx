@@ -120,7 +120,7 @@ const PermissionControlRow = (path, field, debounceSaveFn, editModeEnabled) => {
 				{isHeader ? null : <div className='col-md-1'><PropControl type="checkbox" path={path.concat(field)} prop={'permission'} label={label(field)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>}
 				<div className={'col-md-8'}>
 					<PropControl className={isHeader ? 'header' : ''} type='text' path={path.concat(field)} prop={'value'} placeholder={field} 
-						style={{width: 'auto'}} saveFn={() => debounceSaveFn(field, 'myloop@app')} />
+						saveFn={() => debounceSaveFn(field, 'myloop@app')} />
 				</div>
 			</div>	
 		);
