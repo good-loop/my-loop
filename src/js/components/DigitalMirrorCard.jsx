@@ -6,7 +6,7 @@ import _ from 'lodash';
 import PropControl from '../base/components/PropControl';
 import DataStore from '../base/plumbing/DataStore';
 import Claim from '../base/data/Claim';
-import {saveProfile, getClaimsForXId, saveProfileClaims} from '../base/Profiler';
+import Profiler, {saveProfile, getClaimsForXId, saveProfileClaims} from '../base/Profiler';
 import ServerIO from '../plumbing/ServerIO';
 import Misc from '../base/components/Misc';
 import { XId } from 'wwutils';
@@ -50,7 +50,7 @@ const DigitalMirrorCard = ({xids}) => {
 	xids.forEach(xid => {
 		if (XId.service(xid) !== 'twitter') return; // TODO Facebook etc too
 		DataStore.fetch(['widget','DigitalMirrorCard','analyzeData', xid], () => {
-			return ServerIO.load(ServerIO.PROFILER_ENDPOINT + '/analyze-data/' + escape(xid));
+			return Profiler.requestAnalyzeData(xid);
 		});
 	});	
 
