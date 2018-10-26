@@ -6,7 +6,7 @@ import _ from 'lodash';
 import PropControl from '../base/components/PropControl';
 import DataStore from '../base/plumbing/DataStore';
 import Claim from '../base/data/Claim';
-import Profiler, {saveProfile, getClaimsForXId, saveProfileClaims} from '../base/Profiler';
+import {saveProfile, getClaimsForXId, saveProfileClaims} from '../base/Profiler';
 import ServerIO from '../plumbing/ServerIO';
 import Misc from '../base/components/Misc';
 import { XId } from 'wwutils';
@@ -73,7 +73,7 @@ const DigitalMirrorCard = ({xids}) => {
 	xids.forEach(xid => {
 		if (XId.service(xid) !== 'twitter') return; // TODO Facebook etc too
 		DataStore.fetch(['widget','DigitalMirrorCard','analyzeData', xid], () => {
-			return Profiler.requestAnalyzeData(xid);
+			return ServerIO.load(ServerIO.PROFILER_ENDPOINT + '/analyze-data/' + escape(xid));
 		});
 	});	
 
@@ -126,7 +126,7 @@ const DigitalMirrorCard = ({xids}) => {
 			{
 				socialXIds && socialXIds.length > 0
 					? socialXIds.map( xidObj => <PermissionControls xidObj={xidObj} key={xidObj.xid} />)
-					: 'You do not appear to have shared any social media data with us' 
+					: 'Connect your social media - you can use this to boost the donations you generate!' 
 			}
 		</div>
 	);
@@ -192,7 +192,11 @@ const PermissionControls = ({xidObj}) => {
 
 	return (
 		<div>
-			<div className="mirror container">
+			<div className="mirror">
+				<div className='description'>
+					<p>Your data can help us boost the amount that is donated whenever you see one of our ads.</p>
+					<p>And you get to choose what information you share.</p>
+				</div>
 				<div className='row'>
 					<div className="col-md-6 main">
 						{
@@ -204,9 +208,13 @@ const PermissionControls = ({xidObj}) => {
 					<div className='col-md-5 map' />
 				</div>				
 			</div>
-			{/* data might come from Twitter or the user <span className='pull-right info'> <i className="fa fa-info-circle" /> This data was taken from {capitalise(xidObj.service)}</span> */}
-			<button className='pull-left edit' onClick={toggleEditMode} type='button'> Edit </button>
-			{ visible === true ? <div className='autosave'><p>Saved Successfully</p></div> : null }
+			<div>
+				<div>
+					<button className='edit' onClick={toggleEditMode} type='button'> Edit </button>
+					{ visible === true ? <span className='autosave'>Saved Successfully</span> : null }
+				</div>
+				<div className='info'> <i className="fa fa-info-circle" /> This data was taken from {capitalise(xidObj.service)}</div>		
+			</div>
 		</div>
 	);
 };

@@ -202,12 +202,17 @@
 
 // DigitalMirrorCardDesign: a card for showing the user their twitter data (experimental)
 .mirror {
-	font-size: 22px;
-	line-height: 50px;
-	margin-left: 6vmin;
+	margin-left: 2vmin;
+
+	.description {
+		font-size: 16px;
+	}
 
 	// TODO avoid names like "main" in favour of more specific
 	.main {
+		font-size: 22px;
+		line-height: 50px;
+
 		// TODO doc - What is this achieving? Why not show/hide in React??
 		input[type="checkbox"] {
 			display: none;
@@ -254,11 +259,6 @@
 	// 	margin-top: 10px;
 	// }
 	
-	.info {
-		font-size: 2.5vmin;
-		margin-right: 25vmin;
-	}
-	
 	input[type="text"] {
 		font-size: 22px;
 		width: 80%;
@@ -282,19 +282,26 @@
 	}
 }
 
+// autosave message to inform user that their edits have been saved
 .autosave {
-		margin-top: 2.7vmin;
-		margin-left: 13vmin;
+	margin-top: 2.7vmin;
+	margin-left: 2vmin;
 }
 
+//  edit button
 .edit {
-	margin-left: 6vmin;
-	margin-top: 2vmin;
+	margin-left: 2vmin;
+	margin-top: 0.5vmin;
+}
+
+// info message to let the user know the social media source of the data shown
+.info {
+	font-size: 1.5vmin;
+	margin: 3.5vmin 0 1.5vmin 0.5vmin;
 }
 
 // end of DigitalMirrorCardDesign
 
-// Mark's code for DigitalMirrorCard 
 // TODO: combine DigitalMirrorCard and DigitalMirrorCardDesign and tidy up code
 .vertical-align {
 	display: flex;

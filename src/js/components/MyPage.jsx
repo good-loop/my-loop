@@ -111,8 +111,8 @@ const MyPage = () => {
 					</Card> 
 
 					<Card title="Your Digital Mirror (functional @Mark & Dan W)" defaultOpen>
-						<SocialMediaCard allIds={xids} />						
 						<DigitalMirrorCard xids={xids} />
+						<SocialMediaCard allIds={xids} />						
 					</Card> 
 
 					<Card title="Consent Controls" defaultOpen>
@@ -420,20 +420,23 @@ const SocialMediaCard = ({allIds=[]}) => {
 
 	return (
 		<div>
-			<p>Connect your social media - you can use this to boost the donations you generate!</p>
 			{emailID ? '' : '' /* <div> TODO: email capture </div> */	}
 			{twitterID ? (
 				<div className='wrapper'>
-					<div>Twitter username: {XId.id(twitterID)}</div>
+					{/* <div>Twitter username: {XId.id(twitterID)}</div> */}
 				</div>
-			) : (
-				<div><SocialSignInButton service='twitter' verb='connect' /></div>
+				) : (
+				<div>
+					<SocialSignInButton service='twitter' verb='connect' />
+				</div>
 			)}
 			{fbid ? (
 				// TODO show some data about them from FB
 				<div>Facebook ID: {XId.id(fbid)} {fbpeep? fbpeep.name : ''}</div>
 			) : (
-				<div><SocialSignInButton service='facebook' verb='connect' /></div>
+				<div>
+					<div><SocialSignInButton service='facebook' verb='connect' /></div>
+				</div>	
 			)}
 		</div>
 	);
