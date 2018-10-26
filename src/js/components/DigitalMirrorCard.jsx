@@ -6,7 +6,7 @@ import _ from 'lodash';
 import PropControl from '../base/components/PropControl';
 import DataStore from '../base/plumbing/DataStore';
 import Claim from '../base/data/Claim';
-import {saveProfile, getClaimsForXId, saveProfileClaims, requestAnalyzeData} from '../base/Profiler';
+import Profiler, {saveProfile, getClaimsForXId, saveProfileClaims} from '../base/Profiler';
 import ServerIO from '../plumbing/ServerIO';
 import Misc from '../base/components/Misc';
 import { XId } from 'wwutils';
@@ -96,7 +96,7 @@ const DigitalMirrorCard = ({xids}) => {
 	// call analyze data, once per XId
 	xids.forEach(xid => {
 		if (XId.service(xid) !== 'twitter') return; // TODO Facebook etc too
-		DataStore.fetch(['widget','DigitalMirrorCard','analyzeData', xid], () => requestAnalyzeData(xid));
+		DataStore.fetch(['widget','DigitalMirrorCard','analyzeData', xid], () => Profiler.requestAnalyzeData(xid));
 	});	
 
 	// ??Switch to using [draft, Person, xid] as the storage for edits
@@ -235,7 +235,7 @@ const PermissionControls = ({xidObj}) => {
 			</div>
 			<div>
 				<div>
-					<button className='edit' onClick={toggleEditMode} type='button'> Edit </button>
+					<button className='btn btn-default edit' onClick={toggleEditMode} type='button'> Edit </button>
 					{ visible === true ? <span className='autosave'>Saved Successfully</span> : null }
 				</div>
 			</div>
