@@ -420,6 +420,7 @@ const SocialMediaCard = ({allIds=[]}) => {
 
 	return (
 		<div>
+			<p>Connect your social media - you can use this to boost the donations you generate!</p>
 			{emailID ? '' : '' /* <div> TODO: email capture </div> */	}
 			{twitterID ? (
 				<div className='wrapper'>

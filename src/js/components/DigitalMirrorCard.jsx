@@ -36,7 +36,7 @@ const iconFromField = (field, value) => {
 			default:<i className="fa fa-genderless" />, 
 			female: <i className="fa fa-venus" />, 
 			male: <i className="fa fa-mars" />
-		}, // FIXME This MUST be dynamic - we can't show female for male
+		}, 
 		location: {
 			default: <i className="fa fa-globe" />
 		},
