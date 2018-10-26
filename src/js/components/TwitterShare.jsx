@@ -1,3 +1,11 @@
+
+// This is making noise in the js console -- it's probably repeatedly calling Twitter.
+// TODO We don't need to use the Twitter button. We can use a dialog, with an iframe using a twitter intent url
+// MVP: just use a a tag (no dialog no iframe)
+// copy-pasta from https://as.good-loop.com:
+// <a href="https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Fas.good-loop.com%2F&amp;ref_src=twsrc%5Etfw&amp;text=I%20just%20gave%20to%20charity%20by%20watching%20a%20%40GoodLoopHQ%20ad%20%3A)&amp;tw_p=tweetbutton&amp;url=https%3A%2F%2Fas.good-loop.com%2F%3Fvert%3Dvert_ajdoxcbg" class="btn" id="b"><i></i><span class="label" id="l">Tweet</span></a>
+
+
 // Twitter share button wrapped in React component
 // Is a bit fiddly as their API is intended to be used with Vanilla JS/jQuery
 
