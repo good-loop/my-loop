@@ -21,16 +21,39 @@ const socialMedia = [
 	}
 ];
 
-const IconFromField = {
-	// No icon for this
-	name: null,
-	gender: <i className="fa fa-venus"></i>, // FIXME This MUST be dynamic - we can't show female for male
-	location: <i className="fa fa-globe"></i>,
-	job: <i className="fa fa-briefcase"></i>,
-	relationship: <i className="fa fa-heart"></i>
-};
-
 const userdataPath = ['widget', 'DigitalMirror', 'userdata'];
+
+const iconFromField = (field, value) => {
+	if( !_.isString(value) ) value = `${value}`; 
+	value = value.toLowerCase();
+
+	const icons = {
+		// No icon for this
+		name: {
+			default: null
+		},
+		gender: {
+			default:<i className="fa fa-genderless" />, 
+			female: <i className="fa fa-venus" />, 
+			male: <i className="fa fa-mars" />
+		}, // FIXME This MUST be dynamic - we can't show female for male
+		location: {
+			default: <i className="fa fa-globe" />
+		},
+		job: {
+			default: <i className="fa fa-briefcase" />
+		},
+		relationship: {
+			default: <i className="fa fa-heart" />
+		}
+	};
+
+	const iconField = icons[field];
+
+	if( !iconField ) return null;
+
+	return icons[field][value] ? icons[field][value] : icons[field]['default']; 
+};
 
 // TODO: Think that this will need to change significantly in future
 // Rough form: can open menu to see specific data we've found and where it's come from
@@ -113,14 +136,16 @@ const DigitalMirrorCard = ({xids}) => {
 const PermissionControlRow = (path, field, debounceSaveFn, editModeEnabled) => {
 	// Hard-set 'name' to be header
 	const isHeader = field === 'name';
+	const fieldPath = path.concat(field);
 
 	if(editModeEnabled) {
 		return (
 			<div className='row vertical-align' key={'data-control-' + field}> 
-				{isHeader ? null : <div className='col-md-1'><PropControl type="checkbox" path={path.concat(field)} prop={'permission'} label={label(field)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>}
+				{isHeader ? null : <div className='col-md-1'><PropControl type="checkbox" path={fieldPath} prop={'permission'} label={label(field, fieldPath)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>}
 				<div className={'col-md-8'}>
-					<PropControl className={isHeader ? 'header' : ''} type='text' path={path.concat(field)} prop={'value'} placeholder={field} 
-						style={{width: 'auto'}} saveFn={() => debounceSaveFn(field, 'myloop@app')} />
+					<PropControl className={isHeader ? 'header' : ''} type='text' path={fieldPath} prop={'value'} placeholder={field} 
+						style={{width: 'auto'}} saveFn={() => debounceSaveFn(field, 'myloop@app')}
+					/>
 				</div>
 			</div>	
 		);
@@ -128,7 +153,7 @@ const PermissionControlRow = (path, field, debounceSaveFn, editModeEnabled) => {
 
 	return (
 		<div className='row vertical-align' key={'data-control-' + field}> 
-			{isHeader ? null : <div className='col-md-1'>{label(field)}</div>}
+			{isHeader ? null : <div className='col-md-1'>{label(field, fieldPath)}</div>}
 			<div className={'col-md-8' + (isHeader ? ' header' : '')}>{DataStore.getValue(path.concat([field, 'value'])) || capitalise(field)}</div>
 		</div>
 	);
@@ -188,13 +213,21 @@ const PermissionControls = ({xidObj}) => {
 
 // This is just a proof of concept.
 // If we end up going with this method, would want to use images that represent the relevant data field
-const label = (field) => (	
-	IconFromField[field] ? (
-		<div className="input-label">
-			{IconFromField[field]}
-		</div>
-	): null
-);
+const label = (field, fieldPath) => {
+	let fieldValue = DataStore.getValue(fieldPath);
+	// If there is data, will be in form {permission: bool, value: 'val'}
+	fieldValue = fieldValue && fieldValue.value;
+
+	const icon = iconFromField(field, fieldValue);
+
+	return (	
+		icon ? (
+			<div className="input-label">
+				{icon}
+			</div>
+		): null
+	);
+};
 
 // TODO use Crud instead
 // Save updated parameters to user's Profiler space
