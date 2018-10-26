@@ -1,27 +1,24 @@
-import React from 'react';
+/**
+ * The core page of My-Loop
+ */
 import Cookies from 'js-cookie';
-import _ from 'lodash';
-import { assert, assMatch } from 'sjtest';
-import { XId, modifyHash, stopEvent, encURI, yessy } from 'wwutils';
-import pivot from 'data-pivot';
-import C from '../C';
-import ServerIO from '../plumbing/ServerIO';
-import DataStore from '../base/plumbing/DataStore';
-import Person from '../base/data/Person';
-import Misc from '../base/components/Misc';
-import CardAccordion, {Card} from '../base/components/CardAccordion';
-import ActionMan from '../plumbing/ActionMan';
-import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
+import React from 'react';
+import { stopEvent, XId } from 'wwutils';
 import Login from 'you-again';
-import {LoginLink, SocialSignInButton} from '../base/components/LoginWidget';
-import {LoginToSee} from './Bits';
-import {getProfile, getProfilesNow} from '../base/Profiler';
-import ConsentWidget from './ConsentWidget';
+import CardAccordion, { Card } from '../base/components/CardAccordion';
+import { LoginLink, SocialSignInButton } from '../base/components/LoginWidget';
+import Misc from '../base/components/Misc';
+import Person from '../base/data/Person';
+import DataStore from '../base/plumbing/DataStore';
+import { getProfile, getProfilesNow } from '../base/Profiler';
 import printer from '../base/utils/printer';
-import DonationCard from './DonationCard';
+import DigitalMirrorCard from '../components/DigitalMirrorCard';
 import Footer from '../components/Footer';
 import ShareAnAd from '../components/ShareAnAd';
-import {DigitalMirrorCard} from '../components/DigitalMirrorCard';
+import ServerIO from '../plumbing/ServerIO';
+import { LoginToSee } from './Bits';
+import ConsentWidget from './ConsentWidget';
+import DonationCard from './DonationCard';
 
 const fetcher = xid => DataStore.fetch(['data', 'Person', xid], () => {
 	return getProfile({xid});
@@ -101,7 +98,9 @@ const MyPage = () => {
 
 					<Card title='Your Digital Mirror (design @Irina)'><DigitalMirrorCardDesign /></Card> 
 
-					<Card title='Your Digital Mirror (functional @Mark & Dan W)' defaultOpen><DigitalMirrorCard xids={xids} /></Card> 
+					<Card title='Your Digital Mirror (functional @Mark & Dan W)' defaultOpen>
+						<DigitalMirrorCard xids={xids} />
+					</Card> 
 
 					<Card title='Consent Controls' defaultOpen>{Login.isLoggedIn()? <ConsentWidget xids={xids} /> : <LoginToSee />}</Card>
 
@@ -233,49 +232,49 @@ const Row3 = ({children}) => {
 </div>);
 };
 
-const StatisticsCard = () => { 
-	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
-		const name = "total-spend"; // dummy parameter: helps identify request in network tab
-		return ServerIO.getAllSpend({name});
-	});
-	if ( ! pvSum.resolved) {
-		return <Misc.Loading text='Loading donation data...' />;
-	}
-	let ttl = pvSum.value && pvSum.value.total;
-	let cnt = ttl? Math.round(ttl / 0.12) : 100000; // HACK assume 12p per ad
-	// TODO use a call to lg to get a count of minviews for cnt
+// const StatisticsCard = () => { 
+// 	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
+// 		const name = "total-spend"; // dummy parameter: helps identify request in network tab
+// 		return ServerIO.getAllSpend({name});
+// 	});
+// 	if ( ! pvSum.resolved) {
+// 		return <Misc.Loading text='Loading donation data...' />;
+// 	}
+// 	let ttl = pvSum.value && pvSum.value.total;
+// 	let cnt = ttl? Math.round(ttl / 0.12) : 100000; // HACK assume 12p per ad
+// 	// TODO use a call to lg to get a count of minviews for cnt
 
-	return (<section className="statistics statistics-what text-center">
-		<div className="statistics-content">
-			<div className="row">
-				<h2 className="h2 text-center helvetica-font">Thousands each month raised for charity</h2>
-				<div>&nbsp;</div>
-			</div>
-			<Row3>
-				<div className="statistics-item">
-					<div className="statistics-value">
-						<div className="statistics-value-highlight"><span>{printer.prettyNumber(cnt)}</span></div>
-						<strong className="statistics-subtext">people reached</strong>
-					</div>
-				</div>
-				<div className="statistics-item">
-					<div className="statistics-value">
-						<div className="statistics-value-highlight">
-							<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={10} showCurrencySymbol={false} />										
-						</div>
-						<strong className="statistics-subtext">pounds raised</strong>
-					</div>
-				</div>
-				<div className="statistics-item">
-					<div className="statistics-value">
-						<div className="statistics-value-highlight"><div className="text-stat">No compromises</div></div>
-						<strong className="statistics-subtext">on your privacy</strong>
-					</div>
-				</div>
-			</Row3>
-		</div>
-	</section>);
-};
+// 	return (<section className="statistics statistics-what text-center">
+// 		<div className="statistics-content">
+// 			<div className="row">
+// 				<h2 className="h2 text-center helvetica-font">Thousands each month raised for charity</h2>
+// 				<div>&nbsp;</div>
+// 			</div>
+// 			<Row3>
+// 				<div className="statistics-item">
+// 					<div className="statistics-value">
+// 						<div className="statistics-value-highlight"><span>{printer.prettyNumber(cnt)}</span></div>
+// 						<strong className="statistics-subtext">people reached</strong>
+// 					</div>
+// 				</div>
+// 				<div className="statistics-item">
+// 					<div className="statistics-value">
+// 						<div className="statistics-value-highlight">
+// 							<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={10} showCurrencySymbol={false} />										
+// 						</div>
+// 						<strong className="statistics-subtext">pounds raised</strong>
+// 					</div>
+// 				</div>
+// 				<div className="statistics-item">
+// 					<div className="statistics-value">
+// 						<div className="statistics-value-highlight"><div className="text-stat">No compromises</div></div>
+// 						<strong className="statistics-subtext">on your privacy</strong>
+// 					</div>
+// 				</div>
+// 			</Row3>
+// 		</div>
+// 	</section>);
+// };
 
 const StatisticsCardMini = () => { 
 	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
@@ -318,35 +317,35 @@ const StatisticsCardMini = () => {
 	</section>);
 };
 
-const OnboardingCard = ({allIds}) => {
-	let step1Img = 'https://image.ibb.co/nnGOgV/153970313184640369.png';
-	let step2Img = 'https://image.ibb.co/jJm3Fq/153970315675413631.png';
-	let step3Img = 'https://image.ibb.co/fMRQTA/153970316087031793.png';
+// const OnboardingCard = ({allIds}) => {
+// 	let step1Img = 'https://image.ibb.co/nnGOgV/153970313184640369.png';
+// 	let step2Img = 'https://image.ibb.co/jJm3Fq/153970315675413631.png';
+// 	let step3Img = 'https://image.ibb.co/fMRQTA/153970316087031793.png';
 
-	return 	(<section id="howitworks" className="how text-center">
-		<div className="how-content container-fluid">
-			<Row3>
-				<div className="how-step">
-					<img className="how-img" src={step1Img} alt='banners in a web page' />
-					<span className="how-text">You see one of our Ads For Good on a website</span>
-				</div>
-				<div className="how-step">
-					<img className="how-img" src={step2Img} alt='banners in a web page' />
-					<span className="how-text">A video ad plays for 15 seconds</span>
-				</div>
-				<div className="how-step">
-					<img className="how-img" src={step3Img} alt='banners in a web page' />
-					<span className="how-text">We donate half the ad revenue to your chosen charity</span>
-				</div>
-			</Row3>
-			<div className="row">
-				<center>
-					<a className='btn btn-default' href='https://as.good-loop.com/?site=my.good-loop.com'>Try it now: Watch an Ad-for-Good!</a>
-				</center>
-			</div>
-		</div>
-	</section>);
-};
+// 	return 	(<section id="howitworks" className="how text-center">
+// 		<div className="how-content container-fluid">
+// 			<Row3>
+// 				<div className="how-step">
+// 					<img className="how-img" src={step1Img} alt='banners in a web page' />
+// 					<span className="how-text">You see one of our Ads For Good on a website</span>
+// 				</div>
+// 				<div className="how-step">
+// 					<img className="how-img" src={step2Img} alt='banners in a web page' />
+// 					<span className="how-text">A video ad plays for 15 seconds</span>
+// 				</div>
+// 				<div className="how-step">
+// 					<img className="how-img" src={step3Img} alt='banners in a web page' />
+// 					<span className="how-text">We donate half the ad revenue to your chosen charity</span>
+// 				</div>
+// 			</Row3>
+// 			<div className="row">
+// 				<center>
+// 					<a className='btn btn-default' href='https://as.good-loop.com/?site=my.good-loop.com'>Try it now: Watch an Ad-for-Good!</a>
+// 				</center>
+// 			</div>
+// 		</div>
+// 	</section>);
+// };
 
 const OnboardingCardMini = ({allIds}) => {
 	let step1Img = 'https://image.ibb.co/nnGOgV/153970313184640369.png';
@@ -376,6 +375,9 @@ const OnboardingCardMini = ({allIds}) => {
 	</section>);
 };
 
+/**
+ * Social CTAs: Share on social / connect
+ */
 const SocialMediaCard = ({allIds=[]}) => {
 	let emailID = allIds.filter(id => XId.service(id)==='email')[0];
 	let twitterID = allIds.filter(id => XId.service(id)==='twitter')[0];
@@ -392,7 +394,6 @@ const SocialMediaCard = ({allIds=[]}) => {
 		{twitterID ? 
 			<div className='wrapper'>
 				<div>Twitter username: {XId.id(twitterID)}</div>
-				<button className='btn btn-default' onClick={ e => ServerIO.load(ServerIO.PROFILER_ENDPOINT + '/analyze-data/' + escape(twitterID))}>Refresh</button>
 			</div>
 			: 
 			<div><SocialSignInButton service='twitter' verb='connect' /></div>

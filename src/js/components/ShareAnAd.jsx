@@ -125,4 +125,4 @@ class ShareAnAd extends React.Component {
 	}
 }
 
-module.exports = ShareAnAd;
+export default ShareAnAd;

@@ -9,6 +9,7 @@ import Claim from '../base/data/Claim';
 import {saveProfile, getClaimsForXId, saveProfileClaims} from '../base/Profiler';
 import ServerIO from '../plumbing/ServerIO';
 import Misc from '../base/components/Misc';
+import { XId } from 'wwutils';
 
 // @param dataFields: data that we would like to pull from corresponding social media site's API
 // Just Twitter for the moment.
@@ -23,7 +24,7 @@ const socialMedia = [
 const IconFromField = {
 	// No icon for this
 	name: null,
-	gender: <i className="fa fa-venus"></i>,
+	gender: <i className="fa fa-venus"></i>, // FIXME This MUST be dynamic - we can't show female for male
 	location: <i className="fa fa-globe"></i>,
 	job: <i className="fa fa-briefcase"></i>,
 	relationship: <i className="fa fa-heart"></i>
@@ -43,6 +44,15 @@ const userdataPath = ['widget', 'DigitalMirror', 'userdata'];
 
 const DigitalMirrorCard = ({xids}) => {
 	if(!xids) return null;
+	assMatch(xids, 'String[]');
+
+	// call analyze data, once per XId
+	xids.forEach(xid => {
+		if (XId.service(xid) !== 'twitter') return; // TODO Facebook etc too
+		DataStore.fetch(['widget','DigitalMirrorCard','analyzeData', xid], () => {
+			return ServerIO.load(ServerIO.PROFILER_ENDPOINT + '/analyze-data/' + escape(xid));
+		});
+	});	
 
 	// ??Switch to using [draft, Person, xid] as the storage for edits
 	// -- and hence reuse some existing Crud code.
@@ -64,10 +74,7 @@ const DigitalMirrorCard = ({xids}) => {
 			// We are currently just reading from Claims
 			// Might want to pay more attention to std, custom after we've added multiple data sources
 			const {std, custom} = DataStore.getValue(readPath) || {std: null, custom: null};
-			let writeData = null;//std && custom ? Object.assign(std, custom) : null;
-
-			// Nothing in std or custom, try to pull from Claims instead
-			if( !writeData ) writeData = getClaimsForXId(xid);
+			let writeData = getClaimsForXId(xid);//std && custom ? Object.assign(std, custom) : null;
 
 			DataStore.setValue(writePath, writeData , false);
 		}
@@ -77,6 +84,7 @@ const DigitalMirrorCard = ({xids}) => {
 	// combined with blob of data from "socialMedia"
 	// e.g [{xid: 'fakeuser@twitter', service: 'twitter', idHandle: '@twitter', dataFields:['location', 'relationship', 'job', 'gender']}]
 	const socialXIds = socialMedia.reduce( (out, socialMediaService) => {
+		// Minor TODO use the XId.service() method here
 		// @email, @twitter, @facebook ...
 		const {idHandle} = socialMediaService;
 		// implicitly assuming that there is only going to be one xid per social media service
@@ -86,6 +94,8 @@ const DigitalMirrorCard = ({xids}) => {
 
 		return out.concat({xid, ...socialMediaService});
 	}, []);
+
+	// TODO if someone attaches two social medias -- we want to show one profile, which is a merge of them representing our best guess.
 
 	return (
 		<div>
@@ -108,7 +118,10 @@ const PermissionControlRow = (path, field, debounceSaveFn, editModeEnabled) => {
 		return (
 			<div className='row vertical-align' key={'data-control-' + field}> 
 				{isHeader ? null : <div className='col-md-1'><PropControl type="checkbox" path={path.concat(field)} prop={'permission'} label={label(field)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>}
-				<div className={'col-md-8'}><PropControl className={isHeader ? 'header' : ''} type='text' path={path.concat(field)} prop={'value'} placeholder={field} style={{width: 'auto'}} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>
+				<div className={'col-md-8'}>
+					<PropControl className={isHeader ? 'header' : ''} type='text' path={path.concat(field)} prop={'value'} placeholder={field} 
+						style={{width: 'auto'}} saveFn={() => debounceSaveFn(field, 'myloop@app')} />
+				</div>
 			</div>	
 		);
 	}
@@ -121,7 +134,10 @@ const PermissionControlRow = (path, field, debounceSaveFn, editModeEnabled) => {
 	);
 };
 
-/** Checkboxes for all items in 'dataFields'
+/** 
+ * TODO Try to avoid adhoc data structures like xidObj -- they easily get confusing.
+ * 
+ * Checkboxes for all items in 'dataFields'
  *  Can also edit data field when 'edit mode' is enabled.
  */
 const PermissionControls = ({xidObj}) => {
@@ -137,13 +153,12 @@ const PermissionControls = ({xidObj}) => {
 	// If you don't, a debounce function will be created on each redraw,
 	// causing a save to fire on every key stroke.
 	let debounceSaveFn = DataStore.getValue(['widget', 'DigitalMirror', xid, 'debounceSaveFn']);
-
-	let visible = DataStore.getValue(['widget','DigitalMirror','autosaveTriggered']);
-
 	if( !debounceSaveFn ) {
 		debounceSaveFn = _.debounce((field, from) => saveFn(xid, field, from), 1000);
 		DataStore.setValue(['widget', 'DigitalMirror', xid, 'debounceSaveFn'], debounceSaveFn);
 	}
+
+	let visible = DataStore.getValue(['widget','DigitalMirror','autosaveTriggered']);
 
 	const editModeEnabled = DataStore.getValue(['widget', 'DigitalMirror', 'editModeEnabled']);
 	const toggleEditMode = () => {
@@ -181,6 +196,7 @@ const label = (field) => (
 	): null
 );
 
+// TODO use Crud instead
 // Save updated parameters to user's Profiler space
 // Note that this 
 // Want to deal be a able to deal with an array of fields
@@ -223,11 +239,11 @@ const saveFn = (xid, fields, from) => {
 	setTimeout(() => DataStore.setValue(['widget','DigitalMirror', 'autosaveTriggered'], false), 1000);
 };
 
-/** Little helper method to capitalise first character in a given string */
+/** Minor TODO Maybe use css text-effect instead
+ * Little helper method to capitalise first character in a given string */
 const capitalise = (string) => {
 	return string[0].toUpperCase() + string.slice(1);
 };
 
-module.exports = {
-	DigitalMirrorCard
-};
+export default DigitalMirrorCard;
+
