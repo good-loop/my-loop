@@ -19,10 +19,16 @@ class ShareAnAd extends React.Component {
 			if (this[ref]) this[ref].focus();
 		};
 
+		const adID = DataStore.getValue(['widget', 'TwitterShare', 'adID']);
+		const mobileVideo = DataStore.getValue(['widget', 'TwitterShare', 'mobileVideo']);
+		const video = DataStore.getValue(['widget', 'TwitterShare', 'video']);
+
 		// ID of Good-loop ad to be shown
 		// Imagining that we will sometimes have set this based on user's ad history
 		this.state = {
-			adID: DataStore.getValue(['widget', 'TwitterShare', 'adID'])
+			adID,
+			mobileVideo,
+			video
 		};
 	}
 
@@ -53,7 +59,12 @@ class ShareAnAd extends React.Component {
 		
 		iframe.style.height = '102px';
 		iframe.style.width = '100%';
-		iframe.style.display = 'block';
+		// HACK (26/10/18): allow adunit to still run and pick out ad ID and video
+		// Will display actual video in a video tag. Solves problem with
+		// adunit not making good use of space on mobile
+		// Only one that fits screen is stickyfooter, but the actual video ad is
+		// tiny for this
+		iframe.style.display = 'none';
 
 		iframe.addEventListener('load', () => {
 			window.iframe = iframe;
@@ -88,19 +99,25 @@ class ShareAnAd extends React.Component {
 				// Assuming that adunit has not embedded itself in another iframe
 				const {goodloop} = contentWindow;
 				const id = goodloop.vert.adid; 
+				const vid = goodloop.vert.video;
+				const mobVid = goodloop.vert.mobileVideo;
 
 				DataStore.setValue(['widget', 'TwitterShare', 'adID'], id);
-				this.setState({adID: id}); 
+				DataStore.setValue(['widget', 'TwitterShare', 'video'], vid);
+				DataStore.setValue(['widget', 'TwitterShare', 'mobileVideo'], vid);
+
+				this.setState({adID: id, video: vid, mobileVideo: mobVid}); 
 			});
 		}     
 	} 
 
 	render() {
-		const {adID} = this.state;
+		const {adID, mobileVideo, video} = this.state;
 
 		return (
 			<div className="ShareAd">
 				<h2> Share this ad on social media </h2>
+				<video controls="true" width="100%" height="auto" src={video}> An error occured </video>
 				<div ref={e => this.setRef('adunitRef', e)} />
 				{ adID ? <TwitterShare adID={this.state.adID} /> : null}
 			</div>
