@@ -206,7 +206,9 @@
 	line-height: 50px;
 	margin-left: 6vmin;
 
+	// TODO avoid names like "main" in favour of more specific
 	.main {
+		// TODO doc - What is this achieving? Why not show/hide in React??
 		input[type="checkbox"] {
 			display: none;
 		}
@@ -222,31 +224,35 @@
 		}
 	}
 
+	// TODO avoid header as a name in a widget - its too generic to be grepped, and could have conflicts
 	.header  {
 		height: 100%;
 		font-size: 30px !important;
 		width: 94%;
 	}
 
+	// TODO If you're putting in tweaks, say why -- is this an aesthetic tweak, or fixing a layout bug?
 	.header.form-control  {
 		width: 94%;
 	}
 
-	.header, .map {
-		margin: 2vmin 0;
-	}
 
-	i {
-		padding-right: 20px;
-	}
-	
-	.map img {
-		border-style: dotted;
-		border-width: 1px;
-		height: 70%;
-		width: 84%;
-		margin-top: 10px;
-	}
+	// No - use a semantic tag or class
+	// i {
+	// 	padding-right: 20px;
+	// }
+
+	// no map yet in this MVP
+	// .header, .map {
+	// 	margin: 2vmin 0;
+	// }
+	// .map img {
+	// 	border-style: dotted;
+	// 	border-width: 1px;
+	// 	height: 70%;
+	// 	width: 84%;
+	// 	margin-top: 10px;
+	// }
 	
 	.info {
 		font-size: 2.5vmin;
@@ -258,6 +264,7 @@
 		width: 80%;
 	}
 
+	// Why?? And why not do this in React??
 	input[type="checkbox"] {
 		display: none;
 	}
@@ -267,7 +274,7 @@
 		width: 25px;
 		text-align: center;
 
-		i{
+		i {
 			width: 100%;
 			height: auto;
 			display: block; // Prevent line-height displacing icon

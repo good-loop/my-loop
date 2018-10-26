@@ -204,7 +204,7 @@ const PermissionControls = ({xidObj}) => {
 					<div className='col-md-5 map' />
 				</div>				
 			</div>
-			<span className='pull-right info'> <i className="fa fa-info-circle" /> This data was taken from {capitalise(xidObj.service)}</span>		
+			{/* data might come from Twitter or the user <span className='pull-right info'> <i className="fa fa-info-circle" /> This data was taken from {capitalise(xidObj.service)}</span> */}
 			<button className='pull-left edit' onClick={toggleEditMode} type='button'> Edit </button>
 			{ visible === true ? <div className='autosave'><p>Saved Successfully</p></div> : null }
 		</div>
