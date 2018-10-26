@@ -194,6 +194,8 @@ const PermissionControls = ({xidObj}) => {
 	const {xid, dataFields} = xidObj;
 	const path = userdataPath.concat(xid);
 
+	const profileImage = DataStore.getValue(path.concat('img'));
+
 	// Move debounceSaveFn and editMode in to PermissionControlRow?
 
 	// Save function. Can only be called once every 5 seconds
@@ -226,7 +228,7 @@ const PermissionControls = ({xidObj}) => {
 							{dataFields.map( fieldObj => PermissionControlRow(path, fieldObj, debounceSaveFn, editModeEnabled))}
 						</div>
 						<div className='col-md-5 profile-photo'>
-							<img src="https://randomuser.me/api/portraits/women/57.jpg" />
+							{ profileImage ? <img src={profileImage.value} alt='user-profile' /> : null}
 						</div>
 					</div>
 				</div>				
