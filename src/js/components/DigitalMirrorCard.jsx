@@ -166,8 +166,8 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 	if(editModeEnabled) {
 		return (
 			<div className='row vertical-align h-50px' key={'data-control-' + field}> 
-				<div className='col-md-1'><PropControl type="checkbox" path={fieldPath} prop={'permission'} label={label(field, fieldPath)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>
-				<div className={'col-md-8'}>
+				<div className='col-xs-1'><PropControl type="checkbox" path={fieldPath} prop={'permission'} label={label(field, fieldPath)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>
+				<div className={'col-xs-8'}>
 					<PropControl type={type} options={options} className={isHeader ? 'header' : ''} path={fieldPath} prop={'value'} placeholder={field} 
 						saveFn={() => debounceSaveFn(field, 'myloop@app')}
 					/>
@@ -222,15 +222,13 @@ const PermissionControls = ({xidObj}) => {
 					<p>Your data can help us boost the amount that is donated whenever you see one of our ads.</p>
 					<p>And you get to choose what information you share.</p>
 				</div>
-				<div className='row'>
-					<div className="col-md-6 main">
-						{
-							// TODO: (24/10/18) isHeader is a hack. Wanted first item in the list to appear larger
-							// come back and clean this up
-							dataFields.map( fieldObj => PermissionControlRow(path, fieldObj, debounceSaveFn, editModeEnabled))
-						}
+				<div className='container'>
+					<div className='row'>
+						<div className="col-md-6 main">
+							{dataFields.map( fieldObj => PermissionControlRow(path, fieldObj, debounceSaveFn, editModeEnabled))}
+						</div>
+						<div className='col-md-5 map' />
 					</div>
-					<div className='col-md-5 map' />
 				</div>				
 			</div>
 			<div>
