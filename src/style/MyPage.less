@@ -160,7 +160,6 @@
 		color: #9b9b9b;
 
 		.statistics-value {
-			text-transform: uppercase;
 			vertical-align: middle;
 
 			.statistics-value-highlight {
@@ -170,24 +169,30 @@
 				padding-bottom: 10px;
 				margin-bottom: 10px;
 				font-size: 24px;
-				text-transform: none;
 				color: #4a4a4a;	
 				font-weight: bold;
-			}
-
-			.statistics-value-highlight::after {
-				display: block;
-				position: absolute;
-				content: "";
-				bottom: 0;
-				left: 50%;
-				margin-left: -51px;
-				width: 102px;
-				height: 5px;
-				background: @gl-color;
+				&:after {
+					display: block;
+					position: absolute;
+					content: "";
+					bottom: 0;
+					left: 50%;
+					margin-left: -51px;
+					width: 102px;
+					height: 5px;
+					background: @gl-color;
+				}
 			}
 		}
+
+		// a non-money value, eg "No compromises"
+		.text-stat {
+			font-size: 19px;
+			padding-bottom: 2px;
+		}
+
 		.statistics-subtext {
+			text-transform: uppercase;
 			display: block;
 			min-height: 36px;
 		}
@@ -195,10 +200,7 @@
 }  // ./statistics-content (aka Our Achievements Together card)
 
 // this is used for the achievement text-based messages in StatisticsCard
-.text-stat {
-	font-size: 19px;
-	padding-bottom: 2px;
-}
+
 
 // DigitalMirrorCardDesign: a card for showing the user their twitter data (experimental)
 .mirror {
