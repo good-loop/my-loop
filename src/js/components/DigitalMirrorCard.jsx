@@ -17,7 +17,30 @@ const socialMedia = [
 	{
 		service: 'twitter',
 		idHandle: '@twitter',
-		dataFields: ['name', 'gender', 'location', 'job', 'relationship'] // keys should match back-end/Datastore
+		// type should match PropControl type
+		dataFields: [
+			{
+				field: 'name',
+				type: 'text'
+			}, 
+			{
+				field: 'gender',
+				type:'select',
+				options: ['Male', 'Female', 'Other', 'Not specified']
+			}, 
+			{
+				field: 'location',
+				type: 'text'
+			}, 
+			{
+				field: 'job',
+				type: 'text'
+			}, 
+			{
+				field: 'relationship',
+				type: 'select',
+				options: ['Single', 'In a relationship', 'Engaged', 'Married', 'Divorced', 'Widowed', 'Not specified']
+			}] // keys should match back-end/Datastore
 	}
 ];
 
@@ -133,7 +156,8 @@ const DigitalMirrorCard = ({xids}) => {
 };
 
 /**TODO: clean this up */
-const PermissionControlRow = (path, field, debounceSaveFn, editModeEnabled) => {
+const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) => {
+	const {field, type, options} = fieldObj;
 	// Hard-set 'name' to be header
 	const isHeader = field === 'name';
 	const fieldPath = path.concat(field);
@@ -143,7 +167,7 @@ const PermissionControlRow = (path, field, debounceSaveFn, editModeEnabled) => {
 			<div className='row vertical-align' key={'data-control-' + field}> 
 				{isHeader ? null : <div className='col-md-1'><PropControl type="checkbox" path={fieldPath} prop={'permission'} label={label(field, fieldPath)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>}
 				<div className={'col-md-8'}>
-					<PropControl className={isHeader ? 'header' : ''} type='text' path={fieldPath} prop={'value'} placeholder={field} 
+					<PropControl type={type} options={options} className={isHeader ? 'header' : ''} path={fieldPath} prop={'value'} placeholder={field} 
 						saveFn={() => debounceSaveFn(field, 'myloop@app')}
 					/>
 				</div>
@@ -202,7 +226,7 @@ const PermissionControls = ({xidObj}) => {
 						{
 							// TODO: (24/10/18) isHeader is a hack. Wanted first item in the list to appear larger
 							// come back and clean this up
-							dataFields.map( field => PermissionControlRow(path, field, debounceSaveFn, editModeEnabled))
+							dataFields.map( fieldObj => PermissionControlRow(path, fieldObj, debounceSaveFn, editModeEnabled))
 						}
 					</div>
 					<div className='col-md-5 map' />
