@@ -5,17 +5,17 @@ import Cookies from 'js-cookie';
 import React from 'react';
 import { stopEvent, XId } from 'wwutils';
 import Login from 'you-again';
+import DataStore from '../base/plumbing/DataStore';
+import ServerIO from '../plumbing/ServerIO';
+import printer from '../base/utils/printer';
+import { getProfile, getProfilesNow } from '../base/Profiler';
+import Person from '../base/data/Person';
+import Misc from '../base/components/Misc';
 import CardAccordion, { Card } from '../base/components/CardAccordion';
 import { LoginLink, SocialSignInButton } from '../base/components/LoginWidget';
-import Misc from '../base/components/Misc';
-import Person from '../base/data/Person';
-import DataStore from '../base/plumbing/DataStore';
-import { getProfile, getProfilesNow } from '../base/Profiler';
-import printer from '../base/utils/printer';
 import DigitalMirrorCard from '../components/DigitalMirrorCard';
 import Footer from '../components/Footer';
 import ShareAnAd from '../components/ShareAnAd';
-import ServerIO from '../plumbing/ServerIO';
 import { LoginToSee } from './Bits';
 import ConsentWidget from './ConsentWidget';
 import DonationCard from './DonationCard';
@@ -194,7 +194,7 @@ const WelcomeCard = ({xids}) => {
 				<div className="pull-right logged-in">
 					<p>Hi { Login.getUser().name || Login.getUser().xid }</p>
 					<small className="pull-right">
-						<a className="logout-link" href="#my" onClick={e => stopEvent(e) && Login.logout()}>&Log out</a>
+						<a className="logout-link" href="#my" onClick={e => stopEvent(e) && Login.logout()}>Log out</a>
 					</small>
 				</div>
 			</div>
