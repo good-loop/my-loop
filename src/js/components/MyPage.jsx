@@ -1,27 +1,24 @@
-import React from 'react';
+/**
+ * The core page of My-Loop
+ */
 import Cookies from 'js-cookie';
-import _ from 'lodash';
-import { assert, assMatch } from 'sjtest';
-import { XId, modifyHash, stopEvent, encURI, yessy } from 'wwutils';
-import pivot from 'data-pivot';
-import C from '../C';
-import ServerIO from '../plumbing/ServerIO';
-import DataStore from '../base/plumbing/DataStore';
-import Person from '../base/data/Person';
-import Misc from '../base/components/Misc';
-import CardAccordion, {Card} from '../base/components/CardAccordion';
-import ActionMan from '../plumbing/ActionMan';
-import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
+import React from 'react';
+import { stopEvent, XId } from 'wwutils';
 import Login from 'you-again';
-import {LoginLink, SocialSignInButton} from '../base/components/LoginWidget';
-import {LoginToSee} from './Bits';
-import {getProfile, getProfilesNow} from '../base/Profiler';
-import ConsentWidget from './ConsentWidget';
+import CardAccordion, { Card } from '../base/components/CardAccordion';
+import { LoginLink, SocialSignInButton } from '../base/components/LoginWidget';
+import Misc from '../base/components/Misc';
+import Person from '../base/data/Person';
+import DataStore from '../base/plumbing/DataStore';
+import { getProfile, getProfilesNow } from '../base/Profiler';
 import printer from '../base/utils/printer';
-import DonationCard from './DonationCard';
+import DigitalMirrorCard from '../components/DigitalMirrorCard';
 import Footer from '../components/Footer';
 import ShareAnAd from '../components/ShareAnAd';
-import {DigitalMirrorCard} from '../components/DigitalMirrorCard';
+import ServerIO from '../plumbing/ServerIO';
+import { LoginToSee } from './Bits';
+import ConsentWidget from './ConsentWidget';
+import DonationCard from './DonationCard';
 
 const fetcher = xid => DataStore.fetch(['data', 'Person', xid], () => {
 	return getProfile({xid});
@@ -101,7 +98,9 @@ const MyPage = () => {
 
 					<Card title='Your Digital Mirror (design @Irina)'><DigitalMirrorCardDesign /></Card> 
 
-					<Card title='Your Digital Mirror (functional @Mark & Dan W)' defaultOpen><DigitalMirrorCard xids={xids} /></Card> 
+					<Card title='Your Digital Mirror (functional @Mark & Dan W)' defaultOpen>
+						<DigitalMirrorCard xids={xids} />
+					</Card> 
 
 					<Card title='Consent Controls' defaultOpen>{Login.isLoggedIn()? <ConsentWidget xids={xids} /> : <LoginToSee />}</Card>
 
