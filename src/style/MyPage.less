@@ -16,6 +16,7 @@
 
 // prettify cards
 .panel-body {
+	padding: 2.5vmin;
 	background-color: #E6E4D6;
 	box-shadow: 0 3px 5px rgba(0,0,0,0.3); 
 }
@@ -211,16 +212,13 @@
 
 // DigitalMirrorCard: a widget for showing the user their twitter data (experimental)
 .mirror {
-	margin-left: 2vmin;
-
 	.description {
 		font-size: 16px;
 	}
 
-	// TODO avoid names like "main" in favour of more specific
-	.main {
+	.profile-details {
 		font-size: 22px;
-		line-height: 50px;
+		line-height: 50px; 
 
 		// TODO doc - What is this achieving? Why not show/hide in React??
 		// This hides the little tickbox that comes with the standard HTML "Checkbox"
@@ -232,16 +230,26 @@
 		input[type="checkbox"]:not(:checked)+div{
 			filter: grayscale(100%);
 		}
+
 		.form-control {
 			display: inline-block;
-			font-size: 125%;
 			background-color: transparent;
-			width: 80%;
+			padding: 4px; // align non-dropdown with dropdown input values
+			width: 80%; // aligning profile name with rest of detaills
+		}
+
+		// hack to fix ugly dropdown 
+		button, input, select, textarea {
+			background: transparent;
 		}
 	}
 
-	// TODO avoid header as a name in a widget - its too generic to be grepped, and could have conflicts
-	.header  {
+	// aligning profile photo with profile details
+	.profile-photo {
+		margin-top: 2vmin;
+	}
+
+	.profile-name  {
 		height: 100%;
 		font-size: 30px !important;
 		width: 94%;
@@ -300,17 +308,21 @@
 			display: block; // Prevent line-height displacing icon
 		}
 	}
+
+	select[placeholder="relationship"], select[placeholder="gender"] {
+		width: 80%;
+	}
 }
 
 // autosave message to inform user that their edits have been saved
 .autosave {
 	margin-top: 2.7vmin;
-	margin-left: 2vmin;
+	//margin-left: 2vmin;
 }
 
 //  edit button
 .edit {
-	margin: 0.5vmin 0 3.5vmin 2vmin;
+	margin: 1.5vmin 0 3.5vmin 0;
 }
 
 // end of DigitalMirrorCardDesign

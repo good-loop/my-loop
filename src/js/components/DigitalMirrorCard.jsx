@@ -168,7 +168,7 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 			<div className='row vertical-align h-50px' key={'data-control-' + field}> 
 				<div className='col-xs-1'><PropControl type="checkbox" path={fieldPath} prop={'permission'} label={label(field, fieldPath)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>
 				<div className={'col-xs-8'}>
-					<PropControl type={type} options={options} className={isHeader ? 'header' : ''} path={fieldPath} prop={'value'} placeholder={field} 
+					<PropControl type={type} options={options} className={isHeader ? 'profile-name' : ''} path={fieldPath} prop={'value'} placeholder={field} 
 						saveFn={() => debounceSaveFn(field, 'myloop@app')}
 					/>
 				</div>
@@ -179,7 +179,7 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 	return (
 		<div className='row vertical-align' key={'data-control-' + field}> 
 			{isHeader ? null : <div className='col-md-1'>{label(field, fieldPath)}</div>}
-			<div className={'col-md-8' + (isHeader ? ' header' : '')}>{DataStore.getValue(path.concat([field, 'value'])) || capitalise(field)}</div>
+			<div className={'col-md-8' + (isHeader ? ' profile-name' : '')}>{DataStore.getValue(path.concat([field, 'value'])) || capitalise(field)}</div>
 		</div>
 	);
 };
@@ -224,10 +224,12 @@ const PermissionControls = ({xidObj}) => {
 				</div>
 				<div className='container'>
 					<div className='row'>
-						<div className="col-md-6 main">
+						<div className="col-md-6 profile-details">
 							{dataFields.map( fieldObj => PermissionControlRow(path, fieldObj, debounceSaveFn, editModeEnabled))}
 						</div>
-						<div className='col-md-5 map' />
+						<div className='col-md-5 profile-photo'>
+							<img src="https://randomuser.me/api/portraits/women/57.jpg" />
+						</div>
 					</div>
 				</div>				
 			</div>
