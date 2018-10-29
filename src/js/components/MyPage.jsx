@@ -106,10 +106,6 @@ const MyPage = () => {
 						<DonationCard xids={xids} />
 					</Card>
 
-					<Card title="Your Digital Mirror (design @Irina)">
-						<DigitalMirrorCardDesign />
-					</Card> 
-
 					<Card title="Your Digital Mirror (functional @Mark & Dan W)" defaultOpen>
 						<DigitalMirrorCard xids={xids} />
 						<SocialMediaCard allIds={xids} />						
