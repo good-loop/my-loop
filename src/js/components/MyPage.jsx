@@ -396,7 +396,7 @@ const OnboardingCardMini = () => {
 				</div>
 				<div className="row">
 					<center>
-						<a className='btn btn-default' href='https://as.good-loop.com/?site=my.good-loop.com'>Try it now: Watch an Ad For Good!</a>
+						<a className='btn btn-default' href='https://as.good-loop.com/?site=my.good-loop.com' target='_blank'>Try it now: Watch an Ad For Good!</a>
 					</center>
 				</div>
 			</div>
