@@ -47,6 +47,8 @@ const socialMedia = [
 
 const userdataPath = ['widget', 'DigitalMirror', 'userdata'];
 
+// ??This may be over-engineered
+// ?? doc e.g. returns jsx and not string as you might expect
 const iconFromField = (field, value) => {
 	if( !_.isString(value) ) value = `${value}`; 
 	value = value.toLowerCase();
@@ -76,7 +78,7 @@ const iconFromField = (field, value) => {
 
 	if( !iconField ) return null;
 
-	return icons[field][value] ? icons[field][value] : icons[field]['default']; 
+	return icons[field][value] ? icons[field][value] : icons[field].default; 
 };
 
 // TODO: Think that this will need to change significantly in future
@@ -164,20 +166,27 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 	if(editModeEnabled) {
 		return (
 			<div className='row vertical-align revertHeight' key={'data-control-' + field}> 
-				<div className='col-md-1'><PropControl type="checkbox" path={fieldPath} prop={'permission'} label={label(field, fieldPath)} key={field} saveFn={() => debounceSaveFn(field, 'myloop@app')} /></div>
+				<div className='col-md-1'>
+					<PropControl type="checkbox" path={fieldPath} prop={'permission'} label={label(field, fieldPath)} key={field} 
+						saveFn={() => debounceSaveFn(field, 'myloop@app')} />
+				</div>
 				<div className={'col-md-8'}>
-					<PropControl type={type} options={options} className={isHeader ? 'profile-name' : ''} path={fieldPath} prop={'value'} placeholder={field} 
+					<PropControl type={type} options={options} className={isHeader ? 'profile-name' : ''} 
+						path={fieldPath} prop={'value'} placeholder={field} 
 						saveFn={() => debounceSaveFn(field, 'myloop@app')}
 					/>
 				</div>
 			</div>	
 		);
 	}
-
+	const v = DataStore.getValue(path.concat([field, 'value']));
+	// ?? profile-name: better to use a bootstrap instead of a custom css class
 	return (
 		<div className='row vertical-align' key={'data-control-' + field}> 
 			{isHeader ? null : <div className='col-md-1'>{label(field, fieldPath)}</div>}
-			<div className={'col-md-8' + (isHeader ? ' profile-name' : '')}>{DataStore.getValue(path.concat([field, 'value'])) || capitalise(field)}</div>
+			<div className={'col-md-8' + (isHeader ? ' profile-name' : '')}>
+				{v || capitalise(field)}
+			</div>
 		</div>
 	);
 };
