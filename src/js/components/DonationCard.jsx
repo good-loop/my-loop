@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import { assert, assMatch } from 'sjtest';
 import { XId, modifyHash, stopEvent, encURI, yessy } from 'wwutils';
-import pivot from 'data-pivot';
+// import pivot from 'data-pivot';
 import C from '../C';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
