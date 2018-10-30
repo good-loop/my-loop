@@ -106,7 +106,7 @@ const MyPage = () => {
 						<DonationCard xids={xids} />
 					</Card>
 
-					<Card title="Your Digital Mirror (functional @Mark & Dan W)" defaultOpen>
+					<Card title="Your Digital Mirror" defaultOpen>
 						<DigitalMirrorCard xids={xids} />
 						<SocialMediaCard allIds={xids} />						
 					</Card> 
@@ -123,7 +123,7 @@ const MyPage = () => {
 						<ContactCard allIds={allIds} />
 					</Card>
 					
-					<Card title="Linked Profiles" defaultOpen>
+					<Card title="Linked Profiles" >
 						<LinkedProfilesCard xids={xids} />
 					</Card>
 				</CardAccordion>
