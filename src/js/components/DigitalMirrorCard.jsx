@@ -98,7 +98,9 @@ const DigitalMirrorCard = ({xids}) => {
 	// call analyze data, once per XId
 	xids.forEach(xid => {
 		if (XId.service(xid) !== 'twitter') return; // TODO Facebook etc too
-		DataStore.fetch(['widget','DigitalMirrorCard','analyzeData', xid], () => Profiler.requestAnalyzeData(xid));
+		DataStore.fetch(['widget','DigitalMirrorCard','analyzeData', xid], 
+			() => Profiler.requestAnalyzeData(xid));
+		// ??do we need to store the response data into DataStore.data.Person??
 	});	
 
 	// ??Switch to using [draft, Person, xid] as the storage for edits
