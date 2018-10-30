@@ -156,7 +156,10 @@ const DigitalMirrorCard = ({xids}) => {
 	);
 };
 
-/**TODO: clean this up */
+/**TODO: clean this up 
+ * 
+ * ??Does it need bootstrap rows? they feel like a cumbersome solution here
+*/
 const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) => {
 	const {field, type, options} = fieldObj;
 	// Hard-set 'name' to be header
@@ -184,7 +187,7 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 	return (
 		<div className='row vertical-align' key={'data-control-' + field}> 
 			{isHeader ? null : <div className='col-md-1'>{label(field, fieldPath)}</div>}
-			<div className={'col-md-8' + (isHeader ? ' profile-name' : '')}>
+			<div className={'col-md-9' + (isHeader ? ' profile-name' : '')}>
 				{v || capitalise(field)}
 			</div>
 		</div>
@@ -233,11 +236,11 @@ const PermissionControls = ({xidObj}) => {
 				</div>
 				<div className='container'>
 					<div className='row'>
-						<div className="col-md-4 profile-details">
+						<div className="col-md-5 profile-details">
 							{dataFields.map( fieldObj => PermissionControlRow(path, fieldObj, debounceSaveFn, editModeEnabled))}
 						</div>
 						<div className='col-md-5 profile-photo'>
-							{ profileImage ? <img src={profileImage.value} alt='user-profile' /> : null}
+							{profileImage ? <img className='img-thumbnail img-profile' src={profileImage.value} alt='user-profile' /> : null}
 						</div>
 					</div>
 				</div>				
