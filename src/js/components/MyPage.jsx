@@ -409,27 +409,34 @@ const OnboardingCardMini = () => {
  * Social CTAs: Share on social / connect
  */
 const SocialMediaCard = ({allIds=[]}) => {
-	let emailID = allIds.filter(id => XId.service(id)==='email')[0];
-	let twitterID = allIds.filter(id => XId.service(id)==='twitter')[0];
-	let fbid = allIds.filter(id => XId.service(id)==='facebook')[0];
-	let fbpeep = getProfilesNow([fbid])[0];	
+	// TODO (31/10/18): move this in to ids after email signup code is connected
+	const emailID = allIds.filter(id => XId.service(id)==='email')[0];
 
+	const ids = {
+		twitterID: allIds.filter(id => XId.service(id)==='twitter')[0],
+		fbid: allIds.filter(id => XId.service(id)==='facebook')[0],
+	};
+
+	const fbpeep = getProfilesNow([ids.fbid])[0]; 
 	return (
 		<div>
-			<p>Connect your social media - you can use this to boost the donations you generate!</p>
+			
+			{	// Show text if ids contains an undefined value (user still hasn't connected one of their social media accounts)
+				Object.values(ids).some( id => id === undefined || id === null) ? <p>Connect your social media - you can use this to boost the donations you generate!</p> : null
+			}
 			{emailID ? '' : '' /* <div> TODO: email capture </div> */	}
-			{twitterID ? (
+			{ids.twitterID ? (
 				<div className='wrapper'>
-					<p className="connected" ><i className="fa fa-handshake-o" /> Twitter id: {XId.id(twitterID)}</p>
+					<p className="connected" ><i className="fa fa-handshake-o" /> Twitter id: {XId.id(ids.twitterID)}</p>
 				</div>
 				) : (
 				<div>
 					<SocialSignInButton service='twitter' verb='connect' />
 				</div>
 			)}
-			{fbid ? (
+			{ids.fbid ? (
 				// TODO show some data about them from FB
-				<div>Facebook ID: {XId.id(fbid)} {fbpeep? fbpeep.name : ''}</div>
+				<div>Facebook ID: {XId.id(ids.fbid)} {fbpeep? fbpeep.name : ''}</div>
 			) : (
 				<div>
 					<div><SocialSignInButton service='facebook' verb='connect' /></div>
