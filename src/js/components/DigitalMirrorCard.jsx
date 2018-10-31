@@ -165,8 +165,11 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 	// Hard-set 'name' to be header
 	const isHeader = field === 'name';
 	const fieldPath = path.concat(field);
+	const fieldValue = DataStore.getValue(fieldPath.concat('value'));
 
-	if( editModeEnabled ) {
+	// For drop-down menus, easy to display display the edit field if the user has not already provided a value
+	// Behaviour is a good deal more complicated for text fields, which will switch to having a value as soon as the user begins typing
+	if( editModeEnabled || ( !fieldValue && type==='select' ) ) {
 		return (
 			<div className='row vertical-align revertHeight' key={'data-control-' + field}> 
 				<div className='col-md-1'>
