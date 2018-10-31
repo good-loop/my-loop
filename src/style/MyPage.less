@@ -236,18 +236,18 @@
 			display: inline-block;
 			background-color: transparent;
 			padding: 4px; // align non-dropdown with dropdown input values
-			width: 80%; // aligning profile name with rest of detaills
+			// width: 80%; // aligning profile name with rest of detaills
+		}
+
+		select {
+			width: 80%; // hack to align dropdown fields with non-dropdown fields
+			border: 1px solid #ccc; //just to make it look more modern
 		}
 
 		// hack to fix ugly dropdown 
 		button, input, select, textarea {
 			background: transparent;
 		}
-
-		// hack to allow more space between icon and value (applied to all except profile-name, eg gender, relationship,  etc)
-		// .col-md-8:not(.profile-name) {
-		// 	padding-left: 3vmin;
-		// }
 	}
 
 	// aligning profile photo with profile details
@@ -258,13 +258,12 @@
 	.profile-name  {
 		height: 100%;
 		font-size: 30px !important;
-		width: 94%; // align it with the value below (relevant when in edit mode)
 	}
 
-	// TODO If you're putting in tweaks, say why -- is this an aesthetic tweak, or fixing a layout bug?
-	.header.form-control  {
-		width: 94%;
-	}
+	// // TODO If you're putting in tweaks, say why -- is this an aesthetic tweak, or fixing a layout bug?
+	// .header.form-control  {
+	// 	width: 94%;
+	// }
 
 
 	// No - use a semantic tag or class
@@ -287,6 +286,11 @@
 	input[type="text"] {
 		font-size: 22px;
 		width: 80%;
+	}
+
+	 // ugly hack to align profile-name with the values below (relevant when in edit mode)
+	input[type="text"].profile-name.form-control {
+		width: 93%;
 	}
 
 	// Why?? And why not do this in React??
@@ -313,10 +317,6 @@
 			height: auto;
 			display: block; // Prevent line-height displacing icon
 		}
-	}
-
-	select[placeholder="relationship"], select[placeholder="gender"] {
-		width: 80%;
 	}
 }
 

@@ -169,12 +169,10 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 	if( editModeEnabled) {
 		return (
 			<div className='row vertical-align revertHeight' key={'data-control-' + field}> 
-				<div className='col-md-1'>
-					{label(field, fieldPath)} 
-				</div>
+				{isHeader ? null : <div className='col-md-1'>{label(field, fieldPath)}</div>}
 				<div className={'col-md-8'}>
 					<PropControl type={type} options={options} dflt={dflt} className={isHeader ? 'profile-name' : ''} 
-						path={fieldPath} prop={'value'} placeholder={field} 
+						path={fieldPath} prop={'value'} placeholder={placeholder} 
 						saveFn={() => debounceSaveFn(field, 'myloop@app')}
 					/>
 				</div>
@@ -186,7 +184,7 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 	return (
 		<div className='row vertical-align' key={'data-control-' + field}> 
 			{isHeader ? null : <div className='col-md-1'>{label(field, fieldPath)}</div>}
-			<div className={'col-md-9' + (isHeader ? ' profile-name' : '')}>
+			<div className={'col-md-9' + (fieldValue ? '' : ' text-muted') + (isHeader ? ' profile-name' : '')}>
 				{v || placeholder}
 			</div>
 		</div>
