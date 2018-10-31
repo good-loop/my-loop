@@ -233,7 +233,6 @@ const PermissionControls = ({xidObj}) => {
 			<div className="mirror">
 				<div className='description'>
 					<p>Your data can help us boost the amount that is donated whenever you see one of our ads.</p>
-					<p>And you get to choose what information you share.</p>
 				</div>
 				<div className='container word-wrap'>
 					<div className='row'>
