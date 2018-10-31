@@ -174,7 +174,7 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 				</div>
 				<div className={'col-md-8'}>
 					<PropControl type={type} options={options} dflt={dflt} className={isHeader ? 'profile-name' : ''} 
-						path={fieldPath} prop={'value'} placeholder={field} 
+						path={fieldPath} prop={'value'} placeholder={placeholder} 
 						saveFn={() => debounceSaveFn(field, 'myloop@app')}
 					/>
 				</div>

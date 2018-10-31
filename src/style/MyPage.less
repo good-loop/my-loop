@@ -239,15 +239,15 @@
 			width: 80%; // aligning profile name with rest of detaills
 		}
 
+		// hack to align dropdown fields with non-dropdown fields
+		select {
+			width: 80%;
+		}
+
 		// hack to fix ugly dropdown 
 		button, input, select, textarea {
 			background: transparent;
 		}
-
-		// hack to allow more space between icon and value (applied to all except profile-name, eg gender, relationship,  etc)
-		// .col-md-8:not(.profile-name) {
-		// 	padding-left: 3vmin;
-		// }
 	}
 
 	// aligning profile photo with profile details
@@ -313,10 +313,6 @@
 			height: auto;
 			display: block; // Prevent line-height displacing icon
 		}
-	}
-
-	select[placeholder="relationship"], select[placeholder="gender"] {
-		width: 80%;
 	}
 }
 
