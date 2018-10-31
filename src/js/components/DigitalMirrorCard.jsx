@@ -166,6 +166,7 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 	const isHeader = field === 'name';
 	const fieldPath = path.concat(field);
 	const fieldValue = DataStore.getValue(fieldPath.concat('value'));
+	const placeholder = 'Unknown ' + field; // Shows where value for text field is not available
 
 	// For drop-down menus, easy to display display the edit field if the user has not already provided a value
 	// Behaviour is a good deal more complicated for text fields, which will switch to having a value as soon as the user begins typing
@@ -179,7 +180,7 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 				</div>
 				<div className={'col-md-8'}>
 					<PropControl type={type} options={options} className={isHeader ? 'profile-name' : ''} 
-						path={fieldPath} prop={'value'} placeholder={field} 
+						path={fieldPath} prop={'value'} placeholder={placeholder} 
 						saveFn={() => debounceSaveFn(field, 'myloop@app')}
 					/>
 				</div>
@@ -192,7 +193,7 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 		<div className='row vertical-align' key={'data-control-' + field}> 
 			{isHeader ? null : <div className='col-md-1'>{label(field, fieldPath)}</div>}
 			<div className={'col-md-9' + (isHeader ? ' profile-name' : '')}>
-				{v || 'Unknown ' + field}
+				{v || placeholder}
 			</div>
 		</div>
 	);
