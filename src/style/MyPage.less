@@ -236,7 +236,7 @@
 			display: inline-block;
 			background-color: transparent;
 			padding: 4px; // align non-dropdown with dropdown input values
-			// width: 80%; // aligning profile name with rest of detaills
+			color: inherit; // ensure consistent text color across dropdown and non-dropdown fields
 		}
 
 		select {
@@ -361,4 +361,9 @@
 
 .word-wrap {
 	word-break: break-all;
+}
+
+// hack to make grayed out values consistent across website
+.text-muted {
+	color: #9c9c9c;
 }
