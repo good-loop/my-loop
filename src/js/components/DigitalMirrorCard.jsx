@@ -240,10 +240,10 @@ const PermissionControls = ({xidObj}) => {
 				</div>
 				<div className='container word-wrap'>
 					<div className='row'>
-						<div className='col-sm-5 col-md-5 col-md-push-5 profile-photo'>
+						<div className='col-sm-5 col-sm-push-5 profile-photo'>
 							{profileImage ? <img className='img-thumbnail img-profile' src={profileImage.value} alt='user-profile' /> : null}
 						</div>
-						<div className="col-sm-5 col-md-5 col-md-pull-5 profile-details">
+						<div className="col-sm-5 col-sm-pull-5 profile-details">
 							{dataFields.map( fieldObj => PermissionControlRow(path, fieldObj, debounceSaveFn, editModeEnabled))}
 						</div>
 					</div>
