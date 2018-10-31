@@ -80,7 +80,7 @@ const iconFromField = (field, value) => {
 
 	if( !iconField ) return null;
 
-	return icons[field][value] ? icons[field][value] : icons[field].default; 
+	return iconField[value] ? iconField[value] : iconField.default; 
 };
 
 // TODO: Think that this will need to change significantly in future
@@ -166,14 +166,14 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 
 	// For drop-down menus, easy to display display the edit field if the user has not already provided a value
 	// Behaviour is a good deal more complicated for text fields, which will switch to having a value as soon as the user begins typing
-	if( editModeEnabled) {
+	if( editModeEnabled ) {
 		return (
 			<div className='row vertical-align revertHeight' key={'data-control-' + field}> 
 				{isHeader ? null : <div className='col-md-1'>{label(field, fieldPath)}</div>}
 				<div className={'col-md-8'}>
 					<PropControl type={type} options={options} dflt={dflt} className={isHeader ? 'profile-name' : ''} 
 						path={fieldPath} prop={'value'} placeholder={placeholder} 
-						saveFn={() => debounceSaveFn(field, 'myloop@app')}
+						saveFn={() => debounceSaveFn('myloop@app')}
 					/>
 				</div>
 			</div>	
@@ -213,7 +213,7 @@ const PermissionControls = ({xidObj}) => {
 	// causing a save to fire on every key stroke.
 	let debounceSaveFn = DataStore.getValue(['widget', 'DigitalMirror', xid, 'debounceSaveFn']);
 	if( !debounceSaveFn ) {
-		debounceSaveFn = _.debounce((field, from) => saveFn(xid, field, from), 1000);
+		debounceSaveFn = _.debounce((from) => saveFn(xid, dataFields, from), 1000);
 		DataStore.setValue(['widget', 'DigitalMirror', xid, 'debounceSaveFn'], debounceSaveFn, false);
 	}
 
@@ -276,12 +276,16 @@ const label = (field, fieldPath) => {
 // Important for editing data held where we use a "Save" button
 /**
  * @param from optional
+ * @param fieldObjs [{field: "name"}, {field: "relationship"}] is rough format expected
+ * Will deconstruct and, for each 'field' value, generate a Claim to be sent to the back-end
+ * Wanted it to bulk save all data fields like this to work-around a bug (31/10/18) where typing
+ * quickly meant that only the first field edited would be saved. Caused by race against debounce
  */
-const saveFn = (xid, fields, from) => {
+const saveFn = (xid, fieldObjs, from) => {
 	// to inform the user that an autosave event happened
 	DataStore.setValue(['widget','DigitalMirror', 'autosaveTriggered'], true);
 
-	if( _.isString(fields) ) fields = [fields];
+	if( _.isString(fieldObjs) ) fieldObjs = [fieldObjs];
 
 	// This is really just a bit of paranoia 
 	// While this should only ever be saving Claims that have been edited by the user,
@@ -292,7 +296,8 @@ const saveFn = (xid, fields, from) => {
 
 	let claims = [];
 
-	fields.forEach( field => {
+	fieldObjs.forEach( fieldObj => {
+		const {field} = fieldObj;
 		const data = DataStore.getValue(userdataPath.concat([xid, field]));
 
 		// Allow blank string
