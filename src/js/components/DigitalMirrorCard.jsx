@@ -172,7 +172,7 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 
 	// For drop-down menus, easy to display display the edit field if the user has not already provided a value
 	// Behaviour is a good deal more complicated for text fields, which will switch to having a value as soon as the user begins typing
-	if( editModeEnabled || ( !fieldValue && type==='select' ) ) {
+	if( editModeEnabled) {
 		return (
 			<div className='row vertical-align revertHeight' key={'data-control-' + field}> 
 				<div className='col-md-1'>
