@@ -8,7 +8,7 @@ import Login from 'you-again';
 import DataStore from '../base/plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
 import printer from '../base/utils/printer';
-import { getProfile, getProfilesNow } from '../base/Profiler';
+import Profiler, { getProfile, getProfilesNow } from '../base/Profiler';
 import Person from '../base/data/Person';
 import Misc from '../base/components/Misc';
 import CardAccordion, { Card } from '../base/components/CardAccordion';
@@ -21,6 +21,10 @@ import ConsentWidget from './ConsentWidget';
 import DonationCard from './DonationCard';
 
 const fetcher = xid => DataStore.fetch(['data', 'Person', xid], () => {
+	// Call analyzedata servlet to pull in user data from Twitter
+	// Putting this here means that the DigitalMirror will refresh itself with the data
+	// once the request has finished processing
+	if( XId.service(xid) === 'twitter' ) return Profiler.requestAnalyzeData(xid);
 	return getProfile({xid});
 });
 

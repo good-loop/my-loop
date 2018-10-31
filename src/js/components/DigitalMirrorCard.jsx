@@ -97,12 +97,6 @@ const DigitalMirrorCard = ({xids}) => {
 	if(!xids) return null;
 	assMatch(xids, 'String[]');
 
-	// call analyze data, once per XId
-	xids.forEach(xid => {
-		if (XId.service(xid) !== 'twitter') return; // TODO Facebook etc too
-		DataStore.fetch(['widget','DigitalMirrorCard','analyzeData', xid], () => Profiler.requestAnalyzeData(xid));
-	});	
-
 	// ??Switch to using [draft, Person, xid] as the storage for edits
 	// -- and hence reuse some existing Crud code.
 	/** HACK: Grab data from [data, Person, xid] (which we treat as read-only),
@@ -222,7 +216,7 @@ const PermissionControls = ({xidObj}) => {
 	let debounceSaveFn = DataStore.getValue(['widget', 'DigitalMirror', xid, 'debounceSaveFn']);
 	if( !debounceSaveFn ) {
 		debounceSaveFn = _.debounce((field, from) => saveFn(xid, field, from), 1000);
-		DataStore.setValue(['widget', 'DigitalMirror', xid, 'debounceSaveFn'], debounceSaveFn);
+		DataStore.setValue(['widget', 'DigitalMirror', xid, 'debounceSaveFn'], debounceSaveFn, false);
 	}
 
 	let visible = DataStore.getValue(['widget','DigitalMirror','autosaveTriggered']);
