@@ -80,7 +80,7 @@ const iconFromField = (field, value) => {
 
 	if( !iconField ) return null;
 
-	return icons[field][value] ? icons[field][value] : icons[field].default; 
+	return iconField[value] ? iconField[value] : iconField.default; 
 };
 
 // TODO: Think that this will need to change significantly in future
