@@ -235,7 +235,7 @@ const PermissionControls = ({xidObj}) => {
 					<p>Your data can help us boost the amount that is donated whenever you see one of our ads.</p>
 					<p>And you get to choose what information you share.</p>
 				</div>
-				<div className='container'>
+				<div className='container word-wrap'>
 					<div className='row'>
 						<div className="col-md-5 profile-details">
 							{dataFields.map( fieldObj => PermissionControlRow(path, fieldObj, debounceSaveFn, editModeEnabled))}
