@@ -166,12 +166,13 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 	const isHeader = field === 'name';
 	const fieldPath = path.concat(field);
 
-	if(editModeEnabled) {
+	if( editModeEnabled ) {
 		return (
 			<div className='row vertical-align revertHeight' key={'data-control-' + field}> 
 				<div className='col-md-1'>
 					<PropControl type="checkbox" path={fieldPath} prop={'permission'} label={label(field, fieldPath)} key={field} 
-						saveFn={() => debounceSaveFn(field, 'myloop@app')} />
+						saveFn={() => debounceSaveFn(field, 'myloop@app')} 
+					/>
 				</div>
 				<div className={'col-md-8'}>
 					<PropControl type={type} options={options} className={isHeader ? 'profile-name' : ''} 
@@ -182,13 +183,13 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 			</div>	
 		);
 	}
-	const v = DataStore.getValue(path.concat([field, 'value']));
+	const v = DataStore.getValue(fieldPath.concat('value'));
 	// ?? profile-name: better to use a bootstrap instead of a custom css class
 	return (
 		<div className='row vertical-align' key={'data-control-' + field}> 
 			{isHeader ? null : <div className='col-md-1'>{label(field, fieldPath)}</div>}
 			<div className={'col-md-9' + (isHeader ? ' profile-name' : '')}>
-				{v || capitalise(field)}
+				{v || 'Unknown ' + field}
 			</div>
 		</div>
 	);
