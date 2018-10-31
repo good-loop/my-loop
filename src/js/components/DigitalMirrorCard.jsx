@@ -27,7 +27,8 @@ const socialMedia = [
 			{
 				field: 'gender',
 				type:'select', // Drop-down menu
-				options: ['Male', 'Female', 'Other', 'Not specified']
+				options: ['Male', 'Female', 'Other', 'Not specified'],
+				dflt: 'Unknown gender'
 			}, 
 			{
 				field: 'location',
@@ -40,7 +41,8 @@ const socialMedia = [
 			{
 				field: 'relationship',
 				type: 'select',
-				options: ['Single', 'In a relationship', 'Engaged', 'Married', 'Divorced', 'Widowed', 'Not specified']
+				options: ['Single', 'In a relationship', 'Engaged', 'Married', 'Divorced', 'Widowed', 'Not specified'],
+				dflt: 'Unknown relationship'
 			}] // keys should match back-end/Datastore
 	}
 ];
@@ -161,7 +163,7 @@ const DigitalMirrorCard = ({xids}) => {
  * ??Does it need bootstrap rows? they feel like a cumbersome solution here
 */
 const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) => {
-	const {field, type, options} = fieldObj;
+	const {field, type, options, dflt} = fieldObj;
 	// Hard-set 'name' to be header
 	const isHeader = field === 'name';
 	const fieldPath = path.concat(field);
@@ -174,13 +176,11 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 		return (
 			<div className='row vertical-align revertHeight' key={'data-control-' + field}> 
 				<div className='col-md-1'>
-					<PropControl type="checkbox" path={fieldPath} prop={'permission'} label={label(field, fieldPath)} key={field} 
-						saveFn={() => debounceSaveFn(field, 'myloop@app')} 
-					/>
+					{label(field, fieldPath)} 
 				</div>
 				<div className={'col-md-8'}>
-					<PropControl type={type} options={options} className={isHeader ? 'profile-name' : ''} 
-						path={fieldPath} prop={'value'} placeholder={placeholder} 
+					<PropControl type={type} options={options} dflt={dflt} className={isHeader ? 'profile-name' : ''} 
+						path={fieldPath} prop={'value'} placeholder={field} 
 						saveFn={() => debounceSaveFn(field, 'myloop@app')}
 					/>
 				</div>
