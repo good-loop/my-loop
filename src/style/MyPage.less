@@ -219,6 +219,7 @@
 	.profile-details {
 		font-size: 22px;
 		line-height: 50px; 
+		margin-top: 1vmin;
 
 		// TODO doc - What is this achieving? Why not show/hide in React??
 		// This hides the little tickbox that comes with the standard HTML "Checkbox"
@@ -235,35 +236,34 @@
 			display: inline-block;
 			background-color: transparent;
 			padding: 4px; // align non-dropdown with dropdown input values
-			width: 80%; // aligning profile name with rest of detaills
+			color: inherit; // ensure consistent text color across dropdown and non-dropdown fields
+		}
+
+		select {
+			width: 80%; // hack to align dropdown fields with non-dropdown fields
+			border: 1px solid #ccc; //just to make it look more modern
 		}
 
 		// hack to fix ugly dropdown 
 		button, input, select, textarea {
 			background: transparent;
 		}
-
-		// hack to allow more space between icon and value (applied to all except profile-name, eg gender, relationship,  etc)
-		.col-md-8:not(.profile-name) {
-			padding-left: 3vmin;
-		}
 	}
 
 	// aligning profile photo with profile details
 	.profile-photo {
-		margin-top: 2vmin;
+		margin-top: 3vmin;
 	}
 
 	.profile-name  {
 		height: 100%;
 		font-size: 30px !important;
-		width: 94%; // align it with the value below (relevant when in edit mode)
 	}
 
-	// TODO If you're putting in tweaks, say why -- is this an aesthetic tweak, or fixing a layout bug?
-	.header.form-control  {
-		width: 94%;
-	}
+	// // TODO If you're putting in tweaks, say why -- is this an aesthetic tweak, or fixing a layout bug?
+	// .header.form-control  {
+	// 	width: 94%;
+	// }
 
 
 	// No - use a semantic tag or class
@@ -286,6 +286,11 @@
 	input[type="text"] {
 		font-size: 22px;
 		width: 80%;
+	}
+
+	 // ugly hack to align profile-name with the values below (relevant when in edit mode)
+	input[type="text"].profile-name.form-control {
+		width: 93%;
 	}
 
 	// Why?? And why not do this in React??
@@ -313,21 +318,16 @@
 			display: block; // Prevent line-height displacing icon
 		}
 	}
-
-	select[placeholder="relationship"], select[placeholder="gender"] {
-		width: 80%;
-	}
 }
 
 // autosave message to inform user that their edits have been saved
 .autosave {
-	margin-top: 2.7vmin;
-	//margin-left: 2vmin;
+	margin-left: 1vmin;
 }
 
 //  edit button
 .edit {
-	margin: 1.5vmin 0 3.5vmin 1.3vmin;
+	margin: 2vmin 0 2vmin 1.3vmin;	
 }
 
 // end of DigitalMirrorCardDesign
@@ -343,7 +343,7 @@
 // Used to reset line-height of bootstrap rows in DigitalMirror
 // makes toggling 'Edit' mode much less jarring
 .revertHeight {
-	line-height: initial;
+	line-height: inherit;
 }
 
 /** size a user profile picture*/
@@ -359,3 +359,11 @@
 	}
 }
 
+.word-wrap {
+	word-break: break-all;
+}
+
+// hack to make grayed out values consistent across website
+.text-muted {
+	color: #9c9c9c;
+}

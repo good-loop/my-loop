@@ -27,7 +27,8 @@ const socialMedia = [
 			{
 				field: 'gender',
 				type:'select', // Drop-down menu
-				options: ['Male', 'Female', 'Other', 'Not specified']
+				options: ['Male', 'Female', 'Other', 'Not specified'],
+				dflt: 'Unknown gender'
 			}, 
 			{
 				field: 'location',
@@ -40,7 +41,8 @@ const socialMedia = [
 			{
 				field: 'relationship',
 				type: 'select',
-				options: ['Single', 'In a relationship', 'Engaged', 'Married', 'Divorced', 'Widowed', 'Not specified']
+				options: ['Single', 'In a relationship', 'Engaged', 'Married', 'Divorced', 'Widowed', 'Not specified'],
+				dflt: 'Unknown relationship'
 			}] // keys should match back-end/Datastore
 	}
 ];
@@ -78,7 +80,7 @@ const iconFromField = (field, value) => {
 
 	if( !iconField ) return null;
 
-	return icons[field][value] ? icons[field][value] : icons[field].default; 
+	return iconField[value] ? iconField[value] : iconField.default; 
 };
 
 // TODO: Think that this will need to change significantly in future
@@ -95,6 +97,7 @@ const DigitalMirrorCard = ({xids}) => {
 	if(!xids) return null;
 	assMatch(xids, 'String[]');
 
+<<<<<<< HEAD
 	// call analyze data, once per XId
 	xids.forEach(xid => {
 		if (XId.service(xid) !== 'twitter') return; // TODO Facebook etc too
@@ -103,6 +106,8 @@ const DigitalMirrorCard = ({xids}) => {
 		// ??do we need to store the response data into DataStore.data.Person??
 	});	
 
+=======
+>>>>>>> 103fd7f36a7e9e076a3378806ddc405ea4b3be37
 	// ??Switch to using [draft, Person, xid] as the storage for edits
 	// -- and hence reuse some existing Crud code.
 	/** HACK: Grab data from [data, Person, xid] (which we treat as read-only),
@@ -163,34 +168,35 @@ const DigitalMirrorCard = ({xids}) => {
  * ??Does it need bootstrap rows? they feel like a cumbersome solution here
 */
 const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) => {
-	const {field, type, options} = fieldObj;
+	const {field, type, options, dflt} = fieldObj;
 	// Hard-set 'name' to be header
 	const isHeader = field === 'name';
 	const fieldPath = path.concat(field);
+	const fieldValue = DataStore.getValue(fieldPath.concat('value'));
+	const placeholder = 'Unknown ' + field; // Shows where value for text field is not available
 
-	if(editModeEnabled) {
+	// For drop-down menus, easy to display display the edit field if the user has not already provided a value
+	// Behaviour is a good deal more complicated for text fields, which will switch to having a value as soon as the user begins typing
+	if( editModeEnabled ) {
 		return (
 			<div className='row vertical-align revertHeight' key={'data-control-' + field}> 
-				<div className='col-md-1'>
-					<PropControl type="checkbox" path={fieldPath} prop={'permission'} label={label(field, fieldPath)} key={field} 
-						saveFn={() => debounceSaveFn(field, 'myloop@app')} />
-				</div>
+				{isHeader ? null : <div className='col-md-1'>{label(field, fieldPath)}</div>}
 				<div className={'col-md-8'}>
-					<PropControl type={type} options={options} className={isHeader ? 'profile-name' : ''} 
-						path={fieldPath} prop={'value'} placeholder={field} 
-						saveFn={() => debounceSaveFn(field, 'myloop@app')}
+					<PropControl type={type} options={options} dflt={dflt} className={isHeader ? 'profile-name' : ''} 
+						path={fieldPath} prop={'value'} placeholder={placeholder} 
+						saveFn={() => debounceSaveFn('myloop@app')}
 					/>
 				</div>
 			</div>	
 		);
 	}
-	const v = DataStore.getValue(path.concat([field, 'value']));
+	const v = DataStore.getValue(fieldPath.concat('value'));
 	// ?? profile-name: better to use a bootstrap instead of a custom css class
 	return (
 		<div className='row vertical-align' key={'data-control-' + field}> 
 			{isHeader ? null : <div className='col-md-1'>{label(field, fieldPath)}</div>}
-			<div className={'col-md-9' + (isHeader ? ' profile-name' : '')}>
-				{v || capitalise(field)}
+			<div className={'col-md-9' + (fieldValue ? '' : ' text-muted') + (isHeader ? ' profile-name' : '')}>
+				{v || placeholder}
 			</div>
 		</div>
 	);
@@ -218,8 +224,8 @@ const PermissionControls = ({xidObj}) => {
 	// causing a save to fire on every key stroke.
 	let debounceSaveFn = DataStore.getValue(['widget', 'DigitalMirror', xid, 'debounceSaveFn']);
 	if( !debounceSaveFn ) {
-		debounceSaveFn = _.debounce((field, from) => saveFn(xid, field, from), 1000);
-		DataStore.setValue(['widget', 'DigitalMirror', xid, 'debounceSaveFn'], debounceSaveFn);
+		debounceSaveFn = _.debounce((from) => saveFn(xid, dataFields, from), 1000);
+		DataStore.setValue(['widget', 'DigitalMirror', xid, 'debounceSaveFn'], debounceSaveFn, false);
 	}
 
 	let visible = DataStore.getValue(['widget','DigitalMirror','autosaveTriggered']);
@@ -234,15 +240,14 @@ const PermissionControls = ({xidObj}) => {
 			<div className="mirror">
 				<div className='description'>
 					<p>Your data can help us boost the amount that is donated whenever you see one of our ads.</p>
-					<p>And you get to choose what information you share.</p>
 				</div>
-				<div className='container'>
+				<div className='container word-wrap'>
 					<div className='row'>
-						<div className="col-md-5 profile-details">
-							{dataFields.map( fieldObj => PermissionControlRow(path, fieldObj, debounceSaveFn, editModeEnabled))}
-						</div>
-						<div className='col-md-5 profile-photo'>
+						<div className='col-sm-5 col-sm-push-5 profile-photo'>
 							{profileImage ? <img className='img-thumbnail img-profile' src={profileImage.value} alt='user-profile' /> : null}
+						</div>
+						<div className="col-sm-5 col-sm-pull-5 profile-details">
+							{dataFields.map( fieldObj => PermissionControlRow(path, fieldObj, debounceSaveFn, editModeEnabled))}
 						</div>
 					</div>
 				</div>				
@@ -282,12 +287,16 @@ const label = (field, fieldPath) => {
 // Important for editing data held where we use a "Save" button
 /**
  * @param from optional
+ * @param fieldObjs [{field: "name"}, {field: "relationship"}] is rough format expected
+ * Will deconstruct and, for each 'field' value, generate a Claim to be sent to the back-end
+ * Wanted it to bulk save all data fields like this to work-around a bug (31/10/18) where typing
+ * quickly meant that only the first field edited would be saved. Caused by race against debounce
  */
-const saveFn = (xid, fields, from) => {
+const saveFn = (xid, fieldObjs, from) => {
 	// to inform the user that an autosave event happened
 	DataStore.setValue(['widget','DigitalMirror', 'autosaveTriggered'], true);
 
-	if( _.isString(fields) ) fields = [fields];
+	if( _.isString(fieldObjs) ) fieldObjs = [fieldObjs];
 
 	// This is really just a bit of paranoia 
 	// While this should only ever be saving Claims that have been edited by the user,
@@ -298,7 +307,8 @@ const saveFn = (xid, fields, from) => {
 
 	let claims = [];
 
-	fields.forEach( field => {
+	fieldObjs.forEach( fieldObj => {
+		const {field} = fieldObj;
 		const data = DataStore.getValue(userdataPath.concat([xid, field]));
 
 		// Allow blank string
