@@ -244,14 +244,15 @@ const CampaignPage = ({path}) => {
 		return { cid, value100p };
 	});
 	
-	let campaignTotal = pvDonationsBreakdown.value.total;
+	let campaignTotal = pvDonationsBreakdown.value.total; 
+	let donationValue = campaign.donation ? campaign.donation : campaignTotal; // check if statically set and, if not, then update with latest figures
 	let charityTotal = filteredBreakdown.reduce((acc, current) => acc + current.value100p, 0);
 	let campaignSlice = {}; // campaignSlice is of the form { cid: {percentageTotal: ...} } so as to ensure the correct values are extracted later (checking for cid rather than index)
 	filteredBreakdown.forEach(function(obj) {
 		const rawFraction = obj.value100p / charityTotal || 0; 
 		campaignSlice[obj.cid] = {percentageTotal: Math.round(rawFraction*100)}; 
 	});
-	console.log(campaignSlice);
+	
 	return (<div className='campaign-page'>
 		<div className='grid'>
 			<div className='grid-tile top'> 
@@ -263,7 +264,7 @@ const CampaignPage = ({path}) => {
 						<div className='title frank-font'>
 							<div>{cadvertiser}</div>
 							<div>are donating</div>							
-							<div><Misc.Money amount={29049} minimumFractionDigits={2} /></div>
+							<div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div>
 							<div>to charity</div>
 						</div>
 						<div className='ads-for-good' style={brandColorBgStyle}>
