@@ -97,17 +97,6 @@ const DigitalMirrorCard = ({xids}) => {
 	if(!xids) return null;
 	assMatch(xids, 'String[]');
 
-<<<<<<< HEAD
-	// call analyze data, once per XId
-	xids.forEach(xid => {
-		if (XId.service(xid) !== 'twitter') return; // TODO Facebook etc too
-		DataStore.fetch(['widget','DigitalMirrorCard','analyzeData', xid], 
-			() => Profiler.requestAnalyzeData(xid));
-		// ??do we need to store the response data into DataStore.data.Person??
-	});	
-
-=======
->>>>>>> 103fd7f36a7e9e076a3378806ddc405ea4b3be37
 	// ??Switch to using [draft, Person, xid] as the storage for edits
 	// -- and hence reuse some existing Crud code.
 	/** HACK: Grab data from [data, Person, xid] (which we treat as read-only),
