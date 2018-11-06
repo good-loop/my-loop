@@ -169,12 +169,15 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 	if( editModeEnabled ) {
 		return (
 			<div className='row vertical-align revertHeight' key={'data-control-' + field}> 
-				{isHeader ? null : <div className='col-md-1'>{label({field, fieldPath, debounceSaveFn})}</div>}
+				{isHeader ? null : <div className='col-md-1'>{label({field, fieldPath})}</div>}
 				<div className={'col-md-8'}>
 					<PropControl type={type} options={options} dflt={dflt} className={isHeader ? 'profile-name' : ''} 
 						path={fieldPath} prop={'value'} placeholder={placeholder} 
 						saveFn={() => debounceSaveFn('myloop@app')}
 					/>
+				</div>
+				<div className={'col-md-1 ' + (isHeader ? 'col-md-push-1' : '')}>
+					<PropControl type='checkbox' path={fieldPath} prop='permission' saveFn={() => debounceSaveFn('myloop@app')} style={{display: 'inline-block'}} /> 
 				</div>
 			</div>	
 		);
@@ -183,7 +186,7 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 	// ?? profile-name: better to use a bootstrap instead of a custom css class
 	return (
 		<div className='row vertical-align' key={'data-control-' + field}> 
-			{isHeader ? null : <div className='col-md-1'>{label({field, fieldPath, debounceSaveFn})}</div>}
+			{isHeader ? null : <div className='col-md-1'>{label({field, fieldPath})}</div>}
 			<div className={'col-md-9' + (fieldValue ? '' : ' text-muted') + (isHeader ? ' profile-name' : '')}>
 				{v || placeholder}
 			</div>
@@ -253,19 +256,14 @@ const PermissionControls = ({xidObj}) => {
 
 // This is just a proof of concept.
 // If we end up going with this method, would want to use images that represent the relevant data field
-const label = ({field, fieldPath, debounceSaveFn}) => {
+const label = ({field, fieldPath}) => {
 	let fieldValue = DataStore.getValue(fieldPath);
 	// If there is data, will be in form {permission: bool, value: 'val'}
 	fieldValue = fieldValue && fieldValue.value;
 
 	const icon = iconFromField(field, fieldValue);
-	const iconLabel = (<div className='input-label'>{icon}</div>);
 
-	return (	
-		icon ? (
-			<PropControl type='checkbox' path={fieldPath} prop='permission' label={iconLabel} saveFn={() => debounceSaveFn('myloop@app')} style={{display: 'inline-block'}} />
-		): null
-	);
+	return icon ? <div className='input-label'>{icon}</div> : null;
 };
 
 // TODO use Crud instead
