@@ -20,6 +20,8 @@ import { LoginToSee } from './Bits';
 import ConsentWidget from './ConsentWidget';
 import DonationCard from './DonationCard';
 
+const pagePath = ['widget', 'MyPage'];
+
 const fetcher = xid => DataStore.fetch(['data', 'Person', xid], () => {
 	// Call analyzedata servlet to pull in user data from Twitter
 	// Putting this here means that the DigitalMirror will refresh itself with the data
@@ -85,6 +87,24 @@ const MyPage = () => {
 	const allIds = xids.map(trkid => 'user:' + trkid).join(' OR ');
 
 	const locn = ""+window.location;
+	
+	// Record request if this has not already been done this session
+	const {mixpanel} = window;
+	const alreadyTracked = DataStore.getValue(pagePath.concat('alreadyTracked'));
+
+	if(mixpanel && !alreadyTracked) {
+		try {
+			mixpanel.track(
+				"Page rendered",
+				{
+					xids
+				}
+			);
+			DataStore.setValue(pagePath.concat('alreadyTracked'), true, false);
+		} catch(e) {
+			console.warn(e);
+		}
+	}
 
 	// display...
 	return (
