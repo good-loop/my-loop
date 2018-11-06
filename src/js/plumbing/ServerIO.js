@@ -101,5 +101,19 @@ ServerIO.getAllSpend = ({vert, name}) => {
 	return ServerIO.load(url, params);
 };
 
+ServerIO.MixPanelTrack = (tag, data, path) => {
+	// Record request if this has not already been done this session
+	const {mixpanel} = window;
+	const alreadyTracked = DataStore.getValue(path);
+
+	if(mixpanel && !alreadyTracked) {
+		try {
+			mixpanel.track(tag, data);
+			DataStore.setValue(path, true, false);
+		} catch(e) {
+			console.warn(e);
+		}
+	}
+};
 
 // Profiler API: see Profiler.js

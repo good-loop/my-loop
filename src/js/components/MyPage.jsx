@@ -88,23 +88,7 @@ const MyPage = () => {
 
 	const locn = ""+window.location;
 	
-	// Record request if this has not already been done this session
-	const {mixpanel} = window;
-	const alreadyTracked = DataStore.getValue(pagePath.concat('alreadyTracked'));
-
-	if(mixpanel && !alreadyTracked) {
-		try {
-			mixpanel.track(
-				"Page rendered",
-				{
-					xids
-				}
-			);
-			DataStore.setValue(pagePath.concat('alreadyTracked'), true, false);
-		} catch(e) {
-			console.warn(e);
-		}
-	}
+	ServerIO.MixPanelTrack('Page rendered', {xids}, pagePath.concat('renderLogged'));
 
 	// display...
 	return (
