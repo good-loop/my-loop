@@ -25,3 +25,5 @@ C.CAN = new Enum("view edit admin sudo");
 // setup roles
 defineRole(C.ROLES.user, [C.CAN.view]);
 defineRole(C.ROLES.admin, C.CAN.values);
+
+C.TRACKPATH = ['data', 'MixPanelTrack'];

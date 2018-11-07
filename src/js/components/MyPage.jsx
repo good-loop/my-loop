@@ -19,6 +19,7 @@ import ShareAnAd from '../components/ShareAnAd';
 import { LoginToSee } from './Bits';
 import ConsentWidget from './ConsentWidget';
 import DonationCard from './DonationCard';
+import C from '../C';
 
 const pagePath = ['widget', 'MyPage'];
 
@@ -88,7 +89,7 @@ const MyPage = () => {
 
 	const locn = ""+window.location;
 	
-	ServerIO.MixPanelTrack('Page rendered', {xids}, pagePath.concat('renderLogged'));
+	ServerIO.MixPanelTrack('Page rendered', {xids}, C.TRACKPATH.concat('renderLogged'));
 
 	// display...
 	return (
@@ -417,7 +418,7 @@ const OnboardingCardMini = () => {
  * Social CTAs: Share on social / connect
  */
 const SocialMediaCard = ({allIds=[]}) => {
-	// TODO (31/10/18): move this in to ids after email signup code is connected
+	// TODO (31/10/18): move emailID in to ids after email signup code has been implemented
 	const emailID = allIds.filter(id => XId.service(id)==='email')[0];
 
 	const ids = {
