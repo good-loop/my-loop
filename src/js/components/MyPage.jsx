@@ -20,8 +20,11 @@ import { LoginToSee } from './Bits';
 import ConsentWidget from './ConsentWidget';
 import DonationCard from './DonationCard';
 import C from '../C';
+import { Server } from 'http';
 
 const pagePath = ['widget', 'MyPage'];
+
+window.DEBUG = true;
 
 const fetcher = xid => DataStore.fetch(['data', 'Person', xid], () => {
 	// Call analyzedata servlet to pull in user data from Twitter
@@ -91,6 +94,23 @@ const MyPage = () => {
 	
 	ServerIO.MixPanelTrack('Page rendered', {xids}, C.TRACKPATH.concat('renderLogged'));
 
+	// Attempt to find ad most recently watched by the user
+	// Go through all @trk ids.
+	// Expect that user should only ever have one @trk, but can't confirm that
+	let userAdHistoryPV = DataStore.fetch(pagePath.concat('AdHistory'), () => {
+		// Only interested in @trk ids. Other types won't have associated watch history
+		const trkIds = xids.filter( xid => xid.slice(xid.length - 4) === '@trk');
+		// Pull in data for each ID
+		const PVs = trkIds.map( trkID => ServerIO.getAdHistory(trkID));
+		// Pick the data with the most recent timestamp
+		return Promise.all(PVs).then( values => values.reduce( (newestData, currentData) => {
+			if( !newestData ) {
+				return currentData;
+			}
+			return Date.parse(currentData.cargo.time) > Date.parse(newestData.cargo.time) ? currentData : newestData;
+		}));
+	});
+
 	// display...
 	return (
 		<div className="page MyPage">
@@ -107,7 +127,7 @@ const MyPage = () => {
 						</Card>								
 						<Card title="Boost Your Impact" className="SocialMediaCard" defaultOpen>
 							<SocialMediaCard allIds={xids} />
-							<ShareAnAd />
+							{ userAdHistoryPV.resolved ? <ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} /> : null }
 						</Card> 
 					</CardRow3>
 

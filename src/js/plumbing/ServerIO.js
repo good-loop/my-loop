@@ -116,4 +116,7 @@ ServerIO.MixPanelTrack = (tag, data, path) => {
 	}
 };
 
-// Profiler API: see Profiler.js
+/** Returns information on the last ad watched by the given user
+ *  Ok if xid is blank. Watch-history will use current session cookie instead
+ */
+ServerIO.getAdHistory = (xid) => ServerIO.load(ServerIO.AS_ENDPOINT + '/watch-history/' + (xid ? escape(xid) : '' ), {});
