@@ -1,5 +1,6 @@
 import React from 'react';
 import DataStore from '../base/plumbing/DataStore';
+import ServerIO from '../plumbing/ServerIO';
 import TwitterShare from './TwitterShare';
 
 
@@ -9,21 +10,21 @@ const injectGoodLoopUnit = ({adID, vastTag, thisRef}) => {
 
 	/** Elements to place in Good-Loop iframe */
 	const $script = document.createElement('script');
-	$script.setAttribute('src', adID ? '//as.good-loop.com/unit.js?gl.vert=' + adID : '//as.good-loop.com/unit.js');
+	$script.setAttribute('src', adID ? ServerIO.AS_ENDPOINT + '/unit.js?gl.variant=pre-roll&gl.vert=' + adID : ServerIO.AS_ENDPOINT + '/unit.js?gl.variant=pre-roll');
 
 	const $div = document.createElement('div');
 	$div.setAttribute('class', 'goodloopad');
 
-	// Choose stickyfooter because it looks ok at any width/height
-	$div.setAttribute('data-format', 'stickyfooter');
-	$div.setAttribute('data-mobile-format', 'stickyfooter');
+	$div.setAttribute('data-format', 'player');
+	$div.setAttribute('data-mobile-format', 'player');
 
 	iframe.setAttribute('id', 'good-loop-iframe');
 	iframe.setAttribute('frameborder', 0);
 	iframe.setAttribute('scrolling', 'auto');
 	
-	iframe.style.height = '102px';
-	iframe.style.width = '100%';
+	iframe.style.height = 'auto';
+	iframe.style.width = 'auto';
+	iframe.style['max-width'] = '100%';
 	// HACK (26/10/18): allow adunit to still run and pick out ad ID and video
 	// 08/11/18 updated this so that the adunit will display for vast videos
 	if( !vastTag ) {
@@ -57,7 +58,7 @@ const injectGoodLoopUnit = ({adID, vastTag, thisRef}) => {
 		});
 	});
 
-	return adIDPV;
+	return {adIDPV, iframe};
 };
 
 class ShareAnAd extends React.Component {
@@ -102,8 +103,12 @@ class ShareAnAd extends React.Component {
 
 		const {adID, mobileVideo, vastTag, video} = this.state;
 
+		// Handles two cases:
+		// 1) The user has no view history => the adunit picks an ad for them to watch
+		//	(will need to make sure that they see the GoodLoop unit if it picks a VAST ad!)
+		// 2) The last ad they watched was a VAST ad. Use the GoodLoop player to play.
 		if( !video && !mobileVideo ) {
-			const adIDPV = injectGoodLoopUnit({adID, thisRef: this, vastTag});
+			const {adIDPV, iframe} = injectGoodLoopUnit({adID, thisRef: this, vastTag});
 			// Grab ad ID chosen by adunit and place in to DataStore/state
 			adIDPV.then( contentWindow => { 
 				// Assuming that adunit has not embedded itself in another iframe
@@ -111,12 +116,16 @@ class ShareAnAd extends React.Component {
 				const id = goodloop.vert.adid; 
 				const vid = goodloop.vert.video;
 				const mobVid = goodloop.vert.mobileVideo;
-
-				DataStore.setValue(['widget', 'TwitterShare', 'adID'], id);
-				DataStore.setValue(['widget', 'TwitterShare', 'video'], vid);
-				DataStore.setValue(['widget', 'TwitterShare', 'mobileVideo'], vid);
+				const glVastTag = goodloop.vert.vastTag;
 
 				this.setState({adID: id, video: vid, mobileVideo: mobVid}); 
+
+				// User has no previous view history, but the ad picked by the unit is a VAST ad
+				// Want to show them the GoodLoop unit in this case
+				if( glVastTag ) {
+					iframe.style.display = 'block';
+					this.setState({vastTag: glVastTag});
+				}
 			});
 		}     
 	} 
@@ -136,7 +145,7 @@ class ShareAnAd extends React.Component {
 		return (
 			<div className="ShareAd">
 				<h2> Share this ad on social media </h2>
-				<video controls="true" width="100%" height="auto" src={isMobile? mobileVideo : video}> An error occured </video>
+				{ video || mobileVideo ? <video controls="true" width="100%" height="auto" src={isMobile? mobileVideo : video}> An error occured </video> : null }
 				<div ref={e => this.setRef('adunitRef', e)} />
 				{ adID ? <TwitterShare adID={this.state.adID} /> : null}
 			</div>

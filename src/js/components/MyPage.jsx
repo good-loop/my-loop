@@ -100,6 +100,12 @@ const MyPage = () => {
 	let userAdHistoryPV = DataStore.fetch(pagePath.concat('AdHistory'), () => {
 		// Only interested in @trk ids. Other types won't have associated watch history
 		const trkIds = xids.filter( xid => xid.slice(xid.length - 4) === '@trk');
+
+		// No cookies registered, try using current session's cookie
+		if( !trkIds || trkIds.length === 0 ) {
+			return ServerIO.getAdHistory();
+		}
+
 		// Pull in data for each ID
 		const PVs = trkIds.map( trkID => ServerIO.getAdHistory(trkID));
 		// Pick the data with the most recent timestamp

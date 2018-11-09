@@ -23,6 +23,7 @@
 
 // And that is why we're stuck with the current behaviour where the Tweet button does not update upon receiving new props.
 import React from 'react';
+import ServerIO from '../plumbing/ServerIO';
 
 // Having users share our ads would actually 
 // be quite a clever way to alleviate a shortage of publishers.
@@ -110,7 +111,7 @@ class TwitterShare extends React.Component {
 				data-dnt="true"
 				data-size="large"
 				data-text="I just gave to charity by watching a @GoodLoopHQ ad :)"
-				data-url={adID ? 'https://as.good-loop.com/?gl.vert=' + adID : 'https://as.good-loop.com'}
+				data-url={adID ? ServerIO.AS_ENDPOINT + '/?gl.vert=' + adID : ServerIO.AS_ENDPOINT}
 			>
 					Tweet
 			</a>);
