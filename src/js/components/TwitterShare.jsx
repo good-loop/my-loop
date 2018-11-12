@@ -23,7 +23,10 @@
 
 // And that is why we're stuck with the current behaviour where the Tweet button does not update upon receiving new props.
 import React from 'react';
+import md5 from 'md5';
 import ServerIO from '../plumbing/ServerIO';
+import {saveSocialShareId} from '../base/Profiler';
+import Person from '../base/data/Person';
 
 // Having users share our ads would actually 
 // be quite a clever way to alleviate a shortage of publishers.
@@ -33,7 +36,7 @@ class TwitterShare extends React.Component {
 	constructor(props) {
 		super(props);
 
-		const {adID, socialShareId} = props;
+		const {adID, TwitterXId} = props;
 
 		// Create ref by callback https://reactjs.org/docs/refs-and-the-dom.html#callback-refs
 
@@ -45,10 +48,17 @@ class TwitterShare extends React.Component {
 			if (this[ref]) this[ref].focus();
 		};
 
+		// Make hash out of service name and vert ID
+		// Important that ID generated always be the same for given service + adID
+		// Don't want the user to be able to generate multiple tracking IDs for
+		// the same ad. If the share it multiple times, would like share count to be aggregated
+		const TwitterSocialShareId = md5( 'twitter' + adID );
+
 		this.state = {
 			adID,
 			twttrPV: null,
-			socialShareId
+			TwitterXId,
+			TwitterSocialShareId
 		};
 	}
 	
@@ -70,7 +80,7 @@ class TwitterShare extends React.Component {
 	}
 
 	componentDidMount() {
-		const {twttrPV} = this.state; 
+		const {twttrPV, TwitterXId, TwitterSocialShareId} = this.state; 
 
 		this.focusRef('twitterShareRef'); // resolve DOM element that Tweet button will be loaded in to
 
@@ -79,6 +89,8 @@ class TwitterShare extends React.Component {
 
 			if(twttr) {
 				twttr.widgets.load();
+
+				twttr.events.bind('click', () => saveSocialShareId(TwitterXId, TwitterSocialShareId));
 			}
 		});
 	} 
@@ -107,7 +119,7 @@ class TwitterShare extends React.Component {
 		
 		// adID and socialShareId should always come paired
 		// Only reason a socialShareId wouldn't be created is if we don't have and adID
-		const {adID, socialShareId} = this.state;
+		const {adID, TwitterSocialShareId} = this.state;
 
 		return (
 			<a className="twitter-share-button"
@@ -115,7 +127,7 @@ class TwitterShare extends React.Component {
 				data-dnt="true"
 				data-size="large"
 				data-text="I just gave to charity by watching a @GoodLoopHQ ad :)"
-				data-url={adID ? ServerIO.AS_ENDPOINT + '/?gl.vert=' + adID + '&gl.socialShareId=' + socialShareId : ServerIO.AS_ENDPOINT}
+				data-url={adID ? ServerIO.AS_ENDPOINT + '/?gl.vert=' + adID + '&gl.socialShareId=' + TwitterSocialShareId : ServerIO.AS_ENDPOINT}
 			>
 					Tweet
 			</a>);
