@@ -33,7 +33,7 @@ class TwitterShare extends React.Component {
 	constructor(props) {
 		super(props);
 
-		const {adID} = props;
+		const {adID, socialShareId} = props;
 
 		// Create ref by callback https://reactjs.org/docs/refs-and-the-dom.html#callback-refs
 
@@ -47,7 +47,8 @@ class TwitterShare extends React.Component {
 
 		this.state = {
 			adID,
-			twttrPV: null
+			twttrPV: null,
+			socialShareId
 		};
 	}
 	
@@ -103,7 +104,10 @@ class TwitterShare extends React.Component {
 		// Was the mention of adding some sort of tracking URL so that users would be able
 		// to see how many of their followers watched the ad that they shared.
 		// return <div className="TwitterShare" ref={e => this.setRef('twitterShareRef', e)} />;
-		const {adID} = this.state;
+		
+		// adID and socialShareId should always come paired
+		// Only reason a socialShareId wouldn't be created is if we don't have and adID
+		const {adID, socialShareId} = this.state;
 
 		return (
 			<a className="twitter-share-button"
@@ -111,7 +115,7 @@ class TwitterShare extends React.Component {
 				data-dnt="true"
 				data-size="large"
 				data-text="I just gave to charity by watching a @GoodLoopHQ ad :)"
-				data-url={adID ? ServerIO.AS_ENDPOINT + '/?gl.vert=' + adID : ServerIO.AS_ENDPOINT}
+				data-url={adID ? ServerIO.AS_ENDPOINT + '/?gl.vert=' + adID + '&gl.socialShareId=' + socialShareId : ServerIO.AS_ENDPOINT}
 			>
 					Tweet
 			</a>);

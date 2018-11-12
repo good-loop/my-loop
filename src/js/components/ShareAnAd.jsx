@@ -1,8 +1,11 @@
 import React from 'react';
+import md5 from 'md5';
 import DataStore from '../base/plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
 import TwitterShare from './TwitterShare';
-
+import C from '../C';
+import Person from '../base/data/Person';
+import {saveSocialShareId} from '../base/Profiler';
 
 /** Returns promise that resolves when Good-Loop unit is loaded and ready */
 const injectGoodLoopUnit = ({adID, vastTag, thisRef}) => {
@@ -142,12 +145,21 @@ class ShareAnAd extends React.Component {
 			isMobile = !!(userAgent.match('/mobile|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i'));
 		}
 
+		// This ID will later be used to show the user how many people have watched the ad that they shared
+		const TwitterXId = Person.getTwitterXId();
+		// Make hash out of service name and vert ID
+		// Important that ID generated always be the same for given service + adID
+		// Don't want the user to be able to generate multiple tracking IDs for
+		// the same ad. If the share it multiple times, would like share count to be aggregated
+		const TwitterSocialShareId = md5( 'twitter' + adID );
+
 		return (
 			<div className="ShareAd">
 				<h2> Share this ad on social media </h2>
 				{ video || mobileVideo ? <video controls="true" width="100%" height="auto" src={isMobile? mobileVideo : video}> An error occured </video> : null }
 				<div ref={e => this.setRef('adunitRef', e)} />
-				{ adID ? <TwitterShare adID={this.state.adID} /> : null}
+				{ adID ? <button onClick={() => saveSocialShareId(TwitterXId, TwitterSocialShareId)} > Link ShareId </button> : null }
+				{ adID ? <TwitterShare adID={this.state.adID} socialShareId={TwitterSocialShareId} onClick={() => saveSocialShareId(TwitterXId, TwitterSocialShareId)} /> : null}
 			</div>
 		);
 	}
