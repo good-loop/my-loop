@@ -145,17 +145,46 @@ class ShareAnAd extends React.Component {
 			isMobile = !!(userAgent.match('/mobile|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i'));
 		}
 
-		const TwitterXId = Person.getTwitterXId();
+		const twitterXId = Person.getTwitterXId();
+		// Array of the form [{Id:"8facbac79b73d31c36716e584d631969", views: 1}]
+		const twitterSocialShareIds = twitterXId ? DataStore.getValue(['data', 'Person', twitterXId, 'socialShareIds']) : null; 
 
 		return (
 			<div className="ShareAd">
 				<h2> Share this ad on social media </h2>
 				{ video || mobileVideo ? <video controls="true" width="100%" height="auto" src={isMobile? mobileVideo : video}> An error occured </video> : null }
 				<div ref={e => this.setRef('adunitRef', e)} />
-				{ adID && TwitterXId ? <TwitterShare adID={this.state.adID} TwitterXId={TwitterXId} /> : null}
+				{ adID && twitterXId ? <TwitterShare adID={this.state.adID} TwitterXId={twitterXId} /> : null}
+				{ twitterSocialShareIds ? SharedAdsDisplay(twitterSocialShareIds) : null }
 			</div>
 		);
 	}
 }
+
+const SharedAdsDisplay = twitterSocialShareIds => (
+	<div className='sharedAds container-fluid'>
+		Ads you have previously shared:
+		<table className='word-wrap text-center'>
+			<thead>
+				<tr>
+					<th> Share ID </th>
+					<th> Views </th>
+				</tr>
+			</thead>
+			<tbody>
+				{twitterSocialShareIds.map( shareId => {
+					const {Id, views} = shareId;
+					
+					return (
+						<tr key='Id'>
+							<td> {Id} </td>
+							<td> {views} </td>
+						</tr>
+					);
+				})}
+			</tbody>
+		</table>
+	</div>
+);
 
 export default ShareAnAd;
