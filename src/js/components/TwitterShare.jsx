@@ -52,7 +52,7 @@ class TwitterShare extends React.Component {
 		// Important that ID generated always be the same for given service + adID
 		// Don't want the user to be able to generate multiple tracking IDs for
 		// the same ad. If the share it multiple times, would like share count to be aggregated
-		const TwitterSocialShareId = md5( 'twitter' + adID );
+		const TwitterSocialShareId = md5( TwitterXId + adID );
 
 		this.state = {
 			adID,
@@ -80,7 +80,7 @@ class TwitterShare extends React.Component {
 	}
 
 	componentDidMount() {
-		const {twttrPV, TwitterXId, TwitterSocialShareId} = this.state; 
+		const {adID, twttrPV, TwitterXId, TwitterSocialShareId} = this.state; 
 
 		this.focusRef('twitterShareRef'); // resolve DOM element that Tweet button will be loaded in to
 
@@ -90,7 +90,7 @@ class TwitterShare extends React.Component {
 			if(twttr) {
 				twttr.widgets.load();
 
-				twttr.events.bind('click', () => saveSocialShareId(TwitterXId, TwitterSocialShareId));
+				twttr.events.bind('click', () => saveSocialShareId(TwitterXId, TwitterSocialShareId, adID));
 			}
 		});
 	} 
