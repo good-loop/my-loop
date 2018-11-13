@@ -5,7 +5,6 @@ import ServerIO from '../plumbing/ServerIO';
 import TwitterShare from './TwitterShare';
 import C from '../C';
 import Person from '../base/data/Person';
-import {saveSocialShareId} from '../base/Profiler';
 
 /** Returns promise that resolves when Good-Loop unit is loaded and ready */
 const injectGoodLoopUnit = ({adID, vastTag, thisRef}) => {
@@ -164,21 +163,23 @@ class ShareAnAd extends React.Component {
 const SharedAdsDisplay = twitterSocialShareIds => (
 	<div className='sharedAds container-fluid'>
 		Ads you have previously shared:
-		<table className='word-wrap text-center'>
+		<table className='word-wrap width100'>
 			<thead>
 				<tr>
-					<th> Share ID </th>
+					<th> Advert </th>
 					<th> Views </th>
+					<th> Shared on </th>
 				</tr>
 			</thead>
 			<tbody>
 				{twitterSocialShareIds.map( shareId => {
-					const {Id, views} = shareId;
+					const {adName, dateShared, views} = shareId;
 					
 					return (
-						<tr key='Id'>
-							<td> {Id} </td>
+						<tr key='id'>
+							<td> {adName} </td>
 							<td> {views} </td>
+							<td> {dateShared} </td>
 						</tr>
 					);
 				})}
