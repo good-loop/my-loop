@@ -10,6 +10,7 @@ import Profiler, {saveProfile, getClaimsForXId, saveProfileClaims} from '../base
 import ServerIO from '../plumbing/ServerIO';
 import Misc from '../base/components/Misc';
 import { XId } from 'wwutils';
+import C from '../C';
 
 // @param dataFields: data that we would like to pull from corresponding social media site's API
 // Just Twitter for the moment.
@@ -225,6 +226,7 @@ const PermissionControls = ({xidObj}) => {
 	const editModeEnabled = DataStore.getValue(['widget', 'DigitalMirror', 'editModeEnabled']);
 	const toggleEditMode = () => {
 		DataStore.setValue(['widget', 'DigitalMirror', 'editModeEnabled'], !editModeEnabled);
+		ServerIO.MixPanelTrack('Twitter data edit clicked', {}, C.TRACKPATH.concat('editLogged'));
 	};
 
 	return (
