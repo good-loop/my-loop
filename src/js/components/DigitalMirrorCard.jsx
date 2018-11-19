@@ -176,7 +176,7 @@ const DoNotUseToggle = ({path, debounceSaveFn}) => {
 					<input 
 						id='use'
 						type='radio' 
-						onClick={() => onChange()} 
+						onChange={() => onChange()} 
 						checked={currentValue === true}
 					/>
 					Use 
@@ -188,7 +188,7 @@ const DoNotUseToggle = ({path, debounceSaveFn}) => {
 					<input 
 						id='noUse'
 						type='radio' 
-						onClick={() => onChange()} 
+						onChange={() => onChange()} 
 						checked={currentValue === false}
 					/>
 					*Do not use 
@@ -269,7 +269,7 @@ const PermissionControls = ({xidObj}) => {
 	const editModeEnabled = DataStore.getValue(['widget', 'DigitalMirror', 'editModeEnabled']);
 	const toggleEditMode = () => {
 		DataStore.setValue(['widget', 'DigitalMirror', 'editModeEnabled'], !editModeEnabled);
-		ServerIO.MixPanelTrack('Twitter data edit clicked', {}, C.TRACKPATH.concat('editLogged'));
+		ServerIO.mixPanelTrack('Twitter data edit clicked', {});
 	};
 
 	return (

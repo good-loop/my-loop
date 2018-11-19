@@ -101,9 +101,11 @@ ServerIO.getAllSpend = ({vert, name}) => {
 	return ServerIO.load(url, params);
 };
 
-ServerIO.MixPanelTrack = (tag, data, path) => {
+// MixPanel log where user came from?
+ServerIO.mixPanelTrack = (tag, data) => {
 	// Record request if this has not already been done this session
 	const {mixpanel} = window;
+	const path = C.TRACKPATH.concat(tag);
 	const alreadyTracked = DataStore.getValue(path);
 
 	if(mixpanel && !alreadyTracked) {

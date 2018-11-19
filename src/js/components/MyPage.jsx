@@ -90,9 +90,7 @@ const MyPage = () => {
 	// HACK DataLog query string: "user:trkid1@trk OR user:trkid2@trk OR ..."
 	const allIds = xids.map(trkid => 'user:' + trkid).join(' OR ');
 
-	const locn = ""+window.location;
-	
-	ServerIO.MixPanelTrack('Page rendered', {xids}, C.TRACKPATH.concat('renderLogged'));
+	ServerIO.mixPanelTrack('Page rendered', {referrer: 'document.referrer'});
 
 	// Attempt to find ad most recently watched by the user
 	// Go through all @trk ids.
