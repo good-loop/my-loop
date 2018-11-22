@@ -122,3 +122,15 @@ ServerIO.mixPanelTrack = (tag, data) => {
  *  Ok if xid is blank. Watch-history will use current session cookie instead
  */
 ServerIO.getAdHistory = (xid) => ServerIO.load(ServerIO.AS_ENDPOINT + '/watch-history/' + (xid ? escape(xid) : '' ), {});
+
+// Queries as for number of times that an ad shared by a user has been watched
+// socialShareId should always be an array of strings
+ServerIO.getViewCount = (socialShareId) => {
+	if( typeof socialShareId === 'string' ) {
+		socialShareId = [socialShareId];
+	} 
+
+	assMatch(socialShareId, 'String[]');
+
+	return ServerIO.load(ServerIO.AS_ENDPOINT + '/social-share/', { data: {socialShareIds: JSON.stringify(socialShareId)} });
+};

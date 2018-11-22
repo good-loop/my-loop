@@ -129,7 +129,7 @@ class ShareAnAd extends React.Component {
 					this.setState({vastTag: glVastTag});
 				}
 			});
-		}     
+		} 
 	} 
 
 	render() {
@@ -145,47 +145,56 @@ class ShareAnAd extends React.Component {
 		}
 
 		const twitterXId = Person.getTwitterXId();
-		// Array of the form [{Id:"8facbac79b73d31c36716e584d631969", views: 1}]
-		const twitterSocialShareIds = twitterXId ? DataStore.getValue(['data', 'Person', twitterXId, 'socialShareIds']) : null; 
 
+		// TODO: clean this up?
 		return (
 			<div className="ShareAd">
 				<h2> Share this ad on social media </h2>
 				{ video || mobileVideo ? <video controls="true" width="100%" height="auto" src={isMobile? mobileVideo : video}> An error occured </video> : null }
 				<div ref={e => this.setRef('adunitRef', e)} />
 				{ adID && twitterXId ? <TwitterShare adID={this.state.adID} TwitterXId={twitterXId} /> : null}
-				{ twitterSocialShareIds ? SharedAdsDisplay(twitterSocialShareIds) : null }
+				<SharedAdsDisplay xid={twitterXId} />
 			</div>
 		);
 	}
 }
 
-const SharedAdsDisplay = twitterSocialShareIds => (
-	<div className='sharedAds container-fluid'>
-		Ads you have previously shared:
-		<table className='word-wrap width100'>
-			<thead>
-				<tr>
-					<th> Advert </th>
-					<th> Views </th>
-					<th> Shared on </th>
-				</tr>
-			</thead>
-			<tbody>
-				{twitterSocialShareIds.map( shareId => {
-					const {adName, dateShared, views} = shareId;
-					
-					return (
-						<tr key='id'>
-							<td> {adName} </td>
-							<td> {views} </td>
-							<td> {dateShared} </td>
-						</tr>
-					);
-				})}
-			</tbody>
-		</table>
-	</div>
-);
+const SharedAdsDisplay = ({xid}) => {
+	const twitterSocialShareObjects = xid ? DataStore.getValue(['data', 'Person', xid, 'socialShareIds']) : null;
+	if( !twitterSocialShareObjects ) return null;
+
+	// Want an array of just the ID strings. Filter out other crap
+	const shareIds = twitterSocialShareObjects.map( shareIdObject => shareIdObject.id);
+	DataStore.fetch(['data', 'Person', xid, 'views'], () => ServerIO.getViewCount(shareIds));
+
+	return (
+		<div className='sharedAds container-fluid'>
+			Ads you have previously shared:
+			<table className='word-wrap width100'>
+				<thead>
+					<tr>
+						<th> Advert </th>
+						<th> Views </th>
+						<th> Shared on </th>
+					</tr>
+				</thead>
+				<tbody>
+					{twitterSocialShareObjects.map( shareIdObj => {
+						const {id, adID, dateShared} = shareIdObj;
+						const views = DataStore.getValue(['data', 'Person', xid, 'views', id]);
+
+						return (
+							<tr key='id'>
+								<td> {adID} </td>
+								<td> {views} </td>
+								<td> {dateShared} </td>
+							</tr>
+						);
+					})}
+				</tbody>
+			</table>
+		</div>
+	);
+};
 
 export default ShareAnAd;
