@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<!-- Explicit Content-Security-Policy is required for the GoodLoop app -->
-		<meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file:; style-src 'self' 'unsafe-inline' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; media-src *; img-src * data: 'unsafe-inline'; connect-src * 'unsafe-inline'; frame-src * 'unsafe-inline' 'unsafe-eval';">  
+		<meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file:; style-src 'self' 'unsafe-inline' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; media-src * 'self' data: https: http:; img-src * data: 'unsafe-inline'; connect-src * 'unsafe-inline'; frame-src * 'unsafe-inline' 'unsafe-eval';">  
 
 		<title>My Good-Loop</title>
 		<link rel="shortcut icon" href="/favicon-32.png" />
@@ -31,6 +31,18 @@
 			mixpanel.init("167b9e57379ed91f31d1c1ac91014b14");
 		</script>
 		<!-- end Mixpanel -->
+		<!-- Start HotJar -->
+		<script>
+			(function(h,o,t,j,a,r){
+				h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+				h._hjSettings={hjid:1100105,hjsv:6};
+				a=o.getElementsByTagName('head')[0];
+				r=o.createElement('script');r.async=1;
+				r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+				a.appendChild(r);
+			})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+		</script>
+		<!-- End HotJar -->
 	</head>
 	<body>
 		
