@@ -19,6 +19,12 @@ import ShareAnAd from '../components/ShareAnAd';
 import { LoginToSee } from './Bits';
 import ConsentWidget from './ConsentWidget';
 import DonationCard from './DonationCard';
+import C from '../C';
+import { Server } from 'http';
+
+const pagePath = ['widget', 'MyPage'];
+
+window.DEBUG = true;
 
 const fetcher = xid => DataStore.fetch(['data', 'Person', xid], () => {
 	// Call analyzedata servlet to pull in user data from Twitter
@@ -84,7 +90,30 @@ const MyPage = () => {
 	// HACK DataLog query string: "user:trkid1@trk OR user:trkid2@trk OR ..."
 	const allIds = xids.map(trkid => 'user:' + trkid).join(' OR ');
 
-	const locn = ""+window.location;
+	ServerIO.mixPanelTrack('Page rendered', {referrer: 'document.referrer'});
+
+	// Attempt to find ad most recently watched by the user
+	// Go through all @trk ids.
+	// Expect that user should only ever have one @trk, but can't confirm that
+	let userAdHistoryPV = DataStore.fetch(pagePath.concat('AdHistory'), () => {
+		// Only interested in @trk ids. Other types won't have associated watch history
+		const trkIds = xids.filter( xid => xid.slice(xid.length - 4) === '@trk');
+
+		// No cookies registered, try using current session's cookie
+		if( !trkIds || trkIds.length === 0 ) {
+			return ServerIO.getAdHistory();
+		}
+
+		// Pull in data for each ID
+		const PVs = trkIds.map( trkID => ServerIO.getAdHistory(trkID));
+		// Pick the data with the most recent timestamp
+		return Promise.all(PVs).then( values => values.reduce( (newestData, currentData) => {
+			if( !newestData ) {
+				return currentData;
+			}
+			return Date.parse(currentData.cargo.time) > Date.parse(newestData.cargo.time) ? currentData : newestData;
+		}));
+	});
 
 	// display...
 	return (
@@ -102,7 +131,7 @@ const MyPage = () => {
 						</Card>								
 						<Card title="Boost Your Impact" className="SocialMediaCard" defaultOpen>
 							<SocialMediaCard allIds={xids} />
-							<ShareAnAd />
+							{ userAdHistoryPV.resolved ? <ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} /> : null }
 						</Card> 
 					</CardRow3>
 
@@ -413,7 +442,7 @@ const OnboardingCardMini = () => {
  * Social CTAs: Share on social / connect
  */
 const SocialMediaCard = ({allIds=[]}) => {
-	// TODO (31/10/18): move this in to ids after email signup code is connected
+	// TODO (31/10/18): move emailID in to ids after email signup code has been implemented
 	const emailID = allIds.filter(id => XId.service(id)==='email')[0];
 
 	const ids = {

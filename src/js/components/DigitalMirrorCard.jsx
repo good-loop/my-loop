@@ -10,6 +10,7 @@ import Profiler, {saveProfile, getClaimsForXId, saveProfileClaims} from '../base
 import ServerIO from '../plumbing/ServerIO';
 import Misc from '../base/components/Misc';
 import { XId } from 'wwutils';
+import C from '../C';
 
 // @param dataFields: data that we would like to pull from corresponding social media site's API
 // Just Twitter for the moment.
@@ -152,6 +153,51 @@ const DigitalMirrorCard = ({xids}) => {
 	);
 };
 
+/** TODO: See if there is a Misc component/PropControl type that would cover this behaviour? 
+ * Allow the user to specify whether or not they would like us to use their data for targetting ads
+ * Expect there to already be an initial value for 'permission' in the path set by getClaimsForXId.
+ */
+const DoNotUseToggle = ({path, debounceSaveFn}) => {
+	if( !path ) return null;
+
+	const permissionPath = path.concat('permission');
+
+	let currentValue = !!DataStore.getValue(permissionPath);
+
+	const onChange = () => {
+		DataStore.setValue(permissionPath, !currentValue, true);
+		debounceSaveFn('myloop@app');
+	};
+
+	return (
+		<div className='btn-group' data-toggle='buttons'>
+			<div className='btn-group' onClick={onChange}>
+				<label className={'btn btn-primary ' + (currentValue === true ? 'active' : null)} htmlFor='use' > 
+					<input 
+						id='use'
+						type='radio' 
+						onChange={() => onChange()} 
+						checked={currentValue === true}
+					/>
+					Use 
+				</label>
+			</div>
+
+			<div className='btn-group' onClick={onChange}>
+				<label className={'btn btn-primary ' + (currentValue === false ? 'active' : null)} htmlFor='noUse' > 
+					<input 
+						id='noUse'
+						type='radio' 
+						onChange={() => onChange()} 
+						checked={currentValue === false}
+					/>
+					*Do not use 
+				</label>
+			</div>
+		</div>
+	);
+};
+
 /**TODO: clean this up 
  * 
  * ??Does it need bootstrap rows? they feel like a cumbersome solution here
@@ -169,12 +215,13 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 	if( editModeEnabled ) {
 		return (
 			<div className='row vertical-align revertHeight' key={'data-control-' + field}> 
-				{isHeader ? null : <div className='col-md-1'>{label({field, fieldPath, debounceSaveFn})}</div>}
-				<div className={'col-md-8'}>
+				{isHeader ? null : <div className='col-md-1'>{label({field, fieldPath})}</div>}
+				<div className={'col-md-12'}>
 					<PropControl type={type} options={options} dflt={dflt} className={isHeader ? 'profile-name' : ''} 
 						path={fieldPath} prop={'value'} placeholder={placeholder} 
 						saveFn={() => debounceSaveFn('myloop@app')}
 					/>
+					<DoNotUseToggle path={fieldPath} debounceSaveFn={debounceSaveFn} />
 				</div>
 			</div>	
 		);
@@ -183,7 +230,7 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 	// ?? profile-name: better to use a bootstrap instead of a custom css class
 	return (
 		<div className='row vertical-align' key={'data-control-' + field}> 
-			{isHeader ? null : <div className='col-md-1'>{label({field, fieldPath, debounceSaveFn})}</div>}
+			{isHeader ? null : <div className='col-md-1'>{label({field, fieldPath})}</div>}
 			<div className={'col-md-9' + (fieldValue ? '' : ' text-muted') + (isHeader ? ' profile-name' : '')}>
 				{v || placeholder}
 			</div>
@@ -222,6 +269,7 @@ const PermissionControls = ({xidObj}) => {
 	const editModeEnabled = DataStore.getValue(['widget', 'DigitalMirror', 'editModeEnabled']);
 	const toggleEditMode = () => {
 		DataStore.setValue(['widget', 'DigitalMirror', 'editModeEnabled'], !editModeEnabled);
+		ServerIO.mixPanelTrack('Twitter data edit clicked', {});
 	};
 
 	return (
@@ -239,6 +287,7 @@ const PermissionControls = ({xidObj}) => {
 							{dataFields.map( fieldObj => PermissionControlRow(path, fieldObj, debounceSaveFn, editModeEnabled))}
 						</div>
 					</div>
+					{editModeEnabled ? <small>*If you do not want any of your data to be used for the purpose of targetting ads, click the "Do not use" option beside the relevant field.</small> : null}
 				</div>				
 			</div>
 			<div>
@@ -253,19 +302,14 @@ const PermissionControls = ({xidObj}) => {
 
 // This is just a proof of concept.
 // If we end up going with this method, would want to use images that represent the relevant data field
-const label = ({field, fieldPath, debounceSaveFn}) => {
+const label = ({field, fieldPath}) => {
 	let fieldValue = DataStore.getValue(fieldPath);
 	// If there is data, will be in form {permission: bool, value: 'val'}
 	fieldValue = fieldValue && fieldValue.value;
 
 	const icon = iconFromField(field, fieldValue);
-	const iconLabel = (<div className='input-label'>{icon}</div>);
 
-	return (	
-		icon ? (
-			<PropControl type='checkbox' path={fieldPath} prop='permission' label={iconLabel} saveFn={() => debounceSaveFn('myloop@app')} style={{display: 'inline-block'}} />
-		): null
-	);
+	return icon ? <div className='input-label'>{icon}</div> : null;
 };
 
 // TODO use Crud instead

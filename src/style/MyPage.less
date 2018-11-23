@@ -221,17 +221,6 @@
 		line-height: 50px; 
 		margin-top: 1vmin;
 
-		// TODO doc - What is this achieving? Why not show/hide in React??
-		// This hides the little tickbox that comes with the standard HTML "Checkbox"
-		// React object is set up such that the label is clickable instead.
-		input[type="checkbox"] {
-			display: none;
-		}
-	
-		input[type="checkbox"]:not(:checked)+div{
-			filter: grayscale(100%);
-		}
-
 		.form-control {
 			display: inline-block;
 			background-color: transparent;
@@ -291,13 +280,6 @@
 	 // ugly hack to align profile-name with the values below (relevant when in edit mode)
 	input[type="text"].profile-name.form-control {
 		width: 93%;
-	}
-
-	// Why?? And why not do this in React??
-	// This hides the little tickbox that comes with the standard HTML "Checkbox"
-	// React object is set up such that the label is clickable instead.
-	input[type="checkbox"] {
-		display: none;
 	}
 
 	// Override PropControl class
@@ -366,4 +348,8 @@
 // hack to make grayed out values consistent across website
 .text-muted {
 	color: #9c9c9c;
+}
+
+.width100 {
+	width: 100%;
 }

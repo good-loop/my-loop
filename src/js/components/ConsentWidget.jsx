@@ -55,6 +55,9 @@ const ConsentWidget = ({xids}) => {
 	
 	// handle an edit
 	const togglePerm = ({prop, value, ...x}) => {
+		// Will be sent once per session
+		ServerIO.mixPanelTrack('Consent control clicked', {});
+
 		let dataspace = ServerIO.dataspace; // ??
 		// full perms set
 		// NB: this also means perm settings are synchronised across linked profiles by an edit.
