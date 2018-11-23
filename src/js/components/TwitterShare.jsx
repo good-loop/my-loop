@@ -90,7 +90,7 @@ class TwitterShare extends React.Component {
 			if(twttr) {
 				twttr.widgets.load();
 
-				twttr.events.bind('click', () => saveSocialShareId(TwitterXId, TwitterSocialShareId, adID));
+				twttr.events.bind('click', () => saveSocialShareId({xid: TwitterXId, socialShareId: TwitterSocialShareId, adID}));
 			}
 		});
 	} 

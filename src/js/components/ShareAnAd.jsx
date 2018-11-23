@@ -180,12 +180,12 @@ const SharedAdsDisplay = ({xid}) => {
 				</thead>
 				<tbody>
 					{twitterSocialShareObjects.map( shareIdObj => {
-						const {id, adID, dateShared} = shareIdObj;
+						const {id, adId, name, dateShared} = shareIdObj;
 						const views = DataStore.getValue(['data', 'Person', xid, 'views', id]);
 
 						return (
 							<tr key='id'>
-								<td> {adID} </td>
+								<td> {name || adId} </td>
 								<td> {views} </td>
 								<td> {dateShared} </td>
 							</tr>
