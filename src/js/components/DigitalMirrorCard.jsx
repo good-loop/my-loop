@@ -221,7 +221,6 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
 						path={fieldPath} prop={'value'} placeholder={placeholder} 
 						saveFn={() => debounceSaveFn('myloop@app')}
 					/>
-					<DoNotUseToggle path={fieldPath} debounceSaveFn={debounceSaveFn} />
 				</div>
 			</div>	
 		);
@@ -287,7 +286,6 @@ const PermissionControls = ({xidObj}) => {
 							{dataFields.map( fieldObj => PermissionControlRow(path, fieldObj, debounceSaveFn, editModeEnabled))}
 						</div>
 					</div>
-					{editModeEnabled ? <small>*If you do not want any of your data to be used for the purpose of targetting ads, click the "Do not use" option beside the relevant field.</small> : null}
 				</div>				
 			</div>
 			<div>
