@@ -63,6 +63,7 @@ const injectGoodLoopUnit = ({adID, vastTag, thisRef}) => {
 	return {adIDPV, iframe};
 };
 
+// TODO Does this need to be a component? If not, avoid React.Component in favour of functional jsx
 class ShareAnAd extends React.Component {
 	constructor(props) {
 		super(props);
