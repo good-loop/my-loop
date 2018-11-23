@@ -268,7 +268,9 @@ const CampaignPage = ({path}) => {
 							<div>to charity</div>
 						</div>
 						<div className='ads-for-good' style={brandColorBgStyle}>
-							<img alt='Good Loop Ads For Good Logo' src='https://gl-es-04.good-loop.com/cdn/images/for-good.png' />
+							<a href='https://my.good-loop.com/' target='_blank'>
+								<img alt='Good Loop Ads For Good Logo' src='https://as.good-loop.com/uploads/anon/g46323-3109558700897315648.png' />
+							</a>
 						</div>
 						<div className='arrow'>
 							<Link activeClass='active' className='arrowhead' to='arrowhead' spy smooth duration={2000}>
