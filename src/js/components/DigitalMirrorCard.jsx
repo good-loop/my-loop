@@ -143,7 +143,7 @@ const DigitalMirrorCard = ({xids}) => {
 
 	return (
 		<div>
-			{/* <InteractiveMap /> */}
+			{/* <InteractiveMap use react-leaflet?? /> */}
 			{
 				socialXIds && socialXIds.length > 0
 					? socialXIds.map( xidObj => <PermissionControls xidObj={xidObj} key={xidObj.xid} />)

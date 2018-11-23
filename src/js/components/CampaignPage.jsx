@@ -262,8 +262,8 @@ const CampaignPage = ({path}) => {
 				<div className='header-img' style={headerStyle} >
 					<div className='darken-overlay'>
 						<div className='title frank-font'>
-							<div>{cadvertiser}</div>
-							<div>are donating</div>							
+							<div>{cadvertiser}</div>	
+							<div>{campaign.donation? "are donating" : "have donated so far"}</div>							
 							<div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div>
 							<div>to charity</div>
 						</div>

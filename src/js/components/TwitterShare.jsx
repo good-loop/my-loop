@@ -48,6 +48,8 @@ class TwitterShare extends React.Component {
 			if (this[ref]) this[ref].focus();
 		};
 
+		// TODO always camelCase variable names -- we OnlyStudlyCaseClassNames
+
 		// Make hash out of service name and vert ID
 		// Important that ID generated always be the same for given service + adID
 		// Don't want the user to be able to generate multiple tracking IDs for
@@ -120,6 +122,8 @@ class TwitterShare extends React.Component {
 		// adID and socialShareId should always come paired
 		// Only reason a socialShareId wouldn't be created is if we don't have and adID
 		const {adID, TwitterSocialShareId} = this.state;
+
+		// ??maybe just use gl.via=uxid + a post nonce instead of the social share id machinery??
 
 		return (
 			<a className="twitter-share-button"
