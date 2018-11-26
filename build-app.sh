@@ -5,6 +5,11 @@
 # if you don't do this, new zip created will contain the old zip file
 # Means that file size grows every time that this script is run
 rm myloop.zip
+cd ../wwappbase.js/
+git pull
+cd ../my-loop/   
+git pull
+./convert.less.sh
 npm run compile
 mkdir ~/winterwell/myloopapp
 # PhoneGap requires that app files be wrapped in top-level directory named "www"
