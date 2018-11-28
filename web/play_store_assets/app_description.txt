@@ -1,0 +1,20 @@
+SHORT DESCRIPTION
+
+Help GoodLoop to raise more money for causes you care about.
+
+
+DESCRIPTION
+
+GoodLoop is a video advertising platform that donates 50% of all revenue to charity. After watching a short video, viewers pick which of three charities should receive a donation from us.
+        
+The MyLoop app gives users the ability to do more for their chosen charities.
+
+Features:
+
+Connect your Twitter or Facebook account. With your permission, biographical data retrieved from these sources will be used to enable us to better target adverts. Targetted adverts fetch a higher price, which means more money for charity.
+
+Control your information. If you do not wish us to use any of the data that we have collected, via your connected accounts or otherwise, the app allows you to manage this with ease.
+
+Share an advert. Users who have connected a Twitter account will be presented with the option to share one of our adverts on social media. They will be able to see how many of their followers watched an advert as a result of their Tweet.
+
+You can read more about GoodLoop on our website: https://good-loop.com/our-story.
