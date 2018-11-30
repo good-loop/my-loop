@@ -1,4 +1,7 @@
 *.css
 node_modules
 web/build
-myloop.zip
+myloop.zipweb/privacy-policy.html
+bob.log
+boblog
+web/privacy-policy.html
