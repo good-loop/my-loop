@@ -76,7 +76,9 @@ const DonationCard = ({xids}) => {
 		if (dnt) {
 			return <div>No charity data... You have Do-Not-Track switched on, so we're not tracking you!</div>;
 		}
-		return <p>No charity data for {xids}. <a href='https://as.good-loop.com'>Watch a Good-Loop ad to donate</a></p>;
+		// word-wrap fixes bug where users with a lot of linked IDs see giant string that scrolls off screen if charity data cannot be fetched
+		// Might be better to just display qAllIds instead of xids, but this is easier to test right now (unable to reproduce on local/test)
+		return <p className="word-wrap">No charity data for {xids}. <a href='https://as.good-loop.com'>Watch a Good-Loop ad to donate</a></p>;
 	}
 
 	let donationsByCharity = pvDonationData.value.by_cid;
