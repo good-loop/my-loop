@@ -120,11 +120,13 @@ ServerIO.mixPanelTrack = (tag, data) => {
 
 /** Returns information on the last ad watched by the given user
  *  Ok if xid is blank. Watch-history will use current session cookie instead
+ *  04/12/18 added swallow as adserver has yet to be updated. Means that this endpoint doesn't exist
  */
-ServerIO.getAdHistory = (xid) => ServerIO.load(ServerIO.AS_ENDPOINT + '/watch-history/' + (xid ? escape(xid) : '' ), {});
+ServerIO.getAdHistory = (xid) => ServerIO.load(ServerIO.AS_ENDPOINT + '/watch-history/' + (xid ? escape(xid) : '' ), {swallow:true});
 
 // Queries as for number of times that an ad shared by a user has been watched
 // socialShareId should always be an array of strings
+// 04/12/18 added swallow as adserver has yet to be updated. Means that this endpoint doesn't exist
 ServerIO.getViewCount = (socialShareId) => {
 	if( typeof socialShareId === 'string' ) {
 		socialShareId = [socialShareId];
@@ -132,5 +134,5 @@ ServerIO.getViewCount = (socialShareId) => {
 
 	assMatch(socialShareId, 'String[]');
 
-	return ServerIO.load(ServerIO.AS_ENDPOINT + '/social-share/', { data: {socialShareIds: JSON.stringify(socialShareId)} });
+	return ServerIO.load(ServerIO.AS_ENDPOINT + '/social-share/', { data: {socialShareIds: JSON.stringify(socialShareId)}, swallow:true});
 };
