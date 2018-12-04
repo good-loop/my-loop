@@ -271,7 +271,7 @@ const CampaignPage = ({path}) => {
 						</div>
 						<div className='ads-for-good' style={brandColorBgStyle}>
 							<a href='https://my.good-loop.com/' target='_blank'>
-								<img alt='Good Loop Ads For Good Logo' src='https://as.good-loop.com/uploads/anon/g46323-3109558700897315648.png' />
+								<img alt='Good Loop Ads For Good Logo' src='img/gl-logo-2018-11-white-overlay.png' />
 							</a>
 						</div>
 						<div className='arrow'>
