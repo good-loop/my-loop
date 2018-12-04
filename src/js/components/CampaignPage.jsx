@@ -147,9 +147,11 @@ const LinkToAdWidget = ({cparent, adid, status, brandColorTxtStyle}) => {
  * @param path {!String[]} The deciphered url path - e.g. ['campaign', 'kitkatadid']
  */
 const CampaignPage = ({path}) => {
-
-	let adid = path ? path[1] : '';
 	
+	let adid = path ? path[1] : '';
+
+	ServerIO.mixPanelTrack('Campaign page render', adid);	
+
 	if (!path[1]) {
 		return <Misc.Loading text='Unable to find campaign' />;	
 	}
