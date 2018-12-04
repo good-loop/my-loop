@@ -3,14 +3,29 @@
      To build the app, run build-app.sh, then upload the resulting .zip file
      to https://build.phonegap.com/apps/3373427/builds
  -->
-<widget id="com.phonegap.helloworld" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
-    <name>My Loop</name>
+<widget id="GoodLoop" version="0.1.1" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>GoodLoop</name>
     <!-- TODO: Write a proper description for MyLoop -->
-    <description> MyLoop App </description>
+    <description> 
+        GoodLoop is a video advertising platform that donates 50% of all revenue to charity. After watching a short video, viewers pick which of three charities should receive a donation from us. <br/>
+        
+        The MyLoop app gives users the ability to do more for their chosen charities.<br/>
+
+        Features:<br/>
+
+        Connect your Twitter or Facebook account. With your permission, biographical data retrieved from these sources will be used to enable us to better target adverts. Targetted adverts fetch a higher price, which means more money for charity.<br/>
+
+        Control your information. If you do not wish us to use any of the data that we have collected, via your connected accounts or otherwise, the app allows you to manage this with ease.<br/>
+
+        Share an advert. Users who have connected a Twitter account will be presented with the option to share one of our adverts on social media. They will be able to see how many of their followers watched an advert as a result of their Tweet.<br/>
+
+        You can read more about GoodLoop on our website: https://good-loop.com/our-story.
+     </description>
     <author email="support@good-loop.com" href="https://good-loop.com/">
         GoodLoop Team
     </author>
     <content src="index.html" />
+    <preference name="android-targetSdkVersion" value="26" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="permissions" value="none" />
     <plugin name="cordova-plugin-device" source="npm" spec="~1.1.6" />
@@ -20,8 +35,9 @@
     <!-- Needed to load any kind of external resource. Apparently, Adobe felt that this shouldn't be a core feature -->
     <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
 
-    <config-file platform="android" parent="/manifest/application" mode="merge">
-        <meta-data android:name="android.webkit.WebView.EnableSafeBrowsing" android:value="false" />
+    <!-- Uncomment the below when generating an apk for release -->
+    <config-file platform="android" parent="/manifest" mode="merge">
+        <application android:debuggable="false" />
     </config-file>
 
     <platform name="android">
