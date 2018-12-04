@@ -24,12 +24,12 @@ ServerIO.dataspace = 'gl';
 ServerIO.NO_API_AT_THIS_HOST = true;
 
 ServerIO.PORTAL_DOMAIN = `${C.HTTPS}://${C.SERVER_TYPE}portal.good-loop.com`;
+// Comment out the lines below when deploying!
+// ServerIO.PORTAL_DOMAIN = 'https://testportal.good-loop.com'; // uncomment to let local use the test server's backend
+// ServerIO.PORTAL_DOMAIN = 'https://portal.good-loop.com'; // use in testing to access live data
 
 /** The initial part of an API call. Allows for local to point at live for debugging */
 ServerIO.APIBASE = ServerIO.PORTAL_DOMAIN; // My-Loop has no backend of its own - just use portal domain matching local/test/prod
-// Comment out the lines below when deploying!
-// ServerIO.APIBASE = 'https://testportal.good-loop.com'; // uncomment to let local use the test server's backend
-// ServerIO.APIBASE = 'https://portal.good-loop.com'; // use in testing to access live data
 
 ServerIO.DATALOG_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}lg.good-loop.com/data`;
 // ServerIO.DATALOG_ENDPOINT = 'https://testlg.good-loop.com/data';
@@ -99,23 +99,6 @@ ServerIO.getAllSpend = ({vert, name}) => {
 		data: {name, vert}
 	};
 	return ServerIO.load(url, params);
-};
-
-// MixPanel log where user came from?
-ServerIO.mixPanelTrack = (tag, data) => {
-	// Record request if this has not already been done this session
-	const {mixpanel} = window;
-	const path = C.TRACKPATH.concat(tag);
-	const alreadyTracked = DataStore.getValue(path);
-
-	if(mixpanel && !alreadyTracked) {
-		try {
-			mixpanel.track(tag, data);
-			DataStore.setValue(path, true, false);
-		} catch(e) {
-			console.warn(e);
-		}
-	}
 };
 
 /** Returns information on the last ad watched by the given user
