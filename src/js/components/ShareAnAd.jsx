@@ -7,7 +7,7 @@ import C from '../C';
 import Person from '../base/data/Person';
 
 /** Returns promise that resolves when Good-Loop unit is loaded and ready */
-const injectGoodLoopUnit = ({adID, vastTag, thisRef}) => {
+const injectGoodLoopUnit = ({adID, thisRef}) => {
 	const iframe = document.createElement('iframe');
 
 	/** Elements to place in Good-Loop iframe */
@@ -27,11 +27,6 @@ const injectGoodLoopUnit = ({adID, vastTag, thisRef}) => {
 	iframe.style.height = 'auto';
 	iframe.style.width = 'auto';
 	iframe.style['max-width'] = '100%';
-	// HACK (26/10/18): allow adunit to still run and pick out ad ID and video
-	// 08/11/18 updated this so that the adunit will display for vast videos
-	if( !vastTag ) {
-		iframe.style.display = 'none';
-	}
 
 	iframe.addEventListener('load', () => {
 		window.iframe = iframe;
@@ -39,28 +34,8 @@ const injectGoodLoopUnit = ({adID, vastTag, thisRef}) => {
 		iframe.contentDocument.body.appendChild($script);
 		iframe.contentDocument.body.appendChild($div);
 	});
-	/** */
+
 	thisRef.adunitRef.appendChild(iframe);
-
-	// No ad ID provided
-	// Going to load the adunit, let it pick an ad,
-	// then pull the relevant ad ID out of the iframe
-
-	const adIDPV = new Promise( (resolve, reject) => {
-		$script.addEventListener('load', () => {
-			resolve(iframe.contentWindow);
-		});
-
-		$script.addEventListener('error', () => {
-			reject(false);
-		});
-
-		iframe.addEventListener('error', () => {
-			reject(false);
-		});
-	});
-
-	return {adIDPV, iframe};
 };
 
 // TODO Does this need to be a component? If not, avoid React.Component in favour of functional jsx
@@ -98,39 +73,36 @@ class ShareAnAd extends React.Component {
 		}
 	}
 
+	componentWillMount() {
+		const {adID} = this.state;
+
+		// If the user has not watched an ad, have the back-end pick one and send us the json
+		if( !adID ) {
+			ServerIO.load(ServerIO.AS_ENDPOINT + '/unit.json', {swallow:true})
+				.then( res => {
+					const {vert} = res;
+
+					if( !vert ) {
+						console.warn("Unit.json not returning any advert data?");
+						return;
+					}
+
+					const {adid, video, mobileVideo, vastTag} = vert;
+					this.setState({adID: adid, mobileVideo, vastTag, video});
+				});
+		}
+	}
+
 	// Would usually prefer to put this sort of thing in to componentWillMount
 	// but lifecycle goes willMount -> render -> didMount, and this.adunitRef
 	// needs to be a valid reference for us to put the iframe into
 	componentDidMount() { 
 		this.focusRef('adunitRef'); 
 
-		const {adID, mobileVideo, vastTag, video} = this.state;
+		const {adID, vastTag} = this.state;
 
-		// Handles two cases:
-		// 1) The user has no view history => the adunit picks an ad for them to watch
-		//	(will need to make sure that they see the GoodLoop unit if it picks a VAST ad!)
-		// 2) The last ad they watched was a VAST ad. Use the GoodLoop player to play.
-		if( !video && !mobileVideo ) {
-			const {adIDPV, iframe} = injectGoodLoopUnit({adID, thisRef: this, vastTag});
-			// Grab ad ID chosen by adunit and place in to DataStore/state
-			adIDPV.then( contentWindow => { 
-				// Assuming that adunit has not embedded itself in another iframe
-				const {goodloop} = contentWindow;
-				const id = goodloop.vert.adid; 
-				const vid = goodloop.vert.video;
-				const mobVid = goodloop.vert.mobileVideo;
-				const glVastTag = goodloop.vert.vastTag;
-
-				this.setState({adID: id, video: vid, mobileVideo: mobVid}); 
-
-				// User has no previous view history, but the ad picked by the unit is a VAST ad
-				// Want to show them the GoodLoop unit in this case
-				if( glVastTag ) {
-					iframe.style.display = 'block';
-					this.setState({vastTag: glVastTag});
-				}
-			});
-		} 
+		// Is a VAST ad. Need to use the GoodLoop player to display it
+		if( vastTag ) injectGoodLoopUnit({adID, thisRef: this, vastTag});
 	} 
 
 	render() {
