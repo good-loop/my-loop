@@ -31,111 +31,25 @@ import Person from '../base/data/Person';
 // Having users share our ads would actually 
 // be quite a clever way to alleviate a shortage of publishers.
 
-// Renders Twitter share button as well as a preview of the ad to be shared via the Good-loop ad unit
-class TwitterShare extends React.Component {
-	constructor(props) {
-		super(props);
+const TwitterShare = ({adID, TwitterXId}) => {
+	const TwitterSocialShareId = md5( TwitterXId + adID );
 
-		const {adID, TwitterXId} = props;
+	const onClick = () => saveSocialShareId({xid: TwitterXId, socialShareId: TwitterSocialShareId, adID});
 
-		// Create ref by callback https://reactjs.org/docs/refs-and-the-dom.html#callback-refs
+	// ??maybe just use gl.via=uxid + a post nonce instead of the social share id machinery??
 
-		this.setRef = (ref, value) => {
-			this[ref] = value;
-		};
+	return (
+		<a href={"https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Fas.good-loop.com%2F&amp;ref_src=twsrc%5Etfw&amp;text=I%20just%20gave%20to%20charity%20by%20watching%20a%20%40GoodLoopHQ%20ad%20%3A)&amp;tw_p=tweetbutton&amp;url=https%3A%2F%2Fas.good-loop.com%2F%3Fgl.vert%3D" + encodeURIComponent(adID + "&gl.socialShareId=" + TwitterSocialShareId)} 
+			className="btn tweet-button" 
+			id="b"
+			target="_blank"
+			rel="noreferrer"
+			onClick={onClick}
+		>
+			<span className='fa fa-twitter' />
+			<span className="label" id="l">Tweet</span>
+		</a>);
 
-		this.focusRef = (ref) => {
-			if (this[ref]) this[ref].focus();
-		};
-
-		// TODO always camelCase variable names -- we OnlyStudlyCaseClassNames
-
-		// Make hash out of service name and vert ID
-		// Important that ID generated always be the same for given service + adID
-		// Don't want the user to be able to generate multiple tracking IDs for
-		// the same ad. If the share it multiple times, would like share count to be aggregated
-		const TwitterSocialShareId = md5( TwitterXId + adID );
-
-		this.state = {
-			adID,
-			twttrPV: null,
-			TwitterXId,
-			TwitterSocialShareId
-		};
-	}
-	
-	componentWillMount() {
-		// Need to know when Twitter API script has finished loading			
-		const twttrPV = new Promise( (resolve, reject) => {
-			const $head = document.querySelector('head');
-			const $script = document.createElement('script');
-			$script.setAttribute('src', 'https://platform.twitter.com/widgets.js');
-			$script.addEventListener('load', () => {
-				resolve(true);
-			});
-			$script.addEventListener('error', () => {
-				reject(false);
-			});
-			$head.appendChild($script);
-		});
-		this.setState({twttrPV});
-	}
-
-	componentDidMount() {
-		const {adID, twttrPV, TwitterXId, TwitterSocialShareId} = this.state; 
-
-		this.focusRef('twitterShareRef'); // resolve DOM element that Tweet button will be loaded in to
-
-		twttrPV.then( () => {
-			const {twttr} = window;
-
-			if(twttr) {
-				twttr.widgets.load();
-
-				twttr.events.bind('click', () => saveSocialShareId({xid: TwitterXId, socialShareId: TwitterSocialShareId, adID}));
-			}
-		});
-	} 
-
-	// componentWillUpdate(nextProps, nextState) {
-	// 	if(nextProps.adID !== this.state.adID) this.setState({adID: nextProps.adID});
-	// }
-
-	componentWillReceiveProps(nextProps) {
-		if( nextProps.adID !== this.adID) this.setState({adID: nextProps.adID});
-	}
-
-	componentDidUpdate() {
-		// Force Tweet button to update
-		const {twttr} = window;
-		if(twttr) {
-			twttr.widgets.load();
-		}
-	}
-
-	render() {
-		// Dan had requested that there be some sort of "positive feedback" from share the ad
-		// Was the mention of adding some sort of tracking URL so that users would be able
-		// to see how many of their followers watched the ad that they shared.
-		// return <div className="TwitterShare" ref={e => this.setRef('twitterShareRef', e)} />;
-		
-		// adID and socialShareId should always come paired
-		// Only reason a socialShareId wouldn't be created is if we don't have and adID
-		const {adID, TwitterSocialShareId} = this.state;
-
-		// ??maybe just use gl.via=uxid + a post nonce instead of the social share id machinery??
-
-		return (
-			<a className="twitter-share-button"
-				href="https://twitter.com/intent/tweet"
-				data-dnt="true"
-				data-size="large"
-				data-text="I just gave to charity by watching a @GoodLoopHQ ad :)"
-				data-url={adID ? ServerIO.AS_ENDPOINT + '/?gl.vert=' + adID + '&gl.socialShareId=' + TwitterSocialShareId : ServerIO.AS_ENDPOINT}
-			>
-					Tweet
-			</a>);
-	}
-}
+};
 
 module.exports = TwitterShare;
