@@ -2,9 +2,9 @@ import React from 'react';
 import md5 from 'md5';
 import DataStore from '../base/plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
-import TwitterShare from './TwitterShare';
 import C from '../C';
 import Person from '../base/data/Person';
+import {saveSocialShareId} from '../base/Profiler';
 
 /** Returns promise that resolves when Good-Loop unit is loaded and ready */
 const injectGoodLoopUnit = ({adID, thisRef}) => {
@@ -125,7 +125,7 @@ class ShareAnAd extends React.Component {
 				<h2> Share this ad on social media </h2>
 				{ video || mobileVideo ? <video controls="true" width="100%" height="auto" src={isMobile? mobileVideo : video}> An error occured </video> : null }
 				<div ref={e => this.setRef('adunitRef', e)} />
-				{ adID && twitterXId ? <TwitterShare adID={this.state.adID} TwitterXId={twitterXId} /> : null}
+				<TwitterShare adID={this.state.adID} TwitterXId={twitterXId} />
 				<SharedAdsDisplay xid={twitterXId} />
 			</div>
 		);
@@ -168,6 +168,26 @@ const SharedAdsDisplay = ({xid}) => {
 			</table>
 		</div>
 	);
+};
+
+const TwitterShare = ({adID, TwitterXId}) => {
+	const TwitterSocialShareId = md5( TwitterXId + adID );
+
+	const onClick = () => saveSocialShareId({xid: TwitterXId, socialShareId: TwitterSocialShareId, adID});
+
+	// ??maybe just use gl.via=uxid + a post nonce instead of the social share id machinery??
+
+	return (
+		<a href={"https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Fas.good-loop.com%2F&amp;ref_src=twsrc%5Etfw&amp;text=I%20just%20gave%20to%20charity%20by%20watching%20a%20%40GoodLoopHQ%20ad%20%3A)&amp;tw_p=tweetbutton&amp;url=https%3A%2F%2Fas.good-loop.com%2F%3Fgl.vert%3D" + encodeURIComponent(adID + "&gl.socialShareId=" + TwitterSocialShareId)} 
+			className="btn tweet-button" 
+			id="b"
+			target="_blank"
+			rel="noreferrer"
+			onClick={onClick}
+		>
+			<span className='fa fa-twitter' />
+			<span className="label" id="l">Tweet</span>
+		</a>);
 };
 
 export default ShareAnAd;
