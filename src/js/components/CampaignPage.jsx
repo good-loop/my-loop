@@ -23,14 +23,13 @@ import DonationCard from './DonationCard';
 import Footer from '../components/Footer';
 import { Link, Element } from 'react-scroll';
 import MDText from '../base/components/MDText';
-import ListLoad from '../base/components/ListLoad';
 
-const CampaignHeaderWidget = ({cparentLogo, brandLogo}) => {
+const CampaignHeaderWidget = ({cparentLogo, brandLogo, supports}) => {
 	if (cparentLogo) {
 		return (
 			<div>
 				<img alt='Sponsor Logo' src={brandLogo} />
-				<span> Supports </span>
+				{supports ? <span> Supports </span> : null}
 				<img alt='Charity Logo' src={cparentLogo} />
 			</div>
 		);
@@ -59,11 +58,12 @@ let _handleClick = (circleIndex) => {
 const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='left', shown, brandColorBgStyle}) => {
 	let cids = clist.map(x => x.id);
 	let cnames = clist.map(x => x.name);
-	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo);
+	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo || x.logo);
+	// !(x.highResPhoto || x.photo)? .donation-circles .circle img { object-fit: contain; }
 
 	return (
 		<div className={'circle '.concat(name)} onClick={(e) => _handleClick(index)}>
-			<p className='bebas-font'><span className='frank-font'>{campaignSlice[cids[index]].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p>
+			{cparent? <p className='bebas-font'><span className='frank-font'>{campaignSlice[cids[index]].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p> : null}
 			<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} />
 			<div className='project-name frank-font' style={brandColorBgStyle}>
 				{cnames[index]}
@@ -79,7 +79,7 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColor
 	}
 
 	let cnames = clist.map(x => x.name);
-	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo);
+	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo || x.logo);
 	let curls = clist.map(x => x.url);
 	let cdescs = clist.map(x => x.description);
 
@@ -95,7 +95,7 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColor
 						<MDText source={cdescs[index]} renderers={{link: LinkRenderer}} />
 					</div>
 					<div className='btnlink frank-font' style={brandColorBgStyle} onClick={(e) => window.open(curls[index], '_blank')}>
-						Find out more about the<br/> <MDText source={cparent} />							
+						Find out more {cparent ? 'about the<br/> <MDText source={cparent} />' : null}							
 					</div>	
 				</div>
 			</div>
@@ -154,7 +154,7 @@ const CampaignPage = ({path}) => {
 	ServerIO.mixPanelTrack('Campaign page render', adid);	
 
 	if (!path[1]) {
-		return 	<ListLoad type={C.TYPES.Advert} hasFilter servlet='vert' navpage='campaign' status={C.KStatus.PUBLISHED} />;	
+		return <Misc.Loading text='Unable to find campaign' />;	
 	}
 
 	// get the ad for display (so status:published - unless this is a preview, as set by the url)
@@ -167,12 +167,16 @@ const CampaignPage = ({path}) => {
 
 	console.log(pvAdvert.value);
 
+	// default data
+	let defaultImg = "https://i.ibb.co/Xy6HD5J/empty.png"; // to be used when we don't have an image, and we want to default to an "empty" transparent image
+
 	// advertiser data
 	const ad = pvAdvert.value;
 	let cadvertiser = pvAdvert.value.name;
 	let brand = pvAdvert.value.branding;
-	let brandColor = brand.color;
-	let brandLogo = brand.logo;
+	// use good-loop branding if adv branding is not there 
+	let brandColor = brand.color ? brand.color : '#C83312'; 
+	let brandLogo = brand.logo ? brand.logo : defaultImg;
 	let brandColorBgStyle = {
 		backgroundColor: brandColor,
 		color: 'white'
@@ -219,7 +223,8 @@ const CampaignPage = ({path}) => {
 	// parent charity data 
 	let parent = pvAdvert.value.charities.parent;
 	let cparent = parent && parent.name ? parent.name : '';
-	let cparentLogo = parent && parent.logo ? parent.logo : '';
+	let cparentLogo = parent && parent.logo ? parent.logo : defaultImg;
+	let supports = brand.logo && parent && parent.logo; // whether we want to show the "Supports" text at the top in between the 2 logos
 
 	// individual charity data
 	let clist = pvAdvert.value.charities.list;
@@ -248,7 +253,9 @@ const CampaignPage = ({path}) => {
 	});
 	
 	let campaignTotal = pvDonationsBreakdown.value.total; 
-	let donationValue = campaign.donation ? campaign.donation : campaignTotal; // check if statically set and, if not, then update with latest figures
+	let donationValue = 0;
+	donationValue = campaign && campaign.donation ? campaign.donation : campaignTotal; // check if statically set and, if not, then update with latest figures
+	
 	let charityTotal = filteredBreakdown.reduce((acc, current) => acc + current.value100p, 0);
 	let campaignSlice = {}; // campaignSlice is of the form { cid: {percentageTotal: ...} } so as to ensure the correct values are extracted later (checking for cid rather than index)
 	filteredBreakdown.forEach(function(obj) {
@@ -260,14 +267,16 @@ const CampaignPage = ({path}) => {
 		<div className='grid'>
 			<div className='grid-tile top'> 
 				<div className='vertiser-head frank-font' style={brandColorBgStyle} >
-					<CampaignHeaderWidget cparentLogo={cparentLogo} brandLogo={brandLogo} />
+					<CampaignHeaderWidget cparentLogo={cparentLogo} brandLogo={brandLogo} supports={supports} />
 				</div>
 				<div className='header-img' style={headerStyle} >
 					<div className='darken-overlay'>
 						<div className='title frank-font'>
 							<div>{cadvertiser}</div>	
-							<div>{campaign.donation? "are donating" : "have donated so far"}</div>							
-							<div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div>
+							<div>{
+								campaign && campaign.donation? "have donated so far" : "are donating"
+								}</div>							
+							{campaign && campaign.donation? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : null}
 							<div>to charity</div>
 						</div>
 						<div className='ads-for-good' style={brandColorBgStyle}>
