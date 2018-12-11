@@ -55,16 +55,15 @@ let _handleClick = (circleIndex) => {
 	DataStore.setValue(['widget', 'donationCircles', 'active'], toggle);
 };
 
-const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='left', shown, brandColorBgStyle}) => {
+const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='left', shown, brandColorBgStyle, logoStyle}) => {
 	let cids = clist.map(x => x.id);
 	let cnames = clist.map(x => x.name);
 	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo || x.logo);
-	// !(x.highResPhoto || x.photo)? .donation-circles .circle img { object-fit: contain; }
 
 	return (
 		<div className={'circle '.concat(name)} onClick={(e) => _handleClick(index)}>
 			{cparent? <p className='bebas-font'><span className='frank-font'>{campaignSlice[cids[index]].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p> : null}
-			<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} />
+			<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} style={!(clist[index].highResPhoto || clist[index].photo) ? logoStyle : null}/>
 			<div className='project-name frank-font' style={brandColorBgStyle}>
 				{cnames[index]}
 			</div>
@@ -73,7 +72,7 @@ const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='lef
 	);
 };
 
-const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColorBgStyle, brandColorTxtStyle}) => {
+const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColorBgStyle, brandColorTxtStyle, logoStyle}) => {
 	function LinkRenderer(props) {
 		return <a href={props.href} target="_blank" style={brandColorTxtStyle}>{props.children}</a>;
 	}
@@ -86,7 +85,7 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColor
 	return (
 		<div className={'details '.concat(name)}>
 			<div className='innards'>
-				<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} />
+				<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} style={!(clist[index].highResPhoto || clist[index].photo) ? logoStyle : null}/>
 				<div className="text">
 					<div className='title frank-font' style={brandColorTxtStyle}>
 						<MDText source={cnames[index].toUpperCase()} />
@@ -95,7 +94,8 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColor
 						<MDText source={cdescs[index]} renderers={{link: LinkRenderer}} />
 					</div>
 					<div className='btnlink frank-font' style={brandColorBgStyle} onClick={(e) => window.open(curls[index], '_blank')}>
-						Find out more {cparent ? 'about the<br/> <MDText source={cparent} />' : null}							
+						{cparent ? 'Find out more about the' : 'Find out more'} 
+						<br/> <MDText source={cparent} />
 					</div>	
 				</div>
 			</div>
@@ -103,24 +103,24 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColor
 	);
 };
 
-const DonationInfoWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, brandColorTxtStyle}) => {
+const DonationInfoWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, brandColorTxtStyle, logoStyle}) => {
 	let toggle = DataStore.getValue(['widget', 'donationCircles', 'active']) || [true, false, false]; // toggles the info charity box to display one at a time
 	
 	return (
 		<div className='donation-circles'>
-			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={0} name={'left'} shown={toggle[0]} brandColorBgStyle={brandColorBgStyle} />
-			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={1} name={'middle'} shown={toggle[1]} brandColorBgStyle={brandColorBgStyle} />
-			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={2} name={'right'} shown={toggle[2]} brandColorBgStyle={brandColorBgStyle} />
+			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={0} name={'left'} shown={toggle[0]} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle}/>
+			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={1} name={'middle'} shown={toggle[1]} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle}/>
+			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={2} name={'right'} shown={toggle[2]} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle}/>
 			{ toggle[0] ? 
-				<DonationDetailsWidget cparent={cparent} clist={clist} index={0} name={'left'} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle}/>
+				<DonationDetailsWidget cparent={cparent} clist={clist} index={0} name={'left'} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle}/>
 				: null
 			}
 			{ toggle[1] ? 
-				<DonationDetailsWidget cparent={cparent} clist={clist} index={1} name={'middle'} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle}/>
+				<DonationDetailsWidget cparent={cparent} clist={clist} index={1} name={'middle'} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle}/>
 				: null
 			}
 			{ toggle[2] ? 
-				<DonationDetailsWidget cparent={cparent} clist={clist} index={2} name={'right'} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle}/>
+				<DonationDetailsWidget cparent={cparent} clist={clist} index={2} name={'right'} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle}/>
 				: null
 			}
 		</div>
@@ -168,7 +168,7 @@ const CampaignPage = ({path}) => {
 	console.log(pvAdvert.value);
 
 	// default data
-	let defaultImg = "https://i.ibb.co/Xy6HD5J/empty.png"; // to be used when we don't have an image, and we want to default to an "empty" transparent image
+	let defaultImg = "https://i.ibb.co/Xy6HD5J/empty.png"; // hack to be used when we don't have an image, and we want to default to an "empty" transparent image
 
 	// advertiser data
 	const ad = pvAdvert.value;
@@ -188,6 +188,13 @@ const CampaignPage = ({path}) => {
 	let complimentaryColor = '#f0e7d0'; // color for the middle tile that contains donations info
 	let compliColorBgStyle = {
 		backgroundColor: complimentaryColor,
+	};
+	// hack to show appropriately styled logo if it can't find anything better (used in DonationCircleWidget and DonationDetailsWidget)
+	let logoStyle = {
+		objectFit: 'contain',
+		borderWidth: 'medium',
+		borderColor: '#d4c7c7',
+		borderStyle: 'double'
 	};
 
 	// goodloop data
@@ -303,7 +310,7 @@ const CampaignPage = ({path}) => {
 							<MDText source={desc_body} />							
 						</div>
 						<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
-						<DonationInfoWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle}/>
+						<DonationInfoWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle}/>
 					</div>
 				</Element>
 			</div>
