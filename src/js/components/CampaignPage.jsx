@@ -23,6 +23,7 @@ import DonationCard from './DonationCard';
 import Footer from '../components/Footer';
 import { Link, Element } from 'react-scroll';
 import MDText from '../base/components/MDText';
+import ListLoad from '../base/components/ListLoad';
 
 const CampaignHeaderWidget = ({cparentLogo, brandLogo}) => {
 	if (cparentLogo) {
@@ -153,7 +154,7 @@ const CampaignPage = ({path}) => {
 	ServerIO.mixPanelTrack('Campaign page render', adid);	
 
 	if (!path[1]) {
-		return <Misc.Loading text='Unable to find campaign' />;	
+		return 	<ListLoad type={C.TYPES.Advert} hasFilter servlet='vert' navpage='campaign' status={C.KStatus.PUBLISHED} />;	
 	}
 
 	// get the ad for display (so status:published - unless this is a preview, as set by the url)
