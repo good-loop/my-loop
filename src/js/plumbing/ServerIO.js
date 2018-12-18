@@ -119,3 +119,5 @@ ServerIO.getViewCount = (socialShareId) => {
 
 	return ServerIO.load(ServerIO.AS_ENDPOINT + '/social-share/', { data: {socialShareIds: JSON.stringify(socialShareId)}, swallow:true});
 };
+
+ServerIO.getVertData = (vertId) => ServerIO.load(ServerIO.PORTAL_DOMAIN + '/vert/' + vertId);

@@ -138,7 +138,13 @@ const SharedAdsDisplay = ({xid}) => {
 
 	// Want an array of just the ID strings. Filter out other crap
 	const shareIds = twitterSocialShareObjects.map( shareIdObject => shareIdObject.id);
+	// Load number of times that shared ad has been viewed
 	DataStore.fetch(['data', 'Person', xid, 'views'], () => ServerIO.getViewCount(shareIds));
+	// Load human-readable name for each shared ad
+	twitterSocialShareObjects.forEach( shareObject => {
+		const {adId, id} = shareObject;
+		DataStore.fetch(['data', 'Person', xid, 'adData', id], () => ServerIO.getVertData(adId));
+	});
 
 	return (
 		<div className='sharedAds container-fluid'>
@@ -153,8 +159,9 @@ const SharedAdsDisplay = ({xid}) => {
 				</thead>
 				<tbody>
 					{twitterSocialShareObjects.map( shareIdObj => {
-						const {id, adId, name, dateShared} = shareIdObj;
+						const {id, adId, dateShared} = shareIdObj;
 						const views = DataStore.getValue(['data', 'Person', xid, 'views', id]);
+						const name = DataStore.getValue(['data', 'Person', xid, 'adData', id, 'name']);
 
 						return (
 							<tr key='id'>
