@@ -37,7 +37,11 @@ const CampaignHeaderWidget = ({cparentLogo, brandLogo, supports}) => {
 	return (<img alt='Sponsor Logo' src={brandLogo} />);
 };
 
-const SocialMediaFooterWidget = ({type, name, src}) => {
+/**
+ * @param type {!String} vertiser|goodloop
+ * @param branding {Branding}
+ */
+const SocialMediaFooterWidget = ({type, name, branding}) => {
 	return (
 		<div className={'social '.concat(type)}>
 			<MDText source={name} />
@@ -171,9 +175,8 @@ const CampaignPage = ({path}) => {
 	let defaultImg = "https://i.ibb.co/Xy6HD5J/empty.png"; // hack to be used when we don't have an image, and we want to default to an "empty" transparent image
 
 	// advertiser data
-	const ad = pvAdvert.value;
-	let cadvertiser = pvAdvert.value.name;
-	let brand = pvAdvert.value.branding;
+	const ad = pvAdvert.value;	
+	let brand = ad.branding;
 	// use good-loop branding if adv branding is not there 
 	let brandColor = brand.color ? brand.color : '#C83312'; 
 	let brandLogo = brand.logo ? brand.logo : defaultImg;
@@ -197,7 +200,7 @@ const CampaignPage = ({path}) => {
 		borderStyle: 'double'
 	};
 
-	// goodloop data
+	// goodloop branding data
 	let gl_social = {
 		fb_url: 'https://www.facebook.com/the.good.loop/',
 		tw_url: 'https://twitter.com/goodloophq',
@@ -205,10 +208,10 @@ const CampaignPage = ({path}) => {
 	};
 
 	// campaign data
-	let campaign = pvAdvert.value.campaignPage;
+	let campaign = ad.campaignPage;
 	let startDate = '';
-	if (pvAdvert.value.start) {
-		startDate = 'This campaign started on '.concat(pvAdvert.value.start.substring(0, 10));
+	if (ad.start) {
+		startDate = 'This campaign started on '.concat(ad.start.substring(0, 10));
 	}
 	let smallPrint = campaign && campaign.smallPrint ? campaign.smallPrint : '';
 	let bg = '';
@@ -227,14 +230,16 @@ const CampaignPage = ({path}) => {
 		desc_title = campaign.desc_title;
 		desc_body = campaign.desc_body;
 	}
+
 	// parent charity data 
-	let parent = pvAdvert.value.charities.parent;
+	let parent = ad.charities.parent;
+	// minor TODO just pass parent around
 	let cparent = parent && parent.name ? parent.name : '';
 	let cparentLogo = parent && parent.logo ? parent.logo : defaultImg;
 	let supports = brand.logo && parent && parent.logo; // whether we want to show the "Supports" text at the top in between the 2 logos
 
 	// individual charity data
-	let clist = pvAdvert.value.charities.list;
+	let clist = ad.charities.list;
 	let cids = clist.map(x => x.id);
 
 	// load the community total for the ad
@@ -279,7 +284,7 @@ const CampaignPage = ({path}) => {
 				<div className='header-img' style={headerStyle} >
 					<div className='darken-overlay'>
 						<div className='title frank-font'>
-							<div>{cadvertiser}</div>	
+							<div>{ad.name}</div>	
 							<div>{
 								campaign && campaign.donation? "have donated so far" : "are donating"
 								}</div>							
@@ -316,8 +321,7 @@ const CampaignPage = ({path}) => {
 			</div>
 			<div className='grid-tile bottom' style={brandColorBgStyle}>
 				<div className='foot bebas-font'>			
-					<SocialMediaFooterWidget type={'vertiser'} name={cadvertiser} src={brand} />
-					<SocialMediaFooterWidget type={'campaign'} name={cparent} src={campaign} />
+					<SocialMediaFooterWidget type={'vertiser'} name={ad.name} src={brand} />					
 					<SocialMediaFooterWidget type={'goodloop'} name={'GOOD-LOOP'} src={gl_social} />
 				</div>
 			</div>
