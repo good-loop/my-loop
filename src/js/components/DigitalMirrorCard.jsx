@@ -146,7 +146,7 @@ const DigitalMirrorCard = ({xids}) => {
 			{/* <InteractiveMap use react-leaflet?? /> */}
 			{
 				socialXIds && socialXIds.length > 0
-					? socialXIds.map( xidObj => <PermissionControls xidObj={xidObj} key={xidObj.xid} />)
+					? socialXIds.map( xidObj => <ConsentControls xidObj={xidObj} key={xidObj.xid} />)
 					: 'You do not appear to have shared any social media data with us' 
 			}
 		</div>
@@ -155,17 +155,17 @@ const DigitalMirrorCard = ({xids}) => {
 
 /** TODO: See if there is a Misc component/PropControl type that would cover this behaviour? 
  * Allow the user to specify whether or not they would like us to use their data for targetting ads
- * Expect there to already be an initial value for 'permission' in the path set by getClaimsForXId.
+ * Expect there to already be an initial value for 'consent' in the path set by getClaimsForXId.
  */
 const DoNotUseToggle = ({path, debounceSaveFn}) => {
 	if( !path ) return null;
 
-	const permissionPath = path.concat('permission');
+	const consentPath = path.concat('consent');
 
-	let currentValue = !!DataStore.getValue(permissionPath);
+	let currentValue = !!DataStore.getValue(consentPath);
 
 	const onChange = () => {
-		DataStore.setValue(permissionPath, !currentValue, true);
+		DataStore.setValue(consentPath, !currentValue, true);
 		debounceSaveFn('myloop@app');
 	};
 
@@ -202,7 +202,7 @@ const DoNotUseToggle = ({path, debounceSaveFn}) => {
  * 
  * ??Does it need bootstrap rows? they feel like a cumbersome solution here
 */
-const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) => {
+const ConsentControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) => {
 	const {field, type, options, dflt} = fieldObj;
 	// Hard-set 'name' to be header
 	const isHeader = field === 'name';
@@ -243,7 +243,7 @@ const PermissionControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) =
  * Checkboxes for all items in 'dataFields'
  *  Can also edit data field when 'edit mode' is enabled.
  */
-const PermissionControls = ({xidObj}) => {
+const ConsentControls = ({xidObj}) => {
 	if(!xidObj || !xidObj.xid || !xidObj.dataFields) return null;
 
 	const {xid, dataFields} = xidObj;
@@ -251,7 +251,7 @@ const PermissionControls = ({xidObj}) => {
 
 	const profileImage = DataStore.getValue(path.concat('img'));
 
-	// Move debounceSaveFn and editMode in to PermissionControlRow?
+	// Move debounceSaveFn and editMode in to ConsentControlRow?
 
 	// Save function. Can only be called once every 5 seconds
 	// Important that this be stored somewhere more permanent than the component body
@@ -283,7 +283,7 @@ const PermissionControls = ({xidObj}) => {
 							{profileImage ? <img className='img-thumbnail img-profile' src={profileImage.value} alt='user-profile' /> : null}
 						</div>
 						<div className="col-sm-5 col-sm-pull-5 profile-details">
-							{dataFields.map( fieldObj => PermissionControlRow(path, fieldObj, debounceSaveFn, editModeEnabled))}
+							{dataFields.map( fieldObj => ConsentControlRow(path, fieldObj, debounceSaveFn, editModeEnabled))}
 						</div>
 					</div>
 				</div>				
@@ -302,7 +302,7 @@ const PermissionControls = ({xidObj}) => {
 // If we end up going with this method, would want to use images that represent the relevant data field
 const label = ({field, fieldPath}) => {
 	let fieldValue = DataStore.getValue(fieldPath);
-	// If there is data, will be in form {permission: bool, value: 'val'}
+	// If there is data, will be in form {consent: bool, value: 'val'}
 	fieldValue = fieldValue && fieldValue.value;
 
 	const icon = iconFromField(field, fieldValue);
@@ -344,13 +344,13 @@ const saveFn = (xid, fieldObjs, from) => {
 		// Allow blank string
 		if( !data && data !== '' ) return;
 	
-		let {value, permission} = data;
+		let {value, consent} = data;
 
 		// Make sure this is true OR false
 		// Found this was 'undefined' where no data was loaded for a particular field
-		if( !permission ) permission = false;
+		if( !consent ) consent = false;
 
-		const claim = Claim.make({key: field, value, from, p: permission});
+		const claim = Claim.make({key: field, value, from, consent});
 		claims = claims.concat(claim);
 	});
 

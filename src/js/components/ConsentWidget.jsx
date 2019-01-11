@@ -13,7 +13,7 @@ import PropControl from '../base/components/PropControl';
 import BS from '../base/components/BS3';
 import ActionMan from '../plumbing/ActionMan';
 import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
-import {getPermissions, setPermissions, saveProfile, getProfile, getProfilesNow} from '../base/Profiler';
+import {getConsents, setConsents, saveProfile, getProfile, getProfilesNow} from '../base/Profiler';
 import { getId } from '../base/data/DataClass';
 
 const _debounceFnForKey = {};
@@ -41,11 +41,11 @@ const ConsentWidget = ({xids}) => {
 	assert(xids.length, "ConsentWidget.jsx");
 	let path = ['widget', 'ConsentWidget', 'perms'];	
 	let peeps = getProfilesNow(xids);
-	// get and combine the permissions
+	// get and combine the consents
 	const perms = DataStore.getValue(path) || DataStore.setValue(path, {});
 	peeps.forEach(person => {
 		// hm - orefer true/false/most-recent??
-		let peepPerms = getPermissions({person});
+		let peepPerms = getConsents({person});
 		if (peepPerms) {
 			Object.assign(perms, peepPerms);
 		}
@@ -61,11 +61,11 @@ const ConsentWidget = ({xids}) => {
 		let dataspace = ServerIO.dataspace; // ??
 		// full perms set
 		// NB: this also means perm settings are synchronised across linked profiles by an edit.
-		let permissions = DataStore.getValue(path);
-		assert(permissions[prop] === value, "ConsentWidget.jsx - mismatch",permissions,prop,value);
+		let consents = DataStore.getValue(path);
+		assert(consents[prop] === value, "ConsentWidget.jsx - mismatch",consents,prop,value);
 		// set each
 		peeps.forEach(person => {
-			setPermissions({person, dataspace, permissions});
+			setConsents({person, dataspace, consents});
 			// save (after a second)
 			let pid = getId(person);
 			let saveProfileDebounced = debounceForSameInput(pid, saveProfile, 1000);
