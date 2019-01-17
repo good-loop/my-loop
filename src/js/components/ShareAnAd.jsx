@@ -130,7 +130,7 @@ class ShareAnAd extends React.Component {
 			</div>
 		);
 	}
-}
+} // ./ShareAnAd
 
 const SharedAdsDisplay = ({xid}) => {
 	const twitterSocialShareObjects = xid ? DataStore.getValue(['data', 'Person', xid, 'socialShareIds']) : null;
