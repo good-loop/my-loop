@@ -132,6 +132,11 @@ class ShareAnAd extends React.Component {
 	}
 } // ./ShareAnAd
 
+/** 
+ * Table with data on ads shared by the user
+ * Data shown: Name of Advert	Number of times somebody has viewed ad shared by user	  Date Shared
+ * A unique tracking ID is used to determine how many people have watched an ad as a result of it being shared
+ */
 const SharedAdsDisplay = ({xid}) => {
 	const twitterSocialShareObjects = xid ? DataStore.getValue(['data', 'Person', xid, 'socialShareIds']) : null;
 	if( !twitterSocialShareObjects ) return null;
