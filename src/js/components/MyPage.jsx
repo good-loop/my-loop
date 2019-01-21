@@ -376,36 +376,6 @@ const StatisticsCardMini = () => {
 	</section>);
 };
 
-// const OnboardingCard = ({allIds}) => {
-// 	let step1Img = 'https://image.ibb.co/nnGOgV/153970313184640369.png';
-// 	let step2Img = 'https://image.ibb.co/jJm3Fq/153970315675413631.png';
-// 	let step3Img = 'https://image.ibb.co/fMRQTA/153970316087031793.png';
-
-// 	return 	(<section id="howitworks" className="how text-center">
-// 		<div className="how-content container-fluid">
-// 			<Row3>
-// 				<div className="how-step">
-// 					<img className="how-img" src={step1Img} alt='banners in a web page' />
-// 					<span className="how-text">You see one of our Ads For Good on a website</span>
-// 				</div>
-// 				<div className="how-step">
-// 					<img className="how-img" src={step2Img} alt='banners in a web page' />
-// 					<span className="how-text">A video ad plays for 15 seconds</span>
-// 				</div>
-// 				<div className="how-step">
-// 					<img className="how-img" src={step3Img} alt='banners in a web page' />
-// 					<span className="how-text">We donate half the ad revenue to your chosen charity</span>
-// 				</div>
-// 			</Row3>
-// 			<div className="row">
-// 				<center>
-// 					<a className='btn btn-default' href='https://as.good-loop.com/?site=my.good-loop.com'>Try it now: Watch an Ad-for-Good!</a>
-// 				</center>
-// 			</div>
-// 		</div>
-// 	</section>);
-// };
-
 
 const OnboardingCardMini = () => {
 	const step1Img = 'https://image.ibb.co/nnGOgV/153970313184640369.png';
@@ -502,6 +472,7 @@ const LinkedProfilesCard = ({xids}) => {
 		{ nonTrackers.map(xid => <div key={xid}>{XId.service(xid)+': '+XId.id(xid)}</div>) }
 		Good-Loop cookies (random IDs, used by us to record your donations and avoid repeating ads): {trackers.map(xid => XId.id(xid)).join(", ")}<br/>
 		Currently logged into Good-Loop via: {authd.map(xid => XId.service(xid)+': '+XId.id(xid)).join(", ")}<br/>
+		TODO unverified email
 	</div>);
 };
 
