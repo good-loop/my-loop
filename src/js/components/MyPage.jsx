@@ -242,7 +242,7 @@ const WelcomeCard = ({xids}) => {
 			<div className="row blank-row"></div>
 			<div className="col-md-7 header-text frank-font">
 				<p className="title"><span> Become a superhero </span> for the causes you care about</p>
-				<LoginLink className='btn btn-lg btn-default btn-gl helvetica-font' verb='Sign Up' />			
+				<LoginLink className='btn btn-lg btn-default btn-gl' verb='Sign Up' />			
 			</div>
 			<div className="col-md-1 header-img">
 				<img src={heroImage} alt="Superhero" />
@@ -291,49 +291,6 @@ const Row3 = ({children}) => {
 </div>);
 };
 
-// const StatisticsCard = () => { 
-// 	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
-// 		const name = "total-spend"; // dummy parameter: helps identify request in network tab
-// 		return ServerIO.getAllSpend({name});
-// 	});
-// 	if ( ! pvSum.resolved) {
-// 		return <Misc.Loading text='Loading donation data...' />;
-// 	}
-// 	let ttl = pvSum.value && pvSum.value.total;
-// 	let cnt = ttl? Math.round(ttl / 0.12) : 100000; // HACK assume 12p per ad
-// 	// TODO use a call to lg to get a count of minviews for cnt
-
-// 	return (<section className="statistics statistics-what text-center">
-// 		<div className="statistics-content">
-// 			<div className="row">
-// 				<h2 className="h2 text-center helvetica-font">Thousands each month raised for charity</h2>
-// 				<div>&nbsp;</div>
-// 			</div>
-// 			<Row3>
-// 				<div className="statistics-item">
-// 					<div className="statistics-value">
-// 						<div className="statistics-value-highlight"><span>{printer.prettyNumber(cnt)}</span></div>
-// 						<strong className="statistics-subtext">people reached</strong>
-// 					</div>
-// 				</div>
-// 				<div className="statistics-item">
-// 					<div className="statistics-value">
-// 						<div className="statistics-value-highlight">
-// 							<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={10} showCurrencySymbol={false} />										
-// 						</div>
-// 						<strong className="statistics-subtext">pounds raised</strong>
-// 					</div>
-// 				</div>
-// 				<div className="statistics-item">
-// 					<div className="statistics-value">
-// 						<div className="statistics-value-highlight"><div className="text-stat">No compromises</div></div>
-// 						<strong className="statistics-subtext">on your privacy</strong>
-// 					</div>
-// 				</div>
-// 			</Row3>
-// 		</div>
-// 	</section>);
-// };
 
 const StatisticsCardMini = () => { 
 	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
@@ -350,7 +307,7 @@ const StatisticsCardMini = () => {
 	return (<section className="statistics statistics-what text-center">
 		<div className="statistics-content">
 			<div className="row">
-				<h2 className="h2 text-center helvetica-font">Thousands each month raised for charity</h2>
+				<h2 className="text-center">Thousands each month raised for charity</h2>
 			</div>
 			<div className="row statistics-item">
 				<div className="statistics-value">

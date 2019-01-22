@@ -94,7 +94,7 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColor
 					<div className='title frank-font' style={brandColorTxtStyle}>
 						<MDText source={cnames[index].toUpperCase()} />
 					</div>
-					<div className='description helvetica-font'>
+					<div className='description'>
 						<MDText source={cdescs[index]} renderers={{link: LinkRenderer}} />
 					</div>
 					<div className='btnlink frank-font' style={brandColorBgStyle} onClick={(e) => window.open(curls[index], '_blank')}>
@@ -311,7 +311,7 @@ const CampaignPage = ({path}) => {
 						<div className='title frank-font' style={brandColorTxtStyle}>
 							<MDText source={desc_title} />							
 						</div>
-						<div className='subtitle helvetica-font'>
+						<div className='subtitle'>
 							<MDText source={desc_body} />							
 						</div>
 						<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
