@@ -123,7 +123,7 @@ class ShareAnAd extends React.Component {
 		return (
 			<div className="ShareAd">
 				<h2> Share this ad on social media </h2>
-				{ video || mobileVideo ? <video controls="true" width="100%" height="auto" src={isMobile? mobileVideo : video}> An error occured </video> : null }
+				{ video || mobileVideo ? <video controls={true} width="100%" height="auto" src={isMobile? mobileVideo : video}> An error occured </video> : null }
 				<div ref={e => this.setRef('adunitRef', e)} />
 				<TwitterShare adID={this.state.adID} TwitterXId={twitterXId} />
 				<SharedAdsDisplay xid={twitterXId} />
