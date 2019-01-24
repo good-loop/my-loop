@@ -60,15 +60,14 @@ class ShareAnAd extends React.Component {
 		const { adHistory } = props;
 
 		if( adHistory ) {
-			const {vert, video, mobileVideo, vastTag} = adHistory;
+			const {vert, video, format} = adHistory;
 
 			// ID of Good-loop ad to be shown
 			// Imagining that we will sometimes have set this based on user's ad history
 			this.state = {
 				adID: vert,
-				mobileVideo,
+				format,
 				video,
-				vastTag
 			};
 		}
 	}
@@ -87,8 +86,8 @@ class ShareAnAd extends React.Component {
 						return;
 					}
 
-					const {adid, video, mobileVideo, vastTag} = vert;
-					this.setState({adID: adid, mobileVideo, vastTag, video});
+					const {adid, video, format} = vert;
+					this.setState({adID: adid, format, video});
 				});
 		}
 	}
@@ -99,33 +98,24 @@ class ShareAnAd extends React.Component {
 	componentDidMount() { 
 		this.focusRef('adunitRef'); 
 
-		const {adID, vastTag} = this.state;
+		const {adID, format} = this.state;
 
 		// Is a VAST ad. Need to use the GoodLoop player to display it
-		if( vastTag ) injectGoodLoopUnit({adID, thisRef: this, vastTag});
+		if( format === 'vast-vpaid' ) injectGoodLoopUnit({adID, thisRef: this});
 	} 
 
 	render() {
 		// Think we can safely assume that there will always be a 'video' for us to latch on to
-		const {adID, mobileVideo, video} = this.state;
-
-		// COPIED FROM UNIT.JS
-		// Identify if we're on mobile or not
-		let isMobile;
-		if( mobileVideo ) {
-			const userAgent = window.navigator.userAgent || window.navigator.vendor || window.opera;
-			isMobile = !!(userAgent.match('/mobile|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i'));
-		}
+		const {adID, format, video} = this.state;
 
 		const twitterXId = Person.getTwitterXId();
 
-		// TODO: clean this up?
 		return (
 			<div className="ShareAd">
 				<h2> Share this ad on social media </h2>
-				{ video || mobileVideo ? <video controls={true} width="100%" height="auto" src={isMobile? mobileVideo : video}> An error occured </video> : null }
+				{ format === 'video' ? <video controls={true} width="100%" height="auto" src={video}> An error occured </video> : null }
 				<div ref={e => this.setRef('adunitRef', e)} />
-				<TwitterShare adID={this.state.adID} TwitterXId={twitterXId} />
+				<TwitterShare adID={adID} TwitterXId={twitterXId} />
 				<SharedAdsDisplay xid={twitterXId} />
 			</div>
 		);
