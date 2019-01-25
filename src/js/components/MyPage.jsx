@@ -428,7 +428,8 @@ const LinkedProfilesCard = ({xids}) => {
 	let nonTrackers = xids.filter(xid => XId.service(xid) !== 'trk');
 	let authd = Login.aliases? Login.aliases.filter( u => u.jwt).map(u => u.xid) : [];
 	
-	let peeps = xids.map(xid => DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Person, xid)).filter(p => !!p);
+	let peeps = xids.map(xid => DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Person, xid));
+	peeps = peeps.filter(p => !!p);
 
 	return (<div>
 		<p>We all have multiple online identities -- e.g. emails, social media, and with retail companies. 
@@ -436,9 +437,9 @@ const LinkedProfilesCard = ({xids}) => {
 		{ nonTrackers.map(xid => <div key={xid}>{XId.service(xid)+': '+XId.id(xid)}</div>) }
 		Good-Loop cookies (random IDs, used by us to record your donations and avoid repeating ads): {trackers.map(xid => XId.id(xid)).join(", ")}<br/>
 		Currently logged into Good-Loop via: {authd.map(xid => XId.service(xid)+': '+XId.id(xid)).join(", ")}<br/>
-		{peeps.map(peep => {
-			<div key={Person.getId(peep)}>{Person.getId(peep)} -> {peep.links? peep.links.map(link => link.v).join(", ") : 'no links'}</div>
-		})}
+		Links: {peeps.map(peep => 
+			<div key={Person.id(peep)}>{Person.id(peep)} -> {peep.links && peep.links.length? peep.links.map(link => link.v).join(", ") : 'no links'}</div>
+		)}
 	</div>);
 };
 
