@@ -101,7 +101,7 @@ class ShareAnAd extends React.Component {
 		const {adID, format} = this.state;
 
 		// Is a VAST ad. Need to use the GoodLoop player to display it
-		if( format === 'vast-vpaid' ) injectGoodLoopUnit({adID, thisRef: this});
+		if( format === 'vast-vpaid' || !format ) injectGoodLoopUnit({adID, thisRef: this});
 	} 
 
 	render() {
