@@ -98,6 +98,8 @@ const DigitalMirrorCard = ({xids}) => {
 	if(!xids) return null;
 	assMatch(xids, 'String[]');
 
+	// TODO use Person.getLinks to find links
+
 	// ??Switch to using [draft, Person, xid] as the storage for edits
 	// -- and hence reuse some existing Crud code.
 	/** HACK: Grab data from [data, Person, xid] (which we treat as read-only),

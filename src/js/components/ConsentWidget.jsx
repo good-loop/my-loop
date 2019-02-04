@@ -42,7 +42,7 @@ const ConsentWidget = ({xids}) => {
 	let path = ['widget', 'ConsentWidget', 'perms'];	
 	let peeps = getProfilesNow(xids);
 	// get and combine the consents
-	const perms = DataStore.getValue(path) || DataStore.setValue(path, {});
+	const perms = DataStore.getValue(path) || DataStore.setValue(path, {}, false);
 	peeps.forEach(person => {
 		// hm - orefer true/false/most-recent??
 		let peepPerms = getConsents({person});

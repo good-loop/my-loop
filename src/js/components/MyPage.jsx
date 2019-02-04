@@ -242,7 +242,7 @@ const WelcomeCard = ({xids}) => {
 			<div className="row blank-row"></div>
 			<div className="col-md-7 header-text frank-font">
 				<p className="title"><span> Become a superhero </span> for the causes you care about</p>
-				<LoginLink className='btn btn-lg btn-default btn-gl helvetica-font' verb='Sign Up' />			
+				<LoginLink className='btn btn-lg btn-default btn-gl' verb='Sign Up' />			
 			</div>
 			<div className="col-md-1 header-img">
 				<img src={heroImage} alt="Superhero" />
@@ -291,49 +291,6 @@ const Row3 = ({children}) => {
 </div>);
 };
 
-// const StatisticsCard = () => { 
-// 	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
-// 		const name = "total-spend"; // dummy parameter: helps identify request in network tab
-// 		return ServerIO.getAllSpend({name});
-// 	});
-// 	if ( ! pvSum.resolved) {
-// 		return <Misc.Loading text='Loading donation data...' />;
-// 	}
-// 	let ttl = pvSum.value && pvSum.value.total;
-// 	let cnt = ttl? Math.round(ttl / 0.12) : 100000; // HACK assume 12p per ad
-// 	// TODO use a call to lg to get a count of minviews for cnt
-
-// 	return (<section className="statistics statistics-what text-center">
-// 		<div className="statistics-content">
-// 			<div className="row">
-// 				<h2 className="h2 text-center helvetica-font">Thousands each month raised for charity</h2>
-// 				<div>&nbsp;</div>
-// 			</div>
-// 			<Row3>
-// 				<div className="statistics-item">
-// 					<div className="statistics-value">
-// 						<div className="statistics-value-highlight"><span>{printer.prettyNumber(cnt)}</span></div>
-// 						<strong className="statistics-subtext">people reached</strong>
-// 					</div>
-// 				</div>
-// 				<div className="statistics-item">
-// 					<div className="statistics-value">
-// 						<div className="statistics-value-highlight">
-// 							<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={10} showCurrencySymbol={false} />										
-// 						</div>
-// 						<strong className="statistics-subtext">pounds raised</strong>
-// 					</div>
-// 				</div>
-// 				<div className="statistics-item">
-// 					<div className="statistics-value">
-// 						<div className="statistics-value-highlight"><div className="text-stat">No compromises</div></div>
-// 						<strong className="statistics-subtext">on your privacy</strong>
-// 					</div>
-// 				</div>
-// 			</Row3>
-// 		</div>
-// 	</section>);
-// };
 
 const StatisticsCardMini = () => { 
 	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
@@ -350,7 +307,7 @@ const StatisticsCardMini = () => {
 	return (<section className="statistics statistics-what text-center">
 		<div className="statistics-content">
 			<div className="row">
-				<h2 className="h2 text-center helvetica-font">Thousands each month raised for charity</h2>
+				<h2 className="text-center">Thousands each month raised for charity</h2>
 			</div>
 			<div className="row statistics-item">
 				<div className="statistics-value">
@@ -375,36 +332,6 @@ const StatisticsCardMini = () => {
 		</div>
 	</section>);
 };
-
-// const OnboardingCard = ({allIds}) => {
-// 	let step1Img = 'https://image.ibb.co/nnGOgV/153970313184640369.png';
-// 	let step2Img = 'https://image.ibb.co/jJm3Fq/153970315675413631.png';
-// 	let step3Img = 'https://image.ibb.co/fMRQTA/153970316087031793.png';
-
-// 	return 	(<section id="howitworks" className="how text-center">
-// 		<div className="how-content container-fluid">
-// 			<Row3>
-// 				<div className="how-step">
-// 					<img className="how-img" src={step1Img} alt='banners in a web page' />
-// 					<span className="how-text">You see one of our Ads For Good on a website</span>
-// 				</div>
-// 				<div className="how-step">
-// 					<img className="how-img" src={step2Img} alt='banners in a web page' />
-// 					<span className="how-text">A video ad plays for 15 seconds</span>
-// 				</div>
-// 				<div className="how-step">
-// 					<img className="how-img" src={step3Img} alt='banners in a web page' />
-// 					<span className="how-text">We donate half the ad revenue to your chosen charity</span>
-// 				</div>
-// 			</Row3>
-// 			<div className="row">
-// 				<center>
-// 					<a className='btn btn-default' href='https://as.good-loop.com/?site=my.good-loop.com'>Try it now: Watch an Ad-for-Good!</a>
-// 				</center>
-// 			</div>
-// 		</div>
-// 	</section>);
-// };
 
 
 const OnboardingCardMini = () => {
@@ -460,7 +387,9 @@ const SocialMediaCard = ({allIds=[]}) => {
 			{emailID ? '' : '' /* <div> TODO: email capture </div> */	}
 			{ids.twitterID ? (
 				<div className='wrapper'>
-					<p className="connected" ><i className="fa fa-handshake-o" /> Twitter id: {XId.id(ids.twitterID)}</p>
+					<p className="connected" ><i className="fa fa-handshake-o" /> Twitter id: <a href={'https://twitter.com/'+XId.id(ids.twitterID)} target='_blank'>
+						{XId.id(ids.twitterID)}
+					</a></p>
 				</div>
 				) : (
 				<div>
@@ -491,17 +420,28 @@ const ContactCard = () => {
 	);
 };
 
+/**
+ * This is mostly for our debugging
+ * @param {*} param0 
+ */
 const LinkedProfilesCard = ({xids}) => {
 	if ( ! xids) return null;
 	let trackers = xids.filter(xid => XId.service(xid) === 'trk');
 	let nonTrackers = xids.filter(xid => XId.service(xid) !== 'trk');
 	let authd = Login.aliases? Login.aliases.filter( u => u.jwt).map(u => u.xid) : [];
+	
+	let peeps = xids.map(xid => DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Person, xid));
+	peeps = peeps.filter(p => !!p);
+
 	return (<div>
 		<p>We all have multiple online identities -- e.g. emails, social media, and with retail companies. 
 		Here are the IDs Good-Loop recognises as you:</p>
 		{ nonTrackers.map(xid => <div key={xid}>{XId.service(xid)+': '+XId.id(xid)}</div>) }
 		Good-Loop cookies (random IDs, used by us to record your donations and avoid repeating ads): {trackers.map(xid => XId.id(xid)).join(", ")}<br/>
 		Currently logged into Good-Loop via: {authd.map(xid => XId.service(xid)+': '+XId.id(xid)).join(", ")}<br/>
+		Links: {peeps.map(peep => 
+			<div key={Person.id(peep)}>{Person.id(peep)} -> {peep.links && peep.links.length? peep.links.map(link => link.v).join(", ") : 'no links'}</div>
+		)}
 	</div>);
 };
 

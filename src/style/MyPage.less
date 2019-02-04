@@ -1,4 +1,3 @@
-@gl-color: #A20F15;
 
 .page.MyPage {
 	background-color: #F6C390;
@@ -39,14 +38,14 @@
 /* gl button: white button on red background */
 .btn-gl {
 	background-color: white;
-	color: @gl-color;
+	color: @gl-red;
 	border-color: white;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
 	font-weight: bold;
 }
 
 .btn.btn-gl:hover {
-	background-color: #a50d23;
+	background-color: #a50d23; // ??relation to gl-red??
 	text-decoration: none;
 	color: white;
 } // end of gl button
@@ -55,7 +54,7 @@
 .WelcomeCard {
 	//min-height: 500px;
 	color: white;
-	background-color: @gl-color;
+	background-color: @gl-red;
 
 	.header {
 		padding: 2vmin 0 6vmin 4vmin;
@@ -181,7 +180,7 @@
 					margin-left: -51px;
 					width: 102px;
 					height: 5px;
-					background: @gl-color;
+					background: @gl-red;
 				}
 			}
 		}
