@@ -66,7 +66,7 @@ const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='lef
 
 	return (
 		<div className={'circle '.concat(name)} onClick={(e) => _handleClick(index)}>
-			{cparent? <p className='bebas-font'><span className='frank-font'>{campaignSlice[cids[index]].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p> : null}
+			{cparent? <p className='header-font'><span className='frank-font'>{campaignSlice[cids[index]].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p> : null}
 			<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} style={!(clist[index].highResPhoto || clist[index].photo) ? logoStyle : null}/>
 			<div className='project-name frank-font' style={brandColorBgStyle}>
 				{cnames[index]}
@@ -142,7 +142,7 @@ const LinkToAdWidget = ({cparent, adid, status, brandColorTxtStyle}) => {
 	let md = "[" + msg + "](" + url + ")";
 	
 	return (
-		<p className='link bebas-font'>
+		<p className='link header-font'>
 			<MDText source={md} renderers={{link: LinkRenderer}} />
 		</p>
 	);
@@ -320,7 +320,7 @@ const CampaignPage = ({path}) => {
 				</Element>
 			</div>
 			<div className='grid-tile bottom' style={brandColorBgStyle}>
-				<div className='foot bebas-font'>			
+				<div className='foot header-font'>			
 					<SocialMediaFooterWidget type={'vertiser'} name={ad.name} src={brand} />					
 					<SocialMediaFooterWidget type={'goodloop'} name={'GOOD-LOOP'} src={gl_social} />
 				</div>
