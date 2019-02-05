@@ -24,7 +24,7 @@ import { Server } from 'http';
 
 const pagePath = ['widget', 'MyPage'];
 
-window.DEBUG = true;
+window.DEBUG = false;
 
 const fetcher = xid => DataStore.fetch(['data', 'Person', xid], () => {
 	// Call analyzedata servlet to pull in user data from Twitter
