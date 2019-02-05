@@ -1,32 +1,31 @@
 /** Data model functions for the Budget data-type. */
 import {assert} from 'sjtest';
 
-import {isa} from '../base/data/DataClass';
+import DataClass from '../base/data/DataClass';
 import C from '../C';
 import Money from '../base/data/Money';
 
 
-const Budget = {};
+class Budget extends DataClass {
+	total= new Money();
+	spent= new Money();
+	/** @type {!String} */
+	id;
 
-Budget.isa = budget => isa(budget, C.TYPES.Budget);
-Budget.assIsa = budget => assert(Budget.isa(budget));
+	constructor(base) {
+		Object.assign(this, base);
+		this['@type'] = 'Budget';
+			// Is this budget connected to an ad? Make sure its ID is correct
+		if (this.adid) {
+			if ( ! this.id) this.id = id(this);
+			assert(this.id === id(this), this);
+		}
+	}
+
+}
+DataClass.register(Budget);
+
 
 const id = item => `budget_${item.adid}`;
-
-Budget.make = base => {
-	const item = {
-		total: Money.make(), // default
-		spent: Money.make(), // default
-		...base, // Base comes after defaults so it overrides
-		'@type': C.TYPES.Budget, // @type always last so it overrides erroneous base.type
-	};
-
-	// Is this budget connected to an ad? Make sure its ID is correct
-	if (item.adid) {
-		if (!item.id) item.id = id(item);
-		assert(item.id === id(item), item);
-	}
-	return item;
-};
 
 export default Budget;

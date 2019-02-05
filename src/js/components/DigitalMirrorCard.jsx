@@ -352,7 +352,7 @@ const saveFn = (xid, fieldObjs, from) => {
 		// Found this was 'undefined' where no data was loaded for a particular field
 		if( !consent ) consent = false;
 
-		const claim = Claim.make({key: field, value, from, consent});
+		const claim = new Claim({key: field, value, from, consent});
 		claims = claims.concat(claim);
 	});
 
