@@ -8,7 +8,7 @@ import ActionMan from '../plumbing/ActionMan';
 import Misc from '../base/components/Misc';
 import {getType, getId} from '../base/data/DataClass';
 import {encURI} from 'wwutils';
-import NGO from '../data/NGO';
+import NGO from '../base/data/NGO';
 
 const COOPLABELS = {
 	ALLOW_OTHERS: "allow other charities (recommended)",
