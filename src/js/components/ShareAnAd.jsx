@@ -102,6 +102,9 @@ class ShareAnAd extends React.Component {
 
 		// Is a VAST ad. Need to use the GoodLoop player to display it
 		if( format === 'vast-vpaid' || !format ) injectGoodLoopUnit({adID, thisRef: this});
+
+		// Report to MixPanel if div is visible to the user
+		window.addEventListener('scroll', () => ServerIO.logIfVisible(this.wrapper, "ShareAnAdVisible"));
 	} 
 
 	render() {
@@ -111,7 +114,7 @@ class ShareAnAd extends React.Component {
 		const twitterXId = Person.getTwitterXId();
 
 		return (
-			<div className="ShareAd">
+			<div className="ShareAd" ref={el => this.wrapper = el}>
 				<h2> Share this ad on social media </h2>
 				{ format === 'video' ? <video controls={true} width="100%" height="auto" src={video}> An error occured </video> : null }
 				<div ref={e => this.setRef('adunitRef', e)} />

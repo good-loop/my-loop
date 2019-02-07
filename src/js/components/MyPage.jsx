@@ -242,7 +242,9 @@ const WelcomeCard = ({xids}) => {
 			<div className="row blank-row"></div>
 			<div className="col-md-7 header-text frank-font">
 				<p className="title"><span> Become a superhero </span> for the causes you care about</p>
-				<LoginLink className='btn btn-lg btn-default btn-gl' verb='Sign Up' />			
+				<div onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
+					<LoginLink className='btn btn-lg btn-default btn-gl' verb='Sign Up' />			
+				</div>
 			</div>
 			<div className="col-md-1 header-img">
 				<img src={heroImage} alt="Superhero" />
@@ -408,17 +410,25 @@ const SocialMediaCard = ({allIds=[]}) => {
 	);
 };
 
-const ContactCard = () => {
-	return (
-		<div>
-			<div>
-				<p>Let us know what you think of this web-app, and your ideas for improving it.</p>
-				<p>Are you interested in hosting Ads For Good on your blog or website?</p>
-				<p><a href="https://www.good-loop.com/book-a-call">Let us know.</a></p>
+// Temporarily switched to class in order to log when div is within viewport
+class ContactCard extends React.Component {
+
+	componentDidMount() {
+		window.addEventListener('scroll', () => ServerIO.logIfVisible(this.wrapper, "ContactCardVisible"));
+	}
+
+	render() {
+		return (
+			<div ref={el => this.wrapper = el}>
+				<div>
+					<p>Let us know what you think of this web-app, and your ideas for improving it.</p>
+					<p>Are you interested in hosting Ads For Good on your blog or website?</p>
+					<p><a href="https://www.good-loop.com/book-a-call">Let us know.</a></p>
+				</div>
 			</div>
-		</div>
-	);
-};
+		);
+	}
+}
 
 /**
  * This is mostly for our debugging
