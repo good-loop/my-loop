@@ -31,6 +31,25 @@
 			mixpanel.init(token);
 		</script>
 		<!-- end Mixpanel -->
+		<!-- Start GA -->
+		<script type="text/javascript">
+			var href = window.location.href;
+			// GA ID for test/local MyLoop
+			var gaId = "UA-133914862-1";
+			
+			if( href.match(/https:\/\/my.good-loop.com/) ) gaId = "UA-133914862-2"; // For production
+
+			var $script = document.createElement("script");
+			$script.async = true;
+			$script.src = "https://www.googletagmanager.com/gtag/js?id=" + gaId;
+			document.head.appendChild($script);
+
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', gaId);
+		</script>
+		<!-- End GA -->
 		<!-- Start HotJar -->
 		<!-- <script>
 			(function(h,o,t,j,a,r){
