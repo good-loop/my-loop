@@ -125,10 +125,12 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColor
 					<div className='description'>
 						<MDText source={cdescs[index]} renderers={{link: LinkRenderer}} />
 					</div>
-					<div className='btnlink frank-font' style={brandColorBgStyle} onClick={(e) => window.open(curls[index], '_blank')}>
-						{cparent ? 'Find out more about the' : 'Find out more'} 
-						<br/> <MDText source={cparent} />
-					</div>	
+					{curls[index] ?
+						<div className='btnlink frank-font' style={brandColorBgStyle} onClick={(e) => window.open(curls[index], '_blank')}>
+							Find out more {curls[index] && cparent ? ' about the' : ''} 
+							<br/> <MDText source={cparent} />
+						</div>	
+						: null }
 				</div>
 			</div>
 		</div>
