@@ -75,7 +75,7 @@ const ConsentWidget = ({xids}) => {
 
 	// The cookie setting is managed by a cookie, as its needed at add-time -- c.f. in unit.js.
 	let dnt = Cookies.get('DNT');
-	perms.cookies = dnt !== '1'; // allow cookies unless DNT=1
+	perms.cookies = (dnt === '1' ? 'no' : 'yes'); // allow cookies unless DNT=1
 	const toggleDNT = ({value}) => {
 		perms.cookies = value;
 		dnt = value? '0' : '1';
