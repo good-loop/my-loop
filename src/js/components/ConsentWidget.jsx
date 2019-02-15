@@ -75,10 +75,10 @@ const ConsentWidget = ({xids}) => {
 
 	// The cookie setting is managed by a cookie, as its needed at add-time -- c.f. in unit.js.
 	let dnt = Cookies.get('DNT');
-	perms.cookies = (dnt === '1' ? 'no' : 'yes'); // allow cookies unless DNT=1
+	perms.cookies = (dnt === '1' ? 'yes' : 'no'); // allow cookies unless DNT=1
 	const toggleDNT = ({value}) => {
 		perms.cookies = value;
-		dnt = value? '0' : '1';
+		dnt = value === "yes" ? '1' : '0';
 		Cookies.set('DNT', dnt, {path:'/', domain:'good-loop.com', expires:365});
 	};
 
@@ -89,7 +89,7 @@ const ConsentWidget = ({xids}) => {
 
 			<PropControl path={path} prop='cookies' 
 				label='Use cookies to record your charity donations, which ads we show you, and how you react to them (e.g. click / ignore / vomit)' 
-				type='yesNo' saveFn={toggleDNT} />
+				type='yesNo' saveFn={(data) => {toggleDNT(data); togglePerm(data);}} />
 			{perms.cookies === false? <small>OK - no cookies. Except ironically this has to set a cookie to work.</small> : null}
 
 			<PropControl path={path} prop='personaliseAds' label='Pick ads that fit your profile' type='yesNo' 
