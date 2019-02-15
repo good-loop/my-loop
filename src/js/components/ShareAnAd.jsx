@@ -5,38 +5,7 @@ import ServerIO from '../plumbing/ServerIO';
 import C from '../C';
 import Person from '../base/data/Person';
 import {saveSocialShareId} from '../base/Profiler';
-
-/** Returns promise that resolves when Good-Loop unit is loaded and ready */
-const injectGoodLoopUnit = ({adID, thisRef}) => {
-	const iframe = document.createElement('iframe');
-
-	/** Elements to place in Good-Loop iframe */
-	const $script = document.createElement('script');
-	$script.setAttribute('src', adID ? ServerIO.AS_ENDPOINT + '/unit.js?gl.variant=pre-roll&gl.vert=' + adID : ServerIO.AS_ENDPOINT + '/unit.js?gl.variant=pre-roll');
-
-	const $div = document.createElement('div');
-	$div.setAttribute('class', 'goodloopad');
-
-	$div.setAttribute('data-format', 'player');
-	$div.setAttribute('data-mobile-format', 'player');
-
-	iframe.setAttribute('id', 'good-loop-iframe');
-	iframe.setAttribute('frameborder', 0);
-	iframe.setAttribute('scrolling', 'auto');
-	
-	iframe.style.height = 'auto';
-	iframe.style.width = 'auto';
-	iframe.style['max-width'] = '100%';
-
-	iframe.addEventListener('load', () => {
-		window.iframe = iframe;
-		iframe.contentDocument.body.style.overflow = 'hidden';
-		iframe.contentDocument.body.appendChild($script);
-		iframe.contentDocument.body.appendChild($div);
-	});
-
-	thisRef.adunitRef.appendChild(iframe);
-};
+import GoodLoopUnit from '../base/components/GoodLoopUnit';
 
 // TODO Does this need to be a component? If not, avoid React.Component in favour of functional jsx
 class ShareAnAd extends React.Component {
@@ -44,18 +13,6 @@ class ShareAnAd extends React.Component {
 		super(props);
 
 		this.state = {};
-		// Create ref by callback https://reactjs.org/docs/refs-and-the-dom.html#callback-refs
-		
-		// Don't need to declare these, but vaguely helpful to see what's used
-		this.adunitRef = null;
-
-		this.setRef = (ref, value) => {
-			this[ref] = value;
-		};
-
-		this.focusRef = (ref) => {
-			if (this[ref]) this[ref].focus();
-		};
 
 		const { adHistory } = props;
 
@@ -96,13 +53,6 @@ class ShareAnAd extends React.Component {
 	// but lifecycle goes willMount -> render -> didMount, and this.adunitRef
 	// needs to be a valid reference for us to put the iframe into
 	componentDidMount() { 
-		this.focusRef('adunitRef'); 
-
-		const {adID, format} = this.state;
-
-		// Is a VAST ad. Need to use the GoodLoop player to display it
-		if( format === 'vast-vpaid' || !format ) injectGoodLoopUnit({adID, thisRef: this});
-
 		// Report to MixPanel if div is visible to the user
 		window.addEventListener('scroll', () => ServerIO.logIfVisible(this.wrapper, "ShareAnAdVisible"));
 	} 
@@ -116,8 +66,11 @@ class ShareAnAd extends React.Component {
 		return (
 			<div className="ShareAd" ref={el => this.wrapper = el}>
 				<h2> Share this ad on social media </h2>
-				{ format === 'video' ? <video controls={true} width="100%" height="auto" src={video}> An error occured </video> : null }
-				<div ref={e => this.setRef('adunitRef', e)} />
+				{ 
+					format === 'video' ? 
+						<video controls={true} width="100%" height="auto" src={video}> An error occured </video> :
+						<GoodLoopUnit adID={adID} /> 
+				}
 				<TwitterShare adID={adID} TwitterXId={twitterXId} />
 				<SharedAdsDisplay xid={twitterXId} />
 			</div>
