@@ -63,11 +63,25 @@ const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='lef
 	let cids = clist.map(x => x.id);
 	let cnames = clist.map(x => x.name);
 	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo || x.logo);
+	let ccrop = clist.map(x => x.circleCrop);
+
+	// this uses the circleCrop value set in the portal to crop the logo/photo to fit neatly into the circle 
+	let ccropDiff = (100-ccrop[index])/100;
+	let circleCropStyle = {
+		width: ccrop[index]+"%",
+		height: ccrop[index]+"%",
+		marginTop: "calc(125px*" + ccropDiff + ")",
+	};
+	let noCropStyle = {
+		borderRadius: 'inherit'
+	};
 
 	return (
 		<div className={'circle '.concat(name)} onClick={(e) => _handleClick(index)}>
 			{cparent? <p className='header-font'><span className='frank-font'>{campaignSlice[cids[index]].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p> : null}
-			<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} style={!(clist[index].highResPhoto || clist[index].photo) ? logoStyle : null}/>
+			<div className='img-wrapper' style={!(clist[index].highResPhoto || clist[index].photo) ? logoStyle : null}>
+				<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} style={ccrop[index] ? circleCropStyle : noCropStyle}/>
+			</div>
 			<div className='project-name frank-font' style={brandColorBgStyle}>
 				{cnames[index]}
 			</div>
@@ -85,11 +99,25 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColor
 	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo || x.logo);
 	let curls = clist.map(x => x.url);
 	let cdescs = clist.map(x => x.description);
+	let ccrop = clist.map(x => x.circleCrop);
+	
+	// this uses the circleCrop value set in the portal to crop the logo/photo to fit neatly into the circle 
+	let ccropDiff = (100-ccrop[index])/100;
+	let circleCropStyle = {
+		width: ccrop[index]+"%",
+		height: ccrop[index]+"%",
+		marginTop: "calc(125px*" + ccropDiff + ")",
+	};
+	let noCropStyle = {
+		borderRadius: 'inherit'
+	};
 
 	return (
 		<div className={'details '.concat(name)}>
 			<div className='innards'>
-				<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} style={!(clist[index].highResPhoto || clist[index].photo) ? logoStyle : null}/>
+				<div className='img-wrapper' style={!(clist[index].highResPhoto || clist[index].photo) ? logoStyle : null}>
+					<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} style={ccrop[index] ? circleCropStyle : noCropStyle}/>
+				</div>
 				<div className="text">
 					<div className='title frank-font' style={brandColorTxtStyle}>
 						<MDText source={cnames[index].toUpperCase()} />
