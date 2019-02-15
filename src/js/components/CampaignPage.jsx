@@ -95,13 +95,20 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColor
 		return <a href={props.href} target="_blank" style={brandColorTxtStyle}>{props.children}</a>;
 	}
 
+	let cids = clist.map(x => x.id);
 	let cnames = clist.map(x => x.name);
 	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo || x.logo);
 	let curls = clist.map(x => x.url);
 	let cdescs = clist.map(x => x.description);
-	let ccrop = clist.map(x => x.circleCrop);
+
+	// get description from sogive if you can't find it in portal
+	// NB: getData will call SoGive for NGO data
+	let pvcharityData = ActionMan.getDataItem({type:C.TYPES.NGO, id:cids[index], status:C.KStatus.PUBLISHED});
+	let sogiveResults = pvcharityData.value;
+	let sogiveDesc = (sogiveResults && sogiveResults.summaryDescription);
 	
 	// this uses the circleCrop value set in the portal to crop the logo/photo to fit neatly into the circle 
+	let ccrop = clist.map(x => x.circleCrop);
 	let ccropDiff = (100-ccrop[index])/100;
 	let circleCropStyle = {
 		width: ccrop[index]+"%",
@@ -123,7 +130,7 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColor
 						<MDText source={cnames[index].toUpperCase()} />
 					</div>
 					<div className='description'>
-						<MDText source={cdescs[index]} renderers={{link: LinkRenderer}} />
+						<MDText source={(cdescs[index] || sogiveDesc)} renderers={{link: LinkRenderer}} />
 					</div>
 					{curls[index] ?
 						<div className='btnlink frank-font' style={brandColorBgStyle} onClick={(e) => window.open(curls[index], '_blank')}>
