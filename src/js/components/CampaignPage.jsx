@@ -164,18 +164,30 @@ const CampaignPage = ({path}) => {
 	// get the ad for display (so status:published - unless this is a preview, as set by the url)
 	let status = DataStore.getUrlValue("gl.status") || C.KStatus.PUBLISHED; 
 	console.log(status);
+
+	//  checking for both adid and advertiser id in the url like this means that the user will get an error message, although the page will still load "404: http://localportal.good-loop.com/vert/gl/h1PY8Fir.json?status=DRAFT&status=DRAFT&app=good-loop&as=marvin%40irinapreda.me%40email&withCredentials=true"
+	// TODO: either use url params instead (e.g. adid=qHejwewq) or remove the error in this case (that might be confusing for us devs)
 	let pvAdvert = ActionMan.getDataItem({type:C.TYPES.Advert, id:adid, status:C.KStatus.DRAFT, domain: ServerIO.PORTAL_DOMAIN});
-	if ( ! pvAdvert.resolved ) {
+	let pvAdvertiser = ActionMan.list({type: C.TYPES.Advert, status:C.KStatus.ALL_BAR_TRASH, q:adid });
+
+	if ( ! pvAdvert.resolved && ! pvAdvertiser.resolved ) {
 		return <Misc.Loading text='Loading campaign data...' />;
 	}
-
-	console.log(pvAdvert.value);
 
 	// default data
 	let defaultImg = "https://i.ibb.co/Xy6HD5J/empty.png"; // hack to be used when we don't have an image, and we want to default to an "empty" transparent image
 
 	// advertiser data
-	const ad = pvAdvert.value;	
+	let ad = pvAdvert.value ? pvAdvert.value : null;
+	let advertiser = pvAdvertiser.value ? pvAdvertiser.value : null;	
+
+	console.log("ad: ",ad);
+	console.log("advertiser: ",advertiser);
+
+	if (advertiser) {
+		ad = advertiser["hits"][0]; // takes one of the advertiser's adverts
+	}
+
 	let brand = ad.branding;
 	// use good-loop branding if adv branding is not there 
 	let brandColor = brand.color ? brand.color : '#C83312'; 
