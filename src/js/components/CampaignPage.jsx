@@ -53,6 +53,36 @@ const SocialMediaFooterWidget = ({type, name, branding}) => {
 	);
 };
 
+// The "share this advert" links
+// TODO replace those PNGs with SVGs, preferably inline
+const shareOptions = [
+	{
+		title: 'Twitter',
+		href: 'https://twitter.com/intent/tweet?text=Our%20ads%20are%20raising%20money%20for%20charity&tw_p=tweetbutton&url=' + window.location.href,
+		logo: '/img/twitter.png'
+	},
+	{
+		title: 'Facebook',
+		href: 'http://www.facebook.com/sharer.php?s=100&p[url]=' + window.location.href + '&p[summary]=Our%20ads%20are%20raising%20money%20for%20charity',
+		logo: '/img/facebook.png'
+	}
+];
+
+const SocialMediaShareWidget = ({type, name, branding}) => {
+	const SocialShareButton = ({href, logo, title}) => (
+		<Link className="charity" href={href} key={title} to={href} target="_blank" rel="noreferrer" title={title} alt={title}>
+			<img alt={{title}+' Logo'} src={logo} crop="50%" title={title} />
+		</Link>
+	);
+
+	return (
+		<div className="social share-page">
+			Share this page:
+			{shareOptions.map(option => SocialShareButton(option))}
+		</div>
+	);
+};
+
 let _handleClick = (circleIndex) => {
 	let toggle = [false, false, false];
 	toggle[circleIndex] = true;
@@ -372,6 +402,7 @@ const CampaignPage = ({path}) => {
 				<div className='foot header-font'>			
 					<SocialMediaFooterWidget type={'vertiser'} name={ad.name} src={brand} />					
 					<SocialMediaFooterWidget type={'goodloop'} name={'GOOD-LOOP'} src={gl_social} />
+					<SocialMediaShareWidget />
 				</div>
 			</div>
 		</div>
