@@ -214,7 +214,7 @@ const DonationSlideWidget = ({cparent, clist, index=0, active}) => {
 
 	return (
 		<div className={itemClass} style={slideStyle}>
-			<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} style={ccrop[index] ? circleCropStyle : noCropStyle} />
+			<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
 			<div style={descStyle}>{chtyDesc}</div>
 		</div>	
 	);
