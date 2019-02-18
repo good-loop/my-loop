@@ -42,6 +42,7 @@ const CampaignHeaderWidget = ({cparentLogo, brandLogo, supports, displayChtyLogo
  * @param branding {Branding}
  */
 const SocialMediaFooterWidget = ({type, name, branding}) => {
+	// FIXME avoid gl-es urls!
 	return (
 		<div className={'social '.concat(type)}>
 			<MDText source={name} />
@@ -84,6 +85,7 @@ const SocialMediaShareWidget = ({type, name, branding}) => {
 };
 
 let _handleClick = (circleIndex) => {
+	// TODO document the assumptions / linked code
 	let toggle = [false, false, false];
 	toggle[circleIndex] = true;
 	DataStore.setValue(['widget', 'donationCircles', 'active'], toggle);
@@ -436,11 +438,14 @@ const CampaignPage = ({path}) => {
 	});
 	
 	let campaignTotal = pvDonationsBreakdown.value.total; 
-	let donationValue = 0;
-	donationValue = campaign && campaign.donation ? campaign.donation : campaignTotal; // check if statically set and, if not, then update with latest figures
+	let donationValue = campaign && campaign.donation? campaign.donation : campaignTotal; // check if statically set and, if not, then update with latest figures
 	
 	let charityTotal = filteredBreakdown.reduce((acc, current) => acc + current.value100p, 0);
+	
+	// TODO campaignSlice is cryptic -- Good that it's documented here. 
+	// But better to give this a semantic name, e.g. percentageForCharityID, so its clear elsewhere too.
 	let campaignSlice = {}; // campaignSlice is of the form { cid: {percentageTotal: ...} } so as to ensure the correct values are extracted later (checking for cid rather than index)
+
 	filteredBreakdown.forEach(function(obj) {
 		const rawFraction = obj.value100p / charityTotal || 0; 
 		campaignSlice[obj.cid] = {percentageTotal: Math.round(rawFraction*100)}; 
@@ -488,6 +493,6 @@ const CampaignPage = ({path}) => {
 		</div>
 		<Footer leftFooter={startDate} rightFooter={smallPrint} brandColorBgStyle={brandColorBgStyle} />
 	</div>);
-};
+}; // ./CampaignPage
 
 export default CampaignPage;
