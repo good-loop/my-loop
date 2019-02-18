@@ -58,21 +58,21 @@ const SocialMediaFooterWidget = ({type, name, branding}) => {
 const shareOptions = [
 	{
 		title: 'Twitter',
-		href: 'https://twitter.com/intent/tweet?text=Our%20ads%20are%20raising%20money%20for%20charity&tw_p=tweetbutton&url=' + window.location.href,
+		href: 'https://twitter.com/intent/tweet?text=Our%20ads%20are%20raising%20money%20for%20charity&tw_p=tweetbutton&url=' + window.location.href.replace("#", "%23"),
 		logo: '/img/twitter.png'
 	},
 	{
 		title: 'Facebook',
-		href: 'http://www.facebook.com/sharer.php?s=100&p[url]=' + window.location.href + '&p[summary]=Our%20ads%20are%20raising%20money%20for%20charity',
+		href: 'http://www.facebook.com/sharer.php?s=100&p[url]=' + window.location.href,
 		logo: '/img/facebook.png'
 	}
 ];
 
 const SocialMediaShareWidget = ({type, name, branding}) => {
 	const SocialShareButton = ({href, logo, title}) => (
-		<Link className="charity" href={href} key={title} to={href} target="_blank" rel="noreferrer" title={title} alt={title}>
+		<a className="charity" href={href} target="_blank" rel="noreferrer" title={title} alt={title}>
 			<img alt={{title}+' Logo'} src={logo} crop="50%" title={title} />
-		</Link>
+		</a>
 	);
 
 	return (
@@ -153,7 +153,7 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColor
 		<div className={'details '.concat(name)}>
 			<div className='innards'>
 				<div className='img-wrapper' style={!(clist[index].highResPhoto || clist[index].photo) ? logoStyle : null}>
-					<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} style={ccrop[index] ? circleCropStyle : noCropStyle}/>
+					<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} style={ccrop[index] && ccrop[index]!==100 ? circleCropStyle : noCropStyle}/>
 				</div>
 				<div className="text">
 					<div className='title frank-font' style={brandColorTxtStyle}>
