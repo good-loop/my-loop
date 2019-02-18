@@ -23,7 +23,7 @@ class Budget extends DataClass {
 	}
 
 }
-DataClass.register(Budget);
+DataClass.register(Budget, "Budget");
 
 
 const id = item => `budget_${item.adid}`;
