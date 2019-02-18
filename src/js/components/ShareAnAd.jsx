@@ -8,6 +8,8 @@ import {saveSocialShareId} from '../base/Profiler';
 import GoodLoopUnit from '../base/components/GoodLoopUnit';
 
 // TODO Does this need to be a component? If not, avoid React.Component in favour of functional jsx
+// (18/02/19) Should be possible now that GoodLoopUnit is inserted elsewhere, but still need div reference is order to report
+// when a div becomes visible.
 class ShareAnAd extends React.Component {
 	constructor(props) {
 		super(props);
@@ -49,9 +51,6 @@ class ShareAnAd extends React.Component {
 		}
 	}
 
-	// Would usually prefer to put this sort of thing in to componentWillMount
-	// but lifecycle goes willMount -> render -> didMount, and this.adunitRef
-	// needs to be a valid reference for us to put the iframe into
 	componentDidMount() { 
 		// Report to MixPanel if div is visible to the user
 		window.addEventListener('scroll', () => ServerIO.logIfVisible(this.wrapper, "ShareAnAdVisible"));
