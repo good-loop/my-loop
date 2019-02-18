@@ -459,7 +459,7 @@ const CampaignPage = ({path}) => {
 							<div>{
 								campaign && campaign.donation? "You've helped " + ad.name + " raise" : "You've helped " + ad.name + " raise"
 								}</div>													
-							{campaign && campaign.donation? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : null}
+							{campaign && campaign.donation? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 							<div>for charity</div>
 						</div>
 					</div>	
