@@ -24,13 +24,13 @@ import Footer from '../components/Footer';
 import { Link, Element } from 'react-scroll';
 import MDText from '../base/components/MDText';
 
-const CampaignHeaderWidget = ({cparentLogo, brandLogo, supports}) => {
+const CampaignHeaderWidget = ({cparentLogo, brandLogo, supports, displayChtyLogo}) => {
 	if (cparentLogo) {
 		return (
 			<div>
 				<img alt='Sponsor Logo' src={brandLogo} />
 				{supports ? <span> Supports </span> : null}
-				<img alt='Charity Logo' src={cparentLogo} />
+				<img alt='Charity Logo' src={cparentLogo} style={displayChtyLogo} />
 			</div>
 		);
 	}
@@ -174,6 +174,93 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColor
 	);
 };
 
+const DonationSlideWidget = ({cparent, clist, index=0, active}) => {	
+	let cids = clist.map(x => x.id);
+	let cnames = clist.map(x => x.name);
+	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo || x.logo);
+	let ccrop = clist.map(x => x.circleCrop);
+	let chtyColor = '#f3ac20'; // TODO: wire this up
+	let chtyDesc = 'Sightsavers is a charity which fights avoidable blindness and promotes equal opportunities for visually impaired people.';// TODO: wire this up
+
+	// TODO: move this in less file
+	let slideStyle = {
+		backgroundColor: chtyColor,
+		height: '100%',		
+		width: '100%',		
+		padding: '50px'
+	};
+
+	// this uses the circleCrop value set in the portal to crop the logo/photo to fit neatly into the circle 
+	let ccropDiff = (100-ccrop[index])/100;
+	let circleCropStyle = {
+		width: ccrop[index]+"%",
+		height: ccrop[index]+"%",
+		marginTop: "calc(125px*" + ccropDiff + ")"
+	};
+	let noCropStyle = {
+		borderRadius: 'inherit',
+		height: '20%',
+		margin: '0 auto'
+	};
+	let descStyle = {
+		padding: '50px',
+		width: '30%',
+		margin: '0 auto',
+		fontSize: '24px',
+	};
+
+	// is the item currently active (aka show in carousel)
+	let itemClass = active ? 'item active' : 'item';
+
+	return (
+		<div className={itemClass} style={slideStyle}>
+			<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} style={ccrop[index] ? circleCropStyle : noCropStyle} />
+			<div style={descStyle}>{chtyDesc}</div>
+		</div>	
+	);
+};
+
+const DonationCarouselWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, brandColorTxtStyle, logoStyle}) => {	 // todo: remove useless params
+	// TODO: move this in less file
+	let innerCarouselStyle = {
+		height: '47vh',
+		width: '100vw',
+		margin: 'auto'
+	};
+	let carouselIndicatorsStyle = {
+		bottom: '30px'
+	};
+	let carouselInnerStyle = {
+		height: '100%',
+		width: '100%'
+	};
+
+	return (
+		<div id="donation-carousel" className="carousel slide" data-interval="false" data-ride="carousel" style={innerCarouselStyle}>
+			{/* <!-- Indicators --> */}
+			<ol className="carousel-indicators" style={carouselIndicatorsStyle}>
+				<li data-target="#donation-carousel" data-slide-to="0" className="active" />
+				<li data-target="#donation-carousel" data-slide-to="1" />
+				<li data-target="#donation-carousel" data-slide-to="2" />
+			</ol>
+			{/* <!-- Content --> */}
+			<div className="carousel-inner" role="listbox" style={carouselInnerStyle}>	
+				<DonationSlideWidget cparent={cparent} clist={clist} index={0} active />
+				<DonationSlideWidget cparent={cparent} clist={clist} index={1} active={false} />
+				<DonationSlideWidget cparent={cparent} clist={clist} index={2} active={false} />					
+			</div>
+			{/* <!-- Previous/Next controls --> */}
+			<a className="left carousel-control" href="#donation-carousel" role="button" data-slide="prev">
+				<span className="icon-prev" aria-hidden="true" />
+				<span className="sr-only">Previous</span>
+			</a>
+			<a className="right carousel-control" href="#donation-carousel" role="button" data-slide="next">
+				<span className="icon-next" aria-hidden="true" />
+				<span className="sr-only">Next</span>
+			</a>
+		</div>
+	);
+};
 const DonationInfoWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, brandColorTxtStyle, logoStyle}) => {
 	let toggle = DataStore.getValue(['widget', 'donationCircles', 'active']) || [true, false, false]; // toggles the info charity box to display one at a time
 	
@@ -315,6 +402,11 @@ const CampaignPage = ({path}) => {
 	// minor TODO just pass parent around
 	let cparent = parent && parent.name ? parent.name : '';
 	let cparentLogo = parent && parent.logo ? parent.logo : defaultImg;
+	let displayLogo = parent && parent.logo ? 'inherit' : 'none';
+	let displayChtyLogo = {
+		backgroundImage: cparentLogo,
+		display: displayLogo
+	};
 	let supports = brand.logo && parent && parent.logo; // whether we want to show the "Supports" text at the top in between the 2 logos
 
 	// individual charity data
@@ -356,47 +448,35 @@ const CampaignPage = ({path}) => {
 	
 	return (<div className='campaign-page'>
 		<div className='grid'>
-			<div className='grid-tile top'> 
+			<div className='grid-tile top' style={compliColorBgStyle}> 
 				<div className='vertiser-head frank-font' style={brandColorBgStyle} >
-					<CampaignHeaderWidget cparentLogo={cparentLogo} brandLogo={brandLogo} supports={supports} />
+					<CampaignHeaderWidget cparentLogo={cparentLogo} brandLogo={brandLogo} displayChtyLogo={displayChtyLogo} supports={supports} />
 				</div>
 				<div className='header-img' style={headerStyle} >
 					<div className='darken-overlay'>
 						<div className='title frank-font'>
-							<div>{ad.name}</div>	
+							<div></div>	{/* TODO: delete this, it's just here because there's a css rule about the 1st div in title*/}
 							<div>{
-								campaign && campaign.donation? "have donated so far" : "are donating"
-								}</div>							
+								campaign && campaign.donation? "You've helped " + ad.name + " raise" : "You've helped " + ad.name + " raise"
+								}</div>													
 							{campaign && campaign.donation? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : null}
-							<div>to charity</div>
-						</div>
-						<div className='ads-for-good' style={brandColorBgStyle}>
-							<a href='https://my.good-loop.com/' target='_blank'>
-								<img alt='Good Loop Ads For Good Logo' src='img/gl-logo-2018-11-white-overlay.png' />
-							</a>
-						</div>
-						<div className='arrow'>
-							<Link activeClass='active' className='arrowhead' to='arrowhead' spy smooth duration={2000}>
-								<span></span>
-								<span></span>
-							</Link>
+							<div>for charity</div>
 						</div>
 					</div>	
 				</div>
 			</div>
 			<div className='grid-tile middle' style={compliColorBgStyle}>
-				<Element name='arrowhead' className='element'>
-					<div className='inside'>
-						<div className='title frank-font' style={brandColorTxtStyle}>
-							<MDText source={desc_title} />							
-						</div>
-						<div className='subtitle'>
-							<MDText source={desc_body} />							
-						</div>
-						<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
-						<DonationInfoWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle}/>
+				<div className='inside'>
+					{/* <div className='title frank-font' style={brandColorTxtStyle}>
+						<MDText source={desc_title} />							
 					</div>
-				</Element>
+					<div className='subtitle'>
+						<MDText source={desc_body} />							
+					</div>
+					<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
+					<DonationInfoWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle}/> */}
+					<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle} />
+				</div>
 			</div>
 			<div className='grid-tile bottom' style={brandColorBgStyle}>
 				<div className='foot header-font'>			
