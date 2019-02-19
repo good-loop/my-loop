@@ -259,7 +259,7 @@ function webpack {
 		printf "\nGetting NPM Dependencies ..."
 		$PSSH "cd $TARGET_DIRECTORY && npm i"
 		printf "\nWebpacking ..."
-    	$PSSH "cd $TARGET_DIRECTORY && webpack --progress"
+    	$PSSH "cd $TARGET_DIRECTORY && webpack --progress -p"
 	fi
 }
 
