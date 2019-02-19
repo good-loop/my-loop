@@ -66,6 +66,11 @@ const shareOptions = [
 		title: 'Facebook',
 		href: 'http://www.facebook.com/sharer.php?s=100&p[url]=' + window.location.href,
 		logo: '/img/facebook.png'
+	},
+	{
+		title: 'LinkedIn',
+		href: 'https://www.linkedin.com/shareArticle?mini=true&title=Our%20ads%20are%20raising%20money%20for%20charity&source=GoodLoop&url=' + window.location.href,
+		logo: '/img/linkedin-white.png'
 	}
 ];
 
