@@ -15,7 +15,7 @@
 		-ms-grid-row: 1;
 		-ms-grid-row-span: 2;
 		width: 100vw;
-		height: 50vh;
+		height: 53vh;
 		background-color: blanchedalmond; // hack to make it look good when we don't have a campaign cover photo
 
 		.vertiser-head {
@@ -25,6 +25,11 @@
 			padding-top: 1em;
 			padding-bottom: 0.5em;
 			font-size: 30px;
+
+			// put in some space between the logos (so that they're not squished together)
+			.header-logos img:first-child {
+				padding-right: 50px;
+			}
 
 			img {
 				height: 90px;
@@ -45,15 +50,40 @@
 
 				.title {
 					color: white;
-					font-size: 5vh;
+					font-size: 6vh;
 					text-shadow: black 2px 2px 0;
 					position: absolute;
-					top: 22%;
+					top: 16%;
 					text-align: center;
 					width: 100%;
 	
-					div:first-child, span {
+					div:first-child {
 						font-size: 8vh;
+					}
+
+					// email cta under the title (toning down the font and moving it a bit away from the title)
+					.cta-email {
+						font-family: "Montserrat Regular", helvetica, sans-serif;
+						text-shadow: initial;
+						margin-top: 2vh;
+						text-align: center;
+						// hack: for some reason setting the font size here keeps it from being glitchy and pushing the email cta down
+						font-size: 20px; 
+						
+						// font too big (email cta text needs to be more subtle)
+						.cta-help, .cta-lead {
+							font-size: 15px;
+						}
+
+						// center input
+						.input-group {
+							margin: 0 auto;
+						}
+
+						// hack: for some reason this makes the 'sign up' btn sit next to the input, instead of flying to the far right
+						span {
+							width: initial;
+						}
 					}
 				}
 	
@@ -74,11 +104,8 @@
 		grid-row: 1 / 3;
 		-ms-grid-row: 1;
 		-ms-grid-row-span: 2;
-		min-height: 541px;
 
 		.inside {
-			padding-top: 35px;
-
 			.title {
 				font-size: 35px;
 			}
@@ -87,10 +114,13 @@
 				color: #592e25;
 			}
 
+			// center and lock watch CTA to the bottom of the slides in the carousel
 			.subtitle, .link {
 				margin-top: 2%;
-				margin-left: 35%;
-				margin-right: 35%;
+				position: absolute;
+				bottom: 1.5vw;
+				width: 32vw;
+				margin-left: 32%;
 			}
 			.link a {
 				font-size: 20px;
