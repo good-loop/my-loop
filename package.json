@@ -14,7 +14,7 @@
 		"js-cookie": "^2.2.0",
 		"lodash": "^4.17.11",
 		"md5": "^2.2.1",
-		"promise-value": "^1.2.1",
+		"promise-value": "1.1.2",
 		"react": "^16.6.0",
 		"react-autocomplete": "^1.8.0",
 		"react-bootstrap": "^0.31.5",
