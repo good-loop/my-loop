@@ -209,7 +209,6 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, adid, status, bra
 			backgroundSize: 'contain',
 			backgroundRepeat: 'no-repeat',
 			backgroundPosition: 'center',
-			backgroundAttachment: 'fixed',
 			height: '25vh'
 		};
 	}
@@ -425,7 +424,7 @@ const CampaignPage = ({path}) => {
 	let brand = ad.branding;
 	// use good-loop branding if adv branding is not there 
 	let brandColor = brand.color ? brand.color : glColor; 
-	let brandLogo = 'https://i.ibb.co/sj5WGTL/kitkat-logo-white.png';//brand.logo ? brand.logo : defaultImg; //TODO: figure out why it won't update logo and then uncomment this
+	let brandLogo = brand.logo ? brand.logo : null; 
 	let brandColorBgStyle = {
 		backgroundColor: brandColor,
 		color: 'white'
@@ -536,8 +535,8 @@ const CampaignPage = ({path}) => {
 	});
 
 	// toggle carousel (true means it spins automatically)
-	//let toggle = "false";
-	let toggle = 5000; // TODO: set this as a param
+	let toggle = "false";
+	//let toggle = 5000; // TODO: set this as a param
 	
 	return (<div className='campaign-page'>
 		<div className='grid'>
