@@ -69,14 +69,14 @@ const SocialMediaFooterWidget = ({type, name, branding}) => {
 // Use function for href as text and url need to be inserted differently for different social media services
 const shareOptions = [
 	{
-		title: 'Twitter',
-		hrefFn: ({text, url}) => `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&tw_p=tweetbutton&url=${url}`,
-		logo: '/img/twitter.png'
-	},
-	{
 		title: 'Facebook',
 		hrefFn: ({text, url}) => `http://www.facebook.com/sharer.php?u=${url}&quote=${encodeURIComponent(text)}`,
 		logo: '/img/facebook.png'
+	},
+	{
+		title: 'Twitter',
+		hrefFn: ({text, url}) => `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&tw_p=tweetbutton&url=${url}`,
+		logo: '/img/twitter.png'
 	},
 	{
 		title: 'LinkedIn',
@@ -124,7 +124,7 @@ const SocialMediaShareWidget = ({type, name, branding, donationValue, charities,
 
 	return (
 		<div className="social share-page">
-			Share this page:
+			<MDText source='Share this page' />
 			{shareOptions.map(option => SocialShareButton(option, shareText))}
 		</div>
 	);
@@ -621,10 +621,10 @@ const CampaignPage = ({path}) => {
 				</div>
 			</div>
 			<div className='grid-tile bottom' style={glColorBgStyle}>
-				<div className='foot header-font'>			
-					<SocialMediaFooterWidget type={'vertiser'} name={ad.name} branding={brand} />					
-					<SocialMediaFooterWidget type={'goodloop'} name={'GOOD-LOOP'} branding={gl_social} />
+				<div className='foot header-font'>		
 					<SocialMediaShareWidget adName={ad.name} donationValue={donationValue} charities={clist} />
+					<SocialMediaFooterWidget type={'goodloop'} name={'GOOD-LOOP'} branding={gl_social} />
+					<SocialMediaFooterWidget type={'vertiser'} name={ad.name} branding={brand} />					
 				</div>
 			</div>
 		</div>
