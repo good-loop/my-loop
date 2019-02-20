@@ -570,7 +570,7 @@ const CampaignPage = ({path}) => {
 					<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle} adid={adid} status={status} toggle={toggle}/>
 				</div>
 			</div>
-			<div className='grid-tile bottom' style={brandColorBgStyle}>
+			<div className='grid-tile bottom' style={glColorBgStyle}>
 				<div className='foot header-font'>			
 					<SocialMediaFooterWidget type={'vertiser'} name={ad.name} branding={brand} />					
 					<SocialMediaFooterWidget type={'goodloop'} name={'GOOD-LOOP'} branding={gl_social} />
@@ -578,7 +578,7 @@ const CampaignPage = ({path}) => {
 				</div>
 			</div>
 		</div>
-		<Footer leftFooter={startDate} rightFooter={smallPrint} brandColorBgStyle={brandColorBgStyle} />
+		<Footer leftFooter={startDate} rightFooter={smallPrint} glColorBgStyle={glColorBgStyle} />
 	</div>);
 }; // ./CampaignPage
 

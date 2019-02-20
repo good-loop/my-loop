@@ -23,8 +23,8 @@ import { Link, Element } from 'react-scroll';
 import MDText from '../base/components/MDText';
 
 // usign css grid (and flex in ie10+) to make the footer mobile responsive & had to create innerFooter divs to align content to the bottom using display:table
-const Footer = ({leftFooter, rightFooter, brandColorBgStyle}) => {
-	return (<div className='footer' style={brandColorBgStyle}>
+const Footer = ({leftFooter, rightFooter, glColorBgStyle}) => {
+	return (<div className='footer' style={glColorBgStyle}>
 		<div className='footer-col leftFooter'>
 			<div className='innerLeftFooter'>
 				<MDText source={leftFooter} />
