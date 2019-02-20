@@ -394,8 +394,8 @@ const LinkToAdWidget = ({cparent, adid, status, brandColorTxtStyle}) => {
 	}
 
 	let msg = 'WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH PROJECT YOU WOULD LIKE TO FUND.';
-	// TODO: adapt this to local/test/prod
-	let url = 'https://demo.good-loop.com/?gl.vert='+encURI(adid)+"&gl.status="+encURI(status);
+	// adapts the link to the demo page to local/test/production
+	let url = `${C.HTTPS}://${C.SERVER_TYPE}demo.good-loop.com/?gl.vert=`+encURI(adid)+"&gl.status="+encURI(status);
 	let md = "[" + msg + "](" + url + ")";
 	
 	return (
