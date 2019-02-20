@@ -1,4 +1,16 @@
 .campaign-page {
+	// makes hyperlinks look nice, but wouldn't work on light backgrounds
+	// TODO: should we remove this? it's not terribly important
+	p > a {
+		color: white;
+		text-decoration: none;
+		border-bottom: 1px dashed;
+	}
+	p > a:hover {
+		color: inherit;
+		border-bottom: none;
+	}
+
 	overflow-x: hidden;
 	text-align: center;
 
@@ -122,8 +134,8 @@
 				margin-top: 2%;
 				position: absolute;
 				bottom: 1.5vw;
-				width: 32vw;
-				margin-left: 32%;
+				width: 39vw;
+				margin-left: 30%;
 			}
 			.link a {
 				font-size: 20px;
