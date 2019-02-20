@@ -445,21 +445,19 @@ const EmailCTA = () => {
 
 	return (
 		<div className="cta-email">
-			<form onSubmit={emailSubmit}>
-				<span className="cta-lead">Double your donation by joining Good-Loop's mailing list</span>
-				{/* <input type="email" className="form-control" name="email" placeholder="Email address" />
-				<input className="btn btn-primary" type="submit" value="Sign Up" /> */}
-				<div className="input-group">
-					<input type="email" className="form-control" name="email" placeholder="Email address"
-						value={email}
-						onInput={event => DataStore.setValue(emailPath, event.target.value)}
-					/>
-					<input className="input-group-addon" id="basic-addon2" style={{textShadow: 'initial'}} type="submit" value="Sign up" /> 
-				</div>
-				<p className="cta-help">You can unsubscribe at any time. We will not share your email. 
-					<span> <a href="https://my.good-loop.com" target="_blank">more info</a></span>
-				</p>
-			</form>
+			<span className="cta-lead">Double your donation by joining Good-Loop's mailing list</span>
+			{/* <input type="email" className="form-control" name="email" placeholder="Email address" />
+			<input className="btn btn-primary" type="submit" value="Sign Up" /> */}
+			<div className="input-group">
+				<input type="email" className="form-control" name="email" placeholder="Email address"
+					value={email}
+					onInput={event => DataStore.setValue(emailPath, event.target.value)}
+				/>
+				<span className="input-group-addon" id="basic-addon2" style={{textShadow: 'initial'}} onClick={emailSubmit}>Sign Up</span> 
+			</div>
+			<p className="cta-help">You can unsubscribe at any time. We will not share your email. 
+				<span> <a href="https://my.good-loop.com" target="_blank">more info</a></span>
+			</p>
 		</div>
 	);
 }; // ./connect
