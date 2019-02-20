@@ -393,7 +393,7 @@ const LinkToAdWidget = ({cparent, adid, status, brandColorTxtStyle}) => {
 		return <a href={props.href} target="_blank" style={brandColorTxtStyle}>{props.children}</a>;
 	}
 
-	let msg = 'WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH ' + cparent + ' PROJECT YOU WOULD LIKE TO FUND.';
+	let msg = 'WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH PROJECT YOU WOULD LIKE TO FUND.';
 	// TODO: adapt this to local/test/prod
 	let url = 'https://demo.good-loop.com/?gl.vert='+encURI(adid)+"&gl.status="+encURI(status);
 	let md = "[" + msg + "](" + url + ")";
@@ -420,9 +420,9 @@ const EmailCTA = () => {
 					<input type="email" className="form-control" name="email" placeholder="Email address" />
 					<span className="input-group-addon" id="basic-addon2" style={{textShadow: 'initial'}}>Sign Up</span>
 				</div>
-				<small className="cta-help">You can unsubscribe at any time. We will not share your email. 
-					<a href="https://my.good-loop.com" target="_blank">more info</a>
-				</small>
+				<p className="cta-help">You can unsubscribe at any time. We will not share your email. 
+					<span> <a href="https://my.good-loop.com" target="_blank">more info</a></span>
+				</p>
 			</form>
 		</div>
 	);
