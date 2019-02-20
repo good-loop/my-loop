@@ -237,11 +237,13 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, adid, status, bra
 	if (chighResPhotos[index]) {
 		photoStyle = {
 			backgroundImage: 'url(' + chighResPhotos[index] + ')',
-			backgroundSize: 'contain',
+			backgroundSize: 'cover',
 			backgroundRepeat: 'no-repeat',
 			backgroundPosition: 'center',
 			height: '25vh',
-			top: '6vh'
+			top: '6vh',
+			border: '1px solid white',
+			boxShadow: '8px 8px white'
 		};
 	}
 
@@ -308,14 +310,12 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, adid, status, bra
 						</div>						
 					</div>	
 					<div className="col-md-4" style={photoStyle}></div>
-					<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
 					<div className="col-md-2" />
 				</div>
 				:
 				<div>
 					<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
 					<div style={descStyle}>{cdescs[index]}</div>
-					<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
 				</div>	
 			}
 		</div>	
@@ -393,13 +393,13 @@ const LinkToAdWidget = ({cparent, adid, status, brandColorTxtStyle}) => {
 		return <a href={props.href} target="_blank" style={brandColorTxtStyle}>{props.children}</a>;
 	}
 
-	let msg = 'WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH PROJECT YOU WOULD LIKE TO FUND.';
+	let msg = 'Watch an advert, unlock a free donation, and choose which project you would like to fund.';
 	// adapts the link to the demo page to local/test/production
 	let url = `${C.HTTPS}://${C.SERVER_TYPE}demo.good-loop.com/?gl.vert=`+encURI(adid)+"&gl.status="+encURI(status);
 	let md = "[" + msg + "](" + url + ")";
 	
 	return (
-		<p className='link header-font'>
+		<p className='link' style={{fontFamily: 'initial'}}>
 			<MDText source={md} renderers={{link: LinkRenderer}} />
 		</p>
 	);
@@ -618,6 +618,7 @@ const CampaignPage = ({path}) => {
 					<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
 					<DonationInfoWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle}/> */}
 					<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle} adid={adid} status={status} toggle={toggle}/>
+					<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
 				</div>
 			</div>
 			<div className='grid-tile bottom' style={glColorBgStyle}>
