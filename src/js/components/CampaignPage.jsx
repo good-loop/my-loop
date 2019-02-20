@@ -240,7 +240,8 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, adid, status, bra
 			backgroundSize: 'contain',
 			backgroundRepeat: 'no-repeat',
 			backgroundPosition: 'center',
-			height: '25vh'
+			height: '25vh',
+			top: '6vh'
 		};
 	}
 
@@ -248,8 +249,8 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, adid, status, bra
 	let slideStyle = {
 		backgroundColor: ccolor[index],
 		height: '100%',		
-		width: '100%',		
-		padding: '50px'
+		width: '100%',	
+		// padding: '50px'
 	};
 
 	// this uses the circleCrop value set in the portal to crop the logo/photo to fit neatly into the circle 
@@ -260,15 +261,27 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, adid, status, bra
 		marginTop: "calc(125px*" + ccropDiff + ")"
 	};
 	let noCropStyle = {
-		borderRadius: 'inherit',
-		height: '6vh',
-		margin: '0 auto'
+		//borderRadius: 'inherit',
+		borderRadius: '64px',
+		height: clogos[index] ? '6vh' : null,
+		margin: '0 auto',
+		float: 'right'
 	};
 	let descStyle = {
-		padding: '2vmin',
-		width: '25vw',
+		// padding: '2vmin',
+		display: 'inline-block',
+		width: '36vw',
 		margin: '0 auto',
 		fontSize: '24px',
+		color: 'white'
+	};
+	let titleStyle = {
+		// padding: '2vmin',
+		// display: 'inline-block',
+		// width: '36vw',
+		// margin: '0 auto',
+		fontSize: '24px',
+		color: 'white'
 	};
 
 	// is the item currently active (aka show in carousel)
@@ -279,15 +292,25 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, adid, status, bra
 		<div className={itemClass} style={slideStyle}>
 			{ chighResPhotos[index] ? 
 				<div>
-					<div className="col-md-3" />
-					<div className="col-md-3">
-						<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
-						<div style={descStyle}>{cdescs[index]}</div>
+					<div className="col-md-1" />
+					<div className="col-md-5" style={titleStyle}>
+						<div style={{ margin: '2vh 0', height: '5vh'}}>
+							<div className="col-md-1" />
+							<div className="col-md-2">
+								<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
+							</div>	
+							<div className="col-md-6" style={{top: '1vh', fontSize: '33px', fontFamily: '\'FrankGothItalicBT\', Fallback, sans-serif'}}>
+								{cnames[index]}
+							</div>	
+						</div>
+						<div style={descStyle}>
+							<MDText source={cdescs[index]} />
+						</div>						
 					</div>	
-					<div className="col-md-3" style={photoStyle}></div>
+					<div className="col-md-4" style={photoStyle}></div>
 					<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
-					<div className="col-md-3" />
-				</div>	
+					<div className="col-md-2" />
+				</div>
 				:
 				<div>
 					<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
@@ -371,6 +394,7 @@ const LinkToAdWidget = ({cparent, adid, status, brandColorTxtStyle}) => {
 	}
 
 	let msg = 'WATCH AN ADVERT, UNLOCK A FREE DONATION, AND CHOOSE WHICH ' + cparent + ' PROJECT YOU WOULD LIKE TO FUND.';
+	// TODO: adapt this to local/test/prod
 	let url = 'https://demo.good-loop.com/?gl.vert='+encURI(adid)+"&gl.status="+encURI(status);
 	let md = "[" + msg + "](" + url + ")";
 	
@@ -394,7 +418,7 @@ const EmailCTA = () => {
 				<input className="btn btn-primary" type="submit" value="Sign Up" /> */}
 				<div className="input-group">
 					<input type="email" className="form-control" name="email" placeholder="Email address" />
-					<span className="input-group-addon" id="basic-addon2">Sign Up</span>
+					<span className="input-group-addon" id="basic-addon2" style={{textShadow: 'initial'}}>Sign Up</span>
 				</div>
 				<small className="cta-help">You can unsubscribe at any time. We will not share your email. 
 					<a href="https://my.good-loop.com" target="_blank">more info</a>
@@ -460,7 +484,8 @@ const CampaignPage = ({path}) => {
 		color: 'white'
 	};
 	let brandColorTxtStyle = {
-		color: brandColor
+		color: 'white', //brandColor
+
 	};
 	// TODO (optional): change portal to allow for complimentary color to be modified
 	let complimentaryColor = '#f0e7d0'; // color for the middle tile that contains donations info
@@ -575,7 +600,7 @@ const CampaignPage = ({path}) => {
 						<div className='title frank-font'>
 							<div></div>	{/* TODO: delete this, it's just here because there's a css rule about the 1st div in title*/}
 							<div>Together we've raised</div>													
-							{campaign && campaign.donation? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'so much money'}
+							{campaign && campaign.donation? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 							<div>for charity</div>
 							<EmailCTA />
 						</div>
