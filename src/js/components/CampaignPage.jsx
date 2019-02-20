@@ -75,12 +75,12 @@ const shareOptions = [
 	},
 	{
 		title: 'Facebook',
-		hrefFn: ({text, url}) => `http://www.facebook.com/sharer.php?s=100&p[url]=${url}&quote=${encodeURIComponent(text)}`,
+		hrefFn: ({text, url}) => `http://www.facebook.com/sharer.php?u=${url}&quote=${encodeURIComponent(text)}`,
 		logo: '/img/facebook.png'
 	},
 	{
 		title: 'LinkedIn',
-		hrefFn: ({text, url}) => `https://www.linkedin.com/shareArticle?mini=true&title=Our%20ads%20are%20raising%20money%20for%20charity&url=${url}&description=${encodeURIComponent(text)}`,
+		hrefFn: ({text, url}) => `https://www.linkedin.com/shareArticle?mini=true&title=Our%20ads%20are%20raising%20money%20for%20charity&url=${url}&summary=${encodeURIComponent(text)}`,
 		logo: '/img/linkedin-white.png'
 	}
 ];
