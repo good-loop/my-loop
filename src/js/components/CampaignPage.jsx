@@ -56,35 +56,66 @@ const SocialMediaFooterWidget = ({type, name, branding}) => {
 
 // The "share this advert" links
 // TODO replace those PNGs with SVGs, preferably inline
+// Use function for href as text and url need to be inserted differently for different social media services
 const shareOptions = [
 	{
 		title: 'Twitter',
-		href: 'https://twitter.com/intent/tweet?text=Our%20ads%20are%20raising%20money%20for%20charity&tw_p=tweetbutton&url=' + window.location.href.replace("#", "%23"),
+		hrefFn: ({text, url}) => `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&tw_p=tweetbutton&url=${url}`,
 		logo: '/img/twitter.png'
 	},
 	{
 		title: 'Facebook',
-		href: 'http://www.facebook.com/sharer.php?s=100&p[url]=' + window.location.href,
+		hrefFn: ({text, url}) => `http://www.facebook.com/sharer.php?s=100&p[url]=${url}&quote=${encodeURIComponent(text)}`,
 		logo: '/img/facebook.png'
 	},
 	{
 		title: 'LinkedIn',
-		href: 'https://www.linkedin.com/shareArticle?mini=true&title=Our%20ads%20are%20raising%20money%20for%20charity&source=GoodLoop&url=' + window.location.href,
+		hrefFn: ({text, url}) => `https://www.linkedin.com/shareArticle?mini=true&title=Our%20ads%20are%20raising%20money%20for%20charity&url=${url}&description=${encodeURIComponent(text)}`,
 		logo: '/img/linkedin-white.png'
 	}
 ];
 
-const SocialMediaShareWidget = ({type, name, branding}) => {
-	const SocialShareButton = ({href, logo, title}) => (
-		<a className="charity" href={href} target="_blank" rel="noreferrer" title={title} alt={title}>
+const SocialMediaShareWidget = ({type, name, branding, donationValue, charities, adName}) => {
+	const SocialShareButton = ({hrefFn, logo, title}, shareText) => (
+		<a className="charity" href={hrefFn({text: shareText, url: window.location.href.replace("#", "%23")})} target="_blank" rel="noreferrer" title={title} alt={title}>
 			<img alt={{title}+' Logo'} src={logo} crop="50%" title={title} />
 		</a>
 	);
+	
+	// What should appear in Tweet/Facebook link/LinkedIn article
+	// Contains fallbacks for where donation amount, charities or advertiser name is not specified
+	const shareTextFn = ({donationValue, charities, adName="We"}) => {
+		const amount = new Money({currency: 'GBP', value: donationValue});
+		const currencyCode = Money.CURRENCY[(amount.currency || 'GBP').toUpperCase()];
+
+		const amountText = Money.prettyString({amount}) || 'money';
+
+		let chartiyText;
+		if( charities && charities.length !== 0) {
+			// Safety: filter out any charities that do not have a human-readable name
+			const charityNames = charities && charities.reduce( (arrayOut, charity) => charity.name ? arrayOut.concat(charity.name) : arrayOut, []);
+			
+			if( !charityNames ) {
+				chartiyText = 'charity';
+			} else if ( charityNames.length === 1) {
+				chartiyText = charityNames[0];
+			} else {
+				// Pull out last two elements as these are formatted differently
+				const finalTwoCharityNames = charityNames.splice(charityNames.length - 2, 2);
+
+				chartiyText = `${charityNames.map( charityName => charityName + ', ')}${finalTwoCharityNames[0]} and ${finalTwoCharityNames[1]}`;
+			} 
+		}
+
+		return `${adName} helped to raise ${currencyCode}${amountText} for ${chartiyText}`;
+	};
+
+	const shareText = shareTextFn({donationValue, charities, adName});
 
 	return (
 		<div className="social share-page">
 			Share this page:
-			{shareOptions.map(option => SocialShareButton(option))}
+			{shareOptions.map(option => SocialShareButton(option, shareText))}
 		</div>
 	);
 };
@@ -492,7 +523,7 @@ const CampaignPage = ({path}) => {
 				<div className='foot header-font'>			
 					<SocialMediaFooterWidget type={'vertiser'} name={ad.name} src={brand} />					
 					<SocialMediaFooterWidget type={'goodloop'} name={'GOOD-LOOP'} src={gl_social} />
-					<SocialMediaShareWidget />
+					<SocialMediaShareWidget adName={ad.name} donationValue={donationValue} charities={clist} />
 				</div>
 			</div>
 		</div>
