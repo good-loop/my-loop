@@ -388,7 +388,6 @@ const CampaignPage = ({path}) => {
 
 	// get the ad for display (so status:published - unless this is a preview, as set by the url)
 	let status = DataStore.getUrlValue("gl.status") || C.KStatus.PUBLISHED; 
-	console.log(status);
 
 	//  checking for both adid and advertiser id in the url like this means that the user will get an error message, although the page will still load "404: http://localportal.good-loop.com/vert/gl/h1PY8Fir.json?status=DRAFT&status=DRAFT&app=good-loop&as=marvin%40irinapreda.me%40email&withCredentials=true"
 	// TODO: either use url params instead (e.g. adid=qHejwewq) or remove the error in this case (that might be confusing for us devs)
@@ -492,10 +491,6 @@ const CampaignPage = ({path}) => {
 
 	// individual charity data
 	let clist = ad.charities.list;
-	console.log("---------------");
-	console.log(clist);
-	console.log("---------------");
-
 	let cids = clist.map(x => x.id);
 
 	// load the community total for the ad
@@ -541,10 +536,10 @@ const CampaignPage = ({path}) => {
 	return (<div className='campaign-page'>
 		<div className='grid'>
 			<div className='grid-tile top' style={compliColorBgStyle}> 
-				<div className='vertiser-head frank-font' style={glColorBgStyle} >
+				<div className='vertiser-head frank-font' style={glColorBgStyle}>
 					<CampaignHeaderWidget glLogo={glLogo} brandLogo={brandLogo} />
 				</div>
-				<div className='header-img' style={brandColorBgStyle} >
+				<div className='header-img' style={campaign && campaign.bg ? headerStyle : brandColorBgStyle} >
 					<div className='darken-overlay'>
 						<div className='title frank-font'>
 							<div></div>	{/* TODO: delete this, it's just here because there's a css rule about the 1st div in title*/}
