@@ -409,16 +409,52 @@ const LinkToAdWidget = ({cparent, adid, status, brandColorTxtStyle}) => {
  * connect with us by email 
  */
 const EmailCTA = () => {
+	// Will name-space by cid
+	const cid = DataStore.getValue(['location', 'path']) || [];
+	const path = ['widget', 'CampaignPage'].concat(cid);
+	const emailPath = path.concat('email');
+	const submittedPath = path.concat('submitted');
+
+	// Check cookies to see if user has already submitted an email here or via the adunit
+	// Only need to check this once
+	DataStore.fetch(submittedPath, () => {
+		const cookies = document.cookie;
+		return cookies.split(';').filter( item => item.includes('cta-email=email')).length;
+	});
+
+	const email = DataStore.getValue(emailPath);
+	const submitted = DataStore.getValue(submittedPath);
+
+
+	const emailSubmit = () => {
+		// Don't submit a blank form
+		if ( !email ) return;
+
+		// Pass to profiler for processing
+		ServerIO.post(ServerIO.PROFILER_ENDPOINT + '/form/gl/', { email })
+			.then(res => {
+				// Don't ask for their email again
+				document.cookie = `cta-email=email;max-age=${60 * 60 * 24 * 365};domain=.good-loop.com;path=/`;
+				DataStore.setValue(submittedPath, true);
+			}, err => {});
+		
+
+	};
+
+	if (submitted) return <div className="cta-email">Thank you for providing your email address!</div>;
 
 	return (
 		<div className="cta-email">
-			<form>
+			<form onSubmit={emailSubmit}>
 				<span className="cta-lead">Double your donation by joining Good-Loop's mailing list</span>
 				{/* <input type="email" className="form-control" name="email" placeholder="Email address" />
 				<input className="btn btn-primary" type="submit" value="Sign Up" /> */}
 				<div className="input-group">
-					<input type="email" className="form-control" name="email" placeholder="Email address" />
-					<span className="input-group-addon" id="basic-addon2" style={{textShadow: 'initial'}}>Sign Up</span>
+					<input type="email" className="form-control" name="email" placeholder="Email address"
+						value={email}
+						onInput={event => DataStore.setValue(emailPath, event.target.value)}
+					/>
+					<input className="input-group-addon" id="basic-addon2" style={{textShadow: 'initial'}} type="submit" value="Sign up" /> 
 				</div>
 				<p className="cta-help">You can unsubscribe at any time. We will not share your email. 
 					<span> <a href="https://my.good-loop.com" target="_blank">more info</a></span>
