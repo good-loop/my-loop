@@ -1,6 +1,6 @@
 {
 	"name": "MyLoopUserPortal",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"description": "MyLoop",
 	"author": "Roscoe McInerney, Daniel Winterstein, Irina Preda",
 	"license": "AGPL-3.0",
@@ -46,6 +46,7 @@
 		"eslint-plugin-import": "^2.14.0",
 		"eslint-plugin-jsx-a11y": "^6.1.2",
 		"eslint-plugin-react": "^7.12.4",
-		"webpack": "^3.12.0"
+		"webpack": "^4.29.5",
+		"webpack-cli": "^3.2.3"
 	}
 }
