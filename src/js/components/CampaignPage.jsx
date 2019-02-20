@@ -24,18 +24,28 @@ import Footer from '../components/Footer';
 import { Link, Element } from 'react-scroll';
 import MDText from '../base/components/MDText';
 
-const CampaignHeaderWidget = ({cparentLogo, brandLogo, supports, displayChtyLogo}) => {
-	if (cparentLogo) {
-		return (
-			<div>
-				<img alt='Sponsor Logo' src={brandLogo} />
-				{supports ? <span> Supports </span> : null}
-				<img alt='Charity Logo' src={cparentLogo} style={displayChtyLogo} />
-			</div>
-		);
-	}
-	return (<img alt='Sponsor Logo' src={brandLogo} />);
+const CampaignHeaderWidget = ({glLogo, brandLogo}) => {
+	return (
+		<div className="header-logos">
+			<img alt='Sponsor Logo' src={brandLogo} />
+			<img alt='Good-Loop Logo' src={glLogo} />
+		</div>
+	);
+
 };
+
+// const CampaignHeaderWidget = ({cparentLogo, brandLogo, supports, displayChtyLogo}) => {
+// 	if (cparentLogo) {
+// 		return (
+// 			<div>
+// 				<img alt='Sponsor Logo' src={brandLogo} />
+// 				{supports ? <span> Supports </span> : null}
+// 				<img alt='Charity Logo' src={cparentLogo} style={displayChtyLogo} />
+// 			</div>
+// 		);
+// 	}
+// 	return (<img alt='Sponsor Logo' src={brandLogo} />);
+// };
 
 /**
  * @param type {!String} vertiser|goodloop
@@ -212,17 +222,31 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColor
 	);
 };
 
-const DonationSlideWidget = ({cparent, clist, index=0, active}) => {	
+const DonationSlideWidget = ({cparent, clist, index=0, active, adid, status, brandColorTxtStyle}) => {	
 	let cids = clist.map(x => x.id);
 	let cnames = clist.map(x => x.name);
-	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo || x.logo);
+	let clogos = clist.map(x => x.logo);
+	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo);
 	let ccrop = clist.map(x => x.circleCrop);
-	let chtyColor = '#f3ac20'; // TODO: wire this up
-	let chtyDesc = 'Sightsavers is a charity which fights avoidable blindness and promotes equal opportunities for visually impaired people.';// TODO: wire this up
+	let ccolor = clist.map(x => x.color); // TODO: does this exist?
+	let cdescs = clist.map(x => x.description);
+	//let cPhoto = chighResPhotos[index] ? chighResPhotos[index] : '';
+
+	// TODO: move this in less file
+	let photoStyle = {};
+	if (chighResPhotos[index]) {
+		photoStyle = {
+			backgroundImage: 'url(' + chighResPhotos[index] + ')',
+			backgroundSize: 'contain',
+			backgroundRepeat: 'no-repeat',
+			backgroundPosition: 'center',
+			height: '25vh'
+		};
+	}
 
 	// TODO: move this in less file
 	let slideStyle = {
-		backgroundColor: chtyColor,
+		backgroundColor: ccolor[index],
 		height: '100%',		
 		width: '100%',		
 		padding: '50px'
@@ -237,12 +261,12 @@ const DonationSlideWidget = ({cparent, clist, index=0, active}) => {
 	};
 	let noCropStyle = {
 		borderRadius: 'inherit',
-		height: '20%',
+		height: '6vh',
 		margin: '0 auto'
 	};
 	let descStyle = {
-		padding: '50px',
-		width: '30%',
+		padding: '2vmin',
+		width: '25vw',
 		margin: '0 auto',
 		fontSize: '24px',
 	};
@@ -251,14 +275,31 @@ const DonationSlideWidget = ({cparent, clist, index=0, active}) => {
 	let itemClass = active ? 'item active' : 'item';
 
 	return (
+
 		<div className={itemClass} style={slideStyle}>
-			<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
-			<div style={descStyle}>{chtyDesc}</div>
+			{ chighResPhotos[index] ? 
+				<div>
+					<div className="col-md-3" />
+					<div className="col-md-3">
+						<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
+						<div style={descStyle}>{cdescs[index]}</div>
+					</div>	
+					<div className="col-md-3" style={photoStyle}></div>
+					<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
+					<div className="col-md-3" />
+				</div>	
+				:
+				<div>
+					<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
+					<div style={descStyle}>{cdescs[index]}</div>
+					<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
+				</div>	
+			}
 		</div>	
 	);
 };
 
-const DonationCarouselWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, brandColorTxtStyle, logoStyle}) => {	 // todo: remove useless params
+const DonationCarouselWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, brandColorTxtStyle, logoStyle, adid, status, toggle}) => {	 // todo: remove useless params
 	// TODO: move this in less file
 	let innerCarouselStyle = {
 		height: '47vh',
@@ -266,7 +307,7 @@ const DonationCarouselWidget = ({cparent, clist, campaignSlice, brandColorBgStyl
 		margin: 'auto'
 	};
 	let carouselIndicatorsStyle = {
-		bottom: '30px'
+		bottom: '5px'
 	};
 	let carouselInnerStyle = {
 		height: '100%',
@@ -274,7 +315,7 @@ const DonationCarouselWidget = ({cparent, clist, campaignSlice, brandColorBgStyl
 	};
 
 	return (
-		<div id="donation-carousel" className="carousel slide" data-interval="false" data-ride="carousel" style={innerCarouselStyle}>
+		<div id="donation-carousel" className="carousel slide" data-interval={toggle} data-ride="carousel" style={innerCarouselStyle}>
 			{/* <!-- Indicators --> */}
 			<ol className="carousel-indicators" style={carouselIndicatorsStyle}>
 				<li data-target="#donation-carousel" data-slide-to="0" className="active" />
@@ -283,9 +324,9 @@ const DonationCarouselWidget = ({cparent, clist, campaignSlice, brandColorBgStyl
 			</ol>
 			{/* <!-- Content --> */}
 			<div className="carousel-inner" role="listbox" style={carouselInnerStyle}>	
-				<DonationSlideWidget cparent={cparent} clist={clist} index={0} active />
-				<DonationSlideWidget cparent={cparent} clist={clist} index={1} active={false} />
-				<DonationSlideWidget cparent={cparent} clist={clist} index={2} active={false} />					
+				<DonationSlideWidget cparent={cparent} clist={clist} index={0} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} active />
+				<DonationSlideWidget cparent={cparent} clist={clist} index={1} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} active={false} />
+				<DonationSlideWidget cparent={cparent} clist={clist} index={2} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} active={false} />					
 			</div>
 			{/* <!-- Previous/Next controls --> */}
 			<a className="left carousel-control" href="#donation-carousel" role="button" data-slide="prev">
@@ -341,6 +382,29 @@ const LinkToAdWidget = ({cparent, adid, status, brandColorTxtStyle}) => {
 };
 
 /**
+ * connect with us by email 
+ */
+const EmailCTA = () => {
+
+	return (
+		<div className="cta-email">
+			<form>
+				<span className="cta-lead">Double your donation by joining Good-Loop's mailing list</span>
+				{/* <input type="email" className="form-control" name="email" placeholder="Email address" />
+				<input className="btn btn-primary" type="submit" value="Sign Up" /> */}
+				<div className="input-group">
+					<input type="email" className="form-control" name="email" placeholder="Email address" />
+					<span className="input-group-addon" id="basic-addon2">Sign Up</span>
+				</div>
+				<small className="cta-help">You can unsubscribe at any time. We will not share your email. 
+					<a href="https://my.good-loop.com" target="_blank">more info</a>
+				</small>
+			</form>
+		</div>
+	);
+}; // ./connect
+
+/**
  * @param path {!String[]} The deciphered url path - e.g. ['campaign', 'kitkatadid']
  */
 const CampaignPage = ({path}) => {
@@ -355,7 +419,6 @@ const CampaignPage = ({path}) => {
 
 	// get the ad for display (so status:published - unless this is a preview, as set by the url)
 	let status = DataStore.getUrlValue("gl.status") || C.KStatus.PUBLISHED; 
-	console.log(status);
 
 	//  checking for both adid and advertiser id in the url like this means that the user will get an error message, although the page will still load "404: http://localportal.good-loop.com/vert/gl/h1PY8Fir.json?status=DRAFT&status=DRAFT&app=good-loop&as=marvin%40irinapreda.me%40email&withCredentials=true"
 	// TODO: either use url params instead (e.g. adid=qHejwewq) or remove the error in this case (that might be confusing for us devs)
@@ -366,24 +429,32 @@ const CampaignPage = ({path}) => {
 		return <Misc.Loading text='Loading campaign data...' />;
 	}
 
+	// good-loop branding
+	let glColor = '#C83312'; 
+	let glLogo = 'https://i.ibb.co/XY3trPW/Good-Loop-Logos-Good-Loop-Logo-Mark-White.png';
+	let glColorBgStyle = {
+		backgroundColor: glColor,
+		color: 'white'
+	};
+
 	// default data
 	let defaultImg = "https://i.ibb.co/Xy6HD5J/empty.png"; // hack to be used when we don't have an image, and we want to default to an "empty" transparent image
 
 	// advertiser data
 	let ad = pvAdvert.value ? pvAdvert.value : null;
-	let advertiser = pvAdvertiser.value ? pvAdvertiser.value : null;	
+	console.log("Loading ad data: ",ad);
 
-	console.log("ad: ",ad);
-	console.log("advertiser: ",advertiser);
-
-	if (advertiser) {
+	if (!ad) {
+		console.log("Can't find ad data");
+		let advertiser = pvAdvertiser.value ? pvAdvertiser.value : null;	
 		ad = advertiser["hits"][0]; // takes one of the advertiser's adverts
+		console.log("Loading advertiser's 1st ad data: ",advertiser);
 	}
 
 	let brand = ad.branding;
 	// use good-loop branding if adv branding is not there 
-	let brandColor = brand.color ? brand.color : '#C83312'; 
-	let brandLogo = brand.logo ? brand.logo : defaultImg;
+	let brandColor = brand.color ? brand.color : glColor; 
+	let brandLogo = brand.logo ? brand.logo : null; 
 	let brandColorBgStyle = {
 		backgroundColor: brandColor,
 		color: 'white'
@@ -423,16 +494,18 @@ const CampaignPage = ({path}) => {
 	let desc_title = '';
 	let desc_body = '';
 	if(campaign) {
-		bg = campaign.bg;
-		headerStyle = {
-			backgroundImage: 'url(' + bg + ')',
-			backgroundSize: 'cover',
-			backgroundRepeat: 'no-repeat',
-			backgroundPosition: 'center',
-			backgroundAttachment: 'fixed'
-		};
-		desc_title = campaign.desc_title;
-		desc_body = campaign.desc_body;
+		if (campaign.bg) {
+			bg = campaign.bg;
+			headerStyle = {
+				backgroundImage: 'url(' + bg + ')',
+				backgroundSize: 'cover',
+				backgroundRepeat: 'no-repeat',
+				backgroundPosition: 'center',
+				backgroundAttachment: 'fixed'
+			};
+		}
+		desc_title = campaign.desc_title ? campaign.desc_title : null;
+		desc_body = campaign.desc_body ? campaign.desc_body : null;
 	}
 
 	// parent charity data 
@@ -486,22 +559,25 @@ const CampaignPage = ({path}) => {
 		const rawFraction = obj.value100p / charityTotal || 0; 
 		campaignSlice[obj.cid] = {percentageTotal: Math.round(rawFraction*100)}; 
 	});
+
+	// toggle carousel (true means it spins automatically)
+	let toggle = "false";
+	//let toggle = 5000; // TODO: set this as a param
 	
 	return (<div className='campaign-page'>
 		<div className='grid'>
 			<div className='grid-tile top' style={compliColorBgStyle}> 
-				<div className='vertiser-head frank-font' style={brandColorBgStyle} >
-					<CampaignHeaderWidget cparentLogo={cparentLogo} brandLogo={brandLogo} displayChtyLogo={displayChtyLogo} supports={supports} />
+				<div className='vertiser-head frank-font' style={glColorBgStyle}>
+					<CampaignHeaderWidget glLogo={glLogo} brandLogo={brandLogo} />
 				</div>
-				<div className='header-img' style={headerStyle} >
+				<div className='header-img' style={campaign && campaign.bg ? headerStyle : brandColorBgStyle} >
 					<div className='darken-overlay'>
 						<div className='title frank-font'>
 							<div></div>	{/* TODO: delete this, it's just here because there's a css rule about the 1st div in title*/}
-							<div>{
-								campaign && campaign.donation? "You've helped " + ad.name + " raise" : "You've helped " + ad.name + " raise"
-								}</div>													
-							{campaign && campaign.donation? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
+							<div>Together we've raised</div>													
+							{campaign && campaign.donation? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'so much money'}
 							<div>for charity</div>
+							<EmailCTA />
 						</div>
 					</div>	
 				</div>
@@ -516,18 +592,18 @@ const CampaignPage = ({path}) => {
 					</div>
 					<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
 					<DonationInfoWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle}/> */}
-					<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle} />
+					<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle} adid={adid} status={status} toggle={toggle}/>
 				</div>
 			</div>
-			<div className='grid-tile bottom' style={brandColorBgStyle}>
+			<div className='grid-tile bottom' style={glColorBgStyle}>
 				<div className='foot header-font'>			
-					<SocialMediaFooterWidget type={'vertiser'} name={ad.name} src={brand} />					
-					<SocialMediaFooterWidget type={'goodloop'} name={'GOOD-LOOP'} src={gl_social} />
+					<SocialMediaFooterWidget type={'vertiser'} name={ad.name} branding={brand} />					
+					<SocialMediaFooterWidget type={'goodloop'} name={'GOOD-LOOP'} branding={gl_social} />
 					<SocialMediaShareWidget adName={ad.name} donationValue={donationValue} charities={clist} />
 				</div>
 			</div>
 		</div>
-		<Footer leftFooter={startDate} rightFooter={smallPrint} brandColorBgStyle={brandColorBgStyle} />
+		<Footer leftFooter={startDate} rightFooter={smallPrint} glColorBgStyle={glColorBgStyle} />
 	</div>);
 }; // ./CampaignPage
 
