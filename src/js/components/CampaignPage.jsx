@@ -85,40 +85,41 @@ const shareOptions = [
 	}
 ];
 
+	
+// What should appear in Tweet/Facebook link/LinkedIn article
+// Contains fallbacks for where donation amount, charities or advertiser name is not specified
+const shareTextFn = ({donationValue, charities, adName="We"}) => {
+	const amount = new Money({currency: 'GBP', value: donationValue});
+
+	const currencySymbol = Money.CURRENCY[(amount.currency || 'GBP').toUpperCase()];
+	const amountText = Money.prettyString({amount}) || 'money';
+	let chartiyText;
+
+	if( charities && charities.length !== 0) {
+		// Safety: filter out any charities that do not have a human-readable name
+		const charityNames = charities && charities.reduce( (arrayOut, charity) => charity.name ? arrayOut.concat(charity.name) : arrayOut, []);
+		
+		if( !charityNames ) {
+			chartiyText = 'charity';
+		} else if ( charityNames.length === 1) {
+			chartiyText = charityNames[0];
+		} else {
+			// Pull out last two elements as these are formatted differently
+			const finalTwoCharityNames = charityNames.splice(charityNames.length - 2, 2);
+
+			chartiyText = `${charityNames.map( charityName => charityName + ', ')}${finalTwoCharityNames[0]} and ${finalTwoCharityNames[1]}`;
+		} 
+	}
+
+	return `${adName} helped to raise ${currencySymbol}${amountText} for ${chartiyText}`;
+};
+
 const SocialMediaShareWidget = ({type, name, branding, donationValue, charities, adName}) => {
 	const SocialShareButton = ({hrefFn, logo, title}, shareText) => (
 		<a className="charity" href={hrefFn({text: shareText, url: window.location.href.replace("#", "%23")})} target="_blank" rel="noreferrer" title={title} alt={title}>
 			<img alt={{title}+' Logo'} src={logo} crop="50%" title={title} />
 		</a>
 	);
-	
-	// What should appear in Tweet/Facebook link/LinkedIn article
-	// Contains fallbacks for where donation amount, charities or advertiser name is not specified
-	const shareTextFn = ({donationValue, charities, adName="We"}) => {
-		const amount = new Money({currency: 'GBP', value: donationValue});
-		const currencyCode = Money.CURRENCY[(amount.currency || 'GBP').toUpperCase()];
-
-		const amountText = Money.prettyString({amount}) || 'money';
-
-		let chartiyText;
-		if( charities && charities.length !== 0) {
-			// Safety: filter out any charities that do not have a human-readable name
-			const charityNames = charities && charities.reduce( (arrayOut, charity) => charity.name ? arrayOut.concat(charity.name) : arrayOut, []);
-			
-			if( !charityNames ) {
-				chartiyText = 'charity';
-			} else if ( charityNames.length === 1) {
-				chartiyText = charityNames[0];
-			} else {
-				// Pull out last two elements as these are formatted differently
-				const finalTwoCharityNames = charityNames.splice(charityNames.length - 2, 2);
-
-				chartiyText = `${charityNames.map( charityName => charityName + ', ')}${finalTwoCharityNames[0]} and ${finalTwoCharityNames[1]}`;
-			} 
-		}
-
-		return `${adName} helped to raise ${currencyCode}${amountText} for ${chartiyText}`;
-	};
 
 	const shareText = shareTextFn({donationValue, charities, adName});
 
@@ -222,7 +223,7 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColor
 	);
 };
 
-const DonationSlideWidget = ({cparent, clist, index=0, active, adid, status, brandColorTxtStyle}) => {	
+const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColorTxtStyle}) => {	
 	let cids = clist.map(x => x.id);
 	let cnames = clist.map(x => x.name);
 	let clogos = clist.map(x => x.logo);
@@ -347,9 +348,9 @@ const DonationCarouselWidget = ({cparent, clist, campaignSlice, brandColorBgStyl
 			</ol>
 			{/* <!-- Content --> */}
 			<div className="carousel-inner" role="listbox" style={carouselInnerStyle}>	
-				<DonationSlideWidget cparent={cparent} clist={clist} index={0} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} active />
-				<DonationSlideWidget cparent={cparent} clist={clist} index={1} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} active={false} />
-				<DonationSlideWidget cparent={cparent} clist={clist} index={2} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} active={false} />					
+				<DonationSlideWidget cparent={cparent} clist={clist} index={0} status={status} brandColorTxtStyle={brandColorTxtStyle} active />
+				<DonationSlideWidget cparent={cparent} clist={clist} index={1} status={status} brandColorTxtStyle={brandColorTxtStyle} active={false} />
+				<DonationSlideWidget cparent={cparent} clist={clist} index={2} status={status} brandColorTxtStyle={brandColorTxtStyle} active={false} />					
 			</div>
 			{/* <!-- Previous/Next controls --> */}
 			<a className="left carousel-control" href="#donation-carousel" role="button" data-slide="prev">
@@ -409,9 +410,10 @@ const LinkToAdWidget = ({cparent, adid, status, brandColorTxtStyle}) => {
  * connect with us by email 
  */
 const EmailCTA = () => {
-	// Will name-space by cid
-	const cid = DataStore.getValue(['location', 'path']) || [];
-	const path = ['widget', 'CampaignPage'].concat(cid);
+	// Will name-space by ad or vertiser id
+	const { 'gl.vert': adid, 'gl.vertiser': vertiserid } = DataStore.getValue(['location', 'params']) || {};
+
+	const path = ['widget', 'CampaignPage'].concat(adid || vertiserid);
 	const emailPath = path.concat('email');
 	const submittedPath = path.concat('submitted');
 
@@ -465,27 +467,35 @@ const EmailCTA = () => {
 /**
  * @param path {!String[]} The deciphered url path - e.g. ['campaign', 'kitkatadid']
  */
-const CampaignPage = ({path}) => {
-	
-	let adid = path ? path[1] : '';
+const CampaignPage = () => {
+	const { 'gl.vert': adid, 'gl.vertiser': vertiserid } = DataStore.getValue(['location', 'params']) || {};
 
-	ServerIO.mixPanelTrack('Campaign page render', {adid});	
+	// Specific adid gets priority over advertiser id
+	const id = adid || vertiserid;
 
-	if (!path[1]) {
+	ServerIO.mixPanelTrack('Campaign page render', {adid, vertiserid});	
+
+	if ( !adid && !vertiserid ) {
 		return <Misc.Loading text='Unable to find campaign' />;	
 	}
 
 	// get the ad for display (so status:published - unless this is a preview, as set by the url)
 	let status = DataStore.getUrlValue("gl.status") || C.KStatus.PUBLISHED; 
 
-	//  checking for both adid and advertiser id in the url like this means that the user will get an error message, although the page will still load "404: http://localportal.good-loop.com/vert/gl/h1PY8Fir.json?status=DRAFT&status=DRAFT&app=good-loop&as=marvin%40irinapreda.me%40email&withCredentials=true"
-	// TODO: either use url params instead (e.g. adid=qHejwewq) or remove the error in this case (that might be confusing for us devs)
-	let pvAdvert = ActionMan.getDataItem({type:C.TYPES.Advert, id:adid, status:C.KStatus.DRAFT, domain: ServerIO.PORTAL_DOMAIN});
-	let pvAdvertiser = ActionMan.list({type: C.TYPES.Advert, status:C.KStatus.ALL_BAR_TRASH, q:adid });
+	// Only pull vertiser data if no adid has been provided
+	let adPv;
+	if( adid ) {
+		adPv = ActionMan.getDataItem({type:C.TYPES.Advert, id, status:C.KStatus.DRAFT, domain: ServerIO.PORTAL_DOMAIN});
+	} else {
+		adPv = ActionMan.list({type: C.TYPES.Advert, status:C.KStatus.ALL_BAR_TRASH, q:id });
+	}
 
-	if ( ! pvAdvert.resolved && ! pvAdvertiser.resolved ) {
+	if ( ! adPv.resolved ) {
 		return <Misc.Loading text='Loading campaign data...' />;
 	}
+	// Assume we have data for single advert if adid exists
+	// Pull out first advert from advertiser data if not
+	let ad = adid ? adPv.value : ( adPv.value && adPv.value.hits && adPv.value.hits[0] );
 
 	// good-loop branding
 	let glColor = '#C83312'; 
@@ -497,17 +507,6 @@ const CampaignPage = ({path}) => {
 
 	// default data
 	let defaultImg = "https://i.ibb.co/Xy6HD5J/empty.png"; // hack to be used when we don't have an image, and we want to default to an "empty" transparent image
-
-	// advertiser data
-	let ad = pvAdvert.value ? pvAdvert.value : null;
-	console.log("Loading ad data: ",ad);
-
-	if (!ad) {
-		console.log("Can't find ad data");
-		let advertiser = pvAdvertiser.value ? pvAdvertiser.value : null;	
-		ad = advertiser["hits"][0]; // takes one of the advertiser's adverts
-		console.log("Loading advertiser's 1st ad data: ",advertiser);
-	}
 
 	let brand = ad.branding;
 	// use good-loop branding if adv branding is not there 
@@ -584,19 +583,19 @@ const CampaignPage = ({path}) => {
 	let cids = clist.map(x => x.id);
 
 	// load the community total for the ad
-	let pvDonationsBreakdown = DataStore.fetch(['widget','CampaignPage','communityTotal', adid], () => {
+	let pvDonationsBreakdown = DataStore.fetch(['widget','CampaignPage','communityTotal', id], () => {
 		// TODO campaign would be nicer 'cos we could combine different ad variants... but its not logged reliably
 		// Argh: Loop.Me have not logged vert, only campaign.
 		// but elsewhere vert is logged and not campaign.
 		// let q = ad.campaign? '(vert:'+adid+' OR campaign:'+ad.campaign+')' : 'vert:'+adid;		
-		let q = 'vert:'+adid;
+		let q = 'vert:'+id;
 		// TODO "" csv encoding for bits of q (e.g. campaign might have a space)
 		return ServerIO.getDonationsData({q});
 	});
+
 	if ( ! pvDonationsBreakdown.resolved ) {
 		return <Misc.Loading text='Loading campaign donations...' />;
 	}
-	console.log(pvDonationsBreakdown.value);
 
 	let filteredBreakdown = cids.map(cid => {
 		const value100p = (pvDonationsBreakdown.value.by_cid[cid] && 
@@ -651,7 +650,7 @@ const CampaignPage = ({path}) => {
 					</div>
 					<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
 					<DonationInfoWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle}/> */}
-					<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle} adid={adid} status={status} toggle={toggle}/>
+					<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle} status={status} toggle={toggle} />
 					<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
 				</div>
 			</div>
