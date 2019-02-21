@@ -52,7 +52,6 @@ const CampaignHeaderWidget = ({glLogo, brandLogo}) => {
  * @param branding {Branding}
  */
 const SocialMediaFooterWidget = ({type, name, branding}) => {
-	// FIXME avoid gl-es urls!
 	return (
 		<div className={'social '.concat(type)}>
 			<MDText source={name} />
@@ -447,7 +446,7 @@ const EmailCTA = () => {
 
 	return (
 		<div className="cta-email">
-			<span className="cta-lead">Double your donation by joining Good-Loop's mailing list</span>
+			<p className="cta-lead"><span>Double your donation by joining Good-Loop's mailing list</span></p>
 			{/* <input type="email" className="form-control" name="email" placeholder="Email address" />
 			<input className="btn btn-primary" type="submit" value="Sign Up" /> */}
 			<div className="input-group">
@@ -455,7 +454,7 @@ const EmailCTA = () => {
 					value={email}
 					onInput={event => DataStore.setValue(emailPath, event.target.value)}
 				/>
-				<span className="input-group-addon" id="basic-addon2" style={{textShadow: 'initial'}} onClick={emailSubmit}>Sign Up</span> 
+				<span className="input-group-addon" id="basic-addon2" style={{textShadow: 'initial', cursor: 'pointer'}} onClick={emailSubmit}>Sign Up</span> 
 			</div>
 			<p className="cta-help">You can unsubscribe at any time. We will not share your email. 
 				<span> <a href="https://my.good-loop.com" target="_blank">more info</a></span>

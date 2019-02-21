@@ -85,9 +85,19 @@
 						// hack: for some reason setting the font size here keeps it from being glitchy and pushing the email cta down
 						font-size: 20px; 
 						
+						// center the email CTA (centering requires specifying width) 
+						.cta-lead {
+							width: 25%;
+						}
+						.cta-help {
+							width: 32%;
+						}
+
 						// font too big (email cta text needs to be more subtle)
 						.cta-help, .cta-lead {
+							background-color: rgb(200, 51, 18); // gl color
 							font-size: 15px;
+							margin: 3px auto;
 						}
 
 						// center input
