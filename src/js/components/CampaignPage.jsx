@@ -15,7 +15,7 @@ import ActionMan from '../plumbing/ActionMan';
 import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
 import Login from 'you-again';
 import {LoginLink, SocialSignInButton} from '../base/components/LoginWidget';
-import {ListItems} from '../base/components/ListLoad';
+import {ListItems, ListFilteredItems} from '../base/components/ListLoad';
 import {LoginToSee} from './Bits';
 import {getProfile, getProfilesNow} from '../base/Profiler';
 import ConsentWidget from './ConsentWidget';
@@ -456,7 +456,15 @@ const CampaignPage = () => {
 	if( adid ) {
 		adPv = ActionMan.getDataItem({type:C.TYPES.Advert, id, status:C.KStatus.DRAFT, domain: ServerIO.PORTAL_DOMAIN});
 	} else {
-		adPv = ActionMan.list({type: C.TYPES.Advert, status:C.KStatus.ALL_BAR_TRASH, q:id });
+		// find out whether the vertiser has just 1 ad, if so then just redirect them to the campaign page of that ad
+		let pvItems = ActionMan.list({type: C.TYPES.Advert, status:C.KStatus.ALL_BAR_TRASH, q:id }); 
+		let adItems = pvItems.value && pvItems.value.hits && pvItems.value.hits.length;
+		// if there's have more than 1 ad, then list them
+		if (adItems > 1) {
+			return <ListFilteredItems type={C.TYPES.Advert} status={C.KStatus.PUBLISHED} servlet='campaign' q={id}/>;		
+		}
+		// if there's just 1, then it's easy 
+		adPv = pvItems;
 	}
 
 	if ( ! adPv.resolved ) {
