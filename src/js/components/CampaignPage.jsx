@@ -15,6 +15,7 @@ import ActionMan from '../plumbing/ActionMan';
 import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
 import Login from 'you-again';
 import {LoginLink, SocialSignInButton} from '../base/components/LoginWidget';
+import {ListItems} from '../base/components/ListLoad';
 import {LoginToSee} from './Bits';
 import {getProfile, getProfilesNow} from '../base/Profiler';
 import ConsentWidget from './ConsentWidget';
@@ -442,7 +443,9 @@ const CampaignPage = () => {
 	ServerIO.mixPanelTrack('Campaign page render', {adid, vertiserid});	
 
 	if ( !adid && !vertiserid ) {
-		return <Misc.Loading text='Unable to find campaign' />;	
+		// No ID -- show a list
+		return <ListItems type={C.TYPES.Advert} status={C.KStatus.PUBLISHED} servlet='campaign' />;		
+		// return <Misc.Loading text='Unable to find campaign' />;	
 	}
 
 	// get the ad for display (so status:published - unless this is a preview, as set by the url)
