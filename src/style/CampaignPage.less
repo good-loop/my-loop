@@ -160,9 +160,31 @@
 					.item {
 						height: 100%;
 						width: 100%;
-					
-						.slide-logo img {
-							float: right;
+						
+						.slide-header {
+							margin: 2vh 0;
+							height: 5vh;
+	
+							.slide-title {
+								font-size: 24px;
+								color: white;
+								top: 1vh; 
+								font-size: 3.18vmin;
+								font-family: 'FrankGothItalicBT', Fallback, sans-serif;
+							}
+
+							.slide-logo img {
+								float: right;
+							}			
+						}
+
+						.slide-desc {
+							display: inline-block;
+							width: 36vw;
+							margin: 0 auto;
+							font-size: 2vmin;
+							color: white;
+							text-align: justify;
 						}
 
 						.slide-photo {
@@ -174,20 +196,6 @@
 							border: 1px solid white;
 							box-shadow: 8px 8px white;
 						}
-
-						.slide-title {
-							font-size: 24px;
-							color: white;
-						}				
-
-						.slide-desc {
-							display: inline-block;
-							width: 36vw;
-							margin: 0 auto;
-							font-size: 2vmin;
-							color: white;
-							text-align: justify;
-						}
 					}
 
 					.carousel-indicators {
@@ -195,6 +203,18 @@
 					}
 				}
 			}
+		}
+	}
+
+	.link.watch-cta {
+		font-family: initial;
+		background-color: rgb(200, 51, 18);
+		padding-top: 6vh;
+		font-size: 2vh;
+
+		.sign-up-btn {
+			text-shadow: initial;
+			cursor: pointer;
 		}
 	}
 

@@ -20,7 +20,7 @@ import {getProfile, getProfilesNow} from '../base/Profiler';
 import ConsentWidget from './ConsentWidget';
 import printer from '../base/utils/printer';
 import DonationCard from './DonationCard';
-import Footer from '../components/Footer';
+import Footer from './Footer';
 import { Link, Element } from 'react-scroll';
 import MDText from '../base/components/MDText';
 
@@ -268,12 +268,12 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 				<div>
 					<div className="col-md-1" />
 					<div className="col-md-5">
-						<div style={{ margin: '2vh 0', height: '5vh'}}>
+						<div className="slide-header">
 							<div className="col-md-1" />
 							<div className="col-md-2 slide-logo">
 								<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
 							</div>	
-							<div className="col-md-6 slide-title" style={{top: '1vh', fontSize: '3.18vmin', fontFamily: '\'FrankGothItalicBT\', Fallback, sans-serif'}}>
+							<div className="col-md-6 slide-title">
 								{cnames[index]}
 							</div>	
 						</div>
@@ -287,7 +287,7 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 				:
 				<div>
 					<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
-					<div style={descStyle}>{cdescs[index]}</div>
+					<div>{cdescs[index]}</div>
 				</div>	
 			}
 		</div>	
@@ -358,7 +358,7 @@ const LinkToAdWidget = ({cparent, adid, status, brandColorTxtStyle}) => {
 	let md = "[" + msg + "](" + url + ")";
 	
 	return (
-		<div className='link watch-cta' style={{fontFamily: 'initial', backgroundColor: 'rgb(200, 51, 18)', paddingTop: '6vh', fontSize: '2vh'}}>
+		<div className='link watch-cta'>
 			<MDText source={md} renderers={{link: LinkRenderer}} />
 		</div>
 	);
@@ -413,7 +413,7 @@ const EmailCTA = () => {
 					value={email}
 					onInput={event => DataStore.setValue(emailPath, event.target.value)}
 				/>
-				<span className="input-group-addon" id="basic-addon2" style={{textShadow: 'initial', cursor: 'pointer'}} onClick={emailSubmit}>Sign Up</span> 
+				<span className="input-group-addon sign-up-btn" id="basic-addon2" onClick={emailSubmit}>Sign Up</span> 
 			</div>
 			<p className="cta-help">You can unsubscribe at any time. We will not share your email. 
 				<span> <a href="https://my.good-loop.com" target="_blank">more info</a></span>

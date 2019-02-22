@@ -143,10 +143,18 @@
 			height: 70vh;
 		
 			.carousel-inner .item {
-				.slide-photo {
-					// we don't have space to show the large photo
-					display: none;
+				.slide-header {
+					.slide-title {
+						// otherwise on smaller screens the title becomes unreadable
+						font-size: 3.18vmin;
+					}
+
+					.slide-logo img {
+						// otherwise the logo looms weirdly to the right (on small screens it should just be above the title)
+						float: unset;
+					}
 				}
+
 				.slide-desc {
 					// on small screens, the description can take more space (and become more readable) 
 					//because we're not trying to fit it in the same screen as the top tile
@@ -154,15 +162,12 @@
 					font-size: 2vh;
 					width: 70vw; 
 				}
-				.slide-title {
-					// otherwise on smaller screens the title becomes unreadable
-					font-size: 3.18vmin;
-				}
-			
-				.slide-logo img {
-					// otherwise the logo looms weirdly to the right (on small screens it should just be above the title)
-					float: unset;
-				}
+
+				.slide-photo {
+					// we don't have space to show the large photo
+					display: none;
+				}		
+
 			}
 		}
 
