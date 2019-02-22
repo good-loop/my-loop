@@ -308,6 +308,7 @@ const DonationCarouselWidget = ({cparent, clist, campaignSlice, brandColorBgStyl
 			</ol>
 			{/* <!-- Content --> */}
 			<div className="carousel-inner" role="listbox">	
+				{/* TODO: deal more elegantly with having less than 3 char (currently it shows those slides as "undefined") */}
 				<DonationSlideWidget cparent={cparent} clist={clist} index={0} status={status} brandColorTxtStyle={brandColorTxtStyle} active />
 				<DonationSlideWidget cparent={cparent} clist={clist} index={1} status={status} brandColorTxtStyle={brandColorTxtStyle} active={false} />
 				<DonationSlideWidget cparent={cparent} clist={clist} index={2} status={status} brandColorTxtStyle={brandColorTxtStyle} active={false} />					
