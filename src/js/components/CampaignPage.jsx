@@ -297,31 +297,36 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 };
 
 const DonationCarouselWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, brandColorTxtStyle, logoStyle, adid, status, toggle}) => {	 // todo: remove useless params
+	console.log('----------');
+	console.log(clist.length);
+	console.log(clist[0]);
+	console.log('----------');
 
 	return (
 		<div id="donation-carousel" className="carousel slide" data-interval={toggle} data-ride="carousel">
 			{/* <!-- Indicators --> */}
 			<ol className="carousel-indicators">
-				<li data-target="#donation-carousel" data-slide-to="0" className="active" />
-				<li data-target="#donation-carousel" data-slide-to="1" />
-				<li data-target="#donation-carousel" data-slide-to="2" />
+				{ clist[0] ? <li data-target="#donation-carousel" data-slide-to="0" className="active" /> : null}
+				{ clist[1] ? <li data-target="#donation-carousel" data-slide-to="1" /> : null}
+				{ clist[2] ? <li data-target="#donation-carousel" data-slide-to="2" /> : null}
 			</ol>
 			{/* <!-- Content --> */}
 			<div className="carousel-inner" role="listbox">	
-				{/* TODO: deal more elegantly with having less than 3 char (currently it shows those slides as "undefined") */}
-				<DonationSlideWidget cparent={cparent} clist={clist} index={0} status={status} brandColorTxtStyle={brandColorTxtStyle} active />
-				<DonationSlideWidget cparent={cparent} clist={clist} index={1} status={status} brandColorTxtStyle={brandColorTxtStyle} active={false} />
-				<DonationSlideWidget cparent={cparent} clist={clist} index={2} status={status} brandColorTxtStyle={brandColorTxtStyle} active={false} />					
+				{ clist[0] ? <DonationSlideWidget cparent={cparent} clist={clist} index={0} status={status} brandColorTxtStyle={brandColorTxtStyle} active /> : null}
+				{ clist[1] ? <DonationSlideWidget cparent={cparent} clist={clist} index={1} status={status} brandColorTxtStyle={brandColorTxtStyle} active={false} /> : null}
+				{ clist[2] ? <DonationSlideWidget cparent={cparent} clist={clist} index={2} status={status} brandColorTxtStyle={brandColorTxtStyle} active={false} /> : null}					
 			</div>
 			{/* <!-- Previous/Next controls --> */}
-			<a className="left carousel-control" href="#donation-carousel" role="button" data-slide="prev">
-				<span className="icon-prev" aria-hidden="true" />
-				<span className="sr-only">Previous</span>
-			</a>
-			<a className="right carousel-control" href="#donation-carousel" role="button" data-slide="next">
-				<span className="icon-next" aria-hidden="true" />
-				<span className="sr-only">Next</span>
-			</a>
+			{ clist.length > 1 ? 
+				<a className="left carousel-control" href="#donation-carousel" role="button" data-slide="prev">
+					<span className="icon-prev" aria-hidden="true" />
+					<span className="sr-only">Previous</span>
+				</a> : null }
+			{ clist.length > 1 ? 
+				<a className="right carousel-control" href="#donation-carousel" role="button" data-slide="next">
+					<span className="icon-next" aria-hidden="true" />
+					<span className="sr-only">Next</span>
+				</a> : null }
 		</div>
 	);
 };
