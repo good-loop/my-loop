@@ -96,14 +96,17 @@
 							margin: 3px auto;
 						}
 
-						// center input
 						.input-group {
-							margin: 0 auto;
+							margin: 0 auto;	// center input
+
+							.sign-up-btn {
+								text-shadow: initial; // the rest of the email-cta should be shadowed, but not the button (unreadable)
+								cursor: pointer; // a button should look clickable
+							}
 						}
 
-						// hack: for some reason this makes the 'sign up' btn sit next to the input, instead of flying to the far right
 						span {
-							width: initial;
+							width: initial; // hack: for some reason this makes the 'sign up' btn sit next to the input, instead of flying to the far right
 						}
 					}
 				}
@@ -149,57 +152,62 @@
 			}
 
 			.carousel {
+				// ensure carousel takes up the rest of the screen (below the top tile "Together we've raised ...")
 				height: 46vh;
 				width: 100vw;
 				margin: auto;
 
 				.carousel-inner {
+					// this is necessary, otherwise it doesn't set the chty background-color 
 					height: 100%;
-					width: 100%;
 
 					.item {
+						// this is necessary, otherwise it doesn't set the chty background-color 
 						height: 100%;
-						width: 100%;
-						
+
 						.slide-header {
+							// chty logo and title should have enough space to look good (no matter the length of the title)
 							margin: 2vh 0;
 							height: 5vh;
 	
 							.slide-title {
-								font-size: 24px;
-								color: white;
-								top: 1vh; 
+								// set the look of the chty name
 								font-size: 3.18vmin;
 								font-family: 'FrankGothItalicBT', Fallback, sans-serif;
+								color: white;
+								top: 1vh; // center it vertically								
 							}
 
 							.slide-logo img {
-								float: right;
+								// make the logo float next to title 
+								float: right; // float right as in to the right of that col (but to the left of the chty title, which is the next col)
 							}			
 						}
 
-						.slide-desc {
-							display: inline-block;
-							width: 36vw;
-							margin: 0 auto;
-							font-size: 2vmin;
-							color: white;
-							text-align: justify;
+						.slide-desc {							
+							display: inline-block; // new line
+							width: 36vw;  // fill up the left side of the slide
+							margin: 0 auto; // center it
+							font-size: 2vmin; 
+							color: white; // TODO: we should just set this globally once, no?
+							text-align: justify; // looks nicer justified, no matter the length of text
 						}
 
 						.slide-photo {
+							// adjust the photo to fit the container
 							background-size: cover;
 							background-repeat: no-repeat;
 							background-position: center;
 							height: 25vh;
-							top: 6vh;
+							top: 6vh; // center it vertically (approx)
+							// slight design tweak to make it look 3d 
 							border: 1px solid white;
 							box-shadow: 8px 8px white;
 						}
 					}
 
 					.carousel-indicators {
-						bottom: 15px;
+						bottom: 15px; // set the carousel indicators to be fixed at the bottom of the slides
 					}
 				}
 			}
@@ -207,15 +215,10 @@
 	}
 
 	.link.watch-cta {
-		font-family: initial;
-		background-color: rgb(200, 51, 18);
-		padding-top: 6vh;
-		font-size: 2vh;
-
-		.sign-up-btn {
-			text-shadow: initial;
-			cursor: pointer;
-		}
+		font-family: initial; // go back to using montserrat (looks nicer)
+		background-color: rgb(200, 51, 18); // TODO: this should be set as less var gl-colour
+		padding-top: 6vh; // give it some space, looks less cluttered this way
+		font-size: 2vh; // make it pop out responsively
 	}
 
 	* {
