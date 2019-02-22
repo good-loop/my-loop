@@ -24,13 +24,6 @@
 	margin-top:0px; // no navbar (yet)
 }
 
-// ??why??
-.CardAccordion {
-	margin-top:30px;
-}
-
-
-
 // this was possibly fixing an IE11 error to do with padding of the whole page
 // * {
 // 	-webkit-box-sizing: border-box;
@@ -48,209 +41,6 @@
 // p > a:hover {
 // 	border-bottom: 1px dotted;
 // }
-
-// mapping each circle to a css grid area (including IE10+ fix)
-.circle.left { -ms-grid-row: 1; -ms-grid-column: 1; grid-area: c1; }
-.circle.middle { -ms-grid-row: 1; -ms-grid-column: 3; grid-area: c2; }
-.circle.right { -ms-grid-row: 1; -ms-grid-column: 5; grid-area: c3; }
-.details.left { 
-	-ms-grid-row: 3; 
-	-ms-grid-column: 1; 
-	-ms-grid-column-span: 5; 
-	grid-area: d1; 
-}
-.details.middle { 
-	-ms-grid-row: 5; 
-	-ms-grid-column: 1; 
-	-ms-grid-column-span: 5; 
-	grid-area: d2; 
-}
-.details.right { 
-	-ms-grid-row: 7; 
-	-ms-grid-column: 1; 
-	-ms-grid-column-span: 5; 
-	grid-area: d3; 
-}
-
-// making donation circles and their respective details vertical once the screen is too small to fit them horizontally
-@media only screen and (max-width: 900px) {
-
-	.circle.left {
-		-ms-grid-row: 1;
-		-ms-grid-column: 1;
-	}
-
-	.circle.middle {
-		-ms-grid-row: 3;
-		-ms-grid-column: 1;
-	}
-
-	.circle.right {
-		-ms-grid-row: 5;
-		-ms-grid-column: 1;
-	}
-
-	.details.left {
-		-ms-grid-row: 2;
-		-ms-grid-column: 1;
-	}
-
-	.details.middle {
-		-ms-grid-row: 4;
-		-ms-grid-column: 1
-	}
-
-	.details.right {
-		-ms-grid-row: 6;
-		-ms-grid-column: 1
-	}
-}
-
-// creating a 3-column layout, slightly complicated by the fact that it needs to have adaptive layout so that on mobile components of the layout move to completely different places
-// e.g. the charity details are normally below all the charity circles, but on mobile they move below their respective donation circle
-.donation-circles {
-	display: grid;
-	-webkit-box-pack: center;
-	    -ms-flex-pack: center;
-	        justify-content: center;
-	grid-gap: 0px 40px;
-	justify-items: center;
-	margin: 0 auto;
-	// assumption that the width of the donation circles is 250px
-	-ms-grid-columns: 250px 20px 250px 20px 250px;
-	grid-template-columns: 250px 250px 250px;
-	-ms-grid-rows: auto 20px auto 20px auto 20px auto;
-	    grid-template-areas: 
-	"c1 c2 c3"
-	"d1 d1 d1"
-	"d2 d2 d2"
-	"d3 d3 d3";  
-
-	.circle {
-		grid-column: 1 / 3;
-		-ms-grid-column: 1;
-		-ms-grid-column-span: 2;
-		position: relative;
-		float: left;
-		text-align: center;
-		padding-top: 20px;
-
-		p {
-			position: absolute;
-			top: 70px;
-			width: 100%;
-			text-align: center;
-			font-size: 1.5rem;
-			color: white;
-			font-size: 20px;
-			z-index: 1;
-			cursor: pointer;
-			text-shadow: 2px 2px 6px grey;
-		}
-		span {
-			font-size: 70px;
-		}
-		.img-wrapper { // we wrap the image in a div to be able to do circle cropping (if circleCrop value provided in the portal)
-			// we define a relatively large circle for the image to be in
-			width: 250px;
-			height: 250px;
-			border-radius: 250px;
-			object-fit: contain;
-		}
-		img {
-			// make it take the shape of the circle div it's in
-			width: 100%;
-			height: 100%;
-			//border-radius: inherit;
-			-o-object-fit: contain;
-			object-fit: contain;
-			cursor: pointer;
-		}
-		.project-name {
-			margin-top: 20px;
-			padding: 0.8em;
-			font-size: 20px;
-			cursor: pointer;
-		}
-		.arrow-up {
-			width: 0;
-			height: 0;
-			margin: 2em auto auto auto;
-			border-left: 50px solid transparent;
-			border-right: 50px solid transparent;
-			border-bottom: 50px solid white;
-		}
-	}
-
-	.details {
-		.innards {
-			// define this element as a grid having 2 columns (logo, description) with 20px space in between
-			background-color: white;
-			padding-top: 50px;
-			padding-bottom: 60px;
-			width: 100vw;
-			display: grid;
-			-ms-grid-columns: 400px 20px 450px;
-			grid-template-columns: 400px 450px;
-			-webkit-box-pack: center;
-			    -ms-flex-pack: center;
-			        justify-content: center;
-			grid-gap: 20px;
-			
-			.img-wrapper { // we wrap the image in a div to be able to do circle cropping (if circleCrop value provided in the portal)
-				// we define a relatively large circle for the image to be in
-				border-radius: 400px;
-				width: 400px;
-				height: 400px;
-				object-fit: contain;
-			}
-
-			img {
-				// set this as the left column in the div
-				grid-column: 1 / 2;
-				-ms-grid-column: 1;
-				-ms-grid-column-span: 1;
-				// make it take the shape of the circle div it's in
-				width: 100%;
-				height: 100%;
-				-o-object-fit: contain;
-				   object-fit: contain;
-			}
-
-			.text {
-				grid-column: 1 / 2;
-				-ms-grid-column: 1;
-				-ms-grid-column-span: 1;
-				margin: 0% 8% 8% 8%;
-			}
-
-			.top {
-				font-size: 20px;
-			}
-
-			.title {
-				font-size: 35px;
-			}
-
-			.description {
-				color: #592e25;
-				text-align: justify;
-				margin: 8% 0%;
-			}
-
-			.btnlink {
-				padding: 10px 0px 10px 0px;
-				cursor: pointer;
-				font-size: 20px;
-				text-decoration: none;
-
-				p {
-					margin: 0px;
-				}
-			}
-		}
-	}
-} // ./donation-circles end
 
 .grid-tile.bottom {
 	grid-row: 1 / 3;
@@ -287,122 +77,9 @@
 	} 
 } 
 
-
-// hack for responsive scaling of donation circles
-// (minmax alternative doesn't work for some reason)
-@media only screen and (max-width: 1200px) {
-	.donation-circles {
-		grid-gap: 0px 30px;
-	}
-
-	.campaign-page .grid-tile.middle .inside {
-		.subtitle, .link {
-			margin-left: 33%;
-			margin-right: 33%;
-		}	
-	}
-}
-
-@media only screen and (max-width: 1100px) {
-	.donation-circles {
-		grid-gap: 0px 20px;
-	}
-	.campaign-page .grid-tile.middle .inside {
-		.subtitle, .link {
-			margin-left: 30%;
-			margin-right: 30%;
-		}	
-	}
-}
-
-@media only screen and (max-width: 1050px) {
-	.donation-circles {
-		grid-gap: 0px 15px;
-	}
-	.campaign-page .grid-tile.middle .inside {
-		.subtitle, .link {
-			margin-left: 25%;
-			margin-right: 25%;
-		}	
-	}
-}
-
-@media only screen and (max-width: 1000px) {
-	.donation-circles {
-		grid-gap: 0px 10px;
-	}
-	.campaign-page .grid-tile.middle .inside {
-		.subtitle, .link {
-			margin-left: 20%;
-			margin-right: 20%;
-		}	
-	}
-}
-
-// responsive scaling of grid gap and fixing margins for small screens
-// TODO: margins could maybe be standardized across viewport sizes
-@media only screen and (max-width: 950px) {
-	.donation-circles {
-		grid-gap: 0px 5px;
-	}
-	.donation-circles .details .innards {
-		img {
-			margin-left: 40px;
-		}
-		.text {
-			margin-right: 40px;
-		}
-	}
-}
-
 // using css grid to change the template of the grid to a column based one 
 // only applies on phone-sized devices
 @media only screen and (max-width: 900px) {
-	.campaign-page .grid-tile.top {
-		.vertiser-head {
-			font-size: 20px;
-
-			img:nth-child(1) {
-				height: 70px;
-			}
-			img:nth-child(3) {
-				height: 70px;
-			}
-		}
-		.header-img .darken-overlay {
-			.ads-for-good {
-				margin-top: 18%;
-				img {
-					height: 60px;
-				}
-			}
-		}
-	}
-
-	.donation-circles {
-		padding-bottom: 2%;
-		-ms-grid-columns: 1fr;
-		grid-template-columns: 1fr;
-		    grid-template-areas: 
-		"c1"
-		"d1"
-		"c2" 
-		"d2"
-		"c3"
-		"d3";  
-
-		.circle .project-name {
-			margin-top: 10px;
-		}
-		
-		.details .innards {
-			display: block;
-			width: 100vw;
-			img {
-				display: none;
-			}
-		}
-	}
 
 	.grid-tile.bottom .foot {
 		-ms-grid-columns: 1fr;
@@ -411,13 +88,6 @@
 		"vertiser" 
 		"campaign" 
 		"goodloop";  
-	}
-
-	.campaign-page .grid-tile.top {
-				
-		.ads-for-good {
-			margin-top: 18%;
-		}
 	}
 
 	// using css grid to display footer vertically on mobile
@@ -453,110 +123,59 @@
 	} // ./footer
 } 
 
-@media only screen and (max-width: 750px) {
-	.campaign-page .grid-tile.top {
-		.vertiser-head {
-			font-size: 18px;
+// top tile ("Together we've raised ... for charity") should fit the top screen when on mobile
+// TODO does this make sense? or is there a better way of doing this?
+@media only screen and (max-width: 900px) {
+	.campaign-page {
+		.grid-tile.top {
+			// on smaller screens the top tile should take up more of the screen
+			// to avoid making the top tile ("Together we've raised ...") look squished 
+			height: 73vh;
 
-			img:nth-child(1) {
-				height: 60px;
-			}
-			img:nth-child(3) {
-				height: 60px;
+			.header-img .darken-overlay .title {
+				//the logos need more space, otherwise the will overlap with the top tile text
+				top: 22%;
 			}
 		}
-		.header-img .darken-overlay {
-			.ads-for-good {
-				margin-top: 18%;
-				img {
-					height: 60px;
+
+		.grid-tile.middle .inside .carousel {
+			// to avoid making the middle tile (carousel) look squished on small screens
+			height: 70vh;
+		
+			.carousel-inner .item {
+				.slide-photo {
+					// we don't have space to show the large photo
+					display: none;
+				}
+				.slide-desc {
+					// on small screens, the description can take more space (and become more readable) 
+					//because we're not trying to fit it in the same screen as the top tile
+					margin: 35px auto;
+					font-size: 2vh;
+					width: 70vw; 
+				}
+				.slide-title {
+					// otherwise on smaller screens the title becomes unreadable
+					font-size: 3.18vmin;
+				}
+			
+				.slide-logo img {
+					// otherwise the logo looms weirdly to the right (on small screens it should just be above the title)
+					float: unset;
 				}
 			}
-			.arrow {
-				left: calc(45%);
-			}
+		}
+
+		// adapt the cta font to smaller screens (couldn't just make it responsive by default)
+		.link.watch-cta {
+			font-size: 6vmin; 
 		}
 	}
 }
 
-@media only screen and (max-width: 600px) {
-	.campaign-page .grid-tile.top {
-		.vertiser-head {
-			font-size: 18px;
-
-			img:nth-child(1) {
-				height: 60px;
-			}
-			img:nth-child(3) {
-				height: 60px;
-			}
-		}
-		.header-img .darken-overlay {
-			.ads-for-good {
-				margin-top: 18%;
-				img {
-					height: 60px;
-				}
-			}
-			.arrow {
-				left: calc(45%);
-			}
-		}
-	}
-}
-
-@media only screen and (max-width: 400px) {
-	.campaign-page .grid-tile.top {
-		.vertiser-head {
-			font-size: 15px;
-
-			img:nth-child(1) {
-				height: 10vmin;
-			}
-			img:nth-child(2) {
-				height: 10vmin;
-			}
-		}
-		.header-img .darken-overlay {
-			.ads-for-good {
-				margin-top: 18%;
-				img {
-					height: 60px;
-				}
-			}
-			.arrow {
-				left: calc(45%);
-			}
-		}
-	}
-}
 
 // hack to target IE10+ and replace css grid with flexbox
 @media screen and (-ms-high-contrast:active), (-ms-high-contrast:none) {
-
-	.donation-circles {
-		display: flex;
-		flex-wrap: wrap;
-
-		.circle {
-			padding-left: 20px;
-		}
-
-		.details {
-			.innards {
-				display: flex;
-				flex-direction: row;
-				flex-wrap: wrap;
-				
-				.text {
-					display: flex;
-					flex-direction: column;
-					flex-basis: calc(33.333% - 20px);	
-				}
-			}
-		}
-	}
-
 	.foot {
 		display: flex;
 		flex-wrap: wrap;

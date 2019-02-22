@@ -232,27 +232,16 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 	let cdescs = clist.map(x => x.description);
 	//let cPhoto = chighResPhotos[index] ? chighResPhotos[index] : '';
 
-	// TODO: move this in less file
+	// set the photo if it has one
 	let photoStyle = {};
 	if (chighResPhotos[index]) {
 		photoStyle = {
 			backgroundImage: 'url(' + chighResPhotos[index] + ')',
-			backgroundSize: 'cover',
-			backgroundRepeat: 'no-repeat',
-			backgroundPosition: 'center',
-			height: '25vh',
-			top: '6vh',
-			border: '1px solid white',
-			boxShadow: '8px 8px white'
 		};
 	}
 
-	// TODO: move this in less file
 	let slideStyle = {
 		backgroundColor: ccolor[index],
-		height: '100%',		
-		width: '100%',	
-		// padding: '50px'
 	};
 
 	// this uses the circleCrop value set in the portal to crop the logo/photo to fit neatly into the circle 
@@ -267,23 +256,6 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 		borderRadius: '64px',
 		height: clogos[index] ? '6vh' : null,
 		margin: '0 auto',
-		float: 'right'
-	};
-	let descStyle = {
-		// padding: '2vmin',
-		display: 'inline-block',
-		width: '36vw',
-		margin: '0 auto',
-		fontSize: '24px',
-		color: 'white'
-	};
-	let titleStyle = {
-		// padding: '2vmin',
-		// display: 'inline-block',
-		// width: '36vw',
-		// margin: '0 auto',
-		fontSize: '24px',
-		color: 'white'
 	};
 
 	// is the item currently active (aka show in carousel)
@@ -295,21 +267,21 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 			{ chighResPhotos[index] ? 
 				<div>
 					<div className="col-md-1" />
-					<div className="col-md-5" style={titleStyle}>
+					<div className="col-md-5">
 						<div style={{ margin: '2vh 0', height: '5vh'}}>
 							<div className="col-md-1" />
-							<div className="col-md-2">
+							<div className="col-md-2 slide-logo">
 								<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
 							</div>	
-							<div className="col-md-6" style={{top: '1vh', fontSize: '33px', fontFamily: '\'FrankGothItalicBT\', Fallback, sans-serif'}}>
+							<div className="col-md-6 slide-title" style={{top: '1vh', fontSize: '3.18vmin', fontFamily: '\'FrankGothItalicBT\', Fallback, sans-serif'}}>
 								{cnames[index]}
 							</div>	
 						</div>
-						<div style={descStyle}>
+						<div className="slide-desc">
 							<MDText source={cdescs[index]} />
 						</div>						
 					</div>	
-					<div className="col-md-4" style={photoStyle}></div>
+					<div className="col-md-4 slide-photo" style={photoStyle}></div>
 					<div className="col-md-2" />
 				</div>
 				:
@@ -323,30 +295,17 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 };
 
 const DonationCarouselWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, brandColorTxtStyle, logoStyle, adid, status, toggle}) => {	 // todo: remove useless params
-	// TODO: move this in less file
-	let innerCarouselStyle = {
-		height: '47vh',
-		width: '100vw',
-		margin: 'auto'
-	};
-	let carouselIndicatorsStyle = {
-		bottom: '5px'
-	};
-	let carouselInnerStyle = {
-		height: '100%',
-		width: '100%'
-	};
 
 	return (
-		<div id="donation-carousel" className="carousel slide" data-interval={toggle} data-ride="carousel" style={innerCarouselStyle}>
+		<div id="donation-carousel" className="carousel slide" data-interval={toggle} data-ride="carousel">
 			{/* <!-- Indicators --> */}
-			<ol className="carousel-indicators" style={carouselIndicatorsStyle}>
+			<ol className="carousel-indicators">
 				<li data-target="#donation-carousel" data-slide-to="0" className="active" />
 				<li data-target="#donation-carousel" data-slide-to="1" />
 				<li data-target="#donation-carousel" data-slide-to="2" />
 			</ol>
 			{/* <!-- Content --> */}
-			<div className="carousel-inner" role="listbox" style={carouselInnerStyle}>	
+			<div className="carousel-inner" role="listbox">	
 				<DonationSlideWidget cparent={cparent} clist={clist} index={0} status={status} brandColorTxtStyle={brandColorTxtStyle} active />
 				<DonationSlideWidget cparent={cparent} clist={clist} index={1} status={status} brandColorTxtStyle={brandColorTxtStyle} active={false} />
 				<DonationSlideWidget cparent={cparent} clist={clist} index={2} status={status} brandColorTxtStyle={brandColorTxtStyle} active={false} />					
@@ -399,9 +358,9 @@ const LinkToAdWidget = ({cparent, adid, status, brandColorTxtStyle}) => {
 	let md = "[" + msg + "](" + url + ")";
 	
 	return (
-		<p className='link' style={{fontFamily: 'initial'}}>
+		<div className='link watch-cta' style={{fontFamily: 'initial', backgroundColor: 'rgb(200, 51, 18)', paddingTop: '6vh', fontSize: '2vh'}}>
 			<MDText source={md} renderers={{link: LinkRenderer}} />
-		</p>
+		</div>
 	);
 };
 
@@ -649,10 +608,10 @@ const CampaignPage = () => {
 					</div>
 					<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
 					<DonationInfoWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle}/> */}
-					<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle} status={status} toggle={toggle} />
-					<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
+					<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle} adid={adid} status={status} toggle={toggle}/>
 				</div>
 			</div>
+			<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
 			<div className='grid-tile bottom' style={glColorBgStyle}>
 				<div className='foot header-font'>		
 					<SocialMediaShareWidget adName={ad.name} donationValue={donationValue} charities={clist} />
