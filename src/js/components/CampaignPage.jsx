@@ -228,7 +228,8 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 	let clogos = clist.map(x => x.logo);
 	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo);
 	let ccrop = clist.map(x => x.circleCrop);
-	let ccolor = clist.map(x => x.color); // TODO: does this exist?
+	let cbgColor = clist.map(x => x.color); // TODO: does this exist?
+	let ctxtColor = clist.map(x => x.txtColor); // TODO: does this exist?
 	let cdescs = clist.map(x => x.description);
 	//let cPhoto = chighResPhotos[index] ? chighResPhotos[index] : '';
 
@@ -241,7 +242,8 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 	}
 
 	let slideStyle = {
-		backgroundColor: ccolor[index],
+		backgroundColor: cbgColor[index],
+		color: ctxtColor[index],
 	};
 
 	// this uses the circleCrop value set in the portal to crop the logo/photo to fit neatly into the circle 
