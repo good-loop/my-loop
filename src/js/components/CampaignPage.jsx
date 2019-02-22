@@ -168,9 +168,9 @@ const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='lef
 	);
 };
 
-const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColorBgStyle, brandColorTxtStyle, logoStyle}) => {
+const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColorBgStyle, logoStyle}) => {
 	function LinkRenderer(props) {
-		return <a href={props.href} target="_blank" style={brandColorTxtStyle}>{props.children}</a>;
+		return <a href={props.href} target="_blank">{props.children}</a>;
 	}
 
 	let cids = clist.map(x => x.id);
@@ -204,7 +204,7 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColor
 					<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} style={ccrop[index] && ccrop[index]!==100 ? circleCropStyle : noCropStyle}/>
 				</div>
 				<div className="text">
-					<div className='title frank-font' style={brandColorTxtStyle}>
+					<div className='title frank-font'>
 						<MDText source={cnames[index].toUpperCase()} />
 					</div>
 					<div className='description'>
@@ -324,7 +324,7 @@ const DonationCarouselWidget = ({cparent, clist, campaignSlice, brandColorBgStyl
 		</div>
 	);
 };
-const DonationInfoWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, brandColorTxtStyle, logoStyle}) => {
+const DonationInfoWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, logoStyle}) => {
 	let toggle = DataStore.getValue(['widget', 'donationCircles', 'active']) || [true, false, false]; // toggles the info charity box to display one at a time
 	
 	return (
@@ -333,25 +333,25 @@ const DonationInfoWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, b
 			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={1} name={'middle'} shown={toggle[1]} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle}/>
 			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={2} name={'right'} shown={toggle[2]} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle}/>
 			{ toggle[0] ? 
-				<DonationDetailsWidget cparent={cparent} clist={clist} index={0} name={'left'} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle}/>
+				<DonationDetailsWidget cparent={cparent} clist={clist} index={0} name={'left'} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle}/>
 				: null
 			}
 			{ toggle[1] ? 
-				<DonationDetailsWidget cparent={cparent} clist={clist} index={1} name={'middle'} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle}/>
+				<DonationDetailsWidget cparent={cparent} clist={clist} index={1} name={'middle'} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle}/>
 				: null
 			}
 			{ toggle[2] ? 
-				<DonationDetailsWidget cparent={cparent} clist={clist} index={2} name={'right'} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle}/>
+				<DonationDetailsWidget cparent={cparent} clist={clist} index={2} name={'right'} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle}/>
 				: null
 			}
 		</div>
 	);
 };
 
-const LinkToAdWidget = ({cparent, adid, status, brandColorTxtStyle}) => {
+const LinkToAdWidget = ({cparent, adid, status}) => {
 	// this is needed to be able to both control the look of the link in MDText
 	function LinkRenderer(props) {
-		return <a href={props.href} target="_blank" style={brandColorTxtStyle}>{props.children}</a>;
+		return <a href={props.href} target="_blank">{props.children}</a>;
 	}
 
 	let msg = 'Watch an advert, unlock a free donation, and choose which project you would like to fund.';
@@ -474,11 +474,7 @@ const CampaignPage = () => {
 	let brandLogo = brand.logo ? brand.logo : null; 
 	let brandColorBgStyle = {
 		backgroundColor: brandColor,
-		color: 'white'
-	};
-	let brandColorTxtStyle = {
-		color: 'white', //brandColor
-
+		color: brand.lockAndTextColor ? brand.lockAndTextColor : 'white' // TODO: this can be refactored probably to reduce code repetition
 	};
 	// TODO (optional): change portal to allow for complimentary color to be modified
 	let complimentaryColor = '#f0e7d0'; // color for the middle tile that contains donations info
@@ -524,6 +520,12 @@ const CampaignPage = () => {
 		}
 		desc_title = campaign.desc_title ? campaign.desc_title : null;
 		desc_body = campaign.desc_body ? campaign.desc_body : null;
+	}
+
+	// if there is no charity data, tell the user
+	// TODO: do we want to deal with this in a more elegant way?
+	if (!ad.charities) {
+		return <Misc.Loading text='Cannot find charity data' />;	
 	}
 
 	// parent charity data 
@@ -610,10 +612,10 @@ const CampaignPage = () => {
 					</div>
 					<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
 					<DonationInfoWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle}/> */}
-					<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle} adid={adid} status={status} toggle={toggle}/>
+					<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle} adid={adid} status={status} toggle={toggle}/>
 				</div>
 			</div>
-			<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
+			<LinkToAdWidget cparent={cparent} adid={adid} status={status} />
 			<div className='grid-tile bottom' style={glColorBgStyle}>
 				<div className='foot header-font'>		
 					<SocialMediaShareWidget adName={ad.name} donationValue={donationValue} charities={clist} />
