@@ -180,6 +180,12 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 	// is the item currently active (aka show in carousel)
 	let itemClass = active ? 'item active' : 'item';
 
+	// if there's no chty title or logo, we shouldn't show the slide in the carousel
+	if (!clist[index].name && !clist[index].logo) {
+		return(null);
+	}
+
+	// if there's no chty description, then we should just show the chty title and logo large and centered
 	if (!cdescs[index]) {
 		return (
 			<div className={itemClass} style={slideStyle}>
@@ -200,6 +206,7 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 		);
 	}
 
+	// if we have a chty photo we should display it alongside the rest of the data, otherwise display just the rest 
 	return (
 		<div className={itemClass} style={slideStyle}>
 			{ chighResPhotos[index] ? 
@@ -252,9 +259,10 @@ const DonationCarouselWidget = ({cparent, clist, campaignSlice, brandColorBgStyl
 		<div id="donation-carousel" className="carousel slide" data-interval={toggle} data-ride="carousel">
 			{/* <!-- Indicators --> */}
 			<ol className="carousel-indicators">
-				{ clist[0] ? <li data-target="#donation-carousel" data-slide-to="0" className="active" /> : null}
-				{ clist[1] ? <li data-target="#donation-carousel" data-slide-to="1" /> : null}
-				{ clist[2] ? <li data-target="#donation-carousel" data-slide-to="2" /> : null}
+				{/* // TODO: repeated code, make this check more efficient */}
+				{ clist[0] && clist[0].name && clist[0].logo ? <li data-target="#donation-carousel" data-slide-to="0" className="active" /> : null}
+				{ clist[1] && clist[1].name && clist[1].logo ? <li data-target="#donation-carousel" data-slide-to="1" /> : null}
+				{ clist[2] && clist[2].name && clist[2].logo ? <li data-target="#donation-carousel" data-slide-to="2" /> : null}
 			</ol>
 			{/* <!-- Content --> */}
 			<div className="carousel-inner" role="listbox">	
