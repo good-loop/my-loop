@@ -196,7 +196,7 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 							<div className="slide-logo">
 								<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
 							</div>	
-							<div className="slide-title" style={{paddingTop: '3%'}}>
+							<div className="slide-title" style={{paddingTop: '3%', color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
 								{cnames[index]}
 							</div>	
 						</div>		
@@ -218,7 +218,7 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 							<div className="col-md-2 slide-logo">
 								<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
 							</div>	
-							<div className="col-md-6 slide-title">
+							<div className="col-md-6 slide-title" style={{color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
 								{cnames[index]}
 							</div>	
 						</div>
@@ -238,7 +238,7 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 							<div className="col-md-2 slide-logo">
 								<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
 							</div>	
-							<div className="col-md-6 slide-title">
+							<div className="col-md-6 slide-title" style={{color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
 								{cnames[index]}
 							</div>	
 						</div>
@@ -399,10 +399,6 @@ const CampaignPage = () => {
 	// Pull out first advert from advertiser data if not
 	let ad = adid ? adPv.value : ( adPv.value && adPv.value.hits && adPv.value.hits[0] );
 
-	console.log('----------');
-	console.log(ad);
-	console.log('----------');
-
 	// good-loop branding
 	let glColor = '#C83312'; 
 	let glLogo = 'https://i.ibb.co/XY3trPW/Good-Loop-Logos-Good-Loop-Logo-Mark-White.png';
@@ -413,7 +409,7 @@ const CampaignPage = () => {
 
 	let brand = ad.branding;
 	// use good-loop branding if adv branding is not there 
-	let brandColor = brand.color ? brand.color : glColor; 
+	let brandColor = brand.backgroundColor ? brand.backgroundColor : glColor; 
 	let brandLogo = brand.logo_white || brand.logo || null; 
 	let brandColorBgStyle = {
 		backgroundColor: brand && brandColor,
@@ -444,19 +440,19 @@ const CampaignPage = () => {
 	let startDate = ad.start ? 'This campaign started on '.concat(ad.start.substring(0, 10)) : '';
 	let smallPrint = null;
 	let bg = null;
-	let headerStyle = {};
 	let desc_title = null;
 	let desc_body = null;
 	if(campaign) {
 		smallPrint = campaign.smallPrint ? campaign.smallPrint : '';
 		if (campaign.bg) {
 			bg = campaign.bg;
-			headerStyle = {
+			brandColorBgStyle = {
 				backgroundImage: 'url(' + bg + ')',
 				backgroundSize: 'cover',
 				backgroundRepeat: 'no-repeat',
 				backgroundPosition: 'center',
-				backgroundAttachment: 'fixed'
+				backgroundAttachment: 'fixed',
+				color: brand && brand.lockAndTextColor ? brand.lockAndTextColor : 'white' 
 			};
 		}
 		desc_title = campaign.desc_title ? campaign.desc_title : null;
@@ -524,7 +520,7 @@ const CampaignPage = () => {
 				<div className='vertiser-head frank-font' style={glColorBgStyle}>
 					<CampaignHeaderWidget glLogo={glLogo} brandLogo={brandLogo} />
 				</div>
-				<div className='header' style={campaign && campaign.bg ? headerStyle : brandColorBgStyle} >
+				<div className='header' style={brandColorBgStyle} >
 					<div className='header-text'>
 						<div className='header-title frank-font'>
 							<div></div>	{/* TODO: delete this, it's just here because there's a css rule about the 1st div in title*/}
