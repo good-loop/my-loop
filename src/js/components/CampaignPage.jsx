@@ -155,7 +155,7 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 
 	let slideStyle = {
 		backgroundColor: cbgColor[index],
-		color: ctxtColor[index],
+		color: ctxtColor[index] ? ctxtColor[index] : 'white',
 	};
 
 	// this uses the circleCrop value set in the portal to crop the logo/photo to fit neatly into the circle 
@@ -168,8 +168,13 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 	let noCropStyle = {
 		//borderRadius: 'inherit',
 		borderRadius: '64px',
-		height: clogos[index] ? '6vh' : null,
+		// if there's no desc, then make the logo bigger
+		height: cdescs[index] ? '6vh' : '10vh',
+		float: cdescs[index] ? 'right' : 'unset',
 		margin: '0 auto',
+		// logo sizes can vary, so we need to limit how much space they get
+		maxHeight: '450px', 
+		maxWidth: '300px',
 	};
 
 	// is the item currently active (aka show in carousel)
@@ -181,12 +186,11 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 				<div>
 					<div className="col-md-3" />
 					<div className="col-md-6">
-						<div className="slide-header">
-							<div className="col-md-1" />
-							<div className="col-md-2 slide-logo">
+						<div className="slide-header" style={{marginTop: '6vh'}}>
+							<div className="slide-logo">
 								<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
 							</div>	
-							<div className="col-md-6 slide-title">
+							<div className="slide-title" style={{paddingTop: '3%'}}>
 								{cnames[index]}
 							</div>	
 						</div>		
