@@ -28,11 +28,10 @@ import MDText from '../base/components/MDText';
 const CampaignHeaderWidget = ({glLogo, brandLogo}) => {
 	return (
 		<div className="header-logos">
-			<img alt='Sponsor Logo' src={brandLogo} />
+			<img alt='Sponsor Logo' src={brandLogo} style={{ display: brandLogo ? 'inline-block' : 'none' }} />
 			<img alt='Good-Loop Logo' src={glLogo} />
 		</div>
 	);
-
 };
 
 // const CampaignHeaderWidget = ({cparentLogo, brandLogo, supports, displayChtyLogo}) => {
@@ -482,18 +481,15 @@ const CampaignPage = () => {
 		color: 'white'
 	};
 
-	// default data
-	let defaultImg = "https://i.ibb.co/Xy6HD5J/empty.png"; // hack to be used when we don't have an image, and we want to default to an "empty" transparent image
-
 	let brand = ad.branding;
 	// use good-loop branding if adv branding is not there 
 	let brandColor = brand.color ? brand.color : glColor; 
-	let brandLogo = brand.logo ? brand.logo : null; 
+	let brandLogo = brand.logo_white || brand.logo || null; 
 	let brandColorBgStyle = {
-		backgroundColor: brandColor,
-		color: brand.lockAndTextColor ? brand.lockAndTextColor : 'white' // TODO: this can be refactored probably to reduce code repetition
+		backgroundColor: brand && brandColor,
+		color: brand && brand.lockAndTextColor ? brand.lockAndTextColor : 'white' // TODO: this can be refactored probably to reduce code repetition
 	};
-	// TODO (optional): change portal to allow for complimentary color to be modified
+	// TODO: change portal to allow for complimentary color to be modified
 	let complimentaryColor = '#f0e7d0'; // color for the middle tile that contains donations info
 	let compliColorBgStyle = {
 		backgroundColor: complimentaryColor,
@@ -514,17 +510,15 @@ const CampaignPage = () => {
 	};
 
 	// campaign data
-	let campaign = ad.campaignPage;
-	let startDate = '';
-	if (ad.start) {
-		startDate = 'This campaign started on '.concat(ad.start.substring(0, 10));
-	}
-	let smallPrint = campaign && campaign.smallPrint ? campaign.smallPrint : '';
-	let bg = '';
+	let campaign = ad && ad.campaignPage;
+	let startDate = ad.start ? 'This campaign started on '.concat(ad.start.substring(0, 10)) : '';
+	let smallPrint = null;
+	let bg = null;
 	let headerStyle = {};
-	let desc_title = '';
-	let desc_body = '';
+	let desc_title = null;
+	let desc_body = null;
 	if(campaign) {
+		smallPrint = campaign.smallPrint ? campaign.smallPrint : '';
 		if (campaign.bg) {
 			bg = campaign.bg;
 			headerStyle = {
@@ -549,13 +543,6 @@ const CampaignPage = () => {
 	let parent = ad.charities.parent;
 	// minor TODO just pass parent around
 	let cparent = parent && parent.name ? parent.name : '';
-	let cparentLogo = parent && parent.logo ? parent.logo : defaultImg;
-	let displayLogo = parent && parent.logo ? 'inherit' : 'none';
-	let displayChtyLogo = {
-		backgroundImage: cparentLogo,
-		display: displayLogo
-	};
-	let supports = brand.logo && parent && parent.logo; // whether we want to show the "Supports" text at the top in between the 2 logos
 
 	// individual charity data
 	let clist = ad.charities.list;
