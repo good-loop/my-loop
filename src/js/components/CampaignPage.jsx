@@ -134,160 +134,6 @@ const SocialMediaShareWidget = ({type, name, branding, donationValue, charities,
 	);
 };
 
-let _handleClick = (circleIndex) => {
-	// TODO document the assumptions / linked code
-	let toggle = [false, false, false];
-	toggle[circleIndex] = true;
-	DataStore.setValue(['widget', 'donationCircles', 'active'], toggle);
-};
-
-const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='left', shown, brandColorBgStyle, logoStyle}) => {
-	let cids = clist.map(x => x.id);
-	let cnames = clist.map(x => x.name);
-	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo || x.logo);
-	let ccrop = clist.map(x => x.circleCrop);
-
-	// this uses the circleCrop value set in the portal to crop the logo/photo to fit neatly into the circle 
-	let ccropDiff = (100-ccrop[index])/100;
-	let circleCropStyle = {
-		width: ccrop[index]+"%",
-		height: ccrop[index]+"%",
-		marginTop: "calc(125px*" + ccropDiff + ")",
-	};
-	let noCropStyle = {
-		borderRadius: 'inherit'
-	};
-
-	return (
-		<div className={'circle '.concat(name)} onClick={(e) => _handleClick(index)}>
-			{cparent? <p className='header-font'><span className='frank-font'>{campaignSlice[cids[index]].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p> : null}
-			<div className='img-wrapper' style={!(clist[index].highResPhoto || clist[index].photo) ? logoStyle : null}>
-				<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} style={ccrop[index] ? circleCropStyle : noCropStyle}/>
-			</div>
-			<div className='project-name frank-font' style={brandColorBgStyle}>
-				{cnames[index]}
-			</div>
-			{ shown ? <div className='arrow-up' /> : null }
-		</div>
-	);
-};
-
-
-/**
- * See Output.js for relevant doc notes
- * {
- * 	output: {?Output} if unset, returns null!
- * 	cost: {?Money} how much do you wish to donate?
- * 	targetCount: {?Number} e.g. 10 for "10 malaria nets"
- * 		Either cost or targetCount should be set, but not both.
- * }
-  @returns {?Output}
- */
-// const impactCalc = ({charity, project, output, cost, targetCount}) => {
-// 	NGO.assIsa(charity);
-// 	Project.assIsa(project);
-// 	assMatch(targetCount, "?Number");
-// 	assMatch(cost, "?Money");
-// 	if ( ! output) {
-// 		return null;
-// 	}
-// 	if ( ! cost && ! targetCount) {
-// 		// specify either a spend, e.g. cost:£10, or a target scale, e.g. targetCount:10 (nets)
-// 		return null;
-// 	}
-// 	// Output.assIsa(output);	can break old data :(
-	
-// 	// more people?
-// 	let cpbraw = NGO.costPerBeneficiary({charity:charity, project:project, output:output});
-// 	if (!cpbraw || !cpbraw.value) {
-// 		return null; // Not a quantified output?
-// 	}
-// 	Money.assIsa(cpbraw);
-// 	const unitName = Output.name(output) || '';
-
-// 	// for low CPBs, switch to showing "£10 can fund" rather than "helping 1 person costs £0"
-// 	if (Money.value(cpbraw) < 0.75 && targetCount===1 && ! cost) {
-// 		cost = Money.make({currency:'GBP', value:10}); // ??support other currencies??
-// 		targetCount = null;
-// 	}
-	
-// 	// Requested a particular impact count? (ie "cost of helping 3 people")
-// 	if (targetCount) {
-// 		assert( ! cost, "impactCalc - cant set cost and targetCount");
-// 		cost = Money.make({currency: cpbraw.currency, value: Money.value(cpbraw) * targetCount});		
-// 	} else {
-// 		targetCount = Money.divide(cost, cpbraw);
-// 	}
-	
-// 	// Pluralise unit name correctly
-// 	const plunitName = Misc.TrPlural(targetCount, unitName);
-
-// 	return Output.make({cost, number:targetCount, name:plunitName, description:output.description});
-// }; // ./impactCalc()
-
-
-const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColorBgStyle, logoStyle, donationValue}) => {
-	function LinkRenderer(props) {
-		return <a href={props.href} target="_blank">{props.children}</a>;
-	}
-
-	let cids = clist.map(x => x.id);
-	let cnames = clist.map(x => x.name);
-	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo || x.logo);
-	let curls = clist.map(x => x.url);
-	let cdescs = clist.map(x => x.description);
-
-	// get description from sogive if you can't find it in portal
-	// NB: getData will call SoGive for NGO data
-	let pvcharityData = ActionMan.getDataItem({type:C.TYPES.NGO, id:cids[index], status:C.KStatus.PUBLISHED});
-	let sogiveResults = pvcharityData.value;
-	let sogiveDesc = (sogiveResults && sogiveResults.summaryDescription);
-	if (sogiveResults.projects) {
-		const project = sogiveResults.projects[0];
-		let impact = null;
-		if (project.outputs) {
-			const outputs = project.outputs;
-			impact = impactCalc({ charity: cids[index], project, output:outputs[0], cost: donationValue });
-		}
-	}
-	
-	// this uses the circleCrop value set in the portal to crop the logo/photo to fit neatly into the circle 
-	let ccrop = clist.map(x => x.circleCrop);
-	let ccropDiff = (100-ccrop[index])/100;
-	let circleCropStyle = {
-		width: ccrop[index]+"%",
-		height: ccrop[index]+"%",
-		marginTop: "calc(125px*" + ccropDiff + ")",
-	};
-	let noCropStyle = {
-		borderRadius: 'inherit'
-	};
-
-	return (
-		<div className={'details '.concat(name)}>
-			<div className='innards'>
-				<div className='img-wrapper' style={!(clist[index].highResPhoto || clist[index].photo) ? logoStyle : null}>
-					<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} style={ccrop[index] && ccrop[index]!==100 ? circleCropStyle : noCropStyle}/>
-				</div>
-				<div className="text">
-					<div className='title frank-font'>
-						<MDText source={cnames[index].toUpperCase()} />
-					</div>
-					<div className='description'>
-						<MDText source={(cdescs[index] || sogiveDesc)} renderers={{link: LinkRenderer}} />
-					</div>
-					{curls[index] ?
-						<div className='btnlink frank-font' style={brandColorBgStyle} onClick={(e) => window.open(curls[index], '_blank')}>
-							Find out more {curls[index] && cparent ? ' about the' : ''} 
-							<br/> <MDText source={cparent} />
-						</div>	
-						: null }
-				</div>
-			</div>
-		</div>
-	);
-};
-
 const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColorTxtStyle}) => {	
 	let cids = clist.map(x => x.id);
 	let cnames = clist.map(x => x.name);
@@ -329,8 +175,28 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 	// is the item currently active (aka show in carousel)
 	let itemClass = active ? 'item active' : 'item';
 
-	return (
+	if (!cdescs[index]) {
+		return (
+			<div className={itemClass} style={slideStyle}>
+				<div>
+					<div className="col-md-3" />
+					<div className="col-md-6">
+						<div className="slide-header">
+							<div className="col-md-1" />
+							<div className="col-md-2 slide-logo">
+								<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
+							</div>	
+							<div className="col-md-6 slide-title">
+								{cnames[index]}
+							</div>	
+						</div>		
+					</div>
+				</div>
+			</div>
+		);
+	}
 
+	return (
 		<div className={itemClass} style={slideStyle}>
 			{ chighResPhotos[index] ? 
 				<div>
@@ -354,10 +220,24 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 				</div>
 				:
 				<div>
-					<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
-					<div>{cdescs[index]}</div>
-				</div>	
-			}
+					<div className="col-md-3" />
+					<div className="col-md-6">
+						<div className="slide-header">
+							<div className="col-md-1" />
+							<div className="col-md-2 slide-logo">
+								<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
+							</div>	
+							<div className="col-md-6 slide-title">
+								{cnames[index]}
+							</div>	
+						</div>
+						<div className="slide-desc">
+							<MDText source={cdescs[index]} />
+						</div>						
+					</div>	
+					<div className="col-md-3" />
+				</div>
+			} 
 		</div>	
 	);
 };
@@ -389,29 +269,6 @@ const DonationCarouselWidget = ({cparent, clist, campaignSlice, brandColorBgStyl
 					<span className="icon-next" aria-hidden="true" />
 					<span className="sr-only">Next</span>
 				</a> : null }
-		</div>
-	);
-};
-const DonationInfoWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, logoStyle, donationValue}) => {
-	let toggle = DataStore.getValue(['widget', 'donationCircles', 'active']) || [true, false, false]; // toggles the info charity box to display one at a time
-	
-	return (
-		<div className='donation-circles'>
-			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={0} name={'left'} shown={toggle[0]} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle}/>
-			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={1} name={'middle'} shown={toggle[1]} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle}/>
-			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={2} name={'right'} shown={toggle[2]} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle}/>
-			{ toggle[0] ? 
-				<DonationDetailsWidget cparent={cparent} clist={clist} index={0} name={'left'} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle} donationValue={donationValue}/>
-				: null
-			}
-			{ toggle[1] ? 
-				<DonationDetailsWidget cparent={cparent} clist={clist} index={1} name={'middle'} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle} donationValue={donationValue}/>
-				: null
-			}
-			{ toggle[2] ? 
-				<DonationDetailsWidget cparent={cparent} clist={clist} index={2} name={'right'} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle} donationValue={donationValue}/>
-				: null
-			}
 		</div>
 	);
 };
