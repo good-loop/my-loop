@@ -24,6 +24,7 @@ import DonationCard from './DonationCard';
 import Footer from './Footer';
 import { Link, Element } from 'react-scroll';
 import MDText from '../base/components/MDText';
+import PropControl from '../base/components/PropControl';
 
 const CampaignHeaderWidget = ({glLogo, brandLogo}) => {
 	return (
@@ -85,47 +86,50 @@ const shareOptions = [
 ];
 
 	
-// What should appear in Tweet/Facebook link/LinkedIn article
+/** What should appear in Tweet/Facebook link/LinkedIn article
 // Contains fallbacks for where donation amount, charities or advertiser name is not specified
+@returns {String} e.g. TOMS helped raise £££ for Crisis
+ */ 
 const shareTextFn = ({donationValue, charities, adName="We"}) => {
 	const amount = new Money({currency: 'GBP', value: donationValue});
 
 	const currencySymbol = Money.CURRENCY[(amount.currency || 'GBP').toUpperCase()];
 	const amountText = Money.prettyString({amount}) || 'money';
-	let chartiyText;
+	let charityText;
 
 	if( charities && charities.length !== 0) {
 		// Safety: filter out any charities that do not have a human-readable name
 		const charityNames = charities && charities.reduce( (arrayOut, charity) => charity.name ? arrayOut.concat(charity.name) : arrayOut, []);
 		
 		if( !charityNames ) {
-			chartiyText = 'charity';
+			charityText = 'charity';
 		} else if ( charityNames.length === 1) {
-			chartiyText = charityNames[0];
+			charityText = charityNames[0];
 		} else {
 			// Pull out last two elements as these are formatted differently
 			const finalTwoCharityNames = charityNames.splice(charityNames.length - 2, 2);
 
-			chartiyText = `${charityNames.map( charityName => charityName + ', ')}${finalTwoCharityNames[0]} and ${finalTwoCharityNames[1]}`;
+			charityText = `${charityNames.map( charityName => charityName + ', ')}${finalTwoCharityNames[0]} and ${finalTwoCharityNames[1]}`;
 		} 
 	}
 
-	return `${adName} helped to raise ${currencySymbol}${amountText} for ${chartiyText}`;
+	return `${adName} helped to raise ${currencySymbol}${amountText} for ${charityText}`;
 };
 
 const SocialMediaShareWidget = ({type, name, branding, donationValue, charities, adName}) => {
-	const SocialShareButton = ({hrefFn, logo, title}, shareText) => (
-		<a className="charity" href={hrefFn({text: shareText, url: window.location.href.replace("#", "%23")})} target="_blank" rel="noreferrer" title={title} alt={title}>
+	const SocialShareButton = ({option, shareText}) => {
+		const {hrefFn, logo, title} = option;
+		return <a className="charity" href={hrefFn({text: shareText, url: window.location.href.replace("#", "%23")})} target="_blank" rel="noreferrer" title={title} alt={title}>
 			<img alt={{title}+' Logo'} src={logo} crop="50%" title={title} />
-		</a>
-	);
+		</a>;
+	};
 
 	const shareText = shareTextFn({donationValue, charities, adName});
 
 	return (
 		<div className="social share-page">
 			<MDText source='Share this page' />
-			{shareOptions.map(option => SocialShareButton(option, shareText))}
+			{shareOptions.map(option => <SocialShareButton key={option.title} option={option} shareText={shareText} />)}
 		</div>
 	);
 };
@@ -168,7 +172,61 @@ const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='lef
 	);
 };
 
-const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColorBgStyle, logoStyle}) => {
+
+/**
+ * See Output.js for relevant doc notes
+ * {
+ * 	output: {?Output} if unset, returns null!
+ * 	cost: {?Money} how much do you wish to donate?
+ * 	targetCount: {?Number} e.g. 10 for "10 malaria nets"
+ * 		Either cost or targetCount should be set, but not both.
+ * }
+  @returns {?Output}
+ */
+// const impactCalc = ({charity, project, output, cost, targetCount}) => {
+// 	NGO.assIsa(charity);
+// 	Project.assIsa(project);
+// 	assMatch(targetCount, "?Number");
+// 	assMatch(cost, "?Money");
+// 	if ( ! output) {
+// 		return null;
+// 	}
+// 	if ( ! cost && ! targetCount) {
+// 		// specify either a spend, e.g. cost:£10, or a target scale, e.g. targetCount:10 (nets)
+// 		return null;
+// 	}
+// 	// Output.assIsa(output);	can break old data :(
+	
+// 	// more people?
+// 	let cpbraw = NGO.costPerBeneficiary({charity:charity, project:project, output:output});
+// 	if (!cpbraw || !cpbraw.value) {
+// 		return null; // Not a quantified output?
+// 	}
+// 	Money.assIsa(cpbraw);
+// 	const unitName = Output.name(output) || '';
+
+// 	// for low CPBs, switch to showing "£10 can fund" rather than "helping 1 person costs £0"
+// 	if (Money.value(cpbraw) < 0.75 && targetCount===1 && ! cost) {
+// 		cost = Money.make({currency:'GBP', value:10}); // ??support other currencies??
+// 		targetCount = null;
+// 	}
+	
+// 	// Requested a particular impact count? (ie "cost of helping 3 people")
+// 	if (targetCount) {
+// 		assert( ! cost, "impactCalc - cant set cost and targetCount");
+// 		cost = Money.make({currency: cpbraw.currency, value: Money.value(cpbraw) * targetCount});		
+// 	} else {
+// 		targetCount = Money.divide(cost, cpbraw);
+// 	}
+	
+// 	// Pluralise unit name correctly
+// 	const plunitName = Misc.TrPlural(targetCount, unitName);
+
+// 	return Output.make({cost, number:targetCount, name:plunitName, description:output.description});
+// }; // ./impactCalc()
+
+
+const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColorBgStyle, logoStyle, donationValue}) => {
 	function LinkRenderer(props) {
 		return <a href={props.href} target="_blank">{props.children}</a>;
 	}
@@ -184,6 +242,14 @@ const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColor
 	let pvcharityData = ActionMan.getDataItem({type:C.TYPES.NGO, id:cids[index], status:C.KStatus.PUBLISHED});
 	let sogiveResults = pvcharityData.value;
 	let sogiveDesc = (sogiveResults && sogiveResults.summaryDescription);
+	if (sogiveResults.projects) {
+		const project = sogiveResults.projects[0];
+		let impact = null;
+		if (project.outputs) {
+			const outputs = project.outputs;
+			impact = impactCalc({ charity: cids[index], project, output:outputs[0], cost: donationValue });
+		}
+	}
 	
 	// this uses the circleCrop value set in the portal to crop the logo/photo to fit neatly into the circle 
 	let ccrop = clist.map(x => x.circleCrop);
@@ -297,11 +363,7 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 };
 
 const DonationCarouselWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, brandColorTxtStyle, logoStyle, adid, status, toggle}) => {	 // todo: remove useless params
-	console.log('----------');
-	console.log(clist.length);
-	console.log(clist[0]);
-	console.log('----------');
-
+	
 	return (
 		<div id="donation-carousel" className="carousel slide" data-interval={toggle} data-ride="carousel">
 			{/* <!-- Indicators --> */}
@@ -330,7 +392,7 @@ const DonationCarouselWidget = ({cparent, clist, campaignSlice, brandColorBgStyl
 		</div>
 	);
 };
-const DonationInfoWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, logoStyle}) => {
+const DonationInfoWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, logoStyle, donationValue}) => {
 	let toggle = DataStore.getValue(['widget', 'donationCircles', 'active']) || [true, false, false]; // toggles the info charity box to display one at a time
 	
 	return (
@@ -339,15 +401,15 @@ const DonationInfoWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, l
 			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={1} name={'middle'} shown={toggle[1]} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle}/>
 			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={2} name={'right'} shown={toggle[2]} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle}/>
 			{ toggle[0] ? 
-				<DonationDetailsWidget cparent={cparent} clist={clist} index={0} name={'left'} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle}/>
+				<DonationDetailsWidget cparent={cparent} clist={clist} index={0} name={'left'} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle} donationValue={donationValue}/>
 				: null
 			}
 			{ toggle[1] ? 
-				<DonationDetailsWidget cparent={cparent} clist={clist} index={1} name={'middle'} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle}/>
+				<DonationDetailsWidget cparent={cparent} clist={clist} index={1} name={'middle'} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle} donationValue={donationValue}/>
 				: null
 			}
 			{ toggle[2] ? 
-				<DonationDetailsWidget cparent={cparent} clist={clist} index={2} name={'right'} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle}/>
+				<DonationDetailsWidget cparent={cparent} clist={clist} index={2} name={'right'} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle} donationValue={donationValue}/>
 				: null
 			}
 		</div>
@@ -405,8 +467,6 @@ const EmailCTA = () => {
 				document.cookie = `cta-email=email;max-age=${60 * 60 * 24 * 365};domain=.good-loop.com;path=/`;
 				DataStore.setValue(submittedPath, true);
 			}, err => {});
-		
-
 	};
 
 	if (submitted) return <div className="cta-email">Thank you for providing your email address!</div>;
@@ -417,10 +477,7 @@ const EmailCTA = () => {
 			{/* <input type="email" className="form-control" name="email" placeholder="Email address" />
 			<input className="btn btn-primary" type="submit" value="Sign Up" /> */}
 			<div className="input-group">
-				<input type="email" className="form-control" name="email" placeholder="Email address"
-					value={email}
-					onInput={event => DataStore.setValue(emailPath, event.target.value)}
-				/>
+				<PropControl path={path} prop='email' type='email' placeholder="Email address" />
 				<span className="input-group-addon sign-up-btn" id="basic-addon2" onClick={emailSubmit}>Sign Up</span> 
 			</div>
 			<p className="cta-help">You can unsubscribe at any time. We will not share your email. 
@@ -472,6 +529,10 @@ const CampaignPage = () => {
 	// Assume we have data for single advert if adid exists
 	// Pull out first advert from advertiser data if not
 	let ad = adid ? adPv.value : ( adPv.value && adPv.value.hits && adPv.value.hits[0] );
+
+	console.log('----------');
+	console.log(ad);
+	console.log('----------');
 
 	// good-loop branding
 	let glColor = '#C83312'; 
@@ -594,16 +655,16 @@ const CampaignPage = () => {
 				<div className='vertiser-head frank-font' style={glColorBgStyle}>
 					<CampaignHeaderWidget glLogo={glLogo} brandLogo={brandLogo} />
 				</div>
-				<div className='header-img' style={campaign && campaign.bg ? headerStyle : brandColorBgStyle} >
-					<div className='darken-overlay'>
-						<div className='title frank-font'>
+				<div className='header' style={campaign && campaign.bg ? headerStyle : brandColorBgStyle} >
+					<div className='header-text'>
+						<div className='header-title frank-font'>
 							<div></div>	{/* TODO: delete this, it's just here because there's a css rule about the 1st div in title*/}
 							<div>Together we've raised</div>													
 							{campaign && campaign.donation? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 							<div>for charity</div>
-							<EmailCTA />
 						</div>
-					</div>	
+						<EmailCTA />
+					</div>
 				</div>
 			</div>
 			<div className='grid-tile middle' style={compliColorBgStyle}>

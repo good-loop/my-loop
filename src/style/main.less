@@ -90,6 +90,7 @@
 		"goodloop";  
 	}
 
+	// Why is main.less adding rules beyond the general-purpose footer.less??
 	// using css grid to display footer vertically on mobile
 	.footer {
 		-ms-grid-columns: 1fr;
@@ -132,9 +133,9 @@
 			// to avoid making the top tile ("Together we've raised ...") look squished 
 			height: 73vh;
 
-			.header-img .darken-overlay .title {
+			.header .header-text {
 				//the logos need more space, otherwise the will overlap with the top tile text
-				top: 22%;
+				top: 22vh;
 			}
 		}
 

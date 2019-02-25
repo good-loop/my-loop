@@ -52,77 +52,64 @@
 			}
 		}
 
-		.header-img {
+		.header {
 			min-height: 100%;
 			background-size: cover;
 			
-			.darken-overlay {
-				//background-color: rgba(62, 0, 0, 0.3);
-				height: 100vh;
+			.header-text {
+				color: white;
+				position: absolute;
+				top: 15vh;
+				text-align: center;
+				width: 100%;
 
-				.title {
-					color: white;
+				.header-title {
 					font-size: 5vh;
 					text-shadow: black 2px 2px 0;
-					position: absolute;
-					top: 16%;
-					text-align: center;
-					width: 100%;
-	
-					div:first-child {
-						font-size: 8vh;
-					}
-
-					// email cta under the title (toning down the font and moving it a bit away from the title)
-					.cta-email {
-						font-family: "Montserrat Regular", helvetica, sans-serif;
-						text-shadow: initial;
-						text-align: center;
-						// make the text pop out even if there is a bg image
-						font-weight: bold;
-						text-shadow: black 1px 1px 0;
-						// hack: for some reason setting the font size here keeps it from being glitchy and pushing the email cta down
-						font-size: 20px; 
-						
-						// center the email CTA (centering requires specifying width) 
-						.cta-lead, .cta-help {
-							width: 22em;
-						}
-
-						// font too big (email cta text needs to be more subtle)
-						.cta-help, .cta-lead {
-							background-color: rgb(200, 51, 18); // gl color
-							font-size: 15px;
-							margin: 3px auto;
-						}
-
-						.input-group {
-							margin: 0 auto;	// center input
-
-							.sign-up-btn {
-								text-shadow: initial; // the rest of the email-cta should be shadowed, but not the button (unreadable)
-								cursor: pointer; // a button should look clickable
-							}
-						}
-
-						span {
-							width: initial; // hack: for some reason this makes the 'sign up' btn sit next to the input, instead of flying to the far right
-						}
-					}
 				}
-	
-				.ads-for-good {
-					bottom: 19%;
-					position: absolute;
-					width: 100%;
-					padding: 8px;
-					img {
-						height: 100px;
-					}
-				}
-			}
+			}				
 		}
 	}
+
+	// email cta under the title (toning down the font and moving it a bit away from the title)
+	.cta-email {
+//		font-family: "Montserrat Regular", helvetica, sans-serif;
+		text-shadow: initial;
+		text-align: center;
+		// make the text pop out even if there is a bg image
+		font-weight: bold;
+		// hack: for some reason setting the font size here keeps it from being glitchy and pushing the email cta down
+		font-size: 2vh; 
+		
+		// center the email CTA (centering requires specifying width) 
+		.cta-lead, .cta-help {
+			width: 22em;
+		}
+
+		// font too big (email cta text needs to be more subtle)
+		.cta-help {
+			font-size: 1.5vh;
+		}
+
+		.cta-help, .cta-lead {
+			background-color: rgb(200, 51, 18); // gl color	
+			margin: 3px auto;
+		}
+
+		.input-group {
+			margin: 0 auto;	// center input
+
+			.sign-up-btn {
+				text-shadow: initial; // the rest of the email-cta should be shadowed, but not the button (unreadable)
+				cursor: pointer; // a button should look clickable
+			}
+		}
+
+		span {
+			width: initial; // hack: for some reason this makes the 'sign up' btn sit next to the input, instead of flying to the far right
+		}
+	} // ./cta-email
+	
 
 	.grid-tile.middle {
 		grid-row: 1 / 3;
