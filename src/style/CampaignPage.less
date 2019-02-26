@@ -81,9 +81,12 @@
 		// hack: for some reason setting the font size here keeps it from being glitchy and pushing the email cta down
 		font-size: 2vh; 
 		color: white;
-		
-		// center the email CTA (centering requires specifying width) 
-		.cta-lead, .cta-help {
+
+		// center the email CTA (centering requires specifying width) and highlight just the CTA text ("Double your donation ...")
+		.cta-lead {
+			width: 19em;
+		}		
+		.cta-help {
 			width: 22em;
 		}
 

@@ -349,7 +349,7 @@ const EmailCTA = () => {
 
 	return (
 		<div className="cta-email">
-			<p className="cta-lead"><span>Double your donation by joining Good-Loop's mailing list</span></p>
+			<p className="cta-lead"><span>Double your donation by joining<br/> Good-Loop's mailing list</span></p>
 			{/* <input type="email" className="form-control" name="email" placeholder="Email address" />
 			<input className="btn btn-primary" type="submit" value="Sign Up" /> */}
 			<div className="input-group">
@@ -529,7 +529,7 @@ const CampaignPage = () => {
 					<CampaignHeaderWidget glLogo={glLogo} brandLogo={brandLogo} />
 				</div>
 				<div className='header' style={glColorBgStyle}>
-					<div className='header-text' style={compliColorBgStyle} >
+					<div className='header-text' style={compliColorBgStyle}>
 						<div className='header-title frank-font'>
 							<div></div>	{/* TODO: delete this, it's just here because there's a css rule about the 1st div in title*/}
 							<div>Together we've raised</div>													
