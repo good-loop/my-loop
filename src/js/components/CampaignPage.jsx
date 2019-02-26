@@ -160,21 +160,11 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 
 	// this uses the circleCrop value set in the portal to crop the logo/photo to fit neatly into the circle 
 	let ccropDiff = (100-ccrop[index])/100;
-	console.log(ccrop);
 	let circleCropStyle = {
 		objectFit: 'contain',
-		width: ccrop[index]+'%',
-		height: ccrop[index]+'%',
-		marginTop: "calc(50px*" + ccropDiff + ")",
-	};
-	let noCropStyle = {		
-		borderRadius: '64px',
-		objectFit: 'contain',
-		// if there's no desc, then make the logo bigger
-		height: cdescs[index] ? '6vh' : '10vh',
-		// logo sizes can vary, so we need to limit how much space they get
-		maxHeight: '450px', 
-		maxWidth: '300px',
+		width: ccrop[index] ? ccrop[index]+'%' : '100%',
+		height: ccrop[index] ? ccrop[index]+'%' : '100%',
+		marginTop: ccrop[index] ? "calc(50px*" + ccropDiff + ")" : null,
 	};
 
 	let logoStyle = {
@@ -182,8 +172,8 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 		//float: cdescs[index] ? 'right' : 'unset',
 		backgroundColor: 'white', //TODO: do we want this to be editable in the portal? it could be the same color as the chty foreground used for text
 		borderRadius: '50%',
-		height: '80px',
-		width: '80px',
+		height: '100px', // decided to set it to 100px, as this is the preview in the portal and i think generally the size in which chty logos are shown
+		width: '100px',
 		textAlign: 'center',
 		/* margin-top: 25px; */
 		overflow: 'hidden',
@@ -198,11 +188,8 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 		return(null);
 	}
 
-	// if there's no chty description, then we should just show the chty title and logo large and centered
+	// if there's no chty description, then we should just show the chty title and logo and center them
 	if (!cdescs[index]) {
-		logoStyle.height = '100px';
-		logoStyle.width = '100px';
-
 		return (
 			<div className={itemClass} style={slideStyle}>
 				<div>
@@ -210,7 +197,7 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 					<div className="col-md-6">
 						<div className="slide-header" style={{marginTop: '6vh', height: '10vh'}}>
 							<div className="slide-logo" style={logoStyle}>
-								<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? circleCropStyle : noCropStyle} />
+								<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={circleCropStyle} />
 							</div>	
 							<div className="slide-title" style={{paddingTop: '3%', color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
 								{cnames[index]}
@@ -233,7 +220,7 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 							<div className="col-md-1" />
 							<div className="col-md-2">
 								<div className="slide-logo" style={logoStyle}>
-									<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? circleCropStyle : noCropStyle} />
+									<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={circleCropStyle} />
 								</div>	
 							</div>	
 							<div className="col-md-6 slide-title" style={{color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
@@ -255,7 +242,7 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 							<div className="col-md-1" />
 							<div className="col-md-2">
 								<div className="slide-logo" style={logoStyle}>
-									<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? circleCropStyle : noCropStyle} />
+									<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={circleCropStyle} />
 								</div>	
 							</div>	
 							<div className="col-md-6 slide-title" style={{color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
