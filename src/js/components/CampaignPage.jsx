@@ -423,9 +423,10 @@ const CampaignPage = () => {
 		color: brand && brand.lockAndTextColor ? brand.lockAndTextColor : 'white' // TODO: this can be refactored probably to reduce code repetition
 	};
 	// TODO: change portal to allow for complimentary color to be modified
-	let complimentaryColor = '#f0e7d0'; // color for the middle tile that contains donations info
+	let complimentaryColor = '#51808a'; // color for the middle tile that contains donations info
 	let compliColorBgStyle = {
 		backgroundColor: complimentaryColor,
+		color: 'white'
 	};
 	// hack to show appropriately styled logo if it can't find anything better (used in DonationCircleWidget and DonationDetailsWidget)
 	let logoStyle = {
@@ -523,12 +524,12 @@ const CampaignPage = () => {
 	
 	return (<div className='campaign-page'>
 		<div className='grid'>
-			<div className='grid-tile top' style={compliColorBgStyle}> 
-				<div className='vertiser-head frank-font' style={glColorBgStyle}>
+			<div className='grid-tile top'> 
+				<div className='vertiser-head frank-font'>
 					<CampaignHeaderWidget glLogo={glLogo} brandLogo={brandLogo} />
 				</div>
-				<div className='header' style={brandColorBgStyle} >
-					<div className='header-text'>
+				<div className='header' style={glColorBgStyle}>
+					<div className='header-text' style={compliColorBgStyle} >
 						<div className='header-title frank-font'>
 							<div></div>	{/* TODO: delete this, it's just here because there's a css rule about the 1st div in title*/}
 							<div>Together we've raised</div>													
