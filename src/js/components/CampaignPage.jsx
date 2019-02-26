@@ -160,21 +160,34 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 
 	// this uses the circleCrop value set in the portal to crop the logo/photo to fit neatly into the circle 
 	let ccropDiff = (100-ccrop[index])/100;
+	console.log(ccrop);
 	let circleCropStyle = {
-		width: ccrop[index]+"%",
-		height: ccrop[index]+"%",
-		marginTop: "calc(125px*" + ccropDiff + ")"
+		objectFit: 'contain',
+		width: ccrop[index]+'%',
+		height: ccrop[index]+'%',
+		marginTop: "calc(50px*" + ccropDiff + ")",
 	};
-	let noCropStyle = {
-		//borderRadius: 'inherit',
+	let noCropStyle = {		
 		borderRadius: '64px',
+		objectFit: 'contain',
 		// if there's no desc, then make the logo bigger
 		height: cdescs[index] ? '6vh' : '10vh',
-		float: cdescs[index] ? 'right' : 'unset',
-		margin: '0 auto',
 		// logo sizes can vary, so we need to limit how much space they get
 		maxHeight: '450px', 
 		maxWidth: '300px',
+	};
+
+	let logoStyle = {
+		margin: '0 auto',
+		//float: cdescs[index] ? 'right' : 'unset',
+		backgroundColor: 'white', //TODO: do we want this to be editable in the portal? it could be the same color as the chty foreground used for text
+		borderRadius: '50%',
+		height: '80px',
+		width: '80px',
+		textAlign: 'center',
+		/* margin-top: 25px; */
+		overflow: 'hidden',
+		color: 'black'
 	};
 
 	// is the item currently active (aka show in carousel)
@@ -187,14 +200,17 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 
 	// if there's no chty description, then we should just show the chty title and logo large and centered
 	if (!cdescs[index]) {
+		logoStyle.height = '100px';
+		logoStyle.width = '100px';
+
 		return (
 			<div className={itemClass} style={slideStyle}>
 				<div>
 					<div className="col-md-3" />
 					<div className="col-md-6">
-						<div className="slide-header" style={{marginTop: '6vh'}}>
-							<div className="slide-logo">
-								<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
+						<div className="slide-header" style={{marginTop: '6vh', height: '10vh'}}>
+							<div className="slide-logo" style={logoStyle}>
+								<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? circleCropStyle : noCropStyle} />
 							</div>	
 							<div className="slide-title" style={{paddingTop: '3%', color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
 								{cnames[index]}
@@ -215,8 +231,10 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 					<div className="col-md-5">
 						<div className="slide-header">
 							<div className="col-md-1" />
-							<div className="col-md-2 slide-logo">
-								<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
+							<div className="col-md-2">
+								<div className="slide-logo" style={logoStyle}>
+									<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? circleCropStyle : noCropStyle} />
+								</div>	
 							</div>	
 							<div className="col-md-6 slide-title" style={{color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
 								{cnames[index]}
@@ -235,8 +253,10 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 					<div className="col-md-6">
 						<div className="slide-header">
 							<div className="col-md-1" />
-							<div className="col-md-2 slide-logo">
-								<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
+							<div className="col-md-2">
+								<div className="slide-logo" style={logoStyle}>
+									<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? circleCropStyle : noCropStyle} />
+								</div>	
 							</div>	
 							<div className="col-md-6 slide-title" style={{color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
 								{cnames[index]}
