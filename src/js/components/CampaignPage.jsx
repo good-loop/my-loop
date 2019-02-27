@@ -53,6 +53,7 @@ const CampaignHeaderWidget = ({glLogo, brandLogo}) => {
  * @param branding {Branding}
  */
 const SocialMediaFooterWidget = ({type, name, branding}) => {
+	// TODO dont use gl-es-0x underlying server urls
 	return (
 		<div className={'social '.concat(type)}>
 			<MDText source={name} />
