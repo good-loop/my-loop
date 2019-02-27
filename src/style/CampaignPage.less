@@ -1,8 +1,6 @@
 .campaign-page {
-	// makes hyperlinks look nice, but wouldn't work on light backgrounds
-	// TODO: should we remove this? it's not terribly important
 	p > a, span > a {
-		color: white;
+		color: inherit;
 		text-decoration: none;
 		border-bottom: 1px dashed;
 	}
@@ -27,7 +25,7 @@
 		-ms-grid-row: 1;
 		-ms-grid-row-span: 2;
 		width: 100vw;
-		height: 53vh;
+		height: 54vh;
 		background-color: blanchedalmond; // hack to make it look good when we don't have a campaign cover photo
 
 		.vertiser-head {
@@ -44,7 +42,7 @@
 			}
 
 			img {
-				height: 90px;
+				height: 10vh;
 			}
 
 			span {
@@ -52,78 +50,68 @@
 			}
 		}
 
-		.header-img {
+		.header {
 			min-height: 100%;
 			background-size: cover;
 			
-			.darken-overlay {
-				//background-color: rgba(62, 0, 0, 0.3);
-				height: 100vh;
+			.header-text {
+				position: absolute;
+				top: 15vh;
+				text-align: center;
+				width: 100%;
+				height: 100%; // otherwise it doesn't take up the whole section
 
-				.title {
-					color: white;
-					font-size: 6vh;
+				.header-title {
+					font-size: 5vh;
 					text-shadow: black 2px 2px 0;
-					position: absolute;
-					top: 16%;
-					text-align: center;
-					width: 100%;
-	
-					div:first-child {
-						font-size: 8vh;
-					}
-
-					// email cta under the title (toning down the font and moving it a bit away from the title)
-					.cta-email {
-						font-family: "Montserrat Regular", helvetica, sans-serif;
-						text-shadow: initial;
-						margin-top: 2vh;
-						text-align: center;
-						// make the text pop out even if there is a bg image
-						font-weight: bold;
-						text-shadow: black 1px 1px 0;
-						// hack: for some reason setting the font size here keeps it from being glitchy and pushing the email cta down
-						font-size: 20px; 
-						
-						// center the email CTA (centering requires specifying width) 
-						.cta-lead {
-							width: 25%;
-						}
-						.cta-help {
-							width: 32%;
-						}
-
-						// font too big (email cta text needs to be more subtle)
-						.cta-help, .cta-lead {
-							background-color: rgb(200, 51, 18); // gl color
-							font-size: 15px;
-							margin: 3px auto;
-						}
-
-						// center input
-						.input-group {
-							margin: 0 auto;
-						}
-
-						// hack: for some reason this makes the 'sign up' btn sit next to the input, instead of flying to the far right
-						span {
-							width: initial;
-						}
-					}
 				}
-	
-				.ads-for-good {
-					bottom: 19%;
-					position: absolute;
-					width: 100%;
-					padding: 8px;
-					img {
-						height: 100px;
-					}
-				}
-			}
+			}				
 		}
 	}
+
+	// email cta under the title (toning down the font and moving it a bit away from the title)
+	.cta-email {
+//		font-family: "Montserrat Regular", helvetica, sans-serif;
+		text-shadow: initial;
+		text-align: center;
+		// make the text pop out even if there is a bg image
+		font-weight: bold;
+		// hack: for some reason setting the font size here keeps it from being glitchy and pushing the email cta down
+		font-size: 2vh; 
+		color: white;
+
+		// center the email CTA (centering requires specifying width) and highlight just the CTA text ("Double your donation ...")
+		.cta-lead {
+			width: 19em;
+		}		
+		.cta-help {
+			width: 22em;
+		}
+
+		// font too big (email cta text needs to be more subtle)
+		.cta-help {
+			font-size: 1.5vh;
+		}
+
+		.cta-help, .cta-lead {
+			background-color: rgb(200, 51, 18); // gl color	
+			margin: 3px auto;
+		}
+
+		.input-group {
+			margin: 0 auto;	// center input
+
+			.sign-up-btn {
+				text-shadow: initial; // the rest of the email-cta should be shadowed, but not the button (unreadable)
+				cursor: pointer; // a button should look clickable
+			}
+		}
+
+		span {
+			width: initial; // hack: for some reason this makes the 'sign up' btn sit next to the input, instead of flying to the far right
+		}
+	} // ./cta-email
+	
 
 	.grid-tile.middle {
 		grid-row: 1 / 3;
@@ -152,100 +140,81 @@
 				text-decoration: none;
 			}
 
-		}
+			.carousel {
+				// ensure carousel takes up the rest of the screen (below the top tile "Together we've raised ...")
+				height: 46vh;
+				width: 100vw;
+				margin: auto;
 
+				.carousel-inner {
+					// this is necessary, otherwise it doesn't set the chty background-color 
+					height: 100%;
+
+					.item {
+						// this is necessary, otherwise it doesn't set the chty background-color 
+						height: 100%;
+
+						.slide-header {
+							// chty logo and title should have enough space to look good (no matter the length of the title)
+							height: 10vh;
+							margin-top: 2vh;
+	
+							.slide-title {
+								// set the look of the chty name
+								font-size: 3.18vmin;
+								font-family: 'FrankGothItalicBT', Fallback, sans-serif;
+								color: white;
+								top: 2.5vh; // center it vertically								
+							}
+						}
+
+						.slide-desc {							
+							display: inline-block; // new line
+							width: 36vw;  // fill up the left side of the slide
+							margin: 0 auto; // center it
+							font-size: 2vmin; 
+							text-align: justify; // looks nicer justified, no matter the length of text
+							margin-top: 1vh;
+						}
+
+						.slide-photo {
+							// adjust the photo to fit the container
+							background-size: cover;
+							background-repeat: no-repeat;
+							background-position: center;
+							height: 25vh;
+							top: 6vh; // center it vertically (approx)
+							// slight design tweak to make it look 3d 
+							border: 1px solid white;
+							box-shadow: 8px 8px white;
+							// center it a bit horizontally
+							left: 30px;
+						}
+					}
+
+					.carousel-indicators {
+						bottom: 15px; // set the carousel indicators to be fixed at the bottom of the slides
+					}
+				}
+			}
+		}
 	}
 
-	@-webkit-keyframes bounceArrow {
-		0%, 20%, 50%, 80%, 100% {
-		-webkit-transform: translateY(0px);
-		        transform: translateY(0px);
-		opacity: 0.4;
-		}
-		40% {
-		-webkit-transform: translateY(5px);
-		        transform: translateY(5px);
-		opacity: 0.8;
-		}
-		60% {
-		-webkit-transform: translateY(10px);
-		        transform: translateY(10px);
-		opacity: 1;
-		}
+	.link.watch-cta {
+		font-family: initial; // go back to using montserrat (looks nicer)
+		background-color: rgb(200, 51, 18); // TODO: this should be set as less var gl-colour
+		color: white; // otherwise it will be set as black (default colour?)
+		padding-top: 6vh; // give it some space, looks less cluttered this way
+		font-size: 2vh; // make it pop out responsively
 	}
 
-	@keyframes bounceArrow {
-		0%, 20%, 50%, 80%, 100% {
-		-webkit-transform: translateY(0px);
-		        transform: translateY(0px);
-		opacity: 0.4;
-		}
-		40% {
-		-webkit-transform: translateY(5px);
-		        transform: translateY(5px);
-		opacity: 0.8;
-		}
-		60% {
-		-webkit-transform: translateY(10px);
-		        transform: translateY(10px);
-		opacity: 1;
-		}
-	}
 	* {
 		-webkit-box-sizing: border-box;
 		        box-sizing: border-box;
 	}
 
-	.arrow {
-		margin: 100px auto 0;
-		position: absolute;
-		bottom: 8%;
-		left: calc(49%);
-		/*background: red;*/
-		cursor: pointer;
-	}
-	.arrow span {
-		width: 38px;
-		height: 15px;
-		-webkit-animation: 2s bounceArrow infinite;
-		        animation: 2s bounceArrow infinite;
-		display: block;
-	}
-	.arrow span:first-child {
-		padding: 4px 4px 0;
-		border-radius: 3px 3px 0 0;
-	}
-	.arrow span:last-child {
-		padding: 0 4px 4px;
-		border-radius: 0 0 3px 3px;
-	}
-	.arrow span:after, .arrow span:before {
-		content: "";
-		height: 2px;
-		background: #fff;
-		width: 19px;
-		position: absolute;
-	}
-	.arrow span:before {
-		-webkit-transform-origin: left;
-		    -ms-transform-origin: left;
-		        transform-origin: left;
-		-webkit-transform: rotate(30deg);
-		    -ms-transform: rotate(30deg);
-		        transform: rotate(30deg);
-		left: 3px;
-	}
-	.arrow span:after {
-		-webkit-transform-origin: right;
-		    -ms-transform-origin: right;
-		        transform-origin: right;
-		-webkit-transform: rotate(-30deg);
-		    -ms-transform: rotate(-30deg);
-		        transform: rotate(-30deg);
-		right: 3px;
-	}
-
 	// campaign page footer
+	// Can we standardise on one My-Loop footer??
 	.footer {
 		.leftFooter, .rightFooter {
 			color: white;

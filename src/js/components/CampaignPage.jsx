@@ -15,23 +15,24 @@ import ActionMan from '../plumbing/ActionMan';
 import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
 import Login from 'you-again';
 import {LoginLink, SocialSignInButton} from '../base/components/LoginWidget';
+import {ListItems, ListFilteredItems} from '../base/components/ListLoad';
 import {LoginToSee} from './Bits';
 import {getProfile, getProfilesNow} from '../base/Profiler';
 import ConsentWidget from './ConsentWidget';
 import printer from '../base/utils/printer';
 import DonationCard from './DonationCard';
-import Footer from '../components/Footer';
+import Footer from './Footer';
 import { Link, Element } from 'react-scroll';
 import MDText from '../base/components/MDText';
+import PropControl from '../base/components/PropControl';
 
 const CampaignHeaderWidget = ({glLogo, brandLogo}) => {
 	return (
 		<div className="header-logos">
-			<img alt='Sponsor Logo' src={brandLogo} />
+			<img alt='Sponsor Logo' src={brandLogo} style={{ display: brandLogo ? 'inline-block' : 'none' }} />
 			<img alt='Good-Loop Logo' src={glLogo} />
 		</div>
 	);
-
 };
 
 // const CampaignHeaderWidget = ({cparentLogo, brandLogo, supports, displayChtyLogo}) => {
@@ -52,6 +53,7 @@ const CampaignHeaderWidget = ({glLogo, brandLogo}) => {
  * @param branding {Branding}
  */
 const SocialMediaFooterWidget = ({type, name, branding}) => {
+	// TODO dont use gl-es-0x underlying server urls
 	return (
 		<div className={'social '.concat(type)}>
 			<MDText source={name} />
@@ -85,139 +87,50 @@ const shareOptions = [
 ];
 
 	
-// What should appear in Tweet/Facebook link/LinkedIn article
+/** What should appear in Tweet/Facebook link/LinkedIn article
 // Contains fallbacks for where donation amount, charities or advertiser name is not specified
+@returns {String} e.g. TOMS helped raise £££ for Crisis
+ */ 
 const shareTextFn = ({donationValue, charities, adName="We"}) => {
 	const amount = new Money({currency: 'GBP', value: donationValue});
 
 	const currencySymbol = Money.CURRENCY[(amount.currency || 'GBP').toUpperCase()];
 	const amountText = Money.prettyString({amount}) || 'money';
-	let chartiyText;
+	let charityText;
 
 	if( charities && charities.length !== 0) {
 		// Safety: filter out any charities that do not have a human-readable name
 		const charityNames = charities && charities.reduce( (arrayOut, charity) => charity.name ? arrayOut.concat(charity.name) : arrayOut, []);
 		
 		if( !charityNames ) {
-			chartiyText = 'charity';
+			charityText = 'charity';
 		} else if ( charityNames.length === 1) {
-			chartiyText = charityNames[0];
+			charityText = charityNames[0];
 		} else {
 			// Pull out last two elements as these are formatted differently
 			const finalTwoCharityNames = charityNames.splice(charityNames.length - 2, 2);
 
-			chartiyText = `${charityNames.map( charityName => charityName + ', ')}${finalTwoCharityNames[0]} and ${finalTwoCharityNames[1]}`;
+			charityText = `${charityNames.map( charityName => charityName + ', ')}${finalTwoCharityNames[0]} and ${finalTwoCharityNames[1]}`;
 		} 
 	}
 
-	return `${adName} helped to raise ${currencySymbol}${amountText} for ${chartiyText}`;
+	return `${adName} helped to raise ${currencySymbol}${amountText} for ${charityText}`;
 };
 
 const SocialMediaShareWidget = ({type, name, branding, donationValue, charities, adName}) => {
-	const SocialShareButton = ({hrefFn, logo, title}, shareText) => (
-		<a className="charity" href={hrefFn({text: shareText, url: window.location.href.replace("#", "%23")})} target="_blank" rel="noreferrer" title={title} alt={title}>
+	const SocialShareButton = ({option, shareText}) => {
+		const {hrefFn, logo, title} = option;
+		return <a className="charity" href={hrefFn({text: shareText, url: window.location.href.replace("#", "%23")})} target="_blank" rel="noreferrer" title={title} alt={title}>
 			<img alt={{title}+' Logo'} src={logo} crop="50%" title={title} />
-		</a>
-	);
+		</a>;
+	};
 
 	const shareText = shareTextFn({donationValue, charities, adName});
 
 	return (
 		<div className="social share-page">
 			<MDText source='Share this page' />
-			{shareOptions.map(option => SocialShareButton(option, shareText))}
-		</div>
-	);
-};
-
-let _handleClick = (circleIndex) => {
-	// TODO document the assumptions / linked code
-	let toggle = [false, false, false];
-	toggle[circleIndex] = true;
-	DataStore.setValue(['widget', 'donationCircles', 'active'], toggle);
-};
-
-const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='left', shown, brandColorBgStyle, logoStyle}) => {
-	let cids = clist.map(x => x.id);
-	let cnames = clist.map(x => x.name);
-	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo || x.logo);
-	let ccrop = clist.map(x => x.circleCrop);
-
-	// this uses the circleCrop value set in the portal to crop the logo/photo to fit neatly into the circle 
-	let ccropDiff = (100-ccrop[index])/100;
-	let circleCropStyle = {
-		width: ccrop[index]+"%",
-		height: ccrop[index]+"%",
-		marginTop: "calc(125px*" + ccropDiff + ")",
-	};
-	let noCropStyle = {
-		borderRadius: 'inherit'
-	};
-
-	return (
-		<div className={'circle '.concat(name)} onClick={(e) => _handleClick(index)}>
-			{cparent? <p className='header-font'><span className='frank-font'>{campaignSlice[cids[index]].percentageTotal}%</span><br/> HAS BEEN DONATED TO...</p> : null}
-			<div className='img-wrapper' style={!(clist[index].highResPhoto || clist[index].photo) ? logoStyle : null}>
-				<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} style={ccrop[index] ? circleCropStyle : noCropStyle}/>
-			</div>
-			<div className='project-name frank-font' style={brandColorBgStyle}>
-				{cnames[index]}
-			</div>
-			{ shown ? <div className='arrow-up' /> : null }
-		</div>
-	);
-};
-
-const DonationDetailsWidget = ({cparent, clist, index=0, name='left', brandColorBgStyle, brandColorTxtStyle, logoStyle}) => {
-	function LinkRenderer(props) {
-		return <a href={props.href} target="_blank" style={brandColorTxtStyle}>{props.children}</a>;
-	}
-
-	let cids = clist.map(x => x.id);
-	let cnames = clist.map(x => x.name);
-	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo || x.logo);
-	let curls = clist.map(x => x.url);
-	let cdescs = clist.map(x => x.description);
-
-	// get description from sogive if you can't find it in portal
-	// NB: getData will call SoGive for NGO data
-	let pvcharityData = ActionMan.getDataItem({type:C.TYPES.NGO, id:cids[index], status:C.KStatus.PUBLISHED});
-	let sogiveResults = pvcharityData.value;
-	let sogiveDesc = (sogiveResults && sogiveResults.summaryDescription);
-	
-	// this uses the circleCrop value set in the portal to crop the logo/photo to fit neatly into the circle 
-	let ccrop = clist.map(x => x.circleCrop);
-	let ccropDiff = (100-ccrop[index])/100;
-	let circleCropStyle = {
-		width: ccrop[index]+"%",
-		height: ccrop[index]+"%",
-		marginTop: "calc(125px*" + ccropDiff + ")",
-	};
-	let noCropStyle = {
-		borderRadius: 'inherit'
-	};
-
-	return (
-		<div className={'details '.concat(name)}>
-			<div className='innards'>
-				<div className='img-wrapper' style={!(clist[index].highResPhoto || clist[index].photo) ? logoStyle : null}>
-					<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} style={ccrop[index] && ccrop[index]!==100 ? circleCropStyle : noCropStyle}/>
-				</div>
-				<div className="text">
-					<div className='title frank-font' style={brandColorTxtStyle}>
-						<MDText source={cnames[index].toUpperCase()} />
-					</div>
-					<div className='description'>
-						<MDText source={(cdescs[index] || sogiveDesc)} renderers={{link: LinkRenderer}} />
-					</div>
-					{curls[index] ?
-						<div className='btnlink frank-font' style={brandColorBgStyle} onClick={(e) => window.open(curls[index], '_blank')}>
-							Find out more {curls[index] && cparent ? ' about the' : ''} 
-							<br/> <MDText source={cparent} />
-						</div>	
-						: null }
-				</div>
-			</div>
+			{shareOptions.map(option => <SocialShareButton key={option.title} option={option} shareText={shareText} />)}
 		</div>
 	);
 };
@@ -228,169 +141,162 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 	let clogos = clist.map(x => x.logo);
 	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo);
 	let ccrop = clist.map(x => x.circleCrop);
-	let ccolor = clist.map(x => x.color); // TODO: does this exist?
+	let cbgColor = clist.map(x => x.color); // TODO: does this exist?
+	let ctxtColor = clist.map(x => x.txtColor); // TODO: does this exist?
 	let cdescs = clist.map(x => x.description);
 	//let cPhoto = chighResPhotos[index] ? chighResPhotos[index] : '';
 
-	// TODO: move this in less file
+	// set the photo if it has one
 	let photoStyle = {};
 	if (chighResPhotos[index]) {
 		photoStyle = {
 			backgroundImage: 'url(' + chighResPhotos[index] + ')',
-			backgroundSize: 'cover',
-			backgroundRepeat: 'no-repeat',
-			backgroundPosition: 'center',
-			height: '25vh',
-			top: '6vh',
-			border: '1px solid white',
-			boxShadow: '8px 8px white'
 		};
 	}
 
-	// TODO: move this in less file
 	let slideStyle = {
-		backgroundColor: ccolor[index],
-		height: '100%',		
-		width: '100%',	
-		// padding: '50px'
+		backgroundColor: cbgColor[index],
+		color: ctxtColor[index] ? ctxtColor[index] : 'white',
 	};
 
 	// this uses the circleCrop value set in the portal to crop the logo/photo to fit neatly into the circle 
 	let ccropDiff = (100-ccrop[index])/100;
 	let circleCropStyle = {
-		width: ccrop[index]+"%",
-		height: ccrop[index]+"%",
-		marginTop: "calc(125px*" + ccropDiff + ")"
+		objectFit: 'contain',
+		width: ccrop[index] ? ccrop[index]+'%' : '100%',
+		height: ccrop[index] ? ccrop[index]+'%' : '100%',
+		marginTop: ccrop[index] ? "calc(50px*" + ccropDiff + ")" : null,
 	};
-	let noCropStyle = {
-		//borderRadius: 'inherit',
-		borderRadius: '64px',
-		height: clogos[index] ? '6vh' : null,
+
+	let logoStyle = {
 		margin: '0 auto',
-		float: 'right'
-	};
-	let descStyle = {
-		// padding: '2vmin',
-		display: 'inline-block',
-		width: '36vw',
-		margin: '0 auto',
-		fontSize: '24px',
-		color: 'white'
-	};
-	let titleStyle = {
-		// padding: '2vmin',
-		// display: 'inline-block',
-		// width: '36vw',
-		// margin: '0 auto',
-		fontSize: '24px',
-		color: 'white'
+		//float: cdescs[index] ? 'right' : 'unset',
+		backgroundColor: 'white', //TODO: do we want this to be editable in the portal? it could be the same color as the chty foreground used for text
+		borderRadius: '50%',
+		height: '100px', // decided to set it to 100px, as this is the preview in the portal and i think generally the size in which chty logos are shown
+		width: '100px',
+		textAlign: 'center',
+		/* margin-top: 25px; */
+		overflow: 'hidden',
+		color: 'black'
 	};
 
 	// is the item currently active (aka show in carousel)
 	let itemClass = active ? 'item active' : 'item';
 
-	return (
+	// if there's no chty title or logo, we shouldn't show the slide in the carousel
+	if (!clist[index].name && !clist[index].logo) {
+		return(null);
+	}
 
+	// if there's no chty description, then we should just show the chty title and logo and center them
+	if (!cdescs[index]) {
+		return (
+			<div className={itemClass} style={slideStyle}>
+				<div>
+					<div className="col-md-3" />
+					<div className="col-md-6">
+						<div className="slide-header" style={{marginTop: '6vh', height: '10vh'}}>
+							<div className="slide-logo" style={logoStyle}>
+								<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={circleCropStyle} />
+							</div>	
+							<div className="slide-title" style={{paddingTop: '3%', color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
+								{cnames[index]}
+							</div>	
+						</div>		
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+	// if we have a chty photo we should display it alongside the rest of the data, otherwise display just the rest 
+	return (
 		<div className={itemClass} style={slideStyle}>
 			{ chighResPhotos[index] ? 
 				<div>
 					<div className="col-md-1" />
-					<div className="col-md-5" style={titleStyle}>
-						<div style={{ margin: '2vh 0', height: '5vh'}}>
+					<div className="col-md-5">
+						<div className="slide-header">
 							<div className="col-md-1" />
 							<div className="col-md-2">
-								<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
+								<div className="slide-logo" style={logoStyle}>
+									<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={circleCropStyle} />
+								</div>	
 							</div>	
-							<div className="col-md-6" style={{top: '1vh', fontSize: '33px', fontFamily: '\'FrankGothItalicBT\', Fallback, sans-serif'}}>
+							<div className="col-md-6 slide-title" style={{color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
 								{cnames[index]}
 							</div>	
 						</div>
-						<div style={descStyle}>
+						<div className="slide-desc">
 							<MDText source={cdescs[index]} />
 						</div>						
 					</div>	
-					<div className="col-md-4" style={photoStyle}></div>
+					<div className="col-md-4 slide-photo" style={photoStyle}></div>
 					<div className="col-md-2" />
 				</div>
 				:
 				<div>
-					<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={ccrop[index] ? noCropStyle : noCropStyle} />
-					<div style={descStyle}>{cdescs[index]}</div>
-				</div>	
-			}
+					<div className="col-md-3" />
+					<div className="col-md-6">
+						<div className="slide-header">
+							<div className="col-md-1" />
+							<div className="col-md-2">
+								<div className="slide-logo" style={logoStyle}>
+									<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={circleCropStyle} />
+								</div>	
+							</div>	
+							<div className="col-md-6 slide-title" style={{color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
+								{cnames[index]}
+							</div>	
+						</div>
+						<div className="slide-desc">
+							<MDText source={cdescs[index]} />
+						</div>						
+					</div>	
+					<div className="col-md-3" />
+				</div>
+			} 
 		</div>	
 	);
 };
 
 const DonationCarouselWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, brandColorTxtStyle, logoStyle, adid, status, toggle}) => {	 // todo: remove useless params
-	// TODO: move this in less file
-	let innerCarouselStyle = {
-		height: '47vh',
-		width: '100vw',
-		margin: 'auto'
-	};
-	let carouselIndicatorsStyle = {
-		bottom: '5px'
-	};
-	let carouselInnerStyle = {
-		height: '100%',
-		width: '100%'
-	};
-
-	return (
-		<div id="donation-carousel" className="carousel slide" data-interval={toggle} data-ride="carousel" style={innerCarouselStyle}>
-			{/* <!-- Indicators --> */}
-			<ol className="carousel-indicators" style={carouselIndicatorsStyle}>
-				<li data-target="#donation-carousel" data-slide-to="0" className="active" />
-				<li data-target="#donation-carousel" data-slide-to="1" />
-				<li data-target="#donation-carousel" data-slide-to="2" />
-			</ol>
-			{/* <!-- Content --> */}
-			<div className="carousel-inner" role="listbox" style={carouselInnerStyle}>	
-				<DonationSlideWidget cparent={cparent} clist={clist} index={0} status={status} brandColorTxtStyle={brandColorTxtStyle} active />
-				<DonationSlideWidget cparent={cparent} clist={clist} index={1} status={status} brandColorTxtStyle={brandColorTxtStyle} active={false} />
-				<DonationSlideWidget cparent={cparent} clist={clist} index={2} status={status} brandColorTxtStyle={brandColorTxtStyle} active={false} />					
-			</div>
-			{/* <!-- Previous/Next controls --> */}
-			<a className="left carousel-control" href="#donation-carousel" role="button" data-slide="prev">
-				<span className="icon-prev" aria-hidden="true" />
-				<span className="sr-only">Previous</span>
-			</a>
-			<a className="right carousel-control" href="#donation-carousel" role="button" data-slide="next">
-				<span className="icon-next" aria-hidden="true" />
-				<span className="sr-only">Next</span>
-			</a>
-		</div>
-	);
-};
-const DonationInfoWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, brandColorTxtStyle, logoStyle}) => {
-	let toggle = DataStore.getValue(['widget', 'donationCircles', 'active']) || [true, false, false]; // toggles the info charity box to display one at a time
 	
 	return (
-		<div className='donation-circles'>
-			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={0} name={'left'} shown={toggle[0]} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle}/>
-			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={1} name={'middle'} shown={toggle[1]} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle}/>
-			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={2} name={'right'} shown={toggle[2]} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle}/>
-			{ toggle[0] ? 
-				<DonationDetailsWidget cparent={cparent} clist={clist} index={0} name={'left'} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle}/>
-				: null
-			}
-			{ toggle[1] ? 
-				<DonationDetailsWidget cparent={cparent} clist={clist} index={1} name={'middle'} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle}/>
-				: null
-			}
-			{ toggle[2] ? 
-				<DonationDetailsWidget cparent={cparent} clist={clist} index={2} name={'right'} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle}/>
-				: null
-			}
+		<div id="donation-carousel" className="carousel slide" data-interval={toggle} data-ride="carousel">
+			{/* <!-- Indicators --> */}
+			<ol className="carousel-indicators">
+				{/* // TODO: repeated code, make this check more efficient */}
+				{ clist[0] && clist[0].name && clist[0].logo ? <li data-target="#donation-carousel" data-slide-to="0" className="active" /> : null}
+				{ clist[1] && clist[1].name && clist[1].logo ? <li data-target="#donation-carousel" data-slide-to="1" /> : null}
+				{ clist[2] && clist[2].name && clist[2].logo ? <li data-target="#donation-carousel" data-slide-to="2" /> : null}
+			</ol>
+			{/* <!-- Content --> */}
+			<div className="carousel-inner" role="listbox">	
+				{ clist[0] ? <DonationSlideWidget cparent={cparent} clist={clist} index={0} status={status} brandColorTxtStyle={brandColorTxtStyle} active /> : null}
+				{ clist[1] ? <DonationSlideWidget cparent={cparent} clist={clist} index={1} status={status} brandColorTxtStyle={brandColorTxtStyle} active={false} /> : null}
+				{ clist[2] ? <DonationSlideWidget cparent={cparent} clist={clist} index={2} status={status} brandColorTxtStyle={brandColorTxtStyle} active={false} /> : null}					
+			</div>
+			{/* <!-- Previous/Next controls --> */}
+			{ clist.length > 1 ? 
+				<a className="left carousel-control" href="#donation-carousel" role="button" data-slide="prev">
+					<span className="icon-prev" aria-hidden="true" />
+					<span className="sr-only">Previous</span>
+				</a> : null }
+			{ clist.length > 1 ? 
+				<a className="right carousel-control" href="#donation-carousel" role="button" data-slide="next">
+					<span className="icon-next" aria-hidden="true" />
+					<span className="sr-only">Next</span>
+				</a> : null }
 		</div>
 	);
 };
 
-const LinkToAdWidget = ({cparent, adid, status, brandColorTxtStyle}) => {
+const LinkToAdWidget = ({cparent, adid, status}) => {
 	// this is needed to be able to both control the look of the link in MDText
 	function LinkRenderer(props) {
-		return <a href={props.href} target="_blank" style={brandColorTxtStyle}>{props.children}</a>;
+		return <a href={props.href} target="_blank">{props.children}</a>;
 	}
 
 	let msg = 'Watch an advert, unlock a free donation, and choose which project you would like to fund.';
@@ -399,15 +305,17 @@ const LinkToAdWidget = ({cparent, adid, status, brandColorTxtStyle}) => {
 	let md = "[" + msg + "](" + url + ")";
 	
 	return (
-		<p className='link' style={{fontFamily: 'initial'}}>
+		<div className='link watch-cta'>
 			<MDText source={md} renderers={{link: LinkRenderer}} />
-		</p>
+		</div>
 	);
 };
 
 /**
+ *
  * connect with us by email 
  */
+// NB: code was copy-pasted from adunit. But it will diverge.
 const EmailCTA = () => {
 	// Will name-space by ad or vertiser id
 	const { 'gl.vert': adid, 'gl.vertiser': vertiserid } = DataStore.getValue(['location', 'params']) || {};
@@ -419,6 +327,7 @@ const EmailCTA = () => {
 	// Check cookies to see if user has already submitted an email here or via the adunit
 	// Only need to check this once
 	DataStore.fetch(submittedPath, () => {
+		// TODO replace with js-cookie here
 		const cookies = document.cookie;
 		return cookies.split(';').filter( item => item.includes('cta-email=email')).length;
 	});
@@ -438,23 +347,16 @@ const EmailCTA = () => {
 				document.cookie = `cta-email=email;max-age=${60 * 60 * 24 * 365};domain=.good-loop.com;path=/`;
 				DataStore.setValue(submittedPath, true);
 			}, err => {});
-		
-
 	};
 
 	if (submitted) return <div className="cta-email">Thank you for providing your email address!</div>;
 
 	return (
 		<div className="cta-email">
-			<p className="cta-lead"><span>Double your donation by joining Good-Loop's mailing list</span></p>
-			{/* <input type="email" className="form-control" name="email" placeholder="Email address" />
-			<input className="btn btn-primary" type="submit" value="Sign Up" /> */}
+			<p className="cta-lead"><span>Double your donation by joining<br/> Good-Loop's mailing list</span></p>
 			<div className="input-group">
-				<input type="email" className="form-control" name="email" placeholder="Email address"
-					value={email}
-					onInput={event => DataStore.setValue(emailPath, event.target.value)}
-				/>
-				<span className="input-group-addon" id="basic-addon2" style={{textShadow: 'initial', cursor: 'pointer'}} onClick={emailSubmit}>Sign Up</span> 
+				<PropControl path={path} prop='email' type='email' placeholder="Email address" />
+				<span className="input-group-addon sign-up-btn" id="basic-addon2" onClick={emailSubmit}>Sign Up</span> 
 			</div>
 			<p className="cta-help">You can unsubscribe at any time. We will not share your email. 
 				<span> <a href="https://my.good-loop.com" target="_blank">more info</a></span>
@@ -464,7 +366,7 @@ const EmailCTA = () => {
 }; // ./connect
 
 /**
- * @param path {!String[]} The deciphered url path - e.g. ['campaign', 'kitkatadid']
+ * Expects url parameters: `gl.vert` or `gl.vertiser`
  */
 const CampaignPage = () => {
 	const { 'gl.vert': adid, 'gl.vertiser': vertiserid } = DataStore.getValue(['location', 'params']) || {};
@@ -475,7 +377,9 @@ const CampaignPage = () => {
 	ServerIO.mixPanelTrack('Campaign page render', {adid, vertiserid});	
 
 	if ( !adid && !vertiserid ) {
-		return <Misc.Loading text='Unable to find campaign' />;	
+		// No ID -- show a list
+		return <ListItems type={C.TYPES.Advert} status={C.KStatus.PUBLISHED} servlet='campaign' />;		
+		// return <Misc.Loading text='Unable to find campaign' />;	
 	}
 
 	// get the ad for display (so status:published - unless this is a preview, as set by the url)
@@ -486,7 +390,15 @@ const CampaignPage = () => {
 	if( adid ) {
 		adPv = ActionMan.getDataItem({type:C.TYPES.Advert, id, status:C.KStatus.DRAFT, domain: ServerIO.PORTAL_DOMAIN});
 	} else {
-		adPv = ActionMan.list({type: C.TYPES.Advert, status:C.KStatus.ALL_BAR_TRASH, q:id });
+		// find out whether the vertiser has just 1 ad, if so then just redirect them to the campaign page of that ad
+		let pvItems = ActionMan.list({type: C.TYPES.Advert, status:C.KStatus.ALL_BAR_TRASH, q:id }); 
+		let adItems = pvItems.value && pvItems.value.hits && pvItems.value.hits.length;
+		// if there's have more than 1 ad, then list them
+		if (adItems > 1) {
+			return <ListFilteredItems type={C.TYPES.Advert} status={C.KStatus.PUBLISHED} servlet='campaign' q={id}/>;		
+		}
+		// if there's just 1, then it's easy 
+		adPv = pvItems;
 	}
 
 	if ( ! adPv.resolved ) {
@@ -504,25 +416,19 @@ const CampaignPage = () => {
 		color: 'white'
 	};
 
-	// default data
-	let defaultImg = "https://i.ibb.co/Xy6HD5J/empty.png"; // hack to be used when we don't have an image, and we want to default to an "empty" transparent image
-
 	let brand = ad.branding;
 	// use good-loop branding if adv branding is not there 
-	let brandColor = brand.color ? brand.color : glColor; 
-	let brandLogo = brand.logo ? brand.logo : null; 
+	let brandColor = brand.backgroundColor ? brand.backgroundColor : glColor; 
+	let brandLogo = brand.logo_white || brand.logo || null; 
 	let brandColorBgStyle = {
-		backgroundColor: brandColor,
-		color: 'white'
+		backgroundColor: brand && brandColor,
+		color: brand && brand.lockAndTextColor ? brand.lockAndTextColor : 'white' // TODO: this can be refactored probably to reduce code repetition
 	};
-	let brandColorTxtStyle = {
-		color: 'white', //brandColor
-
-	};
-	// TODO (optional): change portal to allow for complimentary color to be modified
-	let complimentaryColor = '#f0e7d0'; // color for the middle tile that contains donations info
+	// TODO: change portal to allow for complimentary color to be modified
+	let complimentaryColor = '#51808a'; // color for the middle tile that contains donations info
 	let compliColorBgStyle = {
 		backgroundColor: complimentaryColor,
+		color: 'white'
 	};
 	// hack to show appropriately styled logo if it can't find anything better (used in DonationCircleWidget and DonationDetailsWidget)
 	let logoStyle = {
@@ -540,42 +446,39 @@ const CampaignPage = () => {
 	};
 
 	// campaign data
-	let campaign = ad.campaignPage;
-	let startDate = '';
-	if (ad.start) {
-		startDate = 'This campaign started on '.concat(ad.start.substring(0, 10));
-	}
-	let smallPrint = campaign && campaign.smallPrint ? campaign.smallPrint : '';
-	let bg = '';
-	let headerStyle = {};
-	let desc_title = '';
-	let desc_body = '';
+	let campaign = ad && ad.campaignPage;
+	let startDate = ad.start ? 'This campaign started on '.concat(ad.start.substring(0, 10)) : '';
+	let smallPrint = null;
+	let bg = null;
+	let desc_title = null;
+	let desc_body = null;
 	if(campaign) {
+		smallPrint = campaign.smallPrint ? campaign.smallPrint : '';
 		if (campaign.bg) {
 			bg = campaign.bg;
-			headerStyle = {
+			brandColorBgStyle = {
 				backgroundImage: 'url(' + bg + ')',
 				backgroundSize: 'cover',
 				backgroundRepeat: 'no-repeat',
 				backgroundPosition: 'center',
-				backgroundAttachment: 'fixed'
+				backgroundAttachment: 'fixed',
+				color: brand && brand.lockAndTextColor ? brand.lockAndTextColor : 'white' 
 			};
 		}
 		desc_title = campaign.desc_title ? campaign.desc_title : null;
 		desc_body = campaign.desc_body ? campaign.desc_body : null;
 	}
 
+	// if there is no charity data, tell the user
+	// TODO: do we want to deal with this in a more elegant way?
+	if (!ad.charities) {
+		return <Misc.Loading text='Cannot find charity data' />;	
+	}
+
 	// parent charity data 
 	let parent = ad.charities.parent;
 	// minor TODO just pass parent around
 	let cparent = parent && parent.name ? parent.name : '';
-	let cparentLogo = parent && parent.logo ? parent.logo : defaultImg;
-	let displayLogo = parent && parent.logo ? 'inherit' : 'none';
-	let displayChtyLogo = {
-		backgroundImage: cparentLogo,
-		display: displayLogo
-	};
-	let supports = brand.logo && parent && parent.logo; // whether we want to show the "Supports" text at the top in between the 2 logos
 
 	// individual charity data
 	let clist = ad.charities.list;
@@ -623,20 +526,20 @@ const CampaignPage = () => {
 	
 	return (<div className='campaign-page'>
 		<div className='grid'>
-			<div className='grid-tile top' style={compliColorBgStyle}> 
-				<div className='vertiser-head frank-font' style={glColorBgStyle}>
+			<div className='grid-tile top'> 
+				<div className='vertiser-head frank-font'>
 					<CampaignHeaderWidget glLogo={glLogo} brandLogo={brandLogo} />
 				</div>
-				<div className='header-img' style={campaign && campaign.bg ? headerStyle : brandColorBgStyle} >
-					<div className='darken-overlay'>
-						<div className='title frank-font'>
+				<div className='header' style={glColorBgStyle}>
+					<div className='header-text' style={compliColorBgStyle}>
+						<div className='header-title frank-font'>
 							<div></div>	{/* TODO: delete this, it's just here because there's a css rule about the 1st div in title*/}
 							<div>Together we've raised</div>													
 							{campaign && campaign.donation? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 							<div>for charity</div>
-							<EmailCTA />
 						</div>
-					</div>	
+						<EmailCTA />
+					</div>
 				</div>
 			</div>
 			<div className='grid-tile middle' style={compliColorBgStyle}>
@@ -649,10 +552,10 @@ const CampaignPage = () => {
 					</div>
 					<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
 					<DonationInfoWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle}/> */}
-					<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle} status={status} toggle={toggle} />
-					<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
+					<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle} adid={adid} status={status} toggle={toggle}/>
 				</div>
 			</div>
+			<LinkToAdWidget cparent={cparent} adid={adid} status={status} />
 			<div className='grid-tile bottom' style={glColorBgStyle}>
 				<div className='foot header-font'>		
 					<SocialMediaShareWidget adName={ad.name} donationValue={donationValue} charities={clist} />

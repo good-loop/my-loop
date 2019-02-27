@@ -21,12 +21,14 @@ import ConsentWidget from './ConsentWidget';
 import DonationCard from './DonationCard';
 import C from '../C';
 import { Server } from 'http';
+import { assMatch } from 'sjtest';
 
 const pagePath = ['widget', 'MyPage'];
 
 window.DEBUG = false;
 
 const fetcher = xid => DataStore.fetch(['data', 'Person', xid], () => {
+	assMatch(xid, String, "MyPage.jsx fetcher: xid is not a string "+xid);
 	// Call analyzedata servlet to pull in user data from Twitter
 	// Putting this here means that the DigitalMirror will refresh itself with the data
 	// once the request has finished processing
@@ -432,7 +434,7 @@ class ContactCard extends React.Component {
 
 /**
  * This is mostly for our debugging
- * @param {*} param0 
+ * @param {String[]} xids 
  */
 const LinkedProfilesCard = ({xids}) => {
 	if ( ! xids) return null;

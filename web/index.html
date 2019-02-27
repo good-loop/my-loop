@@ -80,7 +80,22 @@
 			<script defer src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 			<script defer src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 			<!-- everything else comes via webpack -->
-			<script defer src="build/js/bundle.js"></script>
+			<script>
+				// Insert bundle[-debug].js - but allow dynamic test/production build switch.
+				// Default to debug build on test and local servers.
+				var isDebug = window.location.hostname.match(/^local/) || window.location.hostname.match(/^test/);
+				
+				// Has the user specified debug/production build with a URL param?
+				var debugParam = window.location.search.match(/debug=(\w+)/i);
+				if (debugParam && debugParam[1]) {
+					// Require an exact match to change from default
+					if (debugParam[1] === 'false') isDebug = false;
+					else if (debugParam[1] === 'true') isDebug = true;
+				}
+				
+				var filename = isDebug ? 'bundle-debug.js' : 'bundle.js';
+				document.write('<script defer src="/build/js/' + filename + '"/><\/script>');
+			</script>
 			
 			<img src='https://lg.good-loop.com/pxl' style='position:absolute;bottom:0px;left:0px;width:1px;height:1px;' />
 
