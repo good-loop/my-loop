@@ -312,8 +312,10 @@ const LinkToAdWidget = ({cparent, adid, status}) => {
 };
 
 /**
+ *
  * connect with us by email 
  */
+// NB: code was copy-pasted from adunit. But it will diverge.
 const EmailCTA = () => {
 	// Will name-space by ad or vertiser id
 	const { 'gl.vert': adid, 'gl.vertiser': vertiserid } = DataStore.getValue(['location', 'params']) || {};
@@ -325,6 +327,7 @@ const EmailCTA = () => {
 	// Check cookies to see if user has already submitted an email here or via the adunit
 	// Only need to check this once
 	DataStore.fetch(submittedPath, () => {
+		// TODO replace with js-cookie here
 		const cookies = document.cookie;
 		return cookies.split(';').filter( item => item.includes('cta-email=email')).length;
 	});
@@ -351,8 +354,6 @@ const EmailCTA = () => {
 	return (
 		<div className="cta-email">
 			<p className="cta-lead"><span>Double your donation by joining<br/> Good-Loop's mailing list</span></p>
-			{/* <input type="email" className="form-control" name="email" placeholder="Email address" />
-			<input className="btn btn-primary" type="submit" value="Sign Up" /> */}
 			<div className="input-group">
 				<PropControl path={path} prop='email' type='email' placeholder="Email address" />
 				<span className="input-group-addon sign-up-btn" id="basic-addon2" onClick={emailSubmit}>Sign Up</span> 
@@ -365,7 +366,7 @@ const EmailCTA = () => {
 }; // ./connect
 
 /**
- * @param path {!String[]} The deciphered url path - e.g. ['campaign', 'kitkatadid']
+ * Expects url parameters: `gl.vert` or `gl.vertiser`
  */
 const CampaignPage = () => {
 	const { 'gl.vert': adid, 'gl.vertiser': vertiserid } = DataStore.getValue(['location', 'params']) || {};
