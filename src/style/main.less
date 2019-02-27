@@ -19,30 +19,13 @@
 }
 
 // main 
-
 .avoid-navbar {
 	margin-top:0px; // no navbar (yet)
 }
 
-// this was possibly fixing an IE11 error to do with padding of the whole page
-// * {
-// 	-webkit-box-sizing: border-box;
-// 	        box-sizing: border-box;
-// 	padding: 0;
-// 	margin: 0;
-//}
-
-// hyperlink consistent across apps??
-// p > a {
-// 	color: #274b6a;
-// 	text-decoration: none;
-// 	border-bottom: 1px dashed;
-// }
-// p > a:hover {
-// 	border-bottom: 1px dotted;
-// }
-
+// footer
 .grid-tile.bottom {
+	// uses css grid for layout purposes
 	grid-row: 1 / 3;
 	-ms-grid-row: 1;
 	-ms-grid-row-span: 2;
@@ -76,8 +59,7 @@
 		}
 	} 
 } 
-
-// using css grid to change the template of the grid to a column based one 
+// using css grid to change the template of the grid to a column based one (only needed for the footer)
 // only applies on phone-sized devices
 @media only screen and (max-width: 900px) {
 
@@ -121,13 +103,16 @@
 				display: inherit;
 			}
 		}
-	} // ./footer
-} 
+	} 
+} // ./footer
 
-// top tile ("Together we've raised ... for charity") should fit the top screen when on mobile
-// TODO does this make sense? or is there a better way of doing this?
+
+// remove restriction top+middle tile
 @media only screen and (max-width: 900px) {
+	// smaller screens (aka phones) shouldn't try to fit the top & middle tile into one page
+	// TODO does this make sense? or is there a better way of doing this?
 	.campaign-page {
+		// top tile ("Together we've raised ... for charity") should fit the top screen when on mobile
 		.grid-tile.top {
 			// on smaller screens the top tile should take up more of the screen
 			// to avoid making the top tile ("Together we've raised ...") look squished 
@@ -179,13 +164,12 @@
 			}
 		}
 
-		// adapt the cta font to smaller screens (couldn't just make it responsive by default)
+		// adapt the cta font to smaller screens, otherwise it's massive (couldn't just make it responsive by default)
 		.link.watch-cta {
 			font-size: 6vmin; 
 		}
 	}
-}
-
+}//. remove restriction top+middle tile
 
 // hack to target IE10+ and replace css grid with flexbox
 @media screen and (-ms-high-contrast:active), (-ms-high-contrast:none) {
@@ -207,4 +191,227 @@
 		flex-basis: calc(33.333% - 20px);
 	}
 	
-}
+} //. hack
+
+// campaign page
+.campaign-page {
+	p > a, span > a {
+		color: inherit;
+		text-decoration: none;
+		border-bottom: 1px dashed;
+	}
+	p > a:hover, span > a:hover  {
+		color: inherit;
+		border-bottom: none;
+	}
+
+	overflow-x: hidden;
+	text-align: center;
+
+    // TODO: replace with boostrap grid
+    // using css grid instead of bootstrap grid to organise layout of the page (3 rows) and fit whole width
+	.grid {
+		display: grid;
+		grid-template-rows: 1fr;
+		-ms-grid-rows: 1fr;
+	}
+
+	.grid-tile.top {
+		grid-row: 1 / 3;
+		-ms-grid-row: 1;
+		-ms-grid-row-span: 2;
+		width: 100vw;
+		height: 54vh;
+		background-color: blanchedalmond; // hack to make it look good when we don't have a campaign cover photo
+
+		.vertiser-head {
+			position: absolute;
+			width: 100%;
+			text-align: center;
+			padding-top: 1em;
+			padding-bottom: 0.5em;
+			font-size: 30px;
+
+			// put in some space between the logos (so that they're not squished together)
+			.header-logos img:first-child {
+				padding-right: 50px;
+			}
+
+			img {
+				height: 10vh;
+			}
+
+			span {
+				padding-left: 0.6em;
+			}
+		}
+
+		.header {
+			min-height: 100%;
+			background-size: cover;
+			
+			.header-text {
+				position: absolute;
+				top: 15vh;
+				text-align: center;
+				width: 100%;
+
+				.header-title {
+					font-size: 5vh;
+					text-shadow: black 2px 2px 0;
+				}
+			}				
+		}
+	}
+
+	// email cta under the title (toning down the font and moving it a bit away from the title)
+	.cta-email {
+		text-shadow: initial;
+		text-align: center;
+		// make the text pop out even if there is a bg image
+		font-weight: bold;
+		// hack: for some reason setting the font size here keeps it from being glitchy and pushing the email cta down
+		font-size: 2vh; 
+		color: white;
+
+		// center the email CTA (centering requires specifying width) and highlight just the CTA text ("Double your donation ...")
+		.cta-lead {
+			width: 19em;
+		}		
+		.cta-help {
+			width: 22em;
+		}
+
+		// font too big (email cta text needs to be more subtle)
+		.cta-help {
+			font-size: 1.5vh;
+		}
+
+		.cta-help, .cta-lead {
+			background-color: rgb(200, 51, 18); // gl color	
+			margin: 3px auto;
+		}
+
+		.input-group {
+			margin: 0 auto;	// center input
+
+			.sign-up-btn {
+				text-shadow: initial; // the rest of the email-cta should be shadowed, but not the button (unreadable)
+				cursor: pointer; // a button should look clickable
+			}
+		}
+
+		span {
+			width: initial; // hack: for some reason this makes the 'sign up' btn sit next to the input, instead of flying to the far right
+		}
+	} // ./cta-email
+	
+	.grid-tile.middle {
+		grid-row: 1 / 3;
+		-ms-grid-row: 1;
+		-ms-grid-row-span: 2;
+
+		.inside {
+			.title {
+				font-size: 35px;
+			}
+
+			.subtitle {
+				color: #592e25;
+			}
+
+			// center and lock watch CTA to the bottom of the slides in the carousel
+			.subtitle, .link {
+				margin-top: 2%;
+				position: absolute;
+				bottom: 1.5vw;
+				width: 48vw;
+				margin-left: 27%;
+			}
+			.link a {
+				font-size: 20px;
+				text-decoration: none;
+			}
+
+			.carousel {
+				// ensure carousel takes up the rest of the screen (below the top tile "Together we've raised ...")
+				height: 46vh;
+				width: 100vw;
+				margin: auto;
+
+				.carousel-inner {
+					// this is necessary, otherwise it doesn't set the chty background-color 
+					height: 100%;
+
+					.item {
+						// this is necessary, otherwise it doesn't set the chty background-color 
+						height: 100%;
+
+						.slide-header {
+							// chty logo and title should have enough space to look good (no matter the length of the title)
+							height: 10vh;
+							margin-top: 2vh;
+	
+							.slide-title {
+								// set the look of the chty name
+								font-size: 2.6vmin;
+								font-family: 'FrankGothItalicBT', Fallback, sans-serif;
+								color: white;
+								top: 3vh; // center it vertically								
+							}
+						}
+
+						.slide-desc {							
+							display: inline-block; // new line
+							width: 36vw;  // fill up the left side of the slide
+							margin: 0 auto; // center it
+							font-size: 2vmin; 
+							text-align: justify; // looks nicer justified, no matter the length of text
+							margin-top: 1vh;
+						}
+
+						.slide-photo {
+							// adjust the photo to fit the container
+							background-size: cover;
+							background-repeat: no-repeat;
+							background-position: center;
+							height: 25vh;
+							top: 6vh; // center it vertically (approx)
+							// slight design tweak to make it look 3d 
+							border: 1px solid white;
+							box-shadow: 8px 8px white;
+							// center it a bit horizontally
+							left: 30px;
+						}
+					}
+
+					.carousel-indicators {
+						bottom: 15px; // set the carousel indicators to be fixed at the bottom of the slides
+					}
+				}
+			}
+		}
+	}
+
+	.link.watch-cta {
+		font-family: initial; // go back to using montserrat (looks nicer)
+		background-color: rgb(200, 51, 18); // TODO: this should be set as less var gl-colour
+		color: white; // otherwise it will be set as black (default colour?)
+		padding-top: 6vh; // give it some space, looks less cluttered this way
+		font-size: 2vh; // make it pop out responsively
+	}
+
+	* {
+		-webkit-box-sizing: border-box;
+		        box-sizing: border-box;
+	}
+
+	// campaign page footer
+	// Can we standardise on one My-Loop footer??
+	.footer {
+		.leftFooter, .rightFooter {
+			color: white;
+			opacity: 0.8;
+		}
+	}
+} //. campaign page
