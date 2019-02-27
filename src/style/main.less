@@ -141,26 +141,33 @@
 
 		.grid-tile.middle .inside .carousel {
 			// to avoid making the middle tile (carousel) look squished on small screens
-			height: 70vh;
+			height: 72vh;
 		
 			.carousel-inner .item {
 				.slide-header {
 					.slide-title {
 						// otherwise on smaller screens the title becomes unreadable
 						font-size: 3.18vmin;
+						top: 1.5vh;
 					}
 
-					.slide-logo img {
-						// otherwise the logo looms weirdly to the right (on small screens it should just be above the title)
-						float: unset;
+					.slide-logo {
+						// otherwise the logo is too big 
+						height: 60px !important;
+						width: 60px !important;
+
+						img {
+							// otherwise the logo looms weirdly to the right (on small screens it should just be above the title)
+							float: unset;
+						}
 					}
 				}
 
 				.slide-desc {
 					// on small screens, the description can take more space (and become more readable) 
 					//because we're not trying to fit it in the same screen as the top tile
-					margin: 35px auto;
-					font-size: 2vh;
+					margin:6vh auto;
+					font-size:3.6vw;
 					width: 70vw; 
 				}
 
