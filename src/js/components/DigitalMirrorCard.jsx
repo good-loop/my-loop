@@ -11,6 +11,7 @@ import ServerIO from '../plumbing/ServerIO';
 import Misc from '../base/components/Misc';
 import { XId } from 'wwutils';
 import C from '../C';
+import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
 
 // TODO: Think that this will need to change significantly in future
 // Rough form: can open menu to see specific data we've found and where it's come from
@@ -21,20 +22,13 @@ import C from '../C';
 // is shown rather than whatever data has come from Twitter.
 // Editing these fields always modifies the user provided data on the back-end
 // rather than the data held for that specific social media source 
-const DigitalMirrorCard = ({xids}) => {
+/**
+ * 
+ * @param {*} logsIfVisibleRef Pass this to component, MixPanel tracking event will be sent out if the element is ever completely visible on user's screen
+ */
+const DigitalMirrorCard = ({xids, logsIfVisibleRef}) => {
 	if(!xids) return null;
 	assMatch(xids, 'String[]');
-
-	// Report if this div appeared fully on the user's screen
-	let containerRef = useRef();
-	useEffect(() => {
-		const scrollListener = window.addEventListener(
-			'scroll',
-			// Pass in reference to actual DOM element 
-			() => ServerIO.logIfVisible(containerRef.current, "DigitalMirrorVisible")
-		);
-		return () => window.removeEventListener('scroll', scrollListener);
-	}, [containerRef]);
 
 	// TODO use Person.getLinks to find links
 
@@ -77,7 +71,7 @@ const DigitalMirrorCard = ({xids}) => {
 	// TODO if someone attaches two social medias -- we want to show one profile, which is a merge of them representing our best guess.
 
 	return (
-		<div ref={containerRef}>
+		<div ref={logsIfVisibleRef}>
 			{/* <InteractiveMap use react-leaflet?? /> */}
 			{
 				socialXIds && socialXIds.length > 0
@@ -365,4 +359,4 @@ const saveFn = (xid, fieldObjs, from) => {
 	setTimeout(() => DataStore.setValue(['widget','DigitalMirror', 'autosaveTriggered'], false), 1000);
 };
 
-export default DigitalMirrorCard;
+export default withLogsIfVisible(DigitalMirrorCard);
