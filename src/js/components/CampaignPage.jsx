@@ -492,7 +492,7 @@ const CampaignPage = () => {
 		// let q = ad.campaign? '(vert:'+adid+' OR campaign:'+ad.campaign+')' : 'vert:'+adid;		
 		let q = 'vert:'+id;
 		// TODO "" csv encoding for bits of q (e.g. campaign might have a space)
-		return ServerIO.getDonationsData({q});
+		return ServerIO.getDonationsData({q});		
 	});
 
 	if ( ! pvDonationsBreakdown.resolved ) {
@@ -505,7 +505,8 @@ const CampaignPage = () => {
 		) || 0;
 		return { cid, value100p };
 	});
-	
+	console.log(pvDonationsBreakdown);
+
 	let campaignTotal = pvDonationsBreakdown.value.total; 
 	let donationValue = campaign && campaign.donation? campaign.donation : campaignTotal; // check if statically set and, if not, then update with latest figures
 	
@@ -535,7 +536,7 @@ const CampaignPage = () => {
 						<div className='header-title frank-font'>
 							<div></div>	{/* TODO: delete this, it's just here because there's a css rule about the 1st div in title*/}
 							<div>Together we've raised</div>													
-							{campaign && campaign.donation? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
+							{donationValue? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 							<div>for charity</div>
 						</div>
 						<EmailCTA />
