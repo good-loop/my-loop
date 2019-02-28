@@ -173,8 +173,8 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 		//float: cdescs[index] ? 'right' : 'unset',
 		backgroundColor: 'white', //TODO: do we want this to be editable in the portal? it could be the same color as the chty foreground used for text
 		borderRadius: '50%',
-		height: '100px', // decided to set it to 100px, as this is the preview in the portal and i think generally the size in which chty logos are shown
-		width: '100px',
+		height: '5.5vw', // decided to set it to 100px, as this is the preview in the portal and i think generally the size in which chty logos are shown
+		width: '5.5vw',
 		textAlign: 'center',
 		/* margin-top: 25px; */
 		overflow: 'hidden',
@@ -527,11 +527,11 @@ const CampaignPage = () => {
 	return (<div className='campaign-page'>
 		<div className='grid'>
 			<div className='grid-tile top'> 
-				<div className='vertiser-head frank-font'>
+				<div className='vertiser-head frank-font' style={glColorBgStyle}>
 					<CampaignHeaderWidget glLogo={glLogo} brandLogo={brandLogo} />
 				</div>
-				<div className='header' style={glColorBgStyle}>
-					<div className='header-text' style={compliColorBgStyle}>
+				<div className='header' style={compliColorBgStyle}>
+					<div className='header-text'>
 						<div className='header-title frank-font'>
 							<div></div>	{/* TODO: delete this, it's just here because there's a css rule about the 1st div in title*/}
 							<div>Together we've raised</div>													
