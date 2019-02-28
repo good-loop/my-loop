@@ -492,7 +492,7 @@ const CampaignPage = () => {
 		// let q = ad.campaign? '(vert:'+adid+' OR campaign:'+ad.campaign+')' : 'vert:'+adid;		
 		let q = 'vert:'+id;
 		// TODO "" csv encoding for bits of q (e.g. campaign might have a space)
-		return ServerIO.getDonationsData({q});
+		return ServerIO.getDonationsData({q});		
 	});
 
 	if ( ! pvDonationsBreakdown.resolved ) {
@@ -506,7 +506,7 @@ const CampaignPage = () => {
 		return { cid, value100p };
 	});
 	
-	let campaignTotal = pvDonationsBreakdown.value.total; 
+	let campaignTotal = pvDonationsBreakdown.data.total.value; 
 	let donationValue = campaign && campaign.donation? campaign.donation : campaignTotal; // check if statically set and, if not, then update with latest figures
 	
 	let charityTotal = filteredBreakdown.reduce((acc, current) => acc + current.value100p, 0);
