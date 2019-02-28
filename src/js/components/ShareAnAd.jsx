@@ -6,6 +6,7 @@ import C from '../C';
 import Person from '../base/data/Person';
 import {saveSocialShareId} from '../base/Profiler';
 import GoodLoopUnit from '../base/components/GoodLoopUnit';
+import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
 
 // TODO Does this need to be a component? If not, avoid React.Component in favour of functional jsx
 // (18/02/19) Should be possible now that GoodLoopUnit is inserted elsewhere, but still need div reference is order to report
@@ -51,19 +52,15 @@ class ShareAnAd extends React.Component {
 		}
 	}
 
-	componentDidMount() { 
-		// Report to MixPanel if div is visible to the user
-		window.addEventListener('scroll', () => ServerIO.logIfVisible(this.wrapper, "ShareAnAdVisible"));
-	} 
-
 	render() {
 		// Think we can safely assume that there will always be a 'video' for us to latch on to
 		const {adID, format, video} = this.state;
+		const {logsIfVisibleRef} = this.props;
 
 		const twitterXId = Person.getTwitterXId();
 
 		return (
-			<div className="ShareAd" ref={el => this.wrapper = el}>
+			<div className="ShareAd" ref={logsIfVisibleRef}>
 				<h2> Share this ad on social media </h2>
 				{ 
 					format === 'video' ? 
@@ -147,4 +144,4 @@ const TwitterShare = ({adID, TwitterXId}) => {
 		</a>);
 };
 
-export default ShareAnAd;
+export default withLogsIfVisible(ShareAnAd);
