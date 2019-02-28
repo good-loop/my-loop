@@ -535,7 +535,7 @@ const CampaignPage = () => {
 						<div className='header-title frank-font'>
 							<div></div>	{/* TODO: delete this, it's just here because there's a css rule about the 1st div in title*/}
 							<div>Together we've raised</div>													
-							{campaign && campaign.donation? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
+							{donationValue? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 							<div>for charity</div>
 						</div>
 						<EmailCTA />
