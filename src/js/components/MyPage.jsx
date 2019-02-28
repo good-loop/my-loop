@@ -168,54 +168,6 @@ const MyPage = () => {
 	);
 }; // ./MyPage
 
-/**
- * TODO Assuming we have their Twitter profile and we're interrogated it to extract info...
- */
-const DigitalMirrorCardDesign = () => {
-	return (<div>
-		<div className="mirror">
-			<div className="row">
-				<div className="col-md-6 main">
-					<div className="row">
-						<div className="col-md-8 header">
-							Irina Preda
-						</div>
-					</div>
-					<div className="row">
-						<div className="col-md-8">
-							<i className="fa fa-venus"></i>
-							Female
-						</div>
-					</div>
-					<div className="row">
-						<div className="col-md-8">
-							<i className="fa fa-globe"></i>
-							London, UK
-						</div>
-					</div>
-					<div className="row">
-						<div className="col-md-8">
-							<i className="fa fa-briefcase"></i>
-							Software Developer
-						</div>
-					</div>
-					<div className="row">
-						<div className="col-md-8">
-							<i className="fa fa-heart"></i>
-							Unknown Relationship Status
-						</div>
-					</div>
-				
-				</div>
-				<div className="col-md-5 map">
-					<img src="https://image.ibb.co/fL2AWV/preview.jpg" />
-				</div>
-			</div>
-		</div>
-		<div className="pull-right info"><i className="fa fa-info-circle"></i> This data is from Twitter</div>
-	</div>);
-};
-
 const WelcomeCard = ({xids}) => {
 	const heroImage = 'https://image.ibb.co/eWpfwV/hero7.png';
 
