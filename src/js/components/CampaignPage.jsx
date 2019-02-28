@@ -505,8 +505,9 @@ const CampaignPage = () => {
 		) || 0;
 		return { cid, value100p };
 	});
-	
-	let campaignTotal = pvDonationsBreakdown.data.total.value; 
+	console.log(pvDonationsBreakdown);
+
+	let campaignTotal = pvDonationsBreakdown.value.total; 
 	let donationValue = campaign && campaign.donation? campaign.donation : campaignTotal; // check if statically set and, if not, then update with latest figures
 	
 	let charityTotal = filteredBreakdown.reduce((acc, current) => acc + current.value100p, 0);
