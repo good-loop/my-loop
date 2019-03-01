@@ -417,19 +417,15 @@ const CampaignPage = () => {
 	};
 
 	let {branding={}, mockUp={}} = ad;
-	// use good-loop branding if adv branding is not there 
-	let brandColor = mockUp.backgroundColor || glColor; 
+	// default styling if adv branding is not there 
+	let complimentaryColor = '#51808a'; // default color (complimentary to the gl-red) for the middle tile that contains donations info
+	let brandColor = mockUp.backgroundColor || branding.backgroundColor || complimentaryColor;
 	let brandLogo = branding.logo_white || branding.logo || null; 
 	let brandColorBgStyle = {
 		backgroundColor: brandColor,
-		color: mockUp.lockAndTextColor || 'white' // TODO: this can be refactored probably to reduce code repetition
+		color: branding.lockAndTextColor || mockUp.lockAndTextColor || 'white',
 	};
-	// TODO: change portal to allow for complimentary color to be modified
-	let complimentaryColor = '#51808a'; // color for the middle tile that contains donations info
-	let compliColorBgStyle = {
-		backgroundColor: complimentaryColor,
-		color: 'white'
-	};
+
 	// hack to show appropriately styled logo if it can't find anything better (used in DonationCircleWidget and DonationDetailsWidget)
 	let logoStyle = {
 		objectFit: 'contain',
@@ -452,6 +448,7 @@ const CampaignPage = () => {
 	let bg = null;
 	let desc_title = null;
 	let desc_body = null;
+
 	if(campaign) {
 		smallPrint = campaign.smallPrint ? campaign.smallPrint : '';
 		if (campaign.bg) {
@@ -531,7 +528,7 @@ const CampaignPage = () => {
 				<div className='vertiser-head frank-font' style={glColorBgStyle}>
 					<CampaignHeaderWidget glLogo={glLogo} brandLogo={brandLogo} />
 				</div>
-				<div className='header' style={compliColorBgStyle}>
+				<div className='header' style={brandColorBgStyle}>
 					<div className='header-text'>
 						<div className='header-title frank-font'>
 							<div></div>	{/* TODO: delete this, it's just here because there's a css rule about the 1st div in title*/}
@@ -543,7 +540,7 @@ const CampaignPage = () => {
 					</div>
 				</div>
 			</div>
-			<div className='grid-tile middle' style={compliColorBgStyle}>
+			<div className='grid-tile middle' style={brandColorBgStyle}>
 				<div className='inside'>
 					{/* <div className='title frank-font' style={brandColorTxtStyle}>
 						<MDText source={desc_title} />							
