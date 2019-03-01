@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import md5 from 'md5';
 import DataStore from '../base/plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
@@ -6,76 +6,48 @@ import C from '../C';
 import Person from '../base/data/Person';
 import {saveSocialShareId} from '../base/Profiler';
 import GoodLoopUnit from '../base/components/GoodLoopUnit';
+import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
 
 // TODO Does this need to be a component? If not, avoid React.Component in favour of functional jsx
 // (18/02/19) Should be possible now that GoodLoopUnit is inserted elsewhere, but still need div reference is order to report
 // when a div becomes visible.
-class ShareAnAd extends React.Component {
-	constructor(props) {
-		super(props);
 
-		this.state = {};
+const ShareAnAd = ({ adHistory={}, logsIfVisibleRef }) => {
+	let {vert, format, video} = adHistory;
 
-		const { adHistory } = props;
-
-		if( adHistory ) {
-			const {vert, video, format} = adHistory;
-
-			// ID of Good-loop ad to be shown
-			// Imagining that we will sometimes have set this based on user's ad history
-			this.state = {
-				adID: vert,
-				format,
-				video,
-			};
-		}
-	}
-
-	componentWillMount() {
-		const {adID} = this.state;
-
-		// If the user has not watched an ad, have the back-end pick one and send us the json
-		if( !adID ) {
+	useEffect( () => {
+		if( !vert ) {
 			ServerIO.load(ServerIO.AS_ENDPOINT + '/unit.json', {swallow:true})
 				.then( res => {
-					const {vert} = res;
+					const vertData = res.vert;
 
-					if( !vert ) {
+					if( !vertData ) {
 						console.warn("Unit.json not returning any advert data?");
 						return;
 					}
 
-					const {adid, video, format} = vert;
-					this.setState({adID: adid, format, video});
+					vert = vertData.adid;
+					video = vertData.video;
+					format = vertData.format;
 				});
 		}
-	}
+	}, [vert]);
 
-	componentDidMount() { 
-		// Report to MixPanel if div is visible to the user
-		window.addEventListener('scroll', () => ServerIO.logIfVisible(this.wrapper, "ShareAnAdVisible"));
-	} 
+	const twitterXId = Person.getTwitterXId();
 
-	render() {
-		// Think we can safely assume that there will always be a 'video' for us to latch on to
-		const {adID, format, video} = this.state;
-
-		const twitterXId = Person.getTwitterXId();
-
-		return (
-			<div className="ShareAd" ref={el => this.wrapper = el}>
-				<h2> Share this ad on social media </h2>
-				{ 
-					format === 'video' ? 
-						<video controls={true} width="100%" height="auto" src={video}> An error occured </video> :
-						<GoodLoopUnit adID={adID} /> 
-				}
-				<TwitterShare adID={adID} TwitterXId={twitterXId} />
-				<SharedAdsDisplay xid={twitterXId} />
-			</div>
-		);
-	}
-} // ./ShareAnAd
+	return (
+		<div className="ShareAd" ref={logsIfVisibleRef}>
+			<h2> Share this ad on social media </h2>
+			{ 
+				format === 'video' 
+					? <video controls={true} width="100%" height="auto" src={video}> An error occured </video> 
+					: <GoodLoopUnit adID={vert} /> 
+			}
+			<TwitterShare adID={vert} TwitterXId={twitterXId} />
+			<SharedAdsDisplay xid={twitterXId} />
+		</div>
+	);
+};
 
 /** 
  * Table with data on ads shared by the user
@@ -147,4 +119,4 @@ const TwitterShare = ({adID, TwitterXId}) => {
 		</a>);
 };
 
-export default ShareAnAd;
+export default withLogsIfVisible(ShareAnAd);

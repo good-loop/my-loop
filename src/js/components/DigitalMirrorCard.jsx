@@ -11,6 +11,76 @@ import ServerIO from '../plumbing/ServerIO';
 import Misc from '../base/components/Misc';
 import { XId } from 'wwutils';
 import C from '../C';
+import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
+
+// TODO: Think that this will need to change significantly in future
+// Rough form: can open menu to see specific data we've found and where it's come from
+// Separate input fields that allow user to set override
+
+// Is currently not an issue as we are only working with data from one social media source (Twitter)
+// Need to set things up so that user provided data (regardless of the form that this comes in)
+// is shown rather than whatever data has come from Twitter.
+// Editing these fields always modifies the user provided data on the back-end
+// rather than the data held for that specific social media source 
+/**
+ * 
+ * @param {*} logsIfVisibleRef Pass this to component, MixPanel tracking event will be sent out if the element is ever completely visible on user's screen
+ */
+const DigitalMirrorCard = ({xids, logsIfVisibleRef}) => {
+	if(!xids) return null;
+	assMatch(xids, 'String[]');
+
+	// TODO use Person.getLinks to find links
+
+	// ??Switch to using [draft, Person, xid] as the storage for edits
+	// -- and hence reuse some existing Crud code.
+	/** HACK: Grab data from [data, Person, xid] (which we treat as read-only),
+	 *  process, and put in to state
+	 *  Assumes that a fetch request has already been made to put the data in to the above location
+	 *  Want to avoid making a second, unnecessary, request for data
+	*/
+	xids.forEach( xid => {
+		assMatch(xid, "String", "DigitalMirrorCard.jsx, pullInXIdData -- xid is not a string");
+		const writePath = userdataPath.concat(xid);
+
+		const data = DataStore.getValue(writePath);
+
+		if( !data ) {
+			// We are currently just reading from Claims
+			// Might want to pay more attention to std, custom after we've added multiple data sources
+			let writeData = getClaimsForXId(xid);//std && custom ? Object.assign(std, custom) : null;
+			DataStore.setValue(writePath, writeData , false);
+		}
+	});
+
+	// array of all relevant linked social media xids available
+	// combined with blob of data from "socialMedia"
+	// e.g [{xid: 'fakeuser@twitter', service: 'twitter', idHandle: '@twitter', dataFields:['location', 'relationship', 'job', 'gender']}]
+	const socialXIds = socialMedia.reduce( (out, socialMediaService) => {
+		// Minor TODO use the XId.service() method here
+		// @email, @twitter, @facebook ...
+		const {idHandle} = socialMediaService;
+		// implicitly assuming that there is only going to be one xid per social media service
+		const xid = xids.find( id => id.slice(id.length - idHandle.length) === idHandle);
+		
+		if(!xid) return out;
+
+		return out.concat({xid, ...socialMediaService});
+	}, []);
+
+	// TODO if someone attaches two social medias -- we want to show one profile, which is a merge of them representing our best guess.
+
+	return (
+		<div ref={logsIfVisibleRef}>
+			{/* <InteractiveMap use react-leaflet?? /> */}
+			{
+				socialXIds && socialXIds.length > 0
+					? socialXIds.map( xidObj => <ConsentControls xidObj={xidObj} key={xidObj.xid} />)
+					: 'You do not appear to have shared any social media data with us' 
+			}
+		</div>
+	);
+};
 
 // @param dataFields: data that we would like to pull from corresponding social media site's API
 // Just Twitter for the moment.
@@ -83,92 +153,6 @@ const iconFromField = (field, value) => {
 
 	return iconField[value] ? iconField[value] : iconField.default; 
 };
-
-// TODO: Think that this will need to change significantly in future
-// Rough form: can open menu to see specific data we've found and where it's come from
-// Separate input fields that allow user to set override
-
-// Is currently not an issue as we are only working with data from one social media source (Twitter)
-// Need to set things up so that user provided data (regardless of the form that this comes in)
-// is shown rather than whatever data has come from Twitter.
-// Editing these fields always modifies the user provided data on the back-end
-// rather than the data held for that specific social media source 
-class DigitalMirrorCard extends React.Component {
-	constructor(props) {
-		super(props);
-
-		this.state = { 
-			xids: props.xids 
-		};
-	}
-
-	componentDidMount() {
-		window.addEventListener('scroll', () => ServerIO.logIfVisible(this.wrapper, "DigitalMirrorVisible"));
-	}
-
-	render() {
-		const { xids } = this.state;
-
-		if(!xids) return null;
-		assMatch(xids, 'String[]');
-	
-		// TODO use Person.getLinks to find links
-	
-		// ??Switch to using [draft, Person, xid] as the storage for edits
-		// -- and hence reuse some existing Crud code.
-		/** HACK: Grab data from [data, Person, xid] (which we treat as read-only),
-		 *  process, and put in to state
-		 *  Assumes that a fetch request has already been made to put the data in to the above location
-		 *  Want to avoid making a second, unnecessary, request for data
-		*/
-		xids.forEach( xid => {
-			assMatch(xid, "String", "DigitalMirrorCard.jsx, pullInXIdData -- xid is not a string");
-	
-			const readPath = ['data', 'Person', xid];
-			
-			const writePath = userdataPath.concat(xid);
-	
-			const data = DataStore.getValue(writePath);
-	
-			if( !data ) {
-				// We are currently just reading from Claims
-				// Might want to pay more attention to std, custom after we've added multiple data sources
-				const {std, custom} = DataStore.getValue(readPath) || {std: null, custom: null};
-				let writeData = getClaimsForXId(xid);//std && custom ? Object.assign(std, custom) : null;
-	
-				DataStore.setValue(writePath, writeData , false);
-			}
-		});
-	
-		// array of all relevant linked social media xids available
-		// combined with blob of data from "socialMedia"
-		// e.g [{xid: 'fakeuser@twitter', service: 'twitter', idHandle: '@twitter', dataFields:['location', 'relationship', 'job', 'gender']}]
-		const socialXIds = socialMedia.reduce( (out, socialMediaService) => {
-			// Minor TODO use the XId.service() method here
-			// @email, @twitter, @facebook ...
-			const {idHandle} = socialMediaService;
-			// implicitly assuming that there is only going to be one xid per social media service
-			const xid = xids.find( id => id.slice(id.length - idHandle.length) === idHandle);
-			
-			if(!xid) return out;
-	
-			return out.concat({xid, ...socialMediaService});
-		}, []);
-	
-		// TODO if someone attaches two social medias -- we want to show one profile, which is a merge of them representing our best guess.
-	
-		return (
-			<div onScroll={C.logIfVisible} ref={el => this.wrapper = el}>
-				{/* <InteractiveMap use react-leaflet?? /> */}
-				{
-					socialXIds && socialXIds.length > 0
-						? socialXIds.map( xidObj => <ConsentControls xidObj={xidObj} key={xidObj.xid} />)
-						: 'You do not appear to have shared any social media data with us' 
-				}
-			</div>
-		);
-	}
-}
 
 /** TODO: See if there is a Misc component/PropControl type that would cover this behaviour? 
  * Allow the user to specify whether or not they would like us to use their data for targetting ads
@@ -375,11 +359,4 @@ const saveFn = (xid, fieldObjs, from) => {
 	setTimeout(() => DataStore.setValue(['widget','DigitalMirror', 'autosaveTriggered'], false), 1000);
 };
 
-/** Minor TODO Maybe use css text-effect instead
- * Little helper method to capitalise first character in a given string */
-const capitalise = (string) => {
-	return string[0].toUpperCase() + string.slice(1);
-};
-
-export default DigitalMirrorCard;
-
+export default withLogsIfVisible(DigitalMirrorCard);

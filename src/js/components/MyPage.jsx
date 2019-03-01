@@ -22,6 +22,7 @@ import DonationCard from './DonationCard';
 import C from '../C';
 import { Server } from 'http';
 import { assMatch } from 'sjtest';
+import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
 
 const pagePath = ['widget', 'MyPage'];
 
@@ -364,25 +365,18 @@ const SocialMediaCard = ({allIds=[]}) => {
 	);
 };
 
-// Temporarily switched to class in order to log when div is within viewport
-class ContactCard extends React.Component {
-
-	componentDidMount() {
-		window.addEventListener('scroll', () => ServerIO.logIfVisible(this.wrapper, "ContactCardVisible"));
-	}
-
-	render() {
-		return (
-			<div ref={el => this.wrapper = el}>
-				<div>
-					<p>Let us know what you think of this web-app, and your ideas for improving it.</p>
-					<p>Are you interested in hosting Ads For Good on your blog or website?</p>
-					<p><a href="https://www.good-loop.com/book-a-call">Let us know.</a></p>
-				</div>
-			</div>
-		);
-	}
-}
+// Two-liner as withLogsIfVisible latches on to Component.displayName or Component.name in order to generate sensible-looking event tag in MixPanel
+// Obviously will not work quite right if we were to use an anonymous function
+let ContactCard = ({logsIfVisibleRef}) => (
+	<div ref={logsIfVisibleRef}>
+		<div>
+			<p>Let us know what you think of this web-app, and your ideas for improving it.</p>
+			<p>Are you interested in hosting Ads For Good on your blog or website?</p>
+			<p><a href="https://www.good-loop.com/book-a-call">Let us know.</a></p>
+		</div>
+	</div>
+);
+ContactCard = withLogsIfVisible(ContactCard);
 
 /**
  * This is mostly for our debugging
