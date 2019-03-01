@@ -417,18 +417,13 @@ const CampaignPage = () => {
 	};
 
 	let {branding={}, mockUp={}} = ad;
-	// use good-loop branding if adv branding is not there 
-	let brandColor = mockUp.backgroundColor || glColor; 
+	// default styling if adv branding is not there 
+	let complimentaryColor = '#51808a'; // default color (complimentary to the gl-red) for the middle tile that contains donations info
+	let brandColor = mockUp.backgroundColor || branding.backgroundColor || complimentaryColor;
 	let brandLogo = branding.logo_white || branding.logo || null; 
 	let brandColorBgStyle = {
 		backgroundColor: brandColor,
-		color: mockUp.lockAndTextColor || 'white' // TODO: this can be refactored probably to reduce code repetition
-	};
-	// TODO: change portal to allow for complimentary color to be modified
-	let complimentaryColor = '#51808a'; // color for the middle tile that contains donations info
-	let compliColorBgStyle = {
-		backgroundColor: complimentaryColor,
-		color: 'white'
+		color: branding.lockAndTextColor || mockUp.lockAndTextColor || 'white',
 	};
 
 	// hack to show appropriately styled logo if it can't find anything better (used in DonationCircleWidget and DonationDetailsWidget)
@@ -453,6 +448,7 @@ const CampaignPage = () => {
 	let bg = null;
 	let desc_title = null;
 	let desc_body = null;
+
 	if(campaign) {
 		smallPrint = campaign.smallPrint ? campaign.smallPrint : '';
 		if (campaign.bg) {
