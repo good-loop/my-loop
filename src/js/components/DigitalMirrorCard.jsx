@@ -1,6 +1,6 @@
 // Collection of controls for managing
 // social media data linked by the user
-import React, {useEffect, useRef} from 'react';
+import React from 'react';
 import {assMatch} from 'sjtest';
 import _ from 'lodash';
 import PropControl from '../base/components/PropControl';
