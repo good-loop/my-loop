@@ -58,139 +58,6 @@
 		}
 	} 
 } 
-// using css grid to change the template of the grid to a column based one (only needed for the footer)
-// only applies on phone-sized devices
-@media only screen and (max-width: 900px) {
-
-	.grid-tile.bottom .foot {
-		-ms-grid-columns: 1fr;
-		grid-template-columns: 1fr;
-		grid-template-areas: 
-		"vertiser" 
-		"campaign" 
-		"goodloop";  
-	}
-
-	// Why is main.less adding rules beyond the general-purpose footer.less??
-	// using css grid to display footer vertically on mobile
-	.footer {
-		-ms-grid-columns: 1fr;
-		grid-template-columns: 1fr;
-		grid-template-areas: 
-		"leftFooter" 
-		"mainFooter" 
-		"rightFooter";  
-
-		// left footer and right footer no longer need to be fixed to the bottom and to the sides
-		// instead they look better moved to the center and reverting the vertical alignment
-		.leftFooter {
-			display: block;
-			text-align: center;
-	
-			.innerLeftFooter {
-				vertical-align: initial;
-				display: inherit;
-			}
-		}
-		
-		.rightFooter {
-			display: block;
-			text-align: center;
-	
-			.innerRightFooter {
-				vertical-align: initial;
-				display: inherit;
-			}
-		}
-	} 
-} // ./footer
-
-
-// remove restriction top+middle tile
-@media only screen and (max-width: 900px) {
-	// smaller screens (aka phones) shouldn't try to fit the top & middle tile into one page
-	// TODO does this make sense? or is there a better way of doing this?
-	.campaign-page {
-		// top tile ("Together we've raised ... for charity") should fit the top screen when on mobile
-		.grid-tile.top {
-			// on smaller screens the top tile should take up more of the screen
-			// to avoid making the top tile ("Together we've raised ...") look squished 
-			height: 73vh;
-
-			.header .header-text {
-				//the logos need more space, otherwise the will overlap with the top tile text
-				top: 22vh;
-			}
-		}
-
-		.grid-tile.middle .inside .carousel {
-			// to avoid making the middle tile (carousel) look squished on small screens
-			height: 72vh;
-		
-			.carousel-inner .item {
-				.slide-header {
-					.slide-title {
-						// otherwise on smaller screens the title becomes unreadable
-						font-size: 3.18vmin;
-						top: 1.5vh;
-					}
-
-					.slide-logo {
-						// otherwise the logo is too big 
-						height: 60px !important;
-						width: 60px !important;
-
-						img {
-							// otherwise the logo looms weirdly to the right (on small screens it should just be above the title)
-							float: unset;
-						}
-					}
-				}
-
-				.slide-desc {
-					// on small screens, the description can take more space (and become more readable) 
-					//because we're not trying to fit it in the same screen as the top tile
-					margin:6vh auto;
-					font-size:3.6vw;
-					width: 70vw; 
-				}
-
-				.slide-photo {
-					// we don't have space to show the large photo
-					display: none;
-				}		
-
-			}
-		}
-
-		// adapt the cta font to smaller screens, otherwise it's massive (couldn't just make it responsive by default)
-		.link.watch-cta {
-			font-size: 6vmin; 
-		}
-	}
-}//. remove restriction top+middle tile
-
-// hack to target IE10+ and replace css grid with flexbox
-@media screen and (-ms-high-contrast:active), (-ms-high-contrast:none) {
-	.foot {
-		display: flex;
-		flex-wrap: wrap;
-	}
-
-	.social {
-		flex-basis: calc(33.333% - 20px);
-	}
-
-	.footer {
-		display: flex;
-		flex-wrap: wrap;
-	}
-	
-	.footer-col {
-		flex-basis: calc(33.333% - 20px);
-	}
-	
-} //. hack
 
 // campaign page
 .campaign-page {
@@ -411,3 +278,137 @@
 		}
 	}
 } //. campaign page
+
+// using css grid to change the template of the grid to a column based one (only needed for the footer)
+// only applies on phone-sized devices
+@media only screen and (max-width: 900px) {
+
+	.grid-tile.bottom .foot {
+		-ms-grid-columns: 1fr;
+		grid-template-columns: 1fr;
+		grid-template-areas: 
+		"vertiser" 
+		"campaign" 
+		"goodloop";  
+	}
+
+	// Why is main.less adding rules beyond the general-purpose footer.less??
+	// using css grid to display footer vertically on mobile
+	.footer {
+		-ms-grid-columns: 1fr;
+		grid-template-columns: 1fr;
+		grid-template-areas: 
+		"leftFooter" 
+		"mainFooter" 
+		"rightFooter";  
+
+		// left footer and right footer no longer need to be fixed to the bottom and to the sides
+		// instead they look better moved to the center and reverting the vertical alignment
+		.leftFooter {
+			display: block;
+			text-align: center;
+	
+			.innerLeftFooter {
+				vertical-align: initial;
+				display: inherit;
+			}
+		}
+		
+		.rightFooter {
+			display: block;
+			text-align: center;
+	
+			.innerRightFooter {
+				vertical-align: initial;
+				display: inherit;
+			}
+		}
+	} 
+} // ./footer
+
+
+// remove restriction top+middle tile
+@media only screen and (max-width: 900px) {
+	// smaller screens (aka phones) shouldn't try to fit the top & middle tile into one page
+	// TODO does this make sense? or is there a better way of doing this?
+	.campaign-page {
+		// top tile ("Together we've raised ... for charity") should fit the top screen when on mobile
+		.grid-tile.top {
+			// on smaller screens the top tile should take up more of the screen
+			// to avoid making the top tile ("Together we've raised ...") look squished 
+			height: 73vh;
+
+			.header .header-text {
+				//the logos need more space, otherwise the will overlap with the top tile text
+				top: 22vh;
+			}
+		}
+
+		.grid-tile.middle .inside .carousel {
+			// to avoid making the middle tile (carousel) look squished on small screens
+			height: 72vh;
+		
+			.carousel-inner .item {
+				.slide-header {
+					.slide-title {
+						// otherwise on smaller screens the title becomes unreadable
+						font-size: 3.18vmin;
+						top: 1.5vh;
+					}
+
+					.slide-logo {
+						// otherwise the logo is too small 
+						height: 60px !important;
+						width: 60px !important;
+
+						img {
+							// otherwise the logo looms weirdly to the right (on small screens it should just be above the title)
+							float: unset;
+						}
+					}
+				}
+
+				.slide-desc {
+					// on small screens, the description can take more space (and become more readable) 
+					//because we're not trying to fit it in the same screen as the top tile
+					margin:6vh auto;
+					font-size:3.6vw;
+					width: 70vw; 
+				}
+
+				.slide-photo {
+					// we don't have space to show the large photo
+					display: none;
+				}		
+
+			}
+		}
+
+		// adapt the cta font to smaller screens, otherwise it's massive (couldn't just make it responsive by default)
+		.link.watch-cta {
+			font-size: 6vmin; 
+		}
+	}
+}//. remove restriction top+middle tile
+
+// hack to target IE10+ and replace css grid with flexbox
+@media screen and (-ms-high-contrast:active), (-ms-high-contrast:none) {
+	.foot {
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	.social {
+		flex-basis: calc(33.333% - 20px);
+	}
+
+	.footer {
+		display: flex;
+		flex-wrap: wrap;
+	}
+	
+	.footer-col {
+		flex-basis: calc(33.333% - 20px);
+	}
+	
+} //. hack

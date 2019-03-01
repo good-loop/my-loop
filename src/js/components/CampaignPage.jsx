@@ -171,9 +171,9 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 	let logoStyle = {
 		margin: '0 auto',
 		//float: cdescs[index] ? 'right' : 'unset',
-		backgroundColor: 'white', //TODO: do we want this to be editable in the portal? it could be the same color as the chty foreground used for text
+		backgroundColor: 'white', //TODO: do we want this to be editable in the portal? it could be the same color as the chty foreground used for text #minor
 		borderRadius: '50%',
-		height: '5.5vw', // decided to set it to 100px, as this is the preview in the portal and i think generally the size in which chty logos are shown
+		height: '5.5vw', 
 		width: '5.5vw',
 		textAlign: 'center',
 		/* margin-top: 25px; */
