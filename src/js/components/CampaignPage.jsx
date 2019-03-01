@@ -416,13 +416,13 @@ const CampaignPage = () => {
 		color: 'white'
 	};
 
-	let brand = ad.branding;
+	let {brand={}, mockUp={}} = ad;
 	// use good-loop branding if adv branding is not there 
-	let brandColor = brand.backgroundColor ? brand.backgroundColor : glColor; 
+	let brandColor = mockUp.backgroundColor || glColor; 
 	let brandLogo = brand.logo_white || brand.logo || null; 
 	let brandColorBgStyle = {
-		backgroundColor: brand && brandColor,
-		color: brand && brand.lockAndTextColor ? brand.lockAndTextColor : 'white' // TODO: this can be refactored probably to reduce code repetition
+		backgroundColor: brandColor,
+		color: mockUp.lockAndTextColor || 'white' // TODO: this can be refactored probably to reduce code repetition
 	};
 	// TODO: change portal to allow for complimentary color to be modified
 	let complimentaryColor = '#51808a'; // color for the middle tile that contains donations info
@@ -462,7 +462,7 @@ const CampaignPage = () => {
 				backgroundRepeat: 'no-repeat',
 				backgroundPosition: 'center',
 				backgroundAttachment: 'fixed',
-				color: brand && brand.lockAndTextColor ? brand.lockAndTextColor : 'white' 
+				color: mockUp.lockAndTextColor || 'white' 
 			};
 		}
 		desc_title = campaign.desc_title ? campaign.desc_title : null;
