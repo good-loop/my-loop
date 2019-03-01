@@ -261,7 +261,7 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 	);
 };
 
-const DonationCarouselWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, brandColorTxtStyle, logoStyle, adid, status, toggle}) => {	 // todo: remove useless params
+const DonationCarouselWidget = ({cparent, clist, campaignSlice, brandColorTxtStyle, logoStyle, adid, status, toggle}) => {	 // todo: remove useless params
 	
 	return (
 		<div id="donation-carousel" className="carousel slide" data-interval={toggle} data-ride="carousel">
@@ -430,6 +430,7 @@ const CampaignPage = () => {
 		backgroundColor: complimentaryColor,
 		color: 'white'
 	};
+
 	// hack to show appropriately styled logo if it can't find anything better (used in DonationCircleWidget and DonationDetailsWidget)
 	let logoStyle = {
 		objectFit: 'contain',
@@ -531,7 +532,7 @@ const CampaignPage = () => {
 				<div className='vertiser-head frank-font' style={glColorBgStyle}>
 					<CampaignHeaderWidget glLogo={glLogo} brandLogo={brandLogo} />
 				</div>
-				<div className='header' style={compliColorBgStyle}>
+				<div className='header' style={brandColorBgStyle}>
 					<div className='header-text'>
 						<div className='header-title frank-font'>
 							<div></div>	{/* TODO: delete this, it's just here because there's a css rule about the 1st div in title*/}
@@ -543,7 +544,7 @@ const CampaignPage = () => {
 					</div>
 				</div>
 			</div>
-			<div className='grid-tile middle' style={compliColorBgStyle}>
+			<div className='grid-tile middle' style={brandColorBgStyle}>
 				<div className='inside'>
 					{/* <div className='title frank-font' style={brandColorTxtStyle}>
 						<MDText source={desc_title} />							
@@ -553,7 +554,7 @@ const CampaignPage = () => {
 					</div>
 					<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
 					<DonationInfoWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle}/> */}
-					<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle} adid={adid} status={status} toggle={toggle}/>
+					<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} logoStyle={logoStyle} adid={adid} status={status} toggle={toggle}/>
 				</div>
 			</div>
 			<LinkToAdWidget cparent={cparent} adid={adid} status={status} />
