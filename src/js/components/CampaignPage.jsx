@@ -416,10 +416,10 @@ const CampaignPage = () => {
 		color: 'white'
 	};
 
-	let {brand={}, mockUp={}} = ad;
+	let {branding={}, mockUp={}} = ad;
 	// use good-loop branding if adv branding is not there 
 	let brandColor = mockUp.backgroundColor || glColor; 
-	let brandLogo = brand.logo_white || brand.logo || null; 
+	let brandLogo = branding.logo_white || branding.logo || null; 
 	let brandColorBgStyle = {
 		backgroundColor: brandColor,
 		color: mockUp.lockAndTextColor || 'white' // TODO: this can be refactored probably to reduce code repetition
@@ -562,7 +562,7 @@ const CampaignPage = () => {
 				<div className='foot header-font'>		
 					<SocialMediaShareWidget adName={ad.name} donationValue={donationValue} charities={clist} />
 					<SocialMediaFooterWidget type={'goodloop'} name={'GOOD-LOOP'} branding={gl_social} />
-					<SocialMediaFooterWidget type={'vertiser'} name={ad.name} branding={brand} />					
+					<SocialMediaFooterWidget type={'vertiser'} name={ad.name} branding={branding} />					
 				</div>
 			</div>
 		</div>
