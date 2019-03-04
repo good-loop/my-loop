@@ -134,7 +134,7 @@ const MyPage = () => {
 						</Card>								
 						<Card title="Boost Your Impact" className="SocialMediaCard" defaultOpen>
 							<SocialMediaCard allIds={xids} />
-							{ userAdHistoryPV.resolved ? <ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} /> : null }
+							<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} />
 						</Card> 
 					</CardRow3>
 
