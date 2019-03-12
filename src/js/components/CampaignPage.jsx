@@ -57,10 +57,12 @@ const SocialMediaFooterWidget = ({type, name, branding}) => {
 	return (
 		<div className={'social '.concat(type)}>
 			<MDText source={name} />
-			{branding && branding.fb_url? <a href={branding.fb_url} target='_blank'><img src='https://gl-es-05.good-loop.com/cdn/images/facebook.png' /></a> : null}
-			{branding && branding.tw_url? <a href={branding.tw_url} target='_blank'><img src='https://gl-es-04.good-loop.com/cdn/images/twitter.png' /></a> : null}
-			{branding && branding.insta_url? <a href={branding.insta_url} target='_blank'><img src='https://gl-es-05.good-loop.com/cdn/images/instagram.png' /></a> : null}
-			{branding && branding.yt_url? <a href={branding.yt_url} target='_blank'><img src='https://gl-es-04.good-loop.com/cdn/images/youtube.png' /></a> : null}
+			<div className="social-links">
+				{branding && branding.fb_url? <a href={branding.fb_url} target='_blank'><img src='https://gl-es-05.good-loop.com/cdn/images/facebook.png' /></a> : null}
+				{branding && branding.tw_url? <a href={branding.tw_url} target='_blank'><img src='https://gl-es-04.good-loop.com/cdn/images/twitter.png' /></a> : null}
+				{branding && branding.insta_url? <a href={branding.insta_url} target='_blank'><img src='https://gl-es-05.good-loop.com/cdn/images/instagram.png' /></a> : null}
+				{branding && branding.yt_url? <a href={branding.yt_url} target='_blank'><img src='https://gl-es-04.good-loop.com/cdn/images/youtube.png' /></a> : null}
+			</div>
 		</div>
 	);
 };
@@ -130,7 +132,9 @@ const SocialMediaShareWidget = ({type, name, branding, donationValue, charities,
 	return (
 		<div className="social share-page">
 			<MDText source='Share this page' />
-			{shareOptions.map(option => <SocialShareButton key={option.title} option={option} shareText={shareText} />)}
+			<div className="social-links">
+				{shareOptions.map(option => <SocialShareButton key={option.title} option={option} shareText={shareText} />)}
+			</div>
 		</div>
 	);
 };
@@ -138,7 +142,7 @@ const SocialMediaShareWidget = ({type, name, branding, donationValue, charities,
 const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColorTxtStyle}) => {	
 	let cids = clist.map(x => x.id);
 	let cnames = clist.map(x => x.name);
-	let clogos = clist.map(x => x.logo);
+	let clogos = clist.map(x => x.logo || x.logo_white);
 	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo);
 	let ccrop = clist.map(x => x.circleCrop);
 	let cbgColor = clist.map(x => x.color); // TODO: does this exist?
@@ -191,6 +195,7 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 
 	// if there's no chty description, then we should just show the chty title and logo and center them
 	if (!cdescs[index]) {
+		slideStyle.height = '22vh';
 		return (
 			<div className={itemClass} style={slideStyle}>
 				<div>
