@@ -25,6 +25,7 @@ import Footer from './Footer';
 import { Link, Element } from 'react-scroll';
 import MDText from '../base/components/MDText';
 import PropControl from '../base/components/PropControl';
+import {IntentLink} from '../base/components/SocialShare';
 
 const CampaignHeaderWidget = ({glLogo, brandLogo}) => {
 	return (
@@ -64,28 +65,6 @@ const SocialMediaFooterWidget = ({type, name, branding}) => {
 		</div>
 	);
 };
-
-// The "share this advert" links
-// TODO replace those PNGs with SVGs, preferably inline
-// Use function for href as text and url need to be inserted differently for different social media services
-const shareOptions = [
-	{
-		title: 'Facebook',
-		hrefFn: ({text, url}) => `http://www.facebook.com/sharer.php?u=${url}&quote=${encodeURIComponent(text)}`,
-		logo: '/img/facebook.png'
-	},
-	{
-		title: 'Twitter',
-		hrefFn: ({text, url}) => `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&tw_p=tweetbutton&url=${url}`,
-		logo: '/img/twitter.png'
-	},
-	{
-		title: 'LinkedIn',
-		hrefFn: ({text, url}) => `https://www.linkedin.com/shareArticle?mini=true&title=Our%20ads%20are%20raising%20money%20for%20charity&url=${url}&summary=${encodeURIComponent(text)}`,
-		logo: '/img/linkedin-white.png'
-	}
-];
-
 	
 /** What should appear in Tweet/Facebook link/LinkedIn article
 // Contains fallbacks for where donation amount, charities or advertiser name is not specified
@@ -117,20 +96,16 @@ const shareTextFn = ({donationValue, charities, adName="We"}) => {
 	return `${adName} helped to raise ${currencySymbol}${amountText} for ${charityText}`;
 };
 
-const SocialMediaShareWidget = ({type, name, branding, donationValue, charities, adName}) => {
-	const SocialShareButton = ({option, shareText}) => {
-		const {hrefFn, logo, title} = option;
-		return <a className="charity" href={hrefFn({text: shareText, url: window.location.href.replace("#", "%23")})} target="_blank" rel="noreferrer" title={title} alt={title}>
-			<img alt={{title}+' Logo'} src={logo} crop="50%" title={title} />
-		</a>;
-	};
-
+const SocialMediaShareWidget = ({donationValue, charities, adName}) => {
 	const shareText = shareTextFn({donationValue, charities, adName});
-
+	const url = window.location.href;
+	
 	return (
 		<div className="social share-page">
 			<MDText source='Share this page' />
-			{shareOptions.map(option => <SocialShareButton key={option.title} option={option} shareText={shareText} />)}
+			<IntentLink service='facebook' text={shareText} url={url} />
+			<IntentLink service='twitter' text={shareText} url={url} />
+			<IntentLink service='linkedin' text={shareText} url={url} />
 		</div>
 	);
 };
