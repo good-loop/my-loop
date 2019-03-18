@@ -5,16 +5,11 @@
 	color: #333;
 	margin: 0px;
 	padding: 10px;	
-	display: grid;
-	-ms-grid-columns: 1fr 1px 1fr 1px 1fr;
-	grid-template-columns: 1fr 1fr 1fr;
-	grid-template-areas: "leftFooter mainFooter rightFooter";
-	grid-gap: 1px;
+	display: flex;
+	flex-wrap: wrap;
 
 	.footer-col {
-		grid-column: 1 / 3;
-		-ms-grid-column: 1;
-		-ms-grid-column-span: 2;
+		flex-basis: 33.3%;
 	}
 
 	div {
@@ -50,3 +45,41 @@
 
 // TODO: clear conflict between this and footer definition in main.less
 // investigate tool to find out unused CSS rules (would ease our job of removing useless CSS)
+
+// using flex to change the template of the layout for the footer to a column based one
+// only applies on phone-sized devices
+@media only screen and (max-width: 900px) {
+	// using flex to display footer vertically on mobile
+	.footer {
+		flex-direction: column;
+		flex-basis: 100%;
+
+		// styles the fineprint text set in the portal (campaign start date and advertiser copyright or whatever else they want to add in the right side of the footer)
+		.leftFooter, .rightFooter {
+			color: white;
+			opacity: 0.8;
+		}
+
+		// left footer and right footer no longer need to be fixed to the bottom and to the sides
+		// instead they look better moved to the center and reverting the vertical alignment
+		.leftFooter {
+			display: block;
+			text-align: center;
+	
+			.innerLeftFooter {
+				vertical-align: initial;
+				display: inherit;
+			}
+		}
+		
+		.rightFooter {
+			display: block;
+			text-align: center;
+	
+			.innerRightFooter {
+				vertical-align: initial;
+				display: inherit;
+			}
+		}
+	} 
+}
