@@ -1,28 +1,14 @@
 import React from 'react';
-import Cookies from 'js-cookie';
-import _ from 'lodash';
-import { assert, assMatch } from 'sjtest';
-import { XId, modifyHash, stopEvent, encURI, yessy } from 'wwutils';
+import { encURI } from 'wwutils';
 // import pivot from 'data-pivot';
 import C from '../C';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
-import Person from '../base/data/Person';
 import Money from '../base/data/Money';
 import Misc from '../base/components/Misc';
-import CardAccordion, {Card} from '../base/components/CardAccordion';
 import ActionMan from '../plumbing/ActionMan';
-import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
-import Login from 'you-again';
-import {LoginLink, SocialSignInButton} from '../base/components/LoginWidget';
 import {ListItems, ListFilteredItems} from '../base/components/ListLoad';
-import {LoginToSee} from './Bits';
-import {getProfile, getProfilesNow} from '../base/Profiler';
-import ConsentWidget from './ConsentWidget';
-import printer from '../base/utils/printer';
-import DonationCard from './DonationCard';
 import Footer from './Footer';
-import { Link, Element } from 'react-scroll';
 import MDText from '../base/components/MDText';
 import PropControl from '../base/components/PropControl';
 import {IntentLink} from '../base/components/SocialShare';
@@ -30,7 +16,12 @@ import {IntentLink} from '../base/components/SocialShare';
 const CampaignHeaderWidget = ({glLogo, brandLogo}) => {
 	return (
 		<div className="header-logos">
-			<img alt='Sponsor Logo' src={brandLogo} style={{ display: brandLogo ? 'inline-block' : 'none' }} />
+			<OptimisedImage 
+				alt='Sponsor Logo'
+				render={ props => <img {...props} />} 
+				src={brandLogo} 
+				style={{ display: brandLogo ? 'inline-block' : 'none' }} 
+			/>
 			<img alt='Good-Loop Logo' src={glLogo} />
 		</div>
 	);
@@ -345,6 +336,23 @@ const EmailCTA = () => {
 	);
 }; // ./connect
 
+/** Grabs either standard or mobile-optimised image depending on context
+ * @render (21/03/19) made this render props to deal with unusual way that bg image is handled
+ * Just providing a thin wrapper to an img element might be easier going forward
+ * @param href https://testmedia.good-loop.com/uploads/standard/cat.jpg
+ */
+const OptimisedImage = (props) => {
+	let {render} = props;
+	let src = props.src || '';
+
+	const isMobile = DataStore.getValue(['env', 'isMobile']);
+	// Logos have different path structure (testmedia.good-loop.com/uploads/img/cat.jpg)
+	const isStandardMediaImage = src.includes('media.good-loop.com/uploads/standard/');
+	src = isMobile && isStandardMediaImage ? src.replace('uploads/standard', 'uploads/mobile') : src;
+
+	return render({...props, src});
+};
+
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser`
  */
@@ -390,7 +398,7 @@ const CampaignPage = () => {
 
 	// good-loop branding
 	let glColor = '#C83312'; 
-	let glLogo = 'https://i.ibb.co/XY3trPW/Good-Loop-Logos-Good-Loop-Logo-Mark-White.png';
+	let glLogo = '/img/logo-white.svg';
 	let glColorBgStyle = {
 		backgroundColor: glColor,
 		color: 'white'
@@ -430,11 +438,12 @@ const CampaignPage = () => {
 	let desc_body = null;
 
 	if(campaign) {
-		smallPrint = campaign.smallPrint ? campaign.smallPrint : '';
+		smallPrint = campaign.smallPrint || '';
 		if (campaign.bg) {
 			bg = campaign.bg;
 			brandColorBgStyle = {
-				backgroundImage: 'url(' + bg + ')',
+				// Now handled via OpimisedImage
+				// backgroundImage: 'url(' + bg + ')',
 				backgroundSize: 'cover',
 				backgroundRepeat: 'no-repeat',
 				backgroundPosition: 'center',
@@ -508,17 +517,22 @@ const CampaignPage = () => {
 				<div className='vertiser-head frank-font' style={glColorBgStyle}>
 					<CampaignHeaderWidget glLogo={glLogo} brandLogo={brandLogo} />
 				</div>
-				<div className='header' style={brandColorBgStyle}>
-					<div className='header-text'>
-						<div className='header-title frank-font'>
-							<div></div>	{/* TODO: delete this, it's just here because there's a css rule about the 1st div in title*/}
-							<div>Together we've raised</div>													
-							{donationValue? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
-							<div>for charity</div>
+				<OptimisedImage
+					src={bg}
+					render={({src}) => (
+						<div className='header' style={{...brandColorBgStyle, backgroundImage: 'url(' + src + ')'}}>
+							<div className='header-text'>
+								<div className='header-title frank-font'>
+									<div></div>	{/* TODO: delete this, it's just here because there's a css rule about the 1st div in title*/}
+									<div>Together we've raised</div>													
+									{donationValue? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
+									<div>for charity</div>
+								</div>
+								<EmailCTA />
+							</div>
 						</div>
-						<EmailCTA />
-					</div>
-				</div>
+					)}
+				/>
 			</div>
 			<div className='grid-tile middle' style={brandColorBgStyle}>
 				<div className='inside'>
