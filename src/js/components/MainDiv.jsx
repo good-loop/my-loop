@@ -1,3 +1,4 @@
+/* global navigator */
 import React, { Component } from 'react';
 import Login from 'you-again';
 import { assert } from 'sjtest';
@@ -70,6 +71,14 @@ class MainDiv extends Component {
 			// Store response.cargo.success somewhere in datastore so other components can check (a) if it's finished and (b) if it was successful before trying to talk to lg.good-loop.com
 		});
 
+	}
+
+	componentDidMount() {
+		// Check if we're on a mobile device and place the result in state
+		// COPIED FROM ADUNIT'S device.js
+		const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+		const isMobile = !!(userAgent.match('/mobile|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i'));
+		DataStore.setValue(['env', 'isMobile'], isMobile);
 	}
 
 	componentDidCatch(error, info) {
