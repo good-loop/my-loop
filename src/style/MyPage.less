@@ -1,6 +1,15 @@
 
+// good-loop branding
+@glColor: #C83312; 
+
 .page.MyPage {
-	background-color: #F6C390;
+	text-align: center;
+	background-color: @glColor; // #F6C390;
+	color: white;
+}
+
+span.glyphicon.glyphicon-triangle-bottom, span.glyphicon.glyphicon-triangle-top {
+    display: none;
 }
 
 // hack to pad out header only pre-sign up 
@@ -8,20 +17,44 @@
 	min-height: 6vmin;
 } // end of hack
 
+.splashPhoto {
+	height: 370px;
+    background-image: url(https://c.pxhere.com/photos/84/cf/wall_walking_good_graffiti_street-54078.jpg!d);
+    background-size: cover;
+    width: 100%;
+    background-position: center;
+}
+
 // hack to remove panel's default padding
 .headerCard .panel-body {
 	padding: 0px;
 }
 
+// take up the whole space
+.panel {
+	margin-bottom: 0;
+	padding: 20px;
+}
+
 // prettify cards
 .panel-body {
-	padding: 2.5vmin;
-	background-color: #E6E4D6;
-	box-shadow: 0 3px 5px rgba(0,0,0,0.3); 
+	// add more white space, looks less cluttered
+	padding: 50px;
+	// restrict width of text
+	width: 70%;
+    margin: 0 auto;
+	background-color: transparent; //#E6E4D6;
+	//box-shadow: 0 3px 5px rgba(0,0,0,0.3); 
+
+	.ShareAd {
+		width: 500px;
+		margin: 0 auto;
+	}
 }
 
 .panel-heading {
-	box-shadow: 0 3px 5px rgba(0,0,0,0.3);
+	color: white;
+	//box-shadow: 0 3px 5px rgba(0,0,0,0.3);
 }
 
 .panel-title {
@@ -31,8 +64,9 @@
 }
 
 .panel-default, .panel-default > .panel-heading{
-	background-color: #F5AA57;
+	background-color: transparent; // #F5AA57;
 	border-color: transparent;
+	color: white;
 } // end of prettify cards
 
 /* gl button: white button on red background */
@@ -40,7 +74,7 @@
 	background-color: white;
 	color: @gl-red;
 	border-color: white;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+	//box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
 	font-weight: bold;
 }
 
@@ -130,7 +164,7 @@
 		padding-top: 12px;
 		padding-bottom: 20px;
 		margin: 0 auto;
-		color: #4a4a4a;
+		//color: #4a4a4a;
 		vertical-align: top;
 	}
 	
@@ -138,8 +172,6 @@
 		height: 132px;
 		max-width: 200px;
 	}
-
-
 }
 
 
@@ -148,7 +180,7 @@
 // StatisticsCard shows e.g. 1,470,000 people reached
 .statistics-content {
 	h2 {
-		color: #4a4a4a;
+		//color: #4a4a4a;
 		font-size: 24px;
 		margin: 0 4vmin;
 		line-height: 1.5em;
@@ -157,7 +189,7 @@
 	.statistics-item {
 		text-align: center;
 		font-size: 13px;
-		color: #9b9b9b;
+		//color: #9b9b9b;
 
 		.statistics-value {
 			vertical-align: middle;
@@ -169,7 +201,7 @@
 				padding-bottom: 10px;
 				margin-bottom: 10px;
 				font-size: 24px;
-				color: #4a4a4a;	
+				//color: #4a4a4a;	
 				font-weight: bold;
 				&:after {
 					display: block;
@@ -369,4 +401,11 @@
 #good-loop-iframe {
 	height: 175px !important;
 	width: 310px !important;
+}
+
+// on my-loop we only want to show gl social links, so center the content and unset flex
+.grid-tile.bottom .foot.center .social {
+	text-align: center;
+	margin: 0 auto;
+	flex-basis: unset;
 }

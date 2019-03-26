@@ -101,13 +101,15 @@ const DonationCard = ({xids}) => {
 		return ServerIO.getDonationsData({q:qcids, name});
 	});
 	let communityDonationsByCharity = pvCommunityCharityTotal.value? pvCommunityCharityTotal.value.by_cid : {};
-	
+
+	let onlyOneCharity = cids.length === 1 ? true : false;
+
 	// make rows
 	let rows = cids.map(cid => {
-		return {cid, userTotal: donationsByCharity[cid], communityTotal: communityDonationsByCharity[cid]};
+		return {cid, userTotal: donationsByCharity[cid], communityTotal: communityDonationsByCharity[cid], onlyOneCharity: onlyOneCharity};
 	});
 	// sort by value??
-	
+
 	// render
 	// TODO <You xids={xids} />
 
@@ -160,7 +162,7 @@ const getImage = peeps => {
 	return null;
 };
 
-const CharityDonation = ({cid, userTotal, communityTotal}) => {
+const CharityDonation = ({cid, userTotal, communityTotal, onlyOneCharity}) => {
 	// HACK: avoid any dodgy numbers from old/new donation counters
 	if (communityTotal > 20000) communityTotal = communityTotal*0.06;
 
@@ -180,7 +182,7 @@ const CharityDonation = ({cid, userTotal, communityTotal}) => {
 	
 	const img = charity.logo || charity.img || "/img/logo-grey.png";
 	return (
-		<div className="col-md-4">
+		<div className={onlyOneCharity ? "" : "col-md-4"}>
 			<div className="charity-circle">
 				<div className="top">
 					<img src={img} alt={`Logo for ${charity.name}`} className='charity-logo mx-auto' />

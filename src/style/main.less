@@ -224,37 +224,38 @@
 		padding-top: 6vh; // give it some space, looks less cluttered this way
 		font-size: 2.5vh; // make it pop out responsively
 	}
+} //. campaign page
 
-	// share and social media buttons
-	.grid-tile.bottom {
-		min-height: 100px;
-	
-		.foot {
-			// displaying the social buttons in a column layout
-			display: flex;
-			width: 100%;
-	
-			.social {
-				flex-basis: calc(33.333%);
-				color: white;
-				// avoid looking overcrowded
-				padding-top: 5%;
-				padding-bottom: 4%;
-				
-				p {
-					margin: 0px;
-					font-size: 50px;
-	
-					span {
-						font-size: 18px;
-						position: relative;
-						top: -1.1em;
-					}
+
+// share and social media buttons
+.grid-tile.bottom {
+	min-height: 100px;
+
+	.foot {
+		// displaying the social buttons in a column layout
+		display: flex;
+		width: 100%;
+
+		.social {
+			flex-basis: calc(33.333%);
+			color: white;
+			// avoid looking overcrowded
+			padding-top: 5%;
+			padding-bottom: 4%;
+			
+			p {
+				margin: 0px;
+				font-size: 50px;
+
+				span {
+					font-size: 18px;
+					position: relative;
+					top: -1.1em;
 				}
 			}
-		} 
+		}
 	} 
-} //. campaign page
+} 
 
 // **mobile layout rules**
 // using flex to change the template of the layout for the bottom row (share and social buttons) to a column based one
@@ -323,11 +324,11 @@
 		.link.watch-cta {
 			font-size: 6vmin; 
 		}
+	}
 
-		// social buttons should be in one column
-		.grid-tile.bottom .foot {
-			flex-direction: column;
-			flex-basis: 100%;
-		}
+	// social buttons should be in one column
+	.grid-tile.bottom .foot {
+		flex-direction: column;
+		flex-basis: 100%;
 	}
 }//. mobile layout rules 

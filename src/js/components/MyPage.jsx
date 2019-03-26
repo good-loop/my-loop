@@ -23,6 +23,7 @@ import C from '../C';
 import { Server } from 'http';
 import { assMatch } from 'sjtest';
 import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
+import { SocialMediaGLFooterWidget } from './SocialLinksWidget';
 
 const pagePath = ['widget', 'MyPage'];
 
@@ -118,53 +119,70 @@ const MyPage = () => {
 		}));
 	});
 
+	let glColor2 = '#f5aa57';
+	let glColor3 = '#51808a';
+	let splashPhotoStyle = { 
+		padding: '0px'
+		//width: unset;
+	}
 	// display...
 	return (
 		<div className="page MyPage">
-			<div className="container avoid-navbar">
-				<CardAccordion widgetName="MyReport" multiple >
+			<CardAccordion widgetName="MyReport" multiple >	
+				
+				<Card defaultOpen className="headerCard" style={splashPhotoStyle}>
+					<SplashPhotoCard/>
+				</Card>
 
-					<Card defaultOpen className="headerCard"><WelcomeCard xids={xids} /></Card>
-					<CardRow3>
-						<Card title="Our Achievements Together" className="StatisticsCard MiniCard" defaultOpen>
-							<StatisticsCardMini allIds={allIds} />
-						</Card>
-						<Card title="How Good-Loop Ads Work" className="StatisticsCard MiniCard" defaultOpen>
-							<OnboardingCardMini allIds={allIds} />
-						</Card>								
-						<Card title="Boost Your Impact" className="SocialMediaCard" defaultOpen>
-							<SocialMediaCard allIds={xids} />
-							<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} />
-						</Card> 
-					</CardRow3>
+				<Card defaultOpen>
+					{/* <WelcomeCard xids={xids} /> */}
+					<IntroCard/>
+				</Card>
 
-					<Card title="Your Charities" defaultOpen>
-						<DonationCard xids={xids} />
-					</Card>
+				<Card title="Our Achievements Together" className="StatisticsCard MiniCard" bgColor={glColor2} defaultOpen>
+					<StatisticsCardMini allIds={allIds} />
+				</Card>
+				<Card title="How Good-Loop Ads Work" className="StatisticsCard MiniCard" bgColor={glColor3} defaultOpen>
+					<OnboardingCardMini allIds={allIds} />
+				</Card>								
+				<Card title="Boost Your Impact" className="SocialMediaCard" defaultOpen>
+					<SocialMediaCard allIds={xids} />
+					<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} />
+				</Card> 
 
-					<Card title="Your Digital Mirror" defaultOpen>
-						<DigitalMirrorCard xids={xids} />
-						<SocialMediaCard allIds={xids} />						
-					</Card> 
+				<Card title="Your Charities" bgColor={glColor2} defaultOpen>
+					<DonationCard xids={xids} />
+				</Card>
 
-					<Card title="Consent Controls" defaultOpen>
-						{Login.isLoggedIn() ? (
-							<ConsentWidget xids={xids} />
-						) : (
-							<LoginToSee />
-						)}
-					</Card>
+				<Card title="Your Digital Mirror" bgColor={glColor3} defaultOpen>
+					<DigitalMirrorCard xids={xids} />
+					<SocialMediaCard allIds={xids} />						
+				</Card> 
 
-					<Card title="Get In Touch" defaultOpen>
-						<ContactCard allIds={allIds} />
-					</Card>
-					
-					<Card title="Linked Profiles" >
-						<LinkedProfilesCard xids={xids} />
-					</Card>
-				</CardAccordion>
+				<Card title="Consent Controls" defaultOpen>
+					{Login.isLoggedIn() ? (
+						<ConsentWidget xids={xids} />
+					) : (
+						<LoginToSee />
+					)}
+				</Card>
+
+				<Card title="Get In Touch" bgColor={glColor2} defaultOpen>
+					<ContactCard allIds={allIds} />
+				</Card>
+				
+				<Card title="Linked Profiles" bgColor={glColor3}>
+					<LinkedProfilesCard xids={xids} />
+				</Card>
+			</CardAccordion>
+			<div className='grid-tile bottom'>
+				<div className='foot header-font center'>		
+					<SocialMediaGLFooterWidget />
+				</div>
 			</div>
-			<Footer />
+			<div>
+				<Footer />
+			</div>	
 		</div>
 	);
 }; // ./MyPage
@@ -211,6 +229,33 @@ const WelcomeCard = ({xids}) => {
 		<div className="WelcomeCard">
 			{ content }
 		</div>
+	);
+};
+
+// explain good-loop and join CTA
+const IntroCard = ({}) => {
+
+	return (
+		<div className="WelcomeCard">
+			<div className="row header">
+				<div className="row blank-row"></div>
+				<div className="col-md-12 header-text frank-font">
+					<p className="title">ADS FOR GOOD</p>
+					<p className="subtitle">Good-Loop ads reward the charity of your choice for every ad you watch</p>
+					<div onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
+						<LoginLink className='btn btn-lg btn-default btn-gl' verb='Join Us' />			
+					</div>
+				</div>				
+			</div>
+		</div>
+	);
+};
+
+const SplashPhotoCard = ({}) => {
+
+	return (
+		<div className="splashPhoto">			
+		</div>			
 	);
 };
 
@@ -266,13 +311,13 @@ const StatisticsCardMini = () => {
 			<div className="row">
 				<h2 className="text-center">Thousands each month raised for charity</h2>
 			</div>
-			<div className="row statistics-item">
+			<div className="col-md-4 statistics-item">
 				<div className="statistics-value">
 					<div className="statistics-value-highlight"><span>{printer.prettyNumber(cnt)}</span></div>
 					<strong className="statistics-subtext">people reached</strong>
 				</div>
 			</div>
-			<div className="row statistics-item">
+			<div className="col-md-4 statistics-item">
 				<div className="statistics-value">
 					<div className="statistics-value-highlight">
 						<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={10} showCurrencySymbol={false} />										
@@ -280,7 +325,7 @@ const StatisticsCardMini = () => {
 					<strong className="statistics-subtext">pounds raised</strong>
 				</div>
 			</div>
-			<div className="row statistics-item">
+			<div className="col-md-4 statistics-item">
 				<div className="statistics-value">
 					<div className="statistics-value-highlight"><div className="text-stat">No compromises</div></div>
 					<strong className="statistics-subtext">on your privacy</strong>
@@ -299,17 +344,19 @@ const OnboardingCardMini = () => {
 	return (
 		<section id="howitworks" className="how text-center">
 			<div className="how-content container-fluid">
-				<div className="row how-step">
-					<img className="how-img" src={step1Img} alt='banners in a web page' />
-					<span className="how-text">You see one of our Ads For Good on a website</span>
-				</div>
-				<div className="row how-step">
-					<img className="how-img" src={step2Img} alt='banners in a web page' />
-					<span className="how-text">A video ad plays for 15 seconds</span>
-				</div>
-				<div className="row how-step">
-					<img className="how-img" src={step3Img} alt='banners in a web page' />
-					<span className="how-text">We donate half the ad revenue to your chosen charity</span>
+				<div className="row">
+					<div className="col-md-4 how-step">
+						<img className="how-img" src={step1Img} alt='banners in a web page' />
+						<span className="how-text">You see one of our Ads For Good on a website</span>
+					</div>
+					<div className="col-md-4 how-step">
+						<img className="how-img" src={step2Img} alt='banners in a web page' />
+						<span className="how-text">A video ad plays for 15 seconds</span>
+					</div>
+					<div className="col-md-4 how-step">
+						<img className="how-img" src={step3Img} alt='banners in a web page' />
+						<span className="how-text">We donate half the ad revenue to your chosen charity</span>
+					</div>
 				</div>
 				<div className="row">
 					<center>
@@ -367,8 +414,8 @@ const SocialMediaCard = ({allIds=[]}) => {
 
 // Two-liner as withLogsIfVisible latches on to Component.displayName or Component.name in order to generate sensible-looking event tag in MixPanel
 // Obviously will not work quite right if we were to use an anonymous function
-let ContactCard = ({logsIfVisibleRef}) => (
-	<div ref={logsIfVisibleRef}>
+let ContactCard = ({logsIfVisibleRef, bgColor}) => (
+	<div style={{backgroundColor: bgColor}} ref={logsIfVisibleRef}>
 		<div>
 			<p>Let us know what you think of this web-app, and your ideas for improving it.</p>
 			<p>Are you interested in hosting Ads For Good on your blog or website?</p>
