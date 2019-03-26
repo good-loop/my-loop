@@ -61,14 +61,15 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 			ServerIO.getDataItem({type: 'NGO', id: charity.id, status: 'PUBLISHED'})
 				// Grab projects, but ignore any results that do not contain a "costPerBeneficiary" field
 				// Will give a blank array if none are found
-				.then(res => setImpactData(
+				.then(res => 
 					res 
 					&& res.cargo 
-					&& res.cargo.projects
-					&& res.cargo.projects
-						.reduce( (out, data) => data.outputs && data.outputs.length > 0 ? [...out, ...data.outputs] : out, [])
-						.filter( data => data.costPerBeneficiary )
-				));
+					&& res.cargo.projects 
+					&& setImpactData(
+						res.cargo.projects
+							.reduce( (out, data) => data.outputs && data.outputs.length > 0 ? [...out, ...data.outputs] : out, [])
+							.filter( data => data.costPerBeneficiary )
+					));
 		}
 	}, [clist]);
 
