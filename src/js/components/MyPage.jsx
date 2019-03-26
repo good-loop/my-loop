@@ -129,12 +129,12 @@ const MyPage = () => {
 	return (
 		<div className="page MyPage">
 			<CardAccordion widgetName="MyReport" multiple >	
-				
 				<Card defaultOpen className="headerCard" style={splashPhotoStyle}>
+					<NavBarCard/>
 					<SplashPhotoCard/>
 				</Card>
 
-				<Card defaultOpen>
+				<Card defaultOpen className="introCard" >
 					{/* <WelcomeCard xids={xids} /> */}
 					<IntroCard/>
 				</Card>
@@ -202,7 +202,7 @@ const WelcomeCard = ({xids}) => {
 			</div>
 			<div className="row header">
 				<div className="col-md-7 header-text">
-					<p className="title frank-font">You're a champion!</p>
+					<p className="title">You're a champion!</p>
 					<p className="subtitle">Find out below how to boost your contribution</p>
 				</div>
 				<div className="col-md-1 header-img">
@@ -212,8 +212,7 @@ const WelcomeCard = ({xids}) => {
 		</div>
 	) : (
 		<div className="row header">
-			<div className="row blank-row"></div>
-			<div className="col-md-7 header-text frank-font">
+			<div className="col-md-7 header-text">
 				<p className="title"><span> Become a superhero </span> for the causes you care about</p>
 				<div onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
 					<LoginLink className='btn btn-lg btn-default btn-gl' verb='Sign Up' />			
@@ -234,28 +233,69 @@ const WelcomeCard = ({xids}) => {
 
 // explain good-loop and join CTA
 const IntroCard = ({}) => {
-
+	const heroImage = 'https://image.ibb.co/eWpfwV/hero7.png';
+	const content = Login.isLoggedIn() ? (
+		<div>
+			<div className="row header">
+				<div className="col-md-7 header-text post-login">
+					<p className="title header-font">You're a champion!</p>
+					<p className="subtitle">Find out below how to boost your contribution</p>
+				</div>
+				<div className="col-md-1 header-img">
+					<img src={heroImage} alt="Superhero" />
+				</div>
+			</div>
+		</div>
+	) : (
+		<div className="row header">
+			<div className="col-md-12 header-text">
+				<p className="title header-font">ADS FOR GOOD</p>
+				<p className="subtitle subheader-font">Good-Loop ads reward the charity of your choice for every ad you watch</p>
+				<div onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
+					<LoginLink className='btn btn-lg btn-default btn-gl' verb='Join Us' />			
+				</div>
+			</div>				
+		</div>
+	);
 	return (
 		<div className="WelcomeCard">
-			<div className="row header">
-				<div className="row blank-row"></div>
-				<div className="col-md-12 header-text frank-font">
-					<p className="title">ADS FOR GOOD</p>
-					<p className="subtitle">Good-Loop ads reward the charity of your choice for every ad you watch</p>
-					<div onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
-						<LoginLink className='btn btn-lg btn-default btn-gl' verb='Join Us' />			
-					</div>
-				</div>				
-			</div>
+			{ content }
 		</div>
 	);
 };
 
 const SplashPhotoCard = ({}) => {
-
 	return (
 		<div className="splashPhoto">			
 		</div>			
+	);
+};
+
+const NavBarCard = ({}) => {
+	let glLogo = '/img/GoodLoopLogos_Good-Loop_AltLogo_White_Resized.png';
+	const content = Login.isLoggedIn() ? (
+		<div className="pull-right logged-in">
+			<p>Hi { Login.getUser().name || Login.getUser().xid }</p>
+			<small className="pull-right">
+				<a className="logout-link" href="#my" onClick={e => stopEvent(e) && Login.logout()}>Log out</a>
+			</small>
+		</div>
+	) : (
+		<div className="pull-right">
+			<LoginLink className='btn btn-lg btn-default btn-gl discrete-login' verb='Login' />		
+		</div>
+	);
+	return (
+		<div className="nav-bar" style={{ height: '6vh' }}>
+			<div className='col-sm-6'>
+				<div className="header-logos pull-left">
+					<img alt='Good-Loop Logo' src={glLogo} style={{ height: '6vh', padding: '20px' }}/>
+				</div>		
+			</div>
+			<div className='col-sm-6'>
+				{ content }	
+			</div>
+		</div>
 	);
 };
 
@@ -360,7 +400,7 @@ const OnboardingCardMini = () => {
 				</div>
 				<div className="row">
 					<center>
-						<a className='btn btn-default' href='https://as.good-loop.com/?site=my.good-loop.com' target='_blank'>Try it now: Watch an Ad For Good!</a>
+						<a className='btn btn-default' href='https://as.good-loop.com/?site=my.good-loop.com' target='_blank'>Watch an Ad For Good</a>
 					</center>
 				</div>
 			</div>

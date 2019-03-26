@@ -40,7 +40,7 @@ const ShareAnAd = ({ adHistory, logsIfVisibleRef }) => {
 
 	return (
 		<div className="ShareAd" ref={logsIfVisibleRef}>
-			<h2> Share this ad on social media </h2>
+			<h3> Share this ad on social media </h3>
 			{ 
 				format === 'video' 
 					? <video controls={true} width="100%" height="auto" src={video}> An error occured </video> 

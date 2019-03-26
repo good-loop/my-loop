@@ -17,20 +17,34 @@ span.glyphicon.glyphicon-triangle-bottom, span.glyphicon.glyphicon-triangle-top 
 	min-height: 6vmin;
 } // end of hack
 
+a.btn.btn-lg.btn-default.btn-gl.discrete-login {
+	border: 0;
+	background-color: inherit;
+	color: white;
+	padding-top: 18px;
+	border-color: white;
+}
+
 .splashPhoto {
-	height: 370px;
+	height: 48vh;
     background-image: url(https://c.pxhere.com/photos/84/cf/wall_walking_good_graffiti_street-54078.jpg!d);
     background-size: cover;
     width: 100%;
     background-position: center;
 }
 
-// hack to remove panel's default padding
-.headerCard .panel-body {
+// hack to remove panel's default padding and width (so that splashPhoto can take up the whole width of the page)
+.Card.panel.panel-default.headerCard, .Card.panel.panel-default.headerCard .panel-body {
 	padding: 0px;
+	width: unset;
 }
 
-// take up the whole space
+// make sure to have the intro card occupy the rest of the screen (under splashPhoto and navBar)
+.introCard {
+	height: 46vh;
+}
+
+// take up the whole space and look decluttered
 .panel {
 	margin-bottom: 0;
 	padding: 20px;
@@ -39,7 +53,7 @@ span.glyphicon.glyphicon-triangle-bottom, span.glyphicon.glyphicon-triangle-top 
 // prettify cards
 .panel-body {
 	// add more white space, looks less cluttered
-	padding: 50px;
+	padding: 30px;
 	// restrict width of text
 	width: 70%;
     margin: 0 auto;
@@ -58,15 +72,16 @@ span.glyphicon.glyphicon-triangle-bottom, span.glyphicon.glyphicon-triangle-top 
 }
 
 .panel-title {
-	font-family: 'BebasNeue', Fallback, sans-serif;
-	font-size: 18px;
 	letter-spacing: 1px;
+	font-weight: bold;
 }
 
 .panel-default, .panel-default > .panel-heading{
 	background-color: transparent; // #F5AA57;
 	border-color: transparent;
 	color: white;
+	// add more white space, looks less cluttered
+	padding: 25px;
 } // end of prettify cards
 
 /* gl button: white button on red background */
@@ -79,7 +94,7 @@ span.glyphicon.glyphicon-triangle-bottom, span.glyphicon.glyphicon-triangle-top 
 }
 
 .btn.btn-gl:hover {
-	background-color: #a50d23; // ??relation to gl-red??
+	background-color: @gl-red; 
 	text-decoration: none;
 	color: white;
 } // end of gl button
@@ -90,8 +105,12 @@ span.glyphicon.glyphicon-triangle-bottom, span.glyphicon.glyphicon-triangle-top 
 	color: white;
 	background-color: @gl-red;
 
-	.header {
-		padding: 2vmin 0 6vmin 4vmin;
+	.header-text {
+		padding: 0vmin 0 3vmin 4vmin;
+	}
+
+	.header-text.post-login {
+		padding: 2vmin 0 3vmin 4vmin;
 	}
 
 	.header-text{
@@ -105,6 +124,7 @@ span.glyphicon.glyphicon-triangle-bottom, span.glyphicon.glyphicon-triangle-top 
 		-ms-user-select: none; /* Internet Explorer/Edge */
 		user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 	}
+
 	.header-img img {
 		height: 35vmin;
 		width: 35vmin;
@@ -112,20 +132,20 @@ span.glyphicon.glyphicon-triangle-bottom, span.glyphicon.glyphicon-triangle-top 
 	}
 
 	.title {
-		font-size: 3.7vmin;
-		text-transform: uppercase;
+		font-size: 40px;
 		letter-spacing: 0.6vmin;
-		font-weight: 900;
 		width: 100%;
 		margin: 0 auto;
-		padding: 6vmin 0 3vmin 0;
+		padding: 6vmin 0 3vmin 0;		
+	}
+	.header-text.post-login.title {
+		padding: 8vmin 0 3vmin 0;		
 	}
 
 	.subtitle {	
-		font-size: 4vmin;
+		font-size: 43px;
 		letter-spacing: 0.4vmin;
-		font-weight: normal;
-		padding-bottom: 3vmin;
+		padding-top: 1vmin;		
 		width: 85%;
 		margin: 0 auto;
 	}
@@ -134,6 +154,7 @@ span.glyphicon.glyphicon-triangle-bottom, span.glyphicon.glyphicon-triangle-top 
 	.btn-gl {
 		margin-bottom: 5vmin;
 		font-size: 2.5vmin;
+		margin-top: 4vmin;
 	}
 
 	// appears in the top-right of the big red welcome card
@@ -152,8 +173,8 @@ span.glyphicon.glyphicon-triangle-bottom, span.glyphicon.glyphicon-triangle-top 
 //OnboardingCard styles how good loop ads work section 
 #howitworks {
 	line-height: 1.4;
-	font-family: "campton-book", sans-serif;
-	font-size: 16px;
+	//font-family: "campton-book", sans-serif;
+	//font-size: 16px;
 
 	.how-text {
 		padding-top: 23px;
@@ -181,18 +202,21 @@ span.glyphicon.glyphicon-triangle-bottom, span.glyphicon.glyphicon-triangle-top 
 .statistics-content {
 	h2 {
 		//color: #4a4a4a;
-		font-size: 24px;
+		//font-size: 24px;
 		margin: 0 4vmin;
 		line-height: 1.5em;
 	}
 
 	.statistics-item {
 		text-align: center;
-		font-size: 13px;
+		//font-size: 13px;
 		//color: #9b9b9b;
 
 		.statistics-value {
+			// align
 			vertical-align: middle;
+			// less cluttered
+			padding-top: 30px;
 
 			.statistics-value-highlight {
 				margin-top: 5px;
@@ -219,7 +243,7 @@ span.glyphicon.glyphicon-triangle-bottom, span.glyphicon.glyphicon-triangle-top 
 
 		// a non-money value, eg "No compromises"
 		.text-stat {
-			font-size: 19px;
+			//font-size: 19px;
 			padding-bottom: 2px;
 		}
 
@@ -244,11 +268,11 @@ span.glyphicon.glyphicon-triangle-bottom, span.glyphicon.glyphicon-triangle-top 
 // DigitalMirrorCard: a widget for showing the user their twitter data (experimental)
 .mirror {
 	.description {
-		font-size: 16px;
+		//font-size: 16px;
 	}
 
 	.profile-details {
-		font-size: 22px;
+		text-align: left;
 		line-height: 50px; 
 		margin-top: 1vmin;
 
@@ -409,3 +433,4 @@ span.glyphicon.glyphicon-triangle-bottom, span.glyphicon.glyphicon-triangle-top 
 	margin: 0 auto;
 	flex-basis: unset;
 }
+
