@@ -272,7 +272,7 @@ const SplashPhotoCard = ({}) => {
 };
 
 const NavBarCard = ({}) => {
-	let glLogo = '/img/GoodLoopLogos_Good-Loop_AltLogo_White_Resized.png';
+	let glLogo = 'https://i.ibb.co/ZT8scH0/Good-Loop-Logos-Good-Loop-Alt-Logo-White-Resized.png';
 	const content = Login.isLoggedIn() ? (
 		<div className="pull-right logged-in">
 			<p>Hi { Login.getUser().name || Login.getUser().xid }</p>
