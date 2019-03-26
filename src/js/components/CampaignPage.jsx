@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { encURI } from 'wwutils';
 // import pivot from 'data-pivot';
 import C from '../C';
@@ -50,6 +50,28 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 	let ctxtColor = clist.map(x => x.txtColor); // TODO: does this exist?
 	let cdescs = clist.map(x => x.description);
 	//let cPhoto = chighResPhotos[index] ? chighResPhotos[index] : '';
+
+	// This data will never be used outside of this component, so I have chosen to manage state locally
+	// impactData is actually the "projects" field in SoGive data
+	const [impactData, setImpactData] = useState([]);
+	// Think what we need to do is call setImpactData on ServerIO callback
+	useEffect(() => {
+		const charity = clist[index];
+		if( !charity.hideImpactData ) {
+			ServerIO.getDataItem({type: 'NGO', id: charity.id, status: 'PUBLISHED'})
+				// Grab projects, but ignore any results that do not contain a "costPerBeneficiary" field
+				// Will give a blank array if none are found
+				.then(res => 
+					res 
+					&& res.cargo 
+					&& res.cargo.projects 
+					&& setImpactData(
+						res.cargo.projects
+							.reduce( (out, data) => data.outputs && data.outputs.length > 0 ? [...out, ...data.outputs] : out, [])
+							.filter( data => data.costPerBeneficiary )
+					));
+		}
+	}, [clist]);
 
 	// set the photo if it has one
 	let photoStyle = {};
@@ -136,6 +158,11 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 						</div>
 						<div className="slide-desc">
 							<MDText source={cdescs[index]} />
+							{
+								impactData.map( data => (
+									<MDText key={data} source={`**Average cost: ${Money.CURRENCY[data.costPerBeneficiary.currency] || ''}${data.costPerBeneficiary.value} per ${data.name || 'unit'} **`} />
+								))
+							}
 						</div>						
 					</div>	
 					<div className="col-md-4 slide-photo" style={photoStyle}></div>
@@ -158,6 +185,11 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 						</div>
 						<div className="slide-desc">
 							<MDText source={cdescs[index]} />
+							{
+								impactData.map( data => (
+									<MDText source={`**Average cost: ${Money.CURRENCY[data.costPerBeneficiary.currency] || ''}${data.costPerBeneficiary.value} per ${data.name || 'unit'} **`} />
+								))
+							}
 						</div>						
 					</div>	
 					<div className="col-md-3" />
