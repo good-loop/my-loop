@@ -124,7 +124,7 @@ const MyPage = () => {
 	let splashPhotoStyle = { 
 		padding: '0px'
 		//width: unset;
-	}
+	};
 	// display...
 	return (
 		<div className="page MyPage">
@@ -190,88 +190,89 @@ const MyPage = () => {
 const WelcomeCard = ({xids}) => {
 	const heroImage = 'https://image.ibb.co/eWpfwV/hero7.png';
 
-	const content = Login.isLoggedIn() ? (
-		<div>
-			<div className="row">
-				<div className="pull-right logged-in">
-					<p>Hi { Login.getUser().name || Login.getUser().xid }</p>
-					<small className="pull-right">
-						<a className="logout-link" href="#my" onClick={e => stopEvent(e) && Login.logout()}>Log out</a>
-					</small>
-				</div>
-			</div>
-			<div className="row header">
-				<div className="col-md-7 header-text">
-					<p className="title">You're a champion!</p>
-					<p className="subtitle">Find out below how to boost your contribution</p>
-				</div>
-				<div className="col-md-1 header-img">
-					<img src={heroImage} alt="Superhero" />
-				</div>
-			</div>
-		</div>
-	) : (
-		<div className="row header">
-			<div className="col-md-7 header-text">
-				<p className="title"><span> Become a superhero </span> for the causes you care about</p>
-				<div onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
-					<LoginLink className='btn btn-lg btn-default btn-gl' verb='Sign Up' />			
-				</div>
-			</div>
-			<div className="col-md-1 header-img">
-				<img src={heroImage} alt="Superhero" />
-			</div>
-		</div>
-	);
-
 	return (
 		<div className="WelcomeCard">
-			{ content }
+			{ 
+				Login.isLoggedIn() ? (
+					<div>
+						<div className="row">
+							<div className="pull-right logged-in">
+								<p>Hi { Login.getUser().name || Login.getUser().xid }</p>
+								<small className="pull-right">
+									<a className="logout-link" href="#my" onClick={e => stopEvent(e) && Login.logout()}>Log out</a>
+								</small>
+							</div>
+						</div>
+						<div className="row header">
+							<div className="col-md-7 header-text">
+								<p className="title">You're a champion!</p>
+								<p className="subtitle">Find out below how to boost your contribution</p>
+							</div>
+							<div className="col-md-1 header-img">
+								<img src={heroImage} alt="Superhero" />
+							</div>
+						</div>
+					</div>
+				) : (
+					<div className="row header">
+						<div className="col-md-7 header-text">
+							<p className="title"><span> Become a superhero </span> for the causes you care about</p>
+							<div onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
+								<LoginLink className='btn btn-lg btn-default btn-gl' verb='Sign Up' />			
+							</div>
+						</div>
+						<div className="col-md-1 header-img">
+							<img src={heroImage} alt="Superhero" />
+						</div>
+					</div>
+				)
+			}
 		</div>
 	);
 };
 
 // explain good-loop and join CTA
-const IntroCard = ({}) => {
+const IntroCard = () => {
 	const heroImage = 'https://image.ibb.co/eWpfwV/hero7.png';
-	const content = Login.isLoggedIn() ? (
-		<div>
-			<div className="row header">
-				<div className="col-md-7 header-text post-login">
-					<p className="title header-font">You're a champion!</p>
-					<p className="subtitle">Find out below how to boost your contribution</p>
-				</div>
-				<div className="col-md-1 header-img">
-					<img src={heroImage} alt="Superhero" />
-				</div>
-			</div>
-		</div>
-	) : (
-		<div className="row header">
-			<div className="col-md-12 header-text">
-				<p className="title header-font">ADS FOR GOOD</p>
-				<p className="subtitle subheader-font">Good-Loop ads reward the charity of your choice for every ad you watch</p>
-				<div onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
-					<LoginLink className='btn btn-lg btn-default btn-gl' onClick={LoginWidget.changeVerb('register')} verb='Join us' />			
-				</div>
-			</div>				
-		</div>
-	);
 	return (
 		<div className="WelcomeCard">
-			{ content }
+			{ 
+				Login.isLoggedIn() ? (
+					<div>
+						<div className="row header">
+							<div className="col-md-7 header-text post-login">
+								<p className="title header-font">You're a champion!</p>
+								<p className="subtitle">Find out below how to boost your contribution</p>
+							</div>
+							<div className="col-md-1 header-img">
+								<img src={heroImage} alt="Superhero" />
+							</div>
+						</div>
+					</div>
+				) : (
+					<div className="row header">
+						<div className="col-md-12 header-text">
+							<p className="title header-font">ADS FOR GOOD</p>
+							<p className="subtitle subheader-font">Good-Loop ads reward the charity of your choice for every ad you watch</p>
+							<div onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
+								<LoginLink className='btn btn-lg btn-default btn-gl' onClick={() => LoginWidget.changeVerb('register')} verb='Join us' />			
+							</div>
+						</div>				
+					</div>
+				)
+			}
 		</div>
 	);
 };
 
-const SplashPhotoCard = ({}) => {
+const SplashPhotoCard = () => {
 	return (
 		<div className="splashPhoto">			
 		</div>			
 	);
 };
 
-const NavBarCard = ({}) => {
+const NavBarCard = () => {
 	let glLogo = 'https://i.ibb.co/ZT8scH0/Good-Loop-Logos-Good-Loop-Alt-Logo-White-Resized.png';
 	const content = Login.isLoggedIn() ? (
 		<div className="pull-right logged-in">
