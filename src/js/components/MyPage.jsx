@@ -24,6 +24,7 @@ import { Server } from 'http';
 import { assMatch } from 'sjtest';
 import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
 import { SocialMediaGLFooterWidget } from './SocialLinksWidget';
+import AccountMenu from '../base/components/AccountMenu';
 
 const pagePath = ['widget', 'MyPage'];
 
@@ -144,9 +145,12 @@ const MyPage = () => {
 				</Card>
 				<Card title="How Good-Loop Ads Work" className="StatisticsCard MiniCard" bgColor={glColor3} defaultOpen>
 					<OnboardingCardMini allIds={allIds} />
-				</Card>								
-				<Card title="Boost Your Impact" className="SocialMediaCard" defaultOpen>
-					<SocialMediaCard allIds={xids} />
+				</Card>							
+				<Card title="Recent Campaigns" bgColor={glColor2} defaultOpen>
+					<RecentCampaignsCard />
+				</Card>	
+				<Card title="Boost Your Impact" className="boostImpact" defaultOpen>
+					<SocialMediaCard allIds={xids} className="socialConnect"/>
 					<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} />
 				</Card> 
 
@@ -155,11 +159,11 @@ const MyPage = () => {
 				</Card>
 
 				<Card title="Your Digital Mirror" bgColor={glColor3} defaultOpen>
-					<DigitalMirrorCard xids={xids} />
-					<SocialMediaCard allIds={xids} />						
+					<DigitalMirrorCard xids={xids} className="digitalMirror"/>
+					<SocialMediaCard allIds={xids} className="socialConnect"/>						
 				</Card> 
 
-				<Card title="Consent Controls" defaultOpen>
+				<Card title="Consent Controls" defaultOpen className="consentControls">
 					{Login.isLoggedIn() ? (
 						<ConsentWidget xids={xids} />
 					) : (
@@ -171,7 +175,7 @@ const MyPage = () => {
 					<ContactCard allIds={allIds} />
 				</Card>
 				
-				<Card title="Linked Profiles" bgColor={glColor3}>
+				<Card title="Linked Profiles" bgColor={glColor3} className="linkedProfiles">
 					<LinkedProfilesCard xids={xids} />
 				</Card>
 			</CardAccordion>
@@ -275,10 +279,11 @@ const NavBarCard = ({}) => {
 	let glLogo = 'https://i.ibb.co/ZT8scH0/Good-Loop-Logos-Good-Loop-Alt-Logo-White-Resized.png';
 	const content = Login.isLoggedIn() ? (
 		<div className="pull-right logged-in">
-			<p>Hi { Login.getUser().name || Login.getUser().xid }</p>
+			{/* <p>Hi { Login.getUser().name || Login.getUser().xid }</p>
 			<small className="pull-right">
 				<a className="logout-link" href="#my" onClick={e => stopEvent(e) && Login.logout()}>Log out</a>
-			</small>
+			</small> */}
+			<AccountMenu account={false} logoutLink={'#'} />
 		</div>
 	) : (
 		<div className="pull-right">
@@ -286,10 +291,10 @@ const NavBarCard = ({}) => {
 		</div>
 	);
 	return (
-		<div className="nav-bar" style={{ height: '6vh' }}>
+		<div className="nav-bar">
 			<div className='col-sm-6'>
 				<div className="header-logos pull-left">
-					<img alt='Good-Loop Logo' src={glLogo} style={{ height: '6vh', padding: '20px' }}/>
+					<img className="gl-logo" alt='Good-Loop Logo' src={glLogo}/>
 				</div>		
 			</div>
 			<div className='col-sm-6'>
@@ -335,6 +340,7 @@ const Row3 = ({children}) => {
 
 
 const StatisticsCardMini = () => { 
+	const statsImg = 'https://as.good-loop.com/uploads/marvinirinapreda.meemail/stats__card__v7-158228810410788570.png';
 	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
 		const name = "total-spend"; // dummy parameter: helps identify request in network tab
 		return ServerIO.getAllSpend({name});
@@ -372,7 +378,19 @@ const StatisticsCardMini = () => {
 				</div>
 			</div>
 		</div>
+		<div>
+			<img className="statistics-image" src={statsImg}/>
+		</div>
 	</section>);
+};
+
+const StatisticsCard = () => { 
+	const statsImg = './img/stats_card_v7.png';
+	return(
+		<div>
+			<img className="statistics-image" src={statsImg}/>
+		</div>
+	);
 };
 
 
@@ -408,11 +426,78 @@ const OnboardingCardMini = () => {
 	);
 };
 
+const RecentCampaignsCard = () => {
+	
+	const vertisers = 
+			[
+				{
+					"name": "KitKat",
+					"adid": "xsINEuJV",
+					"logo": "https://as.good-loop.com/uploads/anon/kithead1-8689246171902103163.png"
+				},
+				// {
+				// 	"name": "Lynx",
+				// 	"adid": "i2NidWgu",
+				// 	"logo": "https://as.good-loop.com/uploads/anon/lynx-black-9012135637566843772.png"
+				// },
+				// {
+				// 	"name": "Glasgow Credit Union",
+				// 	"adid": "rfQVI7tc",
+				// 	"logo": "https://as.good-loop.com/uploads/anon/gcu____white-5300781013619689576.png"
+				// },
+				// {
+				// 	"name": "Love Beauty and Planet",
+				// 	"adid": "dEQj33ir",
+				// 	"logo": "https://as.good-loop.com/uploads/anon/lovebeautyplanet__horizontal-full-logo-2244424493762407107.jpg"
+				// },
+				// {
+				// 	"name": "method",
+				// 	"adid": "JvtlN3pk",
+				// 	"logo": "https://as.good-loop.com/uploads/anon/methodlogo-1-6990657047366189851.png"
+				// },
+				{
+					"name": "Persil",
+					"adid": "2loo5PtL",
+					"logo": "https://i.pinimg.com/originals/b7/dc/2e/b7dc2e499618bf9e345dcf4335eb408e.png"
+				},
+				{
+					"name": "Linda McCartney",
+					"adid": "qprjFW1H",
+					"logo": "https://cookschool.club/wp-content/uploads/2018/09/imageedit_1_9636644754-300x200.png"
+				},
+				{
+					"name": "Cappy",
+					"adid": "2dsE6F5g",
+					"logo": "https://as.good-loop.com/uploads/anon/kisspng-or871378622657345-8807730161052821806.png"
+				},
+				{
+					"name": "Sunbites",
+					"adid": "2ROGntyn",
+					"logo": "https://as.good-loop.com/uploads/anon/sunbites-logo-1220401756647184148.png"
+				},
+				{
+					"name": "Villa Plus",
+					"adid": "lrOQ2Jq3",
+					"logo": "https://www.spacecity.co.uk/wp-content/uploads/2018/03/Villa-Plus.png"
+				}
+				// {
+				// 	"name": "Elf Pets",
+				// 	"adid": "91NPl6ab",
+				// 	"logo": "https://as.good-loop.com/uploads/anon/Screen_Shot_2018-11-19_at_10.12.02-8445321654427265690.png"
+				// }
+			];
+	return (
+		<div className="vertiser-row">
+			{	vertisers.map(x => <a href={"//my.good-loop.com/#campaign/?gl.vert="+x.adid} target="_blank"><img src={x.logo} alt={x.name}/></a>)	}
+		</div>		
+	);
+};
+
 
 /**
  * Social CTAs: Share on social / connect
  */
-const SocialMediaCard = ({allIds=[]}) => {
+const SocialMediaCard = ({allIds=[], className}) => {
 	// TODO (31/10/18): move emailID in to ids after email signup code has been implemented
 	const emailID = allIds.filter(id => XId.service(id)==='email')[0];
 
@@ -423,7 +508,7 @@ const SocialMediaCard = ({allIds=[]}) => {
 
 	const fbpeep = getProfilesNow([ids.fbid])[0]; 
 	return (
-		<div>
+		<div className={className}>
 			
 			{	// Show text if ids contains an undefined value (user still hasn't connected one of their social media accounts)
 				Object.values(ids).some( id => id === undefined || id === null) ? <p>Connect your social media - you can use this to boost the donations you generate!</p> : null
