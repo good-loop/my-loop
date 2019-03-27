@@ -12,7 +12,7 @@ import Profiler, { getProfile, getProfilesNow } from '../base/Profiler';
 import Person from '../base/data/Person';
 import Misc from '../base/components/Misc';
 import CardAccordion, { Card } from '../base/components/CardAccordion';
-import { LoginLink, SocialSignInButton } from '../base/components/LoginWidget';
+import LoginWidget, { LoginLink, SocialSignInButton } from '../base/components/LoginWidget';
 import DigitalMirrorCard from '../components/DigitalMirrorCard';
 import Footer from '../components/Footer';
 import ShareAnAd from '../components/ShareAnAd';
@@ -252,7 +252,7 @@ const IntroCard = ({}) => {
 				<p className="title header-font">ADS FOR GOOD</p>
 				<p className="subtitle subheader-font">Good-Loop ads reward the charity of your choice for every ad you watch</p>
 				<div onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
-					<LoginLink className='btn btn-lg btn-default btn-gl' verb='Join Us' />			
+					<LoginLink className='btn btn-lg btn-default btn-gl' onClick={LoginWidget.changeVerb('register')} verb='Join us' />			
 				</div>
 			</div>				
 		</div>
