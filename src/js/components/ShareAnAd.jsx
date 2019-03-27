@@ -6,6 +6,7 @@ import C from '../C';
 import Person from '../base/data/Person';
 import {saveSocialShareId} from '../base/Profiler';
 import GoodLoopUnit from '../base/components/GoodLoopUnit';
+import {IntentLink} from '../base/components/SocialShare';
 import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
 
 /**
@@ -37,6 +38,7 @@ const ShareAnAd = ({ adHistory, logsIfVisibleRef }) => {
 	let {vert, format, video} = adHistory || backUpVertData || {};
 
 	const twitterXId = Person.getTwitterXId();
+	const socialShareId = twitterXId && md5( twitterXId + vert );
 
 	return (
 		<div className="ShareAd" ref={logsIfVisibleRef}>
@@ -50,34 +52,21 @@ const ShareAnAd = ({ adHistory, logsIfVisibleRef }) => {
 				twitterXId
 				&& (
 					<div>
-						<TwitterIntentLink twitterXId={twitterXId} vert={vert} />
+						<IntentLink 
+							onClick={() => saveSocialShareId({xid: twitterXId, socialShareId, adid:vert})}
+							service='twitter' 
+							text='I just gave to charity by watching a GoodLoop ad'
+							url={`https://as.good-loop.com/?gl.vert=${vert}&gl.socialShareId=${socialShareId}`}
+						>
+							<span className='fa fa-twitter' />
+							<span className="label" id="l">Tweet</span>
+						</IntentLink>
+						{/* <TwitterIntentLink twitterXId={twitterXId} vert={vert} /> */}
 						<SharedAdStats twitterXId={twitterXId} />
 					</div>
 				)
 			}
 		</div>
-	);
-};
-
-/** Do we want to make this a generic component? Feels like it should be
- * Twitter share button: user clicks and is prompted to tweet a link to one of our ads
- */
-const TwitterIntentLink = ({vert, twitterXId}) => {
-	// Allows us to track stats for ads shared by individual users
-	const socialShareId = md5( twitterXId + vert );
-	console.warn("IntentLink", vert);
-	return (
-		<a 
-			href={"https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Fas.good-loop.com%2F&amp;ref_src=twsrc%5Etfw&amp;text=I%20just%20gave%20to%20charity%20by%20watching%20a%20%40GoodLoopHQ%20ad%20%3A)&amp;tw_p=tweetbutton&amp;url=https%3A%2F%2Fas.good-loop.com%2F%3Fgl.vert%3D" + encodeURIComponent(vert + "&gl.socialShareId=" + socialShareId)} 
-			className="btn tweet-button" 
-			id="b"
-			target="_blank"
-			rel="noreferrer"
-			onClick={() => saveSocialShareId({xid: twitterXId, socialShareId, adid:vert})}
-		>
-			<span className='fa fa-twitter' />
-			<span className="label" id="l">Tweet</span>
-		</a>
 	);
 };
 
@@ -96,7 +85,6 @@ const SharedAdStats = ({twitterXId}) => {
 	// Load human-readable name for each shared ad
 	const [names, setNames] = useState({});
 	useEffect(() => {
-		console.warn(twitterSocialShareObjects);
 		twitterSocialShareObjects
 			.forEach( shareObject => {
 				ServerIO.getVertData(shareObject.adId)
