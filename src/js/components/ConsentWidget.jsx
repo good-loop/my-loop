@@ -83,7 +83,7 @@ const ConsentWidget = ({xids}) => {
 	};
 
 	return (
-		<div>
+		<div className="consent-widget">
 			<p>Help us boost the money raised for charity using your data - without compromising your privacy.</p>
 			<p>Please can we:</p>
 

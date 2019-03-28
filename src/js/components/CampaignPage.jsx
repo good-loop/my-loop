@@ -12,6 +12,14 @@ import Footer from './Footer';
 import MDText from '../base/components/MDText';
 import PropControl from '../base/components/PropControl';
 import { SocialMediaGLFooterWidget, SocialMediaFooterWidget, SocialMediaShareWidget } from './SocialLinksWidget';
+import NavBar from './NavBar';
+import CardAccordion, { Card } from '../base/components/CardAccordion';
+import OptimisedImage from './OptimisedImage';
+import OnboardingCardMini from './OnboardingCardMini';
+import SocialMediaCard from './SocialMediaCard';
+import ShareAnAd from '../components/ShareAnAd';
+
+const pagePath = ['widget', 'MyPage'];
 
 const CampaignHeaderWidget = ({glLogo, brandLogo}) => {
 	return (
@@ -115,10 +123,10 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 	if (!clist[index].name && !clist[index].logo) {
 		return(null);
 	}
+	//slideStyle.height = '22vh';
 
 	// if there's no chty description, then we should just show the chty title and logo and center them
 	if (!cdescs[index]) {
-		slideStyle.height = '22vh';
 		return (
 			<div className={itemClass} style={slideStyle}>
 				<div>
@@ -128,7 +136,7 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 							<div className="slide-logo" style={logoStyle}>
 								<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={circleCropStyle} />
 							</div>	
-							<div className="slide-title" style={{paddingTop: '3%', color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
+							<div className="slide-title h3" style={{paddingTop: '3%', color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
 								{cnames[index]}
 							</div>	
 						</div>		
@@ -146,13 +154,8 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 					<div className="col-md-1" />
 					<div className="col-md-5">
 						<div className="slide-header">
-							<div className="col-md-1" />
-							<div className="col-md-2">
-								<div className="slide-logo" style={logoStyle}>
-									<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={circleCropStyle} />
-								</div>	
-							</div>	
-							<div className="col-md-6 slide-title" style={{color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
+							<div className="col-md-3" />
+							<div className="col-md-6 slide-title h3" style={{color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
 								{cnames[index]}
 							</div>	
 						</div>
@@ -179,7 +182,7 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 									<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={circleCropStyle} />
 								</div>	
 							</div>	
-							<div className="col-md-6 slide-title" style={{color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
+							<div className="col-md-6 slide-title h3" style={{color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
 								{cnames[index]}
 							</div>	
 						</div>
@@ -196,6 +199,47 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 				</div>
 			} 
 		</div>	
+	);
+};
+
+const DonationInfoWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, brandColorTxtStyle}) => {
+	let toggle = DataStore.getValue(['widget', 'donationCircles', 'active']) || [true, false, false]; // toggles the info charity box to display one at a time
+	
+	return (
+		<div className='donation-circles'>
+			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={0} name={'left'} shown={toggle[0]} brandColorBgStyle={brandColorBgStyle} />
+			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={1} name={'middle'} shown={toggle[1]} brandColorBgStyle={brandColorBgStyle} />
+			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={2} name={'right'} shown={toggle[2]} brandColorBgStyle={brandColorBgStyle} />
+		</div>
+	);
+};
+
+
+let _handleClick = (circleIndex) => {
+	let toggle = [false, false, false];
+	toggle[circleIndex] = true;
+	DataStore.setValue(['widget', 'donationCircles', 'active'], toggle);
+};
+
+const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='left', shown, brandColorBgStyle}) => {
+	let cids = clist.map(x => x.id);
+	let cnames = clist.map(x => x.name);
+	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo || x.logo);
+	// !(x.highResPhoto || x.photo)? .donation-circles .circle img { object-fit: contain; }
+
+	return (
+		<div className={'circle '.concat(name)} onClick={(e) => _handleClick(index)}>
+			{cparent? 
+				<div className="circle-info">
+					<p><span>{campaignSlice[cids[index]].percentageTotal}%</span><br/> HAS BEEN DONATED TO...<br/><span className='project-name'>{cnames[index]}</span></p>
+				</div>
+				: 
+				null
+			}
+			 {/* brandColorBgStyle */}
+			<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} />
+			{/* <span class="circle-draw" alt={cparent+' '+cnames[index]} style={brandColorBgStyle}></span> */}
+		</div>
 	);
 };
 
@@ -303,27 +347,36 @@ const EmailCTA = () => {
 	);
 }; // ./connect
 
-/** Grabs either standard or mobile-optimised image depending on context
- * @render (21/03/19) made this render props to deal with unusual way that bg image is handled
- * Just providing a thin wrapper to an img element might be easier going forward
- * @param href https://testmedia.good-loop.com/uploads/standard/cat.jpg
- */
-const OptimisedImage = (props) => {
-	let {render} = props;
-	let src = props.src || '';
-
-	const isMobile = DataStore.getValue(['env', 'isMobile']);
-	// Logos have different path structure (testmedia.good-loop.com/uploads/img/cat.jpg)
-	const isStandardMediaImage = src.includes('media.good-loop.com/uploads/standard/');
-	src = isMobile && isStandardMediaImage ? src.replace('uploads/standard', 'uploads/mobile') : src;
-
-	return render({...props, src});
-};
-
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser`
  */
 const CampaignPage = () => {
+	//TODO this is the same mypage, refactor out of here
+	let xids = getAllXIds();
+
+	// Attempt to find ad most recently watched by the user
+	// Go through all @trk ids.
+	// Expect that user should only ever have one @trk, but can't confirm that
+	let userAdHistoryPV = DataStore.fetch(pagePath.concat('AdHistory'), () => {
+		// Only interested in @trk ids. Other types won't have associated watch history
+		const trkIds = xids.filter( xid => xid.slice(xid.length - 4) === '@trk');
+
+		// No cookies registered, try using current session's cookie
+		if( !trkIds || trkIds.length === 0 ) {
+			return ServerIO.getAdHistory();
+		}
+
+		// Pull in data for each ID
+		const PVs = trkIds.map( trkID => ServerIO.getAdHistory(trkID));
+		// Pick the data with the most recent timestamp
+		return Promise.all(PVs).then( values => values.reduce( (newestData, currentData) => {
+			if( !newestData ) {
+				return currentData;
+			}
+			return Date.parse(currentData.cargo.time) > Date.parse(newestData.cargo.time) ? currentData : newestData;
+		}));
+	});
+
 	const { 'gl.vert': adid, 'gl.vertiser': vertiserid } = DataStore.getValue(['location', 'params']) || {};
 
 	// Specific adid gets priority over advertiser id
@@ -374,11 +427,14 @@ const CampaignPage = () => {
 	let {branding={}, mockUp={}} = ad;
 	// default styling if adv branding is not there 
 	let complimentaryColor = '#51808a'; // default color (complimentary to the gl-red) for the middle tile that contains donations info
-	let brandColor = mockUp.backgroundColor || branding.backgroundColor || complimentaryColor;
+	let brandColor = mockUp.backgroundColor || branding.color || complimentaryColor;
 	let brandLogo = branding.logo_white || branding.logo || null; 
 	let brandColorBgStyle = {
 		backgroundColor: brandColor,
 		color: branding.lockAndTextColor || mockUp.lockAndTextColor || 'white',
+	};
+	let brandColorTxtStyle = {
+		color: brandColor
 	};
 
 	// hack to show appropriately styled logo if it can't find anything better (used in DonationCircleWidget and DonationDetailsWidget)
@@ -408,6 +464,7 @@ const CampaignPage = () => {
 				backgroundRepeat: 'no-repeat',
 				backgroundPosition: 'center',
 				backgroundAttachment: 'fixed',
+				backgroundColor: brandColor,
 				color: mockUp.lockAndTextColor || 'white' 
 			};
 		}
@@ -467,53 +524,57 @@ const CampaignPage = () => {
 		campaignSlice[obj.cid] = {percentageTotal: Math.round(rawFraction*100)}; 
 	});
 
+	// alternating colours, complimentary to glColor which is the g-l colour
+	let glColor2 = '#f5aa57';
+	let glColor3 = '#51808a';
+
 	// toggle carousel (true means it spins automatically)
 	let toggle = "false";
 	//let toggle = 5000; // TODO: set this as a param
 	
-	return (<div className='campaign-page'>
-		<div className='grid'>
-			<div className='grid-tile top'> 
-				<div className='vertiser-head frank-font' style={glColorBgStyle}>
-					<CampaignHeaderWidget glLogo={glLogo} brandLogo={brandLogo} />
-				</div>
-				<OptimisedImage
-					src={bg}
-					render={({src}) => (
-						<div className='header' style={{...brandColorBgStyle, backgroundImage: 'url(' + src + ')'}}>
-							<div className='header-text'>
-								<div className='header-title frank-font'>
-									<div></div>	{/* TODO: delete this, it's just here because there's a css rule about the 1st div in title*/}
-									<div>Together we've raised</div>													
-									{donationValue? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
-									<div>for charity</div>
-								</div>
-								<EmailCTA />
+	// TODO: refactor this because it's very similar now to mypage
+	return (
+	<div className="page MyPage">
+		<NavBar brandLogo={brandLogo} />
+		{/* TODO: get rid of old css classes, previous to refactor */}
+		<div className='grid-tile top'> 
+			<OptimisedImage
+				src={bg}
+				render={({src}) => (
+					<div className='header' style={{...brandColorBgStyle, backgroundImage: 'url(' + src + ')'}}>
+						<div className='header-text'>
+							<div className='header-title'>
+								<div></div>	{/* TODO: delete this, it's just here because there's a css rule about the 1st div in title*/}
+								<div>Together we've raised</div>													
+								{donationValue? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
+								<div>for charity</div>
 							</div>
+							<DonationInfoWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle}/>
+							{/* <EmailCTA /> */}
 						</div>
-					)}
-				/>
-			</div>
-			<div className='grid-tile middle' style={brandColorBgStyle}>
-				<div className='inside'>
-					{/* <div className='title frank-font' style={brandColorTxtStyle}>
-						<MDText source={desc_title} />							
 					</div>
-					<div className='subtitle'>
-						<MDText source={desc_body} />							
-					</div>
-					<LinkToAdWidget cparent={cparent} adid={adid} status={status} brandColorTxtStyle={brandColorTxtStyle} />
-					<DonationInfoWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle} logoStyle={logoStyle}/> */}
-					<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle} adid={adid} status={status} toggle={toggle}/>
-				</div>
+				)}
+			/>
+		</div>
+		<div className='grid-tile middle' style={brandColorBgStyle}>
+			<div className='inside'>
+				<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle} adid={adid} status={status} toggle={toggle}/>
 			</div>
-			<LinkToAdWidget cparent={cparent} adid={adid} status={status} />
-			<div className='grid-tile bottom' style={glColorBgStyle}>
-				<div className='foot header-font'>		
-					<SocialMediaShareWidget adName={ad.name} donationValue={donationValue} charities={clist} />
-					<SocialMediaGLFooterWidget />
-					<SocialMediaFooterWidget type={'vertiser'} name={ad.name} branding={branding} />					
-				</div>
+		</div>
+		<CardAccordion multiple >	
+			<Card title="How Good-Loop Ads Work" className="StatisticsCard MiniCard" bgColor={glColor2} defaultOpen>
+				<OnboardingCardMini/>
+			</Card>							
+			<Card title="Boost Your Impact" className="boostImpact" bgColor={glColor3} defaultOpen>
+				<SocialMediaCard allIds={xids} className="socialConnect"/>
+				<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} />
+			</Card> 
+		</CardAccordion>
+		<div className='grid-tile bottom' style={glColorBgStyle}>
+			<div className='foot header-font'>		
+				<SocialMediaShareWidget adName={ad.name} donationValue={donationValue} charities={clist} />
+				<SocialMediaGLFooterWidget />
+				<SocialMediaFooterWidget type={'vertiser'} name={ad.name} branding={branding} />					
 			</div>
 		</div>
 		<Footer leftFooter={startDate} rightFooter={smallPrint} glColorBgStyle={glColorBgStyle} />

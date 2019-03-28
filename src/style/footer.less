@@ -7,10 +7,17 @@
 	display: flex;
 	flex-wrap: wrap;
 
+	//links look better on my-loop in white
+	a {
+		color: white;
+	}
+
+	// put footer elem in columns
 	.footer-col {
 		flex-basis: 33.3%;
 	}
 
+	// stick the left and right footer to the bottom (TODO: be more specific with classes)
 	div {
 		vertical-align: bottom;
 	}
@@ -18,27 +25,25 @@
 	.mainFooter {
 		text-align: center;
 	}
+
+	.leftFooter, .rightFooter {
+		display: table;
+		font-size: 12px;
+		height: 6vh; 
+	}
 	
 	.leftFooter {
-		display: table;
 		text-align: left;
-		font-size: 12px;
-
-		.innerLeftFooter {
-			vertical-align: bottom;
-			display: table-cell;
-		}
 	}
 	
 	.rightFooter {
-		display: table;
 		text-align: right;
-		font-size: 12px;
+	}
 
-		.innerRightFooter {
-			vertical-align: bottom;
-			display: table-cell;
-		}
+	.innerLeftFooter,
+	.innerRightFooter {
+		vertical-align: bottom;
+		display: table-cell;
 	}
 }
 

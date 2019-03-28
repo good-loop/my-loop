@@ -24,7 +24,10 @@ import { Server } from 'http';
 import { assMatch } from 'sjtest';
 import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
 import { SocialMediaGLFooterWidget } from './SocialLinksWidget';
-import AccountMenu from '../base/components/AccountMenu';
+import NavBar from './NavBar';
+import OnboardingCardMini from './OnboardingCardMini';
+import RecentCampaignsCard from './RecentCampaignsCard';
+import SocialMediaCard from './SocialMediaCard';
 
 const pagePath = ['widget', 'MyPage'];
 
@@ -120,6 +123,7 @@ const MyPage = () => {
 		}));
 	});
 
+	// alternating colours, complimentary to glColor which is the g-l colour
 	let glColor2 = '#f5aa57';
 	let glColor3 = '#51808a';
 	let splashPhotoStyle = { 
@@ -128,10 +132,11 @@ const MyPage = () => {
 	};
 	// display...
 	return (
+		// TODO: refactor out the elements are the same as campaign page
 		<div className="page MyPage">
 			<CardAccordion widgetName="MyReport" multiple >	
-				<Card defaultOpen className="headerCard" style={splashPhotoStyle}>
-					<NavBarCard/>
+				<Card defaultOpen className="fullCard" style={splashPhotoStyle}>
+					<NavBar/>
 					<SplashPhotoCard/>
 				</Card>
 
@@ -163,7 +168,7 @@ const MyPage = () => {
 					<SocialMediaCard allIds={xids} className="socialConnect"/>						
 				</Card> 
 
-				<Card title="Consent Controls" defaultOpen className="consentControls">
+				<Card title="Consent Controls" bgColor={glColor2} defaultOpen className="consentControls">
 					{Login.isLoggedIn() ? (
 						<ConsentWidget xids={xids} />
 					) : (
@@ -171,7 +176,7 @@ const MyPage = () => {
 					)}
 				</Card>
 
-				<Card title="Get In Touch" bgColor={glColor2} defaultOpen>
+				<Card title="Get In Touch" defaultOpen>
 					<ContactCard allIds={allIds} />
 				</Card>
 				
@@ -248,7 +253,7 @@ const IntroCard = () => {
 								<p className="title header-font">You're a champion!</p>
 								<p className="subtitle">Find out below how to boost your contribution</p>
 							</div>
-							<div className="col-md-1 header-img">
+							<div className="col-md-5 header-img">
 								<img src={heroImage} alt="Superhero" />
 							</div>
 						</div>
@@ -273,35 +278,6 @@ const SplashPhotoCard = () => {
 	return (
 		<div className="splashPhoto">			
 		</div>			
-	);
-};
-
-const NavBarCard = () => {
-	let glLogo = 'https://i.ibb.co/ZT8scH0/Good-Loop-Logos-Good-Loop-Alt-Logo-White-Resized.png';
-	const content = Login.isLoggedIn() ? (
-		<div className="pull-right logged-in">
-			{/* <p>Hi { Login.getUser().name || Login.getUser().xid }</p>
-			<small className="pull-right">
-				<a className="logout-link" href="#my" onClick={e => stopEvent(e) && Login.logout()}>Log out</a>
-			</small> */}
-			<AccountMenu account={false} logoutLink={'#'} />
-		</div>
-	) : (
-		<div className="pull-right">
-			<LoginLink className='btn btn-lg btn-default btn-gl discrete-login' verb='Login' />		
-		</div>
-	);
-	return (
-		<div className="nav-bar">
-			<div className='col-sm-6'>
-				<div className="header-logos pull-left">
-					<img className="gl-logo" alt='Good-Loop Logo' src={glLogo}/>
-				</div>		
-			</div>
-			<div className='col-sm-6'>
-				{ content }	
-			</div>
-		</div>
 	);
 };
 
@@ -390,150 +366,6 @@ const StatisticsCard = () => {
 	return(
 		<div>
 			<img className="statistics-image" src={statsImg}/>
-		</div>
-	);
-};
-
-
-const OnboardingCardMini = () => {
-	const step1Img = 'https://image.ibb.co/nnGOgV/153970313184640369.png';
-	const step2Img = 'https://image.ibb.co/jJm3Fq/153970315675413631.png';
-	const step3Img = 'https://image.ibb.co/fMRQTA/153970316087031793.png';
-
-	return (
-		<section id="howitworks" className="how text-center">
-			<div className="how-content container-fluid">
-				<div className="row">
-					<div className="col-md-4 how-step">
-						<img className="how-img" src={step1Img} alt='banners in a web page' />
-						<span className="how-text">You see one of our Ads For Good on a website</span>
-					</div>
-					<div className="col-md-4 how-step">
-						<img className="how-img" src={step2Img} alt='banners in a web page' />
-						<span className="how-text">A video ad plays for 15 seconds</span>
-					</div>
-					<div className="col-md-4 how-step">
-						<img className="how-img" src={step3Img} alt='banners in a web page' />
-						<span className="how-text">We donate half the ad revenue to your chosen charity</span>
-					</div>
-				</div>
-				<div className="row">
-					<center>
-						<a className='btn btn-default' href='https://as.good-loop.com/?site=my.good-loop.com' target='_blank'>Watch an Ad For Good</a>
-					</center>
-				</div>
-			</div>
-		</section>
-	);
-};
-
-const RecentCampaignsCard = () => {
-	
-	const vertisers = 
-			[
-				{
-					"name": "KitKat",
-					"adid": "xsINEuJV",
-					"logo": "https://as.good-loop.com/uploads/anon/kithead1-8689246171902103163.png"
-				},
-				// {
-				// 	"name": "Lynx",
-				// 	"adid": "i2NidWgu",
-				// 	"logo": "https://as.good-loop.com/uploads/anon/lynx-black-9012135637566843772.png"
-				// },
-				// {
-				// 	"name": "Glasgow Credit Union",
-				// 	"adid": "rfQVI7tc",
-				// 	"logo": "https://as.good-loop.com/uploads/anon/gcu____white-5300781013619689576.png"
-				// },
-				// {
-				// 	"name": "Love Beauty and Planet",
-				// 	"adid": "dEQj33ir",
-				// 	"logo": "https://as.good-loop.com/uploads/anon/lovebeautyplanet__horizontal-full-logo-2244424493762407107.jpg"
-				// },
-				// {
-				// 	"name": "method",
-				// 	"adid": "JvtlN3pk",
-				// 	"logo": "https://as.good-loop.com/uploads/anon/methodlogo-1-6990657047366189851.png"
-				// },
-				{
-					"name": "Persil",
-					"adid": "2loo5PtL",
-					"logo": "https://i.pinimg.com/originals/b7/dc/2e/b7dc2e499618bf9e345dcf4335eb408e.png"
-				},
-				{
-					"name": "Linda McCartney",
-					"adid": "qprjFW1H",
-					"logo": "https://cookschool.club/wp-content/uploads/2018/09/imageedit_1_9636644754-300x200.png"
-				},
-				{
-					"name": "Cappy",
-					"adid": "2dsE6F5g",
-					"logo": "https://as.good-loop.com/uploads/anon/kisspng-or871378622657345-8807730161052821806.png"
-				},
-				{
-					"name": "Sunbites",
-					"adid": "2ROGntyn",
-					"logo": "https://as.good-loop.com/uploads/anon/sunbites-logo-1220401756647184148.png"
-				},
-				{
-					"name": "Villa Plus",
-					"adid": "lrOQ2Jq3",
-					"logo": "https://www.spacecity.co.uk/wp-content/uploads/2018/03/Villa-Plus.png"
-				}
-				// {
-				// 	"name": "Elf Pets",
-				// 	"adid": "91NPl6ab",
-				// 	"logo": "https://as.good-loop.com/uploads/anon/Screen_Shot_2018-11-19_at_10.12.02-8445321654427265690.png"
-				// }
-			];
-	return (
-		<div className="vertiser-row">
-			{	vertisers.map(x => <a href={"//my.good-loop.com/#campaign/?gl.vert="+x.adid} target="_blank"><img src={x.logo} alt={x.name}/></a>)	}
-		</div>		
-	);
-};
-
-
-/**
- * Social CTAs: Share on social / connect
- */
-const SocialMediaCard = ({allIds=[], className}) => {
-	// TODO (31/10/18): move emailID in to ids after email signup code has been implemented
-	const emailID = allIds.filter(id => XId.service(id)==='email')[0];
-
-	const ids = {
-		twitterID: allIds.filter(id => XId.service(id)==='twitter')[0],
-		fbid: allIds.filter(id => XId.service(id)==='facebook')[0],
-	};
-
-	const fbpeep = getProfilesNow([ids.fbid])[0]; 
-	return (
-		<div className={className}>
-			
-			{	// Show text if ids contains an undefined value (user still hasn't connected one of their social media accounts)
-				Object.values(ids).some( id => id === undefined || id === null) ? <p>Connect your social media - you can use this to boost the donations you generate!</p> : null
-			}
-			{emailID ? '' : '' /* <div> TODO: email capture </div> */	}
-			{ids.twitterID ? (
-				<div className='wrapper'>
-					<p className="connected" ><i className="fa fa-handshake-o" /> Twitter id: <a href={'https://twitter.com/'+XId.id(ids.twitterID)} target='_blank'>
-						{XId.id(ids.twitterID)}
-					</a></p>
-				</div>
-				) : (
-				<div>
-					<SocialSignInButton service='twitter' verb='connect' />
-				</div>
-			)}
-			{ids.fbid ? (
-				// TODO show some data about them from FB
-				<div>Facebook ID: {XId.id(ids.fbid)} {fbpeep? fbpeep.name : ''}</div>
-			) : (
-				<div>
-					<div><SocialSignInButton service='facebook' verb='connect' /></div>
-				</div>	
-			)}
 		</div>
 	);
 };

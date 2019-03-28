@@ -3,6 +3,22 @@
 @import "footer.less";
 @import "DonationCircleWidget.less";
 
+.header-font {
+	font-family: "Montserrat Extrabold";
+	text-transform: uppercase;
+	font-size: 30px;
+} 
+
+.subheader-font {
+	font-family: "Gotham Medium Regular";
+	font-size: 30px;
+}
+
+.body-font {
+	font-family: "Tajawal Regular";
+	font-size: 20px;
+}
+
 // my loop page
 .avoid-navbar {
 	margin-top:0px; // no navbar (yet)
@@ -41,24 +57,30 @@
 // make it stand out a bit
 // TODO move some place more appropriate
 .btn-default {
-	font-size: 16px;
+	font-size: 19px;
+}
+
+// make hyperlinks look nicer (dotted underline and inherited color that can be decided in the portal)
+p > a, span > a {
+	color: inherit;
+	text-decoration: none;
+	border-bottom: 1px dashed;
+}
+p > a:hover, span > a:hover  {
+	color: inherit;
+	border-bottom: none;
 }
 
 // campaign page
 .campaign-page {
-	// make hyperlinks look nicer (dotted underline and inherited color that can be decided in the portal)
-	p > a, span > a {
-		color: inherit;
-		text-decoration: none;
-		border-bottom: 1px dashed;
-	}
-	p > a:hover, span > a:hover  {
-		color: inherit;
-		border-bottom: none;
-	}
-
 	overflow-x: hidden;
 	text-align: center;
+
+}
+
+.vertiser-logo {
+	height: 7vh;
+}
 
     // using flex for layout of the page 
 	.grid {
@@ -79,39 +101,44 @@
 	}
 
 	.grid-tile.top {
-		height: 54vh;
+		height: 46vh;
 		background-color: blanchedalmond; // hack to make it look good when we don't have a campaign cover photo
 
-		.vertiser-head {			
-			// setting height fixes slightly squashed logos on mobile
-			height: 13.5vh;
-			// logo section with bg color should take up whole width 
-			width: 100%;
-			// space things out a bit
-			padding-top: 1em;
-			padding-bottom: 0.5em;
+		// .vertiser-head {			
+		// 	// setting height fixes slightly squashed logos on mobile
+		// 	height: 13.5vh;
+		// 	// logo section with bg color should take up whole width 
+		// 	width: 100%;
+		// 	// space things out a bit
+		// 	padding-top: 1em;
+		// 	padding-bottom: 0.5em;
 
-			// put in some space between the logos (so that they're not squished together)
-			.header-logos img:first-child {
-				padding-right: 50px;
-			}
+		// 	// put in some space between the logos (so that they're not squished together)
+		// 	.header-logos img:first-child {
+		// 		padding-right: 50px;
+		// 	}
 
-			// logo size should be specific to avoid odd img sizes  
-			img {
-				height: 10vh;
-			}
-		}
+		// 	// logo size should be specific to avoid odd img sizes  
+		// 	img {
+		// 		height: 10vh;
+		// 	}
+		// }
 
 		.header {
 			// make the header image take up the whole width and height of the header section
 			flex-basis:100%;
 			min-height: 100%;
 			background-size: cover;
-			
-			.header-text .header-title {
-				font-size: 5vh;
-				text-shadow: black 2px 2px 0;
-			}				
+
+			.header-text {
+				padding-top: 3vh;
+
+				.header-title {
+					font-size: 5vh;
+					font-weight: bold;
+					text-shadow: black 2px 2px 0;
+				}		
+			}		
 		}
 	}
 
@@ -185,7 +212,7 @@
 			.carousel {
 				// ensure carousel takes up the rest of the screen (below the top tile "Together we've raised ...")
 				height: 100%;
-				width: 100vw;
+				//width: 100vw;
 				margin: auto;
 
 				.carousel-inner {
@@ -246,22 +273,118 @@
 		padding-top: 6vh; // give it some space, looks less cluttered this way
 		font-size: 2.5vh; // make it pop out responsively
 	}
-} //. campaign page
+
+
+// creating a 3-column layout, slightly complicated by the fact that it needs to have adaptive layout so that on mobile components of the layout move to completely different places
+// e.g. the charity details are normally below all the charity circles, but on mobile they move below their respective donation circle
+.donation-circles {
+	display: grid;
+	-webkit-box-pack: center;
+	    -ms-flex-pack: center;
+	        justify-content: center;
+	grid-gap: 0px 40px;
+	justify-items: center;
+	margin: 0 auto;
+	// assumption that the width of the donation circles is 250px
+	-ms-grid-columns: 250px 20px 250px 20px 250px;
+	grid-template-columns: 250px 250px 250px;
+	-ms-grid-rows: auto 20px auto 20px auto 20px auto;
+	    grid-template-areas: 
+	"c1 c2 c3"
+	"d1 d1 d1"
+	"d2 d2 d2"
+	"d3 d3 d3";  
+
+	.circle {
+		grid-column: 1 / 3;
+		-ms-grid-column: 1;
+		-ms-grid-column-span: 2;
+		position: relative;
+		float: left;
+		text-align: center;
+
+		.circle-info {
+			position: absolute;
+			top: 40px;
+			width: 100%;
+			text-align: center;
+			font-size: 1.5rem;
+			color: white;
+			font-size: 16px;
+			z-index: 1;
+			text-shadow: 2px 2px 6px grey;
+		}
+		span {
+			font-size: 55px;
+			line-height: normal;
+		}
+		img {
+			width: 200px;
+			height: 200px;
+			border-radius: 250px;
+			-o-object-fit: cover;
+			   object-fit: cover;
+		}
+		.project-name {
+			margin-top: 20px;
+			padding: 0.8em;
+			font-size: 18px;
+		}
+		.arrow-up {
+			width: 0;
+			height: 0;
+			margin: 2em auto auto auto;
+			border-left: 50px solid transparent;
+			border-right: 50px solid transparent;
+			border-bottom: 50px solid white;
+		}
+	}
+} // ./donation-circles end
+
+.circle-draw {
+	height: 200px;
+	width: 200px;
+	background-color: #bbb;
+	border-radius: 50%;
+	display: inline-block;
+}
+
 
 // **mobile layout rules**
 // using flex to change the template of the layout for the bottom row (share and social buttons) to a column based one
 // and replacing carousel with scroll-down layout
 // and removing restriction to top+middle tile (smaller screens shouldn't try to fit the top & middle tile into one page)
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 1100px) {
 
 	// TODO: to refactor this and add comments
+	.linkedProfiles .panel-body, .consentControls .panel-body {
+		width: unset;
+	}
+
+	//TODO: this is a must because for some reason the dropdown css changes the position to static when on mobile sized screens
+	// position static then leads to the flex column not occupying the 33.3% of the screen anymore
+	// i have to investigate why it does this and how to best change it
+	.navbar-nav .open .dropdown-menu {
+		position: absolute !important; 
+	}
+
 	.nav-bar {
 		height: 12vh;
-
+		flex-direction: column;
+		flex-basis: 100%;
+		
 		.gl-logo {
-			height: 4vh;
+			height: 6vh;
 			padding: 0;
-			margin-top: 4vh;
+			margin: 2vh 0 0 1vh;
+		}
+		
+		.vertiser-logo {
+			margin-top: 1.5vh;
+		}
+
+		.nav-bar .pull-right.logged-in {
+			margin: 1vh 1vh 0 0;
 		}
 	}
 	
@@ -270,6 +393,7 @@
 	// }
 
 	.introCard{
+		height: 53vh;
 		padding: 0;
 		.panel-title {
 			font-size: 29px;
@@ -291,7 +415,7 @@
 	}
 
 	.WelcomeCard .subtitle {
-		font-size: 23px;
+		font-size: 4vmin;
 	}
 
 	h2.text-center {
@@ -302,69 +426,72 @@
 		height: 34vh;
 	}
 
-	.campaign-page {
-		// top tile ("Together we've raised ... for charity") should fit the top screen when on mobile
-		.grid-tile.top {
-			// on smaller screens the top tile should take up more of the screen
-			// to avoid making the top tile ("Together we've raised ...") look squished 
-			height: 73vh;
+	.donation-circles {
+		display: none;
+	}
 
-			.header .header-text {
-				//we have more vertical space on mobile, so let's vertically center the header-text (e.g. "Together we've raised ...") a bit
-				margin-top: 8vh;
-			}
+	// top tile ("Together we've raised ... for charity") should fit the top screen when on mobile
+	.grid-tile.top {
+		// on smaller screens the top tile should take up more of the screen
+		// to avoid making the top tile ("Together we've raised ...") look squished 
+		height: 33vh;
+
+		// .header .header-text {
+		// 	//we have more vertical space on mobile, so let's vertically center the header-text (e.g. "Together we've raised ...") a bit
+		// 	margin-top: 8vh;
+		// }
+	}
+
+	.grid-tile.middle .inside .carousel {
+		.carousel-indicators, .carousel-control {
+			// replace carousel with scroll-down layout
+			display: none;
 		}
 
-		.grid-tile.middle .inside .carousel {
-			.carousel-indicators, .carousel-control {
-				// replace carousel with scroll-down layout
+		.carousel-inner .item {
+			// replace carousel with scroll-down layout
+			display: block;
+			height: 63vh;
+
+			.slide-header {
+				.slide-title {
+					// otherwise on smaller screens the title becomes unreadable
+					font-size: 3.18vmin;
+					top: 1.5vh;
+				}
+
+				.slide-logo {
+					// otherwise the logo is too small 
+					height: 60px !important;
+					width: 60px !important;
+
+					img {
+						// otherwise the logo looms weirdly to the right (on small screens it should just be above the title)
+						float: unset;
+					}
+				}
+			}
+
+			.slide-desc {
+				// on small screens, the description can take more space (and become more readable) 
+				//because we're not trying to fit it in the same screen as the top tile
+				margin:6vh auto;
+				font-size:3.6vw;
+				width: 70vw; 
+			}
+
+			.slide-photo {
+				// we don't have space to show the large photo
 				display: none;
-			}
-
-			.carousel-inner .item {
-				// replace carousel with scroll-down layout
-				display: block;
-				height: 63vh;
-
-				.slide-header {
-					.slide-title {
-						// otherwise on smaller screens the title becomes unreadable
-						font-size: 3.18vmin;
-						top: 1.5vh;
-					}
-
-					.slide-logo {
-						// otherwise the logo is too small 
-						height: 60px !important;
-						width: 60px !important;
-
-						img {
-							// otherwise the logo looms weirdly to the right (on small screens it should just be above the title)
-							float: unset;
-						}
-					}
-				}
-
-				.slide-desc {
-					// on small screens, the description can take more space (and become more readable) 
-					//because we're not trying to fit it in the same screen as the top tile
-					margin:6vh auto;
-					font-size:3.6vw;
-					width: 70vw; 
-				}
-
-				.slide-photo {
-					// we don't have space to show the large photo
-					display: none;
-				}		
-			}
-		}
-
-		// adapt the cta font to smaller screens, otherwise it's massive (I couldn't just make it responsive by default)
-		.link.watch-cta {
-			font-size: 6vmin; 
+			}		
 		}
 	}
+
+	// adapt the cta font to smaller screens, otherwise it's massive (I couldn't just make it responsive by default)
+	.link.watch-cta {
+		font-size: 6vmin; 
+	}
+
 
 	// social buttons should be in one column
 	.grid-tile.bottom .foot {

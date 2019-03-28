@@ -20,21 +20,54 @@ span.glyphicon.glyphicon-triangle-bottom, span.glyphicon.glyphicon-triangle-top 
 
 // nav bar at the top
 .nav-bar {
-	height: 7vh;
+    height: 8vh;
+	padding-top: 0.5vh;
+	display: flex;
+	flex-wrap: wrap;
 
+	.nav-col-4 {
+		flex-basis: 33.3%;
+	}
+
+	.nav-col-6 {
+		flex-basis: 50%;	
+	}
+	
 	.gl-logo {
 		height: 7vh;
-		padding: 20px;
+		padding: 10px;
+	}
+
+	.pull-right.logged-in {
+		padding: 1vh 0px;
+	}
+
+	li > a {
+		color: inherit;
+		text-decoration: none;
+		border-bottom: none;
+	}
+	li > a:hover  {
+		color: inherit;
+		border-bottom: none;
+		background-color: transparent;
+	}
+	
+	.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {
+		background-color: transparent;
+	}
+	.navbar-nav>li>.dropdown-menu {
+		color: @glColor;
+		background: white;
 	}
 }
-
 
 // login btn in the top right
 a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 	border: 0;
 	background-color: inherit;
 	color: white;
-	padding-top: 18px;
+	padding-top: 2.5vh;
 	border-color: white;
 }
 
@@ -47,8 +80,8 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
     background-position: center;
 }
 
-// hack to remove panel's default padding and width (so that splashPhoto can take up the whole width of the page)
-.Card.panel.panel-default.headerCard, .Card.panel.panel-default.headerCard .panel-body {
+// hack to remove panel's default padding and width (so that splashPhoto etc can take up the whole width of the page)
+.Card.panel.panel-default.fullCard, .Card.panel.panel-default.fullCard .panel-body {
 	padding: 0px;
 	width: unset;
 }
@@ -124,7 +157,7 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 	}
 
 	.header-text.post-login {
-		padding: 2vmin 0 3vmin 4vmin;
+		padding: 2vmin 0 3vmin 1vmin;
 	}
 
 	.header-text{
@@ -142,7 +175,6 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 	.header-img img {
 		height: 35vmin;
 		width: 35vmin;
-		margin: 0 30%;
 	}
 
 	.title {
@@ -150,7 +182,7 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 		letter-spacing: 0.6vmin;
 		width: 100%;
 		margin: 0 auto;
-		padding: 4vmin 0 3vmin 0;		
+		padding: 2vmin 0 3vmin 0;		
 	}
 	.header-text.post-login.title {
 		padding: 8vmin 0 3vmin 0;		
@@ -452,15 +484,25 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 // 	padding-top: 10px;
 // }
 
+// we don't want the consent controls to take up too much of the width (avoiding the aesthetic of a big block of text)
 .linkedProfiles .panel-body, .consentControls .panel-body {
-	text-align: left;
 	width: 45%;
+}
+
+// looks bad if it's centre aligned, let's move it left (as long as the user is logged in/ there are consent controls to show)
+.linkedProfiles .panel-body, .consentControls .consent-widget {
+	text-align: left;
 }
 
 // set the vertiser logo sizes and put in some space between them to look less cluttered
 .vertiser-row {
 	img {
 		height: 100px;
-		padding: 0px 1vw;
+		padding: 0px 1.5vw;
 	}
+}
+
+// TODO: replace img with code , so we don't need this anymore
+.StatisticsCard .statistics-image {
+	max-width: 60vw;
 }
