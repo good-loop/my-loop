@@ -1,6 +1,6 @@
 import React from 'react';
 import AccountMenu from '../base/components/AccountMenu';
-import OptimisedImage from './OptimisedImage';
+import OptimisedImage from './Image';
 import { LoginLink } from '../base/components/LoginWidget';
 
 const NavBar = ({brandLogo}) => {
