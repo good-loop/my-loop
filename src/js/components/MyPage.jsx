@@ -360,7 +360,9 @@ const StatisticsCardMini = () => {
 		</div>
 		<div className='container-fluid'>
 			<div className='row sub-header bottom-pad1'> 
-				IN 2018, GOOD-LOOP'S ETHICAL ADVERTISING RAISER OVER £200,000 FOR CHARITABLE CAUSES. THAT'S ENOUGH TO FUND... 
+				IN 2018, GOOD-LOOP'S ETHICAL ADVERTISING RAISED OVER <br /> 
+				<span className='header'> £200,000 </span> <br/> 
+				FOR CHARITABLE CAUSES. THAT'S ENOUGH TO FUND... 
 			</div>
 			<div className='row flex-row flex-centre bottom-pad1'>
 				<div className='col-lg-4 col-md-6'>
@@ -368,7 +370,10 @@ const StatisticsCardMini = () => {
 						<div className='flex-column flex-centre'>
 							<RoundLogo alt='centre-point' className='col-md-6' url='https://as.good-loop.com/uploads/anon/kithead1-8689246171902103163.png' />
 							<span className='sub-header'> 888 NIGHTS </span>
-							<span> of accommodation for young homeless people in the UK </span>
+							<span> 
+								of accommodation <br /> 
+								for young homeless people in the UK 
+							</span>
 						</div>
 					</div>
 				</div>
@@ -378,7 +383,10 @@ const StatisticsCardMini = () => {
 						<div className='flex-column flex-centre'>
 							<RoundLogo alt='centre-point' className='col-md-6' url='https://as.good-loop.com/uploads/anon/kithead1-8689246171902103163.png' />
 							<span className='sub-header'> 1000 CALLS </span>
-							<span> to the Mind mental health info line which offers support and resources </span>
+							<span> 
+								to the Mind mental health info line <br /> 
+								which offers support and resources 
+							</span>
 						</div>
 					</div>
 				</div>
