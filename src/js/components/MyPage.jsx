@@ -13,9 +13,9 @@ import Person from '../base/data/Person';
 import Misc from '../base/components/Misc';
 import CardAccordion, { Card } from '../base/components/CardAccordion';
 import LoginWidget, { LoginLink, SocialSignInButton } from '../base/components/LoginWidget';
-import DigitalMirrorCard from '../components/DigitalMirrorCard';
-import Footer from '../components/Footer';
-import ShareAnAd from '../components/ShareAnAd';
+import DigitalMirrorCard from './DigitalMirrorCard';
+import Footer from './Footer';
+import ShareAnAd from './ShareAnAd';
 import { LoginToSee } from './Bits';
 import ConsentWidget from './ConsentWidget';
 import DonationCard from './DonationCard';
@@ -28,6 +28,7 @@ import NavBar from './NavBar';
 import OnboardingCardMini from './OnboardingCardMini';
 import RecentCampaignsCard from './RecentCampaignsCard';
 import SocialMediaCard from './SocialMediaCard';
+import { RoundLogo } from './Image';
 
 const pagePath = ['widget', 'MyPage'];
 
@@ -334,29 +335,82 @@ const StatisticsCardMini = () => {
 			<div className="row">
 				<h2 className="text-center">Thousands each month raised for charity</h2>
 			</div>
-			<div className="col-md-4 statistics-item">
-				<div className="statistics-value">
-					<div className="statistics-value-highlight"><span>{printer.prettyNumber(cnt)}</span></div>
-					<strong className="statistics-subtext">people reached</strong>
-				</div>
-			</div>
-			<div className="col-md-4 statistics-item">
-				<div className="statistics-value">
-					<div className="statistics-value-highlight">
-						<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={10} showCurrencySymbol={false} />										
+			<div className='row'>
+				<div className="col-md-4 statistics-item">
+					<div className="statistics-value">
+						<div className="statistics-value-highlight"><span>{printer.prettyNumber(cnt)}</span></div>
+						<strong className="statistics-subtext">people reached</strong>
 					</div>
-					<strong className="statistics-subtext">pounds raised</strong>
 				</div>
-			</div>
-			<div className="col-md-4 statistics-item">
-				<div className="statistics-value">
-					<div className="statistics-value-highlight"><div className="text-stat">No compromises</div></div>
-					<strong className="statistics-subtext">on your privacy</strong>
+				<div className="col-md-4 statistics-item">
+					<div className="statistics-value">
+						<div className="statistics-value-highlight">
+							<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={10} showCurrencySymbol={false} />										
+						</div>
+						<strong className="statistics-subtext">pounds raised</strong>
+					</div>
+				</div>
+				<div className="col-md-4 statistics-item">
+					<div className="statistics-value">
+						<div className="statistics-value-highlight"><div className="text-stat">No compromises</div></div>
+						<strong className="statistics-subtext">on your privacy</strong>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div>
-			<img className="statistics-image" src={statsImg}/>
+		<div className='container-fluid'>
+			<div className='row sub-header bottom-pad1'> 
+				IN 2018, GOOD-LOOP'S ETHICAL ADVERTISING RAISER OVER £200,000 FOR CHARITABLE CAUSES. THAT'S ENOUGH TO FUND... 
+			</div>
+			<div className='row flex-row flex-centre bottom-pad1'>
+				<div className='col-lg-4 col-md-6'>
+					<div className='row bottom-pad1'>
+						<div className='flex-column flex-centre'>
+							<RoundLogo alt='centre-point' className='col-md-6' url='https://as.good-loop.com/uploads/anon/kithead1-8689246171902103163.png' />
+							<span className='sub-header'> 888 NIGHTS </span>
+							<span> of accommodation for young homeless people in the UK </span>
+						</div>
+					</div>
+				</div>
+				<div className='col-lg-4' />
+				<div className='col-lg-4 col-md-6'>
+					<div className='row bottom-pad1'>
+						<div className='flex-column flex-centre'>
+							<RoundLogo alt='centre-point' className='col-md-6' url='https://as.good-loop.com/uploads/anon/kithead1-8689246171902103163.png' />
+							<span className='sub-header'> 1000 CALLS </span>
+							<span> to the Mind mental health info line which offers support and resources </span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div className='row flex-row flex-centre bottom-pad1'>
+				<div className='col-lg-4 col-md-6'>
+					<div className='row flex-row bottom-pad1'>
+						<div className='flex-column flex-centre'>
+							<RoundLogo alt='centre-point' className='col-md-6' url='/img/save-the-children.png' />
+							<span className='sub-header'> FOOD FOR ONE YEAR </span>
+							<span> for 80 families in poverty in the UK </span>
+							<span className='sub-header'> 180 VACCINATIONS </span>
+							<span> to protect children against measles </span>
+						</div>
+					</div>
+				</div>
+				<div className='col-lg-4' />
+				<div className='col-lg-4 col-md-6'>
+					<div className='row bottom-pad1'>
+						<div className='flex-column flex-centre'>
+							<RoundLogo alt='centre-point' className='col-md-6' url='/img/cocoa-plan-logo-scaled.png' />
+							<span className='sub-header'> 318 SCHOOL KITS </span>
+							<span> including stantionary and exercise books </span>
+							<span className='sub-header'> 183 SOLAR CHARGERS </span>
+							<span> in community centres </span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div className='row'>
+				As well as 800 workshops for kids at the Sheffield Children's Hospital, 11,500 text reminders to check for breast cancer from Coppafeel, 135 one-to-one mentoring sessions with the Prince's Trust, 72 cervical stitch surgeries from Tommy's, 1,100 support sessions from Ditch The Label, 23 vaccinations for stray cats and much more.
+			</div>
 		</div>
 	</section>);
 };
