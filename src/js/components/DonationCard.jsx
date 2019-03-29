@@ -1,3 +1,4 @@
+/* global navigator */
 import React from 'react';
 import _ from 'lodash';
 import { assert, assMatch } from 'sjtest';

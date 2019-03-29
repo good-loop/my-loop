@@ -14,10 +14,10 @@ import PropControl from '../base/components/PropControl';
 import { SocialMediaGLFooterWidget, SocialMediaFooterWidget, SocialMediaShareWidget } from './SocialLinksWidget';
 import NavBar from './NavBar';
 import CardAccordion, { Card } from '../base/components/CardAccordion';
-import OptimisedImage from './OptimisedImage';
+import OptimisedImage from './Image';
 import OnboardingCardMini from './OnboardingCardMini';
 import SocialMediaCard from './SocialMediaCard';
-import ShareAnAd from '../components/ShareAnAd';
+import ShareAnAd from './ShareAnAd';
 
 const pagePath = ['widget', 'MyPage'];
 
