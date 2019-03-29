@@ -63,7 +63,24 @@ const RecentCampaignsCard = () => {
 			];
 	return (
 		<div className="vertiser-row">
-			{	vertisers.map(x => <a href={"//my.good-loop.com/#campaign/?gl.vert="+x.adid} target="_blank"><img src={x.logo} alt={x.name}/></a>)	}
+			{	vertisers.map(x => 
+				<a key={x.adid} href={"//my.good-loop.com/#campaign/?gl.vert="+x.adid}>
+					<div style={{
+						backgroundImage: `url('${x.logo}')`,
+						border: '1px solid grey',
+						borderRadius: '50%',
+						margin: 0,
+						backgroundColor: '#fff',
+						backgroundRepeat: 'no-repeat',
+						backgroundPosition: 'center center',
+						backgroundSize: '83%',
+						height: '5em',
+						width: '5em'
+					}} 
+					/>
+					{/* <Logo url={x.logo} alt={x.name} /> */}
+				</a>)	
+			}
 		</div>		
 	);
 };

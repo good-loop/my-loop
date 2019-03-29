@@ -1,4 +1,4 @@
-@import "colours.less";
+@import "../js/base/style/colours.less";
 
 .page.MyPage {
 	text-align: center;
@@ -176,7 +176,6 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 	}
 
 	.title {
-		font-size: 40px;
 		letter-spacing: 0.6vmin;
 		width: 100%;
 		margin: 0 auto;
@@ -187,7 +186,6 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 	}
 
 	.subtitle {	
-		font-size: 43px;
 		letter-spacing: 0.4vmin;
 		padding-top: 1vmin;		
 		width: 85%;
@@ -494,10 +492,12 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 
 // set the vertiser logo sizes and put in some space between them to look less cluttered
 .vertiser-row {
-	img {
-		height: 100px;
-		padding: 0px 1.5vw;
-	}
+		display: flex;
+		justify-content: space-around;
+		flex-direction: row;
+		width: 100%;
+		text-align: center;
+		// padding: 0px 1.5vw;
 }
 
 // TODO: replace img with code , so we don't need this anymore
