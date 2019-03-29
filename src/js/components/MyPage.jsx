@@ -145,30 +145,30 @@ const MyPage = () => {
 					<IntroCard/>
 				</Card>
 
-				<Card title="Our Achievements Together" className="StatisticsCard MiniCard" bgColor={glColor2} defaultOpen>
+				<Card title="Our Achievements Together" className="StatisticsCard MiniCard " bgColor={glColor2} titleClassName='sub-header' defaultOpen>
 					<StatisticsCardMini allIds={allIds} />
 				</Card>
-				<Card title="How Good-Loop Ads Work" className="StatisticsCard MiniCard" bgColor={glColor3} defaultOpen>
+				<Card title="How Good-Loop Ads Work" className="StatisticsCard MiniCard" bgColor={glColor3} titleClassName='sub-header' defaultOpen>
 					<OnboardingCardMini allIds={allIds} />
 				</Card>							
-				<Card title="Recent Campaigns" bgColor={glColor2} defaultOpen>
+				<Card title="Recent Campaigns" bgColor={glColor2} titleClassName='sub-header' defaultOpen>
 					<RecentCampaignsCard />
 				</Card>	
-				<Card title="Boost Your Impact" className="boostImpact" defaultOpen>
+				<Card title="Boost Your Impact" className="boostImpact" titleClassName='sub-header' defaultOpen>
 					<SocialMediaCard allIds={xids} className="socialConnect"/>
 					<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} />
 				</Card> 
 
-				<Card title="Your Charities" bgColor={glColor2} defaultOpen>
+				<Card title="Your Charities" bgColor={glColor2} titleClassName='sub-header' defaultOpen>
 					<DonationCard xids={xids} />
 				</Card>
 
-				<Card title="Your Digital Mirror" bgColor={glColor3} defaultOpen>
+				<Card title="Your Digital Mirror" bgColor={glColor3} titleClassName='sub-header' defaultOpen>
 					<DigitalMirrorCard xids={xids} className="digitalMirror"/>
 					<SocialMediaCard allIds={xids} className="socialConnect"/>						
 				</Card> 
 
-				<Card title="Consent Controls" bgColor={glColor2} defaultOpen className="consentControls">
+				<Card title="Consent Controls" bgColor={glColor2} defaultOpen titleClassName='sub-header' className="consentControls">
 					{Login.isLoggedIn() ? (
 						<ConsentWidget xids={xids} />
 					) : (
@@ -176,11 +176,11 @@ const MyPage = () => {
 					)}
 				</Card>
 
-				<Card title="Get In Touch" defaultOpen>
+				<Card title="Get In Touch" titleClassName='sub-header' defaultOpen>
 					<ContactCard allIds={allIds} />
 				</Card>
 				
-				<Card title="Linked Profiles" bgColor={glColor3} className="linkedProfiles">
+				<Card title="Linked Profiles" bgColor={glColor3} titleClassName='sub-header' className="linkedProfiles">
 					<LinkedProfilesCard xids={xids} />
 				</Card>
 			</CardAccordion>
@@ -197,7 +197,7 @@ const MyPage = () => {
 }; // ./MyPage
 
 const WelcomeCard = ({xids}) => {
-	const heroImage = 'https://image.ibb.co/eWpfwV/hero7.png';
+	const heroImage = '/img/hero7.png';
 
 	return (
 		<div className="WelcomeCard">
@@ -242,7 +242,7 @@ const WelcomeCard = ({xids}) => {
 
 // explain good-loop and join CTA
 const IntroCard = () => {
-	const heroImage = 'https://image.ibb.co/eWpfwV/hero7.png';
+	const heroImage = '/img/hero7.png';
 	return (
 		<div className="WelcomeCard">
 			{ 
@@ -250,8 +250,8 @@ const IntroCard = () => {
 					<div>
 						<div className="row header">
 							<div className="col-md-7 header-text post-login">
-								<p className="title header-font">You're a champion!</p>
-								<p className="subtitle">Find out below how to boost your contribution</p>
+								<p className="title header"> You're a champion! </p>
+								<p className="title sub-header"> Find out below how to boost your contribution </p>
 							</div>
 							<div className="col-md-5 header-img">
 								<img src={heroImage} alt="Superhero" />
@@ -261,8 +261,8 @@ const IntroCard = () => {
 				) : (
 					<div className="row header">
 						<div className="col-md-12 header-text">
-							<p className="title header-font">ADS FOR GOOD</p>
-							<p className="subtitle subheader-font">Good-Loop ads reward the charity of your choice for every ad you watch</p>
+							<p className="title header">ADS FOR GOOD</p>
+							<p className="subtitle sub-header">Good-Loop ads reward the charity of your choice for every ad you watch</p>
 							<div onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
 								<LoginLink className='btn btn-lg btn-default btn-gl' onClick={() => LoginWidget.changeVerb('register')} verb='Join us' />			
 							</div>
