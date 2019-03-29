@@ -125,7 +125,8 @@ const MyPage = () => {
 	});
 
 	// alternating colours, complimentary to glColor which is the g-l colour
-	let glColor2 = '#f5aa57';
+	// let glColor2 = '#f5aa57';
+	const glColor2 = '#008C59';
 	let glColor3 = '#51808a';
 	let splashPhotoStyle = { 
 		padding: '0px'
@@ -362,7 +363,8 @@ const StatisticsCardMini = () => {
 			<div className='row sub-header bottom-pad1'> 
 				IN 2018, GOOD-LOOP'S ETHICAL ADVERTISING RAISED OVER <br /> 
 				<span className='header'> £200,000 </span> <br/> 
-				FOR CHARITABLE CAUSES. THAT'S ENOUGH TO FUND... 
+				FOR CHARITABLE CAUSES <br /> 
+				THAT'S ENOUGH TO FUND... 
 			</div>
 			<div className='row flex-row flex-centre bottom-pad1'>
 				<div className='col-lg-4 col-md-6'>
