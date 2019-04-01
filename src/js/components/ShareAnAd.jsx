@@ -59,7 +59,6 @@ const ShareAnAd = ({ adHistory, logsIfVisibleRef }) => {
 							text='I just gave to charity by watching a GoodLoop ad'
 							url={`https://as.good-loop.com/?gl.vert=${vert}&gl.socialShareId=${socialShareId}`}
 						/>
-						{/* <TwitterIntentLink twitterXId={twitterXId} vert={vert} /> */}
 						<SharedAdStats twitterXId={twitterXId} />
 					</div>
 				)
