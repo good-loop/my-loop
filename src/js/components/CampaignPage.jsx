@@ -417,10 +417,8 @@ const CampaignPage = () => {
 	let ad = adid ? adPv.value : ( adPv.value && adPv.value.hits && adPv.value.hits[0] );
 
 	// good-loop branding
-	let glColor = '#C83312'; // TODO: move this to less?
 	let glLogo = '/img/logo-white.svg';
 	let glColorBgStyle = {
-		backgroundColor: glColor,
 		color: 'white'
 	};
 
@@ -524,10 +522,6 @@ const CampaignPage = () => {
 		campaignSlice[obj.cid] = {percentageTotal: Math.round(rawFraction*100)}; 
 	});
 
-	// alternating colours, complimentary to glColor which is the g-l colour
-	let glColor2 = '#f5aa57';
-	let glColor3 = '#51808a';
-
 	// toggle carousel (true means it spins automatically)
 	let toggle = "false";
 	//let toggle = 5000; // TODO: set this as a param
@@ -562,15 +556,15 @@ const CampaignPage = () => {
 			</div>
 		</div>
 		<CardAccordion multiple >	
-			<Card title="How Good-Loop Ads Work" className="StatisticsCard MiniCard" bgColor={glColor2} defaultOpen>
+			<Card title="How Good-Loop Ads Work" className="StatisticsCard MiniCard background-dark-green" defaultOpen>
 				<OnboardingCardMini/>
 			</Card>							
-			<Card title="Boost Your Impact" className="boostImpact" bgColor={glColor3} defaultOpen>
+			<Card title="Boost Your Impact" className="boostImpact background-dark-blue" defaultOpen>
 				<SocialMediaCard allIds={xids} className="socialConnect"/>
 				<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} />
 			</Card> 
 		</CardAccordion>
-		<div className='grid-tile bottom' style={glColorBgStyle}>
+		<div className='grid-tile bottom background-gl-red' style={glColorBgStyle}>
 			<div className='foot header-font'>		
 				<SocialMediaShareWidget adName={ad.name} donationValue={donationValue} charities={clist} />
 				<SocialMediaGLFooterWidget />

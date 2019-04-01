@@ -124,10 +124,6 @@ const MyPage = () => {
 		}));
 	});
 
-	// alternating colours, complimentary to glColor which is the g-l colour
-	// let glColor2 = '#f5aa57';
-	const glColor2 = '#008C59';
-	let glColor3 = '#51808a';
 	let splashPhotoStyle = { 
 		padding: '0px'
 		//width: unset;
@@ -147,13 +143,13 @@ const MyPage = () => {
 					<IntroCard/>
 				</Card>
 
-				<Card title="Our Achievements Together" className="StatisticsCard MiniCard " bgColor={glColor2} titleClassName='sub-header' defaultOpen>
+				<Card title="Our Achievements Together" className="StatisticsCard MiniCard background-dark-green" titleClassName='sub-header' defaultOpen>
 					<StatisticsCardMini allIds={allIds} />
 				</Card>
-				<Card title="How Good-Loop Ads Work" className="StatisticsCard MiniCard" bgColor={glColor3} titleClassName='sub-header' defaultOpen>
+				<Card title="How Good-Loop Ads Work" className="StatisticsCard MiniCard background-dark-blue" titleClassName='sub-header' defaultOpen>
 					<OnboardingCardMini allIds={allIds} />
 				</Card>							
-				<Card title="Recent Campaigns" bgColor={glColor2} titleClassName='sub-header' defaultOpen>
+				<Card title="Recent Campaigns" className='background-dark-green' titleClassName='sub-header' defaultOpen>
 					<RecentCampaignsCard />
 				</Card>	
 				<Card title="Boost Your Impact" className="boostImpact" titleClassName='sub-header' defaultOpen>
@@ -161,16 +157,16 @@ const MyPage = () => {
 					<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} />
 				</Card> 
 
-				<Card title="Your Charities" bgColor={glColor2} titleClassName='sub-header' defaultOpen>
+				<Card title="Your Charities" className='background-dark-green' titleClassName='sub-header' defaultOpen>
 					<DonationCard xids={xids} />
 				</Card>
 
-				<Card title="Your Digital Mirror" bgColor={glColor3} titleClassName='sub-header' defaultOpen>
+				<Card title="Your Digital Mirror" className='background-dark-blue' titleClassName='sub-header' defaultOpen>
 					<DigitalMirrorCard xids={xids} className="digitalMirror"/>
 					<SocialMediaCard allIds={xids} className="socialConnect"/>						
 				</Card> 
 
-				<Card title="Consent Controls" bgColor={glColor2} defaultOpen titleClassName='sub-header' className="consentControls">
+				<Card title="Consent Controls" defaultOpen titleClassName='sub-header' className="consentControls background-dark-green">
 					{Login.isLoggedIn() ? (
 						<ConsentWidget xids={xids} />
 					) : (
@@ -182,7 +178,7 @@ const MyPage = () => {
 					<ContactCard allIds={allIds} />
 				</Card>
 				
-				<Card title="Linked Profiles" bgColor={glColor3} titleClassName='sub-header' className="linkedProfiles">
+				<Card title="Linked Profiles" titleClassName='sub-header' className="linkedProfiles background-dark-blue">
 					<LinkedProfilesCard xids={xids} />
 				</Card>
 			</CardAccordion>
@@ -436,8 +432,8 @@ const StatisticsCard = () => {
 
 // Two-liner as withLogsIfVisible latches on to Component.displayName or Component.name in order to generate sensible-looking event tag in MixPanel
 // Obviously will not work quite right if we were to use an anonymous function
-let ContactCard = ({logsIfVisibleRef, bgColor}) => (
-	<div style={{backgroundColor: bgColor}} ref={logsIfVisibleRef}>
+let ContactCard = ({logsIfVisibleRef}) => (
+	<div ref={logsIfVisibleRef}>
 		<div>
 			<p>Let us know what you think of this web-app, and your ideas for improving it.</p>
 			<p>Are you interested in hosting Ads For Good on your blog or website?</p>
