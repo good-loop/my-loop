@@ -17,42 +17,49 @@ const NavBar = ({brandLogo}) => {
 		<div className="pull-right">
 			<LoginLink className='btn btn-lg btn-default btn-gl discrete-login' verb='Login' />		
 		</div>
-    );
-    const content = brandLogo ? (
-        <div className="nav-bar">
-            <div className='nav-col-4'>
-                <div className="header-logos pull-left">
-                    <a href="#my"><img className="gl-logo" alt='Good-Loop Logo' src={glLogo}/></a>
-                </div>		
-            </div>
-            <div className='nav-col-4'>
-                <OptimisedImage 
-                    alt='Sponsor Logo'
-                    render={ props => <img {...props} />} 
-                    src={brandLogo} 
-                    className='vertiser-logo'
-                    style={{ display: brandLogo ? 'inline-block' : 'none' }} 
-			    />
-            </div>
-            <div className='nav-col-4'>
-                { loginInfo }	
-            </div>
-        </div>
-        ) : (
-        <div className="nav-bar">
-            <div className='nav-col-6'>
-                <div className="header-logos pull-left">
-                    <a href="#my"><img className="gl-logo" alt='Good-Loop Logo' src={glLogo}/></a>
-                </div>		
-            </div>
-            <div className='nav-col-6'>
-                { loginInfo }	
-            </div>
-        </div>);
+	);
+	const content = brandLogo 
+		? (
+			<React.Fragment>
+				<div className='col-md-4'>
+					<div className="header-logos pull-left">
+						<a href="#my">
+							<img className="gl-logo" alt='Good-Loop Logo' src={glLogo}/>
+						</a>
+					</div>		
+				</div>
+				<div className='col-md-4'>
+					<OptimisedImage 
+						alt='Sponsor Logo'
+						render={ props => <img {...props} /> } 
+						src={brandLogo} 
+						className='vertiser-logo'
+						style={{ display: brandLogo ? 'inline-block' : 'none' }} 
+					/>
+				</div>
+				<div className='col-md-4'>
+					{ loginInfo }	
+				</div>
+			</React.Fragment>
+		) 
+		: (
+			<React.Fragment>
+				<div className='col-md-6'>
+					<div className="header-logos pull-left">
+						<a href="#my">
+							<img className="gl-logo" alt='Good-Loop Logo' src={glLogo}/>
+						</a>
+					</div>		
+				</div>
+				<div className='col-md-6'>
+					{ loginInfo }	
+				</div>
+			</React.Fragment>
+		);
 	return (
-        <div>
-        { content }
-        </div>
+		<div className="nav-bar container-fluid">
+			{ content }
+		</div>
 	);
 };
 
