@@ -370,7 +370,7 @@ const StatisticsCardMini = () => {
 				<div className='col-lg-4 col-md-6'>
 					<div className='row bottom-pad1'>
 						<div className='flex-column flex-centre'>
-							<RoundLogo alt='centre-point' className='col-md-6' url='https://as.good-loop.com/uploads/anon/kithead1-8689246171902103163.png' />
+							<RoundLogo alt='centre-point' className='col-md-6' url='/img/centre-point.png' />
 							<span className='sub-header'> 888 NIGHTS </span>
 							<span> 
 								of accommodation <br /> 
