@@ -55,6 +55,7 @@ const ShareAnAd = ({ adHistory, logsIfVisibleRef }) => {
 						<IntentLink 
 							onClick={() => saveSocialShareId({xid: twitterXId, socialShareId, adid:vert})}
 							service='twitter' 
+							style={{backgroundColor: 'none', border: '5px solid'}}
 							text='I just gave to charity by watching a GoodLoop ad'
 							url={`https://as.good-loop.com/?gl.vert=${vert}&gl.socialShareId=${socialShareId}`}
 						/>
