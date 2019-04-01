@@ -2,7 +2,7 @@ import React from 'react';
 import Cookies from 'js-cookie';
 import _ from 'lodash';
 import { assert, assMatch } from 'sjtest';
-import { XId, modifyHash, stopEvent, encURI, yessy } from 'wwutils';
+import { XId, modifyHash, stopEvent, encURI, yessy, join } from 'wwutils';
 // import pivot from 'data-pivot';
 import C from '../C';
 import ServerIO from '../plumbing/ServerIO';
@@ -23,8 +23,8 @@ import { Link, Element } from 'react-scroll';
 import MDText from '../base/components/MDText';
 
 // usign css grid (and flex in ie10+) to make the footer mobile responsive & had to create innerFooter divs to align content to the bottom using display:table
-const Footer = ({leftFooter, rightFooter, glColorBgStyle}) => {
-	return (<div className='footer' style={glColorBgStyle}>
+const Footer = ({className, leftFooter, rightFooter}) => {
+	return (<div className={join('footer', className)}>
 		<div className='footer-col leftFooter'>
 			<div className='innerLeftFooter'>
 				<MDText source={leftFooter} />
