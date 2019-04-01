@@ -42,7 +42,6 @@ const ShareAnAd = ({ adHistory, logsIfVisibleRef }) => {
 
 	return (
 		<div className="ShareAd" ref={logsIfVisibleRef}>
-			<h3> Share this ad on social media </h3>
 			{ 
 				format === 'video' 
 					? <video controls={true} width="100%" height="auto" src={video}> An error occured </video> 
@@ -52,15 +51,13 @@ const ShareAnAd = ({ adHistory, logsIfVisibleRef }) => {
 				twitterXId
 				&& (
 					<div>
+						<h3> Share this ad on social media </h3>
 						<IntentLink 
 							onClick={() => saveSocialShareId({xid: twitterXId, socialShareId, adid:vert})}
 							service='twitter' 
 							text='I just gave to charity by watching a GoodLoop ad'
 							url={`https://as.good-loop.com/?gl.vert=${vert}&gl.socialShareId=${socialShareId}`}
-						>
-							<span className='fa fa-twitter' />
-							<span className="label" id="l">Tweet</span>
-						</IntentLink>
+						/>
 						{/* <TwitterIntentLink twitterXId={twitterXId} vert={vert} /> */}
 						<SharedAdStats twitterXId={twitterXId} />
 					</div>
