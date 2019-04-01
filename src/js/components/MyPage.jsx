@@ -135,7 +135,7 @@ const MyPage = () => {
 			<CardAccordion widgetName="MyReport" multiple >	
 				<Card defaultOpen className="fullCard" style={splashPhotoStyle}>
 					<NavBar/>
-					<SplashPhotoCard/>
+					{/* <SplashPhotoCard/> */}
 				</Card>
 
 				<Card defaultOpen className="introCard" >
