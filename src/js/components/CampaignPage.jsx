@@ -571,7 +571,7 @@ const CampaignPage = () => {
 				<SocialMediaFooterWidget type={'vertiser'} name={ad.name} branding={branding} />					
 			</div>
 		</div>
-		<Footer leftFooter={startDate} rightFooter={smallPrint} glColorBgStyle={glColorBgStyle} />
+		<Footer leftFooter={startDate} rightFooter={smallPrint} />
 	</div>);
 }; // ./CampaignPage
 
