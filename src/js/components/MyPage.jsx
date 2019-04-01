@@ -198,7 +198,7 @@ const WelcomeCard = ({xids}) => {
 	const heroImage = '/img/hero7.png';
 
 	return (
-		<div className="WelcomeCard container">
+		<div className="WelcomeCard container-fluid">
 			{ 
 				Login.isLoggedIn() ? (
 					<div>
@@ -242,7 +242,7 @@ const WelcomeCard = ({xids}) => {
 const IntroCard = () => {
 	const heroImage = '/img/hero7.png';
 	return (
-		<div className="WelcomeCard container">
+		<div className="WelcomeCard container-fluid">
 			{ 
 				Login.isLoggedIn() ? (
 					<div>
@@ -328,7 +328,7 @@ const StatisticsCardMini = () => {
 	// TODO use a call to lg to get a count of minviews for cnt
 
 	return (<section className="statistics statistics-what text-center">
-		<div className="statistics-content container">
+		<div className="statistics-content container-fluid">
 			<div className="row">
 				<h2 className="text-center">Thousands each month raised for charity</h2>
 			</div>
