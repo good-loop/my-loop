@@ -2,6 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import MDText from '../base/components/MDText';
 import {IntentLink} from '../base/components/SocialShare';
+import Money from '../base/data/Money';
 
 /** What should appear in Tweet/Facebook link/LinkedIn article
 // Contains fallbacks for where donation amount, charities or advertiser name is not specified
@@ -41,9 +42,15 @@ const SocialMediaShareWidget = ({donationValue, charities, adName}) => {
 		<div className="social share-page">
 			<MDText source='Share this page' />
 			<div className="social-links">
-				<IntentLink service='facebook' text={shareText} url={url} />
-				<IntentLink service='twitter' text={shareText} url={url} />
-				<IntentLink service='linkedin' text={shareText} url={url} />
+				<IntentLink service='facebook' text={shareText} url={url}>
+					<img src='https://gl-es-05.good-loop.com/cdn/images/facebook.png' alt='share-on-facebook' />
+				</IntentLink>
+				<IntentLink service='twitter' text={shareText} url={url}>
+					<img src='https://gl-es-04.good-loop.com/cdn/images/twitter.png' alt='share-on-twitter' />			
+				</IntentLink>
+				<IntentLink service='linkedin' text={shareText} url={url}>
+					<img src='https://gl-es-05.good-loop.com/cdn/images/instagram.png' alt='share-on-linkedin' />			
+				</IntentLink>
 			</div>
 		</div>
 	);
@@ -69,14 +76,14 @@ const SocialMediaFooterWidget = ({type, name, branding}) => {
 };
 
 // good-loop social media links
-const SocialMediaGLFooterWidget = ({}) => {
+const SocialMediaGLFooterWidget = () => {
 	// goodloop branding data
 	const gl_social = {
 		fb_url: 'https://www.facebook.com/the.good.loop/',
 		tw_url: 'https://twitter.com/goodloophq',
 		insta_url: 'https://www.instagram.com/good.loop.ads/',
 	};
-	return <SocialMediaFooterWidget type={'goodloop'} name={'GOOD-LOOP'} branding={gl_social} />
+	return <SocialMediaFooterWidget type={'goodloop'} name={'GOOD-LOOP'} branding={gl_social} />;
 };
 
 export { SocialMediaGLFooterWidget, SocialMediaFooterWidget, SocialMediaShareWidget };
