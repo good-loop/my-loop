@@ -10,7 +10,6 @@ import DataStore from '../base/plumbing/DataStore';
 import Person from '../base/data/Person';
 import Misc from '../base/components/Misc';
 import PropControl from '../base/components/PropControl';
-import BS from '../base/components/BS3';
 import ActionMan from '../plumbing/ActionMan';
 import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
 import {getConsents, setConsents, saveProfile, getProfile, getProfilesNow} from '../base/Profiler';
