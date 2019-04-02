@@ -362,7 +362,7 @@ const StatisticsCardMini = () => {
 				FOR CHARITABLE CAUSES <br /> 
 				THAT'S ENOUGH TO FUND... 
 			</div>
-			<div className='row flex-row flex-centre bottom-pad1'>
+			<div className='row bottom-pad1'>
 				<div className='col-lg-4 col-md-6'>
 					<div className='row bottom-pad1'>
 						<div className='flex-column flex-centre'>
@@ -389,9 +389,9 @@ const StatisticsCardMini = () => {
 					</div>
 				</div>
 			</div>
-			<div className='row flex-row flex-centre bottom-pad1'>
+			<div className='row bottom-pad1'>
 				<div className='col-lg-4 col-md-6'>
-					<div className='row flex-row bottom-pad1'>
+					<div className='row bottom-pad1'>
 						<div className='flex-column flex-centre'>
 							<RoundLogo alt='centre-point' className='col-md-6' url='/img/save-the-children.png' />
 							<span className='sub-header'> FOOD FOR ONE YEAR </span>
