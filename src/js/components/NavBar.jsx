@@ -14,7 +14,7 @@ const NavBar = ({brandLogo}) => {
 			<AccountMenu account={false} logoutLink={'#'} />
 		</div>
 	) : (
-		<div className="pull-right">
+		<div id='top-right-menu' className="pull-right">
 			<LoginLink className='btn btn-lg btn-default btn-gl discrete-login' verb='Login' />		
 		</div>
 	);
