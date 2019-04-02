@@ -17,10 +17,8 @@ const RoundLogo = props => (
 			backgroundRepeat: 'no-repeat',
 			backgroundPosition: 'center center',
 			backgroundSize: '83%',
-			minHeight: '100px',
-			minWidth: '100px',
-			height: '5em',
-			width: '5em'
+			height: '5rem',
+			width: '5rem'
 		}} 
 	/>
 );
