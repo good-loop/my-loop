@@ -58,7 +58,9 @@ const NavBar = ({brandLogo}) => {
 		);
 	return (
 		<div className="nav-bar container-fluid">
-			{ content }
+			<div className='row width100pct'>
+				{ content }
+			</div>
 		</div>
 	);
 };
