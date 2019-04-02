@@ -330,7 +330,7 @@ const StatisticsCardMini = () => {
 	return (<section className="statistics statistics-what text-center">
 		<div className="statistics-content container-fluid">
 			<div className="row">
-				<h2 className="text-center">Thousands each month raised for charity</h2>
+				<h2 className="header">Thousands each month raised for charity</h2>
 			</div>
 			<div className='row'>
 				<div className="col-md-4 statistics-item">
