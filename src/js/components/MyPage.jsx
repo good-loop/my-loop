@@ -213,7 +213,7 @@ const WelcomeCard = ({xids}) => {
 						<div className="row header">
 							<div className="col-md-7 header-text">
 								<p className="title">You're a champion!</p>
-								<p className="subtitle">Find out below how to boost your contribution</p>
+								<p className="subtitle">Find out how to boost your contribution below</p>
 							</div>
 							<div className="col-md-1 header-img">
 								<img src={heroImage} alt="Superhero" />
@@ -249,7 +249,7 @@ const IntroCard = () => {
 						<div className="row header">
 							<div className="col-md-7 header-text post-login">
 								<p className="title header"> You're a champion! </p>
-								<p className="title sub-header"> Find out below how to boost your contribution </p>
+								<p className="title sub-header"> Find out how to boost your contribution below </p>
 							</div>
 							<div className="col-md-5 header-img">
 								<img src={heroImage} alt="Superhero" />
