@@ -278,7 +278,7 @@ const ConsentControls = ({xidObj}) => {
 				<div className='description'>
 					<p>Your data can help us boost the amount that is donated whenever you see one of our ads.</p>
 				</div>
-				<div className='container word-wrap'>
+				<div className='container-fluid word-wrap'>
 					<div className='row'>
 						<div className='col-sm-5 col-sm-push-5 profile-photo'>
 							{profileImage ? <img className='img-thumbnail img-profile' src={profileImage.value} alt='user-profile' /> : null}
