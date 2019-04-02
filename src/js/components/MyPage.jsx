@@ -262,7 +262,7 @@ const IntroCard = () => {
 							<p className="title header">ADS FOR GOOD</p>
 							<p className="subtitle sub-header">Good-Loop ads reward the charity of your choice <br /> for every ad you watch</p>
 							<div onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
-								<LoginLink className='btn btn-lg btn-default btn-gl' onClick={() => LoginWidget.changeVerb('register')} verb='Join us' />			
+								<LoginLink className='btn btn-lg btn-default btn-gl sub-header' onClick={() => LoginWidget.changeVerb('register')} verb='Join us' />			
 							</div>
 						</div>				
 					</div>
