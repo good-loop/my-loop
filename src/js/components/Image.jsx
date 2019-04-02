@@ -32,7 +32,7 @@ const RoundLogo = props => (
  */
 const optimise = url => {
 	if ( ! url) return url;
-	const isMediaServer = url.indexOf('media.good-loop.com') !== -1;
+	const isMediaImage = url.indexOf('media.good-loop.com') !== -1;
 	if ( ! isMediaImage) return url;
 	// mobile or standard?
 	const isMobile = DataStore.getValue(['env', 'isMobile']);
