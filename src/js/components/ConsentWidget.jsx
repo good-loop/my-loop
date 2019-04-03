@@ -2,17 +2,11 @@
 import React from 'react';
 import _ from 'lodash';
 import { assert, assMatch } from 'sjtest';
-import { XId, modifyHash, stopEvent, encURI, yessy } from 'wwutils';
 import Cookies from 'js-cookie';
-import C from '../C';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
-import Person from '../base/data/Person';
-import Misc from '../base/components/Misc';
 import PropControl from '../base/components/PropControl';
-import ActionMan from '../plumbing/ActionMan';
-import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
-import {getConsents, setConsents, saveProfile, getProfile, getProfilesNow} from '../base/Profiler';
+import {getConsents, setConsents, saveProfile, getProfilesNow} from '../base/Profiler';
 import { getId } from '../base/data/DataClass';
 
 const _debounceFnForKey = {};
@@ -88,7 +82,8 @@ const ConsentWidget = ({xids}) => {
 
 			<PropControl path={path} prop='cookies' 
 				label='Use cookies to record your charity donations, which ads we show you, and how you react to them (e.g. click / ignore / vomit)' 
-				type='yesNo' saveFn={(data) => {toggleDNT(data); togglePerm(data);}} />
+				type='yesNo' saveFn={(data) => { toggleDNT(data); togglePerm(data); }} 
+			/>
 			{perms.cookies === false? <small>OK - no cookies. Except ironically this has to set a cookie to work.</small> : null}
 
 			<PropControl path={path} prop='personaliseAds' label='Pick ads that fit your profile' type='yesNo' 
