@@ -107,7 +107,7 @@ const DonationCard = ({xids}) => {
 	// TODO <You xids={xids} />
 
 	return(<div>
-		<p>What we've raised together for your charities.</p>
+		<p>What we've raised together</p>
 		{rows.slice(0, 3).map(row => <CharityDonation key={row.cid} {...row} />)}
 	</div>);
 }; // ./DonationCard
