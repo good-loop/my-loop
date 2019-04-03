@@ -28,7 +28,7 @@ const DonationCard = ({xids}) => {
 	if ( ! Login.isLoggedIn()) {
 		return <LoginToSee />;
 	}
-	
+
 	// Do not track?
 	let dnt = doNotTrack();
 
@@ -187,7 +187,7 @@ const CharityDonation = ({cid, userTotal, communityTotal, onlyOneCharity}) => {
 				</div>
 			</div>
 			
-			<div className='charity-circle-caption'>{charity.displayName || charity.name || cid}</div>
+			<div className='top-pad1'>{charity.displayName || charity.name || cid}</div>
 		</div>
 	);
 };

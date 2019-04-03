@@ -19,19 +19,28 @@ html, body {
 	font-size: 1.618rem;
 }
 
+.top-pad1 {
+	padding-top: 1rem;
+}
+
 .bottom-pad1 {
 	padding-bottom: 1rem;
 }
 
 // Base style for intent links on MyLoop
 .intent-link {
-	height: 80px;
-	width: 80px;
+	height: 4rem;
+	width: 4rem;
 	border-radius: 50%;
 	
 	display: flex;
 	justify-content: center; 
 	align-items: center;
+
+	img {
+		height: 3.5rem;
+		width: 3.5rem;
+	}
 }
 
 .background-gl-red {
@@ -44,6 +53,11 @@ html, body {
 
 .background-dark-green {
 	background-color: #008C59;
+}
+
+// Override bootstrap default. Does not look good on ShareAnAd shared ads table
+th {
+	text-align: center;
 }
 
 // my loop page

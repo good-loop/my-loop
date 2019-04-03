@@ -55,7 +55,7 @@ const ShareAnAd = ({ adHistory, logsIfVisibleRef }) => {
 						<IntentLink 
 							onClick={() => saveSocialShareId({xid: twitterXId, socialShareId, adid:vert})}
 							service='twitter' 
-							style={{backgroundColor: 'none', border: '5px solid'}}
+							style={{backgroundColor: 'none', border: '0.25rem solid'}}
 							text='I just gave to charity by watching a GoodLoop ad'
 							url={`https://as.good-loop.com/?gl.vert=${vert}&gl.socialShareId=${socialShareId}`}
 						/>
@@ -96,8 +96,10 @@ const SharedAdStats = ({twitterXId}) => {
 
 	return (
 		<div className='sharedAds container-fluid'>
-			Ads you have previously shared:
-			<table className='word-wrap width100'>
+			<div className='bottom-pad1 top-pad1'>
+				Ads you have previously shared:
+			</div>
+			<table className='word-wrap width100pct'>
 				<thead>
 					<tr>
 						<th> Advert </th>
