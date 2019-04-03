@@ -1,21 +1,14 @@
 /* global navigator */
 import React from 'react';
-import _ from 'lodash';
-import { assert, assMatch } from 'sjtest';
-import { XId, modifyHash, stopEvent, encURI, yessy } from 'wwutils';
-// import pivot from 'data-pivot';
+import { XId } from 'wwutils';
 import C from '../C';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
 import {getId} from '../base/data/DataClass';
-import Person from '../base/data/Person';
 import Misc from '../base/components/Misc';
 import ActionMan from '../plumbing/ActionMan';
-import SimpleTable, {CellFormat} from '../base/components/SimpleTable';
 import Login from 'you-again';
-import {LoginLink, SocialSignInButton} from '../base/components/LoginWidget';
-import {getProfile, getProfilesNow} from '../base/Profiler';
-import printer from '../base/utils/printer';
+import { getProfilesNow } from '../base/Profiler';
 import {LoginToSee} from './Bits';
 
 /**
@@ -34,13 +27,6 @@ const doNotTrack = () => {
 const DonationCard = ({xids}) => {
 	if ( ! Login.isLoggedIn()) {
 		return <LoginToSee />;
-	}
-	let hasjwts = Login.aliases? Login.aliases.filter(u => u.jwt) : [];
-	if ( ! hasjwts.length) {
-		DataStore.fetch(['transient','jwt',Login.getId()], () => {
-			return Login.verify();
-		});
-		return <Misc.Loading text='Checking your login...' />;
 	}
 	
 	// Do not track?
