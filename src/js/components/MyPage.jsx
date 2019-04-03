@@ -456,7 +456,7 @@ const LinkedProfilesCard = ({xids}) => {
 	let peeps = xids.map(xid => DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Person, xid));
 	peeps = peeps.filter(p => !!p);
 
-	return (<div>
+	return (<div className='word-wrap'>
 		<p>We all have multiple online identities -- e.g. emails, social media, and with retail companies. 
 		Here are the IDs Good-Loop recognises as you:</p>
 		{ nonTrackers.map(xid => <div key={xid}>{XId.service(xid)+': '+XId.id(xid)}</div>) }
