@@ -69,7 +69,7 @@ const DonationCard = ({xids}) => {
 		return (
 			<React.Fragment>
 				<p className="word-wrap">You do not appear to have made a donation via a Good-Loop ad</p>
-				<a href='https://as.good-loop.com'>Watch a Good-Loop ad to donate</a>
+				<a className='white-link' href='https://as.good-loop.com'>Watch a Good-Loop ad to donate</a>
 			</React.Fragment>
 		);
 	}
