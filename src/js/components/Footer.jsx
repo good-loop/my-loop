@@ -33,7 +33,7 @@ const Footer = ({className, leftFooter, rightFooter}) => {
 		<div className='footer-col mainFooter'>
 			<p>
 				Ads for Good by Good-Loop Ltd.<br />
-				&copy; 2017-18 Good-Loop <a href="mailto:daniel@good-loop.com?Subject=Good-Loop%20Portal" target="_top">Contact Us</a>
+				&copy; 2019 Good-Loop <a href="mailto:daniel@good-loop.com?Subject=My-Loop%20query" target="_top">Contact Us</a>
 				&nbsp; This web-app is open-source on <a target='_blank' href='https://github.com/good-loop/my-loop'>GitHub</a>.
 			</p>
 		</div>
