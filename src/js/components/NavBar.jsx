@@ -18,48 +18,37 @@ const NavBar = ({brandLogo}) => {
 			<LoginLink className='btn btn-lg btn-default btn-gl discrete-login' verb='Login' />		
 		</div>
 	);
-	const content = brandLogo 
-		? (
-			<React.Fragment>
-				<div className='col-md-4'>
-					<div className="header-logos pull-left">
-						<a href="#my">
-							<img className="gl-logo" alt='Good-Loop Logo' src={glLogo}/>
-						</a>
-					</div>		
-				</div>
-				<div className='col-md-4'>
-					<OptimisedImage 
-						alt='Sponsor Logo'
-						render={ props => <img {...props} /> } 
-						src={brandLogo} 
-						className='vertiser-logo'
-						style={{ display: brandLogo ? 'inline-block' : 'none' }} 
-					/>
-				</div>
-				<div className='col-md-4'>
-					{ loginInfo }	
-				</div>
-			</React.Fragment>
-		) 
-		: (
-			<React.Fragment>
-				<div className='col-md-6'>
-					<div className="header-logos pull-left">
-						<a href="#my">
-							<img className="gl-logo" alt='Good-Loop Logo' src={glLogo}/>
-						</a>
-					</div>		
-				</div>
-				<div className='col-md-6'>
-					{ loginInfo }	
-				</div>
-			</React.Fragment>
-		);
+
+	// TODO: Refactor campaign-page specific code out of here
+	// Need to adjust layout to fit three elements if a brandLogo is provided
+	const colLength = brandLogo ? 4 : 6;
+
 	return (
 		<div className="nav-bar container-fluid">
-			<div className='row width100pct'>
-				{ content }
+			<div className='row flex-row'>
+				<div className={`col-md-${colLength} col-xs-${colLength} flex-vertical-align flex-align-items-start`}>
+					<div className="header-logos">
+						<a href="#my">
+							<img className="gl-logo" alt='Good-Loop Logo' src={glLogo} />
+						</a>
+					</div>		
+				</div>
+				{
+					brandLogo
+					&&
+					<div className='col-md-4 col-xs-4'>
+						<OptimisedImage 
+							alt='Sponsor Logo'
+							render={ props => <img {...props} /> } 
+							src={brandLogo} 
+							className='vertiser-logo'
+							style={{ display: brandLogo ? 'inline-block' : 'none' }} 
+						/>
+					</div>
+				}
+				<div className={`col-md-${colLength} col-xs-${colLength}`}>
+					{ loginInfo }	
+				</div>
 			</div>
 		</div>
 	);
