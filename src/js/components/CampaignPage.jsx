@@ -21,35 +21,7 @@ import ShareAnAd from './ShareAnAd';
 
 const pagePath = ['widget', 'MyPage'];
 
-const CampaignHeaderWidget = ({glLogo, brandLogo}) => {
-	return (
-		<div className="header-logos">
-			<OptimisedImage 
-				alt='Sponsor Logo'
-				render={ props => <img {...props} />} 
-				src={brandLogo} 
-				style={{ display: brandLogo ? 'inline-block' : 'none' }} 
-			/>
-			<img alt='Good-Loop Logo' src={glLogo} />
-		</div>
-	);
-};
-
-// const CampaignHeaderWidget = ({cparentLogo, brandLogo, supports, displayChtyLogo}) => {
-// 	if (cparentLogo) {
-// 		return (
-// 			<div>
-// 				<img alt='Sponsor Logo' src={brandLogo} />
-// 				{supports ? <span> Supports </span> : null}
-// 				<img alt='Charity Logo' src={cparentLogo} style={displayChtyLogo} />
-// 			</div>
-// 		);
-// 	}
-// 	return (<img alt='Sponsor Logo' src={brandLogo} />);
-// };
-
-const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColorTxtStyle}) => {	
-	let cids = clist.map(x => x.id);
+const DonationSlideWidget = ({cparent, clist, index=0, active}) => {	
 	let cnames = clist.map(x => x.name);
 	let clogos = clist.map(x => x.logo || x.logo_white);
 	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo);
@@ -202,26 +174,13 @@ const DonationSlideWidget = ({cparent, clist, index=0, active, status, brandColo
 	);
 };
 
-const DonationInfoWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, brandColorTxtStyle}) => {
-	let toggle = DataStore.getValue(['widget', 'donationCircles', 'active']) || [true, false, false]; // toggles the info charity box to display one at a time
-	
-	return (
-		<div className='donation-circles'>
-			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={0} name={'left'} shown={toggle[0]} brandColorBgStyle={brandColorBgStyle} />
-			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={1} name={'middle'} shown={toggle[1]} brandColorBgStyle={brandColorBgStyle} />
-			<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={2} name={'right'} shown={toggle[2]} brandColorBgStyle={brandColorBgStyle} />
-		</div>
-	);
-};
-
-
 let _handleClick = (circleIndex) => {
 	let toggle = [false, false, false];
 	toggle[circleIndex] = true;
 	DataStore.setValue(['widget', 'donationCircles', 'active'], toggle);
 };
 
-const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='left', shown, brandColorBgStyle}) => {
+const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='left'}) => {
 	let cids = clist.map(x => x.id);
 	let cnames = clist.map(x => x.name);
 	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo || x.logo);
@@ -229,53 +188,56 @@ const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='lef
 
 	return (
 		<div className={'circle '.concat(name)} onClick={(e) => _handleClick(index)}>
-			{cparent? 
+			{cparent &&
 				<div className="circle-info">
-					<p><span>{campaignSlice[cids[index]].percentageTotal}%</span><br/> HAS BEEN DONATED TO...<br/><span className='project-name'>{cnames[index]}</span></p>
+					<p>
+						<span>
+							{campaignSlice[cids[index]].percentageTotal}%
+						</span>
+						<br /> 
+						HAS BEEN DONATED TO...
+						<br />
+						<span className='project-name'>
+							{cnames[index]}
+						</span>
+					</p>
 				</div>
-				: 
-				null
 			}
-			 {/* brandColorBgStyle */}
 			<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} />
-			{/* <span class="circle-draw" alt={cparent+' '+cnames[index]} style={brandColorBgStyle}></span> */}
 		</div>
 	);
 };
 
-const DonationCarouselWidget = ({cparent, clist, campaignSlice, brandColorBgStyle, brandColorTxtStyle, logoStyle, adid, status, toggle}) => {	 // todo: remove useless params
-	
-	return (
-		<div id="donation-carousel" className="carousel slide" data-interval={toggle} data-ride="carousel">
-			{/* <!-- Indicators --> */}
-			<ol className="carousel-indicators">
-				{/* // TODO: repeated code, make this check more efficient */}
-				{ clist[0] && clist[0].name && clist[0].logo ? <li data-target="#donation-carousel" data-slide-to="0" className="active" /> : null}
-				{ clist[1] && clist[1].name && clist[1].logo ? <li data-target="#donation-carousel" data-slide-to="1" /> : null}
-				{ clist[2] && clist[2].name && clist[2].logo ? <li data-target="#donation-carousel" data-slide-to="2" /> : null}
-			</ol>
-			{/* <!-- Content --> */}
-			<div className="carousel-inner" role="listbox">	
-				{ clist[0] ? <DonationSlideWidget cparent={cparent} clist={clist} index={0} status={status} brandColorTxtStyle={brandColorTxtStyle} active /> : null}
-				{ clist[1] ? <DonationSlideWidget cparent={cparent} clist={clist} index={1} status={status} brandColorTxtStyle={brandColorTxtStyle} active={false} /> : null}
-				{ clist[2] ? <DonationSlideWidget cparent={cparent} clist={clist} index={2} status={status} brandColorTxtStyle={brandColorTxtStyle} active={false} /> : null}					
-			</div>
-			{/* <!-- Previous/Next controls --> */}
-			{ clist.length > 1 ? 
-				<a className="left carousel-control" href="#donation-carousel" role="button" data-slide="prev">
-					<span className="icon-prev" aria-hidden="true" />
-					<span className="sr-only">Previous</span>
-				</a> : null }
-			{ clist.length > 1 ? 
-				<a className="right carousel-control" href="#donation-carousel" role="button" data-slide="next">
-					<span className="icon-next" aria-hidden="true" />
-					<span className="sr-only">Next</span>
-				</a> : null }
+const DonationCarouselWidget = ({cparent, clist, toggle}) => (	
+	<div id="donation-carousel" className="carousel slide" data-interval={toggle} data-ride="carousel">
+		{/* <!-- Indicators --> */}
+		<ol className="carousel-indicators">
+			{/* // TODO: repeated code, make this check more efficient */}
+			{ clist[0] && clist[0].name && clist[0].logo && <li data-target="#donation-carousel" data-slide-to="0" className="active" />}
+			{ clist[1] && clist[1].name && clist[1].logo && <li data-target="#donation-carousel" data-slide-to="1" />}
+			{ clist[2] && clist[2].name && clist[2].logo && <li data-target="#donation-carousel" data-slide-to="2" />}
+		</ol>
+		{/* <!-- Content --> */}
+		<div className="carousel-inner" role="listbox">	
+			{ clist[0] && <DonationSlideWidget cparent={cparent} clist={clist} index={0} active />}
+			{ clist[1] && <DonationSlideWidget cparent={cparent} clist={clist} index={1} active={false} />}
+			{ clist[2] && <DonationSlideWidget cparent={cparent} clist={clist} index={2} active={false} />}					
 		</div>
-	);
-};
+		{/* <!-- Previous/Next controls --> */}
+		{ clist.length > 1 && 
+			<a className="left carousel-control" href="#donation-carousel" role="button" data-slide="prev">
+				<span className="icon-prev" aria-hidden="true" />
+				<span className="sr-only">Previous</span>
+			</a>}
+		{ clist.length > 1 && 
+			<a className="right carousel-control" href="#donation-carousel" role="button" data-slide="next">
+				<span className="icon-next" aria-hidden="true" />
+				<span className="sr-only">Next</span>
+			</a>}
+	</div>
+);
 
-const LinkToAdWidget = ({cparent, adid, status}) => {
+const LinkToAdWidget = ({adid, status}) => {
 	// this is needed to be able to both control the look of the link in MDText
 	function LinkRenderer(props) {
 		return <a href={props.href} target="_blank">{props.children}</a>;
@@ -324,11 +286,11 @@ const EmailCTA = () => {
 
 		// Pass to profiler for processing
 		ServerIO.post(ServerIO.PROFILER_ENDPOINT + '/form/gl/', { email })
-			.then(res => {
+			.then( () => {
 				// Don't ask for their email again
 				document.cookie = `cta-email=email;max-age=${60 * 60 * 24 * 365};domain=.good-loop.com;path=/`;
 				DataStore.setValue(submittedPath, true);
-			}, err => {});
+			});
 	};
 
 	if (submitted) return <div className="cta-email">Thank you for providing your email address!</div>;
@@ -387,7 +349,6 @@ const CampaignPage = () => {
 	if ( !adid && !vertiserid ) {
 		// No ID -- show a list
 		return <ListItems type={C.TYPES.Advert} status={C.KStatus.PUBLISHED} servlet='campaign' />;		
-		// return <Misc.Loading text='Unable to find campaign' />;	
 	}
 
 	// get the ad for display (so status:published - unless this is a preview, as set by the url)
@@ -417,22 +378,18 @@ const CampaignPage = () => {
 	let ad = adid ? adPv.value : ( adPv.value && adPv.value.hits && adPv.value.hits[0] );
 
 	// good-loop branding
-	let glLogo = '/img/logo-white.svg';
 	let glColorBgStyle = {
 		color: 'white'
 	};
 
-	let {branding={}, mockUp={}} = ad;
+	let {branding={}} = ad;
 	// default styling if adv branding is not there 
 	let complimentaryColor = '#51808a'; // default color (complimentary to the gl-red) for the middle tile that contains donations info
-	let brandColor = mockUp.backgroundColor || branding.color || complimentaryColor;
+	let brandColor = branding.backgroundColor || branding.color || complimentaryColor;
 	let brandLogo = branding.logo_white || branding.logo || null; 
 	let brandColorBgStyle = {
 		backgroundColor: brandColor,
-		color: branding.lockAndTextColor || mockUp.lockAndTextColor || 'white',
-	};
-	let brandColorTxtStyle = {
-		color: brandColor
+		color: branding.lockAndTextColor || 'white',
 	};
 
 	// hack to show appropriately styled logo if it can't find anything better (used in DonationCircleWidget and DonationDetailsWidget)
@@ -448,8 +405,6 @@ const CampaignPage = () => {
 	let startDate = ad.start ? 'This campaign started on '.concat(ad.start.substring(0, 10)) : '';
 	let smallPrint = null;
 	let bg = null;
-	let desc_title = null;
-	let desc_body = null;
 
 	if(campaign) {
 		smallPrint = campaign.smallPrint || '';
@@ -463,11 +418,9 @@ const CampaignPage = () => {
 				backgroundPosition: 'center',
 				backgroundAttachment: 'fixed',
 				backgroundColor: brandColor,
-				color: mockUp.lockAndTextColor || 'white' 
+				color: branding.lockAndTextColor || 'white' 
 			};
 		}
-		desc_title = campaign.desc_title ? campaign.desc_title : null;
-		desc_body = campaign.desc_body ? campaign.desc_body : null;
 	}
 
 	// if there is no charity data, tell the user
@@ -506,7 +459,6 @@ const CampaignPage = () => {
 		) || 0;
 		return { cid, value100p };
 	});
-	console.log(pvDonationsBreakdown);
 
 	let campaignTotal = pvDonationsBreakdown.value.total; 
 	let donationValue = campaign && campaign.donation? campaign.donation : campaignTotal; // check if statically set and, if not, then update with latest figures
@@ -524,7 +476,6 @@ const CampaignPage = () => {
 
 	// toggle carousel (true means it spins automatically)
 	let toggle = "false";
-	//let toggle = 5000; // TODO: set this as a param
 	
 	// TODO: refactor this because it's very similar now to mypage
 	return (
@@ -543,7 +494,11 @@ const CampaignPage = () => {
 								{donationValue? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 								<div>for charity</div>
 							</div>
-							<DonationInfoWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} brandColorTxtStyle={brandColorTxtStyle}/>
+							<div>
+								<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={0} name='left' />
+								<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={1} name='middle' />
+								<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={2} name='right' />
+							</div>
 							{/* <EmailCTA /> */}
 						</div>
 					</div>
