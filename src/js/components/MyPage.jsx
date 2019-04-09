@@ -154,7 +154,7 @@ const MyPage = () => {
 				</Card>	
 				<Card title="Boost Your Impact" className="boostImpact" titleClassName='sub-header' defaultOpen>
 					<SocialMediaCard allIds={xids} className="socialConnect"/>
-					<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} />
+					<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} xids={xids} />
 				</Card> 
 
 				<Card title="Your Charities" className='background-dark-green' titleClassName='sub-header' defaultOpen>

@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import md5 from 'md5';
+import { XId } from 'wwutils';
 import DataStore from '../base/plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
 import C from '../C';
@@ -9,13 +10,15 @@ import GoodLoopUnit from '../base/components/GoodLoopUnit';
 import {IntentLink} from '../base/components/SocialShare';
 import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
 
+// TODO: force ShareAnAd to use non-VAST video rather than loading Good-Loop player? Thinking about how to reduce loading times, that might be an idea.
+
 /**
  * Shows: 
  * 1) A preview of a GoodLoop ad. This is either the last ad watched by the user or a random ad
  * 2) A Twitter intent link to share this ad
  * 3) A table showing how many times their shared ads have been viewed by others
  */
-const ShareAnAd = ({ adHistory, logsIfVisibleRef }) => {
+const ShareAnAd = ({ adHistory, logsIfVisibleRef, xids }) => {
 	// Load in back-up vert data
 	// Easiest to just always load back-up data:
 	// avoids a race-condition where adHistory is provided after initial render has set off fetch
@@ -37,7 +40,7 @@ const ShareAnAd = ({ adHistory, logsIfVisibleRef }) => {
 	}, []);
 	let {vert, format, video} = adHistory || backUpVertData || {};
 
-	const twitterXId = Person.getTwitterXId();
+	const twitterXId = xids.find(id => XId.service(id)==='twitter');
 	const socialShareId = twitterXId && md5( twitterXId + vert );
 
 	return (
