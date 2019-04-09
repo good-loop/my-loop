@@ -6,11 +6,8 @@ import _ from 'lodash';
 import PropControl from '../base/components/PropControl';
 import DataStore from '../base/plumbing/DataStore';
 import Claim from '../base/data/Claim';
-import Profiler, {saveProfile, getClaimsForXId, saveProfileClaims} from '../base/Profiler';
+import {getClaimsForXId, saveProfileClaims} from '../base/Profiler';
 import ServerIO from '../plumbing/ServerIO';
-import Misc from '../base/components/Misc';
-import { XId } from 'wwutils';
-import C from '../C';
 import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
 
 // TODO: Think that this will need to change significantly in future
@@ -72,7 +69,6 @@ const DigitalMirrorCard = ({xids, logsIfVisibleRef}) => {
 
 	return (
 		<div ref={logsIfVisibleRef}>
-			{/* <InteractiveMap use react-leaflet?? /> */}
 			{
 				socialXIds && socialXIds.length > 0
 					? socialXIds.map( xidObj => <ConsentControls xidObj={xidObj} key={xidObj.xid} />)
@@ -98,7 +94,7 @@ const socialMedia = [
 			{
 				field: 'gender',
 				type:'select', // Drop-down menu
-				options: ['Male', 'Female', 'Other', 'Not specified'],
+				options: ['', 'Male', 'Female', 'Other', 'Not specified'],
 				dflt: 'Unknown gender'
 			}, 
 			{
@@ -112,7 +108,7 @@ const socialMedia = [
 			{
 				field: 'relationship',
 				type: 'select',
-				options: ['Single', 'In a relationship', 'Engaged', 'Married', 'Divorced', 'Widowed', 'Not specified'],
+				options: ['', 'Single', 'In a relationship', 'Engaged', 'Married', 'Divorced', 'Widowed', 'Not specified'],
 				dflt: 'Unknown relationship'
 			}] // keys should match back-end/Datastore
 	}
@@ -154,51 +150,6 @@ const iconFromField = (field, value) => {
 	return iconField[value] ? iconField[value] : iconField.default; 
 };
 
-/** TODO: See if there is a Misc component/PropControl type that would cover this behaviour? 
- * Allow the user to specify whether or not they would like us to use their data for targetting ads
- * Expect there to already be an initial value for 'consent' in the path set by getClaimsForXId.
- */
-const DoNotUseToggle = ({path, debounceSaveFn}) => {
-	if( !path ) return null;
-
-	const consentPath = path.concat('consent');
-
-	let currentValue = !!DataStore.getValue(consentPath);
-
-	const onChange = () => {
-		DataStore.setValue(consentPath, !currentValue, true);
-		debounceSaveFn('myloop@app');
-	};
-
-	return (
-		<div className='btn-group' data-toggle='buttons'>
-			<div className='btn-group' onClick={onChange}>
-				<label className={'btn btn-primary ' + (currentValue === true ? 'active' : null)} htmlFor='use' > 
-					<input 
-						id='use'
-						type='radio' 
-						onChange={() => onChange()} 
-						checked={currentValue === true}
-					/>
-					Use 
-				</label>
-			</div>
-
-			<div className='btn-group' onClick={onChange}>
-				<label className={'btn btn-primary ' + (currentValue === false ? 'active' : null)} htmlFor='noUse' > 
-					<input 
-						id='noUse'
-						type='radio' 
-						onChange={() => onChange()} 
-						checked={currentValue === false}
-					/>
-					*Do not use 
-				</label>
-			</div>
-		</div>
-	);
-};
-
 /**TODO: clean this up 
  * 
  * ??Does it need bootstrap rows? they feel like a cumbersome solution here
@@ -217,7 +168,7 @@ const ConsentControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) => {
 		return (
 			<div className='row vertical-align revertHeight' key={'data-control-' + field}> 
 				{isHeader ? null : <div className='col-md-1'>{label({field, fieldPath})}</div>}
-				<div className={'col-md-12'}>
+				<div className={'col-md-11'}>
 					<PropControl type={type} options={options} dflt={dflt} className={isHeader ? 'profile-name' : ''} 
 						path={fieldPath} prop={'value'} placeholder={placeholder} 
 						saveFn={() => debounceSaveFn('myloop@app')}
@@ -231,7 +182,7 @@ const ConsentControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) => {
 	return (
 		<div className='row vertical-align' key={'data-control-' + field}> 
 			{isHeader ? null : <div className='col-md-1'>{label({field, fieldPath})}</div>}
-			<div className={'col-md-9' + (fieldValue ? '' : ' text-muted') + (isHeader ? ' profile-name' : '')}>
+			<div className={'col-md-11' + (fieldValue ? '' : ' text-muted') + (isHeader ? ' profile-name' : '')}>
 				{v || placeholder}
 			</div>
 		</div>
