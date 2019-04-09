@@ -3,16 +3,16 @@
  */
 import Cookies from 'js-cookie';
 import React from 'react';
-import { stopEvent, XId } from 'wwutils';
+import { XId } from 'wwutils';
 import Login from 'you-again';
 import DataStore from '../base/plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
 import printer from '../base/utils/printer';
-import Profiler, { getProfile, getProfilesNow } from '../base/Profiler';
+import Profiler, { getProfile } from '../base/Profiler';
 import Person from '../base/data/Person';
 import Misc from '../base/components/Misc';
 import CardAccordion, { Card } from '../base/components/CardAccordion';
-import LoginWidget, { LoginLink, SocialSignInButton } from '../base/components/LoginWidget';
+import LoginWidget, { LoginLink } from '../base/components/LoginWidget';
 import DigitalMirrorCard from './DigitalMirrorCard';
 import Footer from './Footer';
 import ShareAnAd from './ShareAnAd';
@@ -20,7 +20,6 @@ import { LoginToSee } from './Bits';
 import ConsentWidget from './ConsentWidget';
 import DonationCard from './DonationCard';
 import C from '../C';
-import { Server } from 'http';
 import { assMatch } from 'sjtest';
 import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
 import { SocialMediaGLFooterWidget } from './SocialLinksWidget';
@@ -194,50 +193,6 @@ const MyPage = () => {
 	);
 }; // ./MyPage
 
-const WelcomeCard = ({xids}) => {
-	const heroImage = '/img/hero7.png';
-
-	return (
-		<div className="WelcomeCard container-fluid">
-			{ 
-				Login.isLoggedIn() ? (
-					<div>
-						<div className="row">
-							<div className="pull-right logged-in">
-								<p>Hi { Login.getUser().name || Login.getUser().xid }</p>
-								<small className="pull-right">
-									<a className="logout-link" href="#my" onClick={e => stopEvent(e) && Login.logout()}>Log out</a>
-								</small>
-							</div>
-						</div>
-						<div className="row header">
-							<div className="col-md-7 header-text">
-								<p className="title">You're a champion!</p>
-								<p className="subtitle">Find out how to boost your contribution below</p>
-							</div>
-							<div className="col-md-1 header-img">
-								<img src={heroImage} alt="Superhero" />
-							</div>
-						</div>
-					</div>
-				) : (
-					<div className="row header">
-						<div className="col-md-7 header-text">
-							<p className="title"><span> Become a superhero </span> for the causes you care about</p>
-							<div onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
-								<LoginLink className='btn btn-lg btn-default btn-gl' verb='Sign Up' />			
-							</div>
-						</div>
-						<div className="col-md-1 header-img">
-							<img src={heroImage} alt="Superhero" />
-						</div>
-					</div>
-				)
-			}
-		</div>
-	);
-};
-
 // explain good-loop and join CTA
 const IntroCard = () => {
 	const heroImage = '/img/hero7.png';
@@ -249,7 +204,7 @@ const IntroCard = () => {
 						<div className="row header">
 							<div className="col-md-7 header-text post-login">
 								<p className="title header"> You're a champion! </p>
-								<p className="title sub-header"> Find out how to boost your contribution below </p>
+								<p className="title sub-header"> Find out how to do more for charity below </p>
 							</div>
 							<div className="col-md-5 header-img">
 								<img src={heroImage} alt="Superhero" />
@@ -271,48 +226,6 @@ const IntroCard = () => {
 		</div>
 	);
 };
-
-const SplashPhotoCard = () => {
-	return (
-		<div className="splashPhoto">			
-		</div>			
-	);
-};
-
-/**
- * Convenience hack for 3-cards in a row
- */
-const CardRow3 = ({children}) => {
-	return (<div className="row">
-		<div className="col-md-4">
-			{children[0]}
-		</div>
-		<div className="col-md-4">
-			{children[1]}
-		</div>
-		<div className="col-md-4">
-			{children[2]}
-		</div>
-</div>);
-};
-
-/**
- * Convenience hack for 3-items, bit-o-spacing-if-large-screen
- */
-const Row3 = ({children}) => {
-	return (<div className="row">
-		<div className="col-md-4 col-lg-3 col-lg-offset-1">
-			{children[0]}
-		</div>
-		<div className="col-md-4">
-			{children[1]}
-		</div>
-		<div className="col-md-4 col-lg-3">
-			{children[2]}
-		</div>
-</div>);
-};
-
 
 const StatisticsCardMini = () => { 
 	const statsImg = 'https://as.good-loop.com/uploads/marvinirinapreda.meemail/stats__card__v7-158228810410788570.png';
@@ -419,15 +332,6 @@ const StatisticsCardMini = () => {
 			</div>
 		</div>
 	</section>);
-};
-
-const StatisticsCard = () => { 
-	const statsImg = './img/stats_card_v7.png';
-	return(
-		<div>
-			<img className="statistics-image" src={statsImg}/>
-		</div>
-	);
 };
 
 // Two-liner as withLogsIfVisible latches on to Component.displayName or Component.name in order to generate sensible-looking event tag in MixPanel
