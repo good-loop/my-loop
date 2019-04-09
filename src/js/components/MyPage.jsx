@@ -204,7 +204,7 @@ const IntroCard = () => {
 						<div className="row header">
 							<div className="col-md-7 header-text post-login">
 								<p className="title header"> You're a champion! </p>
-								<p className="title sub-header"> Find out how to do more for charity below </p>
+								<p className="title sub-header"> Find out how you can raise more for charity below </p>
 							</div>
 							<div className="col-md-5 header-img">
 								<img src={heroImage} alt="Superhero" />
