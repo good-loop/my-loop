@@ -54,7 +54,7 @@ const ShareAnAd = ({ adHistory, logsIfVisibleRef, xids }) => {
 				twitterXId
 				&& (
 					<div>
-						<h3> Share this ad on social media </h3>
+						<h3 className='sub-header'> Share this ad on social media </h3>
 						<IntentLink 
 							onClick={() => saveSocialShareId({xid: twitterXId, socialShareId, adid:vert})}
 							service='twitter' 
@@ -73,7 +73,13 @@ const ShareAnAd = ({ adHistory, logsIfVisibleRef, xids }) => {
 /** Table showing how many times adverts shared by the user on Twitter have been viewed */
 const SharedAdStats = ({twitterXId}) => {
 	const twitterSocialShareObjects = twitterXId && DataStore.getValue(['data', 'Person', twitterXId, 'socialShareIds']);
-	if( !twitterSocialShareObjects ) return null;
+	if( !twitterSocialShareObjects ) {
+		return (
+			<div className='top-pad1'>
+				Come back later to see how much your followers have raised for charity
+			</div>
+		);
+	}
 
 	// Load number of times that shared ad has been viewed
 	let views={};
