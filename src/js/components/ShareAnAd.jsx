@@ -3,8 +3,6 @@ import md5 from 'md5';
 import { XId } from 'wwutils';
 import DataStore from '../base/plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
-import C from '../C';
-import Person from '../base/data/Person';
 import {saveSocialShareId} from '../base/Profiler';
 import GoodLoopUnit from '../base/components/GoodLoopUnit';
 import {IntentLink} from '../base/components/SocialShare';
@@ -18,7 +16,7 @@ import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
  * 2) A Twitter intent link to share this ad
  * 3) A table showing how many times their shared ads have been viewed by others
  */
-const ShareAnAd = ({ adHistory, logsIfVisibleRef, xids }) => {
+const ShareAnAd = ({ adHistory, logsIfVisibleRef, xids=[] }) => {
 	// Load in back-up vert data
 	// Easiest to just always load back-up data:
 	// avoids a race-condition where adHistory is provided after initial render has set off fetch
@@ -38,7 +36,7 @@ const ShareAnAd = ({ adHistory, logsIfVisibleRef, xids }) => {
 				});
 			});
 	}, []);
-	let {vert, format, video} = adHistory || backUpVertData || {};
+	let {vert, format, url} = adHistory || backUpVertData || {};
 
 	const twitterXId = xids.find(id => XId.service(id)==='twitter');
 	const socialShareId = twitterXId && md5( twitterXId + vert );
@@ -47,7 +45,7 @@ const ShareAnAd = ({ adHistory, logsIfVisibleRef, xids }) => {
 		<div className="ShareAd" ref={logsIfVisibleRef}>
 			{ 
 				format === 'video' 
-					? <video controls={true} width="100%" height="auto" src={video}> An error occured </video> 
+					? <video controls={true} width="100%" height="auto" src={url}> An error occured </video> 
 					: <GoodLoopUnit adID={vert} /> 
 			}
 			{

@@ -316,29 +316,6 @@ const CampaignPage = () => {
 	//TODO this is the same mypage, refactor out of here
 	let xids = getAllXIds();
 
-	// Attempt to find ad most recently watched by the user
-	// Go through all @trk ids.
-	// Expect that user should only ever have one @trk, but can't confirm that
-	let userAdHistoryPV = DataStore.fetch(pagePath.concat('AdHistory'), () => {
-		// Only interested in @trk ids. Other types won't have associated watch history
-		const trkIds = xids.filter( xid => xid.slice(xid.length - 4) === '@trk');
-
-		// No cookies registered, try using current session's cookie
-		if( !trkIds || trkIds.length === 0 ) {
-			return ServerIO.getAdHistory();
-		}
-
-		// Pull in data for each ID
-		const PVs = trkIds.map( trkID => ServerIO.getAdHistory(trkID));
-		// Pick the data with the most recent timestamp
-		return Promise.all(PVs).then( values => values.reduce( (newestData, currentData) => {
-			if( !newestData ) {
-				return currentData;
-			}
-			return Date.parse(currentData.cargo.time) > Date.parse(newestData.cargo.time) ? currentData : newestData;
-		}));
-	});
-
 	const { 'gl.vert': adid, 'gl.vertiser': vertiserid } = DataStore.getValue(['location', 'params']) || {};
 
 	// Specific adid gets priority over advertiser id
@@ -516,7 +493,7 @@ const CampaignPage = () => {
 			</Card>							
 			<Card title="Boost Your Impact" className="boostImpact background-dark-blue" defaultOpen>
 				<SocialMediaCard allIds={xids} className="socialConnect"/>
-				<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} />
+				{ ad && ad.videos && ad.videos.length && <ShareAnAd adHistory={{...ad.videos[0], vert: adid}} />}
 			</Card> 
 		</CardAccordion>
 		<div className='grid-tile bottom background-gl-red' style={glColorBgStyle}>
