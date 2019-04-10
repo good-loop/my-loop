@@ -25,7 +25,7 @@ COMPILE_UNITS='no'
 UNITS_LOCATION=""
 RESTART_SERVICE_AFTER_SYNC='no'
 SERVICE_NAME=('')
-PLEASE_SYNC=("config" "src" "web" "package.json" "webpack.config.js" ".babelrc")
+PLEASE_SYNC=("config" "src" "web" "package.json" "webpack.config.js")
 AUTOMATED_TESTING='no'
 PRESERVE=()
 
@@ -341,7 +341,7 @@ function restore_preserved {
 }
 
 ##########################################
-### Seciton 08: Defining the Function for minifying CSS
+### Section 08: Defining the Function for minifying CSS
 ##########################################
 function minify_css {
 	for css in $(find $CSS_OUTPUT_LOCATION -type f -iname "*.css"); do
@@ -350,7 +350,13 @@ function minify_css {
 	done
 }
 
-
+############################################
+### Section 09: Defining Special Tasks to Perform Before the Sync-ing Process
+############################################
+function pre_sync {
+	# Check for rogue .babelrc files and DESTROY them
+	$PSSH "find /home/winterwell/my.good-loop.com ! -name 'node_modules' -exec rm {} \; >/dev/null 2>&1"
+}
 
 
 
@@ -363,6 +369,7 @@ image_optimisation
 convert_less_files
 minify_css
 preserve_items
+pre_sync
 printf "\nSyncing $PROJECT to $TARGETS\n"
 sync_whole_project
 restore_preserved
