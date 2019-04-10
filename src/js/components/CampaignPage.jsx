@@ -473,7 +473,7 @@ const CampaignPage = () => {
 								{donationValue? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 								<div>for charity</div>
 							</div>
-							<div>
+							<div className='flex-row flex-centre'>
 								<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={0} name='left' />
 								<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={1} name='middle' />
 								<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={2} name='right' />
