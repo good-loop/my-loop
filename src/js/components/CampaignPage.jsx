@@ -210,18 +210,20 @@ const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='lef
 
 const DonationCarouselWidget = ({cparent, clist, toggle}) => (	
 	<div id="donation-carousel" className="carousel slide" data-interval={toggle} data-ride="carousel">
-		{/* <!-- Indicators --> */}
-		<ol className="carousel-indicators">
-			{/* // TODO: repeated code, make this check more efficient */}
-			{ clist[0] && clist[0].name && clist[0].logo && <li data-target="#donation-carousel" data-slide-to="0" className="active" />}
-			{ clist[1] && clist[1].name && clist[1].logo && <li data-target="#donation-carousel" data-slide-to="1" />}
-			{ clist[2] && clist[2].name && clist[2].logo && <li data-target="#donation-carousel" data-slide-to="2" />}
-		</ol>
 		{/* <!-- Content --> */}
 		<div className="carousel-inner" role="listbox">	
 			{ clist[0] && <DonationSlideWidget cparent={cparent} clist={clist} index={0} active />}
 			{ clist[1] && <DonationSlideWidget cparent={cparent} clist={clist} index={1} active={false} />}
-			{ clist[2] && <DonationSlideWidget cparent={cparent} clist={clist} index={2} active={false} />}					
+			{ clist[2] && <DonationSlideWidget cparent={cparent} clist={clist} index={2} active={false} />}
+			{/* <!-- Indicators --> */}
+			<div className='carousel-container'>
+				<ol className="carousel-indicators">
+					{/* // TODO: repeated code, make this check more efficient */}
+					{ clist[0] && clist[0].name && clist[0].logo && <li data-target="#donation-carousel" data-slide-to="0" className="active" />}
+					{ clist[1] && clist[1].name && clist[1].logo && <li data-target="#donation-carousel" data-slide-to="1" />}
+					{ clist[2] && clist[2].name && clist[2].logo && <li data-target="#donation-carousel" data-slide-to="2" />}
+				</ol>	
+			</div>				
 		</div>
 		{/* <!-- Previous/Next controls --> */}
 		{ clist.length > 1 && 
