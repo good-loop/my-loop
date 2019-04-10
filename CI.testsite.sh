@@ -355,7 +355,7 @@ function minify_css {
 ############################################
 function pre_sync {
 	# Check for rogue .babelrc files and DESTROY them
-	$PSSH "find /home/winterwell/my.good-loop.com ! -name 'node_modules' -exec rm {} \; >/dev/null 2>&1"
+	$PSSH "find /home/winterwell/my.good-loop.com ! -name 'node_modules' -exec rm -rf {} \; >/dev/null 2>&1"
 }
 
 
