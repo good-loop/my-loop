@@ -354,8 +354,7 @@ function minify_css {
 ### Section 09: Defining Special Tasks to Perform Before the Sync-ing Process
 ############################################
 function pre_sync {
-	# Check for rogue .babelrc files and DESTROY them
-	$PSSH "find /home/winterwell/my.good-loop.com ! -name 'node_modules' -exec rm -rf {} \; >/dev/null 2>&1"
+	$PSSH "cd /home/winterwell/my.good-loop.com/ && find . -maxdepth 1 ! -name 'node_modules' -exec rm -rf {} \; >/dev/null 2>&1"
 }
 
 
