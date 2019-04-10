@@ -299,8 +299,21 @@ p > a:hover, span > a:hover  {
 						}
 					}
 
+					.carousel-container {
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+						width: 100%;
+					}
+
 					.carousel-indicators {
-						bottom: 15px; // set the carousel indicators to be fixed at the bottom of the slides
+						// Override default Bootstrap
+						// (10/04/19) Fix for indicators being placed on top of text in CampaignPage
+						left: unset;
+						position: relative;
+						bottom: unset;
+						margin-left: auto;
+						width: 100%;
 					}
 				}
 			}
