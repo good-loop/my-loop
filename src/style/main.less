@@ -59,61 +59,19 @@ html, body {
 	margin: auto;
 }
 
-// Override bootstrap default. Does not look good on ShareAnAd shared ads table
-th {
-	text-align: center;
-}
-
 // TODO (03/04/19): get rid of this. Added quickly so we can release. Bootstrap makes links blue, looks awful with green background
 .white-link {
 	color: #fff;
 	text-decoration: underline;
 }
 
-// my loop page
-.avoid-navbar {
-	margin-top:0px; // no navbar (yet)
+// Dark BootStrap link colour looks terrible with MyLoop's coloured backgrounds
+a {
+	.white-link();
 }
 
-// share and social media buttons
-.grid-tile.bottom {
-	min-height: 100px;
-
-	.foot {
-		// displaying the social buttons in a column layout
-		display: flex;
-		width: 100%;
-
-		.social {
-			flex-basis: calc(33.333%);
-			color: white;
-			// avoid looking overcrowded
-			padding-top: 5%;
-			padding-bottom: 4%;
-			
-			p {
-				margin: 0px;
-				font-size: 35px;
-
-				span {
-					font-size: 18px;
-					position: relative;
-					top: -1.1em;
-				}
-			}
-		}
-	} 
-} 
-
-// make hyperlinks look nicer (dotted underline and inherited color that can be decided in the portal)
-p > a, span > a {
-	color: inherit;
+.btn {
 	text-decoration: none;
-	border-bottom: 1px dashed;
-}
-p > a:hover, span > a:hover  {
-	color: inherit;
-	border-bottom: none;
 }
 
 // email cta under the title 
@@ -211,20 +169,11 @@ p > a:hover, span > a:hover  {
 		font-size: 16px;
 	}
 
-	// TODO: to refactor this and add comments
-	.linkedProfiles .panel-body, .consentControls .panel-body {
-		width: unset;
-	}
-
 	//TODO: this is a must because for some reason the dropdown css changes the position to static when on mobile sized screens
 	// position static then leads to the flex column not occupying the 33.3% of the screen anymore
 	// i have to investigate why it does this and how to best change it
 	.navbar-nav .open .dropdown-menu {
 		position: absolute !important; 
-	}
-
-	.panel-body {
-		width: unset;
 	}
 
 	p.title.header-font {

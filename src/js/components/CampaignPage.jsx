@@ -19,7 +19,7 @@ import OnboardingCardMini from './OnboardingCardMini';
 import SocialMediaCard from './SocialMediaCard';
 import ShareAnAd from './ShareAnAd';
 
-const DonationSlideWidget = ({cparent, clist, active, name, logo, logo_white, highResPhoto, photo, txtColor, description, hideImpactData, id}) => {	
+const DonationSlideWidget = ({active, name, logo, logo_white, highResPhoto, photo, txtColor, description, hideImpactData, id}) => {	
 	// This data will never be used outside of this component, so I have chosen to manage state locally
 	// impactData is actually the "projects" field in SoGive data
 	const [impactData, setImpactData] = useState([]);
@@ -39,7 +39,7 @@ const DonationSlideWidget = ({cparent, clist, active, name, logo, logo_white, hi
 							.filter( data => data.costPerBeneficiary )
 					));
 		}
-	}, [clist]);
+	}, [id]);
 
 	let slideStyle = {
 		color: txtColor || 'white',
@@ -363,54 +363,55 @@ const CampaignPage = () => {
 
 	// TODO: refactor this because it's very similar now to mypage
 	return (
-	<div className="page MyPage">
-		<NavBar brandLogo={brandLogo} />
-		{/* TODO: get rid of old css classes, previous to refactor */}
-		<div className='grid-tile top'> 
-			<OptimisedImage
-				src={bg}
-				render={({src}) => (
-					<div className='header' style={{...brandColorBgStyle, backgroundImage: 'url(' + src + ')'}}>
-						<div className='header-text'>
-							<div className='header-title'>
-								<div>Together we've raised</div>													
-								{donationValue? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
-								<div>for charity</div>
+		<div className="page MyPage">
+			<NavBar brandLogo={brandLogo} />
+			{/* TODO: get rid of old css classes, previous to refactor */}
+			<div className='grid-tile top'> 
+				<OptimisedImage
+					src={bg}
+					render={({src}) => (
+						<div className='header' style={{...brandColorBgStyle, backgroundImage: 'url(' + src + ')'}}>
+							<div className='header-text'>
+								<div className='header-title'>
+									<div>Together we've raised</div>													
+									{donationValue? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
+									<div>for charity</div>
+								</div>
+								<div className='flex-row flex-centre'>
+									<DonationCircleWidget {...clist[0]} cparent={cparent} campaignSlice={campaignSlice} pos='left' />
+									<DonationCircleWidget {...clist[1]} cparent={cparent} campaignSlice={campaignSlice} pos='middle' />
+									<DonationCircleWidget {...clist[2]} cparent={cparent} campaignSlice={campaignSlice} pos='right' />
+								</div>
+								{/* <EmailCTA /> */}
 							</div>
-							<div className='flex-row flex-centre'>
-								<DonationCircleWidget {...clist[0]} cparent={cparent} campaignSlice={campaignSlice} pos='left' />
-								<DonationCircleWidget {...clist[1]} cparent={cparent} campaignSlice={campaignSlice} pos='middle' />
-								<DonationCircleWidget {...clist[2]} cparent={cparent} campaignSlice={campaignSlice} pos='right' />
-							</div>
-							{/* <EmailCTA /> */}
 						</div>
-					</div>
-				)}
-			/>
-		</div>
-		<div className='grid-tile middle'>
-			<div className='inside'>
-				<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle} adid={adid} status={status} toggle={toggle} />
+					)}
+				/>
 			</div>
-		</div>
-		<CardAccordion multiple >	
-			<Card title="How Good-Loop Ads Work" className="StatisticsCard MiniCard background-dark-green" defaultOpen>
-				<OnboardingCardMini/>
-			</Card>							
-			<Card title="Boost Your Impact" className="boostImpact background-dark-blue" defaultOpen>
-				<SocialMediaCard allIds={xids} className="socialConnect"/>
-				{ ad && ad.videos && ad.videos.length && <ShareAnAd adHistory={{...ad.videos[0], vert: adid}} />}
-			</Card> 
-		</CardAccordion>
-		<div className='grid-tile bottom background-gl-red' style={glColorBgStyle}>
-			<div className='foot header-font'>		
-				<SocialMediaShareWidget adName={ad.name} donationValue={donationValue} charities={clist} />
-				<SocialMediaGLFooterWidget />
-				<SocialMediaFooterWidget type={'vertiser'} name={ad.name} branding={branding} />					
+			<div className='grid-tile middle'>
+				<div className='inside'>
+					<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle} adid={adid} status={status} toggle={toggle} />
+				</div>
 			</div>
+			<CardAccordion multiple >	
+				<Card title="How Good-Loop Ads Work" className="StatisticsCard MiniCard background-dark-green" defaultOpen>
+					<OnboardingCardMini/>
+				</Card>							
+				<Card title="Boost Your Impact" className="boostImpact background-dark-blue" defaultOpen>
+					<SocialMediaCard allIds={xids} className="socialConnect"/>
+					{ ad && ad.videos && ad.videos.length && <ShareAnAd adHistory={{...ad.videos[0], vert: adid}} />}
+				</Card> 
+			</CardAccordion>
+			<div className='grid-tile bottom background-gl-red' style={glColorBgStyle}>
+				<div className='foot header-font'>		
+					<SocialMediaGLFooterWidget />
+					<SocialMediaFooterWidget type={'vertiser'} name={ad.name} branding={branding} />
+					<SocialMediaShareWidget adName={ad.name} donationValue={donationValue} charities={clist} />
+				</div>
+			</div>
+			<Footer leftFooter={startDate} rightFooter={smallPrint} />
 		</div>
-		<Footer leftFooter={startDate} rightFooter={smallPrint} />
-	</div>);
+	);
 }; // ./CampaignPage
 
 export default CampaignPage;

@@ -83,7 +83,7 @@ const SocialMediaGLFooterWidget = () => {
 		tw_url: 'https://twitter.com/goodloophq',
 		insta_url: 'https://www.instagram.com/good.loop.ads/',
 	};
-	return <SocialMediaFooterWidget type={'goodloop'} name={'GOOD-LOOP'} branding={gl_social} />;
+	return <SocialMediaFooterWidget type={'goodloop'} branding={gl_social} />;
 };
 
 export { SocialMediaGLFooterWidget, SocialMediaFooterWidget, SocialMediaShareWidget };

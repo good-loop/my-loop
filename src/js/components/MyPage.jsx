@@ -245,7 +245,7 @@ const StatisticsCardMini = () => {
 			<div className="row">
 				<h2 className="header">Thousands raised for charity each month </h2>
 			</div>
-			<div className='row'>
+			<div className='row bottom-pad1'>
 				<div className="col-md-4 statistics-item">
 					<div className="statistics-value">
 						<div className="statistics-value-highlight"><span>{printer.prettyNumber(cnt)}</span></div>
