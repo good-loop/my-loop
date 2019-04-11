@@ -11,7 +11,7 @@ import {ListItems, ListFilteredItems} from '../base/components/ListLoad';
 import Footer from './Footer';
 import MDText from '../base/components/MDText';
 import PropControl from '../base/components/PropControl';
-import { SocialMediaGLFooterWidget, SocialMediaFooterWidget, SocialMediaShareWidget } from './SocialLinksWidget';
+import { SocialMediaShareWidget } from './SocialLinksWidget';
 import NavBar from './NavBar';
 import CardAccordion, { Card } from '../base/components/CardAccordion';
 import OptimisedImage from './Image';
@@ -403,10 +403,12 @@ const CampaignPage = () => {
 				</Card> 
 			</CardAccordion>
 			<div className='grid-tile bottom background-gl-red' style={glColorBgStyle}>
-				<div className='foot header-font'>		
-					<SocialMediaGLFooterWidget />
-					<SocialMediaFooterWidget type={'vertiser'} name={ad.name} branding={branding} />
-					<SocialMediaShareWidget adName={ad.name} donationValue={donationValue} charities={clist} />
+				<div className='foot header-font container-fluid'>
+					<div className='row'>
+						<div className='col-md-12'>
+							<SocialMediaShareWidget adName={ad.name} donationValue={donationValue} charities={clist} />
+						</div>
+					</div>
 				</div>
 			</div>
 			<Footer leftFooter={startDate} rightFooter={smallPrint} />

@@ -22,7 +22,7 @@ import DonationCard from './DonationCard';
 import C from '../C';
 import { assMatch } from 'sjtest';
 import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
-import { SocialMediaGLFooterWidget } from './SocialLinksWidget';
+import { SocialMediaFooterWidget } from './SocialLinksWidget';
 import NavBar from './NavBar';
 import OnboardingCardMini from './OnboardingCardMini';
 import RecentCampaignsCard from './RecentCampaignsCard';
@@ -183,7 +183,12 @@ const MyPage = () => {
 			</CardAccordion>
 			<div className='grid-tile bottom'>
 				<div className='foot header-font center'>		
-					<SocialMediaGLFooterWidget />
+					<SocialMediaFooterWidget 
+						type={'goodloop'} 
+						fb_url='https://www.facebook.com/the.good.loop/'
+						tw_url='https://twitter.com/goodloophq'
+						insta_url='https://www.instagram.com/good.loop.ads/'
+					/>
 				</div>
 			</div>
 			<div>
