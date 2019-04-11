@@ -55,6 +55,10 @@ html, body {
 	background-color: #008C59;
 }
 
+.margin-auto {
+	margin: auto;
+}
+
 // Override bootstrap default. Does not look good on ShareAnAd shared ads table
 th {
 	text-align: center;
@@ -112,287 +116,70 @@ p > a:hover, span > a:hover  {
 	border-bottom: none;
 }
 
-// campaign page
-.campaign-page {
-	overflow-x: hidden;
+// email cta under the title 
+// TODO(10/04/19): clear this up. Suspect that most if this is actually not needed
+.cta-email {
+	// toning down the font 
+	text-shadow: initial;
 	text-align: center;
+	// make the text pop out even if there is a bg image
+	font-weight: bold;
+	// hack: for some reason setting the font size here keeps it from being glitchy and pushing the email cta down
+	font-size: 2vh; 
+	color: white;
 
+	// center the email CTA (centering requires specifying width) and highlight just the CTA text ("Double your donation ...")
+	.cta-lead {
+		width: 19em;
+	}		
+	.cta-help {
+		width: 22em;
+	}
+
+	// font too big (email cta text needs to be more subtle)
+	.cta-help {
+		font-size: 1.5vh;
+	}
+
+	.cta-help, .cta-lead {
+		background-color: rgb(200, 51, 18); // gl color	
+		margin: 3px auto;
+	}
+
+	.input-group {
+		margin: 0 auto;	// center input
+
+		.sign-up-btn {
+			text-shadow: initial; // the rest of the email-cta should be shadowed, but not the button (unreadable)
+			cursor: pointer; // a button should look clickable
+		}
+	}
+
+	span {
+		width: initial; // hack: for some reason this makes the 'sign up' btn sit next to the input, instead of flying to the far right
+	}
+} // ./cta-email
+
+.link.watch-cta {
+	font-family: initial; // go back to using montserrat (looks nicer)
+	background-color: rgb(200, 51, 18); // TODO: this should be set as less var gl-colour
+	color: white; // otherwise it will be set as black (default colour?)
+	padding-top: 6vh; // give it some space, looks less cluttered this way
+	font-size: 2.5vh; // make it pop out responsively
 }
-
-.vertiser-logo {
-	height: 7vh;
-}
-
-    // using flex for layout of the page 
-	.grid {
-		display: flex;
-		flex-wrap: wrap;
-	}
-
-	// each child of the grid is a row in the layout
-	.grid > div {
-		// using flex for layout throughout
-		display: flex; 
-		// let each div occupy the whole width
-		flex-basis: 100%;  
-		// center inner content (affects watch cta for example)
-		justify-content: center;
-		// this is to allow the top tile to be in rows, rather than side by side
-		flex-wrap: wrap;
-	}
-
-	.grid-tile.top {
-		height: 46vh;
-		background-color: blanchedalmond; // hack to make it look good when we don't have a campaign cover photo
-
-		// .vertiser-head {			
-		// 	// setting height fixes slightly squashed logos on mobile
-		// 	height: 13.5vh;
-		// 	// logo section with bg color should take up whole width 
-		// 	width: 100%;
-		// 	// space things out a bit
-		// 	padding-top: 1em;
-		// 	padding-bottom: 0.5em;
-
-		// 	// put in some space between the logos (so that they're not squished together)
-		// 	.header-logos img:first-child {
-		// 		padding-right: 50px;
-		// 	}
-
-		// 	// logo size should be specific to avoid odd img sizes  
-		// 	img {
-		// 		height: 10vh;
-		// 	}
-		// }
-
-		.header {
-			// make the header image take up the whole width and height of the header section
-			flex-basis:100%;
-			min-height: 100%;
-			background-size: cover;
-
-			.header-text {
-				padding-top: 3vh;
-
-				.header-title {
-					font-size: 5vh;
-					font-weight: bold;
-					text-shadow: black 2px 2px 0;
-				}		
-			}		
-		}
-	}
-
-	// email cta under the title 
-	.cta-email {
-		// toning down the font 
-		text-shadow: initial;
-		text-align: center;
-		// make the text pop out even if there is a bg image
-		font-weight: bold;
-		// hack: for some reason setting the font size here keeps it from being glitchy and pushing the email cta down
-		font-size: 2vh; 
-		color: white;
-
-		// center the email CTA (centering requires specifying width) and highlight just the CTA text ("Double your donation ...")
-		.cta-lead {
-			width: 19em;
-		}		
-		.cta-help {
-			width: 22em;
-		}
-
-		// font too big (email cta text needs to be more subtle)
-		.cta-help {
-			font-size: 1.5vh;
-		}
-
-		.cta-help, .cta-lead {
-			background-color: rgb(200, 51, 18); // gl color	
-			margin: 3px auto;
-		}
-
-		.input-group {
-			margin: 0 auto;	// center input
-
-			.sign-up-btn {
-				text-shadow: initial; // the rest of the email-cta should be shadowed, but not the button (unreadable)
-				cursor: pointer; // a button should look clickable
-			}
-		}
-
-		span {
-			width: initial; // hack: for some reason this makes the 'sign up' btn sit next to the input, instead of flying to the far right
-		}
-	} // ./cta-email
-	
-	.grid-tile.middle {
-	
-		.inside {
-			.title {
-				font-size: 35px;
-			}
-
-			.subtitle {
-				color: #592e25;
-			}
-
-			// center and lock watch CTA to the bottom of the slides in the carousel
-			.subtitle, .link {
-				margin-top: 2%;
-				position: absolute;
-				bottom: 1.5vw;
-				width: 48vw;
-				margin-left: 27%;
-			}
-			.link a {
-				font-size: 20px;
-				text-decoration: none;
-			}
-
-			.carousel {
-				// ensure carousel takes up the rest of the screen (below the top tile "Together we've raised ...")
-				height: 100%;
-				//width: 100vw;
-				margin: auto;
-
-				.carousel-inner {
-					// this is necessary, otherwise it doesn't set the chty background-color 
-					height: 100%;
-
-					.item {
-						// this is necessary, otherwise it doesn't set the chty background-color 
-						height: 46vh;
-
-						.slide-header {
-							// chty logo and title should have enough space to look good (no matter the length of the title)
-							height: 10vh;
-							margin-top: 2vh;
-	
-							.slide-title {
-								// set the look of the chty name
-								font-size: 2.6vmin;
-								font-family: 'FrankGothItalicBT', Fallback, sans-serif;
-								color: white;
-								top: 3vh; // center it vertically								
-							}
-						}
-
-						.slide-desc {							
-							display: inline-block; // new line
-							width: 36vw;  // fill up the left side of the slide
-							margin: 0 auto; // center it
-							font-size: 2vmin; 
-							text-align: justify; // looks nicer justified, no matter the length of text
-							margin-top: 1vh;
-						}
-
-						.slide-photo {
-							// adjust the photo to fit the container
-							background-size: contain;
-							background-repeat: no-repeat;
-							background-position: center;
-							height: 25vh;
-							top: 8vh; // center it vertically (approx)
-							// center it a bit horizontally
-							left: 30px;
-						}
-					}
-
-					.carousel-container {
-						display: flex;
-						flex-direction: row;
-						align-items: center;
-						width: 100%;
-					}
-
-					.carousel-indicators {
-						// Override default Bootstrap
-						// (10/04/19) Fix for indicators being placed on top of text in CampaignPage
-						left: unset;
-						position: relative;
-						bottom: unset;
-						margin-left: auto;
-						width: 100%;
-					}
-				}
-			}
-		}
-	}
-
-	.link.watch-cta {
-		font-family: initial; // go back to using montserrat (looks nicer)
-		background-color: rgb(200, 51, 18); // TODO: this should be set as less var gl-colour
-		color: white; // otherwise it will be set as black (default colour?)
-		padding-top: 6vh; // give it some space, looks less cluttered this way
-		font-size: 2.5vh; // make it pop out responsively
-	}
-
-
-// creating a 3-column layout, slightly complicated by the fact that it needs to have adaptive layout so that on mobile components of the layout move to completely different places
-// e.g. the charity details are normally below all the charity circles, but on mobile they move below their respective donation circle
-.donation-circles {
-	display: grid;
-	-webkit-box-pack: center;
-	    -ms-flex-pack: center;
-	        justify-content: center;
-	grid-gap: 0px 40px;
-	justify-items: center;
-	margin: 0 auto;
-	// assumption that the width of the donation circles is 250px
-	-ms-grid-columns: 250px 20px 250px 20px 250px;
-	grid-template-columns: 250px 250px 250px;
-	-ms-grid-rows: auto 20px auto 20px auto 20px auto;
-	    grid-template-areas: 
-	"c1 c2 c3"
-	"d1 d1 d1"
-	"d2 d2 d2"
-	"d3 d3 d3"; 
-} // ./donation-circles end
 
 .circle {
-	grid-column: 1 / 3;
-	-ms-grid-column: 1;
-	-ms-grid-column-span: 2;
-	position: relative;
-	float: left;
-	text-align: center;
+	width: 8rem;
+	height: 8rem;
 	margin: auto;
-
-	.circle-info {
-		position: absolute;
-		top: 40px;
-		width: 100%;
-		text-align: center;
-		font-size: 1.5rem;
-		color: white;
-		font-size: 16px;
-		z-index: 1;
-		text-shadow: 2px 2px 6px grey;
-	}
+	border-radius: 50%;
+	font-size: 0.875rem;
+	
 	span {
-		font-size: 55px;
-		line-height: normal;
-	}
-	img {
-		width: 200px;
-		height: 200px;
-		border-radius: 250px;
-		-o-object-fit: cover;
-		   object-fit: cover;
+		.sub-header();
 	}
 	.project-name {
-		margin-top: 20px;
-		padding: 0.8em;
-		font-size: 18px;
-	}
-	.arrow-up {
-		width: 0;
-		height: 0;
-		margin: 2em auto auto auto;
-		border-left: 50px solid transparent;
-		border-right: 50px solid transparent;
-		border-bottom: 50px solid white;
+		font-size: 1rem;
 	}
 }
 
@@ -404,6 +191,16 @@ p > a:hover, span > a:hover  {
 	display: inline-block;
 }
 
+// Override wonky BootStrap absolute positioning
+.carousel-indicators {
+	position: relative;
+	bottom: unset;
+	left: unset;
+	z-index: unset;
+	width: auto;
+	padding-left: unset;
+	margin-left: auto;
+}
 
 // **mobile layout rules**
 // using flex to change the template of the layout for the bottom row (share and social buttons) to a column based one
@@ -434,24 +231,13 @@ p > a:hover, span > a:hover  {
 		font-size: 5vmin;
 	}
 
-	.splashPhoto {
-		height: 34vh;
-	}
-
 	.donation-circles {
 		display: none;
 	}
 
-	// top tile ("Together we've raised ... for charity") should fit the top screen when on mobile
-	.grid-tile.top {
-		// on smaller screens the top tile should take up more of the screen
-		// to avoid making the top tile ("Together we've raised ...") look squished 
-		height: 33vh;
-
-		// .header .header-text {
-		// 	//we have more vertical space on mobile, so let's vertically center the header-text (e.g. "Together we've raised ...") a bit
-		// 	margin-top: 8vh;
-		// }
+	.circle img {
+		width: 8rem;
+		height: 8rem;
 	}
 
 	.grid-tile.middle .inside .carousel {
@@ -487,13 +273,13 @@ p > a:hover, span > a:hover  {
 			.slide-desc {
 				// on small screens, the description can take more space (and become more readable) 
 				//because we're not trying to fit it in the same screen as the top tile
-				margin:6vh auto;
-				font-size:3.6vw;
+				margin: 6vh auto;
 				width: 70vw; 
 			}
 
 			.slide-photo {
 				// we don't have space to show the large photo
+				margin: auto;
 				display: none;
 			}		
 		}
@@ -503,17 +289,15 @@ p > a:hover, span > a:hover  {
 	.link.watch-cta {
 		font-size: 6vmin; 
 	}
-
-
-	// social buttons should be in one column
-	.grid-tile.bottom .foot {
-		flex-direction: column;
-		flex-basis: 100%;
-	}
 }
 
 @media only screen and (max-width: 525px) {
 	html, body {
 		font-size: 14px;
+	}
+
+	.circle img{
+		width: 6.5rem;
+		height: 6.5rem;
 	}
 }//. mobile layout rules 

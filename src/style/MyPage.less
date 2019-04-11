@@ -10,18 +10,12 @@ span.glyphicon.glyphicon-triangle-bottom, span.glyphicon.glyphicon-triangle-top 
     display: none;
 }
 
-// hack to pad out header only pre-sign up 
-.row.blank-row {
-	min-height: 6vmin;
-} // end of hack
-
+.gl-logo {
+	height: 2.5rem;
+}
 
 // nav bar at the top
 .nav-bar {
-	.gl-logo {
-		height: 2.5rem;
-	}
-
 	li > a {
 		color: inherit;
 		text-decoration: none;
@@ -51,15 +45,6 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 	border-color: white;
 }
 
-// splash photo at the top
-.splashPhoto {
-	height: 48vh;
-    background-image: url(https://c.pxhere.com/photos/84/cf/wall_walking_good_graffiti_street-54078.jpg!d);
-    background-size: cover;
-    width: 100%;
-    background-position: center;
-}
-
 // hack to remove panel's default padding and width (so that splashPhoto etc can take up the whole width of the page)
 .Card.panel.panel-default.fullCard, .Card.panel.panel-default.fullCard .panel-body {
 	padding: 0px;
@@ -79,13 +64,11 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 	// restrict width of text
 	width: 70%;
     margin: 0 auto;
-	background-color: transparent; //#E6E4D6;
-	//box-shadow: 0 3px 5px rgba(0,0,0,0.3); 
+	background-color: transparent;
 }
 
 .panel-heading {
 	color: white;
-	//box-shadow: 0 3px 5px rgba(0,0,0,0.3);
 }
 
 .panel-title {
@@ -94,7 +77,7 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 }
 
 .panel-default, .panel-default > .panel-heading{
-	background-color: transparent; // #F5AA57;
+	background-color: transparent;
 	border-color: transparent;
 	color: white;
 	// add more white space, looks less cluttered
@@ -106,7 +89,6 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 	background-color: white;
 	color: @gl-red;
 	border-color: white;
-	//box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
 	font-weight: bold;
 }
 
@@ -118,16 +100,7 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 
 // card at the head of the page welcoming the user
 .WelcomeCard {
-	// .header-text {
-	// 	padding: 0vmin 0 3vmin 4vmin;
-	// }
-
-	// .header-text.post-login {
-	// 	padding: 2vmin 0 3vmin 1vmin;
-	// }
-
 	.header-text{
-		//padding: 14vmin 0 0 0;
 		vertical-align: middle; 
 		text-align: center;
 		// made text unselectable for hypothetical problems on mobile (it being near a button)
@@ -181,8 +154,6 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 //OnboardingCard styles how good loop ads work section 
 #howitworks {
 	line-height: 1.4;
-	//font-family: "campton-book", sans-serif;
-	//font-size: 16px;
 
 	.how-text {
 		padding-top: 23px;
@@ -193,7 +164,6 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 		padding-top: 12px;
 		padding-bottom: 20px;
 		margin: 0 auto;
-		//color: #4a4a4a;
 		vertical-align: top;
 	}
 	
@@ -209,16 +179,12 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 // StatisticsCard shows e.g. 1,470,000 people reached
 .statistics-content {
 	h2 {
-		//color: #4a4a4a;
-		//font-size: 24px;
 		margin: 0 4vmin;
 		line-height: 1.5em;
 	}
 
 	.statistics-item {
 		text-align: center;
-		//font-size: 13px;
-		//color: #9b9b9b;
 
 		.statistics-value {
 			// align
@@ -233,7 +199,6 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 				padding-bottom: 10px;
 				margin-bottom: 10px;
 				font-size: 24px;
-				//color: #4a4a4a;	
 				font-weight: bold;
 				&:after {
 					display: block;
@@ -252,7 +217,6 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 
 		// a non-money value, eg "No compromises"
 		.text-stat {
-			//font-size: 19px;
 			padding-bottom: 2px;
 		}
 
@@ -301,29 +265,6 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 		height: 100%;
 		font-size: 30px !important;
 	}
-
-	// // TODO If you're putting in tweaks, say why -- is this an aesthetic tweak, or fixing a layout bug?
-	// .header.form-control  {
-	// 	width: 94%;
-	// }
-
-
-	// No - use a semantic tag or class
-	// i {
-	// 	padding-right: 20px;
-	// }
-
-	// no map yet in this MVP
-	// .header, .map {
-	// 	margin: 2vmin 0;
-	// }
-	// .map img {
-	// 	border-style: dotted;
-	// 	border-width: 1px;
-	// 	height: 70%;
-	// 	width: 84%;
-	// 	margin-top: 10px;
-	// }
 	
 	input[type="text"] {
 		font-size: 22px;
@@ -431,10 +372,6 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 	margin: 0 auto;
 	flex-basis: unset;
 }
-
-// .socialConnect > div {
-// 	padding-top: 10px;
-// }
 
 // we don't want the consent controls to take up too much of the width (avoiding the aesthetic of a big block of text)
 .linkedProfiles .panel-body, .consentControls .panel-body {

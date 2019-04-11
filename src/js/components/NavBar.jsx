@@ -41,7 +41,7 @@ const NavBar = ({brandLogo}) => {
 							alt='Sponsor Logo'
 							render={ props => <img {...props} /> } 
 							src={brandLogo} 
-							className='vertiser-logo'
+							className='gl-logo'
 							style={{ display: brandLogo ? 'inline-block' : 'none' }} 
 						/>
 					</div>

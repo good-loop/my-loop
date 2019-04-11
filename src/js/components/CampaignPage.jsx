@@ -19,26 +19,14 @@ import OnboardingCardMini from './OnboardingCardMini';
 import SocialMediaCard from './SocialMediaCard';
 import ShareAnAd from './ShareAnAd';
 
-const pagePath = ['widget', 'MyPage'];
-
-const DonationSlideWidget = ({cparent, clist, index=0, active}) => {	
-	let cnames = clist.map(x => x.name);
-	let clogos = clist.map(x => x.logo || x.logo_white);
-	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo);
-	let ccrop = clist.map(x => x.circleCrop);
-	let cbgColor = clist.map(x => x.color); // TODO: does this exist?
-	let ctxtColor = clist.map(x => x.txtColor); // TODO: does this exist?
-	let cdescs = clist.map(x => x.description);
-	//let cPhoto = chighResPhotos[index] ? chighResPhotos[index] : '';
-
+const DonationSlideWidget = ({cparent, clist, active, name, logo, logo_white, highResPhoto, photo, txtColor, description, hideImpactData, id}) => {	
 	// This data will never be used outside of this component, so I have chosen to manage state locally
 	// impactData is actually the "projects" field in SoGive data
 	const [impactData, setImpactData] = useState([]);
 	// Think what we need to do is call setImpactData on ServerIO callback
 	useEffect(() => {
-		const charity = clist[index];
-		if( !charity.hideImpactData ) {
-			ServerIO.getDataItem({type: 'NGO', id: charity.id, status: 'PUBLISHED'})
+		if( !hideImpactData ) {
+			ServerIO.getDataItem({type: 'NGO', id, status: 'PUBLISHED'})
 				// Grab projects, but ignore any results that do not contain a "costPerBeneficiary" field
 				// Will give a blank array if none are found
 				.then(res => 
@@ -53,168 +41,85 @@ const DonationSlideWidget = ({cparent, clist, index=0, active}) => {
 		}
 	}, [clist]);
 
-	// set the photo if it has one
-	let photoStyle = {};
-	if (chighResPhotos[index]) {
-		photoStyle = {
-			backgroundImage: 'url(' + chighResPhotos[index] + ')',
-		};
-	}
-
 	let slideStyle = {
-		backgroundColor: cbgColor[index],
-		color: ctxtColor[index] ? ctxtColor[index] : 'white',
-	};
-
-	// this uses the circleCrop value set in the portal to crop the logo/photo to fit neatly into the circle 
-	let ccropDiff = (100-ccrop[index])/100;
-	let circleCropStyle = {
-		objectFit: 'contain',
-		width: ccrop[index] ? ccrop[index]+'%' : '100%',
-		height: ccrop[index] ? ccrop[index]+'%' : '100%',
-		marginTop: ccrop[index] ? "calc(50px*" + ccropDiff + ")" : null,
-	};
-
-	let logoStyle = {
-		margin: '0 auto',
-		//float: cdescs[index] ? 'right' : 'unset',
-		backgroundColor: 'white', //TODO: do we want this to be editable in the portal? it could be the same color as the chty foreground used for text #minor
-		borderRadius: '50%',
-		height: '5.5vw', 
-		width: '5.5vw',
-		textAlign: 'center',
-		/* margin-top: 25px; */
-		overflow: 'hidden',
-		color: 'black'
+		color: txtColor || 'white',
 	};
 
 	// is the item currently active (aka show in carousel)
 	let itemClass = active ? 'item active' : 'item';
 
 	// if there's no chty title or logo, we shouldn't show the slide in the carousel
-	if (!clist[index].name && !clist[index].logo) {
-		return(null);
-	}
-	//slideStyle.height = '22vh';
-
-	// if there's no chty description, then we should just show the chty title and logo and center them
-	if (!cdescs[index]) {
-		return (
-			<div className={itemClass} style={slideStyle}>
-				<div>
-					<div className="col-md-3" />
-					<div className="col-md-6">
-						<div className="slide-header" style={{marginTop: '6vh', height: '10vh'}}>
-							<div className="slide-logo" style={logoStyle}>
-								<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={circleCropStyle} />
-							</div>	
-							<div className="slide-title h3" style={{paddingTop: '3%', color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
-								{cnames[index]}
-							</div>	
-						</div>		
-					</div>
-				</div>
-			</div>
-		);
+	if (!name && !logo) {
+		return null;
 	}
 
-	// if we have a chty photo we should display it alongside the rest of the data, otherwise display just the rest 
+	// Layout changes based on whether or not image has been provided for each charity
 	return (
 		<div className={itemClass} style={slideStyle}>
-			{ chighResPhotos[index] ? 
-				<div>
-					<div className="col-md-1" />
-					<div className="col-md-5">
+			<div className='container-fluid'>
+				<div className='flex row'>
+					<div className='col-md-1' />
+					<div className='col-md-5 flex-column'>
 						<div className="slide-header">
 							<div className="col-md-3" />
-							<div className="col-md-6 slide-title h3" style={{color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
-								{cnames[index]}
+							<div className="col-md-6 slide-title h3" style={slideStyle}>
+								{name}
 							</div>	
 						</div>
 						<div className="slide-desc">
-							<MDText source={cdescs[index]} />
+							<MDText source={description} />
 							{
 								impactData.map( data => (
 									<MDText key={data} source={`**Average cost: ${Money.CURRENCY[data.costPerBeneficiary.currency] || ''}${data.costPerBeneficiary.value} per ${data.name || 'unit'} **`} />
 								))
 							}
-						</div>						
-					</div>	
-					<div className="col-md-4 slide-photo" style={photoStyle}></div>
-					<div className="col-md-2" />
+						</div>		
+					</div>
+					<div className='col-md-4 slide-photo margin-auto'>
+						<DonationCircleWidget highResPhoto={highResPhoto} photo={photo} logo={logo} logo_white={logo_white} />
+					</div>
+					<div className='col-md-2' />
 				</div>
-				:
-				<div>
-					<div className="col-md-3" />
-					<div className="col-md-6">
-						<div className="slide-header">
-							<div className="col-md-1" />
-							<div className="col-md-2">
-								<div className="slide-logo" style={logoStyle}>
-									<img alt={cparent+' '+cnames[index]} src={clogos[index]} style={circleCropStyle} />
-								</div>	
-							</div>	
-							<div className="col-md-6 slide-title h3" style={{color: ctxtColor[index] ? ctxtColor[index] : 'white'}}>
-								{cnames[index]}
-							</div>	
-						</div>
-						<div className="slide-desc">
-							<MDText source={cdescs[index]} />
-							{
-								impactData.map( data => (
-									<MDText source={`**Average cost: ${Money.CURRENCY[data.costPerBeneficiary.currency] || ''}${data.costPerBeneficiary.value} per ${data.name || 'unit'} **`} />
-								))
-							}
-						</div>						
-					</div>	
-					<div className="col-md-3" />
-				</div>
-			} 
-		</div>	
-	);
-};
-
-let _handleClick = (circleIndex) => {
-	let toggle = [false, false, false];
-	toggle[circleIndex] = true;
-	DataStore.setValue(['widget', 'donationCircles', 'active'], toggle);
-};
-
-const DonationCircleWidget = ({cparent, clist, campaignSlice, index=0, name='left'}) => {
-	let cids = clist.map(x => x.id);
-	let cnames = clist.map(x => x.name);
-	let chighResPhotos = clist.map(x => x.highResPhoto || x.photo || x.logo);
-	// !(x.highResPhoto || x.photo)? .donation-circles .circle img { object-fit: contain; }
-
-	return (
-		<div className={'circle '.concat(name)} onClick={(e) => _handleClick(index)}>
-			{cparent &&
-				<div className="circle-info">
-					<p>
-						<span>
-							{campaignSlice[cids[index]].percentageTotal}%
-						</span>
-						<br /> 
-						HAS BEEN DONATED TO...
-						<br />
-						<span className='project-name'>
-							{cnames[index]}
-						</span>
-					</p>
-				</div>
-			}
-			<img alt={cparent+' '+cnames[index]} src={chighResPhotos[index]} />
+			</div>
 		</div>
 	);
 };
 
+const DonationCircleWidget = ({cparent, id, name, highResPhoto, photo, logo, logo_white, campaignSlice, pos='left'}) => (
+	<div 
+		className={'circle flex-vertical-align ' + pos} 
+		style={{
+			background: `url(${highResPhoto || photo || logo || logo_white})`,
+			backgroundSize: 'cover',
+			backgroundPosition: 'center center',
+			backgroundRepeat: 'no-repeat'
+		}}
+	>
+		{cparent &&
+			<div className="circle-info">
+				<p>
+					<span>
+						{campaignSlice[id]['percentageTotal']}%
+					</span>
+					<br /> 
+					HAS BEEN DONATED TO...
+					<br />
+					<span className='project-name'>
+						{name}
+					</span>
+				</p>
+			</div>
+		}
+	</div>
+);
+
 const DonationCarouselWidget = ({cparent, clist, toggle}) => (	
-	<div id="donation-carousel" className="carousel slide" data-interval={toggle} data-ride="carousel">
+	<div id="donation-carousel" className="carousel slide container-fluid" data-interval={toggle} data-ride="carousel">
 		{/* <!-- Content --> */}
-		<div className="carousel-inner" role="listbox">	
-			{ clist[0] && <DonationSlideWidget cparent={cparent} clist={clist} index={0} active />}
-			{ clist[1] && <DonationSlideWidget cparent={cparent} clist={clist} index={1} active={false} />}
-			{ clist[2] && <DonationSlideWidget cparent={cparent} clist={clist} index={2} active={false} />}
+		<div className="carousel-inner flex-column" role="listbox">	
+			{ clist[0] && <DonationSlideWidget {...clist[0]} cparent={cparent} active />}
+			{ clist[1] && <DonationSlideWidget {...clist[1]} cparent={cparent} />}
+			{ clist[2] && <DonationSlideWidget {...clist[2]} cparent={cparent} />}
 			{/* <!-- Indicators --> */}
 			<div className='carousel-container'>
 				<ol className="carousel-indicators">
@@ -455,7 +360,7 @@ const CampaignPage = () => {
 
 	// toggle carousel (true means it spins automatically)
 	let toggle = "false";
-	
+
 	// TODO: refactor this because it's very similar now to mypage
 	return (
 	<div className="page MyPage">
@@ -468,15 +373,14 @@ const CampaignPage = () => {
 					<div className='header' style={{...brandColorBgStyle, backgroundImage: 'url(' + src + ')'}}>
 						<div className='header-text'>
 							<div className='header-title'>
-								<div></div>	{/* TODO: delete this, it's just here because there's a css rule about the 1st div in title*/}
 								<div>Together we've raised</div>													
 								{donationValue? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 								<div>for charity</div>
 							</div>
 							<div className='flex-row flex-centre'>
-								<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={0} name='left' />
-								<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={1} name='middle' />
-								<DonationCircleWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} index={2} name='right' />
+								<DonationCircleWidget {...clist[0]} cparent={cparent} campaignSlice={campaignSlice} pos='left' />
+								<DonationCircleWidget {...clist[1]} cparent={cparent} campaignSlice={campaignSlice} pos='middle' />
+								<DonationCircleWidget {...clist[2]} cparent={cparent} campaignSlice={campaignSlice} pos='right' />
 							</div>
 							{/* <EmailCTA /> */}
 						</div>
@@ -484,9 +388,9 @@ const CampaignPage = () => {
 				)}
 			/>
 		</div>
-		<div className='grid-tile middle' style={brandColorBgStyle}>
+		<div className='grid-tile middle'>
 			<div className='inside'>
-				<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle} adid={adid} status={status} toggle={toggle}/>
+				<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle} adid={adid} status={status} toggle={toggle} />
 			</div>
 		</div>
 		<CardAccordion multiple >	
