@@ -34,9 +34,8 @@ const shareTextFn = ({donationValue, charities, adName="We"}) => {
 	return `${adName} helped to raise ${currencySymbol}${amountText} for ${charityText}`;
 };
 
-const SocialMediaShareWidget = ({donationValue, charities, adName}) => {
+const SocialMediaShareWidget = ({donationValue, charities, adName, url=window.location.href}) => {
 	const shareText = shareTextFn({donationValue, charities, adName});
-	const url = window.location.href;
 	
 	return (
 		<div className="social share-page">
@@ -60,30 +59,19 @@ const SocialMediaShareWidget = ({donationValue, charities, adName}) => {
  * @param type {!String} vertiser|goodloop
  * @param branding {Branding}
  */
-const SocialMediaFooterWidget = ({type, name, branding}) => {
+const SocialMediaFooterWidget = ({type, name, fb_url, tw_url, insta_url, yt_url}) => {
 	// TODO dont use gl-es-0x underlying server urls
 	return (
 		<div className={'social '.concat(type)}>
 			<MDText source={name} />
 			<div className="social-links">
-				{branding && branding.fb_url? <a href={branding.fb_url} target='_blank'><img src='https://gl-es-05.good-loop.com/cdn/images/facebook.png' /></a> : null}
-				{branding && branding.tw_url? <a href={branding.tw_url} target='_blank'><img src='https://gl-es-04.good-loop.com/cdn/images/twitter.png' /></a> : null}
-				{branding && branding.insta_url? <a href={branding.insta_url} target='_blank'><img src='https://gl-es-05.good-loop.com/cdn/images/instagram.png' /></a> : null}
-				{branding && branding.yt_url? <a href={branding.yt_url} target='_blank'><img src='https://gl-es-04.good-loop.com/cdn/images/youtube.png' /></a> : null}
+				{fb_url && <a href={fb_url} target='_blank'><img src='https://gl-es-05.good-loop.com/cdn/images/facebook.png' /></a>}
+				{tw_url && <a href={tw_url} target='_blank'><img src='https://gl-es-04.good-loop.com/cdn/images/twitter.png' /></a>}
+				{insta_url && <a href={insta_url} target='_blank'><img src='https://gl-es-05.good-loop.com/cdn/images/instagram.png' /></a>}
+				{yt_url && <a href={yt_url} target='_blank'><img src='https://gl-es-04.good-loop.com/cdn/images/youtube.png' /></a>}
 			</div>
 		</div>
 	);
 };
 
-// good-loop social media links
-const SocialMediaGLFooterWidget = () => {
-	// goodloop branding data
-	const gl_social = {
-		fb_url: 'https://www.facebook.com/the.good.loop/',
-		tw_url: 'https://twitter.com/goodloophq',
-		insta_url: 'https://www.instagram.com/good.loop.ads/',
-	};
-	return <SocialMediaFooterWidget type={'goodloop'} branding={gl_social} />;
-};
-
-export { SocialMediaGLFooterWidget, SocialMediaFooterWidget, SocialMediaShareWidget };
+export { SocialMediaFooterWidget, SocialMediaShareWidget };
