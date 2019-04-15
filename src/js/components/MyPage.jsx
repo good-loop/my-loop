@@ -91,7 +91,6 @@ window.getAllXIds = getAllXIds;
 
 // TODO document trkids
 const MyPage = () => {
-
 	let xids = getAllXIds();
 
 	// TODO pass around xids and turn into strings later
@@ -133,13 +132,13 @@ const MyPage = () => {
 		<div className="page MyPage">
 			<CardAccordion widgetName="MyReport" multiple >	
 				<Card defaultOpen className="fullCard" style={splashPhotoStyle}>
-					<NavBar/>
+					<NavBar />
 					{/* <SplashPhotoCard/> */}
 				</Card>
 
 				<Card defaultOpen className="introCard" >
 					{/* <WelcomeCard xids={xids} /> */}
-					<IntroCard/>
+					<IntroCard />
 				</Card>
 
 				<Card title="Our Achievements Together" className="StatisticsCard MiniCard background-dark-green" titleClassName='sub-header' defaultOpen>
@@ -153,7 +152,7 @@ const MyPage = () => {
 				</Card>	
 				<Card title="Boost Your Impact" className="boostImpact" titleClassName='sub-header' defaultOpen>
 					<SocialMediaCard allIds={xids} className="socialConnect"/>
-					<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} xids={xids} />
+					<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} mixPanelTag='ShareAnAd' xids={xids} />
 				</Card> 
 
 				<Card title="Your Charities" className='background-dark-green' titleClassName='sub-header' defaultOpen>
@@ -161,7 +160,7 @@ const MyPage = () => {
 				</Card>
 
 				<Card title="Your Digital Mirror" className='background-dark-blue' titleClassName='sub-header' defaultOpen>
-					<DigitalMirrorCard xids={xids} className="digitalMirror"/>
+					<DigitalMirrorCard xids={xids} className="digitalMirror" mixPanelTag='DigitalMirror' />
 					<SocialMediaCard allIds={xids} className="socialConnect"/>						
 				</Card> 
 
@@ -174,7 +173,7 @@ const MyPage = () => {
 				</Card>
 
 				<Card title="Get In Touch" titleClassName='sub-header' defaultOpen>
-					<ContactCard allIds={allIds} />
+					<ContactCard allIds={allIds} mixPanelTag='ContactCard' />
 				</Card>
 				
 				<Card title="Linked Profiles" titleClassName='sub-header' className="linkedProfiles background-dark-blue">
@@ -233,7 +232,6 @@ const IntroCard = () => {
 };
 
 const StatisticsCardMini = () => { 
-	const statsImg = 'https://as.good-loop.com/uploads/marvinirinapreda.meemail/stats__card__v7-158228810410788570.png';
 	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
 		const name = "total-spend"; // dummy parameter: helps identify request in network tab
 		return ServerIO.getAllSpend({name});

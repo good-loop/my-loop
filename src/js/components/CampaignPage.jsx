@@ -393,13 +393,13 @@ const CampaignPage = () => {
 					<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle} adid={adid} status={status} toggle={toggle} />
 				</div>
 			</div>
-			<CardAccordion multiple >	
+			<CardAccordion multiple>	
 				<Card title="How Good-Loop Ads Work" className="StatisticsCard MiniCard background-dark-green" defaultOpen>
-					<OnboardingCardMini/>
+					<OnboardingCardMini />
 				</Card>							
 				<Card title="Boost Your Impact" className="boostImpact background-dark-blue" defaultOpen>
 					<SocialMediaCard allIds={xids} className="socialConnect"/>
-					{ ad && ad.videos && ad.videos.length && <ShareAnAd adHistory={{...ad.videos[0], vert: adid}} />}
+					{ ad && ad.videos && ad.videos.length && <ShareAnAd adHistory={{...ad.videos[0], vert: adid}} mixPanelTag='ShareAnAd' />}
 				</Card> 
 			</CardAccordion>
 			<div className='grid-tile bottom background-gl-red' style={glColorBgStyle}>
