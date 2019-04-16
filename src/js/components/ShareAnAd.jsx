@@ -49,7 +49,8 @@ const ShareAnAd = ({ adHistory, logsIfVisibleRef, xids=[] }) => {
 					: <GoodLoopUnit adID={vert} /> 
 			}
 			{
-				twitterXId
+				// twitterXId
+				true
 				&& (
 					<div>
 						<h3 className='sub-header'> Share this ad on social media </h3>
@@ -60,7 +61,7 @@ const ShareAnAd = ({ adHistory, logsIfVisibleRef, xids=[] }) => {
 							text='I just gave to charity by watching a GoodLoop ad'
 							url={`https://as.good-loop.com/?gl.vert=${vert}&gl.socialShareId=${socialShareId}`}
 						/>
-						<SharedAdStats twitterXId={twitterXId} />
+						{/* <SharedAdStats twitterXId={twitterXId} /> */}
 					</div>
 				)
 			}
@@ -68,7 +69,13 @@ const ShareAnAd = ({ adHistory, logsIfVisibleRef, xids=[] }) => {
 	);
 };
 
-/** Table showing how many times adverts shared by the user on Twitter have been viewed */
+/** Table showing how many times adverts shared by the user on Twitter have been viewed 
+ * (15/04/19) This has been turned off as I (MW) cannot think of a nice way of:
+ * 1) Making this feature useable to non-registered users
+ * 2) Ensuring that stats are correctly carried over after a user has signed up
+ * 
+ * In it's current form, this feature is not well presented, and I think that it should be hidden for the moment 
+*/
 const SharedAdStats = ({twitterXId}) => {
 	const twitterSocialShareObjects = twitterXId && DataStore.getValue(['data', 'Person', twitterXId, 'socialShareIds']);
 	if( !twitterSocialShareObjects ) {
