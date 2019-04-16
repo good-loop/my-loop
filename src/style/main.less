@@ -1,6 +1,5 @@
 @import "../js/base/style/main-base.less";
 @import "MyPage.less";
-@import "footer.less";
 @import "DonationCircleWidget.less";
 @import "flex.less";
 
@@ -17,6 +16,10 @@ html, body {
 .sub-header {
 	.header-font();
 	font-size: 1.618rem;
+}
+
+.pad1 {
+	padding: 1rem;
 }
 
 .top-pad1 {
@@ -68,6 +71,11 @@ html, body {
 // Dark BootStrap link colour looks terrible with MyLoop's coloured backgrounds
 a {
 	.white-link();
+}
+
+// Override as grey border doesn't look good with red background
+.footer {
+	border-top: none;
 }
 
 .btn {
@@ -214,7 +222,7 @@ a {
 	}
 }
 
-@media only screen and (max-width: 525px) {
+@media only screen and (max-width: 578px) {
 	html, body {
 		font-size: 14px;
 	}

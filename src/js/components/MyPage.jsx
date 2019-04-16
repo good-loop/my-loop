@@ -22,7 +22,6 @@ import DonationCard from './DonationCard';
 import C from '../C';
 import { assMatch } from 'sjtest';
 import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
-import { SocialMediaFooterWidget } from './SocialLinksWidget';
 import NavBar from './NavBar';
 import OnboardingCardMini from './OnboardingCardMini';
 import RecentCampaignsCard from './RecentCampaignsCard';
@@ -126,67 +125,105 @@ const MyPage = () => {
 	return (
 		// TODO: refactor out the elements are the same as campaign page
 		<div className="page MyPage">
-			<CardAccordion widgetName="MyReport" multiple>	
-				<Card defaultOpen className="fullCard" style={{padding: '0px'}}>
-					<NavBar />
-				</Card>
+			<Card defaultOpen className="fullCard" style={{padding: '0px'}}>
+				<NavBar />
+			</Card>
 
-				<Card defaultOpen className="introCard">
+			<div title="Our Achievements Together" className='StatisticsCard MiniCard background-gl-red container-fluid'>
+				<div className='row pad1 introCard'>
 					<IntroCard />
-				</Card>
+				</div>
+			</div>
 
-				<Card title="Our Achievements Together" className="StatisticsCard MiniCard background-dark-green" titleClassName='sub-header' defaultOpen>
+			<div title="Our Achievements Together" className='StatisticsCard MiniCard background-dark-green container-fluid'>
+				<div className='row panel-title panel-heading sub-header pad1'> 
+					Our Achievements Together
+				</div>
+				<div className='row pad1'>
 					<StatisticsCardMini allIds={allIds} />
-				</Card>
-				<Card title="How Good-Loop Ads Work" className="StatisticsCard MiniCard background-dark-blue" titleClassName='sub-header' defaultOpen>
+				</div>
+			</div>
+
+			<div title="How Good-Loop Ads Work" className='StatisticsCard MiniCard background-dark-blue container-fluid'>
+				<div className='row panel-title panel-heading sub-header pad1'> 
+					How Good-Loop Ads Work
+				</div>
+				<div className='row pad1'>
 					<OnboardingCardMini allIds={allIds} />
-				</Card>							
-				<Card title="Recent Campaigns" className='background-dark-green' titleClassName='sub-header' defaultOpen>
+				</div>
+			</div>
+
+
+			<div title="Recent Campaigns" className='boostImpact background-gl-red container-fluid'>
+				<div className='row panel-title panel-heading sub-header pad1'> 
+					Recent Campaigns
+				</div>
+				<div className='row pad1'>
 					<RecentCampaignsCard />
-				</Card>	
-				<Card title="Boost Your Impact" className="boostImpact" titleClassName='sub-header' defaultOpen>
+				</div>
+			</div>
+
+			<div title="Boost Your Impact" className='boostImpact background-dark-green container-fluid'>
+				<div className='row panel-title panel-heading sub-header pad1'> 
+					Boost Your Impact
+				</div>
+				<div className='row pad1'>
 					<SocialMediaCard allIds={xids} className="socialConnect" />
 					<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} mixPanelTag='ShareAnAd' xids={xids} />
-				</Card> 
+				</div>
+			</div>
 
-				<Card title="Your Charities" className='background-dark-green' titleClassName='sub-header' defaultOpen>
+			<div title="Your Charities" className='background-dark-blue container-fluid'>
+				<div className='row panel-title panel-heading sub-header pad1'> 
+					Your Charities
+				</div>
+				<div className='row pad1'>
 					<DonationCard xids={xids} />
-				</Card>
+				</div>
+			</div>
 
-				<Card title="Your Digital Mirror" className='background-dark-blue' titleClassName='sub-header' defaultOpen>
+			<div title="Your Digital Mirror" className='background-gl-red container-fluid'>
+				<div className='row panel-title panel-heading sub-header pad1'> 
+					Digital Mirror
+				</div>
+				<div className='row pad1'> 
 					<DigitalMirrorCard xids={xids} className="digitalMirror" mixPanelTag='DigitalMirror' />
-					<SocialMediaCard allIds={xids} className="socialConnect" />						
-				</Card> 
+					<SocialMediaCard allIds={xids} className="socialConnect" />	
+				</div>
+			</div>
 
-				<Card title="Consent Controls" defaultOpen titleClassName='sub-header' className="consentControls background-dark-green">
+			<div title="Consent Controls" className="consentControls background-dark-green container-fluid">
+				<div className='row panel-title panel-heading sub-header pad1'> 
+					Consent Controls
+				</div>
+				<div className='row pad1'> 
 					{Login.isLoggedIn() ? (
 						<ConsentWidget xids={xids} />
 					) : (
 						<LoginToSee />
 					)}
-				</Card>
-
-				<Card title="Get In Touch" titleClassName='sub-header' defaultOpen>
-					<ContactCard allIds={allIds} mixPanelTag='ContactCard' />
-				</Card>
-				
-				<Card title="Linked Profiles" titleClassName='sub-header' className="linkedProfiles background-dark-blue">
-					<LinkedProfilesCard xids={xids} />
-				</Card>
-			</CardAccordion>
-			<div className='grid-tile bottom'>
-				<div className='foot header-font center'>		
-					<SocialMediaFooterWidget 
-						type='goodloop'
-						fb_url='https://www.facebook.com/the.good.loop/'
-						tw_url='https://twitter.com/goodloophq'
-						insta_url='https://www.instagram.com/good.loop.ads/'
-					/>
 				</div>
 			</div>
-			<div>
-				<Footer />
-			</div>	
+
+			<div title='Linked Profiles' className="linkedProfiles background-dark-blue container-fluid">
+				<div className='row panel-title panel-heading sub-header pad1'> 
+					Linked Profiles
+				</div>
+				<div className='row pad1'> 
+					<LinkedProfilesCard xids={xids} />
+				</div>
+			</div>
+
+			<div title="Get In Touch" className='container-fluid'>
+				<div className='row panel-title panel-heading sub-header pad1'> 
+					Get in touch
+				</div>
+				<div className='row pad1'> 
+					<ContactCard allIds={allIds} mixPanelTag='ContactCard' />
+				</div>
+			</div>
+
+			<Footer className='background-gl-red' />
 		</div>
 	);
 }; // ./MyPage
@@ -194,23 +231,23 @@ const MyPage = () => {
 // explain good-loop and join CTA
 const IntroCard = () => (
 	<div className="WelcomeCard container-fluid">
-		{ 
-			<div>
-				<div className="row header">
-					<div className="col header-text post-login">
-						<p className="title header"> Good-Loop ads reward the charity of your choice every time you watch </p>
-						{
-							Login.isLoggedIn()
-							|| (
-								<div onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
-									<LoginLink className='btn btn-lg btn-default btn-gl sub-header' onClick={() => LoginWidget.changeVerb('register')} verb='Join us' />			
-								</div>
-							)
-						}
-					</div>
+		<div className="row header">
+			<div className="col header-text post-login">
+				<div className="title header"> 
+					<div className='bottom-pad1'>Good-Loop ads</div> 
+					<div className='bottom-pad1'>reward the charity of your choice</div> 
+					<div> every time you watch </div>
 				</div>
+				{
+					Login.isLoggedIn()
+					|| (
+						<div onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
+							<LoginLink className='btn btn-lg btn-default btn-gl sub-header' onClick={() => LoginWidget.changeVerb('register')} verb='Join us' />			
+						</div>
+					)
+				}
 			</div>
-		}
+		</div>
 	</div>
 );
 
@@ -348,16 +385,20 @@ const LinkedProfilesCard = ({xids}) => {
 	let peeps = xids.map(xid => DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Person, xid));
 	peeps = peeps.filter(p => !!p);
 
-	return (<div className='word-wrap'>
-		<p>We all have multiple online identities -- e.g. emails, social media, and with retail companies. 
-		Here are the IDs Good-Loop recognises as you:</p>
-		{ nonTrackers.map(xid => <div key={xid}>{XId.service(xid)+': '+XId.id(xid)}</div>) }
-		Good-Loop cookies (random IDs, used by us to record your donations and avoid repeating ads): {trackers.map(xid => XId.id(xid)).join(", ")}<br/>
-		Currently logged into Good-Loop via: {authd.map(xid => XId.service(xid)+': '+XId.id(xid)).join(", ")}<br/>
-		Links: {peeps.map(peep => 
-			<div key={Person.id(peep)}>{Person.id(peep)} -> {peep.links && peep.links.length? peep.links.map(link => link.v).join(", ") : 'no links'}</div>
-		)}
-	</div>);
+	return (
+		<div>
+			<p>We all have multiple online identities -- e.g. emails, social media, and with retail companies. 
+			Here are the IDs Good-Loop recognises as you:</p>
+			<div className='word-wrap'>
+				{ nonTrackers.map(xid => <div key={xid}>{XId.service(xid)+': '+XId.id(xid)}</div>) }
+				Good-Loop cookies (random IDs, used by us to record your donations and avoid repeating ads): {trackers.map(xid => XId.id(xid)).join(", ")}<br/>
+				Currently logged into Good-Loop via: {authd.map(xid => XId.service(xid)+': '+XId.id(xid)).join(", ")}<br/>
+				Links: {peeps.map(peep => 
+					<div key={Person.id(peep)}>{Person.id(peep)} -> {peep.links && peep.links.length? peep.links.map(link => link.v).join(", ") : 'no links'}</div>
+				)}
+			</div>
+		</div>
+	);
 };
 
 export default MyPage;
