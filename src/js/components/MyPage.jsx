@@ -122,22 +122,16 @@ const MyPage = () => {
 		}));
 	});
 
-	let splashPhotoStyle = { 
-		padding: '0px'
-		//width: unset;
-	};
 	// display...
 	return (
 		// TODO: refactor out the elements are the same as campaign page
 		<div className="page MyPage">
-			<CardAccordion widgetName="MyReport" multiple >	
-				<Card defaultOpen className="fullCard" style={splashPhotoStyle}>
+			<CardAccordion widgetName="MyReport" multiple>	
+				<Card defaultOpen className="fullCard" style={{padding: '0px'}}>
 					<NavBar />
-					{/* <SplashPhotoCard/> */}
 				</Card>
 
-				<Card defaultOpen className="introCard" >
-					{/* <WelcomeCard xids={xids} /> */}
+				<Card defaultOpen className="introCard">
 					<IntroCard />
 				</Card>
 
@@ -151,7 +145,7 @@ const MyPage = () => {
 					<RecentCampaignsCard />
 				</Card>	
 				<Card title="Boost Your Impact" className="boostImpact" titleClassName='sub-header' defaultOpen>
-					<SocialMediaCard allIds={xids} className="socialConnect"/>
+					<SocialMediaCard allIds={xids} className="socialConnect" />
 					<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} mixPanelTag='ShareAnAd' xids={xids} />
 				</Card> 
 
@@ -161,7 +155,7 @@ const MyPage = () => {
 
 				<Card title="Your Digital Mirror" className='background-dark-blue' titleClassName='sub-header' defaultOpen>
 					<DigitalMirrorCard xids={xids} className="digitalMirror" mixPanelTag='DigitalMirror' />
-					<SocialMediaCard allIds={xids} className="socialConnect"/>						
+					<SocialMediaCard allIds={xids} className="socialConnect" />						
 				</Card> 
 
 				<Card title="Consent Controls" defaultOpen titleClassName='sub-header' className="consentControls background-dark-green">
@@ -183,7 +177,7 @@ const MyPage = () => {
 			<div className='grid-tile bottom'>
 				<div className='foot header-font center'>		
 					<SocialMediaFooterWidget 
-						type={'goodloop'} 
+						type='goodloop'
 						fb_url='https://www.facebook.com/the.good.loop/'
 						tw_url='https://twitter.com/goodloophq'
 						insta_url='https://www.instagram.com/good.loop.ads/'
@@ -198,38 +192,27 @@ const MyPage = () => {
 }; // ./MyPage
 
 // explain good-loop and join CTA
-const IntroCard = () => {
-	const heroImage = '/img/hero7.png';
-	return (
-		<div className="WelcomeCard container-fluid">
-			{ 
-				Login.isLoggedIn() ? (
-					<div>
-						<div className="row header">
-							<div className="col-md-7 header-text post-login">
-								<p className="title header"> You're a champion! </p>
-								<p className="title sub-header"> Find out how you can raise more for charity below </p>
-							</div>
-							<div className="col-md-5 header-img">
-								<img src={heroImage} alt="Superhero" />
-							</div>
-						</div>
+const IntroCard = () => (
+	<div className="WelcomeCard container-fluid">
+		{ 
+			<div>
+				<div className="row header">
+					<div className="col header-text post-login">
+						<p className="title header"> Good-Loop ads reward the charity of your choice every time you watch </p>
+						{
+							Login.isLoggedIn()
+							|| (
+								<div onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
+									<LoginLink className='btn btn-lg btn-default btn-gl sub-header' onClick={() => LoginWidget.changeVerb('register')} verb='Join us' />			
+								</div>
+							)
+						}
 					</div>
-				) : (
-					<div className="row header">
-						<div className="col-md-12 header-text">
-							<p className="title header">ADS FOR GOOD</p>
-							<p className="subtitle sub-header">Good-Loop ads reward the charity of your choice <br /> for every ad you watch</p>
-							<div onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
-								<LoginLink className='btn btn-lg btn-default btn-gl sub-header' onClick={() => LoginWidget.changeVerb('register')} verb='Join us' />			
-							</div>
-						</div>				
-					</div>
-				)
-			}
-		</div>
-	);
-};
+				</div>
+			</div>
+		}
+	</div>
+);
 
 const StatisticsCardMini = () => { 
 	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
@@ -274,7 +257,7 @@ const StatisticsCardMini = () => {
 		<div className='container-fluid'>
 			<div className='row sub-header bottom-pad1'> 
 				IN 2018, GOOD-LOOP'S ETHICAL ADVERTISING RAISED OVER <br /> 
-				<span className='header'> £200,000 </span> <br/> 
+				<span className='header'> £200,000 </span> <br /> 
 				FOR CHARITABLE CAUSES <br /> 
 				THAT'S ENOUGH TO FUND... 
 			</div>
@@ -344,7 +327,9 @@ let ContactCard = ({logsIfVisibleRef}) => (
 		<div>
 			<p>Let us know what you think of this web-app, and your ideas for improving it.</p>
 			<p>Are you interested in hosting Ads For Good on your blog or website?</p>
-			<p><a href="https://www.good-loop.com/book-a-call">Let us know.</a></p>
+			<p>
+				<a href="https://www.good-loop.com/book-a-call">Let us know.</a>
+			</p>
 		</div>
 	</div>
 );
