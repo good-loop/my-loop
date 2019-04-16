@@ -100,6 +100,8 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 
 // card at the head of the page welcoming the user
 .WelcomeCard {
+	height: 100vh;
+	
 	.header-text{
 		vertical-align: middle; 
 		text-align: center;
@@ -109,11 +111,6 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 		-moz-user-select: none; /* Firefox */
 		-ms-user-select: none; /* Internet Explorer/Edge */
 		user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
-	}
-
-	.header-img img {
-		height: 17rem;
-		width: 17rem;
 	}
 
 	.title {
@@ -345,11 +342,6 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 	text-align: center;
 	margin: 0 auto;
 	flex-basis: unset;
-}
-
-// looks bad if it's centre aligned, let's move it left (as long as the user is logged in/ there are consent controls to show)
-.linkedProfiles .panel-body, .consentControls .consent-widget {
-	text-align: left;
 }
 
 // set the vertiser logo sizes and put in some space between them to look less cluttered

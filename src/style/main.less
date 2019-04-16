@@ -168,6 +168,31 @@ a {
 	margin-left: auto;
 }
 
+// Want flex to treat this as an element with actual physical dimensions
+// Gives more balanced layout with intro text
+.triangle-container {
+	height: 50%;
+}
+
+.triangle-base {
+	position: absolute;
+	bottom: 0;
+	height: 50%;
+	width: 50%;
+}
+
+.white-triangle-left {
+	.triangle-base();
+	left: 0;
+	background-image: linear-gradient(to right top, white 0%, white 50%, transparent 50%);
+}
+
+.white-triangle-right {
+	.triangle-base();
+	right: 0;
+	background-image: linear-gradient(to left top, white 0%, white 50%, transparent 50%);	
+}
+
 // **mobile layout rules**
 // using flex to change the template of the layout for the bottom row (share and social buttons) to a column based one
 // and replacing carousel with scroll-down layout

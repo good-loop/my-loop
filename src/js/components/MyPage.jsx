@@ -11,7 +11,7 @@ import printer from '../base/utils/printer';
 import Profiler, { getProfile } from '../base/Profiler';
 import Person from '../base/data/Person';
 import Misc from '../base/components/Misc';
-import CardAccordion, { Card } from '../base/components/CardAccordion';
+import { Card } from '../base/components/CardAccordion';
 import LoginWidget, { LoginLink } from '../base/components/LoginWidget';
 import DigitalMirrorCard from './DigitalMirrorCard';
 import Footer from './Footer';
@@ -129,9 +129,24 @@ const MyPage = () => {
 				<NavBar />
 			</Card>
 
-			<div title="Our Achievements Together" className='StatisticsCard MiniCard background-gl-red container-fluid'>
-				<div className='row pad1 introCard'>
-					<IntroCard />
+			<div title="Welcome Card" className='StatisticsCard MiniCard background-gl-red'>
+				<IntroCard />
+			</div>
+
+			<div title='Intro' className='container-fluid'>
+				<div className='row'>
+					<div className='col-md-3'>
+						<i className='fa fa-pencil fa-4x' />
+					</div>
+					<div className='col-md-3'>
+						<i className='fa fa-check-circle fa-4x' />
+					</div>
+					<div className='col-md-3'>
+						<i className='fa fa-mouse-pointer fa-4x' />
+					</div>
+					<div className='col-md-3'>
+						<i className='fa fa-envelope fa-4x' />
+					</div>
 				</div>
 			</div>
 
@@ -230,7 +245,7 @@ const MyPage = () => {
 
 // explain good-loop and join CTA
 const IntroCard = () => (
-	<div className="WelcomeCard container-fluid">
+	<div className="WelcomeCard container-fluid pad1 flex-vertical-align">
 		<div className="row header">
 			<div className="col header-text post-login">
 				<div className="title header"> 
@@ -247,6 +262,10 @@ const IntroCard = () => (
 					)
 				}
 			</div>
+		</div>
+		<div className='row triangle-container'>
+			<div className='white-triangle-left' />
+			<div className='white-triangle-right' />
 		</div>
 	</div>
 );
@@ -266,27 +285,21 @@ const StatisticsCardMini = () => {
 	return (<section className="statistics statistics-what text-center">
 		<div className="statistics-content container-fluid">
 			<div className="row">
-				<h2 className="header">Thousands raised for charity each month </h2>
+				<h2 className="sub-header">Thousands raised for charity each month </h2>
 			</div>
 			<div className='row bottom-pad1'>
-				<div className="col-md-4 statistics-item">
+				<div className="col-md-6 statistics-item">
 					<div className="statistics-value">
 						<div className="statistics-value-highlight"><span>{printer.prettyNumber(cnt)}</span></div>
 						<strong className="statistics-subtext">people reached</strong>
 					</div>
 				</div>
-				<div className="col-md-4 statistics-item">
+				<div className="col-md-6 statistics-item">
 					<div className="statistics-value">
 						<div className="statistics-value-highlight">
 							<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={10} showCurrencySymbol={false} />										
 						</div>
 						<strong className="statistics-subtext">pounds raised</strong>
-					</div>
-				</div>
-				<div className="col-md-4 statistics-item">
-					<div className="statistics-value">
-						<div className="statistics-value-highlight"><div className="text-stat">No compromises</div></div>
-						<strong className="statistics-subtext">on your privacy</strong>
 					</div>
 				</div>
 			</div>
