@@ -147,7 +147,7 @@ const MyPage = () => {
 							</div>
 							<div className='row pad1'>
 								<IntroCard isVisible={DataStore.getValue(['widget', 'MyPage', 'IntroCardVisible'])} />
-								<div onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
+								<div className='top-pad3' onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
 									<LoginLink className='btn btn-lg btn-default btn-gl sub-header' onClick={() => LoginWidget.changeVerb('register')} verb='Join us' />			
 								</div>
 							</div>
@@ -155,7 +155,7 @@ const MyPage = () => {
 					)
 			}
 
-			<div title="Our Achievements Together" className='StatisticsCard MiniCard background-white black container-fluid top-pad3'>
+			<div title="Our Achievements Together" className='StatisticsCard MiniCard container-fluid top-pad3'>
 				<div className='row panel-title panel-heading sub-header pad1'> 
 					Our Achievements Together
 				</div>
@@ -164,7 +164,7 @@ const MyPage = () => {
 				</div>
 			</div>
 
-			<div title="Recent Campaigns" className='boostImpact background-gl-red container-fluid'>
+			<div title="Recent Campaigns" className='boostImpact container-fluid'>
 				<div className='row panel-title panel-heading sub-header pad1'> 
 					Recent Campaigns
 				</div>
@@ -173,7 +173,7 @@ const MyPage = () => {
 				</div>
 			</div>
 
-			<div title="Boost Your Impact" className='boostImpact background-dark-green container-fluid'>
+			<div title="Boost Your Impact" className='boostImpact container-fluid'>
 				<div className='row panel-title panel-heading sub-header pad1'> 
 					Boost Your Impact
 				</div>
@@ -183,7 +183,7 @@ const MyPage = () => {
 				</div>
 			</div>
 
-			<div title="Your Charities" className='background-dark-blue container-fluid'>
+			<div title="Your Charities" className='container-fluid'>
 				<div className='row panel-title panel-heading sub-header pad1'> 
 					Your Charities
 				</div>
@@ -192,7 +192,7 @@ const MyPage = () => {
 				</div>
 			</div>
 
-			<div title="Your Digital Mirror" className='background-gl-red container-fluid'>
+			<div title="Your Digital Mirror" className='container-fluid'>
 				<div className='row panel-title panel-heading sub-header pad1'> 
 					Digital Mirror
 				</div>
@@ -202,7 +202,7 @@ const MyPage = () => {
 				</div>
 			</div>
 
-			<div title="Consent Controls" className="consentControls background-dark-green container-fluid">
+			<div title="Consent Controls" className="consentControls container-fluid">
 				<div className='row panel-title panel-heading sub-header pad1'> 
 					Consent Controls
 				</div>
@@ -215,14 +215,14 @@ const MyPage = () => {
 				</div>
 			</div>
 
-			<div title='Linked Profiles' className="linkedProfiles background-dark-blue container-fluid">
+			{/* <div title='Linked Profiles' className="linkedProfiles container-fluid">
 				<div className='row panel-title panel-heading sub-header pad1'> 
 					Linked Profiles
 				</div>
 				<div className='row pad1'> 
 					<LinkedProfilesCard xids={xids} />
 				</div>
-			</div>
+			</div> */}
 
 			<div title="Get In Touch" className='container-fluid'>
 				<div className='row panel-title panel-heading sub-header pad1'> 
@@ -311,9 +311,6 @@ const StatisticsCardMini = () => {
 
 	return (<section className="statistics statistics-what text-center">
 		<div className="statistics-content container-fluid">
-			<div className="row">
-				<h2 className="sub-header">Thousands raised for charity each month </h2>
-			</div>
 			<div className='row bottom-pad1'>
 				<div className="col-md-6 statistics-item">
 					<div className="statistics-value">
@@ -369,8 +366,6 @@ const StatisticsCardMini = () => {
 					<div className='row bottom-pad1'>
 						<div className='flex-column flex-centre'>
 							<RoundLogo alt='centre-point' className='col-md-6' url='/img/save-the-children.png' />
-							<span className='sub-header'> FOOD FOR ONE YEAR </span>
-							<span> for 80 families in poverty in the UK </span>
 							<span className='sub-header'> 180 VACCINATIONS </span>
 							<span> to protect children against measles </span>
 						</div>
@@ -382,14 +377,12 @@ const StatisticsCardMini = () => {
 							<RoundLogo alt='centre-point' className='col-md-6' url='/img/cocoa-plan-logo-scaled.png' />
 							<span className='sub-header'> 318 SCHOOL KITS </span>
 							<span> including stantionary and exercise books </span>
-							<span className='sub-header'> 183 SOLAR CHARGERS </span>
-							<span> in community centres </span>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div className='row'>
-				As well as 800 workshops for kids at the Sheffield Children's Hospital, 11,500 text reminders to check for breast cancer from Coppafeel, 135 one-to-one mentoring sessions with the Prince's Trust, 72 cervical stitch surgeries from Tommy's, 1,100 support sessions from Ditch The Label, 23 vaccinations for stray cats and much more.
+				As well as 800 workshops for kids at the Sheffield Children's Hospital, 11,500 text reminders to check for breast cancer from Coppafeel, 135 one-to-one mentoring sessions with the Prince's Trust and much more.
 			</div>
 		</div>
 	</section>);
