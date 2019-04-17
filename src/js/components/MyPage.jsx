@@ -11,7 +11,6 @@ import printer from '../base/utils/printer';
 import Profiler, { getProfile } from '../base/Profiler';
 import Person from '../base/data/Person';
 import Misc from '../base/components/Misc';
-import { Card } from '../base/components/CardAccordion';
 import LoginWidget, { LoginLink } from '../base/components/LoginWidget';
 import DigitalMirrorCard from './DigitalMirrorCard';
 import Footer from './Footer';
@@ -21,7 +20,7 @@ import ConsentWidget from './ConsentWidget';
 import DonationCard from './DonationCard';
 import C from '../C';
 import { assMatch } from 'sjtest';
-import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
+import {withLogsIfVisible, withDoesIfVisible} from '../base/components/HigherOrderComponents';
 import NavBar from './NavBar';
 import OnboardingCardMini from './OnboardingCardMini';
 import RecentCampaignsCard from './RecentCampaignsCard';
@@ -96,7 +95,7 @@ const MyPage = () => {
 	// HACK DataLog query string: "user:trkid1@trk OR user:trkid2@trk OR ..."
 	const allIds = xids.map(trkid => 'user:' + trkid).join(' OR ');
 
-	ServerIO.mixPanelTrack('Page rendered', {referrer: 'document.referrer'});
+	ServerIO.mixPanelTrack({mixPanelTag: 'Page rendered', data:{referrer: 'document.referrer'}});
 
 	// Attempt to find ad most recently watched by the user
 	// Go through all @trk ids.
@@ -127,40 +126,10 @@ const MyPage = () => {
 		<div className="page MyPage">
 			<div title="Welcome Card" className='StatisticsCard MiniCard background-gl-red vh-100'>
 				<NavBar />
-				<IntroCard />
+				<TitleCard />
 			</div>
 
-			<div title='Intro' className='container-fluid background-white'>
-				<div className='sub-header'>
-					Get involed
-				</div>
-				<div className='row gl-red pad1'>
-					<div className='col-md-3 flex-vertical-align intro-item'>
-						<i className='fa fa-pencil fa-4x margin-auto' />
-						<div className='margin-auto intro-item-text'> 
-							Sign Up 
-						</div>
-					</div>
-					<div className='col-md-3 flex-vertical-align intro-item'>
-						<i className='fa fa-check-circle fa-4x margin-auto' />
-						<div className='margin-auto intro-item-text'> 
-							Set your data preferences 
-						</div>
-					</div>
-					<div className='col-md-3 flex-vertical-align intro-item'>
-						<i className='fa fa-mouse-pointer fa-4x margin-auto' />
-						<div className='margin-auto intro-item-text'> 
-							Browse online as normal 
-						</div>
-					</div>
-					<div className='col-md-3 flex-vertical-align intro-item'>
-						<i className='fa fa-envelope fa-4x margin-auto' />
-						<div className='margin-auto intro-item-text'> 
-							Learn how much you and other Good-Loopers have raised for charity each month! 
-						</div>
-					</div>
-				</div>
-			</div>
+			<IntroCard isVisible={DataStore.getValue(['widget', 'MyPage', 'IntroCardVisible'])} />
 
 			<div title="Our Achievements Together" className='StatisticsCard MiniCard background-dark-green container-fluid'>
 				<div className='row panel-title panel-heading sub-header pad1'> 
@@ -256,7 +225,7 @@ const MyPage = () => {
 }; // ./MyPage
 
 // explain good-loop and join CTA
-const IntroCard = () => (
+const TitleCard = () => (
 	<div className="WelcomeCard container-fluid flex-vertical-align">
 		<div className="row header">
 			<div className="col header-text post-login">
@@ -281,6 +250,49 @@ const IntroCard = () => (
 		</div>
 	</div>
 );
+
+/**
+ * 
+ * @param {isVisible} Icons will fade in to view the first time that this card becomes completely visible on the user's screen  
+ */
+let IntroCard = ({isVisible, doesIfVisibleRef}) => { 
+	const visibleClass = isVisible ? ' fade-in ' : '';
+
+	return (
+		<div title='Intro' className='container-fluid background-white' ref={doesIfVisibleRef}>
+			<div className='sub-header'>
+				Get involed
+			</div>
+			<div className='row gl-red pad1'>
+				<div className={'col-md-3 flex-vertical-align intro-item' + visibleClass}>
+					<i className='fa fa-pencil fa-4x margin-auto' />
+					<div className='margin-auto intro-item-text'> 
+						Sign Up 
+					</div>
+				</div>
+				<div className={'col-md-3 flex-vertical-align intro-item' + visibleClass}>
+					<i className='fa fa-check-circle fa-4x margin-auto' />
+					<div className='margin-auto intro-item-text'> 
+						Set your data preferences 
+					</div>
+				</div>
+				<div className={'col-md-3 flex-vertical-align intro-item' + visibleClass}>
+					<i className='fa fa-mouse-pointer fa-4x margin-auto' />
+					<div className='margin-auto intro-item-text'> 
+						Browse online as normal 
+					</div>
+				</div>
+				<div className={'col-md-3 flex-vertical-align intro-item' + visibleClass}>
+					<i className='fa fa-envelope fa-4x margin-auto' />
+					<div className='margin-auto intro-item-text'> 
+						Learn how much you and other Good-Loopers have raised for charity each month! 
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+};
+IntroCard = withDoesIfVisible(IntroCard, () => DataStore.setValue(['widget', 'MyPage', 'IntroCardVisible'], true));
 
 const StatisticsCardMini = () => { 
 	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
@@ -382,10 +394,14 @@ const StatisticsCardMini = () => {
 	</section>);
 };
 
+const FadingIcon = (Icon) => {
+	return <Icon />;
+};
+
 // Two-liner as withLogsIfVisible latches on to Component.displayName or Component.name in order to generate sensible-looking event tag in MixPanel
 // Obviously will not work quite right if we were to use an anonymous function
-let ContactCard = ({logsIfVisibleRef}) => (
-	<div ref={logsIfVisibleRef}>
+let ContactCard = ({doesIfVisibleRef}) => (
+	<div ref={doesIfVisibleRef}>
 		<div>
 			<p>Let us know what you think of this web-app, and your ideas for improving it.</p>
 			<p>Are you interested in hosting Ads For Good on your blog or website?</p>
