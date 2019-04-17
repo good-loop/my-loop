@@ -228,7 +228,7 @@ const CampaignPage = () => {
 	// Specific adid gets priority over advertiser id
 	const id = adid || vertiserid;
 
-	ServerIO.mixPanelTrack('Campaign page render', {adid, vertiserid});	
+	ServerIO.mixPanelTrack({mixPanelTag: 'Campaign page render', data: {adid, vertiserid}});	
 
 	if ( !adid && !vertiserid ) {
 		// No ID -- show a list

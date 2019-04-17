@@ -49,7 +49,7 @@ const ConsentWidget = ({xids}) => {
 	// handle an edit
 	const togglePerm = ({prop, value, ...x}) => {
 		// Will be sent once per session
-		ServerIO.mixPanelTrack('Consent control clicked', {});
+		ServerIO.mixPanelTrack({mixPanelTag: 'Consent control clicked'});
 
 		let dataspace = ServerIO.dataspace; // ??
 		// full perms set

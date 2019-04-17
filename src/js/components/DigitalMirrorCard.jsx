@@ -23,7 +23,7 @@ import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
  * 
  * @param {*} logsIfVisibleRef Pass this to component, MixPanel tracking event will be sent out if the element is ever completely visible on user's screen
  */
-const DigitalMirrorCard = ({xids, logsIfVisibleRef}) => {
+const DigitalMirrorCard = ({xids, doesIfVisibleRef}) => {
 	if(!xids) return null;
 	assMatch(xids, 'String[]');
 
@@ -68,7 +68,7 @@ const DigitalMirrorCard = ({xids, logsIfVisibleRef}) => {
 	// TODO if someone attaches two social medias -- we want to show one profile, which is a merge of them representing our best guess.
 
 	return (
-		<div ref={logsIfVisibleRef}>
+		<div ref={doesIfVisibleRef}>
 			{
 				socialXIds && socialXIds.length > 0
 					? socialXIds.map( xidObj => <ConsentControls xidObj={xidObj} key={xidObj.xid} />)
@@ -220,7 +220,7 @@ const ConsentControls = ({xidObj}) => {
 	const editModeEnabled = DataStore.getValue(['widget', 'DigitalMirror', 'editModeEnabled']);
 	const toggleEditMode = () => {
 		DataStore.setValue(['widget', 'DigitalMirror', 'editModeEnabled'], !editModeEnabled);
-		ServerIO.mixPanelTrack('Twitter data edit clicked', {});
+		ServerIO.mixPanelTrack({mixPanelTag:'Twitter data edit clicked'});
 	};
 
 	return (
