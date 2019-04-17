@@ -58,8 +58,16 @@ html, body {
 	background-color: #008C59;
 }
 
+.background-white {
+	background-color: #fff;
+}
+
 .margin-auto {
 	margin: auto;
+}
+
+.vh-100 {
+	height: 100vh;
 }
 
 // TODO (03/04/19): get rid of this. Added quickly so we can release. Bootstrap makes links blue, looks awful with green background
@@ -177,7 +185,7 @@ a {
 .triangle-base {
 	position: absolute;
 	bottom: 0;
-	height: 50%;
+	height: 66%;
 	width: 50%;
 }
 
@@ -250,6 +258,11 @@ a {
 @media only screen and (max-width: 578px) {
 	html, body {
 		font-size: 14px;
+	}
+
+	// Triangles take up too much space on mobile. Looks a bit silly
+	.white-triangle-left, .white-triangle-right {
+		height: 50%;
 	}
 
 	.circle img{

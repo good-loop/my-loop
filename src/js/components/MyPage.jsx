@@ -125,15 +125,12 @@ const MyPage = () => {
 	return (
 		// TODO: refactor out the elements are the same as campaign page
 		<div className="page MyPage">
-			<Card defaultOpen className="fullCard" style={{padding: '0px'}}>
+			<div title="Welcome Card" className='StatisticsCard MiniCard background-gl-red vh-100'>
 				<NavBar />
-			</Card>
-
-			<div title="Welcome Card" className='StatisticsCard MiniCard background-gl-red'>
 				<IntroCard />
 			</div>
 
-			<div title='Intro' className='container-fluid'>
+			<div title='Intro' className='container-fluid background-white'>
 				<div className='row'>
 					<div className='col-md-3'>
 						<i className='fa fa-pencil fa-4x' />
@@ -245,7 +242,7 @@ const MyPage = () => {
 
 // explain good-loop and join CTA
 const IntroCard = () => (
-	<div className="WelcomeCard container-fluid pad1 flex-vertical-align">
+	<div className="WelcomeCard container-fluid flex-vertical-align">
 		<div className="row header">
 			<div className="col header-text post-login">
 				<div className="title header"> 
