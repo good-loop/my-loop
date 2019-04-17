@@ -131,18 +131,33 @@ const MyPage = () => {
 			</div>
 
 			<div title='Intro' className='container-fluid background-white'>
+				<div className='sub-header'>
+					Get involed
+				</div>
 				<div className='row gl-red pad1'>
-					<div className='col-md-3'>
-						<i className='fa fa-pencil fa-4x' />
+					<div className='col-md-3 flex-vertical-align intro-item'>
+						<i className='fa fa-pencil fa-4x margin-auto' />
+						<div className='margin-auto intro-item-text'> 
+							Sign Up 
+						</div>
 					</div>
-					<div className='col-md-3'>
-						<i className='fa fa-check-circle fa-4x' />
+					<div className='col-md-3 flex-vertical-align intro-item'>
+						<i className='fa fa-check-circle fa-4x margin-auto' />
+						<div className='margin-auto intro-item-text'> 
+							Set your data preferences 
+						</div>
 					</div>
-					<div className='col-md-3'>
-						<i className='fa fa-mouse-pointer fa-4x' />
+					<div className='col-md-3 flex-vertical-align intro-item'>
+						<i className='fa fa-mouse-pointer fa-4x margin-auto' />
+						<div className='margin-auto intro-item-text'> 
+							Browse online as normal 
+						</div>
 					</div>
-					<div className='col-md-3'>
-						<i className='fa fa-envelope fa-4x' />
+					<div className='col-md-3 flex-vertical-align intro-item'>
+						<i className='fa fa-envelope fa-4x margin-auto' />
+						<div className='margin-auto intro-item-text'> 
+							Learn how much you and other Good-Loopers have raised for charity each month! 
+						</div>
 					</div>
 				</div>
 			</div>
