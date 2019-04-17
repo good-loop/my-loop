@@ -24,7 +24,7 @@ const NavBar = ({brandLogo}) => {
 	const colLength = brandLogo ? 4 : 6;
 
 	return (
-		<div className="nav-bar container-fluid">
+		<div className="nav-bar container-fluid white">
 			<div className='row flex-row'>
 				<div className={`col-md-${colLength} col-xs-${colLength} flex-vertical-align flex-align-items-start`}>
 					<div className="header-logos">

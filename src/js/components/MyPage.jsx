@@ -129,9 +129,33 @@ const MyPage = () => {
 				<TitleCard />
 			</div>
 
-			<IntroCard isVisible={DataStore.getValue(['widget', 'MyPage', 'IntroCardVisible'])} />
+			<div title="How Good-Loop Ads Work" className='StatisticsCard MiniCard container-fluid top-pad3'>
+				<div className='row panel-title panel-heading sub-header pad1'> 
+					How Good-Loop works
+				</div>
+				<div className='row pad1'>
+					<OnboardingCardMini allIds={allIds} />
+				</div>
+			</div>
 
-			<div title="Our Achievements Together" className='StatisticsCard MiniCard background-dark-green container-fluid'>
+			{
+				Login.isLoggedIn()
+					|| (
+						<div className='container-fluid'>
+							<div className='row panel-title panel-heading sub-header pad1'> 
+								Get Involved
+							</div>
+							<div className='row pad1'>
+								<IntroCard isVisible={DataStore.getValue(['widget', 'MyPage', 'IntroCardVisible'])} />
+								<div onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
+									<LoginLink className='btn btn-lg btn-default btn-gl sub-header' onClick={() => LoginWidget.changeVerb('register')} verb='Join us' />			
+								</div>
+							</div>
+						</div>						
+					)
+			}
+
+			<div title="Our Achievements Together" className='StatisticsCard MiniCard background-white black container-fluid top-pad3'>
 				<div className='row panel-title panel-heading sub-header pad1'> 
 					Our Achievements Together
 				</div>
@@ -139,16 +163,6 @@ const MyPage = () => {
 					<StatisticsCardMini allIds={allIds} />
 				</div>
 			</div>
-
-			<div title="How Good-Loop Ads Work" className='StatisticsCard MiniCard background-dark-blue container-fluid'>
-				<div className='row panel-title panel-heading sub-header pad1'> 
-					How Good-Loop Ads Work
-				</div>
-				<div className='row pad1'>
-					<OnboardingCardMini allIds={allIds} />
-				</div>
-			</div>
-
 
 			<div title="Recent Campaigns" className='boostImpact background-gl-red container-fluid'>
 				<div className='row panel-title panel-heading sub-header pad1'> 
@@ -229,19 +243,11 @@ const TitleCard = () => (
 	<div className="WelcomeCard container-fluid flex-vertical-align">
 		<div className="row header">
 			<div className="col header-text post-login">
-				<div className="title header"> 
+				<div className="title header white"> 
 					<div className='bottom-pad1'>Good-Loop ads</div> 
 					<div className='bottom-pad1'>reward the charity of your choice</div> 
 					<div> every time you watch </div>
 				</div>
-				{
-					Login.isLoggedIn()
-					|| (
-						<div onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
-							<LoginLink className='btn btn-lg btn-default btn-gl sub-header' onClick={() => LoginWidget.changeVerb('register')} verb='Join us' />			
-						</div>
-					)
-				}
 			</div>
 		</div>
 		<div className='row triangle-container'>
@@ -260,31 +266,28 @@ let IntroCard = ({isVisible, doesIfVisibleRef}) => {
 
 	return (
 		<div title='Intro' className='container-fluid background-white' ref={doesIfVisibleRef}>
-			<div className='sub-header'>
-				Get involed
-			</div>
-			<div className='row gl-red pad1'>
-				<div className={'col-md-3 flex-vertical-align intro-item' + visibleClass}>
-					<i className='fa fa-pencil fa-4x margin-auto' />
-					<div className='margin-auto intro-item-text'> 
+			<div className='row pad1'>
+				<div className={'col-md-4 flex-vertical-align intro-item' + visibleClass}>
+					<i className='fa fa-pencil fa-4x margin-auto highlight' />
+					<div className='margin-auto intro-item-text text-left'> 
 						Sign Up 
 					</div>
 				</div>
-				<div className={'col-md-3 flex-vertical-align intro-item' + visibleClass}>
+				{/* <div className={'col-md-3 flex-vertical-align intro-item' + visibleClass}>
 					<i className='fa fa-check-circle fa-4x margin-auto' />
 					<div className='margin-auto intro-item-text'> 
 						Set your data preferences 
 					</div>
-				</div>
-				<div className={'col-md-3 flex-vertical-align intro-item' + visibleClass}>
-					<i className='fa fa-mouse-pointer fa-4x margin-auto' />
-					<div className='margin-auto intro-item-text'> 
+				</div> */}
+				<div className={'col-md-4 flex-vertical-align intro-item' + visibleClass}>
+					<i className='fa fa-mouse-pointer fa-4x margin-auto highlight' />
+					<div className='margin-auto intro-item-text text-left'> 
 						Browse online as normal 
 					</div>
 				</div>
-				<div className={'col-md-3 flex-vertical-align intro-item' + visibleClass}>
-					<i className='fa fa-envelope fa-4x margin-auto' />
-					<div className='margin-auto intro-item-text'> 
+				<div className={'col-md-4 flex-vertical-align intro-item' + visibleClass}>
+					<i className='fa fa-envelope fa-4x margin-auto highlight' />
+					<div className='margin-auto intro-item-text text-left'> 
 						Learn how much you and other Good-Loopers have raised for charity each month! 
 					</div>
 				</div>
@@ -336,7 +339,7 @@ const StatisticsCardMini = () => {
 				THAT'S ENOUGH TO FUND... 
 			</div>
 			<div className='row bottom-pad1'>
-				<div className='col-lg-4 col-md-6'>
+				<div className='col-md-6'>
 					<div className='row bottom-pad1'>
 						<div className='flex-column flex-centre'>
 							<RoundLogo alt='centre-point' className='col-md-6' url='/img/centre-point.png' />
@@ -348,8 +351,7 @@ const StatisticsCardMini = () => {
 						</div>
 					</div>
 				</div>
-				<div className='col-lg-4' />
-				<div className='col-lg-4 col-md-6'>
+				<div className='col-md-6'>
 					<div className='row bottom-pad1'>
 						<div className='flex-column flex-centre'>
 							<RoundLogo alt='centre-point' className='col-md-6' url='/img/mind-logo.png' />
@@ -363,7 +365,7 @@ const StatisticsCardMini = () => {
 				</div>
 			</div>
 			<div className='row bottom-pad1'>
-				<div className='col-lg-4 col-md-6'>
+				<div className='col-md-6'>
 					<div className='row bottom-pad1'>
 						<div className='flex-column flex-centre'>
 							<RoundLogo alt='centre-point' className='col-md-6' url='/img/save-the-children.png' />
@@ -374,8 +376,7 @@ const StatisticsCardMini = () => {
 						</div>
 					</div>
 				</div>
-				<div className='col-lg-4' />
-				<div className='col-lg-4 col-md-6'>
+				<div className='col-md-6'>
 					<div className='row bottom-pad1'>
 						<div className='flex-column flex-centre'>
 							<RoundLogo alt='centre-point' className='col-md-6' url='/img/cocoa-plan-logo-scaled.png' />

@@ -10,6 +10,7 @@ html, body {
 
 .header {
 	.header-font();
+	color: @gl-red;
 	font-size: 2.618rem;
 } 
 
@@ -26,8 +27,16 @@ html, body {
 	padding-top: 1rem;
 }
 
+.top-pad3 {
+	padding-top: 3rem;
+}
+
 .bottom-pad1 {
 	padding-bottom: 1rem;
+}
+
+.bottom-pad3 {
+	padding-bottom: 3rem;
 }
 
 // Base style for intent links on MyLoop
@@ -79,6 +88,28 @@ html, body {
 .gl-red {
 	color: @gl-red;
 }
+
+.black {
+	color: #000;
+}
+
+.white {
+	color: #fff;
+}
+
+// Little red strip used for decoration
+.highlight {
+	&:after {
+		display: block;
+		content: "";
+		margin: 15px;
+		width: 102px;
+		height: 5px;
+		// Darken to look more reasonable with dark green background
+		background: @gl-red;
+	}
+}
+
 // Dark BootStrap link colour looks terrible with MyLoop's coloured backgrounds
 a {
 	.white-link();
@@ -94,9 +125,12 @@ a {
 }
 
 .intro-item {
-	height: 14rem;
+	height: 10rem;
+}
+
+.faded {
 	opacity: 0;
-	transition: 1.5s opacity;
+	transition: 1s opacity;
 }
 
 .fade-in {
@@ -105,7 +139,7 @@ a {
 
 .intro-item-text {
 	// Want first line of all blocks to on the same eye-level
-	height: 5rem;
+	height: 3rem;
 	color: #000;
 }
 
