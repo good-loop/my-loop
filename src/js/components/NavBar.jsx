@@ -4,7 +4,7 @@ import OptimisedImage from './Image';
 import { LoginLink } from '../base/components/LoginWidget';
 
 const NavBar = ({brandLogo}) => {
-	let glLogo = 'https://as.good-loop.com/uploads/marvinirinapreda.meemail/logo-white2-1935363258088848027.png';
+	let glLogo = '/img/GoodLoopLogos_Good-Loop_AltLogo_White_Resized.png';
 	const loginInfo = Login.isLoggedIn() ? (
 		<div className="pull-right logged-in">
 			{/* <p>Hi { Login.getUser().name || Login.getUser().xid }</p>

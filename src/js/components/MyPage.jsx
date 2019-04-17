@@ -131,7 +131,7 @@ const MyPage = () => {
 			</div>
 
 			<div title='Intro' className='container-fluid background-white'>
-				<div className='row'>
+				<div className='row gl-red pad1'>
 					<div className='col-md-3'>
 						<i className='fa fa-pencil fa-4x' />
 					</div>
