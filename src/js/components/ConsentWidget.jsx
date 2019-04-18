@@ -31,7 +31,8 @@ const debounceForSameInput = (key, fn, ...other) => {
 /**
  */
 const ConsentWidget = ({xids}) => {
-	assert(xids.length, "ConsentWidget.jsx");
+	if( !xids.length ) return null;
+
 	let path = ['widget', 'ConsentWidget', 'perms'];	
 	let peeps = getProfilesNow(xids);
 	// get and combine the consents

@@ -81,7 +81,7 @@ const ShareAnAd = ({ adHistory, doesIfVisibleRef, xids=[] }) => {
  * In it's current form, this feature is not well presented, and I think that it should be hidden for the moment 
 */
 const SharedAdStats = ({twitterXId}) => {
-	const twitterSocialShareObjects = twitterXId && DataStore.getValue(['data', 'Person', twitterXId, 'socialShareIds']);
+	const twitterSocialShareObjects = twitterXId && DataStore.getValue(['data', 'Person', 'xids', twitterXId, 'socialShareIds']);
 	if( !twitterSocialShareObjects ) {
 		return (
 			<div className='top-pad1'>

@@ -14,6 +14,7 @@ import BS from '../base/components/BS3';
 // Templates
 import MessageBar from '../base/components/MessageBar';
 import LoginWidget from '../base/components/LoginWidget';
+import NavBar from './NavBar';
 
 // Pages
 import MyPage from './MyPage';
@@ -21,6 +22,7 @@ import CampaignPage from './CampaignPage';
 import {BasicAccountPage} from '../base/components/AccountPageWidgets';
 import E404Page from '../base/components/E404Page';
 import TestPage from '../base/components/TestPage';
+import DataManagementPage from './DataManagementPage';
 
 // DataStore
 C.setupDataStore();
@@ -28,11 +30,11 @@ C.setupDataStore();
 // Actions
 
 const PAGES = {
-	account: BasicAccountPage,
+	// account: BasicAccountPage,
 	my: MyPage,
 	campaign: CampaignPage,
 	test: TestPage,
-
+	account: DataManagementPage
 };
 
 const DEFAULT_PAGE = 'my';
@@ -111,7 +113,7 @@ class MainDiv extends Component {
 		return (
 			<div>
 				<div>
-					<MessageBar />
+					<MessageBar /> 
 					<div className='page' id={page}>						
 						<Page path={path} />
 					</div>

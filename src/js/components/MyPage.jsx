@@ -12,11 +12,8 @@ import Profiler, { getProfile } from '../base/Profiler';
 import Person from '../base/data/Person';
 import Misc from '../base/components/Misc';
 import LoginWidget, { LoginLink } from '../base/components/LoginWidget';
-import DigitalMirrorCard from './DigitalMirrorCard';
 import Footer from './Footer';
 import ShareAnAd from './ShareAnAd';
-import { LoginToSee } from './Bits';
-import ConsentWidget from './ConsentWidget';
 import DonationCard from './DonationCard';
 import C from '../C';
 import { assMatch } from 'sjtest';
@@ -24,14 +21,12 @@ import {withLogsIfVisible, withDoesIfVisible} from '../base/components/HigherOrd
 import NavBar from './NavBar';
 import OnboardingCardMini from './OnboardingCardMini';
 import RecentCampaignsCard from './RecentCampaignsCard';
-import SocialMediaCard from './SocialMediaCard';
-import { RoundLogo } from './Image';
 
 const pagePath = ['widget', 'MyPage'];
 
 window.DEBUG = false;
 
-const fetcher = xid => DataStore.fetch(['data', 'Person', xid], () => {
+const fetcher = xid => DataStore.fetch(['data', 'Person', 'xids', xid], () => {
 	assMatch(xid, String, "MyPage.jsx fetcher: xid is not a string "+xid);
 	// Call analyzedata servlet to pull in user data from Twitter
 	// Putting this here means that the DigitalMirror will refresh itself with the data
@@ -84,9 +79,6 @@ const getAllXIds2 = (all, agendaXIds) => {
 	});
 };
 
-// for debug
-window.getAllXIds = getAllXIds;
-
 // TODO document trkids
 const MyPage = () => {
 	let xids = getAllXIds();
@@ -136,14 +128,15 @@ const MyPage = () => {
 				<div className='row pad1'>
 					<OnboardingCardMini allIds={allIds} />
 				</div>
-				<div className='row background-gl-red white sub-header pad1'>
-					Your data has value! Registering increases the value of your donations
-				</div>
+
 				<div className='row pad1'>
 					{
 						Login.isLoggedIn()
 						|| (
 							<div className='container-fluid'>
+								<div className='row background-gl-red white sub-header pad1'>
+									Your data has value! Registering increases the value of your donations
+								</div>
 								<div className='row panel-title panel-heading sub-header pad1'> 
 									Get Involved
 								</div>
@@ -201,38 +194,6 @@ const MyPage = () => {
 					<DonationCard xids={xids} />
 				</div>
 			</div>
-
-			<div title="Your Digital Mirror" className='container-fluid'>
-				<div className='row panel-title panel-heading sub-header pad1'> 
-					Digital Mirror
-				</div>
-				<div className='row pad1'> 
-					<DigitalMirrorCard xids={xids} className="digitalMirror" mixPanelTag='DigitalMirror' />
-					<SocialMediaCard allIds={xids} className="socialConnect" />	
-				</div>
-			</div>
-
-			<div title="Consent Controls" className="consentControls container-fluid">
-				<div className='row panel-title panel-heading sub-header pad1'> 
-					Consent Controls
-				</div>
-				<div className='row pad1'> 
-					{Login.isLoggedIn() ? (
-						<ConsentWidget xids={xids} />
-					) : (
-						<LoginToSee />
-					)}
-				</div>
-			</div>
-
-			{/* <div title='Linked Profiles' className="linkedProfiles container-fluid">
-				<div className='row panel-title panel-heading sub-header pad1'> 
-					Linked Profiles
-				</div>
-				<div className='row pad1'> 
-					<LinkedProfilesCard xids={xids} />
-				</div>
-			</div> */}
 
 			<div title="Get In Touch" className='container-fluid'>
 				<div className='row panel-title panel-heading sub-header pad1'> 
@@ -430,29 +391,6 @@ ContactCard = withLogsIfVisible(ContactCard);
  * This is mostly for our debugging
  * @param {String[]} xids 
  */
-const LinkedProfilesCard = ({xids}) => {
-	if ( ! xids) return null;
-	let trackers = xids.filter(xid => XId.service(xid) === 'trk');
-	let nonTrackers = xids.filter(xid => XId.service(xid) !== 'trk');
-	let authd = Login.aliases? Login.aliases.filter( u => u.jwt).map(u => u.xid) : [];
-	
-	let peeps = xids.map(xid => DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Person, xid));
-	peeps = peeps.filter(p => !!p);
 
-	return (
-		<div>
-			<p>We all have multiple online identities -- e.g. emails, social media, and with retail companies. 
-			Here are the IDs Good-Loop recognises as you:</p>
-			<div className='word-wrap'>
-				{ nonTrackers.map(xid => <div key={xid}>{XId.service(xid)+': '+XId.id(xid)}</div>) }
-				Good-Loop cookies (random IDs, used by us to record your donations and avoid repeating ads): {trackers.map(xid => XId.id(xid)).join(", ")}<br/>
-				Currently logged into Good-Loop via: {authd.map(xid => XId.service(xid)+': '+XId.id(xid)).join(", ")}<br/>
-				Links: {peeps.map(peep => 
-					<div key={Person.id(peep)}>{Person.id(peep)} -> {peep.links && peep.links.length? peep.links.map(link => link.v).join(", ") : 'no links'}</div>
-				)}
-			</div>
-		</div>
-	);
-};
 
 export default MyPage;
