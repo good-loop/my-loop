@@ -60,7 +60,11 @@ const ShareAnAd = ({ adHistory, doesIfVisibleRef, xids=[] }) => {
 							style={{backgroundColor: 'none', border: '0.25rem solid'}}
 							text='I just gave to charity by watching a GoodLoop ad'
 							url={`https://as.good-loop.com/?gl.vert=${vert}&gl.socialShareId=${socialShareId}`}
-						/>
+						>
+							<div className='gl-red intent-link intent-link-border'>
+								<i className='fa fa-2x fa-twitter' />
+							</div>
+						</IntentLink>
 						{/* <SharedAdStats twitterXId={twitterXId} /> */}
 					</div>
 				)
