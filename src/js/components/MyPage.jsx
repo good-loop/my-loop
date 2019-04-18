@@ -136,24 +136,25 @@ const MyPage = () => {
 				<div className='row pad1'>
 					<OnboardingCardMini allIds={allIds} />
 				</div>
-			</div>
-
-			{
-				Login.isLoggedIn()
-					|| (
-						<div className='container-fluid'>
-							<div className='row panel-title panel-heading sub-header pad1'> 
-								Get Involved
-							</div>
-							<div className='row pad1'>
-								<IntroCard isVisible={DataStore.getValue(['widget', 'MyPage', 'IntroCardVisible'])} />
-								<div className='top-pad3' onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
-									<LoginLink className='btn btn-lg btn-default btn-gl sub-header' onClick={() => LoginWidget.changeVerb('register')} verb='Join us' />			
+				<div className='row pad1'>
+					{
+						Login.isLoggedIn()
+						|| (
+							<div className='container-fluid'>
+								<div className='row panel-title panel-heading sub-header pad1'> 
+									Get Involved
 								</div>
-							</div>
-						</div>						
-					)
-			}
+								<div className='row pad1'>
+									<IntroCard isVisible={DataStore.getValue(['widget', 'MyPage', 'IntroCardVisible'])} />
+									<div className='top-pad3' onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
+										<LoginLink className='btn btn-lg btn-default btn-gl sub-header' onClick={() => LoginWidget.changeVerb('register')} verb='Join us' />			
+									</div>
+								</div>
+							</div>						
+						)
+					}
+				</div>
+			</div>
 
 			<div title="Our Achievements Together" className='StatisticsCard MiniCard container-fluid top-pad3'>
 				<div className='row panel-title panel-heading sub-header pad1'> 
@@ -179,7 +180,13 @@ const MyPage = () => {
 				</div>
 				<div className='row pad1'>
 					<SocialMediaCard allIds={xids} className="socialConnect" />
-					<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} mixPanelTag='ShareAnAd' xids={xids} />
+				</div>
+				<div className='row'>
+					<div className='col-md-3' />
+					<div className='col-md-6 col-xs-12'>
+						<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} mixPanelTag='ShareAnAd' xids={xids} />
+					</div>
+					<div className='col-md-3' />
 				</div>
 			</div>
 
@@ -269,7 +276,7 @@ let IntroCard = ({isVisible, doesIfVisibleRef}) => {
 			<div className='row pad1'>
 				<div className={'col-md-4 flex-vertical-align intro-item' + visibleClass}>
 					<i className='fa fa-pencil fa-4x margin-auto highlight' />
-					<div className='margin-auto intro-item-text text-left'> 
+					<div className='margin-auto intro-item-text text-justify'> 
 						Sign Up 
 					</div>
 				</div>
@@ -281,13 +288,13 @@ let IntroCard = ({isVisible, doesIfVisibleRef}) => {
 				</div> */}
 				<div className={'col-md-4 flex-vertical-align intro-item' + visibleClass}>
 					<i className='fa fa-mouse-pointer fa-4x margin-auto highlight' />
-					<div className='margin-auto intro-item-text text-left'> 
+					<div className='margin-auto intro-item-text text-justify'> 
 						Browse online as normal 
 					</div>
 				</div>
 				<div className={'col-md-4 flex-vertical-align intro-item' + visibleClass}>
 					<i className='fa fa-envelope fa-4x margin-auto highlight' />
-					<div className='margin-auto intro-item-text text-left'> 
+					<div className='margin-auto intro-item-text text-justify'> 
 						Learn how much you and other Good-Loopers have raised for charity each month! 
 					</div>
 				</div>
@@ -329,21 +336,24 @@ const StatisticsCardMini = () => {
 			</div>
 		</div>
 		<div className='container-fluid'>
-			<div className='row sub-header bottom-pad1'> 
-				IN 2018, GOOD-LOOP'S ETHICAL ADVERTISING RAISED OVER <br /> 
-				<span className='header'> £200,000 </span> <br /> 
-				FOR CHARITABLE CAUSES <br /> 
-				THAT'S ENOUGH TO FUND... 
+			<div className='row bottom-pad1'> 
+				<span className='sub-header'> 
+					IN 2018, GOOD-LOOP'S ETHICAL ADVERTISING RAISED OVER <br /> 
+					<span className='header'> £200,000 </span> <br /> 
+				</span> 
+				<br /> 
+				That's enough to fund... 
 			</div>
-			<div className='row bottom-pad1'>
+			<div className='row'>
 				<div className='col-md-6'>
 					<div className='row bottom-pad1'>
 						<div className='flex-column flex-centre'>
-							<RoundLogo alt='centre-point' className='col-md-6' url='/img/centre-point.png' />
-							<span className='sub-header'> 888 NIGHTS </span>
-							<span> 
-								of accommodation <br /> 
-								for young homeless people in the UK 
+							<span className='sub-header bottom-padP5'>
+								888 NIGHTS
+							</span>
+							<span className='text-justify'> 
+								of accommodation for young <br /> 
+								homeless people in the UK 
 							</span>
 						</div>
 					</div>
@@ -351,9 +361,10 @@ const StatisticsCardMini = () => {
 				<div className='col-md-6'>
 					<div className='row bottom-pad1'>
 						<div className='flex-column flex-centre'>
-							<RoundLogo alt='centre-point' className='col-md-6' url='/img/mind-logo.png' />
-							<span className='sub-header'> 1000 CALLS </span>
-							<span> 
+							<span className='sub-header bottom-padP5'> 
+								1000 CALLS 
+							</span>
+							<span className='text-justify'> 
 								to the Mind mental health info line <br /> 
 								which offers support and resources 
 							</span>
@@ -365,23 +376,25 @@ const StatisticsCardMini = () => {
 				<div className='col-md-6'>
 					<div className='row bottom-pad1'>
 						<div className='flex-column flex-centre'>
-							<RoundLogo alt='centre-point' className='col-md-6' url='/img/save-the-children.png' />
-							<span className='sub-header'> 180 VACCINATIONS </span>
-							<span> to protect children against measles </span>
+							<span className='sub-header bottom-padP5'> 
+								180 VACCINATIONS 
+							</span>
+							<span className='text-justify'> to protect children against measles </span>
 						</div>
 					</div>
 				</div>
 				<div className='col-md-6'>
 					<div className='row bottom-pad1'>
 						<div className='flex-column flex-centre'>
-							<RoundLogo alt='centre-point' className='col-md-6' url='/img/cocoa-plan-logo-scaled.png' />
-							<span className='sub-header'> 318 SCHOOL KITS </span>
-							<span> including stantionary and exercise books </span>
+							<span className='sub-header bottom-padP5'> 
+								318 SCHOOL KITS
+							</span>
+							<span className='text-justify'> including stantionary and text-books </span>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div className='row'>
+			<div className='row text-justify'>
 				As well as 800 workshops for kids at the Sheffield Children's Hospital, 11,500 text reminders to check for breast cancer from Coppafeel, 135 one-to-one mentoring sessions with the Prince's Trust and much more.
 			</div>
 		</div>
