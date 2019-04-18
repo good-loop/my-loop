@@ -178,9 +178,9 @@ const MyPage = () => {
 				<div className='row panel-title panel-heading sub-header pad1'> 
 					Boost Your Impact
 				</div>
-				<div className='row pad1'>
+				{/* <div className='row pad1'>
 					<SocialMediaCard allIds={xids} className="socialConnect" />
-				</div>
+				</div> */}
 				<div className='row'>
 					<div className='col-md-3' />
 					<div className='col-md-6 col-xs-12'>
