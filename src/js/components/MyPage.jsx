@@ -136,6 +136,9 @@ const MyPage = () => {
 				<div className='row pad1'>
 					<OnboardingCardMini allIds={allIds} />
 				</div>
+				<div className='row background-gl-red white sub-header pad1'>
+					Your data has value! Registering increases the value of your donations
+				</div>
 				<div className='row pad1'>
 					{
 						Login.isLoggedIn()
@@ -146,9 +149,9 @@ const MyPage = () => {
 								</div>
 								<div className='row pad1'>
 									<IntroCard isVisible={DataStore.getValue(['widget', 'MyPage', 'IntroCardVisible'])} />
-									<div className='top-pad3' onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
-										<LoginLink className='btn btn-lg btn-default btn-gl sub-header' onClick={() => LoginWidget.changeVerb('register')} verb='Join us' />			
-									</div>
+								</div>
+								<div className='row' onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
+									<LoginLink className='btn btn-lg btn-default btn-gl sub-header' onClick={() => LoginWidget.changeVerb('register')} verb='Join us' />			
 								</div>
 							</div>						
 						)
@@ -275,9 +278,9 @@ let IntroCard = ({isVisible, doesIfVisibleRef}) => {
 		<div title='Intro' className='container-fluid background-white' ref={doesIfVisibleRef}>
 			<div className='row pad1'>
 				<div className={'col-md-4 flex-vertical-align intro-item' + visibleClass}>
-					<i className='fa fa-pencil fa-4x margin-auto highlight' />
-					<div className='margin-auto intro-item-text text-justify'> 
-						Sign Up 
+					<i className='fa fa-pencil fa-3x margin-auto' />
+					<div className='margin-auto intro-item-text text-left'> 
+						Sign Up. We will not share any of your information with third-parties
 					</div>
 				</div>
 				{/* <div className={'col-md-3 flex-vertical-align intro-item' + visibleClass}>
@@ -287,14 +290,14 @@ let IntroCard = ({isVisible, doesIfVisibleRef}) => {
 					</div>
 				</div> */}
 				<div className={'col-md-4 flex-vertical-align intro-item' + visibleClass}>
-					<i className='fa fa-mouse-pointer fa-4x margin-auto highlight' />
-					<div className='margin-auto intro-item-text text-justify'> 
+					<i className='fa fa-mouse-pointer fa-3x margin-auto' />
+					<div className='margin-auto intro-item-text text-left'> 
 						Browse online as normal 
 					</div>
 				</div>
 				<div className={'col-md-4 flex-vertical-align intro-item' + visibleClass}>
-					<i className='fa fa-envelope fa-4x margin-auto highlight' />
-					<div className='margin-auto intro-item-text text-justify'> 
+					<i className='fa fa-envelope fa-3x margin-auto' />
+					<div className='margin-auto intro-item-text text-left'> 
 						Learn how much you and other Good-Loopers have raised for charity each month! 
 					</div>
 				</div>
@@ -394,8 +397,11 @@ const StatisticsCardMini = () => {
 					</div>
 				</div>
 			</div>
-			<div className='row text-justify'>
-				As well as 800 workshops for kids at the Sheffield Children's Hospital, 11,500 text reminders to check for breast cancer from Coppafeel, 135 one-to-one mentoring sessions with the Prince's Trust and much more.
+			<div className='row text-center'>
+				{/* TODO: Have this point to some sort of record of Good-Loop's achievements */}
+				<a href='/'>
+					And much more...
+				</a>
 			</div>
 		</div>
 	</section>);
