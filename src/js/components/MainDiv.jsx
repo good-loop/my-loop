@@ -122,7 +122,8 @@ class MainDiv extends Component {
 						<Page path={path} />
 					</div>
 				</div>
-				<LoginWidget logo={C.app.service} title={'Welcome to '+C.app.name} services={['twitter', 'facebook']} />
+				<img href='/img/new-logo.png' /> 
+				<LoginWidget logo={<img src='/img/new-logo.png' style={{height: '64px'}} />} title=' ' services={['twitter', 'facebook']} />
 			</div>
 		);
 	} // ./render()
