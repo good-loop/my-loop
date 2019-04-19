@@ -221,7 +221,7 @@ const EmailCTA = () => {
  */
 const CampaignPage = () => {
 	//TODO this is the same mypage, refactor out of here
-	let xids = getAllXIds();
+	let xids = DataStore.getValue(['data', 'Person', 'xids']);
 
 	const { 'gl.vert': adid, 'gl.vertiser': vertiserid } = DataStore.getValue(['location', 'params']) || {};
 
