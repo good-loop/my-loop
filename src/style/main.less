@@ -240,28 +240,20 @@ a {
 	margin-left: auto;
 }
 
-// Want flex to treat this as an element with actual physical dimensions
-// Gives more balanced layout with intro text
-.triangle-container {
-	height: 50%;
-}
-
 .triangle-base {
-	position: absolute;
-	bottom: 0;
-	height: 66%;
+	height: 100%;
 	width: 50%;
 }
 
 .white-triangle-left {
 	.triangle-base();
-	left: 0;
+	float: left;
 	background-image: linear-gradient(to right top, white 0%, white 50%, transparent 50%);
 }
 
 .white-triangle-right {
 	.triangle-base();
-	right: 0;
+	float: right;
 	background-image: linear-gradient(to left top, white 0%, white 50%, transparent 50%);	
 }
 
@@ -322,11 +314,6 @@ a {
 @media only screen and (max-width: 578px) {
 	html, body {
 		font-size: 14px;
-	}
-
-	// Triangles take up too much space on mobile. Looks a bit silly
-	.white-triangle-left, .white-triangle-right {
-		height: 50%;
 	}
 
 	.circle img{

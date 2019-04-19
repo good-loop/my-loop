@@ -64,9 +64,13 @@ const MyPage = () => {
 	return (
 		// TODO: refactor out the elements are the same as campaign page
 		<div className="page MyPage">
-			<div title="Welcome Card" className='StatisticsCard MiniCard background-gl-red vh-100'>
+			<div title="Welcome Card" className='StatisticsCard MiniCard background-gl-red vh-100 flex-column'>
 				<NavBar />
 				<TitleCard />
+				<div className='flex-fill'>
+					<div className='white-triangle-left' />
+					<div className='white-triangle-right' />
+				</div>
 			</div>
 
 			<div title="How Good-Loop Ads Work" className='StatisticsCard MiniCard container-fluid top-pad3'>
@@ -160,7 +164,7 @@ const MyPage = () => {
 
 // explain good-loop and join CTA
 const TitleCard = () => (
-	<div className="WelcomeCard container-fluid flex-vertical-align">
+	<div className="WelcomeCard container-fluid flex-vertical-align flex-fill">
 		<div className="row header">
 			<div className="col header-text post-login">
 				<div className="title header white"> 
@@ -169,10 +173,6 @@ const TitleCard = () => (
 					<div> every time you watch </div>
 				</div>
 			</div>
-		</div>
-		<div className='row triangle-container'>
-			<div className='white-triangle-left' />
-			<div className='white-triangle-right' />
 		</div>
 	</div>
 );
