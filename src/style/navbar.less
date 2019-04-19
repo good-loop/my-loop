@@ -1,0 +1,45 @@
+.navbar {
+    font-size: inherit !important;
+    border: none;
+    position: relative;
+
+    a {
+        color: white !important;
+    }
+}
+
+.navbar-brand {
+    // From flex.less
+    .flex-vertical-align();
+
+    img {
+        height: 1.5rem;
+    }
+}
+
+.dropdown.open {
+    .dropdown-toggle {
+        background-color: darken(@gl-red, 10%) !important;
+    }
+}
+
+.navbar-inverse {
+    background-color: @gl-red;
+    border-color: unset;
+}
+
+.navbar-inverse .navbar-toggle, .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
+    border-color: darken(@gl-red, 10%);
+}
+
+.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
+    background-color: darken(@gl-red, 10%);
+}
+
+.dropdown-menu {
+    background-color: @gl-red;
+
+    li > a:hover {
+        background: darken(@gl-red, 10%);
+    }
+}

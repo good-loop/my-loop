@@ -10,6 +10,7 @@ import Roles from './../base/Roles';
 import C from './../C';
 import Crud from './../base/plumbing/Crud'; // Crud is loaded here (but not used here)
 import BS from '../base/components/BS3';
+import Profiler from '../base/Profiler';
 
 // Templates
 import MessageBar from '../base/components/MessageBar';
@@ -82,6 +83,9 @@ class MainDiv extends Component {
 		const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 		const isMobile = !!(userAgent.match('/mobile|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i'));
 		DataStore.setValue(['env', 'isMobile'], isMobile);
+
+		// Fetch user xid data
+		DataStore.setValue(['data', 'Person', 'xids'], Profiler.getAllXIds());
 	}
 
 	componentDidCatch(error, info) {
@@ -113,7 +117,7 @@ class MainDiv extends Component {
 		return (
 			<div>
 				<div>
-					<MessageBar /> 
+					{/* <MessageBar />  */}
 					<div className='page' id={page}>						
 						<Page path={path} />
 					</div>

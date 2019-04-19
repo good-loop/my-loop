@@ -1,7 +1,6 @@
 /**
  * The core page of My-Loop
  */
-import Cookies from 'js-cookie';
 import React from 'react';
 import { XId } from 'wwutils';
 import Login from 'you-again';
@@ -26,62 +25,11 @@ const pagePath = ['widget', 'MyPage'];
 
 window.DEBUG = false;
 
-const fetcher = xid => DataStore.fetch(['data', 'Person', 'xids', xid], () => {
-	assMatch(xid, String, "MyPage.jsx fetcher: xid is not a string "+xid);
-	// Call analyzedata servlet to pull in user data from Twitter
-	// Putting this here means that the DigitalMirror will refresh itself with the data
-	// once the request has finished processing
-	if( XId.service(xid) === 'twitter' ) return Profiler.requestAnalyzeData(xid);
-	return getProfile({xid});
-});
-
-/**
- * @returns String[] xids
- */
-const getAllXIds = () => {
-	let all =[]; // String[]
-	// cookie tracker
-	let trkid = Cookies.get("trkid");
-	// const trkIdMatches = document.cookie.match('trkid=([^;]+)');
-	// console.warn("trkIdMatches", trkIdMatches, "cookies", cookies);
-	// const currentTrkId = trkIdMatches && trkIdMatches[1];
-	if (trkid) all.push(trkid);
-	// aliases
-	let axids = null;
-	if (Login.aliases) {
-		axids = Login.aliases.map(a => a.xid);
-		all = all.concat(axids);
-	}
-	// linked IDs?
-	getAllXIds2(all, all);
-	// de dupe
-	all = Array.from(new Set(all));
-	return all;
-};
-/**
- * @param all {String[]} all XIds -- modify this!
- * @param agendaXIds {String[]} XIds to investigate
- */
-const getAllXIds2 = (all, agendaXIds) => {
-	// ...fetch profiles from the agenda
-	let pvsPeep = agendaXIds.map(fetcher);
-	// races the fetches -- so the output can change as more data comes in!
-	// It can be considered done when DataStore holds a profile for each xid
-	pvsPeep.filter(pvp => pvp.value).forEach(pvp => {
-		let peep = pvp.value;
-		let linkedIds = Person.linkedIds(peep);	
-		if ( ! linkedIds) return;
-		// loop test and recurse
-		linkedIds.filter(li => all.indexOf(li) === -1).forEach(li => {
-			all.push(li);
-			getAllXIds2(all, [li]);					
-		});
-	});
-};
-
 // TODO document trkids
 const MyPage = () => {
-	let xids = getAllXIds();
+	let xids = DataStore.getValue(['data', 'Person', 'xids']);
+
+	if( !xids ) return <Misc.Loading />;
 
 	// TODO pass around xids and turn into strings later
 	// HACK DataLog query string: "user:trkid1@trk OR user:trkid2@trk OR ..."
@@ -140,7 +88,7 @@ const MyPage = () => {
 								<div className='row panel-title panel-heading sub-header pad1'> 
 									Get Involved
 								</div>
-								<div className='row pad1'>
+								<div className='row'>
 									<IntroCard isVisible={DataStore.getValue(['widget', 'MyPage', 'IntroCardVisible'])} />
 								</div>
 								<div className='row' onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
@@ -168,22 +116,23 @@ const MyPage = () => {
 				<div className='row pad1'>
 					<RecentCampaignsCard />
 				</div>
-			</div>
-
-			<div title="Boost Your Impact" className='boostImpact container-fluid'>
-				<div className='row panel-title panel-heading sub-header pad1'> 
-					Boost Your Impact
-				</div>
 				{/* <div className='row pad1'>
 					<SocialMediaCard allIds={xids} className="socialConnect" />
 				</div> */}
-				<div className='row'>
+				<div className='row pad1'>
 					<div className='col-md-3' />
 					<div className='col-md-6 col-xs-12'>
 						<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} mixPanelTag='ShareAnAd' xids={xids} />
 					</div>
 					<div className='col-md-3' />
 				</div>
+			</div>
+
+			<div title="Boost Your Impact" className='boostImpact container-fluid'>
+				{/* <div className='row pad1'>
+					<SocialMediaCard allIds={xids} className="socialConnect" />
+				</div> */}
+
 			</div>
 
 			<div title="Your Charities" className='container-fluid'>
@@ -360,9 +309,9 @@ const StatisticsCardMini = () => {
 			</div>
 			<div className='row text-center'>
 				{/* TODO: Have this point to some sort of record of Good-Loop's achievements */}
-				<a href='/'>
+				{/* <a href='/'> */}
 					And much more...
-				</a>
+				{/* </a> */}
 			</div>
 		</div>
 	</section>);
