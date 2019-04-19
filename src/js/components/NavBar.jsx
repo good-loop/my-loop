@@ -19,7 +19,7 @@ const Contents = ({pageLinks, currentPage}) => (
 				{pageLinks}
 			</ul>
 			<div>
-				<AccountMenu active={currentPage === 'account'} logoutLink='#my' />
+				<AccountMenu active={currentPage === 'account'} logoutLink='#my' isMobile={window.innerWidth <= 767} />
 			</div>
 		</div>
 	</div>
