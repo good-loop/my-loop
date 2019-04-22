@@ -1,3 +1,5 @@
+@navbar-accent-color: darken(@gl-red, 10%);
+
 .navbar {
     font-size: inherit !important;
     border: none;
@@ -19,7 +21,7 @@
 
 .dropdown.open {
     .dropdown-toggle {
-        background-color: darken(@gl-red, 10%) !important;
+        background-color: @navbar-accent-color !important;
     }
 }
 
@@ -29,17 +31,17 @@
 }
 
 .navbar-inverse .navbar-toggle, .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
-    border-color: darken(@gl-red, 10%);
+    border-color: @navbar-accent-color;
 }
 
 .navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
-    background-color: darken(@gl-red, 10%);
+    background-color: @navbar-accent-color;
 }
 
 .dropdown-menu {
     background-color: @gl-red;
 
     li > a:hover {
-        background: darken(@gl-red, 10%);
+        background: @navbar-accent-color;
     }
 }
