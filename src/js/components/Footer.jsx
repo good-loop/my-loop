@@ -4,8 +4,8 @@ import { SocialMediaFooterWidget } from './SocialLinksWidget';
 import MDText from '../base/components/MDText';
 
 // usign css grid (and flex in ie10+) to make the footer mobile responsive & had to create innerFooter divs to align content to the bottom using display:table
-const Footer = ({className, leftFooter, rightFooter}) => (
-	<div className={join('footer pad1', className)}>
+const Footer = ({className, leftFooter, rightFooter, style}) => (
+	<div className={join('footer pad1', className)} style={style}>
 		<SocialMediaFooterWidget 
 			type='goodloop'
 			fb_url='https://www.facebook.com/the.good.loop/'

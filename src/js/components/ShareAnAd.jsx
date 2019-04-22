@@ -16,7 +16,7 @@ import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
  * 2) A Twitter intent link to share this ad
  * 3) A table showing how many times their shared ads have been viewed by others
  */
-const ShareAnAd = ({ adHistory, doesIfVisibleRef, xids=[] }) => {
+const ShareAnAd = ({ adHistory, color, doesIfVisibleRef, xids=[] }) => {
 	// Load in back-up vert data
 	// Easiest to just always load back-up data:
 	// avoids a race-condition where adHistory is provided after initial render has set off fetch
@@ -61,7 +61,7 @@ const ShareAnAd = ({ adHistory, doesIfVisibleRef, xids=[] }) => {
 							text='I just gave to charity by watching a GoodLoop ad'
 							url={`https://as.good-loop.com/?gl.vert=${vert}&gl.socialShareId=${socialShareId}`}
 						>
-							<div className='gl-red intent-link intent-link-border'>
+							<div className='gl-red intent-link intent-link-border' style={{color}}>
 								<i className='fa fa-2x fa-twitter' />
 							</div>
 						</IntentLink>

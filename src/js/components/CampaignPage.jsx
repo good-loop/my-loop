@@ -13,13 +13,10 @@ import MDText from '../base/components/MDText';
 import PropControl from '../base/components/PropControl';
 import { SocialMediaShareWidget } from './SocialLinksWidget';
 import NavBar from './NavBar';
-import CardAccordion, { Card } from '../base/components/CardAccordion';
-import OptimisedImage from './Image';
-import OnboardingCardMini from './OnboardingCardMini';
-import SocialMediaCard from './SocialMediaCard';
+import OptimisedImage, { RoundLogo } from './Image';
 import ShareAnAd from './ShareAnAd';
 
-const DonationSlideWidget = ({active, name, logo, logo_white, highResPhoto, photo, txtColor, description, hideImpactData, id}) => {	
+const DonationSlideWidget = ({active, name, logo, description, hideImpactData, id}) => {	
 	// This data will never be used outside of this component, so I have chosen to manage state locally
 	// impactData is actually the "projects" field in SoGive data
 	const [impactData, setImpactData] = useState([]);
@@ -41,10 +38,6 @@ const DonationSlideWidget = ({active, name, logo, logo_white, highResPhoto, phot
 		}
 	}, [id]);
 
-	let slideStyle = {
-		color: txtColor || 'white',
-	};
-
 	// is the item currently active (aka show in carousel)
 	let itemClass = active ? 'item active' : 'item';
 
@@ -55,14 +48,14 @@ const DonationSlideWidget = ({active, name, logo, logo_white, highResPhoto, phot
 
 	// Layout changes based on whether or not image has been provided for each charity
 	return (
-		<div className={itemClass} style={slideStyle}>
+		<div className={itemClass}>
 			<div className='container-fluid'>
 				<div className='flex row'>
 					<div className='col-md-1' />
 					<div className='col-md-5 flex-column'>
 						<div className="slide-header">
 							<div className="col-md-3" />
-							<div className="col-md-6 slide-title h3" style={slideStyle}>
+							<div className="col-md-6 slide-title h3">
 								{name}
 							</div>	
 						</div>
@@ -76,88 +69,11 @@ const DonationSlideWidget = ({active, name, logo, logo_white, highResPhoto, phot
 						</div>		
 					</div>
 					<div className='col-md-4 slide-photo margin-auto'>
-						<DonationCircleWidget highResPhoto={highResPhoto} photo={photo} logo={logo} logo_white={logo_white} />
+						<RoundLogo url={logo} />
 					</div>
 					<div className='col-md-2' />
 				</div>
 			</div>
-		</div>
-	);
-};
-
-const DonationCircleWidget = ({cparent, id, name, highResPhoto, photo, logo, logo_white, campaignSlice, pos='left'}) => (
-	<div 
-		className={'circle flex-vertical-align ' + pos} 
-		style={{
-			background: `url(${highResPhoto || photo || logo || logo_white})`,
-			backgroundSize: 'cover',
-			backgroundPosition: 'center center',
-			backgroundRepeat: 'no-repeat'
-		}}
-	>
-		{cparent &&
-			<div className="circle-info">
-				<p>
-					<span>
-						{campaignSlice[id]['percentageTotal']}%
-					</span>
-					<br /> 
-					HAS BEEN DONATED TO...
-					<br />
-					<span className='project-name'>
-						{name}
-					</span>
-				</p>
-			</div>
-		}
-	</div>
-);
-
-const DonationCarouselWidget = ({cparent, clist, toggle}) => (	
-	<div id="donation-carousel" className="carousel slide container-fluid" data-interval={toggle} data-ride="carousel">
-		{/* <!-- Content --> */}
-		<div className="carousel-inner flex-column" role="listbox">	
-			{ clist[0] && <DonationSlideWidget {...clist[0]} cparent={cparent} active />}
-			{ clist[1] && <DonationSlideWidget {...clist[1]} cparent={cparent} />}
-			{ clist[2] && <DonationSlideWidget {...clist[2]} cparent={cparent} />}
-			{/* <!-- Indicators --> */}
-			<div className='carousel-container'>
-				<ol className="carousel-indicators">
-					{/* // TODO: repeated code, make this check more efficient */}
-					{ clist[0] && clist[0].name && clist[0].logo && <li data-target="#donation-carousel" data-slide-to="0" className="active" />}
-					{ clist[1] && clist[1].name && clist[1].logo && <li data-target="#donation-carousel" data-slide-to="1" />}
-					{ clist[2] && clist[2].name && clist[2].logo && <li data-target="#donation-carousel" data-slide-to="2" />}
-				</ol>	
-			</div>				
-		</div>
-		{/* <!-- Previous/Next controls --> */}
-		{ clist.length > 1 && 
-			<a className="left carousel-control" href="#donation-carousel" role="button" data-slide="prev">
-				<span className="icon-prev" aria-hidden="true" />
-				<span className="sr-only">Previous</span>
-			</a>}
-		{ clist.length > 1 && 
-			<a className="right carousel-control" href="#donation-carousel" role="button" data-slide="next">
-				<span className="icon-next" aria-hidden="true" />
-				<span className="sr-only">Next</span>
-			</a>}
-	</div>
-);
-
-const LinkToAdWidget = ({adid, status}) => {
-	// this is needed to be able to both control the look of the link in MDText
-	function LinkRenderer(props) {
-		return <a href={props.href} target="_blank">{props.children}</a>;
-	}
-
-	let msg = 'Watch an advert, unlock a free donation, and choose which project you would like to fund.';
-	// adapts the link to the demo page to local/test/production
-	let url = `${C.HTTPS}://${C.SERVER_TYPE}demo.good-loop.com/?gl.vert=`+encURI(adid)+"&gl.status="+encURI(status);
-	let md = "[" + msg + "](" + url + ")";
-	
-	return (
-		<div className='link watch-cta'>
-			<MDText source={md} renderers={{link: LinkRenderer}} />
 		</div>
 	);
 };
@@ -220,9 +136,6 @@ const EmailCTA = () => {
  * Expects url parameters: `gl.vert` or `gl.vertiser`
  */
 const CampaignPage = () => {
-	//TODO this is the same mypage, refactor out of here
-	let xids = DataStore.getValue(['data', 'Person', 'xids']);
-
 	const { 'gl.vert': adid, 'gl.vertiser': vertiserid } = DataStore.getValue(['location', 'params']) || {};
 
 	// Specific adid gets priority over advertiser id
@@ -234,9 +147,6 @@ const CampaignPage = () => {
 		// No ID -- show a list
 		return <ListItems type={C.TYPES.Advert} status={C.KStatus.PUBLISHED} servlet='campaign' />;		
 	}
-
-	// get the ad for display (so status:published - unless this is a preview, as set by the url)
-	let status = DataStore.getUrlValue("gl.status") || C.KStatus.PUBLISHED; 
 
 	// Only pull vertiser data if no adid has been provided
 	let adPv;
@@ -268,55 +178,24 @@ const CampaignPage = () => {
 
 	let {branding={}} = ad;
 	// default styling if adv branding is not there 
-	let complimentaryColor = '#51808a'; // default color (complimentary to the gl-red) for the middle tile that contains donations info
-	let brandColor = branding.backgroundColor || branding.color || complimentaryColor;
-	let brandLogo = branding.logo_white || branding.logo || null; 
-	let brandColorBgStyle = {
-		backgroundColor: brandColor,
-		color: branding.lockAndTextColor || 'white',
-	};
 
-	// hack to show appropriately styled logo if it can't find anything better (used in DonationCircleWidget and DonationDetailsWidget)
-	let logoStyle = {
-		objectFit: 'contain',
-		borderWidth: 'medium',
-		borderColor: '#d4c7c7',
-		borderStyle: 'double'
-	};
+	let brandColor = branding.color || branding.backgroundColor || (ad.mockUp && ad.mockUp.backgroundColor);
+	let brandLogo = branding.logo; 
 
 	// campaign data
 	let campaign = ad && ad.campaignPage;
 	let startDate = ad.start ? 'This campaign started on '.concat(ad.start.substring(0, 10)) : '';
 	let smallPrint = null;
-	let bg = null;
 
 	if(campaign) {
 		smallPrint = campaign.smallPrint || '';
-		if (campaign.bg) {
-			bg = campaign.bg;
-			brandColorBgStyle = {
-				// Now handled via OpimisedImage
-				// backgroundImage: 'url(' + bg + ')',
-				backgroundSize: 'cover',
-				backgroundRepeat: 'no-repeat',
-				backgroundPosition: 'center',
-				backgroundAttachment: 'fixed',
-				backgroundColor: brandColor,
-				color: branding.lockAndTextColor || 'white' 
-			};
-		}
 	}
 
 	// if there is no charity data, tell the user
 	// TODO: do we want to deal with this in a more elegant way?
 	if (!ad.charities) {
-		return <Misc.Loading text='Cannot find charity data' />;	
+		return <span>Cannot find charity data</span>;	
 	}
-
-	// parent charity data 
-	let parent = ad.charities.parent;
-	// minor TODO just pass parent around
-	let cparent = parent && parent.name ? parent.name : '';
 
 	// individual charity data
 	let clist = ad.charities.list;
@@ -358,60 +237,88 @@ const CampaignPage = () => {
 		campaignSlice[obj.cid] = {percentageTotal: Math.round(rawFraction*100)}; 
 	});
 
-	// toggle carousel (true means it spins automatically)
-	let toggle = "false";
-
 	// TODO: refactor this because it's very similar now to mypage
 	return (
 		<div className="page MyPage">
-			<NavBar brandLogo={brandLogo} />
+			<NavBar brandLogo={brandLogo} style={{backgroundColor: brandColor}} />
 			{/* TODO: get rid of old css classes, previous to refactor */}
-			<div className='grid-tile top'> 
-				<OptimisedImage
-					src={bg}
-					render={({src}) => (
-						<div className='header' style={{...brandColorBgStyle, backgroundImage: 'url(' + src + ')'}}>
-							<div className='header-text'>
-								<div className='header-title'>
-									<div>Together we've raised</div>													
-									{donationValue? <div><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
-									<div>for charity</div>
+			<div className='container-fluid'>
+				<div className='row'>
+					<div className='header-text'>
+						<div className='flex-row flex-centre bottom-pad1'>
+							<img className='margin-auto' src={brandLogo} style={{width: '10rem', display: 'block'}} />
+						</div>
+						<div className='sub-header pad1'>
+							<div>Together we've raised</div>													
+							{donationValue? <div className='header' style={{color: brandColor}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
+							<div>for</div>
+						</div>
+						<div className='container-fluid pad1'>
+							<div className='row'>
+								<div className='col-md-4'>
+									<div className='flex-row pad1'>
+										<a className='margin-auto' src={clist[0].url}>
+											<RoundLogo url={clist[0].logo} />
+										</a>
+									</div>
+									<div className='margin-auto text-block'>
+										<div className='sub-header text-center pad1'> 
+											{clist[0].name}
+										</div>
+										<MDText source={clist[0].description} />									
+									</div>
 								</div>
-								<div className='flex-row flex-centre'>
-									<DonationCircleWidget {...clist[0]} cparent={cparent} campaignSlice={campaignSlice} pos='left' />
-									<DonationCircleWidget {...clist[1]} cparent={cparent} campaignSlice={campaignSlice} pos='middle' />
-									<DonationCircleWidget {...clist[2]} cparent={cparent} campaignSlice={campaignSlice} pos='right' />
+								<div className='col-md-4'>
+									<div className='flex-row pad1'>
+										<a className='margin-auto' src={clist[1].url}>
+											<RoundLogo url={clist[1].logo} />
+										</a>
+									</div>
+									<div className='margin-auto text-block'>
+										<div className='sub-header text-center pad1'> 
+											{clist[1].name}
+										</div>
+										<MDText source={clist[1].description} />
+									</div>
 								</div>
-								{/* <EmailCTA /> */}
+								<div className='col-md-4'>
+									<div className='flex-row pad1'>
+										<a className='margin-auto' src={clist[2].url}>
+											<RoundLogo url={clist[2].logo} />
+										</a>
+									</div>
+									<div className='margin-auto text-block'>
+										<div className='sub-header text-center pad1'> 
+											{clist[2].name}
+										</div>
+										<MDText source={clist[2].description} />
+									</div>
+								</div>	
 							</div>
 						</div>
-					)}
-				/>
-			</div>
-			<div className='grid-tile middle'>
-				<div className='inside'>
-					<DonationCarouselWidget cparent={cparent} clist={clist} campaignSlice={campaignSlice} brandColorBgStyle={brandColorBgStyle} logoStyle={logoStyle} adid={adid} status={status} toggle={toggle} />
+						{/* <EmailCTA /> */}
+					</div>
 				</div>
 			</div>
-			<CardAccordion multiple>	
-				<Card title="How Good-Loop Ads Work" className="StatisticsCard MiniCard background-dark-green" defaultOpen>
-					<OnboardingCardMini />
-				</Card>							
-				<Card title="Boost Your Impact" className="boostImpact background-dark-blue" defaultOpen>
-					<SocialMediaCard allIds={xids} className="socialConnect"/>
-					{ ad && ad.videos && ad.videos.length && <ShareAnAd adHistory={{...ad.videos[0], vert: adid}} mixPanelTag='ShareAnAd' />}
-				</Card> 
-			</CardAccordion>
-			<div className='grid-tile bottom background-gl-red' style={glColorBgStyle}>
-				<div className='foot header-font container-fluid'>
-					<div className='row'>
-						<div className='col-md-12'>
-							<SocialMediaShareWidget adName={ad.name} donationValue={donationValue} charities={clist} />
+			<div className='container-fluid'>
+				<div className='row'>
+					<div className='col-md-3' /> 
+					<div className='col-md-6'>
+						{ ad && ad.videos && ad.videos.length && <ShareAnAd adHistory={{...ad.videos[0], vert: adid}} mixPanelTag='ShareAnAd' color={brandColor} />}
+					</div> 
+					<div className='col-md-3' /> 				
+				</div>
+				<div className='row' style={glColorBgStyle}>
+					<div className='foot header-font container-fluid'>
+						<div className='row'>
+							<div className='col-md-12'>
+								<SocialMediaShareWidget adName={ad.name} donationValue={donationValue} charities={clist} />
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<Footer leftFooter={startDate} rightFooter={smallPrint} />
+			<Footer className='background-gl-red' leftFooter={startDate} rightFooter={smallPrint} style={{backgroundColor: brandColor}} />
 		</div>
 	);
 }; // ./CampaignPage

@@ -3,6 +3,7 @@
 @import "DonationCircleWidget.less";
 @import "flex.less";
 @import "navbar.less";
+@import "CampaignPage.less";
 
 // Set base size for rem
 html, body {
@@ -24,6 +25,14 @@ html, body {
 	padding: 1rem;
 }
 
+.pad2 {
+	padding: 2rem;
+}
+
+.pad3 {
+	padding: 3rem;
+}
+
 .top-pad1 {
 	padding-top: 1rem;
 }
@@ -38,6 +47,10 @@ html, body {
 
 .bottom-pad1 {
 	padding-bottom: 1rem;
+}
+
+.bottom-pad2 {
+	padding-bottom: 2rem;
 }
 
 .bottom-pad3 {
@@ -180,7 +193,7 @@ a {
 	}
 
 	.cta-help, .cta-lead {
-		background-color: rgb(200, 51, 18); // gl color	
+		background-color: @gl-red; // gl color	
 		margin: 3px auto;
 	}
 
@@ -200,7 +213,7 @@ a {
 
 .link.watch-cta {
 	font-family: initial; // go back to using montserrat (looks nicer)
-	background-color: rgb(200, 51, 18); // TODO: this should be set as less var gl-colour
+	background-color: @gl-red; // TODO: this should be set as less var gl-colour
 	color: white; // otherwise it will be set as black (default colour?)
 	padding-top: 6vh; // give it some space, looks less cluttered this way
 	font-size: 2.5vh; // make it pop out responsively
