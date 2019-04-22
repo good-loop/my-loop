@@ -2,21 +2,16 @@
  * The core page of My-Loop
  */
 import React from 'react';
-import { XId } from 'wwutils';
 import Login from 'you-again';
 import DataStore from '../base/plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
 import printer from '../base/utils/printer';
-import Profiler, { getProfile } from '../base/Profiler';
-import Person from '../base/data/Person';
 import Misc from '../base/components/Misc';
 import LoginWidget, { LoginLink } from '../base/components/LoginWidget';
 import Footer from './Footer';
 import ShareAnAd from './ShareAnAd';
 import DonationCard from './DonationCard';
-import C from '../C';
-import { assMatch } from 'sjtest';
-import {withLogsIfVisible, withDoesIfVisible} from '../base/components/HigherOrderComponents';
+import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
 import NavBar from './NavBar';
 import OnboardingCardMini from './OnboardingCardMini';
 import RecentCampaignsCard from './RecentCampaignsCard';
@@ -80,15 +75,14 @@ const MyPage = () => {
 				<div className='row pad1'>
 					<OnboardingCardMini allIds={allIds} />
 				</div>
-
+				<div className='row background-gl-red white sub-header pad1'>
+					Your data has value! Registering increases the value of your donations
+				</div>
 				<div className='row pad1'>
 					{
 						Login.isLoggedIn()
 						|| (
 							<div className='container-fluid'>
-								<div className='row background-gl-red white sub-header pad1'>
-									Your data has value! Registering increases the value of your donations
-								</div>
 								<div className='row panel-title panel-heading sub-header pad1'> 
 									Get Involved
 								</div>
@@ -120,9 +114,6 @@ const MyPage = () => {
 				<div className='row pad1'>
 					<RecentCampaignsCard />
 				</div>
-				{/* <div className='row pad1'>
-					<SocialMediaCard allIds={xids} className="socialConnect" />
-				</div> */}
 				<div className='row pad1'>
 					<div className='col-md-3' />
 					<div className='col-md-6 col-xs-12'>
@@ -130,13 +121,6 @@ const MyPage = () => {
 					</div>
 					<div className='col-md-3' />
 				</div>
-			</div>
-
-			<div title="Boost Your Impact" className='boostImpact container-fluid'>
-				{/* <div className='row pad1'>
-					<SocialMediaCard allIds={xids} className="socialConnect" />
-				</div> */}
-
 			</div>
 
 			<div title="Your Charities" className='container-fluid'>
@@ -177,45 +161,30 @@ const TitleCard = () => (
 	</div>
 );
 
-/**
- * 
- * @param {isVisible} Icons will fade in to view the first time that this card becomes completely visible on the user's screen  
- */
-let IntroCard = ({isVisible, doesIfVisibleRef}) => { 
-	const visibleClass = isVisible ? ' fade-in ' : '';
-
-	return (
-		<div title='Intro' className='container-fluid background-white' ref={doesIfVisibleRef}>
-			<div className='row pad1'>
-				<div className={'col-md-4 flex-vertical-align intro-item' + visibleClass}>
-					<i className='fa fa-pencil fa-3x margin-auto' />
-					<div className='margin-auto intro-item-text text-left'> 
-						Sign Up. We will not share any of your information with third-parties
-					</div>
+const IntroCard = () => (
+	<div title='Intro' className='container-fluid background-white'>
+		<div className='row pad1'>
+			<div className='col-md-4 flex-vertical-align intro-item'>
+				<i className='fa fa-pencil fa-3x margin-auto' />
+				<div className='margin-auto intro-item-text text-left'> 
+					Sign Up. We will not share any of your information with third-parties
 				</div>
-				{/* <div className={'col-md-3 flex-vertical-align intro-item' + visibleClass}>
-					<i className='fa fa-check-circle fa-4x margin-auto' />
-					<div className='margin-auto intro-item-text'> 
-						Set your data preferences 
-					</div>
-				</div> */}
-				<div className={'col-md-4 flex-vertical-align intro-item' + visibleClass}>
-					<i className='fa fa-mouse-pointer fa-3x margin-auto' />
-					<div className='margin-auto intro-item-text text-left'> 
-						Browse online as normal 
-					</div>
+			</div>
+			<div className='col-md-4 flex-vertical-align intro-item'>
+				<i className='fa fa-mouse-pointer fa-3x margin-auto' />
+				<div className='margin-auto intro-item-text text-left'> 
+					Browse online as normal 
 				</div>
-				<div className={'col-md-4 flex-vertical-align intro-item' + visibleClass}>
-					<i className='fa fa-envelope fa-3x margin-auto' />
-					<div className='margin-auto intro-item-text text-left'> 
-						Learn how much you and other Good-Loopers have raised for charity each month! 
-					</div>
+			</div>
+			<div className='col-md-4 flex-vertical-align intro-item'>
+				<i className='fa fa-envelope fa-3x margin-auto' />
+				<div className='margin-auto intro-item-text text-left'> 
+					Learn how much you and other Good-Loopers have raised for charity each month! 
 				</div>
 			</div>
 		</div>
-	);
-};
-IntroCard = withDoesIfVisible(IntroCard, () => DataStore.setValue(['widget', 'MyPage', 'IntroCardVisible'], true));
+	</div>
+);
 
 const StatisticsCardMini = () => { 
 	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
@@ -317,10 +286,6 @@ const StatisticsCardMini = () => {
 	</section>);
 };
 
-const FadingIcon = (Icon) => {
-	return <Icon />;
-};
-
 // Two-liner as withLogsIfVisible latches on to Component.displayName or Component.name in order to generate sensible-looking event tag in MixPanel
 // Obviously will not work quite right if we were to use an anonymous function
 let ContactCard = ({doesIfVisibleRef}) => (
@@ -335,11 +300,5 @@ let ContactCard = ({doesIfVisibleRef}) => (
 	</div>
 );
 ContactCard = withLogsIfVisible(ContactCard);
-
-/**
- * This is mostly for our debugging
- * @param {String[]} xids 
- */
-
 
 export default MyPage;
