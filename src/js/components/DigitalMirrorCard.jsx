@@ -21,7 +21,7 @@ import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
 // rather than the data held for that specific social media source 
 /**
  * 
- * @param {*} logsIfVisibleRef Pass this to component, MixPanel tracking event will be sent out if the element is ever completely visible on user's screen
+ * @param {*} doesIfVisibleRef Pass this to component, MixPanel tracking event will be sent out if the element is ever completely visible on user's screen
  */
 const DigitalMirrorCard = ({xids, doesIfVisibleRef}) => {
 	if(!xids) return null;
@@ -231,12 +231,14 @@ const ConsentControls = ({xidObj}) => {
 				</div>
 				<div className='container-fluid word-wrap'>
 					<div className='row'>
-						<div className='col-sm-5 col-sm-push-5 profile-photo'>
+						<div className='col-sm-2' />
+						<div className='col-sm-3 profile-photo'>
 							{profileImage ? <img className='img-thumbnail img-profile' src={profileImage.value} alt='user-profile' /> : null}
 						</div>
-						<div className="col-sm-5 col-sm-pull-5 profile-details">
+						<div className="col-sm-5 profile-details">
 							{dataFields.map( fieldObj => ConsentControlRow(path, fieldObj, debounceSaveFn, editModeEnabled))}
 						</div>
+						<div className='col-sm-2' />
 					</div>
 				</div>				
 			</div>
