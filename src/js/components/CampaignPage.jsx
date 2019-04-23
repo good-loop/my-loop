@@ -301,21 +301,12 @@ const CampaignPage = () => {
 				</div>
 			</div>
 			<div className='container-fluid'>
-				<div className='row'>
+				<div className='row pad1'>
 					<div className='col-md-3' /> 
 					<div className='col-md-6'>
 						{ ad && ad.videos && ad.videos.length && <ShareAnAd adHistory={{...ad.videos[0], vert: adid}} mixPanelTag='ShareAnAd' color={brandColor} />}
 					</div> 
 					<div className='col-md-3' /> 				
-				</div>
-				<div className='row' style={glColorBgStyle}>
-					<div className='foot header-font container-fluid'>
-						<div className='row'>
-							<div className='col-md-12'>
-								<SocialMediaShareWidget adName={ad.name} donationValue={donationValue} charities={clist} />
-							</div>
-						</div>
-					</div>
 				</div>
 			</div>
 			<Footer className='background-gl-red' leftFooter={startDate} rightFooter={smallPrint} style={{backgroundColor: brandColor}} />
