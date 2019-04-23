@@ -60,6 +60,10 @@ class MainDiv extends Component {
 				// close the login dialog on success
 				LoginWidget.hide();
 			}
+
+			// Update xids
+			DataStore.setValue(['data', 'Person', 'xids'], Profiler.getAllXIds(), false);
+
 			// Link profiles? No - done by the YA server
 			// poke React via DataStore (e.g. for Login.error)
 			DataStore.update({});			
@@ -76,7 +80,7 @@ class MainDiv extends Component {
 		});
 
 	}
-
+	
 	componentDidMount() {
 		// Check if we're on a mobile device and place the result in state
 		// COPIED FROM ADUNIT'S device.js

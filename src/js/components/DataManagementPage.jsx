@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Login from 'you-again';
 
 import DataStore from '../base/plumbing/DataStore';
@@ -11,9 +11,17 @@ import { LoginToSee } from './Bits';
 import NavBar from './NavBar';
 import Footer from './Footer';
 import { withLogsIfVisible } from '../base/components/HigherOrderComponents';
+import {getAllXIds} from '../base/Profiler';
 
 let Page = () => {
 	const xids = DataStore.getValue(['data', 'Person', 'xids']) || [];
+
+	// HACK (23/04/19): you_again does not call login.change() after user connects with Twitter
+	// Means that xids were never being refreshed => user can never use the DigitalMirror
+	// Think that taking a look at you_again is the proper long-term solution, but this will do for right now
+	useEffect(() => {
+		DataStore.setValue(['data', 'Person', 'xids'], getAllXIds());
+	}, [Login.aliases.length]);
 
 	return (
 		<div className='page text-center'>
