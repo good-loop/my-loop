@@ -14,7 +14,7 @@ import Profiler from '../base/Profiler';
 
 // Templates
 import MessageBar from '../base/components/MessageBar';
-import LoginWidget from '../base/components/LoginWidget';
+import LoginWidget from './LoginWidget';
 import NavBar from './NavBar';
 
 // Pages
@@ -87,9 +87,7 @@ class MainDiv extends Component {
 		const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 		const isMobile = !!(userAgent.match('/mobile|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i'));
 		DataStore.setValue(['env', 'isMobile'], isMobile);
-
-		// Fetch user xid data
-		DataStore.setValue(['data', 'Person', 'xids'], Profiler.getAllXIds());
+		DataStore.setValue(['data', 'Person', 'xids'], Profiler.getAllXIds(), false);
 	}
 
 	componentDidCatch(error, info) {

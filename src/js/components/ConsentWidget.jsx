@@ -78,30 +78,22 @@ const ConsentWidget = ({xids}) => {
 
 	return (
 		<div className="consent-widget">
-			<p>Help us boost the money raised for charity using your data - without compromising your privacy.</p>
-			<p>Please can we:</p>
-
 			<PropControl path={path} prop='cookies' 
-				label='Use cookies to record your charity donations, which ads we show you, and how you react to them (e.g. click / ignore / vomit)' 
+				label='Allow cookies' 
 				type='yesNo' saveFn={(data) => { toggleDNT(data); togglePerm(data); }} 
 			/>
 			{perms.cookies === false? <small>OK - no cookies. Except ironically this has to set a cookie to work.</small> : null}
 
-			<PropControl path={path} prop='personaliseAds' label='Pick ads that fit your profile' type='yesNo' 
+			<PropControl path={path} prop='personaliseAds' label='Allow ad targetting' type='yesNo' 
 				saveFn={togglePerm}
 			/>
 
-			<PropControl path={path} prop='sendMessages' label='Send updates and commercial messages' type='yesNo' 
+			<PropControl path={path} prop='sendMessages' label='Allow us to email you updates and commerical messages' type='yesNo' 
 				saveFn={togglePerm}
 			/>
-
-			Sell your data: Hell No
 
 			<p>
-				It's your data: You can change your mind at any time (just edit these settings). 
-				You can see and control your profile data - we're working on easy-to-use online tools for that, 
-				but in the meantime you can contact us, and our heroic support team will help.
-				For more details see our <a href="https://www.good-loop.com/privacy-policy" target="_blank">Privacy Manifesto</a>.
+				These settings can be updated at any time from the account menu
 			</p>
 		</div>
 	);
