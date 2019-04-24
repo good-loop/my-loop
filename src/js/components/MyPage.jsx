@@ -3,15 +3,18 @@
  */
 import React from 'react';
 import Login from 'you-again';
+
 import DataStore from '../base/plumbing/DataStore';
-import ServerIO from '../plumbing/ServerIO';
 import printer from '../base/utils/printer';
 import Misc from '../base/components/Misc';
-import LoginWidget, { LoginLink } from '../base/components/LoginWidget';
+import { LoginLink } from '../base/components/LoginWidget';
+import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
+
+import ServerIO from '../plumbing/ServerIO';
 import Footer from './Footer';
 import ShareAnAd from './ShareAnAd';
 import DonationCard from './DonationCard';
-import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
+import LoginWidget from './LoginWidget';
 import NavBar from './NavBar';
 import OnboardingCardMini from './OnboardingCardMini';
 import RecentCampaignsCard from './RecentCampaignsCard';
@@ -75,24 +78,26 @@ const MyPage = () => {
 				<div className='row pad1'>
 					<OnboardingCardMini allIds={allIds} />
 				</div>
-				<div className='row background-gl-red white sub-header pad1'>
-					Your data has value! Registering increases the value of your donations
-				</div>
 				<div className='row pad1'>
 					{
 						Login.isLoggedIn()
 						|| (
-							<div className='container-fluid'>
-								<div className='row panel-title panel-heading sub-header pad1'> 
-									Get Involved
+							<>
+								<div className='row background-gl-red white sub-header pad1'>
+									Your data has value! Registering increases the value of your donations
 								</div>
-								<div className='row'>
-									<IntroCard isVisible={DataStore.getValue(['widget', 'MyPage', 'IntroCardVisible'])} />
+								<div className='container-fluid'>
+									<div className='row panel-title panel-heading sub-header pad1'> 
+										Get Involved
+									</div>
+									<div className='row'>
+										<IntroCard isVisible={DataStore.getValue(['widget', 'MyPage', 'IntroCardVisible'])} />
+									</div>
+									<div className='row' onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
+										<LoginLink className='btn btn-lg btn-default btn-gl sub-header' onClick={() => LoginWidget.changeVerb('register')} verb='Join us' />			
+									</div>
 								</div>
-								<div className='row' onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
-									<LoginLink className='btn btn-lg btn-default btn-gl sub-header' onClick={() => LoginWidget.changeVerb('register')} verb='Join us' />			
-								</div>
-							</div>						
+							</>						
 						)
 					}
 				</div>
@@ -164,22 +169,28 @@ const TitleCard = () => (
 const IntroCard = () => (
 	<div title='Intro' className='container-fluid background-white'>
 		<div className='row pad1'>
-			<div className='col-md-4 flex-vertical-align intro-item'>
-				<i className='fa fa-pencil fa-3x margin-auto' />
-				<div className='margin-auto intro-item-text text-left'> 
-					Sign Up. We will not share any of your information with third-parties
+			<div className='col-md-4 intro-item'>
+				<i className='fa fa-pencil fa-3x margin-auto pad1' />
+				<div className='text-left flex-row'>  
+					<span className='margin-auto how-text'>
+						Sign Up. We will not share any of your information with third-parties
+					</span>
 				</div>
 			</div>
-			<div className='col-md-4 flex-vertical-align intro-item'>
-				<i className='fa fa-mouse-pointer fa-3x margin-auto' />
-				<div className='margin-auto intro-item-text text-left'> 
-					Browse online as normal 
-				</div>
+			<div className='col-md-4 intro-item'>
+				<i className='fa fa-mouse-pointer fa-3x margin-auto pad1' />
+				<div className='text-left flex-row'>
+					<span className='margin-auto how-text'> 
+						Browse online as normal. Targetted adverts generate more for your chosen charities.
+					</span>		
+				</div>				
 			</div>
-			<div className='col-md-4 flex-vertical-align intro-item'>
-				<i className='fa fa-envelope fa-3x margin-auto' />
-				<div className='margin-auto intro-item-text text-left'> 
-					Learn how much you and other Good-Loopers have raised for charity each month! 
+			<div className='col-md-4 intro-item'>
+				<i className='fa fa-envelope fa-3x margin-auto pad1' />
+				<div className='text-left flex-row'>
+					<span className='margin-auto how-text'> 
+						Learn how much you and other Good-Loopers have raised for charity each month! 
+					</span>
 				</div>
 			</div>
 		</div>
