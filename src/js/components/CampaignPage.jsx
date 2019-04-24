@@ -186,6 +186,7 @@ const CampaignPage = () => {
 	let campaign = ad && ad.campaignPage;
 	let startDate = ad.start ? 'This campaign started on '.concat(ad.start.substring(0, 10)) : '';
 	let smallPrint = null;
+	const backgroundImage = campaign && campaign.bg;
 
 	if(campaign) {
 		smallPrint = campaign.smallPrint || '';
@@ -245,13 +246,16 @@ const CampaignPage = () => {
 			<div className='container-fluid'>
 				<div className='row'>
 					<div className='header-text'>
-						<div className='flex-row flex-centre bottom-pad1'>
-							<img className='margin-auto' src={brandLogo} style={{width: '10rem', display: 'block'}} />
-						</div>
-						<div className='sub-header pad1'>
-							<div>Together we've raised</div>													
-							{donationValue? <div className='header' style={{color: brandColor}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
-							<div>for</div>
+						<div className={backgroundImage ? 'header-block' : ''}>
+							<div className='flex-row flex-centre pad1'>
+								<img className='margin-auto' src={brandLogo} style={{width: '10rem', display: 'block'}} />
+							</div>
+							<div className='sub-header pad1'>
+								<div>Together we've raised</div>													
+								{donationValue? <div className='header white' style={backgroundImage ? {textShadow: '2px 2px ' + brandColor} : {color: brandColor}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
+								<div>for</div>
+							</div>
+							<div className='img-block' style={{backgroundImage: 'url(' + backgroundImage + ')'}} />
 						</div>
 						<div className='container-fluid pad1'>
 							<div className='row'>
