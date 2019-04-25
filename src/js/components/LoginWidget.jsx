@@ -2,7 +2,7 @@ import React from 'react';
 
 import DataStore from '../base/plumbing/DataStore';
 import LoginWidget, {EmailSignin, SocialSignin, VERB_PATH} from '../base/components/LoginWidget';
-import ConsentWidget, {saveAllPerms} from './ConsentWidget';
+import ServerIO from '../plumbing/ServerIO';
 
 const LoginWidgetGuts = ({services, verb, onLogin}) => {
 	if (!verb) verb = DataStore.getValue(VERB_PATH) || 'login';
@@ -13,7 +13,7 @@ const LoginWidgetGuts = ({services, verb, onLogin}) => {
 					<EmailSignin
 						verb={verb}
 						onLogin={onLogin}
-						onRegister={saveAllPerms}
+						onRegister={({email}) => ServerIO.load(ServerIO.PROFILER_ENDPOINT + "/email", {data: {email, emailType:"user_registration"}})}
 					/>
 				</div>
 				<div className="login-social col-sm-6">
