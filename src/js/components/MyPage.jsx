@@ -167,7 +167,7 @@ const TitleCard = () => (
 );
 
 const IntroCard = () => (
-	<div title='Intro' className='container-fluid background-white'>
+	<div title='Intro' className='container-fluid'>
 		<div className='row pad1'>
 			<div className='col-md-4 intro-item'>
 				<i className='fa fa-pencil fa-3x margin-auto pad1' />
