@@ -25,6 +25,6 @@ const Contents = ({pageLinks, currentPage}) => (
 	</div>
 );
 
-const MyLoopNavBar = ({style}) => <NavBar pages={[]} render={Contents} style={style} />;	
+const MyLoopNavBar = props => <NavBar {...props} pages={[]} render={Contents} />;	
 
 export default MyLoopNavBar;
