@@ -20,14 +20,13 @@ const LoginWidgetGuts = ({services, verb, onLogin}) => {
 					<SocialSignin verb={verb} services={services} />
 				</div>
 			</div>
-			<div className='row'>
+			{/* <div className='row'>
 				{
 					verb === 'register'
 						? <ConsentWidget xids={DataStore.getValue(['data', 'Person', 'xids'])} />
 						: <span className='pull-right'> Manage your data preferences <a href='/#account'> here </a> </span>
 				}
-			</div>
-
+			</div> */}
 		</div>
 	);
 };
