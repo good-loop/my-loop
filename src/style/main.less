@@ -14,6 +14,7 @@ html, body {
 	.header-font();
 	color: @gl-red;
 	font-size: 2.618rem;
+	line-height: initial;
 } 
 
 .sub-header {
@@ -57,6 +58,14 @@ html, body {
 	padding-bottom: 3rem;
 }
 
+.mt-1 {
+	margin-top: 1rem;
+}
+
+.min-height-15 {
+	min-height: 15rem;
+}
+
 // Base style for intent links on MyLoop
 .intent-link {
 	height: 4rem;
@@ -94,6 +103,10 @@ html, body {
 	background-color: #fff;
 }
 
+.text-shadow-light-blue {
+	text-shadow: @gl-light-blue 2px 2px;
+}
+
 .margin-auto {
 	margin: auto;
 }
@@ -125,11 +138,9 @@ html, body {
 	&:after {
 		display: block;
 		content: "";
-		margin: 15px;
-		width: 70px;
-		height: 5px;
+		height: 3px;
 		// Darken to look more reasonable with dark green background
-		background: @gl-red;
+		background: @gl-light-blue;
 	}
 }
 

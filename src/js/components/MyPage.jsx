@@ -18,6 +18,7 @@ import LoginWidget from './LoginWidget';
 import NavBar from './NavBar';
 import OnboardingCardMini from './OnboardingCardMini';
 import RecentCampaignsCard from './RecentCampaignsCard';
+import { RoundLogo } from './Image';
 
 const pagePath = ['widget', 'MyPage'];
 
@@ -104,18 +105,12 @@ const MyPage = () => {
 			</div>
 
 			<div title="Our Achievements Together" className='StatisticsCard MiniCard container-fluid top-pad3'>
-				<div className='row panel-title panel-heading sub-header pad1'> 
-					Our Achievements Together
-				</div>
-				<div className='row pad1'>
+				<div className='row'>
 					<StatisticsCardMini allIds={allIds} />
 				</div>
 			</div>
 
 			<div title="Recent Campaigns" className='boostImpact container-fluid'>
-				<div className='row panel-title panel-heading sub-header pad1'> 
-					Recent Campaigns
-				</div>
 				<div className='row pad1'>
 					<RecentCampaignsCard />
 				</div>
@@ -206,93 +201,82 @@ const StatisticsCardMini = () => {
 		return <Misc.Loading text='Loading donation data...' />;
 	}
 	let ttl = pvSum.value && pvSum.value.total;
-	let cnt = ttl? Math.round(ttl / 0.12) : 100000; // HACK assume 12p per ad
-	// TODO use a call to lg to get a count of minviews for cnt
 
 	return (<section className="statistics statistics-what text-center">
-		<div className="statistics-content container-fluid">
-			<div className='row bottom-pad1'>
-				<div className="col-md-6 statistics-item">
-					<div className="statistics-value">
-						<div className="statistics-value-highlight"><span>{printer.prettyNumber(cnt)}</span></div>
-						<strong className="statistics-subtext">people reached</strong>
-					</div>
-				</div>
-				<div className="col-md-6 statistics-item">
-					<div className="statistics-value">
-						<div className="statistics-value-highlight">
-							<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={10} showCurrencySymbol={false} />										
-						</div>
-						<strong className="statistics-subtext">pounds raised</strong>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div className='container-fluid'>
-			<div className='row bottom-pad1'> 
+		<div className='container-fluid white'>
+			<div className='row bottom-pad1 background-gl-red'> 
 				<span className='sub-header'> 
-					IN 2018, GOOD-LOOP'S ETHICAL ADVERTISING RAISED OVER <br /> 
-					<span className='header'> £200,000 </span> <br /> 
+					To date, Good-Loop's ethical advertising has raised <br /> 
+					<span className='header white text-shadow-light-blue'> 
+						<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={10} showCurrencySymbol={false} /> 
+					</span> 
+					<br /> 
 				</span> 
 				<br /> 
 				That's enough to fund... 
 			</div>
-			<div className='row'>
-				<div className='col-md-6'>
-					<div className='row bottom-pad1'>
-						<div className='flex-column flex-centre'>
-							<span className='sub-header bottom-padP5'>
-								888 NIGHTS
-							</span>
-							<span className='text-justify'> 
-								of accommodation for young <br /> 
-								homeless people in the UK 
-							</span>
-						</div>
-					</div>
+			{/* <div className='row'>
+				<div className='flex-row flex-centre pad1'>
+					<img className='margin-auto' src='/img/kitkat-logo-scaled.png' />
 				</div>
-				<div className='col-md-6'>
-					<div className='row bottom-pad1'>
-						<div className='flex-column flex-centre'>
-							<span className='sub-header bottom-padP5'> 
-								1000 CALLS 
+			</div> */}
+			<div className='row mt-1'>
+				<div className='header-block min-height-15'>
+					<div className='img-block' style={{backgroundImage: 'url(http://localmy.good-loop.com/img/children-scaled.jpeg)', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />
+					<div className='col-md-1' />					
+					<div className='col-md-5 col-sm-5 flex-row'>
+						<div className='flex-column flex-centre pad1 text-block'>
+							<span className='header white bottom-pad1'> 
+								318 school kits
 							</span>
-							<span className='text-justify'> 
-								to the Mind mental health info line <br /> 
-								which offers support and resources 
+							<span> 
+								While primary school is free in Côte d'Ivoire, some farmers struggle to pay for their children's school supplies. Nestlé and the International Cocoa Initiative will provide exercise-books, note-books, pens, rulers, erasers, chalk and slate so that more children can go to school.
 							</span>
 						</div>
 					</div>
+					<div className='col-md-6' />
 				</div>
 			</div>
-			<div className='row bottom-pad1'>
-				<div className='col-md-6'>
-					<div className='row bottom-pad1'>
-						<div className='flex-column flex-centre'>
-							<span className='sub-header bottom-padP5'> 
-								180 VACCINATIONS 
+			<div className='row mt-1'>
+				<div className='header-block min-height-15'>
+					<div className='img-block' style={{backgroundImage: 'url(http://localmy.good-loop.com/img/the-room.jpeg)', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />
+					<div className='col-md-1' />					
+					<div className='col-md-5 col-sm-5 flex-row'>
+						<div className='flex-column flex-centre pad1 text-block'>
+							<span className='header white bottom-pad1'> 
+								888 nights of accommodation
 							</span>
-							<span className='text-justify'> to protect children against measles </span>
+							<span> 
+								Centrepoint supports more than 10,000 young homeless people in the UK each year.
+							</span>
+						</div>
+					</div>
+					<div className='col-md-6' />
+				</div>
+			</div>
+			<div className='row mt-1'>
+				<div className='header-block min-height-15'>
+					<div className='img-block' style={{backgroundImage: 'url(http://localmy.good-loop.com/img/plants-scaled.jpeg)', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />			
+					<div className='col-md-1' />
+					<div className='col-md-5 col-sm-5 flex-row'>
+						<div className='flex-column flex-centre pad1 text-block'>
+							<span className='header white bottom-pad1'>
+								68 vegetable growing kits									
+							</span>
+							<span> 
+								Overreliance on cocoa means some Côte d'Ivoire farmers are vulnerable to price fluctuations. Nestlé and the International Cocoa Initiative ran workshops to give women the tools, seedlings, fertilisers and skills needed to grow and sell plantain, rice or peppers.  
+							</span>
 						</div>
 					</div>
 				</div>
-				<div className='col-md-6'>
-					<div className='row bottom-pad1'>
-						<div className='flex-column flex-centre'>
-							<span className='sub-header bottom-padP5'> 
-								318 SCHOOL KITS
-							</span>
-							<span className='text-justify'> including stantionary and text-books </span>
-						</div>
-					</div>
-				</div>
+				<div className='col-md-6' />
 			</div>
-			<div className='row text-center'>
-				{/* TODO: Have this point to some sort of record of Good-Loop's achievements */}
-				{/* <a href='/'> */}
-					And much more...
-				{/* </a> */}
-			</div>
+		</div>
+		<div className='sub-header text-center mt-1'>
+			{/* TODO: Have this point to some sort of record of Good-Loop's achievements */}
+			{/* <a href='/'> */}
+				And much more...
+			{/* </a> */}
 		</div>
 	</section>);
 };
