@@ -222,7 +222,7 @@ const StatisticsCardMini = () => {
 			</div> */}
 			<div className='row mt-1'>
 				<div className='header-block min-height-15'>
-					<div className='img-block' style={{backgroundImage: 'url(http://localmy.good-loop.com/img/children-scaled.jpeg)', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />
+					<div className='img-block' style={{backgroundImage: 'url(' + ServerIO.MY_ENDPOINT + '/img/children-scaled.jpeg' + ')', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />
 					<div className='col-md-1' />					
 					<div className='col-md-5 col-sm-5 flex-row'>
 						<div className='flex-column flex-centre pad1 text-block'>
@@ -239,7 +239,7 @@ const StatisticsCardMini = () => {
 			</div>
 			<div className='row mt-1'>
 				<div className='header-block min-height-15'>
-					<div className='img-block' style={{backgroundImage: 'url(http://localmy.good-loop.com/img/the-room.jpeg)', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />
+					<div className='img-block' style={{backgroundImage: 'url(' + ServerIO.MY_ENDPOINT + '/img/the-room.jpeg' + ')', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />
 					<div className='col-md-1' />					
 					<div className='col-md-5 col-sm-5 flex-row'>
 						<div className='flex-column flex-centre pad1 text-block'>
@@ -256,7 +256,7 @@ const StatisticsCardMini = () => {
 			</div>
 			<div className='row mt-1'>
 				<div className='header-block min-height-15'>
-					<div className='img-block' style={{backgroundImage: 'url(http://localmy.good-loop.com/img/plants-scaled.jpeg)', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />			
+					<div className='img-block' style={{backgroundImage: 'url(' + ServerIO.MY_ENDPOINT + '/img/plants-scaled.jpeg' + ')', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />			
 					<div className='col-md-1' />
 					<div className='col-md-5 col-sm-5 flex-row'>
 						<div className='flex-column flex-centre pad1 text-block'>

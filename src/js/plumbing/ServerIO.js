@@ -43,6 +43,11 @@ ServerIO.AS_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}as.good-loop.com`;
 // ServerIO.AS_ENDPOINT = `https://testas.good-loop.com`;
 // ServerIO.AS_ENDPOINT = `https://as.good-loop.com`;
 
+ServerIO.MY_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}my.good-loop.com`;
+// ServerIO.MY_ENDPOINT = `https://testmy.good-loop.com`;
+// ServerIO.MY_ENDPOINT = `https://my.good-loop.com`;
+
+
 /**
  * My Loop has no backend, so use profiler
  */
@@ -106,7 +111,7 @@ ServerIO.getAllSpend = ({vert, name}) => {
  */
 ServerIO.getAdHistory = (xid) => ServerIO.load(ServerIO.AS_ENDPOINT + '/watch-history/' + (xid ? escape(xid) : '' ));
 
-// Queries as for number of times that an ad shared by a user has been watched
+// Queries for number of times that an ad shared by a user has been watched
 // socialShareId should always be an array of strings
 ServerIO.getViewCount = (socialShareId) => {
 	if( typeof socialShareId === 'string' ) {
