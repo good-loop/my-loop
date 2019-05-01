@@ -4,202 +4,35 @@
 	text-align: center;
 }
 
-span.glyphicon.glyphicon-triangle-bottom, span.glyphicon.glyphicon-triangle-top {
-    display: none;
+.triangle-base {
+	height: 100%;
+	width: 50%;
 }
 
-// nav bar at the top
-.nav-bar {
-	li > a {
-		color: inherit;
-		text-decoration: none;
-		border-bottom: none;
-	}
-	li > a:hover  {
-		color: inherit;
-		border-bottom: none;
-		background-color: transparent;
-	}
-	
-	.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {
-		background-color: transparent;
-	}
-	.navbar-nav>li>.dropdown-menu {
-		color: @gl-red;
-		background: white;
-	}
+.white-triangle-left {
+	.triangle-base();
+	float: left;
+	background-image: linear-gradient(to right top, white 0%, white 50%, transparent 50%);
 }
 
-// login btn in the top right
-a.btn.btn-lg.btn-default.btn-gl.discrete-login {
-	border: 0;
-	background-color: inherit;
-	color: white;
-	padding-top: 2.5vh;
-	border-color: white;
-}
-
-// hack to remove panel's default padding and width (so that splashPhoto etc can take up the whole width of the page)
-.Card.panel.panel-default.fullCard, .Card.panel.panel-default.fullCard .panel-body {
-	padding: 0px;
-	width: unset;
-}
-
-// take up the whole space and look decluttered
-.panel {
-	margin-bottom: 0;
-	padding: 20px;
-}
-
-// prettify cards
-.panel-body {
-	// add more white space, looks less cluttered
-	padding: 30px;
-	// restrict width of text
-	width: 70%;
-    margin: 0 auto;
-	background-color: transparent;
-}
-
-.panel-title {
-	letter-spacing: 1px;
-	font-weight: bold;
+.white-triangle-right {
+	.triangle-base();
+	float: right;
+	background-image: linear-gradient(to left top, white 0%, white 50%, transparent 50%);	
 }
 
 /* gl button: white button on red background */
 .btn-gl {
+	&:hover {
+		background-color: @gl-red; 
+		text-decoration: none;
+		color: white;
+	}
 	background-color: white;
 	color: @gl-red;
 	border: 3px solid @gl-red;
 	font-weight: bold;
 }
-
-.btn.btn-gl:hover {
-	background-color: @gl-red; 
-	text-decoration: none;
-	color: white;
-} // end of gl button
-
-// card at the head of the page welcoming the user
-.WelcomeCard {	
-
-	.header-text{
-		vertical-align: middle; 
-		text-align: center;
-		// made text unselectable for hypothetical problems on mobile (it being near a button)
-		-webkit-touch-callout: none; /* iOS Safari */
-		-webkit-user-select: none; /* Safari */ /* Konqueror HTML */
-		-moz-user-select: none; /* Firefox */
-		-ms-user-select: none; /* Internet Explorer/Edge */
-		user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
-	}
-
-	.title {
-		width: 100%;
-		margin: 0 auto;
-		padding: 2vmin 0 3vmin 0;		
-	}
-	.header-text.post-login.title {
-		padding: 8vmin 0 3vmin 0;		
-	}
-
-	.subtitle {	
-		letter-spacing: 0.4vmin;
-		padding-top: 1vmin;		
-		width: 85%;
-		margin: 0 auto;
-	}
-
-	// hack to add some padding and proper size for mobile between sign in button and hero image
-	.btn-gl {
-		margin-top: 2rem;
-	}
-
-	// appears in the top-right of the big red welcome card
-	.logged-in {
-		font-size: 3.5vmin;
-		padding-right: 30px;
-		padding-top: 10px;
-		
-		p {
-			margin: 0 0 0px;
-		}
-	}
-}
-
-
-.how-text {
-	text-align: left;
-	display: block;
-	// Restrict line length to less than 80 characters.
-	// Improves readibility for larger blocks of text
-	max-width: 40rem;
-}
-
-
-// end of OnboardingCard
-
-// StatisticsCard shows e.g. 1,470,000 people reached
-.statistics-content {
-	h2 {
-		margin: 0 4vmin;
-		line-height: 1.5em;
-	}
-
-	.statistics-item {
-		text-align: center;
-
-		.statistics-value {
-			// align
-			vertical-align: middle;
-			// less cluttered
-			padding-top: 30px;
-
-			.statistics-value-highlight {
-				margin-top: 5px;
-				position: relative;
-				display: block;
-				padding-bottom: 10px;
-				margin-bottom: 10px;
-				font-size: 24px;
-				font-weight: bold;
-				&:after {
-					display: block;
-					position: absolute;
-					content: "";
-					bottom: 0;
-					left: 50%;
-					margin-left: -51px;
-					width: 102px;
-					height: 5px;
-					// Darken to look more reasonable with dark green background
-					background: @gl-red;
-				}
-			}
-		}
-
-		// a non-money value, eg "No compromises"
-		.text-stat {
-			padding-bottom: 2px;
-		}
-
-		.statistics-subtext {
-			text-transform: uppercase;
-			display: block;
-			min-height: 36px;
-		}
-	}
-}  // ./statistics-content (aka Our Achievements Together card)
-// this is used for the achievement text-based messages in StatisticsCard
-
-
-// SocialMediaCard: a widget for showing connected social media accounts or buttons to connect
-// fixing odd margins on the twitter id display
-.wrapper .connected {
-	margin-left: 0.5vmin;
-}
-// ./SocialMediaCard 
-
 
 // DigitalMirrorCard: a widget for showing the user their twitter data (experimental)
 .mirror {
@@ -259,18 +92,6 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 	}
 }
 
-// autosave message to inform user that their edits have been saved
-.autosave {
-	margin-left: 1vmin;
-}
-
-//  edit button
-.edit {
-	margin: 2vmin 0 2vmin 1.3vmin;	
-}
-
-// end of DigitalMirrorCardDesign
-
 // TODO: combine DigitalMirrorCard and DigitalMirrorCardDesign and tidy up code
 .vertical-align {
 	display: flex;
@@ -293,15 +114,6 @@ a.btn.btn-lg.btn-default.btn-gl.discrete-login {
 
 .word-wrap {
 	word-break: break-all;
-}
-
-// hack to make grayed out values consistent across website
-.text-muted {
-	color: #9c9c9c;
-}
-
-.width100pct {
-	width: 100%;
 }
 
 // on my-loop we only want to show gl social links, so center the content and unset flex

@@ -26,10 +26,6 @@ html, body {
 	padding: 1rem;
 }
 
-.pad2 {
-	padding: 2rem;
-}
-
 .pad3 {
 	padding: 3rem;
 }
@@ -42,26 +38,15 @@ html, body {
 	padding-top: 3rem;
 }
 
-.bottom-padP5 {
-	padding-bottom: 0.5rem;
-}
-
 .bottom-pad1 {
 	padding-bottom: 1rem;
-}
-
-.bottom-pad2 {
-	padding-bottom: 2rem;
-}
-
-.bottom-pad3 {
-	padding-bottom: 3rem;
 }
 
 .mt-1 {
 	margin-top: 1rem;
 }
 
+// Used to give achievements rows a more even height
 .min-height-15 {
 	min-height: 15rem;
 }
@@ -91,18 +76,6 @@ html, body {
 	background-color: @gl-red;
 }
 
-.background-dark-blue {
-	background-color: #51808a;
-}
-
-.background-dark-green {
-	background-color: #008C59;
-}
-
-.background-white {
-	background-color: #fff;
-}
-
 .text-shadow-light-blue {
 	text-shadow: @gl-light-blue 2px 2px;
 }
@@ -115,22 +88,21 @@ html, body {
 	height: 100vh;
 }
 
-// TODO (03/04/19): get rid of this. Added quickly so we can release. Bootstrap makes links blue, looks awful with green background
-.white-link {
-	color: #fff;
-	text-decoration: underline;
-}
-
 .gl-red {
 	color: @gl-red;
 }
 
-.black {
-	color: #000;
-}
-
 .white {
 	color: #fff;
+}
+
+// hack to make grayed out values consistent across website
+.text-muted {
+	color: #9c9c9c;
+}
+
+.width100pct {
+	width: 100%;
 }
 
 // Little red strip used for decoration
@@ -163,69 +135,10 @@ a {
 	height: 10rem;
 }
 
-.faded {
-	opacity: 0;
-	transition: 1s opacity;
-}
-
-.fade-in {
-	opacity: 1;
-}
-
-.intro-item-text {
-	// Want first line of all blocks to on the same eye-level
-	height: 3rem;
-	color: #000;
-}
-
 .btn-primary {
 	background-color: @gl-red !important;
 	border-color: darken(@gl-red, 10%) !important;
 }
-
-// email cta under the title 
-// TODO(10/04/19): clear this up. Suspect that most if this is actually not needed
-.cta-email {
-	// toning down the font 
-	text-shadow: initial;
-	text-align: center;
-	// make the text pop out even if there is a bg image
-	font-weight: bold;
-	// hack: for some reason setting the font size here keeps it from being glitchy and pushing the email cta down
-	font-size: 2vh; 
-	color: white;
-
-	// center the email CTA (centering requires specifying width) and highlight just the CTA text ("Double your donation ...")
-	.cta-lead {
-		width: 19em;
-	}		
-	.cta-help {
-		width: 22em;
-	}
-
-	// font too big (email cta text needs to be more subtle)
-	.cta-help {
-		font-size: 1.5vh;
-	}
-
-	.cta-help, .cta-lead {
-		background-color: @gl-red; // gl color	
-		margin: 3px auto;
-	}
-
-	.input-group {
-		margin: 0 auto;	// center input
-
-		.sign-up-btn {
-			text-shadow: initial; // the rest of the email-cta should be shadowed, but not the button (unreadable)
-			cursor: pointer; // a button should look clickable
-		}
-	}
-
-	span {
-		width: initial; // hack: for some reason this makes the 'sign up' btn sit next to the input, instead of flying to the far right
-	}
-} // ./cta-email
 
 .link.watch-cta {
 	font-family: initial; // go back to using montserrat (looks nicer)
@@ -235,113 +148,9 @@ a {
 	font-size: 2.5vh; // make it pop out responsively
 }
 
-.circle {
-	width: 8rem;
-	height: 8rem;
-	margin: auto;
-	border-radius: 50%;
-	font-size: 0.875rem;
-	
-	span {
-		.sub-header();
-	}
-	.project-name {
-		font-size: 1rem;
-	}
-}
-
-.circle-draw {
-	height: 200px;
-	width: 200px;
-	background-color: #bbb;
-	border-radius: 50%;
-	display: inline-block;
-}
-
-// Override wonky BootStrap absolute positioning
-.carousel-indicators {
-	position: relative;
-	bottom: unset;
-	left: unset;
-	z-index: unset;
-	width: auto;
-	padding-left: unset;
-	margin-left: auto;
-}
-
-.triangle-base {
-	height: 100%;
-	width: 50%;
-}
-
-.white-triangle-left {
-	.triangle-base();
-	float: left;
-	background-image: linear-gradient(to right top, white 0%, white 50%, transparent 50%);
-}
-
-.white-triangle-right {
-	.triangle-base();
-	float: right;
-	background-image: linear-gradient(to left top, white 0%, white 50%, transparent 50%);	
-}
-
-// For Login-widget logo on mobile
-h4.modal-title {
-	text-align: center;
-}
-
-// **mobile layout rules**
-// using flex to change the template of the layout for the bottom row (share and social buttons) to a column based one
-// and replacing carousel with scroll-down layout
-// and removing restriction to top+middle tile (smaller screens shouldn't try to fit the top & middle tile into one page)
 @media only screen and (max-width: 1100px) {
 	html, body {
 		font-size: 16px;
-	}
-
-	//TODO: this is a must because for some reason the dropdown css changes the position to static when on mobile sized screens
-	// position static then leads to the flex column not occupying the 33.3% of the screen anymore
-	// i have to investigate why it does this and how to best change it
-	.navbar-nav .open .dropdown-menu {
-		position: absolute !important; 
-	}
-
-	.circle img {
-		width: 8rem;
-		height: 8rem;
-	}
-
-	.grid-tile.middle .inside .carousel {
-		.carousel-indicators, .carousel-control {
-			// replace carousel with scroll-down layout
-			display: none;
-		}
-
-		.carousel-inner .item {
-			// replace carousel with scroll-down layout
-			display: block;
-			height: 63vh;
-
-			.slide-header {
-				.slide-title {
-					// otherwise on smaller screens the title becomes unreadable
-					font-size: 3.18vmin;
-					top: 1.5vh;
-				}
-
-				.slide-logo {
-					// otherwise the logo is too small 
-					height: 60px !important;
-					width: 60px !important;
-
-					img {
-						// otherwise the logo looms weirdly to the right (on small screens it should just be above the title)
-						float: unset;
-					}
-				}
-			}
-		}
 	}
 }
 
@@ -349,9 +158,4 @@ h4.modal-title {
 	html, body {
 		font-size: 14px;
 	}
-
-	.circle img{
-		width: 6.5rem;
-		height: 6.5rem;
-	}
-}//. mobile layout rules 
+}

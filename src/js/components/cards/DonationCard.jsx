@@ -63,10 +63,10 @@ const DonationCard = ({xids}) => {
 		// word-wrap fixes bug where users with a lot of linked IDs see giant string that scrolls off screen if charity data cannot be fetched
 		// Might be better to just display qAllIds instead of xids, but this is easier to test right now (unable to reproduce on local/test)
 		return (
-			<React.Fragment>
+			<>
 				<p className="word-wrap">You do not appear to have made a donation via a Good-Loop ad</p>
-				<a className='white-link' href='https://as.good-loop.com'>Watch a Good-Loop ad to donate</a>
-			</React.Fragment>
+				<a href='https://as.good-loop.com'>Watch a Good-Loop ad to donate</a>
+			</>
 		);
 	}
 

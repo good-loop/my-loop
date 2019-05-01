@@ -164,24 +164,24 @@ const IntroCard = () => (
 		<div className='row pad1'>
 			<div className='col-md-4 intro-item'>
 				<i className='fa fa-pencil fa-3x margin-auto pad1' />
-				<div className='text-left flex-row'>  
-					<span className='margin-auto how-text'>
+				<div className='flex-row'>  
+					<span className='margin-auto text-block'>
 						Sign Up. We will not share any of your information with third-parties
 					</span>
 				</div>
 			</div>
 			<div className='col-md-4 intro-item'>
 				<i className='fa fa-mouse-pointer fa-3x margin-auto pad1' />
-				<div className='text-left flex-row'>
-					<span className='margin-auto how-text'> 
+				<div className='flex-row'>
+					<span className='margin-auto text-block'>				
 						Browse online as normal. Targetted adverts generate more for your chosen charities.
 					</span>		
 				</div>				
 			</div>
 			<div className='col-md-4 intro-item'>
 				<i className='fa fa-envelope fa-3x margin-auto pad1' />
-				<div className='text-left flex-row'>
-					<span className='margin-auto how-text'> 
+				<div className='flex-row'>
+					<span className='margin-auto text-block'> 
 						Learn how much you and other Good-Loopers have raised for charity each month! 
 					</span>
 				</div>
