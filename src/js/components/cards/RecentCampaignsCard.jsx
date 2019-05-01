@@ -1,5 +1,5 @@
 import React from 'react';
-import {RoundLogo} from './Image';
+import {RoundLogo} from '../Image';
 
 const RecentCampaignsCard = () => {
 	

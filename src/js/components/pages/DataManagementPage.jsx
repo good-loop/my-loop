@@ -1,17 +1,17 @@
 import React, {useEffect} from 'react';
 import Login from 'you-again';
 
-import DataStore from '../base/plumbing/DataStore';
+import DataStore from '../../base/plumbing/DataStore';
 
-import DigitalMirrorCard from './DigitalMirrorCard';
-import ConsentWidget from './ConsentWidget';
-import SocialMediaCard from './SocialMediaCard';
-import LinkedProfilesCard from './LinkedProfilesCard';
-import { LoginToSee } from './Bits';
-import NavBar from './NavBar';
-import Footer from './Footer';
-import { withLogsIfVisible } from '../base/components/HigherOrderComponents';
-import {getAllXIds} from '../base/Profiler';
+import DigitalMirrorCard from '../cards/DigitalMirrorCard';
+import ConsentWidget from '../ConsentWidget';
+import SocialMediaCard from '../cards/SocialMediaCard';
+import LinkedProfilesCard from '../cards/LinkedProfilesCard';
+import NavBar from '../NavBar';
+import Footer from '../Footer';
+import { withLogsIfVisible } from '../../base/components/HigherOrderComponents';
+import {getAllXIds} from '../../base/Profiler';
+import Misc from '../../base/components/Misc';
 
 let Page = () => {
 	const xids = DataStore.getValue(['data', 'Person', 'xids']) || [];
@@ -44,7 +44,7 @@ let Page = () => {
 					{Login.isLoggedIn() ? (
 						<ConsentWidget xids={xids} />
 					) : (
-						<LoginToSee />
+						<Misc.LoginToSee />
 					)}
 				</div>
 			</div>

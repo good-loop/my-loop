@@ -1,7 +1,7 @@
 import React from 'react';
 import { XId } from 'wwutils';
-import { getProfilesNow } from '../base/Profiler';
-import { SocialSignInButton } from '../base/components/LoginWidget';
+import { getProfilesNow } from '../../base/Profiler';
+import { SocialSignInButton } from '../../base/components/LoginWidget';
 
 /**
  * Social CTAs: Share on social / connect

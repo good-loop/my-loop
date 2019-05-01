@@ -18,12 +18,12 @@ import LoginWidget from './LoginWidget';
 import NavBar from './NavBar';
 
 // Pages
-import MyPage from './MyPage';
-import CampaignPage from './CampaignPage';
+import MyPage from './pages/MyPage';
+import CampaignPage from './pages/CampaignPage';
 import {BasicAccountPage} from '../base/components/AccountPageWidgets';
 import E404Page from '../base/components/E404Page';
 import TestPage from '../base/components/TestPage';
-import DataManagementPage from './DataManagementPage';
+import DataManagementPage from './pages/DataManagementPage';
 
 // DataStore
 C.setupDataStore();

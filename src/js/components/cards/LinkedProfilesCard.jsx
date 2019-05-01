@@ -2,9 +2,9 @@ import React from 'react';
 import Login from 'you-again';
 import { XId } from 'wwutils';
 
-import C from '../C';
-import Person from '../base/data/Person';
-import DataStore from '../base/plumbing/DataStore';
+import C from '../../C';
+import Person from '../../base/data/Person';
+import DataStore from '../../base/plumbing/DataStore';
 
 
 const LinkedProfilesCard = ({xids}) => {

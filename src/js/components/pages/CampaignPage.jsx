@@ -1,16 +1,16 @@
 import React from 'react';
 // import pivot from 'data-pivot';
-import C from '../C';
-import ServerIO from '../plumbing/ServerIO';
-import DataStore from '../base/plumbing/DataStore';
-import Misc from '../base/components/Misc';
-import ActionMan from '../plumbing/ActionMan';
-import {ListItems, ListFilteredItems} from '../base/components/ListLoad';
-import Footer from './Footer';
-import MDText from '../base/components/MDText';
-import NavBar from './NavBar';
-import { RoundLogo } from './Image';
-import ShareAnAd from './ShareAnAd';
+import C from '../../C';
+import ServerIO from '../../plumbing/ServerIO';
+import DataStore from '../../base/plumbing/DataStore';
+import Misc from '../../base/components/Misc';
+import ActionMan from '../../plumbing/ActionMan';
+import {ListItems, ListFilteredItems} from '../../base/components/ListLoad';
+import Footer from '../Footer';
+import MDText from '../../base/components/MDText';
+import NavBar from '../NavBar';
+import { RoundLogo } from '../Image';
+import ShareAnAd from '../cards/ShareAnAd';
 
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser`
@@ -127,7 +127,7 @@ const CampaignPage = () => {
 							</div>
 							<div className='sub-header pad1'>
 								<div>Together we've raised</div>													
-								{donationValue? <div className='header' style={backgroundImage ? {textShadow: '2px 2px ' + brandColor} : {color: brandColor}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
+								{donationValue? <div className='header white' style={{color: '#000', textShadow: '2px 2px ' + (brandColor || '#000')}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 								<div>for</div>
 							</div>
 							<div className='img-block' style={{backgroundImage: 'url(' + backgroundImage + ')'}} />

@@ -1,12 +1,11 @@
 /* global navigator */
 import React from 'react';
-import C from '../C';
-import ServerIO from '../plumbing/ServerIO';
-import DataStore from '../base/plumbing/DataStore';
-import Misc from '../base/components/Misc';
-import ActionMan from '../plumbing/ActionMan';
+import C from '../../C';
+import ServerIO from '../../plumbing/ServerIO';
+import DataStore from '../../base/plumbing/DataStore';
+import Misc from '../../base/components/Misc';
+import ActionMan from '../../plumbing/ActionMan';
 import Login from 'you-again';
-import {LoginToSee} from './Bits';
 
 /**
  * @returns {?Boolean} true if do-not-track is on
@@ -23,7 +22,7 @@ const doNotTrack = () => {
 
 const DonationCard = ({xids}) => {
 	if ( ! Login.isLoggedIn()) {
-		return <LoginToSee />;
+		return <Misc.LoginToSee />;
 	}
 
 	// Do not track?

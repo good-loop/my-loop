@@ -3,12 +3,12 @@
 import React from 'react';
 import {assMatch} from 'sjtest';
 import _ from 'lodash';
-import PropControl from '../base/components/PropControl';
-import DataStore from '../base/plumbing/DataStore';
-import Claim from '../base/data/Claim';
-import {getClaimsForXId, saveProfileClaims} from '../base/Profiler';
-import ServerIO from '../plumbing/ServerIO';
-import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
+import PropControl from '../../base/components/PropControl';
+import DataStore from '../../base/plumbing/DataStore';
+import Claim from '../../base/data/Claim';
+import {getClaimsForXId, saveProfileClaims} from '../../base/Profiler';
+import ServerIO from '../../plumbing/ServerIO';
+import {withLogsIfVisible} from '../../base/components/HigherOrderComponents';
 
 // TODO: Think that this will need to change significantly in future
 // Rough form: can open menu to see specific data we've found and where it's come from

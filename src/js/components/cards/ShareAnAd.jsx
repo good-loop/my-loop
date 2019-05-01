@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import md5 from 'md5';
 import { XId } from 'wwutils';
-import DataStore from '../base/plumbing/DataStore';
-import ServerIO from '../plumbing/ServerIO';
-import {saveSocialShareId} from '../base/Profiler';
-import GoodLoopUnit from '../base/components/GoodLoopUnit';
-import {IntentLink} from '../base/components/SocialShare';
-import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
+import DataStore from '../../base/plumbing/DataStore';
+import ServerIO from '../../plumbing/ServerIO';
+import {saveSocialShareId} from '../../base/Profiler';
+import GoodLoopUnit from '../../base/components/GoodLoopUnit';
+import {IntentLink} from '../../base/components/SocialShare';
+import {withLogsIfVisible} from '../../base/components/HigherOrderComponents';
 
 // TODO: force ShareAnAd to use non-VAST video rather than loading Good-Loop player? Thinking about how to reduce loading times, that might be an idea.
 

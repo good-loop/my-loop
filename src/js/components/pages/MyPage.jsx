@@ -4,19 +4,19 @@
 import React from 'react';
 import Login from 'you-again';
 
-import DataStore from '../base/plumbing/DataStore';
-import Misc from '../base/components/Misc';
-import { LoginLink } from '../base/components/LoginWidget';
-import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
+import DataStore from '../../base/plumbing/DataStore';
+import Misc from '../../base/components/Misc';
+import { LoginLink } from '../../base/components/LoginWidget';
+import {withLogsIfVisible} from '../../base/components/HigherOrderComponents';
 
-import ServerIO from '../plumbing/ServerIO';
-import Footer from './Footer';
-import ShareAnAd from './ShareAnAd';
-import DonationCard from './DonationCard';
-import LoginWidget from './LoginWidget';
-import NavBar from './NavBar';
-import OnboardingCardMini from './OnboardingCardMini';
-import RecentCampaignsCard from './RecentCampaignsCard';
+import ServerIO from '../../plumbing/ServerIO';
+import Footer from '../Footer';
+import ShareAnAd from '../cards/ShareAnAd';
+import DonationCard from '../cards/DonationCard';
+import LoginWidget from '../LoginWidget';
+import NavBar from '../NavBar';
+import OnboardingCardMini from '../cards/OnboardingCardMini';
+import RecentCampaignsCard from '../cards/RecentCampaignsCard';
 
 const pagePath = ['widget', 'MyPage'];
 
