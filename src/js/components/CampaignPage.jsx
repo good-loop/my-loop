@@ -1,136 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import { encURI } from 'wwutils';
+import React from 'react';
 // import pivot from 'data-pivot';
 import C from '../C';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
-import Money from '../base/data/Money';
 import Misc from '../base/components/Misc';
 import ActionMan from '../plumbing/ActionMan';
 import {ListItems, ListFilteredItems} from '../base/components/ListLoad';
 import Footer from './Footer';
 import MDText from '../base/components/MDText';
-import PropControl from '../base/components/PropControl';
-import { SocialMediaShareWidget } from './SocialLinksWidget';
 import NavBar from './NavBar';
-import OptimisedImage, { RoundLogo } from './Image';
+import { RoundLogo } from './Image';
 import ShareAnAd from './ShareAnAd';
-
-const DonationSlideWidget = ({active, name, logo, description, hideImpactData, id}) => {	
-	// This data will never be used outside of this component, so I have chosen to manage state locally
-	// impactData is actually the "projects" field in SoGive data
-	const [impactData, setImpactData] = useState([]);
-	// Think what we need to do is call setImpactData on ServerIO callback
-	useEffect(() => {
-		if( !hideImpactData ) {
-			ServerIO.getDataItem({type: 'NGO', id, status: 'PUBLISHED'})
-				// Grab projects, but ignore any results that do not contain a "costPerBeneficiary" field
-				// Will give a blank array if none are found
-				.then(res => 
-					res 
-					&& res.cargo 
-					&& res.cargo.projects 
-					&& setImpactData(
-						res.cargo.projects
-							.reduce( (out, data) => data.outputs && data.outputs.length > 0 ? [...out, ...data.outputs] : out, [])
-							.filter( data => data.costPerBeneficiary )
-					));
-		}
-	}, [id]);
-
-	// is the item currently active (aka show in carousel)
-	let itemClass = active ? 'item active' : 'item';
-
-	// if there's no chty title or logo, we shouldn't show the slide in the carousel
-	if (!name && !logo) {
-		return null;
-	}
-
-	// Layout changes based on whether or not image has been provided for each charity
-	return (
-		<div className={itemClass}>
-			<div className='container-fluid'>
-				<div className='flex row'>
-					<div className='col-md-1' />
-					<div className='col-md-5 flex-column'>
-						<div className="slide-header">
-							<div className="col-md-3" />
-							<div className="col-md-6 slide-title h3">
-								{name}
-							</div>	
-						</div>
-						<div className="slide-desc">
-							<MDText source={description} />
-							{
-								impactData.map( data => (
-									<MDText key={data} source={`**Average cost: ${Money.CURRENCY[data.costPerBeneficiary.currency] || ''}${data.costPerBeneficiary.value} per ${data.name || 'unit'} **`} />
-								))
-							}
-						</div>		
-					</div>
-					<div className='col-md-4 slide-photo margin-auto'>
-						<RoundLogo url={logo} />
-					</div>
-					<div className='col-md-2' />
-				</div>
-			</div>
-		</div>
-	);
-};
-
-/**
- *
- * connect with us by email 
- */
-// NB: code was copy-pasted from adunit. But it will diverge.
-const EmailCTA = () => {
-	// Will name-space by ad or vertiser id
-	const { 'gl.vert': adid, 'gl.vertiser': vertiserid } = DataStore.getValue(['location', 'params']) || {};
-
-	const path = ['widget', 'CampaignPage'].concat(adid || vertiserid);
-	const emailPath = path.concat('email');
-	const submittedPath = path.concat('submitted');
-
-	// Check cookies to see if user has already submitted an email here or via the adunit
-	// Only need to check this once
-	DataStore.fetch(submittedPath, () => {
-		// TODO replace with js-cookie here
-		const cookies = document.cookie;
-		return cookies.split(';').filter( item => item.includes('cta-email=email')).length;
-	});
-
-	const email = DataStore.getValue(emailPath);
-	const submitted = DataStore.getValue(submittedPath);
-
-
-	const emailSubmit = () => {
-		// Don't submit a blank form
-		if ( !email ) return;
-
-		// Pass to profiler for processing
-		ServerIO.post(ServerIO.PROFILER_ENDPOINT + '/form/gl/', { email })
-			.then( () => {
-				// Don't ask for their email again
-				document.cookie = `cta-email=email;max-age=${60 * 60 * 24 * 365};domain=.good-loop.com;path=/`;
-				DataStore.setValue(submittedPath, true);
-			});
-	};
-
-	if (submitted) return <div className="cta-email">Thank you for providing your email address!</div>;
-
-	return (
-		<div className="cta-email">
-			<p className="cta-lead"><span>Double your donation by joining<br/> Good-Loop's mailing list</span></p>
-			<div className="input-group">
-				<PropControl path={path} prop='email' type='email' placeholder="Email address" />
-				<span className="input-group-addon sign-up-btn" id="basic-addon2" onClick={emailSubmit}>Sign Up</span> 
-			</div>
-			<p className="cta-help">You can unsubscribe at any time. We will not share your email. 
-				<span> <a href="https://my.good-loop.com" target="_blank">more info</a></span>
-			</p>
-		</div>
-	);
-}; // ./connect
 
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser`
@@ -170,11 +50,6 @@ const CampaignPage = () => {
 	// Assume we have data for single advert if adid exists
 	// Pull out first advert from advertiser data if not
 	let ad = adid ? adPv.value : ( adPv.value && adPv.value.hits && adPv.value.hits[0] );
-
-	// good-loop branding
-	let glColorBgStyle = {
-		color: 'white'
-	};
 
 	let {branding={}} = ad;
 	// default styling if adv branding is not there 
