@@ -1,14 +1,11 @@
 /* global navigator */
 import React from 'react';
-import { XId } from 'wwutils';
 import C from '../C';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
-import {getId} from '../base/data/DataClass';
 import Misc from '../base/components/Misc';
 import ActionMan from '../plumbing/ActionMan';
 import Login from 'you-again';
-import { getProfilesNow } from '../base/Profiler';
 import {LoginToSee} from './Bits';
 
 /**
@@ -95,7 +92,7 @@ const DonationCard = ({xids}) => {
 	});
 	let communityDonationsByCharity = pvCommunityCharityTotal.value? pvCommunityCharityTotal.value.by_cid : {};
 
-	let onlyOneCharity = cids.length === 1 ? true : false;
+	let onlyOneCharity = cids.length === 1;
 
 	// make rows
 	let rows = cids.map(cid => {
@@ -112,52 +109,9 @@ const DonationCard = ({xids}) => {
 	</div>);
 }; // ./DonationCard
 
-
-const You = ({xids}) => {
-	console.warn("You...", xids);
-	let peeps = getProfilesNow(xids);
-	// get image	
-	let img = getImage(peeps);	
-	console.warn("You img", img);
-	return (<div></div>);
-};
-
-// TODO move to Profiler
-const getImage = peeps => {	
-	// any with an image?
-	let peepsWithImg = peeps.filter(peep => peep.img);
-	if (peepsWithImg.length) {
-		// TODO use the claim data to pick the most recent
-		return peepsWithImg[0].img;
-	}
-	// Facebook?
-	// use http://graph.facebook.com/" + facebookId + "/picture?type=square For instance:
-	let fbpeeps = peeps.filter(peep => XId.service(getId(peep)) === 'facebook');
-	if (fbpeeps.length) {
-		// TODO an ajax request to https://graph.facebook.com/{id}?fields=picture.width(720).height(720)&redirect=false
-		// will get a json blob with picture.data.url
-		// a redirect??
-		let xid = fbpeeps[0].xid;
-		// FIXME this kills react?!
-		// let pvImg = DataStore.fetch(['transient', 'fb', xid], () => {
-		// 	return $.get('https://graph.facebook.com/' + XId.id(fbpeeps[0].xid) + "/picture?type=square");
-		// });
-		// if (pvImg.resolved) {
-		// 	console.warn("FB img", pvImg.value);
-		// }
-	}
-	// TODO email - gravatar
-	// ?? is there a gmail??
-	// https://stackoverflow.com/questions/9128700/getting-google-profile-picture-url-with-user-id
-	// <script src="https://www.avatarapi.com/js.aspx?email=peter.smith@gmail.com&size=128"></script>
-	// https://picasaweb.google.com/data/feed/api/user/daniel.winterstein@gmail.com?kind=album&alt=json
-	// then profilePic = myArr["feed"]["entry"][0]["media$group"]["media$thumbnail"][0]["url"]; 
-	return null;
-};
-
-const CharityDonation = ({cid, userTotal, communityTotal, onlyOneCharity}) => {
+const CharityDonation = ({cid, communityTotal, onlyOneCharity}) => {
 	// HACK: avoid any dodgy numbers from old/new donation counters
-	if (communityTotal > 20000) communityTotal = communityTotal*0.06;
+	if (communityTotal > 20000) communityTotal *= 0.06;
 
 	// TODO show the users donations - if they're above a threshold, e.g. £1
 	// Below that and users will feel dispirited 
@@ -191,43 +145,5 @@ const CharityDonation = ({cid, userTotal, communityTotal, onlyOneCharity}) => {
 		</div>
 	);
 };
-
-	// // TODO fetch peeps, use Person.img, use Login.getUser(), use gravatar and Facebook standards to get an image
-	// let peeps = getProfilesNow(xids);
-	// console.warn("image", peeps, Login.getUser(), Login.aliases);
-	// let profileImg = (Login.getUser() && Login.getUser().img)
-	// 	// TODO a fallback image
-	// 	|| "http://scotlandjs.com/assets/speakers/irina-preda-e8f1d6ce56f84ecaf4b6c64be7312b56.jpg";
-
-// 	// Display their charity + community donations
-// 	return 	(<Misc.Col2>
-// 		<div className="content">
-// 			<div className="partial-circle big top">
-// 				<img src="https://res.cloudinary.com/hrscywv4p/image/upload/c_limit,h_630,w_1200,f_auto,q_90/v1/722207/gl-logo-red-bkgrnd_qipkwt.jpg" />
-// 			</div>
-// 			<div className="partial-circle big bottom"><p className="stats">
-// 				<Misc.Money amount={1} />
-// 			</p></div>
-// 			<div className="partial-circle2 small top">
-// 				<img src={profileImg} />
-// 			</div>
-// 			<div className="partial-circle2 small bottom"><p className="stats">
-// 				<Misc.Money amount={userTotal} />
-// 			</p></div>
-// 		</div>
-// 		<div>{pvTopCharity.value? <CharityBlurb charity={pvTopCharity.value} /> : null}</div>
-// 	</Misc.Col2>);
-// }; // ./DonationsCard
-
-// const CharityBlurb = ({charity}) => {
-// 	let img = charity.logo || charity.img;
-// 	// HACK for old SoGive data which has relative urls
-// 	if (img && img[0]==='/') img = 'https://app.sogive.org'+img;
-// 	return (<div>
-// 		<h4>Your Top Charity</h4>
-// 		<h4>{charity.name}</h4>
-// 		{img? <img src={img} className='logo img-thumbnail' /> : null}
-// 	</div>);
-// };
 
 export default DonationCard;

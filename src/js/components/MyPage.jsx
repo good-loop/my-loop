@@ -5,7 +5,6 @@ import React from 'react';
 import Login from 'you-again';
 
 import DataStore from '../base/plumbing/DataStore';
-import printer from '../base/utils/printer';
 import Misc from '../base/components/Misc';
 import { LoginLink } from '../base/components/LoginWidget';
 import {withLogsIfVisible} from '../base/components/HigherOrderComponents';
@@ -18,7 +17,6 @@ import LoginWidget from './LoginWidget';
 import NavBar from './NavBar';
 import OnboardingCardMini from './OnboardingCardMini';
 import RecentCampaignsCard from './RecentCampaignsCard';
-import { RoundLogo } from './Image';
 
 const pagePath = ['widget', 'MyPage'];
 
