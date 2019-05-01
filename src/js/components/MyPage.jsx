@@ -223,7 +223,7 @@ const StatisticsCardMini = () => {
 					<div className='img-block' style={{backgroundImage: 'url(' + ServerIO.MY_ENDPOINT + '/img/children-scaled.jpeg' + ')', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />
 					<div className='col-md-1' />					
 					<div className='col-md-5 col-sm-5 flex-row'>
-						<div className='flex-column flex-centre pad1 text-block'>
+						<div className='flex-column pad1 text-block'>
 							<span className='header white bottom-pad1'> 
 								318 school kits
 							</span>
@@ -240,7 +240,7 @@ const StatisticsCardMini = () => {
 					<div className='img-block' style={{backgroundImage: 'url(' + ServerIO.MY_ENDPOINT + '/img/the-room.jpeg' + ')', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />
 					<div className='col-md-1' />					
 					<div className='col-md-5 col-sm-5 flex-row'>
-						<div className='flex-column flex-centre pad1 text-block'>
+						<div className='flex-column pad1 text-block'>
 							<span className='header white bottom-pad1'> 
 								888 nights of accommodation
 							</span>
@@ -257,7 +257,7 @@ const StatisticsCardMini = () => {
 					<div className='img-block' style={{backgroundImage: 'url(' + ServerIO.MY_ENDPOINT + '/img/plants-scaled.jpeg' + ')', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />			
 					<div className='col-md-1' />
 					<div className='col-md-5 col-sm-5 flex-row'>
-						<div className='flex-column flex-centre pad1 text-block'>
+						<div className='flex-column pad1 text-block'>
 							<span className='header white bottom-pad1'>
 								68 vegetable growing kits									
 							</span>
