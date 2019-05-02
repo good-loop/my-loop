@@ -34,7 +34,7 @@ const DigitalMirrorCard = ({xids, doesIfVisibleRef}) => {
 	);
 };
 
-const debounceSaveFn = ({xid, value, from, prop}) => _.debounce(() => saveFn(xid, value, from, prop));
+const debounceSaveFn = _.debounce(({xid, data, from}) => saveFn(xid, data, from), 3000);
 
 /**
  * @param fieldType is just PropControl's type. What kind of input field do you want
@@ -43,26 +43,8 @@ const debounceSaveFn = ({xid, value, from, prop}) => _.debounce(() => saveFn(xid
 const ConsentControlRow = ({path, prop, fieldType, iconFn, selectOptions, xid}) => {
 	const editModeEnabled = DataStore.getValue(['widget', 'DigitalMirror', 'editModeEnabled']);
 
-	// For drop-down menus, easy to display display the edit field if the user has not already provided a value
-	// Behaviour is a good deal more complicated for text fields, which will switch to having a value as soon as the user begins typing
-	if( editModeEnabled ) {
-		return (
-			<div className='row vertical-align revertHeight'> 
-				<div className={'col-md-11'}>
-					<PropControl 
-						type={fieldType}
-						path={path} 
-						prop={prop}
-						options={selectOptions}
-						saveFn={(value) => debounceSaveFn({value, from: 'myloop@app', prop, xid})}
-					/>
-				</div>
-			</div>	
-		);
-	}
-
 	const placeholder = 'Unknown ' + prop; // Shows where value for text field is not available
-	const value = DataStore.getValue([...path, prop]) || placeholder;
+	const value = DataStore.getValue([...path, prop]);
 	// ?? profile-name: better to use a bootstrap instead of a custom css class
 	return (
 		<div className='row vertical-align'> 
@@ -70,7 +52,17 @@ const ConsentControlRow = ({path, prop, fieldType, iconFn, selectOptions, xid}) 
 				{iconFn && iconFn(value)}
 			</div>
 			<div className={'col-md-11' + (value ? '' : ' text-muted')}>
-				{value}
+				{
+					editModeEnabled
+						? <PropControl 
+							type={fieldType}
+							path={path} 
+							prop={prop}
+							options={selectOptions}
+							saveFn={() => debounceSaveFn({data: DataStore.getValue(path), from: 'myloop@app', prop, xid})}
+						/>
+						:(value || placeholder)
+				}
 			</div>
 		</div>
 	);
@@ -172,23 +164,22 @@ const ConsentControls = ({xid}) => {
  * Wanted it to bulk save all data fields like this to work-around a bug (31/10/18) where typing
  * quickly meant that only the first field edited would be saved. Caused by race against debounce
  */
-const saveFn = (xid, value, from, prop) => {
+const saveFn = (xid, data, from) => {
 	// to inform the user that an autosave event happened
 	DataStore.setValue(['widget','DigitalMirror', 'autosaveTriggered'], true);
 
-	// This is really just a bit of paranoia 
-	// While this should only ever be saving Claims that have been edited by the user,
-	// wanted to be absolutely sure that unmodified Twitter data was not being marked as
-	// having come from 'myloop@app'
 	if( !from ) from = [xid];
 	else from = [xid].concat(from);
 
 	// Allow blank string
-	if( !value && value !== '' ) return;
+	if( !data ) return;
 
-	const claim = [new Claim({key: prop, value, from, c: true})];
+	let claims = [];
+	Object.keys(data).forEach( key => {
+		claims = [...claims, new Claim({key, value: data[key], from, c: true})];
+	});
 
-	saveProfileClaims(xid, claim);
+	saveProfileClaims(xid, claims);
 	setTimeout(() => DataStore.setValue(['widget', 'DigitalMirror', 'autosaveTriggered'], false), 1000);
 };
 
