@@ -1,189 +1,76 @@
 // Collection of controls for managing
 // social media data linked by the user
-import React from 'react';
-import {assMatch} from 'sjtest';
+import React, {useEffect} from 'react';
 import _ from 'lodash';
+import {XId, encURI} from 'wwutils';
+
 import PropControl from '../../base/components/PropControl';
 import DataStore from '../../base/plumbing/DataStore';
 import Claim from '../../base/data/Claim';
-import {getClaimsForXId, saveProfileClaims} from '../../base/Profiler';
+import {saveProfileClaims} from '../../base/Profiler';
 import ServerIO from '../../plumbing/ServerIO';
 import {withLogsIfVisible} from '../../base/components/HigherOrderComponents';
 
-// TODO: Think that this will need to change significantly in future
-// Rough form: can open menu to see specific data we've found and where it's come from
-// Separate input fields that allow user to set override
+const userdataPath = ['widget', 'DigitalMirror', 'userdata'];
 
-// Is currently not an issue as we are only working with data from one social media source (Twitter)
-// Need to set things up so that user provided data (regardless of the form that this comes in)
-// is shown rather than whatever data has come from Twitter.
-// Editing these fields always modifies the user provided data on the back-end
-// rather than the data held for that specific social media source 
 /**
- * 
  * @param {*} doesIfVisibleRef Pass this to component, MixPanel tracking event will be sent out if the element is ever completely visible on user's screen
  */
 const DigitalMirrorCard = ({xids, doesIfVisibleRef}) => {
 	if(!xids) return null;
-	assMatch(xids, 'String[]');
 
-	// TODO use Person.getLinks to find links
+	const twitterXId = xids.find( xid => XId.service(xid) === 'twitter' );
 
-	// ??Switch to using [draft, Person, xid] as the storage for edits
-	// -- and hence reuse some existing Crud code.
-	/** HACK: Grab data from [data, Person, xid] (which we treat as read-only),
-	 *  process, and put in to state
-	 *  Assumes that a fetch request has already been made to put the data in to the above location
-	 *  Want to avoid making a second, unnecessary, request for data
-	*/
-	xids.forEach( xid => {
-		assMatch(xid, "String", "DigitalMirrorCard.jsx, pullInXIdData -- xid is not a string");
-		const writePath = userdataPath.concat(xid);
-
-		const data = DataStore.getValue(writePath);
-
-		if( !data ) {
-			// We are currently just reading from Claims
-			// Might want to pay more attention to std, custom after we've added multiple data sources
-			let writeData = getClaimsForXId(xid);//std && custom ? Object.assign(std, custom) : null;
-			DataStore.setValue(writePath, writeData , false);
-		}
-	});
-
-	// array of all relevant linked social media xids available
-	// combined with blob of data from "socialMedia"
-	// e.g [{xid: 'fakeuser@twitter', service: 'twitter', idHandle: '@twitter', dataFields:['location', 'relationship', 'job', 'gender']}]
-	const socialXIds = socialMedia.reduce( (out, socialMediaService) => {
-		// Minor TODO use the XId.service() method here
-		// @email, @twitter, @facebook ...
-		const {idHandle} = socialMediaService;
-		// implicitly assuming that there is only going to be one xid per social media service
-		const xid = xids.find( id => id.slice(id.length - idHandle.length) === idHandle);
-		
-		if(!xid) return out;
-
-		return out.concat({xid, ...socialMediaService});
-	}, []);
-
-	// TODO if someone attaches two social medias -- we want to show one profile, which is a merge of them representing our best guess.
+	useEffect( () => {
+		if( !twitterXId ) return;
+		ServerIO.load(`${ServerIO.PROFILER_ENDPOINT}/profile/${ServerIO.dataspace}/${encURI(twitterXId)}`, {swallow:true})
+			.then( res => DataStore.setValue([...userdataPath, twitterXId], res.cargo, false));
+	}, [twitterXId]);
 
 	return (
 		<div ref={doesIfVisibleRef}>
-			{
-				socialXIds && socialXIds.length > 0
-					? socialXIds.map( xidObj => <ConsentControls xidObj={xidObj} key={xidObj.xid} />)
-					: 'You do not appear to have shared any social media data with us' 
-			}
+			<ConsentControls xid={twitterXId} />
 		</div>
 	);
 };
 
-// @param dataFields: data that we would like to pull from corresponding social media site's API
-// Just Twitter for the moment.
-const socialMedia = [
-	{
-		service: 'twitter',
-		idHandle: '@twitter',
-		// type should match PropControl type
-		// dictates what sort of input field will be used
-		dataFields: [
-			{
-				field: 'name',
-				type: 'text'
-			}, 
-			{
-				field: 'gender',
-				type:'select', // Drop-down menu
-				options: ['', 'Male', 'Female', 'Other', 'Not specified'],
-				dflt: 'Unknown gender'
-			}, 
-			{
-				field: 'location',
-				type: 'text'
-			}, 
-			{
-				field: 'job',
-				type: 'text'
-			}, 
-			{
-				field: 'relationship',
-				type: 'select',
-				options: ['', 'Single', 'In a relationship', 'Engaged', 'Married', 'Divorced', 'Widowed', 'Not specified'],
-				dflt: 'Unknown relationship'
-			}] // keys should match back-end/Datastore
-	}
-];
+const debounceSaveFn = ({xid, value, from, prop}) => _.debounce(() => saveFn(xid, value, from, prop));
 
-const userdataPath = ['widget', 'DigitalMirror', 'userdata'];
-
-// ??This may be over-engineered
-// ?? doc e.g. returns jsx and not string as you might expect
-const iconFromField = (field, value) => {
-	if( !_.isString(value) ) value = `${value}`; 
-	value = value.toLowerCase();
-
-	const icons = {
-		// No icon for this
-		name: {
-			default: null
-		},
-		gender: {
-			default:<i className="fa fa-genderless" />, 
-			female: <i className="fa fa-venus" />, 
-			male: <i className="fa fa-mars" />
-		}, 
-		location: {
-			default: <i className="fa fa-globe" />
-		},
-		job: {
-			default: <i className="fa fa-briefcase" />
-		},
-		relationship: {
-			default: <i className="fa fa-heart" />
-		}
-	};
-
-	const iconField = icons[field];
-
-	if( !iconField ) return null;
-
-	return iconField[value] ? iconField[value] : iconField.default; 
-};
-
-/**TODO: clean this up 
- * 
- * ??Does it need bootstrap rows? they feel like a cumbersome solution here
+/**
+ * @param fieldType is just PropControl's type. What kind of input field do you want
+ * @param iconFn should return Font Awesome/other icon element. Is a function because icon should change based on value of field
 */
-const ConsentControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) => {
-	const {field, type, options, dflt} = fieldObj;
-	// Hard-set 'name' to be header
-	const isHeader = field === 'name';
-	const fieldPath = path.concat(field);
-	const fieldValue = DataStore.getValue(fieldPath.concat('value'));
-	const placeholder = 'Unknown ' + field; // Shows where value for text field is not available
+const ConsentControlRow = ({path, prop, fieldType, iconFn, selectOptions, xid}) => {
+	const editModeEnabled = DataStore.getValue(['widget', 'DigitalMirror', 'editModeEnabled']);
 
 	// For drop-down menus, easy to display display the edit field if the user has not already provided a value
 	// Behaviour is a good deal more complicated for text fields, which will switch to having a value as soon as the user begins typing
 	if( editModeEnabled ) {
 		return (
-			<div className='row vertical-align revertHeight' key={'data-control-' + field}> 
-				{isHeader ? null : <div className='col-md-1'>{label({field, fieldPath})}</div>}
+			<div className='row vertical-align revertHeight'> 
 				<div className={'col-md-11'}>
-					<PropControl type={type} options={options} dflt={dflt} className={isHeader ? 'profile-name' : ''} 
-						path={fieldPath} prop={'value'} placeholder={placeholder} 
-						saveFn={() => debounceSaveFn('myloop@app')}
+					<PropControl 
+						type={fieldType}
+						path={path} 
+						prop={prop}
+						options={selectOptions}
+						saveFn={(value) => debounceSaveFn({value, from: 'myloop@app', prop, xid})}
 					/>
 				</div>
 			</div>	
 		);
 	}
-	const v = DataStore.getValue(fieldPath.concat('value'));
+
+	const placeholder = 'Unknown ' + prop; // Shows where value for text field is not available
+	const value = DataStore.getValue([...path, prop]) || placeholder;
 	// ?? profile-name: better to use a bootstrap instead of a custom css class
 	return (
-		<div className='row vertical-align' key={'data-control-' + field}> 
-			{isHeader ? null : <div className='col-md-1'>{label({field, fieldPath})}</div>}
-			<div className={'col-md-11' + (fieldValue ? '' : ' text-muted') + (isHeader ? ' profile-name' : '')}>
-				{v || placeholder}
+		<div className='row vertical-align'> 
+			<div className='col-md-1 input-label'>
+				{iconFn && iconFn(value)}
+			</div>
+			<div className={'col-md-11' + (value ? '' : ' text-muted')}>
+				{value}
 			</div>
 		</div>
 	);
@@ -195,32 +82,20 @@ const ConsentControlRow = (path, fieldObj, debounceSaveFn, editModeEnabled) => {
  * Checkboxes for all items in 'dataFields'
  *  Can also edit data field when 'edit mode' is enabled.
  */
-const ConsentControls = ({xidObj}) => {
-	if(!xidObj || !xidObj.xid || !xidObj.dataFields) return null;
+const ConsentControls = ({xid}) => {
+	const path = [...userdataPath, xid, 'std'];
+	const claims = DataStore.getValue(path);
 
-	const {xid, dataFields} = xidObj;
-	const path = userdataPath.concat(xid);
-
-	const profileImage = DataStore.getValue(path.concat('img'));
-
-	// Move debounceSaveFn and editMode in to ConsentControlRow?
-
-	// Save function. Can only be called once every 5 seconds
-	// Important that this be stored somewhere more permanent than the component body
-	// If you don't, a debounce function will be created on each redraw,
-	// causing a save to fire on every key stroke.
-	let debounceSaveFn = DataStore.getValue(['widget', 'DigitalMirror', xid, 'debounceSaveFn']);
-	if( !debounceSaveFn ) {
-		debounceSaveFn = _.debounce((from) => saveFn(xid, dataFields, from), 1000);
-		DataStore.setValue(['widget', 'DigitalMirror', xid, 'debounceSaveFn'], debounceSaveFn, false);
+	if( !claims || !xid ) {
+		return null;
 	}
 
-	let visible = DataStore.getValue(['widget','DigitalMirror','autosaveTriggered']);
+	const {img} = claims;
+	const hasSaved = DataStore.getValue(['widget', 'DigitalMirror', 'autosaveTriggered']);
 
-	const editModeEnabled = DataStore.getValue(['widget', 'DigitalMirror', 'editModeEnabled']);
 	const toggleEditMode = () => {
-		DataStore.setValue(['widget', 'DigitalMirror', 'editModeEnabled'], !editModeEnabled);
-		ServerIO.mixPanelTrack({mixPanelTag:'Twitter data edit clicked'});
+		const currentValue = DataStore.getValue(['widget', 'DigitalMirror', 'editModeEnabled']);
+		DataStore.setValue(['widget', 'DigitalMirror', 'editModeEnabled'], !currentValue);
 	};
 
 	return (
@@ -230,38 +105,59 @@ const ConsentControls = ({xidObj}) => {
 					<p>Your data can help us boost the amount that is donated whenever you see one of our ads.</p>
 				</div>
 				<div className='container-fluid word-wrap'>
-					<div className='row'>
-						<div className='col-sm-2' />
-						<div className='col-sm-3 profile-photo'>
-							{profileImage ? <img className='img-thumbnail img-profile' src={profileImage.value} alt='user-profile' /> : null}
-						</div>
-						<div className="col-sm-5 profile-details">
-							{dataFields.map( fieldObj => ConsentControlRow(path, fieldObj, debounceSaveFn, editModeEnabled))}
-						</div>
-						<div className='col-sm-2' />
+					<div className='col-sm-2' />
+					<div className='col-sm-3 profile-photo'>
+						{img && <img className='img-thumbnail img-profile' src={img} alt='user-profile' />}
 					</div>
+					<div className="col-sm-5 profile-details">
+						<ConsentControlRow 
+							xid={xid}
+							path={path}
+							prop='name' 
+							fieldType='text'
+						/>
+						<ConsentControlRow 
+							xid={xid}
+							path={path}
+							prop='gender' 
+							fieldType='select'
+							selectOptions={['', 'male', 'female']}
+							iconFn={value => value === 'female' ? <i className='fa fa-venus' /> : ( value === 'male' ? <i className='fa fa-mars' /> : <i className='fa fa-genderless' />)} 
+						/>
+						<ConsentControlRow 
+							xid={xid} 
+							path={path}
+							prop='location' 
+							fieldType='text' 
+							iconFn={() => <i className='fa fa-globe' />} 
+						/>
+						<ConsentControlRow 
+							xid={xid} 
+							path={path}
+							prop='job' 
+							fieldType='text' 
+							iconFn={() => <i className='fa fa-briefcase' />} 
+						/>
+						<ConsentControlRow 
+							xid={xid} 
+							path={path}
+							prop='relationship' 
+							fieldType='select'
+							selectOptions={['', 'Single', 'In a relationship', 'Engaged', 'Married', 'Divorced', 'Widowed', 'Not specified']}
+							iconFn={() => <i className='fa fa-heart' />} 
+						/>
+					</div>
+					<div className='col-sm-2' />
 				</div>				
 			</div>
 			<div>
 				<div>
 					<button className='btn btn-default edit' onClick={toggleEditMode} type='button'> Edit </button>
-					{ visible === true ? <span className='autosave'>Saved Successfully</span> : null }
+					{ hasSaved && <span className='autosave'>Saved Successfully</span> }
 				</div>
 			</div>
 		</div>
 	);
-};
-
-// This is just a proof of concept.
-// If we end up going with this method, would want to use images that represent the relevant data field
-const label = ({field, fieldPath}) => {
-	let fieldValue = DataStore.getValue(fieldPath);
-	// If there is data, will be in form {consent: bool, value: 'val'}
-	fieldValue = fieldValue && fieldValue.value;
-
-	const icon = iconFromField(field, fieldValue);
-
-	return icon ? <div className='input-label'>{icon}</div> : null;
 };
 
 // TODO use Crud instead
@@ -276,11 +172,9 @@ const label = ({field, fieldPath}) => {
  * Wanted it to bulk save all data fields like this to work-around a bug (31/10/18) where typing
  * quickly meant that only the first field edited would be saved. Caused by race against debounce
  */
-const saveFn = (xid, fieldObjs, from) => {
+const saveFn = (xid, value, from, prop) => {
 	// to inform the user that an autosave event happened
 	DataStore.setValue(['widget','DigitalMirror', 'autosaveTriggered'], true);
-
-	if( _.isString(fieldObjs) ) fieldObjs = [fieldObjs];
 
 	// This is really just a bit of paranoia 
 	// While this should only ever be saving Claims that have been edited by the user,
@@ -289,27 +183,13 @@ const saveFn = (xid, fieldObjs, from) => {
 	if( !from ) from = [xid];
 	else from = [xid].concat(from);
 
-	let claims = [];
+	// Allow blank string
+	if( !value && value !== '' ) return;
 
-	fieldObjs.forEach( fieldObj => {
-		const {field} = fieldObj;
-		const data = DataStore.getValue(userdataPath.concat([xid, field]));
+	const claim = [new Claim({key: prop, value, from, c: true})];
 
-		// Allow blank string
-		if( !data && data !== '' ) return;
-	
-		let {value, consent} = data;
-
-		// Make sure this is true OR false
-		// Found this was 'undefined' where no data was loaded for a particular field
-		consent = !!consent;
-
-		const claim = new Claim({key: field, value, from, c: consent});
-		claims = claims.concat(claim);
-	});
-
-	saveProfileClaims(xid, claims);
-	setTimeout(() => DataStore.setValue(['widget','DigitalMirror', 'autosaveTriggered'], false), 1000);
+	saveProfileClaims(xid, claim);
+	setTimeout(() => DataStore.setValue(['widget', 'DigitalMirror', 'autosaveTriggered'], false), 1000);
 };
 
 export default withLogsIfVisible(DigitalMirrorCard);
