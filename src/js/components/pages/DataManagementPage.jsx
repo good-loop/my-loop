@@ -21,7 +21,7 @@ let Page = () => {
 	// Think that taking a look at you_again is the proper long-term solution, but this will do for right now
 	useEffect(() => {
 		DataStore.setValue(['data', 'Person', 'xids'], getAllXIds());
-	}, [Login.aliases.length]);
+	}, [Login && Login.aliases && Login.aliases.length]);
 
 	return (
 		<div className='page text-center'>
