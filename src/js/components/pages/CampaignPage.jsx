@@ -86,7 +86,7 @@ const CampaignPage = () => {
 		let q = 'vert:'+id;
 		// TODO "" csv encoding for bits of q (e.g. campaign might have a space)
 		return ServerIO.getDonationsData({q});		
-	});
+	}, true, 5*60*1000);
 
 	if ( ! pvDonationsBreakdown.resolved ) {
 		return <Misc.Loading text='Loading campaign donations...' />;
