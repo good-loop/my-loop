@@ -134,45 +134,23 @@ const CampaignPage = () => {
 						</div>
 						<div className='container-fluid pad1'>
 							<div className='row'>
-								<div className='col-md-4'>
-									<div className='flex-row pad1'>
-										<a className='margin-auto' src={clist[0].url}>
-											<RoundLogo url={clist[0].logo} />
-										</a>
-									</div>
-									<div className='margin-auto text-block'>
-										<div className='sub-header text-center pad1'> 
-											{clist[0].name}
+								{
+									clist.map( charity => (
+										<div className={'col-md-' + 12 / clist.length}>
+											<div className='flex-row pad1'>
+												<a className='margin-auto' src={charity.url}>
+													<RoundLogo url={charity.logo} />
+												</a>
+											</div>
+											<div className='margin-auto text-block'>
+												<div className='sub-header text-center pad1'> 
+													{charity.name}
+												</div>
+												<MDText source={charity.description} />									
+											</div>
 										</div>
-										<MDText source={clist[0].description} />									
-									</div>
-								</div>
-								<div className='col-md-4'>
-									<div className='flex-row pad1'>
-										<a className='margin-auto' src={clist[1].url}>
-											<RoundLogo url={clist[1].logo} />
-										</a>
-									</div>
-									<div className='margin-auto text-block'>
-										<div className='sub-header text-center pad1'> 
-											{clist[1].name}
-										</div>
-										<MDText source={clist[1].description} />
-									</div>
-								</div>
-								<div className='col-md-4'>
-									<div className='flex-row pad1'>
-										<a className='margin-auto' src={clist[2].url}>
-											<RoundLogo url={clist[2].logo} />
-										</a>
-									</div>
-									<div className='margin-auto text-block'>
-										<div className='sub-header text-center pad1'> 
-											{clist[2].name}
-										</div>
-										<MDText source={clist[2].description} />
-									</div>
-								</div>	
+									))
+								}
 							</div>
 						</div>
 						{/* <EmailCTA /> */}
