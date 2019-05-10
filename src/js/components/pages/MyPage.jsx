@@ -8,6 +8,7 @@ import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
 import { LoginLink } from '../../base/components/LoginWidget';
 import {withLogsIfVisible} from '../../base/components/HigherOrderComponents';
+import {join} from 'wwutils';
 
 import ServerIO from '../../plumbing/ServerIO';
 import Footer from '../Footer';
@@ -201,7 +202,7 @@ const StatisticsCardMini = () => {
 	let ttl = pvSum.value && pvSum.value.total;
 
 	return (<section className="statistics statistics-what text-center">
-		<div className='container-fluid white'>
+		<div className='container-fluid'>
 
 			<NumberImpactCard headline="To date, Good-Loop's ethical advertising has raised" 
 				number={ttl} type='Money' description="That's enough to fund..." />
@@ -266,7 +267,7 @@ const NumberImpactCard = ({headline, number, unit, type, description, textColor=
 			<div className='col-md-5 col-sm-5 flex-row'>
 				{headline? <h3>{headline}</h3> : null}
 				<div className='flex-column pad1 text-block'>
-					<span className='header white bottom-pad1'> 
+					<span className='header bottom-pad1'> 
 						{type==='Money'? <Misc.Money amount={number} maximumFractionDigits={0} maximumSignificantDigits={10} showCurrencySymbol={true} /> 
 							: <span>{number} {unit}</span>}
 					</span>
