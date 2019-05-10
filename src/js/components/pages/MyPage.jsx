@@ -202,25 +202,13 @@ const StatisticsCardMini = () => {
 
 	return (<section className="statistics statistics-what text-center">
 		<div className='container-fluid white'>
-			<div className='row bottom-pad1 background-gl-red'> 
-				<span className='sub-header'> 
-					To date, Good-Loop's ethical advertising has raised <br /> 
-					<span className='header white text-shadow-light-blue'> 
-						<Misc.Money amount={ttl} maximumFractionDigits={0} maximumSignificantDigits={10} showCurrencySymbol={false} /> 
-					</span> 
-					<br /> 
-				</span> 
-				<br /> 
-				That's enough to fund... 
-			</div>
-			{/* <div className='row'>
-				<div className='flex-row flex-centre pad1'>
-					<img className='margin-auto' src='/img/kitkat-logo-scaled.png' />
-				</div>
-			</div> */}
+
+			<NumberImpactCard headline="To date, Good-Loop's ethical advertising has raised" 
+				number={ttl} type='Money' description="That's enough to fund..." />
+
 			<div className='row mt-1'>
 				<div className='header-block min-height-15'>
-					<div className='img-block' style={{backgroundImage: 'url(' + ServerIO.MY_ENDPOINT + '/img/children-scaled.jpeg' + ')', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />
+					<div className='img-block' style={{backgroundImage: 'url(/img/children-scaled.jpeg)', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />
 					<div className='col-md-1' />					
 					<div className='col-md-5 col-sm-5 flex-row'>
 						<div className='flex-column pad1 text-block'>
@@ -235,26 +223,14 @@ const StatisticsCardMini = () => {
 					<div className='col-md-6' />
 				</div>
 			</div>
+
+			<NumberImpactCard number={888} unit="nights of accommodation" 
+				description="Centrepoint supports more than 10,000 young homeless people in the UK each year." 
+				textColor='light-1' bgColor='dark-1' />
+
 			<div className='row mt-1'>
 				<div className='header-block min-height-15'>
-					<div className='img-block' style={{backgroundImage: 'url(' + ServerIO.MY_ENDPOINT + '/img/the-room.jpeg' + ')', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />
-					<div className='col-md-1' />					
-					<div className='col-md-5 col-sm-5 flex-row'>
-						<div className='flex-column pad1 text-block'>
-							<span className='header white bottom-pad1'> 
-								888 nights of accommodation
-							</span>
-							<span> 
-								Centrepoint supports more than 10,000 young homeless people in the UK each year.
-							</span>
-						</div>
-					</div>
-					<div className='col-md-6' />
-				</div>
-			</div>
-			<div className='row mt-1'>
-				<div className='header-block min-height-15'>
-					<div className='img-block' style={{backgroundImage: 'url(' + ServerIO.MY_ENDPOINT + '/img/plants-scaled.jpeg' + ')', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />			
+					<div className='img-block' style={{backgroundImage: 'url(/img/plants-scaled.jpeg)', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />			
 					<div className='col-md-1' />
 					<div className='col-md-5 col-sm-5 flex-row'>
 						<div className='flex-column pad1 text-block'>
@@ -269,6 +245,7 @@ const StatisticsCardMini = () => {
 				</div>
 				<div className='col-md-6' />
 			</div>
+
 		</div>
 		<div className='sub-header text-center mt-1'>
 			{/* TODO: Have this point to some sort of record of Good-Loop's achievements */}
@@ -278,6 +255,31 @@ const StatisticsCardMini = () => {
 		</div>
 	</section>);
 };
+
+const NumberImpactCard = ({headline, number, unit, type, description, textColor='dark-0', bgColor='light-0'}) => {
+// 	<div className='img-block' 
+// 	style={{backgroundImage: 'url(' + ServerIO.MY_ENDPOINT + '/img/the-room.jpeg' + ')', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} 
+// />
+	return (<div className={join('row mt-1','text-'+textColor,'bg-'+bgColor)}>
+		<div className='header-block min-height-15'>
+			<div className='col-md-1' />					
+			<div className='col-md-5 col-sm-5 flex-row'>
+				{headline? <h3>{headline}</h3> : null}
+				<div className='flex-column pad1 text-block'>
+					<span className='header white bottom-pad1'> 
+						{type==='Money'? <Misc.Money amount={number} maximumFractionDigits={0} maximumSignificantDigits={10} showCurrencySymbol={true} /> 
+							: <span>{number} {unit}</span>}
+					</span>
+					<span> 
+						{description}
+					</span>
+				</div>
+			</div>
+			<div className='col-md-6' />
+		</div>
+	</div>);
+};
+
 
 // Two-liner as withLogsIfVisible latches on to Component.displayName or Component.name in order to generate sensible-looking event tag in MixPanel
 // Obviously will not work quite right if we were to use an anonymous function

@@ -43,7 +43,8 @@ ServerIO.AS_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}as.good-loop.com`;
 // ServerIO.AS_ENDPOINT = `https://testas.good-loop.com`;
 // ServerIO.AS_ENDPOINT = `https://as.good-loop.com`;
 
-ServerIO.MY_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}my.good-loop.com`;
+// Is this needed, instead of "/" relative urls?? ^DW May 2019
+// ServerIO.MY_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}my.good-loop.com`;
 // ServerIO.MY_ENDPOINT = `https://testmy.good-loop.com`;
 // ServerIO.MY_ENDPOINT = `https://my.good-loop.com`;
 
