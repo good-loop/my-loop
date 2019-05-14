@@ -7,45 +7,40 @@ const ImpactCard = ({children}) => (
 	</div>
 );
 
-/**
- * 
- * @param className use to set background colour/text colour 
- */
-const ImpactHeader = ({className, render}) => (
-	<div className={'impact-header pad1 ' + className}>
-		<div className='triangle' />
-		{render()}
-	</div>
+const ImpactHeaderText = ({amount, className, headerText, subheaderText}) => (
+	<>
+		<div className='triangle-gl-red' />
+		<div className={'impact-header pad1 ' + className}>	
+			<div className='header'>
+				{headerText}
+			</div>
+			<div className='sub-header'>
+				{subheaderText}
+				<div>
+					<Misc.Money amount={amount} />
+				</div>
+			</div>
+		</div>
+	</>
 );
 
-const ImpactHeaderText = ({amount, headerText, subheaderText, ...props}) => <ImpactHeader {...props} render={() => (
+const ImpactHeaderNumber = ({className, headerText, subheaderText, logoSrc}) => (
 	<>
-		<div className='header'>
-			{headerText}
-		</div>
-		<div className='sub-header'>
-			{subheaderText}
-			<div>
-				<Misc.Money amount={amount} />
+		<div className='triangle-gl-blue' />
+		<div className={'impact-header pad1 ' + className}>	
+			<div className='header'>
+				{headerText}
+			</div>
+			<div className='sub-header'>
+				{subheaderText}
+				<div className='flex-row'>
+					<span>Made possible by adverts from:</span>
+					<img className='impact-logo' src={logoSrc} alt='vertiser-logo' />
+				</div>
 			</div>
 		</div>
-	</>)} 
-/>;
-
-const ImpactHeaderNumber = ({headerText, subheaderText, logoSrc, ...props}) => <ImpactHeader {...props} render={() => (
-	<>
-		<div className='header'>
-			{headerText}
-		</div>
-		<div className='sub-header'>
-			{subheaderText}
-			<div className='flex-row'>
-				<span>Made possible by adverts from:</span>
-				<img className='impact-logo' src={logoSrc} alt='vertiser-logo' />
-			</div>
-		</div>
-	</>)} 
-/>;
+	</>
+);
 
 /** Generic div with image as background
  * @param render set to layer elements over background image
@@ -76,7 +71,6 @@ const ImpactImageNumber = ({logoSrc, headerText, subheaderText, ...props}) => <I
 export {
 	ImpactCard,
 
-	ImpactHeader,
 	ImpactHeaderText,
 	ImpactHeaderNumber,
 

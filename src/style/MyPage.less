@@ -146,3 +146,18 @@
 .impact-image-text {
 	height: 12em !important;
 }
+
+.triangle {
+	width: 100%;
+	height: 5em;
+}
+
+.triangle-gl-red {
+	.triangle();
+	background-image: linear-gradient(to left top, @gl-red 0%, @gl-red 50%, transparent 50%);
+}
+
+.triangle-gl-blue {
+	.triangle();
+	background-image: linear-gradient(to left top, @gl-light-blue 0%, @gl-light-blue 50%, transparent 50%);
+}
