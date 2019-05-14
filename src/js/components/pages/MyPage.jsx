@@ -3,12 +3,12 @@
  */
 import React from 'react';
 import Login from 'you-again';
+import {join} from 'wwutils';
 
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
 import { LoginLink } from '../../base/components/LoginWidget';
 import {withLogsIfVisible} from '../../base/components/HigherOrderComponents';
-import {join} from 'wwutils';
 
 import ServerIO from '../../plumbing/ServerIO';
 import Footer from '../Footer';
@@ -18,6 +18,7 @@ import LoginWidget from '../LoginWidget';
 import NavBar from '../NavBar';
 import OnboardingCardMini from '../cards/OnboardingCardMini';
 import RecentCampaignsCard from '../cards/RecentCampaignsCard';
+import {ImpactImageNumber, ImpactImageText, ImpactHeaderText, ImpactHeaderNumber, ImpactCard} from '../cards/ImpactCard';
 
 const pagePath = ['widget', 'MyPage'];
 
@@ -70,7 +71,19 @@ const MyPage = () => {
 					<div className='white-triangle-right' />
 				</div>
 			</div>
-
+			<div>
+				<ImpactCard>
+					<ImpactHeaderText amount={200000} className='background-gl-red' headerText='Your impact 2018' subheaderText='Watching adverts and signing-up has raised over' />
+					<ImpactImageText imageSrc='/img/stats3-scaled.jpg' />
+					<div className='text-block'>
+						Advert donations have enabled 318 school kits! Some of Nestlé Cocoa Plan farmers struggle to pay for the books and school supplies for their children. Thanks to you, Nestlé and the International Cocoa Initiative will provide school kits so that more children can go to school. School kits contain exercise books, note books, pens, ruler, eraser, chalk and slate.
+					</div>
+				</ImpactCard>
+				<ImpactCard>
+					<ImpactHeaderNumber className='bg-light-2' headerText='Food for one year' subheaderText='for 80 families in poverty in the UK' logoSrc='http://localmy.good-loop.com/img/toms-shoes-logo-vector.png' />
+					<ImpactImageNumber imageSrc='http://www.agricorner.com/wp-content/uploads/2010/11/kissan-call-center.jpg' logoSrc='http://www.stickpng.com/assets/images/5842a9fca6515b1e0ad75b06.png' subheaderText='adverts enabled' headerText='444 urgent calls to shelter helpline' />
+				</ImpactCard>
+			</div>
 			<div title="How Good-Loop Ads Work" className='StatisticsCard MiniCard container-fluid top-pad3'>
 				<div className='row panel-title panel-heading sub-header pad1'> 
 					How Good-Loop works
@@ -199,17 +212,12 @@ const StatisticsCardMini = () => {
 	if ( ! pvSum.resolved) {
 		return <Misc.Loading text='Loading donation data...' />;
 	}
-	let ttl = pvSum.value && pvSum.value.total;
 
 	return (<section className="statistics statistics-what text-center">
 		<div className='container-fluid'>
-
-			<NumberImpactCard headline="To date, Good-Loop's ethical advertising has raised" 
-				number={ttl} type='Money' description="That's enough to fund..." />
-
 			<div className='row mt-1'>
 				<div className='header-block min-height-15'>
-					<div className='img-block' style={{backgroundImage: 'url(/img/children-scaled.jpeg)', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />
+					<div className='img-block img-hero' style={{backgroundImage: 'url(/img/children-scaled.jpeg)', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />
 					<div className='col-md-1' />					
 					<div className='col-md-5 col-sm-5 flex-row'>
 						<div className='flex-column pad1 text-block'>
@@ -224,14 +232,9 @@ const StatisticsCardMini = () => {
 					<div className='col-md-6' />
 				</div>
 			</div>
-
-			<NumberImpactCard number={888} unit="nights of accommodation" 
-				description="Centrepoint supports more than 10,000 young homeless people in the UK each year." 
-				textColor='light-1' bgColor='dark-1' />
-
 			<div className='row mt-1'>
 				<div className='header-block min-height-15'>
-					<div className='img-block' style={{backgroundImage: 'url(/img/plants-scaled.jpeg)', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />			
+					<div className='img-block img-hero' style={{backgroundImage: 'url(/img/plants-scaled.jpeg)', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />			
 					<div className='col-md-1' />
 					<div className='col-md-5 col-sm-5 flex-row'>
 						<div className='flex-column pad1 text-block'>
@@ -256,31 +259,6 @@ const StatisticsCardMini = () => {
 		</div>
 	</section>);
 };
-
-const NumberImpactCard = ({headline, number, unit, type, description, textColor='dark-0', bgColor='light-0'}) => {
-// 	<div className='img-block' 
-// 	style={{backgroundImage: 'url(' + ServerIO.MY_ENDPOINT + '/img/the-room.jpeg' + ')', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} 
-// />
-	return (<div className={join('row mt-1','text-'+textColor,'bg-'+bgColor)}>
-		<div className='header-block min-height-15'>
-			<div className='col-md-1' />					
-			<div className='col-md-5 col-sm-5 flex-row'>
-				{headline? <h3>{headline}</h3> : null}
-				<div className='flex-column pad1 text-block'>
-					<span className='header bottom-pad1'> 
-						{type==='Money'? <Misc.Money amount={number} maximumFractionDigits={0} maximumSignificantDigits={10} showCurrencySymbol={true} /> 
-							: <span>{number} {unit}</span>}
-					</span>
-					<span> 
-						{description}
-					</span>
-				</div>
-			</div>
-			<div className='col-md-6' />
-		</div>
-	</div>);
-};
-
 
 // Two-liner as withLogsIfVisible latches on to Component.displayName or Component.name in order to generate sensible-looking event tag in MixPanel
 // Obviously will not work quite right if we were to use an anonymous function
