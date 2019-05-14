@@ -63,13 +63,20 @@ const MyPage = () => {
 	return (
 		// TODO: refactor out the elements are the same as campaign page
 		<div className="page MyPage">
-			<div title="Welcome Card" className='StatisticsCard MiniCard background-gl-red vh-100 flex-column'>
+			<div title="Welcome Card" className='StatisticsCard MiniCard background-gl-red flex-column'>
 				<NavBar />
-				<TitleCard />
-				<div className='flex-fill'>
-					<div className='white-triangle-left' />
-					<div className='white-triangle-right' />
-				</div>
+				<div className='flex-row pad3'>
+					<div className='sub-header white text-left margin-auto'>
+						Good-Loop ads
+						<br />
+						reward the charity of your choice
+						<br />
+						every time you watch
+					</div>
+					<div className='flex-vertical-align margin-auto'>
+						<img className='gl-logo-big' src='/img/logo-white2.png' />
+					</div>
+				</div>				
 			</div>
 			<div>
 				<ImpactCard>

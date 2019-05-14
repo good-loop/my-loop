@@ -4,23 +4,6 @@
 	text-align: center;
 }
 
-.triangle-base {
-	height: 100%;
-	width: 50%;
-}
-
-.white-triangle-left {
-	.triangle-base();
-	float: left;
-	background-image: linear-gradient(to right top, white 0%, white 50%, transparent 50%);
-}
-
-.white-triangle-right {
-	.triangle-base();
-	float: right;
-	background-image: linear-gradient(to left top, white 0%, white 50%, transparent 50%);	
-}
-
 // DigitalMirrorCard: a widget for showing the user their twitter data (experimental)
 .mirror {
 	.profile-details {
@@ -160,4 +143,9 @@
 .triangle-gl-blue {
 	.triangle();
 	background-image: linear-gradient(to left top, @gl-light-blue 0%, @gl-light-blue 50%, transparent 50%);
+}
+
+.gl-logo-big {
+	width: 7rem;
+	height: 7rem;
 }
