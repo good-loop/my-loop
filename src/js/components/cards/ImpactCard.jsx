@@ -45,28 +45,29 @@ const ImpactHeaderNumber = ({className, headerText, subheaderText, logoSrc}) => 
 /** Generic div with image as background
  * @param render set to layer elements over background image
  */
-const ImpactImage = ({className, imageSrc, render}) => (
+const ImpactImage = ({className, imageSrc, children}) => (
 	<>
 		<div className={'img-block text-left pad1 ' + className} style={{backgroundImage: 'url(' + imageSrc + ')'}}>
-			{render && render()}
+			{children}
 		</div>
 	</>
 );
 
 const ImpactImageText = ({className, ...props}) => <ImpactImage {...props} className={className + ' impact-image-text'} />;
 
-const ImpactImageNumber = ({logoSrc, headerText, subheaderText, ...props}) => <ImpactImage {...props} render={() => (
-	<div className='flex-column'>
-		<img className='impact-logo' src={logoSrc} alt='vertiser-logo' />
-		<div className='sub-header white'>
-			{subheaderText}
+const ImpactImageNumber = ({logoSrc, headerText, subheaderText, ...props}) => (
+	<ImpactImage {...props}>
+		<div className='flex-column'>
+			<img className='impact-logo' src={logoSrc} alt='vertiser-logo' />
+			<div className='sub-header white'>
+				{subheaderText}
+			</div>
+			<div className='header white'>
+				{headerText}
+			</div>
 		</div>
-		<div className='header white'>
-			{headerText}
-		</div>
-	</div>
-)}
-/>;
+	</ImpactImage>
+);
 
 export {
 	ImpactCard,
