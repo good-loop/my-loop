@@ -88,9 +88,6 @@ const MyPage = () => {
 						Login.isLoggedIn()
 						|| (
 							<>
-								<div className='row background-gl-red white sub-header pad1'>
-									Your data has value! Registering increases the value of your donations
-								</div>
 								<div className='container-fluid'>
 									<div className='row panel-title panel-heading sub-header pad1'> 
 										Get Involved
@@ -99,7 +96,7 @@ const MyPage = () => {
 										<IntroCard isVisible={DataStore.getValue(['widget', 'MyPage', 'IntroCardVisible'])} />
 									</div>
 									<div className='row' onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
-										<RegisterLink className='btn btn-lg btn-default btn-gl sub-header' verb='Join us' />			
+										<RegisterLink className='background-gl-red white sub-header btn btn-gl' verb='Sign-Up' />			
 									</div>
 								</div>
 							</>						
