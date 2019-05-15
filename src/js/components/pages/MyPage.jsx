@@ -67,7 +67,7 @@ const MyPage = () => {
 				<NavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
 				<div className='triangle-gl-red' />
 				<div className='flex-row pad3 background-gl-red'>
-					<div className='sub-header white text-left margin-auto'>
+					<div className='header white text-left margin-auto'>
 						Good-Loop ads
 						<br />
 						reward the charity of your choice

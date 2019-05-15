@@ -30,6 +30,10 @@ html, body {
 	padding: 3rem;
 }
 
+.pad10 {
+	padding: 10rem;
+}
+
 .right-pad1 {
 	padding-right: 1rem;
 }
@@ -78,6 +82,10 @@ html, body {
 
 .background-gl-red {
 	background-color: @gl-red;
+}
+
+.background-gl-dark-blue {
+	background-color: @gl-dark-blue;
 }
 
 .background-gl-dark-grey {
@@ -175,16 +183,16 @@ a {
 	html, body {
 		font-size: 16px;
 	}
+
+	.header-card {
+		.logo-big {
+			display: none;
+		}
+	}
 }
 
 @media only screen and (max-width: 578px) {
 	html, body {
 		font-size: 14px;
-	}
-	
-	.header-card {
-		.logo-big {
-			display: none;
-		}
 	}
 }
