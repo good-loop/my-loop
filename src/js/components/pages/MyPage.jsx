@@ -3,7 +3,6 @@
  */
 import React from 'react';
 import Login from 'you-again';
-import {join} from 'wwutils';
 
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
@@ -14,11 +13,11 @@ import ServerIO from '../../plumbing/ServerIO';
 import Footer from '../Footer';
 import ShareAnAd from '../cards/ShareAnAd';
 import DonationCard from '../cards/DonationCard';
-import LoginWidget from '../LoginWidget';
 import NavBar from '../NavBar';
 import OnboardingCardMini from '../cards/OnboardingCardMini';
 import RecentCampaignsCard from '../cards/RecentCampaignsCard';
 import {ImpactImageNumber, ImpactImageText, ImpactHeaderText, ImpactHeaderNumber, ImpactCard} from '../cards/ImpactCard';
+import SocialMediaCard from '../cards/SocialMediaCard';
 
 const pagePath = ['widget', 'MyPage'];
 
@@ -104,7 +103,13 @@ const MyPage = () => {
 					}
 				</div>
 			</div>
-
+			<div className='flex-column white' title='Boost your impact'>
+				<div className='triangle-gl-red' />
+				<div className='background-gl-red'>
+					Boost your impact by connecting with social media
+					<SocialMediaCard allIds={xids} className="socialConnect" />
+				</div>					
+			</div>
 			<div>
 				<ImpactCard>
 					<ImpactHeaderText amount={200000} className='background-gl-red' headerText='Your impact 2018' subheaderText='Watching adverts and signing-up has raised over' />
