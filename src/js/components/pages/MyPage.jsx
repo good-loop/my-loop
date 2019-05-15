@@ -75,31 +75,15 @@ const MyPage = () => {
 						every time you watch
 					</div>
 					<div className='flex-vertical-align margin-auto'>
-						<img className='gl-logo-big' src='/img/logo-white2.png' />
+						<img className='logo-big' src='/img/logo-white2.png' />
 					</div>
 				</div>				
 			</div>
-			<div>
-				<ImpactCard>
-					<ImpactHeaderText amount={200000} className='background-gl-red' headerText='Your impact 2018' subheaderText='Watching adverts and signing-up has raised over' />
-					<ImpactImageText imageSrc='/img/stats3-scaled.jpg' />
-					<div className='text-block'>
-						Advert donations have enabled 318 school kits! Some of Nestlé Cocoa Plan farmers struggle to pay for the books and school supplies for their children. Thanks to you, Nestlé and the International Cocoa Initiative will provide school kits so that more children can go to school. School kits contain exercise books, note books, pens, ruler, eraser, chalk and slate.
-					</div>
-				</ImpactCard>
-				<ImpactCard>
-					<ImpactHeaderNumber className='bg-light-2' headerText='Food for one year' subheaderText='for 80 families in poverty in the UK' logoSrc='http://localmy.good-loop.com/img/toms-shoes-logo-vector.png' />
-					<ImpactImageNumber imageSrc='http://www.agricorner.com/wp-content/uploads/2010/11/kissan-call-center.jpg' logoSrc='http://www.stickpng.com/assets/images/5842a9fca6515b1e0ad75b06.png' subheaderText='adverts enabled' headerText='444 urgent calls to shelter helpline' />
-				</ImpactCard>
-			</div>
-			<div title="How Good-Loop Ads Work" className='StatisticsCard MiniCard container-fluid top-pad3'>
-				<div className='row panel-title panel-heading sub-header pad1'> 
-					How Good-Loop works
-				</div>
-				<div className='row pad1'>
+			<div title="How Good-Loop Ads Work" className='StatisticsCard MiniCard top-pad3'>
+				<div>
 					<OnboardingCardMini allIds={allIds} />
 				</div>
-				<div className='row pad1'>
+				<div className='pad1'>
 					{
 						Login.isLoggedIn()
 						|| (
@@ -122,6 +106,20 @@ const MyPage = () => {
 						)
 					}
 				</div>
+			</div>
+
+			<div>
+				<ImpactCard>
+					<ImpactHeaderText amount={200000} className='background-gl-red' headerText='Your impact 2018' subheaderText='Watching adverts and signing-up has raised over' />
+					<ImpactImageText imageSrc='/img/stats3-scaled.jpg' />
+					<div className='text-block'>
+						Advert donations have enabled 318 school kits! Some of Nestlé Cocoa Plan farmers struggle to pay for the books and school supplies for their children. Thanks to you, Nestlé and the International Cocoa Initiative will provide school kits so that more children can go to school. School kits contain exercise books, note books, pens, ruler, eraser, chalk and slate.
+					</div>
+				</ImpactCard>
+				<ImpactCard>
+					<ImpactHeaderNumber className='bg-light-2' headerText='Food for one year' subheaderText='for 80 families in poverty in the UK' logoSrc='http://localmy.good-loop.com/img/toms-shoes-logo-vector.png' />
+					<ImpactImageNumber imageSrc='http://www.agricorner.com/wp-content/uploads/2010/11/kissan-call-center.jpg' logoSrc='http://www.stickpng.com/assets/images/5842a9fca6515b1e0ad75b06.png' subheaderText='adverts enabled' headerText='444 urgent calls to shelter helpline' />
+				</ImpactCard>
 			</div>
 
 			<div title="Our Achievements Together" className='StatisticsCard MiniCard container-fluid top-pad3'>

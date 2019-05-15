@@ -30,6 +30,10 @@ html, body {
 	padding: 3rem;
 }
 
+.right-pad1 {
+	padding-right: 1rem;
+}
+
 .top-pad1 {
 	padding-top: 1rem;
 }
@@ -76,6 +80,14 @@ html, body {
 	background-color: @gl-red;
 }
 
+.background-gl-dark-grey {
+	background-color: @gl-dark-grey;
+}
+
+.background-gl-light-grey {
+	background-color: @gl-light-grey;
+}
+
 .text-shadow-light-blue {
 	text-shadow: @gl-light-blue 2px 2px;
 }
@@ -98,6 +110,22 @@ html, body {
 
 .width100pct {
 	width: 100%;
+}
+
+// Make blocks of text more readable
+.text-block {
+    text-align: left;
+    line-height: 1.5rem;
+    // Restrict max characters per line to < 70 or so
+    // Helps to improve readibility
+    max-width: 35rem;
+}
+
+// Useful in headers
+.compact-text-block {
+	.text-block();
+	line-height: 1.4rem;
+	max-width: 20rem;
 }
 
 // Little red strip used for decoration
@@ -155,7 +183,7 @@ a {
 	}
 	
 	.header-card {
-		.gl-logo-big {
+		.logo-big {
 			display: none;
 		}
 	}

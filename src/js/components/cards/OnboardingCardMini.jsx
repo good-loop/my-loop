@@ -1,32 +1,17 @@
 import React from 'react';
 
-const OnboardingCardMini = () => {
-	return (
-		<section id="howitworks" className="how text-center">
-			<div className="how-content container-fluid">
-				<div className="row">
-					<div className="col-md-4">
-						<i className='fa fa-handshake-o fa-3x pad1' />
-						<div className='flex-row'>
-							<span className="text-block margin-auto"> With Good-Loop, advertisers agree to donate 50% of the cost of each ad to charitable causes </span>
-						</div>
-					</div>
-					<div className="col-md-4">
-						<i className='fa fa-eye fa-3x pad1' />
-						<div className='flex-row'>
-							<span className="text-block margin-auto"> After watching a 15 second video, the viewer decides which of three charities should receive a donation </span>
-						</div>
-					</div>
-					<div className="col-md-4">
-						<i className='fa fa-thumbs-up fa-3x pad1' />
-						<div className='flex-row'>
-							<span className="text-block margin-auto"> That's it! Good-Loop aims to use advertising for good </span>
-						</div>
-					</div>
+const OnboardingCardMini = () => (
+	<>
+		<div className='triangle-gl-light-grey' />
+		<div className='flex-row flex-centre background-gl-light-grey pad1'>
+			<div className='flex-row margin-auto'>
+				<div className='right-pad1'>
+					<img className='logo-big' src='/img/low-res-15-second.png' alt='fifteen-seconds' />
 				</div>
+				<div className='compact-text-block flex-vertical-align'> Watch a 15 second advert and decide which of three charities should receive 50% of the cost of the ad </div>
 			</div>
-		</section>
-	);
-};
+		</div>
+	</>
+);
 
 export default OnboardingCardMini;
