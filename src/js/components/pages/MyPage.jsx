@@ -7,7 +7,7 @@ import {join} from 'wwutils';
 
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
-import { LoginLink } from '../../base/components/LoginWidget';
+import { RegisterLink } from '../../base/components/LoginWidget';
 import {withLogsIfVisible} from '../../base/components/HigherOrderComponents';
 
 import ServerIO from '../../plumbing/ServerIO';
@@ -63,9 +63,10 @@ const MyPage = () => {
 	return (
 		// TODO: refactor out the elements are the same as campaign page
 		<div className="page MyPage">
-			<div title="Welcome Card" className='StatisticsCard MiniCard background-gl-red flex-column'>
-				<NavBar />
-				<div className='flex-row pad3'>
+			<div title="Welcome Card" className='StatisticsCard MiniCard flex-column'>
+				<NavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
+				<div className='triangle-gl-red' />
+				<div className='flex-row pad3 background-gl-red'>
 					<div className='sub-header white text-left margin-auto'>
 						Good-Loop ads
 						<br />
@@ -114,7 +115,7 @@ const MyPage = () => {
 										<IntroCard isVisible={DataStore.getValue(['widget', 'MyPage', 'IntroCardVisible'])} />
 									</div>
 									<div className='row' onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
-										<LoginLink className='btn btn-lg btn-default btn-gl sub-header' onClick={() => LoginWidget.changeVerb('register')} verb='Join us' />			
+										<RegisterLink className='btn btn-lg btn-default btn-gl sub-header' verb='Join us' />			
 									</div>
 								</div>
 							</>						

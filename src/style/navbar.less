@@ -7,7 +7,7 @@
     margin-bottom: 0;
 
     a {
-        color: white !important;
+        color: @gl-red !important;
     }
 }
 
@@ -27,12 +27,16 @@
 }
 
 .navbar-inverse {
-    background-color: @gl-red;
+    background-color: #fff;
     border-color: unset;
 }
 
 .navbar-inverse .navbar-toggle, .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
-    border-color: @navbar-accent-color;
+    border-color: @gl-red;
+
+    .icon-bar {
+        background-color: @gl-red;
+    }    
 }
 
 .navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
