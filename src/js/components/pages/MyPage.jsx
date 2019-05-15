@@ -63,7 +63,7 @@ const MyPage = () => {
 	return (
 		// TODO: refactor out the elements are the same as campaign page
 		<div className="page MyPage">
-			<div title="Welcome Card" className='StatisticsCard MiniCard flex-column'>
+			<div title="Welcome Card" className='header-card MiniCard flex-column'>
 				<NavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
 				<div className='triangle-gl-red' />
 				<div className='flex-row pad3 background-gl-red'>
