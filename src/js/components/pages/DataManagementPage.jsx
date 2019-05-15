@@ -25,7 +25,7 @@ let Page = () => {
 
 	return (
 		<div className='page text-center'>
-			<NavBar />
+			<NavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
 			<div title="Your Digital Mirror" className='container-fluid'>
 				<div className='row panel-title panel-heading sub-header pad1'> 
 					Digital Mirror
