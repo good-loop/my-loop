@@ -124,7 +124,6 @@ class MainDiv extends Component {
 						<Page path={path} />
 					</div>
 				</div>
-				<img href='/img/new-logo.png' /> 
 				<LoginWidget logo={<img src='/img/new-logo.png' style={{height: '64px'}} />} title=' ' services={['twitter', 'facebook']} />
 			</div>
 		);
