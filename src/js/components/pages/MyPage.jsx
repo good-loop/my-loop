@@ -79,7 +79,7 @@ const MyPage = () => {
 					</div>
 				</div>				
 			</div>
-			<div title="How Good-Loop Ads Work" className='StatisticsCard MiniCard top-pad3'>
+			<div title="How Good-Loop Ads Work" className='StatisticsCard MiniCard'>
 				<div>
 					<OnboardingCardMini allIds={allIds} />
 				</div>

@@ -2,6 +2,14 @@ import React from 'react';
 
 const OnboardingCardMini = () => (
 	<>
+		<div className='flex-row flex-centre pad3'>
+			<div className='flex-vertical-align width50pct'>
+				<img className='width100pct margin-auto' src='/img/phone-placeholder.jpg' />
+			</div>
+			<div className='flex-vertical-align sub-header width50pct'>
+				Watch to donate
+			</div>
+		</div>
 		<div>
 			<div className='triangle-gl-light-grey' />
 			<div className='flex-row flex-centre background-gl-light-grey pad1'>
