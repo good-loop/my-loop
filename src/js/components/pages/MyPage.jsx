@@ -113,8 +113,8 @@ const MyPage = () => {
 					</div>
 				</div>					
 			</div>
-			<div className='flex-column'>
-				<ImpactCard>
+			<div className='flex-row flex-wrap'>
+				<ImpactCard className='top-margin0'>
 					<ImpactHeaderText amount={200000} className='background-gl-red' headerText='Your impact 2018' subheaderText='Watching adverts and signing-up has raised over' />
 					<ImpactImageText imageSrc='/img/stats3-scaled.jpg' />
 					<div className='text-block'>

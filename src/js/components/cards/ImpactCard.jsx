@@ -1,8 +1,8 @@
 import React from 'react';
 import Misc from '../../base/components/Misc';
 
-const ImpactCard = ({children}) => (
-	<div className='impact-card'>
+const ImpactCard = ({children, className}) => (
+	<div className={'impact-card ' + className}>
 		{children}
 	</div>
 );
