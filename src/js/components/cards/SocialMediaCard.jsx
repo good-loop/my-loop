@@ -18,10 +18,6 @@ const SocialMediaCard = ({allIds=[], className}) => {
 	const fbpeep = getProfilesNow([ids.fbid])[0]; 
 	return (
 		<div className={className}>
-			
-			{	// Show text if ids contains an undefined value (user still hasn't connected one of their social media accounts)
-				Object.values(ids).some( id => id === undefined || id === null) ? <p>Connect your social media - you can use this to boost the donations you generate!</p> : null
-			}
 			{emailID ? '' : '' /* <div> TODO: email capture </div> */	}
 			{ids.twitterID ? (
 				<div className='wrapper'>

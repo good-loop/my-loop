@@ -32,7 +32,10 @@ let Page = () => {
 				</div>
 				<div className='row pad1'> 
 					<DigitalMirrorCard xids={xids} className="digitalMirror" mixPanelTag='DigitalMirror' />
-					<SocialMediaCard allIds={xids} className="socialConnect" />	
+					<div className='flex-column'>
+						<div>Connect your social media - you can use this to boost the donations you generate!</div>
+						<SocialMediaCard allIds={xids} className="socialConnect" />	
+					</div>
 				</div>
 			</div>
 

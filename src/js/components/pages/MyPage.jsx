@@ -110,12 +110,14 @@ const MyPage = () => {
 						<div className='sub-header'>
 							Boost your impact
 						</div>
-						<div className='flex-row'>
-							<RegisterLink className='background-gl-red white sub-header btn btn-gl' verb='Sign-Up' />			
-							<SocialMediaCard allIds={xids} className="socialConnect" />
+						<div className='text-block'>
+							Boost your impact by singing up or connecting with social media
+						</div>
+						<div className='flex-row flex-wrap'>
+							<RegisterLink className='sub-header btn btn-gl' verb='Sign-Up' />			
+							<SocialMediaCard allIds={xids} className='socialConnect margin1' />
 						</div>
 					</div>
-					Boost your impact by connecting with social media
 				</div>					
 			</div>
 			<div>
@@ -231,7 +233,7 @@ const StatisticsCardMini = () => {
 
 	return (<section className="statistics statistics-what text-center">
 		<div className='container-fluid'>
-			<div className='row mt-1'>
+			<div className='row top-margin1'>
 				<div className='header-block min-height-15'>
 					<div className='img-block img-hero' style={{backgroundImage: 'url(/img/children-scaled.jpeg)', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />
 					<div className='col-md-1' />					
@@ -248,7 +250,7 @@ const StatisticsCardMini = () => {
 					<div className='col-md-6' />
 				</div>
 			</div>
-			<div className='row mt-1'>
+			<div className='row top-margin1'>
 				<div className='header-block min-height-15'>
 					<div className='img-block img-hero' style={{backgroundImage: 'url(/img/plants-scaled.jpeg)', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />			
 					<div className='col-md-1' />
@@ -267,7 +269,7 @@ const StatisticsCardMini = () => {
 			</div>
 
 		</div>
-		<div className='sub-header text-center mt-1'>
+		<div className='sub-header text-center top-margin1'>
 			{/* TODO: Have this point to some sort of record of Good-Loop's achievements */}
 			{/* <a href='/'> */}
 				And much more...
