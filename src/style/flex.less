@@ -1,16 +1,30 @@
 // Useful for making BootStrap columns all the same height
 .flex {
     display: flex;
+    > * {
+        margin: auto;
+    }
 }
 
 .flex-column {
-    display: flex;
+    .flex();
     flex-direction: column;
 }
 
 .flex-row {
-	display: flex;
+    .flex();	
     flex-direction: row;
+}
+
+// Will take up as much space in the container as possible
+.flex-fill {
+    .flex();    
+    flex: 1;
+}
+
+.flex-vertical-align {
+    .flex-column();
+    justify-content: center;
 }
 
 .flex-centre {
@@ -21,17 +35,6 @@
     align-items: start;
 }
 
-.flex-vertical-align {
-    .flex-column();
-    justify-content: center;
-}
-
 .flex-space-between {
     justify-content: space-between;
-}
-
-// Will take up as much space in the container as possible
-.flex-fill {
-    display: flex;
-    flex: 1;
 }

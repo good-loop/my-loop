@@ -4,7 +4,7 @@ const OnboardingCardMini = () => (
 	<>
 		<div className='flex-row flex-centre pad3'>
 			<div className='flex-vertical-align width50pct'>
-				<img className='width100pct margin-auto' src='/img/phone-placeholder.jpg' />
+				<img className='width100pct' src='/img/phone-placeholder.jpg' />
 			</div>
 			<div className='flex-vertical-align sub-header width50pct'>
 				Watch to donate
@@ -13,7 +13,7 @@ const OnboardingCardMini = () => (
 		<div>
 			<div className='triangle-gl-light-grey' />
 			<div className='flex-row flex-centre background-gl-light-grey pad1'>
-				<div className='flex-row margin-auto'>
+				<div className='flex-row'>
 					<div className='right-pad1'>
 						<img className='logo-big' src='/img/low-res-15-second.png' alt='fifteen-seconds' />
 					</div>
@@ -22,7 +22,7 @@ const OnboardingCardMini = () => (
 			</div>
 		</div>
 		<div>
-			<div className='flex-column'>
+			<div>
 				<div className='img-block' style={{backgroundImage: 'url(/img/let_s-use-ad-money_tfvhbb.webp)'}}>
 					<div className='pad10' />
 					<div className='triangle-gl-dark-blue' />

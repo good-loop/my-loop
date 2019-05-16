@@ -123,7 +123,7 @@ const CampaignPage = () => {
 					<div className='header-text'>
 						<div className={backgroundImage ? 'header-block' : ''}>
 							<div className='flex-row flex-centre pad1'>
-								<img className='margin-auto' src={brandLogo} style={{width: '10rem', display: 'block'}} />
+								<img src={brandLogo} style={{width: '10rem', display: 'block'}} />
 							</div>
 							<div className='sub-header pad1'>
 								<div>Together we've raised</div>													
@@ -138,11 +138,11 @@ const CampaignPage = () => {
 									clist.map( charity => (
 										<div className={'col-md-' + 12 / clist.length}>
 											<div className='flex-row pad1'>
-												<a className='margin-auto' src={charity.url}>
+												<a src={charity.url}>
 													<RoundLogo url={charity.logo} />
 												</a>
 											</div>
-											<div className='margin-auto text-block'>
+											<div className='text-block'>
 												<div className='sub-header text-center pad1'> 
 													{charity.name}
 												</div>

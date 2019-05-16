@@ -62,18 +62,18 @@ const MyPage = () => {
 	return (
 		// TODO: refactor out the elements are the same as campaign page
 		<div className="page MyPage">
-			<div title="Welcome Card" className='header-card MiniCard flex-column'>
+			<div title="Welcome Card" className='header-card MiniCard'>
 				<NavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
 				<div className='triangle-gl-red' />
 				<div className='flex-row pad3 background-gl-red'>
-					<div className='header white text-left margin-auto'>
+					<div className='header white text-left'>
 						Good-Loop ads
 						<br />
 						reward the charity of your choice
 						<br />
 						every time you watch
 					</div>
-					<div className='flex-vertical-align margin-auto'>
+					<div className='flex-vertical-align'>
 						<img className='logo-big' src='/img/logo-white2.png' />
 					</div>
 				</div>				
@@ -103,11 +103,19 @@ const MyPage = () => {
 					}
 				</div>
 			</div>
-			<div className='flex-column white' title='Boost your impact'>
+			<div className='white' title='Boost your impact'>
 				<div className='triangle-gl-red' />
 				<div className='background-gl-red'>
+					<div className='flex-column'>
+						<div className='sub-header'>
+							Boost your impact
+						</div>
+						<div className='flex-row'>
+							<RegisterLink className='background-gl-red white sub-header btn btn-gl' verb='Sign-Up' />			
+							<SocialMediaCard allIds={xids} className="socialConnect" />
+						</div>
+					</div>
 					Boost your impact by connecting with social media
-					<SocialMediaCard allIds={xids} className="socialConnect" />
 				</div>					
 			</div>
 			<div>
@@ -185,25 +193,25 @@ const IntroCard = () => (
 	<div title='Intro' className='container-fluid'>
 		<div className='row pad1'>
 			<div className='col-md-4 intro-item'>
-				<i className='fa fa-pencil fa-3x margin-auto pad1' />
+				<i className='fa fa-pencil fa-3x pad1' />
 				<div className='flex-row'>  
-					<span className='margin-auto text-block'>
+					<span className='text-block'>
 						Sign Up. We will not share any of your information with third-parties
 					</span>
 				</div>
 			</div>
 			<div className='col-md-4 intro-item'>
-				<i className='fa fa-mouse-pointer fa-3x margin-auto pad1' />
+				<i className='fa fa-mouse-pointer fa-3x pad1' />
 				<div className='flex-row'>
-					<span className='margin-auto text-block'>				
+					<span className='text-block'>				
 						Browse online as normal. Targetted adverts generate more for your chosen charities.
 					</span>		
 				</div>				
 			</div>
 			<div className='col-md-4 intro-item'>
-				<i className='fa fa-envelope fa-3x margin-auto pad1' />
+				<i className='fa fa-envelope fa-3x pad1' />
 				<div className='flex-row'>
-					<span className='margin-auto text-block'> 
+					<span className='text-block'> 
 						Learn how much you and other Good-Loopers have raised for charity each month! 
 					</span>
 				</div>
