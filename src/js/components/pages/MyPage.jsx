@@ -12,7 +12,6 @@ import {withLogsIfVisible} from '../../base/components/HigherOrderComponents';
 import ServerIO from '../../plumbing/ServerIO';
 import Footer from '../Footer';
 import ShareAnAd from '../cards/ShareAnAd';
-import DonationCard from '../cards/DonationCard';
 import NavBar from '../NavBar';
 import OnboardingCardMini from '../cards/OnboardingCardMini';
 import RecentCampaignsCard from '../cards/RecentCampaignsCard';
@@ -107,16 +106,10 @@ const MyPage = () => {
 				<div className='triangle-gl-red' />
 				<div className='background-gl-red'>
 					<div className='flex-column'>
-						<div className='sub-header'>
-							Boost your impact
-						</div>
 						<div className='text-block'>
 							Boost your impact by singing up or connecting with social media
 						</div>
-						<div className='flex-row flex-wrap'>
-							<RegisterLink className='sub-header btn btn-gl' verb='Sign-Up' />			
-							<SocialMediaCard allIds={xids} className='socialConnect margin1' />
-						</div>
+						<SocialMediaCard allIds={xids} className='socialConnect margin1' />
 					</div>
 				</div>					
 			</div>
@@ -153,13 +146,22 @@ const MyPage = () => {
 				</div>
 			</div>
 
-			<div title="Your Charities" className='container-fluid'>
-				<div className='row panel-title panel-heading sub-header pad1'> 
-					Your Charities
-				</div>
-				<div className='row pad1'>
-					<DonationCard xids={xids} />
-				</div>
+			<div className='white' title='Boost your impact'>
+				<div className='triangle-gl-red' />
+				<div className='background-gl-red'>
+					<div className='flex-column'>
+						<div className='sub-header'>
+							Boost your impact
+						</div>
+						<div className='text-block'>
+							Boost your impact by singing up or connecting with social media
+						</div>
+						<div className='flex-row flex-wrap'>
+							<RegisterLink className='sub-header btn btn-gl' verb='Sign-Up' />			
+							<SocialMediaCard allIds={xids} className='socialConnect margin1' />
+						</div>
+					</div>
+				</div>					
 			</div>
 
 			<div title="Get In Touch" className='container-fluid'>
@@ -171,25 +173,26 @@ const MyPage = () => {
 				</div>
 			</div>
 
+			<div>
+				<div className='triangle-gl-light-grey' />
+				<div className='background-gl-light-grey flex-row flex-wrap'>
+					<div className='flex-column pad1 width20'>
+						<div className='sub-header gl-red highlight font-bold'>
+							Time and attention online are valuable
+						</div>
+						<div className='sub-header'>
+							Let's harness that value and use it for good
+						</div>
+					</div>
+					<div className='text-block pad1'>
+						Good-Loop will never force you to engage with an ad. But, if you choose to give an adveritser some of your valuable time, attention and data, you get to give 50% of the advertisers' money to a relevant charitable cause.
+					</div>
+				</div>
+			</div>
 			<Footer className='background-gl-red' />
 		</div>
 	);
 }; // ./MyPage
-
-// explain good-loop and join CTA
-const TitleCard = () => (
-	<div className="WelcomeCard container-fluid flex-vertical-align flex-fill">
-		<div className="row header">
-			<div className="col header-text post-login">
-				<div className="title header white"> 
-					<div className='bottom-pad1'>Good-Loop ads</div> 
-					<div className='bottom-pad1'>reward the charity of your choice</div> 
-					<div> every time you watch </div>
-				</div>
-			</div>
-		</div>
-	</div>
-);
 
 const IntroCard = () => (
 	<div title='Intro' className='container-fluid'>

@@ -124,6 +124,12 @@ html, body {
 	width: 50%;
 }
 
+// Very specific, only used by block of text near bottom of page
+// Would just shift to ".bottom-bit-of-text-at-bottom-of-page", but this would be the only rule in there anyway
+.width20 {
+	width: 20rem;
+}
+
 // Make blocks of text more readable
 .text-block {
     text-align: left;
@@ -136,18 +142,22 @@ html, body {
 // Useful in headers
 .compact-text-block {
 	.text-block();
-	line-height: 1.4rem;
+	line-height: initial;
 	max-width: 20rem;
 }
 
-// Little red strip used for decoration
+.font-bold {
+	font-weight: bold;
+}
+
+// Little black strip used for decoration
 .highlight {
 	&:after {
 		display: block;
 		content: "";
-		height: 3px;
+		height: 2px;
 		// Darken to look more reasonable with dark green background
-		background: @gl-light-blue;
+		background: #000;
 	}
 }
 
