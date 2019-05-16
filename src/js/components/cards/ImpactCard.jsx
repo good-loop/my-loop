@@ -9,6 +9,7 @@ const ImpactCard = ({children}) => (
 
 const ImpactHeaderText = ({amount, className, headerText, subheaderText}) => (
 	<>
+		<div className='triangle-gl-red' />
 		<div className={'impact-header pad1 ' + className}>	
 			<div className='header'>
 				{headerText}
@@ -25,6 +26,7 @@ const ImpactHeaderText = ({amount, className, headerText, subheaderText}) => (
 
 const ImpactHeaderNumber = ({className, headerText, subheaderText, logoSrc}) => (
 	<>
+		<div className='triangle-gl-blue' />
 		<div className={'impact-header pad1 flex-column ' + className}>	
 			<div className='header'>
 				{headerText}

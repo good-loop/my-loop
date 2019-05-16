@@ -113,7 +113,7 @@ const MyPage = () => {
 					</div>
 				</div>					
 			</div>
-			<div>
+			<div className='flex-column'>
 				<ImpactCard>
 					<ImpactHeaderText amount={200000} className='background-gl-red' headerText='Your impact 2018' subheaderText='Watching adverts and signing-up has raised over' />
 					<ImpactImageText imageSrc='/img/stats3-scaled.jpg' />
@@ -125,12 +125,6 @@ const MyPage = () => {
 					<ImpactHeaderNumber className='bg-light-2' headerText='Food for one year' subheaderText='for 80 families in poverty in the UK' logoSrc='http://localmy.good-loop.com/img/toms-shoes-logo-vector.png' />
 					<ImpactImageNumber imageSrc='http://www.agricorner.com/wp-content/uploads/2010/11/kissan-call-center.jpg' logoSrc='http://www.stickpng.com/assets/images/5842a9fca6515b1e0ad75b06.png' subheaderText='adverts enabled' headerText='444 urgent calls to shelter helpline' />
 				</ImpactCard>
-			</div>
-
-			<div title="Our Achievements Together" className='StatisticsCard MiniCard container-fluid top-pad3'>
-				<div className='row'>
-					<StatisticsCardMini allIds={allIds} />
-				</div>
 			</div>
 
 			<div title="Recent Campaigns" className='boostImpact container-fluid'>
@@ -224,62 +218,6 @@ const IntroCard = () => (
 		</div>
 	</div>
 );
-
-const StatisticsCardMini = () => { 
-	const pvSum = DataStore.fetch(['widget','stats','all-donations'], () => {
-		const name = "total-spend"; // dummy parameter: helps identify request in network tab
-		return ServerIO.getAllSpend({name});
-	});
-	if ( ! pvSum.resolved) {
-		return <Misc.Loading text='Loading donation data...' />;
-	}
-
-	return (<section className="statistics statistics-what text-center">
-		<div className='container-fluid'>
-			<div className='row top-margin1'>
-				<div className='header-block min-height-15'>
-					<div className='img-block img-hero' style={{backgroundImage: 'url(/img/children-scaled.jpeg)', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />
-					<div className='col-md-1' />					
-					<div className='col-md-5 col-sm-5 flex-row'>
-						<div className='flex-column pad1 text-block'>
-							<span className='header white bottom-pad1'> 
-								318 school kits
-							</span>
-							<span> 
-								While primary school is free in Côte d'Ivoire, some farmers struggle to pay for their children's school supplies. Nestlé and the International Cocoa Initiative will provide exercise-books, note-books, pens, rulers, erasers, chalk and slate so that more children can go to school.
-							</span>
-						</div>
-					</div>
-					<div className='col-md-6' />
-				</div>
-			</div>
-			<div className='row top-margin1'>
-				<div className='header-block min-height-15'>
-					<div className='img-block img-hero' style={{backgroundImage: 'url(/img/plants-scaled.jpeg)', filter: 'brightness(0.5)', backgroundAttachment: 'unset'}} />			
-					<div className='col-md-1' />
-					<div className='col-md-5 col-sm-5 flex-row'>
-						<div className='flex-column pad1 text-block'>
-							<span className='header white bottom-pad1'>
-								68 vegetable growing kits									
-							</span>
-							<span> 
-								Overreliance on cocoa means some Côte d'Ivoire farmers are vulnerable to price fluctuations. Nestlé and the International Cocoa Initiative ran workshops to give women the tools, seedlings, fertilisers and skills needed to grow and sell plantain, rice or peppers.  
-							</span>
-						</div>
-					</div>
-				</div>
-				<div className='col-md-6' />
-			</div>
-
-		</div>
-		<div className='sub-header text-center top-margin1'>
-			{/* TODO: Have this point to some sort of record of Good-Loop's achievements */}
-			{/* <a href='/'> */}
-				And much more...
-			{/* </a> */}
-		</div>
-	</section>);
-};
 
 // Two-liner as withLogsIfVisible latches on to Component.displayName or Component.name in order to generate sensible-looking event tag in MixPanel
 // Obviously will not work quite right if we were to use an anonymous function
