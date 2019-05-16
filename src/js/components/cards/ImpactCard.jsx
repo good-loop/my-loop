@@ -9,7 +9,6 @@ const ImpactCard = ({children}) => (
 
 const ImpactHeaderText = ({amount, className, headerText, subheaderText}) => (
 	<>
-		<div className='triangle-gl-red' />
 		<div className={'impact-header pad1 ' + className}>	
 			<div className='header'>
 				{headerText}
@@ -26,16 +25,19 @@ const ImpactHeaderText = ({amount, className, headerText, subheaderText}) => (
 
 const ImpactHeaderNumber = ({className, headerText, subheaderText, logoSrc}) => (
 	<>
-		<div className='triangle-gl-blue' />
-		<div className={'impact-header pad1 ' + className}>	
+		<div className={'impact-header pad1 flex-column ' + className}>	
 			<div className='header'>
 				{headerText}
 			</div>
 			<div className='sub-header'>
 				{subheaderText}
-				<div className='flex-row'>
-					<span>Made possible by adverts from:</span>
-					<img className='impact-logo' src={logoSrc} alt='vertiser-logo' />
+				<div className='flex-row flex-wrap pad1'>
+					{ logoSrc 
+						&& <>
+							<span>Made possible by adverts from:</span>
+							<img className='impact-logo' src={logoSrc} alt='vertiser-logo' />
+						</>
+					}
 				</div>
 			</div>
 		</div>
@@ -58,7 +60,7 @@ const ImpactImageText = ({className, ...props}) => <ImpactImage {...props} class
 const ImpactImageNumber = ({logoSrc, headerText, subheaderText, ...props}) => (
 	<ImpactImage {...props}>
 		<div className='flex-column'>
-			<img className='impact-logo' src={logoSrc} alt='vertiser-logo' />
+			{logoSrc && <img className='impact-logo' src={logoSrc} alt='vertiser-logo' />}
 			<div className='sub-header white'>
 				{subheaderText}
 			</div>
