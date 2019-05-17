@@ -1,4 +1,6 @@
 import React from 'react';
+import Login from 'you-again';
+
 // import pivot from 'data-pivot';
 import C from '../../C';
 import ServerIO from '../../plumbing/ServerIO';
@@ -11,6 +13,7 @@ import MDText from '../../base/components/MDText';
 import NavBar from '../NavBar';
 import { RoundLogo } from '../Image';
 import ShareAnAd from '../cards/ShareAnAd';
+import {RegisterLink, LoginLink} from '../../base/components/LoginWidget';
 
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser`
@@ -158,6 +161,14 @@ const CampaignPage = () => {
 				</div>
 			</div>
 			<div className='container-fluid'>
+				{
+					Login.isLoggedIn()
+					|| (
+						<div className='row'> 
+							<RegisterLink className='background-gl-light-grey white sub-header btn btn-gl' style={{backgroundColor: brandColor, borderColor: brandColor}} verb='Sign-Up' />								
+						</div>
+					)
+				}
 				<div className='row pad1'>
 					<div className='col-md-3' /> 
 					<div className='col-md-6'>
@@ -166,7 +177,7 @@ const CampaignPage = () => {
 					<div className='col-md-3' /> 				
 				</div>
 			</div>
-			<Footer className='background-gl-red' leftFooter={startDate} rightFooter={smallPrint} style={{backgroundColor: brandColor}} />
+			<Footer leftFooter={startDate} rightFooter={smallPrint} />
 		</div>
 	);
 }; // ./CampaignPage
