@@ -7,7 +7,7 @@ import ServerIO from '../../plumbing/ServerIO';
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
 import ActionMan from '../../plumbing/ActionMan';
-import {ListItems, ListFilteredItems} from '../../base/components/ListLoad';
+import {ListItems} from '../../base/components/ListLoad';
 import Footer from '../Footer';
 import MDText from '../../base/components/MDText';
 import NavBar from '../NavBar';
@@ -41,7 +41,7 @@ const CampaignPage = () => {
 		let adItems = pvItems.value && pvItems.value.hits && pvItems.value.hits.length;
 		// if there's have more than 1 ad, then list them
 		if (adItems > 1) {
-			return <ListFilteredItems type={C.TYPES.Advert} status={C.KStatus.PUBLISHED} servlet='campaign' q={id}/>;		
+			return <ListItems type={C.TYPES.Advert} status={C.KStatus.PUBLISHED} servlet='campaign' q={id} />;		
 		}
 		// if there's just 1, then it's easy 
 		adPv = pvItems;
