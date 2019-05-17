@@ -24,7 +24,7 @@ let Page = () => {
 	}, [Login && Login.aliases && Login.aliases.length]);
 
 	return (
-		<div className='page text-center'>
+		<div className='page DataPage text-center'>
 			<NavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
 			<div title="Your Digital Mirror" className='container-fluid'>
 				<div className='row panel-title panel-heading sub-header pad1'> 

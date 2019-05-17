@@ -118,7 +118,7 @@ const CampaignPage = () => {
 
 	// TODO: refactor this because it's very similar now to mypage
 	return (
-		<div className="page MyPage">
+		<div className="page CampaignPage text-center">
 			<NavBar brandLogo={brandLogo} style={{backgroundColor: brandColor}} />
 			{/* TODO: get rid of old css classes, previous to refactor */}
 			<div className='container-fluid'>
