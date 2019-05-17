@@ -13,7 +13,7 @@ import MDText from '../../base/components/MDText';
 import NavBar from '../NavBar';
 import { RoundLogo } from '../Image';
 import ShareAnAd from '../cards/ShareAnAd';
-import {RegisterLink, LoginLink} from '../../base/components/LoginWidget';
+import {RegisterLink} from '../../base/components/LoginWidget';
 
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser`
@@ -31,30 +31,20 @@ const CampaignPage = () => {
 		return <ListItems type={C.TYPES.Advert} status={C.KStatus.PUBLISHED} servlet='campaign' />;		
 	}
 
-	// Only pull vertiser data if no adid has been provided
 	let adPv;
-	if( adid ) {
-		adPv = ActionMan.getDataItem({type:C.TYPES.Advert, id, status:C.KStatus.DRAFT, domain: ServerIO.PORTAL_DOMAIN});
-	} else {
-		// find out whether the vertiser has just 1 ad, if so then just redirect them to the campaign page of that ad
-		let pvItems = ActionMan.list({type: C.TYPES.Advert, status:C.KStatus.ALL_BAR_TRASH, q:id }); 
-		let adItems = pvItems.value && pvItems.value.hits && pvItems.value.hits.length;
-		// if there's have more than 1 ad, then list them
-		if (adItems > 1) {
-			return <ListItems type={C.TYPES.Advert} status={C.KStatus.PUBLISHED} servlet='campaign' q={id} />;		
-		}
-		// if there's just 1, then it's easy 
-		adPv = pvItems;
-	}
+
+	adPv = adid
+		? ActionMan.getDataItem({type: C.TYPES.Advert, id, status:C.KStatus.DRAFT, domain: ServerIO.PORTAL_DOMAIN})
+		: ActionMan.list({type: C.TYPES.Advert, status:C.KStatus.ALL_BAR_TRASH, q:id });
 
 	if ( ! adPv.resolved ) {
 		return <Misc.Loading text='Loading campaign data...' />;
 	}
 	// Assume we have data for single advert if adid exists
 	// Pull out first advert from advertiser data if not
-	let ad = adid ? adPv.value : ( adPv.value && adPv.value.hits && adPv.value.hits[0] );
+	let ad = (adid ? adPv.value : ( adPv.value && adPv.value.hits && adPv.value.hits[0] )) || {};
 
-	let {branding={}} = ad;
+	let {branding} = ad || {branding: {}};
 	// default styling if adv branding is not there 
 
 	let brandColor = branding.color || branding.backgroundColor || (ad.mockUp && ad.mockUp.backgroundColor);
@@ -80,13 +70,17 @@ const CampaignPage = () => {
 	let clist = ad.charities.list;
 	let cids = clist.map(x => x.id);
 
+	// Unfortunately need to repeat structure as ActionMan.list does not return a promise
+	let q = adid 
+		? 'vert:' + id
+		: adPv.value.hits.reduce( (query, vert) => query += 'vert:' + vert.id + ' OR ', '');
+
 	// load the community total for the ad
 	let pvDonationsBreakdown = DataStore.fetch(['widget','CampaignPage','communityTotal', id], () => {
 		// TODO campaign would be nicer 'cos we could combine different ad variants... but its not logged reliably
 		// Argh: Loop.Me have not logged vert, only campaign.
 		// but elsewhere vert is logged and not campaign.
 		// let q = ad.campaign? '(vert:'+adid+' OR campaign:'+ad.campaign+')' : 'vert:'+adid;		
-		let q = 'vert:'+id;
 		// TODO "" csv encoding for bits of q (e.g. campaign might have a space)
 		return ServerIO.getDonationsData({q});		
 	}, true, 5*60*1000);
