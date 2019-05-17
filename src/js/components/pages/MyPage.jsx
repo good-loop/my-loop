@@ -13,10 +13,12 @@ import ServerIO from '../../plumbing/ServerIO';
 import Footer from '../Footer';
 import ShareAnAd from '../cards/ShareAnAd';
 import NavBar from '../NavBar';
+import ConsentWidget from '../ConsentWidget';
 import OnboardingCardMini from '../cards/OnboardingCardMini';
 import RecentCampaignsCard from '../cards/RecentCampaignsCard';
 import {ImpactImageNumber, ImpactImageText, ImpactHeaderText, ImpactHeaderNumber, ImpactCard} from '../cards/ImpactCard';
 import SocialMediaCard from '../cards/SocialMediaCard';
+
 
 const pagePath = ['widget', 'MyPage'];
 
@@ -156,6 +158,19 @@ const MyPage = () => {
 						</div>
 					</div>
 				</div>					
+			</div>
+
+			<div title="Consent Controls" className="consentControls container-fluid">
+				<div className='row panel-title panel-heading sub-header pad1'> 
+					Consent Controls
+				</div>
+				<div className='row pad1'> 
+					{Login.isLoggedIn() ? (
+						<ConsentWidget xids={xids} />
+					) : (
+						<Misc.LoginToSee />
+					)}
+				</div>
 			</div>
 
 			<div title="Get In Touch" className='container-fluid'>
