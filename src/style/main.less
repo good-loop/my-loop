@@ -30,6 +30,10 @@ html, body {
 	padding: 3rem;
 }
 
+.pad5 {
+	padding: 5rem;
+}
+
 .pad10 {
 	padding: 10rem;
 }
@@ -169,13 +173,18 @@ html, body {
 	}
 }
 
+.img-block-basic {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
 // background-image will be set in JS
 .img-block {
     width: 100%;
     height: 100%;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
+
+	.img-block-basic();
 }
 
 // Use in conjunction with img-block

@@ -105,7 +105,6 @@ const MyPage = () => {
 				</div>
 			</div>
 			<div className='white' title='Boost your impact'>
-				<div className='triangle-gl-red' />
 				<div className='background-gl-red'>
 					<div className='flex-column'>
 						<div className='text-block'>
@@ -115,12 +114,26 @@ const MyPage = () => {
 					</div>
 				</div>					
 			</div>
-			<div className='flex-row flex-wrap'>
-				<ImpactCard className='top-margin0'>
-					<ImpactHeaderText amount={200000} className='background-gl-red' headerText='Your impact 2018' subheaderText='Watching adverts and signing-up has raised over' />
-					<ImpactImageText imageSrc='/img/stats3-scaled.jpg' />
-					<div className='text-block'>
-						Advert donations have enabled 318 school kits! Some of Nestlé Cocoa Plan farmers struggle to pay for the books and school supplies for their children. Thanks to you, Nestlé and the International Cocoa Initiative will provide school kits so that more children can go to school. School kits contain exercise books, note books, pens, ruler, eraser, chalk and slate.
+			<div>
+				<ImpactCard className='top-margin1'>
+					<ImpactHeaderText amount={200000} className='background-gl-red row' headerText='Your impact 2018' subheaderText='Watching adverts and signing-up has raised over ' />
+					<div className='image-and-text container-fluid'>
+						<div className='img-container'>
+							<img className='impact-image' src='/img/stats1-cropped.jpg' />
+						</div>
+						<div className='impact-text pad1'>
+						Advert donations enabled 68 vegetable growing kits! Poverty affects many cocoa-growing households in Côte d'Ivoire. In order help diversify their income, Nestlé and the International Cocoa Initiative engage women in vegetable growing, equipping them with skills, tools seedlings, and fertilizers to grow and market plantain, rice or peppers. Thanks for helping us make this possible!
+						</div>
+					</div>
+				</ImpactCard>
+				<ImpactCard className='top-margin1'>
+					<div className='reversed-image-and-text container-fluid'>
+						<div className='img-container'>
+							<img className='impact-image' src='/img/stats3-cropped.jpg' />
+						</div>
+						<div className='impact-text pad1'>
+							Advert donations have enabled 318 school kits! Some of Nestlé Cocoa Plan farmers struggle to pay for the books and school supplies for their children. Thanks to you, Nestlé and the International Cocoa Initiative will provide school kits so that more children can go to school. School kits contain exercise books, note books, pens, ruler, eraser, chalk and slate.
+						</div>
 					</div>
 				</ImpactCard>
 				<ImpactCard>

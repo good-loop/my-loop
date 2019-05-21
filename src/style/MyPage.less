@@ -103,21 +103,54 @@
 		flex-wrap: wrap;
 }
 
-// These only really work as part of a thin column
-.impact-card {
-	max-width: 500px;
+.img-container {
+	text-align: center;
 }
 
-.impact-header {
+// These only really work as part of a thin column
+.impact-card {
 	text-align: left;
 
 	.header, .sub-header {
-		color: white;
+		color: #fff;
+	}
+
+	.body-text {
+		color: #000;
 	}
 
 	.impact-logo {
 		height: 3.5em;
 		width: auto;
+	}
+
+	.impact-text {
+
+	}
+
+	.impact-image {
+		width: 100%;
+		max-width: 600px;
+	}
+
+	.image-and-text {
+		.flex-row();
+
+		margin: 3rem auto 3rem auto;
+
+		> * {
+			width: 50%;	
+		}
+	}
+
+	.reversed-image-and-text {
+		.flex-row-reverse();
+
+		margin: 3rem auto 3rem auto;
+
+		> * {
+			width: 50%;	
+		}
 	}
 }
 
@@ -163,4 +196,16 @@
 .logo-big {
 	width: 7rem;
 	height: auto;
+}
+
+@media only screen and (max-width: 1110px) {
+	.impact-card {
+		.image-and-text, .reversed-image-and-text {
+			flex-direction: column;
+			
+			> * {
+				width: 100%;
+			}
+		}
+	}
 }

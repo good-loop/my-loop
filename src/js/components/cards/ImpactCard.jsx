@@ -2,23 +2,20 @@ import React from 'react';
 import Misc from '../../base/components/Misc';
 
 const ImpactCard = ({children, className}) => (
-	<div className={'impact-card ' + className}>
+	<div className={'impact-card container-fluid ' + className}>
 		{children}
 	</div>
 );
 
 const ImpactHeaderText = ({amount, className, headerText, subheaderText}) => (
 	<>
-		<div className='triangle-gl-red' />
-		<div className={'impact-header pad1 ' + className}>	
-			<div className='header'>
+		<div className={'pad1 row ' + className}>	
+			<div className='header impact-header col-md-6 col-sm-12'>
 				{headerText}
 			</div>
-			<div className='sub-header'>
-				{subheaderText}
-				<div>
-					<Misc.Money amount={amount} />
-				</div>
+			<div className='sub-header impact-sub-header col-md-6 col-sm-12'>
+				{subheaderText} 
+				<Misc.Money amount={amount} />
 			</div>
 		</div>
 	</>
@@ -26,12 +23,11 @@ const ImpactHeaderText = ({amount, className, headerText, subheaderText}) => (
 
 const ImpactHeaderNumber = ({className, headerText, subheaderText, logoSrc}) => (
 	<>
-		<div className='triangle-gl-blue' />
-		<div className={'impact-header pad1 flex-column ' + className}>	
-			<div className='header'>
+		<div className={'pad1 row ' + className}>	
+			<div className='header impact-header col-md-6'>
 				{headerText}
 			</div>
-			<div className='sub-header'>
+			<div className='sub-header impact-sub-header col-md-6'>
 				{subheaderText}
 				<div className='flex-row flex-wrap pad1'>
 					{ logoSrc 
@@ -48,19 +44,20 @@ const ImpactHeaderNumber = ({className, headerText, subheaderText, logoSrc}) => 
 
 /** Generic div with image as background
  * @param render set to layer elements over background image
+ * Width auto to allow for bootstrap col
  */
 const ImpactImage = ({className, imageSrc, children}) => (
 	<>
-		<div className={'img-block text-left pad1 ' + className} style={{backgroundImage: 'url(' + imageSrc + ')'}}>
+		<div className={'img-block-basic impact-image text-left ' + className} style={{backgroundImage: 'url(' + imageSrc + ')'}}>
 			{children}
 		</div>
 	</>
 );
 
-const ImpactImageText = ({className, ...props}) => <ImpactImage {...props} className={className + ' impact-image-text'} />;
+const ImpactImageText = (props) => <ImpactImage {...props} />;
 
-const ImpactImageNumber = ({logoSrc, headerText, subheaderText, ...props}) => (
-	<ImpactImage {...props}>
+const ImpactImageNumber = ({className, logoSrc, headerText, subheaderText, ...props}) => (
+	<ImpactImage className={className + ' img-block '} {...props}>
 		<div className='flex-column'>
 			{logoSrc && <img className='impact-logo' src={logoSrc} alt='vertiser-logo' />}
 			<div className='sub-header white'>
