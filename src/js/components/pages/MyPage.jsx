@@ -138,7 +138,7 @@ const MyPage = () => {
 				</ImpactCard>
 				<ImpactCard>
 					<ImpactHeaderNumber className='bg-light-2' headerText='888 NIGHTS OF ACCOMMODATION' subheaderText='Centrepoint supports more than 10,000 young homeless people in the UK each year.' logoSrc='/img/toms-shoes-logo-vector.png' />
-					<ImpactImageNumber imageSrc='http://www.agricorner.com/wp-content/uploads/2010/11/kissan-call-center.jpg' logoSrc='http://www.stickpng.com/assets/images/5842a9fca6515b1e0ad75b06.png' subheaderText='adverts enabled' headerText='444 urgent calls to shelter helpline' />
+					<ImpactImageNumber imageSrc='/img/call-center.jpg' logoSrc='/img/method-logo.png' subheaderText='adverts enabled' headerText='1000 calls to the Mind mental health infoline' />
 				</ImpactCard>
 			</div>
 
