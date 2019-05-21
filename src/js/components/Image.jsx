@@ -1,24 +1,13 @@
 import React from 'react';
 import DataStore from '../base/plumbing/DataStore';
 
-/**
- * ?? Why not out the css into a .less file?
- */
 const RoundLogo = props => (
 	<div
 		{...props} 
 		alt={props.alt} 
+		className='round-logo'
 		style={{
 			backgroundImage: `url('${props.url}')`,
-			border: '1px solid grey',
-			borderRadius: '50%',
-			margin: 0,
-			backgroundColor: '#fff',
-			backgroundRepeat: 'no-repeat',
-			backgroundPosition: 'center center',
-			backgroundSize: '100%',
-			height: '5rem',
-			width: '5rem',
 			...props.style
 		}} 
 	/>
