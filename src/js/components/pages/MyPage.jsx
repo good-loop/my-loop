@@ -115,7 +115,7 @@ const MyPage = () => {
 				</div>					
 			</div>
 			<div>
-				<ImpactCard className='top-margin1'>
+				<ImpactCard className='top-margin1 container-fluid'>
 					<ImpactHeaderText amount={200000} className='background-gl-red row' headerText='Your impact 2018' subheaderText='Watching adverts and signing-up has raised over ' />
 					<div className='image-and-text container-fluid'>
 						<div className='img-container'>
@@ -126,7 +126,7 @@ const MyPage = () => {
 						</div>
 					</div>
 				</ImpactCard>
-				<ImpactCard className='top-margin1'>
+				<ImpactCard className='top-margin1 container-fluid'>
 					<div className='reversed-image-and-text container-fluid'>
 						<div className='img-container'>
 							<img className='impact-image' src='/img/stats3-cropped.jpg' />

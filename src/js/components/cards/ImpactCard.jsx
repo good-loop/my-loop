@@ -2,7 +2,7 @@ import React from 'react';
 import Misc from '../../base/components/Misc';
 
 const ImpactCard = ({children, className}) => (
-	<div className={'impact-card container-fluid ' + className}>
+	<div className={'impact-card ' + className}>
 		{children}
 	</div>
 );
@@ -23,13 +23,13 @@ const ImpactHeaderText = ({amount, className, headerText, subheaderText}) => (
 
 const ImpactHeaderNumber = ({className, headerText, subheaderText, logoSrc}) => (
 	<>
-		<div className={'pad1 row ' + className}>	
-			<div className='header impact-header col-md-6'>
+		<div className={'pad1 ' + className}>	
+			<div className='header impact-header'>
 				{headerText}
 			</div>
-			<div className='sub-header impact-sub-header col-md-6'>
+			<div className='sub-header impact-sub-header'>
 				{subheaderText}
-				<div className='flex-row flex-wrap pad1'>
+				<div className='flex-row flex-wrap'>
 					{ logoSrc 
 						&& <>
 							<span>Made possible by adverts from:</span>
@@ -48,7 +48,7 @@ const ImpactHeaderNumber = ({className, headerText, subheaderText, logoSrc}) => 
  */
 const ImpactImage = ({className, imageSrc, children}) => (
 	<>
-		<div className={'img-block-basic impact-image text-left ' + className} style={{backgroundImage: 'url(' + imageSrc + ')'}}>
+		<div className={'img-block-basic text-left ' + className} style={{backgroundImage: 'url(' + imageSrc + ')'}}>
 			{children}
 		</div>
 	</>
