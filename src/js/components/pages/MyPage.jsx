@@ -137,7 +137,7 @@ const MyPage = () => {
 					</div>
 				</ImpactCard>
 				<ImpactCard>
-					<ImpactHeaderNumber className='bg-light-2' headerText='Food for one year' subheaderText='for 80 families in poverty in the UK' logoSrc='http://localmy.good-loop.com/img/toms-shoes-logo-vector.png' />
+					<ImpactHeaderNumber className='bg-light-2' headerText='888 NIGHTS OF ACCOMMODATION' subheaderText='Centrepoint supports more than 10,000 young homeless people in the UK each year.' logoSrc='/img/toms-shoes-logo-vector.png' />
 					<ImpactImageNumber imageSrc='http://www.agricorner.com/wp-content/uploads/2010/11/kissan-call-center.jpg' logoSrc='http://www.stickpng.com/assets/images/5842a9fca6515b1e0ad75b06.png' subheaderText='adverts enabled' headerText='444 urgent calls to shelter helpline' />
 				</ImpactCard>
 			</div>

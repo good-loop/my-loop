@@ -1,5 +1,6 @@
 import React from 'react';
 import Misc from '../../base/components/Misc';
+import {RoundLogo} from '../Image';
 
 const ImpactCard = ({children, className}) => (
 	<div className={'impact-card ' + className}>
@@ -56,10 +57,14 @@ const ImpactImage = ({className, imageSrc, children}) => (
 
 const ImpactImageText = (props) => <ImpactImage {...props} />;
 
-const ImpactImageNumber = ({className, logoSrc, headerText, subheaderText, ...props}) => (
+const ImpactImageNumber = ({alt, className, logoSrc, headerText, subheaderText, ...props}) => (
 	<ImpactImage className={className + ' img-block '} {...props}>
 		<div className='flex-column'>
-			{logoSrc && <img className='impact-logo' src={logoSrc} alt='vertiser-logo' />}
+			{logoSrc 
+				&& (
+					<RoundLogo url={logoSrc} alt={alt || 'advertiser-logo'} /> 
+				)
+			}
 			<div className='sub-header white'>
 				{subheaderText}
 			</div>
