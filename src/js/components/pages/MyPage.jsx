@@ -162,12 +162,12 @@ const MyPage = () => {
 						<div className='sub-header'>
 							Boost your impact
 						</div>
-						<div className='text-block'>
+						<div className='text-block pad1'>
 							Boost your impact by singing up or connecting with social media
 						</div>
 						<div className='flex-row flex-wrap'>
 							<RegisterLink className='sub-header btn btn-gl' verb='Sign-Up' />			
-							<SocialMediaCard allIds={xids} className='socialConnect margin1' />
+							<SocialMediaCard allIds={xids} className='socialConnect pad1' />
 						</div>
 					</div>
 				</div>					
