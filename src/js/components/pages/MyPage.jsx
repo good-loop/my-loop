@@ -252,10 +252,10 @@ const IntroCard = () => (
 let ContactCard = ({doesIfVisibleRef}) => (
 	<div ref={doesIfVisibleRef}>
 		<div>
-			<p>Let us know what you think of this web-app, and your ideas for improving it.</p>
+			<p>Tell us what you think of this web-app.</p>
 			<p>Are you interested in hosting Ads For Good on your blog or website?</p>
 			<p>
-				<a href="https://www.good-loop.com/book-a-call">Let us know.</a>
+				<a href="https://www.good-loop.com/book-a-call">Let us Know.</a>
 			</p>
 		</div>
 	</div>
