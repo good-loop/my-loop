@@ -108,7 +108,7 @@ const MyPage = () => {
 				<div className='background-gl-red'>
 					<div className='flex-column'>
 						<div className='text-block'>
-							Boost your impact by singing up or connecting with social media
+							Boost your impact by signing up or connecting with social media.
 						</div>
 						<SocialMediaCard allIds={xids} className='socialConnect margin1' />
 					</div>
@@ -116,7 +116,7 @@ const MyPage = () => {
 			</div>
 			<div>
 				<ImpactCard className='top-margin1 container-fluid'>
-					<ImpactHeaderText amount={200000} className='background-gl-red row' headerText='Your impact 2018' subheaderText='Watching adverts and signing-up has raised over ' />
+					<ImpactHeaderText amount={200000} className='background-gl-red row' headerText='Your impact 2018' subheaderText='Watching adverts and signing up has raised over ' />
 					<div className='image-and-text container-fluid'>
 						<div className='img-container'>
 							<img className='impact-image' src='/img/stats1-cropped.jpg' />
@@ -132,7 +132,7 @@ const MyPage = () => {
 							<img className='impact-image' src='/img/stats3-cropped.jpg' />
 						</div>
 						<div className='impact-text pad1'>
-							Advert donations have enabled 318 school kits! Some of Nestlé Cocoa Plan farmers struggle to pay for the books and school supplies for their children. Thanks to you, Nestlé and the International Cocoa Initiative will provide school kits so that more children can go to school. School kits contain exercise books, note books, pens, ruler, eraser, chalk and slate.
+							Advert donations have enabled 318 school kits! Some Nestlé Cocoa Plan farmers struggle to pay for books and school supplies for their children. Thanks to you, Nestlé and the International Cocoa Initiative will provide school kits so that more children can go to school. School kits contain exercise books, note books, pens, rulers, erasers, chalk and slates.
 						</div>
 					</div>
 				</ImpactCard>
@@ -163,10 +163,10 @@ const MyPage = () => {
 							Boost your impact
 						</div>
 						<div className='text-block pad1'>
-							Boost your impact by singing up or connecting with social media
+							Boost your impact by signing up or connecting with social media.
 						</div>
 						<div className='flex-row flex-wrap'>
-							<RegisterLink className='sub-header btn btn-gl' verb='Sign-Up' />			
+							<RegisterLink className='sub-header btn btn-gl' verb='Sign Up' />			
 							<SocialMediaCard allIds={xids} className='socialConnect pad1' />
 						</div>
 					</div>
@@ -231,7 +231,7 @@ const IntroCard = () => (
 				<i className='fa fa-mouse-pointer fa-3x pad1' />
 				<div className='flex-row'>
 					<span className='text-block'>				
-						Browse online as normal. Targetted adverts generate more for your chosen charities.
+						Browse online as normal. Targeted adverts generate more for your chosen charities.
 					</span>		
 				</div>				
 			</div>
