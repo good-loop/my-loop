@@ -16,9 +16,9 @@ import NavBar from '../NavBar';
 import ConsentWidget from '../ConsentWidget';
 import OnboardingCardMini from '../cards/OnboardingCardMini';
 import RecentCampaignsCard from '../cards/RecentCampaignsCard';
+// TODO refactor so ImpactCard is the shared module, with other bits tucked away inside it
 import {ImpactImageNumber, ImpactImageText, ImpactHeaderText, ImpactHeaderNumber, ImpactCard} from '../cards/ImpactCard';
 import SocialMediaCard from '../cards/SocialMediaCard';
-
 
 const pagePath = ['widget', 'MyPage'];
 
@@ -115,6 +115,7 @@ const MyPage = () => {
 				</div>					
 			</div>
 			<div>
+			{/* TODO refactor so this is data passed into ImpactCard */}
 				<ImpactCard className='top-margin1 container-fluid'>
 					<ImpactHeaderText amount={200000} className='background-gl-red row' headerText='Your impact 2018' subheaderText='Watching adverts and signing up has raised over ' />
 					<div className='image-and-text container-fluid'>

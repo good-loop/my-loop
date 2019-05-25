@@ -1,6 +1,9 @@
 import React from 'react';
 import Misc from '../../base/components/Misc';
 import {RoundLogo} from '../Image';
+import Counter from '../../base/components/Counter';
+import Money from '../../base/data/Money';
+import {asNum} from 'wwutils';
 
 const ImpactCard = ({children, className}) => (
 	<div className={'impact-card ' + className}>
@@ -8,39 +11,43 @@ const ImpactCard = ({children, className}) => (
 	</div>
 );
 
-const ImpactHeaderText = ({amount, className, headerText, subheaderText}) => (
-	<>
+/**
+ * @param amount {Money|Number}
+ */
+const ImpactHeaderText = ({amount, className, headerText, subheaderText}) => {
+	let n = Money.isa(amount)? Money.value(amount) : asNum(amount);
+	return (
 		<div className={'pad1 row ' + className}>	
 			<div className='header impact-header col-md-6 col-sm-12'>
 				{headerText}
 			</div>
 			<div className='sub-header impact-sub-header col-md-6 col-sm-12'>
-				{subheaderText} 
-				<Misc.Money amount={amount} />
-			</div>
-		</div>
-	</>
-);
-
-const ImpactHeaderNumber = ({className, headerText, subheaderText, logoSrc}) => (
-	<>
-		<div className={'pad1 ' + className}>	
-			<div className='header impact-header'>
-				{headerText}
-			</div>
-			<div className='sub-header impact-sub-header'>
 				{subheaderText}
-				<div className='flex-row flex-wrap'>
-					{ logoSrc 
-						&& <>
-							<span>Made possible by adverts from:</span>
-							<img className='impact-logo' src={logoSrc} alt='vertiser-logo' />
-						</>
-					}
-				</div>
+				{Money.isa(amount)? <span className='currency-symbol'>{Money.CURRENCY[amount.currency]}</span> : null}
+				<Counter n={n} id={headerText} />
 			</div>
 		</div>
-	</>
+	);
+};
+
+// misleading name??
+const ImpactHeaderNumber = ({className, headerText, subheaderText, logoSrc}) => (
+	<div className={'pad1 ' + className}>	
+		<div className='header impact-header'>
+			{headerText}
+		</div>
+		<div className='sub-header impact-sub-header'>
+			{subheaderText}
+			<div className='flex-row flex-wrap'>
+				{ logoSrc 
+					&& <>
+						<span>Made possible by adverts from:</span>
+						<img className='impact-logo' src={logoSrc} alt='vertiser-logo' />
+					</>
+				}
+			</div>
+		</div>
+	</div>
 );
 
 /** Generic div with image as background
@@ -85,3 +92,4 @@ export {
 	ImpactImageText,
 	ImpactImageNumber
 };
+export default ImpactCard;

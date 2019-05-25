@@ -28,6 +28,7 @@
     "react-dropzone": "^8.1.0",
     "react-markdown": "^4.0.6",
     "react-scroll": "^1.7.11",
+	"react-on-visible": "^1.6.0",
     "sjtest": "^0.4.9",
     "wwutils": "^0.9.4",
     "you-again": "^0.8.4"
