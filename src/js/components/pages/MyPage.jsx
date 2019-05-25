@@ -114,6 +114,7 @@ const MyPage = () => {
 					</div>
 				</div>					
 			</div>
+
 			<div>
 			{/* TODO refactor so this is data passed into ImpactCard */}
 				<ImpactCard className='top-margin1 container-fluid'>
@@ -138,8 +139,16 @@ const MyPage = () => {
 					</div>
 				</ImpactCard>
 				<ImpactCard>
-					<ImpactHeaderNumber className='bg-light-2' headerText='888 NIGHTS OF ACCOMMODATION' subheaderText='Centrepoint supports more than 10,000 young homeless people in the UK each year.' logoSrc='/img/toms-shoes-logo-vector.png' />
-					<ImpactImageNumber imageSrc='/img/call-center.jpg' logoSrc='/img/method-logo.png' subheaderText='adverts enabled' headerText='1000 calls to the Mind mental health infoline' />
+					<ImpactHeaderNumber className='bg-light-2' 
+						amount={888}
+						headerText='nights of accommodation' 
+						subheaderText='Centrepoint supports more than 10,000 young homeless people in the UK each year.' logoSrc='/img/toms-shoes-logo-vector.png' 
+					/>
+					<ImpactImageNumber imageSrc='/img/call-center.jpg' logoSrc='/img/method-logo.png' 
+						subheaderText='adverts enabled' 
+						amount={1000}
+						headerText='calls to the Mind mental health infoline' 
+					/>
 				</ImpactCard>
 			</div>
 
@@ -212,6 +221,7 @@ const MyPage = () => {
 					</div>
 				</div>
 			</div>
+
 			<Footer className='background-gl-red' />
 		</div>
 	);

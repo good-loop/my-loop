@@ -15,7 +15,6 @@ const ImpactCard = ({children, className}) => (
  * @param amount {Money|Number}
  */
 const ImpactHeaderText = ({amount, className, headerText, subheaderText}) => {
-	let n = Money.isa(amount)? Money.value(amount) : asNum(amount);
 	return (
 		<div className={'pad1 row ' + className}>	
 			<div className='header impact-header col-md-6 col-sm-12'>
@@ -23,18 +22,17 @@ const ImpactHeaderText = ({amount, className, headerText, subheaderText}) => {
 			</div>
 			<div className='sub-header impact-sub-header col-md-6 col-sm-12'>
 				{subheaderText}
-				{Money.isa(amount)? <span className='currency-symbol'>{Money.CURRENCY[amount.currency]}</span> : null}
-				<Counter n={n} id={headerText} />
+				<Counter n={amount} id={headerText || 'ImpactHeaderText'} />
 			</div>
 		</div>
 	);
 };
 
 // misleading name??
-const ImpactHeaderNumber = ({className, headerText, subheaderText, logoSrc}) => (
+const ImpactHeaderNumber = ({className, amount, headerText, subheaderText, logoSrc}) => (
 	<div className={'pad1 ' + className}>	
 		<div className='header impact-header'>
-			{headerText}
+			<Counter n={amount} id={headerText || 'ImpactHeaderNumber'} /> {headerText}
 		</div>
 		<div className='sub-header impact-sub-header'>
 			{subheaderText}
@@ -55,16 +53,14 @@ const ImpactHeaderNumber = ({className, headerText, subheaderText, logoSrc}) => 
  * Width auto to allow for bootstrap col
  */
 const ImpactImage = ({className, imageSrc, children}) => (
-	<>
-		<div className={'img-block-basic text-left ' + className} style={{backgroundImage: 'url(' + imageSrc + ')'}}>
-			{children}
-		</div>
-	</>
+	<div className={'img-block-basic text-left ' + className} style={{backgroundImage: 'url(' + imageSrc + ')'}}>
+		{children}
+	</div>
 );
 
 const ImpactImageText = (props) => <ImpactImage {...props} />;
 
-const ImpactImageNumber = ({alt, className, logoSrc, headerText, subheaderText, ...props}) => (
+const ImpactImageNumber = ({alt, className, logoSrc, amount, headerText, subheaderText, ...props}) => (
 	<ImpactImage className={className + ' img-block '} {...props}>
 		<div className='flex-column'>
 			{logoSrc 
@@ -76,6 +72,7 @@ const ImpactImageNumber = ({alt, className, logoSrc, headerText, subheaderText, 
 				{subheaderText}
 			</div>
 			<div className='header white'>
+				<Counter n={amount} id={headerText || 'ImpactImageNumber'} />
 				{headerText}
 			</div>
 		</div>
