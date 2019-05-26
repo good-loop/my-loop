@@ -28,7 +28,7 @@ const ImpactHeaderText = ({amount, className, headerText, subheaderText}) => {
 	);
 };
 
-// misleading name??
+// How does this differ from ImpactImageNumber?? Should they be merged??
 const ImpactHeaderNumber = ({className, amount, headerText, subheaderText, logoSrc}) => (
 	<div className={'pad1 ' + className}>	
 		<div className='header impact-header'>
@@ -60,6 +60,7 @@ const ImpactImage = ({className, imageSrc, children}) => (
 
 const ImpactImageText = (props) => <ImpactImage {...props} />;
 
+// How does this differ from ImpactImageNumber?? Should they be merged??
 const ImpactImageNumber = ({alt, className, logoSrc, amount, headerText, subheaderText, ...props}) => (
 	<ImpactImage className={className + ' img-block '} {...props}>
 		<div className='flex-column'>
