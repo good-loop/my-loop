@@ -44,7 +44,7 @@ const CampaignPage = () => {
 	// Pull out first advert from advertiser data if not
 	let ad = (adid ? adPv.value : ( adPv.value && adPv.value.hits && adPv.value.hits[0] )) || {};
 
-	let {branding} = ad || {branding: {}};
+	let branding = ad.branding || {};
 	// default styling if adv branding is not there 
 
 	let brandColor = branding.color || branding.backgroundColor || (ad.mockUp && ad.mockUp.backgroundColor);
