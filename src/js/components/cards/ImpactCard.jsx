@@ -72,7 +72,7 @@ const ImpactImageNumber = ({alt, className, logoSrc, amount, headerText, subhead
 			<div className='sub-header white'>
 				{subheaderText}
 			</div>
-			<div className='header white'>
+			<div className='header white margin0'>
 				<Counter n={amount} id={headerText || 'ImpactImageNumber'} />
 				{headerText}
 			</div>

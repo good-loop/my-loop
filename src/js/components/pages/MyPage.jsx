@@ -106,7 +106,7 @@ const MyPage = () => {
 			</div>
 			<div className='white' title='Boost your impact'>
 				<div className='background-gl-red'>
-					<div className='flex-column'>
+					<div className='flex-column pad1'>
 						<div className='text-block'>
 							Boost your impact by signing up or connecting with social media.
 						</div>
@@ -144,7 +144,7 @@ const MyPage = () => {
 						headerText='nights of accommodation' 
 						subheaderText='Centrepoint supports more than 10,000 young homeless people in the UK each year.' logoSrc='/img/toms-shoes-logo-vector.png' 
 					/>
-					<ImpactImageNumber imageSrc='/img/call-center.jpg' logoSrc='/img/method-logo.png' 
+					<ImpactImageNumber className='pad1' imageSrc='/img/call-center.jpg' logoSrc='/img/method-logo.png' 
 						subheaderText='adverts enabled' 
 						amount={1000}
 						headerText='calls to the Mind mental health infoline' 
