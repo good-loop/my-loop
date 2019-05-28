@@ -17,7 +17,7 @@ const OnboardingCardMini = () => (
 					<div className='right-pad1'>
 						<img className='logo-big' src='/img/low-res-15-second.png' alt='fifteen-seconds' />
 					</div>
-					<div className='compact-text-block flex-vertical-align'> Watch a 15 second advert and decide which of three charities should receive 50% of the cost of the ad </div>
+					<div className='sub-header flex-vertical-align'> Watch a 15 second advert and decide which of three charities should receive 50% of the cost of the ad </div>
 				</div>
 			</div>
 		</div>
