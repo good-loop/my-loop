@@ -1,9 +1,6 @@
 import React from 'react';
-import Misc from '../../base/components/Misc';
 import {RoundLogo} from '../Image';
 import Counter from '../../base/components/Counter';
-import Money from '../../base/data/Money';
-import {asNum} from 'wwutils';
 
 const ImpactCard = ({children, className}) => (
 	<div className={'impact-card ' + className}>
@@ -11,28 +8,12 @@ const ImpactCard = ({children, className}) => (
 	</div>
 );
 
-/**
- * @param amount {Money|Number}
- */
-const ImpactHeaderText = ({amount, className, headerText, subheaderText}) => {
-	return (
-		<div className={'pad1 row ' + className}>	
-			<div className='header impact-header col-md-6 col-sm-12'>
-				{headerText}
-			</div>
-			<div className='sub-header impact-sub-header col-md-6 col-sm-12'>
-				{subheaderText}
-				<Counter n={amount} id={headerText || 'ImpactHeaderText'} />
-			</div>
-		</div>
-	);
-};
-
 // How does this differ from ImpactImageNumber?? Should they be merged??
 const ImpactHeaderNumber = ({className, amount, headerText, subheaderText, logoSrc}) => (
 	<div className={'pad1 ' + className}>	
 		<div className='header impact-header'>
-			<Counter n={amount} id={headerText || 'ImpactHeaderNumber'} /> {headerText}
+			<Counter value={amount} /> 
+			{headerText}
 		</div>
 		<div className='sub-header impact-sub-header'>
 			{subheaderText}
@@ -73,7 +54,7 @@ const ImpactImageNumber = ({alt, className, logoSrc, amount, headerText, subhead
 				{subheaderText}
 			</div>
 			<div className='header white margin0'>
-				<Counter n={amount} id={headerText || 'ImpactImageNumber'} />
+				<Counter value={amount} />
 				{headerText}
 			</div>
 		</div>
@@ -83,7 +64,6 @@ const ImpactImageNumber = ({alt, className, logoSrc, amount, headerText, subhead
 export {
 	ImpactCard,
 
-	ImpactHeaderText,
 	ImpactHeaderNumber,
 
 	ImpactImage,

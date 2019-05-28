@@ -8,6 +8,7 @@ import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
 import { RegisterLink } from '../../base/components/LoginWidget';
 import {withLogsIfVisible} from '../../base/components/HigherOrderComponents';
+import Money from '../../base/data/Money';
 
 import ServerIO from '../../plumbing/ServerIO';
 import Footer from '../Footer';
@@ -19,6 +20,7 @@ import RecentCampaignsCard from '../cards/RecentCampaignsCard';
 // TODO refactor so ImpactCard is the shared module, with other bits tucked away inside it
 import {ImpactImageNumber, ImpactImageText, ImpactHeaderText, ImpactHeaderNumber, ImpactCard} from '../cards/ImpactCard';
 import SocialMediaCard from '../cards/SocialMediaCard';
+import Counter from '../../base/components/Counter';
 
 const pagePath = ['widget', 'MyPage'];
 
@@ -116,9 +118,16 @@ const MyPage = () => {
 			</div>
 
 			<div>
-			{/* TODO refactor so this is data passed into ImpactCard */}
 				<ImpactCard className='top-margin1 container-fluid'>
-					<ImpactHeaderText amount={200000} className='background-gl-red row' headerText='Your impact 2018' subheaderText='Watching adverts and signing up has raised over ' />
+					<div className='pad1 row background-gl-red row'>	
+						<div className='header impact-header col-md-6 col-sm-12'>
+							Your impact 2018
+						</div>
+						<div className='sub-header impact-sub-header col-md-6 col-sm-12'>
+							Watching adverts and signing up has raised over
+							<Counter currencySymbol='£' value={200000} />
+						</div>
+					</div>
 					<div className='image-and-text container-fluid'>
 						<div className='img-container'>
 							<img className='impact-image' src='/img/stats1-cropped.jpg' />
