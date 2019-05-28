@@ -31,7 +31,7 @@ const debounceForSameInput = (key, fn, ...other) => {
 const path = ['widget', 'ConsentWidget', 'perms'];
 
 // handle an edit
-const togglePerm = ({prop, value, peeps}) => {
+const togglePerm = ({prop, newValue: value, peeps}) => {
 	// Will be sent once per session
 	ServerIO.mixPanelTrack({mixPanelTag: 'Consent control clicked'});
 
@@ -50,9 +50,9 @@ const togglePerm = ({prop, value, peeps}) => {
 	});
 };
 
-const toggleDNT = ({perms, dnt, value}) => {
+const toggleDNT = ({perms, dnt, newValue: value}) => {
 	perms.cookies = value;
-	dnt = value === "yes" ? '1' : '0';
+	dnt = value === true ? '1' : '0';
 	Cookies.set('DNT', dnt, {path:'/', domain:'good-loop.com', expires:365});
 };
 
@@ -89,7 +89,7 @@ const ConsentWidget = ({xids}) => {
 
 	// The cookie setting is managed by a cookie, as its needed at add-time -- c.f. in unit.js.
 	let dnt = Cookies.get('DNT');
-	perms.cookies = (dnt === '1' ? 'yes' : 'no'); // allow cookies unless DNT=1
+	perms.cookies = (dnt === '1'); // allow cookies unless DNT=1
 
 	return (
 		<div className="consent-widget">
