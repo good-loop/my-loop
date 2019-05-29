@@ -28,7 +28,7 @@ const ImpactHeaderNumber = ({className, amount, headerText, subheaderText, logoS
 		</div>
 	</div>
 );
-//
+
 /** Generic div with image as background
  * @param render set to layer elements over background image
  * Width auto to allow for bootstrap col
