@@ -15,7 +15,7 @@ const OnboardingCardMini = () => (
 			<div className='flex-row flex-centre background-gl-light-grey pad1'>
 				<div className='flex-row'>
 					<div className='right-pad1'>
-						<img className='logo-big' src='/img/low-res-15-second.png' alt='fifteen-seconds' />
+						<img className='logo-big' src='/img/15-second.svg' alt='fifteen-seconds' />
 					</div>
 					<div className='sub-header flex-vertical-align'> Watch a 15 second advert and decide which of three charities should receive 50% of the cost of the ad </div>
 				</div>
