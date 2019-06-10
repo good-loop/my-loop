@@ -68,7 +68,7 @@ const MyPage = () => {
 			<div title="Welcome Card" className='header-card MiniCard'>
 				<NavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
 				<div className='triangle-gl-red' />
-				<div className='flex-row pad3 background-gl-red'>
+				<div className='flex-row pad3 bg-gl-red'>
 					<div className='header white text-left'>
 						Good-Loop ads
 						<br />
@@ -98,7 +98,7 @@ const MyPage = () => {
 										<IntroCard isVisible={DataStore.getValue(['widget', 'MyPage', 'IntroCardVisible'])} />
 									</div>
 									<div className='row' onClick={() => ServerIO.mixPanelTrack("SignUpClicked")}>
-										<RegisterLink className='background-gl-red white sub-header btn btn-gl' verb='Sign-Up' />			
+										<RegisterLink className='bg-gl-red white sub-header btn btn-gl' verb='Sign-Up' />			
 									</div>
 								</div>
 							</>						
@@ -107,7 +107,7 @@ const MyPage = () => {
 				</div>
 			</div>
 			<div className='white' title='Boost your impact'>
-				<div className='background-gl-red'>
+				<div className='bg-gl-red'>
 					<div className='flex-column pad1'>
 						<div className='text-block'>
 							Boost your impact by signing up or connecting with social media.
@@ -119,7 +119,7 @@ const MyPage = () => {
 
 			<div>
 				<ImpactCard className='top-margin1 container-fluid'>
-					<div className='pad1 row background-gl-red row'>	
+					<div className='pad1 row bg-gl-red row'>	
 						<div className='header impact-header col-md-6 col-sm-12'>
 							Your impact 2018
 						</div>
@@ -176,7 +176,7 @@ const MyPage = () => {
 
 			<div className='white' title='Boost your impact'>
 				<div className='triangle-gl-red' />
-				<div className='background-gl-red'>
+				<div className='bg-gl-red'>
 					<div className='flex-column'>
 						<div className='sub-header'>
 							Boost your impact
@@ -216,7 +216,7 @@ const MyPage = () => {
 
 			<div>
 				<div className='triangle-gl-light-grey' />
-				<div className='background-gl-light-grey flex-row flex-wrap'>
+				<div className='bg-gl-light-grey flex-row flex-wrap'>
 					<div className='flex-column pad1 width20'>
 						<div className='sub-header gl-red highlight font-bold'>
 							Time and attention online are valuable
@@ -231,7 +231,7 @@ const MyPage = () => {
 				</div>
 			</div>
 
-			<Footer className='background-gl-red' />
+			<Footer className='bg-gl-red' />
 		</div>
 	);
 }; // ./MyPage

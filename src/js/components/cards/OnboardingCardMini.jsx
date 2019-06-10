@@ -12,7 +12,7 @@ const OnboardingCardMini = () => (
 		</div>
 		<div>
 			<div className='triangle-gl-light-grey' />
-			<div className='flex-row flex-centre background-gl-light-grey pad1'>
+			<div className='flex-row flex-centre bg-gl-light-grey pad1'>
 				<div className='flex-row'>
 					<div className='right-pad1'>
 						<img className='logo-big' src='/img/15-second.svg' alt='fifteen-seconds' />
@@ -27,7 +27,7 @@ const OnboardingCardMini = () => (
 					<div className='pad10' />
 					<div className='triangle-gl-dark-blue' />
 				</div>
-				<div className='header white background-gl-dark-blue'>
+				<div className='header white bg-gl-dark-blue'>
 					Making online adverts
 					<br />
 					a better experience

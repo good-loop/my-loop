@@ -61,7 +61,7 @@ const ShareAnAd = ({ adHistory, color, doesIfVisibleRef, xids=[] }) => {
 							text='I just gave to charity by watching a GoodLoop ad'
 							url={`https://as.good-loop.com/?gl.vert=${vert}&gl.socialShareId=${socialShareId}`}
 						>
-							<div className='gl-red intent-link intent-link-border' style={{color}}>
+							<div className='color-gl-red intent-link intent-link-border' style={{color}}>
 								<i className='fa fa-2x fa-twitter' />
 							</div>
 						</IntentLink>
@@ -72,7 +72,7 @@ const ShareAnAd = ({ adHistory, color, doesIfVisibleRef, xids=[] }) => {
 							text='I just gave to charity by watching a GoodLoop ad'
 							url={`https://as.good-loop.com/?gl.vert=${vert}&gl.socialShareId=${socialShareId}`}
 						>
-							<div className='gl-red intent-link intent-link-border' style={{color}}>
+							<div className='color-gl-red intent-link intent-link-border' style={{color}}>
 								<i className='fa fa-2x fa-facebook' />
 							</div>
 						</IntentLink>

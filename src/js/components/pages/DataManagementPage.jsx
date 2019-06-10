@@ -59,7 +59,7 @@ let Page = () => {
 					<LinkedProfilesCard xids={xids} />
 				</div>
 			</div>
-			<Footer className='background-gl-red' />
+			<Footer className='bg-gl-red' />
 		</div>
 	);
 };

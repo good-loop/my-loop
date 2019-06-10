@@ -14,7 +14,7 @@
 	// pin to top of container, occupy 5/6 height
 	.top {
 		height: 83.3%;
-		background-color: #A20F15; //#e0b626
+		background-color: #A20F15; // TODO use a semantic colour from colours.less
 
 		.charity-logo {
 			opacity: 0.8;
@@ -30,7 +30,7 @@
 	// pin to bottom of container, occupy 1/6 height
 	.bottom {
 		height: 16.7%;
-		background-color: #8d0a11;
+		background-color: #8d0a11; // TODO use a semantic colour from colours.less
 		.stats {
 			width: 100%;
 			text-align: center;
@@ -40,7 +40,7 @@
 			-o-transition: all 1s;
 			transition: all 1s;
 			//margin-top: -0.75rem;
-			color: lightgray;
+			color: lightgray; // TODO use a semantic colour from colours.less
 			z-index: 1;
 			font-family: Geneva, Tahoma, Verdana, sans-serif;
 		}
@@ -49,86 +49,3 @@
 
 }
 
-/*
-.partial-circle {
-	width: 30vmin;
-	height: 30vmin;
-	margin: 0 auto;
-	position: relative;
-	overflow: hidden;
-	z-index: 2;
-
-}
-
-.partial-circle img {
-	opacity: 0.8;
-	width: 30vmin;
-	height: 30vmin;
-	-o-object-fit: contain;
-	   object-fit: contain;
-    padding: 4vmin; 
-	display: block;
-}
-
-// TODO: remove :before potentially, seems like a hack to deal with layering instead of z-index?
-// styles the bottom part of the circle
-.partial-circle:before {
-	content: "";
-	position: absolute;
-	width: 30vmin;
-	height: 30vmin;
-	border-radius: 50%;
-}
-.partial-circle.top:before {
-	top: 0;
-	background: #A20F15; //#e0b626
-}
-
-.partial-circle.bottom:before {
-	bottom: 0;
-	background: #8d0a11;
-}
-
-.partial-circle.top {
-	height: 25vmin;
-}
-
-.partial-circle.bottom {
-	height: 5vmin;
-}
-
-// caption underneath the circle with the title of the charity e.g. Multiple Sclerosis Society
-.partial-circle-caption {
-	width: 33vmin;
-	text-align: center;
-	// margin-left: 2em;
-	// margin-top: 0.5rem;
-	margin: 2.5vmin auto;
-}
-
-// TODO: rename to be more specific e.g. donation-circle-number
-.stats {
-	position: absolute;
-	top: 5%;
-	width: 100%;
-	text-align: center;
-	font-size: 3vmin;
-	font-weight: bold;
-	-webkit-transition: all 1s;
-	-o-transition: all 1s;
-	transition: all 1s;
-	//margin-top: -0.75rem;
-	color: lightgray;
-	z-index: 1;
-	font-family: Geneva, Tahoma, Verdana, sans-serif;
-}
-*/
-// old code for the donation circles' wrapper??
-// .content {
-// 	margin-top: 20px;
-// 	-ms-flex-line-pack: center;
-// 	    align-content: center;
-// 	-webkit-box-align: center;
-// 	    -ms-flex-align: center;
-// 	        align-items: center;
-// }

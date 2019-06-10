@@ -159,7 +159,7 @@ const CampaignPage = () => {
 					Login.isLoggedIn()
 					|| (
 						<div className='row'> 
-							<RegisterLink className='background-gl-light-grey white sub-header btn btn-gl' style={{backgroundColor: brandColor, borderColor: brandColor}} verb='Sign-Up' />								
+							<RegisterLink className='bg-gl-light-grey white sub-header btn btn-gl' style={{backgroundColor: brandColor, borderColor: brandColor}} verb='Sign-Up' />								
 						</div>
 					)
 				}
