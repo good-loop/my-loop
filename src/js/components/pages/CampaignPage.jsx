@@ -124,7 +124,7 @@ const CampaignPage = () => {
 							</div>
 							<div className='sub-header pad1'>
 								<div>Together we've raised</div>													
-								{donationValue? <div className='header white' style={{WebkitTextStroke: '1px', WebkitTextStrokeColor: (brandColor || '#000')}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
+								{donationValue? <div className='header white' style={{color: brandColor || '#000'}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 								<div>for</div>
 							</div>
 							<div className='img-block img-hero' style={{backgroundImage: 'url(' + backgroundImage + ')'}} />
