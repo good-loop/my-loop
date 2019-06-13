@@ -28,6 +28,10 @@ const CampaignPage = () => {
 
 	if ( !adid && !vertiserid ) {
 		// No ID -- show a list
+		// TODO better graphic design before we make this list widget public
+		if ( ! Login.isLoggedIn()) {
+			return <div>Missing: campaign or advertiser ID. Please check the link you used to get here.</div>;
+		}
 		return <ListItems type={C.TYPES.Advert} status={C.KStatus.PUBLISHED} servlet='campaign' />;		
 	}
 
