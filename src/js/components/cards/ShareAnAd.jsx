@@ -57,7 +57,7 @@ const ShareAnAd = ({ adHistory, color, doesIfVisibleRef, xids=[] }) => {
 						<IntentLink 
 							onClick={() => saveSocialShareId({xid: twitterXId, socialShareId, adid:vert})}
 							service='twitter' 
-							style={{backgroundColor: 'none', border: '0.25rem solid', margin: '0 1rem'}}
+							style={{backgroundColor: 'none', margin: '0 1rem', textDecoration: 'none'}}
 							text='I just gave to charity by watching a GoodLoop ad'
 							url={`https://as.good-loop.com/?gl.vert=${vert}&gl.socialShareId=${socialShareId}`}
 						>
@@ -68,7 +68,7 @@ const ShareAnAd = ({ adHistory, color, doesIfVisibleRef, xids=[] }) => {
 						<IntentLink 
 							onClick={() => saveSocialShareId({xid: twitterXId, socialShareId, adid:vert})}
 							service='facebook' 
-							style={{backgroundColor: 'none', border: '0.25rem solid', margin: '0 1rem'}}
+							style={{backgroundColor: 'none', margin: '0 1rem', textDecoration: 'none'}}
 							text='I just gave to charity by watching a GoodLoop ad'
 							url={`https://as.good-loop.com/?gl.vert=${vert}&gl.socialShareId=${socialShareId}`}
 						>
