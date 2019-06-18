@@ -162,7 +162,7 @@ const MyPage = () => {
 							</div>
 						</div>
 					</div>
-					<ImpactImage className='pad1 img-block '>
+					<ImpactImage className='pad1 img-block' imageSrc='/img/call-center.jpg'>
 						<div className='flex-column'>
 							<RoundLogo url='/img/method-logo.png' alt='advertiser-logo' /> 
 							<div className='sub-header white'>
