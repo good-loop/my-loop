@@ -2,109 +2,6 @@
 	text-align: center;
 }
 
-// DigitalMirrorCard: a widget for showing the user their twitter data (experimental)
-.mirror {
-	.profile-details {
-		text-align: left;
-		line-height: 50px; 
-		margin-top: 1vmin;
-
-		.form-control {
-			display: inline-block;
-			padding: 4px; // align non-dropdown with dropdown input values
-		}
-
-		select {
-			width: 80%; // hack to align dropdown fields with non-dropdown fields
-			border: 1px solid #ccc; //just to make it look more modern
-		}
-	}
-
-	// aligning profile photo with profile details
-	.profile-photo {
-		margin-top: 3vmin;
-	}
-
-	.profile-name  {
-		height: 100%;
-		font-size: 30px !important;
-	}
-	
-	input[type="text"] {
-		font-size: 22px;
-		width: 80%;
-	}
-
-	 // ugly hack to align profile-name with the values below (relevant when in edit mode)
-	input[type="text"].profile-name.form-control {
-		width: 93%;
-	}
-
-	// Override PropControl class
-	// Checkbox adding padding to left of checkbox
-	// was resulting in jarring transition between display and edit mode
-	.checkbox label {
-		padding-left: 0;
-	}
-
-	.input-label {
-		height: 25px;
-		width: 25px;
-		text-align: center;
-
-		i {
-			width: 100%;
-			height: auto;
-			display: block; // Prevent line-height displacing icon
-		}
-	}
-}
-
-// TODO: combine DigitalMirrorCard and DigitalMirrorCardDesign and tidy up code
-.vertical-align {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	align-items: center;
-}
-
-// Used to reset line-height of bootstrap rows in DigitalMirror
-// makes toggling 'Edit' mode much less jarring
-.revertHeight {
-	line-height: inherit;
-}
-
-/** size a user profile picture*/
-.img-profile {
-	width: 64px;
-	max-height: 100px;
-}
-
-.word-wrap {
-	word-break: break-all;
-}
-
-// on my-loop we only want to show gl social links, so center the content and unset flex
-.grid-tile.bottom .foot.center .social {
-	text-align: center;
-	margin: 0 auto;
-	flex-basis: unset;
-}
-
-// set the vertiser logo sizes and put in some space between them to look less cluttered
-.vertiser-row {
-		display: flex;
-		justify-content: space-around;
-		flex-direction: row;
-		width: 100%;
-		text-align: center;
-		flex-wrap: wrap;
-}
-
-.img-container {
-	text-align: center;
-}
-
 // These only really work as part of a thin column
 .impact-card {
 	text-align: left;
@@ -120,10 +17,6 @@
 	.impact-logo {
 		height: 3.5em;
 		width: auto;
-	}
-
-	.impact-text {
-
 	}
 
 	.impact-image {
@@ -193,24 +86,61 @@
     border-color: transparent transparent @gl-light-grey transparent;	
 }
 
-.logo-big {
-	width: 7rem;
-	height: auto;
-}
-
-.round-logo {
-	border: 1px solid grey;
+// TODO: consider deleting/chopping down. Donation circles cited are not currently in use.
+// this is for the donation circles on the my-loop page
+// circle with logo and band showing donation total across bottom
+.charity-circle {
+	width: 10rem;
+	height: 10rem;
 	border-radius: 50%;
-	margin: 0;
-	background-color: #fff;
-	background-repeat: no-repeat;
-	background-position: center center;
-	background-size: 100%;
-	height: 5rem;
-	width: 5rem;
+	overflow: hidden; // cut off content outside circle
+	margin: auto;
+
+	.top, .bottom {
+		width: 100%;
+	}
+	// pin to top of container, occupy 5/6 height
+	.top {
+		height: 83.3%;
+		background-color: #A20F15; // TODO use a semantic colour from colours.less
+
+		.charity-logo {
+			opacity: 0.8;
+			padding-top: 3vmin;
+			width: 100%;
+			height: 100%;
+			display: block;
+			-o-object-fit: contain;
+			object-fit: contain;
+		}
+	}
+
+	// pin to bottom of container, occupy 1/6 height
+	.bottom {
+		height: 16.7%;
+		background-color: #8d0a11; // TODO use a semantic colour from colours.less
+		.stats {
+			width: 100%;
+			text-align: center;
+			font-size: 2.4vmin;
+			font-weight: bold;
+			-webkit-transition: all 1s;
+			-o-transition: all 1s;
+			transition: all 1s;
+			//margin-top: -0.75rem;
+			color: lightgray; // TODO use a semantic colour from colours.less
+			z-index: 1;
+			font-family: Geneva, Tahoma, Verdana, sans-serif;
+		}
+	}
 }
 
-// TODO doc - what issue is this solving??
+// Change impact card layout from:
+// *IMAGE* *TEXT*
+// to
+// *IMAGE*
+// *TEXT*
+// Former looks wonky on smaller screens 
 @media only screen and (max-width: 1110px) {
 	.impact-card {
 		.image-and-text, .reversed-image-and-text {

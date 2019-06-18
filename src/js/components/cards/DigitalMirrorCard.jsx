@@ -43,11 +43,12 @@ const debounceSaveFn = _.debounce(({xid, data, from}) => saveFn(xid, data, from)
 const ConsentControlRow = ({path, prop, fieldType, iconFn, selectOptions, xid}) => {
 	const editModeEnabled = DataStore.getValue(['widget', 'DigitalMirror', 'editModeEnabled']);
 
-	const placeholder = 'Unknown ' + prop; // Shows where value for text field is not available
+	// Shows where value for text field is not available
+	const placeholder = 'Unknown ' + prop;
 	const value = DataStore.getValue([...path, prop]);
-	// ?? profile-name: better to use a bootstrap instead of a custom css class
+
 	return (
-		<div className='row vertical-align'> 
+		<div className='row flex-row flex-centre top-pad1'> 
 			<div className='col-md-1 input-label'>
 				{iconFn && iconFn(value)}
 			</div>
@@ -69,8 +70,6 @@ const ConsentControlRow = ({path, prop, fieldType, iconFn, selectOptions, xid}) 
 };
 
 /** 
- * TODO Try to avoid adhoc data structures like xidObj -- they easily get confusing.
- * 
  * Checkboxes for all items in 'dataFields'
  *  Can also edit data field when 'edit mode' is enabled.
  */
@@ -142,7 +141,7 @@ const ConsentControls = ({xid}) => {
 					<div className='col-sm-2' />
 				</div>				
 			</div>
-			<div>
+			<div className='pad1'>
 				<div>
 					<button className='btn btn-default edit' onClick={toggleEditMode} type='button'> Edit </button>
 					{ hasSaved && <span className='autosave'>Saved Successfully</span> }

@@ -1,10 +1,13 @@
 @import "../js/base/style/main-base.less";
 @import "../js/base/style/colours.less";
+@import "../js/base/style/flex.less";
+
 @import "MyPage.less";
-@import "DonationCircleWidget.less";
-@import "flex.less";
-@import "navbar.less";
 @import "CampaignPage.less";
+@import "AccountPage.less";
+@import "navbar.less";
+
+// Rules below are not specific to any MyLoop page
 
 // Set base size for rem
 html, body {
@@ -203,12 +206,24 @@ a {
 	border-color: darken(@gl-red, 10%) !important;
 }
 
-.link.watch-cta {
-	font-family: initial; // go back to using montserrat (looks nicer)
-	background-color: @gl-red; // TODO: this should be set as less var gl-colour
-	color: white; // otherwise it will be set as black (default colour?)
-	padding-top: 6vh; // give it some space, looks less cluttered this way
-	font-size: 2.5vh; // make it pop out responsively
+.word-wrap {
+	word-break: break-all;
+}
+
+.round-logo {
+	border: 1px solid grey;
+	border-radius: 50%;
+	background-color: #fff;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: 100%;
+	height: 5rem;
+	width: 5rem;
+}
+
+.logo-big {
+	width: 7rem;
+	height: auto;
 }
 
 @media only screen and (max-width: 1100px) {
