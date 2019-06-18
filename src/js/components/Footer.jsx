@@ -18,9 +18,9 @@ const Footer = ({className, leftFooter, rightFooter, style}) => (
 		</div>
 		<div className='mainFooter flex-column'>
 			<p className='text-block'>
-				&copy; 2016-2019 <a href='https://www.good-loop.com/blog'>Good-Loop Ltd.</a> <a href='https://www.good-loop.com/privacy-policy'>Privacy policy</a>
+				&copy; 2016-2019 <a href='https://www.good-loop.com/blog'>Good-Loop Ltd</a>, all rights reserved. <a href='https://www.good-loop.com/privacy-policy'>Privacy policy</a>
 				<br />
-				Registered in Scotland, Uk (No. SC548356)
+				Good-Loop&trade; is registered in Scotland, Uk (No. SC548356)
 				<br />
 				127 Rose Street South Lane, Edinburgh, EH2 4BB
 				<br />
