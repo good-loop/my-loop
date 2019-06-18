@@ -18,7 +18,7 @@ const RecentCampaignsCard = () => {
 				{
 					"name": "Linda McCartney",
 					"adid": "qprjFW1H",
-					"logo": "https://cookschool.club/wp-content/uploads/2018/09/imageedit_1_9636644754-300x200.png"
+					"logo": "/img/linda-mac-logo.png"
 				},
 				{
 					"name": "WWF",
@@ -32,7 +32,7 @@ const RecentCampaignsCard = () => {
 				},
 			];
 	return (
-		<div className="vertiser-row">
+		<div className="flex-row">
 			{	vertisers.map(x => 
 				<a key={x.adid} href={"/#campaign/?gl.vert="+x.adid}>
 					<RoundLogo alt={x.name} url={x.logo} />
