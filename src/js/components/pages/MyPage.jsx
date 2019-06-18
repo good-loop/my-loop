@@ -8,19 +8,20 @@ import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
 import { RegisterLink } from '../../base/components/LoginWidget';
 import {useLogsIfVisible} from '../../base/components/CustomHooks';
-import Money from '../../base/data/Money';
+import Counter from '../../base/components/Counter';
 
 import ServerIO from '../../plumbing/ServerIO';
 import Footer from '../Footer';
-import ShareAnAd from '../cards/ShareAnAd';
 import NavBar from '../NavBar';
 import ConsentWidget from '../ConsentWidget';
+import {RoundLogo} from '../Image';
+
+import ShareAnAd from '../cards/ShareAnAd';
 import OnboardingCardMini from '../cards/OnboardingCardMini';
 import RecentCampaignsCard from '../cards/RecentCampaignsCard';
 // TODO refactor so ImpactCard is the shared module, with other bits tucked away inside it
-import {ImpactImageNumber, ImpactImageText, ImpactHeaderText, ImpactHeaderNumber, ImpactCard} from '../cards/ImpactCard';
+import {ImpactCard, ImpactImage} from '../cards/ImpactCard';
 import SocialMediaCard from '../cards/SocialMediaCard';
-import Counter from '../../base/components/Counter';
 
 const pagePath = ['widget', 'MyPage'];
 
@@ -148,16 +149,31 @@ const MyPage = () => {
 					</div>
 				</ImpactCard>
 				<ImpactCard>
-					<ImpactHeaderNumber className='bg-light-2' 
-						amount={888}
-						headerText='nights of accommodation' 
-						subheaderText='Centrepoint supports more than 10,000 young homeless people in the UK each year.' logoSrc='/img/toms-shoes-logo-vector.png' 
-					/>
-					<ImpactImageNumber className='pad1' imageSrc='/img/call-center.jpg' logoSrc='/img/method-logo.png' 
-						subheaderText='adverts enabled' 
-						amount={1000}
-						headerText='calls to the Mind mental health infoline' 
-					/>
+					<div className='pad1 bg-light-2'>	
+						<div className='header impact-header'>
+							<Counter value={888} /> 
+							nights of accommodation
+						</div>
+						<div className='sub-header impact-sub-header'>
+							Centrepoint supports more than 10,000 young homeless people in the UK each year.
+							<div className='flex-row flex-wrap'>
+								<span>Made possible by adverts from:</span>
+								<img className='impact-logo' src='/img/toms-shoes-logo-vector.png' alt='vertiser-logo' />
+							</div>
+						</div>
+					</div>
+					<ImpactImage className='pad1 img-block '>
+						<div className='flex-column'>
+							<RoundLogo url='/img/method-logo.png' alt='advertiser-logo' /> 
+							<div className='sub-header white'>
+								adverts enabled
+							</div>
+							<div className='header white margin0'>
+								<Counter value={1000} />
+								calls to the Mind mental health infoline
+							</div>
+						</div>
+					</ImpactImage>
 				</ImpactCard>
 			</div>
 
