@@ -1,13 +1,13 @@
 /**
  * The core page of My-Loop
  */
-import React from 'react';
+import React, {useRef} from 'react';
 import Login from 'you-again';
 
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
 import { RegisterLink } from '../../base/components/LoginWidget';
-import {withLogsIfVisible} from '../../base/components/HigherOrderComponents';
+import {useLogsIfVisible} from '../../base/components/CustomHooks';
 import Money from '../../base/data/Money';
 
 import ServerIO from '../../plumbing/ServerIO';
@@ -267,19 +267,21 @@ const IntroCard = () => (
 	</div>
 );
 
-// Two-liner as withLogsIfVisible latches on to Component.displayName or Component.name in order to generate sensible-looking event tag in MixPanel
-// Obviously will not work quite right if we were to use an anonymous function
-let ContactCard = ({doesIfVisibleRef}) => (
-	<div ref={doesIfVisibleRef}>
-		<div>
-			<p>Tell us what you think of this web-app.</p>
-			<p>Are you interested in hosting Ads For Good on your blog or website?</p>
-			<p>
-				<a href="https://www.good-loop.com/book-a-call">Let us Know.</a>
-			</p>
+const ContactCard = () => {
+	let doesIfVisibleRef = useRef();
+	useLogsIfVisible(doesIfVisibleRef, 'MyPageVisible');
+	
+	return (
+		<div ref={doesIfVisibleRef}>
+			<div>
+				<p>Tell us what you think of this web-app.</p>
+				<p>Are you interested in hosting Ads For Good on your blog or website?</p>
+				<p>
+					<a href="https://www.good-loop.com/book-a-call">Let us Know.</a>
+				</p>
+			</div>
 		</div>
-	</div>
-);
-ContactCard = withLogsIfVisible(ContactCard);
+	);
+};
 
 export default MyPage;

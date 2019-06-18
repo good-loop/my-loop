@@ -1,6 +1,6 @@
 // Collection of controls for managing
 // social media data linked by the user
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import _ from 'lodash';
 import {XId, encURI} from 'wwutils';
 
@@ -9,14 +9,14 @@ import DataStore from '../../base/plumbing/DataStore';
 import Claim from '../../base/data/Claim';
 import {saveProfileClaims} from '../../base/Profiler';
 import ServerIO from '../../plumbing/ServerIO';
-import {withLogsIfVisible} from '../../base/components/HigherOrderComponents';
+import {useLogsIfVisible} from '../../base/components/CustomHooks';
 
 const userdataPath = ['widget', 'DigitalMirror', 'userdata'];
 
 /**
  * @param {*} doesIfVisibleRef Pass this to component, MixPanel tracking event will be sent out if the element is ever completely visible on user's screen
  */
-const DigitalMirrorCard = ({xids, doesIfVisibleRef}) => {
+const DigitalMirrorCard = ({xids}) => {
 	if(!xids) return null;
 
 	const twitterXId = xids.find( xid => XId.service(xid) === 'twitter' );
@@ -26,6 +26,9 @@ const DigitalMirrorCard = ({xids, doesIfVisibleRef}) => {
 		ServerIO.load(`${ServerIO.PROFILER_ENDPOINT}/profile/${ServerIO.dataspace}/${encURI(twitterXId)}`, {swallow:true})
 			.then( res => DataStore.setValue([...userdataPath, twitterXId], res.cargo, false));
 	}, [twitterXId]);
+
+	let doesIfVisibleRef = useRef();
+	useLogsIfVisible(doesIfVisibleRef, 'DigitalMirrorVisible');
 
 	return (
 		<div ref={doesIfVisibleRef}>
@@ -182,4 +185,4 @@ const saveFn = (xid, data, from) => {
 	setTimeout(() => DataStore.setValue(['widget', 'DigitalMirror', 'autosaveTriggered'], false), 1000);
 };
 
-export default withLogsIfVisible(DigitalMirrorCard);
+export default DigitalMirrorCard;

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import Login from 'you-again';
 
 import DataStore from '../../base/plumbing/DataStore';
@@ -9,11 +9,11 @@ import SocialMediaCard from '../cards/SocialMediaCard';
 import LinkedProfilesCard from '../cards/LinkedProfilesCard';
 import NavBar from '../NavBar';
 import Footer from '../Footer';
-import { withLogsIfVisible } from '../../base/components/HigherOrderComponents';
+import { useLogsIfVisible } from '../../base/components/CustomHooks';
 import {getAllXIds} from '../../base/Profiler';
 import Misc from '../../base/components/Misc';
 
-let Page = () => {
+const Page = () => {
 	const xids = DataStore.getValue(['data', 'Person', 'xids']) || [];
 
 	// HACK (23/04/19): you_again does not call login.change() after user connects with Twitter
@@ -23,8 +23,11 @@ let Page = () => {
 		DataStore.setValue(['data', 'Person', 'xids'], getAllXIds());
 	}, [Login && Login.aliases && Login.aliases.length]);
 
+	let doesIfVisibleRef = useRef();
+	useLogsIfVisible(doesIfVisibleRef, 'ShareAnAdVisible');
+
 	return (
-		<div className='page DataPage text-center'>
+		<div className='page DataPage text-center' ref={doesIfVisibleRef}>
 			<NavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
 			<div title="Your Digital Mirror" className='container-fluid'>
 				<div className='row panel-title panel-heading sub-header pad1'> 
@@ -64,4 +67,4 @@ let Page = () => {
 	);
 };
 
-export default withLogsIfVisible(Page);
+export default Page;
