@@ -27,7 +27,7 @@ const OnboardingCardMini = () => (
 					<div className='pad10' />
 					<div className='triangle-gl-dark-blue' />
 				</div>
-				<div className='header white bg-gl-dark-blue'>
+				<div className='header white bg-gl-dark-blue pad2'>
 					Making online adverts
 					<br />
 					a better experience
