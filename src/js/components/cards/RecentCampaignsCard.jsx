@@ -32,7 +32,7 @@ const RecentCampaignsCard = () => {
 				},
 			];
 	return (
-		<div className="flex-row">
+		<div className="flex-row flex-wrap">
 			{	vertisers.map(x => 
 				<a key={x.adid} href={"/#campaign/?gl.vert="+x.adid}>
 					<RoundLogo alt={x.name} url={x.logo} />
