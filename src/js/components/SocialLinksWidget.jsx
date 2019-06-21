@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import MDText from '../base/components/MDText';
-import {IntentLink} from '../base/components/SocialShare';
+import {IntentLink, FacebookLogo, TwitterLogo, InstagramLogo} from './SocialShare';
 import Money from '../base/data/Money';
 
 /** What should appear in Tweet/Facebook link/LinkedIn article
@@ -41,15 +41,21 @@ const SocialMediaShareWidget = ({donationValue, charities, adName, url=window.lo
 		<div className="social share-page">
 			<MDText source='Share this page' />
 			<div className="social-links">
-				<IntentLink service='facebook' text={shareText} url={url}>
-					<img src='https://gl-es-05.good-loop.com/cdn/images/facebook.png' alt='share-on-facebook' />
-				</IntentLink>
-				<IntentLink service='twitter' text={shareText} url={url}>
-					<img src='https://gl-es-04.good-loop.com/cdn/images/twitter.png' alt='share-on-twitter' />			
-				</IntentLink>
-				<IntentLink service='linkedin' text={shareText} url={url}>
-					<img src='https://gl-es-05.good-loop.com/cdn/images/instagram.png' alt='share-on-linkedin' />			
-				</IntentLink>
+				<IntentLink 
+					service='facebook' 
+					text={shareText} 
+					url={url} 
+				/>
+				<IntentLink 
+					service='twitter' 
+					text={shareText} 
+					url={url} 
+				/>
+				<IntentLink 
+					service='linkedin' 
+					text={shareText} 
+					url={url} 
+				/>
 			</div>
 		</div>
 	);
@@ -65,10 +71,10 @@ const SocialMediaFooterWidget = ({type, name, fb_url, tw_url, insta_url, yt_url}
 		<div className={'social '.concat(type)}>
 			<MDText source={name} />
 			<div className="social-links">
-				{fb_url && <a href={fb_url} target='_blank'><img src='https://gl-es-05.good-loop.com/cdn/images/facebook.png' /></a>}
-				{tw_url && <a href={tw_url} target='_blank'><img src='https://gl-es-04.good-loop.com/cdn/images/twitter.png' /></a>}
-				{insta_url && <a href={insta_url} target='_blank'><img src='https://gl-es-05.good-loop.com/cdn/images/instagram.png' /></a>}
-				{yt_url && <a href={yt_url} target='_blank'><img src='https://gl-es-04.good-loop.com/cdn/images/youtube.png' /></a>}
+				{fb_url && <a className='social-button-link' href={fb_url} target='_blank'><FacebookLogo /></a>}
+				{tw_url && <a className='social-button-link' href={tw_url} target='_blank'><TwitterLogo /></a>}
+				{insta_url && <a className='social-button-link' href={insta_url} target='_blank'><InstagramLogo /></a>}
+				{yt_url && <a className='social-button-link' href={yt_url} target='_blank'><img src='https://gl-es-04.good-loop.com/cdn/images/youtube.png' /></a>}
 			</div>
 		</div>
 	);

@@ -2,6 +2,7 @@ import React from 'react';
 import { XId } from 'wwutils';
 import { getProfilesNow } from '../../base/Profiler';
 import { SocialSignInButton } from '../../base/components/LoginWidget';
+import { TwitterLogo, FacebookLogo } from '../SocialShare';
 
 /**
  * Social CTAs: Share on social / connect
@@ -31,7 +32,9 @@ const SocialMediaCard = ({allIds=[], className}) => {
 				</div>
 				) : (
 				<div>
-					<SocialSignInButton service='twitter' verb='connect' />
+					<SocialSignInButton service='twitter' verb='connect'>
+						<TwitterLogo className='intent-link-small' />
+					</SocialSignInButton>
 				</div>
 			)}
 			{ids.fbid ? (
@@ -39,7 +42,9 @@ const SocialMediaCard = ({allIds=[], className}) => {
 				<div>Facebook ID: {XId.id(ids.fbid)} {fbpeep? fbpeep.name : ''}</div>
 			) : (
 				<div>
-					<div><SocialSignInButton service='facebook' verb='connect' /></div>
+					<SocialSignInButton service='facebook' verb='connect'>
+						<FacebookLogo className='intent-link-small' />
+					</SocialSignInButton>
 				</div>	
 			)}
 		</div>

@@ -5,7 +5,7 @@ import DataStore from '../../base/plumbing/DataStore';
 import ServerIO from '../../plumbing/ServerIO';
 import {saveSocialShareId} from '../../base/Profiler';
 import GoodLoopUnit from '../../base/components/GoodLoopUnit';
-import {IntentLink} from '../../base/components/SocialShare';
+import {IntentLink} from '../SocialShare';
 import {useLogsIfVisible} from '../../base/components/CustomHooks';
 
 // TODO: force ShareAnAd to use non-VAST video rather than loading Good-Loop player? Thinking about how to reduce loading times, that might be an idea.
@@ -58,27 +58,17 @@ const ShareAnAd = ({ adHistory, color, xids=[] }) => {
 					<div>
 						<h3 className='sub-header'> Share this ad on social media </h3>
 						<IntentLink 
-							onClick={() => saveSocialShareId({xid: twitterXId, socialShareId, adid:vert})}
-							service='twitter' 
-							style={{backgroundColor: 'none', margin: '0 1rem', textDecoration: 'none'}}
+							onClick={() => saveSocialShareId({xid: twitterXId, socialShareId, adid: vert})}
+							service='twitter'  
 							text='I just gave to charity by watching a GoodLoop ad'
 							url={`https://as.good-loop.com/?gl.vert=${vert}&gl.socialShareId=${socialShareId}`}
-						>
-							<div className='color-gl-red intent-link intent-link-border' style={{color}}>
-								<i className='fa fa-2x fa-twitter' />
-							</div>
-						</IntentLink>
+						/>
 						<IntentLink 
-							onClick={() => saveSocialShareId({xid: twitterXId, socialShareId, adid:vert})}
-							service='facebook' 
-							style={{backgroundColor: 'none', margin: '0 1rem', textDecoration: 'none'}}
+							onClick={() => saveSocialShareId({xid: twitterXId, socialShareId, adid: vert})}
+							service='facebook'  
 							text='I just gave to charity by watching a GoodLoop ad'
 							url={`https://as.good-loop.com/?gl.vert=${vert}&gl.socialShareId=${socialShareId}`}
-						>
-							<div className='color-gl-red intent-link intent-link-border' style={{color}}>
-								<i className='fa fa-2x fa-facebook' />
-							</div>
-						</IntentLink>
+						/>
 						{/* <SharedAdStats twitterXId={twitterXId} /> */}
 					</div>
 				)
