@@ -91,7 +91,7 @@ const PermissionControl = ({header, prop, subtext, textOn, saveFn}) => {
 				{subtext}
 			</div>
 			<div className='col-md-3 flex-row slider'>
-				Ok
+				<span> No </span>
 				<PropControl 
 					path={path} 
 					prop={prop}
@@ -99,7 +99,7 @@ const PermissionControl = ({header, prop, subtext, textOn, saveFn}) => {
 					type='checkbox' 
 					saveFn={saveFn} 
 				/>
-				No
+				<span> Ok </span>
 			</div>
 			<div className='col-md-4'>
 				{ value && <div className='color-gl-red'>{textOn}</div> }
