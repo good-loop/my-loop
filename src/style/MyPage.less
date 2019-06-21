@@ -135,6 +135,44 @@
 	}
 }
 
+// Turn checkbox in to a slider
+// Prettier look for consent controls
+
+.slider {
+	// Container class .slider makes it possible to control all elements without resorting to "creative" selectors
+	input {
+		display: none;
+		// Move slider right and change background colour if option checked
+		&:checked + .slider-inner {
+			background-color: @gl-red;
+			.round-bit {
+				right: 0;
+				left: unset;
+			}
+		}
+	}
+
+	.slider-inner {
+		background-color: @gl-light-grey;
+		position: relative;
+		display: inline-block;
+
+		width: 6rem;
+		height: 2rem;
+		border-radius: 5%;
+
+		.round-bit {
+			position: absolute;
+			border-radius: 50%;
+			width: 2rem;
+			height: 2rem;
+			background-color: #fff;
+			left: 0;
+			right: unset;
+		}
+	}
+}
+
 // Change impact card layout from:
 // *IMAGE* *TEXT*
 // to

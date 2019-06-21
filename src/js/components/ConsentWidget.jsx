@@ -74,6 +74,14 @@ const saveAllPerms = () => {
 const PermissionControl = ({header, prop, subtext, textOn, saveFn}) => {
 	const value = DataStore.getValue([...path, prop]);
 
+	const Slider = () => (
+		<>
+			<div className='slider-inner'>
+				<div className='round-bit' />
+			</div>
+		</>
+	);
+
 	return (
 		<>
 			<div className='col-md-5 text-left'>
@@ -82,10 +90,16 @@ const PermissionControl = ({header, prop, subtext, textOn, saveFn}) => {
 				</div>
 				{subtext}
 			</div>
-			<div className='col-md-3'>
-				<PropControl path={path} prop={prop} 
-					type='checkbox' saveFn={saveFn} 
+			<div className='col-md-3 flex-row slider'>
+				Ok
+				<PropControl 
+					path={path} 
+					prop={prop}
+					label={<Slider />} 
+					type='checkbox' 
+					saveFn={saveFn} 
 				/>
+				No
 			</div>
 			<div className='col-md-4'>
 				{ value && <div className='color-gl-red'>{textOn}</div> }
@@ -118,8 +132,8 @@ const ConsentWidget = ({xids}) => {
 
 	return (
 		<div className="container">
-			<div className='row'>
-				<i>You</i> decide how you want to do good online. 
+			<div className='row text-left bottom-pad2'>
+				<i>You</i> decide how you want to do good online. As Good-Loop will always donate 50% of all ad revenue to charity, giving Good-Loop permission to use your data in a way that is valuable to advertisers will mean that your donations are worth more. 
 			</div>
 			<div className='row bottom-pad2'>
 				<PermissionControl 
