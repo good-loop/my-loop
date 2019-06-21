@@ -62,6 +62,10 @@ html, body {
 	padding-bottom: 1rem;
 }
 
+.bottom-pad2 {
+	padding-bottom: 2rem;
+}
+
 .margin0 {
 	margin: 0;
 }
@@ -83,12 +87,20 @@ html, body {
 	min-height: 15rem;
 }
 
+.social-button-link {
+	display: inline-block;
+	background-color: unset;
+	margin: 0 1rem;
+	text-decoration: none;
+}
+
 // Base style for intent links on MyLoop
 .intent-link {
 	height: 4rem;
 	width: 4rem;
 	border-radius: 50%;
-	
+	margin: 0 1rem 0 0;
+
 	display: flex;
 	justify-content: center; 
 	align-items: center;
@@ -97,6 +109,14 @@ html, body {
 		height: 3.5rem;
 		width: 3.5rem;
 	}
+}
+
+// Override to make intent links a bit smaller
+// Only used by "social connect" button currently
+.intent-link-small {
+	.intent-link();
+	height: 2rem;
+	width: 2rem;
 }
 
 // TODO (18/04/19): consider coming back and removing this

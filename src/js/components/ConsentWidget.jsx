@@ -31,7 +31,7 @@ const debounceForSameInput = (key, fn, ...other) => {
 const path = ['widget', 'ConsentWidget', 'perms'];
 
 // handle an edit
-const togglePerm = ({prop, newValue: value, peeps}) => {
+const togglePerm = ({prop, value, peeps}) => {
 	// Will be sent once per session
 	ServerIO.mixPanelTrack({mixPanelTag: 'Consent control clicked'});
 
@@ -50,7 +50,7 @@ const togglePerm = ({prop, newValue: value, peeps}) => {
 	});
 };
 
-const toggleDNT = ({perms, dnt, newValue: value}) => {
+const toggleDNT = ({perms, dnt, value}) => {
 	perms.cookies = value;
 	dnt = value === true ? '1' : '0';
 	Cookies.set('DNT', dnt, {path:'/', domain:'good-loop.com', expires:365});
@@ -64,11 +64,36 @@ const saveAllPerms = () => {
 	const convertedConsents = convertConsents(DataStore.getValue(path));
 
 	saveProfile({id: peeps, c: convertedConsents});
-	// peeps.forEach( peep => {
-		// saveProfile();
-	// });
 };
 
+/** 
+ *  @param label (String) header (e.g "Allow cookies") 
+ *  @param subtext (String) smaller text that provides a bit more info
+ *  @param textOn (String) will only appear if the user has given permission 
+*/
+const PermissionControl = ({header, prop, subtext, textOn, saveFn}) => {
+	const value = DataStore.getValue([...path, prop]);
+
+	return (
+		<>
+			<div className='col-md-5 text-left'>
+				<div className='sub-header'>
+					{header}
+				</div>
+				{subtext}
+			</div>
+			<div className='col-md-3'>
+				<PropControl path={path} prop={prop} 
+					type='checkbox' saveFn={saveFn} 
+				/>
+			</div>
+			<div className='col-md-4'>
+				{ value && <div className='color-gl-red'>{textOn}</div> }
+			</div>
+		</>
+	);
+};
+// props => { toggleDNT({...props, perms, dnt}); togglePerm({...props, peeps}); }
 /**
  */
 const ConsentWidget = ({xids}) => {
@@ -92,23 +117,39 @@ const ConsentWidget = ({xids}) => {
 	perms.cookies = (dnt === '1'); // allow cookies unless DNT=1
 
 	return (
-		<div className="consent-widget">
-			<PropControl path={path} prop='cookies' 
-				label='Allow cookies' 
-				type='yesNo' saveFn={props => { toggleDNT({...props, perms, dnt}); togglePerm({...props, peeps}); }} 
-			/>
-			{perms.cookies === false? <small>OK - no cookies. Except ironically this has to set a cookie to work.</small> : null}
-
-			<PropControl path={path} prop='personaliseAds' label='Allow ad targetting' type='yesNo' 
-				saveFn={props => togglePerm({...props, peeps})}
-			/>
-
-			<PropControl path={path} prop='sendMessages' label='Allow us to email you updates and commerical messages' type='yesNo' 
-				saveFn={props => togglePerm({...props, peeps})}
-			/>
-			<p>
-				These settings can be updated at any time from the account menu
-			</p>
+		<div className="container">
+			<div className='row'>
+				<i>You</i> decide how you want to do good online. 
+			</div>
+			<div className='row bottom-pad2'>
+				<PermissionControl 
+					header='Allow cookies'
+					prop='cookies'
+					saveFn={props => { toggleDNT({...props, perms, dnt}); togglePerm({...props, peeps}); }}
+					subtext='Allow us to track your donations and avoid showing you the same advert twice'
+					textOn='Thank you &mdash; this improves our service and raises more money for charity!'
+				/>
+			</div>
+			<div className='row bottom-pad2'>
+				<PermissionControl 
+					header='Allow ad targeting'
+					prop='personaliseAds'
+					saveFn={props => togglePerm({...props, peeps})}
+					subtext='Only Good-Loop ads for good, of course'
+					textOn='Thank you &mdash; this raises more money for charity!'
+				/>
+			</div>
+			<div className='row bottom-pad2'>
+				<PermissionControl 
+					header='Allow us to email you updates and commercial messages'
+					prop='sendMessages'
+					saveFn={props => togglePerm({...props, peeps})}
+					textOn='Thank you &mdash; this raises more money for charity!'
+				/>
+			</div>
+			<div className='row'>
+				We will never share your data or post to your social media account without your consent. See our <a href='https://www.good-loop.com/privacy-policy' rel='noopener noreferrer' target='_blank'> privacy policy </a> for more information.
+			</div>
 		</div>
 	);
 };
