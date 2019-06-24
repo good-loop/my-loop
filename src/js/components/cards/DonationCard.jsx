@@ -126,7 +126,7 @@ const CharityDonation = ({cid, communityTotal, onlyOneCharity}) => {
 		charity = pvCharity.value || {};
 	}
 	
-	const img = charity.logo || charity.img || "/img/logo-grey.png";
+	const img = charity.logo || charity.img || "/img/logo-white.svg";
 	return (
 		<div className={onlyOneCharity ? "" : "col-md-4"}>
 			<div className="charity-circle">

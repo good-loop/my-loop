@@ -8,37 +8,37 @@ const RecentCampaignsCard = () => {
 				{
 					name: "KitKat",
 					adid: "xsINEuJV",
-					logo: "https://as.good-loop.com/uploads/anon/kithead1-8689246171902103163.png",
+					logo: "/img/vertiser-logos/kitkat-logo-scaled.png",
 					background: "https://as.good-loop.com/uploads/anon/kitkat__stats1__mini-6306904842484749395.jpg"
 				},
 				{
 					name: "H&M",
 					adid: "CeuNVbtW",
-					logo: "/img/HM-logo.png",
+					logo: "/img/vertiser-logos/HM-logo.png",
 					background: "https://as.good-loop.com/uploads/anon/kitkat__stats1__mini-6306904842484749395.jpg"
 				},
 				{
 					name: "Linda McCartney",
 					adid: "qprjFW1H",
-					logo: "/img/linda-mac-logo.png",
+					logo: "/img/vertiser-logos/linda-mac-logo.png",
 					background: "https://as.good-loop.com/uploads/anon/kitkat__stats1__mini-6306904842484749395.jpg"
 				},
 				{
 					name: "WWF",
 					adid: "I6g1Ot1b",
-					logo: "/img/wwf-logo.png",
+					logo: "/img/vertiser-logos/wwf-logo.png",
 					background: "https://as.good-loop.com/uploads/anon/kitkat__stats1__mini-6306904842484749395.jpg"
 				},
 				{
 					name: "Doom Bar",
 					adid: "ma9LU5chyU",
-					logo: "/img/doom-bar-logo.png",
+					logo: "/img/vertiser-logos/doom-bar-logo.png",
 					background: "https://as.good-loop.com/uploads/anon/kitkat__stats1__mini-6306904842484749395.jpg"
 				},
 				{
 					name: "British Gas",
 					adid: "tEfu6NjSY5",
-					logo: "/img/bg-logo-mobile.svg",
+					logo: "/img/vertiser-logos/bg-logo-mobile.svg",
 					background: "https://as.good-loop.com/uploads/anon/kitkat__stats1__mini-6306904842484749395.jpg"
 				}
 			];
