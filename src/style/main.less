@@ -234,15 +234,41 @@ a {
 	word-break: break-all;
 }
 
-.round-logo {
-	border: 1px solid grey;
-	border-radius: 50%;
-	background-color: #fff;
+.logo-base {
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-size: 100%;
+}
+
+// Just a copy of the adunit's charity logos
+.round-logo {
+	.logo-base();
+	border: 1px solid grey;
+	border-radius: 50%;
+	background-color: #fff;
 	height: 5rem;
 	width: 5rem;
+}
+
+
+.square-logo {
+	.logo-base();
+	// Square size that occupies 1/3 of screen-width
+	width: 32vw;
+	height: 32vw;
+	margin: 1rem auto;
+
+	// Want to position child elements absolutely
+	position: relative;
+
+	// Place small advertiser logo in top-left
+	img {
+		width: 25%;
+
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
 }
 
 .logo-big {

@@ -1,18 +1,25 @@
 import React from 'react';
 import DataStore from '../base/plumbing/DataStore';
 
-const RoundLogo = props => (
-	<div
-		{...props} 
-		alt={props.alt} 
-		className='round-logo'
+const BaseLogo = ({alt, className, style, url, ...props}) => (
+	<div 
+		{...props}
+		alt={alt}
+		className={className}
 		style={{
-			backgroundImage: `url('${props.url}')`,
-			...props.style
-		}} 
-	/>
+			backgroundImage: `url('${url}')`,
+			...style
+		}}
+	>
+		{props.children}
+	</div>
 );
 
+/** Basically just the adunit's charity logo */
+const RoundLogo = props => <BaseLogo {...props} className={props.className + ' round-logo'} />;
+
+/** Occupies 1/3 screen-width by default */
+const SquareLogo = props => <BaseLogo {...props} className={props.className + ' square-logo'} />;
 
 /**
  * @param {?String} url The image url
@@ -57,5 +64,6 @@ export default OptimisedImage;
 export {
 	optimise,
 	RoundLogo,
+	SquareLogo,
 	OptimisedImage
 }; 

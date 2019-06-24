@@ -118,6 +118,19 @@ const MyPage = () => {
 				</div>					
 			</div>
 
+			<div title="Recent Campaigns" className='boostImpact container-fluid'>
+				<div className='row'>
+					<RecentCampaignsCard />
+				</div>
+				<div className='row pad1'>
+					<div className='col-md-3' />
+					<div className='col-md-6 col-xs-12'>
+						<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} mixPanelTag='ShareAnAd' xids={xids} />
+					</div>
+					<div className='col-md-3' />
+				</div>
+			</div>
+
 			<div>
 				<ImpactCard className='top-margin1 container-fluid'>
 					<div className='pad1 row bg-gl-red row'>	
@@ -175,19 +188,6 @@ const MyPage = () => {
 						</div>
 					</ImpactImage>
 				</ImpactCard>
-			</div>
-
-			<div title="Recent Campaigns" className='boostImpact container-fluid'>
-				<div className='row pad1'>
-					<RecentCampaignsCard />
-				</div>
-				<div className='row pad1'>
-					<div className='col-md-3' />
-					<div className='col-md-6 col-xs-12'>
-						<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} mixPanelTag='ShareAnAd' xids={xids} />
-					</div>
-					<div className='col-md-3' />
-				</div>
 			</div>
 
 			<div className='white' title='Boost your impact'>
