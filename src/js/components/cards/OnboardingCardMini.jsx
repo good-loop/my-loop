@@ -1,4 +1,5 @@
 import React from 'react';
+import RecentCampaignsCard from './RecentCampaignsCard';
 
 const OnboardingCardMini = () => (
 	<>
@@ -20,6 +21,9 @@ const OnboardingCardMini = () => (
 					<div className='sub-header flex-vertical-align'> Watch a 15 second advert and decide which of three charities should receive 50% of the cost of the ad </div>
 				</div>
 			</div>
+		</div>
+		<div>
+			<RecentCampaignsCard />
 		</div>
 		<div>
 			<div>

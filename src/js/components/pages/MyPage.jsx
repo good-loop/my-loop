@@ -18,7 +18,6 @@ import {RoundLogo} from '../Image';
 
 import ShareAnAd from '../cards/ShareAnAd';
 import OnboardingCardMini from '../cards/OnboardingCardMini';
-import RecentCampaignsCard from '../cards/RecentCampaignsCard';
 // TODO refactor so ImpactCard is the shared module, with other bits tucked away inside it
 import {ImpactCard, ImpactImage} from '../cards/ImpactCard';
 import SocialMediaCard from '../cards/SocialMediaCard';
@@ -119,9 +118,6 @@ const MyPage = () => {
 			</div>
 
 			<div title="Recent Campaigns" className='boostImpact container-fluid'>
-				<div className='row'>
-					<RecentCampaignsCard />
-				</div>
 				<div className='row pad1'>
 					<div className='col-md-3' />
 					<div className='col-md-6 col-xs-12'>
