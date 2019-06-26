@@ -85,10 +85,12 @@ const PermissionControl = ({header, prop, subtext, textOn, saveFn}) => {
 	return (
 		<>
 			<div className='col-md-5 text-left'>
-				<div className='sub-header'>
-					{header}
+				<div>
+					<b>{header}</b>
 				</div>
-				{subtext}
+				<span>
+					{subtext}
+				</span>
 			</div>
 			<div className='col-md-3 flex-row slider'>
 				<span> No </span>
