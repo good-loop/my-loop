@@ -66,6 +66,14 @@ const saveAllPerms = () => {
 	saveProfile({id: peeps, c: convertedConsents});
 };
 
+const Slider = () => (
+	<>
+		<div className='slider-inner'>
+			<div className='round-bit' />
+		</div>
+	</>
+);
+
 /** 
  *  @param label (String) header (e.g "Allow cookies") 
  *  @param subtext (String) smaller text that provides a bit more info
@@ -73,14 +81,6 @@ const saveAllPerms = () => {
 */
 const PermissionControl = ({header, prop, subtext, textOn, saveFn}) => {
 	const value = DataStore.getValue([...path, prop]);
-
-	const Slider = () => (
-		<>
-			<div className='slider-inner'>
-				<div className='round-bit' />
-			</div>
-		</>
-	);
 
 	return (
 		<>
