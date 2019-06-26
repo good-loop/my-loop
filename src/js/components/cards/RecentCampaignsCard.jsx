@@ -54,7 +54,7 @@ const RecentCampaignsCard = () => {
 				<a key={adid} href={"/#campaign/?gl.vert="+adid}>
 					<SquareLogo alt={name} url={background}>
 						<img src={logo} alt='vertiser-logo' />
-						<div className='text-container sub-header white'>
+						<div className='text-container sub-header color-gl-red'>
 							<span>{charityName}</span>
 						</div>
 					</SquareLogo>
