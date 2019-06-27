@@ -29,7 +29,7 @@ const Page = () => {
 	return (
 		<div className='page DataPage text-center' ref={doesIfVisibleRef}>
 			<NavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
-			<div title="Your Digital Mirror" className='container-fluid'>
+			<div className='container-fluid'>
 				<div className='row panel-title panel-heading sub-header pad1'> 
 					Digital Mirror
 				</div>
@@ -42,7 +42,7 @@ const Page = () => {
 				</div>
 			</div>
 
-			<div title="Consent Controls" className="consentControls container-fluid">
+			<div className="consentControls container-fluid">
 				<div className='row panel-title panel-heading sub-header pad1'> 
 					Consent Controls
 				</div>
@@ -54,7 +54,7 @@ const Page = () => {
 					)}
 				</div>
 			</div>
-			<div title='Linked Profiles' className="linkedProfiles container-fluid">
+			<div className="linkedProfiles container-fluid">
 				<div className='row panel-title panel-heading sub-header pad1'> 
 					Linked Profiles
 				</div>

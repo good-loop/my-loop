@@ -65,7 +65,7 @@ const MyPage = () => {
 	return (
 		// TODO: refactor out the elements are the same as campaign page
 		<div className="page MyPage">
-			<div title="Welcome Card" className='header-card MiniCard'>
+			<div className='header-card MiniCard'>
 				<NavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
 				<div className='triangle-gl-red' />
 				<div className='flex-row pad3 bg-gl-red'>
@@ -81,7 +81,7 @@ const MyPage = () => {
 					</div>
 				</div>				
 			</div>
-			<div title="How Good-Loop Ads Work" className='StatisticsCard MiniCard'>
+			<div className='StatisticsCard MiniCard'>
 				<div>
 					<OnboardingCardMini allIds={allIds} />
 				</div>
@@ -106,7 +106,7 @@ const MyPage = () => {
 					}
 				</div>
 			</div>
-			<div className='white' title='Boost your impact'>
+			<div className='white'>
 				<div className='bg-gl-red'>
 					<div className='flex-column pad1'>
 						<div className='text-block'>
@@ -117,7 +117,7 @@ const MyPage = () => {
 				</div>					
 			</div>
 
-			<div title="Recent Campaigns" className='boostImpact container-fluid'>
+			<div className='boostImpact container-fluid'>
 				<div className='row pad1'>
 					<div className='col-md-3' />
 					<div className='col-md-6 col-xs-12'>
@@ -186,7 +186,7 @@ const MyPage = () => {
 				</ImpactCard>
 			</div>
 
-			<div className='white' title='Boost your impact'>
+			<div className='white'>
 				<div className='triangle-gl-red' />
 				<div className='bg-gl-red'>
 					<div className='flex-column'>
@@ -204,7 +204,7 @@ const MyPage = () => {
 				</div>					
 			</div>
 
-			<div title="Consent Controls" className="consentControls container-fluid">
+			<div className="consentControls container-fluid">
 				<div className='row panel-title panel-heading sub-header pad1'> 
 					Consent Controls
 				</div>
@@ -217,7 +217,7 @@ const MyPage = () => {
 				</div>
 			</div>
 
-			<div title="Get In Touch" className='container-fluid'>
+			<div className='container-fluid'>
 				<div className='row panel-title panel-heading sub-header pad1'> 
 					Get in touch
 				</div>
@@ -249,7 +249,7 @@ const MyPage = () => {
 }; // ./MyPage
 
 const IntroCard = () => (
-	<div title='Intro' className='container-fluid'>
+	<div className='container-fluid'>
 		<div className='row pad1'>
 			<div className='col-md-4 intro-item'>
 				<i className='fa fa-pencil fa-3x pad1' />

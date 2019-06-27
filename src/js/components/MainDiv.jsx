@@ -23,7 +23,7 @@ import CampaignPage from './pages/CampaignPage';
 import {BasicAccountPage} from '../base/components/AccountPageWidgets';
 import E404Page from '../base/components/E404Page';
 import TestPage from '../base/components/TestPage';
-import DataManagementPage from './pages/DataManagementPage';
+import AccountPage from './pages/AccountPage';
 
 // DataStore
 C.setupDataStore();
@@ -35,7 +35,7 @@ const PAGES = {
 	my: MyPage,
 	campaign: CampaignPage,
 	test: TestPage,
-	account: DataManagementPage
+	account: AccountPage
 };
 
 const DEFAULT_PAGE = 'my';
