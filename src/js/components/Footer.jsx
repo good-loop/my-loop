@@ -16,7 +16,7 @@ const Footer = ({className, leftFooter, rightFooter, style}) => (
 				<MDText source={leftFooter} />
 			</div>
 		</div>
-		<div className='mainFooter flex-column'>
+		<div className='mainFooter flex-column pad1'>
 			<p className='text-block'>
 				&copy; 2016-2019 <a href='https://www.good-loop.com/blog'>Good-Loop Ltd</a>, all rights reserved. <a href='https://www.good-loop.com/privacy-policy'>Privacy policy</a>
 				<br />
