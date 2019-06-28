@@ -106,17 +106,7 @@ const MyPage = () => {
 					}
 				</div>
 			</div>
-			<div className='white'>
-				<div className='bg-gl-red'>
-					<div className='flex-column pad1'>
-						<div className='text-block'>
-							Boost your impact by signing up or connecting with social media.
-						</div>
-						<SocialMediaCard allIds={xids} className='socialConnect margin1' />
-					</div>
-				</div>					
-			</div>
-
+			<BoostYouImpactCard xids={xids} />				
 			<div className='boostImpact container-fluid'>
 				<div className='row pad1'>
 					<div className='col-md-3' />
@@ -186,22 +176,7 @@ const MyPage = () => {
 				</ImpactCard>
 			</div>
 
-			<div className='white top-margin1'>
-				<div className='bg-gl-red'>
-					<div className='flex-column'>
-						<div className='sub-header'>
-							Boost your impact
-						</div>
-						<div className='text-block pad1'>
-							Boost your impact by signing up or connecting with social media.
-						</div>
-						<div className='flex-row flex-wrap'>
-							<RegisterLink className='sub-header btn btn-gl' verb='Sign Up' />			
-							<SocialMediaCard allIds={xids} className='socialConnect pad1' />
-						</div>
-					</div>
-				</div>					
-			</div>
+			<BoostYouImpactCard xids={xids} />
 
 			<div className="consentControls container-fluid">
 				<div className='row panel-title panel-heading sub-header pad1'> 
@@ -246,6 +221,25 @@ const MyPage = () => {
 		</div>
 	);
 }; // ./MyPage
+
+const BoostYouImpactCard = ({xids}) => (
+	<div className='white top-margin1'>
+		<div className='bg-gl-red'>
+			<div className='flex-column'>
+				<div className='sub-header'>
+					Boost your impact
+				</div>
+				<div className='text-block pad1'>
+					Boost your impact by signing up or connecting with social media.
+				</div>
+				<div className='flex-row flex-wrap'>
+					<RegisterLink className='sub-header btn btn-gl' verb='Sign Up' />			
+					<SocialMediaCard allIds={xids} className='socialConnect pad1' />
+				</div>
+			</div>
+		</div>					
+	</div>
+);
 
 const IntroCard = () => (
 	<div className='container-fluid'>
