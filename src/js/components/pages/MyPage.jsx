@@ -186,8 +186,7 @@ const MyPage = () => {
 				</ImpactCard>
 			</div>
 
-			<div className='white'>
-				<div className='triangle-gl-red' />
+			<div className='white top-margin1'>
 				<div className='bg-gl-red'>
 					<div className='flex-column'>
 						<div className='sub-header'>
