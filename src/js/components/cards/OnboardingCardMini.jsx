@@ -5,7 +5,7 @@ const OnboardingCardMini = () => (
 	<>
 		<div className='flex-row flex-centre pad3'>
 			<div className='flex-vertical-align width50pct'>
-				<img className='width100pct' src='/img/gl-phone-preview.webp' />
+				<img className='width100pct' src='/img/gl-phone-preview.png' />
 			</div>
 			<div className='flex-vertical-align sub-header width50pct'>
 				Watch to donate
@@ -27,7 +27,7 @@ const OnboardingCardMini = () => (
 		</div>
 		<div>
 			<div>
-				<div className='img-block' style={{backgroundImage: 'url(/img/let_s-use-ad-money_tfvhbb.webp)'}}>
+				<div className='img-block' style={{backgroundImage: 'url(/img/let_s-use-ad-money_tfvhbb.png)'}}>
 					<div className='pad10' />
 					<div className='triangle-gl-dark-blue' />
 				</div>
