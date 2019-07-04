@@ -63,8 +63,14 @@ const makeConfig = ({ filename, mode }) => {
 	return config;
 };
 
-// Output bundle files for production and dev/debug
-module.exports = [
-	makeConfig({filename: 'bundle.js', mode: 'production' }),
+const configs = [
 	makeConfig({filename: 'bundle-debug.js', mode: 'development' }),
 ];
+
+// Allow debug-only compilation for faster iteration in dev
+if (process.env.NO_PROD !== 'true') {
+	configs.push(makeConfig({filename: 'bundle.js', mode: 'production' }));
+}
+
+// Output bundle files for production and dev/debug
+module.exports = configs;
