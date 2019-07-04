@@ -62,7 +62,7 @@ const Page = () => {
 					<LinkedProfilesCard xids={xids} />
 				</div>
 			</div>
-			<Footer className='bg-gl-red' />
+			<Footer className='bg-gl-red' showSocialMediaLinks />
 		</div>
 	);
 };

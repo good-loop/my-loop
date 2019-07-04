@@ -111,7 +111,7 @@ const MyPage = () => {
 				<div className='row pad1'>
 					<div className='col-md-3' />
 					<div className='col-md-6 col-xs-12'>
-						<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} mixPanelTag='ShareAnAd' xids={xids} />
+						<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} mixPanelTag='ShareAnAd' />
 					</div>
 					<div className='col-md-3' />
 				</div>
@@ -217,7 +217,7 @@ const MyPage = () => {
 				</div>
 			</div>
 
-			<Footer className='bg-gl-red' />
+			<Footer className='bg-gl-red' showSocialMediaLinks />
 		</div>
 	);
 }; // ./MyPage

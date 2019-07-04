@@ -1,9 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
-import md5 from 'md5';
-import { XId } from 'wwutils';
-import DataStore from '../../base/plumbing/DataStore';
 import ServerIO from '../../plumbing/ServerIO';
-import {saveSocialShareId} from '../../base/Profiler';
 import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import {IntentLink} from '../SocialShare';
 import {useLogsIfVisible} from '../../base/components/CustomHooks';
@@ -16,7 +12,7 @@ import {useLogsIfVisible} from '../../base/components/CustomHooks';
  * 2) A Twitter intent link to share this ad
  * 3) A table showing how many times their shared ads have been viewed by others
  */
-const ShareAnAd = ({ adHistory, color, xids=[] }) => {
+const ShareAnAd = ({ adHistory, color}) => {
 	// Load in back-up vert data
 	// Easiest to just always load back-up data:
 	// avoids a race-condition where adHistory is provided after initial render has set off fetch
@@ -38,9 +34,6 @@ const ShareAnAd = ({ adHistory, color, xids=[] }) => {
 	}, []);
 	let {vert, format, url} = adHistory || backUpVertData || {};
 
-	const twitterXId = xids.find(id => XId.service(id)==='twitter');
-	const socialShareId = twitterXId && md5( twitterXId + vert );
-
 	let doesIfVisibleRef = useRef();
 	useLogsIfVisible(doesIfVisibleRef, 'ShareAnAdVisible');
 
@@ -51,100 +44,27 @@ const ShareAnAd = ({ adHistory, color, xids=[] }) => {
 					? <video controls={true} width="100%" height="auto" src={url}> An error occured </video> 
 					: <GoodLoopUnit adID={vert} /> 
 			}
-			{
-				// twitterXId
-				true
-				&& (
-					<div>
-						<h3 className='sub-header'> Share this ad on social media </h3>
-						<IntentLink 
-							onClick={() => saveSocialShareId({xid: twitterXId, socialShareId, adid: vert})}
-							service='twitter'  
-							text='I just gave to charity by watching a GoodLoop ad'
-							url={`https://as.good-loop.com/?gl.vert=${vert}&gl.socialShareId=${socialShareId}`}
-						/>
-						<IntentLink 
-							onClick={() => saveSocialShareId({xid: twitterXId, socialShareId, adid: vert})}
-							service='facebook'  
-							text='I just gave to charity by watching a GoodLoop ad'
-							url={`https://as.good-loop.com/?gl.vert=${vert}&gl.socialShareId=${socialShareId}`}
-						/>
-						{/* <SharedAdStats twitterXId={twitterXId} /> */}
-					</div>
-				)
-			}
+			<CampaignPageLinks vert={vert} color={color} />
 		</div>
 	);
 };
 
-/** Table showing how many times adverts shared by the user on Twitter have been viewed 
- * (15/04/19) This has been turned off as I (MW) cannot think of a nice way of:
- * 1) Making this feature useable to non-registered users
- * 2) Ensuring that stats are correctly carried over after a user has signed up
- * 
- * In it's current form, this feature is not well presented, and I think that it should be hidden for the moment 
-*/
-const SharedAdStats = ({twitterXId}) => {
-	const twitterSocialShareObjects = twitterXId && DataStore.getValue(['data', 'Person', 'xids', twitterXId, 'socialShareIds']);
-	if( !twitterSocialShareObjects ) {
-		return (
-			<div className='top-pad1'>
-				Come back later to see how much your followers have raised for charity
-			</div>
-		);
-	}
-
-	// Load number of times that shared ad has been viewed
-	let views={};
-	useEffect(() => {
-		const shareIds = twitterSocialShareObjects.map( shareIdObject => shareIdObject.id);
-		views = ServerIO.getViewCount(shareIds);
-	}, [twitterSocialShareObjects]);
-
-	// Load human-readable name for each shared ad
-	const [names, setNames] = useState({});
-	useEffect(() => {
-		twitterSocialShareObjects
-			.forEach( shareObject => {
-				ServerIO.getVertData(shareObject.adId)
-					.then( res => {
-						const { cargo={} } = res;
-						const {id, name} = cargo;
-						// Append to names only if an ad id and name have been returned
-						return id && name && setNames({...names, [id]: name}); 
-					});
-			});
-	}, [twitterSocialShareObjects]);
-
-	return (
-		<div className='sharedAds container-fluid'>
-			<div className='bottom-pad1 top-pad1'>
-				Ads you have previously shared:
-			</div>
-			<table className='word-wrap width100pct'>
-				<thead>
-					<tr>
-						<th> Advert </th>
-						<th> Views </th>
-						<th> Shared on </th>
-					</tr>
-				</thead>
-				<tbody>
-					{twitterSocialShareObjects.map( shareIdObj => {
-						const {id, adId, dateShared} = shareIdObj;
-
-						return (
-							<tr key={id}>
-								<td> {names[adId] || adId} </td>
-								<td> {views[id] || 0} </td>
-								<td> {dateShared} </td>
-							</tr>
-						);
-					})}
-				</tbody>
-			</table>
-		</div>
-	);
-};
+const CampaignPageLinks = ({color, vert}) => (
+	<div>
+		<h3 className='sub-header'> Share this ad on social media </h3>
+		<IntentLink 
+			service='twitter'  
+			text='I just gave to charity by watching a GoodLoop ad'
+			url={`${window.location.origin}/#campaign/?gl.vert=${vert}`}
+			style={{color}}
+		/>
+		<IntentLink 
+			service='facebook'  
+			text='I just gave to charity by watching a GoodLoop ad'
+			url={`${window.location.origin}/#campaign/?gl.vert=${vert}`}
+			style={{color}}
+		/>
+	</div>
+);
 
 export default ShareAnAd;

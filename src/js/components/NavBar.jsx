@@ -3,8 +3,8 @@ import NavBar from '../base/components/NavBar';
 import AccountMenu from '../base/components/AccountMenu';
 import C from '../C';
 
-const Contents = ({pageLinks, currentPage, logo}) => (
-	<div className='container-fluid'>
+const Contents = ({pageLinks, currentPage, style, logo}) => (
+	<div className='container-fluid' style={style}>
 		<div className="navbar-header" title="Dashboard">
 			<button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
 				<span className="sr-only">Toggle navigation</span>

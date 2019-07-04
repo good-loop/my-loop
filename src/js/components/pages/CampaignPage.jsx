@@ -137,7 +137,7 @@ const CampaignPage = () => {
 							<div className='row'>
 								{
 									clist.map( charity => (
-										<div className={'col-md-' + 12 / clist.length}>
+										<div className={'col-md-' + 12 / clist.length} key={charity.name}>
 											<div className='flex-row pad1'>
 												<a src={charity.url}>
 													<RoundLogo url={charity.logo} />
@@ -163,14 +163,16 @@ const CampaignPage = () => {
 					Login.isLoggedIn()
 					|| (
 						<div className='row'> 
-							<RegisterLink className='bg-gl-light-grey white sub-header btn btn-gl' style={{backgroundColor: brandColor, borderColor: brandColor}} verb='Sign-Up' />								
+							<RegisterLink className='sub-header btn btn-gl' style={{backgroundColor: brandColor, borderColor: brandColor}} verb='Sign-Up' />								
 						</div>
 					)
 				}
 				<div className='row pad1'>
 					<div className='col-md-3' /> 
 					<div className='col-md-6'>
-						{ ad && ad.videos && ad.videos.length && <ShareAnAd adHistory={{...ad.videos[0], vert: adid}} mixPanelTag='ShareAnAd' color={brandColor} />}
+						{ ad && ad.videos && ad.videos.length 
+							&& <ShareAnAd adHistory={{...ad.videos[0], vert: adid}} mixPanelTag='ShareAnAd' color={brandColor} />
+						}
 					</div> 
 					<div className='col-md-3' /> 				
 				</div>
