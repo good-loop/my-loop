@@ -33,8 +33,9 @@
     "you-again": "^0.8.4"
   },
   "scripts": {
-    "compile-watch": "webpack --config $PWD/webpack.config.js --progress --colors --watch",
     "compile": "webpack --config $PWD/webpack.config.js --progress --colors",
+    "compile-watch": "webpack --config $PWD/webpack.config.js --progress --colors --watch",
+    "compile-watch-fast": "NO_PROD=true webpack --config $PWD/webpack.config.js --progress --colors --watch",
     "flow": "flow; test $? -eq 0 -o $? -eq 2"
   },
   "devDependencies": {
