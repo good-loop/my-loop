@@ -3,6 +3,7 @@
  */
 import React, {useRef} from 'react';
 import Login from 'you-again';
+import { XId } from 'wwutils';
 
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
@@ -232,10 +233,7 @@ const BoostYouImpactCard = ({xids}) => (
 				<div className='text-block pad1'>
 					Boost your impact by signing up or connecting with social media.
 				</div>
-				<div className='flex-row flex-wrap'>
-					<RegisterLink className='sub-header btn btn-gl' verb='Sign Up' />			
-					<SocialMediaCard allIds={xids} className='socialConnect pad1' />
-				</div>
+				<SocialMediaCard allIds={xids} className='socialConnect pad1' />
 			</div>
 		</div>					
 	</div>
