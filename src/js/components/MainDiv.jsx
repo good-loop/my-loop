@@ -24,6 +24,7 @@ import {BasicAccountPage} from '../base/components/AccountPageWidgets';
 import E404Page from '../base/components/E404Page';
 import TestPage from '../base/components/TestPage';
 import AccountPage from './pages/AccountPage';
+import RedesignPage from './pages/RedesignPage';
 
 // DataStore
 C.setupDataStore();
@@ -35,7 +36,8 @@ const PAGES = {
 	my: MyPage,
 	campaign: CampaignPage,
 	test: TestPage,
-	account: AccountPage
+	account: AccountPage,
+	redesign: RedesignPage
 };
 
 const DEFAULT_PAGE = 'my';
