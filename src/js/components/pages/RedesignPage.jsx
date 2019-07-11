@@ -1,10 +1,12 @@
 import React from 'react';
 
 // This page is for experimenting with ideas for the upcoming My-Loop redesign
+// Everything below should be considered scratch code: it will be reworked
 const RedesignPage = () => {
 	return (
 		<div>
 			<SVG1 />
+			<Sausages />
 		</div>
 	);
 };
@@ -107,5 +109,69 @@ const SVG1 = () => (
 		</div>
 	</>
 );
+
+const Sausages = () => {
+	return (
+		<>
+			<div 
+				className='white bg-gl-red pad1'
+				style={{
+					borderRadius:'3%/50%',
+					borderTopRightRadius:0,
+					borderBottomRightRadius:0,
+					margin:'1rem 0'
+				}}
+			>
+				<div 
+					className='header flex-vertical-align' 
+					style={{
+						border: '8px solid #fff', 
+						borderRadius:'50%',
+						width: '4rem',
+						height: '4rem',
+						textAlign: 'center',
+						marginRight: '1rem',
+						display: 'inline-flex'
+					}}
+				>
+					<span> 
+						1
+					</span> 
+				</div> 
+				<span className='header'>WATCH</span> 
+				<span className='sub-header'>&nbsp; a 15 second video </span>
+			</div>
+			<div 
+				className='white bg-gl-red pad1'
+				style={{
+					borderRadius:'3%/50%',
+					borderTopLeftRadius:0,
+					borderBottomLeftRadius:0,
+					margin:'1rem 0',
+					textAlign: 'right'
+				}}
+			>
+				<span className='header'>CHOOSE</span> 
+				<span className='sub-header'>&nbsp; a charity to support </span>
+				<div 
+					className='header flex-vertical-align' 
+					style={{
+						border: '8px solid #fff', 
+						borderRadius:'50%',
+						width: '4rem',
+						height: '4rem',
+						textAlign: 'center',
+						marginRight: '1rem',
+						display: 'inline-flex'
+					}}
+				> 
+					<span>
+						2 
+					</span>
+				</div> 
+			</div>
+		</>
+	);	
+};
 
 export default RedesignPage;
