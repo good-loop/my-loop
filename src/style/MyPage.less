@@ -124,6 +124,42 @@
 	}
 }
 
+.number-circle {
+	border: 6px solid #fff;
+	border-radius: 50%;
+	width: 4rem;
+	height: 4rem;
+	text-align: center;
+	margin: 0 1rem;
+	display: inline-flex;
+}
+
+.sausage-container-base {
+	// Apparently can't just do 3% / 50% as less will simply resolve this to border-radius: 0.06%...
+	border-top-left-radius:     3% 50%;
+	border-top-right-radius:    3% 50%;
+	border-bottom-right-radius: 3% 50%;
+	border-bottom-left-radius:  3% 50%;
+	margin: 1rem 0;
+}
+
+.sausage-container-left {
+	.sausage-container-base();
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+	text-align: right;
+}
+
+.sausage-container-right {
+	.sausage-container-base();
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.RedesignPage {
+	max-width: 775px;
+}
+
 // Change impact card layout from:
 // *IMAGE* *TEXT*
 // to
