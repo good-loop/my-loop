@@ -50,7 +50,7 @@ const ShareAnAd = ({ adHistory, color}) => {
 };
 
 const CampaignPageLinks = ({color, vert}) => (
-	<div>
+	<div className='text-center'>
 		<h3 className='sub-header'> Share this ad on social media </h3>
 		<IntentLink 
 			service='twitter'  
