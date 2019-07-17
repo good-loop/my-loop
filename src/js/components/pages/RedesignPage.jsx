@@ -107,10 +107,7 @@ const RedesignPage = () => {
 				<div 
 					className='img-block'
 					style={{
-						position: 'relative', 
-						height: '100vh',
 						backgroundImage:`url('${ServerIO.MYLOOP_ENDPONT}/img/tropical-isle.jpg')`,
-						marginBottom: '2rem'
 					}}
 				>
 					<RedesignNavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
