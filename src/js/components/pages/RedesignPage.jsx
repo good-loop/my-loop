@@ -24,40 +24,45 @@ const pagePath = ['widget', 'MyPage'];
 
 window.DEBUG = false;
 
-const TestContainerSVG = () => (
-	<svg
-		height="139mm"
-		width="210mm"
-		style={{
-			position:'absolute',
-			bottom: 0
-		}}
-	>
-		<defs>
-			<pattern id="image" x="0" y="0" patternUnits="userSpaceOnUse" height="800" width="800">
-				<image x="0" y="0" xlinkHref="http://testmy.good-loop.com/img/tulips-temp.jpg" />
-			</pattern>
-		</defs>
-		<g
-			transform="translate(0,-559.8429)"
+const TestContainerSVG = () => {
+	return (
+		<svg
+			width="210mm"
+			height="139mm"
+			viewBox="0 0 744.09449 492.51938"
+			style={{
+				position:'absolute',
+				bottom: '-21%',
+				width: '100%'
+			}}
 		>
-			<ellipse
-				transform="matrix(-0.97032509,0.24180408,-0.27684891,-0.96091346,0,0)"
-				ry="231.3644"
-				rx="371.87408"
-				cy="-872.8985"
-				cx="-135.81924"
-				id="path3336"
-				fill="url(#image)"
-				style={{
-					stroke: '#ffffff',
-					strokeWidth: '10',
-					strokeOpacity: '1'
-				}}
-			/>
-		</g>
-	</svg>
-);
+			<defs>
+				<pattern id="image" x="0" y="0" patternUnits="userSpaceOnUse" height="666" width="1000">
+					<image x="0" y="0" xlinkHref={`${ServerIO.MYLOOP_ENDPONT}/img/tulips-temp.jpg`} />
+				</pattern>
+			</defs>
+			<g
+				id="layer1"
+				transform="matrix(-1.441249,0,0,-0.99464529,976.46655,1047.7181)"
+			>
+				<ellipse
+					id="path3336"
+					transform="matrix(-0.97032509,0.24180408,-0.27684891,-0.96091346,0,0)"
+					ry="231.3644"
+					rx="371.87408"
+					cy="-872.8985"
+					cx="-135.81924"
+					fill="url(#image)"
+					style={{
+						stroke: '#ffffff',
+						strokeWidth: '10',
+						strokeOpacity: '1'
+					}}
+				/>
+			</g>
+		</svg>
+	);
+};
 
 // 775 x 600
 // This page is for experimenting with ideas for the upcoming My-Loop redesign
@@ -103,31 +108,16 @@ const RedesignPage = () => {
 					className='img-block'
 					style={{
 						position: 'relative', 
-						minHeight: '100vh',
-						backgroundImage:"url('http://testmy.good-loop.com/img/tropical-isle.jpg')",
+						height: '100vh',
+						backgroundImage:`url('${ServerIO.MYLOOP_ENDPONT}/img/tropical-isle.jpg')`,
 						marginBottom: '2rem'
 					}}
 				>
 					<RedesignNavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
-					{/* <TestContainerSVG /> */}
+					<TestContainerSVG />
 				</div>
 				<div>
 					<div style={{padding: 0}}>
-						<div style={{position:'relative'}}>
-							<TopCurveSVG />
-							<div style={{position:'absolute', bottom: 0, right: 0, color: '#fff'}}>
-								<div className='header'>
-									Our
-									<br />
-									Mission.
-								</div>
-								<div className='text-block' style={{maxWidth: '12rem'}}>
-									At Good-Loop, we believe that your time and attention online is valuable.
-									<br />
-									Together, we want to harness that power and use it to make a positive difference.
-								</div>
-							</div>
-						</div>
 						<div style={{position: 'relative'}}>
 							<BottomCurveSVG />
 							<div style={{position:'absolute', left: '1rem', top: '50%'}}>
@@ -144,7 +134,7 @@ const RedesignPage = () => {
 							<div
 								className='img-block'
 								style={{
-									backgroundImage:"url('http://testmy.good-loop.com/img/wheat_fields.jpg')",
+									backgroundImage:`url('${ServerIO.MYLOOP_ENDPONT}/img/wheat_fields.jpg')`,
 									minHeight: '30rem',
 									position: 'absolute',
 									zIndex: '-1'
