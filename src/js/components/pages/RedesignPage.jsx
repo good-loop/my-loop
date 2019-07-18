@@ -1,11 +1,11 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import Login from 'you-again';
 import { XId } from 'wwutils';
 
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
 import { RegisterLink } from '../../base/components/LoginWidget';
-import {useLogsIfVisible} from '../../base/components/CustomHooks';
+import {useDoOnResize} from '../../base/components/CustomHooks';
 import Counter from '../../base/components/Counter';
 
 import ServerIO from '../../plumbing/ServerIO';
@@ -25,41 +25,51 @@ const pagePath = ['widget', 'MyPage'];
 window.DEBUG = false;
 
 const TestContainerSVG = () => {
+	const ref = useRef();
+	const [width, setWidth] = useState();
+	const [height, setHeight] = useState();
+
+	const resizeFn = () => {
+		if( !ref.current ) {
+			return;
+		}
+
+		const {width: parentWidth} = ref.current.parentElement.getBoundingClientRect();
+		
+		setWidth(parentWidth);
+		setHeight(parentWidth * 0.6 * 0.99);			
+	};
+
+	// Resize SVG if parent size changes
+	useDoOnResize({resizeFn});
+
 	return (
 		<svg
-			width="210mm"
-			height="139mm"
-			viewBox="0 0 744.09449 492.51938"
+			width={width}
+			height={height}
+			viewBox="0 0 1062.992 850.39327"
 			style={{
 				position:'absolute',
-				bottom: '-21%',
-				width: '100%'
+				bottom: 0
 			}}
 		>
 			<defs>
-				<pattern id="image" x="0" y="0" patternUnits="userSpaceOnUse" height="666" width="1000">
-					<image x="0" y="0" xlinkHref={`${ServerIO.MYLOOP_ENDPONT}/img/tulips-temp.jpg`} />
+				<pattern id="image" x="0" y="0" height="1" width="1"
+					viewBox="0 0 1000 666" preserveAspectRatio="xMidYMid slice"
+				>
+					<image width="1000" height="666" xlinkHref={`${ServerIO.MYLOOP_ENDPONT}/img/tulips-temp.jpg`} />
 				</pattern>
 			</defs>
-			<g
-				id="layer1"
-				transform="matrix(-1.441249,0,0,-0.99464529,976.46655,1047.7181)"
-			>
-				<ellipse
-					id="path3336"
-					transform="matrix(-0.97032509,0.24180408,-0.27684891,-0.96091346,0,0)"
-					ry="231.3644"
-					rx="371.87408"
-					cy="-872.8985"
-					cx="-135.81924"
-					fill="url(#image)"
-					style={{
-						stroke: '#ffffff',
-						strokeWidth: '10',
-						strokeOpacity: '1'
-					}}
-				/>
-			</g>
+			<path
+				id="path3336"
+				d="M 739.65309,24.273895 A 842.80831,1282.2272 75.325871 0 0 239.69389,88.203568 842.80831,1282.2272 75.325871 0 0 -762.10481,880.63285 l 1858.98731,0 0,-810.156975 A 842.80831,1282.2272 75.325871 0 0 739.65309,24.273895 Z"
+				fill="url(#image)"
+				style={{
+					stroke: '#ffffff',
+					strokeWidth: '10',
+					strokeOpacity: '1'
+				}}
+			/>
 		</svg>
 	);
 };
