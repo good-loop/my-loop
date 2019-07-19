@@ -1,78 +1,18 @@
-import React, {useRef, useState} from 'react';
-import Login from 'you-again';
-import { XId } from 'wwutils';
+import React from 'react';
 
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
-import { RegisterLink } from '../../base/components/LoginWidget';
-import {useDoOnResize} from '../../base/components/CustomHooks';
-import Counter from '../../base/components/Counter';
 
 import ServerIO from '../../plumbing/ServerIO';
-import Footer from '../Footer';
 import {RedesignNavBar} from '../NavBar';
-import ConsentWidget from '../ConsentWidget';
-import {RoundLogo} from '../Image';
 
 import ShareAnAd from '../cards/ShareAnAd';
-import OnboardingCardMini from '../cards/OnboardingCardMini';
 // TODO refactor so ImpactCard is the shared module, with other bits tucked away inside it
-import {ImpactCard, ImpactImage} from '../cards/ImpactCard';
-import SocialMediaCard from '../cards/SocialMediaCard';
+import RecentCampaignsCard from '../cards/RecentCampaignsCard';
 
 const pagePath = ['widget', 'MyPage'];
 
 window.DEBUG = false;
-
-const TestContainerSVG = () => {
-	const ref = useRef();
-	const [width, setWidth] = useState();
-	const [height, setHeight] = useState();
-
-	const resizeFn = () => {
-		if( !ref.current ) {
-			return;
-		}
-
-		const {width: parentWidth} = ref.current.parentElement.getBoundingClientRect();
-		
-		setWidth(parentWidth);
-		setHeight(parentWidth * 0.6 * 0.99);			
-	};
-
-	// Resize SVG if parent size changes
-	useDoOnResize({resizeFn});
-
-	return (
-		<svg
-			width={width}
-			height={height}
-			viewBox="0 0 1062.992 850.39327"
-			style={{
-				position:'absolute',
-				bottom: 0
-			}}
-		>
-			<defs>
-				<pattern id="image" x="0" y="0" height="1" width="1"
-					viewBox="0 0 1000 666" preserveAspectRatio="xMidYMid slice"
-				>
-					<image width="1000" height="666" xlinkHref={`${ServerIO.MYLOOP_ENDPONT}/img/tulips-temp.jpg`} />
-				</pattern>
-			</defs>
-			<path
-				id="path3336"
-				d="M 739.65309,24.273895 A 842.80831,1282.2272 75.325871 0 0 239.69389,88.203568 842.80831,1282.2272 75.325871 0 0 -762.10481,880.63285 l 1858.98731,0 0,-810.156975 A 842.80831,1282.2272 75.325871 0 0 739.65309,24.273895 Z"
-				fill="url(#image)"
-				style={{
-					stroke: '#ffffff',
-					strokeWidth: '10',
-					strokeOpacity: '1'
-				}}
-			/>
-		</svg>
-	);
-};
 
 // 775 x 600
 // This page is for experimenting with ideas for the upcoming My-Loop redesign
@@ -115,7 +55,7 @@ const RedesignPage = () => {
 		<div className='flex-row'>
 			<div className='RedesignPage'>
 				<div 
-					className='img-block'
+					className='splash img-block'
 					style={{
 						backgroundImage:`url('${ServerIO.MYLOOP_ENDPONT}/img/tropical-isle.jpg')`,
 					}}
@@ -123,15 +63,16 @@ const RedesignPage = () => {
 					<RedesignNavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
 					<TestContainerSVG />
 				</div>
+				<RecentCampaignsCard />
 				<div>
 					<div style={{padding: 0}}>
 						<div style={{position: 'relative'}}>
 							<BottomCurveSVG />
-							<div style={{position:'absolute', left: '1rem', top: '50%'}}>
-								<div className='header' style={{display:'inline-block'}}>
+							<div style={{position:'absolute', left: '1rem', top: '50%', width: '100%'}}>
+								<div className='header text-center' style={{display:'inline-block', width: '50%'}}>
 									Here's how &nbsp;
 								</div>
-								<div className='header white' style={{display:'inline-block'}}>
+								<div className='header white text-center' style={{display:'inline-block', width: '50%'}}>
 									it works
 								</div>
 							</div>
@@ -181,41 +122,37 @@ const RedesignPage = () => {
 	);
 };
 
-const TopCurveSVG = () => (
+const TestContainerSVG = () => (
 	<svg
-		className='fill-gl-red'
-		xmlns="http://www.w3.org/2000/svg"
-		version="1.1"
-		id="svg2"
-		viewBox="0 0 1470.4724 1006.2992"
-		height="284mm"
-		width="415mm"
-		preserveAspectRatio="none"
+		viewBox="0 0 1062.992 850.39327"
 		style={{
-			width: '100%',
-			height: '50vh',
-			display: 'block',
-			top: 0,
-			left: 0
+			position:'absolute',
+			bottom: 0
 		}}
+		preserveAspectRatio="none"
 	>
-		<defs id="defs4" />
-		<g
-			transform="translate(0,-46.062992)"
-			id="layer1"
-		>
-			<path
-				id="path4176"
-				d="M 1470.4983,49.399428 C 1330.7955,293.85243 370.47077,457.34523 -3.5406101,572.52452 l 4.5606053,480.84398 1469.5689048,0.01 z"				
-				style={{
-					fill:'#0000000', 
-					fillOpacity: 1, 
-					fillRule: 'evenodd', 
-					strokeLinecap:'butt', 
-					strokeLinejoin:'miter', 
-				}}
-			/>
-		</g>
+		<defs>
+			<pattern id="image" x="0" y="0" height="1" width="1"
+				viewBox="0 0 1000 666" preserveAspectRatio="xMidYMid slice"
+			>
+				<image 
+					width="1000" 
+					height="666" 
+					xlinkHref={`${ServerIO.MYLOOP_ENDPONT}/img/tulips-temp.jpg`}
+					preserveAspectRatio="xMidYMid slice" 
+				/>
+			</pattern>
+		</defs>
+		<path
+			id="path3336"
+			d="M 739.65309,24.273895 A 842.80831,1282.2272 75.325871 0 0 239.69389,88.203568 842.80831,1282.2272 75.325871 0 0 -762.10481,880.63285 l 1858.98731,0 0,-810.156975 A 842.80831,1282.2272 75.325871 0 0 739.65309,24.273895 Z"
+			fill="url(#image)"
+			style={{
+				stroke: '#ffffff',
+				strokeWidth: '10',
+				strokeOpacity: '1'
+			}}
+		/>
 	</svg>
 );
 
