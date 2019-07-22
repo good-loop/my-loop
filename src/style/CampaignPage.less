@@ -27,4 +27,37 @@
         color: #fff;
         background-color: @gl-red;
     }
+
+    @logo-size: 320px;
+    .square-logo {
+        width: @logo-size;
+        height: @logo-size;
+
+        background-size: cover;
+    }
+
+    .charities-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+
+        * > {
+            margin: 0 auto;
+        }
+    }
+
+    .charity {
+        position: relative;
+        background: linear-gradient(#6e808f, #40403b);
+
+        .name {
+            position: absolute;
+            bottom: 0;
+            text-align: left;
+        }
+    }
+
+    .charity-description {
+        width: @logo-size;
+    }
 }

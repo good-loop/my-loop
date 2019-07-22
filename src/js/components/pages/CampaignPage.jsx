@@ -11,7 +11,7 @@ import {ListItems} from '../../base/components/ListLoad';
 import Footer from '../Footer';
 import MDText from '../../base/components/MDText';
 import NavBar from '../NavBar';
-import { RoundLogo } from '../Image';
+import { SquareLogo } from '../Image';
 import ShareAnAd from '../cards/ShareAnAd';
 import {RegisterLink} from '../../base/components/LoginWidget';
 
@@ -58,7 +58,9 @@ const CampaignPage = () => {
 	let campaign = ad && ad.campaignPage;
 	let startDate = ad.start ? 'This campaign started on '.concat(ad.start.substring(0, 10)) : '';
 	let smallPrint = null;
-	const backgroundImage = campaign && campaign.bg;
+
+	// Use background image given to adunit, or show default image of sand dune 
+	const backgroundImage = (campaign && campaign.bg) || (ServerIO.MYLOOP_ENDPONT + '/img/wheat_fields.jpg');
 
 	if(campaign) {
 		smallPrint = campaign.smallPrint || '';
@@ -122,59 +124,54 @@ const CampaignPage = () => {
 			<div className='container-fluid'>
 				<div className='row'>
 					<div className='header-text'>
-						<div className={backgroundImage ? 'header-block' : ''}>
+						<div 
+							className='header-block img-block'
+							style={{backgroundImage: 'url(' + backgroundImage + ')', minHeight: '25rem'}}
+						>
 							<div className='flex-row flex-centre pad1'>
-								<img src={brandLogo} style={{width: '10rem', display: 'block'}} />
+								<img src={brandLogo} style={{width: '20rem', display: 'block'}} alt='advertiser-logo' />
 							</div>
-							<div className='sub-header pad1'>
+							<div className='sub-header pad1 white'>
 								<div>Together we've raised</div>													
 								{donationValue? <div className='header white' style={{color: brandColor || '#000'}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 								<div>for</div>
 							</div>
-							<div className='img-block img-hero' style={{backgroundImage: 'url(' + backgroundImage + ')'}} />
 						</div>
-						<div className='container-fluid pad1'>
-							<div className='row'>
-								{
-									clist.map( charity => (
-										<div className={'col-md-' + 12 / clist.length} key={charity.name}>
-											<div className='flex-row pad1'>
-												<a src={charity.url}>
-													<RoundLogo url={charity.logo} />
-												</a>
-											</div>
-											<div className='text-block'>
-												<div className='sub-header text-center pad1'> 
-													{charity.name}
-												</div>
-												<MDText source={charity.description} />									
-											</div>
+						<div className='charities-container'>
+							{
+								clist.map( charity => (
+									<div className='top-pad1 bottom-pad1' key={charity.name}>
+										<a className='flex-row charity' href={charity.url} target="_blank" rel="noopener noreferrer">
+											<SquareLogo url={charity.highResPhoto} />
+											<span className='name sub-header pad1 white'> 
+												{charity.name} 
+											</span>
+										</a>
+										<div className='charity-description text-block'>
+											{charity.description}
 										</div>
-									))
-								}
-							</div>
+									</div>
+									// <div className='text-block'>
+									// 	<div className='sub-header text-center pad1'> 
+									// 		{charity.name}
+									// 	</div>
+									// 	<MDText source={charity.description} />									
+									// </div>
+								))
+							}
 						</div>
-						{/* <EmailCTA /> */}
 					</div>
 				</div>
 			</div>
 			<div className='container-fluid'>
-				{
-					Login.isLoggedIn()
-					|| (
-						<div className='row'> 
-							<RegisterLink className='sub-header btn btn-gl' style={{backgroundColor: brandColor, borderColor: brandColor}} verb='Sign-Up' />								
-						</div>
-					)
-				}
 				<div className='row pad1'>
-					<div className='col-md-3' /> 
-					<div className='col-md-6'>
+					<div className='col-md-2' /> 
+					<div className='col-md-8'>
 						{ ad && ad.videos && ad.videos.length 
 							&& <ShareAnAd adHistory={{...ad.videos[0], vert: adid}} mixPanelTag='ShareAnAd' color={brandColor} />
 						}
 					</div> 
-					<div className='col-md-3' /> 				
+					<div className='col-md-2' /> 				
 				</div>
 			</div>
 			<Footer leftFooter={startDate} rightFooter={smallPrint} />
