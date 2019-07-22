@@ -1,5 +1,6 @@
 import React from 'react';
 import Login from 'you-again';
+import ReactMarkdown from 'react-markdown';
 
 // import pivot from 'data-pivot';
 import C from '../../C';
@@ -9,7 +10,6 @@ import Misc from '../../base/components/Misc';
 import ActionMan from '../../plumbing/ActionMan';
 import {ListItems} from '../../base/components/ListLoad';
 import Footer from '../Footer';
-import MDText from '../../base/components/MDText';
 import NavBar from '../NavBar';
 import { SquareLogo } from '../Image';
 import ShareAnAd from '../cards/ShareAnAd';
@@ -148,7 +148,7 @@ const CampaignPage = () => {
 											</span>
 										</a>
 										<div className='charity-description text-block'>
-											{charity.description}
+											<ReactMarkdown source={charity.description} />
 										</div>
 									</div>
 									// <div className='text-block'>
