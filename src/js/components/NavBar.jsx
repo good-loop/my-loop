@@ -48,7 +48,7 @@ const LogoContainerSVG = () => {
 	useDoOnResize({resizeFn});
 
 	return (
-		<svg
+		<svg id='LogoContainerSVG'
 			ref={ref}
 			viewBox="0 0 701.57477 708.66127"
 			width={width}

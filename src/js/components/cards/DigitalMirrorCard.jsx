@@ -21,6 +21,7 @@ const DigitalMirrorCard = ({xids}) => {
 
 	const twitterXId = xids.find( xid => XId.service(xid) === 'twitter' );
 
+	// Possibly overkill?
 	useEffect( () => {
 		if( !twitterXId ) return;
 		ServerIO.load(`${ServerIO.PROFILER_ENDPOINT}/profile/${ServerIO.dataspace}/${encURI(twitterXId)}`, {swallow:true})
