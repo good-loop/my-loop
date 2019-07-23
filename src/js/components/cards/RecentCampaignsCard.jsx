@@ -49,16 +49,18 @@ const RecentCampaignsCard = () => {
 				}
 			];
 	return (
-		<div className="flex-row flex-wrap">
+		<div className="flex-row flex-wrap campaign-cards">
 			{	vertisers.map(({adid, background, charityName, name, logo}) => 
-				<a key={adid} href={"/#campaign/?gl.vert="+adid}>
-					<SquareLogo alt={name} url={background}>
+				<SquareLogo alt={name} url={background} key={adid}>
+					<a href={"/#campaign/?gl.vert="+adid}>
 						<img src={logo} alt='vertiser-logo' />
 						<div className='text-container sub-header white'>
 							<span>{charityName}</span>
 						</div>
-					</SquareLogo>
-				</a>)	
+						<div className='square-logo-dummy' />
+					</a>
+				</SquareLogo>
+			)	
 			}
 		</div>		
 	);

@@ -250,12 +250,17 @@ a {
 	width: 5rem;
 }
 
-
 .square-logo {
 	.logo-base();
 	// Square size that occupies 1/3 of screen-width
-	width: 320px;
-	height: 320px;
+	width: 33%;
+	// height: 320px;
+
+	// Interesting trick to make sure that height and width are the same
+	// Works as margin is calculated as a percentage of the parent's width
+	.square-logo-dummy {
+		margin-top: 100%;
+	}
 
 	// Want to position child elements absolutely
 	position: relative;
