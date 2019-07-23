@@ -156,10 +156,14 @@
 	border-bottom-right-radius: 0;
 }
 
+// Defines maximum extent of content area
+// Rest of window will just consist of white-space
+@max-page-width: 970px;
 .RedesignPage {
 	// Responsive guttering
 	// Use vw to keep consistent units with splash page
-	margin: 0 15vw;
+	width: 100%;
+	max-width: @max-page-width;
 
 	.splash.img-block {
 		position: relative;

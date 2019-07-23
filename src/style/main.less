@@ -11,7 +11,9 @@
 
 // Set base size for rem
 html, body {
-	font-size: 20px;
+	// Minimum font-size for page
+	// This is usually scaled to vw (see media queries at bottom)
+	font-size: 12px;
 }
 
 .header {
@@ -288,20 +290,24 @@ a {
 	height: auto;
 }
 
-@media only screen and (max-width: 1100px) {
+// CSS lock to control range of possible fonts
+// Can't just expand wih vw as the actual content is of limited size
+// Would just mean that we break the layout on screens larger than "max-page-width"
+// Allow font to scale with viewport size for devices between 320px and "max-page-width" (currently 970px)
+@media (min-width: 320px) {
 	html, body {
-		font-size: 16px;
+		font-size: 3.5vw;
+	}
+}
+
+@media (min-width: @max-page-width) {
+	html, body {
+		font-size: 20px;
 	}
 
 	.header-card {
 		.logo-big {
 			display: none;
 		}
-	}
-}
-
-@media only screen and (max-width: 578px) {
-	html, body {
-		font-size: 14px;
 	}
 }
