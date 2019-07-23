@@ -90,23 +90,19 @@ const RedesignPage = () => {
 							/>
 							<div className='white bg-gl-red pad1 sausage-container-right flex-row'>
 								<CharacterInCircle character={1} />
-								<div
-									className='flex-row' 								
-								>
+								<div>
 									<span className='header'>WATCH</span> 
 									<span className='sub-header'>&nbsp; a 15 second video </span>
 								</div>
 							</div>
 							<div className='white bg-gl-red pad1 sausage-container-left flex-row'>
-								<div
-									className='flex-row'
-								>
+								<div>
 									<span className='header'>CHOOSE</span> 
 									<span className='sub-header'>&nbsp; a charity to support </span>
 								</div>
 								<CharacterInCircle character={2} />					
 							</div>
-							<div className='white flex-row'>
+							<div className='color-gl-red flex-row'>
 								<CharacterInCircle character={3} />
 								<div
 									style={{
@@ -117,7 +113,7 @@ const RedesignPage = () => {
 									<div className='header'>
 										DONATE
 									</div>
-									<div className='sub-header'>
+									<div className='sub-header white'>
 										50% of the cost of the advert will be donated to the charity of your choice
 									</div>
 								</div>
