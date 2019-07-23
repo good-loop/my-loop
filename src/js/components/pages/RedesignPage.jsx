@@ -88,17 +88,25 @@ const RedesignPage = () => {
 									zIndex: '-1'
 								}}
 							/>
-							<div className='white bg-gl-red pad1 sausage-container-right'>
+							<div className='white bg-gl-red pad1 sausage-container-right flex-row'>
 								<CharacterInCircle character={1} />
-								<span className='header'>WATCH</span> 
-								<span className='sub-header'>&nbsp; a 15 second video </span>
+								<div
+									className='flex-row' 								
+								>
+									<span className='header'>WATCH</span> 
+									<span className='sub-header'>&nbsp; a 15 second video </span>
+								</div>
 							</div>
-							<div className='white bg-gl-red pad1 sausage-container-left'>
-								<span className='header'>CHOOSE</span> 
-								<span className='sub-header'>&nbsp; a charity to support </span>
+							<div className='white bg-gl-red pad1 sausage-container-left flex-row'>
+								<div
+									className='flex-row'
+								>
+									<span className='header'>CHOOSE</span> 
+									<span className='sub-header'>&nbsp; a charity to support </span>
+								</div>
 								<CharacterInCircle character={2} />					
 							</div>
-							<div className='color-gl-red flex-row'>
+							<div className='white flex-row'>
 								<CharacterInCircle character={3} />
 								<div
 									style={{
