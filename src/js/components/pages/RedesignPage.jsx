@@ -9,6 +9,7 @@ import {RedesignNavBar} from '../NavBar';
 import ShareAnAd from '../cards/ShareAnAd';
 // TODO refactor so ImpactCard is the shared module, with other bits tucked away inside it
 import RecentCampaignsCard from '../cards/RecentCampaignsCard';
+import {MyPageHeaderOvalSVG, HowItWorksCurveSVG} from '../svg';
 
 const pagePath = ['widget', 'MyPage'];
 
@@ -61,18 +62,18 @@ const RedesignPage = () => {
 					}}
 				>
 					<RedesignNavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
-					<TestContainerSVG />
+					<MyPageHeaderOvalSVG />
 				</div>
 				<RecentCampaignsCard />
 				<div>
 					<div style={{padding: 0}}>
 						<div style={{position: 'relative'}}>
-							<BottomCurveSVG />
+							<HowItWorksCurveSVG />
 							<div style={{position:'absolute', left: '1rem', top: '50%', width: '100%'}}>
-								<div className='header text-center' style={{display:'inline-block', width: '50%'}}>
+								<div className='header text-center' style={{display:'inline-block', width: '48%'}}>
 									Here's how &nbsp;
 								</div>
-								<div className='header white text-center' style={{display:'inline-block', width: '50%'}}>
+								<div className='header white text-center' style={{display:'inline-block', width: '48%'}}>
 									it works
 								</div>
 							</div>
@@ -125,78 +126,6 @@ const RedesignPage = () => {
 		</div>
 	);
 };
-
-const TestContainerSVG = () => (
-	<svg
-		viewBox="0 0 1062.992 850.39327"
-		style={{
-			position:'absolute',
-			bottom: 0
-		}}
-		preserveAspectRatio="none"
-	>
-		<defs>
-			<pattern id="image" x="0" y="0" height="1" width="1"
-				viewBox="0 0 1000 666" preserveAspectRatio="xMidYMid slice"
-			>
-				<image 
-					width="1000" 
-					height="666" 
-					xlinkHref={`${ServerIO.MYLOOP_ENDPONT}/img/tulips-temp.jpg`}
-					preserveAspectRatio="xMidYMid slice" 
-				/>
-			</pattern>
-		</defs>
-		<path
-			id="path3336"
-			d="M 739.65309,24.273895 A 842.80831,1282.2272 75.325871 0 0 239.69389,88.203568 842.80831,1282.2272 75.325871 0 0 -762.10481,880.63285 l 1858.98731,0 0,-810.156975 A 842.80831,1282.2272 75.325871 0 0 739.65309,24.273895 Z"
-			fill="url(#image)"
-			style={{
-				stroke: '#ffffff',
-				strokeWidth: '10',
-				strokeOpacity: '1'
-			}}
-		/>
-	</svg>
-);
-
-const BottomCurveSVG = () => (
-	<svg
-		className='fill-gl-red'
-		xmlns="http://www.w3.org/2000/svg"
-		version="1.1"
-		id="svg4230"
-		viewBox="0 0 1470.4724 1006.2992"
-		height="284mm"
-		width="415mm"
-		preserveAspectRatio="none"
-		style={{
-			width: '100%',
-			height: '50vh',
-			display: 'block',
-			top: 0,
-			left: 0
-		}}
-	>
-		<defs id="defs4232" />
-		<g
-			transform="translate(0,-46.062988)"
-			id="layer1"
-		>
-			<path
-				id="path4778"
-				d="m -0.2659911,45.285047 1474.2413911,0.25 0,1005.275253 C 562.73563,942.95245 779.43944,133.0991 -0.0498096,199.79129 Z"
-				style={{
-					fill:'#0000000', 
-					fillOpacity: 1, 
-					fillRule: 'evenodd', 
-					strokeLinecap:'butt', 
-					strokeLinejoin:'miter', 
-				}}
-			/>
-		</g>
-	</svg>
-);
 
 // Applies thick circular border to contents
 const CharacterInCircle = ({character}) => (

@@ -1,8 +1,8 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React from 'react';
 import NavBar from '../base/components/NavBar';
 import AccountMenu from '../base/components/AccountMenu';
 import C from '../C';
-import {useDoOnResize} from '../base/components/CustomHooks';
+import {NavBarLogoContainerSVG} from './svg';
 
 const Contents = ({pageLinks, currentPage, style, logo}) => (
 	<div className='container-fluid' style={style}>
@@ -26,60 +26,7 @@ const Contents = ({pageLinks, currentPage, style, logo}) => (
 	</div>
 );
 
-const MyLoopNavBar = props => <NavBar {...props} pages={[]} render={Contents} />;	
-
-const LogoContainerSVG = () => {
-	const ref = useRef();
-	const [width, setWidth] = useState();
-	const [height, setHeight] = useState();
-
-	const resizeFn = () => {
-		if( !ref.current ) {
-			return;
-		}
-
-		const {width: parentWidth} = ref.current.parentElement.getBoundingClientRect();
-		
-		setWidth(parentWidth * 0.6);
-		setHeight(parentWidth * 0.6 * 0.99);			
-	};
-
-	// Resize SVG if parent size changes
-	useDoOnResize({resizeFn});
-
-	return (
-		<svg id='LogoContainerSVG'
-			ref={ref}
-			viewBox="0 0 701.57477 708.66127"
-			width={width}
-			height={height}
-			// height={calculatedWidth * 0.99}
-			style={{
-				position: 'absolute',
-				zIndex: '-1',
-				top: 0,
-				left: 0
-			}}
-		>
-			<g
-				transform="translate(-10,0)"
-			>
-				<path
-					d="M 0,0 0,707.88564 C 96.461052,230.64218 665.81805,291.87867 701.44004,0.03496744 Z"
-					style={{
-						fill:'#fdf4f3', 
-						strokeWidth: '1px',
-						fillOpacity: 1, 
-						fillRule: 'evenodd', 
-						strokeLinecap:'butt', 
-						strokeLinejoin:'miter', 
-					}}
-				/>
-			</g>
-		</svg>
-	);
-};
-
+const MyLoopNavBar = props => <NavBar {...props} pages={[]} render={Contents} />;
 
 const RedesignNavBar = props => (
 	<div>
@@ -88,7 +35,7 @@ const RedesignNavBar = props => (
 			pages={[]}
 			render={({pageLinks, currentPage, style, logo}) => (
 				<>
-					<LogoContainerSVG />
+					<NavBarLogoContainerSVG />
 					<div style={style}>
 						<div className="navbar-header" title="Dashboard">
 							<button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
