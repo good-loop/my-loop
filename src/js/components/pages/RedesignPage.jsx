@@ -78,16 +78,14 @@ const HowItWorksCard = () => {
 					</div>
 				</div>
 				<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} mixPanelTag='ShareAnAd' />
-				<div style={{position: 'relative'}}>
-					<div
-						className='img-block'
-						style={{
-							backgroundImage:`url('${ServerIO.MYLOOP_ENDPONT}/img/wheat_fields.jpg')`,
-							minHeight: '30rem',
-							position: 'absolute',
-							zIndex: '-1'
-						}}
-					/>
+				<div 
+					className='img-block' 
+					style={{
+						position: 'relative',
+						backgroundImage:`url('${ServerIO.MYLOOP_ENDPONT}/img/wheat_fields.jpg')`,
+						minHeight: '30rem',
+					}}
+				>
 					<div className='white bg-gl-red pad1 sausage-container-right flex-row'>
 						<CharacterInCircle character={1} />
 						<div>
