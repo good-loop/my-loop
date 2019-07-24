@@ -116,6 +116,8 @@ const HowItWorksCard = () => {
 							</div>
 						</div>
 					</div>
+				</div>
+				<div className='img-block' style={{backgroundImage: `url('${ServerIO.MYLOOP_ENDPONT}/img/dew-grass.jpg')`}}>
 					<LogoRibbonSVG />
 					<div className="white">
 						<div>
