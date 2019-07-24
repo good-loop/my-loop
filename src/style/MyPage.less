@@ -178,6 +178,21 @@
 	margin-bottom: 2rem;
 }
 
+.our-mission {
+	.flex-row();
+
+	svg {
+		width: 48%;
+	}
+
+	& > div {
+		width: 48%;
+		// Stick text to top of div
+		// flex-row should be applied to parent element
+		margin-top: 0;
+	}
+}
+
 // Change impact card layout from:
 // *IMAGE* *TEXT*
 // to
