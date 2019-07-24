@@ -10,7 +10,6 @@ import ShareAnAd from '../cards/ShareAnAd';
 // TODO refactor so ImpactCard is the shared module, with other bits tucked away inside it
 import RecentCampaignsCard from '../cards/RecentCampaignsCard';
 import {MyPageHeaderOvalSVG, HowItWorksCurveSVG, GlLogoGenericSvg, LogoRibbonSVG} from '../svg';
-import { relative } from 'path';
 
 window.DEBUG = false;
 
@@ -120,6 +119,17 @@ const HowItWorksCard = () => {
 						</div>
 					</div>
 					<LogoRibbonSVG />
+					<div>
+						<div>
+							<i> make an </i>
+						</div>
+						<div className='header'> 
+							IMPACT 
+						</div>
+						<div className='text-block'>
+							In 2018, Good-Loopers raised more than £200,000 for charitble causes by signing up and watching adverts
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

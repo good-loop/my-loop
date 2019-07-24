@@ -15,12 +15,12 @@ const MyPageHeaderOvalSVG = () => (
 	>
 		<defs>
 			<pattern id="image" x="0" y="0" height="1" width="1"
-				viewBox="0 0 1000 666" preserveAspectRatio="xMidYMid slice"
+				viewBox="0 0 1200 795" preserveAspectRatio="xMidYMid slice"
 			>
 				<image 
-					width="1000" 
-					height="666" 
-					xlinkHref={`${ServerIO.MYLOOP_ENDPONT}/img/tulips-temp.jpg`}
+					width="1200" 
+					height="795" 
+					xlinkHref={`${ServerIO.MYLOOP_ENDPONT}/img/tulips.jpg`}
 					preserveAspectRatio="xMidYMid slice" 
 				/>
 			</pattern>
@@ -34,6 +34,20 @@ const MyPageHeaderOvalSVG = () => (
 				strokeWidth: '10',
 				strokeOpacity: '1'
 			}}
+		/>
+		<image 
+			width="500"
+			height="500"
+			x="550"
+			y="150"
+			xlinkHref={`${ServerIO.MYLOOP_ENDPONT}/img/doinggoodfeelsgood.png`} 
+		/>
+		<image 
+			width="500"
+			height="500"
+			x="550"
+			y="440"
+			xlinkHref={`${ServerIO.MYLOOP_ENDPONT}/img/littleflowers.png`} 
 		/>
 	</svg>
 );
