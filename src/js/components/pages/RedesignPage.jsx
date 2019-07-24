@@ -119,7 +119,7 @@ const HowItWorksCard = () => {
 						</div>
 					</div>
 					<LogoRibbonSVG />
-					<div>
+					<div className="white">
 						<div>
 							<i> make an </i>
 						</div>
@@ -145,14 +145,18 @@ const RedesignPage = () => {
 	return (
 		<div className='flex-row'>
 			<div className='RedesignPage'>
-				<div 
-					className='splash img-block'
-					style={{
-						backgroundImage:`url('${ServerIO.MYLOOP_ENDPONT}/img/tropical-isle.jpg')`,
-					}}
-				>
+				<div className='img-block' style={{backgroundImage: `url('${ServerIO.MYLOOP_ENDPONT}/img/tulips.jpg')`, backgroundPosition: 'right'}}>
 					<RedesignNavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
-					<MyPageHeaderOvalSVG />
+					<div className='flex-column'>
+						<img 
+							src={`${ServerIO.MYLOOP_ENDPONT}/img/doinggoodfeelsgood.png`} 
+							style={{width: '45%', marginRight: 0}} 
+						/>
+						<img 
+							src={`${ServerIO.MYLOOP_ENDPONT}/img/littleflowers.png`} 
+							style={{width: '45%',  marginRight: 0}} 
+						/>
+					</div>
 				</div>
 				<OurMissionCard />
 				<RecentCampaignsCard />

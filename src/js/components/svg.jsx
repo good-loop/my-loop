@@ -4,13 +4,10 @@ import React, {useRef, useState} from 'react';
 import ServerIO from '../plumbing/ServerIO';
 import {useDoOnResize} from '../base/components/CustomHooks';
 
+// Not currently in use
 const MyPageHeaderOvalSVG = () => (
 	<svg
 		viewBox="0 0 1062.992 850.39327"
-		style={{
-			position:'absolute',
-			bottom: 0
-		}}
 		preserveAspectRatio="none"
 	>
 		<defs>
@@ -102,8 +99,8 @@ const NavBarLogoContainerSVG = () => {
 
 		const {width: parentWidth} = ref.current.parentElement.getBoundingClientRect();
 		
-		setWidth(parentWidth * 0.6);
-		setHeight(parentWidth * 0.6 * 0.99);			
+		setWidth(parentWidth * 0.4);
+		setHeight(parentWidth * 0.4 * 0.99);			
 	};
 
 	// Resize SVG if parent size changes
