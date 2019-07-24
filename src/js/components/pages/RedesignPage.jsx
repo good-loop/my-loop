@@ -9,7 +9,8 @@ import {RedesignNavBar} from '../NavBar';
 import ShareAnAd from '../cards/ShareAnAd';
 // TODO refactor so ImpactCard is the shared module, with other bits tucked away inside it
 import RecentCampaignsCard from '../cards/RecentCampaignsCard';
-import {MyPageHeaderOvalSVG, HowItWorksCurveSVG, GlLogoGenericSvg} from '../svg';
+import {MyPageHeaderOvalSVG, HowItWorksCurveSVG, GlLogoGenericSvg, LogoRibbonSVG} from '../svg';
+import { relative } from 'path';
 
 window.DEBUG = false;
 
@@ -118,6 +119,7 @@ const HowItWorksCard = () => {
 							</div>
 						</div>
 					</div>
+					<LogoRibbonSVG />
 				</div>
 			</div>
 		</div>
