@@ -16,6 +16,42 @@ import {HowItWorksCurveSVG, GlLogoGenericSvg, LogoRibbonSVG, SplitColouredCircle
 
 window.DEBUG = false;
 
+// This page is for experimenting with ideas for the upcoming My-Loop redesign
+// Everything below should be considered scratch code: it will be reworked
+const RedesignPage = () => {
+	ServerIO.mixPanelTrack({mixPanelTag: 'Page rendered', data:{referrer: 'document.referrer'}});
+
+	return (
+		<div className='flex-row'>
+			<div className='RedesignPage'>
+				<SplashCard />
+				<OurMissionCard />
+				<RecentCampaignsCard />
+				<HowItWorksCard />
+				<ContactCard />
+				<TimeAndAttentionCard />
+				<Footer />
+			</div>
+		</div>
+	);
+};
+
+const SplashCard = () => (
+	<div className='img-block' style={{backgroundImage: `url('${ServerIO.MYLOOP_ENDPONT}/img/tulips.jpg')`, backgroundPosition: 'right'}}>
+		<RedesignNavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
+		<div className='flex-column'>
+			<img 
+				src={`${ServerIO.MYLOOP_ENDPONT}/img/doinggoodfeelsgood.png`} 
+				style={{width: '45%', marginRight: 0}} 
+			/>
+			<img 
+				src={`${ServerIO.MYLOOP_ENDPONT}/img/littleflowers.png`} 
+				style={{width: '45%',  marginRight: 0}} 
+			/>
+		</div>
+	</div>
+);
+
 const ContactCard = () => {
 	let doesIfVisibleRef = useRef();
 	useLogsIfVisible(doesIfVisibleRef, 'ContactCardVisible');
@@ -185,39 +221,6 @@ const HowItWorksCard = () => {
 					</div>
 				</div>
 				<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} className='top-pad1' mixPanelTag='ShareAnAd' />
-			</div>
-		</div>
-	);
-};
-
-// 775 x 600
-// This page is for experimenting with ideas for the upcoming My-Loop redesign
-// Everything below should be considered scratch code: it will be reworked
-const RedesignPage = () => {
-	ServerIO.mixPanelTrack({mixPanelTag: 'Page rendered', data:{referrer: 'document.referrer'}});
-
-	return (
-		<div className='flex-row'>
-			<div className='RedesignPage'>
-				<div className='img-block' style={{backgroundImage: `url('${ServerIO.MYLOOP_ENDPONT}/img/tulips.jpg')`, backgroundPosition: 'right'}}>
-					<RedesignNavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
-					<div className='flex-column'>
-						<img 
-							src={`${ServerIO.MYLOOP_ENDPONT}/img/doinggoodfeelsgood.png`} 
-							style={{width: '45%', marginRight: 0}} 
-						/>
-						<img 
-							src={`${ServerIO.MYLOOP_ENDPONT}/img/littleflowers.png`} 
-							style={{width: '45%',  marginRight: 0}} 
-						/>
-					</div>
-				</div>
-				<OurMissionCard />
-				<RecentCampaignsCard />
-				<HowItWorksCard />
-				<ContactCard />
-				<TimeAndAttentionCard />
-				<Footer />
 			</div>
 		</div>
 	);
