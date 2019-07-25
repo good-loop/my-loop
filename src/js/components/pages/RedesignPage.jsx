@@ -1,7 +1,8 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
+import {useLogsIfVisible} from '../../base/components/CustomHooks';
 
 import ServerIO from '../../plumbing/ServerIO';
 import {RedesignNavBar} from '../NavBar';
@@ -12,7 +13,50 @@ import ShareAnAd from '../cards/ShareAnAd';
 import RecentCampaignsCard from '../cards/RecentCampaignsCard';
 import {HowItWorksCurveSVG, GlLogoGenericSvg, LogoRibbonSVG, SplitColouredCircleSVG} from '../svg';
 
+
 window.DEBUG = false;
+
+const ContactCard = () => {
+	let doesIfVisibleRef = useRef();
+	useLogsIfVisible(doesIfVisibleRef, 'ContactCardVisible');
+	
+	return (
+		<div className='text-center'>
+			<div className='row panel-title panel-heading sub-header pad1'> 
+				Get in touch
+			</div>
+			<div className='row pad1'> 
+				<div ref={doesIfVisibleRef}>
+					<div>
+						<p>Tell us what you think of this web-app.</p>
+						<p>Are you interested in hosting Ads For Good on your blog or website?</p>
+						<p>
+							<a href="https://www.good-loop.com/book-a-call">Let us Know.</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+};
+
+const TimeAndAttentionCard = () => (
+	<div>
+		<div className='bg-gl-light-grey flex-row flex-wrap text-center'>
+			<div className='flex-column pad1 width20'>
+				<div className='sub-header gl-red highlight font-bold'>
+					Time and attention online are valuable
+				</div>
+				<div className='sub-header'>
+					Let's harness that value and use it for good
+				</div>
+			</div>
+			<div className='text-block pad1'>
+				Good-Loop will never force you to engage with an ad. But, if you choose to give an adveritser some of your valuable time, attention and data, you get to give 50% of the advertisers' money to a relevant charitable cause.
+			</div>
+		</div>
+	</div>
+);
 
 const OurMissionCard = () => (
 	<div className='color-gl-red'>
@@ -171,6 +215,8 @@ const RedesignPage = () => {
 				<OurMissionCard />
 				<RecentCampaignsCard />
 				<HowItWorksCard />
+				<ContactCard />
+				<TimeAndAttentionCard />
 				<Footer />
 			</div>
 		</div>
