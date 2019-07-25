@@ -70,10 +70,10 @@ const HowItWorksCard = () => {
 				<div style={{position: 'relative'}}>
 					<HowItWorksCurveSVG />
 					<div style={{position:'absolute', left: '1rem', top: '50%', width: '100%'}}>
-						<div className='header text-center' style={{display:'inline-block', width: '48%'}}>
+						<div className='header text-center' style={{display:'inline-block', width: '53%'}}>
 							Here's how &nbsp;
 						</div>
-						<div className='header white text-center' style={{display:'inline-block', width: '48%'}}>
+						<div className='header white text-center' style={{display:'inline-block', width: '40%'}}>
 							it works
 						</div>
 					</div>
