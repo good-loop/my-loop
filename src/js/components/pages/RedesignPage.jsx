@@ -5,11 +5,12 @@ import Misc from '../../base/components/Misc';
 
 import ServerIO from '../../plumbing/ServerIO';
 import {RedesignNavBar} from '../NavBar';
+import Footer from '../Footer';
 
 import ShareAnAd from '../cards/ShareAnAd';
 // TODO refactor so ImpactCard is the shared module, with other bits tucked away inside it
 import RecentCampaignsCard from '../cards/RecentCampaignsCard';
-import {MyPageHeaderOvalSVG, HowItWorksCurveSVG, GlLogoGenericSvg, LogoRibbonSVG} from '../svg';
+import {HowItWorksCurveSVG, GlLogoGenericSvg, LogoRibbonSVG, SplitColouredCircleSVG} from '../svg';
 
 window.DEBUG = false;
 
@@ -77,7 +78,6 @@ const HowItWorksCard = () => {
 						</div>
 					</div>
 				</div>
-				<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} mixPanelTag='ShareAnAd' />
 				<div 
 					className='img-block' 
 					style={{
@@ -117,13 +117,22 @@ const HowItWorksCard = () => {
 						</div>
 					</div>
 				</div>
-				<div className='img-block' style={{backgroundImage: `url('${ServerIO.MYLOOP_ENDPONT}/img/dew-grass.jpg')`}}>
+				<div className='img-block' style={{backgroundImage: `url('${ServerIO.MYLOOP_ENDPONT}/img/dew-grass.jpg')`, position: 'relative'}}>
 					<LogoRibbonSVG />
-					<div className="white">
+					<SplitColouredCircleSVG />
+					<div 
+						className="white"
+						style={{
+							position: 'absolute',
+							top: '3rem',
+							right: 0,
+							width: '55%'
+						}}
+					>
 						<div>
 							<i> make an </i>
 						</div>
-						<div className='header'> 
+						<div className='sub-header'> 
 							IMPACT 
 						</div>
 						<div className='text-block'>
@@ -131,6 +140,7 @@ const HowItWorksCard = () => {
 						</div>
 					</div>
 				</div>
+				<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} className='top-pad1' mixPanelTag='ShareAnAd' />
 			</div>
 		</div>
 	);
@@ -161,6 +171,7 @@ const RedesignPage = () => {
 				<OurMissionCard />
 				<RecentCampaignsCard />
 				<HowItWorksCard />
+				<Footer />
 			</div>
 		</div>
 	);

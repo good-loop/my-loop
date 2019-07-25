@@ -30,7 +30,7 @@ const Footer = ({className, leftFooter, rightFooter, style, showSocialMediaLinks
 				127 Rose Street South Lane, Edinburgh, EH2 4BB
 				<br />
 			</p>
-			<p className='margin1'>
+			<p>
 				This web-app is open-source on <a target='_blank' href='https://github.com/good-loop/my-loop'>GitHub</a>.
 			</p>
 		</div>

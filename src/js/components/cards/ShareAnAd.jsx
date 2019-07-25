@@ -12,7 +12,7 @@ import {useLogsIfVisible} from '../../base/components/CustomHooks';
  * 2) A Twitter intent link to share this ad
  * 3) A table showing how many times their shared ads have been viewed by others
  */
-const ShareAnAd = ({ adHistory, color}) => {
+const ShareAnAd = ({ adHistory, className, color}) => {
 	// Load in back-up vert data
 	// Easiest to just always load back-up data:
 	// avoids a race-condition where adHistory is provided after initial render has set off fetch
@@ -38,7 +38,7 @@ const ShareAnAd = ({ adHistory, color}) => {
 	useLogsIfVisible(doesIfVisibleRef, 'ShareAnAdVisible');
 
 	return (
-		<div className="ShareAd" ref={doesIfVisibleRef}>
+		<div className={"ShareAd " + className} ref={doesIfVisibleRef}>
 			{ 
 				format === 'video' 
 					? <video controls={true} width="100%" height="auto" src={url}> An error occured </video> 
