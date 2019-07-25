@@ -162,6 +162,8 @@
 // Rest of window will just consist of white-space
 @max-page-width: 970px;
 .RedesignPage {
+	// TODO: Move these out of .RedesignPage bracket once decision on whether or not to release has been made
+
 	// Responsive guttering
 	// Use vw to keep consistent units with splash page
 	width: 100%;
@@ -172,6 +174,12 @@
 		height: 115vw;
 		margin-bottom: 2rem;
 	}
+
+	// Recolour little underline element to be white
+	.highlight:after {
+		background: #fff;
+	}
+
 }
 
 .campaign-cards {

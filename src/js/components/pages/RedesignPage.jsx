@@ -42,9 +42,9 @@ const ContactCard = () => {
 
 const TimeAndAttentionCard = () => (
 	<div>
-		<div className='bg-gl-light-grey flex-row flex-wrap text-center'>
+		<div className='bg-gl-red flex-row flex-wrap text-center white'>
 			<div className='flex-column pad1 width20'>
-				<div className='sub-header gl-red highlight font-bold'>
+				<div className='sub-header highlight font-bold'>
 					Time and attention online are valuable
 				</div>
 				<div className='sub-header'>
