@@ -69,8 +69,8 @@ const HowItWorksCard = () => {
 			<div style={{padding: 0}}>
 				<div style={{position: 'relative'}}>
 					<HowItWorksCurveSVG />
-					<div style={{position:'absolute', left: '1rem', top: '50%', width: '100%'}}>
-						<div className='header text-center' style={{display:'inline-block', width: '53%'}}>
+					<div style={{position:'absolute', top: '50%', width: '100%'}}>
+						<div className='header text-center' style={{display:'inline-block', width: '54%'}}>
 							Here's how &nbsp;
 						</div>
 						<div className='header white text-center' style={{display:'inline-block', width: '40%'}}>
