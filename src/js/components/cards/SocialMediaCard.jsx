@@ -19,14 +19,16 @@ const SocialMediaCard = ({allIds=[], className}) => {
 
 	const fbpeep = getProfilesNow([fbid])[0]; 
 	return (
-		<div className={'social-media-card' + className}>
+		<div className={'social-media-card ' + className}>
 			<div className='flex-row flex-wrap'>
-				<div className='pad1'>
-					{
-						!emailID
-						&& <RegisterLink className='sub-header btn btn-gl' verb='Sign Up' /> 
-					}
-				</div>
+				{
+					!emailID
+					&& (
+						<div className='pad1'>
+							<RegisterLink className='sub-header btn btn-gl' verb='Sign Up' />
+						</div>
+					)
+				}
 				<div className='social-connect-container'>
 					{twitterID ? (
 						<div className='wrapper'>
