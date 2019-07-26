@@ -58,10 +58,10 @@ const HowItWorksCurveSVG = () => (
 		viewBox="0 0 1470.4724 1006.2992"
 		height="284mm"
 		width="415mm"
-		preserveAspectRatio="none"
+		// preserveAspectRatio="none"
 		style={{
 			width: '100%',
-			height: '50vh',
+			height: 'auto',
 			display: 'block',
 			top: 0,
 			left: 0
@@ -74,7 +74,7 @@ const HowItWorksCurveSVG = () => (
 		>
 			<path
 				id="path4778"
-				d="m -0.2659911,45.285047 1474.2413911,0.25 0,1005.275253 C 562.73563,942.95245 779.43944,133.0991 -0.0498096,199.79129 Z"
+				d="m -0.2659911,45.285047 1474.2413911,0.25 0,1005.275253 C 632.23582,1116.7029 793.62274,194.27165 -0.0498096,225.50558 Z"
 				style={{
 					fill:'#0000000', 
 					fillOpacity: 1, 
@@ -112,7 +112,6 @@ const NavBarLogoContainerSVG = () => {
 			viewBox="0 0 701.57477 708.66127"
 			width={width}
 			height={height}
-			// height={calculatedWidth * 0.99}
 			style={{
 				position: 'absolute',
 				zIndex: '-1',

@@ -161,10 +161,14 @@ const HowItWorksCard = () => {
 					<HowItWorksCurveSVG />
 					<div style={{position:'absolute', top: '50%', width: '100%'}}>
 						<div className='header text-center' style={{display:'inline-block', width: '54%'}}>
-							Here's how &nbsp;
+							Here's
+							<br />
+							how
 						</div>
 						<div className='header white text-center' style={{display:'inline-block', width: '40%'}}>
-							it works
+							it 
+							<br />
+							works
 						</div>
 					</div>
 				</div>
@@ -210,15 +214,7 @@ const HowItWorksCard = () => {
 				<div className='img-block' style={{backgroundImage: `url('${ServerIO.MYLOOP_ENDPONT}/img/dew-grass.jpg')`, position: 'relative'}}>
 					<LogoRibbonSVG />
 					<SplitColouredCircleSVG />
-					<div 
-						className="white"
-						style={{
-							position: 'absolute',
-							top: '3rem',
-							right: 0,
-							width: '55%'
-						}}
-					>
+					<div className="white impact-card-text">
 						<div>
 							<i> make an </i>
 						</div>

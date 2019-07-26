@@ -13,7 +13,6 @@ import Footer from '../Footer';
 import NavBar from '../NavBar';
 import { SquareLogo } from '../Image';
 import ShareAnAd from '../cards/ShareAnAd';
-import {RegisterLink} from '../../base/components/LoginWidget';
 
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser`
@@ -129,7 +128,7 @@ const CampaignPage = () => {
 							style={{backgroundImage: 'url(' + backgroundImage + ')'}}
 						>
 							<div className='flex-row flex-centre pad1'>
-								<img src={brandLogo} style={{width: '20rem', display: 'block'}} alt='advertiser-logo' />
+								<img className='header-logo' src={brandLogo} alt='advertiser-logo' />
 							</div>
 							<div className='sub-header pad1 white'>
 								<div>Together we've raised</div>													
