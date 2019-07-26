@@ -126,7 +126,7 @@ const CampaignPage = () => {
 					<div className='header-text'>
 						<div 
 							className='header-block img-block'
-							style={{backgroundImage: 'url(' + backgroundImage + ')', minHeight: '25rem'}}
+							style={{backgroundImage: 'url(' + backgroundImage + ')'}}
 						>
 							<div className='flex-row flex-centre pad1'>
 								<img src={brandLogo} style={{width: '20rem', display: 'block'}} alt='advertiser-logo' />
