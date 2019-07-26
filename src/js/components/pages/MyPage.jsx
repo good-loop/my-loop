@@ -84,7 +84,7 @@ const MyPage = () => {
 			</div>
 			<div className='StatisticsCard MiniCard'>
 				<div>
-					<OnboardingCardMini allIds={allIds} />
+					<OnboardingCardMini />
 				</div>
 				<div className='pad1'>
 					{
@@ -197,7 +197,7 @@ const MyPage = () => {
 					Get in touch
 				</div>
 				<div className='row pad1'> 
-					<ContactCard allIds={allIds} mixPanelTag='ContactCard' />
+					<ContactCard />
 				</div>
 			</div>
 

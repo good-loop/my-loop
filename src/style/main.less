@@ -301,8 +301,9 @@ a {
 // CSS lock to control range of possible fonts
 // Can't just expand wih vw as the actual content is of limited size
 // Would just mean that we break the layout on screens larger than "max-page-width"
-// Allow font to scale with viewport size for devices between 320px and "max-page-width" (currently 970px)
-@media (min-width: 320px) {
+
+// Allow font to scale by view-port size. Minimum font-size is 12px, maximum is 24px
+@media (min-width: 440px) {
 	html, body {
 		font-size: 3vw;
 	}

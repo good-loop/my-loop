@@ -3,12 +3,14 @@ import React, {useEffect, useRef} from 'react';
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
 import {useLogsIfVisible} from '../../base/components/CustomHooks';
+import { RegisterLink } from '../../base/components/LoginWidget';
 
 import ServerIO from '../../plumbing/ServerIO';
 import {RedesignNavBar} from '../NavBar';
 import Footer from '../Footer';
 
 import ShareAnAd from '../cards/ShareAnAd';
+import SocialMediaCard from '../cards/SocialMediaCard';
 // TODO refactor so ImpactCard is the shared module, with other bits tucked away inside it
 import RecentCampaignsCard from '../cards/RecentCampaignsCard';
 import {HowItWorksCurveSVG, GlLogoGenericSvg, LogoRibbonSVG, SplitColouredCircleSVG} from '../svg';
@@ -36,21 +38,29 @@ const RedesignPage = () => {
 	);
 };
 
-const SplashCard = () => (
-	<div className='img-block' style={{backgroundImage: `url('${ServerIO.MYLOOP_ENDPONT}/img/tulips.jpg')`, backgroundPosition: 'right'}}>
-		<RedesignNavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
-		<div className='flex-column'>
-			<img 
-				src={`${ServerIO.MYLOOP_ENDPONT}/img/doinggoodfeelsgood.png`} 
-				style={{width: '45%', marginRight: 0}} 
-			/>
-			<img 
-				src={`${ServerIO.MYLOOP_ENDPONT}/img/littleflowers.png`} 
-				style={{width: '45%',  marginRight: 0}} 
-			/>
-		</div>
-	</div>
-);
+const SplashCard = () => {
+	let xids = DataStore.getValue(['data', 'Person', 'xids']);
+	if( !xids ) return <Misc.Loading />;
+
+	return (
+		<>
+			<div className='img-block' style={{backgroundImage: `url('${ServerIO.MYLOOP_ENDPONT}/img/tulips.jpg')`, backgroundPosition: 'right'}}>
+				<RedesignNavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
+				<div className='flex-column'>
+					<img 
+						src={`${ServerIO.MYLOOP_ENDPONT}/img/doinggoodfeelsgood.png`} 
+						style={{width: '40%', marginRight: 0}} 
+					/>
+					<img 
+						src={`${ServerIO.MYLOOP_ENDPONT}/img/littleflowers.png`} 
+						style={{width: '40%',  marginRight: 0}} 
+					/>
+				</div>
+			</div>
+			<SocialMediaCard allIds={xids} />		
+		</>
+	);
+};
 
 const ContactCard = () => {
 	let doesIfVisibleRef = useRef();
@@ -58,10 +68,10 @@ const ContactCard = () => {
 	
 	return (
 		<div className='text-center'>
-			<div className='row panel-title panel-heading sub-header pad1'> 
+			<div className='sub-header top-pad1'> 
 				Get in touch
 			</div>
-			<div className='row pad1'> 
+			<div className='pad1'> 
 				<div ref={doesIfVisibleRef}>
 					<div>
 						<p>Tell us what you think of this web-app.</p>

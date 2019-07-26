@@ -165,7 +165,7 @@ const LogoRibbonSVG = () => (
 			width: '100%',
 			height: 'auto',
 			position: 'absolute',
-			top: '-5rem',
+			top: '-4.15rem',
 			zIndex: 1
 		}}
 	>
