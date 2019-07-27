@@ -5,10 +5,10 @@ import { assert } from 'sjtest';
 import { modifyHash } from 'wwutils';
 
 // Plumbing
-import DataStore from './../base/plumbing/DataStore';
-import Roles from './../base/Roles';
-import C from './../C';
-import Crud from './../base/plumbing/Crud'; // Crud is loaded here (but not used here)
+import DataStore from '../base/plumbing/DataStore';
+import Roles from '../base/Roles';
+import C from '../C';
+import Crud from '../base/plumbing/Crud'; // Crud is loaded here (but not used here)
 import BS from '../base/components/BS3';
 import Profiler from '../base/Profiler';
 
