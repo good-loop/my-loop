@@ -1,4 +1,8 @@
 // Collection of all inline svgs used throughout My-Loop
+
+// TODO document this kind of code! There is lots of opaque hard-coding here.
+// Parameterise it too.
+
 import React, {useRef, useState} from 'react';
 
 import ServerIO from '../plumbing/ServerIO';
