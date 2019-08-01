@@ -14,20 +14,42 @@ html, body {
 	// Minimum font-size for page
 	// This is usually scaled to vw (see media queries at bottom)
 	font-size: 12px;
+	background: #000; // black gutters if on desktop
 }
+
+
+.page {
+	background: white;
+	// NB: centering copied from Bootstrap's center-block
+	// display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+// Gutters on desktop
+// Defines maximum extent of content area. Rest of window will just consist of white-space
+@max-page-width: 970px;
+.page {
+	max-width: @max-page-width;
+}
+
 
 .header {
 	.header-font();
-	font-size: 2.618rem;
+	font-size: 2.618rem; // ??
 	line-height: initial;
 } 
 
 .sub-header {
 	.sub-header-font();
-	font-size: 1.618rem;
+	font-size: 1.618rem; // ??
 }
 
+
+
 // TODO use bootstrap instead
+// TODO carefully remove much of the below css
+
 .pad1 {
 	padding: 1rem;
 }
@@ -206,10 +228,6 @@ a {
 		margin: 1rem;
 	}
 
-}
-
-.btn {
-	text-decoration: none;
 }
 
 .intro-item {
