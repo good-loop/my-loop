@@ -1,7 +1,7 @@
 import React from 'react';
 import DataStore from '../base/plumbing/DataStore';
 
-const BaseLogo = ({alt, className, style, url, ...props}) => (
+const BaseLogo = ({alt, className, style, url, children, ...props}) => (
 	<div 
 		{...props}
 		alt={alt}
@@ -11,15 +11,23 @@ const BaseLogo = ({alt, className, style, url, ...props}) => (
 			...style
 		}}
 	>
-		{props.children}
+		{children}
 	</div>
 );
 
 /** Basically just the adunit's charity logo */
-const RoundLogo = props => <BaseLogo {...props} className={props.className + ' round-logo'} />;
+const RoundLogo = ({className, ...rest}) => <BaseLogo {...rest} className={'round-logo' + (className ? ' ' + className : '')} />;
 
-/** Occupies 1/3 screen-width by default */
-const SquareLogo = props => <BaseLogo {...props} className={props.className + ' square-logo'} />;
+/**
+ * Uses "% margins are relative to element width" trick to force square aspect - see main.less
+ * Occupies 1/3 screen-width by default.
+ */
+const SquareLogo = ({className, children, ...rest}) => (
+	<BaseLogo {...rest} className={'square-logo' + (className ? ' ' + className : '')}>
+		<div className="squarener" />
+		{children}
+	</BaseLogo>
+);
 
 /**
  * @param {?String} url The image url
