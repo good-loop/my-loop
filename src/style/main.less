@@ -147,11 +147,11 @@ html, body {
 
 // Make blocks of text more readable
 .text-block {
-    text-align: left;
-    line-height: 1.5rem;
-    // Restrict max characters per line to < 70 or so
-    // Helps to improve readibility
-    max-width: 35rem;
+	text-align: left;
+	line-height: 1.5rem;
+	// Restrict max characters per line to < 70 or so
+	// Helps to improve readibility
+	max-width: 35rem;
 }
 
 // Useful in headers
@@ -177,26 +177,26 @@ html, body {
 }
 
 .img-block-basic {
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 
 // background-image will be set in JS
 .img-block {
-    width: 100%;
-    height: 100%;
+	width: 100%;
+	height: 100%;
 
 	.img-block-basic();
 }
 
 // Use in conjunction with img-block
 .img-hero {
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    filter: blur(5px);
-    background-attachment: fixed;
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	filter: blur(5px);
+	background-attachment: fixed;
 }
 
 // Dark BootStrap link colour looks terrible with MyLoop's coloured backgrounds
@@ -269,8 +269,10 @@ a {
 		position: absolute;
 		width: 100%;
 		height: 100%;
+		left: 0;
 		top: 0;
-	} 
+		text-decoration: none;
+	}
 
 	// Want to position child elements absolutely
 	position: relative;
