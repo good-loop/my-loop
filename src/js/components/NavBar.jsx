@@ -2,7 +2,7 @@ import React from 'react';
 import NavBar from '../base/components/NavBar';
 import AccountMenu from '../base/components/AccountMenu';
 import C from '../C';
-import {NavBarLogoContainerSVG} from './svg';
+import {navBarLogoContainerSVG} from './svg';
 
 const Contents = ({pageLinks, currentPage, style, logo}) => (
 	<div className='container-fluid' style={style}>
@@ -30,12 +30,12 @@ const MyLoopNavBar = props => <NavBar {...props} pages={[]} render={Contents} />
 
 const RedesignNavBar = props => (
 	<div>
-		<NavBar 
-			{...props} 
+		<NavBar
+			{...props}
 			pages={[]}
 			render={({pageLinks, currentPage, style, logo}) => (
 				<>
-					<NavBarLogoContainerSVG />
+					{navBarLogoContainerSVG}
 					<div style={style}>
 						<div className="navbar-header" title="Dashboard">
 							<button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">

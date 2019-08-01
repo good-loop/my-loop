@@ -14,20 +14,42 @@ html, body {
 	// Minimum font-size for page
 	// This is usually scaled to vw (see media queries at bottom)
 	font-size: 12px;
+	background: #000; // black gutters if on desktop
 }
+
+
+.page {
+	background: white;
+	// NB: centering copied from Bootstrap's center-block
+	// display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+// Gutters on desktop
+// Defines maximum extent of content area. Rest of window will just consist of white-space
+@max-page-width: 970px;
+.page {
+	max-width: @max-page-width;
+}
+
 
 .header {
 	.header-font();
-	font-size: 2.618rem;
+	font-size: 2.618rem; // ??
 	line-height: initial;
 } 
 
 .sub-header {
 	.sub-header-font();
-	font-size: 1.618rem;
+	font-size: 1.618rem; // ??
 }
 
+
+
 // TODO use bootstrap instead
+// TODO carefully remove much of the below css
+
 .pad1 {
 	padding: 1rem;
 }
@@ -147,11 +169,11 @@ html, body {
 
 // Make blocks of text more readable
 .text-block {
-    text-align: left;
-    line-height: 1.5rem;
-    // Restrict max characters per line to < 70 or so
-    // Helps to improve readibility
-    max-width: 35rem;
+	text-align: left;
+	line-height: 1.5rem;
+	// Restrict max characters per line to < 70 or so
+	// Helps to improve readibility
+	max-width: 35rem;
 }
 
 // Useful in headers
@@ -165,38 +187,27 @@ html, body {
 	font-weight: bold;
 }
 
-// Little black strip used for decoration
-.highlight {
-	&:after {
-		display: block;
-		content: "";
-		height: 2px;
-		// Darken to look more reasonable with dark green background
-		background: #000;
-	}
-}
-
 .img-block-basic {
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 
 // background-image will be set in JS
 .img-block {
-    width: 100%;
-    height: 100%;
+	width: 100%;
+	height: 100%;
 
 	.img-block-basic();
 }
 
 // Use in conjunction with img-block
 .img-hero {
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    filter: blur(5px);
-    background-attachment: fixed;
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	filter: blur(5px);
+	background-attachment: fixed;
 }
 
 // Dark BootStrap link colour looks terrible with MyLoop's coloured backgrounds
@@ -217,10 +228,6 @@ a {
 		margin: 1rem;
 	}
 
-}
-
-.btn {
-	text-decoration: none;
 }
 
 .intro-item {
@@ -256,46 +263,57 @@ a {
 	.logo-base();
 	// Square size that occupies 1/3 of screen-width
 	width: 33%;
-	// height: 320px;
 
-	// Interesting trick to make sure that height and width are the same
-	// Works as margin is calculated as a percentage of the parent's width
-	.square-logo-dummy {
+	
+	// Percentage margin is calculated based on parent's width
+	// So to give an element a specific aspect, place an empty dummy element in-flow with a % top-margin
+	.squarener {
 		margin-top: 100%;
 	}
 
-	a {
+	// Link should make the entire div clickable
+	.logo-link {
 		display: block;
 		position: absolute;
 		width: 100%;
 		height: 100%;
+		left: 0;
 		top: 0;
-	} 
+		text-decoration: none; // no floating underline!
+		z-index: 999; // always in front, even if it's accidentally placed earlier than other elements
+	}
 
 	// Want to position child elements absolutely
 	position: relative;
 
 	// Place small advertiser logo in top-left
-	img {
+	.vertiser-logo {
 		width: 25%;
-
 		position: absolute;
-		top: 0.5rem;
-		left: 0.5rem;
+		left: 5%;
+		top: 5%;
 	}
 
-	.text-container {
+	.campaign-name{
 		position: absolute;
-		bottom: 0.5rem;
-		left: 0.5rem;
-
-		width: 100%;
+		bottom: 5%;
+		left: 5%;
+		width: 90%; // 100% minus the 5% each side of fake padding implied by the element's positioning
 	}
 }
 
 .logo-big {
 	width: 7rem;
 	height: auto;
+}
+
+.contrast-text {
+	.white {
+		text-shadow: 0.1em 0.1em black;
+	}
+	.black, &.color-gl-red {
+		text-shadow: 0.1em 0.1em white;
+	}
 }
 
 // CSS lock to control range of possible fonts

@@ -5,7 +5,7 @@ import DataStore from '../../base/plumbing/DataStore';
 
 import DigitalMirrorCard from '../cards/DigitalMirrorCard';
 import ConsentWidget from '../ConsentWidget';
-import SocialMediaCard from '../cards/SocialMediaCard';
+import SignUpConnectCard from '../cards/SignUpConnectCard';
 import LinkedProfilesCard from '../cards/LinkedProfilesCard';
 import NavBar from '../NavBar';
 import Footer from '../Footer';
@@ -37,7 +37,7 @@ const Page = () => {
 					<DigitalMirrorCard xids={xids} className="digitalMirror" mixPanelTag='DigitalMirror' />
 					<div className='flex-column'>
 						<div>Connect your social media - you can use this to boost the donations you generate!</div>
-						<SocialMediaCard allIds={xids} className="socialConnect" />	
+						<SignUpConnectCard allIds={xids} className="socialConnect" />	
 					</div>
 				</div>
 			</div>
