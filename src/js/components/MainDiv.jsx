@@ -129,7 +129,7 @@ class MainDiv extends Component {
 						<Page path={path} />
 					</div>
 				</div>
-				<LoginWidget logo={<img src='/img/new-logo.png' style={{height: '64px'}} />} title=' ' services={['twitter', 'facebook']} />
+				<LoginWidget logo={<img src='/img/new-logo.png' style={{height: '64px'}} />} title='My Good-Loop: Raising money for Charity from adverts' services={['twitter', 'facebook']} />
 			</div>
 		);
 	} // ./render()

@@ -4,13 +4,14 @@ import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
 import {useLogsIfVisible} from '../../base/components/CustomHooks';
 import { RegisterLink } from '../../base/components/LoginWidget';
+import Counter from '../../base/components/Counter';
 
 import ServerIO from '../../plumbing/ServerIO';
 import {RedesignNavBar} from '../NavBar';
 import Footer from '../Footer';
 
 import ShareAnAd from '../cards/ShareAnAd';
-import SocialMediaCard from '../cards/SocialMediaCard';
+import SignUpConnectCard from '../cards/SignUpConnectCard';
 // TODO refactor so ImpactCard is the shared module, with other bits tucked away inside it
 import RecentCampaignsCard from '../cards/RecentCampaignsCard';
 import {GlLogoGenericSvg, howItWorksCurveSVG, glLogoDefaultSvg, splitColouredCircleSVG} from '../svg';
@@ -28,6 +29,8 @@ const MyPage = () => {
 				<OurMissionCard />
 				<RecentCampaignsCard />
 				<HowItWorksCard />
+				<SignUpConnectCard />
+				<ShareAdCard />
 				<ContactCard />
 				<TimeAndAttentionCard />
 				<Footer />
@@ -37,9 +40,6 @@ const MyPage = () => {
 };
 
 const SplashCard = () => {
-	let xids = DataStore.getValue(['data', 'Person', 'xids']);
-	if( !xids ) return <Misc.Loading />;
-
 	return (
 		<>
 			<div className='img-block' style={{backgroundImage: `url('${ServerIO.MYLOOP_ENDPONT}/img/tulips.jpg')`, backgroundPosition: 'right'}}>
@@ -55,7 +55,7 @@ const SplashCard = () => {
 					/>
 				</div>
 			</div>
-			<SocialMediaCard allIds={xids} />
+			<SignUpConnectCard />
 		</>
 	);
 };
@@ -123,11 +123,69 @@ const OurMissionCard = () => (
 	</div>
 );
 
+
 const HowItWorksCard = () => {
+	// TODO I've somehow broken the background colour for the how-it-works curve. Sorry. ^DW
+	return (
+		<div className="how-it-works">
+			<div className="photo-bg">
+				<div className="how-it-works-banner">
+					{howItWorksCurveSVG}
+					<div className="left header text-center">Here's<br />how</div>
+					<div className="right header text-center">it<br />works</div>
+				</div>
+				<div className='steps'>
+					<div className='step-1 finger to-left white bg-gl-red pad1 flex-row'>
+						<CircleChar >1</CircleChar>
+						<div>
+							<span className='header'>WATCH</span>
+							<span className='sub-header'>&nbsp; a 15 second video </span>
+						</div>
+					</div>
+					<div className='step-2 finger to-right white bg-gl-red pad1 flex-row'>
+						<CircleChar>2</CircleChar>
+						<div>
+							<span className='header'>CHOOSE</span>
+							<span className='sub-header'>&nbsp; a charity to support </span>
+						</div>					
+					</div>
+					<div className='step-3 finger to-left white bg-gl-red pad1 flex-row'>
+						<CircleChar>3</CircleChar>
+						<div>
+							<span className='header'>DONATE</span><br/>
+							<span className='sub-header'>
+								50% of the advert cost goes to the charity
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>{/* ./photo-bg */}
+			<div className="logo-ribbon">{glLogoDefaultSvg}</div>
+			<div className='make-an-impact img-block'>
+				{splitColouredCircleSVG}
+				<div className="impact-girl" />
+				<div className="white impact-card-text">
+					<div className="impact-card-header">
+						<div className="quiet">make an</div>
+						<div className='loud sub-header'>IMPACT</div>
+					</div>
+					
+					<div className='text-block'>
+						In 2018, Good-Loopers raised more than <Counter currencySymbol='£' value={200000} animationLength={1000} /> for charitable causes by signing up and watching adverts.<br/>
+						In 2019, we've already beaten that figure - and we're aiming for <strong>£1,000,000</strong>.
+					</div>
+				</div>
+			</div>			
+		</div>
+	);
+};
+
+const ShareAdCard = () => {
 	let xids = DataStore.getValue(['data', 'Person', 'xids']);
 
 	if( !xids ) return <Misc.Loading />;
 
+	// ??This code could probably be simpler.
 	// Attempt to find ad most recently watched by the user
 	// Go through all @trk ids.
 	// Expect that user should only ever have one @trk, but can't confirm that
@@ -152,59 +210,7 @@ const HowItWorksCard = () => {
 		}));
 	}, []);
 
-	return (
-		<div className="how-it-works">
-			<div className="how-it-works-banner">
-				{howItWorksCurveSVG}
-				<div className="left header text-center">Here's<br />how</div>
-				<div className="right header text-center">it<br />works</div>
-			</div>
-			<div className='steps photo-bg'>
-				<div className='step-1 finger to-left white bg-gl-red pad1  flex-row'>
-					<CircleChar >1</CircleChar>
-					<div>
-						<span className='header'>WATCH</span>
-						<span className='sub-header'>&nbsp; a 15 second video </span>
-					</div>
-				</div>
-				<div className='step-2 finger to-right white bg-gl-red pad1 flex-row'>
-					<div>
-						<span className='header'>CHOOSE</span>
-						<span className='sub-header'>&nbsp; a charity to support </span>
-					</div>
-					<CircleChar>2</CircleChar>
-				</div>
-				<div className='step-3 contrast-text color-gl-red flex-row'>
-					<CircleChar>3</CircleChar>
-					<div style={{ margin: 'unset', maxWidth: '25rem' }}>
-						<div className='header'>
-							DONATE
-						</div>
-						<div className='sub-header white'>
-							50% of the cost of the advert will be donated to the charity of your choice
-						</div>
-					</div>
-				</div>
-			</div>
-			<div className="logo-ribbon">{glLogoDefaultSvg}</div>
-			<div className='make-an-impact img-block'>
-				{splitColouredCircleSVG}
-				<div className="impact-girl" />
-				<div className="white impact-card-text">
-					<div className="impact-card-header">
-						<div className="quiet">make an</div>
-						<div className='loud sub-header'>IMPACT</div>
-					</div>
-					
-					<div className='text-block'>
-						In 2018, Good-Loopers raised more than <strong>£200,000</strong> for charitable causes by signing up and watching adverts.<br/>
-						In 2019, we've already beaten that figure - and we're aiming for <strong>£1,000,000</strong>.
-					</div>
-				</div>
-			</div>
-			<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} className='top-pad1' mixPanelTag='ShareAnAd' />
-		</div>
-	);
+	return (<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} className='top-pad1' mixPanelTag='ShareAnAd' />);
 };
 
 /**

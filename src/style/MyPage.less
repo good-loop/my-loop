@@ -13,6 +13,10 @@
 
 .how-it-works {
 	overflow: hidden;
+	.photo-bg {
+		background-image: url("/img/wheat_fields.jpg");
+		background-size: cover;
+	}
 	.how-it-works-banner {
 		height: 15em;
 		position: relative;
@@ -30,7 +34,7 @@
 			top: 0;
 			z-index: -1;
 		}
-
+		/* left=Here's How, right=It Works */
 		.left {
 			color: black;
 		}
@@ -42,8 +46,6 @@
 	.steps {
 		overflow: hidden;
 		position: relative;
-		background-image: url("/img/wheat_fields.jpg");
-		background-size: cover;
 		min-height: 30rem;
 
 		.step-1 {
@@ -56,7 +58,8 @@
 			}
 		}
 	}
-}
+} // ./how-it-works
+
 
 .logo-ribbon {
 	position: relative;
@@ -273,11 +276,6 @@
 		position: relative;
 		height: 115vw;
 		margin-bottom: 2rem;
-	}
-
-	.social-connect-container {
-		.flex-row();
-		.flex-wrap();
 	}
 
 }
