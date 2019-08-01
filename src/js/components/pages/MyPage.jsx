@@ -13,19 +13,17 @@ import ShareAnAd from '../cards/ShareAnAd';
 import SocialMediaCard from '../cards/SocialMediaCard';
 // TODO refactor so ImpactCard is the shared module, with other bits tucked away inside it
 import RecentCampaignsCard from '../cards/RecentCampaignsCard';
-import {HowItWorksCurveSVG, GlLogoGenericSvg, LogoRibbonSVG, SplitColouredCircleSVG} from '../svg';
+import {GlLogoGenericSvg, howItWorksCurveSVG, glLogoDefaultSvg, splitColouredCircleSVG} from '../svg';
 
 
 window.DEBUG = false;
 
-// This page is for experimenting with ideas for the upcoming My-Loop redesign
-// Everything below should be considered scratch code: it will be reworked
-const RedesignPage = () => {
+const MyPage = () => {
 	ServerIO.mixPanelTrack({mixPanelTag: 'Page rendered', data:{referrer: 'document.referrer'}});
 
 	return (
 		<div className='flex-row'>
-			<div className='RedesignPage'>
+			<div className='MyPage'>
 				<SplashCard />
 				<OurMissionCard />
 				<RecentCampaignsCard />
@@ -47,17 +45,17 @@ const SplashCard = () => {
 			<div className='img-block' style={{backgroundImage: `url('${ServerIO.MYLOOP_ENDPONT}/img/tulips.jpg')`, backgroundPosition: 'right'}}>
 				<RedesignNavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
 				<div className='flex-column'>
-					<img 
-						src={`${ServerIO.MYLOOP_ENDPONT}/img/doinggoodfeelsgood.png`} 
-						style={{width: '40%', marginRight: 0}} 
+					<img
+						src={`${ServerIO.MYLOOP_ENDPONT}/img/doinggoodfeelsgood.png`}
+						style={{width: '40%', marginRight: 0}}
 					/>
-					<img 
-						src={`${ServerIO.MYLOOP_ENDPONT}/img/littleflowers.png`} 
-						style={{width: '40%',  marginRight: 0}} 
+					<img
+						src={`${ServerIO.MYLOOP_ENDPONT}/img/littleflowers.png`}
+						style={{width: '40%',  marginRight: 0}}
 					/>
 				</div>
 			</div>
-			<SocialMediaCard allIds={xids} />		
+			<SocialMediaCard allIds={xids} />
 		</>
 	);
 };
@@ -65,13 +63,13 @@ const SplashCard = () => {
 const ContactCard = () => {
 	let doesIfVisibleRef = useRef();
 	useLogsIfVisible(doesIfVisibleRef, 'ContactCardVisible');
-	
+
 	return (
 		<div className='text-center'>
-			<div className='sub-header top-pad1'> 
+			<div className='sub-header top-pad1'>
 				Get in touch
 			</div>
-			<div className='pad1'> 
+			<div className='pad1'>
 				<div ref={doesIfVisibleRef}>
 					<div>
 						<p>Tell us what you think of this web-app.</p>
@@ -90,15 +88,15 @@ const TimeAndAttentionCard = () => (
 	<div>
 		<div className='bg-gl-red flex-row flex-wrap text-center white'>
 			<div className='flex-column pad1 width20'>
-				<div className='sub-header highlight font-bold'>
-					Time and attention online are valuable
+				<div className='sub-header font-bold'>
+					Time and attention online are valuable.
 				</div>
 				<div className='sub-header'>
-					Let's harness that value and use it for good
+					Let's harness that value and use it for good.
 				</div>
 			</div>
 			<div className='text-block pad1'>
-				Good-Loop will never force you to engage with an ad. But, if you choose to give an adveritser some of your valuable time, attention and data, you get to give 50% of the advertisers' money to a relevant charitable cause.
+				Good-Loop will never force you to engage with an ad. But, if you choose to give an advertiser some of your valuable time and attention, you get to give 50% of the advertisers' money to a relevant charitable cause.
 			</div>
 		</div>
 	</div>
@@ -109,7 +107,7 @@ const OurMissionCard = () => (
 		<div className='our-mission'>
 			<GlLogoGenericSvg />
 			<div>
-				<div className='sub-header'> 
+				<div className='sub-header'>
 					Our Mission
 				</div>
 				<div className='text-block'>
@@ -153,92 +151,70 @@ const HowItWorksCard = () => {
 			return Date.parse(currentData.cargo.time) > Date.parse(newestData.cargo.time) ? currentData : newestData;
 		}));
 	}, []);
-	
+
 	return (
-		<div>
-			<div style={{padding: 0}}>
-				<div style={{position: 'relative'}}>
-					<HowItWorksCurveSVG />
-					<div style={{position:'absolute', top: '50%', width: '100%'}}>
-						<div className='header text-center' style={{display:'inline-block', width: '54%'}}>
-							Here's
-							<br />
-							how
-						</div>
-						<div className='header white text-center' style={{display:'inline-block', width: '40%'}}>
-							it 
-							<br />
-							works
-						</div>
-					</div>
-				</div>
-				<div 
-					className='img-block' 
-					style={{
-						position: 'relative',
-						backgroundImage:`url('${ServerIO.MYLOOP_ENDPONT}/img/wheat_fields.jpg')`,
-						minHeight: '30rem',
-					}}
-				>
-					<div className='white bg-gl-red pad1 sausage-container-right flex-row'>
-						<CharacterInCircle character={1} />
-						<div>
-							<span className='header'>WATCH</span> 
-							<span className='sub-header'>&nbsp; a 15 second video </span>
-						</div>
-					</div>
-					<div className='white bg-gl-red pad1 sausage-container-left flex-row'>
-						<div>
-							<span className='header'>CHOOSE</span> 
-							<span className='sub-header'>&nbsp; a charity to support </span>
-						</div>
-						<CharacterInCircle character={2} />					
-					</div>
-					<div className='color-gl-red flex-row'>
-						<CharacterInCircle character={3} />
-						<div
-							style={{
-								margin: 'unset',
-								maxWidth: '25rem'
-							}}
-						>
-							<div className='header'>
-								DONATE
-							</div>
-							<div className='sub-header white'>
-								50% of the cost of the advert will be donated to the charity of your choice
-							</div>
-						</div>
-					</div>
-				</div>
-				<div className='img-block' style={{backgroundImage: `url('${ServerIO.MYLOOP_ENDPONT}/img/dew-grass.jpg')`, position: 'relative'}}>
-					<LogoRibbonSVG />
-					<SplitColouredCircleSVG />
-					<div className="white impact-card-text">
-						<div>
-							<i> make an </i>
-						</div>
-						<div className='sub-header'> 
-							IMPACT 
-						</div>
-						<div className='text-block'>
-							In 2018, Good-Loopers raised more than £200,000 for charitble causes by signing up and watching adverts
-						</div>
-					</div>
-				</div>
-				<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} className='top-pad1' mixPanelTag='ShareAnAd' />
+		<div className="how-it-works">
+			<div className="how-it-works-banner">
+				{howItWorksCurveSVG}
+				<div className="left header text-center">Here's<br />how</div>
+				<div className="right header text-center">it<br />works</div>
 			</div>
+			<div className='steps photo-bg'>
+				<div className='step-1 finger to-left white bg-gl-red pad1  flex-row'>
+					<CircleChar >1</CircleChar>
+					<div>
+						<span className='header'>WATCH</span>
+						<span className='sub-header'>&nbsp; a 15 second video </span>
+					</div>
+				</div>
+				<div className='step-2 finger to-right white bg-gl-red pad1 flex-row'>
+					<div>
+						<span className='header'>CHOOSE</span>
+						<span className='sub-header'>&nbsp; a charity to support </span>
+					</div>
+					<CircleChar>2</CircleChar>
+				</div>
+				<div className='step-3 contrast-text color-gl-red flex-row'>
+					<CircleChar>3</CircleChar>
+					<div style={{ margin: 'unset', maxWidth: '25rem' }}>
+						<div className='header'>
+							DONATE
+						</div>
+						<div className='sub-header white'>
+							50% of the cost of the advert will be donated to the charity of your choice
+						</div>
+					</div>
+				</div>
+			</div>
+			<div className="logo-ribbon">{glLogoDefaultSvg}</div>
+			<div className='make-an-impact img-block'>
+				{splitColouredCircleSVG}
+				<div className="impact-girl" />
+				<div className="white impact-card-text">
+					<div className="impact-card-header">
+						<div className="quiet">make an</div>
+						<div className='loud sub-header'>IMPACT</div>
+					</div>
+					
+					<div className='text-block'>
+						In 2018, Good-Loopers raised more than <strong>£200,000</strong> for charitable causes by signing up and watching adverts.<br/>
+						In 2019, we've already beaten that figure - and we're aiming for <strong>£1,000,000</strong>.
+					</div>
+				</div>
+			</div>
+			<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} className='top-pad1' mixPanelTag='ShareAnAd' />
 		</div>
 	);
 };
 
-// Applies thick circular border to contents
-const CharacterInCircle = ({character}) => (
-	<div className='number-circle header flex-vertical-align'>
-		<span>
-			{character}
-		</span>
+/**
+ * Stick some text in this to put it inside a thick circular border.
+ * NB weird things will happen if used for more than 1-2 characters.
+ */
+const CircleChar = ({children, className, ...rest}) => (
+	<div className={'number-circle header flex-vertical-align' + (className ? ' ' + className : '')} {...rest}>
+		{children}
 	</div>
 );
 
-export default RedesignPage;
+export default MyPage;
