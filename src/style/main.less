@@ -14,12 +14,13 @@ html, body {
 	// Minimum font-size for page
 	// This is usually scaled to vw (see media queries at bottom)
 	font-size: 12px;
-	background: #000; // black gutters if on desktop
+	background-color:#eeeaea; // warm off-white - still feels open but falls back from page content
 }
 
 
 .page {
-	background: white;
+	background-color: white;
+	box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
 	// NB: centering copied from Bootstrap's center-block
 	// display: block;
 	margin-left: auto;
@@ -313,6 +314,17 @@ a {
 	}
 	.black, &.color-gl-red {
 		text-shadow: 0.1em 0.1em white;
+	}
+}
+
+.social-connected {
+	.user-pic {
+		display: inline-block;
+		overflow: hidden;
+		height: 2em;
+		width: 2em;
+		border: 1px solid silver;
+		border-radius: 0.1em;
 	}
 }
 

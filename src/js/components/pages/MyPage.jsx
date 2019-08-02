@@ -39,20 +39,19 @@ const MyPage = () => {
 	);
 };
 
+/*
+M 60 120
+a 60 60 0 0 0 -60 -60
+*/
+
 const SplashCard = () => {
 	return (
 		<>
 			<div className='img-block' style={{backgroundImage: `url('${ServerIO.MYLOOP_ENDPONT}/img/tulips.jpg')`, backgroundPosition: 'right'}}>
 				<RedesignNavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
 				<div className='flex-column'>
-					<img
-						src={`${ServerIO.MYLOOP_ENDPONT}/img/doinggoodfeelsgood.png`}
-						style={{width: '40%', marginRight: 0}}
-					/>
-					<img
-						src={`${ServerIO.MYLOOP_ENDPONT}/img/littleflowers.png`}
-						style={{width: '40%',  marginRight: 0}}
-					/>
+					<img src="/img/doinggoodfeelsgood.png" style={{width: '40%', marginRight: 0}} alt="" />
+					<img src="/img/littleflowers.png" style={{width: '40%', marginRight: 0}} alt=""/>
 				</div>
 			</div>
 			<SignUpConnectCard />
@@ -136,7 +135,7 @@ const HowItWorksCard = () => {
 				</div>
 				<div className='steps'>
 					<div className='step-1 finger to-left white bg-gl-red pad1 flex-row'>
-						<CircleChar >1</CircleChar>
+						<CircleChar>1</CircleChar>
 						<div>
 							<span className='header'>WATCH</span>
 							<span className='sub-header'>&nbsp; a 15 second video </span>
@@ -171,46 +170,44 @@ const HowItWorksCard = () => {
 					</div>
 					
 					<div className='text-block'>
-						In 2018, Good-Loopers raised more than <Counter currencySymbol='£' value={200000} animationLength={1000} /> for charitable causes by signing up and watching adverts.<br/>
+						In 2018, Good-Loopers raised more than <strong><Counter currencySymbol='£' value={200000} animationLength={1000} /></strong> for charitable causes by signing up and watching adverts.<br/>
 						In 2019, we've already beaten that figure - and we're aiming for <strong>£1,000,000</strong>.
 					</div>
 				</div>
-			</div>			
+			</div>
 		</div>
 	);
 };
 
+
+let userAdHistoryPV;
+
 const ShareAdCard = () => {
 	let xids = DataStore.getValue(['data', 'Person', 'xids']);
+	if (!xids) return <Misc.Loading />;
 
-	if( !xids ) return <Misc.Loading />;
-
-	// ??This code could probably be simpler.
-	// Attempt to find ad most recently watched by the user
-	// Go through all @trk ids.
-	// Expect that user should only ever have one @trk, but can't confirm that
-	let userAdHistoryPV;
-	useEffect(() => {
+	// Only do this once! Try to find the user's most recently viewed advert.
+	if (!userAdHistoryPV) {
 		// Only interested in @trk ids. Other types won't have associated watch history
-		const trkIds = xids.filter( xid => xid.slice(xid.length - 4) === '@trk');
+		let trkIds = xids.filter(xid => xid.match(/@trk$/));
 
-		// No cookies registered, try using current session's cookie
-		if( !trkIds || trkIds.length === 0 ) {
-			return ServerIO.getAdHistory();
-		}
+		// Fetch ad-history for all known tracking IDs...
+		// No trkids? Calling getAdHistory with null arg = try current cookie
+		if (!trkIds.length) trkIds = [null];
+		const pvs = trkIds.map(trkId => ServerIO.getAdHistory(trkId));
 
-		// Pull in data for each ID
-		const PVs = trkIds.map( trkID => ServerIO.getAdHistory(trkID));
-		// Pick the data with the most recent timestamp
-		userAdHistoryPV = Promise.all(PVs).then( values => values.reduce( (newestData, currentData) => {
-			if( !newestData ) {
-				return currentData;
+		// ... and evaluate result to find most recent view when all requests resolved
+		userAdHistoryPV = Promise.all(pvs).then(vals => vals.reduce((newest, candidate) => {
+			const candidateTime = Date.parse(candidate.cargo.time);
+			if (candidateTime > newest.parsedTime) {
+				// tack the UTC timestamp on the view object for simple comparison
+				return {parsedTime: candidateTime, ...candidate.cargo};
 			}
-			return Date.parse(currentData.cargo.time) > Date.parse(newestData.cargo.time) ? currentData : newestData;
-		}));
-	}, []);
+			return newest;
+		}, {parsedTime: new Date(0).getTime()})); // fake adview object for reducer initial value
+	}
 
-	return (<ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} className='top-pad1' mixPanelTag='ShareAnAd' />);
+	return <ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} className='top-pad1' mixPanelTag='ShareAnAd' />;
 };
 
 /**

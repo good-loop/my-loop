@@ -12,7 +12,7 @@ import {useLogsIfVisible} from '../../base/components/CustomHooks';
  * 2) A Twitter intent link to share this ad
  * 3) A table showing how many times their shared ads have been viewed by others
  */
-const ShareAnAd = ({ adHistory, className, color}) => {
+const ShareAnAd = ({adHistory, className, color}) => {
 	// Load in back-up vert data
 	// Easiest to just always load back-up data:
 	// avoids a race-condition where adHistory is provided after initial render has set off fetch
@@ -22,7 +22,7 @@ const ShareAnAd = ({ adHistory, className, color}) => {
 	useEffect( () => {
 		ServerIO.load(ServerIO.AS_ENDPOINT + '/unit.json', {swallow:true})
 			.then( res => {
-				if( !res.vert ) {
+				if (!res.vert) {
 					console.warn("Unit.json not returning any advert data?");
 					return;
 				}
@@ -38,13 +38,20 @@ const ShareAnAd = ({ adHistory, className, color}) => {
 	let doesIfVisibleRef = useRef();
 	useLogsIfVisible(doesIfVisibleRef, 'ShareAnAdVisible');
 
+	/*
+		// Does it make sense in this context to just run a video?
+		format === 'video' ? (
+			<video controls={true} width="100%" height="auto" src={url}> An error occured </video> 
+		) : (
+			<GoodLoopUnit adID={vert} />
+		)
+	*/
+
+	// TODO Don't render the GoodLoopUnit below until the user clicks "Oh yeah show me an ad"
+
 	return (
 		<div className={"ShareAd " + className} ref={doesIfVisibleRef}>
-			{ 
-				format === 'video' 
-					? <video controls={true} width="100%" height="auto" src={url}> An error occured </video> 
-					: <GoodLoopUnit adID={vert} /> 
-			}
+			<GoodLoopUnit adID={vert} />
 			<CampaignPageLinks vert={vert} color={color} />
 		</div>
 	);
