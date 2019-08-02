@@ -18,6 +18,7 @@ const ShareAnAd = ({ adHistory, className, color}) => {
 	// avoids a race-condition where adHistory is provided after initial render has set off fetch
 	// Could mean that backup data is always applied as promise resolves and overrides data passed via adHistory
 	const [backUpVertData, setBackUpVertData] = useState({});
+	// ??Hm: useEffect() is not best here, and DataStore.fetch() is a better idea.
 	useEffect( () => {
 		ServerIO.load(ServerIO.AS_ENDPOINT + '/unit.json', {swallow:true})
 			.then( res => {
