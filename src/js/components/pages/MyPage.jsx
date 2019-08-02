@@ -47,7 +47,7 @@ a 60 60 0 0 0 -60 -60
 const SplashCard = () => {
 	return (
 		<>
-			<div className='img-block' style={{backgroundImage: `url('${ServerIO.MYLOOP_ENDPONT}/img/tulips.jpg')`, backgroundPosition: 'right'}}>
+			<div className='img-block' style={{backgroundImage: 'url("/img/tulips.jpg")', backgroundPosition: 'right'}}>
 				<RedesignNavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
 				<div className='flex-column'>
 					<img src="/img/doinggoodfeelsgood.png" style={{width: '40%', marginRight: 0}} alt="" />
