@@ -32,11 +32,15 @@
 			position: absolute;
 			left: 0;
 			top: 0;
-			z-index: -1;
+			z-index: 0; // In front of the picture background, behind the text
 		}
 		/* left=Here's How, right=It Works */
+		.left, .right {
+			z-index: 1; // In front of the curve
+		}
 		.left {
 			color: black;
+			
 		}
 		.right {
 			color: white;
@@ -53,9 +57,10 @@
 		}
 		
 		.step-3 {
-			.number-circle {
-				margin: 0 1rem;
-			}
+			// background-color: rgba(255, 255, 255, 0.4);
+			background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+			align-items: flex-start; // put the number circle in the upper corner
+			border-bottom-left-radius: 0;
 		}
 	}
 } // ./how-it-works
@@ -129,19 +134,22 @@
 
 .finger {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
+	justify-content: flex-start;
+
 	&.to-left {
-		border-radius: 1000vmax 0 0 1000vmax;
+		border-radius: 3rem 0 0 3rem; // concentric with number circle, which is 2rem + 1rem margin
 		margin: 0 0 1rem 1rem;
 		.number-circle {
-			margin-right: 1rem;
+			margin: 0 1rem 0 0; // just push away text to right
 		}
 	}
 	&.to-right {
-		border-radius: 0 1000vmax 1000vmax 0;
+		border-radius: 0 3rem 3rem 0; // concentric with number circle, which is 2rem + 1rem margin
 		margin: 0 1rem 1rem 0;
 		.number-circle {
-			margin-left: 1rem;
+			margin: 0 1rem; // push away text to right AND align vertically to circles above and below
 		}
 	}
 }
@@ -274,10 +282,39 @@
 
 	.splash.img-block {
 		position: relative;
-		height: 115vw;
-		margin-bottom: 2rem;
-	}
+		height: 30rem;
 
+		background-image: url("/img/tulips.jpg");
+		background-position: 'right';
+
+		.doing-good, .little-flowers {
+			position: absolute;
+			right: 0;
+			width: 18rem;
+		}
+		.doing-good {
+			top: 2rem;
+		}
+		.little-flowers {
+			bottom: 0;
+		}
+
+		.social-media-card {
+			position: absolute;
+			bottom: 0;
+		}
+	}
+}
+
+// Align the 
+.social-media-card {
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		.fa {
+			margin-right: 0.25em;
+		}
+	}
 }
 
 .campaign-cards {

@@ -1,8 +1,10 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useState, useRef} from 'react';
 import ServerIO from '../../plumbing/ServerIO';
 import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import {IntentLink} from '../SocialShare';
 import {useLogsIfVisible} from '../../base/components/CustomHooks';
+import Misc from '../../base/components/Misc';
+import DataStore from '../../base/plumbing/DataStore';
 
 // TODO: force ShareAnAd to use non-VAST video rather than loading Good-Loop player? Thinking about how to reduce loading times, that might be an idea.
 
@@ -12,47 +14,61 @@ import {useLogsIfVisible} from '../../base/components/CustomHooks';
  * 2) A Twitter intent link to share this ad
  * 3) A table showing how many times their shared ads have been viewed by others
  */
-const ShareAnAd = ({adHistory, className, color}) => {
+const ShareAnAd = ({adHistory = {}, className, color}) => {
 	// Load in back-up vert data
 	// Easiest to just always load back-up data:
 	// avoids a race-condition where adHistory is provided after initial render has set off fetch
 	// Could mean that backup data is always applied as promise resolves and overrides data passed via adHistory
-	const [backUpVertData, setBackUpVertData] = useState({});
-	// ??Hm: useEffect() is not best here, and DataStore.fetch() is a better idea.
-	useEffect( () => {
-		ServerIO.load(ServerIO.AS_ENDPOINT + '/unit.json', {swallow:true})
-			.then( res => {
-				if (!res.vert) {
-					console.warn("Unit.json not returning any advert data?");
-					return;
-				}
-
-				setBackUpVertData({
-					vert: res.vert.id,
-					...(res.vert.videos && res.vert.videos[0] || {}),
-				});
-			});
-	}, []);
-	let {vert, format, url} = adHistory || backUpVertData || {};
+	const [state, setState] = useState({});
+	const { runVert } = state;
 
 	let doesIfVisibleRef = useRef();
 	useLogsIfVisible(doesIfVisibleRef, 'ShareAnAdVisible');
 
-	/*
-		// Does it make sense in this context to just run a video?
-		format === 'video' ? (
-			<video controls={true} width="100%" height="auto" src={url}> An error occured </video> 
-		) : (
-			<GoodLoopUnit adID={vert} />
-		)
-	*/
+	let {vert} = adHistory;
 
-	// TODO Don't render the GoodLoopUnit below until the user clicks "Oh yeah show me an ad"
+	// No viewing history provided? Grab a random ad from the server to showcase.
+	if (!vert) {
+		const unitJsonPv = DataStore.fetch(['widget', 'exampleVert', 'unitJson'], () => (
+			ServerIO.load(ServerIO.AS_ENDPOINT + '/unit.json', {swallow:true})
+		));
+
+		if (unitJsonPv.value) {
+			if (unitJsonPv.value.vert) {
+				vert = unitJsonPv.value.vert.id;
+			} else {
+				console.warn('??? unit.json has no member "vert"');
+			}
+		}
+	}
+
+	let content;
+
+	// We might be waiting a second for this
+	if (!vert) {
+		content = <Misc.Loading />;
+	} else {
+		// Only mount the adunit if the user has clicked to show it
+		const splashOrUnit = runVert ? (
+			<GoodLoopUnit adID={adHistory.vert} />
+		) : (
+			<div className="unit-click-to-load" onClick={() => setState({runVert: true})}>
+				Click to see Good-Loop in action and make a donation!
+			</div>
+		);
+
+		content = <>
+			{splashOrUnit}
+			<CampaignPageLinks vert={vert} color={color} />
+		</>;
+		
+	}
+
+	
 
 	return (
 		<div className={"ShareAd " + className} ref={doesIfVisibleRef}>
-			<GoodLoopUnit adID={vert} />
-			<CampaignPageLinks vert={vert} color={color} />
+			{content}
 		</div>
 	);
 };

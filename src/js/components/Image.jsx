@@ -1,16 +1,8 @@
 import React from 'react';
 import DataStore from '../base/plumbing/DataStore';
 
-const BaseLogo = ({alt, className, style, url, children, ...props}) => (
-	<div 
-		{...props}
-		alt={alt}
-		className={className}
-		style={{
-			backgroundImage: `url('${url}')`,
-			...style
-		}}
-	>
+const BaseLogo = ({alt, className, style, url, children, ...rest}) => (
+	<div alt={alt} className={className} style={{backgroundImage: `url('${url}')`, ...style}} {...rest}>
 		{children}
 	</div>
 );

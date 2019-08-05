@@ -47,14 +47,12 @@ a 60 60 0 0 0 -60 -60
 const SplashCard = () => {
 	return (
 		<>
-			<div className='img-block' style={{backgroundImage: 'url("/img/tulips.jpg")', backgroundPosition: 'right'}}>
+			<div className='splash img-block' style={{}}>
 				<RedesignNavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
-				<div className='flex-column'>
-					<img src="/img/doinggoodfeelsgood.png" style={{width: '40%', marginRight: 0}} alt="" />
-					<img src="/img/littleflowers.png" style={{width: '40%', marginRight: 0}} alt=""/>
-				</div>
+				<img className="doing-good" src="/img/doinggoodfeelsgood.png" alt="" />
+				<img className="little-flowers" src="/img/littleflowers.png" alt="" />
+				<SignUpConnectCard />
 			</div>
-			<SignUpConnectCard />
 		</>
 	);
 };
@@ -134,29 +132,30 @@ const HowItWorksCard = () => {
 					<div className="right header text-center">it<br />works</div>
 				</div>
 				<div className='steps'>
-					<div className='step-1 finger to-left white bg-gl-red pad1 flex-row'>
+					<div className='step-1 finger to-left white bg-gl-red pad1'>
 						<CircleChar>1</CircleChar>
 						<div>
 							<span className='header'>WATCH</span>
 							<span className='sub-header'>&nbsp; a 15 second video </span>
 						</div>
 					</div>
-					<div className='step-2 finger to-right white bg-gl-red pad1 flex-row'>
+					<div className='step-2 finger to-right white bg-gl-red pad1'>
 						<CircleChar>2</CircleChar>
 						<div>
 							<span className='header'>CHOOSE</span>
 							<span className='sub-header'>&nbsp; a charity to support </span>
-						</div>					
+						</div>
 					</div>
-					<div className='step-3 finger to-left white bg-gl-red pad1 flex-row'>
+					<div className='step-3 finger to-left white pad1'>
 						<CircleChar>3</CircleChar>
 						<div>
 							<span className='header'>DONATE</span><br/>
 							<span className='sub-header'>
-								50% of the advert cost goes to the charity
+								50% of the advert cost<br/>goes to the charity
 							</span>
 						</div>
 					</div>
+					
 				</div>
 			</div>{/* ./photo-bg */}
 			<div className="logo-ribbon">{glLogoDefaultSvg}</div>
