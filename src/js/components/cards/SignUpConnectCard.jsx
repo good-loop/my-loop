@@ -21,7 +21,7 @@ const SignUpConnectCard = ({className}) => {
 	return (
 		<div className={join('flex-row flex-wrap social-media-card', className)}>
 			<div className='pad1'>
-				{emailID? <Connected service='email' xid={emailID} />
+				{emailID? <Connected service='good-loop' xid={emailID} />
 					: <RegisterLink className='btn btn-lg btn-gl' verb='Sign Up' />
 				}
 			</div>
@@ -49,6 +49,8 @@ const Connected = ({service, xid}) => {
 	// Show the user name for Facebook, not the ID.
 	let { name, img } = profile.std;
 
+	if (img) img = img.replace(/^http:/, 'https:');
+
 	const nameText = service === 'facebook' ? (
 		name || `id: ${XId.id(xid)}`
 	) : XId.prettyName(xid);
@@ -56,10 +58,12 @@ const Connected = ({service, xid}) => {
 	// TODO Fallback for profile photo
 
 	return (
-		<div className="social-connected">
-			<Misc.Logo service={service} color square size="small" />&nbsp;
-			<img className="user-pic" src={img} alt={`User pic for ${toTitleCase(service)} user ${XId.prettyName(xid)}`} />&nbsp;
-			{nameText}
+		<div className={`social-connected bg-${service} white`}>
+			<span className="user-pic-or-fallback bg-white" title={`User pic for ${toTitleCase(service)} user ${XId.prettyName(xid)}`}>
+				<Misc.Logo service={service} color={false} square={false} size="small" />
+				{ img ? <img className="user-pic" src={img} alt="" /> : ''}
+			</span>
+			&nbsp;{nameText}
 		</div>
 	);
 };

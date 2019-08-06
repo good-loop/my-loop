@@ -161,6 +161,7 @@ const HowItWorksCard = () => {
 			<div className="logo-ribbon">{glLogoDefaultSvg}</div>
 			<div className='make-an-impact img-block'>
 				{splitColouredCircleSVG}
+				<div className="impact-girl accent" />
 				<div className="impact-girl" />
 				<div className="white impact-card-text">
 					<div className="impact-card-header">

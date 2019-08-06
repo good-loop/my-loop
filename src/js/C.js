@@ -10,7 +10,7 @@ export default C;
 C.app = {
 	name: "the My-Loop Portal",
 	service: "good-loop",
-	logo: "/img/GoodLoopLogos_Good-Loop_AltLogo_White_Resized.png",
+	logo: "/img/logo-white.svg",
 	website: "https://good-loop.com",
 	facebookAppId: "320927325010346", // https://developers.facebook.com/apps/320927325010346/dashboard/
 	privacyPolicy: "https://doc.good-loop.com/privacy-policy.html",

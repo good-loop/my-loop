@@ -99,9 +99,13 @@
 		bottom: 0;
 		height: 90%;
 		width: 40%;
-		background-image: url("/img/redgirl1.png");
+		background-image: url("/img/redgirl.png");
 		background-repeat: no-repeat;
 		background-size: contain;
+		&.accent {
+			filter: contrast(0) brightness(200%);
+			transform: translateX(-0.1em);
+		}
 	}
 
 	.impact-card-header {
