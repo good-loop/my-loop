@@ -3,6 +3,7 @@ import Login from 'you-again';
 import ReactMarkdown from 'react-markdown';
 
 // import pivot from 'data-pivot';
+import Roles from '../../base/Roles';
 import C from '../../C';
 import ServerIO from '../../plumbing/ServerIO';
 import DataStore from '../../base/plumbing/DataStore';
@@ -13,6 +14,7 @@ import Footer from '../Footer';
 import NavBar from '../NavBar';
 import { SquareLogo } from '../Image';
 import ShareAnAd from '../cards/ShareAnAd';
+import NGO from '../../base/data/NGO';
 
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser`
@@ -23,7 +25,7 @@ const CampaignPage = () => {
 	// Specific adid gets priority over advertiser id
 	const id = adid || vertiserid;
 
-	ServerIO.mixPanelTrack({mixPanelTag: 'Campaign page render', data: {adid, vertiserid}});	
+	ServerIO.mixPanelTrack({mixPanelTag: 'Campaign page render', data: {adid, vertiserid}});
 
 	if ( !adid && !vertiserid ) {
 		// No ID -- show a list
@@ -130,34 +132,14 @@ const CampaignPage = () => {
 							<div className='flex-row flex-centre pad1'>
 								<img className='header-logo' src={brandLogo} alt='advertiser-logo' />
 							</div>
-							<div className='sub-header pad1 white'>
+							<div className='sub-header pad1 white contrast-text'>
 								<div>Together we've raised</div>													
-								{donationValue? <div className='header white' style={{color: brandColor || '#000'}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
+								{donationValue? <div className='header' style={{color: brandColor || '#000'}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 								<div>for</div>
 							</div>
 						</div>
 						<div className='charities-container'>
-							{
-								clist.map( charity => (
-									<div className='top-pad1 bottom-pad1' key={charity.name}>
-										<a className='flex-row charity' href={charity.url} target="_blank" rel="noopener noreferrer">
-											<SquareLogo url={charity.highResPhoto} />
-											<span className='name sub-header pad1 white'> 
-												{charity.name} 
-											</span>
-										</a>
-										<div className='charity-description text-block'>
-											<ReactMarkdown source={charity.description} />
-										</div>
-									</div>
-									// <div className='text-block'>
-									// 	<div className='sub-header text-center pad1'> 
-									// 		{charity.name}
-									// 	</div>
-									// 	<MDText source={charity.description} />									
-									// </div>
-								))
-							}
+							{clist.map( charity => <CharityCard key={charity.id} charity={charity} />)}
 						</div>
 					</div>
 				</div>
@@ -177,5 +159,35 @@ const CampaignPage = () => {
 		</div>
 	);
 }; // ./CampaignPage
+
+
+const CharityCard = ({charity}) => {
+	// fetch extra info from SoGive
+	const pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:charity.id, status:C.KStatus.PUBLISHED});
+	let sogiveCharity = pvCharity.value;
+	let cid = charity.id;
+	if (sogiveCharity) {		
+		// HACK: prefer short description
+		if (sogiveCharity.summaryDescription) sogiveCharity.description = sogiveCharity.summaryDescription;
+		// merge in SoGive as defaults
+		charity = Object.assign({}, sogiveCharity, charity);
+		cid = NGO.id(sogiveCharity); // see ServerIO's hacks to handle bad data entry in the Portal
+	}
+	let photo = charity.highResPhoto || charity.images;
+
+	return (
+		<div className='top-pad1 bottom-pad1' key={charity.name}>
+			<a className='flex-row charity' href={charity.url} target="_blank" rel="noopener noreferrer">
+				<SquareLogo url={photo} />
+				<span className='name sub-header pad1 white contrast-text'> 
+					{charity.name} 
+				</span>
+			</a>
+			<div className='charity-description text-block'>
+				<ReactMarkdown source={charity.description} />
+			</div>
+			{Roles.isDev()? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
+		</div>);
+};
 
 export default CampaignPage;

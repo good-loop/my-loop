@@ -308,13 +308,19 @@ a {
 	height: auto;
 }
 
+/** Make sure the text is readable when using images as a backdrop. 
+NB: to handle the ugly corner case of dynamic colours, we use a flexible grey shadow.
+*/
 .contrast-text {
-	.white, &.white {
-		text-shadow: 0.1em 0.1em black;
-	}
-	.black, &.black, .color-gl-red, &.gl-color-red {
-		text-shadow: 0.1em 0.1em white;
-	}
+	// black or gl-red text
+	text-shadow: 0.05em 0.05em 0.1em rgba(0.5,0.5,0.5,0.5); // white;
+
+	// .white, &.white {
+	// 	text-shadow: 0.05em 0.05em 0.1em #666;
+	// }
+	// .black, &.black, .color-gl-red, &.gl-color-red {
+	// 	text-shadow: 0.1em 0.1em white;
+	// }
 }
 
 .social-connected {
