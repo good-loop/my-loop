@@ -50,7 +50,7 @@ const ShareAnAd = ({adHistory = {}, className, color}) => {
 	} else {
 		// Only mount the adunit if the user has clicked to show it
 		const splashOrUnit = runVert ? (
-			<GoodLoopUnit adID={adHistory.vert} />
+			<GoodLoopUnit vertId={adHistory.vert} />
 		) : (
 			<div className="unit-click-to-load" onClick={() => setState({runVert: true})}>
 				Click to see Good-Loop in action and make a donation!
@@ -61,10 +61,7 @@ const ShareAnAd = ({adHistory = {}, className, color}) => {
 			{splashOrUnit}
 			<CampaignPageLinks vert={vert} color={color} />
 		</>;
-		
 	}
-
-	
 
 	return (
 		<div className={"ShareAd " + className} ref={doesIfVisibleRef}>
@@ -75,15 +72,15 @@ const ShareAnAd = ({adHistory = {}, className, color}) => {
 
 const CampaignPageLinks = ({color, vert}) => (
 	<div className='text-center'>
-		<h3 className='sub-header'> Share this ad on social media </h3>
-		<IntentLink 
-			service='twitter'  
+		<h3 className='sub-header'>Share this ad on social media</h3>
+		<IntentLink
+			service='twitter'
 			text='I just gave to charity by watching a GoodLoop ad'
 			url={`${window.location.origin}/#campaign/?gl.vert=${vert}`}
 			style={{color}}
 		/>
-		<IntentLink 
-			service='facebook'  
+		<IntentLink
+			service='facebook'
 			text='I just gave to charity by watching a GoodLoop ad'
 			url={`${window.location.origin}/#campaign/?gl.vert=${vert}`}
 			style={{color}}
