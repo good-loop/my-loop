@@ -52,24 +52,6 @@
 			gtag('config', gaId);
 		</script>
 		<!-- End GA -->
-		<!-- Start HotJar -->
-		<!-- <script>
-			(function(h,o,t,j,a,r){
-				var href = window.location.href;
-				var token = 1100105;
-				
-				// Switch to production token
-				if( href.match(/https:\/\/my.good-loop.com/) ) token = 1101511;
-
-				h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-				h._hjSettings={hjid:token,hjsv:6};
-				a=o.getElementsByTagName('head')[0];
-				r=o.createElement('script');r.async=1;
-				r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-				a.appendChild(r);
-			})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-		</script> -->
-		<!-- End HotJar -->
 	</head>
 	<body>
 		
@@ -78,7 +60,6 @@
 		<footer>
 			<!-- Scripts -->
 			<script defer src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-			<script defer src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 			<!-- everything else comes via webpack -->
 			<script>
 				// Insert bundle[-debug].js - but allow dynamic test/production build switch.
