@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import MDText from '../base/components/MDText';
-import {IntentLink, FacebookLogo, TwitterLogo, InstagramLogo} from './SocialShare';
+import {IntentLink, FacebookLogo, TwitterLogo, InstagramLogo} from './MyGLSocialShare';
 import Money from '../base/data/Money';
 
 /** What should appear in Tweet/Facebook link/LinkedIn article

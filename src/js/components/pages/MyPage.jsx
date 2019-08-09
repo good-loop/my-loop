@@ -23,18 +23,16 @@ const MyPage = () => {
 	ServerIO.mixPanelTrack({mixPanelTag: 'Page rendered', data:{referrer: 'document.referrer'}});
 
 	return (
-		<div className='flex-row'>
-			<div className='MyPage'>
-				<SplashCard />
-				<OurMissionCard />
-				<RecentCampaignsCard />
-				<HowItWorksCard />
-				<SignUpConnectCard />
-				<ShareAdCard />
-				<ContactCard />
-				<TimeAndAttentionCard />
-				<Footer />
-			</div>
+		<div className='MyPage'>
+			<SplashCard />
+			<OurMissionCard />
+			<RecentCampaignsCard />
+			<HowItWorksCard />
+			<SignUpConnectCard className='flex-row' />
+			<ShareAdCard />
+			<ContactCard />
+			<TimeAndAttentionCard />
+			<Footer />
 		</div>
 	);
 };
@@ -51,7 +49,7 @@ const SplashCard = () => {
 				<RedesignNavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
 				<img className="doing-good" src="/img/doinggoodfeelsgood.png" alt="" />
 				<img className="little-flowers" src="/img/littleflowers.png" alt="" />
-				<SignUpConnectCard />
+				<SignUpConnectCard className='' />
 			</div>
 		</>
 	);

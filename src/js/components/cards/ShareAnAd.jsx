@@ -1,7 +1,7 @@
 import React, {useState, useRef} from 'react';
 import ServerIO from '../../plumbing/ServerIO';
 import GoodLoopUnit from '../../base/components/GoodLoopUnit';
-import {IntentLink} from '../SocialShare';
+import {IntentLink} from '../MyGLSocialShare';
 import {useLogsIfVisible} from '../../base/components/CustomHooks';
 import Misc from '../../base/components/Misc';
 import DataStore from '../../base/plumbing/DataStore';

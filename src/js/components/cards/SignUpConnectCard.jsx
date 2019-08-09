@@ -1,7 +1,7 @@
 import React from 'react';
 import { XId, join, toTitleCase } from 'wwutils';
 import { getProfilesNow } from '../../base/Profiler';
-import { RegisterLink, SocialSignInButton } from '../../base/components/LoginWidget';
+import { LoginLink, SocialSignInButton } from '../../base/components/LoginWidget';
 import Misc from '../../base/components/Misc';
 import DataStore from '../../base/plumbing/DataStore';
 
@@ -19,10 +19,10 @@ const SignUpConnectCard = ({className}) => {
 	const fbid = xids.filter(id => XId.service(id)==='facebook')[0];
 	
 	return (
-		<div className={join('flex-row flex-wrap social-media-card', className)}>
+		<div className={join('social-media-card', className)}>
 			<div className='pad1'>
 				{emailID? <Connected service='good-loop' xid={emailID} />
-					: <RegisterLink className='btn btn-lg btn-gl' verb='Sign Up' />
+					: <LoginLink className='btn btn-lg btn-default bg-gl-red white'><Misc.Icon fa='envelope' size='2x' /> Sign-Up</LoginLink>
 				}
 			</div>
 			<div className='pad1'>
