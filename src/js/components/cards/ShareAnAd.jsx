@@ -42,30 +42,22 @@ const ShareAnAd = ({adHistory = {}, className, color}) => {
 		}
 	}
 
-	let content;
-
-	// We might be waiting a second for this
-	if (!vert) {
-		content = <Misc.Loading />;
-	} else {
-		// Only mount the adunit if the user has clicked to show it
-		const splashOrUnit = runVert ? (
-			<GoodLoopUnit vertId={adHistory.vert} />
-		) : (
-			<div className="unit-click-to-load" onClick={() => setState({runVert: true})}>
-				Click to see Good-Loop in action and make a donation!
-			</div>
-		);
-
-		content = <>
-			{splashOrUnit}
-			<CampaignPageLinks vert={vert} color={color} />
-		</>;
-	}
-
 	return (
 		<div className={"ShareAd " + className} ref={doesIfVisibleRef}>
-			{content}
+			{vert ? (<>
+				<div className="unit">
+					{ runVert ? ( // Only mount the adunit if the user has clicked to show it
+						<GoodLoopUnit vertId={adHistory.vert} />
+					) : (
+						<div className="click-to-load" onClick={() => setState({runVert: true})}>
+							Click to see Good-Loop in action and make a donation right now!
+						</div>
+					)}
+				</div>
+				<CampaignPageLinks vert={vert} color={color} />
+			</>) : (
+				<Misc.Loading />
+			)}
 		</div>
 	);
 };

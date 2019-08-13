@@ -77,7 +77,11 @@
 		width: 9rem;
 		position: absolute;
 		top: -3.5rem;
-		right: 13%;
+		// Q: Left AND margin-left?
+		// A: The "Make an impact" header starts 50% from the left.
+		// So we put the logo at 50%, and then bump it a little further right in rem units to avoid the header.
+		left: 50%;
+		margin-left: 5rem;
 		z-index: 1;
 	}
 }
@@ -103,6 +107,7 @@
 		background-repeat: no-repeat;
 		background-size: contain;
 		&.accent {
+			// A second copy filtered to white to provide a contrasting drop shadow
 			filter: contrast(0) brightness(200%);
 			transform: translateX(-0.1em);
 		}
@@ -122,6 +127,11 @@
 		top: 1rem;
 		right: 1rem;
 		width: 50%;
+	}
+	.social-media-card {
+		position: absolute;
+		bottom: 0;
+		right: 0;
 	}
 }
 
@@ -224,25 +234,25 @@
 
 .triangle-gl-dark-blue {
 	.triangle();
-	border-color: transparent transparent @gl-dark-blue transparent;	
+	border-color: transparent transparent @gl-dark-blue transparent;
 }
 
 .triangle-gl-blue {
 	.triangle();
-	border-color: transparent transparent @gl-light-blue transparent;	
+	border-color: transparent transparent @gl-light-blue transparent;
 }
 
 .triangle-gl-dark-grey {
 	.triangle();
-	border-color: transparent transparent @gl-dark-grey transparent;	
+	border-color: transparent transparent @gl-dark-grey transparent;
 }
 
 .triangle-gl-light-grey {
 	.triangle();
-	border-color: transparent transparent @gl-light-grey transparent;	
+	border-color: transparent transparent @gl-light-grey transparent;
 }
 
-// Turn checkbox in to a slider
+// Turn checkbox into a slider
 // Prettier look for consent controls
 
 .slider {
@@ -281,7 +291,6 @@
 }
 
 .MyPage {
-
 	width: 100%;
 
 	.splash.img-block {
@@ -335,6 +344,20 @@
 		// Stick text to top of div
 		// flex-row should be applied to parent element
 		margin-top: 0;
+	}
+}
+
+.ShareAd {
+	.unit {
+		.click-to-load {
+			text-align: center;
+			line-height: 3rem;
+			color: @gl-red;
+			border: 1px solid @gl-red;
+			border-radius: 0.25rem;
+			margin: 1rem;
+			cursor: pointer;
+		}
 	}
 }
 

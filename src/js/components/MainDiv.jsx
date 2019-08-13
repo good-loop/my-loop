@@ -125,7 +125,7 @@ class MainDiv extends Component {
 			<div>
 				<div>
 					{/* <MessageBar />  */}
-					<div className='page' id={page}>						
+					<div className='page' id={page}>
 						<Page path={path} />
 					</div>
 				</div>

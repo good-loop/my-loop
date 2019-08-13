@@ -46,24 +46,22 @@ const SignUpConnectCard = ({className}) => {
  */
 const Connected = ({service, xid}) => {
 	const profile = getProfilesNow([xid])[0] || {std: {}};
-	// Show the user name for Facebook, not the ID.
 	let { name, img } = profile.std;
 
+	// Don't get caught out by mixed content restrictions
 	if (img) img = img.replace(/^http:/, 'https:');
 
 	const nameText = service === 'facebook' ? (
-		name || `id: ${XId.id(xid)}`
+		name || `id: ${XId.id(xid)}` // Show the user name for Facebook, not the ID.
 	) : XId.prettyName(xid);
-
-	// TODO Fallback for profile photo
 
 	return (
 		<div className={`social-connected bg-${service} white`}>
-			<span className="user-pic-or-fallback bg-white" title={`User pic for ${toTitleCase(service)} user ${XId.prettyName(xid)}`}>
-				<Misc.Logo service={service} color={false} square={false} size="small" />
-				{ img ? <img className="user-pic" src={img} alt="" /> : ''}
-			</span>
-			&nbsp;{nameText}
+			{ img ? <><img className="user-pic" src={img} alt="" />&nbsp;</> : ''}
+			<div>
+				<div className="connected"><Misc.Logo service={service} color={false} square={false} size="xsmall" /> Connected</div>
+				<div className="name">{nameText}</div>
+			</div>
 		</div>
 	);
 };

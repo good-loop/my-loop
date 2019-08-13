@@ -1,13 +1,12 @@
-import React, {useEffect, useRef} from 'react';
+import React, { useRef } from 'react';
 
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
 import {useLogsIfVisible} from '../../base/components/CustomHooks';
-import { RegisterLink } from '../../base/components/LoginWidget';
 import Counter from '../../base/components/Counter';
 
 import ServerIO from '../../plumbing/ServerIO';
-import {RedesignNavBar} from '../NavBar';
+import MyLoopNavBar from '../NavBar';
 import Footer from '../Footer';
 
 import ShareAnAd from '../cards/ShareAnAd';
@@ -28,7 +27,6 @@ const MyPage = () => {
 			<OurMissionCard />
 			<RecentCampaignsCard />
 			<HowItWorksCard />
-			<SignUpConnectCard className='flex-row' />
 			<ShareAdCard />
 			<ContactCard />
 			<TimeAndAttentionCard />
@@ -46,7 +44,7 @@ const SplashCard = () => {
 	return (
 		<>
 			<div className='splash img-block' style={{}}>
-				<RedesignNavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
+				<MyLoopNavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' noRegister />
 				<img className="doing-good" src="/img/doinggoodfeelsgood.png" alt="" />
 				<img className="little-flowers" src="/img/littleflowers.png" alt="" />
 				<SignUpConnectCard className='' />
@@ -172,6 +170,7 @@ const HowItWorksCard = () => {
 						In 2019, we've already beaten that figure - and we're aiming for <strong>£1,000,000</strong>.
 					</div>
 				</div>
+				<SignUpConnectCard />
 			</div>
 		</div>
 	);

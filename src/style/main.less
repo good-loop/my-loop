@@ -334,7 +334,7 @@ This issue appears on http://testmy.good-loop.com/#campaign/?gl.vert=CeuNVbtW wh
 	padding: 0.25em;
 	border-radius: 0.25em;
 
-	.user-pic-or-fallback {
+	.user-pic {
 		display: inline-block;
 		position: relative;
 		overflow: hidden;
@@ -349,6 +349,13 @@ This issue appears on http://testmy.good-loop.com/#campaign/?gl.vert=CeuNVbtW wh
 			height: 100%;
 			width: 100%;
 		}
+	}
+	// The "(icon) Connected" status line
+	.connected {
+		font-size: 66%;
+	}
+	.connected, .name { // And the username too
+		line-height: 1;
 	}
 }
 
