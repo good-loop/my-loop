@@ -65,11 +65,8 @@ const ContactCard = () => {
 			<div className='pad1'>
 				<div ref={doesIfVisibleRef}>
 					<div>
-						<p>Tell us what you think of this web-app.</p>
-						<p>Are you interested in hosting Ads For Good on your blog or website?</p>
-						<p>
-							<a href="https://www.good-loop.com/book-a-call">Let us Know.</a>
-						</p>
+						<p><a href="mailto:hello@good-loop.com?subject=My thoughts on My Good-Loop">Tell us what you think of My Good-Loop.</a></p>
+						<p>Interested in hosting Ads For Good on your blog or website? <a href="https://www.good-loop.com/book-a-call">Let us know.</a></p>
 					</div>
 				</div>
 			</div>
