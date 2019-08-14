@@ -50,7 +50,8 @@ const ShareAnAd = ({adHistory = {}, className, color}) => {
 						<GoodLoopUnit vertId={adHistory.vert} />
 					) : (
 						<div className="click-to-load" onClick={() => setState({runVert: true})}>
-							Click to see Good-Loop in action and make a donation right now!
+							Click to see Good-Loop in action<br />
+							and make a donation right now!
 						</div>
 					)}
 				</div>
