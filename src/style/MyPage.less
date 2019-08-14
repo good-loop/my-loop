@@ -99,13 +99,14 @@
 
 	.impact-girl {
 		position: absolute;
-		left: 15%;
+		right: 50%;
 		bottom: 0;
 		height: 90%;
-		width: 40%;
+		width: 50%;
 		background-image: url("/img/redgirl.png");
 		background-repeat: no-repeat;
 		background-size: contain;
+		background-position: bottom center;
 		&.accent {
 			// A second copy filtered to white to provide a contrasting drop shadow
 			filter: contrast(0) brightness(200%);
@@ -128,6 +129,7 @@
 		right: 1rem;
 		width: 50%;
 	}
+
 	.social-media-card {
 		position: absolute;
 		bottom: 0;
@@ -315,16 +317,7 @@
 		.social-media-card {
 			position: absolute;
 			bottom: 0;
-		}
-	}
-}
-
-.social-media-card {
-	.btn {
-		display: inline-flex;
-		align-items: center;
-		.fa {
-			margin-right: 0.25em;
+			left: 0;
 		}
 	}
 }

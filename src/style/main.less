@@ -11,9 +11,6 @@
 
 // Set base size for rem
 html, body {
-	// Minimum font-size for page
-	// This is usually scaled to vw (see media queries at bottom)
-	font-size: 12px;
 	background-color:#eeeaea; // warm off-white - still feels open but falls back from page content
 }
 
@@ -328,6 +325,29 @@ This issue appears on http://testmy.good-loop.com/#campaign/?gl.vert=CeuNVbtW wh
 	// }
 }
 
+.social-media-card {
+	padding: 0.5rem 1rem;
+	// Default width: wide enough to show full "Connect with X" text
+	font-size: 120%;
+	width: 14em;
+	
+	// nice vertical alignment - including service logos
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		.fa {
+			margin-right: 0.25em;
+		}
+		font-size: 100%; // Override Bootstrap's explicit px sizing for contextual sizing
+	}
+
+	.btn, .social-connected {
+		overflow: hidden; // people can have long names!
+		margin-bottom: 0.5rem; // enclosing in pad1 was making them stack up too tall
+		width: 100%; // equal width for prettiness, set explicit width on the social-media-card in question
+	}
+}
+
 .social-connected {
 	display: flex;
 	align-items: center;
@@ -359,19 +379,20 @@ This issue appears on http://testmy.good-loop.com/#campaign/?gl.vert=CeuNVbtW wh
 	}
 }
 
-// CSS lock to control range of possible fonts
-// Can't just expand wih vw as the actual content is of limited size
-// Would just mean that we break the layout on screens larger than "max-page-width"
+// Font sizing:
+// No smaller than 14px, no larger than 24px, and scale relative to viewport width between those values
 
-// Allow font to scale by view-port size. Minimum font-size is 12px, maximum is 24px
-@media (min-width: 440px) {
+@media (max-width: 466px) {
+	font-size: 14px;
+}
+
+@media (min-width: 466px) {
 	html, body {
 		font-size: 3vw;
 	}
 }
 
-// Max font-size of 24px is reached at view width of 880px
-@media (min-width: 880px) {
+@media (min-width: 800px) {
 	html, body {
 		font-size: 24px;
 	}
