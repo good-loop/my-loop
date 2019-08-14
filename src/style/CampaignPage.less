@@ -62,10 +62,11 @@
 
 	.charity-description {
 		width: @logo-size;
-		padding: inherit 0.25em;
-		&:first-child { padding-left: inherit; }
-		&:last-child { padding-right: inherit; }
+		padding: 0 0.25em;
 	}
+
+	.charity-card:first-child .charity-description { padding-left: 0; }
+	.charity-card:last-child .charity-description { padding-right: 0; }
 
 	.header-logo {
 		width: 10rem; 

@@ -133,7 +133,7 @@ const CampaignPage = () => {
 								<img className='header-logo' src={brandLogo} alt='advertiser-logo' />
 							</div>
 							<div className='sub-header pad1 white contrast-text'>
-								<div>Together we've raised</div>													
+								<div>Together we've raised</div>
 								{donationValue? <div className='header' style={{color: brandColor || '#000'}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 								<div>for</div>
 							</div>
@@ -152,7 +152,7 @@ const CampaignPage = () => {
 							&& <ShareAnAd adHistory={{...ad.videos[0], vert: adid}} mixPanelTag='ShareAnAd' color={brandColor} />
 						}
 					</div> 
-					<div className='col-md-2' /> 				
+					<div className='col-md-2' />
 				</div>
 			</div>
 			<Footer leftFooter={startDate} rightFooter={smallPrint} />
@@ -176,11 +176,11 @@ const CharityCard = ({charity}) => {
 	let photo = charity.highResPhoto || charity.images;
 
 	return (
-		<div className='top-pad1 bottom-pad1' key={charity.name}>
+		<div className='charity-card top-pad1 bottom-pad1' key={charity.name}>
 			<a className='flex-row charity' href={charity.url} target="_blank" rel="noopener noreferrer">
 				<SquareLogo url={photo} />
-				<span className='name sub-header pad1 white contrast-text'> 
-					{charity.name} 
+				<span className='name sub-header pad1 white contrast-text'>
+					{charity.name}
 				</span>
 			</a>
 			<div className='charity-description text-block'>
