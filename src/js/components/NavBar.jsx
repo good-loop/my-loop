@@ -1,7 +1,10 @@
 import React from 'react';
+import Login from 'you-again';
+
 import NavBar from '../base/components/NavBar';
 import C from '../C';
 import {navBarLogoContainerSVG} from './svg';
+
 
 const MyLoopNavBar = props => (
 	<div>
@@ -61,7 +64,7 @@ const AccountMenu = ({active, logoutLink}) => {
 				<ul className="dropdown-menu">
 					<li><a href="#account">Account</a></li>
 					<li role="separator" className="divider" />
-					<li><a href={logoutLink} onClick={() => doLogout()}>Log out</a></li>
+					<li><a href={logoutLink} onClick={() => Login.logout()}>Log out</a></li>
 				</ul>
 			</li>
 		</ul>
