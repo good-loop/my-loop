@@ -53,7 +53,7 @@ const RecentCampaignsCard = () => {
 			{vertisers.map(({adid, background, charityName, name, logo}) => (
 				<SquareLogo className="contrast-text" alt={name} url={background} key={adid}>
 					<img className="vertiser-logo" src={logo} alt="vertiser-logo" />
-					<div className="campaign-name sub-header white text-contrast">{charityName}</div>
+					<div className="campaign-name sub-header white">{charityName}</div>
 					<a className="logo-link" href={'/#campaign/?gl.vert=' + adid}>&nbsp;</a>
 				</SquareLogo>
 			))}
