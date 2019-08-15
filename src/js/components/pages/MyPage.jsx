@@ -98,12 +98,11 @@ const OurMissionCard = () => (
 			<GlLogoGenericSvg />
 			<div>
 				<div className='sub-header'>
-					Our Mission
+					What's Good-Loop?
 				</div>
 				<div className='text-block'>
-					At Good-Loop, we believe that your time and attention is valuable.
-
-					Together, we want to harness that power and use it to make a positive difference.
+					At Good-Loop, we raise money for charities using the power of advertising.<br />
+					Every time you watch one of our ads, we'll use the advertisers' money to make a donation to a charity of your choice.
 				</div>
 			</div>
 		</div>
