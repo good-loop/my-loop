@@ -8,34 +8,23 @@ import {LoginLink} from '../base/components/LoginWidget';
 
 
 const MyLoopNavBar = props => (
-	<div>
-		<NavBar
-			{...props}
-			pages={[]}
-			render={({pageLinks, currentPage, style, logo}) => <>
-				{navBarLogoContainerSVG}
-				<div style={style}>
-					<div className="navbar-header" title="Dashboard">
-						<button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-							<span className="sr-only">Toggle navigation</span>
-							<span className="icon-bar" /><span className="icon-bar" /><span className="icon-bar" />
-						</button>
-						<a className="navbar-brand" href='/'>
-							<img alt={C.app.name} src={logo || C.app.homeLogo || C.app.logo} />
-						</a>
-					</div>
-					<div id="navbar" className="navbar-collapse collapse">
-						<ul className="nav navbar-nav">
-							{pageLinks}
-						</ul>
-						<div>
-							<AccountMenu active={currentPage === 'account'} logoutLink='#my' />
-						</div>
-					</div>
+	<NavBar
+		{...props}
+		pages={[]}
+		render={({pageLinks, currentPage, style, logo}) => <>
+			{navBarLogoContainerSVG}
+			<div style={style}>
+				<div className="navbar-header" title="Dashboard">
+					<a className="navbar-brand" href='/'>
+						<img alt={C.app.name} src={logo || C.app.homeLogo || C.app.logo} />
+					</a>
 				</div>
-			</>}
-		/>
-	</div>
+				<div id="navbar" className="navbar-collapse collapse">
+					<AccountMenu active={currentPage === 'account'} logoutLink='#my' />
+				</div>
+			</div>
+		</>}
+	/>
 );
 
 const AccountMenu = ({active, logoutLink}) => {

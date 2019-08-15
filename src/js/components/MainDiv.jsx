@@ -122,15 +122,12 @@ class MainDiv extends Component {
 		// TODO move NavBar in here
 
 		return (
-			<div>
-				<div>
-					{/* <MessageBar />  */}
-					<div className='page' id={page}>
-						<Page path={path} />
-					</div>
+			<>
+				<div className='page' id={page}>
+					<Page path={path} />
 				</div>
 				<LoginWidget logo={<img src='/img/new-logo.png' style={{height: '64px'}} />} title='My Good-Loop: Raising money for Charity from adverts' services={['twitter', 'facebook']} />
-			</div>
+			</>
 		);
 	} // ./render()
 } // ./MainDiv

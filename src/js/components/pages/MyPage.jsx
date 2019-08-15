@@ -35,21 +35,15 @@ const MyPage = () => {
 	);
 };
 
-/*
-M 60 120
-a 60 60 0 0 0 -60 -60
-*/
 
 const SplashCard = () => {
 	return (
-		<>
-			<div className='splash img-block' style={{}}>
-				<MyLoopNavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' noRegister />
-				<img className="doing-good" src="/img/doinggoodfeelsgood.png" alt="" />
-				<img className="little-flowers" src="/img/littleflowers.png" alt="" />
-				<SignUpConnectCard className='' />
-			</div>
-		</>
+		<div className='splash img-block' style={{}}>
+			<MyLoopNavBar logo='/img/new-logo-with-text.svg' />
+			<img className="doing-good" src="/img/doinggoodfeelsgood.png" alt="" />
+			<img className="little-flowers" src="/img/littleflowers.png" alt="" />
+			<SignUpConnectCard className='' />
+		</div>
 	);
 };
 
@@ -75,19 +69,17 @@ const ContactCard = () => {
 };
 
 const TimeAndAttentionCard = () => (
-	<div>
-		<div className='bg-gl-red flex-row flex-wrap text-center white'>
-			<div className='flex-column pad1 width20'>
-				<div className='sub-header font-bold'>
-					Time and attention online are valuable.
-				</div>
-				<div className='sub-header'>
-					Let's harness that value and use it for good.
-				</div>
+	<div className='bg-gl-red flex-row flex-wrap text-center white'>
+		<div className='flex-column pad1 width20'>
+			<div className='sub-header font-bold'>
+				Time and attention online are valuable.
 			</div>
-			<div className='text-block pad1'>
-				Good-Loop will never force you to engage with an ad. But, if you choose to give an advertiser some of your valuable time and attention, you get to give 50% of the advertisers' money to a relevant charitable cause.
+			<div className='sub-header'>
+				Let's harness that value and use it for good.
 			</div>
+		</div>
+		<div className='text-block pad1'>
+			Good-Loop will never force you to engage with an ad. But, if you choose to give an advertiser some of your valuable time and attention, you get to give 50% of the advertisers' money to a relevant charitable cause.
 		</div>
 	</div>
 );
@@ -114,7 +106,6 @@ const OurMissionCard = () => (
 
 
 const HowItWorksCard = () => {
-	// TODO I've somehow broken the background colour for the how-it-works curve. Sorry. ^DW
 	return (
 		<div className="how-it-works">
 			<div className="photo-bg">
