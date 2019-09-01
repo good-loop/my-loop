@@ -18,13 +18,16 @@ import NGO from '../../base/data/NGO';
 
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser`
+ * TODO support agency and ourselves!
+ * Split: branding - a vertiser ID, vs ad-params
  */
 const CampaignPage = () => {
-	const { 'gl.vert': adid, 'gl.vertiser': vertiserid } = DataStore.getValue(['location', 'params']) || {};
+	const { 'gl.vert': adid, 'gl.vertiser': vertiserid, status } = DataStore.getValue(['location', 'params']) || {};
 
 	// Specific adid gets priority over advertiser id
 	const id = adid || vertiserid;
 
+	// TODO replace with a ServerIO.log method which can abstract what backend we use
 	ServerIO.mixPanelTrack({mixPanelTag: 'Campaign page render', data: {adid, vertiserid}});
 
 	if ( !adid && !vertiserid ) {
@@ -36,15 +39,15 @@ const CampaignPage = () => {
 		return <ListItems type={C.TYPES.Advert} status={C.KStatus.PUBLISHED} servlet='campaign' />;		
 	}
 
-	let adPv;
-
-	adPv = adid
-		? ActionMan.getDataItem({type: C.TYPES.Advert, id, status:C.KStatus.DRAFT, domain: ServerIO.PORTAL_DOMAIN})
+	let adPv = adid? ActionMan.getDataItem({type: C.TYPES.Advert, id, status: status || C.KStatus.PUBLISHED, domain: ServerIO.PORTAL_DOMAIN})
 		: ActionMan.list({type: C.TYPES.Advert, status:C.KStatus.ALL_BAR_TRASH, q:id });
 
 	if ( ! adPv.resolved ) {
 		return <Misc.Loading text='Loading campaign data...' />;
 	}
+
+	// FIXME - locked to one ad?! Nooo that was never the spec. 
+	// (well: M was junior. and had his head up his arse)
 	// Assume we have data for single advert if adid exists
 	// Pull out first advert from advertiser data if not
 	let ad = (adid ? adPv.value : ( adPv.value && adPv.value.hits && adPv.value.hits[0] )) || {};
@@ -63,13 +66,13 @@ const CampaignPage = () => {
 	// Use background image given to adunit, or show default image of sand dune 
 	const backgroundImage = (campaign && campaign.bg) || (ServerIO.MYLOOP_ENDPONT + '/img/wheat_fields.jpg');
 
-	if(campaign) {
+	if (campaign) {
 		smallPrint = campaign.smallPrint || '';
 	}
 
 	// if there is no charity data, tell the user
 	// TODO: do we want to deal with this in a more elegant way?
-	if (!ad.charities) {
+	if ( ! ad.charities) {
 		return <span>Cannot find charity data</span>;	
 	}
 
