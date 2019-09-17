@@ -9,6 +9,9 @@ import DataStore from '../../base/plumbing/DataStore';
 // TODO: force ShareAnAd to use non-VAST video rather than loading Good-Loop player? Thinking about how to reduce loading times, that might be an idea.
 
 /**
+ * 
+ * @param adHistory {} TODO document what format this input is
+ * 
  * Shows: 
  * 1) A preview of a GoodLoop ad. This is either the last ad watched by the user or a random ad
  * 2) A Twitter intent link to share this ad

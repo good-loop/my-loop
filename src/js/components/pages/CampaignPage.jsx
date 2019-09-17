@@ -1,7 +1,7 @@
 import React from 'react';
 import Login from 'you-again';
 import ReactMarkdown from 'react-markdown';
-
+import _ from 'lodash';
 // import pivot from 'data-pivot';
 import Roles from '../../base/Roles';
 import C from '../../C';
@@ -15,84 +15,80 @@ import NavBar from '../NavBar';
 import { SquareLogo } from '../Image';
 import ShareAnAd from '../cards/ShareAnAd';
 import NGO from '../../base/data/NGO';
+import SearchQuery from '../../base/searchquery';
+import BS from '../../base/components/BS';
 
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser`
- * TODO support agency and ourselves!
+ * TODO support q=flexible query
+ * TODO support agency and ourselves! with multiple adverts
  * Split: branding - a vertiser ID, vs ad-params
  */
 const CampaignPage = () => {
-	const { 'gl.vert': adid, 'gl.vertiser': vertiserid, status } = DataStore.getValue(['location', 'params']) || {};
-
-	// Specific adid gets priority over advertiser id
-	const id = adid || vertiserid;
+	// What adverts should we look at?
+	let { 'gl.vert': adid, 'gl.vertiser': vertiserid, q='', status } = DataStore.getValue(['location', 'params']) || {};	
+	let sq = new SearchQuery(q);
+	if (adid) sq = sq.setProp('vert', adid);
+	if (vertiserid) sq = sq.setProp('vertiser', vertiserid);
+	q = sq.query;
+	console.log("query", q);
 
 	// TODO replace with a ServerIO.log method which can abstract what backend we use
 	ServerIO.mixPanelTrack({mixPanelTag: 'Campaign page render', data: {adid, vertiserid}});
 
-	if ( !adid && !vertiserid ) {
-		// No ID -- show a list
+	if ( ! q) {
+		// No query -- show a list
 		// TODO better graphic design before we make this list widget public
 		if ( ! Login.isLoggedIn()) {
 			return <div>Missing: campaign or advertiser ID. Please check the link you used to get here.</div>;
 		}
-		return <ListItems type={C.TYPES.Advert} status={C.KStatus.PUBLISHED} servlet='campaign' />;		
+		return <ListItems type={C.TYPES.Advert} servlet='campaign' />;		
 	}
 
-	let adPv = adid? ActionMan.getDataItem({type: C.TYPES.Advert, id, status: status || C.KStatus.PUBLISHED, domain: ServerIO.PORTAL_DOMAIN})
-		: ActionMan.list({type: C.TYPES.Advert, status:C.KStatus.ALL_BAR_TRASH, q:id });
+	let pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
 
-	if ( ! adPv.resolved ) {
+	if ( ! pvAds.resolved ) {
 		return <Misc.Loading text='Loading campaign data...' />;
 	}
 
-	// FIXME - locked to one ad?! Nooo that was never the spec. 
-	// (well: M was junior. and had his head up his arse)
-	// Assume we have data for single advert if adid exists
-	// Pull out first advert from advertiser data if not
-	let ad = (adid ? adPv.value : ( adPv.value && adPv.value.hits && adPv.value.hits[0] )) || {};
+	let ads = pvAds.value.hits;
+	// No ads?!
+	if ( ! ads.length) {
+		return <BS.Alert>Could not load adverts for {q} {status}</BS.Alert>;
+	}
 
-	let branding = ad.branding || {};
-	// default styling if adv branding is not there 
-
-	let brandColor = branding.color || branding.backgroundColor || (ad.mockUp && ad.mockUp.backgroundColor);
+	let branding = {};
+	let campaignPage = {};
+	// ??last ad wins any branding settings!
+	ads.forEach(ad => Object.assign(branding, ad.branding));
+	ads.forEach(ad => Object.assign(campaignPage, ad.campaignPage));
+	
+	let brandColor = branding.color || branding.backgroundColor;
 	let brandLogo = branding.logo; 
 
-	// campaign data
-	let campaign = ad && ad.campaignPage;
-	let startDate = ad.start ? 'This campaign started on '.concat(ad.start.substring(0, 10)) : '';
-	let smallPrint = null;
-
 	// Use background image given to adunit, or show default image of sand dune 
-	const backgroundImage = (campaign && campaign.bg) || (ServerIO.MYLOOP_ENDPONT + '/img/wheat_fields.jpg');
+	const backgroundImage = (campaignPage && campaignPage.bg) || (ServerIO.MYLOOP_ENDPONT + '/img/wheat_fields.jpg');
 
-	if (campaign) {
-		smallPrint = campaign.smallPrint || '';
-	}
-
-	// if there is no charity data, tell the user
-	// TODO: do we want to deal with this in a more elegant way?
-	if ( ! ad.charities) {
-		return <span>Cannot find charity data</span>;	
-	}
+	const soloAd = ads.length===1? ads[0] : null;
+	const startDateString = soloAd && soloAd.startDate;
+	const smallPrint = soloAd && soloAd.smallPrint;
 
 	// individual charity data
-	let clist = ad.charities.list;
-	let cids = clist.map(x => x.id);
+	let charities = _.flatten(ads.map(ad => ad.charities.list));
+	let cids = charities.map(x => x.id);
 
 	// Unfortunately need to repeat structure as ActionMan.list does not return a promise
-	let q = adid 
-		? 'vert:' + id
-		: adPv.value.hits.reduce( (query, vert) => query += 'vert:' + vert.id + ' OR ', '');
+	let sqDon = new SearchQuery();
+	ads.forEach(vert => sqDon = sqDon.or('vert:' + vert.id));
 
 	// load the community total for the ad
-	let pvDonationsBreakdown = DataStore.fetch(['widget','CampaignPage','communityTotal', id], () => {
+	let pvDonationsBreakdown = DataStore.fetch(['widget','CampaignPage','communityTotal', sqDon.query], () => {
 		// TODO campaign would be nicer 'cos we could combine different ad variants... but its not logged reliably
 		// Argh: Loop.Me have not logged vert, only campaign.
 		// but elsewhere vert is logged and not campaign.
 		// let q = ad.campaign? '(vert:'+adid+' OR campaign:'+ad.campaign+')' : 'vert:'+adid;		
 		// TODO "" csv encoding for bits of q (e.g. campaign might have a space)
-		return ServerIO.getDonationsData({q});		
+		return ServerIO.getDonationsData({q:sqDon.query});		
 	}, true, 5*60*1000);
 
 	if ( ! pvDonationsBreakdown.resolved ) {
@@ -107,7 +103,7 @@ const CampaignPage = () => {
 	});
 
 	let campaignTotal = pvDonationsBreakdown.value.total; 
-	let donationValue = campaign && campaign.donation? campaign.donation : campaignTotal; // check if statically set and, if not, then update with latest figures
+	let donationValue = campaignPage && campaignPage.donation? campaignPage.donation : campaignTotal; // check if statically set and, if not, then update with latest figures
 	
 	let charityTotal = filteredBreakdown.reduce((acc, current) => acc + current.value100p, 0);
 	
@@ -142,7 +138,7 @@ const CampaignPage = () => {
 							</div>
 						</div>
 						<div className='charities-container'>
-							{clist.map( charity => <CharityCard key={charity.id} charity={charity} />)}
+							{charities.map( charity => <CharityCard key={charity.id} charity={charity} />)}
 						</div>
 					</div>
 				</div>
@@ -151,14 +147,14 @@ const CampaignPage = () => {
 				<div className='row pad1'>
 					<div className='col-md-2' /> 
 					<div className='col-md-8'>
-						{ ad && ad.videos && ad.videos.length 
-							&& <ShareAnAd adHistory={{...ad.videos[0], vert: adid}} mixPanelTag='ShareAnAd' color={brandColor} />
+						{ads.length && ads[0].videos && ads[0].videos.length 
+							&& <ShareAnAd adHistory={{...ads[0].videos[0], vert: adid}} mixPanelTag='ShareAnAd' color={brandColor} />
 						}
 					</div> 
 					<div className='col-md-2' />
 				</div>
 			</div>
-			<Footer leftFooter={startDate} rightFooter={smallPrint} />
+			<Footer leftFooter={startDateString} rightFooter={smallPrint} />
 		</div>
 	);
 }; // ./CampaignPage

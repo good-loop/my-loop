@@ -3,19 +3,21 @@ import { join } from 'wwutils';
 import { SocialMediaFooterWidget } from './SocialLinksWidget';
 import MDText from '../base/components/MDText';
 
+/**
+ * 
+ * @param leftFooter {String} Markdown text
+ * @param rightFooter {String} Markdown text
+ * @param style {Object} css styling 
+ */
 const Footer = ({className, leftFooter, rightFooter, style, showSocialMediaLinks}) => (
 	<div className={join('footer pad1', className)} style={style}>
-		{
-			showSocialMediaLinks
-			&& (
-				<SocialMediaFooterWidget 
-					type='goodloop'
-					fb_url='https://www.facebook.com/the.good.loop/'
-					tw_url='https://twitter.com/goodloophq'
-					insta_url='https://www.instagram.com/goodloophq/'
-				/>
-			)
-		}
+		{showSocialMediaLinks? 
+			<SocialMediaFooterWidget 
+				type='goodloop'
+				fb_url='https://www.facebook.com/the.good.loop/'
+				tw_url='https://twitter.com/goodloophq'
+				insta_url='https://www.instagram.com/goodloophq/'
+			/> : null}
 		<div className='footer-col leftFooter'>
 			<div className='innerLeftFooter'>
 				<MDText source={leftFooter} />
