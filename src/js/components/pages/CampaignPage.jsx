@@ -28,7 +28,8 @@ const CampaignPage = () => {
 	// What adverts should we look at?
 	let { 'gl.vert': adid, 'gl.vertiser': vertiserid, q='', status } = DataStore.getValue(['location', 'params']) || {};	
 	let sq = new SearchQuery(q);
-	if (adid) sq = sq.setProp('vert', adid);
+	// NB: convert url parameters into a backend ES query against the Advert.java object
+	if (adid) sq = sq.setProp('id', adid);
 	if (vertiserid) sq = sq.setProp('vertiser', vertiserid);
 	q = sq.query;
 	console.log("query", q);
@@ -79,7 +80,9 @@ const CampaignPage = () => {
 
 	// Unfortunately need to repeat structure as ActionMan.list does not return a promise
 	let sqDon = new SearchQuery();
-	ads.forEach(vert => sqDon = sqDon.or('vert:' + vert.id));
+	for(let i=0; i<ads.length; i++) {
+		sqDon = sqDon.or('vert:' + ads[i].id);
+	}
 
 	// load the community total for the ad
 	let pvDonationsBreakdown = DataStore.fetch(['widget','CampaignPage','communityTotal', sqDon.query], () => {
@@ -95,6 +98,7 @@ const CampaignPage = () => {
 		return <Misc.Loading text='Loading campaign donations...' />;
 	}
 
+	// ?? doc - what is this?
 	let filteredBreakdown = cids.map(cid => {
 		const value100p = (pvDonationsBreakdown.value.by_cid[cid] && 
 			pvDonationsBreakdown.value.by_cid[cid].value100p
