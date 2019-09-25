@@ -26,7 +26,7 @@ import BS from '../../base/components/BS';
  */
 const CampaignPage = () => {
 	// What adverts should we look at?
-	let { 'gl.vert': adid, 'gl.vertiser': vertiserid, q='', status } = DataStore.getValue(['location', 'params']) || {};	
+	let { 'gl.vert': adid, 'gl.vertiser': vertiserid, q='', status=C.KStatus.PUB_OR_ARC } = DataStore.getValue(['location', 'params']) || {};	
 	let sq = new SearchQuery(q);
 	// NB: convert url parameters into a backend ES query against the Advert.java object
 	if (adid) sq = sq.setProp('id', adid);
