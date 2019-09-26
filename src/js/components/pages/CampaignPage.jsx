@@ -74,8 +74,19 @@ const CampaignPage = () => {
 	const startDateString = soloAd && soloAd.startDate;
 	const smallPrint = soloAd && soloAd.smallPrint;
 
+	// SoGive occasionally provides duplicated charity objects, so we check and filter them first.
+	// TODO: This check shouldn't be here, maybe SoGive can filter its stuff before sending it over?
+	const removeDuplicateCharities = arr => {
+		let ids = [];
+		return arr.filter(obj => {
+			if (ids.includes(obj.id)) { return; }
+			ids.push(obj.id);
+			return obj;
+		});
+	};
+
 	// individual charity data
-	let charities = _.flatten(ads.map(ad => ad.charities.list));
+	let charities = removeDuplicateCharities(_.flatten(ads.map(ad => ad.charities.list)));
 	let cids = charities.map(x => x.id);
 
 	// Unfortunately need to repeat structure as ActionMan.list does not return a promise
