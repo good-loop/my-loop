@@ -247,7 +247,9 @@ a.btn {
 }
 
 .word-wrap {
-	word-break: break-all;
+	/* c.f. https://stackoverflow.com/posts/40442295/revisions */
+	overflow-wrap: break-word;
+	// word-break: break-all;
 }
 
 .logo-base {
