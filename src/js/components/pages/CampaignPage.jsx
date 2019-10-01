@@ -177,30 +177,38 @@ const CampaignPage = () => {
 
 const CharityCard = ({charity}) => {
 	// fetch extra info from SoGive
-	const pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:charity.id, status:C.KStatus.PUBLISHED});
-	let sogiveCharity = pvCharity.value;
+	console.log(charity);
 	let cid = charity.id;
-	if (sogiveCharity) {		
-		// HACK: prefer short description
-		if (sogiveCharity.summaryDescription) sogiveCharity.description = sogiveCharity.summaryDescription;
-		// merge in SoGive as defaults
-		charity = Object.assign({}, sogiveCharity, charity);
-		cid = NGO.id(sogiveCharity); // see ServerIO's hacks to handle bad data entry in the Portal
+	if (cid) {
+		const pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:charity.id, status:C.KStatus.PUBLISHED});
+		let sogiveCharity = pvCharity.value;
+		if (sogiveCharity) {		
+			// HACK: prefer short description
+			if (sogiveCharity.summaryDescription) sogiveCharity.description = sogiveCharity.summaryDescription;
+			// merge in SoGive as defaults
+			charity = Object.assign({}, sogiveCharity, charity);
+			cid = NGO.id(sogiveCharity); // see ServerIO's hacks to handle bad data entry in the Portal
+		}
 	}
+
+	// If charity has photo, use it. Otherwise use logo with custom colour bg and eliminate name.
 	let photo = charity.highResPhoto || charity.images;
+	let logo = charity.logo;
 
 	return (
 		<div className='charity-card top-pad1 bottom-pad1' key={charity.name}>
-			<a className='flex-row charity' href={charity.url} target="_blank" rel="noopener noreferrer">
-				<SquareLogo url={photo} />
+			<a className='flex-row charity' href={charity.url} target="_blank" rel="noopener noreferrer"
+				style={photo || !charity.color ? {} : {background: charity.color}}
+			>
+				<SquareLogo url={photo || logo} className={photo ? '' : 'contain'} />
 				<span className='name sub-header pad1 white contrast-text'>
-					{charity.name}
+					{photo ? charity.name : ''}
 				</span>
 			</a>
 			<div className='charity-description text-block'>
 				<ReactMarkdown source={charity.description} />
 			</div>
-			{Roles.isDev()? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
+			{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
 		</div>);
 };
 
