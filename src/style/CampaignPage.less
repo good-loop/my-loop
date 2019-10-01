@@ -8,12 +8,15 @@
 .header-block {
 	overflow: auto;
 	position: relative;
-	min-height: 15rem;
+	min-height: 18.5rem;
 }
 
 .CampaignPage {
 	.navbar {
 		background-color: @gl-red;
+		.navbar-brand img {
+			height: 80%;
+		}
 	}
 
 	.navbar a {
@@ -22,6 +25,7 @@
 
 	.dropdown > a {
 		color: #fff !important;
+		padding-top: 1em;
 	}
 
 	.btn-gl {
@@ -38,6 +42,10 @@
 		&.contain {
 			background-size: contain;
 		}
+	}
+
+	#logo-container-curve {
+		display: none;
 	}
 
 	.charities-container {
@@ -67,7 +75,15 @@
 
 	.charity-description {
 		width: @logo-size;
-		padding: 0 0.25em;
+		padding: 0.5em 0.25em;
+		p {
+			line-height: 1.25;
+			font-size: 22px;
+		}
+	}
+
+	.charity-card {
+		padding-top: 3px;
 	}
 
 	.charity-card:first-child .charity-description { padding-left: 0; }
