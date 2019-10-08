@@ -29,10 +29,8 @@ const Footer = ({className, leftFooter, rightFooter, style, showSocialMediaLinks
 				<a href='https://www.good-loop.com/privacy-policy'>Privacy policy</a>
 			</p>
 			<p>
-				Good-Loop&trade; is registered in Scotland, U.K.
-				<br />(No. SC548356)
+				Good-Loop&trade; is registered in Scotland, U.K. (No. SC548356)
 			</p>
-			<p>127 Rose Street South Lane, Edinburgh, EH2 4BB</p>
 			<p>
 				This web-app is open-source on <a target='_blank' href='https://github.com/good-loop/my-loop'>GitHub</a>.
 			</p>

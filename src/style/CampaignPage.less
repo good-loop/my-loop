@@ -12,6 +12,8 @@
 }
 
 .CampaignPage {
+	// Note: My-Loop has nav buttons, but the navbar is transparent.
+	// Whereas CampaignPage has a solid brand-coloured navbar
 	.navbar {
 		background-color: @gl-red;
 		.navbar-brand img {
@@ -60,7 +62,7 @@
 
 	.charity {
 		position: relative;
-		background: linear-gradient(#6e808f, #40403b);
+		// background: linear-gradient(#6e808f, #40403b); looks ugly
 
 		.name {			
 			position: absolute;
@@ -77,8 +79,9 @@
 		width: @logo-size;
 		padding: 0.5em 0.25em;
 		p {
-			line-height: 1.25;
-			font-size: 22px;
+			line-height: 1;
+			font-size: 14pt;
+			text-align: justify;
 		}
 	}
 

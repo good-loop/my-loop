@@ -23,11 +23,8 @@ const Page = () => {
 		DataStore.setValue(['data', 'Person', 'xids'], getAllXIds());
 	}, [Login && Login.aliases && Login.aliases.length]);
 
-	let doesIfVisibleRef = useRef();
-	useLogsIfVisible(doesIfVisibleRef, 'ShareAnAdVisible');
-
 	return (
-		<div className='page DataPage text-center' ref={doesIfVisibleRef}>
+		<div className='page DataPage text-center'>
 			<NavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
 			<div className='container-fluid'>
 				<div className='row panel-title panel-heading sub-header pad1'> 

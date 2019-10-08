@@ -1,4 +1,6 @@
 import React, { useRef } from 'react';
+// import PV from 'promise-value';
+import {yessy} from 'wwutils';
 
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
@@ -164,34 +166,28 @@ const HowItWorksCard = () => {
 };
 
 
-let userAdHistoryPV;
-
 const ShareAdCard = () => {
+	// ?? how is this populated??
 	let xids = DataStore.getValue(['data', 'Person', 'xids']);
-	if (!xids) return <Misc.Loading />;
+	// ??Only interested in @trk ids. Other types won't have associated watch history ??
+	let trkIds = xids && xids.filter(xid => xid.match(/@trk$/));
 
-	// Only do this once! Try to find the user's most recently viewed advert.
-	if (!userAdHistoryPV) {
-		// Only interested in @trk ids. Other types won't have associated watch history
-		let trkIds = xids.filter(xid => xid.match(/@trk$/));
-
-		// Fetch ad-history for all known tracking IDs...
-		// No trkids? Calling getAdHistory with null arg = try current cookie
-		if (!trkIds.length) trkIds = [null];
-		const pvs = trkIds.map(trkId => ServerIO.getAdHistory(trkId));
-
-		// ... and evaluate result to find most recent view when all requests resolved
-		userAdHistoryPV = Promise.all(pvs).then(vals => vals.reduce((newest, candidate) => {
-			const candidateTime = Date.parse(candidate.cargo.time);
-			if (candidateTime > newest.parsedTime) {
-				// tack the UTC timestamp on the view object for simple comparison
-				return {parsedTime: candidateTime, ...candidate.cargo};
-			}
-			return newest;
-		}, {parsedTime: new Date(0).getTime()})); // fake adview object for reducer initial value
+	if ( ! yessy(trkIds)) {
+		console.log("ShareAdCard - no trkIds = no ad??", xids);
+		return <div className='top-pad1'><ShareAnAd /></div>;
 	}
 
-	return <ShareAnAd adHistory={userAdHistoryPV && userAdHistoryPV.value} className='top-pad1' mixPanelTag='ShareAnAd' />;
+	// What was the last thing they watched? Actually, just anything (race)
+	let pvLastAd = DataStore.fetch(['misc', 'lastAd', JSON.stringify(trkIds)], () => {
+		// Fetch ad-history for all known tracking IDs...
+		const pAds = trkIds.map(trkId => ServerIO.getLastAd(trkId));
+		const pAd = Promise.race(pAds);
+		// TODO pick the most ad?? (but oh well, I think picking an earlier ad is harmless)
+		return pAd;
+	});
+	if ( ! pvLastAd.resolved) return <Misc.Loading />;
+	const adid = pvLastAd.value && pvLastAd.value.id; // NB: the server might return an error, in which case adid is null	
+	return <div className='top-pad1'><ShareAnAd adid={adid} /></div>;
 };
 
 /**

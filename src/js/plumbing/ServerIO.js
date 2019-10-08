@@ -108,8 +108,9 @@ ServerIO.getAllSpend = ({vert, name}) => {
 
 /** Returns information on the last ad watched by the given user
  *  Ok if xid is blank. Watch-history will use current session cookie instead
+ * @returns {Promise<Advert>} Advert json ajax result from as.good-loop.com/watch-history
  */
-ServerIO.getAdHistory = (xid) => ServerIO.load(ServerIO.AS_ENDPOINT + '/watch-history/' + (xid ? escape(xid) : '' ));
+ServerIO.getLastAd = (xid) => ServerIO.load(ServerIO.AS_ENDPOINT + '/watch-history/' + (xid ? escape(xid) : '' ));
 
 // Queries for number of times that an ad shared by a user has been watched
 // socialShareId should always be an array of strings

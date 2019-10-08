@@ -15,6 +15,8 @@ import NavBar from '../NavBar';
 import { SquareLogo } from '../Image';
 import ShareAnAd from '../cards/ShareAnAd';
 import NGO from '../../base/data/NGO';
+import Money from '../../base/data/Money';
+import CampaignPageDC from '../../data/CampaignPage';
 import SearchQuery from '../../base/searchquery';
 import BS from '../../base/components/BS';
 
@@ -33,9 +35,6 @@ const CampaignPage = () => {
 	if (vertiserid) sq = sq.setProp('vertiser', vertiserid);
 	q = sq.query;
 	console.log("query", q);
-
-	// TODO replace with a ServerIO.log method which can abstract what backend we use
-	ServerIO.mixPanelTrack({mixPanelTag: 'Campaign page render', data: {adid, vertiserid}});
 
 	if ( ! q) {
 		// No query -- show a list
@@ -58,9 +57,10 @@ const CampaignPage = () => {
 		return <BS.Alert>Could not load adverts for {q} {status}</BS.Alert>;
 	}
 
+	// Combine campaign page and branding settings from all ads
+	// Last ad wins any branding settings!
 	let branding = {};
 	let campaignPage = {};
-	// ??last ad wins any branding settings!
 	ads.forEach(ad => Object.assign(branding, ad.branding));
 	ads.forEach(ad => Object.assign(campaignPage, ad.campaignPage));
 	
@@ -93,6 +93,7 @@ const CampaignPage = () => {
 	let sqDon = new SearchQuery();
 	for(let i=0; i<ads.length; i++) {
 		sqDon = sqDon.or('vert:' + ads[i].id);
+		if (ads[i].campaign) sqDon = sqDon.or('campaign:' + ads[i].campaign);
 	}
 
 	// load the community total for the ad
@@ -109,27 +110,14 @@ const CampaignPage = () => {
 		return <Misc.Loading text='Loading campaign donations...' />;
 	}
 
-	// ?? doc - what is this?
-	let filteredBreakdown = cids.map(cid => {
-		const value100p = (pvDonationsBreakdown.value.by_cid[cid] && 
-			pvDonationsBreakdown.value.by_cid[cid].value100p
-		) || 0;
-		return { cid, value100p };
-	});
 
 	let campaignTotal = pvDonationsBreakdown.value.total; 
-	let donationValue = campaignPage && campaignPage.donation? campaignPage.donation : campaignTotal; // check if statically set and, if not, then update with latest figures
-	
-	let charityTotal = filteredBreakdown.reduce((acc, current) => acc + current.value100p, 0);
-	
-	// TODO campaignSlice is cryptic -- Good that it's documented here. 
-	// But better to give this a semantic name, e.g. percentageForCharityID, so its clear elsewhere too.
-	let campaignSlice = {}; // campaignSlice is of the form { cid: {percentageTotal: ...} } so as to ensure the correct values are extracted later (checking for cid rather than index)
-
-	filteredBreakdown.forEach(function(obj) {
-		const rawFraction = obj.value100p / charityTotal || 0; 
-		campaignSlice[obj.cid] = {percentageTotal: Math.round(rawFraction*100)}; 
-	});
+	let donationValue = campaignTotal; // check if statically set and, if not, then update with latest figures
+	// Allow the campaign page to override and specify a total
+	let campaignPageDonations = ads.map(ad => ad.campaignPage && CampaignPageDC.donation(ad.campaignPage)).filter(x => x);
+	if (campaignPageDonations.length === ads.length) {
+		donationValue = Money.sum(campaignPageDonations);
+	}
 
 	// TODO: refactor this because it's very similar now to mypage
 	return (
@@ -147,7 +135,7 @@ const CampaignPage = () => {
 								<img className='header-logo' src={brandLogo} alt='advertiser-logo' />
 							</div>
 							<div className='sub-header pad1 white contrast-text'>
-								<div>Together we've raised</div>
+								<div>Together our Ads-for-Good have raised</div>
 								{donationValue? <div className='header' style={{color: 'white'}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 								<div>for</div>
 							</div>
@@ -157,17 +145,24 @@ const CampaignPage = () => {
 						</div>
 					</div>
 				</div>
-			</div>
-			<div className='container-fluid'>
+
+				<div className='row'>
+					TODO campaign info -- a list of the ads run, with some summary stats of date, 
+					thumbnail image, number of views
+
+					??group ads by campaign - eg TOMS run the same campaign over a few languages
+				</div>
+
 				<div className='row pad1'>
 					<div className='col-md-2' /> 
 					<div className='col-md-8'>
 						{ads.length && ads[0].videos && ads[0].videos.length 
-							&& <ShareAnAd adHistory={{...ads[0].videos[0], vert: adid}} mixPanelTag='ShareAnAd' color={brandColor} />
+							&& <ShareAnAd adid={ads[0].id} color={brandColor} />
 						}
 					</div> 
 					<div className='col-md-2' />
 				</div>
+
 			</div>
 			<Footer leftFooter={startDateString} rightFooter={smallPrint} />
 		</div>
@@ -199,16 +194,23 @@ const CharityCard = ({charity}) => {
 			<a className='flex-row charity' href={charity.url} target="_blank" rel="noopener noreferrer"
 				style={photo || !charity.color ? {} : {background: charity.color}}
 			>
-				<SquareLogo url={photo || logo} className={photo ? '' : 'contain'} />
+				<SquareLogo url={photo || logo} className={photo? 'contain' : null} />
 				<span className='name sub-header pad1 white contrast-text'>
 					{photo ? charity.name : ''}
 				</span>
 			</a>
-			<div className='charity-description text-block'>
-				<ReactMarkdown source={charity.description} />
-			</div>
+			<CharityCard2 charity={charity} />
 			{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
 		</div>);
+};
+
+const CharityCard2 = ({charity}) => {
+	// impact data?? e.g. you funded 10 trees <-- This would be best when we can TODO
+	if (charity.description) {
+		return <div className='charity-description text-block'><ReactMarkdown source={charity.description} /></div>;
+	}
+	// TODO money donated to this charity??
+	return null;
 };
 
 export default CampaignPage;

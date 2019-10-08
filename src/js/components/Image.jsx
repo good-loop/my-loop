@@ -1,6 +1,9 @@
 import React from 'react';
 import DataStore from '../base/plumbing/DataStore';
+import { join } from 'wwutils';
 
+// FIXME this doesnt get printed 'cos Bootstrap sets background to off for printing.
+// Either (a) stronger css to get it printed, or (b) use and <img> instead
 const BaseLogo = ({alt, className, style, url, children, ...rest}) => (
 	<div alt={alt} className={className} style={{backgroundImage: `url('${url}')`, ...style}} {...rest}>
 		{children}
@@ -15,7 +18,7 @@ const RoundLogo = ({className, ...rest}) => <BaseLogo {...rest} className={'roun
  * Occupies 1/3 screen-width by default.
  */
 const SquareLogo = ({className, children, ...rest}) => (
-	<BaseLogo {...rest} className={'square-logo' + (className ? ' ' + className : '')}>
+	<BaseLogo {...rest} className={join('square-logo', className)}>
 		<div className="squarener" />
 		{children}
 	</BaseLogo>
