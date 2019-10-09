@@ -140,10 +140,14 @@ const CampaignPage = () => {
 								<div>for</div>
 							</div>
 						</div>
-						<div className='charities-container'>
-							{charities.map( charity => <CharityCard key={charity.id} charity={charity} />)}
-						</div>
 					</div>
+				</div>
+
+				<div className='charities-container'>
+					<div>
+						{charities.filter(c => c.logo).map(charity => <ScrollTo aName={charity.id}><img alt={charity.name} src={charity.logo} className='logo' /></ScrollTo>) }
+					</div>
+					{charities.map( charity => <CharityCard key={charity.id} charity={charity} />)}
 				</div>
 
 				<div className='row'>
@@ -170,6 +174,15 @@ const CampaignPage = () => {
 }; // ./CampaignPage
 
 
+/**
+ * TODO link to a part of a page. How do we do this, given that we already use #foo for page nav??
+ * TODO move into Misc?
+ */
+const ScrollTo = ({aName, children}) => {
+	let url = window.location+"#"+escape(aName); // TODO modify to include something that will trigger a scroll to the target aName
+	return <a href={url}>{children}</a>;
+};
+
 const CharityCard = ({charity}) => {
 	// fetch extra info from SoGive
 	let cid = charity.id;
@@ -189,19 +202,25 @@ const CharityCard = ({charity}) => {
 	let photo = charity.highResPhoto || charity.images;
 	let logo = charity.logo;
 
-	return (
+	return (<>
+		<a name={cid} />
 		<div className='charity-card top-pad1 bottom-pad1' key={charity.name}>
 			<a className='flex-row charity' href={charity.url} target="_blank" rel="noopener noreferrer"
 				style={photo || !charity.color ? {} : {background: charity.color}}
 			>
+				{photo && logo? <img className='logo-small' src={logo} style={{position:"relative",top:0,left:0}} /> : null}
+
 				<SquareLogo url={photo || logo} className={photo? 'contain' : null} />
 				<span className='name sub-header pad1 white contrast-text'>
 					{photo ? charity.name : ''}
 				</span>
 			</a>
 			<CharityCard2 charity={charity} />
+			<div>TODO Impact, or £s donated</div>
+			<div>TODO thank-you comment from the charity, if we received one</div>
 			{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
-		</div>);
+		</div>
+	</>);
 };
 
 const CharityCard2 = ({charity}) => {
