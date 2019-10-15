@@ -15,7 +15,7 @@ import Money from '../../base/data/Money';
 const AdvertCard = ({advert}) => {
 	// TODO pull impressions data from DataLog
 	return (<ACard>
-		{advert.end}
+		Date: <Misc.LongDate date={advert.end} />
 		{advert.name}
 		{advert.campaign}
 		TODO campaign info -- some summary stats of date, 
