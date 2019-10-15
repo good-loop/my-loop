@@ -32,7 +32,10 @@ const CharityCard = ({charity, donationValue}) => {
 		let sogiveCharity = pvCharity.value;
 		if (sogiveCharity) {		
 			// HACK: prefer short description
-			if (sogiveCharity.summaryDescription) sogiveCharity.description = sogiveCharity.summaryDescription;
+			// if (sogiveCharity.summaryDescription) sogiveCharity.description = sogiveCharity.summaryDescription;
+
+			// Prefer full descriptions. If unavailable switch to summary desc.
+			if (!sogiveCharity.description) sogiveCharity.description = sogiveCharity.summaryDescription;
 			// merge in SoGive as defaults
 			charity = Object.assign({}, sogiveCharity, charity);
 			cid = NGO.id(sogiveCharity); // see ServerIO's hacks to handle bad data entry in the Portal
@@ -45,9 +48,9 @@ const CharityCard = ({charity, donationValue}) => {
 
 	let backgroundColor = charity.color;
 
-	return (<ACard backgroundColor={backgroundColor} name={cid} >
+	return (<ACard backgroundColor={backgroundColor} name={cid} className="card-container">
 		<div className='charity-card' key={charity.name}>
-			<a className='flex-row charity' href={charity.url} target="_blank" rel="noopener noreferrer"
+			{/* <a className='flex-row charity' href={charity.url} target="_blank" rel="noopener noreferrer"
 				style={photo || !charity.color ? {} : {background: charity.color}}
 			>
 				{photo && logo? <img className='logo-small' src={logo} style={{position:"relative",top:0,left:0}} /> : null}
@@ -56,14 +59,37 @@ const CharityCard = ({charity, donationValue}) => {
 				<span className='name sub-header p-1 white contrast-text'>
 					{photo ? charity.name : ''}
 				</span>
-			</a>
-			<CharityCard2 charity={charity} />
-			<div>TODO Impact if we know it
-				{donationValue? <Counter currencySymbol={Money.currencySymbol(donationValue)} value={Money.value(donationValue)} /> : null}
+			</a> */}
+
+			<div className="charity-info" style={{display: 'flex', flexDirection: 'row'}}>
+				<div className="charity-text">
+					<span className="name sub-header p-1 white contrast-text">
+						{ charity.name }
+					</span>
+					<div className="charity-description text-block">
+						<MDText source={charity.description || ''} />
+					</div>
+				</div>
+				<div className="charity-logo">
+					<a className="charity" href={charity.url} target="_blank" rel="noopener no referrer"
+						style={photo || !charity.color ? {} : {background: charity.color}}
+					>
+						{photo && logo? <img className="logo" src={logo || photo} style={{position:"relative", top:0, left:0}} /> : null}
+					</a>
+				</div>
 			</div>
-			<blockquote className="blockquote"><MDText source={tq(charity)} /></blockquote>
-			{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
+
+			<div className="story-card-mockup">
+				<span>This will be the StoryCard</span>
+			</div>
 		</div>
+
+		{/* <CharityCard2 charity={charity} /> */}
+		<div>TODO Impact if we know it
+			{donationValue? <Counter currencySymbol={Money.currencySymbol(donationValue)} value={Money.value(donationValue)} /> : null}
+		</div>
+		<blockquote className="blockquote"><MDText source={tq(charity)} /></blockquote>
+		{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
 	</ACard>);
 };
 

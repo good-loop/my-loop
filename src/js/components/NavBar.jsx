@@ -13,7 +13,7 @@ const MyLoopNavBar = props => (
 		pages={[]}
 		render={({pageLinks, currentPage, style, logo}) => <>
 			{navBarLogoContainerSVG}
-			<div style={style}>
+			<div style={style} className="navbar-items">
 				<div className="navbar-header" title="Dashboard">
 					<a className="navbar-brand" href='/'>
 						<img alt={C.app.name} src={logo || C.app.homeLogo || C.app.logo} />

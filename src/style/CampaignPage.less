@@ -16,10 +16,22 @@
 	// Whereas CampaignPage has a solid brand-coloured navbar
 	.navbar {
 		background-color: @gl-red;
+		position: fixed;
+
 		.navbar-brand img {
 			height: 80%;
 		}
+		.navbar-items {
+		display: flex;
+		justify-content: space-between;
+		width: 100%;
+		}
 	}
+
+	#navbar {
+		max-width: fit-content;
+	}
+
 
 	.navbar a {
 		color: #fff !important;
@@ -50,20 +62,68 @@
 		display: none;
 	}
 
-	.charity {
-		position: relative;
-		// background: linear-gradient(#6e808f, #40403b); looks ugly
-
-		.name {			
-			position: absolute;
-			left: 0;
-			bottom: 0;
-			width: 100%;
-			text-align: left;
-			max-height: 100%;
-			overflow: hidden;
+	.hero {
+		height: 100vh;
+		display: flex;
+		.container.p-2 {
+			align-self: center;
 		}
 	}
+
+	.card-container {
+		height: 100vh;
+		display: flex
+	}
+
+	.container.p-2 {
+		margin: 0 auto;
+		align-self: center;
+	}
+
+	.charity-card {
+		display: flex;
+		.charity-info {
+			max-width: 60%;
+			margin: 0 auto;
+			display: flex;
+			flex-direction: row;
+			.charity-text {
+				width: 100%;
+				text-align: start;
+
+				display: flex;
+				flex-direction: column;
+				.charity-description {
+					width: 100%;
+				}
+			}
+			.charity-logo {
+				max-width: 20%;
+				display: flex;
+				.charity {
+					display: flex;
+					position: relative;
+					.logo{
+						position: relative;
+						max-height: 150px;
+						height: 100%;
+						width: auto;
+					}
+					.name {			
+						position: absolute;
+						left: 0;
+						bottom: 0;
+						width: 100%;
+						text-align: left;
+						max-height: 100%;
+						overflow: hidden;
+					}
+				}
+			}
+		}
+	}
+
+	
 
 	.charity-description {
 		width: @logo-size;
@@ -71,8 +131,16 @@
 		p {
 			line-height: 1;
 			font-size: 14pt;
-			text-align: justify;
+			text-align: left;
 		}
+	}
+
+	// Testing layout. Will be replaced with actual component.
+	.story-card-mockup {
+		border: 1px solid black;
+		width: 25%;
+		height: 16em;
+		border-radius: 15px;
 	}
 
 	.header-logo {

@@ -166,7 +166,7 @@ const CampaignPage = () => {
 const SplashCard = ({branding, campaignPage, donationValue}) => {
 	// Use background image given to adunit, or show default image of sand dune 
 	const backgroundImage = (campaignPage && campaignPage.bg) || (ServerIO.MYLOOP_ENDPONT + '/img/wheat_fields.jpg');
-	return (<ACard backgroundImage={backgroundImage}>
+	return (<ACard className="hero" backgroundImage={backgroundImage}>
 		<div className='flex-row flex-centre p-1'>
 			<img className='header-logo' src={branding.logo} alt='advertiser-logo' />
 		</div>
