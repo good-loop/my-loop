@@ -19,6 +19,7 @@ import Money from '../../base/data/Money';
 import CampaignPageDC from '../../data/CampaignPage';
 import SearchQuery from '../../base/searchquery';
 import BS from '../../base/components/BS';
+import ACard from '../cards/ACard';
 
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser`
@@ -64,12 +65,6 @@ const CampaignPage = () => {
 	ads.forEach(ad => Object.assign(branding, ad.branding));
 	ads.forEach(ad => Object.assign(campaignPage, ad.campaignPage));
 	
-	let brandColor = branding.color || branding.backgroundColor;
-	let brandLogo = branding.logo; 
-
-	// Use background image given to adunit, or show default image of sand dune 
-	const backgroundImage = (campaignPage && campaignPage.bg) || (ServerIO.MYLOOP_ENDPONT + '/img/wheat_fields.jpg');
-
 	const soloAd = ads.length===1? ads[0] : null;
 	const startDateString = soloAd && soloAd.startDate;
 	const smallPrint = soloAd && soloAd.smallPrint;
@@ -119,34 +114,17 @@ const CampaignPage = () => {
 		donationValue = Money.sum(campaignPageDonations);
 	}
 
+	let brandColor = branding.color || branding.backgroundColor;
+
 	// TODO: refactor this because it's very similar now to mypage
 	return (
-		<div className="page CampaignPage text-center">
-			<NavBar brandLogo={brandLogo} style={{backgroundColor: brandColor}} />
+		<div className="widepage CampaignPage text-center">
+			<NavBar brandLogo={branding.logo} style={{backgroundColor: brandColor}} />
 			{/* TODO: get rid of old css classes, previous to refactor */}
-			<div className='container-fluid'>
-				<div className='row'>
-					<div className='header-text'>
-						<div 
-							className='header-block img-block'
-							style={{backgroundImage: 'url(' + backgroundImage + ')'}}
-						>
-							<div className='flex-row flex-centre pad1'>
-								<img className='header-logo' src={brandLogo} alt='advertiser-logo' />
-							</div>
-							<div className='sub-header pad1 white contrast-text'>
-								<div>Together our Ads-for-Good have raised</div>
-								{donationValue? <div className='header' style={{color: 'white'}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
-								<div>for</div>
-							</div>
-						</div>
-					</div>
-				</div>
+			<div>
+				<SplashCard branding={branding} campaignPage={campaignPage} donationValue={donationValue} />
 
 				<div className='charities-container'>
-					<div>
-						{charities.filter(c => c.logo).map(charity => <ScrollTo aName={charity.id}><img alt={charity.name} src={charity.logo} className='logo' /></ScrollTo>) }
-					</div>
 					{charities.map( charity => <CharityCard key={charity.id} charity={charity} />)}
 				</div>
 
@@ -173,6 +151,38 @@ const CampaignPage = () => {
 	);
 }; // ./CampaignPage
 
+
+const SplashCard = ({branding, campaignPage, donationValue}) => {
+	// Use background image given to adunit, or show default image of sand dune 
+	const backgroundImage = (campaignPage && campaignPage.bg) || (ServerIO.MYLOOP_ENDPONT + '/img/wheat_fields.jpg');
+	return (<ACard backgroundImage={backgroundImage}>
+		<div className='flex-row flex-centre pad1'>
+			<img className='header-logo' src={branding.logo} alt='advertiser-logo' />
+		</div>
+		<div className='sub-header pad1 white contrast-text'>
+			<div>Together our Ads-for-Good have raised</div>
+			{donationValue? <div className='header' style={{color: 'white'}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
+			<div>for</div>
+		</div>
+	</ACard>);
+
+		// <div className='header-text'>
+		// 	<div 
+		// 		className='header-block img-block'
+		// 		style={{backgroundImage: 'url(' + backgroundImage + ')'}}
+		// 	>
+		// 	<div className='container-fluid'></div>
+		// 		<div className='flex-row flex-centre pad1'>
+		// 			<img className='header-logo' src={branding.logo} alt='advertiser-logo' />
+		// 		</div>
+		// 		<div className='sub-header pad1 white contrast-text'>
+		// 			<div>Together our Ads-for-Good have raised</div>
+		// 			{donationValue? <div className='header' style={{color: 'white'}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
+		// 			<div>for</div>
+		// 		</div>
+		// 	</div>
+		// </div>);
+};
 
 /**
  * TODO link to a part of a page. How do we do this, given that we already use #foo for page nav??

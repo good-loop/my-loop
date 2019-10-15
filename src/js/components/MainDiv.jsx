@@ -123,7 +123,7 @@ class MainDiv extends Component {
 
 		return (
 			<>
-				<div className='page' id={page}>
+				<div id={page} /* wrap in an id in case you need high-strength css rules */>
 					<Page path={path} />
 				</div>
 				<LoginWidget logo={<img src='/img/new-logo.png' style={{height: '64px'}} />} title='My Good-Loop: Raising money for Charity from adverts' services={['twitter', 'facebook']} />
