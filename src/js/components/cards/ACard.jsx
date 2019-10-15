@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-const ACard = ({backgroundImage, backgroundColor, children}) => {
+const ACard = ({backgroundImage, backgroundColor, children, name}) => {
 	let style ={
 		backgroundColor, 
 		backgroundImage: backgroundImage? 'url(' + backgroundImage + ')' : null,
@@ -9,7 +9,8 @@ const ACard = ({backgroundImage, backgroundColor, children}) => {
 	};
 	return (
 		<div className='w-100' style={style} >
-			<div className='container-fluid'>
+			{name? <a name={name} /> : null}
+			<div className='container p-1'>
 				{children}
 			</div>
 		</div>
