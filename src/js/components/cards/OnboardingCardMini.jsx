@@ -3,7 +3,7 @@ import RecentCampaignsCard from './RecentCampaignsCard';
 
 const OnboardingCardMini = () => (
 	<>
-		<div className='flex-row flex-centre pad3'>
+		<div className='flex-row flex-centre p-3'>
 			<div className='flex-vertical-align width50pct'>
 				<img className='width100pct' src='/img/gl-phone-preview.png' />
 			</div>
@@ -13,9 +13,9 @@ const OnboardingCardMini = () => (
 		</div>
 		<div>
 			<div className='triangle-gl-light-grey' />
-			<div className='flex-row flex-centre bg-gl-light-grey pad1'>
+			<div className='flex-row flex-centre bg-gl-light-grey p-1'>
 				<div className='flex-row'>
-					<div className='right-pad1'>
+					<div className='right-p-1'>
 						<img className='logo-big' src='/img/15-second.svg' alt='fifteen-seconds' />
 					</div>
 					<div className='sub-header flex-vertical-align'> Watch a 15 second advert and decide which of three charities should receive 50% of the cost of the ad </div>
@@ -31,7 +31,7 @@ const OnboardingCardMini = () => (
 					<div className='pad10' />
 					<div className='triangle-gl-dark-blue' />
 				</div>
-				<div className='header white bg-gl-dark-blue pad2'>
+				<div className='header white bg-gl-dark-blue p-2'>
 					Making online adverts
 					<br />
 					a better experience

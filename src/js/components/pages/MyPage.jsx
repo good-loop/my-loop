@@ -10,7 +10,7 @@ import Counter from '../../base/components/Counter';
 import ServerIO from '../../plumbing/ServerIO';
 import MyLoopNavBar from '../NavBar';
 import Footer from '../Footer';
-
+import ACard from '../cards/ACard';
 import ShareAnAd from '../cards/ShareAnAd';
 import SignUpConnectCard from '../cards/SignUpConnectCard';
 // TODO refactor so ImpactCard is the shared module, with other bits tucked away inside it
@@ -24,7 +24,7 @@ const MyPage = () => {
 	ServerIO.mixPanelTrack({mixPanelTag: 'Page rendered', data:{referrer: 'document.referrer'}});
 
 	return (
-		<div className='MyPage'>
+		<div className='MyPage widepage'>
 			<SplashCard />
 			<OurMissionCard />
 			<RecentCampaignsCard />
@@ -55,10 +55,10 @@ const ContactCard = () => {
 
 	return (
 		<div className='text-center'>
-			<div className='sub-header top-pad1'>
+			<div className='sub-header top-p-1'>
 				Get in touch
 			</div>
-			<div className='pad1'>
+			<div className='p-1'>
 				<div ref={doesIfVisibleRef}>
 					<div>
 						<p><a href="mailto:hello@good-loop.com?subject=My thoughts on My Good-Loop">Tell us what you think of My Good-Loop.</a></p>
@@ -71,23 +71,26 @@ const ContactCard = () => {
 };
 
 const TimeAndAttentionCard = () => (
-	<div className='bg-gl-red flex-row flex-wrap text-center white'>
-		<div className='flex-column pad1 width20'>
-			<div className='sub-header font-bold'>
-				Time and attention online are valuable.
+	// TODO We want two columns on desktop, one on mobile
+	<ACard className='bg-gl-red'>
+		<div className='flex-row text-center white'>
+			<div className='p-1'>
+				<div className='sub-header font-bold'>
+					Time and attention online are valuable.
+				</div>
+				<div className='sub-header'>
+					Let's harness that value and use it for good.
+				</div>
 			</div>
-			<div className='sub-header'>
-				Let's harness that value and use it for good.
+			<div className='text-block p-1'>
+				Good-Loop will never force you to engage with an ad. But, if you choose to give an advertiser some of your valuable time and attention, you get to give 50% of the advertisers' money to a relevant charitable cause.
 			</div>
 		</div>
-		<div className='text-block pad1'>
-			Good-Loop will never force you to engage with an ad. But, if you choose to give an advertiser some of your valuable time and attention, you get to give 50% of the advertisers' money to a relevant charitable cause.
-		</div>
-	</div>
+	</ACard>
 );
 
 const OurMissionCard = () => (
-	<div className='color-gl-red'>
+	<ACard className='color-gl-red' name='our-mission'>
 		<div className='our-mission'>
 			<GlLogoGenericSvg />
 			<div>
@@ -103,7 +106,7 @@ const OurMissionCard = () => (
 		<div className='sub-header'>
 			Here are some of our recent campaigns
 		</div>
-	</div>
+	</ACard>
 );
 
 
@@ -117,21 +120,21 @@ const HowItWorksCard = () => {
 					<div className="right header text-center">it<br />works</div>
 				</div>
 				<div className='steps'>
-					<div className='step-1 finger to-left white bg-gl-red pad1'>
+					<div className='step-1 finger to-left white bg-gl-red p-1'>
 						<CircleChar>1</CircleChar>
 						<div>
 							<span className='header'>WATCH</span>
 							<span className='sub-header'>&nbsp; a 15 second video </span>
 						</div>
 					</div>
-					<div className='step-2 finger to-right white bg-gl-red pad1'>
+					<div className='step-2 finger to-right white bg-gl-red p-1'>
 						<CircleChar>2</CircleChar>
 						<div>
 							<span className='header'>CHOOSE</span>
 							<span className='sub-header'>&nbsp; a charity to support </span>
 						</div>
 					</div>
-					<div className='step-3 finger to-left white pad1'>
+					<div className='step-3 finger to-left white p-1'>
 						<CircleChar>3</CircleChar>
 						<div>
 							<span className='header'>DONATE</span><br/>
@@ -174,7 +177,7 @@ const ShareAdCard = () => {
 
 	if ( ! yessy(trkIds)) {
 		console.log("ShareAdCard - no trkIds = no ad??", xids);
-		return <div className='top-pad1'><ShareAnAd /></div>;
+		return <div className='top-p-1'><ShareAnAd /></div>;
 	}
 
 	// What was the last thing they watched? Actually, just anything (race)
@@ -187,7 +190,7 @@ const ShareAdCard = () => {
 	});
 	if ( ! pvLastAd.resolved) return <Misc.Loading />;
 	const adid = pvLastAd.value && pvLastAd.value.id; // NB: the server might return an error, in which case adid is null	
-	return <div className='top-pad1'><ShareAnAd adid={adid} /></div>;
+	return <div className='top-p-1'><ShareAnAd adid={adid} /></div>;
 };
 
 /**

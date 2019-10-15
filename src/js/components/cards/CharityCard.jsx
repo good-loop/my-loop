@@ -8,9 +8,23 @@ import Misc from '../../base/components/Misc';
 import ActionMan from '../../plumbing/ActionMan';
 import NGO from '../../base/data/NGO';
 import { SquareLogo } from '../Image';
-import ReactMarkdown from 'react-markdown';
+import MDText from '../../base/components/MDText';
+import Counter from '../../base/components/Counter';
+import Money from '../../base/data/Money';
 
-const CharityCard = ({charity}) => {
+/**
+ * HACK hardcode some thank you messages.
+ * 
+ * TODO Have this as a field in the AdvertPage -> Charity editor
+ */
+const tq = charity => {
+	return {
+		helenbamber: `"That is absolutely fantastic news, thank you so much! Congratulations everyone on a successful Spring/Summer Campaign! 
+		The donation will go a huge way in supporting our clients to recover and rebuild their lives." -- Sophie at Helen Bamber`
+	}[charity.id] || "TODO thank-you comment from the charity, if we received one";
+};
+
+const CharityCard = ({charity, donationValue}) => {
 	// fetch extra info from SoGive
 	let cid = charity.id;
 	if (cid) {
@@ -39,13 +53,15 @@ const CharityCard = ({charity}) => {
 				{photo && logo? <img className='logo-small' src={logo} style={{position:"relative",top:0,left:0}} /> : null}
 
 				<SquareLogo url={photo || logo} className={photo? 'contain' : null} />
-				<span className='name sub-header pad1 white contrast-text'>
+				<span className='name sub-header p-1 white contrast-text'>
 					{photo ? charity.name : ''}
 				</span>
 			</a>
 			<CharityCard2 charity={charity} />
-			<div>TODO Impact, or £s donated</div>
-			<div>TODO thank-you comment from the charity, if we received one</div>
+			<div>TODO Impact if we know it
+				{donationValue? <Counter currencySymbol={Money.currencySymbol(donationValue)} value={Money.value(donationValue)} /> : null}
+			</div>
+			<blockquote className="blockquote"><MDText source={tq(charity)} /></blockquote>
 			{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
 		</div>
 	</ACard>);
@@ -54,7 +70,7 @@ const CharityCard = ({charity}) => {
 const CharityCard2 = ({charity}) => {
 	// impact data?? e.g. you funded 10 trees <-- This would be best when we can TODO
 	if (charity.description) {
-		return <div className='charity-description text-block'><ReactMarkdown source={charity.description} /></div>;
+		return <div className='charity-description text-block'><MDText source={charity.description} /></div>;
 	}
 	// TODO money donated to this charity??
 	return null;

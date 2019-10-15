@@ -21,7 +21,8 @@ import SearchQuery from '../../base/searchquery';
 import BS from '../../base/components/BS';
 import ACard from '../cards/ACard';
 import CharityCard from '../cards/CharityCard';
-
+import AdvertCard from '../cards/AdvertCard';
+import {sortByDate} from '../../base/utils/SortFn';
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser`
  * TODO support q=flexible query
@@ -105,7 +106,10 @@ const CampaignPage = () => {
 	if ( ! pvDonationsBreakdown.resolved ) {
 		return <Misc.Loading text='Loading campaign donations...' />;
 	}
-
+	if ( ! pvDonationsBreakdown.value ) {
+		// TODO let's refactor this out into a standard error card -- possibly stick it in wwappbase or Misc
+		return <div>Error: {pvDonationsBreakdown.error}. Try reloading the page. Contact us if this persists.</div>;
+	}
 
 	let campaignTotal = pvDonationsBreakdown.value.total; 
 	let donationValue = campaignTotal; // check if statically set and, if not, then update with latest figures
@@ -114,8 +118,20 @@ const CampaignPage = () => {
 	if (campaignPageDonations.length === ads.length) {
 		donationValue = Money.sum(campaignPageDonations);
 	}
+	// also the per-charity numbers	
+	let donByCid = pvDonationsBreakdown.value.by_cid;
 
 	let brandColor = branding.color || branding.backgroundColor;
+
+	// Group ads by campaign
+	let campaignByName = {};
+	ads.forEach(ad => {
+		let name = ad.campaign || ad.id;
+		campaignByName[name] = Object.assign({}, campaignByName[name], ad);
+	});
+	let campaigns = Object.values(campaignByName);
+	// sort by date
+	campaigns.sort(sortByDate(ad => ad.end || ad.start));
 
 	// TODO: refactor this because it's very similar now to mypage
 	return (
@@ -125,16 +141,12 @@ const CampaignPage = () => {
 			<div>
 				<SplashCard branding={branding} campaignPage={campaignPage} donationValue={donationValue} />
 				
-				{charities.map( charity => <CharityCard key={charity.id} charity={charity} />)}				
+				{charities.map( charity => <CharityCard key={charity.id} charity={charity} donationValue={donByCid[charity.id]} />)}				
 
-				<div className='row'>
-					TODO campaign info -- a list of the ads run, with some summary stats of date, 
-					thumbnail image, number of views
+				{campaigns.map(ad => <AdvertCard key={ad.id} advert={ad} />)}
 
-					??group ads by campaign - eg TOMS run the same campaign over a few languages
-				</div>
-
-				<div className='row pad1'>
+				{/* This may become redundant ??remove? */}
+				<div className='row p-1'>
 					<div className='col-md-2' /> 
 					<div className='col-md-8'>
 						{ads.length && ads[0].videos && ads[0].videos.length 
@@ -155,10 +167,10 @@ const SplashCard = ({branding, campaignPage, donationValue}) => {
 	// Use background image given to adunit, or show default image of sand dune 
 	const backgroundImage = (campaignPage && campaignPage.bg) || (ServerIO.MYLOOP_ENDPONT + '/img/wheat_fields.jpg');
 	return (<ACard backgroundImage={backgroundImage}>
-		<div className='flex-row flex-centre pad1'>
+		<div className='flex-row flex-centre p-1'>
 			<img className='header-logo' src={branding.logo} alt='advertiser-logo' />
 		</div>
-		<div className='sub-header pad1 white contrast-text'>
+		<div className='sub-header p-1 white contrast-text'>
 			<div>Together our Ads-for-Good have raised</div>
 			{donationValue? <div className='header' style={{color: 'white'}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 			<div>for</div>
@@ -171,10 +183,10 @@ const SplashCard = ({branding, campaignPage, donationValue}) => {
 		// 		style={{backgroundImage: 'url(' + backgroundImage + ')'}}
 		// 	>
 		// 	<div className='container-fluid'></div>
-		// 		<div className='flex-row flex-centre pad1'>
+		// 		<div className='flex-row flex-centre p-1'>
 		// 			<img className='header-logo' src={branding.logo} alt='advertiser-logo' />
 		// 		</div>
-		// 		<div className='sub-header pad1 white contrast-text'>
+		// 		<div className='sub-header p-1 white contrast-text'>
 		// 			<div>Together our Ads-for-Good have raised</div>
 		// 			{donationValue? <div className='header' style={{color: 'white'}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 		// 			<div>for</div>

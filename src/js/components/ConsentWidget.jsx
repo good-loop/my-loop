@@ -134,10 +134,10 @@ const ConsentWidget = ({xids}) => {
 
 	return (
 		<div className="container">
-			<div className='row text-left bottom-pad2'>
+			<div className='row text-left bottom-p-2'>
 				<i>You</i> decide how you want to do good online. As Good-Loop will always donate 50% of all ad revenue to charity, giving Good-Loop permission to use your data in a way that is valuable to advertisers will mean that your donations are worth more. 
 			</div>
-			<div className='row bottom-pad2'>
+			<div className='row bottom-p-2'>
 				<PermissionControl 
 					header='Allow cookies'
 					prop='cookies'
@@ -146,7 +146,7 @@ const ConsentWidget = ({xids}) => {
 					textOn='Thank you &mdash; this improves our service and raises more money for charity!'
 				/>
 			</div>
-			<div className='row bottom-pad2'>
+			<div className='row bottom-p-2'>
 				<PermissionControl 
 					header='Allow ad targeting'
 					prop='personaliseAds'
@@ -155,7 +155,7 @@ const ConsentWidget = ({xids}) => {
 					textOn='Thank you &mdash; this raises more money for charity!'
 				/>
 			</div>
-			<div className='row bottom-pad2'>
+			<div className='row bottom-p-2'>
 				<PermissionControl 
 					header='Allow us to email you updates and commercial messages'
 					prop='sendMessages'

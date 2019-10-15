@@ -52,7 +52,7 @@ const ConsentControlRow = ({path, prop, fieldType, iconFn, selectOptions, xid}) 
 	const value = DataStore.getValue([...path, prop]);
 
 	return (
-		<div className='row flex-row flex-centre top-pad1'> 
+		<div className='row flex-row flex-centre top-p-1'> 
 			<div className='col-md-1 input-label'>
 				{iconFn && iconFn(value)}
 			</div>
@@ -145,7 +145,7 @@ const ConsentControls = ({xid}) => {
 					<div className='col-sm-2' />
 				</div>				
 			</div>
-			<div className='pad1'>
+			<div className='p-1'>
 				<div>
 					<button className='btn btn-default edit' onClick={toggleEditMode} type='button'> Edit </button>
 					{ hasSaved && <span className='autosave'>Saved Successfully</span> }

@@ -1,16 +1,17 @@
 
 import React from 'react';
+import { join } from 'wwutils';
 
-const ACard = ({backgroundImage, backgroundColor, children, name}) => {
+const ACard = ({backgroundImage, backgroundColor, className, children, name}) => {
 	let style ={
 		backgroundColor, 
 		backgroundImage: backgroundImage? 'url(' + backgroundImage + ')' : null,
 		backgroundSize: 'cover'
 	};
 	return (
-		<div className='w-100' style={style} >
+		<div className={join('w-100',className)} style={style} >
 			{name? <a name={name} /> : null}
-			<div className='container p-1'>
+			<div className='container p-2'>
 				{children}
 			</div>
 		</div>

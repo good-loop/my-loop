@@ -27,10 +27,10 @@ const Page = () => {
 		<div className='page DataPage text-center'>
 			<NavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
 			<div className='container-fluid'>
-				<div className='row panel-title panel-heading sub-header pad1'> 
+				<div className='row panel-title panel-heading sub-header p-1'> 
 					Digital Mirror
 				</div>
-				<div className='row pad1'> 
+				<div className='row p-1'> 
 					<DigitalMirrorCard xids={xids} className="digitalMirror" mixPanelTag='DigitalMirror' />
 					<div className='flex-column'>
 						<div>Connect your social media - you can use this to boost the donations you generate!</div>
@@ -40,10 +40,10 @@ const Page = () => {
 			</div>
 
 			<div className="consentControls container-fluid">
-				<div className='row panel-title panel-heading sub-header pad1'> 
+				<div className='row panel-title panel-heading sub-header p-1'> 
 					Consent Controls
 				</div>
-				<div className='row pad1'> 
+				<div className='row p-1'> 
 					{Login.isLoggedIn() ? (
 						<ConsentWidget xids={xids} />
 					) : (
@@ -52,10 +52,10 @@ const Page = () => {
 				</div>
 			</div>
 			<div className="linkedProfiles container-fluid">
-				<div className='row panel-title panel-heading sub-header pad1'> 
+				<div className='row panel-title panel-heading sub-header p-1'> 
 					Linked Profiles
 				</div>
-				<div className='row pad1'> 
+				<div className='row p-1'> 
 					<LinkedProfilesCard xids={xids} />
 				</div>
 			</div>
