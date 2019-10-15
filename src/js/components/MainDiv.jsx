@@ -9,7 +9,7 @@ import DataStore from '../base/plumbing/DataStore';
 import Roles from '../base/Roles';
 import C from '../C';
 import Crud from '../base/plumbing/Crud'; // Crud is loaded here (but not used here)
-import BS from '../base/components/BS3';
+import BS from '../base/components/BS4';
 import Profiler from '../base/Profiler';
 
 // Templates
