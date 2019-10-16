@@ -13,13 +13,13 @@ const MyLoopNavBar = props => (
 		pages={[]}
 		render={({pageLinks, currentPage, style, logo}) => <>
 			{navBarLogoContainerSVG}
-			<div style={style} className="navbar-items">
+			<div style={Object.assign({}, style, {display: 'flex', justifyContent: 'space-between', width:'100%'})} className="navbar-items">
 				<div className="navbar-header" title="Dashboard">
 					<a className="navbar-brand" href='/'>
 						<img alt={C.app.name} src={logo || C.app.homeLogo || C.app.logo} />
 					</a>
 				</div>
-				<div id="navbar" className="navbar-collapse collapse">
+				<div id="navbar" className="navbar-collapse collapse" style={{maxWidth: 'fit-content', marginRight: '1em'}}>
 					<AccountMenu active={currentPage === 'account'} logoutLink='#my' />
 				</div>
 			</div>
@@ -28,11 +28,13 @@ const MyLoopNavBar = props => (
 );
 
 const AccountMenu = ({active, logoutLink}) => {
-	if (!Login.isLoggedIn()) return (
-		<ul id='top-right-menu' className="nav navbar-nav navbar-right">
-			<li><LoginLink /></li>
-		</ul>
-	);
+	if (!Login.isLoggedIn()) { 
+		return (
+			<ul id='top-right-menu' className="nav navbar-nav navbar-right">
+				<li><LoginLink /></li>
+			</ul>
+		); 
+	}
 
 	let user = Login.getUser();
 

@@ -103,7 +103,7 @@ const OurMissionCard = () => (
 				</div>
 			</div>
 		</div>
-		<div className='sub-header'>
+		<div className='sub-header' style={{textAlign: 'center'}}>
 			Here are some of our recent campaigns
 		</div>
 	</ACard>
@@ -190,7 +190,7 @@ const ShareAdCard = () => {
 	});
 	if ( ! pvLastAd.resolved) return <Misc.Loading />;
 	const adid = pvLastAd.value && pvLastAd.value.id; // NB: the server might return an error, in which case adid is null	
-	return <div className='top-p-1'><ShareAnAd adid={adid} /></div>;
+	return <div className='top-p-3'><ShareAnAd adid={adid} /></div>;
 };
 
 /**

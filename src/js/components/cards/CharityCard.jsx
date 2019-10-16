@@ -11,7 +11,9 @@ import { SquareLogo } from '../Image';
 import MDText from '../../base/components/MDText';
 import Counter from '../../base/components/Counter';
 import Money from '../../base/data/Money';
+import StoryCard from './StoryCard';
 
+const bgColorPalette = ['#00A676', '#F7F9F9', '#E0D0C1', '#A76D60', '#4E8098', '#90C2E7']; 
 /**
  * HACK hardcode some thank you messages.
  * 
@@ -20,13 +22,15 @@ import Money from '../../base/data/Money';
 const tq = charity => {
 	return {
 		helenbamber: `"That is absolutely fantastic news, thank you so much! Congratulations everyone on a successful Spring/Summer Campaign! 
-		The donation will go a huge way in supporting our clients to recover and rebuild their lives." -- Sophie at Helen Bamber`
-	}[charity.id] || "TODO thank-you comment from the charity, if we received one";
+		The donation will go a huge way in supporting our clients to recover and rebuild their lives." -- Sophie at Helen Bamber`,
+		centrepoint: `"This is a test quote. Regardless, someone surely said these exacts words somewhere, sometime." -- Me, writing this`
+	}[charity.id] || "";
 };
 
 const CharityCard = ({charity, donationValue}) => {
 	// fetch extra info from SoGive
 	let cid = charity.id;
+	console.log(cid);
 	if (cid) {
 		const pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:charity.id, status:C.KStatus.PUBLISHED});
 		let sogiveCharity = pvCharity.value;
@@ -48,7 +52,7 @@ const CharityCard = ({charity, donationValue}) => {
 
 	let backgroundColor = charity.color;
 
-	return (<ACard backgroundColor={backgroundColor} name={cid} className="card-container">
+	return (<ACard backgroundColor={backgroundColor || bgColorPalette[Math.floor(Math.random() * Math.floor(5))]} name={cid} className="card-container">
 		<div className='charity-card' key={charity.name}>
 			{/* <a className='flex-row charity' href={charity.url} target="_blank" rel="noopener noreferrer"
 				style={photo || !charity.color ? {} : {background: charity.color}}
@@ -69,26 +73,31 @@ const CharityCard = ({charity, donationValue}) => {
 					<div className="charity-description text-block">
 						<MDText source={charity.description || ''} />
 					</div>
+					<div className="charity-donation">
+						<span>Total amount raised: </span>
+						{/* TODO use react-spring for smoother, less expensive animations. Should be default tool */}
+						<span>{donationValue? <Counter currencySymbol={Money.currencySymbol(donationValue)} value={Money.value(donationValue)} /> : null}</span>
+					</div>
+					<br/>
+					<blockquote className="blockquote"><MDText source={tq(charity)} /></blockquote>
 				</div>
 				<div className="charity-logo">
 					<a className="charity" href={charity.url} target="_blank" rel="noopener no referrer"
 						style={photo || !charity.color ? {} : {background: charity.color}}
 					>
-						{photo && logo? <img className="logo" src={logo || photo} style={{position:"relative", top:0, left:0}} /> : null}
+						<img className="logo" src={logo || photo} style={{position:"relative", top:0, left:0, backgroundColor: backgroundColor}} />
 					</a>
 				</div>
 			</div>
 
-			<div className="story-card-mockup">
+			<StoryCard />
+			{/* <div className="story-card-mockup">
 				<span>This will be the StoryCard</span>
-			</div>
+			</div> */}
 		</div>
 
 		{/* <CharityCard2 charity={charity} /> */}
-		<div>TODO Impact if we know it
-			{donationValue? <Counter currencySymbol={Money.currencySymbol(donationValue)} value={Money.value(donationValue)} /> : null}
-		</div>
-		<blockquote className="blockquote"><MDText source={tq(charity)} /></blockquote>
+		
 		{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
 	</ACard>);
 };

@@ -123,8 +123,6 @@
 		}
 	}
 
-	
-
 	.charity-description {
 		width: @logo-size;
 		padding: 0.5em 0.25em;
@@ -143,8 +141,43 @@
 		border-radius: 15px;
 	}
 
+	.story-card-container {
+		border: 1px solid black;
+		width: 25%;
+		height: 20em;
+		border-radius: 15px;
+		overflow: hidden;
+		background-color: #fff;
+		// Polyfill to manage img width within container
+		img {
+			max-width: -moz-available;
+    		max-width: -webkit-fill-available;
+    		max-width: fill-available;
+		}
+		.story-card-text {
+			font-size: .8em;
+		}
+	}
+
 	.header-logo {
 		width: 10rem; 
 		display: block;
+	}
+
+	.advert-card-container {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+
+	.advert-card {
+		border: 1px solid black;
+		width: 33%;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.blockquote {
+		font-size: .8rem;
 	}
 }

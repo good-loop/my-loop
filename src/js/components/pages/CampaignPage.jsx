@@ -60,6 +60,8 @@ const CampaignPage = () => {
 		return <BS.Alert>Could not load adverts for {q} {status}</BS.Alert>;
 	}
 
+	// console.log(ads)
+
 	// Combine campaign page and branding settings from all ads
 	// Last ad wins any branding settings!
 	let branding = {};
@@ -103,6 +105,8 @@ const CampaignPage = () => {
 		return ServerIO.getDonationsData({q:sqDon.query});		
 	}, true, 5*60*1000);
 
+	// console.log(pvDonationsBreakdown);
+
 	if ( ! pvDonationsBreakdown.resolved ) {
 		return <Misc.Loading text='Loading campaign donations...' />;
 	}
@@ -114,6 +118,8 @@ const CampaignPage = () => {
 	let campaignTotal = pvDonationsBreakdown.value.total; 
 	let donationValue = campaignTotal; // check if statically set and, if not, then update with latest figures
 	// Allow the campaign page to override and specify a total
+	let campaignTotalViews = pvDonationsBreakdown.value.stats.count;
+	console.log(pvDonationsBreakdown);
 	let campaignPageDonations = ads.map(ad => ad.campaignPage && CampaignPageDC.donation(ad.campaignPage)).filter(x => x);
 	if (campaignPageDonations.length === ads.length) {
 		donationValue = Money.sum(campaignPageDonations);
@@ -129,9 +135,23 @@ const CampaignPage = () => {
 		let name = ad.campaign || ad.id;
 		campaignByName[name] = Object.assign({}, campaignByName[name], ad);
 	});
-	let campaigns = Object.values(campaignByName);
+
+	// Filter out campaigns with no video (dummies).
+	let campaigns = Object.values(campaignByName).filter(campaign => campaign.videos[0].url);
 	// sort by date
 	campaigns.sort(sortByDate(ad => ad.end || ad.start));
+
+	// const campaignAds = ads => {
+	// 	let adsByCampaign = {};
+	// 	ads.forEach(ad => {
+	// 		if (!adsByCampaign[ad.name]) {
+	// 			adsByCampaign[ad] 
+	// 		}
+	// 	})
+	// }
+
+	console.log(campaignByName);
+	console.log(campaigns);
 
 	// TODO: refactor this because it's very similar now to mypage
 	return (
@@ -142,8 +162,9 @@ const CampaignPage = () => {
 				<SplashCard branding={branding} campaignPage={campaignPage} donationValue={donationValue} />
 				
 				{charities.map( charity => <CharityCard key={charity.id} charity={charity} donationValue={donByCid[charity.id]} />)}				
-
-				{campaigns.map(ad => <AdvertCard key={ad.id} advert={ad} />)}
+				<div className="advert-card-container container">
+					{ads.filter(campaign => campaign.videos[0].url).map(ad => <AdvertCard key={ad.id} advert={ad} totalViews={campaignTotalViews} />)}
+				</div>
 
 				{/* This may become redundant ??remove? */}
 				<div className='row p-1'>
