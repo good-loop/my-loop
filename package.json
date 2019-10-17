@@ -1,6 +1,6 @@
 {
   "name": "My-Good-Loop",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "My-Loop",
   "author": "Daniel Winterstein",
   "repository": {
@@ -9,6 +9,7 @@
   },
   "license": "MIT",
   "dependencies": {
+	"bootstrap": "^4.3.1",
     "chart.js": "^2.8.0",
     "data-pivot": "^1.0.2",
     "easy-enums": "^1.1.6",
