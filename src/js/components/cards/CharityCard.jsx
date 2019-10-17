@@ -30,7 +30,7 @@ const tq = charity => {
 const CharityCard = ({charity, donationValue}) => {
 	// fetch extra info from SoGive
 	let cid = charity.id;
-	console.log(cid);
+	console.log(`charity id: `, cid);
 	if (cid) {
 		const pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:charity.id, status:C.KStatus.PUBLISHED});
 		let sogiveCharity = pvCharity.value;

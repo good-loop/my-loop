@@ -45,10 +45,10 @@ const AccountMenu = ({active, logoutLink}) => {
 					{ user.name || user.xid }&nbsp;
 					<span className="caret" />
 				</a>
-				<ul className="dropdown-menu">
-					<li><a href="#account">Account</a></li>
-					<li role="separator" className="divider" />
-					<li><a href={logoutLink} onClick={() => Login.logout()}>Log out</a></li>
+				<ul className="dropdown-menu dropdown-menu-right">
+					<li><a href="#account" className="ml-2">Account</a></li>
+					<li role="separator" className="dropdown-divider" />
+					<li><a href={logoutLink} className="ml-2" onClick={() => Login.logout()}>Log out</a></li>
 				</ul>
 			</li>
 		</ul>

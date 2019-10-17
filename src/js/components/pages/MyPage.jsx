@@ -73,16 +73,16 @@ const ContactCard = () => {
 const TimeAndAttentionCard = () => (
 	// TODO We want two columns on desktop, one on mobile
 	<ACard className='bg-gl-red'>
-		<div className='flex-row text-center white'>
-			<div className='p-1'>
-				<div className='sub-header font-bold'>
+		<div className='bottom-text-container flex text-center white'>
+			<div className='p-3'>
+				<div className='sub-header font-bold text-left'>
 					Time and attention online are valuable.
 				</div>
-				<div className='sub-header'>
+				<div className='sub-header text-left'>
 					Let's harness that value and use it for good.
 				</div>
 			</div>
-			<div className='text-block p-1'>
+			<div className='text-block p-3'>
 				Good-Loop will never force you to engage with an ad. But, if you choose to give an advertiser some of your valuable time and attention, you get to give 50% of the advertisers' money to a relevant charitable cause.
 			</div>
 		</div>

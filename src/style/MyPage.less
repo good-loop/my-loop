@@ -4,6 +4,9 @@
 
 .navbar {
 	background-color: transparent!important;
+	#top-right-menu:hover {
+		cursor:pointer;
+	}
 }
 
 #logo-container-curve {
@@ -386,6 +389,15 @@
 			> * {
 				width: 100%;
 			}
+		}
+	}
+
+	// Responsive behaviour for bottom text
+	.bottom-text-container {
+		flex-direction: column;
+		> * {
+			width: 100%;
+			margin: 0;
 		}
 	}
 }

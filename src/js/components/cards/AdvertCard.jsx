@@ -15,7 +15,7 @@ import ServerIO from '../../plumbing/ServerIO';
 
 
 
-const AdvertCard = ({advert, totalViews}) => {
+const AdvertCard = ({advert, viewCount}) => {
 
 	// console.log(advert);
 	// console.log(totalViews);
@@ -37,7 +37,7 @@ const AdvertCard = ({advert, totalViews}) => {
 			<div style={{textAlign: 'initial', padding: '1em'}}>
 				<span>{advert.name}</span><br />
 				{ advert.end? <span>End of campaign: {<Misc.LongDate date={advert.end} />}</span> : '' }<br />
-				<span> --todo: views per ad ??</span>
+				<span> {viewCount} </span>
 			</div>
 			<div style={{padding: '1em'}}>
 				{advert.videos && advert.videos[0]? <Misc.VideoThumbnail url={advert.videos[0].url} /> : null}<br />

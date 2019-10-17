@@ -23,6 +23,7 @@ import ACard from '../cards/ACard';
 import CharityCard from '../cards/CharityCard';
 import AdvertCard from '../cards/AdvertCard';
 import {sortByDate} from '../../base/utils/SortFn';
+import pivot from 'data-pivot';
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser`
  * TODO support q=flexible query
@@ -55,6 +56,7 @@ const CampaignPage = () => {
 	}
 
 	let ads = pvAds.value.hits;
+
 	// No ads?!
 	if ( ! ads.length) {
 		return <BS.Alert>Could not load adverts for {q} {status}</BS.Alert>;
@@ -145,9 +147,23 @@ const CampaignPage = () => {
 
 	// q :(
 	let pvViewData = DataStore.fetch(['misc','views',q], () => {
-		return ServerIO.getDataLogData({filters:{cid:'ashoka', evt:'pick'}, interval:'12 months', breakdowns:['campaign']});
+		let filters = { // bogus test values
+			// start: '2017-01-01T00:00:00Z',
+			// end: '2019-10-15T23:59:59Z',
+			dataspace: 'gl', 
+			q: 'evt:minview' // minview vs spend ??
+		};
+		return ServerIO.getDataLogData({filters, interval:'12 months', breakdowns:['campaign'], name:'view-data'});
 		// return ServerIO.getDonationsData({cid:'ashoka', start: '2017-01-01T00:00:00Z', end: '2019-10-15T23:59:59Z'})
 	});
+
+	let viewcount4campaign = {};
+
+	if (pvViewData.value) {
+		window.pivot = pivot; // for debug
+		viewcount4campaign = pivot(pvViewData.value, "by_campaign.buckets.$bi.{key, doc_count}", "$key.$doc_count");
+		console.warn("viewcount4campaign",viewcount4campaign);
+	}
 
 	console.log(`PVVIEWDATA !!!`, pvViewData);
 	// console.log(`getDonationData: `, ServerIO.getDonationsData({q, start: '2017-01-01T00:00:00Z', end: '2019-10-15T23:59:59Z'}));
@@ -171,7 +187,7 @@ const CampaignPage = () => {
 				
 				{charities.map( charity => <CharityCard key={charity.id} charity={charity} donationValue={donByCid[charity.id]} />)}				
 				<div className="advert-card-container container">
-					{ads.filter(campaign => campaign.videos[0].url).map(ad => <AdvertCard key={ad.id} advert={ad} totalViews={campaignTotalViews} />)}
+					{ads.filter(campaign => campaign.videos[0].url).map(ad => <AdvertCard key={ad.id} advert={ad} viewCount={viewcount4campaign[ad.campaign]} />)}
 				</div>
 
 				{/* This may become redundant ??remove? */}
@@ -206,22 +222,22 @@ const SplashCard = ({branding, campaignPage, donationValue}) => {
 		</div>
 	</ACard>);
 
-		// <div className='header-text'>
-		// 	<div 
-		// 		className='header-block img-block'
-		// 		style={{backgroundImage: 'url(' + backgroundImage + ')'}}
-		// 	>
-		// 	<div className='container-fluid'></div>
-		// 		<div className='flex-row flex-centre p-1'>
-		// 			<img className='header-logo' src={branding.logo} alt='advertiser-logo' />
-		// 		</div>
-		// 		<div className='sub-header p-1 white contrast-text'>
-		// 			<div>Together our Ads-for-Good have raised</div>
-		// 			{donationValue? <div className='header' style={{color: 'white'}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
-		// 			<div>for</div>
-		// 		</div>
-		// 	</div>
-		// </div>);
+	// <div className='header-text'>
+	// 	<div 
+	// 		className='header-block img-block'
+	// 		style={{backgroundImage: 'url(' + backgroundImage + ')'}}
+	// 	>
+	// 	<div className='container-fluid'></div>
+	// 		<div className='flex-row flex-centre p-1'>
+	// 			<img className='header-logo' src={branding.logo} alt='advertiser-logo' />
+	// 		</div>
+	// 		<div className='sub-header p-1 white contrast-text'>
+	// 			<div>Together our Ads-for-Good have raised</div>
+	// 			{donationValue? <div className='header' style={{color: 'white'}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
+	// 			<div>for</div>
+	// 		</div>
+	// 	</div>
+	// </div>);
 };
 
 /**

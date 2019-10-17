@@ -10,7 +10,7 @@ import MDText from '../base/components/MDText';
  * @param style {Object} css styling 
  */
 const Footer = ({className, leftFooter, rightFooter, style, showSocialMediaLinks}) => (
-	<div className={join('footer p-1', className)} style={style}>
+	<div className={join('footer p-3', className)} style={style}>
 		{showSocialMediaLinks? 
 			<SocialMediaFooterWidget 
 				type='goodloop'
@@ -23,7 +23,7 @@ const Footer = ({className, leftFooter, rightFooter, style, showSocialMediaLinks
 				<MDText source={leftFooter} />
 			</div>
 		</div>
-		<div className='mainFooter flex-column p-1'>
+		<div className='mainFooter flex-column p-3'>
 			<p>
 				&copy; 2016-2019 <a href='https://www.good-loop.com/blog'>Good-Loop Ltd</a>, all rights reserved.<br />
 				<a href='https://www.good-loop.com/privacy-policy'>Privacy policy</a>
