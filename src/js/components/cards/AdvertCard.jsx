@@ -11,12 +11,16 @@ import { SquareLogo } from '../Image';
 import MDText from '../../base/components/MDText';
 import Counter from '../../base/components/Counter';
 import Money from '../../base/data/Money';
+import ServerIO from '../../plumbing/ServerIO';
+
 
 
 const AdvertCard = ({advert, totalViews}) => {
+
 	// console.log(advert);
 	// console.log(totalViews);
 	// TODO pull impressions data from DataLog
+
 	return (
 	// <ACard className="advert-card">
 	// End of the campaign: <Misc.LongDate date={advert.end} /><br />

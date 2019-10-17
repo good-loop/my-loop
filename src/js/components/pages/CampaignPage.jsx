@@ -60,6 +60,8 @@ const CampaignPage = () => {
 		return <BS.Alert>Could not load adverts for {q} {status}</BS.Alert>;
 	}
 
+	console.log(sq);
+
 	// console.log(ads)
 
 	// Combine campaign page and branding settings from all ads
@@ -141,6 +143,15 @@ const CampaignPage = () => {
 	// sort by date
 	campaigns.sort(sortByDate(ad => ad.end || ad.start));
 
+	// q :(
+	let pvViewData = DataStore.fetch(['misc','views',q], () => {
+		return ServerIO.getDataLogData({filters:{cid:'ashoka', evt:'pick'}, interval:'12 months', breakdowns:['campaign']});
+		// return ServerIO.getDonationsData({cid:'ashoka', start: '2017-01-01T00:00:00Z', end: '2019-10-15T23:59:59Z'})
+	});
+
+	console.log(`PVVIEWDATA !!!`, pvViewData);
+	// console.log(`getDonationData: `, ServerIO.getDonationsData({q, start: '2017-01-01T00:00:00Z', end: '2019-10-15T23:59:59Z'}));
+
 	// const campaignAds = ads => {
 	// 	let adsByCampaign = {};
 	// 	ads.forEach(ad => {
@@ -149,9 +160,6 @@ const CampaignPage = () => {
 	// 		}
 	// 	})
 	// }
-
-	console.log(campaignByName);
-	console.log(campaigns);
 
 	// TODO: refactor this because it's very similar now to mypage
 	return (

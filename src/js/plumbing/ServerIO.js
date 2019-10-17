@@ -55,39 +55,6 @@ ServerIO.LOGENDPOINT = ServerIO.PROFILER_ENDPOINT + '/log';
 
 ServerIO.checkBase();
 
-/**
- * @deprecated Use getDonationsData or getAllSpend for preference
- * 
- * @param {*} filters 
- * @param {*} breakdowns TODO
- * @param {?String} name Just for debugging - makes it easy to spot in the network tab
- */
-ServerIO.getDataLogData = (filters, breakdowns, name) => {
-	//?? check all uses
-	if ( ! filters.dataspace) console.warn("No dataspace?!", filters);
-	let specs = Object.assign({}, filters);
-	let endpoint = ServerIO.DATALOG_ENDPOINT;
-	return ServerIO.load(endpoint+(name? '?name='+encURI(name) : ''), {data: specs});
-};
-
-/**
- * NB: Copy-pasta from Portal ServerIO.js
- * 
- * @param q {String} e.g. pub:myblog
- * @returns Promise {
- * 	by_cid: {String: Money}
- * 	total: {Money},
- * 	stats: {}
- * }
- * @param {?String} name Just for debugging - makes it easy to spot in the network tab 
- */
-ServerIO.getDonationsData = ({q, start, end, name}) => {
-	let url = ServerIO.AS_ENDPOINT+'/datafn/donations';
-	const params = {
-		data: {name, q, start, end}
-	};
-	return ServerIO.load(url, params);
-};
 
 /** 
  * NB: Copy-pasta from Portal ServerIO.js
