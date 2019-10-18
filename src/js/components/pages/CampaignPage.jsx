@@ -165,7 +165,7 @@ const CampaignPage = () => {
 		console.warn("viewcount4campaign",viewcount4campaign);
 	}
 
-	console.log(`PVVIEWDATA !!!`, pvViewData);
+	console.log(`PVVIEWDATA !!!`, viewcount4campaign);
 	// console.log(`getDonationData: `, ServerIO.getDonationsData({q, start: '2017-01-01T00:00:00Z', end: '2019-10-15T23:59:59Z'}));
 
 	// const campaignAds = ads => {
@@ -180,7 +180,7 @@ const CampaignPage = () => {
 	// TODO: refactor this because it's very similar now to mypage
 	return (
 		<div className="widepage CampaignPage text-center">
-			<NavBar brandLogo={branding.logo} style={{backgroundColor: brandColor}} />
+			<NavBar brandLogo={branding.logo} backgroundColor={branding.color} />
 			{/* TODO: get rid of old css classes, previous to refactor */}
 			<div>
 				<SplashCard branding={branding} campaignPage={campaignPage} donationValue={donationValue} />

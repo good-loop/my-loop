@@ -17,21 +17,30 @@
 	.navbar {
 		background-color: @gl-red;
 		position: fixed;
+		width: 100%;
+		z-index: 1000;
 
 		.navbar-brand img {
 			height: 80%;
 		}
+
 		.navbar-items {
-		display: flex;
-		justify-content: space-between;
-		width: 100%;
+			display: flex;
+			justify-content: space-between;
+			width: 100%;
 		}
-	}
+
+		.btn {
+			color: #fff!important;
+		}
 
 	#navbar {
 		max-width: fit-content;
 	}
-
+	
+	#logo-container-curve {
+		display: none;
+	}
 
 	.navbar a {
 		color: #fff !important;
@@ -56,10 +65,6 @@
 		&.contain {
 			background-size: contain;
 		}
-	}
-
-	#logo-container-curve {
-		display: none;
 	}
 
 	.hero {
@@ -180,4 +185,5 @@
 	.blockquote {
 		font-size: .8rem;
 	}
+}
 }

@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Jumbotron, Container } from 'reactstrap';
 import ACard from './ACard';
 import Roles from '../../base/Roles';
 import C from '../../C';
@@ -64,7 +65,7 @@ const CharityCard = ({charity, donationValue}) => {
 					{photo ? charity.name : ''}
 				</span>
 			</a> */}
-
+{/* 
 			<div className="charity-info" style={{display: 'flex', flexDirection: 'row'}}>
 				<div className="charity-text">
 					<span className="name sub-header p-1 white contrast-text">
@@ -75,7 +76,6 @@ const CharityCard = ({charity, donationValue}) => {
 					</div>
 					<div className="charity-donation">
 						<span>Total amount raised: </span>
-						{/* TODO use react-spring for smoother, less expensive animations. Should be default tool */}
 						<span>{donationValue? <Counter currencySymbol={Money.currencySymbol(donationValue)} value={Money.value(donationValue)} /> : null}</span>
 					</div>
 					<br/>
@@ -88,6 +88,23 @@ const CharityCard = ({charity, donationValue}) => {
 						<img className="logo" src={logo || photo} style={{position:"relative", top:0, left:0, backgroundColor: backgroundColor}} />
 					</a>
 				</div>
+			</div> */}
+
+			<div>
+				<Jumbotron fluid>
+					<Container fluid>
+						<div className="charity-logo">
+							<a className="charity" href={charity.url} target="_blank" rel="noopener no referrer"
+								style={photo || !charity.color ? {} : {background: charity.color}}
+							>
+								<img className="logo" src={logo || photo} style={{position:"relative", top:0, left:0, backgroundColor: backgroundColor}} />
+							</a>
+						</div>
+						<h3 className="display-4">{ charity.name }</h3>
+						<p>{ charity.description }</p>
+						<p>{donationValue? <Counter currencySymbol={Money.currencySymbol(donationValue)} value={Money.value(donationValue)} /> : null}</p>
+					</Container>
+				</Jumbotron>
 			</div>
 
 			<StoryCard />

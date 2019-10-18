@@ -9,7 +9,7 @@
   },
   "license": "MIT",
   "dependencies": {
-	"bootstrap": "^4.3.1",
+    "bootstrap": "^4.3.1",
     "chart.js": "^2.8.0",
     "data-pivot": "^1.0.2",
     "easy-enums": "^1.1.6",
@@ -30,6 +30,7 @@
     "react-markdown": "^4.0.6",
     "react-scroll": "^1.7.11",
     "react-spring": "^8.0.27",
+    "reactstrap": "^8.1.0",
     "sjtest": "^0.4.9",
     "wwutils": "^0.9.4",
     "you-again": "^0.8.4"

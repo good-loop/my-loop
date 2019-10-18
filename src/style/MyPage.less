@@ -3,9 +3,22 @@
 }
 
 .navbar {
-	background-color: transparent!important;
+	background-color: transparent;
 	#top-right-menu:hover {
 		cursor:pointer;
+	}
+	.navbar-brand {
+		z-index: 1;
+	}
+	.dropdown-item {
+		color: #fff!important;
+		text-decoration: none;
+		&:hover {
+			background-color: #440900
+		}
+	}
+	.dropdown-toggle {
+		font-weight: bolder;
 	}
 }
 
@@ -15,7 +28,7 @@
 	left: 0;
 	top: 0;
 	width: 15em;
-	z-index: -1;
+	z-index: 0;
 }
 
 .how-it-works {
