@@ -33,6 +33,7 @@
 		.btn {
 			color: #fff!important;
 		}
+	}
 
 	#navbar {
 		max-width: fit-content;
@@ -87,11 +88,12 @@
 
 	.charity-card {
 		display: flex;
+		.jumbotron {
+			background-color: transparent!important;
+		}
 		.charity-info {
 			max-width: 60%;
-			margin: 0 auto;
-			display: flex;
-			flex-direction: row;
+			text-align: left;
 			.charity-text {
 				width: 100%;
 				text-align: start;
@@ -103,8 +105,8 @@
 				}
 			}
 			.charity-logo {
-				max-width: 20%;
 				display: flex;
+				max-width: 200px;
 				.charity {
 					display: flex;
 					position: relative;
@@ -112,7 +114,7 @@
 						position: relative;
 						max-height: 150px;
 						height: 100%;
-						width: auto;
+						width: 100%;
 					}
 					.name {			
 						position: absolute;
@@ -148,7 +150,7 @@
 
 	.story-card-container {
 		border: 1px solid black;
-		width: 25%;
+		max-width: 25%;
 		height: 20em;
 		border-radius: 15px;
 		overflow: hidden;
@@ -185,5 +187,4 @@
 	.blockquote {
 		font-size: .8rem;
 	}
-}
 }

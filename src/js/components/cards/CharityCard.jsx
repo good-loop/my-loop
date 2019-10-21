@@ -65,7 +65,7 @@ const CharityCard = ({charity, donationValue}) => {
 					{photo ? charity.name : ''}
 				</span>
 			</a> */}
-{/* 
+			{/* 
 			<div className="charity-info" style={{display: 'flex', flexDirection: 'row'}}>
 				<div className="charity-text">
 					<span className="name sub-header p-1 white contrast-text">
@@ -90,9 +90,9 @@ const CharityCard = ({charity, donationValue}) => {
 				</div>
 			</div> */}
 
-			<div>
-				<Jumbotron fluid>
-					<Container fluid>
+			<Container className="d-flex flex-row">
+				<div className="charity-info">
+					<div className="d-flex flex-row">
 						<div className="charity-logo">
 							<a className="charity" href={charity.url} target="_blank" rel="noopener no referrer"
 								style={photo || !charity.color ? {} : {background: charity.color}}
@@ -100,14 +100,17 @@ const CharityCard = ({charity, donationValue}) => {
 								<img className="logo" src={logo || photo} style={{position:"relative", top:0, left:0, backgroundColor: backgroundColor}} />
 							</a>
 						</div>
-						<h3 className="display-4">{ charity.name }</h3>
+						<h4 className="">{ charity.name }</h4>
+					</div>
+					<div>
 						<p>{ charity.description }</p>
 						<p>{donationValue? <Counter currencySymbol={Money.currencySymbol(donationValue)} value={Money.value(donationValue)} /> : null}</p>
-					</Container>
-				</Jumbotron>
-			</div>
-
-			<StoryCard />
+						<p>testing...</p>
+					</div>
+				</div>
+				<StoryCard />				
+			</Container>
+			
 			{/* <div className="story-card-mockup">
 				<span>This will be the StoryCard</span>
 			</div> */}

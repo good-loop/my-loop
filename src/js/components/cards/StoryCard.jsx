@@ -3,7 +3,7 @@ import React from 'react';
 const StoryCard = () => {
 
 	return (
-		<div className="story-card-container">
+		<div className="story-card-container" style={{width:'20%'}}>
 			<img src="https://via.placeholder.com/350x250" alt="placeholder image"/>
 			<div className="story-card-text">
 				<h3>Article title</h3>
