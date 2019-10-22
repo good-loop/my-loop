@@ -39,8 +39,8 @@ const MyPage = () => {
 
 const SplashCard = () => {
 	return (
-		<div className='splash img-block' style={{}}>
-			<MyLoopNavBar logo='/img/new-logo-with-text.svg' backgroundColor='transparent' />
+		<div className='splash img-block'>
+			<MyLoopNavBar logo='/img/new-logo-with-text.svg' backgroundColor='transparent' />			
 			<img className="doing-good" src="/img/doinggoodfeelsgood.png" alt="" />			
 			<img className="little-flowers" src="/img/littleflowers.png" alt="" />
 			<SignUpConnectCard className='' />			
