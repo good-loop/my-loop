@@ -24,9 +24,11 @@ const AdvertCard = ({advert, viewCount}) => {
 		<div>			
 			<h3>{name}</h3>
 
+			{ advert.start? <span>{<Misc.LongDate date={advert.start} />}</span> : null} <br/>
 			{ advert.end? <span>End of campaign: {<Misc.LongDate date={advert.end} />}</span> : '' }<br />
 			
 			{viewCount? <Counter value={viewCount} /> : null}
+			
 		</div>
 		<div style={{padding: '1em'}}>
 			{advert.videos && advert.videos[0]? <Misc.VideoThumbnail url={advert.videos[0].url} /> : null}<br />
