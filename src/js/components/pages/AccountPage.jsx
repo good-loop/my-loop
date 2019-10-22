@@ -7,7 +7,7 @@ import DigitalMirrorCard from '../cards/DigitalMirrorCard';
 import ConsentWidget from '../ConsentWidget';
 import SignUpConnectCard from '../cards/SignUpConnectCard';
 import LinkedProfilesCard from '../cards/LinkedProfilesCard';
-import NavBar from '../NavBar';
+import NavBar from '../MyLoopNavBar';
 import Footer from '../Footer';
 import { useLogsIfVisible } from '../../base/components/CustomHooks';
 import {getAllXIds} from '../../base/Profiler';

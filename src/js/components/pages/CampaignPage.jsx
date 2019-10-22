@@ -11,7 +11,7 @@ import Misc from '../../base/components/Misc';
 import ActionMan from '../../plumbing/ActionMan';
 import {ListItems} from '../../base/components/ListLoad';
 import Footer from '../Footer';
-import NavBar from '../NavBar';
+import NavBar from '../MyLoopNavBar';
 import { SquareLogo } from '../Image';
 import ShareAnAd from '../cards/ShareAnAd';
 import NGO from '../../base/data/NGO';

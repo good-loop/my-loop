@@ -8,7 +8,7 @@ import {useLogsIfVisible} from '../../base/components/CustomHooks';
 import Counter from '../../base/components/Counter';
 
 import ServerIO from '../../plumbing/ServerIO';
-import MyLoopNavBar from '../NavBar';
+import MyLoopNavBar from '../MyLoopNavBar';
 import Footer from '../Footer';
 import ACard from '../cards/ACard';
 import ShareAnAd from '../cards/ShareAnAd';
