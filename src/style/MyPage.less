@@ -80,6 +80,7 @@
 }
 
 
+/** strip across the page, with the GL logo on the right */
 .logo-ribbon {
 	position: relative;
 	height: 2rem;
@@ -142,15 +143,6 @@
 		top: 1rem;
 		right: 1rem;
 		width: 60%;
-	}
-
-	.social-media-card {
-		position: absolute;
-		bottom: 0;
-		right: 0;
-		.tagline {
-			text-align: right;
-		}
 	}
 }
 
@@ -271,43 +263,6 @@
 	border-color: transparent transparent @gl-light-grey transparent;
 }
 
-// Turn checkbox into a slider
-// Prettier look for consent controls
-
-.slider {
-	// Container class .slider makes it possible to control all elements without resorting to "creative" selectors
-	input {
-		display: none;
-		// Move slider right and change background colour if option checked
-		&:checked + .slider-inner {
-			background-color: @gl-red;
-			.round-bit {
-				right: 0;
-			}
-		}
-	}
-
-	.slider-inner {
-		background-color: @gl-light-grey;
-		position: relative;
-		display: inline-block;
-
-		width: 6rem;
-		height: 2rem;
-		border-radius: 5%;
-
-		.round-bit {
-			position: absolute;
-			border-radius: 50%;
-			width: 2rem;
-			height: 2rem;
-			background-color: #fff;
-			right: 4rem;
-
-			transition: right 0.5s;
-		}
-	}
-}
 
 .MyPage {
 	width: 100%;

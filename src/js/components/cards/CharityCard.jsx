@@ -11,7 +11,6 @@ import { SquareLogo } from '../Image';
 import MDText from '../../base/components/MDText';
 import Counter from '../../base/components/Counter';
 import Money from '../../base/data/Money';
-import StoryCard from './StoryCard';
 
 const bgColorPalette = ['#00A676', '#F7F9F9', '#E0D0C1', '#A76D60', '#4E8098', '#90C2E7']; 
 /**
@@ -23,14 +22,16 @@ const tq = charity => {
 	return {
 		helenbamber: `"That is absolutely fantastic news, thank you so much! Congratulations everyone on a successful Spring/Summer Campaign! 
 		The donation will go a huge way in supporting our clients to recover and rebuild their lives." -- Sophie at Helen Bamber`,
-		centrepoint: `"This is a test quote. Regardless, someone surely said these exacts words somewhere, sometime." -- Me, writing this`
 	}[charity.id] || "";
 };
 
-const CharityCard = ({charity, donationValue}) => {
+/**
+ * 
+ * @param {?Number} i - e.g. 0 for "first in the list". Used for bg colour
+ */
+const CharityCard = ({charity, donationValue, i}) => {
 	// fetch extra info from SoGive
 	let cid = charity.id;
-	console.log(`charity id: `, cid);
 	if (cid) {
 		const pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:charity.id, status:C.KStatus.PUBLISHED});
 		let sogiveCharity = pvCharity.value;
@@ -50,65 +51,49 @@ const CharityCard = ({charity, donationValue}) => {
 	let photo = charity.highResPhoto || charity.images;
 	let logo = charity.logo;
 
-	let backgroundColor = charity.color;
+	// bg colour - use palette
+	if (i===undefined) i = Math.floor(Math.random() * bgColorPalette.length);
+	let backgroundColor = charity.color || bgColorPalette[i % bgColorPalette.length];
+	let backgroundImage = photo;
 
-	return (<ACard backgroundColor={backgroundColor || bgColorPalette[Math.floor(Math.random() * Math.floor(5))]} name={cid} className="card-container">
-		<div className='charity-card' key={charity.name}>
-			{/* <a className='flex-row charity' href={charity.url} target="_blank" rel="noopener noreferrer"
-				style={photo || !charity.color ? {} : {background: charity.color}}
-			>
-				{photo && logo? <img className='logo-small' src={logo} style={{position:"relative",top:0,left:0}} /> : null}
-
-				<SquareLogo url={photo || logo} className={photo? 'contain' : null} />
-				<span className='name sub-header p-1 white contrast-text'>
-					{photo ? charity.name : ''}
-				</span>
-			</a> */}
-
-			<div className="charity-info" style={{display: 'flex', flexDirection: 'row'}}>
-				<div className="charity-text">
-					<span className="name sub-header p-1 white contrast-text">
-						{ charity.name }
-					</span>
-					<div className="charity-description text-block">
-						<MDText source={charity.description || ''} />
-					</div>
-					<div className="charity-donation">
-						<span>Total amount raised: </span>
-						{/* TODO use react-spring for smoother, less expensive animations. Should be default tool */}
-						<span>{donationValue? <Counter currencySymbol={Money.currencySymbol(donationValue)} value={Money.value(donationValue)} /> : null}</span>
-					</div>
-					<br/>
-					<blockquote className="blockquote"><MDText source={tq(charity)} /></blockquote>
-				</div>
-				<div className="charity-logo">
-					<a className="charity" href={charity.url} target="_blank" rel="noopener no referrer"
-						style={photo || !charity.color ? {} : {background: charity.color}}
-					>
-						<img className="logo" src={logo || photo} style={{position:"relative", top:0, left:0, backgroundColor: backgroundColor}} />
-					</a>
-				</div>
-			</div>
-
-			<StoryCard />
-			{/* <div className="story-card-mockup">
-				<span>This will be the StoryCard</span>
-			</div> */}
-		</div>
-
-		{/* <CharityCard2 charity={charity} /> */}
+	return (<ACard backgroundImage={backgroundImage} backgroundColor={backgroundColor} name={cid} className="charity-card">
+			
+		<CharityLogo charity={charity} />
 		
+		<h3 className="white contrast-text">{ charity.name }</h3>
+		
+		{photo? <img src={photo} className='logo' /> : null}
+
+		<div className="charity-description text-block">
+			<MDText source={charity.description || ''} />
+		</div>					
+			
+		{donationValue? <div className="charity-donation">
+			<span>Total amount raised: </span>
+			<Counter currencySymbol={Money.currencySymbol(donationValue)} value={Money.value(donationValue)} />
+		</div> : null}
+			
+		{tq(charity)? <blockquote className="blockquote"><MDText source={tq(charity)} /></blockquote> : null}
+
 		{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
 	</ACard>);
 };
 
-const CharityCard2 = ({charity}) => {
-	// impact data?? e.g. you funded 10 trees <-- This would be best when we can TODO
-	if (charity.description) {
-		return <div className='charity-description text-block'><MDText source={charity.description} /></div>;
+/**
+ * Logo (which you can click on)
+ * TODO can we simplify this?? Also, standardise with company logo
+ */
+const CharityLogo = ({charity}) => {
+	let photo = charity.photo || charity.highResPhoto || charity.images;
+	let logo = charity.logo;
+	let imgSrc = logo || photo;
+
+	let $logo = <img className="logo" src={imgSrc} style={{background: charity.color}} alt={charity.name} />;
+	// with / without `a` link?
+	if (charity.url) {
+		return <a href={charity.url} target="_blank" rel="noopener noreferrer">{$logo}</a>;
 	}
-	// TODO money donated to this charity??
-	return null;
+	return $logo;
 };
 
 export default CharityCard;

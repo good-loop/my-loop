@@ -4,14 +4,18 @@
 // Then looks broken to use a darkened gl-red to indicate focus/hover
 @navbar-accent-color: unset;
 
-// Prevents hero image from leaking out of the header
-.header-block {
-	overflow: auto;
-	position: relative;
-	min-height: 18.5rem;
-}
+// which logos??
+@logo-size: 320px;
 
 .CampaignPage {
+
+	.hero {
+		min-height: 40vh;
+		.hero-logo {
+			height: 10vh;
+		}
+	}
+
 	// Note: My-Loop has nav buttons, but the navbar is transparent.
 	// Whereas CampaignPage has a solid brand-coloured navbar
 	.navbar {
@@ -28,11 +32,6 @@
 		}
 	}
 
-	#navbar {
-		max-width: fit-content;
-	}
-
-
 	.navbar a {
 		color: #fff !important;
 	}
@@ -47,7 +46,6 @@
 		background-color: @gl-red;
 	}
 
-	@logo-size: 320px;
 	.square-logo {
 		width: @logo-size;
 		height: @logo-size;
@@ -60,121 +58,6 @@
 
 	#logo-container-curve {
 		display: none;
-	}
-
-	.hero {
-		height: 100vh;
-		display: flex;
-		.container.p-2 {
-			align-self: center;
-		}
-	}
-
-	.card-container {
-		height: 100vh;
-		display: flex
-	}
-
-	.container.p-2 {
-		margin: 0 auto;
-		align-self: center;
-	}
-
-	.charity-card {
-		display: flex;
-		.charity-info {
-			max-width: 60%;
-			margin: 0 auto;
-			display: flex;
-			flex-direction: row;
-			.charity-text {
-				width: 100%;
-				text-align: start;
-
-				display: flex;
-				flex-direction: column;
-				.charity-description {
-					width: 100%;
-				}
-			}
-			.charity-logo {
-				max-width: 20%;
-				display: flex;
-				.charity {
-					display: flex;
-					position: relative;
-					.logo{
-						position: relative;
-						max-height: 150px;
-						height: 100%;
-						width: auto;
-					}
-					.name {			
-						position: absolute;
-						left: 0;
-						bottom: 0;
-						width: 100%;
-						text-align: left;
-						max-height: 100%;
-						overflow: hidden;
-					}
-				}
-			}
-		}
-	}
-
-	.charity-description {
-		width: @logo-size;
-		padding: 0.5em 0.25em;
-		p {
-			line-height: 1;
-			font-size: 14pt;
-			text-align: left;
-		}
-	}
-
-	// Testing layout. Will be replaced with actual component.
-	.story-card-mockup {
-		border: 1px solid black;
-		width: 25%;
-		height: 16em;
-		border-radius: 15px;
-	}
-
-	.story-card-container {
-		border: 1px solid black;
-		width: 25%;
-		height: 20em;
-		border-radius: 15px;
-		overflow: hidden;
-		background-color: #fff;
-		// Polyfill to manage img width within container
-		img {
-			max-width: -moz-available;
-    		max-width: -webkit-fill-available;
-    		max-width: fill-available;
-		}
-		.story-card-text {
-			font-size: .8em;
-		}
-	}
-
-	.header-logo {
-		width: 10rem; 
-		display: block;
-	}
-
-	.advert-card-container {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-	}
-
-	.advert-card {
-		border: 1px solid black;
-		width: 33%;
-		display: flex;
-		flex-direction: column;
 	}
 
 	.blockquote {

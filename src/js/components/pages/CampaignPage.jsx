@@ -62,8 +62,6 @@ const CampaignPage = () => {
 		return <BS.Alert>Could not load adverts for {q} {status}</BS.Alert>;
 	}
 
-	console.log(sq);
-
 	// console.log(ads)
 
 	// Combine campaign page and branding settings from all ads
@@ -133,15 +131,14 @@ const CampaignPage = () => {
 
 	let brandColor = branding.color || branding.backgroundColor;
 
-	// Group ads by campaign
+	// Group ads by campaign {String: Advert}
 	let campaignByName = {};
 	ads.forEach(ad => {
 		let name = ad.campaign || ad.id;
 		campaignByName[name] = Object.assign({}, campaignByName[name], ad);
 	});
 
-	// Filter out campaigns with no video (dummies).
-	let campaigns = Object.values(campaignByName).filter(campaign => campaign.videos[0].url);
+	let campaigns = Object.values(campaignByName);
 	// sort by date
 	campaigns.sort(sortByDate(ad => ad.end || ad.start));
 
@@ -181,24 +178,16 @@ const CampaignPage = () => {
 	return (
 		<div className="widepage CampaignPage text-center">
 			<NavBar brandLogo={branding.logo} style={{backgroundColor: brandColor}} />
-			{/* TODO: get rid of old css classes, previous to refactor */}
-			<div>
+			<div className='avoid-navbar'>
+
 				<SplashCard branding={branding} campaignPage={campaignPage} donationValue={donationValue} />
 				
-				{charities.map( charity => <CharityCard key={charity.id} charity={charity} donationValue={donByCid[charity.id]} />)}				
-				<div className="advert-card-container container">
-					{ads.filter(campaign => campaign.videos[0].url).map(ad => <AdvertCard key={ad.id} advert={ad} viewCount={viewcount4campaign[ad.campaign]} />)}
+				<div className="charity-card-container clearfix">
+					{charities.map( (charity, i) => <CharityCard i={i} key={charity.id} charity={charity} donationValue={donByCid[charity.id]} />)}				
 				</div>
 
-				{/* This may become redundant ??remove? */}
-				<div className='row p-1'>
-					<div className='col-md-2' /> 
-					<div className='col-md-8'>
-						{ads.length && ads[0].videos && ads[0].videos.length 
-							&& <ShareAnAd adid={ads[0].id} color={brandColor} />
-						}
-					</div> 
-					<div className='col-md-2' />
+				<div className="advert-card-container clearfix">
+					{campaigns.filter(campaign => campaign.videos[0].url).map( (ad, i) => <AdvertCard key={ad.id} i={i} advert={ad} viewCount={viewcount4campaign[ad.campaign]} />)}
 				</div>
 
 			</div>
@@ -213,31 +202,13 @@ const SplashCard = ({branding, campaignPage, donationValue}) => {
 	const backgroundImage = (campaignPage && campaignPage.bg) || (ServerIO.MYLOOP_ENDPONT + '/img/wheat_fields.jpg');
 	return (<ACard className="hero" backgroundImage={backgroundImage}>
 		<div className='flex-row flex-centre p-1'>
-			<img className='header-logo' src={branding.logo} alt='advertiser-logo' />
+			<img className='hero-logo' src={branding.logo} alt='advertiser-logo' />
 		</div>
 		<div className='sub-header p-1 white contrast-text'>
 			<div>Together our Ads-for-Good have raised</div>
 			{donationValue? <div className='header' style={{color: 'white'}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
-			<div>for</div>
 		</div>
 	</ACard>);
-
-	// <div className='header-text'>
-	// 	<div 
-	// 		className='header-block img-block'
-	// 		style={{backgroundImage: 'url(' + backgroundImage + ')'}}
-	// 	>
-	// 	<div className='container-fluid'></div>
-	// 		<div className='flex-row flex-centre p-1'>
-	// 			<img className='header-logo' src={branding.logo} alt='advertiser-logo' />
-	// 		</div>
-	// 		<div className='sub-header p-1 white contrast-text'>
-	// 			<div>Together our Ads-for-Good have raised</div>
-	// 			{donationValue? <div className='header' style={{color: 'white'}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
-	// 			<div>for</div>
-	// 		</div>
-	// 	</div>
-	// </div>);
 };
 
 /**
