@@ -23,6 +23,7 @@ import ACard from '../cards/ACard';
 import CharityCard from '../cards/CharityCard';
 import AdvertCard from '../cards/AdvertCard';
 import {sortByDate} from '../../base/utils/SortFn';
+import Counter from '../../base/components/Counter';
 import pivot from 'data-pivot';
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser`
@@ -193,7 +194,7 @@ const SplashCard = ({branding, campaignPage, donationValue}) => {
 		</div>
 		<div className='sub-header p-1 white contrast-text'>
 			<div>Together our Ads-for-Good have raised</div>
-			{donationValue? <div className='header' style={{color: 'white'}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
+			{donationValue? <div className='header' style={{color: 'white'}}><Counter amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 		</div>
 	</ACard>);
 };
