@@ -55,7 +55,7 @@ const ContactCard = () => {
 				Get in touch
 			</div>
 			<div className='p-1'>
-				<p><a href="mailto:hello@good-loop.com?subject=My thoughts on My Good-Loop">Tell us what you think of My Good-Loop.</a></p>
+				<p>Tell us what you think: <a href="mailto:hello@good-loop.com?subject=My thoughts on My Good-Loop">hello@good-loop.com</a></p>
 				<p>Interested in hosting Ads For Good on your blog or website? <a href="https://www.good-loop.com/book-a-call">Let us know.</a></p>
 			</div>
 		</div>
