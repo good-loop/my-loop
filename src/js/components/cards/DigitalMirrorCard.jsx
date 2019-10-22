@@ -9,12 +9,10 @@ import DataStore from '../../base/plumbing/DataStore';
 import Claim from '../../base/data/Claim';
 import {saveProfileClaims} from '../../base/Profiler';
 import ServerIO from '../../plumbing/ServerIO';
-import {useLogsIfVisible} from '../../base/components/CustomHooks';
 
 const userdataPath = ['widget', 'DigitalMirror', 'userdata'];
 
 /**
- * @param {*} doesIfVisibleRef Pass this to component, MixPanel tracking event will be sent out if the element is ever completely visible on user's screen
  */
 const DigitalMirrorCard = ({xids}) => {
 	if(!xids) return null;
@@ -23,16 +21,13 @@ const DigitalMirrorCard = ({xids}) => {
 
 	// Possibly overkill?
 	useEffect( () => {
-		if( !twitterXId ) return;
+		if( ! twitterXId ) return;
 		ServerIO.load(`${ServerIO.PROFILER_ENDPOINT}/profile/${ServerIO.dataspace}/${encURI(twitterXId)}`, {swallow:true})
 			.then( res => DataStore.setValue([...userdataPath, twitterXId], res.cargo, false));
 	}, [twitterXId]);
 
-	let doesIfVisibleRef = useRef();
-	useLogsIfVisible(doesIfVisibleRef, 'DigitalMirrorVisible');
-
 	return (
-		<div ref={doesIfVisibleRef}>
+		<div>
 			<ConsentControls xid={twitterXId} />
 		</div>
 	);

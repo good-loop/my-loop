@@ -4,7 +4,6 @@ import {yessy} from 'wwutils';
 
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
-import {useLogsIfVisible} from '../../base/components/CustomHooks';
 import Counter from '../../base/components/Counter';
 
 import ServerIO from '../../plumbing/ServerIO';
@@ -50,21 +49,14 @@ const SplashCard = () => {
 };
 
 const ContactCard = () => {
-	let doesIfVisibleRef = useRef();
-	useLogsIfVisible(doesIfVisibleRef, 'ContactCardVisible');
-
 	return (
 		<div className='text-center'>
 			<div className='sub-header top-p-1'>
 				Get in touch
 			</div>
 			<div className='p-1'>
-				<div ref={doesIfVisibleRef}>
-					<div>
-						<p><a href="mailto:hello@good-loop.com?subject=My thoughts on My Good-Loop">Tell us what you think of My Good-Loop.</a></p>
-						<p>Interested in hosting Ads For Good on your blog or website? <a href="https://www.good-loop.com/book-a-call">Let us know.</a></p>
-					</div>
-				</div>
+				<p><a href="mailto:hello@good-loop.com?subject=My thoughts on My Good-Loop">Tell us what you think of My Good-Loop.</a></p>
+				<p>Interested in hosting Ads For Good on your blog or website? <a href="https://www.good-loop.com/book-a-call">Let us know.</a></p>
 			</div>
 		</div>
 	);

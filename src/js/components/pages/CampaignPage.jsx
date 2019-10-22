@@ -153,25 +153,12 @@ const CampaignPage = () => {
 	});
 
 	let viewcount4campaign = {};
-
+	window.viewcount4campaign = viewcount4campaign;
 	if (pvViewData.value) {
-		window.pivot = pivot; // for debug
+		window.pivot = pivot; // for debug		
 		viewcount4campaign = pivot(pvViewData.value, "by_campaign.buckets.$bi.{key, doc_count}", "$key.$doc_count");
-		console.warn("viewcount4campaign",viewcount4campaign);
 	}
-
-	console.log(`PVVIEWDATA !!!`, viewcount4campaign);
-	// console.log(`getDonationData: `, ServerIO.getDonationsData({q, start: '2017-01-01T00:00:00Z', end: '2019-10-15T23:59:59Z'}));
-
-	// const campaignAds = ads => {
-	// 	let adsByCampaign = {};
-	// 	ads.forEach(ad => {
-	// 		if (!adsByCampaign[ad.name]) {
-	// 			adsByCampaign[ad] 
-	// 		}
-	// 	})
-	// }
-
+	
 	// TODO: refactor this because it's very similar now to mypage
 	return (
 		<div className="widepage CampaignPage text-center">
@@ -186,7 +173,8 @@ const CampaignPage = () => {
 				
 				<div className="advert-card-container clearfix">
 					<div>Total number of people who unlocked a donation through watching the ads: {campaignTotalViews}  </div>
-					{campaigns.filter(campaign => campaign.videos[0].url).map( (ad, i) => <AdvertCard key={ad.id} i={i} advert={ad} viewCount={viewcount4campaign[ad.campaign]} />)}
+					{campaigns.filter(campaign => campaign.videos[0].url).map( 
+						(ad, i) => <AdvertCard key={ad.id} i={i} advert={ad} viewCount={viewcount4campaign[ad.campaign]} />)}
 				</div>
 
 			</div>

@@ -14,7 +14,7 @@ import Profiler from '../base/Profiler';
 
 // Templates
 import MessageBar from '../base/components/MessageBar';
-import LoginWidget from './LoginWidget';
+import LoginWidget from '../base/components/LoginWidget';
 import NavBar from './MyLoopNavBar';
 
 // Pages
