@@ -13,7 +13,7 @@
 html, body {
 	background-color:#eeeaea; // warm off-white - still feels open but falls back from page content
 	.horizontal-scrollbar {
-       overflow-x: hidden;
+		overflow-x: hidden;
 	}
 }
 
@@ -141,6 +141,64 @@ a.btn {
 		}
 	}
 }
+
+// The "Connect on email/Twitter/Facebook" widget
+.social-media-card {
+	padding: 0.5rem 1rem;
+	// Default width: wide enough to show full "Connect with X" text
+	font-size: 120%;
+	width: 14em;
+
+	.tagline {
+		color: white;
+		.contrast-text;
+		line-height: 1;
+		font-size: 90%;
+	}
+
+	.btn {
+		font-size: 100%; // Override Bootstrap's explicit px sizing for contextual sizing
+	}
+
+	.btn, .social-connected {
+		line-height: 1;
+		overflow: hidden; // people can have long names!
+		margin-bottom: 0.5rem; // enclosing in p-1 was making them stack up too tall
+		width: 100%; // equal width for prettiness, set explicit width on the social-media-card in question
+	}
+}
+
+.social-connected {
+	display: flex;
+	align-items: center;
+	padding: 0.25em;
+	border-radius: 0.25em;
+
+	.user-pic {
+		display: inline-block;
+		position: relative;
+		overflow: hidden;
+		height: 2em;
+		width: 2em;
+
+		border-radius: 0.1em;
+		> * {
+			position: absolute;
+			left: 0;
+			top: 0;
+			height: 100%;
+			width: 100%;
+		}
+	}
+	// The "(icon) Connected" status line
+	.connected {
+		font-size: 66%;
+	}
+	.connected, .name { // And the username too
+		line-height: 1;
+	}
+}
+
 
 
 

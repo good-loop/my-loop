@@ -8,6 +8,11 @@
 	.navbar-brand {
 		z-index: 1;
 	}
+
+	// Override logo size - .logo-small class makes it tiny
+	.navbar-brand .logo-small {
+		width: 10em;
+	}
 }
 
 #logo-container-curve {
@@ -21,10 +26,14 @@
 
 .how-it-works {
 	overflow: hidden;
-	.photo-bg {
-		background-image: url("/img/wheat_fields.jpg");
-		background-size: cover;
+	background-position: bottom; // put the dark "grass" part of the BG image behind the transparent section
+
+	.container {
+		 // Let elements extend to left and right edges
+		padding-left: 0 !important;
+		padding-right: 0 !important;
 	}
+
 	.how-it-works-banner {
 		height: 15em;
 		position: relative;
@@ -56,7 +65,6 @@
 	}
 
 	.steps {
-		overflow: hidden;
 		position: relative;
 		min-height: 30rem;
 
@@ -66,7 +74,9 @@
 		
 		.step-3 {
 			// background-color: rgba(255, 255, 255, 0.4);
-			background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+			&, .finger-bleed {
+				background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+			}
 			align-items: flex-start; // put the number circle in the upper corner
 			border-bottom-left-radius: 0;
 		}
@@ -110,10 +120,21 @@
 	position: relative;
 
 	.split-coloured-circle-svg {
-		position: relative;
+		position: absolute;
 		left: 15%;
 		width: 85%;
-		height: 23em;
+		height: 23em; // Stop short of the bottom
+	}
+
+	.container {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between; // Push to top and bottom
+		align-items: flex-end; // Right align
+		min-height: 25em; // Make sure there's enough height to display all content
+		padding-top: 1em; // Keep the header text away from the ribbon
+
 	}
 
 	.impact-girl {
@@ -122,7 +143,7 @@
 		bottom: 0;
 		height: 90%;
 		width: 50%;
-		background-image: url("/img/redgirl.png");
+		background-image: url("/img/redgirl-crop.svg");
 		background-repeat: no-repeat;
 		background-size: contain;
 		background-position: bottom center;
@@ -141,12 +162,12 @@
 			font-style: oblique;
 		}
 	}
-
-	.impact-card-text {
-		position: absolute;
-		top: 1rem;
-		right: 1rem;
-		width: 60%;
+	
+	.social-media-card {
+		z-index: 1; // may overlap red coat girl on phones
+		.tagline {
+			text-align: right;
+		}
 	}
 }
 
@@ -164,21 +185,36 @@
 .finger {
 	display: flex;
 	flex-direction: row;
-	align-items: center;
+	align-items: flex-start; // keep the numbers aligned in the corners
 	justify-content: flex-start;
+	position: relative; // enable use as position/size ref for .finger-bleed
+
+	// Extend the finger all the way off the side of the screen
+	.finger-bleed {
+		position: absolute;
+		height: 100%;
+		width: 100vw;
+		top: 0;
+	}
 
 	&.to-left {
-		border-radius: 3rem 0 0 3rem; // concentric with number circle, which is 2rem + 1rem margin
+		border-radius: 2.25rem 0 0 2.25rem; // concentric with number circle, which has radius 2rem + 0.25rem padding from p-1 class
 		margin: 0 0 1rem 1rem;
 		.number-circle {
 			margin: 0 1rem 0 0; // just push away text to right
 		}
+		.finger-bleed {
+			left: 100%; // hang off right side
+		}
 	}
 	&.to-right {
-		border-radius: 0 3rem 3rem 0; // concentric with number circle, which is 2rem + 1rem margin
+		border-radius: 0 2.25rem 2.25rem 0; // concentric with number circle, which has radius 2rem + 0.25rem padding from p-1 class
 		margin: 0 1rem 1rem 0;
 		.number-circle {
 			margin: 0 1rem; // push away text to right AND align vertically to circles above and below
+		}
+		.finger-bleed {
+			right: 100%; // hang off left side
 		}
 	}
 }
@@ -276,7 +312,14 @@
 		height: 30em;
 
 		background-image: url("/img/tulips.jpg");
-		background-position: 'right';
+		background-position: center;
+
+		// Restrict connect widget & decorations to centre
+		.container {
+			position: relative;
+			height: 100%;
+			padding-top: 3.5rem; // sum of .navbar-brand height 2.5em, .navbar padding 0.5em
+		}
 
 		.doing-good, .little-flowers {
 			position: absolute;
@@ -291,6 +334,7 @@
 		}
 
 		.social-media-card {
+			z-index: 1; // appear in front of flowers on mobile
 			position: absolute;
 			bottom: 0;
 			left: 0;
@@ -361,8 +405,10 @@
 	}
 }
 
-// shrink the overflowing logo on the ribbon for smallest screens
+
+
 @media (max-width: 768px) {
+	// shrink the overflowing logo on the ribbon for smaller screens
 	.logo-ribbon {
 		.gl-logo-svg {
 			max-height: 9rem;
@@ -373,5 +419,16 @@
 			height: 27vw;
 			width: 27vw;
 		}
+	}
+	// Hide the white curve in the top left on smaller screens
+	#logo-container-curve {
+		display: none;
+	}
+}
+
+// Shrink the red coat girl to avoid clashing with Make An Impact text on phones
+@media (max-width: 991px) { // next BS size starts at 992px
+	.make-an-impact .impact-girl {
+		height: 60%;
 	}
 }

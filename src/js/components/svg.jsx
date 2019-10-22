@@ -3,9 +3,7 @@
 // TODO document this kind of code! There is lots of opaque hard-coding here.
 // Parameterise it too.
 
-import React, {useRef, useState} from 'react';
-
-import ServerIO from '../plumbing/ServerIO';
+import React from 'react';
 
 /** The yin-yang-ish curve on the "HOW IT \ WORKS" element */
 const howItWorksCurveSVG= (
@@ -36,22 +34,16 @@ const glGlyphPath = (
  * a 99% chance the rear element will peek out for an antialiased half-pixel somewhere and look AWFUL.
  * This way, the shapes interlock and never share edges.
  */
-
-
 const GlLogoGenericSvg = ({outline, colour1 = '#770f00', colour2 = '#af2009', colourBg = '#fff'}) => (
 	<svg xmlns="http://www.w3.org/2000/svg" className="gl-logo-svg" viewBox="0 0 100 100">
-		<defs>
-			<g id="gl-glyph">{glGlyphPath}</g>
-			<clipPath id="circle-clip"><circle cx="50" cy="50" r="50" /></clipPath>
-			<mask id="glyph-mask">
-				<rect x="0" y="0" width="100" height="100" fill="#fff" />
-				<g fill="#000"><use xlinkHref="#gl-glyph" /></g>
-			</mask>
-		</defs>
-		<g mask={outline ? 'url(#glyph-mask)' : ''} clipPath="url(#circle-clip)">
+		<mask id="mask">
+			<circle fill="#fff" cx="50" cy="50" r="50" />
+			{ outline ? <g fill="#000">{glGlyphPath}</g> : '' }
+		</mask>
+		<g mask="url(#mask)">
 			<path fill={outline ? undefined : colour2} d="M100 0v100l-70 .078C7.748 67.155 90.519 52.227 75 .094z" />
 			<path fill={outline ? undefined : colour1} d="M0 0l.5 100 29.5.078C7.748 67.155 90.519 52.227 75 .094z" />
-			{outline ? '' : <g fill={colourBg}><use xlinkHref="#gl-glyph" /></g>}
+			{outline ? '' : <g fill={colourBg}>{glGlyphPath}</g>}
 		</g>
 	</svg>
 );
