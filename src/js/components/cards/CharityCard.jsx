@@ -57,24 +57,30 @@ const CharityCard = ({charity, donationValue, i}) => {
 	let backgroundColor = charity.color || bgColorPalette[i % bgColorPalette.length];
 	let backgroundImage = photo;
 
-	return (<ACard backgroundImage={backgroundImage} backgroundColor={backgroundColor} name={cid} className="charity-card">
-			
-		<CharityLogo charity={charity} />
-		
-		<h3 className="white contrast-text">{ charity.name }</h3>
-		
-		{photo? <img src={photo} className='logo' /> : null}
+	// hack: different mobile vs desktop designs -- easiest done in js than pure css
+	const isMobile = DataStore.getValue('env', 'isMobile');
 
-		<div className="charity-description text-block">
-			<MDText source={charity.description || ''} />
-		</div>					
-			
-		{donationValue? <div className="charity-donation">
-			<span>Total amount raised: </span>
-			<Counter currencySymbol={Money.currencySymbol(donationValue)} value={Money.value(donationValue)} />
-		</div> : null}
-			
-		{tq(charity)? <blockquote className="blockquote"><MDText source={tq(charity)} /></blockquote> : null}
+	return (<ACard backgroundImage={isMobile? null : backgroundImage} backgroundColor={backgroundColor} name={cid} className="charity-card">
+		
+		{ !backgroundImage ? <div className="logo-no-bg"><CharityLogo charity={charity} /></div> : '' }
+
+		<div className="white-inner-card" style={backgroundImage? {} : {backgroundColor:'transparent'}}>
+			<h3 className="black">{ charity.name }</h3>
+
+			{donationValue? <div className="charity-donation">
+				<span style={{color: '#770f00'}}><Counter currencySymbol={Money.currencySymbol(donationValue)} value={Money.value(donationValue)} /></span>
+				<span>&nbsp;raised</span>
+			</div> : null}		
+
+			<div className="charity-description text-block" >
+				<MDText source={charity.description || ''} />
+				{tq(charity)? <blockquote className="blockquote"><MDText source={tq(charity)} /></blockquote> : null}			
+			</div>
+
+			{ backgroundImage ? <CharityLogo charity={charity} /> : '' }
+		</div>
+
+		{isMobile && photo? <img src={photo} className='photo' /> : null}
 
 		{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
 	</ACard>);
