@@ -109,9 +109,10 @@
 		height: 9rem;
 		width: 9rem;
 		position: absolute;
-		top: 0;
+		top: 50%;
 		transform: translateY(-50%);
 		right: 1rem;
+		z-index: 1; // needs to appear in front of subsequent div
 	}
 }
 
@@ -429,6 +430,21 @@
 		> * {
 			width: 100%;
 			margin: 0;
+		}
+	}
+}
+
+// shrink the overflowing logo on the ribbon for smallest screens
+@media (max-width: 768px) {
+	.logo-ribbon {
+		.gl-logo-svg {
+			max-height: 9rem;
+			min-height: 6rem;
+			max-width: 9rem;
+			min-width: 6rem;
+			// 27vw = 9rem at current base font sizing & 768px width
+			height: 27vw;
+			width: 27vw;
 		}
 	}
 }
