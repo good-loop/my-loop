@@ -25,6 +25,25 @@ import AdvertCard from '../cards/AdvertCard';
 import {sortByDate} from '../../base/utils/SortFn';
 import Counter from '../../base/components/Counter';
 import pivot from 'data-pivot';
+
+/**
+ * HACK fix campaign name changes to clean up historical campaigns
+ */
+const viewCount = (viewcount4campaign, ad) => {
+	if ( ! ad.campaign) return null;
+	let vc = viewcount4campaign[ad.campaign];
+	if (vc) return vc;
+
+	// HACK TOMS?? ella / josh / sara
+	if (ad.vertiser==='bPe6TXq8') {
+		let keyword = ad.campaign.includes('sara')? 'sara' : ad.campaign.includes('ella')? 'ella' : 'josh';
+		let total = 0;
+		Object.keys(viewcount4campaign).filter(c => c.includes(keyword)).forEach(c => total += viewcount4campaign[c]);
+		return total;
+	}
+	return null;
+};
+
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser`
  * TODO support q=flexible query
@@ -143,13 +162,16 @@ const CampaignPage = () => {
 	// sort by date
 	campaigns.sort(sortByDate(ad => ad.end || ad.start));
 
-	// q :(
+	// Get ad viewing data
 	let pvViewData = DataStore.fetch(['misc','views',q], () => {
+		// filter to these ads
+		let qads = '(vert:'+ads.map(ad => ad.id).join(" OR vert:")+')';
 		let filters = { 
 			dataspace: 'gl', 
-			q: 'evt:minview' // minview vs spend ??
+			q: 'evt:minview AND '+qads // minview vs spend ??
 		};
-		return ServerIO.getDataLogData({filters, interval:'12 months', breakdowns:['campaign'], name:'view-data'});
+		// start = early for all data
+		return ServerIO.getDataLogData({filters, breakdowns:['campaign'], start:'2017-01-01', name:'view-data'});
 		// return ServerIO.getDonationsData({cid:'ashoka', start: '2017-01-01T00:00:00Z', end: '2019-10-15T23:59:59Z'})
 	});
 
@@ -175,7 +197,7 @@ const CampaignPage = () => {
 				<div className="advert-card-container clearfix">
 					<div>Total number of people who unlocked a donation through watching the ads: {campaignTotalViews}  </div>
 					{campaigns.filter(campaign => campaign.videos[0].url).map( 
-						(ad, i) => <AdvertCard key={ad.id} i={i} advert={ad} viewCount={viewcount4campaign[ad.campaign]} />)}
+						(ad, i) => <AdvertCard key={ad.id} i={i} advert={ad} viewCount={viewCount(viewcount4campaign, ad)} />)}
 				</div>
 
 			</div>
