@@ -11,7 +11,7 @@ import Misc from '../../base/components/Misc';
 import ActionMan from '../../plumbing/ActionMan';
 import {ListItems} from '../../base/components/ListLoad';
 import Footer from '../Footer';
-import NavBar from '../NavBar';
+import NavBar from '../MyLoopNavBar';
 import { SquareLogo } from '../Image';
 import ShareAnAd from '../cards/ShareAnAd';
 import NGO from '../../base/data/NGO';
@@ -23,7 +23,27 @@ import ACard from '../cards/ACard';
 import CharityCard from '../cards/CharityCard';
 import AdvertCard from '../cards/AdvertCard';
 import {sortByDate} from '../../base/utils/SortFn';
+import Counter from '../../base/components/Counter';
 import pivot from 'data-pivot';
+
+/**
+ * HACK fix campaign name changes to clean up historical campaigns
+ */
+const viewCount = (viewcount4campaign, ad) => {
+	if ( ! ad.campaign) return null;
+	let vc = viewcount4campaign[ad.campaign];
+	if (vc) return vc;
+
+	// HACK TOMS?? ella / josh / sara
+	if (ad.vertiser==='bPe6TXq8') {
+		let keyword = ad.campaign.includes('sara')? 'sara' : ad.campaign.includes('ella')? 'ella' : 'josh';
+		let total = 0;
+		Object.keys(viewcount4campaign).filter(c => c.includes(keyword)).forEach(c => total += viewcount4campaign[c]);
+		return total;
+	}
+	return null;
+};
+
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser`
  * TODO support q=flexible query
@@ -142,36 +162,26 @@ const CampaignPage = () => {
 	// sort by date
 	campaigns.sort(sortByDate(ad => ad.end || ad.start));
 
-	// q :(
+	// Get ad viewing data
 	let pvViewData = DataStore.fetch(['misc','views',q], () => {
+		// filter to these ads
+		let qads = '(vert:'+ads.map(ad => ad.id).join(" OR vert:")+')';
 		let filters = { 
 			dataspace: 'gl', 
-			q: 'evt:minview' // minview vs spend ??
+			q: 'evt:minview AND '+qads // minview vs spend ??
 		};
-		return ServerIO.getDataLogData({filters, interval:'12 months', breakdowns:['campaign'], name:'view-data'});
+		// start = early for all data
+		return ServerIO.getDataLogData({filters, breakdowns:['campaign'], start:'2017-01-01', name:'view-data'});
 		// return ServerIO.getDonationsData({cid:'ashoka', start: '2017-01-01T00:00:00Z', end: '2019-10-15T23:59:59Z'})
 	});
 
 	let viewcount4campaign = {};
-
+	window.viewcount4campaign = viewcount4campaign;
 	if (pvViewData.value) {
-		window.pivot = pivot; // for debug
+		window.pivot = pivot; // for debug		
 		viewcount4campaign = pivot(pvViewData.value, "by_campaign.buckets.$bi.{key, doc_count}", "$key.$doc_count");
-		console.warn("viewcount4campaign",viewcount4campaign);
 	}
-
-	console.log(`PVVIEWDATA !!!`, viewcount4campaign);
-	// console.log(`getDonationData: `, ServerIO.getDonationsData({q, start: '2017-01-01T00:00:00Z', end: '2019-10-15T23:59:59Z'}));
-
-	// const campaignAds = ads => {
-	// 	let adsByCampaign = {};
-	// 	ads.forEach(ad => {
-	// 		if (!adsByCampaign[ad.name]) {
-	// 			adsByCampaign[ad] 
-	// 		}
-	// 	})
-	// }
-
+	
 	// TODO: refactor this because it's very similar now to mypage
 	return (
 		<div className="widepage CampaignPage text-center">
@@ -186,7 +196,8 @@ const CampaignPage = () => {
 				
 				<div className="advert-card-container clearfix">
 					<div>Total number of people who unlocked a donation through watching the ads: {campaignTotalViews}  </div>
-					{campaigns.filter(campaign => campaign.videos[0].url).map( (ad, i) => <AdvertCard key={ad.id} i={i} advert={ad} viewCount={viewcount4campaign[ad.campaign]} />)}
+					{campaigns.filter(campaign => campaign.videos[0].url).map( 
+						(ad, i) => <AdvertCard key={ad.id} i={i} advert={ad} viewCount={viewCount(viewcount4campaign, ad)} />)}
 				</div>
 
 			</div>
@@ -205,7 +216,7 @@ const SplashCard = ({branding, campaignPage, donationValue}) => {
 		</div>
 		<div className='sub-header p-1 white contrast-text'>
 			<div>Together our Ads-for-Good have raised</div>
-			{donationValue? <div className='header' style={{color: 'white'}}><Misc.Money amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
+			{donationValue? <div className='header' style={{color: 'white'}}><Counter amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 		</div>
 	</ACard>);
 };

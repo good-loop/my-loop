@@ -1,126 +1,133 @@
-@navbar-accent-color: darken(@gl-red, 10%);
+// /**
+// WTF? lets clean out lots of this. BS should provide most of what we need
+// */
 
-.navbar {
-	font-size: inherit !important;
-	border: none;
-	position: relative;
-	margin-bottom: 0;
 
-	a {
-		color: @gl-red !important;
-	}
 
-	#top-right-menu {
-		margin-right: inherit;
-		font-weight: bold;
-		a {
-			text-decoration: none;
-		}
-	}
-}
 
-.navbar-brand {
-	// From flex.less
-	.flex-vertical-align();
-	width: 12em;
-	height: 2.5em;
-	font-size: inherit; // override bootstrap px default
-	img {
-		max-width: 100%; // otherwise, overlarge logo can be ugly
-		height: 100%;
-		margin-left: 10px;
-	}
-}
+// @navbar-accent-color: darken(@gl-red, 10%);
 
-.dropdown.open {
-	.dropdown-toggle {
-		background-color: transparent !important;
-	}
-}
+// .navbar {
+// 	font-size: inherit !important;
+// 	border: none;
+// 	position: relative;
+// 	margin-bottom: 0;
 
-.navbar-inverse {
-	background-color: transparent;
-	border-color: unset;
-}
+// 	a {
+// 		color: @gl-red !important;
+// 	}
 
-.navbar-inverse .navbar-toggle, .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
-	border-color: @gl-red;
+// 	#top-right-menu {
+// 		margin-right: inherit;
+// 		font-weight: bold;
+// 		a {
+// 			text-decoration: none;
+// 		}
+// 	}
+// }
 
-	.icon-bar {
-		background-color: @gl-red;
-	}
-}
+// .navbar-brand {
+// 	// From flex.less
+// 	.flex-vertical-align();
+// 	width: 12em;
+// 	height: 2.5em;
+// 	font-size: inherit; // override bootstrap px default
+// 	img {
+// 		max-width: 100%; // otherwise, overlarge logo can be ugly
+// 		height: 100%;
+// 		margin-left: 10px;
+// 	}
+// }
 
-.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
-	background-color: @navbar-accent-color;
-}
+// .dropdown.open {
+// 	.dropdown-toggle {
+// 		background-color: transparent !important;
+// 	}
+// }
 
-.dropdown > a {
-	color: @gl-red !important;
-}
+// .navbar-inverse {
+// 	background-color: transparent;
+// 	border-color: unset;
+// }
 
-.dropdown-menu {
-	background-color: @gl-red !important;
+// .navbar-inverse .navbar-toggle, .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
+// 	border-color: @gl-red;
 
-	li > a {
-		color: #fff !important;
-	}
+// 	.icon-bar {
+// 		background-color: @gl-red;
+// 	}
+// }
 
-	li > a:hover {
-		background: @navbar-accent-color;
-	}
-}
+// .navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
+// 	background-color: @navbar-accent-color;
+// }
 
-/* Bootstrap overrides to use desktop-style dropdown on mobile too, no more hamburger */
-@media (max-width: 768px) {
-	.navbar-collapse {
-		width: auto;
-		border-top: 0;
-		-webkit-box-shadow: none;
-		box-shadow: none;
-	}
+// .dropdown > a {
+// 	color: @gl-red !important;
+// }
 
-	.navbar-fixed-bottom .navbar-collapse, .navbar-fixed-top .navbar-collapse, .navbar-static-top .navbar-collapse {
-		padding-right: 0;
-		padding-left: 0;
-	}
+// .dropdown-menu {
+// 	background-color: @gl-red !important;
 
-	.navbar-collapse.collapse {
-		display: block !important;
-		height: auto !important;
-		padding-bottom: 0;
-		overflow: visible !important;
-	}
+// 	li > a {
+// 		color: #fff !important;
+// 	}
 
-	.navbar-right {
-		float: right !important;
-	}
+// 	li > a:hover {
+// 		background: @navbar-accent-color;
+// 	}
+// }
 
-	.navbar-nav {
-		float: left;
-		margin: 0;
-	}
+// /* Bootstrap overrides to use desktop-style dropdown on mobile too, no more hamburger */
+// @media (max-width: 768px) {
+// 	.navbar-collapse {
+// 		width: auto;
+// 		border-top: 0;
+// 		-webkit-box-shadow: none;
+// 		box-shadow: none;
+// 	}
 
-	.navbar-header {
-		float: left;
-	}
+// 	.navbar-fixed-bottom .navbar-collapse, .navbar-fixed-top .navbar-collapse, .navbar-static-top .navbar-collapse {
+// 		padding-right: 0;
+// 		padding-left: 0;
+// 	}
 
-	.navbar-nav > li {
-		float: left;
-	}
+// 	.navbar-collapse.collapse {
+// 		display: block !important;
+// 		height: auto !important;
+// 		padding-bottom: 0;
+// 		overflow: visible !important;
+// 	}
 
-	.navbar-nav .open .dropdown-menu {
-		position: absolute;
-		float: left;
-		width: auto;
-		margin: 2px 0 0;
-		border: 1px solid rgba(0,0,0,.15);
-		-webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
-		box-shadow: 0 6px 12px rgba(0,0,0,.175);
-	}
+// 	.navbar-right {
+// 		float: right !important;
+// 	}
 
-	.navbar-right .dropdown-menu {
-		right: 0;
-		left: auto;
-	}
-}
+// 	.navbar-nav {
+// 		float: left;
+// 		margin: 0;
+// 	}
+
+// 	.navbar-header {
+// 		float: left;
+// 	}
+
+// 	.navbar-nav > li {
+// 		float: left;
+// 	}
+
+// 	.navbar-nav .open .dropdown-menu {
+// 		position: absolute;
+// 		float: left;
+// 		width: auto;
+// 		margin: 2px 0 0;
+// 		border: 1px solid rgba(0,0,0,.15);
+// 		-webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+// 		box-shadow: 0 6px 12px rgba(0,0,0,.175);
+// 	}
+
+// 	.navbar-right .dropdown-menu {
+// 		right: 0;
+// 		left: auto;
+// 	}
+// }

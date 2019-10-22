@@ -4,11 +4,10 @@ import {yessy} from 'wwutils';
 
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
-import {useLogsIfVisible} from '../../base/components/CustomHooks';
 import Counter from '../../base/components/Counter';
 
 import ServerIO from '../../plumbing/ServerIO';
-import MyLoopNavBar from '../NavBar';
+import MyLoopNavBar from '../MyLoopNavBar';
 import Footer from '../Footer';
 import ACard from '../cards/ACard';
 import ShareAnAd from '../cards/ShareAnAd';
@@ -40,8 +39,8 @@ const MyPage = () => {
 
 const SplashCard = () => {
 	return (
-		<div className='splash img-block' style={{}}>
-			<MyLoopNavBar logo='/img/new-logo-with-text.svg' backgroundColor='transparent' />
+		<div className='splash img-block'>
+			<MyLoopNavBar logo='/img/new-logo-with-text.svg' backgroundColor='transparent' />			
 			<img className="doing-good" src="/img/doinggoodfeelsgood.png" alt="" />			
 			<img className="little-flowers" src="/img/littleflowers.png" alt="" />
 			<SignUpConnectCard className='' />			
@@ -50,21 +49,14 @@ const SplashCard = () => {
 };
 
 const ContactCard = () => {
-	let doesIfVisibleRef = useRef();
-	useLogsIfVisible(doesIfVisibleRef, 'ContactCardVisible');
-
 	return (
 		<div className='text-center'>
 			<div className='sub-header top-p-1'>
 				Get in touch
 			</div>
 			<div className='p-1'>
-				<div ref={doesIfVisibleRef}>
-					<div>
-						<p><a href="mailto:hello@good-loop.com?subject=My thoughts on My Good-Loop">Tell us what you think of My Good-Loop.</a></p>
-						<p>Interested in hosting Ads For Good on your blog or website? <a href="https://www.good-loop.com/book-a-call">Let us know.</a></p>
-					</div>
-				</div>
+				<p><a href="mailto:hello@good-loop.com?subject=My thoughts on My Good-Loop">Tell us what you think of My Good-Loop.</a></p>
+				<p>Interested in hosting Ads For Good on your blog or website? <a href="https://www.good-loop.com/book-a-call">Let us know.</a></p>
 			</div>
 		</div>
 	);

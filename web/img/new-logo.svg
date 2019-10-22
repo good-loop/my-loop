@@ -6,6 +6,6 @@
 	<g clip-path="url(#circle-clip)">
 		<path fill="#af2009" d="M100 0v100l-70 .078C7.748 67.155 90.519 52.227 75 .094z"></path>
 		<path fill="#770f00" d="M0 0l.5 100 29.5.078C7.748 67.155 90.519 52.227 75 .094z"></path>
-		<g fill="#fff"><use xlink:href="#gl-glyph"></use></g>
+		<g fill="#fff"><use href="#gl-glyph"></use></g>
 	</g>
 </svg>

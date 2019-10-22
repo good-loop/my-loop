@@ -119,10 +119,6 @@ a.btn {
 
 } // ./footer
 
-.intro-item {
-	height: 10rem;
-}
-
 .btn-primary {
 	background-color: @gl-red !important;
 	border-color: darken(@gl-red, 10%) !important;
@@ -133,6 +129,21 @@ a.btn {
 	overflow-wrap: break-word;
 	// word-break: break-all; < deprecated approach
 }
+
+
+// FIXME WHAT are these hacks fixing??
+// BS4 Modal hack. Should be replaced with new unique modal.
+.modal {
+	.modal-dialog {
+		// chunky wide dialogs on laptop or desktop
+		@media (min-width: 576px) {
+			max-width: 700px;
+		}
+	}
+}
+
+
+
 
 .logo-base {
 	background-repeat: no-repeat;
