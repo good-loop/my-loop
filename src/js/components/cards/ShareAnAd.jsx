@@ -45,7 +45,10 @@ const ShareAnAd = ({adid, className, color}) => {
 			{adid ? (<>
 				<div className="unit">
 					{ runVert ? ( // Only mount the adunit if the user has clicked to show it
-						<GoodLoopUnit vertId={adid} />
+						<>
+							<GoodLoopUnit vertId={adid} />
+							<CampaignPageLinks vert={adid} color={color} />
+						</>
 					) : (
 						<div className="click-to-load" onClick={() => setState({runVert: true})}>
 							<Misc.Icon fa='play-circle' className='pull-left' size='3x' />
@@ -54,7 +57,6 @@ const ShareAnAd = ({adid, className, color}) => {
 						</div>
 					)}
 				</div>
-				<CampaignPageLinks vert={adid} color={color} />
 			</>) : (
 				<Misc.Loading />
 			)}

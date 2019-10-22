@@ -1,33 +1,26 @@
 import React from 'react';
 import Login from 'you-again';
-
+import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Navbar, NavbarBrand } from 'reactstrap';
 import NavBar from '../base/components/NavBar';
 import C from '../C';
 import {navBarLogoContainerSVG} from './svg';
 import {LoginLink} from '../base/components/LoginWidget';
 
+const MyLoopNavBar = props => {
+	const toggleColor = props.backgroundColor === 'transparent' ? '#770f00' : '#fff';
 
-const MyLoopNavBar = props => (
-	<NavBar
-		{...props}
-		pages={[]}
-		render={({pageLinks, currentPage, style, logo}) => <>
+	return (
+		<Navbar color={props.backgroundColor}>
 			{navBarLogoContainerSVG}
-			<div style={Object.assign({}, style, {display: 'flex', justifyContent: 'space-between', width:'100%'})} className="navbar-items">
-				<div className="navbar-header" title="Dashboard">
-					<a className="navbar-brand" href='/'>
-						<img alt={C.app.name} src={logo || C.app.homeLogo || C.app.logo} />
-					</a>
-				</div>
-				<div id="navbar" className="navbar-collapse collapse" style={{maxWidth: 'fit-content', marginRight: '1em'}}>
-					<AccountMenu active={currentPage === 'account'} logoutLink='#my' />
-				</div>
-			</div>
-		</>}
-	/>
-);
+			<NavbarBrand href="/" className="mr-auto">
+				<img src={props.logo || C.app.homeLogo || C.app.logo } />
+			</NavbarBrand>
+			<AccountMenu active={props.currentPage === 'account'} logoutLink='#my' toggleColor={toggleColor} />
+		</Navbar>
+	);
+};
 
-const AccountMenu = ({active, logoutLink}) => {
+const AccountMenu = ({active, logoutLink, toggleColor}) => {
 	if (!Login.isLoggedIn()) { 
 		return (
 			<ul id='top-right-menu' className="nav navbar-nav navbar-right">
@@ -39,21 +32,17 @@ const AccountMenu = ({active, logoutLink}) => {
 	let user = Login.getUser();
 
 	return (
-		<ul id='top-right-menu' className="nav navbar-nav navbar-right">
-			<li className={'dropdown' + (active? ' active' : '')}>
-				<a className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-					{ user.name || user.xid }&nbsp;
-					<span className="caret" />
-				</a>
-				<ul className="dropdown-menu dropdown-menu-right">
-					<li><a href="#account" className="ml-2">Account</a></li>
-					<li role="separator" className="dropdown-divider" />
-					<li><a href={logoutLink} className="ml-2" onClick={() => Login.logout()}>Log out</a></li>
-				</ul>
-			</li>
-		</ul>
+		<UncontrolledDropdown className="navbar-right">
+			<DropdownToggle caret style={{backgroundColor: 'transparent', border: '0', color:toggleColor}}>
+				{ user.name || user.xid }&nbsp;
+			</DropdownToggle>
+			<DropdownMenu right>
+				<DropdownItem href="#account">Account</DropdownItem>
+				<DropdownItem divider />
+				<DropdownItem href={logoutLink} onClick={() => Login.logout()}>Log out</DropdownItem>
+			</DropdownMenu>
+		</UncontrolledDropdown>
 	);
 };
-
 
 export default MyLoopNavBar;

@@ -3,9 +3,22 @@
 }
 
 .navbar {
-	background-color: transparent!important;
+	background-color: transparent;
 	#top-right-menu:hover {
 		cursor:pointer;
+	}
+	.navbar-brand {
+		z-index: 1;
+	}
+	.dropdown-item {
+		color: #fff!important;
+		text-decoration: none;
+		&:hover {
+			background-color: #440900
+		}
+	}
+	.dropdown-toggle {
+		font-weight: bolder;
 	}
 }
 
@@ -15,7 +28,7 @@
 	left: 0;
 	top: 0;
 	width: 15em;
-	z-index: -1;
+	z-index: 0;
 }
 
 .how-it-works {
@@ -86,18 +99,21 @@
 	height: 2rem;
 	margin: 0.25rem 0;
 	background-color: @gl-red;
+	
+	.container {
+		position: relative; // use as reference point for gl-logo-svg positioning
+		height: 100%; // take height of ribbon to help position logo
+	}
 
+	// vertically align to middle of ribbon, pin to right edge of container
 	.gl-logo-svg {
 		height: 9rem;
 		width: 9rem;
 		position: absolute;
-		top: -3.5rem;
-		// Q: Left AND margin-left?
-		// A: The "Make an impact" header starts 50% from the left.
-		// So we put the logo at 50%, and then bump it a little further right in rem units to avoid the header.
-		left: 50%;
-		margin-left: 5rem;
-		z-index: 1;
+		top: 50%;
+		transform: translateY(-50%);
+		right: 1rem;
+		z-index: 1; // needs to appear in front of subsequent div
 	}
 }
 
@@ -330,6 +346,22 @@
 	}
 }
 
+// BS4 Modal hack. Should be replaced with new unique modal.
+.modal {
+	.row {
+		flex-wrap: nowrap;
+	}
+	.modal-dialog {
+		width: 80%;
+		@media (min-width: 576px) {
+			max-width: 700px;
+		}
+	}
+	.modal-title {
+		font-size: .8rem;
+	}
+}
+
 // Change impact card layout from:
 // *IMAGE* *TEXT*
 // to
@@ -353,6 +385,21 @@
 		> * {
 			width: 100%;
 			margin: 0;
+		}
+	}
+}
+
+// shrink the overflowing logo on the ribbon for smallest screens
+@media (max-width: 768px) {
+	.logo-ribbon {
+		.gl-logo-svg {
+			max-height: 9rem;
+			min-height: 6rem;
+			max-width: 9rem;
+			min-width: 6rem;
+			// 27vw = 9rem at current base font sizing & 768px width
+			height: 27vw;
+			width: 27vw;
 		}
 	}
 }

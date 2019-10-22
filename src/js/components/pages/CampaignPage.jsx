@@ -121,7 +121,7 @@ const CampaignPage = () => {
 	let donationValue = campaignTotal; // check if statically set and, if not, then update with latest figures
 	// Allow the campaign page to override and specify a total
 	let campaignTotalViews = pvDonationsBreakdown.value.stats.count;
-	console.log(pvDonationsBreakdown);
+	console.log(`campaign total views: `, campaignTotalViews);
 	let campaignPageDonations = ads.map(ad => ad.campaignPage && CampaignPageDC.donation(ad.campaignPage)).filter(x => x);
 	if (campaignPageDonations.length === ads.length) {
 		donationValue = Money.sum(campaignPageDonations);
@@ -144,9 +144,7 @@ const CampaignPage = () => {
 
 	// q :(
 	let pvViewData = DataStore.fetch(['misc','views',q], () => {
-		let filters = { // bogus test values
-			// start: '2017-01-01T00:00:00Z',
-			// end: '2019-10-15T23:59:59Z',
+		let filters = { 
 			dataspace: 'gl', 
 			q: 'evt:minview' // minview vs spend ??
 		};
@@ -162,7 +160,7 @@ const CampaignPage = () => {
 		console.warn("viewcount4campaign",viewcount4campaign);
 	}
 
-	console.log(`PVVIEWDATA !!!`, pvViewData);
+	console.log(`PVVIEWDATA !!!`, viewcount4campaign);
 	// console.log(`getDonationData: `, ServerIO.getDonationsData({q, start: '2017-01-01T00:00:00Z', end: '2019-10-15T23:59:59Z'}));
 
 	// const campaignAds = ads => {
@@ -185,8 +183,9 @@ const CampaignPage = () => {
 				<div className="charity-card-container clearfix">
 					{charities.map( (charity, i) => <CharityCard i={i} key={charity.id} charity={charity} donationValue={donByCid[charity.id]} />)}				
 				</div>
-
+				
 				<div className="advert-card-container clearfix">
+					<div>Total number of people who unlocked a donation through watching the ads: {campaignTotalViews}  </div>
 					{campaigns.filter(campaign => campaign.videos[0].url).map( (ad, i) => <AdvertCard key={ad.id} i={i} advert={ad} viewCount={viewcount4campaign[ad.campaign]} />)}
 				</div>
 

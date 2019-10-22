@@ -41,7 +41,7 @@ const MyPage = () => {
 const SplashCard = () => {
 	return (
 		<div className='splash img-block' style={{}}>
-			<MyLoopNavBar logo='/img/new-logo-with-text.svg' />
+			<MyLoopNavBar logo='/img/new-logo-with-text.svg' backgroundColor='transparent' />
 			<img className="doing-good" src="/img/doinggoodfeelsgood.png" alt="" />			
 			<img className="little-flowers" src="/img/littleflowers.png" alt="" />
 			<SignUpConnectCard className='' />			
@@ -136,15 +136,17 @@ const HowItWorksCard = () => {
 				<div className='step-3 finger to-left white p-1'>
 					<CircleChar>3</CircleChar>
 					<div>
-						<span className='header'>DONATE</span><br/>
+						<span className='header'>DONATE</span><br />
 						<span className='sub-header'>
-							50% of the advert cost<br/>goes to the charity
+							50% of the advert cost<br />goes to the charity
 						</span>
 					</div>
-				</div>					
+				</div>
 			</div>
 		</ACard>
-		<div className="logo-ribbon">{glLogoDefaultSvg}</div>
+		<div className="logo-ribbon">
+			<div className="container">{glLogoDefaultSvg}</div>
+		</div>
 		<div className='make-an-impact img-block'>
 			{splitColouredCircleSVG}
 			<div className="impact-girl accent" />
@@ -172,7 +174,7 @@ const ShareAdCard = () => {
 	// ??Only interested in @trk ids. Other types won't have associated watch history ??
 	let trkIds = xids && xids.filter(xid => xid.match(/@trk$/));
 
-	if ( ! yessy(trkIds)) {
+	if (!yessy(trkIds)) {
 		console.log("ShareAdCard - no trkIds = no ad??", xids);
 		return <div className='top-p-1'><ShareAnAd /></div>;
 	}
@@ -185,7 +187,7 @@ const ShareAdCard = () => {
 		// TODO pick the most ad?? (but oh well, I think picking an earlier ad is harmless)
 		return pAd;
 	});
-	if ( ! pvLastAd.resolved) return <Misc.Loading />;
+	if (!pvLastAd.resolved) return <Misc.Loading />;
 	const adid = pvLastAd.value && pvLastAd.value.id; // NB: the server might return an error, in which case adid is null	
 	return <div className='top-p-3'><ShareAnAd adid={adid} /></div>;
 };

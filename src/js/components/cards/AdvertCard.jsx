@@ -13,8 +13,6 @@ import Counter from '../../base/components/Counter';
 import Money from '../../base/data/Money';
 import ServerIO from '../../plumbing/ServerIO';
 
-
-
 const AdvertCard = ({advert, viewCount}) => {
 
 	// console.log(advert);
