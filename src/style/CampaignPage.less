@@ -46,17 +46,21 @@
 	}
 
 	.charity-card {
-		margin: 1em 0;
+		.bg {
+			background-position: center; // Keep original focus of the photo if the card is short
+		}
 		// Push inner card to the right
-		.container.p-2 {
+		.container {
 			display: flex;
 			justify-content: flex-end;
+			padding: 2em 0!important; // Give some top/bottom breathing room to card
 		}
 		// Charity card logo get to 200px, auto height.
 		.logo {
 			width: 100%;
 			height: 100%;
 			max-width: 200px;
+			margin-right: 1em; // Push to the left to make space between logo and text BG
 		}
 	}
 
@@ -93,9 +97,29 @@
 				}
 			}
 			.logo {
-				position: absolute;
 				bottom: 10px;
 				right: 10px;
+			}
+		}
+
+		// This sets the logo on top, and aligns everything to the right.
+		.charity-card {
+			.container {
+				flex-direction: column;
+				align-items: flex-end;
+			}
+			.white-inner-card {
+				width: 100%;
+				background-color: transparent;
+			}
+			.logo {
+				margin-right: 0;
+			}
+			.photo {
+				display: none;
+			}
+			.bg {
+				background-image: none;
 			}
 		}
 	}

@@ -146,6 +146,7 @@ const CampaignPage = () => {
 	if (campaignPageDonations.length === ads.length) {
 		donationValue = Money.sum(campaignPageDonations);
 	}
+	donationValue = donationValue.value;
 	// also the per-charity numbers	
 	let donByCid = pvDonationsBreakdown.value.by_cid;
 
@@ -178,7 +179,8 @@ const CampaignPage = () => {
 	let viewcount4campaign = {};
 	window.viewcount4campaign = viewcount4campaign;
 	if (pvViewData.value) {
-		window.pivot = pivot; // for debug		
+		window.pivot = pivot; // for debug
+		console.log(pvViewData.value);
 		viewcount4campaign = pivot(pvViewData.value, "by_campaign.buckets.$bi.{key, doc_count}", "$key.$doc_count");
 	}
 	
@@ -195,11 +197,12 @@ const CampaignPage = () => {
 				</div>
 				
 				<div className="advert-card-container clearfix">
-					<div>Total number of people who unlocked a donation through watching the ads: {campaignTotalViews}  </div>
-					{campaigns.filter(campaign => campaign.videos[0].url).map( 
-						(ad, i) => <AdvertCard key={ad.id} i={i} advert={ad} viewCount={viewCount(viewcount4campaign, ad)} />)}
+					<div className="pt-5 pb-5">{campaignTotalViews} people watched an ad in this campaign to unlock a donation</div>
+					<div className="row justify-content-center mx-auto">
+						{campaigns.filter(campaign => campaign.videos[0].url).map( 
+							(ad, i) => <AdvertCard key={ad.id} i={i} advert={ad} viewCount={viewCount(viewcount4campaign, ad)} />)}
+					</div>
 				</div>
-
 			</div>
 			<Footer leftFooter={startDateString} rightFooter={smallPrint} />
 		</div>
@@ -215,8 +218,8 @@ const SplashCard = ({branding, campaignPage, donationValue}) => {
 			<img className='hero-logo' src={branding.logo} alt='advertiser-logo' />
 		</div>
 		<div className='sub-header p-1 white contrast-text'>
-			<div>Together our Ads-for-Good have raised</div>
-			{donationValue? <div className='header' style={{color: 'white'}}><Counter amount={donationValue} minimumFractionDigits={2} /></div> : 'money'}
+			<div>Together our Ads for Good have raised</div>
+			{donationValue? <div className='header' style={{color: 'white'}}>&pound;<Counter value={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 		</div>
 	</ACard>);
 };

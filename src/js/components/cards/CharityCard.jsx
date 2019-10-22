@@ -68,7 +68,7 @@ const CharityCard = ({charity, donationValue, i}) => {
 
 	return (<ACard backgroundImage={isMobile? null : backgroundImage} backgroundColor={backgroundColor} name={cid} className="charity-card">
 		
-		{ !backgroundImage ? <div className="logo-no-bg"><CharityLogo charity={charity} /></div> : '' }
+		<div className="logo"><CharityLogo charity={charity} /></div>
 
 		<div className="white-inner-card" style={backgroundImage? {} : {backgroundColor:'transparent'}}>
 			<h3 className="black">{ charity.name }</h3>
@@ -79,14 +79,12 @@ const CharityCard = ({charity, donationValue, i}) => {
 			</div> : null}		
 
 			<div className="charity-description text-block" >
-				<MDText source={charity.description || ''} />
+				<MDText source={charity.summaryDescription || ''} />
 				{tq(charity)? <blockquote className="blockquote"><MDText source={tq(charity)} /></blockquote> : null}			
 			</div>
-
-			{ backgroundImage ? <CharityLogo charity={charity} /> : '' }
 		</div>
 
-		{isMobile && photo? <img src={photo} className='photo' /> : null}
+		{isMobile && photo? <img className='photo' src={photo} /> : null}
 
 		{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
 	</ACard>);
