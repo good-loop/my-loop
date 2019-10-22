@@ -5,7 +5,7 @@ const OnboardingCardMini = () => (
 	<>
 		<div className='flex-row flex-centre p-3'>
 			<div className='flex-vertical-align width50pct'>
-				<img className='width100pct' src='/img/gl-phone-preview.png' />
+				<img className='w-100' src='/img/gl-phone-preview.png' />
 			</div>
 			<div className='flex-vertical-align sub-header width50pct'>
 				Watch to donate

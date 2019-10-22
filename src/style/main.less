@@ -19,8 +19,8 @@ html, body {
 
 // .page is a medium width page with blank gutters
 .page {
-	background-color: white;
-	box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
+	// background-color: white;
+	// box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
 	// NB: centering copied from Bootstrap's center-block
 	// display: block;
 	margin-left: auto;
@@ -30,14 +30,14 @@ html, body {
 // Gutters on desktop
 // Defines maximum extent of content area. Rest of window will just consist of white-space
 @max-page-width: 970px;
+
 .page {
 	max-width: @max-page-width;
 }
 
-.widepage {
-	
-}
-
+/* actually, they're all wide */
+// .widepage {
+// }
 
 .header {
 	.header-font();
@@ -48,115 +48,6 @@ html, body {
 .sub-header {
 	.sub-header-font();
 	font-size: 1.618rem; // ??
-}
-
-// .navbar a {
-// 	color: #fff !important;
-// 	text-decoration: none;
-// }
-
-// TODO use bootstrap instead
-// TODO carefully remove much of the below css
-
-.pad10 {
-	padding: 10rem;
-}
-
-.right-p-1 {
-	padding-right: 1rem;
-}
-
-.top-p-1 {
-	padding-top: 1rem;
-}
-
-.top-p-3 {
-	padding-top: 3rem;
-}
-
-.bottom-p-1 {
-	padding-bottom: 1rem;
-}
-
-.bottom-p-2 {
-	padding-bottom: 2rem;
-}
-
-.margin0 {
-	margin: 0;
-}
-
-.margin1 {
-	margin: 1rem;
-}
-
-.top-margin0{
-	margin-top: 0;
-}
-
-.top-margin1 {
-	margin-top: 1rem;
-}
-
-// Used to give achievements rows a more even height
-.min-height-15 {
-	min-height: 15rem;
-}
-
-.social-button-link {
-	display: inline-block;
-	background-color: unset;
-	margin: 0 1rem;
-	text-decoration: none;
-}
-
-// Base style for intent links on MyLoop
-.intent-link {
-	height: 4rem;
-	width: 4rem;
-	border-radius: 50%;
-	margin: 0 1rem 0 0;
-
-	display: flex;
-	justify-content: center; 
-	align-items: center;
-
-	img {
-		height: 3.5rem;
-		width: 3.5rem;
-	}
-}
-
-// Override to make intent links a bit smaller
-// Only used by "social connect" button currently
-.intent-link-small {
-	.intent-link();
-	height: 3rem;
-	width: 3rem;
-}
-
-// TODO (18/04/19): consider coming back and removing this
-.intent-link-border {
-	border: 3px solid;
-}
-
-.vh-100 {
-	height: 100vh;
-}
-
-
-.width100pct {
-	width: 100%;
-}
-
-.width50pct {
-	width: 50%;
-}
-
-// Very specific, only used by block of text near bottom of page
-// Would just shift to ".bottom-bit-of-text-at-bottom-of-page", but this would be the only rule in there anyway
-.width20 {
-	width: 20rem;
 }
 
 // Make blocks of text more readable
@@ -173,10 +64,6 @@ html, body {
 	.text-block();
 	line-height: initial;
 	max-width: 20rem;
-}
-
-.font-bold {
-	font-weight: bold;
 }
 
 .img-block-basic {
