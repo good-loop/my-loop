@@ -39,11 +39,15 @@ const MyPage = () => {
 
 const SplashCard = () => {
 	return (
-		<div className='splash img-block'>
-			<MyLoopNavBar logo='/img/new-logo-with-text.svg' backgroundColor='transparent' />			
-			<img className="doing-good" src="/img/doinggoodfeelsgood.png" alt="" />			
-			<img className="little-flowers" src="/img/littleflowers.png" alt="" />
-			<SignUpConnectCard className='' />			
+		<div className='splash img-block' style={{}}>
+			<MyLoopNavBar logo='/img/new-logo-with-text.svg' backgroundColor='transparent' />
+			<div className="container">
+				<SignUpConnectCard className='' />
+				<div className="decorations">
+					<img className="doing-good" src="/img/doinggoodfeelsgood.svg" alt="" />
+					<img className="little-flowers" src="/img/littleflowers.svg" alt="" />
+				</div>
+			</div>
 		</div>
 	);
 };
@@ -117,6 +121,7 @@ const HowItWorksCard = () => {
 						<span className='header'>WATCH</span>
 						<span className='sub-header'>&nbsp; a 15 second video </span>
 					</div>
+					<div className="finger-bleed bg-gl-red" />
 				</div>
 				<div className='step-2 finger to-right white bg-gl-red p-1'>
 					<CircleChar>2</CircleChar>
@@ -124,6 +129,7 @@ const HowItWorksCard = () => {
 						<span className='header'>CHOOSE</span>
 						<span className='sub-header'>&nbsp; a charity to support </span>
 					</div>
+					<div className="finger-bleed bg-gl-red" />
 				</div>
 				<div className='step-3 finger to-left white p-1'>
 					<CircleChar>3</CircleChar>
@@ -133,6 +139,7 @@ const HowItWorksCard = () => {
 							50% of the advert cost<br />goes to the charity
 						</span>
 					</div>
+					<div className="finger-bleed" />
 				</div>
 			</div>
 		</ACard>
@@ -141,20 +148,22 @@ const HowItWorksCard = () => {
 		</div>
 		<div className='make-an-impact img-block'>
 			{splitColouredCircleSVG}
-			<div className="impact-girl accent" />
-			<div className="impact-girl" />
-			<div className="white impact-card-text">
-				<div className="impact-card-header">
-					<div className="quiet">make an</div>
-					<div className='loud sub-header'>IMPACT</div>
+			<div className="container">
+				<div className="impact-girl accent" />
+				<div className="impact-girl" />
+				<div className="white impact-card-text">
+					<div className="impact-card-header">
+						<div className="quiet">make an</div>
+						<div className='loud sub-header'>IMPACT</div>
+					</div>
+					<div className='text-block'>
+						In 2018, Good-Loopers raised more than <strong><Counter currencySymbol='£' value={200000} animationLength={1000} /></strong> for charitable causes by signing up and watching adverts.<br/>
+						In 2019, we've already beaten that figure - and we're aiming for <strong>£1,000,000</strong>.
+					</div>
 				</div>
-				
-				<div className='text-block'>
-					In 2018, Good-Loopers raised more than <strong><Counter currencySymbol='£' value={200000} animationLength={1000} /></strong> for charitable causes by signing up and watching adverts.<br/>
-					In 2019, we've already beaten that figure - and we're aiming for <strong>£1,000,000</strong>.
-				</div>
+				<SignUpConnectCard />
 			</div>
-			<SignUpConnectCard />
+			
 		</div>
 	</>);
 };

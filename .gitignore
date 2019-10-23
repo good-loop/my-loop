@@ -4,3 +4,5 @@ boblog
 bob.log
 node_modules
 web/build
+.vscode
+package-lock.json
