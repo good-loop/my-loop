@@ -4,19 +4,17 @@
 // Then looks broken to use a darkened gl-red to indicate focus/hover
 @navbar-accent-color: unset;
 
-@import url('https://fonts.googleapis.com/css?family=Montserrat:600,800|Tajawal&display=swap');
+@import '../js/base/style/fonts.less';
 
 // which logos??
 @logo-size: 320px;
 
 .CampaignPage {
 
-	font-family: 'Montserrat', sans-serif;
-
 	.hero {
 		min-height: 40vh;
 		.hero-logo {
-			height: 10vh;
+			max-height: 200px;
 		}
 	}
 
@@ -57,10 +55,16 @@
 		}
 		// Charity card logo get to 200px, auto height.
 		.logo {
-			width: 100%;
-			height: 100%;
+			width: auto;
+			height: auto;
 			max-width: 200px;
+			max-height: 200px;;
 			margin-right: 1em; // Push to the left to make space between logo and text BG
+		}
+
+		// Good-Gool header font for both title, and donation subtitle inside charity cards.
+		h3, .charity-donation {
+			&:extend(.header-font);
 		}
 	}
 
@@ -85,6 +89,32 @@
 
 	.blockquote {
 		font-size: .8rem;
+	}
+
+	.total-views-column {
+		display: flex;
+		justify-content: center;
+		padding: 2em 0; // Breathing room between top and bottom elements
+		img {
+			max-width: 200px;
+		}
+		// Style for the element at the top of advert-card-container
+		.align-middle {
+			max-width: 400px;
+			text-align: left;
+			padding: 1em;
+			&:extend(.sub-header-font);
+			p {
+				margin: 0 auto;
+			}
+		}
+	}
+
+	.advert-card-container {
+		// Set max width for the ad card grid
+		.row {
+			max-width: 1200px;
+		}
 	}
 
 	// Hack to force charity card images go full bleed on mobile 

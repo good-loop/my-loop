@@ -27,10 +27,9 @@ const AdvertCard = ({advert, viewCount}) => {
 		{ advert.end ? <span> to {<Misc.LongDate date={advert.end} noWeekday />}</span> : '' }
 	</>) : '';
 
-
 	return (
-		<div className="col-sm-4 pb-5">
-			<div>			
+		<div className="pb-5 d-flex row mx-auto justify-content-center">
+			<div className="p-3">			
 				<h3>{name}</h3>
 				{durationText}
 				{false && viewCount? <Counter value={viewCount} /> : null /* This is giving us strangely tiny numbers (eg "12", see CampaignPage for source)*/}

@@ -143,6 +143,7 @@ const CampaignPage = () => {
 	// Allow the campaign page to override and specify a total
 	let campaignTotalViews = pvDonationsBreakdown.value.stats.count;
 	console.log(`campaign total views: `, campaignTotalViews);
+	console.log(`campaign info: `, DataStore.fetch(['widget', 'CampaignPage']));
 	let campaignPageDonations = ads.map(ad => ad.campaignPage && CampaignPageDC.donation(ad.campaignPage)).filter(x => x);
 	if (campaignPageDonations.length === ads.length) {
 		donationValue = Money.sum(campaignPageDonations);
@@ -199,9 +200,16 @@ const CampaignPage = () => {
 				{charities.map( (charity, i) => <CharityCard i={i} key={charity.id} charity={charity} donationValue={donByCid[charity.id]} />)}				
 			</div>
 			
-			<div className="advert-card-container clearfix">
-				<div className="pt-5 pb-5">{campaignTotalViews} people watched an ad in this campaign to unlock a donation</div>
-				<div className="row justify-content-center mx-auto">
+			<div className="total-views-column">
+				<div className="d-flex align-items-center">
+					<img src={branding.logo} alt="'advertise-logo" />
+				</div>
+				<div className="align-middle d-flex align-items-center">
+					<p>{campaignTotalViews} people watched an ad in this campaign to unlock a donation</p>
+				</div>
+			</div>
+			<div className="advert-card-container clearfix  justify-content-center">
+				<div className="column justify-content-center mx-auto">
 					{campaigns.filter(campaign => campaign.videos[0].url).map( 
 						(ad, i) => <AdvertCard key={ad.id} i={i} advert={ad} viewCount={viewCount(viewcount4campaign, ad)} />)}
 				</div>
