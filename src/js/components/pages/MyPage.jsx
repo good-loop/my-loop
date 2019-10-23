@@ -110,28 +110,24 @@ const HowItWorksCard = () => {
 	return (<>
 		<ACard className="how-it-works" backgroundImage='/img/wheat_fields.jpg' name='how-it-works'>
 			<div className="how-it-works-banner">
-				{howItWorksCurveSVG}
-				<div className="left header text-center">Here's<br />how</div>
-				<div className="right header text-center">it<br />works</div>
+				<img src="img/heres-how-it-works-wide.svg" />
 			</div>
 			<div className='steps'>
-				<div className='step-1 finger to-left white bg-gl-red p-1'>
+				<div className='step-1 finger white bg-gl-red p-1'>
 					<CircleChar>1</CircleChar>
 					<div>
 						<span className='header'>WATCH</span>
 						<span className='sub-header'>&nbsp; a 15 second video </span>
 					</div>
-					<div className="finger-bleed bg-gl-red" />
 				</div>
-				<div className='step-2 finger to-right white bg-gl-red p-1'>
+				<div className='step-2 finger white bg-gl-red p-1'>
 					<CircleChar>2</CircleChar>
 					<div>
 						<span className='header'>CHOOSE</span>
 						<span className='sub-header'>&nbsp; a charity to support </span>
 					</div>
-					<div className="finger-bleed bg-gl-red" />
 				</div>
-				<div className='step-3 finger to-left white p-1'>
+				<div className='step-3 finger white p-1'>
 					<CircleChar>3</CircleChar>
 					<div>
 						<span className='header'>DONATE</span><br />
@@ -139,7 +135,6 @@ const HowItWorksCard = () => {
 							50% of the advert cost<br />goes to the charity
 						</span>
 					</div>
-					<div className="finger-bleed" />
 				</div>
 			</div>
 		</ACard>

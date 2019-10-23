@@ -4,14 +4,17 @@
 
 .navbar {
 	background-color: transparent;
-	// why??
+	// Logo is fixed and should appear in front of other content
 	.navbar-brand {
 		z-index: 1;
+		// Override logo size - .logo-small class makes it tiny
+		.logo-small {
+			width: 10em;
+		}
 	}
-
-	// Override logo size - .logo-small class makes it tiny
-	.navbar-brand .logo-small {
-		width: 10em;
+	// Make text more readable against dark sections of the page
+	#top-right-menu, .dropdown-toggle {
+		text-shadow: 0 0 1px #000;
 	}
 }
 
@@ -26,62 +29,70 @@
 
 .how-it-works {
 	overflow: hidden;
-	background-position: bottom; // put the dark "grass" part of the BG image behind the transparent section
-
-	.container {
-		 // Let elements extend to left and right edges
-		padding-left: 0 !important;
-		padding-right: 0 !important;
+	.bg {
+		background-position: bottom; // put the dark "grass" part of the BG image behind the transparent section
 	}
 
 	.how-it-works-banner {
 		height: 15em;
-		position: relative;
-		display: flex;
-		flex-direction: row;
-		justify-content: space-around;
-		align-items: center;
-		
-		#how-it-works-curve {
-			fill: @gl-red;
-			width: 100%;
+		text-align: center;
+		img {
 			height: 100%;
-			position: absolute;
-			left: 0;
-			top: 0;
-			z-index: 0; // In front of the picture background, behind the text
-		}
-		/* left=Here's How, right=It Works */
-		.left, .right {
-			z-index: 1; // In front of the curve
-		}
-		.left {
-			color: black;
-			
-		}
-		.right {
-			color: white;
+			max-width: 75%;
 		}
 	}
 
 	.steps {
 		position: relative;
-		min-height: 30rem;
 
-		.step-1 {
-			margin-top: 1rem;
+		.finger {
+			// don't stretch across full width (overridden on smallest screens)
+			max-width: 75%;
+			// separate & centre
+			margin: 1rem auto;
+
+			// Put whole lowercase part on its own line if the screen is small enough to break lines
+			.sub-header {
+				display: inline-block;
+			}
 		}
 		
 		.step-3 {
-			// background-color: rgba(255, 255, 255, 0.4);
-			&, .finger-bleed {
-				background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
-			}
-			align-items: flex-start; // put the number circle in the upper corner
+			background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+			// No radius on bottom corners, it looks weird with the fade
 			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+			// Make room at the bottom for balance
+			margin-bottom: 5rem;
 		}
 	}
-} // ./how-it-works
+}
+
+.number-circle {
+	display: inline-flex;
+	flex-shrink: 0; // Don't squish if space is tight
+	border: 0.25rem solid;
+	border-radius: 50%;
+	width: 4rem;
+	height: 4rem;
+	text-align: center;
+	margin: 0;
+}
+
+.finger {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start; // keep the numbers aligned in the corners
+	justify-content: flex-start;
+	position: relative; // enable use as position/size ref for .finger-bleed
+
+	border-radius: 2.25rem; // concentric with number circle, which has radius 2rem + 0.25rem padding from p-1 class
+	.number-circle {
+		margin: 0 1rem 0 0; // push away text to right
+	}
+}
+
+// ./how-it-works
 
 #campaign-cards {
 	margin: 0 -0.05em 0 -0.05em;
@@ -167,54 +178,6 @@
 		z-index: 1; // may overlap red coat girl on phones
 		.tagline {
 			text-align: right;
-		}
-	}
-}
-
-.number-circle {
-	display: inline-flex;
-	flex-shrink: 0; // Don't squish if space is tight
-	border: 0.25rem solid;
-	border-radius: 50%;
-	width: 4rem;
-	height: 4rem;
-	text-align: center;
-	margin: 0;
-}
-
-.finger {
-	display: flex;
-	flex-direction: row;
-	align-items: flex-start; // keep the numbers aligned in the corners
-	justify-content: flex-start;
-	position: relative; // enable use as position/size ref for .finger-bleed
-
-	// Extend the finger all the way off the side of the screen
-	.finger-bleed {
-		position: absolute;
-		height: 100%;
-		width: 100vw;
-		top: 0;
-	}
-
-	&.to-left {
-		border-radius: 2.25rem 0 0 2.25rem; // concentric with number circle, which has radius 2rem + 0.25rem padding from p-1 class
-		margin: 0 0 1rem 1rem;
-		.number-circle {
-			margin: 0 1rem 0 0; // just push away text to right
-		}
-		.finger-bleed {
-			left: 100%; // hang off right side
-		}
-	}
-	&.to-right {
-		border-radius: 0 2.25rem 2.25rem 0; // concentric with number circle, which has radius 2rem + 0.25rem padding from p-1 class
-		margin: 0 1rem 1rem 0;
-		.number-circle {
-			margin: 0 1rem; // push away text to right AND align vertically to circles above and below
-		}
-		.finger-bleed {
-			right: 100%; // hang off left side
 		}
 	}
 }
@@ -423,6 +386,10 @@
 	// Hide the white curve in the top left on smaller screens
 	#logo-container-curve {
 		display: none;
+	}
+
+	.how-it-works .steps .finger {
+		max-width: unset;
 	}
 }
 
