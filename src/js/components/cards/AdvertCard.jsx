@@ -29,14 +29,14 @@ const AdvertCard = ({advert, viewCount}) => {
 
 	return (
 		<div className="pb-5 d-flex row mx-auto justify-content-center">
-			<div className="p-3">			
+			<div className="pt-4 pr-3 sub-header-font">			
 				<h3>{name}</h3>
 				{durationText}
 				{false && viewCount? <Counter value={viewCount} /> : null /* This is giving us strangely tiny numbers (eg "12", see CampaignPage for source)*/}
 				
 			</div>
 			<div>
-				{advert.videos && advert.videos[0]? <Misc.VideoThumbnail url={advert.videos[0].url} width={300} height={225} /> : null}<br />
+				{advert.videos && advert.videos[0]? <Misc.VideoThumbnail url={advert.videos[0].url} width={360} height={270} /> : null}<br />
 
 				{Roles.isDev()? <small><a href={'https://portal.good-loop.com/#advert/'+escape(advert.id)} target='_portal'>Portal Editor</a></small> : null}
 			</div>

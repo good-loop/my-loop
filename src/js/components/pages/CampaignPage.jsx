@@ -1,6 +1,5 @@
 import React from 'react';
 import Login from 'you-again';
-import ReactMarkdown from 'react-markdown';
 import _ from 'lodash';
 // import pivot from 'data-pivot';
 import Roles from '../../base/Roles';
@@ -12,9 +11,6 @@ import ActionMan from '../../plumbing/ActionMan';
 import {ListItems} from '../../base/components/ListLoad';
 import Footer from '../Footer';
 import NavBar from '../MyLoopNavBar';
-import { SquareLogo } from '../Image';
-import ShareAnAd from '../cards/ShareAnAd';
-import NGO from '../../base/data/NGO';
 import Money from '../../base/data/Money';
 import CampaignPageDC from '../../data/CampaignPage';
 import SearchQuery from '../../base/searchquery';
@@ -93,8 +89,8 @@ const CampaignPage = () => {
 	ads.forEach(ad => Object.assign(campaignPage, ad.campaignPage));
 	
 	const soloAd = ads.length===1? ads[0] : null;
-	const startDateString = soloAd && soloAd.startDate;
-	const smallPrint = soloAd && soloAd.smallPrint;
+	// const startDateString = soloAd && soloAd.startDate;
+	// const smallPrint = soloAd && soloAd.smallPrint;
 
 	// SoGive occasionally provides duplicated charity objects, so we check and filter them first.
 	// TODO: This check shouldn't be here, maybe SoGive can filter its stuff before sending it over?
@@ -142,8 +138,6 @@ const CampaignPage = () => {
 	let donationValue = campaignTotal; // check if statically set and, if not, then update with latest figures
 	// Allow the campaign page to override and specify a total
 	let campaignTotalViews = pvDonationsBreakdown.value.stats.count;
-	console.log(`campaign total views: `, campaignTotalViews);
-	console.log(`campaign info: `, DataStore.fetch(['widget', 'CampaignPage']));
 	let campaignPageDonations = ads.map(ad => ad.campaignPage && CampaignPageDC.donation(ad.campaignPage)).filter(x => x);
 	if (campaignPageDonations.length === ads.length) {
 		donationValue = Money.sum(campaignPageDonations);
@@ -182,7 +176,6 @@ const CampaignPage = () => {
 	window.viewcount4campaign = viewcount4campaign;
 	if (pvViewData.value) {
 		window.pivot = pivot; // for debug
-		console.log(pvViewData.value);
 		viewcount4campaign = pivot(pvViewData.value, "by_campaign.buckets.$bi.{key, doc_count}", "$key.$doc_count");
 	}
 	
@@ -214,6 +207,7 @@ const CampaignPage = () => {
 						(ad, i) => <AdvertCard key={ad.id} i={i} advert={ad} viewCount={viewCount(viewcount4campaign, ad)} />)}
 				</div>
 			</div>
+			<Footer />
 		</div>
 	</>
 	);

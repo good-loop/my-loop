@@ -25,7 +25,7 @@ const tq = charity => {
 		The donation will go a huge way in supporting our clients to recover and rebuild their lives." -- Sophie at Helen Bamber`,
 
 		// TODO name
-		wwf: `The money raised through the H&M campaign will support WWF UK's vital work, fighting for a world where people and nature can
+		wwf: `"The money raised through the H&M campaign will support WWF UK's vital work, fighting for a world where people and nature can
 thrive, and continue to support schools, teachers and pupils to
 develop their knowledge and understanding of the environmental
 challenges facing our planet." -- Chiara Cadei, WWF`
