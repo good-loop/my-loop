@@ -25,6 +25,7 @@ import AdvertCard from '../cards/AdvertCard';
 import {sortByDate} from '../../base/utils/SortFn';
 import Counter from '../../base/components/Counter';
 import pivot from 'data-pivot';
+import CSS from '../../base/components/CSS';
 
 /**
  * HACK fix campaign name changes to clean up historical campaigns
@@ -184,25 +185,29 @@ const CampaignPage = () => {
 	
 	// TODO: refactor this because it's very similar now to mypage
 	return (
-		<div className="widepage CampaignPage text-center">
-			<NavBar brandLogo={branding.logo} style={{backgroundColor: brandColor}} />
-			<div className='avoid-navbar'>
+		<>
+			<CSS css={campaignPage.advanced && campaignPage.advanced.customcss} />
+			<CSS css={branding.customCss} />
+			<div className="widepage CampaignPage text-center">			
+				<NavBar brandLogo={branding.logo} style={{backgroundColor: brandColor}} />
+				<div className='avoid-navbar'>
 
-				<SplashCard branding={branding} campaignPage={campaignPage} donationValue={donationValue} />
-				
-				<div className="charity-card-container clearfix">
-					{charities.map( (charity, i) => <CharityCard i={i} key={charity.id} charity={charity} donationValue={donByCid[charity.id]} />)}				
-				</div>
-				
-				<div className="advert-card-container clearfix">
-					<div>Total number of people who unlocked a donation through watching the ads: {campaignTotalViews}  </div>
-					{campaigns.filter(campaign => campaign.videos[0].url).map( 
-						(ad, i) => <AdvertCard key={ad.id} i={i} advert={ad} viewCount={viewCount(viewcount4campaign, ad)} />)}
-				</div>
+					<SplashCard branding={branding} campaignPage={campaignPage} donationValue={donationValue} />
+					
+					<div className="charity-card-container clearfix">
+						{charities.map( (charity, i) => <CharityCard i={i} key={charity.id} charity={charity} donationValue={donByCid[charity.id]} />)}				
+					</div>
+					
+					<div className="advert-card-container clearfix">
+						<div>Total number of people who unlocked a donation through watching the ads: {campaignTotalViews}  </div>
+						{campaigns.filter(campaign => campaign.videos[0].url).map( 
+							(ad, i) => <AdvertCard key={ad.id} i={i} advert={ad} viewCount={viewCount(viewcount4campaign, ad)} />)}
+					</div>
 
+				</div>
+				<Footer leftFooter={startDateString} rightFooter={smallPrint} />
 			</div>
-			<Footer leftFooter={startDateString} rightFooter={smallPrint} />
-		</div>
+		</>
 	);
 }; // ./CampaignPage
 
