@@ -12,8 +12,10 @@ import {LoginLink} from '../base/components/LoginWidget';
 
 const MyLoopNavBar = ({backgroundColor, logo, currentPage}) => {
 	// red on transparent, white if on colour
-	const toggleColor = backgroundColor === 'transparent' ? '#770f00' : '#fff';
-
+	// const toggleColor = backgroundColor === 'transparent' ? '#770f00' : '#fff';
+	// The red gets lost in our other elements easily and is difficult to give a good-looking contrast shadow, trying white for all cases
+	const toggleColor = '#fff';
+	
 	return (
 		<Navbar color={backgroundColor} fixed='top'>
 			{navBarLogoContainerSVG}
@@ -38,7 +40,7 @@ const AccountMenu = ({active, logoutLink, toggleColor}) => {
 
 	return (
 		<UncontrolledDropdown className="navbar-right">
-			<DropdownToggle caret style={{backgroundColor: 'transparent', border: '0', color:toggleColor}}>
+			<DropdownToggle caret style={{backgroundColor: 'transparent', border: '0', color: toggleColor}}>
 				{ user.name || user.xid }&nbsp;
 			</DropdownToggle>
 			<DropdownMenu right>

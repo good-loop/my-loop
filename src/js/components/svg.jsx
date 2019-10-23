@@ -15,10 +15,13 @@ const howItWorksCurveSVG= (
 
 /** The turned-down upper-left corner of the splash element where the GL logo lives */
 const navBarLogoContainerSVG = (
-	<svg id="logo-container-curve" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-		<path d="M100 0C100 50 0 20 0 100V0z" />
+	<svg id="logo-container-curve" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 100">
+		<path d="M0 0 H180 C 180 100 0 0 0 100Z" />
 	</svg>
 );
+// old path <path d="M100 0C100 50 0 20 0 100V0z" />
+// old viewbox 0 0 100 100
+
 
 /** The Good-Loop "g-l" logo glyph. Broken out here because it's used multiple times */
 const glGlyphPath = (

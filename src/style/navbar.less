@@ -2,132 +2,23 @@
 // WTF? lets clean out lots of this. BS should provide most of what we need
 // */
 
-
-
-
-// @navbar-accent-color: darken(@gl-red, 10%);
-
-// .navbar {
-// 	font-size: inherit !important;
-// 	border: none;
-// 	position: relative;
-// 	margin-bottom: 0;
-
-// 	a {
-// 		color: @gl-red !important;
-// 	}
-
-// 	#top-right-menu {
-// 		margin-right: inherit;
-// 		font-weight: bold;
-// 		a {
-// 			text-decoration: none;
-// 		}
-// 	}
-// }
-
-// .navbar-brand {
-// 	// From flex.less
-// 	.flex-vertical-align();
-// 	width: 12em;
-// 	height: 2.5em;
-// 	font-size: inherit; // override bootstrap px default
-// 	img {
-// 		max-width: 100%; // otherwise, overlarge logo can be ugly
-// 		height: 100%;
-// 		margin-left: 10px;
-// 	}
-// }
-
-// .dropdown.open {
-// 	.dropdown-toggle {
-// 		background-color: transparent !important;
-// 	}
-// }
-
-// .navbar-inverse {
-// 	background-color: transparent;
-// 	border-color: unset;
-// }
-
-// .navbar-inverse .navbar-toggle, .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
-// 	border-color: @gl-red;
-
-// 	.icon-bar {
-// 		background-color: @gl-red;
-// 	}
-// }
-
-// .navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
-// 	background-color: @navbar-accent-color;
-// }
-
-// .dropdown > a {
-// 	color: @gl-red !important;
-// }
-
-// .dropdown-menu {
-// 	background-color: @gl-red !important;
-
-// 	li > a {
-// 		color: #fff !important;
-// 	}
-
-// 	li > a:hover {
-// 		background: @navbar-accent-color;
-// 	}
-// }
-
-// /* Bootstrap overrides to use desktop-style dropdown on mobile too, no more hamburger */
-// @media (max-width: 768px) {
-// 	.navbar-collapse {
-// 		width: auto;
-// 		border-top: 0;
-// 		-webkit-box-shadow: none;
-// 		box-shadow: none;
-// 	}
-
-// 	.navbar-fixed-bottom .navbar-collapse, .navbar-fixed-top .navbar-collapse, .navbar-static-top .navbar-collapse {
-// 		padding-right: 0;
-// 		padding-left: 0;
-// 	}
-
-// 	.navbar-collapse.collapse {
-// 		display: block !important;
-// 		height: auto !important;
-// 		padding-bottom: 0;
-// 		overflow: visible !important;
-// 	}
-
-// 	.navbar-right {
-// 		float: right !important;
-// 	}
-
-// 	.navbar-nav {
-// 		float: left;
-// 		margin: 0;
-// 	}
-
-// 	.navbar-header {
-// 		float: left;
-// 	}
-
-// 	.navbar-nav > li {
-// 		float: left;
-// 	}
-
-// 	.navbar-nav .open .dropdown-menu {
-// 		position: absolute;
-// 		float: left;
-// 		width: auto;
-// 		margin: 2px 0 0;
-// 		border: 1px solid rgba(0,0,0,.15);
-// 		-webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
-// 		box-shadow: 0 6px 12px rgba(0,0,0,.175);
-// 	}
-
-// 	.navbar-right .dropdown-menu {
-// 		right: 0;
-// 		left: auto;
-// 	}
-// }
+.navbar {
+	// Nicer font for the dropdown menu / login button
+	#top-right-menu, .dropdown {
+		.sub-header-font();
+		// Reverse modal underlining because it looks nicer this way
+		a {
+			text-decoration: none;
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+	// We hide the "button" nature of this element, so it looks weird for it to get a button-shaped shadow
+	.btn-secondary.dropdown-toggle {
+		// this horrible list compiled by painful attrition
+		&.focus, &:focus, &.active, &:active, &.active:focus, &:active:focus {
+			box-shadow: none;
+		}
+	}
+}

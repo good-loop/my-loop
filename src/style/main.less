@@ -165,13 +165,15 @@ a.btn {
 		overflow: hidden; // people can have long names!
 		margin-bottom: 0.5rem; // enclosing in p-1 was making them stack up too tall
 		width: 100%; // equal width for prettiness, set explicit width on the social-media-card in question
+		text-align: left; // icons in a vertical line
 	}
 }
 
+// Mimic Bootstrap button styling on the non-button "connected" indicator
 .social-connected {
 	display: flex;
 	align-items: center;
-	padding: 0.25em;
+	padding: 0.25rem 0.75rem;
 	border-radius: 0.25em;
 
 	.user-pic {
@@ -190,6 +192,7 @@ a.btn {
 			width: 100%;
 		}
 	}
+
 	// The "(icon) Connected" status line
 	.connected {
 		font-size: 66%;
