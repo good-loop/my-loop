@@ -143,7 +143,7 @@ const CampaignPage = () => {
 		donationValue = Money.sum(campaignPageDonations);
 	}
 	donationValue = donationValue.value;
-	// also the per-charity numbers	
+	// also the per-charity numbers
 	let donByCid = pvDonationsBreakdown.value.by_cid;
 
 	let brandColor = branding.color || branding.backgroundColor;
@@ -163,8 +163,8 @@ const CampaignPage = () => {
 	let pvViewData = DataStore.fetch(['misc','views',q], () => {
 		// filter to these ads
 		let qads = '(vert:'+ads.map(ad => ad.id).join(" OR vert:")+')';
-		let filters = { 
-			dataspace: 'gl', 
+		let filters = {
+			dataspace: 'gl',
 			q: 'evt:minview AND '+qads // minview vs spend ??
 		};
 		// start = early for all data
@@ -204,6 +204,10 @@ const CampaignPage = () => {
 	// publisherCards(pubData);
 	
 	// TODO: refactor this because it's very similar now to mypage
+	// TODO: Replace fake pie chart with the real deal, we have the numbers to hand already
+	// Don't do multiple pies - but group all below a certain threshold as "Other"
+	// TODO Assign unset donations - Check whether we do proportional or equal
+	// TODO Discrepancy between viewer counts - probably because some percentage unlock by clickthrough & videos list uses minview
 	return (<>
 		<CSS css={campaignPage.advanced && campaignPage.advanced.customcss} />
 		<CSS css={branding.customCss} />
@@ -217,9 +221,14 @@ const CampaignPage = () => {
 				{charities.map( (charity, i) => <CharityCard i={i} key={charity.id} charity={charity} donationValue={donByCid[charity.id]} donationBreakdown={pvDonationsBreakdown} />)}				
 			</div>
 
+			<div className="column">
+				<div className="header">Breakdown by Charity</div>
+				<img src="img/hm-fake-pie-chart.png" style={{display: 'block', height: '20rem', margin: 'auto'}}/>
+			</div>
+
 			<div className="pub-container pt-5 pb-5 d-flex column justify-content-center">
-				<div className="sub-header-font pb-5">The campaign was published in the following environments:</div>
-				<div className="row justify-content-around w-100">
+				<div className="sub-header-font text-center pb-5">You might have seen this campaign in one or more of:</div>
+				<div className="row justify-content-around align-items-center w-100">
 					{publishers}
 				</div>
 			</div>
