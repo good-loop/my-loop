@@ -2,6 +2,7 @@ import React from 'react';
 import Login from 'you-again';
 import _ from 'lodash';
 // import pivot from 'data-pivot';
+import { Doughnut } from 'react-chartjs2';
 import Roles from '../../base/Roles';
 import C from '../../C';
 import ServerIO from '../../plumbing/ServerIO';
@@ -22,6 +23,7 @@ import {sortByDate} from '../../base/utils/SortFn';
 import Counter from '../../base/components/Counter';
 import pivot from 'data-pivot';
 import CSS from '../../base/components/CSS';
+
 
 /**
  * HACK fix campaign name changes to clean up historical campaigns
@@ -121,10 +123,8 @@ const CampaignPage = () => {
 		// but elsewhere vert is logged and not campaign.
 		// let q = ad.campaign? '(vert:'+adid+' OR campaign:'+ad.campaign+')' : 'vert:'+adid;		
 		// TODO "" csv encoding for bits of q (e.g. campaign might have a space)
-		return ServerIO.getDonationsData({q:sqDon.query});		
+		return ServerIO.getDonationsData({q:sqDon.query});	
 	}, true, 5*60*1000);
-
-	// console.log(pvDonationsBreakdown);
 
 	if ( ! pvDonationsBreakdown.resolved ) {
 		return <Misc.Loading text='Loading campaign donations...' />;
@@ -168,7 +168,7 @@ const CampaignPage = () => {
 			q: 'evt:minview AND '+qads // minview vs spend ??
 		};
 		// start = early for all data
-		return ServerIO.getDataLogData({filters, breakdowns:['campaign'], start:'2017-01-01', name:'view-data'});
+		return ServerIO.getDataLogData({filters, breakdowns:['campaign', 'pub'], start:'2017-01-01', name:'view-data'});
 		// return ServerIO.getDonationsData({cid:'ashoka', start: '2017-01-01T00:00:00Z', end: '2019-10-15T23:59:59Z'})
 	});
 
@@ -178,6 +178,30 @@ const CampaignPage = () => {
 		window.pivot = pivot; // for debug
 		viewcount4campaign = pivot(pvViewData.value, "by_campaign.buckets.$bi.{key, doc_count}", "$key.$doc_count");
 	}
+
+	// console.log(pvViewData.value);
+	const pubData = pvViewData.value;
+
+	const mockUpLogoUrls = [
+		{
+			name: 'buzzfeed',
+			branding: { logo: 'http://www.worksdesigngroup.com.php72-34.phx1-1.websitetestlink.com/wp-content/uploads/2017/05/buzzfeed-e1515438116988.png'},
+			url: 'https://www.buzzfeed.com'
+		},
+		{
+			name: 'empire',
+			branding: { logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1l-KWl1ddiB47rGuU4qO6D_NPGGdDeB6WyM9vKLCPKSGC-stw&s'},
+			url: 'https://www.empire.com'
+		},
+		{
+			name: 'nme',
+			branding: { logo: 'https://s3.eu-central-1.amazonaws.com/centaur-wp/designweek/prod/content/uploads/2013/10/image001-1002x466.jpg'},
+			url: ''
+		}
+	];
+	const publishers = mockUpLogoUrls.map(pub => <a href={pub.url}><img src={pub.branding.logo} alt={pub.name} /></a>);
+
+	// publisherCards(pubData);
 	
 	// TODO: refactor this because it's very similar now to mypage
 	return (<>
@@ -190,9 +214,16 @@ const CampaignPage = () => {
 			<SplashCard branding={branding} campaignPage={campaignPage} donationValue={donationValue} />
 			
 			<div className="charity-card-container clearfix">
-				{charities.map( (charity, i) => <CharityCard i={i} key={charity.id} charity={charity} donationValue={donByCid[charity.id]} />)}				
+				{charities.map( (charity, i) => <CharityCard i={i} key={charity.id} charity={charity} donationValue={donByCid[charity.id]} donationBreakdown={pvDonationsBreakdown} />)}				
 			</div>
-			
+
+			<div className="pub-container pt-5 pb-5 d-flex column justify-content-center">
+				<div className="sub-header-font pb-5">The campaign was published in the following environments:</div>
+				<div className="row justify-content-around w-100">
+					{publishers}
+				</div>
+			</div>
+
 			<div className="total-views-column">
 				<div className="d-flex align-items-center">
 					<img src={branding.logo} alt="'advertise-logo" />
@@ -204,7 +235,7 @@ const CampaignPage = () => {
 			<div className="advert-card-container clearfix  justify-content-center">
 				<div className="column justify-content-center mx-auto">
 					{campaigns.filter(campaign => campaign.videos[0].url).map( 
-						(ad, i) => <AdvertCard key={ad.id} i={i} advert={ad} viewCount={viewCount(viewcount4campaign, ad)} />)}
+						(ad, i) => <AdvertCard key={ad.id} i={i} advert={ad} viewCount={viewCount(viewcount4campaign, ad)} donationTotal={donationValue} />)}
 				</div>
 			</div>
 			<Footer />
