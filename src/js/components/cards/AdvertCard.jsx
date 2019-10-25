@@ -13,7 +13,7 @@ import Counter from '../../base/components/Counter';
 import Money from '../../base/data/Money';
 import ServerIO from '../../plumbing/ServerIO';
 
-const AdvertCard = ({advert, viewCount, donationTotal, donationBreakdown}) => {
+const AdvertCard = ({advert, viewCount, donationTotal, donationBreakdown, totalViewCount}) => {
 	let name = advert.name || advert.campaign;
 
 	const durationText = advert.start || advert.end ? (<>
@@ -25,6 +25,9 @@ const AdvertCard = ({advert, viewCount, donationTotal, donationBreakdown}) => {
 	// const thisViewCount = viewCount ? <Counter value={viewCount} /> : '';
 	const thisViewCount = viewCount || ''; // multiple counters makes the updates start to chug & looks cluttered in close proximity
 
+	// Money raised by ad based on viewers
+	const moneyRaised = donationTotal * (thisViewCount / totalViewCount);
+
 	return (
 		<div className="pb-5 d-flex row mx-auto justify-content-center">
 			<div className="pt-4 pr-3">
@@ -34,7 +37,7 @@ const AdvertCard = ({advert, viewCount, donationTotal, donationBreakdown}) => {
 					<p>{durationText}</p>
 					<p>
 						{thisViewCount} viewers raised<br />
-						<span className="header-font">&pound;<Counter value={donationTotal} /></span>
+						<span className="header-font">&pound;<Counter value={moneyRaised} /></span>
 					</p>
 				</div>
 			</div>
