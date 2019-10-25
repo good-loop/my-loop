@@ -37,7 +37,7 @@ challenges facing our planet." -- Chiara Cadei, WWF`
  * @param {?Number} i - e.g. 0 for "first in the list". Used for bg colour
  */
 const CharityCard = ({charity, donationValue, i}) => {
-	console.log(donationValue);
+	// console.log(donationValue);
 	// fetch extra info from SoGive
 	let cid = charity.id;
 	if (cid) {

@@ -223,10 +223,14 @@ const CampaignPage = () => {
 		charities.forEach(char => dataArray.push([char.name, Math.floor(char.donation)]));
 		return [['Charity', 'Donation'], ...dataArray];
 	};
-
 	
+	// Sum of the views from every ad in the campaign. We use this number for display
+	// and to pass it to the AdvertCards to calculate the money raised against the total.
+	let totalViewCount = 0;
+	removeDuplicateCharities(ads).forEach(ad => totalViewCount += viewCount(viewcount4campaign, ad));
+
 	assignUnsetDonations();
-	console.log(donationValue);
+	// console.log(donationValue);
 	// TODO: refactor this because it's very similar now to mypage
 	// Don't do multiple pies - but group all below a certain threshold as "Other"
 	// TODO Assign unset donations - Check whether we do proportional or equal
@@ -249,7 +253,7 @@ const CampaignPage = () => {
 						donationBreakdown={pvDonationsBreakdown} />)}				
 			</div>
 
-			<div className="column">
+			<div className="column" style={{maxWidth: '1200px', margin: '0 auto'}}>
 				<div className="header">Breakdown by Charity</div>
 				{/* <img src="img/hm-fake-pie-chart.png" style={{display: 'block', height: '20rem', margin: 'auto'}}/> */}
 				{/* Using react-google-charts as a lightweight charts library. Consult the docs here: https://react-google-charts.com/pie-chart */}
@@ -259,7 +263,7 @@ const CampaignPage = () => {
 					chartType="PieChart" 
 					loader={<div>Loading Chart...</div>} 
 					data={chartData()} 
-					options={{title: 'Donations by charity'}} 
+					options={{title: 'Money donated:'}} 
 					rootProps={{'data-tested':'1'}} 
 					style={{fill: 'rgba(255,255,255,0', margin: 0}} />
 			</div>
@@ -276,13 +280,19 @@ const CampaignPage = () => {
 					<img src={branding.logo} alt="'advertise-logo" />
 				</div>
 				<div className="align-middle d-flex align-items-center">
-					<p>{campaignTotalViews} people watched an ad in this campaign to unlock a donation</p>
+					<p>{totalViewCount} people watched an ad in this campaign to unlock a donation</p>
 				</div>
 			</div>
 			<div className="advert-card-container clearfix  justify-content-center">
 				<div className="column justify-content-center mx-auto">
-					{campaigns.filter(campaign => campaign.videos[0].url).map( 
-						(ad, i) => <AdvertCard key={ad.id} i={i} advert={ad} viewCount={viewCount(viewcount4campaign, ad)} donationTotal={donationValue} />)}
+					{removeDuplicateCharities(ads).filter(campaign => campaign.videos[0].url).map( 
+						(ad, i) => <AdvertCard 
+							key={ad.id} 
+							i={i} 
+							advert={ad} 
+							viewCount={viewCount(viewcount4campaign, ad)} 
+							donationTotal={donationValue}
+							totalViewCount={totalViewCount} />)}
 				</div>
 			</div>
 			<Footer />
