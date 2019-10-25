@@ -2,7 +2,7 @@ import React from 'react';
 import Login from 'you-again';
 import _ from 'lodash';
 // import pivot from 'data-pivot';
-import { Doughnut } from 'react-chartjs2';
+import { Chart } from 'react-google-charts';
 import Roles from '../../base/Roles';
 import C from '../../C';
 import ServerIO from '../../plumbing/ServerIO';
@@ -202,9 +202,32 @@ const CampaignPage = () => {
 	const publishers = mockUpLogoUrls.map(pub => <a href={pub.url}><img src={pub.branding.logo} alt={pub.name} /></a>);
 
 	// publisherCards(pubData);
+
+	// Calculates total donations per charity based on percentage available, adding [donation] and [donationPercentage] to the charities object
+	const assignUnsetDonations = () => {
+		charities = charities.map(char => {
+			return { ...char, donation: Math.floor(donByCid[char.id].value)};
+		});
+
+		const donationTotalMinusUnset = Object.values(charities).reduce((t, {donation}) => t + donation, 0);
+		charities = charities.map(e => {
+			const percentage = e.donation * 100 / donationTotalMinusUnset;
+			const calculatedDonation = percentage * donationValue / 100;
+			return {...e, donation: calculatedDonation, donationPercentage: percentage};
+		});
+	};
+
+	// Prepare data to be used in the Chart from charities names and donation value.
+	const chartData = () => {
+		let dataArray =[];
+		charities.forEach(char => dataArray.push([char.name, Math.floor(char.donation)]));
+		return [['Charity', 'Donation'], ...dataArray];
+	};
+
 	
+	assignUnsetDonations();
+	console.log(donationValue);
 	// TODO: refactor this because it's very similar now to mypage
-	// TODO: Replace fake pie chart with the real deal, we have the numbers to hand already
 	// Don't do multiple pies - but group all below a certain threshold as "Other"
 	// TODO Assign unset donations - Check whether we do proportional or equal
 	// TODO Discrepancy between viewer counts - probably because some percentage unlock by clickthrough & videos list uses minview
@@ -218,12 +241,27 @@ const CampaignPage = () => {
 			<SplashCard branding={branding} campaignPage={campaignPage} donationValue={donationValue} />
 			
 			<div className="charity-card-container clearfix">
-				{charities.map( (charity, i) => <CharityCard i={i} key={charity.id} charity={charity} donationValue={donByCid[charity.id]} donationBreakdown={pvDonationsBreakdown} />)}				
+				{charities.map( (charity, i) => 
+					<CharityCard 
+						i={i} key={charity.id} 
+						charity={charity} 
+						donationValue={charity.donation} 
+						donationBreakdown={pvDonationsBreakdown} />)}				
 			</div>
 
 			<div className="column">
 				<div className="header">Breakdown by Charity</div>
-				<img src="img/hm-fake-pie-chart.png" style={{display: 'block', height: '20rem', margin: 'auto'}}/>
+				{/* <img src="img/hm-fake-pie-chart.png" style={{display: 'block', height: '20rem', margin: 'auto'}}/> */}
+				{/* Using react-google-charts as a lightweight charts library. Consult the docs here: https://react-google-charts.com/pie-chart */}
+				<Chart 
+					width={'100%'} 
+					height={'500px'} 
+					chartType="PieChart" 
+					loader={<div>Loading Chart...</div>} 
+					data={chartData()} 
+					options={{title: 'Donations by charity'}} 
+					rootProps={{'data-tested':'1'}} 
+					style={{fill: 'rgba(255,255,255,0', margin: 0}} />
 			</div>
 
 			<div className="pub-container pt-5 pb-5 d-flex column justify-content-center">

@@ -37,6 +37,7 @@ challenges facing our planet." -- Chiara Cadei, WWF`
  * @param {?Number} i - e.g. 0 for "first in the list". Used for bg colour
  */
 const CharityCard = ({charity, donationValue, i}) => {
+	console.log(donationValue);
 	// fetch extra info from SoGive
 	let cid = charity.id;
 	if (cid) {
@@ -74,7 +75,8 @@ const CharityCard = ({charity, donationValue, i}) => {
 			<h3 className="black">{ charity.name }</h3>
 
 			{donationValue? <div className="charity-donation">
-				<span style={{color: '#770f00'}}><Counter currencySymbol={Money.currencySymbol(donationValue)} value={Money.value(donationValue)} /></span>
+				{/* <span style={{color: '#770f00'}}><Counter currencySymbol={Money.currencySymbol(donationValue)} value={Money.value(donationValue)} /></span> */}
+				<span style={{color: '#770f00'}}><Counter currencySymbol='&pound;' value={donationValue} /></span>
 				<span>&nbsp;raised</span>
 			</div> : null}		
 
