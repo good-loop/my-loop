@@ -44,22 +44,24 @@ const viewCount = (viewcount4campaign, ad) => {
 };
 
 /**
- * Expects url parameters: `gl.vert` or `gl.vertiser`
+ * Expects url parameters: `gl.vert` or `gl.vertiser` or `via`
  * TODO support q=flexible query
  * TODO support agency and ourselves! with multiple adverts
  * Split: branding - a vertiser ID, vs ad-params
  */
 const CampaignPage = () => {
 	// What adverts should we look at?
-	let { 'gl.vert': adid, 'gl.vertiser': vertiserid, q='', status=C.KStatus.PUB_OR_ARC } = DataStore.getValue(['location', 'params']) || {};	
+	let { 'gl.vert': adid, 'gl.vertiser': vertiserid, via, q='', status=C.KStatus.PUB_OR_ARC } = DataStore.getValue(['location', 'params']) || {};	
 	let sq = new SearchQuery(q);
 	// NB: convert url parameters into a backend ES query against the Advert.java object
 	if (adid) sq = sq.setProp('id', adid);
 	if (vertiserid) sq = sq.setProp('vertiser', vertiserid);
+	if (via) sq = sq.setProp('via', via);
 	q = sq.query;
 	console.log("query", q);
-
-	if ( ! q) {
+	const slug = DataStore.getValue('location','path', 1);
+	const all = slug==='all';
+	if ( ! q && ! all) {
 		// No query -- show a list
 		// TODO better graphic design before we make this list widget public
 		if ( ! Login.isLoggedIn()) {
@@ -85,6 +87,7 @@ const CampaignPage = () => {
 
 	// Combine campaign page and branding settings from all ads
 	// Last ad wins any branding settings!
+	// TODO support for agency level (and avdertiser level) branding to win through
 	let branding = {};
 	let campaignPage = {};
 	ads.forEach(ad => Object.assign(branding, ad.branding));
@@ -99,14 +102,17 @@ const CampaignPage = () => {
 	const removeDuplicateCharities = arr => {
 		let ids = [];
 		return arr.filter(obj => {
-			if (ids.includes(obj.id)) { return; }
+			if ( ! obj || ! obj.id) return false;
+			if (ids.includes(obj.id)) return false;
 			ids.push(obj.id);
-			return obj;
+			return true;
 		});
 	};
 
 	// individual charity data
-	let charities = removeDuplicateCharities(_.flatten(ads.map(ad => ad.charities.list)));
+	let charities = removeDuplicateCharities(_.flatten(ads.map(
+		ad => ad.charities && ad.charities.list || []
+	)));
 	let cids = charities.map(x => x.id);
 
 	// Unfortunately need to repeat structure as ActionMan.list does not return a promise

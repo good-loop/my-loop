@@ -64,22 +64,24 @@ const ShareAnAd = ({adid, className, color}) => {
 	);
 };
 
-const CampaignPageLinks = ({color, vert}) => (
-	<div className='text-center'>
-		<h3 className='sub-header'>Share this ad on social media</h3>
-		<IntentLink
-			service='twitter'
-			text='I just gave to charity by watching a GoodLoop ad'
-			url={`${window.location.origin}/#campaign/?gl.vert=${vert}`}
-			style={{color}}
-		/>
-		<IntentLink
-			service='facebook'
-			text='I just gave to charity by watching a GoodLoop ad'
-			url={`${window.location.origin}/#campaign/?gl.vert=${vert}`}
-			style={{color}}
-		/>
-	</div>
-);
+const CampaignPageLinks = ({color, vert}) => {
+	const url = window.location.origin+'/#campaign/?gl.vert='+escape(vert);
+	return (
+		<div className='text-center'>
+			<h3 className='sub-header'>Share this ad on social media</h3>
+			<IntentLink
+				service='twitter'
+				text='I just gave to charity by watching a GoodLoop ad'
+				url={url}
+				style={{color}}
+			/>
+			<IntentLink
+				service='facebook'
+				text='I just gave to charity by watching a GoodLoop ad'
+				url={url}
+				style={{color}}
+			/>
+		</div>);
+};
 
 export default ShareAnAd;
