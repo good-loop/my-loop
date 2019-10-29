@@ -151,6 +151,7 @@ const CampaignPage = () => {
 	donationValue = donationValue.value;
 	// also the per-charity numbers
 	let donByCid = pvDonationsBreakdown.value.by_cid;
+	console.log(pvDonationsBreakdown);
 
 	let brandColor = branding.color || branding.backgroundColor;
 
@@ -185,7 +186,6 @@ const CampaignPage = () => {
 		viewcount4campaign = pivot(pvViewData.value, "by_campaign.buckets.$bi.{key, doc_count}", "$key.$doc_count");
 	}
 
-	// console.log(pvViewData.value);
 	const pubData = pvViewData.value;
 
 	const mockUpLogoUrls = [
@@ -205,6 +205,9 @@ const CampaignPage = () => {
 			url: ''
 		}
 	];
+
+	// Array of publisher logos from mockup.
+	// TODO: Get proper
 	const publishers = mockUpLogoUrls.map(pub => <a href={pub.url}><img src={pub.branding.logo} alt={pub.name} /></a>);
 
 	// publisherCards(pubData);
@@ -212,9 +215,12 @@ const CampaignPage = () => {
 	// Calculates total donations per charity based on percentage available, adding [donation] and [donationPercentage] to the charities object
 	const assignUnsetDonations = () => {
 		charities = charities.map(char => {
-			return { ...char, donation: Math.floor(donByCid[char.id].value)};
+			if (donByCid[char.id]) { // if the charities have been edited after the campaign they might be missing values.
+				return { ...char, donation: Math.floor(donByCid[char.id].value)};
+			} return char; 
 		});
 
+		charities = charities.filter(c => c.donation); // Get rid of charities with no logged donations.
 		const donationTotalMinusUnset = Object.values(charities).reduce((t, {donation}) => t + donation, 0);
 		charities = charities.map(e => {
 			const percentage = e.donation * 100 / donationTotalMinusUnset;
@@ -229,11 +235,30 @@ const CampaignPage = () => {
 		charities.forEach(char => dataArray.push([char.name, Math.floor(char.donation)]));
 		return [['Charity', 'Donation'], ...dataArray];
 	};
-	
+
+	let charitiesById = _.uniq(_.flattenDeep(ads.map(c => c.charities.list)));
+	let charIds = [];
+	charitiesById.forEach(c => {
+		if (!charIds.includes(c.name)) {
+			charIds.push(c.name);
+		}
+	});
+
+	// Picks one video from each campaign to display as a sample.
+	const sampleAdFromEachCampaign = () => {
+		let campaignNames = [];
+		return removeDuplicateCharities(ads).map(ad => {
+			if (!campaignNames.includes(ad.campaign) && ad.videos[0].url) { // Only those ads with a valid video. Filters out dummies.
+				campaignNames.push(ad.campaign);
+				return ad;
+			} return null;
+		}).filter(ad => ad);
+	};
+
 	// Sum of the views from every ad in the campaign. We use this number for display
 	// and to pass it to the AdvertCards to calculate the money raised against the total.
 	let totalViewCount = 0;
-	removeDuplicateCharities(ads).forEach(ad => totalViewCount += viewCount(viewcount4campaign, ad));
+	sampleAdFromEachCampaign().forEach(ad => totalViewCount += viewCount(viewcount4campaign, ad));
 
 	assignUnsetDonations();
 	// console.log(donationValue);
@@ -291,7 +316,7 @@ const CampaignPage = () => {
 			</div>
 			<div className="advert-card-container clearfix  justify-content-center">
 				<div className="column justify-content-center mx-auto">
-					{removeDuplicateCharities(ads).filter(campaign => campaign.videos[0].url).map( 
+					{sampleAdFromEachCampaign().map( 
 						(ad, i) => <AdvertCard 
 							key={ad.id} 
 							i={i} 

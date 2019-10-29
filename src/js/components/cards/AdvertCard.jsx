@@ -27,6 +27,7 @@ const AdvertCard = ({advert, viewCount, donationTotal, donationBreakdown, totalV
 
 	// Money raised by ad based on viewers
 	const moneyRaised = donationTotal * (thisViewCount / totalViewCount);
+	console.log(donationTotal, ' ', thisViewCount, ' ', totalViewCount);
 
 	return (
 		<div className="pb-5 d-flex row mx-auto justify-content-center">
