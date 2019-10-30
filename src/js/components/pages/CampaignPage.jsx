@@ -207,14 +207,9 @@ const CampaignPage = () => {
 			url: ''
 		}
 	];
-<<<<<<< HEAD
-	const publishers = mockUpLogoUrls.map(pub => <img src={pub.branding.logo} alt={pub.name} />);
-=======
-
 	// Array of publisher logos from mockup.
 	// TODO: Get proper
-	const publishers = mockUpLogoUrls.map(pub => <a href={pub.url}><img src={pub.branding.logo} alt={pub.name} /></a>);
->>>>>>> 6606fa737e47b14914a441d67d9285e6e521f912
+	const publishers = mockUpLogoUrls.map(pub => <img src={pub.branding.logo} alt={pub.name} />);
 
 	// publisherCards(pubData);
 
