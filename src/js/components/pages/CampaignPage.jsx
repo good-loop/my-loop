@@ -22,6 +22,7 @@ import AdvertCard from '../cards/AdvertCard';
 import {sortByDate} from '../../base/utils/SortFn';
 import Counter from '../../base/components/Counter';
 import pivot from 'data-pivot';
+import printer from '../../base/utils/printer';
 import CSS from '../../base/components/CSS';
 
 
@@ -270,7 +271,7 @@ const CampaignPage = () => {
 		<CSS css={campaignPage.advanced && campaignPage.advanced.customcss} />
 		<CSS css={branding.customCss} />
 		<div className="widepage CampaignPage text-center">
-			<NavBar brandLogo={branding.logo} style={{backgroundColor: brandColor}} />
+			<NavBar brandLogo={branding.logo} logo="/img/new-logo-with-text-white.svg" style={{backgroundColor: brandColor}} />
 			<div className='avoid-navbar' />
 
 			<SplashCard branding={branding} campaignPage={campaignPage} donationValue={donationValue} />
@@ -284,22 +285,29 @@ const CampaignPage = () => {
 						donationBreakdown={pvDonationsBreakdown} />)}				
 			</div>
 
-			<div className="column" style={{maxWidth: '1200px', margin: '0 auto'}}>
-				<div className="header">Breakdown by Charity</div>
+			<div className="section column pt-5 pb-5" style={{maxWidth: '1200px', margin: '0 auto'}}>
 				{/* <img src="img/hm-fake-pie-chart.png" style={{display: 'block', height: '20rem', margin: 'auto'}}/> */}
 				{/* Using react-google-charts as a lightweight charts library. Consult the docs here: https://react-google-charts.com/pie-chart */}
+				<h2 className="breakdown-title">Breakdown by charity</h2>
 				<Chart 
 					width={'100%'} 
-					height={'500px'} 
+					height={'500px'}
 					chartType="PieChart" 
 					loader={<div>Loading Chart...</div>} 
 					data={chartData()} 
-					options={{title: 'Money donated:'}} 
+					options={
+						{
+							legend: {
+								alignment: 'center',
+								position: 'bottom',
+							}
+						}
+					} 
 					rootProps={{'data-tested':'1'}} 
 					style={{fill: 'rgba(255,255,255,0', margin: 0}} />
 			</div>
 
-			<div className="pub-container pt-5 pb-5 d-flex column justify-content-center">
+			<div className="section pub-container pt-5 pb-5 d-flex column justify-content-center">
 				<div className="sub-header-font text-center pb-5">You might have seen this campaign in one or more of:</div>
 				<div className="row justify-content-around align-items-center w-100">
 					{publishers}
@@ -311,7 +319,9 @@ const CampaignPage = () => {
 					<img src={branding.logo} alt="'advertise-logo" />
 				</div>
 				<div className="align-middle d-flex align-items-center">
-					<p>{totalViewCount} people watched an ad in this campaign to unlock a donation</p>
+					<div className="sub-header-font">
+						<span className="font-weight-bold">{printer.prettyNumber(totalViewCount)}</span> people watched an ad in this campaign to unlock a donation
+					</div>
 				</div>
 			</div>
 			<div className="advert-card-container clearfix  justify-content-center">

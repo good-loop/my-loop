@@ -72,7 +72,7 @@ const CharityCard = ({charity, donationValue, i}) => {
 		<div className="logo"><CharityLogo charity={charity} /></div>
 
 		<div className="white-inner-card" style={backgroundImage? {} : {backgroundColor:'transparent'}}>
-			<h3 className="black">{ charity.name }</h3>
+			<div className="charity-donation">{ charity.name }</div>
 
 			{donationValue? <div className="charity-donation">
 				{/* <span style={{color: '#770f00'}}><Counter currencySymbol={Money.currencySymbol(donationValue)} value={Money.value(donationValue)} /></span> */}

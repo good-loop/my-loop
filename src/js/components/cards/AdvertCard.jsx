@@ -12,6 +12,7 @@ import MDText from '../../base/components/MDText';
 import Counter from '../../base/components/Counter';
 import Money from '../../base/data/Money';
 import ServerIO from '../../plumbing/ServerIO';
+import printer from '../../base/utils/printer';
 
 const AdvertCard = ({advert, viewCount, donationTotal, donationBreakdown, totalViewCount}) => {
 	let name = advert.name || advert.campaign;
@@ -27,7 +28,6 @@ const AdvertCard = ({advert, viewCount, donationTotal, donationBreakdown, totalV
 
 	// Money raised by ad based on viewers
 	const moneyRaised = donationTotal * (thisViewCount / totalViewCount);
-	console.log(donationTotal, ' ', thisViewCount, ' ', totalViewCount);
 
 	return (
 		<div className="pb-5 d-flex row mx-auto justify-content-center">
@@ -37,13 +37,13 @@ const AdvertCard = ({advert, viewCount, donationTotal, donationBreakdown, totalV
 				<div className="sub-header-font">
 					<p>{durationText}</p>
 					<p>
-						{thisViewCount} viewers raised<br />
-						<span className="header-font">&pound;<Counter value={moneyRaised} /></span>
+						<span className="value-highlight">{printer.prettyNumber(thisViewCount)}</span> viewers raised<br />
+						<span className="header-font value-highlight">&pound;<Counter value={moneyRaised} /></span>
 					</p>
 				</div>
 			</div>
 			<div>
-				{advert.videos && advert.videos[0]? <Misc.VideoThumbnail url={advert.videos[0].url} width={360} height={270} /> : null}<br />
+				{advert.videos && advert.videos[0]? <Misc.VideoThumbnail url={advert.videos[0].url} width={480} height={270} /> : null}<br />
 				{Roles.isDev()? <small><a href={'https://portal.good-loop.com/#advert/'+escape(advert.id)} target='_portal'>Portal Editor</a></small> : null}
 			</div>
 		</div>
