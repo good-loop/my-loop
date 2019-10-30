@@ -22,6 +22,7 @@ import AdvertCard from '../cards/AdvertCard';
 import {sortByDate} from '../../base/utils/SortFn';
 import Counter from '../../base/components/Counter';
 import pivot from 'data-pivot';
+import printer from '../../base/utils/printer';
 import CSS from '../../base/components/CSS';
 
 
@@ -151,6 +152,7 @@ const CampaignPage = () => {
 	donationValue = donationValue.value;
 	// also the per-charity numbers
 	let donByCid = pvDonationsBreakdown.value.by_cid;
+	console.log(pvDonationsBreakdown);
 
 	let brandColor = branding.color || branding.backgroundColor;
 
@@ -185,7 +187,6 @@ const CampaignPage = () => {
 		viewcount4campaign = pivot(pvViewData.value, "by_campaign.buckets.$bi.{key, doc_count}", "$key.$doc_count");
 	}
 
-	// console.log(pvViewData.value);
 	const pubData = pvViewData.value;
 
 	// @Andris - for hack code like this - document the hack when you write it.
@@ -206,16 +207,26 @@ const CampaignPage = () => {
 			url: ''
 		}
 	];
+<<<<<<< HEAD
 	const publishers = mockUpLogoUrls.map(pub => <img src={pub.branding.logo} alt={pub.name} />);
+=======
+
+	// Array of publisher logos from mockup.
+	// TODO: Get proper
+	const publishers = mockUpLogoUrls.map(pub => <a href={pub.url}><img src={pub.branding.logo} alt={pub.name} /></a>);
+>>>>>>> 6606fa737e47b14914a441d67d9285e6e521f912
 
 	// publisherCards(pubData);
 
 	// Calculates total donations per charity based on percentage available, adding [donation] and [donationPercentage] to the charities object
 	const assignUnsetDonations = () => {
 		charities = charities.map(char => {
-			return { ...char, donation: Math.floor(donByCid[char.id].value)};
+			if (donByCid[char.id]) { // if the charities have been edited after the campaign they might be missing values.
+				return { ...char, donation: Math.floor(donByCid[char.id].value)};
+			} return char; 
 		});
 
+		charities = charities.filter(c => c.donation); // Get rid of charities with no logged donations.
 		const donationTotalMinusUnset = Object.values(charities).reduce((t, {donation}) => t + donation, 0);
 		charities = charities.map(e => {
 			const percentage = e.donation * 100 / donationTotalMinusUnset;
@@ -230,11 +241,30 @@ const CampaignPage = () => {
 		charities.forEach(char => dataArray.push([char.name, Math.floor(char.donation)]));
 		return [['Charity', 'Donation'], ...dataArray];
 	};
-	
+
+	let charitiesById = _.uniq(_.flattenDeep(ads.map(c => c.charities.list)));
+	let charIds = [];
+	charitiesById.forEach(c => {
+		if (!charIds.includes(c.name)) {
+			charIds.push(c.name);
+		}
+	});
+
+	// Picks one video from each campaign to display as a sample.
+	const sampleAdFromEachCampaign = () => {
+		let campaignNames = [];
+		return removeDuplicateCharities(ads).map(ad => {
+			if (!campaignNames.includes(ad.campaign) && ad.videos[0].url) { // Only those ads with a valid video. Filters out dummies.
+				campaignNames.push(ad.campaign);
+				return ad;
+			} return null;
+		}).filter(ad => ad);
+	};
+
 	// Sum of the views from every ad in the campaign. We use this number for display
 	// and to pass it to the AdvertCards to calculate the money raised against the total.
 	let totalViewCount = 0;
-	removeDuplicateCharities(ads).forEach(ad => totalViewCount += viewCount(viewcount4campaign, ad));
+	sampleAdFromEachCampaign().forEach(ad => totalViewCount += viewCount(viewcount4campaign, ad));
 
 	assignUnsetDonations();
 	// console.log(donationValue);
@@ -246,7 +276,7 @@ const CampaignPage = () => {
 		<CSS css={campaignPage.advanced && campaignPage.advanced.customcss} />
 		<CSS css={branding.customCss} />
 		<div className="widepage CampaignPage text-center">
-			<NavBar brandLogo={branding.logo} style={{backgroundColor: brandColor}} />
+			<NavBar brandLogo={branding.logo} logo="/img/new-logo-with-text-white.svg" style={{backgroundColor: brandColor}} />
 			<div className='avoid-navbar' />
 
 			<SplashCard branding={branding} campaignPage={campaignPage} donationValue={donationValue} />
@@ -260,22 +290,29 @@ const CampaignPage = () => {
 						donationBreakdown={pvDonationsBreakdown} />)}				
 			</div>
 
-			<div className="column" style={{maxWidth: '1200px', margin: '0 auto'}}>
-				<div className="header">Breakdown by Charity</div>
+			<div className="section column pt-5 pb-5" style={{maxWidth: '1200px', margin: '0 auto'}}>
 				{/* <img src="img/hm-fake-pie-chart.png" style={{display: 'block', height: '20rem', margin: 'auto'}}/> */}
 				{/* Using react-google-charts as a lightweight charts library. Consult the docs here: https://react-google-charts.com/pie-chart */}
+				<h2 className="breakdown-title">Breakdown by charity</h2>
 				<Chart 
 					width={'100%'} 
-					height={'500px'} 
+					height={'500px'}
 					chartType="PieChart" 
 					loader={<div>Loading Chart...</div>} 
 					data={chartData()} 
-					options={{title: 'Money donated:'}} 
+					options={
+						{
+							legend: {
+								alignment: 'center',
+								position: 'bottom',
+							}
+						}
+					} 
 					rootProps={{'data-tested':'1'}} 
 					style={{fill: 'rgba(255,255,255,0', margin: 0}} />
 			</div>
 
-			<div className="pub-container pt-5 pb-5 d-flex column justify-content-center">
+			<div className="section pub-container pt-5 pb-5 d-flex column justify-content-center">
 				<div className="sub-header-font text-center pb-5">You might have seen this campaign in one or more of:</div>
 				<div className="row justify-content-around align-items-center w-100">
 					{publishers}
@@ -287,12 +324,14 @@ const CampaignPage = () => {
 					<img src={branding.logo} alt="'advertise-logo" />
 				</div>
 				<div className="align-middle d-flex align-items-center">
-					<p>{totalViewCount} people watched an ad in this campaign to unlock a donation</p>
+					<div className="sub-header-font">
+						<span className="font-weight-bold">{printer.prettyNumber(totalViewCount)}</span> people watched an ad in this campaign to unlock a donation
+					</div>
 				</div>
 			</div>
 			<div className="advert-card-container clearfix  justify-content-center">
 				<div className="column justify-content-center mx-auto">
-					{removeDuplicateCharities(ads).filter(campaign => campaign.videos[0].url).map( 
+					{sampleAdFromEachCampaign().map( 
 						(ad, i) => <AdvertCard 
 							key={ad.id} 
 							i={i} 

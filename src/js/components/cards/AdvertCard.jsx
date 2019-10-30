@@ -12,12 +12,13 @@ import MDText from '../../base/components/MDText';
 import Counter from '../../base/components/Counter';
 import Money from '../../base/data/Money';
 import ServerIO from '../../plumbing/ServerIO';
+import printer from '../../base/utils/printer';
 
 const AdvertCard = ({advert, viewCount, donationTotal, donationBreakdown, totalViewCount}) => {
-	let name = advert.name || advert.campaign;
+	// let name = advert.name || advert.campaign; // hm - we can't count on these names being written for the public
 
 	const durationText = advert.start || advert.end ? (<>
-		Ran
+		This advert ran
 		{ advert.start ? <span> from {<Misc.RoughDate date={advert.start} />}</span> : null}
 		{ advert.end ? <span> to {<Misc.RoughDate date={advert.end} />}</span> : '' }
 	</>) : '';
@@ -31,18 +32,16 @@ const AdvertCard = ({advert, viewCount, donationTotal, donationBreakdown, totalV
 	return (
 		<div className="pb-5 d-flex row mx-auto justify-content-center">
 			<div className="pt-4 pr-3">
-				<div className="sub-header-font">Advert:</div>
-				<h3 className="header-font">{name}</h3>
 				<div className="sub-header-font">
 					<p>{durationText}</p>
 					<p>
-						{thisViewCount} viewers raised<br />
-						<span className="header-font">&pound;<Counter value={moneyRaised} /></span>
+						<span className="value-highlight">{printer.prettyNumber(thisViewCount)}</span> viewers raised<br />
+						<span className="header-font value-highlight">&pound;<Counter value={moneyRaised} /></span>
 					</p>
 				</div>
 			</div>
 			<div>
-				{advert.videos && advert.videos[0]? <Misc.VideoThumbnail url={advert.videos[0].url} width={360} height={270} /> : null}<br />
+				{advert.videos && advert.videos[0]? <Misc.VideoThumbnail url={advert.videos[0].url} width={480} height={270} /> : null}<br />
 				{Roles.isDev()? <small><a href={'https://portal.good-loop.com/#advert/'+escape(advert.id)} target='_portal'>Portal Editor</a></small> : null}
 			</div>
 		</div>

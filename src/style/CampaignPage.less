@@ -11,9 +11,14 @@
 	.hero {
 		min-height: 40vh;
 		.hero-logo {
-			max-height: 200px;
+			max-height: 150px;
 			max-width: 100%; // Contains image in mobile
 		}
+	}
+
+	// Hack to give breathing room to splash without changing base Component
+	.container.p-2 {
+		padding: 6rem 2rem!important;
 	}
 
 	// Note: My-Loop has nav buttons, but the navbar is transparent.
@@ -31,6 +36,12 @@
 		background-color: @gl-red;
 	}
 
+	// Subtle box-shadow to separate important sections on the page.
+	// TODO: More elegant solution.
+	.section {
+		box-shadow: 0px 3px 2px -2px rgba(0,0,0,0.1);
+	}
+
 ////////// Charity Cards /////////
 	.charity-card {
 		.bg {
@@ -40,7 +51,7 @@
 		.container {
 			display: flex;
 			justify-content: flex-end;
-			padding: 2em 0!important; // Give some top/bottom breathing room to card
+			padding: 5em 0!important; // Give some top/bottom breathing room to card
 		}
 		// Charity card logo get up to 200px, auto height.
 		.logo {
@@ -52,7 +63,7 @@
 			margin-right: 1em; // Push to the left to make space between logo and text BG
 		}
 
-		// Good-Gool header font for both title, and donation subtitle inside charity cards.
+		// Good-Loop sub-header font for both title and donation subtitle inside charity cards.
 		h3, .charity-donation {
 			&:extend(.header-font);
 		}
@@ -88,7 +99,7 @@
 		max-width: 1200px; // container max-width
 		margin: 0 auto;
 		img {
-			max-width: 200px;
+			max-height: 65px;
 		}
 		// Subtitle to the left
 		.sub-header-font {
@@ -97,11 +108,19 @@
 
 	}
 
+	// Hack: Chart title does not align properly, so instead we remove it and use
+	// this header superposed over the chart.
+	.breakdown-title {
+		margin-bottom: -2em;
+	}
+
 ///////// Advert Cards //////////
 	.total-views-column {
 		display: flex;
 		justify-content: center;
 		padding: 2em 0; // Breathing room between top and bottom elements
+		&:extend(.sub-header-font);
+		.sub-header-font { font-size: 1.25rem; }
 		img {
 			max-width: 200px;
 		}
@@ -115,12 +134,35 @@
 				margin: 0 auto;
 			}
 		}
+		@media (max-width:767px) {
+			align-items: center;
+			flex-direction: column;
+		}
 	}
+
+
 	.advert-card-container {
 		text-align: right;
-		.header-font { font-size: 1.5rem; }
+		.header-font { 
+			font-size: 1.5rem;
+			&.value-highlight {
+				font-size: 2rem;
+				font-weight: 700;
+			}
+		}
+		.value-highlight { color: rgb(119, 15, 0); }
 		.sub-header-font { font-size: 1.25rem; }
 	}
+
+	// On small devices makes thumbnail full width and forces aspect ratio for responsive behaviour.
+	@media (max-width: 481px) {
+		@ratio: 1.777777778; // 480w / 270h <-- initial size of thumbnail
+		.video-thumbnail {
+			width: 100%;
+			height: 100vw / @ratio;
+		}
+	}
+
 ////////////////////////
 
 	rect {
