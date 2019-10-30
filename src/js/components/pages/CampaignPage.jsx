@@ -188,6 +188,7 @@ const CampaignPage = () => {
 	// console.log(pvViewData.value);
 	const pubData = pvViewData.value;
 
+	// @Andris - for hack code like this - document the hack when you write it.
 	const mockUpLogoUrls = [
 		{
 			name: 'buzzfeed',
@@ -205,7 +206,7 @@ const CampaignPage = () => {
 			url: ''
 		}
 	];
-	const publishers = mockUpLogoUrls.map(pub => <a href={pub.url}><img src={pub.branding.logo} alt={pub.name} /></a>);
+	const publishers = mockUpLogoUrls.map(pub => <img src={pub.branding.logo} alt={pub.name} />);
 
 	// publisherCards(pubData);
 
