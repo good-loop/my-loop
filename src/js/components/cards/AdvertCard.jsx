@@ -14,7 +14,7 @@ import Money from '../../base/data/Money';
 import ServerIO from '../../plumbing/ServerIO';
 import printer from '../../base/utils/printer';
 
-const AdvertCard = ({advert, viewCount, donationTotal, donationBreakdown, totalViewCount}) => {
+const AdvertCard = ({advert, viewCount, donationTotal, donationBreakdown, totalViewCount, isMulti}) => {
 	// let name = advert.name || advert.campaign; // hm - we can't count on these names being written for the public
 	const durationText = advert.start || advert.end ? (<>
 		This advert ran
@@ -29,19 +29,14 @@ const AdvertCard = ({advert, viewCount, donationTotal, donationBreakdown, totalV
 	const moneyRaised = donationTotal * (thisViewCount / totalViewCount);
 
 	return (
-		<div className="mb-5 d-flex row mx-auto justify-content-center ad-card">
-			<div className="pr-3">
-				<div className="sub-header-font">
-					<p>{durationText}</p>
-					<p>
-						<span className="value-highlight">{printer.prettyNumber(thisViewCount)}</span> viewers raised<br />
-						<span className="header-font value-highlight">&pound;<Counter value={moneyRaised} /></span>
-					</p>
-				</div>
-			</div>
+		<div className="mb-5 d-flex column mx-auto justify-content-center ad-card">
 			<div>
-				{advert.videos && advert.videos[0]? <Misc.VideoThumbnail url={advert.videos[0].url} width={480} height={270} /> : null}<br />
+				{advert.videos && advert.videos[0]? <Misc.VideoThumbnail url={advert.videos[0].url} width={576} height={324} /> : null}<br />
 				{Roles.isDev()? <small><a href={'https://portal.good-loop.com/#advert/'+escape(advert.id)} target='_portal'>Portal Editor</a></small> : null}
+				<div className="pt-3 pb-4" style={{margin: '0 auto'}}>
+					<span>{printer.prettyNumber(thisViewCount)} people raised &pound;<Counter value={moneyRaised} /> by</span><br />
+					<span>watching an ad in this campaign</span>
+				</div>
 			</div>
 		</div>
 	);

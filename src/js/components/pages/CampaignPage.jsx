@@ -23,6 +23,7 @@ import {sortByDate} from '../../base/utils/SortFn';
 import Counter from '../../base/components/Counter';
 import pivot from 'data-pivot';
 import printer from '../../base/utils/printer';
+import publishers from '../../data/PublisherList';
 import CSS from '../../base/components/CSS';
 
 let isMulti = false; // We'll use this for some text options, such as plurals in splash or ad cards presentation
@@ -210,7 +211,20 @@ const CampaignPage = () => {
 	];
 	// Array of publisher logos from mockup.
 	// TODO: Get proper
-	const publishers = mockUpLogoUrls.map(pub => <img src={pub.branding.logo} alt={pub.name} />);
+	// let campaignPublishers = [];
+	// if (pubData && pubData.by_pub) {
+	// 	campaignPublishers = pubData.by_pub.forEach(pub => {
+	// 		publishers.forEach(publisher => {
+	// 			if (pub.key === publisher.name) {
+	// 				campaignPublishers.push(publisher);
+	// 			}	
+	// 		});
+	// 	});
+			
+
+	// }
+	// console.log(`campaign publishers`, campaignPublishers);
+	// (pub => <img src={pub.branding.logo} alt={pub.name} />);
 
 	// publisherCards(pubData);
 
@@ -263,6 +277,13 @@ const CampaignPage = () => {
 	sampleAdFromEachCampaign().forEach(ad => totalViewCount += viewCount(viewcount4campaign, ad));
 
 	assignUnsetDonations();
+
+	// We use this bit to alternate orientation of charity cards, either left or right
+	// TODO device a more elgant way of accomplishing this effect.
+	let imageLeft = false;
+
+	console.log(ads);
+	if(pubData && pubData.by_pub) console.log(pubData.by_pub.buckets);
 	// console.log(donationValue);
 	// TODO: refactor this because it's very similar now to mypage
 	// Don't do multiple pies - but group all below a certain threshold as "Other"
@@ -277,43 +298,32 @@ const CampaignPage = () => {
 
 			<SplashCard branding={branding} campaignPage={campaignPage} donationValue={donationValue} totalViewCount={totalViewCount} />
 			
-			<div className="charity-card-container clearfix">
-				{charities.map( (charity, i) => 
-					<CharityCard 
-						i={i} key={charity.id} 
-						charity={charity} 
-						donationValue={charity.donation} 
-						donationBreakdown={pvDonationsBreakdown} />)}				
-			</div>
-
-			{/* <div className="section column pt-5 pb-5" style={{maxWidth: '1200px', margin: '0 auto'}}>
-				<h2 className="breakdown-title">Breakdown by charity</h2>
-				<Chart 
-					width={'100%'} 
-					height={'500px'}
-					chartType="PieChart" 
-					loader={<div>Loading Chart...</div>} 
-					data={chartData()} 
-					options={
-						{
-							legend: {
-								alignment: 'center',
-								position: 'bottom',
-							}
-						}
-					} 
-					rootProps={{'data-tested':'1'}} 
-					style={{fill: 'rgba(255,255,255,0', margin: 0}} />
-			</div> */}
-
-			<div className="section pub-container d-flex column justify-content-center">
-				<div className="sub-header-font text-center pb-5 pl-4 pr-4">You might have seen this campaign in one or more of:</div>
-				<div className="row justify-content-around align-items-center">
-					{publishers}
+			<div className="container-fluid" style={{backgroundColor: '#af2009'}}>
+				<div className="intro-text">
+					<span>At {ads[0].vertiserName? ads[0].vertiserName : ads[0].name} we want to give back. We work with Good-Loop to put out Ads for Good, and donate money to charity. Together with <span className="font-weight-bold">{printer.prettyNumber(totalViewCount)}</span> people we've raised funds for the following causes and can't wait to see our positive impact go even further. See our impact below.</span>
 				</div>
 			</div>
 
-			<div className="total-views-column">
+			<div className="charity-card-container section clearfix">
+				{charities.map( (charity, i) => {
+					imageLeft = !imageLeft;
+					return <CharityCard 
+						i={i} key={charity.id}
+						imageLeft={imageLeft} 
+						charity={charity} 
+						donationValue={charity.donation} 
+						donationBreakdown={pvDonationsBreakdown} />;
+				})}				
+			</div>
+
+			<div className="section pub-container d-flex column justify-content-center">
+				<div className="header-font text-center pb-5 pl-4 pr-4">This is where you might have seen our campaign</div>
+				<div className="row justify-content-around align-items-center">
+					{/* {publishers} */}
+				</div>
+			</div>
+
+			{/* <div className="total-views-column">
 				<div className="d-flex align-items-center">
 					<img src={branding.logo} alt="'advertise-logo" />
 				</div>
@@ -324,14 +334,17 @@ const CampaignPage = () => {
 							: <span>During this campaign: </span> }
 					</div>
 				</div>
-			</div>
+			</div> */}
+
 			<div className="advert-card-container clearfix  justify-content-center">
+				<div className="pt-5 pb-4 advert-section-header" style={{margin: '0 auto'}}>The {isMulti? 'Campaigns' : 'Campaign'}</div>
 				<div className="column justify-content-center mx-auto">
 					{sampleAdFromEachCampaign().map( 
 						(ad, i) => <AdvertCard 
 							key={ad.id} 
 							i={i} 
 							advert={ad} 
+							isMulti={isMulti}
 							viewCount={viewCount(viewcount4campaign, ad)} 
 							donationTotal={donationValue}
 							totalViewCount={totalViewCount} />)}
@@ -347,16 +360,15 @@ const CampaignPage = () => {
 const SplashCard = ({branding, campaignPage, donationValue, totalViewCount}) => {
 	// Use background image given to adunit, or show default image of sand dune 
 	const backgroundImage = (campaignPage && campaignPage.bg) || (ServerIO.MYLOOP_ENDPONT + '/img/wheat_fields.jpg');
-	return (<ACard className="hero" backgroundImage={backgroundImage}>
+	return (<ACard className="hero">
 		<div className='flex-row flex-centre p-1'>
 			<img className='hero-logo' src={branding.logo} alt='advertiser-logo' />
 		</div>
-		<div className='sub-header p-1 white contrast-text'>
+		<div className='sub-header p-1'>
 			<div>
-				<span>{printer.prettyNumber(totalViewCount)}</span><span> people have</span><br />
-				<span>{`watched our ${isMulti? 'ads' : 'ad'}, raising`}</span>
+				<span>Together our ads for good have raised</span>
 			</div>
-			{donationValue? <div className='header' style={{color: 'white'}}>&pound;<Counter value={donationValue} minimumFractionDigits={2} /></div> : 'money'}
+			{donationValue? <div className='header' style={{color: 'black'}}>&pound;<Counter value={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 		</div>
 	</ACard>);
 };

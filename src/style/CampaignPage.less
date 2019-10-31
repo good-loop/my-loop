@@ -5,6 +5,7 @@
 @navbar-accent-color: unset;
 
 @import '../js/base/style/fonts.less';
+@import '../js/base/style/colours.less';
 
 .CampaignPage {
 
@@ -23,7 +24,7 @@
 
 	// Hack to give breathing room to splash without changing base Component
 	.container.p-2 {
-		padding: 6rem 2rem!important;
+		padding: 3rem 2rem!important;
 	}
 
 	// Note: My-Loop has nav buttons, but the navbar is transparent.
@@ -39,6 +40,13 @@
 	.btn-gl {
 		color: #fff;
 		background-color: @gl-red;
+	}
+
+	.intro-text {
+		color: #fff;
+		max-width: 560px;
+		margin: 0 auto;
+		padding: 2em 0;
 	}
 
 	// Subtle box-shadow to separate important sections on the page.
@@ -75,6 +83,39 @@
 		h3, .charity-donation {
 			&:extend(.header-font);
 		}
+
+
+		.img-col {
+			width: 50%;
+			margin: 0;
+			background-position: center;
+			background-size: cover;
+		}
+		.info-col {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			.inner-info-section {
+				align-self: flex-start;
+				padding: 2rem;
+				text-align: left;
+				max-width: 70%;
+			}
+			.align-right {
+				align-self: flex-end;
+			}
+			@media (max-width: 767px) {
+				.inner-info-section {
+					max-width: 100%;
+					align-self: center;
+					text-align: center;
+					padding: 2rem 0;
+					.logo div {
+						margin: 0 auto;
+					}
+				}
+			}
+		}
 	}
 
 	// Size and position for the inner white card when a background photo is present. 
@@ -100,7 +141,6 @@
 	.blockquote {
 		font-size: .8rem;
 	}
-////////////////////////
 
 	.pub-container {
 		flex-direction: column; // Stacks subtitle on top of logo grid
@@ -124,6 +164,10 @@
 	}
 
 ///////// Advert Cards //////////
+	.advert-section-header {
+		&:extend(.header-font);
+		color: #fff;
+	}
 	.total-views-column {
 		display: flex;
 		justify-content: center;
@@ -152,11 +196,14 @@
 	// Adds separation line between ad cards
 	.ad-card {
 		box-shadow: 0px 3px 2px -2px rgba(0,0,0,0.1);
+		color: #fff;
+		flex-direction: column;
+		&:extend(.header-font);
 	}
 
 
 	.advert-card-container {
-		text-align: right;
+		background: rgb(119, 15, 0);
 		.header-font { 
 			font-size: 1.5rem;
 			&.value-highlight {
@@ -164,7 +211,7 @@
 				font-weight: 700;
 			}
 		}
-		.value-highlight { color: rgb(119, 15, 0); }
+		.value-highlight { color: @gl-orange; }
 		.sub-header-font { font-size: 1.25rem; }
 	}
 
@@ -210,13 +257,12 @@
 
 		// This sets the logo on top of the charity card, and aligns everything to the right.
 		.charity-card {
-			.container {
-				flex-direction: column;
-				align-items: flex-end;
-			}
-			.white-inner-card {
+			.img-col {
 				width: 100%;
-				background-color: transparent;
+				height: 200px;
+			}
+			.info-col {
+				align-items: center;
 			}
 			.photo {
 				display: none; 
@@ -243,10 +289,6 @@
 			.align-middle {
 				padding-bottom: 4rem;
 			}
-		}
-
-		.advert-card-container {
-			text-align: center;
 		}
 	}
 }

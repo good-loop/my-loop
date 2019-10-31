@@ -36,7 +36,7 @@ challenges facing our planet." -- Chiara Cadei, WWF`
  * 
  * @param {?Number} i - e.g. 0 for "first in the list". Used for bg colour
  */
-const CharityCard = ({charity, donationValue, i}) => {
+const CharityCard = ({charity, donationValue, i, imageLeft}) => {
 	// console.log(donationValue);
 	// fetch extra info from SoGive
 	let cid = charity.id;
@@ -67,29 +67,49 @@ const CharityCard = ({charity, donationValue, i}) => {
 	// hack: different mobile vs desktop designs -- easiest done in js than pure css
 	const isMobile = DataStore.getValue('env', 'isMobile');
 
-	return (<ACard backgroundImage={isMobile? null : backgroundImage} backgroundColor={backgroundColor} name={cid} className="charity-card">
+	return ( //(<ACard backgroundImage={isMobile? null : backgroundImage} backgroundColor={backgroundColor} name={cid} className="charity-card">
 		
-		<div className="logo"><CharityLogo charity={charity} /></div>
+	// 	<div className="logo"><CharityLogo charity={charity} /></div>
 
-		<div className="white-inner-card" style={backgroundImage? {} : {backgroundColor:'transparent'}}>
-			<div className="charity-donation">{ charity.name }</div>
+	// 	<div className="white-inner-card" style={backgroundImage? {} : {backgroundColor:'transparent'}}>
+	// 		<div className="charity-donation">{ charity.name }</div>
 
-			{donationValue? <div className="charity-donation">
-				{/* <span style={{color: '#770f00'}}><Counter currencySymbol={Money.currencySymbol(donationValue)} value={Money.value(donationValue)} /></span> */}
-				<span style={{color: '#770f00'}}><Counter currencySymbol='&pound;' value={donationValue} /></span>
-				<span>&nbsp;raised</span>
-			</div> : null}		
+	// 		{donationValue? <div className="charity-donation">
+	// 			{/* <span style={{color: '#770f00'}}><Counter currencySymbol={Money.currencySymbol(donationValue)} value={Money.value(donationValue)} /></span> */}
+	// 			<span style={{color: '#770f00'}}><Counter currencySymbol='&pound;' value={donationValue} /></span>
+	// 			<span>&nbsp;raised</span>
+	// 		</div> : null}		
 
-			<div className="charity-description text-block" >
-				<MDText source={charity.summaryDescription || ''} />
-				{tq(charity)? <div className="quote"><MDText source={tq(charity)} /></div> : null}			
+	// 		<div className="charity-description text-block" >
+	// 			<MDText source={charity.summaryDescription || ''} />
+	// 			{tq(charity)? <div className="quote"><MDText source={tq(charity)} /></div> : null}			
+	// 		</div>
+	// 	</div>
+
+	// 	{isMobile && photo? <img className='photo' src={photo} /> : null}
+
+	// 	{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
+	// </ACard>
+		<div className="container-fluid charity-card">
+			<div className={`row ${imageLeft? '' : ' flex-row-reverse'}`}>
+				<div className="col-sm img-col" style={{backgroundImage: `url(${backgroundImage})`}}></div>
+				<div className="col-sm info-col">
+					<div className={`inner-info-section ${imageLeft? '' : 'align-right'}`}>
+						<div className="logo"><CharityLogo charity={charity} /></div>
+						<div className="charity-donation">{ charity.name }</div>
+						{donationValue? <div className="charity-donation">
+							<span style={{color: '#af2009'}}><Counter currencySymbol='&pound;' value={donationValue} />&nbsp;raised</span>
+						</div> : null}
+						<div className="charity-description text-block" >
+							<MDText source={charity.summaryDescription || ''} />
+							{tq(charity)? <div className="quote"><MDText source={tq(charity)} /></div> : null}			
+						</div>
+						{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
+					</div>
+				</div>
 			</div>
 		</div>
-
-		{isMobile && photo? <img className='photo' src={photo} /> : null}
-
-		{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
-	</ACard>);
+	);
 };
 
 /**
@@ -103,8 +123,8 @@ const CharityLogo = ({charity}) => {
 
 	// Sets logos inside white square box, to standarise them
 	let $logo = (
-		<div style={{backgroundColor: 'white', width: '150px', height: '150px', borderRadius: '5px', marginRight: '1rem'}}>
-			<img className="logo" src={imgSrc} style={{background: 'white', margin: '0', backgroundColor: 'white'}} alt={charity.name} />
+		<div style={{backgroundColor: 'white', width: '150px', height: '150px', borderRadius: '5px'}}>
+			<img className="logo" src={imgSrc} style={{background: 'white', backgroundColor: 'white'}} alt={charity.name} />
 		</div>
 	);
 	// with / without `a` link?
