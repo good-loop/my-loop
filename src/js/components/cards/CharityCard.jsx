@@ -82,7 +82,7 @@ const CharityCard = ({charity, donationValue, i}) => {
 
 			<div className="charity-description text-block" >
 				<MDText source={charity.summaryDescription || ''} />
-				{tq(charity)? <blockquote className="blockquote"><MDText source={tq(charity)} /></blockquote> : null}			
+				{tq(charity)? <div className="quote"><MDText source={tq(charity)} /></div> : null}			
 			</div>
 		</div>
 
@@ -101,7 +101,12 @@ const CharityLogo = ({charity}) => {
 	let logo = charity.logo;
 	let imgSrc = logo || photo;
 
-	let $logo = <img className="logo" src={imgSrc} style={{background: charity.color}} alt={charity.name} />;
+	// Sets logos inside white square box, to standarise them
+	let $logo = (
+		<div style={{backgroundColor: 'white', width: '150px', height: '150px', borderRadius: '5px', marginRight: '1rem'}}>
+			<img className="logo" src={imgSrc} style={{background: 'white', margin: '0', backgroundColor: 'white'}} alt={charity.name} />
+		</div>
+	);
 	// with / without `a` link?
 	if (charity.url) {
 		return <a href={charity.url} target="_blank" rel="noopener noreferrer">{$logo}</a>;

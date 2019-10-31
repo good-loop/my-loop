@@ -25,7 +25,7 @@ import pivot from 'data-pivot';
 import printer from '../../base/utils/printer';
 import CSS from '../../base/components/CSS';
 
-
+let isMulti = false; // We'll use this for some text options, such as plurals in splash or ad cards presentation
 /**
  * HACK fix campaign name changes to clean up historical campaigns
  */
@@ -36,6 +36,7 @@ const viewCount = (viewcount4campaign, ad) => {
 
 	// HACK TOMS?? ella / josh / sara
 	if (ad.vertiser==='bPe6TXq8') {
+		isMulti = true;
 		let keyword = ad.campaign.includes('sara')? 'sara' : ad.campaign.includes('ella')? 'ella' : 'josh';
 		let total = 0;
 		Object.keys(viewcount4campaign).filter(c => c.includes(keyword)).forEach(c => total += viewcount4campaign[c]);
@@ -274,7 +275,7 @@ const CampaignPage = () => {
 			<NavBar brandLogo={branding.logo} logo="/img/new-logo-with-text-white.svg" style={{backgroundColor: brandColor}} />
 			<div className='avoid-navbar' />
 
-			<SplashCard branding={branding} campaignPage={campaignPage} donationValue={donationValue} />
+			<SplashCard branding={branding} campaignPage={campaignPage} donationValue={donationValue} totalViewCount={totalViewCount} />
 			
 			<div className="charity-card-container clearfix">
 				{charities.map( (charity, i) => 
@@ -285,9 +286,7 @@ const CampaignPage = () => {
 						donationBreakdown={pvDonationsBreakdown} />)}				
 			</div>
 
-			<div className="section column pt-5 pb-5" style={{maxWidth: '1200px', margin: '0 auto'}}>
-				{/* <img src="img/hm-fake-pie-chart.png" style={{display: 'block', height: '20rem', margin: 'auto'}}/> */}
-				{/* Using react-google-charts as a lightweight charts library. Consult the docs here: https://react-google-charts.com/pie-chart */}
+			{/* <div className="section column pt-5 pb-5" style={{maxWidth: '1200px', margin: '0 auto'}}>
 				<h2 className="breakdown-title">Breakdown by charity</h2>
 				<Chart 
 					width={'100%'} 
@@ -305,11 +304,11 @@ const CampaignPage = () => {
 					} 
 					rootProps={{'data-tested':'1'}} 
 					style={{fill: 'rgba(255,255,255,0', margin: 0}} />
-			</div>
+			</div> */}
 
-			<div className="section pub-container pt-5 pb-5 d-flex column justify-content-center">
-				<div className="sub-header-font text-center pb-5">You might have seen this campaign in one or more of:</div>
-				<div className="row justify-content-around align-items-center w-100">
+			<div className="section pub-container d-flex column justify-content-center">
+				<div className="sub-header-font text-center pb-5 pl-4 pr-4">You might have seen this campaign in one or more of:</div>
+				<div className="row justify-content-around align-items-center">
 					{publishers}
 				</div>
 			</div>
@@ -320,7 +319,9 @@ const CampaignPage = () => {
 				</div>
 				<div className="align-middle d-flex align-items-center">
 					<div className="sub-header-font">
-						<span className="font-weight-bold">{printer.prettyNumber(totalViewCount)}</span> people watched an ad in this campaign to unlock a donation
+						{isMulti? 
+							<span><span className="font-weight-bold">{printer.prettyNumber(totalViewCount)}</span><span> people watched an ad in all campaigns to unlock a donation</span></span>
+							: <span>During this campaign: </span> }
 					</div>
 				</div>
 			</div>
@@ -343,7 +344,7 @@ const CampaignPage = () => {
 }; // ./CampaignPage
 
 
-const SplashCard = ({branding, campaignPage, donationValue}) => {
+const SplashCard = ({branding, campaignPage, donationValue, totalViewCount}) => {
 	// Use background image given to adunit, or show default image of sand dune 
 	const backgroundImage = (campaignPage && campaignPage.bg) || (ServerIO.MYLOOP_ENDPONT + '/img/wheat_fields.jpg');
 	return (<ACard className="hero" backgroundImage={backgroundImage}>
@@ -351,7 +352,10 @@ const SplashCard = ({branding, campaignPage, donationValue}) => {
 			<img className='hero-logo' src={branding.logo} alt='advertiser-logo' />
 		</div>
 		<div className='sub-header p-1 white contrast-text'>
-			<div>Together our Ads for Good have raised</div>
+			<div>
+				<span>{printer.prettyNumber(totalViewCount)}</span><span> people have</span><br />
+				<span>{`watched our ${isMulti? 'ads' : 'ad'}, raising`}</span>
+			</div>
 			{donationValue? <div className='header' style={{color: 'white'}}>&pound;<Counter value={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 		</div>
 	</ACard>);

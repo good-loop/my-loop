@@ -16,7 +16,6 @@ import printer from '../../base/utils/printer';
 
 const AdvertCard = ({advert, viewCount, donationTotal, donationBreakdown, totalViewCount}) => {
 	// let name = advert.name || advert.campaign; // hm - we can't count on these names being written for the public
-
 	const durationText = advert.start || advert.end ? (<>
 		This advert ran
 		{ advert.start ? <span> from {<Misc.RoughDate date={advert.start} />}</span> : null}
@@ -30,8 +29,8 @@ const AdvertCard = ({advert, viewCount, donationTotal, donationBreakdown, totalV
 	const moneyRaised = donationTotal * (thisViewCount / totalViewCount);
 
 	return (
-		<div className="pb-5 d-flex row mx-auto justify-content-center">
-			<div className="pt-4 pr-3">
+		<div className="mb-5 d-flex row mx-auto justify-content-center ad-card">
+			<div className="pr-3">
 				<div className="sub-header-font">
 					<p>{durationText}</p>
 					<p>

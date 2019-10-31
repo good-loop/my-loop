@@ -8,11 +8,16 @@
 
 .CampaignPage {
 
+	background-color: #fff!important;
+
 	.hero {
 		min-height: 40vh;
 		.hero-logo {
 			max-height: 150px;
 			max-width: 100%; // Contains image in mobile
+		}
+		.sub-header {
+			padding-top: 3rem!important;
 		}
 	}
 
@@ -51,16 +56,19 @@
 		.container {
 			display: flex;
 			justify-content: flex-end;
-			padding: 5em 0!important; // Give some top/bottom breathing room to card
+			padding: 5rem 0!important; // Give some top/bottom breathing room to card
 		}
-		// Charity card logo get up to 200px, auto height.
+		.charity-description {
+			padding-top: 1rem;;
+		}
+		.quote {
+			font-style: italic;
+		}
+		// Charity card logo aligned and padded inside its div container, for standardisation. 
 		.logo {
 			width: auto;
-			height: auto;
-			max-width: 200px;
-			max-height: 200px;;
-			border-radius: 5px;
-			margin-right: 1em; // Push to the left to make space between logo and text BG
+			height: 95%;
+			max-width: 95%;
 		}
 
 		// Good-Loop sub-header font for both title and donation subtitle inside charity cards.
@@ -98,6 +106,7 @@
 		flex-direction: column; // Stacks subtitle on top of logo grid
 		max-width: 1200px; // container max-width
 		margin: 0 auto;
+		padding: 7em 0;
 		img {
 			max-height: 65px;
 		}
@@ -118,7 +127,7 @@
 	.total-views-column {
 		display: flex;
 		justify-content: center;
-		padding: 2em 0; // Breathing room between top and bottom elements
+		padding: 4em 0; // Breathing room between top and bottom elements
 		&:extend(.sub-header-font);
 		.sub-header-font { font-size: 1.25rem; }
 		img {
@@ -140,6 +149,11 @@
 		}
 	}
 
+	// Adds separation line between ad cards
+	.ad-card {
+		box-shadow: 0px 3px 2px -2px rgba(0,0,0,0.1);
+	}
+
 
 	.advert-card-container {
 		text-align: right;
@@ -152,6 +166,11 @@
 		}
 		.value-highlight { color: rgb(119, 15, 0); }
 		.sub-header-font { font-size: 1.25rem; }
+	}
+
+	// Separation between ad cards
+	.column.row {
+		box-shadow: 0px 3px 2px -2px rgba(0,0,0,0.1);
 	}
 
 	// On small devices makes thumbnail full width and forces aspect ratio for responsive behaviour.
@@ -180,6 +199,15 @@
 			}
 		}
 
+		.pub-container {
+			.row {
+				flex-direction: column;
+			}
+			img {
+				margin-bottom: 2em;
+			}
+		}
+
 		// This sets the logo on top of the charity card, and aligns everything to the right.
 		.charity-card {
 			.container {
@@ -190,9 +218,6 @@
 				width: 100%;
 				background-color: transparent;
 			}
-			.logo {
-				margin-right: 0;
-			}
 			.photo {
 				display: none; 
 			}
@@ -200,6 +225,28 @@
 				// In mobile the background photo can make things hard to read, so we remove it leaving the bg colour
 				background-image: none;
 			}
+			p {
+				padding-top: 1em;
+				padding-left: 1em;
+				padding-right: 1em;
+			}
+			.text-block {
+				width: 100%;
+			}
+		}
+
+		/////Ad Cards ////
+
+		// Breathing room for ad cards presentation on mobile
+		.total-views-column {
+			padding-bottom: 0;
+			.align-middle {
+				padding-bottom: 4rem;
+			}
+		}
+
+		.advert-card-container {
+			text-align: center;
 		}
 	}
 }
