@@ -74,8 +74,7 @@ const CampaignPage = () => {
 	}
 
 	let pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
-
-	if ( ! pvAds.resolved ) {
+	if (!pvAds.resolved) {
 		return <Misc.Loading text='Loading campaign data...' />;
 	}
 
@@ -85,6 +84,13 @@ const CampaignPage = () => {
 	if ( ! ads.length) {
 		return <BS.Alert>Could not load adverts for {q} {status}</BS.Alert>;
 	}
+
+	// Get the advertiser's name (TODO append to advert as vertiserName)
+	const pvVertiser = ActionMan.getDataItem({type: C.TYPES.Advertiser, id: ads[0].vertiser, status: C.KStatus.PUBLISHED});
+	if (!pvVertiser.resolved) {
+		return <Misc.Loading text='Loading campaign data...' />;
+	}
+	const vertiser = pvVertiser.value;
 
 	// console.log(ads)
 
@@ -300,20 +306,21 @@ const CampaignPage = () => {
 			
 			<div className="container-fluid" style={{backgroundColor: '#af2009'}}>
 				<div className="intro-text">
-					<span>At {ads[0].vertiserName? ads[0].vertiserName : ads[0].name} we want to give back. We work with Good-Loop to put out Ads for Good, and donate money to charity. Together with <span className="font-weight-bold">{printer.prettyNumber(totalViewCount)}</span> people we've raised funds for the following causes and can't wait to see our positive impact go even further. See our impact below.</span>
+					<span>At {vertiser.name || ads[0].name} we want to give back. We work with Good-Loop to put out Ads for Good, and donate money to charity. Together with <span className="font-weight-bold">{printer.prettyNumber(totalViewCount)}</span> people we've raised funds for the following causes and can't wait to see our positive impact go even further. See our impact below.</span>
 				</div>
 			</div>
 
 			<div className="charity-card-container section clearfix">
 				{charities.map( (charity, i) => {
 					imageLeft = !imageLeft;
-					return <CharityCard 
+					return <CharityCard
 						i={i} key={charity.id}
-						imageLeft={imageLeft} 
-						charity={charity} 
-						donationValue={charity.donation} 
-						donationBreakdown={pvDonationsBreakdown} />;
-				})}				
+						imageLeft={imageLeft}
+						charity={charity}
+						donationValue={charity.donation}
+						donationBreakdown={pvDonationsBreakdown}
+					/>;
+				})}
 			</div>
 
 			<div className="section pub-container d-flex column justify-content-center">
