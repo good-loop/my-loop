@@ -32,6 +32,14 @@ challenges facing our planet." -- Chiara Cadei, WWF`
 	}[charity.id] || "";
 };
 
+const stockPhotos = [
+	'/img/campaign-stock/dew_web_shutterstock_1051967279.jpg',
+	'/img/campaign-stock/sunrise_web_shutterstock_1504457996.jpg',
+	'/img/campaign-stock/soil_web_shutterstock_1034022475.jpg',
+	'/img/campaign-stock/hills_web_shutterstock_1462852808.jpg',
+	'/img/campaign-stock/sprout_web_shutterstock_760733977.jpg',
+];
+
 /**
  * 
  * @param {?Number} i - e.g. 0 for "first in the list". Used for bg colour
@@ -63,6 +71,11 @@ const CharityCard = ({charity, donationValue, i, imageLeft}) => {
 	if (i===undefined) i = Math.floor(Math.random() * bgColorPalette.length);
 	let backgroundColor = charity.color || bgColorPalette[i % bgColorPalette.length];
 	let backgroundImage = photo;
+	let stockWarning = false;
+	if (!backgroundImage) {
+		backgroundImage = stockPhotos[i % stockPhotos.length];
+		stockWarning = true;
+	}
 
 	// hack: different mobile vs desktop designs -- easiest done in js than pure css
 	const isMobile = DataStore.getValue('env', 'isMobile');
@@ -92,10 +105,12 @@ const CharityCard = ({charity, donationValue, i, imageLeft}) => {
 	// </ACard>
 		<div className="container-fluid charity-card">
 			<div className={`row ${imageLeft? '' : ' flex-row-reverse'}`}>
-				<div className="col-sm img-col" style={{backgroundImage: `url(${backgroundImage})`}}></div>
+				<div className="col-sm img-col" style={{backgroundImage: `url(${backgroundImage})`}}>
+					{stockWarning ? <small className="stock-warning">Stock photo</small> : ''}
+				</div>
 				<div className="col-sm info-col">
 					<div className={`inner-info-section ${imageLeft? '' : 'align-right'}`}>
-						<div className="logo"><CharityLogo charity={charity} /></div>
+						<CharityLogo charity={charity} />
 						<div className="charity-donation">{ charity.name }</div>
 						{donationValue? <div className="charity-donation">
 							<span style={{color: '#af2009'}}><Counter currencySymbol='&pound;' value={donationValue} />&nbsp;raised</span>
