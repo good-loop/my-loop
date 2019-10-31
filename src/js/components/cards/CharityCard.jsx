@@ -138,7 +138,7 @@ const CharityLogo = ({charity}) => {
 
 	// Sets logos inside white square box, to standarise them
 	let $logo = (
-		<div style={{backgroundColor: 'white', width: '150px', height: '150px', borderRadius: '5px'}}>
+		<div className="logo-div" style={{backgroundColor: 'white', width: '150px', height: '150px', borderRadius: '5px'}}>
 			<img className="logo" src={imgSrc} style={{background: 'white', backgroundColor: 'white'}} alt={charity.name} />
 		</div>
 	);

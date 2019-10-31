@@ -31,6 +31,11 @@
 	// Whereas CampaignPage has a solid brand-coloured navbar
 	.navbar {
 		background-color: @gl-red;
+		#top-right-menu {
+			a {
+				color: #fff;
+			}
+		}
 	}
 	
 	#logo-container-curve {
@@ -254,6 +259,8 @@
 		}
 
 		.pub-container {
+			padding-top: 7em;
+			padding-bottom: 3em;
 			.row {
 				flex-direction: column;
 			}
@@ -278,6 +285,9 @@
 				// In mobile the background photo can make things hard to read, so we remove it leaving the bg colour
 				background-image: none;
 			}
+			.logo-div {
+				margin: 0 auto;
+			}
 			p {
 				padding-top: 1em;
 				padding-left: 1em;
@@ -286,6 +296,10 @@
 			.text-block {
 				width: 100%;
 			}
+		}
+
+		.pub-div {
+			width: 100%!important;
 		}
 
 		/////Ad Cards ////
