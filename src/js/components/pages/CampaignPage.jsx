@@ -211,20 +211,21 @@ const CampaignPage = () => {
 	];
 	// Array of publisher logos from mockup.
 	// TODO: Get proper
-	// let campaignPublishers = [];
-	// if (pubData && pubData.by_pub) {
-	// 	campaignPublishers = pubData.by_pub.forEach(pub => {
-	// 		publishers.forEach(publisher => {
-	// 			if (pub.key === publisher.name) {
-	// 				campaignPublishers.push(publisher);
-	// 			}	
-	// 		});
-	// 	});
-			
+	let campaignPublishers = [];
+	if (pubData && pubData.by_pub) {
+		pubData.by_pub.buckets.forEach(pub => {
+			publishers.forEach(publisher => {
+				if (pub.key === publisher.name) {
+					console.log('true!', publisher);
+					campaignPublishers.push(publisher);
+				}
+			});
+		});
+	}	
+	campaignPublishers = campaignPublishers.map(pub => <div className="pb-5 pub-div" style={{width: '33%'}}><img src={pub.branding.logo} alt={pub.name} /></div>);
 
 	// }
-	// console.log(`campaign publishers`, campaignPublishers);
-	// (pub => <img src={pub.branding.logo} alt={pub.name} />);
+	console.log(`campaign publishers`, campaignPublishers);
 
 	// publisherCards(pubData);
 
@@ -282,8 +283,8 @@ const CampaignPage = () => {
 	// TODO device a more elgant way of accomplishing this effect.
 	let imageLeft = false;
 
-	console.log(ads);
-	if(pubData && pubData.by_pub) console.log(pubData.by_pub.buckets);
+	// console.log(ads);
+	// if(pubData && pubData.by_pub) console.log(pubData.by_pub.buckets);
 	// console.log(donationValue);
 	// TODO: refactor this because it's very similar now to mypage
 	// Don't do multiple pies - but group all below a certain threshold as "Other"
@@ -319,7 +320,7 @@ const CampaignPage = () => {
 			<div className="section pub-container d-flex column justify-content-center">
 				<div className="header-font text-center pb-5 pl-4 pr-4">This is where you might have seen our campaign</div>
 				<div className="row justify-content-around align-items-center">
-					{/* {publishers} */}
+					{campaignPublishers}
 				</div>
 			</div>
 

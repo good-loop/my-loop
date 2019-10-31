@@ -26,10 +26,6 @@ const publishers = [
 		branding: { logo: 'https://1z1euk35x7oy36s8we4dr6lo-wpengine.netdna-ssl.com/wp-content/uploads/2015/10/inneractive_logo.jpg'}
 	},
 	{
-		name: 'movieweb.com',
-		branding: { logo: 'https://res-1.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco/v1397184132/53112251db6c84b2852695a853a1e612.gif'}
-	},
-	{
 		name: 'www.rocketgeeks.com',
 		branding: { logo: 'https://rocketgeeks.com/wp-content/themes/unified/images/logo_footer.png'}
 	},

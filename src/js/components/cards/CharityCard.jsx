@@ -95,7 +95,7 @@ const CharityCard = ({charity, donationValue, i, imageLeft}) => {
 				<div className="col-sm img-col" style={{backgroundImage: `url(${backgroundImage})`}}></div>
 				<div className="col-sm info-col">
 					<div className={`inner-info-section ${imageLeft? '' : 'align-right'}`}>
-						<div className="logo"><CharityLogo charity={charity} /></div>
+						<CharityLogo charity={charity} />
 						<div className="charity-donation">{ charity.name }</div>
 						{donationValue? <div className="charity-donation">
 							<span style={{color: '#af2009'}}><Counter currencySymbol='&pound;' value={donationValue} />&nbsp;raised</span>
