@@ -197,24 +197,6 @@ const CampaignPage = () => {
 
 	const pubData = pvViewData.value;
 
-	// @Andris - for hack code like this - document the hack when you write it.
-	const mockUpLogoUrls = [
-		{
-			name: 'buzzfeed',
-			branding: { logo: 'http://www.worksdesigngroup.com.php72-34.phx1-1.websitetestlink.com/wp-content/uploads/2017/05/buzzfeed-e1515438116988.png'},
-			url: 'https://www.buzzfeed.com'
-		},
-		{
-			name: 'empire',
-			branding: { logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1l-KWl1ddiB47rGuU4qO6D_NPGGdDeB6WyM9vKLCPKSGC-stw&s'},
-			url: 'https://www.empire.com'
-		},
-		{
-			name: 'nme',
-			branding: { logo: 'https://s3.eu-central-1.amazonaws.com/centaur-wp/designweek/prod/content/uploads/2013/10/image001-1002x466.jpg'},
-			url: ''
-		}
-	];
 	// Array of publisher logos from mockup.
 	// TODO: Get proper
 	let campaignPublishers = [];
@@ -324,25 +306,14 @@ const CampaignPage = () => {
 				})}
 			</div>
 
-			<div className="section pub-container d-flex column justify-content-center">
-				<div className="header-font text-center pb-5 pl-4 pr-4">This is where you might have seen our campaign</div>
-				<div className="row justify-content-around align-items-center">
-					{campaignPublishers}
-				</div>
-			</div>
-
-			{/* <div className="total-views-column">
-				<div className="d-flex align-items-center">
-					<img src={branding.logo} alt="'advertise-logo" />
-				</div>
-				<div className="align-middle d-flex align-items-center">
-					<div className="sub-header-font">
-						{isMulti? 
-							<span><span className="font-weight-bold">{printer.prettyNumber(totalViewCount)}</span><span> people watched an ad in all campaigns to unlock a donation</span></span>
-							: <span>During this campaign: </span> }
+			{ campaignPublishers.length ? 
+				<div className="section pub-container d-flex column justify-content-center">
+					<div className="header-font text-center pb-5 pl-4 pr-4">This is where you might have seen our campaign</div>
+					<div className="row justify-content-around align-items-center">
+						{campaignPublishers}
 					</div>
-				</div>
-			</div> */}
+				</div> : ''
+			}
 
 			<div className="advert-card-container clearfix  justify-content-center">
 				<div className="pt-5 pb-4 advert-section-header" style={{margin: '0 auto'}}>The {isMulti? 'Campaigns' : 'Campaign'}</div>
