@@ -80,27 +80,7 @@ const CharityCard = ({charity, donationValue, i, imageLeft}) => {
 	// hack: different mobile vs desktop designs -- easiest done in js than pure css
 	const isMobile = DataStore.getValue('env', 'isMobile');
 
-	return ( //(<ACard backgroundImage={isMobile? null : backgroundImage} backgroundColor={backgroundColor} name={cid} className="charity-card">
-		
-	// 	<div className="logo"><CharityLogo charity={charity} /></div>
-
-	// 	<div className="white-inner-card" style={backgroundImage? {} : {backgroundColor:'transparent'}}>
-	// 		<div className="charity-donation">{ charity.name }</div>
-
-	// 		{donationValue? <div className="charity-donation">
-	// 			{/* <span style={{color: '#770f00'}}><Counter currencySymbol={Money.currencySymbol(donationValue)} value={Money.value(donationValue)} /></span> */}
-	// 			<span style={{color: '#770f00'}}><Counter currencySymbol='&pound;' value={donationValue} /></span>
-	// 			<span>&nbsp;raised</span>
-	// 		</div> : null}		
-
-	// 		<div className="charity-description text-block" >
-	// 			<MDText source={charity.summaryDescription || ''} />
-	// 			{tq(charity)? <div className="quote"><MDText source={tq(charity)} /></div> : null}			
-	// 		</div>
-	// 	</div>
-
-	// 	{isMobile && photo? <img className='photo' src={photo} /> : null}
-
+	return ( 
 	// 	{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
 	// </ACard>
 		<div className="container-fluid charity-card">
@@ -113,7 +93,7 @@ const CharityCard = ({charity, donationValue, i, imageLeft}) => {
 						<CharityLogo charity={charity} />
 						<div className="charity-donation">{ charity.name }</div>
 						{donationValue? <div className="charity-donation">
-							<span style={{color: '#af2009'}}><Counter currencySymbol='&pound;' value={donationValue} />&nbsp;raised</span>
+							<span style={{color: '#af2009', fontWeight: '700'}}><Counter currencySymbol='&pound;' value={donationValue} />&nbsp;raised</span>
 						</div> : null}
 						<div className="charity-description text-block" >
 							<MDText source={charity.summaryDescription || ''} />

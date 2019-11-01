@@ -19,6 +19,9 @@
 		}
 		.sub-header {
 			padding-top: 3rem!important;
+			font-size: 1.4rem;
+			text-transform: uppercase;
+			font-weight: 700;
 		}
 	}
 
@@ -72,10 +75,14 @@
 			padding: 5rem 0!important; // Give some top/bottom breathing room to card
 		}
 		.charity-description {
-			padding-top: 1rem;;
+			padding-top: 1rem;
+			p {
+				font-weight: 600;
+				font-size: medium;
+			}
+			.quote p {
+			font-weight: 500;
 		}
-		.quote {
-			font-style: italic;
 		}
 		// Charity card logo aligned and padded inside its div container, for standardisation. 
 		.logo {
@@ -86,6 +93,9 @@
 
 		// Good-Loop sub-header font for both title and donation subtitle inside charity cards.
 		h3, .charity-donation {
+			font-size: larger;
+			letter-spacing: 0.1rem;
+			font-weight: 400;
 			&:extend(.header-font);
 		}
 
@@ -213,6 +223,12 @@
 		color: #fff;
 		flex-direction: column;
 		&:extend(.header-font);
+		.advert-impact-text { // Makes summary look thinner and more stylish
+			font-weight: 600;
+			letter-spacing: 0.1em;
+			font-size: larger;
+			max-width: 600px;
+		}
 	}
 
 
