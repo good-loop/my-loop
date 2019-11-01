@@ -41,7 +41,7 @@
 		}
 	}
 	
-	#logo-container-curve {
+	#logo-container-curve { // No white curve on the navbar seen in the main site
 		display: none;
 	}
 
@@ -57,8 +57,7 @@
 		padding: 2em 0;
 	}
 
-	// Subtle box-shadow to separate important sections on the page.
-	// TODO: More elegant solution.
+	// Subtle box-shadow line to separate important sections on the page.
 	.section {
 		box-shadow: 0px 3px 2px -2px rgba(0,0,0,0.1);
 	}
@@ -74,7 +73,7 @@
 			justify-content: flex-end;
 			padding: 5rem 0!important; // Give some top/bottom breathing room to card
 		}
-		.charity-description {
+		.charity-description { // Affects style of description text
 			padding-top: 1rem;
 			p {
 				font-weight: 600;
@@ -99,7 +98,7 @@
 			&:extend(.header-font);
 		}
 
-
+		// Image and info columns. What gives us the "checkboard" design.
 		.img-col {
 			width: 50%;
 			margin: 0;
@@ -117,6 +116,8 @@
 			display: flex;
 			flex-direction: column;
 			align-items: flex-start;
+
+			// These widths and alignments allow us to mimic a boostrap container margins instead of dealing with superposed layers.
 			.inner-info-section {
 				align-self: flex-start;
 				padding: 2rem;
@@ -124,10 +125,10 @@
 				max-width: 70%;
 				width: 70%;
 			}
-			.align-right {
+			.align-right { 
 				align-self: flex-end;
 			}
-			@media (max-width: 767px) {
+			@media (max-width: 767px) { // Centred and full width white block of the cards on mobile
 				.inner-info-section {
 					max-width: 100%;
 					width: 100%;
@@ -139,26 +140,6 @@
 					}
 				}
 			}
-		}
-	}
-
-	// Size and position for the inner white card when a background photo is present. 
-	// Width gets overwritten in the media queries at the bottom for mobile.
-	.white-inner-card{
-		display: flex;
-		flex-direction: column;
-		max-width: 600px;
-		align-items: flex-end;
-		background-color: rgba(255, 255, 255, .9);
-		width: 45%;
-		text-align: right;
-		border-radius: 5px;
-		padding: 1em;
-		h3 {
-			font-size: 3rem;
-		}
-		.charity-donation {
-			font-size: 2rem;
 		}
 	}
 
@@ -178,13 +159,6 @@
 		.sub-header-font {
 			text-align: left;
 		}
-
-	}
-
-	// Hack: Chart title does not align properly, so instead we remove it and use
-	// this header superposed over the chart.
-	.breakdown-title {
-		margin-bottom: -2em;
 	}
 
 ///////// Advert Cards //////////
@@ -231,10 +205,9 @@
 		}
 	}
 
-
 	.advert-card-container {
 		background: rgb(119, 15, 0);
-		.header-font { 
+		.header-font {
 			font-size: 1.5rem;
 			&.value-highlight {
 				font-size: 2rem;
@@ -261,9 +234,6 @@
 
 ////////////////////////
 
-	rect {
-		fill: rgba(0, 0, 0, 0);
-	}
 
 ////// Media Queries Mobile ////////
 	@media (max-width: 728px) {
@@ -276,7 +246,7 @@
 			}
 		}
 
-		.pub-container {
+		.pub-container { // Stacks publishers logos on mobile
 			padding-top: 7em;
 			padding-bottom: 3em;
 			.row {

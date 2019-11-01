@@ -13,7 +13,6 @@ import MDText from '../../base/components/MDText';
 import Counter from '../../base/components/Counter';
 import Money from '../../base/data/Money';
 
-const bgColorPalette = ['#00A676', '#F7F9F9', '#E0D0C1', '#A76D60', '#4E8098', '#90C2E7']; 
 /**
  * HACK hardcode some thank you messages.
  * 
@@ -67,18 +66,12 @@ const CharityCard = ({charity, donationValue, i, imageLeft}) => {
 	let photo = charity.highResPhoto || charity.images;
 	let logo = charity.logo;
 
-	// bg colour - use palette
-	if (i===undefined) i = Math.floor(Math.random() * bgColorPalette.length);
-	let backgroundColor = charity.color || bgColorPalette[i % bgColorPalette.length];
 	let backgroundImage = photo;
 	let stockWarning = false;
 	if (!backgroundImage) {
 		backgroundImage = stockPhotos[i % stockPhotos.length];
 		stockWarning = true;
 	}
-
-	// hack: different mobile vs desktop designs -- easiest done in js than pure css
-	const isMobile = DataStore.getValue('env', 'isMobile');
 
 	return ( 
 	// 	{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
