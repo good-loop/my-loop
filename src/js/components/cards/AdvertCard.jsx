@@ -14,6 +14,10 @@ import Money from '../../base/data/Money';
 import ServerIO from '../../plumbing/ServerIO';
 import printer from '../../base/utils/printer';
 
+/**
+ * Info to the public about an ad campaign
+ * @param {Advert} advert  
+ */
 const AdvertCard = ({advert, viewCount, donationTotal, donationBreakdown, totalViewCount, isMulti}) => {
 	// let name = advert.name || advert.campaign; // hm - we can't count on these names being written for the public
 	const durationText = advert.start || advert.end ? (<>
