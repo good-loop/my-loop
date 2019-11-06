@@ -10,52 +10,12 @@
 		// Override logo size - .logo-small class makes it tiny
 		.logo-small {
 			width: 10em;
-			height: 1.666em;
+			height: 2em;
 		}
 	}
 	// Make text more readable against dark sections of the page
 	#top-right-menu, .dropdown-toggle {
 		text-shadow: 0 0 1px #000;
-	}
-}
-
-#logo-container-curve {
-	fill: white; // background; -- Weirdly this came out as pastel purple on DW's chrome July 2019
-	position: absolute;
-	left: 0;
-	top: 0;
-	width: 15em;
-	z-index: 0;
-}
-
-// The curve takes up too much space on a small screen, but the colour logo looks nasty on a variable background
-#logo-container-pill {
-	fill: white;
-	position: absolute;
-	z-index: 0;
-	top: 0.3rem; // Determined by hand tweaking, don't ask
-	left: 0.75rem; // GL logo is 1em from left at 1.25rem font size, minus 0.5rem padding
-	width: 13.5rem; // GL logo is 10em at 1.25rem font size, plus 0.5rem padding each side
-	height: 2.7rem; // 5:1 aspect
-	display: none; // only visible on small screens
-}
-
-// Shrink nav elements further on smallest screens so account menu isn't bumped to second line
-@media (max-width: 576px) {
-	// all values found by manual tweaking, feel free to refactor
-	#logo-container-pill {
-		width: 7.75rem;
-		height: 1.55rem;
-		top: 0.75rem;
-		left: 1rem;
-	}
-
-	.navbar .navbar-brand .logo-small {
-		width: 6em;
-		height: 1em;
-	}
-	.navbar .dropdown-toggle {
-		font-size: 100%; // overriding BS (intended for desktop, because we overrode the hamburger) value of 1rem
 	}
 }
 
@@ -129,18 +89,6 @@
 	.breaker {
 		font-size: 0;
 		display: block;
-	}
-}
-
-@media (max-width: 450px) { // special case 
-	.finger {
-		.spacer {
-			display: none; // don't put a leading space on the second line of eg WATCH / a 15 second video
-		}
-		.breaker {
-			display: inline;
-			font-size: 100%;
-		}
 	}
 }
 
@@ -421,7 +369,6 @@
 }
 
 
-
 @media (max-width: 768px) {
 	// shrink the overflowing logo on the ribbon for smaller screens
 	.logo-ribbon {
@@ -435,13 +382,6 @@
 			width: 27vw;
 		}
 	}
-	// Hide the white curve in the top left on smaller screens
-	#logo-container-curve {
-		display: none;
-	}
-	#logo-container-pill {
-		display: block;
-	}
 
 	.how-it-works .steps .finger {
 		max-width: unset;
@@ -452,5 +392,28 @@
 @media (max-width: 991px) { // next BS size starts at 992px
 	.make-an-impact .impact-girl {
 		height: 60%;
+	}
+}
+
+
+// Special cases for extra-tiny screens
+@media (max-width: 450px) {
+	// The "How It Works" steps need help flowing
+	.finger {
+		.spacer {
+			display: none; // don't put a leading space on the second line of eg WATCH / a 15 second video
+		}
+		.breaker {
+			display: inline;
+			font-size: 100%;
+		}
+	}
+	// Shrink nav elements further on smallest screens so account menu isn't bumped to second line
+	.navbar .navbar-brand .logo-small {
+		width: 5em;
+		height: 1em;
+	}
+	.navbar .dropdown-toggle {
+		font-size: 100%; // overriding BS (intended for desktop, because we overrode the hamburger) value of 1rem
 	}
 }

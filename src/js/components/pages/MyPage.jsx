@@ -14,7 +14,7 @@ import ShareAnAd from '../cards/ShareAnAd';
 import SignUpConnectCard from '../cards/SignUpConnectCard';
 // TODO refactor so ImpactCard is the shared module, with other bits tucked away inside it
 import RecentCampaignsCard from '../cards/RecentCampaignsCard';
-import {GlLogoGenericSvg, howItWorksCurveSVG, glLogoDefaultSvg, splitColouredCircleSVG} from '../svg';
+import {GlLogoGenericSvg, glLogoDefaultSvg, splitColouredCircleSVG} from '../svg';
 
 
 window.DEBUG = false;
@@ -40,7 +40,7 @@ const MyPage = () => {
 const SplashCard = () => {
 	return (
 		<div className='splash img-block' style={{}}>
-			<MyLoopNavBar logo='/img/new-logo-with-text.svg' backgroundColor='transparent' />
+			<MyLoopNavBar logo='/img/logo-in-pill.svg' backgroundColor='transparent' />
 			<div className="container">
 				<SignUpConnectCard className='' />
 				<div className="decorations">

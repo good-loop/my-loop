@@ -3,7 +3,6 @@ import Login from 'you-again';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Navbar, NavbarBrand } from 'reactstrap';
 // import NavBar from '../base/components/NavBar';
 import C from '../C';
-import {navBarLogoContainerSVG, navBarLogoPillSVG} from './svg';
 import {LoginLink} from '../base/components/LoginWidget';
 
 /**
@@ -18,8 +17,6 @@ const MyLoopNavBar = ({backgroundColor, logo, currentPage}) => {
 	
 	return (
 		<Navbar color={backgroundColor} fixed='top'>
-			{navBarLogoContainerSVG}
-			{navBarLogoPillSVG}
 			<NavbarBrand href="/" className="mr-auto">
 				<img src={logo || C.app.homeLogo || C.app.logo} alt='logo' className='logo-small' />
 			</NavbarBrand>
