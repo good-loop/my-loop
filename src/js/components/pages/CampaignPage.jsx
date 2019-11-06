@@ -2,7 +2,6 @@ import React from 'react';
 import Login from 'you-again';
 import _ from 'lodash';
 // import pivot from 'data-pivot';
-import { Chart } from 'react-google-charts';
 import Roles from '../../base/Roles';
 import C from '../../C';
 import ServerIO from '../../plumbing/ServerIO';
@@ -160,7 +159,6 @@ const CampaignPage = () => {
 	donationValue = donationValue.value;
 	// also the per-charity numbers
 	let donByCid = pvDonationsBreakdown.value.by_cid;
-	console.log(pvDonationsBreakdown);
 
 	let brandColor = branding.color || branding.backgroundColor;
 
@@ -197,24 +195,6 @@ const CampaignPage = () => {
 
 	const pubData = pvViewData.value;
 
-	// @Andris - for hack code like this - document the hack when you write it.
-	const mockUpLogoUrls = [
-		{
-			name: 'buzzfeed',
-			branding: { logo: 'http://www.worksdesigngroup.com.php72-34.phx1-1.websitetestlink.com/wp-content/uploads/2017/05/buzzfeed-e1515438116988.png'},
-			url: 'https://www.buzzfeed.com'
-		},
-		{
-			name: 'empire',
-			branding: { logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1l-KWl1ddiB47rGuU4qO6D_NPGGdDeB6WyM9vKLCPKSGC-stw&s'},
-			url: 'https://www.empire.com'
-		},
-		{
-			name: 'nme',
-			branding: { logo: 'https://s3.eu-central-1.amazonaws.com/centaur-wp/designweek/prod/content/uploads/2013/10/image001-1002x466.jpg'},
-			url: ''
-		}
-	];
 	// Array of publisher logos from mockup.
 	// TODO: Get proper
 	let campaignPublishers = [];
@@ -231,9 +211,6 @@ const CampaignPage = () => {
 	campaignPublishers = campaignPublishers.map(pub => <div className="pb-5 pub-div" style={{width: '33%'}}><img src={pub.branding.logo} alt={pub.name} /></div>);
 
 	// }
-	console.log(`campaign publishers`, campaignPublishers);
-
-	// publisherCards(pubData);
 
 	// Calculates total donations per charity based on percentage available, adding [donation] and [donationPercentage] to the charities object
 	const assignUnsetDonations = () => {
@@ -250,13 +227,6 @@ const CampaignPage = () => {
 			const calculatedDonation = percentage * donationValue / 100;
 			return {...e, donation: calculatedDonation, donationPercentage: percentage};
 		});
-	};
-
-	// Prepare data to be used in the Chart from charities names and donation value.
-	const chartData = () => {
-		let dataArray =[];
-		charities.forEach(char => dataArray.push([char.name, Math.floor(char.donation)]));
-		return [['Charity', 'Donation'], ...dataArray];
 	};
 
 	let charitiesById = _.uniq(_.flattenDeep(ads.map(c => c.charities.list)));
@@ -289,13 +259,6 @@ const CampaignPage = () => {
 	// TODO device a more elgant way of accomplishing this effect.
 	let imageLeft = false;
 
-	// console.log(ads);
-	// if(pubData && pubData.by_pub) console.log(pubData.by_pub.buckets);
-	// console.log(donationValue);
-	// TODO: refactor this because it's very similar now to mypage
-	// Don't do multiple pies - but group all below a certain threshold as "Other"
-	// TODO Assign unset donations - Check whether we do proportional or equal
-	// TODO Discrepancy between viewer counts - probably because some percentage unlock by clickthrough & videos list uses minview
 	return (<>
 		<CSS css={campaignPage.advanced && campaignPage.advanced.customcss} />
 		<CSS css={branding.customCss} />
@@ -324,25 +287,14 @@ const CampaignPage = () => {
 				})}
 			</div>
 
-			<div className="section pub-container d-flex column justify-content-center">
-				<div className="header-font text-center pb-5 pl-4 pr-4">This is where you might have seen our campaign</div>
-				<div className="row justify-content-around align-items-center">
-					{campaignPublishers}
-				</div>
-			</div>
-
-			{/* <div className="total-views-column">
-				<div className="d-flex align-items-center">
-					<img src={branding.logo} alt="'advertise-logo" />
-				</div>
-				<div className="align-middle d-flex align-items-center">
-					<div className="sub-header-font">
-						{isMulti? 
-							<span><span className="font-weight-bold">{printer.prettyNumber(totalViewCount)}</span><span> people watched an ad in all campaigns to unlock a donation</span></span>
-							: <span>During this campaign: </span> }
+			{ campaignPublishers.length ? 
+				<div className="section pub-container d-flex column justify-content-center">
+					<div className="header-font text-center pb-5 pl-4 pr-4">This is where you might have seen our campaign</div>
+					<div className="row justify-content-around align-items-center">
+						{campaignPublishers}
 					</div>
-				</div>
-			</div> */}
+				</div> : ''
+			}
 
 			<div className="advert-card-container clearfix  justify-content-center">
 				<div className="pt-5 pb-4 advert-section-header" style={{margin: '0 auto'}}>The {isMulti? 'Campaigns' : 'Campaign'}</div>
@@ -365,9 +317,7 @@ const CampaignPage = () => {
 }; // ./CampaignPage
 
 
-const SplashCard = ({branding, campaignPage, donationValue, totalViewCount}) => {
-	// Use background image given to adunit, or show default image of sand dune 
-	const backgroundImage = (campaignPage && campaignPage.bg) || (ServerIO.MYLOOP_ENDPONT + '/img/wheat_fields.jpg');
+const SplashCard = ({branding, donationValue}) => {
 	return (<ACard className="hero">
 		<div className='flex-row flex-centre p-1'>
 			<img className='hero-logo' src={branding.logo} alt='advertiser-logo' />

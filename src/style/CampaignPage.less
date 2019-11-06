@@ -19,6 +19,9 @@
 		}
 		.sub-header {
 			padding-top: 3rem!important;
+			font-size: 1.4rem;
+			text-transform: uppercase;
+			font-weight: 700;
 		}
 	}
 
@@ -38,7 +41,7 @@
 		}
 	}
 	
-	#logo-container-curve, #logo-container-pill {
+	#logo-container-curve, #logo-container-pill { // No white curve on the navbar seen in the main site
 		display: none !important;
 	}
 
@@ -71,8 +74,14 @@
 			justify-content: flex-end;
 			padding: 5rem 0!important; // Give some top/bottom breathing room to card
 		}
-		.charity-description {
-			padding-top: 1rem;;
+		.charity-description { // Affects style of description text
+			padding-top: 1rem;
+			p {
+				font-weight: 600;
+				font-size: medium;
+			}
+			.quote p {
+			font-weight: 500;
 		}
 		.quote {
 			font-style: italic;
@@ -86,10 +95,13 @@
 
 		// Good-Loop sub-header font for both title and donation subtitle inside charity cards.
 		h3, .charity-donation {
+			font-size: larger;
+			letter-spacing: 0.1rem;
+			font-weight: 400;
 			&:extend(.header-font);
 		}
 
-
+		// Image and info columns. What gives us the "checkboard" design.
 		.img-col {
 			width: 50%;
 			margin: 0;
@@ -107,18 +119,22 @@
 			display: flex;
 			flex-direction: column;
 			align-items: flex-start;
+
+			// These widths and alignments allow us to mimic a boostrap container margins instead of dealing with superposed layers.
 			.inner-info-section {
 				align-self: flex-start;
 				padding: 2rem;
 				text-align: left;
 				max-width: 70%;
+				width: 70%;
 			}
-			.align-right {
+			.align-right { 
 				align-self: flex-end;
 			}
-			@media (max-width: 767px) {
+			@media (max-width: 767px) { // Centred and full width white block of the cards on mobile
 				.inner-info-section {
 					max-width: 100%;
+					width: 100%;
 					align-self: center;
 					text-align: center;
 					padding: 2rem 0;
@@ -128,27 +144,7 @@
 				}
 			}
 		}
-	}
-
-	// Size and position for the inner white card when a background photo is present. 
-	// Width gets overwritten in the media queries at the bottom for mobile.
-	.white-inner-card{
-		display: flex;
-		flex-direction: column;
-		max-width: 600px;
-		align-items: flex-end;
-		background-color: rgba(255, 255, 255, .9);
-		width: 45%;
-		text-align: right;
-		border-radius: 5px;
-		padding: 1em;
-		h3 {
-			font-size: 3rem;
-		}
-		.charity-donation {
-			font-size: 2rem;
-		}
-	}
+	} // ./charity-card
 
 	.blockquote {
 		font-size: .8rem;
@@ -166,13 +162,6 @@
 		.sub-header-font {
 			text-align: left;
 		}
-
-	}
-
-	// Hack: Chart title does not align properly, so instead we remove it and use
-	// this header superposed over the chart.
-	.breakdown-title {
-		margin-bottom: -2em;
 	}
 
 ///////// Advert Cards //////////
@@ -211,12 +200,17 @@
 		color: #fff;
 		flex-direction: column;
 		&:extend(.header-font);
+		.advert-impact-text { // Makes summary look thinner and more stylish
+			font-weight: 600;
+			letter-spacing: 0.1em;
+			font-size: larger;
+			max-width: 600px;
+		}
 	}
-
 
 	.advert-card-container {
 		background: rgb(119, 15, 0);
-		.header-font { 
+		.header-font {
 			font-size: 1.5rem;
 			&.value-highlight {
 				font-size: 2rem;
@@ -243,9 +237,6 @@
 
 ////////////////////////
 
-	rect {
-		fill: rgba(0, 0, 0, 0);
-	}
 
 ////// Media Queries Mobile ////////
 	@media (max-width: 728px) {
@@ -258,15 +249,15 @@
 			}
 		}
 
-		.pub-container {
+		.pub-container { // Stacks publishers logos on mobile
 			padding-top: 7em;
 			padding-bottom: 3em;
 			.row {
 				flex-direction: column;
 			}
-			img {
-				margin-bottom: 2em;
-			}
+			// img { why extra margin??
+			// 	margin-bottom: 2em;
+			// }
 		}
 
 		// This sets the logo on top of the charity card, and aligns everything to the right.
@@ -288,7 +279,7 @@
 			.logo-div {
 				margin: 0 auto;
 			}
-			p {
+			p {	// why?
 				padding-top: 1em;
 				padding-left: 1em;
 				padding-right: 1em;

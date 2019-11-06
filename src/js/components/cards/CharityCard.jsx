@@ -13,7 +13,6 @@ import MDText from '../../base/components/MDText';
 import Counter from '../../base/components/Counter';
 import Money from '../../base/data/Money';
 
-const bgColorPalette = ['#00A676', '#F7F9F9', '#E0D0C1', '#A76D60', '#4E8098', '#90C2E7']; 
 /**
  * HACK hardcode some thank you messages.
  * 
@@ -67,9 +66,6 @@ const CharityCard = ({charity, donationValue, i, imageLeft}) => {
 	let photo = charity.highResPhoto || charity.images;
 	let logo = charity.logo;
 
-	// bg colour - use palette
-	if (i===undefined) i = Math.floor(Math.random() * bgColorPalette.length);
-	let backgroundColor = charity.color || bgColorPalette[i % bgColorPalette.length];
 	let backgroundImage = photo;
 	let stockWarning = false;
 	if (!backgroundImage) {
@@ -77,30 +73,7 @@ const CharityCard = ({charity, donationValue, i, imageLeft}) => {
 		stockWarning = true;
 	}
 
-	// hack: different mobile vs desktop designs -- easiest done in js than pure css
-	const isMobile = DataStore.getValue('env', 'isMobile');
-
-	return ( //(<ACard backgroundImage={isMobile? null : backgroundImage} backgroundColor={backgroundColor} name={cid} className="charity-card">
-		
-	// 	<div className="logo"><CharityLogo charity={charity} /></div>
-
-	// 	<div className="white-inner-card" style={backgroundImage? {} : {backgroundColor:'transparent'}}>
-	// 		<div className="charity-donation">{ charity.name }</div>
-
-	// 		{donationValue? <div className="charity-donation">
-	// 			{/* <span style={{color: '#770f00'}}><Counter currencySymbol={Money.currencySymbol(donationValue)} value={Money.value(donationValue)} /></span> */}
-	// 			<span style={{color: '#770f00'}}><Counter currencySymbol='&pound;' value={donationValue} /></span>
-	// 			<span>&nbsp;raised</span>
-	// 		</div> : null}		
-
-	// 		<div className="charity-description text-block" >
-	// 			<MDText source={charity.summaryDescription || ''} />
-	// 			{tq(charity)? <div className="quote"><MDText source={tq(charity)} /></div> : null}			
-	// 		</div>
-	// 	</div>
-
-	// 	{isMobile && photo? <img className='photo' src={photo} /> : null}
-
+	return ( 
 	// 	{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
 	// </ACard>
 		<div className="container-fluid charity-card">
@@ -113,7 +86,7 @@ const CharityCard = ({charity, donationValue, i, imageLeft}) => {
 						<CharityLogo charity={charity} />
 						<div className="charity-donation">{ charity.name }</div>
 						{donationValue? <div className="charity-donation">
-							<span style={{color: '#af2009'}}><Counter currencySymbol='&pound;' value={donationValue} />&nbsp;raised</span>
+							<span style={{color: '#af2009', fontWeight: '700'}}><Counter currencySymbol='&pound;' value={donationValue} />&nbsp;raised</span>
 						</div> : null}
 						<div className="charity-description text-block" >
 							<MDText source={charity.summaryDescription || ''} />
