@@ -115,24 +115,24 @@ const HowItWorksCard = () => {
 			<div className='steps'>
 				<div className='step-1 finger white bg-gl-red p-1'>
 					<CircleChar>1</CircleChar>
-					<div>
-						<span className='header'>WATCH</span>
-						<span className='sub-header'>&nbsp; a 15 second video </span>
+					<div className="step-desc">
+						<span className='header'>WATCH<span className="spacer">&nbsp;</span></span>
+						<span className='sub-header'>a 15 second video</span>
 					</div>
 				</div>
 				<div className='step-2 finger white bg-gl-red p-1'>
 					<CircleChar>2</CircleChar>
-					<div>
-						<span className='header'>CHOOSE</span>
-						<span className='sub-header'>&nbsp; a charity to support </span>
+					<div className="step-desc">
+						<span className='header'>CHOOSE<span className="spacer">&nbsp;</span></span>
+						<span className='sub-header'>a charity to support</span>
 					</div>
 				</div>
 				<div className='step-3 finger white p-1'>
 					<CircleChar>3</CircleChar>
-					<div>
+					<div className="step-desc">
 						<span className='header'>DONATE</span><br />
 						<span className='sub-header'>
-							50% of the advert cost<br />goes to the charity
+							50% of the advert cost<span className="breaker"> </span>goes to the charity
 						</span>
 					</div>
 				</div>

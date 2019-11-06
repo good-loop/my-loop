@@ -126,7 +126,7 @@ class MainDiv extends Component {
 				<div id={page} /* wrap in an id in case you need high-strength css rules */>
 					<Page path={path} />
 				</div>
-				<LoginWidget logo={<img src='/img/new-logo.png' style={{height: '64px'}} />} title='My Good-Loop: Raising money for Charity from adverts' services={['twitter', 'facebook']} />
+				<LoginWidget logo={<img src='/img/new-logo.svg' style={{height: '64px'}} />} title='My Good-Loop' services={['twitter', 'facebook']} />
 			</>
 		);
 	} // ./render()

@@ -17,53 +17,31 @@ html, body {
 	}
 }
 
-// .page is a medium width page with blank gutters
-.page {
-	// background-color: white;
-	// box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
-	// NB: centering copied from Bootstrap's center-block
-	// display: block;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-// Gutters on desktop
-// Defines maximum extent of content area. Rest of window will just consist of white-space
-@max-page-width: 970px;
-
-.page {
-	max-width: @max-page-width;
-}
-
-/* actually, they're all wide */
-// .widepage {
-// }
-
 .header {
 	.header-font();
-	font-size: 2.618rem; // ??
+	font-size: 2.618rem; // ?? TODO no rem sizing
 	line-height: initial;
 } 
 
 .sub-header {
 	.sub-header-font();
-	font-size: 1.618rem; // ??
+	font-size: 1.618rem; // ?? TODO no rem sizing
 }
 
 // Make blocks of text more readable
 .text-block {
 	text-align: left;
-	line-height: 1.25rem;
+	line-height: 1.25rem; // TODO no rem sizing
 	// Restrict max characters per line to < 70 or so
 	// Helps to improve readibility
-	max-width: 35rem;
+	max-width: 35rem; // TODO no!
 }
 
 // Useful in headers
 .compact-text-block {
 	.text-block();
 	line-height: initial;
-	max-width: 20rem;
+	max-width: 20rem; // TODO no!
 }
 
 .img-block-basic {

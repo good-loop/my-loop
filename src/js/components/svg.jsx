@@ -19,6 +19,12 @@ const navBarLogoContainerSVG = (
 		<path d="M0 0 H180 C 180 100 0 0 0 100Z" />
 	</svg>
 );
+/** The more compact pill-shaped container used on mobile */
+const navBarLogoPillSVG = (
+	<svg id="logo-container-pill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20">
+		<path d="M10 20 A10 10 0 0 1 10 0 L90 0 A10 10 0 0 1 90 20 Z" />
+	</svg>
+);
 // old path <path d="M100 0C100 50 0 20 0 100V0z" />
 // old viewbox 0 0 100 100
 
@@ -65,6 +71,7 @@ const splitColouredCircleSVG = (
 export {
 	howItWorksCurveSVG,
 	navBarLogoContainerSVG,
+	navBarLogoPillSVG,
 	glLogoDefaultSvg,
 	glLogoOutlineSvg,
 	GlLogoGenericSvg,

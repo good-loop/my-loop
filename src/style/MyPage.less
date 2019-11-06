@@ -27,6 +27,34 @@
 	z-index: 0;
 }
 
+// The curve takes up too much space on a small screen, but the colour logo looks nasty on a variable background
+#logo-container-pill {
+	fill: white;
+	position: absolute;
+	z-index: 0;
+	top: 0.535rem; // Determined by hand tweaking, don't ask
+	left: 0.75rem; // GL logo is 1em from left at 1.25rem font size, minus 0.5rem padding
+	width: 13.5rem; // GL logo is 10em at 1.25rem font size, plus 0.5rem padding each side
+	display: none; // only visible on small screens
+}
+
+// Shrink nav elements further on smallest screens so account menu isn't bumped to second line
+@media (max-width: 576px) {
+	// all values found by manual tweaking, feel free to refactor
+	#logo-container-pill {
+		width: 7.75rem;
+		top: 1.1rem;
+		left: 1rem;
+	}
+
+	.navbar .navbar-brand .logo-small {
+		width: 6em;
+	}
+	.navbar .dropdown-toggle {
+		font-size: 100%; // overriding BS (intended for desktop, because we overrode the hamburger) value of like 200%
+	}
+}
+
 .how-it-works {
 	overflow: hidden;
 	.bg {
@@ -89,6 +117,26 @@
 	border-radius: 2.25rem; // concentric with number circle, which has radius 2rem + 0.25rem padding from p-1 class
 	.number-circle {
 		margin: 0 1rem 0 0; // push away text to right
+	}
+	.step-desc {
+		overflow: hidden; // somehow mobile safari is allowing overflow by default instead of wrapping???
+	}
+	// fixed-position line break in step 3, conditionally converts to a space on small screens to allow natural wrapping
+	.breaker {
+		font-size: 0;
+		display: block;
+	}
+}
+
+@media (max-width: 450px) { // special case 
+	.finger {
+		.spacer {
+			display: none; // don't put a leading space on the second line of eg WATCH / a 15 second video
+		}
+		.breaker {
+			display: inline;
+			font-size: 100%;
+		}
 	}
 }
 
@@ -386,6 +434,9 @@
 	// Hide the white curve in the top left on smaller screens
 	#logo-container-curve {
 		display: none;
+	}
+	#logo-container-pill {
+		display: block;
 	}
 
 	.how-it-works .steps .finger {
