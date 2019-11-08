@@ -119,14 +119,20 @@ class MainDiv extends Component {
 			</div>);
 		}
 	
-		// TODO move NavBar in here
+		// Fleshed out title for My-Loop custom login modal design.
+		const loginWidgetTitle = (
+			<div className="text-center">
+				<span className="modal-main-title">My GOOD-LOOP</span><br />
+				<span className="modal-subtitle">Raising money for charity with adverts</span>
+			</div>
+		);
 
 		return (
 			<>
 				<div id={page} /* wrap in an id in case you need high-strength css rules */>
 					<Page path={path} />
 				</div>
-				<LoginWidget logo={<img src='/img/new-logo.svg' style={{height: '64px'}} />} title='My Good-Loop' services={['twitter', 'facebook']} />
+				<LoginWidget logo={<img src='/img/new-logo.svg' style={{height: '64px'}} />} title={loginWidgetTitle} services={['twitter', 'facebook']} />
 			</>
 		);
 	} // ./render()
