@@ -14,6 +14,9 @@
 	overflow-x: hidden; // The above line triggers an horizontal overflow in some cases, this disables that effect.
 
     border-radius: 15px;
+	border: none;
+
+	background-color: transparent; // Needed to get rid of white border around top edges
 
 	.btn-primary {
 		background: linear-gradient(#b91c08, #621208);
@@ -23,7 +26,7 @@
 
 	.modal-header {
 	background: linear-gradient(#b91c08, #621208);
-	border-radius: 15px 15px 5px 5px;
+	border-radius: 15px 15px 0px 0px;
 		#text {
 			display: none;
 		}
@@ -44,17 +47,28 @@
 	}
 
 	.modal-body {
+		background-color: #fff;
         // Combine three images for the background
         // TODO: Merge them into one for simplicity.
 		background-image: url(/img/redgirl-crop-Xflipped.svg), url(/img/flat-bg-bar.svg), url(/img/background-curve.svg);
 		background-repeat: no-repeat;
 		background-size: 15%, 100%, 37%;
 		background-position-y: bottom, 136%, 93.1%;
-		background-position-x: 95%, 0%, 100%;
+		background-position-x: 95%, 0%, 100.5%;
 		min-height: 20em; // stable height when switching between login and register
 
-		.login-guts .btn.signin {
-			box-shadow: 1px 2px 4px rgba(0, 0, 0, .2);
+		.login-guts {
+			.btn.signin {
+				box-shadow: 1px 2px 4px rgba(0, 0, 0, .2);
+			}
+			#loginByEmail {
+				.btn { // login/register buttton
+					&:hover { color: black; }
+				}
+				a { // no account and forgotten pass links
+					&:hover { color: #b91c08; }
+				}
+			}
 		}
 		.social-signin {
 			p { // made smaller to make room for GL girl
@@ -86,6 +100,7 @@
 		position: absolute;
 		right: .4em;
 		top: .2em;
+		text-shadow: none; // default has white shadow to "pop it out"
 	}
 
 	@media (max-width: 767px) { // Small fixes in mobile devices
