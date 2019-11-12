@@ -39,12 +39,13 @@ const MyPage = () => {
 
 
 const TestAd = () => {
+	// see https://console.appnexus.com/placement?id=1610003
 	if ( ! Roles.isDev()) return false;
 	return (<div>
-		<h4>Yay! You've scrolled down here -- Let's watch an ad and raise some money for charity :)</h4>
-		<script src="http://ib.adnxs.com/ttj?id=17741379&size=300x250" type="text/javascript"></script>
+		<h4>Yay! You've scrolled down here -- Let's see an ad and raise some money for charity :)</h4>
+		<script src="http://ib.adnxs.com/ttj?id=17741445&size=300x250" type="text/javascript"></script>
 	</div>);
-}
+};
 
 
 const SplashCard = () => {
