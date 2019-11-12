@@ -15,7 +15,7 @@ import SignUpConnectCard from '../cards/SignUpConnectCard';
 // TODO refactor so ImpactCard is the shared module, with other bits tucked away inside it
 import RecentCampaignsCard from '../cards/RecentCampaignsCard';
 import {GlLogoGenericSvg, glLogoDefaultSvg, splitColouredCircleSVG} from '../svg';
-
+import Roles from '../../base/Roles';
 
 window.DEBUG = false;
 
@@ -32,9 +32,19 @@ const MyPage = () => {
 			<ContactCard />
 			<TimeAndAttentionCard />
 			<Footer />
+			<TestAd />
 		</div>
 	);
 };
+
+
+const TestAd = () => {
+	if ( ! Roles.isDev()) return false;
+	return (<div>
+		<h4>Yay! You've scrolled down here -- Let's watch an ad and raise some money for charity :)</h4>
+		<script src="http://ib.adnxs.com/ttj?id=17741379&size=300x250" type="text/javascript"></script>
+	</div>);
+}
 
 
 const SplashCard = () => {
