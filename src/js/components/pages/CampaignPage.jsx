@@ -10,7 +10,7 @@ import Misc from '../../base/components/Misc';
 import ActionMan from '../../plumbing/ActionMan';
 import {ListItems} from '../../base/components/ListLoad';
 import Footer from '../Footer';
-import NavBar from '../MyLoopNavBar';
+import MyLoopNavBar from '../MyLoopNavBar';
 import Money from '../../base/data/Money';
 import CampaignPageDC from '../../data/CampaignPage';
 import SearchQuery from '../../base/searchquery';
@@ -199,16 +199,19 @@ const CampaignPage = () => {
 	// TODO: Get proper
 	let campaignPublishers = [];
 	if (pubData && pubData.by_pub) {
-		pubData.by_pub.buckets.forEach(pub => {
-			publishers.forEach(publisher => {
-				if (pub.key === publisher.name) {
-					console.log('true!', publisher);
-					campaignPublishers.push(publisher);
-				}
-			});
+		// for each bucket (ie data on a publisher this campaign ran on)
+		pubData.by_pub.buckets.forEach(pBucket => {
+			// find the publisher object which matches it
+			const pub = publishers.find(thisPub => pBucket.key === thisPub.name);
+			if (!pub) return;
+			// and render, if found
+			campaignPublishers.push(
+				<div key={pub.name} className="pb-5 pub-div d-inline-block" style={{width: '33%'}}>
+					<img src={pub.branding.logo} alt={pub.name} />
+				</div>
+			);
 		});
-	}	
-	campaignPublishers = campaignPublishers.map(pub => <div className="pb-5 pub-div" style={{width: '33%'}}><img src={pub.branding.logo} alt={pub.name} /></div>);
+	}
 
 	// }
 
@@ -255,17 +258,13 @@ const CampaignPage = () => {
 
 	assignUnsetDonations();
 
-	// We use this bit to alternate orientation of charity cards, either left or right
-	// TODO device a more elgant way of accomplishing this effect.
-	let imageLeft = false;
 
 	return (<>
-		<NavBar brandLogo={branding.logo} logo="/img/new-logo-with-text-white.svg" style={{backgroundColor: brandColor}} />
+		<MyLoopNavBar brandLogo={branding.logo} logo="/img/new-logo-with-text-white.svg" style={{backgroundColor: brandColor}} />
 		<CSS css={campaignPage.advanced && campaignPage.advanced.customcss} />
 		<CSS css={branding.customCss} />
 		<div className="widepage CampaignPage text-center">
 			<SplashCard branding={branding} campaignPage={campaignPage} donationValue={donationValue} totalViewCount={totalViewCount} />
-			
 			<div className="container-fluid" style={{backgroundColor: '#af2009'}}>
 				<div className="intro-text">
 					<span>At {vertiser.name || ads[0].name} we want to give back. We work with Good-Loop to put out Ads for Good, and donate money to charity. Together with <span className="font-weight-bold">{printer.prettyNumber(totalViewCount)}</span> people we've raised funds for the following causes and can't wait to see our positive impact go even further. See our impact below.</span>
@@ -273,22 +272,21 @@ const CampaignPage = () => {
 			</div>
 
 			<div className="charity-card-container section clearfix">
-				{charities.map( (charity, i) => {
-					imageLeft = !imageLeft;
-					return <CharityCard
+				{charities.map((charity, i) => (
+					<CharityCard
 						i={i} key={charity.id}
-						imageLeft={imageLeft}
+						imageLeft={i % 2 === 0} /* Alternate L/R/L/R */
 						charity={charity}
 						donationValue={charity.donation}
 						donationBreakdown={pvDonationsBreakdown}
-					/>;
-				})}
+					/>
+				))}
 			</div>
 
 			{ campaignPublishers.length ?
 				<div className="section pub-container d-flex justify-content-center">
 					<div className="header-font text-center pb-5 pl-4 pr-4">This is where you might have seen our campaign</div>
-					<div className="d-flex justify-content-around align-items-center">
+					<div className="text-center">
 						{campaignPublishers}
 					</div>
 				</div> : ''

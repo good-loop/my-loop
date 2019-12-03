@@ -26,7 +26,7 @@ const MyLoopNavBar = ({backgroundColor, logo, currentPage}) => {
 };
 
 const AccountMenu = ({active, logoutLink, toggleColor}) => {
-	if ( ! Login.isLoggedIn()) { 
+	if (!Login.isLoggedIn()) { 
 		return (
 			<ul id='top-right-menu' className="nav navbar-nav navbar-right">
 				<li className="login-link"><LoginLink /></li>
