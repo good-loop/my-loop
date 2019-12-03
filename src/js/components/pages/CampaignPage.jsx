@@ -264,8 +264,6 @@ const CampaignPage = () => {
 		<CSS css={branding.customCss} />
 		<div className="widepage CampaignPage text-center">
 			<NavBar brandLogo={branding.logo} logo="/img/new-logo-with-text-white.svg" style={{backgroundColor: brandColor}} />
-			<div className='avoid-navbar' />
-
 			<SplashCard branding={branding} campaignPage={campaignPage} donationValue={donationValue} totalViewCount={totalViewCount} />
 			
 			<div className="container-fluid" style={{backgroundColor: '#af2009'}}>

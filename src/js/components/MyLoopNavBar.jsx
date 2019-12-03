@@ -16,7 +16,7 @@ const MyLoopNavBar = ({backgroundColor, logo, currentPage}) => {
 	const toggleColor = '#fff';
 	
 	return (
-		<Navbar color={backgroundColor} fixed='top'>
+		<Navbar color={backgroundColor} sticky='top'>
 			<NavbarBrand href="/" className="mr-auto">
 				<img src={logo || C.app.homeLogo || C.app.logo} alt='logo' className='logo-small' />
 			</NavbarBrand>
