@@ -285,10 +285,10 @@ const CampaignPage = () => {
 				})}
 			</div>
 
-			{ campaignPublishers.length ? 
-				<div className="section pub-container d-flex column justify-content-center">
+			{ campaignPublishers.length ?
+				<div className="section pub-container d-flex justify-content-center">
 					<div className="header-font text-center pb-5 pl-4 pr-4">This is where you might have seen our campaign</div>
-					<div className="row justify-content-around align-items-center">
+					<div className="d-flex justify-content-around align-items-center">
 						{campaignPublishers}
 					</div>
 				</div> : ''
