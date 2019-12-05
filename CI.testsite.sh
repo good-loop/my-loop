@@ -9,7 +9,7 @@ DO_NOT_SYNC_LIST='/tmp/do_not_sync_list.txt'
 
 
 PROJECT='myloop'
-TARGETS=('simmons.soda.sh' 'gl-es-03.good-loop.com' 'gl-es-04.good-loop.com' 'gl-es-05.good-loop.com')
+TARGETS=('hugh.soda.sh' 'gl-es-03.good-loop.com' 'gl-es-04.good-loop.com' 'gl-es-05.good-loop.com')
 PROJECT_LOCATION="."
 TARGET_DIRECTORY='/home/winterwell/my.good-loop.com'
 IMAGE_OPTIMISE='yes'
