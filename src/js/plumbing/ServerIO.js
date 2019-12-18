@@ -92,3 +92,8 @@ ServerIO.getViewCount = (socialShareId) => {
 };
 
 ServerIO.getVertData = (vertId) => ServerIO.load(ServerIO.PORTAL_DOMAIN + '/vert/' + vertId);
+
+ServerIO.searchCharities = ({q, prefix, from, size, status, recommended, impact}) => {
+	// assMatch( q || prefix, String);
+	return ServerIO.load('https://app.sogive.org/search.json', {data: {q, prefix, from, size, status, recommended, impact}} );
+};

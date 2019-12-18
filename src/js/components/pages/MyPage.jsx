@@ -16,6 +16,7 @@ import SignUpConnectCard from '../cards/SignUpConnectCard';
 import RecentCampaignsCard from '../cards/RecentCampaignsCard';
 import {GlLogoGenericSvg, glLogoDefaultSvg, splitColouredCircleSVG} from '../svg';
 import Roles from '../../base/Roles';
+import CharityPicker from '../CharityPicker';
 
 window.DEBUG = false;
 
@@ -66,6 +67,7 @@ const SplashCard = () => {
 const ContactCard = () => {
 	return (
 		<div className='text-center'>
+			<CharityPicker />
 			<div className='sub-header top-p-1'>
 				Get in touch
 			</div>
