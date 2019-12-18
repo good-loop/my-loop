@@ -1,12 +1,14 @@
 import React from 'react';
 import Login from 'you-again';
 import _ from 'lodash';
+import { Row, Col, Container } from 'reactstrap';
 // import pivot from 'data-pivot';
 import Roles from '../../base/Roles';
 import C from '../../C';
 import ServerIO from '../../plumbing/ServerIO';
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
+import DemoPlayer from '../../base/components/DemoPlayer';
 import ActionMan from '../../plumbing/ActionMan';
 import {ListItems} from '../../base/components/ListLoad';
 import Footer from '../Footer';
@@ -60,7 +62,6 @@ const CampaignPage = () => {
 	if (vertiserid) sq = sq.setProp('vertiser', vertiserid);
 	if (via) sq = sq.setProp('via', via);
 	q = sq.query;
-	console.log("query", q);
 	const slug = DataStore.getValue('location','path', 1);
 	const all = slug==='all';
 	if ( ! q && ! all) {
@@ -77,7 +78,7 @@ const CampaignPage = () => {
 		return <Misc.Loading text='Loading campaign data...' />;
 	}
 
-	let ads = pvAds.value.hits;
+	let ads = all ? pvAds.value.hits.slice(0, 15) : pvAds.value.hits;
 
 	// No ads?!
 	if ( ! ads.length) {
@@ -202,7 +203,6 @@ const CampaignPage = () => {
 		pubData.by_pub.buckets.forEach(pub => {
 			publishers.forEach(publisher => {
 				if (pub.key === publisher.name) {
-					console.log('true!', publisher);
 					campaignPublishers.push(publisher);
 				}
 			});
@@ -295,21 +295,10 @@ const CampaignPage = () => {
 					</div>
 				</div> : ''
 			}
-
-			<div className="advert-card-container clearfix  justify-content-center">
-				<div className="pt-5 pb-4 advert-section-header" style={{margin: '0 auto'}}>The {isMulti? 'Campaigns' : 'Campaign'}</div>
-				<div className="column justify-content-center mx-auto">
-					{sampleAdFromEachCampaign().map( 
-						(ad, i) => <AdvertCard 
-							key={ad.id} 
-							i={i} 
-							advert={ad} 
-							isMulti={isMulti}
-							viewCount={viewCount(viewcount4campaign, ad)} 
-							donationTotal={donationValue}
-							totalViewCount={totalViewCount} />)}
-				</div>
-			</div>
+			<Container>
+				<br></br>
+				<DemoPlayer vertId={adid} production />
+			</Container>
 			<Footer />
 		</div>
 	</>
