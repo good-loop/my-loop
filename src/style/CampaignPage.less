@@ -12,8 +12,19 @@ body {
 	overflow-x: hidden;
 }
 
-.CampaignPage {
 
+// Note: My-Loop has nav buttons, but the navbar is transparent.
+// Whereas CampaignPage has a solid brand-coloured navbar
+#campaign .navbar {
+	background-color: @gl-red;
+	#top-right-menu {
+		a {
+			color: #fff;
+		}
+	}
+}
+
+.CampaignPage {
 	background-color: #fff!important;
 
 	.hero {
@@ -35,16 +46,7 @@ body {
 		padding: 3rem 2rem!important;
 	}
 
-	// Note: My-Loop has nav buttons, but the navbar is transparent.
-	// Whereas CampaignPage has a solid brand-coloured navbar
-	.navbar {
-		background-color: @gl-red;
-		#top-right-menu {
-			a {
-				color: #fff;
-			}
-		}
-	}
+
 
 	.btn-gl {
 		color: #fff;

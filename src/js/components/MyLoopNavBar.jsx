@@ -16,7 +16,7 @@ const MyLoopNavBar = ({backgroundColor, logo, currentPage}) => {
 	const toggleColor = '#fff';
 	
 	return (
-		<Navbar color={backgroundColor} fixed='top'>
+		<Navbar color={backgroundColor} sticky='top'>
 			<NavbarBrand href="/" className="mr-auto">
 				<img src={logo || C.app.homeLogo || C.app.logo} alt='logo' className='logo-small' />
 			</NavbarBrand>
@@ -26,7 +26,7 @@ const MyLoopNavBar = ({backgroundColor, logo, currentPage}) => {
 };
 
 const AccountMenu = ({active, logoutLink, toggleColor}) => {
-	if ( ! Login.isLoggedIn()) { 
+	if (!Login.isLoggedIn()) { 
 		return (
 			<ul id='top-right-menu' className="nav navbar-nav navbar-right">
 				<li className="login-link"><LoginLink /></li>
