@@ -26,6 +26,10 @@
 		display: flex!important;
 		margin: 0!important;
 	}
+
+	@media (max-width: 767px) {
+		width: 100%;
+	}
 }
 
 .pick-a-charity-header {
@@ -110,6 +114,9 @@
 				max-width: 11em;
 				margin: 0 auto;
 				align-self: center;
+				@media (max-width: 767px) {
+					max-width: 100%;
+				}
 			}
 		}
 	
@@ -136,10 +143,25 @@
 			color: white;
 			box-shadow: 1px 1px 3px rgba(0,0,0, .2);
 
-			user-select: none;
+			user-select: none; // Blocks double click selection of text on buttons
 			&:hover {
 				cursor: pointer;
 				background-color: #9b0000;
+			}
+		}
+
+		// Vertical layout for smaller devices.
+		@media (max-width: 767px) {
+			flex-direction: column;
+			.logo-div {
+				width: 90%;
+				margin: .5em auto;
+			}
+			.info-div {
+				width: 100%;
+				.picker-save-btn, .picker-remove-btn, .picker-login-btn {
+					align-self: center;
+				}
 			}
 		}
 	}

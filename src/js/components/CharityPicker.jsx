@@ -103,15 +103,16 @@ const SearchForm = ({from, status, query, setState, state}) => {
 
 const SearchResultCard = ({ item, CTA, onPick }) => {
 	const [isFavourite, setIsFavourite] = useState(false);
+	const xids = DataStore.getValue('data', 'Person', 'xids');
 
 	const charityName = item.displayName || item.name;
 	const charityDescription = item.summaryDescription || item.description;
 	const charityId = item['@id'];
 
-	const xids = DataStore.getValue('data', 'Person', 'xids');
-
 	useEffect(() => {
-		const savedCharities = DataStore.getValue(['data', 'Person', 'profiles'])[xids[0]].savedCharities;
+		// When the component is mounted check if the user has saved charity ids in their profile, and if the current one's among them.
+		// If the user is not logged in default to false.
+		const savedCharities = Login.isLoggedIn() ? DataStore.getValue(['data', 'Person', 'profiles'])[xids[0]].savedCharities : false;
 		const isPresent = savedCharities ? savedCharities.includes(charityId) : false;
 		setIsFavourite(isPresent);
 	}, []);
@@ -127,6 +128,7 @@ const SearchResultCard = ({ item, CTA, onPick }) => {
 		});
 	};
 
+	// Remove the current charity's id from the user's profile.
 	const removeCharity = () => {
 		let profiles = DataStore.getValue(['data', 'Person', 'profiles']);
 		xids.forEach(id => {
@@ -149,10 +151,15 @@ const SearchResultCard = ({ item, CTA, onPick }) => {
 		return saveCharityButton;
 	};
 
+	const charityLogo = () => {
+		if (item.logo) return <img className="charity-card-logo" src={item.logo || ''} alt="charity logo" />;
+		return <p>{ charityName }</p>;
+	};
+
 	return (
 		<div className={ `charity-card ${isFavourite ? 'favourite' : ''}` } key={ item.id }>
 			<div className="logo-div">
-				<img className="charity-card-logo" src={item.logo || ''} alt="charity logo" />
+				{ charityLogo() }
 			</div>
 			<div className="info-div d-flex">
 				<p>
