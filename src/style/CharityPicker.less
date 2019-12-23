@@ -90,6 +90,10 @@
 	
 		background-color: #eeeaea;
 		box-shadow: 1px 1px 3px rgba(0,0,0, .2);
+
+		&.favourite {
+			background-color: #15D2A7;
+		}
 	
 		.logo-div {
 			background-color: #fff;
@@ -97,12 +101,13 @@
 			border-radius: 5px;
 			display: flex;
 	
-			min-height: 7em;
+			height: 7em;
 			width: 33%;
 	
 			.charity-card-logo {
 				// max-width: 8em;
 				max-height: 6em;
+				max-width: 11em;
 				margin: 0 auto;
 				align-self: center;
 			}
@@ -115,9 +120,14 @@
 			justify-content: space-between;
 			text-align: left;
 			padding: 1em .5em .5em .5em;
+
+			.charity-card-name {
+				font-weight: 700;
+				color: #830000;
+			}
 		}
 	
-		.picker-save-btn, .picker-remove-btn {
+		.picker-save-btn, .picker-remove-btn, .picker-login-btn {
 			text-align: center;
 			align-self: flex-end;
 			width: 80%;
@@ -125,6 +135,8 @@
 			background-color: #830000;
 			color: white;
 			box-shadow: 1px 1px 3px rgba(0,0,0, .2);
+
+			user-select: none;
 			&:hover {
 				cursor: pointer;
 				background-color: #9b0000;

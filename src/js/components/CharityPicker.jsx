@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Container, InputGroup, InputGroupAddon, InputGroupText, Row, Form, FormGroup, Input, Label, Button } from 'reactstrap';
+import Login from 'you-again';
 
 import DataStore from '../base/plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
 import Profiler from '../base/Profiler';
 import Person from '../base/data/Person';
+import { LoginLink } from '../base/components/LoginWidget';
+
 
 const RESULTS_PER_PAGE = 10;
 
 const CharityPicker = () => {
 	const [state, setState] = useState(null);
 
-	useEffect(() => {
-		console.log(state);
-	}, [state]);
-
 	let q = DataStore.getUrlValue('q');
 	let from = DataStore.getUrlValue('from') || 0;
 	const status = DataStore.getUrlValue('status') || '';
-	let searchPager;
 
 	const charityCards = () => {
 		return state ? state.charities.map( c => <SearchResultCard item={c} /> ) : '';
@@ -44,19 +42,6 @@ const CharityPicker = () => {
 				</div> : '' }
 			</Row>
 		</Container>
-	);
-};
-
-const SearchResults = ({charities}) => {
-
-
-	return (
-		<div className="search-results-div">
-			<p>{ `Showing ${charities.length} results found` }</p>
-			<div>
-				{ charities }
-			</div>
-		</div>
 	);
 };
 
@@ -87,9 +72,10 @@ const SearchForm = ({from, status, query, setState, state}) => {
 		setValue(e.target.value);
 		searchCharity();
 	};
-	const handleSubmit = e => {
-		e.preventDefault();
-		searchCharity();
+	const handleKeyUp = e => {
+		if (e.key === 'Enter') {
+			searchCharity();
+		}
 	};
 
 	return (
@@ -102,6 +88,7 @@ const SearchForm = ({from, status, query, setState, state}) => {
 					placeholder="Search your charity..."
 					value={value.q}
 					onChange={handleChange}
+					onKeyUp={handleKeyUp}
 					className="border-right-0"
 				/>
 				<InputGroupAddon addonType="append">
@@ -119,9 +106,6 @@ const SearchResultCard = ({ item, CTA, onPick }) => {
 
 	const charityName = item.displayName || item.name;
 	const charityDescription = item.summaryDescription || item.description;
-	const charityLogo = item.logo ? 
-		<img style={{maxWidth: '100px'}} src={ item.logo } alt="charity logo" />
-		: <div className="charity-logo-placeholder">{charityName}</div>;
 	const charityId = item['@id'];
 
 	const xids = DataStore.getValue('data', 'Person', 'xids');
@@ -141,7 +125,6 @@ const SearchResultCard = ({ item, CTA, onPick }) => {
 			Person.saveProfile(profiles[id]);
 			setIsFavourite(true);
 		});
-		// profiles.forEach(profile => Person.saveProfile(profile));
 	};
 
 	const removeCharity = () => {
@@ -158,17 +141,25 @@ const SearchResultCard = ({ item, CTA, onPick }) => {
 	const saveCharityButton = <div className="picker-save-btn" onClick={saveCharity}>Add charity to your favourites</div>;
 	const removeCharityButton = <div className="picker-remove-btn" onClick={removeCharity}>Remove charity from your favourites</div>;
 
+	const cardButton = () => {
+		if (!Login.isLoggedIn()) return <LoginLink><div className="picker-login-btn">Login to save your charity!</div></LoginLink>;
+		if (isFavourite) {
+			return removeCharityButton;
+		}
+		return saveCharityButton;
+	};
+
 	return (
-		<div className="charity-card" key={ item.id }>
+		<div className={ `charity-card ${isFavourite ? 'favourite' : ''}` } key={ item.id }>
 			<div className="logo-div">
 				<img className="charity-card-logo" src={item.logo || ''} alt="charity logo" />
 			</div>
 			<div className="info-div d-flex">
 				<p>
-					<span className="charity-card-name">{charityName} </span>
+					<span className="charity-card-name">{charityName} </span><br />
 					{ charityDescription }
 				</p>
-				{ isFavourite ? removeCharityButton : saveCharityButton }
+				{ cardButton() }
 			</div>
 		</div>
 	);
