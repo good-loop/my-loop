@@ -1,0 +1,135 @@
+
+
+#charity-picker-bg {
+	background-color: #830000;
+	padding: 1em 0;
+}
+
+.charity-picker-box {
+	width: 50%;
+	background-color: #fff;
+	border-radius: 45px;
+	flex-direction: column;
+	margin: 0 auto;
+
+	&.top {
+		border-radius: 45px 45px 0 0;
+		padding: .5em .5em 0 .5em;
+	}
+
+	&.bottom {
+		border-radius: 0 0 45px 45px;
+		padding: .5em 2em 1em 2em;
+	}
+
+	.form-group {
+		display: flex!important;
+		margin: 0!important;
+	}
+}
+
+.pick-a-charity-header {
+	background-color: #830000;
+	color: #fff;
+	border-radius: 35px;
+	margin: 0 .5em;
+	text-align: start;
+	padding: 1em 2em 0.1em 2em;
+}
+
+.search-bar-div {
+	padding: .5em;
+	border-radius: 5px;
+	background-color: #830000;
+	margin-bottom: .5em;
+}
+
+#search-input {
+	&:active, &:focus {
+		outline: none!important;
+		border: none!important;
+		box-shadow: none!important;
+	}
+}
+
+.shown-results {
+	padding: .5em;
+	background-color: #eeeaea;
+	text-align: left;
+	border-radius: 5px;
+	& > p { // Results found text, align bottom-left
+		text-align: left;
+		margin-bottom: 0;
+		color: #830000;
+	}
+}
+
+.search-results-div {
+	div {
+		padding: .5em 0;
+	}
+}
+
+.charity-card-wrapper {
+	background-color: #fff;
+	padding: .3em .5em;
+	border-radius: 5px;
+
+	// Fixed height for search contents box and make it scrollable.
+	max-height: 80vh;
+	overflow: auto;
+}
+
+.shown-results {
+	.charity-card {
+		display: flex;
+		border-radius: 5px;
+		margin: .5em 0;
+		margin-bottom: .6em;
+		width: 100%;
+	
+		background-color: #eeeaea;
+		box-shadow: 1px 1px 3px rgba(0,0,0, .2);
+	
+		.logo-div {
+			background-color: #fff;
+			margin: .5em;
+			border-radius: 5px;
+			display: flex;
+	
+			min-height: 7em;
+			width: 33%;
+	
+			.charity-card-logo {
+				// max-width: 8em;
+				max-height: 6em;
+				margin: 0 auto;
+				align-self: center;
+			}
+		}
+	
+		.info-div {
+			width: 66%;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			text-align: left;
+			padding: 1em .5em .5em .5em;
+		}
+	
+		.picker-save-btn, .picker-remove-btn {
+			text-align: center;
+			align-self: flex-end;
+			width: 80%;
+			border-radius: 5px;
+			background-color: #830000;
+			color: white;
+			box-shadow: 1px 1px 3px rgba(0,0,0, .2);
+			&:hover {
+				cursor: pointer;
+				background-color: #9b0000;
+			}
+		}
+	}
+}
+
