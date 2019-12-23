@@ -78,7 +78,7 @@ const CampaignPage = () => {
 		return <Misc.Loading text='Loading campaign data...' />;
 	}
 
-	let ads = all ? pvAds.value.hits.slice(0, 15) : pvAds.value.hits;
+	let ads = all ? pvAds.value.hits.slice(0, 10) : pvAds.value.hits;
 
 	// No ads?!
 	if ( ! ads.length) {
@@ -174,6 +174,7 @@ const CampaignPage = () => {
 	// sort by date
 	campaigns.sort(sortByDate(ad => ad.end || ad.start));
 
+	console.log(`thiiiiiis is the Q: ${q}`);
 	// Get ad viewing data
 	let pvViewData = DataStore.fetch(['misc','views',q], () => {
 		// filter to these ads
