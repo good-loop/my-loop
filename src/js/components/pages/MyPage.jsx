@@ -29,6 +29,7 @@ const MyPage = () => {
 			<OurMissionCard />
 			<RecentCampaignsCard />
 			<HowItWorksCard />
+			<CharityPicker />
 			<ShareAdCard />
 			<ContactCard />
 			<TimeAndAttentionCard />
@@ -67,7 +68,6 @@ const SplashCard = () => {
 const ContactCard = () => {
 	return (
 		<div className='text-center'>
-			<CharityPicker />
 			<div className='sub-header top-p-1'>
 				Get in touch
 			</div>

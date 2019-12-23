@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Form, FormGroup, Input, Label, Button } from 'reactstrap';
+import { Container, InputGroup, InputGroupAddon, InputGroupText, Row, Form, FormGroup, Input, Label, Button } from 'reactstrap';
 
 import DataStore from '../base/plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
@@ -25,18 +25,24 @@ const CharityPicker = () => {
 	};
 
 	return (
-		<Container className="charity-picker-box">
-			<div className="pick-a-charity-header">
-				<h2>Pick a Charity</h2>
-				<p>By choosing a preferred charity, we'll automatically make donations to them on your behalf where possible.</p>
-			</div>
-			<div className="search-bar-div">
-				<SearchForm query={q} from={from} status={status} setState={setState} state={state} />
-			</div>
-			<div className="shown-results">
-				<p>{ state ? `Showing ${state ? state.charities.length : 0} results found` : '' }</p>
-				{ state ? charityCards() : '' }
-			</div>
+		<Container fluid id="charity-picker-bg">
+			<Row className="charity-picker-box top">
+				<div className="pick-a-charity-header">
+					<h2>Pick a Charity</h2>
+					<p>By choosing a preferred charity, we'll automatically make donations to them on your behalf where possible.</p>
+				</div>
+			</Row>
+			<Row className="charity-picker-box bottom">
+				<div className="search-bar-div">
+					<SearchForm query={q} from={from} status={status} setState={setState} state={state} />
+				</div>
+				{ state ? <div className="shown-results">
+					<p>{ state ? `Showing ${state ? state.charities.length : 0} results found` : '' }</p>
+					<div className="charity-card-wrapper">
+						{ state ? charityCards() : '' }
+					</div>
+				</div> : '' }
+			</Row>
 		</Container>
 	);
 };
@@ -87,19 +93,24 @@ const SearchForm = ({from, status, query, setState, state}) => {
 	};
 
 	return (
-		<Form>
-			<FormGroup>
+		<div>
+			<InputGroup>
 				<Input
-					type="test"
+					type="search"
 					name="search"
 					id="search-input"
 					placeholder="Search your charity..."
 					value={value.q}
 					onChange={handleChange}
+					className="border-right-0"
 				/>
-				<Button onClick={handleSubmit}>Submit</Button>
-			</FormGroup>
-		</Form>
+				<InputGroupAddon addonType="append">
+					<InputGroupText className="bg-white">
+						<i className="fas fa-search" />
+					</InputGroupText>
+				</InputGroupAddon>
+			</InputGroup>
+		</div>
 	);
 };
 
