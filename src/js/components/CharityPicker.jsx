@@ -57,11 +57,12 @@ const SearchForm = ({from, status, query, setState, state}) => {
 		return charities.slice(0, 10);
 	};
 
-	const searchCharity = async () => {
-		DataStore.setUrlValue('q', value);
-		DataStore.setUrlValue('from', from);
+	const searchCharity = async eventValue => {
+		// DataStore.setUrlValue('q', value);
+		// DataStore.setUrlValue('from', from);
+		console.log(eventValue);
 
-		let data = await ServerIO.searchCharities({ q: value || query, from, size: RESULTS_PER_PAGE, status });
+		let data = await ServerIO.searchCharities({ q: eventValue || value, from, size: RESULTS_PER_PAGE, status });
 		let charities = maxCharities(data.cargo.hits);
 		let total = data.cargo.total;
 		setState({ ...state, total, charities });
@@ -70,7 +71,7 @@ const SearchForm = ({from, status, query, setState, state}) => {
 
 	const handleChange = e => {
 		setValue(e.target.value);
-		searchCharity();
+		searchCharity(e.target.value);
 	};
 	const handleKeyUp = e => {
 		if (e.key === 'Enter') {
