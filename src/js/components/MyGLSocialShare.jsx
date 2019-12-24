@@ -11,7 +11,7 @@ const BaseSocialLogo = ({className='', service, style}) => (
 			className={'color-gl-red intent-link intent-link-border ' + className}
 			style={style}
 		>
-			<i className={'fa fa-2x fa-'+service} />
+			<i className={'fab fa-2x fa-'+service} />
 		</div>
 	</div>
 );

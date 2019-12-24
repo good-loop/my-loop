@@ -78,7 +78,7 @@ const CampaignPage = () => {
 		return <Misc.Loading text='Loading campaign data...' />;
 	}
 
-	let ads = all ? pvAds.value.hits.slice(0, 10) : pvAds.value.hits;
+	let ads = all && pvAds ? pvAds.value.hits.slice(0, 10) : pvAds.value.hits;
 
 	// No ads?!
 	if ( ! ads.length) {
