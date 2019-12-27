@@ -4,14 +4,13 @@
 // Then looks broken to use a darkened gl-red to indicate focus/hover
 @navbar-accent-color: unset;
 
-@import '../js/base/style/fonts.less';
-@import '../js/base/style/colours.less';
-@import '../../src/js/base/style/DemoPlayer.less';
+@import "../js/base/style/fonts.less";
+@import "../js/base/style/colours.less";
+@import "../../src/js/base/style/DemoPlayer.less";
 
 body {
 	overflow-x: hidden;
 }
-
 
 // Note: My-Loop has nav buttons, but the navbar is transparent.
 // Whereas CampaignPage has a solid brand-coloured navbar
@@ -25,7 +24,7 @@ body {
 }
 
 .CampaignPage {
-	background-color: #fff!important;
+	background-color: #fff !important;
 
 	.hero {
 		min-height: 40vh;
@@ -34,7 +33,7 @@ body {
 			max-width: 100%; // Contains image in mobile
 		}
 		.sub-header {
-			padding-top: 3rem!important;
+			padding-top: 3rem !important;
 			font-size: 1.4rem;
 			text-transform: uppercase;
 			font-weight: 700;
@@ -43,10 +42,8 @@ body {
 
 	// Hack to give breathing room to splash without changing base Component
 	.container.p-2 {
-		padding: 3rem 2rem!important;
+		padding: 3rem 2rem !important;
 	}
-
-
 
 	.btn-gl {
 		color: #fff;
@@ -63,10 +60,10 @@ body {
 	// Subtle box-shadow to separate important sections on the page.
 	// TODO: More elegant solution.
 	.section {
-		box-shadow: 0px 3px 2px -2px rgba(0,0,0,0.1);
+		box-shadow: 0px 3px 2px -2px rgba(0, 0, 0, 0.1);
 	}
 
-////////// Charity Cards /////////
+	////////// Charity Cards /////////
 	.charity-card {
 		.bg {
 			background-position: center; // Keep original focus of the photo if the card is short
@@ -75,9 +72,10 @@ body {
 		.container {
 			display: flex;
 			justify-content: flex-end;
-			padding: 5rem 0!important; // Give some top/bottom breathing room to card
+			padding: 5rem 0 !important; // Give some top/bottom breathing room to card
 		}
-		.charity-description { // Affects style of description text
+		.charity-description {
+			// Affects style of description text
 			padding-top: 1rem;
 			p {
 				font-weight: 600;
@@ -90,7 +88,7 @@ body {
 		.quote {
 			font-style: italic;
 		}
-		// Charity card logo aligned and padded inside its div container, for standardisation. 
+		// Charity card logo aligned and padded inside its div container, for standardisation.
 		.logo {
 			width: auto;
 			height: 95%;
@@ -98,7 +96,8 @@ body {
 		}
 
 		// Good-Loop sub-header font for both title and donation subtitle inside charity cards.
-		h3, .charity-donation {
+		h3,
+		.charity-donation {
 			font-size: larger;
 			letter-spacing: 0.1rem;
 			font-weight: 400;
@@ -132,10 +131,11 @@ body {
 				max-width: 70%;
 				width: 70%;
 			}
-			.align-right { 
+			.align-right {
 				align-self: flex-end;
 			}
-			@media (max-width: 767px) { // Centred and full width white block of the cards on mobile
+			@media (max-width: 767px) {
+				// Centred and full width white block of the cards on mobile
 				.inner-info-section {
 					max-width: 100%;
 					width: 100%;
@@ -151,7 +151,7 @@ body {
 	} // ./charity-card
 
 	.blockquote {
-		font-size: .8rem;
+		font-size: 0.8rem;
 	}
 
 	.pub-container {
@@ -168,142 +168,160 @@ body {
 		}
 	}
 
-///////// Advert Cards //////////
-	.advert-section-header {
-		&:extend(.header-font);
+	///////// Advert Cards //////////
+	.advert-bg {
+		background-color: #830000;
 		color: #fff;
-	}
-	.total-views-column {
-		display: flex;
-		justify-content: center;
-		padding: 4em 0; // Breathing room between top and bottom elements
-		&:extend(.sub-header-font);
-		.sub-header-font { font-size: 1.25rem; }
-		img {
-			max-width: 200px;
+
+		.advert-section-header {
+			&:extend(.header-font);
+			color: #fff;
 		}
-		// Style for the element at the top of advert-card-container
-		.align-middle {
-			max-width: 400px;
-			text-align: left;
-			padding: 1em;
+		.total-views-column {
+			display: flex;
+			justify-content: center;
+			padding: 4em 0; // Breathing room between top and bottom elements
 			&:extend(.sub-header-font);
-			p {
-				margin: 0 auto;
+			.sub-header-font {
+				font-size: 1.25rem;
 			}
-		}
-		@media (max-width:767px) {
-			align-items: center;
-			flex-direction: column;
-		}
-	}
-
-	// Adds separation line between ad cards
-	.ad-card {
-		box-shadow: 0px 3px 2px -2px rgba(0,0,0,0.1);
-		color: #fff;
-		flex-direction: column;
-		&:extend(.header-font);
-		.advert-impact-text { // Makes summary look thinner and more stylish
-			font-weight: 600;
-			letter-spacing: 0.1em;
-			font-size: larger;
-			max-width: 600px;
-		}
-	}
-
-	.advert-card-container {
-		background: rgb(119, 15, 0);
-		.header-font {
-			font-size: 1.5rem;
-			&.value-highlight {
-				font-size: 2rem;
-				font-weight: 700;
+			img {
+				max-width: 200px;
 			}
-		}
-		.value-highlight { color: @gl-orange; }
-		.sub-header-font { font-size: 1.25rem; }
-	}
-
-	// Separation between ad cards
-	.column.row {
-		box-shadow: 0px 3px 2px -2px rgba(0,0,0,0.1);
-	}
-
-	// On small devices makes thumbnail full width and forces aspect ratio for responsive behaviour.
-	@media (max-width: 481px) {
-		@ratio: 1.777777778; // 480w / 270h <-- initial size of thumbnail
-		.video-thumbnail {
-			width: 100%;
-			height: 100vw / @ratio;
-		}
-	}
-
-////////////////////////
-
-
-////// Media Queries Mobile ////////
-	@media (max-width: 728px) {
-		.ACard {
-			.container {
-				padding: 2em 0!important; 	// Forces charity card images go full bleed on mobile 
-				.img {
-					max-height: 300px;
+			// Style for the element at the top of advert-card-container
+			.align-middle {
+				max-width: 400px;
+				text-align: left;
+				padding: 1em;
+				&:extend(.sub-header-font);
+				p {
+					margin: 0 auto;
 				}
 			}
-		}
-
-		.pub-container { // Stacks publishers logos on mobile
-			padding-top: 7em;
-			padding-bottom: 3em;
-			.row {
+			@media (max-width: 767px) {
+				align-items: center;
 				flex-direction: column;
 			}
-			// img { why extra margin??
-			// 	margin-bottom: 2em;
-			// }
 		}
 
-		// This sets the logo on top of the charity card, and aligns everything to the right.
-		.charity-card {
-			.img-col {
+		.ad-sizer {
+			width: 80%;
+			margin: 0 auto;
+		}
+
+		// Adds separation line between ad cards
+		.ad-card {
+			box-shadow: 0px 3px 2px -2px rgba(0, 0, 0, 0.1);
+			color: #fff;
+			flex-direction: column;
+			&:extend(.header-font);
+			.advert-impact-text {
+				// Makes summary look thinner and more stylish
+				font-weight: 600;
+				letter-spacing: 0.1em;
+				font-size: larger;
+				max-width: 600px;
+			}
+		}
+
+		.advert-card-container {
+			background: rgb(119, 15, 0);
+			.header-font {
+				font-size: 1.5rem;
+				&.value-highlight {
+					font-size: 2rem;
+					font-weight: 700;
+				}
+			}
+			.value-highlight {
+				color: @gl-orange;
+			}
+			.sub-header-font {
+				font-size: 1.25rem;
+			}
+		}
+
+		// Separation between ad cards
+		.column.row {
+			box-shadow: 0px 3px 2px -2px rgba(0, 0, 0, 0.1);
+		}
+
+		// On small devices makes thumbnail full width and forces aspect ratio for responsive behaviour.
+		@media (max-width: 481px) {
+			@ratio: 1.777777778; // 480w / 270h <-- initial size of thumbnail
+			.video-thumbnail {
 				width: 100%;
-				height: 200px;
-			}
-			.info-col {
-				align-items: center;
-			}
-			.photo {
-				display: none; 
-			}
-			.bg {
-				// In mobile the background photo can make things hard to read, so we remove it leaving the bg colour
-				background-image: none;
-			}
-			.logo-div {
-				margin: 0 auto;
-			}
-			p {	// why?
-				padding-top: 1em;
-				padding-left: 1em;
-				padding-right: 1em;
-			}
-			.text-block {
-				width: 100%;
+				height: 100vw / @ratio;
 			}
 		}
 
-		.pub-div {
-			width: 100%!important;
-		}
+		////////////////////////
 
-		/////Ad Cards ////
+		////// Media Queries Mobile ////////
+		@media (max-width: 728px) {
+			.ACard {
+				.container {
+					padding: 2em 0 !important; // Forces charity card images go full bleed on mobile
+					.img {
+						max-height: 300px;
+					}
+				}
+			}
 
-		// Breathing room for ad cards presentation on mobile
-		.total-views-column {
-			padding-bottom: 0;
-			.align-middle {
-				padding-bottom: 4rem;
+			.pub-container {
+				// Stacks publishers logos on mobile
+				padding-top: 7em;
+				padding-bottom: 3em;
+				.row {
+					flex-direction: column;
+				}
+				// img { why extra margin??
+				// 	margin-bottom: 2em;
+				// }
+			}
+
+			// This sets the logo on top of the charity card, and aligns everything to the right.
+			.charity-card {
+				.img-col {
+					width: 100%;
+					height: 200px;
+				}
+				.info-col {
+					align-items: center;
+				}
+				.photo {
+					display: none;
+				}
+				.bg {
+					// In mobile the background photo can make things hard to read, so we remove it leaving the bg colour
+					background-image: none;
+				}
+				.logo-div {
+					margin: 0 auto;
+				}
+				p {
+					// why?
+					padding-top: 1em;
+					padding-left: 1em;
+					padding-right: 1em;
+				}
+				.text-block {
+					width: 100%;
+				}
+			}
+
+			.pub-div {
+				width: 100% !important;
+			}
+
+			/////Ad Cards ////
+
+			// Breathing room for ad cards presentation on mobile
+			.total-views-column {
+				padding-bottom: 0;
+				.align-middle {
+					padding-bottom: 4rem;
+				}
 			}
 		}
 	}

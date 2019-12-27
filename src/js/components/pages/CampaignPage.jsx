@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { memo, useEffect, createRef } from 'react';
 import Login from 'you-again';
 import _ from 'lodash';
-import { Row, Col, Container } from 'reactstrap';
-// import pivot from 'data-pivot';
+import { Container } from 'reactstrap';
+import pivot from 'data-pivot';
+
 import Roles from '../../base/Roles';
 import C from '../../C';
 import ServerIO from '../../plumbing/ServerIO';
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
-import DemoPlayer from '../../base/components/DemoPlayer';
 import ActionMan from '../../plumbing/ActionMan';
 import {ListItems} from '../../base/components/ListLoad';
 import Footer from '../Footer';
@@ -19,31 +19,37 @@ import SearchQuery from '../../base/searchquery';
 import BS from '../../base/components/BS';
 import ACard from '../cards/ACard';
 import CharityCard from '../cards/CharityCard';
-import AdvertCard from '../cards/AdvertCard';
+// import AdvertCard from '../cards/AdvertCard';
 import {sortByDate} from '../../base/utils/SortFn';
 import Counter from '../../base/components/Counter';
-import pivot from 'data-pivot';
 import printer from '../../base/utils/printer';
 import publishers from '../../data/PublisherList';
 import CSS from '../../base/components/CSS';
 
 let isMulti = false; // We'll use this for some text options, such as plurals in splash or ad cards presentation
+const tomsCampaigns = /(josh|sara|ella)/; // For matching TOMS campaign names needing special treatment
 /**
  * HACK fix campaign name changes to clean up historical campaigns
  */
 const viewCount = (viewcount4campaign, ad) => {
-	if ( ! ad.campaign) return null;
-	let vc = viewcount4campaign[ad.campaign];
-	if (vc) return vc;
+	if (!ad.campaign) return null;
 
 	// HACK TOMS?? ella / josh / sara
-	if (ad.vertiser==='bPe6TXq8') {
+	// Don't crunch down TOMS ads that aren't in the sara/ella/josh campaign group
+	if (ad.vertiser === 'bPe6TXq8' && ad.campaign.match(tomsCampaigns)) {
 		isMulti = true;
-		let keyword = ad.campaign.includes('sara')? 'sara' : ad.campaign.includes('ella')? 'ella' : 'josh';
-		let total = 0;
-		Object.keys(viewcount4campaign).filter(c => c.includes(keyword)).forEach(c => total += viewcount4campaign[c]);
-		return total;
+		let keyword = 'josh';
+		if (ad.campaign.includes('sara')) keyword = 'sara';
+		if (ad.campaign.includes('ella')) keyword = 'ella';
+		// Total views across all ads for this influencer
+		return Object.keys(viewcount4campaign).reduce((acc, cname) => {
+			return cname.includes(keyword) ? acc + viewcount4campaign[cname] : acc;
+		}, 0);
 	}
+
+
+	let vc = viewcount4campaign[ad.campaign];
+	if (vc) return vc;
 	return null;
 };
 
@@ -55,7 +61,7 @@ const viewCount = (viewcount4campaign, ad) => {
  */
 const CampaignPage = () => {
 	// What adverts should we look at?
-	let { 'gl.vert': adid, 'gl.vertiser': vertiserid, via, q='', status=C.KStatus.PUB_OR_ARC } = DataStore.getValue(['location', 'params']) || {};	
+	let { 'gl.vert': adid, 'gl.vertiser': vertiserid, via, q='', status=C.KStatus.PUB_OR_ARC } = DataStore.getValue(['location', 'params']) || {};
 	let sq = new SearchQuery(q);
 	// NB: convert url parameters into a backend ES query against the Advert.java object
 	if (adid) sq = sq.setProp('id', adid);
@@ -92,8 +98,6 @@ const CampaignPage = () => {
 	}
 	const vertiser = pvVertiser.value;
 
-	// console.log(ads)
-
 	// Combine campaign page and branding settings from all ads
 	// Last ad wins any branding settings!
 	// TODO support for agency level (and avdertiser level) branding to win through
@@ -108,18 +112,18 @@ const CampaignPage = () => {
 
 	// SoGive occasionally provides duplicated charity objects, so we check and filter them first.
 	// TODO: This check shouldn't be here, maybe SoGive can filter its stuff before sending it over?
-	const removeDuplicateCharities = arr => {
-		let ids = [];
+	// NB Used on charities and adverts
+	const uniqueIds = arr => {
+		let ids = {};
 		return arr.filter(obj => {
-			if ( ! obj || ! obj.id) return false;
-			if (ids.includes(obj.id)) return false;
-			ids.push(obj.id);
+			if (!obj || !obj.id || ids[obj.id]) return false;
+			ids[obj.id] = true;
 			return true;
 		});
 	};
 
 	// individual charity data
-	let charities = removeDuplicateCharities(_.flatten(ads.map(
+	let charities = uniqueIds(_.flatten(ads.map(
 		ad => ad.charities && ad.charities.list || []
 	)));
 	let cids = charities.map(x => x.id);
@@ -174,9 +178,8 @@ const CampaignPage = () => {
 	// sort by date
 	campaigns.sort(sortByDate(ad => ad.end || ad.start));
 
-	console.log(`thiiiiiis is the Q: ${q}`);
 	// Get ad viewing data
-	let pvViewData = DataStore.fetch(['misc','views',q], () => {
+	let pvViewData = DataStore.fetch(['misc', 'views', q], () => {
 		// filter to these ads
 		let qads = '(vert:'+ads.map(ad => ad.id).join(" OR vert:")+')';
 		let filters = {
@@ -189,11 +192,11 @@ const CampaignPage = () => {
 	});
 
 	let viewcount4campaign = {};
-	window.viewcount4campaign = viewcount4campaign;
 	if (pvViewData.value) {
 		window.pivot = pivot; // for debug
 		viewcount4campaign = pivot(pvViewData.value, "by_campaign.buckets.$bi.{key, doc_count}", "$key.$doc_count");
 	}
+
 
 	const pubData = pvViewData.value;
 
@@ -214,8 +217,6 @@ const CampaignPage = () => {
 			);
 		});
 	}
-
-	// }
 
 	// Calculates total donations per charity based on percentage available, adding [donation] and [donationPercentage] to the charities object
 	const assignUnsetDonations = () => {
@@ -244,19 +245,35 @@ const CampaignPage = () => {
 
 	// Picks one video from each campaign to display as a sample.
 	const sampleAdFromEachCampaign = () => {
-		let campaignNames = [];
-		return removeDuplicateCharities(ads).map(ad => {
-			if (!campaignNames.includes(ad.campaign) && ad.videos[0].url) { // Only those ads with a valid video. Filters out dummies.
-				campaignNames.push(ad.campaign);
-				return ad;
-			} return null;
-		}).filter(ad => ad);
+		const campaignNames = {};
+		// 1 ad per campaign, no adverts without a valid video
+		return uniqueIds(ads).filter((ad) => {
+			let cname;
+			// HACK FOR TOMS 2019 The normal code returns 5 campaigns where there are 3 synthetic campaign groups
+			// Dedupe on "only the first josh/sara/ella campaign" instead
+			if (ad.vertiser === 'bPe6TXq8' && ad.campaign.match(tomsCampaigns)) {
+				cname = ad.campaign.match(tomsCampaigns)[0];
+			} else {
+				cname = ad.campaign;
+			}
+
+			if (!campaignNames[cname] && ad.videos[0].url) {
+				campaignNames[cname] = true;
+				return true;
+			}
+			return false;
+		});
 	};
+
+	// const campaignsObject = () => {
+	// 	const campaignNames = pvViewData.value.buckets.reduce
+	// };
 
 	// Sum of the views from every ad in the campaign. We use this number for display
 	// and to pass it to the AdvertCards to calculate the money raised against the total.
-	let totalViewCount = 0;
-	sampleAdFromEachCampaign().forEach(ad => totalViewCount += viewCount(viewcount4campaign, ad));
+	let totalViewCount = sampleAdFromEachCampaign().reduce((acc, ad) => {
+		return acc + viewCount(viewcount4campaign, ad);
+	}, 0);
 
 	assignUnsetDonations();
 
@@ -269,7 +286,13 @@ const CampaignPage = () => {
 			<SplashCard branding={branding} campaignPage={campaignPage} donationValue={donationValue} totalViewCount={totalViewCount} />
 			<div className="container-fluid" style={{backgroundColor: '#af2009'}}>
 				<div className="intro-text">
-					<span>At {vertiser.name || ads[0].name} we want to give back. We work with Good-Loop to put out Ads for Good, and donate money to charity. Together with <span className="font-weight-bold">{printer.prettyNumber(totalViewCount)}</span> people we've raised funds for the following causes and can't wait to see our positive impact go even further. See our impact below.</span>
+					<span>
+						At {vertiser.name || ads[0].name} we want to give back.
+						We work with Good-Loop to put out Ads for Good, and donate money to charity.
+						Together with <span className="font-weight-bold">{printer.prettyNumber(totalViewCount)}</span> people
+						we've raised funds for the following causes and can't wait to see our positive impact go even further.
+						See our impact below.
+					</span>
 				</div>
 			</div>
 
@@ -293,9 +316,26 @@ const CampaignPage = () => {
 					</div>
 				</div> : ''
 			}
-			<Container>
+			
+			<Container fluid className="advert-bg">
 				<br></br>
-				<DemoPlayer vertId={adid} production />
+				{/* <DemoPlayer vertId={adid} production /> */}
+				<Container className="pt-5 pb-5">
+					<h4 className="sub-header-font pb-3">The campaign</h4>
+					{ sampleAdFromEachCampaign().map(
+						ad => <AdvertCard
+							ad={ad}
+							vertId={ad.id}
+							size="landscape"
+							nonce={`landscape${ad.id}`}
+							production
+
+							viewCountProp={viewCount(viewcount4campaign, ad)}
+							donationTotal={donationValue}
+							totalViewCount={totalViewCount}
+						/>
+					)}
+				</Container>
 			</Container>
 			<Footer />
 		</div>
@@ -303,6 +343,62 @@ const CampaignPage = () => {
 	);
 }; // ./CampaignPage
 
+const AdvertCard = ({ ad, viewCountProp, donationTotal, totalViewCount }) => {
+	const durationText = ad.start || ad.end ? (<>
+		This advert ran
+		{ ad.start ? <span> from {<Misc.RoughDate date={ad.start} />}</span> : null}
+		{ ad.end ? <span> to {<Misc.RoughDate date={ad.end} />}</span> : '' }
+	</>) : '';
+	const thisViewCount = viewCountProp || '';
+
+	// Money raised by ad based on viewers
+	const moneyRaised = donationTotal * (thisViewCount / totalViewCount);
+
+	return (
+		<>
+			<GoodLoopAd vertId={ad.id} size="landscape" nonce={`landscape${ad.id}`} production />
+			{Roles.isDev()? <small><a href={'https://portal.good-loop.com/#advert/'+escape(ad.id)} target='_portal'>Portal Editor</a></small> : null}
+			<div className="pt-3 pb-5 mb-2 advert-impact-text" style={{margin: '0 auto'}}>
+				<span>{printer.prettyNumber(thisViewCount)} people raised &pound;<Counter value={moneyRaised} /> by watching an ad in this campaign</span>
+			</div>
+		</>
+	);
+};
+
+const GoodLoopAd = memo(({ vertId, size, nonce, production, social, glParams = { 'gl.play': 'onclick' } }) => {
+	let prefix = '';
+	if (window.location.hostname.match(/^local/)) prefix = 'local';
+	if (window.location.hostname.match(/^test/)) prefix = 'test';
+	if (production) prefix = '';
+
+	const glUnitUrl = new URL(`https://${prefix}as.good-loop.com/unit.js`);
+	// const fullUnitUrl = glUnitUrl + (vertId ? `?gl.vert=${vertId}&gl.debug=true` : '' );
+	if (vertId) glUnitUrl.searchParams.set('gl.vert', vertId);
+	Object.entries(glParams).forEach(([key, value]) => {
+		glUnitUrl.searchParams.set(key, value);
+	});
+
+	let adContainer = createRef();
+	let script;
+
+	const createScript = () => {
+		script = document.createElement('script');
+		script.setAttribute('src', glUnitUrl);
+		script.setAttribute('key', `${nonce}-script`);
+		return script;
+	};
+
+	useEffect(() => {
+		adContainer.current.append(createScript());
+	}, [nonce]);
+
+	return (
+		<div className={`ad-sizer ${size} ${social ? 'slide-in' : ''}`} ref={adContainer} >
+			<div className="aspectifier" />
+			<div className="goodloopad" data-format={size} data-mobile-format={size} key={nonce + '-container'} />
+		</div>
+	);
+});
 
 const SplashCard = ({branding, donationValue}) => {
 	return (<ACard className="hero">

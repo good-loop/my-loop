@@ -12,7 +12,7 @@ import { LoginLink } from '../base/components/LoginWidget';
 import C from '../C';
 
 
-const RESULTS_PER_PAGE = 10;
+const RESULTS_DISPLAYED = 10;
 
 const CharityPicker = () => {
 	// TODO Should charities go in DataStore?
@@ -22,7 +22,11 @@ const CharityPicker = () => {
 	const handleChange = e => {
 		const q = e.target.value;
 		setQuery(q);
-		ServerIO.searchCharities({ q, from: 0, size: RESULTS_PER_PAGE, status: C.KStatus.PUBLISHED })
+		if (q.length === 0) { // If search bar is cleared display no charities.
+			setCharities([]);
+			return;
+		}
+		ServerIO.searchCharities({ q, from: 0, status: C.KStatus.PUBLISHED })
 			.then(({cargo}) => setCharities(cargo.hits));
 	};
 
@@ -37,7 +41,7 @@ const CharityPicker = () => {
 			<Row className="charity-picker-box bottom">
 				<InputGroup className="search-bar-div">
 					{/* class border-right-0 removes grey line between search box and addon */}
-					<Input type="search" name="search" className="border-right-0"
+					<Input id="search-input" type="search" name="search" className="border-right-0"
 						placeholder="Search by charity name or keywords"
 						value={query}
 						onChange={handleChange}
@@ -73,7 +77,7 @@ const SearchResults = ({ charities }) => {
 	return (
 		<div className="shown-results">
 			{/* Rewrite for truncated charity list / no search yet / etc*/}
-			<p>Showing {charities.length} results found</p>
+			<p>Showing {charities.length} results</p>
 			<div className="charity-card-wrapper">
 				{ charities.map(c => {
 					const isSaved = savedCharities[c['@id']];
