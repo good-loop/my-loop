@@ -110,13 +110,20 @@ const saveRemoveCharity = (cid, remove) => {
 
 
 const SearchResultCard = ({ charity, isSaved }) => {
+	const [saved, setSaved] = useState(isSaved);
 	const charityName = charity.displayName || charity.name;
 	const charityDescription = charity.summaryDescription || charity.description;
 
+	const handlePickerClick = e => {
+		const isRemoveBtn = e.target.className.includes('remove');
+		saveRemoveCharity(charity['@id'], isRemoveBtn);
+		setSaved(!saved);
+	};
+
 	const cardButton = isSaved ? (
-		<div className="picker-remove-btn" onClick={() => saveRemoveCharity(charity['@id'], true)}>Remove charity from your favourites</div>
+		<div className="picker-remove-btn" onClick={handlePickerClick}>Remove charity from your favourites</div>
 	) : (
-		<div className="picker-save-btn" onClick={() => saveRemoveCharity(charity['@id'])}>Add charity to your favourites</div>
+		<div className="picker-save-btn" onClick={handlePickerClick}>Add charity to your favourites</div>
 	);
 
 	const charityLogo = charity.logo ? (
@@ -126,7 +133,7 @@ const SearchResultCard = ({ charity, isSaved }) => {
 	);
 
 	return (
-		<div className={`charity-card ${isSaved ? 'favourite' : ''}`} key={charity.id}>
+		<div className={`charity-card ${saved ? 'favourite' : ''}`} key={charity.id}>
 			<div className="logo-div">{charityLogo}</div>
 			<div className="info-div d-flex">
 				<h5 className="charity-card-name">{charityName}</h5>
