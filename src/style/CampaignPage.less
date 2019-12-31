@@ -161,6 +161,7 @@ body {
 		padding: 7em 0;
 		img {
 			max-height: 65px;
+			max-width: 100%;
 		}
 		// Subtitle to the left
 		.sub-header-font {
@@ -205,8 +206,11 @@ body {
 		}
 
 		.ad-sizer {
-			width: 80%;
+			width: 66%;
 			margin: 0 auto;
+			@media (max-width: 767px) {
+				width: 100%;
+			}
 		}
 
 		// Adds separation line between ad cards

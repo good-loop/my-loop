@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, InputGroup, InputGroupAddon, InputGroupText, Row, Form, FormGroup, Input, Label, Button } from 'reactstrap';
 import Login from 'you-again';
-
 import _ from 'lodash';
 
 import DataStore from '../base/plumbing/DataStore';
@@ -21,6 +20,7 @@ const CharityPicker = () => {
 
 	const handleChange = e => {
 		const q = e.target.value;
+		setCharities([]);
 		setQuery(q);
 		if (q.length === 0) { // If search bar is cleared display no charities.
 			setCharities([]);
@@ -35,7 +35,7 @@ const CharityPicker = () => {
 			<Row className="charity-picker-box top">
 				<div className="pick-a-charity-header">
 					<h2>Pick a Charity</h2>
-					<p>By choosing a preferred charity, we&#39;ll automatically make donations to them on your behalf where possible.</p>
+					<p>The selected charities will be saved to your Good-Loop account and prioritised in future interactions.</p>
 				</div>
 			</Row>
 			<Row className="charity-picker-box bottom">
@@ -44,7 +44,7 @@ const CharityPicker = () => {
 					<Input id="search-input" type="search" name="search" className="border-right-0"
 						placeholder="Search by charity name or keywords"
 						value={query}
-						onChange={handleChange}
+						onChange={ _.debounce(handleChange, 300, { leading: true, trailing: false }) }
 					/>
 					<InputGroupAddon addonType="append">
 						<InputGroupText className="bg-white">
@@ -52,7 +52,7 @@ const CharityPicker = () => {
 						</InputGroupText>
 					</InputGroupAddon>
 				</InputGroup>
-				<SearchResults charities={charities} />
+				{ charities ? <SearchResults charities={charities} /> : '' }
 			</Row>
 		</Container>
 	);
@@ -63,16 +63,16 @@ const SearchResults = ({ charities }) => {
 	// but we should maybe tell them it's only saved for this browser
 	const profiles = DataStore.getValue('data', 'Person', 'profiles') || {};
 
-	const savedCharities = {};
+	let savedCharities = '';
 	Object.values(profiles).forEach(profile => {
 		/* TODO Andris' claims list has one entry with k:savedcharities and one with k:savedCharities
 		...but the one with k=savedcharities ALSO has kv:savedCharities=etc.
 		Do we crush keys down to lowercase when checking for duplicates? Should we? */
 		const scClaim = profile.claims.find(claim => claim.k === 'savedCharities');
-		const thisSavedCharities = scClaim && scClaim.v ? scClaim.v.split(',') : [];
-		thisSavedCharities.forEach(charity => savedCharities[charity] = true);
+		const thisSavedCharities = scClaim && scClaim.v ? scClaim.v : '';
+		// thisSavedCharities.forEach(charity => savedCharities[charity] = true);
+		savedCharities += thisSavedCharities;
 	});
-
 
 	return (
 		<div className="shown-results">
@@ -80,8 +80,9 @@ const SearchResults = ({ charities }) => {
 			<p>Showing {charities.length} results</p>
 			<div className="charity-card-wrapper">
 				{ charities.map(c => {
-					const isSaved = savedCharities[c['@id']];
-					return <SearchResultCard isSaved={isSaved} charity={c} />;
+					// const isSaved = savedCharities[c['@id']] !== undefined;
+					const isSaved = savedCharities.includes(c['@id']);
+					return <SearchResultCard savedCharities={savedCharities} charity={c} />;
 				})}
 			</div>
 		</div>
@@ -109,10 +110,13 @@ const saveRemoveCharity = (cid, remove) => {
 };
 
 
-const SearchResultCard = ({ charity, isSaved }) => {
-	const [saved, setSaved] = useState(isSaved);
+const SearchResultCard = ({ charity, savedCharities }) => {
+	const [saved, setSaved] = useState(false);
 	const charityName = charity.displayName || charity.name;
 	const charityDescription = charity.summaryDescription || charity.description;
+
+	const isSaved = savedCharities.includes(charity['@id']);
+	if (!saved && isSaved) setSaved(isSaved);
 
 	const handlePickerClick = e => {
 		const isRemoveBtn = e.target.className.includes('remove');
@@ -120,7 +124,7 @@ const SearchResultCard = ({ charity, isSaved }) => {
 		setSaved(!saved);
 	};
 
-	const cardButton = isSaved ? (
+	const cardButton = saved ? (
 		<div className="picker-remove-btn" onClick={handlePickerClick}>Remove charity from your favourites</div>
 	) : (
 		<div className="picker-save-btn" onClick={handlePickerClick}>Add charity to your favourites</div>

@@ -289,7 +289,7 @@ const CampaignPage = () => {
 					<span>
 						At {vertiser.name || ads[0].name} we want to give back.
 						We work with Good-Loop to put out Ads for Good, and donate money to charity.
-						Together with <span className="font-weight-bold">{printer.prettyNumber(totalViewCount)}</span> people
+						Together with <span className="font-weight-bold">{printer.prettyNumber(totalViewCount, 4)}</span> people
 						we've raised funds for the following causes and can't wait to see our positive impact go even further.
 						See our impact below.
 					</span>
@@ -320,8 +320,8 @@ const CampaignPage = () => {
 			<Container fluid className="advert-bg">
 				<br></br>
 				{/* <DemoPlayer vertId={adid} production /> */}
-				<Container className="pt-5 pb-5">
-					<h4 className="sub-header-font pb-3">The campaign</h4>
+				<Container className="pt-4 pb-5">
+					<h4 className="sub-header-font pb-4">The campaign</h4>
 					{ sampleAdFromEachCampaign().map(
 						ad => <AdvertCard
 							ad={ad}
@@ -359,7 +359,7 @@ const AdvertCard = ({ ad, viewCountProp, donationTotal, totalViewCount }) => {
 			<GoodLoopAd vertId={ad.id} size="landscape" nonce={`landscape${ad.id}`} production />
 			{Roles.isDev()? <small><a href={'https://portal.good-loop.com/#advert/'+escape(ad.id)} target='_portal'>Portal Editor</a></small> : null}
 			<div className="pt-3 pb-5 mb-2 advert-impact-text" style={{margin: '0 auto'}}>
-				<span>{printer.prettyNumber(thisViewCount)} people raised &pound;<Counter value={moneyRaised} /> by watching an ad in this campaign</span>
+				<span>{printer.prettyNumber(thisViewCount)} people raised &pound;<Counter sigFigs={4} value={moneyRaised} /> by watching an ad in this campaign</span>
 			</div>
 		</>
 	);
@@ -409,7 +409,7 @@ const SplashCard = ({branding, donationValue}) => {
 			<div>
 				<span>Together our ads for good have raised</span>
 			</div>
-			{donationValue? <div className='header' style={{color: 'black'}}>&pound;<Counter value={donationValue} minimumFractionDigits={2} /></div> : 'money'}
+			{donationValue? <div className='header' style={{color: 'black'}}>&pound;<Counter sigFigs={4} value={donationValue} minimumFractionDigits={2} /></div> : 'money'}
 		</div>
 	</ACard>);
 };
