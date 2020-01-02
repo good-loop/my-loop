@@ -9,9 +9,12 @@ import { saveProfileClaims } from '../base/Profiler';
 import Claim from '../base/data/Claim';
 import { LoginLink } from '../base/components/LoginWidget';
 import C from '../C';
+import DataClass from '../base/data/DataClass';
 
+const savingPath = ['widget', 'charityPicker', 'saving'];
+DataStore.setValue(savingPath, false);
 
-const RESULTS_DISPLAYED = 10;
+let favCharities = [];
 
 const CharityPicker = () => {
 	// TODO Should charities go in DataStore?
@@ -20,12 +23,12 @@ const CharityPicker = () => {
 
 	const handleChange = e => {
 		const q = e.target.value;
-		setCharities([]);
 		setQuery(q);
 		if (q.length === 0) { // If search bar is cleared display no charities.
 			setCharities([]);
 			return;
 		}
+		// Calls SoGive and returns appropriate list from that server.
 		ServerIO.searchCharities({ q, from: 0, status: C.KStatus.PUBLISHED })
 			.then(({cargo}) => setCharities(cargo.hits));
 	};
@@ -52,7 +55,7 @@ const CharityPicker = () => {
 						</InputGroupText>
 					</InputGroupAddon>
 				</InputGroup>
-				{ charities ? <SearchResults charities={charities} /> : '' }
+				{ charities.length ? <SearchResults charities={charities} /> : '' }
 			</Row>
 		</Container>
 	);
@@ -70,7 +73,14 @@ const SearchResults = ({ charities }) => {
 		Do we crush keys down to lowercase when checking for duplicates? Should we? */
 		const scClaim = profile.claims.find(claim => claim.k === 'savedCharities');
 		const thisSavedCharities = scClaim && scClaim.v ? scClaim.v : '';
-		// thisSavedCharities.forEach(charity => savedCharities[charity] = true);
+		
+		// If there are already charities in the profile, add them to our local array.
+		if (thisSavedCharities) {
+			thisSavedCharities.split(',').forEach(charity => {
+				favCharities.push(charity);
+			});
+		}
+
 		savedCharities += thisSavedCharities;
 	});
 
@@ -80,8 +90,6 @@ const SearchResults = ({ charities }) => {
 			<p>Showing {charities.length} results</p>
 			<div className="charity-card-wrapper">
 				{ charities.map(c => {
-					// const isSaved = savedCharities[c['@id']] !== undefined;
-					const isSaved = savedCharities.includes(c['@id']);
 					return <SearchResultCard savedCharities={savedCharities} charity={c} />;
 				})}
 			</div>
@@ -89,38 +97,51 @@ const SearchResults = ({ charities }) => {
 	);
 };
 
-const saveRemoveCharity = (cid, remove) => {
+const saveFavsToServer = () => {
+	// Grab the existing profiles, create a new Claim with appropriate data for each one
+	// and save it to back-end. We save them as claims in the profile in order to generate a full
+	// history we can store and use.
 	let profiles = DataStore.getValue(['data', 'Person', 'profiles']) || [];
 	Object.values(profiles).forEach(profile => {
-		const scClaim = profile.claims.find(claim => claim.k=== 'savedCharities');
-		let savedCharities = [];
-		if (scClaim && scClaim.v && _.isString(scClaim.v)) savedCharities = scClaim.v.split(',');
+		const claim = new Claim({
+			key: 'savedCharities',
+			value: favCharities.join(','),
+			from: 'myloop@app',
+			c: true,
+		});
 
-		const index = savedCharities.indexOf(cid);
-		if (index >= 0) {
-			if (remove) savedCharities.splice(index, 1);
-		} else if (!remove) {
-			savedCharities.push(cid);
-		}
-
-		// const newProfile = { ...profiles, savedCharities: savedCharities.join(',') };
-		// Person.saveProfile(newProfile);
-		saveProfileClaims(profile.id, [new Claim({key: 'savedCharities', value: savedCharities.join(','), from: 'myloop@app', c: true})]);
+		saveProfileClaims(profile.id, [claim]);
 	});
 };
 
+const saveRemoveFavCharity = (cid, remove) => {
+	if (remove) favCharities = favCharities.filter(e => e !== cid);
+	else favCharities.push(cid);
+	// We use Set to remove any possible duplicate. Extra safe.
+	const favCharitiesSet = new Set(favCharities);
+	favCharities = Array.from(favCharitiesSet);
+	saveFavsToServer();
+};
 
 const SearchResultCard = ({ charity, savedCharities }) => {
 	const [saved, setSaved] = useState(false);
 	const charityName = charity.displayName || charity.name;
 	const charityDescription = charity.summaryDescription || charity.description;
 
-	const isSaved = savedCharities.includes(charity['@id']);
-	if (!saved && isSaved) setSaved(isSaved);
+	const checkIfSaved = () => {
+		const isSaved = savedCharities.includes(charity['@id']);
+		if (!saved && isSaved) setSaved(isSaved);
+	};
 
-	const handlePickerClick = e => {
+	// Only runs first time component is mounted.
+	useEffect(() => {
+		checkIfSaved();
+	}, []);
+
+	const handlePickerClick = async e => {
+		if (DataStore.getValue(savingPath)) return;
 		const isRemoveBtn = e.target.className.includes('remove');
-		saveRemoveCharity(charity['@id'], isRemoveBtn);
+		saveRemoveFavCharity(charity['@id'], isRemoveBtn);
 		setSaved(!saved);
 	};
 
