@@ -355,13 +355,13 @@ const AdvertCard = ({ ad, viewCountProp, donationTotal, totalViewCount }) => {
 	const moneyRaised = donationTotal * (thisViewCount / totalViewCount);
 
 	return (
-		<>
+		<div className="ad-card">
 			<GoodLoopAd vertId={ad.id} size="landscape" nonce={`landscape${ad.id}`} production />
 			{Roles.isDev()? <small><a href={'https://portal.good-loop.com/#advert/'+escape(ad.id)} target='_portal'>Portal Editor</a></small> : null}
 			<div className="pt-3 pb-5 mb-2 advert-impact-text" style={{margin: '0 auto'}}>
 				<span>{printer.prettyNumber(thisViewCount)} people raised &pound;<Counter sigFigs={4} value={moneyRaised} /> by watching an ad in this campaign</span>
 			</div>
-		</>
+		</div>
 	);
 };
 
