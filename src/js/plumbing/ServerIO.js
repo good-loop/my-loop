@@ -97,3 +97,5 @@ ServerIO.searchCharities = ({q, prefix, from, size, status, recommended, impact}
 	// assMatch( q || prefix, String);
 	return ServerIO.load('https://app.sogive.org/search.json', {data: {q, prefix, from, size, status, recommended, impact}} );
 };
+
+ServerIO.getCharity = ({id}) => ServerIO.load(`https://app.sogive.org/charity/${id}.json`);

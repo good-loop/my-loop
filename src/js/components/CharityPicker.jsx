@@ -1,155 +1,168 @@
 import React, { useState, useEffect } from 'react';
-import { Container, InputGroup, InputGroupAddon, InputGroupText, Row, Form, FormGroup, Input, Label, Button } from 'reactstrap';
-import Login from 'you-again';
+import { Container, Input } from 'reactstrap';
 import _ from 'lodash';
 
 import DataStore from '../base/plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
 import { saveProfileClaims } from '../base/Profiler';
 import Claim from '../base/data/Claim';
-import { LoginLink } from '../base/components/LoginWidget';
 import C from '../C';
-import DataClass from '../base/data/DataClass';
 
 const savingPath = ['widget', 'charityPicker', 'saving'];
 DataStore.setValue(savingPath, false);
 
-let favCharities = [];
-
 const CharityPicker = () => {
 	// TODO Should charities go in DataStore?
-	const [charities, setCharities] = useState([]);
-	const [query, setQuery] = useState('');
+	const [savedCharities, setSavedCharities] = useState([]);
+	const [showSearch, setShowSearch] = useState(false);
 
-	const handleChange = e => {
-		const q = e.target.value;
-		setQuery(q);
-		if (q.length === 0) { // If search bar is cleared display no charities.
-			setCharities([]);
-			return;
-		}
-		// Calls SoGive and returns appropriate list from that server.
-		ServerIO.searchCharities({ q, from: 0, status: C.KStatus.PUBLISHED })
-			.then(({cargo}) => setCharities(cargo.hits));
+	const retrieveSavedCharities = () => {
+		const profiles = DataStore.getValue('data', 'Person', 'profiles');
+		
+		let charityIdSet = {};
+		Object.values(profiles).forEach(profile => {
+			const scClaim = profile.claims.find(claim => claim.k === 'savedCharities');
+			const thisSavedCharities = (scClaim && scClaim.v) ? scClaim.v : '';
+			thisSavedCharities.split(',').forEach(cid => charityIdSet[cid] = true);
+		});
+
+		let charityObjs = [];
+		let idsNotFetched = Object.keys(charityIdSet); // Strike off each ID as we get a charity from the server...
+		Object.keys(charityIdSet).forEach(id => {
+			ServerIO.getCharity({id})
+				.then(({cargo}) => charityObjs.push(cargo))
+				.always(() => {
+					// ...Once all charities on the list have been fetched (or failed), update this component
+					idsNotFetched.splice(idsNotFetched.indexOf(id), 1);
+					if (idsNotFetched.length === 0) setSavedCharities(charityObjs);
+				});
+		});
 	};
 
+	/** Function to save or unsave the charity specified by cid */
+	const setSavedCharity = ({charity, remove}) => {
+		const newSavedCharities = remove ? savedCharities.filter(c => c['@id'] !== charity['@id']) : savedCharities.concat(charity);
+		const newSavedIds = _.uniq(newSavedCharities.map(c => c['@id']));
+
+		const newSavedClaim = new Claim({
+			key: 'savedCharities',
+			value: newSavedIds.join(','),
+			from: 'myloop@app',
+			c: true,
+		});
+		// Grab the existing profiles, create a new Claim with appropriate data for each one
+		// and save it to back-end. We save them as claims in the profile in order to generate a full
+		// history we can store and use.
+		let profiles = DataStore.getValue(['data', 'Person', 'profiles']) || [];
+		let xidsToUpdate = Object.keys(profiles);
+		console.log(`this are the xids`, profiles);
+		const promises = saveProfileClaims(xidsToUpdate, [newSavedClaim]);
+		// update each profile when the server responds
+		promises.forEach(promise => {
+			promise.then(response => console.log('response for profile update:', response));
+		});
+		// TODO See useEffect below - if this component is bound to user profile, we won't need to do this
+		setSavedCharities(newSavedCharities);
+	};
+
+	// TODO Bind this component to the user profile so we get full saved charity data when it's ready
+	useEffect(() => {
+		setTimeout(() => retrieveSavedCharities(), 800);
+	}, []);
+
+	const headerContents = savedCharities.length ? <>
+		<h2>Your Saved Charities</h2>
+		<p>These charities will be prioritised in future interactions.</p>
+	</> : <>
+		<h2>Pick a Charity</h2>
+		<p>The selected charities will be saved to your Good-Loop account and prioritised in future interactions.</p>
+	</>;
+
+	const showSearchButton = (savedCharities.length && !showSearch) ? (
+		<div className="add-charities-btn" role="button" onClick={() => setShowSearch(true)}>Add more charities</div>
+	) : null;
+
+	const search = (showSearch || savedCharities.length === 0) ? (
+		<CharitySearch savedCharities={savedCharities} setSaved={setSavedCharity} />
+	) : null;
+	
 	return (
-		<Container fluid id="charity-picker-bg">
-			<Row className="charity-picker-box top">
-				<div className="pick-a-charity-header">
-					<h2>Pick a Charity</h2>
-					<p>The selected charities will be saved to your Good-Loop account and prioritised in future interactions.</p>
+		<div id="charity-picker">
+			<Container className="charity-picker-inner">
+				<div className="charity-picker-header">
+					{headerContents}
 				</div>
-			</Row>
-			<Row className="charity-picker-box bottom">
-				<InputGroup className="search-bar-div">
-					{/* class border-right-0 removes grey line between search box and addon */}
-					<Input id="search-input" type="search" name="search" className="border-right-0"
-						placeholder="Search by charity name or keywords"
-						value={query}
-						onChange={ _.debounce(handleChange, 300, { leading: true, trailing: false }) }
-					/>
-					<InputGroupAddon addonType="append">
-						<InputGroupText className="bg-white">
-							<i className="fas fa-search" />
-						</InputGroupText>
-					</InputGroupAddon>
-				</InputGroup>
-				{ charities.length ? <SearchResults charities={charities} /> : '' }
-			</Row>
-		</Container>
-	);
-};
-
-const SearchResults = ({ charities }) => {
-	// TODO We can assign saved charities to a @trk ID if the user isn't logged in,
-	// but we should maybe tell them it's only saved for this browser
-	const profiles = DataStore.getValue('data', 'Person', 'profiles') || {};
-
-	let savedCharities = '';
-	Object.values(profiles).forEach(profile => {
-		/* TODO Andris' claims list has one entry with k:savedcharities and one with k:savedCharities
-		...but the one with k=savedcharities ALSO has kv:savedCharities=etc.
-		Do we crush keys down to lowercase when checking for duplicates? Should we? */
-		const scClaim = profile.claims.find(claim => claim.k === 'savedCharities');
-		const thisSavedCharities = scClaim && scClaim.v ? scClaim.v : '';
-		
-		// If there are already charities in the profile, add them to our local array.
-		if (thisSavedCharities) {
-			thisSavedCharities.split(',').forEach(charity => {
-				favCharities.push(charity);
-			});
-		}
-
-		savedCharities += thisSavedCharities;
-	});
-
-	return (
-		<div className="shown-results">
-			{/* Rewrite for truncated charity list / no search yet / etc*/}
-			<p>Showing {charities.length} results</p>
-			<div className="charity-card-wrapper">
-				{ charities.map(c => {
-					return <SearchResultCard savedCharities={savedCharities} charity={c} />;
-				})}
-			</div>
+				<div className="saved-charities">
+					{savedCharities.map(c => <SearchResultCard charity={c} isSaved setSaved={setSavedCharity} />)}
+				</div>
+				{showSearchButton}
+				{search}
+			</Container>
 		</div>
 	);
 };
 
-const saveFavsToServer = () => {
-	// Grab the existing profiles, create a new Claim with appropriate data for each one
-	// and save it to back-end. We save them as claims in the profile in order to generate a full
-	// history we can store and use.
-	let profiles = DataStore.getValue(['data', 'Person', 'profiles']) || [];
-	Object.values(profiles).forEach(profile => {
-		const claim = new Claim({
-			key: 'savedCharities',
-			value: favCharities.join(','),
-			from: 'myloop@app',
-			c: true,
-		});
+const CharitySearch = ({savedCharities, setSaved}) => {
+	const [query, setQuery] = useState('');
+	const [result, setResult] = useState([]);
 
-		saveProfileClaims(profile.id, [claim]);
-	});
+	const savedCharityIds = savedCharities.map(c => c['@id']);
+
+	const onQueryChange = e => {
+		const q = e.target.value;
+		setQuery(q);
+		if (q.length === 0) { // If search bar is cleared display no charities.
+			setResult([]);
+			return;
+		}
+		// Pull out IDs of saved charities for use below
+		
+		// Calls SoGive and returns appropriate list from that server.
+		ServerIO.searchCharities({ q, from: 0, status: C.KStatus.PUBLISHED })
+			.then(({cargo}) => {
+				// Only show charities not already saved
+				const chars = cargo.hits.filter(c => !savedCharityIds.includes(c['@id']));
+				setResult(chars);
+			});
+	};
+
+	const resultsPlural = (result.length === 1) ? 'result' : 'results';
+
+	return <>
+		<div className="search-bar">
+			{/* class border-right-0 removes grey line between search box and addon */}
+			<div className="search-input-container">
+				<Input className="search-input" type="search" name="search"
+					placeholder="Search by charity name or keywords"
+					value={query}
+					onChange={ _.debounce(onQueryChange, 300, { leading: true, trailing: false }) }
+				/>
+				<i className="fas fa-search search-icon" />
+			</div>
+
+		</div>
+		<div className="search-results">
+			{/* Rewrite for truncated charity list / no search yet / etc*/}
+			<p>Showing {result.length} {resultsPlural}</p>
+			<div className="charity-card-wrapper">
+				{result.map(c => {
+					const isSaved = savedCharityIds.includes(c['@id']);
+					return isSaved ? '' : <SearchResultCard charity={c} isSaved={isSaved} setSaved={setSaved} />;
+				})}
+			</div>
+		</div>
+	</>;
 };
 
-const saveRemoveFavCharity = (cid, remove) => {
-	if (remove) favCharities = favCharities.filter(e => e !== cid);
-	else favCharities.push(cid);
-	// We use Set to remove any possible duplicate. Extra safe.
-	const favCharitiesSet = new Set(favCharities);
-	favCharities = Array.from(favCharitiesSet);
-	saveFavsToServer();
-};
 
-const SearchResultCard = ({ charity, savedCharities }) => {
-	const [saved, setSaved] = useState(false);
+const SearchResultCard = ({ charity, isSaved, setSaved }) => {
 	const charityName = charity.displayName || charity.name;
 	const charityDescription = charity.summaryDescription || charity.description;
 
-	const checkIfSaved = () => {
-		const isSaved = savedCharities.includes(charity['@id']);
-		if (!saved && isSaved) setSaved(isSaved);
-	};
-
-	// Only runs first time component is mounted.
-	useEffect(() => {
-		checkIfSaved();
-	}, []);
-
-	const handlePickerClick = async e => {
-		if (DataStore.getValue(savingPath)) return;
-		const isRemoveBtn = e.target.className.includes('remove');
-		saveRemoveFavCharity(charity['@id'], isRemoveBtn);
-		setSaved(!saved);
-	};
-
-	const cardButton = saved ? (
-		<div className="picker-remove-btn" onClick={handlePickerClick}>Remove charity from your favourites</div>
-	) : (
-		<div className="picker-save-btn" onClick={handlePickerClick}>Add charity to your favourites</div>
-	);
+	// Props for the save/remove button
+	const disabled = DataStore.getValue(savingPath);
+	const onClick = () => setSaved({charity, remove: isSaved});
+	const buttonLabel = (isSaved ? 'Remove charity from' : 'Add charity to') + ' your favourites';
 
 	const charityLogo = charity.logo ? (
 		<img className="charity-card-logo" src={charity.logo || ''} alt="charity logo" />
@@ -158,12 +171,12 @@ const SearchResultCard = ({ charity, savedCharities }) => {
 	);
 
 	return (
-		<div className={`charity-card ${saved ? 'favourite' : ''}`} key={charity.id}>
+		<div className={`charity-card ${isSaved ? 'favourite' : ''}`} key={charity.id}>
 			<div className="logo-div">{charityLogo}</div>
 			<div className="info-div d-flex">
 				<h5 className="charity-card-name">{charityName}</h5>
 				<p>{charityDescription}</p>
-				{cardButton}
+				<div role="button" className="save-remove-btn" disabled={disabled} onClick={onClick}>{buttonLabel}</div>
 			</div>
 		</div>
 	);

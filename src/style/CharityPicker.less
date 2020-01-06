@@ -1,98 +1,92 @@
 
 
-#charity-picker-bg {
+#charity-picker {
 	background-color: #830000;
 	padding: 1em 0;
-}
 
-.charity-picker-box {
-	width: 50%;
-	background-color: #fff;
-	border-radius: 45px;
-	flex-direction: column;
-	margin: 0 auto;
-
-	&.top {
-		border-radius: 45px 45px 0 0;
-		padding: .5em .5em 0 .5em;
+	.charity-picker-inner {
+		border-radius: 45px;
+		background-color: white;
+		border: 1px solid transparent; // Prevent margin collapse with header
+		padding-bottom: 5px;
 	}
 
-	&.bottom {
-		border-radius: 0 0 45px 45px;
-		padding: .5em 2em 1em 2em;
+	.charity-picker-header {
+		background-color: #830000;
+		color: #fff;
+		border-radius: 35px;
+		margin: 10px -5px; // horizontal: counteract 15px padding on container
+		text-align: start;
+		padding: 1em 2em 0.1em 2em;
 	}
 
-	.form-group {
-		display: flex!important;
-		margin: 0!important;
+	.search-bar, .search-results {
+		margin: 0.5em 1em;
+		border-radius: 5px;
+		padding: .5em;
 	}
 
-	@media (max-width: 767px) {
+	.search-bar {
+		background-color: #830000;
+	}
+
+	.search-results {
+		background-color: #eeeaea;
+		text-align: left;
+		& > p { // Results found text, align bottom-left
+			text-align: left;
+			margin-bottom: 0;
+			color: #830000;
+		}
+	}
+
+	.search-input-container {
+		position: relative; // allow icon to position itself against this
 		width: 100%;
 	}
-}
 
-.pick-a-charity-header {
-	background-color: #830000;
-	color: #fff;
-	border-radius: 35px;
-	margin: 0 .5em;
-	text-align: start;
-	padding: 1em 2em 0.1em 2em;
-}
+	/* clears the 'X' from Chrome */
+	input[type="search"]::-webkit-search-decoration,
+	input[type="search"]::-webkit-search-cancel-button,
+	input[type="search"]::-webkit-search-results-button,
+	input[type="search"]::-webkit-search-results-decoration { display: none; }
 
-.search-bar-div {
-	padding: .5em;
-	border-radius: 5px;
-	background-color: #830000;
-	margin-bottom: .5em;
-}
-
-
-// Removes Bootstrap's weird blue styling arpund focused input elements.
-#search-input {
-	&:active, &:focus {
-		outline: none!important;
-		border: none!important;
-		box-shadow: none!important;
+	.search-input {
+		width: 100%;
 	}
-}
 
-.shown-results {
-	padding: .5em;
-	background-color: #eeeaea;
-	text-align: left;
-	border-radius: 5px;
-	& > p { // Results found text, align bottom-left
-		text-align: left;
-		margin-bottom: 0;
-		color: #830000;
+	// Put the search/magnifying glass icon in the right side of the input box
+	.search-icon {
+		position: absolute;
+		right: 0.5em;
+		top: 50%;
+		transform: translateY(-50%);
 	}
-}
 
-.search-results-div {
-	div {
+	.add-charities-btn {
+		margin: 1.5em auto;
+		align-self: center;
+		width: 14em;
+		text-align: center;
+		border: 1px solid black;
 		padding: .5em 0;
+		font-size: 1.2em;
+		color: white;
+		background-color: #830000;
+		border-radius: 5px;
+		font-family: 'Montserrat', sans-serif;
+		font-weight: 600;
 	}
-}
+	
+	// Match width of saved charities (displayed outside search box) to search box
+	.saved-charities .charity-card {
+		margin: 0.5em 1em;
+	}
 
-.charity-card-wrapper {
-	background-color: #fff;
-	padding: .3em .5em;
-	border-radius: 5px;
-
-	// Fixed height for search contents box and make it scrollable.
-	max-height: 25em;
-	overflow: auto;
-}
-
-.shown-results {
 	.charity-card {
 		display: flex;
 		border-radius: 5px;
 		margin: .5em 0;
-		margin-bottom: .6em;
-		width: 100%;
 	
 		background-color: #eeeaea;
 		box-shadow: 1px 1px 3px rgba(0,0,0, .2);
@@ -106,9 +100,17 @@
 			margin: .5em;
 			border-radius: 5px;
 			display: flex;
+			align-items: center;
+			justify-content: center;
 	
 			height: 7em;
 			width: 33%;
+
+			& > p {
+				font-size: 1.2em;
+				font-weight: 600;
+				max-width: 80%;
+			}
 	
 			.charity-card-logo {
 				// max-width: 8em;
@@ -140,7 +142,7 @@
 			}
 		}
 	
-		.picker-save-btn, .picker-remove-btn, .picker-login-btn {
+		.save-remove-btn, .picker-login-btn {
 			text-align: center;
 			align-self: flex-end;
 			width: 80%;
@@ -171,5 +173,25 @@
 			}
 		}
 	}
+}
+
+
+// Removes Bootstrap's weird blue styling arpund focused input elements.
+.search-input {
+	&:active, &:focus {
+		outline: none!important;
+		border: none!important;
+		box-shadow: none!important;
+	}
+}
+
+.charity-card-wrapper {
+	background-color: #fff;
+	padding: .3em .5em;
+	border-radius: 5px;
+
+	// Fixed height for search contents box and make it scrollable.
+	max-height: 25em;
+	overflow: auto;
 }
 
