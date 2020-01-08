@@ -60,6 +60,10 @@ const viewCount = (viewcount4campaign, ad) => {
  * Split: branding - a vertiser ID, vs ad-params
  */
 const CampaignPage = () => {
+	// If true we'll change the layout slightly, positioning the advert video on top.
+	const isLanding = DataStore.getValue(['location', 'params']).landing === 'true'; // Super hacky but the '#' in our URLS messes up cleaner ways of doing this.
+	console.log(isLanding);
+
 	// What adverts should we look at?
 	let { 'gl.vert': adid, 'gl.vertiser': vertiserid, via, q='', status=C.KStatus.PUB_OR_ARC } = DataStore.getValue(['location', 'params']) || {};
 	let sq = new SearchQuery(q);
@@ -283,7 +287,7 @@ const CampaignPage = () => {
 		<CSS css={campaignPage.advanced && campaignPage.advanced.customcss} />
 		<CSS css={branding.customCss} />
 		<div className="widepage CampaignPage text-center">
-			<SplashCard branding={branding} campaignPage={campaignPage} donationValue={donationValue} totalViewCount={totalViewCount} />
+			<SplashCard branding={branding} campaignPage={campaignPage} donationValue={donationValue} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
 			<div className="container-fluid" style={{backgroundColor: '#af2009'}}>
 				<div className="intro-text">
 					<span>
@@ -317,26 +321,27 @@ const CampaignPage = () => {
 				</div> : ''
 			}
 			
-			<Container fluid className="advert-bg">
-				<br></br>
-				{/* <DemoPlayer vertId={adid} production /> */}
-				<Container className="pt-4 pb-5">
-					<h4 className="sub-header-font pb-4">The campaign</h4>
-					{ sampleAdFromEachCampaign().map(
-						ad => <AdvertCard
-							ad={ad}
-							vertId={ad.id}
-							size="landscape"
-							nonce={`landscape${ad.id}`}
-							production
+			{ isLanding ? '' : 
+				<Container fluid className="advert-bg">
+					<br></br>
+					{/* <DemoPlayer vertId={adid} production /> */}
+					<Container className="pt-4 pb-5">
+						<h4 className="sub-header-font pb-4">The campaign</h4>
+						{ sampleAdFromEachCampaign().map(
+							ad => <AdvertCard
+								ad={ad}
+								vertId={ad.id}
+								size="landscape"
+								nonce={`landscape${ad.id}`}
+								production
 
-							viewCountProp={viewCount(viewcount4campaign, ad)}
-							donationTotal={donationValue}
-							totalViewCount={totalViewCount}
-						/>
-					)}
-				</Container>
-			</Container>
+								viewCountProp={viewCount(viewcount4campaign, ad)}
+								donationTotal={donationValue}
+								totalViewCount={totalViewCount}
+							/>
+						)}
+					</Container>
+				</Container> }
 			<Footer />
 		</div>
 	</>
@@ -400,11 +405,14 @@ const GoodLoopAd = memo(({ vertId, size, nonce, production, social, glParams = {
 	);
 });
 
-const SplashCard = ({branding, donationValue}) => {
+const SplashCard = ({ branding, donationValue, adId, landing }) => {
 	return (<ACard className="hero">
 		<div className='flex-row flex-centre p-1'>
 			<img className='hero-logo' src={branding.logo} alt='advertiser-logo' />
 		</div>
+		{ landing ? <div className="top-advert-player">
+			<GoodLoopAd vertId={adId} size="landscape" nonce={`landscape${adId}`} production />
+		</div> : '' }
 		<div className='sub-header p-1'>
 			<div>
 				<span>Together our ads for good have raised</span>

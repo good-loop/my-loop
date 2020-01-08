@@ -28,8 +28,9 @@ const ShareAnAd = ({adid, className, color}) => {
 	// No viewing history provided? Grab a random ad from the server to showcase.
 	if ( ! adid) {
 		const unitJsonPv = DataStore.fetch(['widget', 'exampleVert', 'unitJson'], () => (
-			ServerIO.load(ServerIO.AS_ENDPOINT + '/unit.json', {swallow:true})
+			ServerIO.load(ServerIO.AS_ENDPOINT + '/unit.json?gl.status=PUBLISHED', {swallow:true})
 		));
+		console.log(`Promise from server load here: `, unitJsonPv);
 
 		if (unitJsonPv.value) {
 			if (unitJsonPv.value.vert) {
@@ -41,7 +42,7 @@ const ShareAnAd = ({adid, className, color}) => {
 	}
 
 	return (
-		<div className={"ShareAd " + className}>
+		<div className={"ShareAd mt-5 mb-3 " + className}>
 			{adid ? (<>
 				<div className="unit">
 					{ runVert ? ( // Only mount the adunit if the user has clicked to show it
@@ -67,19 +68,19 @@ const ShareAnAd = ({adid, className, color}) => {
 const CampaignPageLinks = ({color, vert}) => {
 	const url = window.location.origin+'/#campaign/?gl.vert='+escape(vert);
 	return (
-		<div className='text-center'>
+		<div className='text-center mt-3'>
 			<h3 className='sub-header'>Share this ad on social media</h3>
 			<IntentLink
 				service='twitter'
 				text='I just gave to charity by watching a GoodLoop ad'
 				url={url}
-				style={{color}}
+				style={{color, margin: '0 1em'}}
 			/>
 			<IntentLink
 				service='facebook'
 				text='I just gave to charity by watching a GoodLoop ad'
 				url={url}
-				style={{color}}
+				style={{color, margin: '0 1em'}}
 			/>
 		</div>);
 };

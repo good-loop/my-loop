@@ -192,6 +192,7 @@ const ShareAdCard = () => {
 	let pvLastAd = DataStore.fetch(['misc', 'lastAd', JSON.stringify(trkIds)], () => {
 		// Fetch ad-history for all known tracking IDs...
 		const pAds = trkIds.map(trkId => ServerIO.getLastAd(trkId));
+		console.log(`This is the map od tracker ids and getLAstAd applied to them`, pAds);
 		const pAd = Promise.race(pAds);
 		// TODO pick the most ad?? (but oh well, I think picking an earlier ad is harmless)
 		return pAd;
