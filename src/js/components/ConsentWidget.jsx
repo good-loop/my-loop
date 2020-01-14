@@ -53,7 +53,8 @@ const togglePerm = ({prop, value, peeps}) => {
 const toggleDNT = ({perms, dnt, value}) => {
 	perms.cookies = value;
 	dnt = value === true ? '1' : '0';
-	Cookies.set('DNT', dnt, {path:'/', domain:'good-loop.com', expires:365, sameSite:'None', secure:true});
+	const secure = window.location.protocol==='https:';
+	Cookies.set('DNT', dnt, {path:'/', domain:'good-loop.com', expires:365, sameSite:'None', secure});
 };
 
 /** Little convenience for registration

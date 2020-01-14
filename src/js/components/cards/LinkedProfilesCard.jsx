@@ -47,22 +47,29 @@ const LinkedProfilesCard = ({xids}) => {
 					<br />
 				</div>
 				<div>
-					Links: 
-					{
-						peeps.length 
-							? peeps.map(peep => <>
-								<div key={Person.id(peep)}>
-									{Person.id(peep)} -> {peep.links && peep.links.length? peep.links.map(link => <><div> {link.v} </div><br /></>) : 'no links'}
-								</div>
-								<br />
-								</>)
-							: ' no links found ' 
-
-					}
+					Links: <ListLinks peeps={peeps} />
 				</div>
 			</div>
 		</div>
 	);
+};
+
+/**
+ * 
+ * @param {{
+ * 	peeps: Person[]
+ * }} 
+ */
+const ListLinks = ({peeps}) => {
+	if ( ! peeps.length) return ' no links found ';
+	return peeps.map(peep => <>
+		<div key={Person.id(peep)}>
+			{Person.id(peep)}
+			&rarrow;
+			{peep.links && peep.links.length? peep.links.map(link => <div key={link.v}> {link.v} </div>) : 'no links'}
+		</div>
+		<br />
+	</>);
 };
 
 export default LinkedProfilesCard;
