@@ -50,7 +50,7 @@ const loginResponsePath = ['misc', 'login', 'response'];
 */
 class MainDiv extends Component {
 
-	componentWillMount() {
+	componentDidMount() {
 		// redraw on change
 		const updateReact = (mystate) => this.setState({});
 		DataStore.addListener(updateReact);
@@ -58,6 +58,12 @@ class MainDiv extends Component {
 		Login.app = C.app.service;
 		// Set up login watcher here, at the highest level		
 		Login.change(() => {
+			// invalidate all lists!
+			DataStore.setValue(['list'], {});
+			// also remove any promises for these lists -- see fetch()		
+			let ppath = ['transient', 'PromiseValue', 'list'];
+			DataStore.setValue(ppath, null);
+
 			// ?? should we store and check for "Login was attempted" to guard this??
 			if (Login.isLoggedIn()) {
 				// close the login dialog on success
@@ -69,7 +75,7 @@ class MainDiv extends Component {
 
 			// Link profiles? No - done by the YA server
 			// poke React via DataStore (e.g. for Login.error)
-			DataStore.update({});			
+			DataStore.update({});
 			// is this needed??
 			this.setState({});
 		});
@@ -82,16 +88,15 @@ class MainDiv extends Component {
 			// Store response.cargo.success somewhere in datastore so other components can check (a) if it's finished and (b) if it was successful before trying to talk to lg.good-loop.com
 		});
 
-	}
-	
-	componentDidMount() {
 		// Check if we're on a mobile device and place the result in state
 		// COPIED FROM ADUNIT'S device.js
 		const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 		const isMobile = !!(userAgent.match('/mobile|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i'));
 		DataStore.setValue(['env', 'isMobile'], isMobile);
+
 		DataStore.setValue(['data', 'Person', 'xids'], Profiler.getAllXIds(), false);
-	}
+	} // ./componentDidMount
+	
 
 	componentDidCatch(error, info) {
 		// Display fallback UI
