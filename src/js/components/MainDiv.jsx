@@ -49,13 +49,16 @@ const loginResponsePath = ['misc', 'login', 'response'];
 		Top-level: tabs
 */
 class MainDiv extends Component {
+	constructor(props) {
+		super(props);
+		Login.app = C.app.service;
+	}
 
 	componentDidMount() {
 		// redraw on change
 		const updateReact = (mystate) => this.setState({});
 		DataStore.addListener(updateReact);
 
-		Login.app = C.app.service;
 		// Set up login watcher here, at the highest level		
 		Login.change(() => {
 			// invalidate all lists!
