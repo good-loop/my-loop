@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 // import PV from 'promise-value';
 import {yessy} from 'wwutils';
 
@@ -22,6 +22,14 @@ window.DEBUG = false;
 
 const MyPage = () => {
 	ServerIO.mixPanelTrack({mixPanelTag: 'Page rendered', data:{referrer: 'document.referrer'}});
+
+	// If we're currently in as.good-loop.com, and we have a glvert param defined, we shpuld redirect to campaign page
+	useEffect(() => {
+		const urlParams = DataStore.getValue(['location', 'params']);
+		if (Object.keys(urlParams).includes('gl.vert')) {
+			window.location.href = `/#campaign/?gl.vert=${urlParams['gl.vert']}`;
+		}
+	});
 
 	return (
 		<div className='MyPage widepage'>
