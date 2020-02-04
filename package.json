@@ -9,38 +9,18 @@
   },
   "license": "MIT",
   "dependencies": {
-    "bootstrap": "^4.3.1",
-    "chart.js": "^2.8.0",
-    "data-pivot": "^1.0.2",
-    "easy-enums": "^1.1.6",
-    "easyi18n": "^1.1.1",
-    "hashmap": "^2.3.0",
-    "intl": "^1.2.5",
-    "jquery": "^3.4.1",
-    "js-cookie": "^2.2.0",
-    "lodash": "^4.17.11",
-    "md5": "^2.2.1",
-    "promise-value": "^1.2.5",
-    "react": "^16.8.6",
-    "react-autocomplete": "^1.8.1",
-    "react-bootstrap": "^0.32.4",
-    "react-chartjs2": "^1.2.1",
-    "react-dom": "^16.8.6",
-    "react-dropzone": "^8.1.0",
-    "react-google-charts": "^3.0.15",
-    "react-markdown": "^4.0.6",
-    "react-scroll": "^1.7.11",
-    "react-spring": "^8.0.27",
-    "reactstrap": "^8.1.0",
-    "sjtest": "^0.4.9",
-    "wwutils": "^0.9.4",
-    "you-again": "^0.8.6"
+    "jest": "^25.1.0",
+    "shelljs": "^0.8.3",
+    "yargs": "^15.1.0",
+    "jest-puppeteer": "^4.4.0",
+    "puppeteer": "^2.0.0"
   },
   "scripts": {
     "compile": "webpack --config $PWD/webpack.config.js --progress --colors",
     "compile-watch": "webpack --config $PWD/webpack.config.js --progress --colors --watch",
     "compile-watch-fast": "NO_PROD=true webpack --config $PWD/webpack.config.js --progress --colors --watch",
-    "flow": "flow; test $? -eq 0 -o $? -eq 2"
+    "flow": "flow; test $? -eq 0 -o $? -eq 2",
+    "test": "jest"
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",
@@ -58,6 +38,13 @@
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-react-hooks": "^1.6.0",
     "webpack": "^4.29.6",
-    "webpack-cli": "^3.2.3"
+    "webpack-cli": "^3.2.3",
+    "puppet-theatre": "^1.0.17"
+  },
+  "jest": {
+    "preset": "jest-puppeteer",
+    "globals": {
+      "window": {}
+    }
   }
 }
