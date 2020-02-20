@@ -3,6 +3,9 @@ import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
 
 // Fetch advert data from backend
+/**
+ * @returns {Advert}
+ */
 const fetchCampaignData = async () => {
 	let { 'gl.vert': adid, 'gl.vertiser': vertiserid, via, q='', status=C.KStatus.PUB_OR_ARC } = DataStore.getValue(['location', 'params']) || {};
 	const data = await ServerIO.getDataItem({type: C.TYPES.Advert, id:adid, status: status});

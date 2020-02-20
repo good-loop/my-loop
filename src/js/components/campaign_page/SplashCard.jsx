@@ -5,9 +5,13 @@ import Counter from '../../base/components/Counter';
 import printer from '../../base/utils/printer';
 import GoodLoopAd from './GoodLoopAd';
 
-const SplashCard = ({ data }) => {
+/**
+ * @param {??what}  branding
+ * @param {?Number} communityTotal 
+ * @param {??What} viewData
+ */
+const SplashCard = ({branding, communityTotal, viewData, adId, name}) => {
 	// branding, donationValue, adId, landing
-	const { branding, communityTotal = null, viewData = null, adId, name } = data;
 	const landing = false;
 
 	const totalDonated = communityTotal ? communityTotal.total.value : '';
@@ -21,13 +25,6 @@ const SplashCard = ({ data }) => {
 		</div> : ''
 	);
 
-	// If money is available display it in a counter
-	const moneyCounter = (
-		communityTotal ? <div className='header' style={{color: 'black'}}>
-			&pound;<Counter sigFigs={4} value={totalDonated} minimumFractionDigits={2} />
-		</div> : 'money'
-	);
-
 	return (
 		<>
 			<ACard className="hero">
@@ -37,7 +34,9 @@ const SplashCard = ({ data }) => {
 				{ topAdvert } {/* <---This will normally be empty */}
 				<div className='sub-header p-1'>
 					<div><span>Together our ads for good have raised</span></div>
-					{ moneyCounter }
+					{communityTotal? 
+						<div className='header' style={{color: 'black'}}>&pound;<Counter sigFigs={4} value={totalDonated} minimumFractionDigits={2} /></div>
+						: '...'}
 				</div>
 			</ACard>
 			<div className="container-fluid" style={{backgroundColor: '#af2009'}}>

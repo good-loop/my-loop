@@ -25,33 +25,30 @@ import Counter from '../../base/components/Counter';
 import printer from '../../base/utils/printer';
 import publishers from '../../data/PublisherList';
 import CSS from '../../base/components/CSS';
+import Branding from '../../data/Branding';
+import AThing from '../../base/data/AThing';
 
-let isMulti = false; // We'll use this for some text options, such as plurals in splash or ad cards presentation
-const tomsCampaigns = /(josh|sara|ella)/; // For matching TOMS campaign names needing special treatment
 /**
- * HACK fix campaign name changes to clean up historical campaigns
+ * Gets its parameters from the url
+ * @returns {?PromiseValue<Advert[]>} null means no ads specified - so show a list or error
  */
-const viewCount = (viewcount4campaign, ad) => {
-	if (!ad.campaign) return null;
-
-	// HACK TOMS?? ella / josh / sara
-	// Don't crunch down TOMS ads that aren't in the sara/ella/josh campaign group
-	if (ad.vertiser === 'bPe6TXq8' && ad.campaign.match(tomsCampaigns)) {
-		isMulti = true;
-		let keyword = 'josh';
-		if (ad.campaign.includes('sara')) keyword = 'sara';
-		if (ad.campaign.includes('ella')) keyword = 'ella';
-		// Total views across all ads for this influencer
-		return Object.keys(viewcount4campaign).reduce((acc, cname) => {
-			return cname.includes(keyword) ? acc + viewcount4campaign[cname] : acc;
-		}, 0);
+const fetchAds = ({all}) => {
+	// What adverts should we look at?
+	let { 'gl.vert': adid, 'gl.vertiser': vertiserid, via, q='', status=C.KStatus.PUB_OR_ARC } = DataStore.getValue(['location', 'params']) || {};
+	let sq = new SearchQuery(q);
+	// NB: convert url parameters into a backend ES query against the Advert.java object
+	if (adid) sq = sq.setProp('id', adid);
+	if (vertiserid) sq = sq.setProp('vertiser', vertiserid);
+	if (via) sq = sq.setProp('via', via);
+	const q2 = sq.query;	
+	if ( ! q2 && ! all) {
+		return null;
 	}
 
-
-	let vc = viewcount4campaign[ad.campaign];
-	if (vc) return vc;
-	return null;
+	let pvAds = ActionMan.list({type: C.TYPES.Advert, status, q2});
+	return pvAds;
 };
+
 
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser` or `via`
@@ -62,19 +59,13 @@ const viewCount = (viewcount4campaign, ad) => {
 const CampaignPage = () => {
 	// If true we'll change the layout slightly, positioning the advert video on top.
 	const isLanding = DataStore.getValue(['location', 'params']).landing === 'true'; // Super hacky but the '#' in our URLS messes up cleaner ways of doing this.
-	console.log(isLanding);
-
-	// What adverts should we look at?
-	let { 'gl.vert': adid, 'gl.vertiser': vertiserid, via, q='', status=C.KStatus.PUB_OR_ARC } = DataStore.getValue(['location', 'params']) || {};
-	let sq = new SearchQuery(q);
-	// NB: convert url parameters into a backend ES query against the Advert.java object
-	if (adid) sq = sq.setProp('id', adid);
-	if (vertiserid) sq = sq.setProp('vertiser', vertiserid);
-	if (via) sq = sq.setProp('via', via);
-	q = sq.query;
 	const slug = DataStore.getValue('location','path', 1);
 	const all = slug==='all';
-	if ( ! q && ! all) {
+
+	// Get data step 1 -- What ads are we looking at?
+	let pvAds = fetchAds({all});
+	// Handle no data casses
+	if ( ! pvAds) {
 		// No query -- show a list
 		// TODO better graphic design before we make this list widget public
 		if ( ! Login.isLoggedIn()) {
@@ -82,17 +73,16 @@ const CampaignPage = () => {
 		}
 		return <ListItems type={C.TYPES.Advert} servlet='campaign' />;		
 	}
-
-	let pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
-	if (!pvAds.resolved) {
+	if ( ! pvAds.resolved) {
 		return <Misc.Loading text='Loading campaign data...' />;
 	}
 
+	// doc??
 	let ads = all && pvAds ? pvAds.value.hits.slice(0, 10) : pvAds.value.hits;
 
 	// No ads?!
 	if ( ! ads.length) {
-		return <BS.Alert>Could not load adverts for {q} {status}</BS.Alert>;
+		return <BS.Alert>Could not load adverts.</BS.Alert>;
 	}
 
 	// Get the advertiser's name (TODO append to advert as vertiserName)
@@ -104,27 +94,15 @@ const CampaignPage = () => {
 
 	// Combine campaign page and branding settings from all ads
 	// Last ad wins any branding settings!
-	// TODO support for agency level (and avdertiser level) branding to win through
-	let branding = {};
+	// TODO support for agency level (and avdertiser level) branding to win through	
+	let branding = new Branding();
 	let campaignPage = {};
 	ads.forEach(ad => Object.assign(branding, ad.branding));
 	ads.forEach(ad => Object.assign(campaignPage, ad.campaignPage));
 	
-	const soloAd = ads.length===1? ads[0] : null;
-	// const startDateString = soloAd && soloAd.startDate;
-	// const smallPrint = soloAd && soloAd.smallPrint;
-
 	// SoGive occasionally provides duplicated charity objects, so we check and filter them first.
 	// TODO: This check shouldn't be here, maybe SoGive can filter its stuff before sending it over?
-	// NB Used on charities and adverts
-	const uniqueIds = arr => {
-		let ids = {};
-		return arr.filter(obj => {
-			if (!obj || !obj.id || ids[obj.id]) return false;
-			ids[obj.id] = true;
-			return true;
-		});
-	};
+	// NB Used on charities and adverts	
 
 	// individual charity data
 	let charities = uniqueIds(_.flatten(ads.map(
@@ -133,12 +111,14 @@ const CampaignPage = () => {
 	let cids = charities.map(x => x.id);
 
 	// Unfortunately need to repeat structure as ActionMan.list does not return a promise
+	// huh??
 	let sqDon = new SearchQuery();
 	for(let i=0; i<ads.length; i++) {
 		sqDon = sqDon.or('vert:' + ads[i].id);
 		if (ads[i].campaign) sqDon = sqDon.or('campaign:' + ads[i].campaign);
 	}
 
+	// refactor into a fetch-datalog-data (donation and view data) function or two
 	// load the community total for the ad
 	let pvDonationsBreakdown = DataStore.fetch(['widget','CampaignPage','communityTotal', sqDon.query], () => {
 		// TODO campaign would be nicer 'cos we could combine different ad variants... but its not logged reliably
@@ -165,9 +145,12 @@ const CampaignPage = () => {
 	if (campaignPageDonations.length === ads.length) {
 		donationValue = Money.sum(campaignPageDonations);
 	}
-	donationValue = donationValue.value;
+	donationValue = donationValue.value;	
 	// also the per-charity numbers
 	let donByCid = pvDonationsBreakdown.value.by_cid;
+	// end of function??
+
+
 
 	let brandColor = branding.color || branding.backgroundColor;
 
@@ -348,12 +331,16 @@ const CampaignPage = () => {
 	);
 }; // ./CampaignPage
 
+
 const AdvertCard = ({ ad, viewCountProp, donationTotal, totalViewCount }) => {
-	const durationText = ad.start || ad.end ? (<>
-		This advert ran
-		{ ad.start ? <span> from {<Misc.RoughDate date={ad.start} />}</span> : null}
-		{ ad.end ? <span> to {<Misc.RoughDate date={ad.end} />}</span> : '' }
-	</>) : '';
+	// TODO When do we want to show the campaign's date?
+	// - If we have several campaigns spanning a few years
+	// - If the user is the marketing officer or reporting on a campaign - they need more details
+	// const durationText = ad.start || ad.end ? (<>
+	// 	This advert ran
+	// 	{ ad.start ? <span> from {<Misc.RoughDate date={ad.start} />}</span> : null}
+	// 	{ ad.end ? <span> to {<Misc.RoughDate date={ad.end} />}</span> : '' }
+	// </>) : '';
 	const thisViewCount = viewCountProp || '';
 
 	// Money raised by ad based on viewers
@@ -370,6 +357,7 @@ const AdvertCard = ({ ad, viewCountProp, donationTotal, totalViewCount }) => {
 	);
 };
 
+// why??
 const GoodLoopAd = memo(({ vertId, size, nonce, production, social, glParams = { 'gl.play': 'onclick' } }) => {
 	let prefix = '';
 	if (window.location.hostname.match(/^local/)) prefix = 'local';
@@ -429,6 +417,48 @@ const SplashCard = ({ branding, donationValue, adId, landing }) => {
 const ScrollTo = ({aName, children}) => {
 	let url = window.location+"#"+escape(aName); // TODO modify to include something that will trigger a scroll to the target aName
 	return <a href={url}>{children}</a>;
+};
+
+const tomsCampaigns = /(josh|sara|ella)/; // For matching TOMS campaign names needing special treatment
+
+/**
+ * HACK fix campaign name changes to clean up historical campaigns
+ * @param {Advert} ad
+ * @param {String:Number} viewcount4campaign
+ * @returns {?Number}
+ */
+const viewCount = (viewcount4campaign, ad) => {
+	if (!ad.campaign) return null;
+
+	// HACK TOMS?? ella / josh / sara
+	// Don't crunch down TOMS ads that aren't in the sara/ella/josh campaign group
+	if (ad.vertiser === 'bPe6TXq8' && ad.campaign.match(tomsCampaigns)) {
+		let keyword = 'josh';
+		if (ad.campaign.includes('sara')) keyword = 'sara';
+		if (ad.campaign.includes('ella')) keyword = 'ella';
+		// Total views across all ads for this influencer
+		return Object.keys(viewcount4campaign).reduce((acc, cname) => {
+			return cname.includes(keyword) ? acc + viewcount4campaign[cname] : acc;
+		}, 0);
+	}
+
+
+	let vc = viewcount4campaign[ad.campaign];
+	if (vc) return vc;
+	return null;
+};
+
+/**
+ * @param {Athing[]} arr items with ids
+ * @returns filtered version of arr
+ */
+const uniqueIds = arr => {
+	let ids = {};
+	return arr.filter(obj => {
+		if (!obj || !obj.id || ids[obj.id]) return false;
+		ids[obj.id] = true;
+		return true;
+	});
 };
 
 export default CampaignPage;
