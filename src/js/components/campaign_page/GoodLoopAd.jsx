@@ -1,8 +1,5 @@
 import React, { memo, createRef, useEffect } from 'react';
 
-/**
- * ??why memo??
- */
 const GoodLoopAd = memo(({ vertId, size, nonce, production, social, glParams = { 'gl.play': 'onclick' } }) => {
 	let prefix = '';
 	if (window.location.hostname.match(/^local/)) prefix = 'local';
@@ -16,7 +13,6 @@ const GoodLoopAd = memo(({ vertId, size, nonce, production, social, glParams = {
 		glUnitUrl.searchParams.set(key, value);
 	});
 
-	// Why??
 	let adContainer = createRef();
 	let script;
 
@@ -27,7 +23,6 @@ const GoodLoopAd = memo(({ vertId, size, nonce, production, social, glParams = {
 		return script;
 	};
 
-	// why??
 	useEffect(() => {
 		adContainer.current.append(createScript());
 	}, [nonce]);

@@ -12,9 +12,6 @@ import SplashCard from '../campaign_page/SplashCard';
 import CharitiesSection from '../campaign_page/CharitiesSection';
 import AdvertCard from '../campaign_page/AdvertCard';
 import { fetchCampaignData, fetchCommunityTotal, fetchViewData, charitiesWithNoUnsetDonations } from '../../utils/campaignPageUtils';
-import DataStore from '../../base/plumbing/DataStore';
-import ActionMan from '../../plumbing/ActionMan';
-import C from '../../C';
 
 const CampaignPage2 = () => {
 	const [campaignData, setCampaignData] = useState(null);
@@ -25,10 +22,6 @@ const CampaignPage2 = () => {
 		fetchCampaignData()
 			.then(res => setCampaignData(res.cargo));
 	}, []);
-
-	let { 'gl.vert': adid, 'gl.vertiser': vertiserid, via, q='', status=C.KStatus.PUB_OR_ARC, sort } = DataStore.getValue(['location', 'params']) || {};	
-	let pvAdverts = ActionMan.list({type:C.TYPES.Advert, status, q, sort});
-
 
 	// Once campaign data is ready get community total and include it in the object,
 	// as long as it has not been done before.
