@@ -27,11 +27,11 @@ const baseConfig = {
 				exclude: /node_modules/,
 				options: {
 					presets: [
-						['@babel/preset-env', { targets: { ie: "11" }, loose: true }]
+						['@babel/preset-env', { targets: { ie: "11" }, loose: true }],
+						['@babel/preset-react']
 					],
 					plugins: [
 						'@babel/plugin-proposal-class-properties',
-						'@babel/plugin-transform-react-jsx',
 						'transform-node-env-inline'
 					]
 				}
@@ -45,7 +45,7 @@ const baseConfig = {
 * Copy and fill out the baseConfig object with
 * @param filename {!String} Set the bundle output.filename
 * 
-* ## process.env 
+* ## process.env
 * process is always globally available to runtime code.
 */
 const makeConfig = ({ filename, mode }) => {
