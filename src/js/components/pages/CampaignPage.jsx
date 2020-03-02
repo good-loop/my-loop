@@ -105,10 +105,21 @@ const CampaignPage = () => {
 		return <ListItems type={C.TYPES.Advert} servlet='campaign' />;
 	}
 
+	// Try to get ads based on spec given in URL params
 	let pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
 	if (!pvAds.resolved) return <Misc.Loading text='Loading campaign data...' />;
-	let ads = all && pvAds ? pvAds.value.hits.slice(0, 10) : pvAds.value.hits;
-	if (!ads.length) return <BS.Alert>Could not load adverts for {q} {status}</BS.Alert>; // No ads?!
+	let pvAdsDraft = null; // Be ready to fall back to ALL_BAR_TRASH if requested ad is draft-only
+	if (pvAds.resolved && !pvAds.value || !pvAds.value.hits || !pvAds.value.hits.length) {
+		pvAdsDraft = ActionMan.list({type: C.TYPES.Advert, status: C.KStatus.ALL_BAR_TRASH, q});
+		console.warn(`Unable to find ad ${adId} with status ${status}, falling back to ALL_BAR_TRASH`);
+	}
+	if (pvAdsDraft && !pvAdsDraft.resolved) return <Misc.Loading text='Loading campaign data...' />;
+
+	// If it's remotely possible to have an ad now, we have it. Which request succeeded, if any?
+	const pvAdsSuccess = [pvAds, pvAdsDraft].find(pv => pv && pv.resolved && pv.value && pv.value.hits);
+	let ads = pvAdsSuccess && pvAdsSuccess.value && pvAdsSuccess.value.hits;
+	if (ads && !all) ads = ads.slice(0, 10); // Limit to first 10 results unless we're on #campaign/all
+	if (!ads || !ads.length) return <BS.Alert>Could not load adverts for {q} {status}</BS.Alert>; // No ads?!
 
 	// Get the advertiser's name (TODO append to advert as vertiserName)
 	const pvVertiser = ActionMan.getDataItem({type: C.TYPES.Advertiser, id: ads[0].vertiser, status: C.KStatus.PUBLISHED});
@@ -145,7 +156,7 @@ const CampaignPage = () => {
 		// TODO campaign would be nicer 'cos we could combine different ad variants... but its not logged reliably
 		// Argh: Loop.Me have not logged vert, only campaign.
 		// but elsewhere vert is logged and not campaign.
-		// let q = ad.campaign? '(vert:'+adid+' OR campaign:'+ad.campaign+')' : 'vert:'+adid;		
+		// let q = ad.campaign? '(vert:'+adid+' OR campaign:'+ad.campaign+')' : 'vert:'+adid;
 		// TODO "" csv encoding for bits of q (e.g. campaign might have a space)
 		return ServerIO.getDonationsData({q:sqDon.query});
 	}, true, 5*60*1000);
@@ -158,13 +169,13 @@ const CampaignPage = () => {
 		return <div>Error: {pvDonationsBreakdown.error}. Try reloading the page. Contact us if this persists.</div>;
 	}
 
-	let campaignTotal = pvDonationsBreakdown.value.total; 
+	let campaignTotal = pvDonationsBreakdown.value.total;
 	let donationValue = campaignTotal; // check if statically set and, if not, then update with latest figures
 	// Allow the campaign page to override and specify a total
 	let campaignTotalViews = pvDonationsBreakdown.value.stats.count;
 	let campaignPageDonations = ads.map(ad => ad.campaignPage && CampaignPageDC.donation(ad.campaignPage)).filter(x => x);
 	if (campaignPageDonations.length === ads.length) {
-		donationValue = Money.sum(campaignPageDonations);
+		donationValue = Money.total(campaignPageDonations);
 	}
 	donationValue = donationValue.value;
 	// also the per-charity numbers
@@ -226,7 +237,7 @@ const CampaignPage = () => {
 		charities = charities.map(char => {
 			if (donByCid[char.id]) { // if the charities have been edited after the campaign they might be missing values.
 				return { ...char, donation: Math.floor(donByCid[char.id].value)};
-			} return char; 
+			} return char;
 		});
 
 		charities = charities.filter(c => c.donation); // Get rid of charities with no logged donations.
@@ -339,7 +350,7 @@ const CampaignPage = () => {
 							/>
 						)}
 					</Container>
-				</Container> 
+				</Container>
 			)}
 			<Footer />
 		</div>
