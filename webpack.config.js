@@ -16,11 +16,26 @@ const baseConfig = {
 	},
 	devtool: 'source-map',
 	resolve: {
-		extensions: ['.js', '.jsx'],
+		extensions: ['.ts', '.tsx', '.js', '.jsx'],
 		symlinks: false
 	},
 	module: {
 		rules: [
+			{
+				test: /\.tsx?$/,
+				loader: 'babel-loader',
+				exclude: /node_modules/,
+				options: {
+					presets: [
+						['@babel/preset-typescript', { targets: { ie: "11" }, loose: true }],
+						'@babel/react'
+					],
+					plugins: [
+						'@babel/plugin-transform-typescript',
+						'babel-plugin-const-enum'
+					]
+				}
+			},
 			{
 				test: /.jsx?$/,
 				loader: 'babel-loader',

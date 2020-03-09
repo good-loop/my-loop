@@ -1,18 +1,17 @@
 import React from 'react';
 import CharityCard from '../cards/CharityCard';
 
-const formatCharityData = data => {
-	const dataKeys = Object.keys(data);
-	return dataKeys.map((e, i) => {
-		const charity = data[e];
-		return { i, charity: charity, donationValue: charity.donated };
+const CharitiesSection = ({charities, donationsByCharity}) => {
+
+	const charityCardsArray = charities.map((e, i) => {
+		const donationValue = donationsByCharity[e.id] ? donationsByCharity[e.id].value : 0;
+		return <CharityCard
+			i={i}
+			imageLeft={i % 2 === 0}
+			charity={e}
+			donationValue={donationValue}
+		/>;
 	});
-};
-
-const CharitiesSection = ({charities}) => {
-
-	const charityObjectArray = formatCharityData(charities);
-	const charityCardsArray = charityObjectArray.map(e => <CharityCard i={e.i} imageLeft={e.i % 2 === 0} charity={e.charity} donationValue={e.donationValue} />)
 
 	return (
 		<>

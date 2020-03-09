@@ -7,25 +7,22 @@ import GoodLoopAd from './GoodLoopAd';
 
 const SplashCard = ({ data }) => {
 	// branding, donationValue, adId, landing
-	const { branding, communityTotal = null, viewData = null, adId, name } = data;
+	const { branding, totalDonated = 0, totalViews = 0, id, name } = data;
 	const landing = false;
-
-	const totalDonated = communityTotal ? communityTotal.total.value : '';
-	const totalViews = viewData ? viewData.all.count : '';
 
 	// If defined as landing page advert should display on top of the page
 	// Normal behaviour is to display them at the bottom, no nothing here.
 	const topAdvert = (
 		landing ? <div className="top-advert-player">
-			<GoodLoopAd vertId={adId} size="landscape" nonce={`landscape${adId}`} production />
+			<GoodLoopAd vertId={id} size="landscape" nonce={`landscape${id}`} production />
 		</div> : ''
 	);
 
 	// If money is available display it in a counter
 	const moneyCounter = (
-		communityTotal ? <div className='header' style={{color: 'black'}}>
+		<div className='header' style={{color: 'black'}}>
 			&pound;<Counter sigFigs={4} value={totalDonated} minimumFractionDigits={2} />
-		</div> : 'money'
+		</div>
 	);
 
 	return (
