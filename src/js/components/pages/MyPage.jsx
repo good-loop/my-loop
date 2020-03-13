@@ -17,6 +17,7 @@ import RecentCampaignsCard from '../cards/RecentCampaignsCard';
 import {GlLogoGenericSvg, glLogoDefaultSvg, splitColouredCircleSVG} from '../svg';
 import Roles from '../../base/Roles';
 import CharityPicker from '../CharityPicker';
+import LandingSection from '../LandingSection';
 
 window.DEBUG = false;
 
@@ -33,7 +34,8 @@ const MyPage = () => {
 
 	return (
 		<div className='MyPage widepage'>
-			<SplashCard />
+			<LandingSection />
+			{/* <SplashCard /> */}
 			<OurMissionCard />
 			<RecentCampaignsCard />
 			<HowItWorksCard />

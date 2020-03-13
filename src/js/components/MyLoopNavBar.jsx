@@ -14,11 +14,12 @@ const MyLoopNavBar = ({backgroundColor, logo, currentPage}) => {
 	// const toggleColor = backgroundColor === 'transparent' ? '#770f00' : '#fff';
 	// The red gets lost in our other elements easily and is difficult to give a good-looking contrast shadow, trying white for all cases
 	const toggleColor = '#fff';
+	const logoSrc = logo || C.app.homeLogo || C.app.logo;
 	
 	return (
 		<Navbar color={backgroundColor} sticky='top'>
 			<NavbarBrand href="/" className="mr-auto">
-				<img src={logo || C.app.homeLogo || C.app.logo} alt='logo' className='logo-small' />
+				<img src={logoSrc} alt='logo' className='logo-small' />
 			</NavbarBrand>
 			<AccountMenu active={currentPage === 'account'} logoutLink='#my' toggleColor={toggleColor} />
 		</Navbar>
