@@ -53,78 +53,90 @@ const viewCount = (viewcount4campaign, ad) => {
 	return null;
 };
 
+
+// SoGive occasionally provides duplicated charity objects, so we check and filter them first.
+// TODO: This check shouldn't be here, maybe SoGive can filter its stuff before sending it over?
+// NB Also used on adverts for similar reasons
+const uniqueIds = arr => {
+	let ids = {};
+	return arr.filter(obj => {
+		if (!obj || !obj.id || ids[obj.id]) return false;
+		ids[obj.id] = true;
+		return true;
+	});
+};
+
+
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser` or `via`
- * TODO support q=flexible query
+ * TODO support q=... flexible query
  * TODO support agency and ourselves! with multiple adverts
  * Split: branding - a vertiser ID, vs ad-params
  */
 const CampaignPage = () => {
-	// If true we'll change the layout slightly, positioning the advert video on top.
-	const isLanding = DataStore.getValue(['location', 'params']).landing === 'true'; // Super hacky but the '#' in our URLS messes up cleaner ways of doing this.
-	console.log(isLanding);
-
 	// What adverts should we look at?
-	let { 'gl.vert': adid, 'gl.vertiser': vertiserid, via, q='', status=C.KStatus.PUB_OR_ARC } = DataStore.getValue(['location', 'params']) || {};
+	let {
+		'gl.vert': adid,
+		'gl.vertiser': vertiserid,
+		via,
+		q = '',
+		status = C.KStatus.PUB_OR_ARC,
+		landing,
+	} = DataStore.getValue(['location', 'params']) || {};
+	
+	// Is the campaign page being used as a click-through advert landing page?
+	// If so, change the layout slightly, positioning the advert video on top.
+	const isLanding = (landing !== undefined) && (landing !== 'false');
+
 	let sq = new SearchQuery(q);
 	// NB: convert url parameters into a backend ES query against the Advert.java object
 	if (adid) sq = sq.setProp('id', adid);
 	if (vertiserid) sq = sq.setProp('vertiser', vertiserid);
 	if (via) sq = sq.setProp('via', via);
 	q = sq.query;
-	const slug = DataStore.getValue('location','path', 1);
-	const all = slug==='all';
-	if ( ! q && ! all) {
+	const slug = DataStore.getValue('location', 'path', 1);
+	const all = slug === 'all';
+	if (!q && !all) {
 		// No query -- show a list
 		// TODO better graphic design before we make this list widget public
-		if ( ! Login.isLoggedIn()) {
+		if (!Login.isLoggedIn()) {
 			return <div>Missing: campaign or advertiser ID. Please check the link you used to get here.</div>;
 		}
-		return <ListItems type={C.TYPES.Advert} servlet='campaign' />;		
+		return <ListItems type={C.TYPES.Advert} servlet='campaign' />;
 	}
 
+	// Try to get ads based on spec given in URL params
 	let pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
-	if (!pvAds.resolved) {
-		return <Misc.Loading text='Loading campaign data...' />;
+	if (!pvAds.resolved) return <Misc.Loading text='Loading campaign data...' />;
+	let pvAdsDraft = null; // Be ready to fall back to ALL_BAR_TRASH if requested ad is draft-only
+	if (pvAds.resolved && !pvAds.value || !pvAds.value.hits || !pvAds.value.hits.length) {
+		pvAdsDraft = ActionMan.list({type: C.TYPES.Advert, status: C.KStatus.ALL_BAR_TRASH, q});
+		console.warn(`Unable to find ad ${adId} with status ${status}, falling back to ALL_BAR_TRASH`);
 	}
+	if (pvAdsDraft && !pvAdsDraft.resolved) return <Misc.Loading text='Loading campaign data...' />;
 
-	let ads = all && pvAds ? pvAds.value.hits.slice(0, 10) : pvAds.value.hits;
-
-	// No ads?!
-	if ( ! ads.length) {
-		return <BS.Alert>Could not load adverts for {q} {status}</BS.Alert>;
-	}
+	// If it's remotely possible to have an ad now, we have it. Which request succeeded, if any?
+	const pvAdsSuccess = [pvAds, pvAdsDraft].find(pv => pv && pv.resolved && pv.value && pv.value.hits);
+	let ads = pvAdsSuccess && pvAdsSuccess.value && pvAdsSuccess.value.hits;
+	if (ads && !all) ads = ads.slice(0, 10); // Limit to first 10 results unless we're on #campaign/all
+	if (!ads || !ads.length) return <BS.Alert>Could not load adverts for {q} {status}</BS.Alert>; // No ads?!
 
 	// Get the advertiser's name (TODO append to advert as vertiserName)
 	const pvVertiser = ActionMan.getDataItem({type: C.TYPES.Advertiser, id: ads[0].vertiser, status: C.KStatus.PUBLISHED});
-	if (!pvVertiser.resolved) {
-		return <Misc.Loading text='Loading campaign data...' />;
-	}
+	if (!pvVertiser.resolved) return <Misc.Loading text='Loading campaign data...' />;
 	const vertiser = pvVertiser.value;
 
 	// Combine campaign page and branding settings from all ads
 	// Last ad wins any branding settings!
-	// TODO support for agency level (and avdertiser level) branding to win through
+	// TODO support for agency level (and advertiser level) branding to win through
 	let branding = {};
 	let campaignPage = {};
 	ads.forEach(ad => Object.assign(branding, ad.branding));
 	ads.forEach(ad => Object.assign(campaignPage, ad.campaignPage));
 	
-	const soloAd = ads.length===1? ads[0] : null;
+	const soloAd = ads.length === 1 ? ads[0] : null;
 	// const startDateString = soloAd && soloAd.startDate;
 	// const smallPrint = soloAd && soloAd.smallPrint;
-
-	// SoGive occasionally provides duplicated charity objects, so we check and filter them first.
-	// TODO: This check shouldn't be here, maybe SoGive can filter its stuff before sending it over?
-	// NB Used on charities and adverts
-	const uniqueIds = arr => {
-		let ids = {};
-		return arr.filter(obj => {
-			if (!obj || !obj.id || ids[obj.id]) return false;
-			ids[obj.id] = true;
-			return true;
-		});
-	};
 
 	// individual charity data
 	let charities = uniqueIds(_.flatten(ads.map(
@@ -134,7 +146,7 @@ const CampaignPage = () => {
 
 	// Unfortunately need to repeat structure as ActionMan.list does not return a promise
 	let sqDon = new SearchQuery();
-	for(let i=0; i<ads.length; i++) {
+	for (let i = 0; i < ads.length; i++) {
 		sqDon = sqDon.or('vert:' + ads[i].id);
 		if (ads[i].campaign) sqDon = sqDon.or('campaign:' + ads[i].campaign);
 	}
@@ -144,9 +156,9 @@ const CampaignPage = () => {
 		// TODO campaign would be nicer 'cos we could combine different ad variants... but its not logged reliably
 		// Argh: Loop.Me have not logged vert, only campaign.
 		// but elsewhere vert is logged and not campaign.
-		// let q = ad.campaign? '(vert:'+adid+' OR campaign:'+ad.campaign+')' : 'vert:'+adid;		
+		// let q = ad.campaign? '(vert:'+adid+' OR campaign:'+ad.campaign+')' : 'vert:'+adid;
 		// TODO "" csv encoding for bits of q (e.g. campaign might have a space)
-		return ServerIO.getDonationsData({q:sqDon.query});	
+		return ServerIO.getDonationsData({q:sqDon.query});
 	}, true, 5*60*1000);
 
 	if ( ! pvDonationsBreakdown.resolved ) {
@@ -157,13 +169,13 @@ const CampaignPage = () => {
 		return <div>Error: {pvDonationsBreakdown.error}. Try reloading the page. Contact us if this persists.</div>;
 	}
 
-	let campaignTotal = pvDonationsBreakdown.value.total; 
+	let campaignTotal = pvDonationsBreakdown.value.total;
 	let donationValue = campaignTotal; // check if statically set and, if not, then update with latest figures
 	// Allow the campaign page to override and specify a total
 	let campaignTotalViews = pvDonationsBreakdown.value.stats.count;
 	let campaignPageDonations = ads.map(ad => ad.campaignPage && CampaignPageDC.donation(ad.campaignPage)).filter(x => x);
 	if (campaignPageDonations.length === ads.length) {
-		donationValue = Money.sum(campaignPageDonations);
+		donationValue = Money.total(campaignPageDonations);
 	}
 	donationValue = donationValue.value;
 	// also the per-charity numbers
@@ -200,8 +212,6 @@ const CampaignPage = () => {
 		window.pivot = pivot; // for debug
 		viewcount4campaign = pivot(pvViewData.value, "by_campaign.buckets.$bi.{key, doc_count}", "$key.$doc_count");
 	}
-
-
 	const pubData = pvViewData.value;
 
 	// Array of publisher logos from mockup.
@@ -227,7 +237,7 @@ const CampaignPage = () => {
 		charities = charities.map(char => {
 			if (donByCid[char.id]) { // if the charities have been edited after the campaign they might be missing values.
 				return { ...char, donation: Math.floor(donByCid[char.id].value)};
-			} return char; 
+			} return char;
 		});
 
 		charities = charities.filter(c => c.donation); // Get rid of charities with no logged donations.
@@ -281,7 +291,6 @@ const CampaignPage = () => {
 
 	assignUnsetDonations();
 
-
 	return (<>
 		<MyLoopNavBar brandLogo={branding.logo} logo="/img/new-logo-with-text-white.svg" style={{backgroundColor: brandColor}} />
 		<CSS css={campaignPage.advanced && campaignPage.advanced.customcss} />
@@ -321,13 +330,13 @@ const CampaignPage = () => {
 				</div> : ''
 			}
 			
-			{ isLanding ? '' : 
+			{ isLanding ? '' : (
 				<Container fluid className="advert-bg">
-					<br></br>
+					<br />
 					{/* <DemoPlayer vertId={adid} production /> */}
 					<Container className="pt-4 pb-5">
 						<h4 className="sub-header-font pb-4">The campaign</h4>
-						{ sampleAdFromEachCampaign().map(
+						{sampleAdFromEachCampaign().map(
 							ad => <AdvertCard
 								ad={ad}
 								vertId={ad.id}
@@ -341,12 +350,14 @@ const CampaignPage = () => {
 							/>
 						)}
 					</Container>
-				</Container> }
+				</Container>
+			)}
 			<Footer />
 		</div>
 	</>
 	);
 }; // ./CampaignPage
+
 
 const AdvertCard = ({ ad, viewCountProp, donationTotal, totalViewCount }) => {
 	const durationText = ad.start || ad.end ? (<>
@@ -369,6 +380,7 @@ const AdvertCard = ({ ad, viewCountProp, donationTotal, totalViewCount }) => {
 		</div>
 	);
 };
+
 
 const GoodLoopAd = memo(({ vertId, size, nonce, production, social, glParams = { 'gl.play': 'onclick' } }) => {
 	let prefix = '';
@@ -405,6 +417,7 @@ const GoodLoopAd = memo(({ vertId, size, nonce, production, social, glParams = {
 	);
 });
 
+
 const SplashCard = ({ branding, donationValue, adId, landing }) => {
 	return (<ACard className="hero">
 		<div className='flex-row flex-centre p-1'>
@@ -422,6 +435,7 @@ const SplashCard = ({ branding, donationValue, adId, landing }) => {
 	</ACard>);
 };
 
+
 /**
  * TODO link to a part of a page. How do we do this, given that we already use #foo for page nav??
  * TODO move into Misc?
@@ -430,5 +444,6 @@ const ScrollTo = ({aName, children}) => {
 	let url = window.location+"#"+escape(aName); // TODO modify to include something that will trigger a scroll to the target aName
 	return <a href={url}>{children}</a>;
 };
+
 
 export default CampaignPage;
