@@ -1,11 +1,12 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React from 'react';
-import { Button } from 'reactstrap';
+import { Button, Form, FormGroup, Label } from 'reactstrap';
 import { useSpring } from 'react-spring';
 
 import MyLoopNavBar from './MyLoopNavBar';
 import BackgroundFader from './BackgroundFader';
+import PropControl from '../base/components/PropControl';
 
 const springPageDown = setY => {
 	const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -44,10 +45,17 @@ const CtaBox = () => {
 			<h2>Turn Advertising into a Force for Good</h2>
 			<h3>Donate a few spare seconds to charity and see it add up.</h3>
 			<h3>Together we've raised over £500,000</h3>
-			<div className="input-box">
-				<input type="text" placeholder=" email address" className="email-input-text" />
+			<Form inline>
+				<FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+					<PropControl
+						prop="email"
+						path={['misc', 'ctaForm']}
+						placeholder=" email address"
+						label="Email"
+					/>
+				</FormGroup>
 				<Button color="info">Join My.Good-Loop</Button> 
-			</div>
+			</Form>
 		</div>
 	);
 };
