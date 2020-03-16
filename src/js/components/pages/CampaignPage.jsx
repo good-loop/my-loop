@@ -90,9 +90,9 @@ const CampaignPage = () => {
 
 	let sq = new SearchQuery(q);
 	// NB: convert url parameters into a backend ES query against the Advert.java object
-	if (adid) sq = sq.setProp('id', adid);
-	if (vertiserid) sq = sq.setProp('vertiser', vertiserid);
-	if (via) sq = sq.setProp('via', via);
+	if (adid) sq = SearchQuery.setProp(sq, 'id', adid);
+	if (vertiserid) sq = SearchQuery.setProp(sq, 'vertiser', vertiserid);
+	if (via) sq = SearchQuery.setProp(sq, 'via', via);
 	q = sq.query;
 	const slug = DataStore.getValue('location', 'path', 1);
 	const all = slug === 'all';
@@ -147,8 +147,8 @@ const CampaignPage = () => {
 	// Unfortunately need to repeat structure as ActionMan.list does not return a promise
 	let sqDon = new SearchQuery();
 	for (let i = 0; i < ads.length; i++) {
-		sqDon = sqDon.or('vert:' + ads[i].id);
-		if (ads[i].campaign) sqDon = sqDon.or('campaign:' + ads[i].campaign);
+		sqDon = SearchQuery.or(sqDon, 'vert:' + ads[i].id);
+		if (ads[i].campaign) sqDon = SearchQuery.or(sqDon, 'campaign:' + ads[i].campaign);
 	}
 
 	// load the community total for the ad
