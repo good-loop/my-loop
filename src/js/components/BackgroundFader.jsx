@@ -7,9 +7,15 @@ const bgImages = [
 	{ id: 2, url: '/img/wwf-bg.jpg' }
 ];
 
+const bgLogos = [
+	'/img/wateraid-logo.jpg',
+	'/img/woodland-trust-logo.jpg',
+	'/img/wwf-logo.jpg'
+];
+
 const LandingSection = () => {
 	const [index, setIndex] = useState(0);
-	const transitions = useTransition(bgImages[index], item => item.id, {
+	const transitions = useTransition({ bg: bgImages[index], icon: bgLogos[index] }, item => item.bg.id, {
 		from : { opacity: 0 },
 		enter: { opacity: 1 },
 		leave: { opacity: 0 },
@@ -17,15 +23,16 @@ const LandingSection = () => {
 	});
 
 	// eslint-disable-next-line no-void
-	useEffect(() => void setInterval(() => setIndex(state => (state + 1) % 3), 5000), []);
+	useEffect(() => void setInterval(() => setIndex(state => (state + 1) % 3), 7000), []);
 	return transitions.map(({ item, props, key }) => (
 		<animated.div
 			key={key}
 			// className="background-image"
-			src={ item.url }
+			// src={ item.url }
 			style={{...props}}
 		>
-			<img className="background-image" src={item.url} alt="background" />
+			<img className="background-image" src={item.bg.url} alt="background" />
+			<img className="background-logo" src={item.icon} alt="charity logo" />
 		</animated.div>
 	));
 };

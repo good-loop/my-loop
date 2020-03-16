@@ -19,6 +19,18 @@
 	object-fit: cover;
 }
 
+.background-logo {
+	filter: brightness(0.8);
+	position: absolute;
+	bottom: 7%;
+	right: 5%;
+	width: 10%;
+	height: auto;
+	@media only screen and (max-width: 767px) {
+		width: 20%
+	}
+}
+
 .cta-box {
 	margin: auto;
 	display: flex;
@@ -26,22 +38,30 @@
 	justify-content: center;
 	text-align: center;
 	z-index: 1;
-
 	color: white;
+
+	//// CTA Header text /////
 	h1, h2, h3 {
-		// text-shadow: 1px 1px black;
 		font-size: 200%;
+		margin-bottom: 1rem; // Overrides Bootstrap default
 	}
 	h3 {
 		font-weight: 700;
+	} ///////////////////////
+
+	.form-inline { // Centers elements inside CTA form
+		justify-content: center;
+		& > .form-group{
+			width: 35%;
+			.form-group {
+				width: 100%;
+			}
+		}
+	}
+	.email-join-input {
+		width: 100%; // PropControl input occupies entire width of formgrou parent
 	}
 
-	.form-inline {
-		justify-content: center;
-	}
-	label {
-		margin-right: .5em;
-	}
 	@media only screen and (max-width: 767px) {
 		max-width: 96%;
 		.form-inline > .form-group {
@@ -55,7 +75,7 @@
 	bottom: 5%;
 	left: 0;
 	right: 0;
-	margin: auto;
+	margin: 0 auto;
 	filter: drop-shadow(1px 1px 2px black);
 	width: 70px;
 	&:hover {
