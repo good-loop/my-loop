@@ -27,6 +27,11 @@ const getVersion = (label, n) => {
 	return version;
 };
 
+/**
+ * Randomly pick what to display.
+ * @param {!String} label - What is this a version of? E.g. "bgcolor". Can be used separately with `AB.getVersion()`
+ * @param {!JSX[]} children - Several jsx elements to choose one of
+ */
 const AB = ({label, children}) => {
 	if ( ! children) return null;
 	if (children.filter) children = children.filter(x => !! x);
