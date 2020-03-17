@@ -11,6 +11,8 @@ import DataStore from '../base/plumbing/DataStore';
 import Profiler, {doRegisterEmail} from '../base/Profiler';
 import AB from './AB';
 import CSS from '../base/components/CSS';
+import Money from '../base/data/Money';
+import Counter from '../base/components/Counter';
 
 const springPageDown = setY => {
 	const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -49,6 +51,7 @@ const ctaFormPath = ['misc', 'ctaForm'];
 const CtaBox = () => {
 	const thankYouMessage = <h4>Thank you!</h4>;
 	const hasSubmittedEmail = DataStore.getValue(['misc', 'hasSubmittedEmail']) === true;
+	let total = new Money("£700000");
 	return (
 		<div className="cta-box">
 			<AB label='ctatext'>
@@ -60,7 +63,7 @@ const CtaBox = () => {
 				<>
 					<h2>Turn Advertising into a Force for Good</h2>
 					<h3>Donate a few spare seconds to charity and see it add up.</h3>
-					<h3>Together we've raised over £700,000!</h3>
+					<h3>Together we've raised over <Counter amount={total} initial={100000} />!</h3>
 				</>
 			</AB>
 			{hasSubmittedEmail ? thankYouMessage :
@@ -81,7 +84,7 @@ const CtaBox = () => {
 					</Button> 
 				</Form>}
 			<AB label='ctatext'>
-				<h4>Together we've raised over £700,000</h4>
+				<h4>Together we've raised over <Counter amount={total} initial={100000} /></h4>
 				<></>
 			</AB>
 		</div>
