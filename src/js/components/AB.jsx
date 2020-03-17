@@ -3,6 +3,14 @@ import DataStore from '../base/plumbing/DataStore';
 import {assMatch, assert} from 'sjtest';
 import {is} from 'wwutils';
 
+/*
+A CSS example:
+<AB label='bgcol'>
+	<CSS css=".mything {background:red;}" />
+	<CSS css=".mything {background:blue;}" />
+</AB>
+*/
+
 /**
  * For A/B testing
  * @param {!String} label What are we versioning?
