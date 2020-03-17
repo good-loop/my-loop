@@ -34,7 +34,7 @@ const LandingSection = () => {
 				<BackgroundFader />
 				{/* <img className="background-image" src={ bgImages[0] } alt="background" /> */}
 				<CtaBox />
-				<img					
+				<img
 					className="scroll-down-button"
 					src="/img/scroll-down.png"
 					alt="scroll down"
@@ -76,9 +76,9 @@ const CtaBox = () => {
 							placeholder="email address"
 						/>
 					</FormGroup>
-					<Button onClick={doEmailSignU\Lp} color="info" disabled={hasSubmittedEmail} >
+					<Button onClick={doEmailSignUp} color="info" disabled={hasSubmittedEmail} >
 						Join us
-					</Button> 
+					</Button>
 				</Form>}
 			<AB label='ctatext'>
 				<h4>Together we've raised over <Counter amount={total} initial={100000} /></h4>
