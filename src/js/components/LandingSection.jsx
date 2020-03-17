@@ -60,10 +60,11 @@ const CtaBox = () => {
 							className="email-join-input"
 							prop="email"
 							path={ctaFormPath}
-							placeholder=" email address"
+							placeholder="email address"
+							size='lg'
 						/>
 					</FormGroup>
-					<Button onClick={doEmailSignUp} color="info" 
+					<Button onClick={doEmailSignUp} color="info" size='lg'
 						disabled={hasSubmittedEmail || ! DataStore.getValue(ctaFormPath.concat('email'))}
 					>
 						Join My.Good-Loop
@@ -79,6 +80,7 @@ const doEmailSignUp = e => {
 	let formData = DataStore.getValue(ctaFormPath);
 	assert(formData.email);
 	formData.notify = 'daniel@good-loop.com';
+	formData.useraction="Join My.Good-Loop";
 	doRegisterEmail(formData);
 	DataStore.setValue(['misc', 'hasSubmittedEmail'], true);
 }
