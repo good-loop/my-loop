@@ -51,7 +51,8 @@ const ctaFormPath = ['misc', 'ctaForm'];
 const CtaBox = () => {
 	const thankYouMessage = <h4>Thank you!</h4>;
 	const hasSubmittedEmail = DataStore.getValue(['misc', 'hasSubmittedEmail']) === true;
-	let total = new Money("£700000");
+	// NB: the total is higher -- but we need to clean up our donation tracker docs before we can reliably report it. March 2020
+	let total = new Money("£500000");
 	return (
 		<div className="cta-box">
 			<AB label='ctatext'>
