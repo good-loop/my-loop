@@ -54,8 +54,8 @@ const CtaBox = () => {
 	return (
 		<div className="cta-box">
 			<h2>Turn Advertising into a Force for Good</h2>
-			<h3>Donate a few spare seconds to charity and see it add up.</h3>
-			<h3>Together we've raised over £500,000</h3>
+			<h3>Your time, attention and data is valuable.</h3>
+			<h3>Sign up and use this value for good.</h3>
 			{hasSubmitedEmail ? thankYouMessage :
 				<Form inline>
 					<FormGroup className="mb-2 mr-sm-2 mb-sm-0">
@@ -68,6 +68,7 @@ const CtaBox = () => {
 					</FormGroup>
 					<Button onClick={logEmailSubmission} color="info">Join My.Good-Loop</Button> 
 				</Form>}
+			<h4>Together we've raised over £700,000</h4>
 		</div>
 	);
 };

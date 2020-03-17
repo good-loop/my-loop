@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useTransition, animated, config } from 'react-spring';
 
-const bgImages = [
+const bgImagesDesktop = [
 	{ id: 0, url: '/img/wateraid-bg-1080p.jpg' },
 	{ id: 1, url: '/img/woodland-trust-bg-1080p.jpg' },
 	{ id: 2, url: '/img/wwf-bg-1080p.jpg' }
+];
+
+const bgImagesMobile = [
+	{ id: 0, url: '/img/wateraid-bg-mobile.jpg' },
+	{ id: 1, url: '/img/woodland-trust-bg-mobile.jpg' },
+	{ id: 2, url: '/img/wwf-bg-mobile.jpg' }
 ];
 
 const bgLogos = [
@@ -15,6 +21,11 @@ const bgLogos = [
 
 const LandingSection = () => {
 	const [index, setIndex] = useState(0);
+
+	// If user is viewing on mobile device in portrait mode, show appropiate asset
+	const isPortraitMobile = window.matchMedia("only screen and (max-width: 768px)") && window.matchMedia("(orientation: portrait)").matches;
+	const bgImages = isPortraitMobile ? bgImagesMobile : bgImagesDesktop;
+
 	const transitions = useTransition({ bg: bgImages[index], icon: bgLogos[index] }, item => item.bg.id, {
 		from : { opacity: 0 },
 		enter: { opacity: 1 },

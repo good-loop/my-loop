@@ -17,6 +17,7 @@
 	height: 100%;
 	max-height: 100vh;
 	object-fit: cover;
+	filter: blur(2px);
 }
 
 .background-logo {
@@ -30,6 +31,16 @@
 		width: 20%
 	}
 }
+
+.landing-bg .background-logo {
+	height: 10vw;
+	object-fit: contain;
+	display: block;
+	background-color: white;
+	filter: none;
+	border-radius: 3px;
+	box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.4);
+  }
 
 .cta-box {
 	margin: auto;
@@ -51,6 +62,7 @@
 
 	.form-inline { // Centers elements inside CTA form
 		justify-content: center;
+		margin-bottom: 1rem;
 		& > .form-group{
 			width: 35%;
 			.form-group {
@@ -69,6 +81,22 @@
 		}
 	}
 }
+
+.cta-box {
+	color: black;
+	background-color: rgba(255, 255, 255, 0.5);
+	padding: 1em;
+	border-radius: 3px;
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.3);
+
+	.btn {
+		background-color: #870000;
+		border-color: transparent;
+		&:hover {
+			background-color: #770000;
+		}
+	}
+  }
 
 .scroll-down-button {
 	position: absolute;
