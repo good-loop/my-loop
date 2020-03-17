@@ -8,6 +8,7 @@ import MyLoopNavBar from './MyLoopNavBar';
 import BackgroundFader from './BackgroundFader';
 import PropControl from '../base/components/PropControl';
 import DataStore from '../base/plumbing/DataStore';
+import Profiler, {doRegisterEmail} from '../base/Profiler';
 
 const springPageDown = setY => {
 	const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -41,37 +42,46 @@ const LandingSection = () => {
 };
 
 
+const ctaFormPath = ['misc', 'ctaForm'];
+
 const CtaBox = () => {
 	const thankYouMessage = <h4>Thank you!</h4>;
-	const hasSubmitedEmail = DataStore.getValue(['misc', 'hasSubmittedEmail']) === true;
-
-	const logEmailSubmission = e => {
-		e.preventDefault();
-		console.log('THIS HAS BEEEN EXECUTEEEED!');
-		DataStore.setValue(['misc', 'hasSubmittedEmail'], true);
-	};
+	const hasSubmittedEmail = DataStore.getValue(['misc', 'hasSubmittedEmail']) === true;
 
 	return (
 		<div className="cta-box">
 			<h2>Turn Advertising into a Force for Good</h2>
 			<h3>Your time, attention and data is valuable.</h3>
 			<h3>Sign up and use this value for good.</h3>
-			{hasSubmitedEmail ? thankYouMessage :
+			{hasSubmittedEmail ? thankYouMessage :
 				<Form inline>
 					<FormGroup className="mb-2 mr-sm-2 mb-sm-0">
 						<PropControl
 							className="email-join-input"
 							prop="email"
-							path={['misc', 'ctaForm']}
+							path={ctaFormPath}
 							placeholder=" email address"
 						/>
 					</FormGroup>
-					<Button onClick={logEmailSubmission} color="info">Join My.Good-Loop</Button> 
+					<Button onClick={doEmailSignUp} color="info" 
+						disabled={hasSubmittedEmail || ! DataStore.getValue(ctaFormPath.concat('email'))}
+					>
+						Join My.Good-Loop
+					</Button> 
 				</Form>}
 			<h4>Together we've raised over £700,000</h4>
 		</div>
 	);
 };
+
+const doEmailSignUp = e => {
+	e.preventDefault();		
+	let formData = DataStore.getValue(ctaFormPath);
+	assert(formData.email);
+	formData.notify = 'daniel@good-loop.com';
+	doRegisterEmail(formData);
+	DataStore.setValue(['misc', 'hasSubmittedEmail'], true);
+}
 
 
 export default LandingSection;
