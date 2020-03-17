@@ -8,6 +8,8 @@ import MyLoopNavBar from './MyLoopNavBar';
 import BackgroundFader from './BackgroundFader';
 import PropControl from '../base/components/PropControl';
 import DataStore from '../base/plumbing/DataStore';
+import Profiler, {doRegisterEmail} from '../base/Profiler';
+import AB from './AB';
 
 const springPageDown = setY => {
 	const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -41,35 +43,57 @@ const LandingSection = () => {
 };
 
 
+const ctaFormPath = ['misc', 'ctaForm'];
+
 const CtaBox = () => {
 	const thankYouMessage = <h4>Thank you!</h4>;
-	const hasSubmitedEmail = DataStore.getValue(['misc', 'hasSubmittedEmail']) === true;
-
-	const logEmailSubmission = e => {
-		e.preventDefault();
-		DataStore.setValue(['misc', 'hasSubmittedEmail'], true);
-	};
-
+	const hasSubmittedEmail = DataStore.getValue(['misc', 'hasSubmittedEmail']) === true;
 	return (
 		<div className="cta-box">
-			<h2>Turn Advertising into a Force for Good</h2>
-			<h4>Your time, attention, &amp; data are valuable.</h4>
-			<h4>Sign up and use this value for good.</h4>
-			{hasSubmitedEmail ? thankYouMessage :
+			<AB label='ctatext'>
+				<>
+					<h2>Turn Advertising into a Force for Good</h2>
+					<h4>Your time, attention, &amp; data is valuable.</h4>
+					<h4>Sign up and use this value for good.</h4>
+				</>
+				<>
+					<h2>Turn Advertising into a Force for Good</h2>
+					<h4>Donate a few spare seconds to charity and see it add up.</h4>
+					<h4>Together we've raised over £700,000!</h4>
+				</>
+			</AB>
+			{hasSubmittedEmail ? thankYouMessage :
 				<Form inline>
 					<FormGroup className="mb-2 mr-sm-2 mb-sm-0">
 						<PropControl
 							className="email-join-input"
 							prop="email"
-							path={['misc', 'ctaForm']}
-							placeholder=" email address"
+							path={ctaFormPath}
+							placeholder="email address"
 						/>
 					</FormGroup>
-					<Button onClick={logEmailSubmission} color="info">Join us</Button> 
+					<Button onClick={doEmailSignUp} color="info"
+						disabled={hasSubmittedEmail || ! DataStore.getValue(ctaFormPath.concat('email'))}
+					>
+						Join us
+					</Button> 
 				</Form>}
-			<h5>Together we've raised over £700,000</h5>
+			<AB label='ctatext'>
+				<h4>Together we've raised over £700,000</h4>
+				<></>
+			</AB>
 		</div>
 	);
+};
+
+const doEmailSignUp = e => {
+	e.preventDefault();		
+	let formData = DataStore.getValue(ctaFormPath);
+	assert(formData.email);
+	formData.notify = 'daniel@good-loop.com';
+	formData.useraction="Join My.Good-Loop";
+	doRegisterEmail(formData);
+	DataStore.setValue(['misc', 'hasSubmittedEmail'], true);
 };
 
 

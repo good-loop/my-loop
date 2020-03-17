@@ -120,6 +120,7 @@ class MainDiv extends Component {
 		if ( ! Page) {
 			Page = E404Page;
 		}
+
 		if (this.state && this.state.error && this.state.errorPath === path) {
 			Page = () => (<div><h3>There was an Error :'(</h3>
 				<p>Try navigating to a different tab, or reloading the page. If this problem persists, please contact support.</p>
