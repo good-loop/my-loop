@@ -76,9 +76,7 @@ const CtaBox = () => {
 							placeholder="email address"
 						/>
 					</FormGroup>
-					<Button onClick={doEmailSignUp} color="info"
-						disabled={hasSubmittedEmail || ! DataStore.getValue(ctaFormPath.concat('email'))}
-					>
+					<Button onClick={doEmailSignUp} color="info" disabled={hasSubmittedEmail} >
 						Join us
 					</Button> 
 				</Form>}
@@ -93,7 +91,7 @@ const CtaBox = () => {
 const doEmailSignUp = e => {
 	e.preventDefault();		
 	let formData = DataStore.getValue(ctaFormPath);
-	assert(formData.email);
+	if ( ! formData || ! formData.email) return;  // quiet fail NB: we didnt like the disabled look for a CTA
 	formData.notify = 'daniel@good-loop.com';
 	formData.useraction="Join My.Good-Loop";
 	doRegisterEmail(formData);
