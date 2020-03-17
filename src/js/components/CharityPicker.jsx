@@ -11,14 +11,30 @@ import C from '../C';
 const savingPath = ['widget', 'charityPicker', 'saving'];
 DataStore.setValue(savingPath, false);
 
+
+
+/**
+
+
+	TODO Redesign & Refactor
+	This component is prob easiest taking the learnings & redoing from scratch.
+
+	- Offer users a search box + some suggestion buttons. Just a search box is potentially confusing.
+	- The current code is buggy, and reinvents the wheel using non-GL patterns, inc inefficient data loading.
+
+	@Deprecated 
+*/
 const CharityPicker = () => {
-	// TODO Should charities go in DataStore?
+	// Note: only make quick fixes. Any major work should be done as a re-write.
+
+	// TODO refactor: charities go in DataStore - this widget should not use internal state.
 	const [savedCharities, setSavedCharities] = useState([]);
 	const [showSearch, setShowSearch] = useState(false);
 
+	// TODO doc fns - what side effects is this trying to have?
 	const retrieveSavedCharities = () => {
 		const profiles = DataStore.getValue('data', 'Person', 'profiles');
-		
+		if ( ! profiles) return; // HACK fix NPE
 		let charityIdSet = {};
 		Object.values(profiles).forEach(profile => {
 			const scClaim = profile.claims.find(claim => claim.k === 'savedCharities');
@@ -28,6 +44,7 @@ const CharityPicker = () => {
 
 		let charityObjs = [];
 		let idsNotFetched = Object.keys(charityIdSet); // Strike off each ID as we get a charity from the server...
+		// TODO fetch the list in one ajax call
 		Object.keys(charityIdSet).forEach(id => {
 			ServerIO.getCharity({id})
 				.then(({cargo}) => charityObjs.push(cargo))
@@ -65,6 +82,7 @@ const CharityPicker = () => {
 		setSavedCharities(newSavedCharities);
 	};
 
+	// TODO Don't useEffect - we have other & better ways of doing things.
 	// TODO Bind this component to the user profile so we get full saved charity data when it's ready
 	useEffect(() => {
 		setTimeout(() => retrieveSavedCharities(), 800);
