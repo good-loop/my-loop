@@ -9,6 +9,7 @@ import BackgroundFader from './BackgroundFader';
 import PropControl from '../base/components/PropControl';
 import DataStore from '../base/plumbing/DataStore';
 import Profiler, {doRegisterEmail} from '../base/Profiler';
+import AB from './AB';
 
 const springPageDown = setY => {
 	const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -47,12 +48,20 @@ const ctaFormPath = ['misc', 'ctaForm'];
 const CtaBox = () => {
 	const thankYouMessage = <h4>Thank you!</h4>;
 	const hasSubmittedEmail = DataStore.getValue(['misc', 'hasSubmittedEmail']) === true;
-
 	return (
 		<div className="cta-box">
-			<h2>Turn Advertising into a Force for Good</h2>
-			<h3>Your time, attention and data is valuable.</h3>
-			<h3>Sign up and use this value for good.</h3>
+			<AB label='ctatext'>
+				<>
+					<h2>Turn Advertising into a Force for Good</h2>
+					<h3>Your time, attention, and data is valuable.</h3>
+					<h3>Sign up and use this value for good.</h3>
+				</>
+				<>
+					<h2>Turn Advertising into a Force for Good</h2>
+					<h3>Donate a few spare seconds to charity and see it add up.</h3>
+					<h3>Together we've raised over £700,000!</h3>
+				</>
+			</AB>
 			{hasSubmittedEmail ? thankYouMessage :
 				<Form inline>
 					<FormGroup className="mb-2 mr-sm-2 mb-sm-0">
@@ -70,7 +79,10 @@ const CtaBox = () => {
 						Join My.Good-Loop
 					</Button> 
 				</Form>}
-			<h4>Together we've raised over £700,000</h4>
+			<AB label='ctatext'>
+				<h4>Together we've raised over £700,000</h4>
+				<></>
+			</AB>
 		</div>
 	);
 };
