@@ -57,13 +57,13 @@ const CtaBox = () => {
 			<AB label='ctatext'>
 				<>
 					<h2>Turn Advertising into a Force for Good</h2>
-					<h3>Your time, attention, and data is valuable.</h3>
-					<h3>Sign up and use this value for good.</h3>
+					<h4>Your time, attention, &amp; data is valuable.</h4>
+					<h4>Sign up and use this value for good.</h4>
 				</>
 				<>
 					<h2>Turn Advertising into a Force for Good</h2>
-					<h3>Donate a few spare seconds to charity and see it add up.</h3>
-					<h3>Together we've raised over <Counter amount={total} initial={100000} />!</h3>
+					<h4>Donate a few spare seconds to charity and see it add up.</h4>
+					<h4>Together we've raised over <Counter amount={total} initial={100000} /></h4>
 				</>
 			</AB>
 			{hasSubmittedEmail ? thankYouMessage :
@@ -74,13 +74,12 @@ const CtaBox = () => {
 							prop="email"
 							path={ctaFormPath}
 							placeholder="email address"
-							size='lg'
 						/>
 					</FormGroup>
-					<Button onClick={doEmailSignUp} color="info" size='lg'
+					<Button onClick={doEmailSignUp} color="info"
 						disabled={hasSubmittedEmail || ! DataStore.getValue(ctaFormPath.concat('email'))}
 					>
-						Join My.Good-Loop
+						Join us
 					</Button> 
 				</Form>}
 			<AB label='ctatext'>
@@ -99,7 +98,7 @@ const doEmailSignUp = e => {
 	formData.useraction="Join My.Good-Loop";
 	doRegisterEmail(formData);
 	DataStore.setValue(['misc', 'hasSubmittedEmail'], true);
-}
+};
 
 
 export default LandingSection;
