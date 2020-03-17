@@ -76,7 +76,7 @@ const CtaBox = () => {
 							placeholder="email address"
 						/>
 					</FormGroup>
-					<Button onClick={doEmailSignUp} color="info" disabled={hasSubmittedEmail} >
+					<Button onClick={doEmailSignU\Lp} color="info" disabled={hasSubmittedEmail} >
 						Join us
 					</Button> 
 				</Form>}
