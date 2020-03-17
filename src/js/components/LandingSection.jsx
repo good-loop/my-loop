@@ -47,15 +47,14 @@ const CtaBox = () => {
 
 	const logEmailSubmission = e => {
 		e.preventDefault();
-		console.log('THIS HAS BEEEN EXECUTEEEED!');
 		DataStore.setValue(['misc', 'hasSubmittedEmail'], true);
 	};
 
 	return (
 		<div className="cta-box">
 			<h2>Turn Advertising into a Force for Good</h2>
-			<h3>Your time, attention and data is valuable.</h3>
-			<h3>Sign up and use this value for good.</h3>
+			<h4>Your time, attention, &amp; data are valuable.</h4>
+			<h4>Sign up and use this value for good.</h4>
 			{hasSubmitedEmail ? thankYouMessage :
 				<Form inline>
 					<FormGroup className="mb-2 mr-sm-2 mb-sm-0">
@@ -66,9 +65,9 @@ const CtaBox = () => {
 							placeholder=" email address"
 						/>
 					</FormGroup>
-					<Button onClick={logEmailSubmission} color="info">Join My.Good-Loop</Button> 
+					<Button onClick={logEmailSubmission} color="info">Join us</Button> 
 				</Form>}
-			<h4>Together we've raised over £700,000</h4>
+			<h5>Together we've raised over £700,000</h5>
 		</div>
 	);
 };

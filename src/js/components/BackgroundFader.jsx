@@ -23,7 +23,7 @@ const LandingSection = () => {
 	const [index, setIndex] = useState(0);
 
 	// If user is viewing on mobile device in portrait mode, show appropiate asset
-	const isPortraitMobile = window.matchMedia("only screen and (max-width: 768px)") && window.matchMedia("(orientation: portrait)").matches;
+	const isPortraitMobile = window.matchMedia("only screen and (max-width: 768px)").matches && window.matchMedia("(orientation: portrait)").matches;
 	const bgImages = isPortraitMobile ? bgImagesMobile : bgImagesDesktop;
 
 	const transitions = useTransition({ bg: bgImages[index], icon: bgLogos[index] }, item => item.bg.id, {
