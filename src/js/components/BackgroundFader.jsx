@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useTransition, animated, config } from 'react-spring';
 
 const bgImages = [
-	{ id: 0, url: '/img/wateraid-bg.jpg' },
-	{ id: 1, url: '/img/woodland-trust-bg.jpg' },
-	{ id: 2, url: '/img/wwf-bg.jpg' }
+	{ id: 0, url: '/img/wateraid-bg-1080p.jpg' },
+	{ id: 1, url: '/img/woodland-trust-bg-1080p.jpg' },
+	{ id: 2, url: '/img/wwf-bg-1080p.jpg' }
 ];
 
 const bgLogos = [
