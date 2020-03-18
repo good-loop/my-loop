@@ -19,7 +19,7 @@ const bgLogos = [
 	'/img/wwf-logo.jpg'
 ];
 
-const LandingSection = () => {
+const BackgroundFader = () => {
 	const [index, setIndex] = useState(0);
 
 	// If user is viewing on mobile device in portrait mode, show appropiate asset
@@ -48,4 +48,4 @@ const LandingSection = () => {
 	));
 };
 
-export default LandingSection;
+export default BackgroundFader;

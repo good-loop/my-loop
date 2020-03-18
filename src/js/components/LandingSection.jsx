@@ -69,7 +69,7 @@ const CtaBox = () => {
 			</AB>
 			{hasSubmittedEmail ? thankYouMessage :
 				<Form inline>
-					<FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+					<FormGroup className="mb-2 mr-sm-2 mb-sm-0 outer-form-group">
 						<PropControl
 							className="email-join-input"
 							prop="email"
@@ -77,7 +77,7 @@ const CtaBox = () => {
 							placeholder="email address"
 						/>
 					</FormGroup>
-					<Button onClick={doEmailSignUp} color="info" disabled={hasSubmittedEmail} >
+					<Button onClick={doEmailSignUp} color="info" disabled={hasSubmittedEmail}>
 						Join us
 					</Button>
 				</Form>}
@@ -92,7 +92,7 @@ const CtaBox = () => {
 const doEmailSignUp = e => {
 	e.preventDefault();		
 	let formData = DataStore.getValue(ctaFormPath);
-	if ( ! formData || ! formData.email) return;  // quiet fail NB: we didnt like the disabled look for a CTA
+	if ( ! formData || ! formData.email) return; // quiet fail NB: we didnt like the disabled look for a CTA
 	formData.notify = 'daniel@good-loop.com';
 	formData.useraction="Join My.Good-Loop";
 	doRegisterEmail(formData);

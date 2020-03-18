@@ -2,116 +2,114 @@
 @import "../js/base/style/fonts.less";
 
 .landing-bg {
-	// background: linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,.3)),
-	// 	url('/img/wateraid-bg.jpg') no-repeat center center fixed;
-	// background-size: cover;
 	height: 100vh;
 	width: 100%;
 	display: flex;
-}
 
-.background-image {
-	filter: brightness(0.4);
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	max-height: 100vh;
-	object-fit: cover;
-}
-
-.background-logo {
-	filter: brightness(0.8);
-	position: absolute;
-	bottom: 5%;
-	right: 5%;
-	width: 10%;
-	height: auto;
-	@media only screen and (max-width: 767px) {
-		width: 20%
+	.background-image {
+		filter: brightness(0.4);
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		max-height: 100vh;
+		object-fit: cover;
 	}
-}
 
-.landing-bg .background-logo {
-	height: 10vw;
-	object-fit: contain;
-	display: block;
-	background-color: white;
-	filter: none;
-	border-radius: 3px;
-	box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.4);
-	z-index: 999;
-  }
-
-.cta-box {
-	margin: auto;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	text-align: center;
-	z-index: 1;
-	color: white;
-
-	.btn {
-		background-color: #870000;
-		border-color: #870000; // no weird BS borders
-
-		&:hover {
-			background-color: #770000;
+	.background-logo {
+		// Positions charity logo in the bottom right corner
+		position: absolute;
+		bottom: 5%;
+		right: 5%;
+		width: 10%;
+		height: 10vw;
+		object-fit: contain;
+		display: block;
+		background-color: white;
+		border-radius: 3px;
+		box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.4);
+		z-index: 999;
+		@media only screen and (max-width: 767px) {
+			width: 20%
 		}
 	}
 
-	//// CTA Header text /////
-	h1, h2, h3, h4 {
-		font-family: 'Montserrat', sans-serif;
-		letter-spacing: .2em;
-		text-transform: uppercase;
-		margin-bottom: 1.3rem; // Overrides Bootstrap default
-		align-self: center;
-	} 
-	
-	h2 { max-width: 650px; font-size: 200%; }
-	h4 { max-width: 480px; font-weight: 600; }
-
-	@media only screen and (max-width: 900px) {
-		h2 { max-width: 100%; font-size: 120%; letter-spacing: .1em; }
-		h4 { max-width: 80%; font-size: 100%; letter-spacing: .1em; }
-	}
-	///////////////////////
-
-	.form-inline { // Centers elements inside CTA form
+	.cta-box {
+		margin: auto;
+		display: flex;
+		flex-direction: column;
 		justify-content: center;
-		margin-bottom: 1rem;
-		& > .form-group{
-			width: 35%;
-			margin-right: 0!important; // overwrites BS
-			.form-group {
-				width: 100%;
+		text-align: center;
+		z-index: 1;
+		color: white;
+	
+		.btn { // Vanilla BS button, except for colour to keep it consistent with our buttons elsewhere
+			background-color: #870000;
+			border-color: #870000; // no weird BS borders
+	
+			&:hover {
+				background-color: #770000;
 			}
 		}
-	}
-	.email-join-input {
-		width: 100%; // PropControl input occupies entire width of formgrou parent
-	}
-
-	@media only screen and (max-width: 767px) {
-		max-width: 96%;
-		.form-inline > .form-group {
-			width: 90%;
+	
+		//// CTA Header text /////
+		h1, h2, h3, h4 {
+			font-family: 'Montserrat', sans-serif;
+			letter-spacing: .2em; // Our montserrat h elements shouls have a looser spacing
+			text-transform: uppercase; // Forces uppercase for h3 and h4. Needed here to make text readebale against photo bg
+			margin-bottom: 1.3rem; // Overrides Bootstrap default to separate elements.
+			align-self: center;
+		} 
+		
+		// Setting a max width allows us to break lines where we need to on desktop.
+		// On smaller devices we let it expand to occupy between 80% and 100% of the section's width
+		// font-size and letter-spacing were modified to make them look good on all devices.
+		h2 { max-width: 650px; font-size: 200%; }
+		h4 { max-width: 480px; font-weight: 600; }
+	
+		@media only screen and (max-width: 900px) { // TODO: We could modify these rules slightly to make it look even better on iPads
+			h2 { max-width: 100%; font-size: 120%; letter-spacing: .1em; }
+			h4 { max-width: 80%; font-size: 100%; letter-spacing: .1em; }
 		}
+		///////////////////////
+	
+		//// FORM /////////////
+		.form-inline { // Centers elements inside CTA form
+			justify-content: center;
+			margin-bottom: 1rem;
+			// Actual input box should be 35% of the parent inline element,
+			// and the propcontrol inside 100% of the resulting space
+			.outer-form-group{
+				width: 35%;
+				margin-right: 0!important; // overwrites BS, eliminating gap
+				.form-group {
+					width: 100%;
+				}
+				@media only screen and (max-width: 767px) { width: 90%; }
+			}
+		}
+		.email-join-input {
+			width: 100%; // PropControl input occupies entire width of formgroup parent
+		}
+	
+		@media only screen and (max-width: 767px) {
+			max-width: 96%;
+		}
+		/////////////////////
 	}
-}
 
-
-.scroll-down-button {
-	position: absolute;
-	bottom: 5%;
-	left: 0;
-	right: 0;
-	margin: 0 auto;
-	filter: drop-shadow(1px 1px 2px black);
-	width: 70px;
-	z-index: 999;
-	&:hover {
-		cursor: pointer;
+	// Custom scroll button. Rules define position, shadow and hover behaviour of img element.
+	.scroll-down-button {
+		position: absolute;
+		bottom: 5%;
+		left: 0;
+		right: 0;
+		margin: 0 auto;
+		filter: drop-shadow(1px 1px 2px black);
+		width: 70px;
+		z-index: 999;
+		&:hover {
+			cursor: pointer;
+		}
+	
 	}
 }
