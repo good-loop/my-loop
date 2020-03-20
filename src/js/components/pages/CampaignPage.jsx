@@ -26,7 +26,6 @@ import printer from '../../base/utils/printer';
 import publishers from '../../data/PublisherList';
 import CSS from '../../base/components/CSS';
 
-let isMulti = false; // We'll use this for some text options, such as plurals in splash or ad cards presentation
 const tomsCampaigns = /(josh|sara|ella)/; // For matching TOMS campaign names needing special treatment
 /**
  * HACK fix campaign name changes to clean up historical campaigns
@@ -87,6 +86,9 @@ const CampaignPage = () => {
 	// Is the campaign page being used as a click-through advert landing page?
 	// If so, change the layout slightly, positioning the advert video on top.
 	const isLanding = (landing !== undefined) && (landing !== 'false');
+
+	// If user is using a mobile device on portrait mode we'll present the appropriate adunit in the AdvertCard
+	const isPortraitMobile = window.matchMedia("only screen and (max-width: 768px)").matches && window.matchMedia("(orientation: portrait)").matches;
 
 	let sq = new SearchQuery(q);
 	// NB: convert url parameters into a backend ES query against the Advert.java object
@@ -343,6 +345,7 @@ const CampaignPage = () => {
 								size="landscape"
 								nonce={`landscape${ad.id}`}
 								production
+								isPortraitMobile={isPortraitMobile}
 
 								viewCountProp={viewCount(viewcount4campaign, ad)}
 								donationTotal={donationValue}
@@ -359,7 +362,7 @@ const CampaignPage = () => {
 }; // ./CampaignPage
 
 
-const AdvertCard = ({ ad, viewCountProp, donationTotal, totalViewCount }) => {
+const AdvertCard = ({ ad, viewCountProp, donationTotal, totalViewCount, isPortraitMobile }) => {
 	const durationText = ad.start || ad.end ? (<>
 		This advert ran
 		{ ad.start ? <span> from {<Misc.RoughDate date={ad.start} />}</span> : null}
@@ -369,10 +372,11 @@ const AdvertCard = ({ ad, viewCountProp, donationTotal, totalViewCount }) => {
 
 	// Money raised by ad based on viewers
 	const moneyRaised = donationTotal * (thisViewCount / totalViewCount);
+	const size = isPortraitMobile ? 'portrait' : 'landscape';
 
 	return (
 		<div className="ad-card">
-			<GoodLoopAd vertId={ad.id} size="landscape" nonce={`landscape${ad.id}`} production />
+			<GoodLoopAd vertId={ad.id} size={size} nonce={`${size}${ad.id}`} production />
 			{Roles.isDev()? <small><a href={'https://portal.good-loop.com/#advert/'+escape(ad.id)} target='_portal'>Portal Editor</a></small> : null}
 			<div className="pt-3 pb-5 mb-2 advert-impact-text" style={{margin: '0 auto'}}>
 				<span>{printer.prettyNumber(thisViewCount)} people raised &pound;<Counter sigFigs={4} value={moneyRaised} /> by watching an ad in this campaign</span>
