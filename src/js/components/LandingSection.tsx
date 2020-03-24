@@ -21,7 +21,7 @@ const springPageDown = (setY: Function): void => {
 		y: vh,
 		reset: true,
 		from: { y: window.scrollY },
-		onFrame: props => window.scroll(vh, props.y)
+		onFrame: (props: { y: number }) => window.scroll(vh, props.y)
 	});
 };
 
@@ -43,7 +43,7 @@ const LandingSection = (): JSX.Element => {
 					className="scroll-down-button"
 					src="/img/scroll-down.png"
 					alt="scroll down"
-					onClick={ () => springPageDown(setY) }
+					onClick={ (): void => springPageDown(setY) }
 				/>
 			</div>
 		</>
@@ -53,16 +53,17 @@ const LandingSection = (): JSX.Element => {
 const ctaFormPath = ['misc', 'ctaForm'];
 
 const doEmailSignUp = (e: { preventDefault: () => void }): void => {
-	e.preventDefault();		
-	const formData = DataStore.getValue(ctaFormPath);
+	e.preventDefault();
+	const formData: any = DataStore.getValue(ctaFormPath);
 	if ( ! formData || ! formData.email) return; // quiet fail NB: we didnt like the disabled look for a CTA
 	formData.notify = 'daniel@good-loop.com';
 	formData.useraction="Join My.Good-Loop";
 	doRegisterEmail(formData);
+	//@ts-ignore
 	DataStore.setValue(['misc', 'hasSubmittedEmail'], true);
 };
 
-const CtaBox = (): JSX.Element => {
+const CtaBox: React.FC = () => {
 	const thankYouMessage = <h4>Thank you!</h4>;
 	//@ts-ignore
 	const hasSubmittedEmail = DataStore.getValue(['misc', 'hasSubmittedEmail']) === true;
