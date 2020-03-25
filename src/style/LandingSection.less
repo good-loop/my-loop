@@ -95,6 +95,19 @@
 			max-width: 96%;
 		}
 		/////////////////////
+
+		//// iPhone 5se fix ////
+		// Old 5se models have a lower browser nav bar before the user starts
+		// scrolling. Thus the actual height to consider here is 460px. This hack
+		// addresses it.
+		@media screen and (max-height: 529px) {
+			margin-top: 20%;
+			.donation-raised-counter {
+				max-width: 100%;
+				letter-spacing: initial;
+				font-size: 90%;
+			}
+		}
 	}
 
 	// Custom scroll button. Rules define position, shadow and hover behaviour of img element.
@@ -110,6 +123,10 @@
 		&:hover {
 			cursor: pointer;
 		}
-	
+		// Adjustment for tiny screens
+		@media screen and (max-height: 529px) {
+			bottom: 2%;
+			width: 45px;
+		}
 	}
 }

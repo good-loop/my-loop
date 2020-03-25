@@ -85,7 +85,7 @@ const CtaBox: React.FC = () => {
 					<h4>Donate a few spare seconds to charity and see it add up.</h4>
 					{/* 
 					//@ts-ignore */}
-					<h4>Together we've raised over <Counter amount={total} initial={100000} /></h4>
+					<h4 className="donation-raised-counter">Together we've raised over <Counter amount={total} initial={100000} /></h4>
 				</>
 			</AB>
 			{hasSubmittedEmail ? thankYouMessage :
