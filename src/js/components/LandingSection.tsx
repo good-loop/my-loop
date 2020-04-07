@@ -56,7 +56,7 @@ const doEmailSignUp = (e: { preventDefault: () => void }): void => {
 	e.preventDefault();
 	const formData: any = DataStore.getValue(ctaFormPath);
 	if ( ! formData || ! formData.email) return; // quiet fail NB: we didnt like the disabled look for a CTA
-	formData.notify = 'daniel@good-loop.com';
+	formData.notify = 'daniel@good-loop.com'; // HACK
 	formData.useraction="Join My.Good-Loop";
 	doRegisterEmail(formData);
 	//@ts-ignore
