@@ -35,7 +35,6 @@ const MyPage = () => {
 	return (
 		<div className='MyPage widepage'>
 			<LandingSection />
-			{/* <SplashCard /> */}
 			<OurMissionCard />
 			<RecentCampaignsCard />
 			<HowItWorksCard />

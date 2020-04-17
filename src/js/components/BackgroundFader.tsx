@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTransition, animated, config } from 'react-spring';
+import {isPortraitMobile} from '../base/utils/miscutils';
 
 const bgImagesDesktop = [
 	{ id: 0, url: '/img/wateraid-bg.jpg' },
@@ -23,8 +24,7 @@ const BackgroundFader = (): JSX.Element[] => {
 	const [index, setIndex] = useState(0);
 
 	// If user is viewing on mobile device in portrait mode, show appropiate asset
-	const isPortraitMobile = window.matchMedia("only screen and (max-width: 768px)").matches && window.matchMedia("(orientation: portrait)").matches;
-	const bgImages = isPortraitMobile ? bgImagesMobile : bgImagesDesktop;
+	const bgImages = isPortraitMobile() ? bgImagesMobile : bgImagesDesktop;
 
 	const transitions = useTransition({ bg: bgImages[index], icon: bgLogos[index] }, item => item.bg.id, {
 		from : { opacity: 0 },

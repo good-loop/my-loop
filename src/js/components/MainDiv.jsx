@@ -19,7 +19,7 @@ import NavBar from './MyLoopNavBar';
 
 // Pages
 import MyPage from './pages/MyPage';
-import CampaignPage from './pages/CampaignPage';
+import CampaignPage from './campaignpage/CampaignPage';
 import {BasicAccountPage} from '../base/components/AccountPageWidgets';
 import E404Page from '../base/components/E404Page';
 import TestPage from '../base/components/TestPage';

@@ -1,5 +1,7 @@
-
-
+/**
+ * HACK hard-code a few high-profile publishers
+ * TODO replace this with ajax loading of data from the portal (with a cache)
+ */
 const publishers = [
 	{
 		name: 'www.buzzfeed.com',
