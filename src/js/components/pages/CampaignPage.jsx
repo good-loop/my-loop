@@ -172,6 +172,10 @@ const CampaignPage = () => {
 		return ServerIO.getDonationsData({q:sqDon.query});
 	}, true, 5*60*1000);
 
+	// DEBUG HACK - to test handling of slow donations data, uncomment these lines
+	// pvDonationsBreakdown.resolved = false;
+	// pvDonationsBreakdown.value = null;
+
 	if (pvDonationsBreakdown.error) {
 		// TODO let's refactor this out into a standard error card -- possibly stick it in wwappbase or Misc
 		return <div>Error: {pvDonationsBreakdown.error}. Try reloading the page. Contact us if this persists.</div>;
@@ -180,14 +184,13 @@ const CampaignPage = () => {
 	let ncampaignTotal = pvDonationsBreakdown.value && pvDonationsBreakdown.value.total;
 	let ndonationValue = ncampaignTotal; // check if statically set and, if not, then update with latest figures
 	// Allow the campaign page to override and specify a total
-	let ncampaignTotalViews = pvDonationsBreakdown.value && pvDonationsBreakdown.value.stats.count;
 	let campaignPageDonations = ads.map(ad => ad.campaignPage && CampaignPageDC.donation(ad.campaignPage)).filter(x => x);
 	if (campaignPageDonations.length === ads.length) {
 		ndonationValue = Money.total(campaignPageDonations);
 	}
 	if (ndonationValue && ndonationValue.value) ndonationValue = ndonationValue.value; // WTF??
 	// also the per-charity numbers
-	let donByCid = pvDonationsBreakdown.value.by_cid;
+	let ndonByCid = pvDonationsBreakdown.value && pvDonationsBreakdown.value.by_cid;
 
 	let brandColor = branding.color || branding.backgroundColor;
 
@@ -247,8 +250,8 @@ const CampaignPage = () => {
 			return;
 		}
 		charities = charities.map(char => {
-			if (donByCid[char.id]) { // if the charities have been edited after the campaign they might be missing values.
-				return { ...char, donation: Math.floor(donByCid[char.id].value)};
+			if (ndonByCid && ndonByCid[char.id]) { // if the charities have been edited after the campaign they might be missing values.
+				return { ...char, donation: Math.floor(ndonByCid[char.id].value)};
 			} return char;
 		});
 
