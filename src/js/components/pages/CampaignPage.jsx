@@ -385,7 +385,7 @@ const AdvertCard = ({ ad, viewCountProp, donationTotal, totalViewCount, isPortra
 	);
 };
 
-
+// FIXME how does this relate to GoodLoopAd.jsx or GoodLoopUnit.jsx??
 const GoodLoopAd = memo(({ vertId, size, nonce, production, social, glParams = { 'gl.play': 'onclick' } }) => {
 	let prefix = '';
 	if (window.location.hostname.match(/^local/)) prefix = 'local';
