@@ -294,10 +294,6 @@ const CampaignPage = () => {
 		});
 	};
 
-	// const campaignsObject = () => {
-	// 	const campaignNames = pvViewData.value.buckets.reduce
-	// };
-
 	// Sum of the views from every ad in the campaign. We use this number for display
 	// and to pass it to the AdvertCards to calculate the money raised against the total.
 	let totalViewCount = sampleAdFromEachCampaign().reduce((acc, ad) => {
