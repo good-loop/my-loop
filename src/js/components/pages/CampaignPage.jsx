@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 import React, { memo, useEffect, createRef } from 'react';
 import Login from 'you-again';
 import _ from 'lodash';
@@ -31,12 +34,11 @@ const tomsCampaigns = /(josh|sara|ella)/; // For matching TOMS campaign names ne
  * HACK fix campaign name changes to clean up historical campaigns
  */
 const viewCount = (viewcount4campaign, ad) => {
-	if (!ad.campaign) return null;
+	if ( ! ad.campaign) return null;
 
 	// HACK TOMS?? ella / josh / sara
 	// Don't crunch down TOMS ads that aren't in the sara/ella/josh campaign group
 	if (ad.vertiser === 'bPe6TXq8' && ad.campaign.match(tomsCampaigns)) {
-		isMulti = true;
 		let keyword = 'josh';
 		if (ad.campaign.includes('sara')) keyword = 'sara';
 		if (ad.campaign.includes('ella')) keyword = 'ella';
@@ -98,35 +100,42 @@ const CampaignPage = () => {
 	q = sq.query;
 	const slug = DataStore.getValue('location', 'path', 1);
 	const all = slug === 'all';
-	if (!q && !all) {
+	if ( ! q && ! all) {
 		// No query -- show a list
 		// TODO better graphic design before we make this list widget public
-		if (!Login.isLoggedIn()) {
+		if ( ! Login.isLoggedIn()) {
 			return <div>Missing: campaign or advertiser ID. Please check the link you used to get here.</div>;
 		}
 		return <ListItems type={C.TYPES.Advert} servlet='campaign' />;
 	}
 
+	// TODO server side support to do this cleaner "give me published if possible, failing that archived, failing that draft"
 	// Try to get ads based on spec given in URL params
 	let pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
-	if (!pvAds.resolved) return <Misc.Loading text='Loading campaign data...' />;
-	let pvAdsDraft = null; // Be ready to fall back to ALL_BAR_TRASH if requested ad is draft-only
-	if (pvAds.resolved && !pvAds.value || !pvAds.value.hits || !pvAds.value.hits.length) {
-		pvAdsDraft = ActionMan.list({type: C.TYPES.Advert, status: C.KStatus.ALL_BAR_TRASH, q});
-		console.warn(`Unable to find ad ${adId} with status ${status}, falling back to ALL_BAR_TRASH`);
+	if ( ! pvAds.resolved) {
+		return <Misc.Loading text='Loading campaign info...' />;
 	}
-	if (pvAdsDraft && !pvAdsDraft.resolved) return <Misc.Loading text='Loading campaign data...' />;
+	// No published ads?
+	let pvAdsDraft = null; // Be ready to fall back to ALL_BAR_TRASH if requested ad is draft-only
+	if (pvAds.resolved && ( ! pvAds.value || ! pvAds.value.hits || ! pvAds.value.hits.length)) {
+		pvAdsDraft = ActionMan.list({type: C.TYPES.Advert, status: C.KStatus.ALL_BAR_TRASH, q});
+		console.warn(`Unable to find ad ${adid} with status ${status}, falling back to ALL_BAR_TRASH`);
+		if ( ! pvAdsDraft.resolved) {
+			return <Misc.Loading text='Loading draft campaign info...' />;
+		}
+	}
 
 	// If it's remotely possible to have an ad now, we have it. Which request succeeded, if any?
 	const pvAdsSuccess = [pvAds, pvAdsDraft].find(pv => pv && pv.resolved && pv.value && pv.value.hits);
 	let ads = pvAdsSuccess && pvAdsSuccess.value && pvAdsSuccess.value.hits;
-	if (ads && !all) ads = ads.slice(0, 10); // Limit to first 10 results unless we're on #campaign/all
-	if (!ads || !ads.length) return <BS.Alert>Could not load adverts for {q} {status}</BS.Alert>; // No ads?!
+	if (ads && ! all) ads = ads.slice(0, 10); // Limit to first 10 results unless we're on #campaign/all
+	if ( ! ads || ! ads.length) {
+		return <BS.Alert>Could not load adverts for {q} {status}</BS.Alert>; // No ads?!
+	}
 
 	// Get the advertiser's name (TODO append to advert as vertiserName)
 	const pvVertiser = ActionMan.getDataItem({type: C.TYPES.Advertiser, id: ads[0].vertiser, status: C.KStatus.PUBLISHED});
-	if (!pvVertiser.resolved) return <Misc.Loading text='Loading campaign data...' />;
-	const vertiser = pvVertiser.value;
+	const nvertiser = pvVertiser.value;
 
 	// Combine campaign page and branding settings from all ads
 	// Last ad wins any branding settings!
@@ -163,23 +172,20 @@ const CampaignPage = () => {
 		return ServerIO.getDonationsData({q:sqDon.query});
 	}, true, 5*60*1000);
 
-	if ( ! pvDonationsBreakdown.resolved ) {
-		return <Misc.Loading text='Loading campaign donations...' />;
-	}
-	if ( ! pvDonationsBreakdown.value ) {
+	if (pvDonationsBreakdown.error) {
 		// TODO let's refactor this out into a standard error card -- possibly stick it in wwappbase or Misc
 		return <div>Error: {pvDonationsBreakdown.error}. Try reloading the page. Contact us if this persists.</div>;
 	}
 
-	let campaignTotal = pvDonationsBreakdown.value.total;
-	let donationValue = campaignTotal; // check if statically set and, if not, then update with latest figures
+	let ncampaignTotal = pvDonationsBreakdown.value && pvDonationsBreakdown.value.total;
+	let ndonationValue = ncampaignTotal; // check if statically set and, if not, then update with latest figures
 	// Allow the campaign page to override and specify a total
-	let campaignTotalViews = pvDonationsBreakdown.value.stats.count;
+	let ncampaignTotalViews = pvDonationsBreakdown.value && pvDonationsBreakdown.value.stats.count;
 	let campaignPageDonations = ads.map(ad => ad.campaignPage && CampaignPageDC.donation(ad.campaignPage)).filter(x => x);
 	if (campaignPageDonations.length === ads.length) {
-		donationValue = Money.total(campaignPageDonations);
+		ndonationValue = Money.total(campaignPageDonations);
 	}
-	donationValue = donationValue.value;
+	if (ndonationValue && ndonationValue.value) ndonationValue = ndonationValue.value; // WTF??
 	// also the per-charity numbers
 	let donByCid = pvDonationsBreakdown.value.by_cid;
 
@@ -234,8 +240,12 @@ const CampaignPage = () => {
 		});
 	}
 
-	// Calculates total donations per charity based on percentage available, adding [donation] and [donationPercentage] to the charities object
+	/** Calculates total donations per charity based on percentage available, adding [donation] and [donationPercentage] to the charities object  */ 
 	const assignUnsetDonations = () => {
+		if ( ! ndonationValue) {
+			console.warn("Missing ndonationValue");
+			return;
+		}
 		charities = charities.map(char => {
 			if (donByCid[char.id]) { // if the charities have been edited after the campaign they might be missing values.
 				return { ...char, donation: Math.floor(donByCid[char.id].value)};
@@ -246,7 +256,7 @@ const CampaignPage = () => {
 		const donationTotalMinusUnset = Object.values(charities).reduce((t, {donation}) => t + donation, 0);
 		charities = charities.map(e => {
 			const percentage = e.donation * 100 / donationTotalMinusUnset;
-			const calculatedDonation = percentage * donationValue / 100;
+			const calculatedDonation = percentage * ndonationValue / 100;
 			return {...e, donation: calculatedDonation, donationPercentage: percentage};
 		});
 	};
@@ -259,7 +269,7 @@ const CampaignPage = () => {
 		}
 	});
 
-	// Picks one video from each campaign to display as a sample.
+	/** Picks one video from each campaign to display as a sample.  */
 	const sampleAdFromEachCampaign = () => {
 		const campaignNames = {};
 		// 1 ad per campaign, no adverts without a valid video
@@ -273,7 +283,7 @@ const CampaignPage = () => {
 				cname = ad.campaign;
 			}
 
-			if (!campaignNames[cname] && ad.videos[0].url) {
+			if ( ! campaignNames[cname] && ad.videos[0].url) {
 				campaignNames[cname] = true;
 				return true;
 			}
@@ -298,11 +308,11 @@ const CampaignPage = () => {
 		<CSS css={campaignPage.advanced && campaignPage.advanced.customcss} />
 		<CSS css={branding.customCss} />
 		<div className="widepage CampaignPage text-center">
-			<SplashCard branding={branding} campaignPage={campaignPage} donationValue={donationValue} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
+			<SplashCard branding={branding} campaignPage={campaignPage} donationValue={ndonationValue} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
 			<div className="container-fluid" style={{backgroundColor: '#af2009'}}>
 				<div className="intro-text">
 					<span>
-						At {vertiser.name || ads[0].name} we want to give back.
+						At {(nvertiser && nvertiser.name) || ads[0].name} we want to give back.
 						We work with Good-Loop to put out Ads for Good, and donate money to charity.
 						Together with <span className="font-weight-bold">{printer.prettyNumber(totalViewCount, 4)}</span> people
 						we've raised funds for the following causes and can't wait to see our positive impact go even further.
@@ -348,7 +358,7 @@ const CampaignPage = () => {
 								isPortraitMobile={isPortraitMobile}
 
 								viewCountProp={viewCount(viewcount4campaign, ad)}
-								donationTotal={donationValue}
+								donationTotal={ndonationValue}
 								totalViewCount={totalViewCount}
 							/>
 						)}

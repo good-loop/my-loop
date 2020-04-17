@@ -2,16 +2,7 @@
 import Money from '../base/data/Money';
 
 
-class CampaignPage {} //extends DataClass {
-// 	/** @type {Money} */
-// 	dntn;
-
-// 	constructor(base) {
-// 		Object.assign(this, base);
-// 		this['@type'] = 'CampaignPage';
-// 	}
-// }
-// DataClass.register(CampaignPage, "CampaignPage");
+class CampaignPage {}
 
 /**
  * Utility hack to handle old string format
