@@ -21,7 +21,7 @@ const baseConfig = {
 	},
 	module: {
 		rules: [
-			{
+			{	// Typescript
 				test: /\.tsx?$/,
 				loader: 'babel-loader',
 				exclude: /node_modules/,
@@ -37,7 +37,7 @@ const baseConfig = {
 					]
 				}
 			},
-			{
+			{	// .js or .jsx
 				test: /.jsx?$/,
 				loader: 'babel-loader',
 				exclude: /node_modules/,
