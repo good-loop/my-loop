@@ -45,13 +45,14 @@ const DEFAULT_PAGE = 'my';
 
 const loginResponsePath = ['misc', 'login', 'response'];
 
+Login.app = C.app.service;
+
 /**
-		Top-level: tabs
+	TODO refactor to use MainDivBase
 */
 class MainDiv extends Component {
 	constructor(props) {
 		super(props);
-		Login.app = C.app.service;
 	}
 
 	componentDidMount() {
