@@ -8,7 +8,7 @@ import { Container } from 'reactstrap';
 import pivot from 'data-pivot';
 import PV from 'promise-value';
 import Roles from '../../base/Roles';
-import {isPortraitMobile} from '../../base/utils/miscutils';
+import {isPortraitMobile, sum} from '../../base/utils/miscutils';
 import C from '../../C';
 import ServerIO from '../../plumbing/ServerIO';
 import DataStore from '../../base/plumbing/DataStore';
@@ -34,6 +34,9 @@ import CampaignSplashCard from './CampaignSplashCard';
 const tomsCampaigns = /(josh|sara|ella)/; // For matching TOMS campaign names needing special treatment
 /**
  * HACK fix campaign name changes to clean up historical campaigns
+ * @param {Object} viewcount4campaign
+ * @param {!Advert} ad
+ * @returns {Number}
  */
 const viewCount = (viewcount4campaign, ad) => {
 	if ( ! ad.campaign) return null;
@@ -141,7 +144,10 @@ const CampaignPage = () => {
 	let sqDon = new SearchQuery();
 	for (let i = 0; i < ads.length; i++) {
 		sqDon = SearchQuery.or(sqDon, 'vert:' + ads[i].id);
-		if (ads[i].campaign) sqDon = SearchQuery.or(sqDon, 'campaign:' + ads[i].campaign);
+		if (ads[i].campaign) {
+			let sqc = SearchQuery.setProp(new SearchQuery(), 'campaign', ads[i].campaign);
+			sqDon = SearchQuery.or(sqDon, sqc);
+		}
 	}
 
 	// load the community total for the ad
@@ -237,10 +243,14 @@ const CampaignPage = () => {
 
 	// Sum of the views from every ad in the campaign. We use this number for display
 	// and to pass it to the AdvertCards to calculate the money raised against the total.
-	let campaignNames = _.uniq(ads.map(campaignNameForAd));
-	let totalViewCount = campaignNames.reduce((acc, ad) => {
-		return acc + viewCount(viewcount4campaign, ad);
-	}, 0);
+	let totalViewCount = 0;
+	{
+		const ad4c = {};
+		ads.forEach(ad => ad4c[ad.campaignNameForAd] = ad);
+		let ads1perCampaign = Object.values(ad4c);
+		let views = ads1perCampaign.map(ad => viewCount(viewcount4campaign, ad));		
+		totalViewCount = sum(views);
+	}
 
 	assignUnsetDonations();
 
