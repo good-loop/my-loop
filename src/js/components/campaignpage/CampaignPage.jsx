@@ -246,7 +246,7 @@ const CampaignPage = () => {
 	let totalViewCount = 0;
 	{
 		const ad4c = {};
-		ads.forEach(ad => ad4c[ad.campaignNameForAd] = ad);
+		ads.forEach(ad => ad4c[campaignNameForAd(ad)] = ad);
 		let ads1perCampaign = Object.values(ad4c);
 		let views = ads1perCampaign.map(ad => viewCount(viewcount4campaign, ad));		
 		totalViewCount = sum(views);
