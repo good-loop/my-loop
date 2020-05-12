@@ -39,7 +39,6 @@
     "compile": "webpack --config $PWD/webpack.config.js --progress --colors",
     "compile-watch": "webpack --config $PWD/webpack.config.js --progress --colors --watch",
     "compile-watch-fast": "NO_PROD=true webpack --config $PWD/webpack.config.js --progress --colors --watch",
-    "flow": "flow; test $? -eq 0 -o $? -eq 2",
     "test": "jest",
     "type-check": "tsc --noEmit"
   },
