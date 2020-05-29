@@ -17,7 +17,7 @@ fi
 ########
 ### Whom shall receive the emails?:: Add new recipients with a comma separating the addresses
 ########
-EMAIL_RECIPIENTS='sysadmin@sodash.com'
+EMAIL_RECIPIENTS='sysadmin@good-loop.com,andris@good-loop.com'
 DELAY_SECONDS='10'
 
 ########
@@ -76,7 +76,7 @@ function send_alert {
 
 ATTACHMENTS=()
 
-NEW_FAIL_LOGS=$(find test-results/Logs\(failure\)/ -type f -iname "*.txt" -amin +0 -amin -4)
+NEW_FAIL_LOGS=$(find ~/winterwell/wwappbase.js/test-base/test-results/Logs/ -type f -iname "*.txt" -amin +0 -amin -4)
 
 if [[ $NEW_FAIL_LOGS = '' ]]; then
         printf "\nNo Failures Detected\n"
