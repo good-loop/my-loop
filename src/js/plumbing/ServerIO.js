@@ -99,3 +99,31 @@ ServerIO.searchCharities = ({q, prefix, from, size, status, recommended, impact}
 };
 
 ServerIO.getCharity = ({id}) => ServerIO.load(`https://app.sogive.org/charity/${id}.json`);
+
+// TODO the following method was removed from `base`
+// it's reinstated here to avoid breakage of the site, but we might just purge all calls to it.
+/**
+* Function will only log the same data once per session
+* @param tag String used to identify data
+* @param data optional: any additional data you wish to send along with the request
+*/
+ServerIO.mixPanelTrack = ({mixPanelTag, data = {}}) => {
+	// Record request if this has not already been done this session
+	const {mixpanel} = window;
+	const path = C.TRACKPATH.concat(mixPanelTag);
+	const alreadyTracked = DataStore.getValue(path);
+	const userId = Login.getId();
+	
+	if( userId ) {
+		data.user = userId;
+	}
+	
+	if(mixpanel && !alreadyTracked) {
+		try {
+			mixpanel.track(mixPanelTag, data);
+			DataStore.setValue(path, true, false);
+		} catch(e) {
+			console.warn(e);
+		}
+	}
+};
