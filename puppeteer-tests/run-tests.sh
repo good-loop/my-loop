@@ -17,7 +17,7 @@ fi
 ########
 ### Whom shall receive the emails?:: Add new recipients with a comma separating the addresses
 ########
-EMAIL_RECIPIENTS='sysadmin@good-loop.com,andris@good-loop.com'
+EMAIL_RECIPIENTS='sysadmin@good-loop.com,daniel@good-loop.com'
 DELAY_SECONDS='10'
 
 ########
