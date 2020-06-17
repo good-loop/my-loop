@@ -34,12 +34,8 @@
     "sjtest": "^0.4.9",
     "wwutils": "^0.9.5",
     "you-again": "^0.8.8",
-    "jest": "^25.1.0",
     "shelljs": "^0.8.3",
-    "yargs": "^15.1.0",
-    "jest-puppeteer": "^4.4.0",
-    "puppeteer": "^2.0.0",
-    "puppet-theatre": "latest"
+    "yargs": "^15.1.0"
   },
   "scripts": {
     "compile": "webpack --config $PWD/webpack.config.js --progress --colors",
@@ -76,11 +72,12 @@
     "eslint-plugin-react-hooks": "^3.0.0",
     "intl": "^1.2.5",
     "jest": "^25.2.7",
+    "jest-cli": "^26.0.1",
     "jest-environment-puppeteer": "^4.3.0",
     "jest-puppeteer": "^4.4.0",
     "puppeteer": "^3.0.0",
-    "puppet-theatre": "^1.0.18",
     "shelljs": "^0.8.3",
+    "ts-jest": "26.1.0",
     "typescript": "^3.8.3",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
