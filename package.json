@@ -1,6 +1,6 @@
 {
   "name": "My-Good-Loop",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "My-Loop",
   "author": "Daniel Winterstein",
   "repository": {
@@ -30,7 +30,13 @@
     "react-spring": "^8.0.27",
     "reactstrap": "^8.4.1",
     "sjtest": "^0.4.9",
-    "you-again": "^0.8.8"
+    "you-again": "^0.8.8",
+    "jest": "^25.1.0",
+    "shelljs": "^0.8.3",
+    "yargs": "^15.1.0",
+    "jest-puppeteer": "^4.4.0",
+    "puppeteer": "^2.0.0",
+    "puppet-theatre": "latest"
   },
   "scripts": {
     "compile": "webpack --config $PWD/webpack.config.js --progress --colors",
