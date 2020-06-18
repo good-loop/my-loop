@@ -18,6 +18,9 @@ import DataStore from '../../base/plumbing/DataStore';
  * 3) A table showing how many times their shared ads have been viewed by others
  */
 const ShareAnAd = ({adid, className, color}) => {
+
+	if (true) return null; // this is currently buggy
+
 	// Load in back-up vert data
 	// Easiest to just always load back-up data:
 	// avoids a race-condition where adHistory is provided after initial render has set off fetch

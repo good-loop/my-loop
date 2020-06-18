@@ -4,7 +4,7 @@
 import React, { memo, useEffect, createRef } from 'react';
 import Login from 'you-again';
 import _ from 'lodash';
-import { Container } from 'reactstrap';
+import { Container, Alert } from 'reactstrap';
 import pivot from 'data-pivot';
 import PV from 'promise-value';
 import Roles from '../../base/Roles';
@@ -14,13 +14,11 @@ import ServerIO from '../../plumbing/ServerIO';
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
 import ActionMan from '../../plumbing/ActionMan';
-import {ListItems} from '../../base/components/ListLoad';
 import Footer from '../Footer';
 import MyLoopNavBar from '../MyLoopNavBar';
 import Money from '../../base/data/Money';
 import CampaignPageDC from '../../data/CampaignPage';
 import SearchQuery from '../../base/searchquery';
-import BS from '../../base/components/BS';
 import ACard from '../cards/ACard';
 import CharityCard from '../cards/CharityCard';
 import {sortByDate} from '../../base/utils/SortFn';
@@ -30,6 +28,8 @@ import CSS from '../../base/components/CSS';
 import GoodLoopAd from './GoodLoopAd';
 import PublishersCard from './PublishersCard';
 import CampaignSplashCard from './CampaignSplashCard';
+import ErrorAlert from '../../base/components/ErrorAlert';
+import ListLoad from '../../base/components/ListLoad';
 
 const tomsCampaigns = /(josh|sara|ella)/; // For matching TOMS campaign names needing special treatment
 /**
@@ -104,13 +104,13 @@ const CampaignPage = () => {
 		if ( ! Login.isLoggedIn()) {
 			return <div>Missing: campaign or advertiser ID. Please check the link you used to get here.</div>;
 		}
-		return <ListItems type={C.TYPES.Advert} servlet='campaign' />;
+		return <ListLoad type={C.TYPES.Advert} servlet='campaign' />;
 	}
 	if ( ! pvAds.resolved) {
 		return <Misc.Loading text='Loading campaign info...' />;
 	}
 	if (pvAds.error) {		
-		return <BS.Alert>Error loading advert data</BS.Alert>;
+		return <ErrorAlert>Error loading advert data</ErrorAlert>;
 	}
 
 	// If it's remotely possible to have an ad now, we have it. Which request succeeded, if any?
@@ -119,7 +119,7 @@ const CampaignPage = () => {
 		ads = ads.slice(0, 10); // Limit to first 10 results unless we're on #campaign/all
 	}
 	if ( ! ads || ! ads.length) {
-		return <BS.Alert>Could not load adverts for {sq.query} {status}</BS.Alert>; // No ads?!
+		return <Alert>Could not load adverts for {sq.query} {status}</Alert>; // No ads?!
 	}
 
 	// Get the advertiser's name (TODO append to advert as vertiserName)

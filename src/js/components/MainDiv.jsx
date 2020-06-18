@@ -8,8 +8,7 @@ import { modifyHash } from 'wwutils';
 import DataStore from '../base/plumbing/DataStore';
 import Roles from '../base/Roles';
 import C from '../C';
-import Crud from '../base/plumbing/Crud'; // Crud is loaded here (but not used here)
-import BS from '../base/components/BS4';
+import Crud from '../base/plumbing/Crud'; // Crud is loaded here to init (but not used here)
 import Profiler from '../base/Profiler';
 
 // Templates

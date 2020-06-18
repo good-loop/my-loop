@@ -11,6 +11,7 @@ import NavBar from '../MyLoopNavBar';
 import Footer from '../Footer';
 import {getAllXIds} from '../../base/Profiler';
 import Misc from '../../base/components/Misc';
+import {Card as BSCard, CardHeader, CardBody} from 'reactstrap';
 
 const Page = () => {
 	const xids = DataStore.getValue(['data', 'Person', 'xids']) || [];
@@ -23,41 +24,35 @@ const Page = () => {
 	}, [Login && Login.aliases && Login.aliases.length]);
 
 	return (
-		<div className='page DataPage text-center'>
+		<div className='page'>
 			<NavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
-			<div className='container-fluid'>
-				<div className='row panel-title panel-heading sub-header p-1'> 
-					Digital Mirror
-				</div>
-				<div className='row p-1'> 
-					<DigitalMirrorCard xids={xids} className="digitalMirror" mixPanelTag='DigitalMirror' />
-					<div className='flex-column'>
-						<div>Connect your social media - you can use this to boost the donations you generate!</div>
-						<SignUpConnectCard allIds={xids} className="socialConnect" />	
-					</div>
-				</div>
-			</div>
+			<div className='container mt-5'>
 
-			<div className="consentControls container-fluid">
-				<div className='row panel-title panel-heading sub-header p-1'> 
-					Consent Controls
-				</div>
-				<div className='row p-1'> 
-					{Login.isLoggedIn() ? (
-						<ConsentWidget xids={xids} />
-					) : (
-						<Misc.LoginToSee />
-					)}
-				</div>
-			</div>
+				<BSCard>
+					<CardHeader>Consent Controls</CardHeader>
+					<CardBody>
+						{Login.isLoggedIn()? <ConsentWidget xids={xids} /> : <Misc.LoginToSee /> }
+					</CardBody>
+				</BSCard>				
+
+				<BSCard>
+					<CardHeader>Digital Mirror</CardHeader>
+					<CardBody>
+						<DigitalMirrorCard xids={xids} className="digitalMirror" mixPanelTag='DigitalMirror' />
+						<div className='flex-column'>
+							<div>Connect your social media - you can use this to boost the donations you generate!</div>
+							<SignUpConnectCard allIds={xids} className="socialConnect" />	
+						</div>
+					</CardBody>
+				</BSCard>
 			
-			<div className="linkedProfiles container-fluid">
-				<div className='row panel-title panel-heading sub-header p-1'> 
-					Linked Profiles
-				</div>
-				<div className='row p-1'> 
-					<LinkedProfilesCard xids={xids} />
-				</div>
+				<BSCard>
+					<CardHeader>Linked Profiles</CardHeader>
+					<CardBody>
+						<LinkedProfilesCard xids={xids} />
+					</CardBody>
+				</BSCard>
+				
 			</div>
 			<Footer className='bg-gl-red' showSocialMediaLinks />
 		</div>

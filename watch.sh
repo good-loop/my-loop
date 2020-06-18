@@ -1,1 +1,1 @@
-../wwappbase.js/template/watch.sh
+../wwappbase.js/project/watch.sh

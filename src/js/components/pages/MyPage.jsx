@@ -32,14 +32,15 @@ const MyPage = () => {
 		}
 	});
 
+	// <ShareAdCard /> is buggy, so removed for now
+
 	return (
 		<div className='MyPage widepage'>
 			<LandingSection />
 			<OurMissionCard />
 			<RecentCampaignsCard />
 			<HowItWorksCard />
-			<CharityPicker />
-			<ShareAdCard />
+			<CharityPicker />			
 			<ContactCard />
 			<TimeAndAttentionCard />
 			<Footer />
@@ -56,22 +57,6 @@ const TestAd = () => {
 		<h4>Hello Dev. Yay! You've scrolled down here -- Let's see an ad and raise some money for charity :)</h4>
 		<script src="http://ib.adnxs.com/ttj?id=17741445&size=300x250" type="text/javascript"></script>
 	</div>);
-};
-
-
-const SplashCard = () => {
-	return (
-		<div className='splash img-block' style={{}}>
-			<MyLoopNavBar logo='/img/logo-in-pill.svg' backgroundColor='transparent' />
-			<div className="container">
-				<SignUpConnectCard className='' />
-				<div className="decorations">
-					<img className="doing-good" src="/img/doinggoodfeelsgood.svg" alt="" />
-					<img className="little-flowers" src="/img/littleflowers.svg" alt="" />
-				</div>
-			</div>
-		</div>
-	);
 };
 
 const ContactCard = () => {
@@ -185,31 +170,6 @@ const HowItWorksCard = () => {
 	</>);
 };
 
-
-const ShareAdCard = () => {
-	// ?? how is this populated??
-	let xids = DataStore.getValue(['data', 'Person', 'xids']);
-	// ??Only interested in @trk ids. Other types won't have associated watch history ??
-	let trkIds = xids && xids.filter(xid => xid.match(/@trk$/));
-
-	if (!yessy(trkIds)) {
-		console.log("ShareAdCard - no trkIds = no ad??", xids);
-		return <div className='top-p-1'><ShareAnAd /></div>;
-	}
-
-	// What was the last thing they watched? Actually, just anything (race)
-	let pvLastAd = DataStore.fetch(['misc', 'lastAd', JSON.stringify(trkIds)], () => {
-		// Fetch ad-history for all known tracking IDs...
-		const pAds = trkIds.map(trkId => ServerIO.getLastAd(trkId));
-		console.log(`This is the map of tracker ids and getLastAd applied to them`, pAds);
-		const pAd = Promise.race(pAds);
-		// TODO pick the most ad?? (but oh well, I think picking an earlier ad is harmless)
-		return pAd;
-	});
-	if (!pvLastAd.resolved) return <Misc.Loading />;
-	const adid = pvLastAd.value && pvLastAd.value.id; // NB: the server might return an error, in which case adid is null
-	return <div className='top-p-3'><ShareAnAd adid={adid} /></div>;
-};
 
 /**
  * Stick some text in this to put it inside a thick circular border.
