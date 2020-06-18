@@ -1,6 +1,6 @@
 import React from 'react';
 import Login from 'you-again';
-import { XId } from 'wwutils';
+import XId from '../../base/data/XId';
 
 import C from '../../C';
 import Person from '../../base/data/Person';

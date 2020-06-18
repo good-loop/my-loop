@@ -1,7 +1,6 @@
 import React from 'react';
 import DataStore from '../base/plumbing/DataStore';
 import {assMatch, assert} from 'sjtest';
-import {is} from 'wwutils';
 
 /*
 A CSS example:
@@ -49,7 +48,7 @@ const AB = ({label, children}) => {
 	if (children.length === 1) return children[0];
 
 	let vi = getVersion(label, children.length);	
-	let child = children[vi]
+	let child = children[vi];
 	console.log("AB: "+label+" picked "+vi+" of "+children.length);
 	return child;
 };

@@ -1,14 +1,15 @@
 import React from 'react';
 
 import { assert } from 'sjtest';
-import { Grid, Row, Col } from 'react-bootstrap';
+import { Row, Col } from 'reactstrap';
 import C from '../C';
 import DataStore from '../base/plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
 import Misc from '../base/components/Misc';
 import {getType, getId} from '../base/data/DataClass';
-import {encURI} from 'wwutils';
+import {encURI} from '../base/utils/miscutils';
 import NGO from '../base/data/NGO';
+import $ from 'jquery';
 
 const COOPLABELS = {
 	ALLOW_OTHERS: "allow other charities (recommended)",
@@ -32,11 +33,11 @@ const SimplifiedCharityControls = ({entity, path, ...other}) => {
 				options={['ALLOW_OTHERS', 'MUST_USE_ONLY_MINE', 'MUST_USE_SOME_OF_MINE']}
 				labels={COOPLABELS}
 			/>
-			<Grid fluid><Row>
+			<Row>
 				<Col sm={4}><SimplifiedCharityForm path={path} i={0} /></Col>
 				<Col sm={4}><SimplifiedCharityForm path={path} i={1} /></Col>
 				<Col sm={4}><SimplifiedCharityForm path={path} i={2} /></Col>
-			</Row></Grid>
+			</Row>
 		</Misc.Card>
 	);
 };

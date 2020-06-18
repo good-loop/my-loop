@@ -1,5 +1,5 @@
 import React from 'react';
-import { join } from 'wwutils';
+import {space} from '../base/utils/miscutils';
 import { SocialMediaFooterWidget } from './SocialLinksWidget';
 import MDText from '../base/components/MDText';
 
@@ -10,7 +10,7 @@ import MDText from '../base/components/MDText';
  * @param style {Object} css styling 
  */
 const Footer = ({className, leftFooter, rightFooter, style, showSocialMediaLinks}) => (
-	<div className={join('footer p-3', className)} style={style}>
+	<div className={space('footer p-3', className)} style={style}>
 		{showSocialMediaLinks? 
 			<SocialMediaFooterWidget 
 				type='goodloop'

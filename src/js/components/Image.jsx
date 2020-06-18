@@ -1,6 +1,6 @@
 import React from 'react';
 import DataStore from '../base/plumbing/DataStore';
-import { join } from 'wwutils';
+import { space } from '../base/utils/miscutils';
 
 // FIXME this doesnt get printed 'cos Bootstrap sets background to off for printing.
 // Either (a) stronger css to get it printed, or (b) use and <img> instead
@@ -18,7 +18,7 @@ const RoundLogo = ({className, ...rest}) => <BaseLogo {...rest} className={'roun
  * Occupies 1/3 screen-width by default.
  */
 const SquareLogo = ({className, children, ...rest}) => (
-	<BaseLogo {...rest} className={join('square-logo', className)}>
+	<BaseLogo {...rest} className={space('square-logo', className)}>
 		<div className="squarener" />
 		{children}
 	</BaseLogo>
@@ -42,7 +42,6 @@ const optimise = url => {
 	}
 	return optiurl;
 };
-
 
 // TODO Instead of a jsx widget, have a function url -> optimised url. 
 /** Grabs either standard or mobile-optimised image depending on context

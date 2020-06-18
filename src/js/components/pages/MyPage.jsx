@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 // import PV from 'promise-value';
-import {yessy} from 'wwutils';
+import {yessy} from '../../base/utils/miscutils';
 
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';

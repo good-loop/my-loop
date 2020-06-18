@@ -2,7 +2,8 @@
 // social media data linked by the user
 import React, {useEffect, useRef} from 'react';
 import _ from 'lodash';
-import {XId, encURI} from 'wwutils';
+import {encURI} from '../../base/utils/miscutils';
+import XId from '../../base/data/XId';
 
 import PropControl from '../../base/components/PropControl';
 import DataStore from '../../base/plumbing/DataStore';

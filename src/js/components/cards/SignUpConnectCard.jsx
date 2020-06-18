@@ -1,16 +1,17 @@
 import React from 'react';
-import { XId, join, toTitleCase } from 'wwutils';
+import { space, toTitleCase } from '../../base/utils/miscutils';
 import { getProfilesNow } from '../../base/Profiler';
 import { LoginLink, SocialSignInButton } from '../../base/components/LoginWidget';
 import Misc from '../../base/components/Misc';
 import DataStore from '../../base/plumbing/DataStore';
+import XId from '../../base/data/XId';
 
 const signInOrConnected = ({service, xid}) => {
 	if (xid) return <Connected service={service} xid={xid} />;
 	
-	if (service === 'good-loop') return (
-		<LoginLink className='btn bg-gl-red white'><Misc.Icon fa='envelope' /> Sign Up</LoginLink>
-	);
+	if (service === 'good-loop') {
+		return <LoginLink className='btn bg-gl-red white'><Misc.Icon fa='envelope' /> Sign Up</LoginLink>;
+	}
 
 	return (
 		<SocialSignInButton service={service} verb='connect' />
@@ -29,7 +30,7 @@ const SignUpConnectCard = ({className}) => {
 	const service2xid = xids.reduce((acc, id) => ({[XId.service(id)]: id, ...acc}), {});
 
 	return (
-		<div className={join('social-media-card', className)}>
+		<div className={space('social-media-card', className)}>
 			<p className="tagline">
 				Boost your donations<br/>
 				and track your impact
