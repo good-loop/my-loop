@@ -40,7 +40,7 @@ const MyPage = () => {
 			<OurMissionCard />
 			<RecentCampaignsCard />
 			<HowItWorksCard />
-			<CharityPicker />			
+			<CharityPicker />
 			<ContactCard />
 			<TimeAndAttentionCard />
 			<Footer />
