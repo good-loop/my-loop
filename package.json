@@ -15,7 +15,7 @@
     "easyi18n": "^1.1.1",
     "hashmap": "^2.4.0",
     "intl": "^1.2.5",
-    "jquery": "^3.5.0",
+    "jquery": "^3.5.1",
     "js-cookie": "^2.2.1",
     "lodash": "^4.17.15",
     "md5": "^2.2.1",
@@ -30,16 +30,10 @@
     "react-spring": "^8.0.27",
     "reactstrap": "^8.4.1",
     "sjtest": "^0.4.9",
-    "you-again": "^0.8.8",
-    "jest": "^25.1.0",
-    "shelljs": "^0.8.3",
-    "yargs": "^15.1.0",
-    "jest-puppeteer": "^4.4.0",
-    "puppeteer": "^2.0.0",
-    "puppet-theatre": "latest"
+    "you-again": "^0.8.8"
   },
   "scripts": {
-    "compile": "webpack --config $PWD/webpack.config.js --progress --colors",
+    "compile": "webpack --config $PWD/webpack.config.js --progress --colors && git log -1 > web/build/npm-compile.gitlog.txt",
     "compile-watch": "webpack --config $PWD/webpack.config.js --progress --colors --watch",
     "compile-watch-fast": "NO_PROD=true webpack --config $PWD/webpack.config.js --progress --colors --watch",
     "test": "jest",
@@ -78,13 +72,13 @@
     "less": "^3.11.1",
     "less-loader": "^5.0.0",
     "mini-css-extract-plugin": "^0.9.0",
-    "puppet-theatre": "^1.0.18",
     "puppeteer": "^3.0.0",
+    "puppet-theatre": "^1.0.18",
     "shelljs": "^0.8.3",
     "typescript": "^3.8.3",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
-    "yargs": "^15.1.0"
+    "yargs": "^15.3.1"
   },
   "jest": {
     "preset": "jest-puppeteer",

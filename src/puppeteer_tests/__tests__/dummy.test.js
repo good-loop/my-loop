@@ -1,6 +1,6 @@
 
 const config = JSON.parse(process.env.__CONFIGURATION);
-const { ourServers} = require('../utils/testConfig');
+const { ourServers} = require('../testConfig');
 
 const baseSite = ourServers[config.site];
 

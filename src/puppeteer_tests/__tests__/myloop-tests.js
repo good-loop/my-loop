@@ -1,8 +1,8 @@
 const puppeteer = require('puppeteer');
 const $ = require('jquery');
-const { CommonSelectors, MyLoopSelectors, TwitterSelectors} = require('../utils/MasterSelectors');
-const {fillInForm, login, watchAdvertAndDonate} = require('../res/UtilityFunctions');
-const {password, username, twitterPassword, twitterUsername} = require('../../../logins/sogive-app/puppeteer.credentials');
+const { CommonSelectors, MyLoopSelectors, TwitterSelectors} = require('../MasterSelectors');
+const {fillInForm, login, watchAdvertAndDonate} = require('../test-base/UtilityFunctions');
+const {password, username, twitterPassword, twitterUsername} = require('../../../../logins/test/Credentials');
 
 
 const timeStamp = new Date().toISOString();

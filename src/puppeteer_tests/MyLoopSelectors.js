@@ -1,3 +1,4 @@
+
 const MyLoopSelectors = {
 	logIn: "#top-right-menu",
 	logged_in_greeting:".dropdown",

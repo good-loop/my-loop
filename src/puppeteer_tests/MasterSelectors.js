@@ -1,8 +1,5 @@
-import PortalSelectors from './PortalSelectors';
-import AdServerSelectors from './AdServerSelectors';
-import SoGiveSelectors from './SoGiveSelectors';
-import MyLoopSelectors from './MyLoopSelectors';
-import DemoPageSelectors from './DemoPageSelectors';
+
+const MyLoopSelectors = require('./MyLoopSelectors');
 
 // Selectors that are used across all platfroms are written directly in SelectorsMaster
 const CommonSelectors = {
@@ -36,12 +33,8 @@ const TwitterSelectors = {
 };
 
 module.exports = {
-	AdServerSelectors,
 	CommonSelectors,
 	FacebookSelectors,
-	PortalSelectors,
-	SoGiveSelectors,
 	TwitterSelectors,
-	MyLoopSelectors,
-	DemoPageSelectors
+	MyLoopSelectors
 };

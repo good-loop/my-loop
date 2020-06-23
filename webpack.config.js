@@ -13,7 +13,7 @@ const webDir = process.env.OUTPUT_WEB_DIR || 'web';
 const baseConfig = {
 	entry: ['@babel/polyfill', './src/js/app.jsx'],
 	output: {
-		path: path.resolve(__dirname, './' + webDir + '/build/'),
+		path: path.resolve(__dirname, './' + webDir + '/build/js/'),
 		// filename: is left undefined and filled in by makeConfig
 	},
 	devtool: 'source-map',
@@ -82,12 +82,12 @@ const makeConfig = ({ filename, mode }) => {
 };
 
 const configs = [
-	makeConfig({filename: 'js/bundle-debug.js', mode: 'development' }),
+	makeConfig({filename: 'bundle-debug.js', mode: 'development' }),
 ];
 
 // Allow debug-only compilation for faster iteration in dev
 if (process.env.NO_PROD !== 'true') {
-	configs.push(makeConfig({filename: 'js/bundle.js', mode: 'production' }));
+	configs.push(makeConfig({filename: 'bundle.js', mode: 'production' }));
 }
 
 // Output bundle files for production and dev/debug
