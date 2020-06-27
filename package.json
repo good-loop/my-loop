@@ -33,7 +33,7 @@
     "you-again": "^0.8.8"
   },
   "scripts": {
-    "compile": "webpack --config $PWD/webpack.config.js --progress --colors && git log -1 > web/build/npm-compile.gitlog.txt",
+    "compile": "webpack --config $PWD/webpack.config.js --progress --colors && ./gitstamp.sh",
     "compile-watch": "webpack --config $PWD/webpack.config.js --progress --colors --watch",
     "compile-watch-fast": "NO_PROD=true webpack --config $PWD/webpack.config.js --progress --colors --watch",
     "test": "jest",
@@ -58,7 +58,6 @@
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-const-enum": "^1.0.1",
-    "css-loader": "^3.6.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-plugin-import": "^2.20.2",
@@ -73,7 +72,6 @@
     "less-loader": "^5.0.0",
     "mini-css-extract-plugin": "^0.9.0",
     "puppeteer": "^3.0.0",
-    "puppet-theatre": "^1.0.18",
     "shelljs": "^0.8.3",
     "typescript": "^3.8.3",
     "webpack": "^4.42.1",
