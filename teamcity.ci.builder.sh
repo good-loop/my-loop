@@ -13,7 +13,7 @@
 PROJECT_NAME='my-loop' #This name will be used to create/or/refer-to the directory of the project in /home/winterwell/
 GIT_REPO_URL='github.com:/good-loop/my-loop' #
 PROJECT_USES_BOB='no'  #yes or no :: If 'yes', then you must also supply the name of the service which is used to start,stop,or restart the jvm
-NAME_OF_SERVICE='my-loop' # This can be blank, but if your service uses a JVM, then you must put in the service name which is used to start,stop,or restart the JVM on the server.
+NAME_OF_SERVICE='' # This can be blank, but if your service uses a JVM, then you must put in the service name which is used to start,stop,or restart the JVM on the server.
 PROJECT_USES_NPM='yes' # yes or no
 PROJECT_USES_WEBPACK='yes' #yes or no
 PROJECT_USES_JERBIL='no' #yes or no
@@ -51,7 +51,6 @@ NPM_RUN_COMPILE_LOGFILE="/home/winterwell/.npm/_logs/npm.run.compile.for.$PROJEC
 ##### FUNCTIONS
 ## Do not edit these unless you know what you are doing
 #####
-
 ATTACHMENTS=()
 function send_alert_email {
     for email in ${EMAIL_RECIPIENTS[@]}; do
@@ -253,23 +252,6 @@ function start_service {
 }
 
 
-# Automated Testing -- Evaluate and Use
-function use_automated_tests {
-    if [[ $PROJECT_USES_AUTOMATED_TESTING = 'yes' ]]; then
-        BUILD_PROCESS_NAME='automated testing'
-        BUILD_STEP='automated tests were running'
-        for server in ${TARGET_SERVERS[@]}; do
-            printf "\nEnding old automated testing session on $server...\n"
-            ssh winterwell@$server "tmux kill-session -t $PROJECT_NAME-automated-tests"
-            printf "\n$server is starting automated tests...\n"
-            ssh winterwell@$server "tmux new-session -d -s $PROJECT_NAME-automated-tests -n panel01"
-            ssh winterwell@$server "tmux send-keys -t $PROJECT_NAME-automated-tests 'cd $PROJECT_ROOT_ON_SERVER && npm run tests' C-m"
-            printf "\n$server is running automated tests in a tmux session\n"
-            printf "\tto check the progress, use ssh winterwell@$server and then use tmux attach-sessiont -t $PROJECT_NAME-automated-tests\n"
-        done
-    fi
-}
-
 
 ################
 ### Run the Functions in Order
@@ -286,4 +268,3 @@ use_npm
 use_webpack
 use_jerbil
 start_service
-use_automated_tests
