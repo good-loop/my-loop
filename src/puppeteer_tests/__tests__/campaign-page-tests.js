@@ -1,7 +1,4 @@
 const puppeteer = require('puppeteer');
-const { CommonSelectors, MyLoopSelectors, TwitterSelectors } = require('../MasterSelectors');
-const { fillInForm, login, watchAdvertAndDonate } = require('../test-base/UtilityFunctions');
-const { password, username, twitterPassword, twitterUsername } = require('../Credentials');
 
 // await page.goto('https://testmy.good-loop.com/#campaign/?gl.vert=CeuNVbtW');
 
@@ -24,15 +21,16 @@ describe('Display tests', () => {
 	});
 
 	it('Displays information based on vert id', async () => {
-		const hnhLogoUrl = 'https://media.good-loop.com/uploads/standard/Untitled_design_50-16466054913389307591.png';
-
+		await page.goto('https://testmy.good-loop.com/#campaign/?gl.vert=CeuNVbtW');
 		await page.waitForSelector('.hero-logo');
 		const logo = await page.$eval('.hero-logo', e => e.src);
 
+		const hnhLogoUrl = 'https://media.good-loop.com/uploads/standard/Untitled_design_50-16466054913389307591.png';				
 		await expect(logo).toMatch(hnhLogoUrl);
 	});
 
 	it('Displays charity card for each charity', async () => {
+		await page.goto('https://testmy.good-loop.com/#campaign/?gl.vert=CeuNVbtW');
 		await page.waitForSelector('.charity-card');
 		const cards = await page.$$('.charity-card');
 
