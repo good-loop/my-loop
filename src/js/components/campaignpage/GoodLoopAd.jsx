@@ -4,15 +4,16 @@ import _ from 'lodash';
 import { Container } from 'reactstrap';
 import ACard from '../cards/ACard';
 import Counter from '../../base/components/Counter';
+import ServerIO from '../../plumbing/ServerIO';
 
 // FIXME how does this relate to GoodLoopUnit.jsx?? or DemoPlayer.jsx GoodLoopAd
-const GoodLoopAd = memo(({ vertId, size, nonce, production, social, glParams = { 'gl.play': 'onclick' } }) => {
-	let prefix = '';
-	if (window.location.hostname.match(/^local/)) prefix = 'local';
-	if (window.location.hostname.match(/^test/)) prefix = 'test';
-	if (production) prefix = '';
-
-	const glUnitUrl = new URL(`https://${prefix}as.good-loop.com/unit.js`);
+// Why memo??
+const GoodLoopAd = memo(({ vertId, size, nonce, social, glParams = { 'gl.play': 'onclick' } }) => {
+	// let prefix = '';
+	// if (window.location.hostname.match(/^local/)) prefix = 'local';
+	// if (window.location.hostname.match(/^test/)) prefix = 'test';
+	// if (production) prefix = '';
+	const glUnitUrl = new URL(ServerIO.AS_ENDPOINT+'/unit.js');
 	// const fullUnitUrl = glUnitUrl + (vertId ? `?gl.vert=${vertId}&gl.debug=true` : '' );
 	if (vertId) glUnitUrl.searchParams.set('gl.vert', vertId);
 	Object.entries(glParams).forEach(([key, value]) => {

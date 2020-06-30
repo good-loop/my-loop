@@ -10,7 +10,6 @@ import ServerIO from '../../plumbing/ServerIO';
 import MyLoopNavBar from '../MyLoopNavBar';
 import Footer from '../Footer';
 import ACard from '../cards/ACard';
-import ShareAnAd from '../cards/ShareAnAd';
 import SignUpConnectCard from '../cards/SignUpConnectCard';
 // TODO refactor so ImpactCard is the shared module, with other bits tucked away inside it
 import RecentCampaignsCard from '../cards/RecentCampaignsCard';

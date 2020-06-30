@@ -10,6 +10,7 @@ import C from '../C.js';
 import DataStore from '../base/plumbing/DataStore';
 
 import ServerIO from '../base/plumbing/ServerIOBase';
+import { getUrlVars } from '../base/utils/miscutils';
 
 export default ServerIO;
 
@@ -35,9 +36,14 @@ ServerIO.PROFILER_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}profiler.good-loop.co
 // ServerIO.PROFILER_ENDPOINT = 'https://testprofiler.good-loop.com';
 // ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com';
 
-ServerIO.AS_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}as.good-loop.com`;
+// ServerIO.AS_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}as.good-loop.com`;
 // ServerIO.AS_ENDPOINT = `https://testas.good-loop.com`;
+// Use the live adserver, since our showcase ad selectionis hard-coded to live ads.
 ServerIO.AS_ENDPOINT = `https://as.good-loop.com`;
+// HACK allow using test ads if requested
+if (getUrlVars().testas) {
+	ServerIO.AS_ENDPOINT = `https://testas.good-loop.com`;
+}
 
 // Useful where relative links can not be used (think inline-CSS 'url' image links)
 ServerIO.MYLOOP_ENDPONT = `${C.HTTPS}://${C.SERVER_TYPE}my.good-loop.com`;
