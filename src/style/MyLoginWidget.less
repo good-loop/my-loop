@@ -13,7 +13,7 @@
 	overflow-y: auto;
 	overflow-x: hidden; // The above line triggers an horizontal overflow in some cases, this disables that effect.
 
-    border-radius: 15px;
+	border-radius: 15px;
 	border: none;
 
 	background-color: transparent; // Needed to get rid of white border around top edges
@@ -34,15 +34,12 @@
 			color: #fff;
 			margin: 0 auto;
 			position: relative;
-			.text-center { // Hack: The component comes with a hardcoded %nbsp; that generates an extra line.
-				margin-top: -2em;
-			}
 			.modal-main-title {
 				font-weight: 700;
 				font-size: 2em;
 				font-family: 'Montserrat', sans-serif;
 			}
-            .modal-subtitle { font-size: .85em; }
+			.modal-subtitle { font-size: .85em; }
 		}
 	}
 
@@ -75,20 +72,6 @@
 				max-width: 80%;
                 font-size: .8em;
 			}
-		}
-	}
-
-    // Possibly delete since footer was removed?
-	.modal-footer {
-		background-color: #b91c08;
-		padding: 0;
-		.switch-verb {
-			width: 100%;
-			text-align: center;
-			font-size: 1.5em;
-			margin: 0.4rem;
-			padding: 1rem 0;
-			background-color: #fff;
 		}
 	}
 
