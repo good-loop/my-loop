@@ -2,6 +2,9 @@
 
 # TeamCity Continuous Integration Builder Template
 
+# Versions of this script are usually run by TeamCity, in response to a git commit.
+# The script uses ssh remote commands to target a server -- it does not affect the local machine.
+# For testing, the script can also be run from your local computer.
 #Version 1.1
 # Meaning - Script has been written and tested
 
@@ -211,7 +214,7 @@ function use_webpack {
             printf "\nNPM is now running a Webpack process on $server\n"
             ssh winterwell@$server "cd $PROJECT_ROOT_ON_SERVER && npm run compile &> $NPM_RUN_COMPILE_LOGFILE"
             printf "\nChecking for errors that occurred during Webpacking process on $server ...\n"
-            if [[ $(ssh winterwell@$server "cat $NPM_RUN_COMPILE_LOGFILE | grep -i 'error' | grep -iv 'ErrorAlert.jsx'") = '' ]]; then
+            if [[ $(ssh winterwell@$server "cat $NPM_RUN_COMPILE_LOGFILE | grep -i 'error' | grep -v '[webpack.Progress]' | grep -iv 'ErrorAlert.jsx'") = '' ]]; then
                 printf "\nNo Webpacking errors detected on $server\n"
             else
                 printf "\nOne or more errors were recorded during the webpacking process. Sending Alert Emails, but Continuing Operation\n"

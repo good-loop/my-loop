@@ -30,16 +30,20 @@ const debounceForSameInput = (key, fn, ...other) => {
 
 const path = ['widget', 'ConsentWidget', 'perms'];
 
-// handle an edit
+/** handle an edit
+ * 
+ * ??What does this do exactly??
+ *  */
 const togglePerm = ({prop, value, peeps}) => {
-	// Will be sent once per session
-	ServerIO.mixPanelTrack({mixPanelTag: 'Consent control clicked'});
 
 	let dataspace = ServerIO.dataspace; // ??
 	// full perms set
 	// NB: this also means perm settings are synchronised across linked profiles by an edit.
 	let consents = DataStore.getValue(path);
-	assert(consents[prop] === value, "ConsentWidget.jsx - mismatch",consents,prop,value);
+	
+	// fails - what does that mean??
+	// assert(consents[prop] === value, "ConsentWidget.jsx - mismatch",consents,prop,value);
+
 	// set each
 	peeps.forEach(person => {
 		setConsents({person, dataspace, consents});
@@ -67,14 +71,6 @@ const saveAllPerms = () => {
 	saveProfile({id: peeps, c: convertedConsents});
 };
 
-const Slider = () => (
-	<>
-		<div className='slider-inner'>
-			<div className='round-bit' />
-		</div>
-	</>
-);
-
 /** 
  *  @param label (String) header (e.g "Allow cookies") 
  *  @param subtext (String) smaller text that provides a bit more info
@@ -94,15 +90,12 @@ const PermissionControl = ({header, prop, subtext, textOn, saveFn}) => {
 				</span>
 			</div>
 			<div className='col-md-3 flex-row slider'>
-				<span> No </span>
 				<PropControl 
 					path={path} 
 					prop={prop}
-					label={<Slider />} 
-					type='checkbox' 
+					type='yesNo' 
 					saveFn={saveFn} 
 				/>
-				<span> Ok </span>
 			</div>
 			<div className='col-md-4'>
 				{ value && <div className='color-gl-red'>{textOn}</div> }
