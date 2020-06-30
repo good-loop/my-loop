@@ -5,8 +5,8 @@
 # Versions of this script are usually run by TeamCity, in response to a git commit.
 # The script uses ssh remote commands to target a server -- it does not affect the local machine.
 # For testing, the script can also be run from your local computer.
-#Version 1.1
-# Meaning - Script has been written and tested
+#Version 1.2
+# Latest Change -- one more error sniffing task for the 'use_npm' function
 
 #####  GENERAL SETTINGS
 ## This section should be the most widely edited part of this script
@@ -20,15 +20,10 @@ NAME_OF_SERVICE='' # This can be blank, but if your service uses a JVM, then you
 PROJECT_USES_NPM='yes' # yes or no
 PROJECT_USES_WEBPACK='yes' #yes or no
 PROJECT_USES_JERBIL='no' #yes or no
-PROJECT_USES_AUTOMATED_TESTING='yes' #yes or no
 PROJECT_USES_WWAPPBASE_SYMLINK='yes'
 
 # Where is the test server?
 TARGET_SERVERS=(baker.good-loop.com)
-
-## TODO : put in an argument switch to allow a specific branch to be pulled from git
-## TODO : resolve symlinks with wwappbase.js
-
 
 
 #####  SPECIFIC SETTINGS
@@ -47,7 +42,6 @@ EMAIL_RECIPIENTS=(sysadmin@good-loop.com daniel@good-loop.com roscoe@good-loop.c
 BOB_ARGS='' #you can set bob arguments here, but they will run each and every time that the project is auto-built
 BOB_BUILD_PROJECT_NAME='' #If the project name isn't automatically sensed by bob, you can set it explicitly here
 NPM_CLEANOUT='no' #yes/no , will nuke the node_modules directory if 'yes', and then get brand-new packages.
-
 NPM_I_LOGFILE="/home/winterwell/.npm/_logs/npm.i.for.$PROJECT_NAME.log"
 NPM_RUN_COMPILE_LOGFILE="/home/winterwell/.npm/_logs/npm.run.compile.for.$PROJECT_NAME.log"
 
@@ -190,7 +184,18 @@ function use_npm {
             ssh winterwell@$server "cd $PROJECT_ROOT_ON_SERVER && npm i &> $NPM_I_LOGFILE"
             printf "\nChecking for errors while npm was attempting to get packages on $server ...\n"
             if [[ $(ssh winterwell@$server "grep -i 'error' $NPM_I_LOGFILE") = '' ]]; then
-                printf "\nNo NPM errors detected\n"
+                printf "\nNPM package installer check : No mention of 'error' in $NPM_I_LOGFILE on $server\n"
+            else
+                printf "\nNPM encountered one or more errors while attempting to get node packages. Sending Alert Emails, but Continuing Operation\n"
+                # Get the NPM_I_LOGFILE
+                scp winterwell@$server:$NPM_I_LOGFILE .
+                # Add it to the Attachments
+                ATTACHMENTS+=("-a npm.i.for.$PROJECT_NAME.log")
+                # Send the email
+                send_alert_email
+            fi
+            if [[ $(ssh winterwell@$server "grep -i 'is not in the npm registry' $NPM_I_LOGFILE") = '' ]]; then
+                printf "\nNPM package installer check : No mention of packages which could not be found in $NPM_I_LOGFILE on $server\n"
             else
                 printf "\nNPM encountered one or more errors while attempting to get node packages. Sending Alert Emails, but Continuing Operation\n"
                 # Get the NPM_I_LOGFILE
@@ -253,7 +258,6 @@ function start_service {
         done
     fi
 }
-
 
 
 ################
