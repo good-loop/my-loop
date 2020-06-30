@@ -5,7 +5,7 @@
 # Versions of this script are usually run by TeamCity, in response to a git commit.
 # The script uses ssh remote commands to target a server -- it does not affect the local machine.
 # For testing, the script can also be run from your local computer.
-#Version 1.2
+#Version 1.2.1
 # Latest Change -- one more error sniffing task for the 'use_npm' function
 
 #####  GENERAL SETTINGS
@@ -30,9 +30,7 @@ TARGET_SERVERS=(baker.good-loop.com)
 ## This section should only be selectively edited - based on non-standardized needs
 #####
 PROJECT_ROOT_ON_SERVER="/home/winterwell/$PROJECT_NAME"
-AUTOMATED_TESTS_COMMAND="bash $PROJECT_ROOT_ON_SERVER/run-tests.sh test"
 WWAPPBASE_REPO_PATH_ON_SERVER_DISK="/home/winterwell/wwappbase.js"
-
 
 
 ##### UNDENIABLY ESOTERIC SETTINGS
