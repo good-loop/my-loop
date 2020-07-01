@@ -285,7 +285,6 @@ const CampaignPage = () => {
 		<CSS css={campaignPage && campaignPage.customCss} />
 		<CSS css={branding.customCss} />
 		<div className="widepage CampaignPage text-center">
-			
 			<CampaignSplashCard branding={branding} campaignPage={campaignPage} donationValue={ndonationValue} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
 
 			<div className="container-fluid" style={{backgroundColor: '#af2009'}}>
@@ -317,6 +316,11 @@ const CampaignPage = () => {
 					totalViewCount={totalViewCount}
 				/>
 			)}
+
+			{campaignPage.smallPrint ? (
+				<div className="small-print"><small>{campaignPage.smallPrint}</small></div>
+			) : null}
+
 			<Footer />
 		</div>
 	</>
