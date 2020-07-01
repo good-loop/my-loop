@@ -36,11 +36,18 @@ ServerIO.PROFILER_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}profiler.good-loop.co
 // ServerIO.AS_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}as.good-loop.com`;
 // ServerIO.AS_ENDPOINT = `https://testas.good-loop.com`;
 // Use the live adserver, since our showcase ad selectionis hard-coded to live ads.
-ServerIO.AS_ENDPOINT = `https://as.good-loop.com`;
+ServerIO.AS_ENDPOINT = 'https://as.good-loop.com';
+
 // HACK allow using test ads if requested
 if (getUrlVars().testas) {
-	ServerIO.AS_ENDPOINT = `https://testas.good-loop.com`;
-	ServerIO.PORTAL_ENDPOINT = `https://testportal.good-loop.com`;
+	ServerIO.AS_ENDPOINT = 'https://testas.good-loop.com';
+	ServerIO.PORTAL_ENDPOINT = 'https://testportal.good-loop.com';
+	ServerIO.DATALOG_ENDPOINT = 'https://testlg.good-loop.com/data';
+}
+if (getUrlVars().localas) {
+	ServerIO.AS_ENDPOINT = 'http://localas.good-loop.com';
+	ServerIO.PORTAL_ENDPOINT = 'http://localportal.good-loop.com';
+	ServerIO.DATALOG_ENDPOINT = 'http://locallg.good-loop.com/data';
 }
 
 /** The initial part of an API call. Allows for local to point at live for debugging */

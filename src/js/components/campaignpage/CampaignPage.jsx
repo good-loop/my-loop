@@ -204,10 +204,10 @@ const CampaignPage = () => {
 	// Get ad viewing data
 	let pvViewData = DataStore.fetch(['misc', 'views', sq.query], () => {
 		// filter to these ads
-		let qads = '(vert:'+ads.map(ad => ad.id).join(" OR vert:")+')';
+		let qads = ads.map(({id}) => `vert:${id}`).join(' OR ');
 		let filters = {
 			dataspace: 'gl',
-			q: 'evt:minview AND '+qads // minview vs spend ??
+			q: `evt:minview AND (${qads})` // minview vs spend ??
 		};
 		// start = early for all data
 		return ServerIO.getDataLogData({filters, breakdowns:['campaign', 'pub'], start:'2017-01-01', name:'view-data'});
