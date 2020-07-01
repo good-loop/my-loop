@@ -1,12 +1,13 @@
 /*
  * 
  */
-import React, { memo, useEffect, createRef } from 'react';
+import React from 'react';
 import Login from 'you-again';
 import _ from 'lodash';
 import { Container, Alert } from 'reactstrap';
 import pivot from 'data-pivot';
 import PV from 'promise-value';
+
 import Roles from '../../base/Roles';
 import {isPortraitMobile, sum} from '../../base/utils/miscutils';
 import C from '../../C';
@@ -96,18 +97,18 @@ const CampaignPage = () => {
 	const isLanding = (landing !== undefined) && (landing !== 'false');
 
 	// Which advert(s)?
-	const sq = adsQuery({q,adid,vertiserid,via});
-	let pvAds = fetchAds({searchQuery:sq, adid, vertiserid, via});
-	if ( ! pvAds) {
+	const sq = adsQuery({q, adid, vertiserid, via});
+	let pvAds = fetchAds({searchQuery: sq, adid, vertiserid, via, status});
+	if (!pvAds) {
 		// No query -- show a list
 		// TODO better graphic design before we make this list widget public
-		if ( ! Login.isLoggedIn()) {
+		if (!Login.isLoggedIn()) {
 			return <div>Missing: campaign or advertiser ID. Please check the link you used to get here.</div>;
 		}
-		return <ListLoad type={C.TYPES.Advert} servlet='campaign' />;
+		return <ListLoad type={C.TYPES.Advert} servlet="campaign" />;
 	}
-	if ( ! pvAds.resolved) {
-		return <Misc.Loading text='Loading campaign info...' />;
+	if (!pvAds.resolved) {
+		return <Misc.Loading text="Loading campaign info..." />;
 	}
 	if (pvAds.error) {		
 		return <ErrorAlert>Error loading advert data</ErrorAlert>;
@@ -186,7 +187,10 @@ const CampaignPage = () => {
 	let campaignByName = {};
 	ads.forEach(ad => {
 		let name = ad.campaign || ad.id;
-		campaignByName[name] = Object.assign({}, campaignByName[name], ad);
+		campaignByName[name] = {
+			...campaignByName[name],
+			...ad
+		};
 	});
 
 	let campaigns = Object.values(campaignByName);
@@ -214,7 +218,7 @@ const CampaignPage = () => {
 
 	/** Calculates total donations per charity based on percentage available, adding [donation] and [donationPercentage] to the charities object  */ 
 	const assignUnsetDonations = () => {
-		if ( ! ndonationValue) {
+		if (!ndonationValue) {
 			console.warn("Missing ndonationValue");
 			return;
 		}
@@ -256,7 +260,7 @@ const CampaignPage = () => {
 
 	return (<>
 		<MyLoopNavBar brandLogo={branding.logo} logo="/img/new-logo-with-text-white.svg" style={{backgroundColor: brandColor}} />
-		<CSS css={campaignPage.advanced && campaignPage.advanced.customcss} />
+		<CSS css={campaignPage && campaignPage.customCss} />
 		<CSS css={branding.customCss} />
 		<div className="widepage CampaignPage text-center">
 			<CampaignSplashCard branding={branding} campaignPage={campaignPage} donationValue={ndonationValue} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
@@ -286,10 +290,14 @@ const CampaignPage = () => {
 
 			<PublishersCard pvViewData={pvViewData} />
 						
-			{isLanding ? null : 
-				<AdvertsCatalogue ads={ads} viewcount4campaign={viewcount4campaign} ndonationValue={ndonationValue} totalViewCount={totalViewCount} />
-			}
-
+			{isLanding ? null : (
+				<AdvertsCatalogue
+					ads={ads}
+					viewcount4campaign={viewcount4campaign}
+					ndonationValue={ndonationValue}
+					totalViewCount={totalViewCount}
+				/>
+			)}
 			<Footer />
 		</div>
 	</>
@@ -341,11 +349,11 @@ const AdvertsCatalogue = ({ads, viewcount4campaign, ndonationValue, totalViewCou
 };
 
 const AdvertCard = ({ad, viewCountProp, donationTotal, totalViewCount}) => {
-	const durationText = ad.start || ad.end ? (<>
+	const durationText = ad.start || ad.end ? <>
 		This advert ran
-		{ ad.start ? <span> from {<Misc.RoughDate date={ad.start} />}</span> : null}
-		{ ad.end ? <span> to {<Misc.RoughDate date={ad.end} />}</span> : '' }
-	</>) : '';
+		{ ad.start ? <span> from <Misc.RoughDate date={ad.start} /></span> : null}
+		{ ad.end ? <span> to <Misc.RoughDate date={ad.end} /></span> : '' }
+	</> : '';
 	const thisViewCount = viewCountProp || '';
 
 	// Money raised by ad based on viewers
@@ -370,8 +378,7 @@ const isAll = () => {
 
 
 /**
- * 
- @returns {!SearchQuery}
+ * @returns {!SearchQuery}
  */
 const adsQuery = ({q,adid,vertiserid,via}) => {
 	let sq = new SearchQuery(q);
@@ -385,7 +392,7 @@ const adsQuery = ({q,adid,vertiserid,via}) => {
  * 
  * @returns { ? PV<Advert[]>} null if no query
  */
-const fetchAds = ({searchQuery, adid,vertiserid,via,status=C.KStatus.PUB_OR_ARC}) => {
+const fetchAds = ({ searchQuery, adid, vertiserid, via, status = C.KStatus.PUB_OR_ARC }) => {
 	let q = searchQuery.query;	
 	if ( ! q && ! isAll()) {
 		return null;
