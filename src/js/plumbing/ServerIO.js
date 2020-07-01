@@ -18,15 +18,12 @@ export default ServerIO;
  * This is the dataspace used in unit.js for reporting events */
 ServerIO.dataspace = 'gl';
 
+/**
+ * ??
+ */
 ServerIO.NO_API_AT_THIS_HOST = true;
 
-ServerIO.PORTAL_DOMAIN = `${C.HTTPS}://${C.SERVER_TYPE}portal.good-loop.com`;
 // Comment out the lines below when deploying!
-// ServerIO.PORTAL_DOMAIN = 'https://testportal.good-loop.com'; // uncomment to let local use the test server's backend
-ServerIO.PORTAL_DOMAIN = 'https://portal.good-loop.com'; // use in testing to access live data
-
-/** The initial part of an API call. Allows for local to point at live for debugging */
-ServerIO.APIBASE = ServerIO.PORTAL_DOMAIN; // My-Loop has no backend of its own - just use portal domain matching local/test/prod
 
 ServerIO.DATALOG_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}lg.good-loop.com/data`;
 // ServerIO.DATALOG_ENDPOINT = 'https://testlg.good-loop.com/data';
@@ -43,7 +40,11 @@ ServerIO.AS_ENDPOINT = `https://as.good-loop.com`;
 // HACK allow using test ads if requested
 if (getUrlVars().testas) {
 	ServerIO.AS_ENDPOINT = `https://testas.good-loop.com`;
+	ServerIO.PORTAL_ENDPOINT = `https://testportal.good-loop.com`;
 }
+
+/** The initial part of an API call. Allows for local to point at live for debugging */
+ServerIO.APIBASE = ServerIO.PORTAL_ENDPOINT; // My-Loop has no backend of its own - just use portal domain matching local/test/prod
 
 // Useful where relative links can not be used (think inline-CSS 'url' image links)
 ServerIO.MYLOOP_ENDPONT = `${C.HTTPS}://${C.SERVER_TYPE}my.good-loop.com`;
@@ -93,7 +94,7 @@ ServerIO.getViewCount = (socialShareId) => {
 	return ServerIO.load(ServerIO.AS_ENDPOINT + '/social-share/', { data: {socialShareIds: JSON.stringify(socialShareId)}});
 };
 
-ServerIO.getVertData = (vertId) => ServerIO.load(ServerIO.PORTAL_DOMAIN + '/vert/' + vertId);
+ServerIO.getVertData = (vertId) => ServerIO.load(ServerIO.PORTAL_ENDPOINT + '/vert/' + vertId);
 
 ServerIO.searchCharities = ({q, prefix, from, size, status, recommended, impact}) => {
 	// assMatch( q || prefix, String);
