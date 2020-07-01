@@ -86,11 +86,15 @@ const CampaignPage = () => {
 	let {
 		'gl.vert': adid,
 		'gl.vertiser': vertiserid,
+		'gl.status': glStatus,
+		status,
 		via,
 		q = '',
-		status = C.KStatus.PUB_OR_ARC,
 		landing,
 	} = DataStore.getValue(['location', 'params']) || {};
+
+	// Merge gl.status into status & take default value
+	if (!status) status = (glStatus || C.KStatus.PUB_OR_ARC);
 	
 	// Is the campaign page being used as a click-through advert landing page?
 	// If so, change the layout slightly, positioning the advert video on top.
@@ -256,6 +260,24 @@ const CampaignPage = () => {
 		totalViewCount = sum(views);
 	}
 
+	
+
+	const descHeader = campaignPage.desc_title ? (
+		<h3>{campaignPage.desc_title}</h3>
+	) : null;
+
+	const descBody = campaignPage.desc_body ? (
+		<span>{campaignPage.desc_body}</span>
+	) : (
+		<span>
+			At {(nvertiser && nvertiser.name) || ads[0].name} we want to give back.
+			We work with Good-Loop to put out Ads for Good, and donate money to charity.
+			Together with <span className="font-weight-bold">{printer.prettyNumber(totalViewCount, 4)}</span> people
+			we've raised funds for the following causes and can't wait to see our positive impact go even further.
+			See our impact below.
+		</span>
+	);
+
 	assignUnsetDonations();
 
 	return (<>
@@ -263,16 +285,13 @@ const CampaignPage = () => {
 		<CSS css={campaignPage && campaignPage.customCss} />
 		<CSS css={branding.customCss} />
 		<div className="widepage CampaignPage text-center">
+			
 			<CampaignSplashCard branding={branding} campaignPage={campaignPage} donationValue={ndonationValue} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
+
 			<div className="container-fluid" style={{backgroundColor: '#af2009'}}>
 				<div className="intro-text">
-					<span>
-						At {(nvertiser && nvertiser.name) || ads[0].name} we want to give back.
-						We work with Good-Loop to put out Ads for Good, and donate money to charity.
-						Together with <span className="font-weight-bold">{printer.prettyNumber(totalViewCount, 4)}</span> people
-						we've raised funds for the following causes and can't wait to see our positive impact go even further.
-						See our impact below.
-					</span>
+					{descHeader}
+					{descBody}
 				</div>
 			</div>
 
@@ -289,7 +308,7 @@ const CampaignPage = () => {
 			</div>
 
 			<PublishersCard pvViewData={pvViewData} />
-						
+
 			{isLanding ? null : (
 				<AdvertsCatalogue
 					ads={ads}
@@ -311,7 +330,7 @@ const campaignNameForAd = ad => {
 		let cname = ad.campaign.match(tomsCampaigns)[0];
 		return cname;
 	}
-	return ad.campaign;	
+	return ad.campaign;
 };
 
 /**
@@ -392,7 +411,7 @@ const adsQuery = ({q,adid,vertiserid,via}) => {
  * 
  * @returns { ? PV<Advert[]>} null if no query
  */
-const fetchAds = ({ searchQuery, adid, vertiserid, via, status = C.KStatus.PUB_OR_ARC }) => {
+const fetchAds = ({ searchQuery, adid, vertiserid, via, status }) => {
 	let q = searchQuery.query;	
 	if ( ! q && ! isAll()) {
 		return null;
