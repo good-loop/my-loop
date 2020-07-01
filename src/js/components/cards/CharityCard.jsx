@@ -50,7 +50,7 @@ const CharityCard = ({charity, donationValue, i, imageLeft}) => {
 	if (cid) {
 		const pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:charity.id, status:C.KStatus.PUBLISHED});
 		let sogiveCharity = pvCharity.value;
-		if (sogiveCharity) {		
+		if (sogiveCharity) {
 			// HACK: prefer short description
 			// if (sogiveCharity.summaryDescription) sogiveCharity.description = sogiveCharity.summaryDescription;
 
