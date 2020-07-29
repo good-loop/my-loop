@@ -1,18 +1,23 @@
 const puppeteer = require('puppeteer');
+const { targetServers } = require('../testConfig');
+
 const $ = require('jquery');
 const { CommonSelectors, MyLoopSelectors } = require('../MasterSelectors');
 const {login } = require('../test-base/UtilityFunctions');
 const { password, username} = require('../Credentials');
 
-const timeStamp = new Date().toISOString();
+const config = JSON.parse(process.env.__CONFIGURATION);
+const baseSite = targetServers[config.site];
 
-let browser, page, dataStore;
+let url = `${baseSite}`;
 
 describe('My-Loop tests', () => {
-	beforeAll(async () => {
-		browser = await puppeteer.launch();
-		page = await browser.newPage();
-	});
+//	beforeAll(async () => {
+//		// is this needed??
+//		browser = await puppeteer.launch();
+//		page = await browser.newPage();
+//	});
+
 
 	test('My Loop log in', async () => {
 		await page.goto("https://testmy.good-loop.com/#my");

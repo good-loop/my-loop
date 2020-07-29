@@ -1,18 +1,16 @@
 const puppeteer = require('puppeteer');
-
+const { targetServers } = require('../testConfig');
 // await page.goto('https://testmy.good-loop.com/#campaign/?gl.vert=CeuNVbtW');
 
-let browser, page, dataStore;
-
 describe('Display tests', () => {
-	beforeAll(async () => {
-		browser = await puppeteer.launch();
-		page = await browser.newPage();
-	});
-
-	afterAll(async () => {
-		browser.close();
-	});
+	// beforeAll(async () => {
+	// 	browser = await puppeteer.launch();
+	// 	page = await browser.newPage();
+	// });
+// 
+	// afterAll(async () => {
+	// 	browser.close();
+	// });
 
 	it('Can open CampaignPage', async () => {
 		await page.goto('https://testmy.good-loop.com/#campaign/?gl.vert=CeuNVbtW');

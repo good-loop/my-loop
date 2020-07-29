@@ -1,8 +1,8 @@
 
 const config = JSON.parse(process.env.__CONFIGURATION);
-const { ourServers} = require('../testConfig');
+const { targetServers } = require('../testConfig');
 
-const baseSite = ourServers[config.site];
+const baseSite = targetServers[config.site];
 
 describe('My GL - smoke test', () => {
 	it('should load a page', async () => {
