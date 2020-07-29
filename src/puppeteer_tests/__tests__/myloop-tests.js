@@ -12,15 +12,9 @@ const baseSite = targetServers[config.site];
 let url = `${baseSite}`;
 
 describe('My-Loop tests', () => {
-//	beforeAll(async () => {
-//		// is this needed??
-//		browser = await puppeteer.launch();
-//		page = await browser.newPage();
-//	});
-
 
 	test('My Loop log in', async () => {
-		await page.goto("https://testmy.good-loop.com/#my");
+		await page.goto(url);
 		await login({
 			page,
 			username: username,

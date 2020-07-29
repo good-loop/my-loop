@@ -1,25 +1,19 @@
 const puppeteer = require('puppeteer');
 const { targetServers } = require('../testConfig');
 // await page.goto('https://testmy.good-loop.com/#campaign/?gl.vert=CeuNVbtW');
+const config = JSON.parse(process.env.__CONFIGURATION);
+const baseSite = targetServers[config.site];
 
 describe('Display tests', () => {
-	// beforeAll(async () => {
-	// 	browser = await puppeteer.launch();
-	// 	page = await browser.newPage();
-	// });
-// 
-	// afterAll(async () => {
-	// 	browser.close();
-	// });
 
 	it('Can open CampaignPage', async () => {
-		await page.goto('https://testmy.good-loop.com/#campaign/?gl.vert=CeuNVbtW');
+		await page.goto(baseSite+'/#campaign/?gl.vert=CeuNVbtW');
 
 		await expect(page.title()).resolves.toMatch('My Good-Loop');
 	});
 
 	it('Displays information based on vert id', async () => {
-		await page.goto('https://testmy.good-loop.com/#campaign/?gl.vert=CeuNVbtW');
+		await page.goto(baseSite+'/#campaign/?gl.vert=CeuNVbtW');
 		await page.waitForSelector('.hero-logo');
 		const logo = await page.$eval('.hero-logo', e => e.src);
 
@@ -28,7 +22,7 @@ describe('Display tests', () => {
 	});
 
 	it('Displays charity card for each charity', async () => {
-		await page.goto('https://testmy.good-loop.com/#campaign/?gl.vert=CeuNVbtW');
+		await page.goto(baseSite+'/#campaign/?gl.vert=CeuNVbtW');
 		await page.waitForSelector('.charity-card');
 		const cards = await page.$$('.charity-card');
 
