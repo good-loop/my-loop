@@ -102,8 +102,8 @@ const CampaignPage = () => {
 
 	// Which advert(s)?
 	const sq = adsQuery({q, adid, vertiserid, via});
-	let pvAds = fetchAds({searchQuery: sq, adid, vertiserid, via, status});
-	if (!pvAds) {
+	let pvAds = fetchAds({searchQuery: sq, status});
+	if ( ! pvAds) {
 		// No query -- show a list
 		// TODO better graphic design before we make this list widget public
 		if (!Login.isLoggedIn()) {
@@ -119,6 +119,7 @@ const CampaignPage = () => {
 	}
 
 	// If it's remotely possible to have an ad now, we have it. Which request succeeded, if any?
+	/** @type {Advert[]} */
 	let ads = pvAds.value.hits;
 	if (ads && ! isAll()) {
 		ads = ads.slice(0, 10); // Limit to first 10 results unless we're on #campaign/all
@@ -202,7 +203,7 @@ const CampaignPage = () => {
 	campaigns.sort(sortByDate(ad => ad.end || ad.start));
 
 	// Get ad viewing data
-	let pvViewData = DataStore.fetch(['misc', 'views', sq.query], () => {
+	let pvViewData = DataStore.fetch(['misc', 'views', isAll()? 'all' : sq.query], () => {
 		// filter to these ads
 		let qads = ads.map(({id}) => `vert:${id}`).join(' OR ');
 		let filters = {
@@ -241,10 +242,15 @@ const CampaignPage = () => {
 		});
 	};
 
-	let charitiesById = _.uniq(_.flattenDeep(ads.map(c => c.charities.list)));
+	{	// NB: some very old ads may not have charities
+		let noCharityAds = ads.filter(ad => ! ad.charities);
+		// minor todo - clean these up in the portal
+		if (noCharityAds.length) console.warn("Ads without charities data", noCharityAds.map(ad => [ad.id, ad.campaign, ad.name, ad.status]));
+	}
+	let charitiesById = _.uniq(_.flattenDeep(ads.map(ad => ad.charities && ad.charities.list)));
 	let charIds = [];
 	charitiesById.forEach(c => {
-		if (!charIds.includes(c.name)) {
+		if (c && ! charIds.includes(c.name)) {
 			charIds.push(c.name);
 		}
 	});
@@ -415,7 +421,7 @@ const adsQuery = ({q,adid,vertiserid,via}) => {
  * 
  * @returns { ? PV<Advert[]>} null if no query
  */
-const fetchAds = ({ searchQuery, adid, vertiserid, via, status }) => {
+const fetchAds = ({ searchQuery, status }) => {
 	let q = searchQuery.query;	
 	if ( ! q && ! isAll()) {
 		return null;
@@ -426,7 +432,7 @@ const fetchAds = ({ searchQuery, adid, vertiserid, via, status }) => {
 	// HACK No published ads? fall back to ALL_BAR_TRASH if requested ad is draft-only
 	if (pvAds.resolved && ( ! pvAds.value || ! pvAds.value.hits || ! pvAds.value.hits.length)) {
 		let pvAdsDraft = ActionMan.list({type: C.TYPES.Advert, status: C.KStatus.ALL_BAR_TRASH, q});
-		console.warn(`Unable to find ad ${adid} with status ${status}, falling back to ALL_BAR_TRASH`);
+		console.warn(`Unable to find ad ${q} with status ${status}, falling back to ALL_BAR_TRASH`);
 		return pvAdsDraft;
 	}
 	return pvAds;
