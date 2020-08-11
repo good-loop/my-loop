@@ -30,18 +30,93 @@ body {
 .CampaignPage {
 	background-color: #fff !important;
 
-	.hero {
-		min-height: 40vh;
-		.hero-logo {
-			max-height: 150px;
-			max-width: 100%; // Contains image in mobile
+	.impact-hub-splash {
+		position: relative;
+
+		.splash-curve {
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+			z-index: 1;
 		}
-		.sub-header {
-			padding-top: 3rem !important;
-			font-size: 1.4rem;
-			text-transform: uppercase;
-			font-weight: 700;
+
+		.splash-img {
+			height: 100vh;
+			object-fit: cover;
 		}
+
+		.splash-card {
+			position: absolute;
+			top: 50%;
+			width: 100%;
+			right: 0;
+			transform: translateY(-50%);
+			z-index: 2;
+			display: flex;
+			flex-direction: column;
+			align-items: flex-end;
+		}
+
+		.splash-content {
+			width: 45%;
+		}
+		
+		.hero {
+			min-height: 40vh;
+			.hero-circles {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				justify-content: space-between;
+				.plus {
+					width: 30px;
+				}
+			}
+			.white-circle {
+				.sub-header {
+					font-size: 1.4rem;
+					color: @gl-orange;
+					font-weight: 700;
+				}
+			}
+			.header {
+				font-weight: 600;
+				font-size: 2.35rem;
+			}
+			.subtext {
+				font-size: 1.5rem;
+			}
+		}
+	}
+
+	.white-circle {
+		position: relative;
+		background: white;
+		border-radius: 50%;
+		width: 100px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		.content {
+			position: absolute;
+			width: 70%;
+			height: 70%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			img {
+				width: 100%;
+			}
+		}
+	}
+
+	.white-circle:after {
+		content: "";
+		display: block;
+		padding-bottom: 100%;
 	}
 
 	// Hack to give breathing room to splash without changing base Component
