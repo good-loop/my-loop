@@ -39,12 +39,28 @@ body {
 			left: 0;
 			height: 100%;
 			width: 100%;
-			z-index: 1;
+			z-index: 2;
+			@media @ipad-max {
+				display: none;
+			}
 		}
 
 		.splash-img {
 			height: 100vh;
 			object-fit: cover;
+		}
+
+		.dark-overlay {
+			position: absolute;
+			z-index: 1;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+			background-color: rgba(0, 0, 0, 0.1);
+			@media @ipad-max {
+				background-color: rgba(0, 0, 0, 0.2);
+			}
 		}
 
 		.splash-card {
@@ -53,70 +69,105 @@ body {
 			width: 100%;
 			right: 0;
 			transform: translateY(-50%);
-			z-index: 2;
+			z-index: 3;
 			display: flex;
 			flex-direction: column;
 			align-items: flex-end;
+			@media @md-max {
+				align-items: center;
+				justify-content: start;
+				height: 100%;
+			}
 		}
 
 		.splash-content {
 			width: 45%;
+			height: 100%;
+			@media @ipad-max {
+				height: 90%;
+				padding-top: 70px; // avoid navbar
+				width: 100%;
+				@media @md-max {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: space-between;
+				}
+			}
+		}
+
+		.splash-text {
+			@media @ipad-max {
+				text-shadow: 0 2px 3px black;
+			}
 		}
 		
 		.hero {
 			min-height: 40vh;
 			.hero-circles {
+				flex-grow: 1;
 				display: flex;
 				flex-direction: row;
 				align-items: center;
 				justify-content: space-between;
+				width: 100%;
+				@media @md-max {
+					flex-direction: column;
+				}
 				.plus {
 					width: 30px;
+					@media @md-max {
+						width: 20px;
+					}
 				}
 			}
 			.white-circle {
+				width: 25%;
+				@media @md-max {
+					width: 40%;
+				}
 				.sub-header {
 					font-size: 1.4rem;
 					color: @gl-orange;
 					font-weight: 700;
+					@media @md-max {
+						font-size: 1rem;
+					}
 				}
 			}
 			.header {
 				font-weight: 600;
 				font-size: 2.35rem;
+				@media @md-max {
+					font-size: 1.7rem;
+					@media (max-height: 568px) {
+						font-size: 1.5rem;
+					}
+				}
 			}
 			.subtext {
 				font-size: 1.5rem;
+				@media @md-max {
+					font-size: 1rem;
+				}
 			}
 		}
-	}
 
-	.white-circle {
-		position: relative;
-		background: white;
-		border-radius: 50%;
-		width: 100px;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		.content {
+		.splash-buttons {
 			position: absolute;
-			width: 70%;
-			height: 70%;
+			bottom: 20px;
+			left: 50px;
+			z-index: 3;
 			display: flex;
-			flex-direction: column;
+			flex-direction: row;
 			align-items: center;
-			justify-content: center;
-			img {
+			@media @md-max {
+				justify-content: space-between;
+				left: 0px;
 				width: 100%;
+				padding: 0px 10px;
 			}
 		}
-	}
-
-	.white-circle:after {
-		content: "";
-		display: block;
-		padding-bottom: 100%;
 	}
 
 	// Hack to give breathing room to splash without changing base Component
@@ -124,9 +175,9 @@ body {
 		padding: 3rem 2rem !important;
 	}
 
-	.btn-gl {
-		color: #fff;
-		background-color: @gl-red;
+	h1,h2 {
+		font-weight: 600;
+		color: @gl-light-red;
 	}
 
 	.intro-text {
@@ -248,164 +299,27 @@ body {
 		}
 	}
 
-	///////// Advert Cards //////////
-	.advert-bg {
-		background-color: #830000;
-		color: #fff;
+	.tablet-ad-container {
+		position: absolute;
+		z-index: 1;
+		// Position on top of tablet image
+		top: 8%;
+		left: 18.2%;
+		width: 71.4%;
+		height: 66.2%;
+	}
 
-		.advert-section-header {
-			&:extend(.header-font);
-			color: #fff;
-		}
-		.total-views-column {
-			display: flex;
-			justify-content: center;
-			padding: 4em 0; // Breathing room between top and bottom elements
-			&:extend(.sub-header-font);
-			.sub-header-font {
-				font-size: 1.25rem;
-			}
-			img {
-				max-width: 200px;
-			}
-			// Style for the element at the top of advert-card-container
-			.align-middle {
-				max-width: 400px;
-				text-align: left;
-				padding: 1em;
-				&:extend(.sub-header-font);
-				p {
-					margin: 0 auto;
-				}
-			}
-			@media (max-width: 767px) {
-				align-items: center;
-				flex-direction: column;
-			}
-		}
+	.tablet-overlay {
+		position: relative;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 2;
+		pointer-events: none;
+	}
 
-		.ad-sizer {
-			width: 66%;
-			margin: 0 auto;
-			@media (max-width: 767px) {
-				width: 100%;
-			}
-		}
-
-		// Adds separation line between ad cards
-		.ad-card {
-			box-shadow: 0px 3px 2px -2px rgba(0, 0, 0, 0.1);
-			color: #fff;
-			flex-direction: column;
-			&:extend(.header-font);
-			.advert-impact-text {
-				// Makes summary look thinner and more stylish
-				font-weight: 600;
-				font-size: larger;
-				letter-spacing: 0.1em;
-				max-width: 600px;
-				font-family: 'Montserrat', sans-serif;
-				text-transform: uppercase;
-			}
-		}
-
-		.advert-card-container {
-			background: rgb(119, 15, 0);
-			.header-font {
-				font-size: 1.5rem;
-				&.value-highlight {
-					font-size: 2rem;
-					font-weight: 700;
-				}
-			}
-			.value-highlight {
-				color: @gl-orange;
-			}
-			.sub-header-font {
-				font-size: 1.25rem;
-			}
-		}
-
-		// Separation between ad cards
-		.column.row {
-			box-shadow: 0px 3px 2px -2px rgba(0, 0, 0, 0.1);
-		}
-
-		// On small devices makes thumbnail full width and forces aspect ratio for responsive behaviour.
-		@media (max-width: 481px) {
-			@ratio: 1.777777778; // 480w / 270h <-- initial size of thumbnail
-			.video-thumbnail {
-				width: 100%;
-				height: 100vw / @ratio;
-			}
-		}
-
-		////////////////////////
-
-		////// Media Queries Mobile ////////
-		@media (max-width: 728px) {
-			.ACard {
-				.container {
-					padding: 2em 0 !important; // Forces charity card images go full bleed on mobile
-					.img {
-						max-height: 300px;
-					}
-				}
-			}
-
-			.pub-container {
-				// Stacks publishers logos on mobile
-				padding-top: 7em;
-				padding-bottom: 3em;
-				.row {
-					flex-direction: column;
-				}
-			}
-
-			// This sets the logo on top of the charity card, and aligns everything to the right.
-			.charity-card {
-				.img-col {
-					width: 100%;
-					height: 200px;
-				}
-				.info-col {
-					align-items: center;
-				}
-				.photo {
-					display: none;
-				}
-				.bg {
-					// In mobile the background photo can make things hard to read, so we remove it leaving the bg colour
-					background-image: none;
-				}
-				.logo-div {
-					margin: 0 auto;
-				}
-				p {
-					// why?
-					padding-top: 1em;
-					padding-left: 1em;
-					padding-right: 1em;
-				}
-				.text-block {
-					width: 100%;
-				}
-			}
-
-			.pub-div {
-				width: 100% !important;
-			}
-
-			/////Ad Cards ////
-
-			// Breathing room for ad cards presentation on mobile
-			.total-views-column {
-				padding-bottom: 0;
-				.align-middle {
-					padding-bottom: 4rem;
-				}
-			}
-		}
+	.ad-card {
+		position: relative;
 	}
 
 	// Match the advert section

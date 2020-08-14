@@ -1,7 +1,7 @@
 /*
  * 
  */
-import React from 'react';
+import React, { Fragment } from 'react';
 import Login from 'you-again';
 import _ from 'lodash';
 import { Container, Alert } from 'reactstrap';
@@ -260,7 +260,8 @@ const CampaignPage = () => {
 		totalViewCount = sum(views);
 	}
 
-	
+	// Get name of advertiser from nvertiser if existing, or ad if not
+	let nvertiserName = (nvertiser && nvertiser.name) || ads[0].name;
 
 	const descHeader = campaignPage.desc_title ? (
 		<h3>{campaignPage.desc_title}</h3>
@@ -270,7 +271,7 @@ const CampaignPage = () => {
 		<span>{campaignPage.desc_body}</span>
 	) : (
 		<span>
-			At {(nvertiser && nvertiser.name) || ads[0].name} we want to give back.
+			At {nvertiserName} we want to give back.
 			We work with Good-Loop to put out Ads for Good, and donate money to charity.
 			Together with <span className="font-weight-bold">{printer.prettyNumber(totalViewCount, 4)}</span> people
 			we've raised funds for the following causes and can't wait to see our positive impact go even further.
@@ -284,15 +285,29 @@ const CampaignPage = () => {
 		<MyLoopNavBar brandLogo={branding.logo} logo="/img/new-logo-with-text-white.svg" style={{backgroundColor: brandColor}} />
 		<CSS css={campaignPage && campaignPage.customCss} />
 		<CSS css={branding.customCss} />
-		<div className="widepage CampaignPage text-center">
+		<div className="widepage CampaignPage text-center gl-btns">
 			<CampaignSplashCard branding={branding} campaignPage={campaignPage} donationValue={ndonationValue} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
 
+			<HowDoesItWork nvertiserName={nvertiserName}/>
+
+			{/*
 			<div className="container-fluid" style={{backgroundColor: '#af2009'}}>
 				<div className="intro-text">
 					{descHeader}
 					{descBody}
 				</div>
 			</div>
+			*/}
+
+			{isLanding ? null : (
+				<AdvertsCatalogue
+					ads={ads}
+					viewcount4campaign={viewcount4campaign}
+					ndonationValue={ndonationValue}
+					nvertiserName={nvertiserName}
+					totalViewCount={totalViewCount}
+				/>
+			)}
 
 			<div className="charity-card-container section clearfix">
 				{charities.map((charity, i) => (
@@ -307,15 +322,6 @@ const CampaignPage = () => {
 			</div>
 
 			<PublishersCard pvViewData={pvViewData} />
-
-			{isLanding ? null : (
-				<AdvertsCatalogue
-					ads={ads}
-					viewcount4campaign={viewcount4campaign}
-					ndonationValue={ndonationValue}
-					totalViewCount={totalViewCount}
-				/>
-			)}
 
 			{campaignPage.smallPrint ? (
 				<div className="small-print"><small>{campaignPage.smallPrint}</small></div>
@@ -337,11 +343,35 @@ const campaignNameForAd = ad => {
 	return ad.campaign;
 };
 
+const HowDoesItWork = ({nvertiserName}) => {
+    return (
+        <div className="bg-gl-light-pink py-5">
+            <div class="container py-5">
+                <h2 class="pb-5">How does it work?</h2>
+                <div class="row mb-3 text-center align-items-start">
+                    <div class="col-md d-flex flex-column">
+                        <img src="/img//Graphic_tv.scaled.400w.png" class="w-100" />
+                        1. {nvertiserName}'s video ad was ‘wrapped’ into Good-loop’s ethical ad frame, as you can see on the video below. 
+                    </div>
+                    <div class="col-md d-flex flex-column mt-5 mt-md-0">
+                        <img src="/img/Graphic_video_with_red_swirl.scaled.400w.png" class="w-100" />
+                        2. When the users choosed to engage (by watching, swiping or clicking) they unlocked a donation, funded by {nvertiserName}.
+                    </div>
+                    <div class="col-md d-flex flex-column mt-5 mt-md-0">
+                        <img src="/img/Graphic_leafy_video.scaled.400w.png" class="w-100" />
+                        3. Once the donation was unlocked, the user could then choose which charity they wanted to fund with 50% of the ad money.
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
 /**
  * List of adverts with some info about them (like views, dates)
  * @param {*} param0 
  */
-const AdvertsCatalogue = ({ads, viewcount4campaign, ndonationValue, totalViewCount}) => {
+const AdvertsCatalogue = ({ads, viewcount4campaign, ndonationValue, nvertiserName, totalViewCount}) => {
 	/** Picks one Ad (with a video) from each campaign to display as a sample.  */
 	let sampleAd4Campaign = {};
 	ads.forEach(ad => {
@@ -353,19 +383,23 @@ const AdvertsCatalogue = ({ads, viewcount4campaign, ndonationValue, totalViewCou
 	const sampleAds = Object.values(sampleAd4Campaign);	
 
 	return (<>
-		<Container fluid className="advert-bg">
+		<Container fluid className="py-5">
 			<br />
-			<Container className="pt-4 pb-5">
-				<h4 className="sub-header-font pb-4">The campaign</h4>
+			<Container className="py-5">
 				{sampleAds.map(
-					ad => <AdvertCard
-						key={ad.id}
-						ad={ad}
-						viewCountProp={viewCount(viewcount4campaign, ad)}
-						donationTotal={ndonationValue}
-						totalViewCount={totalViewCount}
-					/>
+					ad => <Fragment>
+						<h2>Watch the {nvertiserName} ad that raised <Counter currencySymbol="£" sigFigs={4} value={ndonationValue} minimumFractionDigits={2}/> with<br/>{printer.prettyNumber(viewCount(viewcount4campaign, ad))} ad viewers</h2>
+						<AdvertCard
+							key={ad.id}
+							ad={ad}
+							viewCountProp={viewCount(viewcount4campaign, ad)}
+							donationTotal={ndonationValue}
+							totalViewCount={totalViewCount}
+						/>
+					</Fragment>
 				)}
+				<a className="btn btn-primary mb-3 mb-md-0 mr-md-3" href="TODO">See all campaigns</a>
+				<a className="btn btn-transparent" href="TODO">Campaign performance & brand study</a>
 			</Container>
 		</Container>
 	</>);
@@ -385,11 +419,11 @@ const AdvertCard = ({ad, viewCountProp, donationTotal, totalViewCount}) => {
 
 	return (
 		<div className="ad-card">
-			<GoodLoopAd vertId={ad.id} size={size} nonce={`${size}${ad.id}`} production />
-			{Roles.isDev()? <small><a href={'https://portal.good-loop.com/#advert/'+escape(ad.id)} target='_portal'>Portal Editor</a></small> : null}
-			<div className="pt-3 pb-5 mb-2 advert-impact-text" style={{margin: '0 auto'}}>
-				<span>{printer.prettyNumber(thisViewCount)} people raised &pound;<Counter sigFigs={4} value={moneyRaised} /> by watching an ad in this campaign</span>
+			<div className="tablet-ad-container">
+				<GoodLoopAd vertId={ad.id} size={size} nonce={`${size}${ad.id}`} production />
 			</div>
+			<img src="/img/hiclipart.com.overlay.png" className="w-100 tablet-overlay"/>
+			{Roles.isDev()? <small><a href={'https://portal.good-loop.com/#advert/'+escape(ad.id)} target='_portal'>Portal Editor</a></small> : null}
 		</div>
 	);
 };

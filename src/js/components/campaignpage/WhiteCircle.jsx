@@ -1,8 +1,8 @@
 import React from 'react';
 
-const WhiteCircle = ({width, children}) => {
+const WhiteCircle = ({width, children, className}) => {
     return (
-        <div className="white-circle shadow" style={{width: (width && width ? width : "100%")}}>
+        <div className={"white-circle " + (className != undefined ? className : "")} style={(width != undefined ? {width:width} : {})}>
             <div className="content">
                 {children}
             </div>
