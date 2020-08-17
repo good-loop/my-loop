@@ -309,16 +309,22 @@ const CampaignPage = () => {
 				/>
 			)}
 
-			<div className="charity-card-container section clearfix">
-				{charities.map((charity, i) => (
-					<CharityCard
-						i={i} key={charity.id}
-						imageLeft={i % 2 === 0} /* Alternate L/R/L/R */
-						charity={charity}
-						donationValue={charity.donation}
-						donationBreakdown={pvDonationsBreakdown}
-					/>
-				))}
+			<div className="charity-card-container bg-gl-light-pink">
+				<div className="py-5">
+					<h2>Our Impact</h2>
+				</div>
+				<Container className="py-5">
+					<div class="row">
+						{charities.map((charity, i) => (
+							<CharityCard
+								i={i} key={charity.id}
+								charity={charity}
+								donationValue={charity.donation}
+								donationBreakdown={pvDonationsBreakdown}
+							/>
+						))}
+					</div>
+				</Container>
 			</div>
 
 			<PublishersCard pvViewData={pvViewData} />
@@ -419,8 +425,11 @@ const AdvertCard = ({ad, viewCountProp, donationTotal, totalViewCount}) => {
 
 	return (
 		<div className="ad-card">
-			<div className="tablet-ad-container">
-				<GoodLoopAd vertId={ad.id} size={size} nonce={`${size}${ad.id}`} production />
+			<div className="tablet-container">
+				<img src="/img/websitetest.PNG" className="tablet-bg"/>
+				<div className="tablet-ad-container">
+					<GoodLoopAd vertId={ad.id} size={size} nonce={`${size}${ad.id}`} production />
+				</div>
 			</div>
 			<img src="/img/hiclipart.com.overlay.png" className="w-100 tablet-overlay"/>
 			{Roles.isDev()? <small><a href={'https://portal.good-loop.com/#advert/'+escape(ad.id)} target='_portal'>Portal Editor</a></small> : null}

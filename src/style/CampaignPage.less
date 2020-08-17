@@ -170,112 +170,33 @@ body {
 		}
 	}
 
-	// Hack to give breathing room to splash without changing base Component
-	.container.p-2 {
-		padding: 3rem 2rem !important;
-	}
-
 	h1,h2 {
-		font-weight: 600;
 		color: @gl-light-red;
 	}
 
-	.intro-text {
-		color: #fff;
-		max-width: 560px;
-		margin: 0 auto;
-		padding: 2em 0;
-	}
-
-	// Subtle box-shadow to separate important sections on the page.
-	// TODO: More elegant solution.
-	.section {
-		box-shadow: 0px 3px 2px -2px rgba(0, 0, 0, 0.1);
+	h1,h2,h3,h4,h5 {
+		font-weight: 600;
+		text-transform: uppercase;
 	}
 
 	////////// Charity Cards /////////
 	.charity-card {
-		.bg {
-			background-position: center; // Keep original focus of the photo if the card is short
+		.flex-column>* {
+			margin: unset;
 		}
-		// Push inner card to the right
-		.container {
-			display: flex;
-			justify-content: flex-end;
-			padding: 5rem 0 !important; // Give some top/bottom breathing room to card
+		.stub-divider {
+			padding: 2px;
+			width: 15%;
+			margin-top: 20px;
+			margin-bottom: 20px;
+			background-color: @gl-light-red;
 		}
 		.charity-description {
-			// Affects style of description text
-			padding-top: 1rem;
-			p {
-				font-weight: 600;
-				font-size: medium;
-			}
-			.quote p {
-				font-weight: 500;
-			}
-		}
-		.quote {
-			font-style: italic;
-		}
-		// Charity card logo aligned and padded inside its div container, for standardisation.
-		.logo {
-			width: auto;
-			height: 95%;
-			max-width: 95%;
-		}
-
-		// Good-Loop sub-header font for both title and donation subtitle inside charity cards.
-		h3,
-		.charity-donation {
-			font-size: larger;
-			letter-spacing: 0.1rem;
-			font-weight: 400;
-			&:extend(.header-font);
-		}
-
-		// Image and info columns. What gives us the "checkboard" design.
-		.img-col {
-			width: 50%;
-			margin: 0;
-			background-position: center;
-			background-size: cover;
-			// Inform the user that this is a stock photo and not specific to this charity
-			.stock-warning {
-				position: absolute;
-				bottom: 0.5em;
-				left: 0.5em;
-				color: lightgray;
-			}
-		}
-		.info-col {
-			display: flex;
-			flex-direction: column;
-			align-items: flex-start;
-
-			// These widths and alignments allow us to mimic a boostrap container margins instead of dealing with superposed layers.
-			.inner-info-section {
-				align-self: flex-start;
-				padding: 2rem;
-				text-align: left;
-				max-width: 70%;
-				width: 70%;
-			}
-			.align-right {
-				align-self: flex-end;
-			}
-			@media (max-width: 767px) {
-				// Centred and full width white block of the cards on mobile
-				.inner-info-section {
-					max-width: 100%;
-					width: 100%;
-					align-self: center;
-					text-align: center;
-					padding: 2rem 0;
-					.logo div {
-						margin: 0 auto;
-					}
-				}
+			a {
+				font-weight: bold;
+				font-style: italic;
+				color: @gl-light-red;
+				text-decoration: none;
 			}
 		}
 	} // ./charity-card
@@ -284,29 +205,30 @@ body {
 		font-size: 0.8rem;
 	}
 
-	.pub-container {
-		flex-direction: column; // Stacks subtitle on top of logo grid
-		max-width: 1200px; // container max-width
-		margin: 0 auto;
-		padding: 7em 0;
-		img {
-			max-height: 65px;
-			max-width: 100%;
-		}
-		// Subtitle to the left
-		.sub-header-font {
-			text-align: left;
-		}
-	}
-
-	.tablet-ad-container {
+	.tablet-container {
 		position: absolute;
 		z-index: 1;
 		// Position on top of tablet image
-		top: 8%;
+		top: 8.8%;
 		left: 18.2%;
-		width: 71.4%;
-		height: 66.2%;
+		width: 71.6%;
+		height: 74.6%;
+		overflow: hidden;
+		.tablet-ad-container {
+			position: relative;
+			top: 50%;
+			transform: translateY(-50%);
+			left: 2.5%;
+			width: 95%;
+			z-index: 1;
+		}
+		.tablet-bg {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			z-index: 0;
+		}
 	}
 
 	.tablet-overlay {

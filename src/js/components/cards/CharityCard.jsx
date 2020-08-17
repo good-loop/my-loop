@@ -12,6 +12,7 @@ import { SquareLogo } from '../Image';
 import MDText from '../../base/components/MDText';
 import Counter from '../../base/components/Counter';
 import Money from '../../base/data/Money';
+import WhiteCircle from '../campaignpage/WhiteCircle';
 
 /**
  * HACK hardcode some thank you messages.
@@ -74,27 +75,22 @@ const CharityCard = ({charity, donationValue, i, imageLeft}) => {
 	}
 
 	return ( 
-	// 	{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
-	// </ACard>
-		<div className="container-fluid charity-card">
-			<div className={`row ${imageLeft? '' : ' flex-row-reverse'}`}>
-				<div className="col-sm img-col" style={{backgroundImage: `url(${backgroundImage})`}}>
-					{stockWarning ? <small className="stock-warning">Stock photo</small> : ''}
+		<div className="col charity-card">
+			<div className="flex-column">
+				<WhiteCircle className="mb-5 w-50 mx-auto">
+					<CharityLogo charity={charity}/>
+				</WhiteCircle>
+				{donationValue? <h4 className="text-left">
+					<Counter currencySymbol='&pound;' value={donationValue} />&nbsp;raised
+				</h4> : null}
+				<div className="stub-divider"></div>
+				<div className="charity-description text-block" >
+					<MDText source={charity.summaryDescription || ''} />
+					{//tq(charity)? <div className="quote"><MDText source={//tq(charity)} /></div> : null}
+					}
+					<a href={charity.url} target="_blank" rel="noopener noreferrer">Go to charity website</a>
 				</div>
-				<div className="col-sm info-col">
-					<div className={`inner-info-section ${imageLeft? '' : 'align-right'}`}>
-						<CharityLogo charity={charity} />
-						<div className="charity-donation">{ charity.name }</div>
-						{donationValue? <div className="charity-donation">
-							<span style={{color: '#af2009', fontWeight: '700'}}><Counter currencySymbol='&pound;' value={donationValue} />&nbsp;raised</span>
-						</div> : null}
-						<div className="charity-description text-block" >
-							<MDText source={charity.summaryDescription || ''} />
-							{tq(charity)? <div className="quote"><MDText source={tq(charity)} /></div> : null}			
-						</div>
-						{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
-					</div>
-				</div>
+				{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
 			</div>
 		</div>
 	);
@@ -104,19 +100,16 @@ const CharityCard = ({charity, donationValue, i, imageLeft}) => {
  * Logo (which you can click on)
  * TODO can we simplify this?? Also, standardise with company logo
  */
-const CharityLogo = ({charity}) => {
+const CharityLogo = ({charity, link, className}) => {
 	let photo = charity.photo || charity.highResPhoto || charity.images;
 	let logo = charity.logo;
 	let imgSrc = logo || photo;
 
-	// Sets logos inside white square box, to standarise them
 	let $logo = (
-		<div className="logo-div" style={{backgroundColor: 'white', width: '150px', height: '150px', borderRadius: '5px'}}>
-			<img className="logo" src={imgSrc} style={{background: 'white', backgroundColor: 'white'}} alt={charity.name} />
-		</div>
+		<img className="logo" src={imgSrc} alt={charity.name} className={className} />
 	);
 	// with / without `a` link?
-	if (charity.url) {
+	if (charity.url && link) {
 		return <a href={charity.url} target="_blank" rel="noopener noreferrer">{$logo}</a>;
 	}
 	return $logo;
