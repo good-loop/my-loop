@@ -101,12 +101,9 @@ const CharityCard = ({charity, donationValue, i, imageLeft}) => {
  * TODO can we simplify this?? Also, standardise with company logo
  */
 const CharityLogo = ({charity, link, className}) => {
-	let photo = charity.photo || charity.highResPhoto || charity.images;
-	let logo = charity.logo;
-	let imgSrc = logo || photo;
 
 	let $logo = (
-		<img className="logo" src={imgSrc} alt={charity.name} className={className} />
+		<img className="logo" src={charity.logo} alt={charity.name} className={className} />
 	);
 	// with / without `a` link?
 	if (charity.url && link) {
