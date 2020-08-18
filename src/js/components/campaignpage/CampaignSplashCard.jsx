@@ -6,8 +6,6 @@ import WhiteCircle from './WhiteCircle';
 import printer from '../../base/utils/printer';
 
 const SplashCard = ({ branding, campaignPage, donationValue, totalViewCount, adId, landing }) => {
-	console.log(campaignPage);
-	console.log(branding);
 	return (
 		<div className="impact-hub-splash">
 			<img src={campaignPage.bg} className="w-100 splash-img" />

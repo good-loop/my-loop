@@ -22,6 +22,7 @@ import CampaignPageDC from '../../data/CampaignPage';
 import SearchQuery from '../../base/searchquery';
 import ACard from '../cards/ACard';
 import CharityCard from '../cards/CharityCard';
+import CharityQuote from './CharityQuote';
 import {sortByDate} from '../../base/utils/SortFn';
 import Counter from '../../base/components/Counter';
 import printer from '../../base/utils/printer';
@@ -31,6 +32,7 @@ import PublishersCard from './PublishersCard';
 import CampaignSplashCard from './CampaignSplashCard';
 import ErrorAlert from '../../base/components/ErrorAlert';
 import ListLoad from '../../base/components/ListLoad';
+import DevLink from './DevLink';
 
 const tomsCampaigns = /(josh|sara|ella)/; // For matching TOMS campaign names needing special treatment
 /**
@@ -314,7 +316,7 @@ const CampaignPage = () => {
 					<h2>Our Impact</h2>
 				</div>
 				<Container className="py-5">
-					<div class="row">
+					<div className="row pb-5">
 						{charities.map((charity, i) => (
 							<CharityCard
 								i={i} key={charity.id}
@@ -424,15 +426,17 @@ const AdvertCard = ({ad, viewCountProp, donationTotal, totalViewCount}) => {
 	const size = isPortraitMobile() ? 'portrait' : 'landscape';
 
 	return (
-		<div className="ad-card">
-			<div className="tablet-container">
-				<img src="/img/websitetest.PNG" className="tablet-bg"/>
-				<div className="tablet-ad-container">
-					<GoodLoopAd vertId={ad.id} size={size} nonce={`${size}${ad.id}`} production />
+		<div>
+			<div className="ad-card">
+				<div className="tablet-container">
+					<img src="/img/websitetest.PNG" className="tablet-bg"/>
+					<div className="tablet-ad-container">
+						<GoodLoopAd vertId={ad.id} size={size} nonce={`${size}${ad.id}`} production />
+					</div>
 				</div>
+				<img src="/img/hiclipart.com.overlay.png" className="w-100 tablet-overlay"/>
 			</div>
-			<img src="/img/hiclipart.com.overlay.png" className="w-100 tablet-overlay"/>
-			{Roles.isDev()? <small><a href={'https://portal.good-loop.com/#advert/'+escape(ad.id)} target='_portal'>Portal Editor</a></small> : null}
+			{Roles.isDev()? <DevLink href={'https://portal.good-loop.com/#advert/'+escape(ad.id)} target='_portal'>Portal Editor</DevLink> : null}
 		</div>
 	);
 };

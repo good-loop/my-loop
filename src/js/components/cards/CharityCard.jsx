@@ -13,24 +13,7 @@ import MDText from '../../base/components/MDText';
 import Counter from '../../base/components/Counter';
 import Money from '../../base/data/Money';
 import WhiteCircle from '../campaignpage/WhiteCircle';
-
-/**
- * HACK hardcode some thank you messages.
- * 
- * TODO Have this as a field in the AdvertPage -> Charity editor or campaign page
- */
-const tq = charity => {
-	return {
-		helenbamber: `"That is absolutely fantastic news, thank you so much! Congratulations everyone on a successful Spring/Summer Campaign! 
-		The donation will go a huge way in supporting our clients to recover and rebuild their lives." -- Sophie at Helen Bamber`,
-
-		// TODO name
-		wwf: `"The money raised through the H&M campaign will support WWF UK's vital work, fighting for a world where people and nature can
-thrive, and continue to support schools, teachers and pupils to
-develop their knowledge and understanding of the environmental
-challenges facing our planet." -- Chiara Cadei, WWF`
-	}[charity.id] || "";
-};
+import DevLink from '../campaignpage/DevLink';
 
 const stockPhotos = [
 	'/img/campaign-stock/dew_web_shutterstock_1051967279.jpg',
@@ -56,22 +39,14 @@ const CharityCard = ({charity, donationValue, i, imageLeft}) => {
 			// if (sogiveCharity.summaryDescription) sogiveCharity.description = sogiveCharity.summaryDescription;
 
 			// Prefer full descriptions. If unavailable switch to summary desc.
-			if (!sogiveCharity.description) sogiveCharity.description = sogiveCharity.summaryDescription;
+			console.log(sogiveCharity.name + ": " + sogiveCharity.description);
+			if (!sogiveCharity.description) {
+				sogiveCharity.description = sogiveCharity.summaryDescription;
+			}
 			// merge in SoGive as defaults
 			charity = Object.assign({}, sogiveCharity, charity);
 			cid = NGO.id(sogiveCharity); // see ServerIO's hacks to handle bad data entry in the Portal
 		}
-	}
-
-	// If charity has photo, use it. Otherwise use logo with custom colour bg and eliminate name.
-	let photo = charity.highResPhoto || charity.images;
-	let logo = charity.logo;
-
-	let backgroundImage = photo;
-	let stockWarning = false;
-	if (!backgroundImage) {
-		backgroundImage = stockPhotos[i % stockPhotos.length];
-		stockWarning = true;
 	}
 
 	return ( 
@@ -86,11 +61,9 @@ const CharityCard = ({charity, donationValue, i, imageLeft}) => {
 				<div className="stub-divider"></div>
 				<div className="charity-description text-block" >
 					<MDText source={charity.summaryDescription || ''} />
-					{//tq(charity)? <div className="quote"><MDText source={//tq(charity)} /></div> : null}
-					}
 					<a href={charity.url} target="_blank" rel="noopener noreferrer">Go to charity website</a>
 				</div>
-				{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
+				{Roles.isDev() && cid? <DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</DevLink> : null}
 			</div>
 		</div>
 	);
