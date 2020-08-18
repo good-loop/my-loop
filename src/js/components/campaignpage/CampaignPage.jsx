@@ -22,7 +22,7 @@ import CampaignPageDC from '../../data/CampaignPage';
 import SearchQuery from '../../base/searchquery';
 import ACard from '../cards/ACard';
 import CharityCard from '../cards/CharityCard';
-import CharityQuote from './CharityQuote';
+import {CharityQuote, tq} from './CharityQuote';
 import {sortByDate} from '../../base/utils/SortFn';
 import Counter from '../../base/components/Counter';
 import printer from '../../base/utils/printer';
@@ -134,11 +134,17 @@ const CampaignPage = () => {
 	const nvertiser = pvVertiser.value;
 
 	// Combine campaign page and branding settings from all ads
-	// Last ad wins any branding settings!
-	// TODO support for agency level (and advertiser level) branding to win through
+	// Vertiser branding wins, ad branding fallback, last ad wins
 	let branding = {};
 	let campaignPage = {};
-	ads.forEach(ad => Object.assign(branding, ad.branding));
+	let useVertiser = true;
+	if (!nvertiser)
+		useVertiser = false;
+	else if (!nvertiser.branding)
+		useVertiser = false;
+	else if (!nvertiser.branding.logo)
+		useVertiser = false;
+	ads.forEach(ad => Object.assign(branding, (useVertiser ? nvertiser.branding : ad.branding)));
 	ads.forEach(ad => Object.assign(campaignPage, ad.campaignPage));
 	
 	// individual charity data
@@ -283,6 +289,15 @@ const CampaignPage = () => {
 
 	assignUnsetDonations();
 
+	// Check if this page has any quotes to add
+	let hasQuotes = false;
+	charities.forEach(charity => {
+		if (tq(charity)) {
+			hasQuotes = true;
+			return;
+		}
+	});
+
 	return (<>
 		<MyLoopNavBar brandLogo={branding.logo} logo="/img/new-logo-with-text-white.svg" style={{backgroundColor: brandColor}} />
 		<CSS css={campaignPage && campaignPage.customCss} />
@@ -291,15 +306,6 @@ const CampaignPage = () => {
 			<CampaignSplashCard branding={branding} campaignPage={campaignPage} donationValue={ndonationValue} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
 
 			<HowDoesItWork nvertiserName={nvertiserName}/>
-
-			{/*
-			<div className="container-fluid" style={{backgroundColor: '#af2009'}}>
-				<div className="intro-text">
-					{descHeader}
-					{descBody}
-				</div>
-			</div>
-			*/}
 
 			{isLanding ? null : (
 				<AdvertsCatalogue
@@ -326,6 +332,21 @@ const CampaignPage = () => {
 							/>
 						))}
 					</div>
+				</Container>
+				{hasQuotes ?
+					<div className="pt-5">
+						<h2>How are charities using the money raised?</h2>
+					</div>
+				: null}
+				<Container className="py-5">
+					{charities.map((charity, i) => (
+						<CharityQuote
+							i={i} key={charity.id}
+							charity={charity}
+							donationValue={charity.donation}
+							donationBreakdown={pvDonationsBreakdown}
+						/>
+					))}
 				</Container>
 			</div>
 
