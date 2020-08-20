@@ -50,7 +50,7 @@ const CharityCard = ({charity, donationValue, i, imageLeft}) => {
 	}
 
 	return ( 
-		<div className="col charity-card">
+		<div className="col-md charity-card mt-5 mt-md-0">
 			<div className="flex-column">
 				<WhiteCircle className="mb-5 w-50 mx-auto">
 					<CharityLogo charity={charity}/>

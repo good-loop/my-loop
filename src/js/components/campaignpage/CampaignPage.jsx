@@ -33,6 +33,7 @@ import CampaignSplashCard from './CampaignSplashCard';
 import ErrorAlert from '../../base/components/ErrorAlert';
 import ListLoad from '../../base/components/ListLoad';
 import DevLink from './DevLink';
+import { useMediaQuery } from 'react-responsive';
 
 const tomsCampaigns = /(josh|sara|ella)/; // For matching TOMS campaign names needing special treatment
 /**
@@ -298,6 +299,8 @@ const CampaignPage = () => {
 		}
 	});
 
+	const isMobile = useMediaQuery({query: "(max-width: 767px)"})
+	
 	return (<>
 		<MyLoopNavBar brandLogo={branding.logo} logo="/img/new-logo-with-text-white.svg" style={{backgroundColor: brandColor}} />
 		<CSS css={campaignPage && campaignPage.customCss} />
@@ -349,8 +352,48 @@ const CampaignPage = () => {
 					))}
 				</Container>
 			</div>
+			
+			<div className="bg-white">
+				<Container>
+					<h2 className="my-5">Where can you see our ads?</h2>
+					<p className="w-60 mx-auto">Good-Loop distributes ethical online ads to millions of people every month in premium websites across the world’s best publishers and social platforms.</p>
+				</Container>
+				{isMobile ?
+					<img src="/img/Graphic_metro_mobile.800w.png" className="w-100"/>
+					:
+					<img src="/img/Graphic_metro.1920w.png" className="w-100"/>
+				}
+			</div>
 
-			<PublishersCard pvViewData={pvViewData} />
+			<div className="bg-gl-light-red">
+				<Container className="py-5 text-white">
+					<div className="pt-5"></div>
+					<h2 className="text-white">Join the revolution and support ads<br/>that make a difference</h2>
+					<p className="py-5">Help us do even more good in the world! All you have to do is sign up with your email or social account. This will help us boost the donations you generate by seeing our ads.</p>
+					<div className="py-5 w-50 row mx-auto">
+						<div className="col-md">
+							<a className="btn btn-secondary w-100" href="TODO">Sign up</a>
+						</div>
+						<div className="col-md">
+							<a className="btn btn-transparent btn-white w-100 mt-3 mt-md-0" href="TODO"><i class="fas fa-share-alt mr-2"></i> Share the love</a>
+						</div>
+					</div>
+					<div className="pb-5"></div>
+				</Container>
+			</div>
+
+			<div className="bg-gl-light-pink">
+				<Container className="py-5">
+					<div className="pt-5"></div>
+					<h2>Are you a brand or an agency?</h2>
+					<p className="py-5">Company website: <a href="http://www.good-loop.com">www.good-loop.com</a><br/>Email: <b>hello@good-loop.com</b></p>
+					<div className="py-5 flex-column flex-md-row justify-content-center">
+						<a className="btn btn-primary" href="TODO">Book a call</a>
+						<a className="btn btn-transparent w-100 mt-3 mt-md-0" href="TODO">Download pdf version</a>
+					</div>
+					<div className="pb-5"></div>
+				</Container>
+			</div>
 
 			{campaignPage.smallPrint ? (
 				<div className="small-print"><small>{campaignPage.smallPrint}</small></div>

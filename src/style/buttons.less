@@ -80,6 +80,11 @@
         border: solid 2px @gl-orange !important;
     }
 
+    .btn-transparent.btn-white {
+        color: white !important;
+        border-color: white !important;
+    }
+
     .btn-transparent:hover:not(.disabled) {
         color: @gl-btn-hover !important;
         box-shadow: none !important;
@@ -93,5 +98,33 @@
         box-shadow: none !important;
         border: solid 2px @gl-red !important;
     }
+
+    /*
+    .btn-transparent-white {
+        background-color: transparent;
+        color: white !important;
+        padding: 13px 38px; // Account for border
+        @media @md-max {
+            padding: 8px 38px;
+            @media (max-height: 568px) {
+                padding: 8px 18px;
+            }
+        }
+        border: solid 2px white !important;
+    }
+
+    .btn-transparent-white:hover:not(.disabled) {
+        color: @gl-orange !important;
+        box-shadow: none !important;
+        border: solid 2px @gl-orange !important;
+    }
+
+    // TODO: btn-secondary:focus not working??
+    .btn-transparent-white:active:not(.disabled),
+    .btn-transparent-white:focus:not(.disabled) {
+        color: @gl-red!important;
+        box-shadow: none !important;
+        border: solid 2px @gl-red !important;
+    }*/
 
 }
