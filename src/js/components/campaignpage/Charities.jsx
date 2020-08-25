@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Container } from 'reactstrap';
 import ActionMan from '../../plumbing/ActionMan';
 import CharityQuote from './CharityQuote';
 import CharityCard from '../cards/CharityCard';
+import Money from '../../base/data/Money';
+import costPerBeneficiaryCalc from './costPerBeneficiary';
 
 /**
  * HACK hardcode some thank you messages.
@@ -26,19 +28,16 @@ challenges facing our planet."`,
 	}[charity['@id']] || "";
 };
 
+function formatNumber(num) {
+	return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+}
+
 const Charities = ({charities}) => {
 
-    /*
-    // Check if this page has any quotes to add
-	let hasQuotes = false;
-	charities.forEach(charity => {
-		if (tq(charity)) {
-			hasQuotes = true;
-			return;
-		}
-	});*/
+    let hasQuoteCardContent = false;
 
 	let sogiveCharities = charities.map (charity=> {
+
 		// fetch extra info from SoGive
 		let cid = charity.id;
 		let sogiveCharity = null;
@@ -69,9 +68,57 @@ const Charities = ({charities}) => {
 				charity = Object.assign({}, sogiveCharity, charity);
 				cid = NGO.id(sogiveCharity); // see ServerIO's hacks to handle bad data entry in the Portal
 			}
-		}
+        }
+        
+        // Get charity impacts from impact model, if any data on it exists
+
+        let impact = "";
+        let donationsMoney = new Money(charity.donation);
+        
+        // Attempt to get data from special field first, simple and easy
+        if (charity.simpleImpact) {
+            let name = charity.simpleImpact.name;
+            name = name.replace(/\(singular\: (.*)\)/g, "");
+            let numOfImpact = formatNumber(Math.round(Money.divide(donationsMoney, charity.simpleImpact.costPerBeneficiary)));
+            impact = numOfImpact + " " + name;
+        } else {
+            // Look for a representative project with outputs
+            let project = null;
+            console.log(charity.projects);
+            if (charity.projects) {
+                charity.projects.forEach (proj => {
+                    if (proj.isRep && proj.outputs) {
+                        if (proj.outputs.length > 0) {
+                            project = proj;
+                        }
+                    }
+                });
+            }
+            if (project != null) {
+                project.outputs.forEach (output => {
+                    let name = output.name;
+                    name = name.replace(/\(singular\: (.*)\)/g, "");
+
+                    // If costPerBeneficiary exists, use it
+                    if (output.costPerBeneficiary) {
+                        let numOfImpact = formatNumber(Math.round(Money.divide(donationsMoney, output.costPerBeneficiary)));
+                        impact = numOfImpact + " " + name;
+                    } else if (output.number) {  // Otherwise calculate it from scratch
+                        let cpb = costPerBeneficiaryCalc({charity, project, output});
+                        let numOfImpact = formatNumber(Math.round(Money.divide(donationsMoney, cpb)));
+                        impact = numOfImpact + " " + name;
+                    }
+                })
+            }
+            // If none of these yield an impact, it's not physically possible to retrieve
+        }
+
+        charity.impact = impact;
+        if (tq(charity) || impact)
+            hasQuoteCardContent = true;
+
 		return charity;
-	});
+    });
 
     return (
         <div className="charity-card-container bg-gl-light-pink">
@@ -91,21 +138,25 @@ const Charities = ({charities}) => {
                     ))}
                 </div>
             </Container>
-            <div className="pt-5">
-                <h2>How are charities using the money raised?</h2>
-            </div>
-            <Container className="py-5">
-                {sogiveCharities.map((charity, i) => (
-                    charity ?
-                    <CharityQuote
-                        i={i} key={charity.id}
-                        charity={charity}
-                        quote={tq(charity)}
-                        donationValue={charity.donation}
-                    />
-                    : null
-                ))}
-            </Container>
+            {hasQuoteCardContent ?
+                <Fragment>
+                    <div className="pt-5">
+                        <h2>How are charities using the money raised?</h2>
+                    </div>
+                    <Container className="py-5">
+                        {sogiveCharities.map((charity, i) => (
+                            charity ?
+                            <CharityQuote
+                                i={i} key={charity.id}
+                                charity={charity}
+                                quote={tq(charity)}
+                                donationValue={charity.donation}
+                            />
+                            : null
+                        ))}
+                    </Container>
+                </Fragment>
+            : null}
         </div>
     );
 }
