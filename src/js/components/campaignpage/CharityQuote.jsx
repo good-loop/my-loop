@@ -1,36 +1,14 @@
 import React from 'react';
 import Counter from '../../base/components/Counter';
 import Money from '../../base/data/Money';
-
-/**
- * HACK hardcode some thank you messages.
- * 
- * TODO Have this as a field in the AdvertPage -> Charity editor or campaign page
- */
-const tq = charity => {
-	return {
-		helenbamber: {quote:`"That is absolutely fantastic news, thank you so much! Congratulations everyone on a successful Spring/Summer Campaign! 
-		The donation will go a huge way in supporting our clients to recover and rebuild their lives."`,
-					source: "Sophie at Helen Bamber"},
-		
-		// TODO name
-		"wwf-uk": {
-			img: "/img/WWF_FeelGoodImage.png",
-			quote:`"The money raised through the H&M campaign will support WWF UK's vital work, fighting for a world where people and nature can
-thrive, and continue to support schools, teachers and pupils to
-develop their knowledge and understanding of the environmental
-challenges facing our planet."`,
-			source: "Chiara Cadei, WWF"}
-	}[charity['@id']] || "";
-};
+import costPerBeneficiaryCalc from './costPerBeneficiary';
 
 function formatNumber(num) {
 	return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
 }
 
-const CharityQuote = ({charity, donationValue}) => {
-
-	let quote = tq(charity);
+const CharityQuote = ({charity, quote, donationValue}) => {
+	
 	let impact = "";
 	let donationsMoney = new Money(donationValue);
 	if (charity.simpleImpact) {
@@ -55,10 +33,12 @@ const CharityQuote = ({charity, donationValue}) => {
 				let name = output.name;
 				name = name.replace(/\(singular\: (.*)\)/g, "");
 				if (output.costPerBeneficiary) {
-					let numOfImpact = formatNumber(Math.round(Money.divide(donationsMoney, project.outputs[0].costPerBeneficiary)));
+					let numOfImpact = formatNumber(Math.round(Money.divide(donationsMoney, output.costPerBeneficiary)));
 					impact = numOfImpact + " " + name;
 				} else if (output.number) {
-					impact = "Contributing to " + formatNumber(output.number) + " " + name;
+					let cpb = costPerBeneficiaryCalc({charity, project, output});
+					let numOfImpact = formatNumber(Math.round(Money.divide(donationsMoney, cpb)));
+					impact = numOfImpact + " " + name;
 				}
 			})
 		}
@@ -92,4 +72,4 @@ const CharityQuote = ({charity, donationValue}) => {
     );
 }
 
-export {CharityQuote, tq}
+export default CharityQuote;

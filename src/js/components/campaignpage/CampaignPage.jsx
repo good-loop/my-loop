@@ -21,8 +21,7 @@ import Money from '../../base/data/Money';
 import CampaignPageDC from '../../data/CampaignPage';
 import SearchQuery from '../../base/searchquery';
 import ACard from '../cards/ACard';
-import CharityCard from '../cards/CharityCard';
-import {CharityQuote, tq} from './CharityQuote';
+import Charities from './Charities';
 import {sortByDate} from '../../base/utils/SortFn';
 import Counter from '../../base/components/Counter';
 import printer from '../../base/utils/printer';
@@ -250,10 +249,6 @@ const CampaignPage = () => {
 		});
 	};
 
-	charities.forEach(charity => {
-		console.log(charity);
-	});
-
 	let charitiesById = _.uniq(_.flattenDeep(ads.map(c => c.charities.list)));
 	let charIds = [];
 	charitiesById.forEach(c => {
@@ -278,50 +273,6 @@ const CampaignPage = () => {
 
 	assignUnsetDonations();
 
-	// Check if this page has any quotes to add
-	let hasQuotes = false;
-	charities.forEach(charity => {
-		if (tq(charity)) {
-			hasQuotes = true;
-			return;
-		}
-	});
-
-	let sogiveCharities = charities.map (charity=> {
-		// fetch extra info from SoGive
-		let cid = charity.id;
-		let sogiveCharity = null;
-		if (cid) {
-			const pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:charity.id, status:C.KStatus.PUBLISHED});
-			sogiveCharity = pvCharity.value;
-			if (sogiveCharity) {
-				// HACK: prefer short description
-				// if (sogiveCharity.summaryDescription) sogiveCharity.description = sogiveCharity.summaryDescription;
-
-				// Prefer full descriptions. If unavailable switch to summary desc.
-				if (!sogiveCharity.description) {
-					sogiveCharity.description = sogiveCharity.summaryDescription;
-				}
-				
-				// If no descriptions exist, fallback to the charity object description
-				if (!sogiveCharity.description) {
-					sogiveCharity.description = charity.description;
-				}
-				
-				// Cut descriptions down to 1 paragraph.
-				let firstParagraph = (/^.+\n\n/g).exec(sogiveCharity.description);
-				if (firstParagraph) {
-					sogiveCharity.description = firstParagraph[0];
-				}
-				// merge in SoGive as defaults
-				// Retain donation amount
-				charity = Object.assign({}, sogiveCharity, charity);
-				cid = NGO.id(sogiveCharity); // see ServerIO's hacks to handle bad data entry in the Portal
-			}
-		}
-		return charity;
-	});
-
 	const isMobile = useMediaQuery({query: "(max-width: 767px)"})
 	
 	return (<>
@@ -343,40 +294,7 @@ const CampaignPage = () => {
 				/>
 			)}
 
-			<div className="charity-card-container bg-gl-light-pink">
-				<div className="py-5">
-					<h2>Our Impact</h2>
-				</div>
-				<Container className="py-5">
-					<div className="row pb-5 justify-content-center">
-						{sogiveCharities.map((charity, i) => (
-							charity ?
-							<CharityCard
-								i={i} key={charity.id}
-								charity={charity}
-								donationValue={charity.donation}
-								donationBreakdown={pvDonationsBreakdown}
-							/>
-							: null
-						))}
-					</div>
-				</Container>
-				<div className="pt-5">
-					<h2>How are charities using the money raised?</h2>
-				</div>
-				<Container className="py-5">
-					{sogiveCharities.map((charity, i) => (
-						charity ?
-						<CharityQuote
-							i={i} key={charity.id}
-							charity={charity}
-							donationValue={charity.donation}
-							donationBreakdown={pvDonationsBreakdown}
-						/>
-						: null
-					))}
-				</Container>
-			</div>
+			<Charities charities={charities}/>
 			
 			<div className="bg-white">
 				<Container>
