@@ -4,7 +4,6 @@ import ActionMan from '../../plumbing/ActionMan';
 import CharityQuote from './CharityQuote';
 import CharityCard from '../cards/CharityCard';
 import Money from '../../base/data/Money';
-import costPerBeneficiaryCalc from './costPerBeneficiary';
 
 /**
  * HACK hardcode some thank you messages.
@@ -102,10 +101,6 @@ const Charities = ({charities}) => {
                     // If costPerBeneficiary exists, use it
                     if (output.costPerBeneficiary) {
                         let numOfImpact = formatNumber(Math.round(Money.divide(donationsMoney, output.costPerBeneficiary)));
-                        impact = numOfImpact + " " + name;
-                    } else if (output.number) {  // Otherwise calculate it from scratch
-                        let cpb = costPerBeneficiaryCalc({charity, project, output});
-                        let numOfImpact = formatNumber(Math.round(Money.divide(donationsMoney, cpb)));
                         impact = numOfImpact + " " + name;
                     }
                 })

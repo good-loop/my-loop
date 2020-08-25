@@ -341,6 +341,8 @@ const CampaignPage = () => {
 			{campaignPage.smallPrint ? (
 				<div className="small-print"><small>{campaignPage.smallPrint}</small></div>
 			) : null}
+			
+			<div className="small py-5">Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></div>
 
 			<Footer />
 		</div>
