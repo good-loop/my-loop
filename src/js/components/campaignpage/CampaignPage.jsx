@@ -250,6 +250,10 @@ const CampaignPage = () => {
 		});
 	};
 
+	charities.forEach(charity => {
+		console.log(charity);
+	});
+
 	let charitiesById = _.uniq(_.flattenDeep(ads.map(c => c.charities.list)));
 	let charIds = [];
 	charitiesById.forEach(c => {
@@ -272,22 +276,6 @@ const CampaignPage = () => {
 	// Get name of advertiser from nvertiser if existing, or ad if not
 	let nvertiserName = (nvertiser && nvertiser.name) || ads[0].name;
 
-	const descHeader = campaignPage.desc_title ? (
-		<h3>{campaignPage.desc_title}</h3>
-	) : null;
-
-	const descBody = campaignPage.desc_body ? (
-		<span>{campaignPage.desc_body}</span>
-	) : (
-		<span>
-			At {nvertiserName} we want to give back.
-			We work with Good-Loop to put out Ads for Good, and donate money to charity.
-			Together with <span className="font-weight-bold">{printer.prettyNumber(totalViewCount, 4)}</span> people
-			we've raised funds for the following causes and can't wait to see our positive impact go even further.
-			See our impact below.
-		</span>
-	);
-
 	assignUnsetDonations();
 
 	// Check if this page has any quotes to add
@@ -297,6 +285,41 @@ const CampaignPage = () => {
 			hasQuotes = true;
 			return;
 		}
+	});
+
+	let sogiveCharities = charities.map (charity=> {
+		// fetch extra info from SoGive
+		let cid = charity.id;
+		let sogiveCharity = null;
+		if (cid) {
+			const pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:charity.id, status:C.KStatus.PUBLISHED});
+			sogiveCharity = pvCharity.value;
+			if (sogiveCharity) {
+				// HACK: prefer short description
+				// if (sogiveCharity.summaryDescription) sogiveCharity.description = sogiveCharity.summaryDescription;
+
+				// Prefer full descriptions. If unavailable switch to summary desc.
+				if (!sogiveCharity.description) {
+					sogiveCharity.description = sogiveCharity.summaryDescription;
+				}
+				
+				// If no descriptions exist, fallback to the charity object description
+				if (!sogiveCharity.description) {
+					sogiveCharity.description = charity.description;
+				}
+				
+				// Cut descriptions down to 1 paragraph.
+				let firstParagraph = (/^.+\n\n/g).exec(sogiveCharity.description);
+				if (firstParagraph) {
+					sogiveCharity.description = firstParagraph[0];
+				}
+				// merge in SoGive as defaults
+				// Retain donation amount
+				charity = Object.assign({}, sogiveCharity, charity);
+				cid = NGO.id(sogiveCharity); // see ServerIO's hacks to handle bad data entry in the Portal
+			}
+		}
+		return charity;
 	});
 
 	const isMobile = useMediaQuery({query: "(max-width: 767px)"})
@@ -325,30 +348,32 @@ const CampaignPage = () => {
 					<h2>Our Impact</h2>
 				</div>
 				<Container className="py-5">
-					<div className="row pb-5">
-						{charities.map((charity, i) => (
+					<div className="row pb-5 justify-content-center">
+						{sogiveCharities.map((charity, i) => (
+							charity ?
 							<CharityCard
 								i={i} key={charity.id}
 								charity={charity}
 								donationValue={charity.donation}
 								donationBreakdown={pvDonationsBreakdown}
 							/>
+							: null
 						))}
 					</div>
 				</Container>
-				{hasQuotes ?
-					<div className="pt-5">
-						<h2>How are charities using the money raised?</h2>
-					</div>
-				: null}
+				<div className="pt-5">
+					<h2>How are charities using the money raised?</h2>
+				</div>
 				<Container className="py-5">
-					{charities.map((charity, i) => (
+					{sogiveCharities.map((charity, i) => (
+						charity ?
 						<CharityQuote
 							i={i} key={charity.id}
 							charity={charity}
 							donationValue={charity.donation}
 							donationBreakdown={pvDonationsBreakdown}
 						/>
+						: null
 					))}
 				</Container>
 			</div>
@@ -493,12 +518,20 @@ const AdvertCard = ({ad, viewCountProp, donationTotal, totalViewCount}) => {
 		<div>
 			<div className="ad-card">
 				<div className="tablet-container">
-					<img src="/img/websitetest.png" className="tablet-bg"/>
+					{isPortraitMobile() ?
+						<img src="/img/mobilewebsite.PNG" className="tablet-bg"/>
+						:
+						<img src="/img/websitetest.png" className="tablet-bg"/>
+					}
 					<div className="tablet-ad-container">
 						<GoodLoopAd vertId={ad.id} size={size} nonce={`${size}${ad.id}`} production />
 					</div>
 				</div>
-				<img src="/img/hiclipart.com.overlay.png" className="w-100 tablet-overlay"/>
+				{isPortraitMobile() ?
+					<img src="/img/hiclipart.com.mobile.cropped.overlay.png" className="w-100 tablet-overlay"/>
+					:
+					<img src="/img/hiclipart.com.overlay.png" className="w-100 tablet-overlay"/>
+				}
 			</div>
 			{Roles.isDev()? <DevLink href={'https://portal.good-loop.com/#advert/'+escape(ad.id)} target='_portal'>Portal Editor</DevLink> : null}
 		</div>
