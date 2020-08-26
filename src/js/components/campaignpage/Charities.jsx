@@ -1,11 +1,13 @@
 import React, { Fragment } from 'react';
 import { Container } from 'reactstrap';
 import ActionMan from '../../plumbing/ActionMan';
-import CharityQuote from './CharityQuote';
 import CharityMiniCard from '../cards/CharityCard';
 import Money from '../../base/data/Money';
 import NGO from '../../base/data/NGO';
 import C from '../../C';
+import Counter from '../../base/components/Counter';
+import { space } from '../../base/utils/miscutils';
+import printer from '../../base/utils/printer';
 
 /**
  * HACK hardcode some thank you messages.
@@ -85,7 +87,7 @@ const Charities = ({ charities }) => {
 					<h2>How are charities using the money raised?</h2>
 				</div>
 				{sogiveCharities.map((charity, i) =>
-					<CharityCard i={i} key={NGO.id(charity)} charity={charity} />
+					<CharityCard i={i} key={NGO.id(charity)} charity={charity} donationValue={charity.donation} />
 				)}
 			</Container>
 		</div>
@@ -96,7 +98,7 @@ const Charities = ({ charities }) => {
  * 
  * @param {!NGO} charity This data item is a copy that can be modified without side-effects
  */
-const CharityCard = ({ charity, i }) => {
+const CharityCard = ({ charity, donationValue, i }) => {
 	// Get charity impacts from impact model, if any data on it exists
 	let donationsMoney = new Money(charity.donation);
 	// Prefer full descriptions here. If unavailable switch to summary desc.
@@ -116,17 +118,17 @@ const CharityCard = ({ charity, i }) => {
 		<div className={space("charity-quote row", !img && "no-img")}>
 			{img ?
 				<div className="charity-quote-img col-md-5 p-0">
-					<img src={img} className="w-100" />
+					<img src={img} className="w-100" alt="charity" />
 				</div>
 				: null}
 			<div className={space("charity-quote-content", img && "col-md-7")}>
 				<div className="charity-quote-logo">
-					<img src={charity.logo} />
+					<img src={charity.logo} alt="logo" />
 				</div>
 				<div className="charity-quote-text">
-					{donationValue ? <div className="w-100"><h2><Counter currencySymbol='&pound;' value={donationValue} /> raised</h2></div> : null}
+					{donationValue ? <div className="w-100"><h2><Counter currencySymbol="&pound;" value={donationValue} /> raised</h2></div> : null}
 					{charity.simpleImpact ? <Impact impact={charity.simpleImpact} donationValue={donationValue} /> : null}
-					{quote ? <p class="font-italic">{quote.quote}</p><p>{quote.source}</p> : null}
+					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
 				</div>
 			</div>
 		</div>
