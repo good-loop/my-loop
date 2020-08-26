@@ -1,7 +1,7 @@
 /*
  * 
  */
-import React from 'react';
+import React, { Fragment } from 'react';
 import Login from 'you-again';
 import _ from 'lodash';
 import { Container, Alert } from 'reactstrap';
@@ -413,16 +413,15 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, ndonationValue, nvertiserNa
 			<br />
 			<Container className="py-5">
 				{sampleAds.map(
-					ad => <>
+					ad => <Fragment key={ad.id} >
 						<h2>Watch the {nvertiserName} ad that raised <Counter currencySymbol="£" sigFigs={4} value={ndonationValue} minimumFractionDigits={2} /> with<br />{printer.prettyNumber(viewCount(viewcount4campaign, ad))} ad viewers</h2>
 						<AdvertCard
-							key={ad.id}
 							ad={ad}
 							viewCountProp={viewCount(viewcount4campaign, ad)}
 							donationTotal={ndonationValue}
 							totalViewCount={totalViewCount}
 						/>
-					</>
+					</Fragment>
 				)}
 				<a className="btn btn-primary mb-3 mb-md-0 mr-md-3" href="TODO">See all campaigns</a>
 				<a className="btn btn-transparent" href="TODO">Campaign performance & brand study</a>
