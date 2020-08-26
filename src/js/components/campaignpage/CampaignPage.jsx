@@ -353,7 +353,12 @@ const CampaignPage = () => {
 	);
 }; // ./CampaignPage
 
+/**
+ * @param {!Advert} ad 
+ * @returns {!string} Can be "unknown" to fill in for no-campaign odd data items
+ */
 const campaignNameForAd = ad => {
+	if ( ! ad.campaign) return "unknown";
 	// HACK FOR TOMS 2019 The normal code returns 5 campaigns where there are 3 synthetic campaign groups
 	// Dedupe on "only the first josh/sara/ella campaign" instead
 	if (ad.vertiser === 'bPe6TXq8' && ad.campaign.match(tomsCampaigns)) {
