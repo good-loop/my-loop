@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { Container } from 'reactstrap';
 import ActionMan from '../../plumbing/ActionMan';
 import CharityQuote from './CharityQuote';
-import CharityCard from '../cards/CharityCard';
+import CharityMiniCard from '../cards/CharityCard';
 import Money from '../../base/data/Money';
 import NGO from '../../base/data/NGO';
 import C from '../../C';
@@ -32,92 +32,34 @@ challenges facing our planet."`,
 	}[charity['@id']] || "";
 };
 
-function formatNumber(num) {
-	return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
-}
 
+// use printer.prettyNumber instead
+// if something else is needed, we should document it
+// function formatNumber(num) {
+// 	return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+// }
+
+/**
+ * 
+ * @param {!NGO[]} charities 
+ */
 const Charities = ({ charities }) => {
-
-	let hasQuoteCardContent = false;
-
+	// paranoia: filter nulls - is this needed??
+	charities = charities.filter(x => x);
+	// augment with SoGive data
 	let sogiveCharities = charities.map(charity => {
-
-		// fetch extra info from SoGive
-		let cid = charity.id;
-		let sogiveCharity = null;
-		if (cid) {
-			const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: charity.id, status: C.KStatus.PUBLISHED });
-			sogiveCharity = pvCharity.value;
-			if (sogiveCharity) {
-				// HACK: prefer short description
-				// if (sogiveCharity.summaryDescription) sogiveCharity.description = sogiveCharity.summaryDescription;
-
-				// Prefer full descriptions. If unavailable switch to summary desc.
-				if (!sogiveCharity.description) {
-					sogiveCharity.description = sogiveCharity.summaryDescription;
-				}
-
-				// If no descriptions exist, fallback to the charity object description
-				if (!sogiveCharity.description) {
-					sogiveCharity.description = charity.description;
-				}
-
-				// Cut descriptions down to 1 paragraph.
-				let firstParagraph = (/^.+\n\n/g).exec(sogiveCharity.description);
-				if (firstParagraph) {
-					sogiveCharity.description = firstParagraph[0];
-				}
-				// merge in SoGive as defaults
-				// Retain donation amount
-				charity = Object.assign({}, sogiveCharity, charity);
-				cid = NGO.id(sogiveCharity); // see ServerIO's hacks to handle bad data entry in the Portal
-			}
+		if (!charity.id) {
+			console.warn("Charity without an id?!", charity);
+			return charity;
 		}
-
-		// Get charity impacts from impact model, if any data on it exists
-
-		let impact = "";
-		let donationsMoney = new Money(charity.donation);
-
-		// Attempt to get data from special field first, simple and easy
-		if (charity.simpleImpact) {
-			let name = charity.simpleImpact.name;
-			name = name.replace(/\(singular: (.*)\)/g, "");
-			let numOfImpact = formatNumber(Math.round(Money.divide(donationsMoney, charity.simpleImpact.costPerBeneficiary)));
-			impact = numOfImpact + " " + name;
-		} else {
-			// Look for a representative project with outputs
-			let project = null;
-			console.log(charity.projects);
-			if (charity.projects) {
-				charity.projects.forEach(proj => {
-					if (proj.isRep && proj.outputs) {
-						if (proj.outputs.length > 0) {
-							project = proj;
-						}
-					}
-				});
-			}
-			if (project != null) {
-				project.outputs.forEach(output => {
-					let name = output.name;
-					name = name.replace(/\(singular: (.*)\)/g, "");
-
-					// If costPerBeneficiary exists, use it
-					if (output.costPerBeneficiary) {
-						let numOfImpact = formatNumber(Math.round(Money.divide(donationsMoney, output.costPerBeneficiary)));
-						impact = numOfImpact + " " + name;
-					}
-				});
-			}
-			// If none of these yield an impact, it's not physically possible to retrieve
-		}
-
-		charity.impact = impact;
-		if (tq(charity) || impact) {
-			hasQuoteCardContent = true;
-		}
-		return charity;
+		// NB: the lower-level ServerIOBase.js helps patch mismatches between GL and SoGive ids
+		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: charity.id, status: C.KStatus.PUBLISHED });
+		if (!pvCharity.value) return charity; // no extra data yet
+		// merge, preferring Good-Loop data (esp the GL id, and GL donation)
+		// NB: GL data is more likely to be stale, but it might also be custom-edited -- and it can happily be tweaked by Good-Loop staff
+		// NB: This merge is a copy, so the objects can then be edited without affecting other components
+		let mergedCharity = Object.assign({}, pvCharity.value, charity);
+		return mergedCharity;
 	});
 
 	return (
@@ -127,38 +69,77 @@ const Charities = ({ charities }) => {
 			</div>
 			<Container className="py-5">
 				<div className="row pb-5 justify-content-center">
-					{sogiveCharities.map((charity, i) => (
-						charity ?
-							<CharityCard
-								i={i} key={charity.id}
-								charity={charity}
-								donationValue={charity.donation}
-							/>
-							: null
-					))}
+					{sogiveCharities.map((charity, i) =>
+						<CharityMiniCard
+							i={i} key={charity.id}
+							charity={charity}
+							donationValue={charity.donation}
+						/>
+					)}
 				</div>
+				<div className="py-5">
+					<h2>How are charities using the money raised?</h2>
+				</div>
+				{sogiveCharities.map((charity, i) =>
+					<CharityCard i={i} key={charity.id} charity={charity} />
+				)}
 			</Container>
-			{hasQuoteCardContent ?
-				<>
-					<div className="pt-5">
-						<h2>How are charities using the money raised?</h2>
-					</div>
-					<Container className="py-5">
-						{sogiveCharities.map((charity, i) => (
-							charity ?
-								<CharityQuote
-									i={i} key={charity.id}
-									charity={charity}
-									quote={tq(charity)}
-									donationValue={charity.donation}
-								/>
-								: null
-						))}
-					</Container>
-				</>
-				: null}
 		</div>
 	);
+};
+
+/**
+ * 
+ * @param {!NGO} charity - This can be modified without side-effects
+ */
+const CharityCard = ({ charity, i }) => {
+	// Get charity impacts from impact model, if any data on it exists
+	let donationsMoney = new Money(charity.donation);
+	// Prefer full descriptions here. If unavailable switch to summary desc.
+	let desc = charity.description || charity.summaryDescription || '';
+	// But do cut descriptions down to 1 paragraph.
+	let firstParagraph = (/^.+\n *\n/g).exec(desc);
+	if (firstParagraph) {
+		desc = firstParagraph[0];
+	}
+
+	quote.img ??;
+
+	return (<div className="p-3">
+		<div className={space("charity-quote row", !quote.img && "no-img")}>
+			{quote.img ?
+				<div className="charity-quote-img col-md-5 p-0">
+					<img src={quote.img} className="w-100" />
+				</div>
+				: null}
+			<div className={"charity-quote-content" + (quote.img ? " col-md-7" : "")}>
+				<div className="charity-quote-logo">
+					<img src={charity.logo} />
+				</div>
+				<div className="charity-quote-text">
+					{donationValue ? <div className="w-100"><h2><Counter currencySymbol='&pound;' value={donationValue} /> raised</h2></div> : null}
+					{charity.simpleImpact ? <Impact impact={charity.simpleImpact} donationValue={donationValue} /> : null}
+					{quote ? <p class="font-italic">{quote.quote}</p><p>{quote.source}</p> : null}
+				</div>
+			</div>
+		</div>
+	</div>
+	);
+};
+
+/**
+ * 
+ * @param {Output} impact
+ * @param {Money} donationValue
+ */
+const Impact = ({ impact, donationValue }) => {
+	if (!impact.name || !impact.costPerBeneficiary || !donationValue) {
+		return null;
+	}
+	// TODO process plural/singular ??copy code from SoGive?
+	const name = impact.name.replace(/\(singular: (.*)\)/g, "");
+	let numOfImpact = printer.prettyNumber(Math.round(Money.divide(donationValue, impact.costPerBeneficiary)));
+	return <div>{numOfImpact} {name}</div>;
 };
 
 export default Charities;
