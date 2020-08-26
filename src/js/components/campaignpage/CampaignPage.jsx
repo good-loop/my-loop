@@ -1,7 +1,7 @@
 /*
  * 
  */
-import React, { Fragment } from 'react';
+import React from 'react';
 import Login from 'you-again';
 import _ from 'lodash';
 import { Container, Alert } from 'reactstrap';
@@ -9,7 +9,7 @@ import pivot from 'data-pivot';
 import PV from 'promise-value';
 
 import Roles from '../../base/Roles';
-import {isPortraitMobile, sum} from '../../base/utils/miscutils';
+import { isPortraitMobile, sum, isMobile } from '../../base/utils/miscutils';
 import C from '../../C';
 import ServerIO from '../../plumbing/ServerIO';
 import DataStore from '../../base/plumbing/DataStore';
@@ -22,7 +22,7 @@ import CampaignPageDC from '../../data/CampaignPage';
 import SearchQuery from '../../base/searchquery';
 import ACard from '../cards/ACard';
 import Charities from './Charities';
-import {sortByDate} from '../../base/utils/SortFn';
+import { sortByDate } from '../../base/utils/SortFn';
 import Counter from '../../base/components/Counter';
 import printer from '../../base/utils/printer';
 import CSS from '../../base/components/CSS';
@@ -32,7 +32,6 @@ import CampaignSplashCard from './CampaignSplashCard';
 import ErrorAlert from '../../base/components/ErrorAlert';
 import ListLoad from '../../base/components/ListLoad';
 import DevLink from './DevLink';
-import { useMediaQuery } from 'react-responsive';
 
 const tomsCampaigns = /(josh|sara|ella)/; // For matching TOMS campaign names needing special treatment
 /**
@@ -42,7 +41,7 @@ const tomsCampaigns = /(josh|sara|ella)/; // For matching TOMS campaign names ne
  * @returns {Number}
  */
 const viewCount = (viewcount4campaign, ad) => {
-	if ( ! ad.campaign) return null;
+	if (!ad.campaign) return null;
 
 	// HACK TOMS?? ella / josh / sara
 	// Don't crunch down TOMS ads that aren't in the sara/ella/josh campaign group
@@ -97,15 +96,15 @@ const CampaignPage = () => {
 
 	// Merge gl.status into status & take default value
 	if (!status) status = (glStatus || C.KStatus.PUB_OR_ARC);
-	
+
 	// Is the campaign page being used as a click-through advert landing page?
 	// If so, change the layout slightly, positioning the advert video on top.
 	const isLanding = (landing !== undefined) && (landing !== 'false');
 
 	// Which advert(s)?
-	const sq = adsQuery({q, adid, vertiserid, via});
-	let pvAds = fetchAds({searchQuery: sq, status});
-	if ( ! pvAds) {
+	const sq = adsQuery({ q, adid, vertiserid, via });
+	let pvAds = fetchAds({ searchQuery: sq, status });
+	if (!pvAds) {
 		// No query -- show a list
 		// TODO better graphic design before we make this list widget public
 		if (!Login.isLoggedIn()) {
@@ -116,22 +115,22 @@ const CampaignPage = () => {
 	if (!pvAds.resolved) {
 		return <Misc.Loading text="Loading campaign info..." />;
 	}
-	if (pvAds.error) {		
+	if (pvAds.error) {
 		return <ErrorAlert>Error loading advert data</ErrorAlert>;
 	}
 
 	// If it's remotely possible to have an ad now, we have it. Which request succeeded, if any?
 	/** @type {Advert[]} */
 	let ads = pvAds.value.hits;
-	if (ads && ! isAll()) {
+	if (ads && !isAll()) {
 		ads = ads.slice(0, 10); // Limit to first 10 results unless we're on #campaign/all
 	}
-	if ( ! ads || ! ads.length) {
+	if (!ads || !ads.length) {
 		return <Alert>Could not load adverts for {sq.query} {status}</Alert>; // No ads?!
 	}
 
 	// Get the advertiser's name (TODO append to advert as vertiserName)
-	const pvVertiser = ActionMan.getDataItem({type: C.TYPES.Advertiser, id: ads[0].vertiser, status: C.KStatus.PUBLISHED});
+	const pvVertiser = ActionMan.getDataItem({ type: C.TYPES.Advertiser, id: ads[0].vertiser, status: C.KStatus.PUBLISHED });
 	const nvertiser = pvVertiser.value;
 
 	// Combine campaign page and branding settings from all ads
@@ -139,15 +138,16 @@ const CampaignPage = () => {
 	let branding = {};
 	let campaignPage = {};
 	let useVertiser = true;
-	if (!nvertiser)
+	if (!nvertiser) {
 		useVertiser = false;
-	else if (!nvertiser.branding)
+	} else if (!nvertiser.branding) {
 		useVertiser = false;
-	else if (!nvertiser.branding.logo)
+	} else if (!nvertiser.branding.logo) {
 		useVertiser = false;
+	}
 	ads.forEach(ad => Object.assign(branding, (useVertiser ? nvertiser.branding : ad.branding)));
 	ads.forEach(ad => Object.assign(campaignPage, ad.campaignPage));
-	
+
 	// individual charity data
 	let charities = uniqueIds(_.flatten(ads.map(
 		ad => ad.charities && ad.charities.list || []
@@ -165,14 +165,14 @@ const CampaignPage = () => {
 	}
 
 	// load the community total for the ad
-	let pvDonationsBreakdown = DataStore.fetch(['widget','CampaignPage','communityTotal', sqDon.query], () => {
+	let pvDonationsBreakdown = DataStore.fetch(['widget', 'CampaignPage', 'communityTotal', sqDon.query], () => {
 		// TODO campaign would be nicer 'cos we could combine different ad variants... but its not logged reliably
 		// Argh: Loop.Me have not logged vert, only campaign.
 		// but elsewhere vert is logged and not campaign.
 		// let q = ad.campaign? '(vert:'+adid+' OR campaign:'+ad.campaign+')' : 'vert:'+adid;
 		// TODO "" csv encoding for bits of q (e.g. campaign might have a space)
-		return ServerIO.getDonationsData({q:sqDon.query});
-	}, true, 5*60*1000);
+		return ServerIO.getDonationsData({ q: sqDon.query });
+	}, true, 5 * 60 * 1000);
 
 	// DEBUG HACK - to test handling of slow donations data, uncomment these lines
 	// pvDonationsBreakdown.resolved = false;
@@ -211,15 +211,15 @@ const CampaignPage = () => {
 	campaigns.sort(sortByDate(ad => ad.end || ad.start));
 
 	// Get ad viewing data
-	let pvViewData = DataStore.fetch(['misc', 'views', isAll()? 'all' : sq.query], () => {
+	let pvViewData = DataStore.fetch(['misc', 'views', isAll() ? 'all' : sq.query], () => {
 		// filter to these ads
-		let qads = ads.map(({id}) => `vert:${id}`).join(' OR ');
+		let qads = ads.map(({ id }) => `vert:${id}`).join(' OR ');
 		let filters = {
 			dataspace: 'gl',
 			q: `evt:minview AND (${qads})` // minview vs spend ??
 		};
 		// start = early for all data
-		return ServerIO.getDataLogData({filters, breakdowns:['campaign', 'pub'], start:'2017-01-01', name:'view-data'});
+		return ServerIO.getDataLogData({ filters, breakdowns: ['campaign', 'pub'], start: '2017-01-01', name: 'view-data' });
 		// return ServerIO.getDonationsData({cid:'ashoka', start: '2017-01-01T00:00:00Z', end: '2019-10-15T23:59:59Z'})
 	});
 
@@ -229,7 +229,7 @@ const CampaignPage = () => {
 		viewcount4campaign = pivot(pvViewData.value, "by_campaign.buckets.$bi.{key, doc_count}", "$key.$doc_count");
 	}
 
-	/** Calculates total donations per charity based on percentage available, adding [donation] and [donationPercentage] to the charities object  */ 
+	/** Calculates total donations per charity based on percentage available, adding [donation] and [donationPercentage] to the charities object  */
 	const assignUnsetDonations = () => {
 		if (!ndonationValue) {
 			console.warn("Missing ndonationValue");
@@ -237,28 +237,28 @@ const CampaignPage = () => {
 		}
 		charities = charities.map(char => {
 			if (ndonByCid && ndonByCid[char.id]) { // if the charities have been edited after the campaign they might be missing values.
-				return { ...char, donation: Math.floor(ndonByCid[char.id].value)};
+				return { ...char, donation: Math.floor(ndonByCid[char.id].value) };
 			} return char;
 		});
 
 		charities = charities.filter(c => c.donation); // Get rid of charities with no logged donations.
-		const donationTotalMinusUnset = Object.values(charities).reduce((t, {donation}) => t + donation, 0);
+		const donationTotalMinusUnset = Object.values(charities).reduce((t, { donation }) => t + donation, 0);
 		charities = charities.map(e => {
 			const percentage = e.donation * 100 / donationTotalMinusUnset;
 			const calculatedDonation = percentage * ndonationValue / 100;
-			return {...e, donation: calculatedDonation, donationPercentage: percentage};
+			return { ...e, donation: calculatedDonation, donationPercentage: percentage };
 		});
 	};
 
 	{	// NB: some very old ads may not have charities
-		let noCharityAds = ads.filter(ad => ! ad.charities);
+		let noCharityAds = ads.filter(ad => !ad.charities);
 		// minor todo - clean these up in the portal
 		if (noCharityAds.length) console.warn("Ads without charities data", noCharityAds.map(ad => [ad.id, ad.campaign, ad.name, ad.status]));
 	}
 	let charitiesById = _.uniq(_.flattenDeep(ads.map(ad => ad.charities && ad.charities.list)));
 	let charIds = [];
 	charitiesById.forEach(c => {
-		if (c && ! charIds.includes(c.name)) {
+		if (c && !charIds.includes(c.name)) {
 			charIds.push(c.name);
 		}
 	});
@@ -270,7 +270,7 @@ const CampaignPage = () => {
 		const ad4c = {};
 		ads.forEach(ad => ad4c[campaignNameForAd(ad)] = ad);
 		let ads1perCampaign = Object.values(ad4c);
-		let views = ads1perCampaign.map(ad => viewCount(viewcount4campaign, ad));		
+		let views = ads1perCampaign.map(ad => viewCount(viewcount4campaign, ad));
 		totalViewCount = sum(views);
 	}
 
@@ -279,16 +279,14 @@ const CampaignPage = () => {
 
 	assignUnsetDonations();
 
-	const isMobile = useMediaQuery({query: "(max-width: 767px)"})
-	
 	return (<>
-		<MyLoopNavBar brandLogo={branding.logo} logo="/img/new-logo-with-text-white.svg" style={{backgroundColor: brandColor}} />
+		<MyLoopNavBar brandLogo={branding.logo} logo="/img/new-logo-with-text-white.svg" style={{ backgroundColor: brandColor }} />
 		<CSS css={campaignPage && campaignPage.customCss} />
 		<CSS css={branding.customCss} />
 		<div className="widepage CampaignPage text-center gl-btns">
 			<CampaignSplashCard branding={branding} campaignPage={campaignPage} donationValue={ndonationValue} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
 
-			<HowDoesItWork nvertiserName={nvertiserName}/>
+			<HowDoesItWork nvertiserName={nvertiserName} />
 
 			{isLanding ? null : (
 				<AdvertsCatalogue
@@ -300,54 +298,54 @@ const CampaignPage = () => {
 				/>
 			)}
 
-			<Charities charities={charities}/>
-			
+			<Charities charities={charities} />
+
 			<div className="bg-white">
 				<Container>
 					<h2 className="my-5">Where can you see our ads?</h2>
 					<p className="w-60 mx-auto">Good-Loop distributes ethical online ads to millions of people every month in premium websites across the world’s best publishers and social platforms.</p>
 				</Container>
-				{isMobile ?
-					<img src="/img/Graphic_metro_mobile.800w.png" className="w-100"/>
+				{isMobile() ?
+					<img src="/img/Graphic_metro_mobile.800w.png" className="w-100" alt="publishers" />
 					:
-					<img src="/img/Graphic_metro.1920w.png" className="w-100"/>
+					<img src="/img/Graphic_metro.1920w.png" className="w-100" alt="publishers" />
 				}
 			</div>
 
 			<div className="bg-gl-light-red">
 				<Container className="py-5 text-white">
-					<div className="pt-5"></div>
-					<h2 className="text-white">Join the revolution and support ads<br/>that make a difference</h2>
+					<div className="pt-5" />
+					<h2 className="text-white">Join the revolution and support ads<br />that make a difference</h2>
 					<p className="py-5">Help us do even more good in the world! All you have to do is sign up with your email or social account. This will help us boost the donations you generate by seeing our ads.</p>
 					<div className="py-5 w-50 row mx-auto">
 						<div className="col-md">
 							<a className="btn btn-secondary w-100" href="TODO">Sign up</a>
 						</div>
 						<div className="col-md">
-							<a className="btn btn-transparent btn-white w-100 mt-3 mt-md-0" href="TODO"><i class="fas fa-share-alt mr-2"></i> Share the love</a>
+							<a className="btn btn-transparent btn-white w-100 mt-3 mt-md-0" href="TODO"><i className="fas fa-share-alt mr-2" /> Share the love</a>
 						</div>
 					</div>
-					<div className="pb-5"></div>
+					<div className="pb-5" />
 				</Container>
 			</div>
 
 			<div className="bg-gl-light-pink">
 				<Container className="py-5">
-					<div className="pt-5"></div>
+					<div className="pt-5" />
 					<h2>Are you a brand or an agency?</h2>
-					<p className="py-5">Company website: <a href="http://www.good-loop.com">www.good-loop.com</a><br/>Email: <b>hello@good-loop.com</b></p>
+					<p className="py-5">Company website: <a href="http://www.good-loop.com">www.good-loop.com</a><br />Email: <b>hello@good-loop.com</b></p>
 					<div className="py-5 flex-column flex-md-row justify-content-center">
 						<a className="btn btn-primary mr-md-3" href="TODO">Book a call</a>
 						<a className="btn btn-transparent mt-3 mt-md-0" href="TODO">Download pdf version</a>
 					</div>
-					<div className="pb-5"></div>
+					<div className="pb-5" />
 				</Container>
 			</div>
 
 			{campaignPage.smallPrint ? (
 				<div className="small-print"><small>{campaignPage.smallPrint}</small></div>
 			) : null}
-			
+
 			<div className="small py-5">Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></div>
 
 			<Footer />
@@ -366,52 +364,52 @@ const campaignNameForAd = ad => {
 	return ad.campaign;
 };
 
-const HowDoesItWork = ({nvertiserName}) => {
-    return (
-        <div className="bg-gl-light-pink py-5">
-            <div class="container py-5">
-                <h2 class="pb-5">How does it work?</h2>
-                <div class="row mb-3 text-center align-items-start">
-                    <div class="col-md d-flex flex-column">
-                        <img src="/img//Graphic_tv.scaled.400w.png" class="w-100" />
-                        1. {nvertiserName}'s video ad was ‘wrapped’ into Good-loop’s ethical ad frame, as you can see on the video below. 
-                    </div>
-                    <div class="col-md d-flex flex-column mt-5 mt-md-0">
-                        <img src="/img/Graphic_video_with_red_swirl.scaled.400w.png" class="w-100" />
-                        2. When the users choosed to engage (by watching, swiping or clicking) they unlocked a donation, funded by {nvertiserName}.
-                    </div>
-                    <div class="col-md d-flex flex-column mt-5 mt-md-0">
-                        <img src="/img/Graphic_leafy_video.scaled.400w.png" class="w-100" />
-                        3. Once the donation was unlocked, the user could then choose which charity they wanted to fund with 50% of the ad money.
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
-}
+const HowDoesItWork = ({ nvertiserName }) => {
+	return (
+		<div className="bg-gl-light-pink py-5">
+			<div className="container py-5">
+				<h2 className="pb-5">How does it work?</h2>
+				<div className="row mb-3 text-center align-items-start">
+					<div className="col-md d-flex flex-column">
+						<img src="/img//Graphic_tv.scaled.400w.png" className="w-100" alt="wrapped video" />
+						1. {nvertiserName}'s video ad was ‘wrapped’ into Good-loop’s ethical ad frame, as you can see on the video below.
+					</div>
+					<div className="col-md d-flex flex-column mt-5 mt-md-0">
+						<img src="/img/Graphic_video_with_red_swirl.scaled.400w.png" className="w-100" alt="choose to watch" />
+						2. When the users choosed to engage (by watching, swiping or clicking) they unlocked a donation, funded by {nvertiserName}.
+					</div>
+					<div className="col-md d-flex flex-column mt-5 mt-md-0">
+						<img src="/img/Graphic_leafy_video.scaled.400w.png" className="w-100" alt="choose charity" />
+						3. Once the donation was unlocked, the user could then choose which charity they wanted to fund with 50% of the ad money.
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+};
 
 /**
  * List of adverts with some info about them (like views, dates)
  * @param {*} param0 
  */
-const AdvertsCatalogue = ({ads, viewcount4campaign, ndonationValue, nvertiserName, totalViewCount}) => {
+const AdvertsCatalogue = ({ ads, viewcount4campaign, ndonationValue, nvertiserName, totalViewCount }) => {
 	/** Picks one Ad (with a video) from each campaign to display as a sample.  */
 	let sampleAd4Campaign = {};
 	ads.forEach(ad => {
 		let cname = campaignNameForAd(ad);
 		if (sampleAd4Campaign[cname]) return;
-		if ( ! ad.videos || ! ad.videos[0].url) return;
+		if (!ad.videos || !ad.videos[0].url) return;
 		sampleAd4Campaign[cname] = ad;
 	});
-	const sampleAds = Object.values(sampleAd4Campaign);	
+	const sampleAds = Object.values(sampleAd4Campaign);
 
 	return (<>
 		<Container fluid className="py-5">
 			<br />
 			<Container className="py-5">
 				{sampleAds.map(
-					ad => <Fragment>
-						<h2>Watch the {nvertiserName} ad that raised <Counter currencySymbol="£" sigFigs={4} value={ndonationValue} minimumFractionDigits={2}/> with<br/>{printer.prettyNumber(viewCount(viewcount4campaign, ad))} ad viewers</h2>
+					ad => <>
+						<h2>Watch the {nvertiserName} ad that raised <Counter currencySymbol="£" sigFigs={4} value={ndonationValue} minimumFractionDigits={2} /> with<br />{printer.prettyNumber(viewCount(viewcount4campaign, ad))} ad viewers</h2>
 						<AdvertCard
 							key={ad.id}
 							ad={ad}
@@ -419,7 +417,7 @@ const AdvertsCatalogue = ({ads, viewcount4campaign, ndonationValue, nvertiserNam
 							donationTotal={ndonationValue}
 							totalViewCount={totalViewCount}
 						/>
-					</Fragment>
+					</>
 				)}
 				<a className="btn btn-primary mb-3 mb-md-0 mr-md-3" href="TODO">See all campaigns</a>
 				<a className="btn btn-transparent" href="TODO">Campaign performance & brand study</a>
@@ -428,11 +426,11 @@ const AdvertsCatalogue = ({ads, viewcount4campaign, ndonationValue, nvertiserNam
 	</>);
 };
 
-const AdvertCard = ({ad, viewCountProp, donationTotal, totalViewCount}) => {
+const AdvertCard = ({ ad, viewCountProp, donationTotal, totalViewCount }) => {
 	const durationText = ad.start || ad.end ? <>
 		This advert ran
 		{ ad.start ? <span> from <Misc.RoughDate date={ad.start} /></span> : null}
-		{ ad.end ? <span> to <Misc.RoughDate date={ad.end} /></span> : '' }
+		{ad.end ? <span> to <Misc.RoughDate date={ad.end} /></span> : ''}
 	</> : '';
 	const thisViewCount = viewCountProp || '';
 
@@ -445,21 +443,21 @@ const AdvertCard = ({ad, viewCountProp, donationTotal, totalViewCount}) => {
 			<div className="ad-card">
 				<div className="tablet-container">
 					{isPortraitMobile() ?
-						<img src="/img/mobilewebsite.PNG" className="tablet-bg"/>
+						<img src="/img/mobilewebsite.PNG" className="tablet-bg" />
 						:
-						<img src="/img/websitetest.png" className="tablet-bg"/>
+						<img src="/img/websitetest.png" className="tablet-bg" />
 					}
 					<div className="tablet-ad-container">
 						<GoodLoopAd vertId={ad.id} size={size} nonce={`${size}${ad.id}`} production />
 					</div>
 				</div>
 				{isPortraitMobile() ?
-					<img src="/img/hiclipart.com.mobile.cropped.overlay.png" className="w-100 tablet-overlay"/>
+					<img src="/img/hiclipart.com.mobile.cropped.overlay.png" className="w-100 tablet-overlay" />
 					:
-					<img src="/img/hiclipart.com.overlay.png" className="w-100 tablet-overlay"/>
+					<img src="/img/hiclipart.com.overlay.png" className="w-100 tablet-overlay" />
 				}
 			</div>
-			{Roles.isDev()? <DevLink href={'https://portal.good-loop.com/#advert/'+escape(ad.id)} target='_portal'>Portal Editor</DevLink> : null}
+			{Roles.isDev() ? <DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal">Portal Editor</DevLink> : null}
 		</div>
 	);
 };
@@ -473,7 +471,7 @@ const isAll = () => {
 /**
  * @returns {!SearchQuery}
  */
-const adsQuery = ({q,adid,vertiserid,via}) => {
+const adsQuery = ({ q, adid, vertiserid, via }) => {
 	let sq = new SearchQuery(q);
 	// NB: convert url parameters into a backend ES query against the Advert.java object
 	if (adid) sq = SearchQuery.setProp(sq, 'id', adid);
@@ -486,16 +484,16 @@ const adsQuery = ({q,adid,vertiserid,via}) => {
  * @returns { ? PV<Advert[]>} null if no query
  */
 const fetchAds = ({ searchQuery, status }) => {
-	let q = searchQuery.query;	
-	if ( ! q && ! isAll()) {
+	let q = searchQuery.query;
+	if (!q && !isAll()) {
 		return null;
 	}
 	// TODO server side support to do this cleaner "give me published if possible, failing that archived, failing that draft"
 	// Try to get ads based on spec given in URL params
-	let pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
+	let pvAds = ActionMan.list({ type: C.TYPES.Advert, status, q });
 	// HACK No published ads? fall back to ALL_BAR_TRASH if requested ad is draft-only
-	if (pvAds.resolved && ( ! pvAds.value || ! pvAds.value.hits || ! pvAds.value.hits.length)) {
-		let pvAdsDraft = ActionMan.list({type: C.TYPES.Advert, status: C.KStatus.ALL_BAR_TRASH, q});
+	if (pvAds.resolved && (!pvAds.value || !pvAds.value.hits || !pvAds.value.hits.length)) {
+		let pvAdsDraft = ActionMan.list({ type: C.TYPES.Advert, status: C.KStatus.ALL_BAR_TRASH, q });
 		console.warn(`Unable to find ad ${q} with status ${status}, falling back to ALL_BAR_TRASH`);
 		return pvAdsDraft;
 	}
