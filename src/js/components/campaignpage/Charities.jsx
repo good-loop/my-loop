@@ -63,7 +63,7 @@ const Charities = ({ charities }) => {
 		if (!pvCharity.value) return charity; // no extra data yet
 		// merge, preferring Good-Loop data (esp the GL id, and GL donation)
 		// NB: GL data is more likely to be stale, but it might also be custom-edited -- and it can happily be tweaked by Good-Loop staff
-		// NB: This merge is a copy, so the objects can then be edited without affecting other components
+		// NB: This merge is a shallow copy, so the objects can then be shallow edited without affecting other components
 		let mergedCharity = Object.assign({}, pvCharity.value, charity);
 		return mergedCharity;
 	});
@@ -96,7 +96,7 @@ const Charities = ({ charities }) => {
 
 /**
  * 
- * @param {!NGO} charity This data item is a copy that can be modified without side-effects
+ * @param {!NGO} charity This data item is a shallow copy
  */
 const CharityCard = ({ charity, donationValue, i }) => {
 	// Get charity impacts from impact model, if any data on it exists
