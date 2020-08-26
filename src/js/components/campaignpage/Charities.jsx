@@ -11,8 +11,12 @@ import C from '../../C';
  * HACK hardcode some thank you messages.
  * 
  * TODO Have this as a field in the AdvertPage -> Charity editor or campaign page
+ * 
+ * // document custom return type
+ * @returns ?{img:?string, quote:string, source:string} mostly returns null
  */
 const tq = charity => {
+	let cid = NGO.id(charity);
 	return {
 		helenbamber: {
 			quote: `"That is absolutely fantastic news, thank you so much! Congratulations everyone on a successful Spring/Summer Campaign! 
@@ -29,7 +33,7 @@ develop their knowledge and understanding of the environmental
 challenges facing our planet."`,
 			source: "Chiara Cadei, WWF"
 		}
-	}[charity['@id']] || "";
+	}[cid];
 };
 
 
@@ -48,12 +52,12 @@ const Charities = ({ charities }) => {
 	charities = charities.filter(x => x);
 	// augment with SoGive data
 	let sogiveCharities = charities.map(charity => {
-		if (!charity.id) {
+		if ( ! NGO.id(charity)) {
 			console.warn("Charity without an id?!", charity);
 			return charity;
 		}
 		// NB: the lower-level ServerIOBase.js helps patch mismatches between GL and SoGive ids
-		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: charity.id, status: C.KStatus.PUBLISHED });
+		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: NGO.id(charity), status: C.KStatus.PUBLISHED });
 		if (!pvCharity.value) return charity; // no extra data yet
 		// merge, preferring Good-Loop data (esp the GL id, and GL donation)
 		// NB: GL data is more likely to be stale, but it might also be custom-edited -- and it can happily be tweaked by Good-Loop staff
@@ -71,7 +75,7 @@ const Charities = ({ charities }) => {
 				<div className="row pb-5 justify-content-center">
 					{sogiveCharities.map((charity, i) =>
 						<CharityMiniCard
-							i={i} key={charity.id}
+							i={i} key={NGO.id(charity)}
 							charity={charity}
 							donationValue={charity.donation}
 						/>
@@ -81,7 +85,7 @@ const Charities = ({ charities }) => {
 					<h2>How are charities using the money raised?</h2>
 				</div>
 				{sogiveCharities.map((charity, i) =>
-					<CharityCard i={i} key={charity.id} charity={charity} />
+					<CharityCard i={i} key={NGO.id(charity)} charity={charity} />
 				)}
 			</Container>
 		</div>
@@ -90,7 +94,7 @@ const Charities = ({ charities }) => {
 
 /**
  * 
- * @param {!NGO} charity - This can be modified without side-effects
+ * @param {!NGO} charity This data item is a copy that can be modified without side-effects
  */
 const CharityCard = ({ charity, i }) => {
 	// Get charity impacts from impact model, if any data on it exists
@@ -103,16 +107,19 @@ const CharityCard = ({ charity, i }) => {
 		desc = firstParagraph[0];
 	}
 
-	quote.img ??;
+	const quote = tq(charity);
+	let img = (quote && quote.img) || charity.photo;
+
+	// TODO let's reduce the use of custom css classes (e.g. charity-quote-img etc below)
 
 	return (<div className="p-3">
-		<div className={space("charity-quote row", !quote.img && "no-img")}>
-			{quote.img ?
+		<div className={space("charity-quote row", !img && "no-img")}>
+			{img ?
 				<div className="charity-quote-img col-md-5 p-0">
-					<img src={quote.img} className="w-100" />
+					<img src={img} className="w-100" />
 				</div>
 				: null}
-			<div className={"charity-quote-content" + (quote.img ? " col-md-7" : "")}>
+			<div className={space("charity-quote-content", img && "col-md-7")}>
 				<div className="charity-quote-logo">
 					<img src={charity.logo} />
 				</div>

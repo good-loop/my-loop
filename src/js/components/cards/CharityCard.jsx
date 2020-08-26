@@ -42,7 +42,7 @@ const CharityMiniCard = ({charity, donationValue, i, imageLeft}) => {
 					<MDText source={desc} />
 					<a href={charity.url} target="_blank" rel="noopener noreferrer">Go to charity website</a>
 				</div>
-				{charity.id? <DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(charity.id)} target="_sogive">SoGive</DevLink> : null}
+				{NGO.id(charity)? <DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(NGO.id(charity))} target="_sogive">SoGive</DevLink> : null}
 			</div>
 		</div>
 	);
@@ -56,8 +56,8 @@ const CharityMiniCard = ({charity, donationValue, i, imageLeft}) => {
 const CharityLogo = ({charity, link, className}) => {
 	let $logo = <img className={space("logo",className)} src={charity.logo} alt={charity.name} />;
 	if ( ! charity.logo) {
-		console.warn("Charity without a logo",charity.id,charity);
-		$logo = <span>{charity.name || charity.id}</span>; // fallback to their name
+		console.warn("Charity without a logo",NGO.id(charity),charity);
+		$logo = <span>{charity.name || NGO.id(charity)}</span>; // fallback to their name
 	}
 	// with / without `a` link?
 	if (charity.url && link) {
