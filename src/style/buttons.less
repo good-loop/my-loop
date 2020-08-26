@@ -1,0 +1,130 @@
+
+// Button LESS
+
+.gl-btns {
+
+    .btn {
+        border-radius: 100px;
+        vertical-align: middle;
+        padding: 15px 40px;
+        box-shadow: none !important;
+        font-weight: bold;
+        font-family: 'Montserrat';
+        font-size: 0.9rem;
+        p {
+            margin: 0 !important;
+        }
+        @media @md-max {
+            padding: 10px 40px;
+            font-size: 0.7rem;
+            @media (max-height: 568px) {
+                padding: 10px 20px;
+            }
+        }
+    }
+
+    .btn.disabled {
+        cursor: default;
+    }
+
+    .btn-primary {
+        background-color: @gl-orange !important;
+        color:white !important;
+        border: none !important;
+    }
+
+    .btn-primary:hover:not(.disabled) {
+        background-color: @gl-btn-hover !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    .btn-primary:active:not(.disabled),
+    .btn-primary:focus:not(.disabled) {
+        background-color: @gl-red !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    .btn-secondary {
+        background-color: white;
+        color:black !important;
+        mix-blend-mode: screen;
+        border: none !important;
+    }
+
+    .btn-secondary:hover:not(.disabled) {
+        background-color: @gl-btn-hover !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    // TODO: btn-secondary:focus not working??
+    .btn-secondary:active:not(.disabled),
+    .btn-secondary:focus:not(.disabled) {
+        background-color: @gl-red !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    .btn-transparent {
+        background-color: transparent;
+        color: @gl-orange !important;
+        padding: 13px 38px; // Account for border
+        @media @md-max {
+            padding: 8px 38px;
+            @media (max-height: 568px) {
+                padding: 8px 18px;
+            }
+        }
+        border: solid 2px @gl-orange !important;
+    }
+
+    .btn-transparent.btn-white {
+        color: white !important;
+        border-color: white !important;
+    }
+
+    .btn-transparent:hover:not(.disabled) {
+        color: @gl-btn-hover !important;
+        box-shadow: none !important;
+        border: solid 2px @gl-btn-hover !important;
+    }
+
+    // TODO: btn-secondary:focus not working??
+    .btn-transparent:active:not(.disabled),
+    .btn-transparent:focus:not(.disabled) {
+        color: @gl-red !important;
+        box-shadow: none !important;
+        border: solid 2px @gl-red !important;
+    }
+
+    /*
+    .btn-transparent-white {
+        background-color: transparent;
+        color: white !important;
+        padding: 13px 38px; // Account for border
+        @media @md-max {
+            padding: 8px 38px;
+            @media (max-height: 568px) {
+                padding: 8px 18px;
+            }
+        }
+        border: solid 2px white !important;
+    }
+
+    .btn-transparent-white:hover:not(.disabled) {
+        color: @gl-orange !important;
+        box-shadow: none !important;
+        border: solid 2px @gl-orange !important;
+    }
+
+    // TODO: btn-secondary:focus not working??
+    .btn-transparent-white:active:not(.disabled),
+    .btn-transparent-white:focus:not(.disabled) {
+        color: @gl-red!important;
+        box-shadow: none !important;
+        border: solid 2px @gl-red !important;
+    }*/
+
+}

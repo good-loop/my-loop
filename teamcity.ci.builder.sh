@@ -66,7 +66,7 @@ function send_alert_email {
 # Git Cleanup Function -- More of a classic 'I type this too much, it should be a function', Function.
 function git_hard_set_to_master {
     ssh winterwell@$server "cd $1 && git gc --prune=now"
-    ssh winterwell@$server "cd $1 && git pull origin master"
+    ssh winterwell@$server "cd $1 && git pull origin feature/impact-hub"
     ssh winterwell@$server "cd $1 && git reset --hard FETCH_HEAD"
 }
 

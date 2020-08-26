@@ -1,0 +1,41 @@
+// Colours that were not in or did not have a close enough equivalent in base colours.less
+
+@gl-light-pink: #FEF5F4;            // doesn't exist in base
+@gl-light-red: #af2009;             // gl-red is too dark
+@gl-btn-hover: #e82316;             // gl-red is too dull
+@gl-background-default: #f4f3f1;    // gl-grey is too dark/yellow
+@gl-light-grey-ny: #E4E4E4;         // Non-yellow version of light grey
+
+// Colour classes
+
+.color-gl-light-pink {
+    color: @gl-light-pink !important;
+    h1>a,h2>a,h3>a,h4>a,h5>a {
+        color: @gl-light-pink !important;
+    }
+}
+
+.color-gl-light-red {
+    color: @gl-light-red !important;
+    h1>a,h2>a,h3>a,h4>a,h5>a {
+        color: @gl-light-red !important;
+    }
+}
+
+// Background classes
+
+.bg-gl-light-pink {
+    background-color: @gl-light-pink !important;
+}
+
+.bg-gl-light-red {
+    background-color: @gl-light-red !important;
+}
+
+.bg-gl-default {
+	background-color: @gl-background-default !important;
+}
+
+.bg-gl-light-blue {
+	background-color: @gl-light-blue !important;
+}
