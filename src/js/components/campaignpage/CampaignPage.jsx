@@ -335,7 +335,7 @@ const CampaignPage = () => {
 					<h2>Are you a brand or an agency?</h2>
 					<p className="py-5">Company website: <a href="http://www.good-loop.com">www.good-loop.com</a><br />Email: <b>hello@good-loop.com</b></p>
 					<div className="py-5 flex-column flex-md-row justify-content-center">
-						<a className="btn btn-primary mr-md-3" href="TODO">Book a call</a>
+						<a className="btn btn-primary mr-md-3" target="_blank" href="https://www.good-loop.com/contact">Book a call</a>
 						<a className="btn btn-transparent mt-3 mt-md-0" href="TODO">Download pdf version</a>
 					</div>
 					<div className="pb-5" />
