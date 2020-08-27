@@ -46,6 +46,7 @@ const Charities = ({ charities }) => {
 		let cid = charity.id;
 		let sogiveCharity = null;
 		if (cid) {
+			console.log("CHARITY ID " + charity.id);
 			const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: charity.id, status: C.KStatus.PUBLISHED });
 			sogiveCharity = pvCharity.value;
 			if (sogiveCharity) {
@@ -70,7 +71,8 @@ const Charities = ({ charities }) => {
 				// merge in SoGive as defaults
 				// Retain donation amount
 				charity = Object.assign({}, sogiveCharity, charity);
-				cid = NGO.id(sogiveCharity); // see ServerIO's hacks to handle bad data entry in the Portal
+				charity.id = escape(NGO.id(sogiveCharity)); // see ServerIO's hacks to handle bad data entry in the Portal
+				console.log("NEW CHARITY ID " + charity.id);
 			}
 		}
 
