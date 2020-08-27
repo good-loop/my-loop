@@ -69,8 +69,11 @@ const Charities = ({ charities }) => {
                     sogiveCharity.description = firstParagraph[0];
                     console.log(firstParagraph[0]);
 				}
+
 				// merge in SoGive as defaults
 				// Retain donation amount
+				
+				// !!! Sogive charity data will override ad specific data !!!
 				charity = Object.assign({}, charity, sogiveCharity);
 				charity.id = NGO.id(sogiveCharity); // see ServerIO's hacks to handle bad data entry in the Portal
 			}
@@ -104,7 +107,7 @@ const Charities = ({ charities }) => {
 				project.outputs.forEach(output => {
 					let name = output.name;
 					name = name.replace(/\(singular: (.*)\)/g, "");
-
+					
 					// If costPerBeneficiary exists, use it
 					if (output.costPerBeneficiary) {
 						let numOfImpact = formatNumber(Math.round(Money.divide(donationsMoney, output.costPerBeneficiary)));
