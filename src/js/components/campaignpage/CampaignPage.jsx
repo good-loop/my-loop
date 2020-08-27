@@ -32,6 +32,7 @@ import CampaignSplashCard from './CampaignSplashCard';
 import ErrorAlert from '../../base/components/ErrorAlert';
 import ListLoad from '../../base/components/ListLoad';
 import DevLink from './DevLink';
+import {LoginLink} from '../../base/components/LoginWidget';
 
 const tomsCampaigns = /(josh|sara|ella)/; // For matching TOMS campaign names needing special treatment
 /**
@@ -318,7 +319,7 @@ const CampaignPage = () => {
 					<p className="py-5">Help us do even more good in the world! All you have to do is sign up with your email or social account. This will help us boost the donations you generate by seeing our ads.</p>
 					<div className="py-5 w-50 row mx-auto">
 						<div className="col-md">
-							<a className="btn btn-secondary w-100" href="TODO">Sign up</a>
+							<LoginLink><div className="btn btn-secondary w-100">Sign up</div></LoginLink>
 						</div>
 						<div className="col-md">
 							<a className="btn btn-transparent btn-white w-100 mt-3 mt-md-0" href="TODO"><i className="fas fa-share-alt mr-2" /> Share the love</a>
@@ -422,8 +423,9 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, ndonationValue, nvertiserNa
 						/>
 					</Fragment>
 				)}
-				<a className="btn btn-primary mb-3 mb-md-0 mr-md-3" href="TODO">See all campaigns</a>
-				<a className="btn btn-transparent" href="TODO">Campaign performance & brand study</a>
+				<a className="btn btn-primary mb-3 mb-md-0 mr-md-3" href="/">See all campaigns</a>
+				{//<a className="btn btn-transparent" href="TODO">Campaign performance & brand study</a>
+				}
 			</Container>
 		</Container>
 	</>);

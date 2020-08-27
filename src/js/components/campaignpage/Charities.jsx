@@ -72,7 +72,7 @@ const Charities = ({ charities }) => {
 				// merge in SoGive as defaults
 				// Retain donation amount
 				charity = Object.assign({}, charity, sogiveCharity);
-				cid = NGO.id(sogiveCharity); // see ServerIO's hacks to handle bad data entry in the Portal
+				charity.id = NGO.id(sogiveCharity); // see ServerIO's hacks to handle bad data entry in the Portal
 			}
 		}
 
@@ -136,7 +136,7 @@ const Charities = ({ charities }) => {
 								charity={charity}
 								donationValue={charity.donation}
 							/>
-							: null
+						: null
 					))}
 				</div>
 			</Container>
