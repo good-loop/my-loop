@@ -21,7 +21,7 @@ import DevLink from '../campaignpage/DevLink';
  */
 const CharityCard = ({charity, donationValue, i, imageLeft}) => {
 	// console.log(donationValue);
-
+	
 	return ( 
 		<div className="col-md-4 charity-card mt-5 mt-md-0">
 			<div className="flex-column">
