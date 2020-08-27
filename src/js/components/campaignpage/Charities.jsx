@@ -54,22 +54,24 @@ const Charities = ({ charities }) => {
 
 				// Prefer full descriptions. If unavailable switch to summary desc.
 				if (!sogiveCharity.description) {
-					sogiveCharity.description = sogiveCharity.summaryDescription;
-				}
-
+                    sogiveCharity.description = sogiveCharity.summaryDescription;
+                }
+				
 				// If no descriptions exist, fallback to the charity object description
 				if (!sogiveCharity.description) {
 					sogiveCharity.description = charity.description;
-				}
-
+                }
+                
+                console.log(sogiveCharity.description);
 				// Cut descriptions down to 1 paragraph.
 				let firstParagraph = (/^.+\n\n/g).exec(sogiveCharity.description);
 				if (firstParagraph) {
-					sogiveCharity.description = firstParagraph[0];
+                    sogiveCharity.description = firstParagraph[0];
+                    console.log(firstParagraph[0]);
 				}
 				// merge in SoGive as defaults
 				// Retain donation amount
-				charity = Object.assign({}, sogiveCharity, charity);
+				charity = Object.assign({}, charity, sogiveCharity);
 				cid = NGO.id(sogiveCharity); // see ServerIO's hacks to handle bad data entry in the Portal
 			}
 		}
