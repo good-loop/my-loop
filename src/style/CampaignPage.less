@@ -280,6 +280,7 @@ body {
 				justify-content: flex-end;
 				img {
 					max-height: 150px;
+					max-width: 150px;
 				}
 				@media @md-max {
 					margin-bottom: 20px;
@@ -311,5 +312,14 @@ body {
 
 	.w-60 {
 		width: 60% !important;
+	}
+
+	.book-call-popup {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translateX(-50%) translateY(-50%);
+		width: 300px;
+		height: 500px;
 	}
 }

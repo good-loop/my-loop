@@ -27,7 +27,7 @@ const tq = charity => {
 		},
 
 		// TODO name
-		"wwf-uk": {
+		"wwf": {
 			img: "/img/WWF_FeelGoodImage.png",
 			quote: `"The money raised through the H&M campaign will support WWF UK's vital work, fighting for a world where people and nature can
 thrive, and continue to support schools, teachers and pupils to
@@ -38,13 +38,6 @@ challenges facing our planet."`,
 	}[cid];
 };
 
-
-// use printer.prettyNumber instead
-// if something else is needed, we should document it
-// function formatNumber(num) {
-// 	return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
-// }
-
 /**
  * 
  * @param {!NGO[]} charities 
@@ -53,19 +46,28 @@ const Charities = ({ charities }) => {
 	// paranoia: filter nulls - is this needed??
 	charities = charities.filter(x => x);
 	// augment with SoGive data
-	let sogiveCharities = charities.map(charity => {
+	let sogiveCharities = charities.map(charityOriginal => {
+
+		// Shallow copy charity obj
+		let charity = Object.assign({}, charityOriginal);
 		if ( ! NGO.id(charity)) {
 			console.warn("Charity without an id?!", charity);
 			return charity;
 		}
+
 		// NB: the lower-level ServerIOBase.js helps patch mismatches between GL and SoGive ids
 		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: NGO.id(charity), status: C.KStatus.PUBLISHED });
 		if (!pvCharity.value) return charity; // no extra data yet
-		// merge, preferring Good-Loop data (esp the GL id, and GL donation)
-		// NB: GL data is more likely to be stale, but it might also be custom-edited -- and it can happily be tweaked by Good-Loop staff
+		// merge, preferring SoGive data
+		// Prefer SoGive for now as the page is designed to work with generic info - and GL data is often campaign/player specific
+		// TODO: review this
 		// NB: This merge is a shallow copy, so the objects can then be shallow edited without affecting other components
-		let mergedCharity = Object.assign({}, pvCharity.value, charity);
-		return mergedCharity;
+		charity = Object.assign(charity, pvCharity.value);
+
+		// HACK: charity objs have conflicting IDs, force NGO to use id instead of @id
+		charity['@id'] = undefined;
+
+		return charity;
 	});
 
 	return (
@@ -99,8 +101,6 @@ const Charities = ({ charities }) => {
  * @param {!NGO} charity This data item is a shallow copy
  */
 const CharityCard = ({ charity, donationValue, i }) => {
-	// Get charity impacts from impact model, if any data on it exists
-	let donationsMoney = new Money(charity.donation);
 	// Prefer full descriptions here. If unavailable switch to summary desc.
 	let desc = charity.description || charity.summaryDescription || '';
 	// But do cut descriptions down to 1 paragraph.
@@ -110,6 +110,7 @@ const CharityCard = ({ charity, donationValue, i }) => {
 	}
 
 	const quote = tq(charity);
+	console.log("Quote: " + quote);
 	let img = (quote && quote.img) || charity.photo;
 
 	// TODO let's reduce the use of custom css classes (e.g. charity-quote-img etc below)
@@ -120,14 +121,14 @@ const CharityCard = ({ charity, donationValue, i }) => {
 				<div className="charity-quote-img col-md-5 p-0">
 					<img src={img} className="w-100" alt="charity" />
 				</div>
-				: null}
+			: null}
 			<div className={space("charity-quote-content", img && "col-md-7")}>
 				<div className="charity-quote-logo">
 					<img src={charity.logo} alt="logo" />
 				</div>
 				<div className="charity-quote-text">
 					{donationValue ? <div className="w-100"><h2><Counter currencySymbol="&pound;" value={donationValue} /> raised</h2></div> : null}
-					{charity.simpleImpact ? <Impact impact={charity.simpleImpact} donationValue={donationValue} /> : null}
+					{charity.simpleImpact ? <Impact impact={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
 				</div>
 			</div>
@@ -141,14 +142,24 @@ const CharityCard = ({ charity, donationValue, i }) => {
  * @param {Output} impact
  * @param {Money} donationValue
  */
-const Impact = ({ impact, donationValue }) => {
+const Impact = ({ charity, donationValue }) => {
+	// Get charity impacts from impact model, if any data on it exists
+	let impact = "";
+	let donationsMoney = new Money(charity.donation);
+	// Attempt to get data from special field first, simple and easy
+	if (charity.simpleImpact) {
+		let name = charity.simpleImpact.name;
+		// TODO process plural/singular ??copy code from SoGive?
+		name = name.replace(/\(singular: (.*)\)/g, "");
+		let numOfImpact = prettyNumber(Math.round(Money.divide(donationsMoney, charity.simpleImpact.costPerBeneficiary)));
+		impact = numOfImpact + " " + name;
+	}
+	
 	if (!impact.name || !impact.costPerBeneficiary || !donationValue) {
 		return null;
 	}
-	// TODO process plural/singular ??copy code from SoGive?
-	const name = impact.name.replace(/\(singular: (.*)\)/g, "");
-	let numOfImpact = printer.prettyNumber(Math.round(Money.divide(donationValue, impact.costPerBeneficiary)));
-	return <div>{numOfImpact} {name}</div>;
+	
+	return <div>{impact}</div>;
 };
 
 export default Charities;
