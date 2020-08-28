@@ -9,7 +9,7 @@ import Misc from './base/components/Misc';
 import '../style/main.less';
 import BG from './base/components/BG';
 import { randomPick, encURI } from './base/utils/miscutils';
-import { Form, Button, Card } from 'reactstrap';
+import { Form, Button, Card, CardTitle } from 'reactstrap';
 import PropControl from './base/components/PropControl';
 import DataStore from './base/plumbing/DataStore';
 import DevLink from './components/campaignpage/DevLink';
@@ -47,7 +47,7 @@ const NewTabMainDiv = () => {
 	return (
 		<BG src={bg.src} fullscreen opacity={0.9}>
 			<div className='container'>
-				<h2>Hello! Sadly this extension is not ready yet...</h2>
+			<Card body><h2>Hello! Sadly this extension is not ready yet...</h2></Card>
 
 				{C.SERVER_TYPE !== 'local' ? <DevLink href='http://localmy.good-loop.com/newtab.html'>Local Version</DevLink> : null}
 				{C.SERVER_TYPE !== 'test' ? <DevLink href='https://testmy.good-loop.com/newtab.html'>Test Version</DevLink> : null}
@@ -61,9 +61,9 @@ const NewTabMainDiv = () => {
 					</Form>
 				</Card>
 
-				<h3>TODO pick between a few charities</h3>
-			{charities.map(c => <Card body>{c}</Card>)}
-		<Card body>
+				<Card body><h3>TODO pick between a few charities</h3></Card>
+			{charities.map(c => <Card key={c} body>{c}</Card>)}
+		<Card body><CardTitle>Ads for Good (ads are supplied from the Xandr / AppNexus exchange)</CardTitle>
 			<BannerAd />
 		</Card>
 			</div>
