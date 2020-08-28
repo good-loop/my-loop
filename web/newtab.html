@@ -4,20 +4,59 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
-		<meta property="og:image" content="https://as.good-loop.com/uploads/markwinterwell.comemail/GoodLoopLogos__Good-Loop__PrimaryLogo__Colour-9042269355453360705.png" />
+		<meta property="og:image" content="https://my.good-loop.com/img/gl-logo/rectangle/logo.svg" />
 		<meta property="og:title" content="My.Good-Loop" />
 		<!-- Explicit Content-Security-Policy is required for the GoodLoop app -->
 		<meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file:; style-src 'self' 'unsafe-inline' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; media-src * 'self' data: https: http:; img-src * data: 'unsafe-inline'; connect-src * 'unsafe-inline'; frame-src * 'unsafe-inline' 'unsafe-eval';">  
 
 		<title>My Good-Loop</title>
-		<link rel="shortcut icon" href="/img/logo.png" />
+		<link rel="shortcut icon" href="/img/gl-logo/LogoMark/logo.64.png" />
 
 		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 		<link rel="stylesheet" type="text/css" href="/build/style/main.css">
 	</head>
 	<body>
 
-		<h2>Hello! Sadly this extension is not ready yet...</h2>
+		<div id="mainDiv"></div>						
+
+		<!-- Scripts -->
+		<script type="text/javascript" async src="https://platform.twitter.com/widgets.js"></script>
+		<script>
+			window.fbAsyncInit = function() {
+			    FB.init({
+			      appId      : '1847521215521290', // ?? check against C.js
+			      xfbml      : true,
+			      version    : 'v2.8'
+			    });
+		    //FB.AppEvents.logPageView();
+			};
+
+			(function(d, s, id){
+	    		var js, fjs = d.getElementsByTagName(s)[0];
+				if (d.getElementById(id)) {return;}
+				js = d.createElement(s); js.id = id;
+				js.src = "//connect.facebook.net/en_US/sdk.js";
+				fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));
+		</script>
+		
+		<!-- everything comes via webpack -->
+		<script>
+			// Insert bundle[-debug].js - but allow dynamic test/production build switch.
+			// Default to debug build on test and local servers.
+			var isDebug = window.location.hostname.match(/^local/) || window.location.hostname.match(/^test/);
+			
+			// Has the user specified debug/production build with a URL param?
+			var debugParam = window.location.search.match(/debug=(\w+)/i);
+			if (debugParam && debugParam[1]) {
+				// Require an exact match to change from default
+				if (debugParam[1] === 'false') isDebug = false;
+				else if (debugParam[1] === 'true') isDebug = true;
+			}
+			
+			var filename = isDebug ? 'bundle-debug.js' : 'bundle.js';
+			document.write('<script src="/build/js/' + filename + '"/><\/script>');
+		</script>
 
 		<!-- Global site tag (gtag.js) - Google Analytics -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-89730678-7"></script>

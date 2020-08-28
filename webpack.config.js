@@ -62,19 +62,25 @@ const baseConfig = {
 };
 
 
-/*
+/**
 * Copy and fill out the baseConfig object with
 * @param filename {!String} Set the bundle output.filename
-* 
+* @param {?string} entry (unusual) Compile a different top-level file instead of app.jsx
 * ## process.env
 * process is always globally available to runtime code.
+
 */
-const makeConfig = ({ filename, mode }) => {
+const makeConfig = ({ filename, mode, entry }) => {
 	// config.mode can be "development" or "production" & dictates whether JS is minified
 	const config = Object.assign({}, baseConfig, { mode });
 	
 	// What filename should we render to?
 	config.output = Object.assign({}, config.output, { filename });
+
+	// Not app.jsx?
+	if (entry) {
+		config.entry[config.entry.length-1] = entry;
+	}
 
 	// The "mode" param should be inserting process.env already...
 	// process.env is available globally within bundle.js & allows us to hardcode different behaviour for dev & production builds	
@@ -83,6 +89,7 @@ const makeConfig = ({ filename, mode }) => {
 
 const configs = [
 	makeConfig({filename: 'js/bundle-debug.js', mode: 'development' }),
+	makeConfig({filename: 'js/newtab-bundle-debug.js', mode: 'development', entry:'./src/js/newtab.jsx'}),
 ];
 
 // Allow debug-only compilation for faster iteration in dev
