@@ -42,12 +42,12 @@ const NewTabMainDiv = () => {
 		{ src: 'https://images.unsplash.com/photo-1592755137605-f53768fd7931?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80' },
 	]);
 
-	let charities = ['wwf','save-the-children'];
+	let charities = ['wwf', 'save-the-children'];
 
 	return (
 		<BG src={bg.src} fullscreen opacity={0.9}>
 			<div className='container'>
-			<Card body><h2>Hello! Sadly this extension is not ready yet...</h2></Card>
+				<Card body><h2>Hello! Sadly this extension is not ready yet...</h2></Card>
 
 				{C.SERVER_TYPE !== 'local' ? <DevLink href='http://localmy.good-loop.com/newtab.html'>Local Version</DevLink> : null}
 				{C.SERVER_TYPE !== 'test' ? <DevLink href='https://testmy.good-loop.com/newtab.html'>Test Version</DevLink> : null}
@@ -62,10 +62,10 @@ const NewTabMainDiv = () => {
 				</Card>
 
 				<Card body><h3>TODO pick between a few charities</h3></Card>
-			{charities.map(c => <Card key={c} body>{c}</Card>)}
-		<Card body><CardTitle>Ads for Good (ads are supplied from the Xandr / AppNexus exchange)</CardTitle>
-			<BannerAd />
-		</Card>
+				{charities.map(c => <Card key={c} body>{c}</Card>)}
+				<Card body><CardTitle>Ads for Good (ads are supplied from the Xandr / AppNexus exchange)</CardTitle>
+					<BannerAd />
+				</Card>
 			</div>
 		</BG>);
 };
