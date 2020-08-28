@@ -80,6 +80,7 @@ const makeConfig = ({ filename, mode, entry }) => {
 
 	// Has an entry point other than app.jsx been requested?
 	if (entry) {
+		// NB: copy .entry to avoid messing up a shared array
 		config.entry = [...config.entry.slice(0, config.entry.length - 1), entry];
 	}
 
