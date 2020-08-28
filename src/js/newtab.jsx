@@ -30,11 +30,15 @@ const google = () => {
 const NewTabMainDiv = () => {
 
 	let bg = randomPick([
-
+		{src:'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1351&q=80'},
+		{src:'https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1440&q=80'},
+		{src:'https://images.unsplash.com/photo-1588392382834-a891154bca4d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80'},
+		{src:'https://images.unsplash.com/photo-1582425312148-de9955e68e45?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2134&q=80'},
+		{src:'https://images.unsplash.com/photo-1592755137605-f53768fd7931?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80'},
 	]);
 
 	return (<div className='container'>
-		<BG src={bg} fullscreen />
+		<BG src={bg.src} fullscreen />
 		<h2>Hello! Sadly this extension is not ready yet...</h2>
 
 		{C.SERVER_TYPE !== 'local'? <DevLink href='http://localmy.good-loop.com/newtab.html'>Local Version</DevLink> : null}
