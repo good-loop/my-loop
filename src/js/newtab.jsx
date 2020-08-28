@@ -15,6 +15,7 @@ import DataStore from './base/plumbing/DataStore';
 import DevLink from './components/campaignpage/DevLink';
 import C from './C';
 import Roles from './base/Roles';
+import BannerAd from './components/BannerAd';
 
 // Pass font awesome version onto Misc, so it adds the appropiate class to the icons
 Misc.FontAwesome = 5;
@@ -63,7 +64,7 @@ const NewTabMainDiv = () => {
 				<h3>TODO pick between a few charities</h3>
 			{charities.map(c => <Card body>{c}</Card>)}
 		<Card body>
-			TODO an advert!
+			<BannerAd />
 		</Card>
 			</div>
 		</BG>);
