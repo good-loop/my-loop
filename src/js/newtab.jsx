@@ -49,7 +49,9 @@ const NewTabMainDiv = () => {
 
 		TODO pick between a few charities
 
-		TODO an advert! &#x1f5d1;
+		TODO an advert!
+		
+		TODO replace font awesome with unicode &#x1f5d1; &#xf014;
 
 	</div>);
 };
