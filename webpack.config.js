@@ -11,6 +11,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webDir = process.env.OUTPUT_WEB_DIR || 'web';
 
 const baseConfig = {
+	// NB When editing keep the "our code" entry point last in this list - makeConfig override depends on this position.
 	entry: ['@babel/polyfill', './src/js/app.jsx'],
 	output: {
 		path: path.resolve(__dirname, './' + webDir + '/build/'), // NB: this should include js and css outputs
@@ -77,9 +78,9 @@ const makeConfig = ({ filename, mode, entry }) => {
 	// What filename should we render to?
 	config.output = Object.assign({}, config.output, { filename });
 
-	// Not app.jsx?
+	// Has an entry point other than app.jsx been requested?
 	if (entry) {
-		config.entry[config.entry.length-1] = entry;
+		config.entry = [...config.entry.slice(0, config.entry.length - 1), entry];
 	}
 
 	// The "mode" param should be inserting process.env already...
