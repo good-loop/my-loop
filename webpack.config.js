@@ -95,6 +95,7 @@ const configs = [
 // Allow debug-only compilation for faster iteration in dev
 if (process.env.NO_PROD !== 'true') {
 	configs.push(makeConfig({filename: 'js/bundle.js', mode: 'production' }));
+	makeConfig({filename: 'js/newtab-bundle.js', mode: 'production', entry:'./src/js/newtab.jsx'}),
 }
 
 // Output bundle files for production and dev/debug
