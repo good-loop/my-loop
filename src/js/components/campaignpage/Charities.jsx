@@ -8,6 +8,7 @@ import C from '../../C';
 import Counter from '../../base/components/Counter';
 import { space } from '../../base/utils/miscutils';
 import printer from '../../base/utils/printer';
+import MDText from '../../base/components/MDText';
 
 /**
  * HACK hardcode some thank you messages.
@@ -28,7 +29,6 @@ const tq = charity => {
 
 		// TODO name
 		"wwf": {
-			img: "/img/WWF_FeelGoodImage.png",
 			quote: `"The money raised through the H&M campaign will support WWF UK's vital work, fighting for a world where people and nature can
 thrive, and continue to support schools, teachers and pupils to
 develop their knowledge and understanding of the environmental
@@ -50,6 +50,7 @@ const Charities = ({ charities }) => {
 
 		// Shallow copy charity obj
 		let charity = Object.assign({}, charityOriginal);
+		console.log(charity.id);
 		if ( ! NGO.id(charity)) {
 			console.warn("Charity without an id?!", charity);
 			return charity;
@@ -111,7 +112,7 @@ const CharityCard = ({ charity, donationValue, i }) => {
 
 	const quote = tq(charity);
 	console.log("Quote: " + quote);
-	let img = (quote && quote.img) || charity.photo;
+	let img = (quote && quote.img) || charity.images;
 
 	// TODO let's reduce the use of custom css classes (e.g. charity-quote-img etc below)
 
@@ -119,7 +120,7 @@ const CharityCard = ({ charity, donationValue, i }) => {
 		<div className={space("charity-quote row", !img && "no-img")}>
 			{img ?
 				<div className="charity-quote-img col-md-5 p-0">
-					<img src={img} className="w-100" alt="charity" />
+					<img src={img} alt="charity" />
 				</div>
 			: null}
 			<div className={space("charity-quote-content", img && "col-md-7")}>
@@ -130,6 +131,7 @@ const CharityCard = ({ charity, donationValue, i }) => {
 					{donationValue ? <div className="w-100"><h2><Counter currencySymbol="&pound;" value={donationValue} /> raised</h2></div> : null}
 					{charity.simpleImpact ? <Impact impact={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
+					{!charity.simpleImpact && !quote ? <MDText source={desc} /> : null}
 				</div>
 			</div>
 		</div>
@@ -143,11 +145,15 @@ const CharityCard = ({ charity, donationValue, i }) => {
  * @param {Money} donationValue
  */
 const Impact = ({ charity, donationValue }) => {
+
 	// Get charity impacts from impact model, if any data on it exists
 	let impact = "";
 	let donationsMoney = new Money(charity.donation);
 	// Attempt to get data from special field first, simple and easy
 	if (charity.simpleImpact) {
+		if (!charity.simpleImpact.name || !charity.simpleImpact.costPerBeneficiary || !donationValue) {
+			return null;
+		}
 		let name = charity.simpleImpact.name;
 		// TODO process plural/singular ??copy code from SoGive?
 		name = name.replace(/\(singular: (.*)\)/g, "");
@@ -155,11 +161,7 @@ const Impact = ({ charity, donationValue }) => {
 		impact = numOfImpact + " " + name;
 	}
 	
-	if (!impact.name || !impact.costPerBeneficiary || !donationValue) {
-		return null;
-	}
-	
-	return <div>{impact}</div>;
+	return <b>{impact}</b>;
 };
 
 export default Charities;

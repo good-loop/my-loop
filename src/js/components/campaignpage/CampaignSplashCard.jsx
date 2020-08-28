@@ -4,11 +4,12 @@ import Counter from '../../base/components/Counter';
 import GoodLoopAd from './GoodLoopAd';
 import WhiteCircle from './WhiteCircle';
 import printer from '../../base/utils/printer';
+import { space } from '../../base/utils/miscutils';
 
-const SplashCard = ({ branding, campaignPage, donationValue, totalViewCount, adId, landing }) => {
+const SplashCard = ({ branding, pdf, campaignPage, donationValue, totalViewCount, adId, landing }) => {
 	return (
 		<div className="impact-hub-splash">
-			<img src={campaignPage.bg} className="w-100 splash-img" alt="splash" />
+			<img src={campaignPage.bg ? campaignPage.bg : "/img/lightcurve.svg"} className={space("w-100", campaignPage.bg ? "splash-img" : "splash-curve")} alt="splash" />
 			<div className="dark-overlay" />
 			<img src="/img/redcurve.svg" className="w-100 splash-curve" alt="curve"/>
 			<div className="hero splash-card px-5">
@@ -40,7 +41,7 @@ const SplashCard = ({ branding, campaignPage, donationValue, totalViewCount, adI
 				</div>
 			</div>
 			<div className="splash-buttons">
-				<a className="btn btn-primary mr-md-3" href="TODO">Download in pdf</a><a className="btn btn-transparent" href="TODO"><i className="fas fa-share-alt mr-2" /> Share</a>
+				{pdf ? <a className="btn btn-primary mr-md-3" href={pdf}>Download in pdf</a> : null}<a className="btn btn-transparent" href="TODO"><i className="fas fa-share-alt mr-2" /> Share</a>
 			</div>
 		</div>
 	);

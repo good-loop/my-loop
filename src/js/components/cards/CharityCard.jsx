@@ -28,6 +28,9 @@ const CharityMiniCard = ({charity, donationValue, i, imageLeft}) => {
 	if (firstParagraph) {
 		desc = firstParagraph[0];
 	}
+	console.log("Charity mini card charity: " + charity.id);
+	console.log("NGO.id : " + NGO.id(charity));
+	
 	return ( 
 		<div className="col-md-4 charity-card mt-5 mt-md-0">
 			<div className="flex-column">
@@ -54,7 +57,8 @@ const CharityMiniCard = ({charity, donationValue, i, imageLeft}) => {
  * @param {?boolean} link true to make the logo a link
  */
 const CharityLogo = ({charity, link, className}) => {
-	let $logo = <img className={space("logo",className)} src={charity.logo} alt={charity.name} />;
+	// 'logo' class forces the logos to be too small for the circle - so leaving it out
+	let $logo = <img className={className} src={charity.logo} alt={charity.name} />;
 	if ( ! charity.logo) {
 		console.warn("Charity without a logo",NGO.id(charity),charity);
 		$logo = <span>{charity.name || NGO.id(charity)}</span>; // fallback to their name

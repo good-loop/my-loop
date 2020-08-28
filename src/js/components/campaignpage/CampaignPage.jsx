@@ -34,6 +34,21 @@ import ListLoad from '../../base/components/ListLoad';
 import DevLink from './DevLink';
 import {LoginLink} from '../../base/components/LoginWidget';
 
+/**
+ * HACK hard-coded list of campaigns which have PDF versions
+ * TODO put this in portal or somewhere else
+ * @param {Campaign} campaign 
+ */
+const pdfLookup = (campaign) => {
+	
+	let pdf = {
+		"collectivecampaign" : "/pdf/TODO"
+	}[campaign];
+
+	return pdf;
+
+}
+
 const tomsCampaigns = /(josh|sara|ella)/; // For matching TOMS campaign names needing special treatment
 /**
  * HACK fix campaign name changes to clean up historical campaigns
@@ -196,6 +211,9 @@ const CampaignPage = () => {
 
 	let brandColor = branding.color || branding.backgroundColor;
 
+	// PDF version of page
+	let pdf = null;
+
 	// Group ads by campaign {String: Advert}
 	let campaignByName = {};
 	ads.forEach(ad => {
@@ -204,6 +222,8 @@ const CampaignPage = () => {
 			...campaignByName[name],
 			...ad
 		};
+		// Fetch PDF by campaign (last ad wins)
+		pdf = pdfLookup(ad.campaign);
 	});
 
 	let campaigns = Object.values(campaignByName);
@@ -280,11 +300,11 @@ const CampaignPage = () => {
 	assignUnsetDonations();
 
 	return (<>
-		<MyLoopNavBar brandLogo={branding.logo} logo="/img/new-logo-with-text-white.svg" style={{ backgroundColor: brandColor }} />
+		<MyLoopNavBar brandLogo={branding.logo} logo="/img/new-logo-with-text-white.svg" />
 		<CSS css={campaignPage && campaignPage.customCss} />
 		<CSS css={branding.customCss} />
 		<div className="widepage CampaignPage text-center gl-btns">
-			<CampaignSplashCard branding={branding} campaignPage={campaignPage} donationValue={ndonationValue} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
+			<CampaignSplashCard branding={branding} pdf={pdf} campaignPage={campaignPage} donationValue={ndonationValue} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
 
 			<HowDoesItWork nvertiserName={nvertiserName} />
 
@@ -336,7 +356,7 @@ const CampaignPage = () => {
 					<p className="py-5">Company website: <a href="http://www.good-loop.com">www.good-loop.com</a><br />Email: <b>hello@good-loop.com</b></p>
 					<div className="py-5 flex-column flex-md-row justify-content-center">
 						<a className="btn btn-primary mr-md-3" target="_blank" href="https://www.good-loop.com/contact">Book a call</a>
-						<a className="btn btn-transparent mt-3 mt-md-0" href="TODO">Download pdf version</a>
+						{pdf ? <a className="btn btn-transparent mt-3 mt-md-0" href={pdf}>Download pdf version</a> : null}
 					</div>
 					<div className="pb-5" />
 				</Container>

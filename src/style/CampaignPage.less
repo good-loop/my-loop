@@ -36,6 +36,11 @@ body {
 
 	.impact-hub-splash {
 		position: relative;
+		height: 100vh;
+		background-color: #f55d58;
+		@media @ipad-max {
+			background-color: #ffffff;
+		}
 
 		.splash-curve {
 			position: absolute;
@@ -50,7 +55,7 @@ body {
 		}
 
 		.splash-img {
-			height: 100vh;
+			height: 100%;
 			object-fit: cover;
 		}
 
@@ -263,6 +268,19 @@ body {
 	.charity-quote {
 		background-color: white;
 		box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+		.charity-quote-img {
+			position: relative;
+			overflow: hidden;
+			img {
+				display: block;
+				min-width: 100%;
+				min-height: 100%;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+			}
+		}
 		.charity-quote-content {
 			padding: 40px;
 			padding-bottom: 0;
