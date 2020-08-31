@@ -300,7 +300,7 @@ const CampaignPage = () => {
 	assignUnsetDonations();
 
 	return (<>
-		<MyLoopNavBar brandLogo={branding.logo} logo="/img/new-logo-with-text-white.svg" />
+		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" logoScroll="/img/new-logo-with-text.svg"/>
 		<CSS css={campaignPage && campaignPage.customCss} />
 		<CSS css={branding.customCss} />
 		<div className="widepage CampaignPage text-center gl-btns">
