@@ -42,7 +42,7 @@ import {LoginLink} from '../../base/components/LoginWidget';
 const pdfLookup = (campaign) => {
 	
 	let pdf = {
-		"collectivecampaign" : "/pdf/TODO"
+		"collectivecampaign" : "/resources/Good-loop_H&M_campaign.pdf"
 	}[campaign];
 
 	return pdf;
