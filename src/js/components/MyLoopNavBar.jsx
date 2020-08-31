@@ -9,28 +9,55 @@ import {LoginLink} from '../base/components/LoginWidget';
  * Why do we need our own jsx??
  */
 
-const MyLoopNavBar = ({backgroundColor, logo, currentPage}) => {
-	// red on transparent, white if on colour
-	// const toggleColor = backgroundColor === 'transparent' ? '#770f00' : '#fff';
-	// The red gets lost in our other elements easily and is difficult to give a good-looking contrast shadow, trying white for all cases
-	const toggleColor = '#fff';
-	const logoSrc = logo || C.app.homeLogo || C.app.logo;
-	
-	return (
-		<Navbar color={backgroundColor} sticky='top'>
-			<NavbarBrand href="/" className="mr-auto">
-				<img src={logoSrc} alt='logo' className='logo-small' />
-			</NavbarBrand>
-			<AccountMenu active={currentPage === 'account'} logoutLink='#my' toggleColor={toggleColor} />
-		</Navbar>
-	);
-};
+  /*
+  * Navbar for all My-Loop pages
+  * Expects a logo url and currentPage object
+  * If logoScroll is set, logoScroll will be displayed in place of logo when the navbar is scrolled
+  */
+class MyLoopNavBar extends React.Component{
 
-const AccountMenu = ({active, logoutLink, toggleColor}) => {
+	constructor (props) {
+		super(props);
+		this.state = {scrolled: window.scrollY > 50}
+		this.handleScroll = this.handleScroll.bind(this);
+	}
+
+	componentDidMount () {
+		window.addEventListener('scroll', this.handleScroll);
+	}
+	
+	componentWillUnmount () {
+		window.removeEventListener('scroll', this.handleScroll);
+	}
+
+	handleScroll () {
+		this.setState ({scrolled: window.scrollY > 50});
+	}
+
+	render () {
+		// red on transparent, white if on colour
+		// const toggleColor = backgroundColor === 'transparent' ? '#770f00' : '#fff';
+		// The red gets lost in our other elements easily and is difficult to give a good-looking contrast shadow, trying white for all cases
+		//const toggleColor = this.state.scrolled ? '#AD2016' : '#fff';
+		const logoSrc = this.props.logo || C.app.homeLogo || C.app.logo;
+		const logoScrollSrc = this.props.logoScroll;
+
+		return (
+			<Navbar className={this.state.scrolled ? "scrolled" : ""} sticky='top'>
+				<NavbarBrand href="/" className="mr-auto">
+					<img src={this.state.scrolled && logoScrollSrc ? logoScrollSrc : logoSrc} alt='logo' className='logo-small' />
+				</NavbarBrand>
+				<AccountMenu active={this.props.currentPage === 'account'} logoutLink='#my' />
+			</Navbar>
+		);
+	}
+}
+
+const AccountMenu = ({active, logoutLink}) => {
 	if (!Login.isLoggedIn()) { 
 		return (
 			<ul id='top-right-menu' className="nav navbar-nav navbar-right">
-				<li className="login-link"><LoginLink /></li>
+				<li className="login-link"><LoginLink>Register / Log in</LoginLink></li>
 			</ul>
 		); 
 	}
@@ -39,7 +66,7 @@ const AccountMenu = ({active, logoutLink, toggleColor}) => {
 
 	return (
 		<UncontrolledDropdown className="navbar-right">
-			<DropdownToggle caret style={{backgroundColor: 'transparent', border: '0', color: toggleColor}}>
+			<DropdownToggle caret style={{backgroundColor: 'transparent', border: '0'}} className="login-link">
 				{ user.name || user.xid }&nbsp;
 			</DropdownToggle>
 			<DropdownMenu right>

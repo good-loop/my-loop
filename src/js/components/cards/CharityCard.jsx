@@ -12,89 +12,40 @@ import { SquareLogo } from '../Image';
 import MDText from '../../base/components/MDText';
 import Counter from '../../base/components/Counter';
 import Money from '../../base/data/Money';
+import WhiteCircle from '../campaignpage/WhiteCircle';
+import DevLink from '../campaignpage/DevLink';
+import { space } from '../../base/utils/miscutils';
 
 /**
- * HACK hardcode some thank you messages.
- * 
- * TODO Have this as a field in the AdvertPage -> Charity editor or campaign page
- */
-const tq = charity => {
-	return {
-		helenbamber: `"That is absolutely fantastic news, thank you so much! Congratulations everyone on a successful Spring/Summer Campaign! 
-		The donation will go a huge way in supporting our clients to recover and rebuild their lives." -- Sophie at Helen Bamber`,
-
-		// TODO name
-		wwf: `"The money raised through the H&M campaign will support WWF UK's vital work, fighting for a world where people and nature can
-thrive, and continue to support schools, teachers and pupils to
-develop their knowledge and understanding of the environmental
-challenges facing our planet." -- Chiara Cadei, WWF`
-	}[charity.id] || "";
-};
-
-const stockPhotos = [
-	'/img/campaign-stock/dew_web_shutterstock_1051967279.jpg',
-	'/img/campaign-stock/sunrise_web_shutterstock_1504457996.jpg',
-	'/img/campaign-stock/soil_web_shutterstock_1034022475.jpg',
-	'/img/campaign-stock/hills_web_shutterstock_1462852808.jpg',
-	'/img/campaign-stock/sprout_web_shutterstock_760733977.jpg',
-];
-
-/**
- * 
+ * Logo + £s + summaryDescription
  * @param {?Number} i - e.g. 0 for "first in the list". Used for bg colour
  */
-const CharityCard = ({charity, donationValue, i, imageLeft}) => {
-	// console.log(donationValue);
-	// fetch extra info from SoGive
-	let cid = charity.id;
-	if (cid) {
-		const pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:charity.id, status:C.KStatus.PUBLISHED});
-		let sogiveCharity = pvCharity.value;
-		if (sogiveCharity) {
-			// HACK: prefer short description
-			// if (sogiveCharity.summaryDescription) sogiveCharity.description = sogiveCharity.summaryDescription;
-
-			// Prefer full descriptions. If unavailable switch to summary desc.
-			if (!sogiveCharity.description) sogiveCharity.description = sogiveCharity.summaryDescription;
-			// merge in SoGive as defaults
-			charity = Object.assign({}, sogiveCharity, charity);
-			cid = NGO.id(sogiveCharity); // see ServerIO's hacks to handle bad data entry in the Portal
-		}
+const CharityMiniCard = ({charity, donationValue, i, imageLeft}) => {
+	// HACK: prefer short description
+	let desc = charity.summaryDescription || charity.description || '';
+	// Cut descriptions down to 1 paragraph.
+	let firstParagraph = (/^.+\n *\n/g).exec(desc);
+	if (firstParagraph) {
+		desc = firstParagraph[0];
 	}
-
-	// If charity has photo, use it. Otherwise use logo with custom colour bg and eliminate name.
-	let photo = charity.highResPhoto || charity.images;
-	let logo = charity.logo;
-
-	let backgroundImage = photo;
-	let stockWarning = false;
-	if (!backgroundImage) {
-		backgroundImage = stockPhotos[i % stockPhotos.length];
-		stockWarning = true;
-	}
-
+	console.log("Charity mini card charity: " + charity.id);
+	console.log("NGO.id : " + NGO.id(charity));
+	
 	return ( 
-	// 	{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
-	// </ACard>
-		<div className="container-fluid charity-card">
-			<div className={`row ${imageLeft? '' : ' flex-row-reverse'}`}>
-				<div className="col-sm img-col" style={{backgroundImage: `url(${backgroundImage})`}}>
-					{stockWarning ? <small className="stock-warning">Stock photo</small> : ''}
+		<div className="col-md-4 charity-card mt-5 mt-md-0">
+			<div className="flex-column">
+				<WhiteCircle className="mb-5 w-50 mx-auto">
+					<CharityLogo charity={charity}/>
+				</WhiteCircle>
+				{donationValue? <h4 className="text-left">
+					<Counter currencySymbol="&pound;" value={donationValue} />&nbsp;raised
+				</h4> : null}
+				<div className="stub-divider"/>
+				<div className="charity-description text-block" >
+					<MDText source={desc} />
+					<a href={charity.url} target="_blank" rel="noopener noreferrer">Go to charity website</a>
 				</div>
-				<div className="col-sm info-col">
-					<div className={`inner-info-section ${imageLeft? '' : 'align-right'}`}>
-						<CharityLogo charity={charity} />
-						<div className="charity-donation">{ charity.name }</div>
-						{donationValue? <div className="charity-donation">
-							<span style={{color: '#af2009', fontWeight: '700'}}><Counter currencySymbol='&pound;' value={donationValue} />&nbsp;raised</span>
-						</div> : null}
-						<div className="charity-description text-block" >
-							<MDText source={charity.summaryDescription || ''} />
-							{tq(charity)? <div className="quote"><MDText source={tq(charity)} /></div> : null}			
-						</div>
-						{Roles.isDev() && cid? <small><a href={'https://app.sogive.org/#simpleedit?charityId='+escape(cid)} target='_sogive'>SoGive</a></small> : null}
-					</div>
-				</div>
+				{NGO.id(charity)? <DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(NGO.id(charity))} target="_sogive">SoGive</DevLink> : null}
 			</div>
 		</div>
 	);
@@ -102,24 +53,21 @@ const CharityCard = ({charity, donationValue, i, imageLeft}) => {
 
 /**
  * Logo (which you can click on)
- * TODO can we simplify this?? Also, standardise with company logo
+ * TODO can standardise this with brand logos
+ * @param {?boolean} link true to make the logo a link
  */
-const CharityLogo = ({charity}) => {
-	let photo = charity.photo || charity.highResPhoto || charity.images;
-	let logo = charity.logo;
-	let imgSrc = logo || photo;
-
-	// Sets logos inside white square box, to standarise them
-	let $logo = (
-		<div className="logo-div" style={{backgroundColor: 'white', width: '150px', height: '150px', borderRadius: '5px'}}>
-			<img className="logo" src={imgSrc} style={{background: 'white', backgroundColor: 'white'}} alt={charity.name} />
-		</div>
-	);
+const CharityLogo = ({charity, link, className}) => {
+	// 'logo' class forces the logos to be too small for the circle - so leaving it out
+	let $logo = <img className={className} src={charity.logo} alt={charity.name} />;
+	if ( ! charity.logo) {
+		console.warn("Charity without a logo",NGO.id(charity),charity);
+		$logo = <span>{charity.name || NGO.id(charity)}</span>; // fallback to their name
+	}
 	// with / without `a` link?
-	if (charity.url) {
+	if (charity.url && link) {
 		return <a href={charity.url} target="_blank" rel="noopener noreferrer">{$logo}</a>;
 	}
 	return $logo;
 };
 
-export default CharityCard;
+export default CharityMiniCard;

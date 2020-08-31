@@ -11,6 +11,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webDir = process.env.OUTPUT_WEB_DIR || 'web';
 
 const baseConfig = {
+	// NB When editing keep the "our code" entry point last in this list - makeConfig override depends on this position.
 	entry: ['@babel/polyfill', './src/js/app.jsx'],
 	output: {
 		path: path.resolve(__dirname, './' + webDir + '/build/'), // NB: this should include js and css outputs
@@ -62,19 +63,26 @@ const baseConfig = {
 };
 
 
-/*
+/**
 * Copy and fill out the baseConfig object with
 * @param filename {!String} Set the bundle output.filename
-* 
+* @param {?string} entry (unusual) Compile a different top-level file instead of app.jsx
 * ## process.env
 * process is always globally available to runtime code.
+
 */
-const makeConfig = ({ filename, mode }) => {
+const makeConfig = ({ filename, mode, entry }) => {
 	// config.mode can be "development" or "production" & dictates whether JS is minified
 	const config = Object.assign({}, baseConfig, { mode });
 	
 	// What filename should we render to?
 	config.output = Object.assign({}, config.output, { filename });
+
+	// Has an entry point other than app.jsx been requested?
+	if (entry) {
+		// NB: copy .entry to avoid messing up a shared array
+		config.entry = [...config.entry.slice(0, config.entry.length - 1), entry];
+	}
 
 	// The "mode" param should be inserting process.env already...
 	// process.env is available globally within bundle.js & allows us to hardcode different behaviour for dev & production builds	
@@ -83,11 +91,13 @@ const makeConfig = ({ filename, mode }) => {
 
 const configs = [
 	makeConfig({filename: 'js/bundle-debug.js', mode: 'development' }),
+	makeConfig({filename: 'js/newtab-bundle-debug.js', mode: 'development', entry:'./src/js/newtab.jsx'}),
 ];
 
 // Allow debug-only compilation for faster iteration in dev
 if (process.env.NO_PROD !== 'true') {
 	configs.push(makeConfig({filename: 'js/bundle.js', mode: 'production' }));
+	configs.push(makeConfig({filename: 'js/newtab-bundle.js', mode: 'production', entry:'./src/js/newtab.jsx'}));
 }
 
 // Output bundle files for production and dev/debug

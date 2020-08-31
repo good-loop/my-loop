@@ -13,7 +13,7 @@ import Profiler from '../base/Profiler';
 
 // Templates
 import MessageBar from '../base/components/MessageBar';
-import LoginWidget from '../base/components/LoginWidget';
+import LoginWidget, {setShowLogin} from '../base/components/LoginWidget';
 import NavBar from './MyLoopNavBar';
 
 // Pages
@@ -70,7 +70,7 @@ class MainDiv extends Component {
 			// ?? should we store and check for "Login was attempted" to guard this??
 			if (Login.isLoggedIn()) {
 				// close the login dialog on success
-				LoginWidget.hide();
+				setShowLogin(false);
 			}
 
 			// Update xids

@@ -68,7 +68,7 @@ const CtaBox: React.FC = () => {
 	//@ts-ignore
 	const hasSubmittedEmail = DataStore.getValue(['misc', 'hasSubmittedEmail']) === true;
 	// NB: the total is higher -- but we need to clean up our donation tracker docs before we can reliably report it. March 2020
-	const total = new Money("£500000");
+	const total = new Money("£1000000");
 	//@ts-ignore
 	return (
 		<div className="cta-box">
