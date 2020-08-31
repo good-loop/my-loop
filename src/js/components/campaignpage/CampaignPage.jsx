@@ -33,6 +33,7 @@ import ErrorAlert from '../../base/components/ErrorAlert';
 import ListLoad from '../../base/components/ListLoad';
 import DevLink from './DevLink';
 import {LoginLink} from '../../base/components/LoginWidget';
+import ShareButton from '../ShareButton';
 
 /**
  * HACK hard-coded list of campaigns which have PDF versions
@@ -342,7 +343,7 @@ const CampaignPage = () => {
 							<LoginLink><div className="btn btn-secondary w-100">Sign up</div></LoginLink>
 						</div>
 						<div className="col-md">
-							<a className="btn btn-transparent btn-white w-100 mt-3 mt-md-0" href="TODO"><i className="fas fa-share-alt mr-2" /> Share the love</a>
+							<ShareButton className="btn-transparent btn-white w-100 mt-3 mt-md-0" href="TODO">Share the love</ShareButton>
 						</div>
 					</div>
 					<div className="pb-5" />
@@ -365,8 +366,6 @@ const CampaignPage = () => {
 			{campaignPage.smallPrint ? (
 				<div className="small-print"><small>{campaignPage.smallPrint}</small></div>
 			) : null}
-
-			<div className="small py-5">Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></div>
 
 			<Footer />
 		</div>

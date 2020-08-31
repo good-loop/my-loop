@@ -1,10 +1,10 @@
 import React from 'react';
-
 import Counter from '../../base/components/Counter';
 import GoodLoopAd from './GoodLoopAd';
 import WhiteCircle from './WhiteCircle';
 import printer from '../../base/utils/printer';
 import { space } from '../../base/utils/miscutils';
+import ShareButton from '../ShareButton';
 
 const SplashCard = ({ branding, pdf, campaignPage, donationValue, totalViewCount, adId, landing }) => {
 	return (
@@ -41,7 +41,8 @@ const SplashCard = ({ branding, pdf, campaignPage, donationValue, totalViewCount
 				</div>
 			</div>
 			<div className="splash-buttons">
-				{pdf ? <a className="btn btn-primary mr-md-3" href={pdf}>Download in pdf</a> : null}<a className="btn btn-transparent" href="TODO"><i className="fas fa-share-alt mr-2" /> Share</a>
+				{pdf ? <a className="btn btn-primary mr-md-3" href={pdf}>Download in pdf</a> : null}
+				<ShareButton className="btn-transparent fill">Share</ShareButton>
 			</div>
 		</div>
 	);

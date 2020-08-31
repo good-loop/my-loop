@@ -27,7 +27,6 @@ const tq = charity => {
 			source: "Sophie at Helen Bamber"
 		},
 
-		// TODO name
 		"wwf": {
 			quote: `"The money raised through the H&M campaign will support WWF UK's vital work, fighting for a world where people and nature can
 thrive, and continue to support schools, teachers and pupils to
