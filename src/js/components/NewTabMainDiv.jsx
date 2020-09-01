@@ -36,15 +36,15 @@ C.setupDataStore();
 
 Login.app = C.app.service;
 
-const WebtopPage = () => {
+let bg = randomPick([
+	{ src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1351&q=80' },
+	{ src: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1440&q=80' },
+	{ src: 'https://images.unsplash.com/photo-1588392382834-a891154bca4d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80' },
+	{ src: 'https://images.unsplash.com/photo-1582425312148-de9955e68e45?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2134&q=80' },
+	{ src: 'https://images.unsplash.com/photo-1592755137605-f53768fd7931?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80' },
+]);
 
-	let bg = randomPick([
-		{ src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1351&q=80' },
-		{ src: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1440&q=80' },
-		{ src: 'https://images.unsplash.com/photo-1588392382834-a891154bca4d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80' },
-		{ src: 'https://images.unsplash.com/photo-1582425312148-de9955e68e45?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2134&q=80' },
-		{ src: 'https://images.unsplash.com/photo-1592755137605-f53768fd7931?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80' },
-	]);
+const WebtopPage = () => {
 
 	let charities = ['wwf', 'save-the-children'];
 
@@ -53,18 +53,17 @@ const WebtopPage = () => {
 
 	return (
 		<BG src={bg.src} fullscreen opacity={0.9}>
-			<div className='container'>
-				<Card body><h2>Hello! Sadly this is not ready yet...</h2></Card>
+			<div className='container'>				
 
 				{C.SERVER_TYPE !== 'local' ? <DevLink href='http://localmy.good-loop.com/newtab.html'>Local Version</DevLink> : null}
 				{C.SERVER_TYPE !== 'test' ? <DevLink href='https://testmy.good-loop.com/newtab.html'>Test Version</DevLink> : null}
 				{!C.isProduction() ? <DevLink href='https://my.good-loop.com/newtab.html'>Production Version</DevLink> : null}
 
-				<Card body>TODO score / impact</Card>
+				<Card id='score' body className='pull-right'>£1,000,000 raised</Card>
 
 				<Card body>
-					<Form onSubmit={google} inline>
-						<PropControl type='search' prop='q' path={['widget', 'search']} /><Button onClick={google}>Search</Button>
+					<Form onSubmit={google} inline className='flex-row' >
+						<PropControl type='search' prop='q' path={['widget', 'search']} className='flex-grow' /><Button color='secondary' onClick={google}>Search</Button>
 					</Form>
 				</Card>
 
