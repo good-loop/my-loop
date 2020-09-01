@@ -19,7 +19,7 @@ const Script = ({src}) => {
 	if (scripts[src]) {
 		return;
 	}
-	addScript(src); // async, onload, onerror, domElement
+	addScript({src}); // async, onload, onerror, domElement
 	scripts[src] = true;
 };
 
