@@ -26,7 +26,8 @@ window.$ = $;
  * TODO Ecosia
  */
 const google = () => {
-	window.location = 'https://www.ecosia.org/search?q=' + encURI(DataStore.getValue('widget', 'search', 'q'));
+	// NB: use window.parent to break out of the newtab iframe, otherwise ecosia objects
+	(window.parent || window.parent).location = 'https://www.ecosia.org/search?q=' + encURI(DataStore.getValue('widget', 'search', 'q'));
 };
 
 // HACK!!!
