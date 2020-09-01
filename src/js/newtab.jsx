@@ -44,10 +44,13 @@ const NewTabMainDiv = () => {
 
 	let charities = ['wwf', 'save-the-children'];
 
+	// iframe src change?
+	// https://stackoverflow.com/posts/17316521/revisions
+
 	return (
 		<BG src={bg.src} fullscreen opacity={0.9}>
 			<div className='container'>
-				<Card body><h2>Hello! Sadly this extension is not ready yet...</h2></Card>
+				<Card body><h2>Hello! Sadly this is not ready yet...</h2></Card>				
 
 				{C.SERVER_TYPE !== 'local' ? <DevLink href='http://localmy.good-loop.com/newtab.html'>Local Version</DevLink> : null}
 				{C.SERVER_TYPE !== 'test' ? <DevLink href='https://testmy.good-loop.com/newtab.html'>Test Version</DevLink> : null}
@@ -57,13 +60,17 @@ const NewTabMainDiv = () => {
 
 				<Card body>
 					<Form onSubmit={google} inline>
-						<PropControl prop='q' path={['widget', 'search']} /><Button onClick={google}>Search</Button>
+						<PropControl type='search' prop='q' path={['widget', 'search']} /><Button onClick={google}>Search</Button>
 					</Form>
 				</Card>
 
+				<a href='https://good-loop.com' target="_parent">Good-Loop</a>
+				
+				<a href='https://doc.good-loop.com' target="_top">Docs eg privacy policy</a>
+
 				<Card body><h3>TODO pick between a few charities</h3></Card>
 				{charities.map(c => <Card key={c} body>{c}</Card>)}
-				<Card body><CardTitle>Ads for Good (ads are supplied from the Xandr / AppNexus exchange)</CardTitle>
+				<Card body><CardTitle></CardTitle>
 					<BannerAd />
 				</Card>
 			</div>
