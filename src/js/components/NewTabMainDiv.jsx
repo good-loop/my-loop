@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import Login from 'you-again';
 import { assert } from 'sjtest';
-import { modifyHash, randomPick, encURI, space } from '../base/utils/miscutils';
+import { modifyHash, randomPick, encURI, space, stopEvent } from '../base/utils/miscutils';
 import {Card, Form, Button, CardTitle, Row, Col} from 'reactstrap';
 
 // Plumbing
@@ -50,7 +50,7 @@ let bg = randomPick([
 
 const WebtopPage = () => {
 
-	let charities = ['wwf', 'save-the-children'];
+	let charities = ['wwf', 'the-save-the-children-fund', 'against-malaria-foundation', 'trees-for-the-future', 'cancer-research-uk'];
 
 	// iframe src change?
 	// https://stackoverflow.com/posts/17316521/revisions
@@ -118,14 +118,14 @@ const NewTabCharityCard = ({cid}) => {
 	let img = charity.images;
 	let selected = false; // TODO user preferences
 
-	return (<Col sm={12} md={4} xl={3} ><Card body selected={selected}>
-		<Row>
-			{img? <Col cols={5} ><img src={img} alt="charity" /></Col> : null}
-			<Col cols={img? 7 : 12}>
-				<DynImg src={charity.logo} alt="logo" className='logo-large' style={{height:'100%',overflow:'hidden'}} />
+	return (<Col sm={12} md={6} ><Card body selected={selected}>
+		<div className='flex-row'>
+			{img? <img src={img} alt="charity" style={{maxHeight:'100%',maxWidth:'35%'}} /> : null}
+			<div>
+				<img src={charity.logo} alt="logo" className='logo-large' style={{height:'100%',overflow:'hidden'}} />
 				<MDText source={desc} />
-			</Col>
-		</Row>
+			</div>
+		</div>
 		<Button color={selected?'secondary':'primary'} onClick={e => toggleCharitySelect(cid)}>{selected? "select" : "de-select"}</Button>
 	</Card></Col>
 	);
@@ -139,7 +139,8 @@ const toggleCharitySelect = e => {
 /**
  * TODO Ecosia
  */
-const google = () => {
+const google = e => {
+	stopEvent(e);
 	// NB: use window.parent to break out of the newtab iframe, otherwise ecosia objects
 	(window.parent || window.parent).location = 'https://www.ecosia.org/search?q=' + encURI(DataStore.getValue('widget', 'search', 'q'));
 };
