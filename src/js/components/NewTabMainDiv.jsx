@@ -122,7 +122,7 @@ const NewTabCharityCard = ({cid}) => {
 		<div className='flex-row'>
 			{img? <img src={img} alt="charity" style={{maxHeight:'100%',maxWidth:'35%'}} /> : null}
 			<div>
-				<img src={charity.logo} alt="logo" className='logo-large' style={{height:'100%',overflow:'hidden'}} />
+				<img src={charity.logo} alt="logo" className='logo-large' style={{height:'100%',overflow:'hidden',marginTop:0,marginLeft:"-1.25rem"}} />
 				<MDText source={desc} />
 			</div>
 		</div>
