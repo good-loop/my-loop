@@ -8,6 +8,7 @@ appnexus.com, 1613, RESELLER
 appnexus.com, 3326, RESELLER
 google.com, pub-1409765517756851, RESELLER
 google.com, pub-4075894099602271, RESELLER
+google.com, pub-6898383636837097, DIRECT, f08c47fec0942fa0		# google adsense on gl.com 
 freewheel.tv, 146081, RESELLER
 rubiconproject.com, 8861, RESELLER, 0bfd66d529a55807
 EMXDGT.com, 45, DIRECT, 1e1d41537f7cad7f
