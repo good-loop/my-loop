@@ -16,6 +16,7 @@ import Profiler from '../base/Profiler';
 import MessageBar from '../base/components/MessageBar';
 import LoginWidget, { setShowLogin } from '../base/components/LoginWidget';
 import NavBar from './MyLoopNavBar';
+import DynImg from '../base/components/DynImg';
 
 // Pages
 import E404Page from '../base/components/E404Page';
@@ -117,22 +118,14 @@ const NewTabCharityCard = ({cid}) => {
 	let img = charity.images;
 	let selected = false; // TODO user preferences
 
-	return (<Col sm={3} xs={1} xl={4} ><Card body selected={selected}>
-		<div className={space("charity-quote row", !img && "no-img")}>
-			{img ?
-				<div className="charity-quote-img col-md-5 p-0">
-					<img src={img} alt="charity" />
-				</div>
-				: null}
-			<div className={space("charity-quote-content", img && "col-md-7")}>
-				<div className="charity-quote-logo">
-					<img src={charity.logo} alt="logo" />
-				</div>
-				<div className="charity-quote-text">
-					<MDText source={desc} />
-				</div>
-			</div>
-		</div>
+	return (<Col sm={12} md={4} xl={3} ><Card body selected={selected}>
+		<Row>
+			{img? <Col cols={5} ><img src={img} alt="charity" /></Col> : null}
+			<Col cols={img? 7 : 12}>
+				<DynImg src={charity.logo} alt="logo" className='logo-large' style={{height:'100%',overflow:'hidden'}} />
+				<MDText source={desc} />
+			</Col>
+		</Row>
 		<Button color={selected?'secondary':'primary'} onClick={e => toggleCharitySelect(cid)}>{selected? "select" : "de-select"}</Button>
 	</Card></Col>
 	);
