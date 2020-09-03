@@ -3,18 +3,18 @@ import React, { Component } from 'react';
 import Login from 'you-again';
 import { assert } from 'sjtest';
 import { modifyHash, randomPick, encURI, space, stopEvent } from '../base/utils/miscutils';
-import {Card, Form, Button, CardTitle, Row, Col} from 'reactstrap';
+import {Card, Form, Button, CardTitle, Row, Col, Badge} from 'reactstrap';
 
 // Plumbing
 import DataStore from '../base/plumbing/DataStore';
 import Roles from '../base/Roles';
 import C from '../C';
 import Crud from '../base/plumbing/Crud'; // Crud is loaded here to init (but not used here)
-import Profiler from '../base/Profiler';
+import Profiler, { getProfile } from '../base/Profiler';
 
 // Templates
 import MessageBar from '../base/components/MessageBar';
-import LoginWidget, { setShowLogin } from '../base/components/LoginWidget';
+import LoginWidget, { setShowLogin, LoginLink, LogoutLink } from '../base/components/LoginWidget';
 import NavBar from './MyLoopNavBar';
 import DynImg from '../base/components/DynImg';
 
@@ -58,12 +58,11 @@ const WebtopPage = () => {
 	return (
 		<BG src={bg.src} fullscreen opacity={0.9}>
 			<div className="container">				
-
-				{C.SERVER_TYPE !== 'local' ? <DevLink href="http://localmy.good-loop.com/newtab.html">Local Version</DevLink> : null}
-				{C.SERVER_TYPE !== 'test' ? <DevLink href="https://testmy.good-loop.com/newtab.html">Test Version</DevLink> : null}
-				{!C.isProduction() ? <DevLink href="https://my.good-loop.com/newtab.html">Production Version</DevLink> : null}
-
-				<Card id="score" body className="pull-right">£1,000,000 raised</Card>
+				
+				<Card id="score" body className="pull-right">
+					<LoginAccountControl />
+					£1,000,000 raised
+				</Card>
 
 				<Card body>
 					<Form onSubmit={google} inline className="flex-row" >
@@ -79,9 +78,24 @@ const WebtopPage = () => {
 					<BannerAd />
 				</Card>
 
+				{C.SERVER_TYPE !== 'local' ? <DevLink href="http://localmy.good-loop.com/newtab.html">Local Version</DevLink> : <Badge>local</Badge>}
+				{C.SERVER_TYPE !== 'test' ? <DevLink href="https://testmy.good-loop.com/newtab.html">Test Version</DevLink> : <Badge>test</Badge>}
+				{!C.isProduction() ? <DevLink href="https://my.good-loop.com/newtab.html">Production Version</DevLink> : <Badge>live</Badge>}
+
 				<NewTabFooter />
 			</div>
 		</BG>);
+};
+
+const LoginAccountControl = () => {
+	if ( ! Login.isLoggedIn()) {		
+		return <LoginLink />;
+	}
+	let user = Login.getUser();
+	return <div>
+		{user.name || user.id}
+		<small><LogoutLink /></small>
+	</div>;
 };
 
 
@@ -91,7 +105,7 @@ const PAGES = {
 	webtop: WebtopPage
 };
 const NewTabMainDiv = () => {
-	return <MainDivBase pageForPath={PAGES} defaultPage="webtop" />;
+	return <MainDivBase pageForPath={PAGES} defaultPage="webtop" navbar={false} />;
 };
 
 const NewTabFooter = () => (<Footer>
@@ -101,6 +115,10 @@ const NewTabFooter = () => (<Footer>
 </Footer>);
 
 const NewTabCharityCard = ({cid}) => {
+	let user = Login.getUser();
+	let profile = user.xid? getProfile({xid:user.xid}) : null;
+	console.warn("profile", profile);
+
 	let pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:cid, status:C.KStatus.PUBLISHED});
 	if ( ! pvCharity.value) {
 		return <Col sm={3} xs={1} xl={4} ><Card body>{cid}</Card></Col>;
