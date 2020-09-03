@@ -116,7 +116,7 @@ const NewTabFooter = () => (<Footer>
 
 const NewTabCharityCard = ({cid}) => {
 	let user = Login.getUser();
-	let profile = user.xid? getProfile({xid:user.xid}) : null;
+	let profile = user && user.xid? getProfile({xid:user.xid}) : null;
 	console.warn("profile", profile);
 
 	let pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:cid, status:C.KStatus.PUBLISHED});
