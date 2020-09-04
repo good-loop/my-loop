@@ -42,7 +42,7 @@ const SplashCard = ({ branding, pdf, campaignPage, donationValue, totalViewCount
 			</div>
 			<div className="splash-buttons">
 				{pdf ? <a className="btn btn-primary mr-md-3" href={pdf}>Download in pdf</a> : null}
-				<ShareButton className="btn-transparent fill">Share</ShareButton>
+				<ShareButton className="btn-transparent fill" url={window.location.href}>Share</ShareButton>
 			</div>
 		</div>
 	);

@@ -343,7 +343,7 @@ const CampaignPage = () => {
 							<LoginLink><div className="btn btn-secondary w-100">Sign up</div></LoginLink>
 						</div>
 						<div className="col-md">
-							<ShareButton className="btn-transparent btn-white w-100 mt-3 mt-md-0" href="TODO">Share the love</ShareButton>
+							<ShareButton className="btn-transparent btn-white w-100 mt-3 mt-md-0" url={window.location.href}>Share the love</ShareButton>
 						</div>
 					</div>
 					<div className="pb-5" />
