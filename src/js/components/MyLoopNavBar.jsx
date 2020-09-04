@@ -7,6 +7,7 @@ import {LoginLink} from '../base/components/LoginWidget';
 
 /**
  * Why do we need our own jsx??
+ * MyLoop Navbar now has separate scroll functionality - could be moved into base if this is wanted across all our services
  */
 
   /*
@@ -35,11 +36,9 @@ class MyLoopNavBar extends React.Component{
 	}
 
 	render () {
-		// red on transparent, white if on colour
-		// const toggleColor = backgroundColor === 'transparent' ? '#770f00' : '#fff';
-		// The red gets lost in our other elements easily and is difficult to give a good-looking contrast shadow, trying white for all cases
-		//const toggleColor = this.state.scrolled ? '#AD2016' : '#fff';
+		// Provide fallbacks for logo
 		const logoSrc = this.props.logo || C.app.homeLogo || C.app.logo;
+		// logoScroll's fallback is logo
 		const logoScrollSrc = this.props.logoScroll;
 
 		return (

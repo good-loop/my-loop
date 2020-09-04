@@ -1,30 +1,37 @@
-// /**
-// WTF? lets clean out lots of this. BS should provide most of what we need
-// */
-
 .navbar {
-	// Nicer font for the dropdown menu / login button
-	#top-right-menu, .dropdown {
-		.sub-header-font();
-		// Reverse modal underlining because it looks nicer this way
-		a {
-			text-decoration: none;
+	background: transparent;
+	transition: 0.2s;
+	// Style login widget accordingly
+	.login-link {
+		text-shadow: none;
+		font-weight: 600;
+		color: #fff;
+		@media @md-max {
+			font-size: 0.7rem;
+		}
+		// !important will still not override the a ruling - so this is necessary
+		& a {
+			color: #fff;
+			font-size: 1rem;
+			@media @md-max {
+				font-size: 0.7rem;
+			}
 			&:hover {
-				text-decoration: underline;
+				text-decoration: none;
 			}
 		}
-	}
-	// We hide the "button" nature of this element, so it looks weird for it to get a button-shaped shadow
-	.btn-secondary.dropdown-toggle {
-		// this horrible list compiled by painful attrition
-		&.focus, &:focus, &.active, &:active, &.active:focus, &:active:focus {
-			box-shadow: none;
-		}
+		text-transform: uppercase;
 	}
 
-	// UghhhhhhhhHHHHHHH why is accountmenu coloured inline with a jsx prop but the login-link left with default styling
-	.login-link a {
-		font-size: 1.4em;
-		color: white;
+	&.scrolled {
+		background: white;
+		box-shadow: 0px 0px 5px rgba(0,0,0,0.75);
+		transition: 0.2s;
+		.login-link {
+			color: #AD2016;
+			& a {
+				color: #AD2016;
+			}
+		}
 	}
 }

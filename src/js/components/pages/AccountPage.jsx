@@ -7,7 +7,7 @@ import DigitalMirrorCard from '../cards/DigitalMirrorCard';
 import ConsentWidget from '../ConsentWidget';
 import SignUpConnectCard from '../cards/SignUpConnectCard';
 import LinkedProfilesCard from '../cards/LinkedProfilesCard';
-import NavBar from '../MyLoopNavBar';
+import MyLoopNavBar from '../MyLoopNavBar';
 import Footer from '../Footer';
 import {getAllXIds} from '../../base/Profiler';
 import Misc from '../../base/components/Misc';
@@ -25,7 +25,7 @@ const Page = () => {
 
 	return (
 		<div className='page'>
-			<NavBar logo='/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png' />
+			<MyLoopNavBar logo="/img/new-logo-with-text.svg"/>
 			<div className='container mt-5'>
 
 				<BSCard>
