@@ -64,7 +64,7 @@ const ContactCard = () => {
 			</div>
 			<div className='p-1'>
 				<p>Tell us what you think: <a href="mailto:hello@good-loop.com?subject=My thoughts on My Good-Loop">hello@good-loop.com</a></p>
-				<p>Interested in hosting Ads For Good on your blog or website? <a href="https://www.good-loop.com/book-a-call">Let us know.</a></p>
+				<p>Interested in hosting Ads For Good on your blog or website? <a href="https://www.good-loop.com/contact">Let us know.</a></p>
 			</div>
 		</div>
 	);
