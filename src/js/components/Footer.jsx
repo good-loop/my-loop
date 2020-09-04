@@ -25,7 +25,7 @@ const Footer = ({className, leftFooter, rightFooter, style, showSocialMediaLinks
 		</div>
 		<div className='mainFooter flex-column p-3'>
 			<p>
-				&copy; 2016-2019 <a href='https://good-loop.com/good-news/index'>Good-Loop Ltd</a>, all rights reserved.<br />
+				&copy; 2016-2020 <a href='https://good-loop.com/good-news/index'>Good-Loop Ltd</a>, all rights reserved.<br />
 				<a href='https://doc.good-loop.com/policy/privacy-policy.html'>Privacy policy</a>
 			</p>
 			<p>
