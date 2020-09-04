@@ -86,7 +86,7 @@ const Charities = ({ charities }) => {
 					)}
 				</div>
 				<div className="py-5">
-					<h2>How are charities using the money raised?</h2>
+					<h2>How charities use the donations</h2>
 				</div>
 				{sogiveCharities.map((charity, i) =>
 					<CharityCard i={i} key={NGO.id(charity)} charity={charity} donationValue={charity.donation} />

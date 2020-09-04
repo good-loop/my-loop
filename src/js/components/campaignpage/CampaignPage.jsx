@@ -425,23 +425,21 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, ndonationValue, nvertiserNa
 		if (!ad.videos || !ad.videos[0].url) return;
 		sampleAd4Campaign[cname] = ad;
 	});
-	const sampleAds = Object.values(sampleAd4Campaign);
+
+	// Make sure to only pick one if multiple are returned
+	const ad = Object.values(sampleAd4Campaign)[0];
 
 	return (<>
 		<Container fluid className="py-5">
 			<br />
 			<Container className="py-5">
-				{sampleAds.map(
-					ad => <Fragment key={ad.id} >
-						<h2>Watch the {nvertiserName} ad that raised <Counter currencySymbol="£" sigFigs={4} value={ndonationValue} minimumFractionDigits={2} /> with<br />{printer.prettyNumber(viewCount(viewcount4campaign, ad))} ad viewers</h2>
-						<AdvertCard
-							ad={ad}
-							viewCountProp={viewCount(viewcount4campaign, ad)}
-							donationTotal={ndonationValue}
-							totalViewCount={totalViewCount}
-						/>
-					</Fragment>
-				)}
+				<h2>Watch the {nvertiserName} ad that raised <Counter currencySymbol="£" sigFigs={4} value={ndonationValue} minimumFractionDigits={2} /> with<br />{printer.prettyNumber(viewCount(viewcount4campaign, ad))} ad viewers</h2>
+				<AdvertCard
+					ad={ad}
+					viewCountProp={viewCount(viewcount4campaign, ad)}
+					donationTotal={ndonationValue}
+					totalViewCount={totalViewCount}
+				/>
 				<a className="btn btn-primary mb-3 mb-md-0 mr-md-3" href="/">See all campaigns</a>
 				{//<a className="btn btn-transparent" href="TODO">Campaign performance & brand study</a>
 				}
