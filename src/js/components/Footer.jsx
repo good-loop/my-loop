@@ -26,7 +26,7 @@ const Footer = ({className, leftFooter, rightFooter, style, showSocialMediaLinks
 		<div className='mainFooter flex-column p-3'>
 			<p>
 				&copy; 2016-2019 <a href='https://good-loop.com/good-news/index'>Good-Loop Ltd</a>, all rights reserved.<br />
-				<a href='https://www.good-loop.com/privacy-policy'>Privacy policy</a>
+				<a href='https://doc.good-loop.com/policy/privacy-policy.html'>Privacy policy</a>
 			</p>
 			<p>
 				Good-Loop&trade; is registered in Scotland, U.K. (No. SC548356)
