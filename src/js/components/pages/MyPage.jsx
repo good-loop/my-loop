@@ -131,10 +131,11 @@ const HowItWorksCard = () => {
 						<span className='sub-header'>a charity to support</span>
 					</div>
 				</div>
-				<div className='step-3 finger white p-1'>
+				<div className='step-3 finger white bg-gl-red p-1'>
 					<CircleChar>3</CircleChar>
 					<div className="step-desc">
 						<span className='header'>DONATE</span><br />
+						<div class="divider"></div>
 						<span className='sub-header'>
 							50% of the advert cost<span className="breaker"> </span>goes to the charity
 						</span>
@@ -156,8 +157,9 @@ const HowItWorksCard = () => {
 						<div className='loud sub-header'>IMPACT</div>
 					</div>
 					<div className='text-block'>
-						In 2018, Good-Loopers raised more than <strong><Counter currencySymbol='£' value={200000} animationLength={1000} /></strong> for charitable causes by signing up and watching adverts.<br/>
-						In 2019, we've already beaten that figure - and we're aiming for <strong>£1,000,000</strong>.
+						In 2020, Good-Loopers raised more than <strong><Counter currencySymbol='£' value={1000000} animationLength={1000} /></strong> for charitable causes by signing up and watching adverts.<br/>
+						{//In 2019, we've already beaten that figure - and we're aiming for <strong>£1,000,000</strong>.
+						}
 					</div>
 				</div>
 				<SignUpConnectCard />

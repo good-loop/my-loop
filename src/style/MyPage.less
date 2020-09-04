@@ -55,12 +55,13 @@
 		}
 		
 		.step-3 {
-			background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
-			// No radius on bottom corners, it looks weird with the fade
-			border-bottom-left-radius: 0;
-			border-bottom-right-radius: 0;
+			//background-image: linear-gradient(to bottom, @gl-red 0%, @gl-red 40%, fade(@gl-red, 0%) 90%);
 			// Make room at the bottom for balance
 			margin-bottom: 5rem;
+			.divider {
+				padding: 1px;
+				background: white;
+			}
 		}
 	}
 }
