@@ -158,8 +158,7 @@ const HowItWorksCard = () => {
 					</div>
 					<div className='text-block'>
 						In 2020, Good-Loopers raised more than <strong><Counter currencySymbol='£' value={1000000} animationLength={1000} /></strong> for charitable causes by signing up and watching adverts.<br/>
-						{//In 2019, we've already beaten that figure - and we're aiming for <strong>£1,000,000</strong>.
-						}
+						Help us achieve even more.
 					</div>
 				</div>
 				<SignUpConnectCard />
