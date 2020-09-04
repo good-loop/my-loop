@@ -400,7 +400,7 @@ const HowDoesItWork = ({ nvertiserName }) => {
 					</div>
 					<div className="col-md d-flex flex-column mt-5 mt-md-0">
 						<img src="/img/Graphic_video_with_red_swirl.scaled.400w.png" className="w-100" alt="choose to watch" />
-						2. When the users choosed to engage (by watching, swiping or clicking) they unlocked a donation, funded by {nvertiserName}.
+						2. When the users choose to engage (by watching, swiping or clicking) they unlocked a donation, funded by {nvertiserName}.
 					</div>
 					<div className="col-md d-flex flex-column mt-5 mt-md-0">
 						<img src="/img/Graphic_leafy_video.scaled.400w.png" className="w-100" alt="choose charity" />
