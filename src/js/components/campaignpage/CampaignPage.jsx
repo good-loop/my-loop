@@ -470,11 +470,7 @@ const AdvertCard = ({ ad, viewCountProp, donationTotal, totalViewCount }) => {
 		<div>
 			<div className="ad-card">
 				<div className="tablet-container">
-					{isPortraitMobile() ?
-						<img src="/img/mobilewebsite.PNG" className="tablet-bg" />
-						:
-						<img src="/img/websitetest.png" className="tablet-bg" />
-					}
+					<img src="/img/redcurve.svg" className="tablet-bg w-100 h-100"/>
 					<div className="tablet-ad-container">
 						<GoodLoopAd vertId={ad.id} size={size} nonce={`${size}${ad.id}`} production />
 					</div>
