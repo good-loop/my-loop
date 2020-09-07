@@ -34,6 +34,8 @@ import ListLoad from '../../base/components/ListLoad';
 import DevLink from './DevLink';
 import {LoginLink} from '../../base/components/LoginWidget';
 import ShareButton from '../ShareButton';
+import Helmet from 'react-helmet';
+import CampaignMeta from './CampaignMeta';
 
 /**
  * HACK hard-coded list of campaigns which have PDF versions
@@ -301,6 +303,9 @@ const CampaignPage = () => {
 	assignUnsetDonations();
 
 	return (<>
+		<Helmet>
+			<CampaignMeta campaignPage={campaignPage} nvertiserName={nvertiserName}/>
+		</Helmet>
 		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" logoScroll="/img/new-logo-with-text.svg"/>
 		<CSS css={campaignPage && campaignPage.customCss} />
 		<CSS css={branding.customCss} />
@@ -389,6 +394,7 @@ const campaignNameForAd = ad => {
 };
 
 const HowDoesItWork = ({ nvertiserName }) => {
+	const nvertiserNameNoTrail = nvertiserName.replace(/\'s$/g, "");
 	return (
 		<div className="bg-gl-light-pink py-5">
 			<div className="container py-5">
@@ -396,7 +402,7 @@ const HowDoesItWork = ({ nvertiserName }) => {
 				<div className="row mb-3 text-center align-items-start">
 					<div className="col-md d-flex flex-column">
 						<img src="/img//Graphic_tv.scaled.400w.png" className="w-100" alt="wrapped video" />
-						1. {nvertiserName}'s video ad was ‘wrapped’ into Good-loop’s ethical ad frame, as you can see on the video below.
+						1. {nvertiserNameNoTrail}'s video ad was ‘wrapped’ into Good-loop’s ethical ad frame, as you can see on the video below.
 					</div>
 					<div className="col-md d-flex flex-column mt-5 mt-md-0">
 						<img src="/img/Graphic_video_with_red_swirl.scaled.400w.png" className="w-100" alt="choose to watch" />
