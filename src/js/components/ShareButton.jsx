@@ -2,7 +2,12 @@ import React from 'react';
 import {Row} from 'reactstrap';
 
 /*
- * Takes prop url - must be provided!
+ * Produces a button with sharing links and dynamic meta, using ShareServlet
+ * Props:
+ * url - must be provided!
+ * title
+ * image
+ * description
  */
 class ShareButton extends React.Component {
 
@@ -12,9 +17,31 @@ class ShareButton extends React.Component {
 			showing: false
 		}
 	}
-
+	
 	render () {
-		let url = escape(this.props.url);
+
+		// Generate ShareServlet sharing url
+		let metaProps = this.props.meta;
+		if (!metaProps)
+			metaProps = this.props;
+		let params = [];
+		if (metaProps.title)
+			params.push('title=' + escape(metaProps.title));
+		if (metaProps.image)
+			params.push('image=' + escape(metaProps.image));
+		if (metaProps.description)
+			params.push('desc=' + escape(metaProps.description));
+		let url = "https://as.good-loop.com/share?"; //title=Foo&link=" + escape(this.props.url);
+		let paramCount = 0;
+		params.forEach (param => {
+			url += (paramCount != 0 ? "&" : "") + param;
+			paramCount ++;
+		});
+		url += (paramCount != 0 ? "&" : "") + "link=" + escape(this.props.url);
+		console.log("Sharing: " + url);
+		url = escape(url);
+		console.log("Escaped: " + url);
+
 		return (
 			<div className="position-relative">
 				<div className={"btn " + this.props.className} onClick={() => this.setState({showing: !this.state.showing})}><i className="fas fa-share-alt mr-2" />{this.props.children}</div>

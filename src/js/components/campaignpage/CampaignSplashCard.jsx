@@ -6,7 +6,7 @@ import printer from '../../base/utils/printer';
 import { space } from '../../base/utils/miscutils';
 import ShareButton from '../ShareButton';
 
-const SplashCard = ({ branding, pdf, campaignPage, donationValue, totalViewCount, adId, landing }) => {
+const SplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, totalViewCount, adId, landing }) => {
 	return (
 		<div className="impact-hub-splash">
 			<img src={campaignPage.bg ? campaignPage.bg : "/img/lightcurve.svg"} className={space("w-100", campaignPage.bg ? "splash-img" : "splash-curve")} alt="splash" />
@@ -42,7 +42,7 @@ const SplashCard = ({ branding, pdf, campaignPage, donationValue, totalViewCount
 			</div>
 			<div className="splash-buttons">
 				{pdf ? <a className="btn btn-primary mr-md-3" href={pdf}>Download in pdf</a> : null}
-				<ShareButton className="btn-transparent fill" url={window.location.href}>Share</ShareButton>
+				<ShareButton meta={shareMeta} className="btn-transparent fill" url={window.location.href}>Share</ShareButton>
 			</div>
 		</div>
 	);

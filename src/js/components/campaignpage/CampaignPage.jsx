@@ -34,8 +34,6 @@ import ListLoad from '../../base/components/ListLoad';
 import DevLink from './DevLink';
 import {LoginLink} from '../../base/components/LoginWidget';
 import ShareButton from '../ShareButton';
-import Helmet from 'react-helmet';
-import CampaignMeta from './CampaignMeta';
 
 /**
  * HACK hard-coded list of campaigns which have PDF versions
@@ -298,19 +296,23 @@ const CampaignPage = () => {
 	}
 
 	// Get name of advertiser from nvertiser if existing, or ad if not
-	let nvertiserName = (nvertiser && nvertiser.name) || ads[0].name;
+	const nvertiserName = (nvertiser && nvertiser.name) || ads[0].name;
+	const nvertiserNameNoTrail = nvertiserName.replace(/\'s$/g, "");
+
+	let shareButtonMeta = {
+		title: nvertiserNameNoTrail + "'s Good-Loop Impact - My-Loop",
+		image: campaignPage.bg ? campaignPage.bg : "https://testmy.good-loop.com/img/redcurve.svg",
+		description: "See " + nvertiserNameNoTrail + "'s impact from Good-Loop ethical advertising"
+	}
 
 	assignUnsetDonations();
 
 	return (<>
-		<Helmet>
-			<CampaignMeta campaignPage={campaignPage} nvertiserName={nvertiserName}/>
-		</Helmet>
 		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" logoScroll="/img/new-logo-with-text.svg"/>
 		<CSS css={campaignPage && campaignPage.customCss} />
 		<CSS css={branding.customCss} />
 		<div className="widepage CampaignPage text-center gl-btns">
-			<CampaignSplashCard branding={branding} pdf={pdf} campaignPage={campaignPage} donationValue={ndonationValue} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
+			<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaignPage} donationValue={ndonationValue} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
 
 			<HowDoesItWork nvertiserName={nvertiserName} />
 
@@ -348,7 +350,7 @@ const CampaignPage = () => {
 							<LoginLink><div className="btn btn-secondary w-100">Sign up</div></LoginLink>
 						</div>
 						<div className="col-md">
-							<ShareButton className="btn-transparent btn-white w-100 mt-3 mt-md-0" url={window.location.href}>Share the love</ShareButton>
+							<ShareButton className="btn-transparent btn-white w-100 mt-3 mt-md-0" meta={shareButtonMeta} url={window.location.href}>Share the love</ShareButton>
 						</div>
 					</div>
 					<div className="pb-5" />
