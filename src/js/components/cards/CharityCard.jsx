@@ -20,7 +20,7 @@ import { space } from '../../base/utils/miscutils';
  * Logo + £s + summaryDescription
  * @param {?Number} i - e.g. 0 for "first in the list". Used for bg colour
  */
-const CharityMiniCard = ({charity, donationValue, i, imageLeft}) => {
+const CharityMiniCard = ({charity, NGOid, donationValue, i}) => {
 	// HACK: prefer short description
 	let desc = charity.summaryDescription || charity.description || '';
 	// Cut descriptions down to 1 paragraph.
@@ -28,8 +28,6 @@ const CharityMiniCard = ({charity, donationValue, i, imageLeft}) => {
 	if (firstParagraph) {
 		desc = firstParagraph[0];
 	}
-	console.log("Charity mini card charity: " + charity.id);
-	console.log("NGO.id : " + NGO.id(charity));
 	
 	return ( 
 		<div className="col-md-4 charity-card mt-5 mt-md-0">
@@ -45,7 +43,7 @@ const CharityMiniCard = ({charity, donationValue, i, imageLeft}) => {
 					<MDText source={desc} />
 					<a href={charity.url} target="_blank" rel="noopener noreferrer">Go to charity website</a>
 				</div>
-				{NGO.id(charity)? <DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(NGO.id(charity))} target="_sogive">SoGive</DevLink> : null}
+				{NGOid? <DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(NGOid)} target="_sogive">SoGive</DevLink> : null}
 			</div>
 		</div>
 	);
