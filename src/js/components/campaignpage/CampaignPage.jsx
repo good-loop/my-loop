@@ -1,7 +1,7 @@
 /*
  * 
  */
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import Login from 'you-again';
 import _ from 'lodash';
 import { Container, Alert } from 'reactstrap';
@@ -134,9 +134,6 @@ const CampaignPage = () => {
 
 	// If it's remotely possible to have an ad now, we have it. Which request succeeded, if any?
 	let ads = pvAds.value.hits;
-	if (ads && !isAll()) {
-		ads = ads.slice(0, 10); // Limit to first 10 results unless we're on #campaign/all
-	}
 	if (!ads || !ads.length) {
 		return <Alert>Could not load adverts for {sq.query} {status}</Alert>; // No ads?!
 	}
@@ -422,62 +419,68 @@ const HowDoesItWork = ({ nvertiserName }) => {
  * List of adverts with some info about them (like views, dates)
  * @param {*} param0 
  */
-//{ ads, viewcount4campaign, ndonationValue, nvertiserName, totalViewCount }
-class AdvertsCatalogue extends React.Component {
+const AdvertsCatalogue = ({ ads, viewcount4campaign, ndonationValue, nvertiserName, totalViewCount }) => {
 
-	constructor (props) {
-		super(props);
-		this.state = {
-			selected: 0
+	const [selected, setSelected] = useState(0);
+
+	/** Picks one Ad (with a video) from each campaign to display as a sample.  */
+	let sampleAd4Campaign = {};
+	ads.forEach(ad => {
+		let cname = campaignNameForAd(ad);
+		if (sampleAd4Campaign[cname]) {
+			// Prioritise ads with a start and end time attached
+			let startProvided = !sampleAd4Campaign[cname].start && ad.start;
+			let endProvided = !sampleAd4Campaign[cname].end && ad.end;
+			// If the ad cannot provide a new value for start or end, skip it
+			if (!startProvided && !endProvided)
+				return;
 		}
-	}
+		if (!ad.videos || !ad.videos[0].url) return;
+		sampleAd4Campaign[cname] = ad;
+	});
 
-	render () {
-		/** Picks one Ad (with a video) from each campaign to display as a sample.  */
-		let sampleAd4Campaign = {};
-		this.props.ads.forEach(ad => {
-			let cname = campaignNameForAd(ad);
-			if (sampleAd4Campaign[cname]) return;
-			if (!ad.videos || !ad.videos[0].url) return;
-			sampleAd4Campaign[cname] = ad;
-		});
+	const sampleAds = Object.values(sampleAd4Campaign);
+	const selectedAd = sampleAds[selected];
 
-		// Make sure to only pick one if multiple are returned
-		const sampleAds = Object.values(sampleAd4Campaign);
-		const selectedAd = sampleAds[this.state.selected];
+	let views = viewCount(viewcount4campaign, selectedAd);
+	
+	if (sampleAds.length > 1)
+		views = totalViewCount;
 
-		return (<>
-			<Container fluid className="py-5">
-				<br />
-				<Container className="py-5">
-					<h2>Watch the {this.props.nvertiserName} ad that raised <Counter currencySymbol="£" sigFigs={4} value={this.props.ndonationValue} minimumFractionDigits={2} /> with<br />{printer.prettyNumber(viewCount(this.props.viewcount4campaign, selectedAd))} ad viewers</h2>
-					<AdvertCard
-						ad={selectedAd}
-						viewCountProp={viewCount(this.props.viewcount4campaign, selectedAd)}
-						donationTotal={this.props.ndonationValue}
-						totalViewCount={this.props.totalViewCount}
-					/>
-					{sampleAds.length > 1 &&
-						<div className="row">
-							{sampleAds.map(ad =>
-								<AdvertPreviewCard
-									ad={ad}
-								/>
-							)}
-						</div>
-					}
-					<a className="btn btn-primary mb-3 mb-md-0 mr-md-3" href="/">See all campaigns</a>
-					{//<a className="btn btn-transparent" href="TODO">Campaign performance & brand study</a>
-					}
-				</Container>
-			</Container>
-		</>);
-	}
+	views = printer.prettyNumber(views);
+
+	return (<>
+		<Container className="py-5">
+			<h2>Watch the {nvertiserName} ad{sampleAds.length > 1 ? "s" : ""} that raised <Counter currencySymbol="£" sigFigs={4} value={ndonationValue} minimumFractionDigits={2} /> with<br />{views} ad viewers</h2>
+			<AdvertCard
+				ad={selectedAd}
+				viewCountProp={views}
+				donationTotal={ndonationValue}
+				totalViewCount={totalViewCount}
+			/>
+			{sampleAds.length > 1 &&
+				<div className="row justify-content-center">
+					{sampleAds.map((ad, i) =>
+						<AdvertPreviewCard
+							key={i}
+							ad={ad}
+							selected={selectedAd == ad}
+							handleClick={() => setSelected(i)}
+						/>
+					)}
+				</div>
+			}
+			<br/>
+			<a className="btn btn-primary mb-3 mb-md-0 mr-md-3" href="/">See all campaigns</a>
+			{//<a className="btn btn-transparent" href="TODO">Campaign performance & brand study</a>
+			}
+		</Container>
+	</>);
 };
 
 const AdvertCard = ({ ad }) => {
 
-	const size = isPortraitMobile() ? 'portrait' : 'landscape';
+	const size = isPortraitMobile() ? 'mobile' : 'landscape';
 
 	return (
 		<div>
@@ -499,10 +502,29 @@ const AdvertCard = ({ ad }) => {
 	);
 };
 
-const AdvertPreviewCard = ({ad}) => {
+const AdvertPreviewCard = ({ad, handleClick, selected=false}) => {
+	let size = 'landscape';
+	
+	// Show when the campaign ran
+	// Fallback to ad creation date
+	const durationText = ad.start || ad.end ? <span>
+		{ ad.start ? <Misc.RoughDate date={ad.start} /> : ''}
+		{ ad.start && ad.end ? ' - ' : null}
+		{ad.end ? <Misc.RoughDate date={ad.end} /> : ''}
+	</span> : <span>
+		{ <Misc.RoughDate date={ad.created} /> }
+	</span>;
+
 	return (
-		<div className="col">
-			<h1>YO</h1>
+		<div className="col-md-3 col-6">
+			<div onClick={e => {e.preventDefault(); handleClick()}} className={"pointer-wrapper" + (selected ? " selected" : "")}>
+				<div className="ad-prev">
+					<GoodLoopAd vertId={ad.id} size={size} nonce={`${size}${ad.id}`} production />
+				</div>
+			</div>
+			<div>
+				{durationText}
+			</div>
 		</div>
 	);
 }

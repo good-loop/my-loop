@@ -37,7 +37,6 @@ const SignUpConnectCard = ({className}) => {
 			</p>
 			{signInOrConnected({ service: 'good-loop', xid: service2xid.email })}
 			{signInOrConnected({ service: 'twitter', xid: service2xid.twitter })}
-			{signInOrConnected({ service: 'facebook', xid: service2xid.facebook })}
 		</div>
 	);
 };
