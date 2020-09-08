@@ -77,7 +77,7 @@ const CtaBox: React.FC = () => {
 			<AB label='ctatext'>
 				<>
 					<h2>Turn Advertising into a Force for Good</h2>
-					<h4>Your time, attention, &amp; data is valuable.</h4>
+					<h4>Your time, attention, &amp; data are valuable.</h4>
 					<h4>Sign up and use this value for good.</h4>
 				</>
 				<>
