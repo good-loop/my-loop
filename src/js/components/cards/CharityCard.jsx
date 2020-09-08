@@ -15,6 +15,7 @@ import Money from '../../base/data/Money';
 import WhiteCircle from '../campaignpage/WhiteCircle';
 import DevLink from '../campaignpage/DevLink';
 import { space } from '../../base/utils/miscutils';
+import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
 
 /**
  * Logo + £s + summaryDescription
@@ -43,7 +44,7 @@ const CharityMiniCard = ({charity, NGOid, donationValue, i}) => {
 					<MDText source={desc} />
 					<a href={charity.url} target="_blank" rel="noopener noreferrer">Go to charity website</a>
 				</div>
-				{NGOid? <DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(NGOid)} target="_sogive">SoGive</DevLink> : null}
+				{NGOid? <DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(normaliseSogiveId(NGOid))} target="_sogive">SoGive</DevLink> : null}
 			</div>
 		</div>
 	);

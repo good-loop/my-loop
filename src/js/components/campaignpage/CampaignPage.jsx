@@ -35,20 +35,16 @@ import DevLink from './DevLink';
 import {LoginLink} from '../../base/components/LoginWidget';
 import ShareButton from '../ShareButton';
 
+
+const campaignPdfs = {
+	collectivecampaign : '/resources/Good-loop_H&M_campaign.pdf'
+};
 /**
  * HACK hard-coded list of campaigns which have PDF versions
  * TODO put this in portal or somewhere else
  * @param {Campaign} campaign 
  */
-const pdfLookup = (campaign) => {
-	
-	let pdf = {
-		"collectivecampaign" : "/resources/Good-loop_H&M_campaign.pdf"
-	}[campaign];
-
-	return pdf;
-
-}
+const pdfLookup = (campaign) => campaignPdfs[campaign];
 
 const tomsCampaigns = /(josh|sara|ella)/; // For matching TOMS campaign names needing special treatment
 /**
