@@ -21,6 +21,7 @@ PROJECT_USES_NPM='yes' # yes or no
 PROJECT_USES_WEBPACK='yes' #yes or no
 PROJECT_USES_JERBIL='no' #yes or no
 PROJECT_USES_WWAPPBASE_SYMLINK='yes'
+BRANCH='master' # e.g. feature/impact-hub -- ??What are the setup steps to do CI builds from a branch?? Do we need to change branch on the server??
 
 # Where is the test server?
 TARGET_SERVERS=(baker.good-loop.com)
@@ -66,7 +67,7 @@ function send_alert_email {
 # Git Cleanup Function -- More of a classic 'I type this too much, it should be a function', Function.
 function git_hard_set_to_master {
     ssh winterwell@$server "cd $1 && git gc --prune=now"
-    ssh winterwell@$server "cd $1 && git pull origin feature/impact-hub"
+    ssh winterwell@$server "cd $1 && git pull origin $BRANCH"
     ssh winterwell@$server "cd $1 && git reset --hard FETCH_HEAD"
 }
 
