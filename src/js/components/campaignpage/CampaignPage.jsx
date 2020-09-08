@@ -43,7 +43,7 @@ import ShareButton from '../ShareButton';
 const pdfLookup = (campaign) => {
 	
 	let pdf = {
-		"collectivecampaign" : "/resources/Good-loop_H&M_campaign.pdf"
+		//"collectivecampaign" : "/resources/Good-loop_H&M_campaign.pdf"
 	}[campaign];
 
 	return pdf;
