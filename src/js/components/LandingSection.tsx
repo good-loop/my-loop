@@ -32,7 +32,7 @@ const LandingSection = (): JSX.Element => {
 		<>
 			{/* 
 			//@ts-ignore */}
-			<MyLoopNavBar logo='/img/logo-in-pill.svg' backgroundColor='transparent' />
+			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" logoScroll="/img/new-logo-with-text.svg"/>
 			<div className="landing-bg">
 				{/* 
 				//@ts-ignore */}

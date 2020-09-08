@@ -16,44 +16,6 @@ body {
 	overflow-x: hidden;
 }
 
-// Campaign navbar styling for transparent and white on-scroll
-// NOTE: this will likely move to global navbar styling in future
-#campaign .navbar {
-	background: transparent;
-	transition: 0.2s;
-	.login-link {
-		text-shadow: none;
-		font-weight: 600;
-		color: #fff;
-		@media @md-max {
-			font-size: 0.7rem;
-		}
-		& a {
-			// !important will still not override the a ruling - so this is necessary
-			color: #fff;
-			font-size: 1rem;
-			@media @md-max {
-				font-size: 0.7rem;
-			}
-			&:hover {
-				text-decoration: none;
-			}
-		}
-		text-transform: uppercase;
-	}
-
-	&.scrolled {
-		background: white;
-		box-shadow: 0px 0px 5px rgba(0,0,0,0.75);
-		transition: 0.2s;
-		.login-link {
-			color: #AD2016;
-			& a {
-				color: #AD2016;
-			}
-		}
-	}
-}
 
 .CampaignPage {
 	background-color: #fff !important;
@@ -328,6 +290,7 @@ body {
 			}
 			.charity-quote-logo {
 				display: flex;
+				align-items: flex-start;
 				justify-content: flex-end;
 				img {
 					max-height: 150px;

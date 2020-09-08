@@ -50,6 +50,7 @@ const Charities = ({ charities }) => {
 		// Shallow copy charity obj
 		let charity = Object.assign({}, charityOriginal);
 		console.log(charity.id);
+		console.log(NGO.id(charity));
 		if ( ! NGO.id(charity)) {
 			console.warn("Charity without an id?!", charity);
 			return charity;
@@ -81,12 +82,13 @@ const Charities = ({ charities }) => {
 						<CharityMiniCard
 							i={i} key={NGO.id(charity)}
 							charity={charity}
+							NGOid={NGO.id(charity)}
 							donationValue={charity.donation}
 						/>
 					)}
 				</div>
 				<div className="py-5">
-					<h2>How are charities using the money raised?</h2>
+					<h2>How charities use the donations</h2>
 				</div>
 				{sogiveCharities.map((charity, i) =>
 					<CharityCard i={i} key={NGO.id(charity)} charity={charity} donationValue={charity.donation} />

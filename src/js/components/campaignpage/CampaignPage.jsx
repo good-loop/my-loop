@@ -43,7 +43,7 @@ import ShareButton from '../ShareButton';
 const pdfLookup = (campaign) => {
 	
 	let pdf = {
-		"collectivecampaign" : "/resources/Good-loop_H&M_campaign.pdf"
+		//"collectivecampaign" : "/resources/Good-loop_H&M_campaign.pdf"
 	}[campaign];
 
 	return pdf;
@@ -296,7 +296,14 @@ const CampaignPage = () => {
 	}
 
 	// Get name of advertiser from nvertiser if existing, or ad if not
-	let nvertiserName = (nvertiser && nvertiser.name) || ads[0].name;
+	const nvertiserName = (nvertiser && nvertiser.name) || ads[0].name;
+	const nvertiserNameNoTrail = nvertiserName.replace(/\'s$/g, "");
+
+	let shareButtonMeta = {
+		title: nvertiserNameNoTrail + "'s Good-Loop Impact - My-Loop",
+		image: campaignPage.bg ? campaignPage.bg : "https://testmy.good-loop.com/img/redcurve.svg",
+		description: "See " + nvertiserNameNoTrail + "'s impact from Good-Loop ethical advertising"
+	}
 
 	assignUnsetDonations();
 
@@ -305,7 +312,7 @@ const CampaignPage = () => {
 		<CSS css={campaignPage && campaignPage.customCss} />
 		<CSS css={branding.customCss} />
 		<div className="widepage CampaignPage text-center gl-btns">
-			<CampaignSplashCard branding={branding} pdf={pdf} campaignPage={campaignPage} donationValue={ndonationValue} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
+			<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaignPage} donationValue={ndonationValue} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
 
 			<HowDoesItWork nvertiserName={nvertiserName} />
 
@@ -343,7 +350,7 @@ const CampaignPage = () => {
 							<LoginLink><div className="btn btn-secondary w-100">Sign up</div></LoginLink>
 						</div>
 						<div className="col-md">
-							<ShareButton className="btn-transparent btn-white w-100 mt-3 mt-md-0" href="TODO">Share the love</ShareButton>
+							<ShareButton className="btn-transparent btn-white w-100 mt-3 mt-md-0" meta={shareButtonMeta} url={window.location.href}>Share the love</ShareButton>
 						</div>
 					</div>
 					<div className="pb-5" />
@@ -389,6 +396,9 @@ const campaignNameForAd = ad => {
 };
 
 const HowDoesItWork = ({ nvertiserName }) => {
+	// possessive form - names with terminal S just take an apostrophe, all others get "'s"
+	// EG Sharp's (brewery) ==> "Sharp's' video... " vs Sharp (electronics manufacturer) ==> "Sharp's video"
+	const nvertiserNamePoss = nvertiserName.replace(/s?$/, match => ({ s: 's\''}[match] || '\'s'));
 	return (
 		<div className="bg-gl-light-pink py-5">
 			<div className="container py-5">
@@ -396,11 +406,11 @@ const HowDoesItWork = ({ nvertiserName }) => {
 				<div className="row mb-3 text-center align-items-start">
 					<div className="col-md d-flex flex-column">
 						<img src="/img//Graphic_tv.scaled.400w.png" className="w-100" alt="wrapped video" />
-						1. {nvertiserName}'s video ad was ‘wrapped’ into Good-loop’s ethical ad frame, as you can see on the video below.
+						1. {nvertiserNamePoss} video ad was ‘wrapped’ into Good-loop’s ethical ad frame, as you can see on the video below.
 					</div>
 					<div className="col-md d-flex flex-column mt-5 mt-md-0">
 						<img src="/img/Graphic_video_with_red_swirl.scaled.400w.png" className="w-100" alt="choose to watch" />
-						2. When the users choosed to engage (by watching, swiping or clicking) they unlocked a donation, funded by {nvertiserName}.
+						2. When the users choose to engage (by watching, swiping or clicking) they unlocked a donation, funded by {nvertiserName}.
 					</div>
 					<div className="col-md d-flex flex-column mt-5 mt-md-0">
 						<img src="/img/Graphic_leafy_video.scaled.400w.png" className="w-100" alt="choose charity" />
@@ -416,61 +426,68 @@ const HowDoesItWork = ({ nvertiserName }) => {
  * List of adverts with some info about them (like views, dates)
  * @param {*} param0 
  */
-const AdvertsCatalogue = ({ ads, viewcount4campaign, ndonationValue, nvertiserName, totalViewCount }) => {
-	/** Picks one Ad (with a video) from each campaign to display as a sample.  */
-	let sampleAd4Campaign = {};
-	ads.forEach(ad => {
-		let cname = campaignNameForAd(ad);
-		if (sampleAd4Campaign[cname]) return;
-		if (!ad.videos || !ad.videos[0].url) return;
-		sampleAd4Campaign[cname] = ad;
-	});
-	const sampleAds = Object.values(sampleAd4Campaign);
+//{ ads, viewcount4campaign, ndonationValue, nvertiserName, totalViewCount }
+class AdvertsCatalogue extends React.Component {
 
-	return (<>
-		<Container fluid className="py-5">
-			<br />
-			<Container className="py-5">
-				{sampleAds.map(
-					ad => <Fragment key={ad.id} >
-						<h2>Watch the {nvertiserName} ad that raised <Counter currencySymbol="£" sigFigs={4} value={ndonationValue} minimumFractionDigits={2} /> with<br />{printer.prettyNumber(viewCount(viewcount4campaign, ad))} ad viewers</h2>
-						<AdvertCard
-							ad={ad}
-							viewCountProp={viewCount(viewcount4campaign, ad)}
-							donationTotal={ndonationValue}
-							totalViewCount={totalViewCount}
-						/>
-					</Fragment>
-				)}
-				<a className="btn btn-primary mb-3 mb-md-0 mr-md-3" href="/">See all campaigns</a>
-				{//<a className="btn btn-transparent" href="TODO">Campaign performance & brand study</a>
-				}
+	constructor (props) {
+		super(props);
+		this.state = {
+			selected: 0
+		}
+	}
+
+	render () {
+		/** Picks one Ad (with a video) from each campaign to display as a sample.  */
+		let sampleAd4Campaign = {};
+		this.props.ads.forEach(ad => {
+			let cname = campaignNameForAd(ad);
+			if (sampleAd4Campaign[cname]) return;
+			if (!ad.videos || !ad.videos[0].url) return;
+			sampleAd4Campaign[cname] = ad;
+		});
+
+		// Make sure to only pick one if multiple are returned
+		const sampleAds = Object.values(sampleAd4Campaign);
+		const selectedAd = sampleAds[this.state.selected];
+
+		return (<>
+			<Container fluid className="py-5">
+				<br />
+				<Container className="py-5">
+					<h2>Watch the {this.props.nvertiserName} ad that raised <Counter currencySymbol="£" sigFigs={4} value={this.props.ndonationValue} minimumFractionDigits={2} /> with<br />{printer.prettyNumber(viewCount(this.props.viewcount4campaign, selectedAd))} ad viewers</h2>
+					<AdvertCard
+						ad={selectedAd}
+						viewCountProp={viewCount(this.props.viewcount4campaign, selectedAd)}
+						donationTotal={this.props.ndonationValue}
+						totalViewCount={this.props.totalViewCount}
+					/>
+					{sampleAds.length > 1 &&
+						<div className="row">
+							{sampleAds.map(ad =>
+								<AdvertPreviewCard
+									ad={ad}
+								/>
+							)}
+						</div>
+					}
+					<a className="btn btn-primary mb-3 mb-md-0 mr-md-3" href="/">See all campaigns</a>
+					{//<a className="btn btn-transparent" href="TODO">Campaign performance & brand study</a>
+					}
+				</Container>
 			</Container>
-		</Container>
-	</>);
+		</>);
+	}
 };
 
-const AdvertCard = ({ ad, viewCountProp, donationTotal, totalViewCount }) => {
-	const durationText = ad.start || ad.end ? <>
-		This advert ran
-		{ ad.start ? <span> from <Misc.RoughDate date={ad.start} /></span> : null}
-		{ad.end ? <span> to <Misc.RoughDate date={ad.end} /></span> : ''}
-	</> : '';
-	const thisViewCount = viewCountProp || '';
+const AdvertCard = ({ ad }) => {
 
-	// Money raised by ad based on viewers
-	const moneyRaised = donationTotal * (thisViewCount / totalViewCount);
 	const size = isPortraitMobile() ? 'portrait' : 'landscape';
 
 	return (
 		<div>
 			<div className="ad-card">
 				<div className="tablet-container">
-					{isPortraitMobile() ?
-						<img src="/img/mobilewebsite.PNG" className="tablet-bg" />
-						:
-						<img src="/img/websitetest.png" className="tablet-bg" />
-					}
+					<img src="/img/redcurve.svg" className="tablet-bg w-100 h-100"/>
 					<div className="tablet-ad-container">
 						<GoodLoopAd vertId={ad.id} size={size} nonce={`${size}${ad.id}`} production />
 					</div>
@@ -485,6 +502,14 @@ const AdvertCard = ({ ad, viewCountProp, donationTotal, totalViewCount }) => {
 		</div>
 	);
 };
+
+const AdvertPreviewCard = ({ad}) => {
+	return (
+		<div className="col">
+			<h1>YO</h1>
+		</div>
+	);
+}
 
 const isAll = () => {
 	const slug = DataStore.getValue('location', 'path', 1);

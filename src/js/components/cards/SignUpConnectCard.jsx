@@ -31,7 +31,7 @@ const SignUpConnectCard = ({className}) => {
 
 	return (
 		<div className={space('social-media-card', className)}>
-			<p className="tagline">
+			<p style={{fontSize:"0.85rem"}}>
 				Boost your donations<br/>
 				and track your impact
 			</p>
