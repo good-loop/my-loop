@@ -426,48 +426,61 @@ const HowDoesItWork = ({ nvertiserName }) => {
  * List of adverts with some info about them (like views, dates)
  * @param {*} param0 
  */
-const AdvertsCatalogue = ({ ads, viewcount4campaign, ndonationValue, nvertiserName, totalViewCount }) => {
-	/** Picks one Ad (with a video) from each campaign to display as a sample.  */
-	let sampleAd4Campaign = {};
-	ads.forEach(ad => {
-		let cname = campaignNameForAd(ad);
-		if (sampleAd4Campaign[cname]) return;
-		if (!ad.videos || !ad.videos[0].url) return;
-		sampleAd4Campaign[cname] = ad;
-	});
+//{ ads, viewcount4campaign, ndonationValue, nvertiserName, totalViewCount }
+class AdvertsCatalogue extends React.Component {
 
-	// Make sure to only pick one if multiple are returned
-	const ad = Object.values(sampleAd4Campaign)[0];
+	constructor (props) {
+		super(props);
+		this.state = {
+			selected: 0
+		}
+	}
 
-	return (<>
-		<Container fluid className="py-5">
-			<br />
-			<Container className="py-5">
-				<h2>Watch the {nvertiserName} ad that raised <Counter currencySymbol="£" sigFigs={4} value={ndonationValue} minimumFractionDigits={2} /> with<br />{printer.prettyNumber(viewCount(viewcount4campaign, ad))} ad viewers</h2>
-				<AdvertCard
-					ad={ad}
-					viewCountProp={viewCount(viewcount4campaign, ad)}
-					donationTotal={ndonationValue}
-					totalViewCount={totalViewCount}
-				/>
-				<a className="btn btn-primary mb-3 mb-md-0 mr-md-3" href="/">See all campaigns</a>
-				{//<a className="btn btn-transparent" href="TODO">Campaign performance & brand study</a>
-				}
+	render () {
+		/** Picks one Ad (with a video) from each campaign to display as a sample.  */
+		let sampleAd4Campaign = {};
+		this.props.ads.forEach(ad => {
+			let cname = campaignNameForAd(ad);
+			if (sampleAd4Campaign[cname]) return;
+			if (!ad.videos || !ad.videos[0].url) return;
+			sampleAd4Campaign[cname] = ad;
+		});
+
+		// Make sure to only pick one if multiple are returned
+		const sampleAds = Object.values(sampleAd4Campaign);
+		const selectedAd = sampleAds[this.state.selected];
+
+		return (<>
+			<Container fluid className="py-5">
+				<br />
+				<Container className="py-5">
+					<h2>Watch the {this.props.nvertiserName} ad that raised <Counter currencySymbol="£" sigFigs={4} value={this.props.ndonationValue} minimumFractionDigits={2} /> with<br />{printer.prettyNumber(viewCount(this.props.viewcount4campaign, selectedAd))} ad viewers</h2>
+					<AdvertCard
+						ad={selectedAd}
+						viewCountProp={viewCount(this.props.viewcount4campaign, selectedAd)}
+						donationTotal={this.props.ndonationValue}
+						totalViewCount={this.props.totalViewCount}
+					/>
+					{sampleAds.length > 1 &&
+						<div className="row">
+							{sampleAds.map(ad =>
+								<AdvertPreviewCard
+									ad={ad}
+								/>
+							)}
+						</div>
+					}
+					<a className="btn btn-primary mb-3 mb-md-0 mr-md-3" href="/">See all campaigns</a>
+					{//<a className="btn btn-transparent" href="TODO">Campaign performance & brand study</a>
+					}
+				</Container>
 			</Container>
-		</Container>
-	</>);
+		</>);
+	}
 };
 
-const AdvertCard = ({ ad, viewCountProp, donationTotal, totalViewCount }) => {
-	const durationText = ad.start || ad.end ? <>
-		This advert ran
-		{ ad.start ? <span> from <Misc.RoughDate date={ad.start} /></span> : null}
-		{ad.end ? <span> to <Misc.RoughDate date={ad.end} /></span> : ''}
-	</> : '';
-	const thisViewCount = viewCountProp || '';
+const AdvertCard = ({ ad }) => {
 
-	// Money raised by ad based on viewers
-	const moneyRaised = donationTotal * (thisViewCount / totalViewCount);
 	const size = isPortraitMobile() ? 'portrait' : 'landscape';
 
 	return (
@@ -489,6 +502,14 @@ const AdvertCard = ({ ad, viewCountProp, donationTotal, totalViewCount }) => {
 		</div>
 	);
 };
+
+const AdvertPreviewCard = ({ad}) => {
+	return (
+		<div className="col">
+			<h1>YO</h1>
+		</div>
+	);
+}
 
 const isAll = () => {
 	const slug = DataStore.getValue('location', 'path', 1);

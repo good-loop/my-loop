@@ -1,5 +1,6 @@
 import React from 'react';
 import {Row} from 'reactstrap';
+import { encURI } from '../base/utils/miscutils';
 
 /*
  * Produces a button with sharing links and dynamic meta, using ShareServlet
@@ -21,26 +22,18 @@ class ShareButton extends React.Component {
 	render () {
 
 		// Generate ShareServlet sharing url
+		let url = new URL("https://as.good-loop.com/share");
 		let metaProps = this.props.meta;
 		if (!metaProps)
 			metaProps = this.props;
-		let params = [];
 		if (metaProps.title)
-			params.push('title=' + escape(metaProps.title));
+			url.searchParams.append('title', metaProps.title);
 		if (metaProps.image)
-			params.push('image=' + escape(metaProps.image));
+			url.searchParams.append('image', metaProps.image);
 		if (metaProps.description)
-			params.push('desc=' + escape(metaProps.description));
-		let url = "https://as.good-loop.com/share?"; //title=Foo&link=" + escape(this.props.url);
-		let paramCount = 0;
-		params.forEach (param => {
-			url += (paramCount != 0 ? "&" : "") + param;
-			paramCount ++;
-		});
-		url += (paramCount != 0 ? "&" : "") + "link=" + escape(this.props.url);
-		console.log("Sharing: " + url);
-		url = escape(url);
-		console.log("Escaped: " + url);
+			url.searchParams.append('desc', metaProps.description);
+		url.searchParams.append("link", this.props.url);
+		url = encURI(url.href);
 
 		return (
 			<div className="position-relative">
