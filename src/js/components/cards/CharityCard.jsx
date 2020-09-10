@@ -54,7 +54,7 @@ const CharityMiniCard = ({charity, NGOid, donationValue, i}) => {
  * TODO can standardise this with brand logos
  * @param {?boolean} link true to make the logo a link
  */
-const CharityLogo = ({charity, link, className}) => {
+const CharityLogo = ({charity, className, link=false}) => {
 	// 'logo' class forces the logos to be too small for the circle - so leaving it out
 	let $logo = <img className={className} src={charity.logo} alt={charity.name} />;
 	if ( ! charity.logo) {
@@ -67,5 +67,7 @@ const CharityLogo = ({charity, link, className}) => {
 	}
 	return $logo;
 };
+
+export {CharityLogo};
 
 export default CharityMiniCard;

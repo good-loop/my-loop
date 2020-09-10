@@ -9,6 +9,9 @@ import Counter from '../../base/components/Counter';
 import { space } from '../../base/utils/miscutils';
 import printer from '../../base/utils/printer';
 import MDText from '../../base/components/MDText';
+import WhiteCircle from './WhiteCircle';
+import { CharityLogo } from '../cards/CharityCard';
+import DevLink from './DevLink';
 
 /**
  * HACK hardcode some thank you messages.
@@ -92,6 +95,7 @@ const Charities = ({ charities }) => {
 						/>
 					)}
 				</div>
+				<AlsoSupported charities={sogiveCharitiesWithoutDonations} />
 				<div className="py-5">
 					<h2>How charities use the donations</h2>
 				</div>
@@ -117,7 +121,6 @@ const CharityCard = ({ charity, donationValue, i }) => {
 	}
 
 	const quote = tq(charity);
-	console.log("================= Charity " + charity.id + " quote: " + quote);
 	let img = (quote && quote.img) || charity.images;
 
 	// TODO let's reduce the use of custom css classes (e.g. charity-quote-img etc below)
@@ -170,7 +173,25 @@ const Impact = ({ charity, donationValue }) => {
 };
 
 const AlsoSupported = ({charities}) => {
-	
+	return (charities.length ? <>
+		<div className="flex-row justify-content-between">
+			<div className="stub-divider mx-0"></div>
+			<div className="stub-divider mx-0"></div>
+		</div>
+		<h2>Also supporting</h2>
+		<div className="pt-3 row justify-content-center">
+			{charities.map(charity => <div className="col-md-3 col-4">
+				<WhiteCircle className="mb-5 w-50 mx-auto">
+					<CharityLogo charity={charity} link/>
+				</WhiteCircle>
+				{normaliseSogiveId(charity.id)? <DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">SoGive</DevLink> : null}
+			</div>)}
+		</div>
+		<div className="flex-row justify-content-between">
+			<div className="stub-divider mx-0"></div>
+			<div className="stub-divider mx-0"></div>
+		</div>
+	</> : null);
 }
 
 export default Charities;
