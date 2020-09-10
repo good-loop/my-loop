@@ -3,7 +3,7 @@ import { Container } from 'reactstrap';
 import ActionMan from '../../plumbing/ActionMan';
 import CharityMiniCard from '../cards/CharityCard';
 import Money from '../../base/data/Money';
-import NGO from '../../base/data/NGO';
+import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
 import C from '../../C';
 import Counter from '../../base/components/Counter';
 import { space } from '../../base/utils/miscutils';
@@ -19,7 +19,7 @@ import MDText from '../../base/components/MDText';
  * @returns ?{img:?string, quote:string, source:string} mostly returns null
  */
 const tq = charity => {
-	let cid = NGO.id(charity);
+	let cid = normaliseSogiveId(charity.id);
 	return {
 		helenbamber: {
 			quote: `"That is absolutely fantastic news, thank you so much! Congratulations everyone on a successful Spring/Summer Campaign! 
@@ -42,22 +42,23 @@ challenges facing our planet."`,
  * @param {!NGO[]} charities 
  */
 const Charities = ({ charities }) => {
-	// paranoia: filter nulls - is this needed??
-	charities = charities.filter(x => x);
+	let dupeIds = [];
 	// augment with SoGive data
 	let sogiveCharities = charities.map(charityOriginal => {
 
 		// Shallow copy charity obj
 		let charity = Object.assign({}, charityOriginal);
-		console.log(charity.id);
-		console.log(NGO.id(charity));
-		if ( ! NGO.id(charity)) {
+		if ( ! normaliseSogiveId(charity.id)) {
 			console.warn("Charity without an id?!", charity);
 			return charity;
 		}
-
+		// Remove duplicates
+		if (dupeIds.includes(normaliseSogiveId(charity.id)))
+			return;
+		dupeIds.push(normaliseSogiveId(charity.id));
 		// NB: the lower-level ServerIOBase.js helps patch mismatches between GL and SoGive ids
-		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: NGO.id(charity), status: C.KStatus.PUBLISHED });
+		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: normaliseSogiveId(charity.id), status: C.KStatus.PUBLISHED });
+		console.log('****** Got SoGive data for charity ' + charity.id, pvCharity.value);
 		if (!pvCharity.value) return charity; // no extra data yet
 		// merge, preferring SoGive data
 		// Prefer SoGive for now as the page is designed to work with generic info - and GL data is often campaign/player specific
@@ -70,6 +71,13 @@ const Charities = ({ charities }) => {
 
 		return charity;
 	});
+	// Remove null entries
+	sogiveCharities = sogiveCharities.filter(x => x);
+	sogiveCharities.forEach(charity => {
+		console.log("_++++++++++++++++++ Charity has donation " + charity.donation);
+	});
+	let sogiveCharitiesWithDonations = sogiveCharities.filter(c => c.donation); // Get rid of charities with no logged donations.
+	let sogiveCharitiesWithoutDonations = sogiveCharities.filter(c => !c.donation); // Keep other charities for the "Also Supported" section
 
 	return (
 		<div className="charity-card-container bg-gl-light-pink">
@@ -80,9 +88,9 @@ const Charities = ({ charities }) => {
 				<div className="row pb-5 justify-content-center">
 					{sogiveCharities.map((charity, i) =>
 						<CharityMiniCard
-							i={i} key={NGO.id(charity)}
+							i={i} key={normaliseSogiveId(charity.id)}
 							charity={charity}
-							NGOid={NGO.id(charity)}
+							NGOid={normaliseSogiveId(charity.id)}
 							donationValue={charity.donation}
 						/>
 					)}
@@ -91,7 +99,7 @@ const Charities = ({ charities }) => {
 					<h2>How charities use the donations</h2>
 				</div>
 				{sogiveCharities.map((charity, i) =>
-					<CharityCard i={i} key={NGO.id(charity)} charity={charity} donationValue={charity.donation} />
+					<CharityCard i={i} key={normaliseSogiveId(charity.id)} charity={charity} donationValue={charity.donation} />
 				)}
 			</Container>
 		</div>
@@ -112,7 +120,6 @@ const CharityCard = ({ charity, donationValue, i }) => {
 	}
 
 	const quote = tq(charity);
-	console.log("Quote: " + quote);
 	let img = (quote && quote.img) || charity.images;
 
 	// TODO let's reduce the use of custom css classes (e.g. charity-quote-img etc below)
@@ -130,7 +137,7 @@ const CharityCard = ({ charity, donationValue, i }) => {
 				</div>
 				<div className="charity-quote-text">
 					{donationValue ? <div className="w-100"><h2><Counter currencySymbol="&pound;" value={donationValue} /> raised</h2></div> : null}
-					{charity.simpleImpact ? <Impact impact={charity} donationValue={donationValue} /> : null}
+					{charity.simpleImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
 					{!charity.simpleImpact && !quote ? <MDText source={desc} /> : null}
 				</div>
@@ -146,10 +153,9 @@ const CharityCard = ({ charity, donationValue, i }) => {
  * @param {Money} donationValue
  */
 const Impact = ({ charity, donationValue }) => {
-
 	// Get charity impacts from impact model, if any data on it exists
 	let impact = "";
-	let donationsMoney = new Money(charity.donation);
+	let donationsMoney = new Money(donationValue);
 	// Attempt to get data from special field first, simple and easy
 	if (charity.simpleImpact) {
 		if (!charity.simpleImpact.name || !charity.simpleImpact.costPerBeneficiary || !donationValue) {
@@ -164,5 +170,9 @@ const Impact = ({ charity, donationValue }) => {
 	
 	return <b>{impact}</b>;
 };
+
+const AlsoSupported = ({charities}) => {
+	
+}
 
 export default Charities;
