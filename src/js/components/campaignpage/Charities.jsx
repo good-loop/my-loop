@@ -80,14 +80,14 @@ const Charities = ({ charities }) => {
 			</div>
 			<Container className="py-5">
 				<div className="row pb-5 justify-content-center">
-					{sogiveCharities.map((charity, i) =>
-						<CharityMiniCard
+					{sogiveCharities.map((charity, i) => {
+						return <CharityMiniCard
 							i={i} key={normaliseSogiveId(charity.id)}
 							charity={charity}
 							NGOid={normaliseSogiveId(charity.id)}
 							donationValue={charity.donation}
 						/>
-					)}
+					})}
 				</div>
 				<div className="py-5">
 					<h2>How charities use the donations</h2>
@@ -114,7 +114,6 @@ const CharityCard = ({ charity, donationValue, i }) => {
 	}
 
 	const quote = tq(charity);
-	console.log("Quote: " + quote);
 	let img = (quote && quote.img) || charity.images;
 
 	// TODO let's reduce the use of custom css classes (e.g. charity-quote-img etc below)
@@ -132,7 +131,7 @@ const CharityCard = ({ charity, donationValue, i }) => {
 				</div>
 				<div className="charity-quote-text">
 					{donationValue ? <div className="w-100"><h2><Counter currencySymbol="&pound;" value={donationValue} /> raised</h2></div> : null}
-					{charity.simpleImpact ? <Impact impact={charity} donationValue={donationValue} /> : null}
+					{charity.simpleImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
 					{!charity.simpleImpact && !quote ? <MDText source={desc} /> : null}
 				</div>
@@ -148,7 +147,6 @@ const CharityCard = ({ charity, donationValue, i }) => {
  * @param {Money} donationValue
  */
 const Impact = ({ charity, donationValue }) => {
-
 	// Get charity impacts from impact model, if any data on it exists
 	let impact = "";
 	let donationsMoney = new Money(charity.donation);
