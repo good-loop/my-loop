@@ -9,6 +9,9 @@ import Counter from '../../base/components/Counter';
 import { space } from '../../base/utils/miscutils';
 import printer from '../../base/utils/printer';
 import MDText from '../../base/components/MDText';
+import WhiteCircle from './WhiteCircle';
+import { CharityLogo } from '../cards/CharityCard';
+import DevLink from './DevLink';
 
 /**
  * HACK hardcode some thank you messages.
@@ -26,8 +29,16 @@ const tq = charity => {
 			source: "Sophie at Helen Bamber"
 		},
 
+<<<<<<< HEAD
 		wwf: {
 			quote: `"The money raised through the H&M campaign will support WWF UK's vital work, fighting for a world where people and nature can thrive, and continue to support schools, teachers and pupils to develop their knowledge and understanding of the environmental challenges facing our planet."`,
+=======
+		"wwf-uk": {
+			quote: `"The money raised through the H&M campaign will support WWF UK's vital work, fighting for a world where people and nature can
+thrive, and continue to support schools, teachers and pupils to
+develop their knowledge and understanding of the environmental
+challenges facing our planet."`,
+>>>>>>> master
 			source: "Chiara Cadei, WWF"
 		}
 	}[cid];
@@ -54,13 +65,13 @@ const Charities = ({ charities }) => {
 		dupeIds.push(normaliseSogiveId(charity.id));
 		// NB: the lower-level ServerIOBase.js helps patch mismatches between GL and SoGive ids
 		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: normaliseSogiveId(charity.id), status: C.KStatus.PUBLISHED });
+		console.log('****** Got SoGive data for charity ' + charity.id, pvCharity.value);
 		if (!pvCharity.value) return charity; // no extra data yet
 		// merge, preferring SoGive data
 		// Prefer SoGive for now as the page is designed to work with generic info - and GL data is often campaign/player specific
 		// TODO: review this
 		// NB: This merge is a shallow copy, so the objects can then be shallow edited without affecting other components
 		charity = Object.assign(charity, pvCharity.value);
-
 		// HACK: charity objs have conflicting IDs, force NGO to use id instead of @id
 		charity['@id'] = undefined;
 
@@ -69,6 +80,9 @@ const Charities = ({ charities }) => {
 	// Remove null entries
 	sogiveCharities = sogiveCharities.filter(x => x);
 
+	let sogiveCharitiesWithDonations = sogiveCharities.filter(c => c.donation); // Get rid of charities with no logged donations.
+	let sogiveCharitiesWithoutDonations = sogiveCharities.filter(c => !c.donation); // Keep other charities for the "Also Supported" section
+
 	return (
 		<div className="charity-card-container bg-gl-light-pink">
 			<div className="py-5">
@@ -76,7 +90,7 @@ const Charities = ({ charities }) => {
 			</div>
 			<Container className="py-5">
 				<div className="row pb-5 justify-content-center">
-					{sogiveCharities.map((charity, i) =>
+					{sogiveCharitiesWithDonations.map((charity, i) =>
 						<CharityMiniCard
 							i={i} key={normaliseSogiveId(charity.id)}
 							charity={charity}
@@ -85,10 +99,11 @@ const Charities = ({ charities }) => {
 						/>
 					)}
 				</div>
+				<AlsoSupported charities={sogiveCharitiesWithoutDonations} />
 				<div className="py-5">
 					<h2>How charities use the donations</h2>
 				</div>
-				{sogiveCharities.map((charity, i) =>
+				{sogiveCharitiesWithDonations.map((charity, i) =>
 					<CharityCard i={i} key={normaliseSogiveId(charity.id)} charity={charity} donationValue={charity.donation} />
 				)}
 			</Container>
@@ -110,7 +125,6 @@ const CharityCard = ({ charity, donationValue, i }) => {
 	}
 
 	const quote = tq(charity);
-	console.log("Quote: " + quote);
 	let img = (quote && quote.img) || charity.images;
 
 	// TODO let's reduce the use of custom css classes (e.g. charity-quote-img etc below)
@@ -128,9 +142,9 @@ const CharityCard = ({ charity, donationValue, i }) => {
 				</div>
 				<div className="charity-quote-text">
 					{donationValue ? <div className="w-100"><h2><Counter currencySymbol="&pound;" value={donationValue} /> raised</h2></div> : null}
-					{charity.simpleImpact ? <Impact impact={charity} donationValue={donationValue} /> : null}
+					{charity.simpleImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
-					{!charity.simpleImpact && !quote ? <MDText source={desc} /> : null}
+					{!quote ? <MDText source={desc} /> : null}
 				</div>
 			</div>
 		</div>
@@ -144,10 +158,9 @@ const CharityCard = ({ charity, donationValue, i }) => {
  * @param {Money} donationValue
  */
 const Impact = ({ charity, donationValue }) => {
-
 	// Get charity impacts from impact model, if any data on it exists
 	let impact = "";
-	let donationsMoney = new Money(charity.donation);
+	let donationsMoney = new Money(donationValue);
 	// Attempt to get data from special field first, simple and easy
 	if (charity.simpleImpact) {
 		if (!charity.simpleImpact.name || !charity.simpleImpact.costPerBeneficiary || !donationValue) {
@@ -156,11 +169,33 @@ const Impact = ({ charity, donationValue }) => {
 		let name = charity.simpleImpact.name;
 		// TODO process plural/singular ??copy code from SoGive?
 		name = name.replace(/\(singular: (.*)\)/g, "");
-		let numOfImpact = prettyNumber(Math.round(Money.divide(donationsMoney, charity.simpleImpact.costPerBeneficiary)));
+		let numOfImpact = printer.prettyNumber(Math.round(Money.divide(donationsMoney, charity.simpleImpact.costPerBeneficiary)));
 		impact = numOfImpact + " " + name;
 	}
 	
 	return <b>{impact}</b>;
 };
+
+const AlsoSupported = ({charities}) => {
+	return (charities.length ? <>
+		<div className="flex-row justify-content-between">
+			<div className="stub-divider mx-0"></div>
+			<div className="stub-divider mx-0"></div>
+		</div>
+		<h2>Also supporting</h2>
+		<div className="pt-3 row justify-content-center">
+			{charities.map(charity => <div className="col-md-3 col-4">
+				<WhiteCircle className="mb-5 w-50 mx-auto">
+					<CharityLogo charity={charity} link/>
+				</WhiteCircle>
+				{normaliseSogiveId(charity.id)? <DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">SoGive</DevLink> : null}
+			</div>)}
+		</div>
+		<div className="flex-row justify-content-between">
+			<div className="stub-divider mx-0"></div>
+			<div className="stub-divider mx-0"></div>
+		</div>
+	</> : null);
+}
 
 export default Charities;
