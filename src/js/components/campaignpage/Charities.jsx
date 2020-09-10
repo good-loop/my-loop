@@ -158,7 +158,7 @@ const Impact = ({ charity, donationValue }) => {
 		let name = charity.simpleImpact.name;
 		// TODO process plural/singular ??copy code from SoGive?
 		name = name.replace(/\(singular: (.*)\)/g, "");
-		let numOfImpact = prettyNumber(Math.round(Money.divide(donationsMoney, charity.simpleImpact.costPerBeneficiary)));
+		let numOfImpact = printer.prettyNumber(Math.round(Money.divide(donationsMoney, charity.simpleImpact.costPerBeneficiary)));
 		impact = numOfImpact + " " + name;
 	}
 	
