@@ -259,7 +259,7 @@ const CampaignPage = () => {
 			} return char;
 		});
 
-		charities = charities.filter(c => c.donation); // Get rid of charities with no logged donations.
+		//charities = charities.filter(c => c.donation); // Get rid of charities with no logged donations.
 		const donationTotalMinusUnset = Object.values(charities).reduce((t, { donation }) => t + donation, 0);
 		charities = charities.map(e => {
 			const percentage = e.donation * 100 / donationTotalMinusUnset;

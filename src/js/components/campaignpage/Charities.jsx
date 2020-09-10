@@ -58,6 +58,7 @@ const Charities = ({ charities }) => {
 		dupeIds.push(normaliseSogiveId(charity.id));
 		// NB: the lower-level ServerIOBase.js helps patch mismatches between GL and SoGive ids
 		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: normaliseSogiveId(charity.id), status: C.KStatus.PUBLISHED });
+		console.log('****** Got SoGive data for charity ' + charity.id, pvCharity.value);
 		if (!pvCharity.value) return charity; // no extra data yet
 		// merge, preferring SoGive data
 		// Prefer SoGive for now as the page is designed to work with generic info - and GL data is often campaign/player specific
@@ -72,6 +73,11 @@ const Charities = ({ charities }) => {
 	});
 	// Remove null entries
 	sogiveCharities = sogiveCharities.filter(x => x);
+	sogiveCharities.forEach(charity => {
+		console.log("_++++++++++++++++++ Charity has donation " + charity.donation);
+	});
+	let sogiveCharitiesWithDonations = sogiveCharities.filter(c => c.donation); // Get rid of charities with no logged donations.
+	let sogiveCharitiesWithoutDonations = sogiveCharities.filter(c => !c.donation); // Keep other charities for the "Also Supported" section
 
 	return (
 		<div className="charity-card-container bg-gl-light-pink">
@@ -80,14 +86,14 @@ const Charities = ({ charities }) => {
 			</div>
 			<Container className="py-5">
 				<div className="row pb-5 justify-content-center">
-					{sogiveCharities.map((charity, i) => {
-						return <CharityMiniCard
+					{sogiveCharities.map((charity, i) =>
+						<CharityMiniCard
 							i={i} key={normaliseSogiveId(charity.id)}
 							charity={charity}
 							NGOid={normaliseSogiveId(charity.id)}
 							donationValue={charity.donation}
 						/>
-					})}
+					)}
 				</div>
 				<div className="py-5">
 					<h2>How charities use the donations</h2>
@@ -149,7 +155,7 @@ const CharityCard = ({ charity, donationValue, i }) => {
 const Impact = ({ charity, donationValue }) => {
 	// Get charity impacts from impact model, if any data on it exists
 	let impact = "";
-	let donationsMoney = new Money(charity.donation);
+	let donationsMoney = new Money(donationValue);
 	// Attempt to get data from special field first, simple and easy
 	if (charity.simpleImpact) {
 		if (!charity.simpleImpact.name || !charity.simpleImpact.costPerBeneficiary || !donationValue) {
@@ -164,5 +170,9 @@ const Impact = ({ charity, donationValue }) => {
 	
 	return <b>{impact}</b>;
 };
+
+const AlsoSupported = ({charities}) => {
+	
+}
 
 export default Charities;
