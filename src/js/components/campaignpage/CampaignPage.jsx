@@ -255,16 +255,21 @@ const CampaignPage = () => {
 		}
 		charities = charities.map(char => {
 			if (ndonByCid && ndonByCid[char.id]) { // if the charities have been edited after the campaign they might be missing values.
-				return { ...char, donation: Math.floor(ndonByCid[char.id].value) };
-			} return char;
+				let newChar = { ...char, donation: Math.floor(ndonByCid[char.id].value) };
+				if (!newChar.donation) newChar.donation = 0; // Some charities were giving undefined donations - make sure their 0 or they will bring up NaNs in calculations
+				return newChar;
+			}
+			let newChar = Object.assign({}, char);
+			if (!newChar.donation) newChar.donation = 0; // MAKE SURE donations are 0, not undefined or otherwise falsey
+			return newChar;
 		});
 
-		//charities = charities.filter(c => c.donation); // Get rid of charities with no logged donations.
-		const donationTotalMinusUnset = Object.values(charities).reduce((t, { donation }) => t + donation, 0);
+		const donationTotalMinusUnset = charities.reduce((t, { donation }) => t + donation, 0);
 		charities = charities.map(e => {
 			const percentage = e.donation * 100 / donationTotalMinusUnset;
 			const calculatedDonation = percentage * ndonationValue / 100;
-			return { ...e, donation: calculatedDonation, donationPercentage: percentage };
+			let newChar = { ...e, donation: calculatedDonation, donationPercentage: percentage };
+			return newChar;
 		});
 	};
 
