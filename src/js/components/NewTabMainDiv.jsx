@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import Login from 'you-again';
 import { assert } from 'sjtest';
-import { modifyHash, randomPick, encURI, space, stopEvent } from '../base/utils/miscutils';
-import {Card, Form, Button, CardTitle, Row, Col, Badge} from 'reactstrap';
+import { modifyHash, randomPick, encURI, space, stopEvent, ellipsize } from '../base/utils/miscutils';
+import {Card, Form, Button, CardTitle, Row, Col, Badge, CardBody, CardFooter} from 'reactstrap';
 
 // Plumbing
 import DataStore from '../base/plumbing/DataStore';
@@ -71,6 +71,7 @@ const WebtopPage = () => {
 				</Card>
 
 				<Row>
+					<h2 className='text-dark bg-light'>What charity would you like to support?</h2>
 					{charities.map(c => <NewTabCharityCard key={c} cid={c} />)}
 				</Row>
 
@@ -132,19 +133,21 @@ const NewTabCharityCard = ({cid}) => {
 	if (firstParagraph) {
 		desc = firstParagraph[0];
 	}
+	desc = ellipsize(desc, 240);
 
 	let img = charity.images;
 	let selected = false; // TODO user preferences
 
-	return (<Col sm={12} md={6} ><Card body selected={selected}>
-		<div className='flex-row'>
-			{img? <img src={img} alt="charity" style={{maxHeight:'100%',maxWidth:'35%'}} /> : null}
-			<div>
-				<img src={charity.logo} alt="logo" className='logo-large' style={{height:'100%',overflow:'hidden',marginTop:0,marginLeft:"-1.25rem"}} />
-				<MDText source={desc} />
-			</div>
-		</div>
-		<Button color={selected?'secondary':'primary'} onClick={e => toggleCharitySelect(cid)}>{selected? "select" : "de-select"}</Button>
+	return (<Col sm={12} md={4} ><Card selected={selected}>
+		{img && <img src={img} alt="charity" className='card-img-top'/>}	
+		<CardBody>
+			<CardTitle>{charity.name}</CardTitle>
+			<img src={charity.logo} alt="logo" className='logo-large' style={{height:'100%',overflow:'hidden',marginTop:0,marginLeft:"-1.25rem"}} />
+			<MDText source={desc} />
+		</CardBody>
+		<CardFooter>
+			<Button color={selected?'secondary':'primary'} onClick={e => toggleCharitySelect(cid)}>{selected? "select" : "de-select"}</Button>
+		</CardFooter>
 	</Card></Col>
 	);
 };
