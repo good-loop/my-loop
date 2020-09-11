@@ -9,6 +9,9 @@ import Counter from '../../base/components/Counter';
 import { space } from '../../base/utils/miscutils';
 import printer from '../../base/utils/printer';
 import MDText from '../../base/components/MDText';
+import WhiteCircle from './WhiteCircle';
+import { CharityLogo } from '../cards/CharityCard';
+import DevLink from './DevLink';
 
 /**
  * HACK hardcode some thank you messages.
@@ -27,7 +30,7 @@ const tq = charity => {
 			source: "Sophie at Helen Bamber"
 		},
 
-		"wwf": {
+		"wwf-uk": {
 			quote: `"The money raised through the H&M campaign will support WWF UK's vital work, fighting for a world where people and nature can
 thrive, and continue to support schools, teachers and pupils to
 develop their knowledge and understanding of the environmental
@@ -65,7 +68,6 @@ const Charities = ({ charities }) => {
 		// TODO: review this
 		// NB: This merge is a shallow copy, so the objects can then be shallow edited without affecting other components
 		charity = Object.assign(charity, pvCharity.value);
-
 		// HACK: charity objs have conflicting IDs, force NGO to use id instead of @id
 		charity['@id'] = undefined;
 
@@ -73,9 +75,7 @@ const Charities = ({ charities }) => {
 	});
 	// Remove null entries
 	sogiveCharities = sogiveCharities.filter(x => x);
-	sogiveCharities.forEach(charity => {
-		console.log("_++++++++++++++++++ Charity has donation " + charity.donation);
-	});
+
 	let sogiveCharitiesWithDonations = sogiveCharities.filter(c => c.donation); // Get rid of charities with no logged donations.
 	let sogiveCharitiesWithoutDonations = sogiveCharities.filter(c => !c.donation); // Keep other charities for the "Also Supported" section
 
@@ -86,7 +86,7 @@ const Charities = ({ charities }) => {
 			</div>
 			<Container className="py-5">
 				<div className="row pb-5 justify-content-center">
-					{sogiveCharities.map((charity, i) =>
+					{sogiveCharitiesWithDonations.map((charity, i) =>
 						<CharityMiniCard
 							i={i} key={normaliseSogiveId(charity.id)}
 							charity={charity}
@@ -95,10 +95,11 @@ const Charities = ({ charities }) => {
 						/>
 					)}
 				</div>
+				<AlsoSupported charities={sogiveCharitiesWithoutDonations} />
 				<div className="py-5">
 					<h2>How charities use the donations</h2>
 				</div>
-				{sogiveCharities.map((charity, i) =>
+				{sogiveCharitiesWithDonations.map((charity, i) =>
 					<CharityCard i={i} key={normaliseSogiveId(charity.id)} charity={charity} donationValue={charity.donation} />
 				)}
 			</Container>
@@ -139,7 +140,7 @@ const CharityCard = ({ charity, donationValue, i }) => {
 					{donationValue ? <div className="w-100"><h2><Counter currencySymbol="&pound;" value={donationValue} /> raised</h2></div> : null}
 					{charity.simpleImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
-					{!charity.simpleImpact && !quote ? <MDText source={desc} /> : null}
+					{!quote ? <MDText source={desc} /> : null}
 				</div>
 			</div>
 		</div>
@@ -172,7 +173,25 @@ const Impact = ({ charity, donationValue }) => {
 };
 
 const AlsoSupported = ({charities}) => {
-	
+	return (charities.length ? <>
+		<div className="flex-row justify-content-between">
+			<div className="stub-divider mx-0"></div>
+			<div className="stub-divider mx-0"></div>
+		</div>
+		<h2>Also supporting</h2>
+		<div className="pt-3 row justify-content-center">
+			{charities.map(charity => <div className="col-md-3 col-4">
+				<WhiteCircle className="mb-5 w-50 mx-auto">
+					<CharityLogo charity={charity} link/>
+				</WhiteCircle>
+				{normaliseSogiveId(charity.id)? <DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">SoGive</DevLink> : null}
+			</div>)}
+		</div>
+		<div className="flex-row justify-content-between">
+			<div className="stub-divider mx-0"></div>
+			<div className="stub-divider mx-0"></div>
+		</div>
+	</> : null);
 }
 
 export default Charities;
