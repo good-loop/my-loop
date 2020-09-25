@@ -55,8 +55,14 @@ const CharityMiniCard = ({charity, NGOid, donationValue, i}) => {
  * @param {?boolean} link true to make the logo a link
  */
 const CharityLogo = ({charity, className, link=false}) => {
+	// Check for SVG and use specific width if so
+	let svgClasses="";
+	const imgType = /^.*\.([a-zA-Z]*).*$/g.exec(charity.logo)[1];	
+	if (imgType.toLowerCase() === "svg") {
+		svgClasses = "w-100";
+	}
 	// 'logo' class forces the logos to be too small for the circle - so leaving it out
-	let $logo = <img className={className} src={charity.logo} alt={charity.name} />;
+	let $logo = <img className={space(className, svgClasses)} src={charity.logo} alt={charity.name} />;
 	if ( ! charity.logo) {
 		console.warn("Charity without a logo",NGO.id(charity),charity);
 		$logo = <span>{charity.name || NGO.id(charity)}</span>; // fallback to their name
