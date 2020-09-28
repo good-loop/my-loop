@@ -16,7 +16,7 @@ describe('Display tests', () => {
 	it('Displays information based on vert id', async () => {
 		await page.goto(baseSite+'/#campaign/?gl.vert=CeuNVbtW');
 		await page.waitForSelector('img[alt="brand logo"]');
-		await delay(1000); // Wait for portal/sogive data to load
+		await delay(500); // Wait for portal/sogive data to load
 		const logo = await page.$eval('img[alt="brand logo"]', e => e.src);
 
 		const hnhLogoUrl = 'https://media.good-loop.com/uploads/standard/h.and.m.red.logo-8033650396845614820.svg';				

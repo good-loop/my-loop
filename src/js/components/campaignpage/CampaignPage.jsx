@@ -489,7 +489,7 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, ndonationValue, nvertiserNa
 
 const AdvertCard = ({ ad }) => {
 
-	const size = isPortraitMobile() ? 'mobile' : 'landscape';
+	const size = isPortraitMobile() ? 'portrait' : 'landscape';
 
 	return (
 		<div>
