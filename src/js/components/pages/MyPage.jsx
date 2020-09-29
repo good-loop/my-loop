@@ -135,7 +135,7 @@ const HowItWorksCard = () => {
 					<CircleChar>3</CircleChar>
 					<div className="step-desc">
 						<span className='header'>DONATE</span><br />
-						<div class="divider"></div>
+						<div className="divider"></div>
 						<span className='sub-header'>
 							50% of the advert cost<span className="breaker"> </span>goes to the charity
 						</span>
