@@ -35,7 +35,7 @@ const GoodLoopAd = memo(({ vertId, size, nonce, social, glParams = { 'gl.play': 
 	}, [nonce]);
 
 	return (
-		<div className={`ad-sizer ${size} ${social ? 'slide-in' : ''}`} ref={adContainer} >
+		<div className={`ad-sizer ${size} ${social ? 'slide-in' : ''} position-relative`} style={{zIndex:99}} ref={adContainer} >
 			<div className="aspectifier" />
 			<div className="goodloopad" data-format={size} data-mobile-format={size} key={nonce + '-container'} />
 		</div>

@@ -363,7 +363,7 @@ const CampaignPage = () => {
 				<Container className="py-5">
 					<div className="pt-5" />
 					<h2>Are you a brand or an agency?</h2>
-					<p className="py-5">Company website: <a href="http://www.good-loop.com">www.good-loop.com</a><br />Email: <b>hello@good-loop.com</b></p>
+					<p className="pt-5" style={{fontSize:"1.3rem"}}>Company website: <a style={{textDecoration:"none", color:"inherit"}} href="http://www.good-loop.com"><b>www.good-loop.com</b></a><br />Email: <b>hello@good-loop.com</b></p>
 					<div className="py-5 flex-column flex-md-row justify-content-center">
 						<a className="btn btn-primary mr-md-3" target="_blank" href="https://www.good-loop.com/contact">Book a call</a>
 						{pdf ? <a className="btn btn-transparent mt-3 mt-md-0" href={pdf}>Download pdf version</a> : null}
@@ -460,7 +460,7 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, ndonationValue, nvertiserNa
 
 	return (<>
 		<Container className="py-5">
-			<h2>Watch the {nvertiserName} ad{sampleAds.length > 1 ? "s" : ""} that raised <Counter currencySymbol="£" sigFigs={4} value={ndonationValue} minimumFractionDigits={2} /> with<br />{views} ad viewers</h2>
+			<h2>Watch the {nvertiserName} ad{sampleAds.length > 1 ? "s" : ""} that raised <Counter currencySymbol="£" sigFigs={4} value={ndonationValue} minimumFractionDigits={2} preserveSize /><br/>with {views} ad viewers</h2>
 			<AdvertCard
 				ad={selectedAd}
 				viewCountProp={views}
@@ -492,7 +492,7 @@ const AdvertCard = ({ ad }) => {
 	const size = isPortraitMobile() ? 'portrait' : 'landscape';
 
 	return (
-		<div>
+		<div className="position-relative" style={{minHeight:"100px"}}>
 			<div className="ad-card">
 				<div className="tablet-container">
 					<img src="/img/redcurve.svg" className="tablet-bg w-100 h-100"/>
@@ -507,6 +507,7 @@ const AdvertCard = ({ ad }) => {
 				}
 			</div>
 			{Roles.isDev() ? <DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal">Portal Editor</DevLink> : null}
+			<span className="position-absolute" style={{left:"50%", top:"50%", transform:"translate(-50%, -50%)", zIndex:0}}>If you're seeing this, you likely have ad-blocker enabled. Please disable ad-blocker to see the demo!</span>
 		</div>
 	);
 };
