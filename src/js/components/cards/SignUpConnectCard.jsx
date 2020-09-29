@@ -10,7 +10,7 @@ const signInOrConnected = ({service, xid}) => {
 	if (xid) return <Connected service={service} xid={xid} />;
 	
 	if (service === 'good-loop') {
-		return <LoginLink className='btn bg-gl-red white'>🖂 Sign Up</LoginLink>;
+		return <LoginLink className='btn bg-gl-red white'>Sign Up by Email</LoginLink>;
 	}
 
 	return (
