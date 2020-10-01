@@ -162,11 +162,35 @@ const Impact = ({ charity, donationValue }) => {
 		if (!charity.simpleImpact.name || !charity.simpleImpact.costPerBeneficiary || !donationValue) {
 			return null;
 		}
-		let name = charity.simpleImpact.name;
-		// TODO process plural/singular ??copy code from SoGive?
-		name = name.replace(/\(singular: (.*)\)/g, "");
-		let numOfImpact = printer.prettyNumber(Math.round(Money.divide(donationsMoney, charity.simpleImpact.costPerBeneficiary)));
-		impact = numOfImpact + " " + name;
+		const impactFormat = charity.simpleImpact.name;
+		const numOfImpact = printer.prettyNumber(Math.round(Money.divide(donationsMoney, charity.simpleImpact.costPerBeneficiary)));
+		// Process format to use singular or plural name
+		// Separate impact string into its name and verb
+		const separatorRegex = /(.*) (.*)$/g;
+		let match = separatorRegex.exec(impactFormat);
+		let name = match[1];
+		const verb = match[2];
+		// Extract the singular and plural versions of name
+		const singularRegex = /(.*) \(singular: (.*)\)/g;
+		match = singularRegex.exec(name);
+		if (match) {
+			const isSingular = numOfImpact === "1";
+			const singular = match[2];
+			const plural = match[1];
+			// Use generic phrasing for 0 impact
+			if (numOfImpact === "0") {
+				impact = "To help " + verb.replace(/ed$/, "") + " " + plural;
+			} else {
+				impact = numOfImpact + " " + (isSingular ? singular : plural) + " " + verb;
+			}
+		} else {
+			// If plural/singular versions can't be found, fall back to whatever was given
+			if (numOfImpact === "0") {
+				impact = "To help " + verb.replace(/ed$/, "ing") + " " + name;
+			} else {
+				impact = numOfImpact + " " + name + " " + verb;
+			}
+		}
 	}
 	
 	return <b>{impact}</b>;
