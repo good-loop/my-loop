@@ -346,8 +346,8 @@ const CampaignPage = () => {
 				<Container className="py-5 text-white">
 					<div className="pt-5" />
 					<h2 className="text-white">Join the revolution and support ads<br />that make a difference</h2>
-					<p className="py-5">Help us do even more good in the world!<br/>All you have to do is sign up with your email or social account. This will help us boost the donations you generate by seeing our ads.</p>
-					<div className="py-5 w-50 row mx-auto">
+					<p className="py-5">Help us do even more good in the world!<br/>All you have to do is sign up with your email or social account.<br/>This will help us boost the donations you generate by seeing our ads.</p>
+					<div className="py-4 w-50 row mx-auto">
 						<div className="col-md">
 							<LoginLink><div className="btn btn-secondary w-100">Sign up</div></LoginLink>
 						</div>
@@ -461,7 +461,7 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, ndonationValue, nvertiserNa
 	return (<>
 		<Container className="py-5">
 			<h2>Watch the {nvertiserName} ad{sampleAds.length > 1 ? "s" : ""} that raised <Counter currencySymbol="£" sigFigs={4} value={ndonationValue} minimumFractionDigits={2} preserveSize /><br/>with {views} ad viewers</h2>
-			<div className="py-3"></div>
+			<div className="py-4"></div>
 			<AdvertCard
 				ad={selectedAd}
 				viewCountProp={views}

@@ -165,35 +165,39 @@ const Impact = ({ charity, donationValue }) => {
 		const impactFormat = charity.simpleImpact.name;
 		const numOfImpact = printer.prettyNumber(Math.round(Money.divide(donationsMoney, charity.simpleImpact.costPerBeneficiary)));
 		// Process format to use singular or plural name
-		// Separate impact string into its name and verb
-		const separatorRegex = /(.*) (.*)$/g;
-		let match = separatorRegex.exec(impactFormat);
+		// REGEX for (singular:...) format
+		// Group 1: plural form
+		// Group 3: singular form
+		// Group 4: verb
+		const singularFormatRegex = /(.*) (\(singular: (.*)\)) (.*)/g;
+		let match = singularFormatRegex.exec(impactFormat);
 		if (match) {
-			let name = match[1];
-			const verb = match[2];
-			// Extract the singular and plural versions of name
-			const singularRegex = /(.*) \(singular: (.*)\)/g;
-			match = singularRegex.exec(name);
-			if (match) {
-				const isSingular = numOfImpact === "1";
-				const singular = match[2];
-				const plural = match[1];
-				// Use generic phrasing for 0 impact
-				if (numOfImpact === "0") {
-					impact = "To help " + verb.replace(/ed$/, "") + " " + plural;
-				} else {
-					impact = numOfImpact + " " + (isSingular ? singular : plural) + " " + verb;
-				}
+			const verb = match[4];
+			const isSingular = numOfImpact === "1";
+			const singular = match[3];
+			const plural = match[1];
+			// Use generic phrasing for 0 impact
+			if (numOfImpact === "0") {
+				impact = "To help " + verb.replace(/ed$/, "") + " " + plural;
 			} else {
+				impact = numOfImpact + " " + (isSingular ? singular : plural) + " " + verb;
+			}
+		} else {
+			// Separate impact string into its name and verb using space
+			const separatorRegex = /(.*) (.*)$/g;
+			match = separatorRegex.exec(impactFormat);
+			if (match) {
+				let name = match[1];
+				let verb = match[2];
 				// If plural/singular versions can't be found, fall back to whatever was given
 				if (numOfImpact === "0") {
 					impact = "To help " + verb.replace(/ed$/, "ing") + " " + name;
 				} else {
 					impact = numOfImpact + " " + name + " " + verb;
 				}
+			} else {
+				impact = numOfImpact + " " + impactFormat;
 			}
-		} else {
-			impact = numOfImpact + " " + impactFormat;
 		}
 	}
 	
