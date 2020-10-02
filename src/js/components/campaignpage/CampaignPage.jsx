@@ -461,6 +461,7 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, ndonationValue, nvertiserNa
 	return (<>
 		<Container className="py-5">
 			<h2>Watch the {nvertiserName} ad{sampleAds.length > 1 ? "s" : ""} that raised <Counter currencySymbol="£" sigFigs={4} value={ndonationValue} minimumFractionDigits={2} preserveSize /><br/>with {views} ad viewers</h2>
+			<div className="py-3"></div>
 			<AdvertCard
 				ad={selectedAd}
 				viewCountProp={views}
@@ -479,7 +480,6 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, ndonationValue, nvertiserNa
 					)}
 				</div>
 			}
-			<br/>
 			<a className="btn btn-primary mb-3 mb-md-0 mr-md-3" href="/">See all campaigns</a>
 			{//<a className="btn btn-transparent" href="TODO">Campaign performance & brand study</a>
 			}
