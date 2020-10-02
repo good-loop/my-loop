@@ -32,7 +32,7 @@ const CharityMiniCard = ({charity, NGOid, donationValue, i}) => {
 	return ( 
 		<div className="col-md-4 charity-card mt-5 mt-md-0">
 			<div className="flex-column">
-				<WhiteCircle className="mb-5 w-50 mx-auto">
+				<WhiteCircle className="mb-5 w-50 mx-auto" circleCrop={charity.circleCrop}>
 					<CharityLogo charity={charity}/>
 				</WhiteCircle>
 				{donationValue? <h4 className="text-left">

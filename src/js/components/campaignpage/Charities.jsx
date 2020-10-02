@@ -168,28 +168,32 @@ const Impact = ({ charity, donationValue }) => {
 		// Separate impact string into its name and verb
 		const separatorRegex = /(.*) (.*)$/g;
 		let match = separatorRegex.exec(impactFormat);
-		let name = match[1];
-		const verb = match[2];
-		// Extract the singular and plural versions of name
-		const singularRegex = /(.*) \(singular: (.*)\)/g;
-		match = singularRegex.exec(name);
 		if (match) {
-			const isSingular = numOfImpact === "1";
-			const singular = match[2];
-			const plural = match[1];
-			// Use generic phrasing for 0 impact
-			if (numOfImpact === "0") {
-				impact = "To help " + verb.replace(/ed$/, "") + " " + plural;
+			let name = match[1];
+			const verb = match[2];
+			// Extract the singular and plural versions of name
+			const singularRegex = /(.*) \(singular: (.*)\)/g;
+			match = singularRegex.exec(name);
+			if (match) {
+				const isSingular = numOfImpact === "1";
+				const singular = match[2];
+				const plural = match[1];
+				// Use generic phrasing for 0 impact
+				if (numOfImpact === "0") {
+					impact = "To help " + verb.replace(/ed$/, "") + " " + plural;
+				} else {
+					impact = numOfImpact + " " + (isSingular ? singular : plural) + " " + verb;
+				}
 			} else {
-				impact = numOfImpact + " " + (isSingular ? singular : plural) + " " + verb;
+				// If plural/singular versions can't be found, fall back to whatever was given
+				if (numOfImpact === "0") {
+					impact = "To help " + verb.replace(/ed$/, "ing") + " " + name;
+				} else {
+					impact = numOfImpact + " " + name + " " + verb;
+				}
 			}
 		} else {
-			// If plural/singular versions can't be found, fall back to whatever was given
-			if (numOfImpact === "0") {
-				impact = "To help " + verb.replace(/ed$/, "ing") + " " + name;
-			} else {
-				impact = numOfImpact + " " + name + " " + verb;
-			}
+			impact = numOfImpact + " " + impactFormat;
 		}
 	}
 	
@@ -205,7 +209,7 @@ const AlsoSupported = ({charities}) => {
 		<h2>Also supporting</h2>
 		<div className="pt-3 row justify-content-center">
 			{charities.map(charity => <div className="col-md-3 col-4">
-				<WhiteCircle className="mb-5 w-50 mx-auto">
+				<WhiteCircle className="mb-5 w-50 mx-auto" circleCrop={charity.circleCrop}>
 					<CharityLogo charity={charity} link/>
 				</WhiteCircle>
 				{normaliseSogiveId(charity.id)? <DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">SoGive</DevLink> : null}
