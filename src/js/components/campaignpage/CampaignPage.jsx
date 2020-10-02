@@ -346,7 +346,7 @@ const CampaignPage = () => {
 				<Container className="py-5 text-white">
 					<div className="pt-5" />
 					<h2 className="text-white">Join the revolution and support ads<br />that make a difference</h2>
-					<p className="py-5">Help us do even more good in the world! All you have to do is sign up with your email or social account. This will help us boost the donations you generate by seeing our ads.</p>
+					<p className="py-5">Help us do even more good in the world!<br/>All you have to do is sign up with your email or social account. This will help us boost the donations you generate by seeing our ads.</p>
 					<div className="py-5 w-50 row mx-auto">
 						<div className="col-md">
 							<LoginLink><div className="btn btn-secondary w-100">Sign up</div></LoginLink>
