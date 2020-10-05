@@ -44,6 +44,8 @@ const pdfLookup = (campaign) => {
 	
 	let pdf = {
 		//"collectivecampaign" : "/resources/Good-loop_H&M_campaign.pdf"
+		"coop_selfserve" : "/resources/Good-loop_and_TheCooperativeBank.pdf",
+		"drynites" : "/resources/Good-loop_and_KimberlyClark.pdf"
 	}[campaign];
 
 	return pdf;

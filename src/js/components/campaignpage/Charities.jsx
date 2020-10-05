@@ -216,6 +216,6 @@ const AlsoSupported = ({charities}) => {
 			</div>)}
 		</div>
 	</> : null);
-}
+};
 
 export default Charities;
