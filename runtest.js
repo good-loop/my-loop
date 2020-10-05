@@ -5,11 +5,6 @@
 const shell = require('shelljs');
 const yargv = require('yargs').argv;
 const $ = require('jquery');
-const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-$.support.cors = true;
-$.ajaxSettings.xhr = function () {
-	return new XMLHttpRequest();
-};
 
 // NB: we can't catch --help or help, as node gets them first
 if (yargv.support) {

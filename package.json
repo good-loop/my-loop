@@ -31,7 +31,6 @@
     "react-spring": "^8.0.27",
     "reactstrap": "^8.4.1",
     "sjtest": "^0.4.9",
-    "xmlhttprequest": "^1.8.0",
     "you-again": "^0.8.8"
   },
   "scripts": {
