@@ -206,10 +206,6 @@ const Impact = ({ charity, donationValue }) => {
 
 const AlsoSupported = ({charities}) => {
 	return (charities.length ? <>
-		<div className="flex-row justify-content-between">
-			<div className="stub-divider mx-0"></div>
-			<div className="stub-divider mx-0"></div>
-		</div>
 		<h2>Also supporting</h2>
 		<div className="pt-3 row justify-content-center">
 			{charities.map(charity => <div className="col-md-3 col-4">
@@ -218,10 +214,6 @@ const AlsoSupported = ({charities}) => {
 				</WhiteCircle>
 				{normaliseSogiveId(charity.id)? <DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">SoGive</DevLink> : null}
 			</div>)}
-		</div>
-		<div className="flex-row justify-content-between">
-			<div className="stub-divider mx-0"></div>
-			<div className="stub-divider mx-0"></div>
 		</div>
 	</> : null);
 }
