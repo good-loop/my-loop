@@ -4,6 +4,13 @@
 // Calls npm run test = jest, with config set in process
 const shell = require('shelljs');
 const yargv = require('yargs').argv;
+const $ = require('jquery');
+const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+$.support.cors = true;
+$.ajaxSettings.xhr = function () {
+	return new XMLHttpRequest();
+};
+
 // NB: we can't catch --help or help, as node gets them first
 if (yargv.support) {
 	shell.echo(`
@@ -65,6 +72,26 @@ process.env.__CONFIGURATION = JSON.stringify(config);
 
 // Setting real ARGV
 process.argv = argv;
+
+const baseURLstr = "https://" + config.site + "my.good-loop.com/" + testPath;
+
+// Check tests are not running on production
+console.log("Testing on: " + baseURLstr);
+
+const testURL = new URL(baseURLstr);
+testURL.searchParams.append("get.server.info","true");
+$.ajax(
+	{
+		url: testURL.href,
+		type: 'GET',
+		success: (data) => {
+			const serverInfoStr = $(data).filter('#json').innerHTML;
+			if (!serverInfoStr) return;
+			const serverInfo = JSON.parse(serverInfoStr);
+			console.log(serverInfo);
+		}
+	}
+);
 
 // Execute Jest. Specific target optional.
 shell.exec(`npm run test ${testPath} ${runInBand}`);
