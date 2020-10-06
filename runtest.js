@@ -5,7 +5,7 @@
 const shell = require('shelljs');
 const yargv = require('yargs').argv;
 const fetch = require('node-fetch');
-const $ = require('jquery');
+const os = require('os');
 
 // NB: we can't catch --help or help, as node gets them first
 if (yargv.support) {
@@ -71,20 +71,25 @@ process.env.__CONFIGURATION = JSON.stringify(config);
 process.argv = argv;
 
 const isLocal = config.site === "local";
-const infoURL = (isLocal ? "http://" : "https://") + config.site + "my.good-loop.com:3000";
+const infoURL = (isLocal ? "http://" : "https://") + config.site + "my.good-loop.com/build/gitlog.txt";
 
 if (!yargv.skipProdTest) {
 	// Check tests are not running on production
-	console.log("Getting info from " + infoURL + "...");
+	console.log("Checking gitlog for host type...");
 	fetch(infoURL, { method: 'GET', timeout:10000 })
-		.then(res => res.json())
-		.then(serverInfo => {
-			if (!serverInfo.isProduction) {
-			// Execute Jest. Specific target optional.
-				console.log("Server has " + serverInfo.type + " APIBASE, safe to test");
+		.then(res => res.text())
+		.then(gitlog => {
+			const hostname = gitlog.split('\n')[0].replace(/HOST:\t/g, "");
+			// test server hostname = baker
+			// local server hostname = this machine's name
+			// anything else = assume production
+			const isNotProduction = hostname === "baker" || hostname === os.hostname();
+			if (isNotProduction) {
+				// Execute Jest. Specific target optional.
+				console.log("Hostname " + hostname + " is safe to test");
 				shell.exec(`npm run test ${testPath} ${runInBand}`);
 			} else {
-				console.log("Server is running on production, aborting test!");
+				console.log("Hostname " + hostname + " is not baker or " + os.hostname() + ", assuming production and aborting test!");
 			}
 		})
 		.catch(err => console.log(err));
