@@ -4,7 +4,9 @@
 // Calls npm run test = jest, with config set in process
 const shell = require('shelljs');
 const yargv = require('yargs').argv;
+const fetch = require('node-fetch');
 const $ = require('jquery');
+const { JSDOM } = require('jsdom');
 
 // NB: we can't catch --help or help, as node gets them first
 if (yargv.support) {
@@ -68,25 +70,19 @@ process.env.__CONFIGURATION = JSON.stringify(config);
 // Setting real ARGV
 process.argv = argv;
 
-const baseURLstr = "https://" + config.site + "my.good-loop.com/" + testPath;
+const isLocal = config.site === "local";
+const testURL = (isLocal ? "http://" : "https://") + config.site + "my.good-loop.com/" + testPath;
 
 // Check tests are not running on production
-console.log("Testing on: " + baseURLstr);
+console.log("Testing on: " + testURL);
 
-const testURL = new URL(baseURLstr);
-testURL.searchParams.append("get.server.info","true");
-$.ajax(
-	{
-		url: testURL.href,
-		type: 'GET',
-		success: (data) => {
-			const serverInfoStr = $(data).filter('#json').innerHTML;
-			if (!serverInfoStr) return;
-			const serverInfo = JSON.parse(serverInfoStr);
-			console.log(serverInfo);
-		}
-	}
-);
+fetch(testURL + "?get.server.info=true", { method: 'GET' }).then(data => {
+
+	const serverInfoStr = $(data.body).filter('#json').innerHTML;
+	if (!serverInfoStr) return;
+	const serverInfo = JSON.parse(serverInfoStr);
+	console.log(serverInfo);
+}).catch(err => console.log(err));
 
 // Execute Jest. Specific target optional.
-shell.exec(`npm run test ${testPath} ${runInBand}`);
+//shell.exec(`npm run test ${testPath} ${runInBand}`);
