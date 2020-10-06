@@ -7,6 +7,9 @@ const yargv = require('yargs').argv;
 const fetch = require('node-fetch');
 const os = require('os');
 
+const appURL = "my.good-loop.com";
+const testHostname = "baker";
+
 // NB: we can't catch --help or help, as node gets them first
 if (yargv.support) {
 	shell.echo(`
@@ -70,11 +73,14 @@ process.env.__CONFIGURATION = JSON.stringify(config);
 // Setting real ARGV
 process.argv = argv;
 
+const gitlogPath = "/build/gitlog.txt";
 const isLocal = config.site === "local";
-const infoURL = (isLocal ? "http://" : "https://") + config.site + "my.good-loop.com/build/gitlog.txt";
+const infoURL = (isLocal ? "http://" : "https://") + config.site + appURL + gitlogPath;
 
 if (!yargv.skipProdTest) {
 	// Check tests are not running on production
+	// Assumes that gitlog.txt has been built by npm run compile
+	// Assumes anything other than test or local hostname is production
 	console.log("Checking gitlog for host type...");
 	fetch(infoURL, { method: 'GET', timeout:10000 })
 		.then(res => res.text())
@@ -83,13 +89,13 @@ if (!yargv.skipProdTest) {
 			// test server hostname = baker
 			// local server hostname = this machine's name
 			// anything else = assume production
-			const isNotProduction = hostname === "baker" || hostname === os.hostname();
+			const isNotProduction = hostname === testHostname || hostname === os.hostname();
 			if (isNotProduction) {
 				// Execute Jest. Specific target optional.
 				console.log("Hostname " + hostname + " is safe to test");
 				shell.exec(`npm run test ${testPath} ${runInBand}`);
 			} else {
-				console.log("Hostname " + hostname + " is not baker or " + os.hostname() + ", assuming production and aborting test!");
+				console.log("Hostname " + hostname + " is not " + testHostname + " or " + os.hostname() + ", assuming production and aborting test!");
 			}
 		})
 		.catch(err => console.log(err));
