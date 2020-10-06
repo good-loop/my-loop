@@ -6,7 +6,6 @@ const shell = require('shelljs');
 const yargv = require('yargs').argv;
 const fetch = require('node-fetch');
 const $ = require('jquery');
-const { JSDOM } = require('jsdom');
 
 // NB: we can't catch --help or help, as node gets them first
 if (yargv.support) {
@@ -21,13 +20,14 @@ Options
 		E.g. to run against the test site, use \`node runtest.js --site test\`
 	--head If true (i.e. not headless), launch a browser window for debugging.
 	--test <keyword> Use to filter by test. This matches on top-level "describe" names.
+	--skipProdTest !!UNSAFE!! Don't test the target site for being production. Only use if you need to test on production site.
 
 Tests are defined in: src/puppeteer-tests/__tests__
 (this is where jest-puppeteer looks)
 	`);
 	return 0; // done
 }
-shell.echo("Use `node runtest.js --support` for help and usage notes");
+shell.echo("Use `node runtest.js --support` for help and usage notes\n");
 
 let config = {
 	// The possible values for `site` are defined in testConfig.js, targetServers
@@ -71,18 +71,24 @@ process.env.__CONFIGURATION = JSON.stringify(config);
 process.argv = argv;
 
 const isLocal = config.site === "local";
-const testURL = (isLocal ? "http://" : "https://") + config.site + "my.good-loop.com/" + testPath;
+const infoURL = (isLocal ? "http://" : "https://") + config.site + "my.good-loop.com:3000";
 
-// Check tests are not running on production
-console.log("Testing on: " + testURL);
-
-fetch(testURL + "?get.server.info=true", { method: 'GET' }).then(data => {
-
-	const serverInfoStr = $(data.body).filter('#json').innerHTML;
-	if (!serverInfoStr) return;
-	const serverInfo = JSON.parse(serverInfoStr);
-	console.log(serverInfo);
-}).catch(err => console.log(err));
-
-// Execute Jest. Specific target optional.
-//shell.exec(`npm run test ${testPath} ${runInBand}`);
+if (!yargv.skipProdTest) {
+	// Check tests are not running on production
+	console.log("Getting info from " + infoURL + "...");
+	fetch(infoURL, { method: 'GET', timeout:10000 })
+		.then(res => res.json())
+		.then(serverInfo => {
+			if (!serverInfo.isProduction) {
+			// Execute Jest. Specific target optional.
+				console.log("Server has " + serverInfo.type + " APIBASE, safe to test");
+				shell.exec(`npm run test ${testPath} ${runInBand}`);
+			} else {
+				console.log("Server is running on production, aborting test!");
+			}
+		})
+		.catch(err => console.log(err));
+} else {
+	console.log("Skipping test for production - unsafe!!");
+	shell.exec(`npm run test ${testPath} ${runInBand}`);
+}

@@ -91,8 +91,7 @@ const makeConfig = ({ filename, mode, entry }) => {
 
 const configs = [
 	makeConfig({filename: 'js/bundle-debug.js', mode: 'development' }),
-	makeConfig({filename: 'js/newtab-bundle-debug.js', mode: 'development', entry:'./src/js/newtab.jsx'}),
-	makeConfig({filename: 'js/info-bundle.js', mode: 'production', entry:'./src/js/info.js'}), // Include server info as production always
+	makeConfig({filename: 'js/newtab-bundle-debug.js', mode: 'development', entry:'./src/js/newtab.jsx'})
 ];
 
 // Allow debug-only compilation for faster iteration in dev

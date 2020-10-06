@@ -7,6 +7,7 @@ export default C;
 /**
  * app config
  */
+/*
 C.app = {
 	name: "the My-Loop Portal",
 	service: "good-loop",
@@ -15,7 +16,9 @@ C.app = {
 	facebookAppId: "320927325010346", // https://developers.facebook.com/apps/320927325010346/dashboard/
 	privacyPolicy: "https://doc.good-loop.com/privacy-policy.html",
 	tsncs: "",
-};
+};*/
+// Append sensitive data not exposed on serverinfo
+C.app.facebookAppid = "320927325010346";
 
 // NB: MonetaryAmount is deprecated - left here for old data
 C.TYPES = new Enum("Publisher NGO Advert Advertiser User Person Money MonetaryAmount");
