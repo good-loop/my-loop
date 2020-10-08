@@ -6,9 +6,7 @@ const shell = require('shelljs');
 const yargv = require('yargs').argv;
 const fetch = require('node-fetch');
 const os = require('os');
-
-const appURL = "my.good-loop.com";
-const testHostname = "baker";
+let config = require('./runtestconfig').config;
 
 // NB: we can't catch --help or help, as node gets them first
 if (yargv.support) {
@@ -16,6 +14,8 @@ if (yargv.support) {
 	runtest.js by Good-Loop
 
 Uses jest-puppeteer Doc: https://github.com/smooth-code/jest-puppeteer/blob/master/README.md
+Config is set in runtestconfig.js.
+Individual configurations can be overriden for a test run using --<config name> <new value>
 
 Options
 
@@ -32,15 +32,6 @@ Tests are defined in: src/puppeteer-tests/__tests__
 }
 shell.echo("Use `node runtest.js --support` for help and usage notes\n");
 
-let config = {
-	// The possible values for `site` are defined in testConfig.js, targetServers
-	site: 'local',
-	unsafe: false,
-	vert: '',
-	// Used by jest-puppeteer.config.js to launch an actual browser for debugging
-	head: false,
-	chrome: false,
-};
 // Parse arguments...
 let argv = process.argv.slice(0, 2);
 
@@ -73,9 +64,8 @@ process.env.__CONFIGURATION = JSON.stringify(config);
 // Setting real ARGV
 process.argv = argv;
 
-const gitlogPath = "/build/gitlog.txt";
 const isLocal = config.site === "local";
-const infoURL = (isLocal ? "http://" : "https://") + config.site + appURL + gitlogPath;
+const infoURL = (isLocal ? "http://" : "https://") + config.site + config.appURL + config.gitlogPath;
 
 if (!yargv.skipProdTest) {
 	// Check tests are not running on production
@@ -89,13 +79,13 @@ if (!yargv.skipProdTest) {
 			// test server hostname = baker
 			// local server hostname = this machine's name
 			// anything else = assume production
-			const isNotProduction = hostname === testHostname || hostname === os.hostname();
+			const isNotProduction = hostname === config.testHostname || hostname === os.hostname();
 			if (isNotProduction) {
 				// Execute Jest. Specific target optional.
 				console.log("Hostname " + hostname + " is safe to test");
 				shell.exec(`npm run test ${testPath} ${runInBand}`);
 			} else {
-				console.log("Hostname " + hostname + " is not " + testHostname + " or " + os.hostname() + ", assuming production and aborting test!");
+				console.log("Hostname " + hostname + " is not " + config.testHostname + " or " + os.hostname() + ", assuming production and aborting test!");
 			}
 		})
 		.catch(err => console.log(err));
