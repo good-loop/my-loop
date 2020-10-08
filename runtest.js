@@ -6,6 +6,7 @@ const shell = require('shelljs');
 const yargv = require('yargs').argv;
 const fetch = require('node-fetch');
 const os = require('os');
+const readline = require('readline');
 let config = require('./runtestconfig').config;
 
 // NB: we can't catch --help or help, as node gets them first
@@ -73,23 +74,52 @@ if (!yargv.skipProdTest) {
 	// Assumes anything other than test or local hostname is production
 	console.log("Checking gitlog for host type...");
 	fetch(infoURL, { method: 'GET', timeout:10000 })
-		.then(res => res.text())
+		.then(res => {
+			if (res.ok) return res.text();
+			return res.status;
+		})
 		.then(gitlog => {
-			const hostname = gitlog.split('\n')[0].replace(/HOST:\t/g, "");
-			// test server hostname = baker
-			// local server hostname = this machine's name
-			// anything else = assume production
-			const isNotProduction = hostname === config.testHostname || hostname === os.hostname();
-			if (isNotProduction) {
-				// Execute Jest. Specific target optional.
-				console.log("Hostname " + hostname + " is safe to test");
-				shell.exec(`npm run test ${testPath} ${runInBand}`);
+			if (Number.isInteger(gitlog)) { // If a number was returned, then the request was not OK
+				askToRunTest("Could not get gitlog (status: " + gitlog + "). Continue? (y/n) ");
 			} else {
-				console.log("Hostname " + hostname + " is not " + config.testHostname + " or " + os.hostname() + ", assuming production and aborting test!");
+				const hostname = gitlog.split('\n')[0].replace(/HOST:\t/g, "");
+				// test server hostname = baker
+				// local server hostname = this machine's name
+				// anything else = assume production
+				const isNotProduction = hostname === config.testHostname || hostname === os.hostname();
+				if (isNotProduction) {
+					// Execute Jest. Specific target optional.
+					console.log("Hostname " + hostname + " is safe to test");
+					runTest();
+				} else {
+					console.log("Hostname " + hostname + " is not " + config.testHostname + " or " + os.hostname() + ", assuming production and aborting test!");
+				}
 			}
 		})
-		.catch(err => console.log(err));
+		.catch(err => {
+			console.log(err);
+			askToRunTest("Could not get gitlog (error above). Continue? (y/n) ");
+		});
 } else {
 	console.log("Skipping test for production - unsafe!!");
-	shell.exec(`npm run test ${testPath} ${runInBand}`);
+	runTest();
 }
+
+const askToRunTest = (question) => {
+	const rl = readline.createInterface({
+		input: process.stdin,
+		output: process.stdout
+	});
+	rl.question(question, answer => {
+		if (answer.toLowerCase() === "y") {
+			runTest();
+		} else {
+			console.log("Aborting test");
+		}
+		rl.close();
+	});
+};
+
+const runTest = () => {
+	shell.exec(`npm run test ${testPath} ${runInBand}`);
+};
