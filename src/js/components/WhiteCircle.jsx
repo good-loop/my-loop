@@ -1,5 +1,5 @@
 import React from 'react';
-import { space } from '../../base/utils/miscutils';
+import { space } from '../base/utils/miscutils';
 
 const WhiteCircle = ({width, children, circleCrop, className}) => {
 	let contentStyle = {

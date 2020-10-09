@@ -1,5 +1,5 @@
 /* global navigator */
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import Login from 'you-again';
 import { assert } from 'sjtest';
 import { modifyHash, randomPick, encURI, space, stopEvent, ellipsize } from '../base/utils/miscutils';
@@ -11,6 +11,7 @@ import Roles from '../base/Roles';
 import C from '../C';
 import Crud from '../base/plumbing/Crud'; // Crud is loaded here to init (but not used here)
 import Profiler, { getProfile } from '../base/Profiler';
+import { normaliseSogiveId } from '../base/plumbing/ServerIOBase';
 
 // Templates
 import MessageBar from '../base/components/MessageBar';
@@ -31,6 +32,10 @@ import Footer from './Footer';
 import ActionMan from '../base/plumbing/ActionManBase';
 import MDText from '../base/components/MDText';
 // import RedesignPage from './pages/RedesignPage';
+
+// Components
+import CharityLogo from './CharityLogo';
+import WhiteCircle from './WhiteCircle';
 
 // DataStore
 C.setupDataStore();
@@ -57,46 +62,72 @@ const WebtopPage = () => {
 
 	return (
 		<BG src={bg.src} fullscreen opacity={0.9}>
-			<div className="container">				
-				
-				<Card id="score" body className="pull-right">
-					<LoginAccountControl />
-					£1,000,000 raised
-				</Card>
-
-				<Card body>
-					<Form onSubmit={google} inline className="flex-row" >
-						<PropControl type="search" prop="q" path={['widget', 'search']} className="flex-grow" /><Button color="secondary" onClick={google}>Search</Button>
-					</Form>
-				</Card>
-
+			<div className="position-fixed text-white p-3" style={{top: 0, left: 0, width:"100vw"}}>
 				<Row>
-					<h2 className='text-dark bg-light'>What charity would you like to support?</h2>
-					{charities.map(c => <NewTabCharityCard key={c} cid={c} />)}
+					<Col>
+						£1,000,000 raised
+					</Col>
+					<Col>
+						<LoginAccountControl />
+					</Col>
 				</Row>
-
-				<Card body><CardTitle></CardTitle>
-					<BannerAd />
-				</Card>
-
-				{C.SERVER_TYPE !== 'local' ? <DevLink href="http://localmy.good-loop.com/newtab.html">Local Version</DevLink> : <Badge>local</Badge>}
-				{C.SERVER_TYPE !== 'test' ? <DevLink href="https://testmy.good-loop.com/newtab.html">Test Version</DevLink> : <Badge>test</Badge>}
-				{!C.isProduction() ? <DevLink href="https://my.good-loop.com/newtab.html">Production Version</DevLink> : <Badge>live</Badge>}
-
-				<NewTabFooter />
 			</div>
+			<div className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{top: 0, left: 0, width:"100vw", height:"100vh"}}>
+				<div className="container h-100 flex-column justify-content-center unset-margins">
+
+					<div className="w-100">			
+						<div className="w-50 mx-auto mb-5">
+							<Search/>
+						</div>
+					</div>
+
+					<Row className="justify-content-center">
+						{charities.map(c => <NewTabCharityCard key={c} cid={c} />)}
+					</Row>
+
+					{/*<div>
+						<Card body>
+							<CardTitle></CardTitle>
+							<BannerAd />
+						</Card>
+
+						{C.SERVER_TYPE !== 'local' ? <DevLink href="http://localmy.good-loop.com/newtab.html">Local Version</DevLink> : <Badge>local</Badge>}
+						{C.SERVER_TYPE !== 'test' ? <DevLink href="https://testmy.good-loop.com/newtab.html">Test Version</DevLink> : <Badge>test</Badge>}
+						{!C.isProduction() ? <DevLink href="https://my.good-loop.com/newtab.html">Production Version</DevLink> : <Badge>live</Badge>}
+					</div>*/}
+				</div>
+			</div>
+			<NewTabFooter />
 		</BG>);
 };
 
+const Search = () => {
+	return (<>
+		<Form onSubmit={google} inline className="flex-row" >
+			<i className="fa fa-search tab-search mr-2" onClick={google}></i><PropControl type="search" prop="q" path={['widget', 'search']} className="flex-grow" />
+		</Form>
+	</>);
+};
+
 const LoginAccountControl = () => {
-	if ( ! Login.isLoggedIn()) {		
-		return <LoginLink />;
+	let login = null;
+	if ( ! Login.isLoggedIn()) {
+		login = <LoginLink />;
+	} else {
+		let user = Login.getUser();
+		login = <>
+			{user.name || user.id}<br/>
+			<small><LogoutLink /></small>
+		</>;
 	}
-	let user = Login.getUser();
-	return <div>
-		{user.name || user.id}
-		<small><LogoutLink /></small>
-	</div>;
+	return (<div className="tab-user flex-row">
+		<div className="tab-login">
+			<div className="tab-login-content">
+				{login}
+			</div>
+		</div>
+		<i className="fa fa-user pl-2" style={{fontSize:"2rem"}}></i>
+	</div>);
 };
 
 
@@ -106,10 +137,10 @@ const PAGES = {
 	webtop: WebtopPage
 };
 const NewTabMainDiv = () => {
-	return <MainDivBase pageForPath={PAGES} defaultPage="webtop" navbar={false} />;
+	return <MainDivBase pageForPath={PAGES} defaultPage="webtop" navbar={false} className="newtab"/>;
 };
 
-const NewTabFooter = () => (<Footer>
+const NewTabFooter = () => (<Footer className="tab-footer">
 	<a href="https://good-loop.com" target="_parent">Good-Loop</a>
 
 	<a href="https://doc.good-loop.com/policy/privacy-policy.html" target="_top">Privacy policy</a>
@@ -120,7 +151,7 @@ const NewTabCharityCard = ({cid}) => {
 	let profile = user && user.xid? getProfile({xid:user.xid}) : null;
 	console.warn("profile", profile);
 
-	let pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:cid, status:C.KStatus.PUBLISHED});
+	let pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:normaliseSogiveId(cid), status:C.KStatus.PUBLISHED});
 	if ( ! pvCharity.value) {
 		return <Col sm={3} xs={1} xl={4} ><Card body>{cid}</Card></Col>;
 	}
@@ -135,23 +166,28 @@ const NewTabCharityCard = ({cid}) => {
 	}
 	desc = ellipsize(desc, 240);
 
+	console.log("CHARITY: " + charity.id + " LOGO: " + charity.logo);
+
 	let img = charity.images;
 	let selected = false; // TODO user preferences
 
-	return (<Col sm={12} md={4} ><Card selected={selected}>
-		{img && <img src={img} alt="charity" className='card-img-top'/>}	
-		<CardBody>
-			<CardTitle>{charity.name}</CardTitle>
-			<img src={charity.logo} alt="logo" className='logo-large' style={{height:'100%',overflow:'hidden',marginTop:0,marginLeft:"-1.25rem"}} />
-			<MDText source={desc} />
-		</CardBody>
-		<CardFooter>
-			<Button color={selected?'secondary':'primary'} onClick={e => toggleCharitySelect(cid)}>{selected? "select" : "de-select"}</Button>
-		</CardFooter>
-	</Card></Col>
-	);
+	return (<Col sm={12} md={4} className="d-flex justify-content-center" >
+		{/*<Card selected={selected}>
+			{img && <img src={img} alt="charity" className='card-img-top'/>}	
+			<CardBody>
+				<CardTitle>{charity.name}</CardTitle>
+				<img src={charity.logo} alt="logo" className='logo-large' style={{height:'100%',overflow:'hidden',marginTop:0,marginLeft:"-1.25rem"}} />
+				<MDText source={desc} />
+			</CardBody>
+			<CardFooter>
+				<Button color={selected?'secondary':'primary'} onClick={e => toggleCharitySelect(cid)}>{selected? "select" : "de-select"}</Button>
+			</CardFooter>
+		</Card>*/}
+		<WhiteCircle className="m-3" circleCrop={charity.circleCrop}>
+			<CharityLogo charity={charity} link/>
+		</WhiteCircle>
+	</Col>);
 };
-
 
 const toggleCharitySelect = e => {
 	// TODO

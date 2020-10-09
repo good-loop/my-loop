@@ -1,7 +1,7 @@
 import React from 'react';
 import Counter from '../../base/components/Counter';
 import GoodLoopAd from './GoodLoopAd';
-import WhiteCircle from './WhiteCircle';
+import WhiteCircle from '../WhiteCircle';
 import printer from '../../base/utils/printer';
 import { space } from '../../base/utils/miscutils';
 import ShareButton from '../ShareButton';

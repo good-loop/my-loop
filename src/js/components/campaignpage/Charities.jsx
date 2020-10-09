@@ -9,8 +9,8 @@ import Counter from '../../base/components/Counter';
 import { space } from '../../base/utils/miscutils';
 import printer from '../../base/utils/printer';
 import MDText from '../../base/components/MDText';
-import WhiteCircle from './WhiteCircle';
-import { CharityLogo } from '../cards/CharityCard';
+import WhiteCircle from '../WhiteCircle';
+import CharityLogo from '../CharityLogo';
 import DevLink from './DevLink';
 
 /**
@@ -208,7 +208,7 @@ const AlsoSupported = ({charities}) => {
 	return (charities.length ? <>
 		<h2>Also supporting</h2>
 		<div className="pt-3 row justify-content-center">
-			{charities.map(charity => <div className="col-md-3 col-4">
+			{charities.map(charity => <div key={charity.id} className="col-md-3 col-4">
 				<WhiteCircle className="mb-5 w-50 mx-auto" circleCrop={charity.circleCrop}>
 					<CharityLogo charity={charity} link/>
 				</WhiteCircle>

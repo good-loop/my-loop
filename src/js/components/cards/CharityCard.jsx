@@ -7,13 +7,13 @@ import C from '../../C';
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
 import ActionMan from '../../plumbing/ActionMan';
-import NGO from '../../base/data/NGO';
 import { SquareLogo } from '../Image';
 import MDText from '../../base/components/MDText';
 import Counter from '../../base/components/Counter';
 import Money from '../../base/data/Money';
-import WhiteCircle from '../campaignpage/WhiteCircle';
+import WhiteCircle from '../WhiteCircle';
 import DevLink from '../campaignpage/DevLink';
+import CharityLogo from '../CharityLogo';
 import { space } from '../../base/utils/miscutils';
 
 /**
@@ -48,32 +48,5 @@ const CharityMiniCard = ({charity, NGOid, donationValue, i}) => {
 		</div>
 	);
 };
-
-/**
- * Logo (which you can click on)
- * TODO can standardise this with brand logos
- * @param {?boolean} link true to make the logo a link
- */
-const CharityLogo = ({charity, className, link=false}) => {
-	// Check for SVG and use specific width if so
-	let svgClasses="";
-	const imgType = /^.*\.([a-zA-Z]*).*$/g.exec(charity.logo)[1];	
-	if (imgType.toLowerCase() === "svg") {
-		svgClasses = "w-100";
-	}
-	// 'logo' class forces the logos to be too small for the circle - so leaving it out
-	let $logo = <img className={space(className, svgClasses)} src={charity.logo} alt={charity.name} />;
-	if ( ! charity.logo) {
-		console.warn("Charity without a logo",NGO.id(charity),charity);
-		$logo = <span>{charity.name || NGO.id(charity)}</span>; // fallback to their name
-	}
-	// with / without `a` link?
-	if (charity.url && link) {
-		return <a href={charity.url} target="_blank" rel="noopener noreferrer">{$logo}</a>;
-	}
-	return $logo;
-};
-
-export {CharityLogo};
 
 export default CharityMiniCard;
