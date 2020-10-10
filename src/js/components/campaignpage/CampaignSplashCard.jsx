@@ -24,7 +24,7 @@ const SplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, tot
 						</WhiteCircle>
 						<img src="/img/plus.png" className="plus" alt="+"/>
 						<WhiteCircle>
-							<div className="sub-header">{printer.prettyNumber(totalViewCount)} people</div>
+							<div className="sub-header">{printer.prettyNumber(totalViewCount, 10)} people</div>
 						</WhiteCircle>
 					</div>
 					{ landing ? <div className="top-advert-player">
