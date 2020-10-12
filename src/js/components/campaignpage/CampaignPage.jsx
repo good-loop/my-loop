@@ -494,7 +494,7 @@ const AdvertCard = ({ ad }) => {
 	const size = isPortraitMobile() ? 'portrait' : 'landscape';
 
 	return (
-		<div className="position-relative" style={{minHeight:"100px"}}>
+		<div className="position-relative" style={{minHeight:"100px", maxHeight: "750px"}}>
 			<div className="ad-card">
 				<div className="tablet-container">
 					<img src="/img/redcurve.svg" className="tablet-bg w-100 h-100"/>
