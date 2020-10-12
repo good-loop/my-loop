@@ -20,17 +20,13 @@ const SplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, tot
 						</WhiteCircle>
 						<img src="/img/plus.png" className="plus" alt="+"/>
 						<WhiteCircle>
-							<img src="/img/good-loop-logo-primary.svg" alt="logo" />
-						</WhiteCircle>
-						<img src="/img/plus.png" className="plus" alt="+"/>
-						<WhiteCircle>
-							<div className="sub-header">{printer.prettyNumber(totalViewCount, 10)} people</div>
+							<div className="sub-header">{printer.prettyNumber(totalViewCount)} people</div>
 						</WhiteCircle>
 					</div>
 					{ landing ? <div className="top-advert-player">
 						<GoodLoopAd vertId={adId} size="landscape" nonce={`landscape${adId}`} production />
 					</div> : '' }
-					<div className="flex-column flex-center pt-3 pt-md-5 splash-text">
+					<div className="flex-column flex-center pt-5 splash-text">
 						<div className="header text-white">
 							<div>
 								<span>Raised { donationValue? <Counter currencySymbol="£" sigFigs={4} preservePennies value={donationValue} minimumFractionDigits={2} preserveSize/> : "money" } for charities</span>
