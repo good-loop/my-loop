@@ -72,7 +72,7 @@ const WebtopPage = () => {
 				<div className="container h-100 flex-column justify-content-center unset-margins">
 
 					<div className="w-100 pb-3">
-						<div className="w-50 mx-auto">
+						<div className="tab-search-container mx-auto">
 							<Search/>
 						</div>
 					</div>
@@ -124,25 +124,30 @@ const DonationCount = ({className}) => {
 
 const LoginAccountControl = () => {
 	let login = null;
+	let user = Login.getUser();
 	if ( ! Login.isLoggedIn()) {
 		login = <LoginLink />;
 	} else {
-		let user = Login.getUser();
 		login = <>
-			{user.name || user.id}<br/>
+			<a href="http://localmy.good-loop.com/#account" style={{textDecoration:"none"}}>
+				{user.name || user.id}<br/>
+			</a>
+			<small style={{fontSize:"0.6rem"}}>Change Tabs-for-Good settings in your account page above</small><br/>
 			<small><LogoutLink /></small>
 		</>;
 	}
 	return (
 		<div className="d-inline-block">
-			<div className="tab-user text-white flex-row position-relative">
+			<div className="tab-user flex-row position-relative">
 				<div className="tab-login pr-2 rounded-left">
-					<div className="tab-login-content p-2 bg-white text-dark rounded-right">
+					<div className="tab-login-content py-2 px-3 bg-white text-dark rounded-right">
 						{login}
 					</div>
 				</div>
 				<i className="fa fa-user invisible" style={{fontSize:"2rem", top:0}}></i>
-				<i className="fa fa-user position-absolute" style={{fontSize:"2rem", top:0, right:0}}></i>
+				<a href="http://localmy.good-loop.com/#account">
+					<i className="fa fa-user position-absolute text-white" style={{fontSize:"2rem", top:0, right:0}}></i>
+				</a>
 			</div>
 		</div>
 	);
@@ -190,18 +195,7 @@ const NewTabCharityCard = ({cid}) => {
 	let selected = false; // TODO user preferences
 
 	return (<Col sm={12} md={4} className="d-flex justify-content-center" >
-		{/*<Card selected={selected}>
-			{img && <img src={img} alt="charity" className='card-img-top'/>}	
-			<CardBody>
-				<CardTitle>{charity.name}</CardTitle>
-				<img src={charity.logo} alt="logo" className='logo-large' style={{height:'100%',overflow:'hidden',marginTop:0,marginLeft:"-1.25rem"}} />
-				<MDText source={desc} />
-			</CardBody>
-			<CardFooter>
-				<Button color={selected?'secondary':'primary'} onClick={e => toggleCharitySelect(cid)}>{selected? "select" : "de-select"}</Button>
-			</CardFooter>
-		</Card>*/}
-		<WhiteCircle className="m-3" circleCrop={charity.circleCrop}>
+		<WhiteCircle className="m-3 tab-charity" circleCrop={charity.circleCrop}>
 			<CharityLogo charity={charity} link/>
 		</WhiteCircle>
 	</Col>);
@@ -223,7 +217,7 @@ const google = e => {
 	if (search == null || search === '') {
 		return;
 	}
-	(window.parent || window.parent).location = 'https://www.ecosia.org/search?q=' + encURI();
+	(window.parent || window.parent).location = 'https://www.ecosia.org/search?q=' + encURI(search);
 };
 
 // HACK!!!

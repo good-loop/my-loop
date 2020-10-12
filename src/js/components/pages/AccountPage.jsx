@@ -5,6 +5,7 @@ import DataStore from '../../base/plumbing/DataStore';
 
 import DigitalMirrorCard from '../cards/DigitalMirrorCard';
 import ConsentWidget from '../ConsentWidget';
+import NewTabOptions from '../NewTabOptions';
 import SignUpConnectCard from '../cards/SignUpConnectCard';
 import LinkedProfilesCard from '../cards/LinkedProfilesCard';
 import MyLoopNavBar from '../MyLoopNavBar';
@@ -50,6 +51,12 @@ const Page = () => {
 					<CardHeader>Linked Profiles</CardHeader>
 					<CardBody>
 						<LinkedProfilesCard xids={xids} />
+					</CardBody>
+				</BSCard>
+				<BSCard>
+					<CardHeader>Tabs-for-Good settings</CardHeader>
+					<CardBody>
+						{Login.isLoggedIn()? <NewTabOptions xids={xids} /> : <Misc.LoginToSee /> }
 					</CardBody>
 				</BSCard>
 				
