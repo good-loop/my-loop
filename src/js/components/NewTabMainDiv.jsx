@@ -62,21 +62,17 @@ const WebtopPage = () => {
 
 	return (
 		<BG src={bg.src} fullscreen opacity={0.9}>
-			<div className="position-fixed text-white p-3" style={{top: 0, left: 0, width:"100vw"}}>
-				<Row>
-					<Col>
-						£1,000,000 raised
-					</Col>
-					<Col>
-						<LoginAccountControl />
-					</Col>
-				</Row>
+			<div className="position-fixed p-3" style={{top: 0, left: 0, width:"100vw", zIndex:10}}>
+				<div className="d-flex justify-content-end">
+					<LoginAccountControl />
+				</div>
 			</div>
+			<DonationCount className="mt-2"/>
 			<div className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{top: 0, left: 0, width:"100vw", height:"100vh"}}>
 				<div className="container h-100 flex-column justify-content-center unset-margins">
 
-					<div className="w-100">			
-						<div className="w-50 mx-auto mb-5">
+					<div className="w-100 pb-3">
+						<div className="w-50 mx-auto">
 							<Search/>
 						</div>
 					</div>
@@ -103,10 +99,27 @@ const WebtopPage = () => {
 
 const Search = () => {
 	return (<>
-		<Form onSubmit={google} inline className="flex-row" >
+		<Form onSubmit={google} inline className="flex-row tab-search-form" >
 			<i className="fa fa-search tab-search mr-2" onClick={google}></i><PropControl type="search" prop="q" path={['widget', 'search']} className="flex-grow" />
 		</Form>
 	</>);
+};
+
+const DonationCount = ({className}) => {
+	return (
+		<div className={space("d-flex justify-content-center", className)}>
+			<Row className="bg-white w-25 p-2 rounded">
+				<Col md={4}>
+					<img src="/img/gl-logo/LogoMark/logo.svg" alt="Good-Loop logo" className="w-100"/>
+				</Col>
+				<Col md={8} className="flex-row justify-content-center align-items-center">
+					<p>
+						£1,000,000 raised
+					</p>
+				</Col>
+			</Row>
+		</div>
+	);
 };
 
 const LoginAccountControl = () => {
@@ -120,14 +133,19 @@ const LoginAccountControl = () => {
 			<small><LogoutLink /></small>
 		</>;
 	}
-	return (<div className="tab-user flex-row">
-		<div className="tab-login">
-			<div className="tab-login-content">
-				{login}
+	return (
+		<div className="d-inline-block">
+			<div className="tab-user text-white flex-row position-relative">
+				<div className="tab-login pr-2 rounded-left">
+					<div className="tab-login-content p-2 bg-white text-dark rounded-right">
+						{login}
+					</div>
+				</div>
+				<i className="fa fa-user invisible" style={{fontSize:"2rem", top:0}}></i>
+				<i className="fa fa-user position-absolute" style={{fontSize:"2rem", top:0, right:0}}></i>
 			</div>
 		</div>
-		<i className="fa fa-user pl-2" style={{fontSize:"2rem"}}></i>
-	</div>);
+	);
 };
 
 
@@ -199,7 +217,13 @@ const toggleCharitySelect = e => {
 const google = e => {
 	stopEvent(e);
 	// NB: use window.parent to break out of the newtab iframe, otherwise ecosia objects
-	(window.parent || window.parent).location = 'https://www.ecosia.org/search?q=' + encURI(DataStore.getValue('widget', 'search', 'q'));
+	const search = DataStore.getValue('widget', 'search', 'q');
+	// Cancel search if empty
+	// DONT use !search - if user searches a string that can evaluate falsy, like '0', it will cause a false positive
+	if (search == null || search === '') {
+		return;
+	}
+	(window.parent || window.parent).location = 'https://www.ecosia.org/search?q=' + encURI();
 };
 
 // HACK!!!
