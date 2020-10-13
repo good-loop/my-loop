@@ -42,25 +42,26 @@ challenges facing our planet."`,
 
 /**
  * 
- * @param {!NGO[]} charities 
+ * @param {!NGO[]} charities These already have donation info added to them
  */
 const Charities = ({ charities }) => {
 	let dupeIds = [];
 	// augment with SoGive data
 	let sogiveCharities = charities.map(charityOriginal => {
-
 		// Shallow copy charity obj
 		let charity = Object.assign({}, charityOriginal);
-		if ( ! normaliseSogiveId(charity.id)) {
+		const sogiveId = normaliseSogiveId(charity.id);
+		if ( ! sogiveId) {
 			console.warn("Charity without an id?!", charity);
 			return charity;
 		}
 		// Remove duplicates
-		if (dupeIds.includes(normaliseSogiveId(charity.id)))
+		if (dupeIds.includes(sogiveId)) {
 			return;
-		dupeIds.push(normaliseSogiveId(charity.id));
+		}
+		dupeIds.push(sogiveId);
 		// NB: the lower-level ServerIOBase.js helps patch mismatches between GL and SoGive ids
-		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: normaliseSogiveId(charity.id), status: C.KStatus.PUBLISHED });
+		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: sogiveId, status: C.KStatus.PUBLISHED });
 		console.log('****** Got SoGive data for charity ' + charity.id, pvCharity.value);
 		if (!pvCharity.value) return charity; // no extra data yet
 		// merge, preferring SoGive data
@@ -88,9 +89,9 @@ const Charities = ({ charities }) => {
 				<div className="row pb-5 justify-content-center">
 					{sogiveCharitiesWithDonations.map((charity, i) =>
 						<CharityMiniCard
-							i={i} key={normaliseSogiveId(charity.id)}
+							i={i} key={charity.id}
 							charity={charity}
-							NGOid={normaliseSogiveId(charity.id)}
+							NGOid={charity.id}
 							donationValue={charity.donation}
 						/>
 					)}
@@ -100,7 +101,7 @@ const Charities = ({ charities }) => {
 					<h2>How charities use the donations</h2>
 				</div>
 				{sogiveCharitiesWithDonations.map((charity, i) =>
-					<CharityCard i={i} key={normaliseSogiveId(charity.id)} charity={charity} donationValue={charity.donation} />
+					<CharityCard i={i} key={charity.id} charity={charity} donationValue={charity.donation} />
 				)}
 			</Container>
 		</div>
