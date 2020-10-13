@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { Container } from 'reactstrap';
 import ActionMan from '../../plumbing/ActionMan';
-import CharityMiniCard from '../cards/CharityCard';
+import CharityMiniCard, {CharityLogo} from '../cards/CharityCard';
 import Money from '../../base/data/Money';
 import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
 import C from '../../C';
@@ -10,7 +10,6 @@ import { space } from '../../base/utils/miscutils';
 import printer from '../../base/utils/printer';
 import MDText from '../../base/components/MDText';
 import WhiteCircle from './WhiteCircle';
-import { CharityLogo } from '../cards/CharityCard';
 import DevLink from './DevLink';
 
 /**
