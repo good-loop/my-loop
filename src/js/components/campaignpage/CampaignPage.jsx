@@ -9,7 +9,7 @@ import pivot from 'data-pivot';
 import PV from 'promise-value';
 
 import Roles from '../../base/Roles';
-import { isPortraitMobile, sum, isMobile } from '../../base/utils/miscutils';
+import { isPortraitMobile, sum, isMobile, yessy, space } from '../../base/utils/miscutils';
 import C from '../../C';
 import ServerIO from '../../plumbing/ServerIO';
 import DataStore from '../../base/plumbing/DataStore';
@@ -18,6 +18,7 @@ import ActionMan from '../../plumbing/ActionMan';
 import Footer from '../Footer';
 import MyLoopNavBar from '../MyLoopNavBar';
 import Money from '../../base/data/Money';
+import Advert from '../../base/data/Advert';
 import CampaignPageDC from '../../data/CampaignPage';
 import SearchQuery from '../../base/searchquery';
 import ACard from '../cards/ACard';
@@ -34,6 +35,7 @@ import ListLoad from '../../base/components/ListLoad';
 import DevLink from './DevLink';
 import { LoginLink } from '../../base/components/LoginWidget';
 import ShareButton from '../ShareButton';
+import { assert } from '../../base/utils/assert';
 
 /**
  * HACK hard-coded list of campaigns which have PDF versions
@@ -207,70 +209,8 @@ const CampaignPage = () => {
 		viewcount4campaign = pivot(pvViewData.value, "by_campaign.buckets.$bi.{key, doc_count}", "$key.$doc_count");
 	}
 
-
-	// Fetch donations data
-	let sqDon = new SearchQuery();
-	for (let i = 0; i < ads.length; i++) {
-		sqDon = SearchQuery.or(sqDon, 'vert:' + ads[i].id);
-		if (ads[i].campaign) {
-			let sqc = SearchQuery.setProp(new SearchQuery(), 'campaign', ads[i].campaign);
-			sqDon = SearchQuery.or(sqDon, sqc);
-		}
-	}
-
-	// load the community total for the ad
-	let pvDonationsBreakdown = DataStore.fetch(['widget', 'CampaignPage', 'communityTotal', sqDon.query], () => {
-		// TODO campaign would be nicer 'cos we could combine different ad variants... but its not logged reliably
-		// Argh: Loop.Me have not logged vert, only campaign.
-		// but elsewhere vert is logged and not campaign.
-		// let q = ad.campaign? '(vert:'+adid+' OR campaign:'+ad.campaign+')' : 'vert:'+adid;
-		// TODO "" csv encoding for bits of q (e.g. campaign might have a space)
-		return ServerIO.getDonationsData({ q: sqDon.query });
-	}, true, 5 * 60 * 1000);
-	
-	if (pvDonationsBreakdown.error) {
-		// TODO let's refactor this out into a standard error card -- possibly stick it in wwappbase or Misc
-		return <div>Error: {pvDonationsBreakdown.error}. Try reloading the page. Contact us if this persists.</div>;
-	}
-
-	let ncampaignTotal = pvDonationsBreakdown.value && pvDonationsBreakdown.value.total;
-	let ndonationValue = ncampaignTotal; // check if statically set and, if not, then update with latest figures
-	// Allow the campaign page to override and specify a total
-	let campaignPageDonations = ads.map(ad => ad.campaignPage && CampaignPageDC.donation(ad.campaignPage)).filter(x => x);
-	if (campaignPageDonations.length === ads.length) {
-		ndonationValue = Money.total(campaignPageDonations);
-	}
-	if (ndonationValue && ndonationValue.value) ndonationValue = ndonationValue.value; // WTF??
-	// also the per-charity numbers
-	let ndonByCid = pvDonationsBreakdown.value && pvDonationsBreakdown.value.by_cid;
-
-	/** Calculates total donations per charity based on percentage available, adding [donation] and [donationPercentage] to the charities object  */
-	const assignUnsetDonations = () => {
-		if (!ndonationValue) {
-			console.warn("Missing ndonationValue");
-			return;
-		}
-		charities = charities.map(char => {
-			if (ndonByCid && ndonByCid[char.id]) { // if the charities have been edited after the campaign they might be missing values.
-				let newChar = { ...char, donation: Math.floor(ndonByCid[char.id].value) };
-				if (!newChar.donation) newChar.donation = 0; // Some charities were giving undefined donations - make sure their 0 or they will bring up NaNs in calculations
-				return newChar;
-			}
-			let newChar = { ...char};
-			if (!newChar.donation) newChar.donation = 0; // MAKE SURE donations are 0, not undefined or otherwise falsey
-			return newChar;
-		});
-
-		const donationTotalMinusUnset = charities.reduce((t, { donation }) => t + donation, 0);
-		charities = charities.map(e => {
-			const percentage = e.donation * 100 / donationTotalMinusUnset;
-			const calculatedDonation = percentage * ndonationValue / 100;
-			let newChar = { ...e, donation: calculatedDonation, donationPercentage: percentage };
-			return newChar;
-		});
-	}; // ./assignUnsetDonations
-
-	assignUnsetDonations();
+	const donation4charity = fetchDonationData({ads});
+	const donationTotal = donation4charity.total;
 
 	{	// NB: some very old ads may not have charities
 		let noCharityAds = ads.filter(ad => !ad.charities);
@@ -311,7 +251,7 @@ const CampaignPage = () => {
 		<CSS css={campaignPage && campaignPage.customCss} />
 		<CSS css={branding.customCss} />
 		<div className="widepage CampaignPage text-center gl-btns">
-			<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaignPage} donationValue={ndonationValue} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
+			<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaignPage} donationValue={donationTotal} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
 
 			<HowDoesItWork nvertiserName={nvertiserName} />
 
@@ -319,13 +259,13 @@ const CampaignPage = () => {
 				<AdvertsCatalogue
 					ads={ads}
 					viewcount4campaign={viewcount4campaign}
-					ndonationValue={ndonationValue}
+					donationTotal={donationTotal}
 					nvertiserName={nvertiserName}
 					totalViewCount={totalViewCount}
 				/>
 			)}
 
-			<Charities charities={charities} />
+			<Charities charities={charities} donation4charity={donation4charity} />
 
 			<div className="bg-white">
 				<Container>
@@ -378,6 +318,118 @@ const CampaignPage = () => {
 	);
 }; // ./CampaignPage
 
+
+/**
+ * This may fetch data from the server. It returns instantly, but that can be with some blanks.
+ * 
+ * ??Hm: This is an ugly long method with a server-side search-aggregation! Should we do these as batch calculations on the server??
+ * 
+ * @param {!Advert[]} ads
+ * @returns {cid:Money} donationForCharity, with a .total property for the total
+ */
+const fetchDonationData = ({ads}) => {
+	const donationForCharity = {};
+	if ( ! ads.length) return donationForCharity; // paranoia
+	// things
+	let adIds = ads.map(ad => ad.id);
+	let campaignIds = ads.map(ad => ad.campaign);
+	let charityIds = _.flatten(ads.map(Advert.charityList));
+	// Campaign level total info?
+	let campaignPageDonations = ads.map(ad => ad.campaignPage && CampaignPageDC.donation(ad.campaignPage)).filter(x => x);
+	if (campaignPageDonations.length === ads.length) {
+		let donationTotal = Money.total(campaignPageDonations);
+		donationForCharity.total = donationTotal;
+	}
+	// Campaign level per-charity info?	
+	let campaignsWithoutDonationData = [];
+	for (let i = ads; i < ads.length; i++) {
+		const ad = ads[i];
+		const cp = ad.campaignPage;
+		// no per-charity data? (which is normal)
+		if ( ! cp || ! cp.dntn4charity || Object.values(cp.dntn4charity).filter(x => x).length === 0) {
+			if (ad.campaign) {
+				campaignsWithoutDonationData.push(ad.campaign);
+			} else {
+				console.warn("Advert with no campaign: "+ad.id);
+			}
+			continue;
+		}
+		Object.entries(cp.dntn4charity).forEach((cid, dntn) => {
+			if ( ! dntn) return;
+			if (donationForCharity[cid]) {
+				dntn = Money.add(donationForCharity[cid], dntn);
+			}
+			assert(cid !== 'total', cp); // paranoia
+			donationForCharity[cid] = dntn;
+		});		
+	};
+	// Done?
+	if (donationForCharity.total && campaignsWithoutDonationData.length === 0) {
+		return donationForCharity;
+	}
+	
+	// Fetch donations data	
+	// ...by campaign or advert? campaign would be nicer 'cos we could combine different ad variants... but its not logged reliably
+	// (old data) Loop.Me have not logged vert, only campaign. But elsewhere vert is logged and not campaign.
+	let sq1 = adIds.map(id => "vert:"+id).join(" OR ");
+	// NB: quoting for campaigns if they have a space (crude not 100% bulletproof) 
+	let sq2 = campaignIds.map(id => "campaign:"+(id.includes(" ")? '"'+id+'"' : id)).join(" OR ");
+	let sqDon = SearchQuery.or(sq1, sq2);
+
+	// load the community total for the ad
+	let pvDonationsBreakdown = DataStore.fetch(['widget', 'CampaignPage', 'communityTotal', sqDon.query], () => {
+		return ServerIO.getDonationsData({ q: sqDon.query });
+	}, true, 5 * 60 * 1000);	
+	if (pvDonationsBreakdown.error) {
+		console.error("pvDonationsBreakdown.error", pvDonationsBreakdown.error);
+		return donationForCharity;
+	}
+	if ( ! pvDonationsBreakdown.value) {
+		return donationForCharity; // loading
+	}
+
+	let lgCampaignTotal = pvDonationsBreakdown.value.total;
+	// NB don't override a campaign page setting
+	if ( ! donationForCharity.total) {
+		donationForCharity.total = new Money(lgCampaignTotal);
+	}
+
+	// set the per-charity numbers
+	let donByCid = pvDonationsBreakdown.value.by_cid;
+	Object.entries(donByCid).forEach((cid, dntn) => {
+		if ( ! dntn) return;
+		if (donationForCharity[cid]) {
+			dntn = Money.add(donationForCharity[cid], dntn);
+		}
+		assert(cid !== 'total', cid); // paranoia
+		donationForCharity[cid] = dntn;
+	});
+
+	// assign unallocated money?
+	if ( ! donationForCharity.total) {
+		console.warn("No donation total?!");
+		return donationForCharity;
+	}
+	// NB: minus total, cos total also gets included in the sum-of-values
+	const allocatedMoney = Money.sub(Money.total(Object.values(donationForCharity)), donationForCharity.total);
+	const unallocatedMoney = Money.sub(donationForCharity.total, allocatedMoney);
+	if (Money.value(unallocatedMoney) <= 0) {
+		return donationForCharity;
+	}
+	// share it out based on the allocated money
+	charityIds.forEach(cid => {
+		let cDntn = donationForCharity[cid];
+		if ( ! cDntn) return;
+		let share = Money.divide(cDntn, allocatedMoney);
+		assert(share >=0 && share <= 1, cid);
+		let extra = Money.mul(unallocatedMoney, share);
+		donationForCharity[cid] = Money.add(cDntn, extra);
+	});
+	// done	
+	return donationForCharity;
+}; // ./fetchDonationData()
+
+
 /**
  * @param {!Advert} ad 
  * @returns {!string} Can be "unknown" to fill in for no-campaign odd data items
@@ -424,7 +476,7 @@ const HowDoesItWork = ({ nvertiserName }) => {
  * List of adverts with some info about them (like views, dates)
  * @param {*} param0 
  */
-const AdvertsCatalogue = ({ ads, viewcount4campaign, ndonationValue, nvertiserName, totalViewCount }) => {
+const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount }) => {
 	const [selected, setSelected] = useState(0);
 
 	/** Picks one Ad (with a video) from each campaign to display as a sample.  */
@@ -457,12 +509,12 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, ndonationValue, nvertiserNa
 
 	return (<>
 		<Container className="py-5">
-			<h2>Watch the {nvertiserName} ad{sampleAds.length > 1 ? "s" : ""} that raised <Counter currencySymbol="£" sigFigs={4} value={ndonationValue} minimumFractionDigits={2} preserveSize /><br />with {views} ad viewers</h2>
+			<h2>Watch the {nvertiserName} ad{sampleAds.length > 1 ? "s" : ""} that raised <Counter currencySymbol="£" sigFigs={4} value={donationTotal} minimumFractionDigits={2} preserveSize /><br />with {views} ad viewers</h2>
 			<div className="py-4" />
 			<AdvertCard
 				ad={selectedAd}
 				viewCountProp={views}
-				donationTotal={ndonationValue}
+				donationTotal={donationTotal}
 				totalViewCount={totalViewCount}
 			/>
 			{sampleAds.length > 1 &&

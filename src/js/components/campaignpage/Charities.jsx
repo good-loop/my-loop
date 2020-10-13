@@ -42,9 +42,10 @@ challenges facing our planet."`,
 
 /**
  * 
- * @param {!NGO[]} charities These already have donation info added to them
+ * @param {!NGO[]} charities
+ * @param {{string:Money}} donation4charity - charity ID to donation amount
  */
-const Charities = ({ charities }) => {
+const Charities = ({ charities, donation4charity }) => {
 	let dupeIds = [];
 	// augment with SoGive data
 	let sogiveCharities = charities.map(charityOriginal => {
@@ -63,7 +64,7 @@ const Charities = ({ charities }) => {
 		// NB: the lower-level ServerIOBase.js helps patch mismatches between GL and SoGive ids
 		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: sogiveId, status: C.KStatus.PUBLISHED });
 		console.log('****** Got SoGive data for charity ' + charity.id, pvCharity.value);
-		if (!pvCharity.value) return charity; // no extra data yet
+		if ( ! pvCharity.value) return charity; // no extra data yet
 		// merge, preferring SoGive data
 		// Prefer SoGive for now as the page is designed to work with generic info - and GL data is often campaign/player specific
 		// TODO: review this
@@ -71,14 +72,15 @@ const Charities = ({ charities }) => {
 		charity = Object.assign(charity, pvCharity.value);
 		// HACK: charity objs have conflicting IDs, force NGO to use id instead of @id
 		charity['@id'] = undefined;
-
+		charity.originalId = charityOriginal.id; // preserve for donation look-up
 		return charity;
 	});
 	// Remove null entries
 	sogiveCharities = sogiveCharities.filter(x => x);
 
-	let sogiveCharitiesWithDonations = sogiveCharities.filter(c => c.donation); // Get rid of charities with no logged donations.
-	let sogiveCharitiesWithoutDonations = sogiveCharities.filter(c => !c.donation); // Keep other charities for the "Also Supported" section
+	const getDonation = c => donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
+	let sogiveCharitiesWithDonations = sogiveCharities.filter(c => getDonation(c)); // Get rid of charities with no logged donations.
+	let sogiveCharitiesWithoutDonations = sogiveCharities.filter(c => ! getDonation(c)); // Keep other charities for the "Also Supported" section
 
 	return (
 		<div className="charity-card-container bg-gl-light-pink">
@@ -101,7 +103,7 @@ const Charities = ({ charities }) => {
 					<h2>How charities use the donations</h2>
 				</div>
 				{sogiveCharitiesWithDonations.map((charity, i) =>
-					<CharityCard i={i} key={charity.id} charity={charity} donationValue={charity.donation} />
+					<CharityCard i={i} key={charity.id} charity={charity} donationValue={getDonation(charity)} />
 				)}
 			</Container>
 		</div>
@@ -111,6 +113,7 @@ const Charities = ({ charities }) => {
 /**
  * 
  * @param {!NGO} charity This data item is a shallow copy
+ * @param {!Money} donationValue
  */
 const CharityCard = ({ charity, donationValue, i }) => {
 	// Prefer full descriptions here. If unavailable switch to summary desc.
@@ -128,17 +131,17 @@ const CharityCard = ({ charity, donationValue, i }) => {
 
 	return (<div className="p-3">
 		<div className={space("charity-quote row", !img && "no-img")}>
-			{img ?
+			{img &&
 				<div className="charity-quote-img col-md-5 p-0">
 					<img src={img} alt="charity" />
 				</div>
-			: null}
+			}
 			<div className={space("charity-quote-content", img && "col-md-7")}>
 				<div className="charity-quote-logo">
 					<img src={charity.logo} alt="logo" />
 				</div>
 				<div className="charity-quote-text">
-					{donationValue ? <div className="w-100"><h2><Counter currencySymbol="&pound;" value={donationValue} /> raised</h2></div> : null}
+					{donationValue ? <div className="w-100"><h2><Counter amount={donationValue} /> raised</h2></div> : null}
 					{charity.simpleImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
 					{!quote ? <MDText source={desc} /> : null}
