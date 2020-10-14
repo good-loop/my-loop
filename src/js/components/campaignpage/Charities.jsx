@@ -17,7 +17,7 @@ import DevLink from './DevLink';
  * 
  * TODO Have this as a field in the AdvertPage -> Charity editor or campaign page
  * 
- * // document custom return type
+ * // custom return type
  * @returns ?{img:?string, quote:string, source:string} mostly returns null
  */
 const tq = charity => {
