@@ -342,19 +342,22 @@ const fetchDonationData = ({ads}) => {
 	}
 	// Campaign level per-charity info?	
 	let campaignsWithoutDonationData = [];
-	for (let i = ads; i < ads.length; i++) {
+	for (let i = 0; i < ads.length; i++) {
 		const ad = ads[i];
 		const cp = ad.campaignPage;
 		// no per-charity data? (which is normal)
 		if ( ! cp || ! cp.dntn4charity || Object.values(cp.dntn4charity).filter(x => x).length === 0) {
 			if (ad.campaign) {
 				campaignsWithoutDonationData.push(ad.campaign);
+				console.log("No per-charity data with ad " + ad.id);
 			} else {
-				console.warn("Advert with no campaign: "+ad.id);
+				console.warn("Advert with no campaign: " + ad.id);
 			}
 			continue;
 		}
-		Object.entries(cp.dntn4charity).forEach((cid, dntn) => {
+
+		Object.keys(cp.dntn4charity).forEach(cid => {
+			let dntn = cp.dntn4charity[cid];
 			if ( ! dntn) return;
 			if (donationForCharity[cid]) {
 				dntn = Money.add(donationForCharity[cid], dntn);
@@ -365,6 +368,7 @@ const fetchDonationData = ({ads}) => {
 	};
 	// Done?
 	if (donationForCharity.total && campaignsWithoutDonationData.length === 0) {
+		console.log("Using ad data for donations");
 		return donationForCharity;
 	}
 	
@@ -396,7 +400,8 @@ const fetchDonationData = ({ads}) => {
 
 	// set the per-charity numbers
 	let donByCid = pvDonationsBreakdown.value.by_cid;
-	Object.entries(donByCid).forEach((cid, dntn) => {
+	Object.keys(donByCid).forEach(cid => {
+		let dntn = donByCid[cid];
 		if ( ! dntn) return;
 		if (donationForCharity[cid]) {
 			dntn = Money.add(donationForCharity[cid], dntn);
