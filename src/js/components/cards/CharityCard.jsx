@@ -36,7 +36,7 @@ const CharityMiniCard = ({charity, NGOid, donationValue, i}) => {
 					<CharityLogo charity={charity}/>
 				</WhiteCircle>
 				{donationValue? <h4 className="text-left">
-					<Counter currencySymbol="&pound;" value={donationValue} />&nbsp;raised
+					<Counter currencySymbol="&pound;" amount={donationValue} />&nbsp;raised
 				</h4> : null}
 				<div className="stub-divider"/>
 				<div className="charity-description text-block" >
