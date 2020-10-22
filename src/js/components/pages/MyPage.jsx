@@ -74,22 +74,24 @@ const SubscriptionBox = () => {
 	const hasSubmittedEmail = DataStore.getValue(['misc', 'hasSubmittedEmail']) === true;
 	const thankYouMessage = <h4>Thank you!</h4>;
 	return (<div className="bg-gl-light-red flex-column align-items-center justify-content-center subscription-box">
-		<h2>Subscribe to our monthly newsletter</h2>
+		<h1>Subscribe to our monthly newsletter</h1>
 		<br/><br/>
 		{hasSubmittedEmail ? thankYouMessage :
-			<Form inline>
-				<FormGroup className="mb-2 mr-sm-2 mb-sm-0 outer-form-group">
-					<PropControl
-						className="email-join-input"
-						prop="email"
-						path={ctaFormPath}
-						placeholder="email address"
-					/>
-				</FormGroup>
-				<Button onClick={doEmailSignUp} color="info" disabled={hasSubmittedEmail}>
-					Join us
-				</Button>
-			</Form>}
+			<Container>
+				<Form inline className="flex-row align-items-stretch m-auto">
+					<FormGroup className="mb-2 mr-sm-2 mb-sm-0 outer-form-group flex-grow-1 m-0 pr-3">
+						<PropControl
+							className="email-join-input w-100 h-100"
+							prop="email"
+							path={ctaFormPath}
+							placeholder="Type your email address"
+						/>
+					</FormGroup>
+					<Button onClick={doEmailSignUp} color="info" disabled={hasSubmittedEmail} className="flex-grow-0">
+						Sign me up
+					</Button>
+				</Form>
+			</Container>}
 	</div>);
 };
 

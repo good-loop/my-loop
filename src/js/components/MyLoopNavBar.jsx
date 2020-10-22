@@ -1,6 +1,6 @@
 import React from 'react';
 import Login from 'you-again';
-import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Navbar, NavbarBrand } from 'reactstrap';
+import { Container, Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 // import NavBar from '../base/components/NavBar';
 import C from '../C';
 import {LoginLink} from '../base/components/LoginWidget';
@@ -15,11 +15,11 @@ import {LoginLink} from '../base/components/LoginWidget';
   * Expects a logo url and currentPage object
   * If logoScroll is set, logoScroll will be displayed in place of logo when the navbar is scrolled
   */
-class MyLoopNavBar extends React.Component{
+class MyLoopNavBar extends React.Component {
 
 	constructor (props) {
 		super(props);
-		this.state = {scrolled: window.scrollY > 50}
+		this.state = {scrolled: window.scrollY > 50, open: false};
 		this.handleScroll = this.handleScroll.bind(this);
 	}
 
@@ -32,7 +32,11 @@ class MyLoopNavBar extends React.Component{
 	}
 
 	handleScroll () {
-		this.setState ({scrolled: window.scrollY > 50});
+		this.setState({scrolled: window.scrollY > 50});
+	}
+
+	toggle () {
+		this.setState({open: !this.state.open});
 	}
 
 	render () {
@@ -40,13 +44,32 @@ class MyLoopNavBar extends React.Component{
 		const logoSrc = this.props.logo || C.app.homeLogo || C.app.logo;
 		// logoScroll's fallback is logo
 		const logoScrollSrc = this.props.logoScroll;
-
+		
 		return (
-			<Navbar className={this.state.scrolled ? "scrolled" : ""} sticky='top'>
+			<Navbar className={this.state.scrolled ? "scrolled" : ""} sticky='top' expand='lg'>
 				<NavbarBrand href="/" className="mr-auto">
 					<img src={this.state.scrolled && logoScrollSrc ? logoScrollSrc : logoSrc} alt='logo' className='logo-small' />
 				</NavbarBrand>
-				<AccountMenu active={this.props.currentPage === 'account'} logoutLink='#my' />
+				
+				<NavbarToggler onClick={this.toggle}>
+					<img src="/img/Icon_Hamburger.png" className="navbar-toggler-icon"/>
+				</NavbarToggler>
+				<Collapse isOpen={this.props.open} navbar className="gl-bootstrap-navbar" id="navItemsDiv" style={{flexGrow:0, flexBasis:"40%"}}>
+					<Nav navbar className="navbar-nav w-100 justify-content-between">
+						<NavItem>
+							<NavLink href="https://www.good-loop.com/what-we-do.html">How it works</NavLink>
+						</NavItem>
+						<NavItem>
+							<NavLink href="https://www.good-loop.com/products.html">Ad campaigns</NavLink>
+						</NavItem>
+						<NavItem>
+							<NavLink href="https://www.good-loop.com/case-study/index.html">Charities</NavLink>
+						</NavItem>
+						<NavItem>
+							<NavLink className="btn btn-transparent fill" href="https://www.good-loop.com/contact.html">Get Involved</NavLink>
+						</NavItem>
+					</Nav>
+				</Collapse>
 			</Navbar>
 		);
 	}
