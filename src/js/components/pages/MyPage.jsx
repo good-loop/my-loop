@@ -1,10 +1,15 @@
 import React, { useEffect } from 'react';
+import { Container, Button, Form, FormGroup, Label} from 'reactstrap';
 // import PV from 'promise-value';
 import {yessy} from '../../base/utils/miscutils';
+
+import Profiler, {doRegisterEmail} from '../../base/Profiler';
 
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
 import Counter from '../../base/components/Counter';
+
+import PropControl from '../../base/components/PropControl';
 
 import ServerIO from '../../plumbing/ServerIO';
 import MyLoopNavBar from '../MyLoopNavBar';
@@ -35,13 +40,8 @@ const MyPage = () => {
 	return (
 		<div className='MyPage widepage'>
 			<LandingSection />
-			<OurMissionCard />
-			<RecentCampaignsCard />
 			<HowItWorksCard />
-			<ContactCard />
-			<TimeAndAttentionCard />
-			<Footer />
-			<TestAd />
+			<SubscriptionBox />
 		</div>
 	);
 };
@@ -53,6 +53,43 @@ const TestAd = () => {
 	return (<div>
 		<h4>Hello Dev. Yay! You've scrolled down here -- Let's see an ad and raise some money for charity :)</h4>
 		<script src="http://ib.adnxs.com/ttj?id=17741445&size=300x250" type="text/javascript"></script>
+	</div>);
+};
+
+const ctaFormPath = ['misc', 'ctaForm'];
+
+const doEmailSignUp = e => {
+	e.preventDefault();
+	const formData = DataStore.getValue(ctaFormPath);
+	if ( ! formData || ! formData.email) return; // quiet fail NB: we didnt like the disabled look for a CTA
+	formData.notify = 'daniel@good-loop.com'; // HACK
+	formData.useraction="Join My.Good-Loop";
+	doRegisterEmail(formData);
+	//@ts-ignore
+	DataStore.setValue(['misc', 'hasSubmittedEmail'], true);
+};
+
+const SubscriptionBox = () => {
+	//@ts-ignore
+	const hasSubmittedEmail = DataStore.getValue(['misc', 'hasSubmittedEmail']) === true;
+	const thankYouMessage = <h4>Thank you!</h4>;
+	return (<div className="bg-gl-light-red flex-column align-items-center justify-content-center subscription-box">
+		<h2>Subscribe to our monthly newsletter</h2>
+		<br/><br/>
+		{hasSubmittedEmail ? thankYouMessage :
+			<Form inline>
+				<FormGroup className="mb-2 mr-sm-2 mb-sm-0 outer-form-group">
+					<PropControl
+						className="email-join-input"
+						prop="email"
+						path={ctaFormPath}
+						placeholder="email address"
+					/>
+				</FormGroup>
+				<Button onClick={doEmailSignUp} color="info" disabled={hasSubmittedEmail}>
+					Join us
+				</Button>
+			</Form>}
 	</div>);
 };
 
@@ -70,102 +107,12 @@ const ContactCard = () => {
 	);
 };
 
-const TimeAndAttentionCard = () => (
-	// TODO We want two columns on desktop, one on mobile
-	<ACard className='bg-gl-red'>
-		<div className='bottom-text-container flex text-center white'>
-			<div className='p-3'>
-				<div className='sub-header font-bold text-left'>
-					Time and attention online are valuable.
-				</div>
-				<div className='sub-header text-left'>
-					Let's harness that value and use it for good.
-				</div>
-			</div>
-			<div className='text-block p-3'>
-				Good-Loop will never force you to engage with an ad. But, if you choose to give an advertiser some of your valuable time and attention, you get to give 50% of the advertisers' money to a relevant charitable cause.
-			</div>
-		</div>
-	</ACard>
-);
-
-const OurMissionCard = () => (
-	<ACard className='color-gl-red' name='our-mission'>
-		<div className='our-mission'>
-			<GlLogoGenericSvg />
-			<div>
-				<div className='sub-header'>
-					What's Good-Loop?
-				</div>
-				<div className='text-block'>
-					At Good-Loop, we raise money for charities using the power of advertising.<br />
-					Every time you watch one of our ads, we'll use the advertisers' money to make a donation to a charity of your choice.
-				</div>
-			</div>
-		</div>
-		<div className='sub-header' style={{textAlign: 'center'}}>
-			Here are some of our recent campaigns
-		</div>
-	</ACard>
-);
-
 
 const HowItWorksCard = () => {
-	return (<>
-		<ACard className="how-it-works" backgroundImage='/img/wheat_fields.jpg' name='how-it-works'>
-			<div className="how-it-works-banner">
-				<img src="img/heres-how-it-works-wide.svg" />
-			</div>
-			<div className='steps'>
-				<div className='step-1 finger white bg-gl-red p-1'>
-					<CircleChar>1</CircleChar>
-					<div className="step-desc">
-						<span className='header'>WATCH<span className="spacer">&nbsp;</span></span>
-						<span className='sub-header'>a 15 second video</span>
-					</div>
-				</div>
-				<div className='step-2 finger white bg-gl-red p-1'>
-					<CircleChar>2</CircleChar>
-					<div className="step-desc">
-						<span className='header'>CHOOSE<span className="spacer">&nbsp;</span></span>
-						<span className='sub-header'>a charity to support</span>
-					</div>
-				</div>
-				<div className='step-3 finger white bg-gl-red p-1'>
-					<CircleChar>3</CircleChar>
-					<div className="step-desc">
-						<span className='header'>DONATE</span><br />
-						<div className="divider"></div>
-						<span className='sub-header'>
-							50% of the advert cost<span className="breaker"> </span>goes to the charity
-						</span>
-					</div>
-				</div>
-			</div>
-		</ACard>
-		<div className="logo-ribbon">
-			<div className="container">{glLogoDefaultSvg}</div>
-		</div>
-		<div className='make-an-impact img-block'>
-			{splitColouredCircleSVG}
-			<div className="container">
-				<div className="impact-girl accent" />
-				<div className="impact-girl" />
-				<div className="white impact-card-text">
-					<div className="impact-card-header">
-						<div className="quiet">make an</div>
-						<div className='loud sub-header'>IMPACT</div>
-					</div>
-					<div className='text-block'>
-						In 2020, Good-Loopers raised more than <strong><Counter currencySymbol='£' value={1000000} animationLength={1000} /></strong> for charitable causes by signing up and watching adverts.<br/>
-						Help us achieve even more.
-					</div>
-				</div>
-				<SignUpConnectCard />
-			</div>
-			
-		</div>
-	</>);
+	return (<Container>
+		{//<img src="/img/LandingBackground/infographic.svg" className="w-100"/>
+		}
+	</Container>);
 };
 
 

@@ -2,18 +2,16 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */ // So ESLint don't yell at us for having an img as a button
 import React from 'react';
-import { Button, Form, FormGroup, Label } from 'reactstrap';
 import { useSpring } from 'react-spring';
 
 import MyLoopNavBar from './MyLoopNavBar';
 import BackgroundFader from './BackgroundFader';
-import PropControl from '../base/components/PropControl';
 import DataStore from '../base/plumbing/DataStore';
-import Profiler, {doRegisterEmail} from '../base/Profiler';
 import AB from './AB';
 import CSS from '../base/components/CSS';
 import Money from '../base/data/Money';
 import Counter from '../base/components/Counter';
+import ShareButton from './ShareButton';
 
 const springPageDown = (setY: Function): void => {
 	const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -36,80 +34,53 @@ const LandingSection = (): JSX.Element => {
 			<div className="landing-bg">
 				{/* 
 				//@ts-ignore */}
-				<BackgroundFader />
-				{/* <img className="background-image" src={ bgImages[0] } alt="background" /> */}
+				<LandingBackground />
 				<CtaBox />
 				<img
 					className="scroll-down-button"
-					src="/img/scroll-down.png"
+					src="/img/LandingBackground/arrow.png"
 					alt="scroll down"
 					onClick={ (): void => springPageDown(setY) }
 				/>
+				<ShareButton
+					absolute
+					className="btn-transparent fill"
+					style={{bottom: 30, left: 30}}
+					title={"My-Loop"}
+					image={"/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png"}
+					description={"Using ads for good"}
+					url={window.location.href}>
+						Share
+				</ShareButton>
 			</div>
 		</>
 	);
 };
 
-const ctaFormPath = ['misc', 'ctaForm'];
-
-const doEmailSignUp = (e: { preventDefault: () => void }): void => {
-	e.preventDefault();
-	const formData: any = DataStore.getValue(ctaFormPath);
-	if ( ! formData || ! formData.email) return; // quiet fail NB: we didnt like the disabled look for a CTA
-	formData.notify = 'daniel@good-loop.com'; // HACK
-	formData.useraction="Join My.Good-Loop";
-	doRegisterEmail(formData);
-	//@ts-ignore
-	DataStore.setValue(['misc', 'hasSubmittedEmail'], true);
-};
+const LandingBackground = () => {
+	return (<div className="background-image" >
+		<div className="hover-expand-image">
+			<img src="/img/LandingBackground/back-1.png"/>
+		</div>
+		<div className="hover-expand-image">
+			<img src="/img/LandingBackground/back-2.png"/>
+		</div>
+		<div className="hover-expand-image">
+			<img src="/img/LandingBackground/back-3.png"/>
+		</div>
+		<div className="hover-expand-image">
+			<img src="/img/LandingBackground/back-4.png"/>
+		</div>
+	</div>);
+}
 
 const CtaBox: React.FC = () => {
-	const thankYouMessage = <h4>Thank you!</h4>;
-	//@ts-ignore
-	const hasSubmittedEmail = DataStore.getValue(['misc', 'hasSubmittedEmail']) === true;
 	// NB: the total is higher -- but we need to clean up our donation tracker docs before we can reliably report it. March 2020
 	const total = new Money("£1000000");
 	//@ts-ignore
 	return (
 		<div className="cta-box">
-			{/* 
-			//@ts-ignore */}
-			<AB label='ctatext'>
-				<>
-					<h2>Turn Advertising into a Force for Good</h2>
-					<h4>Your time, attention, &amp; data are valuable.</h4>
-					<h4>Sign up and use this value for good.</h4>
-				</>
-				<>
-					<h2>Turn Advertising into a Force for Good</h2>
-					<h4>Donate a few spare seconds to charity and see it add up.</h4>
-					{/* 
-					//@ts-ignore */}
-					<h4 className="donation-raised-counter">Together we've raised over <Counter amount={total} initial={100000} /></h4>
-				</>
-			</AB>
-			{hasSubmittedEmail ? thankYouMessage :
-				<Form inline>
-					<FormGroup className="mb-2 mr-sm-2 mb-sm-0 outer-form-group">
-						<PropControl
-							className="email-join-input"
-							prop="email"
-							path={ctaFormPath}
-							placeholder="email address"
-						/>
-					</FormGroup>
-					<Button onClick={doEmailSignUp} color="info" disabled={hasSubmittedEmail}>
-						Join us
-					</Button>
-				</Form>}
-			{/* 
-			//@ts-ignore */}
-			<AB label='ctatext'>
-				{/* 
-				//@ts-ignore */}
-				<h4>Together we've raised over <Counter amount={total} initial={100000} /></h4>
-				<></>
-			</AB>
+			<h1>We raised over<br/><Counter amount={total} centerText preservePennies={false} /><br/>using ethical ads</h1>
 		</div>
 	);
 };

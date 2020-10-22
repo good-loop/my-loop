@@ -1,6 +1,6 @@
 import React from 'react';
 import {Row} from 'reactstrap';
-import { encURI } from '../base/utils/miscutils';
+import { encURI, space } from '../base/utils/miscutils';
 
 /*
  * Produces a button with sharing links and dynamic meta, using ShareServlet
@@ -36,7 +36,7 @@ class ShareButton extends React.Component {
 		url = encURI(url.href);
 
 		return (
-			<div className="position-relative">
+			<div className={space(this.props.absolute ? "position-absolute" : "position-relative", "d-inline-block")} style={this.props.style}>
 				<div className={"btn " + this.props.className} onClick={() => this.setState({showing: !this.state.showing})}><i className="fas fa-share-alt mr-2" />{this.props.children}</div>
 				{this.state.showing ?
 					<div className="share-popup">
