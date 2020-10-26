@@ -2,17 +2,15 @@ import React, { useState } from 'react';
 import { Row, Col } from 'reactstrap';
 import { space } from '../base/utils/miscutils';
 
-/** Takes a list of items and splits it into pages
+/** Takes a list of items as its children and splits it into pages according to specified grid dimensions
 @param {Number} rows how many rows each page has
 @param {Number} cols how many columns each page has
 */ 
-const Paginator = ({rows, cols, children}) => {
+const Paginator = ({rows, cols, children, displayCounter=false}) => {
 
 	const [pageNum, setPage] = useState(0);
 	const itemsPerPage = rows * cols;
 	const numPages = Math.ceil(children.length / itemsPerPage);
-	console.log(itemsPerPage + "items per page");
-	console.log("Index between " + pageNum * itemsPerPage + " and " + (pageNum + 1) * itemsPerPage);
 	let items = [];
 	for (let i = pageNum * itemsPerPage; i < (pageNum + 1) * itemsPerPage && i < children.length; i++) {
 		items.push(children[i]);
@@ -31,8 +29,12 @@ const Paginator = ({rows, cols, children}) => {
 	if (!page && children.length > 0) setPage(children[0].props.page);
 
 	return (<div className="paginator">
+		{displayCounter ?
+			<div className="paginator-counter">
+				Showing {items.length} / {children.length} items
+			</div> : null}
 		{page}
-		<div className="paginator-controls flex-row justify-content-between w-50 m-auto">
+		<div className="paginator-controls flex-row justify-content-between w-50 mx-auto mt-5">
 			<PageButton pageNum={pageNum-1<0 ? 0 : pageNum-1} setPage={setPage} disabled={pageNum-1<0}>
 				Previous
 			</PageButton>

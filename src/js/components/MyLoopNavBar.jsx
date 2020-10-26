@@ -61,7 +61,7 @@ class MyLoopNavBar extends React.Component {
 							<NavLink href="/#my?scroll">How it works</NavLink>
 						</NavItem>
 						<NavItem>
-							<NavLink href="https://www.good-loop.com/products.html">Ad campaigns</NavLink>
+							<NavLink href="/#ads">Ad campaigns</NavLink>
 						</NavItem>
 						<NavItem>
 							<NavLink href="/#charities">Charities</NavLink>

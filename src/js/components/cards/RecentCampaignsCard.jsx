@@ -1,64 +1,58 @@
 import React from 'react';
-import {SquareLogo} from '../Image';
+import { isPortraitMobile, space } from '../../base/utils/miscutils';
+import { Col, Row } from 'reactstrap';
+import GoodLoopAd from '../campaignpage/GoodLoopAd';
 
 const RecentCampaignsCard = () => {
 	// TODO fetch data from portal
-	const vertisers = 
+	const campaigns = 
 			[
 				{
 					name: "KitKat",
-					adid: "xsINEuJV",
-					logo: "/img/vertiser-logos/kitkat-logo-scaled.png",
-					background: "/img/kitkatpic.jpg",
-					charityName: 'Cocoa Initiative'
+					adid: "xsINEuJV"
 				},
 				{
 					name: "H&M",
-					adid: "CeuNVbtW",
-					logo: "/img/vertiser-logos/HM-logo.png",
-					background: "/img/hmpic.jpg",
-					charityName: 'Water Aid'
+					adid: "CeuNVbtW"
 				},
 				{
 					name: "Linda McCartney",
-					adid: "qprjFW1H",
-					logo: "/img/vertiser-logos/linda-mac-logo.png",
-					background: "/img/lindamccartneypic.jpg",
-					charityName: 'Food Banks'
+					adid: "qprjFW1H"
 				},
 				{
 					name: "WWF",
-					adid: "I6g1Ot1b",
-					logo: "/img/vertiser-logos/wwf-logo.png",
-					background: "/img/wwfpic.jpg",
-					charityName: 'WWF'
+					adid: "I6g1Ot1b"
 				},
 				{
 					name: "Doom Bar",
-					adid: "ma9LU5chyU",
-					logo: "/img/vertiser-logos/doom-bar-logo.png",
-					background: "/img/doombarpic.jpg",
-					charityName: 'Beach Cleans'
+					adid: "ma9LU5chyU"
 				},
 				{
 					name: "British Gas",
-					adid: "tEfu6NjSY5",
-					logo: "/img/vertiser-logos/bg-logo-mobile.svg",
-					background: "/img/britishgaspic.jpg",
-					charityName: 'Carers UK'
+					adid: "tEfu6NjSY5"
 				}
 			];
 	return (
-		<div className="flex-row flex-wrap" id="campaign-cards">
-			{vertisers.map(({adid, background, charityName, name, logo}) => (
-				<SquareLogo className="contrast-text campaign-card" alt={name} url={background} key={adid}>
-					<img className="vertiser-logo" src={logo} alt="vertiser-logo" />
-					<div className="campaign-name sub-header white">{charityName}</div>
-					<a className="logo-link" href={'/#campaign/?gl.vert=' + escape(adid)}>&nbsp;</a>
-				</SquareLogo>
-			))}
+		<div id="campaign-cards">
+			{campaigns.map(({adid, name}, i) => (<Row className="campaign" key={i}>
+				<TVAdPlayer adid={adid} className="col-6"/>
+				<Col md={6}>
+					{name} raised X
+				</Col>
+			</Row>))}
 		</div>
 	);
+};
+
+const TVAdPlayer = ({adid, className}) => {
+	const size = "landscape";
+	return <div className={space("position-relative", className)}>
+		<img src="/img/LandingBackground/TV_frame.png" className="w-100 invisible"/>
+		<img src="/img/LandingBackground/TV_frame.png" className="w-100 position-absolute" style={{right:"0", top:"0", zIndex:2}}/>
+		<div className="position-absolute tv-ad-player">
+			<GoodLoopAd vertId={adid} size={size} nonce={`${size}${adid}`} production />
+		</div>
+	</div>;
 };
 
 export default RecentCampaignsCard;
