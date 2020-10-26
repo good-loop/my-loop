@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "chart.js": "^2.8.0",
+    "csvtojson": "^2.0.10",
     "data-pivot": "^1.0.2",
     "easy-enums": "^1.1.7",
     "easyi18n": "^1.1.1",
