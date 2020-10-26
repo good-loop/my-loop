@@ -37,13 +37,14 @@ const MyPage = () => {
 
 	// <ShareAdCard /> is buggy, so removed for now
 
-	return (
+	return (<>
+		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg"/>
 		<div className='MyPage widepage'>
 			<LandingSection />
 			<HowItWorksCard />
 			<SubscriptionBox />
 		</div>
-	);
+	</>);
 };
 
 
@@ -111,10 +112,9 @@ const ContactCard = () => {
 
 
 const HowItWorksCard = () => {
-	return (<Container>
-		{//<img src="/img/LandingBackground/infographic.svg" className="w-100"/>
-		}
-	</Container>);
+	return (<div className="bg-white py-5"><Container>
+		<img src="/img/LandingBackground/infographic.png" className="w-100"/>
+	</Container></div>);
 };
 
 

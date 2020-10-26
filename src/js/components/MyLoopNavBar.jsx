@@ -14,12 +14,13 @@ import {LoginLink} from '../base/components/LoginWidget';
   * Navbar for all My-Loop pages
   * Expects a logo url and currentPage object
   * If logoScroll is set, logoScroll will be displayed in place of logo when the navbar is scrolled
+  * If alwaysScrolled is set, the navbar will always display the scrolled version
   */
 class MyLoopNavBar extends React.Component {
 
 	constructor (props) {
 		super(props);
-		this.state = {scrolled: window.scrollY > 50, open: false};
+		this.state = {scrolled: this.props.alwaysScrolled ? true : window.scrollY > 50, open: false};
 		this.handleScroll = this.handleScroll.bind(this);
 	}
 
@@ -32,7 +33,7 @@ class MyLoopNavBar extends React.Component {
 	}
 
 	handleScroll () {
-		this.setState({scrolled: window.scrollY > 50});
+		this.setState({scrolled: this.props.alwaysScrolled ? true : window.scrollY > 50});
 	}
 
 	toggle () {
@@ -57,13 +58,13 @@ class MyLoopNavBar extends React.Component {
 				<Collapse isOpen={this.props.open} navbar className="gl-bootstrap-navbar" id="navItemsDiv" style={{flexGrow:0, flexBasis:"40%"}}>
 					<Nav navbar className="navbar-nav w-100 justify-content-between">
 						<NavItem>
-							<NavLink href="https://www.good-loop.com/what-we-do.html">How it works</NavLink>
+							<NavLink href="/#my?scroll">How it works</NavLink>
 						</NavItem>
 						<NavItem>
 							<NavLink href="https://www.good-loop.com/products.html">Ad campaigns</NavLink>
 						</NavItem>
 						<NavItem>
-							<NavLink href="https://www.good-loop.com/case-study/index.html">Charities</NavLink>
+							<NavLink href="/#charities">Charities</NavLink>
 						</NavItem>
 						<NavItem>
 							<NavLink className="btn btn-transparent fill" href="https://www.good-loop.com/contact.html">Get Involved</NavLink>
