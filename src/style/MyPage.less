@@ -1,9 +1,3 @@
-
-// ??
-.page.MyPage {
-	text-align: center;
-}
-
 .navbar {
 
 	// Overwrites .fixed-top class from base element. Necessary due to the pages style.
@@ -23,30 +17,6 @@
 	// Make text more readable against dark sections of the page
 	#top-right-menu, .dropdown-toggle {
 		text-shadow: 0 0 1px #000;
-	}
-}
-
-/** strip across the page, with the GL logo on the right */
-.logo-ribbon {
-	position: relative;
-	height: 2rem;
-	margin: 0.25rem 0;
-	background-color: @gl-red;
-	
-	.container {
-		position: relative; // use as reference point for gl-logo-svg positioning
-		height: 100%; // take height of ribbon to help position logo
-	}
-
-	// vertically align to middle of ribbon, pin to right edge of container
-	.gl-logo-svg {
-		height: 9rem;
-		width: 9rem;
-		position: absolute;
-		top: 50%;
-		transform: translateY(-50%);
-		right: 1rem;
-		z-index: 1; // needs to appear in front of subsequent div
 	}
 }
 
@@ -71,150 +41,10 @@
 		}
 		padding: 200px 0px;
 	}
-
-	.splash.img-block {
-		position: relative;
-		height: 30em;
-
-		background-image: url("/img/tulips.jpg");
-		background-position: center;
-
-		// Restrict connect widget & decorations to centre
-		.container {
-			position: relative;
-			height: 100%;
-			padding-top: 3.5rem; // sum of .navbar-brand height 2.5em, .navbar padding 0.5em
-		}
-
-		.doing-good, .little-flowers {
-			position: absolute;
-			right: 0;
-			width: 18rem;
-		}
-		.doing-good {
-			top: 2rem;
-		}
-		.little-flowers {
-			bottom: 0;
-		}
-
-		.social-media-card {
-			z-index: 1; // appear in front of flowers on mobile
-			position: absolute;
-			bottom: 0;
-			left: 0;
-		}
-	}
 }
-
-
-.our-mission {
-	.flex-row();
-	
-	padding: 2rem;
-
-	.gl-logo-svg {
-		height: 6em;
-		margin-right: 2em;
-	}
-
-	.text {
-		// Stick text to top of div
-		// flex-row should be applied to parent element
-		margin-top: 0;
-	}
-}
-
-.ShareAd {
-	max-width: 800px;
-	margin: 0 auto;
-	.unit {
-		margin-bottom: 2em;
-		.click-to-load {
-			text-align: center;
-			line-height: 1.5;
-			padding: 0.5em;
-			color: @gl-red;
-			border: 1px solid @gl-red;
-			border-radius: 0.25rem;
-			margin: 1rem;
-			cursor: pointer;
-		}
-	}
-}
-
-// Change impact card layout from:
-// *IMAGE* *TEXT*
-// to
-// *IMAGE*
-// *TEXT*
-// Former looks wonky on smaller screens 
-@media only screen and (max-width: 1110px) {
-	.impact-card {
-		.image-and-text, .reversed-image-and-text {
-			flex-direction: column;
-			
-			> * {
-				width: 100%;
-			}
-		}
-	}
-
-	// Responsive behaviour for bottom text
-	.bottom-text-container {
-		flex-direction: column;
-		> * {
-			width: 100%;
-			margin: 0;
-		}
-	}
-}
-
-
-@media (max-width: 768px) {
-	// shrink the overflowing logo on the ribbon for smaller screens
-	.logo-ribbon {
-		.gl-logo-svg {
-			max-height: 9rem;
-			min-height: 6rem;
-			max-width: 9rem;
-			min-width: 6rem;
-			// 27vw = 9rem at current base font sizing & 768px width
-			height: 27vw;
-			width: 27vw;
-		}
-	}
-
-	.how-it-works .steps .finger {
-		max-width: unset;
-	}
-}
-
-// Shrink the red coat girl to avoid clashing with Make An Impact text on phones
-@media (max-width: 991px) { // next BS size starts at 992px
-	.make-an-impact .impact-girl {
-		height: 60%;
-	}
-}
-
 
 // Special cases for extra-tiny screens
 @media (max-width: 450px) {
-	// The "How It Works" steps need help flowing
-	.finger {
-		.spacer {
-			display: none; // don't put a leading space on the second line of eg WATCH / a 15 second video
-		}
-		.breaker {
-			display: inline;
-			font-size: 100%;
-		}
-	}
-	// Shrink nav elements further on smallest screens so account menu isn't bumped to second line
-	.navbar .navbar-brand .logo-small {
-		width: 5em;
-		height: 1em;
-	}
 	.navbar .dropdown-toggle {
 		font-size: 100%; // overriding BS (intended for desktop, because we overrode the hamburger) value of 1rem
 	}
