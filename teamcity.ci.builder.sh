@@ -21,7 +21,7 @@ PROJECT_USES_NPM='yes' # yes or no
 PROJECT_USES_WEBPACK='yes' #yes or no
 PROJECT_USES_JERBIL='no' #yes or no
 PROJECT_USES_WWAPPBASE_SYMLINK='yes'
-BRANCH='my-loop-revamp' # e.g. feature/impact-hub -- ??What are the setup steps to do CI builds from a branch?? Do we need to change branch on the server??
+BRANCH='master' # e.g. feature/impact-hub -- ??What are the setup steps to do CI builds from a branch?? Do we need to change branch on the server??
 
 # Where is the test server?
 TARGET_SERVERS=(baker.good-loop.com)
