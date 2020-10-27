@@ -23,8 +23,13 @@ const springPageDown = (setY: Function): void => {
 	});
 };
 
+let setYFunc: Function = () => {return null};
+
+const springPage = () => springPageDown(setYFunc);
+
 const LandingSection = (): JSX.Element => {
 	const [, setY] = useSpring(() => ({ y: 0 }));
+	setYFunc = setY;
 
 	return (
 		<>
@@ -83,3 +88,4 @@ const CtaBox: React.FC = () => {
 };
 
 export default LandingSection;
+export { springPage };
