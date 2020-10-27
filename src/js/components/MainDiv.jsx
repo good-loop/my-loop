@@ -20,6 +20,7 @@ import NavBar from './MyLoopNavBar';
 import MyPage from './pages/MyPage';
 import MyCharitiesPage from './pages/MyCharitiesPage';
 import MyAdCampaignsPage from './pages/MyAdCampaignsPage';
+import GetInvolvedPage from './pages/GetInvolvedPage';
 import CampaignPage from './campaignpage/CampaignPage';
 import {BasicAccountPage} from '../base/components/AccountPageWidgets';
 import E404Page from '../base/components/E404Page';
@@ -39,7 +40,8 @@ const PAGES = {
 	test: TestPage,
 	account: AccountPage,
 	charities: MyCharitiesPage,
-	ads: MyAdCampaignsPage
+	ads: MyAdCampaignsPage,
+	involve: GetInvolvedPage
 	// redesign: RedesignPage,
 	// redesign2: Redesign2Page
 };

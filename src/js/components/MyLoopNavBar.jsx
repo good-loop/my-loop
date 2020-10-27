@@ -3,6 +3,7 @@ import Login from 'you-again';
 import { Container, Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 // import NavBar from '../base/components/NavBar';
 import C from '../C';
+import { space } from '../base/utils/miscutils';
 import {LoginLink} from '../base/components/LoginWidget';
 
 /**
@@ -45,9 +46,13 @@ class MyLoopNavBar extends React.Component {
 		const logoSrc = this.props.logo || C.app.homeLogo || C.app.logo;
 		// logoScroll's fallback is logo
 		const logoScrollSrc = this.props.logoScroll;
-		
+		// Optionally uses colour overrides for styling on scroll and default
+		const style = {background:this.state.scrolled ? (this.props.scrollColour ? this.props.scrollColour : "") : (this.props.normalColour ? this.props.normalColour : ""), ...this.props.style};
+		if (this.state.scrolled) Object.assign(style, this.props.scrollStyle);
 		return (
-			<Navbar className={this.state.scrolled ? "scrolled" : ""} sticky='top' expand='lg'>
+			<Navbar className={this.state.scrolled ? "scrolled" : ""}
+				style={style}
+				sticky='top' expand='lg'>
 				<NavbarBrand href="/" className="mr-auto">
 					<img src={this.state.scrolled && logoScrollSrc ? logoScrollSrc : logoSrc} alt='logo' className='logo-small' />
 				</NavbarBrand>
@@ -67,7 +72,7 @@ class MyLoopNavBar extends React.Component {
 							<NavLink href="/#charities">Charities</NavLink>
 						</NavItem>
 						<NavItem>
-							<NavLink className="btn btn-transparent fill" href="https://www.good-loop.com/contact.html">Get Involved</NavLink>
+							<NavLink className="btn btn-transparent fill" href="/#involve">Get Involved</NavLink>
 						</NavItem>
 					</Nav>
 				</Collapse>

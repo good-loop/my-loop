@@ -101,7 +101,7 @@ const MyCharitiesPage = () => {
 			<img src="/img/LandingBackground/Charities_banner.png" className="w-100 mt-5"/>
 			<Container className="py-5">
 				<h1>Charities we donate to</h1>
-				<Paginator rows={5} cols={7} displayCounter>
+				<Paginator rows={5} cols={7} displayCounter displayLoad>
 					{charityLogos.map((c, i) => <div className="p-3 d-flex justify-content-center align-items-center" style={{height: "140px"}}>
 						<CharityLogo charity={c} key={i} style={{maxWidth: "100%", maxHeight:"100%"}} link/>
 					</div>)}

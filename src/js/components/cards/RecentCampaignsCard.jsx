@@ -1,10 +1,18 @@
 import React from 'react';
+import Login from 'you-again';
 import { isPortraitMobile, space } from '../../base/utils/miscutils';
-import { Col, Row } from 'reactstrap';
+import { Col, Row, Alert } from 'reactstrap';
 import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import SearchQuery from '../../base/searchquery';
 import ActionMan from '../../plumbing/ActionMan';
 import DataStore from '../../base/plumbing/DataStore';
+import Misc from '../../base/components/Misc';
+import ErrorAlert from '../../base/components/ErrorAlert';
+import Money from '../../base/data/Money';
+import CampaignPageDC from '../../data/CampaignPage';
+import Counter from '../../base/components/Counter';
+import ServerIO from '../../plumbing/ServerIO';
+import C from '../../C';
 
 const RecentCampaignsCard = () => {
 	// TODO fetch data from portal
@@ -37,52 +45,42 @@ const RecentCampaignsCard = () => {
 
 	campaigns.forEach(campaign => {
 		let {
-			'gl.vert': adid,
-			'gl.vertiser': vertiserid,
-			'gl.status': glStatus,
-			status,
-			via,
-			q = '',
-			landing,
+			status="PUBLISHED"
 		} = DataStore.getValue(['location', 'params']) || {};
 
 		// Which advert(s)?
 		const sq = adsQuery({ adid: campaign.adid });
 		let pvAds = fetchAds({ searchQuery: sq, status });
 		if (!pvAds) {
-			// No query -- show a list
-			// TODO better graphic design before we make this list widget public
-			if (!Login.isLoggedIn()) {
-				return <div>Missing: campaign or advertiser ID. Please check the link you used to get here.</div>;
-			}
-			//return <ListLoad type={C.TYPES.Advert} servlet="campaign" />;
+			console.log("No ads fetched");
 		}
 		if (!pvAds.resolved) {
-			//return <Misc.Loading text="Loading campaign info..." />;
+			return <Misc.Loading text="Loading campaign info..." />;
 		}
 		if (pvAds.error) {
-			//return <ErrorAlert>Error loading advert data</ErrorAlert>;
+			return <ErrorAlert>Error loading advert data</ErrorAlert>;
 		}
 
 		// If it's remotely possible to have an ad now, we have it. Which request succeeded, if any?
 		let adHits = pvAds.value.hits;
 		if (!adHits || !adHits.length) {
-			//return <Alert>Could not load adverts for {sq.query} {status}</Alert>; // No ads?!
+			return <Alert>Could not load adverts for {sq.query} {status}</Alert>; // No ads?!
 		}
 
 		campaign.ad = adHits[0];
-	});
+		console.log(campaign.ad);
+		if (!campaign.ad.id) console.warn("No id!");
 
-	// Get the advertiser's name (TODO append to advert as vertiserName)
-	const pvVertiser = ActionMan.getDataItem({ type: C.TYPES.Advertiser, id: ads[0].vertiser, status: C.KStatus.PUBLISHED });
-	const nvertiser = pvVertiser.value;
+		campaign.donation = fetchDonationData({ads: adHits});
+	});
 
 	return (
 		<div id="campaign-cards">
-			{campaigns.map(({adid, name}, i) => (<Row className="campaign" key={i}>
+			{campaigns.map(({donation, adid, name}, i) => (<Row className="campaign mb-5" key={i}>
 				<TVAdPlayer adid={adid} className="col-6"/>
-				<Col md={6} className="d-flex align-items-center text-center">
-					<h3>{name} raised  for charity</h3>
+				<Col md={6} className="flex-column align-items-center text-center justify-content-center">
+					<h3 className="mb-0">This ad helped {name}<br/>raise {donation ? <Counter currencySymbol="£" sigFigs={4} amount={donation} minimumFractionDigits={2} /> : "money"}</h3>
+					<a className="btn btn-primary mt-3" href={"/#campaign/?gl.vert=" + adid}>Find out more</a>
 				</Col>
 			</Row>))}
 		</div>
@@ -99,6 +97,14 @@ const TVAdPlayer = ({adid, className}) => {
 		</div>
 	</div>;
 };
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// The following is ripped code from CampaignPage.jsx trimmed for purpose
+// TODO: collect all this into a shared data utils js file
+///////////////////////////////////////////////////////////////////////////////
 
 /**
  * @returns {!SearchQuery}
@@ -136,6 +142,51 @@ const fetchAds = ({ searchQuery, status }) => {
 		return pvAdsDraft;
 	}
 	return pvAds;
+};
+
+/**
+ * 
+ * Cut-down version of the function from CampaignPage.jsx, which only looks for a total
+ * 
+ * @param {!Advert[]} ads
+ * @returns {cid:Money} donationForCharity, with a .total property for the total
+ */
+const fetchDonationData = ({ads}) => {
+	if ( ! ads.length) {
+		console.warn("Could not fetch donation data: empty ads list!");
+		return null; // paranoia
+	}
+	// things
+	let adIds = ads.map(ad => ad.id);
+	let campaignIds = ads.map(ad => ad.campaign);
+	// Campaign level total info?
+	let campaignPageDonations = ads.map(ad => ad.campaignPage && CampaignPageDC.donation(ad.campaignPage)).filter(x => x);
+	if (campaignPageDonations.length === ads.length) {
+		return Money.total(campaignPageDonations);
+	}
+
+	// Fetch donations data	
+	// ...by campaign or advert? campaign would be nicer 'cos we could combine different ad variants... but its not logged reliably
+	// (old data) Loop.Me have not logged vert, only campaign. But elsewhere vert is logged and not campaign.
+	let sq1 = adIds.map(id => "vert:"+id).join(" OR ");
+	// NB: quoting for campaigns if they have a space (crude not 100% bulletproof) 
+	let sq2 = campaignIds.map(id => "campaign:"+(id.includes(" ")? '"'+id+'"' : id)).join(" OR ");
+	let sqDon = SearchQuery.or(sq1, sq2);
+
+	// load the community total for the ad
+	let pvDonationsBreakdown = DataStore.fetch(['widget', 'CampaignPage', 'communityTotal', sqDon.query], () => {
+		return ServerIO.getDonationsData({ q: sqDon.query });
+	}, true, 5 * 60 * 1000);	
+	if (pvDonationsBreakdown.error) {
+		console.error("pvDonationsBreakdown.error", pvDonationsBreakdown.error);
+		return null;
+	}
+	if ( ! pvDonationsBreakdown.value) {
+		return null; // loading
+	}
+
+	let lgCampaignTotal = pvDonationsBreakdown.value.total;
+	return new Money(lgCampaignTotal);
 };
 
 export default RecentCampaignsCard;

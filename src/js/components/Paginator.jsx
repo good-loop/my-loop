@@ -6,7 +6,7 @@ import { space } from '../base/utils/miscutils';
 @param {Number} rows how many rows each page has
 @param {Number} cols how many columns each page has
 */ 
-const Paginator = ({rows, cols, children, displayCounter=false}) => {
+const Paginator = ({rows, cols, children, displayCounter=false, displayLoad=false}) => {
 
 	const [pageNum, setPage] = useState(0);
 	const itemsPerPage = rows * cols;
@@ -29,9 +29,10 @@ const Paginator = ({rows, cols, children, displayCounter=false}) => {
 	if (!page && children.length > 0) setPage(children[0].props.page);
 
 	return (<div className="paginator">
-		{displayCounter ?
+		{displayCounter || (displayLoad && items.length === 0) ?
 			<div className="paginator-counter">
-				Showing {items.length} / {children.length} items
+				{!displayLoad || items.length > 0 ? "Showing " + items.length + " / " + children.length + " items"
+				: "Loading..."}
 			</div> : null}
 		{page}
 		<div className="paginator-controls flex-row justify-content-between w-50 mx-auto mt-5">
