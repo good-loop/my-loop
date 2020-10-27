@@ -23,30 +23,47 @@
 .MyPage {
 	background-color:#eeeaea; // warm off-white - still feels open but falls back from page content
 	width: 100%;
-
-	.subscription-box {
-		h1,h2,h3,h4,h5 {
-			color: white;
-			font-weight: 600;
-		}
-		input {
-			font-size: 2rem;
-			border-radius: 0;
-			width: 100%;
-		}
-		.btn {
-			font-size: 1.5rem;
-			font-weight: 600;
-			padding-left: 5rem;
-			padding-right: 5rem;
-		}
-		padding: 200px 0px;
-	}
 }
 
 // Special cases for extra-tiny screens
 @media (max-width: 450px) {
 	.navbar .dropdown-toggle {
 		font-size: 100%; // overriding BS (intended for desktop, because we overrode the hamburger) value of 1rem
+	}
+}
+
+.big-sub-box {
+	h1,h2,h3,h4,h5 {
+		color: white !important;
+		font-weight: 600;
+	}
+	input {
+		font-size: 2rem;
+		border-radius: 0;
+		width: 100%;
+	}
+	.btn {
+		font-size: 1.5rem;
+		font-weight: 600;
+		padding-left: 5rem;
+		padding-right: 5rem;
+	}
+	p {
+		color: white;
+	}
+	padding: 200px 0px;
+	@media @md-max {
+		h1,h2,h3,h4,h5 {
+			font-size: 2rem;
+			text-align: center;
+			padding: 0px 10px;
+		}
+		input {
+			font-size: 1rem;
+		}
+		.btn {
+			font-size: 1rem;
+		}
+		padding: 50px 0;
 	}
 }

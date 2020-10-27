@@ -36,7 +36,7 @@ class ShareButton extends React.Component {
 		url = encURI(url.href);
 
 		return (
-			<div className={space(this.props.absolute ? "position-absolute" : "position-relative", "d-inline-block")} style={this.props.style}>
+			<div className={space(this.props.absolute ? "position-absolute" : "position-relative", "d-inline-block share-btn")} style={this.props.style}>
 				<div className={"btn " + this.props.className} onClick={() => this.setState({showing: !this.state.showing})}><i className="fas fa-share-alt mr-2" />{this.props.children}</div>
 				{this.state.showing ?
 					<div className="share-popup">

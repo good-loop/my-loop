@@ -76,8 +76,8 @@ const CtaBox: React.FC = () => {
 	const total = new Money("£1000000");
 	//@ts-ignore
 	return (
-		<div className="cta-box">
-			<h1>We raised over<br/><Counter amount={total} centerText preservePennies={false} /><br/>using ethical ads</h1>
+		<div className="title">
+			<h1>We've raised over<br/><Counter amount={total} centerText preservePennies={false} /><br/>using ethical ads</h1>
 		</div>
 	);
 };

@@ -6,6 +6,15 @@
 	width: 100%;
 	display: flex;
 
+	@media @md-max {
+		.share-btn {
+			bottom: 100px !important;
+			left: 50% !important;
+			transform: translateX(-50%);
+			z-index: 999;
+		}
+	}
+
 	.background-image {
 		filter: brightness(0.9);
 		position: absolute;
@@ -49,7 +58,7 @@
 		}
 	}
 
-	.cta-box {
+	.title {
 		margin: auto;
 		display: flex;
 		flex-direction: column;
@@ -58,17 +67,8 @@
 		z-index: 1;
 		color: white;
 	
-		.btn { // Vanilla BS button, except for colour to keep it consistent with our buttons elsewhere
-			background-color: #870000;
-			border-color: #870000; // no weird BS borders
-	
-			&:hover {
-				background-color: #770000;
-			}
-		}
-	
 		//// CTA Header text /////
-		h1, h2, h3, h4 {
+		h1 {
 			font-family: 'Montserrat', sans-serif;
 			font-weight: normal;
 			font-size: 5rem;
@@ -76,54 +76,8 @@
 			text-shadow: 0px 1px 3px black;
 			margin-bottom: 1.3rem; // Overrides Bootstrap default to separate elements.
 			align-self: center;
-		}
-		
-		// Setting a max width allows us to break lines where we need to on desktop.
-		// On smaller devices we let it expand to occupy between 80% and 100% of the section's width
-		// font-size and letter-spacing were modified to make them look good on all devices.
-		h2 { max-width: 650px; font-size: 200%; }
-		h4 { max-width: 480px; font-weight: 600; }
-	
-		@media only screen and (max-width: 900px) { // TODO: We could modify these rules slightly to make it look even better on iPads
-			h2 { max-width: 100%; font-size: 120%; letter-spacing: .1em; }
-			h4 { max-width: 80%; font-size: 100%; letter-spacing: .1em; }
-		}
-		///////////////////////
-	
-		//// FORM /////////////
-		.form-inline { // Centers elements inside CTA form
-			justify-content: center;
-			margin-bottom: 1rem;
-			// Actual input box should be 35% of the parent inline element,
-			// and the propcontrol inside 100% of the resulting space
-			.outer-form-group{
-				width: 35%;
-				margin-right: 0!important; // overwrites BS, eliminating gap
-				.form-group {
-					width: 100%;
-				}
-				@media only screen and (max-width: 767px) { width: 90%; }
-			}
-		}
-		.email-join-input {
-			width: 100%; // PropControl input occupies entire width of formgroup parent
-		}
-	
-		@media only screen and (max-width: 767px) {
-			max-width: 96%;
-		}
-		/////////////////////
-
-		//// iPhone 5se fix ////
-		// Old 5se models have a lower browser nav bar before the user starts
-		// scrolling. Thus the actual height to consider here is 460px. This hack
-		// addresses it.
-		@media screen and (max-height: 529px) {
-			margin-top: 20%;
-			.donation-raised-counter {
-				max-width: 100%;
-				letter-spacing: initial;
-				font-size: 90%;
+			@media @md-max {
+				font-size: 2rem;
 			}
 		}
 	}

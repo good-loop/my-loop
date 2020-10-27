@@ -1,6 +1,23 @@
 .navbar {
 	background: transparent;
 	transition: 0.2s;
+
+	@media (max-width: 1500px) {
+        font-size: 0.85rem;
+    }
+    @media (max-width: 1400px) {
+        font-size: 0.7rem;
+    }
+    @media (max-width: 1142px) {
+        font-size: 0.6rem;
+    }
+    @media (max-width: 1034px) {
+        font-size: 0.5rem;
+    }
+    @media @lg-max {
+        font-size: 1rem;
+    }
+
 	// Style login widget accordingly
 	.login-link {
 		text-shadow: none;

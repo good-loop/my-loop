@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { Row, Col } from 'reactstrap';
 import { space } from '../base/utils/miscutils';
+import { isPortraitMobile } from '../base/utils/miscutils';
 
 /** Takes a list of items as its children and splits it into pages according to specified grid dimensions
 @param {Number} rows how many rows each page has
 @param {Number} cols how many columns each page has
 */ 
-const Paginator = ({rows, cols, children, displayCounter=false, displayLoad=false}) => {
-
+const Paginator = ({rows, cols, rowsMD, colsMD, pageButtonRange, pageButtonRangeMD, children, displayCounter=false, displayLoad=false}) => {
+	if (isPortraitMobile() && rowsMD) rows = rowsMD;
+	if (isPortraitMobile() && colsMD) cols = colsMD;
+	if (isPortraitMobile() && pageButtonRangeMD) pageButtonRange = pageButtonRangeMD;
 	const [pageNum, setPage] = useState(0);
 	const itemsPerPage = rows * cols;
 	const numPages = Math.ceil(children.length / itemsPerPage);
@@ -16,14 +19,30 @@ const Paginator = ({rows, cols, children, displayCounter=false, displayLoad=fals
 		items.push(children[i]);
 	}
 
+	// Setup page button count, applying a limit and offset according to the pageButtonRange
 	let pageBtns = [];
-	for (let i = 0; i < numPages; i++) {
+	let start = 0;
+	let max = numPages;
+	if (pageButtonRange) {
+		start = pageNum - pageButtonRange;
+		// If we're on the last page, make up for the lost end range
+		start = pageNum === numPages - 1 ? start - 1 : start;
+		// Don't go to page -1
+		start = start < 0 ? 0 : start;
+		
+		max = pageNum + pageButtonRange + 1;
+		// If we're on page 1, make up for the lost start range
+		max = pageNum === 0 ? max + 1 : max;
+		// Don't show more pages than exist
+		max = max > numPages ? numPages : max;
+	}
+	for (let i = start; i < max; i++) {
 		pageBtns.push(<PageButton key={i} pageNum={i} setPage={setPage} selected={pageNum === i}>
 			{(i+1) + "."}
 		</PageButton>);
 	}
 
-	const page = <PageSection page={pageNum} rows={rows} cols={cols}>
+	const page = <PageSection page={pageNum} rows={rows} useMobileSizing={rowsMD || colsMD}>
 		{items}
 	</PageSection>;
 	if (!page && children.length > 0) setPage(children[0].props.page);
@@ -35,11 +54,13 @@ const Paginator = ({rows, cols, children, displayCounter=false, displayLoad=fals
 				: "Loading..."}
 			</div> : null}
 		{page}
-		<div className="paginator-controls flex-row justify-content-between w-50 mx-auto mt-5">
+		<div className={"paginator-controls flex-row justify-content-between " + (isPortraitMobile() ? "w-100" : "w-50") + " mx-auto mt-5"}>
 			<PageButton pageNum={pageNum-1<0 ? 0 : pageNum-1} setPage={setPage} disabled={pageNum-1<0}>
 				Previous
 			</PageButton>
+			{pageButtonRange ? <p className={start === 0 ? "invisible" : ""}>...</p> : null}
 			{pageBtns}
+			{pageButtonRange ? <p className={max === numPages ? "invisible" : ""}>...</p> : null}
 			<PageButton pageNum={pageNum+1>=numPages ? numPages - 1 : pageNum+1} setPage={setPage} disabled={pageNum+1>=numPages}>
 				Next
 			</PageButton>
@@ -67,7 +88,7 @@ const PageButton = ({pageNum, setPage, selected=false, disabled=false, children}
 	</>);
 };
 
-const PageSection = ({page, rows, cols, className, children}) => {
+const PageSection = ({page, rows, useMobileSizing=false, className, children}) => {
 	let colSize = Math.round(12 / rows);
 	let numCols = 12 / colSize;
 	let offset = numCols > rows;
@@ -82,7 +103,7 @@ const PageSection = ({page, rows, cols, className, children}) => {
 	return (<div className={space("page-section", className)} id={"page-"+page}>
 		<Row>
 			{children.map((c,i) =>
-				<Col md={colSize} style={i % rows !== 0 && offset ? {marginLeft:offsetVal+"%"} : {}}>
+				<Col md={colSize} xs={isPortraitMobile() && useMobileSizing? colSize : null} style={i % rows !== 0 && offset ? {marginLeft:offsetVal+"%"} : {}}>
 					{c}
 				</Col>)}
 		</Row>

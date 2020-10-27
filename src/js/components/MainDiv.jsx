@@ -13,7 +13,8 @@ import Profiler from '../base/Profiler';
 
 // Templates
 import MessageBar from '../base/components/MessageBar';
-import LoginWidget, {setShowLogin} from '../base/components/LoginWidget';
+import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import LoginWidget, {LoginLink, setShowLogin} from '../base/components/LoginWidget';
 import NavBar from './MyLoopNavBar';
 
 // Pages
@@ -147,10 +148,38 @@ class MainDiv extends Component {
 				<div id={page} /* wrap in an id in case you need high-strength css rules */>
 					<Page path={path} />
 				</div>
+				<div className="position-fixed bg-white rounded" style={{bottom:10, right: 10, zIndex: 9999}}>
+					<AccountMenu logoutLink='#my' />
+				</div>
 				<LoginWidget logo={<img src='/img/new-logo.svg' style={{height: '64px'}} />} title={loginWidgetTitle} services={['twitter']} />
 			</>
 		);
 	} // ./render()
 } // ./MainDiv
+
+const AccountMenu = ({logoutLink}) => {
+	if (!Login.isLoggedIn()) { 
+		return (
+			<div className="login-menu">
+				<LoginLink>Register / Log in</LoginLink>
+			</div>
+		); 
+	}
+
+	let user = Login.getUser();
+
+	return (
+		<UncontrolledDropdown className="login-menu">
+			<DropdownToggle caret style={{backgroundColor: 'transparent', border: '0'}} className="login-link">
+				{ user.name || user.xid }&nbsp;
+			</DropdownToggle>
+			<DropdownMenu right>
+				<DropdownItem href="#account">Account</DropdownItem>
+				<DropdownItem divider />
+				<DropdownItem href={logoutLink} onClick={() => Login.logout()}>Log out</DropdownItem>
+			</DropdownMenu>
+		</UncontrolledDropdown>
+	);
+};
 
 export default MainDiv;

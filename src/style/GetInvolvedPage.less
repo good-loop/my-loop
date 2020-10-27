@@ -2,17 +2,45 @@
     .unset-margins>* {
         margin: unset;
     }
+    .w-md-50 {
+        @media @md-min {
+            width: 50% !important;
+        }
+    }
+    .w-md-25 {
+        @media @md-min {
+            width: 25% !important;
+        }
+        width: 50% !important;
+    }
     h1, h2, h3, h4 {
         font-family: 'Montserrat', sans-serif;
         font-weight: normal;
         margin-bottom: 1.3rem; // Overrides Bootstrap default to separate elements.
         align-self: center;
     }
-    h2 {
+    h2, h3, h4 {
         font-weight: 600;
         color: @gl-light-red;
     }
+    h3, h4 {
+        text-transform: uppercase;
+    }
     p {
         font-size: 1.5rem;
+        a {
+            color: #126CFC !important;
+            text-decoration: underline !important;
+        }
+    }
+    .white-circle {
+        background: none;
+        box-shadow: none;
+        border: 2px solid @gl-light-red;
+        h1 {
+            margin: 0;
+            margin-left: 0.5rem;
+            color: @gl-light-red;
+        }
     }
 }
