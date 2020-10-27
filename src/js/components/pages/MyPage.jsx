@@ -1,24 +1,13 @@
 import React, { useEffect } from 'react';
-import { Container, Button, Form, FormGroup, Label} from 'reactstrap';
+import { Container } from 'reactstrap';
 // import PV from 'promise-value';
 
 import DataStore from '../../base/plumbing/DataStore';
-import Misc from '../../base/components/Misc';
-import Counter from '../../base/components/Counter';
-
-import PropControl from '../../base/components/PropControl';
-
-import ServerIO from '../../plumbing/ServerIO';
 import MyLoopNavBar from '../MyLoopNavBar';
-import Footer from '../Footer';
-import ACard from '../cards/ACard';
-import SignUpConnectCard from '../cards/SignUpConnectCard';
-// TODO refactor so ImpactCard is the shared module, with other bits tucked away inside it
-import RecentCampaignsCard from '../cards/RecentCampaignsCard';
-import {GlLogoGenericSvg, glLogoDefaultSvg, splitColouredCircleSVG} from '../svg';
 import Roles from '../../base/Roles';
 import LandingSection from '../LandingSection';
 import SubscriptionBox from '../cards/SubscriptionBox';
+import { isPortraitMobile } from '../../base/utils/miscutils';
 
 window.DEBUG = false;
 
@@ -59,7 +48,9 @@ const TestAd = () => {
 
 const HowItWorksCard = () => {
 	return (<div className="bg-white py-5"><Container>
-		<img src="/img/LandingBackground/infographic.png" className="w-100"/>
+		{isPortraitMobile() ?
+		<embed src="/img/LandingBackground/svg-mobile/infographic.svg" className="w-100"/>
+		: <img src="/img/LandingBackground/infographic.png" className="w-100"/>}
 	</Container></div>);
 };
 
