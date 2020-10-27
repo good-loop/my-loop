@@ -75,7 +75,7 @@ const SubscriptionBox = () => {
 	const hasSubmittedEmail = DataStore.getValue(['misc', 'hasSubmittedEmail']) === true;
 	const thankYouMessage = <h4>Thank you!</h4>;
 	return (<div className="bg-gl-light-red flex-column align-items-center justify-content-center subscription-box">
-		<h1>Subscribe to our monthly newsletter</h1>
+		<h1>Join our mainling list</h1>
 		<br/><br/>
 		{hasSubmittedEmail ? thankYouMessage :
 			<Container>
