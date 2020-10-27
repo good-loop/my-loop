@@ -1,1 +1,1 @@
-../../website/webroot/ads.txt
+../../wwappbase.js/ads.txt
