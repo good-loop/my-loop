@@ -318,6 +318,25 @@ const CampaignPage = () => {
 	);
 }; // ./CampaignPage
 
+/**
+ * HACK correct donation values that are wrong till new portal controls are released
+ * TODO remove this!!
+ */
+const hackCorrectedDonations = id => {
+	const donation = {
+		"yhPf2ttbXW": {
+			total:new Money("£10000"),
+			"no-kid-hungry":new Money("£10000")
+		},
+		"5ao5MthZ": {
+			total: new Money("£25000"),
+			"canine-partners-for-independence":new Money("£5850"),
+			"cats-protection":new Money("£5875"),
+			"royal-society-for-the-prevention-of-cruelty-to-animals":new Money("£13275")
+		}
+	}[id];
+	return donation;
+};
 
 /**
  * This may fetch data from the server. It returns instantly, but that can be with some blanks.
@@ -334,11 +353,20 @@ const fetchDonationData = ({ads}) => {
 	let adIds = ads.map(ad => ad.id);
 	let campaignIds = ads.map(ad => ad.campaign);
 	let charityIds = _.flatten(ads.map(Advert.charityList));
-	// Campaign level total info?
-	let campaignPageDonations = ads.map(ad => ad.campaignPage && CampaignPageDC.donation(ad.campaignPage)).filter(x => x);
-	if (campaignPageDonations.length === ads.length) {
-		let donationTotal = Money.total(campaignPageDonations);
-		donationForCharity.total = donationTotal;
+
+	// HACK return hacked values if Cheerios or Purina
+	for (let i = 0; i < ads.length; i++) {
+		const ad = ads[i];
+		const donation = hackCorrectedDonations(ad.id);
+		if (donation) return donation;
+	}
+	if (!donationForCharity.total) {
+		// Campaign level total info?
+		let campaignPageDonations = ads.map(ad => ad.campaignPage && CampaignPageDC.donation(ad.campaignPage)).filter(x => x);
+		if (campaignPageDonations.length === ads.length) {
+			let donationTotal = Money.total(campaignPageDonations);
+			donationForCharity.total = donationTotal;
+		}
 	}
 	// Campaign level per-charity info?	
 	let campaignsWithoutDonationData = [];

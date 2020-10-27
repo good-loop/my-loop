@@ -4,6 +4,7 @@ import MyLoopNavBar from '../MyLoopNavBar';
 import WhiteCircle from '../campaignpage/WhiteCircle';
 import ShareButton from '../ShareButton';
 import SubscriptionBox from '../cards/SubscriptionBox';
+import { LoginLink } from '../../base/components/LoginWidget';
 
 const GetInvolvedPage = () => {
 
@@ -18,7 +19,9 @@ const GetInvolvedPage = () => {
 			<img src="/img/LandingBackground/involved_banner.png" className="w-100 mt-5"/>
 			<Container className="py-5">
 				<h1 className="text-center">Get involved and be part<br/>of the ad revolution</h1>
-				<SubscriptionBox className="w-75 mx-auto my-5"/>
+				<div className="d-flex justify-content-center align-items-center">
+					<LoginLink><div className="btn btn-transparent fill">Sign up</div></LoginLink>
+				</div>
                 {// Offset this to the right - technically off-center but looks weighted otherwise, eyes are weird
                 }
 				<Row className="ml-md-5 pl-md-5 text-center text-md-left"> 

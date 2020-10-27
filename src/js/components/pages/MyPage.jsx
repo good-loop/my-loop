@@ -5,7 +5,7 @@ import { Container } from 'reactstrap';
 import DataStore from '../../base/plumbing/DataStore';
 import MyLoopNavBar from '../MyLoopNavBar';
 import Roles from '../../base/Roles';
-import LandingSection from '../LandingSection';
+import LandingSection, { springPage } from '../LandingSection';
 import SubscriptionBox from '../cards/SubscriptionBox';
 import { isPortraitMobile } from '../../base/utils/miscutils';
 
@@ -19,6 +19,9 @@ const MyPage = () => {
 		const urlParams = DataStore.getValue(['location', 'params']);
 		if (Object.keys(urlParams).includes('gl.vert')) {
 			window.location.href = `/#campaign/?gl.vert=${urlParams['gl.vert']}`;
+		}
+		if (Object.keys(urlParams).includes('scroll')) {
+			springPage();
 		}
 	});
 
