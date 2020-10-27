@@ -23,6 +23,7 @@ class MyLoopNavBar extends React.Component {
 		super(props);
 		this.state = {scrolled: this.props.alwaysScrolled ? true : window.scrollY > 50, open: false};
 		this.handleScroll = this.handleScroll.bind(this);
+		this.toggle = this.toggle.bind(this);
 	}
 
 	componentDidMount () {
@@ -60,7 +61,7 @@ class MyLoopNavBar extends React.Component {
 				<NavbarToggler onClick={this.toggle}>
 					<img src="/img/Icon_Hamburger.png" className="navbar-toggler-icon"/>
 				</NavbarToggler>
-				<Collapse isOpen={this.props.open} navbar className="gl-bootstrap-navbar" id="navItemsDiv" style={{flexGrow:0, flexBasis:"40%"}}>
+				<Collapse isOpen={this.state.open} navbar className="gl-bootstrap-navbar" id="navItemsDiv" style={{flexGrow:0, flexBasis:"40%"}}>
 					<Nav navbar className="navbar-nav w-100 justify-content-between">
 						<NavItem>
 							<NavLink href="/#my?scroll">How it works</NavLink>
