@@ -25,7 +25,7 @@ import LandingSection from '../LandingSection';
 window.DEBUG = false;
 
 const MyPage = () => {
-	ServerIO.mixPanelTrack({mixPanelTag: 'Page rendered', data:{referrer: 'document.referrer'}});
+	//ServerIO.mixPanelTrack({mixPanelTag: 'Page rendered', data:{referrer: 'document.referrer'}});
 
 	// If we're currently in as.good-loop.com, and we have a glvert param defined, we shpuld redirect to campaign page
 	useEffect(() => {
