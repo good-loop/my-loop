@@ -27,6 +27,7 @@ import {BasicAccountPage} from '../base/components/AccountPageWidgets';
 import E404Page from '../base/components/E404Page';
 import TestPage from '../base/components/TestPage';
 import AccountPage from './pages/AccountPage';
+import Footer from './Footer';
 // import RedesignPage from './pages/RedesignPage';
 
 // DataStore
@@ -147,8 +148,9 @@ class MainDiv extends Component {
 			<>
 				<div id={page} /* wrap in an id in case you need high-strength css rules */>
 					<Page path={path} />
+					<Footer />
 				</div>
-				<div className="position-fixed bg-white rounded" style={{bottom:10, right: 10, zIndex: 9999}}>
+				<div className="position-fixed account" style={{bottom:10, right: 10, zIndex: 9999}}>
 					<AccountMenu logoutLink='#my' />
 				</div>
 				<LoginWidget logo={<img src='/img/new-logo.svg' style={{height: '64px'}} />} title={loginWidgetTitle} services={['twitter']} />
@@ -160,7 +162,7 @@ class MainDiv extends Component {
 const AccountMenu = ({logoutLink}) => {
 	if (!Login.isLoggedIn()) { 
 		return (
-			<div className="login-menu">
+			<div className="login-menu btn btn-transparent fill">
 				<LoginLink>Register / Log in</LoginLink>
 			</div>
 		); 
@@ -170,7 +172,7 @@ const AccountMenu = ({logoutLink}) => {
 
 	return (
 		<UncontrolledDropdown className="login-menu">
-			<DropdownToggle caret style={{backgroundColor: 'transparent', border: '0'}} className="login-link">
+			<DropdownToggle caret style={{backgroundColor: 'transparent', border: '0'}} className="login-link btn-transparent fill">
 				{ user.name || user.xid }&nbsp;
 			</DropdownToggle>
 			<DropdownMenu right>
