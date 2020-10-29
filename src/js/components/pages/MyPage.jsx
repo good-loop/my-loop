@@ -13,7 +13,7 @@ import { isPortraitMobile } from '../../base/utils/miscutils';
 window.DEBUG = false;
 
 const MyPage = ({spring}) => {
-	//ServerIO.mixPanelTrack({mixPanelTag: 'Page rendered', data:{referrer: 'document.referrer'}});
+	//spring the page down if asked to for how it works section
 	const [, setY] = useSpring(() => ({ y: 0 }));
 
 	if (spring) springPageDown(setY);
