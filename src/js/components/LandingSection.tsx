@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */ // So ESLint don't yell at us for having an img as a button
-import React from 'react';
+import React, { useState } from 'react';
 import { useSpring } from 'react-spring';
 
 import MyLoopNavBar from './MyLoopNavBar';
@@ -12,6 +12,7 @@ import CSS from '../base/components/CSS';
 import Money from '../base/data/Money';
 import Counter from '../base/components/Counter';
 import ShareButton from './ShareButton';
+import { isPortraitMobile } from '../base/utils/miscutils';
 
 const springPageDown = (setY: Function): void => {
 	const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -60,19 +61,24 @@ const LandingSection = (): JSX.Element => {
 };
 
 const LandingBackground = () => {
+	const [selImg,] = useState(Math.floor(Math.random() * 4) + 1);
 	return (<div className="background-image" >
-		<div className="hover-expand-image">
-			<img src="/img/LandingBackground/back-1.png"/>
-		</div>
-		<div className="hover-expand-image">
-			<img src="/img/LandingBackground/back-2.png"/>
-		</div>
-		<div className="hover-expand-image">
-			<img src="/img/LandingBackground/back-3.png"/>
-		</div>
-		<div className="hover-expand-image">
-			<img src="/img/LandingBackground/back-4.png"/>
-		</div>
+		{isPortraitMobile() ?
+			<img src={"/img/LandingBackground/back-" + selImg + ".png"} className="mobile-img"/>
+			:<>
+				<div className="hover-expand-image">
+					<img src="/img/LandingBackground/back-1.png"/>
+				</div>
+				<div className="hover-expand-image">
+					<img src="/img/LandingBackground/back-2.png"/>
+				</div>
+				<div className="hover-expand-image">
+					<img src="/img/LandingBackground/back-3.png"/>
+				</div>
+				<div className="hover-expand-image">
+					<img src="/img/LandingBackground/back-4.png"/>
+				</div>
+			</>}
 	</div>);
 }
 
