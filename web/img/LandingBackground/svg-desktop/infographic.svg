@@ -213,7 +213,7 @@
 	
 		<image style="overflow:visible;opacity:0.25;" width="392" height="126" xlink:href="E9ABF04FAB7A654B.png"  transform="matrix(1 0 0 1 774 3243.7295)">
 	</image>
-	<a xlink:href="" onclick="event.preventDefault(); window.parent.location.href='/#involve';">
+	<a xlink:href="" onclick="event.preventDefault(); window.scrollY=0; window.parent.location.href='/#involve';">
 		<g>
 			<g>
 				<path class="st3" d="M1095.6,3347.7H829.7c-26.3,0-47.6-21.3-47.6-47.6l0,0c0-26.3,21.3-47.6,47.6-47.6h265.9
