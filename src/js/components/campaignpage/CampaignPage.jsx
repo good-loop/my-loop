@@ -15,19 +15,17 @@ import ServerIO from '../../plumbing/ServerIO';
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
 import ActionMan from '../../plumbing/ActionMan';
-import Footer from '../Footer';
 import MyLoopNavBar from '../MyLoopNavBar';
 import Money from '../../base/data/Money';
 import Advert from '../../base/data/Advert';
 import CampaignPageDC from '../../data/CampaignPage';
 import SearchQuery from '../../base/searchquery';
-import ACard from '../cards/ACard';
 import Charities from './Charities';
 import { sortByDate } from '../../base/utils/SortFn';
 import Counter from '../../base/components/Counter';
 import printer from '../../base/utils/printer';
 import CSS from '../../base/components/CSS';
-import GoodLoopAd from './GoodLoopAd';
+import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import PublishersCard from './PublishersCard';
 import CampaignSplashCard from './CampaignSplashCard';
 import ErrorAlert from '../../base/components/ErrorAlert';
@@ -572,16 +570,19 @@ const AdvertCard = ({ ad }) => {
 	return (
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
 			<div className="ad-card">
-				<div className="tablet-container">
-					<img src="/img/redcurve.svg" className="tablet-bg w-100 h-100" />
-					<div className="tablet-ad-container">
-						<GoodLoopAd vertId={ad.id} size={size} nonce={`${size}${ad.id}`} production />
-					</div>
-				</div>
 				{isPortraitMobile() ?
-					<img src="/img/hiclipart.com.mobile.cropped.overlay.png" className="w-100 tablet-overlay" />
-					:
-					<img src="/img/hiclipart.com.overlay.png" className="w-100 tablet-overlay" />}
+					<div className="position-relative theunit">
+						<GoodLoopUnit vertId={ad.id} size={size}/>
+					</div>
+					: <>
+						<div className="tablet-container">
+							<img src="/img/redcurve.svg" className="tablet-bg w-100 h-100" />
+							<div className="position-relative theunit">
+								<GoodLoopUnit vertId={ad.id} size={size}/>
+							</div>
+						</div>
+						<img src="/img/hiclipart.com.overlay.png" className="w-100 tablet-overlay" />
+					</>}
 			</div>
 			{Roles.isDev() ? <DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal">Portal Editor</DevLink> : null}
 			<span className="position-absolute" style={{ left: "50%", top: "50%", transform: "translate(-50%, -50%)", zIndex: 0 }}>If you're seeing this, you likely have ad-blocker enabled. Please disable ad-blocker to see the demo!</span>
@@ -606,7 +607,7 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false }) => {
 		<div className="col-md-3 col-6">
 			<div onClick={e => { e.preventDefault(); handleClick(); }} className={"pointer-wrapper" + (selected ? " selected" : "")}>
 				<div className="ad-prev">
-					<GoodLoopAd vertId={ad.id} size={size} nonce={`${size}${ad.id}`} production />
+					<GoodLoopUnit vertId={ad.id} size={size} />
 				</div>
 			</div>
 			<div>

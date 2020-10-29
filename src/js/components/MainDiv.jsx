@@ -154,9 +154,10 @@ class MainDiv extends Component {
 					<Page path={path} />
 					<Footer />
 				</div>
+				{/*
 				<div className="position-fixed account" style={{bottom:10, right: 10, zIndex: 9999}}>
 					<AccountMenu />
-				</div>
+				</div>*/}
 				<LoginWidget logo={<img src='/img/new-logo.svg' style={{height: '64px'}} />} title={loginWidgetTitle} services={['twitter']} />
 			</>
 		);
