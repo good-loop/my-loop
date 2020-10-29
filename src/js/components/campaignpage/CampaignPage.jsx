@@ -311,8 +311,6 @@ const CampaignPage = () => {
 			{campaignPage.smallPrint ? (
 				<div className="small-print"><small>{campaignPage.smallPrint}</small></div>
 			) : null}
-
-			<Footer />
 		</div>
 	</>
 	);
