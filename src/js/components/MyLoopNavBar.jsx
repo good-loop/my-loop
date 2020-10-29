@@ -63,7 +63,7 @@ class MyLoopNavBar extends React.Component {
 				<Collapse isOpen={this.state.open} navbar className="gl-bootstrap-navbar" id="navItemsDiv" style={{flexGrow:0, flexBasis:"40%"}}>
 					<Nav navbar className="navbar-nav w-100 justify-content-between">
 						<NavItem>
-							<NavLink href="/#my?scroll">How it works</NavLink>
+							<NavLink href="/#howitworks">How it works</NavLink>
 						</NavItem>
 						<NavItem>
 							<NavLink href="/#ads">Ad campaigns</NavLink>

@@ -45,7 +45,8 @@ const PAGES = {
 	account: AccountPage,
 	charities: MyCharitiesPage,
 	ads: MyAdCampaignsPage,
-	involve: GetInvolvedPage
+	involve: GetInvolvedPage,
+	howitworks: MyPage
 	// redesign: RedesignPage,
 	// redesign2: Redesign2Page
 };
@@ -129,6 +130,8 @@ class MainDiv extends Component {
 		}
 		assert(page);
 		let Page = PAGES[page];
+		let spring = false;
+		if (page === "howitworks") spring = true;
 		if ( ! Page) {
 			Page = E404Page;
 		}
@@ -151,7 +154,7 @@ class MainDiv extends Component {
 		return (
 			<>
 				<div id={page} /* wrap in an id in case you need high-strength css rules */>
-					<Page path={path} />
+					<Page path={path} spring={spring}/>
 					<Footer />
 				</div>
 				<div className="position-fixed account" style={{bottom:10, right: 10, zIndex: 9999}}>

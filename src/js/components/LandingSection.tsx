@@ -2,7 +2,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */ // So ESLint don't yell at us for having an img as a button
 import React, { useState } from 'react';
-import { useSpring } from 'react-spring';
 
 import MyLoopNavBar from './MyLoopNavBar';
 import BackgroundFader from './BackgroundFader';
@@ -24,13 +23,8 @@ const springPageDown = (setY: Function): void => {
 	});
 };
 
-let setYFunc: Function = () => {return null};
-
-const springPage = () => springPageDown(setYFunc);
-
-const LandingSection = (): JSX.Element => {
-	const [, setY] = useSpring(() => ({ y: 0 }));
-	setYFunc = setY;
+const LandingSection = ({setY}: {setY: Function}): JSX.Element => {
+	//const [, setY] = useSpring(() => ({ y: 0 }));
 
 	return (
 		<>
@@ -94,4 +88,4 @@ const CtaBox: React.FC = () => {
 };
 
 export default LandingSection;
-export { springPage };
+export { springPageDown };

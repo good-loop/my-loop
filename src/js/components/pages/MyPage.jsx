@@ -1,27 +1,28 @@
 import React, { useEffect } from 'react';
 import { Container } from 'reactstrap';
 // import PV from 'promise-value';
+import { useSpring } from 'react-spring';
 
 import DataStore from '../../base/plumbing/DataStore';
 import MyLoopNavBar from '../MyLoopNavBar';
 import Roles from '../../base/Roles';
-import LandingSection, { springPage } from '../LandingSection';
+import LandingSection, { springPageDown } from '../LandingSection';
 import SubscriptionBox from '../cards/SubscriptionBox';
 import { isPortraitMobile } from '../../base/utils/miscutils';
 
 window.DEBUG = false;
 
-const MyPage = () => {
+const MyPage = ({spring}) => {
 	//ServerIO.mixPanelTrack({mixPanelTag: 'Page rendered', data:{referrer: 'document.referrer'}});
+	const [, setY] = useSpring(() => ({ y: 0 }));
+
+	if (spring) springPageDown(setY);
 
 	// If we're currently in as.good-loop.com, and we have a glvert param defined, we shpuld redirect to campaign page
 	useEffect(() => {
 		const urlParams = DataStore.getValue(['location', 'params']);
 		if (Object.keys(urlParams).includes('gl.vert')) {
 			window.location.href = `/#campaign/?gl.vert=${urlParams['gl.vert']}`;
-		}
-		if (Object.keys(urlParams).includes('scroll')) {
-			springPage();
 		}
 	});
 
@@ -30,7 +31,7 @@ const MyPage = () => {
 	return (<>
 		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg"/>
 		<div className='MyPage widepage'>
-			<LandingSection />
+			<LandingSection setY={setY}/>
 			<HowItWorksCard />
 			<SubscriptionBox title="Subscribe to our monthly newsletter" className="bg-gl-light-red big-sub-box"/>
 		</div>
