@@ -130,6 +130,7 @@ class MainDiv extends Component {
 		}
 		assert(page);
 		let Page = PAGES[page];
+		// HowItWorks page is just the homepage but sprung down
 		let spring = false;
 		if (page === "howitworks") spring = true;
 		if ( ! Page) {
