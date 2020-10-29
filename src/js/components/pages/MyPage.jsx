@@ -54,7 +54,7 @@ const HowItWorksCard = () => {
 	return (<div className="bg-white py-5"><Container>
 		{isPortraitMobile() ?
 		<embed src="/img/LandingBackground/svg-mobile/infographic.svg" className="w-100"/>
-		: <img src="/img/LandingBackground/infographic.png" className="w-100"/>}
+		: <embed src="/img/LandingBackground/svg-desktop/infographic.svg" className="w-100"/>}
 	</Container></div>);
 };
 
