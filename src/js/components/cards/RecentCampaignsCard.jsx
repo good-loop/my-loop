@@ -75,7 +75,7 @@ const RecentCampaignsCard = () => {
 			{campaigns.map(({donation, adid, name}, i) => (<Row className="campaign mb-5" key={i}>
 				<TVAdPlayer adid={adid} className="col-md-6"/>
 				<Col md={6} className="flex-column align-items-center text-center justify-content-center pt-3 pt-md-0">
-					<h3 className="mb-0">This ad helped {name}<br/>raise {donation ? <Counter currencySymbol="£" sigFigs={4} amount={donation} minimumFractionDigits={2} /> : "money"}</h3>
+					<h3 className="mb-0">This ad helped {name}<br/>raise {donation ? <Counter currencySymbol="£" sigFigs={4} amount={donation} minimumFractionDigits={2} preservePennies /> : "money"}</h3>
 					<a className="btn btn-primary mt-3" href={"/#campaign/?gl.vert=" + adid}>Find out more</a>
 				</Col>
 			</Row>))}
