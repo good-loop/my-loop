@@ -19,16 +19,20 @@ const GetInvolvedPage = () => {
 			<img src="/img/LandingBackground/involved_banner.png" className="w-100 mt-5"/>
 			<Container className="py-5">
 				<h1 className="text-center">Get involved and be part<br/>of the ad revolution</h1>
-				<div className="d-flex justify-content-center align-items-center">
+				<div className="d-flex justify-content-center align-items-center mb-5">
 					<LoginLink><div className="btn btn-transparent fill">Sign up</div></LoginLink>
 				</div>
                 {// Offset this to the right - technically off-center but looks weighted otherwise, eyes are weird
                 }
 				<Row className="ml-md-5 pl-md-5 text-center text-md-left"> 
 					<Col md={6}>
-						<div className="w-100 h-100 flex-column unset-margins justify-content-center">
+						<div className="w-100 h-100 flex-column unset-margins justify-content-center mission">
 							<h2 className="mr-auto">What is our mission?</h2><br/>
-							<p>Our mission is not less than to change the global ad industry. Brands are spending $450M on ads every year and in theory we are capable of turning half of that money into charitable donations.</p>
+							<p>Our mission is to change the global ad industry for good through turning adverts into charitable donations.
+								<span className="color-gl-light-red"> $586 billion was spent on advertising</span> in 2019 alone<a target="_blank" href="/resources/statistic_id236943_global-advertising-revenue-2012-2024.pdf">*</a> -
+								if that money had gone through Good-Loop, we could completely
+								<span className="color-gl-light-red"> stop the rise of greenhouse gas in just one year</span><a target="_blank" rel="noreferrer" href="https://www.bloomberg.com/news/articles/2019-10-23/how-to-halt-global-warming-for-300-billion">*</a>.
+								As part of the Good-Loop community, you can help us make that a reality.</p>
 						</div>
 					</Col>
 					<Col md={6}>

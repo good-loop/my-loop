@@ -1,4 +1,16 @@
 .GetInvolvedPage {
+    .mission p {
+        a {
+            text-decoration: none !important;
+            transition: 0.3s;
+            transform: scale(1) rotate(0deg);
+            display: inline-block;
+            &:hover {
+                transform: scale(2) rotate(20deg);
+                transition: 0.3s;
+            }
+        }
+    }
     .unset-margins>* {
         margin: unset;
     }
