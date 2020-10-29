@@ -1,5 +1,6 @@
 /* global navigator */
 import React, { Component } from 'react';
+import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import Login from 'you-again';
 import { assert } from 'sjtest';
 import { modifyHash } from '../base/utils/miscutils';
@@ -13,9 +14,9 @@ import Profiler from '../base/Profiler';
 
 // Templates
 import MessageBar from '../base/components/MessageBar';
-import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import LoginWidget, {LoginLink, setShowLogin} from '../base/components/LoginWidget';
 import NavBar from './MyLoopNavBar';
+import Misc from '../base/components/Misc';
 
 // Pages
 import MyPage from './pages/MyPage';
@@ -28,6 +29,7 @@ import E404Page from '../base/components/E404Page';
 import TestPage from '../base/components/TestPage';
 import AccountPage from './pages/AccountPage';
 import Footer from './Footer';
+import { Register } from '../../puppeteer_tests/test-base/common-selectors';
 // import RedesignPage from './pages/RedesignPage';
 
 // DataStore
@@ -75,11 +77,13 @@ class MainDiv extends Component {
 			let ppath = ['transient', 'PromiseValue', 'list'];
 			DataStore.setValue(ppath, null);
 
+			// Showing thank you message and allowing user to close instead
+			/*
 			// ?? should we store and check for "Login was attempted" to guard this??
 			if (Login.isLoggedIn()) {
 				// close the login dialog on success
 				setShowLogin(false);
-			}
+			}*/
 
 			// Update xids
 			DataStore.setValue(['data', 'Person', 'xids'], Profiler.getAllXIds(), false);
@@ -151,7 +155,7 @@ class MainDiv extends Component {
 					<Footer />
 				</div>
 				<div className="position-fixed account" style={{bottom:10, right: 10, zIndex: 9999}}>
-					<AccountMenu logoutLink='#my' />
+					<AccountMenu />
 				</div>
 				<LoginWidget logo={<img src='/img/new-logo.svg' style={{height: '64px'}} />} title={loginWidgetTitle} services={['twitter']} />
 			</>
@@ -162,9 +166,7 @@ class MainDiv extends Component {
 const AccountMenu = ({logoutLink}) => {
 	if (!Login.isLoggedIn()) { 
 		return (
-			<div className="login-menu btn btn-transparent fill">
-				<LoginLink>Register / Log in</LoginLink>
-			</div>
+			<LoginLink className="login-menu btn btn-transparent fill">Register / Log in</LoginLink>
 		); 
 	}
 

@@ -11,29 +11,23 @@ import { encURI, space } from '../base/utils/miscutils';
  * description
  */
 class ShareButton extends React.Component {
-
 	constructor (props) {
 		super(props);
 		this.state = {
 			showing: false
-		}
+		};
 	}
 	
 	render () {
-
 		// Generate ShareServlet sharing url
 		let url = new URL("https://as.good-loop.com/share");
 		let metaProps = this.props.meta;
-		if (!metaProps)
-			metaProps = this.props;
-		if (metaProps.title)
-			url.searchParams.append('title', metaProps.title);
-		if (metaProps.image)
-			url.searchParams.append('image', metaProps.image);
-		if (metaProps.description)
-			url.searchParams.append('desc', metaProps.description);
+		if (!metaProps) metaProps = this.props;
+		if (metaProps.title) url.searchParams.append('title', metaProps.title);
+		if (metaProps.image) url.searchParams.append('image', metaProps.image);
+		if (metaProps.description) url.searchParams.append('desc', metaProps.description);
 		url.searchParams.append("link", this.props.url);
-		console.log("ShareServlet generated URL: " + url);
+		//console.log("ShareServlet generated URL: " + url);
 		url = encURI(url.href);
 
 		return (
@@ -53,7 +47,6 @@ class ShareButton extends React.Component {
 			</div>
 		);
 	}
-
-}
+};
 
 export default ShareButton;
