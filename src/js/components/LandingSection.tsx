@@ -50,7 +50,7 @@ const LandingSection = (): JSX.Element => {
 					className="btn-transparent fill"
 					style={{bottom: 30, left: 30}}
 					title={"My-Loop"}
-					image={"/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png"}
+					image={"https://my.good-loop.com/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png"}
 					description={"Using ads for good"}
 					url={window.location.href}>
 						Share

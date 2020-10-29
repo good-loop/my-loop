@@ -33,6 +33,7 @@ class ShareButton extends React.Component {
 		if (metaProps.description)
 			url.searchParams.append('desc', metaProps.description);
 		url.searchParams.append("link", this.props.url);
+		console.log("ShareServlet generated URL: " + url);
 		url = encURI(url.href);
 
 		return (
@@ -45,7 +46,7 @@ class ShareButton extends React.Component {
 							<a className="col p-2" target="_blank" href={"https://www.facebook.com/sharer/sharer.php?u=" + url}><img src="/img/share/Facebook.png" className="w-100"/></a>
 							<a className="col p-2" target="_blank" href={"https://twitter.com/intent/tweet?url=" + url}><img src="/img/share/Twitter.png" className="w-100"/></a>
 							<a className="col p-2" target="_blank" href={"http://www.linkedin.com/shareArticle?mini=true&url=" + url}><img src="/img/share/LinkedIn.png" className="w-100"/></a>
-							<a className="col p-2" target="_blank" href={"mailto:hello@good-loop.com?&subject=&body=" + url}><img src="/img/share/Email.png" className="w-100"/></a>
+							<a className="col p-2" target="_blank" href={"mailto:?&subject=&body=" + this.props.url}><img src="/img/share/Email.png" className="w-100"/></a>
 						</Row>
 					</div>
 				: null}

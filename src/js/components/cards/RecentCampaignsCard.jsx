@@ -36,10 +36,6 @@ const RecentCampaignsCard = () => {
 		{
 			name: "Doom Bar",
 			adid: "ma9LU5chyU"
-		},
-		{
-			name: "British Gas",
-			adid: "tEfu6NjSY5"
 		}
 	];
 
