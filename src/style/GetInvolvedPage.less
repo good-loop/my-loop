@@ -11,9 +11,6 @@
             }
         }
     }
-    .unset-margins>* {
-        margin: unset;
-    }
     .w-md-50 {
         @media @md-min {
             width: 50% !important;
@@ -45,14 +42,32 @@
             text-decoration: underline !important;
         }
     }
-    .white-circle {
-        background: none;
-        box-shadow: none;
-        border: 2px solid @gl-light-red;
-        h1 {
-            margin: 0;
-            margin-left: 0.5rem;
-            color: @gl-light-red;
+    .action {
+        .white-circle {
+            background: none;
+            box-shadow: none;
+            border: 2px solid @gl-light-red;
+            h1 {
+                margin: 0;
+                margin-left: 0.5rem;
+                color: @gl-light-red;
+            }
+        }
+        &.done {
+            .white-circle {
+                border: 4px solid #00e344;
+                h1 {
+                    font-weight: 600;
+                    color: #00e344;
+                }
+            }
+            h5 {
+                color: #00e344;
+            }
+            .fa-check {
+                font-size: 2rem;
+                color: #00e344;
+            }
         }
     }
 }

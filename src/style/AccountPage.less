@@ -15,12 +15,101 @@
 	}
 }
 
-#account {
-	.navbar {
-		.login-link {
-			color: #AD2016;
-			& a {
-				color: #AD2016;
+.AccountPage {
+
+	.user {
+		img {
+			width: 100%;
+			@media @md-max {
+				width: 25%;
+				margin-bottom: 1rem;
+			}
+		}
+		h1 {
+			font-size: 1.6rem;
+			font-weight: 600;
+		}
+	}
+
+	h1, h2, h3, h4 {
+		font-family: 'Montserrat', sans-serif;
+		font-weight: normal;
+		margin-bottom: 1.3rem; // Overrides Bootstrap default to separate elements.
+		align-self: center;
+	}
+
+	h2,h4 {
+		font-weight: 600;
+		text-transform: uppercase;
+	}
+
+	h2 {
+		color: @gl-light-red;
+	}
+
+	p {
+		font-size: 1.5rem;
+		@media @md-max {
+			font-size: 1.2rem;
+		}
+		a {
+			color: #126CFC !important;
+			text-decoration: underline !important;
+		}
+	}
+
+	.more-to-do {
+		.do-section {
+			.do-img {
+				@media @md-max {
+					width: 50% !important;
+				}
+			}
+			.doline {
+				position: absolute;
+				top: 50%;
+				bottom: 0;
+				left: 8.3%;
+				padding: 0px 1.5px;
+				background: #F9B139;
+				@media @md-max {
+					display: none;
+				}
+			}
+			&.done {
+				.doline {
+					background: #07950C;
+				}
+			}
+		}
+	}
+
+	.settings {
+		font-size: 1.5rem;
+		a {
+            color: #126CFC !important;
+            text-decoration: underline !important;
+		}
+		small {
+			font-size: 0.8rem;
+		}
+		.hover-info {
+			position: relative;
+			.extra-info {
+				display: none;
+				font-size: 1rem;
+				position: absolute;
+				top: 50%;
+				left: 25%;
+				background: white;
+				z-index: 99;
+				padding: 20px;
+				box-shadow: 3px 3px 4px rgba(0,0,0,0.5);
+			}
+			&:hover {
+				.extra-info {
+					display: block;
+				}
 			}
 		}
 	}

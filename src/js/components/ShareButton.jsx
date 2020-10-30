@@ -37,10 +37,10 @@ class ShareButton extends React.Component {
 					<div className="share-popup">
 						<img src="/img/share/ShareBubble.svg" className="w-100 bubble"/>
 						<Row className="popup-btns no-gutters w-100">
-							<a className="col p-2" target="_blank" href={"https://www.facebook.com/sharer/sharer.php?u=" + url}><img src="/img/share/Facebook.png" className="w-100"/></a>
-							<a className="col p-2" target="_blank" href={"https://twitter.com/intent/tweet?url=" + url}><img src="/img/share/Twitter.png" className="w-100"/></a>
-							<a className="col p-2" target="_blank" href={"http://www.linkedin.com/shareArticle?mini=true&url=" + url}><img src="/img/share/LinkedIn.png" className="w-100"/></a>
-							<a className="col p-2" target="_blank" href={"mailto:?&subject=&body=" + this.props.url}><img src="/img/share/Email.png" className="w-100"/></a>
+							<a className="col p-2" onClick={this.props.onShare} target="_blank" href={"https://www.facebook.com/sharer/sharer.php?u=" + url}><img src="/img/share/Facebook.png" className="w-100"/></a>
+							<a className="col p-2" onClick={this.props.onShare} target="_blank" href={"https://twitter.com/intent/tweet?url=" + url}><img src="/img/share/Twitter.png" className="w-100"/></a>
+							<a className="col p-2" onClick={this.props.onShare} target="_blank" href={"http://www.linkedin.com/shareArticle?mini=true&url=" + url}><img src="/img/share/LinkedIn.png" className="w-100"/></a>
+							<a className="col p-2" onClick={this.props.onShare} target="_blank" href={"mailto:?&subject=&body=" + this.props.url}><img src="/img/share/Email.png" className="w-100"/></a>
 						</Row>
 					</div>
 				: null}

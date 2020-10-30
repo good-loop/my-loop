@@ -51,11 +51,14 @@ const TestAd = () => {
 
 
 const HowItWorksCard = () => {
-	return (<div className="bg-white py-5"><Container>
-		{isPortraitMobile() ?
-		<embed src="/img/LandingBackground/svg-mobile/infographic.svg" className="w-100"/>
-		: <embed src="/img/LandingBackground/svg-desktop/infographic.svg" className="w-100"/>}
-	</Container></div>);
+	return (<div className="bg-white py-5">
+		<Container>
+			<h2 className="text-center mt-5">Help us change advertising for good</h2> 
+			{isPortraitMobile() ?
+				<embed src="/img/LandingBackground/svg-mobile/infographic.svg" className="w-100"/>
+				: <embed src="/img/LandingBackground/svg-desktop/infographic.svg" className="w-100"/>}
+		</Container>
+	</div>);
 };
 
 export default MyPage;

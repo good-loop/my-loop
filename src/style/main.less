@@ -218,6 +218,11 @@ a.btn {
 	width: 5rem;
 }
 
+// Override whoever put auto margins on flex children (why??)
+.unset-margins>* {
+	margin: unset;
+}
+
 /** Make sure the text is readable when using images as a backdrop. 
 
 NB: to handle the ugly corner case of dynamic colours, we use a flexible grey shadow.

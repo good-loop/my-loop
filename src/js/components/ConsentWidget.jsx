@@ -1,5 +1,5 @@
-
 import React from 'react';
+import { Container, Col, Row } from 'reactstrap';
 import _ from 'lodash';
 import { assert, assMatch } from 'sjtest';
 import Cookies from 'js-cookie';
@@ -81,13 +81,13 @@ const PermissionControl = ({header, prop, subtext, textOn, saveFn}) => {
 
 	return (
 		<>
-			<div className='col-md-5 text-left'>
-				<div>
-					<b>{header}</b>
+			<div className='col-md-6 text-left'>
+				<div className="hover-info">
+					{header}
+					{subtext ? <div className="extra-info">
+						{subtext}
+					</div> : null}
 				</div>
-				<span>
-					{subtext}
-				</span>
 			</div>
 			<div className='col-md-3 flex-row slider'>
 				<PropControl 
@@ -97,8 +97,8 @@ const PermissionControl = ({header, prop, subtext, textOn, saveFn}) => {
 					saveFn={saveFn} 
 				/>
 			</div>
-			<div className='col-md-4'>
-				{ value && <div className='color-gl-red'>{textOn}</div> }
+			<div className='col-md-3'>
+				{ value && <div className='color-gl-light-red'>{textOn}</div> }
 			</div>
 		</>
 	);
@@ -127,40 +127,35 @@ const ConsentWidget = ({xids}) => {
 	perms.cookies = (dnt === '1'); // allow cookies unless DNT=1
 
 	return (
-		<div className="container">
-			<div className='row text-left bottom-p-2'>
-				<i>You</i> decide how you want to do good online. As Good-Loop will always donate 50% of all ad revenue to charity, giving Good-Loop permission to use your data in a way that is valuable to advertisers will mean that your donations are worth more. 
-			</div>
-			<div className='row bottom-p-2'>
+		<>
+			<Row className='py-2'>
 				<PermissionControl 
-					header='Allow cookies'
+					header='Allow ad cookies'
 					prop='cookies'
 					saveFn={props => { toggleDNT({...props, perms, dnt}); togglePerm({...props, peeps}); }}
 					subtext='Allow us to track your donations and avoid showing you the same advert twice'
-					textOn='Thank you &mdash; this improves our service and raises more money for charity!'
+					textOn='Thank you!'
 				/>
-			</div>
-			<div className='row bottom-p-2'>
+			</Row>
+			<Row className='py-2'>
 				<PermissionControl 
 					header='Allow ad targeting'
 					prop='personaliseAds'
 					saveFn={props => togglePerm({...props, peeps})}
-					subtext='Only Good-Loop ads for good, of course'
-					textOn='Thank you &mdash; this raises more money for charity!'
+					subtext='Get Good-Loop ads tailored to you'
+					textOn='Thank you!'
 				/>
-			</div>
-			<div className='row bottom-p-2'>
+			</Row>
+			<Row className='py-2'>
 				<PermissionControl 
-					header='Allow us to email you updates and commercial messages'
+					header='Subscribe to email updates'
 					prop='sendMessages'
 					saveFn={props => togglePerm({...props, peeps})}
-					textOn='Thank you &mdash; this raises more money for charity!'
+					textOn='Thank you!'
 				/>
-			</div>
-			<div className='row'>
-				We will never share your data or post to your social media account without your consent. See our <a href='https://www.good-loop.com/privacy-policy' rel='noopener noreferrer' target='_blank'> privacy policy </a> for more information.
-			</div>
-		</div>
+			</Row>
+			<small>We will never share your data or post to your social media account without your consent.<br/>See our <a href='https://doc.good-loop.com/policy/privacy-policy.html' rel='noopener noreferrer' target='_blank'>privacy policy</a> for more information.</small>
+		</>
 	);
 };
 
