@@ -79,16 +79,6 @@ const MoreToDo = () => {
 				<h4>Thanks for recognising our ads</h4>
 				<img className="w-50" src="/img/new-logo-with-text.svg"/>
 			</DoSection>
-			<DoSection img="/img/LandingBackground/Group32.png" done={window.canShowAds}>
-				{window.canShowAds ? <>
-					<h4>Thanks for turning off ad blocker</h4>
-				</>:<>
-					<h4>Ad blockers</h4>
-					<p>
-						Please switch off or delete your ad blockers so that we can serve you our ads.
-					</p>
-				</>}
-			</DoSection>
 			<DoSection img="/img/LandingBackground/Group33.png" done={subbed} last>
 				{subbed ?<>
 					<h4>Thanks for subscribing to our newsletter</h4>
