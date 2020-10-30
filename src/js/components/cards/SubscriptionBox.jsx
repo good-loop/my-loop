@@ -24,7 +24,7 @@ const doEmailSignUp = e => {
  * Displays email register form
  * @param {String} title header to give the box 
  */
-const SubscriptionBox = ({className, title}) => {
+const SubscriptionBox = ({onSubmit, className, title}) => {
 	//@ts-ignore
 	const hasSubmittedEmail = DataStore.getValue(['misc', 'hasSubmittedEmail']) === true;
 	const thankYouMessage = <><h4>Thank you!</h4><p>We'll email you shortly :)</p></>;
@@ -42,7 +42,7 @@ const SubscriptionBox = ({className, title}) => {
 							placeholder="Type your email address"
 						/>
 					</FormGroup>
-					<Button onClick={doEmailSignUp} color="info" disabled={hasSubmittedEmail} className="flex-grow-0">
+					<Button onClick={() => {doEmailSignUp(event); onSubmit();}} color="info" disabled={hasSubmittedEmail} className="flex-grow-0">
 						Sign me up
 					</Button>
 				</Form>

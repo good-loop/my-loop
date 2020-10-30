@@ -15,6 +15,7 @@ import {getAllXIds} from '../../base/Profiler';
 import Misc from '../../base/components/Misc';
 import { space } from '../../base/utils/miscutils';
 import PropControl from '../../base/components/PropControl';
+import SubscriptionBox from '../cards/SubscriptionBox';
 
 const Page = () => {
 	const xids = DataStore.getValue(['data', 'Person', 'xids']) || [];
@@ -66,6 +67,9 @@ const Page = () => {
 };
 
 const MoreToDo = () => {
+
+	const [subbed, setSubbed] = useState(false);
+
 	return (
 		<div className="more-to-do">
 			<DoSection img="/img/LandingBackground/Group30.png" done>
@@ -85,11 +89,16 @@ const MoreToDo = () => {
 					</p>
 				</>}
 			</DoSection>
-			<DoSection img="/img/LandingBackground/Group33.png" last>
-				<h4>Newsletter</h4>
-				<p>
-					Sign up to our monthly newsletter to read about our most successful ad campaigns and how the charities are using the money from it. Plus we will update you on new Good-loop community features together with any new major Good-loop achievements.
-				</p>
+			<DoSection img="/img/LandingBackground/Group33.png" done={subbed} last>
+				{subbed ?<>
+					<h4>Thanks for subscribing to our newsletter</h4>
+				</>:<>
+					<h4>Newsletter</h4>
+					<p>
+						Sign up to our monthly newsletter to read about the ad world and our achievements within it.
+					</p>
+				</>}
+				<SubscriptionBox onSubmit={() => setSubbed(true)}/>
 			</DoSection>
 		</div>
 	);
