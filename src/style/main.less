@@ -185,21 +185,19 @@ a.btn {
 	}
 }
 
-.account {
-	.btn {
-		font-weight: 600;
-		padding: 10px;
-		mix-blend-mode: normal;
-		a {
-			color: @gl-light-red;
-			text-decoration: none;
-		}
-		&:hover:not(.disabled) {
-			background-color: white !important;
-		}
-		&:focus:not(.disabled) {
-			background-color: white !important;
-		}
+.login-menu .btn, .login-menu.btn {
+	font-weight: 600;
+	padding: 10px;
+	mix-blend-mode: normal;
+	a {
+		color: @gl-light-red;
+		text-decoration: none;
+	}
+	&:hover:not(.disabled) {
+		background-color: white !important;
+	}
+	&:focus:not(.disabled) {
+		background-color: white !important;
 	}
 }
 

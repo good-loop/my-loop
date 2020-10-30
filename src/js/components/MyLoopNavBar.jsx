@@ -1,6 +1,7 @@
 import React from 'react';
 import Login from 'you-again';
-import { Container, Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { LoginLink } from '../base/components/LoginWidget';
 // import NavBar from '../base/components/NavBar';
 import C from '../C';
 import { space } from '../base/utils/miscutils';
@@ -53,14 +54,14 @@ class MyLoopNavBar extends React.Component {
 			<Navbar className={this.state.scrolled ? "scrolled" : ""}
 				style={style}
 				sticky='top' expand='lg'>
-				<NavbarBrand href="/" className="mr-auto">
+				<NavbarBrand href="/#my" className="mr-auto">
 					<img src={this.state.scrolled && logoScrollSrc ? logoScrollSrc : logoSrc} alt='logo' className='logo-small' />
 				</NavbarBrand>
 				
 				<NavbarToggler onClick={this.toggle}>
 					<img src="/img/Icon_Hamburger.200w.png" className="navbar-toggler-icon"/>
 				</NavbarToggler>
-				<Collapse isOpen={this.state.open} navbar className="gl-bootstrap-navbar" id="navItemsDiv" style={{flexGrow:0, flexBasis:"40%"}}>
+				<Collapse isOpen={this.state.open} navbar className="gl-bootstrap-navbar" id="navItemsDiv" style={{flexGrow:0, flexBasis:"60%"}}>
 					<Nav navbar className="navbar-nav w-100 justify-content-between">
 						<NavItem>
 							<NavLink href="/#howitworks">How it works</NavLink>
@@ -72,7 +73,10 @@ class MyLoopNavBar extends React.Component {
 							<NavLink href="/#charities">Charities</NavLink>
 						</NavItem>
 						<NavItem>
-							<NavLink className="btn btn-transparent fill" href="/#involve">Get Involved</NavLink>
+							<NavLink href="/#involve">Get Involved</NavLink>
+						</NavItem>
+						<NavItem>
+							<AccountMenu />
 						</NavItem>
 					</Nav>
 				</Collapse>
@@ -80,5 +84,28 @@ class MyLoopNavBar extends React.Component {
 		);
 	}
 }
+
+const AccountMenu = ({logoutLink}) => {
+	if (!Login.isLoggedIn()) { 
+		return (
+			<LoginLink className="login-menu btn btn-transparent fill">Register / Log in</LoginLink>
+		); 
+	}
+
+	let user = Login.getUser();
+
+	return (
+		<UncontrolledDropdown className="login-menu">
+			<DropdownToggle caret style={{backgroundColor: 'transparent', border: '0'}} className="login-link btn btn-transparent fill">
+				{ user.name || user.xid }&nbsp;
+			</DropdownToggle>
+			<DropdownMenu right>
+				<DropdownItem href="#account">Account</DropdownItem>
+				<DropdownItem divider />
+				<DropdownItem href={logoutLink} onClick={() => Login.logout()}>Log out</DropdownItem>
+			</DropdownMenu>
+		</UncontrolledDropdown>
+	);
+};
 
 export default MyLoopNavBar;

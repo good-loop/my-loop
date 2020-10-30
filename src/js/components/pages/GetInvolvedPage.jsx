@@ -20,7 +20,6 @@ const GetInvolvedPage = () => {
 			<Container className="py-5">
 				<h1 className="text-center">Get involved and be part<br/>of the ad revolution</h1>
 				<div className="d-flex justify-content-center align-items-center mb-5">
-					<LoginLink><div className="btn btn-transparent fill">Sign up</div></LoginLink>
 				</div>
                 {// Offset this to the right - technically off-center but looks weighted otherwise, eyes are weird
                 }
@@ -41,12 +40,17 @@ const GetInvolvedPage = () => {
 				</Row>
 				<div className="flex-column unset-margins text-center pt-5 mt-5 justify-content-center align-items-center">
 					<h2 className="mb-5">What could you do to help us?</h2>
+
 					<WhiteCircle width="125px" className="my-5"><h1>1.</h1></WhiteCircle>
+					<h4 className="mb-3">Sign up</h4>
+					<p className="w-md-50 mb-5">Creating an account unlocks more features, which help us do even more good and give you more control.<br/><LoginLink><div className="btn btn-transparent fill">Sign up</div></LoginLink></p>
+
+					<WhiteCircle width="125px" className="my-5"><h1>2.</h1></WhiteCircle>
 					<h4 className="mb-3">Recognise the Good-Loop ads</h4>
 					<p className="w-md-50">Remember our logo, so whenever you see one of our ads, you could recognise it and watch it for a few seconds to unlock a donation.</p>
 					<img className="w-md-25 mb-5" src="/img/new-logo-with-text.svg"/>
                     
-					<WhiteCircle width="125px" className="my-5"><h1>2.</h1></WhiteCircle>
+					<WhiteCircle width="125px" className="my-5"><h1>3.</h1></WhiteCircle>
 					<h4 className="mb-3">Share the good news</h4>
 					<p className="w-md-50">Spread the word about our mission by telling your friends about it and by sharing this website on one of your social media channels.</p>
 					<ShareButton className="btn-transparent fill"
@@ -58,14 +62,6 @@ const GetInvolvedPage = () => {
 						Share
 					</ShareButton>
 					<div className="pb-5"></div>
-
-					<WhiteCircle width="125px" className="my-5"><h1>3.</h1></WhiteCircle>
-					<h4 className="mb-3">Allow us to use cookies</h4>
-					<p className="w-md-50">Allow Good-Loop cookies on your devices, so it is more likely that you will see some of our ads.<br/><a className="mb-5" onClick={openCookieSettings}>Allow cookies</a></p>
-
-					<WhiteCircle width="125px" className="my-5"><h1>4.</h1></WhiteCircle>
-					<h4 className="mb-3">Share your data</h4>
-					<p className="w-md-50">By sharing your data you allow us to better target ads to your interest and to be a more appealing advertising option for brands. We will never share your data with third parties.<br/>Share your data (gender, age, country, job title)</p>
 				</div>
 
 			</Container>

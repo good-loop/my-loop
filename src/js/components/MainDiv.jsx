@@ -1,6 +1,5 @@
 /* global navigator */
 import React, { Component } from 'react';
-import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import Login from 'you-again';
 import { assert } from 'sjtest';
 import { modifyHash } from '../base/utils/miscutils';
@@ -65,10 +64,21 @@ class MainDiv extends Component {
 		super(props);
 	}
 
+	scrollToTop () {
+		// Scroll to top on hash change - except for page How it Works, which scrolls down the homepage
+		if (window.location.hash !== "howitworks") {
+			console.log("HASH CHANGE");
+			// Allow page to load before scrolling
+			window.scrollTo(0,0);
+		}
+	}
+
 	componentDidMount() {
 		// redraw on change
 		const updateReact = (mystate) => this.setState({});
 		DataStore.addListener(updateReact);
+
+		window.addEventListener("hashchange", this.scrollToTop);
 
 		// Set up login watcher here, at the highest level		
 		Login.change(() => {
@@ -112,6 +122,10 @@ class MainDiv extends Component {
 
 		DataStore.setValue(['data', 'Person', 'xids'], Profiler.getAllXIds(), false);
 	} // ./componentDidMount
+
+	componentWillUnmount () {
+		window.removeEventListener("hashchange", this.scrollToTop);
+	}
 	
 
 	componentDidCatch(error, info) {
@@ -158,36 +172,10 @@ class MainDiv extends Component {
 					<Page path={path} spring={spring}/>
 					<Footer />
 				</div>
-				<div className="position-fixed account" style={{bottom:10, right: 10, zIndex: 9999}}>
-					<AccountMenu />
-				</div>
 				<LoginWidget logo={<img src='/img/new-logo.svg' style={{height: '64px'}} />} title={loginWidgetTitle} services={['twitter']} />
 			</>
 		);
 	} // ./render()
 } // ./MainDiv
-
-const AccountMenu = ({logoutLink}) => {
-	if (!Login.isLoggedIn()) { 
-		return (
-			<LoginLink className="login-menu btn btn-transparent fill">Register / Log in</LoginLink>
-		); 
-	}
-
-	let user = Login.getUser();
-
-	return (
-		<UncontrolledDropdown className="login-menu">
-			<DropdownToggle caret style={{backgroundColor: 'transparent', border: '0'}} className="login-link btn-transparent fill">
-				{ user.name || user.xid }&nbsp;
-			</DropdownToggle>
-			<DropdownMenu right>
-				<DropdownItem href="#account">Account</DropdownItem>
-				<DropdownItem divider />
-				<DropdownItem href={logoutLink} onClick={() => Login.logout()}>Log out</DropdownItem>
-			</DropdownMenu>
-		</UncontrolledDropdown>
-	);
-};
 
 export default MainDiv;
