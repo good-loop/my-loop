@@ -145,6 +145,10 @@ const YourDataSettings = () => {
 	</div>);
 };
 
+/**
+ * 
+ * @param {?boolean} last If false, use .doline to draw in a line down to the next item
+ */
 const DoSection = ({done=false, img, last=false, children}) => {
 	return (
 		<Row className={space("do-section position-relative", done ? "done" : "")}>
@@ -153,7 +157,7 @@ const DoSection = ({done=false, img, last=false, children}) => {
 				<img src={done ? "/img/LandingBackground/Group30.png" : img} className="w-100 do-img"/>
 			</Col>
 			<Col className="offset-md-1 flex-column unset-margins justify-content-center mb-5">
-				<div>
+				<div> {/* NB: div needed to avoid centering children */}
 					{children}
 				</div>
 			</Col>
@@ -162,30 +166,3 @@ const DoSection = ({done=false, img, last=false, children}) => {
 };
 
 export default Page;
-
-/*
-<BSCard>
-					<CardHeader>Consent Controls</CardHeader>
-					<CardBody>
-						{Login.isLoggedIn()? <ConsentWidget xids={xids} /> : <Misc.LoginToSee /> }
-					</CardBody>
-				</BSCard>				
-
-				<BSCard>
-					<CardHeader>Digital Mirror</CardHeader>
-					<CardBody>
-						<DigitalMirrorCard xids={xids} className="digitalMirror" mixPanelTag='DigitalMirror' />
-						<div className='flex-column'>
-							<div>Connect your social media - you can use this to boost the donations you generate!</div>
-							<SignUpConnectCard allIds={xids} className="socialConnect" />	
-						</div>
-					</CardBody>
-				</BSCard>
-			
-				<BSCard>
-					<CardHeader>Linked Profiles</CardHeader>
-					<CardBody>
-						<LinkedProfilesCard xids={xids} />
-					</CardBody>
-				</BSCard>
-*/

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import Login from 'you-again';
 import { Container, Row, Col } from 'reactstrap';
+import Cookies from 'js-cookie';
 import MyLoopNavBar from '../MyLoopNavBar';
 import WhiteCircle from '../campaignpage/WhiteCircle';
 import ShareButton from '../ShareButton';
 import SubscriptionBox from '../cards/SubscriptionBox';
 import { LoginLink } from '../../base/components/LoginWidget';
 import { space } from '../../base/utils/miscutils';
-import Cookies from 'js-cookie';
 
 const GetInvolvedPage = () => {
 	return (<>
@@ -17,8 +17,7 @@ const GetInvolvedPage = () => {
 			<Container className="py-5">
 				<h1 className="text-center">Get involved and be part<br/>of the ad revolution</h1>
 				{/* what is this div for?? */}
-				<div className="d-flex justify-content-center align-items-center mb-5">
-				</div>
+				<div className="d-flex justify-content-center align-items-center mb-5" />
 				{/* Offset this to the right - technically off-center but looks weighted otherwise, eyes are weird */}
 				<Row className="ml-md-5 pl-md-5 text-center text-md-left"> 
 					<Col md={6}>
@@ -46,7 +45,6 @@ const GetInvolvedPage = () => {
 };
 
 const ThingsYouCanDo = () => {
-		
 	const [doneActions, setDoneActions] = useState(null);
 	const [fetchedCookies, setFetchedCookies] = useState(false);
 	if (!fetchedCookies) {
@@ -76,40 +74,40 @@ const ThingsYouCanDo = () => {
 	}
 
 	return (<>
-	<h2 className="mb-5">What could you do to help us?</h2>
+		<h2 className="mb-5">What could you do to help us?</h2>
 
-	<Action number={1} doneActions={doneActions}>
-		<h4 className="mb-3">Sign up</h4>
-		<p className="w-md-50">Creating an account unlocks more features, which help us do even more good and give you more control.<br/>
-		<LoginLink><div className="btn btn-transparent fill">Sign up</div></LoginLink></p>
-	</Action>
+		<Action number={1} doneActions={doneActions}>
+			<h4 className="mb-3">Sign up</h4>
+			<p className="w-md-50">Creating an account unlocks more features, which help us do even more good and give you more control.<br/>
+				<LoginLink><div className="btn btn-transparent fill">Sign up</div></LoginLink></p>
+		</Action>
 
-	<Action number={2} doneActions={doneActions}>
-		<h4 className="mb-3">Recognise the Good-Loop ads</h4>
-		<p className="w-md-50">Remember our logo, so whenever you see one of our ads, you could recognise it and watch it for a few seconds to unlock a donation.</p>
-		<img className="w-md-25" src="/img/new-logo-with-text.svg"/>
-	</Action>
+		<Action number={2} doneActions={doneActions}>
+			<h4 className="mb-3">Recognise the Good-Loop ads</h4>
+			<p className="w-md-50">Remember our logo, so whenever you see one of our ads, you could recognise it and watch it for a few seconds to unlock a donation.</p>
+			<img className="w-md-25" src="/img/gl-logo/rectangle/logo-name.svg" alt="logo" />
+		</Action>
 	
-	<Action number={3} doneActions={doneActions}>
-		<h4 className="mb-3">Share the good news</h4>
-		<p className="w-md-50">Spread the word about our mission by telling your friends about it and by sharing this website on one of your social media channels.</p>
-		<ShareButton className="btn-transparent fill"
-			title="My-Loop"
-			image="/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png"
-			description="Using ads for good"
-			url="https://my.good-loop.com"
-			onShare={() => markAsDone(3)}
-		>
-			Share
-		</ShareButton>
-	</Action></>);
+		<Action number={3} doneActions={doneActions}>
+			<h4 className="mb-3">Share the good news</h4>
+			<p className="w-md-50">Spread the word about our mission by telling your friends about it and by sharing this website on one of your social media channels.</p>
+			<ShareButton className="btn-transparent fill"
+				title="My-Loop"
+				image="/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png"
+				description="Using ads for good"
+				url="https://my.good-loop.com"
+				onShare={() => markAsDone(3)}
+			>
+				Share
+			</ShareButton>
+		</Action></>);
 };
 
 const Action = ({number, doneActions, className, children}) => {
 	const done = doneActions.includes(number);
 	return (<div className={space("action flex-column unset-margins justify-content-center align-items-center mb-5", done ? "done" : "", className)}>
 		<WhiteCircle width="125px" className=""><h1>{number}.</h1></WhiteCircle>
-		{done ? <i className="fa fa-check"></i> : null}
+		{done ? <i className="fa fa-check" /> : null}
 		<div className="pb-3"/>
 		{children}
 	</div>);
