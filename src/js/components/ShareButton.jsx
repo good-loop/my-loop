@@ -30,12 +30,16 @@ class ShareButton extends React.Component {
 		//console.log("ShareServlet generated URL: " + url);
 		url = encURI(url.href);
 
+		// NB: theres no unicode character for share
+		// c.f. https://stackoverflow.com/questions/23358594/is-there-a-unicode-character-for-the-share-icon
+		// (which includes a css hack for making .<: look like it)
+
 		return (
 			<div className={space(this.props.absolute ? "position-absolute" : "position-relative", "d-inline-block share-btn")} style={this.props.style}>
-				<div className={"btn " + this.props.className} onClick={() => this.setState({showing: !this.state.showing})}><i className="fas fa-share-alt mr-2" />{this.props.children}</div>
-				{this.state.showing ?
+				<div className={space("btn", this.props.className)} onClick={() => this.setState({showing: !this.state.showing})}><i className="fas fa-share-alt mr-2" />{this.props.children}</div>
+				{this.state.showing &&
 					<div className="share-popup">
-						<img src="/img/share/ShareBubble.svg" className="w-100 bubble"/>
+						<img src="/img/share/ShareBubble.svg" className="w-100 bubble" alt="share icon"/>
 						<Row className="popup-btns no-gutters w-100">
 							<a className="col p-2" onClick={this.props.onShare} target="_blank" href={"https://www.facebook.com/sharer/sharer.php?u=" + url}><img src="/img/share/Facebook.png" className="w-100"/></a>
 							<a className="col p-2" onClick={this.props.onShare} target="_blank" href={"https://twitter.com/intent/tweet?url=" + url}><img src="/img/share/Twitter.png" className="w-100"/></a>
@@ -43,7 +47,7 @@ class ShareButton extends React.Component {
 							<a className="col p-2" onClick={this.props.onShare} target="_blank" href={"mailto:?&subject=&body=" + this.props.url}><img src="/img/share/Email.png" className="w-100"/></a>
 						</Row>
 					</div>
-				: null}
+				}
 			</div>
 		);
 	}

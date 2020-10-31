@@ -15,6 +15,35 @@
 	}
 }
 
+
+/** a funky list of things to do. On mobile, it gracefully becomes less funky. 
+A .TubeLine div contains seberal sections with TubeLine-img and TubeLine-line
+*/
+.TubeLine {
+	.TubeLine-img {
+		@media @md-max {
+			width: 50% !important;
+		}
+	}
+	.TubeLine-line {
+		position: absolute;
+		top: 0%; // NB the line will flow under the img, due to element ordering in the jsx
+		bottom: 0;
+		left: 8.3%; // halfway across the img -- Is this placement reliable??
+		padding: 0px 1.5px;
+		background: #F9B139;
+		@media @md-max { // no joining line on mobile
+			display: none;
+		}
+	}
+	.done {
+		.TubeLine-line {
+			background: #07950C;
+		}
+	}
+}
+
+
 .AccountPage {
 
 	.user {
@@ -58,31 +87,6 @@
 		}
 	}
 
-	.more-to-do {
-		.do-section {
-			.do-img {
-				@media @md-max {
-					width: 50% !important;
-				}
-			}
-			.doline {
-				position: absolute;
-				top: 50%;
-				bottom: 0;
-				left: 8.3%;
-				padding: 0px 1.5px;
-				background: #F9B139;
-				@media @md-max {
-					display: none;
-				}
-			}
-			&.done {
-				.doline {
-					background: #07950C;
-				}
-			}
-		}
-	}
 
 	.settings {
 		font-size: 1.5rem;

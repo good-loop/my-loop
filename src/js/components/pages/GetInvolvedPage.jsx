@@ -27,7 +27,7 @@ const GetInvolvedPage = () => {
 				<Row className="ml-md-5 pl-md-5 text-center text-md-left"> 
 					<Col md={6}>
 						<div className="w-100 h-100 flex-column unset-margins justify-content-center mission">
-							<h2 className="mr-auto">What is our mission?</h2><br/>
+							<h2 className="mr-auto">What is our mission?</h2>
 							<p>Our mission is to change the global ad industry for good through turning adverts into charitable donations.
 								<em>$586 billion was spent on advertising</em> in 2019 alone<Ref href='"/resources/statistic_id236943_global-advertising-revenue-2012-2024.pdf"' /> - if 
 								that money had gone through Good-Loop, we could completely <em>stop 
@@ -40,9 +40,14 @@ const GetInvolvedPage = () => {
 					</Col>
 				</Row>
 				<div className="flex-column unset-margins text-center pt-5 pb-5 mt-5 justify-content-center align-items-center">
+					<h2 className="mr-auto">What can you do to help?</h2>					
 					<MoreToDo />
 				</div>
-
+				<div className="GetInTouch">
+					<h2 className="mr-auto">Get in touch</h2>					
+					<p>Tell us what you think: <a href='mailto:hello@good-loop.com?subject=My%20thoughts%20on%20My.Good-Loop'>hello@good-loop.com</a></p>
+					<p>Interested in hosting Ads For Good on your blog or website? <a href='https://www.good-loop.com/contact'>Let us know</a>.</p>
+				</div>
 			</Container>
 			<SubscriptionBox title="Subscribe to our monthly newsletter" className="bg-gl-light-red big-sub-box"/>
 		</div>

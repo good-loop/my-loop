@@ -89,7 +89,7 @@ const PermissionControl = ({header, prop, subtext, textOn, saveFn}) => {
 					</div> : null}
 				</div>
 			</div>
-			<div className='col-md-3 flex-row slider'>
+			<div className='col-md-3 flex-row'>
 				<PropControl 
 					path={path} 
 					prop={prop}
@@ -148,7 +148,7 @@ const ConsentWidget = ({xids}) => {
 			</Row>
 			<Row className='py-2'>
 				<PermissionControl 
-					header='Subscribe to email updates'
+					header='Receive email updates'
 					prop='sendMessages'
 					saveFn={props => togglePerm({...props, peeps})}
 					textOn='Thank you!'

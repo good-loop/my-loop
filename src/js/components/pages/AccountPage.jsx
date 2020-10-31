@@ -17,6 +17,7 @@ import { space } from '../../base/utils/miscutils';
 import PropControl from '../../base/components/PropControl';
 import SubscriptionBox from '../cards/SubscriptionBox';
 import ShareButton from '../ShareButton';
+import { addImageCredit } from '../../base/components/AboutPage';
 
 const Page = () => {
 	const xids = DataStore.getValue(['data', 'Person', 'xids']) || [];
@@ -67,37 +68,30 @@ const Page = () => {
 	);
 };
 
+addImageCredit({name:"add-user", author:"Icons8", url:"https://icons8.com/icons/set/add-user-male"});
+
 // See also GetInvoledPage
 export const MoreToDo = () => {
 	const [subbed, setSubbed] = useState(false);
 
 	return (
-		<div className="more-to-do">
-			<DoSection title='Sign up' img="/img/LandingBackground/Group30.png" done={Login.isLoggedIn()}>
-				Creating an account unlocks more features, which help us do even more good and give you more control.<br/>
+		<div className="more-to-do TubeLine">
+			<DoSection title="Sign up" tqTitle="Thanks for signing up" 
+				img="/img/icons8-add-user-male.png" done={Login.isLoggedIn()}>
+				<p>Creating an account unlocks more features, which help us do more good and gives you more control.</p>
 				{ ! Login.isLoggedIn() && <LoginLink><div className="btn btn-transparent fill">Sign up</div></LoginLink>}
-				<h4>Thanks for signing up</h4>
 			</DoSection>
-			<DoSection img="/img/LandingBackground/Group30.png" done>
-				<h4>Recognise Good-Loop ads</h4>
-				<p className="w-md-50">Remember our logo, so whenever you see one of our ads, 
-				you could recognise it. The Good-Loop logo guarantees that a full 50% of the money is going to charity.</p>
+			<DoSection title="Recognise Good-Loop ads" img="/img/LandingBackground/Group30.png" done>
+				<p className="w-md-50">Remember our logo, so when you see one of our ads, 
+				you can recognise it. The Good-Loop logo guarantees that a full 50% of the money is going to charity.</p>
 				<img className="w-50" src="/img/gl-logo/rectangle/logo-name.svg" alt="logo" />
 			</DoSection>
-			<DoSection img="/img/LandingBackground/Group33.png" done={subbed} last>
-				{subbed ?<>
-					<h4>Thanks for subscribing to our newsletter</h4>
-				</>:<>
-					<h4>Newsletter</h4>
-					<p>
-						Sign up to our monthly newsletter to read about the ad world and our achievements within it.
-					</p>
-				</>}
-				<SubscriptionBox onSubmit={() => setSubbed(true)}/>
+			<DoSection title='Newsletter' tqTitle="Thanks for subscribing to our newsletter" img="/img/LandingBackground/Group33.png" done={subbed}>
+				<p>Sign up to our monthly newsletter to read about the ad world and our achievements within it.</p>
+				<SubscriptionBox onSubmit={() => setSubbed(true)} />
 			</DoSection>
-			<DoSection >
-				<h4 className="mb-3">Share the good news</h4>
-				<p className="w-md-50">Spread the word about our mission by telling your friends about it and by sharing this website on one of your social media channels.</p>
+			<DoSection title="Share the good news" img="/img/LandingBackground/share.png" last>
+				<p className="w-md-50">Spread the word about our mission by sharing this website on one of your social media channels.</p>
 				<ShareButton className="btn-transparent fill"
 					title="My-Loop"
 					image="/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png"
@@ -127,8 +121,8 @@ const YourDataSettings = () => {
 	return (<div className="your-data-form">
 		<h4>Your data:</h4>
 		<Row>
-			<Col md={3}>Name:</Col>
-			<Col md={4} xs={6}>
+			<Col md={4}>Name:</Col>
+			<Col md={8} xs={6}>
 				<PropControl 
 					path={path} 
 					prop="name"
@@ -136,11 +130,10 @@ const YourDataSettings = () => {
 					saveFn={null} 
 				/>
 			</Col>
-			<Col xs={3}><a>Change</a></Col>
 		</Row>
 		<Row>
-			<Col md={3}>Email:</Col>
-			<Col md={4} xs={6}>
+			<Col md={4}>Email:</Col>
+			<Col md={8} xs={6}>
 				<PropControl 
 					path={path} 
 					prop="email"
@@ -148,36 +141,28 @@ const YourDataSettings = () => {
 					saveFn={null} 
 				/>
 			</Col>
-			<Col xs={3}><a>Change</a></Col>
 		</Row>
 		<Row>
-			<Col md={3}>Password:</Col>
-			<Col md={4} xs={6}>
-				<PropControl 
-					path={path} 
-					prop="password"
-					type="password" 
-					saveFn={null} 
-				/>
-			</Col>
-			<Col xs={3}><a>Change</a></Col>
+			To change password, please go through password reset.
 		</Row>
 	</div>);
 };
 
 /**
  * 
+ * @param {!string} img url for an icon in a yellow circle. Minor TODO this would be nicer as a text icon (unicode or an icont font like FA) instead of an image
  * @param {?boolean} last If false, use .doline to draw in a line down to the next item
  */
-const DoSection = ({done=false, img, last=false, children}) => {
+const DoSection = ({title, tqTitle, done=false, img, last=false, children}) => {	
 	return (
-		<Row className={space("do-section position-relative", done ? "done" : "")}>
-			{!last ? <div className="doline" /> : null}
+		<Row className={space("position-relative", done ? "done" : "")}>
+			{!last ? <div className="TubeLine-line" /> : null}
 			<Col md={2} className="mb-5 text-center">
-				<img src={done ? "/img/LandingBackground/Group30.png" : img} className="w-100 do-img"/>
+				<img src={done ? "/img/LandingBackground/Group30.png" : img} className="w-100 TubeLine-img"/>
 			</Col>
 			<Col className="offset-md-1 flex-column unset-margins justify-content-center mb-5">
 				<div> {/* NB: div needed to avoid centering children */}
+					<h4>{done? tqTitle : title}</h4>
 					{children}
 				</div>
 			</Col>

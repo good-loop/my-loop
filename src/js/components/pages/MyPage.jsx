@@ -33,22 +33,11 @@ const MyPage = ({spring}) => {
 		<div className='MyPage widepage'>
 			<LandingSection setY={setY}/>
 			<HowItWorksCard />
+			{false && <AttentionIsValuableCard /> /* was this cut for a reason? */}
 			<SubscriptionBox title="Subscribe to our monthly newsletter" className="bg-gl-light-red big-sub-box"/>
 		</div>
 	</>);
 };
-
-
-const TestAd = () => {
-	// see https://console.appnexus.com/placement?id=1610003
-	if ( ! Roles.isDev()) return false;
-	return (<div>
-		<h4>Hello Dev. Yay! You've scrolled down here -- Let's see an ad and raise some money for charity :)</h4>
-		<script src="http://ib.adnxs.com/ttj?id=17741445&size=300x250" type="text/javascript"></script>
-	</div>);
-};
-
-
 
 const HowItWorksCard = () => {
 	return (<div className="bg-white py-5">
@@ -60,5 +49,20 @@ const HowItWorksCard = () => {
 		</Container>
 	</div>);
 };
+
+/**
+ * TODO This has been cut -- should it be reinstated??
+ */
+const AttentionIsValuableCard = () => {
+	return (<div className="AttentionIsValuableCard">
+		<h4>Time and attention online are valuable.</h4>
+		<h4>Let's harness that value and use it for good.</h4>
+		<p>
+			Good-Loop will never force you to engage with an ad. 
+			But, if you choose to give an advertiser some of your valuable time and attention, you get to give 50% of the advertisers' money to a relevant charitable cause.
+		</p>
+	</div>);
+};
+
 
 export default MyPage;

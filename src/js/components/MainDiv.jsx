@@ -29,6 +29,8 @@ import TestPage from '../base/components/TestPage';
 import AccountPage from './pages/AccountPage';
 import Footer from './Footer';
 import { Register } from '../../puppeteer_tests/test-base/common-selectors';
+import MyGLAboutPage from './MyGLAboutPage';
+import { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
 // import RedesignPage from './pages/RedesignPage';
 
 // DataStore
@@ -45,10 +47,12 @@ const PAGES = {
 	charities: MyCharitiesPage,
 	ads: MyAdCampaignsPage,
 	involve: GetInvolvedPage,
-	howitworks: MyPage
-	// redesign: RedesignPage,
-	// redesign2: Redesign2Page
+	howitworks: MyPage,
+	about: MyGLAboutPage
 };
+
+addFunderCredit("Scottish Enterprise");
+addDataCredit({name:"The charity impact database", url:"https://sogive.org", author:"SoGive"});
 
 const DEFAULT_PAGE = 'my';
 
