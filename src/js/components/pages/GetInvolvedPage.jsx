@@ -8,6 +8,11 @@ import ShareButton from '../ShareButton';
 import SubscriptionBox from '../cards/SubscriptionBox';
 import { LoginLink } from '../../base/components/LoginWidget';
 import { space } from '../../base/utils/miscutils';
+import { MoreToDo } from './AccountPage';
+
+const Ref = ({href}) => {
+	return <a className='Ref' target="_blank" rel="noreferrer" href={href}>*</a>;
+};
 
 const GetInvolvedPage = () => {
 	return (<>
@@ -24,9 +29,9 @@ const GetInvolvedPage = () => {
 						<div className="w-100 h-100 flex-column unset-margins justify-content-center mission">
 							<h2 className="mr-auto">What is our mission?</h2><br/>
 							<p>Our mission is to change the global ad industry for good through turning adverts into charitable donations.
-								<span className="color-gl-light-red"> $586 billion was spent on advertising</span> in 2019 alone<a target="_blank" href="/resources/statistic_id236943_global-advertising-revenue-2012-2024.pdf">*</a> -
-								if that money had gone through Good-Loop, we could completely
-								<span className="color-gl-light-red"> stop the rise of greenhouse gas in just one year</span><a target="_blank" rel="noreferrer" href="https://www.bloomberg.com/news/articles/2019-10-23/how-to-halt-global-warming-for-300-billion">*</a>.
+								<em>$586 billion was spent on advertising</em> in 2019 alone<Ref href='"/resources/statistic_id236943_global-advertising-revenue-2012-2024.pdf"' /> - if 
+								that money had gone through Good-Loop, we could completely <em>stop 
+									the rise of greenhouse gas in just one year</em><Ref href="https://www.bloomberg.com/news/articles/2019-10-23/how-to-halt-global-warming-for-300-billion"/>.
 								As part of the Good-Loop community, you can help us make that a reality.</p>
 						</div>
 					</Col>
@@ -35,82 +40,13 @@ const GetInvolvedPage = () => {
 					</Col>
 				</Row>
 				<div className="flex-column unset-margins text-center pt-5 pb-5 mt-5 justify-content-center align-items-center">
-					<ThingsYouCanDo />
+					<MoreToDo />
 				</div>
 
 			</Container>
 			<SubscriptionBox title="Subscribe to our monthly newsletter" className="bg-gl-light-red big-sub-box"/>
 		</div>
 	</>);
-};
-
-const ThingsYouCanDo = () => {
-	const [doneActions, setDoneActions] = useState(null);
-	const [fetchedCookies, setFetchedCookies] = useState(false);
-	if (!fetchedCookies) {
-		setDoneActions(Cookies.get('glDoneActions'));
-		setFetchedCookies(true);
-	}
-
-	const replaceDoneActions = (newDoneActions) => {
-		Cookies.set('glDoneActions', doneActions, {expires: 365});
-		setDoneActions(newDoneActions);
-	};
-
-	if (!doneActions) replaceDoneActions([]);
-
-	console.log(Cookies.get('glDoneActions'));
-
-	const markAsDone = (actionNum) => {
-		if (doneActions) {
-			if (!doneActions.includes(actionNum)) replaceDoneActions([...doneActions, actionNum]);
-		} else replaceDoneActions([actionNum]);
-	};
-
-	if (Login.isLoggedIn()) {
-		if (!doneActions) {
-			markAsDone(1);
-		} else if (!doneActions.includes(1)) markAsDone(1);
-	}
-
-	return (<>
-		<h2 className="mb-5">What could you do to help us?</h2>
-
-		<Action number={1} doneActions={doneActions}>
-			<h4 className="mb-3">Sign up</h4>
-			<p className="w-md-50">Creating an account unlocks more features, which help us do even more good and give you more control.<br/>
-				<LoginLink><div className="btn btn-transparent fill">Sign up</div></LoginLink></p>
-		</Action>
-
-		<Action number={2} doneActions={doneActions}>
-			<h4 className="mb-3">Recognise the Good-Loop ads</h4>
-			<p className="w-md-50">Remember our logo, so whenever you see one of our ads, you could recognise it and watch it for a few seconds to unlock a donation.</p>
-			<img className="w-md-25" src="/img/gl-logo/rectangle/logo-name.svg" alt="logo" />
-		</Action>
-	
-		<Action number={3} doneActions={doneActions}>
-			<h4 className="mb-3">Share the good news</h4>
-			<p className="w-md-50">Spread the word about our mission by telling your friends about it and by sharing this website on one of your social media channels.</p>
-			<ShareButton className="btn-transparent fill"
-				title="My-Loop"
-				image="/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png"
-				description="Using ads for good"
-				url="https://my.good-loop.com"
-				onShare={() => markAsDone(3)}
-			>
-				Share
-			</ShareButton>
-		</Action></>);
-};
-
-const Action = ({number, doneActions, className, children}) => {
-	const done = doneActions.includes(number);
-	return (<div className={space("action flex-column unset-margins justify-content-center align-items-center mb-5", done ? "done" : "", className)}>
-		<WhiteCircle width="125px" className=""><h1>{number}.</h1></WhiteCircle>
-		{done ? <i className="fa fa-check" /> : null}
-		<div className="pb-3"/>
-		{children}
-	</div>);
 };
 
 export default GetInvolvedPage;

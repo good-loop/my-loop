@@ -1,16 +1,18 @@
+
+/** citation "footnote" *s get some on-hover juice */
+a.Ref {
+	text-decoration: none !important;
+	transition: 0.3s;
+	transform: scale(1) rotate(0deg);
+	display: inline-block;
+	&:hover {
+		transform: scale(2) rotate(20deg);
+		transition: 0.3s;
+	}
+} // ./Ref
+
+
 .GetInvolvedPage {
-    .mission p {
-        a {
-            text-decoration: none !important;
-            transition: 0.3s;
-            transform: scale(1) rotate(0deg);
-            display: inline-block;
-            &:hover {
-                transform: scale(2) rotate(20deg);
-                transition: 0.3s;
-            }
-        }
-    }
     .w-md-50 {
         @media @md-min {
             width: 50% !important;
@@ -39,7 +41,6 @@
         font-size: 1.5rem;
         a {
             color: #126CFC !important;
-            text-decoration: underline !important;
         }
     }
     .action {

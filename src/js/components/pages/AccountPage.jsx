@@ -16,6 +16,7 @@ import Misc from '../../base/components/Misc';
 import { space } from '../../base/utils/miscutils';
 import PropControl from '../../base/components/PropControl';
 import SubscriptionBox from '../cards/SubscriptionBox';
+import ShareButton from '../ShareButton';
 
 const Page = () => {
 	const xids = DataStore.getValue(['data', 'Person', 'xids']) || [];
@@ -67,17 +68,21 @@ const Page = () => {
 };
 
 // See also GetInvoledPage
-const MoreToDo = () => {
+export const MoreToDo = () => {
 	const [subbed, setSubbed] = useState(false);
 
 	return (
 		<div className="more-to-do">
-			<DoSection img="/img/LandingBackground/Group30.png" done>
+			<DoSection title='Sign up' img="/img/LandingBackground/Group30.png" done={Login.isLoggedIn()}>
+				Creating an account unlocks more features, which help us do even more good and give you more control.<br/>
+				{ ! Login.isLoggedIn() && <LoginLink><div className="btn btn-transparent fill">Sign up</div></LoginLink>}
 				<h4>Thanks for signing up</h4>
 			</DoSection>
 			<DoSection img="/img/LandingBackground/Group30.png" done>
-				<h4>Thanks for recognising our ads</h4>
-				<img className="w-50" src="/img/gl-logo/AdsForGood/AdsForGood.svg" alt="logo" />
+				<h4>Recognise Good-Loop ads</h4>
+				<p className="w-md-50">Remember our logo, so whenever you see one of our ads, 
+				you could recognise it. The Good-Loop logo guarantees that a full 50% of the money is going to charity.</p>
+				<img className="w-50" src="/img/gl-logo/rectangle/logo-name.svg" alt="logo" />
 			</DoSection>
 			<DoSection img="/img/LandingBackground/Group33.png" done={subbed} last>
 				{subbed ?<>
@@ -89,6 +94,21 @@ const MoreToDo = () => {
 					</p>
 				</>}
 				<SubscriptionBox onSubmit={() => setSubbed(true)}/>
+			</DoSection>
+			<DoSection >
+				<h4 className="mb-3">Share the good news</h4>
+				<p className="w-md-50">Spread the word about our mission by telling your friends about it and by sharing this website on one of your social media channels.</p>
+				<ShareButton className="btn-transparent fill"
+					title="My-Loop"
+					image="/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png"
+					description="Using ads for good"
+					url="https://my.good-loop.com"
+					onShare={() => {
+						console.error("TODO onShare");
+					}}
+				>
+					Share
+				</ShareButton>
 			</DoSection>
 		</div>
 	);
