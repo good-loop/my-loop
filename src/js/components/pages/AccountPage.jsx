@@ -31,12 +31,12 @@ const Page = () => {
 	const name = Login.isLoggedIn() ? user.name || user.xid : "";
 
 	return (
-		<div className='AccountPage'>
+		<div className="AccountPage">
 			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" alwaysScrolled/>
-			<div className='container mt-5 pt-5'>
+			<div className="container mt-5 pt-5">
 				<Row className="mb-5 user">
 					<Col md={3} className="d-md-block d-flex justify-content-center">
-						<img src="/img/LandingBackground/user.png"/>
+						<img src="/img/LandingBackground/user.png" alt="user icon" />
 					</Col>
 					<Col md={8} className="flex-column justify-content-center align-items-start">
 						{Login.isLoggedIn() ? <div>
@@ -52,7 +52,7 @@ const Page = () => {
 					<div className="w-75 mx-auto">
 						<div className="text-center">
 							<h2>What to do now?</h2>
-							<p>You have already made the first and most important step in helping us: you joined our community. But there is more you can do!</p>
+							<p>You have already made the first important step in helping us: you joined our community. But there is more you can do!</p>
 						</div>
 						<MoreToDo/>
 					</div>
@@ -66,8 +66,8 @@ const Page = () => {
 	);
 };
 
+// See also GetInvoledPage
 const MoreToDo = () => {
-
 	const [subbed, setSubbed] = useState(false);
 
 	return (
@@ -77,7 +77,7 @@ const MoreToDo = () => {
 			</DoSection>
 			<DoSection img="/img/LandingBackground/Group30.png" done>
 				<h4>Thanks for recognising our ads</h4>
-				<img className="w-50" src="/img/new-logo-with-text.svg"/>
+				<img className="w-50" src="/img/gl-logo/AdsForGood/AdsForGood.svg" alt="logo" />
 			</DoSection>
 			<DoSection img="/img/LandingBackground/Group33.png" done={subbed} last>
 				{subbed ?<>
@@ -112,7 +112,7 @@ const YourDataSettings = () => {
 				<PropControl 
 					path={path} 
 					prop="name"
-					type='text' 
+					type="text" 
 					saveFn={null} 
 				/>
 			</Col>
@@ -124,7 +124,7 @@ const YourDataSettings = () => {
 				<PropControl 
 					path={path} 
 					prop="email"
-					type='text' 
+					type="text" 
 					saveFn={null} 
 				/>
 			</Col>
@@ -136,7 +136,7 @@ const YourDataSettings = () => {
 				<PropControl 
 					path={path} 
 					prop="password"
-					type='password' 
+					type="password" 
 					saveFn={null} 
 				/>
 			</Col>
@@ -148,7 +148,7 @@ const YourDataSettings = () => {
 const DoSection = ({done=false, img, last=false, children}) => {
 	return (
 		<Row className={space("do-section position-relative", done ? "done" : "")}>
-			{!last ? <div className="doline"></div> : null}
+			{!last ? <div className="doline" /> : null}
 			<Col md={2} className="mb-5 text-center">
 				<img src={done ? "/img/LandingBackground/Group30.png" : img} className="w-100 do-img"/>
 			</Col>
