@@ -33,10 +33,11 @@ const optimise = url => {
 	const isMediaImage = url.indexOf('media.good-loop.com') !== -1;
 	if ( ! isMediaImage) return url;
 	// mobile or standard?
-	const isMobile = DataStore.getValue(['env', 'isMobile']);
+	const isMobile = isMobile();
 	let optiurl;
 	if (isMobile) {
-		optiurl = url.replace('uploads/standard', 'uploads/mobile').replace('uploads/raw', 'uploads/mobile');
+		optiurl = url.replace('uploads/standard', 'uploads/mobile')
+			.replace('uploads/raw', 'uploads/mobile');
 	} else {
 		optiurl = url.replace('uploads/raw', 'uploads/standard');
 	}
@@ -52,12 +53,7 @@ const optimise = url => {
 const OptimisedImage = (props) => {
 	let {render} = props;
 	let src = props.src || '';
-
-	const isMobile = DataStore.getValue(['env', 'isMobile']);
-	// Logos have different path structure (testmedia.good-loop.com/uploads/img/cat.jpg)
-	const isStandardMediaImage = src.includes('media.good-loop.com/uploads/standard/');
-	src = isMobile && isStandardMediaImage ? src.replace('uploads/standard', 'uploads/mobile') : src;
-
+	src = optimise(src);	
 	return render({...props, src});
 };
 

@@ -11,7 +11,7 @@ import LinkedProfilesCard from '../cards/LinkedProfilesCard';
 import MyLoopNavBar from '../MyLoopNavBar';
 import { LoginLink } from '../../base/components/LoginWidget';
 import Footer from '../Footer';
-import {getAllXIds, getConsents, getProfilesNow} from '../../base/Profiler';
+import {getAllXIds, getConsents, getEmail, getProfilesNow, hasConsent, PURPOSES} from '../../base/Profiler';
 import Misc from '../../base/components/Misc';
 import { space } from '../../base/utils/miscutils';
 import PropControl from '../../base/components/PropControl';
@@ -21,17 +21,8 @@ import { addImageCredit } from '../../base/components/AboutPage';
 import Roles from '../../base/Roles';
 
 const Page = () => {
-	let xids = DataStore.getValue(['data', 'Person', 'xids']) || [];
-
-	// HACK (23/04/19): you_again does not call login.change() after user connects with Twitter
-	// Means that xids were never being refreshed => user can never use the DigitalMirror
-	// Think that taking a look at you_again is the proper long-term solution, but this will do for right now
-	useEffect(() => {
-		const all = getAllXIds();
-		console.log("set data.Person.xids",all, " was: ", xids);
-		DataStore.setValue(['data', 'Person', 'xids'], all, false);
-		xids = all;
-	}, [Login && Login.aliases && Login.aliases.length]);
+	// race conditions with Login and profile fetch (for linked IDs) mean all-xids should be refreshed.
+	let xids = getAllXIds(); 
 
 	const user = Login.getUser();
 	const name = Login.isLoggedIn() ? user.name || user.xid : "";
@@ -60,7 +51,7 @@ const Page = () => {
 							<h2>What to do now?</h2>
 							<p>You have already made the first important step in helping us: you joined our community. But there is more you can do!</p>
 						</div>
-						<MoreToDo/>
+						<MoreToDo xids={xids} />
 					</div>
 					
 					<h2 className="text-center mb-5">Your settings</h2>
@@ -75,24 +66,32 @@ const Page = () => {
 addImageCredit({name:"add-user", author:"Icons8", url:"https://icons8.com/icons/set/add-user-male"});
 
 // See also GetInvoledPage
-export const MoreToDo = () => {
-	let subbed = false; // TODO
+export const MoreToDo = ({xids}) => {
+	// Count the user as subscribed if we have a linked email + a consent
+	const props = {};
+	props.xids = xids;
+	props.purpose = PURPOSES.email_mailing_list;
+	let hc = hasConsent(props); // TODO
+	let he = getEmail({xids});
+	let subbed = hc && he;
 	
 	return (
 		<div className="more-to-do TubeLine">
 			<DoSection title="Sign up" tqTitle="Thanks for signing up" 
-				img="/img/icons8-add-user-male.png" done={Login.isLoggedIn()}>
+				img="/img/icons8-add-user-male.png" done={Login.isLoggedIn()}
+			>
 				<p>Creating an account unlocks more features, which help us do more good and gives you more control.</p>
 				{ ! Login.isLoggedIn() && <LoginLink><div className="btn btn-transparent fill">Sign up</div></LoginLink>}
 			</DoSection>
 			<DoSection title="Recognise Good-Loop ads" img="/img/LandingBackground/Group30.png" done>
 				<p className="w-md-50">Remember our logo, so when you see one of our ads, 
-				you can recognise it. The Good-Loop logo guarantees that a full 50% of the money is going to charity.</p>
+					you can recognise it. The Good-Loop logo guarantees that a full 50% of the money is going to charity.</p>
 				<img className="w-50" src="/img/gl-logo/rectangle/logo-name.svg" alt="logo" />
 			</DoSection>
-			<DoSection title='Newsletter' tqTitle="Thanks for subscribing to our newsletter" img="/img/LandingBackground/Group33.png" done={subbed}>
+			<DoSection title="Newsletter" tqTitle="Thanks for subscribing to our newsletter" img="/img/LandingBackground/Group33.png" done={subbed}>
 				<p>Sign up to our monthly newsletter to read about the ad world and our achievements within it.</p>
 				<SubscriptionBox />
+				{he && <div><small>Email: {he}</small></div>}
 			</DoSection>
 			<DoSection title="Share the good news" img="/img/LandingBackground/share.png" last>
 				<p className="w-md-50">Spread the word about our mission by sharing this website on one of your social media channels.</p>
@@ -120,12 +119,15 @@ const Settings = ({xids}) => {
 	return (<div className="settings">
 		<ConsentWidget xids={xids}/>
 		<div className="pt-3"/>
-		<YourDataSettings/>
-		{(true || Roles.isDev()) && <div className="dev-text"><small>IDs: {xids.join(", ")}</small></div>}
-		{(true || Roles.isDev()) && <div className="dev-text"><small>Consents: {JSON.stringify(consents)}</small></div>}
+		{false && <YourDataSettings/>}
+		{Roles.isDev() && <div className="dev-text"><small>IDs: {xids.join(", ")}</small></div>}
+		{Roles.isDev() && <div className="dev-text"><small>Consents: {JSON.stringify(consents)}</small></div>}
 	</div>);
 };
 
+/**
+ * TODO collect and maintain data about the user - eg common demographics
+ */
 const YourDataSettings = () => {
 	const path = ['widget', 'YourDataWidget', 'details'];
 	return (<div className="your-data-form">
