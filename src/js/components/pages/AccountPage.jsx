@@ -11,13 +11,14 @@ import LinkedProfilesCard from '../cards/LinkedProfilesCard';
 import MyLoopNavBar from '../MyLoopNavBar';
 import { LoginLink } from '../../base/components/LoginWidget';
 import Footer from '../Footer';
-import {getAllXIds} from '../../base/Profiler';
+import {getAllXIds, getConsents, getProfilesNow} from '../../base/Profiler';
 import Misc from '../../base/components/Misc';
 import { space } from '../../base/utils/miscutils';
 import PropControl from '../../base/components/PropControl';
 import SubscriptionBox from '../cards/SubscriptionBox';
 import ShareButton from '../ShareButton';
 import { addImageCredit } from '../../base/components/AboutPage';
+import Roles from '../../base/Roles';
 
 const Page = () => {
 	let xids = DataStore.getValue(['data', 'Person', 'xids']) || [];
@@ -75,8 +76,8 @@ addImageCredit({name:"add-user", author:"Icons8", url:"https://icons8.com/icons/
 
 // See also GetInvoledPage
 export const MoreToDo = () => {
-	const [subbed, setSubbed] = useState(false);
-
+	let subbed = false; // TODO
+	
 	return (
 		<div className="more-to-do TubeLine">
 			<DoSection title="Sign up" tqTitle="Thanks for signing up" 
@@ -91,7 +92,7 @@ export const MoreToDo = () => {
 			</DoSection>
 			<DoSection title='Newsletter' tqTitle="Thanks for subscribing to our newsletter" img="/img/LandingBackground/Group33.png" done={subbed}>
 				<p>Sign up to our monthly newsletter to read about the ad world and our achievements within it.</p>
-				<SubscriptionBox onSubmit={() => setSubbed(true)} />
+				<SubscriptionBox />
 			</DoSection>
 			<DoSection title="Share the good news" img="/img/LandingBackground/share.png" last>
 				<p className="w-md-50">Spread the word about our mission by sharing this website on one of your social media channels.</p>
@@ -112,10 +113,16 @@ export const MoreToDo = () => {
 };
 
 const Settings = ({xids}) => {
+	// debug
+	let profiles = getProfilesNow(xids);
+	let consents = getConsents({profiles});
+
 	return (<div className="settings">
 		<ConsentWidget xids={xids}/>
 		<div className="pt-3"/>
 		<YourDataSettings/>
+		{(true || Roles.isDev()) && <div className="dev-text"><small>IDs: {xids.join(", ")}</small></div>}
+		{(true || Roles.isDev()) && <div className="dev-text"><small>Consents: {JSON.stringify(consents)}</small></div>}
 	</div>);
 };
 
