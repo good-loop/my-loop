@@ -1,5 +1,9 @@
 
+
+
 // TODO try to refactor this to use less css rules, and more vanilla Bootstrap
+
+
 
 // NOTE: this file was created only recently (22/04/19) so don't assume that all 
 // less rules pertaining to the campaign page will be here
@@ -73,6 +77,7 @@ body {
 			width: 100%;
 			background-color: rgba(0, 0, 0, 0.1);
 			@media @ipad-max {
+				// why??
 				background-color: rgba(0, 0, 0, 0.2);
 			}
 		}
@@ -102,7 +107,7 @@ body {
 				padding-top: 70px; // avoid navbar
 				width: 100%;
 				@media @md-max {
-					display: flex;
+					display: flex; // Is it possible to use flex or BS to write something simpler that just works across devices??
 					flex-direction: column;
 					align-items: center;
 					justify-content: space-between;
@@ -124,7 +129,7 @@ body {
 				flex-direction: row;
 				align-items: center;
 				justify-content: space-between;
-				width: 68.75%;
+				width: 68.75%; // ??
 				margin: auto;
 				@media @md-max {
 					width: 100%;

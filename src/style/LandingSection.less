@@ -1,6 +1,22 @@
 
 @import "../js/base/style/fonts.less";
 
+/*
+
+TODO: CSS Clean-Up to be more modular and robust
+
+Redefining font stuff (font family or size) or basic tags (e.g. h1,h2,p,a) for a specific section is usually a mistake, 
+as it leads to inconsistent styling + harder to maintain css.
+
+For the css below that deals in font/text matters:
+ - Can we remove this?
+ - ...If not, should it be promoted to a general rule?
+ - ...If not, add a comment
+
+*/
+
+
+
 .landing-bg {
 	height: 100vh;
 	width: 100%;
@@ -30,6 +46,8 @@
 			object-fit: cover;
 		}
 
+		/* Thin vertical strips of a few images - if you hover over one, it will expand.
+		NB: mobile uses one fixed image (which is done in code) */
 		.hover-expand-image {
 			img {
 				height: 100%;
@@ -38,10 +56,10 @@
 			}
 			flex-grow: 1;
 			flex-basis: 0;
-			transition: flex-grow 0.75s;
+			transition: flex-grow 0.85s;
 			&:hover {
 				flex-grow: 3;
-				transition: flex-grow 0.75s;
+				transition: flex-grow 0.85s;
 			}
 		}
 	}
