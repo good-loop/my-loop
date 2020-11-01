@@ -9,12 +9,14 @@ import SubscriptionBox from '../cards/SubscriptionBox';
 import { LoginLink } from '../../base/components/LoginWidget';
 import { space } from '../../base/utils/miscutils';
 import { MoreToDo } from './AccountPage';
+import { getAllXIds } from '../../base/Profiler';
 
 const Ref = ({href}) => {
 	return <a className='Ref' target="_blank" rel="noreferrer" href={href}>*</a>;
 };
 
 const GetInvolvedPage = () => {
+	let xids = getAllXIds(); 
 	return (<>
 		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" alwaysScrolled/>
 		<div className="GetInvolvedPage">
@@ -41,7 +43,7 @@ const GetInvolvedPage = () => {
 				</Row>
 				<div className="flex-column unset-margins text-center pt-5 pb-5 mt-5 justify-content-center align-items-center">
 					<h2 className="mr-auto">What can you do to help?</h2>					
-					<MoreToDo />
+					<MoreToDo xids={xids} />
 				</div>
 				<div className="GetInTouch">
 					<h2 className="mr-auto">Get in touch</h2>					

@@ -88,7 +88,7 @@ class MyLoopNavBar extends React.Component {
 const AccountMenu = ({logoutLink}) => {
 	if (!Login.isLoggedIn()) { 
 		return (
-			<LoginLink className="login-menu btn btn-transparent fill">Register / Log in</LoginLink>
+			<LoginLink verb="register" className="login-menu btn btn-transparent fill">Register / Log in</LoginLink>
 		); 
 	}
 

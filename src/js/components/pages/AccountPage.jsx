@@ -21,7 +21,7 @@ import { addImageCredit } from '../../base/components/AboutPage';
 import Roles from '../../base/Roles';
 
 const Page = () => {
-	// race conditions with Login and profile fetch (for linked IDs) mean all-xids should be refreshed.
+	// NB: race conditions with Login and profile fetch (for linked IDs) mean all-xids should be refreshed.
 	let xids = getAllXIds(); 
 
 	const user = Login.getUser();
@@ -40,7 +40,7 @@ const Page = () => {
 							<h1>Hi {name},</h1>
 							<p>Thanks for being a member of the Good-loop family. Together we are changing the global ad industry and making a meaningful impact on the world.</p>
 						</div>:<div> <h1>You need an account to see this page.</h1>
-							<LoginLink className="btn btn-transparent fill">Register / Log in</LoginLink>
+							<LoginLink verb="register" className="btn btn-transparent fill">Register / Log in</LoginLink>
 						</div>}
 					</Col>
 				</Row>
@@ -68,12 +68,10 @@ addImageCredit({name:"add-user", author:"Icons8", url:"https://icons8.com/icons/
 // See also GetInvoledPage
 export const MoreToDo = ({xids}) => {
 	// Count the user as subscribed if we have a linked email + a consent
-	const props = {};
-	props.xids = xids;
-	props.purpose = PURPOSES.email_mailing_list;
-	let hc = hasConsent(props); // TODO
-	let he = getEmail({xids});
-	let subbed = hc && he;
+	const props = {xids, purpose: PURPOSES.email_mailing_list};
+	let hc = xids && hasConsent(props);
+	let email = xids && getEmail({xids});
+	let subbed = hc && email;
 	
 	return (
 		<div className="more-to-do TubeLine">
@@ -91,7 +89,7 @@ export const MoreToDo = ({xids}) => {
 			<DoSection title="Newsletter" tqTitle="Thanks for subscribing to our newsletter" img="/img/LandingBackground/Group33.png" done={subbed}>
 				<p>Sign up to our monthly newsletter to read about the ad world and our achievements within it.</p>
 				<SubscriptionBox />
-				{he && <div><small>Email: {he}</small></div>}
+				{email && <div><small>Email: {email}</small></div>}
 			</DoSection>
 			<DoSection title="Share the good news" img="/img/LandingBackground/share.png" last>
 				<p className="w-md-50">Spread the word about our mission by sharing this website on one of your social media channels.</p>
