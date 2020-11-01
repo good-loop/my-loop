@@ -45,7 +45,7 @@ const GetInvolvedPage = () => {
 				</div>
 				<div className="GetInTouch">
 					<h2 className="mr-auto">Get in touch</h2>					
-					<p>Tell us what you think: <a href='mailto:hello@good-loop.com?subject=My%20thoughts%20on%20My.Good-Loop'>hello@good-loop.com</a></p>
+					<p>Tell us what you think: <a target="_blank" href='mailto:hello@good-loop.com?subject=My%20thoughts%20on%20My.Good-Loop'>hello@good-loop.com</a></p>
 					<p>Interested in hosting Ads For Good on your blog or website? <a href='https://www.good-loop.com/contact'>Let us know</a>.</p>
 				</div>
 			</Container>

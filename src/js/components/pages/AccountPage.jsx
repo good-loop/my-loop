@@ -20,13 +20,16 @@ import ShareButton from '../ShareButton';
 import { addImageCredit } from '../../base/components/AboutPage';
 
 const Page = () => {
-	const xids = DataStore.getValue(['data', 'Person', 'xids']) || [];
+	let xids = DataStore.getValue(['data', 'Person', 'xids']) || [];
 
 	// HACK (23/04/19): you_again does not call login.change() after user connects with Twitter
 	// Means that xids were never being refreshed => user can never use the DigitalMirror
 	// Think that taking a look at you_again is the proper long-term solution, but this will do for right now
 	useEffect(() => {
-		DataStore.setValue(['data', 'Person', 'xids'], getAllXIds());
+		const all = getAllXIds();
+		console.log("set data.Person.xids",all, " was: ", xids);
+		DataStore.setValue(['data', 'Person', 'xids'], all, false);
+		xids = all;
 	}, [Login && Login.aliases && Login.aliases.length]);
 
 	const user = Login.getUser();
@@ -143,7 +146,7 @@ const YourDataSettings = () => {
 			</Col>
 		</Row>
 		<Row>
-			To change password, please go through password reset.
+			If you want to change your password, please go through password reset.
 		</Row>
 	</div>);
 };
@@ -162,7 +165,7 @@ const DoSection = ({title, tqTitle, done=false, img, last=false, children}) => {
 			</Col>
 			<Col className="offset-md-1 flex-column unset-margins justify-content-center mb-5">
 				<div> {/* NB: div needed to avoid centering children */}
-					<h4>{done? tqTitle : title}</h4>
+					<h4>{done && tqTitle? tqTitle : title}</h4>
 					{children}
 				</div>
 			</Col>

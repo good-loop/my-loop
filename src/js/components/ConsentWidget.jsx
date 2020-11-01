@@ -54,12 +54,14 @@ const togglePerm = ({prop, value, peeps}) => {
 	});
 };
 
-const toggleDNT = ({perms, dnt, value}) => {
-	perms.cookies = value;
-	dnt = value === true ? '1' : '0';
+const toggleDNT = ({perms, dnt, newValue}) => {
+	perms.cookies = newValue;
+	dnt = newValue === true ? '1' : '0';
 	const secure = window.location.protocol==='https:';
-	Cookies.set('DNT', dnt, {path:'/', domain:'good-loop.com', expires:365, sameSite:'None', secure});
+	// ref: https://web.dev/samesite-cookies-explained/
+	Cookies.set('DNT', dnt, {path:'/', domain:'good-loop.com', expires:365, sameSite:secure?'None':'Lax', secure});
 };
+window.Cookies = Cookies; // debug 
 
 /** Little convenience for registration
  * Wanted to be able to save perms after user has registered
@@ -75,6 +77,7 @@ const saveAllPerms = () => {
  *  @param label (String) header (e.g "Allow cookies") 
  *  @param subtext (String) smaller text that provides a bit more info
  *  @param textOn (String) will only appear if the user has given permission 
+ *  @param saveFn {!Function} Do the edit! `({event, path, prop, newValue}) -> any`
 */
 const PermissionControl = ({header, prop, subtext, textOn, saveFn}) => {
 	const value = DataStore.getValue([...path, prop]);
@@ -103,7 +106,7 @@ const PermissionControl = ({header, prop, subtext, textOn, saveFn}) => {
 		</>
 	);
 };
-// props => { toggleDNT({...props, perms, dnt}); togglePerm({...props, peeps}); }
+
 /**
  */
 const ConsentWidget = ({xids}) => {
@@ -154,7 +157,7 @@ const ConsentWidget = ({xids}) => {
 					textOn='Thank you!'
 				/>
 			</Row>
-			<small>We will never share your data or post to your social media account without your consent.<br/>See our <a href='https://doc.good-loop.com/policy/privacy-policy.html' rel='noopener noreferrer' target='_blank'>privacy policy</a> for more information.</small>
+			<small>We will never share your data without your consent unless there is a legal obligation.<br/>See our <a href='https://doc.good-loop.com/policy/privacy-policy.html' rel='noopener noreferrer' target='_blank'>privacy policy</a> for more information.</small>
 		</>
 	);
 };
