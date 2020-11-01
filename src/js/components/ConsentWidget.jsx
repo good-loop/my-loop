@@ -50,6 +50,7 @@ const togglePerm = ({prop, value, peeps}) => {
 		// save (after a second)
 		let pid = getId(person);
 		let saveProfileDebounced = debounceForSameInput(pid, saveProfile, 1000);
+		// TODO save a diff instead of the whole doc!
 		saveProfileDebounced(person);
 	});
 };
@@ -125,9 +126,10 @@ const ConsentWidget = ({xids}) => {
 	// update DataStore
 	DataStore.setValue(path, perms, false);
 
-	// The cookie setting is managed by a cookie, as its needed at add-time -- c.f. in unit.js.
+	// The cookie setting is managed by a cookie, as its needed at advert-time -- c.f. in unit.js.
 	let dnt = Cookies.get('DNT');
 	perms.cookies = (dnt === '1'); // allow cookies unless DNT=1
+	console.log("perms", perms);
 
 	return (
 		<>
