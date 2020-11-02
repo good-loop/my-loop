@@ -43,9 +43,13 @@ const HowItWorksCard = () => {
 	return (<div className="bg-white py-5">
 		<Container>
 			<h2 className="text-center mt-5">Help us change advertising for good</h2> 
-			{isPortraitMobile() ?
+			{isPortraitMobile() ? <>
 				<embed src="/img/LandingBackground/svg-mobile/infographic.svg" className="w-100"/>
-				: <embed src="/img/LandingBackground/svg-desktop/infographic.svg" className="w-100"/>}
+				{/* Center CTA btn - not included in mobile SVG */}
+				<div className="flex-row justify-content-center">
+					<a href="/#involve" className="btn btn-primary">Get involved</a>
+				</div>
+			</>: <embed src="/img/LandingBackground/svg-desktop/infographic.svg" className="w-100"/>}
 		</Container>
 	</div>);
 };

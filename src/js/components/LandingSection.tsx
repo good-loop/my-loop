@@ -78,11 +78,12 @@ const LandingBackground = () => {
 
 const CtaBox: React.FC = () => {
 	// NB: the total is higher -- but we need to clean up our donation tracker docs before we can reliably report it. March 2020
-	const total = new Money("£1000000");
+	const total = new Money("$1501885");
 	//@ts-ignore
 	return (
 		<div className="title">
-			<h1>We've raised over<br/><Counter amount={total} centerText preservePennies={false} /><br/>using ethical ads</h1>
+			<h1>Raise money for charity<br/>whilst you browse the web</h1>
+			<p>Help us redirect 50% of ad money to tackle global issues.<br/>We've raised <Counter amount={total} sigFigs={3}/> using ethical ads.</p>
 		</div>
 	);
 };

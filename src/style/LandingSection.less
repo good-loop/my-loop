@@ -77,13 +77,22 @@ For the css below that deals in font/text matters:
 		h1 {
 			font-family: 'Montserrat', sans-serif;
 			font-weight: normal;
-			font-size: 5rem;
-			text-transform: none;
+			font-size: 2.5rem;
 			text-shadow: 0px 1px 3px black;
 			margin-bottom: 1.3rem; // Overrides Bootstrap default to separate elements.
 			align-self: center;
 			@media @md-max {
 				font-size: 2rem;
+			}
+		}
+		// Hack - will globalise later, put like this to not interfere with CampaignPage styling for now
+		p {
+			font-size: 1.5rem;
+			text-shadow: 0px 3px 6px rgba(0,0,0,0.5);
+			font-family: 'Montserrat', sans-serif;
+			@media @md-max {
+				font-size: 1.2rem;
+				padding: 0 20px;
 			}
 		}
 	}

@@ -133,6 +133,8 @@ const ConsentWidget = ({xids}) => {
 				subtext='Allow us to track your donations and avoid showing you the same advert twice'
 				textOn='Thank you!'
 			/>
+			{/* Spacer for mobile */}
+			<div className="pb-3 pb-md-0"/>
 			<PermissionControl 
 				header='Allow ad targeting'
 				prop={PURPOSES.personalize_ads}
@@ -140,12 +142,16 @@ const ConsentWidget = ({xids}) => {
 				subtext='Get Good-Loop ads tailored to you'
 				textOn='Thank you!'
 			/>
+			{/* Spacer for mobile */}
+			<div className="pb-3 pb-md-0"/>
 			<PermissionControl 
 				header='Allow Good-Loop marketing emails'
 				prop={PURPOSES.email_marketing}
 				saveFn={props => togglePerm({...props, profiles})}
 				textOn='Thank you!'
 			/>
+			{/* Spacer for mobile */}
+			<div className="pb-3 pb-md-0"/>
 			<small>We will never share your data without your consent unless there is a legal obligation.<br/>See our <a href='https://doc.good-loop.com/policy/privacy-policy.html' rel='noopener noreferrer' target='_blank'>privacy policy</a> for more information.</small>
 		</>
 	);
