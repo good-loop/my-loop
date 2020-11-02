@@ -42,7 +42,7 @@ const GetInvolvedPage = () => {
 					</Col>
 				</Row>
 				<div className="flex-column unset-margins text-center pt-5 pb-5 mt-5 justify-content-center align-items-center">
-					<h2 className="mr-auto">What can you do to help?</h2>					
+					<h2 className="text-center mb-5">What can you do to help?</h2>				
 					<MoreToDo xids={xids} />
 				</div>
 				<div className="GetInTouch">

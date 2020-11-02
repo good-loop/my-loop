@@ -76,13 +76,13 @@ export const MoreToDo = ({xids}) => {
 	return (
 		<div className="more-to-do TubeLine">
 			<DoSection title="Sign up" tqTitle="Thanks for signing up" 
-				img="/img/icons8-add-user-male.png" done={Login.isLoggedIn()}
+				img="/img/icons8-add-user-male.png" done={Login.isLoggedIn()} lineTop={10}
 			>
 				<p>Creating an account unlocks more features, which help us do more good and gives you more control.</p>
 				{ ! Login.isLoggedIn() && <LoginLink><div className="btn btn-transparent fill">Sign up</div></LoginLink>}
 			</DoSection>
 			<DoSection title="Recognise Good-Loop ads" img="/img/LandingBackground/Group30.png" done>
-				<p className="w-md-50">Remember our logo, so when you see one of our ads, 
+				<p>Remember our logo, so when you see one of our ads, 
 					you can recognise it. The Good-Loop logo guarantees that a full 50% of the money is going to charity.</p>
 				<img className="w-50" src="/img/gl-logo/rectangle/logo-name.svg" alt="logo" />
 			</DoSection>
@@ -92,7 +92,7 @@ export const MoreToDo = ({xids}) => {
 				{email && <div><small>Email: {email}</small></div>}
 			</DoSection>
 			<DoSection title="Share the good news" img="/img/LandingBackground/share.png" last>
-				<p className="w-md-50">Spread the word about our mission by sharing this website on one of your social media channels.</p>
+				<p>Spread the word about our mission by sharing this website on one of your social media channels.</p>
 				<ShareButton className="btn-transparent fill"
 					title="My-Loop"
 					image="/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png"
@@ -161,14 +161,17 @@ const YourDataSettings = () => {
 /**
  * 
  * @param {!string} img url for an icon in a yellow circle. Minor TODO this would be nicer as a text icon (unicode or an icont font like FA) instead of an image
- * @param {?boolean} last If false, use .doline to draw in a line down to the next item
+ * @param {?boolean} last If false, use .TubeLine-line to draw in a line down to the next item
+ * @param {?string} circleClassName custom classes for the circle icon
+ * @param {?Object} circleStyle custom styling for the circle icon
+ * @param {?Number} lineTop manually set the top of the connecting line as a percentage
  */
-const DoSection = ({title, tqTitle, done=false, img, last=false, children}) => {	
+const DoSection = ({title, tqTitle, done=false, img, last=false, children, circleClassName, circleStyle, lineTop}) => {	
 	return (
 		<Row className={space("position-relative", done ? "done" : "")}>
-			{!last ? <div className="TubeLine-line" /> : null}
-			<Col md={2} className="mb-5 text-center">
-				<img src={done ? "/img/LandingBackground/Group30.png" : img} className="w-100 TubeLine-img"/>
+			{!last ? <div className="TubeLine-line" style={lineTop?{top: lineTop + "%"} : null}/> : null}
+			<Col md={2} className="mb-5 text-center position-relative">
+				<img src={done ? "/img/LandingBackground/Group30.png" : img} className={space("w-100 TubeLine-img", circleClassName)} style={circleStyle}/>
 			</Col>
 			<Col className="offset-md-1 flex-column unset-margins justify-content-center mb-5">
 				<div> {/* NB: div needed to avoid centering children */}
