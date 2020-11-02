@@ -26,6 +26,17 @@ const springPageDown = (setY: Function): void => {
 const LandingSection = ({setY}: {setY: Function}): JSX.Element => {
 	//const [, setY] = useSpring(() => ({ y: 0 }));
 
+	const shareBtn = <ShareButton
+		absolute={!isPortraitMobile()}
+		className="btn-transparent fill"
+		style={isPortraitMobile() ? null : {bottom: 30, left: 30}}
+		title={"My-Loop"}
+		image={"https://my.good-loop.com/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png"}
+		description={"Using ads for good"}
+		url={window.location.href}>
+			Share
+	</ShareButton>;
+
 	return (
 		<>
 			<div className="landing-bg">
@@ -39,17 +50,14 @@ const LandingSection = ({setY}: {setY: Function}): JSX.Element => {
 					alt="scroll down"
 					onClick={ (): void => springPageDown(setY) }
 				/>
-				<ShareButton
-					absolute
-					className="btn-transparent fill"
-					style={{bottom: 30, left: 30}}
-					title={"My-Loop"}
-					image={"https://my.good-loop.com/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png"}
-					description={"Using ads for good"}
-					url={window.location.href}>
-						Share
-				</ShareButton>
+				{isPortraitMobile() ?
+					null : shareBtn}
 			</div>
+			{isPortraitMobile() ?
+			// separate share button off of landing section for mobile - no room
+				<div className="bg-white pt-5 flex-row justify-content-center">
+					{shareBtn}
+				</div>: null}
 		</>
 	);
 };
