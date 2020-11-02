@@ -3,6 +3,9 @@
 @import "../js/base/style/flex.less";
 
 @import "MyPage.less";
+@import "MyCharitiesPage.less";
+@import "MyAdCampaignsPage.less";
+@import "GetInvolvedPage.less";
 @import "CampaignPage.less";
 @import "AccountPage.less";
 @import "navbar.less";
@@ -10,10 +13,20 @@
 @import "CharityPicker.less";
 @import "LandingSection.less";
 @import "WhiteCircle.less";
+@import "ShareButton.less";
 @import "DevLink.less";
 @import "buttons.less";
 @import "website-colours.less";
 @import "breakpoints.less";
+
+/*
+
+TODO: CSS Clean-Up -- promote / delete / comment wanted on much of the code below:
+Where and why are these used?
+
+*/
+
+
 
 // Rules below are not specific to any MyLoop page
 
@@ -181,8 +194,21 @@ a.btn {
 	}
 }
 
-
-
+.login-menu .btn, .login-menu.btn {
+	font-weight: 600;
+	padding: 10px;
+	mix-blend-mode: normal;
+	a {
+		color: @gl-light-red;
+		text-decoration: none;
+	}
+	&:hover:not(.disabled) {
+		background-color: white !important;
+	}
+	&:focus:not(.disabled) {
+		background-color: white !important;
+	}
+}
 
 
 .logo-base {
@@ -201,49 +227,10 @@ a.btn {
 	width: 5rem;
 }
 
-// ??what is the use-case (and so could this be simpler?)
-.square-logo {
-	.logo-base();
-	// Square size that occupies 1/3 of screen-width
-	width: 33%;
-
-	
-	// Percentage margin is calculated based on parent's width
-	// So to give an element a specific aspect, place an empty dummy element in-flow with a % top-margin
-	.squarener {
-		margin-top: 100%;
-	}
-
-	// Link should make the entire div clickable
-	.logo-link {
-		display: block;
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		left: 0;
-		top: 0;
-		text-decoration: none; // no floating underline!
-		z-index: 999; // always in front, even if it's accidentally placed earlier than other elements
-	}
-
-	// Want to position child elements absolutely
-	position: relative;
-
-	// Place small advertiser logo in top-left
-	.vertiser-logo {
-		width: 25%;
-		position: absolute;
-		left: 5%;
-		top: 5%;
-	}
-
-	.campaign-name{
-		position: absolute;
-		bottom: 5%;
-		left: 5%;
-		width: 90%; // 100% minus the 5% each side of fake padding implied by the element's positioning
-	}
-} // ./square-logo
+// Override whoever put auto margins on flex children (why??)
+.unset-margins>* {
+	margin: unset;
+}
 
 /** Make sure the text is readable when using images as a backdrop. 
 

@@ -1,3 +1,19 @@
+
+/*
+
+TODO: CSS Clean-Up to be more modular and robust
+
+Redefining font stuff (font family or size) or basic tags (e.g. h1,h2,p,a) for a specific section is usually a mistake, 
+as it leads to inconsistent styling + harder to maintain css.
+
+For the css below that deals in font/text matters:
+ - Can we remove this?
+ - ...If not, should it be promoted to a general rule?
+ - ...If not, add a comment
+
+*/
+
+
 // DigitalMirrorCard: a widget for showing the user their twitter data (experimental)
 .mirror {
 	.profile-details {
@@ -15,12 +31,105 @@
 	}
 }
 
-#account {
-	.navbar {
-		.login-link {
-			color: #AD2016;
-			& a {
-				color: #AD2016;
+
+/** a funky list of things to do. On mobile, it gracefully becomes less funky. 
+A .TubeLine div contains seberal sections with TubeLine-img and TubeLine-line
+*/
+.TubeLine {
+	.TubeLine-img {
+		@media @md-max {
+			width: 50% !important;
+		}
+	}
+	.TubeLine-line {
+		position: absolute;
+		top: 0%; // NB the line will flow under the img, due to element ordering in the jsx
+		bottom: 0;
+		left: 8.3%; // halfway across the img -- Is this placement reliable??
+		padding: 0px 1.5px;
+		background: #F9B139;
+		@media @md-max { // no joining line on mobile
+			display: none;
+		}
+	}
+	.done {
+		.TubeLine-line {
+			background: #07950C;
+		}
+	}
+}
+
+.AccountPage {
+
+	.user {
+		img {
+			width: 100%;
+			@media @md-max {
+				width: 25%;
+				margin-bottom: 1rem;
+			}
+		}
+		h1 {
+			font-size: 1.6rem;
+			font-weight: 600;
+		}
+	}
+
+	h1, h2, h3, h4 {
+		font-family: 'Montserrat', sans-serif;
+		font-weight: normal;
+		margin-bottom: 1.3rem; // Overrides Bootstrap default to separate elements.
+		align-self: center;
+	}
+
+	h2,h4 {
+		font-weight: 600;
+		text-transform: uppercase;
+	}
+
+	h2 {
+		color: @gl-light-red;
+	}
+
+	p {
+		font-size: 1.5rem;
+		@media @md-max {
+			font-size: 1.2rem;
+		}
+		a {
+			color: #126CFC !important;
+			text-decoration: underline !important;
+		}
+	}
+
+
+	.settings {
+		font-size: 1.5rem;
+		a {
+            color: #126CFC !important;
+            text-decoration: underline !important;
+		}
+		small {
+			font-size: 0.8rem;
+			line-height: 0.5;
+		}
+		.hover-info {
+			position: relative;
+			.extra-info {
+				display: none;
+				font-size: 1rem;
+				position: absolute;
+				top: 50%;
+				left: 25%;
+				background: white;
+				z-index: 99;
+				padding: 20px;
+				box-shadow: 3px 3px 4px rgba(0,0,0,0.5);
+			}
+			&:hover {
+				.extra-info {
+					display: block;
+				}
 			}
 		}
 	}

@@ -15,19 +15,17 @@ import ServerIO from '../../plumbing/ServerIO';
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
 import ActionMan from '../../plumbing/ActionMan';
-import Footer from '../Footer';
 import MyLoopNavBar from '../MyLoopNavBar';
 import Money from '../../base/data/Money';
 import Advert from '../../base/data/Advert';
 import CampaignPageDC from '../../data/CampaignPage';
 import SearchQuery from '../../base/searchquery';
-import ACard from '../cards/ACard';
 import Charities from './Charities';
 import { sortByDate } from '../../base/utils/SortFn';
 import Counter from '../../base/components/Counter';
 import printer from '../../base/utils/printer';
 import CSS from '../../base/components/CSS';
-import GoodLoopAd from './GoodLoopAd';
+import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import PublishersCard from './PublishersCard';
 import CampaignSplashCard from './CampaignSplashCard';
 import ErrorAlert from '../../base/components/ErrorAlert';
@@ -247,10 +245,10 @@ const CampaignPage = () => {
 	};
 
 	return (<>
-		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" logoScroll="/img/new-logo-with-text.svg" />
 		<CSS css={campaignPage && campaignPage.customCss} />
 		<CSS css={branding.customCss} />
 		<div className="widepage CampaignPage text-center gl-btns">
+			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" logoScroll="/img/gl-logo/rectangle/logo-name.svg" scrollColour="white"/>
 			<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaignPage} donationValue={donationTotal} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
 
 			<HowDoesItWork nvertiserName={nvertiserName} />
@@ -311,13 +309,30 @@ const CampaignPage = () => {
 			{campaignPage.smallPrint ? (
 				<div className="small-print"><small>{campaignPage.smallPrint}</small></div>
 			) : null}
-
-			<Footer />
 		</div>
 	</>
 	);
 }; // ./CampaignPage
 
+/**
+ * HACK correct donation values that are wrong till new portal controls are released
+ * TODO remove this!!
+ */
+const hackCorrectedDonations = id => {
+	const donation = {
+		"yhPf2ttbXW": {
+			total:new Money("£10000"),
+			"no-kid-hungry":new Money("£10000")
+		},
+		"5ao5MthZ": {
+			total: new Money("£25000"),
+			"canine-partners-for-independence":new Money("£5850"),
+			"cats-protection":new Money("£5875"),
+			"royal-society-for-the-prevention-of-cruelty-to-animals":new Money("£13275")
+		}
+	}[id];
+	return donation;
+};
 
 /**
  * This may fetch data from the server. It returns instantly, but that can be with some blanks.
@@ -334,11 +349,20 @@ const fetchDonationData = ({ads}) => {
 	let adIds = ads.map(ad => ad.id);
 	let campaignIds = ads.map(ad => ad.campaign);
 	let charityIds = _.flatten(ads.map(Advert.charityList));
-	// Campaign level total info?
-	let campaignPageDonations = ads.map(ad => ad.campaignPage && CampaignPageDC.donation(ad.campaignPage)).filter(x => x);
-	if (campaignPageDonations.length === ads.length) {
-		let donationTotal = Money.total(campaignPageDonations);
-		donationForCharity.total = donationTotal;
+
+	// HACK return hacked values if Cheerios or Purina
+	for (let i = 0; i < ads.length; i++) {
+		const ad = ads[i];
+		const donation = hackCorrectedDonations(ad.id);
+		if (donation) return donation;
+	}
+	if (!donationForCharity.total) {
+		// Campaign level total info?
+		let campaignPageDonations = ads.map(ad => ad.campaignPage && CampaignPageDC.donation(ad.campaignPage)).filter(x => x);
+		if (campaignPageDonations.length === ads.length) {
+			let donationTotal = Money.total(campaignPageDonations);
+			donationForCharity.total = donationTotal;
+		}
 	}
 	// Campaign level per-charity info?	
 	let campaignsWithoutDonationData = [];
@@ -533,7 +557,7 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserNam
 						/>
 					)}
 				</div>}
-			<a className="btn btn-primary mb-3 mb-md-0 mr-md-3" href="/">See all campaigns</a>
+			<a className="btn btn-primary mb-3 mb-md-0 mr-md-3 mt-5" href="/#ads">See all campaigns</a>
 			{//<a className="btn btn-transparent" href="TODO">Campaign performance & brand study</a>
 			}
 		</Container>
@@ -546,16 +570,19 @@ const AdvertCard = ({ ad }) => {
 	return (
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
 			<div className="ad-card">
-				<div className="tablet-container">
-					<img src="/img/redcurve.svg" className="tablet-bg w-100 h-100" />
-					<div className="tablet-ad-container">
-						<GoodLoopAd vertId={ad.id} size={size} nonce={`${size}${ad.id}`} production />
-					</div>
-				</div>
 				{isPortraitMobile() ?
-					<img src="/img/hiclipart.com.mobile.cropped.overlay.png" className="w-100 tablet-overlay" />
-					:
-					<img src="/img/hiclipart.com.overlay.png" className="w-100 tablet-overlay" />}
+					<div className="position-relative theunit">
+						<GoodLoopUnit vertId={ad.id} size={size}/>
+					</div>
+					: <>
+						<div className="tablet-container">
+							<img src="/img/redcurve.svg" className="tablet-bg w-100 h-100" />
+							<div className="position-relative theunit">
+								<GoodLoopUnit vertId={ad.id} size={size}/>
+							</div>
+						</div>
+						<img src="/img/hiclipart.com.overlay.png" className="w-100 tablet-overlay" />
+					</>}
 			</div>
 			{Roles.isDev() ? <DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal">Portal Editor</DevLink> : null}
 			<span className="position-absolute" style={{ left: "50%", top: "50%", transform: "translate(-50%, -50%)", zIndex: 0 }}>If you're seeing this, you likely have ad-blocker enabled. Please disable ad-blocker to see the demo!</span>
@@ -580,7 +607,7 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false }) => {
 		<div className="col-md-3 col-6">
 			<div onClick={e => { e.preventDefault(); handleClick(); }} className={"pointer-wrapper" + (selected ? " selected" : "")}>
 				<div className="ad-prev">
-					<GoodLoopAd vertId={ad.id} size={size} nonce={`${size}${ad.id}`} production />
+					<GoodLoopUnit vertId={ad.id} size={size} />
 				</div>
 			</div>
 			<div>
