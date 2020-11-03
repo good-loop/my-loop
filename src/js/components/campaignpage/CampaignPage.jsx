@@ -321,8 +321,8 @@ const CampaignPage = () => {
 const hackCorrectedDonations = id => {
 	const donation = {
 		"yhPf2ttbXW": {
-			total:new Money("$10000"),
-			"no-kid-hungry":new Money("$10000")
+			total:new Money("$100000"),
+			"no-kid-hungry":new Money("$100000")
 		},
 		"5ao5MthZ": {
 			total: new Money("£25000"),
