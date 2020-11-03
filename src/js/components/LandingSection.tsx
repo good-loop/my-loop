@@ -82,7 +82,7 @@ const LandingBackground = () => {
 				</div>
 			</>}
 	</div>);
-}
+};
 
 const CtaBox: React.FC = () => {
 	// NB: the total is higher -- but we need to clean up our donation tracker docs before we can reliably report it. March 2020
