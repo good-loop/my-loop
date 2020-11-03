@@ -12,6 +12,7 @@ import Money from '../../base/data/Money';
 import CampaignPageDC from '../../data/CampaignPage';
 import Counter from '../../base/components/Counter';
 import ServerIO from '../../plumbing/ServerIO';
+import { hackCorrectedDonations } from '../campaignpage/CampaignPage';
 import C from '../../C';
 
 const RecentCampaignsCard = () => {
@@ -36,6 +37,14 @@ const RecentCampaignsCard = () => {
 		{
 			name: "Doom Bar",
 			adid: "ma9LU5chyU"
+		},
+		{
+			name: "General Mills",
+			adid: "yhPf2ttbXW"
+		},
+		{
+			name: "Purina",
+			adid: "5ao5MthZ"
 		}
 	];
 
@@ -160,6 +169,13 @@ const fetchDonationData = ({ads}) => {
 	let campaignPageDonations = ads.map(ad => ad.campaignPage && CampaignPageDC.donation(ad.campaignPage)).filter(x => x);
 	if (campaignPageDonations.length === ads.length) {
 		return Money.total(campaignPageDonations);
+	}
+
+	// HACK return hacked values if Cheerios or Purina
+	for (let i = 0; i < ads.length; i++) {
+		const ad = ads[i];
+		const donation = hackCorrectedDonations(ad.id);
+		if (donation) return donation.total;
 	}
 
 	// Fetch donations data	

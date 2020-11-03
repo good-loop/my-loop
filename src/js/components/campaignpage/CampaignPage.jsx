@@ -656,3 +656,4 @@ const fetchAds = ({ searchQuery, status }) => {
 };
 
 export default CampaignPage;
+export { hackCorrectedDonations };

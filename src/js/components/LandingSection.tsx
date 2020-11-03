@@ -9,7 +9,7 @@ import DataStore from '../base/plumbing/DataStore';
 import AB from './AB';
 import CSS from '../base/components/CSS';
 import Money from '../base/data/Money';
-import Counter from '../base/components/Counter';
+import Ticker from './Ticker';
 import ShareButton from './ShareButton';
 import { isPortraitMobile } from '../base/utils/miscutils';
 
@@ -91,7 +91,7 @@ const CtaBox: React.FC = () => {
 	return (
 		<div className="title">
 			<h1>Raise money for charity<br/>whilst you browse the web</h1>
-			<p>Help us redirect 50% of ad money to tackle global issues.<br/>We've raised <Counter amount={total} sigFigs={3}/> using ethical ads.</p>
+			<p>Help us redirect 50% of ad money to tackle global issues.<br/>We've raised <Ticker amount={total} rate={0.1} centerText/> using ethical ads.</p>
 		</div>
 	);
 };
