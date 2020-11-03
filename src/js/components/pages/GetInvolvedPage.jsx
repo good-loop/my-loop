@@ -31,7 +31,7 @@ const GetInvolvedPage = () => {
 						<div className="w-100 h-100 flex-column unset-margins justify-content-center mission">
 							<h2 className="mr-auto">What is our mission?</h2>
 							<p>Our mission is to change the global ad industry for good through turning adverts into charitable donations.
-								<em>$586 billion was spent on advertising</em> in 2019 alone<Ref href='"/resources/statistic_id236943_global-advertising-revenue-2012-2024.pdf"' /> - if 
+								<em>$586 billion was spent on advertising</em> in 2019 alone<Ref href='/resources/statistic_id236943_global-advertising-revenue-2012-2024.pdf' /> - if 
 								that money had gone through Good-Loop, we could completely <em>stop 
 									the rise of greenhouse gas in just one year</em><Ref href="https://www.bloomberg.com/news/articles/2019-10-23/how-to-halt-global-warming-for-300-billion"/>.
 								As part of the Good-Loop community, you can help us make that a reality.</p>
