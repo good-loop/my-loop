@@ -13,16 +13,24 @@ import Profiler from '../base/Profiler';
 
 // Templates
 import MessageBar from '../base/components/MessageBar';
-import LoginWidget, {setShowLogin} from '../base/components/LoginWidget';
+import LoginWidget, {LoginLink, setShowLogin} from '../base/components/LoginWidget';
 import NavBar from './MyLoopNavBar';
+import Misc from '../base/components/Misc';
 
 // Pages
 import MyPage from './pages/MyPage';
+import MyCharitiesPage from './pages/MyCharitiesPage';
+import MyAdCampaignsPage from './pages/MyAdCampaignsPage';
+import GetInvolvedPage from './pages/GetInvolvedPage';
 import CampaignPage from './campaignpage/CampaignPage';
 import {BasicAccountPage} from '../base/components/AccountPageWidgets';
 import E404Page from '../base/components/E404Page';
 import TestPage from '../base/components/TestPage';
 import AccountPage from './pages/AccountPage';
+import Footer from './Footer';
+import { Register } from '../../puppeteer_tests/test-base/common-selectors';
+import MyGLAboutPage from './MyGLAboutPage';
+import { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
 // import RedesignPage from './pages/RedesignPage';
 
 // DataStore
@@ -36,9 +44,15 @@ const PAGES = {
 	campaign: CampaignPage,
 	test: TestPage,
 	account: AccountPage,
-	// redesign: RedesignPage,
-	// redesign2: Redesign2Page
+	charities: MyCharitiesPage,
+	ads: MyAdCampaignsPage,
+	involve: GetInvolvedPage,
+	howitworks: MyPage,
+	about: MyGLAboutPage
 };
+
+addFunderCredit("Scottish Enterprise");
+addDataCredit({name:"The charity impact database", url:"https://sogive.org", author:"SoGive"});
 
 const DEFAULT_PAGE = 'my';
 
@@ -54,10 +68,21 @@ class MainDiv extends Component {
 		super(props);
 	}
 
+	scrollToTop () {
+		// Scroll to top on hash change - except for page How it Works, which scrolls down the homepage
+		if (window.location.hash !== "howitworks") {
+			console.log("HASH CHANGE");
+			// Allow page to load before scrolling
+			window.scrollTo(0,0);
+		}
+	}
+
 	componentDidMount() {
 		// redraw on change
 		const updateReact = (mystate) => this.setState({});
 		DataStore.addListener(updateReact);
+
+		window.addEventListener("hashchange", this.scrollToTop);
 
 		// Set up login watcher here, at the highest level		
 		Login.change(() => {
@@ -67,11 +92,13 @@ class MainDiv extends Component {
 			let ppath = ['transient', 'PromiseValue', 'list'];
 			DataStore.setValue(ppath, null);
 
+			// Showing thank you message and allowing user to close instead
+			/*
 			// ?? should we store and check for "Login was attempted" to guard this??
 			if (Login.isLoggedIn()) {
 				// close the login dialog on success
 				setShowLogin(false);
-			}
+			}*/
 
 			// Update xids
 			DataStore.setValue(['data', 'Person', 'xids'], Profiler.getAllXIds(), false);
@@ -91,14 +118,12 @@ class MainDiv extends Component {
 			// Store response.cargo.success somewhere in datastore so other components can check (a) if it's finished and (b) if it was successful before trying to talk to lg.good-loop.com
 		});
 
-		// Check if we're on a mobile device and place the result in state
-		// COPIED FROM ADUNIT'S device.js
-		const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-		const isMobile = !!(userAgent.match('/mobile|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i'));
-		DataStore.setValue(['env', 'isMobile'], isMobile);
-
 		DataStore.setValue(['data', 'Person', 'xids'], Profiler.getAllXIds(), false);
 	} // ./componentDidMount
+
+	componentWillUnmount () {
+		window.removeEventListener("hashchange", this.scrollToTop);
+	}
 	
 
 	componentDidCatch(error, info) {
@@ -117,6 +142,9 @@ class MainDiv extends Component {
 		}
 		assert(page);
 		let Page = PAGES[page];
+		// HowItWorks page is just the homepage but sprung down
+		let spring = false;
+		if (page === "howitworks") spring = true;
 		if ( ! Page) {
 			Page = E404Page;
 		}
@@ -139,7 +167,8 @@ class MainDiv extends Component {
 		return (
 			<>
 				<div id={page} /* wrap in an id in case you need high-strength css rules */>
-					<Page path={path} />
+					<Page path={path} spring={spring}/>
+					<Footer />
 				</div>
 				<LoginWidget logo={<img src='/img/new-logo.svg' style={{height: '64px'}} />} title={loginWidgetTitle} services={['twitter']} />
 			</>

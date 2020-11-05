@@ -1,9 +1,5 @@
 
-// ??
-.page.MyPage {
-	text-align: center;
-}
-
+// TODO Why is this not on navbar.less?
 .navbar {
 
 	// Overwrites .fixed-top class from base element. Necessary due to the pages style.
@@ -26,406 +22,62 @@
 	}
 }
 
-.how-it-works {
-	overflow: hidden;
-	.bg {
-		background-position: bottom; // put the dark "grass" part of the BG image behind the transparent section
-	}
-
-	.how-it-works-banner {
-		height: 15em;
-		text-align: center;
-		img {
-			height: 100%;
-			max-width: 75%;
-		}
-	}
-
-	.steps {
-		position: relative;
-
-		.finger {
-			// don't stretch across full width (overridden on smallest screens)
-			max-width: 75%;
-			// separate & centre
-			margin: 1rem auto;
-
-			// Put whole lowercase part on its own line if the screen is small enough to break lines
-			.sub-header {
-				display: inline-block;
-			}
-		}
-		
-		.step-3 {
-			//background-image: linear-gradient(to bottom, @gl-red 0%, @gl-red 40%, fade(@gl-red, 0%) 90%);
-			// Make room at the bottom for balance
-			margin-bottom: 5rem;
-			.divider {
-				padding: 1px;
-				background: white;
-			}
-		}
-	}
-}
-
-.number-circle {
-	display: inline-flex;
-	flex-shrink: 0; // Don't squish if space is tight
-	border: 0.25rem solid;
-	border-radius: 50%;
-	width: 4rem;
-	height: 4rem;
-	text-align: center;
-	margin: 0;
-}
-
-.finger {
-	display: flex;
-	flex-direction: row;
-	align-items: flex-start; // keep the numbers aligned in the corners
-	justify-content: flex-start;
-	position: relative; // enable use as position/size ref for .finger-bleed
-
-	border-radius: 2.25rem; // concentric with number circle, which has radius 2rem + 0.25rem padding from p-1 class
-	.number-circle {
-		margin: 0 1rem 0 0; // push away text to right
-	}
-	.step-desc {
-		overflow: hidden; // somehow mobile safari is allowing overflow by default instead of wrapping???
-	}
-	// fixed-position line break in step 3, conditionally converts to a space on small screens to allow natural wrapping
-	.breaker {
-		font-size: 0;
-		display: block;
-	}
-}
-
-// ./how-it-works
-
-#campaign-cards {
-	margin: 0 -0.05em 0 -0.05em;
-	.campaign-card {
-		margin-bottom: .15em;
-	}
-}
-
-
-/** strip across the page, with the GL logo on the right */
-.logo-ribbon {
-	position: relative;
-	height: 2rem;
-	margin: 0.25rem 0;
-	background-color: @gl-red;
-	
-	.container {
-		position: relative; // use as reference point for gl-logo-svg positioning
-		height: 100%; // take height of ribbon to help position logo
-	}
-
-	// vertically align to middle of ribbon, pin to right edge of container
-	.gl-logo-svg {
-		height: 9rem;
-		width: 9rem;
-		position: absolute;
-		top: 50%;
-		transform: translateY(-50%);
-		right: 1rem;
-		z-index: 1; // needs to appear in front of subsequent div
-	}
-}
-
-.make-an-impact {
-	background-image: url("/img/dew-grass.jpg");
-	position: relative;
-
-	.split-coloured-circle-svg {
-		position: absolute;
-		left: 15%;
-		width: 85%;
-		height: 23em; // Stop short of the bottom
-	}
-
-	.container {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between; // Push to top and bottom
-		align-items: flex-end; // Right align
-		min-height: 25em; // Make sure there's enough height to display all content
-		padding-top: 1em; // Keep the header text away from the ribbon
-
-	}
-
-	.impact-girl {
-		position: absolute;
-		right: 50%;
-		bottom: 0;
-		height: 90%;
-		width: 50%;
-		background-image: url("/img/redgirl-crop.svg");
-		background-repeat: no-repeat;
-		background-size: contain;
-		background-position: bottom center;
-		&.accent {
-			// A second copy filtered to white to provide a contrasting drop shadow
-			filter: contrast(0) brightness(200%);
-			transform: translate(-0.1em, 0.05em);
-		}
-	}
-
-	.impact-card-header {
-		line-height: 1;
-		margin-top: 0.5em;
-		font-weight: bold;
-		.quiet {
-			font-style: oblique;
-		}
-	}
-	
-	.social-media-card {
-		z-index: 1; // may overlap red coat girl on phones
-		.tagline {
-			text-align: right;
-		}
-		@media (max-width:768px) {
-			background: white;
-		}
-	}
-}
-
-// These only really work as part of a thin column
-.impact-card {
-	text-align: left;
-
-	.header, .sub-header {
-		color: #fff;
-	}
-
-	.body-text {
-		color: #000;
-	}
-
-	.impact-logo {
-		height: 3.5em;
-		width: auto;
-	}
-
-	.impact-image {
-		width: 100%;
-		max-width: 600px;
-	}
-
-	.image-and-text {
-		.flex-row();
-
-		margin: 3rem auto 3rem auto;
-
-		> * {
-			width: 50%;	
-		}
-	}
-
-	.reversed-image-and-text {
-		.flex-row-reverse();
-
-		margin: 3rem auto 3rem auto;
-
-		> * {
-			width: 50%;	
-		}
-	}
-}
-
-.impact-logo {
-	width: 100px;
-	height: auto;
-}
-
-.impact-image-text {
-	height: 12em !important;
-}
-
-.triangle {
-	width: 100%;
-	height: 5em;
-	border-style: solid;
-	border-width: 0 0 50px 95vw;
-}
-
-.triangle-gl-red {
-	.triangle();
-	border-color: transparent transparent @gl-red transparent;
-}
-
-.triangle-gl-dark-blue {
-	.triangle();
-	border-color: transparent transparent @gl-dark-blue transparent;
-}
-
-.triangle-gl-blue {
-	.triangle();
-	border-color: transparent transparent @gl-light-blue transparent;
-}
-
-.triangle-gl-dark-grey {
-	.triangle();
-	border-color: transparent transparent @gl-dark-grey transparent;
-}
-
-.triangle-gl-light-grey {
-	.triangle();
-	border-color: transparent transparent @gl-light-grey transparent;
-}
-
-
 .MyPage {
 	background-color:#eeeaea; // warm off-white - still feels open but falls back from page content
 	width: 100%;
-
-	.splash.img-block {
-		position: relative;
-		height: 30em;
-
-		background-image: url("/img/tulips.jpg");
-		background-position: center;
-
-		// Restrict connect widget & decorations to centre
-		.container {
-			position: relative;
-			height: 100%;
-			padding-top: 3.5rem; // sum of .navbar-brand height 2.5em, .navbar padding 0.5em
-		}
-
-		.doing-good, .little-flowers {
-			position: absolute;
-			right: 0;
-			width: 18rem;
-		}
-		.doing-good {
-			top: 2rem;
-		}
-		.little-flowers {
-			bottom: 0;
-		}
-
-		.social-media-card {
-			z-index: 1; // appear in front of flowers on mobile
-			position: absolute;
-			bottom: 0;
-			left: 0;
-		}
+	h2.text-center {
+		font-weight: normal;
+		text-transform: capitalize;
+		color: @gl-light-red;
 	}
 }
-
-
-.our-mission {
-	.flex-row();
-	
-	padding: 2rem;
-
-	.gl-logo-svg {
-		height: 6em;
-		margin-right: 2em;
-	}
-
-	.text {
-		// Stick text to top of div
-		// flex-row should be applied to parent element
-		margin-top: 0;
-	}
-}
-
-.ShareAd {
-	max-width: 800px;
-	margin: 0 auto;
-	.unit {
-		margin-bottom: 2em;
-		.click-to-load {
-			text-align: center;
-			line-height: 1.5;
-			padding: 0.5em;
-			color: @gl-red;
-			border: 1px solid @gl-red;
-			border-radius: 0.25rem;
-			margin: 1rem;
-			cursor: pointer;
-		}
-	}
-}
-
-// Change impact card layout from:
-// *IMAGE* *TEXT*
-// to
-// *IMAGE*
-// *TEXT*
-// Former looks wonky on smaller screens 
-@media only screen and (max-width: 1110px) {
-	.impact-card {
-		.image-and-text, .reversed-image-and-text {
-			flex-direction: column;
-			
-			> * {
-				width: 100%;
-			}
-		}
-	}
-
-	// Responsive behaviour for bottom text
-	.bottom-text-container {
-		flex-direction: column;
-		> * {
-			width: 100%;
-			margin: 0;
-		}
-	}
-}
-
-
-@media (max-width: 768px) {
-	// shrink the overflowing logo on the ribbon for smaller screens
-	.logo-ribbon {
-		.gl-logo-svg {
-			max-height: 9rem;
-			min-height: 6rem;
-			max-width: 9rem;
-			min-width: 6rem;
-			// 27vw = 9rem at current base font sizing & 768px width
-			height: 27vw;
-			width: 27vw;
-		}
-	}
-
-	.how-it-works .steps .finger {
-		max-width: unset;
-	}
-}
-
-// Shrink the red coat girl to avoid clashing with Make An Impact text on phones
-@media (max-width: 991px) { // next BS size starts at 992px
-	.make-an-impact .impact-girl {
-		height: 60%;
-	}
-}
-
 
 // Special cases for extra-tiny screens
 @media (max-width: 450px) {
-	// The "How It Works" steps need help flowing
-	.finger {
-		.spacer {
-			display: none; // don't put a leading space on the second line of eg WATCH / a 15 second video
-		}
-		.breaker {
-			display: inline;
-			font-size: 100%;
-		}
-	}
-	// Shrink nav elements further on smallest screens so account menu isn't bumped to second line
-	.navbar .navbar-brand .logo-small {
-		width: 5em;
-		height: 1em;
-	}
 	.navbar .dropdown-toggle {
 		font-size: 100%; // overriding BS (intended for desktop, because we overrode the hamburger) value of 1rem
+	}
+}
+
+.subscription-box {
+	input {
+		width: 100% !important;
+	}
+}
+
+.big-sub-box {
+	// TODO promote / delete / comment
+	h1,h2,h3,h4,h5 {
+		color: white !important;
+		font-weight: 600;
+	}
+	input {
+		font-size: 2rem;
+		border-radius: 0;
+		width: 100%;
+	}
+	.btn {
+		font-size: 1.5rem;
+		font-weight: 600;
+		padding-left: 5rem;
+		padding-right: 5rem;
+	}
+	p {
+		color: white;
+	}
+	padding: 200px 0px;
+	@media @md-max {
+		h1,h2,h3,h4,h5 {
+			font-size: 2rem;
+			text-align: center;
+			padding: 0px 10px;
+		}
+		input {
+			font-size: 1rem;
+		}
+		.btn {
+			font-size: 1rem;
+		}
+		padding: 50px 0;
 	}
 }

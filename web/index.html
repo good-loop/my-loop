@@ -7,10 +7,10 @@
 		<meta property="og:image" content="https://my.good-loop.com/img/gl-logo/rectangle/logo.svg" />
 		<meta property="og:title" content="My.Good-Loop" />
 		<!-- Explicit Content-Security-Policy is required for the GoodLoop app -->
-		<meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file:; style-src 'self' 'unsafe-inline' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; media-src * 'self' data: https: http:; img-src * data: 'unsafe-inline'; connect-src * 'unsafe-inline'; frame-src * 'unsafe-inline' 'unsafe-eval';">  
+		<meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file:; style-src 'self' 'unsafe-inline' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; media-src * 'self' data: https: http:; img-src * data: 'unsafe-inline'; connect-src * data: 'unsafe-inline'; frame-src * 'unsafe-inline' 'unsafe-eval';">  
 		<link rel="manifest" href="/manifest.webmanifest">
 		<meta name="theme-color" content="#770f00">
-		<title>My Good-Loop</title>
+		<title>My Good-Loop - Raise money for charity whilst you browse the internet</title>
 		<link rel="shortcut icon" href="/favicon-32.png" />
 
 		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -19,6 +19,16 @@
 
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="/build/style/main.css">
+		
+		<script type="text/javascript">
+			var cpm = {};
+			(function(h,u,b){
+			var d=h.getElementsByTagName("script")[0],e=h.createElement("script");
+			e.async=true;e.src='https://cookiehub.net/c2/1ac697d7.js';
+			e.onload=function(){u.cookiehub.load(b);}
+			d.parentNode.insertBefore(e,d);
+			})(document,window,cpm);
+			</script>		
 	</head>
 	<body>
 		
@@ -72,7 +82,7 @@
 
 		gtag('config', 'UA-89730678-7');
 		</script>
-		<script async src='//as.good-loop.com/pxl.js'></script>
+		<!-- script async src='//as.good-loop.com/pxl.js'></script -->
 		<img src='//lg.good-loop.com/pxl' style='position:absolute;bottom:0px;left:0px;width:1;height:1;'/>
 	</body>
 </html>

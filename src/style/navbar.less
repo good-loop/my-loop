@@ -1,6 +1,23 @@
 .navbar {
 	background: transparent;
 	transition: 0.2s;
+
+	@media (max-width: 1500px) {
+        font-size: 0.85rem;
+    }
+    @media (max-width: 1400px) {
+        font-size: 0.7rem;
+    }
+    @media (max-width: 1142px) {
+        font-size: 0.6rem;
+    }
+    @media (max-width: 1034px) {
+        font-size: 0.5rem;
+    }
+    @media @lg-max {
+        font-size: 1rem;
+    }
+
 	// Style login widget accordingly
 	.login-link {
 		text-shadow: none;
@@ -24,14 +41,35 @@
 	}
 
 	&.scrolled {
-		background: white;
+		background: @gl-light-red;
 		box-shadow: 0px 0px 5px rgba(0,0,0,0.75);
 		transition: 0.2s;
-		.login-link {
-			color: #AD2016;
-			& a {
-				color: #AD2016;
-			}
+	}
+
+	.nav-link:not(.btn) {
+		text-transform: uppercase;
+		font-weight: 600;
+		color: white;
+		text-decoration: none;
+		text-shadow: 0px 1px 5px rgba(0,0,0,0.75);
+	}
+
+	.btn {
+		padding: .5rem 2rem !important;
+	}
+
+	.navbar-toggler-icon {
+		// By default bootstrap uses the rule content:"", which for some reason erases the hamburger on safari
+		content: unset !important;
+	}
+
+	.dropdown-menu {
+		border-radius: 0;
+		border: none;
+		box-shadow: 2px 2px 5px rgba(0,0,0,0.75);
+		.menu-item {
+			text-transform: uppercase;
+			font-weight: 600;
 		}
 	}
 }
