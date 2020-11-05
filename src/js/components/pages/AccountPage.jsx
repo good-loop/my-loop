@@ -85,7 +85,7 @@ export const MoreToDo = ({xids}) => {
 			<DoSection title="Recognise Good-Loop ads" img="/img/LandingBackground/Group30.png" done>
 				<p>Remember our logo, so when you see one of our ads, 
 					you can recognise it. The Good-Loop logo guarantees that a full 50% of the money is going to charity.</p>
-				<img className="w-50" src="/img/gl-logo/rectangle/logo-name.svg" alt="logo" />
+				<img className="w-50" src="/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png" alt="logo" />
 			</DoSection>
 			<DoSection title="Newsletter" tqTitle="Thanks for subscribing to our newsletter" img="/img/LandingBackground/Group33.png" done={subbed}>
 				<p>Sign up to our monthly newsletter to read about the ad world and our achievements within it.</p>
