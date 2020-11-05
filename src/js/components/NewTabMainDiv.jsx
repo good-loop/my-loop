@@ -81,6 +81,8 @@ const WebtopPage = () => {
 						{charities.map(c => <NewTabCharityCard key={c} cid={c} />)}
 					</Row>
 
+					<BannerAd />
+
 					{/*<div>
 						<Card body>
 							<CardTitle></CardTitle>
@@ -100,7 +102,7 @@ const WebtopPage = () => {
 const Search = () => {
 	return (<>
 		<Form onSubmit={google} inline className="flex-row tab-search-form" >
-			<i className="fa fa-search tab-search mr-2" onClick={google}></i><PropControl type="search" prop="q" path={['widget', 'search']} className="flex-grow" />
+			<i className="fa fa-search tab-search mr-2" onClick={google}></i><PropControl type="search" prop="q" path={['widget', 'search']} className="flex-grow w-100" />
 		</Form>
 	</>);
 };
