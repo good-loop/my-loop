@@ -34,8 +34,8 @@ import MDText from '../base/components/MDText';
 // import RedesignPage from './pages/RedesignPage';
 
 // Components
-import CharityLogo from './CharityLogo';
-import WhiteCircle from './WhiteCircle';
+import { CharityLogo } from './cards/CharityCard';
+import WhiteCircle from './campaignpage/WhiteCircle';
 
 // DataStore
 C.setupDataStore();
