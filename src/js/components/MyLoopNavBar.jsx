@@ -85,7 +85,7 @@ class MyLoopNavBar extends React.Component {
 	}
 }
 
-const AccountMenu = ({logoutLink}) => {
+const AccountMenu = ({logoutLink, children}) => {
 	if (!Login.isLoggedIn()) { 
 		return (
 			<LoginLink verb="register" className="login-menu btn btn-transparent fill">Register / Log in</LoginLink>
@@ -95,12 +95,14 @@ const AccountMenu = ({logoutLink}) => {
 	let user = Login.getUser();
 
 	return (
-		<UncontrolledDropdown className="login-menu">
+		<UncontrolledDropdown className="account-menu">
 			<DropdownToggle caret style={{backgroundColor: 'transparent', border: '0'}} className="login-link btn btn-transparent fill">
 				{ user.name || user.xid }&nbsp;
 			</DropdownToggle>
 			<DropdownMenu right>
-				<DropdownItem href="#account">Account</DropdownItem>
+				<DropdownItem href="/#account">Account</DropdownItem>
+				{children ? <DropdownItem divider /> : null}
+				{children}
 				<DropdownItem divider />
 				<DropdownItem href={logoutLink} onClick={() => Login.logout()}>Log out</DropdownItem>
 			</DropdownMenu>
@@ -108,4 +110,5 @@ const AccountMenu = ({logoutLink}) => {
 	);
 };
 
+export { AccountMenu };
 export default MyLoopNavBar;

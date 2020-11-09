@@ -3,7 +3,7 @@ import React, { Component, useState } from 'react';
 import Login from 'you-again';
 import { assert } from 'sjtest';
 import { modifyHash, randomPick, encURI, space, stopEvent, ellipsize } from '../base/utils/miscutils';
-import {Card, Form, Button, CardTitle, Row, Col, Badge, CardBody, CardFooter} from 'reactstrap';
+import { Card, Form, Button, CardTitle, Row, Col, Badge, CardBody, CardFooter, DropdownItem } from 'reactstrap';
 
 // Plumbing
 import DataStore from '../base/plumbing/DataStore';
@@ -12,17 +12,19 @@ import C from '../C';
 import Crud from '../base/plumbing/Crud'; // Crud is loaded here to init (but not used here)
 import Profiler, { getProfile } from '../base/Profiler';
 import { normaliseSogiveId } from '../base/plumbing/ServerIOBase';
+import Money from '../base/data/Money';
 
 // Templates
 import MessageBar from '../base/components/MessageBar';
 import LoginWidget, { setShowLogin, LoginLink, LogoutLink } from '../base/components/LoginWidget';
-import NavBar from './MyLoopNavBar';
+import NavBar, { AccountMenu } from './MyLoopNavBar';
 import DynImg from '../base/components/DynImg';
 
 // Pages
 import E404Page from '../base/components/E404Page';
 import TestPage from '../base/components/TestPage';
 import AccountPage from './pages/AccountPage';
+import NewTabStatsPage from './NewTabStatsPage';
 import MainDivBase from '../base/components/MainDivBase';
 import BG from '../base/components/BG';
 import DevLink from './campaignpage/DevLink';
@@ -31,6 +33,7 @@ import BannerAd from './BannerAd';
 import Footer from './Footer';
 import ActionMan from '../base/plumbing/ActionManBase';
 import MDText from '../base/components/MDText';
+import Ticker from './Ticker';
 // import RedesignPage from './pages/RedesignPage';
 
 // Components
@@ -64,7 +67,7 @@ const WebtopPage = () => {
 		<BG src={bg.src} fullscreen opacity={0.9}>
 			<div className="position-fixed p-3" style={{top: 0, left: 0, width:"100vw", zIndex:10}}>
 				<div className="d-flex justify-content-end">
-					<LoginAccountControl />
+					<AccountMenu/>
 				</div>
 			</div>
 			<DonationCount className="mt-2"/>
@@ -74,6 +77,7 @@ const WebtopPage = () => {
 					<div className="w-100 pb-3">
 						<div className="tab-search-container mx-auto">
 							<Search/>
+
 						</div>
 					</div>
 
@@ -108,6 +112,7 @@ const Search = () => {
 };
 
 const DonationCount = ({className}) => {
+	const total = new Money("£1,000,000");
 	return (
 		<div className={space("d-flex justify-content-center", className)}>
 			<Row className="bg-white w-25 p-2 rounded">
@@ -116,7 +121,7 @@ const DonationCount = ({className}) => {
 				</Col>
 				<Col md={8} className="flex-row justify-content-center align-items-center">
 					<p>
-						£1,000,000 raised
+						<Ticker amount={total} rate={0.1} preservePennies unitWidth="0.5em"/> raised
 					</p>
 				</Col>
 			</Row>
@@ -139,17 +144,10 @@ const LoginAccountControl = () => {
 		</>;
 	}
 	return (
-		<div className="d-inline-block">
-			<div className="tab-user flex-row position-relative">
-				<div className="tab-login pr-2 rounded-left">
-					<div className="tab-login-content py-2 px-3 bg-white text-dark rounded-right">
-						{login}
-					</div>
-				</div>
-				<i className="fa fa-user invisible" style={{fontSize:"2rem", top:0}}></i>
-				<a href="http://localmy.good-loop.com/#account">
-					<i className="fa fa-user position-absolute text-white" style={{fontSize:"2rem", top:0, right:0}}></i>
-				</a>
+		<div className="d-inline-block tab-login">
+			<i className="fa fa-user text-white" style={{fontSize:"2rem"}}></i>
+			<div className="tab-login-content position-absolute bg-white rounded p-2" style={{right: 0, top: "100%"}}>
+				{login}
 			</div>
 		</div>
 	);
@@ -159,7 +157,8 @@ const LoginAccountControl = () => {
 
 const PAGES = {
 	account: AccountPage,
-	webtop: WebtopPage
+	webtop: WebtopPage,
+	stats: NewTabStatsPage
 };
 const NewTabMainDiv = () => {
 	return <MainDivBase pageForPath={PAGES} defaultPage="webtop" navbar={false} className="newtab"/>;

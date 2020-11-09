@@ -21,12 +21,46 @@ import ShareButton from '../ShareButton';
 import { addImageCredit } from '../../base/components/AboutPage';
 import Roles from '../../base/Roles';
 
+const Account = () => {
+	let xids = getAllXIds();
+	return <>
+		<div className="w-75 mx-auto">
+			<div className="text-center">
+				<h2>What to do now?</h2>
+				<p>You have already made the first important step in helping us: you joined our community. But there is more you can do!</p>
+			</div>
+			<MoreToDo xids={xids} />
+		</div>
+		
+		<h2 className="text-center mb-5">Your settings</h2>
+		<Settings xids={xids}/>
+	</>;
+};
+
+const tabs = {
+	account: {
+		content: <Account/>,
+		name: "My Account"
+	},
+	tabsForGood: {
+		content: <>
+			<h1>TABS FOR GOOD</h1>
+		</>,
+		name: "Tabs for Good"
+	},
+};
+
 const Page = () => {
 	// NB: race conditions with Login and profile fetch (for linked IDs) mean all-xids should be refreshed.
 	let xids = getAllXIds(); 
 
 	const user = Login.getUser();
 	const name = Login.isLoggedIn() ? user.name || user.xid : "";
+
+	let { tab } = DataStore.getValue(['location', 'params']) || {};
+	tab = tabs[tab];
+	if (!tab) tab = tabs.account;
+	tab = tab.content;
 
 	return (
 		<div className="AccountPage">
@@ -46,22 +80,18 @@ const Page = () => {
 					</Col>
 				</Row>
 				
-				{Login.isLoggedIn() ? <>
-					<div className="w-75 mx-auto">
-						<div className="text-center">
-							<h2>What to do now?</h2>
-							<p>You have already made the first important step in helping us: you joined our community. But there is more you can do!</p>
-						</div>
-						<MoreToDo xids={xids} />
-					</div>
-					
-					<h2 className="text-center mb-5">Your settings</h2>
-					<Settings xids={xids}/>
-				</> : null}
+				{Login.isLoggedIn() ? tab : null}
 
+			</div>
+			<div className="account-sidebar flex-column justify-content-start unset-margins position-absolute bg-white shadow" style={{top: 0, paddingTop:67 /*navbar height*/, left:0}}>
+				{Object.keys(tabs).map(t => <SidebarTab id={t} tab={tabs[t]} selected={tab}/>)}
 			</div>
 		</div>
 	);
+};
+
+const SidebarTab = ({id, tab, selected}) => {
+	return <a href={"/#account?tab=" + id} className={space("account-tab p-2", selected === id ? "active" : "")}>{tab.name}</a>;
 };
 
 addImageCredit({name:"add-user", author:"Icons8", url:"https://icons8.com/icons/set/add-user-male"});
