@@ -314,10 +314,6 @@ const CampaignPage = () => {
 	);
 }; // ./CampaignPage
 
-const Details = ({charities}) => {
-
-};
-
 /**
  * HACK correct donation values that are wrong till new portal controls are released
  * TODO remove this!!
