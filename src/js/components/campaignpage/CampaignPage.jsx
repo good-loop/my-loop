@@ -305,10 +305,12 @@ const CampaignPage = () => {
 					<div className="pb-5" />
 				</Container>
 			</div>
-
-			{campaignPage.smallPrint ? (
-				<div className="small-print"><small>{campaignPage.smallPrint}</small></div>
-			) : null}
+			{campaignPage.smallPrint ?
+				<div className="small-print">
+					<small>
+						{campaignPage.smallPrint}
+					</small>
+				</div> : null}
 		</div>
 	</>
 	);

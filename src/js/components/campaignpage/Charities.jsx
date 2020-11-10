@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { useState } from 'react';
 import { Container } from 'reactstrap';
 import ActionMan from '../../plumbing/ActionMan';
 import CharityMiniCard, {CharityLogo} from '../cards/CharityCard';
@@ -62,7 +62,6 @@ const Charities = ({ charities, donation4charity }) => {
 		dupeIds.push(sogiveId);
 		// NB: the lower-level ServerIOBase.js helps patch mismatches between GL and SoGive ids
 		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: sogiveId, status: C.KStatus.PUBLISHED });
-		console.log('****** Got SoGive data for charity ' + charity.id, pvCharity.value);
 		if ( ! pvCharity.value) return charity; // no extra data yet
 		// merge, preferring SoGive data
 		// Prefer SoGive for now as the page is designed to work with generic info - and GL data is often campaign/player specific
@@ -104,9 +103,47 @@ const Charities = ({ charities, donation4charity }) => {
 				{sogiveCharitiesWithDonations.map((charity, i) =>
 					<CharityCard i={i} key={charity.id} charity={charity} donationValue={getDonation(charity)} />
 				)}
+				<Details charities={sogiveCharities}/>
 			</Container>
 		</div>
 	);
+};
+
+// Extra smallprint details for charities
+const Details = ({charities}) => {
+	
+	const [open, setOpen] = useState(false);
+
+	const hasRegNum = (c) => {
+		return c.englandWalesCharityRegNum || c.scotlandCharityRegNum || c.niCharityRegNum || c.ukCompanyRegNum || c.usCharityRegNum;
+	};
+
+	// Registration numbers for all possible types of reg num for each charity
+	let regNums = charities.map(c => {
+		return hasRegNum(c) ? <div className="charityInfo" key={c.id}>
+			<b>{c.displayName || c.name}</b>
+			<RegNum label="England & Wales Charity Commission registration number" regNum={c.englandWalesCharityRegNum}/>
+			<RegNum label="Scottish OSCR registration number" regNum={c.scotlandCharityRegNum}/>
+			<RegNum label="Northern Ireland registration number" regNum={c.niCharityRegNum}/>
+			<RegNum label="UK Companies House number" regNum={c.ukCompanyRegNum}/>
+			<RegNum label="USA registration number (EIN)" regNum={c.usCharityRegNum}/>
+			<br/>
+		</div>: null;
+	});
+	// Remove null values
+	regNums = regNums.filter(x => x);
+	return regNums.length > 0 ? <div className={space("charity-details bg-white shadow my-3 p-3", open ? "open" : "closed")}>
+		{open ? regNums : null}
+		<a className="color-gl-light-red" onClick={() => setOpen(!open)}>{open ? "Hide charity details" : "See charity details"}</a>
+	</div> : null;
+};
+
+// A labelled entry for a registration number, does not display if regNum is falsy
+const RegNum = ({label, regNum}) => {
+	if (regNum) console.log("REGNUM", label + ": " + regNum);
+	return regNum ? <div className="regNum">
+		{label}: {regNum}
+	</div> : null;
 };
 
 /**
