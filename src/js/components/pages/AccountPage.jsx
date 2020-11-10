@@ -20,6 +20,7 @@ import SubscriptionBox from '../cards/SubscriptionBox';
 import ShareButton from '../ShareButton';
 import { addImageCredit } from '../../base/components/AboutPage';
 import Roles from '../../base/Roles';
+import TabsForGoodSettings from './TabsForGoodSettings';
 
 const Account = () => {
 	let xids = getAllXIds();
@@ -43,9 +44,7 @@ const tabs = {
 		name: "My Account"
 	},
 	tabsForGood: {
-		content: <>
-			<h1>TABS FOR GOOD</h1>
-		</>,
+		content: <TabsForGoodSettings/>,
 		name: "Tabs for Good"
 	},
 };

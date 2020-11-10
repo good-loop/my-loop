@@ -1,5 +1,5 @@
 /* global navigator */
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useRef } from 'react';
 import Login from 'you-again';
 import { assert } from 'sjtest';
 import { modifyHash, randomPick, encURI, space, stopEvent, ellipsize } from '../base/utils/miscutils';
@@ -24,7 +24,6 @@ import DynImg from '../base/components/DynImg';
 import E404Page from '../base/components/E404Page';
 import TestPage from '../base/components/TestPage';
 import AccountPage from './pages/AccountPage';
-import NewTabStatsPage from './NewTabStatsPage';
 import MainDivBase from '../base/components/MainDivBase';
 import BG from '../base/components/BG';
 import DevLink from './campaignpage/DevLink';
@@ -35,6 +34,8 @@ import ActionMan from '../base/plumbing/ActionManBase';
 import MDText from '../base/components/MDText';
 import Ticker from './Ticker';
 // import RedesignPage from './pages/RedesignPage';
+
+import NewTabOnboardingPage from './NewTabOnboarding';
 
 // Components
 import { CharityLogo } from './cards/CharityCard';
@@ -58,6 +59,12 @@ let bg = randomPick([
 
 const WebtopPage = () => {
 
+	const searchRef = useRef(null);
+
+	if (!Login.isLoggedIn()) {
+		window.location.href = "/newtab.html#onboarding";
+	}
+
 	let charities = ['wwf', 'the-save-the-children-fund', 'against-malaria-foundation', 'trees-for-the-future', 'cancer-research-uk'];
 
 	// iframe src change?
@@ -76,7 +83,7 @@ const WebtopPage = () => {
 
 					<div className="w-100 pb-3">
 						<div className="tab-search-container mx-auto">
-							<Search/>
+							<Search ref={searchRef} />
 
 						</div>
 					</div>
@@ -100,6 +107,7 @@ const WebtopPage = () => {
 				</div>
 			</div>
 			<NewTabFooter />
+			<TutorialCard element={searchRef}/>
 		</BG>);
 };
 
@@ -129,36 +137,9 @@ const DonationCount = ({className}) => {
 	);
 };
 
-const LoginAccountControl = () => {
-	let login = null;
-	let user = Login.getUser();
-	if ( ! Login.isLoggedIn()) {
-		login = <LoginLink />;
-	} else {
-		login = <>
-			<a href="http://localmy.good-loop.com/#account" style={{textDecoration:"none"}}>
-				{user.name || user.id}<br/>
-			</a>
-			<small style={{fontSize:"0.6rem"}}>Change Tabs-for-Good settings in your account page above</small><br/>
-			<small><LogoutLink /></small>
-		</>;
-	}
-	return (
-		<div className="d-inline-block tab-login">
-			<i className="fa fa-user text-white" style={{fontSize:"2rem"}}></i>
-			<div className="tab-login-content position-absolute bg-white rounded p-2" style={{right: 0, top: "100%"}}>
-				{login}
-			</div>
-		</div>
-	);
-};
-
-
-
 const PAGES = {
-	account: AccountPage,
 	webtop: WebtopPage,
-	stats: NewTabStatsPage
+	onboarding: NewTabOnboardingPage
 };
 const NewTabMainDiv = () => {
 	return <MainDivBase pageForPath={PAGES} defaultPage="webtop" navbar={false} className="newtab"/>;
@@ -200,6 +181,15 @@ const NewTabCharityCard = ({cid}) => {
 			<CharityLogo charity={charity} link/>
 		</WhiteCircle>
 	</Col>);
+};
+
+const TutorialCard = ({element}) => {
+	if (!element.current) return null;
+	const rect = element.getBoundingClientRect();
+	console.log(rect);
+	return <div className="position-absolute tutorial-highlight" style={{width: rect.width, height: rect.height, top: rect.top, left: rect.left}}>
+
+	</div>;
 };
 
 const toggleCharitySelect = e => {
