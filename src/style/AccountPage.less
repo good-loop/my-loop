@@ -61,13 +61,22 @@ A .TubeLine div contains seberal sections with TubeLine-img and TubeLine-line
 
 .AccountPage {
 
-	.account-tab {
-		background: #add8e6;
-		&:hover {
-			background: #126CFC;
+	.account-sidebar {
+		h5 {
+			text-transform: uppercase;
+			font-weight: 600;
+			font-family: 'Montserrat', sans-serif;
 		}
-		&.active {
-			background: @gl-light-red;
+		.account-tab {
+			color: black;
+			text-decoration: none;
+			&:hover {
+				background: @gl-light-pink;
+			}
+			&.active {
+				background: @gl-pink;
+				font-weight: bold;
+			}
 		}
 	}
 

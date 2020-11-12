@@ -56,10 +56,11 @@ const Page = () => {
 	const user = Login.getUser();
 	const name = Login.isLoggedIn() ? user.name || user.xid : "";
 
-	let { tab } = DataStore.getValue(['location', 'params']) || {};
-	tab = tabs[tab];
-	if (!tab) tab = tabs.account;
-	tab = tab.content;
+	// Get tabulated page (default to account)
+	const { tab } = DataStore.getValue(['location', 'params']) || {};
+	let tabContent = tabs[tab];
+	if (!tabContent) tabContent = tabs.account;
+	tabContent = tabContent.content;
 
 	return (
 		<div className="AccountPage">
@@ -79,11 +80,12 @@ const Page = () => {
 					</Col>
 				</Row>
 				
-				{Login.isLoggedIn() ? tab : null}
+				{Login.isLoggedIn() ? tabContent : null}
 
 			</div>
-			<div className="account-sidebar flex-column justify-content-start unset-margins position-absolute bg-white shadow" style={{top: 0, paddingTop:67 /*navbar height*/, left:0}}>
-				{Object.keys(tabs).map(t => <SidebarTab id={t} tab={tabs[t]} selected={tab}/>)}
+			<div className="account-sidebar flex-column justify-content-start unset-margins position-absolute pl-3" style={{top: 0, paddingTop:80 /*navbar height*/, left:0}}>
+				<h5 className="p-2">My Good-Loop</h5>
+				{Object.keys(tabs).map(t => <SidebarTab key={t} id={t} tab={tabs[t]} selected={tab}/>)}
 			</div>
 		</div>
 	);
