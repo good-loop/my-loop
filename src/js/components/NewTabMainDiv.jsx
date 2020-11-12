@@ -78,14 +78,6 @@ const WebtopPage = () => {
 		lg("tabopen", {user:Login.getId()});
 		logOnceFlag = true;
 	}
-	// Can we query that stat?? TODO move to where StatCard is used
-	let pvStats = DataStore.fetch(['misc','stats','tabopens'], () => {
-		const trkreq = {q:"user:"+Login.getId()}; // ??future, start, end, breakdowns: [byHostOrAd]};
-		trkreq.dataspace = 'gl';
-		trkreq.name = 'tabopens';
-		return ServerIO.getDataLogData(trkreq)
-			.then(res => res.cargo);
-	});
 
 	let charities = ['wwf', 'the-save-the-children-fund', 'against-malaria-foundation', 'trees-for-the-future', 'cancer-research-uk'];
 
@@ -99,7 +91,6 @@ const WebtopPage = () => {
 					<AccountMenu/>
 				</div>
 			</div>
-			{pvStats.value && <h1 className='bg-warning text-danger'>{JSON.stringify(pvStats.value.all.count)}</h1>}
 			<DonationCount className="mt-2"/>
 			<div className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{top: 0, left: 0, width:"100vw", height:"100vh"}}>
 				<div className="container h-100 flex-column justify-content-center unset-margins">
