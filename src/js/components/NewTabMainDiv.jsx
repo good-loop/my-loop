@@ -108,17 +108,6 @@ const WebtopPage = () => {
 					</Row>
 
 					<BannerAd />
-
-					{/*<div>
-						<Card body>
-							<CardTitle></CardTitle>
-							<BannerAd />
-						</Card>
-
-						{C.SERVER_TYPE !== 'local' ? <DevLink href="http://localmy.good-loop.com/newtab.html">Local Version</DevLink> : <Badge>local</Badge>}
-						{C.SERVER_TYPE !== 'test' ? <DevLink href="https://testmy.good-loop.com/newtab.html">Test Version</DevLink> : <Badge>test</Badge>}
-						{!C.isProduction() ? <DevLink href="https://my.good-loop.com/newtab.html">Production Version</DevLink> : <Badge>live</Badge>}
-					</div>*/}
 				</div>
 			</div>
 			<NewTabFooter />
