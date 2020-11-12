@@ -41,6 +41,7 @@ import NewTabOnboardingPage from './NewTabOnboarding';
 // Components
 import { CharityLogo } from './cards/CharityCard';
 import WhiteCircle from './campaignpage/WhiteCircle';
+import { nonce } from '../base/data/DataClass';
 
 // DataStore
 C.setupDataStore();
@@ -75,7 +76,8 @@ const WebtopPage = () => {
 	}
 	// Yeh - a tab is opened -- let's log that (once only)	
 	if ( ! logOnceFlag) {
-		lg("tabopen", {user:Login.getId()});
+		// NB: include a nonce, as otherwise identical events (you open a few tabs) within a 15 minute time bucket get treated as 1
+		lg("tabopen", {user:Login.getId(), nonce:nonce(6)});
 		logOnceFlag = true;
 	}
 	// Can we query that stat?? TODO move to where StatCard is used
