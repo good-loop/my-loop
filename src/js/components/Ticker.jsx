@@ -70,13 +70,13 @@ const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty
 
 	let dispArr = disp.split("");
 	return (
-		<div className="position-relative flex-row justify-content-center align-items-center" style={{padding: "0 " + (centerText ? "0.1rem" : "0")}}>
+		<span className="position-relative flex-row justify-content-center align-items-center" style={{padding: "0 " + (centerText ? "0.1rem" : "0")}}>
 			{/*<span className="invisible text-center" style={{width: centerText ? "100%" : "auto"}}>{currencySymbol + totalVal}</span>
 			<span className="position-absolute text-center" style={{right: 0, width: centerText ? "100%" : "auto"}} ref={ref}>{currencySymbol + disp}</span>*/}
-			{dispArr.map(digit => <div style={{width:unitWidth || "1rem", textAlign:"center", margin:"unset"}}>
+			{dispArr.map((digit, i) => <span key={i} style={{width:unitWidth || "1rem", textAlign:"center", margin:"unset"}}>
 				{digit}
-			</div>)}
-		</div>
+			</span>)}
+		</span>
 	);
 };
 
