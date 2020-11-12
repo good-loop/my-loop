@@ -7,11 +7,10 @@ const TabsForGoodSettings = () => {
 };
 
 const TabStats = () => {
+	//<StatCard md={6} number={35} label="Tokens gained"/>
 	return (
 		<Row>
-			<StatCard md={3} number={5} label="Ad views"/>
-			<StatCard md={3} number={46} label="Max tabs in one day"/>
-			<StatCard md={6} number={35} label="Tokens gained"/>
+			<StatCard md={3} number={5} label="Tabs Opened"/>			
 		</Row>
 	);
 };

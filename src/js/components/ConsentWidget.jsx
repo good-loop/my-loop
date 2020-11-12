@@ -40,9 +40,6 @@ const togglePerm = ({prop, value, profiles}) => {
 	// full perms set
 	// NB: this also means perm settings are synchronised across linked profiles by an edit.
 	let consents = DataStore.getValue(path);
-	
-	// fails - what does that mean??
-	// assert(consents[prop] === value, "ConsentWidget.jsx - mismatch",consents,prop,value);
 
 	// set each
 	profiles.forEach(person => {

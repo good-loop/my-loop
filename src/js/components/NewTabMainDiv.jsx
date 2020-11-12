@@ -1,5 +1,5 @@
 /* global navigator */
-import React, { Component, useState, useRef } from 'react';
+import React, { Component, useState, useRef, useEffect } from 'react';
 import Login from 'you-again';
 import { assert } from 'sjtest';
 import { modifyHash, randomPick, encURI, space, stopEvent, ellipsize } from '../base/utils/miscutils';
@@ -11,8 +11,9 @@ import Roles from '../base/Roles';
 import C from '../C';
 import Crud from '../base/plumbing/Crud'; // Crud is loaded here to init (but not used here)
 import Profiler, { getProfile } from '../base/Profiler';
-import { normaliseSogiveId } from '../base/plumbing/ServerIOBase';
+import ServerIO, { normaliseSogiveId } from '../base/plumbing/ServerIOBase';
 import Money from '../base/data/Money';
+import {lg} from '../base/plumbing/log';
 
 // Templates
 import MessageBar from '../base/components/MessageBar';
@@ -58,13 +59,33 @@ let bg = randomPick([
 ]);
 
 /**
+ * NB: useEffect was triggering twice (perhaps cos of the login dance)
+ */
+let logOnceFlag;
+
+/**
  * The main Tabs-for-Good page
  */
-const WebtopPage = () => {
+const WebtopPage = () => {	
 
+	// Are we logged in??	
 	if (!Login.isLoggedIn()) {
 		window.location.href = "/newtab.html#onboarding";
+		return <div/>;
 	}
+	// Yeh - a tab is opened -- let's log that (once only)	
+	if ( ! logOnceFlag) {
+		lg("tabopen", {user:Login.getId()});
+		logOnceFlag = true;
+	}
+	// Can we query that stat?? TODO move to where StatCard is used
+	let pvStats = DataStore.fetch(['misc','stats','tabopens'], () => {
+		const trkreq = {q:"user:"+Login.getId()}; // ??future, start, end, breakdowns: [byHostOrAd]};
+		trkreq.dataspace = 'gl';
+		trkreq.name = 'tabopens';
+		return ServerIO.getDataLogData(trkreq)
+			.then(res => res.cargo);
+	});
 
 	let charities = ['wwf', 'the-save-the-children-fund', 'against-malaria-foundation', 'trees-for-the-future', 'cancer-research-uk'];
 
@@ -78,6 +99,7 @@ const WebtopPage = () => {
 					<AccountMenu/>
 				</div>
 			</div>
+			{pvStats.value && <h1 className='bg-warning text-danger'>{JSON.stringify(pvStats.value.all.count)}</h1>}
 			<DonationCount className="mt-2"/>
 			<div className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{top: 0, left: 0, width:"100vw", height:"100vh"}}>
 				<div className="container h-100 flex-column justify-content-center unset-margins">
