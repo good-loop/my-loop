@@ -57,9 +57,10 @@ let bg = randomPick([
 	{ src: 'https://images.unsplash.com/photo-1592755137605-f53768fd7931?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80' },
 ]);
 
+/**
+ * The main Tabs-for-Good page
+ */
 const WebtopPage = () => {
-
-	const searchRef = useRef(null);
 
 	if (!Login.isLoggedIn()) {
 		window.location.href = "/newtab.html#onboarding";
@@ -83,8 +84,7 @@ const WebtopPage = () => {
 
 					<div className="w-100 pb-3">
 						<div className="tab-search-container mx-auto">
-							<Search ref={searchRef} />
-
+							<Search />
 						</div>
 					</div>
 
@@ -107,7 +107,6 @@ const WebtopPage = () => {
 				</div>
 			</div>
 			<NewTabFooter />
-			<TutorialCard element={searchRef}/>
 		</BG>);
 };
 
@@ -183,14 +182,6 @@ const NewTabCharityCard = ({cid}) => {
 	</Col>);
 };
 
-const TutorialCard = ({element}) => {
-	if (!element.current) return null;
-	const rect = element.getBoundingClientRect();
-	console.log(rect);
-	return <div className="position-absolute tutorial-highlight" style={{width: rect.width, height: rect.height, top: rect.top, left: rect.left}}>
-
-	</div>;
-};
 
 const toggleCharitySelect = e => {
 	// TODO
