@@ -113,8 +113,8 @@ const WebtopPage = () => {
 
 const Search = () => {
 	return (<>
-		<Form onSubmit={google} inline className="flex-row tab-search-form" >
-			<i className="fa fa-search tab-search mr-2" onClick={google}></i><PropControl type="search" prop="q" path={['widget', 'search']} className="flex-grow w-100" />
+		<Form onSubmit={doSearch} inline className="flex-row tab-search-form" >
+			<i className="fa fa-search tab-search mr-2" onClick={doSearch}></i><PropControl type="search" prop="q" path={['widget', 'search']} className="flex-grow w-100" />
 		</Form>
 	</>);
 };
@@ -197,9 +197,9 @@ const toggleCharitySelect = e => {
 };
 
 /**
- * TODO Ecosia
+ * redirect to Ecosia
  */
-const google = e => {
+const doSearch = e => {
 	stopEvent(e);
 	// NB: use window.parent to break out of the newtab iframe, otherwise ecosia objects
 	const search = DataStore.getValue('widget', 'search', 'q');
