@@ -142,11 +142,13 @@ const TabStats = () => {
 const getTabsOpened = () => {
 	// Get tabs opened stat from profiler
 	let pvValue = DataStore.fetch(['misc','stats','tabopens'], () => {
-		const trkreq = {q:"user:"+Login.getId()}; // ??future, start, end, breakdowns: [byHostOrAd]};
-		trkreq.dataspace = 'gl';
-		trkreq.name = 'tabopens';
-		return ServerIO.getDataLogData(trkreq)
-			.then(res => res.cargo);
+		const trkreq = {
+			q: "user:"+Login.getId(),
+			name: "tabopens",
+			dataspace: 'gl',
+			start: 0 // all time (otherwise defaults to 1 month)
+		}; // ??future, end, breakdowns: [byHostOrAd]};				
+		return ServerIO.getDataLogData(trkreq);
 	});
 	if (pvValue.error) return pvValue;
 	if (!pvValue.value) return null;

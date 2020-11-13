@@ -38,32 +38,32 @@ const Account = () => {
 	</>;
 };
 
-const tabs = {
-	account: {
-		content: <Account/>,
-		name: "My Account"
-	},
-	tabsForGood: {
-		content: <TabsForGoodSettings/>,
-		name: "Tabs for Good"
-	},
+const label4tab = {
+	account: "My Account",
+	tabsForGood: "Tabs for Good"
 };
 
 const Page = () => {
+	// handle the not-logged-in case
+	if ( ! Login.isLoggedIn()) {
+		return (
+			<div className="AccountPage">
+				<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" alwaysScrolled/>
+				<div className="container mt-5 pt-5">
+					<h1>You need an account to see this page.</h1>
+					<LoginLink verb="register" className="btn btn-transparent fill">Register / Log in</LoginLink>							
+				</div>
+			</div>
+		);
+	}
 	// NB: race conditions with Login and profile fetch (for linked IDs) mean all-xids should be refreshed.
 	let xids = getAllXIds(); 
 
 	const user = Login.getUser();
-	const name = Login.isLoggedIn() ? user.name || user.xid : "";
+	const name = user.name || user.xid;
 
-	// Get tabulated page (default to account)
-	let { tab } = DataStore.getValue(['location', 'params']) || {};
-	let tabContent = tabs[tab];
-	if (!tabContent) {
-		tabContent = tabs.account;
-		tab = "account";
-	}
-	tabContent = tabContent.content;
+	// Which tab? (default to account)
+	const tab = DataStore.getUrlValue('tab') || 'account';	
 
 	return (
 		<div className="AccountPage">
@@ -74,28 +74,28 @@ const Page = () => {
 						<img src="/img/LandingBackground/user.png" alt="user icon" />
 					</Col>
 					<Col md={8} className="flex-column justify-content-center align-items-start">
-						{Login.isLoggedIn() ? <div>
-							<h1>Hi {name},</h1>
-							<p>Thanks for being a member of the Good-loop family. Together we are changing the global ad industry and making a meaningful impact on the world.</p>
-						</div>:<div> <h1>You need an account to see this page.</h1>
-							<LoginLink verb="register" className="btn btn-transparent fill">Register / Log in</LoginLink>
-						</div>}
+						<h1>Hi {name},</h1>
+						<p>Thanks for being a member of the Good-loop family. Together we are changing the global ad industry and making a meaningful impact on the world.</p>
 					</Col>
 				</Row>
-				
-				{Login.isLoggedIn() ? tabContent : null}
-
+				{tab==='account' && <Account/>}
+				{tab==='tabsForGood' && <TabsForGoodSettings/>}
 			</div>
 			<div className="account-sidebar flex-column justify-content-start unset-margins position-absolute pl-3" style={{top: 0, paddingTop:80 /*navbar height*/, left:0}}>
 				<h5 className="p-2">My Good-Loop</h5>
-				{Object.keys(tabs).map(t => <SidebarTab key={t} id={t} tab={tabs[t]} selected={tab}/>)}
+				{Object.keys(label4tab).map(t => <SidebarTabLink key={t} tab={t} label={label4tab[t]} selected={t===tab}/>)}
 			</div>
 		</div>
 	);
 };
 
-const SidebarTab = ({id, tab, selected}) => {
-	return <a href={"/#account?tab=" + id} className={space("account-tab p-2", selected === id ? "active" : "")}>{tab.name}</a>;
+/**
+ * 
+ * @param {!string} tab The tab name
+ * @param {boolean} selected
+ */
+const SidebarTabLink = ({tab, label, selected}) => {
+	return <a href={"/#account?tab="+escape(tab)} className={space("account-tab p-2", selected && "active")}>{label || tab}</a>;
 };
 
 addImageCredit({name:"add-user", author:"Icons8", url:"https://icons8.com/icons/set/add-user-male"});
