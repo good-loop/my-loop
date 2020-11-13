@@ -79,7 +79,7 @@ const WebtopPage = () => {
 		logOnceFlag = true;
 	}
 
-	let charities = ['wwf', 'the-save-the-children-fund', 'against-malaria-foundation', 'trees-for-the-future', 'cancer-research-uk'];
+	let charities = ['wwf'];
 
 	// iframe src change?
 	// https://stackoverflow.com/posts/17316521/revisions
@@ -91,16 +91,15 @@ const WebtopPage = () => {
 					<AccountMenu/>
 				</div>
 			</div>
-			<DonationCount className="mt-2"/>
 			<div className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{top: 0, left: 0, width:"100vw", height:"100vh"}}>
 				<div className="container h-100 flex-column justify-content-center unset-margins">
-
+					<h3>Together we've raised <Ticker amount={new Money("£1000000")} rate={0.1} preservePennies unitWidth="0.5em"/></h3>
 					<div className="w-100 pb-3">
 						<div className="tab-search-container mx-auto">
 							<Search />
 						</div>
 					</div>
-
+					<small className="text-center text-white font-weight-bold">You are supporting</small>
 					<Row className="justify-content-center">
 						{charities.map(c => <NewTabCharityCard key={c} cid={c} />)}
 					</Row>
@@ -125,28 +124,10 @@ const WebtopPage = () => {
 
 const Search = () => {
 	return (<>
-		<Form onSubmit={doSearch} inline className="flex-row tab-search-form" >
-			<i className="fa fa-search tab-search mr-2" onClick={doSearch}></i><PropControl type="search" prop="q" path={['widget', 'search']} className="flex-grow w-100" />
+		<Form onSubmit={doSearch} inline className="flex-row tab-search-form px-2" >
+			<PropControl type="search" prop="q" path={['widget', 'search']} className="flex-grow w-100" /><i className="fa fa-search tab-search mr-2" onClick={doSearch}/>
 		</Form>
 	</>);
-};
-
-const DonationCount = ({className}) => {
-	const total = new Money("£1,000,000");
-	return (
-		<div className={space("d-flex justify-content-center", className)}>
-			<Row className="bg-white w-25 p-2 rounded">
-				<Col md={4}>
-					<img src="/img/gl-logo/LogoMark/logo.svg" alt="Good-Loop logo" className="w-100"/>
-				</Col>
-				<Col md={8} className="flex-row justify-content-center align-items-center">
-					<p>
-						<Ticker amount={total} rate={0.1} preservePennies unitWidth="0.5em"/> raised
-					</p>
-				</Col>
-			</Row>
-		</div>
-	);
 };
 
 const PAGES = {

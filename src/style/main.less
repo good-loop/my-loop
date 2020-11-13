@@ -8,6 +8,7 @@
 @import "GetInvolvedPage.less";
 @import "CampaignPage.less";
 @import "AccountPage.less";
+@import "TabsForGoodSettings.less";
 @import "NewTab.less";
 @import "navbar.less";
 @import "MyLoginWidget.less";
@@ -229,7 +230,8 @@ a.btn {
 }
 
 // Override whoever put auto margins on flex children (why??)
-.unset-margins>* {
+// Exception for classes with specified margins
+.unset-margins>*:not([class*="m-"]) {
 	margin: unset;
 }
 

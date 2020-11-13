@@ -57,9 +57,12 @@ const Page = () => {
 	const name = Login.isLoggedIn() ? user.name || user.xid : "";
 
 	// Get tabulated page (default to account)
-	const { tab } = DataStore.getValue(['location', 'params']) || {};
+	let { tab } = DataStore.getValue(['location', 'params']) || {};
 	let tabContent = tabs[tab];
-	if (!tabContent) tabContent = tabs.account;
+	if (!tabContent) {
+		tabContent = tabs.account;
+		tab = "account";
+	}
 	tabContent = tabContent.content;
 
 	return (

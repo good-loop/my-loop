@@ -1,21 +1,116 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Login from 'you-again';
-import { Col, Row } from 'reactstrap';
-import { space } from '../../base/utils/miscutils';
+import { Col, Row, Form } from 'reactstrap';
+import { space, yessy } from '../../base/utils/miscutils';
 import DataStore from '../../base/plumbing/DataStore';
 import ServerIO from '../../plumbing/ServerIO';
+import { fetchAllCharities, fetchAllCharityIDs, fetchCharity } from './MyCharitiesPage';
+import { CharityLogo } from '../cards/CharityCard';
+import PropControl from '../../base/components/PropControl';
+import Paginator from '../Paginator';
 
 
 const TabsForGoodSettings = () => {
 	return <>
 		<h1>Your stats</h1>
 		<TabStats/>
+		<div className="py-3"/>
 		<h1>Pick your charity</h1>
+		<p className="w-50">Select a charity and we will send them all the money that your Tabs for Good are generating. You can change your selection at any time.</p>
+		<br/><br/>
+		<CharityPicker/>
 	</>;
 };
 
 const CharityPicker = () => {
+	const [charities, setCharities] = useState([]);
 
+	let charityLogos = [];
+
+	// Parse CSV from donations tracker into json
+	if (!yessy(charities)) {
+		fetchAllCharityIDs().then(chars => setCharities(chars)).catch(status => console.error("Failed to get donation tracker CSV! Status: " + status));
+	} else {
+		let chars = fetchAllCharities(charities);
+		// Get logo charities
+		charityLogos = charityLogos.filter(c => c.logo);
+		console.log("Filtered " + (chars.length - charityLogos.length) + " charities");
+		console.log("CHARITIES", charities);
+		console.log("SOGIVE", chars);
+		console.log("CHARITY LOGOS", charityLogos);
+	}
+
+	const selectedCharity = {
+		id: "battersea-dogs-and-cats-home",
+		logo: "https://www.battersea.org.uk/sites/all/themes/battersea_theme/images/logo.png",
+		url: "https://www.battersea.org.uk/"
+	};//fetchCharity(getSelectedCharity());
+
+	return <div className="tabs-for-good-settings">
+		<p>Your selected charity:</p>
+		{selectedCharity ?
+			<div className="col-md-3">
+				<CharitySelectBox charity={selectedCharity} deselect do3d/>
+			</div>
+			: <b>Pick a charity!</b>}
+		<div className="py-5"/> {/* spacer */}
+		<div className="flex-row justify-content-between unset-margins mb-3">
+			<p>Can't see your favourite charity? Search for it:</p>
+			<Form onSubmit={e => e.preventDefault()} inline className="flex-row tab-search-form" >
+				<i className="fa fa-search tab-search mr-2"/><PropControl type="search" prop="q" path={['widget', 'search']} className="flex-grow w-100" />
+			</Form>
+		</div>
+		<Paginator rows={4} cols={5} rowsMD={2} colsMD={5} pageButtonRangeMD={1} displayCounter displayLoad>
+			{charityLogos.map(c => <div className="p-3 d-flex justify-content-center align-items-center" style={{height: "140px"}}>
+				<CharitySelectBox charity={c}/>
+			</div>)}
+		</Paginator>
+	</div>;
+};
+
+const CharitySelectBox = ({charity, deselect, do3d}) => {
+
+	const container3d = useRef(null);
+	const [axis, setAxis] = useState({x: 0, y: 0});
+	const [transition, setTransition] = useState('none');
+	const [elementHeight, setElementHeight] = useState(0);
+
+	const on3dMouseMove = e => {
+		if (container3d.current) {
+			// Higher = less extreme
+			let sensitivity = 10;
+			let rect = container3d.current.getBoundingClientRect();
+			// Maths for this found partially by trial and error - "it just works", Todd Howard
+			setAxis({x: ((rect.width / 2) - e.pageX + rect.left) / sensitivity,
+				y: ((rect.height * 2) - e.pageY + rect.bottom) / sensitivity});
+		}
+	};
+
+	const on3dMouseEnter = () => {
+		setTransition('none');
+		setElementHeight(50);
+	};
+
+	const on3dMouseLeave = () => {
+		setTransition('all 0.5s ease');
+		setAxis({x:0, y:0});
+		setElementHeight(0);
+	};
+
+	return <div className={do3d ? "container-3d" : ""} ref={container3d}
+		onMouseMove={do3d ? on3dMouseMove : null}
+		onMouseEnter={do3d ? on3dMouseEnter : null}
+		onMouseLeave={do3d ? on3dMouseLeave : null}
+	>
+		<div style={do3d ? {transform:`rotateY(${-axis.x}deg) rotateX(${axis.y}deg)`, transition:transition} : null} 
+			className={space("charity-select-box flex-column justify-content-center align-items-center unset-margins p-3 position-relative", do3d ? "do3d" : "")}
+		>
+			<CharityLogo charity={charity} key={charity.id} style={{maxWidth: "100%", maxHeight:"100%", transform: `translateZ(${elementHeight}px)`}} className="p-2 mb-5 mt-5 w-75"/>
+			{deselect ? <a className="btn btn-primary thin">Deselect</a>
+				: <a className="btn btn-transparent fill thin">Select</a>}
+			<a className="position-absolute" style={{top: 10, right: 10}} href={charity.url} target="_blank" rel="noreferrer">About</a>
+		</div>
+	</div>;
 };
 
 const TabStats = () => {
@@ -66,6 +161,11 @@ const getTabsWeeklyAverage = () => {
 const getDaysWithGoodLoop = () => {
 	// TODO fill in backend!!
 	return 16;
+};
+
+const getSelectedCharity = () => {
+	// TODO fill in backend!!
+	return "battersea-dogs-and-cats-home";
 };
 
 const StatCard = ({md, lg, xs, number, label, className, padding, children}) => {

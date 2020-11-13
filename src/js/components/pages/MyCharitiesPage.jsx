@@ -48,53 +48,19 @@ const dntnTrackerToSogiveID = charity => {
 
 const MyCharitiesPage = () => {
 
-	const [charities, setCharities] = useState([]);
+	const [charityIDs, setCharities] = useState([]);
 
-	let charityLogos = [];
+	let charities = [];
 
 	// Parse CSV from donations tracker into json
-	if (!yessy(charities)) window.fetch('/charities.csv')
-		.then(res => {
-			if (res.status !== 200) {
-				console.error("Failed to get CSV! " + res.status);
-				return;
-			}
-			return res.text();
-		})
-		.then(csvStr => {
-			csv({
-				noheader:true,
-				output: "csv"
-			})
-				.fromString(csvStr)
-				.then(csvRow => { 
-					let charList = [];
-					for (let i = 5; i < csvRow.length; i++) {
-						const charity = csvRow[i][7];
-						if (charity && !charList.includes(charity)) charList.push(charity);
-					}
-					setCharities(charList);
-				});
-		});
-	// Get sogive data for charities 
-	else {
-		for (let i = 0; i < charities.length; i ++) {
-			let pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: normaliseSogiveId(charities[i]), status: C.KStatus.PUBLISHED });
-			let charity = pvCharity.value;
-			if (charity && charity.logo) {
-				charityLogos.push(charity);
-			} else{
-				const mappedID = dntnTrackerToSogiveID(charities[i]);
-				if (mappedID) {
-					pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: mappedID, status: C.KStatus.PUBLISHED });
-					charity = pvCharity.value;
-					if (charity && charity.logo) charityLogos.push(charity);
-					//else console.warn("Could not find SoGive data for " + charities[i]);
-				}// else console.warn("Could not find SoGive data for " + charities[i]);
-			}
-		}
+	if (!yessy(charityIDs)) {
+		fetchAllCharityIDs().then(chars => setCharities(chars)).catch(status => console.error("Failed to get donation tracker CSV! Status: " + status));
+	} else {
+		charities = fetchAllCharities(charityIDs);
+		// Get logo charities
+		charities = charities.filter(c => c.logo);
 	}
-    
+
 	return (<>
 		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" alwaysScrolled/>
 		<div className="MyCharitiesPage">
@@ -102,7 +68,7 @@ const MyCharitiesPage = () => {
 			<Container className="py-5">
 				<h1>Charities we donate to</h1>
 				<Paginator rows={5} cols={7} rowsMD={2} colsMD={5} pageButtonRangeMD={1} displayCounter displayLoad>
-					{charityLogos.map((c, i) => <div className="p-3 d-flex justify-content-center align-items-center" style={{height: "140px"}}>
+					{charities.map((c, i) => <div className="p-3 d-flex justify-content-center align-items-center" style={{height: "140px"}}>
 						<CharityLogo charity={c} key={i} style={{maxWidth: "100%", maxHeight:"100%"}} link/>
 					</div>)}
 				</Paginator>
@@ -111,4 +77,64 @@ const MyCharitiesPage = () => {
 	</>);
 };
 
+/*
+ * Fetches list of all charities from the donation tracker CSV
+ * Split from fetchAllCharities so that the CSV list can be cached while the sogive requests can update per render
+ */
+const fetchAllCharityIDs = () => {
+	let charities = [];
+	return new Promise ((resolve, reject) => {
+		// Parse CSV from donations tracker into json
+		window.fetch('/charities.csv')
+			.then(res => {
+				if (res.status !== 200) {
+					reject(res.status);
+				}
+				return res.text();
+			})
+			.then(csvStr => {
+				csv({
+					noheader:true,
+					output: "csv"
+				})
+					.fromString(csvStr)
+					.then(csvRow => { 
+						let charList = [];
+						for (let i = 5; i < csvRow.length; i++) {
+							const charity = csvRow[i][7];
+							if (charity && !charList.includes(charity)) charList.push(charity);
+						}
+						resolve(charList);
+					});
+			});
+	});
+};
+
+const fetchAllCharities = (csvData) => {
+	let charities = [];
+	// Get sogive data for charities 
+	for (let i = 0; i < csvData.length; i ++) {
+		const charity = fetchCharity(csvData[i]);
+		if (charity) charities.push(charity);
+	}
+	return charities;
+};
+
+const fetchCharity = (id) => {
+	let pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: normaliseSogiveId(id), status: C.KStatus.PUBLISHED });
+	let charity = pvCharity.value;
+	if (charity) return charity;
+	if (id === "battersea-dogs-and-cats-home") console.warn("Could not find Battersea first round!");
+	// If using the ServerIO sogiveId table didnt work, try for special donation tracker cases
+	const mappedID = dntnTrackerToSogiveID(id);
+	if (mappedID) {
+		pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: mappedID, status: C.KStatus.PUBLISHED });
+		charity = pvCharity.value;
+		if (charity) return charity;
+		if (id === "battersea-dogs-and-cats-home") console.warn("Could not find Battersea second round!");
+	}
+	return null;
+};
+
+export { fetchAllCharities, fetchAllCharityIDs, fetchCharity };
 export default MyCharitiesPage;

@@ -1,0 +1,31 @@
+.tabs-for-good-settings {
+
+    .container-3d {
+        perspective: 1000px;
+        // Extend width beyond bounds
+        padding-left: 150px !important;
+        padding-right: 150px !important;
+        margin-left: -150px !important;
+        margin-right: -150px !important;
+    }
+
+    .charity-select-box {
+        border: 1px solid @gl-light-red;
+        border-radius: 10px;
+        box-shadow: 2px 2px 3px rgba(0,0,0,0.25);
+
+        &.do3d {
+            transform-style: preserve-3d;
+            * {
+                transition: all 0.5s ease;
+            }
+        }
+        a {
+            color: @gl-light-red;
+            font-weight: 600;
+            &:hover {
+                color: @gl-red;
+            }
+        }
+    }
+}
