@@ -39,7 +39,14 @@ class MyLoopNavBar extends React.Component {
 	}
 
 	toggle () {
-		this.setState({open: !this.state.open});
+		let scrolled = true;
+		// If we're about to open, force the "scrolled" style
+		if (!this.state.open) {
+			scrolled = true;
+		} else {
+			scrolled = window.scrollY > 50;
+		}
+		this.setState({open: !this.state.open, scrolled: scrolled});
 	}
 
 	render () {
@@ -53,7 +60,7 @@ class MyLoopNavBar extends React.Component {
 		return (
 			<Navbar className={this.state.scrolled ? "scrolled" : ""}
 				style={style}
-				sticky='top' expand='lg'>
+				sticky='top' expand='xl'>
 				<NavbarBrand href="/#my" className="mr-auto">
 					<img src={this.state.scrolled && logoScrollSrc ? logoScrollSrc : logoSrc} alt='logo' className='logo-small' />
 				</NavbarBrand>
@@ -61,7 +68,7 @@ class MyLoopNavBar extends React.Component {
 				<NavbarToggler onClick={this.toggle}>
 					<img src="/img/Icon_Hamburger.200w.png" className="navbar-toggler-icon"/>
 				</NavbarToggler>
-				<Collapse isOpen={this.state.open} navbar className="gl-bootstrap-navbar" id="navItemsDiv" style={{flexGrow:0, flexBasis:"60%"}}>
+				<Collapse isOpen={this.state.open} navbar className="gl-bootstrap-navbar" id="navItemsDiv" style={{flexGrow:0}}>
 					<Nav navbar className="navbar-nav w-100 justify-content-between">
 						<NavItem>
 							<NavLink href="/#howitworks">How it works</NavLink>
