@@ -85,7 +85,14 @@ class MyLoopNavBar extends React.Component {
 	}
 }
 
-const AccountMenu = ({logoutLink, children}) => {
+/**
+ * Account dropdown widget for account access and logout
+ * @param logoutLink custom link to redirect to on logout
+ * @param small display a small circle with initial instead of full name
+ * @param accountLink custom link for account page
+ * @param children enter extra DropdownItem components to add more entries to the menu here
+ */
+const AccountMenu = ({logoutLink, small, accountLink, children}) => {
 	if (!Login.isLoggedIn()) { 
 		return (
 			<LoginLink verb="register" className="login-menu btn btn-transparent fill">Register / Log in</LoginLink>
@@ -93,14 +100,16 @@ const AccountMenu = ({logoutLink, children}) => {
 	}
 
 	let user = Login.getUser();
+	let name = user.name || user.xid;
+	let initial = name.substr(0, 1);
 
 	return (
 		<UncontrolledDropdown className="account-menu">
-			<DropdownToggle caret style={{backgroundColor: 'transparent', border: '0'}} className="login-link btn btn-transparent fill">
-				{ user.name || user.xid }&nbsp;
+			<DropdownToggle caret className={space("login-link", small ? "bg-gl-orange small-account text-white" : "btn btn-transparent fill")}>
+				{small ? initial : name + " "}
 			</DropdownToggle>
 			<DropdownMenu right>
-				<DropdownItem href="/#account">Account</DropdownItem>
+				<DropdownItem href={accountLink || "/#account"}>Account</DropdownItem>
 				{children ? <DropdownItem divider /> : null}
 				{children}
 				<DropdownItem divider />

@@ -14,6 +14,7 @@ import Profiler, { getProfile } from '../base/Profiler';
 import ServerIO, { normaliseSogiveId } from '../base/plumbing/ServerIOBase';
 import Money from '../base/data/Money';
 import {lg} from '../base/plumbing/log';
+import TabsForGoodSettings, { getTabsOpened } from './pages/TabsForGoodSettings';
 
 // Templates
 import MessageBar from '../base/components/MessageBar';
@@ -86,6 +87,9 @@ const WebtopPage = () => {
 	// iframe src change?
 	// https://stackoverflow.com/posts/17316521/revisions
 
+	let tabsOpened = getTabsOpened();
+	if (!tabsOpened || tabsOpened.error) tabsOpened = "-";
+
 	return (<>
 		<BG src={bg.src} fullscreen opacity={0.9} bottom={110}>
 			<div className="position-fixed p-3" style={{top: 0, left: 0, width:"100vw", zIndex:10}}>
@@ -96,12 +100,18 @@ const WebtopPage = () => {
 						</a>
 						<h4 className="pl-2">Tabs for<br/>good</h4>
 					</div>
-					<AccountMenu/>
+					<div className="user-controls flex-row">
+						<span className="pr-3 text-white font-weight-bold">{tabsOpened} tabs opened</span>
+						<AccountMenu small accountLink="/#account?tab=tabsForGood"/>
+					</div>
 				</div>
 			</div>
 			<div className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{top: 0, left: 0, width:"100vw", height:"100vh"}}>
 				<div className="container h-100 flex-column justify-content-center unset-margins">
-					<h3 className="text-center">Together we've raised <Ticker amount={new Money("£1000000")} rate={0.1} preservePennies unitWidth="0.6em"/></h3>
+					<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
+						<h3 className="text-center">Together we've raised <Ticker amount={new Money("$1501886.40")} rate={0.1} preservePennies unitWidth="0.6em"/></h3>
+						<img src="/img/TabsForGood/sparkle.png" alt="sparkle" style={{width: 50}} className="pl-1"/>
+					</div>
 					<div className="w-100 pb-3">
 						<div className="tab-search-container mx-auto">
 							<Search />
@@ -128,7 +138,7 @@ const Ads = () => {
 const Search = () => {
 	return (<>
 		<Form onSubmit={doSearch} inline className="flex-row tab-search-form px-2" >
-			<PropControl type="search" prop="q" path={['widget', 'search']} className="flex-grow w-100" /><i className="fa fa-search tab-search mr-2" onClick={doSearch}/>
+			<PropControl placeholder="Search with Ecosia" type="search" prop="q" path={['widget', 'search']} className="flex-grow w-100" /><i className="fa fa-search tab-search mr-2" onClick={doSearch}/>
 		</Form>
 	</>);
 };
@@ -154,7 +164,7 @@ const NewTabCharityCard = ({cid}) => {
 
 	let pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:normaliseSogiveId(cid), status:C.KStatus.PUBLISHED});
 	if ( ! pvCharity.value) {
-		return <Col sm={3} xs={1} xl={4} ><Card body>{cid}</Card></Col>;
+		return null;
 	}
 	if (pvCharity.error) return null; // offline maybe
 	const charity = pvCharity.value;

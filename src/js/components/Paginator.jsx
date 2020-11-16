@@ -6,6 +6,12 @@ import { isPortraitMobile } from '../base/utils/miscutils';
 /** Takes a list of items as its children and splits it into pages according to specified grid dimensions
 @param {Number} rows how many rows each page has
 @param {Number} cols how many columns each page has
+@param {?Number} pageButtonRange how many page numbers to display either side of "this page"
+@param {?Number} rowsMD row number for mobile
+@param {?Number} colsMD column number for mobile
+@param {?Number} pageButtonRangeMD pageButtonRange for mobile
+@param {?Boolean} displayCounter show the number of items and number per page
+@param {?Boolean} displayLoad set the counter to "Loading..." when no items are present
 */ 
 const Paginator = ({rows, cols, rowsMD, colsMD, pageButtonRange, pageButtonRangeMD, children, displayCounter=false, displayLoad=false}) => {
 	if (isPortraitMobile() && rowsMD) rows = rowsMD;
@@ -54,7 +60,7 @@ const Paginator = ({rows, cols, rowsMD, colsMD, pageButtonRange, pageButtonRange
 				: "Loading..."}
 			</div> : null}
 		{page}
-		<div className={"paginator-controls flex-row justify-content-between " + (isPortraitMobile() ? "w-100" : "w-50") + " mx-auto mt-5"}>
+		<div className={"paginator-controls flex-row justify-content-between" + (isPortraitMobile() ? "w-100" : "w-50") + " mx-auto mt-5"}>
 			<PageButton pageNum={pageNum-1<0 ? 0 : pageNum-1} setPage={setPage} disabled={pageNum-1<0}>
 				Previous
 			</PageButton>
@@ -78,11 +84,11 @@ const PageButton = ({pageNum, setPage, selected=false, disabled=false, children}
 
 	return (<>
 		{disabled ?
-			<span className={space("paginator-btn disabled", selected ? "selected" : "")}>
+			<span className={space("paginator-btn disabled text-muted", selected ? "selected" : "")}>
 				{children}
 			</span>
 			:
-			<a onClick={e => switchPage(e)} className={space("paginator-btn", selected ? "selected" : "")}>
+			<a onClick={e => switchPage(e)} className={space("paginator-btn text-primary", selected ? "selected font-weight-bold" : "")}>
 				{children}
 			</a>}
 	</>);
