@@ -86,8 +86,8 @@ const WebtopPage = () => {
 	// iframe src change?
 	// https://stackoverflow.com/posts/17316521/revisions
 
-	return (
-		<BG src={bg.src} fullscreen opacity={0.9}>
+	return (<>
+		<BG src={bg.src} fullscreen opacity={0.9} bottom={110}>
 			<div className="position-fixed p-3" style={{top: 0, left: 0, width:"100vw", zIndex:10}}>
 				<div className="d-flex justify-content-end">
 					<AccountMenu/>
@@ -95,7 +95,7 @@ const WebtopPage = () => {
 			</div>
 			<div className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{top: 0, left: 0, width:"100vw", height:"100vh"}}>
 				<div className="container h-100 flex-column justify-content-center unset-margins">
-					<h3>Together we've raised <Ticker amount={new Money("£1000000")} rate={0.1} preservePennies unitWidth="0.5em"/></h3>
+					<h3 className="text-center">Together we've raised <Ticker amount={new Money("£1000000")} rate={0.1} preservePennies unitWidth="0.6em"/></h3>
 					<div className="w-100 pb-3">
 						<div className="tab-search-container mx-auto">
 							<Search />
@@ -105,12 +105,18 @@ const WebtopPage = () => {
 					<Row className="justify-content-center">
 						{charities.map(c => <NewTabCharityCard key={c} cid={c} />)}
 					</Row>
-
-					<BannerAd />
 				</div>
 			</div>
 			<NewTabFooter />
-		</BG>);
+		</BG>
+		<Ads />
+	</>);
+};
+
+const Ads = () => {
+	return <div className="ads position-absolute" style={{bottom: 0, left: 0, right: 0, height: 110, padding:10}}>
+		<BannerAd/>
+	</div>;
 };
 
 const Search = () => {
