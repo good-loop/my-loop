@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { useState } from 'react';
 import { Container } from 'reactstrap';
 import ActionMan from '../../plumbing/ActionMan';
 import CharityMiniCard, {CharityLogo} from '../cards/CharityCard';
@@ -45,37 +45,9 @@ challenges facing our planet."`,
  * @param {{string:Money}} donation4charity - charity ID to donation amount
  */
 const Charities = ({ charities, donation4charity }) => {
-	let dupeIds = [];
+	
 	// augment with SoGive data
-	let sogiveCharities = charities.map(charityOriginal => {
-		// Shallow copy charity obj
-		let charity = Object.assign({}, charityOriginal);
-		const sogiveId = normaliseSogiveId(charity.id);
-		if ( ! sogiveId) {
-			console.warn("Charity without an id?!", charity);
-			return charity;
-		}
-		// Remove duplicates
-		if (dupeIds.includes(sogiveId)) {
-			return;
-		}
-		dupeIds.push(sogiveId);
-		// NB: the lower-level ServerIOBase.js helps patch mismatches between GL and SoGive ids
-		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: sogiveId, status: C.KStatus.PUBLISHED });
-		console.log('****** Got SoGive data for charity ' + charity.id, pvCharity.value);
-		if ( ! pvCharity.value) return charity; // no extra data yet
-		// merge, preferring SoGive data
-		// Prefer SoGive for now as the page is designed to work with generic info - and GL data is often campaign/player specific
-		// TODO: review this
-		// NB: This merge is a shallow copy, so the objects can then be shallow edited without affecting other components
-		charity = Object.assign(charity, pvCharity.value);
-		// HACK: charity objs have conflicting IDs, force NGO to use id instead of @id
-		charity['@id'] = undefined;
-		charity.originalId = charityOriginal.id; // preserve for donation look-up
-		return charity;
-	});
-	// Remove null entries
-	sogiveCharities = sogiveCharities.filter(x => x);
+	let sogiveCharities = fetchSogiveData(charities);
 
 	const getDonation = c => donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
 	let sogiveCharitiesWithDonations = sogiveCharities.filter(c => getDonation(c)); // Get rid of charities with no logged donations.
@@ -107,6 +79,41 @@ const Charities = ({ charities, donation4charity }) => {
 			</Container>
 		</div>
 	);
+};
+
+// Extra smallprint details for charities
+const CharityDetails = ({charities}) => {
+
+	let sogiveCharities = fetchSogiveData(charities);
+
+	const hasRegNum = (c) => {
+		return c.englandWalesCharityRegNum || c.scotlandCharityRegNum || c.niCharityRegNum || c.ukCompanyRegNum || c.usCharityRegNum;
+	};
+
+	// Registration numbers for all possible types of reg num for each charity
+	let regNums = sogiveCharities.map(c => {
+		return hasRegNum(c) ? <div className="charityInfo" key={c.id}><small>
+			<b>{c.displayName || c.name}</b>
+			<RegNum label="England & Wales Charity Commission registration number" regNum={c.englandWalesCharityRegNum}/>
+			<RegNum label="Scottish OSCR registration number" regNum={c.scotlandCharityRegNum}/>
+			<RegNum label="Northern Ireland registration number" regNum={c.niCharityRegNum}/>
+			<RegNum label="UK Companies House number" regNum={c.ukCompanyRegNum}/>
+			<RegNum label="USA registration number (EIN)" regNum={c.usCharityRegNum}/>
+			<br/>
+		</small></div>: null;
+	});
+	// Remove null values
+	regNums = regNums.filter(x => x);
+	return regNums.length > 0 ? <div className="charity-details bg-white shadow my-3 p-3">
+		{regNums}
+	</div> : null;
+};
+
+// A labelled entry for a registration number, does not display if regNum is falsy
+const RegNum = ({label, regNum}) => {
+	return regNum ? <div className="regNum">
+		{label}: {regNum}
+	</div> : null;
 };
 
 /**
@@ -149,6 +156,40 @@ const CharityCard = ({ charity, donationValue, i }) => {
 		</div>
 	</div>
 	);
+};
+
+// Augment ad charity objects with sogive data
+const fetchSogiveData = (charities) => {
+	let dupeIds = [];
+	let sogiveCharities = charities.map(charityOriginal => {
+		// Shallow copy charity obj
+		let charity = Object.assign({}, charityOriginal);
+		const sogiveId = normaliseSogiveId(charity.id);
+		if ( ! sogiveId) {
+			console.warn("Charity without an id?!", charity);
+			return charity;
+		}
+		// Remove duplicates
+		if (dupeIds.includes(sogiveId)) {
+			return;
+		}
+		dupeIds.push(sogiveId);
+		// NB: the lower-level ServerIOBase.js helps patch mismatches between GL and SoGive ids
+		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: sogiveId, status: C.KStatus.PUBLISHED });
+		if ( ! pvCharity.value) return charity; // no extra data yet
+		// merge, preferring SoGive data
+		// Prefer SoGive for now as the page is designed to work with generic info - and GL data is often campaign/player specific
+		// TODO: review this
+		// NB: This merge is a shallow copy, so the objects can then be shallow edited without affecting other components
+		charity = Object.assign(charity, pvCharity.value);
+		// HACK: charity objs have conflicting IDs, force NGO to use id instead of @id
+		charity['@id'] = undefined;
+		charity.originalId = charityOriginal.id; // preserve for donation look-up
+		return charity;
+	});
+	// Remove null entries
+	sogiveCharities = sogiveCharities.filter(x => x);
+	return sogiveCharities;
 };
 
 /**
@@ -221,4 +262,5 @@ const AlsoSupported = ({charities}) => {
 	</> : null);
 };
 
+export { CharityDetails };
 export default Charities;
