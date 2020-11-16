@@ -89,7 +89,13 @@ const WebtopPage = () => {
 	return (<>
 		<BG src={bg.src} fullscreen opacity={0.9} bottom={110}>
 			<div className="position-fixed p-3" style={{top: 0, left: 0, width:"100vw", zIndex:10}}>
-				<div className="d-flex justify-content-end">
+				<div className="d-flex justify-content-between">
+					<div className="logo pl-5 flex-row">
+						<a href="https://my.good-loop.com">
+							<img src="/img/logo-white.svg" style={{width: 50}} alt="logo"/>
+						</a>
+						<h4 className="pl-2">Tabs for<br/>good</h4>
+					</div>
 					<AccountMenu/>
 				</div>
 			</div>
