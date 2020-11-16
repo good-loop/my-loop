@@ -34,6 +34,11 @@ const CharityPicker = () => {
 		let chars = fetchAllCharities(charities);
 		// Get logo charities
 		charityLogos = chars.filter(c => c.logo);
+		let search = DataStore.getValue(['widget', 'search', 'q']);
+		if (search) {
+			search = search.toLowerCase();
+			charityLogos = charityLogos.filter(c => c.name ? c.name.toLowerCase().includes(search) : false);
+		}
 	}
 
 	const selectedCharity = {

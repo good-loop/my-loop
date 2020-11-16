@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Row, Col } from 'reactstrap';
-import { space } from '../base/utils/miscutils';
-import { isPortraitMobile } from '../base/utils/miscutils';
+import { space, isPortraitMobile } from '../base/utils/miscutils';
 
 /** Takes a list of items as its children and splits it into pages according to specified grid dimensions
 @param {Number} rows how many rows each page has
@@ -18,12 +17,15 @@ const Paginator = ({rows, cols, rowsMD, colsMD, pageButtonRange, pageButtonRange
 	if (isPortraitMobile() && colsMD) cols = colsMD;
 	if (isPortraitMobile() && pageButtonRangeMD) pageButtonRange = pageButtonRangeMD;
 	const [pageNum, setPage] = useState(0);
+	// Remember if we've had items or not, so we don't display loading again if we empty later
+	const [hasLoadedItems, setLoadedItems] = useState(false);
 	const itemsPerPage = rows * cols;
 	const numPages = Math.ceil(children.length / itemsPerPage);
 	let items = [];
 	for (let i = pageNum * itemsPerPage; i < (pageNum + 1) * itemsPerPage && i < children.length; i++) {
 		items.push(children[i]);
 	}
+	if (items.length > 0 && !hasLoadedItems) setLoadedItems(true);
 
 	// Setup page button count, applying a limit and offset according to the pageButtonRange
 	let pageBtns = [];
@@ -56,7 +58,7 @@ const Paginator = ({rows, cols, rowsMD, colsMD, pageButtonRange, pageButtonRange
 	return (<div className="paginator">
 		{displayCounter || (displayLoad && items.length === 0) ?
 			<div className="paginator-counter">
-				{!displayLoad || items.length > 0 ? "Showing " + items.length + " / " + children.length + " items"
+				{!displayLoad || (items.length > 0 || hasLoadedItems) ? "Showing " + items.length + " / " + children.length + " items"
 				: "Loading..."}
 			</div> : null}
 		{page}
