@@ -10,7 +10,7 @@
 	<meta property="og:description" content="My.Good-Loop raises money for charity from your web browsing." />
 	<!-- Explicit Content-Security-Policy is required for the GoodLoop app -->
 	<meta http-equiv="Content-Security-Policy"
-		content="default-src * gap://ready file:; style-src 'self' 'unsafe-inline' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; media-src * 'self' data: https: http:; img-src * data: 'unsafe-inline'; connect-src * 'unsafe-inline'; frame-src * 'unsafe-inline' 'unsafe-eval';">
+		content="default-src * gap://ready file:; style-src 'self' 'unsafe-inline' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; media-src * 'self' data: https: http:; img-src * data: blob: about: 'unsafe-inline'; connect-src * 'unsafe-inline'; frame-src * 'unsafe-inline' 'unsafe-eval';">
 
 	<title>My Good-Loop</title>
 	<link rel="shortcut icon" href="/img/gl-logo/LogoMark/logo.64.png" />
@@ -36,27 +36,26 @@
 
 </head>
 
-<body>
+<body style="overflow-y: hidden">
 
 	<div id="mainDiv"></div>
 
-	<!-- Ads -->
-	
-	<h4>The Xandr / AppNexus ad-tag</h4>
-	<script src="https://ib.adnxs.com/ttj?id=20079232&size=728x90" type="text/javascript"></script>
-
-	<h4>Media.net ad-tag</h4>
-	<!-- media.net 728x90 -->
-	<div class='leaderboard' style='width:728px;height:90px;'>
-		<div id="788598671">
-			<script type="text/javascript">
-				try {
-					window._mNHandle.queue.push(function () {
-						window._mNDetails.loadTag("788598671", "728x90", "788598671");
-					});
-				}
-				catch (error) { }
-			</script>
+	<div class="position-absolute w-100 flex-row" style="bottom:0; height: 110px; padding: 10px">
+		<!-- Ads -->
+		<script src="https://ib.adnxs.com/ttj?id=20079232&size=728x90" type="text/javascript"></script>
+		
+		<!-- media.net 728x90 -->
+		<div class='leaderboard' style='width:728px;height:90px;'>
+			<div id="788598671">
+				<script type="text/javascript">
+					try {
+						window._mNHandle.queue.push(function () {
+							window._mNDetails.loadTag("788598671", "728x90", "788598671");
+						});
+					}
+					catch (error) { }
+				</script>
+			</div>
 		</div>
 	</div>
 
