@@ -14,7 +14,7 @@ import Profiler, { getProfile } from '../base/Profiler';
 import ServerIO, { normaliseSogiveId } from '../base/plumbing/ServerIOBase';
 import Money from '../base/data/Money';
 import {lg} from '../base/plumbing/log';
-import TabsForGoodSettings, { getTabsOpened } from './pages/TabsForGoodSettings';
+import TabsForGoodSettings, { getTabsOpened, Search } from './pages/TabsForGoodSettings';
 
 // Templates
 import MessageBar from '../base/components/MessageBar';
@@ -114,7 +114,7 @@ const WebtopPage = () => {
 					</div>
 					<div className="w-100 pb-3">
 						<div className="tab-search-container mx-auto">
-							<Search />
+							<Search onSubmit={doSearch} placeholder="Search with Ecosia"/>
 						</div>
 					</div>
 					<small className="text-center text-white font-weight-bold">You are supporting</small>
@@ -125,21 +125,6 @@ const WebtopPage = () => {
 			</div>
 			<NewTabFooter />
 		</BG>
-		<Ads />
-	</>);
-};
-
-const Ads = () => {
-	return <div className="ads position-absolute" style={{bottom: 0, left: 0, right: 0, height: 110, padding:10}}>
-		<BannerAd/>
-	</div>;
-};
-
-const Search = () => {
-	return (<>
-		<Form onSubmit={doSearch} inline className="flex-row tab-search-form px-2" >
-			<PropControl placeholder="Search with Ecosia" type="search" prop="q" path={['widget', 'search']} className="flex-grow w-100" /><i className="fa fa-search tab-search mr-2" onClick={doSearch}/>
-		</Form>
 	</>);
 };
 
@@ -213,4 +198,5 @@ const doSearch = e => {
 Roles.isDev = () => true;
 
 
+export { Search };
 export default NewTabMainDiv;

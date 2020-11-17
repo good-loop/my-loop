@@ -31,12 +31,9 @@ const SignUpConnectCard = ({className}) => {
 
 	return (
 		<div className={space('social-media-card', className)}>
-			<p style={{fontSize:"0.85rem"}}>
-				Boost your donations<br/>
-				and track your impact
-			</p>
 			{signInOrConnected({ service: 'good-loop', xid: service2xid.email })}
 			{signInOrConnected({ service: 'twitter', xid: service2xid.twitter })}
+			{signInOrConnected({ service: 'facebook', xid: service2xid.facebook })}
 		</div>
 	);
 };

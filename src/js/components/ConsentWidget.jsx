@@ -147,9 +147,6 @@ const ConsentWidget = ({xids}) => {
 				saveFn={props => togglePerm({...props, profiles})}
 				textOn='Thank you!'
 			/>
-			{/* Spacer for mobile */}
-			<div className="pb-3 pb-md-0"/>
-			<small>We will never share your data without your consent unless there is a legal obligation.<br/>See our <a href='https://doc.good-loop.com/policy/privacy-policy.html' rel='noopener noreferrer' target='_blank'>privacy policy</a> for more information.</small>
 		</>
 	);
 };

@@ -19,8 +19,8 @@ import PropControl from '../../base/components/PropControl';
 import SubscriptionBox from '../cards/SubscriptionBox';
 import ShareButton from '../ShareButton';
 import { addImageCredit } from '../../base/components/AboutPage';
-import Roles from '../../base/Roles';
 import TabsForGoodSettings from './TabsForGoodSettings';
+import AccountSettings from './AccountSettings';
 
 const Account = () => {
 	let xids = getAllXIds();
@@ -32,14 +32,12 @@ const Account = () => {
 			</div>
 			<MoreToDo xids={xids} />
 		</div>
-		
-		<h2 className="text-center mb-5">Your settings</h2>
-		<Settings xids={xids}/>
 	</>;
 };
 
 const label4tab = {
 	account: "My Account",
+	settings: "Settings",
 	tabsForGood: "Tabs for Good"
 };
 
@@ -79,9 +77,10 @@ const Page = () => {
 					</Col>
 				</Row>
 				{tab==='account' && <Account/>}
+				{tab==='settings' && <AccountSettings xids={xids}/>}
 				{tab==='tabsForGood' && <TabsForGoodSettings/>}
 			</div>
-			<div className="account-sidebar flex-column justify-content-start unset-margins position-absolute pl-3" style={{top: 0, paddingTop:80 /*navbar height*/, left:0}}>
+			<div className="account-sidebar flex-column justify-content-start unset-margins position-absolute pl-3 bg-white" style={{top: 0, paddingTop:80 /*navbar height*/, left:0}}>
 				<h5 className="p-2">My Good-Loop</h5>
 				{Object.keys(label4tab).map(t => <SidebarTabLink key={t} tab={t} label={label4tab[t]} selected={t===tab}/>)}
 			</div>
@@ -142,55 +141,6 @@ export const MoreToDo = ({xids}) => {
 			</DoSection>
 		</div>
 	);
-};
-
-const Settings = ({xids}) => {
-	// debug
-	let profiles = getProfilesNow(xids);
-	let consents = getConsents({profiles});
-
-	return (<div className="settings">
-		<ConsentWidget xids={xids}/>
-		<div className="pt-3"/>
-		{false && <YourDataSettings/>}
-		{Roles.isDev() && <div className="dev-text"><small>IDs: {xids.join(", ")}</small></div>}
-		{Roles.isDev() && <div className="dev-text"><small>Consents: {JSON.stringify(consents)}</small></div>}
-	</div>);
-};
-
-/**
- * TODO collect and maintain data about the user - eg common demographics
- */
-const YourDataSettings = () => {
-	const path = ['widget', 'YourDataWidget', 'details'];
-	return (<div className="your-data-form">
-		<h4>Your data:</h4>
-		<Row>
-			<Col md={4}>Name:</Col>
-			<Col md={8} xs={6}>
-				<PropControl 
-					path={path} 
-					prop="name"
-					type="text" 
-					saveFn={null} 
-				/>
-			</Col>
-		</Row>
-		<Row>
-			<Col md={4}>Email:</Col>
-			<Col md={8} xs={6}>
-				<PropControl 
-					path={path} 
-					prop="email"
-					type="text" 
-					saveFn={null} 
-				/>
-			</Col>
-		</Row>
-		<Row>
-			If you want to change your password, please go through password reset.
-		</Row>
-	</div>);
 };
 
 /**

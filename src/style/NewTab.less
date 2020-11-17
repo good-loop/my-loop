@@ -36,27 +36,28 @@
     @media @md-max {
         width: 100%;
     }
-    .tab-search {
-        color: @gl-light-red;
-        &:hover {
-            cursor: pointer;
-            color: @gl-red;
-        }
+}
+
+.tab-search {
+    color: @gl-light-red;
+    &:hover {
+        cursor: pointer;
+        color: @gl-red;
     }
-    .tab-search-form {
-        background: white;
-        border: 1px solid gray;
+}
+.tab-search-form {
+    background: white;
+    border: 1px solid gray;
+    border-radius: 100px;
+    .search input {
+        margin: unset;
+        width: 100%;
         border-radius: 100px;
-        .search input {
-            margin: unset;
-            width: 100%;
-            border-radius: 100px;
-            background: transparent;
+        background: transparent;
+        border: none;
+        &:hover, &:focus {
             border: none;
-            &:hover, &:focus {
-                border: none;
-                box-shadow: none;
-            }
+            box-shadow: none;
         }
     }
 }

@@ -132,6 +132,9 @@ A .TubeLine div contains seberal sections with TubeLine-img and TubeLine-line
 			font-size: 0.8rem;
 			line-height: 0.5;
 		}
+		.normal {
+			font-size: 1rem;
+		}
 		.hover-info {
 			position: relative;
 			.extra-info {
@@ -149,6 +152,33 @@ A .TubeLine div contains seberal sections with TubeLine-img and TubeLine-line
 				.extra-info {
 					display: block;
 				}
+			}
+		}
+
+		.your-data-form .user-setting {
+			// Change font size but dont increase input sizes
+			&>*:not(input) {
+				font-size: 1.3rem;
+			}
+
+			input {
+				border-radius: 0;
+				border: 1px solid grey;
+			}
+		}
+
+		// Styling for consent widget toggles
+		.form-check-label {
+			// Swap sides for toggle circle and label
+			display: inline-flex;
+			flex-direction: row-reverse;
+			justify-content: center;
+			align-items: center;
+			
+			// Styling for circle toggle
+			input {
+				margin-left: 1rem;
+				margin-right: 0;
 			}
 		}
 	}

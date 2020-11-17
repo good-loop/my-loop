@@ -57,9 +57,7 @@ const CharityPicker = () => {
 		<div className="py-5"/> {/* spacer */}
 		<div className="flex-row justify-content-between unset-margins mb-3">
 			<p>Can't see your favourite charity? Search for it:</p>
-			<Form onSubmit={e => e.preventDefault()} inline className="flex-row tab-search-form" >
-				<i className="fa fa-search tab-search mr-2"/><PropControl type="search" prop="q" path={['widget', 'search']} className="flex-grow w-100" />
-			</Form>
+			<Search onSubmit={e => e.preventDefault()} placeholder="Find your charity"/>
 		</div>
 		<Paginator rows={4} cols={5} rowsMD={2} colsMD={5} pageButtonRangeMD={1} displayCounter displayLoad>
 			{charityLogos.map(c => <div className="p-3 d-flex justify-content-center align-items-center">
@@ -149,6 +147,15 @@ const TabStats = () => {
 	);
 };
 
+// Search box
+const Search = ({onSubmit, placeholder}) => {
+	return (<>
+		<Form onSubmit={onSubmit} inline className="flex-row tab-search-form px-2" >
+			<PropControl placeholder={placeholder} type="search" prop="q" path={['widget', 'search']} className="flex-grow w-100" /><i className="fa fa-search tab-search mr-2" onClick={onSubmit}/>
+		</Form>
+	</>);
+};
+
 /*
  * Fetch the number of tabs opened by the user.
  * Returns null if no value i.e. loading.
@@ -195,5 +202,5 @@ const StatCard = ({md, lg, xs, number, label, className, padding, children}) => 
 	</Col>;
 };
 
-export { getTabsOpened };
+export { getTabsOpened, Search };
 export default TabsForGoodSettings;
