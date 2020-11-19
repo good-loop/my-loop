@@ -31,6 +31,7 @@ import Footer from './Footer';
 import { Register } from '../../puppeteer_tests/test-base/common-selectors';
 import MyGLAboutPage from './MyGLAboutPage';
 import { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
+import TabsForGoodOnboard from './pages/TabsForGoodOnboard';
 // import RedesignPage from './pages/RedesignPage';
 
 // DataStore
@@ -48,7 +49,8 @@ const PAGES = {
 	ads: MyAdCampaignsPage,
 	involve: GetInvolvedPage,
 	howitworks: MyPage,
-	about: MyGLAboutPage
+	about: MyGLAboutPage,
+	tabsForGood: TabsForGoodOnboard
 };
 
 addFunderCredit("Scottish Enterprise");

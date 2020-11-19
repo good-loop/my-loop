@@ -43,6 +43,7 @@ import NewTabOnboardingPage from './NewTabOnboarding';
 import { CharityLogo } from './cards/CharityCard';
 import WhiteCircle from './campaignpage/WhiteCircle';
 import { nonce } from '../base/data/DataClass';
+import NewtabLoginWidget from './NewtabLoginWidget';
 
 // DataStore
 C.setupDataStore();
@@ -71,12 +72,16 @@ let logOnceFlag;
 const WebtopPage = () => {	
 
 	// Are we logged in??	
-	if (!Login.isLoggedIn()) {
+	/*if (!Login.isLoggedIn()) {
 		window.location.href = "/newtab.html#onboarding";
 		return <div/>;
-	}
+	}*/
+
+	const fromMyLoop = window.document.referrer.includes("my.good-loop.com");
+	const onboarding = fromMyLoop && !Login.isLoggedIn();
+
 	// Yeh - a tab is opened -- let's log that (once only)	
-	if ( ! logOnceFlag) {
+	if ( ! logOnceFlag && Login.isLoggedIn()) {
 		// NB: include a nonce, as otherwise identical events (you open a few tabs) within a 15 minute time bucket get treated as 1
 		lg("tabopen", {user:Login.getId(), nonce:nonce(6)});
 		logOnceFlag = true;
@@ -91,7 +96,7 @@ const WebtopPage = () => {
 	if (!tabsOpened || tabsOpened.error) tabsOpened = "-";
 
 	return (<>
-		<BG src={bg.src} fullscreen opacity={0.9} bottom={110}>
+		<BG src={bg.src} fullscreen opacity={0.9} bottom={onboarding ? 0 : 110}>
 			<div className="position-fixed p-3" style={{top: 0, left: 0, width:"100vw", zIndex:10}}>
 				<div className="d-flex justify-content-between">
 					<div className="logo pl-5 flex-row">
@@ -101,31 +106,55 @@ const WebtopPage = () => {
 						<h4 className="pl-2">Tabs for<br/>good</h4>
 					</div>
 					<div className="user-controls flex-row">
-						<span className="pr-3 text-white font-weight-bold">{tabsOpened} tabs opened</span>
+						{Login.isLoggedIn() ? <span className="pr-3 text-white font-weight-bold">{tabsOpened} tabs opened</span> : null}
 						<AccountMenu small accountLink="/#account?tab=tabsForGood"/>
 					</div>
 				</div>
 			</div>
 			<div className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{top: 0, left: 0, width:"100vw", height:"100vh"}}>
 				<div className="container h-100 flex-column justify-content-center unset-margins">
-					<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
-						<h3 className="text-center">Together we've raised <Ticker amount={new Money("$1501886.40")} rate={0.1} preservePennies unitWidth="0.6em"/></h3>
-						<img src="/img/TabsForGood/sparkle.png" alt="sparkle" style={{width: 50}} className="pl-1"/>
-					</div>
-					<div className="w-100 pb-3">
-						<div className="tab-search-container mx-auto">
-							<Search onSubmit={doSearch} placeholder="Search with Ecosia"/>
-						</div>
-					</div>
-					<small className="text-center text-white font-weight-bold">You are supporting</small>
-					<Row className="justify-content-center">
-						{charities.map(c => <NewTabCharityCard key={c} cid={c} />)}
-					</Row>
+					{Login.isLoggedIn() ? <NormalTabCenter charities={charities}/> : <OnboardingTabCenter onboarding={onboarding}/>}
 				</div>
 			</div>
 			<NewTabFooter />
 		</BG>
+		<NewtabLoginWidget/>
 	</>);
+};
+
+const NormalTabCenter = ({charities}) => {
+	return <>
+		<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
+			<h3 className="text-center">Together we've raised <Ticker amount={new Money("$1501886.40")} rate={0.1} preservePennies unitWidth="0.6em"/></h3>
+			<img src="/img/TabsForGood/sparkle.png" alt="sparkle" style={{width: 50}} className="pl-1"/>
+		</div>
+		<div className="w-100 pb-3">
+			<div className="tab-search-container mx-auto">
+				<Search onSubmit={doSearch} placeholder="Search with Ecosia"/>
+			</div>
+		</div>
+		<small className="text-center text-white font-weight-bold">You are supporting</small>
+		<Row className="justify-content-center">
+			{charities.map(c => <NewTabCharityCard key={c} cid={c} />)}
+		</Row>
+	</>;
+};
+
+const OnboardingTabCenter = ({onboarding}) => {
+	return <>
+		<div className="w-100 pb-3">
+			<div className="tab-search-container mx-auto">
+				<Search onSubmit={doSearch} placeholder="Search with Ecosia"/>
+			</div>
+		</div>
+		<div className="text-center onboarding">
+			<h2>Together we've raised</h2>
+			<h1><Ticker amount={new Money("$1501886.40")} rate={0.1} preservePennies unitWidth="0.6em"/></h1>
+			<p>Every time you open a tab you raise money for good.<br/>You decide who gets it.</p>
+			{onboarding ? <a className="extension-btn">Add tabs for good to chrome</a>
+			: <a className="extension-btn">Sign up or Log in</a>}
+		</div>
+	</>;
 };
 
 const PAGES = {

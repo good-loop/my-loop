@@ -84,12 +84,14 @@
 }
 
 .onboarding {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100vh;
+    h1 {
+        font-size: 3.5rem;
+    }
+    h1,h2,p {
+        color: white;
+        font-weight: 500;
+        text-shadow: 3px 3px 6px #00000077;
+    }
 }
 
 #webtop {
@@ -104,5 +106,22 @@
             text-transform: uppercase;
             font-weight: 800;
         }
+    }
+}
+
+.extension-btn {
+    background: @gl-light-red;
+    box-shadow: 0px 3px 6px rgba(0,0,0,0.25);
+    padding: 0.75rem 1rem;
+    text-transform: uppercase;
+    color: white !important;
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+    text-decoration: none;
+    transition: 0.2s;
+
+    &:hover {
+        background: @gl-red;
+        box-shadow: 0px 3px 6px rgba(0,0,0,0.5);
     }
 }

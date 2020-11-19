@@ -72,9 +72,13 @@ class MyLoopNavBar extends React.Component {
 						<NavItem>
 							<NavLink href="/#charities">Charities</NavLink>
 						</NavItem>
-						<NavItem>
-							<NavLink href="/#involve">Get Involved</NavLink>
-						</NavItem>
+						<UncontrolledDropdown nav inNavbar> 
+							<DropdownToggle nav caret>Get involved</DropdownToggle>
+							<DropdownMenu>
+								<DropdownItem href="/#involve">Join the revolution</DropdownItem>
+								<DropdownItem href="/newtab.html">Tabs-for-good</DropdownItem>
+							</DropdownMenu>
+						</UncontrolledDropdown>
 						<NavItem>
 							<AccountMenu />
 						</NavItem>
@@ -110,9 +114,7 @@ const AccountMenu = ({logoutLink, small, accountLink, children}) => {
 			</DropdownToggle>
 			<DropdownMenu right>
 				<DropdownItem href={accountLink || "/#account"}>Account</DropdownItem>
-				{children ? <DropdownItem divider /> : null}
 				{children}
-				<DropdownItem divider />
 				<DropdownItem href={logoutLink} onClick={() => Login.logout()}>Log out</DropdownItem>
 			</DropdownMenu>
 		</UncontrolledDropdown>
