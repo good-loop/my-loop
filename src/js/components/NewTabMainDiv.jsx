@@ -15,7 +15,7 @@ import ServerIO, { normaliseSogiveId } from '../base/plumbing/ServerIOBase';
 import Money from '../base/data/Money';
 import {lg} from '../base/plumbing/log';
 import TabsForGoodSettings, { getTabsOpened, Search, getSelectedCharity } from './pages/TabsForGoodSettings';
-import { fetchAllCharities, fetchAllCharityIDs, fetchCharity } from './pages/MyCharitiesPage';
+import {fetchCharity } from './pages/MyCharitiesPage';
 
 // Templates
 import MessageBar from '../base/components/MessageBar';

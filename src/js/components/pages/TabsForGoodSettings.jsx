@@ -24,6 +24,7 @@ const TabsForGoodSettings = () => {
 };
 
 const CharityPicker = () => {
+	// Why is this useState??
 	const [charities, setCharities] = useState([]);
 
 	let charityLogos = [];
@@ -68,7 +69,7 @@ const CharityPicker = () => {
  * Show a selectable charity in the charity list
  * @param charity the charity to show
  * @param deselect show a deselect button instead of a select one
- * @param do3d activate the 3d mouse follow effect
+ * @param do3d activate the 3d mouse follow effect ??doc: why not always on?
  * @param do3dPadding override width of div that captures the mouse for tracking on 3d effects
  */
 const CharitySelectBox = ({charity, deselect, do3d, do3dPadding, className}) => {
@@ -145,7 +146,7 @@ const TabStats = () => {
 	);
 };
 
-// Search box
+/** Search box -- for what?? Charity search and Ecosia web search are probably best kept separate. */
 const Search = ({onSubmit, placeholder}) => {
 	return (<>
 		<Form onSubmit={onSubmit} inline className="flex-row tab-search-form px-2" >

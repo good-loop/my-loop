@@ -9,6 +9,9 @@ import { yessy } from '../../base/utils/miscutils';
 import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
 import { CharityLogo } from '../cards/CharityCard';
 
+/**
+ * TODO refactor - merge with the lower level handling of mapping Good-Loop data to SoGive IDs
+ */
 const dntnTrackerToSogiveID = charity => {
 	const id = {
 		"Art Fund": "national-art-collections-fund",
@@ -78,6 +81,7 @@ const MyCharitiesPage = () => {
 };
 
 /*
+	TODO use DataStore.fetch instead of window.fetch
  * Fetches list of all charities from the donation tracker CSV
  * Split from fetchAllCharities so that the CSV list can be cached while the sogive requests can update per render
  */
@@ -109,7 +113,7 @@ const fetchAllCharityIDs = () => {
 			});
 	});
 };
-
+/** TODO refactor. Split munging csv data out from fetching SoGive data. If something is doing a fetch, it should return a PromiseValue  */ 
 const fetchAllCharities = (csvData) => {
 	let charities = [];
 	// Get sogive data for charities 
@@ -119,7 +123,7 @@ const fetchAllCharities = (csvData) => {
 	}
 	return charities;
 };
-
+/** TODO This looks overly complex -- What's the scenario where vanilla ActionMan.getDataItem() doesn't work? */
 const fetchCharity = (id) => {
 
 	let pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:normaliseSogiveId(id), status:C.KStatus.PUBLISHED});
