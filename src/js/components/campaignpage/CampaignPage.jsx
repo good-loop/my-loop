@@ -20,7 +20,7 @@ import Money from '../../base/data/Money';
 import Advert from '../../base/data/Advert';
 import CampaignPageDC from '../../data/CampaignPage';
 import SearchQuery from '../../base/searchquery';
-import Charities from './Charities';
+import Charities, { CharityDetails } from './Charities';
 import { sortByDate } from '../../base/utils/SortFn';
 import Counter from '../../base/components/Counter';
 import printer from '../../base/utils/printer';
@@ -307,10 +307,14 @@ const CampaignPage = () => {
 					</Container>
 				</div>
 
-				{campaignPage.smallPrint ? (
-					<div className="small-print"><small>{campaignPage.smallPrint}</small></div>
-				) : null}
-			</div>
+			<CharityDetails charities={charities}/>
+			{campaignPage.smallPrint ?
+				<div className="small-print">
+					<small>
+						{campaignPage.smallPrint}
+					</small>
+				</div> : null}
+        
 		</div>
 	</>
 	);
