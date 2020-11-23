@@ -111,7 +111,7 @@ const PageSection = ({page, rows, useMobileSizing=false, className, children}) =
 	return (<div className={space("page-section", className)} id={"page-"+page}>
 		<Row>
 			{children.map((c,i) =>
-				<Col md={colSize} xs={isPortraitMobile() && useMobileSizing? colSize : null} style={i % rows !== 0 && offset ? {marginLeft:offsetVal+"%"} : {}}>
+				<Col key={i} md={colSize} xs={isPortraitMobile() && useMobileSizing? colSize : null} style={i % rows !== 0 && offset ? {marginLeft:offsetVal+"%"} : {}}>
 					{c}
 				</Col>)}
 		</Row>
