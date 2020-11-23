@@ -4,7 +4,7 @@ import { isPortraitMobile, space } from '../../base/utils/miscutils';
 import Roles from '../../base/Roles';
 import PropControl from '../../base/components/PropControl';
 import ConsentWidget from '../ConsentWidget';
-import { getConsents, getProfilesNow } from '../../base/Profiler';
+import { getAllXIds, getConsents, getProfilesNow } from '../../base/Profiler';
 import SignUpConnectCard from '../cards/SignUpConnectCard';
 import Login from 'you-again';
 
@@ -37,6 +37,11 @@ const ConsentSettings = ({xids}) => {
  * TODO collect and maintain data about the user - eg common demographics
  */
 const YourDataSettings = ({className}) => {
+	let xids = getAllXIds();
+	// Good-Loop profile
+	
+	// email?
+
 	const path = ['widget', 'YourDataWidget', 'details'];
 	return (<div className={space("your-data-form", className)}>
 		<h4>Your data:</h4>
