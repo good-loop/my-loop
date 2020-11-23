@@ -1,22 +1,23 @@
-.navbar {
-	background: transparent;
-	transition: 0.2s;
-
+.font-sizes {
 	@media (max-width: 1500px) {
         font-size: 0.85rem;
     }
     @media (max-width: 1400px) {
         font-size: 0.7rem;
     }
-    @media (max-width: 1142px) {
-        font-size: 0.6rem;
-    }
-    @media (max-width: 1034px) {
-        font-size: 0.5rem;
-    }
-    @media @lg-max {
-        font-size: 1rem;
-    }
+    @media @xl-max {
+        font-size: 1.5rem;
+	}
+	@media @md-max {
+		font-size: 1rem;
+	}
+}
+
+.navbar {
+	background: transparent;
+	transition: 0.2s;
+
+	.font-sizes();
 
 	// Style login widget accordingly
 	.login-link {
@@ -61,6 +62,16 @@
 	.navbar-toggler-icon {
 		// By default bootstrap uses the rule content:"", which for some reason erases the hamburger on safari
 		content: unset !important;
+	}
+
+	#navItemsDiv {
+		@media @xl-min {
+			flex-basis: 60%;
+		}
+	}
+
+	.account-menu .btn {
+		.font-sizes();
 	}
 
 	.dropdown-menu {
