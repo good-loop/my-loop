@@ -121,19 +121,26 @@ const fetchAllCharities = (csvData) => {
 };
 
 const fetchCharity = (id) => {
-	let pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: normaliseSogiveId(id), status: C.KStatus.PUBLISHED });
-	let charity = pvCharity.value;
-	if (charity) return charity;
-	if (id === "battersea-dogs-and-cats-home") console.warn("Could not find Battersea first round!");
-	// If using the ServerIO sogiveId table didnt work, try for special donation tracker cases
-	const mappedID = dntnTrackerToSogiveID(id);
-	if (mappedID) {
-		pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: mappedID, status: C.KStatus.PUBLISHED });
-		charity = pvCharity.value;
-		if (charity) return charity;
-		if (id === "battersea-dogs-and-cats-home") console.warn("Could not find Battersea second round!");
+
+	let pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:normaliseSogiveId(id), status:C.KStatus.PUBLISHED});
+	if ( ! pvCharity.value) {
+		const mappedId = dntnTrackerToSogiveID(id);
+		if (!mappedId) {
+			return null;
+		}
+		pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:mappedId, status:C.KStatus.PUBLISHED});
+		if ( ! pvCharity.value) {
+			return null;
+		}
+		if (pvCharity.error) {
+			return null; // offline maybe
+		}
 	}
-	return null;
+	if (pvCharity.error) {
+		return null; // offline maybe
+	}
+	let charity = pvCharity.value;
+	return charity;
 };
 
 export { fetchAllCharities, fetchAllCharityIDs, fetchCharity };

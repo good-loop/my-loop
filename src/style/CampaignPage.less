@@ -24,13 +24,6 @@ body {
 .CampaignPage {
 	background-color: #fff !important;
 
-	.navbar.scrolled {
-		.nav-link:not(.btn) {
-			color: black;
-			text-shadow: none;
-		}
-	}
-
 	.stub-divider {
 		padding: 2px;
 		width: 15%;
@@ -148,7 +141,7 @@ body {
 					font-size: 1.6rem;
 					color: @gl-orange;
 					font-weight: 700;
-					@media (max-width:1400px) {
+					@media @lg-max {
 						font-size: 1.4rem;
 					}
 					@media @md-max {

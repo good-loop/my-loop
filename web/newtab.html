@@ -36,13 +36,14 @@
 
 </head>
 
-<body style="overflow-y: hidden">
+<body style="overflow-y: hidden; background: none;">
 
 	<div id="mainDiv"></div>
 
 	<div id="tab-ads" class="position-absolute w-100 flex-row" style="bottom:0; height: 110px; padding: 10px">
-		<!-- Ads -->
-		<script src="https://ib.adnxs.com/ttj?id=20079232&size=728x90" type="text/javascript"></script>
+		<!-- ApNexus Ads -->
+		<!-- TODO: not working in iframe, using 2 media.net ads for now -->
+		<!--<script src="https://ib.adnxs.com/ttj?id=20079232&size=728x90" type="text/javascript"></script>-->
 		
 		<!-- media.net 728x90 -->
 		<div class='leaderboard' style='width:728px;height:90px;'>
@@ -51,6 +52,18 @@
 					try {
 						window._mNHandle.queue.push(function () {
 							window._mNDetails.loadTag("788598671", "728x90", "788598671");
+						});
+					}
+					catch (error) { }
+				</script>
+			</div>
+		</div>
+		<div class='leaderboard' style='width:728px;height:90px;'>
+			<div id="788598672">
+				<script type="text/javascript">
+					try {
+						window._mNHandle.queue.push(function () {
+							window._mNDetails.loadTag("788598672", "728x90", "788598671");
 						});
 					}
 					catch (error) { }

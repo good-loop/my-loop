@@ -14,11 +14,11 @@ import Profiler, { getProfile } from '../base/Profiler';
 import ServerIO, { normaliseSogiveId } from '../base/plumbing/ServerIOBase';
 import Money from '../base/data/Money';
 import {lg} from '../base/plumbing/log';
-import TabsForGoodSettings, { getTabsOpened, Search } from './pages/TabsForGoodSettings';
+import TabsForGoodSettings, { getTabsOpened, Search, getSelectedCharity } from './pages/TabsForGoodSettings';
+import { fetchAllCharities, fetchAllCharityIDs, fetchCharity } from './pages/MyCharitiesPage';
 
 // Templates
 import MessageBar from '../base/components/MessageBar';
-import LoginWidget, { setShowLogin, LoginLink, LogoutLink } from '../base/components/LoginWidget';
 import NavBar, { AccountMenu } from './MyLoopNavBar';
 import DynImg from '../base/components/DynImg';
 
@@ -43,7 +43,7 @@ import NewTabOnboardingPage from './NewTabOnboarding';
 import { CharityLogo } from './cards/CharityCard';
 import WhiteCircle from './campaignpage/WhiteCircle';
 import { nonce } from '../base/data/DataClass';
-import NewtabLoginWidget from './NewtabLoginWidget';
+import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLoginWidget';
 
 // DataStore
 C.setupDataStore();
@@ -53,18 +53,23 @@ C.setupDataStore();
 
 Login.app = C.app.service;
 
-let bg = randomPick([
-	{ src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1351&q=80' },
-	{ src: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1440&q=80' },
-	{ src: 'https://images.unsplash.com/photo-1588392382834-a891154bca4d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80' },
-	{ src: 'https://images.unsplash.com/photo-1582425312148-de9955e68e45?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2134&q=80' },
-	{ src: 'https://images.unsplash.com/photo-1592755137605-f53768fd7931?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80' },
-]);
+const inIframe = () => {
+	try {
+		return window.self !== window.top;
+	} catch (e) {
+		return true;
+	}
+};
 
 /**
  * NB: useEffect was triggering twice (perhaps cos of the login dance)
  */
 let logOnceFlag;
+
+/**
+ * Same for trying to verify user once ^^
+ */
+let verifiedLoginOnceFlag;
 
 /**
  * The main Tabs-for-Good page
@@ -76,9 +81,7 @@ const WebtopPage = () => {
 		window.location.href = "/newtab.html#onboarding";
 		return <div/>;
 	}*/
-
-	const fromMyLoop = window.document.referrer.includes("my.good-loop.com");
-	const onboarding = fromMyLoop && !Login.isLoggedIn();
+	const onboarding = !inIframe();
 
 	// Yeh - a tab is opened -- let's log that (once only)	
 	if ( ! logOnceFlag && Login.isLoggedIn()) {
@@ -87,16 +90,28 @@ const WebtopPage = () => {
 		logOnceFlag = true;
 	}
 
-	let charities = ['wwf'];
+	if (!verifiedLoginOnceFlag) {
+		// Popup login widget if not logged in
+		// Login fail conditions from youagain.js
+		Login.verify().then(res => {
+			if (!res || !res.success) setShowTabLogin(true);
+		}).catch(res => {
+			setShowTabLogin(true);
+		});
+		verifiedLoginOnceFlag = true;
+	}
+
+	let charityID = getSelectedCharity();
 
 	// iframe src change?
 	// https://stackoverflow.com/posts/17316521/revisions
 
-	let tabsOpened = getTabsOpened();
-	if (!tabsOpened || tabsOpened.error) tabsOpened = "-";
+
+	// Background images on tab plugin sourced locally
+	let bgImg = onboarding ? "/img/TabsForGood/Onboarding.png" : null;
 
 	return (<>
-		<BG src={bg.src} fullscreen opacity={0.9} bottom={onboarding ? 0 : 110}>
+		<BG src={bgImg} fullscreen opacity={0.9} bottom={onboarding ? 0 : 110}>
 			<div className="position-fixed p-3" style={{top: 0, left: 0, width:"100vw", zIndex:10}}>
 				<div className="d-flex justify-content-between">
 					<div className="logo pl-5 flex-row">
@@ -106,23 +121,30 @@ const WebtopPage = () => {
 						<h4 className="pl-2">Tabs for<br/>good</h4>
 					</div>
 					<div className="user-controls flex-row">
-						{Login.isLoggedIn() ? <span className="pr-3 text-white font-weight-bold">{tabsOpened} tabs opened</span> : null}
-						<AccountMenu small accountLink="/#account?tab=tabsForGood"/>
+						{Login.isLoggedIn() && !onboarding ? <TabsOpenedCounter/> : null}
+						<AccountMenu small accountLink="/#account?tab=tabsForGood" customLogin={
+							<NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>
+						}/>
 					</div>
 				</div>
 			</div>
 			<div className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{top: 0, left: 0, width:"100vw", height:"100vh"}}>
 				<div className="container h-100 flex-column justify-content-center unset-margins">
-					{Login.isLoggedIn() ? <NormalTabCenter charities={charities}/> : <OnboardingTabCenter onboarding={onboarding}/>}
+					{!onboarding ? <NormalTabCenter charityID={charityID}/> : <OnboardingTabCenter/>}
 				</div>
 			</div>
-			<NewTabFooter />
 		</BG>
 		<NewtabLoginWidget/>
 	</>);
 };
 
-const NormalTabCenter = ({charities}) => {
+const TabsOpenedCounter = () => {
+	let tabsOpened = getTabsOpened();
+	if (!tabsOpened || tabsOpened.error) tabsOpened = "-";
+	return <span className="pr-3 text-white font-weight-bold">{tabsOpened} tabs opened</span>;
+};
+
+const NormalTabCenter = ({charityID}) => {
 	return <>
 		<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
 			<h3 className="text-center">Together we've raised <Ticker amount={new Money("$1501886.40")} rate={0.1} preservePennies unitWidth="0.6em"/></h3>
@@ -134,13 +156,11 @@ const NormalTabCenter = ({charities}) => {
 			</div>
 		</div>
 		<small className="text-center text-white font-weight-bold">You are supporting</small>
-		<Row className="justify-content-center">
-			{charities.map(c => <NewTabCharityCard key={c} cid={c} />)}
-		</Row>
+		<NewTabCharityCard cid={charityID} />
 	</>;
 };
 
-const OnboardingTabCenter = ({onboarding}) => {
+const OnboardingTabCenter = () => {
 	return <>
 		<div className="w-100 pb-3">
 			<div className="tab-search-container mx-auto">
@@ -151,8 +171,7 @@ const OnboardingTabCenter = ({onboarding}) => {
 			<h2>Together we've raised</h2>
 			<h1><Ticker amount={new Money("$1501886.40")} rate={0.1} preservePennies unitWidth="0.6em"/></h1>
 			<p>Every time you open a tab you raise money for good.<br/>You decide who gets it.</p>
-			{onboarding ? <a className="extension-btn">Add tabs for good to chrome</a>
-			: <a className="extension-btn">Sign up or Log in</a>}
+			<a className="extension-btn">Add tabs for good to chrome</a>
 		</div>
 	</>;
 };
@@ -172,40 +191,22 @@ const NewTabFooter = () => (<Footer className="tab-footer">
 </Footer>);
 
 const NewTabCharityCard = ({cid}) => {
+	console.log("CHARITY TO SELECT", cid);
 	let user = Login.getUser();
 	let profile = user && user.xid? getProfile({xid:user.xid}) : null;
 	console.warn("profile", profile);
 
-	let pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:normaliseSogiveId(cid), status:C.KStatus.PUBLISHED});
-	if ( ! pvCharity.value) {
-		return null;
-	}
-	if (pvCharity.error) return null; // offline maybe
-	const charity = pvCharity.value;
-	// Prefer full descriptions here. If unavailable switch to summary desc.
-	let desc = charity.description || charity.summaryDescription || '';
-	// But do cut descriptions down to 1 paragraph.
-	let firstParagraph = (/^.+\n *\n/g).exec(desc);
-	if (firstParagraph) {
-		desc = firstParagraph[0];
-	}
-	desc = ellipsize(desc, 240);
+	const charity = cid ? fetchCharity(cid) : null;	
 
-	console.log("CHARITY: " + charity.id + " LOGO: " + charity.logo);
-
-	let img = charity.images;
-	let selected = false; // TODO user preferences
-
-	return (<Col sm={12} md={4} className="d-flex justify-content-center" >
-		<WhiteCircle className="m-3 tab-charity" circleCrop={charity.circleCrop}>
-			<CharityLogo charity={charity} link/>
-		</WhiteCircle>
-	</Col>);
-};
-
-
-const toggleCharitySelect = e => {
-	// TODO
+	return (<div className="d-flex justify-content-center" >
+		<a href={charity ? charity.url : "/#account?tab=tabsForGood"} target={charity ? "_blank" : null}>
+			<WhiteCircle className="m-3 tab-charity" circleCrop={charity ? charity.circleCrop : null}>
+				{charity ?
+					<CharityLogo charity={charity}/>
+					: <p className="color-gl-light-red font-weight-bold text-center my-auto">Select a charity</p>}
+			</WhiteCircle>
+		</a>
+	</div>);
 };
 
 /**
@@ -222,9 +223,6 @@ const doSearch = e => {
 	}
 	(window.parent || window.parent).location = 'https://www.ecosia.org/search?q=' + encURI(search);
 };
-
-// HACK!!!
-Roles.isDev = () => true;
 
 
 export { Search };

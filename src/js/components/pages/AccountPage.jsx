@@ -14,7 +14,7 @@ import { LoginLink } from '../../base/components/LoginWidget';
 import Footer from '../Footer';
 import {getAllXIds, getConsents, getEmail, getProfilesNow, hasConsent, PURPOSES} from '../../base/Profiler';
 import Misc from '../../base/components/Misc';
-import { space } from '../../base/utils/miscutils';
+import { space, isPortraitMobile } from '../../base/utils/miscutils';
 import PropControl from '../../base/components/PropControl';
 import SubscriptionBox from '../cards/SubscriptionBox';
 import ShareButton from '../ShareButton';

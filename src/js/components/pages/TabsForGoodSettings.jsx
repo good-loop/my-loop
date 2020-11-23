@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Login from 'you-again';
 import { Col, Row, Form } from 'reactstrap';
-import { space, yessy } from '../../base/utils/miscutils';
+import { isPortraitMobile, space, yessy } from '../../base/utils/miscutils';
 import DataStore from '../../base/plumbing/DataStore';
 import ServerIO from '../../plumbing/ServerIO';
+import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
 import { fetchAllCharities, fetchAllCharityIDs, fetchCharity } from './MyCharitiesPage';
 import { CharityLogo } from '../cards/CharityCard';
 import PropControl from '../../base/components/PropControl';
@@ -16,7 +17,7 @@ const TabsForGoodSettings = () => {
 		<TabStats/>
 		<div className="py-3"/>
 		<h1>Pick your charity</h1>
-		<p className="w-50">Select a charity and we will send them all the money that your Tabs for Good are generating. You can change your selection at any time.</p>
+		<p className={isPortraitMobile() ? "" : "w-50"}>Select a charity and we will send them all the money that your Tabs for Good are generating. You can change your selection at any time.</p>
 		<br/><br/>
 		<CharityPicker/>
 	</>;
@@ -41,27 +42,22 @@ const CharityPicker = () => {
 		}
 	}
 
-	const selectedCharity = {
-		id: "battersea-dogs-and-cats-home",
-		logo: "https://www.battersea.org.uk/sites/all/themes/battersea_theme/images/logo.png",
-		url: "https://www.battersea.org.uk/"
-	};//fetchCharity(getSelectedCharity());
+	const selId = getSelectedCharity();
+	const selectedCharity = selId ? fetchCharity(selId) : null;
 
 	return <div className="tabs-for-good-settings">
 		<p>Your selected charity:</p>
-		{selectedCharity ?
-			<div className="col-md-3">
-				<CharitySelectBox charity={selectedCharity} deselect do3d/>
-			</div>
-			: <b>Pick a charity!</b>}
+		<div className="col-md-3">
+			<CharitySelectBox charity={selectedCharity} deselect do3d={!isPortraitMobile()}/>
+		</div>
 		<div className="py-5"/> {/* spacer */}
-		<div className="flex-row justify-content-between unset-margins mb-3">
-			<p>Can't see your favourite charity? Search for it:</p>
+		<div className="d-md-flex flex-md-row justify-content-between unset-margins mb-3">
+			<p>Can't see your favourite charity?&nbsp;<br className="d-md-none"/>Search for it:</p>
 			<Search onSubmit={e => e.preventDefault()} placeholder="Find your charity"/>
 		</div>
 		<Paginator rows={4} cols={5} rowsMD={2} colsMD={5} pageButtonRangeMD={1} displayCounter displayLoad>
-			{charityLogos.map(c => <div className="p-3 d-flex justify-content-center align-items-center">
-				<CharitySelectBox charity={c} do3d do3dPadding={25}/>
+			{charityLogos.map(c => <div className="p-md-3 d-flex justify-content-center align-items-center">
+				<CharitySelectBox charity={c} do3d={!isPortraitMobile()} do3dPadding={25} className="pt-3 pt-md-0"/>
 			</div>)}
 		</Paginator>
 	</div>;
@@ -75,7 +71,7 @@ const CharityPicker = () => {
  * @param do3d activate the 3d mouse follow effect
  * @param do3dPadding override width of div that captures the mouse for tracking on 3d effects
  */
-const CharitySelectBox = ({charity, deselect, do3d, do3dPadding}) => {
+const CharitySelectBox = ({charity, deselect, do3d, do3dPadding, className}) => {
 
 	const container3d = useRef(null);
 	const [axis, setAxis] = useState({x: 0, y: 0});
@@ -109,19 +105,21 @@ const CharitySelectBox = ({charity, deselect, do3d, do3dPadding}) => {
 
 	const padAmount = do3dPadding || 150;
 
-	return <div className={do3d ? "container-3d" : ""} ref={container3d}
+	return <div className={space(do3d ? "container-3d" : "", className)} ref={container3d}
 		style={do3d ? {paddingLeft:padAmount, paddingRight:padAmount, marginLeft:-padAmount, marginRight:-padAmount} : null}
 		onMouseMove={do3d ? on3dMouseMove : null}
 		onMouseEnter={do3d ? on3dMouseEnter : null}
 		onMouseLeave={do3d ? on3dMouseLeave : null}
 	>
 		<div style={style} 
-			className={space("charity-select-box flex-column justify-content-center align-items-center unset-margins p-3 position-relative", do3d ? "do3d" : "")}
+			className={space("charity-select-box flex-column justify-content-center align-items-center unset-margins p-md-3 position-relative w-100", do3d ? "do3d" : "")}
 		>
-			<CharityLogo charity={charity} key={charity.id} style={{width: "100%", transform: `translateZ(${elementHeight}px)`}} className="p-2 mb-5 mt-5 w-75"/>
-			{deselect ? <a className="btn btn-primary thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}}>Deselect</a>
-				: <a className="btn btn-transparent fill thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}}>Select</a>}
-			<a className="position-absolute" style={{top: 10, right: 10}} href={charity.url} target="_blank" rel="noreferrer">About</a>
+			{charity ? <>
+				<CharityLogo style={{maxWidth:"100%"}} charity={charity} key={charity.id} style={{width: "100%", transform: `translateZ(${elementHeight}px)`}} className="p-2 mb-5 mt-5 w-75"/>
+				{deselect ? <a className="btn btn-primary thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} onClick={() => deselectCharity(charity)}>Deselect</a>
+					: <a className="btn btn-transparent fill thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} onClick={() => selectCharity(charity)}>Select</a>}
+				<a className="position-absolute" style={{top: 10, right: 10}} href={charity.url} target="_blank" rel="noreferrer">About</a>
+			</> : <p style={{transform: `translateZ(${elementHeight}px)`}} className="color-gl-light-red">Select a charity</p>}
 		</div>
 	</div>;
 };
@@ -162,6 +160,7 @@ const Search = ({onSubmit, placeholder}) => {
  * Returns the pvValue itself on error - an error can be tested for by checking if (val.error)
  */
 const getTabsOpened = () => {
+	if (!Login.isLoggedIn()) return null;
 	// Get tabs opened stat from profiler
 	let pvValue = DataStore.fetch(['misc','stats','tabopens'], () => {
 		const trkreq = {
@@ -189,7 +188,15 @@ const getDaysWithGoodLoop = () => {
 
 const getSelectedCharity = () => {
 	// TODO fill in backend!!
-	return "battersea-dogs-and-cats-home";
+	return null;//"battersea-dogs-and-cats-home";
+};
+
+const selectCharity = (charity) => {
+	// TODO fill in backend!!
+};
+
+const deselectCharity = (charity) => {
+	// TODO fill in backend!!
 };
 
 const StatCard = ({md, lg, xs, number, label, className, padding, children}) => {
@@ -202,5 +209,5 @@ const StatCard = ({md, lg, xs, number, label, className, padding, children}) => 
 	</Col>;
 };
 
-export { getTabsOpened, Search };
+export { getTabsOpened, Search, getSelectedCharity };
 export default TabsForGoodSettings;

@@ -1,18 +1,19 @@
 import React from 'react';
 import { Row, Col } from 'reactstrap';
-import { space } from '../../base/utils/miscutils';
+import { isPortraitMobile, space } from '../../base/utils/miscutils';
 import Roles from '../../base/Roles';
 import PropControl from '../../base/components/PropControl';
 import ConsentWidget from '../ConsentWidget';
 import { getConsents, getProfilesNow } from '../../base/Profiler';
 import SignUpConnectCard from '../cards/SignUpConnectCard';
+import Login from 'you-again';
 
 const AccountSettings = ({xids}) => {
 	return <div className="settings">
 		<h2 className="text-center mb-5">Your settings</h2>
 		<ConsentSettings xids={xids}/>
 		<SignUpConnectCard className="mb-5" allIds={xids}/>
-		<YourDataSettings className="w-50"/>
+		<YourDataSettings className={isPortraitMobile() ? "" : "w-50"}/>
 		{/* Spacer for mobile */}
 		<div className="pb-3 pb-md-0"/>
 		<small>We will never share your data without your consent unless there is a legal obligation.<br/>See our <a href='https://doc.good-loop.com/policy/privacy-policy.html' rel='noopener noreferrer' target='_blank'>privacy policy</a> for more information.</small>
@@ -41,7 +42,7 @@ const YourDataSettings = ({className}) => {
 		<h4>Your data:</h4>
 		<Row className="align-items-center user-setting">
 			<Col md={4}>Name:</Col>
-			<Col md={6} xs={6}>
+			<Col md={6}>
 				<PropControl 
 					path={path} 
 					prop="name"
@@ -52,9 +53,9 @@ const YourDataSettings = ({className}) => {
 			</Col>
 			<Col md={2}><a href="TODO">Change</a></Col>
 		</Row>
-		<Row className="align-items-center user-setting">
+		<Row className="align-items-center user-setting mt-4 mt-md-0">
 			<Col md={4}>Email:</Col>
-			<Col md={6} xs={6}>
+			<Col md={6}>
 				<PropControl 
 					path={path} 
 					prop="email"

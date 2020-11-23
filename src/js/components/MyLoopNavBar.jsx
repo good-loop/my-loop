@@ -4,7 +4,7 @@ import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, Un
 import { LoginLink } from '../base/components/LoginWidget';
 // import NavBar from '../base/components/NavBar';
 import C from '../C';
-import { space } from '../base/utils/miscutils';
+import { space, isPortraitMobile } from '../base/utils/miscutils';
 
 /**
  * Why do we need our own jsx??
@@ -39,7 +39,14 @@ class MyLoopNavBar extends React.Component {
 	}
 
 	toggle () {
-		this.setState({open: !this.state.open});
+		let scrolled = true;
+		// If we're about to open, force the "scrolled" style
+		if (!this.state.open) {
+			scrolled = true;
+		} else {
+			scrolled = window.scrollY > 50;
+		}
+		this.setState({open: !this.state.open, scrolled: scrolled});
 	}
 
 	render () {
@@ -53,7 +60,7 @@ class MyLoopNavBar extends React.Component {
 		return (
 			<Navbar className={this.state.scrolled ? "scrolled" : ""}
 				style={style}
-				sticky='top' expand='lg'>
+				sticky='top' expand='xl'>
 				<NavbarBrand href="/#my" className="mr-auto">
 					<img src={this.state.scrolled && logoScrollSrc ? logoScrollSrc : logoSrc} alt='logo' className='logo-small' />
 				</NavbarBrand>
@@ -61,7 +68,7 @@ class MyLoopNavBar extends React.Component {
 				<NavbarToggler onClick={this.toggle}>
 					<img src="/img/Icon_Hamburger.200w.png" className="navbar-toggler-icon"/>
 				</NavbarToggler>
-				<Collapse isOpen={this.state.open} navbar className="gl-bootstrap-navbar" id="navItemsDiv" style={{flexGrow:0, flexBasis:"60%"}}>
+				<Collapse isOpen={this.state.open} navbar className="gl-bootstrap-navbar" id="navItemsDiv" style={{flexGrow:0}}>
 					<Nav navbar className="navbar-nav w-100 justify-content-between">
 						<NavItem>
 							<NavLink href="/#howitworks">How it works</NavLink>
@@ -72,13 +79,18 @@ class MyLoopNavBar extends React.Component {
 						<NavItem>
 							<NavLink href="/#charities">Charities</NavLink>
 						</NavItem>
-						<UncontrolledDropdown nav inNavbar> 
-							<DropdownToggle nav caret>Get involved</DropdownToggle>
-							<DropdownMenu>
-								<DropdownItem href="/#involve">Join the revolution</DropdownItem>
-								<DropdownItem href="/newtab.html">Tabs-for-good</DropdownItem>
-							</DropdownMenu>
-						</UncontrolledDropdown>
+						{isPortraitMobile() ?
+							<NavItem>
+								<NavLink href="/#involve">Get involved</NavLink>
+							</NavItem>
+							:
+							<UncontrolledDropdown nav inNavbar> 
+								<DropdownToggle nav caret>Get involved</DropdownToggle>
+								<DropdownMenu>
+									<DropdownItem href="/#involve">Join the revolution</DropdownItem>
+									<DropdownItem href="/newtab.html">Tabs-for-good</DropdownItem>
+								</DropdownMenu>
+							</UncontrolledDropdown>}
 						<NavItem>
 							<AccountMenu />
 						</NavItem>
@@ -96,10 +108,10 @@ class MyLoopNavBar extends React.Component {
  * @param accountLink custom link for account page
  * @param children enter extra DropdownItem components to add more entries to the menu here
  */
-const AccountMenu = ({logoutLink, small, accountLink, children}) => {
+const AccountMenu = ({logoutLink, small, accountLink, customLogin, children}) => {
 	if (!Login.isLoggedIn()) { 
 		return (
-			<LoginLink verb="register" className="login-menu btn btn-transparent fill">Register / Log in</LoginLink>
+			customLogin || <LoginLink verb="register" className="login-menu btn btn-transparent fill">Register / Log in</LoginLink>
 		); 
 	}
 

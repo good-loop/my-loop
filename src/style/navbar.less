@@ -70,11 +70,16 @@
 	.dropdown-toggle::after {
 		display: none;
 	}
+
+	#navItemsDiv {
+		@media @xl-min {
+			flex-basis: 60%;
+		}
+	}
 }
 
 .account-menu {
 	.btn.btn-transparent {
-		.font-sizes();
 		&:hover, &:active, &:focus {
 			background: white !important;
 		}
