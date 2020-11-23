@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { Container } from 'reactstrap';
 // import PV from 'promise-value';
+
+// TODO I think a solution where we set the scroll would be cleaner. ^Dan
 import { useSpring } from 'react-spring';
 
 import DataStore from '../../base/plumbing/DataStore';
@@ -15,8 +17,8 @@ window.DEBUG = false;
 const MyPage = ({spring}) => {
 	//spring the page down if asked to for how it works section
 	const [, setY] = useSpring(() => ({ y: 0 }));
-
 	if (spring) springPageDown(setY);
+	// TODO I think a solution where we set the scroll would be cleaner. ^Dan
 
 	// If we're currently in as.good-loop.com, and we have a glvert param defined, we shpuld redirect to campaign page
 	useEffect(() => {

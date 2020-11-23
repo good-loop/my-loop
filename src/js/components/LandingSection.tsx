@@ -4,7 +4,6 @@
 import React, { useState } from 'react';
 
 import MyLoopNavBar from './MyLoopNavBar';
-import BackgroundFader from './BackgroundFader';
 import DataStore from '../base/plumbing/DataStore';
 import AB from './AB';
 import CSS from '../base/components/CSS';
@@ -30,11 +29,11 @@ const LandingSection = ({setY}: {setY: Function}): JSX.Element => {
 		absolute={!isPortraitMobile()}
 		className="btn-transparent fill"
 		style={isPortraitMobile() ? null : {bottom: 30, left: 30}}
-		title={"My-Loop"}
-		image={"https://my.good-loop.com/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png"}
-		description={"Using ads for good"}
+		title="My-Loop"
+		image="https://my.good-loop.com/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png"
+		description="Using ads for good"
 		url={window.location.href}>
-			Share
+		Share
 	</ShareButton>;
 
 	return (
@@ -68,9 +67,9 @@ const LandingBackground = () => {
 		{isPortraitMobile() ?
 			<img src={"/img/LandingBackground/back-" + selImg + ".png"} className="mobile-img"/>
 			:<>
-				<div className="hover-expand-image">
+				{/* <div className="hover-expand-image">
 					<img src="/img/LandingBackground/back-1.png"/>
-				</div>
+				</div> */}
 				<div className="hover-expand-image">
 					<img src="/img/LandingBackground/back-2.png"/>
 				</div>
