@@ -39,7 +39,7 @@ const ConsentSettings = ({xids}) => {
 const YourDataSettings = ({className}) => {
 	let xids = getAllXIds();
 	// Good-Loop profile
-	
+
 	// email?
 
 	const path = ['widget', 'YourDataWidget', 'details'];
@@ -56,7 +56,6 @@ const YourDataSettings = ({className}) => {
 					placeholder="James Bond"
 				/>
 			</Col>
-			<Col md={2}><a href="TODO">Change</a></Col>
 		</Row>
 		<Row className="align-items-center user-setting mt-4 mt-md-0">
 			<Col md={4}>Email:</Col>
@@ -69,7 +68,6 @@ const YourDataSettings = ({className}) => {
 					placeholder="jamesbond@mi7.com"
 				/>
 			</Col>
-			<Col md={2}><a href="TODO">Change</a></Col>
 		</Row>
 		<div className="normal">
 			If you want to change your password, please go through password reset.

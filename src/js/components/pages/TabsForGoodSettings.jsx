@@ -27,8 +27,12 @@ const CharityPicker = () => {
 	// Why is this useState??
 	const [charities, setCharities] = useState([]);
 
+	// TODO allow picking a charity without a logo	
 	let charityLogos = [];
 
+	// TODO less charities -- just show a shortlist of dunno, the top 10 UK charities?
+	// Because paging through is not fun.
+	// TODO search should search SoGive, to give a wide range of options
 	// Parse CSV from donations tracker into json
 	if (!yessy(charities)) {
 		fetchAllCharityIDs().then(chars => setCharities(chars)).catch(status => console.error("Failed to get donation tracker CSV! Status: " + status));
@@ -57,8 +61,8 @@ const CharityPicker = () => {
 			<Search onSubmit={e => e.preventDefault()} placeholder="Find your charity"/>
 		</div>
 		<Paginator rows={4} cols={5} rowsMD={2} colsMD={5} pageButtonRangeMD={1} displayCounter displayLoad>
-			{charityLogos.map(c => <div className="p-md-3 d-flex justify-content-center align-items-center">
-				<CharitySelectBox charity={c} do3d={!isPortraitMobile()} do3dPadding={25} className="pt-3 pt-md-0"/>
+			{charityLogos.map(c => <div key={c.id} className="p-md-3 d-flex justify-content-center align-items-center">
+				<CharitySelectBox charity={c} do3d={!isPortraitMobile()} padAmount3D={25} className="pt-3 pt-md-0"/>
 			</div>)}
 		</Paginator>
 	</div>;
@@ -70,10 +74,10 @@ const CharityPicker = () => {
  * @param charity the charity to show
  * @param deselect show a deselect button instead of a select one
  * @param do3d activate the 3d mouse follow effect ??doc: why not always on?
- * @param do3dPadding override width of div that captures the mouse for tracking on 3d effects
+ * @param padAmount3D override width of div that captures the mouse for tracking on 3d effects. ??0Why would this vary?
  */
-const CharitySelectBox = ({charity, deselect, do3d, do3dPadding, className}) => {
-
+const CharitySelectBox = ({charity, deselect, do3d, padAmount3D=150, className}) => {
+	// ref & state are used for the 3D card effect
 	const container3d = useRef(null);
 	const [axis, setAxis] = useState({x: 0, y: 0});
 	const [transition, setTransition] = useState('none');
@@ -104,10 +108,8 @@ const CharitySelectBox = ({charity, deselect, do3d, do3dPadding, className}) => 
 	let style = do3d ? {transform:`rotateY(${-axis.x}deg) rotateX(${axis.y}deg)`, transition:transition} : {};
 	style.height = 280;
 
-	const padAmount = do3dPadding || 150;
-
-	return <div className={space(do3d ? "container-3d" : "", className)} ref={container3d}
-		style={do3d ? {paddingLeft:padAmount, paddingRight:padAmount, marginLeft:-padAmount, marginRight:-padAmount} : null}
+	return <div className={space(do3d && "container-3d", className)} ref={container3d}
+		style={do3d ? {paddingLeft:padAmount3D, paddingRight:padAmount3D, marginLeft:-padAmount3D, marginRight:-padAmount3D} : null}
 		onMouseMove={do3d ? on3dMouseMove : null}
 		onMouseEnter={do3d ? on3dMouseEnter : null}
 		onMouseLeave={do3d ? on3dMouseLeave : null}
@@ -116,7 +118,7 @@ const CharitySelectBox = ({charity, deselect, do3d, do3dPadding, className}) => 
 			className={space("charity-select-box flex-column justify-content-center align-items-center unset-margins p-md-3 position-relative w-100", do3d ? "do3d" : "")}
 		>
 			{charity ? <>
-				<CharityLogo style={{maxWidth:"100%"}} charity={charity} key={charity.id} style={{width: "100%", transform: `translateZ(${elementHeight}px)`}} className="p-2 mb-5 mt-5 w-75"/>
+				<CharityLogo style={{maxWidth:"100%", width: "100%", transform: `translateZ(${elementHeight}px)`}} charity={charity} key={charity.id} className="p-2 mb-5 mt-5 w-75"/>
 				{deselect ? <a className="btn btn-primary thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} onClick={() => deselectCharity(charity)}>Deselect</a>
 					: <a className="btn btn-transparent fill thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} onClick={() => selectCharity(charity)}>Select</a>}
 				<a className="position-absolute" style={{top: 10, right: 10}} href={charity.url} target="_blank" rel="noreferrer">About</a>
