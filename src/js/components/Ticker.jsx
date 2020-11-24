@@ -36,7 +36,7 @@ const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty
 		return null;
 	}
 	
-	const timeDiff = Date.now() - startTime.getTime();
+	const timeDiff = startTime ? Date.now() - startTime.getTime() : 0;
 	const valDiff = (timeDiff / tickTime) * rate;
 
 	const [dispVal, setValue] = useState(value);
