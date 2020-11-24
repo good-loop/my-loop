@@ -55,7 +55,7 @@ const CharityPicker = () => {
 		{selectedCharity && 
 			<><p>Your selected charity:</p>
 				<div className="col-md-3">
-					<CharitySelectBox charity={selectedCharity} deselect />
+					<CharitySelectBox charity={selectedCharity} selected />
 				</div>
 			</>}
 		<div className="py-5"/> {/* spacer */}
@@ -75,11 +75,11 @@ const CharityPicker = () => {
 /**
  * Show a selectable charity in the charity list
  * @param charity the charity to show
- * @param deselect show a deselect button instead of a select one
+ * @param {boolean} selected 
  * @param do3d activate the 3d mouse follow effect ??doc: why not always on?
  * @param padAmount3D override width of div that captures the mouse for tracking on 3d effects. ??0Why would this vary?
  */
-const CharitySelectBox = ({charity, deselect, padAmount3D=150, className}) => {
+const CharitySelectBox = ({charity, selected, padAmount3D=150, className}) => {
 	let do3d = ! isPortraitMobile();		
 	// ref & state are used for the 3D card effect
 	const container3d = useRef(null);
@@ -112,6 +112,8 @@ const CharitySelectBox = ({charity, deselect, padAmount3D=150, className}) => {
 	let style = do3d ? {transform:`rotateY(${-axis.x}deg) rotateX(${axis.y}deg)`, transition:transition} : {};
 	style.height = 280;
 
+	// NB: to deselect, pick a different charity (I think that's intuitive enough)
+
 	return <div className={space(do3d && "container-3d", className)} ref={container3d}
 		style={do3d ? {paddingLeft:padAmount3D, paddingRight:padAmount3D, marginLeft:-padAmount3D, marginRight:-padAmount3D} : null}
 		onMouseMove={do3d ? on3dMouseMove : null}
@@ -123,8 +125,8 @@ const CharitySelectBox = ({charity, deselect, padAmount3D=150, className}) => {
 		>
 			{charity ? <>
 				<CharityLogo style={{maxWidth:"100%", width: "100%", transform: `translateZ(${elementHeight}px)`}} charity={charity} key={charity.id} className="p-2 mb-5 mt-5 w-75"/>
-				{deselect ? <a className="btn btn-primary thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} onClick={() => deselectCharity(charity)}>Deselect</a>
-					: <a className="btn btn-transparent fill thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} onClick={() => setSelectedCharityId(charity)}>Select</a>}
+				{selected ? <span className="text-success thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} >🗹 Selected</span>
+					: <a className="btn btn-transparent fill thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} onClick={() => setSelectedCharityId(charity.id)}>Select</a>}
 				<a className="position-absolute" style={{top: 10, right: 10}} href={charity.url} target="_blank" rel="noreferrer">About</a>
 			</> : <p style={{transform: `translateZ(${elementHeight}px)`}} className="color-gl-light-red">Select a charity</p>}
 		</div>
@@ -196,10 +198,6 @@ const setSelectedCharityId = (cid) => {
 	let xids = getAllXIds();
 	let persons = getProfilesNow(xids);
 	setClaimValue({persons, key:"charity", value:cid});
-};
-
-const deselectCharity = (charity) => {
-	// TODO fill in backend!!
 };
 
 const StatCard = ({md, lg, xs, number, label, className, padding, children}) => {
