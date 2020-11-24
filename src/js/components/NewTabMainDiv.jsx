@@ -3,18 +3,17 @@ import React, { Component, useState, useRef, useEffect } from 'react';
 import Login from 'you-again';
 import { assert } from 'sjtest';
 import { modifyHash, randomPick, encURI, space, stopEvent, ellipsize } from '../base/utils/miscutils';
-import { Card, Form, Button, CardTitle, Row, Col, Badge, CardBody, CardFooter, DropdownItem } from 'reactstrap';
+import { Card, Form, Button, CardTitle, Row, Col, Badge, CardBody, CardFooter, DropdownItem, Alert } from 'reactstrap';
 
 // Plumbing
 import DataStore from '../base/plumbing/DataStore';
 import Roles from '../base/Roles';
 import C from '../C';
 import Crud from '../base/plumbing/Crud'; // Crud is loaded here to init (but not used here)
-import Profiler, { getProfile } from '../base/Profiler';
 import ServerIO, { normaliseSogiveId } from '../base/plumbing/ServerIOBase';
 import Money from '../base/data/Money';
 import {lg} from '../base/plumbing/log';
-import TabsForGoodSettings, { getTabsOpened, Search, getSelectedCharity } from './pages/TabsForGoodSettings';
+import TabsForGoodSettings, { getTabsOpened, Search, getSelectedCharityId } from './pages/TabsForGoodSettings';
 import {fetchCharity } from './pages/MyCharitiesPage';
 
 // Templates
@@ -101,7 +100,7 @@ const WebtopPage = () => {
 		verifiedLoginOnceFlag = true;
 	}
 
-	let charityID = getSelectedCharity();
+	let charityID = getSelectedCharityId();
 
 	// iframe src change?
 	// https://stackoverflow.com/posts/17316521/revisions
@@ -139,14 +138,14 @@ const WebtopPage = () => {
 };
 
 const TabsOpenedCounter = () => {
-	let tabsOpened = getTabsOpened();
-	if (!tabsOpened || tabsOpened.error) tabsOpened = "-";
-	return <span className="pr-3 text-white font-weight-bold">{tabsOpened} tabs opened</span>;
+	let pvTabsOpened = getTabsOpened();
+	return <span className="pr-3 text-white font-weight-bold">{pvTabsOpened.value || '-'} tabs opened</span>;
 };
 
 const NormalTabCenter = ({charityID}) => {
 	return <>
 		<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
+			<Alert>FIXME this ticker resets each time you load the page</Alert>
 			<h3 className="text-center">Together we've raised <Ticker amount={new Money("$1501886.40")} rate={0.1} preservePennies unitWidth="0.6em"/></h3>
 			<img src="/img/TabsForGood/sparkle.png" alt="sparkle" style={{width: 50}} className="pl-1"/>
 		</div>

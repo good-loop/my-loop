@@ -4,15 +4,12 @@ import { Col, Row, Form } from 'reactstrap';
 
 import DataStore from '../../base/plumbing/DataStore';
 
-import DigitalMirrorCard from '../cards/DigitalMirrorCard';
-import ConsentWidget from '../ConsentWidget';
 import NewTabOptions from '../NewTabOptions';
-import SignUpConnectCard from '../cards/SignUpConnectCard';
 import LinkedProfilesCard from '../cards/LinkedProfilesCard';
 import MyLoopNavBar from '../MyLoopNavBar';
 import { LoginLink } from '../../base/components/LoginWidget';
 import Footer from '../Footer';
-import {getAllXIds, getConsents, getEmail, getProfilesNow, hasConsent, PURPOSES} from '../../base/Profiler';
+import {getAllXIds, getConsents, getEmail, getProfilesNow, hasConsent, PURPOSES} from '../../base/data/Person';
 import Misc from '../../base/components/Misc';
 import { space, isPortraitMobile } from '../../base/utils/miscutils';
 import PropControl from '../../base/components/PropControl';
@@ -21,6 +18,7 @@ import ShareButton from '../ShareButton';
 import { addImageCredit } from '../../base/components/AboutPage';
 import TabsForGoodSettings from './TabsForGoodSettings';
 import AccountSettings from './AccountSettings';
+import { lg } from '../../base/plumbing/log';
 
 const Account = () => {
 	let xids = getAllXIds();
@@ -131,9 +129,10 @@ export const MoreToDo = ({xids}) => {
 					title="My-Loop"
 					image="/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png"
 					description="Using ads for good"
-					url="https://my.good-loop.com"
-					onShare={() => {
-						console.error("TODO onShare");
+					url="https://my.good-loop.com" // TODO add via=user so we can track and attribute visits
+					onShare={e => {
+						console.error("TODO log onShare - which channel",e);
+						lg("shareclick", {user:Login.getId()});
 					}}
 				>
 					Share

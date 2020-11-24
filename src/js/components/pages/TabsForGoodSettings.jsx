@@ -9,6 +9,7 @@ import { fetchAllCharities, fetchAllCharityIDs, fetchCharity } from './MyChariti
 import { CharityLogo } from '../cards/CharityCard';
 import PropControl from '../../base/components/PropControl';
 import Paginator from '../Paginator';
+import { getAllXIds, getClaimValue, getProfilesNow, setClaimValue } from '../../base/data/Person';
 
 
 const TabsForGoodSettings = () => {
@@ -47,14 +48,16 @@ const CharityPicker = () => {
 		}
 	}
 
-	const selId = getSelectedCharity();
+	const selId = getSelectedCharityId();
 	const selectedCharity = selId ? fetchCharity(selId) : null;
 
 	return <div className="tabs-for-good-settings">
-		<p>Your selected charity:</p>
-		<div className="col-md-3">
-			<CharitySelectBox charity={selectedCharity} deselect do3d={!isPortraitMobile()}/>
-		</div>
+		{selectedCharity && 
+			<><p>Your selected charity:</p>
+				<div className="col-md-3">
+					<CharitySelectBox charity={selectedCharity} selected />
+				</div>
+			</>}
 		<div className="py-5"/> {/* spacer */}
 		<div className="d-md-flex flex-md-row justify-content-between unset-margins mb-3">
 			<p>Can't see your favourite charity?&nbsp;<br className="d-md-none"/>Search for it:</p>
@@ -62,7 +65,7 @@ const CharityPicker = () => {
 		</div>
 		<Paginator rows={4} cols={5} rowsMD={2} colsMD={5} pageButtonRangeMD={1} displayCounter displayLoad>
 			{charityLogos.map(c => <div key={c.id} className="p-md-3 d-flex justify-content-center align-items-center">
-				<CharitySelectBox charity={c} do3d={!isPortraitMobile()} padAmount3D={25} className="pt-3 pt-md-0"/>
+				<CharitySelectBox charity={c} padAmount3D={25} className="pt-3 pt-md-0"/>
 			</div>)}
 		</Paginator>
 	</div>;
@@ -72,11 +75,12 @@ const CharityPicker = () => {
 /**
  * Show a selectable charity in the charity list
  * @param charity the charity to show
- * @param deselect show a deselect button instead of a select one
+ * @param {boolean} selected 
  * @param do3d activate the 3d mouse follow effect ??doc: why not always on?
  * @param padAmount3D override width of div that captures the mouse for tracking on 3d effects. ??0Why would this vary?
  */
-const CharitySelectBox = ({charity, deselect, do3d, padAmount3D=150, className}) => {
+const CharitySelectBox = ({charity, selected, padAmount3D=150, className}) => {
+	let do3d = ! isPortraitMobile();		
 	// ref & state are used for the 3D card effect
 	const container3d = useRef(null);
 	const [axis, setAxis] = useState({x: 0, y: 0});
@@ -108,6 +112,8 @@ const CharitySelectBox = ({charity, deselect, do3d, padAmount3D=150, className})
 	let style = do3d ? {transform:`rotateY(${-axis.x}deg) rotateX(${axis.y}deg)`, transition:transition} : {};
 	style.height = 280;
 
+	// NB: to deselect, pick a different charity (I think that's intuitive enough)
+
 	return <div className={space(do3d && "container-3d", className)} ref={container3d}
 		style={do3d ? {paddingLeft:padAmount3D, paddingRight:padAmount3D, marginLeft:-padAmount3D, marginRight:-padAmount3D} : null}
 		onMouseMove={do3d ? on3dMouseMove : null}
@@ -119,8 +125,8 @@ const CharitySelectBox = ({charity, deselect, do3d, padAmount3D=150, className})
 		>
 			{charity ? <>
 				<CharityLogo style={{maxWidth:"100%", width: "100%", transform: `translateZ(${elementHeight}px)`}} charity={charity} key={charity.id} className="p-2 mb-5 mt-5 w-75"/>
-				{deselect ? <a className="btn btn-primary thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} onClick={() => deselectCharity(charity)}>Deselect</a>
-					: <a className="btn btn-transparent fill thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} onClick={() => selectCharity(charity)}>Select</a>}
+				{selected ? <span className="text-success thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} >🗹 Selected</span>
+					: <a className="btn btn-transparent fill thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} onClick={() => setSelectedCharityId(charity.id)}>Select</a>}
 				<a className="position-absolute" style={{top: 10, right: 10}} href={charity.url} target="_blank" rel="noreferrer">About</a>
 			</> : <p style={{transform: `translateZ(${elementHeight}px)`}} className="color-gl-light-red">Select a charity</p>}
 		</div>
@@ -128,27 +134,23 @@ const CharitySelectBox = ({charity, deselect, do3d, padAmount3D=150, className})
 };
 
 const TabStats = () => {
-	//<StatCard md={6} number={35} label="Tokens gained"/>
-
-	let tabsOpened = getTabsOpened();
-	if (tabsOpened && tabsOpened.error) tabsOpened="Something went wrong :(";
+	let pvTabsOpened = getTabsOpened();
 
 	let daysWithGoodLoop = getDaysWithGoodLoop();
-	if (daysWithGoodLoop && daysWithGoodLoop.error) daysWithGoodLoop="Something went wrong :(";
 
-	let weeklyAvg = getTabsWeeklyAverage();
-	if (weeklyAvg && weeklyAvg.error) weeklyAvg="Something went wrong :(";
+	let weeklyAvg = Math.round(7*pvTabsOpened.value / daysWithGoodLoop);
 
 	return (
 		<Row>
-			<StatCard md={4} number={daysWithGoodLoop !== null ? daysWithGoodLoop : "-"} label="Days with Good-Loop"/>
-			<StatCard md={4} number={tabsOpened !== null ? tabsOpened : "-"} label="Tabs opened"/>
-			<StatCard md={4} number={weeklyAvg !== null ? weeklyAvg : "-"} label="Weekly tab average"/>
+			<StatCard md={4} number={daysWithGoodLoop || "-"} label="Days with Tabs for Good"/>
+			<StatCard md={4} number={pvTabsOpened.value || "-"} label="Tabs opened"/>
+			<StatCard md={4} number={weeklyAvg || "-"} label="Weekly tab average"/>
 		</Row>
 	);
 };
 
-/** Search box -- for what?? Charity search and Ecosia web search are probably best kept separate. */
+/** Search box - a magnifying-glass icon by a text input ??Should this move down to PropControl type=search
+ */
 const Search = ({onSubmit, placeholder}) => {
 	return (<>
 		<Form onSubmit={onSubmit} inline className="flex-row tab-search-form px-2" >
@@ -157,31 +159,27 @@ const Search = ({onSubmit, placeholder}) => {
 	</>);
 };
 
-/*
+/** 
  * Fetch the number of tabs opened by the user.
- * Returns null if no value i.e. loading.
- * Returns the pvValue itself on error - an error can be tested for by checking if (val.error)
+ * @returns PromiseValue<Number>
  */
 const getTabsOpened = () => {
-	if (!Login.isLoggedIn()) return null;
+	if ( ! Login.isLoggedIn()) {
+		return null;
+	}
 	// Get tabs opened stat from profiler
 	let pvValue = DataStore.fetch(['misc','stats','tabopens'], () => {
 		const trkreq = {
-			q: "user:"+Login.getId(),
+			q: "user:"+Login.getId()+" AND evt:tabopen",
 			name: "tabopens",
 			dataspace: 'gl',
 			start: 0 // all time (otherwise defaults to 1 month)
 		}; // ??future, end, breakdowns: [byHostOrAd]};				
-		return ServerIO.getDataLogData(trkreq);
+		let pData = ServerIO.getDataLogData(trkreq);
+		// unwrap the count
+		return pData.then(res => res.all.count);
 	});
-	if (pvValue.error) return pvValue;
-	if (!pvValue.value) return null;
-	return pvValue.value.all.count;
-};
-
-const getTabsWeeklyAverage = () => {
-	// TODO fill in backend!!
-	return 54;
+	return pvValue;	
 };
 
 const getDaysWithGoodLoop = () => {
@@ -189,17 +187,17 @@ const getDaysWithGoodLoop = () => {
 	return 16;
 };
 
-const getSelectedCharity = () => {
-	// TODO fill in backend!!
-	return null;//"battersea-dogs-and-cats-home";
+const getSelectedCharityId = () => {
+	let xids = getAllXIds();
+	let persons = getProfilesNow(xids);
+	let cid = getClaimValue({persons, key:"charity"});
+	return cid;
 };
 
-const selectCharity = (charity) => {
-	// TODO fill in backend!!
-};
-
-const deselectCharity = (charity) => {
-	// TODO fill in backend!!
+const setSelectedCharityId = (cid) => {
+	let xids = getAllXIds();
+	let persons = getProfilesNow(xids);
+	setClaimValue({persons, key:"charity", value:cid});
 };
 
 const StatCard = ({md, lg, xs, number, label, className, padding, children}) => {
@@ -212,5 +210,5 @@ const StatCard = ({md, lg, xs, number, label, className, padding, children}) => 
 	</Col>;
 };
 
-export { getTabsOpened, Search, getSelectedCharity };
+export { getTabsOpened, Search, getSelectedCharityId};
 export default TabsForGoodSettings;
