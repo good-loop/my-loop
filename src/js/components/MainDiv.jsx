@@ -9,7 +9,6 @@ import DataStore from '../base/plumbing/DataStore';
 import Roles from '../base/Roles';
 import C from '../C';
 import Crud from '../base/plumbing/Crud'; // Crud is loaded here to init (but not used here)
-import Profiler from '../base/Profiler';
 
 // Templates
 import MessageBar from '../base/components/MessageBar';
@@ -32,6 +31,7 @@ import { Register } from '../../puppeteer_tests/test-base/common-selectors';
 import MyGLAboutPage from './MyGLAboutPage';
 import { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
 import TabsForGoodOnboard from './pages/TabsForGoodOnboard';
+import { getAllXIds } from '../base/data/Person';
 // import RedesignPage from './pages/RedesignPage';
 
 // DataStore
@@ -103,7 +103,7 @@ class MainDiv extends Component {
 			}*/
 
 			// Update xids
-			DataStore.setValue(['data', 'Person', 'xids'], Profiler.getAllXIds(), false);
+			DataStore.setValue(['data', 'Person', 'xids'], getAllXIds(), false);
 
 			// Link profiles? No - done by the YA server
 			// poke React via DataStore (e.g. for Login.error)
@@ -120,7 +120,7 @@ class MainDiv extends Component {
 			// Store response.cargo.success somewhere in datastore so other components can check (a) if it's finished and (b) if it was successful before trying to talk to lg.good-loop.com
 		});
 
-		DataStore.setValue(['data', 'Person', 'xids'], Profiler.getAllXIds(), false);
+		DataStore.setValue(['data', 'Person', 'xids'], getAllXIds(), false);
 	} // ./componentDidMount
 
 	componentWillUnmount () {

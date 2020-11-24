@@ -2,9 +2,9 @@ import React from 'react';
 import { Container, Button, Form, FormGroup, Label} from 'reactstrap';
 import {space, stopEvent, yessy} from '../../base/utils/miscutils';
 
-import Profiler, {doRegisterEmail} from '../../base/Profiler';
 import DataStore from '../../base/plumbing/DataStore';
 import PropControl from '../../base/components/PropControl';
+import { doRegisterEmail } from '../../base/data/Person';
 
 
 const ctaFormPath = ['misc', 'ctaForm'];

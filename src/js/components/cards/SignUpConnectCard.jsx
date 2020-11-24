@@ -1,10 +1,10 @@
 import React from 'react';
 import { space, toTitleCase } from '../../base/utils/miscutils';
-import { getProfilesNow } from '../../base/Profiler';
 import { LoginLink, SocialSignInButton } from '../../base/components/LoginWidget';
 import Misc from '../../base/components/Misc';
 import DataStore from '../../base/plumbing/DataStore';
 import XId from '../../base/data/XId';
+import { getProfilesNow } from '../../base/data/Person';
 
 const signInOrConnected = ({service, xid}) => {
 	if (xid) return <Connected service={service} xid={xid} />;

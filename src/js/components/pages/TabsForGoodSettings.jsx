@@ -51,10 +51,12 @@ const CharityPicker = () => {
 	const selectedCharity = selId ? fetchCharity(selId) : null;
 
 	return <div className="tabs-for-good-settings">
-		<p>Your selected charity:</p>
-		<div className="col-md-3">
-			<CharitySelectBox charity={selectedCharity} deselect do3d={!isPortraitMobile()}/>
-		</div>
+		{selectedCharity && 
+			<><p>Your selected charity:</p>
+				<div className="col-md-3">
+					<CharitySelectBox charity={selectedCharity} deselect />
+				</div>
+			</>}
 		<div className="py-5"/> {/* spacer */}
 		<div className="d-md-flex flex-md-row justify-content-between unset-margins mb-3">
 			<p>Can't see your favourite charity?&nbsp;<br className="d-md-none"/>Search for it:</p>
@@ -62,7 +64,7 @@ const CharityPicker = () => {
 		</div>
 		<Paginator rows={4} cols={5} rowsMD={2} colsMD={5} pageButtonRangeMD={1} displayCounter displayLoad>
 			{charityLogos.map(c => <div key={c.id} className="p-md-3 d-flex justify-content-center align-items-center">
-				<CharitySelectBox charity={c} do3d={!isPortraitMobile()} padAmount3D={25} className="pt-3 pt-md-0"/>
+				<CharitySelectBox charity={c} padAmount3D={25} className="pt-3 pt-md-0"/>
 			</div>)}
 		</Paginator>
 	</div>;
@@ -76,7 +78,8 @@ const CharityPicker = () => {
  * @param do3d activate the 3d mouse follow effect ??doc: why not always on?
  * @param padAmount3D override width of div that captures the mouse for tracking on 3d effects. ??0Why would this vary?
  */
-const CharitySelectBox = ({charity, deselect, do3d, padAmount3D=150, className}) => {
+const CharitySelectBox = ({charity, deselect, padAmount3D=150, className}) => {
+	let do3d = ! isPortraitMobile();		
 	// ref & state are used for the 3D card effect
 	const container3d = useRef(null);
 	const [axis, setAxis] = useState({x: 0, y: 0});
@@ -128,27 +131,23 @@ const CharitySelectBox = ({charity, deselect, do3d, padAmount3D=150, className})
 };
 
 const TabStats = () => {
-	//<StatCard md={6} number={35} label="Tokens gained"/>
-
-	let tabsOpened = getTabsOpened();
-	if (tabsOpened && tabsOpened.error) tabsOpened="Something went wrong :(";
+	let pvTabsOpened = getTabsOpened();
 
 	let daysWithGoodLoop = getDaysWithGoodLoop();
-	if (daysWithGoodLoop && daysWithGoodLoop.error) daysWithGoodLoop="Something went wrong :(";
 
-	let weeklyAvg = getTabsWeeklyAverage();
-	if (weeklyAvg && weeklyAvg.error) weeklyAvg="Something went wrong :(";
+	let weeklyAvg = Math.round(7*pvTabsOpened.value / daysWithGoodLoop);
 
 	return (
 		<Row>
-			<StatCard md={4} number={daysWithGoodLoop !== null ? daysWithGoodLoop : "-"} label="Days with Good-Loop"/>
-			<StatCard md={4} number={tabsOpened !== null ? tabsOpened : "-"} label="Tabs opened"/>
-			<StatCard md={4} number={weeklyAvg !== null ? weeklyAvg : "-"} label="Weekly tab average"/>
+			<StatCard md={4} number={daysWithGoodLoop || "-"} label="Days with Tabs for Good"/>
+			<StatCard md={4} number={pvTabsOpened.value || "-"} label="Tabs opened"/>
+			<StatCard md={4} number={weeklyAvg || "-"} label="Weekly tab average"/>
 		</Row>
 	);
 };
 
-/** Search box -- for what?? Charity search and Ecosia web search are probably best kept separate. */
+/** Search box - a magnifying-glass icon by a text input ??Should this move down to PropControl type=search
+ */
 const Search = ({onSubmit, placeholder}) => {
 	return (<>
 		<Form onSubmit={onSubmit} inline className="flex-row tab-search-form px-2" >
@@ -157,31 +156,27 @@ const Search = ({onSubmit, placeholder}) => {
 	</>);
 };
 
-/*
+/** 
  * Fetch the number of tabs opened by the user.
- * Returns null if no value i.e. loading.
- * Returns the pvValue itself on error - an error can be tested for by checking if (val.error)
+ * @returns PromiseValue<Number>
  */
 const getTabsOpened = () => {
-	if (!Login.isLoggedIn()) return null;
+	if ( ! Login.isLoggedIn()) {
+		return null;
+	}
 	// Get tabs opened stat from profiler
 	let pvValue = DataStore.fetch(['misc','stats','tabopens'], () => {
 		const trkreq = {
-			q: "user:"+Login.getId(),
+			q: "user:"+Login.getId()+" AND evt:tabopen",
 			name: "tabopens",
 			dataspace: 'gl',
 			start: 0 // all time (otherwise defaults to 1 month)
 		}; // ??future, end, breakdowns: [byHostOrAd]};				
-		return ServerIO.getDataLogData(trkreq);
+		let pData = ServerIO.getDataLogData(trkreq);
+		// unwrap the count
+		return pData.then(res => res.all.count);
 	});
-	if (pvValue.error) return pvValue;
-	if (!pvValue.value) return null;
-	return pvValue.value.all.count;
-};
-
-const getTabsWeeklyAverage = () => {
-	// TODO fill in backend!!
-	return 54;
+	return pvValue;	
 };
 
 const getDaysWithGoodLoop = () => {
