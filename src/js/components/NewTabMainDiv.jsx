@@ -37,6 +37,7 @@ import Ticker from './Ticker';
 // import RedesignPage from './pages/RedesignPage';
 
 import NewTabOnboardingPage from './NewTabOnboarding';
+import NewtabTutorialCard from './NewtabTutorialCard';
 
 // Components
 import { CharityLogo } from './cards/CharityCard';
@@ -133,6 +134,7 @@ const WebtopPage = () => {
 				</div>
 			</div>
 		</BG>
+		<NewtabTutorialCard/>
 		<NewtabLoginWidget/>
 	</>);
 };
@@ -145,8 +147,7 @@ const TabsOpenedCounter = () => {
 const NormalTabCenter = ({charityID}) => {
 	return <>
 		<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
-			<Alert>FIXME this ticker resets each time you load the page</Alert>
-			<h3 className="text-center">Together we've raised <Ticker amount={new Money("$1501886.40")} rate={0.1} preservePennies unitWidth="0.6em"/></h3>
+			<h3 className="text-center">Together we've raised <Ticker amount={new Money("$1501886.40")} rate={0.1} startTime={/* arbitrarily taken from dev time */ new Date(1606220478753)} preservePennies unitWidth="0.6em"/></h3>
 			<img src="/img/TabsForGood/sparkle.png" alt="sparkle" style={{width: 50}} className="pl-1"/>
 		</div>
 		<div className="w-100 pb-3">
@@ -191,9 +192,9 @@ const NewTabFooter = () => (<Footer className="tab-footer">
 
 const NewTabCharityCard = ({cid}) => {
 	console.log("CHARITY TO SELECT", cid);
-	let user = Login.getUser();
-	let profile = user && user.xid? getProfile({xid:user.xid}) : null;
-	console.warn("profile", profile);
+	//let user = Login.getUser();
+	//let profile = user && user.xid? getProfile({xid:user.xid}) : null;
+	//console.warn("profile", profile);
 
 	const charity = cid ? fetchCharity(cid) : null;	
 

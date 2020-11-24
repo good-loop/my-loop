@@ -23,8 +23,9 @@ import Money from '../base/data/Money';
  * @param {Number} tickTime - time between ticks in milliseconds
  * @param {Boolean} preservePennies Preserves 2 digits on the pennies count. This overrides sigFigs. True by default for money.
  * @param {Boolean} centerText Centers the text when counting up in the animation.
+ * @param {Date} startTime Calculates the start value based on a start time so the ticker updates on refreshes
  */
-const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty = true, preservePennies, centerText=false, unitWidth}) => 
+const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty = true, preservePennies, centerText=false, startTime, unitWidth}) => 
 {
 	if (amount) {
 		value = Money.value(amount);
@@ -34,12 +35,14 @@ const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty
 		console.warn("Ticker - No value or amount");
 		return null;
 	}
+	
 	const [dispVal, setValue] = useState(value);
 	const [running, setRunning] = useState(false);
 	const ref = useRef();
 
 	// Begin ticking on load
 	useEffect(() => {
+		// Add time offset
 		const interval = setInterval(() => {
 			setValue(dispVal + rate);
 		}, tickTime);
@@ -65,7 +68,15 @@ const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty
 		}	
 	};
 
-	let disp = pretty? formatNum(dispVal) : dispVal.toString();	
+	let offsetDispVal = dispVal;
+
+	if (startTime) {
+		const timeDiff = Date.now() - startTime.getTime();
+		const valDiff = (timeDiff / tickTime) * rate;
+		offsetDispVal = dispVal + valDiff;
+	}
+
+	let disp = pretty? formatNum(offsetDispVal) : offsetDispVal.toString();	
 	disp = currencySymbol + disp;
 
 	let dispArr = disp.split("");

@@ -144,6 +144,7 @@ const fetchCharity = (id) => {
 		return null; // offline maybe
 	}
 	let charity = pvCharity.value;
+	if (!charity.id) charity.id = id;
 	return charity;
 };
 
