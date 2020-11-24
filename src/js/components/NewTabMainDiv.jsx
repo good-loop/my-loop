@@ -13,7 +13,7 @@ import Crud from '../base/plumbing/Crud'; // Crud is loaded here to init (but no
 import ServerIO, { normaliseSogiveId } from '../base/plumbing/ServerIOBase';
 import Money from '../base/data/Money';
 import {lg} from '../base/plumbing/log';
-import TabsForGoodSettings, { getTabsOpened, Search, getSelectedCharity } from './pages/TabsForGoodSettings';
+import TabsForGoodSettings, { getTabsOpened, Search, getSelectedCharityId } from './pages/TabsForGoodSettings';
 import {fetchCharity } from './pages/MyCharitiesPage';
 
 // Templates
@@ -100,7 +100,7 @@ const WebtopPage = () => {
 		verifiedLoginOnceFlag = true;
 	}
 
-	let charityID = getSelectedCharity();
+	let charityID = getSelectedCharityId();
 
 	// iframe src change?
 	// https://stackoverflow.com/posts/17316521/revisions

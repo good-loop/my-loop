@@ -9,6 +9,7 @@ import { fetchAllCharities, fetchAllCharityIDs, fetchCharity } from './MyChariti
 import { CharityLogo } from '../cards/CharityCard';
 import PropControl from '../../base/components/PropControl';
 import Paginator from '../Paginator';
+import { getAllXIds, getClaimValue, getProfilesNow, setClaimValue } from '../../base/data/Person';
 
 
 const TabsForGoodSettings = () => {
@@ -47,7 +48,7 @@ const CharityPicker = () => {
 		}
 	}
 
-	const selId = getSelectedCharity();
+	const selId = getSelectedCharityId();
 	const selectedCharity = selId ? fetchCharity(selId) : null;
 
 	return <div className="tabs-for-good-settings">
@@ -123,7 +124,7 @@ const CharitySelectBox = ({charity, deselect, padAmount3D=150, className}) => {
 			{charity ? <>
 				<CharityLogo style={{maxWidth:"100%", width: "100%", transform: `translateZ(${elementHeight}px)`}} charity={charity} key={charity.id} className="p-2 mb-5 mt-5 w-75"/>
 				{deselect ? <a className="btn btn-primary thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} onClick={() => deselectCharity(charity)}>Deselect</a>
-					: <a className="btn btn-transparent fill thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} onClick={() => selectCharity(charity)}>Select</a>}
+					: <a className="btn btn-transparent fill thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} onClick={() => setSelectedCharityId(charity)}>Select</a>}
 				<a className="position-absolute" style={{top: 10, right: 10}} href={charity.url} target="_blank" rel="noreferrer">About</a>
 			</> : <p style={{transform: `translateZ(${elementHeight}px)`}} className="color-gl-light-red">Select a charity</p>}
 		</div>
@@ -184,13 +185,17 @@ const getDaysWithGoodLoop = () => {
 	return 16;
 };
 
-const getSelectedCharity = () => {
-	// TODO fill in backend!!
-	return null;//"battersea-dogs-and-cats-home";
+const getSelectedCharityId = () => {
+	let xids = getAllXIds();
+	let persons = getProfilesNow(xids);
+	let cid = getClaimValue({persons, key:"charity"});
+	return cid;
 };
 
-const selectCharity = (charity) => {
-	// TODO fill in backend!!
+const setSelectedCharityId = (cid) => {
+	let xids = getAllXIds();
+	let persons = getProfilesNow(xids);
+	setClaimValue({persons, key:"charity", value:cid});
 };
 
 const deselectCharity = (charity) => {
@@ -207,5 +212,5 @@ const StatCard = ({md, lg, xs, number, label, className, padding, children}) => 
 	</Col>;
 };
 
-export { getTabsOpened, Search, getSelectedCharity };
+export { getTabsOpened, Search, getSelectedCharityId};
 export default TabsForGoodSettings;
