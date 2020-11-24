@@ -1,24 +1,3 @@
-.tab-user {
-    font-family: "Tajawal", sans-serif;
-    font-weight: 600;
-    .tab-login {
-        overflow: hidden;
-        text-transform: uppercase;
-        .tab-login-content {
-            transform: translateX(-101%);
-            transition: 0.1s;
-        }
-    }
-    &:hover {
-        .tab-login {
-            .tab-login-content {
-                transform: translateX(0);
-                transition: 0.1s;
-            }
-        }
-    }
-}
-
 .tab-footer {
     position: fixed;
     bottom: 0;
@@ -140,6 +119,31 @@
     .login-content {
         h1,h2,h3,h4 {
             color: @gl-light-red !important;
+        }
+    }
+}
+
+.tutorial-card {
+    border-radius: 20px;
+    p {
+        font-size: 1.3rem;
+        color: darkslategray;
+    }
+    h1,h2,h3,h4 {
+        text-transform: uppercase;
+        color: @gl-turquoise !important;
+    }
+    .page-circle {
+        border-radius: 50%;
+        border: 2px solid @gl-light-red;
+        width: 15px;
+        &.selected {
+            background: @gl-light-red;
+        }
+        &:after {
+            content:"";
+            display: block;
+            padding-bottom: 100%;
         }
     }
 }

@@ -37,13 +37,13 @@ import Ticker from './Ticker';
 // import RedesignPage from './pages/RedesignPage';
 
 import NewTabOnboardingPage from './NewTabOnboarding';
-import NewtabTutorialCard from './NewtabTutorialCard';
 
 // Components
 import { CharityLogo } from './cards/CharityCard';
 import WhiteCircle from './campaignpage/WhiteCircle';
 import { nonce } from '../base/data/DataClass';
 import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLoginWidget';
+import NewtabTutorialCard, { openTutorial } from './NewtabTutorialCard';
 
 // DataStore
 C.setupDataStore();
@@ -135,8 +135,8 @@ const WebtopPage = () => {
 			</div>
 		</BG>
 		<NewtabTutorialCard/>
-		<NewtabLoginWidget/>
-	</>);
+		<NewtabLoginWidget onRegister={openTutorial}/>
+	</>); 
 };
 
 const TabsOpenedCounter = () => {
@@ -199,7 +199,7 @@ const NewTabCharityCard = ({cid}) => {
 	const charity = cid ? fetchCharity(cid) : null;	
 
 	return (<div className="d-flex justify-content-center" >
-		<a href={charity ? charity.url : "/#account?tab=tabsForGood"} target={charity ? "_blank" : null}>
+		<a href={charity ? charity.url : "/#account?tab=tabsForGood"} rel="noreferrer" target="_blank">
 			<WhiteCircle className="m-3 tab-charity" circleCrop={charity ? charity.circleCrop : null}>
 				{charity ?
 					<CharityLogo charity={charity}/>

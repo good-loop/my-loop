@@ -36,14 +36,19 @@ const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty
 		return null;
 	}
 	
+	const timeDiff = Date.now() - startTime.getTime();
+	const valDiff = (timeDiff / tickTime) * rate;
+
 	const [dispVal, setValue] = useState(value);
-	const [running, setRunning] = useState(false);
-	const ref = useRef();
+	// Use state to make sure the offset is only stored once
+	const [valOffset] = useState(startTime ? valDiff : 0);
 
 	// Begin ticking on load
 	useEffect(() => {
-		// Add time offset
+		// Start routine updates
 		const interval = setInterval(() => {
+			// If the startTime is set, use that to calculate differences
+			// Otherwise use a fixed rate addition
 			setValue(dispVal + rate);
 		}, tickTime);
 		return () => clearInterval(interval);
@@ -64,18 +69,11 @@ const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty
 			return new Intl.NumberFormat('en-GB', options).format(x);
 		} catch(er) {
 			console.warn("Ticker.jsx formatNumber "+er); // Handle the weird Intl undefined bug, seen Oct 2019, possibly caused by a specific phone type
-			return ""+x;	
+			return ""+x;
 		}	
 	};
 
-	let offsetDispVal = dispVal;
-
-	if (startTime) {
-		const timeDiff = Date.now() - startTime.getTime();
-		const valDiff = (timeDiff / tickTime) * rate;
-		offsetDispVal = dispVal + valDiff;
-	}
-
+	const offsetDispVal = dispVal + valOffset;
 	let disp = pretty? formatNum(offsetDispVal) : offsetDispVal.toString();	
 	disp = currencySymbol + disp;
 

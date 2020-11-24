@@ -27,7 +27,7 @@ const switchToVerb = (e, verb) => {
 	DataStore.setValue(LOGIN_VERB_PATH, verb);
 };
 
-const NewtabLoginWidget = () => {
+const NewtabLoginWidget = ({onLogin, onRegister}) => {
 
 	const open = DataStore.getValue(LOGIN_OPEN_PATH);
 	const verb = DataStore.getValue(LOGIN_VERB_PATH);
@@ -68,7 +68,16 @@ const NewtabLoginWidget = () => {
 				{/* FORM SIDE - shows the login form according to the verb */}
 				<Col xs={7} className="login-content flex-column unset-margins justify-content-center align-items-center">
 					<h4 className="mb-3">{headers[verb]}</h4>
-					<LogInForm onLogin={() => setShowTabLogin(false)} onRegister={() => switchToVerb(null, "thankyou")}/>
+					<LogInForm
+						onLogin={() => {
+							if (onLogin) onLogin();
+							setShowTabLogin(false);
+						}}
+						onRegister={() => {
+							if (onRegister) onRegister();
+							setShowTabLogin(false);
+						}}
+					/>
 					<ErrorAlert error={error} />
 				</Col>
 			</>}
