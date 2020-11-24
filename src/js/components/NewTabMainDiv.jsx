@@ -162,11 +162,6 @@ const NormalTabCenter = ({charityID}) => {
 
 const OnboardingTabCenter = () => {
 	return <>
-		<div className="w-100 pb-3">
-			<div className="tab-search-container mx-auto">
-				<Search onSubmit={doSearch} placeholder="Search with Ecosia"/>
-			</div>
-		</div>
 		<div className="text-center onboarding">
 			<h2>Together we've raised</h2>
 			<h1><Ticker amount={new Money("$1501886.40")} rate={0.1} preservePennies unitWidth="0.6em"/></h1>
