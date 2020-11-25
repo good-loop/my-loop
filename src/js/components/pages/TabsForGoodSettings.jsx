@@ -1,16 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef, useState } from 'react';
+import { Col, Form, Row } from 'reactstrap';
 import Login from 'you-again';
-import { Col, Row, Form } from 'reactstrap';
-import { isPortraitMobile, space, yessy } from '../../base/utils/miscutils';
-import DataStore from '../../base/plumbing/DataStore';
-import ServerIO from '../../plumbing/ServerIO';
-import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
-import { fetchAllCharities, fetchAllCharityIDs, fetchCharity } from './MyCharitiesPage';
-import { CharityLogo } from '../cards/CharityCard';
 import PropControl from '../../base/components/PropControl';
-import Paginator from '../Paginator';
-import { getAllXIds, getClaimValue, getProfilesNow, setClaimValue } from '../../base/data/Person';
 import JSend from '../../base/data/JSend';
+import { getAllXIds, getClaimValue, getProfilesNow, savePersons, setClaimValue } from '../../base/data/Person';
+import DataStore from '../../base/plumbing/DataStore';
+import { isPortraitMobile, space, yessy } from '../../base/utils/miscutils';
+import ServerIO from '../../plumbing/ServerIO';
+import { CharityLogo } from '../cards/CharityCard';
+import Paginator from '../Paginator';
+import { fetchAllCharities, fetchAllCharityIDs, fetchCharity } from './MyCharitiesPage';
 
 
 const TabsForGoodSettings = () => {
@@ -185,8 +184,23 @@ const getTabsOpened = () => {
 const getTabsOpened2_unwrap = res => JSend.data(res).all.count;
 
 const getDaysWithGoodLoop = () => {
-	// TODO fill in backend!!
-	return 16;
+	const xids = getAllXIds();
+	const persons = getProfilesNow(xids);
+	// use the oldest claim (TODO lets have a register claim and use that)
+	let allClaims = [];
+	persons.forEach(peep => allClaims.push(...peep.claims));	
+	// const claims = getClaims({persons, key:"registered:tabs-for-good"});
+	// find the oldest
+	const claimDates = allClaims.map(c => c.t).filter(t => t);
+	claimDates.sort();
+	const oldest = claimDates[0];
+	if ( ! oldest) {
+		console.warn("getDaysWithGoodLoop - No claim date");
+		return 1;
+	}
+	const dmsecs = new Date().getTime() - new Date(oldest).getTime();
+	const days = Math.floor(dmsecs / (1000*60*60*24));
+	return days;
 };
 
 const getSelectedCharityId = () => {
@@ -200,7 +214,9 @@ const setSelectedCharityId = (cid) => {
 	let xids = getAllXIds();
 	let persons = getProfilesNow(xids);
 	setClaimValue({persons, key:"charity", value:cid});
-	console.log("SELECTED CHARITY " + cid);
+	savePersons({persons});
+	console.log("setSelectedCharityId " + cid);
+	DataStore.update();
 };
 
 const StatCard = ({md, lg, xs, number, label, className, padding, children}) => {
@@ -213,5 +229,5 @@ const StatCard = ({md, lg, xs, number, label, className, padding, children}) => 
 	</Col>;
 };
 
-export { getTabsOpened, Search, getSelectedCharityId};
+export { getTabsOpened, Search, getSelectedCharityId };
 export default TabsForGoodSettings;

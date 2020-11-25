@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { assert } from 'sjtest';
+import { assert, assMatch } from '../base/utils/assert';
 import { Row, Col } from 'reactstrap';
 import C from '../C';
 import DataStore from '../base/plumbing/DataStore';

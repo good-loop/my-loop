@@ -1,13 +1,11 @@
 import React from 'react';
 import { Container, Col, Row } from 'reactstrap';
 import _ from 'lodash';
-import { assert, assMatch } from 'sjtest';
 import Cookies from 'js-cookie';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
 import PropControl from '../base/components/PropControl';
 import {convertConsents, getConsents, setConsents, savePersons, getProfilesNow, PURPOSES} from '../base/data/Person';
-import { getId } from '../base/data/DataClass';
 
 // const _debounceFnForKey = {};
 // /**
@@ -34,20 +32,20 @@ const path = ['widget', 'ConsentWidget', 'perms'];
  * 
  * ??What does this do exactly??
  *  */
-const togglePerm = ({prop, value, persons}) => {
+const togglePerm = ({prop, value, persons, ...props}) => {
 
 	let dataspace = ServerIO.dataspace; // ??
 	// full perms set
 	// NB: this also means perm settings are synchronised across linked profiles by an edit.
 	let consents = DataStore.getValue(path);
-
+	console.log("consents",consents);
 	// set each	
 	persons.forEach(person => {
 		setConsents({person, dataspace, consents});
 	});
 
 	// save (after a second)
-	savePersons({persons});
+	saveConsents({persons});
 };
 
 const toggleDNT = ({perms, dnt, newValue}) => {
@@ -99,9 +97,9 @@ const PermissionControl = ({header, prop, subtext, textOn, saveFn}) => {
 const ConsentWidget = ({xids}) => {
 	if( !xids.length ) return null;
 
-	let profiles = getProfilesNow(xids);
+	let persons = getProfilesNow(xids);
 	// get and combine the consents
-	let perms = getConsents({profiles});
+	let perms = getConsents({persons});
 	DataStore.setValue(path, perms, false);
 
 	// The cookie setting is managed by a cookie, as its needed at advert-time -- c.f. in unit.js.
@@ -115,7 +113,7 @@ const ConsentWidget = ({xids}) => {
 			<PermissionControl 
 				header='Allow analytical cookies'
 				prop={PURPOSES.cookies_analytical}
-				saveFn={props => { toggleDNT({...props, perms, dnt}); togglePerm({...props, profiles}); }}
+				saveFn={props => { toggleDNT({...props, perms, dnt}); togglePerm({...props, persons}); }}
 				subtext='Allow us to track your donations and avoid showing you the same advert twice'
 				textOn='Thank you!'
 			/>
@@ -124,7 +122,7 @@ const ConsentWidget = ({xids}) => {
 			<PermissionControl 
 				header='Allow ad targeting'
 				prop={PURPOSES.personalize_ads}
-				saveFn={props => togglePerm({...props, profiles})}
+				saveFn={props => togglePerm({...props, persons})}
 				subtext='Get Good-Loop ads tailored to you'
 				textOn='Thank you!'
 			/>
@@ -133,7 +131,7 @@ const ConsentWidget = ({xids}) => {
 			<PermissionControl 
 				header='Allow Good-Loop marketing emails'
 				prop={PURPOSES.email_marketing}
-				saveFn={props => togglePerm({...props, profiles})}
+				saveFn={props => togglePerm({...props, persons})}
 				textOn='Thank you!'
 			/>
 		</>

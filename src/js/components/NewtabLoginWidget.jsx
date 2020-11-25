@@ -1,18 +1,22 @@
+/**
+ * Copy-pasta from LoginWidget but restyled
+ * TODO refactor to reuse code from LoginWidget. Login flows are notoriously error-prone, so we don't want to maintain two copies.
+ */
+
 import React, { useState, useEffect } from 'react';
 import Login from 'you-again';
-import { assMatch } from 'sjtest';
+import { assert, assMatch } from '../base/utils/assert';
 import C from '../C';
 import { emailLogin } from '../base/components/LoginWidget';
 import { Row, Col } from 'reactstrap';
 import DataStore from '../base/plumbing/DataStore';
 import PropControl from '../base/components/PropControl';
 import ErrorAlert from '../base/components/ErrorAlert';
-import { space } from '../base/utils/miscutils';
+import { space, stopEvent } from '../base/utils/miscutils';
 
 const LOGIN_PATH = ['widget', 'tabLogin', 'login'];
 const LOGIN_OPEN_PATH = [...LOGIN_PATH, 'open'];
 const LOGIN_VERB_PATH = [...LOGIN_PATH, 'verb'];
-const STATUS_PATH = [...LOGIN_PATH, 'status'];
 
 const setShowTabLogin = (showLogin) => {
 	DataStore.setValue(LOGIN_OPEN_PATH, showLogin);
@@ -23,13 +27,15 @@ const getShowTabLogin = () => {
 };
 
 const switchToVerb = (e, verb) => {
-	if (e) e.preventDefault();
+	if (e) stopEvent(e);
 	DataStore.setValue(LOGIN_VERB_PATH, verb);
 };
 
 const NewtabLoginWidget = ({onLogin, onRegister}) => {
 
 	const open = DataStore.getValue(LOGIN_OPEN_PATH);
+	if ( ! open) return null;
+
 	const verb = DataStore.getValue(LOGIN_VERB_PATH);
 	// Default to register
 	useEffect(() => {
@@ -50,9 +56,13 @@ const NewtabLoginWidget = ({onLogin, onRegister}) => {
 		error.text = "Could not login. Check your credentials are correct.";
 	}
 
-	return open ? <>
+	// ??minor: it might be nice to have a transition on the verb switch
+
+	// why not use a BS modal??
+	return <>
 		<div className="position-absolute" style={{width: "100vw", height: "100vh", top: 0, left: 0, zIndex: 999, background:"rgba(0,0,0,0.5)"}} />
-		<Row className={space("tab-login-widget position-absolute bg-white shadow", register ? "" : "flex-row-reverse", verb === "thankyou" ? "thankyou" : "")} style={{width: 700, height:450, zIndex:9999, top: "50%", left:"50%", transform:"translate(-50%, -75%)"}}>
+		<Row className={space("tab-login-widget position-absolute bg-white shadow", register? "" : "flex-row-reverse", verb==="thankyou" && "thankyou")} 
+			style={{width: 700, height:450, zIndex:9999, top: "50%", left:"50%", transform:"translate(-50%, -75%)"}}>
 			{verb === "thankyou" ? <RegisterThankYou/> : <>
 				{/* BLUE SIDE - shows the OPPOSITE of the current login verb, allows switching */}
 				<Col xs={5} className="bg-gl-turquoise flex-column unset-margins justify-content-center align-items-center text-white text-center m-0 p-3">
@@ -82,8 +92,7 @@ const NewtabLoginWidget = ({onLogin, onRegister}) => {
 				</Col>
 			</>}
 		</Row>
-	</> : null;
-
+	</>;
 };
 
 const LogInForm = ({onRegister, onLogin}) => {
@@ -96,7 +105,7 @@ const LogInForm = ({onRegister, onLogin}) => {
 	const register = verb === "register";
 
 	const doItFn = e => {
-		e.preventDefault();
+		stopEvent(e);
 		if ( ! person) {			
 			Login.error = {text:'Please fill in email and password'};
 			return;
@@ -106,8 +115,6 @@ const LogInForm = ({onRegister, onLogin}) => {
 	};
 
 	// login/register
-	let status = DataStore.getValue(STATUS_PATH);
-
 
 	return <form id="loginByEmail" onSubmit={doItFn} className="flex-column unset-margins justify-content-center align-items-center">
 		<PropControl type="email" path={path} item={person} prop="email" placeholder="Email" className="mb-3"/>			
@@ -128,14 +135,14 @@ const RegisterThankYou = () => {
 		<p>Thanks for signing up with us! You can now choose a charity to fund, and access all the benefits of My-Loop. See your new account <a href="/#account" className="text-primary">here</a>.</p>
 		<a onClick={() => setShowTabLogin(false)} className="btn btn-primary">Back to Tabs-for-Good</a>
 	</>;
-}
+};
 
 const EmailReset = ({person}) => {
 	const requested = DataStore.getValue([...LOGIN_PATH, 'reset-requested']);
 	const path = ['data', C.TYPES.User, 'loggingIn'];
 
-	const doItFn = e => {
-		e.preventDefault();			
+	const doEmailReset = e => {
+		stopEvent(e);		
 		if ( ! person) {
 			Login.error = {text:'Please fill in email and password'};
 			DataStore.update();
@@ -154,7 +161,7 @@ const EmailReset = ({person}) => {
 	};
 
 	return (
-		<form id="loginByEmail" onSubmit={doItFn} className="flex-column unset-margins justify-content-center align-items-center text-center">
+		<form id="loginByEmail" onSubmit={doEmailReset} className="flex-column unset-margins justify-content-center align-items-center text-center">
 			<p className="mb-3">Forgotten your password?<br/>No problem - we will email you a link to reset it.</p>
 			<PropControl className="mb-3" type="email" path={path} item={person} prop="email" placeholder="Email" />			
 			{requested ? <div className="alert alert-info mb-3">A password reset email has been sent out.<br/>Still having trouble? Contact us: support@good-loop.com</div> : ''}
@@ -169,10 +176,10 @@ const EmailReset = ({person}) => {
 };
 
 const NewtabLoginLink = ({className, children}) => {
-    
+    /** toggle open */
 	const onClick = e => {
-		e.preventDefault();
-		setShowTabLogin(!getShowTabLogin());
+		stopEvent(e);
+		setShowTabLogin( ! getShowTabLogin());
 	};
     
 	return <a className={className} onClick={onClick}>

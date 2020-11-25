@@ -1,7 +1,7 @@
 /* global navigator */
 import React, { Component } from 'react';
 import Login from 'you-again';
-import { assert } from 'sjtest';
+import { assert, assMatch } from '../base/utils/assert';
 import { modifyHash } from '../base/utils/miscutils';
 
 // Plumbing

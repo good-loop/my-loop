@@ -4,7 +4,7 @@ import { is, isPortraitMobile, space } from '../../base/utils/miscutils';
 import Roles from '../../base/Roles';
 import PropControl from '../../base/components/PropControl';
 import ConsentWidget from '../ConsentWidget';
-import { getAllXIds, getClaimValue, getConsents, getProfilesNow, savePersons, setClaimValue} from '../../base/data/Person';
+import { getAllXIds, getClaimValue, getProfilesNow, savePersons, setClaimValue} from '../../base/data/Person';
 import SignUpConnectCard from '../cards/SignUpConnectCard';
 import Login from 'you-again';
 import XId from '../../base/data/XId';
@@ -25,10 +25,6 @@ const AccountSettings = ({xids}) => {
 };
 
 const ConsentSettings = ({xids}) => {
-	// debug
-	let profiles = getProfilesNow(xids);
-	let consents = getConsents({profiles});
-
 	return (<div className="consents">
 		<ConsentWidget xids={xids}/>
 		<div className="pt-3"/>

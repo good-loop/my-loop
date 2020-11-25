@@ -9,7 +9,7 @@ import LinkedProfilesCard from '../cards/LinkedProfilesCard';
 import MyLoopNavBar from '../MyLoopNavBar';
 import { LoginLink } from '../../base/components/LoginWidget';
 import Footer from '../Footer';
-import {getAllXIds, getConsents, getEmail, getProfilesNow, hasConsent, PURPOSES} from '../../base/data/Person';
+import {getAllXIds, getEmail, getProfilesNow, hasConsent, PURPOSES} from '../../base/data/Person';
 import Misc from '../../base/components/Misc';
 import { space, isPortraitMobile } from '../../base/utils/miscutils';
 import PropControl from '../../base/components/PropControl';

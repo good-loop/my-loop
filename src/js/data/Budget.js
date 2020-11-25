@@ -1,5 +1,5 @@
 /** Data model functions for the Budget data-type. */
-import {assert} from 'sjtest';
+import { assert, assMatch } from '../base/utils/assert';
 
 import DataClass from '../base/data/DataClass';
 import C from '../C';

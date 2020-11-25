@@ -1,6 +1,5 @@
 import React from 'react';
 import DataStore from '../base/plumbing/DataStore';
-import {assMatch, assert} from 'sjtest';
 
 /*
 A CSS example:
