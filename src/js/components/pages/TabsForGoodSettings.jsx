@@ -10,6 +10,7 @@ import { CharityLogo } from '../cards/CharityCard';
 import PropControl from '../../base/components/PropControl';
 import Paginator from '../Paginator';
 import { getAllXIds, getClaimValue, getProfilesNow, setClaimValue } from '../../base/data/Person';
+import JSend from '../../base/data/JSend';
 
 
 const TabsForGoodSettings = () => {
@@ -143,7 +144,7 @@ const TabStats = () => {
 	return (
 		<Row>
 			<StatCard md={4} number={daysWithGoodLoop || "-"} label="Days with Tabs for Good"/>
-			<StatCard md={4} number={pvTabsOpened.value || "-"} label="Tabs opened"/>
+			<StatCard md={4} number={(pvTabsOpened && pvTabsOpened.value) || "-"} label="Tabs opened"/>
 			<StatCard md={4} number={weeklyAvg || "-"} label="Weekly tab average"/>
 		</Row>
 	);
@@ -161,7 +162,7 @@ const Search = ({onSubmit, placeholder}) => {
 
 /** 
  * Fetch the number of tabs opened by the user.
- * @returns PromiseValue<Number>
+ * @returns ?PromiseValue<Number> null if not logged in yet
  */
 const getTabsOpened = () => {
 	if ( ! Login.isLoggedIn()) {
@@ -177,10 +178,11 @@ const getTabsOpened = () => {
 		}; // ??future, end, breakdowns: [byHostOrAd]};				
 		let pData = ServerIO.getDataLogData(trkreq);
 		// unwrap the count
-		return pData.then(res => res.all.count);
+		return pData.then(getTabsOpened2_unwrap);
 	});
 	return pvValue;	
 };
+const getTabsOpened2_unwrap = res => JSend.data(res).all.count;
 
 const getDaysWithGoodLoop = () => {
 	// TODO fill in backend!!
