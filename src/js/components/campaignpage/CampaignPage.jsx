@@ -307,17 +307,16 @@ const CampaignPage = () => {
 					</Container>
 				</div>
 
-			<CharityDetails charities={charities}/>
-			{campaignPage.smallPrint ?
-				<div className="small-print">
-					<small>
-						{campaignPage.smallPrint}
-					</small>
-				</div> : null}
-        
+				<CharityDetails charities={charities}/>
+				{campaignPage.smallPrint ?
+					<div className="small-print">
+						<small>
+							{campaignPage.smallPrint}
+						</small>
+					</div> : null}
+			</div>
 		</div>
-	</>
-	);
+	</>);
 }; // ./CampaignPage
 
 /**
