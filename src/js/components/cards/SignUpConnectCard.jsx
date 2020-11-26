@@ -31,9 +31,8 @@ const SignUpConnectCard = ({className}) => {
 
 	return (
 		<div className={space('social-media-card', className)}>
-			{signInOrConnected({ service: 'good-loop', xid: service2xid.email })}
 			{signInOrConnected({ service: 'twitter', xid: service2xid.twitter })}
-			{signInOrConnected({ service: 'facebook', xid: service2xid.facebook })}
+			{/*signInOrConnected({ service: 'facebook', xid: service2xid.facebook })*/}
 		</div>
 	);
 };

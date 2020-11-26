@@ -21,6 +21,8 @@ const TabsForGoodSettings = () => {
 		<p className={isPortraitMobile() ? "" : "w-50"}>Select a charity and we will send them all the money that your Tabs for Good are generating. You can change your selection at any time.</p>
 		<br/><br/>
 		<CharityPicker/>
+		{/* whitespace to prevent jump on charity search */}
+		<div style={{height:"50vh"}}/>
 	</>;
 };
 
@@ -43,8 +45,9 @@ const CharityPicker = () => {
 		charityLogos = chars.filter(c => c.logo);
 		let search = DataStore.getValue(['widget', 'search', 'q']);
 		if (search) {
-			search = search.toLowerCase();
-			charityLogos = charityLogos.filter(c => c.name ? c.name.toLowerCase().includes(search) : false);
+			// Compare for any letter casing and ignoring spaces
+			search = search.toLowerCase().replace(" ", "");
+			charityLogos = charityLogos.filter(c => c.name ? c.name.toLowerCase().replace(" ", "").includes(search) : false);
 		}
 	}
 
@@ -61,9 +64,9 @@ const CharityPicker = () => {
 		<div className="py-5"/> {/* spacer */}
 		<div className="d-md-flex flex-md-row justify-content-between unset-margins mb-3">
 			<p>Can't see your favourite charity?&nbsp;<br className="d-md-none"/>Search for it:</p>
-			<Search onSubmit={e => e.preventDefault()} placeholder="Find your charity"/>
+			<Search onSubmit={e => e.preventDefault()} placeholder="Find your charity" className="flex-grow ml-md-5"/>
 		</div>
-		<Paginator rows={4} cols={5} rowsMD={2} colsMD={5} pageButtonRangeMD={1} displayCounter displayLoad>
+		<Paginator rows={4} cols={5} rowsMD={2} colsMD={5} pageButtonRangeMD={1} displayCounter displayLoad textWhenNoResults="Sorry, we couldn't find any charities matching your search.">
 			{charityLogos.map(c => <div key={c.id} className="p-md-3 d-flex justify-content-center align-items-center">
 				<CharitySelectBox charity={c} padAmount3D={25} className="pt-3 pt-md-0"/>
 			</div>)}
@@ -125,7 +128,7 @@ const CharitySelectBox = ({charity, selected, padAmount3D=150, className}) => {
 		>
 			{charity ? <>
 				<CharityLogo style={{maxWidth:"100%", width: "100%", transform: `translateZ(${elementHeight}px)`}} charity={charity} key={charity.id} className="p-2 mb-5 mt-5 w-75"/>
-				{selected ? <span className="text-success thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} >🗹 Selected</span>
+				{selected ? <span className="text-success thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} >Selected</span>
 					: <a className="btn btn-transparent fill thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} onClick={() => {console.log("DSAHKDSAKJJ"); setSelectedCharityId(charity.id)}}>Select</a>}
 				<a className="position-absolute" style={{top: 10, right: 10}} href={charity.url} target="_blank" rel="noreferrer">About</a>
 			</> : <p style={{transform: `translateZ(${elementHeight}px)`}} className="color-gl-light-red">Select a charity</p>}
@@ -135,25 +138,27 @@ const CharitySelectBox = ({charity, selected, padAmount3D=150, className}) => {
 
 const TabStats = () => {
 	let pvTabsOpened = getTabsOpened();
-
 	let daysWithGoodLoop = getDaysWithGoodLoop();
-
 	let weeklyAvg = Math.round(7*pvTabsOpened.value / daysWithGoodLoop);
+
+	const goodStat = (stat) => {
+		return stat && stat !== Infinity;
+	};
 
 	return (
 		<Row>
-			<StatCard md={4} number={daysWithGoodLoop || "-"} label="Days with Tabs for Good"/>
-			<StatCard md={4} number={(pvTabsOpened && pvTabsOpened.value) || "-"} label="Tabs opened"/>
-			<StatCard md={4} number={weeklyAvg || "-"} label="Weekly tab average"/>
+			<StatCard md={4} number={goodStat(daysWithGoodLoop) ? daysWithGoodLoop : "-"} label="Days with Tabs for Good"/>
+			<StatCard md={4} number={goodStat(pvTabsOpened) && (pvTabsOpened && pvTabsOpened.value) ? pvTabsOpened.value : "-"} label="Tabs opened"/>
+			<StatCard md={4} number={goodStat(weeklyAvg) ? weeklyAvg : "-"} label="Weekly tab average"/>
 		</Row>
 	);
 };
 
 /** Search box - a magnifying-glass icon by a text input ??Should this move down to PropControl type=search
  */
-const Search = ({onSubmit, placeholder, icon}) => {
+const Search = ({onSubmit, placeholder, icon, className}) => {
 	return (<>
-		<Form onSubmit={onSubmit} inline className="flex-row tab-search-form px-2" >
+		<Form onSubmit={onSubmit} inline className={space("flex-row tab-search-form px-2", className)} >
 			{icon && icon}
 			<PropControl placeholder={placeholder} type="search" prop="q" path={['widget', 'search']} className="flex-grow w-100" />
 			<i className="fa fa-search tab-search mr-2" onClick={onSubmit}/>

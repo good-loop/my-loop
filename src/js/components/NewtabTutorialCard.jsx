@@ -40,8 +40,8 @@ const tutorialPages = [
 				You choose the charity you want to support. We will send them all the money you raise through Tabs for Good. You can change your mind at any time in your account settings.
 			</p>
 		</>
-    },
-    {
+	},
+	{
 		top:"25%",
 		left:"60%",
 		transform:"translate(-50%, -50%)",
@@ -51,8 +51,8 @@ const tutorialPages = [
 				See how much money we've raised so far! :)
 			</p>
 		</>
-    },
-    {
+	},
+	{
 		bottom:"120px",
 		left:"50%",
 		transform:"translate(-50%, 0)",
@@ -62,8 +62,8 @@ const tutorialPages = [
 				50% of the ad revenue received is going to the charity you choose.
 			</p>
 		</>
-    },
-    {
+	},
+	{
 		top:"90px",
 		right:"10px",
 		content: <>
@@ -73,7 +73,7 @@ const tutorialPages = [
 			</p>
 		</>
 	},
-    {
+	{
 		top:"90px",
 		left:"10px",
 		content: <>
@@ -106,16 +106,16 @@ const NewtabTutorialCard = () => {
 	const beforeLastPage = page < tutorialPages.length - 1;
 
 	return open && <>
-        <div className="position-absolute" style={{width: "100vw", height: "100vh", top: 0, left: 0, zIndex: 999, background:"rgba(0,0,0,0.25)"}} />
+		<div className="position-absolute" style={{width: "100vw", height: "100vh", top: 0, left: 0, zIndex: 999, background:"rgba(0,0,0,0.25)"}} />
 		<div className="tutorial-card bg-white position-absolute shadow text-center p-4"
 			style={{
-                zIndex: 9999,
+				zIndex: 9999,
 				top:tutorialPages[page].top,
 				left:tutorialPages[page].left,
 				right:tutorialPages[page].right,
 				bottom:tutorialPages[page].bottom,
 				transform:tutorialPages[page].transform,
-                width:500}}
+				width:500}}
 		>
 			{tutorialPages[page].content}
 			<div className="flex-row justify-content-center align-items-center unset-margins">
@@ -125,6 +125,10 @@ const NewtabTutorialCard = () => {
 			<div className="flex-row justify-content-center align-items-center unset-margins mt-3">
 				{tutorialPages.map((t, i) => <PageCircle pageNum={i} key={i} selectedPageNum={page}/>)}
 			</div>
+			<a className="position-absolute" style={{top:10, right:20}} onClick={e => {
+				e.preventDefault();
+				DataStore.setValue(tutorialOpenPath, false);
+			}}>x</a>
 		</div>
 	</>;
 };

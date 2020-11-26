@@ -11,8 +11,9 @@ import { space, isPortraitMobile } from '../base/utils/miscutils';
 @param {?Number} pageButtonRangeMD pageButtonRange for mobile
 @param {?Boolean} displayCounter show the number of items and number per page
 @param {?Boolean} displayLoad set the counter to "Loading..." when no items are present
+@param {?String} textWhenNoResults text to show when there are no results. Does not show in place of "loading"
 */ 
-const Paginator = ({rows, cols, rowsMD, colsMD, pageButtonRange, pageButtonRangeMD, children, displayCounter=false, displayLoad=false}) => {
+const Paginator = ({rows, cols, rowsMD, colsMD, pageButtonRange, pageButtonRangeMD, children, displayCounter=false, displayLoad=false, textWhenNoResults}) => {
 	if (isPortraitMobile() && rowsMD) rows = rowsMD;
 	if (isPortraitMobile() && colsMD) cols = colsMD;
 	if (isPortraitMobile() && pageButtonRangeMD) pageButtonRange = pageButtonRangeMD;
@@ -59,7 +60,7 @@ const Paginator = ({rows, cols, rowsMD, colsMD, pageButtonRange, pageButtonRange
 		{displayCounter || (displayLoad && items.length === 0) ?
 			<div className="paginator-counter">
 				{!displayLoad || (items.length > 0 || hasLoadedItems) ? "Showing " + items.length + " / " + children.length + " items"
-				: "Loading..."}
+					: "Loading..."}
 			</div> : null}
 		{page}
 		<div className={"paginator-controls flex-row justify-content-between" + (isPortraitMobile() ? "w-100" : "w-50") + " mx-auto mt-5"}>
