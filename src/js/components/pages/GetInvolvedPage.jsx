@@ -9,7 +9,7 @@ import SubscriptionBox from '../cards/SubscriptionBox';
 import { LoginLink } from '../../base/components/LoginWidget';
 import { space } from '../../base/utils/miscutils';
 import { MoreToDo } from './AccountPage';
-import { getAllXIds } from '../../base/Profiler';
+import { getAllXIds } from '../../base/data/Person';
 
 const Ref = ({href}) => {
 	return <a className='Ref' target="_blank" rel="noreferrer" href={href}>*</a>;

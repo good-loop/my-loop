@@ -1,0 +1,149 @@
+.tab-footer {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 90%);
+    transition: 0.2s;
+    &:hover {
+        transform: translate(-50%, 0);
+        transition: 0.2s;
+    }
+}
+
+.tab-search-container {
+    width: 50%;
+    @media @md-max {
+        width: 100%;
+    }
+}
+
+.tab-search {
+    color: @gl-light-red;
+    &:hover {
+        cursor: pointer;
+        color: @gl-red;
+    }
+}
+.tab-search-form {
+    background: white;
+    border: 1px solid gray;
+    border-radius: 100px;
+    .search input {
+        margin: unset;
+        width: 100%;
+        border-radius: 100px;
+        background: transparent;
+        border: none;
+        &:hover, &:focus {
+            border: none;
+            box-shadow: none;
+        }
+    }
+}
+
+.tab-charity {
+    transform: scale(1);
+    transition: 0.2s;
+    &:hover {
+        transform: scale(1.1);
+        transition: 0.2s;
+    }
+}
+
+.stat-card {
+    .stat-content {
+        box-shadow: 0px 1px 2px rgba(0,0,0,0.5);
+    }
+}
+
+.tutorial-highlight {
+    // Border + shadow = glow
+    border: 3px solid @gl-light-red;
+    box-shadow: 0 0 10px @gl-light-red;
+}
+
+.onboarding {
+    h1 {
+        font-size: 3.5rem;
+    }
+    h1,h2,p {
+        color: white;
+        font-weight: 500;
+        text-shadow: 3px 3px 6px #000000d3;
+    }
+}
+
+#webtop {
+    h1,h2,h3,h4,h5 {
+        color: white;
+        font-weight: 600;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .logo {
+        h4 {
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+    }
+}
+
+.extension-btn {
+    background: @gl-light-red;
+    box-shadow: 0px 3px 6px rgba(0,0,0,0.25);
+    padding: 0.75rem 1rem;
+    text-transform: uppercase;
+    color: white !important;
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+    text-decoration: none;
+    transition: 0.2s;
+
+    &:hover {
+        background: @gl-red;
+        box-shadow: 0px 3px 6px rgba(0,0,0,0.5);
+    }
+}
+
+.tab-login-widget {
+    h1,h2,h3, h4 {
+        text-transform: uppercase;
+    }
+    &.thankyou {
+        h1,h2,h3,h4 {
+            color: @gl-light-red !important;
+        }
+        text-align: center;
+        padding: 50px;
+    }
+    .login-content {
+        h1,h2,h3,h4 {
+            color: @gl-light-red !important;
+        }
+    }
+}
+
+.tutorial-card {
+    border-radius: 20px;
+    p {
+        font-size: 1.3rem;
+        color: darkslategray;
+    }
+    h1,h2,h3,h4 {
+        text-transform: uppercase;
+        color: @gl-turquoise !important;
+    }
+    .page-circle {
+        border-radius: 50%;
+        border: 2px solid @gl-light-red;
+        width: 15px;
+        &.selected {
+            background: @gl-light-red;
+        }
+        &:after {
+            content:"";
+            display: block;
+            padding-bottom: 100%;
+        }
+    }
+}

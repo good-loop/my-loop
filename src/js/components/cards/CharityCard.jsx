@@ -7,7 +7,6 @@ import C from '../../C';
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
 import ActionMan from '../../plumbing/ActionMan';
-import NGO from '../../base/data/NGO';
 import { SquareLogo } from '../Image';
 import MDText from '../../base/components/MDText';
 import Counter from '../../base/components/Counter';
@@ -72,7 +71,7 @@ const CharityLogo = ({charity, className, style, link=false}) => {
 	}
 	// with / without `a` link?
 	if (charity.url && link) {
-		return <a href={charity.url} className="w-100 h-100 d-flex justify-content-center align-items-center" target="_blank" rel="noopener noreferrer">{$logo}</a>;
+		return <a href={charity.url} style={style} className="charity-logo w-100 h-100 d-flex justify-content-center align-items-center" target="_blank" rel="noopener noreferrer">{$logo}</a>;
 	}
 	return $logo;
 };

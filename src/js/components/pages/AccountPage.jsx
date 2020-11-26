@@ -4,28 +4,62 @@ import { Col, Row, Form } from 'reactstrap';
 
 import DataStore from '../../base/plumbing/DataStore';
 
-import DigitalMirrorCard from '../cards/DigitalMirrorCard';
-import ConsentWidget from '../ConsentWidget';
-import SignUpConnectCard from '../cards/SignUpConnectCard';
+import NewTabOptions from '../NewTabOptions';
 import LinkedProfilesCard from '../cards/LinkedProfilesCard';
 import MyLoopNavBar from '../MyLoopNavBar';
 import { LoginLink } from '../../base/components/LoginWidget';
 import Footer from '../Footer';
-import {getAllXIds, getConsents, getEmail, getProfilesNow, hasConsent, PURPOSES} from '../../base/Profiler';
+import {getAllXIds, getEmail, getProfilesNow, hasConsent, PURPOSES} from '../../base/data/Person';
 import Misc from '../../base/components/Misc';
-import { space } from '../../base/utils/miscutils';
+import { space, isPortraitMobile } from '../../base/utils/miscutils';
 import PropControl from '../../base/components/PropControl';
 import SubscriptionBox from '../cards/SubscriptionBox';
 import ShareButton from '../ShareButton';
 import { addImageCredit } from '../../base/components/AboutPage';
-import Roles from '../../base/Roles';
+import TabsForGoodSettings from './TabsForGoodSettings';
+import AccountSettings from './AccountSettings';
+import { lg } from '../../base/plumbing/log';
+
+const Account = () => {
+	let xids = getAllXIds();
+	return <>
+		<div className="w-75 mx-auto">
+			<div className="text-center">
+				<h2>What to do now?</h2>
+				<p>You have already made the first important step in helping us: you joined our community. But there is more you can do!</p>
+			</div>
+			<MoreToDo xids={xids} />
+		</div>
+	</>;
+};
+
+const label4tab = {
+	account: "My Account",
+	settings: "Settings",
+	tabsForGood: "Tabs for Good"
+};
 
 const Page = () => {
+	// handle the not-logged-in case
+	if ( ! Login.isLoggedIn()) {
+		return (
+			<div className="AccountPage">
+				<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" alwaysScrolled/>
+				<div className="container mt-5 pt-5">
+					<h1>You need an account to see this page.</h1>
+					<LoginLink verb="register" className="btn btn-transparent fill">Register / Log in</LoginLink>							
+				</div>
+			</div>
+		);
+	}
 	// NB: race conditions with Login and profile fetch (for linked IDs) mean all-xids should be refreshed.
 	let xids = getAllXIds(); 
 
 	const user = Login.getUser();
-	const name = Login.isLoggedIn() ? user.name || user.xid : "";
+	const name = user.name || user.xid;
+
+	// Which tab? (default to account)
+	const tab = DataStore.getUrlValue('tab') || 'account';	
 
 	return (
 		<div className="AccountPage">
@@ -36,31 +70,29 @@ const Page = () => {
 						<img src="/img/LandingBackground/user.png" alt="user icon" />
 					</Col>
 					<Col md={8} className="flex-column justify-content-center align-items-start">
-						{Login.isLoggedIn() ? <div>
-							<h1>Hi {name},</h1>
-							<p>Thanks for being a member of the Good-loop family. Together we are changing the global ad industry and making a meaningful impact on the world.</p>
-						</div>:<div> <h1>You need an account to see this page.</h1>
-							<LoginLink verb="register" className="btn btn-transparent fill">Register / Log in</LoginLink>
-						</div>}
+						<h1>Hi {name},</h1>
+						<p>Thanks for being a member of the Good-loop family. Together we are changing the global ad industry and making a meaningful impact on the world.</p>
 					</Col>
 				</Row>
-				
-				{Login.isLoggedIn() ? <>
-					<div className="w-75 mx-auto">
-						<div className="text-center">
-							<h2>What to do now?</h2>
-							<p>You have already made the first important step in helping us: you joined our community. But there is more you can do!</p>
-						</div>
-						<MoreToDo xids={xids} />
-					</div>
-					
-					<h2 className="text-center mb-5">Your settings</h2>
-					<Settings xids={xids}/>
-				</> : null}
-
+				{tab==='account' && <Account/>}
+				{tab==='settings' && <AccountSettings xids={xids}/>}
+				{tab==='tabsForGood' && <TabsForGoodSettings/>}
+			</div>
+			<div className="account-sidebar flex-column justify-content-start unset-margins position-absolute pl-3 bg-white" style={{top: 0, paddingTop:80 /*navbar height*/, left:0}}>
+				<h5 className="p-2">My Good-Loop</h5>
+				{Object.keys(label4tab).map(t => <SidebarTabLink key={t} tab={t} label={label4tab[t]} selected={t===tab}/>)}
 			</div>
 		</div>
 	);
+};
+
+/**
+ * 
+ * @param {!string} tab The tab name
+ * @param {boolean} selected
+ */
+const SidebarTabLink = ({tab, label, selected}) => {
+	return <a href={"/#account?tab="+escape(tab)} className={space("account-tab p-2", selected && "active")}>{label || tab}</a>;
 };
 
 addImageCredit({name:"add-user", author:"Icons8", url:"https://icons8.com/icons/set/add-user-male"});
@@ -97,9 +129,10 @@ export const MoreToDo = ({xids}) => {
 					title="My-Loop"
 					image="/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png"
 					description="Using ads for good"
-					url="https://my.good-loop.com"
-					onShare={() => {
-						console.error("TODO onShare");
+					url="https://my.good-loop.com" // TODO add via=user so we can track and attribute visits
+					onShare={e => {
+						console.error("TODO log onShare - which channel",e);
+						lg("shareclick", {user:Login.getId()});
 					}}
 				>
 					Share
@@ -107,55 +140,6 @@ export const MoreToDo = ({xids}) => {
 			</DoSection>
 		</div>
 	);
-};
-
-const Settings = ({xids}) => {
-	// debug
-	let profiles = getProfilesNow(xids);
-	let consents = getConsents({profiles});
-
-	return (<div className="settings">
-		<ConsentWidget xids={xids}/>
-		<div className="pt-3"/>
-		{false && <YourDataSettings/>}
-		{Roles.isDev() && <div className="dev-text"><small>IDs: {xids.join(", ")}</small></div>}
-		{Roles.isDev() && <div className="dev-text"><small>Consents: {JSON.stringify(consents)}</small></div>}
-	</div>);
-};
-
-/**
- * TODO collect and maintain data about the user - eg common demographics
- */
-const YourDataSettings = () => {
-	const path = ['widget', 'YourDataWidget', 'details'];
-	return (<div className="your-data-form">
-		<h4>Your data:</h4>
-		<Row>
-			<Col md={4}>Name:</Col>
-			<Col md={8} xs={6}>
-				<PropControl 
-					path={path} 
-					prop="name"
-					type="text" 
-					saveFn={null} 
-				/>
-			</Col>
-		</Row>
-		<Row>
-			<Col md={4}>Email:</Col>
-			<Col md={8} xs={6}>
-				<PropControl 
-					path={path} 
-					prop="email"
-					type="text" 
-					saveFn={null} 
-				/>
-			</Col>
-		</Row>
-		<Row>
-			If you want to change your password, please go through password reset.
-		</Row>
-	</div>);
 };
 
 /**

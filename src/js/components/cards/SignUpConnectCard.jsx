@@ -1,10 +1,10 @@
 import React from 'react';
 import { space, toTitleCase } from '../../base/utils/miscutils';
-import { getProfilesNow } from '../../base/Profiler';
 import { LoginLink, SocialSignInButton } from '../../base/components/LoginWidget';
 import Misc from '../../base/components/Misc';
 import DataStore from '../../base/plumbing/DataStore';
 import XId from '../../base/data/XId';
+import { getProfilesNow } from '../../base/data/Person';
 
 const signInOrConnected = ({service, xid}) => {
 	if (xid) return <Connected service={service} xid={xid} />;
@@ -31,12 +31,8 @@ const SignUpConnectCard = ({className}) => {
 
 	return (
 		<div className={space('social-media-card', className)}>
-			<p style={{fontSize:"0.85rem"}}>
-				Boost your donations<br/>
-				and track your impact
-			</p>
-			{signInOrConnected({ service: 'good-loop', xid: service2xid.email })}
 			{signInOrConnected({ service: 'twitter', xid: service2xid.twitter })}
+			{/*signInOrConnected({ service: 'facebook', xid: service2xid.facebook })*/}
 		</div>
 	);
 };

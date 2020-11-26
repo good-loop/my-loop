@@ -1,23 +1,32 @@
 import React, { useState } from 'react';
 import { Row, Col } from 'reactstrap';
-import { space } from '../base/utils/miscutils';
-import { isPortraitMobile } from '../base/utils/miscutils';
+import { space, isPortraitMobile } from '../base/utils/miscutils';
 
 /** Takes a list of items as its children and splits it into pages according to specified grid dimensions
 @param {Number} rows how many rows each page has
 @param {Number} cols how many columns each page has
+@param {?Number} pageButtonRange how many page numbers to display either side of "this page"
+@param {?Number} rowsMD row number for mobile
+@param {?Number} colsMD column number for mobile
+@param {?Number} pageButtonRangeMD pageButtonRange for mobile
+@param {?Boolean} displayCounter show the number of items and number per page
+@param {?Boolean} displayLoad set the counter to "Loading..." when no items are present
+@param {?String} textWhenNoResults text to show when there are no results. Does not show in place of "loading"
 */ 
-const Paginator = ({rows, cols, rowsMD, colsMD, pageButtonRange, pageButtonRangeMD, children, displayCounter=false, displayLoad=false}) => {
+const Paginator = ({rows, cols, rowsMD, colsMD, pageButtonRange, pageButtonRangeMD, children, displayCounter=false, displayLoad=false, textWhenNoResults}) => {
 	if (isPortraitMobile() && rowsMD) rows = rowsMD;
 	if (isPortraitMobile() && colsMD) cols = colsMD;
 	if (isPortraitMobile() && pageButtonRangeMD) pageButtonRange = pageButtonRangeMD;
 	const [pageNum, setPage] = useState(0);
+	// Remember if we've had items or not, so we don't display loading again if we empty later
+	const [hasLoadedItems, setLoadedItems] = useState(false);
 	const itemsPerPage = rows * cols;
 	const numPages = Math.ceil(children.length / itemsPerPage);
 	let items = [];
 	for (let i = pageNum * itemsPerPage; i < (pageNum + 1) * itemsPerPage && i < children.length; i++) {
 		items.push(children[i]);
 	}
+	if (items.length > 0 && !hasLoadedItems) setLoadedItems(true);
 
 	// Setup page button count, applying a limit and offset according to the pageButtonRange
 	let pageBtns = [];
@@ -50,11 +59,11 @@ const Paginator = ({rows, cols, rowsMD, colsMD, pageButtonRange, pageButtonRange
 	return (<div className="paginator">
 		{displayCounter || (displayLoad && items.length === 0) ?
 			<div className="paginator-counter">
-				{!displayLoad || items.length > 0 ? "Showing " + items.length + " / " + children.length + " items"
-				: "Loading..."}
+				{!displayLoad || (items.length > 0 || hasLoadedItems) ? "Showing " + items.length + " / " + children.length + " items"
+					: "Loading..."}
 			</div> : null}
 		{page}
-		<div className={"paginator-controls flex-row justify-content-between " + (isPortraitMobile() ? "w-100" : "w-50") + " mx-auto mt-5"}>
+		<div className={"paginator-controls flex-row justify-content-between" + (isPortraitMobile() ? "w-100" : "w-50") + " mx-auto mt-5"}>
 			<PageButton pageNum={pageNum-1<0 ? 0 : pageNum-1} setPage={setPage} disabled={pageNum-1<0}>
 				Previous
 			</PageButton>
@@ -78,11 +87,11 @@ const PageButton = ({pageNum, setPage, selected=false, disabled=false, children}
 
 	return (<>
 		{disabled ?
-			<span className={space("paginator-btn disabled", selected ? "selected" : "")}>
+			<span className={space("paginator-btn disabled text-muted", selected ? "selected" : "")}>
 				{children}
 			</span>
 			:
-			<a onClick={e => switchPage(e)} className={space("paginator-btn", selected ? "selected" : "")}>
+			<a onClick={e => switchPage(e)} className={space("paginator-btn text-primary", selected ? "selected font-weight-bold" : "")}>
 				{children}
 			</a>}
 	</>);
@@ -103,7 +112,7 @@ const PageSection = ({page, rows, useMobileSizing=false, className, children}) =
 	return (<div className={space("page-section", className)} id={"page-"+page}>
 		<Row>
 			{children.map((c,i) =>
-				<Col md={colSize} xs={isPortraitMobile() && useMobileSizing? colSize : null} style={i % rows !== 0 && offset ? {marginLeft:offsetVal+"%"} : {}}>
+				<Col key={i} md={colSize} xs={isPortraitMobile() && useMobileSizing? colSize : null} style={i % rows !== 0 && offset ? {marginLeft:offsetVal+"%"} : {}}>
 					{c}
 				</Col>)}
 		</Row>

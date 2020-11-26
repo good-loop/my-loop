@@ -4,7 +4,7 @@ import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, Un
 import { LoginLink } from '../base/components/LoginWidget';
 // import NavBar from '../base/components/NavBar';
 import C from '../C';
-import { space } from '../base/utils/miscutils';
+import { space, isPortraitMobile } from '../base/utils/miscutils';
 
 /**
  * Why do we need our own jsx??
@@ -80,7 +80,7 @@ class MyLoopNavBar extends React.Component {
 							<NavLink href="/#charities">Charities</NavLink>
 						</NavItem>
 						<NavItem>
-							<NavLink href="/#involve">Get Involved</NavLink>
+							<NavLink href="/#involve">Get involved</NavLink>
 						</NavItem>
 						<NavItem>
 							<AccountMenu />
@@ -92,27 +92,37 @@ class MyLoopNavBar extends React.Component {
 	}
 }
 
-const AccountMenu = ({logoutLink}) => {
+/**
+ * Account dropdown widget for account access and logout
+ * @param logoutLink custom link to redirect to on logout
+ * @param small display a small circle with initial instead of full name
+ * @param accountLink custom link for account page
+ * @param children enter extra DropdownItem components to add more entries to the menu here
+ */
+const AccountMenu = ({logoutLink, small, accountLink, customLogin, children}) => {
 	if (!Login.isLoggedIn()) { 
 		return (
-			<LoginLink verb="register" className="login-menu btn btn-transparent fill">Register / Log in</LoginLink>
+			customLogin || <LoginLink verb="register" className="login-menu btn btn-transparent fill">Register / Log in</LoginLink>
 		); 
 	}
 
 	let user = Login.getUser();
+	let name = user.name || user.xid;
+	let initial = name.substr(0, 1);
 
 	return (
-		<UncontrolledDropdown className="login-menu">
-			<DropdownToggle caret style={{backgroundColor: 'transparent', border: '0'}} className="login-link btn btn-transparent fill">
-				{ user.name || user.xid }&nbsp;
+		<UncontrolledDropdown className="account-menu">
+			<DropdownToggle caret className={space("login-link", small ? "bg-gl-orange small-account text-white" : "btn btn-transparent fill")}>
+				{small ? initial : name + " "}
 			</DropdownToggle>
 			<DropdownMenu right>
-				<DropdownItem href="#account">Account</DropdownItem>
-				<DropdownItem divider />
+				<DropdownItem href={accountLink || "/#account"}>Account</DropdownItem>
+				{children}
 				<DropdownItem href={logoutLink} onClick={() => Login.logout()}>Log out</DropdownItem>
 			</DropdownMenu>
 		</UncontrolledDropdown>
 	);
 };
 
+export { AccountMenu };
 export default MyLoopNavBar;

@@ -23,8 +23,9 @@ import Money from '../base/data/Money';
  * @param {Number} tickTime - time between ticks in milliseconds
  * @param {Boolean} preservePennies Preserves 2 digits on the pennies count. This overrides sigFigs. True by default for money.
  * @param {Boolean} centerText Centers the text when counting up in the animation.
+ * @param {Date} startTime Calculates the start value based on a start time so the ticker updates on refreshes
  */
-const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty = true, preservePennies, centerText=false}) => 
+const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty = true, preservePennies, centerText=false, startTime, unitWidth}) => 
 {
 	if (amount) {
 		value = Money.value(amount);
@@ -34,13 +35,20 @@ const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty
 		console.warn("Ticker - No value or amount");
 		return null;
 	}
+	
+	const timeDiff = startTime ? Date.now() - startTime.getTime() : 0;
+	const valDiff = (timeDiff / tickTime) * rate;
+
 	const [dispVal, setValue] = useState(value);
-	const [running, setRunning] = useState(false);
-	const ref = useRef();
+	// Use state to make sure the offset is only stored once
+	const [valOffset] = useState(startTime ? valDiff : 0);
 
 	// Begin ticking on load
 	useEffect(() => {
+		// Start routine updates
 		const interval = setInterval(() => {
+			// If the startTime is set, use that to calculate differences
+			// Otherwise use a fixed rate addition
 			setValue(dispVal + rate);
 		}, tickTime);
 		return () => clearInterval(interval);
@@ -61,28 +69,23 @@ const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty
 			return new Intl.NumberFormat('en-GB', options).format(x);
 		} catch(er) {
 			console.warn("Ticker.jsx formatNumber "+er); // Handle the weird Intl undefined bug, seen Oct 2019, possibly caused by a specific phone type
-			return ""+x;	
+			return ""+x;
 		}	
 	};
 
-	let disp = pretty? formatNum(dispVal) : dispVal.toString();	
+	const offsetDispVal = dispVal + valOffset;
+	let disp = pretty? formatNum(offsetDispVal) : offsetDispVal.toString();	
+	disp = currencySymbol + disp;
 
-	// Get the total value in pretty penny form too, for preserving the size
-	let totalVal = pretty ? formatNum(value) : value.toString();
-	
-	// Make sure the display value is no longer than the end size
-	disp = disp.substr(0, totalVal.length);
-
-	// To avoid having the surrounding text jitter, we fix the size.
-	// using an invisible final value to get the sizing right.
-	// Text is aligned by absolute position of span, right:0 = right alignment by default
-	// If centerText is set, width is set to 100 and text-center does the job
-	// When centerText is set, the container div gets some extra horizontal padding to stop text overflow
+	let dispArr = disp.split("");
 	return (
-		<div className="position-relative d-inline-block" style={{padding: "0 " + (centerText ? "0.1rem" : "0")}}>
-			<span className="invisible text-center" style={{width: centerText ? "100%" : "auto"}}>{currencySymbol + totalVal}</span>
-			<span className="position-absolute text-center" style={{right: 0, width: centerText ? "100%" : "auto"}} ref={ref}>{currencySymbol + disp}</span>
-		</div>
+		<span className="position-relative d-inline-flex flex-row justify-content-center align-items-center" style={{padding: "0 " + (centerText ? "0.1rem" : "0")}}>
+			{/*<span className="invisible text-center" style={{width: centerText ? "100%" : "auto"}}>{currencySymbol + totalVal}</span>
+			<span className="position-absolute text-center" style={{right: 0, width: centerText ? "100%" : "auto"}} ref={ref}>{currencySymbol + disp}</span>*/}
+			{dispArr.map((digit, i) => <span key={i} style={{width:unitWidth || "1rem", textAlign:"center", margin:"unset"}}>
+				{digit}
+			</span>)}
+		</span>
 	);
 };
 

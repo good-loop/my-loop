@@ -1,21 +1,22 @@
 /* global navigator */
-import React, { Component } from 'react';
+import React, { Component, useState, useRef, useEffect } from 'react';
 import Login from 'you-again';
-import { assert } from 'sjtest';
 import { modifyHash, randomPick, encURI, space, stopEvent, ellipsize } from '../base/utils/miscutils';
-import {Card, Form, Button, CardTitle, Row, Col, Badge, CardBody, CardFooter} from 'reactstrap';
+import { Card, Form, Button, CardTitle, Row, Col, Badge, CardBody, CardFooter, DropdownItem, Alert } from 'reactstrap';
 
 // Plumbing
 import DataStore from '../base/plumbing/DataStore';
 import Roles from '../base/Roles';
 import C from '../C';
 import Crud from '../base/plumbing/Crud'; // Crud is loaded here to init (but not used here)
-import Profiler, { getProfile } from '../base/Profiler';
+import Money from '../base/data/Money';
+import {lg} from '../base/plumbing/log';
+import TabsForGoodSettings, { getTabsOpened, Search, getSelectedCharityId } from './pages/TabsForGoodSettings';
+import {fetchCharity } from './pages/MyCharitiesPage';
 
 // Templates
 import MessageBar from '../base/components/MessageBar';
-import LoginWidget, { setShowLogin, LoginLink, LogoutLink } from '../base/components/LoginWidget';
-import NavBar from './MyLoopNavBar';
+import NavBar, { AccountMenu } from './MyLoopNavBar';
 import DynImg from '../base/components/DynImg';
 
 // Pages
@@ -30,7 +31,17 @@ import BannerAd from './BannerAd';
 import Footer from './Footer';
 import ActionMan from '../base/plumbing/ActionManBase';
 import MDText from '../base/components/MDText';
+import Ticker from './Ticker';
 // import RedesignPage from './pages/RedesignPage';
+
+import NewTabOnboardingPage from './NewTabOnboarding';
+
+// Components
+import { CharityLogo } from './cards/CharityCard';
+import WhiteCircle from './campaignpage/WhiteCircle';
+import { nonce } from '../base/data/DataClass';
+import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLoginWidget';
+import NewtabTutorialCard, { openTutorial, TutorialComponent } from './NewtabTutorialCard';
 
 // DataStore
 C.setupDataStore();
@@ -40,134 +51,185 @@ C.setupDataStore();
 
 Login.app = C.app.service;
 
-let bg = randomPick([
-	{ src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1351&q=80' },
-	{ src: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1440&q=80' },
-	{ src: 'https://images.unsplash.com/photo-1588392382834-a891154bca4d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80' },
-	{ src: 'https://images.unsplash.com/photo-1582425312148-de9955e68e45?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2134&q=80' },
-	{ src: 'https://images.unsplash.com/photo-1592755137605-f53768fd7931?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80' },
-]);
+const inIframe = () => {
+	try {
+		return window.self !== window.top;
+	} catch (e) {
+		return true;
+	}
+};
 
-const WebtopPage = () => {
+/**
+ * NB: useEffect was triggering twice (perhaps cos of the login dance)
+ */
+let logOnceFlag;
 
-	let charities = ['wwf', 'the-save-the-children-fund', 'against-malaria-foundation', 'trees-for-the-future', 'cancer-research-uk'];
+/**
+ * Same for trying to verify user once ^^
+ */
+let verifiedLoginOnceFlag;
+
+/**
+ * The main Tabs-for-Good page
+ */
+const WebtopPage = () => {	
+
+	// Are we logged in??	
+	/*if (!Login.isLoggedIn()) {
+		window.location.href = "/newtab.html#onboarding";
+		return <div/>;
+	}*/
+	const onboarding = !inIframe();
+
+	// Yeh - a tab is opened -- let's log that (once only)	
+	if ( ! logOnceFlag && Login.isLoggedIn()) {
+		// NB: include a nonce, as otherwise identical events (you open a few tabs) within a 15 minute time bucket get treated as 1
+		lg("tabopen", {user:Login.getId(), nonce:nonce(6)});
+		logOnceFlag = true;
+	}
+
+	if (!verifiedLoginOnceFlag && !onboarding) {
+		// Popup login widget if not logged in
+		// Login fail conditions from youagain.js
+		Login.verify().then(res => {
+			if (!res || !res.success) setShowTabLogin(true);
+		}).catch(res => {
+			setShowTabLogin(true);
+		});
+		verifiedLoginOnceFlag = true;
+	}
+
+	let charityID = getSelectedCharityId();
 
 	// iframe src change?
 	// https://stackoverflow.com/posts/17316521/revisions
 
-	return (
-		<BG src={bg.src} fullscreen opacity={0.9}>
-			<div className="container">				
-				
-				<Card id="score" body className="pull-right">
-					<LoginAccountControl />
-					£1,000,000 raised
-				</Card>
 
-				<Card body>
-					<Form onSubmit={google} inline className="flex-row" >
-						<PropControl type="search" prop="q" path={['widget', 'search']} className="flex-grow" /><Button color="secondary" onClick={google}>Search</Button>
-					</Form>
-				</Card>
+	// Background images on tab plugin sourced locally
+	let bgImg = onboarding ? "/img/TabsForGood/Onboarding.png" : null;
 
-				<Row>
-					<h2 className='text-dark bg-light'>What charity would you like to support?</h2>
-					{charities.map(c => <NewTabCharityCard key={c} cid={c} />)}
-				</Row>
-
-				<Card body><CardTitle></CardTitle>
-					<BannerAd />
-				</Card>
-
-				{C.SERVER_TYPE !== 'local' ? <DevLink href="http://localmy.good-loop.com/newtab.html">Local Version</DevLink> : <Badge>local</Badge>}
-				{C.SERVER_TYPE !== 'test' ? <DevLink href="https://testmy.good-loop.com/newtab.html">Test Version</DevLink> : <Badge>test</Badge>}
-				{!C.isProduction() ? <DevLink href="https://my.good-loop.com/newtab.html">Production Version</DevLink> : <Badge>live</Badge>}
-
-				<NewTabFooter />
+	return (<>
+		<BG src={bgImg} fullscreen opacity={0.9} bottom={onboarding ? 0 : 110}>
+			<TutorialComponent page={[5, 6]} className="position-fixed p-3" style={{top: 0, left: 0, width:"100vw", zIndex:1}}>
+				<div className="d-flex justify-content-between">
+					<div className="logo pl-5 flex-row">
+						<a href="https://my.good-loop.com">
+							<img src="/img/logo-white.svg" style={{width: 50}} alt="logo"/>
+						</a>
+						<h4 className="pl-2">Tabs for<br/>good</h4>
+					</div>
+					<div className="user-controls flex-row">
+						{!onboarding && <>
+							{Login.isLoggedIn() ? <TabsOpenedCounter/> : null}
+							<AccountMenu small accountLink="/#account?tab=tabsForGood" customLogin={
+								<NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>
+							}/>
+						</>}
+					</div>
+				</div>
+			</TutorialComponent>
+			<div className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{top: 0, left: 0, width:"100vw", height:"100vh"}}>
+				<div className="container h-100 flex-column justify-content-center unset-margins">
+					{!onboarding ? <NormalTabCenter charityID={charityID}/> : <OnboardingTabCenter/>}
+				</div>
 			</div>
-		</BG>);
+			{/* Tutorial highlight to cover adverts */}
+		</BG>
+		<TutorialComponent page={4} className="position-absolute" style={{bottom:0, left:0, right:0, height:110, width:"100vw"}}/>
+		<NewtabTutorialCard/>
+		<NewtabLoginWidget onRegister={() => {if (!onboarding) openTutorial();}}/>
+	</>); 
 };
 
-const LoginAccountControl = () => {
-	if ( ! Login.isLoggedIn()) {		
-		return <LoginLink />;
-	}
-	let user = Login.getUser();
-	return <div>
-		{user.name || user.id}
-		<small><LogoutLink /></small>
-	</div>;
+const TabsOpenedCounter = () => {
+	let pvTabsOpened = getTabsOpened();
+	return <span className="pr-3 text-white font-weight-bold">{(pvTabsOpened && pvTabsOpened.value) || '0'} tabs opened</span>;
 };
 
+const NormalTabCenter = ({charityID}) => {
+	return <>
+		<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
+			<h3 className="text-center">
+				Together we've raised&nbsp;
+				<TutorialComponent page={3} className="d-inline-block">
+					<Ticker amount={new Money("$1501886.40")} rate={0.1} startTime={/* arbitrarily taken from dev time */ new Date(1606220478753)} preservePennies unitWidth="0.6em"/>
+				</TutorialComponent>
+			</h3>
+			<img src="/img/TabsForGood/sparkle.png" alt="sparkle" style={{width: 50}} className="pl-1"/>
+		</div>
+		<div className="w-100 pb-3">
+			<div className="tab-search-container mx-auto">
+				<Search onSubmit={doSearch} placeholder="Search with Ecosia" icon={
+					<TutorialComponent page={1}>
+						<img src="/img/TabsForGood/ecosia.png" alt="search icon"/>
+					</TutorialComponent>
+				}/>
+			</div>
+		</div>
+		<small className="text-center text-white font-weight-bold">You are supporting</small>
+		<NewTabCharityCard cid={charityID} />
+	</>;
+};
 
+const OnboardingTabCenter = () => {
+	return <>
+		<div className="text-center onboarding">
+			<h2>Together we've raised</h2>
+			<h1><Ticker amount={new Money("$1501886.40")} rate={0.1} preservePennies unitWidth="0.6em"/></h1>
+			<p>Every time you open a tab you raise money for good.<br/>You decide who gets it.</p>
+			<a className="extension-btn">Add tabs for good to chrome</a>
+		</div>
+	</>;
+};
 
 const PAGES = {
-	account: AccountPage,
-	webtop: WebtopPage
+	webtop: WebtopPage,
+	onboarding: NewTabOnboardingPage
 };
 const NewTabMainDiv = () => {
-	return <MainDivBase pageForPath={PAGES} defaultPage="webtop" navbar={false} />;
+	return <MainDivBase pageForPath={PAGES} defaultPage="webtop" navbar={false} className="newtab"/>;
 };
 
-const NewTabFooter = () => (<Footer>
+const NewTabFooter = () => (<Footer className="tab-footer">
 	<a href="https://good-loop.com" target="_parent">Good-Loop</a>
 
 	<a href="https://doc.good-loop.com/policy/privacy-policy.html" target="_top">Privacy policy</a>
 </Footer>);
 
 const NewTabCharityCard = ({cid}) => {
-	let user = Login.getUser();
-	let profile = user && user.xid? getProfile({xid:user.xid}) : null;
-	console.warn("profile", profile);
+	console.log("CHARITY TO SELECT", cid);
+	//let user = Login.getUser();
+	//let profile = user && user.xid? getProfile({xid:user.xid}) : null;
+	//console.warn("profile", profile);
 
-	let pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:cid, status:C.KStatus.PUBLISHED});
-	if ( ! pvCharity.value) {
-		return <Col sm={3} xs={1} xl={4} ><Card body>{cid}</Card></Col>;
-	}
-	if (pvCharity.error) return null; // offline maybe
-	const charity = pvCharity.value;
-	// Prefer full descriptions here. If unavailable switch to summary desc.
-	let desc = charity.description || charity.summaryDescription || '';
-	// But do cut descriptions down to 1 paragraph.
-	let firstParagraph = (/^.+\n *\n/g).exec(desc);
-	if (firstParagraph) {
-		desc = firstParagraph[0];
-	}
-	desc = ellipsize(desc, 240);
+	const charity = cid ? fetchCharity(cid) : null;	
 
-	let img = charity.images;
-	let selected = false; // TODO user preferences
-
-	return (<Col sm={12} md={4} ><Card selected={selected}>
-		{img && <img src={img} alt="charity" className='card-img-top'/>}	
-		<CardBody>
-			<CardTitle>{charity.name}</CardTitle>
-			<img src={charity.logo} alt="logo" className='logo-large' style={{height:'100%',overflow:'hidden',marginTop:0,marginLeft:"-1.25rem"}} />
-			<MDText source={desc} />
-		</CardBody>
-		<CardFooter>
-			<Button color={selected?'secondary':'primary'} onClick={e => toggleCharitySelect(cid)}>{selected? "select" : "de-select"}</Button>
-		</CardFooter>
-	</Card></Col>
-	);
-};
-
-
-const toggleCharitySelect = e => {
-	// TODO
+	return (<div className="d-flex justify-content-center" >
+		<a href="/#account?tab=tabsForGood" rel="noreferrer" target="_blank">
+			<TutorialComponent page={2}>
+				<WhiteCircle className="m-3 tab-charity" circleCrop={charity ? charity.circleCrop : null}>
+					{charity ?
+						<CharityLogo charity={charity}/>
+						: <p className="color-gl-light-red font-weight-bold text-center my-auto">Select a charity</p>}
+				</WhiteCircle>
+			</TutorialComponent>
+		</a>
+	</div>);
 };
 
 /**
- * TODO Ecosia
+ * redirect to Ecosia
  */
-const google = e => {
+const doSearch = e => {
 	stopEvent(e);
 	// NB: use window.parent to break out of the newtab iframe, otherwise ecosia objects
-	(window.parent || window.parent).location = 'https://www.ecosia.org/search?q=' + encURI(DataStore.getValue('widget', 'search', 'q'));
+	const search = DataStore.getValue('widget', 'search', 'q');
+	// Cancel search if empty
+	// DONT use !search - if user searches a string that can evaluate falsy, like '0', it will cause a false positive
+	if (search == null || search === '') {
+		return;
+	}
+	(window.parent || window.parent).location = 'https://www.ecosia.org/search?q=' + encURI(search);
 };
-
-// HACK!!!
-Roles.isDev = () => true;
-
 
 export default NewTabMainDiv;

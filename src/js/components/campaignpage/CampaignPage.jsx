@@ -248,7 +248,7 @@ const CampaignPage = () => {
 		<CSS css={campaignPage && campaignPage.customCss} />
 		<CSS css={branding.customCss} />
 		<div className="widepage CampaignPage gl-btns">
-			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" logoScroll="/img/gl-logo/rectangle/logo-name.svg" scrollColour="white"/>
+			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg"/>
 			<div className="text-center">
 				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaignPage} donationValue={donationTotal} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
 
@@ -568,10 +568,8 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserNam
 		</Container>
 	</>);
 };
-
 const AdvertCard = ({ ad }) => {
 	const size = isPortraitMobile() ? 'portrait' : 'landscape';
-
 	return (
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
 			<div className="ad-card">
@@ -594,10 +592,8 @@ const AdvertCard = ({ ad }) => {
 		</div>
 	);
 };
-
 const AdvertPreviewCard = ({ ad, handleClick, selected = false }) => {
 	let size = 'landscape';
-
 	// Show when the campaign ran
 	// Fallback to ad creation date
 	const durationText = ad.start || ad.end ? <span>
@@ -607,7 +603,6 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false }) => {
 	</span> : <span>
 		<Misc.RoughDate date={ad.created} />
 	</span>;
-
 	return (
 		<div className="col-md-3 col-6">
 			<div onClick={e => { e.preventDefault(); handleClick(); }} className={"pointer-wrapper" + (selected ? " selected" : "")}>
@@ -621,13 +616,10 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false }) => {
 		</div>
 	);
 };
-
 const isAll = () => {
 	const slug = DataStore.getValue('location', 'path', 1);
 	return slug === 'all';
 };
-
-
 /**
  * @returns {!SearchQuery}
  */

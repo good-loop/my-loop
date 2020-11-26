@@ -8,6 +8,8 @@
 @import "GetInvolvedPage.less";
 @import "CampaignPage.less";
 @import "AccountPage.less";
+@import "TabsForGoodSettings.less";
+@import "NewTab.less";
 @import "navbar.less";
 @import "MyLoginWidget.less";
 @import "CharityPicker.less";
@@ -136,10 +138,8 @@ a.btn {
 
 // The "Connect on email/Twitter/Facebook" widget
 .social-media-card {
-	padding: 0.5rem 1rem;
-	// Default width: wide enough to show full "Connect with X" text
-	font-size: 120%;
-	width: 14em;
+	display: inline-flex;
+	flex-direction: column;
 
 	.tagline {
 		color: white;
@@ -149,7 +149,7 @@ a.btn {
 	}
 
 	.btn {
-		font-size: 100%; // Override Bootstrap's explicit px sizing for contextual sizing
+		font-size: 1rem;
 	}
 
 	.btn, .social-connected {
@@ -158,6 +158,12 @@ a.btn {
 		margin-bottom: 0.5rem; // enclosing in p-1 was making them stack up too tall
 		width: 100%; // equal width for prettiness, set explicit width on the social-media-card in question
 		text-align: left; // icons in a vertical line
+	}
+
+	// Override margin:auto rules for flex children
+	&>* {
+		margin-left: unset !important;
+		margin-right: unset !important;
 	}
 }
 
@@ -195,8 +201,10 @@ a.btn {
 }
 
 .login-menu .btn, .login-menu.btn {
+	// TODO document
 	font-weight: 600;
 	padding: 10px;
+	// ?? what is mix-blend-mode
 	mix-blend-mode: normal;
 	a {
 		color: @gl-light-red;
@@ -228,7 +236,8 @@ a.btn {
 }
 
 // Override whoever put auto margins on flex children (why??)
-.unset-margins>* {
+// Exception for classes with specified margins
+.unset-margins>*:not([class*="m-"]) {
 	margin: unset;
 }
 
