@@ -247,64 +247,66 @@ const CampaignPage = () => {
 	return (<>
 		<CSS css={campaignPage && campaignPage.customCss} />
 		<CSS css={branding.customCss} />
-		<div className="widepage CampaignPage text-center gl-btns">
+		<div className="widepage CampaignPage gl-btns">
 			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" logoScroll="/img/gl-logo/rectangle/logo-name.svg" scrollColour="white"/>
-			<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaignPage} donationValue={donationTotal} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
+			<div className="text-center">
+				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaignPage} donationValue={donationTotal} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
 
-			<HowDoesItWork nvertiserName={nvertiserName} />
+				<HowDoesItWork nvertiserName={nvertiserName} />
 
-			{isLanding ? null : (
-				<AdvertsCatalogue
-					ads={ads}
-					viewcount4campaign={viewcount4campaign}
-					donationTotal={donationTotal}
-					nvertiserName={nvertiserName}
-					totalViewCount={totalViewCount}
-				/>
-			)}
+				{isLanding ? null : (
+					<AdvertsCatalogue
+						ads={ads}
+						viewcount4campaign={viewcount4campaign}
+						donationTotal={donationTotal}
+						nvertiserName={nvertiserName}
+						totalViewCount={totalViewCount}
+					/>
+				)}
 
-			<Charities charities={charities} donation4charity={donation4charity} />
+				<Charities charities={charities} donation4charity={donation4charity} />
 
-			<div className="bg-white">
-				<Container>
-					<h2 className="my-5">Where can you see our ads?</h2>
-					<p className="w-60 mx-auto">Good-Loop distributes ethical online ads to millions of people every month in premium websites across the world’s best publishers and social platforms.</p>
-				</Container>
-				{isMobile() ?
-					<img src="/img/Graphic_metro_mobile.800w.png" className="w-100" alt="publishers" />
-					:
-					<img src="/img/Graphic_metro.1920w.png" className="w-100" alt="publishers" />}
-			</div>
+				<div className="bg-white">
+					<Container>
+						<h2 className="my-5">Where can you see our ads?</h2>
+						<p className="w-60 mx-auto">Good-Loop distributes ethical online ads to millions of people every month in premium websites across the world’s best publishers and social platforms.</p>
+					</Container>
+					{isMobile() ?
+						<img src="/img/Graphic_metro_mobile.800w.png" className="w-100" alt="publishers" />
+						:
+						<img src="/img/Graphic_metro.1920w.png" className="w-100" alt="publishers" />}
+				</div>
 
-			<div className="bg-gl-light-red">
-				<Container className="py-5 text-white">
-					<div className="pt-5" />
-					<h2 className="text-white">Join the revolution and support ads<br />that make a difference</h2>
-					<p className="py-5">Help us do even more good in the world!<br />All you have to do is sign up with your email or social account.<br />This will help us boost the donations you generate by seeing our ads.</p>
-					<div className="py-4 w-50 row mx-auto">
-						<div className="col-md">
-							<LoginLink><div className="btn btn-secondary w-100">Sign up</div></LoginLink>
+				<div className="bg-gl-light-red">
+					<Container className="py-5 text-white">
+						<div className="pt-5" />
+						<h2 className="text-white">Join the revolution and support ads<br />that make a difference</h2>
+						<p className="py-5">Help us do even more good in the world!<br />All you have to do is sign up with your email or social account.<br />This will help us boost the donations you generate by seeing our ads.</p>
+						<div className="py-4 w-50 row mx-auto">
+							<div className="col-md">
+								<LoginLink><div className="btn btn-secondary w-100">Sign up</div></LoginLink>
+							</div>
+							<div className="col-md">
+								<ShareButton className="btn-transparent btn-white w-100 mt-3 mt-md-0" meta={shareButtonMeta} url={window.location.href}>Share the love</ShareButton>
+							</div>
 						</div>
-						<div className="col-md">
-							<ShareButton className="btn-transparent btn-white w-100 mt-3 mt-md-0" meta={shareButtonMeta} url={window.location.href}>Share the love</ShareButton>
-						</div>
-					</div>
-					<div className="pb-5" />
-				</Container>
-			</div>
+						<div className="pb-5" />
+					</Container>
+				</div>
 
-			<div className="bg-gl-light-pink">
-				<Container className="py-5">
-					<div className="pt-5" />
-					<h2>Are you a brand or an agency?</h2>
-					<p className="pt-5" style={{ fontSize: "1.3rem" }}>Company website: <a style={{ textDecoration: "none", color: "inherit" }} href="http://www.good-loop.com"><b>www.good-loop.com</b></a><br />Email: <b>hello@good-loop.com</b></p>
-					<div className="py-5 flex-column flex-md-row justify-content-center">
-						<a className="btn btn-primary mr-md-3" target="_blank" href="https://www.good-loop.com/contact">Book a call</a>
-						{pdf ? <a className="btn btn-transparent mt-3 mt-md-0" href={pdf}>Download pdf version</a> : null}
-					</div>
-					<div className="pb-5" />
-				</Container>
-			</div>
+				<div className="bg-gl-light-pink">
+					<Container className="py-5">
+						<div className="pt-5" />
+						<h2>Are you a brand or an agency?</h2>
+						<p className="pt-5" style={{ fontSize: "1.3rem" }}>Company website: <a style={{ textDecoration: "none", color: "inherit" }} href="http://www.good-loop.com"><b>www.good-loop.com</b></a><br />Email: <b>hello@good-loop.com</b></p>
+						<div className="py-5 flex-column flex-md-row justify-content-center">
+							<a className="btn btn-primary mr-md-3" target="_blank" href="https://www.good-loop.com/contact">Book a call</a>
+							{pdf ? <a className="btn btn-transparent mt-3 mt-md-0" href={pdf}>Download pdf version</a> : null}
+						</div>
+						<div className="pb-5" />
+					</Container>
+				</div>
+
 			<CharityDetails charities={charities}/>
 			{campaignPage.smallPrint ?
 				<div className="small-print">
@@ -312,6 +314,7 @@ const CampaignPage = () => {
 						{campaignPage.smallPrint}
 					</small>
 				</div> : null}
+        
 		</div>
 	</>
 	);
