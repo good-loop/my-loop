@@ -41,7 +41,7 @@ import { CharityLogo } from './cards/CharityCard';
 import WhiteCircle from './campaignpage/WhiteCircle';
 import { nonce } from '../base/data/DataClass';
 import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLoginWidget';
-import NewtabTutorialCard, { openTutorial } from './NewtabTutorialCard';
+import NewtabTutorialCard, { openTutorial, TutorialComponent } from './NewtabTutorialCard';
 
 // DataStore
 C.setupDataStore();
@@ -88,7 +88,7 @@ const WebtopPage = () => {
 		logOnceFlag = true;
 	}
 
-	if (!verifiedLoginOnceFlag) {
+	if (!verifiedLoginOnceFlag && !onboarding) {
 		// Popup login widget if not logged in
 		// Login fail conditions from youagain.js
 		Login.verify().then(res => {
@@ -110,7 +110,7 @@ const WebtopPage = () => {
 
 	return (<>
 		<BG src={bgImg} fullscreen opacity={0.9} bottom={onboarding ? 0 : 110}>
-			<div className="position-fixed p-3" style={{top: 0, left: 0, width:"100vw", zIndex:10}}>
+			<TutorialComponent page={[5, 6]} className="position-fixed p-3" style={{top: 0, left: 0, width:"100vw", zIndex:1}}>
 				<div className="d-flex justify-content-between">
 					<div className="logo pl-5 flex-row">
 						<a href="https://my.good-loop.com">
@@ -119,38 +119,51 @@ const WebtopPage = () => {
 						<h4 className="pl-2">Tabs for<br/>good</h4>
 					</div>
 					<div className="user-controls flex-row">
-						{Login.isLoggedIn() && !onboarding ? <TabsOpenedCounter/> : null}
-						<AccountMenu small accountLink="/#account?tab=tabsForGood" customLogin={
-							<NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>
-						}/>
+						{!onboarding && <>
+							{Login.isLoggedIn() ? <TabsOpenedCounter/> : null}
+							<AccountMenu small accountLink="/#account?tab=tabsForGood" customLogin={
+								<NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>
+							}/>
+						</>}
 					</div>
 				</div>
-			</div>
+			</TutorialComponent>
 			<div className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{top: 0, left: 0, width:"100vw", height:"100vh"}}>
 				<div className="container h-100 flex-column justify-content-center unset-margins">
 					{!onboarding ? <NormalTabCenter charityID={charityID}/> : <OnboardingTabCenter/>}
 				</div>
 			</div>
+			{/* Tutorial highlight to cover adverts */}
 		</BG>
+		<TutorialComponent page={4} className="position-absolute" style={{bottom:0, left:0, right:0, height:110, width:"100vw"}}/>
 		<NewtabTutorialCard/>
-		<NewtabLoginWidget onRegister={openTutorial}/>
+		<NewtabLoginWidget onRegister={() => {if (!onboarding) openTutorial();}}/>
 	</>); 
 };
 
 const TabsOpenedCounter = () => {
 	let pvTabsOpened = getTabsOpened();
-	return <span className="pr-3 text-white font-weight-bold">{(pvTabsOpened && pvTabsOpened.value) || '-'} tabs opened</span>;
+	return <span className="pr-3 text-white font-weight-bold">{(pvTabsOpened && pvTabsOpened.value) || '0'} tabs opened</span>;
 };
 
 const NormalTabCenter = ({charityID}) => {
 	return <>
 		<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
-			<h3 className="text-center">Together we've raised <Ticker amount={new Money("$1501886.40")} rate={0.1} startTime={/* arbitrarily taken from dev time */ new Date(1606220478753)} preservePennies unitWidth="0.6em"/></h3>
+			<h3 className="text-center">
+				Together we've raised&nbsp;
+				<TutorialComponent page={3} className="d-inline-block">
+					<Ticker amount={new Money("$1501886.40")} rate={0.1} startTime={/* arbitrarily taken from dev time */ new Date(1606220478753)} preservePennies unitWidth="0.6em"/>
+				</TutorialComponent>
+			</h3>
 			<img src="/img/TabsForGood/sparkle.png" alt="sparkle" style={{width: 50}} className="pl-1"/>
 		</div>
 		<div className="w-100 pb-3">
 			<div className="tab-search-container mx-auto">
-				<Search onSubmit={doSearch} placeholder="Search with Ecosia"/>
+				<Search onSubmit={doSearch} placeholder="Search with Ecosia" icon={
+					<TutorialComponent page={1}>
+						<img src="/img/TabsForGood/ecosia.png" alt="search icon"/>
+					</TutorialComponent>
+				}/>
 			</div>
 		</div>
 		<small className="text-center text-white font-weight-bold">You are supporting</small>
@@ -193,11 +206,13 @@ const NewTabCharityCard = ({cid}) => {
 
 	return (<div className="d-flex justify-content-center" >
 		<a href={charity ? charity.url : "/#account?tab=tabsForGood"} rel="noreferrer" target="_blank">
-			<WhiteCircle className="m-3 tab-charity" circleCrop={charity ? charity.circleCrop : null}>
-				{charity ?
-					<CharityLogo charity={charity}/>
-					: <p className="color-gl-light-red font-weight-bold text-center my-auto">Select a charity</p>}
-			</WhiteCircle>
+			<TutorialComponent page={2}>
+				<WhiteCircle className="m-3 tab-charity" circleCrop={charity ? charity.circleCrop : null}>
+					{charity ?
+						<CharityLogo charity={charity}/>
+						: <p className="color-gl-light-red font-weight-bold text-center my-auto">Select a charity</p>}
+				</WhiteCircle>
+			</TutorialComponent>
 		</a>
 	</div>);
 };
@@ -217,6 +232,4 @@ const doSearch = e => {
 	(window.parent || window.parent).location = 'https://www.ecosia.org/search?q=' + encURI(search);
 };
 
-
-export { Search };
 export default NewTabMainDiv;

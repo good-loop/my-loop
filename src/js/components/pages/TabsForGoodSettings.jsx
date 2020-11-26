@@ -151,10 +151,12 @@ const TabStats = () => {
 
 /** Search box - a magnifying-glass icon by a text input ??Should this move down to PropControl type=search
  */
-const Search = ({onSubmit, placeholder}) => {
+const Search = ({onSubmit, placeholder, icon}) => {
 	return (<>
 		<Form onSubmit={onSubmit} inline className="flex-row tab-search-form px-2" >
-			<PropControl placeholder={placeholder} type="search" prop="q" path={['widget', 'search']} className="flex-grow w-100" /><i className="fa fa-search tab-search mr-2" onClick={onSubmit}/>
+			{icon && icon}
+			<PropControl placeholder={placeholder} type="search" prop="q" path={['widget', 'search']} className="flex-grow w-100" />
+			<i className="fa fa-search tab-search mr-2" onClick={onSubmit}/>
 		</Form>
 	</>);
 };

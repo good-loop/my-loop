@@ -51,6 +51,7 @@ const NewtabLoginWidget = ({onLogin, onRegister}) => {
 	};
 	
 	let error = Login.error;
+	console.log("LOGIN ERROR", error);
 
 	if (error && error.text === "error") {
 		error.text = "Could not login. Check your credentials are correct.";

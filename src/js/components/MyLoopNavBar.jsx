@@ -79,18 +79,9 @@ class MyLoopNavBar extends React.Component {
 						<NavItem>
 							<NavLink href="/#charities">Charities</NavLink>
 						</NavItem>
-						{isPortraitMobile() ?
-							<NavItem>
-								<NavLink href="/#involve">Get involved</NavLink>
-							</NavItem>
-							:
-							<UncontrolledDropdown nav inNavbar> 
-								<DropdownToggle nav caret>Get involved</DropdownToggle>
-								<DropdownMenu>
-									<DropdownItem href="/#involve">Join the revolution</DropdownItem>
-									<DropdownItem href="/newtab.html">Tabs-for-good</DropdownItem>
-								</DropdownMenu>
-							</UncontrolledDropdown>}
+						<NavItem>
+							<NavLink href="/#involve">Get involved</NavLink>
+						</NavItem>
 						<NavItem>
 							<AccountMenu />
 						</NavItem>

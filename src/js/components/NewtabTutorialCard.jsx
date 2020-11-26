@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DataStore from '../base/plumbing/DataStore';
 import { space } from '../base/utils/miscutils';
 
 const tutorialPath = ['widget', 'TutorialCard'];
 const tutorialOpenPath = [...tutorialPath, 'open'];
+const tutorialPagePath = [...tutorialPath, 'page'];
 
 const tutorialPages = [
 	{
@@ -86,7 +87,19 @@ const tutorialPages = [
 
 const NewtabTutorialCard = () => {
 	let open = DataStore.getValue(tutorialOpenPath);
-	const [page, setPage] = useState(0);
+	const page = DataStore.getValue(tutorialPagePath);
+	const setPage = (num) => {
+		DataStore.setValue(tutorialPagePath, num);
+	};
+
+	// Set page to 0 by default
+	useEffect(() => {
+		// Use of != is purposeful here: only match if number is explicitly equal, avoid re-render loops
+		if (!page && page != 0) {
+			setPage(0);
+		}
+	});
+
 	if (page > tutorialPages.length - 1) {
 		DataStore.setValue(tutorialOpenPath, false);
 	}
@@ -124,5 +137,20 @@ const openTutorial = () => {
 	DataStore.setValue(tutorialOpenPath, true);
 };
 
-export { openTutorial };
+const TutorialComponent = ({page, customSelectStyle, style, children, className}) => {
+	const current = DataStore.getValue(tutorialPagePath);
+	const open = DataStore.getValue(tutorialOpenPath);
+	let highlight = current === page;
+	if (Array.isArray(page)) {
+		highlight = page.includes(current);
+	}
+	const selectStyle = customSelectStyle || {zIndex:1000, background:"rgba(255,255,255,0.7)", borderRadius:"50px", boxShadow:"0px 0px 5px rgba(255,255,255,1)"};
+	let combinedStyle = style || {};
+	if (highlight && open) Object.assign(combinedStyle, selectStyle);
+	return <div className={space("tutorial-component position-relative", className, highlight ? "highlight" : "")} style={combinedStyle}>
+		{children}
+	</div>;
+};
+
+export { openTutorial, TutorialComponent };
 export default NewtabTutorialCard;
