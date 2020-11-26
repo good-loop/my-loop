@@ -77,30 +77,23 @@ const Charities = ({ charities, donation4charity }) => {
 	// Remove null entries
 	sogiveCharities = sogiveCharities.filter(x => x);
 
-	const getDonation = c => donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
+	const getDonation = c => {
+		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
+		// Filter charity if less then 1/10 the total donation
+		// TODO: better filter method
+		if (d && (d.value < donation4charity.total * 0.1)) d = false;
+		return d;
+	};
+
 	let sogiveCharitiesWithDonations = sogiveCharities.filter(c => getDonation(c)); // Get rid of charities with no logged donations.
-	let sogiveCharitiesWithoutDonations = sogiveCharities.filter(c => ! getDonation(c)); // Keep other charities for the "Also Supported" section
+	//let sogiveCharitiesWithoutDonations = sogiveCharities.filter(c => ! getDonation(c)); // Keep other charities for the "Also Supported" section
 
 	return (
 		<div className="charity-card-container bg-gl-light-pink">
 			<div className="py-5">
 				<h2>Our Impact</h2>
 			</div>
-			<Container className="py-5">
-				<div className="row pb-5 justify-content-center">
-					{sogiveCharitiesWithDonations.map((charity, i) =>
-						<CharityMiniCard
-							i={i} key={charity.id}
-							charity={charity}
-							NGOid={charity.id}
-							donationValue={charity.donation}
-						/>
-					)}
-				</div>
-				<AlsoSupported charities={sogiveCharitiesWithoutDonations} />
-				<div className="py-5">
-					<h2>How charities use the donations</h2>
-				</div>
+			<Container className="pb-5">
 				{sogiveCharitiesWithDonations.map((charity, i) =>
 					<CharityCard i={i} key={charity.id} charity={charity} donationValue={getDonation(charity)} />
 				)}
