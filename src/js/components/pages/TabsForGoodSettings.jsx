@@ -128,7 +128,7 @@ const CharitySelectBox = ({charity, selected, padAmount3D=150, className}) => {
 		>
 			{charity ? <>
 				<CharityLogo style={{maxWidth:"100%", width: "100%", transform: `translateZ(${elementHeight}px)`}} charity={charity} key={charity.id} className="p-2 mb-5 mt-5 w-75"/>
-				{selected ? <span className="text-success thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} >Selected</span>
+				{selected ? <span className="text-success thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} >&#10004; Selected</span>
 					: <a className="btn btn-transparent fill thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} onClick={() => {console.log("DSAHKDSAKJJ"); setSelectedCharityId(charity.id)}}>Select</a>}
 				<a className="position-absolute" style={{top: 10, right: 10}} href={charity.url} target="_blank" rel="noreferrer">About</a>
 			</> : <p style={{transform: `translateZ(${elementHeight}px)`}} className="color-gl-light-red">Select a charity</p>}
