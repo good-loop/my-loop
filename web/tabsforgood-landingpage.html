@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<meta property="og:image" content="https://my.good-loop.com/img/gl-logo/rectangle/logo.svg" />
+		<meta property="og:title" content="Tabs for Good by Good-Loop" />
+		<link rel="manifest" href="/manifest.webmanifest">
+		<meta name="theme-color" content="#770f00">
+		<title>My Good-Loop - Raise money for charity whilst you browse the internet</title>
+		<link rel="shortcut icon" href="/favicon-32.png" />
+
+		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+		<link rel="stylesheet" type="text/css" href="/build/style/main.css">
+		
+		<script type="text/javascript">
+			var cpm = {};
+			(function(h,u,b){
+			var d=h.getElementsByTagName("script")[0],e=h.createElement("script");
+			e.async=true;e.src='https://cookiehub.net/c2/1ac697d7.js';
+			e.onload=function(){u.cookiehub.load(b);}
+			d.parentNode.insertBefore(e,d);
+			})(document,window,cpm);
+			</script>		
+	</head>
+	<body>
+		
+		<div id="mainDiv">
+
+			<div className="text-center onboarding">
+				<h2>Together we've raised</h2>
+				<h1>$1501886.40</h1>
+				<p>Every time you open a tab you raise money for good.<br/>You decide who gets it.</p>
+				<a className="extension-btn">Add tabs for good to chrome</a>
+			</div>	
+
+		</div>
+
+		<!-- Scripts -->
+		<script type="text/javascript" async src="https://platform.twitter.com/widgets.js"></script>
+		<script>
+			window.fbAsyncInit = function() {
+			    FB.init({
+			      appId      : '1847521215521290', // ?? check against C.js
+			      xfbml      : true,
+			      version    : 'v2.8'
+			    });
+		    //FB.AppEvents.logPageView();
+			};
+
+			(function(d, s, id){
+	    		var js, fjs = d.getElementsByTagName(s)[0];
+				if (d.getElementById(id)) {return;}
+				js = d.createElement(s); js.id = id;
+				js.src = "//connect.facebook.net/en_US/sdk.js";
+				fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));
+		</script>
+		
+		<!-- everything comes via webpack -->
+		<script>
+			// Insert bundle[-debug].js - but allow dynamic test/production build switch.
+			// Default to debug build on test and local servers.
+			var isDebug = window.location.hostname.match(/^local/) || window.location.hostname.match(/^test/);
+			
+			// Has the user specified debug/production build with a URL param?
+			var debugParam = window.location.search.match(/debug=(\w+)/i);
+			if (debugParam && debugParam[1]) {
+				// Require an exact match to change from default
+				if (debugParam[1] === 'false') isDebug = false;
+				else if (debugParam[1] === 'true') isDebug = true;
+			}
+			
+			var filename = isDebug ? 'bundle-debug.js' : 'bundle.js';
+			document.write('<script src="/build/js/' + filename + '"/><\/script>');
+		</script>
+		
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-89730678-7"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-89730678-7');
+		</script>
+		<!-- script async src='//as.good-loop.com/pxl.js'></script -->
+		<img src='//lg.good-loop.com/pxl' style='position:absolute;bottom:0px;left:0px;width:1;height:1;'/>
+	</body>
+</html>
