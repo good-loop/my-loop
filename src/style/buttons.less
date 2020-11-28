@@ -48,6 +48,14 @@
     box-shadow: none !important;
     border: none !important;
 }
+.btn-outline-primary {
+	border-color: @gl-orange;
+	&:hover:not(.disabled) {
+		border-color: @gl-orange;
+		background-color: @gl-red;
+	}
+}
+
 
 .btn-secondary {
     background-color: white;
@@ -70,6 +78,7 @@
     border: none !important;
 }
 
+// ??Could this use e.g. Bootstrap's btn-outline-primary instead??
 .btn-transparent {
     background-color: transparent;
     color: @gl-orange !important;

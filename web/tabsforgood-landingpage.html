@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html>
+<!--
 
+	Design:  
+	https://xd.adobe.com/view/de922102-039b-4db0-80c5-d308cee6c841-8bc1/screen/b9798720-feb4-49af-a079-5652f6b8b0aa
+
+-->
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -34,30 +39,28 @@
 	</script>
 </head>
 
-<body>
+<body class='landingpage'>
+	<div class="position-fixed p-3" style="top: 0px; left: 0px; width: 100vw; z-index: 1;">
+		<div class="d-flex justify-content-between">
+			<div class="logo pl-5 flex-row"><a href="https://my.good-loop.com"><img src="/img/logo-white.svg" alt="logo"
+						style="width: 50px;"></a>
+				<h4 class="pl-2 text-white">Tabs for<br>good</h4>
+			</div>
+		</div>
+	</div>
 
-	<div id="mainDiv">
-		<div class="page" id="webtop">
-			<div class="BG-img"
-				style="background-image: url(&quot;/img/TabsForGood/Onboarding.png&quot;); background-size: cover; position: fixed; opacity: 0.9; inset: 0px; z-index: -1;">
-			</div>
-			<div class="tutorial-component position-relative position-fixed p-3"
-				style="top: 0px; left: 0px; width: 100vw; z-index: 1;">
-				<div class="d-flex justify-content-between">
-					<div class="logo pl-5 flex-row"><a href="https://my.good-loop.com"><img src="/img/logo-white.svg"
-								alt="logo" style="width: 50px;"></a>
-						<h4 class="pl-2">Tabs for<br>good</h4>
-					</div>
-					<div class="user-controls flex-row"></div>
-				</div>
-			</div>
-			<div class="flex-column justify-content-end align-items-center position-absolute unset-margins"
-				style="top: 0px; left: 0px; width: 100vw; height: 100vh;">
-				<div class="container h-100 flex-column justify-content-center unset-margins">
+	<div class='pageslice splash-card'>
+		<div class="container h-100">
+			<!-- NB: the html was originally copy-pasted from jsx-generated html, so it's a bit odd. -->
+			<div class="flex-column justify-content-end align-items-center unset-margins h-100">
+				<div class="flex-column justify-content-center unset-margins h-100 ">
 					<div class="text-center onboarding">
+						<p>Every time you open a tab you raise money for good causes.<br>You decide who gets it.</p>
+
 						<h2>Together we've raised</h2>
-						<h1><span
-								class="position-relative d-inline-flex flex-row justify-content-center align-items-center"
+
+						<h1><span id='TickerTotal'
+								class="ticker position-relative d-inline-flex flex-row justify-content-center align-items-center"
 								style="padding: 0px;"><span
 									style="width: 0.6em; text-align: center; margin: unset;">$</span><span
 									style="width: 0.6em; text-align: center; margin: unset;">1</span><span
@@ -71,16 +74,174 @@
 									style="width: 0.6em; text-align: center; margin: unset;">0</span><span
 									style="width: 0.6em; text-align: center; margin: unset;">.</span><span
 									style="width: 0.6em; text-align: center; margin: unset;">9</span><span
-									style="width: 0.6em; text-align: center; margin: unset;">9</span></span></h1>
-						<p>Every time you open a tab you raise money for good.<br>You decide who gets it.</p><a
-							class="btn btn-primary extension-btn">Add tabs for good to chrome</a>
+									style="width: 0.6em; text-align: center; margin: unset;">9</span></span>
+						</h1>
+						<a class="btn btn-primary extension-btn">Add tabs for good to chrome</a>
 					</div>
 				</div>
 			</div>
-			<div class="tutorial-component position-relative position-absolute"
-				style="bottom: 0px; left: 0px; right: 0px; height: 110px; width: 100vw;"></div>
 		</div>
-	</div>
+	</div><!-- ./ splash -->
+
+	<div class='pageslice why-card'>
+		<div class="container">
+			<div class='row'>
+				<div class='col-md-6'>
+					<h2>Why install Tabs-for-Good?</h2>
+					<p>
+						With every single tab you open, you'll generate real money to solve real problems!
+					</p>
+					<p>
+						We use the spare seconds before your website loads, to display
+						unobtrusive banner ads at the bottom of the new tab. Money from the ads goes to your charity.
+					</p>
+					<a class='btn btn-outline-primary'><img class='logo-xsmall'
+							src='/img/gl-logo/external/chrome-logo.svg' /> Add to Chrome</a>
+				</div>
+				<div class='col-md-6'>
+					TODO lovely screenshot
+				</div>
+			</div>
+		</div>
+	</div><!-- ./why-card -->
+
+	<div class='pageslice team-card'>
+		<div class="container">
+			<div class='row'>
+				<div class='col-md-6'>
+					TODO Amy video
+				</div>
+				<div class='col-md-6'>
+					<h2>Meet the Founders</h2>
+					<p>
+						Amy Williams and Daniel Winterstein founded Good-Loop together
+						in 2016 on a mission to make the internet a more positive place
+						by changing online advertising. Join us, and we can turn advertising into a force for good.
+					</p>
+					<a class='btn btn-outline-primary'><img class='logo-xsmall'
+							src='/img/gl-logo/external/chrome-logo.svg' /> Add to Chrome</a>
+				</div>
+			</div>
+		</div>
+	</div><!-- ./team-card -->
+
+	<div class='pageslice vision-card'>
+		<div class="container">
+			<div class='row'>
+				<div class='col-md-6'>
+					<h2>Together, let's make a bright new future</h2>
+					<p>
+						$586 billion was spent on advertising in 2019 alone [ref] - if that money can be harnessed,
+						it would be enough to stop the rise of greenhouse gases. [ref]
+						You can help make this a reality - just by joining Tabs-for-Good.
+					</p>
+					<a class='btn btn-outline-primary'><img class='logo-xsmall'
+							src='/img/gl-logo/external/chrome-logo.svg' /> Add to Chrome</a>
+				</div>
+				<div class='col-md-6'>
+					TODO yin yang drawing
+				</div>
+			</div>
+		</div>
+	</div><!-- ./vision-card -->
+
+
+	<div class='pageslice charities-card'>
+		<div class="container">
+			<div class='row'>
+				<div class='col-md-6'>
+					TODO charity logos
+				</div>
+				<div class='col-md-6'>
+					<h2>You Decide Who Gets the Money</h2>
+					<p>
+						Clean the oceans from plastic, feed the children, save endangered species, or support women's
+						education in developing countries.
+						Pick the cause that you care about.
+					</p>
+					<a class='btn btn-outline-primary'><img class='logo-xsmall'
+							src='/img/gl-logo/external/chrome-logo.svg' /> Add to Chrome</a>
+				</div>
+			</div>
+		</div>
+	</div><!-- ./charities-card -->
+
+	<div class='pageslice ecosia-card'>
+		<div class="container">
+			<div class='row'>
+				<div class='col-md-6'>
+					<h2>Need Another Reason?</h2>
+					<p>
+						There is no such thing as too much help, so we offer Ecosia as a search engine.
+						This means that while raising money for your charity, you also plant trees around the world.
+					</p>
+					<a class='btn btn-outline-primary'><img class='logo-xsmall'
+							src='/img/gl-logo/external/chrome-logo.svg' /> Add to Chrome</a>
+				</div>
+				<div class='col-md-6'>
+					TODO screenshot trees
+				</div>
+			</div>
+		</div>
+	</div><!-- ./charities-card -->
+
+	<footer class="container-fluid text-light">
+		<div class="container py-5">
+			<div class="row justify-content-between">
+				<div class="col-6 col-md mt-5 mt-md-0 footer-links">
+					<div class="d-inline-block">
+						<h5>About</h5>
+						<a href="/our-story.html">Our story</a><br>
+						<a href="/donations-report.html">Our impact</a><br>
+						<a href="/press-and-awards.html">Press and awards</a><br>
+						<a href="/careers.html">Careers</a><br>
+					</div>
+				</div>
+				<div class="col-6 col-md mt-5 mt-md-0 footer-links">
+					<div class="d-inline-block">
+						<h5>More</h5>
+						<a href="https://doc.good-loop.com/policy/privacy-policy.html">Privacy policy</a><br>
+						<a href="https://doc.good-loop.com/policy/cookie-policy.html">Cookie policy</a><br>
+						<a href="#" class="ch2-open-settings-btn">Cookie settings</a><br>
+						<a href="https://doc.good-loop.com/terms/terms-of-use.html">Terms of use</a><br>
+					</div>
+				</div>
+			</div>
+
+			<hr>
+			<div class="row align-items-center justify-content-center">
+				<!-- space row into thirds -->
+				<div class="col-8 col-md-4 col-lg-4 mt-2">
+					<div class="row text-center text-md-right">
+						<div class="col">
+							<a href="https://twitter.com/goodloophq" target="_blank">
+								<img alt="twitter" src="/img/gl-logo/external/twitter-logo.wb.png" class="logo-small">
+							</a>
+						</div>
+						<div class="col">
+							<a href="https://www.facebook.com/the.good.loop/" target="_blank">
+								<img alt="facebook" src="/img/gl-logo/external/facebook-logo.wb.png" class="logo-small">
+							</a>
+						</div>
+						<div class="col">
+							<a href="https://www.instagram.com/goodloophq/" target="_blank">
+								<img alt="instagram" src="/img/gl-logo/external/instagram-logo.wb.png"
+									class="logo-small">
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<a href='https://good-loop.com'><img src="/img/gl-logo/rectangle/logo-name.svg" class="logo-large"></a>
+			</div>
+			<div class="row justify-content-md-center">
+				<small>© Good-Loop Ltd, all rights reserved. <a href='https://good-loop.com'>Good-Loop™</a> is a
+					registered UK company no. SC548356.</small>
+			</div>
+
+		</div>
+	</footer>
 
 	<!-- Scripts -->
 	<script type="text/javascript" async src="https://platform.twitter.com/widgets.js"></script>
@@ -133,5 +294,4 @@
 	<!-- script async src='//as.good-loop.com/pxl.js'></script -->
 	<img src='//lg.good-loop.com/pxl' style='position:absolute;bottom:0px;left:0px;width:1;height:1;' />
 </body>
-
 </html>
