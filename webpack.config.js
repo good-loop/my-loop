@@ -97,7 +97,8 @@ const configs = [
 
 // Allow debug-only compilation for faster iteration in dev
 if (process.env.NO_PROD !== 'true') {
-	// copy, change mode and filename, and add
+	// Add the production configs.
+	// copy, change mode and filename
 	const devconfigs = [...configs];
 	devconfigs.forEach(devc => {
 		let prodc = Object.assign({}, devc);
@@ -107,7 +108,7 @@ if (process.env.NO_PROD !== 'true') {
 		configs.push(prodc);		
 	});
 }
-console.log(configs);
+// console.log(configs);
 
 // Output bundle files for production and dev/debug
 module.exports = configs;
