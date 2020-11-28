@@ -102,11 +102,12 @@ if (process.env.NO_PROD !== 'true') {
 	devconfigs.forEach(devc => {
 		let prodc = Object.assign({}, devc);
 		prodc.mode = 'production';
-		prodc.filename = devc.filename.replace('-debug','');
-		configs.push(prodc);
-		console.log(prodc);
+		prodc.output = Object.assign({}, devc.output);
+		prodc.output.filename = devc.output.filename.replace('-debug','');
+		configs.push(prodc);		
 	});
 }
+console.log(configs);
 
 // Output bundle files for production and dev/debug
 module.exports = configs;
