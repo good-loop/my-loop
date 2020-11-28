@@ -183,7 +183,7 @@ const OnboardingTabCenter = () => {
 			<h2>Together we've raised</h2>
 			<h1><TickerTotal /></h1>
 			<p>Every time you open a tab you raise money for good.<br/>You decide who gets it.</p>
-			<a className="extension-btn">Add tabs for good to chrome</a>
+			<a className="btn btn-primary extension-btn">Add tabs for good to chrome</a>
 		</div>
 	</>;
 };
