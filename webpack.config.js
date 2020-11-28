@@ -92,12 +92,20 @@ const makeConfig = ({ filename, mode, entry }) => {
 const configs = [
 	makeConfig({filename: 'js/bundle-debug.js', mode: 'development' }),
 	makeConfig({filename: 'js/newtab-bundle-debug.js', mode: 'development', entry:'./src/js/newtab.jsx'}),
+	makeConfig({filename: 'js/static-bundle-debug.js', mode: 'development', entry:'./src/js/static.js'}),
 ];
 
 // Allow debug-only compilation for faster iteration in dev
 if (process.env.NO_PROD !== 'true') {
-	configs.push(makeConfig({filename: 'js/bundle.js', mode: 'production' }));
-	configs.push(makeConfig({filename: 'js/newtab-bundle.js', mode: 'production', entry:'./src/js/newtab.jsx'}));
+	// copy, change mode and filename, and add
+	const devconfigs = [...configs];
+	devconfigs.forEach(devc => {
+		let prodc = Object.assign({}, devc);
+		prodc.mode = 'production';
+		prodc.filename = devc.filename.replace('-debug','');
+		configs.push(prodc);
+		console.log(prodc);
+	});
 }
 
 // Output bundle files for production and dev/debug

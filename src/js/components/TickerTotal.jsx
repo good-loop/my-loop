@@ -7,6 +7,6 @@ import Ticker from './Ticker';
  */
 const TickerTotal = () => <Ticker amount={new Money("$1501886.40")} rate={0.1}
 	startTime={/* arbitrarily taken from dev time ??it'd be nice to add auto recalibration */ new Date(1606220478753)}
-	preservePennies unitWidth="0.6em" />;
+	preservePennies />;
 
 export default TickerTotal;

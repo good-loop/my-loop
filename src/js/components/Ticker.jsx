@@ -25,7 +25,7 @@ import Money from '../base/data/Money';
  * @param {Boolean} centerText Centers the text when counting up in the animation.
  * @param {Date} startTime Calculates the start value based on a start time so the ticker updates on refreshes
  */
-const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty = true, preservePennies, centerText=false, startTime, unitWidth}) => 
+const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty = true, preservePennies, centerText=false, startTime}) => 
 {
 	if (amount) {
 		value = Money.value(amount);
@@ -77,14 +77,13 @@ const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty
 	let disp = pretty? formatNum(offsetDispVal) : offsetDispVal.toString();	
 	disp = currencySymbol + disp;
 
+	// slice the string to enforce fixed-width characters (to avoid the string wobbling as it updates)
 	let dispArr = disp.split("");
+	// TODO comment on what the css below is for
 	return (
-		<span className="position-relative d-inline-flex flex-row justify-content-center align-items-center" style={{padding: "0 " + (centerText ? "0.1rem" : "0")}}>
-			{/*<span className="invisible text-center" style={{width: centerText ? "100%" : "auto"}}>{currencySymbol + totalVal}</span>
-			<span className="position-absolute text-center" style={{right: 0, width: centerText ? "100%" : "auto"}} ref={ref}>{currencySymbol + disp}</span>*/}
-			{dispArr.map((digit, i) => <span key={i} style={{width:unitWidth || "1rem", textAlign:"center", margin:"unset"}}>
-				{digit}
-			</span>)}
+		<span className="Ticker position-relative d-inline-flex flex-row justify-content-center align-items-center" 
+			style={{padding: "0 " + (centerText ? "0.1rem" : "0")}}>			
+			{dispArr.map((digit, i) => <span key={i} style={{width: (digit===','||digit==='.'? '0.3' : '0.6')+'em'}}>{digit}</span>)}
 		</span>
 	);
 };

@@ -1,6 +1,6 @@
 
-.landingpage {
 
+.landingpage {	
 	.pageslice {
 		padding-top: 5em;
 		padding-bottom: 5em;
@@ -12,8 +12,26 @@
 		background-image: url('/img/TabsForGood/Onboarding.png'); 
 		background-size: cover; 
 		opacity: 0.9; inset: 0px; 
+		color:white;
+		h1,h2,h3,h4 {
+			text-shadow: 3px 3px 6px #000000d3;
+		}
+		.btn {
+			// background: @gl-light-red !important;
+			box-shadow: 0px 3px 6px rgba(0,0,0,0.25) !important;
+			padding: 0.75rem 1rem;
+			// text-transform: uppercase;
+			// color: white !important;
+			transition: 0.2s;
+			/* Why no rounding here? ask Kati maybe */
+			border-radius: 0;
+			&:hover {
+				// background: @gl-btn-hover !important;
+				box-shadow: 0px 3px 6px rgba(0,0,0,0.5) !important;
+			}
+		}
 	}
-
+	
 	footer {
 		/* do we have a colour name for footer grey?? */
 		background-color: #333;

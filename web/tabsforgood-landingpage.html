@@ -20,7 +20,7 @@
 	<meta name="twitter:description" content="Raise money for good causes whilst you use the internet" />
 	<meta name="twitter:image" content="https://my.good-loop.com/img/TabsForGood/TabsForGood_Twitter.jpg" />
 
-	<title>My Good-Loop - Raise money for charity whilst you browse the internet</title>
+	<title>Tabs-for-Good - Raise money for charity whilst you use the internet</title>
 	<link rel="shortcut icon" href="/favicon-32.png" />
 
 	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet"
@@ -44,7 +44,7 @@
 		<div class="d-flex justify-content-between">
 			<div class="logo pl-5 flex-row"><a href="https://my.good-loop.com"><img src="/img/logo-white.svg" alt="logo"
 						style="width: 50px;"></a>
-				<h4 class="pl-2 text-white">Tabs for<br>good</h4>
+				<h4 class="pl-2 text-white">Tabs for<br>Good</h4>
 			</div>
 		</div>
 	</div>
@@ -55,28 +55,17 @@
 			<div class="flex-column justify-content-end align-items-center unset-margins h-100">
 				<div class="flex-column justify-content-center unset-margins h-100 ">
 					<div class="text-center onboarding">
-						<p>Every time you open a tab you raise money for good causes.<br>You decide who gets it.</p>
+						<h3>Raise money for charity whilst you use the web.</h3>
+						<h3>Each time you open a tab, a donation is made. You decide who gets it.</h3>
 
 						<h2>Together we've raised</h2>
 
 						<h1><span id='TickerTotal'
 								class="ticker position-relative d-inline-flex flex-row justify-content-center align-items-center"
-								style="padding: 0px;"><span
-									style="width: 0.6em; text-align: center; margin: unset;">$</span><span
-									style="width: 0.6em; text-align: center; margin: unset;">1</span><span
-									style="width: 0.6em; text-align: center; margin: unset;">,</span><span
-									style="width: 0.6em; text-align: center; margin: unset;">5</span><span
-									style="width: 0.6em; text-align: center; margin: unset;">3</span><span
-									style="width: 0.6em; text-align: center; margin: unset;">6</span><span
-									style="width: 0.6em; text-align: center; margin: unset;">,</span><span
-									style="width: 0.6em; text-align: center; margin: unset;">0</span><span
-									style="width: 0.6em; text-align: center; margin: unset;">4</span><span
-									style="width: 0.6em; text-align: center; margin: unset;">0</span><span
-									style="width: 0.6em; text-align: center; margin: unset;">.</span><span
-									style="width: 0.6em; text-align: center; margin: unset;">9</span><span
-									style="width: 0.6em; text-align: center; margin: unset;">9</span></span>
-						</h1>
-						<a class="btn btn-primary extension-btn">Add tabs for good to chrome</a>
+								style="padding: 0px;">
+						</span></h1>
+						<a class="btn btn-primary extension-btn"><img class='logo-xsmall'
+							src='/img/gl-logo/external/chrome-logo.svg' /> Add Tabs for Good to chrome</a>
 					</div>
 				</div>
 			</div>
@@ -233,7 +222,7 @@
 				</div>
 			</div>
 			<div class="row justify-content-center">
-				<a href='https://good-loop.com'><img src="/img/gl-logo/rectangle/logo-name.svg" class="logo-large"></a>
+				<a href='https://good-loop.com'><img src="/img/gl-logo/rectangle/logo-name.wb.svg" class="logo-large"></a>
 			</div>
 			<div class="row justify-content-md-center">
 				<small>© Good-Loop Ltd, all rights reserved. <a href='https://good-loop.com'>Good-Loop™</a> is a
@@ -278,7 +267,7 @@
 			else if (debugParam[1] === 'true') isDebug = true;
 		}
 
-		var filename = isDebug ? 'bundle-static-debug.js' : 'bundle-static.js';
+		var filename = isDebug ? 'static-bundle-debug.js' : 'static-bundle.js';
 		document.write('<script src="/build/js/' + filename + '"/><\/script>');
 	</script>
 
