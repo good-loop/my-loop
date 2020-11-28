@@ -42,6 +42,7 @@ import WhiteCircle from './campaignpage/WhiteCircle';
 import { nonce } from '../base/data/DataClass';
 import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLoginWidget';
 import NewtabTutorialCard, { openTutorial, TutorialComponent } from './NewtabTutorialCard';
+import TickerTotal from './TickerTotal';
 
 // DataStore
 C.setupDataStore();
@@ -71,6 +72,7 @@ let verifiedLoginOnceFlag;
 
 /**
  * The main Tabs-for-Good page
+ * 
  */
 const WebtopPage = () => {	
 
@@ -146,13 +148,14 @@ const TabsOpenedCounter = () => {
 	return <span className="pr-3 text-white font-weight-bold">{(pvTabsOpened && pvTabsOpened.value) || '0'} tabs opened</span>;
 };
 
+
 const NormalTabCenter = ({charityID}) => {
 	return <>
 		<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
 			<h3 className="text-center">
 				Together we've raised&nbsp;
 				<TutorialComponent page={3} className="d-inline-block">
-					<Ticker amount={new Money("$1501886.40")} rate={0.1} startTime={/* arbitrarily taken from dev time */ new Date(1606220478753)} preservePennies unitWidth="0.6em"/>
+					<TickerTotal />
 				</TutorialComponent>
 			</h3>
 			<img src="/img/TabsForGood/sparkle.png" alt="sparkle" style={{width: 50}} className="pl-1"/>
@@ -171,11 +174,14 @@ const NormalTabCenter = ({charityID}) => {
 	</>;
 };
 
+/**
+ * @deprecated Moving the landing page to tabsforgood-landingpage.html, as a static page is better for social media shares.
+ */
 const OnboardingTabCenter = () => {
 	return <>
 		<div className="text-center onboarding">
 			<h2>Together we've raised</h2>
-			<h1><Ticker amount={new Money("$1501886.40")} rate={0.1} preservePennies unitWidth="0.6em"/></h1>
+			<h1><TickerTotal /></h1>
 			<p>Every time you open a tab you raise money for good.<br/>You decide who gets it.</p>
 			<a className="extension-btn">Add tabs for good to chrome</a>
 		</div>
@@ -189,12 +195,6 @@ const PAGES = {
 const NewTabMainDiv = () => {
 	return <MainDivBase pageForPath={PAGES} defaultPage="webtop" navbar={false} className="newtab"/>;
 };
-
-const NewTabFooter = () => (<Footer className="tab-footer">
-	<a href="https://good-loop.com" target="_parent">Good-Loop</a>
-
-	<a href="https://doc.good-loop.com/policy/privacy-policy.html" target="_top">Privacy policy</a>
-</Footer>);
 
 const NewTabCharityCard = ({cid}) => {
 	console.log("CHARITY TO SELECT", cid);
