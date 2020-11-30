@@ -68,8 +68,10 @@ const YourDataSettings = ({className}) => {
 
 	// email?
 	let exid = xids.find(xid => XId.service(xid)==='email');
-
-	const path = ['widget', 'YourDataWidget', 'details'];
+	if ( ! exid) {
+		console.warn("AccountSettings - no email?", xids);
+	}
+	
 	return (<div className={space("your-data-form", className)}>
 		<h4>Your data:</h4>
 		<Row className="align-items-center user-setting">
@@ -86,14 +88,8 @@ const YourDataSettings = ({className}) => {
 		<Row className="align-items-center user-setting mt-4 mt-md-0">
 			<Col md={2}>Email:</Col>
 			<Col md={6} className="align-left">
-				<PropControl 
-					path={path} 
-					prop="email"
-					type="email" 
-					dflt={exid && XId.id(exid)}
-					disabled={exid}
-					placeholder="jamesbond@gov.uk"
-				/>
+				<code>{exid? XId.id(exid) : "unset"}</code>
+				<small>Email is set from your login. Let us know if you need to change it by contacting support@good-loop.com.</small>
 			</Col>
 		</Row>
 		<div>
