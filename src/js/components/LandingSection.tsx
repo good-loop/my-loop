@@ -88,7 +88,7 @@ const CtaBox: React.FC = () => {
 	//@ts-ignore
 	return (
 		<div className="title">
-			<h1>Raise money for charity<br/>whilst you browse the web</h1>
+			<h1>Raise money for charity<br/>while you browse the web</h1>
 			<p>Help us redirect 50% of ad money to tackle global issues.<br/>We've raised <TickerTotal /> using ethical ads.</p>
 		</div>
 	);

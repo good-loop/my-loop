@@ -59,7 +59,7 @@ const SimplifiedCharityForm = ({path, i}) => {
 					if ( ! v) return v;
 					// NB: runs on change only, otherwise it keeps looping, as the adserver & sogive servers return !== json.
 					// NB: ServerIO.js getData will call SoGive for NGO data
-					// Swallow errors, which we get whilst the user is typing
+					// Swallow errors, which we get while the user is typing
 					let pvcharityData = ActionMan.getDataItem({type:C.TYPES.NGO, id:v, swallow:true, status:C.KStatus.PUBLISHED});
 					pvcharityData.promise.then(res => {
 						if ( ! res) return; // not a charity
