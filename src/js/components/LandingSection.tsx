@@ -12,6 +12,7 @@ import Money from '../base/data/Money';
 import Ticker from './Ticker';
 import ShareButton from './ShareButton';
 import { isPortraitMobile } from '../base/utils/miscutils';
+import TickerTotal from './TickerTotal';
 
 const springPageDown = (setY: Function): void => {
 	const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
