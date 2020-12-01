@@ -50,33 +50,31 @@
 	</div>
 
 	<div class='pageslice splash-card'>
-		<div class="container h-100">
+		<div class="container h-100 content">
 			<!-- NB: the html was originally copy-pasted from jsx-generated html, so it's a bit odd. -->
 			<div class="flex-column justify-content-end align-items-center unset-margins h-100">
 				<div class="flex-column justify-content-center unset-margins h-100 ">
 					<div class="text-center onboarding">
-						<h3>Raise money for charity while you use the web.</h3>
-						<h3>Each time you open a tab, a donation is made. You decide who gets it.</h3>
-
-						<h2>Together we've raised</h2>
-
-						<h1><span id='TickerTotal'
+						<!--<h1><span id='TickerTotal'
 								class="ticker position-relative d-inline-flex flex-row justify-content-center align-items-center"
 								style="padding: 0px;">
-						</span></h1>
-						<a class="btn btn-primary extension-btn" data-aos="zoom-in" data-aos-delay="1000"><img class='logo-xsmall'
-							src='/img/gl-logo/external/chrome-logo.svg' /> Add Tabs for Good to chrome</a>
+						</span></h1>-->
+						<h2 class="w-50 mx-auto" style="margin-top: 25vh;">Every time you open a new tab you raise money for good causes</h2>
+						<a class="btn btn-primary extension-btn mt-5 mb-3"><img class='logo-xsmall'
+							src='/img/gl-logo/external/chrome-logo.svg' /> Add Tabs for Good to chrome</a><br/>
+						<img class="mt-5" src="/img/TabsForGood/white-arrow.png"/>
 					</div>
 				</div>
 			</div>
 		</div>
+		<div class="position-absolute" style="z-index:1; bottom:0; height:40vh; width: 100vw; background:linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)"></div>
 	</div><!-- ./ splash -->
 
-	<div class='pageslice why-card'>
+	<div class='pageslice why-card mb-5'>
 		<div class="container">
 			<div class='row'>
 				<div class='col-md-6'>
-					<h2>Why install Tabs-for-Good?</h2>
+					<h2>Why install<br/>Tabs-for-Good?</h2>
 					<p>
 						With every single tab you open, you'll generate real money to solve real problems!
 					</p>
@@ -84,21 +82,29 @@
 						We use the spare seconds before your website loads, to display
 						unobtrusive banner ads at the bottom of the new tab. Money from the ads goes to your charity.
 					</p>
-					<a class='btn btn-outline-primary'><img class='logo-xsmall'
+					<a class='btn btn-transparent fill'><img class='logo-xsmall'
 							src='/img/gl-logo/external/chrome-logo.svg' /> Add to Chrome</a>
 				</div>
-				<div class='col-md-6' data-aos="fade-left">
-					TODO lovely screenshot
+				<div class='col-md-6 position-relative' data-aos="fade-left">
+					<div class="large-fade-right">
+						<img src="/img/TabsForGood/laptop2.png" class="w-100">
+					</div>
 				</div>
 			</div>
 		</div>
 	</div><!-- ./why-card -->
 
-	<div class='pageslice team-card'>
+	<div class='pageslice team-card my-5'>
 		<div class="container">
 			<div class='row'>
 				<div class='col-md-6' data-aos="fade-right">
-					TODO Amy video
+					<div class="large-fade-left">
+						<img src="/img/TabsForGood/youtube-back.png" class="position-absolute" style="transform: translate(20%, -25%); width:80%">
+						<iframe width="56%" height="315"
+							src="https://www.youtube.com/embed/pv_smlIDw64" frameborder="0"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
+							style="position: absolute; left: 33%; top: 20px; z-index: 2"></iframe>
+					</div>
 				</div>
 				<div class='col-md-6'>
 					<h2>Meet the Founders</h2>
@@ -107,14 +113,14 @@
 						in 2016 on a mission to make the internet a more positive place
 						by changing online advertising. Join us, and we can turn advertising into a force for good.
 					</p>
-					<a class='btn btn-outline-primary'><img class='logo-xsmall'
+					<a class='btn btn-transparent fill'><img class='logo-xsmall'
 							src='/img/gl-logo/external/chrome-logo.svg' /> Add to Chrome</a>
 				</div>
 			</div>
 		</div>
 	</div><!-- ./team-card -->
 
-	<div class='pageslice vision-card'>
+	<div class='pageslice vision-card my-5'>
 		<div class="container">
 			<div class='row'>
 				<div class='col-md-6'>
@@ -124,7 +130,7 @@
 						it would be enough to stop the rise of greenhouse gases. [ref]
 						You can help make this a reality - just by joining Tabs-for-Good.
 					</p>
-					<a class='btn btn-outline-primary'><img class='logo-xsmall'
+					<a class='btn btn-transparent fill'><img class='logo-xsmall'
 							src='/img/gl-logo/external/chrome-logo.svg' /> Add to Chrome</a>
 				</div>
 				<div class='col-md-6' data-aos="fade-left">
@@ -148,7 +154,7 @@
 						education in developing countries.
 						Pick the cause that you care about.
 					</p>
-					<a class='btn btn-outline-primary'><img class='logo-xsmall'
+					<a class='btn btn-transparent fill'><img class='logo-xsmall'
 							src='/img/gl-logo/external/chrome-logo.svg' /> Add to Chrome</a>
 				</div>
 			</div>
@@ -164,7 +170,7 @@
 						There is no such thing as too much help, so we offer Ecosia as a search engine.
 						This means that while raising money for your charity, you also plant trees around the world.
 					</p>
-					<a class='btn btn-outline-primary' data-aos="zoom-in" data-aos-delay="300"><img class='logo-xsmall'
+					<a class='btn btn-transparent fill' data-aos="zoom-in" data-aos-delay="300"><img class='logo-xsmall'
 							src='/img/gl-logo/external/chrome-logo.svg' /> Add to Chrome</a>
 				</div>
 				<div class='col-md-6' data-aos="fade-left">

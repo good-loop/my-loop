@@ -111,7 +111,7 @@ const WebtopPage = () => {
 	let bgImg = onboarding ? "/img/TabsForGood/Onboarding.png" : null;
 
 	return (<>
-		<BG src={bgImg} fullscreen opacity={0.9} bottom={onboarding ? 0 : 110}>
+		<BG src={bgImg} fullscreen opacity={0.9} bottom={onboarding ? 0 : 110} style={{backgroundPosition: "center"}}>
 			<TutorialComponent page={[5, 6]} className="position-fixed p-3" style={{top: 0, left: 0, width:"100vw", zIndex:1}}>
 				<div className="d-flex justify-content-between">
 					<div className="logo pl-5 flex-row">
@@ -180,10 +180,12 @@ const NormalTabCenter = ({charityID}) => {
 const OnboardingTabCenter = () => {
 	return <>
 		<div className="text-center onboarding">
-			<h2>Together we've raised</h2>
-			<h1><TickerTotal /></h1>
-			<p>Every time you open a tab you raise money for good.<br/>You decide who gets it.</p>
-			<a className="btn btn-primary extension-btn">Add tabs for good to chrome</a>
+			<div style={{marginBottom:"35vh"}}/>
+			<h2 className="w-50 mx-auto">Every time you open a<br/>new tab you raise<br/>money for good causes</h2>
+			{/*<a className="btn btn-primary extension-btn">Add tabs for good to chrome</a>*/}
+			<img className="mt-5" src="/img/TabsForGood/white-arrow.png"/>
+			{/* White fade for image */}
+			<div className="position-absolute" style={{zIndex:1, top:"60vh", height:"40vh", width: "100vw", background:"linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%"}}/>
 		</div>
 	</>;
 };

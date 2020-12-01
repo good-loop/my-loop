@@ -1,20 +1,44 @@
 
 
-.landingpage {	
+.landingpage {
+	
+	h1,h2,h3,h4 {
+		color: @gl-light-red;
+		font-weight: 600;
+	}
+
+	p {
+		font-size: 1.3rem;
+	}
+
 	.pageslice {
 		padding-top: 5em;
 		padding-bottom: 5em;
 		min-height: 50vh;
 	}
 
+	.large-fade-right {
+		position: absolute;
+		left: 0;
+		width: 50vw;
+	}
+	.large-fade-left {
+		position: absolute;
+		right: 0;
+		width: 50vw;
+	}
+
 	.splash-card {
-		height: 95vh; /* let's show there's more below */			
+		height: 100vh; /* let's show there's more below */			
 		background-image: url('/img/TabsForGood/Onboarding.png'); 
 		background-size: cover; 
+		background-position: center center;
 		opacity: 0.9; inset: 0px; 
 		color:white;
 		h1,h2,h3,h4 {
-			text-shadow: 3px 3px 6px #000000d3;
+			text-shadow: 3px 3px 6px #000000c0;
+			font-weight: 600;
+			color: white;
 		}
 		.btn {
 			// background: @gl-light-red !important;
@@ -29,6 +53,11 @@
 				// background: @gl-btn-hover !important;
 				box-shadow: 0px 3px 6px rgba(0,0,0,0.5) !important;
 			}
+		}
+		// Content shown above the white gradient
+		.content {
+			position: relative;
+			z-index: 2;
 		}
 	}
 	
