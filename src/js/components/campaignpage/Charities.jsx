@@ -43,11 +43,26 @@ challenges facing our planet."`,
  * 
  * @param {!NGO[]} charities
  * @param {{string:Money}} donation4charity - charity ID to donation amount
+ * @param {?Boolean} filterLowDonations If true low donation charities will not display
+ * @param {?Number} lowDonationThreshold Custom threshold number to treat charities as "low donation". 1% of the total by default
+ * @param {?Boolean} showLowDonations If false will hide the donation number for low donation charities
+ * @param {?Boolean} showDonations If false will hide all donation numbers
  */
-const Charities = ({ charities, donation4charity }) => {
+const Charities = ({ charities, donation4charity, filterLowDonations=false, lowDonationThreshold, showLowDonations=false, showDonations=true }) => {
 	
 	// augment with SoGive data
-	let sogiveCharities = fetchSogiveData(charities);
+	// Threshold is the given custom amount, otherwise 1% of total - or if total isnt loaded, £50
+	const threshold = lowDonationThreshold || donation4charity.total ? donation4charity.total.value / 100 : 50;
+	console.warn("Low donation threshold for charities set to " + threshold);
+	charities = charities.map(charity => {
+		const include = donation4charity[charity.id] ? donation4charity[charity.id].value >= threshold : false;
+		if (!include && filterLowDonations) return null;
+		charity.lowDonation = !include;
+		return charity;
+	});
+	// Filter nulls
+	charities = charities.filter(x => x);
+	let sogiveCharities = fetchSogiveData(charities, filterLowDonations, threshold);
 
 	const getDonation = c => {
 		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
@@ -67,7 +82,7 @@ const Charities = ({ charities, donation4charity }) => {
 			</div>
 			<Container className="pb-5">
 				{sogiveCharitiesWithDonations.map((charity, i) =>
-					<CharityCard i={i} key={charity.id} charity={charity} donationValue={getDonation(charity)} />
+					<CharityCard i={i} key={charity.id} charity={charity} donationValue={getDonation(charity)} showDonations={showDonations} showLowDonations={showLowDonations} />
 				)}
 			</Container>
 		</div>
@@ -114,7 +129,7 @@ const RegNum = ({label, regNum}) => {
  * @param {!NGO} charity This data item is a shallow copy
  * @param {!Money} donationValue
  */
-const CharityCard = ({ charity, donationValue, i }) => {
+const CharityCard = ({ charity, donationValue, showLowDonations, showDonations }) => {
 	// Prefer full descriptions here. If unavailable switch to summary desc.
 	let desc = charity.description || charity.summaryDescription || '';
 	// But do cut descriptions down to 1 paragraph.
@@ -125,6 +140,8 @@ const CharityCard = ({ charity, donationValue, i }) => {
 
 	const quote = tq(charity);
 	let img = (quote && quote.img) || charity.images;
+
+	const showDonationNum = showDonations && (charity.lowDonation && showLowDonations || !charity.lowDonation);
 
 	// TODO let's reduce the use of custom css classes (e.g. charity-quote-img etc below)
 
@@ -140,7 +157,7 @@ const CharityCard = ({ charity, donationValue, i }) => {
 					<img src={charity.logo} alt="logo" />
 				</div>
 				<div className="charity-quote-text">
-					{donationValue ? <div className="w-100"><h2><Counter amount={donationValue} /> raised</h2></div> : null}
+					{showDonationNum && donationValue ? <div className="w-100"><h2><Counter amount={donationValue} /> raised</h2></div> : null}
 					{charity.simpleImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
 					{!quote ? <MDText source={desc} /> : null}
