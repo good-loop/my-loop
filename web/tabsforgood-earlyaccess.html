@@ -67,7 +67,7 @@
 						<a class="btn btn-primary extension-btn mt-5 mb-3" href="https://my.good-loop.com/resources/extension.v0.2.2.zip" target="_blank"><img class='logo-xsmall'
                             src='/img/gl-logo/external/chrome-logo.svg' /> Download</a><br/>
                         
-                        <p class="mt-5"> Installation</p>
+                        <p class="mt-5"><h4>Installation instructions</h4></p>
 						<img src="/img/TabsForGood/white-arrow.png"/>
 					</div>
 				</div>
@@ -104,7 +104,7 @@
 					<div>
 						<h2>Step 2</h2>
 						<p>
-                            Unzip the "extensions" folder - remember where you put it!
+                            Unzip the "extensions" folder.
 						</p>
 					</div>
 				</div>
@@ -122,9 +122,36 @@
 			<div class='row'>
 				<div class='col-md-6 slice-content'>
 					<div>
-						<h2>Step 3</h2>
+						<h2>Step 3</h2>						
 						<p>
-                            Open Chrome and go to "Manage Extensions"
+							<script>
+								// From https://stackoverflow.com/questions/4565112/javascript-how-to-find-out-if-the-user-browser-is-chrome/13348618#13348618
+								var isChromium = window.chrome;
+var winNav = window.navigator;
+var vendorName = winNav.vendor;
+var isOpera = typeof window.opr !== "undefined";
+var isIEedge = winNav.userAgent.indexOf("Edge") > -1;
+var isIOSChrome = winNav.userAgent.match("CriOS");
+
+if (isIOSChrome) {
+   // is Google Chrome on IOS
+   document.write("You're in Chrome - <a href='chrome://extensions' target='_blank'>Open \"Manage Extensions\"</a>");
+} else if(
+  isChromium !== null &&
+  typeof isChromium !== "undefined" &&
+  vendorName === "Google Inc." &&
+  isOpera === false &&
+  isIEedge === false
+) {
+   // is Google Chrome
+   // NB: Sadly (for understandable safety reasons) giving a link to chrome://extensions doesn't work.
+   document.write("You're in Chrome - Open \"Manage Extensions\"");
+} else { 
+   // not Google Chrome 
+   document.write("Switch to the Chrome browser and go to \"Manage Extensions\"");
+}
+							</script>
+                            
 						</p>
 					</div>
 				</div>
