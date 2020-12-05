@@ -13,11 +13,24 @@ import DataStore from './base/plumbing/DataStore';
 // Twitter??
 
 const CardEditorPage = () => {
+
+// 	import AvatarEditor from 'react-avatar-editor';
+// <AvatarEditor
+// image={aimg}
+// width={250}
+// height={250}
+// border={50}
+// color={[255, 255, 255, 0.6]} // RGBA
+// scale={1.2}
+// rotate={0}
+// />
+
 	let aimg = DataStore.getUrlValue("aimg") || '/img/redgirl.png';	
 	let bimg = DataStore.getUrlValue("bimg") || '';
 	let bg = '/img/card/snowman-scene.png'
 	let ax = DataStore.getUrlValue("ax") || '20%';
 	let ay = DataStore.getUrlValue("ay") || '20%';
+	let aw = DataStore.getUrlValue("aw") || 30;
 	const onDrop = (e,dropInfo) => {
 		console.warn(dropInfo);
 		DataStore.setUrlValue("ax", dropInfo.zoneX+'px');
@@ -26,11 +39,14 @@ const CardEditorPage = () => {
 	return <div className='avoid-navbar position-relative'>
 
 		<DropZone onDrop={onDrop}>
-		<img src={bg} style={{width:'100%'}} />
+			<img src={bg} style={{width:'100%'}} />
 
-			<Draggable id='drag-imga' style={{position:'absolute', border:"dotted 1px black", opacity:'50%', top:ay,left:ax,width:'200px'}}>
-				<img src={aimg} />
+			<Draggable id='drag-imga' style={{position:'absolute', border:"dotted 1px black", opacity:'50%', top:ay,left:ax,width:aw+'%'}}>
+				<img src={aimg} style={{width:'100%'}}/>
 			</Draggable>
+			<div style={{position:'absolute', top:ay, marginTop:"-1.1em", left:ax, width:'150px'}}>
+				<PropControl label='zoom' prop='aw' type="range" step="0.01" min="10" max="80" name="aw" value="30" />
+			</div>
 
 		</DropZone>
 
