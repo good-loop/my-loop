@@ -93,6 +93,7 @@ const configs = [
 	makeConfig({filename: 'js/bundle-debug.js', mode: 'development' }),
 	makeConfig({filename: 'js/newtab-bundle-debug.js', mode: 'development', entry:'./src/js/newtab.jsx'}),
 	makeConfig({filename: 'js/static-bundle-debug.js', mode: 'development', entry:'./src/js/static.js'}),
+	makeConfig({filename: 'js/card-bundle-debug.js', mode: 'development', entry:'./src/js/card.jsx'}),
 ];
 
 // Allow debug-only compilation for faster iteration in dev
