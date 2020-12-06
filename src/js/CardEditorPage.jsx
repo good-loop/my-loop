@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Button } from 'reactstrap';
 import { Draggable, DropZone } from './base/components/DragDrop';
 import PropControl from './base/components/PropControl';
 import DataStore from './base/plumbing/DataStore';
@@ -30,26 +31,28 @@ const CardEditorPage = () => {
 	let bg = '/img/card/snowman-scene.png'
 
 	let ax = DataStore.getUrlValue("ax") || '20%';
-	let ay = DataStore.getUrlValue("ay") || '20%';
+	let ay = DataStore.getUrlValue("ay") || 50;
 	let aw = DataStore.getUrlValue("aw") || 30;
 	let bx = DataStore.getUrlValue("bx") || '70%';
-	let by = DataStore.getUrlValue("by") || '20%';
+	let by = DataStore.getUrlValue("by") || 50;
 	let bw = DataStore.getUrlValue("bw") || 30;
 
-	const onDrop = (e, dropInfo) => {		
+	const onDrop = (e, dropInfo) => {			
 		let did = dropInfo.draggable;
-		console.warn(dropInfo, did);
+		console.warn(dropInfo, did, e);
 		const prefix = did[did.length-1];
 		DataStore.setUrlValue(prefix+"x", dropInfo.zoneX + 'px');
-		DataStore.setUrlValue(prefix+"y", dropInfo.zoneY + 'px');
+		DataStore.setUrlValue(prefix+"y", dropInfo.zoneY);
 	};
 	return <div className='avoid-navbar position-relative'>
 
-		<DropZone onDrop={onDrop}>
-			<img src={bg} style={{ width: '100%' }} />
+		<DropZone id='the-scene' onDrop={onDrop}>			
+
+			<img src={bg} style={{ width: '100%' }} draggable={false} />
 
 			<FacePic prefix='a' x={ax} y={ay} w={aw} img={aimg} />
 			<FacePic prefix='b' x={bx} y={by} w={bw} img={bimg} />
+
 
 		</DropZone>
 
@@ -60,11 +63,12 @@ const CardEditorPage = () => {
 
 const FacePic = ({ prefix, img, x, y, w }) => {
 	return (<>
-		<Draggable id={'drag-'+prefix} style={{ position: 'absolute', border: "dotted 1px black", opacity: '50%', top: y, left: x, width: w + '%' }}>
+		<Draggable id={'drag-'+prefix} style={{ position: 'absolute', border: "dotted 1px black", opacity: '50%', top: y+'px', left: x, width: w + '%' }}>
 			{img ? <img src={img} style={{ width: '100%' }} /> : <PropControl type='imgUpload' prop={prefix+'img'} />}
-		</Draggable>
-		<div style={{ position: 'absolute', top: y, marginTop: "-1.1em", left: x, width: '150px' }}>
-			<PropControl label='zoom' prop={prefix+'w'} type="range" step="0.01" min="10" max="80" name={prefix+"w"} value="30" />
+		</Draggable>		
+		<div className='flex-row' style={{ position: 'absolute', top:(y-50)+'px', marginTop: "-1.1em", left: x, width: '150px' }}>
+			<PropControl prop={prefix+'w'} type="range" step="0.01" min="10" max="80" name={prefix+"w"} value="30" />
+			<Button size='sm' onClick={e => DataStore.setUrlValue(prefix+'img',null)} disabled={ ! img} >🗑</Button>
 		</div>
 	</>);
 };

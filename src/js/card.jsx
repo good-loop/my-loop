@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 
+// Make sure we load endpoint settings
+import ServerIO from './plumbing/ServerIO';
+
 // import Misc from './base/components/Misc';
 
 // Import root LESS file so webpack finds & renders it out to main.css
