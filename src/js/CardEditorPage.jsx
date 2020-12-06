@@ -48,12 +48,13 @@ const CardEditorPage = () => {
 
 		<DropZone id='the-scene' onDrop={onDrop}>			
 
-			<img src={bg} style={{ width: '100%' }} draggable={false} />
+			
 
 			<FacePic prefix='a' x={ax} y={ay} w={aw} img={aimg} />
 			<FacePic prefix='b' x={bx} y={by} w={bw} img={bimg} />
 
-
+			<img src={bg} style={{ width: '100%' }} draggable={false} />
+			
 		</DropZone>
 
 		<PropControl dflt='With you in spirit' prop='msg' />
@@ -66,9 +67,9 @@ const FacePic = ({ prefix, img, x, y, w }) => {
 		<Draggable id={'drag-'+prefix} style={{ position: 'absolute', border: "dotted 1px black", opacity: '50%', top: y+'px', left: x, width: w + '%' }}>
 			{img ? <img src={img} style={{ width: '100%' }} /> : <PropControl type='imgUpload' prop={prefix+'img'} />}
 		</Draggable>		
-		<div className='flex-row' style={{ position: 'absolute', top:(y-50)+'px', marginTop: "-1.1em", left: x, width: '150px' }}>
+		<div className='flex-row' style={{ position: 'absolute', top:y+'px', marginTop: "-1.2em", left: x, width: '150px' }}>
 			<PropControl prop={prefix+'w'} type="range" step="0.01" min="10" max="80" name={prefix+"w"} value="30" />
-			<Button size='sm' onClick={e => DataStore.setUrlValue(prefix+'img',null)} disabled={ ! img} >🗑</Button>
+			<Button size='xs' onClick={e => DataStore.setUrlValue(prefix+'img',null)} disabled={ ! img} >🗑</Button>
 		</div>
 	</>);
 };
