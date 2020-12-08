@@ -552,7 +552,7 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserNam
 				totalViewCount={totalViewCount}
 			/>
 			{sampleAds.length > 1 &&
-				<div className="row justify-content-center">
+				<div className="row justify-content-center mt-5">
 					{sampleAds.map((ad, i) =>
 						<AdvertPreviewCard
 							key={i}
@@ -588,7 +588,7 @@ const AdvertCard = ({ ad }) => {
 					</>}
 			</div>
 			{Roles.isDev() ? <DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal">Portal Editor</DevLink> : null}
-			<span className="position-absolute" style={{ left: "50%", top: "50%", transform: "translate(-50%, -50%)", zIndex: 0 }}>If you're seeing this, you likely have ad-blocker enabled. Please disable ad-blocker to see the demo!</span>
+			{/*<span className="position-absolute" style={{ left: "50%", top: "50%", transform: "translate(-50%, -50%)", zIndex: 0 }}>If you're seeing this, you likely have ad-blocker enabled. Please disable ad-blocker to see the demo!</span>*/}
 		</div>
 	);
 };
@@ -606,7 +606,7 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false }) => {
 	return (
 		<div className="col-md-3 col-6">
 			<div onClick={e => { e.preventDefault(); handleClick(); }} className={"pointer-wrapper" + (selected ? " selected" : "")}>
-				<div className="ad-prev">
+				<div className="ad-prev shadow">
 					<GoodLoopUnit vertId={ad.id} size={size} />
 				</div>
 			</div>

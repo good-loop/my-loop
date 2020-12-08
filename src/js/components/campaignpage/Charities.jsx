@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container } from 'reactstrap';
 import ActionMan from '../../plumbing/ActionMan';
+import Roles from '../../base/Roles';
 import CharityMiniCard, {CharityLogo} from '../cards/CharityCard';
 import Money from '../../base/data/Money';
 import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
@@ -163,6 +164,7 @@ const CharityCard = ({ charity, donationValue, showLowDonations, showDonations }
 					{charity.simpleImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
 					{!quote ? <MDText source={desc} /> : null}
+					{Roles.isDev() && <DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">SoGive</DevLink>}
 				</div>
 			</div>
 		</div>
