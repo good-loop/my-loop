@@ -572,21 +572,15 @@ const AdvertCard = ({ ad }) => {
 	const size = isPortraitMobile() ? 'portrait' : 'landscape';
 	return (
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
-			<div className="ad-card">
-				{isPortraitMobile() ?
-					<div className="position-relative theunit">
-						<GoodLoopUnit vertId={ad.id} size={size}/>
-					</div>
-					: <>
-						<div className="tablet-container">
-							<img src="/img/redcurve.svg" className="tablet-bg w-100 h-100" />
-							<div className="position-relative theunit">
-								<GoodLoopUnit vertId={ad.id} size={size}/>
-							</div>
-						</div>
-						<img src="/img/hiclipart.com.overlay.png" className="w-100 tablet-overlay" />
-					</>}
-			</div>
+			<div className="position-relative ad-card">
+				<img src="/img/mobile.png" className="w-100 invisible"/>
+				<img src="/img/mobile.png" className="position-absolute" style={{left: "-26%", top: -5, width:"130%", zIndex:0}}/>
+				{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
+				<img src="/img/mobileframe.png" className="position-absolute" style={{left: "-26%", top: -5, width:"130%", zIndex:2, pointerEvents:"none"}}/>
+				<div className="position-absolute theunit">
+					<GoodLoopUnit vertId={ad.id} size={size} />
+				</div>
+			</div>;
 			{Roles.isDev() ? <DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal">Portal Editor</DevLink> : null}
 			<span className="position-absolute" style={{ left: "50%", top: "50%", transform: "translate(-50%, -50%)", zIndex: 0 }}>If you're seeing this, you likely have ad-blocker enabled. Please disable ad-blocker to see the demo!</span>
 		</div>
