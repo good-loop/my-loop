@@ -562,7 +562,7 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserNam
 						/>
 					)}
 				</div>}
-			<a className="btn btn-primary mb-3 mb-md-0 mr-md-3 mt-5" href="/#ads">See all campaigns</a>
+			<a className="btn btn-primary mb-3 mb-md-0 mr-md-3 mt-5 position-relative" style={{zIndex:99}} href="/#ads">See all campaigns</a>
 			{//<a className="btn btn-transparent" href="TODO">Campaign performance & brand study</a>
 			}
 		</Container>
