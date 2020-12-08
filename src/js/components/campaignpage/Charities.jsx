@@ -47,8 +47,9 @@ challenges facing our planet."`,
  * @param {?Number} lowDonationThreshold Custom threshold number to treat charities as "low donation". 1% of the total by default
  * @param {?Boolean} showLowDonations If false will hide the donation number for low donation charities
  * @param {?Boolean} showDonations If false will hide all donation numbers
+ * @param {?String[]} hideCharities hide specific charities by ID
  */
-const Charities = ({ charities, donation4charity, filterLowDonations=false, lowDonationThreshold, showLowDonations=false, showDonations=true }) => {
+const Charities = ({ charities, donation4charity, filterLowDonations=false, lowDonationThreshold, showLowDonations=false, showDonations=true, hideCharities }) => {
 	
 	// augment with SoGive data
 	// Threshold is the given custom amount, otherwise 1% of total - or if total isnt loaded, £50
@@ -73,6 +74,7 @@ const Charities = ({ charities, donation4charity, filterLowDonations=false, lowD
 	};
 
 	let sogiveCharitiesWithDonations = sogiveCharities.filter(c => getDonation(c)); // Get rid of charities with no logged donations.
+	if (hideCharities) sogiveCharitiesWithDonations = sogiveCharities.filter(c => !hideCharities.includes(c.id));
 	//let sogiveCharitiesWithoutDonations = sogiveCharities.filter(c => ! getDonation(c)); // Keep other charities for the "Also Supported" section
 
 	return (
