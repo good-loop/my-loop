@@ -15,7 +15,16 @@ For the css below that deals in font/text matters:
 
 */
 
-
+@keyframes scroll-arrow-nudge {
+	from {
+		bottom: 50%;
+		opacity: 0;
+	}
+	to {
+		bottom: 5%;
+		opacity: 1;
+	}
+}
 
 .landing-bg {
 	height: 100vh;
@@ -101,19 +110,28 @@ For the css below that deals in font/text matters:
 	// Custom scroll button. Rules define position, shadow and hover behaviour of img element.
 	.scroll-down-button {
 		position: absolute;
-		bottom: 5%;
 		left: 0;
 		right: 0;
 		margin: 0 auto;
+		opacity: 0;
+		bottom: 50%;
 		filter: drop-shadow(1px 1px 2px black);
 		z-index: 999;
+		transition: 0.2s;
 		&:hover {
 			cursor: pointer;
+			transform: scale(1.2);
+			transition: 0.2s;
 		}
 		// Adjustment for tiny screens
 		@media screen and (max-height: 529px) {
 			bottom: 2%;
 			width: 45px;
 		}
+		animation-name: scroll-arrow-nudge;
+		animation-delay: 2s;
+		animation-duration: 1s;
+		animation-timing-function: ease-out;
+		animation-fill-mode: forwards;
 	}
 }

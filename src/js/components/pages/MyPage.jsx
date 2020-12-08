@@ -18,7 +18,7 @@ const MyPage = ({spring}) => {
 
 	if (spring) springPageDown(setY);
 
-	// If we're currently in as.good-loop.com, and we have a glvert param defined, we shpuld redirect to campaign page
+	// If we're currently in as.good-loop.com, and we have a glvert param defined, we should redirect to campaign page
 	useEffect(() => {
 		const urlParams = DataStore.getValue(['location', 'params']);
 		if (Object.keys(urlParams).includes('gl.vert')) {
