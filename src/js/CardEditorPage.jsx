@@ -46,7 +46,7 @@ const CardEditorPage = () => {
 
 	return (<div className='avoid-navbar'>
 		
-		<Editor3ColLayout>
+		<Editor3ColLayout showAll >
 			<Tabs>
 				<Tab tabId='editor' title="Edit" >
 					<DropZone className='position-relative' id='the-scene' onDrop={onDrop}>			
