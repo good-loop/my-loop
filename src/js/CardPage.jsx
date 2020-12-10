@@ -1,22 +1,24 @@
 
 import React from 'react';
+import {Card} from './CardEditorPage';
 
 // import { useHowl, Play } from 'rehowl'
 
 const CardPage = () => {
-	let aimg = DataStore.getUrlValue("aimg") || '/img/redgirl.png';
-	let atrans = DataStore.getUrlValue("atrans") || '/img/redgirl.png';
-	let bimg = DataStore.getUrlValue("bimg") || '';
-	let bg = '/img/card/snowman-scene.png'
-	return <div className='avoid-navbar position-relative'>
+	let aimg = DataStore.getUrlValue("aimg");
+	let bimg = DataStore.getUrlValue("bimg");
+	let bg = '/img/card/snow-scene-w-transparency.png' // TODO mobile
 
-		<img src={aimg} className='position-absolute' style={{top:'20%',left:'20%',width:'30%'}} />
-		<img src={bimg} className='position-absolute' />
-		<img src={bg} style={{width:'100%', opacity:'50%'}} />
+	let ax = DataStore.getUrlValue("ax") || '20%';
+	let ay = DataStore.getUrlValue("ay") || 50;
+	let aw = DataStore.getUrlValue("aw") || 30;
+	let bx = DataStore.getUrlValue("bx") || '70%';
+	let by = DataStore.getUrlValue("by") || 50;
+	let bw = DataStore.getUrlValue("bw") || 30;
 
-		<h2>With you in spirit</h2>
-		<h1>Season's Greetings</h1>
-	</div>;
+	return (<div className='avoid-navbar position-relative'>
+		<Card bg={bg} {...{ax,ay,aw,aimg,bx,by,bw,bimg}} zIndex={100} flakes />
+	</div>);
 };
 
 export default CardPage;
