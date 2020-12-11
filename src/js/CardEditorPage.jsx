@@ -72,7 +72,7 @@ const CardEditorPage = () => {
 				<LinkOut className='btn btn-primary' href={"mailto:?SUBJECT="+encURI(
 						"Season's Greetings from "+from+" and Good-Loop"
 					)+"&BODY="+encURI(
-						`Dear ${to},\n\nSeasin's Greetings! I'm sending you an e-card with a charity donation.\n\nClick here to open your card:\n${link}.\n\nBest wishes,\n${from}\n`
+						`Dear ${to},\n\nSeason's Greetings! I'm sending you an e-card with a charity donation.\n\n💌✉️ Click here to open your card:\n${link}.\n\nBest wishes,\n${from}\n`
 					)} 
 					title='Opens your email editor'>Send...</LinkOut>
 				<div><small><a href={link} target='_new'>the link</a></small></div>
