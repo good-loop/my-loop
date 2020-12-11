@@ -8,7 +8,7 @@ import LinkOut from './base/components/LinkOut';
 import PropControl from './base/components/PropControl';
 import { Tab, Tabs } from './base/components/Tabs';
 import DataStore from './base/plumbing/DataStore';
-import { encURI } from './base/utils/miscutils';
+import { encURI, modifyHash } from './base/utils/miscutils';
 
 
 // FB img http://graph.facebook.com/67563683055/picture?type=square
@@ -49,7 +49,7 @@ const CardEditorPage = () => {
 		<Editor3ColLayout showAll >
 			<Tabs>
 				<Tab tabId='editor' title="Edit" >
-					<DropZone className='position-relative' id='the-scene' onDrop={onDrop}>			
+					<DropZone className='position-relative' id='the-scene' onDrop={onDrop} style={{border:"none"}}>			
 
 						<FacePic prefix='a' x={ax} y={ay} w={aw} img={aimg} />
 						<FacePic prefix='b' x={bx} y={by} w={bw} img={bimg} />
@@ -59,7 +59,9 @@ const CardEditorPage = () => {
 					</DropZone>
 				</Tab>
 				<Tab tabId='preview' title="Preview" >
-					<Card bg={bg} {...{ax,ay,aw,aimg,bx,by,bw,bimg}} zIndex={100} flakes />
+					<div className='position-relative' id='the-scene' onDrop={onDrop}>			
+						<Card bg={bg} {...{ax,ay,aw,aimg,bx,by,bw,bimg}} zIndex={100} flakes />
+					</div>
 				</Tab>
 			</Tabs>
 			<div>
@@ -139,7 +141,9 @@ const Card = ({bg,ax,ay,aw,aimg,bx,by,bw,bimg,zIndex,flakes}) => {
 			animation-name: fall;  	
 			animation-iteration-count: infinite;		
 		}
-		`}/>
+	`}/>
+	{aimg && <img src={aimg} style={{ position: 'absolute', top: ay+'%', left: ax+'%', width: aw + '%', zIndex}} draggable={false} />}
+	{bimg && <img src={bimg} style={{ position: 'absolute', top: by+'%', left: bx+'%', width: bw + '%', zIndex}} draggable={false} />}
 	<div className='the-card'>				
 		<div style={{position:'absolute', top:'2%', left:0,right:0, zIndex:zIndex+2}}>
 			<h1>To {to}</h1>
@@ -147,13 +151,15 @@ const Card = ({bg,ax,ay,aw,aimg,bx,by,bw,bimg,zIndex,flakes}) => {
 			<h1>From {from}</h1>
 		</div>
 
-		{aimg && <img src={aimg} style={{ position: 'absolute', top: ay+'%', left: ax+'%', width: aw + '%', zIndex}} draggable={false} />}
-		{bimg && <img src={bimg} style={{ position: 'absolute', top: by+'%', left: bx+'%', width: bw + '%', zIndex}} draggable={false} />}
-
 		<img src={bg} style={{position: 'absolute', top:0, left:0, width:'100%', zIndex:zIndex+1}} draggable={false} />		
 		<img src={bg} draggable={false} style={{width:'100%'}}/> {/* 2nd copy is for sizing height */}
 		{flakes && flakeInfos.map((flakeInfo,i) => <img key={i} className='flake' src='/img/card/covidsnowflake.png' style={flakeInfo} />)}
-	</div></>);
+	</div>
+	<p>
+	This e-card by Good-Loop is raising money for Centrepoint and Trees for the Future. For each card, we make a 10p donation to both charities.
+	Thank you for opening it. You can also send it on if you want using this <a href={modifyHash(['cardeditor'],{to:'',from:to},true)}>card editor</a>.
+	</p>
+	</>);
 };
 
 export default CardEditorPage;

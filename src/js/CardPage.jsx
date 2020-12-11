@@ -17,7 +17,7 @@ const CardPage = () => {
 	let bw = DataStore.getUrlValue("bw") || 30;
 
 	return (<div className='avoid-navbar position-relative'>
-		<Card bg={bg} {...{ax,ay,aw,aimg,bx,by,bw,bimg}} zIndex={100} flakes />
+		<Card bg={bg} {...{ax,ay,aw,aimg,bx,by,bw,bimg}} zIndex={100} flakes />		
 	</div>);
 };
 
