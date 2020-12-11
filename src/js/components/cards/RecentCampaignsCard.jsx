@@ -95,10 +95,10 @@ const RecentCampaignsCard = () => {
 const TVAdPlayer = ({adid, className}) => {
 	const size = "landscape";
 	return <div className={space("position-relative", className)}>
-		<img src="/img/mobile.png" className="w-100 invisible"/>
-		<img src="/img/mobile.png" className="position-absolute" style={{left: "-26%", top: -5, width:"130%", zIndex:0}}/>
+		<img src="/img/LandingBackground/mobile.png" className="w-100 invisible"/>
+		<img src="/img/LandingBackground/mobile.png" className="position-absolute mobileframe-shadow" style={{left: "-5%", width:"110%", zIndex:0}}/>
 		{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
-		<img src="/img/mobileframe.png" className="position-absolute" style={{left: "-26%", top: -5, width:"130%", zIndex:2, pointerEvents:"none"}}/>
+		<img src="/img/LandingBackground/mobile_frame.png" className="position-absolute" style={{left: "-5%", width:"110%", zIndex:2, pointerEvents:"none"}}/>
 		<div className="position-absolute tv-ad-player">
 			<GoodLoopUnit vertId={adid} size={size} />
 		</div>
