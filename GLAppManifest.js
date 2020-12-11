@@ -1,11 +1,11 @@
 const GLAppManifest = {
-	name: "the My-Loop Portal",
+	name: "My.Good-Loop",
 	service: "good-loop",
-	logo: "/img/new-logo.svg",
+	logo: "/img/gl-logo/LogoMark/logo.svg",
 	website: "https://good-loop.com",
 	facebookAppId: "320927325010346", // https://developers.facebook.com/apps/320927325010346/dashboard/
 	privacyPolicy: "https://doc.good-loop.com/privacy-policy.html",
-	tsncs: ""
+	tsncs: "https://doc.good-loop.com/terms/terms-of-use.html"
 };
 
 module.exports = GLAppManifest;
