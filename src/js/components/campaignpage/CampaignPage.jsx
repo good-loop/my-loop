@@ -566,30 +566,24 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserNam
 						/>
 					)}
 				</div>}
-			<a className="btn btn-primary mb-3 mb-md-0 mr-md-3 mt-5" href="/#ads">See all campaigns</a>
+			<a className="btn btn-primary mb-3 mb-md-0 mr-md-3 mt-5 position-relative" style={{zIndex:99}} href="/#ads">See all campaigns</a>
 			{//<a className="btn btn-transparent" href="TODO">Campaign performance & brand study</a>
 			}
 		</Container>
 	</>);
 };
 const AdvertCard = ({ ad }) => {
-	const size = isPortraitMobile() ? 'portrait' : 'landscape';
+	const size = 'landscape';
 	return (
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
-			<div className="ad-card">
-				{isPortraitMobile() ?
-					<div className="position-relative theunit">
-						<GoodLoopUnit vertId={ad.id} size={size}/>
-					</div>
-					: <>
-						<div className="tablet-container">
-							<img src="/img/redcurve.svg" className="tablet-bg w-100 h-100" />
-							<div className="position-relative theunit">
-								<GoodLoopUnit vertId={ad.id} size={size}/>
-							</div>
-						</div>
-						<img src="/img/hiclipart.com.overlay.png" className="w-100 tablet-overlay" />
-					</>}
+			<div className="position-relative ad-card">
+				<img src="/img/LandingBackground/mobile.png" className="w-100 invisible"/>
+				<img src="/img/LandingBackground/mobile.png" className="position-absolute d-none d-md-block mobileframe-shadow" style={{left: "-7%", top:"-9%", width:"113%", zIndex:0}}/>
+				{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
+				<img src="/img/LandingBackground/mobile_frame.png" className="position-absolute d-none d-md-block" style={{left: "-7%", width:"113%", top:"-9%", zIndex:2, pointerEvents:"none"}}/>
+				<div className="position-absolute theunit">
+					<GoodLoopUnit vertId={ad.id} size={size} />
+				</div>
 			</div>
 			{Roles.isDev() ? <DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal">Portal Editor</DevLink> : null}
 			{/*<span className="position-absolute" style={{ left: "50%", top: "50%", transform: "translate(-50%, -50%)", zIndex: 0 }}>If you're seeing this, you likely have ad-blocker enabled. Please disable ad-blocker to see the demo!</span>*/}

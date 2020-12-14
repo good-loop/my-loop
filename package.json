@@ -22,6 +22,7 @@
     "md5": "^2.2.1",
     "promise-value": "^1.2.9",
     "react": "^16.13.1",
+    "react-avatar-editor": "^11.0.13",
     "react-autocomplete": "^1.8.1",
     "react-chartjs2": "^1.2.1",
     "react-dom": "^16.13.1",

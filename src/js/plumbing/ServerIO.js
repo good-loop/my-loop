@@ -39,6 +39,8 @@ ServerIO.PROFILER_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}profiler.good-loop.co
 // Use the live adserver, since our showcase ad selectionis hard-coded to live ads.
 ServerIO.AS_ENDPOINT = 'http://localas.good-loop.com';
 
+ServerIO.MEDIA_ENDPOINT = `https://testuploads.good-loop.com/`;
+
 // HACK allow using test ads if requested
 if (getUrlVars().testas) {
 	ServerIO.AS_ENDPOINT = 'https://testas.good-loop.com';
