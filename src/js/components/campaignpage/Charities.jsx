@@ -50,14 +50,24 @@ challenges facing our planet."`,
  * @param {?Boolean} showDonations If false will hide all donation numbers
  * @param {?String[]} hideCharities hide specific charities by ID
  */
-const Charities = ({ charities, donation4charity, filterLowDonations=false, lowDonationThreshold, showLowDonations=false, showDonations=true, hideCharities }) => {
+const Charities = ({ charities, donation4charity, campaignPage }) => {
 	
+	//filterLowDonations, lowDonationThreshold, showLowDonations, showDonations, hideCharities
+	let {lowDntnDisplay, lowDntn, hideCharities} = campaignPage;
+	let lowDonationThreshold = lowDntn.value;
+	lowDntnDisplay = lowDntnDisplay.replace(/\"/g, "");
+	console.log("DISPLAY MODE:", lowDntnDisplay);
+	let filterLowDonations = lowDntnDisplay === "hide-low-charities";
+	let showLowDonations = lowDntnDisplay !== "hide-low-dntns";
+	let showDonations = lowDntnDisplay !== "hide-dntns";
+
 	// augment with SoGive data
 	// Threshold is the given custom amount, otherwise 1% of total - or if total isnt loaded, £50
-	const threshold = lowDonationThreshold || donation4charity.total ? donation4charity.total.value / 100 : 50;
+	const threshold = lowDonationThreshold ? lowDonationThreshold : (donation4charity.total ? donation4charity.total.value / 100 : 50);
 	console.warn("Low donation threshold for charities set to " + threshold);
 	charities = charities.map(charity => {
-		const include = donation4charity[charity.id] ? donation4charity[charity.id].value >= threshold : false;
+		const include = donation4charity[charity.id] ? Money.value(donation4charity[charity.id]) >= threshold : false;
+		console.log("Is " + charity.id + " a low donation? " + !include + ", as " + donation4charity[charity.id].value + " >= " + threshold);
 		if (!include && filterLowDonations) return null;
 		charity.lowDonation = !include;
 		return charity;
@@ -75,7 +85,13 @@ const Charities = ({ charities, donation4charity, filterLowDonations=false, lowD
 	};
 
 	let sogiveCharitiesWithDonations = sogiveCharities.filter(c => getDonation(c)); // Get rid of charities with no logged donations.
-	if (hideCharities) sogiveCharitiesWithDonations = sogiveCharities.filter(c => !hideCharities.includes(c.id));
+	if (hideCharities) {
+		// Convert object to array
+		let hideCharitiesArr = Object.keys(hideCharities);
+		// Remove false entries
+		hideCharitiesArr = hideCharitiesArr.filter(cid => hideCharities[cid]);
+		sogiveCharitiesWithDonations = sogiveCharities.filter(c => !hideCharitiesArr.includes(c.id));
+	}
 	//let sogiveCharitiesWithoutDonations = sogiveCharities.filter(c => ! getDonation(c)); // Keep other charities for the "Also Supported" section
 
 	return (

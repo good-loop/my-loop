@@ -138,6 +138,7 @@ const CampaignPage = () => {
 
 	// If it's remotely possible to have an ad now, we have it. Which request succeeded, if any?
 	let ads = pvAds.value.hits;
+	console.log(ads);
 	if (!ads || !ads.length) {
 		return <Alert>Could not load adverts for {sq.query} {status}</Alert>; // No ads?!
 	}
@@ -264,7 +265,7 @@ const CampaignPage = () => {
 					/>
 				)}
 
-				<Charities charities={charities} donation4charity={donation4charity} />
+				<Charities charities={charities} donation4charity={donation4charity} campaignPage={campaignPage}/>
 
 				<div className="bg-white">
 					<Container>
@@ -513,6 +514,7 @@ const HowDoesItWork = ({ nvertiserName }) => {
 const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount }) => {
 	const [selected, setSelected] = useState(0);
 
+	console.log("Ads for catalogue: ", ads);
 	/** Picks one Ad (with a video) from each campaign to display as a sample.  */
 	let sampleAd4Campaign = {};
 	ads.forEach(ad => {
@@ -526,12 +528,14 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserNam
 				return;
 			}
 		}
-		if (!ad.videos || !ad.videos[0].url) return;
+		//if (!ad.videos || !ad.videos[0].url) return;
 		sampleAd4Campaign[cname] = ad;
 	});
 
 	const sampleAds = Object.values(sampleAd4Campaign);
 	const selectedAd = sampleAds[selected];
+
+	console.log("Sample ads: ", sampleAds);
 
 	let views = viewCount(viewcount4campaign, selectedAd);
 
