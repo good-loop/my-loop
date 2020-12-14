@@ -578,9 +578,9 @@ const AdvertCard = ({ ad }) => {
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
 			<div className="position-relative ad-card">
 				<img src="/img/LandingBackground/mobile.png" className="w-100 invisible"/>
-				<img src="/img/LandingBackground/mobile.png" className="position-absolute d-none d-md-block mobileframe-shadow" style={{left: "-7%", top:"-9%", width:"113%", zIndex:0}}/>
+				<img src="/img/LandingBackground/mobile.png" className="position-absolute d-none d-md-block mobileframe-shadow" style={{left: "50%", top:"50%", width:"80%", zIndex:0, transform: "translate(-50%, -50%)"}}/>
 				{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
-				<img src="/img/LandingBackground/mobile_frame.png" className="position-absolute d-none d-md-block" style={{left: "-7%", width:"113%", top:"-9%", zIndex:2, pointerEvents:"none"}}/>
+				<img src="/img/LandingBackground/mobile_frame.png" className="position-absolute d-none d-md-block" style={{left: "50%", width:"80%", top:"50%", zIndex:2, pointerEvents:"none", transform: "translate(-50%, -50%)"}}/>
 				<div className="position-absolute theunit">
 					<GoodLoopUnit vertId={ad.id} size={size} />
 				</div>
@@ -590,19 +590,15 @@ const AdvertCard = ({ ad }) => {
 		</div>
 	);
 };
+
 const AdvertPreviewCard = ({ ad, handleClick, selected = false }) => {
 	let size = 'landscape';
 	// Show when the campaign ran
 	// Fallback to ad creation date
-	const durationText = ad.start || ad.end ? <span>
-		{ad.start ? <Misc.RoughDate date={ad.start} /> : ''}
-		{ad.start && ad.end ? ' - ' : null}
-		{ad.end ? <Misc.RoughDate date={ad.end} /> : ''}
-	</span> : <span>
-		<Misc.RoughDate date={ad.created} />
-	</span>;
+	const durationText = <Misc.DateDuration startDate={ad.start} endDate={ad.end}/>;
+
 	return (
-		<div className="col-md-3 col-6">
+		<div className="col-md-4 col-6">
 			<div onClick={e => { e.preventDefault(); handleClick(); }} className={"pointer-wrapper" + (selected ? " selected" : "")}>
 				<div className="ad-prev shadow">
 					<GoodLoopUnit vertId={ad.id} size={size} />

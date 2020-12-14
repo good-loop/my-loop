@@ -54,12 +54,20 @@ const Charities = ({ charities, donation4charity, campaignPage }) => {
 	
 	//filterLowDonations, lowDonationThreshold, showLowDonations, showDonations, hideCharities
 	let {lowDntnDisplay, lowDntn, hideCharities} = campaignPage;
-	let lowDonationThreshold = lowDntn.value;
-	lowDntnDisplay = lowDntnDisplay.replace(/\"/g, "");
-	console.log("DISPLAY MODE:", lowDntnDisplay);
-	let filterLowDonations = lowDntnDisplay === "hide-low-charities";
-	let showLowDonations = lowDntnDisplay !== "hide-low-dntns";
-	let showDonations = lowDntnDisplay !== "hide-dntns";
+	let lowDonationThreshold, filterLowDonations, showLowDonations, showDonations;
+	// Does campaign page data contain new data for low donation filtering?
+	if (campaignPage.lowDntn) {
+		lowDonationThreshold = lowDntn.value;
+		lowDntnDisplay = lowDntnDisplay.replace(/\"/g, "");
+		filterLowDonations = lowDntnDisplay === "hide-low-charities";
+		showLowDonations = lowDntnDisplay !== "hide-low-dntns";
+		showDonations = lowDntnDisplay !== "hide-dntns";
+	} else {
+		// Default to hiding low donations
+		filterLowDonations = true;
+		showLowDonations = true;
+		showDonations = true;
+	}
 
 	// augment with SoGive data
 	// Threshold is the given custom amount, otherwise 1% of total - or if total isnt loaded, £50
@@ -67,7 +75,7 @@ const Charities = ({ charities, donation4charity, campaignPage }) => {
 	console.warn("Low donation threshold for charities set to " + threshold);
 	charities = charities.map(charity => {
 		const include = donation4charity[charity.id] ? Money.value(donation4charity[charity.id]) >= threshold : false;
-		console.log("Is " + charity.id + " a low donation? " + !include + ", as " + donation4charity[charity.id].value + " >= " + threshold);
+		//console.log("Is " + charity.id + " a low donation? " + !include + ", as " + donation4charity[charity.id].value + " >= " + threshold);
 		if (!include && filterLowDonations) return null;
 		charity.lowDonation = !include;
 		return charity;
