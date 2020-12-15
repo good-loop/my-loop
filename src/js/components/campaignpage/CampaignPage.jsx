@@ -593,9 +593,6 @@ const AdvertCard = ({ ad }) => {
 
 const AdvertPreviewCard = ({ ad, handleClick, selected = false }) => {
 	let size = 'landscape';
-	// Show when the campaign ran
-	// Fallback to ad creation date
-	const durationText = <Misc.DateDuration startDate={ad.start} endDate={ad.end}/>;
 
 	return (
 		<div className="col-md-4 col-6">
@@ -605,7 +602,7 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false }) => {
 				</div>
 			</div>
 			<div>
-				{durationText}
+				<Misc.DateDuration startDate={ad.start} endDate={ad.end}/>
 			</div>
 		</div>
 	);

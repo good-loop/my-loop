@@ -52,13 +52,26 @@ challenges facing our planet."`,
  */
 const Charities = ({ charities, donation4charity, campaignPage }) => {
 	
-	//filterLowDonations, lowDonationThreshold, showLowDonations, showDonations, hideCharities
+	// Low donation filtering data is represented as only 3 controls for portal simplicity
+	// lowDntn = the threshold at which to consider a charity a low donation
+	// hideCharities = a list of charity IDs to explicitly hide - represented by keySet as an object (explained more below line 103)
+	// lowDntnDisplay = how to deal with low donation charities. represented as several different modes which are expanded into configurations:
+	//   hide-low-charities = cut out low donation charities entirely
+	//   hide-low-dntns = hide the donation figure for low donation charities
+	//   hide-dntns = hide all donation figures
+	//   Otherwise, show everything
+	
+	// The portal control data
 	let {lowDntnDisplay, lowDntn, hideCharities} = campaignPage;
+	// The expanded configurations to operate on, not stored in the portal
 	let lowDonationThreshold, filterLowDonations, showLowDonations, showDonations;
-	// Does campaign page data contain new data for low donation filtering?
-	if (campaignPage.lowDntn) {
+
+	// Does campaign page data contain data for low donation filtering, or is it old?
+	if (lowDntn) {
 		lowDonationThreshold = lowDntn.value;
+		// Remove any trailing quotations that sometimes crop up
 		lowDntnDisplay = lowDntnDisplay.replace(/\"/g, "");
+		// Expand the lowDntnDisplay mode into a configuration
 		filterLowDonations = lowDntnDisplay === "hide-low-charities";
 		showLowDonations = lowDntnDisplay !== "hide-low-dntns";
 		showDonations = lowDntnDisplay !== "hide-dntns";
@@ -93,10 +106,12 @@ const Charities = ({ charities, donation4charity, campaignPage }) => {
 	};
 
 	let sogiveCharitiesWithDonations = sogiveCharities.filter(c => getDonation(c)); // Get rid of charities with no logged donations.
+	// hideCharities is from a KeySet prop control, so is an object of schema {charity_id : bool}.
+	// We want to convert it instead to a list of charity IDs
 	if (hideCharities) {
 		// Convert object to array
 		let hideCharitiesArr = Object.keys(hideCharities);
-		// Remove false entries
+		// Remove false entries - keySet will not remove charity IDs, but set them to false instead.
 		hideCharitiesArr = hideCharitiesArr.filter(cid => hideCharities[cid]);
 		sogiveCharitiesWithDonations = sogiveCharities.filter(c => !hideCharitiesArr.includes(c.id));
 	}
