@@ -112,24 +112,24 @@ const WebtopPage = () => {
 
 	return (<>
 		<BG src={bgImg} fullscreen opacity={0.9} bottom={onboarding ? 0 : 110} style={{backgroundPosition: "center"}}>
-			<TutorialComponent page={[5, 6]} className="position-fixed p-3" style={{top: 0, left: 0, width:"100vw", zIndex:1}}>
+			<div className="position-fixed p-3" style={{top: 0, left: 0, width:"100vw", zIndex:1}}>
 				<div className="d-flex justify-content-between">
-					<div className="logo pl-5 flex-row">
+					<TutorialComponent page={6} className="logo pl-5 flex-row">
 						<a href="https://my.good-loop.com">
 							<img src="/img/logo-white.svg" style={{width: 50}} alt="logo"/>
 						</a>
 						<h4 className="pl-2">Tabs for<br/>good</h4>
-					</div>
-					<div className="user-controls flex-row">
+					</TutorialComponent>
+					<TutorialComponent page={5} className="user-controls flex-row">
 						{!onboarding && <>
 							{Login.isLoggedIn() ? <TabsOpenedCounter/> : null}
 							<AccountMenu small accountLink="/#account?tab=tabsForGood" customLogin={
 								<NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>
 							}/>
 						</>}
-					</div>
+					</TutorialComponent>
 				</div>
-			</TutorialComponent>
+			</div>
 			<div className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{top: 0, left: 0, width:"100vw", height:"100vh"}}>
 				<div className="container h-100 flex-column justify-content-center unset-margins">
 					{!onboarding ? <NormalTabCenter charityID={charityID}/> : <OnboardingTabCenter/>}
