@@ -138,6 +138,7 @@ const CampaignPage = () => {
 
 	// If it's remotely possible to have an ad now, we have it. Which request succeeded, if any?
 	let ads = pvAds.value.hits;
+	console.log(ads);
 	if (!ads || !ads.length) {
 		return <Alert>Could not load adverts for {sq.query} {status}</Alert>; // No ads?!
 	}
@@ -264,7 +265,7 @@ const CampaignPage = () => {
 					/>
 				)}
 
-				<Charities charities={charities} donation4charity={donation4charity} />
+				<Charities charities={charities} donation4charity={donation4charity} campaignPage={campaignPage}/>
 
 				<div className="bg-white">
 					<Container>
@@ -513,6 +514,7 @@ const HowDoesItWork = ({ nvertiserName }) => {
 const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount }) => {
 	const [selected, setSelected] = useState(0);
 
+	console.log("Ads for catalogue: ", ads);
 	/** Picks one Ad (with a video) from each campaign to display as a sample.  */
 	let sampleAd4Campaign = {};
 	ads.forEach(ad => {
@@ -526,12 +528,14 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserNam
 				return;
 			}
 		}
-		if (!ad.videos || !ad.videos[0].url) return;
+		//if (!ad.videos || !ad.videos[0].url) return;
 		sampleAd4Campaign[cname] = ad;
 	});
 
 	const sampleAds = Object.values(sampleAd4Campaign);
 	const selectedAd = sampleAds[selected];
+
+	console.log("Sample ads: ", sampleAds);
 
 	let views = viewCount(viewcount4campaign, selectedAd);
 
@@ -552,7 +556,7 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserNam
 				totalViewCount={totalViewCount}
 			/>
 			{sampleAds.length > 1 &&
-				<div className="row justify-content-center">
+				<div className="row justify-content-center mt-5">
 					{sampleAds.map((ad, i) =>
 						<AdvertPreviewCard
 							key={i}
@@ -574,37 +578,31 @@ const AdvertCard = ({ ad }) => {
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
 			<div className="position-relative ad-card">
 				<img src="/img/LandingBackground/mobile.png" className="w-100 invisible"/>
-				<img src="/img/LandingBackground/mobile.png" className="position-absolute d-none d-md-block mobileframe-shadow" style={{left: "-7%", top:"-9%", width:"113%", zIndex:0}}/>
+				<img src="/img/LandingBackground/mobile.png" className="position-absolute d-none d-md-block mobileframe-shadow" style={{left: "50%", top:"50%", width:"80%", zIndex:0, transform: "translate(-50%, -50%)"}}/>
 				{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
-				<img src="/img/LandingBackground/mobile_frame.png" className="position-absolute d-none d-md-block" style={{left: "-7%", width:"113%", top:"-9%", zIndex:2, pointerEvents:"none"}}/>
+				<img src="/img/LandingBackground/mobile_frame.png" className="position-absolute d-none d-md-block" style={{left: "50%", width:"80%", top:"50%", zIndex:2, pointerEvents:"none", transform: "translate(-50%, -50%)"}}/>
 				<div className="position-absolute theunit">
 					<GoodLoopUnit vertId={ad.id} size={size} />
 				</div>
 			</div>
 			{Roles.isDev() ? <DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal">Portal Editor</DevLink> : null}
+			{/*<span className="position-absolute" style={{ left: "50%", top: "50%", transform: "translate(-50%, -50%)", zIndex: 0 }}>If you're seeing this, you likely have ad-blocker enabled. Please disable ad-blocker to see the demo!</span>*/}
 		</div>
 	);
 };
+
 const AdvertPreviewCard = ({ ad, handleClick, selected = false }) => {
 	let size = 'landscape';
-	// Show when the campaign ran
-	// Fallback to ad creation date
-	const durationText = ad.start || ad.end ? <span>
-		{ad.start ? <Misc.RoughDate date={ad.start} /> : ''}
-		{ad.start && ad.end ? ' - ' : null}
-		{ad.end ? <Misc.RoughDate date={ad.end} /> : ''}
-	</span> : <span>
-		<Misc.RoughDate date={ad.created} />
-	</span>;
+
 	return (
-		<div className="col-md-3 col-6">
+		<div className="col-md-4 col-6">
 			<div onClick={e => { e.preventDefault(); handleClick(); }} className={"pointer-wrapper" + (selected ? " selected" : "")}>
-				<div className="ad-prev">
+				<div className="ad-prev shadow">
 					<GoodLoopUnit vertId={ad.id} size={size} />
 				</div>
 			</div>
 			<div>
-				{durationText}
+				<Misc.DateDuration startDate={ad.start} endDate={ad.end}/>
 			</div>
 		</div>
 	);

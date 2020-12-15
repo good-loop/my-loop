@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container } from 'reactstrap';
 import ActionMan from '../../plumbing/ActionMan';
+import Roles from '../../base/Roles';
 import CharityMiniCard, {CharityLogo} from '../cards/CharityCard';
 import Money from '../../base/data/Money';
 import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
@@ -43,11 +44,58 @@ challenges facing our planet."`,
  * 
  * @param {!NGO[]} charities
  * @param {{string:Money}} donation4charity - charity ID to donation amount
+ * @param {?Boolean} filterLowDonations If true low donation charities will not display
+ * @param {?Number} lowDonationThreshold Custom threshold number to treat charities as "low donation". 1% of the total by default
+ * @param {?Boolean} showLowDonations If false will hide the donation number for low donation charities
+ * @param {?Boolean} showDonations If false will hide all donation numbers
+ * @param {?String[]} hideCharities hide specific charities by ID
  */
-const Charities = ({ charities, donation4charity }) => {
+const Charities = ({ charities, donation4charity, campaignPage }) => {
 	
+	// Low donation filtering data is represented as only 3 controls for portal simplicity
+	// lowDntn = the threshold at which to consider a charity a low donation
+	// hideCharities = a list of charity IDs to explicitly hide - represented by keySet as an object (explained more below line 103)
+	// lowDntnDisplay = how to deal with low donation charities. represented as several different modes which are expanded into configurations:
+	//   hide-low-charities = cut out low donation charities entirely
+	//   hide-low-dntns = hide the donation figure for low donation charities
+	//   hide-dntns = hide all donation figures
+	//   Otherwise, show everything
+	
+	// The portal control data
+	let {lowDntnDisplay, lowDntn, hideCharities} = campaignPage;
+	// The expanded configurations to operate on, not stored in the portal
+	let lowDonationThreshold, filterLowDonations, showLowDonations, showDonations;
+
+	// Does campaign page data contain data for low donation filtering, or is it old?
+	if (lowDntn) {
+		lowDonationThreshold = lowDntn.value;
+		// Remove any trailing quotations that sometimes crop up
+		lowDntnDisplay = lowDntnDisplay.replace(/\"/g, "");
+		// Expand the lowDntnDisplay mode into a configuration
+		filterLowDonations = lowDntnDisplay === "hide-low-charities";
+		showLowDonations = lowDntnDisplay !== "hide-low-dntns";
+		showDonations = lowDntnDisplay !== "hide-dntns";
+	} else {
+		// Default to hiding low donations
+		filterLowDonations = true;
+		showLowDonations = true;
+		showDonations = true;
+	}
+
 	// augment with SoGive data
-	let sogiveCharities = fetchSogiveData(charities);
+	// Threshold is the given custom amount, otherwise 1% of total - or if total isnt loaded, £50
+	const threshold = lowDonationThreshold ? lowDonationThreshold : (donation4charity.total ? donation4charity.total.value / 100 : 50);
+	console.warn("Low donation threshold for charities set to " + threshold);
+	charities = charities.map(charity => {
+		const include = donation4charity[charity.id] ? Money.value(donation4charity[charity.id]) >= threshold : false;
+		//console.log("Is " + charity.id + " a low donation? " + !include + ", as " + donation4charity[charity.id].value + " >= " + threshold);
+		if (!include && filterLowDonations) return null;
+		charity.lowDonation = !include;
+		return charity;
+	});
+	// Filter nulls
+	charities = charities.filter(x => x);
+	let sogiveCharities = fetchSogiveData(charities, filterLowDonations, threshold);
 
 	const getDonation = c => {
 		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
@@ -58,6 +106,15 @@ const Charities = ({ charities, donation4charity }) => {
 	};
 
 	let sogiveCharitiesWithDonations = sogiveCharities.filter(c => getDonation(c)); // Get rid of charities with no logged donations.
+	// hideCharities is from a KeySet prop control, so is an object of schema {charity_id : bool}.
+	// We want to convert it instead to a list of charity IDs
+	if (hideCharities) {
+		// Convert object to array
+		let hideCharitiesArr = Object.keys(hideCharities);
+		// Remove false entries - keySet will not remove charity IDs, but set them to false instead.
+		hideCharitiesArr = hideCharitiesArr.filter(cid => hideCharities[cid]);
+		sogiveCharitiesWithDonations = sogiveCharities.filter(c => !hideCharitiesArr.includes(c.id));
+	}
 	//let sogiveCharitiesWithoutDonations = sogiveCharities.filter(c => ! getDonation(c)); // Keep other charities for the "Also Supported" section
 
 	return (
@@ -67,7 +124,7 @@ const Charities = ({ charities, donation4charity }) => {
 			</div>
 			<Container className="pb-5">
 				{sogiveCharitiesWithDonations.map((charity, i) =>
-					<CharityCard i={i} key={charity.id} charity={charity} donationValue={getDonation(charity)} />
+					<CharityCard i={i} key={charity.id} charity={charity} donationValue={getDonation(charity)} showDonations={showDonations} showLowDonations={showLowDonations} />
 				)}
 			</Container>
 		</div>
@@ -114,7 +171,7 @@ const RegNum = ({label, regNum}) => {
  * @param {!NGO} charity This data item is a shallow copy
  * @param {!Money} donationValue
  */
-const CharityCard = ({ charity, donationValue, i }) => {
+const CharityCard = ({ charity, donationValue, showLowDonations, showDonations }) => {
 	// Prefer full descriptions here. If unavailable switch to summary desc.
 	let desc = charity.description || charity.summaryDescription || '';
 	// But do cut descriptions down to 1 paragraph.
@@ -125,6 +182,8 @@ const CharityCard = ({ charity, donationValue, i }) => {
 
 	const quote = tq(charity);
 	let img = (quote && quote.img) || charity.images;
+
+	const showDonationNum = showDonations && (charity.lowDonation && showLowDonations || !charity.lowDonation);
 
 	// TODO let's reduce the use of custom css classes (e.g. charity-quote-img etc below)
 
@@ -140,10 +199,11 @@ const CharityCard = ({ charity, donationValue, i }) => {
 					<img src={charity.logo} alt="logo" />
 				</div>
 				<div className="charity-quote-text">
-					{donationValue ? <div className="w-100"><h2><Counter amount={donationValue} /> raised</h2></div> : null}
+					{showDonationNum && donationValue ? <div className="w-100"><h2><Counter amount={donationValue} /> raised</h2></div> : null}
 					{charity.simpleImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
 					{!quote ? <MDText source={desc} /> : null}
+					{Roles.isDev() && <DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">SoGive</DevLink>}
 				</div>
 			</div>
 		</div>
