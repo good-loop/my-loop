@@ -138,7 +138,7 @@ const WebtopPage = () => {
 			{/* Tutorial highlight to cover adverts */}
 		</BG>
 		<TutorialComponent page={4} className="position-absolute" style={{bottom:0, left:0, right:0, height:110, width:"100vw"}}/>
-		<NewtabTutorialCard/>
+		<NewtabTutorialCard tutorialPages={tutorialPages}/>
 		<NewtabLoginWidget onRegister={() => {if (!onboarding) openTutorial();}}/>
 	</>); 
 };
@@ -233,5 +233,51 @@ const doSearch = e => {
 	}
 	(window.parent || window.parent).location = 'https://www.ecosia.org/search?q=' + encURI(search);
 };
+
+const tutorialPages = [
+	<>
+		<h2>Success!</h2>
+		<p>
+			Thanks for signing up to Tabs for Good!<br/>
+			You are now raising money for your favourite charity every time you open a new tab.
+		</p>
+	</>,
+	<>
+		<h2>Doing extra good</h2>
+		<p>
+			We use Ecosia as our default search engine, so you can raise money for multiple good causes.
+		</p>
+	</>,
+	<>
+		<h2>It's your choice</h2>
+		<p>
+			You choose the charity you want to support. We will send them all the money you raise through Tabs for Good. You can change your mind at any time in your account settings.
+		</p>
+	</>,
+	<>
+		<h2>Check our progress</h2>
+		<p>
+			See how much money we've raised so far! :)
+		</p>
+	</>,
+	<>
+		<h2>Where the money comes from</h2>
+		<p>
+			50% of the ad revenue received is going to the charity you choose.
+		</p>
+	</>,
+	<>
+		<h2>Your account</h2>
+		<p>
+			Access your account here to change your settings, including your choice of charity.
+		</p>
+	</>,
+	<>
+		<h2>Explore the Loop</h2>
+		<p>
+			Find out more about Good-Loop and what more you can do for good at My-Loop.
+		</p>
+	</>
+];
 
 export default NewTabMainDiv;
