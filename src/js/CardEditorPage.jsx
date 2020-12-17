@@ -27,10 +27,12 @@ const CardEditorPage = () => {
 	let ax = DataStore.getUrlValue("ax") || 10;
 	let ay = DataStore.getUrlValue("ay") || 20;
 	let aw = DataStore.getUrlValue("aw") || 20;
+	let aflip = DataStore.getUrlValue("aflip");
 
 	let bx = DataStore.getUrlValue("bx") || 70;
 	let by = DataStore.getUrlValue("by") || 20;
 	let bw = DataStore.getUrlValue("bw") || 20;
+	let bflip = DataStore.getUrlValue("bflip");
 
 	const onDrop = (e, dropInfo) => {			
 		let did = dropInfo.draggable;
@@ -60,7 +62,7 @@ const CardEditorPage = () => {
 				</Tab>
 				<Tab tabId='preview' title="Preview" >
 					<div className='position-relative' id='the-scene' onDrop={onDrop}>			
-						<Card bg={bg} {...{ax,ay,aw,aimg,bx,by,bw,bimg}} zIndex={100} flakes />
+						<Card bg={bg} {...{ax,ay,aw,aimg,aflip,bx,by,bw,bimg,bflip}} zIndex={100} flakes />
 					</div>
 				</Tab>
 			</Tabs>
@@ -98,7 +100,7 @@ const FacePic = ({ prefix, img, x, y, w}) => {
 	</>);
 };
 
-const Card = ({bg,ax,ay,aw,aimg,bx,by,bw,bimg,zIndex,flakes}) => {
+const Card = ({bg,ax,ay,aw,aimg,aflip,bx,by,bw,bimg,bflip,zIndex,flakes}) => {
 	let from = DataStore.getUrlValue("from");
 	let to = DataStore.getUrlValue("to");
 	let msg = DataStore.getUrlValue("msg");
@@ -142,8 +144,8 @@ const Card = ({bg,ax,ay,aw,aimg,bx,by,bw,bimg,zIndex,flakes}) => {
 			animation-iteration-count: infinite;		
 		}
 	`}/>
-	{aimg && <img src={aimg} style={{ position: 'absolute', top: ay+'%', left: ax+'%', width: aw + '%', zIndex}} draggable={false} />}
-	{bimg && <img src={bimg} style={{ position: 'absolute', top: by+'%', left: bx+'%', width: bw + '%', zIndex}} draggable={false} />}
+	{aimg && <img src={aimg} style={{ position: 'absolute', top: ay+'%', left: ax+'%', width: aw + '%', transform: aflip? "scaleX(-1)" : null, zIndex}} draggable={false} />}
+	{bimg && <img src={bimg} style={{ position: 'absolute', top: by+'%', left: bx+'%', width: bw + '%', transform: bflip? "scaleX(-1)" : null, zIndex}} draggable={false} />}
 	<div className='the-card'>				
 		<div style={{position:'absolute', top:'2%', left:0,right:0, zIndex:zIndex+2}}>
 			<h1>To {to}</h1>
