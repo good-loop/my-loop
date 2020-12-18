@@ -1,6 +1,6 @@
 
 import React from 'react';
-import ACard from './ACard';
+import PageCard from './PageCard';
 import Roles from '../../base/Roles';
 import C from '../../C';
 import DataStore from '../../base/plumbing/DataStore';

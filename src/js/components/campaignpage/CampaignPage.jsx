@@ -173,7 +173,7 @@ const CampaignPage = () => {
 	// PDF version of page
 	let pdf = null;
 
-	// Group ads by campaign {String: Advert}
+	// Group ads by campaign {String: merged-Advert}
 	let campaignByName = {};
 	ads.forEach(ad => {
 		let name = ad.campaign || ad.id;
@@ -309,12 +309,8 @@ const CampaignPage = () => {
 				</div>
 
 				<CharityDetails charities={charities}/>
-				{campaignPage.smallPrint ?
-					<div className="small-print">
-						<small>
-							{campaignPage.smallPrint}
-						</small>
-					</div> : null}
+
+				<CampaignDetailsCard />
 			</div>
 		</div>
 	</>);

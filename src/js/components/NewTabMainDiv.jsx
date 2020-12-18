@@ -37,7 +37,7 @@ import Ticker from './Ticker';
 import NewTabOnboardingPage from './NewTabOnboarding';
 
 // Components
-import { CharityLogo } from './cards/CharityCard';
+import CharityLogo from './CharityLogo';
 import WhiteCircle from './campaignpage/WhiteCircle';
 import { nonce } from '../base/data/DataClass';
 import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLoginWidget';

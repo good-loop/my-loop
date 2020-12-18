@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Container } from 'reactstrap';
 import ActionMan from '../../plumbing/ActionMan';
 import Roles from '../../base/Roles';
-import CharityMiniCard, {CharityLogo} from '../cards/CharityCard';
+import CharityLogo from '../CharityLogo';
+import PageCard from '../../base/components/PageCard';
 import Money from '../../base/data/Money';
 import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
 import C from '../../C';
@@ -12,6 +13,7 @@ import printer from '../../base/utils/printer';
 import MDText from '../../base/components/MDText';
 import WhiteCircle from './WhiteCircle';
 import DevLink from './DevLink';
+import LinkOut from '../../base/components/LinkOut';
 
 /**
  * HACK hardcode some thank you messages.
@@ -131,7 +133,7 @@ const Charities = ({ charities, donation4charity, campaignPage }) => {
 	);
 };
 
-// Extra smallprint details for charities
+/** Extra smallprint details for charities  */
 const CharityDetails = ({charities}) => {
 
 	let sogiveCharities = fetchSogiveData(charities);
@@ -143,7 +145,7 @@ const CharityDetails = ({charities}) => {
 	// Registration numbers for all possible types of reg num for each charity
 	let regNums = sogiveCharities.map(c => {
 		return hasRegNum(c) ? <div className="charityInfo" key={c.id}><small>
-			<b>{c.displayName || c.name}</b>
+			<b><LinkOut href={c.url}>{c.displayName || c.name}</LinkOut></b>
 			<RegNum label="England & Wales Charity Commission registration number" regNum={c.englandWalesCharityRegNum}/>
 			<RegNum label="Scottish OSCR registration number" regNum={c.scotlandCharityRegNum}/>
 			<RegNum label="Northern Ireland registration number" regNum={c.niCharityRegNum}/>
@@ -154,12 +156,19 @@ const CharityDetails = ({charities}) => {
 	});
 	// Remove null values
 	regNums = regNums.filter(x => x);
-	return regNums.length > 0 ? <div className="charity-details bg-white shadow my-3 p-3">
-		{regNums}
-	</div> : null;
+	if ( ! regNums.length) {
+		return null; // No info?
+	}
+	let n = Math.min(4, regNums.length);
+	return <PageCard>
+		<h2>Charity Details</h2>
+		<div className={"charity-details bg-white my-3 p-3 gridbox gridbox-md-"+n}>
+			{regNums}
+		</div>
+	</PageCard>;
 };
 
-// A labelled entry for a registration number, does not display if regNum is falsy
+/** A labelled entry for a registration number, does not display if regNum is falsy */
 const RegNum = ({label, regNum}) => {
 	return regNum ? <div className="regNum">
 		{label}: {regNum}
@@ -299,20 +308,6 @@ const Impact = ({ charity, donationValue }) => {
 	}
 	
 	return <b>{impact}</b>;
-};
-
-const AlsoSupported = ({charities}) => {
-	return (charities.length ? <>
-		<h2>Also supporting</h2>
-		<div className="pt-3 row justify-content-center">
-			{charities.map(charity => <div key={charity.id} className="col-md-3 col-4">
-				<WhiteCircle className="mb-5 w-50 mx-auto" circleCrop={charity.circleCrop}>
-					<CharityLogo charity={charity} link/>
-				</WhiteCircle>
-				{normaliseSogiveId(charity.id)? <DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">SoGive</DevLink> : null}
-			</div>)}
-		</div>
-	</> : null);
 };
 
 export { CharityDetails };

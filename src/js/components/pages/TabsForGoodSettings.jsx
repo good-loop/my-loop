@@ -7,7 +7,7 @@ import { getAllXIds, getClaimValue, getProfilesNow, savePersons, setClaimValue }
 import DataStore from '../../base/plumbing/DataStore';
 import { isPortraitMobile, space, yessy } from '../../base/utils/miscutils';
 import ServerIO from '../../plumbing/ServerIO';
-import { CharityLogo } from '../cards/CharityCard';
+import CharityLogo from '../CharityLogo';
 import Paginator from '../Paginator';
 import { fetchAllCharities, fetchAllCharityIDs, fetchCharity } from './MyCharitiesPage';
 

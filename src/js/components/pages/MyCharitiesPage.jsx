@@ -7,7 +7,7 @@ import C from '../../C';
 import ActionMan from '../../plumbing/ActionMan';
 import { yessy } from '../../base/utils/miscutils';
 import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
-import { CharityLogo } from '../cards/CharityCard';
+import CharityLogo from '../CharityLogo';
 
 /**
  * TODO refactor - merge with the lower level handling of mapping Good-Loop data to SoGive IDs
