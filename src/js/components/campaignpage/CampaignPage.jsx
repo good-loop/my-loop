@@ -34,6 +34,7 @@ import DevLink from './DevLink';
 import { LoginLink } from '../../base/components/LoginWidget';
 import ShareButton from '../ShareButton';
 import { assert } from '../../base/utils/assert';
+import CampaignDetailsCard from './CampaignDetailsCard';
 
 /**
  * HACK hard-coded list of campaigns which have PDF versions
@@ -310,7 +311,7 @@ const CampaignPage = () => {
 
 				<CharityDetails charities={charities}/>
 
-				<CampaignDetailsCard />
+				<CampaignDetailsCard ads={ads} />
 			</div>
 		</div>
 	</>);
