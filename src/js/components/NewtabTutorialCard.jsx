@@ -2,26 +2,31 @@ import React, { useState, useEffect, useRef } from 'react';
 import DataStore from '../base/plumbing/DataStore';
 import { space } from '../base/utils/miscutils';
 import _ from 'lodash';
+import { assMatch } from '../base/utils/assert';
 
 const tutorialPath = ['widget', 'TutorialCard'];
+// TODO document what these mean -- is open a boolean? an ID? or ??
 const tutorialOpenPath = [...tutorialPath, 'open'];
 const tutorialPagePath = [...tutorialPath, 'page'];
 const tutorialRectPath = [...tutorialPath, 'rect'];
 
+
 const NewtabTutorialCard = ({tutorialPages}) => {
-	let open = DataStore.getValue(tutorialOpenPath);
-	const page = DataStore.getValue(tutorialPagePath);
+	const open = DataStore.getValue(tutorialOpenPath);
+	if ( ! open) return null;
+	const page = DataStore.getValue(tutorialPagePath) || 0;
+	assMatch(page, Number);
 	const setPage = (num) => {
 		DataStore.setValue(tutorialPagePath, num);
 	};
 
-	// Set page to 0 by default
-	useEffect(() => {
-		// Use of != is purposeful here: only match if number is explicitly equal, avoid re-render loops
-		if (!page && page != 0) {
-			setPage(0);
-		}
-	});
+	// // Set page to 0 by default
+	// useEffect(() => {
+	// 	// Use of != is purposeful here: only match if number is explicitly equal, avoid re-render loops
+	// 	if (!page && page != 0) {
+	// 		setPage(0);
+	// 	}
+	// });
 
 	if (page > tutorialPages.length - 1) {
 		DataStore.setValue(tutorialOpenPath, false);
@@ -96,8 +101,8 @@ const NewtabTutorialCard = ({tutorialPages}) => {
 			rect.left = window.innerWidth - desiredSize.width;
 		}
 	}
-
-	return open && <>
+	
+	return <>
 		<div className="position-absolute" style={{width: "100vw", height: "100vh", top: 0, left: 0, zIndex: 999, background:"rgba(0,0,0,0.25)"}} />
 		<div className="tutorial-card bg-white position-absolute shadow text-center p-4 flex-column justify-content-between align-items-center unset-margins"
 			style={{
@@ -136,16 +141,25 @@ const openTutorial = () => {
 	DataStore.setValue(tutorialOpenPath, true);
 };
 
+/**
+ * TODO Doc: How should this be used??
+ * 
+ * @param {Object} p
+ * @param {!Number} p.page TODO in hindsight, using numbers makes any reordering tricky.
+ * Maybe switch to named tutoriaal pages, and specify a list of names as the path??
+ */
 const TutorialComponent = ({page, customSelectStyle, style, children, className}) => {
 	const current = DataStore.getValue(tutorialPagePath);
 	const open = DataStore.getValue(tutorialOpenPath);
 	const rect = DataStore.getValue(tutorialRectPath);
-	const selfRef = useRef(null);
-	
+	const selfRef = useRef(null);	
+	assMatch(page, Number);
+
 	let highlight = current === page;
-	if (Array.isArray(page)) {
-		highlight = page.includes(current);
-	}
+	
+	// if (Array.isArray(page)) {
+	// 	highlight = page.includes(current);
+	// }
 
 	useEffect(() => {
 		const myRect = selfRef.current.getBoundingClientRect();

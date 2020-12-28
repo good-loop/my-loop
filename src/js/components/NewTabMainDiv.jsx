@@ -114,13 +114,13 @@ const WebtopPage = () => {
 		<BG src={bgImg} fullscreen opacity={0.9} bottom={onboarding ? 0 : 110} style={{backgroundPosition: "center"}}>
 			<div className="position-fixed p-3" style={{top: 0, left: 0, width:"100vw", zIndex:1}}>
 				<div className="d-flex justify-content-between">
-					<TutorialComponent page={6} className="logo pl-5 flex-row">
+					<TutorialComponent page={5} className="logo pl-5 flex-row">
 						<a href="https://my.good-loop.com">
 							<img src="/img/logo-white.svg" style={{width: 50}} alt="logo"/>
 						</a>
 						<h4 className="pl-2">Tabs for<br/>good</h4>
 					</TutorialComponent>
-					<TutorialComponent page={5} className="user-controls flex-row">
+					<TutorialComponent page={4} className="user-controls flex-row">
 						{!onboarding && <>
 							{Login.isLoggedIn() ? <TabsOpenedCounter/> : null}
 							<AccountMenu small accountLink="/#account?tab=tabsForGood" customLogin={
@@ -137,7 +137,7 @@ const WebtopPage = () => {
 			</div>
 			{/* Tutorial highlight to cover adverts */}
 		</BG>
-		<TutorialComponent page={4} className="position-absolute" style={{bottom:0, left:0, right:0, height:110, width:"100vw"}}/>
+		<TutorialComponent page={3} className="position-absolute" style={{bottom:0, left:0, right:0, height:110, width:"100vw"}}/>
 		<NewtabTutorialCard tutorialPages={tutorialPages}/>
 		<NewtabLoginWidget onRegister={() => {if (!onboarding) openTutorial();}}/>
 	</>); 
@@ -154,7 +154,7 @@ const NormalTabCenter = ({charityID}) => {
 		<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
 			<h3 className="text-center">
 				Together we've raised&nbsp;
-				<TutorialComponent page={3} className="d-inline-block">
+				<TutorialComponent page={2} className="d-inline-block">
 					<TickerTotal />
 				</TutorialComponent>
 			</h3>
@@ -163,9 +163,7 @@ const NormalTabCenter = ({charityID}) => {
 		<div className="w-100 pb-3">
 			<div className="tab-search-container mx-auto">
 				<Search onSubmit={doSearch} placeholder="Search with Ecosia" icon={
-					<TutorialComponent page={1}>
-						<img src="/img/TabsForGood/ecosia.png" alt="search icon"/>
-					</TutorialComponent>
+					<img src="/img/TabsForGood/ecosia.png" alt="search icon"/>
 				}/>
 			</div>
 		</div>
@@ -208,7 +206,7 @@ const NewTabCharityCard = ({cid}) => {
 
 	return (<div className="d-flex justify-content-center" >
 		<a href="/#account?tab=tabsForGood" rel="noreferrer" target="_blank">
-			<TutorialComponent page={2}>
+			<TutorialComponent page={1}>
 				<WhiteCircle className="m-3 tab-charity" circleCrop={charity ? charity.circleCrop : null}>
 					{charity ?
 						<CharityLogo charity={charity}/>
@@ -240,12 +238,6 @@ const tutorialPages = [
 		<p>
 			Thanks for signing up to Tabs for Good!<br/>
 			You are now raising money for your favourite charity every time you open a new tab.
-		</p>
-	</>,
-	<>
-		<h2>Doing extra good</h2>
-		<p>
-			We use Ecosia as our default search engine, so you can raise money for multiple good causes.
 		</p>
 	</>,
 	<>
