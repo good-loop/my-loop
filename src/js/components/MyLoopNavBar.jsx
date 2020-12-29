@@ -1,5 +1,5 @@
 import React from 'react';
-import Login from 'you-again';
+import Login from '../base/you-again';
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { LoginLink } from '../base/components/LoginWidget';
 // import NavBar from '../base/components/NavBar';

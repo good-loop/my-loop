@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import Login from 'you-again';
+import Login from '../base/you-again';
 import { assert, assMatch } from '../base/utils/assert';
 import C from '../C';
 import { emailLogin } from '../base/components/LoginWidget';

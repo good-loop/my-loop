@@ -1,5 +1,5 @@
 import React from 'react';
-import Login from 'you-again';
+import Login from '../base/you-again';
 import NavBar, { AccountMenu } from './MyLoopNavBar';
 
 const NewTabOnboardingPage = () => {

@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState, useCallback} from 'react';
-import Login from 'you-again';
+import Login from '../base/you-again';
 import { Col, Row, Form } from 'reactstrap';
 
 import DataStore from '../../base/plumbing/DataStore';

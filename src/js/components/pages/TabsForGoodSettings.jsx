@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Col, Form, Row } from 'reactstrap';
-import Login from 'you-again';
+import Login from '../base/you-again';
 import PropControl from '../../base/components/PropControl';
 import JSend from '../../base/data/JSend';
 import { getAllXIds, getClaimValue, getProfilesNow, savePersons, setClaimValue } from '../../base/data/Person';

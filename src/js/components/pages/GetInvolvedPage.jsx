@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Login from 'you-again';
+import Login from '../base/you-again';
 import { Container, Row, Col } from 'reactstrap';
 import Cookies from 'js-cookie';
 import MyLoopNavBar from '../MyLoopNavBar';
