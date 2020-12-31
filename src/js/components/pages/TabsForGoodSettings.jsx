@@ -1,15 +1,15 @@
 import React, { useRef, useState } from 'react';
 import { Col, Form, Row } from 'reactstrap';
-import Login from '../../base/youagain';
+import ListLoad from '../../base/components/ListLoad';
 import PropControl from '../../base/components/PropControl';
 import JSend from '../../base/data/JSend';
 import { getAllXIds, getClaimValue, getProfilesNow, savePersons, setClaimValue } from '../../base/data/Person';
+import { getDataItem } from '../../base/plumbing/Crud';
 import DataStore from '../../base/plumbing/DataStore';
-import { isPortraitMobile, space, yessy } from '../../base/utils/miscutils';
+import { isPortraitMobile, space } from '../../base/utils/miscutils';
 import ServerIO from '../../plumbing/ServerIO';
+import Login from '../../base/youagain';
 import { CharityLogo } from '../cards/CharityCard';
-import Paginator from '../Paginator';
-import { fetchAllCharities, fetchAllCharityIDs, fetchCharity } from './MyCharitiesPage';
 
 
 const TabsForGoodSettings = () => {
@@ -27,52 +27,27 @@ const TabsForGoodSettings = () => {
 };
 
 const CharityPicker = () => {
-	// Why is this useState??
-	const [charities, setCharities] = useState([]);
-
-	// TODO allow picking a charity without a logo	
-	let charityLogos = [];
-
-	// TODO less charities -- just show a shortlist of dunno, the top 10 UK charities?
-	// Because paging through is not fun.
-	// TODO search should search SoGive, to give a wide range of options
-	// Parse CSV from donations tracker into json
-	if (!yessy(charities)) {
-		fetchAllCharityIDs().then(chars => setCharities(chars)).catch(status => console.error("Failed to get donation tracker CSV! Status: " + status));
-	} else {
-		let chars = fetchAllCharities(charities);
-		// Get logo charities
-		charityLogos = chars.filter(c => c.logo);
-		let search = DataStore.getValue(['widget', 'search', 'q']);
-		if (search) {
-			// Compare for any letter casing and ignoring spaces
-			search = search.toLowerCase().replace(" ", "");
-			charityLogos = charityLogos.filter(c => c.name ? c.name.toLowerCase().replace(" ", "").includes(search) : false);
-		}
-	}
-
 	const selId = getSelectedCharityId();
-	const selectedCharity = selId ? fetchCharity(selId) : null;
-
+	const selectedCharity = selId && getDataItem({type:C.TYPES.NGO, id:selId, status:C.KStatus.Published, swallow:true});
+	let q = DataStore.getValue('widget','search','q');
 	return <div className="tabs-for-good-settings">
 		{selectedCharity && 
 			<><p>Your selected charity:</p>
 				<div className="col-md-3">
 					<CharitySelectBox charity={selectedCharity} selected />
 				</div>
-			</>}
-		<div className="py-5"/> {/* spacer */}
+			</>}		
 		<div className="d-md-flex flex-md-row justify-content-between unset-margins mb-3">
 			<p>Can't see your favourite charity?&nbsp;<br className="d-md-none"/>Search for it:</p>
 			<Search onSubmit={e => e.preventDefault()} placeholder="Find your charity" className="flex-grow ml-md-5"/>
 		</div>
-		<Paginator rows={4} cols={5} rowsMD={2} colsMD={5} pageButtonRangeMD={1} displayCounter displayLoad textWhenNoResults="Sorry, we couldn't find any charities matching your search.">
-			{charityLogos.map(c => <div key={c.id} className="p-md-3 d-flex justify-content-center align-items-center">
-				<CharitySelectBox charity={c} padAmount3D={25} className="pt-3 pt-md-0"/>
-			</div>)}
-		</Paginator>
+		<ListLoad type="NGO" status="PUBLISHED" q={q} sort="" />
 	</div>;
 };
+
+// ListItem {type, servlet, navpage, item, sort} <div key={c.id} className="p-md-3 d-flex justify-content-center align-items-center">
+				// <CharitySelectBox charity={c} padAmount3D={25} className="pt-3 pt-md-0"/>
+				// </div>
 
 // TODO charity selection backend!!
 /**
@@ -154,7 +129,7 @@ const TabStats = () => {
 	);
 };
 
-/** Search box - a magnifying-glass icon by a text input ??Should this move down to PropControl type=search
+/** Search box - a magnifying-glass icon by a text input ??This is a nice search box - Should this move to PropControl type=search??
  */
 const Search = ({onSubmit, placeholder, icon, className}) => {
 	return (<>
