@@ -1,6 +1,6 @@
 /* global navigator */
 import React, { Component, useState, useRef, useEffect } from 'react';
-import Login from '../base/you-again';
+import Login from '../base/youagain';
 import { modifyHash, randomPick, encURI, space, stopEvent, ellipsize } from '../base/utils/miscutils';
 import { Card, Form, Button, CardTitle, Row, Col, Badge, CardBody, CardFooter, DropdownItem, Alert } from 'reactstrap';
 

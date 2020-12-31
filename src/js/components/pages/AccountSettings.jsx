@@ -6,7 +6,7 @@ import PropControl from '../../base/components/PropControl';
 import ConsentWidget from '../ConsentWidget';
 import { getAllXIds, getClaimValue, getProfilesNow, savePersons, setClaimValue} from '../../base/data/Person';
 import SignUpConnectCard from '../cards/SignUpConnectCard';
-import Login from '../base/you-again';
+import Login from '../../base/youagain';
 import XId from '../../base/data/XId';
 import { nonce } from '../../base/data/DataClass';
 import { assert } from '../../base/utils/assert';
