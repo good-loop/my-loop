@@ -41,7 +41,7 @@ const CharityPicker = () => {
 			<p>Can't see your favourite charity?&nbsp;<br className="d-md-none"/>Search for it:</p>
 			<Search onSubmit={e => e.preventDefault()} placeholder="Find your charity" className="flex-grow ml-md-5"/>
 		</div>
-		<ListLoad type="NGO" status="PUBLISHED" q={q} sort="" />
+		<ListLoad type="NGO" status="PUBLISHED" q={q || "impact:high"} sort="impact" />
 	</div>;
 };
 
