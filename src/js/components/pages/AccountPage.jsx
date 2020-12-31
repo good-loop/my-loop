@@ -1,24 +1,19 @@
-import React, {useEffect, useRef, useState, useCallback} from 'react';
-import Login from '../base/you-again';
-import { Col, Row, Form } from 'reactstrap';
-
-import DataStore from '../../base/plumbing/DataStore';
-
-import NewTabOptions from '../NewTabOptions';
-import LinkedProfilesCard from '../cards/LinkedProfilesCard';
-import MyLoopNavBar from '../MyLoopNavBar';
-import { LoginLink } from '../../base/components/LoginWidget';
-import Footer from '../Footer';
-import {getAllXIds, getEmail, getProfilesNow, hasConsent, PURPOSES} from '../../base/data/Person';
-import Misc from '../../base/components/Misc';
-import { space, isPortraitMobile } from '../../base/utils/miscutils';
-import PropControl from '../../base/components/PropControl';
-import SubscriptionBox from '../cards/SubscriptionBox';
-import ShareButton from '../ShareButton';
+import React from 'react';
+import { Col, Row } from 'reactstrap';
 import { addImageCredit } from '../../base/components/AboutPage';
-import TabsForGoodSettings from './TabsForGoodSettings';
-import AccountSettings from './AccountSettings';
+import { LoginLink } from '../../base/components/LoginWidget';
+import { getAllXIds, getEmail, hasConsent, PURPOSES } from '../../base/data/Person';
+import DataStore from '../../base/plumbing/DataStore';
 import { lg } from '../../base/plumbing/log';
+import { space } from '../../base/utils/miscutils';
+import Login from '../../base/youagain';
+import SubscriptionBox from '../cards/SubscriptionBox';
+import MyLoopNavBar from '../MyLoopNavBar';
+import ShareButton from '../ShareButton';
+import AccountSettings from './AccountSettings';
+import TabsForGoodSettings from './TabsForGoodSettings';
+
+
 
 const Account = () => {
 	let xids = getAllXIds();

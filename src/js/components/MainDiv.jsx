@@ -1,6 +1,6 @@
 /* global navigator */
 import React, { Component } from 'react';
-import Login from '../base/you-again';
+import Login from '../base/youagain';
 import { assert, assMatch } from '../base/utils/assert';
 import { modifyHash } from '../base/utils/miscutils';
 

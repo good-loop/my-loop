@@ -1,5 +1,5 @@
 import React from 'react';
-import Login from '../base/you-again';
+import Login from '../../base/youagain';
 import XId from '../../base/data/XId';
 
 import C from '../../C';
