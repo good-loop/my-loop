@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Col, Form, Row } from 'reactstrap';
 import ListLoad from '../../base/components/ListLoad';
+import Login from '../../base/youagain';
 import PropControl from '../../base/components/PropControl';
 import JSend from '../../base/data/JSend';
 import { getAllXIds, getClaimValue, getProfilesNow, savePersons, setClaimValue } from '../../base/data/Person';
@@ -8,8 +9,6 @@ import { getDataItem } from '../../base/plumbing/Crud';
 import DataStore from '../../base/plumbing/DataStore';
 import { isPortraitMobile, space } from '../../base/utils/miscutils';
 import ServerIO from '../../plumbing/ServerIO';
-import Login from '../../base/youagain';
-import { CharityLogo } from '../cards/CharityCard';
 import { getId } from '../../base/data/DataClass';
 import { assert } from '../../base/utils/assert';
 
@@ -172,16 +171,18 @@ const setSelectedCharityId = (cid) => {
 	let xids = getAllXIds();
 	let persons = getProfilesNow(xids);
 	setClaimValue({persons, key:"charity", value:cid});
-	savePersons({persons});
 	console.log("setSelectedCharityId " + cid);
 	DataStore.update();
+	// save
+	let pv = savePersons({persons});	
 	// return??
 	const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
 	const link = DataStore.getUrlValue("link"); 
 	if (task==="select-charity" && link) {
-		setTimeout(() => {
+		pv.promise.then(re => {
+			console.log("... saved setSelectedCharityId " + cid);
 			window.location = link;
-		}, 250);
+		});
 	}
 };
 
