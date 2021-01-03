@@ -20,18 +20,16 @@ const TabsForGoodSettings = () => {
 		{ ! task && <TabStats/>}
 		<div className="py-3"/>
 		<h1>Pick your charity</h1>
-		<p className={isPortraitMobile() ? "" : "w-50"}>Select a charity and we will send them all the money that your Tabs for Good are generating. You can change your selection at any time.</p>
+		<p className={isPortraitMobile() ? "large" : "large w-50"}>Select a charity and we will send them all the money that your Tabs for Good are generating. You can change your selection at any time.</p>
 		<br/><br/>
 		<CharityPicker/>
-		{/* whitespace to prevent jump on charity search */}
-		<div style={{height:"50vh"}}/>
 	</>;
 };
 
 
 const CharityPicker = () => {
 	const selId = getSelectedCharityId();
-	const selectedCharity = selId && getDataItem({type:C.TYPES.NGO, id:selId, status:C.KStatus.Published, swallow:true});
+	const pvSelectedCharity = selId && getDataItem({type:C.TYPES.NGO, id:selId, status:C.KStatus.Published, swallow:true});
 	let q = DataStore.getValue('widget','search','q');
 	
 	// HACK: default list - poke it into appstate
@@ -43,17 +41,17 @@ const CharityPicker = () => {
 	DataStore.setValue("list.NGO.PUBLISHED.nodomain.LISTLOADHACK.whenever.impact".split("."), {hits, total:hits.length}, false);
 
 	return <div>
-		{selectedCharity && 
-			<><p>Your selected charity:</p>
-				<div className="col-md-3">
-					<CharitySelectBox item={selectedCharity} />
+		{selId && 
+			<><p className='large'>Your selected charity:</p>
+				<div className="gridbox gridbox-md-3">
+					<CharitySelectBox item={pvSelectedCharity.value || {id:selId}} />
 				</div>
 			</>}		
 		<div className="d-md-flex flex-md-row justify-content-between unset-margins mb-3">
-			<p>Can't see your favourite charity?&nbsp;<br className="d-md-none"/>Search for it:</p>
+			<p className='large'>Can't see your favourite charity?&nbsp;<br className="d-md-none"/>Search for it:</p>
 			<Search onSubmit={e => e.preventDefault()} placeholder="Find your charity" className="flex-grow ml-md-5"/>
-		</div>
-		<ListLoad className={"gridbox gridbox-md-4"} type="NGO" status="PUBLISHED" q={q || dq} sort="impact" ListItem={CharitySelectBox} unwrapped />
+		</div>		
+		<ListLoad className={"gridbox gridbox-md-3"} type="NGO" status="PUBLISHED" q={q || dq} sort="impact" ListItem={CharitySelectBox} unwrapped hideTotal />
 	</div>;
 };
 
@@ -66,62 +64,23 @@ const CharityPicker = () => {
  * Show a selectable charity in the charity list
  * @param charity the charity to show
  * @param {boolean} selected 
- * @param do3d activate the 3d mouse follow effect ??doc: why not always on?
- * @param padAmount3D override width of div that captures the mouse for tracking on 3d effects. ??0Why would this vary?
  */
-const CharitySelectBox = ({item, padAmount3D=150, className}) => {
+const CharitySelectBox = ({item, className}) => {
 	assert(item, "CharitySelectBox - no item");
 	const selId = getSelectedCharityId();
 	let selected = getId(item) === selId;	
-	let do3d = ! isPortraitMobile();		
-	// ref & state are used for the 3D card effect
-	const container3d = useRef(null);
-	const [axis, setAxis] = useState({x: 0, y: 0});
-	const [transition, setTransition] = useState('none');
-	const [elementHeight, setElementHeight] = useState(0);
-
-	const on3dMouseMove = e => {
-		if (container3d.current) {
-			// Higher = less extreme
-			let sensitivity = 10;
-			let rect = container3d.current.getBoundingClientRect();
-			// Maths for this found partially by trial and error - "it just works", Todd Howard
-			setAxis({x: ((rect.width / 2) - e.pageX + rect.left) / sensitivity,
-				y: ((rect.height * 2) - e.pageY + rect.bottom + ((rect.top - rect.bottom) / 2) + window.scrollY - (window.screen.height / 2)) / sensitivity});
-		}
-	};
-
-	const on3dMouseEnter = () => {
-		setTransition('none');
-		setElementHeight(50);
-	};
-
-	const on3dMouseLeave = () => {
-		setTransition('all 0.5s ease');
-		setAxis({x:0, y:0});
-		setElementHeight(0);
-	};	
-
-	let style = do3d ? {transform:`rotateY(${-axis.x}deg) rotateX(${axis.y}deg)`, transition:transition} : {};
-	style.height = 280;
-
 	// NB: to deselect, pick a different charity (I think that's intuitive enough)
 
-	return <div className={space("m-md-2", do3d && "container-3d", className)} ref={container3d}
-		style={do3d ? {paddingLeft:padAmount3D, paddingRight:padAmount3D, marginLeft:-padAmount3D, marginRight:-padAmount3D} : null}
-		onMouseMove={do3d ? on3dMouseMove : null}
-		onMouseEnter={do3d ? on3dMouseEnter : null}
-		onMouseLeave={do3d ? on3dMouseLeave : null}
-	>
-		<div style={style} 
-			className={space("charity-select-box flex-column justify-content-center align-items-center unset-margins p-md-3 position-relative w-100", do3d ? "do3d" : "")}
-			onClick={() => setSelectedCharityId(getId(item))}
+	return <div className={space("m-md-2", className)}>
+		<div
+			className={space("charity-select-box flex-column justify-content-center align-items-center unset-margins p-md-3 w-100 position-relative")}			
 		>
-			<CharityLogo style={{maxWidth:"100%", width: "100%", transform: `translateZ(${elementHeight}px)`}} charity={item} className="p-2 mb-5 mt-5 w-75"/>
-			{selected ? <span className="text-success thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} >&#10004; Selected</span>
-				: <a className="btn btn-transparent fill thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}}>Select</a>
+			{item.logo? <img className="logo-xl mt-4 mb-2" src={item.logo} /> : <span>{item.name || item.id}</span>}
+			<p>{item.summaryDescription}</p>
+			{selected ? <span className="text-success thin">&#10004; Selected</span>
+				: <button onClick={() => setSelectedCharityId(getId(item))} className="btn btn-outline-primary thin">Select</button>
 			}
-			<a className="position-absolute" style={{top: 10, right: 10}} href={item.url} target="_blank" rel="noreferrer">About</a>			
+			<a className="position-absolute" style={{top: 10, right: 10}} href={item.url} target="_blank" rel="noreferrer">About</a>
 		</div>
 	</div>;
 }; // ./CharitySelectBox
@@ -216,13 +175,21 @@ const setSelectedCharityId = (cid) => {
 	savePersons({persons});
 	console.log("setSelectedCharityId " + cid);
 	DataStore.update();
+	// return??
+	const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
+	const link = DataStore.getUrlValue("link"); 
+	if (task==="select-charity" && link) {
+		setTimeout(() => {
+			window.location = link;
+		}, 250);
+	}
 };
 
 const StatCard = ({md, lg, xs, number, label, className, padding, children}) => {
 	return <Col md={md} lg={lg} xs={xs} className={space("stat-card", className)} style={{padding:(padding || "20px")}}>
 		<div className="stat-content w-100 h-100 p-4 bg-gl-pink color-gl-red text-center">
 			<h1>{number}</h1>
-			<p style={{marginBottom: 0}}>{label}</p>
+			<p className="large" style={{marginBottom: 0}}>{label}</p>
 			{children}
 		</div>
 	</Col>;
