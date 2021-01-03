@@ -2,7 +2,6 @@
  * Wrapper for server calls.
  *
  */
-import {SJTest, assert, assMatch} from 'sjtest';
 import C from '../C.js';
 
 
@@ -11,6 +10,7 @@ import DataStore from '../base/plumbing/DataStore';
 
 import ServerIO from '../base/plumbing/ServerIOBase';
 import { getUrlVars } from '../base/utils/miscutils';
+import { assMatch } from '../base/utils/assert.js';
 
 export default ServerIO;
 
