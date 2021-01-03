@@ -10,10 +10,12 @@ import { isPortraitMobile, space } from '../../base/utils/miscutils';
 import ServerIO from '../../plumbing/ServerIO';
 import Login from '../../base/youagain';
 import { CharityLogo } from '../cards/CharityCard';
+import { getId } from '../../base/data/DataClass';
+import { assert } from '../../base/utils/assert';
 
 
 const TabsForGoodSettings = () => {
-	const task = DataStore.getUrlValue("task");
+	const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
 	return <>		
 		{ ! task && <TabStats/>}
 		<div className="py-3"/>
@@ -35,21 +37,23 @@ const CharityPicker = () => {
 	// HACK: default list - poke it into appstate
 	const dq = "LISTLOADHACK"; // NB: an OR over "id:X" doesn't work as SoGive is annoyingly using the schema.org "@id" property
 	const DEFAULT_LIST = "against-malaria-foundation oxfam helen-keller-international clean-air-task-force strong-minds give-directly pratham wwf-uk";
-	let hits = DEFAULT_LIST.split(" ").map(cid => getDataItem({type:"NGO",id:cid,status:"PUBLISHED"}) && {id:cid});
+	const type = "NGO"; const status="PUBLISHED";
+	// fetch the full item - and make a Ref
+	let hits = DEFAULT_LIST.split(" ").map(cid => getDataItem({type, id:cid, status}) && {id:cid, "@type":type, status});
 	DataStore.setValue("list.NGO.PUBLISHED.nodomain.LISTLOADHACK.whenever.impact".split("."), {hits, total:hits.length}, false);
 
-	return <div className="tabs-for-good-settings">
+	return <div>
 		{selectedCharity && 
 			<><p>Your selected charity:</p>
 				<div className="col-md-3">
-					<CharitySelectBox charity={selectedCharity} selected />
+					<CharitySelectBox item={selectedCharity} />
 				</div>
 			</>}		
 		<div className="d-md-flex flex-md-row justify-content-between unset-margins mb-3">
 			<p>Can't see your favourite charity?&nbsp;<br className="d-md-none"/>Search for it:</p>
 			<Search onSubmit={e => e.preventDefault()} placeholder="Find your charity" className="flex-grow ml-md-5"/>
 		</div>
-		<ListLoad type="NGO" status="PUBLISHED" q={q || dq} sort="impact" />
+		<ListLoad className={"gridbox gridbox-md-4"} type="NGO" status="PUBLISHED" q={q || dq} sort="impact" ListItem={CharitySelectBox} unwrapped />
 	</div>;
 };
 
@@ -65,7 +69,10 @@ const CharityPicker = () => {
  * @param do3d activate the 3d mouse follow effect ??doc: why not always on?
  * @param padAmount3D override width of div that captures the mouse for tracking on 3d effects. ??0Why would this vary?
  */
-const CharitySelectBox = ({charity, selected, padAmount3D=150, className}) => {
+const CharitySelectBox = ({item, padAmount3D=150, className}) => {
+	assert(item, "CharitySelectBox - no item");
+	const selId = getSelectedCharityId();
+	let selected = getId(item) === selId;	
 	let do3d = ! isPortraitMobile();		
 	// ref & state are used for the 3D card effect
 	const container3d = useRef(null);
@@ -100,7 +107,7 @@ const CharitySelectBox = ({charity, selected, padAmount3D=150, className}) => {
 
 	// NB: to deselect, pick a different charity (I think that's intuitive enough)
 
-	return <div className={space(do3d && "container-3d", className)} ref={container3d}
+	return <div className={space("m-md-2", do3d && "container-3d", className)} ref={container3d}
 		style={do3d ? {paddingLeft:padAmount3D, paddingRight:padAmount3D, marginLeft:-padAmount3D, marginRight:-padAmount3D} : null}
 		onMouseMove={do3d ? on3dMouseMove : null}
 		onMouseEnter={do3d ? on3dMouseEnter : null}
@@ -108,16 +115,17 @@ const CharitySelectBox = ({charity, selected, padAmount3D=150, className}) => {
 	>
 		<div style={style} 
 			className={space("charity-select-box flex-column justify-content-center align-items-center unset-margins p-md-3 position-relative w-100", do3d ? "do3d" : "")}
+			onClick={() => setSelectedCharityId(getId(item))}
 		>
-			{charity ? <>
-				<CharityLogo style={{maxWidth:"100%", width: "100%", transform: `translateZ(${elementHeight}px)`}} charity={charity} key={charity.id} className="p-2 mb-5 mt-5 w-75"/>
-				{selected ? <span className="text-success thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} >&#10004; Selected</span>
-					: <a className="btn btn-transparent fill thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} onClick={() => {console.log("DSAHKDSAKJJ"); setSelectedCharityId(charity.id)}}>Select</a>}
-				<a className="position-absolute" style={{top: 10, right: 10}} href={charity.url} target="_blank" rel="noreferrer">About</a>
-			</> : <p style={{transform: `translateZ(${elementHeight}px)`}} className="color-gl-light-red">Select a charity</p>}
+			<CharityLogo style={{maxWidth:"100%", width: "100%", transform: `translateZ(${elementHeight}px)`}} charity={item} className="p-2 mb-5 mt-5 w-75"/>
+			{selected ? <span className="text-success thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} >&#10004; Selected</span>
+				: <a className="btn btn-transparent fill thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}}>Select</a>
+			}
+			<a className="position-absolute" style={{top: 10, right: 10}} href={item.url} target="_blank" rel="noreferrer">About</a>			
 		</div>
 	</div>;
-};
+}; // ./CharitySelectBox
+
 
 const TabStats = () => {
 	let pvTabsOpened = getTabsOpened();

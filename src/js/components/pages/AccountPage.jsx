@@ -71,7 +71,7 @@ const Page = () => {
 		<div className="AccountPage avoid-navbar">			
 			<Editor3ColLayout>
 				<LeftSidebar>
-					<div className="account-sidebar unset-margins pl-3">
+					<div className="account-sidebar pl-3">
 						<h5 className="p-2">My Good-Loop</h5>
 						{Object.keys(label4tab).map(t => <SidebarTabLink key={t} tab={t} label={label4tab[t]} selected={t === tab} />)}
 					</div>
