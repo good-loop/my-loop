@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Col, Form, Row } from 'reactstrap';
 import ListLoad from '../../base/components/ListLoad';
 import PropControl from '../../base/components/PropControl';
@@ -13,9 +13,9 @@ import { CharityLogo } from '../cards/CharityCard';
 
 
 const TabsForGoodSettings = () => {
-	return <>
-		<h1>Your stats</h1>
-		<TabStats/>
+	const task = DataStore.getUrlValue("task");
+	return <>		
+		{ ! task && <TabStats/>}
 		<div className="py-3"/>
 		<h1>Pick your charity</h1>
 		<p className={isPortraitMobile() ? "" : "w-50"}>Select a charity and we will send them all the money that your Tabs for Good are generating. You can change your selection at any time.</p>
@@ -26,12 +26,18 @@ const TabsForGoodSettings = () => {
 	</>;
 };
 
+
 const CharityPicker = () => {
 	const selId = getSelectedCharityId();
 	const selectedCharity = selId && getDataItem({type:C.TYPES.NGO, id:selId, status:C.KStatus.Published, swallow:true});
 	let q = DataStore.getValue('widget','search','q');
+	
+	// HACK: default list - poke it into appstate
+	const dq = "LISTLOADHACK"; // NB: an OR over "id:X" doesn't work as SoGive is annoyingly using the schema.org "@id" property
 	const DEFAULT_LIST = "against-malaria-foundation oxfam helen-keller-international clean-air-task-force strong-minds give-directly pratham wwf-uk";
-	const dq = "HACKY-HACK"; //'"'+(DEFAULT_LIST.split(" ").join("\" OR \""))+'"'; // NB: "id:X" doesn't work as SoGive is annoyingly using the schema.org "@id" property
+	let hits = DEFAULT_LIST.split(" ").map(cid => getDataItem({type:"NGO",id:cid,status:"PUBLISHED"}) && {id:cid});
+	DataStore.setValue("list.NGO.PUBLISHED.nodomain.LISTLOADHACK.whenever.impact".split("."), {hits, total:hits.length}, false);
+
 	return <div className="tabs-for-good-settings">
 		{selectedCharity && 
 			<><p>Your selected charity:</p>
@@ -123,11 +129,12 @@ const TabStats = () => {
 	};
 
 	return (
+		<><h1>Your stats</h1>
 		<Row>
 			<StatCard md={4} number={goodStat(daysWithGoodLoop) ? daysWithGoodLoop : "-"} label="Days with Tabs for Good"/>
 			<StatCard md={4} number={goodStat(pvTabsOpened) && (pvTabsOpened && pvTabsOpened.value) ? pvTabsOpened.value : "-"} label="Tabs opened"/>
 			<StatCard md={4} number={goodStat(weeklyAvg) ? weeklyAvg : "-"} label="Weekly tab average"/>
-		</Row>
+		</Row></>
 	);
 };
 

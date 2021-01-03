@@ -197,7 +197,7 @@ const NewTabCharityCard = ({cid}) => {
 	const charity = cid ? fetchCharity(cid) : null;	
 
 	return (<div className="d-flex justify-content-center" >
-		<a href="/#account?tab=tabsForGood" rel="noreferrer" target="_blank"> {/* @Ben - Q: Why break out into a new tab?? */}
+		<a href={"/#account?tab=tabsForGood&task=select-charity&link="+encURI(window.location)} rel="noreferrer" target="_blank"> {/* @Ben - Q: Why break out into a new tab?? */}
 			<TutorialComponent page={1}>
 				<WhiteCircle className="m-3 tab-charity" circleCrop={charity ? charity.circleCrop : null}>
 					{charity ?
