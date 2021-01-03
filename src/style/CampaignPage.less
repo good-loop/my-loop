@@ -89,7 +89,7 @@ body {
 			display: flex;
 			flex-direction: column;
 			align-items: flex-end;
-			@media @md-max {
+			@media @width-mobile {
 				align-items: center;
 				justify-content: start;
 				height: 100%;
@@ -103,7 +103,7 @@ body {
 				height: 75%;
 				padding-top: 70px; // avoid navbar
 				width: 100%;
-				@media @md-max {
+				@media @width-mobile {
 					display: flex; // Is it possible to use flex or BS to write something simpler that just works across devices??
 					flex-direction: column;
 					align-items: center;
@@ -128,13 +128,13 @@ body {
 				justify-content: space-between;
 				width: 68.75%; // ??
 				margin: auto;
-				@media @md-max {
+				@media @width-mobile {
 					width: 100%;
 					flex-direction: column;
 				}
 				.plus {
 					width: 30px;
-					@media @md-max {
+					@media @width-mobile {
 						width: 20px;
 					}
 				}
@@ -148,7 +148,7 @@ body {
 					@media @lg-max {
 						font-size: 1.4rem;
 					}
-					@media @md-max {
+					@media @width-mobile {
 						font-size: 1rem;
 					}
 				}
@@ -156,7 +156,7 @@ body {
 			.header {
 				font-weight: 600;
 				font-size: 2.35rem;
-				@media @md-max {
+				@media @width-mobile {
 					font-size: 1.7rem;
 					@media (max-height: 568px) {
 						font-size: 1.5rem;
@@ -165,11 +165,11 @@ body {
 			}
 			.subtext {
 				font-size: 1.5rem;
-				@media @md-max {
+				@media @width-mobile {
 					font-size: 1rem;
 				}
 			}
-		}
+		} // ./hero
 
 		.splash-buttons {
 			position: absolute;
@@ -179,14 +179,14 @@ body {
 			display: flex;
 			flex-direction: row;
 			align-items: center;
-			@media @md-max {
+			@media @width-mobile {
 				justify-content: center;
 				left: 0px;
 				width: 100%;
 				padding: 0px 10px;
 			}
 		}
-	}
+	} // ./impact-hub-splash
 
 	h1,h2 {
 		color: @gl-light-red;
@@ -220,7 +220,7 @@ body {
 		top: 49.5%;
 		left: 50%;
 		transform: translate(-50%, -50%);
-		@media @md-max {
+		@media @width-mobile {
 			width: 100%;
 			height: 75vh;
 			top: 0;
@@ -303,17 +303,6 @@ body {
 				height: 100%;
 				object-fit: cover;
 			}
-			/*position: relative;
-			overflow: hidden;
-			img {
-				display: block;
-				min-width: 100%;
-				min-height: 100%;
-				position: absolute;
-				left: 50%;
-				top: 50%;
-				transform: translate(-50%, -50%);
-			}*/
 		}
 		.charity-quote-content {
 			padding: 40px;
@@ -335,7 +324,7 @@ body {
 					max-height: 150px;
 					max-width: 150px;
 				}
-				@media @md-max {
+				@media @width-mobile {
 					margin-bottom: 20px;
 					justify-content: center;
 				}
@@ -351,7 +340,7 @@ body {
 		}
 		.charity-quote-content {
 			width: 50%;
-			@media @md-max {
+			@media @width-mobile {
 				width: 100%;
 			}
 		}

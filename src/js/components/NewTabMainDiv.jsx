@@ -75,13 +75,9 @@ let verifiedLoginOnceFlag;
  * 
  */
 const WebtopPage = () => {	
-
-	// Are we logged in??	
-	/*if (!Login.isLoggedIn()) {
-		window.location.href = "/newtab.html#onboarding";
-		return <div/>;
-	}*/
-	const onboarding = !inIframe();
+	// onboarding => send them to chrome to install the plugin
+	const onboarding = !inIframe() 
+		&& ! (window.location.hostname==='localmy.good-loop.com' && (""+window.location).includes("test")); // HACK to allow easy testing during development
 
 	// Yeh - a tab is opened -- let's log that (once only)	
 	if ( ! logOnceFlag && Login.isLoggedIn()) {
@@ -197,15 +193,11 @@ const NewTabMainDiv = () => {
 };
 
 const NewTabCharityCard = ({cid}) => {
-	console.log("CHARITY TO SELECT", cid);
-	//let user = Login.getUser();
-	//let profile = user && user.xid? getProfile({xid:user.xid}) : null;
-	//console.warn("profile", profile);
 
 	const charity = cid ? fetchCharity(cid) : null;	
 
 	return (<div className="d-flex justify-content-center" >
-		<a href="/#account?tab=tabsForGood" rel="noreferrer" target="_blank">
+		<a href={"/#account?tab=tabsForGood&task=select-charity&link="+encURI(window.location)}>
 			<TutorialComponent page={1}>
 				<WhiteCircle className="m-3 tab-charity" circleCrop={charity ? charity.circleCrop : null}>
 					{charity ?

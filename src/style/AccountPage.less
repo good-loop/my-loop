@@ -20,7 +20,7 @@ A .TubeLine div contains seberal sections with TubeLine-img and TubeLine-line
 */
 .TubeLine {
 	.TubeLine-img {
-		@media @md-max {
+		@media @width-mobile {
 			width: 50% !important;
 		}
 	}
@@ -31,7 +31,7 @@ A .TubeLine div contains seberal sections with TubeLine-img and TubeLine-line
 		left: 8.3%; // halfway across the img -- Is this placement reliable??
 		padding: 0px 1.5px;
 		background: #F9B139;
-		@media @md-max { // no joining line on mobile
+		@media @width-mobile { // no joining line on mobile
 			display: none;
 		}
 	}
@@ -45,11 +45,6 @@ A .TubeLine div contains seberal sections with TubeLine-img and TubeLine-line
 .AccountPage {
 
 	.account-sidebar {
-		h5 {
-			text-transform: uppercase;
-			font-weight: 600;
-			font-family: 'Montserrat', sans-serif;
-		}
 		.account-tab {
 			color: black;
 			text-decoration: none;
@@ -66,47 +61,25 @@ A .TubeLine div contains seberal sections with TubeLine-img and TubeLine-line
 	.user {
 		img {
 			width: 100%;
-			@media @md-max {
+			@media @width-mobile {
 				width: 25%;
 				margin-bottom: 1rem;
 			}
-		}
-		h1 {
-			font-size: 1.6rem;
-			font-weight: 600;
 		}
 		@media @ipad-max {
 			margin-top: 170px;
 		}
 	}
 
+	// TODO avoid overriding fonts and standard tags
 	h1, h2, h3, h4 {
-		font-family: 'Montserrat', sans-serif;
-		font-weight: normal;
 		margin-bottom: 1.3rem; // Overrides Bootstrap default to separate elements.
 		align-self: center;
-	}
-
-	h2,h4 {
-		font-weight: 600;
-		text-transform: uppercase;
 	}
 
 	h2 {
 		color: @gl-light-red;
 	}
-
-	p {
-		font-size: 1.5rem;
-		@media @md-max {
-			font-size: 1.2rem;
-		}
-		a {
-			color: #126CFC !important;
-			text-decoration: underline !important;
-		}
-	}
-
 
 	.settings {
 		/* chunky settings */
@@ -145,5 +118,5 @@ A .TubeLine div contains seberal sections with TubeLine-img and TubeLine-line
 				margin-right: 0;
 			}
 		}
-	}
+	} // ./settings
 }
