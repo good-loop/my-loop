@@ -41,7 +41,7 @@ import { CharityLogo } from './cards/CharityCard';
 import WhiteCircle from './campaignpage/WhiteCircle';
 import { nonce } from '../base/data/DataClass';
 import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLoginWidget';
-import NewtabTutorialCard, { openTutorial, TutorialComponent } from './NewtabTutorialCard';
+import NewtabTutorialCard, { openTutorial, TutorialComponent, TutorialHighlighter } from './NewtabTutorialCard';
 import TickerTotal from './TickerTotal';
 
 // DataStore
@@ -108,13 +108,12 @@ const WebtopPage = () => {
 
 	return (<>
 		<BG src={bgImg} fullscreen opacity={0.9} bottom={onboarding ? 0 : 110} style={{backgroundPosition: "center"}}>
-			<div className="position-fixed p-3" style={{top: 0, left: 0, width:"100vw", zIndex:1}}>
+			<TutorialHighlighter page={[4,5]} className="position-fixed p-3" style={{top: 0, left: 0, width:"100vw", zIndex:1}}>
 				<div className="d-flex justify-content-between">
-					<TutorialComponent page={5} className="logo pl-5 flex-row">
+					<TutorialComponent page={5} className="logo pl-5 flex-row" style={{width:400}}>
 						<a href="https://my.good-loop.com">
-							<img src="/img/logo-white.svg" style={{width: 50}} alt="logo"/>
+							<img src="/img/TabsForGood/TabsForGood_logo.png" style={{width: 250}} alt="logo"/>
 						</a>
-						<h4 className="pl-2">Tabs for<br/>good</h4>
 					</TutorialComponent>
 					<TutorialComponent page={4} className="user-controls flex-row">
 						{!onboarding && <>
@@ -125,7 +124,7 @@ const WebtopPage = () => {
 						</>}
 					</TutorialComponent>
 				</div>
-			</div>
+			</TutorialHighlighter>
 			<div className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{top: 0, left: 0, width:"100vw", height:"100vh"}}>
 				<div className="container h-100 flex-column justify-content-center unset-margins">
 					{!onboarding ? <NormalTabCenter charityID={charityID}/> : <OnboardingTabCenter/>}
@@ -235,19 +234,19 @@ const tutorialPages = [
 	<>
 		<h2>It's your choice</h2>
 		<p>
-			You choose the charity you want to support. We will send them all the money you raise through Tabs for Good. You can change your mind at any time in your account settings.
+		Choose the charity you want to support. We will send them 50% of the money that brands pay for their ads on Tabs for Good.
 		</p>
 	</>,
 	<>
 		<h2>Check our progress</h2>
 		<p>
-			See how much money we've raised so far! :)
+			See how much money we've raised so far! &#128578;
 		</p>
 	</>,
 	<>
 		<h2>Where the money comes from</h2>
 		<p>
-			50% of the ad revenue received is going to the charity you choose.
+			We generate money by displaying ads at the bottom of each Tabs for Good window. You don't need to click on them for it to work.
 		</p>
 	</>,
 	<>

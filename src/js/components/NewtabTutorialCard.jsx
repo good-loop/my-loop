@@ -35,7 +35,7 @@ const NewtabTutorialCard = ({tutorialPages}) => {
 
 	let targetRect = DataStore.getValue(tutorialRectPath);
 	let rect = {};
-	const desiredSize = {width: 400, height: 400}
+	const desiredSize = {width: 400, height: 450}
 	const padding = 20;
 	console.log("SCREEN SIZE: " + window.innerWidth + ", " + window.innerHeight);
 	if (!targetRect) {
@@ -107,28 +107,31 @@ const NewtabTutorialCard = ({tutorialPages}) => {
 		<div className="tutorial-card bg-white position-absolute shadow text-center p-4 flex-column justify-content-between align-items-center unset-margins"
 			style={{
 				zIndex: 9999,
+				top:"50%",
+				left:"70%",
+				transform:"translateY(-50%)",
+				/*
 				top:rect.top,
 				left:rect.left,
 				right:rect.right,
-				bottom:rect.bottom,
+				bottom:rect.bottom,*/
 				width:desiredSize.width,
 				height:desiredSize.height
 			}}
 		>
-			<div className="tutorial-content">
+			<div className="tutorial-content mt-2">
 				{tutorialPages[page]}
 			</div>
 			<div className="flex-row justify-content-center align-items-center unset-margins">
-				<button type="button" className="btn btn-transparent fill mr-2" onClick={() => DataStore.setValue(tutorialOpenPath, false)}>{beforeLastPage ? "SKIP" : "GOT IT"}</button>
-				{beforeLastPage && <button type="button" className="btn btn-primary" onClick={() => setPage(page + 1)}>NEXT</button>}
+				{beforeLastPage && <button type="button" className="btn btn-primary" onClick={() => setPage(page + 1)}>{beforeLastPage ? "NEXT" : "GOT IT"}</button>}
 			</div>
 			<div className="flex-row justify-content-center align-items-center unset-margins mt-3">
 				{tutorialPages.map((t, i) => <PageCircle pageNum={i} key={i} selectedPageNum={page}/>)}
 			</div>
-			<a className="position-absolute" style={{top:10, right:20}} onClick={e => {
+			<a className="position-absolute color-gl-light-red" style={{top:10, right:20}} onClick={e => {
 				e.preventDefault();
 				DataStore.setValue(tutorialOpenPath, false);
-			}}>x</a>
+			}}>SKIP</a>
 		</div>
 	</>;
 };
@@ -142,11 +145,11 @@ const openTutorial = () => {
 };
 
 /**
- * TODO Doc: How should this be used??
+ * Use as a div that will be recognized by the NewtabTutorialCard when active
  * 
  * @param {Object} p
  * @param {!Number} p.page TODO in hindsight, using numbers makes any reordering tricky.
- * Maybe switch to named tutoriaal pages, and specify a list of names as the path??
+ * Maybe switch to named tutorial pages, and specify a list of names as the path??
  */
 const TutorialComponent = ({page, customSelectStyle, style, children, className}) => {
 	const current = DataStore.getValue(tutorialPagePath);
@@ -182,5 +185,26 @@ const TutorialComponent = ({page, customSelectStyle, style, children, className}
 	</div>;
 };
 
-export { openTutorial, TutorialComponent };
+/**
+ * Use in place of a div when needed
+ * Does not represent a full component, but helps bring out z-index highlights when TutorialComponents z-index's are being overriden from a parent
+ * @param {Number | Array} page The page(s) to highlight on
+ */
+const TutorialHighlighter = ({page, style, children, className}) => {
+	const current = DataStore.getValue(tutorialPagePath);
+	const open = DataStore.getValue(tutorialOpenPath);
+
+	let pageMatch = current === page;
+	if (!pageMatch && Array.isArray(page)) {
+		pageMatch = page.includes(current);
+	}
+	const highlight = pageMatch && open;
+
+	if (highlight) style.zIndex = 1000;
+	return <div className={space("tutorial-highlighter", className, highlight ? "highlight" : "")} style={style}>
+		{children}
+	</div>;
+};
+
+export { openTutorial, TutorialComponent, TutorialHighlighter };
 export default NewtabTutorialCard;
