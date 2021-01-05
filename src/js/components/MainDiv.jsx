@@ -32,6 +32,7 @@ import MyGLAboutPage from './MyGLAboutPage';
 import { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
 import TabsForGoodOnboard from './pages/TabsForGoodOnboard';
 import { getAllXIds } from '../base/data/Person';
+import NewtabCharityLogin from './pages/NewtabCharityLogin';
 // import RedesignPage from './pages/RedesignPage';
 
 // DataStore
@@ -50,7 +51,8 @@ const PAGES = {
 	involve: GetInvolvedPage,
 	howitworks: MyPage,
 	about: MyGLAboutPage,
-	tabsForGood: TabsForGoodOnboard
+	tabsForGood: TabsForGoodOnboard,
+	register: NewtabCharityLogin
 };
 
 addFunderCredit("Scottish Enterprise");

@@ -124,15 +124,24 @@
     p {
         font-size: 1.3rem;
         color: darkslategray;
+        @media @mdpi-max {
+            font-size: 1rem;
+        }
     }
     h1,h2,h3,h4 {
         text-transform: uppercase;
         color: @gl-turquoise !important;
+        @media @mdpi-max {
+            font-size: 1.3rem;
+        }
     }
     .page-circle {
         border-radius: 50%;
         border: 2px solid @gl-light-red;
         width: 15px;
+        @media @mdpi-max {
+            width: 10px;
+        }
         &.selected {
             background: @gl-light-red;
         }
@@ -140,6 +149,14 @@
             content:"";
             display: block;
             padding-bottom: 100%;
+        }
+        &:hover {
+            cursor:pointer;
+        }
+    }
+    .btn {
+        @media @mdpi-max {
+            padding: 3px 15px;
         }
     }
 }

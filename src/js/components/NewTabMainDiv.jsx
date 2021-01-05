@@ -116,18 +116,16 @@ const WebtopPage = () => {
 						</a>
 					</TutorialComponent>
 					<TutorialComponent page={4} className="user-controls flex-row">
-						{!onboarding && <>
-							{Login.isLoggedIn() ? <TabsOpenedCounter/> : null}
-							<AccountMenu small accountLink="/#account?tab=tabsForGood" customLogin={
-								<NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>
-							}/>
-						</>}
+						{Login.isLoggedIn() ? <TabsOpenedCounter/> : null}
+						<AccountMenu small accountLink="/#account?tab=tabsForGood" customLogin={
+							<NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>
+						}/>
 					</TutorialComponent>
 				</div>
 			</TutorialHighlighter>
 			<div className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{top: 0, left: 0, width:"100vw", height:"100vh"}}>
 				<div className="container h-100 flex-column justify-content-center unset-margins">
-					{!onboarding ? <NormalTabCenter charityID={charityID}/> : <OnboardingTabCenter/>}
+					<NormalTabCenter charityID={charityID}/>
 				</div>
 			</div>
 			{/* Tutorial highlight to cover adverts */}

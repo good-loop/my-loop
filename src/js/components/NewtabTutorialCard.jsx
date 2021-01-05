@@ -17,7 +17,11 @@ const NewtabTutorialCard = ({tutorialPages}) => {
 	const page = DataStore.getValue(tutorialPagePath) || 0;
 	assMatch(page, Number);
 	const setPage = (num) => {
-		DataStore.setValue(tutorialPagePath, num);
+		if (num > tutorialPages.length - 1) {
+			DataStore.setValue(tutorialOpenPath, false);
+		} else {
+			DataStore.setValue(tutorialPagePath, num);
+		}
 	};
 
 	// // Set page to 0 by default
@@ -35,7 +39,10 @@ const NewtabTutorialCard = ({tutorialPages}) => {
 
 	let targetRect = DataStore.getValue(tutorialRectPath);
 	let rect = {};
-	const desiredSize = {width: 400, height: 450}
+	let desiredSize = {width: 550, height: 400}
+	if (window.innerWidth <= 1280) {
+		desiredSize = {width: 300, height: 370};
+	}
 	const padding = 20;
 	console.log("SCREEN SIZE: " + window.innerWidth + ", " + window.innerHeight);
 	if (!targetRect) {
@@ -108,7 +115,7 @@ const NewtabTutorialCard = ({tutorialPages}) => {
 			style={{
 				zIndex: 9999,
 				top:"50%",
-				left:"70%",
+				left:window.innerWidth <= 1280 ? "75%" : "70%",
 				transform:"translateY(-50%)",
 				/*
 				top:rect.top,
@@ -123,10 +130,10 @@ const NewtabTutorialCard = ({tutorialPages}) => {
 				{tutorialPages[page]}
 			</div>
 			<div className="flex-row justify-content-center align-items-center unset-margins">
-				{beforeLastPage && <button type="button" className="btn btn-primary" onClick={() => setPage(page + 1)}>{beforeLastPage ? "NEXT" : "GOT IT"}</button>}
+				<button type="button" className="btn btn-primary" onClick={() => setPage(page + 1)}>{beforeLastPage ? "NEXT" : "GOT IT"}</button>
 			</div>
 			<div className="flex-row justify-content-center align-items-center unset-margins mt-3">
-				{tutorialPages.map((t, i) => <PageCircle pageNum={i} key={i} selectedPageNum={page}/>)}
+				{tutorialPages.map((t, i) => <PageCircle pageNum={i} key={i} selectedPageNum={page} onClick={() => setPage(i)}/>)}
 			</div>
 			<a className="position-absolute color-gl-light-red" style={{top:10, right:20}} onClick={e => {
 				e.preventDefault();
@@ -136,8 +143,8 @@ const NewtabTutorialCard = ({tutorialPages}) => {
 	</>;
 };
 
-const PageCircle = ({pageNum, selectedPageNum}) => {
-	return <div className={space("page-circle mr-1 ml-1", pageNum <= selectedPageNum ? "selected" : "")}/>;
+const PageCircle = ({pageNum, selectedPageNum, onClick}) => {
+	return <div className={space("page-circle mr-1 ml-1", pageNum <= selectedPageNum ? "selected" : "")} onClick={onClick}/>;
 };
 
 const openTutorial = () => {

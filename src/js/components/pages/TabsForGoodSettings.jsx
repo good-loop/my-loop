@@ -195,5 +195,5 @@ const StatCard = ({md, lg, xs, number, label, className, padding, children}) => 
 	</Col>;
 };
 
-export { getTabsOpened, Search, getSelectedCharityId };
+export { getTabsOpened, Search, getSelectedCharityId, setSelectedCharityId };
 export default TabsForGoodSettings;
