@@ -11,7 +11,7 @@ import { emailLogin } from '../base/components/LoginWidget';
 import { Row, Col } from 'reactstrap';
 import DataStore from '../base/plumbing/DataStore';
 import PropControl from '../base/components/PropControl';
-import ErrorAlert from '../base/components/ErrorAlert';
+import ErrAlert from '../base/components/ErrAlert';
 import { space, stopEvent } from '../base/utils/miscutils';
 
 const LOGIN_PATH = ['widget', 'tabLogin', 'login'];
@@ -89,7 +89,7 @@ const NewtabLoginWidget = ({onLogin, onRegister}) => {
 							setShowTabLogin(false);
 						}}
 					/>
-					<ErrorAlert error={error} />
+					<ErrAlert error={error} />
 				</Col>
 			</>}
 		</Row>
