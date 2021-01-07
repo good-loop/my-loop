@@ -577,10 +577,9 @@ const AdvertCard = ({ ad }) => {
 	return (
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
 			<div className="position-relative ad-card">
-				<img src="/img/LandingBackground/mobile.png" className="w-100 invisible"/>
-				<img src="/img/LandingBackground/mobile.png" className="position-absolute d-none d-md-block mobileframe-shadow" style={{left: "50%", top:"50%", width:"80%", zIndex:0, transform: "translate(-50%, -50%)"}}/>
+				<img src="/img/LandingBackground/white_iphone.png" className="w-100 invisible"/>
 				{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
-				<img src="/img/LandingBackground/mobile_frame.png" className="position-absolute d-none d-md-block" style={{left: "50%", width:"80%", top:"50%", zIndex:2, pointerEvents:"none", transform: "translate(-50%, -50%)"}}/>
+				<img src="/img/LandingBackground/white_iphone.png" className="position-absolute d-none d-md-block unit-shadow" style={{left: "50%", width:"80%", top:"50%", zIndex:2, pointerEvents:"none", transform: "translate(-50%, -50%)"}}/>
 				<div className="position-absolute theunit">
 					<GoodLoopUnit vertId={ad.id} size={size} />
 				</div>
