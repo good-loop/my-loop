@@ -28,7 +28,7 @@ import CSS from '../../base/components/CSS';
 import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import PublishersCard from './PublishersCard';
 import CampaignSplashCard from './CampaignSplashCard';
-import ErrorAlert from '../../base/components/ErrorAlert';
+import ErrAlert from '../../base/components/ErrAlert';
 import ListLoad from '../../base/components/ListLoad';
 import DevLink from './DevLink';
 import { LoginLink } from '../../base/components/LoginWidget';
@@ -133,7 +133,7 @@ const CampaignPage = () => {
 		return <Misc.Loading text="Loading campaign info..." />;
 	}
 	if (pvAds.error) {
-		return <ErrorAlert>Error loading advert data</ErrorAlert>;
+		return <ErrAlert>Error loading advert data</ErrAlert>;
 	}
 
 	// If it's remotely possible to have an ad now, we have it. Which request succeeded, if any?

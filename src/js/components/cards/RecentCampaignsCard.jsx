@@ -6,7 +6,7 @@ import SearchQuery from '../../base/searchquery';
 import ActionMan from '../../plumbing/ActionMan';
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
-import ErrorAlert from '../../base/components/ErrorAlert';
+import ErrAlert from '../../base/components/ErrAlert';
 import Money from '../../base/data/Money';
 import CampaignPageDC from '../../data/CampaignPage';
 import Counter from '../../base/components/Counter';
@@ -62,7 +62,7 @@ const RecentCampaignsCard = () => {
 			return <Misc.Loading text="Loading campaign info..." />;
 		}
 		if (pvAds.error) {
-			return <ErrorAlert>Error loading advert data</ErrorAlert>;
+			return <ErrAlert>Error loading advert data</ErrAlert>;
 		}
 
 		// If it's remotely possible to have an ad now, we have it. Which request succeeded, if any?
