@@ -122,23 +122,19 @@
 .tutorial-card {
     border-radius: 20px;
     p {
-		.large();
+        font-size: 1.15rem;
         color: darkslategray;
     }
     h1,h2,h3,h4 {
         text-transform: uppercase;
         color: @gl-turquoise !important;
-        // @media @mdpi-max {
-        //     font-size: 1.3rem;
-        // }
+        font-size: 1.3rem;
     }
     .page-circle {
         border-radius: 50%;
         border: 2px solid @gl-light-red;
         width: 15px;
-        // @media @mdpi-max {
-        //     width: 10px;
-        // }
+        width: 10px;
         &.selected {
             background: @gl-light-red;
         }
@@ -151,9 +147,7 @@
             cursor:pointer;
         }
     }
-    // .btn {
-    //     @media @mdpi-max {
-    //         padding: 3px 15px;
-    //     }
-    // }
+    .btn {
+        padding: 5px 20px;
+    }
 }
