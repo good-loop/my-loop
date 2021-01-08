@@ -110,28 +110,28 @@ const NewtabCharityLogin = () => {
                     </a>
             </div>
         }
-        {charity ?
-        <WhiteCircle className="position-absolute" style={{top: "75%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 1000, boxShadow:"none", background:"none"}} width={200} circleCrop={100}>
-			{!chromeRedirect &&
-				<div className="flex-row justify-content-center align-items-stretch w-100 h-100 charity-register-circle">
-					<div className="bg-white w-100 h-100"/>
-					<div className="bg-gl-turquoise w-100 h-100"/>
-				</div>
-			}
-			<WhiteCircle style={{boxShadow:"0 0 3px rgba(0,0,0,0.5)", top:"50%", left:"50%", transform:"translate(-50%, -50%)"}} className="position-absolute charity-circle-img" width={140}>
-				{charity.logo ?
-					<img src={charity.logo}/>
-					: <h3>charity.name</h3>
+        {charity ? <>
+			<WhiteCircle className="position-absolute" style={{top: "75%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 1000, boxShadow:"none", background:"none"}} width={200} circleCrop={100}>
+				{!chromeRedirect &&
+					<div className="flex-row justify-content-center align-items-stretch w-100 h-100 charity-register-circle">
+						<div className="bg-white w-100 h-100"/>
+						<div className="bg-gl-turquoise w-100 h-100"/>
+					</div>
 				}
+				<WhiteCircle style={{boxShadow:"0 0 3px rgba(0,0,0,0.5)", top:"50%", left:"50%", transform:"translate(-50%, -50%)"}} className="position-absolute charity-circle-img" width={140}>
+					{charity.logo ?
+						<img src={charity.logo}/>
+						: <h3>charity.name</h3>
+					}
+				</WhiteCircle>
 			</WhiteCircle>
-		</WhiteCircle>
-		: null}
-		<div className="position-absolute px-2" style={{top: 200, width:"50%", right: "50.25%" /* Account slightly for text and visual pleasantness */, textAlign:"right"}}>
-			<h1 className="text-white">Supporting </h1>
-		</div>
-		<div className="position-absolute px-2" style={{top: 200, width:"50%", left: "50%", textAlign:"left"}}>
-			<h1 className="color-gl-turquoise"> Charity</h1>
-		</div>
+			<div className="position-absolute px-2" style={{top: 200, width:"50%", right: "50.25%" /* Account slightly for text and visual pleasantness */, textAlign:"right"}}>
+				<h1 className={!chromeRedirect ? "text-white" : "color-gl-turquoise"}>Supporting </h1>
+			</div>
+			<div className="position-absolute px-2" style={{top: 200, width:"50%", left: "50%", textAlign:"left"}}>
+				<h1 className="color-gl-turquoise"> {charity.name}</h1>
+			</div>
+		</>: null}
 	</>;
 };
 
