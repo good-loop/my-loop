@@ -5,6 +5,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Login from '../../base/youagain';
+import MyLoopNavBar from '../MyLoopNavBar';
+import WhiteCircle from '../campaignpage/WhiteCircle';
 import { assert, assMatch } from '../../base/utils/assert';
 import C from '../../C';
 import { emailLogin } from '../../base/components/LoginWidget';
@@ -59,12 +61,12 @@ const NewtabCharityLogin = () => {
 
 	// why not use a BS modal??
 	return <>
-		<div className="position-absolute" style={{width: "100vw", height: "100vh", top: 0, left: 0, zIndex: 999, background:"rgba(0,0,0,0.5)"}} />
-		{!chromeRedirect && <Row className={space("tab-login-widget position-absolute bg-white shadow", register? "" : "flex-row-reverse", verb==="thankyou" && "thankyou")} 
-			style={{width: 700, height:450, zIndex:9999, top: "50%", left:"50%", transform:"translate(-50%, -75%)"}}>
+		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg"/>
+		{!chromeRedirect && <Row className={space("tab-login-widget bg-white position-absolute", register? "" : "flex-row-reverse", verb==="thankyou" && "thankyou")} noGutters
+			style={{width: "100vw", height:"100vh", top: 0, left: 0}}>
 			{verb === "thankyou" ? <RegisterThankYou/> : <>
 				{/* BLUE SIDE - shows the OPPOSITE of the current login verb, allows switching */}
-				<Col xs={5} className="bg-gl-turquoise flex-column unset-margins justify-content-center align-items-center text-white text-center m-0 p-3">
+				<Col xs={6} className="bg-gl-turquoise flex-column unset-margins justify-content-center align-items-center text-white text-center">
 					{register ? <>
 						<h4 className="mb-3">Welcome back!</h4>
 						<p className="mb-3">Already have an account?<br/>Please login to keep track of your results.</p>
@@ -75,7 +77,7 @@ const NewtabCharityLogin = () => {
 					<a className="btn btn-secondary" onClick={e => switchToVerb(e, register ? "login" : "register")}>{register ? "Log in" : "Register"}</a>
 				</Col>
 				{/* FORM SIDE - shows the login form according to the verb */}
-				<Col xs={7} className="login-content flex-column unset-margins justify-content-center align-items-center">
+				<Col xs={6} className="login-content flex-column unset-margins justify-content-center align-items-center">
 					<h4 className="mb-3">{headers[verb]}</h4>
 					<LogInForm
 						onLogin={() => {
@@ -98,8 +100,8 @@ const NewtabCharityLogin = () => {
 			</>}
 		</Row>}
         {chromeRedirect &&
-            <div className="tab-login-widget position-absolute bg-white shadow flex-column justify-content-center align-items-center unset-margins" 
-			    style={{width: 700, height:450, zIndex:9999, top: "50%", left:"50%", transform:"translate(-50%, -75%)"}}>
+            <div className="tab-login-widget bg-white flex-column justify-content-center align-items-center unset-margins" 
+			    style={{width: "100vw", height:"100vh"}}>
                     <h3>You're registered!</h3>
                     <p className="mt-2">Tabs for Good is set up to support your charity.</p>
                     <a className="btn btn-primary mt-2"
@@ -109,13 +111,27 @@ const NewtabCharityLogin = () => {
             </div>
         }
         {charity ?
-        <div className="position-absolute flex-column justify-content-center align-items-center unset-margins bg-white shadow p-4" style={{top: "75%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 1000}}>
-            Setting you up to support
-            {charity.logo ?
-                <img src={charity.logo} className="w-100 mt-2" style={{maxWidth: 100}}/>
-                : <h3>charity.name</h3>
-            }
-        </div> : null}
+        <WhiteCircle className="position-absolute" style={{top: "75%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 1000, boxShadow:"none", background:"none"}} width={200} circleCrop={100}>
+			{!chromeRedirect &&
+				<div className="flex-row justify-content-center align-items-stretch w-100 h-100 charity-register-circle">
+					<div className="bg-white w-100 h-100"/>
+					<div className="bg-gl-turquoise w-100 h-100"/>
+				</div>
+			}
+			<WhiteCircle style={{boxShadow:"0 0 3px rgba(0,0,0,0.5)", top:"50%", left:"50%", transform:"translate(-50%, -50%)"}} className="position-absolute charity-circle-img" width={140}>
+				{charity.logo ?
+					<img src={charity.logo}/>
+					: <h3>charity.name</h3>
+				}
+			</WhiteCircle>
+		</WhiteCircle>
+		: null}
+		<div className="position-absolute px-2" style={{top: 200, width:"50%", right: "50.25%" /* Account slightly for text and visual pleasantness */, textAlign:"right"}}>
+			<h1 className="text-white">Supporting </h1>
+		</div>
+		<div className="position-absolute px-2" style={{top: 200, width:"50%", left: "50%", textAlign:"left"}}>
+			<h1 className="color-gl-turquoise"> Charity</h1>
+		</div>
 	</>;
 };
 
