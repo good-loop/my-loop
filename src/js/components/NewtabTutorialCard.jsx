@@ -39,9 +39,9 @@ const NewtabTutorialCard = ({tutorialPages}) => {
 
 	let targetRect = DataStore.getValue(tutorialRectPath);
 	let rect = {};
-	let desiredSize = {width: 550, height: 400}
+	let desiredSize = {width: 350, height: 370}
 	if (window.innerWidth <= 1280) {
-		desiredSize = {width: 300, height: 370};
+		desiredSize.width = 300;
 	}
 	const padding = 20;
 	console.log("SCREEN SIZE: " + window.innerWidth + ", " + window.innerHeight);
