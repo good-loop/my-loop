@@ -250,7 +250,7 @@ const tutorialPages = [
 	<>
 		<h2>Your account</h2>
 		<p>
-			Access your account here to change your settings, including your choice of charity.
+			Access settings including your <b>choice of charity</b>, <b>details</b> and <b>ad targeting preferences</b>.
 		</p>
 	</>,
 	<>
