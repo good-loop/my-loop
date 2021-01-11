@@ -34,6 +34,7 @@ import DevLink from './DevLink';
 import { LoginLink } from '../../base/components/LoginWidget';
 import ShareButton from '../ShareButton';
 import { assert } from '../../base/utils/assert';
+import { Cite } from '../../base/components/LinkOut';
 
 /**
  * HACK hard-coded list of campaigns which have PDF versions
@@ -208,7 +209,7 @@ const CampaignPage = () => {
 		viewcount4campaign = pivot(pvViewData.value, "by_campaign.buckets.$bi.{key, doc_count}", "$key.$doc_count");
 	}
 
-	const donation4charity = fetchDonationData({ads});
+	const donation4charity = fetchDonationData({ ads });
 	const donationTotal = donation4charity.total;
 
 	{	// NB: some very old ads may not have charities
@@ -249,7 +250,7 @@ const CampaignPage = () => {
 		<CSS css={campaignPage && campaignPage.customCss} />
 		<CSS css={branding.customCss} />
 		<div className="widepage CampaignPage gl-btns">
-			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg"/>
+			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" />
 			<div className="text-center">
 				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaignPage} donationValue={donationTotal} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
 
@@ -265,7 +266,7 @@ const CampaignPage = () => {
 					/>
 				)}
 
-				<Charities charities={charities} donation4charity={donation4charity} campaignPage={campaignPage}/>
+				<Charities charities={charities} donation4charity={donation4charity} campaignPage={campaignPage} />
 
 				<div className="bg-white">
 					<Container>
@@ -308,17 +309,36 @@ const CampaignPage = () => {
 					</Container>
 				</div>
 
-				<CharityDetails charities={charities}/>
-				{campaignPage.smallPrint ?
-					<div className="small-print">
-						<small>
-							{campaignPage.smallPrint}
-						</small>
-					</div> : null}
+				<SmallPrintInfo charities={charities} campaignPage={campaignPage} />
+
 			</div>
 		</div>
 	</>);
 }; // ./CampaignPage
+
+const SmallPrintInfo = ({charities, campaignPage}) => {
+	console.log("campaignPage",campaignPage);
+	return <div>
+		<h4>Donation Information</h4>
+		<Row>
+			<Col><CharityDetails charities={charities} /></Col>
+			<Col>
+				 Donation Amount: ?? per video viewed <br/>
+				 Limitations on Donation: ?? Maximum Donation <br/>
+				 Dates: ?? through ?? <br/>
+
+				{campaignPage.smallPrint &&
+					<div className="small-print">
+						<small>
+							{campaignPage.smallPrint}
+						</small>
+					</div>}
+			</Col>
+		</Row>
+		<p><small>This information follows the guidelines of the New York Attorney General for best practice in cause marketing.
+			<Cite href='https://www.charitiesnys.com/cause_marketing.html'/></small></p>
+	</div>;
+}
 
 /**
  * HACK correct donation values that are wrong till new portal controls are released
@@ -327,14 +347,14 @@ const CampaignPage = () => {
 const hackCorrectedDonations = id => {
 	const donation = {
 		"yhPf2ttbXW": {
-			total:new Money("$125000"),
-			"no-kid-hungry":new Money("$125000")
+			total: new Money("$125000"),
+			"no-kid-hungry": new Money("$125000")
 		},
 		"5ao5MthZ": {
 			total: new Money("£25000"),
-			"canine-partners-for-independence":new Money("£5850"),
-			"cats-protection":new Money("£5875"),
-			"royal-society-for-the-prevention-of-cruelty-to-animals":new Money("£13275")
+			"canine-partners-for-independence": new Money("£5850"),
+			"cats-protection": new Money("£5875"),
+			"royal-society-for-the-prevention-of-cruelty-to-animals": new Money("£13275")
 		}
 	}[id];
 	return donation;
@@ -348,9 +368,9 @@ const hackCorrectedDonations = id => {
  * @param {!Advert[]} ads
  * @returns {cid:Money} donationForCharity, with a .total property for the total
  */
-const fetchDonationData = ({ads}) => {
+const fetchDonationData = ({ ads }) => {
 	const donationForCharity = {};
-	if ( ! ads.length) return donationForCharity; // paranoia
+	if (!ads.length) return donationForCharity; // paranoia
 	// things
 	let adIds = ads.map(ad => ad.id);
 	let campaignIds = ads.map(ad => ad.campaign);
@@ -376,7 +396,7 @@ const fetchDonationData = ({ads}) => {
 		const ad = ads[i];
 		const cp = ad.campaignPage;
 		// no per-charity data? (which is normal)
-		if ( ! cp || ! cp.dntn4charity || Object.values(cp.dntn4charity).filter(x => x).length === 0) {
+		if (!cp || !cp.dntn4charity || Object.values(cp.dntn4charity).filter(x => x).length === 0) {
 			if (ad.campaign) {
 				campaignsWithoutDonationData.push(ad.campaign);
 				console.log("No per-charity data with ad " + ad.id);
@@ -388,43 +408,43 @@ const fetchDonationData = ({ads}) => {
 
 		Object.keys(cp.dntn4charity).forEach(cid => {
 			let dntn = cp.dntn4charity[cid];
-			if ( ! dntn) return;
+			if (!dntn) return;
 			if (donationForCharity[cid]) {
 				dntn = Money.add(donationForCharity[cid], dntn);
 			}
 			assert(cid !== 'total', cp); // paranoia
 			donationForCharity[cid] = dntn;
-		});		
+		});
 	};
 	// Done?
 	if (donationForCharity.total && campaignsWithoutDonationData.length === 0) {
 		console.log("Using ad data for donations");
 		return donationForCharity;
 	}
-	
+
 	// Fetch donations data	
 	// ...by campaign or advert? campaign would be nicer 'cos we could combine different ad variants... but its not logged reliably
 	// (old data) Loop.Me have not logged vert, only campaign. But elsewhere vert is logged and not campaign.
-	let sq1 = adIds.map(id => "vert:"+id).join(" OR ");
+	let sq1 = adIds.map(id => "vert:" + id).join(" OR ");
 	// NB: quoting for campaigns if they have a space (crude not 100% bulletproof) 
-	let sq2 = campaignIds.map(id => "campaign:"+(id.includes(" ")? '"'+id+'"' : id)).join(" OR ");
+	let sq2 = campaignIds.map(id => "campaign:" + (id.includes(" ") ? '"' + id + '"' : id)).join(" OR ");
 	let sqDon = SearchQuery.or(sq1, sq2);
 
 	// load the community total for the ad
 	let pvDonationsBreakdown = DataStore.fetch(['widget', 'CampaignPage', 'communityTotal', sqDon.query], () => {
 		return ServerIO.getDonationsData({ q: sqDon.query });
-	}, true, 5 * 60 * 1000);	
+	}, true, 5 * 60 * 1000);
 	if (pvDonationsBreakdown.error) {
 		console.error("pvDonationsBreakdown.error", pvDonationsBreakdown.error);
 		return donationForCharity;
 	}
-	if ( ! pvDonationsBreakdown.value) {
+	if (!pvDonationsBreakdown.value) {
 		return donationForCharity; // loading
 	}
 
 	let lgCampaignTotal = pvDonationsBreakdown.value.total;
 	// NB don't override a campaign page setting
-	if ( ! donationForCharity.total) {
+	if (!donationForCharity.total) {
 		donationForCharity.total = new Money(lgCampaignTotal);
 	}
 
@@ -432,7 +452,7 @@ const fetchDonationData = ({ads}) => {
 	let donByCid = pvDonationsBreakdown.value.by_cid;
 	Object.keys(donByCid).forEach(cid => {
 		let dntn = donByCid[cid];
-		if ( ! dntn) return;
+		if (!dntn) return;
 		if (donationForCharity[cid]) {
 			dntn = Money.add(donationForCharity[cid], dntn);
 		}
@@ -441,7 +461,7 @@ const fetchDonationData = ({ads}) => {
 	});
 
 	// assign unallocated money?
-	if ( ! donationForCharity.total) {
+	if (!donationForCharity.total) {
 		console.warn("No donation total?!");
 		return donationForCharity;
 	}
@@ -454,9 +474,9 @@ const fetchDonationData = ({ads}) => {
 	// share it out based on the allocated money
 	charityIds.forEach(cid => {
 		let cDntn = donationForCharity[cid];
-		if ( ! cDntn) return;
+		if (!cDntn) return;
 		let share = Money.divide(cDntn, allocatedMoney);
-		assert(share >=0 && share <= 1, cid);
+		assert(share >= 0 && share <= 1, cid);
 		let extra = Money.mul(unallocatedMoney, share);
 		donationForCharity[cid] = Money.add(cDntn, extra);
 	});
@@ -565,7 +585,7 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserNam
 						/>
 					)}
 				</div>}
-			<a className="btn btn-primary mb-3 mb-md-0 mr-md-3 mt-5 position-relative" style={{zIndex:99}} href="/#ads">See all campaigns</a>
+			<a className="btn btn-primary mb-3 mb-md-0 mr-md-3 mt-5 position-relative" style={{ zIndex: 99 }} href="/#ads">See all campaigns</a>
 			{//<a className="btn btn-transparent" href="TODO">Campaign performance & brand study</a>
 			}
 		</Container>
@@ -576,9 +596,9 @@ const AdvertCard = ({ ad }) => {
 	return (
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
 			<div className="position-relative ad-card">
-				<img src="/img/LandingBackground/white_iphone.png" className="w-100 invisible"/>
+				<img src="/img/LandingBackground/white_iphone.png" className="w-100 invisible" />
 				{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
-				<img src="/img/LandingBackground/white_iphone.png" className="position-absolute d-none d-md-block unit-shadow" style={{left: "50%", width:"80%", top:"50%", zIndex:2, pointerEvents:"none", transform: "translate(-50%, -50%)"}}/>
+				<img src="/img/LandingBackground/white_iphone.png" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "50%", width: "80%", top: "50%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }} />
 				<div className="position-absolute theunit">
 					<GoodLoopUnit vertId={ad.id} size={size} />
 				</div>
@@ -600,7 +620,7 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false }) => {
 				</div>
 			</div>
 			<div>
-				<Misc.DateDuration startDate={ad.start} endDate={ad.end}/>
+				<Misc.DateDuration startDate={ad.start} endDate={ad.end} />
 			</div>
 		</div>
 	);
