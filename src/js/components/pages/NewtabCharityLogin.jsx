@@ -28,6 +28,13 @@ const switchToVerb = (e, verb) => {
 
 const NewtabCharityLogin = () => {
 
+	if (window.innerWidth < 767) {
+		return <div className="bg-gl-turquoise flex-column justify-content-center align-items-center text-center unset-margins position-absolute" style={{top: 0, left: 0, width: "100vw", height: "100vh"}}>
+			<img src="/img/TabsForGood/TabsForGood_logo.png" className="w-50 mb-5"/>
+			<p className="w-75 text-white"><b>Unfortunately Tabs-for-Good only works on desktop chrome. Please use a desktop to sign up!</b></p>
+		</div>;
+	}
+
 	const verb = DataStore.getValue(LOGIN_VERB_PATH);
 	// Default to register
 	useEffect(() => {
@@ -57,16 +64,17 @@ const NewtabCharityLogin = () => {
     
     const chromeRedirect = verb === "t4g_chrome_store";
 
+	const titleTop = window.innerHeight > 700 ? 200 : 100;
 	// ??minor: it might be nice to have a transition on the verb switch
 
 	// why not use a BS modal??
 	return <>
 		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg"/>
-		{!chromeRedirect && <Row className={space("tab-login-widget bg-white position-absolute", register? "" : "flex-row-reverse", verb==="thankyou" && "thankyou")} noGutters
+		{!chromeRedirect && <Row className={space("tab-login-widget bg-white position-absolute unset-margins", register? "" : "flex-row-reverse", verb==="thankyou" && "thankyou")} noGutters
 			style={{width: "100vw", height:"100vh", top: 0, left: 0}}>
 			{verb === "thankyou" ? <RegisterThankYou/> : <>
 				{/* BLUE SIDE - shows the OPPOSITE of the current login verb, allows switching */}
-				<Col xs={6} className="bg-gl-turquoise flex-column unset-margins justify-content-center align-items-center text-white text-center">
+				<Col xs={6} className="bg-gl-turquoise flex-column unset-margins justify-content-start align-items-center text-white text-center login-left">
 					{register ? <>
 						<h4 className="mb-3">Welcome back!</h4>
 						<p className="mb-3">Already have an account?<br/>Please login to keep track of your results.</p>
@@ -77,7 +85,7 @@ const NewtabCharityLogin = () => {
 					<a className="btn btn-secondary" onClick={e => switchToVerb(e, register ? "login" : "register")}>{register ? "Log in" : "Register"}</a>
 				</Col>
 				{/* FORM SIDE - shows the login form according to the verb */}
-				<Col xs={6} className="login-content flex-column unset-margins justify-content-center align-items-center">
+				<Col xs={6} className="login-content flex-column unset-margins justify-content-start align-items-center login-right">
 					<h4 className="mb-3">{headers[verb]}</h4>
 					<LogInForm
 						onLogin={() => {
@@ -113,7 +121,7 @@ const NewtabCharityLogin = () => {
         {charity ? <>
 			<WhiteCircle className="position-absolute" style={{top: "75%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 1000, boxShadow:"none", background:"none"}} width={200} circleCrop={100}>
 				{!chromeRedirect &&
-					<div className="flex-row justify-content-center align-items-stretch w-100 h-100 charity-register-circle">
+					<div className={space("flex-row justify-content-center align-items-stretch w-100 h-100", register ? "charity-register-circle" : "charity-register-circle-flipped")}>
 						<div className="bg-white w-100 h-100"/>
 						<div className="bg-gl-turquoise w-100 h-100"/>
 					</div>
@@ -121,14 +129,14 @@ const NewtabCharityLogin = () => {
 				<WhiteCircle style={{boxShadow:"0 0 3px rgba(0,0,0,0.5)", top:"50%", left:"50%", transform:"translate(-50%, -50%)"}} className="position-absolute charity-circle-img" width={140}>
 					{charity.logo ?
 						<img src={charity.logo}/>
-						: <h3>charity.name</h3>
+						: <h3>{charity.name}</h3>
 					}
 				</WhiteCircle>
 			</WhiteCircle>
-			<div className="position-absolute px-2" style={{top: 200, width:"50%", right: "50.25%" /* Account slightly for text and visual pleasantness */, textAlign:"right"}}>
+			<div className="position-absolute px-2" style={{top: titleTop, width:"50%", right: "50.25%" /* Account slightly for text and visual pleasantness */, textAlign:"right"}}>
 				<h1 className={!chromeRedirect ? "text-white" : "color-gl-turquoise"}>Supporting </h1>
 			</div>
-			<div className="position-absolute px-2" style={{top: 200, width:"50%", left: "50%", textAlign:"left"}}>
+			<div className="position-absolute px-2" style={{top: titleTop, width:"50%", left: "50%", textAlign:"left"}}>
 				<h1 className="color-gl-turquoise"> {charity.name}</h1>
 			</div>
 		</>: null}
