@@ -1,48 +1,29 @@
 /* global navigator */
-import React, { Component, useState, useRef, useEffect } from 'react';
-import Login from '../base/youagain';
-import { modifyHash, randomPick, encURI, space, stopEvent, ellipsize } from '../base/utils/miscutils';
-import { Card, Form, Button, CardTitle, Row, Col, Badge, CardBody, CardFooter, DropdownItem, Alert } from 'reactstrap';
-
+import React from 'react';
+import BG from '../base/components/BG';
+import MainDivBase from '../base/components/MainDivBase';
+import { nonce } from '../base/data/DataClass';
 // Plumbing
 import DataStore from '../base/plumbing/DataStore';
-import Roles from '../base/Roles';
+import { lg } from '../base/plumbing/log';
+import { encURI, stopEvent } from '../base/utils/miscutils';
+import Login from '../base/youagain';
 import C from '../C';
-import Crud from '../base/plumbing/Crud'; // Crud is loaded here to init (but not used here)
-import Money from '../base/data/Money';
-import {lg} from '../base/plumbing/log';
-import TabsForGoodSettings, { getTabsOpened, Search, getSelectedCharityId } from './pages/TabsForGoodSettings';
-import {fetchCharity } from './pages/MyCharitiesPage';
-
-// Templates
-import MessageBar from '../base/components/MessageBar';
-import NavBar, { AccountMenu } from './MyLoopNavBar';
-import DynImg from '../base/components/DynImg';
-
-// Pages
-import E404Page from '../base/components/E404Page';
-import TestPage from '../base/components/TestPage';
-import AccountPage from './pages/AccountPage';
-import MainDivBase from '../base/components/MainDivBase';
-import BG from '../base/components/BG';
-import DevLink from './campaignpage/DevLink';
-import PropControl from '../base/components/PropControl';
-import BannerAd from './BannerAd';
-import Footer from './Footer';
-import ActionMan from '../base/plumbing/ActionManBase';
-import MDText from '../base/components/MDText';
-import Ticker from './Ticker';
-// import RedesignPage from './pages/RedesignPage';
-
-import NewTabOnboardingPage from './NewTabOnboarding';
-
+import WhiteCircle from './campaignpage/WhiteCircle';
 // Components
 import { CharityLogo } from './cards/CharityCard';
-import WhiteCircle from './campaignpage/WhiteCircle';
-import { nonce } from '../base/data/DataClass';
+import { AccountMenu } from './MyLoopNavBar';
 import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLoginWidget';
+// import RedesignPage from './pages/RedesignPage';
+import NewTabOnboardingPage from './NewTabOnboarding';
 import NewtabTutorialCard, { openTutorial, TutorialComponent, TutorialHighlighter } from './NewtabTutorialCard';
+import { fetchCharity } from './pages/MyCharitiesPage';
+import { getSelectedCharityId, getTabsOpened, Search } from './pages/TabsForGoodSettings';
 import TickerTotal from './TickerTotal';
+
+
+
+
 
 // DataStore
 C.setupDataStore();
