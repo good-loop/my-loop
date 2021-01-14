@@ -4,12 +4,12 @@
 import React, { Fragment, useState } from 'react';
 import Login from '../../base/youagain';
 import _ from 'lodash';
-import { Container, Alert } from 'reactstrap';
+import { Container, Alert, Row, Col } from 'reactstrap';
 import pivot from 'data-pivot';
 import PV from 'promise-value';
 
 import Roles from '../../base/Roles';
-import { isPortraitMobile, sum, isMobile, yessy, space } from '../../base/utils/miscutils';
+import { isPortraitMobile, sum, isMobile, yessy, space, asDate } from '../../base/utils/miscutils';
 import C from '../../C';
 import ServerIO from '../../plumbing/ServerIO';
 import DataStore from '../../base/plumbing/DataStore';
@@ -35,6 +35,8 @@ import { LoginLink } from '../../base/components/LoginWidget';
 import ShareButton from '../ShareButton';
 import { assert } from '../../base/utils/assert';
 import { Cite } from '../../base/components/LinkOut';
+import Campaign from '../../base/data/Campaign';
+import { getDataItem } from '../../base/plumbing/Crud';
 
 /**
  * HACK hard-coded list of campaigns which have PDF versions
@@ -103,7 +105,7 @@ const uniqueIds = arr => {
 const CampaignPage = () => {
 	// What adverts should we look at?
 	let {
-		'gl.vert': adid,
+		'gl.vert': adid, // deprecated - prefer campaign
 		'gl.vertiser': vertiserid,
 		'gl.status': glStatus,
 		status,
@@ -111,16 +113,21 @@ const CampaignPage = () => {
 		q = '',
 		landing,
 	} = DataStore.getValue(['location', 'params']) || {};
+	let campaignId = DataStore.getValue(['location','path'])[1];
 
 	// Merge gl.status into status & take default value
 	if (!status) status = (glStatus || C.KStatus.PUB_OR_ARC);
+	
+	// Is this for one campaign?
+	let pvCampaign = campaignId? getDataItem({type:C.TYPES.Campaign,status,id:campaignId}) : {};
+	const campaignPage = pvCampaign.value || {};
 
 	// Is the campaign page being used as a click-through advert landing page?
 	// If so, change the layout slightly, positioning the advert video on top.
 	const isLanding = (landing !== undefined) && (landing !== 'false');
 
 	// Which advert(s)?
-	const sq = adsQuery({ q, adid, vertiserid, via });
+	const sq = adsQuery({ q, adid, vertiserid, campaignId, via });
 	let pvAds = fetchAds({ searchQuery: sq, status });
 	if (!pvAds) {
 		// No query -- show a list
@@ -148,10 +155,9 @@ const CampaignPage = () => {
 	const pvVertiser = ActionMan.getDataItem({ type: C.TYPES.Advertiser, id: ads[0].vertiser, status: C.KStatus.PUBLISHED });
 	const nvertiser = pvVertiser.value;
 
-	// Combine campaign page and branding settings from all ads
+	// Combine branding settings from all ads
 	// Vertiser branding wins, ad branding fallback, last ad wins
-	let branding = {};
-	let campaignPage = {};
+	let branding = {};	
 	let useVertiser = true;
 	if (!nvertiser) {
 		useVertiser = false;
@@ -161,7 +167,6 @@ const CampaignPage = () => {
 		useVertiser = false;
 	}
 	ads.forEach(ad => Object.assign(branding, (useVertiser ? nvertiser.branding : ad.branding)));
-	ads.forEach(ad => Object.assign(campaignPage, ad.campaignPage));
 
 	// individual charity data
 	let charities = uniqueIds(_.flatten(ads.map(
@@ -209,8 +214,8 @@ const CampaignPage = () => {
 		viewcount4campaign = pivot(pvViewData.value, "by_campaign.buckets.$bi.{key, doc_count}", "$key.$doc_count");
 	}
 
-	const donation4charity = fetchDonationData({ ads });
-	const donationTotal = donation4charity.total;
+	const donation4charity = yessy(campaignPage.dntn4charity)? campaignPage.dntn4charity : fetchDonationData({ ads });
+	const donationTotal = campaignPage.dntn || donation4charity.total;
 
 	{	// NB: some very old ads may not have charities
 		let noCharityAds = ads.filter(ad => !ad.charities);
@@ -227,8 +232,8 @@ const CampaignPage = () => {
 
 	// Sum of the views from every ad in the campaign. We use this number for display
 	// and to pass it to the AdvertCards to calculate the money raised against the total.
-	let totalViewCount = 0;
-	{
+	let totalViewCount = campaignPage.numPeople; // hard set by the Campaign object?
+	if ( ! totalViewCount) {
 		const ad4c = {};
 		ads.forEach(ad => ad4c[campaignNameForAd(ad)] = ad);
 		let ads1perCampaign = Object.values(ad4c);
@@ -252,7 +257,9 @@ const CampaignPage = () => {
 		<div className="widepage CampaignPage gl-btns">
 			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" />
 			<div className="text-center">
-				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaignPage} donationValue={donationTotal} totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
+				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaignPage} 
+					donationValue={donationTotal} 
+					totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
 
 				<HowDoesItWork nvertiserName={nvertiserName} />
 
@@ -309,23 +316,51 @@ const CampaignPage = () => {
 					</Container>
 				</div>
 
-				<SmallPrintInfo charities={charities} campaignPage={campaignPage} />
+				<SmallPrintInfo ads={ads} charities={charities} campaignPage={campaignPage} />
 
 			</div>
 		</div>
 	</>);
 }; // ./CampaignPage
 
-const SmallPrintInfo = ({charities, campaignPage}) => {
+const SmallPrintInfo = ({ads, charities, campaignPage}) => {
+	// set min/max donation-per-ad and start/end dates from ad
+	let dmin,dmax,start,end;
+	for(let i=0; i<ads.length; i++) {
+		let adi = ads[i];
+		let tli = adi.topLineItem;
+		if ( ! tli)	continue;
+		let dPerAd = tli && tli.maxBid;
+		if (dPerAd) {
+			if ( ! dmin || Money.compare(dPerAd, dmin) < 0) dmin = dPerAd;
+			if ( ! dmax || Money.compare(dPerAd, dmin) > 0) dmax = dPerAd;
+		}
+		let starti = tli && asDate(tli.start);
+		let endi = tli && asDate(tli.end);
+		if (starti && ( ! start || starti.getTime() < start.getTime())) start = starti;
+		if (endi && ( ! end || endi.getTime() > end.getTime())) end = endi;
+	}
 	console.log("campaignPage",campaignPage);
+	
+	let totalBudget	= campaignPage.maxDntn;
+	if ( ! totalBudget) {
+		let amounts = ads.map(ad => Advert.budget(ad) && Advert.budget(ad).total);
+		totalBudget = Money.total(amounts);
+	}
+
 	return <div>
 		<h4>Donation Information</h4>
 		<Row>
-			<Col><CharityDetails charities={charities} /></Col>
-			<Col>
-				 Donation Amount: ?? per video viewed <br/>
-				 Limitations on Donation: ?? Maximum Donation <br/>
-				 Dates: ?? through ?? <br/>
+			<Col md={6} ><CharityDetails charities={charities} /></Col>
+			<Col md={6} className="text-left">
+				 Donation Amount: <Misc.Money amount={dmin} /> { dmax && ! Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/>
+				 Limitations on Donation: <Misc.Money amount={totalBudget} /> <br/>
+				 Dates: <Misc.DateTag date={start} /> through <Misc.DateTag date={end} /> <br/>
+
+				 <p>The impacts listed above are indicative not prescriptive. 
+				 We don't ring-fence funding, as the charity can better assess the best use of funds. 
+				 Cost/impact figures are as reported by the charity or by the impact assessor SoGive.
+				 </p>
 
 				{campaignPage.smallPrint &&
 					<div className="small-print">
@@ -630,19 +665,21 @@ const isAll = () => {
 	return slug === 'all';
 };
 /**
- * @returns {!SearchQuery}
+ * @returns {!SearchQuery} for fetching Adverts
  */
-const adsQuery = ({ q, adid, vertiserid, via }) => {
+const adsQuery = ({ q, adid, vertiserid, campaignId, via }) => {
 	let sq = new SearchQuery(q);
 	// NB: convert url parameters into a backend ES query against the Advert.java object
-	if (adid) sq = SearchQuery.setProp(sq, 'id', adid);
+	if (campaignId) sq = SearchQuery.setProp(sq, 'campaign', campaignId);
+	if (adid) sq = SearchQuery.setProp(sq, 'id', adid);	
 	if (vertiserid) sq = SearchQuery.setProp(sq, 'vertiser', vertiserid);
 	if (via) sq = SearchQuery.setProp(sq, 'via', via);
 	return sq;
 };
 /**
- * 
- * @returns { ? PV<Advert[]>} null if no query
+ * @param {Object} p
+ * @param {!SearchQuery} p.searchQuery
+ * @returns ?PV(Advert[]) null if no query
  */
 const fetchAds = ({ searchQuery, status }) => {
 	let q = searchQuery.query;
