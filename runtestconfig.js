@@ -1,6 +1,6 @@
 
 const runtestConfig = {
-	appURL: "studio.good-loop.com",
+	appURL: "my.good-loop.com",
 	// Name of test server
 	testHostname: "baker", 
 	// The possible values for `site` are defined in testConfig.js, targetServers
