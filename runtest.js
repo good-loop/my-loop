@@ -66,7 +66,15 @@ process.env.__CONFIGURATION = JSON.stringify(config);
 process.argv = argv;
 
 const isLocal = config.site === "local";
-const infoURL = (isLocal ? "http://" : "https://") + config.site + config.appURL + config.gitlogPath;
+let site = config.sitePrefixes[config.site];
+if (site === undefined) {
+	site = config.site;
+}
+const infoURL = (isLocal ? "http://" : "https://") + site + config.appURL + config.gitlogPath;
+
+const runTest = () => {
+	shell.exec(`npm run test ${testPath} ${runInBand}`);
+};
 
 if (!yargv.skipProdTest) {
 	// Check tests are not running on production
@@ -92,7 +100,7 @@ if (!yargv.skipProdTest) {
 					console.log("Hostname " + hostname + " is safe to test");
 					runTest();
 				} else {
-					console.log("Hostname " + hostname + " is not " + config.testHostname + " or " + os.hostname() + ", assuming production and aborting test!");
+					console.log("Hostname " + hostname + " is not " + config.testHostname + " or " + os.hostname() + ", assuming production and aborting test!\nUse --skipProdTest to bypass this restriction.");
 				}
 			}
 		})
@@ -118,8 +126,4 @@ const askToRunTest = (question) => {
 		}
 		rl.close();
 	});
-};
-
-const runTest = () => {
-	shell.exec(`npm run test ${testPath} ${runInBand}`);
 };
