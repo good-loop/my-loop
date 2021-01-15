@@ -24,7 +24,7 @@ import GetInvolvedPage from './pages/GetInvolvedPage';
 import CampaignPage from './campaignpage/CampaignPage';
 import {BasicAccountPage} from '../base/components/AccountPageWidgets';
 import E404Page from '../base/components/E404Page';
-import TestPage from '../base/components/TestPage';
+// import TestPage from '../base/components/TestPage';
 import AccountPage from './pages/AccountPage';
 import Footer from './Footer';
 import { Register } from '../../puppeteer_tests/test-base/common-selectors';
@@ -44,7 +44,7 @@ const PAGES = {
 	// account: BasicAccountPage,
 	my: MyPage,
 	campaign: CampaignPage,
-	test: TestPage,
+	// test: TestPage,
 	account: AccountPage,
 	charities: MyCharitiesPage,
 	ads: MyAdCampaignsPage,
