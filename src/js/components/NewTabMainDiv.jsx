@@ -11,7 +11,7 @@ import Login from '../base/youagain';
 import C from '../C';
 import WhiteCircle from './campaignpage/WhiteCircle';
 // Components
-import { CharityLogo } from './cards/CharityCard';
+import CharityLogo from './CharityLogo';
 import { AccountMenu } from './MyLoopNavBar';
 import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLoginWidget';
 // import RedesignPage from './pages/RedesignPage';

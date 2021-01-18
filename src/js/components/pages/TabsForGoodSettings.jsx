@@ -1,16 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { Col, Form, Row } from 'reactstrap';
 import ListLoad from '../../base/components/ListLoad';
-import Login from '../../base/youagain';
 import PropControl from '../../base/components/PropControl';
+import { getId } from '../../base/data/DataClass';
 import JSend from '../../base/data/JSend';
 import { getAllXIds, getClaimValue, getProfilesNow, savePersons, setClaimValue } from '../../base/data/Person';
 import { getDataItem } from '../../base/plumbing/Crud';
 import DataStore from '../../base/plumbing/DataStore';
-import { isPortraitMobile, space } from '../../base/utils/miscutils';
-import ServerIO from '../../plumbing/ServerIO';
-import { getId } from '../../base/data/DataClass';
 import { assert } from '../../base/utils/assert';
+import { space } from '../../base/utils/miscutils';
+import Login from '../../base/youagain';
+import ServerIO from '../../plumbing/ServerIO';
 
 
 const TabsForGoodSettings = () => {

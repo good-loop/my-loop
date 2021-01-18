@@ -1,47 +1,47 @@
 /*
  * 
  */
-import React, { Fragment, useState } from 'react';
-import Login from '../../base/youagain';
-import _ from 'lodash';
-import { Container, Alert, Row, Col,
-	Carousel,
-	CarouselItem,
-	CarouselControl,
-	CarouselIndicators,
-	CarouselCaption } from 'reactstrap';
 import pivot from 'data-pivot';
-import PV from 'promise-value';
+import _ from 'lodash';
+import React, { useState } from 'react';
+import {
+	Alert,
+	Carousel,
 
-import Roles from '../../base/Roles';
-import { isPortraitMobile, sum, isMobile, yessy, space, asDate } from '../../base/utils/miscutils';
-import C from '../../C';
-import ServerIO from '../../plumbing/ServerIO';
-import DataStore from '../../base/plumbing/DataStore';
-import Misc from '../../base/components/Misc';
-import ActionMan from '../../plumbing/ActionMan';
-import MyLoopNavBar from '../MyLoopNavBar';
-import Money from '../../base/data/Money';
-import Advert from '../../base/data/Advert';
-import CampaignPageDC from '../../data/CampaignPage';
-import SearchQuery from '../../base/searchquery';
-import Charities, { CharityDetails } from './Charities';
-import { sortByDate } from '../../base/utils/SortFn';
+
+
+	CarouselCaption, CarouselControl,
+	CarouselIndicators, CarouselItem, Col, Container, Row
+} from 'reactstrap';
 import Counter from '../../base/components/Counter';
-import printer from '../../base/utils/printer';
 import CSS from '../../base/components/CSS';
-import GoodLoopUnit from '../../base/components/GoodLoopUnit';
-import PublishersCard from './PublishersCard';
-import CampaignSplashCard from './CampaignSplashCard';
 import ErrAlert from '../../base/components/ErrAlert';
-import ListLoad from '../../base/components/ListLoad';
-import DevLink from './DevLink';
-import { LoginLink } from '../../base/components/LoginWidget';
-import ShareButton from '../ShareButton';
-import { assert } from '../../base/utils/assert';
+import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import { Cite } from '../../base/components/LinkOut';
+import ListLoad from '../../base/components/ListLoad';
+import Misc from '../../base/components/Misc';
+import StyleBlock from '../../base/components/StyleBlock';
+import Advert from '../../base/data/Advert';
 import Campaign from '../../base/data/Campaign';
+import Money from '../../base/data/Money';
 import { getDataItem } from '../../base/plumbing/Crud';
+import DataStore from '../../base/plumbing/DataStore';
+import Roles from '../../base/Roles';
+import SearchQuery from '../../base/searchquery';
+import { assert } from '../../base/utils/assert';
+import { asDate, isMobile, sum, yessy } from '../../base/utils/miscutils';
+import printer from '../../base/utils/printer';
+import { sortByDate } from '../../base/utils/SortFn';
+import Login from '../../base/youagain';
+import C from '../../C';
+import CampaignPageDC from '../../data/CampaignPage';
+import ActionMan from '../../plumbing/ActionMan';
+import ServerIO from '../../plumbing/ServerIO';
+import MyLoopNavBar from '../MyLoopNavBar';
+import CampaignSplashCard from './CampaignSplashCard';
+import Charities, { CharityDetails } from './Charities';
+import DevLink from './DevLink';
+
 
 /**
  * HACK hard-coded list of campaigns which have PDF versions
@@ -184,7 +184,7 @@ const CampaignPage = () => {
 	// PDF version of page
 	let pdf = null;
 
-	// Group ads by campaign {String: Advert}
+	// Group ads by campaign {String: merged-Advert}
 	let campaignByName = {};
 	ads.forEach(ad => {
 		let name = ad.campaign || ad.id;
@@ -257,8 +257,8 @@ const CampaignPage = () => {
 	};
 
 	return (<>
-		<CSS css={campaignPage && campaignPage.customCss} />
-		<CSS css={branding.customCss} />
+		<StyleBlock>{campaignPage && campaignPage.customCss}</StyleBlock>
+		<StyleBlock>{branding.customCss}</StyleBlock>
 		<div className="widepage CampaignPage gl-btns">
 			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" hidePages/>
 			<div className="text-center">
@@ -310,6 +310,11 @@ const CampaignPage = () => {
 	</>);
 }; // ./CampaignPage
 
+
+/**
+ * Charity details + campaign details
+ * @param {*} param0 
+ */
 const SmallPrintInfo = ({ads, charities, campaignPage}) => {
 	// set min/max donation-per-ad and start/end dates from ad
 	let dmin,dmax,start,end;
@@ -341,10 +346,12 @@ const SmallPrintInfo = ({ads, charities, campaignPage}) => {
 			<Col md={6} ><CharityDetails charities={charities} /></Col>
 			<Col md={6} className="text-left">
 				 Donation Amount: <Misc.Money amount={dmin} /> { dmax && ! Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/>
+				 50% of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies. 
+				 Good-Loop and the advertising exchange make a small commission. The donations depend on viewers watching the adverts.<br/>
 				 Limitations on Donation: <Misc.Money amount={totalBudget} /> <br/>
 				 Dates: <Misc.DateTag date={start} /> through <Misc.DateTag date={end} /> <br/>
 
-				 <p>The impacts listed above are indicative not prescriptive. 
+				 <p>Where impacts such as "trees planted" are listed above, these are representative. 
 				 We don't ring-fence funding, as the charity can better assess the best use of funds. 
 				 Cost/impact figures are as reported by the charity or by the impact assessor SoGive.
 				 </p>
@@ -357,8 +364,10 @@ const SmallPrintInfo = ({ads, charities, campaignPage}) => {
 					</div>}
 			</Col>
 		</Row>
-		<p><small>This information follows the guidelines of the New York Attorney General for best practice in cause marketing.
-			<Cite href='https://www.charitiesnys.com/cause_marketing.html'/></small></p>
+		<p><small>This information follows the guidelines of the New York Attorney General for best practice in cause marketing,
+			<Cite href='https://www.charitiesnys.com/cause_marketing.html'/>
+			and the Better Business Bureau's standard for charity donations within marketing.			
+			</small></p>
 	</div>;
 }
 
