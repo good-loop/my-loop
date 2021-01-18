@@ -4,7 +4,12 @@
 import React, { Fragment, useState } from 'react';
 import Login from '../../base/youagain';
 import _ from 'lodash';
-import { Container, Alert, Row, Col } from 'reactstrap';
+import { Container, Alert, Row, Col,
+	Carousel,
+	CarouselItem,
+	CarouselControl,
+	CarouselIndicators,
+	CarouselCaption } from 'reactstrap';
 import pivot from 'data-pivot';
 import PV from 'promise-value';
 
@@ -255,7 +260,7 @@ const CampaignPage = () => {
 		<CSS css={campaignPage && campaignPage.customCss} />
 		<CSS css={branding.customCss} />
 		<div className="widepage CampaignPage gl-btns">
-			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" />
+			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" hidePages/>
 			<div className="text-center">
 				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaignPage} 
 					donationValue={donationTotal} 
@@ -289,28 +294,10 @@ const CampaignPage = () => {
 				<div className="bg-gl-light-red">
 					<Container className="py-5 text-white">
 						<div className="pt-5" />
-						<h2 className="text-white">Join the revolution and support ads<br />that make a difference</h2>
-						<p className="py-5">Help us do even more good in the world!<br />All you have to do is sign up with your email or social account.<br />This will help us boost the donations you generate by seeing our ads.</p>
-						<div className="py-4 w-50 row mx-auto">
-							<div className="col-md">
-								<LoginLink><div className="btn btn-secondary w-100">Sign up</div></LoginLink>
-							</div>
-							<div className="col-md">
-								<ShareButton className="btn-transparent btn-white w-100 mt-3 mt-md-0" meta={shareButtonMeta} url={window.location.href}>Share the love</ShareButton>
-							</div>
-						</div>
-						<div className="pb-5" />
-					</Container>
-				</div>
-
-				<div className="bg-gl-light-pink">
-					<Container className="py-5">
-						<div className="pt-5" />
-						<h2>Are you a brand or an agency?</h2>
-						<p className="pt-5" style={{ fontSize: "1.3rem" }}>Company website: <a style={{ textDecoration: "none", color: "inherit" }} href="http://www.good-loop.com"><b>www.good-loop.com</b></a><br />Email: <b>hello@good-loop.com</b></p>
-						<div className="py-5 flex-column flex-md-row justify-content-center">
-							<a className="btn btn-primary mr-md-3" target="_blank" href="https://www.good-loop.com/contact">Book a call</a>
-							{pdf ? <a className="btn btn-transparent mt-3 mt-md-0" href={pdf}>Download pdf version</a> : null}
+						<h2 className="text-white w-75 mx-auto">Download Tabs for Good - Chrome search plugin to raise money</h2>
+						<p className="py-5">Every time you open a new tab you raise money for real causes.</p>
+						<div className="py-4 flex-row justify-content-center align-items-center">
+							<a href="https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1" className="btn btn-secondary">Download</a>
 						</div>
 						<div className="pb-5" />
 					</Container>
@@ -558,6 +545,9 @@ const HowDoesItWork = ({ nvertiserName }) => {
 					</div>
 				</div>
 			</div>
+			<div className="flex-row justify-content-center align-items-center">
+				<a className="btn btn-primary" href="https://my.good-loop.com/#howitworks">Learn more</a>
+			</div>
 		</div>
 	);
 };
@@ -575,11 +565,12 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserNam
 	ads.forEach(ad => {
 		let cname = campaignNameForAd(ad);
 		if (sampleAd4Campaign[cname]) {
+			let showcase = ad.campaignPage && ad.campaignPage.showcase;
 			// Prioritise ads with a start and end time attached
 			let startProvided = !sampleAd4Campaign[cname].start && ad.start;
 			let endProvided = !sampleAd4Campaign[cname].end && ad.end;
 			// If the ad cannot provide a new value for start or end, skip it
-			if (!startProvided && !endProvided) {
+			if (!startProvided && !endProvided && !showcase) {
 				return;
 			}
 		}
@@ -600,10 +591,56 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserNam
 
 	views = printer.prettyNumber(views);
 
+	const [activeIndex, setActiveIndex] = useState(0);
+	const [animating, setAnimating] = useState(false);
+	
+	const next = () => {
+		if (animating) return;
+		const nextIndex = activeIndex === items.length - 1 ? 0 : activeIndex + 1;
+		setActiveIndex(nextIndex);
+	}
+
+	const previous = () => {
+		if (animating) return;
+		const nextIndex = activeIndex === 0 ? items.length - 1 : activeIndex - 1;
+		setActiveIndex(nextIndex);
+	}
+
+	const goToIndex = (newIndex) => {
+		if (animating) return;
+		setActiveIndex(newIndex);
+	}
+
+	const carouselSlides = sampleAds.map((ad, i) =>
+		<CarouselItem
+			onExiting={() => setAnimating(true)}
+			onExited={() => setAnimating(false)}
+			key={i}
+		>
+			<AdvertCard
+				ad={ad}
+				viewCountProp={views}
+				donationTotal={donationTotal}
+				totalViewCount={totalViewCount}
+			/>
+			<CarouselCaption captionText={<Misc.DateDuration startDate={ad.start} endDate={ad.end} />}/>
+		</CarouselItem>
+	);
+
 	return (<>
 		<Container className="py-5">
 			<h2>Watch the {nvertiserName} ad{sampleAds.length > 1 ? "s" : ""} that raised <Counter currencySymbol="£" sigFigs={4} amount={donationTotal} minimumFractionDigits={2} preserveSize /><br />with {views} ad viewers</h2>
-			<AdvertCard
+			<Carousel
+				activeIndex={activeIndex}
+				next={next}
+				previous={previous}
+			>
+				<CarouselIndicators items={sampleAds} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{backgroundColor:"#000"}}/>
+				{carouselSlides}
+				<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous}/>
+				<CarouselControl direction="next" directionText="Next" onClickHandler={next} />
+			</Carousel>
+			{/*<AdvertCard
 				ad={selectedAd}
 				viewCountProp={views}
 				donationTotal={donationTotal}
@@ -620,9 +657,9 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserNam
 						/>
 					)}
 				</div>}
-			<a className="btn btn-primary mb-3 mb-md-0 mr-md-3 mt-5 position-relative" style={{ zIndex: 99 }} href="/#ads">See all campaigns</a>
 			{//<a className="btn btn-transparent" href="TODO">Campaign performance & brand study</a>
 			}
+		*/}
 		</Container>
 	</>);
 };
