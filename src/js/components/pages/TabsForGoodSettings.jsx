@@ -18,12 +18,28 @@ const TabsForGoodSettings = () => {
 	return <>		
 		{ ! task && <TabStats/>}
 		<div className="py-3"/>
+		<h2>Choose a different search engine</h2>
+		<SearchEnginePicker/>
+		<div className="py-3"/>
 		<h1>Pick your charity</h1>
 		<br/>
 		<CharityPicker/>
 	</>;
 };
 
+const SearchEnginePicker = () => {
+	const selEngine = getSearchEngine();
+
+	const onSelect = () => {
+		const newEngine = DataStore.getValue(['widget', 'TabsForGoodSettings', 'searchEnginePicker']);
+		console.log(newEngine);
+		setSearchEngine(newEngine);
+	}
+
+	return <PropControl type="select" prop="searchEnginePicker" options={["google", "ecosia", "duckduckgo", "bing"]}
+		labels={["Google", "Ecosia", "DuckDuckGo", "Bing"]} dflt={selEngine || "bing"} onChange={onSelect}
+		path={['widget', 'TabsForGoodSettings']}/>;
+}
 
 const CharityPicker = () => {
 	const selId = getSelectedCharityId();
@@ -180,6 +196,32 @@ const setSelectedCharityId = (cid) => {
 	if (task==="select-charity" && link) {
 		pv.promise.then(re => {
 			console.log("... saved setSelectedCharityId " + cid);
+			window.location = link;
+		});
+	}
+};
+
+const getSearchEngine = () => {
+	let xids = getAllXIds();
+	let persons = getProfilesNow(xids);
+	let engine = getClaimValue({persons, key:"searchEngine"});
+	return engine;
+};
+
+const setSearchEngine = (engine) => {
+	let xids = getAllXIds();
+	let persons = getProfilesNow(xids);
+	setClaimValue({persons, key:"searchEngine", value:engine});
+	console.log("setSelectedCharityId " + engine);
+	DataStore.update();
+	// save
+	let pv = savePersons({persons});	
+	// return??
+	const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
+	const link = DataStore.getUrlValue("link"); 
+	if (task==="select-search-engine" && link) {
+		pv.promise.then(re => {
+			console.log("... saved setSearchEngine " + engine);
 			window.location = link;
 		});
 	}
