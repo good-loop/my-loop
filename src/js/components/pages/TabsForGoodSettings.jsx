@@ -29,7 +29,8 @@ const TabsForGoodSettings = () => {
 
 const SearchEnginePicker = () => {
 	const selEngine = getSearchEngine();
-
+	DataStore.setValue(['widget', 'TabsForGoodSettings', 'searchEnginePicker'], selEngine);
+	
 	const onSelect = () => {
 		const newEngine = DataStore.getValue(['widget', 'TabsForGoodSettings', 'searchEnginePicker']);
 		console.log(newEngine);
@@ -37,7 +38,7 @@ const SearchEnginePicker = () => {
 	}
 
 	return <PropControl type="select" prop="searchEnginePicker" options={["google", "ecosia", "duckduckgo", "bing"]}
-		labels={["Google", "Ecosia", "DuckDuckGo", "Bing"]} dflt={selEngine || "bing"} onChange={onSelect}
+		labels={["Google", "Ecosia", "DuckDuckGo", "Bing"]} dflt={"google"} onChange={onSelect}
 		path={['widget', 'TabsForGoodSettings']}/>;
 }
 
@@ -215,7 +216,7 @@ const setSearchEngine = (engine) => {
 	console.log("setSelectedCharityId " + engine);
 	DataStore.update();
 	// save
-	let pv = savePersons({persons});	
+	let pv = savePersons({persons});
 	// return??
 	const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
 	const link = DataStore.getUrlValue("link"); 
@@ -237,5 +238,5 @@ const StatCard = ({md, lg, xs, number, label, className, padding, children}) => 
 	</Col>;
 };
 
-export { getTabsOpened, Search, getSelectedCharityId, setSelectedCharityId };
+export { getTabsOpened, Search, getSelectedCharityId, setSelectedCharityId, getSearchEngine };
 export default TabsForGoodSettings;
