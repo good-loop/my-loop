@@ -89,7 +89,7 @@ body {
 			display: flex;
 			flex-direction: column;
 			align-items: flex-end;
-			@media @md-max {
+			@media @width-mobile {
 				align-items: center;
 				justify-content: start;
 				height: 100%;
@@ -103,7 +103,7 @@ body {
 				height: 75%;
 				padding-top: 70px; // avoid navbar
 				width: 100%;
-				@media @md-max {
+				@media @width-mobile {
 					display: flex; // Is it possible to use flex or BS to write something simpler that just works across devices??
 					flex-direction: column;
 					align-items: center;
@@ -128,13 +128,13 @@ body {
 				justify-content: space-between;
 				width: 68.75%; // ??
 				margin: auto;
-				@media @md-max {
+				@media @width-mobile {
 					width: 100%;
 					flex-direction: column;
 				}
 				.plus {
 					width: 30px;
-					@media @md-max {
+					@media @width-mobile {
 						width: 20px;
 					}
 				}
@@ -142,21 +142,24 @@ body {
 			.WhiteCircle{
 				width: 40%;
 				.sub-header {
-					font-size: 1.6rem;
+					font-size: 1.4rem;
 					color: @gl-orange;
 					font-weight: 700;
-					@media @lg-max {
-						font-size: 1.4rem;
-					}
-					@media @md-max {
+					@media @width-mobile {
 						font-size: 1rem;
+					}
+					.num {
+						font-size: 1.2rem;
+						@media @width-mobile {
+							font-size: 1rem;
+						}
 					}
 				}
 			}
 			.header {
 				font-weight: 600;
 				font-size: 2.35rem;
-				@media @md-max {
+				@media @width-mobile {
 					font-size: 1.7rem;
 					@media (max-height: 568px) {
 						font-size: 1.5rem;
@@ -165,11 +168,11 @@ body {
 			}
 			.subtext {
 				font-size: 1.5rem;
-				@media @md-max {
+				@media @width-mobile {
 					font-size: 1rem;
 				}
 			}
-		}
+		} // ./hero
 
 		.splash-buttons {
 			position: absolute;
@@ -179,14 +182,14 @@ body {
 			display: flex;
 			flex-direction: row;
 			align-items: center;
-			@media @md-max {
+			@media @width-mobile {
 				justify-content: center;
 				left: 0px;
 				width: 100%;
 				padding: 0px 10px;
 			}
 		}
-	}
+	} // ./impact-hub-splash
 
 	h1,h2 {
 		color: @gl-light-red;
@@ -215,12 +218,13 @@ body {
 
 	.theunit {
 		// Positioning to fit the ad unit inside the mobile frame image - has to be custom percents due to small offsets in the image
-		z-index: 1;
+		z-index: 5;
 		width: 57%;
-		top: 49.5%;
-		left: 50%;
+		top: 50.2%;
+		left: 49.6%;
 		transform: translate(-50%, -50%);
-		@media @md-max {
+		background-color: white;
+		@media @width-mobile {
 			width: 100%;
 			height: 75vh;
 			top: 0;
@@ -232,6 +236,10 @@ body {
 			margin: auto;
 			box-shadow: 0px 0px 5px black;
 		}
+	}
+
+	.unit-shadow {
+		filter: drop-shadow(-20px 20px 10px rgba(22, 26, 27, 0.5));
 	}
 
 	.tablet-container {
@@ -303,17 +311,6 @@ body {
 				height: 100%;
 				object-fit: cover;
 			}
-			/*position: relative;
-			overflow: hidden;
-			img {
-				display: block;
-				min-width: 100%;
-				min-height: 100%;
-				position: absolute;
-				left: 50%;
-				top: 50%;
-				transform: translate(-50%, -50%);
-			}*/
 		}
 		.charity-quote-content {
 			padding: 40px;
@@ -335,7 +332,7 @@ body {
 					max-height: 150px;
 					max-width: 150px;
 				}
-				@media @md-max {
+				@media @width-mobile {
 					margin-bottom: 20px;
 					justify-content: center;
 				}
@@ -351,7 +348,7 @@ body {
 		}
 		.charity-quote-content {
 			width: 50%;
-			@media @md-max {
+			@media @width-mobile {
 				width: 100%;
 			}
 		}

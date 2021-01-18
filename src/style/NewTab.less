@@ -2,7 +2,7 @@
 
 .tab-search-container {
     width: 50%;
-    @media @md-max {
+    @media @width-mobile {
         width: 100%;
     }
 }
@@ -50,6 +50,10 @@
     // Border + shadow = glow
     border: 3px solid @gl-light-red;
     box-shadow: 0 0 10px @gl-light-red;
+}
+
+.tutorial-component.highlight * {
+    z-index: 1000;
 }
 
 .onboarding {
@@ -113,22 +117,43 @@
             color: @gl-light-red !important;
         }
     }
+    .login-left,.login-right {
+        padding-top: 20%;
+    }
+    .login-left {
+        padding-left: 20%;
+    }
+    .login-right {
+        padding-right: 20%;
+    }
+    &.flex-row-reverse {
+        .login-left {
+            padding-left: 0;
+            padding-right: 20%;
+        }
+        .login-right {
+            padding-right: 0;
+            padding-left: 20%;
+        }
+    }
 }
 
 .tutorial-card {
     border-radius: 20px;
     p {
-        font-size: 1.3rem;
+        font-size: 1.15rem;
         color: darkslategray;
     }
     h1,h2,h3,h4 {
         text-transform: uppercase;
         color: @gl-turquoise !important;
+        font-size: 1.3rem;
     }
     .page-circle {
         border-radius: 50%;
         border: 2px solid @gl-light-red;
         width: 15px;
+        width: 10px;
         &.selected {
             background: @gl-light-red;
         }
@@ -137,5 +162,69 @@
             display: block;
             padding-bottom: 100%;
         }
+        &:hover {
+            cursor:pointer;
+        }
     }
+    .btn {
+        padding: 5px 20px;
+    }
+}
+
+@keyframes circleSpin180 {
+    0% {
+        transform: rotate(180deg);
+    }
+    50% {
+        transform: rotate(180deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes circleSpin180Flipped {
+    0% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(180deg);
+    }
+}
+
+@keyframes circleFade {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.charity-register-circle {
+    animation-name: circleSpin180;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-out;
+}
+
+.charity-register-circle-flipped {
+    transform: rotate(180deg);
+    animation-name: circleSpin180Flipped;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-out;
+}
+
+.charity-circle-img {
+    animation-name: circleFade;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-out;
 }

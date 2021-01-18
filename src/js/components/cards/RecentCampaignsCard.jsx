@@ -1,5 +1,4 @@
 import React from 'react';
-import Login from 'you-again';
 import { isPortraitMobile, space } from '../../base/utils/miscutils';
 import { Col, Row, Alert } from 'reactstrap';
 import GoodLoopUnit from '../../base/components/GoodLoopUnit';
@@ -7,7 +6,7 @@ import SearchQuery from '../../base/searchquery';
 import ActionMan from '../../plumbing/ActionMan';
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
-import ErrorAlert from '../../base/components/ErrorAlert';
+import ErrAlert from '../../base/components/ErrAlert';
 import Money from '../../base/data/Money';
 import CampaignPageDC from '../../data/CampaignPage';
 import Counter from '../../base/components/Counter';
@@ -63,7 +62,7 @@ const RecentCampaignsCard = () => {
 			return <Misc.Loading text="Loading campaign info..." />;
 		}
 		if (pvAds.error) {
-			return <ErrorAlert>Error loading advert data</ErrorAlert>;
+			return <ErrAlert>Error loading advert data</ErrAlert>;
 		}
 
 		// If it's remotely possible to have an ad now, we have it. Which request succeeded, if any?
@@ -95,17 +94,14 @@ const RecentCampaignsCard = () => {
 const TVAdPlayer = ({adid, className}) => {
 	const size = "landscape";
 	return <div className={space("position-relative", className)}>
-		<img src="/img/LandingBackground/mobile.png" className="w-100 invisible"/>
-		<img src="/img/LandingBackground/mobile.png" className="position-absolute mobileframe-shadow d-none d-md-block" style={{left: "-5%", top: 0, width:"110%", zIndex:0}}/>
+		<img src="/img/LandingBackground/white_iphone.png" className="w-100 invisible"/>
 		{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
-		<img src="/img/LandingBackground/mobile_frame.png" className="position-absolute d-none d-md-block" style={{left: "-5%", width:"110%", top:0, zIndex:2, pointerEvents:"none"}}/>
+		<img src="/img/LandingBackground/white_iphone.png" className="position-absolute d-none d-md-block unit-shadow" style={{left: "-5%", width:"110%", top:0, zIndex:2, pointerEvents:"none"}}/>
 		<div className="position-absolute tv-ad-player">
 			<GoodLoopUnit vertId={adid} size={size} />
 		</div>
 	</div>;
 };
-
-
 
 
 ///////////////////////////////////////////////////////////////////////////////

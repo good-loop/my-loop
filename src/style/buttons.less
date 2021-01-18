@@ -13,7 +13,7 @@
     p {
         margin: 0 !important;
     }
-    @media @md-max {
+    @media @width-mobile {
         padding: 10px 40px;
         font-size: 0.7rem;
         @media (max-height: 568px) {
@@ -50,6 +50,7 @@
 }
 .btn-outline-primary {
 	border-color: @gl-orange;
+	color: @gl-orange;
 	&:hover:not(.disabled) {
 		border-color: @gl-orange;
 		background-color: @gl-red;
@@ -84,7 +85,7 @@
     background-color: transparent;
     color: @gl-orange !important;
     padding: 13px 38px; // Account for border
-    @media @md-max {
+    @media @width-mobile {
         padding: 8px 38px;
         @media (max-height: 568px) {
             padding: 8px 18px;
@@ -125,7 +126,7 @@
     background-color: transparent;
     color: white !important;
     padding: 13px 38px; // Account for border
-    @media @md-max {
+    @media @width-mobile {
         padding: 8px 38px;
         @media (max-height: 568px) {
             padding: 8px 18px;

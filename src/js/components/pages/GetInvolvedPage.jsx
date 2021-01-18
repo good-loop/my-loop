@@ -1,15 +1,9 @@
-import React, { useState } from 'react';
-import Login from 'you-again';
-import { Container, Row, Col } from 'reactstrap';
-import Cookies from 'js-cookie';
-import MyLoopNavBar from '../MyLoopNavBar';
-import WhiteCircle from '../campaignpage/WhiteCircle';
-import ShareButton from '../ShareButton';
-import SubscriptionBox from '../cards/SubscriptionBox';
-import { LoginLink } from '../../base/components/LoginWidget';
-import { space } from '../../base/utils/miscutils';
-import { MoreToDo } from './AccountPage';
+import React from 'react';
+import { Col, Container, Row } from 'reactstrap';
 import { getAllXIds } from '../../base/data/Person';
+import SubscriptionBox from '../cards/SubscriptionBox';
+import MyLoopNavBar from '../MyLoopNavBar';
+import { MoreToDo } from './AccountPage';
 
 const Ref = ({href}) => {
 	return <a className='Ref' target="_blank" rel="noreferrer" href={href}>*</a>;

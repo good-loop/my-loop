@@ -1,46 +1,51 @@
 /**
  * Copy-pasta from LoginWidget but restyled
- * TODO refactor to reuse code from LoginWidget. Login flows are notoriously error-prone, so we don't want to maintain two copies.
+ * Shareable page dedicated to creating an account for T4G and myloop, and selecting a charity by default at the same time
  */
 
 import React, { useState, useEffect } from 'react';
-import Login from '../base/youagain';
-import { assert, assMatch } from '../base/utils/assert';
-import C from '../C';
-import { emailLogin } from '../base/components/LoginWidget';
+import Login from '../../base/youagain';
+import MyLoopNavBar from '../MyLoopNavBar';
+import WhiteCircle from '../campaignpage/WhiteCircle';
+import { assert, assMatch } from '../../base/utils/assert';
+import C from '../../C';
+import { emailLogin } from '../../base/components/LoginWidget';
 import { Row, Col } from 'reactstrap';
-import DataStore from '../base/plumbing/DataStore';
-import PropControl from '../base/components/PropControl';
-import ErrAlert from '../base/components/ErrAlert';
-import { space, stopEvent } from '../base/utils/miscutils';
+import DataStore from '../../base/plumbing/DataStore';
+import PropControl from '../../base/components/PropControl';
+import ErrAlert from '../../base/components/ErrAlert';
+import { space, stopEvent } from '../../base/utils/miscutils';
+import { setSelectedCharityId } from './TabsForGoodSettings';
+import { fetchCharity } from './MyCharitiesPage';
 
 const LOGIN_PATH = ['widget', 'tabLogin', 'login'];
-const LOGIN_OPEN_PATH = [...LOGIN_PATH, 'open'];
 const LOGIN_VERB_PATH = [...LOGIN_PATH, 'verb'];
-
-const setShowTabLogin = (showLogin) => {
-	DataStore.setValue(LOGIN_OPEN_PATH, showLogin);
-};
-
-const getShowTabLogin = () => {
-	return DataStore.getValue(LOGIN_OPEN_PATH);
-};
 
 const switchToVerb = (e, verb) => {
 	if (e) stopEvent(e);
 	DataStore.setValue(LOGIN_VERB_PATH, verb);
 };
 
-const NewtabLoginWidget = ({onLogin, onRegister}) => {
+const NewtabCharityLogin = () => {
 
-	const open = DataStore.getValue(LOGIN_OPEN_PATH);
-	if ( ! open) return null;
+	if (window.innerWidth < 767) {
+		return <div className="bg-gl-turquoise flex-column justify-content-center align-items-center text-center unset-margins position-absolute" style={{top: 0, left: 0, width: "100vw", height: "100vh"}}>
+			<img src="/img/TabsForGood/TabsForGood_logo.png" className="w-50 mb-5"/>
+			<p className="w-75 text-white"><b>Unfortunately Tabs-for-Good only works on desktop chrome. Please use a desktop to sign up!</b></p>
+		</div>;
+	}
 
 	const verb = DataStore.getValue(LOGIN_VERB_PATH);
 	// Default to register
 	useEffect(() => {
 		if (!verb) DataStore.setValue(LOGIN_VERB_PATH, "register");
-	});
+    });
+
+    const charityId = DataStore.getValue(['location', 'params', 'charity']);
+    let charity;
+    if (charityId) {
+        charity = fetchCharity(charityId);
+    }
 
 	const register = verb === "register";
 
@@ -55,18 +60,21 @@ const NewtabLoginWidget = ({onLogin, onRegister}) => {
 
 	if (error && error.text === "error") {
 		error.text = "Could not login. Check your credentials are correct.";
-	}
+    }
+    
+    const chromeRedirect = verb === "t4g_chrome_store";
 
+	const titleTop = window.innerHeight > 700 ? 200 : 100;
 	// ??minor: it might be nice to have a transition on the verb switch
 
 	// why not use a BS modal??
 	return <>
-		<div className="position-absolute" style={{width: "100vw", height: "100vh", top: 0, left: 0, zIndex: 999, background:"rgba(0,0,0,0.5)"}} />
-		<Row className={space("tab-login-widget position-absolute bg-white shadow", register? "" : "flex-row-reverse", verb==="thankyou" && "thankyou")} 
-			style={{width: 700, height:450, zIndex:9999, top: "50%", left:"50%", transform:"translate(-50%, -75%)"}}>
+		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg"/>
+		{!chromeRedirect && <Row className={space("tab-login-widget bg-white position-absolute unset-margins", register? "" : "flex-row-reverse", verb==="thankyou" && "thankyou")} noGutters
+			style={{width: "100vw", height:"100vh", top: 0, left: 0}}>
 			{verb === "thankyou" ? <RegisterThankYou/> : <>
 				{/* BLUE SIDE - shows the OPPOSITE of the current login verb, allows switching */}
-				<Col xs={5} className="bg-gl-turquoise flex-column unset-margins justify-content-center align-items-center text-white text-center m-0 p-3">
+				<Col xs={6} className="bg-gl-turquoise flex-column unset-margins justify-content-start align-items-center text-white text-center login-left">
 					{register ? <>
 						<h4 className="mb-3">Welcome back!</h4>
 						<p className="mb-3">Already have an account?<br/>Please login to keep track of your results.</p>
@@ -77,22 +85,61 @@ const NewtabLoginWidget = ({onLogin, onRegister}) => {
 					<a className="btn btn-secondary" onClick={e => switchToVerb(e, register ? "login" : "register")}>{register ? "Log in" : "Register"}</a>
 				</Col>
 				{/* FORM SIDE - shows the login form according to the verb */}
-				<Col xs={7} className="login-content flex-column unset-margins justify-content-center align-items-center">
+				<Col xs={6} className="login-content flex-column unset-margins justify-content-start align-items-center login-right">
 					<h4 className="mb-3">{headers[verb]}</h4>
 					<LogInForm
 						onLogin={() => {
-							if (onLogin) onLogin();
-							setShowTabLogin(false);
+                            const charityID = DataStore.getValue(['location', 'params', 'charity']);
+                            setSelectedCharityId(charityID);
+                            if (charity) {
+                                DataStore.setValue(LOGIN_VERB_PATH, "t4g_chrome_store");
+                            }
 						}}
 						onRegister={() => {
-							if (onRegister) onRegister();
-							setShowTabLogin(false);
+                            const charityID = DataStore.getValue(['location', 'params', 'charity']);
+                            setSelectedCharityId(charityID);
+                            if (charity) {
+                                DataStore.setValue(LOGIN_VERB_PATH, "t4g_chrome_store");
+                            }
 						}}
 					/>
 					<ErrAlert error={error} />
 				</Col>
 			</>}
-		</Row>
+		</Row>}
+        {chromeRedirect &&
+            <div className="tab-login-widget bg-white flex-column justify-content-center align-items-center unset-margins" 
+			    style={{width: "100vw", height:"100vh"}}>
+                    <h3>You're registered!</h3>
+                    <p className="mt-2">Tabs for Good is set up to support your charity.</p>
+                    <a className="btn btn-primary mt-2"
+                        href="https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1">
+                        Get Tabs-for-Good
+                    </a>
+            </div>
+        }
+        {charity ? <>
+			<WhiteCircle className="position-absolute" style={{top: "75%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 1000, boxShadow:"none", background:"none"}} width={200} circleCrop={100}>
+				{!chromeRedirect &&
+					<div className={space("flex-row justify-content-center align-items-stretch w-100 h-100", register ? "charity-register-circle" : "charity-register-circle-flipped")}>
+						<div className="bg-white w-100 h-100"/>
+						<div className="bg-gl-turquoise w-100 h-100"/>
+					</div>
+				}
+				<WhiteCircle style={{boxShadow:"0 0 3px rgba(0,0,0,0.5)", top:"50%", left:"50%", transform:"translate(-50%, -50%)"}} className="position-absolute charity-circle-img" width={140}>
+					{charity.logo ?
+						<img src={charity.logo}/>
+						: <h3>{charity.name}</h3>
+					}
+				</WhiteCircle>
+			</WhiteCircle>
+			<div className="position-absolute px-2" style={{top: titleTop, width:"50%", right: "50.25%" /* Account slightly for text and visual pleasantness */, textAlign:"right"}}>
+				<h1 className={!chromeRedirect ? "text-white" : "color-gl-turquoise"}>Supporting </h1>
+			</div>
+			<div className="position-absolute px-2" style={{top: titleTop, width:"50%", left: "50%", textAlign:"left"}}>
+				<h1 className="color-gl-turquoise"> {charity.name}</h1>
+			</div>
+		</>: null}
 	</>;
 };
 
@@ -176,18 +223,4 @@ const EmailReset = ({person}) => {
 	);
 };
 
-const NewtabLoginLink = ({className, children}) => {
-    /** toggle open */
-	const onClick = e => {
-		stopEvent(e);
-		setShowTabLogin( ! getShowTabLogin());
-	};
-    
-	return <a className={className} onClick={onClick}>
-		{children}
-	</a>;
-
-};
-
-export {NewtabLoginLink, setShowTabLogin};
-export default NewtabLoginWidget;
+export default NewtabCharityLogin;

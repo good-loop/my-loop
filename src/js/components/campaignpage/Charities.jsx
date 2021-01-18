@@ -133,7 +133,7 @@ const Charities = ({ charities, donation4charity, campaignPage }) => {
 	);
 };
 
-/** Extra smallprint details for charities  */
+/** Extra smallprint details for charities */
 const CharityDetails = ({charities}) => {
 
 	let sogiveCharities = fetchSogiveData(charities);

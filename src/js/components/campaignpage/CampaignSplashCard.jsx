@@ -19,13 +19,13 @@ const SplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, tot
 						</WhiteCircle>
 						<img src="/img/plus.png" className="plus" alt="+"/>
 						<WhiteCircle>
-							<div className="sub-header">{printer.prettyNumber(totalViewCount)} people</div>
+							<div className="sub-header"><span className="num">{printer.prettyNumber(totalViewCount)}</span> people</div>
 						</WhiteCircle>
 					</div>
 					<div className="flex-column flex-center pt-5 splash-text">
 						<div className="header text-white">
 							<div>
-								<span>Raised { donationValue? <Counter currencySymbol="£" sigFigs={4} preservePennies amount={donationValue} minimumFractionDigits={2} preserveSize/> : "money" } for charities</span>
+								<span>Raised { donationValue? <Counter currencySymbol="£" sigFigs={4} preservePennies amount={donationValue} minimumFractionDigits={2} preserveSize/> : "money" } for charity so far</span>
 							</div>
 						</div>
 						<p className="text-white subtext">by using ethical online ads</p>

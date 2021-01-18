@@ -1,5 +1,5 @@
 import React from 'react';
-import Login from 'you-again';
+import Login from '../base/youagain';
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { LoginLink } from '../base/components/LoginWidget';
 // import NavBar from '../base/components/NavBar';
@@ -16,12 +16,15 @@ import { space, isPortraitMobile } from '../base/utils/miscutils';
   * Expects a logo url and currentPage object
   * If logoScroll is set, logoScroll will be displayed in place of logo when the navbar is scrolled
   * If alwaysScrolled is set, the navbar will always display the scrolled version
+  * neverScroll will disable scrolling changes to style
+  * scrollColour overrides the colour to change to when scrolled
+  * hidePages will mean only the logo and login are visible
   */
 class MyLoopNavBar extends React.Component {
 
 	constructor (props) {
 		super(props);
-		this.state = {scrolled: this.props.alwaysScrolled ? true : window.scrollY > 50, open: false};
+		this.state = {scrolled: this.props.neverScroll ? false : (this.props.alwaysScrolled ? true : window.scrollY > 50), open: false};
 		this.handleScroll = this.handleScroll.bind(this);
 		this.toggle = this.toggle.bind(this);
 	}
@@ -35,7 +38,7 @@ class MyLoopNavBar extends React.Component {
 	}
 
 	handleScroll () {
-		this.setState({scrolled: this.props.alwaysScrolled ? true : window.scrollY > 50});
+		this.setState({scrolled: this.props.neverScroll ? false : (this.props.alwaysScrolled ? true : window.scrollY > 50)});
 	}
 
 	toggle () {
@@ -69,19 +72,21 @@ class MyLoopNavBar extends React.Component {
 					<img src="/img/Icon_Hamburger.200w.png" className="navbar-toggler-icon"/>
 				</NavbarToggler>
 				<Collapse isOpen={this.state.open} navbar className="gl-bootstrap-navbar" id="navItemsDiv" style={{flexGrow:0}}>
-					<Nav navbar className="navbar-nav w-100 justify-content-between">
-						<NavItem>
-							<NavLink href="/#howitworks">How it works</NavLink>
-						</NavItem>
-						<NavItem>
-							<NavLink href="/#ads">Ad campaigns</NavLink>
-						</NavItem>
-						<NavItem>
-							<NavLink href="/#charities">Charities</NavLink>
-						</NavItem>
-						<NavItem>
-							<NavLink href="/#involve">Get involved</NavLink>
-						</NavItem>
+					<Nav navbar className={space("navbar-nav w-100", this.props.hidePages ? "justify-content-end" : "justify-content-between")}>
+						{!this.props.hidePages && <>
+							<NavItem>
+								<NavLink href="/#howitworks">How it works</NavLink>
+							</NavItem>
+							<NavItem>
+								<NavLink href="/#ads">Ad campaigns</NavLink>
+							</NavItem>
+							<NavItem>
+								<NavLink href="/#charities">Charities</NavLink>
+							</NavItem>
+							<NavItem>
+								<NavLink href="/#involve">Get involved</NavLink>
+							</NavItem>
+						</>}
 						<NavItem>
 							<AccountMenu />
 						</NavItem>

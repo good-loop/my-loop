@@ -1,6 +1,6 @@
 /* global navigator */
 import React, { Component } from 'react';
-import Login from 'you-again';
+import Login from '../base/youagain';
 import { assert, assMatch } from '../base/utils/assert';
 import { modifyHash } from '../base/utils/miscutils';
 
@@ -24,7 +24,7 @@ import GetInvolvedPage from './pages/GetInvolvedPage';
 import CampaignPage from './campaignpage/CampaignPage';
 import {BasicAccountPage} from '../base/components/AccountPageWidgets';
 import E404Page from '../base/components/E404Page';
-import TestPage from '../base/components/TestPage';
+// import TestPage from '../base/components/TestPage';
 import AccountPage from './pages/AccountPage';
 import Footer from './Footer';
 import { Register } from '../../puppeteer_tests/test-base/common-selectors';
@@ -32,6 +32,7 @@ import MyGLAboutPage from './MyGLAboutPage';
 import { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
 import TabsForGoodOnboard from './pages/TabsForGoodOnboard';
 import { getAllXIds } from '../base/data/Person';
+import NewtabCharityLogin from './pages/NewtabCharityLogin';
 // import RedesignPage from './pages/RedesignPage';
 
 // DataStore
@@ -43,14 +44,15 @@ const PAGES = {
 	// account: BasicAccountPage,
 	my: MyPage,
 	campaign: CampaignPage,
-	test: TestPage,
+	// test: TestPage,
 	account: AccountPage,
 	charities: MyCharitiesPage,
 	ads: MyAdCampaignsPage,
 	involve: GetInvolvedPage,
 	howitworks: MyPage,
 	about: MyGLAboutPage,
-	tabsForGood: TabsForGoodOnboard
+	tabsForGood: TabsForGoodOnboard,
+	register: NewtabCharityLogin
 };
 
 addFunderCredit("Scottish Enterprise");

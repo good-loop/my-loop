@@ -1,16 +1,22 @@
+
 const runtestConfig = {
-    appURL: "my.good-loop.com",
-	testHostname: "baker", // Name of test server
+	appURL: "my.good-loop.com",
+	// Name of test server
+	testHostname: "baker", 
 	// The possible values for `site` are defined in testConfig.js, targetServers
 	site: 'local',
-	unsafe: false,
-	vert: '',
+	unsafe: false, // ??
+	vert: '', // ??
 	// Used by jest-puppeteer.config.js to launch an actual browser for debugging
-	head: false,
+	head: false, 
     chrome: false,
     gitlogPath: "/build/gitlog.txt"
 };
 
+const sitePrefixes = {
+	prod:""
+};
+
 module.exports = {
-	config: {...runtestConfig} // return copy of object to preserve original config
+	config: {...runtestConfig, sitePrefixes:sitePrefixes} // return copy of object to preserve original config
 };

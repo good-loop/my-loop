@@ -1,48 +1,29 @@
 /* global navigator */
-import React, { Component, useState, useRef, useEffect } from 'react';
-import Login from 'you-again';
-import { modifyHash, randomPick, encURI, space, stopEvent, ellipsize } from '../base/utils/miscutils';
-import { Card, Form, Button, CardTitle, Row, Col, Badge, CardBody, CardFooter, DropdownItem, Alert } from 'reactstrap';
-
+import React from 'react';
+import BG from '../base/components/BG';
+import MainDivBase from '../base/components/MainDivBase';
+import { nonce } from '../base/data/DataClass';
 // Plumbing
 import DataStore from '../base/plumbing/DataStore';
-import Roles from '../base/Roles';
+import { lg } from '../base/plumbing/log';
+import { encURI, stopEvent } from '../base/utils/miscutils';
+import Login from '../base/youagain';
 import C from '../C';
-import Crud from '../base/plumbing/Crud'; // Crud is loaded here to init (but not used here)
-import Money from '../base/data/Money';
-import {lg} from '../base/plumbing/log';
-import TabsForGoodSettings, { getTabsOpened, Search, getSelectedCharityId } from './pages/TabsForGoodSettings';
-import {fetchCharity } from './pages/MyCharitiesPage';
-
-// Templates
-import MessageBar from '../base/components/MessageBar';
-import NavBar, { AccountMenu } from './MyLoopNavBar';
-import DynImg from '../base/components/DynImg';
-
-// Pages
-import E404Page from '../base/components/E404Page';
-import TestPage from '../base/components/TestPage';
-import AccountPage from './pages/AccountPage';
-import MainDivBase from '../base/components/MainDivBase';
-import BG from '../base/components/BG';
-import DevLink from './campaignpage/DevLink';
-import PropControl from '../base/components/PropControl';
-import BannerAd from './BannerAd';
-import Footer from './Footer';
-import ActionMan from '../base/plumbing/ActionManBase';
-import MDText from '../base/components/MDText';
-import Ticker from './Ticker';
-// import RedesignPage from './pages/RedesignPage';
-
-import NewTabOnboardingPage from './NewTabOnboarding';
-
+import WhiteCircle from './campaignpage/WhiteCircle';
 // Components
 import CharityLogo from './CharityLogo';
-import WhiteCircle from './campaignpage/WhiteCircle';
-import { nonce } from '../base/data/DataClass';
+import { AccountMenu } from './MyLoopNavBar';
 import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLoginWidget';
-import NewtabTutorialCard, { openTutorial, TutorialComponent } from './NewtabTutorialCard';
+// import RedesignPage from './pages/RedesignPage';
+import NewTabOnboardingPage from './NewTabOnboarding';
+import NewtabTutorialCard, { openTutorial, TutorialComponent, TutorialHighlighter } from './NewtabTutorialCard';
+import { fetchCharity } from './pages/MyCharitiesPage';
+import { getSelectedCharityId, getTabsOpened, Search } from './pages/TabsForGoodSettings';
 import TickerTotal from './TickerTotal';
+
+
+
+
 
 // DataStore
 C.setupDataStore();
@@ -75,13 +56,9 @@ let verifiedLoginOnceFlag;
  * 
  */
 const WebtopPage = () => {	
-
-	// Are we logged in??	
-	/*if (!Login.isLoggedIn()) {
-		window.location.href = "/newtab.html#onboarding";
-		return <div/>;
-	}*/
-	const onboarding = !inIframe();
+	// onboarding => send them to chrome to install the plugin
+	const onboarding = !inIframe() 
+		&& ! (window.location.hostname==='localmy.good-loop.com' && (""+window.location).includes("test")); // HACK to allow easy testing during development
 
 	// Yeh - a tab is opened -- let's log that (once only)	
 	if ( ! logOnceFlag && Login.isLoggedIn()) {
@@ -112,32 +89,29 @@ const WebtopPage = () => {
 
 	return (<>
 		<BG src={bgImg} fullscreen opacity={0.9} bottom={onboarding ? 0 : 110} style={{backgroundPosition: "center"}}>
-			<div className="position-fixed p-3" style={{top: 0, left: 0, width:"100vw", zIndex:1}}>
+			<TutorialHighlighter page={[4,5]} className="position-fixed p-3" style={{top: 0, left: 0, width:"100vw", zIndex:1}}>
 				<div className="d-flex justify-content-between">
-					<TutorialComponent page={6} className="logo pl-5 flex-row">
+					<TutorialComponent page={5} className="logo pl-5 flex-row" style={{width:400}}>
 						<a href="https://my.good-loop.com">
-							<img src="/img/logo-white.svg" style={{width: 50}} alt="logo"/>
+							<img src="/img/TabsForGood/TabsForGood_logo.png" style={{width: 250}} alt="logo"/>
 						</a>
-						<h4 className="pl-2">Tabs for<br/>good</h4>
 					</TutorialComponent>
-					<TutorialComponent page={5} className="user-controls flex-row">
-						{!onboarding && <>
-							{Login.isLoggedIn() ? <TabsOpenedCounter/> : null}
-							<AccountMenu small accountLink="/#account?tab=tabsForGood" customLogin={
-								<NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>
-							}/>
-						</>}
+					<TutorialComponent page={4} className="user-controls flex-row">
+						{Login.isLoggedIn() ? <TabsOpenedCounter/> : null}
+						<AccountMenu small accountLink="/#account?tab=tabsForGood" customLogin={
+							<NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>
+						}/>
 					</TutorialComponent>
 				</div>
-			</div>
+			</TutorialHighlighter>
 			<div className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{top: 0, left: 0, width:"100vw", height:"100vh"}}>
 				<div className="container h-100 flex-column justify-content-center unset-margins">
-					{!onboarding ? <NormalTabCenter charityID={charityID}/> : <OnboardingTabCenter/>}
+					<NormalTabCenter charityID={charityID}/>
 				</div>
 			</div>
 			{/* Tutorial highlight to cover adverts */}
 		</BG>
-		<TutorialComponent page={4} className="position-absolute" style={{bottom:0, left:0, right:0, height:110, width:"100vw"}}/>
+		<TutorialComponent page={3} className="position-absolute" style={{bottom:0, left:0, right:0, height:110, width:"100vw"}}/>
 		<NewtabTutorialCard tutorialPages={tutorialPages}/>
 		<NewtabLoginWidget onRegister={() => {if (!onboarding) openTutorial();}}/>
 	</>); 
@@ -154,7 +128,7 @@ const NormalTabCenter = ({charityID}) => {
 		<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
 			<h3 className="text-center">
 				Together we've raised&nbsp;
-				<TutorialComponent page={3} className="d-inline-block">
+				<TutorialComponent page={2} className="d-inline-block">
 					<TickerTotal />
 				</TutorialComponent>
 			</h3>
@@ -163,9 +137,7 @@ const NormalTabCenter = ({charityID}) => {
 		<div className="w-100 pb-3">
 			<div className="tab-search-container mx-auto">
 				<Search onSubmit={doSearch} placeholder="Search with Ecosia" icon={
-					<TutorialComponent page={1}>
-						<img src="/img/TabsForGood/ecosia.png" alt="search icon"/>
-					</TutorialComponent>
+					<img src="/img/TabsForGood/ecosia.png" alt="search icon"/>
 				}/>
 			</div>
 		</div>
@@ -199,16 +171,12 @@ const NewTabMainDiv = () => {
 };
 
 const NewTabCharityCard = ({cid}) => {
-	console.log("CHARITY TO SELECT", cid);
-	//let user = Login.getUser();
-	//let profile = user && user.xid? getProfile({xid:user.xid}) : null;
-	//console.warn("profile", profile);
 
 	const charity = cid ? fetchCharity(cid) : null;	
 
 	return (<div className="d-flex justify-content-center" >
-		<a href="/#account?tab=tabsForGood" rel="noreferrer" target="_blank">
-			<TutorialComponent page={2}>
+		<a href={"/#account?tab=tabsForGood&task=select-charity&link="+encURI(window.location)}>
+			<TutorialComponent page={1}>
 				<WhiteCircle className="m-3 tab-charity" circleCrop={charity ? charity.circleCrop : null}>
 					{charity ?
 						<CharityLogo charity={charity}/>
@@ -243,33 +211,27 @@ const tutorialPages = [
 		</p>
 	</>,
 	<>
-		<h2>Doing extra good</h2>
-		<p>
-			We use Ecosia as our default search engine, so you can raise money for multiple good causes.
-		</p>
-	</>,
-	<>
 		<h2>It's your choice</h2>
 		<p>
-			You choose the charity you want to support. We will send them all the money you raise through Tabs for Good. You can change your mind at any time in your account settings.
+		Choose the charity you want to support. We will send them 50% of the money that brands pay for their ads on Tabs for Good.
 		</p>
 	</>,
 	<>
 		<h2>Check our progress</h2>
 		<p>
-			See how much money we've raised so far! :)
+			See how much money we've raised so far! &#128578;
 		</p>
 	</>,
 	<>
 		<h2>Where the money comes from</h2>
 		<p>
-			50% of the ad revenue received is going to the charity you choose.
+			We generate money by displaying ads at the bottom of each Tabs for Good window. You don't need to click on them for it to work.
 		</p>
 	</>,
 	<>
 		<h2>Your account</h2>
 		<p>
-			Access your account here to change your settings, including your choice of charity.
+			Access settings including your <b>choice of charity</b>, <b>details</b> and <b>ad targeting preferences</b>.
 		</p>
 	</>,
 	<>

@@ -1,140 +1,105 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { Col, Form, Row } from 'reactstrap';
-import Login from 'you-again';
+import ListLoad from '../../base/components/ListLoad';
 import PropControl from '../../base/components/PropControl';
+import { getId } from '../../base/data/DataClass';
 import JSend from '../../base/data/JSend';
 import { getAllXIds, getClaimValue, getProfilesNow, savePersons, setClaimValue } from '../../base/data/Person';
+import { getDataItem } from '../../base/plumbing/Crud';
 import DataStore from '../../base/plumbing/DataStore';
-import { isPortraitMobile, space, yessy } from '../../base/utils/miscutils';
+import { assert } from '../../base/utils/assert';
+import { space } from '../../base/utils/miscutils';
+import Login from '../../base/youagain';
 import ServerIO from '../../plumbing/ServerIO';
-import CharityLogo from '../CharityLogo';
-import Paginator from '../Paginator';
-import { fetchAllCharities, fetchAllCharityIDs, fetchCharity } from './MyCharitiesPage';
 
 
 const TabsForGoodSettings = () => {
-	return <>
-		<h1>Your stats</h1>
-		<TabStats/>
+	const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
+	return <>		
+		{ ! task && <TabStats/>}
+		<div className="py-3"/>
+		<h2>Choose a different search engine</h2>
+		<SearchEnginePicker/>
 		<div className="py-3"/>
 		<h1>Pick your charity</h1>
-		<p className={isPortraitMobile() ? "" : "w-50"}>Select a charity and we will send them all the money that your Tabs for Good are generating. You can change your selection at any time.</p>
-		<br/><br/>
+		<br/>
 		<CharityPicker/>
-		{/* whitespace to prevent jump on charity search */}
-		<div style={{height:"50vh"}}/>
 	</>;
 };
 
-const CharityPicker = () => {
-	// Why is this useState??
-	const [charities, setCharities] = useState([]);
-
-	// TODO allow picking a charity without a logo	
-	let charityLogos = [];
-
-	// TODO less charities -- just show a shortlist of dunno, the top 10 UK charities?
-	// Because paging through is not fun.
-	// TODO search should search SoGive, to give a wide range of options
-	// Parse CSV from donations tracker into json
-	if (!yessy(charities)) {
-		fetchAllCharityIDs().then(chars => setCharities(chars)).catch(status => console.error("Failed to get donation tracker CSV! Status: " + status));
-	} else {
-		let chars = fetchAllCharities(charities);
-		// Get logo charities
-		charityLogos = chars.filter(c => c.logo);
-		let search = DataStore.getValue(['widget', 'search', 'q']);
-		if (search) {
-			// Compare for any letter casing and ignoring spaces
-			search = search.toLowerCase().replace(" ", "");
-			charityLogos = charityLogos.filter(c => c.name ? c.name.toLowerCase().replace(" ", "").includes(search) : false);
-		}
+const SearchEnginePicker = () => {
+	const selEngine = getSearchEngine();
+	DataStore.setValue(['widget', 'TabsForGoodSettings', 'searchEnginePicker'], selEngine);
+	
+	const onSelect = () => {
+		const newEngine = DataStore.getValue(['widget', 'TabsForGoodSettings', 'searchEnginePicker']);
+		console.log(newEngine);
+		setSearchEngine(newEngine);
 	}
 
-	const selId = getSelectedCharityId();
-	const selectedCharity = selId ? fetchCharity(selId) : null;
+	return <PropControl type="select" prop="searchEnginePicker" options={["google", "ecosia", "duckduckgo", "bing"]}
+		labels={["Google", "Ecosia", "DuckDuckGo", "Bing"]} dflt={"google"} onChange={onSelect}
+		path={['widget', 'TabsForGoodSettings']}/>;
+}
 
-	return <div className="tabs-for-good-settings">
-		{selectedCharity && 
-			<><p>Your selected charity:</p>
-				<div className="col-md-3">
-					<CharitySelectBox charity={selectedCharity} selected />
+const CharityPicker = () => {
+	const selId = getSelectedCharityId();
+	const pvSelectedCharity = selId && getDataItem({type:C.TYPES.NGO, id:selId, status:C.KStatus.Published, swallow:true});
+	let q = DataStore.getValue('widget','search','q');
+	
+	// HACK: default list - poke it into appstate
+	const dq = "LISTLOADHACK"; // NB: an OR over "id:X" doesn't work as SoGive is annoyingly using the schema.org "@id" property
+	const DEFAULT_LIST = "against-malaria-foundation oxfam helen-keller-international clean-air-task-force strong-minds give-directly pratham wwf-uk";
+	const type = "NGO"; const status="PUBLISHED";
+	// fetch the full item - and make a Ref
+	let hits = DEFAULT_LIST.split(" ").map(cid => getDataItem({type, id:cid, status}) && {id:cid, "@type":type, status});
+	DataStore.setValue("list.NGO.PUBLISHED.nodomain.LISTLOADHACK.whenever.impact".split("."), {hits, total:hits.length}, false);
+
+	return <div>
+		{selId && 
+			<><p className='large'>Your selected charity:</p>
+				<div className="gridbox gridbox-md-3">
+					<CharitySelectBox item={pvSelectedCharity.value || {id:selId}} />
 				</div>
-			</>}
-		<div className="py-5"/> {/* spacer */}
+				<br/>
+			</>}		
 		<div className="d-md-flex flex-md-row justify-content-between unset-margins mb-3">
-			<p>Can't see your favourite charity?&nbsp;<br className="d-md-none"/>Search for it:</p>
+			<p className='large'>Can't see your favourite charity?&nbsp;<br className="d-md-none"/>Search for it:</p>
 			<Search onSubmit={e => e.preventDefault()} placeholder="Find your charity" className="flex-grow ml-md-5"/>
 		</div>
-		<Paginator rows={4} cols={5} rowsMD={2} colsMD={5} pageButtonRangeMD={1} displayCounter displayLoad textWhenNoResults="Sorry, we couldn't find any charities matching your search.">
-			{charityLogos.map(c => <div key={c.id} className="p-md-3 d-flex justify-content-center align-items-center">
-				<CharitySelectBox charity={c} padAmount3D={25} className="pt-3 pt-md-0"/>
-			</div>)}
-		</Paginator>
+		<ListLoad className={"gridbox gridbox-md-3"} type="NGO" status="PUBLISHED" q={q || dq} sort="impact" ListItem={CharitySelectBox} unwrapped hideTotal />
 	</div>;
 };
 
-// TODO charity selection backend!!
+// ListItem {type, servlet, navpage, item, sort} <div key={c.id} className="p-md-3 d-flex justify-content-center align-items-center">
+				// <CharitySelectBox charity={c} padAmount3D={25} className="pt-3 pt-md-0"/>
+				// </div>
+
 /**
  * Show a selectable charity in the charity list
  * @param charity the charity to show
  * @param {boolean} selected 
- * @param do3d activate the 3d mouse follow effect ??doc: why not always on?
- * @param padAmount3D override width of div that captures the mouse for tracking on 3d effects. ??0Why would this vary?
  */
-const CharitySelectBox = ({charity, selected, padAmount3D=150, className}) => {
-	let do3d = ! isPortraitMobile();		
-	// ref & state are used for the 3D card effect
-	const container3d = useRef(null);
-	const [axis, setAxis] = useState({x: 0, y: 0});
-	const [transition, setTransition] = useState('none');
-	const [elementHeight, setElementHeight] = useState(0);
-
-	const on3dMouseMove = e => {
-		if (container3d.current) {
-			// Higher = less extreme
-			let sensitivity = 10;
-			let rect = container3d.current.getBoundingClientRect();
-			// Maths for this found partially by trial and error - "it just works", Todd Howard
-			setAxis({x: ((rect.width / 2) - e.pageX + rect.left) / sensitivity,
-				y: ((rect.height * 2) - e.pageY + rect.bottom + ((rect.top - rect.bottom) / 2) + window.scrollY - (window.screen.height / 2)) / sensitivity});
-		}
-	};
-
-	const on3dMouseEnter = () => {
-		setTransition('none');
-		setElementHeight(50);
-	};
-
-	const on3dMouseLeave = () => {
-		setTransition('all 0.5s ease');
-		setAxis({x:0, y:0});
-		setElementHeight(0);
-	};	
-
-	let style = do3d ? {transform:`rotateY(${-axis.x}deg) rotateX(${axis.y}deg)`, transition:transition} : {};
-	style.height = 280;
-
+const CharitySelectBox = ({item, className}) => {
+	assert(item, "CharitySelectBox - no item");
+	const selId = getSelectedCharityId();
+	let selected = getId(item) === selId;	
 	// NB: to deselect, pick a different charity (I think that's intuitive enough)
 
-	return <div className={space(do3d && "container-3d", className)} ref={container3d}
-		style={do3d ? {paddingLeft:padAmount3D, paddingRight:padAmount3D, marginLeft:-padAmount3D, marginRight:-padAmount3D} : null}
-		onMouseMove={do3d ? on3dMouseMove : null}
-		onMouseEnter={do3d ? on3dMouseEnter : null}
-		onMouseLeave={do3d ? on3dMouseLeave : null}
-	>
-		<div style={style} 
-			className={space("charity-select-box flex-column justify-content-center align-items-center unset-margins p-md-3 position-relative w-100", do3d ? "do3d" : "")}
+	return <div className={space("m-md-2", className)}>
+		<div
+			className={space("charity-select-box flex-column justify-content-between align-items-center unset-margins p-md-3 w-100 position-relative")}			
 		>
-			{charity ? <>
-				<CharityLogo style={{maxWidth:"100%", width: "100%", transform: `translateZ(${elementHeight}px)`}} charity={charity} key={charity.id} className="p-2 mb-5 mt-5 w-75"/>
-				{selected ? <span className="text-success thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} >&#10004; Selected</span>
-					: <a className="btn btn-transparent fill thin position-absolute" style={{bottom:20, left:"50%", transform:"translateX(-50%)"}} onClick={() => {console.log("DSAHKDSAKJJ"); setSelectedCharityId(charity.id)}}>Select</a>}
-				<a className="position-absolute" style={{top: 10, right: 10}} href={charity.url} target="_blank" rel="noreferrer">About</a>
-			</> : <p style={{transform: `translateZ(${elementHeight}px)`}} className="color-gl-light-red">Select a charity</p>}
+			{item.logo? <img className="logo-xl mt-4 mb-2" src={item.logo} /> : <span>{item.name || item.id}</span>}
+			<p>{item.summaryDescription}</p>
+			{selected ? <span className="text-success thin">&#10004; Selected</span>
+				: <button onClick={() => setSelectedCharityId(getId(item))} className="btn btn-outline-primary thin">Select</button>
+			}
+			{item.url && <a className="position-absolute" style={{top: 10, right: 10}} href={item.url} target="_blank" rel="noreferrer">About</a>}
 		</div>
 	</div>;
-};
+}; // ./CharitySelectBox
+
 
 const TabStats = () => {
 	let pvTabsOpened = getTabsOpened();
@@ -146,15 +111,16 @@ const TabStats = () => {
 	};
 
 	return (
+		<><h1>Your stats</h1>
 		<Row>
-			<StatCard md={4} number={goodStat(daysWithGoodLoop) ? daysWithGoodLoop : "-"} label="Days with Tabs for Good"/>
+			<StatCard md={4} number={goodStat(daysWithGoodLoop) ? daysWithGoodLoop : "-"} label="Days with My-Loop"/>
 			<StatCard md={4} number={goodStat(pvTabsOpened) && (pvTabsOpened && pvTabsOpened.value) ? pvTabsOpened.value : "-"} label="Tabs opened"/>
 			<StatCard md={4} number={goodStat(weeklyAvg) ? weeklyAvg : "-"} label="Weekly tab average"/>
-		</Row>
+		</Row></>
 	);
 };
 
-/** Search box - a magnifying-glass icon by a text input ??Should this move down to PropControl type=search
+/** Search box - a magnifying-glass icon by a text input ??This is a nice search box - Should this move to PropControl type=search??
  */
 const Search = ({onSubmit, placeholder, icon, className}) => {
 	return (<>
@@ -221,20 +187,56 @@ const setSelectedCharityId = (cid) => {
 	let xids = getAllXIds();
 	let persons = getProfilesNow(xids);
 	setClaimValue({persons, key:"charity", value:cid});
-	savePersons({persons});
 	console.log("setSelectedCharityId " + cid);
 	DataStore.update();
+	// save
+	let pv = savePersons({persons});	
+	// return??
+	const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
+	const link = DataStore.getUrlValue("link"); 
+	if (task==="select-charity" && link) {
+		pv.promise.then(re => {
+			console.log("... saved setSelectedCharityId " + cid);
+			window.location = link;
+		});
+	}
+};
+
+const getSearchEngine = () => {
+	let xids = getAllXIds();
+	let persons = getProfilesNow(xids);
+	let engine = getClaimValue({persons, key:"searchEngine"});
+	return engine;
+};
+
+const setSearchEngine = (engine) => {
+	let xids = getAllXIds();
+	let persons = getProfilesNow(xids);
+	setClaimValue({persons, key:"searchEngine", value:engine});
+	console.log("setSelectedCharityId " + engine);
+	DataStore.update();
+	// save
+	let pv = savePersons({persons});
+	// return??
+	const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
+	const link = DataStore.getUrlValue("link"); 
+	if (task==="select-search-engine" && link) {
+		pv.promise.then(re => {
+			console.log("... saved setSearchEngine " + engine);
+			window.location = link;
+		});
+	}
 };
 
 const StatCard = ({md, lg, xs, number, label, className, padding, children}) => {
 	return <Col md={md} lg={lg} xs={xs} className={space("stat-card", className)} style={{padding:(padding || "20px")}}>
 		<div className="stat-content w-100 h-100 p-4 bg-gl-pink color-gl-red text-center">
 			<h1>{number}</h1>
-			<p style={{marginBottom: 0}}>{label}</p>
+			<p className="large" style={{marginBottom: 0}}>{label}</p>
 			{children}
 		</div>
 	</Col>;
 };
 
-export { getTabsOpened, Search, getSelectedCharityId };
+export { getTabsOpened, Search, getSelectedCharityId, setSelectedCharityId, getSearchEngine };
 export default TabsForGoodSettings;
