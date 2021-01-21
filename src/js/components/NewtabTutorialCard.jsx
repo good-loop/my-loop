@@ -19,6 +19,7 @@ const NewtabTutorialCard = ({tutorialPages}) => {
 	const setPage = (num) => {
 		if (num > tutorialPages.length - 1) {
 			DataStore.setValue(tutorialOpenPath, false);
+			DataStore.setValue(tutorialPagePath, 0);
 		} else {
 			DataStore.setValue(tutorialPagePath, num);
 		}
@@ -37,9 +38,12 @@ const NewtabTutorialCard = ({tutorialPages}) => {
 	}
 	const beforeLastPage = page < tutorialPages.length - 1;
 
+	let desiredSize = {width: 370, height: 350}
+	// NOTE: The following code gets the tutorial box to automatically size and position itself to any given component.
+	// It's no longer used, but I have left it here in case the same functionality is needed later
+	/*
 	let targetRect = DataStore.getValue(tutorialRectPath);
 	let rect = {};
-	let desiredSize = {width: 350, height: 370}
 	if (window.innerWidth <= 1280) {
 		desiredSize.width = 300;
 	}
@@ -107,7 +111,8 @@ const NewtabTutorialCard = ({tutorialPages}) => {
 			rect.right = window.innerWidth;
 			rect.left = window.innerWidth - desiredSize.width;
 		}
-	}
+	}*/
+	// END SIZE/POSITION CODE
 	
 	return <>
 		<div className="position-absolute" style={{width: "100vw", height: "100vh", top: 0, left: 0, zIndex: 999, background:"rgba(0,0,0,0.25)"}} />
@@ -126,19 +131,22 @@ const NewtabTutorialCard = ({tutorialPages}) => {
 				height:desiredSize.height
 			}}
 		>
-			<div className="tutorial-content mt-2">
-				{tutorialPages[page]}
-			</div>
-			<div className="flex-row justify-content-center align-items-center unset-margins">
-				<button type="button" className="btn btn-primary" onClick={() => setPage(page + 1)}>{beforeLastPage ? "NEXT" : "GOT IT"}</button>
+			<div className="flex-column unset-margins justify-content-center align-items-center">
+				<div className="tutorial-content mt-2">
+					{tutorialPages[page]}
+				</div>
+				<div className="flex-row justify-content-center align-items-center unset-margins">
+					<button type="button" className="btn btn-primary" onClick={() => setPage(page + 1)}>{beforeLastPage ? "NEXT" : "GOT IT"}</button>
+				</div>
 			</div>
 			<div className="flex-row justify-content-center align-items-center unset-margins mt-3">
 				{tutorialPages.map((t, i) => <PageCircle pageNum={i} key={i} selectedPageNum={page} onClick={() => setPage(i)}/>)}
 			</div>
-			<a className="position-absolute color-gl-light-red" style={{top:10, right:20}} onClick={e => {
+			<a className="position-absolute" style={{top:10, right:20}} onClick={e => {
 				e.preventDefault();
 				DataStore.setValue(tutorialOpenPath, false);
-			}}>SKIP</a>
+				DataStore.setValue(tutorialPagePath, 0);
+			}}><h5 className="color-gl-light-red" style={{fontSize:"1rem"}}>SKIP</h5></a>
 		</div>
 	</>;
 };
@@ -184,7 +192,7 @@ const TutorialComponent = ({page, customSelectStyle, style, children, className}
 		}
 	});
 
-	const selectStyle = customSelectStyle || {zIndex:1000, borderRadius:"50px", border: "3px red solid"};
+	const selectStyle = customSelectStyle;// || {zIndex:1000, borderRadius:"25px", border: "3px red solid"};
 	let combinedStyle = style || {};
 	if (highlight && open) Object.assign(combinedStyle, selectStyle);
 	return <div className={space("tutorial-component position-relative", className, highlight ? "highlight" : "")} style={combinedStyle} ref={selfRef}>

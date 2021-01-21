@@ -93,10 +93,10 @@ const WebtopPage = () => {
 				<div className="d-flex justify-content-between">
 					<TutorialComponent page={5} className="logo pl-5 flex-row" style={{width:400}}>
 						<a href="https://my.good-loop.com">
-							<img src="/img/TabsForGood/TabsForGood_logo.png" style={{width: 250}} alt="logo"/>
+							<img src="/img/TabsForGood/TabsForGood_logo.png" style={{width: 200}} alt="logo"/>
 						</a>
 					</TutorialComponent>
-					<TutorialComponent page={4} className="user-controls flex-row">
+					<TutorialComponent page={4} className="user-controls flex-row align-items-center">
 						{Login.isLoggedIn() ? <TabsOpenedCounter/> : null}
 						<AccountMenu small accountLink="/#account?tab=tabsForGood" customLogin={
 							<NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>

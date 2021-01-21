@@ -48,12 +48,18 @@
 
 .tutorial-highlight {
     // Border + shadow = glow
-    border: 3px solid @gl-light-red;
+    border: 6px solid @gl-light-red;
     box-shadow: 0 0 10px @gl-light-red;
 }
 
-.tutorial-component.highlight * {
+.tutorial-component.highlight {
+    border: 6px solid @gl-light-red;
+    box-shadow: 0 0 10px @gl-light-red;
     z-index: 1000;
+    padding: 10px;
+    & * {
+        z-index: 1000;
+    }
 }
 
 .onboarding {
@@ -167,7 +173,8 @@
         }
     }
     .btn {
-        padding: 5px 20px;
+        padding: 10px 30px;
+        background-color: @gl-light-red;
     }
 }
 
