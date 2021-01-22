@@ -132,13 +132,13 @@ const engines = {
 	ecosia: {
 		title:"Ecosia",
 		logo: "/img/TabsForGood/ecosia.png",
-		size: {width: 40, height: 40},
+		size: {width: 30, height: 30},
 		url: "https://ecosia.com/search?q="
 	},
 	duckduckgo: {
 		title:"DuckDuckGo",
 		logo: "/img/TabsForGood/duckduckgo.png",
-		size: {width: 40, height: 40},
+		size: {width: 30, height: 30},
 		url: "https://duckduckgo.com?q="
 	},
 	bing: {
