@@ -7,9 +7,6 @@ import React, { useState } from 'react';
 import {
 	Alert,
 	Carousel,
-
-
-
 	CarouselCaption, CarouselControl,
 	CarouselIndicators, CarouselItem, Col, Container, Row
 } from 'reactstrap';
@@ -133,7 +130,7 @@ const CampaignPage = () => {
 	const isLanding = (landing !== undefined) && (landing !== 'false');
 
 	// Which advert(s)?
-	const sq = adsQuery({ q, adid, vertiserid, campaignId, via });
+	let sq = adsQuery({ q, adid, vertiserid, campaignId, via });
 	let pvAds = fetchAds({ searchQuery: sq, status });
 	if (!pvAds) {
 		// No query -- show a list
@@ -202,7 +199,7 @@ const CampaignPage = () => {
 	campaigns.sort(sortByDate(ad => ad.end || ad.start));
 
 	// Get ad viewing data
-	let sq = new SearchQuery("evt:minview");
+	sq = new SearchQuery("evt:minview");
 	if (campaignId) {
 		sq = SearchQuery.setProp(sq, "campaign", campaignId);
 	} else {
