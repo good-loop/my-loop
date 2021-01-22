@@ -25,6 +25,7 @@ import Advert from '../../base/data/Advert';
 import Campaign from '../../base/data/Campaign';
 import Money from '../../base/data/Money';
 import { getDataItem } from '../../base/plumbing/Crud';
+import { getDataLogData, pivotDataLogData } from '../../base/plumbing/DataLog';
 import DataStore from '../../base/plumbing/DataStore';
 import Roles from '../../base/Roles';
 import SearchQuery from '../../base/searchquery';
@@ -201,22 +202,17 @@ const CampaignPage = () => {
 	campaigns.sort(sortByDate(ad => ad.end || ad.start));
 
 	// Get ad viewing data
-	let pvViewData = DataStore.fetch(['misc', 'views', isAll() ? 'all' : sq.query], () => {
-		// filter to these ads
+	let sq = new SearchQuery("evt:minview");
+	if (campaignId) {
+		sq = SearchQuery.setProp(sq, "campaign", campaignId);
+	} else {
 		let qads = ads.map(({ id }) => `vert:${id}`).join(' OR ');
-		let filters = {
-			dataspace: 'gl',
-			q: `evt:minview AND (${qads})` // minview vs spend ??
-		};
-		// start = early for all data
-		return ServerIO.getDataLogData({ filters, breakdowns: ['campaign', 'pub'], start: '2017-01-01', name: 'view-data' });
-		// return ServerIO.getDonationsData({cid:'ashoka', start: '2017-01-01T00:00:00Z', end: '2019-10-15T23:59:59Z'})
-	});
-
+		sq = SearchQuery.and(sq, qads);
+	}
+	let pvViewData = getDataLogData({q:sq.query, breakdowns:['campaign'], start:'2017-01-01', end:'now', name:"view-data",dataspace:'gl'});
 	let viewcount4campaign = {};
 	if (pvViewData.value) {
-		window.pivot = pivot; // for debug
-		viewcount4campaign = pivot(pvViewData.value, "by_campaign.buckets.$bi.{key, doc_count}", "$key.$doc_count");
+		viewcount4campaign = pivotDataLogData(pvViewData.value, ["campaign"]);
 	}
 
 	const donation4charity = yessy(campaignPage.dntn4charity)? campaignPage.dntn4charity : fetchDonationData({ ads });
