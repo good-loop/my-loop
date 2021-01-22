@@ -18,7 +18,7 @@ import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLog
 import NewTabOnboardingPage from './NewTabOnboarding';
 import NewtabTutorialCard, { openTutorial, TutorialComponent, TutorialHighlighter } from './NewtabTutorialCard';
 import { fetchCharity } from './pages/MyCharitiesPage';
-import { getSelectedCharityId, getTabsOpened, Search } from './pages/TabsForGoodSettings';
+import { getSelectedCharityId, getTabsOpened, Search, getSearchEngine } from './pages/TabsForGoodSettings';
 import TickerTotal from './TickerTotal';
 
 
@@ -124,6 +124,9 @@ const TabsOpenedCounter = () => {
 
 
 const NormalTabCenter = ({charityID}) => {
+
+	console.log("Search engine: " + getSearchEngine());
+
 	return <>
 		<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
 			<h3 className="text-center">

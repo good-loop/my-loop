@@ -31,6 +31,8 @@ const SearchEnginePicker = () => {
 	const selEngine = getSearchEngine();
 	DataStore.setValue(['widget', 'TabsForGoodSettings', 'searchEnginePicker'], selEngine);
 	
+	console.log("Selected search engine: " + selEngine);
+
 	const onSelect = () => {
 		const newEngine = DataStore.getValue(['widget', 'TabsForGoodSettings', 'searchEnginePicker']);
 		console.log(newEngine);
