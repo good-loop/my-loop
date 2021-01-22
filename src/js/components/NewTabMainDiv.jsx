@@ -122,10 +122,32 @@ const TabsOpenedCounter = () => {
 	return <span className="pr-3 text-white font-weight-bold">{(pvTabsOpened && pvTabsOpened.value) || '0'} tabs opened</span>;
 };
 
+const engines = {
+	google: {
+		title:"Google",
+		logo: "/img/TabsForGood/google.png",
+		url: "https://google.com/search?q="
+	},
+	ecosia: {
+		title:"Ecosia",
+		logo: "/img/TabsForGood/ecosia.png",
+		url: "https://ecosia.com/search?q="
+	},
+	duckduckgo: {
+		title:"DuckDuckGo",
+		logo: "/img/TabsForGood/duckduckgo.png",
+		url: "https://duckduckgo.com?q="
+	},
+	bing: {
+		title:"Bing",
+		logo: "/img/TabsForGood/bing.png",
+		url: "https://bing.com/search?q="
+	}
+}
 
 const NormalTabCenter = ({charityID}) => {
 
-	console.log("Search engine: " + getSearchEngine());
+	const searchEngine = getSearchEngine() || 'google';
 
 	return <>
 		<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
@@ -139,8 +161,8 @@ const NormalTabCenter = ({charityID}) => {
 		</div>
 		<div className="w-100 pb-3">
 			<div className="tab-search-container mx-auto">
-				<Search onSubmit={doSearch} placeholder="Search with Ecosia" icon={
-					<img src="/img/TabsForGood/ecosia.png" alt="search icon"/>
+				<Search onSubmit={e => doSearch(e, searchEngine)} placeholder={"Search with " + engines[searchEngine].title} icon={
+					<a href="/#account?tab=tabsForGood"><img src={engines[searchEngine].logo} alt="search icon" style={{width:40, height:40}}/></a>
 				}/>
 			</div>
 		</div>
@@ -193,7 +215,7 @@ const NewTabCharityCard = ({cid}) => {
 /**
  * redirect to Ecosia
  */
-const doSearch = e => {
+const doSearch = (e, engine) => {
 	stopEvent(e);
 	// NB: use window.parent to break out of the newtab iframe, otherwise ecosia objects
 	const search = DataStore.getValue('widget', 'search', 'q');
@@ -202,7 +224,7 @@ const doSearch = e => {
 	if (search == null || search === '') {
 		return;
 	}
-	(window.parent || window.parent).location = 'https://www.ecosia.org/search?q=' + encURI(search);
+	(window.parent || window.parent).location = engines[engine].url + encURI(search);
 };
 
 const tutorialPages = [

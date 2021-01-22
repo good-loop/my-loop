@@ -11,6 +11,7 @@ import { assert } from '../../base/utils/assert';
 import { space } from '../../base/utils/miscutils';
 import Login from '../../base/youagain';
 import ServerIO from '../../plumbing/ServerIO';
+import Cookies from 'js-cookie';
 
 
 const TabsForGoodSettings = () => {
@@ -29,7 +30,7 @@ const TabsForGoodSettings = () => {
 
 const SearchEnginePicker = () => {
 	const selEngine = getSearchEngine();
-	DataStore.setValue(['widget', 'TabsForGoodSettings', 'searchEnginePicker'], selEngine);
+	DataStore.setValue(['widget', 'TabsForGoodSettings', 'searchEnginePicker'], selEngine || 'google');
 	
 	console.log("Selected search engine: " + selEngine);
 
@@ -192,7 +193,7 @@ const setSelectedCharityId = (cid) => {
 	console.log("setSelectedCharityId " + cid);
 	DataStore.update();
 	// save
-	let pv = savePersons({persons});	
+	let pv = savePersons({persons});
 	// return??
 	const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
 	const link = DataStore.getUrlValue("link"); 
@@ -208,6 +209,10 @@ const getSearchEngine = () => {
 	let xids = getAllXIds();
 	let persons = getProfilesNow(xids);
 	let engine = getClaimValue({persons, key:"searchEngine"});
+	console.log("Search Engine COOKIE:", Cookies.get('t4g-search-engine'));
+	if (!engine) {
+		engine = Cookies.get('t4g-search-engine');
+	}
 	return engine;
 };
 
@@ -219,6 +224,12 @@ const setSearchEngine = (engine) => {
 	DataStore.update();
 	// save
 	let pv = savePersons({persons});
+
+	// Set a cookie with the new search engine, so there isnt a delay on loading the correct search engine on new tabs
+	const secure = window.location.protocol==='https:';
+	// ref: https://web.dev/samesite-cookies-explained/
+	Cookies.set('t4g-search-engine', engine, {expires:365, sameSite:'None', secure: true});
+
 	// return??
 	const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
 	const link = DataStore.getUrlValue("link"); 
