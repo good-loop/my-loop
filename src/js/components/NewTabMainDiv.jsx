@@ -126,21 +126,25 @@ const engines = {
 	google: {
 		title:"Google",
 		logo: "/img/TabsForGood/google.png",
+		size: {width: 30, height: 30},
 		url: "https://google.com/search?q="
 	},
 	ecosia: {
 		title:"Ecosia",
 		logo: "/img/TabsForGood/ecosia.png",
+		size: {width: 40, height: 40},
 		url: "https://ecosia.com/search?q="
 	},
 	duckduckgo: {
 		title:"DuckDuckGo",
 		logo: "/img/TabsForGood/duckduckgo.png",
+		size: {width: 40, height: 40},
 		url: "https://duckduckgo.com?q="
 	},
 	bing: {
 		title:"Bing",
 		logo: "/img/TabsForGood/bing.png",
+		size: {width: 30, height: 30},
 		url: "https://bing.com/search?q="
 	}
 }
@@ -148,6 +152,7 @@ const engines = {
 const NormalTabCenter = ({charityID}) => {
 
 	const searchEngine = getSearchEngine() || 'google';
+	engineData = engines[searchEngine];
 
 	return <>
 		<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
@@ -161,8 +166,8 @@ const NormalTabCenter = ({charityID}) => {
 		</div>
 		<div className="w-100 pb-3">
 			<div className="tab-search-container mx-auto">
-				<Search onSubmit={e => doSearch(e, searchEngine)} placeholder={"Search with " + engines[searchEngine].title} icon={
-					<a href="/#account?tab=tabsForGood"><img src={engines[searchEngine].logo} alt="search icon" style={{width:40, height:40}}/></a>
+				<Search onSubmit={e => doSearch(e, searchEngine)} placeholder={"Search with " + engineData.title} icon={
+					<a href="/#account?tab=tabsForGood"><img src={engineData.logo} alt="search icon" style={{width:engineData.size.width, height:engineData.size.height}}/></a>
 				}/>
 			</div>
 		</div>
