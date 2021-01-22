@@ -152,7 +152,7 @@ const engines = {
 const NormalTabCenter = ({charityID}) => {
 
 	const searchEngine = getSearchEngine() || 'google';
-	engineData = engines[searchEngine];
+	const engineData = engines[searchEngine];
 
 	return <>
 		<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
