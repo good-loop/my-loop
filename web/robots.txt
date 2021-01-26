@@ -1,0 +1,8 @@
+# AdsBot must be specifically permitted - wildcard is not enough
+User-agent: AdsBot-Google
+Allow: /
+User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: *
+Allow: /
