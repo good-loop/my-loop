@@ -33,6 +33,7 @@ import { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
 import TabsForGoodOnboard from './pages/TabsForGoodOnboard';
 import { getAllXIds } from '../base/data/Person';
 import NewtabCharityLogin from './pages/NewtabCharityLogin';
+import ServerIO from '../plumbing/ServerIO';
 // import RedesignPage from './pages/RedesignPage';
 
 // DataStore
@@ -138,6 +139,8 @@ class MainDiv extends Component {
 	}
 
 	render() {
+		ServerIO.toggleServer();
+
 		let path = DataStore.getValue('location', 'path');	
 		let page = (path && path[0]);
 		if ( ! page) {
