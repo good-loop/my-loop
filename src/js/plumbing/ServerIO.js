@@ -42,17 +42,18 @@ ServerIO.AS_ENDPOINT = 'https://as.good-loop.com';
 ServerIO.MEDIA_ENDPOINT = `https://testuploads.good-loop.com/`;
 
 // HACK allow using test/production ads if requested
-if (getUrlVars().testas) {
+const server = DataStore.getUrlValue("server");
+if (server==="test") {
 	ServerIO.AS_ENDPOINT = 'https://testas.good-loop.com';
 	ServerIO.PORTAL_ENDPOINT = 'https://testportal.good-loop.com';
 	ServerIO.DATALOG_ENDPOINT = 'https://testlg.good-loop.com/data';
 }
-if (getUrlVars().localas) {
+if (server==="local") {
 	ServerIO.AS_ENDPOINT = 'http://localas.good-loop.com';
 	ServerIO.PORTAL_ENDPOINT = 'http://localportal.good-loop.com';
 	ServerIO.DATALOG_ENDPOINT = 'http://locallg.good-loop.com/data';
 }
-if (getUrlVars().productionas) {
+if (server==="production") {
 	ServerIO.AS_ENDPOINT = 'https://as.good-loop.com';
 	ServerIO.PORTAL_ENDPOINT = 'https://portal.good-loop.com';
 	ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';
