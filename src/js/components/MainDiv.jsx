@@ -139,8 +139,6 @@ class MainDiv extends Component {
 	}
 
 	render() {
-		ServerIO.toggleServer();
-
 		let path = DataStore.getValue('location', 'path');	
 		let page = (path && path[0]);
 		if ( ! page) {
