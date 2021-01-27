@@ -180,6 +180,10 @@ const getDaysWithGoodLoop = () => {
 	return days;
 };
 
+/**
+ * Warning: this uses `getProfilesNow()` -- so the value may start null, then change as profiles are loaded.
+ * @returns {?String} charity ID
+ */
 const getSelectedCharityId = () => {
 	let xids = getAllXIds();
 	let persons = getProfilesNow(xids);
