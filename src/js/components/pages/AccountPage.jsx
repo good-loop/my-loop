@@ -18,6 +18,9 @@ import TabsForGoodSettings from './TabsForGoodSettings';
 
 const Account = () => {
 	let xids = getAllXIds();
+	let user = Login.getUser();
+	let name = user.name || user.xid;
+	
 	return <>
 		<Row className="mb-5 user">
 			<Col md={3} className="d-md-block d-flex justify-content-center">
