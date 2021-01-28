@@ -134,7 +134,7 @@ const NewtabCharityLogin = () => {
 				</WhiteCircle>
 			</WhiteCircle>
 			<div className="position-absolute px-2" style={{top: titleTop, width:"50%", right: "50.25%" /* Account slightly for text and visual pleasantness */, textAlign:"right"}}>
-				<h1 className={!chromeRedirect ? "text-white" : "color-gl-turquoise"}>Supporting </h1>
+				<h1 className={!chromeRedirect ? "text-white" : "color-gl-turquoise"}>Supporting BEANS </h1>
 			</div>
 			<div className="position-absolute px-2" style={{top: titleTop, width:"50%", left: "50%", textAlign:"left"}}>
 				<h1 className="color-gl-turquoise"> {charity.name}</h1>
