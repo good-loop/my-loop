@@ -67,6 +67,21 @@ const NewtabCharityLogin = () => {
 	const titleTop = window.innerHeight > 700 ? 200 : 100;
 	// ??minor: it might be nice to have a transition on the verb switch
 
+	const onRegisterLogin = () => {
+		Login.verify().then(res => {
+			if (!res || !res.success) {console.error("Not logged in! Cannot set charity!")}
+			else {
+				const charityID = DataStore.getValue(['location', 'params', 'charity']);
+				setSelectedCharityId(charityID);
+				if (charity) {
+					DataStore.setValue(LOGIN_VERB_PATH, "t4g_chrome_store");
+				}
+			}
+		}).catch(res => {
+			console.error("Not logged in! Cannot set charity!")
+		});
+	};
+
 	// why not use a BS modal??
 	return <>
 		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg"/>
@@ -88,20 +103,8 @@ const NewtabCharityLogin = () => {
 				<Col xs={6} className="login-content flex-column unset-margins justify-content-start align-items-center login-right">
 					<h4 className="mb-3">{headers[verb]}</h4>
 					<LogInForm
-						onLogin={() => {
-                            const charityID = DataStore.getValue(['location', 'params', 'charity']);
-                            setSelectedCharityId(charityID);
-                            if (charity) {
-                                DataStore.setValue(LOGIN_VERB_PATH, "t4g_chrome_store");
-                            }
-						}}
-						onRegister={() => {
-                            const charityID = DataStore.getValue(['location', 'params', 'charity']);
-                            setSelectedCharityId(charityID);
-                            if (charity) {
-                                DataStore.setValue(LOGIN_VERB_PATH, "t4g_chrome_store");
-                            }
-						}}
+						onLogin={onRegisterLogin}
+						onRegister={onRegisterLogin}
 					/>
 					<ErrAlert error={error} />
 				</Col>
@@ -134,7 +137,7 @@ const NewtabCharityLogin = () => {
 				</WhiteCircle>
 			</WhiteCircle>
 			<div className="position-absolute px-2" style={{top: titleTop, width:"50%", right: "50.25%" /* Account slightly for text and visual pleasantness */, textAlign:"right"}}>
-				<h1 className={!chromeRedirect ? "text-white" : "color-gl-turquoise"}>Supporting BEANS </h1>
+				<h1 className={!chromeRedirect ? "text-white" : "color-gl-turquoise"}>Supporting </h1>
 			</div>
 			<div className="position-absolute px-2" style={{top: titleTop, width:"50%", left: "50%", textAlign:"left"}}>
 				<h1 className="color-gl-turquoise"> {charity.name}</h1>
