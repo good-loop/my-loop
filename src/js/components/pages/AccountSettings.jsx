@@ -7,6 +7,7 @@ import ConsentWidget from '../ConsentWidget';
 import { getAllXIds, getClaimValue, getProfilesNow, savePersons, setClaimValue} from '../../base/data/Person';
 import SignUpConnectCard from '../cards/SignUpConnectCard';
 import Login from '../../base/youagain';
+import { LoginLink } from '../../base/components/LoginWidget';
 import XId from '../../base/data/XId';
 import { nonce } from '../../base/data/DataClass';
 import { assert } from '../../base/utils/assert';
@@ -85,16 +86,18 @@ const YourDataSettings = ({className}) => {
 				/>
 			</Col>
 		</Row>
-		<Row className="align-items-center user-setting mt-4 mt-md-0">
+		<Row className="align-items-start user-setting mt-4 mt-md-0">
 			<Col md={2}>Email:</Col>
-			<Col md={6} className="align-left">
-				<code>{exid? XId.id(exid) : "unset"}</code>
-				<small>Email is set from your login. Let us know if you need to change it by contacting support@good-loop.com.</small>
+			<Col md={6} className="align-left" style={{lineHeight:"100%"}}>
+				<code>{exid? XId.id(exid) : "unset"}</code><br/>
+				<small style={{fontSize:"50%", lineHeight:"50%"}}>Email is set from your login. Let us know if you need to change it by contacting support@good-loop.com.</small>
 			</Col>
 		</Row>
+		<br/>
 		<div>
-			If you want to change your password, please go through password reset.
+			<LoginLink verb="reset" className="btn btn-transparent fill">Change password</LoginLink>
 		</div>
+		<br/>
 	</div>);
 };
 
