@@ -41,18 +41,6 @@ ServerIO.AS_ENDPOINT = 'https://as.good-loop.com';
 
 ServerIO.MEDIA_ENDPOINT = `https://testuploads.good-loop.com/`;
 
-// HACK allow using test ads if requested
-if (getUrlVars().testas) {
-	ServerIO.AS_ENDPOINT = 'https://testas.good-loop.com';
-	ServerIO.PORTAL_ENDPOINT = 'https://testportal.good-loop.com';
-	ServerIO.DATALOG_ENDPOINT = 'https://testlg.good-loop.com/data';
-}
-if (getUrlVars().localas) {
-	ServerIO.AS_ENDPOINT = 'http://localas.good-loop.com';
-	ServerIO.PORTAL_ENDPOINT = 'http://localportal.good-loop.com';
-	ServerIO.DATALOG_ENDPOINT = 'http://locallg.good-loop.com/data';
-}
-
 /** The initial part of an API call. Allows for local to point at live for debugging */
 ServerIO.APIBASE = ServerIO.PORTAL_ENDPOINT; // My-Loop has no backend of its own - just use portal domain matching local/test/prod
 
@@ -67,7 +55,6 @@ ServerIO.MYLOOP_ENDPONT = `${C.HTTPS}://${C.SERVER_TYPE}my.good-loop.com`;
 ServerIO.LOGENDPOINT = ServerIO.PROFILER_ENDPOINT + '/log';
 
 ServerIO.checkBase();
-
 
 /** 
  * NB: Copy-pasta from Portal ServerIO.js

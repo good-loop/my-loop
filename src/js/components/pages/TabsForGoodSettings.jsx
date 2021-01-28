@@ -12,6 +12,7 @@ import { space } from '../../base/utils/miscutils';
 import Login from '../../base/youagain';
 import ServerIO from '../../plumbing/ServerIO';
 import Cookies from 'js-cookie';
+import Icon from '../../base/components/Icon';
 
 
 const TabsForGoodSettings = () => {
@@ -95,7 +96,7 @@ const CharitySelectBox = ({item, className}) => {
 		>
 			{item.logo? <img className="logo-xl mt-4 mb-2" src={item.logo} /> : <span>{item.name || item.id}</span>}
 			<p>{item.summaryDescription}</p>
-			{selected ? <span className="text-success thin">&#10004; Selected</span>
+			{selected ? <span className="text-success thin"><Icon name='tick' /> Selected</span>
 				: <button onClick={() => setSelectedCharityId(getId(item))} className="btn btn-outline-primary thin">Select</button>
 			}
 			{item.url && <a className="position-absolute" style={{top: 10, right: 10}} href={item.url} target="_blank" rel="noreferrer">About</a>}
@@ -179,6 +180,10 @@ const getDaysWithGoodLoop = () => {
 	return days;
 };
 
+/**
+ * Warning: this uses `getProfilesNow()` -- so the value may start null, then change as profiles are loaded.
+ * @returns {?String} charity ID
+ */
 const getSelectedCharityId = () => {
 	let xids = getAllXIds();
 	let persons = getProfilesNow(xids);

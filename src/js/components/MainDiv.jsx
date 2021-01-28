@@ -27,12 +27,12 @@ import E404Page from '../base/components/E404Page';
 // import TestPage from '../base/components/TestPage';
 import AccountPage from './pages/AccountPage';
 import Footer from './Footer';
-import { Register } from '../../puppeteer_tests/test-base/common-selectors';
 import MyGLAboutPage from './MyGLAboutPage';
 import { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
 import TabsForGoodOnboard from './pages/TabsForGoodOnboard';
 import { getAllXIds } from '../base/data/Person';
 import NewtabCharityLogin from './pages/NewtabCharityLogin';
+import ServerIO from '../plumbing/ServerIO';
 // import RedesignPage from './pages/RedesignPage';
 
 // DataStore
