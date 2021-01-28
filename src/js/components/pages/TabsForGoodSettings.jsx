@@ -206,7 +206,9 @@ const setSelectedCharityId = (cid) => {
 		pv.promise.then(re => {
 			console.log("... saved setSelectedCharityId " + cid);
 			window.location = link;
-		});
+		}).catch(e => {
+			console.error("FAILED CHARITY SELECT", e);
+		})
 	}
 };
 
