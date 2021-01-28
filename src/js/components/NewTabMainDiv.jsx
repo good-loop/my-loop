@@ -22,9 +22,6 @@ import { getSelectedCharityId, getTabsOpened, Search, getSearchEngine } from './
 import TickerTotal from './TickerTotal';
 
 
-
-
-
 // DataStore
 C.setupDataStore();
 

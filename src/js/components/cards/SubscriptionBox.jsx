@@ -30,7 +30,7 @@ const SubscriptionBox = ({className, title}) => {
 			<br/><br/></> : null}
 		{hasSubmittedEmail ? thankYouMessage :
 			<Container>
-				<Form inline className="flex-row align-items-stretch m-auto">
+				<Form inline className="flex-row align-items-stretch justify-content-center m-auto">
 					<FormGroup className="mb-2 mr-sm-2 mb-sm-0 outer-form-group flex-grow-1 m-0 pr-md-3">
 						<PropControl
 							className="email-join-input w-100 h-100"
