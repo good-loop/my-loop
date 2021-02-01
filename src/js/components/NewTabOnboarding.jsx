@@ -4,7 +4,7 @@ import NavBar, { AccountMenu } from './MyLoopNavBar';
 
 const NewTabOnboardingPage = () => {
     if (Login.isLoggedIn()) {
-		window.location.href = "/newtab.html#webtop";
+		window.location.href = "https://my.good-loop.com/newtab.html#webtop";
 	}
 	return <>
         <div className="onboarding">

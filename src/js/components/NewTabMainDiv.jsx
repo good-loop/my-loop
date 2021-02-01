@@ -90,12 +90,12 @@ const WebtopPage = () => {
 				<div className="d-flex justify-content-between">
 					<TutorialComponent page={5} className="logo pl-5 flex-row" style={{width:400}}>
 						<a href="https://my.good-loop.com">
-							<img src="/img/TabsForGood/TabsForGood_logo.png" style={{width: 200}} alt="logo"/>
+							<img src="https://my.good-loop.com/img/TabsForGood/TabsForGood_logo.png" style={{width: 200}} alt="logo"/>
 						</a>
 					</TutorialComponent>
 					<TutorialComponent page={4} className="user-controls flex-row align-items-center">
 						{Login.isLoggedIn() ? <TabsOpenedCounter/> : null}
-						<AccountMenu small accountLink="/#account?tab=tabsForGood" 
+						<AccountMenu small accountLink="https://my.good-loop.com/#account?tab=tabsForGood" 
 							customLogin={<NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>}
 						/>
 					</TutorialComponent>
@@ -122,25 +122,25 @@ const TabsOpenedCounter = () => {
 const engines = {
 	google: {
 		title:"Google",
-		logo: "/img/TabsForGood/google.png",
+		logo: "https://my.good-loop.com/img/TabsForGood/google.png",
 		size: {width: 30, height: 30},
 		url: "https://google.com/search?q="
 	},
 	ecosia: {
 		title:"Ecosia",
-		logo: "/img/TabsForGood/ecosia.png",
+		logo: "https://my.good-loop.com/img/TabsForGood/ecosia.png",
 		size: {width: 30, height: 30},
 		url: "https://ecosia.com/search?q="
 	},
 	duckduckgo: {
 		title:"DuckDuckGo",
-		logo: "/img/TabsForGood/duckduckgo.png",
+		logo: "https://my.good-loop.com/img/TabsForGood/duckduckgo.png",
 		size: {width: 30, height: 30},
 		url: "https://duckduckgo.com?q="
 	},
 	bing: {
 		title:"Bing",
-		logo: "/img/TabsForGood/bing.png",
+		logo: "https://my.good-loop.com/img/TabsForGood/bing.png",
 		size: {width: 30, height: 30},
 		url: "https://bing.com/search?q="
 	}
@@ -159,12 +159,12 @@ const NormalTabCenter = ({charityID}) => {
 					<TickerTotal />
 				</TutorialComponent>
 			</h3>
-			<img src="/img/TabsForGood/sparkle.png" alt="sparkle" style={{width: 50}} className="pl-1"/>
+			<img src="https://my.good-loop.com/img/TabsForGood/sparkle.png" alt="sparkle" style={{width: 50}} className="pl-1"/>
 		</div>
 		<div className="w-100 pb-3">
 			<div className="tab-search-container mx-auto">
 				<Search onSubmit={e => doSearch(e, searchEngine)} placeholder={"Search with " + engineData.title} icon={
-					<a href="/#account?tab=tabsForGood"><img src={engineData.logo} alt="search icon" style={{width:engineData.size.width, height:engineData.size.height}}/></a>
+					<a href="https://my.good-loop.com/#account?tab=tabsForGood"><img src={engineData.logo} alt="search icon" style={{width:engineData.size.width, height:engineData.size.height}}/></a>
 				}/>
 			</div>
 		</div>
@@ -182,7 +182,7 @@ const OnboardingTabCenter = () => {
 			<div style={{marginBottom:"35vh"}}/>
 			<h2 className="w-50 mx-auto">Every time you open a<br/>new tab you raise<br/>money for good causes</h2>
 			{/*<a className="btn btn-primary extension-btn">Add tabs for good to chrome</a>*/}
-			<img className="mt-5" src="/img/TabsForGood/white-arrow.png"/>
+			<img className="mt-5" src="https://my.good-loop.com/img/TabsForGood/white-arrow.png"/>
 			{/* White fade for image */}
 			<div className="position-absolute" style={{zIndex:1, top:"60vh", height:"40vh", width: "100vw", background:"linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%"}}/>
 		</div>
