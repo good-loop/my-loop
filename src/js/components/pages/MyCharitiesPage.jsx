@@ -126,13 +126,13 @@ const fetchAllCharities = (csvData) => {
 /** TODO This looks overly complex -- What's the scenario where vanilla ActionMan.getDataItem() doesn't work? */
 const fetchCharity = (id) => {
 
-	let pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:normaliseSogiveId(id), status:C.KStatus.PUBLISHED});
+	let pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:normaliseSogiveId(id), status:C.KStatus.PUBLISHED, swallow:true});
 	if ( ! pvCharity.value) {
 		const mappedId = dntnTrackerToSogiveID(id);
 		if (!mappedId) {
 			return null;
 		}
-		pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:mappedId, status:C.KStatus.PUBLISHED});
+		pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:mappedId, status:C.KStatus.PUBLISHED, swallow:true});
 		if ( ! pvCharity.value) {
 			return null;
 		}

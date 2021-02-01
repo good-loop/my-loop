@@ -187,14 +187,14 @@ const getDaysWithGoodLoop = () => {
 const getSelectedCharityId = () => {
 	let xids = getAllXIds();
 	let persons = getProfilesNow(xids);
-	let cid = getClaimValue({persons, key:"charity"});
+	let cid = getClaimValue({persons, key:"charity", swallow:true});
 	return cid;
 };
 
 const setSelectedCharityId = (cid) => {
 	let xids = getAllXIds();
 	let persons = getProfilesNow(xids);
-	setClaimValue({persons, key:"charity", value:cid});
+	setClaimValue({persons, key:"charity", value:cid, swallow:true});
 	console.log("setSelectedCharityId " + cid);
 	DataStore.update();
 	// save
@@ -215,8 +215,7 @@ const setSelectedCharityId = (cid) => {
 const getSearchEngine = () => {
 	let xids = getAllXIds();
 	let persons = getProfilesNow(xids);
-	let engine = getClaimValue({persons, key:"searchEngine"});
-	console.log("Search Engine COOKIE:", Cookies.get('t4g-search-engine'));
+	let engine = getClaimValue({persons, key:"searchEngine", swallow:true});
 	if (!engine) {
 		engine = Cookies.get('t4g-search-engine');
 	}
@@ -226,7 +225,7 @@ const getSearchEngine = () => {
 const setSearchEngine = (engine) => {
 	let xids = getAllXIds();
 	let persons = getProfilesNow(xids);
-	setClaimValue({persons, key:"searchEngine", value:engine});
+	setClaimValue({persons, key:"searchEngine", value:engine, swallow:true});
 	console.log("setSelectedCharityId " + engine);
 	DataStore.update();
 	// save
