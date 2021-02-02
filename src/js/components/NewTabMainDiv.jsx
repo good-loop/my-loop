@@ -17,6 +17,7 @@ import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLog
 // import RedesignPage from './pages/RedesignPage';
 import NewTabOnboardingPage from './NewTabOnboarding';
 import NewtabTutorialCard, { openTutorial, TutorialComponent, TutorialHighlighter } from './NewtabTutorialCard';
+import NewTabAds from './NewTabAds';
 import { fetchCharity } from './pages/MyCharitiesPage';
 import { getSelectedCharityId, getTabsOpened, Search, getSearchEngine } from './pages/TabsForGoodSettings';
 import TickerTotal from './TickerTotal';
@@ -111,6 +112,7 @@ const WebtopPage = () => {
 		<TutorialComponent page={3} className="position-absolute" style={{bottom:0, left:0, right:0, height:110, width:"100vw"}}/>
 		<NewtabTutorialCard tutorialPages={tutorialPages}/>
 		<NewtabLoginWidget onRegister={() => {if (!onboarding) openTutorial();}}/>
+		<NewTabAds/>
 	</>); 
 };
 
