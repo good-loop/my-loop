@@ -32,7 +32,6 @@ import printer from '../../base/utils/printer';
 import { sortByDate } from '../../base/utils/SortFn';
 import Login from '../../base/youagain';
 import C from '../../C';
-import CampaignPageDC from '../../data/CampaignPage';
 import ActionMan from '../../plumbing/ActionMan';
 import ServerIO from '../../plumbing/ServerIO';
 import MyLoopNavBar from '../MyLoopNavBar';
@@ -116,14 +115,22 @@ const CampaignPage = () => {
 		q = '',
 		landing,
 	} = DataStore.getValue(['location', 'params']) || {};
+	// campaign ID -- from url or from advert
 	let campaignId = DataStore.getValue(['location','path'])[1];
+	let pvAd;
+	if ( ! campaignId && adid) {
+		pvAd = getDataItem({type:C.TYPES.Advert,status,id:adid});
+		if (pvAd.value) {
+			campaignId = Advert.campaign(pvAd.value);
+		}
+	}
 
 	// Merge gl.status into status & take default value
 	if (!status) status = (glStatus || C.KStatus.PUB_OR_ARC);
 	
 	// Is this for one campaign?
 	let pvCampaign = campaignId? getDataItem({type:C.TYPES.Campaign,status,id:campaignId}) : {};
-	const campaignPage = pvCampaign.value || {};
+	const campaign = pvCampaign.value || {};
 
 	// Is the campaign page being used as a click-through advert landing page?
 	// If so, change the layout slightly, positioning the advert video on top.
@@ -131,8 +138,8 @@ const CampaignPage = () => {
 
 	// Which advert(s)?
 	let sq = adsQuery({ q, adid, vertiserid, campaignId, via });
-	let pvAds = fetchAds({ searchQuery: sq, status });
-	if (!pvAds) {
+	let pvAds = pvAd || fetchAds({ searchQuery: sq, status }); // HACK avoid a 2nd search request if adid was specified
+	if ( ! pvAds) {
 		// No query -- show a list
 		// TODO better graphic design before we make this list widget public
 		if (!Login.isLoggedIn()) {
@@ -140,7 +147,7 @@ const CampaignPage = () => {
 		}
 		return <ListLoad type={C.TYPES.Advert} servlet="campaign" />;
 	}
-	if (!pvAds.resolved) {
+	if ( ! pvAds.resolved) {
 		return <Misc.Loading text="Loading campaign info..." />;
 	}
 	if (pvAds.error) {
@@ -148,9 +155,9 @@ const CampaignPage = () => {
 	}
 
 	// If it's remotely possible to have an ad now, we have it. Which request succeeded, if any?
-	let ads = pvAds.value.hits;
+	let ads = pvAd? [pvAd.value] : pvAds.value.hits; // NB: unpack the pvAds = pvAd hack
 	console.log(ads);
-	if (!ads || !ads.length) {
+	if ( ! ads || ! ads.length) {
 		return <Alert>Could not load adverts for {sq.query} {status}</Alert>; // No ads?!
 	}
 
@@ -212,8 +219,8 @@ const CampaignPage = () => {
 		viewcount4campaign = pivotDataLogData(pvViewData.value, ["campaign"]);
 	}
 
-	const donation4charity = yessy(campaignPage.dntn4charity)? campaignPage.dntn4charity : fetchDonationData({ ads });
-	const donationTotal = campaignPage.dntn || donation4charity.total;
+	const donation4charity = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
+	const donationTotal = campaign.dntn || donation4charity.total;
 
 	{	// NB: some very old ads may not have charities
 		let noCharityAds = ads.filter(ad => !ad.charities);
@@ -230,7 +237,7 @@ const CampaignPage = () => {
 
 	// Sum of the views from every ad in the campaign. We use this number for display
 	// and to pass it to the AdvertCards to calculate the money raised against the total.
-	let totalViewCount = campaignPage.numPeople; // hard set by the Campaign object?
+	let totalViewCount = campaign.numPeople; // hard set by the Campaign object?
 	if ( ! totalViewCount) {
 		const ad4c = {};
 		ads.forEach(ad => ad4c[campaignNameForAd(ad)] = ad);
@@ -245,17 +252,17 @@ const CampaignPage = () => {
 
 	let shareButtonMeta = {
 		title: nvertiserNameNoTrail + "'s Good-Loop Impact - My-Loop",
-		image: campaignPage.bg ? campaignPage.bg : "https://testmy.good-loop.com/img/redcurve.svg",
+		image: campaign.bg ? campaign.bg : "https://testmy.good-loop.com/img/redcurve.svg",
 		description: "See " + nvertiserNameNoTrail + "'s impact from Good-Loop ethical advertising"
 	};
 
 	return (<>
-		<StyleBlock>{campaignPage && campaignPage.customCss}</StyleBlock>
+		<StyleBlock>{campaign && campaign.customCss}</StyleBlock>
 		<StyleBlock>{branding.customCss}</StyleBlock>
 		<div className="widepage CampaignPage gl-btns">
 			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" hidePages/>
 			<div className="text-center">
-				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaignPage} 
+				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaign} 
 					donationValue={donationTotal} 
 					totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
 
@@ -271,7 +278,7 @@ const CampaignPage = () => {
 					/>
 				)}
 
-				<Charities charities={charities} donation4charity={donation4charity} campaignPage={campaignPage} />
+				<Charities charities={charities} donation4charity={donation4charity} campaignPage={campaign} />
 
 				<div className="bg-white">
 					<Container>
@@ -296,7 +303,7 @@ const CampaignPage = () => {
 					</Container>
 				</div>
 
-				<SmallPrintInfo ads={ads} charities={charities} campaignPage={campaignPage} />
+				<SmallPrintInfo ads={ads} charities={charities} campaignPage={campaign} />
 
 			</div>
 		</div>
@@ -408,7 +415,7 @@ const fetchDonationData = ({ ads }) => {
 	}
 	if (!donationForCharity.total) {
 		// Campaign level total info?
-		let campaignPageDonations = ads.map(ad => ad.campaignPage && CampaignPageDC.donation(ad.campaignPage)).filter(x => x);
+		let campaignPageDonations = ads.map(ad => ad.campaignPage && Campaign.dntn(ad.campaignPage)).filter(x => x);
 		if (campaignPageDonations.length === ads.length) {
 			let donationTotal = Money.total(campaignPageDonations);
 			donationForCharity.total = donationTotal;

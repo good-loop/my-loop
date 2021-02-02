@@ -8,11 +8,11 @@ import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
 import ErrAlert from '../../base/components/ErrAlert';
 import Money from '../../base/data/Money';
-import CampaignPageDC from '../../data/CampaignPage';
 import Counter from '../../base/components/Counter';
 import ServerIO from '../../plumbing/ServerIO';
 import { hackCorrectedDonations } from '../campaignpage/CampaignPage';
 import C from '../../C';
+import Campaign from '../../base/data/Campaign';
 
 const RecentCampaignsCard = () => {
 	// TODO fetch data from portal
@@ -74,8 +74,8 @@ const RecentCampaignsCard = () => {
 		campaign.ad = adHits[0];
 		console.log(campaign.ad);
 		if (!campaign.ad.id) console.warn("No id!");
-
-		campaign.donation = fetchDonationData({ads: adHits});
+		
+		campaign.dntn = fetchDonationData({ads: adHits});
 	});
 
 	return (
@@ -163,7 +163,7 @@ const fetchDonationData = ({ads}) => {
 	let adIds = ads.map(ad => ad.id);
 	let campaignIds = ads.map(ad => ad.campaign);
 	// Campaign level total info?
-	let campaignPageDonations = ads.map(ad => ad.campaignPage && CampaignPageDC.donation(ad.campaignPage)).filter(x => x);
+	let campaignPageDonations = ads.map(ad => ad.campaignPage && Campaign.dntn(ad.campaignPage)).filter(x => x);
 	if (campaignPageDonations.length === ads.length) {
 		return Money.total(campaignPageDonations);
 	}
