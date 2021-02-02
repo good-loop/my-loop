@@ -13,7 +13,7 @@ const NewTabAds = () => {
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
             {/* Tabs for Good bottom display */}
             <ins className="adsbygoogle"
-                style="display:inline-block;width:728px;height:90px"
+                style={{display:"inline-block",width:728,height:90}}
                 data-ad-client="ca-pub-9448086783562205"
                 data-ad-slot="5736021145"></ins>
             <script>
