@@ -129,6 +129,7 @@ const CampaignPage = () => {
 	if (!status) status = (glStatus || C.KStatus.PUB_OR_ARC);
 	
 	// Is this for one campaign?
+	// FIXME what about when we have multiple campaigns??
 	let pvCampaign = campaignId? getDataItem({type:C.TYPES.Campaign,status,id:campaignId}) : {};
 	const campaign = pvCampaign.value || {};
 
