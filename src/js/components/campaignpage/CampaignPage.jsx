@@ -305,7 +305,7 @@ const CampaignPage = () => {
 					</Container>
 				</div>
 
-				<SmallPrintInfo ads={ads} charities={charities} campaignPage={campaign} />
+				<SmallPrintInfo ads={ads} charities={charities} campaign={campaign} />
 
 			</div>
 		</div>
@@ -315,9 +315,10 @@ const CampaignPage = () => {
 
 /**
  * Charity details + campaign details
- * @param {*} param0 
+ * @param {Object} p
+ * @param {Campaign} p.campaign
  */
-const SmallPrintInfo = ({ads, charities, campaignPage}) => {
+const SmallPrintInfo = ({ads, charities, campaign}) => {
 	// set min/max donation-per-ad and start/end dates from ad
 	let dmin,dmax,start,end;
 	for(let i=0; i<ads.length; i++) {
@@ -334,40 +335,39 @@ const SmallPrintInfo = ({ads, charities, campaignPage}) => {
 		if (starti && ( ! start || starti.getTime() < start.getTime())) start = starti;
 		if (endi && ( ! end || endi.getTime() > end.getTime())) end = endi;
 	}
-	console.log("campaignPage",campaignPage);
+	console.log("campaignPage",campaign);
 	
-	let totalBudget	= campaignPage.maxDntn;
+	let totalBudget	= campaign.maxDntn;
 	if ( ! totalBudget) {
 		let amounts = ads.map(ad => Advert.budget(ad) && Advert.budget(ad).total);
 		totalBudget = Money.total(amounts);
 	}
 
-	return <div>
+	return <div className="container">
 		<Row>
 			<Col md={6} ><CharityDetails charities={charities} /></Col>
 			<Col md={6} className="text-left">
-				 Donation Amount: <Misc.Money amount={dmin} /> { dmax && ! Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/>
+				 {dmin && <>Donation Amount: <Misc.Money amount={dmin} /> { dmax && ! Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/></>}
 				 50% of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies. 
 				 Good-Loop and the advertising exchange make a small commission. The donations depend on viewers watching the adverts.<br/>
-				 Limitations on Donation: <Misc.Money amount={totalBudget} /> <br/>
-				 Dates: <Misc.DateTag date={start} /> through <Misc.DateTag date={end} /> <br/>
-
-				 <p>Where impacts such as "trees planted" are listed above, these are representative. 
+				 {totalBudget && <>Limitations on Donation: <Misc.Money amount={totalBudget} /> <br/></>}
+				 {start && end && <>Dates: <Misc.DateTag date={start} /> through <Misc.DateTag date={end} /> <br/></>}
+				 {Roles.isDev()? <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/'+escape(campaign.id)} target="_portal">Portal Editor: Campaign</DevLink> : null}
+				 <p>If impacts such as "trees planted" are listed above, these are representative. 
 				 We don't ring-fence funding, as the charity can better assess the best use of funds. 
 				 Cost/impact figures are as reported by the charity or by the impact assessor SoGive.
 				 </p>
 
-				{campaignPage.smallPrint &&
+				{campaign.smallPrint &&
 					<div className="small-print">
 						<small>
-							{campaignPage.smallPrint}
+							{campaign.smallPrint}
 						</small>
 					</div>}
 			</Col>
 		</Row>
 		<p><small>This information follows the guidelines of the New York Attorney General for best practice in cause marketing,
-			<Cite href='https://www.charitiesnys.com/cause_marketing.html'/>
-			and the Better Business Bureau's standard for charity donations within marketing.			
+			<Cite href='https://www.charitiesnys.com/cause_marketing.html'/> and the Better Business Bureau's standard for donations in marketing.			
 			</small></p>
 	</div>;
 }
