@@ -158,7 +158,10 @@ const getTabsOpened = () => {
 	});
 	return pvValue;	
 };
-const getTabsOpened2_unwrap = res => JSend.data(res).all.count;
+const getTabsOpened2_unwrap = res => {
+	const data = JSend.data(res);
+	return data.all;
+}
 
 const getDaysWithGoodLoop = () => {
 	const xids = getAllXIds();
