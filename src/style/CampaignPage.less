@@ -363,4 +363,17 @@ body {
 	.w-60 {
 		width: 60% !important;
 	}
+
+	.carousel-indicators {
+		li {
+			background-color: @gl-light-red;
+			&.active {
+				background-color: @gl-red;
+			}
+		}
+	}
+
+	a[class *="carousel-control-"] {
+		z-index: 1000;
+	}
 }

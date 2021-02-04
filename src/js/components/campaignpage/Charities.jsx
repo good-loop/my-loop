@@ -67,6 +67,7 @@ const Charities = ({ charities, donation4charity, campaignPage }) => {
 	let {lowDntnDisplay, lowDntn, hideCharities} = campaignPage;
 	// The expanded configurations to operate on, not stored in the portal
 	let lowDonationThreshold, filterLowDonations, showLowDonations, showDonations;
+	console.log("Low donation display set to " + lowDntnDisplay);
 
 	// Does campaign page data contain data for low donation filtering, or is it old?
 	if (lowDntn) {
@@ -88,13 +89,7 @@ const Charities = ({ charities, donation4charity, campaignPage }) => {
 	// Threshold is the given custom amount, otherwise 1% of total - or if total isnt loaded, £50
 	const threshold = lowDonationThreshold ? lowDonationThreshold : (donation4charity.total ? donation4charity.total.value / 100 : 50);
 	console.warn("Low donation threshold for charities set to " + threshold);
-	charities = charities.map(charity => {
-		const include = donation4charity[charity.id] ? Money.value(donation4charity[charity.id]) >= threshold : false;
-		//console.log("Is " + charity.id + " a low donation? " + !include + ", as " + donation4charity[charity.id].value + " >= " + threshold);
-		if (!include && filterLowDonations) return null;
-		charity.lowDonation = !include;
-		return charity;
-	});
+	/**/
 	// Filter nulls
 	charities = charities.filter(x => x);
 	let sogiveCharities = fetchSogiveData(charities, filterLowDonations, threshold);
@@ -102,12 +97,19 @@ const Charities = ({ charities, donation4charity, campaignPage }) => {
 	const getDonation = c => {
 		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
 		// Filter charity if less then 1/10 the total donation
-		// TODO: better filter method
-		if (d && (d.value < donation4charity.total * 0.1)) d = false;
 		return d;
 	};
 
-	let sogiveCharitiesWithDonations = sogiveCharities.filter(c => getDonation(c)); // Get rid of charities with no logged donations.
+	sogiveCharities = sogiveCharities.map(charity => {
+		const dntn = getDonation(charity.id);
+		const include = dntn ? dntn >= threshold : false;
+		//console.log("Is " + charity.id + " a low donation? " + !include + ", as " + donation4charity[charity.id].value + " >= " + threshold);
+		if (!include && filterLowDonations) return null;
+		charity.lowDonation = !include;
+		return charity;
+	});
+	sogiveCharities = sogiveCharities.filter(x => x);
+	//let sogiveCharitiesWithDonations = sogiveCharities.filter(c => getDonation(c)); // Get rid of charities with no logged donations.
 	// hideCharities is from a KeySet prop control, so is an object of schema {charity_id : bool}.
 	// We want to convert it instead to a list of charity IDs
 	if (hideCharities) {
@@ -115,8 +117,10 @@ const Charities = ({ charities, donation4charity, campaignPage }) => {
 		let hideCharitiesArr = Object.keys(hideCharities);
 		// Remove false entries - keySet will not remove charity IDs, but set them to false instead.
 		hideCharitiesArr = hideCharitiesArr.filter(cid => hideCharities[cid]);
-		sogiveCharitiesWithDonations = sogiveCharities.filter(c => !hideCharitiesArr.includes(c.id));
+		sogiveCharities = sogiveCharities.filter(c => !hideCharitiesArr.includes(c.id));
 	}
+
+	console.log("SOGIVE CHARITIES", sogiveCharities);
 	//let sogiveCharitiesWithoutDonations = sogiveCharities.filter(c => ! getDonation(c)); // Keep other charities for the "Also Supported" section
 
 	return (
@@ -125,7 +129,7 @@ const Charities = ({ charities, donation4charity, campaignPage }) => {
 				<h2>Our Impact</h2>
 			</div>
 			<Container className="pb-5">
-				{sogiveCharitiesWithDonations.map((charity, i) =>
+				{sogiveCharities.map((charity, i) =>
 					<CharityCard i={i} key={charity.id} charity={charity} donationValue={getDonation(charity)} showDonations={showDonations} showLowDonations={showLowDonations} />
 				)}
 			</Container>

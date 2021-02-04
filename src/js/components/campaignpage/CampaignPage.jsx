@@ -220,6 +220,7 @@ const CampaignPage = () => {
 		viewcount4campaign = pivotDataLogData(pvViewData.value, ["campaign"]);
 	}
 
+	console.log(yessy(campaign.dntn4charity) ? "Using campaign donation data" : "Using sogive donation data");
 	const donation4charity = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
 	const donationTotal = campaign.dntn || donation4charity.total;
 
@@ -342,7 +343,6 @@ const SmallPrintInfo = ({ads, charities, campaignPage}) => {
 	}
 
 	return <div>
-		<h4>Donation Information</h4>
 		<Row>
 			<Col md={6} ><CharityDetails charities={charities} /></Col>
 			<Col md={6} className="text-left">
@@ -603,23 +603,6 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserNam
 
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [animating, setAnimating] = useState(false);
-	
-	const next = () => {
-		if (animating) return;
-		const nextIndex = activeIndex === items.length - 1 ? 0 : activeIndex + 1;
-		setActiveIndex(nextIndex);
-	}
-
-	const previous = () => {
-		if (animating) return;
-		const nextIndex = activeIndex === 0 ? items.length - 1 : activeIndex - 1;
-		setActiveIndex(nextIndex);
-	}
-
-	const goToIndex = (newIndex) => {
-		if (animating) return;
-		setActiveIndex(newIndex);
-	}
 
 	const carouselSlides = sampleAds.map((ad, i) =>
 		<CarouselItem
@@ -636,6 +619,23 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserNam
 			<CarouselCaption captionText={<Misc.DateDuration startDate={ad.start} endDate={ad.end} />}/>
 		</CarouselItem>
 	);
+	
+	const next = () => {
+		if (animating) return;
+		const nextIndex = activeIndex === carouselSlides.length - 1 ? 0 : activeIndex + 1;
+		setActiveIndex(nextIndex);
+	}
+
+	const previous = () => {
+		if (animating) return;
+		const nextIndex = activeIndex === 0 ? carouselSlides.length - 1 : activeIndex - 1;
+		setActiveIndex(nextIndex);
+	}
+
+	const goToIndex = (newIndex) => {
+		if (animating) return;
+		setActiveIndex(newIndex);
+	}
 
 	return (<>
 		<Container className="py-5">
@@ -648,7 +648,7 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserNam
 				<CarouselIndicators items={sampleAds} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{backgroundColor:"#000"}}/>
 				{carouselSlides}
 				<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous}/>
-				<CarouselControl direction="next" directionText="Next" onClickHandler={next} />
+				<CarouselControl direction="next" directionText="Next" onClickHandler={next}/>
 			</Carousel>
 			{/*<AdvertCard
 				ad={selectedAd}
