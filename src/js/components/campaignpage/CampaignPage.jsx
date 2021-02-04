@@ -240,11 +240,20 @@ const CampaignPage = () => {
 	// and to pass it to the AdvertCards to calculate the money raised against the total.
 	let totalViewCount = campaign.numPeople; // hard set by the Campaign object?
 	if ( ! totalViewCount) {
-		const ad4c = {};
-		ads.forEach(ad => ad4c[campaignNameForAd(ad)] = ad);
-		let ads1perCampaign = Object.values(ad4c);
-		let views = ads1perCampaign.map(ad => viewCount(viewcount4campaign, ad));
-		totalViewCount = sum(views);
+		if (cid) { // TODO refactor everything to be based around a list of campaigns
+			let sq = SearchQuery.setProp(new SearchQuery(), "campaign", cid);
+			let pvPeepsData = getDataLogData({q:sq.query, breakdowns:[], start:'2017-01-01', end:'now', name:"view-data",dataspace:'gl'});
+			if (pvPeepsData.value) {
+				campaign.numPeople = pvPeepsData.value.all;
+				totalViewCount = campaign.numPeople;
+			}
+		} else {
+			const ad4c = {};
+			ads.forEach(ad => ad4c[campaignNameForAd(ad)] = ad);
+			let ads1perCampaign = Object.values(ad4c);
+			let views = ads1perCampaign.map(ad => viewCount(viewcount4campaign, ad));
+			totalViewCount = sum(views);
+		}
 	}
 
 	// Get name of advertiser from nvertiser if existing, or ad if not
