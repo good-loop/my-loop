@@ -52,7 +52,7 @@ challenges facing our planet."`,
  * @param {?Boolean} showDonations If false will hide all donation numbers
  * @param {?String[]} hideCharities hide specific charities by ID
  */
-const Charities = ({ charities, donation4charity, campaignPage }) => {
+const Charities = ({ charities, donation4charity, campaign }) => {
 	
 	// Low donation filtering data is represented as only 3 controls for portal simplicity
 	// lowDntn = the threshold at which to consider a charity a low donation
@@ -64,7 +64,7 @@ const Charities = ({ charities, donation4charity, campaignPage }) => {
 	//   Otherwise, show everything
 	
 	// The portal control data
-	let {lowDntnDisplay, lowDntn, hideCharities} = campaignPage;
+	let {lowDntnDisplay, lowDntn, hideCharities} = campaign;
 	// The expanded configurations to operate on, not stored in the portal
 	let lowDonationThreshold, filterLowDonations, showLowDonations, showDonations;
 	console.log("Low donation display set to " + lowDntnDisplay);
@@ -94,6 +94,8 @@ const Charities = ({ charities, donation4charity, campaignPage }) => {
 	charities = charities.filter(x => x);
 	let sogiveCharities = fetchSogiveData(charities, filterLowDonations, threshold);
 
+	console.log("SOGIVE CHARITIES FIRST PASS", sogiveCharities);
+
 	const getDonation = c => {
 		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
 		// Filter charity if less then 1/10 the total donation
@@ -112,13 +114,13 @@ const Charities = ({ charities, donation4charity, campaignPage }) => {
 	//let sogiveCharitiesWithDonations = sogiveCharities.filter(c => getDonation(c)); // Get rid of charities with no logged donations.
 	// hideCharities is from a KeySet prop control, so is an object of schema {charity_id : bool}.
 	// We want to convert it instead to a list of charity IDs
-	if (hideCharities) {
+	/*if (hideCharities) {
 		// Convert object to array
 		let hideCharitiesArr = Object.keys(hideCharities);
 		// Remove false entries - keySet will not remove charity IDs, but set them to false instead.
 		hideCharitiesArr = hideCharitiesArr.filter(cid => hideCharities[cid]);
 		sogiveCharities = sogiveCharities.filter(c => !hideCharitiesArr.includes(c.id));
-	}
+	}*/
 
 	console.log("SOGIVE CHARITIES", sogiveCharities);
 	//let sogiveCharitiesWithoutDonations = sogiveCharities.filter(c => ! getDonation(c)); // Keep other charities for the "Also Supported" section
@@ -242,7 +244,9 @@ const fetchSogiveData = (charities) => {
 		dupeIds.push(sogiveId);
 		// NB: the lower-level ServerIOBase.js helps patch mismatches between GL and SoGive ids
 		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: sogiveId, status: C.KStatus.PUBLISHED });
-		if ( ! pvCharity.value) return charity; // no extra data yet
+		if ( ! pvCharity.value) {
+			return charity; // no extra data yet
+		}
 		// merge, preferring SoGive data
 		// Prefer SoGive for now as the page is designed to work with generic info - and GL data is often campaign/player specific
 		// TODO: review this

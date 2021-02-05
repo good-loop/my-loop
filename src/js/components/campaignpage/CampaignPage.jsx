@@ -38,6 +38,7 @@ import MyLoopNavBar from '../MyLoopNavBar';
 import CampaignSplashCard from './CampaignSplashCard';
 import Charities, { CharityDetails } from './Charities';
 import DevLink from './DevLink';
+import AdvertsCatalogue from './AdvertsCatalogue';
 
 
 /**
@@ -117,11 +118,13 @@ const CampaignPage = () => {
 	} = DataStore.getValue(['location', 'params']) || {};
 	// campaign ID -- from url or from advert
 	let campaignId = DataStore.getValue(['location','path'])[1];
+	console.log("Campaign ID from path: ", campaignId);
 	let pvAd;
 	if ( ! campaignId && adid) {
 		pvAd = getDataItem({type:C.TYPES.Advert,status,id:adid});
 		if (pvAd.value) {
 			campaignId = Advert.campaign(pvAd.value);
+			console.log("Campaign ID from ad: ", campaignId);
 		}
 	}
 
@@ -132,6 +135,7 @@ const CampaignPage = () => {
 	// FIXME what about when we have multiple campaigns??
 	let pvCampaign = campaignId? getDataItem({type:C.TYPES.Campaign,status,id:campaignId}) : {};
 	const campaign = pvCampaign.value || {};
+	console.log("Campaign: ", campaign);
 
 	// Is the campaign page being used as a click-through advert landing page?
 	// If so, change the layout slightly, positioning the advert video on top.
@@ -183,9 +187,6 @@ const CampaignPage = () => {
 	let charities = uniqueIds(_.flatten(ads.map(
 		ad => ad.charities && ad.charities.list || []
 	)));
-	let cids = charities.map(x => x.id);
-
-	let brandColor = branding.color || branding.backgroundColor;
 
 	// PDF version of page
 	let pdf = null;
@@ -241,8 +242,8 @@ const CampaignPage = () => {
 	// and to pass it to the AdvertCards to calculate the money raised against the total.
 	let totalViewCount = campaign.numPeople; // hard set by the Campaign object?
 	if ( ! totalViewCount) {
-		if (cid) { // TODO refactor everything to be based around a list of campaigns
-			let sq = SearchQuery.setProp(new SearchQuery(), "campaign", cid);
+		if (campaignId) { // TODO refactor everything to be based around a list of campaigns
+			let sq = SearchQuery.setProp(new SearchQuery(), "campaign", campaignId);
 			let pvPeepsData = getDataLogData({q:sq.query, breakdowns:[], start:'2017-01-01', end:'now', name:"view-data",dataspace:'gl'});
 			if (pvPeepsData.value) {
 				campaign.numPeople = pvPeepsData.value.all;
@@ -289,7 +290,7 @@ const CampaignPage = () => {
 					/>
 				)}
 
-				<Charities charities={charities} donation4charity={donation4charity} campaignPage={campaign} />
+				<Charities charities={charities} donation4charity={donation4charity} campaign={campaign} />
 
 				<div className="bg-white">
 					<Container>
@@ -571,151 +572,6 @@ const HowDoesItWork = ({ nvertiserName }) => {
 	);
 };
 
-/**
- * List of adverts with some info about them (like views, dates)
- * @param {*} param0 
- */
-const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount }) => {
-	const [selected, setSelected] = useState(0);
-
-	console.log("Ads for catalogue: ", ads);
-	/** Picks one Ad (with a video) from each campaign to display as a sample.  */
-	let sampleAd4Campaign = {};
-	ads.forEach(ad => {
-		let cname = campaignNameForAd(ad);
-		if (sampleAd4Campaign[cname]) {
-			let showcase = ad.campaignPage && ad.campaignPage.showcase;
-			// Prioritise ads with a start and end time attached
-			let startProvided = !sampleAd4Campaign[cname].start && ad.start;
-			let endProvided = !sampleAd4Campaign[cname].end && ad.end;
-			// If the ad cannot provide a new value for start or end, skip it
-			if (!startProvided && !endProvided && !showcase) {
-				return;
-			}
-		}
-		//if (!ad.videos || !ad.videos[0].url) return;
-		sampleAd4Campaign[cname] = ad;
-	});
-
-	const sampleAds = Object.values(sampleAd4Campaign);
-	const selectedAd = sampleAds[selected];
-
-	console.log("Sample ads: ", sampleAds);
-
-	let views = viewCount(viewcount4campaign, selectedAd);
-
-	if (sampleAds.length > 1) {
-		views = totalViewCount;
-	}
-
-	views = printer.prettyNumber(views);
-
-	const [activeIndex, setActiveIndex] = useState(0);
-	const [animating, setAnimating] = useState(false);
-
-	const carouselSlides = sampleAds.map((ad, i) =>
-		<CarouselItem
-			onExiting={() => setAnimating(true)}
-			onExited={() => setAnimating(false)}
-			key={i}
-		>
-			<AdvertCard
-				ad={ad}
-				viewCountProp={views}
-				donationTotal={donationTotal}
-				totalViewCount={totalViewCount}
-			/>
-			<CarouselCaption captionText={<Misc.DateDuration startDate={ad.start} endDate={ad.end} />}/>
-		</CarouselItem>
-	);
-	
-	const next = () => {
-		if (animating) return;
-		const nextIndex = activeIndex === carouselSlides.length - 1 ? 0 : activeIndex + 1;
-		setActiveIndex(nextIndex);
-	}
-
-	const previous = () => {
-		if (animating) return;
-		const nextIndex = activeIndex === 0 ? carouselSlides.length - 1 : activeIndex - 1;
-		setActiveIndex(nextIndex);
-	}
-
-	const goToIndex = (newIndex) => {
-		if (animating) return;
-		setActiveIndex(newIndex);
-	}
-
-	return (<>
-		<Container className="py-5">
-			<h2>Watch the {nvertiserName} ad{sampleAds.length > 1 ? "s" : ""} that raised <Counter currencySymbol="£" sigFigs={4} amount={donationTotal} minimumFractionDigits={2} preserveSize /><br />with {views} ad viewers</h2>
-			<Carousel
-				activeIndex={activeIndex}
-				next={next}
-				previous={previous}
-			>
-				<CarouselIndicators items={sampleAds} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{backgroundColor:"#000"}}/>
-				{carouselSlides}
-				<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous}/>
-				<CarouselControl direction="next" directionText="Next" onClickHandler={next}/>
-			</Carousel>
-			{/*<AdvertCard
-				ad={selectedAd}
-				viewCountProp={views}
-				donationTotal={donationTotal}
-				totalViewCount={totalViewCount}
-			/>
-			{sampleAds.length > 1 &&
-				<div className="row justify-content-center mt-5">
-					{sampleAds.map((ad, i) =>
-						<AdvertPreviewCard
-							key={i}
-							ad={ad}
-							selected={selectedAd == ad}
-							handleClick={() => setSelected(i)}
-						/>
-					)}
-				</div>}
-			{//<a className="btn btn-transparent" href="TODO">Campaign performance & brand study</a>
-			}
-		*/}
-		</Container>
-	</>);
-};
-const AdvertCard = ({ ad }) => {
-	const size = 'landscape';
-	return (
-		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
-			<div className="position-relative ad-card">
-				<img src="/img/LandingBackground/white_iphone.png" className="w-100 invisible" />
-				{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
-				<img src="/img/LandingBackground/white_iphone.png" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "50%", width: "80%", top: "50%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }} />
-				<div className="position-absolute theunit">
-					<GoodLoopUnit vertId={ad.id} size={size} />
-				</div>
-			</div>
-			{Roles.isDev() ? <DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal">Portal Editor</DevLink> : null}
-			{/*<span className="position-absolute" style={{ left: "50%", top: "50%", transform: "translate(-50%, -50%)", zIndex: 0 }}>If you're seeing this, you likely have ad-blocker enabled. Please disable ad-blocker to see the demo!</span>*/}
-		</div>
-	);
-};
-
-const AdvertPreviewCard = ({ ad, handleClick, selected = false }) => {
-	let size = 'landscape';
-
-	return (
-		<div className="col-md-4 col-6">
-			<div onClick={e => { e.preventDefault(); handleClick(); }} className={"pointer-wrapper" + (selected ? " selected" : "")}>
-				<div className="ad-prev shadow">
-					<GoodLoopUnit vertId={ad.id} size={size} />
-				</div>
-			</div>
-			<div>
-				<Misc.DateDuration startDate={ad.start} endDate={ad.end} />
-			</div>
-		</div>
-	);
-};
 const isAll = () => {
 	const slug = DataStore.getValue('location', 'path', 1);
 	return slug === 'all';
