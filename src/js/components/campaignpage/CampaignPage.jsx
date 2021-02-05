@@ -120,11 +120,13 @@ const CampaignPage = () => {
 	let campaignId = DataStore.getValue(['location','path'])[1];
 	console.log("Campaign ID from path: ", campaignId);
 	let pvAd;
-	if ( ! campaignId && adid) {
-		pvAd = getDataItem({type:C.TYPES.Advert,status,id:adid});
-		if (pvAd.value) {
-			campaignId = Advert.campaign(pvAd.value);
-			console.log("Campaign ID from ad: ", campaignId);
+	if ( ! campaignId ) {
+		if (adid) {
+			pvAd = getDataItem({type:C.TYPES.Advert,status,id:adid});
+			if (pvAd.value) {
+				campaignId = Advert.campaign(pvAd.value);
+				console.log("Campaign ID from ad: ", campaignId);
+			}
 		}
 	}
 
@@ -134,7 +136,7 @@ const CampaignPage = () => {
 	// Is this for one campaign?
 	// FIXME what about when we have multiple campaigns??
 	let pvCampaign = campaignId? getDataItem({type:C.TYPES.Campaign,status,id:campaignId}) : {};
-	const campaign = pvCampaign.value || {};
+	let campaign = pvCampaign.value || {};
 	console.log("Campaign: ", campaign);
 
 	// Is the campaign page being used as a click-through advert landing page?
@@ -203,9 +205,25 @@ const CampaignPage = () => {
 		pdf = pdfLookup(ad.campaign);
 	});
 
-	let campaigns = Object.values(campaignByName);
-	// sort by date
-	campaigns.sort(sortByDate(ad => ad.end || ad.start));
+	console.log("CAMPAIGN BY NAME: ", campaignByName);
+
+	let campaigns = Object.keys(campaignByName);
+
+	if (!campaignId && campaigns.length > 0) {
+		for (let i = 0; i < campaigns.length; i++) {
+			campaignId = campaigns[i];
+			pvCampaign = campaignId? getDataItem({type:C.TYPES.Campaign,status,id:campaignId}) : {};
+			campaign = pvCampaign.value;
+			if (campaign) {
+				console.log ("NEW CAMPAIGN OBJECT", campaign);
+				break;
+			}
+		}
+		if (!campaign) {
+			console.warn("No campaign settings found!");
+			campaign = {};
+		}
+	}
 
 	// Get ad viewing data
 	sq = new SearchQuery("evt:minview");
@@ -223,6 +241,7 @@ const CampaignPage = () => {
 
 	console.log(yessy(campaign.dntn4charity) ? "Using campaign donation data" : "Using sogive donation data");
 	const donation4charity = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
+	console.log("DONATION 4 CHARITY", donation4charity);
 	const donationTotal = campaign.dntn || donation4charity.total;
 
 	{	// NB: some very old ads may not have charities
@@ -306,8 +325,8 @@ const CampaignPage = () => {
 				<div className="bg-gl-light-red">
 					<Container className="py-5 text-white">
 						<div className="pt-5" />
-						<h2 className="text-white w-75 mx-auto">Download Tabs for Good - Chrome search plugin to raise money</h2>
-						<p className="py-5">Every time you open a new tab you raise money for real causes.</p>
+						<h3 className="text-white w-75 mx-auto">Download Tabs for Good - Chrome search plugin to raise money</h3>
+						<p className="py-3" style={{fontSize:"1.3rem"}}>Every time you open a new tab you raise money for real causes.</p>
 						<div className="py-4 flex-row justify-content-center align-items-center">
 							<a href="https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1" className="btn btn-secondary">Download</a>
 						</div>
@@ -353,20 +372,21 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 		totalBudget = Money.total(amounts);
 	}
 
-	return <div className="container">
+	return <div className="container py-5">
 		<Row>
-			<Col md={6} ><CharityDetails charities={charities} /></Col>
-			<Col md={6} className="text-left">
-				 {dmin && <>Donation Amount: <Misc.Money amount={dmin} /> { dmax && ! Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/></>}
-				 50% of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies. 
-				 Good-Loop and the advertising exchange make a small commission. The donations depend on viewers watching the adverts.<br/>
-				 {totalBudget && <>Limitations on Donation: <Misc.Money amount={totalBudget} /> <br/></>}
-				 {start && end && <>Dates: <Misc.DateTag date={start} /> through <Misc.DateTag date={end} /> <br/></>}
-				 {Roles.isDev()? <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/'+escape(campaign.id)} target="_portal">Portal Editor: Campaign</DevLink> : null}
-				 <p>If impacts such as "trees planted" are listed above, these are representative. 
-				 We don't ring-fence funding, as the charity can better assess the best use of funds. 
-				 Cost/impact figures are as reported by the charity or by the impact assessor SoGive.
-				 </p>
+			<Col md={6} style={{borderRight:"2px solid grey"}}><CharityDetails charities={charities} /></Col>
+			<Col md={6} className="text-center pl-5">
+				 <small>
+					{dmin && <>Donation Amount: <Misc.Money amount={dmin} /> { dmax && ! Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/></>}
+					50% of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies. 
+					Good-Loop and the advertising exchange make a small commission. The donations depend on viewers watching the adverts.<br/>
+					{totalBudget && <>Limitations on Donation: <Misc.Money amount={totalBudget} /> <br/></>}
+					{start && end && <>Dates: <Misc.DateTag date={start} /> through <Misc.DateTag date={end} /> <br/></>}
+					<p>If impacts such as "trees planted" are listed above, these are representative. 
+					We don't ring-fence funding, as the charity can better assess the best use of funds. 
+					Cost/impact figures are as reported by the charity or by the impact assessor SoGive.
+					</p>
+				</small>
 
 				{campaign.smallPrint &&
 					<div className="small-print">
@@ -376,9 +396,11 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 					</div>}
 			</Col>
 		</Row>
+		<br/>
 		<p><small>This information follows the guidelines of the New York Attorney General for best practice in cause marketing,
 			<Cite href='https://www.charitiesnys.com/cause_marketing.html'/> and the Better Business Bureau's standard for donations in marketing.			
-			</small></p>
+		</small></p>
+		{Roles.isDev()? <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/'+escape(campaign.id)} target="_portal">Portal Editor: Campaign</DevLink> : null}
 	</div>;
 }
 

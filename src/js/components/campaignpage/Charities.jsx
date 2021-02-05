@@ -72,6 +72,8 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 	// Does campaign page data contain data for low donation filtering, or is it old?
 	if (lowDntn) {
 		lowDonationThreshold = lowDntn.value;
+	}
+	if (lowDntnDisplay) {
 		// Remove any trailing quotations that sometimes crop up
 		lowDntnDisplay = lowDntnDisplay.replace(/\"/g, "");
 		// Expand the lowDntnDisplay mode into a configuration
@@ -79,11 +81,17 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 		showLowDonations = lowDntnDisplay !== "hide-low-dntns";
 		showDonations = lowDntnDisplay !== "hide-dntns";
 	} else {
+		filterLowDonations = false;
+		showLowDonations = true;
+		showDonations = true;
+	}
+	console.log("Low donation display settings:\n\tfilterLowDonations: " + filterLowDonations + "\n\tshowLowDonations: " + showLowDonations + "\n\tshowDonations: " + showDonations);
+	/*} else {
 		// Default to hiding low donations
 		filterLowDonations = true;
 		showLowDonations = true;
 		showDonations = true;
-	}
+	}*/
 
 	// augment with SoGive data
 	// Threshold is the given custom amount, otherwise 1% of total - or if total isnt loaded, £50
@@ -199,6 +207,8 @@ const CharityCard = ({ charity, donationValue, showLowDonations, showDonations }
 	let img = (quote && quote.img) || charity.images;
 
 	const showDonationNum = showDonations && (charity.lowDonation && showLowDonations || !charity.lowDonation);
+	if (!showDonationNum) console.log("Not showing donations for charity " + charity.id);
+	else if (!donationValue) console.warn("No donation value for charity " + charity.id + "!");
 
 	// TODO let's reduce the use of custom css classes (e.g. charity-quote-img etc below)
 
@@ -214,7 +224,7 @@ const CharityCard = ({ charity, donationValue, showLowDonations, showDonations }
 					<img src={charity.logo} alt="logo" />
 				</div>
 				<div className="charity-quote-text">
-					{showDonationNum && donationValue ? <div className="w-100"><h2><Counter amount={donationValue} /> raised</h2></div> : null}
+					{showDonationNum && donationValue ? <div className="w-100"><h2><Counter amount={donationValue} preservePennies={false} /> raised</h2></div> : null}
 					{charity.simpleImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
 					{!quote ? <MDText source={desc} /> : null}
