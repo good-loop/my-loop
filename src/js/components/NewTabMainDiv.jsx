@@ -118,7 +118,10 @@ const WebtopPage = () => {
 
 const TabsOpenedCounter = () => {
 	let pvTabsOpened = getTabsOpened();
-	return <span className="pr-3 text-white font-weight-bold">{(pvTabsOpened && pvTabsOpened.value) || '0'} tabs opened</span>;
+	if (pvTabsOpened && pvTabsOpened.value) {
+		return <span className="pr-3 text-white font-weight-bold">{pvTabsOpened.value} tabs opened</span>;
+	}
+	return null;
 };
 
 const engines = {
