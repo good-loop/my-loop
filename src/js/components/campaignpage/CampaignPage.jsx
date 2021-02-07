@@ -4,6 +4,7 @@
 import pivot from 'data-pivot';
 import _ from 'lodash';
 import React, { useState } from 'react';
+import PromiseValue from 'promise-value';
 import {
 	Alert,
 	Carousel,
@@ -27,7 +28,7 @@ import DataStore from '../../base/plumbing/DataStore';
 import Roles from '../../base/Roles';
 import SearchQuery from '../../base/searchquery';
 import { assert } from '../../base/utils/assert';
-import { asDate, isMobile, sum, yessy } from '../../base/utils/miscutils';
+import { asDate, isMobile, sum, uniq, yessy } from '../../base/utils/miscutils';
 import printer from '../../base/utils/printer';
 import { sortByDate } from '../../base/utils/SortFn';
 import Login from '../../base/youagain';
@@ -39,6 +40,8 @@ import CampaignSplashCard from './CampaignSplashCard';
 import Charities, { CharityDetails } from './Charities';
 import DevLink from './DevLink';
 import AdvertsCatalogue from './AdvertsCatalogue';
+import List from '../../base/data/List';
+import KStatus from '../../base/data/KStatus';
 
 
 /**
@@ -98,6 +101,108 @@ const uniqueIds = arr => {
 	});
 };
 
+/**
+ * @returns fetches for all the data: `{pvTopCampaign, pvCampaigns, pvAgencies, pvAds, pvAdvertisers}`
+ */
+const fetchIHubData = () => {
+	// What adverts should we look at?
+	let {
+		'gl.vert': adid, // deprecated - prefer campaign
+		'gl.vertiser': vertiserid,
+		'gl.status': glStatus,
+		status,
+		agency,
+		// q = '', TODO
+	} = DataStore.getValue(['location', 'params']) || {};
+	let campaignId1 = DataStore.getValue(['location','path'])[1];
+	// Merge gl.status into status & take default value
+	if ( ! status) status = (glStatus || C.KStatus.PUB_OR_ARC);
+	// Data, assemble
+	// let campaignIds, agencyIds, adIds, advertiserIds;
+	let pvTopCampaign, pvCampaigns, pvAgencies, pvAds, pvAdvertisers;
+	// ...by Campaign?
+	if (campaignId1) {		
+		pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:campaignId1});
+		// wrap as a list
+		// campaignIds = [campaignId1];
+		pvCampaigns = new PromiseValue(pvTopCampaign.promise.then(
+			c => new List([c])
+		));
+		// ads
+		let q = SearchQuery.setProp(new SearchQuery(), "campaign", campaignId1).query;
+		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});		
+	}
+	// ...by Advert?
+	if (adid) {		
+		let pv1 = getDataItem({type:C.TYPES.Advert,status,id:adid});
+		// wrap as a list
+		pvAds = new PromiseValue(pv1.promise.then(
+			v => new List([v])
+		));
+		// top campaign (should be set)
+		if (pv1.value && pv1.value.campaign) {
+			pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:pv1.value.campaign});
+		}
+	}
+	// ...by Advertiser?
+	if (vertiserid) {		
+		let pv1 = getDataItem({type:C.TYPES.Advertiser,status,id:vertiserid});
+		// wrap as a list
+		// advertiserIds = [vertiserid];
+		pvAdvertisers = new PromiseValue(pv1.promise.then(
+			adv => new List([adv])
+		));
+		// ads
+		let q = SearchQuery.setProp(new SearchQuery(), "vertiser", vertiserid).query;
+		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
+		// top campaign?
+		if (pv1.value && pv1.value.campaign) {
+			pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:pv1.value.campaign});
+		}
+	}
+	// ...by Agency?
+	if (agency) {		
+		let pv1 = getDataItem({type:C.TYPES.Agency,status,id:agency});
+		// wrap as a list
+		pvAgencies = new PromiseValue(pv1.promise.then(
+			v => new List([v])
+		));
+		// ads
+		let q = SearchQuery.setProp(new SearchQuery(), "agencyId", agency).query;
+		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
+		// top campaign?
+		if (pv1.value && pv1.value.campaign) {
+			pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:pv1.value.campaign});
+		}
+	}
+	// ...fill in from adverts
+	if (pvAds.value) {
+		if ( ! pvAdvertisers) {
+			// NB: This should be only one advertiser and agency
+			let advIds = uniq(pvAds.value.hits.map(Advert.advertiserId));
+			let advq = SearchQuery.setPropOr(new SearchQuery(), "id", advIds).query;
+			pvAdvertisers = ActionMan.list({type: C.TYPES.Advertiser, status:KStatus.PUB_OR_DRAFT, q:advq});
+		}
+		if ( ! pvAgencies) {
+			let agIds = uniq(pvAds.value.hits.map(ad => ad.agencyId));
+			let agq = SearchQuery.setPropOr(new SearchQuery(), "id", agIds).query;
+			pvAgencies = ActionMan.list({type: C.TYPES.Agency, status:KStatus.PUB_OR_DRAFT, q:agq});
+		}
+		if ( ! pvCampaigns) {
+			let ids = uniq(pvAds.value.hits.map(ad => ad.campaign));
+			let q = SearchQuery.setPropOr(new SearchQuery(), "id", ids).query;
+			pvCampaigns = ActionMan.list({type: C.TYPES.Campaign, status:KStatus.PUB_OR_DRAFT, q});
+		}
+	}
+	// fill in any waiting ones with blanks for convenience
+	return {
+		pvTopCampaign:pvTopCampaign||{},
+		pvCampaigns:pvCampaigns||{}, 
+		pvAgencies:pvAgencies||{}, 
+		pvAds:pvAds||{}, 
+		pvAdvertisers:pvAdvertisers||{}
+	}
+};
 
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser` or `via`
@@ -106,84 +211,38 @@ const uniqueIds = arr => {
  * Split: branding - a vertiser ID, vs ad-params
  */
 const CampaignPage = () => {
-	// What adverts should we look at?
 	let {
-		'gl.vert': adid, // deprecated - prefer campaign
-		'gl.vertiser': vertiserid,
-		'gl.status': glStatus,
-		status,
 		via,
-		q = '',
 		landing,
 	} = DataStore.getValue(['location', 'params']) || {};
-	// campaign ID -- from url or from advert
-	let campaignId = DataStore.getValue(['location','path'])[1];
-	console.log("Campaign ID from path: ", campaignId);
-	let pvAd;
-	if ( ! campaignId ) {
-		if (adid) {
-			pvAd = getDataItem({type:C.TYPES.Advert,status,id:adid});
-			if (pvAd.value) {
-				campaignId = Advert.campaign(pvAd.value);
-				console.log("Campaign ID from ad: ", campaignId);
-			}
-		}
-	}
-
-	// Merge gl.status into status & take default value
-	if (!status) status = (glStatus || C.KStatus.PUB_OR_ARC);
-	
-	// Is this for one campaign?
-	// FIXME what about when we have multiple campaigns??
-	let pvCampaign = campaignId? getDataItem({type:C.TYPES.Campaign,status,id:campaignId}) : {};
-	let campaign = pvCampaign.value || {};
-	console.log("Campaign: ", campaign);
+	// What adverts etc should we look at?
+	let {pvTopCampaign, pvCampaigns, pvAds, pvAdvertisers, pvAgencies} = fetchIHubData();
 
 	// Is the campaign page being used as a click-through advert landing page?
 	// If so, change the layout slightly, positioning the advert video on top.
 	const isLanding = (landing !== undefined) && (landing !== 'false');
 
-	// Which advert(s)?
-	let sq = adsQuery({ q, adid, vertiserid, campaignId, via });
-	let pvAds = pvAd || fetchAds({ searchQuery: sq, status }); // HACK avoid a 2nd search request if adid was specified
-	if ( ! pvAds) {
-		// No query -- show a list
-		// TODO better graphic design before we make this list widget public
-		if (!Login.isLoggedIn()) {
-			return <div>Missing: campaign or advertiser ID. Please check the link you used to get here.</div>;
-		}
-		return <ListLoad type={C.TYPES.Advert} servlet="campaign" />;
-	}
 	if ( ! pvAds.resolved) {
-		return <Misc.Loading text="Loading campaign info..." />;
+		// TODO display some stuff whilst ads are loading
+		return <Misc.Loading text="Loading advert info..." />;
 	}
 	if (pvAds.error) {
 		return <ErrAlert>Error loading advert data</ErrAlert>;
 	}
+	let ads = List.hits(pvAds.value);
 
-	// If it's remotely possible to have an ad now, we have it. Which request succeeded, if any?
-	let ads = pvAd? [pvAd.value] : pvAds.value.hits; // NB: unpack the pvAds = pvAd hack
-	console.log(ads);
-	if ( ! ads || ! ads.length) {
-		return <Alert>Could not load adverts for {sq.query} {status}</Alert>; // No ads?!
+	// Combine Campaign settings
+	let campaign = pvTopCampaign.value;
+	if ( ! campaign && pvCampaigns.value) {
+		let cs = List.hits(pvCampaigns.value);
+		campaign = Object.assign({}, ...cs);	
 	}
-
-	// Get the advertiser's name (TODO append to advert as vertiserName)
-	const pvVertiser = ActionMan.getDataItem({ type: C.TYPES.Advertiser, id: ads[0].vertiser, status: C.KStatus.PUBLISHED });
-	const nvertiser = pvVertiser.value;
-
-	// Combine branding settings from all ads
-	// Vertiser branding wins, ad branding fallback, last ad wins
+	if ( ! campaign) campaign = {};
+	// TODO fill in if no Campaign objects
+	// Priority: TopCampaign, Agency, Advertiser, Campaigns, Adverts
+	// TODO combine branding
 	let branding = {};	
-	let useVertiser = true;
-	if (!nvertiser) {
-		useVertiser = false;
-	} else if (!nvertiser.branding) {
-		useVertiser = false;
-	} else if (!nvertiser.branding.logo) {
-		useVertiser = false;
-	}
-	ads.forEach(ad => Object.assign(branding, (useVertiser ? nvertiser.branding : ad.branding)));
+	ads.forEach(ad => Object.assign(branding, ad.branding));
 
 	// individual charity data
 	let charities = uniqueIds(_.flatten(ads.map(
@@ -206,24 +265,6 @@ const CampaignPage = () => {
 	});
 
 	console.log("CAMPAIGN BY NAME: ", campaignByName);
-
-	let campaigns = Object.keys(campaignByName);
-
-	if (!campaignId && campaigns.length > 0) {
-		for (let i = 0; i < campaigns.length; i++) {
-			campaignId = campaigns[i];
-			pvCampaign = campaignId? getDataItem({type:C.TYPES.Campaign,status,id:campaignId}) : {};
-			campaign = pvCampaign.value;
-			if (campaign) {
-				console.log ("NEW CAMPAIGN OBJECT", campaign);
-				break;
-			}
-		}
-		if (!campaign) {
-			console.warn("No campaign settings found!");
-			campaign = {};
-		}
-	}
 
 	// Get ad viewing data
 	sq = new SearchQuery("evt:minview");
@@ -597,39 +638,6 @@ const HowDoesItWork = ({ nvertiserName }) => {
 const isAll = () => {
 	const slug = DataStore.getValue('location', 'path', 1);
 	return slug === 'all';
-};
-/**
- * @returns {!SearchQuery} for fetching Adverts
- */
-const adsQuery = ({ q, adid, vertiserid, campaignId, via }) => {
-	let sq = new SearchQuery(q);
-	// NB: convert url parameters into a backend ES query against the Advert.java object
-	if (campaignId) sq = SearchQuery.setProp(sq, 'campaign', campaignId);
-	if (adid) sq = SearchQuery.setProp(sq, 'id', adid);	
-	if (vertiserid) sq = SearchQuery.setProp(sq, 'vertiser', vertiserid);
-	if (via) sq = SearchQuery.setProp(sq, 'via', via);
-	return sq;
-};
-/**
- * @param {Object} p
- * @param {!SearchQuery} p.searchQuery
- * @returns ?PV(Advert[]) null if no query
- */
-const fetchAds = ({ searchQuery, status }) => {
-	let q = searchQuery.query;
-	if (!q && !isAll()) {
-		return null;
-	}
-	// TODO server side support to do this cleaner "give me published if possible, failing that archived, failing that draft"
-	// Try to get ads based on spec given in URL params
-	let pvAds = ActionMan.list({ type: C.TYPES.Advert, status, q });
-	// HACK No published ads? fall back to ALL_BAR_TRASH if requested ad is draft-only
-	if (pvAds.resolved && (!pvAds.value || !pvAds.value.hits || !pvAds.value.hits.length)) {
-		let pvAdsDraft = ActionMan.list({ type: C.TYPES.Advert, status: C.KStatus.ALL_BAR_TRASH, q });
-		console.warn(`Unable to find ad ${q} with status ${status}, falling back to ALL_BAR_TRASH`);
-		return pvAdsDraft;
-	}
-	return pvAds;
 };
 
 export default CampaignPage;
