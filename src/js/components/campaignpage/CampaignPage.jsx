@@ -179,19 +179,25 @@ const fetchIHubData = () => {
 	if (pvAds.value) {
 		if ( ! pvAdvertisers) {
 			// NB: This should be only one advertiser and agency
-			let advIds = uniq(pvAds.value.hits.map(Advert.advertiserId));
-			let advq = SearchQuery.setPropOr(new SearchQuery(), "id", advIds).query;
-			pvAdvertisers = ActionMan.list({type: C.TYPES.Advertiser, status:KStatus.PUB_OR_DRAFT, q:advq});
+			let ids = uniq(pvAds.value.hits.map(Advert.advertiserId));
+			if (yessy(ids)) {
+				let advq = SearchQuery.setPropOr(null, "id", ids).query;
+				pvAdvertisers = ActionMan.list({type: C.TYPES.Advertiser, status:KStatus.PUB_OR_DRAFT, q:advq});
+			}
 		}
 		if ( ! pvAgencies) {
-			let agIds = uniq(pvAds.value.hits.map(ad => ad.agencyId));
-			let agq = SearchQuery.setPropOr(new SearchQuery(), "id", agIds).query;
-			pvAgencies = ActionMan.list({type: C.TYPES.Agency, status:KStatus.PUB_OR_DRAFT, q:agq});
+			let ids = uniq(pvAds.value.hits.map(ad => ad.agencyId));
+			if (yessy(ids)) {
+				let agq = SearchQuery.setPropOr(null, "id", ids).query;
+				pvAgencies = ActionMan.list({type: C.TYPES.Agency, status:KStatus.PUB_OR_DRAFT, q:agq});
+			}
 		}
 		if ( ! pvCampaigns) {
 			let ids = uniq(pvAds.value.hits.map(ad => ad.campaign));
-			let q = SearchQuery.setPropOr(new SearchQuery(), "id", ids).query;
-			pvCampaigns = ActionMan.list({type: C.TYPES.Campaign, status:KStatus.PUB_OR_DRAFT, q});
+			if (yessy(ids)) {
+				let q = SearchQuery.setPropOr(null, "id", ids).query;
+				pvCampaigns = ActionMan.list({type: C.TYPES.Campaign, status:KStatus.PUB_OR_DRAFT, q});
+			}
 		}
 	}
 	// fill in any waiting ones with blanks for convenience
@@ -239,6 +245,7 @@ const CampaignPage = () => {
 	}
 	if ( ! campaign) campaign = {};
 	// TODO fill in if no Campaign objects
+	// TODO fill in blanks like donation total and peeps
 	// Priority: TopCampaign, Agency, Advertiser, Campaigns, Adverts
 	// TODO combine branding
 	let branding = {};	
@@ -267,13 +274,10 @@ const CampaignPage = () => {
 	console.log("CAMPAIGN BY NAME: ", campaignByName);
 
 	// Get ad viewing data
-	sq = new SearchQuery("evt:minview");
-	if (campaignId) {
-		sq = SearchQuery.setProp(sq, "campaign", campaignId);
-	} else {
-		let qads = ads.map(({ id }) => `vert:${id}`).join(' OR ');
-		sq = SearchQuery.and(sq, qads);
-	}
+	let sq = new SearchQuery("evt:minview");
+	let qads = ads.map(({ id }) => `vert:${id}`).join(' OR ');
+	sq = SearchQuery.and(sq, qads);
+
 	let pvViewData = getDataLogData({q:sq.query, breakdowns:['campaign'], start:'2017-01-01', end:'now', name:"view-data",dataspace:'gl'});
 	let viewcount4campaign = {};
 	if (pvViewData.value) {
@@ -302,29 +306,30 @@ const CampaignPage = () => {
 	// and to pass it to the AdvertCards to calculate the money raised against the total.
 	let totalViewCount = campaign.numPeople; // hard set by the Campaign object?
 	if ( ! totalViewCount) {
-		if (campaignId) { // TODO refactor everything to be based around a list of campaigns
-			let sq = SearchQuery.setProp(new SearchQuery(), "campaign", campaignId);
-			let pvPeepsData = getDataLogData({q:sq.query, breakdowns:[], start:'2017-01-01', end:'now', name:"view-data",dataspace:'gl'});
-			if (pvPeepsData.value) {
-				campaign.numPeople = pvPeepsData.value.all;
-				totalViewCount = campaign.numPeople;
-			}
-		} else {
-			const ad4c = {};
-			ads.forEach(ad => ad4c[campaignNameForAd(ad)] = ad);
-			let ads1perCampaign = Object.values(ad4c);
-			let views = ads1perCampaign.map(ad => viewCount(viewcount4campaign, ad));
-			totalViewCount = sum(views);
-		}
+		// if (campaignId) { // TODO refactor everything to be based around a list of campaigns
+		// 	let sq = SearchQuery.setProp(new SearchQuery(), "campaign", campaignId);
+		// 	let pvPeepsData = getDataLogData({q:sq.query, breakdowns:[], start:'2017-01-01', end:'now', name:"view-data",dataspace:'gl'});
+		// 	if (pvPeepsData.value) {
+		// 		campaign.numPeople = pvPeepsData.value.all;
+		// 		totalViewCount = campaign.numPeople;
+		// 	}
+		// } else {
+		const ad4c = {};
+		ads.forEach(ad => ad4c[campaignNameForAd(ad)] = ad);
+		let ads1perCampaign = Object.values(ad4c);
+		let views = ads1perCampaign.map(ad => viewCount(viewcount4campaign, ad));
+		totalViewCount = sum(views);
+		// }
 	}
 
 	// Get name of advertiser from nvertiser if existing, or ad if not
-	const nvertiserName = (nvertiser && nvertiser.name) || ads[0].name;
+	let nvertiser = (pvAdvertisers.value && pvAdvertisers.value.hits[0]) || ads[0];
+	const nvertiserName = nvertiser.name;
 	const nvertiserNameNoTrail = nvertiserName.replace(/'s$/g, "");
 
 	let shareButtonMeta = {
 		title: nvertiserNameNoTrail + "'s Good-Loop Impact - My-Loop",
-		image: campaign.bg ? campaign.bg : "https://testmy.good-loop.com/img/redcurve.svg",
+		image: campaign.bg || "https://my.good-loop.com/img/redcurve.svg",
 		description: "See " + nvertiserNameNoTrail + "'s impact from Good-Loop ethical advertising"
 	};
 
@@ -336,7 +341,7 @@ const CampaignPage = () => {
 			<div className="text-center">
 				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaign} 
 					donationValue={donationTotal} 
-					totalViewCount={totalViewCount} landing={isLanding} adId={adid} />
+					totalViewCount={totalViewCount} landing={isLanding} />
 
 				<HowDoesItWork nvertiserName={nvertiserName} />
 
