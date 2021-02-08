@@ -141,7 +141,6 @@ const fetchIHubData = () => {
 	else if (vertiserid) {		
 		pvTopItem = getDataItem({type:C.TYPES.Advertiser,status,id:vertiserid});
 		// wrap as a list
-		// advertiserIds = [vertiserid];
 		pvAdvertisers = fetchIHubData2_wrapAsList(pvTopItem);
 		// ads
 		let q = SearchQuery.setProp(new SearchQuery(), "vertiser", vertiserid).query;
