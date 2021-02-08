@@ -119,10 +119,10 @@ const fetchIHubData = () => {
 	if ( ! status) status = (glStatus || C.KStatus.PUB_OR_ARC);
 	// Data, assemble
 	// let campaignIds, agencyIds, adIds, advertiserIds;
-	let pvTopCampaign, pvCampaigns, pvAgencies, pvAds, pvAdvertisers;
+	let pvTopItem, pvTopCampaign, pvCampaigns, pvAgencies, pvAds, pvAdvertisers;
 	// ...by Campaign?
 	if (campaignId1) {		
-		pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:campaignId1});
+		pvTopItem = pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:campaignId1});
 		// wrap as a list
 		// campaignIds = [campaignId1];
 		pvCampaigns = new PromiseValue(pvTopCampaign.promise.then(
@@ -133,49 +133,44 @@ const fetchIHubData = () => {
 		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});		
 	}
 	// ...by Advert?
-	if (adid) {
+	else if (adid) {
 		console.log("Getting " + adid + " ad...");
-		let pv1 = getDataItem({type:C.TYPES.Advert,status,id:adid});
+		pvTopItem = getDataItem({type:C.TYPES.Advert,status,id:adid});
 		// wrap as a list
-		pvAds = new PromiseValue(pv1.promise.then(
+		pvAds = new PromiseValue(pvTopItem.promise.then(
 			v => new List([v])
 		));
-		// top campaign (should be set)
-		if (pv1.value && pv1.value.campaign) {
-			pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:pv1.value.campaign});
-		}
+		console.log("pvAds", pvAds, "pvTopItem", pvTopItem); // debug
 	}
 	// ...by Advertiser?
 	else if (vertiserid) {		
-		let pv1 = getDataItem({type:C.TYPES.Advertiser,status,id:vertiserid});
+		pvTopItem = getDataItem({type:C.TYPES.Advertiser,status,id:vertiserid});
 		// wrap as a list
 		// advertiserIds = [vertiserid];
-		pvAdvertisers = new PromiseValue(pv1.promise.then(
+		pvAdvertisers = new PromiseValue(pvTopItem.promise.then(
 			adv => new List([adv])
 		));
 		// ads
 		let q = SearchQuery.setProp(new SearchQuery(), "vertiser", vertiserid).query;
 		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
-		// top campaign?
-		if (pv1.value && pv1.value.campaign) {
-			pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:pv1.value.campaign});
-		}
 	}
 	// ...by Agency?
 	else if (agency) {		
-		let pv1 = getDataItem({type:C.TYPES.Agency,status,id:agency});
+		pvTopItem = getDataItem({type:C.TYPES.Agency,status,id:agency});
 		// wrap as a list
-		pvAgencies = new PromiseValue(pv1.promise.then(
+		pvAgencies = new PromiseValue(pvTopItem.promise.then(
 			v => new List([v])
 		));
 		// ads
 		let q = SearchQuery.setProp(new SearchQuery(), "agencyId", agency).query;
 		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
-		// top campaign?
-		if (pv1.value && pv1.value.campaign) {
-			pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:pv1.value.campaign});
-		}
+	} else {
+		throw new Error("No Campaign info specified");
 	}
+	// top campaign?
+	if ( ! pvTopCampaign && pvTopItem && pvTopItem.value && pvTopItem.value.campaign) {
+		pvTopCampaign = getDataItem({type:C.TYPES.Campaign, status, id:pvTopItem.value.campaign});
+	}	
 	// ...fill in from adverts
 	if (pvAds.value) {
 		if ( ! pvAdvertisers) {
@@ -203,6 +198,7 @@ const fetchIHubData = () => {
 	}
 	// fill in any waiting ones with blanks for convenience
 	return {
+		pvTopItem:pvTopItem||{},
 		pvTopCampaign:pvTopCampaign||{},
 		pvCampaigns:pvCampaigns||{}, 
 		pvAgencies:pvAgencies||{}, 
@@ -223,7 +219,7 @@ const CampaignPage = () => {
 		landing,
 	} = DataStore.getValue(['location', 'params']) || {};
 	// What adverts etc should we look at?
-	let {pvTopCampaign, pvCampaigns, pvAds, pvAdvertisers, pvAgencies} = fetchIHubData();
+	let {pvTopItem, pvTopCampaign, pvCampaigns, pvAds, pvAdvertisers, pvAgencies} = fetchIHubData();
 
 	// Is the campaign page being used as a click-through advert landing page?
 	// If so, change the layout slightly, positioning the advert video on top.
