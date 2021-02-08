@@ -124,10 +124,7 @@ const fetchIHubData = () => {
 	if (campaignId1) {		
 		pvTopItem = pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:campaignId1});
 		// wrap as a list
-		// campaignIds = [campaignId1];
-		pvCampaigns = new PromiseValue(pvTopCampaign.promise.then(
-			c => new List([c])
-		));
+		pvCampaigns = fetchIHubData2_wrapAsList(pvTopCampaign);
 		// ads
 		let q = SearchQuery.setProp(new SearchQuery(), "campaign", campaignId1).query;
 		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});		
@@ -137,9 +134,7 @@ const fetchIHubData = () => {
 		console.log("Getting " + adid + " ad...");
 		pvTopItem = getDataItem({type:C.TYPES.Advert,status,id:adid});
 		// wrap as a list
-		pvAds = new PromiseValue(pvTopItem.promise.then(
-			v => new List([v])
-		));
+		pvAds = fetchIHubData2_wrapAsList(pvTopItem);
 		console.log("pvAds", pvAds, "pvTopItem", pvTopItem); // debug
 	}
 	// ...by Advertiser?
@@ -147,9 +142,7 @@ const fetchIHubData = () => {
 		pvTopItem = getDataItem({type:C.TYPES.Advertiser,status,id:vertiserid});
 		// wrap as a list
 		// advertiserIds = [vertiserid];
-		pvAdvertisers = new PromiseValue(pvTopItem.promise.then(
-			adv => new List([adv])
-		));
+		pvAdvertisers = fetchIHubData2_wrapAsList(pvTopItem);
 		// ads
 		let q = SearchQuery.setProp(new SearchQuery(), "vertiser", vertiserid).query;
 		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
@@ -158,9 +151,7 @@ const fetchIHubData = () => {
 	else if (agency) {		
 		pvTopItem = getDataItem({type:C.TYPES.Agency,status,id:agency});
 		// wrap as a list
-		pvAgencies = new PromiseValue(pvTopItem.promise.then(
-			v => new List([v])
-		));
+		pvAgencies = fetchIHubData2_wrapAsList(pvTopItem);
 		// ads
 		let q = SearchQuery.setProp(new SearchQuery(), "agencyId", agency).query;
 		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
@@ -205,6 +196,21 @@ const fetchIHubData = () => {
 		pvAds:pvAds||{}, 
 		pvAdvertisers:pvAdvertisers||{}
 	}
+};
+
+/**
+ * 
+ * @param {PromiseValue} pvTopItem 
+ * @returns {PromiseValue} pvList
+ */
+const fetchIHubData2_wrapAsList = pvTopItem => {
+	if (pvTopItem.resolved) {
+		return new PromiseValue(new List([pvTopItem.value])); // NB: this will lose the top-level error, but oh well
+	}
+	// NB: If pvTopItem were resolved, this would still work -- but not instantly, which would cause issues, as these wrappers keep getting remade
+	return new PromiseValue(pvTopItem.promise.then(
+		v => new List([v]),
+	));
 };
 
 /**
