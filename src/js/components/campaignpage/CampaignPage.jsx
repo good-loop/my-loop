@@ -133,7 +133,8 @@ const fetchIHubData = () => {
 		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});		
 	}
 	// ...by Advert?
-	if (adid) {		
+	if (adid) {
+		console.log("Getting " + adid + " ad...");
 		let pv1 = getDataItem({type:C.TYPES.Advert,status,id:adid});
 		// wrap as a list
 		pvAds = new PromiseValue(pv1.promise.then(
@@ -145,7 +146,7 @@ const fetchIHubData = () => {
 		}
 	}
 	// ...by Advertiser?
-	if (vertiserid) {		
+	else if (vertiserid) {		
 		let pv1 = getDataItem({type:C.TYPES.Advertiser,status,id:vertiserid});
 		// wrap as a list
 		// advertiserIds = [vertiserid];
@@ -161,7 +162,7 @@ const fetchIHubData = () => {
 		}
 	}
 	// ...by Agency?
-	if (agency) {		
+	else if (agency) {		
 		let pv1 = getDataItem({type:C.TYPES.Agency,status,id:agency});
 		// wrap as a list
 		pvAgencies = new PromiseValue(pv1.promise.then(
@@ -242,6 +243,9 @@ const CampaignPage = () => {
 	if ( ! campaign && pvCampaigns.value) {
 		let cs = List.hits(pvCampaigns.value);
 		campaign = Object.assign({}, ...cs);	
+		console.log("Not top campaign, using:", campaign);
+	} else {
+		console.log("Using top campaign ", campaign);
 	}
 	if ( ! campaign) campaign = {};
 	// TODO fill in if no Campaign objects
@@ -323,8 +327,8 @@ const CampaignPage = () => {
 	}
 
 	// Get name of advertiser from nvertiser if existing, or ad if not
-	let nvertiser = (pvAdvertisers.value && pvAdvertisers.value.hits[0]) || ads[0];
-	const nvertiserName = nvertiser.name;
+	let nvertiser = (pvAdvertisers.value && pvAdvertisers.value.hits[0]);
+	const nvertiserName = nvertiser ? nvertiser.name : ads[0].vertiserName;
 	const nvertiserNameNoTrail = nvertiserName.replace(/'s$/g, "");
 
 	let shareButtonMeta = {
@@ -446,7 +450,7 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 		<p><small>This information follows the guidelines of the New York Attorney General for best practice in cause marketing,
 			<Cite href='https://www.charitiesnys.com/cause_marketing.html'/> and the Better Business Bureau's standard for donations in marketing.			
 		</small></p>
-		{Roles.isDev()? <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/'+escape(campaign.id)} target="_portal">Portal Editor: Campaign</DevLink> : null}
+		<DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/'+escape(campaign.id)} target="_portal">Portal Editor: Campaign</DevLink>
 	</div>;
 }
 

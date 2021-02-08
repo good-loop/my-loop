@@ -4,8 +4,12 @@ import WhiteCircle from './WhiteCircle';
 import printer from '../../base/utils/printer';
 import { space } from '../../base/utils/miscutils';
 import ShareButton from '../ShareButton';
+import DevLink from './DevLink';
 
 const SplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, totalViewCount}) => {
+
+	let numPeople = printer.prettyNumber(Math.round(totalViewCount), 10);
+	if (numPeople === "0") numPeople = false;
 	return (
 		<div className="impact-hub-splash">
 			<img src={campaignPage.bg ? campaignPage.bg : "/img/lightcurve.svg"} className={space("w-100", campaignPage.bg ? "splash-img" : "splash-curve")} alt="splash" />
@@ -19,7 +23,7 @@ const SplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, tot
 						</WhiteCircle>
 						<img src="/img/plus.png" className="plus" alt="+"/>
 						<WhiteCircle>
-							<div className="sub-header"><span className="num">{printer.prettyNumber(Math.round(totalViewCount), 10)}</span> people</div>
+							<div className="sub-header">{numPeople ? <><span className="num">{numPeople}</span> people</> : "Loading..."}</div>
 						</WhiteCircle>
 					</div>
 					<div className="flex-column flex-center pt-5 splash-text">
@@ -29,6 +33,7 @@ const SplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, tot
 							</div>
 						</div>
 						<p className="text-white subtext">by using ethical online ads</p>
+						<DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/'+escape(campaignPage.id)} target="_portal">Edit Campaign Settings (using {campaignPage.id})</DevLink>
 					</div>
 				</div>
 			</div>

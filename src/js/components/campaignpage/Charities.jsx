@@ -102,8 +102,6 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 	charities = charities.filter(x => x);
 	let sogiveCharities = fetchSogiveData(charities, filterLowDonations, threshold);
 
-	console.log("SOGIVE CHARITIES FIRST PASS", sogiveCharities);
-
 	const getDonation = c => {
 		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
 		// Filter charity if less then 1/10 the total donation
@@ -111,8 +109,9 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 	};
 
 	sogiveCharities = sogiveCharities.map(charity => {
-		const dntn = getDonation(charity.id);
-		const include = dntn ? dntn >= threshold : false;
+		const dntn = getDonation(charity);
+		const include = dntn ? Money.value(dntn) >= threshold : false;
+		console.log("FILTER FOR CHARITY " + charity.id + ": " + include + ", ", dntn);
 		//console.log("Is " + charity.id + " a low donation? " + !include + ", as " + donation4charity[charity.id].value + " >= " + threshold);
 		if (!include && filterLowDonations) return null;
 		charity.lowDonation = !include;
@@ -221,14 +220,14 @@ const CharityCard = ({ charity, donationValue, showLowDonations, showDonations }
 			}
 			<div className={space("charity-quote-content", img && "col-md-7")}>
 				<div className="charity-quote-logo">
-					<img src={charity.logo} alt="logo" />
+					<img src={charity.logo} alt="logo"/>
 				</div>
 				<div className="charity-quote-text">
 					{showDonationNum && donationValue ? <div className="w-100"><h2><Counter amount={donationValue} preservePennies={false} /> raised</h2></div> : null}
 					{charity.simpleImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
 					{!quote ? <MDText source={desc} /> : null}
-					{Roles.isDev() && <DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">SoGive</DevLink>}
+					<DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">SoGive</DevLink>
 				</div>
 			</div>
 		</div>

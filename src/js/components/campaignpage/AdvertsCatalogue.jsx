@@ -95,7 +95,7 @@ const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserNam
 	}
 	views = printer.prettyNumber(views);
 
-	if (ads.length == 1) {
+	if (sampleAds.length == 1) {
 		return <Container className="py-5">
 			<h2>Watch the {nvertiserName} ad that raised <Counter currencySymbol="£" sigFigs={4} amount={donationTotal} minimumFractionDigits={2} preserveSize /><br />with {views} ad viewers</h2>
 			<AdvertCard
@@ -240,7 +240,7 @@ const AdvertCard = ({ ad }) => {
 	const size = 'landscape';
 	return (
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
-			{Roles.isDev() ? <DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{position:"absolute", zIndex:999}}>Portal Editor</DevLink> : null}
+			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{position:"absolute", zIndex:999}}>Portal Editor</DevLink>
 			<div className="position-relative ad-card">
 				<img src="/img/LandingBackground/white_iphone.png" className="w-100 invisible" />
 				{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
