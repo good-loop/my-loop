@@ -35,7 +35,8 @@ ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com';
 // ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com';
 
 // ServerIO.AS_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}as.good-loop.com`;
-ServerIO.PORTAL_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}portal.good-loop.com`;
+//ServerIO.PORTAL_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}portal.good-loop.com`;
+ServerIO.PORTAL_ENDPOINT = `https://portal.good-loop.com`;
 // Use the live adserver, since our showcase ad selectionis hard-coded to live ads.
 ServerIO.AS_ENDPOINT = 'https://as.good-loop.com';
 
