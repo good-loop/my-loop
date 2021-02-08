@@ -198,7 +198,7 @@ const setSelectedCharityId = (cid) => {
 	let xids = getAllXIds();
 	let persons = getProfilesNow(xids);
 	setClaimValue({persons, key:"charity", value:cid, swallow:true});
-	console.log("setSelectedCharityId " + cid);
+	console.log("setSelectedCharityId " + cid+" for ",xids, "persons", persons);
 	DataStore.update();
 	// save
 	let pv = savePersons({persons});
