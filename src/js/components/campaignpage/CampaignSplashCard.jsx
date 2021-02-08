@@ -5,7 +5,7 @@ import printer from '../../base/utils/printer';
 import { space } from '../../base/utils/miscutils';
 import ShareButton from '../ShareButton';
 
-const SplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, totalViewCount, adId, landing }) => {
+const SplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, totalViewCount}) => {
 	return (
 		<div className="impact-hub-splash">
 			<img src={campaignPage.bg ? campaignPage.bg : "/img/lightcurve.svg"} className={space("w-100", campaignPage.bg ? "splash-img" : "splash-curve")} alt="splash" />

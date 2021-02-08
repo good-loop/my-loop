@@ -255,6 +255,10 @@ const AdvertCard = ({ ad }) => {
 };
 
 const AdvertPreviewCard = ({ ad, handleClick, selected = false }) => {
+	if ( ! ad) {
+		console.warn("AdvertPreviewCard - NO ad?!");
+		return null;
+	}
 	let size = 'landscape';
 
 	return (
