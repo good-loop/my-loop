@@ -240,7 +240,7 @@ const AdvertCard = ({ ad }) => {
 	const size = 'landscape';
 	return (
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
-			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{position:"absolute", zIndex:999}}>Portal Editor</DevLink>
+			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{position:"absolute", zIndex:999}}>Advert Editor</DevLink>
 			<div className="position-relative ad-card">
 				<img src="/img/LandingBackground/white_iphone.png" className="w-100 invisible" />
 				{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
