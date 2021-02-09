@@ -162,7 +162,8 @@ const fetchIHubData = () => {
 		pvTopCampaign = getDataItem({type:C.TYPES.Campaign, status, id:pvTopItem.value.campaign});
 	}	
 	// ...fill in from adverts
-	if (pvAds.value) {
+	if (pvAds.value && pvAds.value.hits && pvAds.value.hits.length && pvAds.value.hits[0]) {
+		console.log("PVADS VALUE", pvAds.value);
 		if ( ! pvAdvertisers) {
 			// NB: This should be only one advertiser and agency
 			let ids = uniq(pvAds.value.hits.map(Advert.advertiserId));
@@ -234,7 +235,7 @@ const CampaignPage = () => {
 		// TODO display some stuff whilst ads are loading
 		return <Misc.Loading text="Loading advert info..." />;
 	}
-	if (pvAds.error) {
+	if (pvAds.error || !pvAds.value.hits || (pvAds.value.hits.length == 1 && !pvAds.value.hits[0])) {
 		return <ErrAlert>Error loading advert data</ErrAlert>;
 	}
 	let ads = List.hits(pvAds.value);
