@@ -64,7 +64,7 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 	//   Otherwise, show everything
 	
 	// The portal control data
-	let {lowDntnDisplay, lowDntn, hideCharities} = campaign;
+	let {lowDntnDisplay, lowDntn, hideCharities, hideImpact} = campaign;
 	// The expanded configurations to operate on, not stored in the portal
 	let lowDonationThreshold, filterLowDonations, showLowDonations, showDonations;
 	console.log("Low donation display set to " + lowDntnDisplay);
@@ -121,13 +121,14 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 	//let sogiveCharitiesWithDonations = sogiveCharities.filter(c => getDonation(c)); // Get rid of charities with no logged donations.
 	// hideCharities is from a KeySet prop control, so is an object of schema {charity_id : bool}.
 	// We want to convert it instead to a list of charity IDs
-	/*if (hideCharities) {
+	if (hideCharities) {
 		// Convert object to array
 		let hideCharitiesArr = Object.keys(hideCharities);
 		// Remove false entries - keySet will not remove charity IDs, but set them to false instead.
 		hideCharitiesArr = hideCharitiesArr.filter(cid => hideCharities[cid]);
 		sogiveCharities = sogiveCharities.filter(c => !hideCharitiesArr.includes(c.id));
-	}*/
+	}
+	if (!hideImpact) hideImpact = {};
 
 	console.log("SOGIVE CHARITIES", sogiveCharities);
 	//let sogiveCharitiesWithoutDonations = sogiveCharities.filter(c => ! getDonation(c)); // Keep other charities for the "Also Supported" section
@@ -139,7 +140,12 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 			</div>
 			<Container className="pb-5">
 				{sogiveCharities.map((charity, i) =>
-					<CharityCard i={i} key={charity.id} charity={charity} donationValue={getDonation(charity)} showDonations={showDonations} showLowDonations={showLowDonations} />
+					<CharityCard i={i} key={charity.id}
+						charity={charity}
+						donationValue={getDonation(charity)}
+						showDonations={showDonations}
+						showLowDonations={showLowDonations}
+						showImpact={!hideImpact[charity.id]} />
 				)}
 			</Container>
 		</div>
@@ -193,7 +199,7 @@ const RegNum = ({label, regNum}) => {
  * @param {!NGO} charity This data item is a shallow copy
  * @param {!Money} donationValue
  */
-const CharityCard = ({ charity, donationValue, showLowDonations, showDonations }) => {
+const CharityCard = ({ charity, donationValue, showLowDonations, showDonations, showImpact }) => {
 	// Prefer full descriptions here. If unavailable switch to summary desc.
 	let desc = charity.description || charity.summaryDescription || '';
 	// But do cut descriptions down to 1 paragraph.
@@ -224,7 +230,7 @@ const CharityCard = ({ charity, donationValue, showLowDonations, showDonations }
 				</div>
 				<div className="charity-quote-text">
 					{showDonationNum && donationValue ? <div className="w-100"><h2><Counter amount={donationValue} preservePennies={false} /> raised</h2></div> : null}
-					{charity.simpleImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
+					{charity.simpleImpact && showImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
 					{!quote ? <MDText source={desc} /> : null}
 					<DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">SoGive</DevLink>
