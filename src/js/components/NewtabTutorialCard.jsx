@@ -113,23 +113,30 @@ const NewtabTutorialCard = ({tutorialPages}) => {
 		}
 	}*/
 	// END SIZE/POSITION CODE
+
+	let style = {
+		zIndex: 9999,
+		top:"50%",
+		left:window.innerWidth <= 1280 ? "75%" : "70%",
+		transform:"translateY(-50%)",
+		/*
+		top:rect.top,
+		left:rect.left,
+		right:rect.right,
+		bottom:rect.bottom,*/
+		width:desiredSize.width,
+		height:desiredSize.height
+	};
+
+	if (page == 0) {
+		style.left = "50%";
+		style.transform = "translate(-50%, -50%)";
+	}
 	
 	return <>
 		<div className="position-absolute" style={{width: "100vw", height: "100vh", top: 0, left: 0, zIndex: 999, background:"rgba(0,0,0,0.25)"}} />
 		<div className="tutorial-card bg-white position-absolute shadow text-center p-4 flex-column justify-content-between align-items-center unset-margins"
-			style={{
-				zIndex: 9999,
-				top:"50%",
-				left:window.innerWidth <= 1280 ? "75%" : "70%",
-				transform:"translateY(-50%)",
-				/*
-				top:rect.top,
-				left:rect.left,
-				right:rect.right,
-				bottom:rect.bottom,*/
-				width:desiredSize.width,
-				height:desiredSize.height
-			}}
+			style={style}
 		>
 			<div className="flex-column unset-margins justify-content-center align-items-center">
 				<div className="tutorial-content mt-2">
