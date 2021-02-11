@@ -38,6 +38,9 @@ import ServerIO from '../plumbing/ServerIO';
 // DataStore
 C.setupDataStore();
 
+// Person from profiler
+ServerIO.USE_PROFILER = true;
+
 // Actions
 
 const PAGES = {
