@@ -42,9 +42,6 @@ ServerIO.AS_ENDPOINT = 'https://as.good-loop.com';
 
 ServerIO.MEDIA_ENDPOINT = `https://testuploads.good-loop.com/`;
 
-/** The initial part of an API call. Allows for local to point at live for debugging */
-ServerIO.APIBASE = ServerIO.PORTAL_ENDPOINT; //  My-Loop has no backend of its own - just use portal domain matching local/test/prod
-
 // Useful where relative links can not be used (think inline-CSS 'url' image links)
 ServerIO.MYLOOP_ENDPONT = `${C.HTTPS}://${C.SERVER_TYPE}my.good-loop.com`;
 // ServerIO.MYLOOP_ENDPONT = `https://testmy.good-loop.com`;
@@ -56,6 +53,9 @@ ServerIO.MYLOOP_ENDPONT = `${C.HTTPS}://${C.SERVER_TYPE}my.good-loop.com`;
 ServerIO.LOGENDPOINT = ServerIO.PROFILER_ENDPOINT + '/log';
 
 ServerIO.checkBase();
+
+/** The initial part of an API call. Allows for local to point at live for debugging */
+ServerIO.APIBASE = ServerIO.PORTAL_ENDPOINT; //  My-Loop has no backend of its own - just use portal domain matching local/test/prod
 
 /** 
  * NB: Copy-pasta from Portal ServerIO.js
