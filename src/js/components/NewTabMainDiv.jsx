@@ -26,6 +26,8 @@ import TickerTotal from './TickerTotal';
 // DataStore
 C.setupDataStore();
 
+ServerIO.USE_PROFILER = true;
+
 // Actions
 
 
