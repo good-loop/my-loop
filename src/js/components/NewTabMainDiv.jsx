@@ -15,7 +15,6 @@ import CharityLogo from './CharityLogo';
 import { AccountMenu } from './MyLoopNavBar';
 import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLoginWidget';
 // import RedesignPage from './pages/RedesignPage';
-import NewTabOnboardingPage from './NewTabOnboarding';
 import NewtabTutorialCard, { openTutorial, TutorialComponent, TutorialHighlighter } from './NewtabTutorialCard';
 import NewTabAds from './NewTabAds';
 import { fetchCharity } from './pages/MyCharitiesPage';
@@ -56,9 +55,6 @@ let verifiedLoginOnceFlag;
  * 
  */
 const WebtopPage = () => {	
-	// onboarding => send them to chrome to install the plugin
-	const onboarding = !inIframe() 
-		&& ! (window.location.hostname==='localmy.good-loop.com' && (""+window.location).includes("test")); // HACK to allow easy testing during development
 
 	// Yeh - a tab is opened -- let's log that (once only)	
 	if ( ! logOnceFlag && Login.isLoggedIn()) {
@@ -67,11 +63,23 @@ const WebtopPage = () => {
 		logOnceFlag = true;
 	}
 
-	if (!verifiedLoginOnceFlag && !onboarding) {
+	const checkIfOpened = () => {
+		console.log("CHECKING IF OPENED BEFORE");
+		if (!window.localStorage.getItem("t4gOpenedB4")) {
+			window.localStorage.setItem("t4gOpenedB4", true);
+			openTutorial();
+		}
+	}
+
+	if (!verifiedLoginOnceFlag) {
 		// Popup login widget if not logged in
 		// Login fail conditions from youagain.js
 		Login.verify().then(res => {
-			if (!res || !res.success) setShowTabLogin(true);
+			if (!res || !res.success) {
+				setShowTabLogin(true);
+			} else {
+				checkIfOpened();
+			}
 		}).catch(res => {
 			setShowTabLogin(true);
 		});
@@ -85,10 +93,9 @@ const WebtopPage = () => {
 
 
 	// Background images on tab plugin sourced locally
-	let bgImg = onboarding ? "/img/TabsForGood/Onboarding.png" : null;
 
 	return (<>
-		<BG src={bgImg} fullscreen opacity={0.9} bottom={onboarding ? 0 : 110} style={{backgroundPosition: "center"}}>
+		<BG src={null} fullscreen opacity={0.9} bottom={110} style={{backgroundPosition: "center"}}>
 			<TutorialHighlighter page={[4,5]} className="position-fixed p-3" style={{top: 0, left: 0, width:"100vw", zIndex:1}}>
 				<div className="d-flex justify-content-between">
 					<TutorialComponent page={5} className="logo pl-5 flex-row" style={{width:400}}>
@@ -113,7 +120,7 @@ const WebtopPage = () => {
 		</BG>
 		<TutorialComponent page={3} className="position-absolute" style={{bottom:0, left:0, right:0, height:110, width:"100vw"}}/>
 		<NewtabTutorialCard tutorialPages={tutorialPages}/>
-		<NewtabLoginWidget onRegister={() => {if (!onboarding) openTutorial();}}/>
+		<NewtabLoginWidget onRegister={() => {checkIfOpened();}}/>
 		<NewTabAds/>
 	</>); 
 };
@@ -180,25 +187,8 @@ const NormalTabCenter = ({charityID}) => {
 	</>;
 };
 
-/**
- * @deprecated Moving the landing page to tabsforgood-landingpage.html, as a static page is better for social media shares.
- */
-const OnboardingTabCenter = () => {
-	return <>
-		<div className="text-center onboarding">
-			<div style={{marginBottom:"35vh"}}/>
-			<h2 className="w-50 mx-auto">Every time you open a<br/>new tab you raise<br/>money for good causes</h2>
-			{/*<a className="btn btn-primary extension-btn">Add tabs for good to chrome</a>*/}
-			<img className="mt-5" src="https://my.good-loop.com/img/TabsForGood/white-arrow.png"/>
-			{/* White fade for image */}
-			<div className="position-absolute" style={{zIndex:1, top:"60vh", height:"40vh", width: "100vw", background:"linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%"}}/>
-		</div>
-	</>;
-};
-
 const PAGES = {
-	webtop: WebtopPage,
-	onboarding: NewTabOnboardingPage
+	webtop: WebtopPage
 };
 const NewTabMainDiv = () => {
 	return <MainDivBase pageForPath={PAGES} defaultPage="webtop" navbar={false} className="newtab"/>;
