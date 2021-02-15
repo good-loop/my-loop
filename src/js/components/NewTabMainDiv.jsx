@@ -71,9 +71,7 @@ const WebtopPage = () => {
 			} else {
 				checkIfOpened();
 			}
-			window.$("loading-content").remove();
 		}).catch(res => {
-			window.$("loading-content").remove();
 			setShowTabLogin(true);
 		});
 		verifiedLoginOnceFlag = true;
