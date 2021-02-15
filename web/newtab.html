@@ -46,37 +46,6 @@
 	<div id="mainDiv"></div>
 
 	<div id="tab-ads" class="position-absolute w-100 flex-row" style="bottom:0; height: 115px; padding: 10px">
-
-		<script>
-			let originalDoc = document;
-			document = document.parent;
-		</script>
-
-		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-		
-		<!-- Tabs for Good bottom display -->
-		<ins class="adsbygoogle"
-			style="display:inline-block;width:728px;height:90px"
-			data-ad-client="ca-pub-9448086783562205"
-			data-ad-slot="5736021145"></ins>
-		<script>
-			(adsbygoogle = window.adsbygoogle || []).push({});
-		</script>
-
-		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-		<!-- Tabs for Good bottom display -->
-		<ins class="adsbygoogle"
-			style="display:inline-block;width:728px;height:90px"
-			data-ad-client="ca-pub-9448086783562205"
-			data-ad-slot="5736021145"></ins>
-		<script>
-			(adsbygoogle = window.adsbygoogle || []).push({});
-		</script>
-
-		<script>
-			document = originalDoc;
-		</script>
-
 	</div>
 
 	<!-- media.net 300x250-->
@@ -140,6 +109,33 @@
 
 	<!-- script async src='//as.good-loop.com/pxl.js'></script -->
 	<img src='https://lg.good-loop.com/pxl' style='position:absolute;bottom:0px;left:0px;width:1;height:1;' />
+
+	<script>
+		setTimeout(() => {
+			$('#tab-ads').html(`
+				<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+				
+					<!-- Tabs for Good bottom display -->
+					<ins class="adsbygoogle"
+						style="display:inline-block;width:728px;height:90px"
+						data-ad-client="ca-pub-9448086783562205"
+						data-ad-slot="5736021145"></ins>
+					<script>
+						(adsbygoogle = window.adsbygoogle || []).push({});
+					</script>
+
+					<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+					<!-- Tabs for Good bottom display -->
+					<ins class="adsbygoogle"
+						style="display:inline-block;width:728px;height:90px"
+						data-ad-client="ca-pub-9448086783562205"
+						data-ad-slot="5736021145"></ins>
+					<script>
+						(adsbygoogle = window.adsbygoogle || []).push({});
+				<\/script>
+			`);
+		}, 2000);
+	</script>
 </body>
 
 </html>
