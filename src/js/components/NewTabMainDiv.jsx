@@ -16,7 +16,6 @@ import { AccountMenu } from './MyLoopNavBar';
 import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLoginWidget';
 // import RedesignPage from './pages/RedesignPage';
 import NewtabTutorialCard, { openTutorial, TutorialComponent, TutorialHighlighter } from './NewtabTutorialCard';
-import NewTabAds from './NewTabAds';
 import { fetchCharity } from './pages/MyCharitiesPage';
 import { getSelectedCharityId, getTabsOpened, Search, getSearchEngine } from './pages/TabsForGoodSettings';
 import TickerTotal from './TickerTotal';
@@ -31,14 +30,6 @@ ServerIO.USE_PROFILER = true;
 
 
 Login.app = C.app.service;
-
-const inIframe = () => {
-	try {
-		return window.self !== window.top;
-	} catch (e) {
-		return true;
-	}
-};
 
 /**
  * NB: useEffect was triggering twice (perhaps cos of the login dance)
@@ -80,14 +71,16 @@ const WebtopPage = () => {
 			} else {
 				checkIfOpened();
 			}
+			window.$("loading-content").remove();
 		}).catch(res => {
+			window.$("loading-content").remove();
 			setShowTabLogin(true);
 		});
 		verifiedLoginOnceFlag = true;
 	}
 
 	let charityID = getSelectedCharityId();
-
+	
 	// iframe src change?
 	// https://stackoverflow.com/posts/17316521/revisions
 
