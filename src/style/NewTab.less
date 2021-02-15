@@ -235,3 +235,23 @@
     animation-iteration-count: 1;
     animation-timing-function: ease-out;
 }
+
+.charity-register {
+    input {
+        border-radius: 0;
+    }
+    .btn-primary {
+        background-color: @gl-blue !important;
+        font-weight: normal !important;
+        &:hover:not(.disabled) {
+            background-color: @gl-light-blue !important;
+        }
+        &:active:not(.disabled),&:focus:not(.disabled) {
+            background-color: @gl-dark-blue !important;
+        }
+    }
+    h1,h2,h3,h4 {
+        text-transform: uppercase;
+        color: grey;
+    }
+}
