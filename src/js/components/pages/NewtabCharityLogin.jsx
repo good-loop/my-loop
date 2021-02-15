@@ -28,6 +28,9 @@ const switchToVerb = (e, verb) => {
 
 const NewtabCharityLogin = () => {
 
+	// Remove cookie consent - blocks iframe content
+	window.$(".ch2").remove();
+
 	const verb = DataStore.getValue(LOGIN_VERB_PATH);
 	// Default to register
 	useEffect(() => {
