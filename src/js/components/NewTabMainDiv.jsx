@@ -121,7 +121,6 @@ const WebtopPage = () => {
 		<TutorialComponent page={3} className="position-absolute" style={{bottom:0, left:0, right:0, height:110, width:"100vw"}}/>
 		<NewtabTutorialCard tutorialPages={tutorialPages}/>
 		<NewtabLoginWidget onRegister={() => {checkIfOpened();}}/>
-		<NewTabAds/>
 	</>); 
 };
 
