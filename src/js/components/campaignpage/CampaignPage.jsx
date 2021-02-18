@@ -236,8 +236,6 @@ const CampaignPage = () => {
 	if ( ! pvAds.resolved) {
 		// TODO display some stuff whilst ads are loading
 		return <Misc.Loading text="Loading advert info..." />;
-	} else {
-		console.log("PVADS TEST", pvAds);
 	}
 	if (pvAds.error || !pvAds.value.hits || (pvAds.value.hits.length == 1 && !pvAds.value.hits[0])) {
 		return <ErrAlert>Error loading advert data</ErrAlert>;
@@ -246,6 +244,7 @@ const CampaignPage = () => {
 		console.warn("NO ADS FOUND, aborting page generation");
 		return <ErrAlert>No ads found to generate impact hub!</ErrAlert>;
 	}
+	let ads = List.hits(pvAds.value);
 
 	// Combine Campaign settings
 	let campaign = pvTopCampaign.value;
