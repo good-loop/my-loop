@@ -243,9 +243,9 @@ const CampaignPage = () => {
 		return <ErrAlert>Error loading advert data</ErrAlert>;
 	}
 	if (pvAds.value.hits.length == 0) {
+		console.warn("NO ADS FOUND, aborting page generation");
 		return <ErrAlert>No ads found to generate impact hub!</ErrAlert>;
 	}
-	let ads = List.hits(pvAds.value);
 
 	// Combine Campaign settings
 	let campaign = pvTopCampaign.value;
