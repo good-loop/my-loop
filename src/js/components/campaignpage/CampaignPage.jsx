@@ -236,6 +236,8 @@ const CampaignPage = () => {
 	if ( ! pvAds.resolved) {
 		// TODO display some stuff whilst ads are loading
 		return <Misc.Loading text="Loading advert info..." />;
+	} else {
+		console.log("PVADS TEST", pvAds);
 	}
 	if (pvAds.error || !pvAds.value.hits || (pvAds.value.hits.length == 1 && !pvAds.value.hits[0])) {
 		return <ErrAlert>Error loading advert data</ErrAlert>;
