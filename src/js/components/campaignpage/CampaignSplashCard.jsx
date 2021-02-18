@@ -6,7 +6,11 @@ import { space } from '../../base/utils/miscutils';
 import ShareButton from '../ShareButton';
 import DevLink from './DevLink';
 
-const SplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, totalViewCount}) => {
+/**
+ * 
+ * @param {?boolean} p.ongoing Is the campaign still running (and the total might go up)?
+ */
+const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, totalViewCount, ongoing}) => {
 
 	let numPeople = printer.prettyNumber(Math.round(totalViewCount), 10);
 	if (numPeople === "0") numPeople = false;
@@ -29,7 +33,8 @@ const SplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, tot
 					<div className="flex-column flex-center pt-5 splash-text">
 						<div className="header text-white">
 							<div>
-								<span>Raised { donationValue? <Counter currencySymbol="£" sigFigs={4} preservePennies amount={donationValue} minimumFractionDigits={2} preserveSize/> : "money" } for charity so far</span>
+								<span>Raised {donationValue? <Counter currencySymbol="£" sigFigs={4} preservePennies amount={donationValue} minimumFractionDigits={2} preserveSize/> : "money" } for 
+									charity {ongoing && "so far"}</span>
 							</div>
 						</div>
 						<p className="text-white subtext">by using ethical online ads</p>
@@ -45,4 +50,4 @@ const SplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, tot
 	);
 };
 
-export default SplashCard;
+export default CampaignSplashCard;

@@ -300,6 +300,23 @@ const CampaignPage = () => {
 	const donation4charity = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
 	console.log("DONATION 4 CHARITY", donation4charity);
 	const donationTotal = campaign.dntn || donation4charity.total;
+	// Is this an interim total or the full amount? Interim if not fixed by campaign, and not ended
+	let ongoing = false;
+	if ( ! campaign.dntn) {
+		// when is the last advert due to stop?
+		let endDate = new Date(2000,1,1);
+		ads.forEach(ad => {
+			let tli = ad.topLineItem;
+			if ( ! tli)	continue;		
+			let end = asDate(tli.end) || new Date(3000,1,1); // unset will be treated as ongoing. TODO a check on last activity (but offline, periodically)
+			if (end.getTime() > endDate.getTime()) {
+				endDate = end;
+			}
+		});
+		if (endDate.getTime() > new Date().getTime()) {
+			ongoing = true;
+		}
+	}
 
 	{	// NB: some very old ads may not have charities
 		let noCharityAds = ads.filter(ad => !ad.charities);
@@ -354,7 +371,7 @@ const CampaignPage = () => {
 			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" hidePages/>
 			<div className="text-center">
 				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaign} 
-					donationValue={donationTotal} 
+					donationValue={donationTotal} ongoing={ongoing}
 					totalViewCount={totalViewCount} landing={isLanding} />
 
 				<HowDoesItWork nvertiserName={nvertiserName} />
@@ -442,6 +459,7 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 					Good-Loop and the advertising exchange make a small commission. The donations depend on viewers watching the adverts.<br/>
 					{totalBudget && <>Limitations on Donation: <Misc.Money amount={totalBudget} /> <br/></>}
 					{start && end && <>Dates: <Misc.DateTag date={start} /> through <Misc.DateTag date={end} /> <br/></>}
+					{ ! start && end && <>End date: <Misc.DateTag date={end} /> <br/></>}
 					<p>If impacts such as "trees planted" are listed above, these are representative. 
 					We don't ring-fence funding, as the charity can better assess the best use of funds. 
 					Cost/impact figures are as reported by the charity or by the impact assessor SoGive.
