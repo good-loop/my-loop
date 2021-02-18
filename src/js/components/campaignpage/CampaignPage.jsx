@@ -240,6 +240,9 @@ const CampaignPage = () => {
 	if (pvAds.error || !pvAds.value.hits || (pvAds.value.hits.length == 1 && !pvAds.value.hits[0])) {
 		return <ErrAlert>Error loading advert data</ErrAlert>;
 	}
+	if (pvAds.value.hits.length == 0) {
+		return <ErrAlert>No ads found to generate impact hub!</ErrAlert>;
+	}
 	let ads = List.hits(pvAds.value);
 
 	// Combine Campaign settings
@@ -422,10 +425,10 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 	}
 	console.log("campaignPage",campaign);
 	
-	let maxDonation	= campaign.maxDntn;
-	if ( ! maxDonation) {
+	let totalBudget	= campaign.maxDntn;
+	if ( ! totalBudget) {
 		let amounts = ads.map(ad => Advert.budget(ad) && Advert.budget(ad).total);
-		maxDonation = Money.mul(Money.total(amounts), 0.5);
+		totalBudget = Money.total(amounts);
 	}
 
 	return <div className="container py-5">
@@ -433,10 +436,10 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 			<Col md={6} style={{borderRight:"2px solid grey"}}><CharityDetails charities={charities} /></Col>
 			<Col md={6} className="text-center pl-5">
 				 <small>
-					{Money.value(dmin) && <>Donation Amount: <Misc.Money amount={dmin} /> { dmax && ! Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/></>}
+					{dmin && <>Donation Amount: <Misc.Money amount={dmin} /> { dmax && ! Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/></>}
 					50% of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies. 
 					Good-Loop and the advertising exchange make a small commission. The donations depend on viewers watching the adverts.<br/>
-					{Money.value(maxDonation) && <>Limitations on Donation: <Misc.Money amount={maxDonation} /> <br/></>}
+					{totalBudget && <>Limitations on Donation: <Misc.Money amount={totalBudget} /> <br/></>}
 					{start && end && <>Dates: <Misc.DateTag date={start} /> through <Misc.DateTag date={end} /> <br/></>}
 					<p>If impacts such as "trees planted" are listed above, these are representative. 
 					We don't ring-fence funding, as the charity can better assess the best use of funds. 
