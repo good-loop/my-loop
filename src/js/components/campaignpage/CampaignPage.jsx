@@ -259,10 +259,15 @@ const CampaignPage = () => {
 	let branding = {};	
 	ads.forEach(ad => Object.assign(branding, ad.branding));
 
-	// individual charity data
-	let charities = uniqueIds(_.flatten(ads.map(
-		ad => ad.charities && ad.charities.list || []
-	)));
+	// individual charity data, attaching ad ID
+	let charities = uniqueIds(_.flatten(ads.map(ad => {
+		const clist = ad.charities && ad.charities.list || []
+		return clist.map(c => {
+			const charity = c;
+			charity.ad = ad.id;
+			return charity;
+		})
+	})));
 
 	// PDF version of page
 	let pdf = null;
