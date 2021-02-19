@@ -47,10 +47,16 @@ let verifiedLoginOnceFlag;
  */
 const WebtopPage = () => {	
 
+	let charityID = getSelectedCharityId();
+
 	// Yeh - a tab is opened -- let's log that (once only)	
 	if ( ! logOnceFlag && Login.isLoggedIn()) {
 		// NB: include a nonce, as otherwise identical events (you open a few tabs) within a 15 minute time bucket get treated as 1
 		lg("tabopen", {user:Login.getId(), nonce:nonce(6)});
+		// Wait 1.5 seconds before logging ad view - 1 second for ad view profit + .5 to load
+		setTimeout(() => {
+			lg("tabadview", {user:Login.getId(), nonce:nonce(6), charity:charityID});
+		}, 1500);
 		logOnceFlag = true;
 	}
 
@@ -76,8 +82,6 @@ const WebtopPage = () => {
 		});
 		verifiedLoginOnceFlag = true;
 	}
-
-	let charityID = getSelectedCharityId();
 	
 	// iframe src change?
 	// https://stackoverflow.com/posts/17316521/revisions
