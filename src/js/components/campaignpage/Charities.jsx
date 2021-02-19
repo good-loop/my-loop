@@ -233,7 +233,10 @@ const CharityCard = ({ charity, donationValue, showLowDonations, showDonations, 
 					{charity.simpleImpact && showImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
 					{!quote ? <MDText source={desc} /> : null}
-					<DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">SoGive Editor</DevLink>
+					<div className="flex-row">
+						<DevLink href={'https://app.sogive.org/#simpleedit?charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">SoGive Editor</DevLink>
+						<DevLink href={'https://portal.good-loop.com/#advert/' + escape(charity.ad)} target="_portal" className="ml-2">Advert Editor</DevLink>
+					</div>
 				</div>
 			</div>
 		</div>
