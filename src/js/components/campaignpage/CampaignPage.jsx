@@ -307,7 +307,7 @@ const CampaignPage = () => {
 		let endDate = new Date(2000,1,1);
 		ads.forEach(ad => {
 			let tli = ad.topLineItem;
-			if ( ! tli)	continue;		
+			if ( ! tli)	return;
 			let end = asDate(tli.end) || new Date(3000,1,1); // unset will be treated as ongoing. TODO a check on last activity (but offline, periodically)
 			if (end.getTime() > endDate.getTime()) {
 				endDate = end;
