@@ -128,9 +128,15 @@ const fetchIHubData = () => {
 		// ads
 		let q = SearchQuery.setProp(new SearchQuery(), "campaign", campaignId1).query;
 		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});		
+		// advertiser
+		if (pvTopCampaign.value && pvTopCampaign.value.vertiser) {
+			const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:vertiserid});			
+			// wrap as a list
+			pvAdvertisers = fetchIHubData2_wrapAsList(pvAdvertiser);
+		}
 	}
 	// ...by Advert?
-	else if (adid) {
+	if (adid) {
 		console.log("Getting " + adid + " ad...");
 		pvTopItem = getDataItem({type:C.TYPES.Advert,status,id:adid});
 		// wrap as a list
@@ -138,23 +144,25 @@ const fetchIHubData = () => {
 		console.log("pvAds", pvAds, "pvTopItem", pvTopItem); // debug
 	}
 	// ...by Advertiser?
-	else if (vertiserid) {
-		pvTopItem = getDataItem({type:C.TYPES.Advertiser,status,id:vertiserid});
+	if (vertiserid) {
+		const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:vertiserid});
+		if ( ! pvTopItem) pvTopItem = pvAdvertiser;
 		// wrap as a list
-		pvAdvertisers = fetchIHubData2_wrapAsList(pvTopItem);
+		pvAdvertisers = fetchIHubData2_wrapAsList(pvAdvertiser);
 		// ads
 		let q = SearchQuery.setProp(new SearchQuery(), "vertiser", vertiserid).query;
 		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
 	}
 	// ...by Agency?
-	else if (agency) {		
+	if (agency) {		
 		pvTopItem = getDataItem({type:C.TYPES.Agency,status,id:agency});
 		// wrap as a list
 		pvAgencies = fetchIHubData2_wrapAsList(pvTopItem);
 		// ads
 		let q = SearchQuery.setProp(new SearchQuery(), "agencyId", agency).query;
 		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
-	} else {
+	} 
+	if ( ! agency && ! vertiserid && ! adid && ! campaignId1)  {
 		throw new Error("No Campaign info specified");
 	}
 	// top campaign?
