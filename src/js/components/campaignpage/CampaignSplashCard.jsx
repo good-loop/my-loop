@@ -38,7 +38,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 							</div>
 						</div>
 						<p className="text-white subtext">by using ethical online ads</p>
-						<DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/'+escape(campaignPage.id)} target="_portal">Campaign Editor (using {campaignPage.id})</DevLink>
+						{campaignPage.id && <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/'+escape(campaignPage.id)} target="_portal">Campaign Editor (using {campaignPage.id})</DevLink>}
 					</div>
 				</div>
 			</div>
