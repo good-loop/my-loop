@@ -271,10 +271,15 @@ const CampaignPage = () => {
 	let branding = {};	
 	ads.forEach(ad => Object.assign(branding, ad.branding));
 
-	// individual charity data
-	let charities = uniqueIds(_.flatten(ads.map(
-		ad => ad.charities && ad.charities.list || []
-	)));
+	// individual charity data, attaching ad ID
+	let charities = uniqueIds(_.flatten(ads.map(ad => {
+		const clist = ad.charities && ad.charities.list || []
+		return clist.map(c => {
+			const charity = c;
+			charity.ad = ad.id;
+			return charity;
+		})
+	})));
 
 	// PDF version of page
 	let pdf = null;
@@ -315,7 +320,7 @@ const CampaignPage = () => {
 		let endDate = new Date(2000,1,1);
 		ads.forEach(ad => {
 			let tli = ad.topLineItem;
-			if ( ! tli)	continue;		
+			if ( ! tli)	return;
 			let end = asDate(tli.end) || new Date(3000,1,1); // unset will be treated as ongoing. TODO a check on last activity (but offline, periodically)
 			if (end.getTime() > endDate.getTime()) {
 				endDate = end;
