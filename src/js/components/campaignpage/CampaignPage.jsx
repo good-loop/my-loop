@@ -28,7 +28,7 @@ import DataStore from '../../base/plumbing/DataStore';
 import Roles from '../../base/Roles';
 import SearchQuery from '../../base/searchquery';
 import { assert } from '../../base/utils/assert';
-import { asDate, isMobile, sum, uniq, yessy } from '../../base/utils/miscutils';
+import { asDate, isMobile, sum, uniq, uniqById, yessy } from '../../base/utils/miscutils';
 import printer from '../../base/utils/printer';
 import { sortByDate } from '../../base/utils/SortFn';
 import Login from '../../base/youagain';
@@ -87,19 +87,6 @@ const viewCount = (viewcount4campaign, ad) => {
 	return null;
 };
 
-
-/** SoGive occasionally provides duplicated charity objects, so we check and filter them first.
-// TODO: This check shouldn't be here, maybe SoGive can filter its stuff before sending it over?
-// NB Also used on adverts for similar reasons
- */
-const uniqueIds = arr => {
-	let ids = {};
-	return arr.filter(obj => {
-		if (!obj || !obj.id || ids[obj.id]) return false;
-		ids[obj.id] = true;
-		return true;
-	});
-};
 
 /**
  * @returns fetches for all the data: `{pvTopCampaign, pvCampaigns, pvAgencies, pvAds, pvAdvertisers}`
@@ -272,7 +259,7 @@ const CampaignPage = () => {
 	ads.forEach(ad => Object.assign(branding, ad.branding));
 
 	// individual charity data, attaching ad ID
-	let charities = uniqueIds(_.flatten(ads.map(ad => {
+	let charities = uniqById(_.flatten(ads.map(ad => {
 		const clist = ad.charities && ad.charities.list || []
 		return clist.map(c => {
 			const charity = c;
