@@ -222,12 +222,12 @@ const doesUserHaveT4G = () => {
 	return cid;
 };
 
-const setHasT4G = (hasT4G) => {
+const setHasT4G = (hasT4G, update=true) => {
 	let xids = getAllXIds();
 	let persons = getProfilesNow(xids);
 	setClaimValue({persons, key:"hasT4G", value:hasT4G, swallow:true});
 	console.log("setHasT4G " + hasT4G +" for ",xids, "persons", persons);
-	DataStore.update();
+	if (update) DataStore.update();
 	// save
 	let pv = savePersons({persons});
     pv.promise.then(re => console.log("... saved setHasT4G " + hasT4G));
