@@ -156,8 +156,9 @@ const CharityDetails = ({charities}) => {
 	};
 
 	// Registration numbers for all possible types of reg num for each charity
+	// Include no-reg-info too, so no confusing gaps (and we still have the link)
 	let regNums = sogiveCharities.map(c => {
-		return hasRegNum(c) ? <div className="charityInfo" key={c.id}><small>
+		return <div className="charityInfo" key={c.id}><small>
 			<b><LinkOut href={c.url}>{c.displayName || c.name}</LinkOut></b>
 			<RegNum label="England & Wales Charity Commission registration number" regNum={c.englandWalesCharityRegNum}/>
 			<RegNum label="Scottish OSCR registration number" regNum={c.scotlandCharityRegNum}/>
@@ -165,7 +166,7 @@ const CharityDetails = ({charities}) => {
 			<RegNum label="UK Companies House number" regNum={c.ukCompanyRegNum}/>
 			<RegNum label="USA registration number (EIN)" regNum={c.usCharityRegNum}/>
 			<br/>
-		</small></div>: null;
+		</small></div>;
 	});
 	// Remove null values
 	regNums = regNums.filter(x => x);
@@ -191,7 +192,7 @@ const RegNum = ({label, regNum}) => {
 /**
  * 
  * @param {!NGO} charity This data item is a shallow copy
- * @param {!Money} donationValue
+ * @param {?Money} donationValue
  */
 const CharityCard = ({ charity, donationValue, showLowDonations, showDonations, showImpact }) => {
 	// Prefer full descriptions here. If unavailable switch to summary desc.
@@ -206,8 +207,8 @@ const CharityCard = ({ charity, donationValue, showLowDonations, showDonations, 
 	let img = (quote && quote.img) || charity.images;
 
 	const showDonationNum = showDonations && (charity.lowDonation && showLowDonations || !charity.lowDonation);
-	if (!showDonationNum) console.log("Not showing donations for charity " + charity.id);
-	else if (!donationValue) console.warn("No donation value for charity " + charity.id + "!");
+	if ( ! showDonationNum) console.log("Not showing donations for charity " + charity.id);
+	else if ( ! donationValue) console.warn("No donation value for charity " + charity.id + "!");
 
 	// TODO let's reduce the use of custom css classes (e.g. charity-quote-img etc below)
 
@@ -223,7 +224,7 @@ const CharityCard = ({ charity, donationValue, showLowDonations, showDonations, 
 					<img src={charity.logo} alt="logo"/>
 				</div>
 				<div className="charity-quote-text">
-					{showDonationNum && donationValue ? <div className="w-100"><h2><Counter amount={donationValue} preservePennies={false} /> raised</h2></div> : null}
+					{showDonationNum && donationValue? <div className="w-100"><h2><Counter amount={donationValue} preservePennies={false} /> raised</h2></div> : null}
 					{charity.simpleImpact && showImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
 					{!quote ? <MDText source={desc} /> : null}

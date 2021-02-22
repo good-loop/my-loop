@@ -264,11 +264,11 @@ const CampaignPage = () => {
 	Object.assign(branding, campaign.branding);
 
 	// individual charity data, attaching ad ID
-	let charities = uniqById(_.flatten(ads.map(ad => {
+	const charities = uniqById(_.flatten(ads.map(ad => {
 		const clist = ad.charities && ad.charities.list || []
 		return clist.map(c => {
 			const charity = c;
-			charity.ad = ad.id;
+			charity.ad = ad.id; // why do we need this??
 			return charity;
 		})
 	})));
@@ -303,6 +303,7 @@ const CampaignPage = () => {
 
 	console.log(yessy(campaign.dntn4charity) ? "Using campaign donation data" : "Using sogive donation data");	
 	let donation4charity = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
+	assert(donation4charity, "CampaignPage.jsx falsy donation4charity?!");
 	console.log("DONATION 4 CHARITY", donation4charity);
 	const donationTotal = campaign.dntn || donation4charity.total;
 	// Is this an interim total or the full amount? Interim if not fixed by campaign, and not ended
@@ -323,9 +324,10 @@ const CampaignPage = () => {
 		}
 	}
 	// Take ratios and scale up the £s? Also: cap the £s?
-	if ( ! campaign.dntn4charity) {
+	if ( ! campaign.dntn4charity && donationTotal) {
 		// sum
-		const totalDntnByCharity = Money.total(Object.values(campaign.dntn4charity));
+		let monies = mapkv(donation4charity, (k,v) => k==="total" || k==="unset"? null : v);
+		const totalDntnByCharity = Money.total(monies);
 		// If the sum is < 10% the total -- scale up
 		let ratio;
 		if (Money.lessThan(totalDntnByCharity, Money.mul(donationTotal, 0.1))) {
@@ -335,10 +337,17 @@ const CampaignPage = () => {
 		}
 		if (ratio) {
 			let donation4charityScaled = {};
-			mapkv(donation4charity, (k,v) => donation4charityScaled[k] = donation4charity[k] * ratio);
+			mapkv(donation4charity, (k,v) => k==="total" || k==="unset"? null : donation4charityScaled[k] = Money.mul(donation4charity[k], ratio));
 			console.log("Scale donations from", donation4charity, "to", donation4charityScaled);
 			donation4charity = donation4charityScaled;
 		}
+	}
+	// Sort by donation value, largest first
+	try {
+		charities.sort((a,b) => - Money.compare(donation4charity[a.id], donation4charity[b.id]));
+	} catch(err) {
+		// currency conversion?? Keep on going unsorted
+		console.error(err);
 	}
 
 	{	// NB: some very old ads may not have charities
@@ -474,7 +483,7 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 	}
 
 	// Did we use an impact model?
-	const impactModels = charities.map(c => c.simpleImpact);
+	const impactModels = charities.map(c => c.simpleImpact).filter(m => m);
 
 	return <div className="container py-5">
 		<Row>
@@ -484,10 +493,10 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 					{dmin && <>Donation Amount: <Misc.Money amount={dmin} /> { dmax && ! Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/></>}
 					50% of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies. 
 					Good-Loop and the advertising exchange make a small commission. The donations depend on viewers watching the adverts.<br/>
-					{totalBudget && <>Limitations on Donation: <Misc.Money amount={totalBudget} /> <br/></>}
+					{ !! Money.value(totalBudget) && <>Limitations on Donation: <Misc.Money amount={totalBudget} /> <br/></>}
 					{start && end && <>Dates: <Misc.DateTag date={start} /> through <Misc.DateTag date={end} /> <br/></>}
 					{ ! start && end && <>End date: <Misc.DateTag date={end} /> <br/></>}
-					{impactModels.length && <p>
+					{ !! impactModels.length && <p>
 						If impacts {impactModels[0].name && `such as "${impactModels[0].name}"`} are listed above, these are representative. 
 						We don't ring-fence funding, as the charity can better assess the best use of funds. 
 						Cost/impact figures are as reported by the charity or by the impact assessor SoGive.
@@ -552,20 +561,14 @@ const fetchDonationData = ({ ads }) => {
 		const ad = ads[i];
 		const donation = hackCorrectedDonations(ad.id);
 		if (donation) return donation;
-	}
-	if (!donationForCharity.total) {
-		// Campaign level total info?
-		let campaignPageDonations = ads.map(ad => ad.campaignPage && Campaign.dntn(ad.campaignPage)).filter(x => x);
-		if (campaignPageDonations.length === ads.length) {
-			let donationTotal = Money.total(campaignPageDonations);
-			donationForCharity.total = donationTotal;
-		}
-	}
+	} // ./hack
+	
 	// Campaign level per-charity info?	
 	let campaignsWithoutDonationData = [];
 	for (let i = 0; i < ads.length; i++) {
 		const ad = ads[i];
 		const cp = ad.campaignPage;
+		// FIXME this is old!! Need to work with new campaigns objects
 		// no per-charity data? (which is normal)
 		if (!cp || !cp.dntn4charity || Object.values(cp.dntn4charity).filter(x => x).length === 0) {
 			if (ad.campaign) {
@@ -597,7 +600,7 @@ const fetchDonationData = ({ ads }) => {
 	// ...by campaign or advert? campaign would be nicer 'cos we could combine different ad variants... but its not logged reliably
 	// (old data) Loop.Me have not logged vert, only campaign. But elsewhere vert is logged and not campaign.
 	let sq1 = adIds.map(id => "vert:" + id).join(" OR ");
-	// NB: quoting for campaigns if they have a space (crude not 100% bulletproof) 
+	// NB: quoting for campaigns if they have a space (crude not 100% bulletproof ??use SearchQuery.js instead) 
 	let sq2 = campaignIds.map(id => "campaign:" + (id.includes(" ") ? '"' + id + '"' : id)).join(" OR ");
 	let sqDon = SearchQuery.or(sq1, sq2);
 
@@ -629,27 +632,6 @@ const fetchDonationData = ({ ads }) => {
 		}
 		assert(cid !== 'total', cid); // paranoia
 		donationForCharity[cid] = dntn;
-	});
-
-	// assign unallocated money?
-	if (!donationForCharity.total) {
-		console.warn("No donation total?!");
-		return donationForCharity;
-	}
-	// NB: minus total, cos total also gets included in the sum-of-values
-	const allocatedMoney = Money.sub(Money.total(Object.values(donationForCharity)), donationForCharity.total);
-	const unallocatedMoney = Money.sub(donationForCharity.total, allocatedMoney);
-	if (Money.value(unallocatedMoney) <= 0) {
-		return donationForCharity;
-	}
-	// share it out based on the allocated money
-	charityIds.forEach(cid => {
-		let cDntn = donationForCharity[cid];
-		if (!cDntn) return;
-		let share = Money.divide(cDntn, allocatedMoney);
-		assert(share >= 0 && share <= 1, cid);
-		let extra = Money.mul(unallocatedMoney, share);
-		donationForCharity[cid] = Money.add(cDntn, extra);
 	});
 	// done	
 	return donationForCharity;
