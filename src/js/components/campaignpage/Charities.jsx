@@ -207,8 +207,8 @@ const CharityCard = ({ charity, donationValue, showLowDonations, showDonations, 
 	let img = (quote && quote.img) || charity.images;
 
 	const showDonationNum = showDonations && (charity.lowDonation && showLowDonations || !charity.lowDonation);
-	if ( ! showDonationNum) console.log("Not showing donations for charity " + charity.id);
-	else if ( ! donationValue) console.warn("No donation value for charity " + charity.id + "!");
+	// if ( ! showDonationNum) console.log("Not showing donations for charity " + charity.id);
+	// else if ( ! donationValue) console.warn("No donation value for charity " + charity.id + "!");
 
 	// TODO let's reduce the use of custom css classes (e.g. charity-quote-img etc below)
 
