@@ -251,12 +251,17 @@ const CampaignPage = () => {
 		console.log("Using top campaign ", campaign);
 	}
 	if ( ! campaign) campaign = {};
-	// TODO fill in if no Campaign objects
+
 	// TODO fill in blanks like donation total and peeps
-	// Priority: TopCampaign, Agency, Advertiser, Campaigns, Adverts
-	// TODO combine branding
+
+	// Combine branding
+	// Priority: TopCampaign, TopItem, Adverts
 	let branding = {};	
-	ads.forEach(ad => Object.assign(branding, ad.branding));
+	ads.forEach(ad => Object.assign(branding, ad.branding));	
+	if (pvTopItem && pvTopItem.value && pvTopItem.value.branding) {
+		Object.assign(branding, pvTopItem.value.branding);
+	}
+	Object.assign(branding, campaign.branding);
 
 	// individual charity data, attaching ad ID
 	let charities = uniqById(_.flatten(ads.map(ad => {
