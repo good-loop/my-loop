@@ -12,7 +12,7 @@ import SubscriptionBox from '../cards/SubscriptionBox';
 import MyLoopNavBar from '../MyLoopNavBar';
 import ShareButton from '../ShareButton';
 import AccountSettings from './AccountSettings';
-import TabsForGoodSettings from './TabsForGoodSettings';
+import TabsForGoodSettings, { doesUserHaveT4G } from './TabsForGoodSettings';
 
 
 
@@ -97,6 +97,9 @@ const Page = () => {
  * @param {boolean} selected
  */
 const SidebarTabLink = ({ tab, label, selected }) => {
+    if (tab === "tabsForGood" && !doesUserHaveT4G()) {
+        return <div><a target="_blank" className={space("account-tab p-2", selected && "active")} href="https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1">Get Tabs for Good</a></div>;
+    }
 	return <div><a href={"/#account?tab=" + escape(tab)} className={space("account-tab p-2", selected && "active")}>{label || tab}</a></div>;
 };
 

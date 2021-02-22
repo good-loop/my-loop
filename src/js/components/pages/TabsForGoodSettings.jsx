@@ -215,6 +215,24 @@ const setSelectedCharityId = (cid) => {
 	}
 };
 
+const doesUserHaveT4G = () => {
+	let xids = getAllXIds();
+	let persons = getProfilesNow(xids);
+	let cid = getClaimValue({persons, key:"hasT4G", swallow:true});
+	return cid;
+};
+
+const setHasT4G = (hasT4G) => {
+	let xids = getAllXIds();
+	let persons = getProfilesNow(xids);
+	setClaimValue({persons, key:"hasT4G", value:hasT4G, swallow:true});
+	console.log("setHasT4G " + hasT4G +" for ",xids, "persons", persons);
+	DataStore.update();
+	// save
+	let pv = savePersons({persons});
+    pv.promise.then(re => console.log("... saved setHasT4G " + hasT4G));
+};
+
 const getSearchEngine = () => {
 	let xids = getAllXIds();
 	let persons = getProfilesNow(xids);
@@ -260,5 +278,5 @@ const StatCard = ({md, lg, xs, number, label, className, padding, children}) => 
 	</Col>;
 };
 
-export { getTabsOpened, Search, getSelectedCharityId, setSelectedCharityId, getSearchEngine };
+export { getTabsOpened, Search, getSelectedCharityId, setSelectedCharityId, getSearchEngine, setHasT4G, doesUserHaveT4G };
 export default TabsForGoodSettings;

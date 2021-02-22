@@ -17,7 +17,7 @@ import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLog
 // import RedesignPage from './pages/RedesignPage';
 import NewtabTutorialCard, { openTutorial, TutorialComponent, TutorialHighlighter } from './NewtabTutorialCard';
 import { fetchCharity } from './pages/MyCharitiesPage';
-import { getSelectedCharityId, getTabsOpened, Search, getSearchEngine } from './pages/TabsForGoodSettings';
+import { getSelectedCharityId, getTabsOpened, Search, getSearchEngine, setHasT4G } from './pages/TabsForGoodSettings';
 import TickerTotal from './TickerTotal';
 
 
@@ -47,10 +47,11 @@ let verifiedLoginOnceFlag;
  */
 const WebtopPage = () => {	
 
-	let charityID = getSelectedCharityId();
+    let charityID = getSelectedCharityId();
 
 	// Yeh - a tab is opened -- let's log that (once only)	
 	if ( ! logOnceFlag && Login.isLoggedIn()) {
+        setHasT4G(true);
 		// NB: include a nonce, as otherwise identical events (you open a few tabs) within a 15 minute time bucket get treated as 1
 		lg("tabopen", {user:Login.getId(), nonce:nonce(6)});
 		// Wait 1.5 seconds before logging ad view - 1 second for ad view profit + .5 to load
