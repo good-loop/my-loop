@@ -61,9 +61,13 @@ const campaignNameForAd = ad => {
  * List of adverts with some info about them (like views, dates)
  * @param {*} param0 
  */
-const AdvertsCatalogue = ({ ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount }) => {
-
-	console.log("Ads for catalogue: ", ads);
+const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount }) => {
+	// filter out any hidden ads
+	// NB: done here as the hiding is a shallow cosmetic -- we still want the view and £ donation data included (or if not, there are other controls)
+	if (campaign && campaign.hideAdverts) {
+		ads = ads.filter(ad => ! campaign.hideAdverts[ad.id]);
+	}
+	console.log("Ads for catalogue: ", ads, "Hiding: ",campaign && campaign.hideAdverts);
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [animating, setAnimating] = useState(false);
 
