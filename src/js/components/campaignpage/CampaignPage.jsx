@@ -252,7 +252,7 @@ const CampaignPage = () => {
 		console.warn("NO ADS FOUND, aborting page generation");
 		return <ErrAlert>No ads found to generate impact hub!</ErrAlert>;
 	}
-	let ads = List.hits(pvAds.value);
+	let ads = List.hits(pvAds.value);		
 
 	// Combine Campaign settings
 	let campaign = pvTopCampaign.value;
@@ -391,6 +391,7 @@ const CampaignPage = () => {
 
 				{isLanding ? null : (
 					<AdvertsCatalogue
+						campaign={campaign}
 						ads={ads}
 						viewcount4campaign={viewcount4campaign}
 						donationTotal={donationTotal}
