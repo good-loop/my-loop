@@ -28,7 +28,7 @@ import DataStore from '../../base/plumbing/DataStore';
 import Roles from '../../base/Roles';
 import SearchQuery from '../../base/searchquery';
 import { assert } from '../../base/utils/assert';
-import { asDate, isMobile, sum, uniq, uniqById, yessy } from '../../base/utils/miscutils';
+import { asDate, isMobile, sum, uniq, uniqById, yessy, mapkv } from '../../base/utils/miscutils';
 import printer from '../../base/utils/printer';
 import { sortByDate } from '../../base/utils/SortFn';
 import Login from '../../base/youagain';
@@ -301,8 +301,8 @@ const CampaignPage = () => {
 		viewcount4campaign = pivotDataLogData(pvViewData.value, ["campaign"]);
 	}
 
-	console.log(yessy(campaign.dntn4charity) ? "Using campaign donation data" : "Using sogive donation data");
-	const donation4charity = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
+	console.log(yessy(campaign.dntn4charity) ? "Using campaign donation data" : "Using sogive donation data");	
+	let donation4charity = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
 	console.log("DONATION 4 CHARITY", donation4charity);
 	const donationTotal = campaign.dntn || donation4charity.total;
 	// Is this an interim total or the full amount? Interim if not fixed by campaign, and not ended
@@ -320,6 +320,24 @@ const CampaignPage = () => {
 		});
 		if (endDate.getTime() > new Date().getTime()) {
 			ongoing = true;
+		}
+	}
+	// Take ratios and scale up the £s? Also: cap the £s?
+	if ( ! campaign.dntn4charity) {
+		// sum
+		const totalDntnByCharity = Money.total(Object.values(campaign.dntn4charity));
+		// If the sum is < 10% the total -- scale up
+		let ratio;
+		if (Money.lessThan(totalDntnByCharity, Money.mul(donationTotal, 0.1))) {
+			ratio = Money.divide(donationTotal, totalDntnByCharity); // ratio is 10+
+		} else if (Money.lessThan(donationTotal, totalDntnByCharity)) {
+			ratio = Money.divide(donationTotal, totalDntnByCharity); // ratio is < 1
+		}
+		if (ratio) {
+			let donation4charityScaled = {};
+			mapkv(donation4charity, (k,v) => donation4charityScaled[k] = donation4charity[k] * ratio);
+			console.log("Scale donations from", donation4charity, "to", donation4charityScaled);
+			donation4charity = donation4charityScaled;
 		}
 	}
 
@@ -455,6 +473,9 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 		totalBudget = Money.total(amounts);
 	}
 
+	// Did we use an impact model?
+	const impactModels = charities.map(c => c.simpleImpact);
+
 	return <div className="container py-5">
 		<Row>
 			<Col md={6} style={{borderRight:"2px solid grey"}}><CharityDetails charities={charities} /></Col>
@@ -466,10 +487,12 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 					{totalBudget && <>Limitations on Donation: <Misc.Money amount={totalBudget} /> <br/></>}
 					{start && end && <>Dates: <Misc.DateTag date={start} /> through <Misc.DateTag date={end} /> <br/></>}
 					{ ! start && end && <>End date: <Misc.DateTag date={end} /> <br/></>}
-					<p>If impacts such as "trees planted" are listed above, these are representative. 
-					We don't ring-fence funding, as the charity can better assess the best use of funds. 
-					Cost/impact figures are as reported by the charity or by the impact assessor SoGive.
-					</p>
+					{impactModels.length && <p>
+						If impacts {impactModels[0].name && `such as "${impactModels[0].name}"`} are listed above, these are representative. 
+						We don't ring-fence funding, as the charity can better assess the best use of funds. 
+						Cost/impact figures are as reported by the charity or by the impact assessor SoGive.
+					</p>}
+					<p>Amounts for campaigns that are in progress or recently finished are estimates and may be subject to audit.</p>
 				</small>
 
 				{campaign.smallPrint &&

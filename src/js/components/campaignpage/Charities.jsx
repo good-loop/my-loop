@@ -86,12 +86,6 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 		showDonations = true;
 	}
 	console.log("Low donation display settings:\n\tfilterLowDonations: " + filterLowDonations + "\n\tshowLowDonations: " + showLowDonations + "\n\tshowDonations: " + showDonations);
-	/*} else {
-		// Default to hiding low donations
-		filterLowDonations = true;
-		showLowDonations = true;
-		showDonations = true;
-	}*/
 
 	// augment with SoGive data
 	// Threshold is the given custom amount, otherwise 1% of total - or if total isnt loaded, £50
@@ -281,58 +275,54 @@ const fetchSogiveData = (charities) => {
 };
 
 /**
- * 
+ * Get charity impacts from impact model, if any data on it exists
  * @param {Output} impact
  * @param {Money} donationValue
  */
 const Impact = ({ charity, donationValue }) => {
-	// Get charity impacts from impact model, if any data on it exists
+	if ( ! charity.simpleImpact) return null;
+	if ( ! charity.simpleImpact.name || ! charity.simpleImpact.costPerBeneficiary || ! donationValue) {
+		return null;
+	}
 	let impact = "";
 	let donationsMoney = new Money(donationValue);
-	// Attempt to get data from special field first, simple and easy
-	if (charity.simpleImpact) {
-		if (!charity.simpleImpact.name || !charity.simpleImpact.costPerBeneficiary || !donationValue) {
-			return null;
+	const impactFormat = charity.simpleImpact.name;
+	const numOfImpact = printer.prettyNumber(Math.round(Money.divide(donationsMoney, charity.simpleImpact.costPerBeneficiary)));
+	// Process format to use singular or plural name
+	// REGEX for (singular:...) format
+	// Group 1: plural form
+	// Group 3: singular form
+	// Group 4: verb
+	const singularFormatRegex = /(.*) (\(singular: (.*)\)) (.*)/g;
+	let match = singularFormatRegex.exec(impactFormat);
+	if (match) {
+		const verb = match[4];
+		const isSingular = numOfImpact === "1";
+		const singular = match[3];
+		const plural = match[1];
+		// Use generic phrasing for 0 impact
+		if (numOfImpact === "0") {
+			impact = "To help " + verb.replace(/ed$/, "") + " " + plural;
+		} else {
+			impact = numOfImpact + " " + (isSingular ? singular : plural) + " " + verb;
 		}
-		const impactFormat = charity.simpleImpact.name;
-		const numOfImpact = printer.prettyNumber(Math.round(Money.divide(donationsMoney, charity.simpleImpact.costPerBeneficiary)));
-		// Process format to use singular or plural name
-		// REGEX for (singular:...) format
-		// Group 1: plural form
-		// Group 3: singular form
-		// Group 4: verb
-		const singularFormatRegex = /(.*) (\(singular: (.*)\)) (.*)/g;
-		let match = singularFormatRegex.exec(impactFormat);
+	} else {
+		// Separate impact string into its name and verb using space
+		const separatorRegex = /(.*) (.*)$/g;
+		match = separatorRegex.exec(impactFormat);
 		if (match) {
-			const verb = match[4];
-			const isSingular = numOfImpact === "1";
-			const singular = match[3];
-			const plural = match[1];
-			// Use generic phrasing for 0 impact
+			let name = match[1];
+			let verb = match[2];
+			// If plural/singular versions can't be found, fall back to whatever was given
 			if (numOfImpact === "0") {
-				impact = "To help " + verb.replace(/ed$/, "") + " " + plural;
+				impact = "To help " + verb.replace(/ed$/, "ing") + " " + name;
 			} else {
-				impact = numOfImpact + " " + (isSingular ? singular : plural) + " " + verb;
+				impact = numOfImpact + " " + name + " " + verb;
 			}
 		} else {
-			// Separate impact string into its name and verb using space
-			const separatorRegex = /(.*) (.*)$/g;
-			match = separatorRegex.exec(impactFormat);
-			if (match) {
-				let name = match[1];
-				let verb = match[2];
-				// If plural/singular versions can't be found, fall back to whatever was given
-				if (numOfImpact === "0") {
-					impact = "To help " + verb.replace(/ed$/, "ing") + " " + name;
-				} else {
-					impact = numOfImpact + " " + name + " " + verb;
-				}
-			} else {
-				impact = numOfImpact + " " + impactFormat;
-			}
+			impact = numOfImpact + " " + impactFormat;
 		}
-	}
-	
+	}	
 	return <b>{impact}</b>;
 };
 
