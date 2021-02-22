@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { space } from '../base/utils/miscutils';
+import NGO from '../base/data/NGO';
 
 /**
  * Logo (which you can click on)
