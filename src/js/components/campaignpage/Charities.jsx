@@ -229,7 +229,7 @@ const CharityCard = ({ charity, donationValue, showLowDonations, showDonations, 
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
 					{!quote ? <MDText source={desc} /> : null}
 					<div className="flex-row">
-						<DevLink href={'https://app.sogive.org/#simpleedit?action=getornew&charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">SoGive Editor</DevLink>
+						<DevLink href={'https://app.sogive.org/#edit?action=getornew&charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">SoGive Editor</DevLink>
 						<DevLink href={ServerIO.PORTAL_ENDPOINT+'/#advert/' + escape(charity.ad)} target="_portal" className="ml-2">Advert Editor</DevLink>
 					</div>
 				</div>
