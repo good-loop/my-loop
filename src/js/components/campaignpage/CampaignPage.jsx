@@ -263,15 +263,20 @@ const CampaignPage = () => {
 	}
 	Object.assign(branding, campaign.branding);
 
+    const ad4Charity = {};
 	// individual charity data, attaching ad ID
 	const charities = uniqById(_.flatten(ads.map(ad => {
 		const clist = ad.charities && ad.charities.list || []
 		return clist.map(c => {
 			const charity = c;
-			charity.ad = ad.id; // why do we need this??
+			ad4Charity[c.id] = ad.id; // for Advert Editor dev button so sales can easily find which ad contains which charity
 			return charity;
 		})
-	})));
+    })));
+    // Attach ads after initial sorting and merging, which can cause ad ID data to be lost
+    charities.forEach(charity => {
+        charity.ad = ad4Charity[charity.id];
+    });
 
 	// PDF version of page
 	let pdf = null;
