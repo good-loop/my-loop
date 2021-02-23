@@ -269,13 +269,14 @@ const CampaignPage = () => {
 		const clist = ad.charities && ad.charities.list || []
 		return clist.map(c => {
 			const charity = c;
-			ad4Charity[c.id] = ad.id; // for Advert Editor dev button so sales can easily find which ad contains which charity
+			ad4Charity[c.id] = ad; // for Advert Editor dev button so sales can easily find which ad contains which charity
 			return charity;
 		})
     })));
+    console.log("AD 4 CHARITY:",ad4Charity)
     // Attach ads after initial sorting and merging, which can cause ad ID data to be lost
     charities.forEach(charity => {
-        charity.ad = ad4Charity[charity.id];
+        charity.ad = ad4Charity[charity.id].id;
     });
 
 	// PDF version of page
@@ -558,7 +559,9 @@ const fetchDonationData = ({ ads }) => {
 	if (!ads.length) return donationForCharity; // paranoia
 	// things
 	let adIds = ads.map(ad => ad.id);
-	let campaignIds = ads.map(ad => ad.campaign);
+    let campaignIds = ads.map(ad => ad.campaign);
+    // Filter bad IDs
+    campaignIds = campaignIds.filter(x=>x);
 	let charityIds = _.flatten(ads.map(Advert.charityList));
 
 	// HACK return hacked values if Cheerios or Purina
@@ -604,7 +607,7 @@ const fetchDonationData = ({ ads }) => {
 	// Fetch donations data	
 	// ...by campaign or advert? campaign would be nicer 'cos we could combine different ad variants... but its not logged reliably
 	// (old data) Loop.Me have not logged vert, only campaign. But elsewhere vert is logged and not campaign.
-	let sq1 = adIds.map(id => "vert:" + id).join(" OR ");
+    let sq1 = adIds.map(id => "vert:" + id).join(" OR ");
 	// NB: quoting for campaigns if they have a space (crude not 100% bulletproof ??use SearchQuery.js instead) 
 	let sq2 = campaignIds.map(id => "campaign:" + (id.includes(" ") ? '"' + id + '"' : id)).join(" OR ");
 	let sqDon = SearchQuery.or(sq1, sq2);
