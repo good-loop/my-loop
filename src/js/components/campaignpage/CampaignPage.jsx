@@ -472,8 +472,13 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 		if ( ! tli)	continue;
 		let dPerAd = tli && tli.maxBid;
 		if (dPerAd) {
-			if ( ! dmin || Money.compare(dPerAd, dmin) < 0) dmin = dPerAd;
-			if ( ! dmax || Money.compare(dPerAd, dmin) > 0) dmax = dPerAd;
+            try {
+                if ( ! dmin || Money.compare(dPerAd, dmin) < 0) dmin = dPerAd;
+                if ( ! dmax || Money.compare(dPerAd, dmin) > 0) dmax = dPerAd;
+            } catch(e) {
+                // Continue without comparison
+                console.error(e);
+            }
 		}
 		let starti = tli && asDate(tli.start);
 		let endi = tli && asDate(tli.end);
