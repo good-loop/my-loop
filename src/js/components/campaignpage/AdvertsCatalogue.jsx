@@ -101,7 +101,7 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 
 	if (sampleAds.length == 1) {
 		return <Container className="py-5">
-			<h2>Watch the <AdvertiserName name={nvertiserName} /> ad that raised <Counter currencySymbol="£" sigFigs={4} amount={donationTotal} minimumFractionDigits={2} preserveSize /><br />with {views} ad viewers</h2>
+			<h2>Watch the <AdvertiserName name={nvertiserName} /> ad that raised <Counter currencySymbol="£" sigFigs={4} amount={donationTotal} minimumFractionDigits={2} preserveSize /><br />from a campaign with {views} ad viewers</h2>
 			<AdvertCard
 				ad={ads[0]}
 				viewCountProp={views}

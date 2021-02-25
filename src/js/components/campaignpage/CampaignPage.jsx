@@ -389,7 +389,11 @@ const CampaignPage = () => {
 		let views = ads1perCampaign.map(ad => viewCount(viewcount4campaign, ad));
 		totalViewCount = sum(views);
 		// }
-	}
+	} else {
+        Object.keys(viewcount4campaign).forEach(ad => {
+            viewcount4campaign[ad] = totalViewCount;
+        })
+    }
 
 	console.log("pvADVERTISERS in main render", pvAdvertisers);
 	// Get name of advertiser from nvertiser if existing, or ad if not
