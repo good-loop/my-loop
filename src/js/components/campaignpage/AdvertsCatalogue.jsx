@@ -101,7 +101,7 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 
 	if (sampleAds.length == 1) {
 		return <Container className="py-5">
-			<h2>Watch the {nvertiserName} ad that raised <Counter currencySymbol="£" sigFigs={4} amount={donationTotal} minimumFractionDigits={2} preserveSize /><br />with {views} ad viewers</h2>
+			<h2>Watch the <AdvertiserName name={nvertiserName} /> ad that raised <Counter currencySymbol="£" sigFigs={4} amount={donationTotal} minimumFractionDigits={2} preserveSize /><br />with {views} ad viewers</h2>
 			<AdvertCard
 				ad={ads[0]}
 				viewCountProp={views}
@@ -146,7 +146,7 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 
 	return (<>
 		<Container className="py-5">
-			<h2>Watch the {nvertiserName} ads that raised <Counter currencySymbol="£" sigFigs={4} amount={donationTotal} minimumFractionDigits={2} preserveSize /><br />with {views} ad viewers</h2>
+			<h2>Watch the <AdvertiserName name={nvertiserName} /> ads that raised <Counter currencySymbol="£" sigFigs={4} amount={donationTotal} minimumFractionDigits={2} preserveSize /><br />with {views} ad viewers</h2>
 			<Carousel
 				activeIndex={activeIndex}
 				next={next}
@@ -165,6 +165,13 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 		</Container>
 	</>);
 };
+
+/**
+ * NB: wrapped in span x2 to allow custom css to target it. e.g.
+ * 
+ * 
+ */
+const AdvertiserName = ({name}) => <span className="advertiser-name"><span>{name}</span></span>
 
 const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 
