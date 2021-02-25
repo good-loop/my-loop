@@ -263,15 +263,17 @@ const CampaignPage = () => {
 	}
 	Object.assign(branding, campaign.branding);
 
+    console.log("ADS BEFORE CHARITY SORTING", ads);
+
     const ad4Charity = {};
 	// individual charity data, attaching ad ID
 	const charities = uniqById(_.flatten(ads.map(ad => {
-		const clist = ad.charities && ad.charities.list || []
+        const clist = (ad.charities && ad.charities.list).slice() || [];
 		return clist.map(c => {
 			const charity = c;
 			ad4Charity[c.id] = ad; // for Advert Editor dev button so sales can easily find which ad contains which charity
 			return charity;
-		})
+		});
     })));
     console.log("AD 4 CHARITY:",ad4Charity)
     // Attach ads after initial sorting and merging, which can cause ad ID data to be lost
@@ -489,7 +491,7 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 	
 	let totalBudget	= campaign.maxDntn;
 	if ( ! totalBudget) {
-		let amounts = ads.map(ad => Advert.budget(ad) && Advert.budget(ad).total);
+        let amounts = ads.map(ad => Advert.budget(ad) && Advert.budget(ad).total);
 		totalBudget = Money.total(amounts);
 	}
 

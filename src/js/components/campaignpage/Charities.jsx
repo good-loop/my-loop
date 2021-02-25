@@ -212,7 +212,7 @@ const CharityCard = ({ charity, donationValue, showLowDonations, showDonations, 
 
 	// TODO let's reduce the use of custom css classes (e.g. charity-quote-img etc below)
 
-	return (<div className="p-3">
+	return (<div className="p-3" id={"charity-" + charity.id}>
 		<div className={space("charity-quote row", !img && "no-img")}>
 			{img &&
 				<div className="charity-quote-img col-md-5 p-0">
