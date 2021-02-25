@@ -115,9 +115,9 @@ const fetchIHubData = () => {
 		// ads
 		let q = SearchQuery.setProp(new SearchQuery(), "campaign", campaignId1).query;
 		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});		
-		// advertiser
+        // advertiser
 		if (pvTopCampaign.value && pvTopCampaign.value.vertiser) {
-			const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:vertiserid});			
+			const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:pvTopCampaign.value.vertiser});			
 			// wrap as a list
 			pvAdvertisers = fetchIHubData2_wrapAsList(pvAdvertiser);
 		}
