@@ -62,6 +62,7 @@ const NewtabCharityLogin = () => {
 		Login.verify().then(res => {
 			if (!res || !res.success) {console.error("Not logged in! Cannot set charity!")}
 			else {
+                console.log("YOU ARE LOGGED IN. YOU ARE DEFINITELY LOGGED IN.");
 				const charityID = DataStore.getValue(['location', 'params', 'charity']);
 				if (charityID) setSelectedCharityId(charityID);
 				DataStore.setValue(LOGIN_VERB_PATH, "t4g_chrome_store");
