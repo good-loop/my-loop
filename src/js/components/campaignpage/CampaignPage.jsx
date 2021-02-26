@@ -42,6 +42,7 @@ import DevLink from './DevLink';
 import AdvertsCatalogue from './AdvertsCatalogue';
 import List from '../../base/data/List';
 import KStatus from '../../base/data/KStatus';
+import { FacebookSelectors } from '../../../puppeteer_tests/MasterSelectors';
 
 
 /**
@@ -121,7 +122,17 @@ const fetchIHubData = () => {
 			// wrap as a list
 			pvAdvertisers = fetchIHubData2_wrapAsList(pvAdvertiser);
 		}
-	}
+    }
+    
+    // Fetch data for the advertiser and it's ad list
+    const fetchDataForVertiser = id => {
+        const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id});
+		// ads
+		let q = SearchQuery.setProp(new SearchQuery(), "vertiser", id).query;
+        const pvAdsList = ActionMan.list({type: C.TYPES.Advert, status, q});
+        return {pvAdvertiser, pvAdsList};
+    };
+
 	// ...by Advert?
 	if (adid) {
 		console.log("Getting " + adid + " ad...");
@@ -132,22 +143,50 @@ const fetchIHubData = () => {
 	}
 	// ...by Advertiser?
 	if (vertiserid) {
-		const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:vertiserid});
-		if ( ! pvTopItem) pvTopItem = pvAdvertiser;
-		// wrap as a list
-		pvAdvertisers = fetchIHubData2_wrapAsList(pvAdvertiser);
-		// ads
-		let q = SearchQuery.setProp(new SearchQuery(), "vertiser", vertiserid).query;
-		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
+        let {vertiser, adsList} = fetchDataForVertiser(id);
+		pvAdvertisers = fetchIHubData2_wrapAsList(vertiser);
+        pvAds = adsList;
+        if ( ! pvTopItem) pvTopItem = vertiser;
 	}
 	// ...by Agency?
 	if (agency) {		
 		pvTopItem = getDataItem({type:C.TYPES.Agency,status,id:agency});
 		// wrap as a list
 		pvAgencies = fetchIHubData2_wrapAsList(pvTopItem);
-		// ads
-		let q = SearchQuery.setProp(new SearchQuery(), "agencyId", agency).query;
-		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
+		// advertisers
+        let q = SearchQuery.setProp(new SearchQuery(), "agencyId", agency).query;
+        pvAdvertisers = ActionMan.list({type: C.TYPES.Advertiser, status, q});
+        if (pvAdvertisers.value) {
+			/*const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:pvTopCampaign.value.vertiser});			
+			// wrap as a list
+            pvAdvertisers = fetchIHubData2_wrapAsList(pvAdvertiser);*/
+
+            // Fetch ads from list of vertisers, wrapped as one big promise
+            const adPromise = new Promise((resolve, reject) => {
+                let ads = [];
+                if (pvAdvertisers.value && pvAdvertisers.value.hits) {
+                    // Keep track of the number of vertisers resolved so we know when to resolve the full promise
+                    let numVertisersReached = 0;
+                    pvAdvertisers.value.hits.forEach(vertiser => {
+                        let {pvVertiser, pvAdsList} = fetchDataForVertiser(vertiser.id);
+                        pvAdsList.promise.then(v => {
+                            v.hits.forEach(ad => {
+                                ads.push(ad);
+                            });
+                            numVertisersReached++;
+                            // If the number of vertisers resolved is all the ones we needed, resolve the full promise
+                            if (numVertisersReached === pvAdvertisers.value.hits.length) resolve(new List(ads));
+                        }).catch(e => {
+                            console.error(e);
+                            // Same resolving code to make sure 1 failed advertiser doesnt leave the whole promise hanging
+                            numVertisersReached++;
+                            if (numVertisersReached === pvAdvertisers.value.hits.length) resolve(new List(ads));
+                        });
+                    });
+                }
+            });
+            pvAds = new PromiseValue(adPromise);
+		}
 	} 
 	if ( ! agency && ! vertiserid && ! adid && ! campaignId1)  {
 		throw new Error("No Campaign info specified");
@@ -157,7 +196,7 @@ const fetchIHubData = () => {
 		pvTopCampaign = getDataItem({type:C.TYPES.Campaign, status, id:pvTopItem.value.campaign});
 	}	
 	// ...fill in from adverts
-	if (pvAds.value && pvAds.value.hits && pvAds.value.hits.length && pvAds.value.hits[0]) {
+	if (pvAds && pvAds.value && pvAds.value.hits && pvAds.value.hits.length && pvAds.value.hits[0]) {
 		console.log("PVADS VALUE", pvAds.value);
 		if ( ! pvAdvertisers) {
 			// NB: This should be only one advertiser and agency
@@ -227,6 +266,8 @@ const CampaignPage = () => {
 	// Is the campaign page being used as a click-through advert landing page?
 	// If so, change the layout slightly, positioning the advert video on top.
 	const isLanding = (landing !== undefined) && (landing !== 'false');
+    
+    console.log("AAAAAAADS", pvAds);
 
 	if ( ! pvAds.resolved) {
 		// TODO display some stuff whilst ads are loading
