@@ -155,7 +155,8 @@ const fetchIHubData = () => {
 			const ids = uniq(pvAdvertisers.value.hits.map(getId));
 			console.log("ADVERTISER IDs", ids);
 			if (yessy(ids)) {
-				let adq = SearchQuery.setProp(new SearchQuery(), "vertiser", id).query;
+                let adq = SearchQuery.setPropOr(new SearchQuery(), "vertiser", ids).query;
+                console.log(adq);
         		pvAds = ActionMan.list({type: C.TYPES.Advert, status, adq});        
 			} else {
 				console.warn("No Advertisers found for agency",agency,pvTopItem);
