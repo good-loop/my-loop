@@ -280,6 +280,44 @@ const filterLowDonations = ({charities, campaign, donationTotal,donation4charity
 	return charities;
 } // ./filterLowDonations
 
+/**
+ * Scale a list of charities to match the money total
+ * @param {Campaign} campaign 
+ * @param {Money} donationTotal 
+ * @param {Object} donation4charity 
+ */
+const scaleCharityDonations = (campaign, donationTotal, donation4charity, charities) => {
+    let donation4charityScaled = {};
+    // Take ratios and scale up the £s? Also: cap the £s?
+	if ( ! campaign.dntn4charity && donationTotal) {
+		// sum
+		let monies = mapkv(donation4charity, (k,v) => k==="total" || k==="unset"? null : v);
+        let totalDntnByCharity = Money.total(monies);
+        // Deep copy money by adding 0
+        let donationTotalAdjusted = donationTotal;
+        Object.keys(donation4charity).forEach(charity => {
+            // Is charity present in the big list?
+            if (charity !== "total" && charity !== "unset" && charities.filter(c => c.id === charity).length === 0) {
+                // If not, remove it's donation from the total to appropriately scale
+                console.log("REMOVING " + charity + " from total",donationTotalAdjusted);
+                donationTotalAdjusted = Money.sub(donationTotalAdjusted, donation4charity[charity]);
+            }
+        });
+        console.log("Final total REMOVING:");
+		// If the sum is < 10% the total -- scale up
+		let ratio;
+		if (Money.lessThan(totalDntnByCharity, Money.mul(donationTotal, 0.1))) {
+			ratio = Money.divide(donationTotal, totalDntnByCharity); // ratio is 10+
+		} else if (Money.lessThan(donationTotal, totalDntnByCharity)) {
+			ratio = Money.divide(donationTotal, totalDntnByCharity); // ratio is < 1
+		}
+		if (ratio) {
+			mapkv(donation4charity, (k,v) => k==="total" || k==="unset"? null : donation4charityScaled[k] = Money.mul(donation4charity[k], ratio));
+			console.log("Scale donations from", donation4charity, "to", donation4charityScaled);
+		}
+    }
+    return donation4charityScaled;
+}
 
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser` or `via`
@@ -358,28 +396,14 @@ const CampaignPage = () => {
 	console.log("DONATION 4 CHARITY", donation4charity);
 	const donationTotal = campaign.dntn || donation4charity.total;
 
-	// Take ratios and scale up the £s? Also: cap the £s?
-	if ( ! campaign.dntn4charity && donationTotal) {
-		// sum
-		let monies = mapkv(donation4charity, (k,v) => k==="total" || k==="unset"? null : v);
-		const totalDntnByCharity = Money.total(monies);
-		// If the sum is < 10% the total -- scale up
-		let ratio;
-		if (Money.lessThan(totalDntnByCharity, Money.mul(donationTotal, 0.1))) {
-			ratio = Money.divide(donationTotal, totalDntnByCharity); // ratio is 10+
-		} else if (Money.lessThan(donationTotal, totalDntnByCharity)) {
-			ratio = Money.divide(donationTotal, totalDntnByCharity); // ratio is < 1
-		}
-		if (ratio) {
-			let donation4charityScaled = {};
-			mapkv(donation4charity, (k,v) => k==="total" || k==="unset"? null : donation4charityScaled[k] = Money.mul(donation4charity[k], ratio));
-			console.log("Scale donations from", donation4charity, "to", donation4charityScaled);
-			donation4charity = donation4charityScaled;
-		}
-    }
-
+    // Scale once to get values in the right ballpark
+    donation4charity = scaleCharityDonations(campaign, donationTotal, donation4charity, charities);
+    
     // filter charities by low £s and campaign.hideCharities
-	charities = filterLowDonations({charities, campaign, donationTotal, donation4charity});
+    charities = filterLowDonations({charities, campaign, donationTotal, donation4charity});
+    
+    // Scale again to make up for discrepencies introduced by filtering
+    donation4charity = scaleCharityDonations(campaign, donationTotal, donation4charity, charities);
 
 	// PDF version of page
 	let pdf = null;
