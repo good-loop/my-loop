@@ -52,19 +52,23 @@ challenges facing our planet."`,
  * @param {?Boolean} showDonations If false will hide all donation numbers
  * @param {?String[]} hideCharities hide specific charities by ID
  */
-const Charities = ({ charities, donation4charity, campaign }) => {
-	
-	// The portal control data
-	let hideImpact = campaign.hideImpact || {};
-	// Filter nulls (paranoia)
-	charities = charities.filter(x => x);
-	let sogiveCharities = fetchSogiveData(charities);
+const Charities = ({ charities, donation4charity, campaign, showDonations, showLowDonations }) => {
 
-	const getDonation = c => {
+    const getDonation = c => {
 		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
 		// Filter charity if less then 1/10 the total donation
 		return d;
 	};
+
+    let sogiveCharities = fetchSogiveData(charities);
+
+    sogiveCharities = sogiveCharities.filter(x => x);
+    
+    let { hideImpact } = campaign;
+	if (!hideImpact) hideImpact = {};
+
+	console.log("SOGIVE CHARITIES", sogiveCharities);
+	//let sogiveCharitiesWithoutDonations = sogiveCharities.filter(c => ! getDonation(c)); // Keep other charities for the "Also Supported" section
 
 	return (
 		<div className="charity-card-container bg-gl-light-pink">
@@ -76,7 +80,9 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 					<CharityCard i={i} key={charity.id}
 						charity={charity}
 						donationValue={getDonation(charity)}
-						showImpact={ ! hideImpact[charity.id]} />
+						showDonations={showDonations}
+						showLowDonations={showLowDonations}
+						showImpact={!hideImpact[charity.id]} />
 				)}
 			</Container>
 		</div>
@@ -131,7 +137,7 @@ const RegNum = ({label, regNum}) => {
  * @param {!NGO} charity This data item is a shallow copy
  * @param {?Money} donationValue
  */
-const CharityCard = ({ charity, donationValue, showImpact }) => {
+const CharityCard = ({ charity, donationValue, showLowDonations, showDonations, showImpact }) => {
 	// Prefer full descriptions here. If unavailable switch to summary desc.
 	let desc = charity.description || charity.summaryDescription || '';
 	// But do cut descriptions down to 1 paragraph.
@@ -142,6 +148,10 @@ const CharityCard = ({ charity, donationValue, showImpact }) => {
 
 	const quote = tq(charity);
 	let img = (quote && quote.img) || charity.images;
+
+	const showDonationNum = showDonations && (charity.lowDonation && showLowDonations || !charity.lowDonation);
+	// if ( ! showDonationNum) console.log("Not showing donations for charity " + charity.id);
+	// else if ( ! donationValue) console.warn("No donation value for charity " + charity.id + "!");
 
 	// TODO let's reduce the use of custom css classes (e.g. charity-quote-img etc below)
 
@@ -157,7 +167,7 @@ const CharityCard = ({ charity, donationValue, showImpact }) => {
 					<img src={charity.logo} alt="logo"/>
 				</div>
 				<div className="charity-quote-text">
-					{donationValue? <div className="w-100"><h2><Counter amount={donationValue} preservePennies={false} /> raised</h2></div> : null}
+					{showDonationNum && donationValue? <div className="w-100"><h2><Counter amount={donationValue} preservePennies={false} /> raised</h2></div> : null}
 					{charity.simpleImpact && showImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
 					{!quote ? <MDText source={desc} /> : null}
@@ -172,7 +182,7 @@ const CharityCard = ({ charity, donationValue, showImpact }) => {
 	);
 };
 
-/** Augment ad charity objects with sogive data  */
+// Augment ad charity objects with sogive data
 const fetchSogiveData = (charities) => {
 	let dupeIds = [];
 	let sogiveCharities = charities.map(charityOriginal => {
