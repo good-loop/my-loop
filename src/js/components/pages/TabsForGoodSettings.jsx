@@ -204,15 +204,16 @@ const setSelectedCharityId = (cid) => {
 	let pv = savePersons({persons});
 	// return??
 	const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
-	const link = DataStore.getUrlValue("link"); 
-	if (task==="select-charity" && link) {
-		pv.promise.then(re => {
-			console.log("... saved setSelectedCharityId " + cid);
-			window.location = link;
-		}).catch(e => {
-			console.error("FAILED CHARITY SELECT", e);
-		})
-	}
+    const link = DataStore.getUrlValue("link");
+    pv.promise.then(re => {
+        console.log("... saved setSelectedCharityId " + cid);
+        if (task==="select-charity" && link) {
+            window.location = link;
+        }
+    }).catch(e => {
+        console.error("FAILED CHARITY SELECT", e);
+    })
+	
 };
 
 const doesUserHaveT4G = () => {

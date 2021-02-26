@@ -12,6 +12,7 @@ import DevLink from './DevLink';
  */
 const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, totalViewCount, ongoing}) => {
 
+    console.log("SPLASH CARD TOTAL VIEW COUNT", totalViewCount);
 	let numPeople = printer.prettyNumber(Math.round(totalViewCount), 10);
 	if (numPeople === "0") numPeople = false;
 	return (

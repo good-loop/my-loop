@@ -115,9 +115,9 @@ const fetchIHubData = () => {
 		// ads
 		let q = SearchQuery.setProp(new SearchQuery(), "campaign", campaignId1).query;
 		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});		
-		// advertiser
+        // advertiser
 		if (pvTopCampaign.value && pvTopCampaign.value.vertiser) {
-			const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:vertiserid});			
+			const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:pvTopCampaign.value.vertiser});			
 			// wrap as a list
 			pvAdvertisers = fetchIHubData2_wrapAsList(pvAdvertiser);
 		}
@@ -263,15 +263,17 @@ const CampaignPage = () => {
 	}
 	Object.assign(branding, campaign.branding);
 
+    console.log("ADS BEFORE CHARITY SORTING", ads);
+
     const ad4Charity = {};
 	// individual charity data, attaching ad ID
 	const charities = uniqById(_.flatten(ads.map(ad => {
-		const clist = ad.charities && ad.charities.list || []
+        const clist = (ad.charities && ad.charities.list).slice() || [];
 		return clist.map(c => {
 			const charity = c;
 			ad4Charity[c.id] = ad; // for Advert Editor dev button so sales can easily find which ad contains which charity
 			return charity;
-		})
+		});
     })));
     console.log("AD 4 CHARITY:",ad4Charity)
     // Attach ads after initial sorting and merging, which can cause ad ID data to be lost
@@ -380,7 +382,11 @@ const CampaignPage = () => {
 		let views = ads1perCampaign.map(ad => viewCount(viewcount4campaign, ad));
 		totalViewCount = sum(views);
 		// }
-	}
+	} else {
+        Object.keys(viewcount4campaign).forEach(ad => {
+            viewcount4campaign[ad] = totalViewCount;
+        })
+    }
 
 	console.log("pvADVERTISERS in main render", pvAdvertisers);
 	// Get name of advertiser from nvertiser if existing, or ad if not
@@ -482,7 +488,7 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 	
 	let totalBudget	= campaign.maxDntn;
 	if ( ! totalBudget) {
-		let amounts = ads.map(ad => Advert.budget(ad) && Advert.budget(ad).total);
+        let amounts = ads.map(ad => Advert.budget(ad) && Advert.budget(ad).total);
 		totalBudget = Money.total(amounts);
 	}
 
@@ -492,7 +498,7 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 	return <div className="container py-5">
 		<Row>
 			<Col md={6} style={{borderRight:"2px solid grey"}}><CharityDetails charities={charities} /></Col>
-			<Col md={6} className="text-center pl-5">
+			<Col md={6} className="text-center pl-md-5">
 				 <small>
 					{dmin && <>Donation Amount: <Misc.Money amount={dmin} /> { dmax && ! Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/></>}
 					50% of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies. 
