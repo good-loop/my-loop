@@ -229,7 +229,8 @@ const filterLowDonations = ({charities, campaign, donationTotal,donation4charity
 	charities = charities.filter(x => x);
 
 	if (campaign.hideCharities) {
-		let hc = campaign.hideCharities;
+        let hc = Object.keys(hideCharities);
+        hc = hc.filter(c => hideCharities[c]);
 		const charities2 = charities.filter(c => ! hc.includes(getId(c)));
 		charities = charities2;
 	}
