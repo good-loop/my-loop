@@ -361,13 +361,6 @@ const CampaignPage = () => {
 		// minor todo - clean these up in the portal
 		if (noCharityAds.length) console.warn("Ads without charities data", noCharityAds.map(ad => [ad.id, ad.campaign, ad.name, ad.status]));
 	}
-	let charitiesById = _.uniq(_.flattenDeep(ads.map(ad => ad.charities && ad.charities.list)));
-	let charIds = [];
-	charitiesById.forEach(c => {
-		if (c && !charIds.includes(c.name)) {
-			charIds.push(c.name);
-		}
-	});
 
 	// Sum of the views from every ad in the campaign. We use this number for display
 	// and to pass it to the AdvertCards to calculate the money raised against the total.
