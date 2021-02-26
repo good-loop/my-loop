@@ -42,6 +42,7 @@ import DevLink from './DevLink';
 import AdvertsCatalogue from './AdvertsCatalogue';
 import List from '../../base/data/List';
 import KStatus from '../../base/data/KStatus';
+import { getId } from '../../base/data/DataClass';
 
 
 /**
@@ -210,6 +211,55 @@ const fetchIHubData2_wrapAsList = pvTopItem => {
 	));
 };
 
+
+
+/**
+ * @param {Object} p
+ * @param {?Money} p.donationTotal
+ * @param {NGO[]} p.charities From adverts (not SoGive)
+ * @returns {NGO[]}
+ */
+const filterLowDonations = ({charities, campaign, donationTotal}) => {
+
+	// Low donation filtering data is represented as only 2 controls for portal simplicity
+	// lowDntn = the threshold at which to consider a charity a low donation
+	// hideCharities = a list of charity IDs to explicitly hide - represented by keySet as an object (explained more below line 103)
+	
+	// Filter nulls
+	charities = charities.filter(x => x);
+
+	if (campaign.hideCharities) {
+		let hc = Campaign.hideCharities(campaign);
+		const charities2 = charities.filter(c => ! campaign.hideCharities.includes(getId(c)));
+		charities = charities2;
+	}
+	
+	let lowDntn = campaign.lowDntn;	
+	if ( ! lowDntn || ! Money.value(lowDntn)) {
+		if ( ! donationTotal) {
+			return charities;
+		}
+		// default to 1%
+		lowDntn = Money.mul(donationTotal, 0.01);
+	}
+	console.warn("Low donation threshold for charities set to " + lowDntn);
+		
+	const getDonation = c => {
+		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
+		return d;
+	};
+
+	charities = charities.filter(charity => {
+		const dntn = getDonation(charity);
+		const include = dntn? Money.value(dntn) >= threshold : false;
+		console.log("lowDntn filter for charity " + charity.id + ": " + include + ", ", dntn);
+		return include;
+	});
+		
+	return charities;
+} // ./filterLowDonations
+
+
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser` or `via`
  * TODO support q=... flexible query
@@ -280,6 +330,18 @@ const CampaignPage = () => {
     charities.forEach(charity => {
         charity.ad = ad4Charity[charity.id].id;
     });
+	
+	// Total £ donation
+	let donation4charity = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
+	assert(donation4charity, "CampaignPage.jsx falsy donation4charity?!");
+	console.log("DONATION 4 CHARITY", donation4charity);
+	const donationTotal = campaign.dntn || donation4charity.total;
+
+	// filter charities
+	charities = filterLowDonations({charities, campaign, donationTotal});
+
+	// augment data
+	let sogiveCharities = fetchSogiveData(charities);
 
 	// PDF version of page
 	let pdf = null;
@@ -309,11 +371,6 @@ const CampaignPage = () => {
 		viewcount4campaign = pivotDataLogData(pvViewData.value, ["campaign"]);
 	}
 
-	console.log(yessy(campaign.dntn4charity) ? "Using campaign donation data" : "Using sogive donation data");	
-	let donation4charity = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
-	assert(donation4charity, "CampaignPage.jsx falsy donation4charity?!");
-	console.log("DONATION 4 CHARITY", donation4charity);
-	const donationTotal = campaign.dntn || donation4charity.total;
 	// Is this an interim total or the full amount? Interim if not fixed by campaign, and not ended
 	let ongoing = false;
 	if ( ! campaign.dntn) {
