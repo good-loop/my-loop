@@ -43,6 +43,7 @@ import AdvertsCatalogue from './AdvertsCatalogue';
 import List from '../../base/data/List';
 import KStatus from '../../base/data/KStatus';
 import { FacebookSelectors } from '../../../puppeteer_tests/MasterSelectors';
+import { getId } from '../../base/data/DataClass';
 
 
 /**
@@ -123,15 +124,6 @@ const fetchIHubData = () => {
 			pvAdvertisers = fetchIHubData2_wrapAsList(pvAdvertiser);
 		}
     }
-    
-    // Fetch data for the advertiser and it's ad list
-    const fetchDataForVertiser = id => {
-        const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id});
-		// ads
-		let q = SearchQuery.setProp(new SearchQuery(), "vertiser", id).query;
-        const pvAdsList = ActionMan.list({type: C.TYPES.Advert, status, q});
-        return {pvAdvertiser, pvAdsList};
-    };
 
 	// ...by Advert?
 	if (adid) {
@@ -143,10 +135,11 @@ const fetchIHubData = () => {
 	}
 	// ...by Advertiser?
 	if (vertiserid) {
-        let {vertiser, adsList} = fetchDataForVertiser(id);
-		pvAdvertisers = fetchIHubData2_wrapAsList(vertiser);
-        pvAds = adsList;
-        if ( ! pvTopItem) pvTopItem = vertiser;
+		const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:vertiserid});
+		// ads
+		let q = SearchQuery.setProp(new SearchQuery(), "vertiser", id).query;
+        pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});        
+        if ( ! pvTopItem) pvTopItem = pvAdvertiser;
 	}
 	// ...by Agency?
 	if (agency) {		
@@ -156,38 +149,20 @@ const fetchIHubData = () => {
 		// advertisers
         let q = SearchQuery.setProp(new SearchQuery(), "agencyId", agency).query;
         pvAdvertisers = ActionMan.list({type: C.TYPES.Advertiser, status, q});
+		// query adverts by advertisers		
         if (pvAdvertisers.value) {
-			/*const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:pvTopCampaign.value.vertiser});			
-			// wrap as a list
-            pvAdvertisers = fetchIHubData2_wrapAsList(pvAdvertiser);*/
-
-            // Fetch ads from list of vertisers, wrapped as one big promise
-            const adPromise = new Promise((resolve, reject) => {
-                let ads = [];
-                if (pvAdvertisers.value && pvAdvertisers.value.hits) {
-                    // Keep track of the number of vertisers resolved so we know when to resolve the full promise
-                    let numVertisersReached = 0;
-                    pvAdvertisers.value.hits.forEach(vertiser => {
-                        let {pvVertiser, pvAdsList} = fetchDataForVertiser(vertiser.id);
-                        pvAdsList.promise.then(v => {
-                            v.hits.forEach(ad => {
-                                ads.push(ad);
-                            });
-                            numVertisersReached++;
-                            // If the number of vertisers resolved is all the ones we needed, resolve the full promise
-                            if (numVertisersReached === pvAdvertisers.value.hits.length) resolve(new List(ads));
-                        }).catch(e => {
-                            console.error(e);
-                            // Same resolving code to make sure 1 failed advertiser doesnt leave the whole promise hanging
-                            numVertisersReached++;
-                            if (numVertisersReached === pvAdvertisers.value.hits.length) resolve(new List(ads));
-                        });
-                    });
-                }
-            });
-            pvAds = new PromiseValue(adPromise);
+			assert( ! pvAds, pvAds);
+			const ids = uniq(pvAdvertisers.value.hits.map(getId));
+			console.log("ADVERTISER IDs", ids);
+			if (yessy(ids)) {
+				let adq = SearchQuery.setProp(new SearchQuery(), "vertiser", id).query;
+        		pvAds = ActionMan.list({type: C.TYPES.Advert, status, adq});        
+			} else {
+				console.warn("No Advertisers found for agency",agency,pvTopItem);
+			}
 		}
-	} 
+	} // ./agency
+	
 	if ( ! agency && ! vertiserid && ! adid && ! campaignId1)  {
 		throw new Error("No Campaign info specified");
 	}
