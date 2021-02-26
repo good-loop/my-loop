@@ -42,6 +42,7 @@ import DevLink from './DevLink';
 import AdvertsCatalogue from './AdvertsCatalogue';
 import List from '../../base/data/List';
 import KStatus from '../../base/data/KStatus';
+import { getId } from '../../base/data/DataClass';
 
 
 /**
@@ -210,6 +211,59 @@ const fetchIHubData2_wrapAsList = pvTopItem => {
 	));
 };
 
+
+
+/**
+ * @param {Object} p
+ * @param {?Money} p.donationTotal
+ * @param {NGO[]} p.charities From adverts (not SoGive)
+ * @returns {NGO[]}
+ */
+const filterLowDonations = ({charities, campaign, donationTotal,donation4charity}) => {
+
+	// Low donation filtering data is represented as only 2 controls for portal simplicity
+	// lowDntn = the threshold at which to consider a charity a low donation
+	// hideCharities = a list of charity IDs to explicitly hide - represented by keySet as an object (explained more below line 103)
+	
+	// Filter nulls
+	charities = charities.filter(x => x);
+
+	if (campaign.hideCharities) {
+		let hc = Campaign.hideCharities(campaign);
+		const charities2 = charities.filter(c => ! hc.includes(getId(c)));
+		charities = charities2;
+	}
+	
+	let lowDntn = campaign.lowDntn;	
+	if ( ! lowDntn || ! Money.value(lowDntn)) {
+		if ( ! donationTotal) {
+			return charities;
+		}
+		// default to 1%
+		lowDntn = Money.mul(donationTotal, 0.01);
+	}
+	console.warn("Low donation threshold for charities set to " + lowDntn);
+	
+	/**
+	 * @param {!NGO} c 
+	 * @returns {?Money}
+	 */
+	const getDonation = c => {
+		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
+		return d;
+	};
+
+	charities = charities.filter(charity => {
+		const dntn = getDonation(charity);
+		const include = dntn && Money.lessThan(lowDntn, dntn);
+		console.log("lowDntn filter for charity " + charity.id + ": " + include + ", ", dntn);
+		return include;
+	});
+		
+	return charities;
+} // ./filterLowDonations
+
+
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser` or `via`
  * TODO support q=... flexible query
@@ -280,6 +334,35 @@ const CampaignPage = () => {
     charities.forEach(charity => {
         charity.ad = ad4Charity[charity.id].id;
     });
+	
+	// Total £ donation
+	let donation4charity = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
+	assert(donation4charity, "CampaignPage.jsx falsy donation4charity?!");
+	console.log("DONATION 4 CHARITY", donation4charity);
+	const donationTotal = campaign.dntn || donation4charity.total;
+
+	// Take ratios and scale up the £s? Also: cap the £s?
+	if ( ! campaign.dntn4charity && donationTotal) {
+		// sum
+		let monies = mapkv(donation4charity, (k,v) => k==="total" || k==="unset"? null : v);
+		const totalDntnByCharity = Money.total(monies);
+		// If the sum is < 10% the total -- scale up
+		let ratio;
+		if (Money.lessThan(totalDntnByCharity, Money.mul(donationTotal, 0.1))) {
+			ratio = Money.divide(donationTotal, totalDntnByCharity); // ratio is 10+
+		} else if (Money.lessThan(donationTotal, totalDntnByCharity)) {
+			ratio = Money.divide(donationTotal, totalDntnByCharity); // ratio is < 1
+		}
+		if (ratio) {
+			let donation4charityScaled = {};
+			mapkv(donation4charity, (k,v) => k==="total" || k==="unset"? null : donation4charityScaled[k] = Money.mul(donation4charity[k], ratio));
+			console.log("Scale donations from", donation4charity, "to", donation4charityScaled);
+			donation4charity = donation4charityScaled;
+		}
+	}	
+
+	// filter charities by low £s and campaign.hideCharities
+	charities = filterLowDonations({charities, campaign, donationTotal, donation4charity});
 
 	// PDF version of page
 	let pdf = null;
@@ -309,11 +392,6 @@ const CampaignPage = () => {
 		viewcount4campaign = pivotDataLogData(pvViewData.value, ["campaign"]);
 	}
 
-	console.log(yessy(campaign.dntn4charity) ? "Using campaign donation data" : "Using sogive donation data");	
-	let donation4charity = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
-	assert(donation4charity, "CampaignPage.jsx falsy donation4charity?!");
-	console.log("DONATION 4 CHARITY", donation4charity);
-	const donationTotal = campaign.dntn || donation4charity.total;
 	// Is this an interim total or the full amount? Interim if not fixed by campaign, and not ended
 	let ongoing = false;
 	if ( ! campaign.dntn) {
@@ -394,25 +472,6 @@ const CampaignPage = () => {
 		charities = charities.filter(c => !hideCharitiesArr.includes(c.id));
 	}
 
-	// Take ratios and scale up the £s? Also: cap the £s?
-	if ( ! campaign.dntn4charity && donationTotal) {
-		// sum
-		let monies = mapkv(donation4charity, (k,v) => k==="total" || k==="unset"? null : v);
-		const totalDntnByCharity = Money.total(monies);
-		// If the sum is < 10% the total -- scale up
-		let ratio;
-		if (Money.lessThan(totalDntnByCharity, Money.mul(donationTotal, 0.1))) {
-			ratio = Money.divide(donationTotal, totalDntnByCharity); // ratio is 10+
-		} else if (Money.lessThan(donationTotal, totalDntnByCharity)) {
-			ratio = Money.divide(donationTotal, totalDntnByCharity); // ratio is < 1
-		}
-		if (ratio) {
-			let donation4charityScaled = {};
-			mapkv(donation4charity, (k,v) => k==="total" || k==="unset"? null : donation4charityScaled[k] = Money.mul(donation4charity[k], ratio));
-			console.log("Scale donations from", donation4charity, "to", donation4charityScaled);
-			donation4charity = donation4charityScaled;
-		}
-	}
 	// Sort by donation value, largest first
 	try {
 		charities.sort((a,b) => - Money.compare(donation4charity[a.id], donation4charity[b.id]));
