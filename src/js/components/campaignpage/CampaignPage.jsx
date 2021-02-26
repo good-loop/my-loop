@@ -137,7 +137,7 @@ const fetchIHubData = () => {
 	if (vertiserid) {
 		const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:vertiserid});
 		// ads
-		let q = SearchQuery.setProp(new SearchQuery(), "vertiser", id).query;
+		let q = SearchQuery.setProp(new SearchQuery(), "vertiser", vertiserid).query;
         pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});        
         if ( ! pvTopItem) pvTopItem = pvAdvertiser;
 	}
@@ -284,7 +284,7 @@ const CampaignPage = () => {
 
     const ad4Charity = {};
 	// individual charity data, attaching ad ID
-	const charities = uniqById(_.flatten(ads.map(ad => {
+    let charities = uniqById(_.flatten(ads.map(ad => {
         const clist = (ad.charities && ad.charities.list).slice() || [];
 		return clist.map(c => {
 			const charity = c;
@@ -347,7 +347,69 @@ const CampaignPage = () => {
 		if (endDate.getTime() > new Date().getTime()) {
 			ongoing = true;
 		}
+    }
+    // Low donation filtering data is represented as only 3 controls for portal simplicity
+	// lowDntn = the threshold at which to consider a charity a low donation
+	// hideCharities = a list of charity IDs to explicitly hide - represented by keySet as an object (explained more below line 103)
+	// lowDntnDisplay = how to deal with low donation charities. represented as several different modes which are expanded into configurations:
+	//   hide-low-charities = cut out low donation charities entirely
+	//   hide-low-dntns = hide the donation figure for low donation charities
+	//   hide-dntns = hide all donation figures
+	//   Otherwise, show everything
+	
+	// The portal control data
+	let {lowDntnDisplay, lowDntn, hideCharities, hideImpact} = campaign;
+	// The expanded configurations to operate on, not stored in the portal
+	let lowDonationThreshold, filterLowDonations, showLowDonations, showDonations;
+	console.log("Low donation display set to " + lowDntnDisplay);
+
+	// Does campaign page data contain data for low donation filtering, or is it old?
+	if (lowDntn) {
+		lowDonationThreshold = lowDntn.value;
 	}
+	if (lowDntnDisplay) {
+		// Remove any trailing quotations that sometimes crop up
+		lowDntnDisplay = lowDntnDisplay.replace(/\"/g, "");
+		// Expand the lowDntnDisplay mode into a configuration
+		filterLowDonations = lowDntnDisplay === "hide-low-charities";
+		showLowDonations = lowDntnDisplay !== "hide-low-dntns";
+		showDonations = lowDntnDisplay !== "hide-dntns";
+	} else {
+		filterLowDonations = false;
+		showLowDonations = true;
+		showDonations = true;
+	}
+    console.log("Low donation display settings:\n\tfilterLowDonations: " + filterLowDonations + "\n\tshowLowDonations: " + showLowDonations + "\n\tshowDonations: " + showDonations);
+    // Threshold is the given custom amount, otherwise 1% of total - or if total isnt loaded, £50
+	const threshold = lowDonationThreshold ? lowDonationThreshold : (donation4charity.total ? donation4charity.total.value / 100 : 50);
+	console.warn("Low donation threshold for charities set to " + threshold);
+    
+    const getDonation = c => {
+		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
+		// Filter charity if less then 1/10 the total donation
+		return d;
+	};
+
+	charities = charities.map(charity => {
+		const dntn = getDonation(charity);
+		const include = dntn ? Money.value(dntn) >= threshold : false;
+		console.log("FILTER FOR CHARITY " + charity.id + ": " + include + ", ", dntn);
+		//console.log("Is " + charity.id + " a low donation? " + !include + ", as " + donation4charity[charity.id].value + " >= " + threshold);
+		if (!include && filterLowDonations) return null;
+		charity.lowDonation = !include;
+		return charity;
+    });
+    
+    // hideCharities is from a KeySet prop control, so is an object of schema {charity_id : bool}.
+	// We want to convert it instead to a list of charity IDs
+	if (hideCharities) {
+		// Convert object to array
+		let hideCharitiesArr = Object.keys(hideCharities);
+		// Remove false entries - keySet will not remove charity IDs, but set them to false instead.
+		hideCharitiesArr = hideCharitiesArr.filter(cid => hideCharities[cid]);
+		charities = charities.filter(c => !hideCharitiesArr.includes(c.id));
+	}
+
 	// Take ratios and scale up the £s? Also: cap the £s?
 	if ( ! campaign.dntn4charity && donationTotal) {
 		// sum
