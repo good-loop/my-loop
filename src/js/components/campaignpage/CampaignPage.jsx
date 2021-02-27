@@ -1,48 +1,34 @@
 /*
  * 
  */
-import pivot from 'data-pivot';
 import _ from 'lodash';
-import React, { useState } from 'react';
 import PromiseValue from 'promise-value';
-import {
-	Alert,
-	Carousel,
-	CarouselCaption, CarouselControl,
-	CarouselIndicators, CarouselItem, Col, Container, Row
-} from 'reactstrap';
-import Counter from '../../base/components/Counter';
-import CSS from '../../base/components/CSS';
+import React from 'react';
+import { Col, Container, Row } from 'reactstrap';
 import ErrAlert from '../../base/components/ErrAlert';
-import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import { Cite } from '../../base/components/LinkOut';
-import ListLoad from '../../base/components/ListLoad';
 import Misc from '../../base/components/Misc';
 import StyleBlock from '../../base/components/StyleBlock';
 import Advert from '../../base/data/Advert';
 import Campaign from '../../base/data/Campaign';
+import { getId } from '../../base/data/DataClass';
+import KStatus from '../../base/data/KStatus';
+import List from '../../base/data/List';
 import Money from '../../base/data/Money';
 import { getDataItem } from '../../base/plumbing/Crud';
 import { getDataLogData, pivotDataLogData } from '../../base/plumbing/DataLog';
 import DataStore from '../../base/plumbing/DataStore';
-import Roles from '../../base/Roles';
 import SearchQuery from '../../base/searchquery';
 import { assert, assMatch } from '../../base/utils/assert';
-import { asDate, isMobile, sum, uniq, uniqById, yessy, mapkv } from '../../base/utils/miscutils';
-import printer from '../../base/utils/printer';
-import { sortByDate } from '../../base/utils/SortFn';
-import Login from '../../base/youagain';
+import { asDate, isMobile, mapkv, sum, uniq, uniqById, yessy } from '../../base/utils/miscutils';
 import C from '../../C';
 import ActionMan from '../../plumbing/ActionMan';
 import ServerIO from '../../plumbing/ServerIO';
 import MyLoopNavBar from '../MyLoopNavBar';
+import AdvertsCatalogue from './AdvertsCatalogue';
 import CampaignSplashCard from './CampaignSplashCard';
 import Charities, { CharityDetails } from './Charities';
 import DevLink from './DevLink';
-import AdvertsCatalogue from './AdvertsCatalogue';
-import List from '../../base/data/List';
-import KStatus from '../../base/data/KStatus';
-import { getId } from '../../base/data/DataClass';
 
 
 /**
@@ -279,7 +265,7 @@ const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled
 	}
 	if ( ! Money.value(donationTotal)) {
 		console.log("Scale donations - dont scale to 0");
-		return donation4charityUnscaled; // can't scale by 0
+		return Object.assign({}, donation4charityUnscaled); // paranoid copy
 	}
 	Money.assIsa(donationTotal);
     // NB: only count donations for the charities listed
@@ -287,7 +273,7 @@ const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled
 	let totalDntnByCharity = Money.total(monies);
 	if ( ! Money.value(totalDntnByCharity)) {
 		console.log("Scale donations - cant scale up 0");
-		return donation4charityUnscaled; // can't scale by 0
+		return Object.assign({}, donation4charityUnscaled); // paranoid copy
 	}
 	// scale up (or down)	
 	let ratio = Money.divide(donationTotal, totalDntnByCharity);
@@ -373,7 +359,8 @@ const CampaignPage = () => {
 	const donation4charityUnscaled = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
 	assert(donation4charityUnscaled, "CampaignPage.jsx falsy donation4charity?!");
 	console.log("DONATION 4 CHARITY", donation4charityUnscaled);
-	const donationTotal = campaign.dntn || donation4charityUnscaled.total;
+	// NB: allow 0 for "use the live figure" as Portal doesn't save edit-to-blank (Feb 2021)
+	const donationTotal = Money.value(campaign.dntn)? campaign.dntn : donation4charityUnscaled.total;
 
     // Scale once to get values in the right ballpark
     let donation4charityScaled = scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
