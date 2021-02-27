@@ -53,82 +53,18 @@ challenges facing our planet."`,
  * @param {?String[]} hideCharities hide specific charities by ID
  */
 const Charities = ({ charities, donation4charity, campaign }) => {
-
-    // Low donation filtering data is represented as only 3 controls for portal simplicity
-	// lowDntn = the threshold at which to consider a charity a low donation
-	// hideCharities = a list of charity IDs to explicitly hide - represented by keySet as an object (explained more below line 103)
-	// lowDntnDisplay = how to deal with low donation charities. represented as several different modes which are expanded into configurations:
-	//   hide-low-charities = cut out low donation charities entirely
-	//   hide-low-dntns = hide the donation figure for low donation charities
-	//   hide-dntns = hide all donation figures
-	//   Otherwise, show everything
 	
 	// The portal control data
-	let {lowDntnDisplay, lowDntn, hideCharities, hideImpact} = campaign;
-	// The expanded configurations to operate on, not stored in the portal
-	let lowDonationThreshold, filterLowDonations, showLowDonations, showDonations;
-	console.log("Low donation display set to " + lowDntnDisplay);
-
-	// Does campaign page data contain data for low donation filtering, or is it old?
-	if (lowDntn) {
-		lowDonationThreshold = lowDntn.value;
-	}
-	if (lowDntnDisplay) {
-		// Remove any trailing quotations that sometimes crop up
-		lowDntnDisplay = lowDntnDisplay.replace(/\"/g, "");
-		// Expand the lowDntnDisplay mode into a configuration
-		filterLowDonations = lowDntnDisplay === "hide-low-charities";
-		showLowDonations = lowDntnDisplay !== "hide-low-dntns";
-		showDonations = lowDntnDisplay !== "hide-dntns";
-	} else {
-		filterLowDonations = false;
-		showLowDonations = true;
-		showDonations = true;
-	}
-    console.log("Low donation display settings:\n\tfilterLowDonations: " + filterLowDonations + "\n\tshowLowDonations: " + showLowDonations + "\n\tshowDonations: " + showDonations);
-    // Threshold is the given custom amount, otherwise 1% of total - or if total isnt loaded, £50
-	const threshold = lowDonationThreshold ? lowDonationThreshold : (donation4charity.total ? donation4charity.total.value / 100 : 50);
-	console.warn("Low donation threshold for charities set to " + threshold);
-    
-    const getDonation = c => {
+	let hideImpact = campaign.hideImpact || {};
+	// Filter nulls (paranoia)
+	charities = charities.filter(x => x);
+    let sogiveCharities = fetchSogiveData(charities);
+        
+	const getDonation = c => {
 		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
 		// Filter charity if less then 1/10 the total donation
 		return d;
 	};
-
-	charities = charities.map(charity => {
-		const dntn = getDonation(charity);
-		const include = dntn ? Money.value(dntn) >= threshold : false;
-		console.log("FILTER FOR CHARITY " + charity.id + ": " + include + ", ", dntn);
-		//console.log("Is " + charity.id + " a low donation? " + !include + ", as " + donation4charity[charity.id].value + " >= " + threshold);
-		if (!include && filterLowDonations) return null;
-		charity.lowDonation = !include;
-		return charity;
-    });
-
-    charities = charities.filter(x=>x);
-    
-    // hideCharities is from a KeySet prop control, so is an object of schema {charity_id : bool}.
-	// We want to convert it instead to a list of charity IDs
-	if (hideCharities) {
-		// Convert object to array
-		let hideCharitiesArr = Object.keys(hideCharities);
-		// Remove false entries - keySet will not remove charity IDs, but set them to false instead.
-		hideCharitiesArr = hideCharitiesArr.filter(cid => hideCharities[cid]);
-		charities = charities.filter(c => !hideCharitiesArr.includes(c.id));
-	}
-
-	// augment with SoGive data
-	/**/
-	// Filter nulls
-	charities = charities.filter(x => x);
-	let sogiveCharities = fetchSogiveData(charities);
-	sogiveCharities = sogiveCharities.filter(x => x);
-	//let sogiveCharitiesWithDonations = sogiveCharities.filter(c => getDonation(c)); // Get rid of charities with no logged donations.
-	if (!hideImpact) hideImpact = {};
-
-	console.log("SOGIVE CHARITIES", sogiveCharities);
-	//let sogiveCharitiesWithoutDonations = sogiveCharities.filter(c => ! getDonation(c)); // Keep other charities for the "Also Supported" section
 
 	return (
 		<div className="charity-card-container bg-gl-light-pink">
@@ -139,10 +75,10 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 				{sogiveCharities.map((charity, i) =>
 					<CharityCard i={i} key={charity.id}
 						charity={charity}
-						donationValue={getDonation(charity)}
-						showDonations={showDonations}
-						showLowDonations={showLowDonations}
-						showImpact={!hideImpact[charity.id]} />
+                        donationValue={getDonation(charity)}
+                        showDonations={showDonations}
+                        showLowDonations={showLowDonations}
+						showImpact={ ! hideImpact[charity.id]} />
 				)}
 			</Container>
 		</div>
@@ -197,7 +133,7 @@ const RegNum = ({label, regNum}) => {
  * @param {!NGO} charity This data item is a shallow copy
  * @param {?Money} donationValue
  */
-const CharityCard = ({ charity, donationValue, showLowDonations, showDonations, showImpact }) => {
+const CharityCard = ({ charity, donationValue, showImpact, showLowDonations, showDonations }) => {
 	// Prefer full descriptions here. If unavailable switch to summary desc.
 	let desc = charity.description || charity.summaryDescription || '';
 	// But do cut descriptions down to 1 paragraph.
@@ -209,9 +145,8 @@ const CharityCard = ({ charity, donationValue, showLowDonations, showDonations, 
 	const quote = tq(charity);
 	let img = (quote && quote.img) || charity.images;
 
-	const showDonationNum = showDonations && (charity.lowDonation && showLowDonations || !charity.lowDonation);
-	// if ( ! showDonationNum) console.log("Not showing donations for charity " + charity.id);
-	// else if ( ! donationValue) console.warn("No donation value for charity " + charity.id + "!");
+    const showDonation = showDonations && (!charity.lowDntn || showLowDonations);
+    console.log("SHOW DONATION for " + charity.id + "? " + showDonation + "\n\tShow donations: " + showDonations + "\n\tShow low donations: " + showLowDonations + "\n\tLow dntn: " + charity.lowDntn + "\n\tCombined: " + (!charity.lowDntn || showLowDonations));
 
 	// TODO let's reduce the use of custom css classes (e.g. charity-quote-img etc below)
 
@@ -227,7 +162,7 @@ const CharityCard = ({ charity, donationValue, showLowDonations, showDonations, 
 					<img src={charity.logo} alt="logo"/>
 				</div>
 				<div className="charity-quote-text">
-					{showDonationNum && donationValue? <div className="w-100"><h2><Counter amount={donationValue} preservePennies={false} /> raised</h2></div> : null}
+					{donationValue && showDonation ? <div className="w-100"><h2><Counter amount={donationValue} preservePennies={false} /> raised</h2></div> : null}
 					{charity.simpleImpact && showImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
 					{!quote ? <MDText source={desc} /> : null}
@@ -242,7 +177,7 @@ const CharityCard = ({ charity, donationValue, showLowDonations, showDonations, 
 	);
 };
 
-// Augment ad charity objects with sogive data
+/** Augment ad charity objects with sogive data  */
 const fetchSogiveData = (charities) => {
 	let dupeIds = [];
 	let sogiveCharities = charities.map(charityOriginal => {

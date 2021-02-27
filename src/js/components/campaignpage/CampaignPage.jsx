@@ -1,49 +1,34 @@
 /*
  * 
  */
-import pivot from 'data-pivot';
 import _ from 'lodash';
-import React, { useState } from 'react';
 import PromiseValue from 'promise-value';
-import {
-	Alert,
-	Carousel,
-	CarouselCaption, CarouselControl,
-	CarouselIndicators, CarouselItem, Col, Container, Row
-} from 'reactstrap';
-import Counter from '../../base/components/Counter';
-import CSS from '../../base/components/CSS';
+import React from 'react';
+import { Col, Container, Row } from 'reactstrap';
 import ErrAlert from '../../base/components/ErrAlert';
-import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import { Cite } from '../../base/components/LinkOut';
-import ListLoad from '../../base/components/ListLoad';
 import Misc from '../../base/components/Misc';
 import StyleBlock from '../../base/components/StyleBlock';
 import Advert from '../../base/data/Advert';
 import Campaign from '../../base/data/Campaign';
+import { getId } from '../../base/data/DataClass';
+import KStatus from '../../base/data/KStatus';
+import List from '../../base/data/List';
 import Money from '../../base/data/Money';
 import { getDataItem } from '../../base/plumbing/Crud';
 import { getDataLogData, pivotDataLogData } from '../../base/plumbing/DataLog';
 import DataStore from '../../base/plumbing/DataStore';
-import Roles from '../../base/Roles';
 import SearchQuery from '../../base/searchquery';
-import { assert } from '../../base/utils/assert';
-import { asDate, isMobile, sum, uniq, uniqById, yessy, mapkv } from '../../base/utils/miscutils';
-import printer from '../../base/utils/printer';
-import { sortByDate } from '../../base/utils/SortFn';
-import Login from '../../base/youagain';
+import { assert, assMatch } from '../../base/utils/assert';
+import { asDate, isMobile, mapkv, sum, uniq, uniqById, yessy } from '../../base/utils/miscutils';
 import C from '../../C';
 import ActionMan from '../../plumbing/ActionMan';
 import ServerIO from '../../plumbing/ServerIO';
 import MyLoopNavBar from '../MyLoopNavBar';
+import AdvertsCatalogue from './AdvertsCatalogue';
 import CampaignSplashCard from './CampaignSplashCard';
 import Charities, { CharityDetails } from './Charities';
 import DevLink from './DevLink';
-import AdvertsCatalogue from './AdvertsCatalogue';
-import List from '../../base/data/List';
-import KStatus from '../../base/data/KStatus';
-import { FacebookSelectors } from '../../../puppeteer_tests/MasterSelectors';
-import { getId } from '../../base/data/DataClass';
 
 
 /**
@@ -225,6 +210,93 @@ const fetchIHubData2_wrapAsList = pvTopItem => {
 	));
 };
 
+
+
+/**
+ * @param {Object} p
+ * @param {?Money} p.donationTotal
+ * @param {NGO[]} p.charities From adverts (not SoGive)
+ * @returns {NGO[]}
+ */
+const filterLowDonations = ({charities, campaign, donationTotal,donation4charity}) => {
+
+	// Low donation filtering data is represented as only 2 controls for portal simplicity
+	// lowDntn = the threshold at which to consider a charity a low donation
+	// hideCharities = a list of charity IDs to explicitly hide - represented by keySet as an object (explained more below line 103)
+	
+	// Filter nulls
+	charities = charities.filter(x => x);
+
+	if (campaign.hideCharities) {
+		let hc = Campaign.hideCharities(campaign);
+		const charities2 = charities.filter(c => ! hc.includes(getId(c)));
+		charities = charities2;
+	}
+	
+	let lowDntn = campaign.lowDntn;	
+	if ( ! lowDntn || ! Money.value(lowDntn)) {
+		if ( ! donationTotal) {
+			return charities;
+		}
+		// default to 1%
+		lowDntn = Money.mul(donationTotal, 0.01);
+	}
+	console.warn("Low donation threshold for charities set to " + lowDntn);
+    
+	/**
+	 * @param {!NGO} c 
+	 * @returns {?Money}
+	 */
+	const getDonation = c => {
+		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
+		return d;
+	};
+
+	charities = charities.filter(charity => {
+        const dntn = getDonation(charity);
+		let include = dntn && Money.lessThan(lowDntn, dntn);
+		return include;
+    });
+	return charities;
+} // ./filterLowDonations
+
+/**
+ * Scale a list of charities to match the money total.
+ * This will scale so that sum(donations to `charities`) = donationTotal
+ * Warning: If a charity isn't on the list, it is assumed that donations to it are noise, to be reallocated.
+ * 
+ * @param {Campaign} campaign 
+ * @param {Money} donationTotal 
+ * @param {Object} donation4charityUnscaled
+ */
+const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled, charities) => {
+	// Campaign.assIsa(campaign); can be {}
+	assMatch(charities, "NGO[]");	
+	if (campaign.dntn4charity) {
+		assert(campaign.dntn4charity === donation4charityUnscaled);
+		return campaign.dntn4charity; // explicitly set, so don't change it
+	}
+	if ( ! Money.value(donationTotal)) {
+		console.log("Scale donations - dont scale to 0");
+		return Object.assign({}, donation4charityUnscaled); // paranoid copy
+	}
+	Money.assIsa(donationTotal);
+    // NB: only count donations for the charities listed
+	let monies = charities.map(c => donation4charityUnscaled[getId(c)]);
+	let totalDntnByCharity = Money.total(monies);
+	if ( ! Money.value(totalDntnByCharity)) {
+		console.log("Scale donations - cant scale up 0");
+		return Object.assign({}, donation4charityUnscaled); // paranoid copy
+	}
+	// scale up (or down)	
+	let ratio = Money.divide(donationTotal, totalDntnByCharity);
+	const donation4charityScaled = {};
+	mapkv(donation4charityUnscaled, (k,v) => 
+		k==="total" || k==="unset"? null : donation4charityScaled[k] = Money.mul(donation4charityUnscaled[k], ratio));
+	console.log("Scale donations from", donation4charityUnscaled, "to", donation4charityScaled);
+    return donation4charityScaled;
+};
+
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser` or `via`
  * TODO support q=... flexible query
@@ -284,7 +356,7 @@ const CampaignPage = () => {
 
     const ad4Charity = {};
 	// individual charity data, attaching ad ID
-    let charities = uniqById(_.flatten(ads.map(ad => {
+	let charities = uniqById(_.flatten(ads.map(ad => {
         const clist = (ad.charities && ad.charities.list).slice() || [];
 		return clist.map(c => {
 			const charity = c;
@@ -297,6 +369,22 @@ const CampaignPage = () => {
     charities.forEach(charity => {
         charity.ad = ad4Charity[charity.id].id;
     });
+
+	// Total £ donation
+	const donation4charityUnscaled = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
+	assert(donation4charityUnscaled, "CampaignPage.jsx falsy donation4charity?!");
+	console.log("DONATION 4 CHARITY", donation4charityUnscaled);
+	// NB: allow 0 for "use the live figure" as Portal doesn't save edit-to-blank (Feb 2021)
+	const donationTotal = Money.value(campaign.dntn)? campaign.dntn : donation4charityUnscaled.total;
+
+    // Scale once to get values in the right ballpark
+    let donation4charityScaled = scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
+    
+    // filter charities by low £s and campaign.hideCharities
+    charities = filterLowDonations({charities, campaign, donationTotal, donation4charity:donation4charityScaled});
+    
+    // Scale again to make up for discrepencies introduced by filtering
+	donation4charityScaled = scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
 
 	// PDF version of page
 	let pdf = null;
@@ -314,7 +402,6 @@ const CampaignPage = () => {
 	});
 
 	console.log("CAMPAIGN BY NAME: ", campaignByName);
-
 	// Get ad viewing data
 	let sq = new SearchQuery("evt:minview");
 	let qads = ads.map(({ id }) => `vert:${id}`).join(' OR ');
@@ -326,11 +413,6 @@ const CampaignPage = () => {
 		viewcount4campaign = pivotDataLogData(pvViewData.value, ["campaign"]);
 	}
 
-	console.log(yessy(campaign.dntn4charity) ? "Using campaign donation data" : "Using sogive donation data");	
-	let donation4charity = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
-	assert(donation4charity, "CampaignPage.jsx falsy donation4charity?!");
-	console.log("DONATION 4 CHARITY", donation4charity);
-	const donationTotal = campaign.dntn || donation4charity.total;
 	// Is this an interim total or the full amount? Interim if not fixed by campaign, and not ended
 	let ongoing = false;
 	if ( ! campaign.dntn) {
@@ -349,28 +431,9 @@ const CampaignPage = () => {
 		}
     }
 
-	// Take ratios and scale up the £s? Also: cap the £s?
-	if ( ! campaign.dntn4charity && donationTotal) {
-		// sum
-		let monies = mapkv(donation4charity, (k,v) => k==="total" || k==="unset"? null : v);
-		const totalDntnByCharity = Money.total(monies);
-		// If the sum is < 10% the total -- scale up
-		let ratio;
-		if (Money.lessThan(totalDntnByCharity, Money.mul(donationTotal, 0.1))) {
-			ratio = Money.divide(donationTotal, totalDntnByCharity); // ratio is 10+
-		} else if (Money.lessThan(donationTotal, totalDntnByCharity)) {
-			ratio = Money.divide(donationTotal, totalDntnByCharity); // ratio is < 1
-		}
-		if (ratio) {
-			let donation4charityScaled = {};
-			mapkv(donation4charity, (k,v) => k==="total" || k==="unset"? null : donation4charityScaled[k] = Money.mul(donation4charity[k], ratio));
-			console.log("Scale donations from", donation4charity, "to", donation4charityScaled);
-			donation4charity = donation4charityScaled;
-		}
-	}
 	// Sort by donation value, largest first
 	try {
-		charities.sort((a,b) => - Money.compare(donation4charity[a.id], donation4charity[b.id]));
+		charities.sort((a,b) => - Money.compare(donation4charityScaled[a.id], donation4charityScaled[b.id]));
 	} catch(err) {
 		// currency conversion?? Keep on going unsorted
 		console.error(err);
@@ -381,13 +444,6 @@ const CampaignPage = () => {
 		// minor todo - clean these up in the portal
 		if (noCharityAds.length) console.warn("Ads without charities data", noCharityAds.map(ad => [ad.id, ad.campaign, ad.name, ad.status]));
 	}
-	let charitiesById = _.uniq(_.flattenDeep(ads.map(ad => ad.charities && ad.charities.list)));
-	let charIds = [];
-	charitiesById.forEach(c => {
-		if (c && !charIds.includes(c.name)) {
-			charIds.push(c.name);
-		}
-	});
 
 	// Sum of the views from every ad in the campaign. We use this number for display
 	// and to pass it to the AdvertCards to calculate the money raised against the total.
@@ -425,7 +481,6 @@ const CampaignPage = () => {
 		image: campaign.bg || "https://my.good-loop.com/img/redcurve.svg",
 		description: nvertiserNameNoTrail ? "See " + nvertiserNameNoTrail + "'s impact from Good-Loop ethical advertising" : "See our impact from Good-Loop ethical advertising"
 	};
-
 	return (<>
 		<StyleBlock>{campaign && campaign.customCss}</StyleBlock>
 		<StyleBlock>{branding.customCss}</StyleBlock>
@@ -449,7 +504,7 @@ const CampaignPage = () => {
 					/>
 				)}
 
-				<Charities charities={charities} donation4charity={donation4charity} campaign={campaign} />
+				<Charities charities={charities} donation4charity={donation4charityScaled} campaign={campaign}/>
 
 				<div className="bg-white">
 					<Container>
