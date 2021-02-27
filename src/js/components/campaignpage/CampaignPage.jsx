@@ -45,6 +45,12 @@ import KStatus from '../../base/data/KStatus';
 import { getId } from '../../base/data/DataClass';
 
 
+const wtf = charities => {
+	let cids = charities.map(getId).join(", ");
+	if (cids.includes("forney")) {
+		console.error("WTF "+cids);
+	}
+};
 /**
  * HACK hard-coded list of campaigns which have PDF versions
  * TODO put this in portal or somewhere else
