@@ -1,48 +1,34 @@
 /*
  * 
  */
-import pivot from 'data-pivot';
 import _ from 'lodash';
-import React, { useState } from 'react';
 import PromiseValue from 'promise-value';
-import {
-	Alert,
-	Carousel,
-	CarouselCaption, CarouselControl,
-	CarouselIndicators, CarouselItem, Col, Container, Row
-} from 'reactstrap';
-import Counter from '../../base/components/Counter';
-import CSS from '../../base/components/CSS';
+import React from 'react';
+import { Col, Container, Row } from 'reactstrap';
 import ErrAlert from '../../base/components/ErrAlert';
-import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import { Cite } from '../../base/components/LinkOut';
-import ListLoad from '../../base/components/ListLoad';
 import Misc from '../../base/components/Misc';
 import StyleBlock from '../../base/components/StyleBlock';
 import Advert from '../../base/data/Advert';
 import Campaign from '../../base/data/Campaign';
+import { getId } from '../../base/data/DataClass';
+import KStatus from '../../base/data/KStatus';
+import List from '../../base/data/List';
 import Money from '../../base/data/Money';
 import { getDataItem } from '../../base/plumbing/Crud';
 import { getDataLogData, pivotDataLogData } from '../../base/plumbing/DataLog';
 import DataStore from '../../base/plumbing/DataStore';
-import Roles from '../../base/Roles';
 import SearchQuery from '../../base/searchquery';
 import { assert, assMatch } from '../../base/utils/assert';
-import { asDate, isMobile, sum, uniq, uniqById, yessy, mapkv } from '../../base/utils/miscutils';
-import printer from '../../base/utils/printer';
-import { sortByDate } from '../../base/utils/SortFn';
-import Login from '../../base/youagain';
+import { asDate, isMobile, mapkv, sum, uniq, uniqById, yessy } from '../../base/utils/miscutils';
 import C from '../../C';
 import ActionMan from '../../plumbing/ActionMan';
 import ServerIO from '../../plumbing/ServerIO';
 import MyLoopNavBar from '../MyLoopNavBar';
+import AdvertsCatalogue from './AdvertsCatalogue';
 import CampaignSplashCard from './CampaignSplashCard';
 import Charities, { CharityDetails } from './Charities';
 import DevLink from './DevLink';
-import AdvertsCatalogue from './AdvertsCatalogue';
-import List from '../../base/data/List';
-import KStatus from '../../base/data/KStatus';
-import { getId } from '../../base/data/DataClass';
 
 
 /**
@@ -122,7 +108,8 @@ const fetchIHubData = () => {
 			// wrap as a list
 			pvAdvertisers = fetchIHubData2_wrapAsList(pvAdvertiser);
 		}
-	}
+    }
+
 	// ...by Advert?
 	if (adid) {
 		console.log("Getting " + adid + " ad...");
@@ -134,22 +121,33 @@ const fetchIHubData = () => {
 	// ...by Advertiser?
 	if (vertiserid) {
 		const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:vertiserid});
-		if ( ! pvTopItem) pvTopItem = pvAdvertiser;
-		// wrap as a list
-		pvAdvertisers = fetchIHubData2_wrapAsList(pvAdvertiser);
 		// ads
 		let q = SearchQuery.setProp(new SearchQuery(), "vertiser", vertiserid).query;
-		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
+        pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});        
+        if ( ! pvTopItem) pvTopItem = pvAdvertiser;
 	}
 	// ...by Agency?
 	if (agency) {		
 		pvTopItem = getDataItem({type:C.TYPES.Agency,status,id:agency});
 		// wrap as a list
 		pvAgencies = fetchIHubData2_wrapAsList(pvTopItem);
-		// ads
-		let q = SearchQuery.setProp(new SearchQuery(), "agencyId", agency).query;
-		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
-	} 
+		// advertisers
+        let q = SearchQuery.setProp(new SearchQuery(), "agencyId", agency).query;
+        pvAdvertisers = ActionMan.list({type: C.TYPES.Advertiser, status, q});
+		// query adverts by advertisers		
+        if (pvAdvertisers.value) {
+			assert( ! pvAds, pvAds);
+			const ids = uniq(pvAdvertisers.value.hits.map(getId));
+			console.log("ADVERTISER IDs", ids);
+			if (yessy(ids)) {
+                let adq = SearchQuery.setPropOr(new SearchQuery(), "vertiser", ids).query;
+        		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q:adq});        
+			} else {
+				console.warn("No Advertisers found for agency",agency,pvTopItem);
+			}
+		}
+	} // ./agency
+	
 	if ( ! agency && ! vertiserid && ! adid && ! campaignId1)  {
 		throw new Error("No Campaign info specified");
 	}
@@ -158,7 +156,7 @@ const fetchIHubData = () => {
 		pvTopCampaign = getDataItem({type:C.TYPES.Campaign, status, id:pvTopItem.value.campaign});
 	}	
 	// ...fill in from adverts
-	if (pvAds.value && pvAds.value.hits && pvAds.value.hits.length && pvAds.value.hits[0]) {
+	if (pvAds && pvAds.value && pvAds.value.hits && pvAds.value.hits.length && pvAds.value.hits[0]) {
 		console.log("PVADS VALUE", pvAds.value);
 		if ( ! pvAdvertisers) {
 			// NB: This should be only one advertiser and agency
@@ -279,7 +277,7 @@ const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled
 	}
 	if ( ! Money.value(donationTotal)) {
 		console.log("Scale donations - dont scale to 0");
-		return donation4charityUnscaled; // can't scale by 0
+		return Object.assign({}, donation4charityUnscaled); // paranoid copy
 	}
 	Money.assIsa(donationTotal);
     // NB: only count donations for the charities listed
@@ -287,7 +285,7 @@ const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled
 	let totalDntnByCharity = Money.total(monies);
 	if ( ! Money.value(totalDntnByCharity)) {
 		console.log("Scale donations - cant scale up 0");
-		return donation4charityUnscaled; // can't scale by 0
+		return Object.assign({}, donation4charityUnscaled); // paranoid copy
 	}
 	// scale up (or down)	
 	let ratio = Money.divide(donationTotal, totalDntnByCharity);
@@ -315,6 +313,8 @@ const CampaignPage = () => {
 	// Is the campaign page being used as a click-through advert landing page?
 	// If so, change the layout slightly, positioning the advert video on top.
 	const isLanding = (landing !== undefined) && (landing !== 'false');
+    
+    console.log("AAAAAAADS", pvAds);
 
 	if ( ! pvAds.resolved) {
 		// TODO display some stuff whilst ads are loading
@@ -358,6 +358,7 @@ const CampaignPage = () => {
 	let charities = uniqById(_.flatten(ads.map(ad => {
         const clist = (ad.charities && ad.charities.list).slice() || [];
 		return clist.map(c => {
+			if ( ! c) return; // bad data paranoia
 			const charity = c;
 			ad4Charity[c.id] = ad; // for Advert Editor dev button so sales can easily find which ad contains which charity
 			return charity;
@@ -373,7 +374,8 @@ const CampaignPage = () => {
 	const donation4charityUnscaled = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
 	assert(donation4charityUnscaled, "CampaignPage.jsx falsy donation4charity?!");
 	console.log("DONATION 4 CHARITY", donation4charityUnscaled);
-	const donationTotal = campaign.dntn || donation4charityUnscaled.total;
+	// NB: allow 0 for "use the live figure" as Portal doesn't save edit-to-blank (Feb 2021)
+	const donationTotal = Money.value(campaign.dntn)? campaign.dntn : donation4charityUnscaled.total;
 
     // Scale once to get values in the right ballpark
     let donation4charityScaled = scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
