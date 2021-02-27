@@ -46,7 +46,7 @@ import { getId } from '../../base/data/DataClass';
 
 
 const wtf = charities => {
-	let cids = charities.map(getId).join(", ");
+	let cids = charities.map(getId).join(", ").toLowerCase();
 	if (cids.includes("forney")) {
 		console.error("WTF "+cids);
 	}
@@ -233,6 +233,7 @@ const filterLowDonations = ({charities, campaign, donationTotal,donation4charity
 	
 	// Filter nulls
 	charities = charities.filter(x => x);
+	wtf(charities)
 
 	if (campaign.hideCharities) {
 		let hc = Campaign.hideCharities(campaign);
@@ -264,7 +265,7 @@ const filterLowDonations = ({charities, campaign, donationTotal,donation4charity
 		let include = dntn && Money.lessThan(lowDntn, dntn);
 		return include;
     });
-
+	wtf(charities)
 	return charities;
 } // ./filterLowDonations
 
@@ -290,6 +291,7 @@ const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled
 	}
 	Money.assIsa(donationTotal);
     // NB: only count donations for the charities listed
+	wtf(charities)
 	let monies = charities.map(c => donation4charityUnscaled[getId(c)]);
 	let totalDntnByCharity = Money.total(monies);
 	if ( ! Money.value(totalDntnByCharity)) {
@@ -366,6 +368,9 @@ const CampaignPage = () => {
         const clist = (ad.charities && ad.charities.list).slice() || [];
 		return clist.map(c => {
 			const charity = c;
+			if (getId(c) && getId(c).toLowerCase().includes("forney")) {
+				console.error(ad);
+			}
 			ad4Charity[c.id] = ad; // for Advert Editor dev button so sales can easily find which ad contains which charity
 			return charity;
 		});
@@ -375,7 +380,8 @@ const CampaignPage = () => {
     charities.forEach(charity => {
         charity.ad = ad4Charity[charity.id].id;
     });
-	
+	wtf(charities)
+
 	// Total £ donation
 	const donation4charityUnscaled = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
 	assert(donation4charityUnscaled, "CampaignPage.jsx falsy donation4charity?!");
@@ -407,7 +413,7 @@ const CampaignPage = () => {
 	});
 
 	console.log("CAMPAIGN BY NAME: ", campaignByName);
-
+wtf(charities)
 	// Get ad viewing data
 	let sq = new SearchQuery("evt:minview");
 	let qads = ads.map(({ id }) => `vert:${id}`).join(' OR ');
@@ -487,7 +493,7 @@ const CampaignPage = () => {
 		image: campaign.bg || "https://my.good-loop.com/img/redcurve.svg",
 		description: nvertiserNameNoTrail ? "See " + nvertiserNameNoTrail + "'s impact from Good-Loop ethical advertising" : "See our impact from Good-Loop ethical advertising"
 	};
-
+	wtf(charities)
 	return (<>
 		<StyleBlock>{campaign && campaign.customCss}</StyleBlock>
 		<StyleBlock>{branding.customCss}</StyleBlock>
