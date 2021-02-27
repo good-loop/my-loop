@@ -27,7 +27,7 @@ import { getDataLogData, pivotDataLogData } from '../../base/plumbing/DataLog';
 import DataStore from '../../base/plumbing/DataStore';
 import Roles from '../../base/Roles';
 import SearchQuery from '../../base/searchquery';
-import { assert } from '../../base/utils/assert';
+import { assert, assMatch } from '../../base/utils/assert';
 import { asDate, isMobile, sum, uniq, uniqById, yessy, mapkv } from '../../base/utils/miscutils';
 import printer from '../../base/utils/printer';
 import { sortByDate } from '../../base/utils/SortFn';
@@ -244,20 +244,6 @@ const filterLowDonations = ({charities, campaign, donationTotal,donation4charity
 	}
 	console.warn("Low donation threshold for charities set to " + lowDntn);
     
-    let {lowDntnDisplay} = campaign;
-	// The expanded configurations to operate on, not stored in the portal
-	let filterLowDonations;
-	console.log("Low donation display set to " + lowDntnDisplay);
-	if (lowDntnDisplay) {
-		// Remove any trailing quotations that sometimes crop up
-		lowDntnDisplay = lowDntnDisplay.replace(/\"/g, "");
-		// Expand the lowDntnDisplay mode into a configuration
-		filterLowDonations = lowDntnDisplay === "hide-low-charities";
-	} else {
-		filterLowDonations = false;
-	}
-	console.log("Low donation display settings:\n\tfilterLowDonations: " + filterLowDonations);
-
 	/**
 	 * @param {!NGO} c 
 	 * @returns {?Money}
@@ -267,57 +253,51 @@ const filterLowDonations = ({charities, campaign, donationTotal,donation4charity
 		return d;
 	};
 
-	charities = charities.map(charity => {
+	charities = charities.filter(charity => {
         const dntn = getDonation(charity);
-        // Loading
-        if (!dntn) return charity;
-		charity.lowDntn = !Money.lessThan(lowDntn, dntn);
-		return charity;
+		let include = dntn && Money.lessThan(lowDntn, dntn);
+		return include;
     });
-    
-    charities = charities.filter(c => !(c.lowDntn && filterLowDonations));
 
 	return charities;
 } // ./filterLowDonations
 
 /**
- * Scale a list of charities to match the money total
+ * Scale a list of charities to match the money total.
+ * This will scale so that sum(donations to `charities`) = donationTotal
+ * Warning: If a charity isn't on the list, it is assumed that donations to it are noise, to be reallocated.
+ * 
  * @param {Campaign} campaign 
  * @param {Money} donationTotal 
- * @param {Object} donation4charity 
+ * @param {Object} donation4charityUnscaled
  */
-const scaleCharityDonations = (campaign, donationTotal, donation4charity, charities) => {
-    let donation4charityScaled = {};
-    // Take ratios and scale up the £s? Also: cap the £s?
-	if ( ! campaign.dntn4charity && donationTotal) {
-		// sum
-		let monies = mapkv(donation4charity, (k,v) => k==="total" || k==="unset"? null : v);
-        let totalDntnByCharity = Money.total(monies);
-        // Deep copy money by adding 0
-        let donationTotalAdjusted = donationTotal;
-        Object.keys(donation4charity).forEach(charity => {
-            // Is charity present in the big list?
-            if (charity !== "total" && charity !== "unset" && charities.filter(c => c.id === charity).length === 0) {
-                // If not, remove it's donation from the total to appropriately scale
-                console.log("REMOVING " + charity + " from total",donationTotalAdjusted);
-                donationTotalAdjusted = Money.sub(donationTotalAdjusted, donation4charity[charity]);
-            }
-        });
-        console.log("Final total REMOVING:");
-		// If the sum is < 10% the total -- scale up
-		let ratio;
-		if (Money.lessThan(totalDntnByCharity, Money.mul(donationTotal, 0.1))) {
-			ratio = Money.divide(donationTotal, totalDntnByCharity); // ratio is 10+
-		} else if (Money.lessThan(donationTotal, totalDntnByCharity)) {
-			ratio = Money.divide(donationTotal, totalDntnByCharity); // ratio is < 1
-		}
-		if (ratio) {
-			mapkv(donation4charity, (k,v) => k==="total" || k==="unset"? null : donation4charityScaled[k] = Money.mul(donation4charity[k], ratio));
-			console.log("Scale donations from", donation4charity, "to", donation4charityScaled);
-		}
-    }
+const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled, charities) => {
+	// Campaign.assIsa(campaign); can be {}
+	assMatch(charities, "NGO[]");	
+	if (campaign.dntn4charity) {
+		assert(campaign.dntn4charity === donation4charityUnscaled);
+		return campaign.dntn4charity; // explicitly set, so don't change it
+	}
+	if ( ! Money.value(donationTotal)) {
+		console.log("Scale donations - dont scale to 0");
+		return donation4charityUnscaled; // can't scale by 0
+	}
+	Money.assIsa(donationTotal);
+    // NB: only count donations for the charities listed
+	let monies = charities.map(c => donation4charityUnscaled[getId(c)]);
+	let totalDntnByCharity = Money.total(monies);
+	if ( ! Money.value(totalDntnByCharity)) {
+		console.log("Scale donations - cant scale up 0");
+		return donation4charityUnscaled; // can't scale by 0
+	}
+	// scale up (or down)	
+	let ratio = Money.divide(donationTotal, totalDntnByCharity);
+	const donation4charityScaled = {};
+	mapkv(donation4charityUnscaled, (k,v) => 
+		k==="total" || k==="unset"? null : donation4charityScaled[k] = Money.mul(donation4charityUnscaled[k], ratio));
+	console.log("Scale donations from", donation4charityUnscaled, "to", donation4charityScaled);
     return donation4charityScaled;
-}
+};
 
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser` or `via`
@@ -391,19 +371,19 @@ const CampaignPage = () => {
     });
 	
 	// Total £ donation
-	let donation4charity = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
-	assert(donation4charity, "CampaignPage.jsx falsy donation4charity?!");
-	console.log("DONATION 4 CHARITY", donation4charity);
-	const donationTotal = campaign.dntn || donation4charity.total;
+	const donation4charityUnscaled = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
+	assert(donation4charityUnscaled, "CampaignPage.jsx falsy donation4charity?!");
+	console.log("DONATION 4 CHARITY", donation4charityUnscaled);
+	const donationTotal = campaign.dntn || donation4charityUnscaled.total;
 
     // Scale once to get values in the right ballpark
-    donation4charity = scaleCharityDonations(campaign, donationTotal, donation4charity, charities);
+    let donation4charityScaled = scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
     
     // filter charities by low £s and campaign.hideCharities
-    charities = filterLowDonations({charities, campaign, donationTotal, donation4charity});
+    charities = filterLowDonations({charities, campaign, donationTotal, donation4charity:donation4charityScaled});
     
     // Scale again to make up for discrepencies introduced by filtering
-    donation4charity = scaleCharityDonations(campaign, donationTotal, donation4charity, charities);
+	donation4charityScaled = scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
 
 	// PDF version of page
 	let pdf = null;
@@ -453,7 +433,7 @@ const CampaignPage = () => {
 
 	// Sort by donation value, largest first
 	try {
-		charities.sort((a,b) => - Money.compare(donation4charity[a.id], donation4charity[b.id]));
+		charities.sort((a,b) => - Money.compare(donation4charityScaled[a.id], donation4charityScaled[b.id]));
 	} catch(err) {
 		// currency conversion?? Keep on going unsorted
 		console.error(err);
@@ -525,7 +505,7 @@ const CampaignPage = () => {
 					/>
 				)}
 
-				<Charities charities={charities} donation4charity={donation4charity} campaign={campaign}/>
+				<Charities charities={charities} donation4charity={donation4charityScaled} campaign={campaign}/>
 
 				<div className="bg-white">
 					<Container>
