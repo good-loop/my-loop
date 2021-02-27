@@ -141,8 +141,7 @@ const fetchIHubData = () => {
 			console.log("ADVERTISER IDs", ids);
 			if (yessy(ids)) {
                 let adq = SearchQuery.setPropOr(new SearchQuery(), "vertiser", ids).query;
-                console.log(adq);
-        		pvAds = ActionMan.list({type: C.TYPES.Advert, status, adq});        
+        		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q:adq});        
 			} else {
 				console.warn("No Advertisers found for agency",agency,pvTopItem);
 			}
@@ -359,6 +358,7 @@ const CampaignPage = () => {
 	let charities = uniqById(_.flatten(ads.map(ad => {
         const clist = (ad.charities && ad.charities.list).slice() || [];
 		return clist.map(c => {
+			if ( ! c) return; // bad data paranoia
 			const charity = c;
 			ad4Charity[c.id] = ad; // for Advert Editor dev button so sales can easily find which ad contains which charity
 			return charity;

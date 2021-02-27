@@ -46,11 +46,7 @@ challenges facing our planet."`,
  * 
  * @param {!NGO[]} charities
  * @param {{string:Money}} donation4charity - charity ID to donation amount
- * @param {?Boolean} filterLowDonations If true low donation charities will not display
- * @param {?Number} lowDonationThreshold Custom threshold number to treat charities as "low donation". 1% of the total by default
- * @param {?Boolean} showLowDonations If false will hide the donation number for low donation charities
- * @param {?Boolean} showDonations If false will hide all donation numbers
- * @param {?String[]} hideCharities hide specific charities by ID
+ * @param {!Campaign} campaign
  */
 const Charities = ({ charities, donation4charity, campaign }) => {
 	
@@ -76,8 +72,6 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 					<CharityCard i={i} key={charity.id}
 						charity={charity}
                         donationValue={getDonation(charity)}
-                        showDonations={showDonations}
-                        showLowDonations={showLowDonations}
 						showImpact={ ! hideImpact[charity.id]} />
 				)}
 			</Container>
@@ -133,7 +127,7 @@ const RegNum = ({label, regNum}) => {
  * @param {!NGO} charity This data item is a shallow copy
  * @param {?Money} donationValue
  */
-const CharityCard = ({ charity, donationValue, showImpact, showLowDonations, showDonations }) => {
+const CharityCard = ({ charity, donationValue, showImpact}) => {
 	// Prefer full descriptions here. If unavailable switch to summary desc.
 	let desc = charity.description || charity.summaryDescription || '';
 	// But do cut descriptions down to 1 paragraph.
@@ -144,9 +138,6 @@ const CharityCard = ({ charity, donationValue, showImpact, showLowDonations, sho
 
 	const quote = tq(charity);
 	let img = (quote && quote.img) || charity.images;
-
-    const showDonation = showDonations && (!charity.lowDntn || showLowDonations);
-    console.log("SHOW DONATION for " + charity.id + "? " + showDonation + "\n\tShow donations: " + showDonations + "\n\tShow low donations: " + showLowDonations + "\n\tLow dntn: " + charity.lowDntn + "\n\tCombined: " + (!charity.lowDntn || showLowDonations));
 
 	// TODO let's reduce the use of custom css classes (e.g. charity-quote-img etc below)
 
@@ -162,7 +153,7 @@ const CharityCard = ({ charity, donationValue, showImpact, showLowDonations, sho
 					<img src={charity.logo} alt="logo"/>
 				</div>
 				<div className="charity-quote-text">
-					{donationValue && showDonation ? <div className="w-100"><h2><Counter amount={donationValue} preservePennies={false} /> raised</h2></div> : null}
+					{donationValue? <div className="w-100"><h2><Counter amount={donationValue} preservePennies={false} /> raised</h2></div> : null}
 					{charity.simpleImpact && showImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
 					{!quote ? <MDText source={desc} /> : null}
