@@ -4,7 +4,7 @@ import { LoginLink, SocialSignInButton } from '../../base/components/LoginWidget
 import Misc from '../../base/components/Misc';
 import DataStore from '../../base/plumbing/DataStore';
 import XId from '../../base/data/XId';
-import { getProfilesNow } from '../../base/data/Person';
+import { getAllXIds, getProfilesNow, getClaimValue } from '../../base/data/Person';
 
 const signInOrConnected = ({service, xid}) => {
 	if (xid) return <Connected service={service} xid={xid} />;
@@ -23,8 +23,8 @@ const signInOrConnected = ({service, xid}) => {
  */
 const SignUpConnectCard = ({className}) => {
 	// ??where is this loaded / set??
-	let xids = DataStore.getValue(['data', 'Person', 'xids']);
-	if (!xids) return <Misc.Loading />;
+	let xids = getAllXIds(); // DataStore.getValue(['data', 'Person', 'xids']);
+	if ( ! xids) return <Misc.Loading />;
 
 	// [id1@service1, id2@service2] --> {service1: id1@service1, service2: id2@service2}, only retain first ID for each service.
 	const service2xid = xids.reduce((acc, id) => ({[XId.service(id)]: id, ...acc}), {});
@@ -46,9 +46,10 @@ const SignUpConnectCard = ({className}) => {
  * - the user's name
  */
 const Connected = ({service, xid}) => {
-	const profile = getProfilesNow([xid])[0] || {std: {}};
-	let { name, img } = profile.std;
-
+	const persons = getProfilesNow([xid]) || {std: {}};
+	let name = getClaimValue({persons,key:"name"});
+	let img = getClaimValue({persons,key:"img"});
+	
 	// Don't get caught out by mixed content restrictions
 	if (img) img = img.replace(/^http:/, 'https:');
 

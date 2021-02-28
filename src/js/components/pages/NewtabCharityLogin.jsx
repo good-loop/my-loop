@@ -59,19 +59,8 @@ const NewtabCharityLogin = () => {
 	// ??minor: it might be nice to have a transition on the verb switch
 
 	const onRegisterLogin = () => {
-		Login.verify().then(res => {
-			if (!res || !res.success) {console.error("Not logged in! Cannot set charity!")}
-			else {
-                console.log("YOU ARE LOGGED IN. YOU ARE DEFINITELY LOGGED IN.");
-				const charityID = DataStore.getValue(['location', 'params', 'charity']);
-				if (charityID) setSelectedCharityId(charityID);
-				DataStore.setValue(LOGIN_VERB_PATH, "t4g_chrome_store");
-			}
-		}).catch(res => {
-			console.error("Not logged in! Cannot set charity!");
-			Login.error = {text:"There was an error trying to log in. Try again, or contact support@good-loop.com if this continues."};
-			DataStore.update();
-		});
+		if (charityId) setSelectedCharityId(charityId);
+		DataStore.setValue(LOGIN_VERB_PATH, "t4g_chrome_store");
 	};
 
 	// why not use a BS modal??
