@@ -59,7 +59,12 @@ const NewtabCharityLogin = () => {
 	// ??minor: it might be nice to have a transition on the verb switch
 
 	const onRegisterLogin = () => {
-		if (charityId) setSelectedCharityId(charityId);
+		// profiler - record product sign up - TODO make this automatic via YouAgain talking with Profiler
+		let xids = getAllXIds();
+		let persons = getProfilesNow(xids);
+		setClaimValue({persons, key:"product.t4g", value:true, swallow:true});
+		
+		if (charityId) setSelectedCharityId(charityId);		
 		DataStore.setValue(LOGIN_VERB_PATH, "t4g_chrome_store");
 	};
 
