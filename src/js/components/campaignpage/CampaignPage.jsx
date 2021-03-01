@@ -362,12 +362,14 @@ const CampaignPage = () => {
     // Assign fetched data to fill holes and normalise IDs
     Object.keys(fetchedDonationData).forEach(cid => {
         const sogiveCid = normaliseSogiveId(cid);
+        // First fill in normalized ID
         if (!donation4charityUnscaled[sogiveCid]) {
-            if (!donation4charityUnscaled[cid]) {
-                donation4charityUnscaled[cid] = fetchedDonationData[cid];
-            }
             donation4charityUnscaled[sogiveCid] = donation4charityUnscaled[cid];
             delete donation4charityUnscaled[cid];
+        }
+        // If still empty, fill in fetched data
+        if (!donation4charityUnscaled[sogiveCid]) {
+            donation4charityUnscaled[sogiveCid] = fetchedDonationData[cid];
         }
     });
     
