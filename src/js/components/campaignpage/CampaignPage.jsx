@@ -239,8 +239,8 @@ const filterLowDonations = ({charities, campaign, donationTotal, donation4charit
 		if ( ! donationTotal) {
 			return charities;
 		}
-		// default to 1% of total		
-		lowDntn = Money.mul(donationTotal, 0.01);
+		// default to 0	
+		lowDntn = new Money(donationTotal.currencySymbol + "0");
 	}
 	console.warn("Low donation threshold for charities set to " + lowDntn);
     
@@ -357,8 +357,20 @@ const CampaignPage = () => {
     console.log("ADS BEFORE CHARITY SORTING", ads);
 
     // initial donation record
-	const donation4charityUnscaled = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
-
+    let donation4charityUnscaled = yessy(campaign.dntn4charity)? campaign.dntn4charity : {};
+    const fetchedDonationData = fetchDonationData({ ads });
+    // Assign fetched data to fill holes
+    Object.keys(fetchedDonationData).forEach(cid => {
+        if (!donation4charityUnscaled[cid]) donation4charityUnscaled[cid] = fetchedDonationData[cid];
+    });
+    // Attach normalised IDs
+    Object.keys(donation4charityUnscaled).forEach(cid => {
+        const sogiveCid = normaliseSogiveId(cid);
+        if (!donation4charityUnscaled[sogiveCid]) {
+            donation4charityUnscaled[sogiveCid] = donation4charityUnscaled[cid];
+        }
+    });
+    
     const ad4Charity = {};
 	// individual charity data, attaching ad ID
 	let charities = uniqById(_.flatten(ads.map(ad => {

@@ -137,7 +137,9 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 	let firstParagraph = (/^.+\n *\n/g).exec(desc);
 	if (firstParagraph) {
 		desc = firstParagraph[0];
-	}
+    }
+    
+    console.log("SHOWING THE CHARITY",charity);
 
 	const quote = tq(charity);
 	let img = (quote && quote.img) || charity.images;
