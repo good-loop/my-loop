@@ -18,6 +18,7 @@ import Money from '../../base/data/Money';
 import { getDataItem } from '../../base/plumbing/Crud';
 import { getDataLogData, pivotDataLogData } from '../../base/plumbing/DataLog';
 import DataStore from '../../base/plumbing/DataStore';
+import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
 import SearchQuery from '../../base/searchquery';
 import { assert, assMatch } from '../../base/utils/assert';
 import { asDate, isMobile, mapkv, sum, uniq, uniqById, yessy } from '../../base/utils/miscutils';
@@ -382,7 +383,7 @@ const CampaignPage = () => {
 		let cids = Object.keys(campaign.dntn4charity);
 		let clistIds = charities.map(getId);
 		cids.forEach(cid => {
-			let cid = normaliseSogiveId(cid);
+			cid = normaliseSogiveId(cid);
 			if ( ! clistIds.includes(cid)) {
 				const c = new NGO({id:cid});
 				console.log("Adding stray charity "+cid,c);
