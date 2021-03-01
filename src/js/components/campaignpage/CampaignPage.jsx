@@ -368,10 +368,28 @@ const CampaignPage = () => {
 				console.error("CampaignPage.jsc charities - Bad charity ID", c.id, c);
 				return null;
 			}
+			const id2 = normaliseSogiveId(c.id);
+			if (id2 !== c.id) {
+				console.warn("Changing charity ID to normaliseSogiveId "+c.id+" to "+id2+" for ad "+ad.id);
+				c.id = id2;
+			}
 			ad4Charity[c.id] = ad; // for Advert Editor dev button so sales can easily find which ad contains which charity
 			return c;
 		});
     })));
+	// Add in any from campaign.dntn4charity - which can include strayCharities
+	if (campaign.dntn4charity) {
+		let cids = Object.keys(campaign.dntn4charity);
+		let clistIds = charities.map(getId);
+		cids.forEach(cid => {
+			let cid = normaliseSogiveId(cid);
+			if ( ! clistIds.includes(cid)) {
+				const c = new NGO({id:cid});
+				console.log("Adding stray charity "+cid,c);
+				charities.push(c);
+			}
+		});
+	}
     // NB: Don't append extra charities found in donation data. This can include noise.
     // Fill in blank in charities with sogive data
     charities = fetchSogiveData(charities);
