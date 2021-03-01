@@ -361,10 +361,12 @@ const CampaignPage = () => {
 	let charities = uniqById(_.flatten(ads.map(ad => {
         const clist = (ad.charities && ad.charities.list).slice() || [];
 		return clist.map(c => {
-			if ( ! c) return; // bad data paranoia
-			const charity = c;
+			if ( ! c) return null; // bad data paranoia						
+			if ( ! c.id || c.id==="unset" || c.id==="undefined" || c.id==="null") { // bad data paranoia						
+				return null;
+			}
 			ad4Charity[c.id] = ad; // for Advert Editor dev button so sales can easily find which ad contains which charity
-			return charity;
+			return c;
 		});
     })));
     // Append extra charities found in donation data - for stray charities
