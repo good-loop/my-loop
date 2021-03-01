@@ -282,7 +282,8 @@ const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled
 	}
 	Money.assIsa(donationTotal);
     // NB: only count donations for the charities listed
-	let monies = charities.map(c => donation4charityUnscaled[getId(c)]);
+    let monies = charities.map(c => getId(c) !== "unset" ? donation4charityUnscaled[getId(c)] : null);
+    monies = monies.filter(x=>x);
 	let totalDntnByCharity = Money.total(monies);
 	if ( ! Money.value(totalDntnByCharity)) {
 		console.log("Scale donations - cant scale up 0");
@@ -390,11 +391,15 @@ const CampaignPage = () => {
     // Scale once to get values in the right ballpark
     let donation4charityScaled = scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
     
+    console.log("DONATION SCALED", donation4charityScaled);
+
     // filter charities by low £s and campaign.hideCharities
     charities = filterLowDonations({charities, campaign, donationTotal, donation4charity:donation4charityScaled});
     
     // Scale again to make up for discrepencies introduced by filtering
 	donation4charityScaled = scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
+
+    console.log("After Filter CHARITIES", charities);
 
 	// PDF version of page
 	let pdf = null;
