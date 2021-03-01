@@ -64,7 +64,7 @@ const WebtopPage = () => {
 	const checkIfOpened = () => {
 		console.log("CHECKING IF OPENED BEFORE");
 		if (!window.localStorage.getItem("t4gOpenedB4")) {
-			window.localStorage.setItem("t4gOpenedB4", true);
+            window.localStorage.setItem("t4gOpenedB4", true);
 			openTutorial();
 		}
 	}
@@ -115,7 +115,7 @@ const WebtopPage = () => {
 			{/* Tutorial highlight to cover adverts */}
 		</BG>
 		<TutorialComponent page={3} className="position-absolute" style={{bottom:0, left:0, right:0, height:110, width:"100vw"}}/>
-		<NewtabTutorialCard tutorialPages={tutorialPages}/>
+		<NewtabTutorialCard tutorialPages={tutorialPages} charityId={charityID}/>
 		<NewtabLoginWidget onRegister={() => {checkIfOpened();}}/>
 	</>); 
 };
@@ -162,13 +162,13 @@ const NormalTabCenter = ({charityID}) => {
 
 	return <>
 		<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
-			<h3 className="text-center">
+			{ !charityID && <><h3 className="text-center">
 				Together we've raised&nbsp;
 				<TutorialComponent page={2} className="d-inline-block">
 					<TickerTotal />
 				</TutorialComponent>
 			</h3>
-			<img src="https://my.good-loop.com/img/TabsForGood/sparkle.png" alt="sparkle" style={{width: 50}} className="pl-1"/>
+			<img src="https://my.good-loop.com/img/TabsForGood/sparkle.png" alt="sparkle" style={{width: 50}} className="pl-1"/></> }
 		</div>
 		<div className="w-100 pb-3">
 			<div className="tab-search-container mx-auto">
