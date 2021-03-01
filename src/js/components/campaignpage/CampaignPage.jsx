@@ -359,14 +359,13 @@ const CampaignPage = () => {
     // initial donation record
     let donation4charityUnscaled = yessy(campaign.dntn4charity)? campaign.dntn4charity : {};
     const fetchedDonationData = fetchDonationData({ ads });
-    // Assign fetched data to fill holes
+    // Assign fetched data to fill holes and normalise IDs
     Object.keys(fetchedDonationData).forEach(cid => {
-        if (!donation4charityUnscaled[cid]) donation4charityUnscaled[cid] = fetchedDonationData[cid];
-    });
-    // Attach normalised IDs
-    Object.keys(donation4charityUnscaled).forEach(cid => {
         const sogiveCid = normaliseSogiveId(cid);
         if (!donation4charityUnscaled[sogiveCid]) {
+            if (!donation4charityUnscaled[cid]) {
+                donation4charityUnscaled[cid] = fetchedDonationData[cid];
+            }
             donation4charityUnscaled[sogiveCid] = donation4charityUnscaled[cid];
             delete donation4charityUnscaled[cid];
         }
