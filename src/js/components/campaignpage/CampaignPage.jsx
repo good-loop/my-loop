@@ -363,6 +363,7 @@ const CampaignPage = () => {
 		return clist.map(c => {
 			if ( ! c) return null; // bad data paranoia						
 			if ( ! c.id || c.id==="unset" || c.id==="undefined" || c.id==="null") { // bad data paranoia						
+				console.error("CampaignPage.jsc charities - Bad charity ID", c.id, c);
 				return null;
 			}
 			ad4Charity[c.id] = ad; // for Advert Editor dev button so sales can easily find which ad contains which charity
