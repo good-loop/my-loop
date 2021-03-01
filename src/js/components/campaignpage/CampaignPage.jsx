@@ -215,9 +215,10 @@ const fetchIHubData2_wrapAsList = pvTopItem => {
  * @param {Object} p
  * @param {?Money} p.donationTotal
  * @param {NGO[]} p.charities From adverts (not SoGive)
+ * @param {Object} p.donation4charity scaled (so it can be compared against donationTotal)
  * @returns {NGO[]}
  */
-const filterLowDonations = ({charities, campaign, donationTotal,donation4charity}) => {
+const filterLowDonations = ({charities, campaign, donationTotal, donation4charity}) => {
 
 	// Low donation filtering data is represented as only 2 controls for portal simplicity
 	// lowDntn = the threshold at which to consider a charity a low donation
@@ -237,7 +238,7 @@ const filterLowDonations = ({charities, campaign, donationTotal,donation4charity
 		if ( ! donationTotal) {
 			return charities;
 		}
-		// default to 1%
+		// default to 1% of total		
 		lowDntn = Money.mul(donationTotal, 0.01);
 	}
 	console.warn("Low donation threshold for charities set to " + lowDntn);
@@ -362,7 +363,7 @@ const CampaignPage = () => {
         const clist = (ad.charities && ad.charities.list).slice() || [];
 		return clist.map(c => {
 			if ( ! c) return null; // bad data paranoia						
-			if ( ! c.id || c.id==="unset" || c.id==="undefined" || c.id==="null") { // bad data paranoia						
+			if ( ! c.id || c.id==="unset" || c.id==="undefined" || c.id==="null" || c.id==="total") { // bad data paranoia						
 				console.error("CampaignPage.jsc charities - Bad charity ID", c.id, c);
 				return null;
 			}
@@ -370,11 +371,7 @@ const CampaignPage = () => {
 			return c;
 		});
     })));
-    // Append extra charities found in donation data - for stray charities
-    Object.keys(donation4charityUnscaled).forEach(charity => {
-        // Push dummy objects for blank charities
-        if (!charities.includes(charity) && donation4charityUnscaled[charity]) charities.push({id: charity});
-    });
+    // NB: Don't append extra charities found in donation data. This can include noise.
     // Fill in blank in charities with sogive data
     charities = fetchSogiveData(charities);
     console.log("CHARITIESSSSSS", charities);
