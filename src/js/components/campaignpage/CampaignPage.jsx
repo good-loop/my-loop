@@ -27,7 +27,7 @@ import ServerIO from '../../plumbing/ServerIO';
 import MyLoopNavBar from '../MyLoopNavBar';
 import AdvertsCatalogue from './AdvertsCatalogue';
 import CampaignSplashCard from './CampaignSplashCard';
-import Charities, { CharityDetails } from './Charities';
+import Charities, { CharityDetails, fetchSogiveData } from './Charities';
 import DevLink from './DevLink';
 
 
@@ -269,8 +269,8 @@ const filterLowDonations = ({charities, campaign, donationTotal,donation4charity
  * @param {Object} donation4charityUnscaled
  */
 const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled, charities) => {
-	// Campaign.assIsa(campaign); can be {}
-	assMatch(charities, "NGO[]");	
+	Campaign.assIsa(campaign);
+	//assMatch(charities, "NGO[]");	- can contain dummy objects from strays
 	if (campaign.dntn4charity) {
 		assert(campaign.dntn4charity === donation4charityUnscaled);
 		return campaign.dntn4charity; // explicitly set, so don't change it
@@ -353,6 +353,9 @@ const CampaignPage = () => {
 
     console.log("ADS BEFORE CHARITY SORTING", ads);
 
+    // initial donation record
+	const donation4charityUnscaled = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
+
     const ad4Charity = {};
 	// individual charity data, attaching ad ID
 	let charities = uniqById(_.flatten(ads.map(ad => {
@@ -364,14 +367,21 @@ const CampaignPage = () => {
 			return charity;
 		});
     })));
+    // Append extra charities found in donation data - for stray charities
+    Object.keys(donation4charityUnscaled).forEach(charity => {
+        // Push dummy objects for blank charities
+        if (!charities.includes(charity) && donation4charityUnscaled[charity]) charities.push({id: charity});
+    });
+    // Fill in blank in charities with sogive data
+    charities = fetchSogiveData(charities);
+    console.log("CHARITIESSSSSS", charities);
     console.log("AD 4 CHARITY:",ad4Charity)
     // Attach ads after initial sorting and merging, which can cause ad ID data to be lost
     charities.forEach(charity => {
-        charity.ad = ad4Charity[charity.id].id;
+        charity.ad = ad4Charity[charity.id] ? ad4Charity[charity.id].id : null;
     });
 
-	// Total £ donation
-	const donation4charityUnscaled = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
+	// Donation total
 	assert(donation4charityUnscaled, "CampaignPage.jsx falsy donation4charity?!");
 	console.log("DONATION 4 CHARITY", donation4charityUnscaled);
 	// NB: allow 0 for "use the live figure" as Portal doesn't save edit-to-blank (Feb 2021)

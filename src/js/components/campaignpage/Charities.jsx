@@ -54,7 +54,7 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 	let hideImpact = campaign.hideImpact || {};
 	// Filter nulls (paranoia)
 	charities = charities.filter(x => x);
-    let sogiveCharities = fetchSogiveData(charities);
+    //let sogiveCharities = fetchSogiveData(charities);
         
 	const getDonation = c => {
 		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
@@ -68,11 +68,12 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 				<h2>Our Impact</h2>
 			</div>
 			<Container className="pb-5">
-				{sogiveCharities.map((charity, i) =>
+				{charities.map((charity, i) =>
 					<CharityCard i={i} key={charity.id}
 						charity={charity}
                         donationValue={getDonation(charity)}
-						showImpact={ ! hideImpact[charity.id]} />
+						showImpact={ ! hideImpact[charity.id]}
+                        campaign={campaign} />
 				)}
 			</Container>
 		</div>
@@ -82,7 +83,7 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 /** Extra smallprint details for charities */
 const CharityDetails = ({charities}) => {
 
-	let sogiveCharities = fetchSogiveData(charities);
+    //let sogiveCharities = fetchSogiveData(charities);
 
 	const hasRegNum = (c) => {
 		return c.englandWalesCharityRegNum || c.scotlandCharityRegNum || c.niCharityRegNum || c.ukCompanyRegNum || c.usCharityRegNum;
@@ -90,7 +91,7 @@ const CharityDetails = ({charities}) => {
 
 	// Registration numbers for all possible types of reg num for each charity
 	// Include no-reg-info too, so no confusing gaps (and we still have the link)
-	let regNums = sogiveCharities.map(c => {
+	let regNums = charities.map(c => {
 		return <div className="charityInfo" key={c.id}><small>
 			<b><LinkOut href={c.url}>{c.displayName || c.name}</LinkOut></b>
 			<RegNum label="England & Wales Charity Commission registration number" regNum={c.englandWalesCharityRegNum}/>
@@ -127,7 +128,7 @@ const RegNum = ({label, regNum}) => {
  * @param {!NGO} charity This data item is a shallow copy
  * @param {?Money} donationValue
  */
-const CharityCard = ({ charity, donationValue, showImpact}) => {
+const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 	// Prefer full descriptions here. If unavailable switch to summary desc.
 	let desc = charity.description || charity.summaryDescription || '';
 	// But do cut descriptions down to 1 paragraph.
@@ -159,7 +160,8 @@ const CharityCard = ({ charity, donationValue, showImpact}) => {
 					{!quote ? <MDText source={desc} /> : null}
 					<div className="flex-row">
 						<DevLink href={'https://app.sogive.org/#edit?action=getornew&charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">SoGive Editor</DevLink>
-						<DevLink href={ServerIO.PORTAL_ENDPOINT+'/#advert/' + escape(charity.ad)} target="_portal" className="ml-2">Advert Editor</DevLink>
+                        {charity.ad ? <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#advert/' + escape(charity.ad)} target="_portal" className="ml-2">Advert Editor</DevLink>
+                        : <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/' + escape(campaign.id) + '?strayCharities=' + escape(charity.id)} target="_portal" className="ml-2">Stray charity from {campaign.id}</DevLink>}
 					</div>
 				</div>
 			</div>
@@ -256,5 +258,5 @@ const Impact = ({ charity, donationValue }) => {
 	return <b>{impact}</b>;
 };
 
-export { CharityDetails };
+export { CharityDetails, fetchSogiveData };
 export default Charities;
