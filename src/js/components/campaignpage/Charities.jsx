@@ -62,6 +62,8 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 		return d;
 	};
 
+    console.log("SHOWING CHARITIES", charities);
+
 	return (
 		<div className="charity-card-container bg-gl-light-pink">
 			<div className="py-5">
