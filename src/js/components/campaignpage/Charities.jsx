@@ -185,7 +185,8 @@ const fetchSogiveData = (charities) => {
 		if (dupeIds.includes(sogiveId)) {
 			return;
 		}
-		dupeIds.push(sogiveId);
+        dupeIds.push(sogiveId);
+        if (!sogiveId) return null;
 		// NB: the lower-level ServerIOBase.js helps patch mismatches between GL and SoGive ids
 		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: sogiveId, status: C.KStatus.PUBLISHED });
 		if ( ! pvCharity.value) {
