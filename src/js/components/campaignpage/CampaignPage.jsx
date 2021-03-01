@@ -269,7 +269,7 @@ const filterLowDonations = ({charities, campaign, donationTotal,donation4charity
  * @param {Object} donation4charityUnscaled
  */
 const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled, charities) => {
-	Campaign.assIsa(campaign);
+	// Campaign.assIsa(campaign); can be {}
 	//assMatch(charities, "NGO[]");	- can contain dummy objects from strays
 	if (campaign.dntn4charity) {
 		assert(campaign.dntn4charity === donation4charityUnscaled);
