@@ -368,6 +368,7 @@ const CampaignPage = () => {
         const sogiveCid = normaliseSogiveId(cid);
         if (!donation4charityUnscaled[sogiveCid]) {
             donation4charityUnscaled[sogiveCid] = donation4charityUnscaled[cid];
+            delete donation4charityUnscaled[cid];
         }
     });
     
