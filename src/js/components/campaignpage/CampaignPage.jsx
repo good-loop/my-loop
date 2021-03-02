@@ -366,7 +366,7 @@ const CampaignPage = () => {
     console.log("[DONATION4CHARITY]", "INITIAL", donation4charityUnscaled);
     // Assign fetched data to fill holes and normalise IDs
     const allCharities = Object.keys(donation4charityUnscaled);
-    Object.keys(fetchedDonationData).forEach(cid => allCharities.push(cid));
+    Object.keys(fetchedDonationData).forEach(cid => !allCharities.includes(cid) && allCharities.push(cid));
     allCharities.forEach(cid => {
         const sogiveCid = normaliseSogiveId(cid);
         console.log("[DONATION4CHARITY]", cid + " >>> " + sogiveCid);
