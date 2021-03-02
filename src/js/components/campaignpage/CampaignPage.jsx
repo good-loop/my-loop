@@ -94,7 +94,8 @@ const fetchIHubData = () => {
 	if ( ! status) status = (glStatus || C.KStatus.PUB_OR_ARC);
 	// Data, assemble
 	// let campaignIds, agencyIds, adIds, advertiserIds;
-	let pvTopItem, pvTopCampaign, pvCampaigns, pvAgencies, pvAds, pvAdvertisers;
+    let pvTopItem, pvTopCampaign, pvCampaigns, pvAgencies, pvAds, pvAdvertisers;
+    let agencyName; // Only name that can override an advertiser is an agency - if one is explicitly set
 	// ...by Campaign?
 	if (campaignId1) {		
 		pvTopItem = pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:campaignId1});
@@ -129,7 +130,8 @@ const fetchIHubData = () => {
 	}
 	// ...by Agency?
 	if (agency) {		
-		pvTopItem = getDataItem({type:C.TYPES.Agency,status,id:agency});
+        pvTopItem = getDataItem({type:C.TYPES.Agency,status,id:agency});
+        agencyName = pvTopItem.value ? pvTopItem.value.name : null;
 		// wrap as a list
 		pvAgencies = fetchIHubData2_wrapAsList(pvTopItem);
 		// advertisers
@@ -191,7 +193,8 @@ const fetchIHubData = () => {
 		pvCampaigns:pvCampaigns||{}, 
 		pvAgencies:pvAgencies||{}, 
 		pvAds:pvAds||{}, 
-		pvAdvertisers:pvAdvertisers||{}
+        pvAdvertisers:pvAdvertisers||{},
+        agencyName
 	}
 };
 
@@ -315,7 +318,7 @@ const CampaignPage = () => {
 		landing,
 	} = DataStore.getValue(['location', 'params']) || {};
 	// What adverts etc should we look at?
-	let {pvTopItem, pvTopCampaign, pvCampaigns, pvAds, pvAdvertisers, pvAgencies} = fetchIHubData();
+	let {pvTopItem, pvTopCampaign, pvCampaigns, pvAds, pvAdvertisers, pvAgencies, agencyName} = fetchIHubData();
 
 	// Is the campaign page being used as a click-through advert landing page?
 	// If so, change the layout slightly, positioning the advert video on top.
@@ -556,7 +559,8 @@ const CampaignPage = () => {
 						ads={ads}
 						viewcount4campaign={viewcount4campaign}
 						donationTotal={donationTotal}
-						nvertiserName={nvertiserName}
+                        nvertiserName={nvertiserName}
+                        agencyName={agencyName}
 						totalViewCount={totalViewCount}
 					/>
 				)}

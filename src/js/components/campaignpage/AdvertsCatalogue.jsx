@@ -61,7 +61,7 @@ const campaignNameForAd = ad => {
  * List of adverts with some info about them (like views, dates)
  * @param {*} param0 
  */
-const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount }) => {
+const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount, agencyName }) => {
 	// filter out any hidden ads
 	// NB: done here as the hiding is a shallow cosmetic -- we still want the view and £ donation data included (or if not, there are other controls)
 	if (campaign && campaign.hideAdverts) {
@@ -146,7 +146,7 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 
 	return (<>
 		<Container className="py-5">
-			<h2>Watch the <AdvertiserName name={nvertiserName} /> ads that raised <Counter currencySymbol="£" sigFigs={4} amount={donationTotal} minimumFractionDigits={2} preserveSize /><br />with {views} ad viewers</h2>
+			<h2>Watch the <AdvertiserName name={agencyName || nvertiserName} /> ads that raised <Counter currencySymbol="£" sigFigs={4} amount={donationTotal} minimumFractionDigits={2} preserveSize /><br />with {views} ad viewers</h2>
 			<Carousel
 				activeIndex={activeIndex}
 				next={next}
