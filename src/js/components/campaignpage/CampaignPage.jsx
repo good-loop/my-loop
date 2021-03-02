@@ -362,6 +362,8 @@ const CampaignPage = () => {
     // Assign fetched data to fill holes and normalise IDs
     Object.keys(fetchedDonationData).forEach(cid => {
         const sogiveCid = normaliseSogiveId(cid);
+        // Skip total
+        if (sogiveCid === "total") return;
         // First fill in normalized ID
         if (!donation4charityUnscaled[sogiveCid]) {
             donation4charityUnscaled[sogiveCid] = donation4charityUnscaled[cid];
@@ -398,7 +400,7 @@ const CampaignPage = () => {
 		let clistIds = charities.map(getId);
 		cids.forEach(cid => {
 			cid = normaliseSogiveId(cid);
-			if ( ! clistIds.includes(cid)) {
+			if ( ! clistIds.includes(cid) && cid !== "total") {
 				const c = new NGO({id:cid});
 				console.log("Adding stray charity "+cid,c);
 				charities.push(c);
