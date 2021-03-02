@@ -17,6 +17,7 @@ import ErrAlert from '../../base/components/ErrAlert';
 import { space, stopEvent } from '../../base/utils/miscutils';
 import { setSelectedCharityId } from './TabsForGoodSettings';
 import { fetchCharity } from './MyCharitiesPage';
+import { getAllXIds, getClaimValue, getProfilesNow, savePersons, setClaimValue } from '../../base/data/Person';
 
 const LOGIN_PATH = ['widget', 'tabLogin', 'login'];
 const LOGIN_VERB_PATH = [...LOGIN_PATH, 'verb'];
