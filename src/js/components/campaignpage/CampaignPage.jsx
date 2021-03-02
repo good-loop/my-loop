@@ -224,13 +224,16 @@ const filterLowDonations = ({charities, campaign, donationTotal, donation4charit
 	// Low donation filtering data is represented as only 2 controls for portal simplicity
 	// lowDntn = the threshold at which to consider a charity a low donation
 	// hideCharities = a list of charity IDs to explicitly hide - represented by keySet as an object (explained more below line 103)
-	
+
+    console.log("[FILTER]", "Filtering with dntn4charity", donation4charity);
+
 	// Filter nulls
 	charities = charities.filter(x => x);
 
 	if (campaign.hideCharities) {
 		let hc = Campaign.hideCharities(campaign);
-		const charities2 = charities.filter(c => ! hc.includes(getId(c)));
+        const charities2 = charities.filter(c => ! hc.includes(getId(c)));
+        console.log("[FILTER]","HIDDEN CHARITIES: ",hc);
 		charities = charities2;
 	}
 	
@@ -242,7 +245,7 @@ const filterLowDonations = ({charities, campaign, donationTotal, donation4charit
 		// default to 0	
 		lowDntn = new Money(donationTotal.currencySymbol + "0");
 	}
-	console.warn("Low donation threshold for charities set to " + lowDntn);
+	console.warn("[FILTER]","Low donation threshold for charities set to " + lowDntn);
     
 	/**
 	 * @param {!NGO} c 
@@ -255,7 +258,8 @@ const filterLowDonations = ({charities, campaign, donationTotal, donation4charit
 
 	charities = charities.filter(charity => {
         const dntn = getDonation(charity);
-		let include = dntn && Money.lessThan(lowDntn, dntn);
+        let include = dntn && Money.lessThan(lowDntn, dntn);
+        if (!include) console.log("[FILTER]","BELOW LOW DONATION: ",charity, dntn);
 		return include;
     });
 	return charities;
@@ -359,11 +363,16 @@ const CampaignPage = () => {
     // initial donation record
     let donation4charityUnscaled = yessy(campaign.dntn4charity)? campaign.dntn4charity : {};
     const fetchedDonationData = fetchDonationData({ ads });
+    console.log("[DONATION4CHARITY]", "INITIAL", donation4charityUnscaled);
     // Assign fetched data to fill holes and normalise IDs
-    Object.keys(fetchedDonationData).forEach(cid => {
+    const allCharities = Object.keys(donation4charityUnscaled);
+    Object.keys(fetchedDonationData).forEach(cid => !allCharities.includes(cid) && allCharities.push(cid));
+    allCharities.forEach(cid => {
         const sogiveCid = normaliseSogiveId(cid);
+        console.log("[DONATION4CHARITY]", cid + " >>> " + sogiveCid);
         // First fill in normalized ID
         if (!donation4charityUnscaled[sogiveCid]) {
+            console.warn("[DONATION4CHARITY]","Replacing " + cid + " with " + sogiveCid);
             donation4charityUnscaled[sogiveCid] = donation4charityUnscaled[cid];
             delete donation4charityUnscaled[cid];
         }
