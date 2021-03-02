@@ -18,6 +18,7 @@ import Money from '../../base/data/Money';
 import { getDataItem } from '../../base/plumbing/Crud';
 import { getDataLogData, pivotDataLogData } from '../../base/plumbing/DataLog';
 import DataStore from '../../base/plumbing/DataStore';
+import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
 import SearchQuery from '../../base/searchquery';
 import { assert, assMatch } from '../../base/utils/assert';
 import { asDate, isMobile, mapkv, sum, uniq, uniqById, yessy } from '../../base/utils/miscutils';
@@ -215,9 +216,10 @@ const fetchIHubData2_wrapAsList = pvTopItem => {
  * @param {Object} p
  * @param {?Money} p.donationTotal
  * @param {NGO[]} p.charities From adverts (not SoGive)
+ * @param {Object} p.donation4charity scaled (so it can be compared against donationTotal)
  * @returns {NGO[]}
  */
-const filterLowDonations = ({charities, campaign, donationTotal,donation4charity}) => {
+const filterLowDonations = ({charities, campaign, donationTotal, donation4charity}) => {
 
 	// Low donation filtering data is represented as only 2 controls for portal simplicity
 	// lowDntn = the threshold at which to consider a charity a low donation
@@ -237,8 +239,8 @@ const filterLowDonations = ({charities, campaign, donationTotal,donation4charity
 		if ( ! donationTotal) {
 			return charities;
 		}
-		// default to 1%
-		lowDntn = Money.mul(donationTotal, 0.01);
+		// default to 0	
+		lowDntn = new Money(donationTotal.currencySymbol + "0");
 	}
 	console.warn("Low donation threshold for charities set to " + lowDntn);
     
@@ -269,7 +271,7 @@ const filterLowDonations = ({charities, campaign, donationTotal,donation4charity
  * @param {Object} donation4charityUnscaled
  */
 const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled, charities) => {
-	Campaign.assIsa(campaign);
+	// Campaign.assIsa(campaign); can be {}
 	//assMatch(charities, "NGO[]");	- can contain dummy objects from strays
 	if (campaign.dntn4charity) {
 		assert(campaign.dntn4charity === donation4charityUnscaled);
@@ -281,7 +283,8 @@ const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled
 	}
 	Money.assIsa(donationTotal);
     // NB: only count donations for the charities listed
-	let monies = charities.map(c => donation4charityUnscaled[getId(c)]);
+    let monies = charities.map(c => getId(c) !== "unset" ? donation4charityUnscaled[getId(c)] : null);
+    monies = monies.filter(x=>x);
 	let totalDntnByCharity = Money.total(monies);
 	if ( ! Money.value(totalDntnByCharity)) {
 		console.log("Scale donations - cant scale up 0");
@@ -354,24 +357,55 @@ const CampaignPage = () => {
     console.log("ADS BEFORE CHARITY SORTING", ads);
 
     // initial donation record
-	const donation4charityUnscaled = yessy(campaign.dntn4charity)? campaign.dntn4charity : fetchDonationData({ ads });
-
+    let donation4charityUnscaled = yessy(campaign.dntn4charity)? campaign.dntn4charity : {};
+    const fetchedDonationData = fetchDonationData({ ads });
+    // Assign fetched data to fill holes and normalise IDs
+    Object.keys(fetchedDonationData).forEach(cid => {
+        const sogiveCid = normaliseSogiveId(cid);
+        // First fill in normalized ID
+        if (!donation4charityUnscaled[sogiveCid]) {
+            donation4charityUnscaled[sogiveCid] = donation4charityUnscaled[cid];
+            delete donation4charityUnscaled[cid];
+        }
+        // If still empty, fill in fetched data
+        if (!donation4charityUnscaled[sogiveCid]) {
+            donation4charityUnscaled[sogiveCid] = fetchedDonationData[cid];
+        }
+    });
+    
     const ad4Charity = {};
 	// individual charity data, attaching ad ID
 	let charities = uniqById(_.flatten(ads.map(ad => {
         const clist = (ad.charities && ad.charities.list).slice() || [];
 		return clist.map(c => {
-			if ( ! c) return; // bad data paranoia
-			const charity = c;
+			if ( ! c) return null; // bad data paranoia						
+			if ( ! c.id || c.id==="unset" || c.id==="undefined" || c.id==="null" || c.id==="total") { // bad data paranoia						
+				console.error("CampaignPage.jsc charities - Bad charity ID", c.id, c);
+				return null;
+			}
+			const id2 = normaliseSogiveId(c.id);
+			if (id2 !== c.id) {
+				console.warn("Changing charity ID to normaliseSogiveId "+c.id+" to "+id2+" for ad "+ad.id);
+				c.id = id2;
+			}
 			ad4Charity[c.id] = ad; // for Advert Editor dev button so sales can easily find which ad contains which charity
-			return charity;
+			return c;
 		});
     })));
-    // Append extra charities found in donation data - for stray charities
-    Object.keys(donation4charityUnscaled).forEach(charity => {
-        // Push dummy objects for blank charities
-        if (!charities.includes(charity) && donation4charityUnscaled[charity]) charities.push({id: charity});
-    });
+	// Add in any from campaign.dntn4charity - which can include strayCharities
+	if (campaign.dntn4charity) {
+		let cids = Object.keys(campaign.dntn4charity);
+		let clistIds = charities.map(getId);
+		cids.forEach(cid => {
+			cid = normaliseSogiveId(cid);
+			if ( ! clistIds.includes(cid)) {
+				const c = new NGO({id:cid});
+				console.log("Adding stray charity "+cid,c);
+				charities.push(c);
+			}
+		});
+	}
+    // NB: Don't append extra charities found in donation data. This can include noise.
     // Fill in blank in charities with sogive data
     charities = fetchSogiveData(charities);
     console.log("CHARITIESSSSSS", charities);
@@ -390,11 +424,15 @@ const CampaignPage = () => {
     // Scale once to get values in the right ballpark
     let donation4charityScaled = scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
     
+    console.log("DONATION SCALED", donation4charityScaled);
+
     // filter charities by low £s and campaign.hideCharities
     charities = filterLowDonations({charities, campaign, donationTotal, donation4charity:donation4charityScaled});
     
     // Scale again to make up for discrepencies introduced by filtering
 	donation4charityScaled = scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
+
+    console.log("After Filter CHARITIES", charities);
 
 	// PDF version of page
 	let pdf = null;
