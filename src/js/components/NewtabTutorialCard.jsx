@@ -11,7 +11,7 @@ const tutorialPagePath = [...tutorialPath, 'page'];
 const tutorialRectPath = [...tutorialPath, 'rect'];
 
 
-const NewtabTutorialCard = ({tutorialPages}) => {
+const NewtabTutorialCard = ({tutorialPages, charityId}) => {
 	const open = DataStore.getValue(tutorialOpenPath);
 	if ( ! open) return null;
 	const page = DataStore.getValue(tutorialPagePath) || 0;
@@ -23,7 +23,16 @@ const NewtabTutorialCard = ({tutorialPages}) => {
 		} else {
 			DataStore.setValue(tutorialPagePath, num);
 		}
-	};
+    };
+    
+    if (charityId) {
+        tutorialPages[1] = <>
+            <h2>Your charity</h2>
+            <p>
+            Your charity is set up to receive donations from the money you generate!
+            </p>
+        </>;
+    }
 
 	// // Set page to 0 by default
 	// useEffect(() => {

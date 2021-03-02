@@ -62,6 +62,8 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 		return d;
 	};
 
+    console.log("SHOWING CHARITIES", charities);
+
 	return (
 		<div className="charity-card-container bg-gl-light-pink">
 			<div className="py-5">
@@ -135,7 +137,9 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 	let firstParagraph = (/^.+\n *\n/g).exec(desc);
 	if (firstParagraph) {
 		desc = firstParagraph[0];
-	}
+    }
+    
+    console.log("SHOWING THE CHARITY",charity);
 
 	const quote = tq(charity);
 	let img = (quote && quote.img) || charity.images;
@@ -185,7 +189,8 @@ const fetchSogiveData = (charities) => {
 		if (dupeIds.includes(sogiveId)) {
 			return;
 		}
-		dupeIds.push(sogiveId);
+        dupeIds.push(sogiveId);
+        if (!sogiveId || sogiveId === "unset") return null;
 		// NB: the lower-level ServerIOBase.js helps patch mismatches between GL and SoGive ids
 		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: sogiveId, status: C.KStatus.PUBLISHED });
 		if ( ! pvCharity.value) {
