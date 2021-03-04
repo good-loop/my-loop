@@ -312,7 +312,8 @@ const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled
 const CampaignPage = () => {
 	let {
 		via,
-		landing,
+        landing,
+        showNonServed
 	} = DataStore.getValue(['location', 'params']) || {};
 	// What adverts etc should we look at?
 	let {pvTopItem, pvTopCampaign, pvCampaigns, pvAds, pvAdvertisers, pvAgencies} = fetchIHubData();
@@ -571,7 +572,8 @@ const CampaignPage = () => {
 						viewcount4campaign={viewcount4campaign}
 						donationTotal={donationTotal}
 						nvertiserName={nvertiserName}
-						totalViewCount={totalViewCount}
+                        totalViewCount={totalViewCount}
+                        showNonServed={showNonServed}
 					/>
 				)}
 

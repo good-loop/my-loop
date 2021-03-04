@@ -61,7 +61,7 @@ const campaignNameForAd = ad => {
  * List of adverts with some info about them (like views, dates)
  * @param {*} param0 
  */
-const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount }) => {
+const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount, showNonServed }) => {
 	// filter out any hidden ads
 	// NB: done here as the hiding is a shallow cosmetic -- we still want the view and £ donation data included (or if not, there are other controls)
 	if (campaign && campaign.hideAdverts) {
@@ -74,6 +74,8 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 	/** Picks one Ad (with a video) from each campaign to display as a sample.  */
 	let sampleAd4Campaign = {};
 	ads.forEach(ad => {
+        // Skip never-served ads
+        if (!ad.hasServed && !showNonServed) return;
 		let cname = campaignNameForAd(ad);
 		if (sampleAd4Campaign[cname]) {
 			let showcase = ad.campaignPage && ad.campaignPage.showcase;
