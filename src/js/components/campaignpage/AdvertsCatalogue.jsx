@@ -75,7 +75,7 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 	let sampleAd4Campaign = {};
 	ads.forEach(ad => {
         // Skip never-served ads
-        if (!ad.hasServed && !showNonServed) return;
+        if (!ad.hasServed && !ad.serving && !showNonServed) return;
 		let cname = campaignNameForAd(ad);
 		if (sampleAd4Campaign[cname]) {
 			let showcase = ad.campaignPage && ad.campaignPage.showcase;
