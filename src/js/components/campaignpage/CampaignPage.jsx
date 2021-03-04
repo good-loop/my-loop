@@ -345,7 +345,21 @@ const CampaignPage = () => {
 	} else {
 		console.log("Using top campaign ", campaign);
 	}
-	if ( ! campaign) campaign = {};
+    if ( ! campaign) campaign = {};
+    
+    // Merge all hide advert lists together from all campaigns
+    console.log("pvCAMPAIGNS", pvCampaigns);
+    let allCampaigns = List.hits(pvCampaigns.value);
+    console.log("ALL CAMPAIGNS", allCampaigns);
+    if (!campaign.hideAdverts) campaign.hideAdverts = {};
+    allCampaigns && allCampaigns.forEach(c => {
+        if (c.hideAdverts) {
+            Object.keys(c.hideAdverts).forEach(hideAd => {
+                if (c.hideAdverts[hideAd]) campaign.hideAdverts[hideAd] = true;
+            });
+        }
+    });
+    console.log("FINAL HIDE ADS LIST", campaign.hideAdverts);
 
 	// TODO fill in blanks like donation total and peeps
 
