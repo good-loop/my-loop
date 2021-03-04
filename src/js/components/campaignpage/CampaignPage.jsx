@@ -313,7 +313,6 @@ const CampaignPage = () => {
 	let {
 		via,
         landing,
-        showNonServed
 	} = DataStore.getValue(['location', 'params']) || {};
 	// What adverts etc should we look at?
 	let {pvTopItem, pvTopCampaign, pvCampaigns, pvAds, pvAdvertisers, pvAgencies} = fetchIHubData();
@@ -335,7 +334,7 @@ const CampaignPage = () => {
 		console.warn("NO ADS FOUND, aborting page generation");
 		return <ErrAlert>No ads found to generate impact hub!</ErrAlert>;
 	}
-	let ads = List.hits(pvAds.value);		
+    let ads = List.hits(pvAds.value);	
 
 	// Combine Campaign settings
 	let campaign = pvTopCampaign.value;
@@ -347,22 +346,9 @@ const CampaignPage = () => {
 		console.log("Using top campaign ", campaign);
 	}
     if ( ! campaign) campaign = {};
-    
-    // Merge all hide advert lists together from all campaigns
-    console.log("pvCAMPAIGNS", pvCampaigns);
-    let allCampaigns = List.hits(pvCampaigns.value);
-    console.log("ALL CAMPAIGNS", allCampaigns);
-    if (!campaign.hideAdverts) campaign.hideAdverts = {};
-    allCampaigns && allCampaigns.forEach(c => {
-        if (c.hideAdverts) {
-            Object.keys(c.hideAdverts).forEach(hideAd => {
-                if (c.hideAdverts[hideAd]) campaign.hideAdverts[hideAd] = true;
-            });
-        }
-    });
-    console.log("FINAL HIDE ADS LIST", campaign.hideAdverts);
 
-	// TODO fill in blanks like donation total and peeps
+	// Get filtered ad list
+    ads = Campaign.advertsToShow(campaign, pvCampaigns.value && List.hits(pvCampaigns.value), ads);
 
 	// Combine branding
 	// Priority: TopCampaign, TopItem, Adverts
@@ -573,7 +559,6 @@ const CampaignPage = () => {
 						donationTotal={donationTotal}
 						nvertiserName={nvertiserName}
                         totalViewCount={totalViewCount}
-                        showNonServed={showNonServed}
 					/>
 				)}
 

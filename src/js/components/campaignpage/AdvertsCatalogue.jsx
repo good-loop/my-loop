@@ -43,35 +43,17 @@ const viewCount = (viewcount4campaign, ad) => {
 };
 
 /**
- * @param {!Advert} ad 
- * @returns {!string} Can be "unknown" to fill in for no-campaign odd data items
- */
-const campaignNameForAd = ad => {
-	if (!ad.campaign) return "unknown";
-	// HACK FOR TOMS 2019 The normal code returns 5 campaigns where there are 3 synthetic campaign groups
-	// Dedupe on "only the first josh/sara/ella campaign" instead
-	if (ad.vertiser === 'bPe6TXq8' && ad.campaign && ad.campaign.match(tomsCampaigns)) {
-		let cname = ad.campaign.match(tomsCampaigns)[0];
-		return cname;
-	}
-	return ad.campaign;
-};
-
-/**
  * List of adverts with some info about them (like views, dates)
  * @param {*} param0 
  */
-const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount, showNonServed }) => {
+const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount}) => {
 	// filter out any hidden ads
 	// NB: done here as the hiding is a shallow cosmetic -- we still want the view and £ donation data included (or if not, there are other controls)
-	if (campaign && campaign.hideAdverts) {
-		ads = ads.filter(ad => ! campaign.hideAdverts[ad.id]);
-	}
-	console.log("Ads for catalogue: ", ads, "Hiding: ",campaign && campaign.hideAdverts);
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [animating, setAnimating] = useState(false);
 
-	/** Picks one Ad (with a video) from each campaign to display as a sample.  */
+    /** Picks one Ad (with a video) from each campaign to display as a sample.  */
+    /*
 	let sampleAd4Campaign = {};
 	ads.forEach(ad => {
         // Skip never-served ads
@@ -91,7 +73,8 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 		sampleAd4Campaign[cname] = ad;
 	});
 
-	const sampleAds = Object.values(sampleAd4Campaign);
+	const sampleAds = Object.values(sampleAd4Campaign);*/
+    const sampleAds = ads;
 
 	console.log("Sample ads: ", sampleAds);
 
