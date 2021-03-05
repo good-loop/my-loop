@@ -232,7 +232,7 @@ const filterLowDonations = ({charities, campaign, donationTotal, donation4charit
 
 	if (campaign.hideCharities) {
 		let hc = Campaign.hideCharities(campaign);
-        const charities2 = charities.filter(c => ! hc.includes(getId(c)));
+        const charities2 = charities.filter(c => ! hc.includes(normaliseSogiveId(getId(c))));
         console.log("[FILTER]","HIDDEN CHARITIES: ",hc);
 		charities = charities2;
 	}
@@ -348,20 +348,29 @@ const CampaignPage = () => {
 	}
     if ( ! campaign) campaign = {};
     
-    // Merge all hide advert lists together from all campaigns
+    // Merge all hide advert and charity lists together from all campaigns
     console.log("pvCAMPAIGNS", pvCampaigns);
     let allCampaigns = List.hits(pvCampaigns.value);
     console.log("ALL CAMPAIGNS", allCampaigns);
-    if (!campaign.hideAdverts) campaign.hideAdverts = {};
-    allCampaigns && allCampaigns.forEach(c => {
-        if (c.hideAdverts) {
-            Object.keys(c.hideAdverts).forEach(hideAd => {
-                if (c.hideAdverts[hideAd]) campaign.hideAdverts[hideAd] = true;
-            });
-        }
-    });
+    if (allCampaigns) {
+        if (!campaign.hideAdverts) campaign.hideAdverts = {};
+        if (!campaign.hideCharities) campaign.hideCharities = {};
+        allCampaigns && allCampaigns.forEach(c => {
+            if (c.hideAdverts) {
+                Object.keys(c.hideAdverts).forEach(hideAd => {
+                    if (c.hideAdverts[hideAd]) campaign.hideAdverts[hideAd] = true;
+                });
+            }
+            if (c.hideCharities) {
+                Object.keys(c.hideCharities).forEach(hideCharity => {
+                    let sogiveId = normaliseSogiveId(hideCharity);
+                    if (c.hideCharities[hideCharity]) campaign.hideCharities[sogiveId] = true;
+                });
+            }
+        });
+    }
     console.log("FINAL HIDE ADS LIST", campaign.hideAdverts);
-
+    console.log("FINAL HIDE CHARITIES LIST", campaign.hideCharities);
 	// TODO fill in blanks like donation total and peeps
 
 	// Combine branding
