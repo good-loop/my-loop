@@ -91,7 +91,8 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 		sampleAd4Campaign[cname] = ad;
 	});
 
-	const sampleAds = Object.values(sampleAd4Campaign);
+    let sampleAds = Object.values(sampleAd4Campaign);
+    if (!sampleAds.length) sampleAds = ads;
 
 	console.log("Sample ads: ", sampleAds);
 
