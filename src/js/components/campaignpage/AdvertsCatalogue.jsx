@@ -95,7 +95,7 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 
 	console.log("Sample ads: ", sampleAds);
 
-	let views = viewCount(viewcount4campaign, sampleAds[0]);
+	let views = sampleAds.length ? viewCount(viewcount4campaign, sampleAds[0]) : 0;
 	if (sampleAds.length > 1) {
 		views = totalViewCount;
 	}
