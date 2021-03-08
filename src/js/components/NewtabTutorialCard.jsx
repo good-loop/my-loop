@@ -266,7 +266,7 @@ const PopupWindow = () => {
                     <p>Remember, you don't have to click the banner ads, you are raising money simply by allowing the ads to appear in your tabs.</p>
 				</div>
                 <div className="flex-row justify-content-center align-items-center unset-margins">
-                    <button type="button" className="btn btn-primary" onClick={() => setShowing(false)}>GOT IT</button>
+                    <button type="button" className="btn btn-transparent fill" onClick={() => setShowing(false)}>GOT IT</button>
                 </div>
                 <div className="position-absolute" style={{width:0, height:0,
                     borderLeft:"10px solid transparent",
