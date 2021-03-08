@@ -11,7 +11,7 @@ const tutorialPagePath = [...tutorialPath, 'page'];
 const tutorialRectPath = [...tutorialPath, 'rect'];
 
 
-const NewtabTutorialCard = ({tutorialPages, charityId}) => {
+const NewtabTutorialCard = ({tutorialPages, charityId, onClose}) => {
 	const open = DataStore.getValue(tutorialOpenPath);
 	if ( ! open) return null;
 	const page = DataStore.getValue(tutorialPagePath) || 0;
@@ -19,7 +19,8 @@ const NewtabTutorialCard = ({tutorialPages, charityId}) => {
 	const setPage = (num) => {
 		if (num > tutorialPages.length - 1) {
 			DataStore.setValue(tutorialOpenPath, false);
-			DataStore.setValue(tutorialPagePath, 0);
+            DataStore.setValue(tutorialPagePath, 0);
+            onClose();
 		} else {
 			DataStore.setValue(tutorialPagePath, num);
 		}
@@ -43,7 +44,8 @@ const NewtabTutorialCard = ({tutorialPages, charityId}) => {
 	// });
 
 	if (page > tutorialPages.length - 1) {
-		DataStore.setValue(tutorialOpenPath, false);
+        DataStore.setValue(tutorialOpenPath, false);
+        onClose();
 	}
 	const beforeLastPage = page < tutorialPages.length - 1;
 
@@ -161,7 +163,8 @@ const NewtabTutorialCard = ({tutorialPages, charityId}) => {
 			<a className="position-absolute" style={{top:10, right:20}} onClick={e => {
 				e.preventDefault();
 				DataStore.setValue(tutorialOpenPath, false);
-				DataStore.setValue(tutorialPagePath, 0);
+                DataStore.setValue(tutorialPagePath, 0);
+                onClose();
 			}}><h5 className="color-gl-light-red" style={{fontSize:"1rem"}}>SKIP</h5></a>
 		</div>
 	</>;
@@ -237,5 +240,47 @@ const TutorialHighlighter = ({page, style, children, className}) => {
 	</div>;
 };
 
-export { openTutorial, TutorialComponent, TutorialHighlighter };
+const PopupWindow = () => {
+
+    const [showing, setShowing] = useState(true);
+
+    let style = {
+		zIndex: 9999,
+		bottom:170,
+		left:20,
+		/*
+		top:rect.top,
+		left:rect.left,
+		right:rect.right,
+		bottom:rect.bottom,*/
+		width:400,
+		height:300
+	};
+    return showing &&
+		<div className="tutorial-card bg-white position-absolute shadow text-center p-4 flex-column justify-content-between align-items-center unset-margins"
+			style={style}
+		>
+			<div className="flex-column unset-margins justify-content-center align-items-center">
+				<div className="tutorial-content mt-2">
+					<h2>No need to click</h2>
+                    <p>Remember, you don't have to click the banner ads, you are raising money simply by allowing the ads to appear in your tabs.</p>
+				</div>
+                <div className="flex-row justify-content-center align-items-center unset-margins">
+                    <button type="button" className="btn btn-primary" onClick={() => setShowing(false)}>GOT IT</button>
+                </div>
+                <div className="position-absolute" style={{width:0, height:0,
+                    borderLeft:"10px solid transparent",
+                    borderRight:"10px solid transparent",
+                    borderTop:"10px solid white",
+                    top:"100%",
+                    left:"5%"}}/>
+			</div>
+			<a className="position-absolute" style={{top:10, right:20}} onClick={e => {
+				e.preventDefault();
+				setShowing(false);
+			}}><h5 className="color-gl-light-red" style={{fontSize:"1rem"}}>X</h5></a>
+		</div>;
+}
+
+export { openTutorial, TutorialComponent, TutorialHighlighter, PopupWindow };
 export default NewtabTutorialCard;
