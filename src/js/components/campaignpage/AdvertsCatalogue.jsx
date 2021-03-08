@@ -62,6 +62,9 @@ const campaignNameForAd = ad => {
  * @param {*} param0 
  */
 const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount, showNonServed }) => {
+
+    let {nosample} = DataStore.getValue(['location', 'params']) || {};
+
 	// filter out any hidden ads
 	// NB: done here as the hiding is a shallow cosmetic -- we still want the view and £ donation data included (or if not, there are other controls)
 	if (campaign && campaign.hideAdverts) {
@@ -71,28 +74,32 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [animating, setAnimating] = useState(false);
 
-	/** Picks one Ad (with a video) from each campaign to display as a sample.  */
-	let sampleAd4Campaign = {};
-	ads.forEach(ad => {
-        // Skip never-served ads
-        if (!ad.hasServed && !ad.serving && !showNonServed) return;
-		let cname = campaignNameForAd(ad);
-		if (sampleAd4Campaign[cname]) {
-			let showcase = ad.campaignPage && ad.campaignPage.showcase;
-			// Prioritise ads with a start and end time attached
-			let startProvided = !sampleAd4Campaign[cname].start && ad.start;
-			let endProvided = !sampleAd4Campaign[cname].end && ad.end;
-			// If the ad cannot provide a new value for start or end, skip it
-			if (!startProvided && !endProvided && !showcase) {
-				return;
-			}
-		}
-		//if (!ad.videos || !ad.videos[0].url) return;
-		sampleAd4Campaign[cname] = ad;
-	});
+    let sampleAds = ads;
 
-    let sampleAds = Object.values(sampleAd4Campaign);
-    if (!sampleAds.length) sampleAds = ads;
+    if (!nosample) {
+        /** Picks one Ad (with a video) from each campaign to display as a sample.  */
+        let sampleAd4Campaign = {};
+        ads.forEach(ad => {
+            // Skip never-served ads
+            if (!ad.hasServed && !ad.serving && !showNonServed) return;
+            let cname = campaignNameForAd(ad);
+            if (sampleAd4Campaign[cname]) {
+                let showcase = ad.campaignPage && ad.campaignPage.showcase;
+                // Prioritise ads with a start and end time attached
+                let startProvided = !sampleAd4Campaign[cname].start && ad.start;
+                let endProvided = !sampleAd4Campaign[cname].end && ad.end;
+                // If the ad cannot provide a new value for start or end, skip it
+                if (!startProvided && !endProvided && !showcase) {
+                    return;
+                }
+            }
+            //if (!ad.videos || !ad.videos[0].url) return;
+            sampleAd4Campaign[cname] = ad;
+        });
+
+        sampleAds = Object.values(sampleAd4Campaign);
+        if (!sampleAds.length) sampleAds = ads;
+    }
 
 	console.log("Sample ads: ", sampleAds);
 
@@ -153,7 +160,8 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 			<Carousel
 				activeIndex={activeIndex}
 				next={next}
-				previous={previous}
+                previous={previous}
+                interval={false}
 			>
 				<div className="d-block d-md-none">
 					<CarouselIndicators items={carouselSlides} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{backgroundColor:"#000"}}/>
