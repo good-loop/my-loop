@@ -386,6 +386,13 @@ const CampaignPage = () => {
 
     // initial donation record
     let donation4charityUnscaled = yessy(campaign.dntn4charity)? campaign.dntn4charity : {};
+    // Merge all other campaign donations - top campaign taking priority on conflicts
+    allCampaigns && allCampaigns.forEach(c => {
+        if (c.dntn4charity) Object.keys(c.dntn4charity).forEach(dntn => {
+            if (!donation4charityUnscaled[dntn]) donation4charityUnscaled[dntn] = c.dntn4charity[dntn];
+        });
+    });
+    // Get live numbers
     const fetchedDonationData = fetchDonationData({ ads });
     console.log("[DONATION4CHARITY]", "INITIAL", donation4charityUnscaled);
     // Assign fetched data to fill holes and normalise IDs
