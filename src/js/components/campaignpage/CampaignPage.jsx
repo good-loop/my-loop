@@ -86,7 +86,7 @@ const fetchIHubData = () => {
 		'gl.vertiser': vertiserid,
 		'gl.status': glStatus,
 		status,
-		agency,
+        agency,
 		// q = '', TODO
 	} = DataStore.getValue(['location', 'params']) || {};
 	let campaignId1 = DataStore.getValue(['location','path'])[1];
@@ -146,16 +146,17 @@ const fetchIHubData = () => {
 			} else {
 				console.warn("No Advertisers found for agency",agency,pvTopItem);
 			}
-		}
+        }
+        pvCampaigns = Campaign.fetchForAgency(agency, status);
 	} // ./agency
 	
-	if ( ! agency && ! vertiserid && ! adid && ! campaignId1)  {
+	if ( ! agency && ! vertiserid && ! adid && ! campaignId1) {
 		throw new Error("No Campaign info specified");
 	}
 	// top campaign?
 	if ( ! pvTopCampaign && pvTopItem && pvTopItem.value && pvTopItem.value.campaign) {
 		pvTopCampaign = getDataItem({type:C.TYPES.Campaign, status, id:pvTopItem.value.campaign});
-	}	
+	}
 	// ...fill in from adverts
 	if (pvAds && pvAds.value && pvAds.value.hits && pvAds.value.hits.length && pvAds.value.hits[0]) {
 		console.log("PVADS VALUE", pvAds.value);
@@ -313,6 +314,7 @@ const CampaignPage = () => {
 	let {
 		via,
         landing,
+        showNonCampaignAds
 	} = DataStore.getValue(['location', 'params']) || {};
 	// What adverts etc should we look at?
 	let {pvTopItem, pvTopCampaign, pvCampaigns, pvAds, pvAdvertisers, pvAgencies} = fetchIHubData();
@@ -320,23 +322,17 @@ const CampaignPage = () => {
 	// Is the campaign page being used as a click-through advert landing page?
 	// If so, change the layout slightly, positioning the advert video on top.
 	const isLanding = (landing !== undefined) && (landing !== 'false');
-    
-    console.log("AAAAAAADS", pvAds);
 
-	if ( ! pvAds.resolved) {
+    if ( ! pvTopCampaign.resolved) {
 		// TODO display some stuff whilst ads are loading
 		return <Misc.Loading text="Loading advert info..." />;
 	}
-	if (pvAds.error || !pvAds.value.hits || (pvAds.value.hits.length == 1 && !pvAds.value.hits[0])) {
-		return <ErrAlert>Error loading advert data</ErrAlert>;
-	}
-	if (pvAds.value.hits.length == 0) {
+	if (!pvTopCampaign.value && !pvCampaigns.value) {
 		console.warn("NO ADS FOUND, aborting page generation");
 		return <ErrAlert>No ads found to generate impact hub!</ErrAlert>;
-	}
-    let ads = List.hits(pvAds.value);	
-
-	// Combine Campaign settings
+    }
+    
+    // Combine Campaign settings
 	let campaign = pvTopCampaign.value;
 	if ( ! campaign && pvCampaigns.value) {
 		let cs = List.hits(pvCampaigns.value);
@@ -347,8 +343,20 @@ const CampaignPage = () => {
 	}
     if ( ! campaign) campaign = {};
 
-	// Get filtered ad list
-    ads = Campaign.advertsToShow(campaign, pvCampaigns.value && List.hits(pvCampaigns.value), ads);
+    console.log("PVCAMPAIGNS", pvCampaigns);
+
+    // Get filtered ad list
+    console.log("Fetching ads with campaign", campaign, "and extra campaigns", pvCampaigns.value);
+    let ads = campaign ? Campaign.advertsToShow(campaign, pvCampaigns.value && List.hits(pvCampaigns.value)) : [];
+    // Merge in ads with no campaigns if asked - less controls applied
+    if (showNonCampaignAds && pvAds.value) {
+        const extraAds = Campaign.advertsToShow(campaign, pvCampaigns.value && List.hits(pvCampaigns.value), List.hits(pvAds.value));
+        extraAds.forEach(ad => {
+            if (!ads.includes(ad)) ads.push(ad);
+        });
+    }
+    console.log("AAAAAAAADS", ads);
+    if (!yessy(ads)) return <Misc.Loading text="Loading advert info..." />;
 
 	// Combine branding
 	// Priority: TopCampaign, TopItem, Adverts
