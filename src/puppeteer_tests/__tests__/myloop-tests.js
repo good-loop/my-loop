@@ -30,6 +30,6 @@ describe('My-Loop tests', () => {
 		//await page.waitFor(10000);
 		//await page.waitForSelector(MyLoopSelectors.logged_in_greeting);
 
-	}, 15000);
+	}, 150000);
 
 }); // ./describe
