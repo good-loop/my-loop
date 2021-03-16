@@ -13,21 +13,43 @@ describe('Display tests', () => {
 		await expect(page.title()).resolves.toMatch('My Good-Loop');
 	});
 
-	it('Displays information based on vert id', async () => {
-		await page.goto(baseSite+'/#campaign/?gl.vert=CeuNVbtW');
-		await page.waitForSelector('img[alt="brand logo"]');
+	it('Loads basic info from campaign id', async () => {
+		await page.goto(baseSite+'/#campaign/nature_valley');
+		await page.waitForSelector('.advertiser-name');
 		await delay(500); // Wait for portal/sogive data to load
-		const logo = await page.$eval('img[alt="brand logo"]', e => e.src);
+		const vertiserName = await page.$eval('.advertiser-name span', e => e.innerHTML);
 
-		const hnhLogoUrl = 'https://media.good-loop.com/uploads/standard/h.and.m.red.logo-8033650396845614820.svg';				
-		await expect(logo).toMatch(hnhLogoUrl);
+		const expectedVertiserName = 'Nature Valley';
+		await expect(vertiserName).toMatch(expectedVertiserName);
+    });
+    
+    it('Displays correct numbers according to campaign data', async () => {
+		await page.goto(baseSite+'/#campaign/nature_valley');
+		await page.waitForSelector('.advertiser-name');
+		await delay(2000); // Wait for portal/sogive data to load and counters to stop counting
+        
+        const numPeople = (await page.$eval('span.num', e => e.innerHTML)).replace(/\,/g,"");
+        const campaignNumPeople = await page.evaluate(() => {
+            return DataStore.getValue(['data','Campaign','nature_valley','numPeople']);
+        });
+        await expect(numPeople).toMatch(campaignNumPeople.toString());
+
+        const totalDonation = (await page.$eval('.splash-text .position-absolute.text-center', e => e.innerHTML)).replace(/(\$|\£|\€)/g,"");
+        const campaignTotalDonation = await page.evaluate(() => {
+            return new Intl.NumberFormat('en-GB', {maximumSignificantDigits:4}).format(Number.parseFloat(DataStore.getValue(['data','Campaign','nature_valley','dntn', 'value'])));
+        });
+        await expect(totalDonation).toMatch(campaignTotalDonation.toString());
 	});
 
 	it('Displays charity card for each charity', async () => {
-		await page.goto(baseSite+'/#campaign/?gl.vert=CeuNVbtW');
-		await page.waitForSelector('.charity-card');
-		const cards = await page.$$('.charity-card');
+		await page.goto(baseSite+'/#campaign/nature_valley');
+		await page.waitForSelector('.charity-quote');
+        const cards = await page.$$('.charity-quote');
+        const charity1 = await page.$$('#charity-national-park-foundation');
+        const charity2 = await page.$$('#charity-the-recycling-partnership');
 
-		await expect(cards.length).toBe(3);
+        await expect(cards.length).toBe(2);
+        await expect(charity1.length).toBe(1);
+        await expect(charity2.length).toBe(1);
 	});
 });
