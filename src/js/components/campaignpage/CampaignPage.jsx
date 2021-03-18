@@ -348,13 +348,15 @@ const CampaignPage = () => {
 	}
     if ( ! campaign) campaign = {};
     
-    // Merge all hide advert and charity lists together from all campaigns
+    // Merge all hide advert, charity and testimonial lists together from all campaigns
+    // Also normalises all charity IDs along the way
     console.log("pvCAMPAIGNS", pvCampaigns);
     let allCampaigns = List.hits(pvCampaigns.value);
     console.log("ALL CAMPAIGNS", allCampaigns);
     if (allCampaigns) {
         if (!campaign.hideAdverts) campaign.hideAdverts = {};
         if (!campaign.hideCharities) campaign.hideCharities = {};
+        if (!campaign.testimonials) campaign.testimonials = {};
         allCampaigns && allCampaigns.forEach(c => {
             if (c.hideAdverts) {
                 Object.keys(c.hideAdverts).forEach(hideAd => {
@@ -367,11 +369,18 @@ const CampaignPage = () => {
                     if (c.hideCharities[hideCharity]) campaign.hideCharities[sogiveId] = true;
                 });
             }
+            if (c.testimonials) {
+                Object.keys(c.testimonials).forEach(charityId => {
+                    const nId = normaliseSogiveId(charityId);
+                    if (!campaign.testimonials[nId]) campaign.testimonials[nId] = c.testimonials[charityId];
+                });
+            }
         });
     }
     console.log("FINAL HIDE ADS LIST", campaign.hideAdverts);
     console.log("FINAL HIDE CHARITIES LIST", campaign.hideCharities);
-	// TODO fill in blanks like donation total and peeps
+    console.log("[TESTIMONIAL]", "All testimonials:", campaign.testimonials);
+    // TODO fill in blanks like donation total and peeps
 
 	// Combine branding
 	// Priority: TopCampaign, TopItem, Adverts
