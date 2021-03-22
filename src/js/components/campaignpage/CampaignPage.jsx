@@ -314,7 +314,7 @@ const CampaignPage = () => {
 	let {
 		via,
         landing,
-        showNonCampaignAds
+        hideNonCampaignAds
 	} = DataStore.getValue(['location', 'params']) || {};
 	// What adverts etc should we look at?
 	let {pvTopItem, pvTopCampaign, pvCampaigns, pvAds, pvAdvertisers, pvAgencies} = fetchIHubData();
@@ -349,10 +349,11 @@ const CampaignPage = () => {
     console.log("Fetching ads with campaign", campaign, "and extra campaigns", pvCampaigns.value);
     let ads = campaign ? Campaign.advertsToShow(campaign, pvCampaigns.value && List.hits(pvCampaigns.value)) : [];
     // Merge in ads with no campaigns if asked - less controls applied
-    if (showNonCampaignAds && pvAds.value) {
+    if (!hideNonCampaignAds && pvAds.value) {
+        const hideAds = Campaign.hideAdverts(campaign, pvCampaigns.value && List.hits(pvCampaigns.value));
         const extraAds = Campaign.advertsToShow(campaign, pvCampaigns.value && List.hits(pvCampaigns.value), List.hits(pvAds.value));
         extraAds.forEach(ad => {
-            if (!ads.includes(ad)) ads.push(ad);
+            if (!ads.includes(ad) && !hideAds.includes(ad.id)) ads.push(ad);
         });
     }
     console.log("AAAAAAAADS", ads);
