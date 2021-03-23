@@ -52,31 +52,7 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [animating, setAnimating] = useState(false);
 
-    /** Picks one Ad (with a video) from each campaign to display as a sample.  */
-    /*
-	let sampleAd4Campaign = {};
-	ads.forEach(ad => {
-        // Skip never-served ads
-        if (!ad.hasServed && !ad.serving && !showNonServed) return;
-		let cname = campaignNameForAd(ad);
-		if (sampleAd4Campaign[cname]) {
-			let showcase = ad.campaignPage && ad.campaignPage.showcase;
-			// Prioritise ads with a start and end time attached
-			let startProvided = !sampleAd4Campaign[cname].start && ad.start;
-			let endProvided = !sampleAd4Campaign[cname].end && ad.end;
-			// If the ad cannot provide a new value for start or end, skip it
-			if (!startProvided && !endProvided && !showcase) {
-				return;
-			}
-		}
-		//if (!ad.videos || !ad.videos[0].url) return;
-		sampleAd4Campaign[cname] = ad;
-	});
-
-	const sampleAds = Object.values(sampleAd4Campaign);*/
     const sampleAds = ads;
-
-	console.log("Sample ads: ", sampleAds);
 
 	let views = viewCount(viewcount4campaign, sampleAds[0]);
 	if (sampleAds.length > 1) {
@@ -242,7 +218,7 @@ const AdvertCard = ({ ad }) => {
 				{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
 				<img src="/img/LandingBackground/white_iphone.png" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "50%", width: "80%", top: "50%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }} />
 				<div className="position-absolute theunit">
-					<GoodLoopUnit vertId={ad.id} size={size} />
+					<GoodLoopUnit vertId={ad.id} size={size} debug={false} />
 				</div>
 			</div>
 			{/*<span className="position-absolute" style={{ left: "50%", top: "50%", transform: "translate(-50%, -50%)", zIndex: 0 }}>If you're seeing this, you likely have ad-blocker enabled. Please disable ad-blocker to see the demo!</span>*/}
@@ -261,7 +237,7 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false }) => {
 		<div className="col-md-4 col-6">
 			<div onClick={e => { e.preventDefault(); handleClick(); }} className={"pointer-wrapper" + (selected ? " selected" : "")}>
 				<div className="ad-prev shadow">
-					<GoodLoopUnit vertId={ad.id} size={size} />
+					<GoodLoopUnit vertId={ad.id} size={size} debug={false} />
 				</div>
 			</div>
 			<div>

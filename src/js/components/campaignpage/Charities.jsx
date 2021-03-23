@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container } from 'reactstrap';
+import { Alert, Container } from 'reactstrap';
 import ActionMan from '../../plumbing/ActionMan';
 import Roles from '../../base/Roles';
 import CharityLogo from '../CharityLogo';
@@ -54,15 +54,11 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 	let hideImpact = campaign.hideImpact || {};
 	// Filter nulls (paranoia)
 	charities = charities.filter(x => x);
-    //let sogiveCharities = fetchSogiveData(charities);
         
 	const getDonation = c => {
 		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
-		// Filter charity if less then 1/10 the total donation
 		return d;
 	};
-
-    console.log("SHOWING CHARITIES", charities);
 
 	return (
 		<div className="charity-card-container bg-gl-light-pink">
@@ -84,8 +80,6 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 
 /** Extra smallprint details for charities */
 const CharityDetails = ({charities}) => {
-
-    //let sogiveCharities = fetchSogiveData(charities);
 
 	const hasRegNum = (c) => {
 		return c.englandWalesCharityRegNum || c.scotlandCharityRegNum || c.niCharityRegNum || c.ukCompanyRegNum || c.usCharityRegNum;
@@ -138,8 +132,6 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 	if (firstParagraph) {
 		desc = firstParagraph[0];
     }
-    
-    console.log("SHOWING THE CHARITY",charity);
 
 	const quote = tq(charity);
 	let img = (quote && quote.img) || charity.images;
@@ -163,8 +155,10 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
 					{!quote ? <MDText source={desc} /> : null}
 					<div className="flex-row">
-						<DevLink href={'https://app.sogive.org/#edit?action=getornew&charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">SoGive Editor</DevLink>
-                        {charity.ad ? <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#advert/' + escape(charity.ad)} target="_portal" className="ml-2">Advert Editor</DevLink>
+                        <DevLink className={charity.noSogiveMatch ? "text-danger" : "" }href={'https://app.sogive.org/#edit?action=getornew&charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">
+                            {charity.noSogiveMatch ? "No SoGive entry found. Create one" : "SoGive Editor"}
+                        </DevLink>
+                        {charity.adId ? <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#advert/' + escape(charity.adId)} target="_portal" className="ml-2">Advert Editor</DevLink>
                         : <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/' + escape(campaign.id) + '?strayCharities=' + escape(charity.id)} target="_portal" className="ml-2">Stray charity from {campaign.id}</DevLink>}
 					</div>
 				</div>
@@ -172,43 +166,6 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 		</div>
 	</div>
 	);
-};
-
-/** Augment ad charity objects with sogive data  */
-const fetchSogiveData = (charities) => {
-	let dupeIds = [];
-	let sogiveCharities = charities.map(charityOriginal => {
-		// Shallow copy charity obj
-		let charity = Object.assign({}, charityOriginal);
-		const sogiveId = normaliseSogiveId(charity.id);
-		if ( ! sogiveId) {
-			console.warn("Charity without an id?!", charity);
-			return charity;
-		}
-		// Remove duplicates
-		if (dupeIds.includes(sogiveId)) {
-			return;
-		}
-        dupeIds.push(sogiveId);
-        if (!sogiveId || sogiveId === "unset") return null;
-		// NB: the lower-level ServerIOBase.js helps patch mismatches between GL and SoGive ids
-		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: sogiveId, status: C.KStatus.PUBLISHED });
-		if ( ! pvCharity.value) {
-			return charity; // no extra data yet
-		}
-		// merge, preferring SoGive data
-		// Prefer SoGive for now as the page is designed to work with generic info - and GL data is often campaign/player specific
-		// TODO: review this
-		// NB: This merge is a shallow copy, so the objects can then be shallow edited without affecting other components
-		charity = Object.assign(charity, pvCharity.value);
-		// HACK: charity objs have conflicting IDs, force NGO to use id instead of @id
-		charity['@id'] = undefined;
-		charity.originalId = charityOriginal.id; // preserve for donation look-up
-		return charity;
-	});
-	// Remove null entries
-	sogiveCharities = sogiveCharities.filter(x => x);
-	return sogiveCharities;
 };
 
 /**
@@ -263,5 +220,5 @@ const Impact = ({ charity, donationValue }) => {
 	return <b>{impact}</b>;
 };
 
-export { CharityDetails, fetchSogiveData };
+export { CharityDetails };
 export default Charities;
