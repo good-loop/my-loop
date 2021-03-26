@@ -207,6 +207,99 @@ const fetchIHubData2_wrapAsList = pvTopItem => {
 	));
 };
 
+
+
+/**
+ * @param {Object} p
+ * @param {?Money} p.donationTotal
+ * @param {NGO[]} p.charities From adverts (not SoGive)
+ * @param {Object} p.donation4charity scaled (so it can be compared against donationTotal)
+ * @returns {NGO[]}
+ */
+const filterLowDonations = ({charities, campaign, donationTotal, donation4charity}) => {
+
+	// Low donation filtering data is represented as only 2 controls for portal simplicity
+	// lowDntn = the threshold at which to consider a charity a low donation
+	// hideCharities = a list of charity IDs to explicitly hide - represented by keySet as an object (explained more below line 103)
+
+    console.log("[FILTER]", "Filtering with dntn4charity", donation4charity);
+
+	// Filter nulls
+	charities = charities.filter(x => x);
+
+	if (campaign.hideCharities) {
+		let hc = Campaign.hideCharities(campaign);
+        const charities2 = charities.filter(c => ! hc.includes(normaliseSogiveId(getId(c))));
+        console.log("[FILTER]","HIDDEN CHARITIES: ",hc);
+		charities = charities2;
+	}
+	
+	let lowDntn = campaign.lowDntn;	
+	if ( ! lowDntn || ! Money.value(lowDntn)) {
+		if ( ! donationTotal) {
+			return charities;
+		}
+		// default to 0	
+		lowDntn = new Money(donationTotal.currencySymbol + "0");
+	}
+	console.warn("[FILTER]","Low donation threshold for charities set to " + lowDntn);
+    
+	/**
+	 * @param {!NGO} c 
+	 * @returns {?Money}
+	 */
+	const getDonation = c => {
+		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
+		return d;
+	};
+
+	charities = charities.filter(charity => {
+        const dntn = getDonation(charity);
+        let include = dntn && Money.lessThan(lowDntn, dntn);
+        if (!include) console.log("[FILTER]","BELOW LOW DONATION: ",charity, dntn);
+		return include;
+    });
+	return charities;
+} // ./filterLowDonations
+
+/**
+ * Scale a list of charities to match the money total.
+ * This will scale so that sum(donations to `charities`) = donationTotal
+ * Warning: If a charity isn't on the list, it is assumed that donations to it are noise, to be reallocated.
+ * 
+ * @param {Campaign} campaign 
+ * @param {Money} donationTotal 
+ * @param {Object} donation4charityUnscaled
+ */
+const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled, charities) => {
+	// Campaign.assIsa(campaign); can be {}
+	//assMatch(charities, "NGO[]");	- can contain dummy objects from strays
+	if (campaign.dntn4charity) {
+		assert(campaign.dntn4charity === donation4charityUnscaled);
+		return campaign.dntn4charity; // explicitly set, so don't change it
+	}
+	if ( ! Money.value(donationTotal)) {
+		console.log("Scale donations - dont scale to 0");
+		return Object.assign({}, donation4charityUnscaled); // paranoid copy
+	}
+	Money.assIsa(donationTotal);
+    // NB: only count donations for the charities listed
+    let monies = charities.map(c => getId(c) !== "unset" ? donation4charityUnscaled[getId(c)] : null);
+    monies = monies.filter(x=>x);
+	let totalDntnByCharity = Money.total(monies);
+	if ( ! Money.value(totalDntnByCharity)) {
+		console.log("Scale donations - cant scale up 0");
+		return Object.assign({}, donation4charityUnscaled); // paranoid copy
+	}
+	// scale up (or down)	
+	let ratio = Money.divide(donationTotal, totalDntnByCharity);
+	const donation4charityScaled = {};
+	mapkv(donation4charityUnscaled, (k,v) => 
+		k==="total" || k==="unset"? null : donation4charityScaled[k] = Money.mul(donation4charityUnscaled[k], ratio));
+	console.log("Scale donations from", donation4charityUnscaled, "to", donation4charityScaled);
+    return donation4charityScaled;
+};
+
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser` or `via`
  * TODO support q=... flexible query
@@ -243,6 +336,7 @@ const CampaignPage = () => {
 		console.warn("No master campaign found, using:", campaign.name || campaign.id);
 	}
     if ( ! campaign) campaign = {};
+<<<<<<< HEAD
 
     // Get filtered ad list
     console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", pvCampaigns.value && List.hits(pvCampaigns.value).map(c => c.name || c.id));
@@ -259,6 +353,33 @@ const CampaignPage = () => {
 
     const extraAds = pvAds.value && List.hits(pvAds.value);
     const otherCampaigns = pvCampaigns.value && List.hits(pvCampaigns.value);
+=======
+    
+    // Merge all hide advert and charity lists together from all campaigns
+    console.log("pvCAMPAIGNS", pvCampaigns);
+    let allCampaigns = List.hits(pvCampaigns.value);
+    console.log("ALL CAMPAIGNS", allCampaigns);
+    if (allCampaigns) {
+        if (!campaign.hideAdverts) campaign.hideAdverts = {};
+        if (!campaign.hideCharities) campaign.hideCharities = {};
+        allCampaigns && allCampaigns.forEach(c => {
+            if (c.hideAdverts) {
+                Object.keys(c.hideAdverts).forEach(hideAd => {
+                    if (c.hideAdverts[hideAd]) campaign.hideAdverts[hideAd] = true;
+                });
+            }
+            if (c.hideCharities) {
+                Object.keys(c.hideCharities).forEach(hideCharity => {
+                    let sogiveId = normaliseSogiveId(hideCharity);
+                    if (c.hideCharities[hideCharity]) campaign.hideCharities[sogiveId] = true;
+                });
+            }
+        });
+    }
+    console.log("FINAL HIDE ADS LIST", campaign.hideAdverts);
+    console.log("FINAL HIDE CHARITIES LIST", campaign.hideCharities);
+	// TODO fill in blanks like donation total and peeps
+>>>>>>> master
 
 	// Combine branding
 	// Priority: TopCampaign, TopItem, Adverts
@@ -269,8 +390,83 @@ const CampaignPage = () => {
 	}
 	Object.assign(branding, campaign.branding);
 
+<<<<<<< HEAD
     // Campaign donation data
     let donation4charityUnscaled = Campaign.dntn4charity(campaign, otherCampaigns, extraAds);
+=======
+    console.log("ADS BEFORE CHARITY SORTING", ads);
+
+    // initial donation record
+    let donation4charityUnscaled = yessy(campaign.dntn4charity)? campaign.dntn4charity : {};
+    // Merge all other campaign donations - top campaign taking priority on conflicts
+    allCampaigns && allCampaigns.forEach(c => {
+        if (c.dntn4charity) Object.keys(c.dntn4charity).forEach(dntn => {
+            if (!donation4charityUnscaled[dntn]) donation4charityUnscaled[dntn] = c.dntn4charity[dntn];
+        });
+    });
+    // Get live numbers
+    const fetchedDonationData = fetchDonationData({ ads });
+    console.log("[DONATION4CHARITY]", "INITIAL", donation4charityUnscaled);
+    // Assign fetched data to fill holes and normalise IDs
+    const allCharities = Object.keys(donation4charityUnscaled);
+    Object.keys(fetchedDonationData).forEach(cid => !allCharities.includes(cid) && allCharities.push(cid));
+    allCharities.forEach(cid => {
+        const sogiveCid = normaliseSogiveId(cid);
+        console.log("[DONATION4CHARITY]", cid + " >>> " + sogiveCid);
+        // First fill in normalized ID
+        if (!donation4charityUnscaled[sogiveCid]) {
+            console.warn("[DONATION4CHARITY]","Replacing " + cid + " with " + sogiveCid);
+            donation4charityUnscaled[sogiveCid] = donation4charityUnscaled[cid];
+            delete donation4charityUnscaled[cid];
+        }
+        // If still empty, fill in fetched data
+        if (!donation4charityUnscaled[sogiveCid]) {
+            donation4charityUnscaled[sogiveCid] = fetchedDonationData[cid];
+        }
+    });
+    
+    const ad4Charity = {};
+	// individual charity data, attaching ad ID
+	let charities = uniqById(_.flatten(ads.map(ad => {
+        const clist = (ad.charities && ad.charities.list).slice() || [];
+		return clist.map(c => {
+			if ( ! c) return null; // bad data paranoia						
+			if ( ! c.id || c.id==="unset" || c.id==="undefined" || c.id==="null" || c.id==="total") { // bad data paranoia						
+				console.error("CampaignPage.jsc charities - Bad charity ID", c.id, c);
+				return null;
+			}
+			const id2 = normaliseSogiveId(c.id);
+			if (id2 !== c.id) {
+				console.warn("Changing charity ID to normaliseSogiveId "+c.id+" to "+id2+" for ad "+ad.id);
+				c.id = id2;
+			}
+			ad4Charity[c.id] = ad; // for Advert Editor dev button so sales can easily find which ad contains which charity
+			return c;
+		});
+    })));
+	// Add in any from campaign.dntn4charity - which can include strayCharities
+	if (campaign.dntn4charity) {
+		let cids = Object.keys(campaign.dntn4charity);
+		let clistIds = charities.map(getId);
+		cids.forEach(cid => {
+			cid = normaliseSogiveId(cid);
+			if ( ! clistIds.includes(cid) && cid !== "total") {
+				const c = new NGO({id:cid});
+				console.log("Adding stray charity "+cid,c);
+				charities.push(c);
+			}
+		});
+	}
+    // NB: Don't append extra charities found in donation data. This can include noise.
+    // Fill in blank in charities with sogive data
+    charities = fetchSogiveData(charities);
+    console.log("CHARITIESSSSSS", charities);
+    console.log("AD 4 CHARITY:",ad4Charity)
+    // Attach ads after initial sorting and merging, which can cause ad ID data to be lost
+    charities.forEach(charity => {
+        charity.ad = ad4Charity[charity.id] ? ad4Charity[charity.id].id : null;
+    });
+>>>>>>> master
 
     let charities = Campaign.charities(campaign, otherCampaigns, extraAds);
     charities.push(...Campaign.strayCharities(campaign));

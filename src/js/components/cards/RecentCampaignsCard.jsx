@@ -10,7 +10,6 @@ import ErrAlert from '../../base/components/ErrAlert';
 import Money from '../../base/data/Money';
 import Counter from '../../base/components/Counter';
 import ServerIO from '../../plumbing/ServerIO';
-import { hackCorrectedDonations } from '../campaignpage/CampaignPage';
 import C from '../../C';
 import Campaign from '../../base/data/Campaign';
 
@@ -19,31 +18,38 @@ const RecentCampaignsCard = () => {
 	const campaigns = [
 		{
 			name: "KitKat",
-			adid: "xsINEuJV"
+            adid: "xsINEuJV",
+            url: "/#campaign?gl.vert=xsINEuJV"
 		},
 		{
 			name: "H&M",
-			adid: "CeuNVbtW"
+            adid: "CeuNVbtW",
+            url: "/#campaign?gl.vert=CeuNVbtW"
 		},
 		{
 			name: "Linda McCartney",
-			adid: "qprjFW1H"
+            adid: "qprjFW1H",
+            url: "/#campaign?gl.vert=qprjFW1H"
 		},
 		{
 			name: "WWF",
-			adid: "I6g1Ot1b"
+            adid: "I6g1Ot1b",
+            url: "/#campaign?gl.vert=I6g1Ot1b"
 		},
 		{
 			name: "Doom Bar",
-			adid: "ma9LU5chyU"
+            adid: "ma9LU5chyU",
+            url: "/#campaign?gl.vert=ma9LU5chyU"
 		},
 		{
 			name: "General Mills",
-			adid: "yhPf2ttbXW"
+            adid: "yhPf2ttbXW",
+            url: "/#campaign/honey_cheerios_nkh_single"
 		},
 		{
 			name: "Purina",
-			adid: "5ao5MthZ"
+            adid: "5ao5MthZ",
+            url: "/#campaign/Purina_Q2%202020"
 		}
 	];
 
@@ -80,11 +86,11 @@ const RecentCampaignsCard = () => {
 
 	return (
 		<div id="campaign-cards">
-			{campaigns.map(({donation, adid, name}, i) => (<Row className="campaign mb-5" key={i}>
+			{campaigns.map(({donation, adid, url, name}, i) => (<Row className="campaign mb-5" key={i}>
 				<TVAdPlayer adid={adid} className="col-md-6"/>
 				<Col md={6} className="flex-column align-items-center text-center justify-content-center pt-3 pt-md-0">
 					<h3 className="mb-0">This ad helped {name}<br/>raise {donation ? <Counter currencySymbol="£" sigFigs={4} amount={donation} minimumFractionDigits={2} preservePennies /> : "money"}</h3>
-					<a className="btn btn-primary mt-3" href={"/#campaign/?gl.vert=" + adid}>Find out more</a>
+					<a className="btn btn-primary mt-3" href={url}>Find out more</a>
 				</Col>
 			</Row>))}
 		</div>
@@ -166,13 +172,6 @@ const fetchDonationData = ({ads}) => {
 	let campaignPageDonations = ads.map(ad => ad.campaignPage && Campaign.dntn(ad.campaignPage)).filter(x => x);
 	if (campaignPageDonations.length === ads.length) {
 		return Money.total(campaignPageDonations);
-	}
-
-	// HACK return hacked values if Cheerios or Purina
-	for (let i = 0; i < ads.length; i++) {
-		const ad = ads[i];
-		const donation = hackCorrectedDonations(ad.id);
-		if (donation) return donation.total;
 	}
 
 	// Fetch donations data	

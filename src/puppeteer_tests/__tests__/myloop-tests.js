@@ -18,7 +18,7 @@ describe('My-Loop tests', () => {
 		const width = await page.evaluate(() => window.innerWidth);
 		if (width < 1200) {
 			await page.click('.navbar-toggler');
-			await page.waitFor(200);
+            await page.waitFor(200);
 		}
 		await login({
 			page,
@@ -27,9 +27,9 @@ describe('My-Loop tests', () => {
 			Selectors: Object.assign(CommonSelectors, MyLoopSelectors),
 			service: 'email'
 		});
-		await page.waitFor(10000);
+		//await page.waitFor(10000);
 		//await page.waitForSelector(MyLoopSelectors.logged_in_greeting);
 
-	}, 15000);
+	}, 150000);
 
 }); // ./describe

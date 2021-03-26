@@ -1,6 +1,6 @@
 
 const MyLoopSelectors = {
-	logIn: "#top-right-menu",
+	logIn: ".login-menu",
 	logged_in_greeting:".dropdown",
 	name: 'input[name="name"]',
 	gender: 'select[name="gender"]',

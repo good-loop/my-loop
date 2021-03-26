@@ -154,6 +154,7 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 					{charity.simpleImpact && showImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
 					{!quote ? <MDText source={desc} /> : null}
+                    {charity.url && <a href={charity.url} className="btn btn-primary mb-3">Learn more</a>}
 					<div className="flex-row">
                         <DevLink className={charity.noSogiveMatch ? "text-danger" : "" }href={'https://app.sogive.org/#edit?action=getornew&charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">
                             {charity.noSogiveMatch ? "No SoGive entry found. Create one" : "SoGive Editor"}

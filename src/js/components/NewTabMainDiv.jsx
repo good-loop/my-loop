@@ -1,5 +1,5 @@
 /* global navigator */
-import React from 'react';
+import React, { useState } from 'react';
 import BG from '../base/components/BG';
 import MainDivBase from '../base/components/MainDivBase';
 import { nonce } from '../base/data/DataClass';
@@ -15,7 +15,7 @@ import CharityLogo from './CharityLogo';
 import { AccountMenu } from './MyLoopNavBar';
 import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLoginWidget';
 // import RedesignPage from './pages/RedesignPage';
-import NewtabTutorialCard, { openTutorial, TutorialComponent, TutorialHighlighter } from './NewtabTutorialCard';
+import NewtabTutorialCard, { openTutorial, TutorialComponent, TutorialHighlighter, PopupWindow } from './NewtabTutorialCard';
 import { fetchCharity } from './pages/MyCharitiesPage';
 import { getSelectedCharityId, getTabsOpened, Search, getSearchEngine, setHasT4G } from './pages/TabsForGoodSettings';
 import TickerTotal from './TickerTotal';
@@ -48,6 +48,7 @@ let verifiedLoginOnceFlag;
 const WebtopPage = () => {	
 
     let charityID = getSelectedCharityId();
+    let [showPopup, setShowPopup] = useState(false);
 
 	// Yeh - a tab is opened -- let's log that (once only)	
 	if ( ! logOnceFlag && Login.isLoggedIn()) {
@@ -59,7 +60,7 @@ const WebtopPage = () => {
 			lg("tabadview", {user:Login.getId(), nonce:nonce(6), charity:charityID});
 		}, 1500);
 		logOnceFlag = true;
-	}
+    }
 
 	const checkIfOpened = () => {
 		console.log("CHECKING IF OPENED BEFORE");
@@ -115,7 +116,8 @@ const WebtopPage = () => {
 			{/* Tutorial highlight to cover adverts */}
 		</BG>
 		<TutorialComponent page={3} className="position-absolute" style={{bottom:0, left:0, right:0, height:110, width:"100vw"}}/>
-		<NewtabTutorialCard tutorialPages={tutorialPages} charityId={charityID}/>
+		<NewtabTutorialCard tutorialPages={tutorialPages} charityId={charityID} onClose={() => setShowPopup(true)}/>
+        {showPopup && <PopupWindow/>}
 		<NewtabLoginWidget onRegister={() => {checkIfOpened();}}/>
 	</>); 
 };

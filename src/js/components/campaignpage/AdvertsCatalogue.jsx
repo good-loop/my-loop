@@ -13,6 +13,7 @@ import Money from '../../base/data/Money';
 import Counter from '../../base/components/Counter';
 import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import DevLink from './DevLink';
+import { setHasT4G } from '../pages/TabsForGoodSettings';
 
 const tomsCampaigns = /(josh|sara|ella)/; // For matching TOMS campaign names needing special treatment
 /**
@@ -46,15 +47,46 @@ const viewCount = (viewcount4campaign, ad) => {
  * List of adverts with some info about them (like views, dates)
  * @param {*} param0 
  */
-const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount}) => {
+const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount, showNonServed }) => {
+
+	// ??Why is this a url parameter?? Shouldn't it be a Campaign property?
+    let {nosample} = DataStore.getValue(['location', 'params']) || {};
+
 	// filter out any hidden ads
 	// NB: done here as the hiding is a shallow cosmetic -- we still want the view and £ donation data included (or if not, there are other controls)
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [animating, setAnimating] = useState(false);
 
-    const sampleAds = ads;
+    let sampleAds = ads;
 
-	let views = viewCount(viewcount4campaign, sampleAds[0]);
+    if (!nosample) {
+        /** Picks one Ad (with a video) from each campaign to display as a sample.  */
+        let sampleAd4Campaign = {};
+        ads.forEach(ad => {
+            // Skip never-served ads
+            if (!ad.hasServed && !ad.serving && !showNonServed) return;
+            let cname = campaignNameForAd(ad);
+            if (sampleAd4Campaign[cname]) {
+                let showcase = ad.campaignPage && ad.campaignPage.showcase;
+                // Prioritise ads with a start and end time attached
+                let startProvided = !sampleAd4Campaign[cname].start && ad.start;
+                let endProvided = !sampleAd4Campaign[cname].end && ad.end;
+                // If the ad cannot provide a new value for start or end, skip it
+                if (!startProvided && !endProvided && !showcase) {
+                    return;
+                }
+            }
+            //if (!ad.videos || !ad.videos[0].url) return;
+            sampleAd4Campaign[cname] = ad;
+        });
+
+        sampleAds = Object.values(sampleAd4Campaign);
+        if (!sampleAds.length) sampleAds = ads;
+    }
+
+	console.log("Sample ads: ", sampleAds);
+
+	let views = sampleAds.length ? viewCount(viewcount4campaign, sampleAds[0]) : 0;
 	if (sampleAds.length > 1) {
 		views = totalViewCount;
 	}
@@ -67,7 +99,8 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 				ad={ads[0]}
 				viewCountProp={views}
 				donationTotal={donationTotal}
-				totalViewCount={totalViewCount}
+                totalViewCount={totalViewCount}
+                active={true}
 			/>
 		</Container>
 	}
@@ -82,7 +115,8 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 				ad={ad}
 				viewCountProp={views}
 				donationTotal={donationTotal}
-				totalViewCount={totalViewCount}
+                totalViewCount={totalViewCount}
+                active={activeIndex === i}
 			/>
 			<CarouselCaption captionText={<Misc.DateDuration startDate={ad.start} endDate={ad.end} />}/>
 		</CarouselItem>
@@ -111,7 +145,8 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 			<Carousel
 				activeIndex={activeIndex}
 				next={next}
-				previous={previous}
+                previous={previous}
+                interval={false}
 			>
 				<div className="d-block d-md-none">
 					<CarouselIndicators items={carouselSlides} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{backgroundColor:"#000"}}/>
@@ -125,7 +160,7 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 			<AdPreviewCarousel ads={sampleAds} setSelected={goToIndex} selectedIndex={activeIndex}/>
 		</Container>
 	</>);
-};
+}; /* ./AdvertsCatalogue */
 
 /**
  * NB: wrapped in span x2 to allow custom css to target it. e.g.
@@ -172,19 +207,22 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 						key={adIndex}
 						ad={ads[adIndex]}
 						selected={selectedIndex == adIndex}
-						handleClick={() => setSelected(adIndex)}
+                        handleClick={() => setSelected(adIndex)}
+                        active={activeIndex === i}
 					/>
 					<AdvertPreviewCard
 						key={adIndex + 1}
 						ad={ads[adIndex + 1]}
 						selected={selectedIndex == adIndex + 1}
-						handleClick={() => setSelected(adIndex + 1)}
+                        handleClick={() => setSelected(adIndex + 1)}
+                        active={activeIndex === i}
 					/>
 					<AdvertPreviewCard
 						key={adIndex + 2}
 						ad={ads[adIndex + 2]}
 						selected={selectedIndex == adIndex + 2}
-						handleClick={() => setSelected(adIndex + 2)}
+                        handleClick={() => setSelected(adIndex + 2)}
+                        active={activeIndex === i}
 					/>
 				</div>
 			</CarouselItem>
@@ -208,8 +246,15 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 	</div>;
 }
 
-const AdvertCard = ({ ad }) => {
-	const size = 'landscape';
+/**
+ * @param {Object} p
+ * @param {boolean} p.active Is this the widget that the user is looking at? false if its just one in a list.
+ */
+const AdvertCard = ({ ad, active }) => {
+    const size = 'landscape';
+	// ??doc - why do we have hasShown?? Is this for efficiency/performance??
+    const [hasShown, setHasShown] = useState(false);
+    if (active && !hasShown) setHasShown(true);
 	return (
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
 			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{position:"absolute", zIndex:999}}>Advert Editor</DevLink>
@@ -218,7 +263,8 @@ const AdvertCard = ({ ad }) => {
 				{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
 				<img src="/img/LandingBackground/white_iphone.png" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "50%", width: "80%", top: "50%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }} />
 				<div className="position-absolute theunit">
-					<GoodLoopUnit vertId={ad.id} size={size} debug={false} />
+					{hasShown ? <GoodLoopUnit vertId={ad.id} size={size} />
+                    : <div style={{background:"black", width:"100%", height:"100%"}}></div>}
 				</div>
 			</div>
 			{/*<span className="position-absolute" style={{ left: "50%", top: "50%", transform: "translate(-50%, -50%)", zIndex: 0 }}>If you're seeing this, you likely have ad-blocker enabled. Please disable ad-blocker to see the demo!</span>*/}
@@ -226,18 +272,25 @@ const AdvertCard = ({ ad }) => {
 	);
 };
 
-const AdvertPreviewCard = ({ ad, handleClick, selected = false }) => {
+/**
+ * ??doc: How does this differ from AdvertCard??
+ * @param {Object} p
+ */
+const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
 	if ( ! ad) {
 		console.warn("AdvertPreviewCard - NO ad?!");
 		return null;
 	}
 	let size = 'landscape';
+    const [hasShown, setHasShown] = useState(false);
+    if (active && !hasShown) setHasShown(true);
 
 	return (
 		<div className="col-md-4 col-6">
 			<div onClick={e => { e.preventDefault(); handleClick(); }} className={"pointer-wrapper" + (selected ? " selected" : "")}>
 				<div className="ad-prev shadow">
-					<GoodLoopUnit vertId={ad.id} size={size} debug={false} />
+					{hasShown ? <GoodLoopUnit vertId={ad.id} size={size} />
+                    : <div style={{background:"black", width:"100%", height:"100%"}}></div>}
 				</div>
 			</div>
 			<div>
