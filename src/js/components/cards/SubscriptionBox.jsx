@@ -39,6 +39,7 @@ const SubscriptionBox = ({className, title}) => {
 							placeholder="Type your email address"
 						/>
 					</FormGroup>
+                    <div className="mobile-break"/>
 					<Button onClick={doEmailSignUp} color="info" disabled={hasSubmittedEmail} className="flex-grow-0">
 						Sign me up
 					</Button>

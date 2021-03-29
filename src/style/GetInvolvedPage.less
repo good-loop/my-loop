@@ -14,12 +14,12 @@ a.Ref {
 
 .GetInvolvedPage {
     .w-md-50 {
-        @media @md-min {
+        @media @lg-min {
             width: 50% !important;
         }
     }
     .w-md-25 {
-        @media @md-min {
+        @media @lg-min {
             width: 25% !important;
         }
         width: 50% !important;
@@ -33,5 +33,10 @@ a.Ref {
     }
     h3, h4 {
         text-transform: uppercase;
+    }
+    .mobile-break {
+        @media @lg-max {
+            width: 100% !important;
+        }
     }
 }
