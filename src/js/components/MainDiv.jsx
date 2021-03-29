@@ -33,6 +33,7 @@ import TabsForGoodOnboard from './pages/TabsForGoodOnboard';
 import { getAllXIds } from '../base/data/Person';
 import NewtabCharityLogin from './pages/NewtabCharityLogin';
 import ServerIO from '../plumbing/ServerIO';
+import { track } from '../base/plumbing/log';
 // import RedesignPage from './pages/RedesignPage';
 
 // DataStore
@@ -170,6 +171,9 @@ class MainDiv extends Component {
 				<span className="modal-subtitle">Raising money for charity with adverts</span>
 			</div>
 		);
+
+		// track pages visited
+		track();
 
 		return (
 			<>
