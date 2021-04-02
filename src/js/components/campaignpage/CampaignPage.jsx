@@ -136,8 +136,26 @@ const fetchIHubData = () => {
 		// advertisers
         let q = SearchQuery.setProp(new SearchQuery(), "agencyId", agency).query;
         pvAdvertisers = ActionMan.list({type: C.TYPES.Advertiser, status, q});
+
+        ////////////////////////////////////////////////////////////////////////////
+        //          !!!!!!!!!!  HACK  !!!!!!!!!!
+        ////////////////////////////////////////////////////////////////////////////
+        // For Omnicare Agency 2/4/2021
+        if (agency === "ACriJf2n") {
+            const adIDs = [
+                "hZOHTstn",
+                "9oj4eG9J",
+                "ZWDiHRZSHP",
+                "Eu01hiCRvJ",
+                "YkCuD4s3KE",
+                "ubJudO7S4i"
+            ];
+            const adq = SearchQuery.setPropOr(new SearchQuery(), "id", adIDs).query;
+            pvAds = ActionMan.list({type: C.TYPES.Advert, status, q:adq});
+        }
+
 		// query adverts by advertisers		
-        if (pvAdvertisers.value) {
+        else if (pvAdvertisers.value) {
 			assert( ! pvAds, pvAds);
 			const ids = uniq(pvAdvertisers.value.hits.map(getId));
 			console.log("ADVERTISER IDs", ids);
@@ -336,7 +354,7 @@ const CampaignPage = () => {
 		console.warn("NO ADS FOUND, aborting page generation");
 		return <Page404/>;
 	}
-	let ads = List.hits(pvAds.value);		
+	let ads = List.hits(pvAds.value);
 
 	// Combine Campaign settings
 	let campaign = pvTopCampaign.value;
@@ -359,7 +377,10 @@ const CampaignPage = () => {
         allCampaigns && allCampaigns.forEach(c => {
             if (c.hideAdverts) {
                 Object.keys(c.hideAdverts).forEach(hideAd => {
-                    if (c.hideAdverts[hideAd]) campaign.hideAdverts[hideAd] = true;
+                    if (c.hideAdverts[hideAd]) {
+                        //console.log("Ad " + hideAd + " hidden by campaign " + c.id);
+                        campaign.hideAdverts[hideAd] = true;
+                    }
                 });
             }
             if (c.hideCharities) {
@@ -413,7 +434,7 @@ const CampaignPage = () => {
             donation4charityUnscaled[sogiveCid] = fetchedDonationData[cid];
         }
     });
-    
+
     const ad4Charity = {};
 	// individual charity data, attaching ad ID
 	let charities = uniqById(_.flatten(ads.map(ad => {
@@ -455,7 +476,6 @@ const CampaignPage = () => {
     charities.forEach(charity => {
         charity.ad = ad4Charity[charity.id] ? ad4Charity[charity.id].id : null;
     });
-
 	// Donation total
 	assert(donation4charityUnscaled, "CampaignPage.jsx falsy donation4charity?!");
 	console.log("DONATION 4 CHARITY", donation4charityUnscaled);
@@ -558,10 +578,10 @@ const CampaignPage = () => {
         })
     }
 
-	console.log("pvADVERTISERS in main render", pvAdvertisers);
 	// Get name of advertiser from nvertiser if existing, or ad if not
-	let nvertiser = (pvAdvertisers.value && pvAdvertisers.value.hits[0]);
-	let nvertiserName = nvertiser ? nvertiser.name : ads[0].vertiserName;
+	let nvertiser = pvAdvertisers.value && List.hits(pvAdvertisers.value)[0];
+    let agency = pvAgencies.value && List.hits(pvAgencies.value)[0];
+	let nvertiserName = agency ? agency.name : (nvertiser ? nvertiser.name : ads[0].vertiserName);
 	console.log("NVERTISER", nvertiser, "nvertiserName", nvertiserName);
 	const nvertiserNameNoTrail = nvertiserName ? nvertiserName.replace(/'s$/g, "") : null;
 
