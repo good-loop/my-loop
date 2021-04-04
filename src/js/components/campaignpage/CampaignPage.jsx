@@ -701,6 +701,10 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 						We don't ring-fence funding, as the charity can better assess the best use of funds. 
 						Cost/impact figures are as reported by the charity or by the impact assessor SoGive.
 					</p>}
+					<p>
+						Donations are provided without conditions. The charities are not recommending or endorsing the products in return.
+						They're just doing good &mdash; which we are glad to support.
+					</p>
 					<p>Amounts for campaigns that are in progress or recently finished are estimates and may be subject to audit.</p>
 				</small>
 
