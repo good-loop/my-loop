@@ -4,7 +4,7 @@
 import _ from 'lodash';
 import PromiseValue from 'promise-value';
 import React from 'react';
-import { Col, Container, Row } from 'reactstrap';
+import { Col, Container, Row, Alert } from 'reactstrap';
 import ErrAlert from '../../base/components/ErrAlert';
 import { Cite } from '../../base/components/LinkOut';
 import Misc from '../../base/components/Misc';
@@ -30,6 +30,7 @@ import AdvertsCatalogue from './AdvertsCatalogue';
 import CampaignSplashCard from './CampaignSplashCard';
 import Charities, { CharityDetails, fetchSogiveData } from './Charities';
 import DevLink from './DevLink';
+import Roles from '../../base/Roles';
 
 
 /**
@@ -135,8 +136,26 @@ const fetchIHubData = () => {
 		// advertisers
         let q = SearchQuery.setProp(new SearchQuery(), "agencyId", agency).query;
         pvAdvertisers = ActionMan.list({type: C.TYPES.Advertiser, status, q});
+
+        ////////////////////////////////////////////////////////////////////////////
+        //          !!!!!!!!!!  HACK  !!!!!!!!!!
+        ////////////////////////////////////////////////////////////////////////////
+        // For Omnicare Agency 2/4/2021
+        if (agency === "ACriJf2n") {
+            const adIDs = [
+                "hZOHTstn",
+                "9oj4eG9J",
+                "ZWDiHRZSHP",
+                "Eu01hiCRvJ",
+                "YkCuD4s3KE",
+                "ubJudO7S4i"
+            ];
+            const adq = SearchQuery.setPropOr(new SearchQuery(), "id", adIDs).query;
+            pvAds = ActionMan.list({type: C.TYPES.Advert, status, q:adq});
+        }
+
 		// query adverts by advertisers		
-        if (pvAdvertisers.value) {
+        else if (pvAdvertisers.value) {
 			assert( ! pvAds, pvAds);
 			const ids = uniq(pvAdvertisers.value.hits.map(getId));
 			console.log("ADVERTISER IDs", ids);
@@ -333,9 +352,9 @@ const CampaignPage = () => {
 	}
 	if (pvAds.value.hits.length == 0) {
 		console.warn("NO ADS FOUND, aborting page generation");
-		return <ErrAlert>No ads found to generate impact hub!</ErrAlert>;
+		return <Page404/>;
 	}
-	let ads = List.hits(pvAds.value);		
+	let ads = List.hits(pvAds.value);
 
 	// Combine Campaign settings
 	let campaign = pvTopCampaign.value;
@@ -360,7 +379,10 @@ const CampaignPage = () => {
         allCampaigns && allCampaigns.forEach(c => {
             if (c.hideAdverts) {
                 Object.keys(c.hideAdverts).forEach(hideAd => {
-                    if (c.hideAdverts[hideAd]) campaign.hideAdverts[hideAd] = true;
+                    if (c.hideAdverts[hideAd]) {
+                        //console.log("Ad " + hideAd + " hidden by campaign " + c.id);
+                        campaign.hideAdverts[hideAd] = true;
+                    }
                 });
             }
             if (c.hideCharities) {
@@ -421,7 +443,7 @@ const CampaignPage = () => {
             donation4charityUnscaled[sogiveCid] = fetchedDonationData[cid];
         }
     });
-    
+
     const ad4Charity = {};
 	// individual charity data, attaching ad ID
 	let charities = uniqById(_.flatten(ads.map(ad => {
@@ -463,7 +485,6 @@ const CampaignPage = () => {
     charities.forEach(charity => {
         charity.ad = ad4Charity[charity.id] ? ad4Charity[charity.id].id : null;
     });
-
 	// Donation total
 	assert(donation4charityUnscaled, "CampaignPage.jsx falsy donation4charity?!");
 	console.log("DONATION 4 CHARITY", donation4charityUnscaled);
@@ -566,10 +587,10 @@ const CampaignPage = () => {
         })
     }
 
-	console.log("pvADVERTISERS in main render", pvAdvertisers);
 	// Get name of advertiser from nvertiser if existing, or ad if not
-	let nvertiser = (pvAdvertisers.value && pvAdvertisers.value.hits[0]);
-	let nvertiserName = nvertiser ? nvertiser.name : ads[0].vertiserName;
+	let nvertiser = pvAdvertisers.value && List.hits(pvAdvertisers.value)[0];
+    let agency = pvAgencies.value && List.hits(pvAgencies.value)[0];
+	let nvertiserName = agency ? agency.name : (nvertiser ? nvertiser.name : ads[0].vertiserName);
 	console.log("NVERTISER", nvertiser, "nvertiserName", nvertiserName);
 	const nvertiserNameNoTrail = nvertiserName ? nvertiserName.replace(/'s$/g, "") : null;
 
@@ -588,7 +609,7 @@ const CampaignPage = () => {
 					donationValue={donationTotal} ongoing={ongoing}
 					totalViewCount={totalViewCount} landing={isLanding} />
 
-				<HowDoesItWork nvertiserName={nvertiserName} />
+				<HowDoesItWork nvertiserName={nvertiserName} charities={charities}/>
 
 				{isLanding ? null : (
 					<AdvertsCatalogue
@@ -689,15 +710,12 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 						We don't ring-fence funding, as the charity can better assess the best use of funds. 
 						Cost/impact figures are as reported by the charity or by the impact assessor SoGive.
 					</p>}
+					<p>
+						Donations are provided without conditions. The charities are not recommending or endorsing the products in return.
+						They're just doing good &mdash; which we are glad to support.
+					</p>
 					<p>Amounts for campaigns that are in progress or recently finished are estimates and may be subject to audit.</p>
 				</small>
-
-				{campaign.smallPrint &&
-					<div className="small-print">
-						<small>
-							{campaign.smallPrint}
-						</small>
-					</div>}
 			</Col>
 		</Row>
 		<br/>
@@ -705,6 +723,12 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 			<Cite href='https://www.charitiesnys.com/cause_marketing.html'/> and the Better Business Bureau's standard for donations in marketing.			
 		</small></p>
 		{campaign && campaign.id && <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/'+escape(campaign.id)} target="_portal">Campaign Editor</DevLink>}
+        {campaign.smallPrint &&
+        <div className="text-center">
+            <small>
+                {campaign.smallPrint}
+            </small>
+        </div>}
 	</div>;
 }
 
@@ -843,7 +867,7 @@ const campaignNameForAd = ad => {
 	return ad.campaign;
 };
 
-const HowDoesItWork = ({ nvertiserName }) => {
+const HowDoesItWork = ({ nvertiserName, charities }) => {
 	// possessive form - names with terminal S just take an apostrophe, all others get "'s"
 	// EG Sharp's (brewery) ==> "Sharp's' video... " vs Sharp (electronics manufacturer) ==> "Sharp's video"
 	const nvertiserNamePoss = nvertiserName ? nvertiserName.replace(/s?$/, match => ({ s: 's\'' }[match] || '\'s')) : null;
@@ -862,7 +886,9 @@ const HowDoesItWork = ({ nvertiserName }) => {
 					</div>
 					<div className="col-md d-flex flex-column mt-5 mt-md-0">
 						<img src="/img/Graphic_leafy_video.scaled.400w.png" className="w-100" alt="choose charity" />
-						3. Once the donation was unlocked, the user could then choose which charity they wanted to fund with 50% of the ad money.
+						3. Once the donation was unlocked,
+                            {charities.length > 1 ? " the user could then choose which charity they wanted to fund with 50% of the ad money."
+                            : " 50% of the ad money raised was sent to " + ((charities.length && charities[0].name) || "charity") + "."}
 					</div>
 				</div>
 			</div>
@@ -872,6 +898,21 @@ const HowDoesItWork = ({ nvertiserName }) => {
 		</div>
 	);
 };
+
+const Page404 = () => <div className="widepage CampaignPage gl-btns">
+    <MyLoopNavBar logo="/img/new-logo-with-text-white.svg" hidePages alwaysScrolled />
+    <div className="my-5 py-2"/>
+    <div className="px-5">
+        <h1>404 - Page not found</h1>
+        <p>We couldn't find anything here! Check your URL is correct, or find other campaigns <a href="/#ads">here.</a></p>
+        {Roles.isDev() && <Alert color="danger">
+            No ad data could be loaded for this page - if this URL has a correct campaign/advertiser/agency ID and should be working,
+            check that there are any associated ads to provide data.<br/>
+            <small>You are seeing this because you are using a developer account - the public cannot see this message.</small>
+        </Alert>}
+    </div>
+    <div className="my-5 py-5"/>
+</div>;
 
 const isAll = () => {
 	const slug = DataStore.getValue('location', 'path', 1);
