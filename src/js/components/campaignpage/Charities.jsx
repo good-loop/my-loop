@@ -14,6 +14,7 @@ import MDText from '../../base/components/MDText';
 import WhiteCircle from './WhiteCircle';
 import DevLink from './DevLink';
 import LinkOut from '../../base/components/LinkOut';
+import TestimonialPlayer from './TestimonialPlayer';
 
 /**
  * HACK hardcode some thank you messages.
@@ -164,7 +165,7 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 					{donationValue? <div className="w-100"><h2><Counter amount={donationValue} preservePennies={false} /> raised</h2></div> : null}
 					{charity.simpleImpact && showImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
-                    {testimonial && <CharityVideo src={testimonial} />}
+                    {testimonial && <TestimonialPlayer src={testimonial} />}
 					{!quote ? <MDText source={desc} /> : null}
                     {charity.url && <a href={charity.url} className="btn btn-primary mb-3">Learn more</a>}
 					<div className="flex-row">
@@ -178,62 +179,6 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 	</div>
 	);
 };
-
-const PlayButton = ({onClick, style, className}) => <svg fill="white" onClick={onClick} className={"testimonial-play-btn " + className} style={style} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-    <path d="M4.378.003A4.546 4.546 0 0 0 0 4.543v90.905c0 3.378 3.555 5.577 6.578 4.067L97.492 54.06c3.344-1.677 3.344-6.45 0-8.127L6.578.476a4.546 4.546 0 0 0-2.2-.473z"></path>
-</svg>;
-
-const DurationBar = ({duration, currentTime}) => {
-    duration = duration || 1;
-    currentTime = currentTime || 0;
-    const widthPercent = (currentTime / duration) * 100;
-    return <div className="position-absolute w-100 duration-bar" style={{background:"rgba(0.5, 0.5, 0.5, 0.5)", bottom:0}}>
-        <div className="position-absolute" style={{top:0, height:"100%", left:0, width:widthPercent + "%", background:"red"}}/>
-    </div>
-}
-
-const CharityVideo = ({src}) => {
-
-    const vid = useRef(null);
-    const [play, setPlay] = useState(false);
-    const [time, setTime] = useState(0);
-    const [intervalId, setIntervalId] = useState(null);
-    const duration = vid.current && vid.current.duration;
-    const currentTime = vid.current && vid.current.currentTime;
-
-    const playVid = () => {
-        vid.current.play();
-        setPlay(true);
-    };
-    const pauseVid = () => {
-        vid.current.pause();
-        setPlay(false);
-    };
-
-    const updatePlay = (toPlay) => {
-        if (toPlay) playVid();
-        else pauseVid();
-    }
-
-    useEffect(() => {
-        setTime(currentTime);
-        setIntervalId(setInterval(() => {
-            setTime(currentTime);
-        }, 500));
-        return () => {
-            clearInterval(intervalId);
-        };
-    }, [currentTime]);
-
-    return <div className="testimonial-video position-relative my-2">
-        <video src={src} className="w-100" ref={vid}/>
-        <PlayButton style={{position:"absolute", top: "50%", left:"50%", height:"70%"}} className={play ? "playing" : "paused"}/>
-        <div className="position-absolute" style={{top:0, left:0, width:"100%", height:"100%", cursor:"pointer"}} onClick={() => updatePlay(!play)}/>
-        <div className="controls d-flex flex-row">
-            <DurationBar duration={duration} currentTime={time}/>
-        </div>
-    </div>;
-}
 
 /** Augment ad charity objects with sogive data  */
 const fetchSogiveData = (charities) => {
