@@ -6,8 +6,10 @@ import { LoginLink } from '../../base/components/LoginWidget';
 import { getAllXIds, getEmail, hasConsent, PURPOSES } from '../../base/data/Person';
 import DataStore from '../../base/plumbing/DataStore';
 import { lg } from '../../base/plumbing/log';
+import Roles from '../../base/Roles';
 import { space } from '../../base/utils/miscutils';
 import Login from '../../base/youagain';
+import AdvancedPersonSettings from '../AdvancedPersonSettings';
 import SubscriptionBox from '../cards/SubscriptionBox';
 import MyLoopNavBar from '../MyLoopNavBar';
 import ShareButton from '../ShareButton';
@@ -44,7 +46,7 @@ const Account = () => {
 const label4tab = {
 	account: "My Account",
 	settings: "Settings",
-	tabsForGood: "Tabs for Good"
+	tabsForGood: "Tabs for Good",
 };
 
 const Page = () => {
@@ -68,6 +70,8 @@ const Page = () => {
 
 	// Which tab? (default to account)
 	const tab = DataStore.getUrlValue('tab') || 'account';
+	// HACK advanced for devs
+	if (Roles.isDev()) label4tab.advanced = "Advanced";
 
 	return (<>
 		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" alwaysScrolled />
@@ -84,6 +88,7 @@ const Page = () => {
 						{tab === 'account' && <Account />}
 						{tab === 'settings' && <AccountSettings xids={xids} />}
 						{tab === 'tabsForGood' && <TabsForGoodSettings />}
+						{tab === 'advanced' && <AdvancedPersonSettings />}
 					</div>
 				</MainPane>
 			</Editor3ColLayout>
