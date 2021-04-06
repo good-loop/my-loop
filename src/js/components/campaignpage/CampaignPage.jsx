@@ -125,7 +125,7 @@ const fetchIHubData = () => {
 		let q = SearchQuery.setProp(new SearchQuery(), "vertiser", vertiserid).query;
         pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});        
         pvTopItem = pvAdvertiser;
-        pvCampaigns = Campaign.fetchForAdvertiser(vertiserid);
+        pvCampaigns = Campaign.fetchForAdvertiser(vertiserid, status);
 	}
 	// ...by Agency?
 	if (agency) {		
@@ -339,11 +339,11 @@ const CampaignPage = () => {
 
     // Get filtered ad list
     console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", pvCampaigns.value && List.hits(pvCampaigns.value).map(c => c.name || c.id));
-    let ads = campaign ? Campaign.advertsToShow(campaign, otherCampaigns) : [];
+    let ads = campaign ? Campaign.advertsToShow(campaign, otherCampaigns, status) : [];
     // Merge in ads with no campaigns if asked - less controls applied
     if (!hideNonCampaignAds && pvAds.value) {
         const hideAds = Campaign.hideAdverts(campaign, otherCampaigns);
-        const extraAds = Campaign.advertsToShow(campaign, otherCampaigns, List.hits(pvAds.value));
+        const extraAds = Campaign.advertsToShow(campaign, otherCampaigns, status, List.hits(pvAds.value));
         extraAds.forEach(ad => {
             if (!ads.includes(ad) && !hideAds.includes(ad.id)) ads.push(ad);
         });
