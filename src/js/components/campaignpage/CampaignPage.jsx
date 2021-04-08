@@ -325,7 +325,7 @@ const CampaignPage = () => {
 	}
 	if (!pvTopCampaign.value && !pvCampaigns.value) {
 		console.warn("NO ADS FOUND, aborting page generation");
-		return <ErrAlert>No ads found to generate impact hub!</ErrAlert>;
+		return <Page404/>;
     }
     
     // Combine Campaign settings
@@ -652,6 +652,21 @@ const HowDoesItWork = ({ nvertiserName, charities }) => {
 		</div>
 	);
 };
+
+const Page404 = () => <div className="widepage CampaignPage gl-btns">
+    <MyLoopNavBar logo="/img/new-logo-with-text-white.svg" hidePages alwaysScrolled />
+    <div className="my-5 py-2"/>
+    <div className="px-5">
+        <h1>404 - Page not found</h1>
+        <p>We couldn't find anything here! Check your URL is correct, or find other campaigns <a href="/#ads">here.</a></p>
+        {Roles.isDev() && <Alert color="danger">
+            No ad data could be loaded for this page - if this URL has a correct campaign/advertiser/agency ID and should be working,
+            check that there are any associated ads to provide data.<br/>
+            <small>You are seeing this because you are using a developer account - the public cannot see this message.</small>
+        </Alert>}
+    </div>
+    <div className="my-5 py-5"/>
+</div>;
 
 const isAll = () => {
 	const slug = DataStore.getValue('location', 'path', 1);
