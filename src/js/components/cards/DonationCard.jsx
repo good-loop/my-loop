@@ -131,7 +131,7 @@ const CharityDonation = ({cid, communityTotal, onlyOneCharity}) => {
 		<div className={onlyOneCharity ? "" : "col-md-4"}>
 			<div className="charity-circle">
 				<div className="top">
-					<img src={img} alt={`Logo for ${charity.name}`} className='charity-logo mx-auto' />
+					<img src={img} alt={`Logo for ${charity.displayName}`} className='charity-logo mx-auto' />
 				</div>
 				<div className="bottom">
 					<p className="stats">

@@ -479,10 +479,10 @@ const CampaignPage = () => {
 			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" hidePages/>
 			<div className="text-center">
 				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaign} 
-					donationValue={donationTotal} ongoing={ongoing}
+					donationValue={donationTotal} ongoing={ongoing} charities={charities}
 					totalViewCount={totalViewCount} landing={isLanding} />
 
-				<HowDoesItWork nvertiserName={nvertiserName} />
+				<HowDoesItWork nvertiserName={nvertiserName} charities={charities} ongoing={ongoing}/>
 
 				{isLanding ? null : (
 					<AdvertsCatalogue
@@ -492,10 +492,12 @@ const CampaignPage = () => {
 						donationTotal={donationTotal}
 						nvertiserName={nvertiserName}
                         totalViewCount={totalViewCount}
+                        showNonServed={showNonServed}
+                        ongoing={ongoing}
 					/>
 				)}
 
-				<Charities charities={charities} donation4charity={donation4charityScaled} campaign={campaign}/>
+				<Charities charities={charities} donation4charity={donation4charityScaled} campaign={campaign} ongoing={ongoing}/>
 
 				<div className="bg-white">
 					<Container>
@@ -581,15 +583,12 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 						We don't ring-fence funding, as the charity can better assess the best use of funds. 
 						Cost/impact figures are as reported by the charity or by the impact assessor SoGive.
 					</p>}
+					<p>
+						Donations are provided without conditions. The charities are not recommending or endorsing the products in return.
+						They're just doing good &mdash; which we are glad to support.
+					</p>
 					<p>Amounts for campaigns that are in progress or recently finished are estimates and may be subject to audit.</p>
 				</small>
-
-				{campaign.smallPrint &&
-					<div className="small-print">
-						<small>
-							{campaign.smallPrint}
-						</small>
-					</div>}
 			</Col>
 		</Row>
 		<br/>
@@ -597,6 +596,12 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 			<Cite href='https://www.charitiesnys.com/cause_marketing.html'/> and the Better Business Bureau's standard for donations in marketing.			
 		</small></p>
 		{campaign && campaign.id && <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/'+escape(campaign.id)} target="_portal">Campaign Editor</DevLink>}
+        {campaign.smallPrint &&
+        <div className="text-center">
+            <small>
+                {campaign.smallPrint}
+            </small>
+        </div>}
 	</div>;
 }
 
@@ -616,7 +621,7 @@ const campaignNameForAd = ad => {
 	return ad.campaign;
 };
 
-const HowDoesItWork = ({ nvertiserName }) => {
+const HowDoesItWork = ({ nvertiserName, charities }) => {
 	// possessive form - names with terminal S just take an apostrophe, all others get "'s"
 	// EG Sharp's (brewery) ==> "Sharp's' video... " vs Sharp (electronics manufacturer) ==> "Sharp's video"
 	const nvertiserNamePoss = nvertiserName ? nvertiserName.replace(/s?$/, match => ({ s: 's\'' }[match] || '\'s')) : null;
@@ -635,7 +640,9 @@ const HowDoesItWork = ({ nvertiserName }) => {
 					</div>
 					<div className="col-md d-flex flex-column mt-5 mt-md-0">
 						<img src="/img/Graphic_leafy_video.scaled.400w.png" className="w-100" alt="choose charity" />
-						3. Once the donation was unlocked, the user could then choose which charity they wanted to fund with 50% of the ad money.
+						3. Once the donation was unlocked,
+                            {charities.length > 1 ? " the user could then choose which charity they wanted to fund with 50% of the ad money."
+                            : " 50% of the ad money raised was sent to " + ((charities.length && charities[0].displayName) || "charity") + "."}
 					</div>
 				</div>
 			</div>
