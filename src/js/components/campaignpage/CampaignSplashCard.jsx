@@ -10,7 +10,7 @@ import DevLink from './DevLink';
  * 
  * @param {?boolean} p.ongoing Is the campaign still running (and the total might go up)?
  */
-const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, totalViewCount, ongoing}) => {
+const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, totalViewCount, charities, ongoing}) => {
 
     console.log("SPLASH CARD TOTAL VIEW COUNT", totalViewCount);
 	let numPeople = printer.prettyNumber(Math.round(totalViewCount), 10);
@@ -34,8 +34,8 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 					<div className="flex-column flex-center pt-5 splash-text">
 						<div className="header text-white">
 							<div>
-								<span>Raised {donationValue? <Counter currencySymbol="£" sigFigs={4} preservePennies amount={donationValue} minimumFractionDigits={2} preserveSize/> : "money" } for 
-									charity {ongoing && "so far"}</span>
+								<span>{ongoing? "Raised" : "Raising"} {donationValue? <Counter currencySymbol="£" sigFigs={4} preservePennies amount={donationValue} minimumFractionDigits={2} preserveSize/> : "money" } for&nbsp;
+									{charities ? (charities.length > 1 ? "charity" : (charities[0].displayName || "charity")) : "charity"} {ongoing && "so far"}</span>
 							</div>
 						</div>
 						<p className="text-white subtext">by using ethical online ads</p>

@@ -597,10 +597,10 @@ const CampaignPage = () => {
 			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" hidePages/>
 			<div className="text-center">
 				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaign} 
-					donationValue={donationTotal} ongoing={ongoing}
+					donationValue={donationTotal} ongoing={ongoing} charities={charities}
 					totalViewCount={totalViewCount} landing={isLanding} />
 
-				<HowDoesItWork nvertiserName={nvertiserName} charities={charities}/>
+				<HowDoesItWork nvertiserName={nvertiserName} charities={charities} ongoing={ongoing}/>
 
 				{isLanding ? null : (
 					<AdvertsCatalogue
@@ -611,10 +611,11 @@ const CampaignPage = () => {
 						nvertiserName={nvertiserName}
                         totalViewCount={totalViewCount}
                         showNonServed={showNonServed}
+                        ongoing={ongoing}
 					/>
 				)}
 
-				<Charities charities={charities} donation4charity={donation4charityScaled} campaign={campaign}/>
+				<Charities charities={charities} donation4charity={donation4charityScaled} campaign={campaign} ongoing={ongoing}/>
 
 				<div className="bg-white">
 					<Container>
@@ -879,7 +880,7 @@ const HowDoesItWork = ({ nvertiserName, charities }) => {
 						<img src="/img/Graphic_leafy_video.scaled.400w.png" className="w-100" alt="choose charity" />
 						3. Once the donation was unlocked,
                             {charities.length > 1 ? " the user could then choose which charity they wanted to fund with 50% of the ad money."
-                            : " 50% of the ad money raised was sent to " + ((charities.length && charities[0].name) || "charity") + "."}
+                            : " 50% of the ad money raised was sent to " + ((charities.length && charities[0].displayName) || "charity") + "."}
 					</div>
 				</div>
 			</div>

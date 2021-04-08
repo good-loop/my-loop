@@ -93,7 +93,7 @@ const NewtabCharityLogin = () => {
 				<WhiteCircle style={{boxShadow:"0 0 3px rgba(0,0,0,0.5)", top:"50%", left:"50%", transform:"translate(-50%, -50%)"}} className="position-absolute charity-circle-img" width={140}>
 					{charity.logo ?
 						<img src={charity.logo}/>
-						: <h3>{charity.name}</h3>
+						: <h3>{charity.displayName}</h3>
 					}
 				</WhiteCircle>
 			</WhiteCircle>
@@ -101,7 +101,7 @@ const NewtabCharityLogin = () => {
 				<h1 className={!chromeRedirect ? "text-white" : "color-gl-turquoise"}>Supporting </h1>
 			</div>
 			<div className="position-absolute px-2" style={{top: titleTop, width:"50%", left: "50%", textAlign:"left"}}>
-				<h1 className="color-gl-turquoise"> {charity.name}</h1>
+				<h1 className="color-gl-turquoise"> {charity.displayName}</h1>
 			</div>
 		</>: null*/}
 	</>;

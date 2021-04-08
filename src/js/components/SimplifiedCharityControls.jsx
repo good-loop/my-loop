@@ -102,7 +102,7 @@ const SimplifiedCharityForm = ({path, i}) => {
 				<img
 					src={charity.logo}
 					style={{height: `${charity.circleCrop || 100}%`, width: `${charity.circleCrop || 100}%`, marginTop: `${(100 - (charity.circleCrop || 100)) / 2}%`, objectFit: 'contain', }}
-					alt={charity.name? `Logo for ${charity.name}` : ''}
+					alt={charity.displayName? `Logo for ${charity.displayName}` : ''}
 				/>
 			</div>
 		</div>
