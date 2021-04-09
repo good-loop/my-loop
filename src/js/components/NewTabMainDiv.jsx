@@ -48,11 +48,12 @@ let verifiedLoginOnceFlag;
  */
 const WebtopPage = () => {	
 
-    let charityID = getSelectedCharityId();
+    let charityID;
+    if (Login.isLoggedIn()) {
+        charityID = getSelectedCharityId();
+    }
     let [showPopup, setShowPopup] = useState(false);
     let [adblockPopup, setAdblockPopup] = useState(true);
-
-    if (Login.getUser()) console.log("USER JWT 1:", Login.getUser().jwt);
     
 	// Yeh - a tab is opened -- let's log that (once only)	
 	if ( ! logOnceFlag && Login.isLoggedIn() && Login.getUser().jwt) {
@@ -68,16 +69,12 @@ const WebtopPage = () => {
         console.log("Waiting on JWT token...");
     }
 
-    if (Login.getUser()) console.log("USER JWT 2:", Login.getUser().jwt);
-
 	const checkIfOpened = () => {
 		if (!window.localStorage.getItem("t4gOpenedB4")) {
             window.localStorage.setItem("t4gOpenedB4", true);
 			openTutorial();
 		}
 	}
-
-    if (Login.getUser()) console.log("USER JWT 3:", Login.getUser().jwt);
 
 	if (!verifiedLoginOnceFlag) {
 		// Popup login widget if not logged in
@@ -99,7 +96,7 @@ const WebtopPage = () => {
     
     const hasAdBlock = detectAdBlock();
 
-    if (Login.getUser()) console.log("USER JWT 4:", Login.getUser().jwt);
+    if (Login.getUser()) console.log("USER JWT:", Login.getUser().jwt);
 
 	// Background images on tab plugin sourced locally
 
