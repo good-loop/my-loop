@@ -176,7 +176,7 @@ const engines = {
 
 const NormalTabCenter = ({charityID}) => {
 
-	const searchEngine = getSearchEngine() || 'google';
+	const searchEngine = Login.isLoggedIn() && Login.getUser().jwt ? getSearchEngine() || 'google' : 'google';
 	const engineData = engines[searchEngine];
 
 	return <>
