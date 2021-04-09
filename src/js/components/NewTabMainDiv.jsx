@@ -48,7 +48,9 @@ let verifiedLoginOnceFlag;
  */
 const WebtopPage = () => {	
 
-    let charityID = getSelectedCharityId();
+    const charityIDPath = ['widget', 'TabsForGood', 'charityID'];
+    let charityID = DataStore.getValue(charityIDPath);
+    getSelectedCharityId(charityIDPath);
     let [showPopup, setShowPopup] = useState(false);
     let [adblockPopup, setAdblockPopup] = useState(true);
 
@@ -168,7 +170,9 @@ const engines = {
 
 const NormalTabCenter = ({charityID}) => {
 
-	const searchEngine = getSearchEngine() || 'google';
+    const enginePath = ['widget', 'TabsForGood', 'engine'];
+	const searchEngine = DataStore.getValue(enginePath) || 'google';
+    getSearchEngine(enginePath);
 	const engineData = engines[searchEngine];
 
 	return <>
