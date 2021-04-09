@@ -48,8 +48,18 @@ const label4tab = {
 };
 
 const Page = () => {
+    const verifyPath = ['widget', 'AccountPage', 'verifyLogin'];
+    let verified = DataStore.getValue(verifyPath);
+    if (!verified) {
+        console.log("[VERIFY] VERIFIYING...")
+        Login.verify().then((res) => {
+            console.log("[VERIFY] LOGGED IN?",res,Login.getUser());
+            DataStore.setValue(verifyPath, res ? "yes" : "no");
+        });
+        verified = "no";
+    }
 	// handle the not-logged-in case
-	if (!Login.isLoggedIn()) {
+	if (verified === "no" || !Login.isLoggedIn()) {
 		return (
 			<div className="AccountPage">
 				<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" alwaysScrolled />

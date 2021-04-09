@@ -160,7 +160,7 @@ const isSafeToLoadUserSettings = () => {
 const waitForLogin = async (func, dpath) => {
     // If we already got a value, just return it
     const storedVal = DataStore.getValue(dpath);
-    if (storedVal) return new PromiseValue(new Promise(resolve => resolve(storedVal)));
+    if (storedVal) return storedVal;
     await Login.verify();
     const val = func();
     DataStore.setValue(dpath, val);
@@ -261,8 +261,8 @@ const doesUserHaveT4G = (dpath) => {
     return waitForLogin(func, dpath);
 };
 
-const setHasT4G = async (hasT4G, update=true) => {
-	await Login.verify();
+const setHasT4G = (hasT4G, update=true) => {
+    let xids = getAllXIds();
 	let persons = getProfilesNow(xids);
 	setClaimValue({persons, key:"hasT4G", value:hasT4G, swallow:true});
 	console.log("setHasT4G " + hasT4G +" for ",xids, "persons", persons);
