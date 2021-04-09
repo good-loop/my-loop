@@ -57,6 +57,8 @@ const Page = () => {
             DataStore.setValue(verifyPath, res ? "yes" : "no");
         });
         verified = "no";
+    } else {
+        console.log("[VERIFY] FOUND??", verified);
     }
 	// handle the not-logged-in case
 	if (verified === "no" || !Login.isLoggedIn()) {

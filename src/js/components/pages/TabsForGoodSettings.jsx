@@ -34,7 +34,7 @@ const SearchEnginePicker = () => {
 	const dpath = ['widget', 'TabsForGood', 'engine'];
 	const selEngine = DataStore.getValue(dpath);
     getSearchEngine(dpath);
-	DataStore.setValue(['widget', 'TabsForGoodSettings', 'searchEnginePicker'], selEngine || 'google');
+	if (!DataStore.getValue('widget', 'TabsForGoodSettings', 'searchEnginePicker')) DataStore.setValue(['widget', 'TabsForGoodSettings', 'searchEnginePicker'], selEngine || 'google');
 	
 	console.log("Selected search engine: " + selEngine);
 
@@ -62,7 +62,8 @@ const CharityPicker = () => {
 	const type = "NGO"; const status="PUBLISHED";
 	// fetch the full item - and make a Ref
 	let hits = DEFAULT_LIST.split(" ").map(cid => getDataItem({type, id:cid, status}) && {id:cid, "@type":type, status});
-	DataStore.setValue("list.NGO.PUBLISHED.nodomain.LISTLOADHACK.whenever.impact".split("."), {hits, total:hits.length}, false);
+    const charitypath = "list.NGO.PUBLISHED.nodomain.LISTLOADHACK.whenever.impact".split(".");
+	if (!DataStore.getValue(charityPath)) DataStore.setValue(charityPath, {hits, total:hits.length}, false);
 
 	return <div>
 		{selId && 
