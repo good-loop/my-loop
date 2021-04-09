@@ -54,6 +54,9 @@
 				fjs.parentNode.insertBefore(js, fjs);
 			}(document, 'script', 'facebook-jssdk'));
 		</script>
+
+
+	
 		
 		<!-- everything comes via webpack -->
 		<script>
@@ -72,16 +75,27 @@
 			var filename = isDebug ? 'bundle-debug.js' : 'bundle.js';
 			document.write('<script src="/build/js/' + filename + '"/><\/script>');
 		</script>
-		
-		<!-- Global site tag (gtag.js) - Google Analytics -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-89730678-7"></script>
+
+		<!-- Google Analytics -->
 		<script>
+			window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+			ga('create', 'UA-89730678-7', 'auto');
+			// Don't send initial pageview - HashWatcher.jsx will translate hash to a more informative synthetic URL.
+			// ga('send', 'pageview');
+		</script>
+		<script async src='https://www.google-analytics.com/analytics.js'></script>
+		<!-- End Google Analytics -->
+		
+		<!-- Experiment: Send synthetic pageview events with more useful normalised URLs using Google Analytics API above-->
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<!-- script async src="https://www.googletagmanager.com/gtag/js?id=UA-89730678-7"></script -->
+		<!-- script>
 		window.dataLayer = window.dataLayer || [];
 		function gtag(){dataLayer.push(arguments);}
 		gtag('js', new Date());
 
 		gtag('config', 'UA-89730678-7');
-		</script>
+		</script -->
 		<!-- script async src='//as.good-loop.com/pxl.js'></script -->
 		<img src='//lg.good-loop.com/pxl' style='position:absolute;bottom:0px;left:0px;width:1;height:1;'/>
 	</body>
