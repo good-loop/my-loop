@@ -177,6 +177,7 @@ const getTabsOpened = () => {
         // unwrap the count
         return pData.then(getTabsOpened2_unwrap);
     });
+    return pvValue;
 };
 const getTabsOpened2_unwrap = res => {
 	const data = JSend.data(res);
