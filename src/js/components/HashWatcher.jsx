@@ -33,7 +33,7 @@ const onHashChange = (event) => {
 const HashWatcher = () => {
 	useEffect(() => {
 		window.addEventListener('hashchange', onHashChange);
-		onHashChange(null, window.location.href);
+		onHashChange({oldURL: null, newURL: window.location.href});
 		return () => window.removeEventListener('hashchange', onHashChange);
 	}, [])
 	return null;
