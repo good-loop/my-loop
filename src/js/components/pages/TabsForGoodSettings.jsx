@@ -136,12 +136,20 @@ const Search = ({onSubmit, placeholder, icon, className}) => {
 	</>);
 };
 
+/**
+ * Check if it is safe to load settings for the user yet
+ * @returns {Boolean}
+ */
+const isSafeToLoadUserSettings = () => {
+    return !!(Login.isLoggedIn() && Login.getUser().jwt);
+}
+
 /** 
  * Fetch the number of tabs opened by the user.
  * @returns ?PromiseValue<Number> null if not logged in yet
  */
 const getTabsOpened = () => {
-	if ( ! Login.isLoggedIn()) {
+	if ( ! isSafeToLoadUserSettings()) {
 		return null;
 	}
 	// Get tabs opened stat from profiler
@@ -164,6 +172,9 @@ const getTabsOpened2_unwrap = res => {
 }
 
 const getDaysWithGoodLoop = () => {
+    if ( ! isSafeToLoadUserSettings()) {
+		return 1;
+	}
 	const xids = getAllXIds();
 	const persons = getProfilesNow(xids);
 	// use the oldest claim (TODO lets have a register claim and use that)
@@ -188,6 +199,9 @@ const getDaysWithGoodLoop = () => {
  * @returns {?String} charity ID
  */
 const getSelectedCharityId = () => {
+    if ( ! isSafeToLoadUserSettings()) {
+		return null;
+	}
 	let xids = getAllXIds();
 	let persons = getProfilesNow(xids);
 	let cid = getClaimValue({persons, key:"charity", swallow:true});
@@ -220,6 +234,9 @@ const setSelectedCharityId = (cid) => {
 };
 
 const doesUserHaveT4G = () => {
+    if ( ! isSafeToLoadUserSettings()) {
+		return null;
+	}
 	let xids = getAllXIds();
 	let persons = getProfilesNow(xids);
 	let cid = getClaimValue({persons, key:"hasT4G", swallow:true});
@@ -238,6 +255,9 @@ const setHasT4G = (hasT4G, update=true) => {
 };
 
 const getSearchEngine = () => {
+    if ( ! isSafeToLoadUserSettings()) {
+		return null;
+	}
 	let xids = getAllXIds();
 	let persons = getProfilesNow(xids);
 	let engine = getClaimValue({persons, key:"searchEngine", swallow:true});

@@ -48,16 +48,12 @@ let verifiedLoginOnceFlag;
  */
 const WebtopPage = () => {	
 
-    let charityID;
-    if (Login.isLoggedIn() && Login.getUser().jwt) {
-        charityID = getSelectedCharityId();
-        console.log("THERE IS A JWT I CHECKED ITS DEFINITELY THERE")
-    }
+    let charityID = getSelectedCharityId();
     let [showPopup, setShowPopup] = useState(false);
     let [adblockPopup, setAdblockPopup] = useState(true);
-    
+
 	// Yeh - a tab is opened -- let's log that (once only)	
-	if ( ! logOnceFlag && Login.isLoggedIn() && Login.getUser().jwt) {
+	if ( ! logOnceFlag && Login.isLoggedIn()) {
         setHasT4G(true, false);
 		// NB: include a nonce, as otherwise identical events (you open a few tabs) within a 15 minute time bucket get treated as 1
 		lg("tabopen", {user:Login.getId(), nonce:nonce(6)});
@@ -66,8 +62,6 @@ const WebtopPage = () => {
 			lg("tabadview", {user:Login.getId(), nonce:nonce(6), charity:charityID});
 		}, 1500);
 		logOnceFlag = true;
-    } else if (Login.getUser() && !Login.getUser().jwt){
-        console.log("Waiting on JWT token...");
     }
 
 	const checkIfOpened = () => {
@@ -96,8 +90,6 @@ const WebtopPage = () => {
 	// https://stackoverflow.com/posts/17316521/revisions
     
     const hasAdBlock = detectAdBlock();
-
-    if (Login.getUser()) console.log("USER JWT:", Login.getUser().jwt);
 
 	// Background images on tab plugin sourced locally
 
@@ -176,7 +168,7 @@ const engines = {
 
 const NormalTabCenter = ({charityID}) => {
 
-	const searchEngine = Login.isLoggedIn() && Login.getUser().jwt ? getSearchEngine() || 'google' : 'google';
+	const searchEngine = getSearchEngine() || 'google';
 	const engineData = engines[searchEngine];
 
 	return <>
