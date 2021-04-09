@@ -31,7 +31,9 @@ const TabsForGoodSettings = () => {
 };
 
 const SearchEnginePicker = () => {
-	const selEngine = getSearchEngine();
+	const dpath = ['widget', 'TabsForGood', 'engine'];
+	const selEngine = DataStore.getValue(dpath);
+    getSearchEngine(dpath);
 	DataStore.setValue(['widget', 'TabsForGoodSettings', 'searchEnginePicker'], selEngine || 'google');
 	
 	console.log("Selected search engine: " + selEngine);
@@ -48,7 +50,9 @@ const SearchEnginePicker = () => {
 }
 
 const CharityPicker = () => {
-	const selId = getSelectedCharityId();
+    const dpath = ['widget', 'TabsForGood', 'charityID'];
+	const selId = DataStore.getValue(dpath);
+    getSelectedCharityId(dpath);
 	const pvSelectedCharity = selId && getDataItem({type:C.TYPES.NGO, id:selId, status:C.KStatus.Published, swallow:true});
 	let q = DataStore.getValue('widget','search','q');
 	
@@ -87,7 +91,9 @@ const CharityPicker = () => {
  */
 const CharitySelectBox = ({item, className}) => {
 	assert(item, "CharitySelectBox - no item");
-	const selId = getSelectedCharityId();
+	const dpath = ['widget', 'TabsForGood', 'charityID'];
+	const selId = DataStore.getValue(dpath);
+    getSelectedCharityId(dpath);
 	let selected = getId(item) === selId;	
 	// NB: to deselect, pick a different charity (I think that's intuitive enough)
 
