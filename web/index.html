@@ -29,6 +29,15 @@
 			d.parentNode.insertBefore(e,d);
 			})(document,window,cpm);
 		</script>
+		<!-- Google Analytics -->
+		<script>
+			window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+			ga('create', 'UA-89730678-7', 'auto');
+			// Don't send initial pageview - HashWatcher.jsx will translate hash to a more informative synthetic URL.
+			// ga('send', 'pageview');
+		</script>
+		<script async src='https://www.google-analytics.com/analytics.js'></script>
+		<!-- End Google Analytics -->
 	</head>
 	<body>
 		
@@ -75,16 +84,6 @@
 			var filename = isDebug ? 'bundle-debug.js' : 'bundle.js';
 			document.write('<script src="/build/js/' + filename + '"/><\/script>');
 		</script>
-
-		<!-- Google Analytics -->
-		<script>
-			window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-			ga('create', 'UA-89730678-7', 'auto');
-			// Don't send initial pageview - HashWatcher.jsx will translate hash to a more informative synthetic URL.
-			// ga('send', 'pageview');
-		</script>
-		<script async src='https://www.google-analytics.com/analytics.js'></script>
-		<!-- End Google Analytics -->
 		
 		<!-- Experiment: Send synthetic pageview events with more useful normalised URLs using Google Analytics API above-->
 		<!-- Global site tag (gtag.js) - Google Analytics -->
