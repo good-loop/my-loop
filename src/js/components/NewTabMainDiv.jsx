@@ -53,7 +53,7 @@ const WebtopPage = () => {
     let [adblockPopup, setAdblockPopup] = useState(true);
 
 	// Yeh - a tab is opened -- let's log that (once only)	
-	if ( ! logOnceFlag && Login.isLoggedIn()) {
+	if ( ! logOnceFlag && Login.isLoggedIn() && Login.getUser().jwt) {
         setHasT4G(true, false);
 		// NB: include a nonce, as otherwise identical events (you open a few tabs) within a 15 minute time bucket get treated as 1
 		lg("tabopen", {user:Login.getId(), nonce:nonce(6)});
@@ -62,6 +62,8 @@ const WebtopPage = () => {
 			lg("tabadview", {user:Login.getId(), nonce:nonce(6), charity:charityID});
 		}, 1500);
 		logOnceFlag = true;
+    } else {
+        console.log("Waiting on JWT token...");
     }
 
 	const checkIfOpened = () => {
