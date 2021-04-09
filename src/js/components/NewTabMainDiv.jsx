@@ -49,8 +49,9 @@ let verifiedLoginOnceFlag;
 const WebtopPage = () => {	
 
     let charityID;
-    if (Login.isLoggedIn()) {
+    if (Login.isLoggedIn() && Login.getUser().jwt) {
         charityID = getSelectedCharityId();
+        console.log("THERE IS A JWT I CHECKED ITS DEFINITELY THERE")
     }
     let [showPopup, setShowPopup] = useState(false);
     let [adblockPopup, setAdblockPopup] = useState(true);
