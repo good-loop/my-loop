@@ -191,6 +191,7 @@ const getSelectedCharityId = () => {
 	let xids = getAllXIds();
 	let persons = getProfilesNow(xids);
 	let cid = getClaimValue({persons, key:"charity", swallow:true});
+    console.log("GOT CHARITY", cid);
 	return cid;
 };
 
