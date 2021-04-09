@@ -91,6 +91,9 @@ const WebtopPage = () => {
     
     const hasAdBlock = detectAdBlock();
 
+    console.log("USER:", Login.getUser());
+    if (Login.getUser()) console.log("USER JWT:", Login.getUser().jwt);
+
 	// Background images on tab plugin sourced locally
 
 	return (<>
