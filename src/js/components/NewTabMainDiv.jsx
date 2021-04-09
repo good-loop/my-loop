@@ -64,7 +64,7 @@ const WebtopPage = () => {
 			lg("tabadview", {user:Login.getId(), nonce:nonce(6), charity:charityID});
 		}, 1500);
 		logOnceFlag = true;
-    } else if (!Login.getUser().jwt){
+    } else if (Login.getUser() && !Login.getUser().jwt){
         console.log("Waiting on JWT token...");
     }
 
