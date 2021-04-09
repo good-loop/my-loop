@@ -97,7 +97,10 @@ const Page = () => {
  * @param {boolean} selected
  */
 const SidebarTabLink = ({ tab, label, selected }) => {
-    if (tab === "tabsForGood" && !doesUserHaveT4G()) {
+    const doesUserHaveT4GPath = ['widget', 'TabsForGood', 'doesHaveT4G'];
+    const doesHaveT4G = DataStore.getValue(doesUserHaveT4GPath);
+    doesUserHaveT4G(doesUserHaveT4GPath);
+    if (tab === "tabsForGood" && !doesHaveT4G) {
         return <div><a target="_blank" className={space("account-tab p-2", selected && "active")} href="https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1">Get Tabs for Good</a></div>;
     }
 	return <div><a href={"/#account?tab=" + escape(tab)} className={space("account-tab p-2", selected && "active")}>{label || tab}</a></div>;
