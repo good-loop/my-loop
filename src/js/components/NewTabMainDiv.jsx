@@ -106,7 +106,7 @@ const WebtopPage = () => {
 					</TutorialComponent>
 					<TutorialComponent page={4} className="user-controls flex-row align-items-center">
 						{Login.isLoggedIn() ? <TabsOpenedCounter/> : null}
-						<AccountMenu small accountLink="https://my.good-loop.com/#account?tab=tabsForGood" 
+						<AccountMenu small accountLink="/#account?tab=tabsForGood" 
 							customLogin={<NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>}
 						/>
 					</TutorialComponent>
@@ -188,7 +188,7 @@ const NormalTabCenter = ({charityID}) => {
 		<div className="w-100 pb-3">
 			<div className="tab-search-container mx-auto">
 				<Search onSubmit={e => doSearch(e, searchEngine)} placeholder={"Search with " + engineData.title} icon={
-					<a href="https://my.good-loop.com/#account?tab=tabsForGood"><img src={engineData.logo} alt="search icon" style={{width:engineData.size.width, height:engineData.size.height}}/></a>
+					<a href="/#account?tab=tabsForGood"><img src={engineData.logo} alt="search icon" style={{width:engineData.size.width, height:engineData.size.height}}/></a>
 				}/>
 			</div>
 		</div>
