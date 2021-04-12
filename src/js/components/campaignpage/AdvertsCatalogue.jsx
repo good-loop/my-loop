@@ -62,7 +62,7 @@ const campaignNameForAd = ad => {
  * List of adverts with some info about them (like views, dates)
  * @param {*} param0 
  */
-const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount, showNonServed }) => {
+const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount, showNonServed, ongoing }) => {
 
     let {nosample} = DataStore.getValue(['location', 'params']) || {};
 
@@ -110,9 +110,12 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 	}
 	views = printer.prettyNumber(views);
 
+    console.log("ONGOING? ", ongoing);
+
 	if (sampleAds.length == 1) {
 		return <Container className="py-5">
-			<h2>Watch the <AdvertiserName name={nvertiserName} /> ad that raised <Counter currencySymbol="£" sigFigs={4} amount={donationTotal} minimumFractionDigits={2} preserveSize /><br />from a campaign with {views} ad viewers</h2>
+			<h2>Watch the <AdvertiserName name={nvertiserName} /> ad&nbsp;
+            {ongoing ? "raising" : "that raised"} <Counter currencySymbol="£" sigFigs={4} amount={donationTotal} minimumFractionDigits={2} preserveSize /><br />from a campaign with {views} ad viewers</h2>
 			<AdvertCard
 				ad={ads[0]}
 				viewCountProp={views}

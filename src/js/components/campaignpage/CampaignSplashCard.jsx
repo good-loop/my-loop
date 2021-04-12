@@ -38,9 +38,9 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 						<div className="header text-white">
 							<div>
 								<span>
-									{ongoing ? "Raised " : "Raising "}
-									{donationValue ? <Counter currencySymbol="£" sigFigs={4} preservePennies amount={donationValue} minimumFractionDigits={2} preserveSize/> : "money" } for
-									{' '}{charityName}{ongoing && " so far"}
+									{ongoing ? "Raising " : "Raised "}
+									{donationValue ? <Counter currencySymbol="£" sigFigs={4} amount={donationValue} minimumFractionDigits={2} preserveSize/> : "money" } for
+									{' '}{charityName}
 									</span>
 							</div>
 						</div>
