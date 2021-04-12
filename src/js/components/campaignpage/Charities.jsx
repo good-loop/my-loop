@@ -47,8 +47,9 @@ challenges facing our planet."`,
  * @param {!NGO[]} charities
  * @param {{string:Money}} donation4charity - charity ID to donation amount
  * @param {!Campaign} campaign
+ * @param {Boolean} ongoing - is this campaign still running?
  */
-const Charities = ({ charities, donation4charity, campaign }) => {
+const Charities = ({ charities, donation4charity, campaign, ongoing }) => {
 	
 	// The portal control data
 	let hideImpact = campaign.hideImpact || {};
@@ -62,8 +63,6 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 		return d;
 	};
 
-    console.log("SHOWING CHARITIES", charities);
-
 	return (
 		<div className="charity-card-container bg-gl-light-pink">
 			<div className="py-5">
@@ -75,7 +74,8 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 						charity={charity}
                         donationValue={getDonation(charity)}
 						showImpact={ ! hideImpact[charity.id]}
-                        campaign={campaign} />
+                        campaign={campaign}
+                        ongoing={ongoing} />
 				)}
 			</Container>
 		</div>
@@ -130,7 +130,7 @@ const RegNum = ({label, regNum}) => {
  * @param {!NGO} charity This data item is a shallow copy
  * @param {?Money} donationValue
  */
-const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
+const CharityCard = ({ charity, donationValue, showImpact, campaign, ongoing}) => {
 	// Prefer full descriptions here. If unavailable switch to summary desc.
 	let desc = charity.description || charity.summaryDescription || '';
 	// But do cut descriptions down to 1 paragraph.
@@ -158,7 +158,7 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 					<img src={charity.logo} alt="logo"/>
 				</div>
 				<div className="charity-quote-text">
-					{donationValue? <div className="w-100"><h2><Counter amount={donationValue} preservePennies={false} /> raised</h2></div> : null}
+					{donationValue? <div className="w-100"><h2>{ongoing && "Raising"} <Counter amount={donationValue} preservePennies={false} /> {!ongoing && "raised"}</h2></div> : null}
 					{charity.simpleImpact && showImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
 					{!quote ? <MDText source={desc} /> : null}
@@ -242,7 +242,7 @@ const Impact = ({ charity, donationValue }) => {
 		if (numOfImpact === "0") {
 			impact = "To help " + verb.replace(/ed$/, "") + " " + plural;
 		} else {
-			impact = numOfImpact + " " + (isSingular ? singular : plural) + " " + verb;
+			impact = (isSingular ? singular : plural) + " " + verb;
 		}
 	} else {
 		// Separate impact string into its name and verb using space
@@ -255,13 +255,13 @@ const Impact = ({ charity, donationValue }) => {
 			if (numOfImpact === "0") {
 				impact = "To help " + verb.replace(/ed$/, "ing") + " " + name;
 			} else {
-				impact = numOfImpact + " " + name + " " + verb;
+				impact = name + " " + verb;
 			}
 		} else {
-			impact = numOfImpact + " " + impactFormat;
+			impact = impactFormat;
 		}
 	}	
-	return <b>{impact}</b>;
+	return <b><span className={`charity-impact-${charity.name.replaceAll(" ", "-")}`}>{numOfImpact}</span> {impact}</b>;
 };
 
 export { CharityDetails, fetchSogiveData };

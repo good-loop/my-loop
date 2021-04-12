@@ -4,7 +4,7 @@
 import _ from 'lodash';
 import PromiseValue from 'promise-value';
 import React from 'react';
-import { Col, Container, Row } from 'reactstrap';
+import { Col, Container, Row, Alert } from 'reactstrap';
 import ErrAlert from '../../base/components/ErrAlert';
 import { Cite } from '../../base/components/LinkOut';
 import Misc from '../../base/components/Misc';
@@ -30,6 +30,7 @@ import AdvertsCatalogue from './AdvertsCatalogue';
 import CampaignSplashCard from './CampaignSplashCard';
 import Charities, { CharityDetails, fetchSogiveData } from './Charities';
 import DevLink from './DevLink';
+import Roles from '../../base/Roles';
 
 
 /**
@@ -331,7 +332,8 @@ const CampaignPage = () => {
 	let {
 		via,
         landing,
-        showNonServed
+        showNonServed,
+        ongoing
 	} = DataStore.getValue(['location', 'params']) || {};
 	// What adverts etc should we look at?
 	let {pvTopItem, pvTopCampaign, pvCampaigns, pvAds, pvAdvertisers, pvAgencies} = fetchIHubData();
@@ -351,7 +353,7 @@ const CampaignPage = () => {
 	}
 	if (pvAds.value.hits.length == 0) {
 		console.warn("NO ADS FOUND, aborting page generation");
-		return <ErrAlert>No ads found to generate impact hub!</ErrAlert>;
+		return <Page404/>;
 	}
 	let ads = List.hits(pvAds.value);
 
@@ -522,8 +524,7 @@ const CampaignPage = () => {
 	}
 
 	// Is this an interim total or the full amount? Interim if not fixed by campaign, and not ended
-	let ongoing = false;
-	if ( ! campaign.dntn) {
+	if ( ! ongoing && ! campaign.dntn) {
 		// when is the last advert due to stop?
 		let endDate = new Date(2000,1,1);
 		ads.forEach(ad => {
@@ -538,6 +539,7 @@ const CampaignPage = () => {
 			ongoing = true;
 		}
     }
+    
 
 	// Sort by donation value, largest first
 	try {
@@ -596,10 +598,10 @@ const CampaignPage = () => {
 			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" hidePages/>
 			<div className="text-center">
 				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaign} 
-					donationValue={donationTotal} ongoing={ongoing}
+					donationValue={donationTotal} ongoing={ongoing} charities={charities}
 					totalViewCount={totalViewCount} landing={isLanding} />
 
-				<HowDoesItWork nvertiserName={nvertiserName} charities={charities}/>
+				<HowDoesItWork nvertiserName={nvertiserName} charities={charities} ongoing={ongoing}/>
 
 				{isLanding ? null : (
 					<AdvertsCatalogue
@@ -610,10 +612,11 @@ const CampaignPage = () => {
 						nvertiserName={nvertiserName}
                         totalViewCount={totalViewCount}
                         showNonServed={showNonServed}
+                        ongoing={ongoing}
 					/>
 				)}
 
-				<Charities charities={charities} donation4charity={donation4charityScaled} campaign={campaign}/>
+				<Charities charities={charities} donation4charity={donation4charityScaled} campaign={campaign} ongoing={ongoing}/>
 
 				<div className="bg-white">
 					<Container>
@@ -700,6 +703,10 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 						We don't ring-fence funding, as the charity can better assess the best use of funds. 
 						Cost/impact figures are as reported by the charity or by the impact assessor SoGive.
 					</p>}
+					<p>
+						Donations are provided without conditions. The charities are not recommending or endorsing the products in return.
+						They're just doing good &mdash; which we are glad to support.
+					</p>
 					<p>Amounts for campaigns that are in progress or recently finished are estimates and may be subject to audit.</p>
 				</small>
 			</Col>
@@ -853,7 +860,7 @@ const campaignNameForAd = ad => {
 	return ad.campaign;
 };
 
-const HowDoesItWork = ({ nvertiserName, charities }) => {
+const HowDoesItWork = ({ nvertiserName, charities, ongoing }) => {
 	// possessive form - names with terminal S just take an apostrophe, all others get "'s"
 	// EG Sharp's (brewery) ==> "Sharp's' video... " vs Sharp (electronics manufacturer) ==> "Sharp's video"
 	const nvertiserNamePoss = nvertiserName ? nvertiserName.replace(/s?$/, match => ({ s: 's\'' }[match] || '\'s')) : null;
@@ -864,17 +871,17 @@ const HowDoesItWork = ({ nvertiserName, charities }) => {
 				<div className="row mb-3 text-center align-items-start">
 					<div className="col-md d-flex flex-column">
 						<img src="/img//Graphic_tv.scaled.400w.png" className="w-100" alt="wrapped video" />
-						1. {nvertiserNamePoss || "This"} video ad was ‘wrapped’ into Good-loop’s ethical ad frame, as you can see on the video below.
+						1. {nvertiserNamePoss || "This"} video ad {ongoing ? "is" : "was"} ‘wrapped’ into Good-loop’s ethical ad frame, as you can see on the video below.
 					</div>
 					<div className="col-md d-flex flex-column mt-5 mt-md-0">
 						<img src="/img/Graphic_video_with_red_swirl.scaled.400w.png" className="w-100" alt="choose to watch" />
-						2. When the users choose to engage (by watching, swiping or clicking) they unlocked a donation, funded by {nvertiserName}.
+						2. When the users choose to engage (by watching, swiping or clicking) they unlock{!ongoing && "ed"} a donation, funded by {nvertiserName}.
 					</div>
 					<div className="col-md d-flex flex-column mt-5 mt-md-0">
 						<img src="/img/Graphic_leafy_video.scaled.400w.png" className="w-100" alt="choose charity" />
-						3. Once the donation was unlocked,
-                            {charities.length > 1 ? " the user could then choose which charity they wanted to fund with 50% of the ad money."
-                            : " 50% of the ad money raised was sent to " + ((charities.length && charities[0].name) || "charity") + "."}
+						3. Once the donation {ongoing ? "is" : "was"} unlocked,
+                            {charities.length > 1 ? " the user " + (ongoing ? "can" : "could") + " then choose which charity they " + (ongoing ? "want" : "wanted") + " to fund with 50% of the ad money."
+                            : " 50% of the ad money raised " + (ongoing ? "is" : "was") + " sent to " + ((charities.length && charities[0].displayName) || "charity") + "."}
 					</div>
 				</div>
 			</div>
@@ -884,6 +891,21 @@ const HowDoesItWork = ({ nvertiserName, charities }) => {
 		</div>
 	);
 };
+
+const Page404 = () => <div className="widepage CampaignPage gl-btns">
+    <MyLoopNavBar logo="/img/new-logo-with-text-white.svg" hidePages alwaysScrolled />
+    <div className="my-5 py-2"/>
+    <div className="px-5">
+        <h1>404 - Page not found</h1>
+        <p>We couldn't find anything here! Check your URL is correct, or find other campaigns <a href="/#ads">here.</a></p>
+        {Roles.isDev() && <Alert color="danger">
+            No ad data could be loaded for this page - if this URL has a correct campaign/advertiser/agency ID and should be working,
+            check that there are any associated ads to provide data.<br/>
+            <small>You are seeing this because you are using a developer account - the public cannot see this message.</small>
+        </Alert>}
+    </div>
+    <div className="my-5 py-5"/>
+</div>;
 
 const isAll = () => {
 	const slug = DataStore.getValue('location', 'path', 1);
