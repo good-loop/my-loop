@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Col, Form, Row } from 'reactstrap';
 import ListLoad from '../../base/components/ListLoad';
 import PropControl from '../../base/components/PropControl';
@@ -31,15 +31,20 @@ const TabsForGoodSettings = () => {
 };
 
 const SearchEnginePicker = () => {
-	const dpath = ['widget', 'TabsForGood', 'engine'];
+	const dpath = ['widget', 'TabsForGoodSettings', 'searchEnginePicker'];
 	const selEngine = DataStore.getValue(dpath);
     getSearchEngine(dpath);
-	DataStore.setValue(['widget', 'TabsForGoodSettings', 'searchEnginePicker'], selEngine || 'google');
+
+    /*useEffect (() => {
+        const currentEngine = DataStore.getValue('widget', 'TabsForGoodSettings', 'searchEnginePicker');
+        console.log("CURRENT SEARCH ENGINE", currentEngine);
+	    if (!currentEngine) DataStore.setValue(['widget', 'TabsForGoodSettings', 'searchEnginePicker'], selEngine || 'google');
+    });*/
 	
 	console.log("Selected search engine: " + selEngine);
 
 	const onSelect = () => {
-		const newEngine = DataStore.getValue(['widget', 'TabsForGoodSettings', 'searchEnginePicker']);
+		const newEngine = DataStore.getValue(dpath);
 		console.log(newEngine);
 		setSearchEngine(newEngine);
 	}
@@ -62,7 +67,8 @@ const CharityPicker = () => {
 	const type = "NGO"; const status="PUBLISHED";
 	// fetch the full item - and make a Ref
 	let hits = DEFAULT_LIST.split(" ").map(cid => getDataItem({type, id:cid, status}) && {id:cid, "@type":type, status});
-	DataStore.setValue("list.NGO.PUBLISHED.nodomain.LISTLOADHACK.whenever.impact".split("."), {hits, total:hits.length}, false);
+    const charityPath = "list.NGO.PUBLISHED.nodomain.LISTLOADHACK.whenever.impact".split(".");
+	if (!DataStore.getValue(charityPath)) DataStore.setValue(charityPath, {hits, total:hits.length}, false);
 
 	return <div>
 		{selId && 

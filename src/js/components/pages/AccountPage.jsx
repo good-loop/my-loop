@@ -47,16 +47,21 @@ const label4tab = {
 	tabsForGood: "Tabs for Good"
 };
 
+let verifyFlag = false;
+
 const Page = () => {
     const verifyPath = ['widget', 'AccountPage', 'verifyLogin'];
     let verified = DataStore.getValue(verifyPath);
-    if (!verified) {
+    if (!verified && !verifyFlag) {
         console.log("[VERIFY] VERIFIYING...")
         Login.verify().then((res) => {
             console.log("[VERIFY] LOGGED IN?",res,Login.getUser());
             DataStore.setValue(verifyPath, res ? "yes" : "no");
         });
         verified = "no";
+        verifyFlag = true;
+    } else {
+        console.log("[VERIFY] FOUND??", verified);
     }
 	// handle the not-logged-in case
 	if (verified === "no" || !Login.isLoggedIn()) {
