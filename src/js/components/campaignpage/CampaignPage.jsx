@@ -310,7 +310,9 @@ const CampaignPage = () => {
 	let {
 		via,
         landing,
-        hideNonCampaignAds
+        hideNonCampaignAds,
+        showNonServed,
+        ongoing
 	} = DataStore.getValue(['location', 'params']) || {};
 	// What adverts etc should we look at?
 	let {pvTopItem, pvTopCampaign, pvCampaigns, pvAds, pvAdvertisers, pvAgencies} = fetchIHubData();
@@ -407,8 +409,7 @@ const CampaignPage = () => {
 	}
 
 	// Is this an interim total or the full amount? Interim if not fixed by campaign, and not ended
-	let ongoing = false;
-	if ( ! campaign.dntn) {
+	if ( ! ongoing && ! campaign.dntn) {
 		// when is the last advert due to stop?
 		let endDate = new Date(2000,1,1);
 		ads.forEach(ad => {
@@ -423,6 +424,7 @@ const CampaignPage = () => {
 			ongoing = true;
 		}
     }
+    
 
 	// Sort by donation value, largest first
 	try {
@@ -621,7 +623,7 @@ const campaignNameForAd = ad => {
 	return ad.campaign;
 };
 
-const HowDoesItWork = ({ nvertiserName, charities }) => {
+const HowDoesItWork = ({ nvertiserName, charities, ongoing }) => {
 	// possessive form - names with terminal S just take an apostrophe, all others get "'s"
 	// EG Sharp's (brewery) ==> "Sharp's' video... " vs Sharp (electronics manufacturer) ==> "Sharp's video"
 	const nvertiserNamePoss = nvertiserName ? nvertiserName.replace(/s?$/, match => ({ s: 's\'' }[match] || '\'s')) : null;
@@ -632,17 +634,17 @@ const HowDoesItWork = ({ nvertiserName, charities }) => {
 				<div className="row mb-3 text-center align-items-start">
 					<div className="col-md d-flex flex-column">
 						<img src="/img//Graphic_tv.scaled.400w.png" className="w-100" alt="wrapped video" />
-						1. {nvertiserNamePoss || "This"} video ad was ‘wrapped’ into Good-loop’s ethical ad frame, as you can see on the video below.
+						1. {nvertiserNamePoss || "This"} video ad {ongoing ? "is" : "was"} ‘wrapped’ into Good-loop’s ethical ad frame, as you can see on the video below.
 					</div>
 					<div className="col-md d-flex flex-column mt-5 mt-md-0">
 						<img src="/img/Graphic_video_with_red_swirl.scaled.400w.png" className="w-100" alt="choose to watch" />
-						2. When the users choose to engage (by watching, swiping or clicking) they unlocked a donation, funded by {nvertiserName}.
+						2. When the users choose to engage (by watching, swiping or clicking) they unlock{!ongoing && "ed"} a donation, funded by {nvertiserName}.
 					</div>
 					<div className="col-md d-flex flex-column mt-5 mt-md-0">
 						<img src="/img/Graphic_leafy_video.scaled.400w.png" className="w-100" alt="choose charity" />
-						3. Once the donation was unlocked,
-                            {charities.length > 1 ? " the user could then choose which charity they wanted to fund with 50% of the ad money."
-                            : " 50% of the ad money raised was sent to " + ((charities.length && charities[0].displayName) || "charity") + "."}
+						3. Once the donation {ongoing ? "is" : "was"} unlocked,
+                            {charities.length > 1 ? " the user " + (ongoing ? "can" : "could") + " then choose which charity they " + (ongoing ? "want" : "wanted") + " to fund with 50% of the ad money."
+                            : " 50% of the ad money raised " + (ongoing ? "is" : "was") + " sent to " + ((charities.length && charities[0].displayName) || "charity") + "."}
 					</div>
 				</div>
 			</div>
