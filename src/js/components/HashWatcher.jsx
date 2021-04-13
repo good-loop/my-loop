@@ -10,10 +10,15 @@ const syntheticPath = (url) => {
 	
 	if ('campaign' === hashBase) {
 		const params = new URLSearchParams(hashParams);
-		let vertId = params.get('gl.vert');
+		
 		let cmpId = params.get('gl.campaign');
-		if (vertId) return `${hashBase}/vert/${vertId}`;
-		if (cmpId) return `${hashBase}/cmp/${cmpId}`
+		if (cmpId) return `${hashBase}/${cmpId}`
+		let agencyId = params.get('agency');
+		if (agencyId) return `${hashBase}/agency/${agencyId}`;
+		let vertiserId = params.get('gl.vertiser')
+		if (vertiserId) return `${hashBase}/advertiser/${vertiserId}`
+		let vertId = params.get('gl.vert');
+		if (vertId) return `${hashBase}/advert/${vertId}`;
 	}
 	return hashBase;
 }
@@ -29,7 +34,7 @@ const onHashChange = (event) => {
 	}
 }
 
-/** Dummy component: watches for hash changes and logs to Google Analytics */
+/** Dummy component: watches for hash changes and logs to Google Analytics as navigation events with synthetic URLs. */
 const HashWatcher = () => {
 	useEffect(() => {
 		window.addEventListener('hashchange', onHashChange);
