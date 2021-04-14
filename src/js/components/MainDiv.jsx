@@ -33,6 +33,8 @@ import TabsForGoodOnboard from './pages/TabsForGoodOnboard';
 import { getAllXIds } from '../base/data/Person';
 import NewtabCharityLogin from './pages/NewtabCharityLogin';
 import ServerIO from '../plumbing/ServerIO';
+import { track } from '../base/plumbing/log';
+import HashWatcher from './HashWatcher';
 // import RedesignPage from './pages/RedesignPage';
 
 // DataStore
@@ -143,7 +145,7 @@ class MainDiv extends Component {
 	render() {
 		let path = DataStore.getValue('location', 'path');	
 		let page = (path && path[0]);
-		if ( ! page) {
+		if (!page) {
 			modifyHash([DEFAULT_PAGE]);
 			return null;
 		}
@@ -171,9 +173,13 @@ class MainDiv extends Component {
 			</div>
 		);
 
+		// track pages visited
+		track();
+
 		return (
 			<>
 				<div id={page} /* wrap in an id in case you need high-strength css rules */>
+					<HashWatcher />
 					<Page path={path} spring={spring}/>
 					<Footer />
 				</div>
