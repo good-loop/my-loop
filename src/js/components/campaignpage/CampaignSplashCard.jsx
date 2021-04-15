@@ -16,7 +16,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 	if (numPeople === "0") numPeople = false;
 
 	let charityName = 'charity';
-	if (charities && charities.length === 1 && charities[0]) charityName = charities[0].displayName;
+	if (charities && charities.length === 1 && charities[0]) charityName = charities[0].displayName || charities[0].name;
 
 	return (
 		<div className="impact-hub-splash">
@@ -41,7 +41,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 									{ongoing ? "Raising " : "Raised "}
 									{donationValue ? <Counter currencySymbol="£" sigFigs={4} amount={donationValue} minimumFractionDigits={2} preserveSize/> : "money" } for
 									{' '}{charityName}
-									</span>
+                                </span>
 							</div>
 						</div>
 						<p className="text-white subtext">by using ethical online ads</p>

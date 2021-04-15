@@ -31,6 +31,7 @@ import CampaignSplashCard from './CampaignSplashCard';
 import Charities, { CharityDetails, fetchSogiveData } from './Charities';
 import DevLink from './DevLink';
 import Roles from '../../base/Roles';
+import HowDoesItWork from './HowDoesItWork';
 
 
 /**
@@ -649,36 +650,43 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 		<Row>
 			<Col md={6} style={{borderRight:"2px solid grey"}}><CharityDetails charities={charities} /></Col>
 			<Col md={6} className="text-center pl-md-5">
-				 <small>
+				 <span className="small">
 					{dmin && <>Donation Amount: <Misc.Money amount={dmin} /> { dmax && ! Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/></>}
 					50% of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies. 
-					Good-Loop and the advertising exchange make a small commission. The donations depend on viewers watching the adverts.<br/>
+					Good-Loop and the advertising exchange make a small commission. The donations depend on viewers watching the adverts.
+				</span>
+                <br/>
+				<span className="small">
 					{ !! Money.value(totalBudget) && <>Limitations on Donation: <Misc.Money amount={totalBudget} /> <br/></>}
 					{start && end && <>Dates: <Misc.DateTag date={start} /> through <Misc.DateTag date={end} /> <br/></>}
 					{ ! start && end && <>End date: <Misc.DateTag date={end} /> <br/></>}
-					{ !! impactModels.length && <p>
+					{ !! impactModels.length && <span>
 						If impacts {impactModels[0].name && `such as "${impactModels[0].name}"`} are listed above, these are representative. 
 						We don't ring-fence funding, as the charity can better assess the best use of funds. 
 						Cost/impact figures are as reported by the charity or by the impact assessor SoGive.
-					</p>}
-					<p>
+						</span>}
+				</span>
+                <br/>
+				<span className="small">
 						Donations are provided without conditions. The charities are not recommending or endorsing the products in return.
 						They're just doing good &mdash; which we are glad to support.
-					</p>
-					<p>Amounts for campaigns that are in progress or recently finished are estimates and may be subject to audit.</p>
-				</small>
+				</span>
+                <br/>
+				<span className="small">
+					Amounts for campaigns that are in progress or recently finished are estimates and may be subject to audit.
+				</span>
 			</Col>
 		</Row>
 		<br/>
-		<p><small>This information follows the guidelines of the New York Attorney General for best practice in cause marketing,
+		<span className="small">This information follows the guidelines of the New York Attorney General for best practice in cause marketing,
 			<Cite href='https://www.charitiesnys.com/cause_marketing.html'/> and the Better Business Bureau's standard for donations in marketing.			
-		</small></p>
+		</span>
 		{campaign && campaign.id && <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/'+escape(campaign.id)} target="_portal">Campaign Editor</DevLink>}
         {campaign.smallPrint &&
         <div className="text-center">
-            <small>
+            <span className="small">
                 {campaign.smallPrint}
-            </small>
+            </span>
         </div>}
 	</div>;
 }
@@ -816,38 +824,6 @@ const campaignNameForAd = ad => {
 		return cname;
 	}
 	return ad.campaign;
-};
-
-const HowDoesItWork = ({ nvertiserName, charities, ongoing }) => {
-	// possessive form - names with terminal S just take an apostrophe, all others get "'s"
-	// EG Sharp's (brewery) ==> "Sharp's' video... " vs Sharp (electronics manufacturer) ==> "Sharp's video"
-	const nvertiserNamePoss = nvertiserName ? nvertiserName.replace(/s?$/, match => ({ s: 's\'' }[match] || '\'s')) : null;
-	return (
-		<div className="bg-gl-light-pink py-5">
-			<div className="container py-5">
-				<h2 className="pb-5">How does it work?</h2>
-				<div className="row mb-3 text-center align-items-start">
-					<div className="col-md d-flex flex-column">
-						<img src="/img//Graphic_tv.scaled.400w.png" className="w-100" alt="wrapped video" />
-						1. {nvertiserNamePoss || "This"} video ad {ongoing ? "is" : "was"} ‘wrapped’ into Good-loop’s ethical ad frame, as you can see on the video below.
-					</div>
-					<div className="col-md d-flex flex-column mt-5 mt-md-0">
-						<img src="/img/Graphic_video_with_red_swirl.scaled.400w.png" className="w-100" alt="choose to watch" />
-						2. When the users choose to engage (by watching, swiping or clicking) they unlock{!ongoing && "ed"} a donation, funded by {nvertiserName}.
-					</div>
-					<div className="col-md d-flex flex-column mt-5 mt-md-0">
-						<img src="/img/Graphic_leafy_video.scaled.400w.png" className="w-100" alt="choose charity" />
-						3. Once the donation {ongoing ? "is" : "was"} unlocked,
-                            {charities.length > 1 ? " the user " + (ongoing ? "can" : "could") + " then choose which charity they " + (ongoing ? "want" : "wanted") + " to fund with 50% of the ad money."
-                            : " 50% of the ad money raised " + (ongoing ? "is" : "was") + " sent to " + ((charities.length && charities[0].displayName) || "charity") + "."}
-					</div>
-				</div>
-			</div>
-			<div className="flex-row justify-content-center align-items-center">
-				<a className="btn btn-primary" href="https://my.good-loop.com/#howitworks">Learn more</a>
-			</div>
-		</div>
-	);
 };
 
 const Page404 = () => <div className="widepage CampaignPage gl-btns">
