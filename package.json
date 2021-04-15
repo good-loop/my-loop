@@ -28,7 +28,8 @@
     "react-dropzone": "^11.0.1",
     "react-markdown": "^4.3.1",
     "react-spring": "^8.0.27",
-    "reactstrap": "^8.5.1"
+    "reactstrap": "^8.5.1",
+    "remark-gfm": "^1.0.0"
   },
   "scripts": {
     "compile": "webpack --config $PWD/webpack.config.js --progress --colors && ./gitstamp.sh",
@@ -71,7 +72,7 @@
     "less-loader": "^5.0.0",
     "mini-css-extract-plugin": "^0.9.0",
     "node-fetch": "^2.6.1",
-    "puppeteer": "^4.0.1",
+    "puppeteer": "^2.0.0",
     "shelljs": "^0.8.4",
     "typescript": "^3.9.6",
     "webpack": "^4.43.0",
