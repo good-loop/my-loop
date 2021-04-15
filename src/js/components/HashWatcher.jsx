@@ -28,7 +28,10 @@ const onHashChange = (event) => {
 	const oldUrl = syntheticPath(event.oldURL);
 	const newUrl = syntheticPath(event.newURL);
 
-	if (oldUrl !== newUrl) {
+	// Transitional issue: if using a cached index.html, window.ga will be undefined.
+	// This will resolve itself in time, but tolerate quietly for now.
+	// Users with old index.html will get one impression logged on initial pageload, as before.
+	if (window.ga && (oldUrl !== newUrl)) {
 		ga('set', 'page', newUrl);
 		ga('send', 'pageview');
 	}
