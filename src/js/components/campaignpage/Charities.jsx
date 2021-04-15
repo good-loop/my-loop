@@ -177,6 +177,14 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign, ongoing}) =
 
 /** Augment ad charity objects with sogive data  */
 const fetchSogiveData = (charities) => {
+
+	let {
+		'gl.status': glStatus,
+		status,
+	} = DataStore.getValue(['location', 'params']) || {};
+	// Merge gl.status into status & take default value
+	if ( ! status) status = (glStatus || C.KStatus.PUB_OR_ARC);
+
 	let dupeIds = [];
 	let sogiveCharities = charities.map(charityOriginal => {
 		// Shallow copy charity obj
@@ -193,7 +201,7 @@ const fetchSogiveData = (charities) => {
         dupeIds.push(sogiveId);
         if (!sogiveId || sogiveId === "unset") return null;
 		// NB: the lower-level ServerIOBase.js helps patch mismatches between GL and SoGive ids
-		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: sogiveId, status: C.KStatus.PUBLISHED });
+		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: sogiveId, status });
 		if ( ! pvCharity.value) {
 			return charity; // no extra data yet
 		}
@@ -260,8 +268,14 @@ const Impact = ({ charity, donationValue }) => {
 		} else {
 			impact = impactFormat;
 		}
-	}	
-	return <b><span className={`charity-impact-${charity.name.replaceAll(" ", "-")}`}>{numOfImpact}</span> {impact}</b>;
+	}
+    // If a (number) string is present, insert the impact number there
+    const impactSplitByNum = impact.split("(number)");
+    const charityName = charity.name.replaceAll(" ", "-");
+    if (impactSplitByNum.length === 1)
+	    return <b><span className={`charity-impact-${charityName}`}>{numOfImpact}</span> <span className={`impact-text-${charityName}`}>{impact}</span></b>;
+    else
+        return <b><span className={`impact-text-${charityName}-start`}>{impactSplitByNum[0]}</span> <span className={`charity-impact-${charityName}`}>{numOfImpact}</span> <span className={`impact-text-${charityName}-end`}>{impactSplitByNum[1]}</span></b>;
 };
 
 export { CharityDetails, fetchSogiveData };
