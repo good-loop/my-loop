@@ -702,7 +702,7 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 					{ !! Money.value(totalBudget) && <>Limitations on Donation: <Misc.Money amount={totalBudget} /> <br/></>}
 					{start && end && <>Dates: <Misc.DateTag date={start} /> through <Misc.DateTag date={end} /> <br/></>}
 					{ ! start && end && <>End date: <Misc.DateTag date={end} /> <br/></>}
-					{ !! impactModels.length && <span className="small">
+					{ !! impactModels.length && <span>
 						If impacts {impactModels[0].name && `such as "${impactModels[0].name}"`} are listed above, these are representative. 
 						We don't ring-fence funding, as the charity can better assess the best use of funds. 
 						Cost/impact figures are as reported by the charity or by the impact assessor SoGive.
