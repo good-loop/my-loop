@@ -81,14 +81,14 @@ const viewCount = (viewcount4campaign, ad) => {
 /**
  * @returns fetches for all the data: `{pvTopCampaign, pvCampaigns, pvAgencies, pvAds, pvAdvertisers}`
  */
-const fetchIHubData = () => {
+ const fetchIHubData = () => {
 	// What adverts should we look at?
 	let {
 		'gl.vert': adid, // deprecated - prefer campaign
 		'gl.vertiser': vertiserid,
 		'gl.status': glStatus,
 		status,
-		agency,
+        agency,
 		// q = '', TODO
 	} = DataStore.getValue(['location', 'params']) || {};
 	let campaignId1 = DataStore.getValue(['location','path'])[1];
@@ -97,14 +97,12 @@ const fetchIHubData = () => {
 	// Data, assemble
 	// let campaignIds, agencyIds, adIds, advertiserIds;
 	let pvTopItem, pvTopCampaign, pvCampaigns, pvAgencies, pvAds, pvAdvertisers;
-	// ...by Campaign?
+    // ...by Campaign?
 	if (campaignId1) {		
-		pvTopItem = pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:campaignId1});
-		// wrap as a list
-		pvCampaigns = fetchIHubData2_wrapAsList(pvTopCampaign);
+        pvTopItem = pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:campaignId1});
+		pvCampaigns = null;
 		// ads
-		let q = SearchQuery.setProp(new SearchQuery(), "campaign", campaignId1).query;
-		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});		
+		pvAds = pvTopCampaign && Campaign.fetchAds(pvTopCampaign, null, status);
         // advertiser
 		if (pvTopCampaign.value && pvTopCampaign.value.vertiser) {
 			const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:pvTopCampaign.value.vertiser});			
@@ -114,12 +112,11 @@ const fetchIHubData = () => {
     }
 
 	// ...by Advert?
+    // !!! DEPRECATED
 	if (adid) {
-		console.log("Getting " + adid + " ad...");
 		pvTopItem = getDataItem({type:C.TYPES.Advert,status,id:adid});
 		// wrap as a list
 		pvAds = fetchIHubData2_wrapAsList(pvTopItem);
-		console.log("pvAds", pvAds, "pvTopItem", pvTopItem); // debug
 	}
 	// ...by Advertiser?
 	if (vertiserid) {
@@ -127,7 +124,8 @@ const fetchIHubData = () => {
 		// ads
 		let q = SearchQuery.setProp(new SearchQuery(), "vertiser", vertiserid).query;
         pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});        
-        if ( ! pvTopItem) pvTopItem = pvAdvertiser;
+        pvTopItem = pvAdvertiser;
+        pvCampaigns = Campaign.fetchForAdvertiser(vertiserid, status);
 	}
 	// ...by Agency?
 	if (agency) {		
@@ -137,70 +135,49 @@ const fetchIHubData = () => {
 		// advertisers
         let q = SearchQuery.setProp(new SearchQuery(), "agencyId", agency).query;
         pvAdvertisers = ActionMan.list({type: C.TYPES.Advertiser, status, q});
-
-        ////////////////////////////////////////////////////////////////////////////
-        //          !!!!!!!!!!  HACK  !!!!!!!!!!
-        ////////////////////////////////////////////////////////////////////////////
-        // For Omnicare Agency 2/4/2021
-        if (agency === "ACriJf2n") {
-            const adIDs = [
-                "hZOHTstn",
-                "9oj4eG9J",
-                "ZWDiHRZSHP",
-                "Eu01hiCRvJ",
-                "YkCuD4s3KE",
-                "ubJudO7S4i"
-            ];
-            const adq = SearchQuery.setPropOr(new SearchQuery(), "id", adIDs).query;
-            pvAds = ActionMan.list({type: C.TYPES.Advert, status, q:adq});
-        }
-
 		// query adverts by advertisers		
-        else if (pvAdvertisers.value) {
+        if (pvAdvertisers.value) {
 			assert( ! pvAds, pvAds);
 			const ids = uniq(pvAdvertisers.value.hits.map(getId));
-			console.log("ADVERTISER IDs", ids);
 			if (yessy(ids)) {
                 let adq = SearchQuery.setPropOr(new SearchQuery(), "vertiser", ids).query;
         		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q:adq});        
 			} else {
 				console.warn("No Advertisers found for agency",agency,pvTopItem);
 			}
-		}
+        }
+        pvCampaigns = Campaign.fetchForAgency(agency, status);
 	} // ./agency
 	
-	if ( ! agency && ! vertiserid && ! adid && ! campaignId1)  {
+	if ( ! agency && ! vertiserid && ! adid && ! campaignId1) {
 		throw new Error("No Campaign info specified");
 	}
 	// top campaign?
 	if ( ! pvTopCampaign && pvTopItem && pvTopItem.value && pvTopItem.value.campaign) {
 		pvTopCampaign = getDataItem({type:C.TYPES.Campaign, status, id:pvTopItem.value.campaign});
-	}	
+	}
 	// ...fill in from adverts
 	if (pvAds && pvAds.value && pvAds.value.hits && pvAds.value.hits.length && pvAds.value.hits[0]) {
-		console.log("PVADS VALUE", pvAds.value);
 		if ( ! pvAdvertisers) {
 			// NB: This should be only one advertiser and agency
 			let ids = uniq(pvAds.value.hits.map(Advert.advertiserId));
-			console.log("ADVERTISER IDs", ids);
 			if (yessy(ids)) {
 				let advq = SearchQuery.setPropOr(null, "id", ids).query;
-				pvAdvertisers = ActionMan.list({type: C.TYPES.Advertiser, status:KStatus.PUB_OR_DRAFT, q:advq});
+				pvAdvertisers = ActionMan.list({type: C.TYPES.Advertiser, status, q:advq});
 			}
 		}
-		console.log("PVADVERTISER", pvAdvertisers);
 		if ( ! pvAgencies) {
 			let ids = uniq(pvAds.value.hits.map(ad => ad.agencyId));
 			if (yessy(ids)) {
 				let agq = SearchQuery.setPropOr(null, "id", ids).query;
-				pvAgencies = ActionMan.list({type: C.TYPES.Agency, status:KStatus.PUB_OR_DRAFT, q:agq});
+				pvAgencies = ActionMan.list({type: C.TYPES.Agency, status, q:agq});
 			}
 		}
 		if ( ! pvCampaigns) {
 			let ids = uniq(pvAds.value.hits.map(ad => ad.campaign));
 			if (yessy(ids)) {
 				let q = SearchQuery.setPropOr(null, "id", ids).query;
-				pvCampaigns = ActionMan.list({type: C.TYPES.Campaign, status:KStatus.PUB_OR_DRAFT, q});
+				pvCampaigns = ActionMan.list({type: C.TYPES.Campaign, status, q});
 			}
 		}
 	}
@@ -330,72 +307,56 @@ const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled
  * Split: branding - a vertiser ID, vs ad-params
  */
 const CampaignPage = () => {
-	let {
+    let {
 		via,
         landing,
+        hideNonCampaignAds,
         showNonServed,
-        ongoing
+        ongoing,
+        status,
+        'gl.status':glStatus
 	} = DataStore.getValue(['location', 'params']) || {};
+    if ( ! status) status = (glStatus || C.KStatus.PUB_OR_ARC);
+    
 	// What adverts etc should we look at?
 	let {pvTopItem, pvTopCampaign, pvCampaigns, pvAds, pvAdvertisers, pvAgencies} = fetchIHubData();
 
 	// Is the campaign page being used as a click-through advert landing page?
 	// If so, change the layout slightly, positioning the advert video on top.
 	const isLanding = (landing !== undefined) && (landing !== 'false');
-    
-    console.log("AAAAAAADS", pvAds);
 
-	if ( ! pvAds.resolved) {
+    if ( ! pvTopCampaign.resolved) {
 		// TODO display some stuff whilst ads are loading
 		return <Misc.Loading text="Loading advert info..." />;
 	}
-	if (pvAds.error || !pvAds.value.hits || (pvAds.value.hits.length == 1 && !pvAds.value.hits[0])) {
-		return <ErrAlert>Error loading advert data</ErrAlert>;
-	}
-	if (pvAds.value.hits.length == 0) {
+	if (!pvTopCampaign.value && !pvCampaigns.value) {
 		console.warn("NO ADS FOUND, aborting page generation");
 		return <Page404/>;
-	}
-	let ads = List.hits(pvAds.value);
-
-	// Combine Campaign settings
+    }
+    
+    // Combine Campaign settings
 	let campaign = pvTopCampaign.value;
 	if ( ! campaign && pvCampaigns.value) {
 		let cs = List.hits(pvCampaigns.value);
 		campaign = Object.assign({}, ...cs);	
-		console.log("Not top campaign, using:", campaign);
-	} else {
-		console.log("Using top campaign ", campaign);
+		console.warn("No master campaign found, using:", campaign.name || campaign.id);
 	}
     if ( ! campaign) campaign = {};
+
+    // Get filtered ad list
+    const otherCampaigns = pvCampaigns.value && List.hits(pvCampaigns.value);
+    console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", otherCampaigns && otherCampaigns.map(c => c.name || c.id));
+    let ads = campaign ? Campaign.advertsToShow(campaign, otherCampaigns, status) : [];
     
-    // Merge all hide advert and charity lists together from all campaigns
-    console.log("pvCAMPAIGNS", pvCampaigns);
-    let allCampaigns = List.hits(pvCampaigns.value);
-    console.log("ALL CAMPAIGNS", allCampaigns);
-    if (allCampaigns) {
-        if (!campaign.hideAdverts) campaign.hideAdverts = {};
-        if (!campaign.hideCharities) campaign.hideCharities = {};
-        allCampaigns && allCampaigns.forEach(c => {
-            if (c.hideAdverts) {
-                Object.keys(c.hideAdverts).forEach(hideAd => {
-                    if (c.hideAdverts[hideAd]) {
-                        //console.log("Ad " + hideAd + " hidden by campaign " + c.id);
-                        campaign.hideAdverts[hideAd] = true;
-                    }
-                });
-            }
-            if (c.hideCharities) {
-                Object.keys(c.hideCharities).forEach(hideCharity => {
-                    let sogiveId = normaliseSogiveId(hideCharity);
-                    if (c.hideCharities[hideCharity]) campaign.hideCharities[sogiveId] = true;
-                });
-            }
+    // Merge in ads with no campaigns if asked - less controls applied
+    if (!hideNonCampaignAds && pvAds.value) {
+        const hideAds = Campaign.hideAdverts(campaign, otherCampaigns);
+        const extraAds = Campaign.advertsToShow(campaign, otherCampaigns, status, List.hits(pvAds.value));
+        extraAds.forEach(ad => {
+            if (!ads.includes(ad) && !hideAds.includes(ad.id)) ads.push(ad);
         });
     }
-    console.log("FINAL HIDE ADS LIST", campaign.hideAdverts);
-    console.log("FINAL HIDE CHARITIES LIST", campaign.hideCharities);
-	// TODO fill in blanks like donation total and peeps
+    if (!yessy(ads)) return <Misc.Loading text="Loading advert info..." />;
 
 	// Combine branding
 	// Priority: TopCampaign, TopItem, Adverts
@@ -406,12 +367,10 @@ const CampaignPage = () => {
 	}
 	Object.assign(branding, campaign.branding);
 
-    console.log("ADS BEFORE CHARITY SORTING", ads);
-
     // initial donation record
     let donation4charityUnscaled = yessy(campaign.dntn4charity)? campaign.dntn4charity : {};
     // Merge all other campaign donations - top campaign taking priority on conflicts
-    allCampaigns && allCampaigns.forEach(c => {
+    otherCampaigns && otherCampaigns.forEach(c => {
         if (c.dntn4charity) Object.keys(c.dntn4charity).forEach(dntn => {
             if (!donation4charityUnscaled[dntn]) donation4charityUnscaled[dntn] = c.dntn4charity[dntn];
         });
@@ -584,7 +543,6 @@ const CampaignPage = () => {
 	let nvertiser = pvAdvertisers.value && List.hits(pvAdvertisers.value)[0];
     let agency = pvAgencies.value && List.hits(pvAgencies.value)[0];
 	let nvertiserName = agency ? agency.name : (nvertiser ? nvertiser.name : ads[0].vertiserName);
-	console.log("NVERTISER", nvertiser, "nvertiserName", nvertiserName);
 	const nvertiserNameNoTrail = nvertiserName ? nvertiserName.replace(/'s$/g, "") : null;
 
 	let shareButtonMeta = {
