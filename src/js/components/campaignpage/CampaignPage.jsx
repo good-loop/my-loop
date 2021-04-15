@@ -691,36 +691,40 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 		<Row>
 			<Col md={6} style={{borderRight:"2px solid grey"}}><CharityDetails charities={charities} /></Col>
 			<Col md={6} className="text-center pl-md-5">
-				 <small>
+				 <span className="small">
 					{dmin && <>Donation Amount: <Misc.Money amount={dmin} /> { dmax && ! Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/></>}
 					50% of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies. 
-					Good-Loop and the advertising exchange make a small commission. The donations depend on viewers watching the adverts.<br/>
+					Good-Loop and the advertising exchange make a small commission. The donations depend on viewers watching the adverts.
+				</span>
+				<span className="small">
 					{ !! Money.value(totalBudget) && <>Limitations on Donation: <Misc.Money amount={totalBudget} /> <br/></>}
 					{start && end && <>Dates: <Misc.DateTag date={start} /> through <Misc.DateTag date={end} /> <br/></>}
 					{ ! start && end && <>End date: <Misc.DateTag date={end} /> <br/></>}
-					{ !! impactModels.length && <p>
+					{ !! impactModels.length && <span className="small">
 						If impacts {impactModels[0].name && `such as "${impactModels[0].name}"`} are listed above, these are representative. 
 						We don't ring-fence funding, as the charity can better assess the best use of funds. 
 						Cost/impact figures are as reported by the charity or by the impact assessor SoGive.
-					</p>}
-					<p>
+						</span>}
+				</span>
+				<span className="small">
 						Donations are provided without conditions. The charities are not recommending or endorsing the products in return.
 						They're just doing good &mdash; which we are glad to support.
-					</p>
-					<p>Amounts for campaigns that are in progress or recently finished are estimates and may be subject to audit.</p>
-				</small>
+				</span>
+				<span className="small">
+					Amounts for campaigns that are in progress or recently finished are estimates and may be subject to audit.
+				</span>
 			</Col>
 		</Row>
 		<br/>
-		<p><small>This information follows the guidelines of the New York Attorney General for best practice in cause marketing,
+		<span className="small">This information follows the guidelines of the New York Attorney General for best practice in cause marketing,
 			<Cite href='https://www.charitiesnys.com/cause_marketing.html'/> and the Better Business Bureau's standard for donations in marketing.			
-		</small></p>
+		</span>
 		{campaign && campaign.id && <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/'+escape(campaign.id)} target="_portal">Campaign Editor</DevLink>}
         {campaign.smallPrint &&
         <div className="text-center">
-            <small>
+            <span className="small">
                 {campaign.smallPrint}
-            </small>
+            </span>
         </div>}
 	</div>;
 }
