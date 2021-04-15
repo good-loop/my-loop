@@ -696,6 +696,7 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 					50% of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies. 
 					Good-Loop and the advertising exchange make a small commission. The donations depend on viewers watching the adverts.
 				</span>
+                <br/>
 				<span className="small">
 					{ !! Money.value(totalBudget) && <>Limitations on Donation: <Misc.Money amount={totalBudget} /> <br/></>}
 					{start && end && <>Dates: <Misc.DateTag date={start} /> through <Misc.DateTag date={end} /> <br/></>}
@@ -706,10 +707,12 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 						Cost/impact figures are as reported by the charity or by the impact assessor SoGive.
 						</span>}
 				</span>
+                <br/>
 				<span className="small">
 						Donations are provided without conditions. The charities are not recommending or endorsing the products in return.
 						They're just doing good &mdash; which we are glad to support.
 				</span>
+                <br/>
 				<span className="small">
 					Amounts for campaigns that are in progress or recently finished are estimates and may be subject to audit.
 				</span>
