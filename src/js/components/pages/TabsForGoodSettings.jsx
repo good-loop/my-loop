@@ -169,7 +169,7 @@ const waitForLogin = async (func, dpath) => {
     if (storedVal) return storedVal;
     await Login.verify();
     const val = func();
-    DataStore.setValue(dpath, val);
+    if (DataStore.getValue(dpath) !== val) DataStore.setValue(dpath, val);
     return val;
 }
 
@@ -217,8 +217,8 @@ const getDaysWithGoodLoop = () => {
 };
 
 /**
- * Warning: this uses `getProfilesNow()` -- so the value may start null, then change as profiles are loaded.
- * @returns {PromiseValue} charity ID
+ * Uses waitForLogin - will update DataStore at given dpath once done, instead of returning
+ * This is to allow the function to defer until login is complete, then update values correctly once loaded
  */
 const getSelectedCharityId = (dpath) => {
     assert(dpath);
