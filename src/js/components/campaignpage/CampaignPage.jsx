@@ -347,6 +347,7 @@ const CampaignPage = () => {
     const otherCampaigns = pvCampaigns.value && List.hits(pvCampaigns.value);
     console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", otherCampaigns && otherCampaigns.map(c => c.name || c.id));
     let ads = campaign ? Campaign.advertsToShow(campaign, otherCampaigns, status) : [];
+    console.log("ADS LENGTH:", ads.length);
     
     // Merge in ads with no campaigns if asked - less controls applied
     if (!hideNonCampaignAds && pvAds.value) {
@@ -649,7 +650,7 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 	return <div className="container py-5">
 		<Row>
 			<Col md={6} style={{borderRight:"2px solid grey"}}><CharityDetails charities={charities} /></Col>
-			<Col md={6} className="text-center pl-md-5">
+			<Col md={6} className="text-center pl-md-5 smallprint">
 				 <span className="small">
 					{dmin && <>Donation Amount: <Misc.Money amount={dmin} /> { dmax && ! Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/></>}
 					50% of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies. 
