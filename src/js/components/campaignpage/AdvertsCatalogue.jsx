@@ -108,7 +108,7 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 	if (sampleAds.length > 1) {
 		views = totalViewCount;
 	}
-	views = printer.prettyNumber(views);
+	//views = printer.prettyNumber(views);
 
     console.log("ONGOING? ", ongoing);
 
