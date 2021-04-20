@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
 import PropControl from '../base/components/PropControl';
-import {convertConsents, getConsents, setConsents, savePersons, getProfilesNow, PURPOSES, saveConsents} from '../base/data/Person';
+import {convertConsents, getConsents, setConsents, savePersons, PURPOSES, saveConsents} from '../base/data/Person';
 
 // const _debounceFnForKey = {};
 // /**
@@ -96,7 +96,7 @@ const PermissionControl = ({header, prop, subtext, textOn, saveFn}) => {
  */
 const ConsentWidget = ({xids}) => {
 	if( !xids.length ) return null;
-
+	if (true) return "TODO";
 	let persons = getProfilesNow(xids);
 	// get and combine the consents
 	let perms = getConsents({persons});

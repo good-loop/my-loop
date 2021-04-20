@@ -4,7 +4,7 @@ import { is, isPortraitMobile, space } from '../../base/utils/miscutils';
 import Roles from '../../base/Roles';
 import PropControl from '../../base/components/PropControl';
 import ConsentWidget from '../ConsentWidget';
-import { getAllXIds, getClaimValue, getProfilesNow, savePersons, setClaimValue} from '../../base/data/Person';
+import { getAllXIds, getClaimValue, savePersons, setClaimValue} from '../../base/data/Person';
 import SignUpConnectCard from '../cards/SignUpConnectCard';
 import Login from '../../base/youagain';
 import { LoginLink } from '../../base/components/LoginWidget';
@@ -34,30 +34,30 @@ const ConsentSettings = ({xids}) => {
 	</div>);
 };
 
-/**
- * TODO move out into its own file
- * @param {!Person[]} persons
- * @param {!string} prop
- * Other params are as for PropControl (just not path)
- */
-const PersonPropControl = ({persons, prop, ...pcStuff}) => {
-	assert( ! pcStuff.path, "path is made here");
-	// stash edits in one place...	
-	let pkey = Login.getId(); // NB: the `persons` list might be unstable - see getProfilesNow() - so we can't key on e.g. xids.join()
-	let path = ['widget', 'PersonPropControl', pkey];
-	const ppath = path.concat(prop);
-	// init the value
-	let v = getClaimValue({persons, key:prop});	
-	if (v && ! is(DataStore.getValue(ppath))) {
-		DataStore.setValue(ppath, v, false);
-	}
-	// ...save edits to all persons
-	let saveFn = ({value, event}) => {
-		setClaimValue({persons, key:prop, value});
-		savePersons({persons});
-	};
-	return <PropControl disabled={ ! persons.length || pcStuff.disabled} path={path} prop={prop} {...pcStuff} saveFn={saveFn} />;
-};
+// /**
+//  * TODO move out into its own file
+//  * @param {!Person[]} persons
+//  * @param {!string} prop
+//  * Other params are as for PropControl (just not path)
+//  */
+// const PersonPropControl = ({persons, prop, ...pcStuff}) => {
+// 	assert( ! pcStuff.path, "path is made here");
+// 	// stash edits in one place...	
+// 	let pkey = Login.getId(); // NB: the `persons` list might be unstable - see getProfilesNow() - so we can't key on e.g. xids.join()
+// 	let path = ['widget', 'PersonPropControl', pkey];
+// 	const ppath = path.concat(prop);
+// 	// init the value
+// 	let v = getClaimValue({persons, key:prop});	
+// 	if (v && ! is(DataStore.getValue(ppath))) {
+// 		DataStore.setValue(ppath, v, false);
+// 	}
+// 	// ...save edits to all persons
+// 	let saveFn = ({value, event}) => {
+// 		setClaimValue({persons, key:prop, value});
+// 		savePersons({persons});
+// 	};
+// 	return <PropControl disabled={ ! persons.length || pcStuff.disabled} path={path} prop={prop} {...pcStuff} saveFn={saveFn} />;
+// };
 
 /**
  * TODO collect and maintain data about the user - eg common demographics
