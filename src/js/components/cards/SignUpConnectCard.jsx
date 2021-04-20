@@ -4,7 +4,7 @@ import { LoginLink, SocialSignInButton } from '../../base/components/LoginWidget
 import Misc from '../../base/components/Misc';
 import DataStore from '../../base/plumbing/DataStore';
 import XId from '../../base/data/XId';
-import { getAllXIds, getClaimValue } from '../../base/data/Person';
+import { getAllXIds, getClaimValue, getProfileFor } from '../../base/data/Person';
 
 const signInOrConnected = ({service, xid}) => {
 	if (xid) return <Connected service={service} xid={xid} />;
@@ -49,10 +49,9 @@ const Connected = ({service, xid}) => {
 	if ( ! xid) return <Alert>Not logged in</Alert>;
 	const pvPerson = getProfileFor({xid, service});
 	if ( ! pvPerson.resolved) return <Misc.Loading />;
-
-	if (true) return <div>TODO</div>;
-	let name = getClaimValue({persons,key:"name"});
-	let img = getClaimValue({persons,key:"img"});
+	let person = pvPerson.value;
+	let name = getClaimValue({person,key:"name"});
+	let img = getClaimValue({person,key:"img"});
 	
 	// Don't get caught out by mixed content restrictions
 	if (img) img = img.replace(/^http:/, 'https:');

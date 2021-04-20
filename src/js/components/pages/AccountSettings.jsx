@@ -4,7 +4,7 @@ import { is, isPortraitMobile, space } from '../../base/utils/miscutils';
 import Roles from '../../base/Roles';
 import PropControl from '../../base/components/PropControl';
 import ConsentWidget from '../ConsentWidget';
-import { getAllXIds, getClaimValue, savePersons, setClaimValue} from '../../base/data/Person';
+import { getAllXIds, getClaimValue, getProfile, savePersons, setClaimValue} from '../../base/data/Person';
 import SignUpConnectCard from '../cards/SignUpConnectCard';
 import Login from '../../base/youagain';
 import { LoginLink } from '../../base/components/LoginWidget';
@@ -12,6 +12,7 @@ import XId from '../../base/data/XId';
 import { nonce } from '../../base/data/DataClass';
 import { assert } from '../../base/utils/assert';
 import DataStore from '../../base/plumbing/DataStore';
+import Misc from '../../base/components/Misc';
 
 const AccountSettings = ({xids}) => {
 	return <div className="settings">
@@ -34,37 +35,40 @@ const ConsentSettings = ({xids}) => {
 	</div>);
 };
 
-// /**
-//  * TODO move out into its own file
-//  * @param {!Person[]} persons
-//  * @param {!string} prop
-//  * Other params are as for PropControl (just not path)
-//  */
-// const PersonPropControl = ({persons, prop, ...pcStuff}) => {
-// 	assert( ! pcStuff.path, "path is made here");
-// 	// stash edits in one place...	
-// 	let pkey = Login.getId(); // NB: the `persons` list might be unstable - see getProfilesNow() - so we can't key on e.g. xids.join()
-// 	let path = ['widget', 'PersonPropControl', pkey];
-// 	const ppath = path.concat(prop);
-// 	// init the value
-// 	let v = getClaimValue({persons, key:prop});	
-// 	if (v && ! is(DataStore.getValue(ppath))) {
-// 		DataStore.setValue(ppath, v, false);
-// 	}
-// 	// ...save edits to all persons
-// 	let saveFn = ({value, event}) => {
-// 		setClaimValue({persons, key:prop, value});
-// 		savePersons({persons});
-// 	};
-// 	return <PropControl disabled={ ! persons.length || pcStuff.disabled} path={path} prop={prop} {...pcStuff} saveFn={saveFn} />;
-// };
+/**
+ * TODO move out into its own file
+ * @param {Person[]} person
+ * @param {!string} prop
+ * Other params are as for PropControl (just not path)
+ */
+const PersonPropControl = ({person, prop, ...pcStuff}) => {
+	Person.assIsa(person, "PersonPropControl", person);
+	assert( ! pcStuff.path, "path is made here");	
+	// stash edits whilst typing
+	let path = ['widget', 'PersonPropControl', person.id];
+	const ppath = path.concat(prop);
+	// init the value
+	let v = getClaimValue({person, key:prop});	
+	if (v && ! is(DataStore.getValue(ppath))) {
+		DataStore.setValue(ppath, v, false);
+	}
+	// ...save edits
+	let saveFn = ({value, event}) => {
+		setClaimValue({person, key:prop, value});
+		savePersons({person});
+	};
+	return <PropControl disabled={pcStuff.disabled} path={path} prop={prop} {...pcStuff} saveFn={saveFn} />;
+};
 
 /**
  * TODO collect and maintain data about the user - eg common demographics
  */
 const YourDataSettings = ({className}) => {
+	let person = getProfile().value;
+	if ( ! person) {
+		return <Misc.Loading />; // paranoia, probably
+	}
 	let xids = getAllXIds();
-	let persons = getProfilesNow(xids);
 	// Good-Loop profile
 
 	// email?
@@ -79,7 +83,7 @@ const YourDataSettings = ({className}) => {
 			<Col md={2}>Name:</Col>
 			<Col md={6}>
 				<PersonPropControl 
-					persons={persons} 
+					person={person} 
 					prop="name"
 					type="text" 
 					placeholder="James Bond"

@@ -68,6 +68,7 @@ const DEFAULT_PAGE = 'my';
 const loginResponsePath = ['misc', 'login', 'response'];
 
 Login.app = C.app.id;
+Login.dataspace = C.app.dataspace;
 
 /**
 	TODO refactor to use MainDivBase
@@ -143,6 +144,7 @@ class MainDiv extends Component {
 	}
 
 	render() {
+		Login.app = C.app.id; // in case a look into T4G switched it over
 		let path = DataStore.getValue('location', 'path');	
 		let page = (path && path[0]);
 		if (!page) {

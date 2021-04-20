@@ -29,7 +29,7 @@ const switchToVerb = (e, verb) => {
 
 const NewtabCharityLogin = () => {
 
-	// Remove cookie consent - blocks iframe content
+	// Remove cookie consent - blocks iframe content ??
 	window.$(".ch2").remove();
 
 	const verb = DataStore.getValue(LOGIN_VERB_PATH);
@@ -58,9 +58,6 @@ const NewtabCharityLogin = () => {
 	// ??minor: it might be nice to have a transition on the verb switch
 
 	const onRegisterLogin = () => {
-		// profiler - record product sign up - TODO make this automatic via YouAgain talking with Profiler
-		let xids = getAllXIds();
-		let persons = getProfilesNow(xids);		
 		if (charityId) setSelectedCharityId(charityId);
 		DataStore.setValue(LOGIN_VERB_PATH, "t4g_chrome_store");
 	};

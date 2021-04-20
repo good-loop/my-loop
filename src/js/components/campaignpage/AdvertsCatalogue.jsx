@@ -13,7 +13,6 @@ import Money from '../../base/data/Money';
 import Counter from '../../base/components/Counter';
 import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import DevLink from './DevLink';
-import { setHasT4G } from '../pages/TabsForGoodSettings';
 
 const tomsCampaigns = /(josh|sara|ella)/; // For matching TOMS campaign names needing special treatment
 /**

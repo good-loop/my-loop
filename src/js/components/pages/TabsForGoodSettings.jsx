@@ -4,7 +4,7 @@ import ListLoad from '../../base/components/ListLoad';
 import PropControl from '../../base/components/PropControl';
 import { getId } from '../../base/data/DataClass';
 import JSend from '../../base/data/JSend';
-import Person, { getAllXIds, getClaimValue, getProfile, getProfilesNow, savePersons, setClaimValue } from '../../base/data/Person';
+import Person, { getAllXIds, getClaimValue, getProfile, savePersons, setClaimValue } from '../../base/data/Person';
 import { getDataItem } from '../../base/plumbing/Crud';
 import DataStore from '../../base/plumbing/DataStore';
 import { assert } from '../../base/utils/assert';
@@ -31,9 +31,8 @@ const TabsForGoodSettings = () => {
 };
 
 const SearchEnginePicker = () => {
-	const dpath = ['widget', 'TabsForGoodSettings', 'searchEnginePicker'];
-	const selEngine = DataStore.getValue(dpath);
-    getSearchEngine(dpath);
+	const pvPerson = getProfile();
+	myEngine = 
 
     /*useEffect (() => {
         const currentEngine = DataStore.getValue('widget', 'TabsForGoodSettings', 'searchEnginePicker');
@@ -203,16 +202,17 @@ const getDaysWithGoodLoop = () => {
 };
 
 /**
-	TODO
+	@returns PromiseValue(String)
  */
-const getSelectedCharityId = () => {
-    return null;
+const getPVSelectedCharityId = (xid) => {
+	return getPVClaimValue({xid, key:"charity"});	
 };
 
 /**
 	TODO
  */
 const setSelectedCharityId = (cid) => {
+	console.error("TODO");
 	// let xids = getAllXIds();
 	// assert(xids.length);
 	// let persons = getProfilesNow(xids);
@@ -236,48 +236,14 @@ const setSelectedCharityId = (cid) => {
 	
 };
 
-const doesUserHaveT4G = (dpath) => {
-    assert(dpath);
-    const func = () => {
-        let xids = getAllXIds();
-        let persons = getProfilesNow(xids);
-        let cid = getClaimValue({persons, key:"hasT4G", swallow:true});
-        return cid;
-    };
-    return waitForLogin(func, dpath);
-};
-
-const setHasT4G = (hasT4G, update=true) => {
-    let xids = getAllXIds();
-	let persons = getProfilesNow(xids);
-	setClaimValue({persons, key:"hasT4G", value:hasT4G, swallow:true});
-	console.log("setHasT4G " + hasT4G +" for ",xids, "persons", persons);
-	if (update) DataStore.update();
-	// save
-	let pv = savePersons({persons});
-    pv.promise.then(re => console.log("... saved setHasT4G " + hasT4G));
-};
-
-
-const getSearchEngine = () => {
-	const xid = Login.getId();
-	if ( ! xid) return null;
-	Person.getClaimValue({xid, key:"searchEngine", value:engine});
-	Person.getClaimValue({xid, key:"searchEngine", value:engine});
-};
-
 const setSearchEngine = (engine) => {
 	const xid = Login.getId();
 	assert(xid, "setSearchEngine");
-	let pvPeep = getProfile({xid});
-	PromiseValue.then(pvPeep, peep => {
-		console.log("setSearchEngine", xid, engine, peep);
-		Person.setClaimValue({xid, key:"searchEngine", value:engine});
-	});
-	
+	let person = getProfile({xid}).value;
+	console.log("setSearchEngine", xid, engine, person);
+	Person.setClaimValue({person, key:"searchEngine", value:engine});
 	DataStore.update();
-	// save
-	savePersons({persons});
+	savePersons({person});	
 };
 
 const StatCard = ({md, lg, xs, number, label, className, padding, children}) => {
@@ -290,5 +256,5 @@ const StatCard = ({md, lg, xs, number, label, className, padding, children}) => 
 	</Col>;
 };
 
-export { getTabsOpened, Search, getSelectedCharityId, setSelectedCharityId, getSearchEngine, setHasT4G, doesUserHaveT4G };
+export { getTabsOpened, Search, getPVSelectedCharityId, setSelectedCharityId };
 export default TabsForGoodSettings;

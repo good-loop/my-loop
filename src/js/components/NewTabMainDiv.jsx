@@ -18,7 +18,7 @@ import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLog
 // import RedesignPage from './pages/RedesignPage';
 import NewtabTutorialCard, { openTutorial, TutorialComponent, TutorialHighlighter, PopupWindow } from './NewtabTutorialCard';
 import { fetchCharity } from './pages/MyCharitiesPage';
-import { getSelectedCharityId, getTabsOpened, Search, getSearchEngine, setHasT4G } from './pages/TabsForGoodSettings';
+import { getPVSelectedCharityId, getTabsOpened, Search} from './pages/TabsForGoodSettings';
 import TickerTotal from './TickerTotal';
 
 
@@ -29,8 +29,7 @@ ServerIO.USE_PROFILER = true;
 
 // Actions
 
-
-Login.app = C.app.id;
+Login.dataspace = C.app.dataspace;
 
 /**
  * NB: useEffect was triggering twice (perhaps cos of the login dance)
@@ -47,18 +46,19 @@ let verifiedLoginOnceFlag;
  * 
  */
 const WebtopPage = () => {
-    const charityID = getSelectedCharityId();
+	Login.app = "t4g.good-loop.com"; // Not My.GL!
+    const pvCharityID = getPVSelectedCharityId();
     let [showPopup, setShowPopup] = useState(false);
     let [adblockPopup, setAdblockPopup] = useState(true);
 
 	// Yeh - a tab is opened -- let's log that (once only)	
 	if ( ! logOnceFlag && Login.isLoggedIn()) {
-        setHasT4G(true, false);
+		Person.setHasApp(Login.app);
 		// NB: include a nonce, as otherwise identical events (you open a few tabs) within a 15 minute time bucket get treated as 1
 		lg("tabopen", {user:Login.getId(), nonce:nonce(6)});
 		// Wait 1.5 seconds before logging ad view - 1 second for ad view profit + .5 to load
 		setTimeout(() => {
-			lg("tabadview", {user:Login.getId(), nonce:nonce(6), charity:charityID});
+			lg("tabadview", {user:Login.getId(), nonce:nonce(6), charity:pvCharityID.value});
 		}, 1500);
 		logOnceFlag = true;
     }
@@ -91,6 +91,7 @@ const WebtopPage = () => {
     const hasAdBlock = detectAdBlock();
 
 	// Background images on tab plugin sourced locally
+	let charityID = pvCharityID.value;
 
 	return (<>
 		<BG src={null} fullscreen opacity={0.9} bottom={110} style={{backgroundPosition: "center"}}>
@@ -138,7 +139,7 @@ const TabsOpenedCounter = () => {
 	return null;
 };
 
-const engines = {
+const ENGINES = {
 	google: {
 		title:"Google",
 		logo: "https://my.good-loop.com/img/TabsForGood/google.png",
@@ -167,10 +168,7 @@ const engines = {
 
 const NormalTabCenter = ({charityID}) => {
 
-    const enginePath = ['widget', 'TabsForGood', 'engine'];
-	const searchEngine = DataStore.getValue(enginePath) || 'google';
-    getSearchEngine(enginePath);
-	const engineData = engines[searchEngine];
+	const engineData = ENGINES[searchEngine];
 
 	return <>
 		<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
@@ -230,7 +228,7 @@ const doSearch = (e, engine) => {
 	if (search == null || search === '') {
 		return;
 	}
-	(window.parent || window.parent).location = engines[engine].url + encURI(search);
+	(window.parent || window.parent).location = ENGINES[engine].url + encURI(search);
 };
 
 const tutorialPages = [
