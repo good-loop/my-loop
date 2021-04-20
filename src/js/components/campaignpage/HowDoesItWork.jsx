@@ -3,7 +3,9 @@ import React from 'react';
 const HowDoesItWork = ({ nvertiserName, charities, ongoing }) => {
 	// possessive form - names with terminal S just take an apostrophe, all others get "'s"
 	// EG Sharp's (brewery) ==> "Sharp's' video... " vs Sharp (electronics manufacturer) ==> "Sharp's video"
-	const nvertiserNamePoss = nvertiserName ? nvertiserName.replace(/s?$/, match => ({ s: 's\'' }[match] || '\'s')) : null;
+	const nvertiserNamePoss = nvertiserName ? 
+        (nvertiserName.includes("'s") ? nvertiserName : nvertiserName.replace(/s?$/, match => ({ s: 's\'' }[match] || '\'s')))
+    : null;
     let charityName;
     if (charities.length === 1) {
         charityName = charities[0].displayName || charities[0].name;
