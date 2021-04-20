@@ -47,9 +47,24 @@ const label4tab = {
 	tabsForGood: "Tabs for Good"
 };
 
+let verifyFlag = false;
+
 const Page = () => {
+    const verifyPath = ['widget', 'AccountPage', 'verifyLogin'];
+    let verified = DataStore.getValue(verifyPath);
+    if (!verified && !verifyFlag) {
+        console.log("[VERIFY] VERIFIYING...")
+        Login.verify().then((res) => {
+            console.log("[VERIFY] LOGGED IN?",res,Login.getUser());
+            DataStore.setValue(verifyPath, res ? "yes" : "no");
+        });
+        verified = "no";
+        verifyFlag = true;
+    } else {
+        console.log("[VERIFY] FOUND??", verified);
+    }
 	// handle the not-logged-in case
-	if (!Login.isLoggedIn()) {
+	if (verified === "no" || !Login.isLoggedIn()) {
 		return (
 			<div className="AccountPage">
 				<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" alwaysScrolled />
@@ -97,7 +112,10 @@ const Page = () => {
  * @param {boolean} selected
  */
 const SidebarTabLink = ({ tab, label, selected }) => {
-    if (tab === "tabsForGood" && !doesUserHaveT4G()) {
+    const doesUserHaveT4GPath = ['widget', 'TabsForGood', 'doesHaveT4G'];
+    const doesHaveT4G = DataStore.getValue(doesUserHaveT4GPath);
+    doesUserHaveT4G(doesUserHaveT4GPath);
+    if (tab === "tabsForGood" && !doesHaveT4G) {
         return <div><a target="_blank" className={space("account-tab p-2", selected && "active")} href="https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1">Get Tabs for Good</a></div>;
     }
 	return <div><a href={"/#account?tab=" + escape(tab)} className={space("account-tab p-2", selected && "active")}>{label || tab}</a></div>;

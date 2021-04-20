@@ -48,8 +48,9 @@ challenges facing our planet."`,
  * @param {!NGO[]} charities
  * @param {{string:Money}} donation4charity - charity ID to donation amount
  * @param {!Campaign} campaign
+ * @param {Boolean} ongoing - is this campaign still running?
  */
-const Charities = ({ charities, donation4charity, campaign }) => {
+const Charities = ({ charities, donation4charity, campaign, ongoing }) => {
 	
 	// The portal control data
 	let hideImpact = campaign.hideImpact || {};
@@ -63,8 +64,6 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 		return d;
 	};
 
-    console.log("SHOWING CHARITIES", charities);
-
 	return (
 		<div className="charity-card-container bg-gl-light-pink">
 			<div className="py-5">
@@ -76,7 +75,8 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 						charity={charity}
                         donationValue={getDonation(charity)}
 						showImpact={ ! hideImpact[charity.id]}
-                        campaign={campaign} />
+                        campaign={campaign}
+                        ongoing={ongoing} />
 				)}
 			</Container>
 		</div>
@@ -131,7 +131,7 @@ const RegNum = ({label, regNum}) => {
  * @param {!NGO} charity This data item is a shallow copy
  * @param {?Money} donationValue
  */
-const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
+const CharityCard = ({ charity, donationValue, showImpact, campaign, ongoing}) => {
 	// Prefer full descriptions here. If unavailable switch to summary desc.
 	let desc = charity.description || charity.summaryDescription || '';
 	// But do cut descriptions down to 1 paragraph.
@@ -162,7 +162,7 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 					<img src={charity.logo} alt="logo"/>
 				</div>
 				<div className="charity-quote-text">
-					{donationValue? <div className="w-100"><h2><Counter amount={donationValue} preservePennies={false} /> raised</h2></div> : null}
+					{donationValue? <div className="w-100"><h2>{ongoing && "Raising"} <Counter amount={donationValue} preservePennies={false} /> {!ongoing && "raised"}</h2></div> : null}
 					{charity.simpleImpact && showImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
                     {testimonial && <TestimonialPlayer src={testimonial} />}
@@ -182,6 +182,14 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 
 /** Augment ad charity objects with sogive data  */
 const fetchSogiveData = (charities) => {
+
+	let {
+		'gl.status': glStatus,
+		status,
+	} = DataStore.getValue(['location', 'params']) || {};
+	// Merge gl.status into status & take default value
+	if ( ! status) status = (glStatus || C.KStatus.PUB_OR_ARC);
+
 	let dupeIds = [];
 	let sogiveCharities = charities.map(charityOriginal => {
 		// Shallow copy charity obj
@@ -198,7 +206,7 @@ const fetchSogiveData = (charities) => {
         dupeIds.push(sogiveId);
         if (!sogiveId || sogiveId === "unset") return null;
 		// NB: the lower-level ServerIOBase.js helps patch mismatches between GL and SoGive ids
-		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: sogiveId, status: C.KStatus.PUBLISHED });
+		const pvCharity = ActionMan.getDataItem({ type: C.TYPES.NGO, id: sogiveId, status });
 		if ( ! pvCharity.value) {
 			return charity; // no extra data yet
 		}
@@ -247,7 +255,7 @@ const Impact = ({ charity, donationValue }) => {
 		if (numOfImpact === "0") {
 			impact = "To help " + verb.replace(/ed$/, "") + " " + plural;
 		} else {
-			impact = numOfImpact + " " + (isSingular ? singular : plural) + " " + verb;
+			impact = (isSingular ? singular : plural) + " " + verb;
 		}
 	} else {
 		// Separate impact string into its name and verb using space
@@ -260,13 +268,19 @@ const Impact = ({ charity, donationValue }) => {
 			if (numOfImpact === "0") {
 				impact = "To help " + verb.replace(/ed$/, "ing") + " " + name;
 			} else {
-				impact = numOfImpact + " " + name + " " + verb;
+				impact = name + " " + verb;
 			}
 		} else {
-			impact = numOfImpact + " " + impactFormat;
+			impact = impactFormat;
 		}
-	}	
-	return <b>{impact}</b>;
+	}
+    // If a (number) string is present, insert the impact number there
+    const impactSplitByNum = impact.split("(number)");
+    const charityName = charity.name.replaceAll(" ", "-");
+    if (impactSplitByNum.length === 1)
+	    return <b><span className={`charity-impact-${charityName}`}>{numOfImpact}</span> <span className={`impact-text-${charityName}`}>{impact}</span></b>;
+    else
+        return <b><span className={`impact-text-${charityName}-start`}>{impactSplitByNum[0]}</span> <span className={`charity-impact-${charityName}`}>{numOfImpact}</span> <span className={`impact-text-${charityName}-end`}>{impactSplitByNum[1]}</span></b>;
 };
 
 export { CharityDetails, fetchSogiveData };

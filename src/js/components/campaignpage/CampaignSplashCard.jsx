@@ -10,11 +10,14 @@ import DevLink from './DevLink';
  * 
  * @param {?boolean} p.ongoing Is the campaign still running (and the total might go up)?
  */
-const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, totalViewCount, ongoing}) => {
-
-    console.log("SPLASH CARD TOTAL VIEW COUNT", totalViewCount);
+const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, totalViewCount, charities, ongoing}) => {
+  console.log("SPLASH CARD TOTAL VIEW COUNT", totalViewCount);
 	let numPeople = printer.prettyNumber(Math.round(totalViewCount), 10);
 	if (numPeople === "0") numPeople = false;
+
+	let charityName = 'charity';
+	if (charities && charities.length === 1 && charities[0]) charityName = charities[0].displayName || charities[0].name;
+
 	return (
 		<div className="impact-hub-splash">
 			<img src={campaignPage.bg ? campaignPage.bg : "/img/lightcurve.svg"} className={space("w-100", campaignPage.bg ? "splash-img" : "splash-curve")} alt="splash" />
@@ -34,8 +37,11 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 					<div className="flex-column flex-center pt-5 splash-text">
 						<div className="header text-white">
 							<div>
-								<span>Raised {donationValue? <Counter currencySymbol="£" sigFigs={4} preservePennies amount={donationValue} minimumFractionDigits={2} preserveSize/> : "money" } for 
-									charity {ongoing && "so far"}</span>
+								<span>
+									{ongoing ? "Raising " : "Raised "}
+									{donationValue ? <Counter currencySymbol="£" sigFigs={4} amount={donationValue} minimumFractionDigits={2} preserveSize/> : "money" } for
+									{' '}{charityName}
+                                </span>
 							</div>
 						</div>
 						<p className="text-white subtext">by using ethical online ads</p>
