@@ -30,7 +30,7 @@ ServerIO.USE_PROFILER = true;
 // Actions
 
 
-Login.app = C.app.service;
+Login.app = C.app.id;
 
 /**
  * NB: useEffect was triggering twice (perhaps cos of the login dance)
@@ -46,11 +46,8 @@ let verifiedLoginOnceFlag;
  * The main Tabs-for-Good page
  * 
  */
-const WebtopPage = () => {	
-
-    const charityIDPath = ['widget', 'TabsForGood', 'charityID'];
-    let charityID = DataStore.getValue(charityIDPath);
-    getSelectedCharityId(charityIDPath);
+const WebtopPage = () => {
+    const charityID = getSelectedCharityId();
     let [showPopup, setShowPopup] = useState(false);
     let [adblockPopup, setAdblockPopup] = useState(true);
 

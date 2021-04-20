@@ -159,22 +159,6 @@ const isSafeToLoadUserSettings = () => {
     return !!(Login.isLoggedIn() && Login.getUser().jwt);
 }
 
-/**
- * Set func to update DataStore once Login is verified
- * @param {Function} func
- * @param {String[]} dpath
- * @returns the result of the function - should retrieve through DataStore
- */
-const waitForLogin = async (func, dpath) => {
-    // If we already got a value, just return it
-    const storedVal = DataStore.getValue(dpath);
-    if (storedVal) return storedVal;
-    await Login.verify();
-    const val = func();
-    if (DataStore.getValue(dpath) !== val) DataStore.setValue(dpath, val);
-    return val;
-}
-
 /** 
  * Fetch the number of tabs opened by the user.
  * @returns ?PromiseValue<Number> null if not logged in yet
@@ -219,42 +203,36 @@ const getDaysWithGoodLoop = () => {
 };
 
 /**
- * Uses waitForLogin - will update DataStore at given dpath once done, instead of returning
- * This is to allow the function to defer until login is complete, then update values correctly once loaded
+	TODO
  */
-const getSelectedCharityId = (dpath) => {
-    assert(dpath);
-    const func = () => {
-        let xids = getAllXIds();
-        let persons = getProfilesNow(xids);
-        let cid = getClaimValue({persons, key:"charity", swallow:true});
-        console.log("GOT CHARITY", cid);
-        return cid;
-    };
-    return waitForLogin(func, dpath);
+const getSelectedCharityId = () => {
+    return null;
 };
 
+/**
+	TODO
+ */
 const setSelectedCharityId = (cid) => {
-	let xids = getAllXIds();
-	assert(xids.length);
-	let persons = getProfilesNow(xids);
-	assert(persons.length);
-	setClaimValue({persons, key:"charity", value:cid, swallow:true});
-	console.log("setSelectedCharityId " + cid+" for ",xids, "persons", persons);
-	DataStore.update();
-	// save
-	let pv = savePersons({persons});
-	// return??
-	const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
-    const link = DataStore.getUrlValue("link");
-    pv.promise.then(re => {
-        console.log("... saved setSelectedCharityId " + cid);
-        if (task==="select-charity" && link) {
-            window.location = link;
-        }
-    }).catch(e => {
-        console.error("FAILED CHARITY SELECT", e);
-    })
+	// let xids = getAllXIds();
+	// assert(xids.length);
+	// let persons = getProfilesNow(xids);
+	// assert(persons.length);
+	// setClaimValue({persons, key:"charity", value:cid, swallow:true});
+	// console.log("setSelectedCharityId " + cid+" for ",xids, "persons", persons);
+	// DataStore.update();
+	// // save
+	// let pv = savePersons({persons});
+	// // return??
+	// const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
+    // const link = DataStore.getUrlValue("link");
+    // pv.promise.then(re => {
+    //     console.log("... saved setSelectedCharityId " + cid);
+    //     if (task==="select-charity" && link) {
+    //         window.location = link;
+    //     }
+    // }).catch(e => {
+    //     console.error("FAILED CHARITY SELECT", e);
+    // })
 	
 };
 
@@ -280,43 +258,35 @@ const setHasT4G = (hasT4G, update=true) => {
     pv.promise.then(re => console.log("... saved setHasT4G " + hasT4G));
 };
 
-const getSearchEngine = (dpath) => {
-    assert(dpath);
-    const func = () => {
-        let xids = getAllXIds();
-        let persons = getProfilesNow(xids);
-        let engine = getClaimValue({persons, key:"searchEngine", swallow:true});
-        if (!engine) {
-            engine = Cookies.get('t4g-search-engine');
-        }
-        return engine;
-    };
-    return waitForLogin(func, dpath);
+
+const getSearchEngine = () => {
+	console.warn("TODO");
 };
 
 const setSearchEngine = (engine) => {
-	let xids = getAllXIds();
-	let persons = getProfilesNow(xids);
-	setClaimValue({persons, key:"searchEngine", value:engine, swallow:true});
-	console.log("setSelectedCharityId " + engine);
-	DataStore.update();
-	// save
-	let pv = savePersons({persons});
+	console.warn("TODO");
+	// let xids = getAllXIds();
+	// let persons = getProfilesNow(xids);
+	// setClaimValue({persons, key:"searchEngine", value:engine, swallow:true});
+	// console.log("setSelectedCharityId " + engine);
+	// DataStore.update();
+	// // save
+	// let pv = savePersons({persons});
 
-	// Set a cookie with the new search engine, so there isnt a delay on loading the correct search engine on new tabs
-	const secure = window.location.protocol==='https:';
-	// ref: https://web.dev/samesite-cookies-explained/
-	Cookies.set('t4g-search-engine', engine, {expires:365, sameSite:'None', secure: true});
+	// // Set a cookie with the new search engine, so there isnt a delay on loading the correct search engine on new tabs
+	// const secure = window.location.protocol==='https:';
+	// // ref: https://web.dev/samesite-cookies-explained/
+	// Cookies.set('t4g-search-engine', engine, {expires:365, sameSite:'None', secure: true});
 
-	// return??
-	const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
-	const link = DataStore.getUrlValue("link"); 
-	if (task==="select-search-engine" && link) {
-		pv.promise.then(re => {
-			console.log("... saved setSearchEngine " + engine);
-			window.location = link;
-		});
-	}
+	// // return??
+	// const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
+	// const link = DataStore.getUrlValue("link"); 
+	// if (task==="select-search-engine" && link) {
+	// 	pv.promise.then(re => {
+	// 		console.log("... saved setSearchEngine " + engine);
+	// 		window.location = link;
+	// 	});
+	// }
 };
 
 const StatCard = ({md, lg, xs, number, label, className, padding, children}) => {

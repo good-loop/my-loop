@@ -67,7 +67,7 @@ const DEFAULT_PAGE = 'my';
 
 const loginResponsePath = ['misc', 'login', 'response'];
 
-Login.app = C.app.service;
+Login.app = C.app.id;
 
 /**
 	TODO refactor to use MainDivBase
