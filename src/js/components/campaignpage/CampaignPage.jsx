@@ -89,6 +89,7 @@ const viewCount = (viewcount4campaign, ad) => {
 		'gl.status': glStatus,
 		status,
         agency,
+        query
 		// q = '', TODO
 	} = DataStore.getValue(['location', 'params']) || {};
 	let campaignId1 = DataStore.getValue(['location','path'])[1];
@@ -102,7 +103,7 @@ const viewCount = (viewcount4campaign, ad) => {
         pvTopItem = pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:campaignId1});
 		pvCampaigns = null;
 		// ads
-		pvAds = pvTopCampaign && Campaign.fetchAds(pvTopCampaign, null, status);
+		pvAds = pvTopCampaign.value && Campaign.fetchAds(pvTopCampaign.value, null, status, query);
         // advertiser
 		if (pvTopCampaign.value && pvTopCampaign.value.vertiser) {
 			const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:pvTopCampaign.value.vertiser});			
@@ -122,8 +123,10 @@ const viewCount = (viewcount4campaign, ad) => {
 	if (vertiserid) {
 		const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:vertiserid});
 		// ads
-		let q = SearchQuery.setProp(new SearchQuery(), "vertiser", vertiserid).query;
-        pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});        
+		let sq = SearchQuery.setProp(new SearchQuery(), "vertiser", vertiserid);
+        if (query) sq = SearchQuery.and(sq, new SearchQuery(query));
+        const q = sq.query;
+        pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});       
         pvTopItem = pvAdvertiser;
         pvCampaigns = Campaign.fetchForAdvertiser(vertiserid, status);
 	}
@@ -140,8 +143,9 @@ const viewCount = (viewcount4campaign, ad) => {
 			assert( ! pvAds, pvAds);
 			const ids = uniq(pvAdvertisers.value.hits.map(getId));
 			if (yessy(ids)) {
-                let adq = SearchQuery.setPropOr(new SearchQuery(), "vertiser", ids).query;
-        		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q:adq});        
+                let adq = SearchQuery.setPropOr(new SearchQuery(), "vertiser", ids);
+                if (query) adq = SearchQuery.and(adq, new SearchQuery(query));
+        		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q:adq.query});        
 			} else {
 				console.warn("No Advertisers found for agency",agency,pvTopItem);
 			}
@@ -313,6 +317,7 @@ const CampaignPage = () => {
         hideNonCampaignAds,
         showNonServed,
         ongoing,
+        query,
         status,
         'gl.status':glStatus
 	} = DataStore.getValue(['location', 'params']) || {};
@@ -346,13 +351,14 @@ const CampaignPage = () => {
     // Get filtered ad list
     const otherCampaigns = pvCampaigns.value && List.hits(pvCampaigns.value);
     console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", otherCampaigns && otherCampaigns.map(c => c.name || c.id));
-    let ads = campaign ? Campaign.advertsToShow(campaign, otherCampaigns, status) : [];
+    let ads = campaign ? Campaign.advertsToShow(campaign, otherCampaigns, status, null, null, null, query) : [];
+    let canonicalAds = campaign ? Campaign.advertsToShow(campaign, otherCampaigns, status) : [];
     console.log("ADS LENGTH:", ads.length);
     
     // Merge in ads with no campaigns if asked - less controls applied
     if (!hideNonCampaignAds && pvAds.value) {
         const hideAds = Campaign.hideAdverts(campaign, otherCampaigns);
-        const extraAds = Campaign.advertsToShow(campaign, otherCampaigns, status, List.hits(pvAds.value));
+        const extraAds = Campaign.advertsToShow(campaign, otherCampaigns, status, List.hits(pvAds.value), null, null, query);
         extraAds.forEach(ad => {
             if (!ads.includes(ad) && !hideAds.includes(ad.id)) ads.push(ad);
         });
@@ -567,12 +573,14 @@ const CampaignPage = () => {
 					<AdvertsCatalogue
 						campaign={campaign}
 						ads={ads}
+                        canonicalAds={canonicalAds}
 						viewcount4campaign={viewcount4campaign}
 						donationTotal={donationTotal}
 						nvertiserName={nvertiserName}
                         totalViewCount={totalViewCount}
                         showNonServed={showNonServed}
                         ongoing={ongoing}
+                        vertisers={pvAdvertisers.value && List.hits(pvAdvertisers.value)}
 					/>
 				)}
 

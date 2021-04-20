@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { space, yessy } from '../../base/utils/miscutils';
+import React, {useState, useRef} from 'react';
+import { space, yessy, uniq } from '../../base/utils/miscutils';
 import {
 	Alert,
 	Carousel,
@@ -14,6 +14,8 @@ import Counter from '../../base/components/Counter';
 import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import DevLink from './DevLink';
 import { setHasT4G } from '../pages/TabsForGoodSettings';
+import PropControl from '../../base/components/PropControl';
+import DataStore from '../../base/plumbing/DataStore';
 
 const tomsCampaigns = /(josh|sara|ella)/; // For matching TOMS campaign names needing special treatment
 /**
@@ -62,7 +64,7 @@ const campaignNameForAd = ad => {
  * List of adverts with some info about them (like views, dates)
  * @param {*} param0 
  */
-const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount, showNonServed, ongoing }) => {
+const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount, showNonServed, ongoing, vertisers, canonicalAds }) => {
 
     let {nosample} = DataStore.getValue(['location', 'params']) || {};
 
@@ -178,6 +180,7 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 					<CarouselControl direction="next" directionText="Next" onClickHandler={next}/>
 				</div>
 			</Carousel>
+            <AdvertFilters vertisers={vertisers} ads={sampleAds} canonicalAds={canonicalAds}/>
 			<AdPreviewCarousel ads={sampleAds} setSelected={goToIndex} selectedIndex={activeIndex}/>
 		</Container>
 	</>);
@@ -311,5 +314,43 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
 		</div>
 	);
 };
+
+const AdvertFilters = ({vertisers, ads, canonicalAds}) => {
+    const adsVertisers = uniq(canonicalAds.map(ad => ad.vertiser));
+    if (vertisers) vertisers = uniq(vertisers).filter(vertiser => adsVertisers.includes(vertiser.id));
+    console.log(vertisers);
+    return <>
+    <div className="position-relative">
+        <h5>Filter by Advertiser</h5>
+        <ClearFilters/>
+    </div>
+    <hr/>
+    <Row className="ad-filters w-100 text-center" noGutters>
+        {vertisers && vertisers.map(vertiser => <FilterButton key={vertiser.id} query={"vertiser:" + vertiser.id}>
+            {vertiser.branding ? <img src={vertiser.branding.logo} className="w-75"/>
+            : <h3>{vertiser.name || vertiser.id}</h3>}
+        </FilterButton>)}
+    </Row></>;
+};
+
+const ClearFilters = ({}) => {
+    const clearable = !!DataStore.getValue(['location', 'params', 'query']);
+    return <a
+            onClick={() => DataStore.setValue(['location', 'params', 'query'], null)}
+            style={{position:"absolute", right:10, bottom: -10, color: clearable ? "black" : "grey"}}>
+                CLEAR FILTERS
+    </a>;
+}
+
+const FilterButton = ({query, children}) => {
+    const {'query':dsQuery} = DataStore.getValue(['location', 'params']);
+    const selected = dsQuery === query;
+    const setQuery = () => {
+        DataStore.setValue(['location', 'params', 'query'], query);
+    };
+    return <Col size={3} className={"ad-filter-btn d-flex flex-row align-items-center justify-content-center " + (selected ? "selected" : "")} onClick={setQuery}>
+        {children}
+    </Col>;
+}
 
 export default AdvertsCatalogue;
