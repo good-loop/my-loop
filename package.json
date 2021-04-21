@@ -1,6 +1,6 @@
 {
   "name": "My-Good-Loop",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "My-Loop",
   "author": "Daniel Winterstein",
   "repository": {
@@ -19,16 +19,16 @@
     "jquery": "^3.5.1",
     "js-cookie": "^2.2.1",
     "lodash": "^4.17.20",
-    "md5": "^2.2.1",
-    "promise-value": "^1.2.10",
+    "md5": "^2.3.0",
+    "promise-value": "^1.2.11",
     "react": "^16.13.1",
     "react-autocomplete": "^1.8.1",
     "react-chartjs2": "^1.2.1",
     "react-dom": "^16.13.1",
     "react-dropzone": "^11.0.1",
-    "react-markdown": "^4.3.1",
+    "react-markdown": "^6.0.0",
     "react-spring": "^8.0.27",
-    "reactstrap": "^8.5.1",
+    "reactstrap": "^8.9.0",
     "remark-gfm": "^1.0.0"
   },
   "scripts": {
