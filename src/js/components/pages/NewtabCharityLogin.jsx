@@ -15,7 +15,7 @@ import DataStore from '../../base/plumbing/DataStore';
 import PropControl from '../../base/components/PropControl';
 import ErrAlert from '../../base/components/ErrAlert';
 import { space, stopEvent } from '../../base/utils/miscutils';
-import { setSelectedCharityId } from './TabsForGoodSettings';
+import { setPersonSetting } from './TabsForGoodSettings';
 import { fetchCharity } from './MyCharitiesPage';
 import { getAllXIds, getClaimValue, savePersons, setClaimValue } from '../../base/data/Person';
 
@@ -58,7 +58,7 @@ const NewtabCharityLogin = () => {
 	// ??minor: it might be nice to have a transition on the verb switch
 
 	const onRegisterLogin = () => {
-		if (charityId) setSelectedCharityId(charityId);
+		if (charityId) setPersonSetting("charity", charityId);
 		DataStore.setValue(LOGIN_VERB_PATH, "t4g_chrome_store");
 	};
 

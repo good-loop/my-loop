@@ -6,8 +6,8 @@ import { getId } from '../../base/data/DataClass';
 import JSend from '../../base/data/JSend';
 import Person, { getAllXIds, getPVClaimValue, getProfile, savePersons, setClaimValue, getClaimValue } from '../../base/data/Person';
 import { getDataItem } from '../../base/plumbing/Crud';
-import DataStore from '../../base/plumbing/DataStore';
-import { assert } from '../../base/utils/assert';
+import DataStore, { getListPath } from '../../base/plumbing/DataStore';
+import { assert, assMatch } from '../../base/utils/assert';
 import { space } from '../../base/utils/miscutils';
 import Login from '../../base/youagain';
 import ServerIO from '../../plumbing/ServerIO';
@@ -15,6 +15,7 @@ import Cookies from 'js-cookie';
 import Icon from '../../base/components/Icon';
 import PromiseValue from 'promise-value';
 import Misc from '../../base/components/Misc';
+import KStatus from '../../base/data/KStatus';
 
 
 const TabsForGoodSettings = () => {
@@ -42,7 +43,7 @@ const SearchEnginePicker = () => {
 	const onSelect = () => {
 		const newEngine = DataStore.getValue(dpath);
 		console.log("newEngine", newEngine);
-		setSearchEngine(newEngine);
+		setPersonSetting("searchEngine",newEngine);
 	}
 
 	return <PropControl type="select" prop="searchEnginePicker" options={["google", "ecosia", "duckduckgo", "bing"]}
@@ -64,10 +65,9 @@ const CharityPicker = () => {
 	const type = "NGO"; const status="PUBLISHED";
 	// fetch the full item - and make a Ref
 	let hits = DEFAULT_LIST.split(" ").map(cid => getDataItem({type, id:cid, status}) && {id:cid, "@type":type, status});
-    const charityPath = "list.NGO.PUBLISHED.nodomain.LISTLOADHACK.whenever.impact".split(".");
-	useEffect (() => {
-        if (!DataStore.getValue(charityPath)) DataStore.setValue(charityPath, {hits, total:hits.length}, false);
-    });
+	// HACK: This is whereListLoad will look!
+    const charityPath = getListPath({type:"NGO", status:KStatus.PUBLISHED, q:"LISTLOADHACK",sort:"impact"}); // "list.NGO.PUBLISHED.nodomain.LISTLOADHACK.whenever.impact".split(".");
+	DataStore.setValue(charityPath, {hits, total:hits.length}, false);
 
 	return <div>
 		{selId && 
@@ -105,7 +105,7 @@ const CharitySelectBox = ({item, className}) => {
 			{item.logo? <img className="logo-xl mt-4 mb-2" src={item.logo} /> : <span>{item.name || item.id}</span>}
 			<p>{item.summaryDescription}</p>
 			{selected ? <span className="text-success thin"><Icon name='tick' /> Selected</span>
-				: <button onClick={() => setSelectedCharityId(getId(item))} className="btn btn-outline-primary thin">Select</button>
+				: <button onClick={() => setPersonSetting("charity", getId(item))} className="btn btn-outline-primary thin">Select</button>
 			}
 			{item.url && <a className="position-absolute" style={{top: 10, right: 10}} href={item.url} target="_blank" rel="noreferrer">About</a>}
 		</div>
@@ -202,25 +202,13 @@ const getPVSelectedCharityId = (xid) => {
 	return getPVClaimValue({xid, key:"charity"});	
 };
 
-/**
-	TODO
- */
-const setSelectedCharityId = (cid) => {
+const setPersonSetting = (key, value) => {
+	assMatch(key,String,"setPersonSetting - no key");
 	const xid = Login.getId();
-	assert(xid, "setCharity");
+	assert(xid, "setPersonSetting - no login");
 	let person = getProfile({xid}).value;
-	console.log("setCharity", xid, cid, person);
-	Person.setClaimValue({person, key:"charity", value:cid});
-	DataStore.update();
-	savePersons({person});		
-};
-
-const setSearchEngine = (engine) => {
-	const xid = Login.getId();
-	assert(xid, "setSearchEngine");
-	let person = getProfile({xid}).value;
-	console.log("setSearchEngine", xid, engine, person);
-	Person.setClaimValue({person, key:"searchEngine", value:engine});
+	console.log("setPersonSetting", xid, key, value, person);
+	Person.setClaimValue({person, key, value});
 	DataStore.update();
 	savePersons({person});	
 };
@@ -235,5 +223,5 @@ const StatCard = ({md, lg, xs, number, label, className, padding, children}) => 
 	</Col>;
 };
 
-export { getTabsOpened, Search, getPVSelectedCharityId, setSelectedCharityId };
+export { getTabsOpened, Search, getPVSelectedCharityId, setPersonSetting };
 export default TabsForGoodSettings;
