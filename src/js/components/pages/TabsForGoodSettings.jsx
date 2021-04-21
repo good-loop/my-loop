@@ -4,7 +4,7 @@ import ListLoad from '../../base/components/ListLoad';
 import PropControl from '../../base/components/PropControl';
 import { getId } from '../../base/data/DataClass';
 import JSend from '../../base/data/JSend';
-import Person, { getAllXIds, getClaimValue, getProfile, savePersons, setClaimValue } from '../../base/data/Person';
+import Person, { getAllXIds, getPVClaimValue, getProfile, savePersons, setClaimValue, getClaimValue } from '../../base/data/Person';
 import { getDataItem } from '../../base/plumbing/Crud';
 import DataStore from '../../base/plumbing/DataStore';
 import { assert } from '../../base/utils/assert';
@@ -14,6 +14,7 @@ import ServerIO from '../../plumbing/ServerIO';
 import Cookies from 'js-cookie';
 import Icon from '../../base/components/Icon';
 import PromiseValue from 'promise-value';
+import Misc from '../../base/components/Misc';
 
 
 const TabsForGoodSettings = () => {
@@ -31,32 +32,29 @@ const TabsForGoodSettings = () => {
 };
 
 const SearchEnginePicker = () => {
-	const pvPerson = getProfile();
-	myEngine = 
-
-    /*useEffect (() => {
-        const currentEngine = DataStore.getValue('widget', 'TabsForGoodSettings', 'searchEnginePicker');
-        console.log("CURRENT SEARCH ENGINE", currentEngine);
-	    if (!currentEngine) DataStore.setValue(['widget', 'TabsForGoodSettings', 'searchEnginePicker'], selEngine || 'google');
-    });*/
-	
-	console.log("Selected search engine: " + selEngine);
+	const person = getProfile().value;
+	if ( ! person) return <Misc.Loading />;
+	let searchEngine = getClaimValue({person, key:"searchEngine"});
+	if ( ! searchEngine) {
+		searchEngine = "google";
+	}
 
 	const onSelect = () => {
 		const newEngine = DataStore.getValue(dpath);
-		console.log(newEngine);
+		console.log("newEngine", newEngine);
 		setSearchEngine(newEngine);
 	}
 
 	return <PropControl type="select" prop="searchEnginePicker" options={["google", "ecosia", "duckduckgo", "bing"]}
-		labels={["Google", "Ecosia", "DuckDuckGo", "Bing"]} dflt={"google"} onChange={onSelect}
+		labels={["Google", "Ecosia", "DuckDuckGo", "Bing"]} dflt={"google"} saveFn={onSelect}
 		path={['widget', 'TabsForGoodSettings']}/>;
 }
 
 const CharityPicker = () => {
-    const dpath = ['widget', 'TabsForGood', 'charityID'];
-	const selId = DataStore.getValue(dpath);
-    getSelectedCharityId(dpath);
+	const person = getProfile().value;
+	if ( ! person) return <Misc.Loading />;
+    let selId = getClaimValue({person, key:"charity"});
+    
 	const pvSelectedCharity = selId && getDataItem({type:C.TYPES.NGO, id:selId, status:C.KStatus.Published, swallow:true});
 	let q = DataStore.getValue('widget','search','q');
 	
@@ -87,10 +85,6 @@ const CharityPicker = () => {
 	</div>;
 };
 
-// ListItem {type, servlet, navpage, item, sort} <div key={c.id} className="p-md-3 d-flex justify-content-center align-items-center">
-				// <CharitySelectBox charity={c} padAmount3D={25} className="pt-3 pt-md-0"/>
-				// </div>
-
 /**
  * Show a selectable charity in the charity list
  * @param charity the charity to show
@@ -98,9 +92,9 @@ const CharityPicker = () => {
  */
 const CharitySelectBox = ({item, className}) => {
 	assert(item, "CharitySelectBox - no item");
-	const dpath = ['widget', 'TabsForGood', 'charityID'];
-	const selId = DataStore.getValue(dpath);
-    getSelectedCharityId(dpath);
+	const person = getProfile().value;
+	let selId = person && getClaimValue({person, key:"charity"});
+    
 	let selected = getId(item) === selId;	
 	// NB: to deselect, pick a different charity (I think that's intuitive enough)
 
@@ -202,7 +196,7 @@ const getDaysWithGoodLoop = () => {
 };
 
 /**
-	@returns PromiseValue(String)
+	@returns ?PromiseValue(String)
  */
 const getPVSelectedCharityId = (xid) => {
 	return getPVClaimValue({xid, key:"charity"});	
@@ -212,28 +206,13 @@ const getPVSelectedCharityId = (xid) => {
 	TODO
  */
 const setSelectedCharityId = (cid) => {
-	console.error("TODO");
-	// let xids = getAllXIds();
-	// assert(xids.length);
-	// let persons = getProfilesNow(xids);
-	// assert(persons.length);
-	// setClaimValue({persons, key:"charity", value:cid, swallow:true});
-	// console.log("setSelectedCharityId " + cid+" for ",xids, "persons", persons);
-	// DataStore.update();
-	// // save
-	// let pv = savePersons({persons});
-	// // return??
-	// const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
-    // const link = DataStore.getUrlValue("link");
-    // pv.promise.then(re => {
-    //     console.log("... saved setSelectedCharityId " + cid);
-    //     if (task==="select-charity" && link) {
-    //         window.location = link;
-    //     }
-    // }).catch(e => {
-    //     console.error("FAILED CHARITY SELECT", e);
-    // })
-	
+	const xid = Login.getId();
+	assert(xid, "setCharity");
+	let person = getProfile({xid}).value;
+	console.log("setCharity", xid, cid, person);
+	Person.setClaimValue({person, key:"charity", value:cid});
+	DataStore.update();
+	savePersons({person});		
 };
 
 const setSearchEngine = (engine) => {

@@ -20,6 +20,7 @@ import NewtabTutorialCard, { openTutorial, TutorialComponent, TutorialHighlighte
 import { fetchCharity } from './pages/MyCharitiesPage';
 import { getPVSelectedCharityId, getTabsOpened, Search} from './pages/TabsForGoodSettings';
 import TickerTotal from './TickerTotal';
+import { getProfile, getPVClaimValue } from '../base/data/Person';
 
 
 // DataStore
@@ -48,17 +49,22 @@ let verifiedLoginOnceFlag;
 const WebtopPage = () => {
 	Login.app = "t4g.good-loop.com"; // Not My.GL!
     const pvCharityID = getPVSelectedCharityId();
+	const charityID = pvCharityID&&pvCharityID.value;
     let [showPopup, setShowPopup] = useState(false);
     let [adblockPopup, setAdblockPopup] = useState(true);
 
 	// Yeh - a tab is opened -- let's log that (once only)	
 	if ( ! logOnceFlag && Login.isLoggedIn()) {
-		Person.setHasApp(Login.app);
+		let pvPerson = getProfile();
+		pvPerson.promise.then(person => { // Hurrah - T4G is definitely installed
+			if ( ! person) console.warn("no person?!");
+			else Person.setHasApp(person, Login.app);
+		});
 		// NB: include a nonce, as otherwise identical events (you open a few tabs) within a 15 minute time bucket get treated as 1
 		lg("tabopen", {user:Login.getId(), nonce:nonce(6)});
 		// Wait 1.5 seconds before logging ad view - 1 second for ad view profit + .5 to load
 		setTimeout(() => {
-			lg("tabadview", {user:Login.getId(), nonce:nonce(6), charity:pvCharityID.value});
+			lg("tabadview", {user:Login.getId(), nonce:nonce(6), charity:charityID});
 		}, 1500);
 		logOnceFlag = true;
     }
@@ -91,7 +97,7 @@ const WebtopPage = () => {
     const hasAdBlock = detectAdBlock();
 
 	// Background images on tab plugin sourced locally
-	let charityID = pvCharityID.value;
+	
 
 	return (<>
 		<BG src={null} fullscreen opacity={0.9} bottom={110} style={{backgroundPosition: "center"}}>
@@ -167,7 +173,8 @@ const ENGINES = {
 }
 
 const NormalTabCenter = ({charityID}) => {
-
+	let pvSE = getPVClaimValue({xid:Login.getId(), key:"searchEngine"});
+	let searchEngine = (pvSE && pvSE.value) || "google";
 	const engineData = ENGINES[searchEngine];
 
 	return <>

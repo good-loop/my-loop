@@ -36,10 +36,12 @@ const NewtabLoginWidget = ({onLogin, onRegister}) => {
 	const open = DataStore.getValue(LOGIN_OPEN_PATH);
 	if ( ! open) return null;
 
-	const verb = DataStore.getValue(LOGIN_VERB_PATH);
+	let verb = DataStore.getValue(LOGIN_VERB_PATH);
 	// Default to register
 	useEffect(() => {
-		if (!verb) DataStore.setValue(LOGIN_VERB_PATH, "register");
+		if ( ! verb) {
+			verb = DataStore.setValue(LOGIN_VERB_PATH, "register", false);
+		}
 	});
 
 	const register = verb === "register";
