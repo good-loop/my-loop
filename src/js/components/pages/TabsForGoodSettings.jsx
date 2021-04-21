@@ -175,15 +175,19 @@ const getTabsOpened2_unwrap = res => {
 	return data.all;
 }
 
+/**
+ * @returns {!Number}
+ */
 const getDaysWithGoodLoop = () => {
-	const xids = getAllXIds();
-	const persons = getProfilesNow(xids);
+	const person = getProfile().value;
+	if ( ! person) {
+		return 1;
+	}
 	// use the oldest claim (TODO lets have a register claim and use that)
-	let allClaims = [];
-	persons.forEach(peep => allClaims.push(...peep.claims));	
-	// const claims = getClaims({persons, key:"registered:tabs-for-good"});
+	let claims = Person.claims(person);
+	// const claims = getClaims({persons, key:"app:t4g.good-loop.com"});
 	// find the oldest
-	const claimDates = allClaims.map(c => c.t).filter(t => t);
+	const claimDates = claims.map(c => c.t).filter(t => t);
 	claimDates.sort();
 	const oldest = claimDates[0];
 	if ( ! oldest) {
@@ -208,7 +212,7 @@ const setPersonSetting = (key, value) => {
 	assert(xid, "setPersonSetting - no login");
 	let person = getProfile({xid}).value;
 	console.log("setPersonSetting", xid, key, value, person);
-	Person.setClaimValue({person, key, value});
+	setClaimValue({person, key, value});
 	DataStore.update();
 	savePersons({person});	
 };
