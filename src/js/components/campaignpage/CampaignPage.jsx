@@ -276,7 +276,7 @@ const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled
 	// Campaign.assIsa(campaign); can be {}
 	//assMatch(charities, "NGO[]");	- can contain dummy objects from strays
     let {forceScaleDonations} = DataStore.getValue(['location', 'params']);
-	if (campaign.dntn4charity && !forceScaleDonations) {
+	if (!isDntn4CharityEmpty(campaign.dntn4charity) && !forceScaleDonations) {
 		// NB: donation4charityUnscaled will contain all data for campaigns, including data not in campaign.dntn4charity
         //assert(campaign.dntn4charity === donation4charityUnscaled);
 		return donation4charityUnscaled; // explicitly set, so don't change it
@@ -303,6 +303,15 @@ const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled
 	console.log("[DONATION4CHARITY]","Scale donations from", donation4charityUnscaled, "to", donation4charityScaled);
     return donation4charityScaled;
 };
+
+const isDntn4CharityEmpty = (dntn4charity) => {
+    let empty = true;
+    if (!dntn4charity) return true;
+    Object.keys(dntn4charity).forEach(charity => {
+        if (dntn4charity[charity] && Money.value(dntn4charity[charity])) empty = false;
+    });
+    return empty;
+}
 
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser` or `via`
@@ -437,7 +446,7 @@ const CampaignPage = () => {
 		});
     })));
 	// Add in any from campaign.dntn4charity - which can include strayCharities
-	if (campaign.dntn4charity) {
+	if (!isDntn4CharityEmpty(campaign.dntn4charity)) {
 		let cids = Object.keys(campaign.dntn4charity);
 		let clistIds = charities.map(getId);
 		cids.forEach(cid => {
