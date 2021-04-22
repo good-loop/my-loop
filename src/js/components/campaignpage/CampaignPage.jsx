@@ -98,7 +98,7 @@ const viewCount = (viewcount4campaign, ad) => {
 	// let campaignIds, agencyIds, adIds, advertiserIds;
 	let pvTopItem, pvTopCampaign, pvCampaigns, pvAgencies, pvAds, pvAdvertisers;
     // ...by Campaign?
-	if (campaignId1) {		
+	if (campaignId1) {
         pvTopItem = pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:campaignId1});
 		pvCampaigns = null;
 		// ads
@@ -125,6 +125,7 @@ const viewCount = (viewcount4campaign, ad) => {
 		let q = SearchQuery.setProp(new SearchQuery(), "vertiser", vertiserid).query;
         pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});        
         pvTopItem = pvAdvertiser;
+        if (pvAdvertiser.value) pvTopCampaign = Campaign.fetchMasterCampaign(pvAdvertiser.value);
         pvCampaigns = Campaign.fetchForAdvertiser(vertiserid, status);
 	}
 	// ...by Agency?
@@ -274,12 +275,15 @@ const filterLowDonations = ({charities, campaign, donationTotal, donation4charit
 const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled, charities) => {
 	// Campaign.assIsa(campaign); can be {}
 	//assMatch(charities, "NGO[]");	- can contain dummy objects from strays
-	if (campaign.dntn4charity) {
-		assert(campaign.dntn4charity === donation4charityUnscaled);
-		return campaign.dntn4charity; // explicitly set, so don't change it
+    let {forceScaleDonations} = DataStore.getValue(['location', 'params']);
+	if (!isDntn4CharityEmpty(campaign.dntn4charity) && !forceScaleDonations) {
+		// NB: donation4charityUnscaled will contain all data for campaigns, including data not in campaign.dntn4charity
+        //assert(campaign.dntn4charity === donation4charityUnscaled);
+		return donation4charityUnscaled; // explicitly set, so don't change it
 	}
+
 	if ( ! Money.value(donationTotal)) {
-		console.log("Scale donations - dont scale to 0");
+		console.log("[DONATION4CHARITY]","Scale donations - dont scale to 0");
 		return Object.assign({}, donation4charityUnscaled); // paranoid copy
 	}
 	Money.assIsa(donationTotal);
@@ -288,7 +292,7 @@ const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled
     monies = monies.filter(x=>x);
 	let totalDntnByCharity = Money.total(monies);
 	if ( ! Money.value(totalDntnByCharity)) {
-		console.log("Scale donations - cant scale up 0");
+		console.log("[DONATION4CHARITY]","Scale donations - cant scale up 0");
 		return Object.assign({}, donation4charityUnscaled); // paranoid copy
 	}
 	// scale up (or down)	
@@ -296,9 +300,18 @@ const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled
 	const donation4charityScaled = {};
 	mapkv(donation4charityUnscaled, (k,v) => 
 		k==="total" || k==="unset"? null : donation4charityScaled[k] = Money.mul(donation4charityUnscaled[k], ratio));
-	console.log("Scale donations from", donation4charityUnscaled, "to", donation4charityScaled);
+	console.log("[DONATION4CHARITY]","Scale donations from", donation4charityUnscaled, "to", donation4charityScaled);
     return donation4charityScaled;
 };
+
+const isDntn4CharityEmpty = (dntn4charity) => {
+    let empty = true;
+    if (!dntn4charity) return true;
+    Object.keys(dntn4charity).forEach(charity => {
+        if (dntn4charity[charity] && Money.value(dntn4charity[charity])) empty = false;
+    });
+    return empty;
+}
 
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser` or `via`
@@ -313,6 +326,7 @@ const CampaignPage = () => {
         hideNonCampaignAds,
         showNonServed,
         ongoing,
+        forceScaleTotal,
         status,
         'gl.status':glStatus
 	} = DataStore.getValue(['location', 'params']) || {};
@@ -344,7 +358,7 @@ const CampaignPage = () => {
     if ( ! campaign) campaign = {};
 
     // Get filtered ad list
-    const otherCampaigns = pvCampaigns.value && List.hits(pvCampaigns.value);
+    const otherCampaigns = pvCampaigns.value && List.hits(pvCampaigns.value).filter(c => c.id!==campaign.id);
     console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", otherCampaigns && otherCampaigns.map(c => c.name || c.id));
     let ads = campaign ? Campaign.advertsToShow(campaign, otherCampaigns, status) : [];
     console.log("ADS LENGTH:", ads.length);
@@ -369,33 +383,48 @@ const CampaignPage = () => {
 	Object.assign(branding, campaign.branding);
 
     // initial donation record
-    let donation4charityUnscaled = yessy(campaign.dntn4charity)? campaign.dntn4charity : {};
+    let donation4charityUnscaled = yessy(campaign.dntn4charity)? Object.assign({}, campaign.dntn4charity) : {};
+    // Mark these donations as set by master campaign - cannot be overriden (unless falsy)
+    Object.keys(donation4charityUnscaled).forEach(c => {
+        donation4charityUnscaled[c].setByMaster = true;
+    });
     // Merge all other campaign donations - top campaign taking priority on conflicts
     otherCampaigns && otherCampaigns.forEach(c => {
-        if (c.dntn4charity) Object.keys(c.dntn4charity).forEach(dntn => {
-            if (!donation4charityUnscaled[dntn]) donation4charityUnscaled[dntn] = c.dntn4charity[dntn];
-        });
+        if (c.id === campaign.id) return;
+        if (c.dntn4charity) {
+            //console.log("[DONATION4CHARITY]", "FROM " + c.id, c.dntn4charity);
+            // Sum up values from different campaigns for similar charities - unless the value is set by master
+            Object.keys(c.dntn4charity).forEach(dntn => {
+                if (!donation4charityUnscaled[dntn] || !donation4charityUnscaled[dntn].setByMaster || !Money.value(donation4charityUnscaled[dntn])) donation4charityUnscaled[dntn] = Money.total([c.dntn4charity[dntn], donation4charityUnscaled[dntn]]);
+            });
+        }
     });
     // Get live numbers
     const fetchedDonationData = fetchDonationData({ ads });
+    console.log("[DONATION4CHARITY]", "FETCHED", fetchedDonationData);
     console.log("[DONATION4CHARITY]", "INITIAL", donation4charityUnscaled);
     // Assign fetched data to fill holes and normalise IDs
     const allCharities = Object.keys(donation4charityUnscaled);
     Object.keys(fetchedDonationData).forEach(cid => !allCharities.includes(cid) && allCharities.push(cid));
     allCharities.forEach(cid => {
         const sogiveCid = normaliseSogiveId(cid);
-        console.log("[DONATION4CHARITY]", cid + " >>> " + sogiveCid);
-        // First fill in normalized ID
-        if (!donation4charityUnscaled[sogiveCid]) {
-            console.warn("[DONATION4CHARITY]","Replacing " + cid + " with " + sogiveCid);
-            donation4charityUnscaled[sogiveCid] = donation4charityUnscaled[cid];
+        //console.log("[DONATION4CHARITY]", "\tVALUE FOR CHARITY",cid, ":",donation4charityUnscaled[cid], "VALUE:", Money.value(donation4charityUnscaled[cid]));
+        //console.log("[DONATION4CHARITY]", cid + " >>> " + sogiveCid);
+        // First fill in normalized ID - total multiple campaigns together, unless setByMaster and not falsy
+        if (!donation4charityUnscaled[sogiveCid] || !donation4charityUnscaled[sogiveCid].setByMaster || !Money.value(donation4charityUnscaled[sogiveCid])) {
+            //console.log("[DONATION4CHARITY]", "\tTOTALLING", sogiveCid, Money.value(donation4charityUnscaled[sogiveCid]), Money.value(donation4charityUnscaled[cid]));
+            donation4charityUnscaled[sogiveCid] = Money.total([donation4charityUnscaled[sogiveCid], donation4charityUnscaled[cid]]);
+        }
+        if (sogiveCid !== cid) {
             delete donation4charityUnscaled[cid];
         }
-        // If still empty, fill in fetched data
-        if (!donation4charityUnscaled[sogiveCid]) {
-            donation4charityUnscaled[sogiveCid] = fetchedDonationData[cid];
+        // Add fetched data, unless set by master and not falsy
+        if (!donation4charityUnscaled[sogiveCid].setByMaster || !Money.value(donation4charityUnscaled[sogiveCid])) {
+            //console.log("[DONATION4CHARITY]", "\tADDING FETCHED", sogiveCid, fetchedDonationData[cid]);
+            donation4charityUnscaled[sogiveCid] = Money.total([donation4charityUnscaled[sogiveCid], fetchedDonationData[cid]]);
         }
     });
+    console.log("[DONATION4CHARITY]", "FILLED", donation4charityUnscaled);
 
     const ad4Charity = {};
 	// individual charity data, attaching ad ID
@@ -417,7 +446,7 @@ const CampaignPage = () => {
 		});
     })));
 	// Add in any from campaign.dntn4charity - which can include strayCharities
-	if (campaign.dntn4charity) {
+	if (!isDntn4CharityEmpty(campaign.dntn4charity)) {
 		let cids = Object.keys(campaign.dntn4charity);
 		let clistIds = charities.map(getId);
 		cids.forEach(cid => {
@@ -438,16 +467,23 @@ const CampaignPage = () => {
     charities.forEach(charity => {
         charity.ad = ad4Charity[charity.id] ? ad4Charity[charity.id].id : null;
     });
+
 	// Donation total
 	assert(donation4charityUnscaled, "CampaignPage.jsx falsy donation4charity?!");
-	console.log("DONATION 4 CHARITY", donation4charityUnscaled);
 	// NB: allow 0 for "use the live figure" as Portal doesn't save edit-to-blank (Feb 2021)
-	const donationTotal = Money.value(campaign.dntn)? campaign.dntn : donation4charityUnscaled.total;
+	// Total up all campaign donations - map to donations, filter nulls
+    const allCampaignDntns = [campaign.dntn, ...(otherCampaigns ? otherCampaigns.map(c => c.dntn).filter(x=>x) : [])];
+    const summed = Money.total(allCampaignDntns);
+	let donationTotal = Money.value(summed)? summed : donation4charityUnscaled.total;
+    if (forceScaleTotal) {
+        const moneys = Object.values(donation4charityUnscaled).filter(x=>x);
+        donationTotal = moneys.length ? Money.total(moneys) : 0;
+    }
 
     // Scale once to get values in the right ballpark
     let donation4charityScaled = scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
     
-    console.log("DONATION SCALED", donation4charityScaled);
+    console.log("[DONATION4CHARITY]", "DONATION SCALED", donation4charityScaled);
 
     // filter charities by low £s and campaign.hideCharities
     charities = filterLowDonations({charities, campaign, donationTotal, donation4charity:donation4charityScaled});
@@ -757,8 +793,10 @@ const fetchDonationData = ({ ads }) => {
 		Object.keys(cp.dntn4charity).forEach(cid => {
 			let dntn = cp.dntn4charity[cid];
 			if (!dntn) return;
+            console.log("[DONATION FETCH]", cid, "from campaign dntn4charity", cp.id, dntn);
 			if (donationForCharity[cid]) {
 				dntn = Money.add(donationForCharity[cid], dntn);
+                console.log("[DONATION FETCH]", cid, "added to make", dntn);
 			}
 			assert(cid !== 'total', cp); // paranoia
 			donationForCharity[cid] = dntn;
@@ -789,6 +827,8 @@ const fetchDonationData = ({ ads }) => {
 	if (!pvDonationsBreakdown.value) {
 		return donationForCharity; // loading
 	}
+    
+    console.log("[DONATION FETCH]", "Received breakdown from server:", pvDonationsBreakdown.value);
 
 	let lgCampaignTotal = pvDonationsBreakdown.value.total;
 	// NB don't override a campaign page setting
