@@ -70,3 +70,4 @@ const AttentionIsValuableCard = () => {
 
 
 export default MyPage;
+export {HowItWorksCard};
