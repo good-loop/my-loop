@@ -342,6 +342,12 @@ const AdvertFilters = ({campaign, vertisers, canonicalAds}) => {
 			<AdvertFilterCategory category={category} filterButtons={filterButtons}/>
 		))
 	);
+	
+	let containsNonNull = false;
+	customFilters && customFilters.forEach(control => {
+		if (control) containsNonNull = true;
+	});
+	if (!containsNonNull) return null;
 
     return <div className="position-relative ad-filters">
 		<ClearFilters/>
@@ -374,11 +380,12 @@ const AdvertFilterCategory = ({category, filterButtons, vertisers}) => {
 
 	const containsSelectedButton = () => {
 		const {'query':dsQuery} = DataStore.getValue(['location', 'params']);
+		if (!dsQuery) return false;
 		if (filterButtons) {
 			if (!filterButtons[category]) return false;
 			let foundQuery = false;
 			filterButtons[category].forEach(btn => {
-				if (btn.query === dsQuery) foundQuery = true;
+				if (btn && btn.query === dsQuery) foundQuery = true;
 			});
 			return foundQuery;
 		} else if (vertisers) {
@@ -406,7 +413,7 @@ const AdvertFilterCategory = ({category, filterButtons, vertisers}) => {
 						</FilterButton>
 					))
 				) : (
-					filterButtons[category].map((filterBtn, i) => (
+					filterButtons[category].filter(x=>x).map((filterBtn, i) => (
 						<FilterButton key={i} query={filterBtn.query}>
 							{filterBtn.imgUrl ? <img src={filterBtn.imgUrl} className="w-75"/>
 							: <h3>{filterBtn.displayName}</h3>}
