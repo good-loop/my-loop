@@ -15,9 +15,9 @@ import DataStore from '../../base/plumbing/DataStore';
 import PropControl from '../../base/components/PropControl';
 import ErrAlert from '../../base/components/ErrAlert';
 import { space, stopEvent } from '../../base/utils/miscutils';
-import { setSelectedCharityId } from './TabsForGoodSettings';
+import { setPersonSetting } from './TabsForGoodSettings';
 import { fetchCharity } from './MyCharitiesPage';
-import { getAllXIds, getClaimValue, getProfilesNow, savePersons, setClaimValue } from '../../base/data/Person';
+import { getAllXIds, getClaimValue, savePersons, setClaimValue } from '../../base/data/Person';
 
 const LOGIN_PATH = ['widget', 'tabLogin', 'login'];
 const LOGIN_VERB_PATH = [...LOGIN_PATH, 'verb'];
@@ -29,7 +29,7 @@ const switchToVerb = (e, verb) => {
 
 const NewtabCharityLogin = () => {
 
-	// Remove cookie consent - blocks iframe content
+	// Remove cookie consent - blocks iframe content ??
 	window.$(".ch2").remove();
 
 	const verb = DataStore.getValue(LOGIN_VERB_PATH);
@@ -43,8 +43,6 @@ const NewtabCharityLogin = () => {
     if (charityId) {
         charity = fetchCharity(charityId);
     }
-
-	const register = verb === "register";
 
 	const headers = {
 		"register": "Sign up (Step 1 of 2)",
@@ -60,12 +58,7 @@ const NewtabCharityLogin = () => {
 	// ??minor: it might be nice to have a transition on the verb switch
 
 	const onRegisterLogin = () => {
-		// profiler - record product sign up - TODO make this automatic via YouAgain talking with Profiler
-		let xids = getAllXIds();
-		let persons = getProfilesNow(xids);
-		setClaimValue({persons, key:"product.t4g", value:true, swallow:true});
-		
-		if (charityId) setSelectedCharityId(charityId);		
+		if (charityId) setPersonSetting("charity", charityId);
 		DataStore.setValue(LOGIN_VERB_PATH, "t4g_chrome_store");
 	};
 
@@ -81,29 +74,7 @@ const NewtabCharityLogin = () => {
 				/>
 				<ErrAlert error={error} />
 			</div>
-		</div>
-        {/*charity ? <>
-			<WhiteCircle className="position-absolute" style={{top: "75%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 1000, boxShadow:"none", background:"none"}} width={200} circleCrop={100}>
-				{!chromeRedirect &&
-					<div className={space("flex-row justify-content-center align-items-stretch w-100 h-100", register ? "charity-register-circle" : "charity-register-circle-flipped")}>
-						<div className="bg-white w-100 h-100"/>
-						<div className="bg-gl-turquoise w-100 h-100"/>
-					</div>
-				}
-				<WhiteCircle style={{boxShadow:"0 0 3px rgba(0,0,0,0.5)", top:"50%", left:"50%", transform:"translate(-50%, -50%)"}} className="position-absolute charity-circle-img" width={140}>
-					{charity.logo ?
-						<img src={charity.logo}/>
-						: <h3>{charity.displayName}</h3>
-					}
-				</WhiteCircle>
-			</WhiteCircle>
-			<div className="position-absolute px-2" style={{top: titleTop, width:"50%", right: "50.25%" /* Account slightly for text and visual pleasantness *//*, textAlign:"right"}}>
-				<h1 className={!chromeRedirect ? "text-white" : "color-gl-turquoise"}>Supporting </h1>
-			</div>
-			<div className="position-absolute px-2" style={{top: titleTop, width:"50%", left: "50%", textAlign:"left"}}>
-				<h1 className="color-gl-turquoise"> {charity.displayName}</h1>
-			</div>
-		</>: null*/}
+		</div>        
 	</>;
 };
 

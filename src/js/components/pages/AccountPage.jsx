@@ -3,7 +3,7 @@ import { Col, Row } from 'reactstrap';
 import { addImageCredit } from '../../base/components/AboutPage';
 import Editor3ColLayout, { LeftSidebar, MainPane } from '../../base/components/Editor3ColLayout';
 import { LoginLink } from '../../base/components/LoginWidget';
-import { getAllXIds, getEmail, hasConsent, PURPOSES } from '../../base/data/Person';
+import Person, { getAllXIds, getEmail, getProfile, hasConsent, PURPOSES } from '../../base/data/Person';
 import DataStore from '../../base/plumbing/DataStore';
 import { lg } from '../../base/plumbing/log';
 import { space } from '../../base/utils/miscutils';
@@ -47,24 +47,9 @@ const label4tab = {
 	tabsForGood: "Tabs for Good"
 };
 
-let verifyFlag = false;
-
 const Page = () => {
-    const verifyPath = ['widget', 'AccountPage', 'verifyLogin'];
-    let verified = DataStore.getValue(verifyPath);
-    if (!verified && !verifyFlag) {
-        console.log("[VERIFY] VERIFIYING...")
-        Login.verify().then((res) => {
-            console.log("[VERIFY] LOGGED IN?",res,Login.getUser());
-            DataStore.setValue(verifyPath, res ? "yes" : "no");
-        });
-        verified = "no";
-        verifyFlag = true;
-    } else {
-        console.log("[VERIFY] FOUND??", verified);
-    }
 	// handle the not-logged-in case
-	if (verified === "no" || !Login.isLoggedIn()) {
+	if ( ! Login.isLoggedIn()) {
 		return (
 			<div className="AccountPage">
 				<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" alwaysScrolled />
@@ -112,13 +97,24 @@ const Page = () => {
  * @param {boolean} selected
  */
 const SidebarTabLink = ({ tab, label, selected }) => {
-    const doesUserHaveT4GPath = ['widget', 'TabsForGood', 'doesHaveT4G'];
-    const doesHaveT4G = DataStore.getValue(doesUserHaveT4GPath);
-    doesUserHaveT4G(doesUserHaveT4GPath);
-    if (tab === "tabsForGood" && !doesHaveT4G) {
-        return <div><a target="_blank" className={space("account-tab p-2", selected && "active")} href="https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1">Get Tabs for Good</a></div>;
+	let url = "/#account?tab=" + escape(tab);
+    if (tab === "tabsForGood") {
+		// TODO detect whether T4G is installed on this specific browser.
+		let pvPerson = getProfile();
+		let hasT4G = Person.hasApp(pvPerson.value, "t4g.good-loop.com");
+		if ( ! hasT4G) {
+			// Detect whether we're on Chrome or not
+			let isChrome = navigator && navigator.vendor === "Google Inc.";
+			if ( ! isChrome) {
+				url = "https://welcome.good-loop.com"
+				label = "About Tabs for Good";
+			} else {
+				url = "https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1"
+				label = "Get Tabs for Good";
+			}
+		}
     }
-	return <div><a href={"/#account?tab=" + escape(tab)} className={space("account-tab p-2", selected && "active")}>{label || tab}</a></div>;
+	return <div><a href={url} className={space("account-tab p-2", selected && "active")}>{label || tab}</a></div>;
 };
 
 addImageCredit({ name: "add-user", author: "Icons8", url: "https://icons8.com/icons/set/add-user-male" });
