@@ -59,7 +59,17 @@ const campaignNameForAd = ad => {
 
 /**
  * List of adverts with some info about them (like views, dates)
- * @param {*} param0 
+ * @param {Object} p
+ * @param {Campaign} p.campaign
+ * @param {Advert[]} p.ads filtered list of ads to show
+ * @param {Object} p.viewcount4campaign viewing data
+ * @param {Money} p.donationTotal
+ * @param {String} p.nvertiserName name of main advertiser/agency
+ * @param {Number} p.totalViewCount
+ * @param {Boolean} p.showNonServed show ads that have never been live
+ * @param {Boolean} p.ongoing override grammar to be present tense instead of past
+ * @param {Advertiser[]} p.vertisers associated advertisers of all ads
+ * @param {Advert[]} p.canonicalAds all ads, unfiltered by the filtering query parameter
  */
 const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount, showNonServed, ongoing, vertisers, canonicalAds }) => {
 
@@ -122,6 +132,7 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
                 totalViewCount={totalViewCount}
                 active={true}
 			/>
+			<AdvertFilters campaign={campaign} vertisers={vertisers} ads={sampleAds} canonicalAds={canonicalAds}/>
 		</Container>
 	}
 
@@ -177,7 +188,9 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 					<CarouselControl direction="next" directionText="Next" onClickHandler={next}/>
 				</div>
 			</Carousel>
-            <AdvertFilters vertisers={vertisers} ads={sampleAds} canonicalAds={canonicalAds}/>
+			<br/>
+			<br/>
+            <AdvertFilters campaign={campaign} vertisers={vertisers} ads={sampleAds} canonicalAds={canonicalAds}/>
 			<AdPreviewCarousel ads={sampleAds} setSelected={goToIndex} selectedIndex={activeIndex}/>
 		</Container>
 	</>);
@@ -288,7 +301,7 @@ const AdvertCard = ({ ad, active }) => {
 	);
 };
 
-const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
+const AdvertPreviewCard = ({ ad, handleClick, selected=false, active }) => {
 	if ( ! ad) {
 		console.warn("AdvertPreviewCard - NO ad?!");
 		return null;
@@ -312,42 +325,119 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
 	);
 };
 
-const AdvertFilters = ({vertisers, ads, canonicalAds}) => {
+/**
+ * Advert filter buttons, via query
+ * @param {Object} p
+ * @param {Campaign} campaign the master campaign
+ * @param {Advertiser[]} vertisers associated advertisers
+ * @param {Advert[]} canonicalAds list of unfiltered ads
+ */
+const AdvertFilters = ({campaign, vertisers, canonicalAds}) => {
     const adsVertisers = uniq(canonicalAds.map(ad => ad.vertiser));
     if (vertisers) vertisers = uniq(vertisers).filter(vertiser => adsVertisers.includes(vertiser.id));
-    console.log(vertisers);
-    return <>
-    <div className="position-relative">
-        <h5>Filter by Advertiser</h5>
-        <ClearFilters/>
-    </div>
-    <hr/>
-    <Row className="ad-filters w-100 text-center" noGutters>
-        {vertisers && vertisers.map(vertiser => <FilterButton key={vertiser.id} query={"vertiser:" + vertiser.id}>
-            {vertiser.branding ? <img src={vertiser.branding.logo} className="w-75"/>
-            : <h3>{vertiser.name || vertiser.id}</h3>}
-        </FilterButton>)}
-    </Row></>;
+	const filterButtons = campaign.filterButtons;
+
+	const customFilters = filterButtons && (
+		Object.keys(filterButtons).map(category => (
+			<AdvertFilterCategory category={category} filterButtons={filterButtons}/>
+		))
+	);
+
+    return <div className="position-relative ad-filters">
+		<ClearFilters/>
+		{campaign.showVertiserFilters && <>
+			<AdvertFilterCategory vertisers={vertisers}/>
+		</>}
+		{customFilters}
+	</div>;
+};
+
+
+/**
+ * Display a filter category
+ * @param {Advertiser[]} vertisers if set, generates a vertiser category
+ */
+const AdvertFilterCategory = ({category, filterButtons, vertisers}) => {
+	
+	// Return null if there is no data, or if no queries are set
+	if (!vertisers) {
+		if (!category || !filterButtons || !filterButtons[category].length) return null;
+		let noQueries = true
+		for (let i = 0; i < category.length; i++) {
+			if (filterButtons[category][i] && filterButtons[category][i].query) noQueries = false;
+		}
+		if (noQueries) {
+			console.warn("Ad filter category " + category + " contains no set queries! Hiding.");
+			return null;
+		}
+	}
+
+	const containsSelectedButton = () => {
+		const {'query':dsQuery} = DataStore.getValue(['location', 'params']);
+		if (filterButtons) {
+			if (!filterButtons[category]) return false;
+			let foundQuery = false;
+			filterButtons[category].forEach(btn => {
+				if (btn.query === dsQuery) foundQuery = true;
+			});
+			return foundQuery;
+		} else if (vertisers) {
+			let foundQuery = false;
+			vertisers.forEach(vertiser => {
+				if (dsQuery === "vertiser:" + vertiser.id) foundQuery = true;
+			});
+			return foundQuery;
+		}
+	};
+
+	const [collapsed, setCollapsed] = useState(true);
+	// Don't collapse the category if the current filter is in this list
+	const collapsable = !containsSelectedButton();
+
+	return <div className={"ad-filter " + (collapsed && collapsable ? "collapsed" : "")}>
+			<h5 style={{cursor:collapsable ? "pointer" : "default"}} onClick={() => setCollapsed(!collapsed)}>Filter by {vertisers ? "advertiser" : category}</h5>
+			<hr/>
+			<div className="ad-filter-list w-100 text-center d-flex flex-row">
+				{vertisers ? (
+					vertisers.map(vertiser => (
+						<FilterButton key={vertiser.id} query={"vertiser:" + vertiser.id}>
+							{vertiser.branding ? <img src={vertiser.branding.logo} className="w-75"/>
+							: <h3>{vertiser.name || vertiser.id}</h3>}
+						</FilterButton>
+					))
+				) : (
+					filterButtons[category].map((filterBtn, i) => (
+						<FilterButton key={i} query={filterBtn.query}>
+							{filterBtn.imgUrl ? <img src={filterBtn.imgUrl} className="w-75"/>
+							: <h3>{filterBtn.displayName}</h3>}
+						</FilterButton>
+					))
+				)}
+			</div>
+			<br/>
+		</div>;
+
 };
 
 const ClearFilters = ({}) => {
     const clearable = !!DataStore.getValue(['location', 'params', 'query']);
     return <a
-            onClick={() => DataStore.setValue(['location', 'params', 'query'], null)}
-            style={{position:"absolute", right:10, bottom: -10, color: clearable ? "black" : "grey"}}>
+            onClick={() => clearable && DataStore.setValue(['location', 'params', 'query'], null)}
+            style={{position:"absolute", right:10, bottom: -10, color: clearable ? "black" : "grey", cursor:clearable ? "pointer" : "default"}}>
                 CLEAR FILTERS
     </a>;
 }
 
 const FilterButton = ({query, children}) => {
+	if (!query) return null;
     const {'query':dsQuery} = DataStore.getValue(['location', 'params']);
     const selected = dsQuery === query;
     const setQuery = () => {
         DataStore.setValue(['location', 'params', 'query'], query);
     };
-    return <Col size={3} className={"ad-filter-btn d-flex flex-row align-items-center justify-content-center " + (selected ? "selected" : "")} onClick={setQuery}>
+    return <div className={"ad-filter-btn d-inline-flex flex-row align-items-center justify-content-center " + (selected ? "selected" : "")} onClick={setQuery}>
         {children}
-    </Col>;
+    </div>;
 }
 
 export default AdvertsCatalogue;

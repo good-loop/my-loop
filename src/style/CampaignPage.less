@@ -422,5 +422,26 @@ body {
         .ad-filter-btn.selected {
             border-bottom: 5px solid @gl-light-red;
         }
+		.ad-filter {
+			height: 171px;
+			transition: 0.3s;
+			overflow: hidden;
+			h5 {
+				font-size: 100%;
+				transition: 0.3s;
+			}
+		}
+		.ad-filter.collapsed {
+			height: 30px;
+			transition: 0.3s;
+			h5 {
+				font-size: 80%;
+				transition: 0.3s;
+			}
+		}
+		.ad-filter-list {
+			overflow-x: auto;
+			overflow-y: hidden;
+		}
     }
 }
