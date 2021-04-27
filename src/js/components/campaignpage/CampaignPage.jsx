@@ -28,10 +28,11 @@ import ServerIO from '../../plumbing/ServerIO';
 import MyLoopNavBar from '../MyLoopNavBar';
 import AdvertsCatalogue from './AdvertsCatalogue';
 import CampaignSplashCard from './CampaignSplashCard';
-import Charities, { CharityDetails, fetchSogiveData } from './Charities';
+import Charities, { CharityDetails } from './Charities';
 import DevLink from './DevLink';
 import Roles from '../../base/Roles';
 import HowDoesItWork from './HowDoesItWork';
+import NGO from '../../base/data/NGO';
 
 
 /**
@@ -257,11 +258,11 @@ const CampaignPage = () => {
     console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", otherCampaigns && otherCampaigns.map(c => c.name || c.id));
     let ads = campaign ? Campaign.advertsToShow(campaign, otherCampaigns, status) : [];
     console.log("ADS LENGTH:", ads.length);
+	let extraAds = Campaign.advertsToShow(campaign, otherCampaigns, status, List.hits(pvAds.value));
     
     // Merge in ads with no campaigns if asked - less controls applied
     if (!hideNonCampaignAds && pvAds.value) {
         const hideAds = Campaign.hideAdverts(campaign, otherCampaigns);
-        const extraAds = Campaign.advertsToShow(campaign, otherCampaigns, status, List.hits(pvAds.value));
         extraAds.forEach(ad => {
             if (!ads.includes(ad) && !hideAds.includes(ad.id)) ads.push(ad);
         });
@@ -295,7 +296,7 @@ const CampaignPage = () => {
         }
     });
     // Get live numbers
-    const fetchedDonationData = fetchDonationData({ ads });
+    const fetchedDonationData = NGO.fetchDonationData({ ads });
     console.log("[DONATION4CHARITY]", "FETCHED", fetchedDonationData);
     console.log("[DONATION4CHARITY]", "INITIAL", donation4charityUnscaled);
     // Assign fetched data to fill holes and normalise IDs
@@ -323,23 +324,7 @@ const CampaignPage = () => {
 
     const ad4Charity = {};
 	// individual charity data, attaching ad ID
-	let charities = uniqById(_.flatten(ads.map(ad => {
-        const clist = (ad.charities && ad.charities.list).slice() || [];
-		return clist.map(c => {
-			if ( ! c) return null; // bad data paranoia						
-			if ( ! c.id || c.id==="unset" || c.id==="undefined" || c.id==="null" || c.id==="total") { // bad data paranoia						
-				console.error("CampaignPage.jsc charities - Bad charity ID", c.id, c);
-				return null;
-			}
-			const id2 = normaliseSogiveId(c.id);
-			if (id2 !== c.id) {
-				console.warn("Changing charity ID to normaliseSogiveId "+c.id+" to "+id2+" for ad "+ad.id);
-				c.id = id2;
-			}
-			ad4Charity[c.id] = ad; // for Advert Editor dev button so sales can easily find which ad contains which charity
-			return c;
-		});
-    })));
+	let charities = Campaign.charities(campaign, otherCampaigns, extraAds, status);
 	// Add in any from campaign.dntn4charity - which can include strayCharities
 	if (!Campaign.isDntn4CharityEmpty(campaign)) {
 		let cids = Object.keys(campaign.dntn4charity);
@@ -355,7 +340,7 @@ const CampaignPage = () => {
 	}
     // NB: Don't append extra charities found in donation data. This can include noise.
     // Fill in blank in charities with sogive data
-    charities = fetchSogiveData(charities);
+    charities = NGO.fetchSogiveData(charities);
     console.log("CHARITIESSSSSS", charities);
     console.log("AD 4 CHARITY:",ad4Charity)
     // Attach ads after initial sorting and merging, which can cause ad ID data to be lost
@@ -414,6 +399,7 @@ const CampaignPage = () => {
 	if (pvViewData.value) {
 		viewcount4campaign = pivotDataLogData(pvViewData.value, ["campaign"]);
 	}
+	console.log("VIEWCOUNT4CAMPAING?", viewcount4campaign);
 
 	// Is this an interim total or the full amount? Interim if not fixed by campaign, and not ended
 	if ( ! ongoing && ! campaign.dntn) {
@@ -642,110 +628,6 @@ const hackCorrectedDonations = id => {
 	}[id];
 	return donation;
 };
-
-/**
- * This may fetch data from the server. It returns instantly, but that can be with some blanks.
- * 
- * ??Hm: This is an ugly long method with a server-side search-aggregation! Should we do these as batch calculations on the server??
- * 
- * @param {!Advert[]} ads
- * @returns {cid:Money} donationForCharity, with a .total property for the total
- */
-const fetchDonationData = ({ ads }) => {
-	const donationForCharity = {};
-	if (!ads.length) return donationForCharity; // paranoia
-	// things
-	let adIds = ads.map(ad => ad.id);
-    let campaignIds = ads.map(ad => ad.campaign);
-    // Filter bad IDs
-    campaignIds = campaignIds.filter(x=>x);
-	let charityIds = _.flatten(ads.map(Advert.charityList));
-
-	// HACK return hacked values if Cheerios or Purina
-	for (let i = 0; i < ads.length; i++) {
-		const ad = ads[i];
-		const donation = hackCorrectedDonations(ad.id);
-		if (donation) return donation;
-	} // ./hack
-	
-	// Campaign level per-charity info?	
-	let campaignsWithoutDonationData = [];
-	for (let i = 0; i < ads.length; i++) {
-		const ad = ads[i];
-		const cp = ad.campaignPage;
-		// FIXME this is old!! Need to work with new campaigns objects
-		// no per-charity data? (which is normal)
-		if (!cp || !cp.dntn4charity || Object.values(cp.dntn4charity).filter(x => x).length === 0) {
-			if (ad.campaign) {
-				campaignsWithoutDonationData.push(ad.campaign);
-				console.log("No per-charity data with ad " + ad.id);
-			} else {
-				console.warn("Advert with no campaign: " + ad.id);
-			}
-			continue;
-		}
-
-		Object.keys(cp.dntn4charity).forEach(cid => {
-			let dntn = cp.dntn4charity[cid];
-			if (!dntn) return;
-            console.log("[DONATION FETCH]", cid, "from campaign dntn4charity", cp.id, dntn);
-			if (donationForCharity[cid]) {
-				dntn = Money.add(donationForCharity[cid], dntn);
-                console.log("[DONATION FETCH]", cid, "added to make", dntn);
-			}
-			assert(cid !== 'total', cp); // paranoia
-			donationForCharity[cid] = dntn;
-		});
-	};
-	// Done?
-	if (donationForCharity.total && campaignsWithoutDonationData.length === 0) {
-		console.log("Using ad data for donations");
-		return donationForCharity;
-	}
-
-	// Fetch donations data	
-	// ...by campaign or advert? campaign would be nicer 'cos we could combine different ad variants... but its not logged reliably
-	// (old data) Loop.Me have not logged vert, only campaign. But elsewhere vert is logged and not campaign.
-    let sq1 = adIds.map(id => "vert:" + id).join(" OR ");
-	// NB: quoting for campaigns if they have a space (crude not 100% bulletproof ??use SearchQuery.js instead) 
-	let sq2 = campaignIds.map(id => "campaign:" + (id.includes(" ") ? '"' + id + '"' : id)).join(" OR ");
-	let sqDon = SearchQuery.or(sq1, sq2);
-
-	// load the community total for the ad
-	let pvDonationsBreakdown = DataStore.fetch(['widget', 'CampaignPage', 'communityTotal', sqDon.query], () => {
-		return ServerIO.getDonationsData({ q: sqDon.query });
-	}, {}, true, 5 * 60 * 1000);
-	if (pvDonationsBreakdown.error) {
-		console.error("pvDonationsBreakdown.error", pvDonationsBreakdown.error);
-		return donationForCharity;
-	}
-	if (!pvDonationsBreakdown.value) {
-		return donationForCharity; // loading
-	}
-    
-    console.log("[DONATION FETCH]", "Received breakdown from server:", pvDonationsBreakdown.value);
-
-	let lgCampaignTotal = pvDonationsBreakdown.value.total;
-	// NB don't override a campaign page setting
-	if (!donationForCharity.total) {
-		donationForCharity.total = new Money(lgCampaignTotal);
-	}
-
-	// set the per-charity numbers
-	let donByCid = pvDonationsBreakdown.value.by_cid;
-	Object.keys(donByCid).forEach(cid => {
-		let dntn = donByCid[cid];
-		if (!dntn) return;
-		if (donationForCharity[cid]) {
-			dntn = Money.add(donationForCharity[cid], dntn);
-		}
-		assert(cid !== 'total', cid); // paranoia
-		donationForCharity[cid] = dntn;
-	});
-	// done	
-	return donationForCharity;
-}; // ./fetchDonationData()
-
 
 /**
  * @param {!Advert} ad 

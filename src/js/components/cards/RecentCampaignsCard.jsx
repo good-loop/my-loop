@@ -155,7 +155,7 @@ const fetchAds = ({ searchQuery, status }) => {
 
 /**
  * 
- * Cut-down version of the function from CampaignPage.jsx, which only looks for a total
+ * Cut-down version of the function from NGO.js, which only looks for a total
  * 
  * @param {!Advert[]} ads
  * @returns {cid:Money} donationForCharity, with a .total property for the total
