@@ -208,61 +208,6 @@ const fetchIHubData2_wrapAsList = pvTopItem => {
 	));
 };
 
-
-
-/**
- * @param {Object} p
- * @param {?Money} p.donationTotal
- * @param {NGO[]} p.charities From adverts (not SoGive)
- * @param {Object} p.donation4charity scaled (so it can be compared against donationTotal)
- * @returns {NGO[]}
- */
-const filterLowDonations = ({charities, campaign, donationTotal, donation4charity}) => {
-
-	// Low donation filtering data is represented as only 2 controls for portal simplicity
-	// lowDntn = the threshold at which to consider a charity a low donation
-	// hideCharities = a list of charity IDs to explicitly hide - represented by keySet as an object (explained more below line 103)
-
-    console.log("[FILTER]", "Filtering with dntn4charity", donation4charity);
-
-	// Filter nulls
-	charities = charities.filter(x => x);
-
-	if (campaign.hideCharities) {
-		let hc = Campaign.hideCharities(campaign);
-        const charities2 = charities.filter(c => ! hc.includes(normaliseSogiveId(getId(c))));
-        console.log("[FILTER]","HIDDEN CHARITIES: ",hc);
-		charities = charities2;
-	}
-	
-	let lowDntn = campaign.lowDntn;	
-	if ( ! lowDntn || ! Money.value(lowDntn)) {
-		if ( ! donationTotal) {
-			return charities;
-		}
-		// default to 0	
-		lowDntn = new Money(donationTotal.currencySymbol + "0");
-	}
-	console.warn("[FILTER]","Low donation threshold for charities set to " + lowDntn);
-    
-	/**
-	 * @param {!NGO} c 
-	 * @returns {?Money}
-	 */
-	const getDonation = c => {
-		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
-		return d;
-	};
-
-	charities = charities.filter(charity => {
-        const dntn = getDonation(charity);
-        let include = dntn && Money.lessThan(lowDntn, dntn);
-        if (!include) console.log("[FILTER]","BELOW LOW DONATION: ",charity, dntn);
-		return include;
-    });
-	return charities;
-} // ./filterLowDonations
-
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser` or `via`
  * TODO support q=... flexible query
@@ -436,7 +381,7 @@ const CampaignPage = () => {
     console.log("[DONATION4CHARITY]", "DONATION SCALED", donation4charityScaled);
 
     // filter charities by low £s and campaign.hideCharities
-    charities = filterLowDonations({charities, campaign, donationTotal, donation4charity:donation4charityScaled});
+    charities = Campaign.filterLowDonations({charities, campaign, donationTotal, donation4charity:donation4charityScaled});
     
     // Scale again to make up for discrepencies introduced by filtering
 	donation4charityScaled = Campaign.scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
