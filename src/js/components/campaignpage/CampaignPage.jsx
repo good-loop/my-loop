@@ -333,6 +333,7 @@ const CampaignPage = () => {
         landing,
         hideNonCampaignAds,
         showNonServed,
+		nosample,
         ongoing,
         query,
         forceScaleTotal,
@@ -369,15 +370,14 @@ const CampaignPage = () => {
     // Get filtered ad list
     const otherCampaigns = pvCampaigns.value && List.hits(pvCampaigns.value).filter(c => c.id!==campaign.id);
     console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", otherCampaigns && otherCampaigns.map(c => c.name || c.id));
-    let ads = campaign ? Campaign.advertsToShow(campaign, otherCampaigns, status, null, null, null, query) : [];
-    let canonicalAds = campaign ? Campaign.advertsToShow(campaign, otherCampaigns, status) : [];
+    let ads = campaign ? Campaign.advertsToShow({topCampaign:campaign, campaigns:otherCampaigns, status, showNonServed, nosample, query}) : [];
+    let canonicalAds = campaign ? Campaign.advertsToShow({topCampaign:campaign, campaigns:otherCampaigns, status}) : [];
     console.log("ADS LENGTH:", ads.length);
-	let extraAds = Campaign.advertsToShow(campaign, otherCampaigns, status, List.hits(pvAds.value));
+	let extraAds = Campaign.advertsToShow({topCampaign:campaign, campaigns:otherCampaigns, status, presetAds:List.hits(pvAds.value), showNonServed, nosample});
     
     // Merge in ads with no campaigns if asked - less controls applied
     if (!hideNonCampaignAds && pvAds.value) {
         const hideAds = Campaign.hideAdverts(campaign, otherCampaigns);
-        const extraAds = Campaign.advertsToShow(campaign, otherCampaigns, status, List.hits(pvAds.value), null, null, query);
         extraAds.forEach(ad => {
             if (!ads.includes(ad) && !hideAds.includes(ad.id)) ads.push(ad);
         });
