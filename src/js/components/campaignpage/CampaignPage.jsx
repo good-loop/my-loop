@@ -264,56 +264,6 @@ const filterLowDonations = ({charities, campaign, donationTotal, donation4charit
 } // ./filterLowDonations
 
 /**
- * Scale a list of charities to match the money total.
- * This will scale so that sum(donations to `charities`) = donationTotal
- * Warning: If a charity isn't on the list, it is assumed that donations to it are noise, to be reallocated.
- * 
- * @param {Campaign} campaign 
- * @param {Money} donationTotal 
- * @param {Object} donation4charityUnscaled
- */
-const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled, charities) => {
-	// Campaign.assIsa(campaign); can be {}
-	//assMatch(charities, "NGO[]");	- can contain dummy objects from strays
-    let {forceScaleDonations} = DataStore.getValue(['location', 'params']);
-	if (!isDntn4CharityEmpty(campaign.dntn4charity) && !forceScaleDonations) {
-		// NB: donation4charityUnscaled will contain all data for campaigns, including data not in campaign.dntn4charity
-        //assert(campaign.dntn4charity === donation4charityUnscaled);
-		return donation4charityUnscaled; // explicitly set, so don't change it
-	}
-
-	if ( ! Money.value(donationTotal)) {
-		console.log("[DONATION4CHARITY]","Scale donations - dont scale to 0");
-		return Object.assign({}, donation4charityUnscaled); // paranoid copy
-	}
-	Money.assIsa(donationTotal);
-    // NB: only count donations for the charities listed
-    let monies = charities.map(c => getId(c) !== "unset" ? donation4charityUnscaled[getId(c)] : null);
-    monies = monies.filter(x=>x);
-	let totalDntnByCharity = Money.total(monies);
-	if ( ! Money.value(totalDntnByCharity)) {
-		console.log("[DONATION4CHARITY]","Scale donations - cant scale up 0");
-		return Object.assign({}, donation4charityUnscaled); // paranoid copy
-	}
-	// scale up (or down)	
-	let ratio = Money.divide(donationTotal, totalDntnByCharity);
-	const donation4charityScaled = {};
-	mapkv(donation4charityUnscaled, (k,v) => 
-		k==="total" || k==="unset"? null : donation4charityScaled[k] = Money.mul(donation4charityUnscaled[k], ratio));
-	console.log("[DONATION4CHARITY]","Scale donations from", donation4charityUnscaled, "to", donation4charityScaled);
-    return donation4charityScaled;
-};
-
-const isDntn4CharityEmpty = (dntn4charity) => {
-    let empty = true;
-    if (!dntn4charity) return true;
-    Object.keys(dntn4charity).forEach(charity => {
-        if (dntn4charity[charity] && Money.value(dntn4charity[charity])) empty = false;
-    });
-    return empty;
-}
-
-/**
  * Expects url parameters: `gl.vert` or `gl.vertiser` or `via`
  * TODO support q=... flexible query
  * TODO support agency and ourselves! with multiple adverts
@@ -446,7 +396,7 @@ const CampaignPage = () => {
 		});
     })));
 	// Add in any from campaign.dntn4charity - which can include strayCharities
-	if (!isDntn4CharityEmpty(campaign.dntn4charity)) {
+	if (!Campaign.isDntn4CharityEmpty(campaign)) {
 		let cids = Object.keys(campaign.dntn4charity);
 		let clistIds = charities.map(getId);
 		cids.forEach(cid => {
@@ -481,7 +431,7 @@ const CampaignPage = () => {
     }
 
     // Scale once to get values in the right ballpark
-    let donation4charityScaled = scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
+    let donation4charityScaled = Campaign.scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
     
     console.log("[DONATION4CHARITY]", "DONATION SCALED", donation4charityScaled);
 
@@ -489,7 +439,7 @@ const CampaignPage = () => {
     charities = filterLowDonations({charities, campaign, donationTotal, donation4charity:donation4charityScaled});
     
     // Scale again to make up for discrepencies introduced by filtering
-	donation4charityScaled = scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
+	donation4charityScaled = Campaign.scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
 
     console.log("After Filter CHARITIES", charities);
 
