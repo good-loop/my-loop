@@ -247,7 +247,7 @@ const CampaignPage = () => {
 		return <Misc.Loading text="Loading advert info..." />;
 	}
 	if (!pvTopCampaign.value && !pvCampaigns.value) {
-		console.warn("NO ADS FOUND, aborting page generation");
+		console.warn("NO CAMPAIGNS FOUND, aborting page generation");
 		return <Page404/>;
     }
     
