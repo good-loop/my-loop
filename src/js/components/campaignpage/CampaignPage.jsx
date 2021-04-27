@@ -214,113 +214,6 @@ const fetchIHubData2_wrapAsList = pvTopItem => {
 };
 
 
-// POSSIBLY OLD CODE MERGED IN FROM A BRANCH CONFLICT, APR 2021
-/**
- * @param {Object} p
- * @param {?Money} p.donationTotal
- * @param {NGO[]} p.charities From adverts (not SoGive)
- * @param {Object} p.donation4charity scaled (so it can be compared against donationTotal)
- * @returns {NGO[]}
- */
-const filterLowDonations = ({charities, campaign, donationTotal, donation4charity}) => {
-
-	// Low donation filtering data is represented as only 2 controls for portal simplicity
-	// lowDntn = the threshold at which to consider a charity a low donation
-	// hideCharities = a list of charity IDs to explicitly hide - represented by keySet as an object (explained more below line 103)
-
-    console.log("[FILTER]", "Filtering with dntn4charity", donation4charity);
-
-	// Filter nulls
-	charities = charities.filter(x => x);
-
-	if (campaign.hideCharities) {
-		let hc = Campaign.hideCharities(campaign);
-        const charities2 = charities.filter(c => ! hc.includes(normaliseSogiveId(getId(c))));
-        console.log("[FILTER]","HIDDEN CHARITIES: ",hc);
-		charities = charities2;
-	}
-	
-	let lowDntn = campaign.lowDntn;	
-	if ( ! lowDntn || ! Money.value(lowDntn)) {
-		if ( ! donationTotal) {
-			return charities;
-		}
-		// default to 0	
-		lowDntn = new Money(donationTotal.currencySymbol + "0");
-	}
-	console.warn("[FILTER]","Low donation threshold for charities set to " + lowDntn);
-    
-	/**
-	 * @param {!NGO} c 
-	 * @returns {?Money}
-	 */
-	const getDonation = c => {
-		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
-		return d;
-	};
-
-	charities = charities.filter(charity => {
-        const dntn = getDonation(charity);
-        let include = dntn && Money.lessThan(lowDntn, dntn);
-        if (!include) console.log("[FILTER]","BELOW LOW DONATION: ",charity, dntn);
-		return include;
-    });
-	return charities;
-} // ./filterLowDonations
-
-/**
- * Scale a list of charities to match the money total.
- * This will scale so that sum(donations to `charities`) = donationTotal
- * Warning: If a charity isn't on the list, it is assumed that donations to it are noise, to be reallocated.
- * 
- * @param {Campaign} campaign 
- * @param {Money} donationTotal 
- * @param {Object} donation4charityUnscaled
- */
-const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled, charities) => {
-	// Campaign.assIsa(campaign); can be {}
-	//assMatch(charities, "NGO[]");	- can contain dummy objects from strays
-    let {forceScaleDonations} = DataStore.getValue(['location', 'params']);
-	if (!isDntn4CharityEmpty(campaign.dntn4charity) && !forceScaleDonations) {
-		// NB: donation4charityUnscaled will contain all data for campaigns, including data not in campaign.dntn4charity
-        //assert(campaign.dntn4charity === donation4charityUnscaled);
-		return donation4charityUnscaled; // explicitly set, so don't change it
-	}
-
-	if ( ! Money.value(donationTotal)) {
-		console.log("[DONATION4CHARITY]","Scale donations - dont scale to 0");
-		return Object.assign({}, donation4charityUnscaled); // paranoid copy
-	}
-	Money.assIsa(donationTotal);
-    // NB: only count donations for the charities listed
-    let monies = charities.map(c => getId(c) !== "unset" ? donation4charityUnscaled[getId(c)] : null);
-    monies = monies.filter(x=>x);
-	let totalDntnByCharity = Money.total(monies);
-	if ( ! Money.value(totalDntnByCharity)) {
-		console.log("[DONATION4CHARITY]","Scale donations - cant scale up 0");
-		return Object.assign({}, donation4charityUnscaled); // paranoid copy
-	}
-	// scale up (or down)	
-	let ratio = Money.divide(donationTotal, totalDntnByCharity);
-	const donation4charityScaled = {};
-	mapkv(donation4charityUnscaled, (k,v) => 
-		k==="total" || k==="unset"? null : donation4charityScaled[k] = Money.mul(donation4charityUnscaled[k], ratio));
-	console.log("[DONATION4CHARITY]","Scale donations from", donation4charityUnscaled, "to", donation4charityScaled);
-    return donation4charityScaled;
-};
-
-const isDntn4CharityEmpty = (dntn4charity) => {
-    let empty = true;
-    if (!dntn4charity) return true;
-    Object.keys(dntn4charity).forEach(charity => {
-        if (dntn4charity[charity] && Money.value(dntn4charity[charity])) empty = false;
-    });
-    return empty;
-}
-
-// END OF POSSIBLY OBSOLETE CODE
-
-
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser` or `via`
  * TODO support q=... flexible query
@@ -370,10 +263,11 @@ const CampaignPage = () => {
     // Get filtered ad list
     const otherCampaigns = pvCampaigns.value && List.hits(pvCampaigns.value).filter(c => c.id!==campaign.id);
     console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", otherCampaigns && otherCampaigns.map(c => c.name || c.id));
-    let ads = campaign ? Campaign.advertsToShow({topCampaign:campaign, campaigns:otherCampaigns, status, showNonServed, nosample, query}) : [];
-    let canonicalAds = campaign ? Campaign.advertsToShow({topCampaign:campaign, campaigns:otherCampaigns, status}) : [];
-    console.log("ADS LENGTH:", ads.length);
-	let extraAds = Campaign.advertsToShow({topCampaign:campaign, campaigns:otherCampaigns, status, presetAds:List.hits(pvAds.value), showNonServed, nosample});
+	let adStatusList = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, status, showNonServed, nosample, query, extraAds:pvAds.value && List.hits(pvAds.value)}).filter(ad => ad.ihStatus==="SHOWING") : [];
+    let ads = adStatusList.filter(ad => ad.ihStatus==="SHOWING");
+    let canonicalAds = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, showNonServed, nosample, status, extraAds:pvAds.value && List.hits(pvAds.value)}).filter(ad => ad.ihStatus==="SHOWING") : [];
+    let extraAds = adStatusList.filter(ad => ad.ihStatus==="NO CAMPAIGN");
+	console.log("ADS LENGTH:", ads.length);
     
     // Merge in ads with no campaigns if asked - less controls applied
     if (!hideNonCampaignAds && pvAds.value) {
@@ -599,14 +493,14 @@ const CampaignPage = () => {
 					<AdvertsCatalogue
 						campaign={campaign}
 						ads={ads}
-                        canonicalAds={canonicalAds}
+						canonicalAds={canonicalAds}
 						viewcount4campaign={viewcount4campaign}
 						donationTotal={donationTotal}
 						nvertiserName={nvertiserName}
-                        totalViewCount={totalViewCount}
-                        showNonServed={showNonServed}
-                        ongoing={ongoing}
-                        vertisers={pvAdvertisers.value && List.hits(pvAdvertisers.value)}
+						totalViewCount={totalViewCount}
+						showNonServed={showNonServed}
+						ongoing={ongoing}
+						vertisers={pvAdvertisers.value && List.hits(pvAdvertisers.value)}
 					/>
 				)}
 
