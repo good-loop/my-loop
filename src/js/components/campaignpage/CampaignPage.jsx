@@ -280,7 +280,7 @@ const filterLowDonations = ({charities, campaign, donationTotal, donation4charit
 const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled, charities) => {
 	// Campaign.assIsa(campaign); can be {}
 	//assMatch(charities, "NGO[]");	- can contain dummy objects from strays
-    let {forceScaleDonations} = campaign;
+    let {forceScaleDonations} = DataStore.getValue(['location', 'params']);
 	if (!isDntn4CharityEmpty(campaign.dntn4charity) && !forceScaleDonations) {
 		// NB: donation4charityUnscaled will contain all data for campaigns, including data not in campaign.dntn4charity
         //assert(campaign.dntn4charity === donation4charityUnscaled);
@@ -331,7 +331,11 @@ const CampaignPage = () => {
     let {
 		via,
         landing,
+        hideNonCampaignAds,
+        showNonServed,
+        ongoing,
         query,
+        forceScaleTotal,
         status,
         'gl.status':glStatus
 	} = DataStore.getValue(['location', 'params']) || {};
@@ -361,13 +365,6 @@ const CampaignPage = () => {
 		console.warn("No master campaign found, using:", campaign.name || campaign.id);
 	}
     if ( ! campaign) campaign = {};
-
-	let {
-		hideNonCampaignAds,
-        showNonServed,
-        ongoing,
-		forceScaleTotal
-	} = campaign;
 
     // Get filtered ad list
     const otherCampaigns = pvCampaigns.value && List.hits(pvCampaigns.value).filter(c => c.id!==campaign.id);
