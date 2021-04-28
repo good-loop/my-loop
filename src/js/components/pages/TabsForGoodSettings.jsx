@@ -38,12 +38,13 @@ const SearchEnginePicker = () => {
 	let searchEngine = getClaimValue({person, key:"searchEngine"});
 	if ( ! searchEngine) {
 		searchEngine = "google";
+	} else {
+		DataStore.setValue(dpath.concat("searchEnginePicker"), searchEngine, false); // set it for the PropControl
 	}
 	const dpath = ['widget', 'TabsForGoodSettings'];
-	const onSelect = () => {
-		const newEngine = DataStore.getValue(dpath);
-		console.log("newEngine", newEngine);
-		setPersonSetting("searchEngine",newEngine);
+	const onSelect = ({value}) => {
+		console.log("newEngine", value);
+		setPersonSetting("searchEngine", value);
 	}
 
 	return <PropControl type="select" prop="searchEnginePicker" options={["google", "ecosia", "duckduckgo", "bing"]}
@@ -206,8 +207,9 @@ const getPVSelectedCharityId = (xid) => {
 	return getPVClaimValue({xid, key:"charity"});	
 };
 
-const setPersonSetting = (key, value) => {
+const setPersonSetting = (key, value) => {	
 	assMatch(key,String,"setPersonSetting - no key");
+	assMatch(value, "String|Number|Boolean");
 	const xid = Login.getId();
 	assert(xid, "setPersonSetting - no login");
 	let person = getProfile({xid}).value;
