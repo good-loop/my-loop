@@ -16,6 +16,7 @@ import Icon from '../../base/components/Icon';
 import PromiseValue from 'promise-value';
 import Misc from '../../base/components/Misc';
 import KStatus from '../../base/data/KStatus';
+import { getDataLogData } from '../../base/plumbing/DataLog';
 
 
 const TabsForGoodSettings = () => {
@@ -158,23 +159,26 @@ const isSafeToLoadUserSettings = () => {
  * @returns ?PromiseValue<Number> null if not logged in yet
  */
 const getTabsOpened = () => {
-    let pvValue = DataStore.fetch(['misc','stats','tabopens'], () => {
-        const trkreq = {
-            q: "user:"+Login.getId()+" AND evt:tabopen",
-            name: "tabopens",
-            dataspace: 'gl',
-            start: 0 // all time (otherwise defaults to 1 month)
-        }; // ??future, end, breakdowns: [byHostOrAd]};				
-        let pData = ServerIO.getDataLogData(trkreq);
-        // unwrap the count
-        return pData.then(getTabsOpened2_unwrap);
-    });
-    return pvValue;
+	const trkreq = {
+		q: "user:"+Login.getId()+" AND evt:tabopen",
+		name: "tabopens",
+		dataspace: 'gl',
+		start: 0 // all time (otherwise defaults to 1 month)
+	}; // ??future, end, breakdowns: [byHostOrAd]};	
+    let pvData = getDataLogData(trkreq);
+	let pvAllCount = PromiseValue.then(pvData, res => {
+		return res.allCount;
+	});
+	// let pData = ServerIO.getDataLogData(trkreq); old code Apr 2021
+	// ??unwrap the count
+	// return pData.then(getTabsOpened2_unwrap);
+    // });
+    return pvAllCount;
 };
-const getTabsOpened2_unwrap = res => {
-	const data = JSend.data(res);
-	return data.all;
-}
+// const getTabsOpened2_unwrap = res => {
+// 	const data = JSend.data(res);
+// 	return data.all;
+// }
 
 /**
  * @returns {!Number}
