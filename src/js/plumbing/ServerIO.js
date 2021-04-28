@@ -26,11 +26,11 @@ ServerIO.NO_API_AT_THIS_HOST = true;
 
 // Comment out the lines below when deploying!
 
-Login.ENDPOINT = 'http://localyouagain.good-loop.com/youagain.json';
+// Login.ENDPOINT = 'http://localyouagain.good-loop.com/youagain.json';
 
 ServerIO.DATALOG_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}lg.good-loop.com/data`;
 // ServerIO.DATALOG_ENDPOINT = 'https://testlg.good-loop.com/data';
-ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';
+// ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';
 
 ServerIO.PROFILER_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}profiler.good-loop.com`;
 ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com';
