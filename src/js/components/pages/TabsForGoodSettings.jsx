@@ -36,12 +36,12 @@ const SearchEnginePicker = () => {
 	const person = getProfile().value;
 	if ( ! person) return <Misc.Loading />;
 	let searchEngine = getClaimValue({person, key:"searchEngine"});
+	const dpath = ['widget', 'TabsForGoodSettings'];
 	if ( ! searchEngine) {
 		searchEngine = "google";
 	} else {
 		DataStore.setValue(dpath.concat("searchEnginePicker"), searchEngine, false); // set it for the PropControl
-	}
-	const dpath = ['widget', 'TabsForGoodSettings'];
+	}	
 	const onSelect = ({value}) => {
 		console.log("newEngine", value);
 		setPersonSetting("searchEngine", value);
