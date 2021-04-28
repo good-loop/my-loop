@@ -3,7 +3,7 @@
  */
 const GLAppManifest = {
 	name: "My.Good-Loop",
-	id: "my.good-loop",
+	id: "my.good-loop.com",
 	dataspace: "good-loop",
 	logo: "/img/gl-logo/LogoMark/logo.svg",
 	website: "https://good-loop.com",
