@@ -127,8 +127,8 @@ class MainDiv extends Component {
 				setShowLogin(false);
 			}*/
 
-			// Update xids
-			DataStore.setValue(['data', 'Person', 'xids'], getAllXIds(), false);
+			// Update xids - Hm: can be heavy if you have a lot. off for now
+			// DataStore.setValue(['data', 'Person', 'xids'], getAllXIds(), false);
 
 			// Link profiles? No - done by the YA server
 			// poke React via DataStore (e.g. for Login.error)
@@ -145,7 +145,7 @@ class MainDiv extends Component {
 			// Store response.cargo.success somewhere in datastore so other components can check (a) if it's finished and (b) if it was successful before trying to talk to lg.good-loop.com
 		});
 
-		DataStore.setValue(['data', 'Person', 'xids'], getAllXIds(), false);
+		// DataStore.setValue(['data', 'Person', 'xids'], getAllXIds(), false);
 	} // ./componentDidMount
 
 	componentWillUnmount () {

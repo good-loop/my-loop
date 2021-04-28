@@ -60,8 +60,8 @@ const Page = () => {
 			</div>
 		);
 	}
-	// NB: race conditions with Login and profile fetch (for linked IDs) mean all-xids should be refreshed.
-	let xids = getAllXIds();
+	// // NB: race conditions with Login and profile fetch (for linked IDs) mean all-xids should be refreshed.
+	// let xids = getAllXIds();
 
 	const user = Login.getUser();
 	const name = user.name || user.xid;

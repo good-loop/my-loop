@@ -39,7 +39,7 @@ const SearchEnginePicker = () => {
 	if ( ! searchEngine) {
 		searchEngine = "google";
 	}
-
+	const dpath = ['widget', 'TabsForGoodSettings'];
 	const onSelect = () => {
 		const newEngine = DataStore.getValue(dpath);
 		console.log("newEngine", newEngine);
@@ -48,7 +48,7 @@ const SearchEnginePicker = () => {
 
 	return <PropControl type="select" prop="searchEnginePicker" options={["google", "ecosia", "duckduckgo", "bing"]}
 		labels={["Google", "Ecosia", "DuckDuckGo", "Bing"]} dflt={"google"} saveFn={onSelect}
-		path={['widget', 'TabsForGoodSettings']}/>;
+		path={dpath}/>;
 }
 
 const CharityPicker = () => {

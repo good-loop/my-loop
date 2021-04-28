@@ -4,7 +4,7 @@ import { is, isPortraitMobile, space } from '../../base/utils/miscutils';
 import Roles from '../../base/Roles';
 import PropControl from '../../base/components/PropControl';
 import ConsentWidget from '../ConsentWidget';
-import { getAllXIds, getClaimValue, getProfile, savePersons, setClaimValue} from '../../base/data/Person';
+import Person, { getAllXIds, getClaimValue, getProfile, savePersons, setClaimValue} from '../../base/data/Person';
 import SignUpConnectCard from '../cards/SignUpConnectCard';
 import Login from '../../base/youagain';
 import { LoginLink } from '../../base/components/LoginWidget';
@@ -68,13 +68,9 @@ const YourDataSettings = ({className}) => {
 	if ( ! person) {
 		return <Misc.Loading />; // paranoia, probably
 	}
-	let xids = getAllXIds();
-	// Good-Loop profile
-
-	// email?
-	let exid = xids.find(xid => XId.service(xid)==='email');
-	if ( ! exid) {
-		console.warn("AccountSettings - no email?", xids);
+	let email = Person.getEmail(person);
+	if ( ! email) {
+		console.warn("AccountSettings - no email?", person);
 	}
 	
 	return (<div className={space("your-data-form", className)}>
@@ -93,7 +89,7 @@ const YourDataSettings = ({className}) => {
 		<Row className="align-items-start user-setting mt-4 mt-md-0">
 			<Col md={2}>Email:</Col>
 			<Col md={6} className="align-left" style={{lineHeight:"100%"}}>
-				<code>{exid? XId.id(exid) : "unset"}</code><br/>
+				<code>{email || "unset"}</code><br/>
 				<small style={{fontSize:"50%", lineHeight:"50%"}}>Email is set from your login. Let us know if you need to change it by contacting support@good-loop.com.</small>
 			</Col>
 		</Row>
