@@ -224,12 +224,6 @@ const CampaignPage = () => {
     let {
 		via,
         landing,
-        hideNonCampaignAds,
-        showNonServed,
-		nosample,
-        ongoing,
-        query,
-        forceScaleTotal,
         status,
         'gl.status':glStatus
 	} = DataStore.getValue(['location', 'params']) || {};
@@ -260,22 +254,24 @@ const CampaignPage = () => {
 	}
     if ( ! campaign) campaign = {};
 
+	let {
+		hideNonCampaignAds,
+		showNonServed,
+		nosample,
+		ongoing,
+		query,
+		forceScaleTotal,
+	} = campaign;
+
     // Get filtered ad list
     const otherCampaigns = pvCampaigns.value && List.hits(pvCampaigns.value).filter(c => c.id!==campaign.id);
     console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", otherCampaigns && otherCampaigns.map(c => c.name || c.id));
 	let adStatusList = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, status, showNonServed, nosample, query, extraAds:pvAds.value && List.hits(pvAds.value)}).filter(ad => ad.ihStatus==="SHOWING") : [];
-    let ads = adStatusList.filter(ad => ad.ihStatus==="SHOWING");
+    let ads = adStatusList.filter(ad => ad.ihStatus==="SHOWING" || (ad.ihStatus==="NO CAMPAIGN" && !hideNonCampaignAds));
     let canonicalAds = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, showNonServed, nosample, status, extraAds:pvAds.value && List.hits(pvAds.value)}).filter(ad => ad.ihStatus==="SHOWING") : [];
     let extraAds = adStatusList.filter(ad => ad.ihStatus==="NO CAMPAIGN");
 	console.log("ADS LENGTH:", ads.length);
-    
-    // Merge in ads with no campaigns if asked - less controls applied
-    if (!hideNonCampaignAds && pvAds.value) {
-        const hideAds = Campaign.hideAdverts(campaign, otherCampaigns);
-        extraAds.forEach(ad => {
-            if (!ads.includes(ad) && !hideAds.includes(ad.id)) ads.push(ad);
-        });
-    }
+
     if (!yessy(ads)) return <Misc.Loading text="Loading advert info..." />;
 
 	// Combine branding
