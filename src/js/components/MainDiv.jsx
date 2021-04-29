@@ -17,7 +17,7 @@ import NavBar from './MyLoopNavBar';
 import Misc from '../base/components/Misc';
 
 // Pages
-import MyPage from './pages/MyPage';
+import MyPage, { HowItWorksCard } from './pages/MyPage';
 import MyCharitiesPage from './pages/MyCharitiesPage';
 import MyAdCampaignsPage from './pages/MyAdCampaignsPage';
 import GetInvolvedPage from './pages/GetInvolvedPage';
@@ -28,6 +28,8 @@ import E404Page from '../base/components/E404Page';
 import AccountPage from './pages/AccountPage';
 import Footer from './Footer';
 import MyGLAboutPage from './MyGLAboutPage';
+import MyLoopNavBar from './MyLoopNavBar';
+import SubscriptionBox from './cards/SubscriptionBox';
 import { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
 import TabsForGoodOnboard from './pages/TabsForGoodOnboard';
 import { getAllXIds } from '../base/data/Person';
@@ -43,6 +45,20 @@ C.setupDataStore();
 // Person from profiler
 ServerIO.USE_PROFILER = true;
 
+/**
+ * Subscribe box as a single page 
+ */
+const SubscribePage = ({}) => {
+
+	return (<>
+		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg"/>
+		<div className='Subscribe widepage'>
+			<SubscriptionBox title="Subscribe to our monthly newsletter" className="bg-gl-light-red big-sub-box"/>
+            <HowItWorksCard />
+		</div>
+	</>);
+}
+
 // Actions
 
 const PAGES = {
@@ -55,6 +71,7 @@ const PAGES = {
 	ads: MyAdCampaignsPage,
 	involve: GetInvolvedPage,
 	howitworks: MyPage,
+    subscribe: SubscribePage,
 	about: MyGLAboutPage,
 	tabsForGood: TabsForGoodOnboard,
 	register: NewtabCharityLogin
@@ -67,7 +84,8 @@ const DEFAULT_PAGE = 'my';
 
 const loginResponsePath = ['misc', 'login', 'response'];
 
-Login.app = C.app.service;
+Login.app = C.app.id;
+Login.dataspace = C.app.dataspace;
 
 /**
 	TODO refactor to use MainDivBase
@@ -109,8 +127,8 @@ class MainDiv extends Component {
 				setShowLogin(false);
 			}*/
 
-			// Update xids
-			DataStore.setValue(['data', 'Person', 'xids'], getAllXIds(), false);
+			// Update xids - Hm: can be heavy if you have a lot. off for now
+			// DataStore.setValue(['data', 'Person', 'xids'], getAllXIds(), false);
 
 			// Link profiles? No - done by the YA server
 			// poke React via DataStore (e.g. for Login.error)
@@ -127,7 +145,7 @@ class MainDiv extends Component {
 			// Store response.cargo.success somewhere in datastore so other components can check (a) if it's finished and (b) if it was successful before trying to talk to lg.good-loop.com
 		});
 
-		DataStore.setValue(['data', 'Person', 'xids'], getAllXIds(), false);
+		// DataStore.setValue(['data', 'Person', 'xids'], getAllXIds(), false);
 	} // ./componentDidMount
 
 	componentWillUnmount () {
@@ -143,6 +161,7 @@ class MainDiv extends Component {
 	}
 
 	render() {
+		Login.app = C.app.id; // in case a look into T4G switched it over
 		let path = DataStore.getValue('location', 'path');	
 		let page = (path && path[0]);
 		if (!page) {

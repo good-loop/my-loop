@@ -4,16 +4,19 @@ import ListLoad from '../../base/components/ListLoad';
 import PropControl from '../../base/components/PropControl';
 import { getId } from '../../base/data/DataClass';
 import JSend from '../../base/data/JSend';
-import { getAllXIds, getClaimValue, getProfilesNow, savePersons, setClaimValue } from '../../base/data/Person';
+import Person, { getAllXIds, getPVClaimValue, getProfile, savePersons, setClaimValue, getClaimValue } from '../../base/data/Person';
 import { getDataItem } from '../../base/plumbing/Crud';
-import DataStore from '../../base/plumbing/DataStore';
-import { assert } from '../../base/utils/assert';
+import DataStore, { getListPath } from '../../base/plumbing/DataStore';
+import { assert, assMatch } from '../../base/utils/assert';
 import { space } from '../../base/utils/miscutils';
 import Login from '../../base/youagain';
 import ServerIO from '../../plumbing/ServerIO';
 import Cookies from 'js-cookie';
 import Icon from '../../base/components/Icon';
 import PromiseValue from 'promise-value';
+import Misc from '../../base/components/Misc';
+import KStatus from '../../base/data/KStatus';
+import { getDataLogData } from '../../base/plumbing/DataLog';
 
 
 const TabsForGoodSettings = () => {
@@ -31,33 +34,30 @@ const TabsForGoodSettings = () => {
 };
 
 const SearchEnginePicker = () => {
-	const dpath = ['widget', 'TabsForGoodSettings', 'searchEnginePicker'];
-	const selEngine = DataStore.getValue(dpath);
-    getSearchEngine(dpath);
-
-    /*useEffect (() => {
-        const currentEngine = DataStore.getValue('widget', 'TabsForGoodSettings', 'searchEnginePicker');
-        console.log("CURRENT SEARCH ENGINE", currentEngine);
-	    if (!currentEngine) DataStore.setValue(['widget', 'TabsForGoodSettings', 'searchEnginePicker'], selEngine || 'google');
-    });*/
-	
-	console.log("Selected search engine: " + selEngine);
-
-	const onSelect = () => {
-		const newEngine = DataStore.getValue(dpath);
-		console.log(newEngine);
-		setSearchEngine(newEngine);
+	const person = getProfile().value;
+	if ( ! person) return <Misc.Loading />;
+	let searchEngine = getClaimValue({person, key:"searchEngine"});
+	const dpath = ['widget', 'TabsForGoodSettings'];
+	if ( ! searchEngine) {
+		searchEngine = "google";
+	} else {
+		DataStore.setValue(dpath.concat("searchEnginePicker"), searchEngine, false); // set it for the PropControl
+	}	
+	const onSelect = ({value}) => {
+		console.log("newEngine", value);
+		setPersonSetting("searchEngine", value);
 	}
 
 	return <PropControl type="select" prop="searchEnginePicker" options={["google", "ecosia", "duckduckgo", "bing"]}
-		labels={["Google", "Ecosia", "DuckDuckGo", "Bing"]} dflt={"google"} onChange={onSelect}
-		path={['widget', 'TabsForGoodSettings']}/>;
+		labels={["Google", "Ecosia", "DuckDuckGo", "Bing"]} dflt={"google"} saveFn={onSelect}
+		path={dpath}/>;
 }
 
 const CharityPicker = () => {
-    const dpath = ['widget', 'TabsForGood', 'charityID'];
-	const selId = DataStore.getValue(dpath);
-    getSelectedCharityId(dpath);
+	const person = getProfile().value;
+	if ( ! person) return <Misc.Loading />;
+    let selId = getClaimValue({person, key:"charity"});
+    
 	const pvSelectedCharity = selId && getDataItem({type:C.TYPES.NGO, id:selId, status:C.KStatus.Published, swallow:true});
 	let q = DataStore.getValue('widget','search','q');
 	
@@ -67,10 +67,9 @@ const CharityPicker = () => {
 	const type = "NGO"; const status="PUBLISHED";
 	// fetch the full item - and make a Ref
 	let hits = DEFAULT_LIST.split(" ").map(cid => getDataItem({type, id:cid, status}) && {id:cid, "@type":type, status});
-    const charityPath = "list.NGO.PUBLISHED.nodomain.LISTLOADHACK.whenever.impact".split(".");
-	useEffect (() => {
-        if (!DataStore.getValue(charityPath)) DataStore.setValue(charityPath, {hits, total:hits.length}, false);
-    });
+	// HACK: This is whereListLoad will look!
+    const charityPath = getListPath({type:"NGO", status:KStatus.PUBLISHED, q:"LISTLOADHACK",sort:"impact"}); // "list.NGO.PUBLISHED.nodomain.LISTLOADHACK.whenever.impact".split(".");
+	DataStore.setValue(charityPath, {hits, total:hits.length}, false);
 
 	return <div>
 		{selId && 
@@ -88,10 +87,6 @@ const CharityPicker = () => {
 	</div>;
 };
 
-// ListItem {type, servlet, navpage, item, sort} <div key={c.id} className="p-md-3 d-flex justify-content-center align-items-center">
-				// <CharitySelectBox charity={c} padAmount3D={25} className="pt-3 pt-md-0"/>
-				// </div>
-
 /**
  * Show a selectable charity in the charity list
  * @param charity the charity to show
@@ -99,9 +94,9 @@ const CharityPicker = () => {
  */
 const CharitySelectBox = ({item, className}) => {
 	assert(item, "CharitySelectBox - no item");
-	const dpath = ['widget', 'TabsForGood', 'charityID'];
-	const selId = DataStore.getValue(dpath);
-    getSelectedCharityId(dpath);
+	const person = getProfile().value;
+	let selId = person && getClaimValue({person, key:"charity"});
+    
 	let selected = getId(item) === selId;	
 	// NB: to deselect, pick a different charity (I think that's intuitive enough)
 
@@ -112,7 +107,7 @@ const CharitySelectBox = ({item, className}) => {
 			{item.logo? <img className="logo-xl mt-4 mb-2" src={item.logo} /> : <span>{item.name || item.id}</span>}
 			<p>{item.summaryDescription}</p>
 			{selected ? <span className="text-success thin"><Icon name='tick' /> Selected</span>
-				: <button onClick={() => setSelectedCharityId(getId(item))} className="btn btn-outline-primary thin">Select</button>
+				: <button onClick={() => setPersonSetting("charity", getId(item))} className="btn btn-outline-primary thin">Select</button>
 			}
 			{item.url && <a className="position-absolute" style={{top: 10, right: 10}} href={item.url} target="_blank" rel="noreferrer">About</a>}
 		</div>
@@ -159,54 +154,45 @@ const isSafeToLoadUserSettings = () => {
     return !!(Login.isLoggedIn() && Login.getUser().jwt);
 }
 
-/**
- * Set func to update DataStore once Login is verified
- * @param {Function} func
- * @param {String[]} dpath
- * @returns the result of the function - should retrieve through DataStore
- */
-const waitForLogin = async (func, dpath) => {
-    // If we already got a value, just return it
-    const storedVal = DataStore.getValue(dpath);
-    if (storedVal) return storedVal;
-    await Login.verify();
-    const val = func();
-    if (DataStore.getValue(dpath) !== val) DataStore.setValue(dpath, val);
-    return val;
-}
-
 /** 
  * Fetch the number of tabs opened by the user.
  * @returns ?PromiseValue<Number> null if not logged in yet
  */
 const getTabsOpened = () => {
-    let pvValue = DataStore.fetch(['misc','stats','tabopens'], () => {
-        const trkreq = {
-            q: "user:"+Login.getId()+" AND evt:tabopen",
-            name: "tabopens",
-            dataspace: 'gl',
-            start: 0 // all time (otherwise defaults to 1 month)
-        }; // ??future, end, breakdowns: [byHostOrAd]};				
-        let pData = ServerIO.getDataLogData(trkreq);
-        // unwrap the count
-        return pData.then(getTabsOpened2_unwrap);
-    });
-    return pvValue;
+	const trkreq = {
+		q: "user:"+Login.getId()+" AND evt:tabopen",
+		name: "tabopens",
+		dataspace: 'gl',
+		start: 0 // all time (otherwise defaults to 1 month)
+	}; // ??future, end, breakdowns: [byHostOrAd]};	
+    let pvData = getDataLogData(trkreq);
+	let pvAllCount = PromiseValue.then(pvData, res => {
+		return res.allCount;
+	});
+	// let pData = ServerIO.getDataLogData(trkreq); old code Apr 2021
+	// ??unwrap the count
+	// return pData.then(getTabsOpened2_unwrap);
+    // });
+    return pvAllCount;
 };
-const getTabsOpened2_unwrap = res => {
-	const data = JSend.data(res);
-	return data.all;
-}
+// const getTabsOpened2_unwrap = res => {
+// 	const data = JSend.data(res);
+// 	return data.all;
+// }
 
+/**
+ * @returns {!Number}
+ */
 const getDaysWithGoodLoop = () => {
-	const xids = getAllXIds();
-	const persons = getProfilesNow(xids);
+	const person = getProfile().value;
+	if ( ! person) {
+		return 1;
+	}
 	// use the oldest claim (TODO lets have a register claim and use that)
-	let allClaims = [];
-	persons.forEach(peep => allClaims.push(...peep.claims));	
-	// const claims = getClaims({persons, key:"registered:tabs-for-good"});
+	let claims = Person.claims(person);
+	// const claims = getClaims({persons, key:"app:t4g.good-loop.com"});
 	// find the oldest
-	const claimDates = allClaims.map(c => c.t).filter(t => t);
+	const claimDates = claims.map(c => c.t).filter(t => t);
 	claimDates.sort();
 	const oldest = claimDates[0];
 	if ( ! oldest) {
@@ -219,104 +205,22 @@ const getDaysWithGoodLoop = () => {
 };
 
 /**
- * Uses waitForLogin - will update DataStore at given dpath once done, instead of returning
- * This is to allow the function to defer until login is complete, then update values correctly once loaded
+	@returns ?PromiseValue(String)
  */
-const getSelectedCharityId = (dpath) => {
-    assert(dpath);
-    const func = () => {
-        let xids = getAllXIds();
-        let persons = getProfilesNow(xids);
-        let cid = getClaimValue({persons, key:"charity", swallow:true});
-        console.log("GOT CHARITY", cid);
-        return cid;
-    };
-    return waitForLogin(func, dpath);
+const getPVSelectedCharityId = (xid) => {
+	return getPVClaimValue({xid, key:"charity"});	
 };
 
-const setSelectedCharityId = (cid) => {
-	let xids = getAllXIds();
-	assert(xids.length);
-	let persons = getProfilesNow(xids);
-	assert(persons.length);
-	setClaimValue({persons, key:"charity", value:cid, swallow:true});
-	console.log("setSelectedCharityId " + cid+" for ",xids, "persons", persons);
+const setPersonSetting = (key, value) => {	
+	assMatch(key,String,"setPersonSetting - no key");
+	assMatch(value, "String|Number|Boolean");
+	const xid = Login.getId();
+	assert(xid, "setPersonSetting - no login");
+	let person = getProfile({xid}).value;
+	console.log("setPersonSetting", xid, key, value, person);
+	setClaimValue({person, key, value});
 	DataStore.update();
-	// save
-	let pv = savePersons({persons});
-	// return??
-	const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
-    const link = DataStore.getUrlValue("link");
-    pv.promise.then(re => {
-        console.log("... saved setSelectedCharityId " + cid);
-        if (task==="select-charity" && link) {
-            window.location = link;
-        }
-    }).catch(e => {
-        console.error("FAILED CHARITY SELECT", e);
-    })
-	
-};
-
-const doesUserHaveT4G = (dpath) => {
-    assert(dpath);
-    const func = () => {
-        let xids = getAllXIds();
-        let persons = getProfilesNow(xids);
-        let cid = getClaimValue({persons, key:"hasT4G", swallow:true});
-        return cid;
-    };
-    return waitForLogin(func, dpath);
-};
-
-const setHasT4G = (hasT4G, update=true) => {
-    let xids = getAllXIds();
-	let persons = getProfilesNow(xids);
-	setClaimValue({persons, key:"hasT4G", value:hasT4G, swallow:true});
-	console.log("setHasT4G " + hasT4G +" for ",xids, "persons", persons);
-	if (update) DataStore.update();
-	// save
-	let pv = savePersons({persons});
-    pv.promise.then(re => console.log("... saved setHasT4G " + hasT4G));
-};
-
-const getSearchEngine = (dpath) => {
-    assert(dpath);
-    const func = () => {
-        let xids = getAllXIds();
-        let persons = getProfilesNow(xids);
-        let engine = getClaimValue({persons, key:"searchEngine", swallow:true});
-        if (!engine) {
-            engine = Cookies.get('t4g-search-engine');
-        }
-        return engine;
-    };
-    return waitForLogin(func, dpath);
-};
-
-const setSearchEngine = (engine) => {
-	let xids = getAllXIds();
-	let persons = getProfilesNow(xids);
-	setClaimValue({persons, key:"searchEngine", value:engine, swallow:true});
-	console.log("setSelectedCharityId " + engine);
-	DataStore.update();
-	// save
-	let pv = savePersons({persons});
-
-	// Set a cookie with the new search engine, so there isnt a delay on loading the correct search engine on new tabs
-	const secure = window.location.protocol==='https:';
-	// ref: https://web.dev/samesite-cookies-explained/
-	Cookies.set('t4g-search-engine', engine, {expires:365, sameSite:'None', secure: true});
-
-	// return??
-	const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
-	const link = DataStore.getUrlValue("link"); 
-	if (task==="select-search-engine" && link) {
-		pv.promise.then(re => {
-			console.log("... saved setSearchEngine " + engine);
-			window.location = link;
-		});
-	}
+	savePersons({person});	
 };
 
 const StatCard = ({md, lg, xs, number, label, className, padding, children}) => {
@@ -329,5 +233,5 @@ const StatCard = ({md, lg, xs, number, label, className, padding, children}) => 
 	</Col>;
 };
 
-export { getTabsOpened, Search, getSelectedCharityId, setSelectedCharityId, getSearchEngine, setHasT4G, doesUserHaveT4G };
+export { getTabsOpened, Search, getPVSelectedCharityId, setPersonSetting };
 export default TabsForGoodSettings;

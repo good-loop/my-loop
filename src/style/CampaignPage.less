@@ -435,4 +435,41 @@ body {
     .smallprint {
         line-height: 1.2;
     }
+
+    .ad-filters {
+        .select {
+            margin: 0px 20px;
+        }
+        .ad-filter-btn {
+            cursor: pointer;
+            border-radius: 10px;
+            margin: 10px;
+            padding: 10px;
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+			max-width: 250px;
+        }
+        .ad-filter-btn.selected {
+            border-bottom: 5px solid @gl-light-red;
+        }
+		.ad-filter {
+			transition: 0.3s;
+			overflow: hidden;
+			h5 {
+				font-size: 100%;
+				transition: 0.3s;
+			}
+		}
+		.ad-filter.collapsed {
+			height: 30px;
+			transition: 0.3s;
+			h5 {
+				font-size: 80%;
+				transition: 0.3s;
+			}
+		}
+		.ad-filter-list {
+			overflow-x: auto;
+			overflow-y: hidden;
+		}
+    }
 }

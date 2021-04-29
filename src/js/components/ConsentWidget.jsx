@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
 import PropControl from '../base/components/PropControl';
-import {convertConsents, getConsents, setConsents, savePersons, getProfilesNow, PURPOSES, saveConsents} from '../base/data/Person';
+import {convertConsents, getConsents, setConsents, savePersons, PURPOSES, saveConsents, getProfile} from '../base/data/Person';
 
 // const _debounceFnForKey = {};
 // /**
@@ -95,9 +95,9 @@ const PermissionControl = ({header, prop, subtext, textOn, saveFn}) => {
 /**
  */
 const ConsentWidget = ({xids}) => {
-	if( !xids.length ) return null;
-
-	let persons = getProfilesNow(xids);
+	if( ! xids.length ) return null;	
+	// allow consent to operate across all linked (and loaded) profiles (with a race condition, which we can ignore)
+	let persons = xids.map(xid => getProfile({xid}).value).filter(p => p);
 	// get and combine the consents
 	let perms = getConsents({persons});
 	DataStore.setValue(path, perms, false);

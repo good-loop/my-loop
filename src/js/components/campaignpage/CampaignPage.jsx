@@ -28,10 +28,11 @@ import ServerIO from '../../plumbing/ServerIO';
 import MyLoopNavBar from '../MyLoopNavBar';
 import AdvertsCatalogue from './AdvertsCatalogue';
 import CampaignSplashCard from './CampaignSplashCard';
-import Charities, { CharityDetails, fetchSogiveData } from './Charities';
+import Charities, { CharityDetails } from './Charities';
 import DevLink from './DevLink';
 import Roles from '../../base/Roles';
 import HowDoesItWork from './HowDoesItWork';
+import NGO from '../../base/data/NGO';
 
 
 /**
@@ -89,6 +90,7 @@ const viewCount = (viewcount4campaign, ad) => {
 		'gl.status': glStatus,
 		status,
         agency,
+        query
 		// q = '', TODO
 	} = DataStore.getValue(['location', 'params']) || {};
 	let campaignId1 = DataStore.getValue(['location','path'])[1];
@@ -98,11 +100,11 @@ const viewCount = (viewcount4campaign, ad) => {
 	// let campaignIds, agencyIds, adIds, advertiserIds;
 	let pvTopItem, pvTopCampaign, pvCampaigns, pvAgencies, pvAds, pvAdvertisers;
     // ...by Campaign?
-	if (campaignId1) {		
+	if (campaignId1) {
         pvTopItem = pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:campaignId1});
 		pvCampaigns = null;
 		// ads
-		pvAds = pvTopCampaign && Campaign.fetchAds(pvTopCampaign, null, status);
+		pvAds = pvTopCampaign.value && Campaign.fetchAds(pvTopCampaign.value, null, status, query);
         // advertiser
 		if (pvTopCampaign.value && pvTopCampaign.value.vertiser) {
 			const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:pvTopCampaign.value.vertiser});			
@@ -122,9 +124,12 @@ const viewCount = (viewcount4campaign, ad) => {
 	if (vertiserid) {
 		const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:vertiserid});
 		// ads
-		let q = SearchQuery.setProp(new SearchQuery(), "vertiser", vertiserid).query;
-        pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});        
+		let sq = SearchQuery.setProp(new SearchQuery(), "vertiser", vertiserid);
+        if (query) sq = SearchQuery.and(sq, new SearchQuery(query));
+        const q = sq.query;
+        pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});       
         pvTopItem = pvAdvertiser;
+        if (pvAdvertiser.value) pvTopCampaign = Campaign.fetchMasterCampaign(pvAdvertiser.value);
         pvCampaigns = Campaign.fetchForAdvertiser(vertiserid, status);
 	}
 	// ...by Agency?
@@ -140,8 +145,9 @@ const viewCount = (viewcount4campaign, ad) => {
 			assert( ! pvAds, pvAds);
 			const ids = uniq(pvAdvertisers.value.hits.map(getId));
 			if (yessy(ids)) {
-                let adq = SearchQuery.setPropOr(new SearchQuery(), "vertiser", ids).query;
-        		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q:adq});        
+                let adq = SearchQuery.setPropOr(new SearchQuery(), "vertiser", ids);
+                if (query) adq = SearchQuery.and(adq, new SearchQuery(query));
+        		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q:adq.query});        
 			} else {
 				console.warn("No Advertisers found for agency",agency,pvTopItem);
 			}
@@ -208,98 +214,6 @@ const fetchIHubData2_wrapAsList = pvTopItem => {
 };
 
 
-
-/**
- * @param {Object} p
- * @param {?Money} p.donationTotal
- * @param {NGO[]} p.charities From adverts (not SoGive)
- * @param {Object} p.donation4charity scaled (so it can be compared against donationTotal)
- * @returns {NGO[]}
- */
-const filterLowDonations = ({charities, campaign, donationTotal, donation4charity}) => {
-
-	// Low donation filtering data is represented as only 2 controls for portal simplicity
-	// lowDntn = the threshold at which to consider a charity a low donation
-	// hideCharities = a list of charity IDs to explicitly hide - represented by keySet as an object (explained more below line 103)
-
-    console.log("[FILTER]", "Filtering with dntn4charity", donation4charity);
-
-	// Filter nulls
-	charities = charities.filter(x => x);
-
-	if (campaign.hideCharities) {
-		let hc = Campaign.hideCharities(campaign);
-        const charities2 = charities.filter(c => ! hc.includes(normaliseSogiveId(getId(c))));
-        console.log("[FILTER]","HIDDEN CHARITIES: ",hc);
-		charities = charities2;
-	}
-	
-	let lowDntn = campaign.lowDntn;	
-	if ( ! lowDntn || ! Money.value(lowDntn)) {
-		if ( ! donationTotal) {
-			return charities;
-		}
-		// default to 0	
-		lowDntn = new Money(donationTotal.currencySymbol + "0");
-	}
-	console.warn("[FILTER]","Low donation threshold for charities set to " + lowDntn);
-    
-	/**
-	 * @param {!NGO} c 
-	 * @returns {?Money}
-	 */
-	const getDonation = c => {
-		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
-		return d;
-	};
-
-	charities = charities.filter(charity => {
-        const dntn = getDonation(charity);
-        let include = dntn && Money.lessThan(lowDntn, dntn);
-        if (!include) console.log("[FILTER]","BELOW LOW DONATION: ",charity, dntn);
-		return include;
-    });
-	return charities;
-} // ./filterLowDonations
-
-/**
- * Scale a list of charities to match the money total.
- * This will scale so that sum(donations to `charities`) = donationTotal
- * Warning: If a charity isn't on the list, it is assumed that donations to it are noise, to be reallocated.
- * 
- * @param {Campaign} campaign 
- * @param {Money} donationTotal 
- * @param {Object} donation4charityUnscaled
- */
-const scaleCharityDonations = (campaign, donationTotal, donation4charityUnscaled, charities) => {
-	// Campaign.assIsa(campaign); can be {}
-	//assMatch(charities, "NGO[]");	- can contain dummy objects from strays
-	if (campaign.dntn4charity) {
-		assert(campaign.dntn4charity === donation4charityUnscaled);
-		return campaign.dntn4charity; // explicitly set, so don't change it
-	}
-	if ( ! Money.value(donationTotal)) {
-		console.log("Scale donations - dont scale to 0");
-		return Object.assign({}, donation4charityUnscaled); // paranoid copy
-	}
-	Money.assIsa(donationTotal);
-    // NB: only count donations for the charities listed
-    let monies = charities.map(c => getId(c) !== "unset" ? donation4charityUnscaled[getId(c)] : null);
-    monies = monies.filter(x=>x);
-	let totalDntnByCharity = Money.total(monies);
-	if ( ! Money.value(totalDntnByCharity)) {
-		console.log("Scale donations - cant scale up 0");
-		return Object.assign({}, donation4charityUnscaled); // paranoid copy
-	}
-	// scale up (or down)	
-	let ratio = Money.divide(donationTotal, totalDntnByCharity);
-	const donation4charityScaled = {};
-	mapkv(donation4charityUnscaled, (k,v) => 
-		k==="total" || k==="unset"? null : donation4charityScaled[k] = Money.mul(donation4charityUnscaled[k], ratio));
-	console.log("Scale donations from", donation4charityUnscaled, "to", donation4charityScaled);
-    return donation4charityScaled;
-};
-
 /**
  * Expects url parameters: `gl.vert` or `gl.vertiser` or `via`
  * TODO support q=... flexible query
@@ -310,10 +224,8 @@ const CampaignPage = () => {
     let {
 		via,
         landing,
-        hideNonCampaignAds,
-        showNonServed,
-        ongoing,
         status,
+		query,
         'gl.status':glStatus
 	} = DataStore.getValue(['location', 'params']) || {};
     if ( ! status) status = (glStatus || C.KStatus.PUB_OR_ARC);
@@ -326,11 +238,12 @@ const CampaignPage = () => {
 	const isLanding = (landing !== undefined) && (landing !== 'false');
 
     if ( ! pvTopCampaign.resolved) {
+		console.log("Looking for master campaign...");
 		// TODO display some stuff whilst ads are loading
 		return <Misc.Loading text="Loading advert info..." />;
 	}
 	if (!pvTopCampaign.value && !pvCampaigns.value) {
-		console.warn("NO ADS FOUND, aborting page generation");
+		console.warn("NO CAMPAIGNS FOUND, aborting page generation");
 		return <Page404/>;
     }
     
@@ -343,16 +256,29 @@ const CampaignPage = () => {
 	}
     if ( ! campaign) campaign = {};
 
+	// CAMPAIGN IMPACT HUB SETTINGS
+	let {
+		showNonCampaignAds,
+		ongoing,
+		forceScaleTotal,
+	} = campaign;
+
     // Get filtered ad list
-    const otherCampaigns = pvCampaigns.value && List.hits(pvCampaigns.value);
-    console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", otherCampaigns && otherCampaigns.map(c => c.name || c.id));
-    let ads = campaign ? Campaign.advertsToShow(campaign, otherCampaigns, status) : [];
-    console.log("ADS LENGTH:", ads.length);
+    const otherCampaigns = pvCampaigns.value && List.hits(pvCampaigns.value).filter(c => c.id!==campaign.id);
+	let adStatusList = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, status, query, extraAds:pvAds.value && List.hits(pvAds.value)}) : [];
+    let ads = adStatusList.filter(ad => ad.ihStatus==="SHOWING");
+    let canonicalAds = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, status, extraAds:pvAds.value && List.hits(pvAds.value)}).filter(ad => ad.ihStatus==="SHOWING") : [];
+    let extraAds = adStatusList.filter(ad => ad.ihStatus==="NO CAMPAIGN");
+	console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", otherCampaigns && otherCampaigns.map(c => c.name || c.id), "and extra ads", extraAds);
+	console.log("ADS LENGTH:", ads.length);
+
+	console.log("AD STATUS LIST:", adStatusList.map(ad => ad.ihStatus));
+
+	let totalViewCount = Campaign.viewcount({topCampaign:campaign, campaigns:otherCampaigns, extraAds});
     
     // Merge in ads with no campaigns if asked - less controls applied
-    if (!hideNonCampaignAds && pvAds.value) {
+    if (showNonCampaignAds && pvAds.value) {
         const hideAds = Campaign.hideAdverts(campaign, otherCampaigns);
-        const extraAds = Campaign.advertsToShow(campaign, otherCampaigns, status, List.hits(pvAds.value));
         extraAds.forEach(ad => {
             if (!ads.includes(ad) && !hideAds.includes(ad.id)) ads.push(ad);
         });
@@ -361,7 +287,7 @@ const CampaignPage = () => {
 
 	// Combine branding
 	// Priority: TopCampaign, TopItem, Adverts
-	let branding = {};	
+	let branding = {};
 	ads.forEach(ad => Object.assign(branding, ad.branding));	
 	if (pvTopItem && pvTopItem.value && pvTopItem.value.branding) {
 		Object.assign(branding, pvTopItem.value.branding);
@@ -369,55 +295,14 @@ const CampaignPage = () => {
 	Object.assign(branding, campaign.branding);
 
     // initial donation record
-    let donation4charityUnscaled = yessy(campaign.dntn4charity)? campaign.dntn4charity : {};
-    // Merge all other campaign donations - top campaign taking priority on conflicts
-    otherCampaigns && otherCampaigns.forEach(c => {
-        if (c.dntn4charity) Object.keys(c.dntn4charity).forEach(dntn => {
-            if (!donation4charityUnscaled[dntn]) donation4charityUnscaled[dntn] = c.dntn4charity[dntn];
-        });
-    });
-    // Get live numbers
-    const fetchedDonationData = fetchDonationData({ ads });
-    console.log("[DONATION4CHARITY]", "INITIAL", donation4charityUnscaled);
-    // Assign fetched data to fill holes and normalise IDs
-    const allCharities = Object.keys(donation4charityUnscaled);
-    Object.keys(fetchedDonationData).forEach(cid => !allCharities.includes(cid) && allCharities.push(cid));
-    allCharities.forEach(cid => {
-        const sogiveCid = normaliseSogiveId(cid);
-        console.log("[DONATION4CHARITY]", cid + " >>> " + sogiveCid);
-        // First fill in normalized ID
-        if (!donation4charityUnscaled[sogiveCid]) {
-            console.warn("[DONATION4CHARITY]","Replacing " + cid + " with " + sogiveCid);
-            donation4charityUnscaled[sogiveCid] = donation4charityUnscaled[cid];
-            delete donation4charityUnscaled[cid];
-        }
-        // If still empty, fill in fetched data
-        if (!donation4charityUnscaled[sogiveCid]) {
-            donation4charityUnscaled[sogiveCid] = fetchedDonationData[cid];
-        }
-    });
+    let donation4charityUnscaled = Campaign.dntn4charity(campaign, otherCampaigns, extraAds, status);
+    console.log("[DONATION4CHARITY]", "FILLED", donation4charityUnscaled);
 
     const ad4Charity = {};
 	// individual charity data, attaching ad ID
-	let charities = uniqById(_.flatten(ads.map(ad => {
-        const clist = (ad.charities && ad.charities.list).slice() || [];
-		return clist.map(c => {
-			if ( ! c) return null; // bad data paranoia						
-			if ( ! c.id || c.id==="unset" || c.id==="undefined" || c.id==="null" || c.id==="total") { // bad data paranoia						
-				console.error("CampaignPage.jsc charities - Bad charity ID", c.id, c);
-				return null;
-			}
-			const id2 = normaliseSogiveId(c.id);
-			if (id2 !== c.id) {
-				console.warn("Changing charity ID to normaliseSogiveId "+c.id+" to "+id2+" for ad "+ad.id);
-				c.id = id2;
-			}
-			ad4Charity[c.id] = ad; // for Advert Editor dev button so sales can easily find which ad contains which charity
-			return c;
-		});
-    })));
+	let charities = Campaign.charities(campaign, otherCampaigns, extraAds, status);
 	// Add in any from campaign.dntn4charity - which can include strayCharities
-	if (campaign.dntn4charity) {
+	if (!Campaign.isDntn4CharityEmpty(campaign)) {
 		let cids = Object.keys(campaign.dntn4charity);
 		let clistIds = charities.map(getId);
 		cids.forEach(cid => {
@@ -431,29 +316,30 @@ const CampaignPage = () => {
 	}
     // NB: Don't append extra charities found in donation data. This can include noise.
     // Fill in blank in charities with sogive data
-    charities = fetchSogiveData(charities);
+    charities = NGO.fetchSogiveData(charities);
     console.log("CHARITIESSSSSS", charities);
     console.log("AD 4 CHARITY:",ad4Charity)
     // Attach ads after initial sorting and merging, which can cause ad ID data to be lost
     charities.forEach(charity => {
         charity.ad = ad4Charity[charity.id] ? ad4Charity[charity.id].id : null;
     });
+
 	// Donation total
 	assert(donation4charityUnscaled, "CampaignPage.jsx falsy donation4charity?!");
-	console.log("DONATION 4 CHARITY", donation4charityUnscaled);
 	// NB: allow 0 for "use the live figure" as Portal doesn't save edit-to-blank (Feb 2021)
-	const donationTotal = Money.value(campaign.dntn)? campaign.dntn : donation4charityUnscaled.total;
+	// Total up all campaign donations - map to donations, filter nulls
+    const donationTotal = Campaign.donationTotal(campaign, otherCampaigns, donation4charityUnscaled, forceScaleTotal);
 
     // Scale once to get values in the right ballpark
-    let donation4charityScaled = scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
+    let donation4charityScaled = Campaign.scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
     
-    console.log("DONATION SCALED", donation4charityScaled);
+    console.log("[DONATION4CHARITY]", "DONATION SCALED", donation4charityScaled);
 
     // filter charities by low £s and campaign.hideCharities
-    charities = filterLowDonations({charities, campaign, donationTotal, donation4charity:donation4charityScaled});
+    charities = Campaign.filterLowDonations({charities, campaign, donationTotal, donation4charity:donation4charityScaled});
     
     // Scale again to make up for discrepencies introduced by filtering
-	donation4charityScaled = scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
+	donation4charityScaled = Campaign.scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
 
     console.log("After Filter CHARITIES", charities);
 
@@ -477,12 +363,6 @@ const CampaignPage = () => {
 	let sq = new SearchQuery("evt:minview");
 	let qads = ads.map(({ id }) => `vert:${id}`).join(' OR ');
 	sq = SearchQuery.and(sq, qads);
-
-	let pvViewData = getDataLogData({q:sq.query, breakdowns:['campaign'], start:'2017-01-01', end:'now', name:"view-data",dataspace:'gl'});
-	let viewcount4campaign = {};
-	if (pvViewData.value) {
-		viewcount4campaign = pivotDataLogData(pvViewData.value, ["campaign"]);
-	}
 
 	// Is this an interim total or the full amount? Interim if not fixed by campaign, and not ended
 	if ( ! ongoing && ! campaign.dntn) {
@@ -516,30 +396,6 @@ const CampaignPage = () => {
 		if (noCharityAds.length) console.warn("Ads without charities data", noCharityAds.map(ad => [ad.id, ad.campaign, ad.name, ad.status]));
 	}
 
-	// Sum of the views from every ad in the campaign. We use this number for display
-	// and to pass it to the AdvertCards to calculate the money raised against the total.
-	let totalViewCount = campaign.numPeople; // hard set by the Campaign object?
-	if ( ! totalViewCount) {
-		// if (campaignId) { // TODO refactor everything to be based around a list of campaigns
-		// 	let sq = SearchQuery.setProp(new SearchQuery(), "campaign", campaignId);
-		// 	let pvPeepsData = getDataLogData({q:sq.query, breakdowns:[], start:'2017-01-01', end:'now', name:"view-data",dataspace:'gl'});
-		// 	if (pvPeepsData.value) {
-		// 		campaign.numPeople = pvPeepsData.value.all;
-		// 		totalViewCount = campaign.numPeople;
-		// 	}
-		// } else {
-		const ad4c = {};
-		ads.forEach(ad => ad4c[campaignNameForAd(ad)] = ad);
-		let ads1perCampaign = Object.values(ad4c);
-		let views = ads1perCampaign.map(ad => viewCount(viewcount4campaign, ad));
-		totalViewCount = sum(views);
-		// }
-	} else {
-        Object.keys(viewcount4campaign).forEach(ad => {
-            viewcount4campaign[ad] = totalViewCount;
-        })
-    }
-
 	// Get name of advertiser from nvertiser if existing, or ad if not
 	let nvertiser = pvAdvertisers.value && List.hits(pvAdvertisers.value)[0];
     let agency = pvAgencies.value && List.hits(pvAgencies.value)[0];
@@ -558,7 +414,7 @@ const CampaignPage = () => {
 			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" hidePages/>
 			<div className="text-center">
 				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaign} 
-					donationValue={donationTotal} ongoing={ongoing} charities={charities}
+					donationValue={donationTotal} charities={charities}
 					totalViewCount={totalViewCount} landing={isLanding} />
 
 				<HowDoesItWork nvertiserName={nvertiserName} charities={charities} ongoing={ongoing}/>
@@ -567,16 +423,15 @@ const CampaignPage = () => {
 					<AdvertsCatalogue
 						campaign={campaign}
 						ads={ads}
-						viewcount4campaign={viewcount4campaign}
+						canonicalAds={canonicalAds}
 						donationTotal={donationTotal}
 						nvertiserName={nvertiserName}
-                        totalViewCount={totalViewCount}
-                        showNonServed={showNonServed}
-                        ongoing={ongoing}
+						totalViewCount={totalViewCount}
+						vertisers={pvAdvertisers.value && List.hits(pvAdvertisers.value)}
 					/>
 				)}
 
-				<Charities charities={charities} donation4charity={donation4charityScaled} campaign={campaign} ongoing={ongoing}/>
+				<Charities charities={charities} donation4charity={donation4charityScaled} campaign={campaign}/>
 
 				<div className="bg-white">
 					<Container>
@@ -711,106 +566,6 @@ const hackCorrectedDonations = id => {
 	}[id];
 	return donation;
 };
-
-/**
- * This may fetch data from the server. It returns instantly, but that can be with some blanks.
- * 
- * ??Hm: This is an ugly long method with a server-side search-aggregation! Should we do these as batch calculations on the server??
- * 
- * @param {!Advert[]} ads
- * @returns {cid:Money} donationForCharity, with a .total property for the total
- */
-const fetchDonationData = ({ ads }) => {
-	const donationForCharity = {};
-	if (!ads.length) return donationForCharity; // paranoia
-	// things
-	let adIds = ads.map(ad => ad.id);
-    let campaignIds = ads.map(ad => ad.campaign);
-    // Filter bad IDs
-    campaignIds = campaignIds.filter(x=>x);
-	let charityIds = _.flatten(ads.map(Advert.charityList));
-
-	// HACK return hacked values if Cheerios or Purina
-	for (let i = 0; i < ads.length; i++) {
-		const ad = ads[i];
-		const donation = hackCorrectedDonations(ad.id);
-		if (donation) return donation;
-	} // ./hack
-	
-	// Campaign level per-charity info?	
-	let campaignsWithoutDonationData = [];
-	for (let i = 0; i < ads.length; i++) {
-		const ad = ads[i];
-		const cp = ad.campaignPage;
-		// FIXME this is old!! Need to work with new campaigns objects
-		// no per-charity data? (which is normal)
-		if (!cp || !cp.dntn4charity || Object.values(cp.dntn4charity).filter(x => x).length === 0) {
-			if (ad.campaign) {
-				campaignsWithoutDonationData.push(ad.campaign);
-				console.log("No per-charity data with ad " + ad.id);
-			} else {
-				console.warn("Advert with no campaign: " + ad.id);
-			}
-			continue;
-		}
-
-		Object.keys(cp.dntn4charity).forEach(cid => {
-			let dntn = cp.dntn4charity[cid];
-			if (!dntn) return;
-			if (donationForCharity[cid]) {
-				dntn = Money.add(donationForCharity[cid], dntn);
-			}
-			assert(cid !== 'total', cp); // paranoia
-			donationForCharity[cid] = dntn;
-		});
-	};
-	// Done?
-	if (donationForCharity.total && campaignsWithoutDonationData.length === 0) {
-		console.log("Using ad data for donations");
-		return donationForCharity;
-	}
-
-	// Fetch donations data	
-	// ...by campaign or advert? campaign would be nicer 'cos we could combine different ad variants... but its not logged reliably
-	// (old data) Loop.Me have not logged vert, only campaign. But elsewhere vert is logged and not campaign.
-    let sq1 = adIds.map(id => "vert:" + id).join(" OR ");
-	// NB: quoting for campaigns if they have a space (crude not 100% bulletproof ??use SearchQuery.js instead) 
-	let sq2 = campaignIds.map(id => "campaign:" + (id.includes(" ") ? '"' + id + '"' : id)).join(" OR ");
-	let sqDon = SearchQuery.or(sq1, sq2);
-
-	// load the community total for the ad
-	let pvDonationsBreakdown = DataStore.fetch(['widget', 'CampaignPage', 'communityTotal', sqDon.query], () => {
-		return ServerIO.getDonationsData({ q: sqDon.query });
-	}, {}, true, 5 * 60 * 1000);
-	if (pvDonationsBreakdown.error) {
-		console.error("pvDonationsBreakdown.error", pvDonationsBreakdown.error);
-		return donationForCharity;
-	}
-	if (!pvDonationsBreakdown.value) {
-		return donationForCharity; // loading
-	}
-
-	let lgCampaignTotal = pvDonationsBreakdown.value.total;
-	// NB don't override a campaign page setting
-	if (!donationForCharity.total) {
-		donationForCharity.total = new Money(lgCampaignTotal);
-	}
-
-	// set the per-charity numbers
-	let donByCid = pvDonationsBreakdown.value.by_cid;
-	Object.keys(donByCid).forEach(cid => {
-		let dntn = donByCid[cid];
-		if (!dntn) return;
-		if (donationForCharity[cid]) {
-			dntn = Money.add(donationForCharity[cid], dntn);
-		}
-		assert(cid !== 'total', cid); // paranoia
-		donationForCharity[cid] = dntn;
-	});
-	// done	
-	return donationForCharity;
-}; // ./fetchDonationData()
-
 
 /**
  * @param {!Advert} ad 

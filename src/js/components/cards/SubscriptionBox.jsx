@@ -30,7 +30,7 @@ const SubscriptionBox = ({className, title}) => {
 			<br/><br/></> : null}
 		{hasSubmittedEmail ? thankYouMessage :
 			<Container>
-				<Form inline className="flex-row align-items-stretch justify-content-center m-auto">
+				<Form inline className="flex-row align-items-stretch justify-content-center m-auto" onSubmit={doEmailSignUp}>
 					<FormGroup className="mb-2 mr-sm-2 mb-sm-0 outer-form-group flex-grow-1 m-0 pr-md-3">
 						<PropControl
 							className="email-join-input w-100 h-100"
@@ -40,7 +40,7 @@ const SubscriptionBox = ({className, title}) => {
 						/>
 					</FormGroup>
                     <div className="mobile-break"/>
-					<Button onClick={doEmailSignUp} color="info" disabled={hasSubmittedEmail} className="flex-grow-0">
+					<Button color="info" disabled={hasSubmittedEmail} className="flex-grow-0">
 						Sign me up
 					</Button>
 				</Form>

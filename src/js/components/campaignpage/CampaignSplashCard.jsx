@@ -8,10 +8,11 @@ import DevLink from './DevLink';
 
 /**
  * 
- * @param {?boolean} p.ongoing Is the campaign still running (and the total might go up)?
  */
-const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, totalViewCount, charities, ongoing}) => {
-  console.log("SPLASH CARD TOTAL VIEW COUNT", totalViewCount);
+const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, totalViewCount, charities}) => {
+
+	let { ongoing } = campaignPage
+	console.log("SPLASH CARD TOTAL VIEW COUNT", totalViewCount);
 	let numPeople = printer.prettyNumber(Math.round(totalViewCount), 10);
 	if (numPeople === "0") numPeople = false;
 
