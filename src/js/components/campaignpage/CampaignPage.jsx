@@ -243,6 +243,7 @@ const CampaignPage = () => {
 	const isLanding = (landing !== undefined) && (landing !== 'false');
 
     if ( ! pvTopCampaign.resolved) {
+		console.log("Looking for master campaign...");
 		// TODO display some stuff whilst ads are loading
 		return <Misc.Loading text="Loading advert info..." />;
 	}
@@ -262,12 +263,14 @@ const CampaignPage = () => {
 
     // Get filtered ad list
     const otherCampaigns = pvCampaigns.value && List.hits(pvCampaigns.value).filter(c => c.id!==campaign.id);
-    console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", otherCampaigns && otherCampaigns.map(c => c.name || c.id));
-	let adStatusList = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, status, showNonServed, nosample, query, extraAds:pvAds.value && List.hits(pvAds.value)}).filter(ad => ad.ihStatus==="SHOWING") : [];
+	let adStatusList = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, status, showNonServed, nosample, query, extraAds:pvAds.value && List.hits(pvAds.value)}) : [];
     let ads = adStatusList.filter(ad => ad.ihStatus==="SHOWING");
     let canonicalAds = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, showNonServed, nosample, status, extraAds:pvAds.value && List.hits(pvAds.value)}).filter(ad => ad.ihStatus==="SHOWING") : [];
     let extraAds = adStatusList.filter(ad => ad.ihStatus==="NO CAMPAIGN");
+	console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", otherCampaigns && otherCampaigns.map(c => c.name || c.id), "and extra ads", extraAds);
 	console.log("ADS LENGTH:", ads.length);
+
+	let totalViewCount = Campaign.viewcount({topCampaign:campaign, campaigns:otherCampaigns, extraAds});
     
     // Merge in ads with no campaigns if asked - less controls applied
     if (!hideNonCampaignAds && pvAds.value) {
@@ -280,7 +283,7 @@ const CampaignPage = () => {
 
 	// Combine branding
 	// Priority: TopCampaign, TopItem, Adverts
-	let branding = {};	
+	let branding = {};
 	ads.forEach(ad => Object.assign(branding, ad.branding));	
 	if (pvTopItem && pvTopItem.value && pvTopItem.value.branding) {
 		Object.assign(branding, pvTopItem.value.branding);
@@ -357,9 +360,6 @@ const CampaignPage = () => {
 	let qads = ads.map(({ id }) => `vert:${id}`).join(' OR ');
 	sq = SearchQuery.and(sq, qads);
 
-	let viewcount4campaign = Advert.viewcountByCampaign(ads);
-	console.log("VIEWCOUNT4CAMPAING?", viewcount4campaign);
-
 	// Is this an interim total or the full amount? Interim if not fixed by campaign, and not ended
 	if ( ! ongoing && ! campaign.dntn) {
 		// when is the last advert due to stop?
@@ -392,30 +392,6 @@ const CampaignPage = () => {
 		if (noCharityAds.length) console.warn("Ads without charities data", noCharityAds.map(ad => [ad.id, ad.campaign, ad.name, ad.status]));
 	}
 
-	// Sum of the views from every ad in the campaign. We use this number for display
-	// and to pass it to the AdvertCards to calculate the money raised against the total.
-	let totalViewCount = campaign.numPeople; // hard set by the Campaign object?
-	if ( ! totalViewCount) {
-		// if (campaignId) { // TODO refactor everything to be based around a list of campaigns
-		// 	let sq = SearchQuery.setProp(new SearchQuery(), "campaign", campaignId);
-		// 	let pvPeepsData = getDataLogData({q:sq.query, breakdowns:[], start:'2017-01-01', end:'now', name:"view-data",dataspace:'gl'});
-		// 	if (pvPeepsData.value) {
-		// 		campaign.numPeople = pvPeepsData.value.all;
-		// 		totalViewCount = campaign.numPeople;
-		// 	}
-		// } else {
-		const ad4c = {};
-		ads.forEach(ad => ad4c[campaignNameForAd(ad)] = ad);
-		let ads1perCampaign = Object.values(ad4c);
-		let views = ads1perCampaign.map(ad => viewCount(viewcount4campaign, ad));
-		totalViewCount = sum(views);
-		// }
-	} else {
-        Object.keys(viewcount4campaign).forEach(ad => {
-            viewcount4campaign[ad] = totalViewCount;
-        })
-    }
-
 	// Get name of advertiser from nvertiser if existing, or ad if not
 	let nvertiser = pvAdvertisers.value && List.hits(pvAdvertisers.value)[0];
     let agency = pvAgencies.value && List.hits(pvAgencies.value)[0];
@@ -444,7 +420,6 @@ const CampaignPage = () => {
 						campaign={campaign}
 						ads={ads}
 						canonicalAds={canonicalAds}
-						viewcount4campaign={viewcount4campaign}
 						donationTotal={donationTotal}
 						nvertiserName={nvertiserName}
 						totalViewCount={totalViewCount}

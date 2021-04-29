@@ -71,7 +71,7 @@ const campaignNameForAd = ad => {
  * @param {Advertiser[]} p.vertisers associated advertisers of all ads
  * @param {Advert[]} p.canonicalAds all ads, unfiltered by the filtering query parameter
  */
-const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nvertiserName, totalViewCount, showNonServed, ongoing, vertisers, canonicalAds }) => {
+const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalViewCount, showNonServed, ongoing, vertisers, canonicalAds }) => {
 
 	// filter out any hidden ads
 	// NB: done here as the hiding is a shallow cosmetic -- we still want the view and £ donation data included (or if not, there are other controls)
@@ -86,11 +86,7 @@ const AdvertsCatalogue = ({campaign, ads, viewcount4campaign, donationTotal, nve
 
 	console.log("Sample ads: ", sampleAds);
 
-	let views = sampleAds.length ? viewCount(viewcount4campaign, sampleAds[0]) : 0;
-	if (sampleAds.length > 1) {
-		views = totalViewCount;
-	}
-	views = printer.prettyNumber(views);
+	let views = printer.prettyNumber(totalViewCount);
 
     console.log("ONGOING? ", ongoing);
 
