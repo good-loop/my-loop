@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Container } from 'reactstrap';
 import ActionMan from '../../plumbing/ActionMan';
 import Roles from '../../base/Roles';
@@ -14,6 +14,7 @@ import MDText from '../../base/components/MDText';
 import WhiteCircle from './WhiteCircle';
 import DevLink from './DevLink';
 import LinkOut from '../../base/components/LinkOut';
+import TestimonialPlayer from './TestimonialPlayer';
 
 /**
  * HACK hardcode some thank you messages.
@@ -142,7 +143,10 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign, ongoing}) =
     //console.log("SHOWING THE CHARITY",charity);
 
 	const quote = tq(charity);
-	let img = (quote && quote.img) || charity.images;
+    let img = (quote && quote.img) || charity.images;
+    
+    const testimonial = campaign.testimonials ? campaign.testimonials[normaliseSogiveId(charity.id)] : null;
+    console.log("[TESTIMONIAL]", "Testimonial for " + charity.id + ":", testimonial);
 
 	// TODO let's reduce the use of custom css classes (e.g. charity-quote-img etc below)
 
@@ -161,6 +165,7 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign, ongoing}) =
 					{donationValue? <div className="w-100"><h2>{ongoing && "Raising"} <Counter amount={donationValue} preservePennies={false} /> {!ongoing && "raised"}</h2></div> : null}
 					{charity.simpleImpact && showImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
+                    {testimonial && <TestimonialPlayer src={testimonial} />}
 					{!quote ? <MDText source={desc} /> : null}
                     {charity.url && <a href={charity.url} className="btn btn-primary mb-3">Learn more</a>}
 					<div className="flex-row">
