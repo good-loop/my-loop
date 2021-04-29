@@ -16,6 +16,7 @@ import Icon from '../../base/components/Icon';
 import PromiseValue from 'promise-value';
 import Misc from '../../base/components/Misc';
 import KStatus from '../../base/data/KStatus';
+import { getDataLogData } from '../../base/plumbing/DataLog';
 
 
 const TabsForGoodSettings = () => {
@@ -36,14 +37,15 @@ const SearchEnginePicker = () => {
 	const person = getProfile().value;
 	if ( ! person) return <Misc.Loading />;
 	let searchEngine = getClaimValue({person, key:"searchEngine"});
+	const dpath = ['widget', 'TabsForGoodSettings'];
 	if ( ! searchEngine) {
 		searchEngine = "google";
-	}
-	const dpath = ['widget', 'TabsForGoodSettings'];
-	const onSelect = () => {
-		const newEngine = DataStore.getValue(dpath);
-		console.log("newEngine", newEngine);
-		setPersonSetting("searchEngine",newEngine);
+	} else {
+		DataStore.setValue(dpath.concat("searchEnginePicker"), searchEngine, false); // set it for the PropControl
+	}	
+	const onSelect = ({value}) => {
+		console.log("newEngine", value);
+		setPersonSetting("searchEngine", value);
 	}
 
 	return <PropControl type="select" prop="searchEnginePicker" options={["google", "ecosia", "duckduckgo", "bing"]}
@@ -157,23 +159,26 @@ const isSafeToLoadUserSettings = () => {
  * @returns ?PromiseValue<Number> null if not logged in yet
  */
 const getTabsOpened = () => {
-    let pvValue = DataStore.fetch(['misc','stats','tabopens'], () => {
-        const trkreq = {
-            q: "user:"+Login.getId()+" AND evt:tabopen",
-            name: "tabopens",
-            dataspace: 'gl',
-            start: 0 // all time (otherwise defaults to 1 month)
-        }; // ??future, end, breakdowns: [byHostOrAd]};				
-        let pData = ServerIO.getDataLogData(trkreq);
-        // unwrap the count
-        return pData.then(getTabsOpened2_unwrap);
-    });
-    return pvValue;
+	const trkreq = {
+		q: "user:"+Login.getId()+" AND evt:tabopen",
+		name: "tabopens",
+		dataspace: 'gl',
+		start: 0 // all time (otherwise defaults to 1 month)
+	}; // ??future, end, breakdowns: [byHostOrAd]};	
+    let pvData = getDataLogData(trkreq);
+	let pvAllCount = PromiseValue.then(pvData, res => {
+		return res.allCount;
+	});
+	// let pData = ServerIO.getDataLogData(trkreq); old code Apr 2021
+	// ??unwrap the count
+	// return pData.then(getTabsOpened2_unwrap);
+    // });
+    return pvAllCount;
 };
-const getTabsOpened2_unwrap = res => {
-	const data = JSend.data(res);
-	return data.all;
-}
+// const getTabsOpened2_unwrap = res => {
+// 	const data = JSend.data(res);
+// 	return data.all;
+// }
 
 /**
  * @returns {!Number}
@@ -206,8 +211,9 @@ const getPVSelectedCharityId = (xid) => {
 	return getPVClaimValue({xid, key:"charity"});	
 };
 
-const setPersonSetting = (key, value) => {
+const setPersonSetting = (key, value) => {	
 	assMatch(key,String,"setPersonSetting - no key");
+	assMatch(value, "String|Number|Boolean");
 	const xid = Login.getId();
 	assert(xid, "setPersonSetting - no login");
 	let person = getProfile({xid}).value;
