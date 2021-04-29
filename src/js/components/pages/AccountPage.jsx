@@ -82,7 +82,7 @@ const Page = () => {
 				<MainPane>
 					<div className="pt-5">
 						{tab === 'account' && <Account />}
-						{tab === 'settings' && <AccountSettings xids={xids} />}
+						{tab === 'settings' && <AccountSettings />}
 						{tab === 'tabsForGood' && <TabsForGoodSettings />}
 					</div>
 				</MainPane>

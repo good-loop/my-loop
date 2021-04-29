@@ -14,7 +14,8 @@ import { assert } from '../../base/utils/assert';
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
 
-const AccountSettings = ({xids}) => {
+const AccountSettings = () => {
+	let xids = getAllXIds();
 	return <div className="settings">
 		<h2 className="text-center mb-5">Your settings</h2>
 		<ConsentSettings xids={xids}/>
