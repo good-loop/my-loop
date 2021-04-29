@@ -47,10 +47,10 @@ challenges facing our planet."`,
  * @param {!NGO[]} charities
  * @param {{string:Money}} donation4charity - charity ID to donation amount
  * @param {!Campaign} campaign
- * @param {Boolean} ongoing - is this campaign still running?
  */
-const Charities = ({ charities, donation4charity, campaign, ongoing }) => {
+const Charities = ({ charities, donation4charity, campaign }) => {
 	
+	let { ongoing } = campaign;
 	// The portal control data
 	let hideImpact = campaign.hideImpact || {};
 	// Filter nulls (paranoia)

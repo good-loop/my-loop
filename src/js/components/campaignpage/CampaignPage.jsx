@@ -225,6 +225,7 @@ const CampaignPage = () => {
 		via,
         landing,
         status,
+		query,
         'gl.status':glStatus
 	} = DataStore.getValue(['location', 'params']) || {};
     if ( ! status) status = (glStatus || C.KStatus.PUB_OR_ARC);
@@ -259,7 +260,6 @@ const CampaignPage = () => {
 	let {
 		showNonCampaignAds,
 		ongoing,
-		query,
 		forceScaleTotal,
 	} = campaign;
 
@@ -414,7 +414,7 @@ const CampaignPage = () => {
 			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" hidePages/>
 			<div className="text-center">
 				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaign} 
-					donationValue={donationTotal} ongoing={ongoing} charities={charities}
+					donationValue={donationTotal} charities={charities}
 					totalViewCount={totalViewCount} landing={isLanding} />
 
 				<HowDoesItWork nvertiserName={nvertiserName} charities={charities} ongoing={ongoing}/>
@@ -427,12 +427,11 @@ const CampaignPage = () => {
 						donationTotal={donationTotal}
 						nvertiserName={nvertiserName}
 						totalViewCount={totalViewCount}
-						ongoing={ongoing}
 						vertisers={pvAdvertisers.value && List.hits(pvAdvertisers.value)}
 					/>
 				)}
 
-				<Charities charities={charities} donation4charity={donation4charityScaled} campaign={campaign} ongoing={ongoing}/>
+				<Charities charities={charities} donation4charity={donation4charityScaled} campaign={campaign}/>
 
 				<div className="bg-white">
 					<Container>
