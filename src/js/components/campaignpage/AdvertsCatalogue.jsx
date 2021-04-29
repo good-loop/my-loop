@@ -66,12 +66,13 @@ const campaignNameForAd = ad => {
  * @param {Money} p.donationTotal
  * @param {String} p.nvertiserName name of main advertiser/agency
  * @param {Number} p.totalViewCount
- * @param {Boolean} p.showNonServed show ads that have never been live
  * @param {Boolean} p.ongoing override grammar to be present tense instead of past
  * @param {Advertiser[]} p.vertisers associated advertisers of all ads
  * @param {Advert[]} p.canonicalAds all ads, unfiltered by the filtering query parameter
  */
-const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalViewCount, showNonServed, ongoing, vertisers, canonicalAds }) => {
+const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalViewCount, ongoing, vertisers, canonicalAds }) => {
+
+	let {showNonServed} = campaign;
 
 	// filter out any hidden ads
 	// NB: done here as the hiding is a shallow cosmetic -- we still want the view and £ donation data included (or if not, there are other controls)

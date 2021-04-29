@@ -255,10 +255,9 @@ const CampaignPage = () => {
 	}
     if ( ! campaign) campaign = {};
 
+	// CAMPAIGN IMPACT HUB SETTINGS
 	let {
 		showNonCampaignAds,
-		showNonServed,
-		nosample,
 		ongoing,
 		query,
 		forceScaleTotal,
@@ -266,9 +265,9 @@ const CampaignPage = () => {
 
     // Get filtered ad list
     const otherCampaigns = pvCampaigns.value && List.hits(pvCampaigns.value).filter(c => c.id!==campaign.id);
-	let adStatusList = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, status, showNonServed, nosample, query, extraAds:pvAds.value && List.hits(pvAds.value)}) : [];
+	let adStatusList = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, status, query, extraAds:pvAds.value && List.hits(pvAds.value)}) : [];
     let ads = adStatusList.filter(ad => ad.ihStatus==="SHOWING");
-    let canonicalAds = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, showNonServed, nosample, status, extraAds:pvAds.value && List.hits(pvAds.value)}).filter(ad => ad.ihStatus==="SHOWING") : [];
+    let canonicalAds = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, status, extraAds:pvAds.value && List.hits(pvAds.value)}).filter(ad => ad.ihStatus==="SHOWING") : [];
     let extraAds = adStatusList.filter(ad => ad.ihStatus==="NO CAMPAIGN");
 	console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", otherCampaigns && otherCampaigns.map(c => c.name || c.id), "and extra ads", extraAds);
 	console.log("ADS LENGTH:", ads.length);
@@ -428,7 +427,6 @@ const CampaignPage = () => {
 						donationTotal={donationTotal}
 						nvertiserName={nvertiserName}
 						totalViewCount={totalViewCount}
-						showNonServed={showNonServed}
 						ongoing={ongoing}
 						vertisers={pvAdvertisers.value && List.hits(pvAdvertisers.value)}
 					/>
