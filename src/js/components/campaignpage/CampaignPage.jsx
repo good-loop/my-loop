@@ -288,47 +288,7 @@ const CampaignPage = () => {
 	Object.assign(branding, campaign.branding);
 
     // initial donation record
-    let donation4charityUnscaled = yessy(campaign.dntn4charity)? Object.assign({}, campaign.dntn4charity) : {};
-    // Mark these donations as set by master campaign - cannot be overriden (unless falsy)
-    Object.keys(donation4charityUnscaled).forEach(c => {
-        donation4charityUnscaled[c].setByMaster = true;
-    });
-    // Merge all other campaign donations - top campaign taking priority on conflicts
-    otherCampaigns && otherCampaigns.forEach(c => {
-        if (c.id === campaign.id) return;
-        if (c.dntn4charity) {
-            //console.log("[DONATION4CHARITY]", "FROM " + c.id, c.dntn4charity);
-            // Sum up values from different campaigns for similar charities - unless the value is set by master
-            Object.keys(c.dntn4charity).forEach(dntn => {
-                if (!donation4charityUnscaled[dntn] || !donation4charityUnscaled[dntn].setByMaster || !Money.value(donation4charityUnscaled[dntn])) donation4charityUnscaled[dntn] = Money.total([c.dntn4charity[dntn], donation4charityUnscaled[dntn]]);
-            });
-        }
-    });
-    // Get live numbers
-    const fetchedDonationData = NGO.fetchDonationData({ ads });
-    console.log("[DONATION4CHARITY]", "FETCHED", fetchedDonationData);
-    console.log("[DONATION4CHARITY]", "INITIAL", donation4charityUnscaled);
-    // Assign fetched data to fill holes and normalise IDs
-    const allCharities = Object.keys(donation4charityUnscaled);
-    Object.keys(fetchedDonationData).forEach(cid => !allCharities.includes(cid) && allCharities.push(cid));
-    allCharities.forEach(cid => {
-        const sogiveCid = normaliseSogiveId(cid);
-        //console.log("[DONATION4CHARITY]", "\tVALUE FOR CHARITY",cid, ":",donation4charityUnscaled[cid], "VALUE:", Money.value(donation4charityUnscaled[cid]));
-        //console.log("[DONATION4CHARITY]", cid + " >>> " + sogiveCid);
-        // First fill in normalized ID - total multiple campaigns together, unless setByMaster and not falsy
-        if (!donation4charityUnscaled[sogiveCid] || !donation4charityUnscaled[sogiveCid].setByMaster || !Money.value(donation4charityUnscaled[sogiveCid])) {
-            //console.log("[DONATION4CHARITY]", "\tTOTALLING", sogiveCid, Money.value(donation4charityUnscaled[sogiveCid]), Money.value(donation4charityUnscaled[cid]));
-            donation4charityUnscaled[sogiveCid] = Money.total([donation4charityUnscaled[sogiveCid], donation4charityUnscaled[cid]]);
-        }
-        if (sogiveCid !== cid) {
-            delete donation4charityUnscaled[cid];
-        }
-        // Add fetched data, unless set by master and not falsy
-        if (!donation4charityUnscaled[sogiveCid].setByMaster || !Money.value(donation4charityUnscaled[sogiveCid])) {
-            //console.log("[DONATION4CHARITY]", "\tADDING FETCHED", sogiveCid, fetchedDonationData[cid]);
-            donation4charityUnscaled[sogiveCid] = Money.total([donation4charityUnscaled[sogiveCid], fetchedDonationData[cid]]);
-        }
-    });
+    let donation4charityUnscaled = Campaign.dntn4charity(campaign, otherCampaigns, extraAds, status);
     console.log("[DONATION4CHARITY]", "FILLED", donation4charityUnscaled);
 
     const ad4Charity = {};
@@ -361,13 +321,7 @@ const CampaignPage = () => {
 	assert(donation4charityUnscaled, "CampaignPage.jsx falsy donation4charity?!");
 	// NB: allow 0 for "use the live figure" as Portal doesn't save edit-to-blank (Feb 2021)
 	// Total up all campaign donations - map to donations, filter nulls
-    const allCampaignDntns = [campaign.dntn, ...(otherCampaigns ? otherCampaigns.map(c => c.dntn).filter(x=>x) : [])];
-    const summed = Money.total(allCampaignDntns);
-	let donationTotal = Money.value(summed)? summed : donation4charityUnscaled.total;
-    if (forceScaleTotal) {
-        const moneys = Object.values(donation4charityUnscaled).filter(x=>x);
-        donationTotal = moneys.length ? Money.total(moneys) : 0;
-    }
+    const donationTotal = Campaign.donationTotal(campaign, otherCampaigns, donation4charityUnscaled, forceScaleTotal);
 
     // Scale once to get values in the right ballpark
     let donation4charityScaled = Campaign.scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
@@ -403,11 +357,7 @@ const CampaignPage = () => {
 	let qads = ads.map(({ id }) => `vert:${id}`).join(' OR ');
 	sq = SearchQuery.and(sq, qads);
 
-	let pvViewData = getDataLogData({q:sq.query, breakdowns:['campaign'], start:'2017-01-01', end:'now', name:"view-data",dataspace:'gl'});
-	let viewcount4campaign = {};
-	if (pvViewData.value) {
-		viewcount4campaign = pivotDataLogData(pvViewData.value, ["campaign"]);
-	}
+	let viewcount4campaign = Advert.viewcountByCampaign(ads);
 	console.log("VIEWCOUNT4CAMPAING?", viewcount4campaign);
 
 	// Is this an interim total or the full amount? Interim if not fixed by campaign, and not ended
