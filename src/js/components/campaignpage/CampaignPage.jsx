@@ -224,7 +224,7 @@ const CampaignPage = () => {
     let {
 		via,
         landing,
-        hideNonCampaignAds,
+        showNonCampaignAds,
         showNonServed,
 		nosample,
         ongoing,
@@ -270,10 +270,12 @@ const CampaignPage = () => {
 	console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", otherCampaigns && otherCampaigns.map(c => c.name || c.id), "and extra ads", extraAds);
 	console.log("ADS LENGTH:", ads.length);
 
+	console.log("AD STATUS LIST:", adStatusList.map(ad => ad.ihStatus));
+
 	let totalViewCount = Campaign.viewcount({topCampaign:campaign, campaigns:otherCampaigns, extraAds});
     
     // Merge in ads with no campaigns if asked - less controls applied
-    if (!hideNonCampaignAds && pvAds.value) {
+    if (showNonCampaignAds && pvAds.value) {
         const hideAds = Campaign.hideAdverts(campaign, otherCampaigns);
         extraAds.forEach(ad => {
             if (!ads.includes(ad) && !hideAds.includes(ad.id)) ads.push(ad);
