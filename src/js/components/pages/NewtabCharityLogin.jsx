@@ -28,6 +28,8 @@ const switchToVerb = (e, verb) => {
 };
 
 const NewtabCharityLogin = () => {
+	// set the app to t4g, so we get the right welcome email
+	Login.app = "t4g.good-loop.com";
 
 	// Remove cookie consent - blocks iframe content ??
 	window.$(".ch2").remove();
