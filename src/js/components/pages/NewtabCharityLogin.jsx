@@ -60,8 +60,8 @@ const NewtabCharityLogin = () => {
 	// ??minor: it might be nice to have a transition on the verb switch
 
 	const onRegisterLogin = () => {
+		DataStore.setValue(LOGIN_VERB_PATH, "t4g_chrome_store", true);
 		if (charityId) setPersonSetting("charity", charityId);
-		DataStore.setValue(LOGIN_VERB_PATH, "t4g_chrome_store");
 	};
 
 	// why not use a BS modal??
