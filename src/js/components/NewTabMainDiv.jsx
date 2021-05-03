@@ -208,10 +208,13 @@ const NewTabMainDiv = () => {
 
 const NewTabCharityCard = ({cid}) => {
 
-	const charity = cid ? fetchCharity(cid) : null;	
+	const charity = cid ? fetchCharity(cid) : null;
+	const isInTutorialHighlight = DataStore.getValue(['widget', 'TutorialCard', 'open']) && DataStore.getValue(['widget', 'TutorialCard', 'page']) === 1;
+	const returnLink = encURI("/newtab.html#webtop?tutOpen=true&tutPage=2");
+	const params = isInTutorialHighlight ? "&task=return&link=" + returnLink : "";
 
 	return (<div className="d-flex justify-content-center" >
-		<a href={"/#account?tab=tabsForGood&task=select-charity&link="+encURI(window.location)}>
+		<a href={"/#account?tab=tabsForGood" + params}>
 			<TutorialComponent page={1}>
 				<WhiteCircle className="m-3 tab-charity" circleCrop={charity ? charity.circleCrop : null}>
 					{charity ?

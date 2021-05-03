@@ -220,7 +220,17 @@ const setPersonSetting = (key, value) => {
 	console.log("setPersonSetting", xid, key, value, person);
 	setClaimValue({person, key, value});
 	DataStore.update();
-	savePersons({person});	
+	const pv = savePersons({person});
+	const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
+    const link = DataStore.getUrlValue("link");
+	pv.promise.then(re => {
+        console.log("... saved person setting ", key, value);
+        if (task==="return" && link) {
+            window.location = link;
+        }
+    }).catch(e => {
+        console.error("FAILED PERSON SAVE", e);
+    })
 };
 
 const StatCard = ({md, lg, xs, number, label, className, padding, children}) => {

@@ -13,8 +13,18 @@ const tutorialRectPath = [...tutorialPath, 'rect'];
 
 const NewtabTutorialCard = ({tutorialPages, charityId, onClose}) => {
 	const open = DataStore.getValue(tutorialOpenPath);
-	if ( ! open) return null;
 	const page = DataStore.getValue(tutorialPagePath) || 0;
+	
+	useEffect(() => {
+		let {tutOpen, tutPage} = DataStore.getValue(['location', 'params']);
+		// Update only on second setting
+		if (tutOpen) DataStore.setValue(tutorialOpenPath, tutOpen, false);
+		if (tutPage) DataStore.setValue(tutorialPagePath, tutPage, true);
+		console.log("DO WE MANUALLY SET THE TUTORIAL? ", tutOpen, tutPage);
+	}, []);
+
+	if ( ! open) return null;
+
 	assMatch(page, Number);
 	const setPage = (num) => {
 		if (num > tutorialPages.length - 1) {
