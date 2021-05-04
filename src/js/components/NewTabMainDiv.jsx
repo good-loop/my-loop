@@ -124,13 +124,13 @@ const WebtopPage = () => {
 			{/* Tutorial highlight to cover adverts */}
 		</BG>
 		<TutorialComponent page={3} className="position-absolute" style={{bottom:0, left:0, right:0, height:110, width:"100vw"}}/>
-        {hasAdBlock.value && adblockPopup && <div style={{background:"white", borderRadius:10, left:"50%", top:"50%", transform:"translate(-50%, -50%)", width:500}}
+        {/*hasAdBlock.value && adblockPopup && <div style={{background:"white", borderRadius:10, left:"50%", top:"50%", transform:"translate(-50%, -50%)", width:500}}
             className="shadow position-absolute text-center p-3"
             >
             <h3 className="text-dark">It looks like you have AdBlock enabled</h3>
             <p>We can't raise money for charity without displaying ads. Please disable your adblocker so Tabs for Good can work!</p>
             <b style={{position:"absolute", top:10, right:20, cursor:"pointer"}} onClick={() => setAdblockPopup(false)}>X</b>
-        </div>}
+		</div>*/}
 		<NewtabTutorialCard tutorialPages={tutorialPages} charityId={charityID} onClose={() => setShowPopup(true)}/>
         {showPopup && <PopupWindow/>}
 		<NewtabLoginWidget onRegister={() => {checkIfOpened();}}/>
