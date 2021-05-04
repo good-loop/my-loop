@@ -84,7 +84,7 @@ const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalVie
 
     let sampleAds = ads;
 
-	console.log("Sample ads: ", sampleAds);
+	console.log("Sample ads: ", sampleAds.map(ad => ad.id));
 
 	let views = printer.prettyNumber(totalViewCount);
 

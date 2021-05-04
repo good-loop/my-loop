@@ -341,7 +341,7 @@ const CampaignPage = () => {
     // Scale again to make up for discrepencies introduced by filtering
 	donation4charityScaled = Campaign.scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
 
-    console.log("After Filter CHARITIES", charities);
+    console.log("After Filter CHARITIES", charities.map(c => c.id));
 
 	// PDF version of page
 	let pdf = null;
