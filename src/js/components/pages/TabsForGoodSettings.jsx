@@ -217,7 +217,8 @@ const setPersonSetting = (key, value) => {
 	const xid = Login.getId();
 	assert(xid, "setPersonSetting - no login");
 	let pvp = getProfile({xid});
-	let person = pvp.value || pvp.interm;
+	let person = pvp.value || pvp.interim;
+	assert(person, "setPersonSetting - no person",pvp);
 	console.log("setPersonSetting", xid, key, value, person);
 	setClaimValue({person, key, value});
 	DataStore.update();
