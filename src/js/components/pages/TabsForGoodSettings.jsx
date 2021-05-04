@@ -216,7 +216,8 @@ const setPersonSetting = (key, value) => {
 	assMatch(value, "String|Number|Boolean");
 	const xid = Login.getId();
 	assert(xid, "setPersonSetting - no login");
-	let person = getProfile({xid}).value;
+	let pvp = getProfile({xid});
+	let person = pvp.value || pvp.interm;
 	console.log("setPersonSetting", xid, key, value, person);
 	setClaimValue({person, key, value});
 	DataStore.update();
