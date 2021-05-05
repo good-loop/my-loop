@@ -61,7 +61,9 @@ const NewtabCharityLogin = () => {
 
 	const onRegisterLogin = () => {
 		DataStore.setValue(LOGIN_VERB_PATH, "t4g_chrome_store", true);
-		if (charityId) setPersonSetting("charity", charityId);
+		if (charityId) {
+			setPersonSetting("charity", charityId);
+		}
 	};
 
 	// why not use a BS modal??
@@ -103,17 +105,20 @@ const LogInForm = ({onRegister, onLogin}) => {
 	};
 
 	// login/register
+	if (verb==="register") {
+		return (<form id="loginByEmail" onSubmit={doItFn} className="flex-column unset-margins justify-content-center align-items-stretch">
+			<PropControl type="email" path={path} item={person} prop="email" placeholder="Email" className="mb-3"/>			
+			<PropControl type="password" path={path} item={person} prop="password" placeholder="Password" className="mb-3"/>
+			<PropControl type="password" path={path} item={person} prop="confpassword" placeholder="Confirm password" className="mb-3"/>
+			<div className="form-group mb-3">
+				<button className="btn btn-primary w-100" type="submit">
+					SUBMIT
+				</button>
+			</div>
+		</form>);
+	}
 
-	return verb === "register" ? <form id="loginByEmail" onSubmit={doItFn} className="flex-column unset-margins justify-content-center align-items-stretch">
-		<PropControl type="email" path={path} item={person} prop="email" placeholder="Email" className="mb-3"/>			
-		<PropControl type="password" path={path} item={person} prop="password" placeholder="Password" className="mb-3"/>
-		<PropControl type="password" path={path} item={person} prop="confpassword" placeholder="Confirm password" className="mb-3"/>
-		<div className="form-group mb-3">
-			<button className="btn btn-primary w-100" type="submit">
-				SUBMIT
-			</button>
-		</div>
-	</form> : <>
+	return (<>
 		<p>Step 1 complete!<br/>
 		Now install the plugin for Chrome.</p>
 		<a className="btn btn-primary mt-2"
@@ -121,7 +126,7 @@ const LogInForm = ({onRegister, onLogin}) => {
 			href="https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1">
 			CHROME STORE
 		</a>
-	</>
+	</>);
 };
 
 export default NewtabCharityLogin;
