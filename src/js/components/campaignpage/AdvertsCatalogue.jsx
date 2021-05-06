@@ -316,13 +316,11 @@ const AdvertFilters = ({campaign, vertisers, canonicalAds}) => {
 	customFilters && customFilters.forEach(control => {
 		if (control) containsNonNull = true;
 	});
-	if (!containsNonNull) return null;
+	if (!containsNonNull && !vertisers) return null;
 
     return <div className="position-relative ad-filters">
 		<ClearFilters/>
-		{campaign.showVertiserFilters && <>
-			<AdvertFilterCategory vertisers={vertisers}/>
-		</>}
+		{campaign.showVertiserFilters && <AdvertFilterCategory vertisers={vertisers}/>}
 		{customFilters}
 	</div>;
 };
@@ -365,6 +363,8 @@ const AdvertFilterCategory = ({category, filterButtons, vertisers}) => {
 			return foundQuery;
 		}
 	};
+
+	console.log("FILTER Vertisers? ", vertisers);
 
 	const [collapsed, setCollapsed] = useState(true);
 	// Don't collapse the category if the current filter is in this list
