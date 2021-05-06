@@ -129,7 +129,7 @@ const viewCount = (viewcount4campaign, ad) => {
         const q = sq.query;
         pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});       
         pvTopItem = pvAdvertiser;
-        if (pvAdvertiser.value) pvTopCampaign = Campaign.fetchMasterCampaign(pvAdvertiser.value);
+        if (pvAdvertiser.value) pvTopCampaign = Campaign.fetchMasterCampaign(pvAdvertiser.value, status);
         pvCampaigns = Campaign.fetchForAdvertiser(vertiserid, status);
 	}
 	// ...by Agency?
@@ -274,7 +274,7 @@ const CampaignPage = () => {
 
 	console.log("AD STATUS LIST:", adStatusList.map(ad => ad.ihStatus));
 
-	let totalViewCount = Campaign.viewcount({topCampaign:campaign, campaigns:otherCampaigns, extraAds});
+	let totalViewCount = Campaign.viewcount({topCampaign:campaign, campaigns:otherCampaigns, extraAds, status});
     
     // Merge in ads with no campaigns if asked - less controls applied
     if (showNonCampaignAds && pvAds.value) {
