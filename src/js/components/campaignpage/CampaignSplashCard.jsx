@@ -37,27 +37,38 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 	</>;
 
 	// TODO Campaign property showWiderImpact && widerImpactDntn
-	if (true) splashText = <>
-		<div className="header text-white text-right">
-			<div>
-				<span>
-					We donate <b><Counter currencySymbol="£" sigFigs={4} amount={new Money(1000)} minimumFractionDigits={2} preserveSize/></b> a year
-				</span>
-				<br/><br/>
+	if (campaignPage.showWiderImpact && campaignPage.widerAnnualDntn) {
+		const widerDntnText = <><b><Counter currencySymbol="£" sigFigs={4} amount={campaignPage.widerAnnualDntn} minimumFractionDigits={2} preserveSize/></b> a year</>;
+		splashText = <>
+			<div className="header text-white text-right">
 				<div>
-					{donationDisplay} of it is raised by<br/>ad campaigns
+					<span>
+						We donate &nbsp;
+						{campaignPage.widerUrl ? (
+							<a href={campaignPage.widerUrl}>{widerDntnText}</a>
+						) : widerDntnText}
+					</span>
+					<br/><br/>
+					<div>
+						{donationDisplay} of it is raised by<br/>ad campaigns
+					</div>
 				</div>
 			</div>
-		</div>
-	</>;
+		</>;
+	}
 
-	const quote = "As part of our [CSR strategy](https://www.google.com/?q=hello) we decided to run some of our ad campaigns with Good-Loop. They provide a framewrork where 50% of the cost of our ads goes to charities chosen by the ad viewers.";
+	const quote = campaignPage.widerImpactQuote;//"As part of our [CSR strategy](https://www.google.com/?q=hello) we decided to run some of our ad campaigns with Good-Loop. They provide a framewrork where 50% of the cost of our ads goes to charities chosen by the ad viewers.";
 
-	let widerImpactQuote = <div className="wider-impact-quote p-5">
-		<div className="text-left w-75 p-5 m-auto">
-			<b>
-				<MDText source={quote}/>
-			</b>
+	let widerImpactQuote = campaignPage.showWiderImpact && quote && <div className="wider-impact-quote p-5">
+		<div className="text-left w-75 p-5 m-auto d-inline-flex flex-row justify-content-center align-items-start">
+			<div md={2} style={{fontSize:"7rem", marginTop:-50, marginRight:20}} className="d-flex flex-column justify-content-start align-items-center">
+				"
+			</div>
+			<div className="d-flex flex-column justify-content-end align-items-start">
+				<b>
+					<MDText source={quote}/>
+				</b>
+			</div>
 		</div>
 	</div>
 
