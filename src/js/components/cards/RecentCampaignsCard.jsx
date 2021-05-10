@@ -12,44 +12,45 @@ import Counter from '../../base/components/Counter';
 import ServerIO from '../../plumbing/ServerIO';
 import C from '../../C';
 import Campaign from '../../base/data/Campaign';
+import NGO from '../../base/data/NGO';
 
 const RecentCampaignsCard = () => {
 	// TODO fetch data from portal
 	const campaigns = [
 		{
-			name: "KitKat",
-            adid: "xsINEuJV",
-            url: "/#campaign?gl.vert=xsINEuJV"
+			name: "LEVI'S",
+            adid: "ko3s6fUOdq",
+            url: "/#campaign/?gl.vertiser=XR67PcGn"
 		},
 		{
-			name: "H&M",
-            adid: "CeuNVbtW",
-            url: "/#campaign?gl.vert=CeuNVbtW"
+			name: "Ribena",
+            adid: "B1lF97utxD",
+            url: "/#campaign/?gl.vertiser=FBY5QmWQ"
 		},
 		{
-			name: "Linda McCartney",
-            adid: "qprjFW1H",
-            url: "/#campaign?gl.vert=qprjFW1H"
+			name: "Nike",
+			adid: "2qQIRm9u5Q",
+			url: "/#campaign?gl.vertiser=TNXHvb5j"
 		},
 		{
-			name: "WWF",
-            adid: "I6g1Ot1b",
-            url: "/#campaign?gl.vert=I6g1Ot1b"
+			name: "Reebok",
+            adid: "HtREj0pifC",
+            url: "/#campaign/?gl.vertiser=KpgM78Lg"
 		},
 		{
-			name: "Doom Bar",
-            adid: "ma9LU5chyU",
-            url: "/#campaign?gl.vert=ma9LU5chyU"
+			name: "Mango",
+            adid: "ojjiPf7kbB",
+            url: "/#campaign/?gl.vertiser=1JBFB6K4"
 		},
 		{
-			name: "General Mills",
-            adid: "yhPf2ttbXW",
-            url: "/#campaign/honey_cheerios_nkh_single"
+			name: "Cadbury",
+            adid: "qgbiSQ0crN",
+            url: "/#campaign/?gl.vertiser=cadbury_bpngtolk"
 		},
 		{
-			name: "Purina",
-            adid: "5ao5MthZ",
-            url: "/#campaign/Purina_Q2%202020"
+			name: "Pantene",
+            adid: "hwtjNncj",
+            url: "/#campaign/?gl.vertiser=zqhRrBjF"
 		}
 	];
 
@@ -86,10 +87,10 @@ const RecentCampaignsCard = () => {
 
 	return (
 		<div id="campaign-cards">
-			{campaigns.map(({donation, adid, url, name}, i) => (<Row className="campaign mb-5" key={i}>
+			{campaigns.map(({dntn, adid, url, name}, i) => (<Row className="campaign mb-5" key={i}>
 				<TVAdPlayer adid={adid} className="col-md-6"/>
 				<Col md={6} className="flex-column align-items-center text-center justify-content-center pt-3 pt-md-0">
-					<h3 className="mb-0">This ad helped {name}<br/>raise {donation ? <Counter currencySymbol="£" sigFigs={4} amount={donation} minimumFractionDigits={2} preservePennies /> : "money"}</h3>
+					<h3 className="mb-0">This ad helped {name}<br/>raise {dntn ? <Counter currencySymbol="£" sigFigs={4} amount={dntn} minimumFractionDigits={2} preservePennies /> : "money"}</h3>
 					<a className="btn btn-primary mt-3" href={url}>Find out more</a>
 				</Col>
 			</Row>))}

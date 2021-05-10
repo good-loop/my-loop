@@ -20,6 +20,12 @@ const TestimonialPlayer = ({src}) => {
     const [time, setTime] = useState(0);
     const duration = vid.current && vid.current.duration;
 
+
+	const height = vid.current ? (vid.current.clientHeight < 500 ? vid.current.clientHeight : 500) : 0;
+	const width = height && ((vid.current.clientWidth / vid.current.clientHeight) * height);
+
+	const isVerticalVid = height > width;
+
     const playVid = () => {
         vid.current.play();
     };
@@ -32,12 +38,12 @@ const TestimonialPlayer = ({src}) => {
         else pauseVid();
     }
 
-    return <div className="testimonial-video position-relative my-2">
+    return <div className="testimonial-video position-relative my-2 mx-auto" style={{background:"rgba(0,0,0,0.3)", width: width || "unset", height: height || "unset"}}>
         <video src={src} className="w-100" ref={vid}
             onTimeUpdate={() =>setTime(vid.current ? vid.current.currentTime : 0)}
             onPlay={() => setPlay(true)}
             onPause={() => setPlay(false)}/>
-        <PlayButton style={{position:"absolute", top: "50%", left:"50%", height:"70%"}} className={play ? "playing" : "paused"}/>
+        <PlayButton style={{position:"absolute", top: "50%", left:"50%", height:isVerticalVid ? "30%" : "70%"}} className={play ? "playing" : "paused"}/>
         <div className="position-absolute" style={{top:0, left:0, bottom:0, right:0, cursor:"pointer"}} onClick={() => updatePlay(!play)}/>
         <DurationBar duration={duration} currentTime={time}/>
     </div>;
