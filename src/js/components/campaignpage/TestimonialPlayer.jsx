@@ -25,7 +25,6 @@ const TestimonialPlayer = ({src}) => {
 	const width = height && ((vid.current.clientWidth / vid.current.clientHeight) * height);
 
 	const isVerticalVid = height > width;
-	console.log("IM VERTICAL?", isVerticalVid, width, height);
 
     const playVid = () => {
         vid.current.play();
