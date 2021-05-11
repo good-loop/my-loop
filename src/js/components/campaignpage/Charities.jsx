@@ -162,7 +162,7 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign, ongoing}) =
 					<img src={charity.logo} alt="logo"/>
 				</div>
 				<div className="charity-quote-text">
-					{donationValue? <div className="w-100"><h2>{ongoing && "Raising"} <Counter amount={donationValue} preservePennies={false} /> {!ongoing && "raised"}</h2></div> : null}
+					{donationValue? <div className="w-100"><h2>{ongoing && "Raising"} <Counter amount={donationValue} noPennies /> {!ongoing && "raised"}</h2></div> : null}
 					{charity.simpleImpact && showImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
                     {testimonial && <TestimonialPlayer src={testimonial} />}
