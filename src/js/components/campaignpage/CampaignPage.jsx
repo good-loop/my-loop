@@ -302,18 +302,11 @@ const CampaignPage = () => {
 	// individual charity data, attaching ad ID
 	let charities = Campaign.charities(campaign, otherCampaigns, extraAds, status);
 	// Add in any from campaign.dntn4charity - which can include strayCharities
-	if (!Campaign.isDntn4CharityEmpty(campaign)) {
-		let cids = Object.keys(campaign.dntn4charity);
-		let clistIds = charities.map(getId);
-		cids.forEach(cid => {
-			cid = normaliseSogiveId(cid);
-			if ( ! clistIds.includes(cid) && cid !== "total") {
-				const c = new NGO({id:cid});
-				console.log("Adding stray charity "+cid,c);
-				charities.push(c);
-			}
-		});
-	}
+	const strayCharities = Campaign.strayCharities(campaign, status);
+	const cids = charities.map(c => c.id);
+	strayCharities.forEach(c => {
+		if (!cids.includes(c.id)) charities.push(c);
+	});
     // NB: Don't append extra charities found in donation data. This can include noise.
     // Fill in blank in charities with sogive data
     charities = NGO.fetchSogiveData(charities);
