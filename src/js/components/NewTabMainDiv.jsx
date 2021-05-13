@@ -49,6 +49,7 @@ let verifiedLoginOnceFlag;
 const WebtopPage = () => {
 	Login.app = "t4g.good-loop.com"; // Not My.GL!
     const pvCharityID = getPVSelectedCharityId();
+	const loadingCharity = !pvCharityID || !pvCharityID.resolved;
 	const charityID = pvCharityID&&pvCharityID.value;
     let [showPopup, setShowPopup] = useState(false);
 
@@ -115,7 +116,7 @@ const WebtopPage = () => {
 			</TutorialHighlighter>
 			<div className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{top: 0, left: 0, width:"100vw", height:"100vh"}}>
 				<div className="container h-100 flex-column justify-content-center unset-margins">
-					<NormalTabCenter charityID={charityID}/>
+					<NormalTabCenter charityID={charityID} loadingCharity={loadingCharity}/>
 				</div>
 			</div>
 			{/* Tutorial highlight to cover adverts */}
@@ -163,7 +164,7 @@ const ENGINES = {
 	}
 }
 
-const NormalTabCenter = ({charityID}) => {
+const NormalTabCenter = ({charityID, loadingCharity}) => {
 	let pvSE = getPVClaimValue({xid:Login.getId(), key:"searchEngine"});
 	let searchEngine = (pvSE && pvSE.value) || "google";
 	const engineData = ENGINES[searchEngine];
@@ -186,7 +187,7 @@ const NormalTabCenter = ({charityID}) => {
 			</div>
 		</div>
 		<small className="text-center text-white font-weight-bold">You are supporting</small>
-		<NewTabCharityCard cid={charityID} />
+		<NewTabCharityCard cid={charityID} loading={loadingCharity} />
 	</>;
 };
 
@@ -197,7 +198,7 @@ const NewTabMainDiv = () => {
 	return <MainDivBase pageForPath={PAGES} defaultPage="webtop" navbar={false} className="newtab"/>;
 };
 
-const NewTabCharityCard = ({cid}) => {
+const NewTabCharityCard = ({cid, loading}) => {
 
 	const charity = cid ? fetchCharity(cid) : null;
 	const isInTutorialHighlight = DataStore.getValue(['widget', 'TutorialCard', 'open']) && DataStore.getValue(['widget', 'TutorialCard', 'page']) === 1;
@@ -208,9 +209,14 @@ const NewTabCharityCard = ({cid}) => {
 		<a href={"/#account?tab=tabsForGood" + params}>
 			<TutorialComponent page={1}>
 				<WhiteCircle className="m-3 tab-charity" circleCrop={charity ? charity.circleCrop : null}>
-					{charity ?
-						<CharityLogo charity={charity}/>
-						: <p className="color-gl-light-red font-weight-bold text-center my-auto">Select a charity</p>}
+					{loading ? (
+						<p className="color-gl-light-red font-weight-bold text-center my-auto">Loading...</p>
+					) : (
+						<>{charity ?
+							<CharityLogo charity={charity}/>
+							: <p className="color-gl-light-red font-weight-bold text-center my-auto">Select a charity</p>}
+						</>
+					)}
 				</WhiteCircle>
 			</TutorialComponent>
 		</a>
