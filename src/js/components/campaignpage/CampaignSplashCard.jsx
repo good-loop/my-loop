@@ -61,6 +61,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 
 	let widerImpactQuote = campaignPage.showWiderImpact && quote && <div className="wider-impact-quote p-5">
 		<div className="text-left w-75 p-5 m-auto d-inline-flex flex-row justify-content-center align-items-start">
+			{/* Two sections - first column is the quotation mark, positioned to line up nicely against the text, second column is the quote itself */}
 			<div md={2} style={{fontSize:"7rem", marginTop:-50, marginRight:20}} className="d-flex flex-column justify-content-start align-items-center">
 				"
 			</div>
