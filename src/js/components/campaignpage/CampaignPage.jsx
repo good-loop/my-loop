@@ -127,7 +127,7 @@ const viewCount = (viewcount4campaign, ad) => {
 		let sq = SearchQuery.setProp(new SearchQuery(), "vertiser", vertiserid);
         if (query) sq = SearchQuery.and(sq, new SearchQuery(query));
         const q = sq.query;
-        pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});       
+        pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
         pvTopItem = pvAdvertiser;
         if (pvAdvertiser.value) pvTopCampaign = Campaign.fetchMasterCampaign(pvAdvertiser.value, status);
         pvCampaigns = Campaign.fetchForAdvertiser(vertiserid, status);
@@ -237,7 +237,7 @@ const CampaignPage = () => {
 	// If so, change the layout slightly, positioning the advert video on top.
 	const isLanding = (landing !== undefined) && (landing !== 'false');
 
-    if ( ! pvTopCampaign.resolved) {
+    if ( ! pvTopCampaign.resolved || ! pvAds.resolved) {
 		console.log("Looking for master campaign...");
 		// TODO display some stuff whilst ads are loading
 		return <Misc.Loading text="Loading advert info..." />;
@@ -272,7 +272,14 @@ const CampaignPage = () => {
 	console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", otherCampaigns && otherCampaigns.map(c => c.name || c.id), "and extra ads", extraAds);
 	console.log("ADS LENGTH:", ads.length);
 
-	console.log("AD STATUS LIST:", adStatusList.map(ad => ad.ihStatus));
+	console.log("AD STATUS LIST:", adStatusList.map(ad => {
+		const obj = {};
+		obj[ad.id] = ad.ihStatus;
+		return obj;
+	}));
+
+	const adIds = ads.map(ad => ad.id);
+	console.log("AD STATUS SHOWING:", adIds);
 
 	let totalViewCount = Campaign.viewcount({topCampaign:campaign, campaigns:otherCampaigns, extraAds, status});
     
