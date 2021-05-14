@@ -92,8 +92,8 @@ const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalVie
 
 	if (sampleAds.length == 1) {
 		return <Container className="py-5">
-			<h2>Watch the <AdvertiserName name={nvertiserName} /> ad&nbsp;
-            {ongoing ? "raising" : "that raised"} <Counter currencySymbol="£" sigFigs={4} amount={donationTotal} minimumFractionDigits={2} preserveSize /><br />from a campaign with {views} ad viewers</h2>
+			<h2>Watch one of the <AdvertiserName name={nvertiserName} /> ads&nbsp;
+            {ongoing ? "raising" : "that raised"} <Counter currencySymbol="£" noPennies amount={donationTotal} minimumFractionDigits={2} preserveSize /><br /> with {views} ad viewers</h2>
 			<AdvertCard
 				ad={ads[0]}
 				viewCountProp={views}
@@ -141,7 +141,7 @@ const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalVie
 
 	return (<>
 		<Container className="py-5">
-			<h2>Watch the <AdvertiserName name={nvertiserName} /> ads that raised <Counter currencySymbol="£" sigFigs={4} amount={donationTotal} minimumFractionDigits={2} preserveSize /><br />with {views} ad viewers</h2>
+			<h2>Watch the <AdvertiserName name={nvertiserName} /> ads {ongoing ? "raising" : "that raised"} <Counter currencySymbol="£" noPennies amount={donationTotal} minimumFractionDigits={2} preserveSize /><br />with {views} ad viewers</h2>
 			<Carousel
 				activeIndex={activeIndex}
 				next={next}
