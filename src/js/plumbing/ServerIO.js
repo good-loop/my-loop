@@ -30,7 +30,7 @@ ServerIO.NO_API_AT_THIS_HOST = true;
 
 ServerIO.DATALOG_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}lg.good-loop.com/data`;
 // ServerIO.DATALOG_ENDPOINT = 'https://testlg.good-loop.com/data';
-ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';
+//ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';
 
 //ServerIO.PROFILER_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}profiler.good-loop.com`;
 ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com';
@@ -48,7 +48,7 @@ ServerIO.MEDIA_ENDPOINT = `https://testuploads.good-loop.com/`;
 // Useful where relative links can not be used (think inline-CSS 'url' image links)
 ServerIO.MYLOOP_ENDPONT = `${C.HTTPS}://${C.SERVER_TYPE}my.good-loop.com`;
 // ServerIO.MYLOOP_ENDPONT = `https://testmy.good-loop.com`;
-// ServerIO.MYLOOP_ENDPONT = `https://my.good-loop.com`;
+//ServerIO.MYLOOP_ENDPONT = `https://my.good-loop.com`;
 
 /**
  * My Loop has no backend, so use profiler
