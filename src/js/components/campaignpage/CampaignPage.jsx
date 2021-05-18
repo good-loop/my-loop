@@ -444,18 +444,6 @@ const CampaignPage = () => {
 						<img src="/img/Graphic_metro.1920w.png" className="w-100" alt="publishers" />}
 				</div>
 
-				<div className="bg-gl-light-red">
-					<Container className="py-5 text-white">
-						<div className="pt-5" />
-						<h3 className="text-white w-75 mx-auto">Download Tabs for Good - Chrome search plugin to raise money</h3>
-						<p className="py-3" style={{fontSize:"1.3rem"}}>Every time you open a new tab you raise money for real causes.</p>
-						<div className="py-4 flex-row justify-content-center align-items-center">
-							<a href="https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1" className="btn btn-secondary">Download</a>
-						</div>
-						<div className="pb-5" />
-					</Container>
-				</div>
-
 				<SmallPrintInfo ads={ads} charities={charities} campaign={campaign} />
 
 			</div>
