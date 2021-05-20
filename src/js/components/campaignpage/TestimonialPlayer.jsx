@@ -38,7 +38,7 @@ const TestimonialPlayer = ({src}) => {
         else pauseVid();
     }
 
-    return <div className="testimonial-video position-relative my-2 mx-auto" style={{background:"rgba(0,0,0,0.3)", width: width || "unset", height: height || "unset"}}>
+    return <div className="testimonial-video position-relative my-2" style={{background:"rgba(0,0,0,0.3)", width: width || "unset", height: height || "unset"}}>
         <video src={src} className="w-100" ref={vid}
             onTimeUpdate={() =>setTime(vid.current ? vid.current.currentTime : 0)}
             onPlay={() => setPlay(true)}
