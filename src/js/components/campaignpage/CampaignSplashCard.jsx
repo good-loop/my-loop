@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Counter from '../../base/components/Counter';
 import WhiteCircle from './WhiteCircle';
 import printer from '../../base/utils/printer';
@@ -7,11 +7,12 @@ import ShareButton from '../ShareButton';
 import DevLink from './DevLink';
 import Money from '../../base/data/Money';
 import MDText from '../../base/components/MDText';
+import C from '../../C';
 
 /**
  * 
  */
-const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, totalViewCount, charities}) => {
+const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, totalViewCount, charities, status}) => {
 
 	let { ongoing } = campaignPage
 	console.log("SPLASH CARD TOTAL VIEW COUNT", totalViewCount);
@@ -74,7 +75,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 	</div>
 
 	return (<>
-		<div className="impact-hub-splash">
+		<div className="impact-hub-splash position-relative">
 			<img src={campaignPage.bg ? campaignPage.bg : "/img/lightcurve.svg"} className={space("w-100", campaignPage.bg ? "splash-img" : "splash-curve")} alt="splash" />
 			<div className="dark-overlay" />
 			<img src="/img/redcurve.svg" className="w-100 splash-curve" alt="curve"/>
@@ -99,9 +100,22 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 				{pdf ? <a className="btn btn-primary mr-md-3" href={pdf} target="_blank">Download in pdf</a> : null}
 				<ShareButton meta={shareMeta} className="btn-transparent fill" url={window.location.href}>Share</ShareButton>
 			</div>
+			<DraftBanner status={status}/>
 		</div>
 		{widerImpactQuote}
 	</>);
 };
+
+const DraftBanner = ({status}) => {
+
+	const [hide, setHide] = useState(false);
+
+	return status !== C.KStatus.PUB_OR_ARC && !hide && (
+		<div className="position-absolute draft-banner">
+			<img src="/img/sticker.png"/>
+			<button type="button" className="btn btn-primary" onClick={() => setHide(true)}>Hide banner</button>
+		</div>
+	);
+}
 
 export default CampaignSplashCard;
