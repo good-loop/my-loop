@@ -316,7 +316,7 @@ const CampaignPage = () => {
 	});
     // NB: Don't append extra charities found in donation data. This can include noise.
     // Fill in blank in charities with sogive data
-    charities = NGO.fetchSogiveData(charities);
+    charities = NGO.fetchSogiveData(charities, campaign);
     console.log("CHARITIESSSSSS", charities);
     console.log("AD 4 CHARITY:",ad4Charity)
     // Attach ads after initial sorting and merging, which can cause ad ID data to be lost
