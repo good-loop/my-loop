@@ -415,7 +415,7 @@ const CampaignPage = () => {
 			<div className="text-center">
 				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaign} 
 					donationValue={donationTotal} charities={charities}
-					totalViewCount={totalViewCount} landing={isLanding} />
+					totalViewCount={totalViewCount} landing={isLanding} status={status}/>
 
 				<HowDoesItWork nvertiserName={nvertiserName} charities={charities} ongoing={ongoing}/>
 

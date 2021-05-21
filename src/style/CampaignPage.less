@@ -490,4 +490,31 @@ body {
 			color: white;
 		}
 	}
+
+	.draft-banner {
+		top: 300px;
+		left:-300px;
+		width:100%;
+		transform:rotate(-45deg);
+		z-index:5;
+		background: url('/img/draft.png');
+		background-position: center;
+		background-repeat:repeat-x;
+		background-size: contain;
+		height: 50px;
+
+		img {
+			height: 100px;
+			position: absolute;
+			top:50%;
+			left:50%;
+			transform:translate(-50%, -50%);
+		}
+
+		button {
+			position: relative;
+			z-index: 10;
+			top: 80px;
+		}
+	}
 }

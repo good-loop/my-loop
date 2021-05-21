@@ -366,12 +366,8 @@ const AdvertFilterCategory = ({category, filterButtons, vertisers}) => {
 
 	console.log("FILTER Vertisers? ", vertisers);
 
-	const [collapsed, setCollapsed] = useState(true);
-	// Don't collapse the category if the current filter is in this list
-	const collapsable = !containsSelectedButton();
-
-	return <div className={"ad-filter " + (collapsed && collapsable ? "collapsed" : "")}>
-			<h5 style={{cursor:collapsable ? "pointer" : "default"}} onClick={() => setCollapsed(!collapsed)}>Filter by {vertisers ? "advertiser" : category}</h5>
+	return <div className="ad-filter">
+			<h5>Filter by {vertisers ? "advertiser" : category}</h5>
 			<hr/>
 			<div className="ad-filter-list w-100 text-center d-flex flex-row">
 				{vertisers ? (
