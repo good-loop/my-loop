@@ -142,8 +142,8 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign, ongoing}) =
     
     //console.log("SHOWING THE CHARITY",charity);
 
-	const quote = tq(charity);
-    let img = (quote && quote.img) || charity.images;
+	const quote = charity.quote;
+    let img = charity.images;
     
     const testimonial = campaign.testimonials ? campaign.testimonials[normaliseSogiveId(charity.id)] : null;
     console.log("[TESTIMONIAL]", "Testimonial for " + charity.id + ":", testimonial);
@@ -165,8 +165,8 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign, ongoing}) =
 					{testimonial && <TestimonialPlayer src={testimonial} />}
 					{donationValue? <div className="w-100"><h2>{ongoing && "Raising"} <Counter amount={donationValue} noPennies /> {!ongoing && "raised"}</h2></div> : null}
 					{charity.simpleImpact && showImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
-					{quote ? <><p className="font-italic">{quote.quote}</p><p>{quote.source}</p></> : null}
-					{!quote ? <MDText source={desc} /> : null}
+					{quote && quote.quote ? <><p className="font-italic">"{quote.quote}"</p><p>— {quote.source}</p></> : null}
+					{!quote || !quote.quote ? <MDText source={desc} /> : null}
                     {charity.url && <a href={charity.url} className="btn btn-primary mb-3">Learn more</a>}
 					<div className="flex-row">
 						<DevLink href={'https://app.sogive.org/#edit?action=getornew&charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">SoGive Editor</DevLink>
