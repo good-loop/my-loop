@@ -305,6 +305,7 @@ const AdvertFilters = ({campaign, vertisers, canonicalAds}) => {
     const adsVertisers = uniq(canonicalAds.map(ad => ad.vertiser));
     if (vertisers) vertisers = uniq(vertisers).filter(vertiser => adsVertisers.includes(vertiser.id));
 	const filterButtons = campaign.filterButtons;
+	const filterCount = filterButtons ? Object.keys(filterButtons).filter(key => filterButtons[key].length).length : 0;
 
 	const customFilters = filterButtons && (
 		Object.keys(filterButtons).map(category => (
@@ -319,7 +320,7 @@ const AdvertFilters = ({campaign, vertisers, canonicalAds}) => {
 	if (!containsNonNull && !vertisers) return null;
 
     return <div className="position-relative ad-filters">
-		<ClearFilters/>
+		{filterCount || campaign.showVertiserFilters ? <ClearFilters/> : null}
 		{campaign.showVertiserFilters && <AdvertFilterCategory vertisers={vertisers}/>}
 		{customFilters}
 	</div>;
@@ -345,6 +346,9 @@ const AdvertFilterCategory = ({category, filterButtons, vertisers}) => {
 		}
 	}
 
+	/**
+	 * Legacy, for preventing collapse (categories no longer collapse)
+	 */
 	const containsSelectedButton = () => {
 		const {'query':dsQuery} = DataStore.getValue(['location', 'params']);
 		if (!dsQuery) return false;
@@ -368,8 +372,7 @@ const AdvertFilterCategory = ({category, filterButtons, vertisers}) => {
 
 	return <div className="ad-filter">
 			<h5>Filter by {vertisers ? "advertiser" : category}</h5>
-			<hr/>
-			<div className="ad-filter-list w-100 text-center d-flex flex-row">
+			<div className="ad-filter-list w-100 text-center d-flex flex-row justify-content-center">
 				{vertisers ? (
 					vertisers.map(vertiser => (
 						<FilterButton key={vertiser.id} query={"vertiser:" + vertiser.id}>

@@ -451,19 +451,21 @@ body {
         }
         .ad-filter-btn {
             cursor: pointer;
-            border-radius: 10px;
+			border: 1px solid @gl-light-red;
+            border-radius: 5px;
             margin: 10px;
-            padding: 10px;
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+            padding: 10px 20px;
 			max-width: 250px;
         }
         .ad-filter-btn.selected {
             border-bottom: 5px solid @gl-light-red;
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
         }
 		.ad-filter {
 			transition: 0.3s;
 			overflow: hidden;
 			h5 {
+				color:@gl-light-red;
 				font-size: 100%;
 				transition: 0.3s;
 			}
