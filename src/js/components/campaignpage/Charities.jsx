@@ -142,7 +142,7 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign, ongoing}) =
     
     //console.log("SHOWING THE CHARITY",charity);
 
-	const quote = charity.quote;
+	const quote = charity.charityQuote;
     let img = charity.images;
     
     const testimonial = campaign.testimonials ? campaign.testimonials[normaliseSogiveId(charity.id)] : null;
