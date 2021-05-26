@@ -186,7 +186,7 @@ const fetchDonationData = ({ads}) => {
 	// load the community total for the ad
 	let pvDonationsBreakdown = DataStore.fetch(['widget', 'CampaignPage', 'communityTotal', sqDon.query], () => {
 		return ServerIO.getDonationsData({ q: sqDon.query });
-	}, {}, true, 5 * 60 * 1000);	
+	}, {cachePeriod: 5 * 60 * 1000});	
 	if (pvDonationsBreakdown.error) {
 		console.error("pvDonationsBreakdown.error", pvDonationsBreakdown.error);
 		return null;
