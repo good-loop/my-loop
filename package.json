@@ -14,7 +14,6 @@
     "data-pivot": "^1.0.2",
     "easy-enums": "^1.1.8",
     "fast-json-patch": "^3.0.0-1",
-    "hashmap": "^2.4.0",
     "intl": "^1.2.5",
     "jquery": "^3.5.1",
     "js-cookie": "^2.2.1",
