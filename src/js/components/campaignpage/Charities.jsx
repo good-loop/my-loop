@@ -145,7 +145,7 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign, ongoing}) =
 	const quote = charity.charityQuote;
     let img = charity.images;
     
-    const testimonial = campaign.testimonials ? campaign.testimonials[normaliseSogiveId(charity.id)] : null;
+    const testimonial = charity.testimonial;
     console.log("[TESTIMONIAL]", "Testimonial for " + charity.id + ":", testimonial);
 
 	// TODO let's reduce the use of custom css classes (e.g. charity-quote-img etc below)
