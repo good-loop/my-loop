@@ -50,8 +50,6 @@ challenges facing our planet."`,
  * @param {!Campaign} campaign
  */
 const Charities = ({ charities, donation4charity, campaign }) => {
-	
-	let ongoing = campaign.ongoing;
 	// The portal control data
 	let hideImpact = campaign.hideImpact || {};
 	// Filter nulls (paranoia)
@@ -76,7 +74,7 @@ const Charities = ({ charities, donation4charity, campaign }) => {
                         donationValue={getDonation(charity)}
 						showImpact={ ! hideImpact[charity.id]}
                         campaign={campaign}
-                        ongoing={ongoing} />
+					/>
 				)}
 			</Container>
 		</div>
@@ -131,7 +129,8 @@ const RegNum = ({label, regNum}) => {
  * @param {!NGO} charity This data item is a shallow copy
  * @param {?Money} donationValue
  */
-const CharityCard = ({ charity, donationValue, showImpact, campaign, ongoing}) => {
+const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
+	const ongoing = campaign.ongoing;
 	// Prefer full descriptions here. If unavailable switch to summary desc.
 	let desc = charity.description || charity.summaryDescription || '';
 	// But do cut descriptions down to 1 paragraph.

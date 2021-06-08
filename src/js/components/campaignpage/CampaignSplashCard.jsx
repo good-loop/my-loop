@@ -8,6 +8,7 @@ import DevLink from './DevLink';
 import Money from '../../base/data/Money';
 import MDText from '../../base/components/MDText';
 import C from '../../C';
+import KStatus from '../../base/data/KStatus';
 
 /**
  * 
@@ -107,13 +108,15 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 };
 
 const DraftBanner = ({status}) => {
+	if (status !== KStatus.DRAFT && status !== KStatus.MODIFIED) {
+		return null;
+	}
+	// const [hide, setHide] = useState(false);
 
-	const [hide, setHide] = useState(false);
-
-	return status !== C.KStatus.PUB_OR_ARC && !hide && (
+	return (
 		<div className="position-absolute draft-banner">
 			<img src="/img/sticker.png"/>
-			<button type="button" className="btn btn-primary" onClick={() => setHide(true)}>Hide banner</button>
+			{/* <button type="button" className="btn btn-primary" onClick={() => setHide(true)}>Hide banner</button> */}
 		</div>
 	);
 }

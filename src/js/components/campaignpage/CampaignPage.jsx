@@ -240,7 +240,16 @@ const CampaignPage = () => {
     if ( ! pvTopCampaign.resolved && ! pvAds.resolved) {
 		console.log("Looking for master campaign...", pvTopItem);
 		// TODO display some stuff whilst ads are loading
-		return <Misc.Loading text={space("Loading advert info...", pvTopItem.value && getType(pvTopItem.value)+" "+pvTopItem.value.id)} />;
+		// Debug info - What are we loading??
+		let msg = space("Loading page info...",
+			pvTopItem.value? getType(pvTopItem.value)+" "+pvTopItem.value.id : pvTopItem.error,
+			pvTopCampaign.value? "Top Campaign: "+pvTopCampaign.value.id : pvTopCampaign.error,
+			pvCampaigns.value? "Campaigns loaded" : pvCampaigns.error,
+			pvAds.value? "Ads loaded" : pvAds.error,
+			pvAdvertisers.value? "Advertisers loaded" : pvAdvertisers.error,
+			pvAgencies.value? "Agencies loaded" : pvAgencies.error,
+		);		
+		return <Misc.Loading text={msg} />;
 	}
 	if ( ! pvTopCampaign.value && ! pvCampaigns.value) {
 		console.warn("NO CAMPAIGNS FOUND, aborting page generation");
@@ -265,20 +274,10 @@ const CampaignPage = () => {
     // Get filtered ad list
     const otherCampaigns = pvCampaigns.value && List.hits(pvCampaigns.value).filter(c => c.id!==campaign.id);
 	let adStatusList = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, status, query, extraAds:pvAds.value && List.hits(pvAds.value)}) : [];
-    let ads = adStatusList.filter(ad => ad.ihStatus==="SHOWING");
+    const ads = adStatusList.filter(ad => ad.ihStatus==="SHOWING");
     let canonicalAds = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, status, extraAds:pvAds.value && List.hits(pvAds.value)}).filter(ad => ad.ihStatus==="SHOWING") : [];
     let extraAds = adStatusList.filter(ad => ad.ihStatus==="NO CAMPAIGN");
 	console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", otherCampaigns && otherCampaigns.map(c => c.name || c.id), "and extra ads", extraAds);
-	console.log("ADS LENGTH:", ads.length);
-
-	console.log("AD STATUS LIST:", adStatusList.map(ad => {
-		const obj = {};
-		obj[ad.id] = ad.ihStatus;
-		return obj;
-	}));
-
-	const adIds = ads.map(ad => ad.id);
-	console.log("AD STATUS SHOWING:", adIds);
 
 	let totalViewCount = Campaign.viewcount({topCampaign:campaign, campaigns:otherCampaigns, extraAds, status});
     
@@ -286,10 +285,11 @@ const CampaignPage = () => {
     if (showNonCampaignAds && pvAds.value) {
         const hideAds = Campaign.hideAdverts(campaign, otherCampaigns);
         extraAds.forEach(ad => {
-            if (!ads.includes(ad) && !hideAds.includes(ad.id)) ads.push(ad);
+            if ( ! ads.includes(ad) && ! hideAds.includes(ad.id)) {
+				ads.push(ad);
+			}
         });
     }
-    if (!yessy(ads)) return <Misc.Loading text="Loading advert info..." />;
 
 	// Combine branding
 	// Priority: TopCampaign, TopItem, Adverts
@@ -399,7 +399,7 @@ const CampaignPage = () => {
 	// Get name of advertiser from nvertiser if existing, or ad if not
 	let nvertiser = pvAdvertisers.value && List.hits(pvAdvertisers.value)[0];
     let agency = pvAgencies.value && List.hits(pvAgencies.value)[0];
-	let nvertiserName = agency ? agency.name : (nvertiser ? nvertiser.name : ads[0].vertiserName);
+	let nvertiserName = agency? agency.name : (nvertiser? nvertiser.name : (ads[0]? ads[0].vertiserName : "Advertiser"));
 	const nvertiserNameNoTrail = nvertiserName ? nvertiserName.replace(/'s$/g, "") : null;
 
 	let shareButtonMeta = {
@@ -417,7 +417,7 @@ const CampaignPage = () => {
 					donationValue={donationTotal} charities={charities}
 					totalViewCount={totalViewCount} landing={isLanding} status={status}/>
 
-				<HowDoesItWork nvertiserName={nvertiserName} charities={charities} ongoing={ongoing}/>
+				<HowDoesItWork nvertiserName={nvertiserName} charities={charities} ongoing={campaign.ongoing}/>
 
 				{isLanding ? null : (
 					<AdvertsCatalogue
@@ -479,7 +479,6 @@ const SmallPrintInfo = ({ads, charities, campaign, pvTopItem}) => {
 		if (starti && ( ! start || starti.getTime() < start.getTime())) start = starti;
 		if (endi && ( ! end || endi.getTime() > end.getTime())) end = endi;
 	}
-	console.log("campaignPage",campaign);
 	
 	let totalBudget	= campaign.maxDntn;
 	if ( ! totalBudget) {
