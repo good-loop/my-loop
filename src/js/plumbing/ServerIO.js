@@ -30,7 +30,7 @@ ServerIO.NO_API_AT_THIS_HOST = true;
 
 ServerIO.DATALOG_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}lg.good-loop.com/data`;
 // ServerIO.DATALOG_ENDPOINT = 'https://testlg.good-loop.com/data';
-//ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';
+ServerIO.DATALOG_ENDPOINT = 'https://lg.good-loop.com/data';
 
 //ServerIO.PROFILER_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}profiler.good-loop.com`;
 ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com';
@@ -39,9 +39,9 @@ ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com';
 
 ServerIO.AS_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}as.good-loop.com`;
 ServerIO.PORTAL_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}portal.good-loop.com`;
-//ServerIO.PORTAL_ENDPOINT = `https://portal.good-loop.com`;
+ServerIO.PORTAL_ENDPOINT = `https://portal.good-loop.com`;
 // Use the live adserver, since our showcase ad selectionis hard-coded to live ads.
-//ServerIO.AS_ENDPOINT = 'https://as.good-loop.com';
+ServerIO.AS_ENDPOINT = 'https://as.good-loop.com';
 
 ServerIO.MEDIA_ENDPOINT = `https://testuploads.good-loop.com/`;
 

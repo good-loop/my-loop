@@ -51,7 +51,7 @@ challenges facing our planet."`,
  */
 const Charities = ({ charities, donation4charity, campaign }) => {
 	
-	let { ongoing } = campaign;
+	let ongoing = campaign.ongoing;
 	// The portal control data
 	let hideImpact = campaign.hideImpact || {};
 	// Filter nulls (paranoia)

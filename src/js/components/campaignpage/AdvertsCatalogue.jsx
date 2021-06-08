@@ -71,7 +71,7 @@ const campaignNameForAd = ad => {
  */
 const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalViewCount, vertisers, canonicalAds }) => {
 
-	let {ongoing} = campaign;
+	let ongoing = campaign.ongoing;
 
 	// filter out any hidden ads
 	// NB: done here as the hiding is a shallow cosmetic -- we still want the view and £ donation data included (or if not, there are other controls)

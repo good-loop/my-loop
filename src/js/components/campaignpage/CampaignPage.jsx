@@ -11,7 +11,7 @@ import Misc from '../../base/components/Misc';
 import StyleBlock from '../../base/components/StyleBlock';
 import Advert from '../../base/data/Advert';
 import Campaign from '../../base/data/Campaign';
-import { getId } from '../../base/data/DataClass';
+import { getId, getType } from '../../base/data/DataClass';
 import KStatus from '../../base/data/KStatus';
 import List from '../../base/data/List';
 import Money from '../../base/data/Money';
@@ -21,7 +21,7 @@ import DataStore from '../../base/plumbing/DataStore';
 import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
 import SearchQuery from '../../base/searchquery';
 import { assert, assMatch } from '../../base/utils/assert';
-import { asDate, isMobile, mapkv, sum, uniq, uniqById, yessy } from '../../base/utils/miscutils';
+import { asDate, is, isMobile, mapkv, space, sum, uniq, uniqById, yessy } from '../../base/utils/miscutils';
 import C from '../../C';
 import ActionMan from '../../plumbing/ActionMan';
 import ServerIO from '../../plumbing/ServerIO';
@@ -237,12 +237,12 @@ const CampaignPage = () => {
 	// If so, change the layout slightly, positioning the advert video on top.
 	const isLanding = (landing !== undefined) && (landing !== 'false');
 
-    if ( ! pvTopCampaign.resolved || ! pvAds.resolved) {
-		console.log("Looking for master campaign...");
+    if ( ! pvTopCampaign.resolved && ! pvAds.resolved) {
+		console.log("Looking for master campaign...", pvTopItem);
 		// TODO display some stuff whilst ads are loading
-		return <Misc.Loading text="Loading advert info..." />;
+		return <Misc.Loading text={space("Loading advert info...", pvTopItem.value && getType(pvTopItem.value)+" "+pvTopItem.value.id)} />;
 	}
-	if (!pvTopCampaign.value && !pvCampaigns.value) {
+	if ( ! pvTopCampaign.value && ! pvCampaigns.value) {
 		console.warn("NO CAMPAIGNS FOUND, aborting page generation");
 		return <Page404/>;
     }
@@ -259,7 +259,6 @@ const CampaignPage = () => {
 	// CAMPAIGN IMPACT HUB SETTINGS
 	let {
 		showNonCampaignAds,
-		ongoing,
 		forceScaleTotal,
 	} = campaign;
 
@@ -364,8 +363,8 @@ const CampaignPage = () => {
 	let qads = ads.map(({ id }) => `vert:${id}`).join(' OR ');
 	sq = SearchQuery.and(sq, qads);
 
-	// Is this an interim total or the full amount? Interim if not fixed by campaign, and not ended
-	if ( ! ongoing && ! campaign.dntn) {
+	// Is this campaign ongoing? Guess from ad dates if unset (is this needed??)
+	if ( ! is(campaign.ongoing)) {
 		// when is the last advert due to stop?
 		let endDate = new Date(2000,1,1);
 		ads.forEach(ad => {
@@ -377,7 +376,8 @@ const CampaignPage = () => {
 			}
 		});
 		if (endDate.getTime() > new Date().getTime()) {
-			ongoing = true;
+			console.warn("CampaignPage.jsx - HACK local `ongoing=true`"); // might be over-written
+			campaign.ongoing = true;
 		}
     }
     
@@ -444,7 +444,7 @@ const CampaignPage = () => {
 						<img src="/img/Graphic_metro.1920w.png" className="w-100" alt="publishers" />}
 				</div>
 
-				<SmallPrintInfo ads={ads} charities={charities} campaign={campaign} />
+				<SmallPrintInfo ads={ads} charities={charities} campaign={campaign} pvTopItem={pvTopItem} />
 
 			</div>
 		</div>
@@ -457,7 +457,7 @@ const CampaignPage = () => {
  * @param {Object} p
  * @param {Campaign} p.campaign
  */
-const SmallPrintInfo = ({ads, charities, campaign}) => {
+const SmallPrintInfo = ({ads, charities, campaign, pvTopItem}) => {
 	// set min/max donation-per-ad and start/end dates from ad
 	let dmin,dmax,start,end;
 	for(let i=0; i<ads.length; i++) {
@@ -525,7 +525,8 @@ const SmallPrintInfo = ({ads, charities, campaign}) => {
 		<span className="small">This information follows the guidelines of the New York Attorney General for best practice in cause marketing,
 			<Cite href='https://www.charitiesnys.com/cause_marketing.html'/> and the Better Business Bureau's standard for donations in marketing.			
 		</span>
-		{campaign && campaign.id && <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/'+escape(campaign.id)} target="_portal">Campaign Editor</DevLink>}
+		{campaign && campaign.id? <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/'+escape(campaign.id)} target="_portal">Campaign Editor</DevLink> : ""}
+		{pvTopItem.value? <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#'+getType(pvTopItem.value)+'/'+escape(pvTopItem.value.id)} target="_portal">{getType(pvTopItem.value)} Editor</DevLink> : ""}
         {campaign.smallPrint &&
         <div className="text-center">
             <span className="small">
