@@ -84,11 +84,10 @@ const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalVie
 
     let sampleAds = ads;
 
-	console.log("Sample ads: ", sampleAds.map(ad => ad.id));
+	// console.log("Sample ads: ", sampleAds.map(ad => ad.id));
+    // console.log("ONGOING? ", ongoing);
 
 	let views = printer.prettyNumber(totalViewCount);
-
-    console.log("ONGOING? ", ongoing);
 
 	if (sampleAds.length == 1) {
 		return <Container className="py-5">
