@@ -84,11 +84,10 @@ const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalVie
 
     let sampleAds = ads;
 
-	console.log("Sample ads: ", sampleAds.map(ad => ad.id));
+	// console.log("Sample ads: ", sampleAds.map(ad => ad.id));
+    // console.log("ONGOING? ", ongoing);
 
 	let views = printer.prettyNumber(totalViewCount);
-
-    console.log("ONGOING? ", ongoing);
 
 	if (sampleAds.length == 1) {
 		return <Container className="py-5">
@@ -261,7 +260,7 @@ const AdvertCard = ({ ad, active }) => {
 				{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
 				<img src="/img/LandingBackground/white_iphone.png" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "50%", width: "80%", top: "50%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }} />
 				<div className="position-absolute theunit">
-					{hasShown ? <GoodLoopUnit vertId={ad.id} size={size} />
+					{hasShown ? <GoodLoopUnit vertId={ad.id} size={size} advert={ad} />
                     : <div style={{background:"black", width:"100%", height:"100%"}}></div>}
 				</div>
 			</div>
@@ -270,6 +269,12 @@ const AdvertCard = ({ ad, active }) => {
 	);
 };
 
+/**
+ * How does this relate to AdvertCard?? Could they share code??
+ * @param {Object} p
+ * @param {Advert} p.ad
+ * @returns 
+ */
 const AdvertPreviewCard = ({ ad, handleClick, selected=false, active }) => {
 	if ( ! ad) {
 		console.warn("AdvertPreviewCard - NO ad?!");
@@ -283,7 +288,7 @@ const AdvertPreviewCard = ({ ad, handleClick, selected=false, active }) => {
 		<div className="col-md-4 col-6">
 			<div onClick={e => { e.preventDefault(); handleClick(); }} className={"pointer-wrapper" + (selected ? " selected" : "")}>
 				<div className="ad-prev shadow">
-					{hasShown ? <GoodLoopUnit vertId={ad.id} size={size} />
+					{hasShown ? <GoodLoopUnit vertId={ad.id} size={size} advert={ad} />
                     : <div style={{background:"black", width:"100%", height:"100%"}}></div>}
 				</div>
 			</div>

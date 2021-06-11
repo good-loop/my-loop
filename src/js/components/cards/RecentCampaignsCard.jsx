@@ -13,6 +13,8 @@ import ServerIO from '../../plumbing/ServerIO';
 import C from '../../C';
 import Campaign from '../../base/data/Campaign';
 import NGO from '../../base/data/NGO';
+import { getDataItem } from '../../base/plumbing/Crud';
+import KStatus from '../../base/data/KStatus';
 
 const RecentCampaignsCard = () => {
 	// TODO fetch data from portal
@@ -100,12 +102,14 @@ const RecentCampaignsCard = () => {
 
 const TVAdPlayer = ({adid, className}) => {
 	const size = "landscape";
+	let pvAd = getDataItem({type:C.TYPES.Advert, id:adid, status:KStatus.PUBLISHED,swallow:true});
 	return <div className={space("position-relative", className)}>
 		<img src="/img/LandingBackground/white_iphone.png" className="w-100 invisible"/>
 		{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
 		<img src="/img/LandingBackground/white_iphone.png" className="position-absolute d-none d-md-block unit-shadow" style={{left: "-5%", width:"110%", top:0, zIndex:2, pointerEvents:"none"}}/>
 		<div className="position-absolute tv-ad-player">
-			<GoodLoopUnit vertId={adid} size={size} />
+			{pvAd.value? <GoodLoopUnit vertId={adid} size={size} advert={pvAd.value} /> 
+			: <div className="bg-dark" />}
 		</div>
 	</div>;
 };
