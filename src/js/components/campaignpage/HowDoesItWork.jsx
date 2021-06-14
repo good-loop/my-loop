@@ -3,16 +3,22 @@ import React from 'react';
 const HowDoesItWork = ({ nvertiserName, charities, ongoing }) => {
 	// possessive form - names with terminal S just take an apostrophe, all others get "'s"
 	// EG Sharp's (brewery) ==> "Sharp's' video... " vs Sharp (electronics manufacturer) ==> "Sharp's video"
-	const nvertiserNamePoss = nvertiserName ? 
-        (nvertiserName.includes("'s") ? nvertiserName : nvertiserName.replace(/s?$/, match => ({ s: 's\'' }[match] || '\'s')))
-    : null;
-    let charityName;
-    if (charities.length === 1) {
-        charityName = charities[0].displayName || charities[0].name;
-        if (charityName && charityName.startsWith("The ")) {
-            charityName = charityName.replace("The ", "the ");
-        }
-    }
+	const nvertiserNamePoss = nvertiserName ? (
+		nvertiserName.includes("'s") ? (
+			nvertiserName
+		) : (
+			nvertiserName.replace(/s?$/, match => ({ s: 's\'' }[match] || '\'s'))
+		)
+	) : null;
+
+	let charityName;
+	if (charities.length === 1) {
+		charityName = charities[0].displayName || charities[0].name;
+		if (charityName && charityName.startsWith("The ")) {
+			charityName = charityName.replace("The ", "the ");
+		}
+	}
+
 	return (
 		<div className="bg-gl-light-pink py-5">
 			<div className="container py-5">
@@ -29,8 +35,11 @@ const HowDoesItWork = ({ nvertiserName, charities, ongoing }) => {
 					<div className="col-md d-flex flex-column mt-5 mt-md-0">
 						<img src="/img/Graphic_leafy_video.scaled.400w.png" className="w-100" alt="choose charity" />
 						3. Once the donation {ongoing ? "is" : "was"} unlocked,
-                            {charities.length > 1 ? " the user " + (ongoing ? "can" : "could") + " then choose which charity they " + (ongoing ? "want" : "wanted") + " to fund with 50% of the ad money."
-                            : " 50% of the ad money raised " + (ongoing ? "is" : "was") + " sent to " + (charityName || "charity") + "."}
+						{charities.length > 1 ? (
+							" the user " + (ongoing ? "can" : "could") + " then choose which charity they " + (ongoing ? "want" : "wanted") + " to fund with 50% of the ad money."
+						) : (
+							" 50% of the ad money raised " + (ongoing ? "is" : "was") + " sent to " + (charityName || "charity") + "."
+						)}
 					</div>
 				</div>
 			</div>

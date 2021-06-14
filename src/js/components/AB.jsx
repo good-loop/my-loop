@@ -18,7 +18,7 @@ A CSS example:
  * 
  * @returns {!Number} in [0, n-1]
  */
-const getVersion = (label, n) => {	
+const getVersion = (label, n) => {
 	// A random int. Use it % n to get version choices (it is up to you what you do with this - the v is not meaningful, but can be examined)
 	let vkey = "v"+label;
 	let version = DataStore.getUrlValue(vkey);
@@ -46,7 +46,7 @@ const AB = ({label, children}) => {
 	if (children.length === 0) return null;
 	if (children.length === 1) return children[0];
 
-	let vi = getVersion(label, children.length);	
+	let vi = getVersion(label, children.length);
 	let child = children[vi];
 	console.log("AB: "+label+" picked "+vi+" of "+children.length);
 	return child;

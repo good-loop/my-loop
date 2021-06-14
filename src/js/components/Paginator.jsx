@@ -38,7 +38,7 @@ const Paginator = ({rows, cols, rowsMD, colsMD, pageButtonRange, pageButtonRange
 		start = pageNum === numPages - 1 ? start - 1 : start;
 		// Don't go to page -1
 		start = start < 0 ? 0 : start;
-		
+
 		max = pageNum + pageButtonRange + 1;
 		// If we're on page 1, make up for the lost start range
 		max = pageNum === 0 ? max + 1 : max;

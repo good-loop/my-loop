@@ -35,7 +35,7 @@ const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty
 		console.warn("Ticker - No value or amount");
 		return null;
 	}
-	
+
 	const timeDiff = startTime ? Date.now() - startTime.getTime() : 0;
 	const valDiff = (timeDiff / tickTime) * rate;
 
@@ -58,23 +58,23 @@ const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty
 	const options = {};
 	// ...set default value for preservePennies and sigFigs (but not both)
 	if (preservePennies===undefined && (amount || currencySymbol)) {
-		preservePennies = true;				
+		preservePennies = true;
 	}
 	if (preservePennies) {
 		options.minimumFractionDigits = 2;
 		options.maximumFractionDigits = 2;
 	}
-	const formatNum = x => {		
+	const formatNum = x => {
 		try {
 			return new Intl.NumberFormat('en-GB', options).format(x);
 		} catch(er) {
 			console.warn("Ticker.jsx formatNumber "+er); // Handle the weird Intl undefined bug, seen Oct 2019, possibly caused by a specific phone type
-			return ""+x;
-		}	
+			return '' + x;
+		}
 	};
 
 	const offsetDispVal = dispVal + valOffset;
-	let disp = pretty? formatNum(offsetDispVal) : offsetDispVal.toString();	
+	let disp = pretty? formatNum(offsetDispVal) : offsetDispVal.toString();
 	disp = currencySymbol + disp;
 
 	// slice the string to enforce fixed-width characters (to avoid the string wobbling as it updates)
@@ -82,7 +82,7 @@ const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty
 	// TODO comment on what the css below is for
 	return (
 		<span className="Ticker position-relative d-inline-flex flex-row justify-content-center align-items-center" 
-			style={{padding: "0 " + (centerText ? "0.1rem" : "0")}}>			
+			style={{padding: "0 " + (centerText ? "0.1rem" : "0")}}>
 			{dispArr.map((digit, i) => <span key={i} style={{width: (digit===','||digit==='.'? '0.3' : '0.6')+'em'}}>{digit}</span>)}
 		</span>
 	);

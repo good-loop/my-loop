@@ -113,7 +113,7 @@ const fetchAllCharityIDs = () => {
 			});
 	});
 };
-/** TODO refactor. Split munging csv data out from fetching SoGive data. If something is doing a fetch, it should return a PromiseValue  */ 
+/** TODO refactor. Split munging csv data out from fetching SoGive data. If something is doing a fetch, it should return a PromiseValue */ 
 const fetchAllCharities = (csvData) => {
 	let charities = [];
 	// Get sogive data for charities 

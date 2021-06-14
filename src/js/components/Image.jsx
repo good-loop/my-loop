@@ -53,7 +53,7 @@ const optimise = url => {
 const OptimisedImage = (props) => {
 	let {render} = props;
 	let src = props.src || '';
-	src = optimise(src);	
+	src = optimise(src);
 	return render({...props, src});
 };
 

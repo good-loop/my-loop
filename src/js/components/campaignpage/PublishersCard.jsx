@@ -20,7 +20,7 @@ const PublishersCard = ({pvViewData}) => {
 		// find the publisher object which matches it
 		const pub = publishers.find(thisPub => pBucket.key === thisPub.name);
 		return pub;
-	});	
+	});
 	// filter nulls (ie not high profile publishers)
 	pubs = pubs.filter(p => p);
 	if ( ! pubs.length) return null;
@@ -32,7 +32,7 @@ const PublishersCard = ({pvViewData}) => {
 			<div className="text-center">
 				{pubs.map(pub => <PubSign key={pub.id} pub={pub} />)}
 			</div>
-		</div>);	
+		</div>);
 };
 
 const PubSign = ({pub}) => (

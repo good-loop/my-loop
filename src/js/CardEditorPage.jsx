@@ -89,7 +89,7 @@ const CardEditorPage = () => {
 
 const FacePic = ({ prefix, img, x, y, w }) => {
 	let flip = DataStore.getUrlValue(prefix + "flip");
-	//  ◭ ⏃ 
+	// ◭ ⏃ 
 	// NB: use %s instead of px for responsive layout
 	// NB: controls have fixed width 'cos otherwise they'd resize during resizing!
 	return (<>
@@ -144,8 +144,8 @@ const Card = ({ bg, ax, ay, aw, aimg, aflip, bx, by, bw, bimg, bflip, zIndex, fl
 			position:absolute;
 			z-index:${zIndex + 10};
 			top:-6%;
-			animation-name: fall;  	
-			animation-iteration-count: infinite;		
+			animation-name: fall;
+			animation-iteration-count: infinite;
 		}
 	`} />
 		{aimg && <img src={aimg} style={{ position: 'absolute', top: ay + '%', left: ax + '%', width: aw + '%', transform: aflip ? "scaleX(-1)" : null, zIndex }} draggable={false} />}

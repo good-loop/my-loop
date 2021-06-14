@@ -21,7 +21,7 @@ import { getDataLogData } from '../../base/plumbing/DataLog';
 
 const TabsForGoodSettings = () => {
 	const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
-	return <>		
+	return <>
 		{ ! task && <TabStats/>}
 		<div className="py-3"/>
 		<h2>Choose a different search engine</h2>
@@ -42,7 +42,7 @@ const SearchEnginePicker = () => {
 		searchEngine = "google";
 	} else {
 		DataStore.setValue(dpath.concat("searchEnginePicker"), searchEngine, false); // set it for the PropControl
-	}	
+	}
 	const onSelect = ({value}) => {
 		console.log("newEngine", value);
 		setPersonSetting("searchEngine", value);
@@ -56,11 +56,11 @@ const SearchEnginePicker = () => {
 const CharityPicker = () => {
 	const person = getProfile().value;
 	if ( ! person) return <Misc.Loading />;
-    let selId = getClaimValue({person, key:"charity"});
-    
+	let selId = getClaimValue({person, key:"charity"});
+
 	const pvSelectedCharity = selId && getDataItem({type:C.TYPES.NGO, id:selId, status:C.KStatus.Published, swallow:true});
 	let q = DataStore.getValue('widget','search','q');
-	
+
 	// HACK: default list - poke it into appstate
 	const dq = "LISTLOADHACK"; // NB: an OR over "id:X" doesn't work as SoGive is annoyingly using the schema.org "@id" property
 	const DEFAULT_LIST = "against-malaria-foundation oxfam helen-keller-international clean-air-task-force strong-minds give-directly pratham wwf-uk cancer-research-uk";
@@ -68,7 +68,7 @@ const CharityPicker = () => {
 	// fetch the full item - and make a Ref
 	let hits = DEFAULT_LIST.split(" ").map(cid => getDataItem({type, id:cid, status}) && {id:cid, "@type":type, status});
 	// HACK: This is whereListLoad will look!
-    const charityPath = getListPath({type:"NGO", status:KStatus.PUBLISHED, q:"LISTLOADHACK",sort:"impact"}); // "list.NGO.PUBLISHED.nodomain.LISTLOADHACK.whenever.impact".split(".");
+	const charityPath = getListPath({type:"NGO", status:KStatus.PUBLISHED, q:"LISTLOADHACK",sort:"impact"}); // "list.NGO.PUBLISHED.nodomain.LISTLOADHACK.whenever.impact".split(".");
 	DataStore.setValue(charityPath, {hits, total:hits.length}, false);
 
 	return <div>
@@ -78,7 +78,7 @@ const CharityPicker = () => {
 					<CharitySelectBox item={pvSelectedCharity.value || {id:selId}} />
 				</div>
 				<br/>
-			</>}		
+			</>}
 		<div className="d-md-flex flex-md-row justify-content-between unset-margins mb-3">
 			<p className='large'>Can't see your favourite charity?&nbsp;<br className="d-md-none"/>Search for it:</p>
 			<Search onSubmit={e => e.preventDefault()} placeholder="Find your charity" className="flex-grow ml-md-5"/>
@@ -96,13 +96,13 @@ const CharitySelectBox = ({item, className}) => {
 	assert(item, "CharitySelectBox - no item");
 	const person = getProfile().value;
 	let selId = person && getClaimValue({person, key:"charity"});
-    
-	let selected = getId(item) === selId;	
+
+	let selected = getId(item) === selId;
 	// NB: to deselect, pick a different charity (I think that's intuitive enough)
 
 	return <div className={space("m-md-2", className)}>
 		<div
-			className={space("charity-select-box flex-column justify-content-between align-items-center unset-margins p-md-3 w-100 position-relative")}			
+			className={space("charity-select-box flex-column justify-content-between align-items-center unset-margins p-md-3 w-100 position-relative")}
 		>
 			{item.logo? <img className="logo-xl mt-4 mb-2" src={item.logo} /> : <span>{item.name || item.id}</span>}
 			<p>{item.summaryDescription}</p>
@@ -151,7 +151,7 @@ const Search = ({onSubmit, placeholder, icon, className}) => {
  * @returns {Boolean}
  */
 const isSafeToLoadUserSettings = () => {
-    return !!(Login.isLoggedIn() && Login.getUser().jwt);
+	return !!(Login.isLoggedIn() && Login.getUser().jwt);
 }
 
 /** 
@@ -164,16 +164,16 @@ const getTabsOpened = () => {
 		name: "tabopens",
 		dataspace: 'gl',
 		start: 0 // all time (otherwise defaults to 1 month)
-	}; // ??future, end, breakdowns: [byHostOrAd]};	
-    let pvData = getDataLogData(trkreq);
+	}; // ??future, end, breakdowns: [byHostOrAd]};
+	let pvData = getDataLogData(trkreq);
 	let pvAllCount = PromiseValue.then(pvData, res => {
 		return res.allCount;
 	});
 	// let pData = ServerIO.getDataLogData(trkreq); old code Apr 2021
 	// ??unwrap the count
 	// return pData.then(getTabsOpened2_unwrap);
-    // });
-    return pvAllCount;
+	// });
+	return pvAllCount;
 };
 // const getTabsOpened2_unwrap = res => {
 // 	const data = JSend.data(res);
@@ -208,10 +208,10 @@ const getDaysWithGoodLoop = () => {
 	@returns ?PromiseValue(String)
  */
 const getPVSelectedCharityId = (xid) => {
-	return getPVClaimValue({xid, key:"charity"});	
+	return getPVClaimValue({xid, key:"charity"});
 };
 
-const setPersonSetting = (key, value) => {	
+const setPersonSetting = (key, value) => {
 	assMatch(key,String,"setPersonSetting - no key");
 	assMatch(value, "String|Number|Boolean");
 	const xid = Login.getId();
@@ -224,15 +224,15 @@ const setPersonSetting = (key, value) => {
 	DataStore.update();
 	const pv = savePersons({person});
 	const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
-    const link = DataStore.getUrlValue("link");
+	const link = DataStore.getUrlValue("link");
 	pv.promise.then(re => {
-        console.log("... saved person setting ", key, value);
-        if (task==="return" && link) {
-            window.location = link;
-        }
-    }).catch(e => {
-        console.error("FAILED PERSON SAVE", e);
-    })
+		console.log("... saved person setting ", key, value);
+		if (task==="return" && link) {
+			window.location = link;
+		}
+	}).catch(e => {
+		console.error("FAILED PERSON SAVE", e);
+	})
 };
 
 const StatCard = ({md, lg, xs, number, label, className, padding, children}) => {

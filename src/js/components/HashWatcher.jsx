@@ -7,10 +7,10 @@ const syntheticPath = (url) => {
 	const hash = urlObj.hash || '#my';
 	let [hashBase, hashParams = ''] = hash.split('?');
 	hashBase = hashBase.replace(/^#/, '');
-	
+
 	if ('campaign' === hashBase) {
 		const params = new URLSearchParams(hashParams);
-		
+
 		let cmpId = params.get('gl.campaign');
 		if (cmpId) return `${hashBase}/${cmpId}`
 		let agencyId = params.get('agency');

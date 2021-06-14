@@ -39,7 +39,7 @@ const togglePerm = ({prop, value, persons, ...props}) => {
 	// NB: this also means perm settings are synchronised across linked profiles by an edit.
 	let consents = DataStore.getValue(path);
 	console.log("consents",consents);
-	// set each	
+	// set each
 	persons.forEach(person => {
 		setConsents({person, dataspace, consents});
 	});
@@ -95,7 +95,7 @@ const PermissionControl = ({header, prop, subtext, textOn, saveFn}) => {
 /**
  */
 const ConsentWidget = ({xids}) => {
-	if( ! xids.length ) return null;	
+	if( ! xids.length ) return null;
 	// allow consent to operate across all linked (and loaded) profiles (with a race condition, which we can ignore)
 	let persons = xids.map(xid => getProfile({xid}).value).filter(p => p);
 	// get and combine the consents

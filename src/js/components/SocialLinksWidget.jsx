@@ -18,7 +18,7 @@ const shareTextFn = ({donationValue, charities, adName="We"}) => {
 	if( charities && charities.length !== 0) {
 		// Safety: filter out any charities that do not have a human-readable name
 		const charityNames = charities && charities.reduce( (arrayOut, charity) => charity.name ? arrayOut.concat(charity.name) : arrayOut, []);
-		
+
 		if( !charityNames ) {
 			charityText = 'charity';
 		} else if ( charityNames.length === 1) {
@@ -36,7 +36,7 @@ const shareTextFn = ({donationValue, charities, adName="We"}) => {
 
 const SocialMediaShareWidget = ({donationValue, charities, adName, url=window.location.href}) => {
 	const shareText = shareTextFn({donationValue, charities, adName});
-	
+
 	return (
 		<div className="social share-page">
 			<MDText source='Share this page' />

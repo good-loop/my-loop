@@ -139,7 +139,7 @@
 // 						/>
 // 					</div>
 // 					<div className='col-sm-2' />
-// 				</div>				
+// 				</div>
 // 			</div>
 // 			<div className='p-1'>
 // 				<div>

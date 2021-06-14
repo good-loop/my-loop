@@ -54,8 +54,8 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 	let hideImpact = campaign.hideImpact || {};
 	// Filter nulls (paranoia)
 	charities = charities.filter(x => x);
-    //let sogiveCharities = fetchSogiveData(charities);
-        
+	//let sogiveCharities = fetchSogiveData(charities);
+
 	const getDonation = c => {
 		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
 		// Filter charity if less then 1/10 the total donation
@@ -71,9 +71,9 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 				{charities.map((charity, i) =>
 					<CharityCard i={i} key={charity.id}
 						charity={charity}
-                        donationValue={getDonation(charity)}
+						donationValue={getDonation(charity)}
 						showImpact={ ! hideImpact[charity.id]}
-                        campaign={campaign}
+						campaign={campaign}
 					/>
 				)}
 			</Container>
@@ -84,7 +84,7 @@ const Charities = ({ charities, donation4charity, campaign }) => {
 /** Extra smallprint details for charities */
 const CharityDetails = ({charities}) => {
 
-    //let sogiveCharities = fetchSogiveData(charities);
+	//let sogiveCharities = fetchSogiveData(charities);
 
 	const hasRegNum = (c) => {
 		return c.englandWalesCharityRegNum || c.scotlandCharityRegNum || c.niCharityRegNum || c.ukCompanyRegNum || c.usCharityRegNum;
@@ -137,15 +137,15 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 	let firstParagraph = (/^.+\n *\n/g).exec(desc);
 	if (firstParagraph) {
 		desc = firstParagraph[0];
-    }
-    
-    //console.log("SHOWING THE CHARITY",charity);
+	}
+
+	//console.log("SHOWING THE CHARITY",charity);
 
 	const quote = charity.charityQuote;
-    let img = charity.images;
-    
-    const testimonial = charity.testimonial;
-    console.log("[TESTIMONIAL]", "Testimonial for " + charity.id + ":", testimonial);
+	let img = charity.images;
+
+	const testimonial = charity.testimonial;
+	console.log("[TESTIMONIAL]", "Testimonial for " + charity.id + ":", testimonial);
 
 	// TODO let's reduce the use of custom css classes (e.g. charity-quote-img etc below)
 
@@ -166,11 +166,14 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 					{charity.simpleImpact && showImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote && quote.quote ? <><p className="font-italic">"{quote.quote}"</p><p>— {quote.source}</p></> : null}
 					{!quote || !quote.quote ? <MDText source={desc} /> : null}
-                    {charity.url && <a href={charity.url} className="btn btn-primary mb-3">Learn more</a>}
+					{charity.url && <a href={charity.url} className="btn btn-primary mb-3">Learn more</a>}
 					<div className="flex-row">
 						<DevLink href={'https://app.sogive.org/#edit?action=getornew&charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">SoGive Editor</DevLink>
-                        {charity.ad ? <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#advert/' + escape(charity.ad)} target="_portal" className="ml-2">Advert Editor</DevLink>
-                        : <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/' + escape(campaign.id) + '?strayCharities=' + escape(charity.id)} target="_portal" className="ml-2">Stray charity from {campaign.id}</DevLink>}
+						{charity.ad ? (
+							<DevLink href={ServerIO.PORTAL_ENDPOINT+'/#advert/' + escape(charity.ad)} target="_portal" className="ml-2">Advert Editor</DevLink>
+						) : (
+							<DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/' + escape(campaign.id) + '?strayCharities=' + escape(charity.id)} target="_portal" className="ml-2">Stray charity from {campaign.id}</DevLink>
+						)}
 					</div>
 				</div>
 			</div>
@@ -228,13 +231,14 @@ const Impact = ({ charity, donationValue }) => {
 			impact = impactFormat;
 		}
 	}
-    // If a (number) string is present, insert the impact number there
-    const impactSplitByNum = impact.split("(number)");
-    const charityName = charity.name.replaceAll(" ", "-");
-    if (impactSplitByNum.length === 1)
-	    return <b><span className={`charity-impact-${charityName}`}>{numOfImpact}</span> <span className={`impact-text-${charityName}`}>{impact}</span></b>;
-    else
-        return <b><span className={`impact-text-${charityName}-start`}>{impactSplitByNum[0]}</span> <span className={`charity-impact-${charityName}`}>{numOfImpact}</span> <span className={`impact-text-${charityName}-end`}>{impactSplitByNum[1]}</span></b>;
+	// If a (number) string is present, insert the impact number there
+	const impactSplitByNum = impact.split("(number)");
+	const charityName = charity.name.replaceAll(" ", "-");
+	if (impactSplitByNum.length === 1) {
+		return <b><span className={`charity-impact-${charityName}`}>{numOfImpact}</span> <span className={`impact-text-${charityName}`}>{impact}</span></b>;
+	} else {
+		return <b><span className={`impact-text-${charityName}-start`}>{impactSplitByNum[0]}</span> <span className={`charity-impact-${charityName}`}>{numOfImpact}</span> <span className={`impact-text-${charityName}-end`}>{impactSplitByNum[1]}</span></b>;
+	}
 };
 
 export { CharityDetails };

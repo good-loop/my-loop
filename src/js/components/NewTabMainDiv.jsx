@@ -48,12 +48,12 @@ let verifiedLoginOnceFlag;
  */
 const WebtopPage = () => {
 	Login.app = "t4g.good-loop.com"; // Not My.GL!
-    const pvCharityID = getPVSelectedCharityId();
+	const pvCharityID = getPVSelectedCharityId();
 	const loadingCharity = !pvCharityID || !pvCharityID.resolved;
 	const charityID = pvCharityID&&pvCharityID.value;
-    let [showPopup, setShowPopup] = useState(false);
+	let [showPopup, setShowPopup] = useState(false);
 
-	// Yeh - a tab is opened -- let's log that (once only)	
+	// Yeh - a tab is opened -- let's log that (once only)
 	if ( ! logOnceFlag && Login.isLoggedIn()) {
 		let pvPerson = getProfile();
 		pvPerson.promise.then(person => { // Hurrah - T4G is definitely installed
@@ -67,11 +67,11 @@ const WebtopPage = () => {
 			lg("tabadview", {user:Login.getId(), nonce:nonce(6), charity:charityID});
 		}, 1500);
 		logOnceFlag = true;
-    }
+	}
 
 	const checkIfOpened = () => {
 		if (!window.localStorage.getItem("t4gOpenedB4")) {
-            window.localStorage.setItem("t4gOpenedB4", true);
+			window.localStorage.setItem("t4gOpenedB4", true);
 			openTutorial();
 		}
 	}
@@ -90,12 +90,11 @@ const WebtopPage = () => {
 		});
 		verifiedLoginOnceFlag = true;
 	}
-	
+
 	// iframe src change?
 	// https://stackoverflow.com/posts/17316521/revisions
 
 	// Background images on tab plugin sourced locally
-	
 
 	return (<>
 		<BG src={null} fullscreen opacity={0.9} bottom={110} style={{backgroundPosition: "center"}}>
@@ -123,7 +122,7 @@ const WebtopPage = () => {
 		</BG>
 		<TutorialComponent page={3} className="position-absolute" style={{bottom:0, left:0, right:0, height:110, width:"100vw"}}/>
 		<NewtabTutorialCard tutorialPages={tutorialPages} charityId={charityID} onClose={() => setShowPopup(true)}/>
-        {showPopup && <PopupWindow/>}
+		{showPopup && <PopupWindow/>}
 		<NewtabLoginWidget onRegister={() => {checkIfOpened();}}/>
 		<AdBlockPopup />
 	</>); 

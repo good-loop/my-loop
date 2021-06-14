@@ -21,13 +21,13 @@ const RecentCampaignsCard = () => {
 	const campaigns = [
 		{
 			name: "LEVI'S",
-            adid: "ko3s6fUOdq",
-            url: "/#campaign/?gl.vertiser=XR67PcGn"
+			adid: "ko3s6fUOdq",
+			url: "/#campaign/?gl.vertiser=XR67PcGn"
 		},
 		{
 			name: "Ribena",
-            adid: "B1lF97utxD",
-            url: "/#campaign/?gl.vertiser=FBY5QmWQ"
+			adid: "B1lF97utxD",
+			url: "/#campaign/?gl.vertiser=FBY5QmWQ"
 		},
 		{
 			name: "Nike",
@@ -36,23 +36,23 @@ const RecentCampaignsCard = () => {
 		},
 		{
 			name: "Reebok",
-            adid: "HtREj0pifC",
-            url: "/#campaign/?gl.vertiser=KpgM78Lg"
+			adid: "HtREj0pifC",
+			url: "/#campaign/?gl.vertiser=KpgM78Lg"
 		},
 		{
 			name: "Mango",
-            adid: "ojjiPf7kbB",
-            url: "/#campaign/?gl.vertiser=1JBFB6K4"
+			adid: "ojjiPf7kbB",
+			url: "/#campaign/?gl.vertiser=1JBFB6K4"
 		},
 		{
 			name: "Cadbury",
-            adid: "qgbiSQ0crN",
-            url: "/#campaign/?gl.vertiser=cadbury_bpngtolk"
+			adid: "qgbiSQ0crN",
+			url: "/#campaign/?gl.vertiser=cadbury_bpngtolk"
 		},
 		{
 			name: "Pantene",
-            adid: "hwtjNncj",
-            url: "/#campaign/?gl.vertiser=zqhRrBjF"
+			adid: "hwtjNncj",
+			url: "/#campaign/?gl.vertiser=zqhRrBjF"
 		}
 	];
 
@@ -83,7 +83,7 @@ const RecentCampaignsCard = () => {
 		campaign.ad = adHits[0];
 		console.log(campaign.ad);
 		if (!campaign.ad.id) console.warn("No id!");
-		
+
 		campaign.dntn = fetchDonationData({ads: adHits});
 	});
 
@@ -102,14 +102,12 @@ const RecentCampaignsCard = () => {
 
 const TVAdPlayer = ({adid, className}) => {
 	const size = "landscape";
-	let pvAd = getDataItem({type:C.TYPES.Advert, id:adid, status:KStatus.PUBLISHED,swallow:true});
 	return <div className={space("position-relative", className)}>
 		<img src="/img/LandingBackground/white_iphone.png" className="w-100 invisible"/>
 		{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
 		<img src="/img/LandingBackground/white_iphone.png" className="position-absolute d-none d-md-block unit-shadow" style={{left: "-5%", width:"110%", top:0, zIndex:2, pointerEvents:"none"}}/>
 		<div className="position-absolute tv-ad-player">
-			{pvAd.value? <GoodLoopUnit vertId={adid} size={size} advert={pvAd.value} /> 
-			: <div className="bg-dark" />}
+			<GoodLoopUnit vertId={adid} size={size} />
 		</div>
 	</div>;
 };
@@ -179,7 +177,7 @@ const fetchDonationData = ({ads}) => {
 		return Money.total(campaignPageDonations);
 	}
 
-	// Fetch donations data	
+	// Fetch donations data
 	// ...by campaign or advert? campaign would be nicer 'cos we could combine different ad variants... but its not logged reliably
 	// (old data) Loop.Me have not logged vert, only campaign. But elsewhere vert is logged and not campaign.
 	let sq1 = adIds.map(id => "vert:"+id).join(" OR ");
@@ -190,7 +188,7 @@ const fetchDonationData = ({ads}) => {
 	// load the community total for the ad
 	let pvDonationsBreakdown = DataStore.fetch(['widget', 'CampaignPage', 'communityTotal', sqDon.query], () => {
 		return ServerIO.getDonationsData({ q: sqDon.query });
-	}, {cachePeriod: 5 * 60 * 1000});	
+	}, {cachePeriod: 5 * 60 * 1000});
 	if (pvDonationsBreakdown.error) {
 		console.error("pvDonationsBreakdown.error", pvDonationsBreakdown.error);
 		return null;

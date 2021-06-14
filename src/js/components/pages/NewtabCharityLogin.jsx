@@ -38,25 +38,25 @@ const NewtabCharityLogin = () => {
 	// Default to register
 	useEffect(() => {
 		if (!verb) DataStore.setValue(LOGIN_VERB_PATH, "register");
-    });
+	});
 
-    const charityId = DataStore.getValue(['location', 'params', 'charity']);
-    let charity;
-    if (charityId) {
-        charity = fetchCharity(charityId);
-    }
+	const charityId = DataStore.getValue(['location', 'params', 'charity']);
+	let charity;
+	if (charityId) {
+		charity = fetchCharity(charityId);
+	}
 
 	const headers = {
 		"register": "Sign up (Step 1 of 2)",
 		"t4g_chrome_store": "Sign up (Step 2 of 2)"
 	};
-	
+
 	let error = Login.error;
 	if (error) console.error("LOGIN ERROR", error);
 
 	if (error && error.text === "error") {
 		error.text = "Could not login. Check your credentials are correct.";
-    }
+	}
 	// ??minor: it might be nice to have a transition on the verb switch
 
 	const onRegisterLogin = () => {
@@ -78,7 +78,7 @@ const NewtabCharityLogin = () => {
 				/>
 				<ErrAlert error={error} />
 			</div>
-		</div>        
+		</div>
 	</>;
 };
 
@@ -91,7 +91,7 @@ const LogInForm = ({onRegister, onLogin}) => {
 
 	const doItFn = e => {
 		stopEvent(e);
-		if ( ! person) {			
+		if ( ! person) {
 			Login.error = {text:'Please fill in email and password'};
 			DataStore.update();
 			return;
@@ -107,7 +107,7 @@ const LogInForm = ({onRegister, onLogin}) => {
 	// login/register
 	if (verb==="register") {
 		return (<form id="loginByEmail" onSubmit={doItFn} className="flex-column unset-margins justify-content-center align-items-stretch">
-			<PropControl type="email" path={path} item={person} prop="email" placeholder="Email" className="mb-3"/>			
+			<PropControl type="email" path={path} item={person} prop="email" placeholder="Email" className="mb-3"/>
 			<PropControl type="password" path={path} item={person} prop="password" placeholder="Password" className="mb-3"/>
 			<PropControl type="password" path={path} item={person} prop="confpassword" placeholder="Confirm password" className="mb-3"/>
 			<div className="form-group mb-3">

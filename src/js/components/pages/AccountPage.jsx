@@ -20,7 +20,7 @@ const Account = () => {
 	let xids = getAllXIds();
 	let user = Login.getUser();
 	let name = user.name || user.xid;
-	
+
 	return <>
 		<Row className="mb-5 user">
 			<Col md={3} className="d-md-block d-flex justify-content-center">
@@ -71,7 +71,7 @@ const Page = () => {
 
 	return (<>
 		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" alwaysScrolled />
-		<div className="AccountPage avoid-navbar">			
+		<div className="AccountPage avoid-navbar">
 			<Editor3ColLayout>
 				<LeftSidebar>
 					<div className="account-sidebar pl-3">
@@ -98,7 +98,7 @@ const Page = () => {
  */
 const SidebarTabLink = ({ tab, label, selected }) => {
 	let url = "/#account?tab=" + escape(tab);
-    if (tab === "tabsForGood") {
+	if (tab === "tabsForGood") {
 		// TODO detect whether T4G is installed on this specific browser.
 		let pvPerson = getProfile();
 		let hasT4G = Person.hasApp(pvPerson.value, "t4g.good-loop.com");
@@ -113,7 +113,7 @@ const SidebarTabLink = ({ tab, label, selected }) => {
 				label = "Get Tabs for Good";
 			}
 		}
-    }
+	}
 	return <div><a href={url} className={space("account-tab p-2", selected && "active")}>{label || tab}</a></div>;
 };
 

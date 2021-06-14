@@ -8,7 +8,7 @@ import { getAllXIds, getClaimValue, getProfileFor } from '../../base/data/Person
 
 const signInOrConnected = ({service, xid}) => {
 	if (xid) return <Connected service={service} xid={xid} />;
-	
+
 	if (service === 'good-loop') {
 		return <LoginLink className='btn bg-gl-red white'>Sign Up by Email</LoginLink>;
 	}
@@ -52,7 +52,7 @@ const Connected = ({service, xid}) => {
 	let person = pvPerson.value;
 	let name = getClaimValue({person,key:"name"});
 	let img = getClaimValue({person,key:"img"});
-	
+
 	// Don't get caught out by mixed content restrictions
 	if (img) img = img.replace(/^http:/, 'https:');
 

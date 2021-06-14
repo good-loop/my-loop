@@ -11,15 +11,15 @@ import { space, isPortraitMobile } from '../base/utils/miscutils';
  * MyLoop Navbar now has separate scroll functionality - could be moved into base if this is wanted across all our services
  */
 
-  /*
-  * Navbar for all My-Loop pages
-  * Expects a logo url and currentPage object
-  * If logoScroll is set, logoScroll will be displayed in place of logo when the navbar is scrolled
-  * If alwaysScrolled is set, the navbar will always display the scrolled version
-  * neverScroll will disable scrolling changes to style
-  * scrollColour overrides the colour to change to when scrolled
-  * hidePages will mean only the logo and login are visible
-  */
+/*
+ * Navbar for all My-Loop pages
+ * Expects a logo url and currentPage object
+ * If logoScroll is set, logoScroll will be displayed in place of logo when the navbar is scrolled
+ * If alwaysScrolled is set, the navbar will always display the scrolled version
+ * neverScroll will disable scrolling changes to style
+ * scrollColour overrides the colour to change to when scrolled
+ * hidePages will mean only the logo and login are visible
+ */
 class MyLoopNavBar extends React.Component {
 
 	constructor (props) {
@@ -32,7 +32,7 @@ class MyLoopNavBar extends React.Component {
 	componentDidMount () {
 		window.addEventListener('scroll', this.handleScroll);
 	}
-	
+
 	componentWillUnmount () {
 		window.removeEventListener('scroll', this.handleScroll);
 	}
@@ -67,7 +67,7 @@ class MyLoopNavBar extends React.Component {
 				<NavbarBrand href="/#my" className="mr-auto">
 					<img src={this.state.scrolled && logoScrollSrc ? logoScrollSrc : logoSrc} alt='logo' className='logo-small' />
 				</NavbarBrand>
-				
+
 				<NavbarToggler onClick={this.toggle}>
 					<img src="/img/Icon_Hamburger.200w.png" className="navbar-toggler-icon"/>
 				</NavbarToggler>

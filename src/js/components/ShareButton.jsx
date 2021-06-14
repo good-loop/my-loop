@@ -17,7 +17,7 @@ class ShareButton extends React.Component {
 			showing: false
 		};
 	}
-	
+
 	render () {
 		// Generate ShareServlet sharing url
 		let url = new URL("https://as.good-loop.com/share");

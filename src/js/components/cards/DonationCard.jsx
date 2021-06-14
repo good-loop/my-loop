@@ -30,12 +30,12 @@ const DonationCard = ({xids}) => {
 
 	if ( ! xids) {
 		if (dnt) {
-			return <div>No tracking IDs to check - You have Do-Not-Track switched on, so we're not tracking you!</div>;	
+			return <div>No tracking IDs to check - You have Do-Not-Track switched on, so we're not tracking you!</div>;
 		}
 		return <div>No tracking IDs to check {dnt===null? " - Do you have Do-Not-Track switched on?" : null}</div>;
 	}
 
-	// Assemble the data: top 5 of: charity, user-donation, community-donation	
+	// Assemble the data: top 5 of: charity, user-donation, community-donation
 	// NB: if xids changes (eg extra linking is added)	then this will reload
 
 	// Get donations by user (including all registered tracking IDs)
@@ -45,7 +45,7 @@ const DonationCard = ({xids}) => {
 	let pvDonationData = DataStore.fetch(donationsPath, () => {
 		const name = "user-donations"; // dummy parameter: helps identify request in network tab
 		return ServerIO.getDonationsData({q, name});
-	});	
+	});
 
 	if ( ! pvDonationData.resolved) {
 		return <Misc.Loading text='Loading your donations...' />;
@@ -82,10 +82,10 @@ const DonationCard = ({xids}) => {
 		topCharityValue.cid = cid;
 		topCharityValue.v = dv;
 	});
-	
-	// load the community total for these charities	
+
+	// load the community total for these charities
 	let pvCommunityCharityTotal = DataStore.fetch(['widget','DonationCard','community'], () => {
-		let qcids = cids.map(xid => 'cid:'+xid).join(' OR ');	
+		let qcids = cids.map(xid => 'cid:'+xid).join(' OR ');
 		const name = "total-donations"; // dummy parameter: helps identify request in network tab
 		return ServerIO.getDonationsData({q:qcids, name});
 	});
@@ -125,7 +125,7 @@ const CharityDonation = ({cid, communityTotal, onlyOneCharity}) => {
 		const pvCharity = ActionMan.getDataItem({type: C.TYPES.NGO, id: cid, status: C.KStatus.PUBLISHED, swallow: true});
 		charity = pvCharity.value || {};
 	}
-	
+
 	const img = charity.logo || charity.img || "/img/logo-white.svg";
 	return (
 		<div className={onlyOneCharity ? "" : "col-md-4"}>
@@ -139,7 +139,6 @@ const CharityDonation = ({cid, communityTotal, onlyOneCharity}) => {
 					</p>
 				</div>
 			</div>
-			
 			<div className='top-p-1'>{charity.displayName || charity.name || cid}</div>
 		</div>
 	);

@@ -22,9 +22,9 @@ const Script = ({src, async, onload, onerror, here}) => {
 		}
 		addScript({src, async, onload, onerror}); // async, onload, onerror, domElement
 		scripts[src] = true;
-		return null;	
+		return null;
 	}
-	const ref = useRef();		
+	const ref = useRef();
 	if ( ! scripts[src] && ref.current) {
 		addScript({src, async, onload, onerror, domElement:ref.current});
 		scripts[src] = true;

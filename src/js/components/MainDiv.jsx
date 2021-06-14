@@ -54,7 +54,7 @@ const SubscribePage = ({}) => {
 		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg"/>
 		<div className='Subscribe widepage'>
 			<SubscriptionBox title="Subscribe to our monthly newsletter" className="bg-gl-light-red big-sub-box"/>
-            <HowItWorksCard />
+			<HowItWorksCard />
 		</div>
 	</>);
 }
@@ -71,7 +71,7 @@ const PAGES = {
 	ads: MyAdCampaignsPage,
 	involve: GetInvolvedPage,
 	howitworks: MyPage,
-    subscribe: SubscribePage,
+	subscribe: SubscribePage,
 	about: MyGLAboutPage,
 	tabsForGood: TabsForGoodOnboard,
 	register: NewtabCharityLogin
@@ -111,11 +111,11 @@ class MainDiv extends Component {
 
 		window.addEventListener("hashchange", this.scrollToTop);
 
-		// Set up login watcher here, at the highest level		
+		// Set up login watcher here, at the highest level
 		Login.change(() => {
 			// invalidate all lists!
 			DataStore.setValue(['list'], {});
-			// also remove any promises for these lists -- see fetch()		
+			// also remove any promises for these lists -- see fetch()
 			let ppath = ['transient', 'PromiseValue', 'list'];
 			DataStore.setValue(ppath, null);
 
@@ -151,7 +151,7 @@ class MainDiv extends Component {
 	componentWillUnmount () {
 		window.removeEventListener("hashchange", this.scrollToTop);
 	}
-	
+
 
 	componentDidCatch(error, info) {
 		// Display fallback UI
@@ -162,7 +162,7 @@ class MainDiv extends Component {
 
 	render() {
 		Login.app = C.app.id; // in case a look into T4G switched it over
-		let path = DataStore.getValue('location', 'path');	
+		let path = DataStore.getValue('location', 'path');
 		let page = (path && path[0]);
 		if (!page) {
 			modifyHash([DEFAULT_PAGE]);
@@ -183,7 +183,7 @@ class MainDiv extends Component {
 				<p>{this.state.error.message}<br /><small>{this.state.error.stack}</small></p>
 			</div>);
 		}
-	
+
 		// Fleshed out title for My-Loop custom login modal design.
 		const loginWidgetTitle = (
 			<div className="text-center">

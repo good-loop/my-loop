@@ -51,7 +51,7 @@ const NewtabLoginWidget = ({onLogin, onRegister}) => {
 		"register": "Create account",
 		"reset": "Reset password"
 	};
-	
+
 	let error = Login.error;
 	if (error) console.error("LOGIN ERROR", error);
 
@@ -109,7 +109,7 @@ const LogInForm = ({onRegister, onLogin}) => {
 
 	const doItFn = e => {
 		stopEvent(e);
-		if ( ! person) {			
+		if ( ! person) {
 			Login.error = {text:'Please fill in email and password'};
 			return;
 		}
@@ -120,7 +120,7 @@ const LogInForm = ({onRegister, onLogin}) => {
 	// login/register
 
 	return <form id="loginByEmail" onSubmit={doItFn} className="flex-column unset-margins justify-content-center align-items-center">
-		<PropControl type="email" path={path} item={person} prop="email" placeholder="Email" className="mb-3"/>			
+		<PropControl type="email" path={path} item={person} prop="email" placeholder="Email" className="mb-3"/>
 		<PropControl type="password" path={path} item={person} prop="password" placeholder="Password" className="mb-3"/>
 		<div className="form-group mb-3">
 			<button className="btn btn-primary" type="submit">
@@ -145,7 +145,7 @@ const EmailReset = ({person}) => {
 	const path = ['data', C.TYPES.User, 'loggingIn'];
 
 	const doEmailReset = e => {
-		stopEvent(e);		
+		stopEvent(e);
 		if ( ! person) {
 			Login.error = {text:'Please fill in email and password'};
 			DataStore.update();
@@ -166,7 +166,7 @@ const EmailReset = ({person}) => {
 	return (
 		<form id="loginByEmail" onSubmit={doEmailReset} className="flex-column unset-margins justify-content-center align-items-center text-center">
 			<p className="mb-3">Forgotten your password?<br/>No problem - we will email you a link to reset it.</p>
-			<PropControl className="mb-3" type="email" path={path} item={person} prop="email" placeholder="Email" />			
+			<PropControl className="mb-3" type="email" path={path} item={person} prop="email" placeholder="Email" />
 			{requested ? <div className="alert alert-info mb-3">A password reset email has been sent out.<br/>Still having trouble? Contact us: support@good-loop.com</div> : ''}
 			<div className="form-group mb-3">
 				<button className="btn btn-primary" type="submit">
@@ -179,12 +179,12 @@ const EmailReset = ({person}) => {
 };
 
 const NewtabLoginLink = ({className, children}) => {
-    /** toggle open */
+	/* toggle open */
 	const onClick = e => {
 		stopEvent(e);
 		setShowTabLogin( ! getShowTabLogin());
 	};
-    
+
 	return <a className={className} onClick={onClick}>
 		{children}
 	</a>;

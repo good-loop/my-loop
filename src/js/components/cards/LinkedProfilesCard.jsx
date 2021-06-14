@@ -12,7 +12,7 @@ const LinkedProfilesCard = ({xids}) => {
 	let trackers = xids.filter(xid => XId.service(xid) === 'trk');
 	let nonTrackers = xids.filter(xid => XId.service(xid) !== 'trk');
 	let authd = Login.aliases? Login.aliases.filter( u => u.jwt).map(u => u.xid) : [];
-	
+
 	let peeps = xids.map(xid => DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Person, xid));
 	peeps = peeps.filter(p => !!p);
 

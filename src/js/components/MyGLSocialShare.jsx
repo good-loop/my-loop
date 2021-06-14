@@ -31,11 +31,11 @@ const MyLoopIntentLink = ({style, ...props}) => (
 // Encourage consistency in social media logos used on My-Loop
 const TwitterLogo = props => BaseSocialLogo({...props, service: 'twitter'});
 
-const FacebookLogo = props => BaseSocialLogo({...props, service: 'facebook'});  
+const FacebookLogo = props => BaseSocialLogo({...props, service: 'facebook'});
 
-const LinkedinLogo = props => BaseSocialLogo({...props, service: 'linkedin'});  
+const LinkedinLogo = props => BaseSocialLogo({...props, service: 'linkedin'});
 
-const InstagramLogo = props => BaseSocialLogo({...props, service: 'instagram'});  
+const InstagramLogo = props => BaseSocialLogo({...props, service: 'instagram'});
 
 export {
 	MyLoopIntentLink as IntentLink,

@@ -36,11 +36,11 @@ const GetInvolvedPage = () => {
 					</Col>
 				</Row>
 				<div className="flex-column unset-margins pt-5 pb-5 mt-5 justify-content-center align-items-center">
-					<h2 className="text-center mb-5">What can you do to help?</h2>				
+					<h2 className="text-center mb-5">What can you do to help?</h2>
 					<MoreToDo xids={xids} />
 				</div>
 				<div className="GetInTouch text-center">
-					<h2 className="mr-auto">Get in touch</h2>					
+					<h2 className="mr-auto">Get in touch</h2>
 					<p>Tell us what you think: <a target="_blank" href='mailto:hello@good-loop.com?subject=My%20thoughts%20on%20My.Good-Loop'>hello@good-loop.com</a></p>
 					<p>Interested in hosting Ads For Good on your blog or website? <a href='https://www.good-loop.com/contact'>Let us know</a>.</p>
 				</div>

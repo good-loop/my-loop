@@ -120,7 +120,7 @@ const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalVie
 			<CarouselCaption captionText={<Misc.DateDuration startDate={ad.start} endDate={ad.end} />}/>
 		</CarouselItem>
 	);
-	
+
 	const next = () => {
 		if (animating) return;
 		const nextIndex = activeIndex === carouselSlides.length - 1 ? 0 : activeIndex + 1;
@@ -177,7 +177,7 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 	const [animating, setAnimating] = useState(false);
 
 	const slidesNum = Math.ceil(ads.length / 3);
-	
+
 	const next = () => {
 		if (animating) return;
 		const nextIndex = activeIndex === carouselSlides.length - 1 ? 0 : activeIndex + 1;
@@ -194,7 +194,7 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 		if (animating) return;
 		setActiveIndex(newIndex);
 	}
-	
+
 	let carouselSlides = [];
 	for (let i = 0; i < slidesNum; i++) {
 		const adIndex = i * 3;
@@ -209,22 +209,22 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 						key={adIndex}
 						ad={ads[adIndex]}
 						selected={selectedIndex == adIndex}
-                        handleClick={() => setSelected(adIndex)}
-                        active={activeIndex === i}
+						handleClick={() => setSelected(adIndex)}
+						active={activeIndex === i}
 					/>
 					<AdvertPreviewCard
 						key={adIndex + 1}
 						ad={ads[adIndex + 1]}
 						selected={selectedIndex == adIndex + 1}
-                        handleClick={() => setSelected(adIndex + 1)}
-                        active={activeIndex === i}
+						handleClick={() => setSelected(adIndex + 1)}
+						active={activeIndex === i}
 					/>
 					<AdvertPreviewCard
 						key={adIndex + 2}
 						ad={ads[adIndex + 2]}
 						selected={selectedIndex == adIndex + 2}
-                        handleClick={() => setSelected(adIndex + 2)}
-                        active={activeIndex === i}
+						handleClick={() => setSelected(adIndex + 2)}
+						active={activeIndex === i}
 					/>
 				</div>
 			</CarouselItem>
@@ -249,9 +249,9 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 }
 
 const AdvertCard = ({ ad, active }) => {
-    const size = 'landscape';
-    const [hasShown, setHasShown] = useState(false);
-    if (active && !hasShown) setHasShown(true);
+	const size = 'landscape';
+	const [hasShown, setHasShown] = useState(false);
+	if (active && !hasShown) setHasShown(true);
 	return (
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
 			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{position:"absolute", zIndex:999}}>Advert Editor ({ad.id})</DevLink>
@@ -313,8 +313,8 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
  * @param {Advert[]} canonicalAds list of unfiltered ads
  */
 const AdvertFilters = ({campaign, vertisers, canonicalAds}) => {
-    const adsVertisers = uniq(canonicalAds.map(ad => ad.vertiser));
-    if (vertisers) vertisers = uniq(vertisers).filter(vertiser => adsVertisers.includes(vertiser.id));
+	const adsVertisers = uniq(canonicalAds.map(ad => ad.vertiser));
+	if (vertisers) vertisers = uniq(vertisers).filter(vertiser => adsVertisers.includes(vertiser.id));
 	const filterButtons = campaign.filterButtons;
 	const filterCount = filterButtons ? Object.keys(filterButtons).filter(key => filterButtons[key].length).length : 0;
 
@@ -323,14 +323,14 @@ const AdvertFilters = ({campaign, vertisers, canonicalAds}) => {
 			<AdvertFilterCategory category={category} filterButtons={filterButtons}/>
 		))
 	);
-	
+
 	let containsNonNull = false;
 	customFilters && customFilters.forEach(control => {
 		if (control) containsNonNull = true;
 	});
 	if (!containsNonNull && !vertisers) return null;
 
-    return <div className="position-relative ad-filters">
+	return <div className="position-relative ad-filters">
 		{filterCount || campaign.showVertiserFilters ? <ClearFilters/> : null}
 		{campaign.showVertiserFilters && <AdvertFilterCategory vertisers={vertisers}/>}
 		{customFilters}
@@ -343,7 +343,7 @@ const AdvertFilters = ({campaign, vertisers, canonicalAds}) => {
  * @param {Advertiser[]} vertisers if set, generates a vertiser category
  */
 const AdvertFilterCategory = ({category, filterButtons, vertisers}) => {
-	
+
 	// Return null if there is no data, or if no queries are set
 	if (!vertisers) {
 		if (!category || !filterButtons || !filterButtons[category].length) return null;
@@ -406,24 +406,24 @@ const AdvertFilterCategory = ({category, filterButtons, vertisers}) => {
 };
 
 const ClearFilters = ({}) => {
-    const clearable = !!DataStore.getValue(['location', 'params', 'query']);
-    return <a
-            onClick={() => clearable && DataStore.setValue(['location', 'params', 'query'], null)}
-            style={{position:"absolute", right:10, bottom: -10, color: clearable ? "black" : "grey", cursor:clearable ? "pointer" : "default"}}>
-                CLEAR FILTERS
-    </a>;
+	const clearable = !!DataStore.getValue(['location', 'params', 'query']);
+	return <a
+		onClick={() => clearable && DataStore.setValue(['location', 'params', 'query'], null)}
+		style={{position:"absolute", right:10, bottom: -10, color: clearable ? "black" : "grey", cursor:clearable ? "pointer" : "default"}}>
+			CLEAR FILTERS
+	</a>;
 }
 
 const FilterButton = ({query, children}) => {
 	if (!query) return null;
-    const {'query':dsQuery} = DataStore.getValue(['location', 'params']);
-    const selected = dsQuery === query;
-    const setQuery = () => {
-        DataStore.setValue(['location', 'params', 'query'], query);
-    };
-    return <div className={"ad-filter-btn d-inline-flex flex-row align-items-center justify-content-center " + (selected ? "selected" : "")} onClick={setQuery}>
-        {children}
-    </div>;
+	const {'query':dsQuery} = DataStore.getValue(['location', 'params']);
+	const selected = dsQuery === query;
+	const setQuery = () => {
+		DataStore.setValue(['location', 'params', 'query'], query);
+	};
+	return <div className={"ad-filter-btn d-inline-flex flex-row align-items-center justify-content-center " + (selected ? "selected" : "")} onClick={setQuery}>
+		{children}
+	</div>;
 }
 
 export default AdvertsCatalogue;

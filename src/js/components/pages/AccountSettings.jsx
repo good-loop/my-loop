@@ -44,12 +44,12 @@ const ConsentSettings = ({xids}) => {
  */
 const PersonPropControl = ({person, prop, ...pcStuff}) => {
 	Person.assIsa(person, "PersonPropControl", person);
-	assert( ! pcStuff.path, "path is made here");	
+	assert( ! pcStuff.path, "path is made here");
 	// stash edits whilst typing
 	let path = ['widget', 'PersonPropControl', person.id];
 	const ppath = path.concat(prop);
 	// init the value
-	let v = getClaimValue({person, key:prop});	
+	let v = getClaimValue({person, key:prop});
 	if (v && ! is(DataStore.getValue(ppath))) {
 		DataStore.setValue(ppath, v, false);
 	}
@@ -73,7 +73,7 @@ const YourDataSettings = ({className}) => {
 	if ( ! email) {
 		console.warn("AccountSettings - no email?", person);
 	}
-	
+
 	return (<div className={space("your-data-form", className)}>
 		<h4>Your data:</h4>
 		<Row className="align-items-center user-setting">

@@ -13,7 +13,7 @@ const CharityLogo = ({charity, className, style, link=false}) => {
 	let svgClasses="";
 	let imgType = /^.*\.([a-zA-Z]*).*$/g.exec(charity.logo);
 	if (imgType) {
-		imgType = imgType[1];	
+		imgType = imgType[1];
 		if (imgType.toLowerCase() === "svg") {
 			svgClasses = "w-100";
 		}

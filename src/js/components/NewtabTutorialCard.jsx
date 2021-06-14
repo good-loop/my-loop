@@ -14,7 +14,7 @@ const tutorialRectPath = [...tutorialPath, 'rect'];
 const NewtabTutorialCard = ({tutorialPages, charityId, onClose}) => {
 	const open = DataStore.getValue(tutorialOpenPath);
 	const page = DataStore.getValue(tutorialPagePath) || 0;
-	
+
 	useEffect(() => {
 		let {tutOpen, tutPage} = DataStore.getValue(['location', 'params']);
 		// Update only on second setting
@@ -29,33 +29,31 @@ const NewtabTutorialCard = ({tutorialPages, charityId, onClose}) => {
 	const setPage = (num) => {
 		if (num > tutorialPages.length - 1) {
 			DataStore.setValue(tutorialOpenPath, false);
-            DataStore.setValue(tutorialPagePath, 0);
-            onClose();
+			DataStore.setValue(tutorialPagePath, 0);
+			onClose();
 		} else {
 			DataStore.setValue(tutorialPagePath, num);
 		}
-    };
-    
-    if (charityId) {
-        tutorialPages[1] = <>
-            <h2>Your charity</h2>
-            <p>
-            Your charity is set up to receive donations from the money you generate!
-            </p>
-        </>;
-    }
+	};
+
+	if (charityId) {
+		tutorialPages[1] = <>
+			<h2>Your charity</h2>
+			<p>
+			Your charity is set up to receive donations from the money you generate!
+			</p>
+		</>;
+	}
 
 	// // Set page to 0 by default
 	// useEffect(() => {
 	// 	// Use of != is purposeful here: only match if number is explicitly equal, avoid re-render loops
-	// 	if (!page && page != 0) {
-	// 		setPage(0);
-	// 	}
+	// 	if (!page && page != 0) setPage(0);
 	// });
 
 	if (page > tutorialPages.length - 1) {
-        DataStore.setValue(tutorialOpenPath, false);
-        onClose();
+		DataStore.setValue(tutorialOpenPath, false);
+		onClose();
 	}
 	const beforeLastPage = page < tutorialPages.length - 1;
 
@@ -81,7 +79,7 @@ const NewtabTutorialCard = ({tutorialPages, charityId, onClose}) => {
 
 		// All calculations assume no scroll
 		let centerPos = {x: targetRect.left + (targetRect.width / 2), y: targetRect.top + (targetRect.height / 2)};
-		
+
 		// Calculate which sides to favour when positioning
 		// Directions of offsets
 		let hDir, vDir;
@@ -153,7 +151,7 @@ const NewtabTutorialCard = ({tutorialPages, charityId, onClose}) => {
 		style.left = "50%";
 		style.transform = "translate(-50%, -50%)";
 	}
-	
+
 	return <>
 		<div className="position-absolute" style={{width: "100vw", height: "100vh", top: 0, left: 0, zIndex: 999, background:"rgba(0,0,0,0.25)"}} />
 		<div className="tutorial-card bg-white position-absolute shadow text-center p-4 flex-column justify-content-between align-items-center unset-margins"
@@ -173,8 +171,8 @@ const NewtabTutorialCard = ({tutorialPages, charityId, onClose}) => {
 			<a className="position-absolute" style={{top:10, right:20}} onClick={e => {
 				e.preventDefault();
 				DataStore.setValue(tutorialOpenPath, false);
-                DataStore.setValue(tutorialPagePath, 0);
-                onClose();
+				DataStore.setValue(tutorialPagePath, 0);
+				onClose();
 			}}><h5 className="color-gl-light-red" style={{fontSize:"1rem"}}>SKIP</h5></a>
 		</div>
 	</>;
@@ -199,11 +197,11 @@ const TutorialComponent = ({page, customSelectStyle, style, children, className}
 	const current = DataStore.getValue(tutorialPagePath);
 	const open = DataStore.getValue(tutorialOpenPath);
 	const rect = DataStore.getValue(tutorialRectPath);
-	const selfRef = useRef(null);	
+	const selfRef = useRef(null);
 	assMatch(page, Number);
 
 	let highlight = current === page;
-	
+
 	// if (Array.isArray(page)) {
 	// 	highlight = page.includes(current);
 	// }
@@ -252,9 +250,9 @@ const TutorialHighlighter = ({page, style, children, className}) => {
 
 const PopupWindow = () => {
 
-    const [showing, setShowing] = useState(true);
+	const [showing, setShowing] = useState(true);
 
-    let style = {
+	let style = {
 		zIndex: 9999,
 		bottom:170,
 		left:20,
@@ -266,29 +264,37 @@ const PopupWindow = () => {
 		width:400,
 		height:300
 	};
-    return showing &&
+	return showing &&
 		<div className="tutorial-card bg-white position-absolute shadow text-center p-4 flex-column justify-content-between align-items-center unset-margins"
 			style={style}
 		>
 			<div className="flex-column unset-margins justify-content-center align-items-center">
 				<div className="tutorial-content mt-2">
 					<h2>No need to click</h2>
-                    <p>Remember, you don't have to click the banner ads, you are raising money simply by allowing the ads to appear in your tabs.</p>
+					<p>Remember, you don't have to click the banner ads, you are raising money simply by allowing the ads to appear in your tabs.</p>
 				</div>
-                <div className="flex-row justify-content-center align-items-center unset-margins">
-                    <button type="button" className="btn btn-transparent fill" onClick={() => setShowing(false)}>GOT IT</button>
-                </div>
-                <div className="position-absolute" style={{width:0, height:0,
-                    borderLeft:"10px solid transparent",
-                    borderRight:"10px solid transparent",
-                    borderTop:"10px solid white",
-                    top:"100%",
-                    left:"5%"}}/>
+				<div className="flex-row justify-content-center align-items-center unset-margins">
+					<button type="button" className="btn btn-transparent fill" onClick={() => setShowing(false)}>GOT IT</button>
+				</div>
+				<div className="position-absolute"
+					style={{
+						width:0, height:0,
+						borderLeft:"10px solid transparent",
+						borderRight:"10px solid transparent",
+						borderTop:"10px solid white",
+						top:"100%",
+						left:"5%"
+					}}
+				/>
 			</div>
-			<a className="position-absolute" style={{top:10, right:20}} onClick={e => {
-				e.preventDefault();
-				setShowing(false);
-			}}><h5 className="color-gl-light-red" style={{fontSize:"1rem"}}>X</h5></a>
+			<a className="position-absolute" style={{top:10, right:20}} 
+				onClick={e => {
+					e.preventDefault();
+					setShowing(false);
+				}}
+			>
+				<h5 className="color-gl-light-red" style={{fontSize:"1rem"}}>X</h5>
+			</a>
 		</div>;
 }
 
