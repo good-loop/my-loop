@@ -110,10 +110,10 @@ const viewCount = (viewcount4campaign, ad) => {
 			// wrap as a list
 			pvAdvertisers = fetchIHubData2_wrapAsList(pvAdvertiser);
 		}
-    }
+	}
 
 	// ...by Advert?
-    // !!! DEPRECATED
+	// !!! DEPRECATED
 	if (adid) {
 		pvTopItem = getDataItem({type:C.TYPES.Advert,status,id:adid});
 		// wrap as a list
@@ -146,7 +146,7 @@ const viewCount = (viewcount4campaign, ad) => {
 			if (yessy(ids)) {
 				let adq = SearchQuery.setPropOr(new SearchQuery(), "vertiser", ids);
 				if (query) adq = SearchQuery.and(adq, new SearchQuery(query));
-				pvAds = ActionMan.list({type: C.TYPES.Advert, status, q:adq.query});        
+				pvAds = ActionMan.list({type: C.TYPES.Advert, status, q:adq.query});
 			} else {
 				console.warn("No Advertisers found for agency",agency,pvTopItem);
 			}
@@ -227,7 +227,7 @@ const CampaignPage = () => {
 		query,
 		'gl.status': glStatus
 	} = DataStore.getValue(['location', 'params']) || {};
-  if (!status) status = (glStatus || C.KStatus.PUB_OR_ARC);
+	if (!status) status = (glStatus || C.KStatus.PUB_OR_ARC);
 
 	// What adverts etc should we look at?
 	let {pvTopItem, pvTopCampaign, pvCampaigns, pvAds, pvAdvertisers, pvAgencies} = fetchIHubData();
@@ -396,7 +396,7 @@ const CampaignPage = () => {
 
 	// Get name of advertiser from nvertiser if existing, or ad if not
 	let nvertiser = pvAdvertisers.value && List.hits(pvAdvertisers.value)[0];
-    let agency = pvAgencies.value && List.hits(pvAgencies.value)[0];
+	let agency = pvAgencies.value && List.hits(pvAgencies.value)[0];
 	let nvertiserName = agency? agency.name : (nvertiser? nvertiser.name : (ads[0]? ads[0].vertiserName : "Advertiser"));
 	const nvertiserNameNoTrail = nvertiserName ? nvertiserName.replace(/'s$/g, "") : null;
 
