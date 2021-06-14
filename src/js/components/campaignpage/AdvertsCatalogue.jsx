@@ -82,23 +82,23 @@ const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalVie
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [animating, setAnimating] = useState(false);
 
-    let sampleAds = ads;
+	let sampleAds = ads;
 
 	// console.log("Sample ads: ", sampleAds.map(ad => ad.id));
-    // console.log("ONGOING? ", ongoing);
+	// console.log("ONGOING? ", ongoing);
 
 	let views = printer.prettyNumber(totalViewCount);
 
 	if (sampleAds.length == 1) {
 		return <Container className="py-5">
 			<h2>Watch one of the <AdvertiserName name={nvertiserName} /> ads&nbsp;
-            {ongoing ? "raising" : "that raised"} <Counter currencySymbol="£" noPennies amount={donationTotal} minimumFractionDigits={2} preserveSize /><br /> with {views} ad viewers</h2>
+			{ongoing ? "raising" : "that raised"} <Counter currencySymbol="£" noPennies amount={donationTotal} minimumFractionDigits={2} preserveSize /><br /> with {views} ad viewers</h2>
 			<AdvertCard
 				ad={ads[0]}
 				viewCountProp={views}
 				donationTotal={donationTotal}
-                totalViewCount={totalViewCount}
-                active={true}
+				totalViewCount={totalViewCount}
+				active={true}
 			/>
 			<AdvertFilters campaign={campaign} vertisers={vertisers} ads={sampleAds} canonicalAds={canonicalAds}/>
 		</Container>
@@ -114,8 +114,8 @@ const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalVie
 				ad={ad}
 				viewCountProp={views}
 				donationTotal={donationTotal}
-                totalViewCount={totalViewCount}
-                active={activeIndex === i}
+				totalViewCount={totalViewCount}
+				active={activeIndex === i}
 			/>
 			<CarouselCaption captionText={<Misc.DateDuration startDate={ad.start} endDate={ad.end} />}/>
 		</CarouselItem>
@@ -144,8 +144,8 @@ const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalVie
 			<Carousel
 				activeIndex={activeIndex}
 				next={next}
-                previous={previous}
-                interval={false}
+				previous={previous}
+				interval={false}
 			>
 				<div className="d-block d-md-none">
 					<CarouselIndicators items={carouselSlides} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{backgroundColor:"#000"}}/>
@@ -158,7 +158,7 @@ const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalVie
 			</Carousel>
 			<br/>
 			<br/>
-            <AdvertFilters campaign={campaign} vertisers={vertisers} ads={sampleAds} canonicalAds={canonicalAds}/>
+			<AdvertFilters campaign={campaign} vertisers={vertisers} ads={sampleAds} canonicalAds={canonicalAds}/>
 			<AdPreviewCarousel ads={sampleAds} setSelected={goToIndex} selectedIndex={activeIndex}/>
 		</Container>
 	</>);
@@ -260,8 +260,11 @@ const AdvertCard = ({ ad, active }) => {
 				{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
 				<img src="/img/LandingBackground/white_iphone.png" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "50%", width: "80%", top: "50%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }} />
 				<div className="position-absolute theunit">
-					{hasShown ? <GoodLoopUnit vertId={ad.id} size={size} advert={ad} />
-                    : <div style={{background:"black", width:"100%", height:"100%"}}></div>}
+					{hasShown ? (
+						<GoodLoopUnit vertId={ad.id} size={size} />
+					) : (
+						<div style={{background:"black", width:"100%", height:"100%"}}></div>
+					)}
 				</div>
 			</div>
 			{/*<span className="position-absolute" style={{ left: "50%", top: "50%", transform: "translate(-50%, -50%)", zIndex: 0 }}>If you're seeing this, you likely have ad-blocker enabled. Please disable ad-blocker to see the demo!</span>*/}
@@ -275,21 +278,24 @@ const AdvertCard = ({ ad, active }) => {
  * @param {Advert} p.ad
  * @returns 
  */
-const AdvertPreviewCard = ({ ad, handleClick, selected=false, active }) => {
-	if ( ! ad) {
+const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
+	if (!ad) {
 		console.warn("AdvertPreviewCard - NO ad?!");
 		return null;
 	}
 	let size = 'landscape';
-    const [hasShown, setHasShown] = useState(false);
-    if (active && !hasShown) setHasShown(true);
+	const [hasShown, setHasShown] = useState(false);
+	if (active && !hasShown) setHasShown(true);
 
 	return (
 		<div className="col-md-4 col-6">
 			<div onClick={e => { e.preventDefault(); handleClick(); }} className={"pointer-wrapper" + (selected ? " selected" : "")}>
 				<div className="ad-prev shadow">
-					{hasShown ? <GoodLoopUnit vertId={ad.id} size={size} advert={ad} />
-                    : <div style={{background:"black", width:"100%", height:"100%"}}></div>}
+					{hasShown ? (
+						<GoodLoopUnit vertId={ad.id} size={size} advert={ad} />
+					) : (
+						<div style={{background:"black", width:"100%", height:"100%"}}></div>
+					)}
 				</div>
 			</div>
 			<div>

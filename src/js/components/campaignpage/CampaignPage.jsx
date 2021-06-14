@@ -38,7 +38,7 @@ import NGO from '../../base/data/NGO';
 /**
  * HACK hard-coded list of campaigns which have PDF versions
  * TODO put this in portal or somewhere else
- * @param {Campaign} campaign 
+ * @param {Campaign} campaign
  */
 const pdfLookup = (campaign) => {
 	let pdf = {
@@ -72,7 +72,6 @@ const viewCount = (viewcount4campaign, ad) => {
 		}, 0);
 	}
 
-
 	let vc = viewcount4campaign[ad.campaign];
 	if (vc) return vc;
 	return null;
@@ -89,25 +88,25 @@ const viewCount = (viewcount4campaign, ad) => {
 		'gl.vertiser': vertiserid,
 		'gl.status': glStatus,
 		status,
-        agency,
-        query
+		agency,
+		query
 		// q = '', TODO
 	} = DataStore.getValue(['location', 'params']) || {};
 	let campaignId1 = DataStore.getValue(['location','path'])[1];
 	// Merge gl.status into status & take default value
-	if ( ! status) status = (glStatus || C.KStatus.PUB_OR_ARC);
+	if (!status) status = (glStatus || C.KStatus.PUB_OR_ARC);
 	// Data, assemble
 	// let campaignIds, agencyIds, adIds, advertiserIds;
 	let pvTopItem, pvTopCampaign, pvCampaigns, pvAgencies, pvAds, pvAdvertisers;
-    // ...by Campaign?
+	// ...by Campaign?
 	if (campaignId1) {
-        pvTopItem = pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:campaignId1});
+		pvTopItem = pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:campaignId1});
 		pvCampaigns = null;
 		// ads
 		pvAds = pvTopCampaign.value && Campaign.fetchAds(pvTopCampaign.value, null, status, query);
-        // advertiser
+		// advertiser
 		if (pvTopCampaign.value && pvTopCampaign.value.vertiser) {
-			const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:pvTopCampaign.value.vertiser});			
+			const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:pvTopCampaign.value.vertiser});
 			// wrap as a list
 			pvAdvertisers = fetchIHubData2_wrapAsList(pvAdvertiser);
 		}
@@ -125,46 +124,46 @@ const viewCount = (viewcount4campaign, ad) => {
 		const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:vertiserid});
 		// ads
 		let sq = SearchQuery.setProp(new SearchQuery(), "vertiser", vertiserid);
-        if (query) sq = SearchQuery.and(sq, new SearchQuery(query));
-        const q = sq.query;
-        pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
-        pvTopItem = pvAdvertiser;
-        if (pvAdvertiser.value) pvTopCampaign = Campaign.fetchMasterCampaign(pvAdvertiser.value, status);
-        pvCampaigns = Campaign.fetchForAdvertiser(vertiserid, status);
+			if (query) sq = SearchQuery.and(sq, new SearchQuery(query));
+			const q = sq.query;
+			pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
+			pvTopItem = pvAdvertiser;
+			if (pvAdvertiser.value) pvTopCampaign = Campaign.fetchMasterCampaign(pvAdvertiser.value, status);
+			pvCampaigns = Campaign.fetchForAdvertiser(vertiserid, status);
 	}
 	// ...by Agency?
-	if (agency) {		
+	if (agency) {
 		pvTopItem = getDataItem({type:C.TYPES.Agency,status,id:agency});
 		// wrap as a list
 		pvAgencies = fetchIHubData2_wrapAsList(pvTopItem);
 		// advertisers
-        let q = SearchQuery.setProp(new SearchQuery(), "agencyId", agency).query;
-        pvAdvertisers = ActionMan.list({type: C.TYPES.Advertiser, status, q});
-		// query adverts by advertisers		
-        if (pvAdvertisers.value) {
-			assert( ! pvAds, pvAds);
+		let q = SearchQuery.setProp(new SearchQuery(), "agencyId", agency).query;
+		pvAdvertisers = ActionMan.list({type: C.TYPES.Advertiser, status, q});
+		// query adverts by advertisers
+			if (pvAdvertisers.value) {
+			assert(!pvAds, pvAds);
 			const ids = uniq(pvAdvertisers.value.hits.map(getId));
 			if (yessy(ids)) {
-                let adq = SearchQuery.setPropOr(new SearchQuery(), "vertiser", ids);
-                if (query) adq = SearchQuery.and(adq, new SearchQuery(query));
-        		pvAds = ActionMan.list({type: C.TYPES.Advert, status, q:adq.query});        
+				let adq = SearchQuery.setPropOr(new SearchQuery(), "vertiser", ids);
+				if (query) adq = SearchQuery.and(adq, new SearchQuery(query));
+				pvAds = ActionMan.list({type: C.TYPES.Advert, status, q:adq.query});        
 			} else {
 				console.warn("No Advertisers found for agency",agency,pvTopItem);
 			}
-        }
-        pvCampaigns = Campaign.fetchForAgency(agency, status);
+		}
+		pvCampaigns = Campaign.fetchForAgency(agency, status);
 	} // ./agency
-	
-	if ( ! agency && ! vertiserid && ! adid && ! campaignId1) {
+
+	if (!agency && !vertiserid && !adid && !campaignId1) {
 		throw new Error("No Campaign info specified");
 	}
 	// top campaign?
-	if ( ! pvTopCampaign && pvTopItem && pvTopItem.value && pvTopItem.value.campaign) {
+	if (!pvTopCampaign && pvTopItem && pvTopItem.value && pvTopItem.value.campaign) {
 		pvTopCampaign = getDataItem({type:C.TYPES.Campaign, status, id:pvTopItem.value.campaign});
 	}
 	// ...fill in from adverts
 	if (pvAds && pvAds.value && pvAds.value.hits && pvAds.value.hits.length && pvAds.value.hits[0]) {
-		if ( ! pvAdvertisers) {
+		if (!pvAdvertisers) {
 			// NB: This should be only one advertiser and agency
 			let ids = uniq(pvAds.value.hits.map(Advert.advertiserId));
 			if (yessy(ids)) {
@@ -172,14 +171,14 @@ const viewCount = (viewcount4campaign, ad) => {
 				pvAdvertisers = ActionMan.list({type: C.TYPES.Advertiser, status, q:advq});
 			}
 		}
-		if ( ! pvAgencies) {
+		if (!pvAgencies) {
 			let ids = uniq(pvAds.value.hits.map(ad => ad.agencyId));
 			if (yessy(ids)) {
 				let agq = SearchQuery.setPropOr(null, "id", ids).query;
 				pvAgencies = ActionMan.list({type: C.TYPES.Agency, status, q:agq});
 			}
 		}
-		if ( ! pvCampaigns) {
+		if (!pvCampaigns) {
 			let ids = uniq(pvAds.value.hits.map(ad => ad.campaign));
 			if (yessy(ids)) {
 				let q = SearchQuery.setPropOr(null, "id", ids).query;
@@ -191,16 +190,16 @@ const viewCount = (viewcount4campaign, ad) => {
 	return {
 		pvTopItem:pvTopItem||{},
 		pvTopCampaign:pvTopCampaign||{},
-		pvCampaigns:pvCampaigns||{}, 
-		pvAgencies:pvAgencies||{}, 
-		pvAds:pvAds||{}, 
+		pvCampaigns:pvCampaigns||{},
+		pvAgencies:pvAgencies||{},
+		pvAds:pvAds||{},
 		pvAdvertisers:pvAdvertisers||{}
 	}
 };
 
 /**
  * 
- * @param {PromiseValue} pvTopItem 
+ * @param {PromiseValue} pvTopItem
  * @returns {PromiseValue} pvList
  */
 const fetchIHubData2_wrapAsList = pvTopItem => {
@@ -221,15 +220,15 @@ const fetchIHubData2_wrapAsList = pvTopItem => {
  * Split: branding - a vertiser ID, vs ad-params
  */
 const CampaignPage = () => {
-    let {
+	let {
 		via,
-        landing,
-        status,
+		landing,
+		status,
 		query,
-        'gl.status':glStatus
+		'gl.status': glStatus
 	} = DataStore.getValue(['location', 'params']) || {};
-    if ( ! status) status = (glStatus || C.KStatus.PUB_OR_ARC);
-    
+  if (!status) status = (glStatus || C.KStatus.PUB_OR_ARC);
+
 	// What adverts etc should we look at?
 	let {pvTopItem, pvTopCampaign, pvCampaigns, pvAds, pvAdvertisers, pvAgencies} = fetchIHubData();
 
@@ -237,7 +236,7 @@ const CampaignPage = () => {
 	// If so, change the layout slightly, positioning the advert video on top.
 	const isLanding = (landing !== undefined) && (landing !== 'false');
 
-    if ( ! pvTopCampaign.resolved && ! pvAds.resolved) {
+	if (!pvTopCampaign.resolved && !pvAds.resolved) {
 		console.log("Looking for master campaign...", pvTopItem);
 		// TODO display some stuff whilst ads are loading
 		// Debug info - What are we loading??
@@ -248,22 +247,22 @@ const CampaignPage = () => {
 			pvAds.value? "Ads loaded" : pvAds.error,
 			pvAdvertisers.value? "Advertisers loaded" : pvAdvertisers.error,
 			pvAgencies.value? "Agencies loaded" : pvAgencies.error,
-		);		
+		);
 		return <Misc.Loading text={msg} />;
 	}
-	if ( ! pvTopCampaign.value && ! pvCampaigns.value) {
+	if (!pvTopCampaign.value && !pvCampaigns.value) {
 		console.warn("NO CAMPAIGNS FOUND, aborting page generation");
 		return <Page404/>;
-    }
-    
-    // Combine Campaign settings
+	}
+
+	// Combine Campaign settings
 	let campaign = pvTopCampaign.value;
-	if ( ! campaign && pvCampaigns.value) {
+	if (!campaign && pvCampaigns.value) {
 		let cs = List.hits(pvCampaigns.value);
-		campaign = Object.assign({}, ...cs);	
+		campaign = Object.assign({}, ...cs);
 		console.warn("No master campaign found, using:", campaign.name || campaign.id);
 	}
-    if ( ! campaign) campaign = {};
+	if (!campaign) campaign = {};
 
 	// CAMPAIGN IMPACT HUB SETTINGS
 	let {
@@ -271,40 +270,40 @@ const CampaignPage = () => {
 		forceScaleTotal,
 	} = campaign;
 
-    // Get filtered ad list
-    const otherCampaigns = pvCampaigns.value && List.hits(pvCampaigns.value).filter(c => c.id!==campaign.id);
+	// Get filtered ad list
+	const otherCampaigns = pvCampaigns.value && List.hits(pvCampaigns.value).filter(c => c.id!==campaign.id);
 	let adStatusList = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, status, query, extraAds:pvAds.value && List.hits(pvAds.value)}) : [];
-    const ads = adStatusList.filter(ad => ad.ihStatus==="SHOWING");
-    let canonicalAds = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, status, extraAds:pvAds.value && List.hits(pvAds.value)}).filter(ad => ad.ihStatus==="SHOWING") : [];
-    let extraAds = adStatusList.filter(ad => ad.ihStatus==="NO CAMPAIGN");
+	const ads = adStatusList.filter(ad => ad.ihStatus==="SHOWING");
+	let canonicalAds = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, status, extraAds:pvAds.value && List.hits(pvAds.value)}).filter(ad => ad.ihStatus==="SHOWING") : [];
+	let extraAds = adStatusList.filter(ad => ad.ihStatus==="NO CAMPAIGN");
 	console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", otherCampaigns && otherCampaigns.map(c => c.name || c.id), "and extra ads", extraAds);
 
 	let totalViewCount = Campaign.viewcount({topCampaign:campaign, campaigns:otherCampaigns, extraAds, status});
-    
-    // Merge in ads with no campaigns if asked - less controls applied
-    if (showNonCampaignAds && pvAds.value) {
-        const hideAds = Campaign.hideAdverts(campaign, otherCampaigns);
-        extraAds.forEach(ad => {
-            if ( ! ads.includes(ad) && ! hideAds.includes(ad.id)) {
+
+	// Merge in ads with no campaigns if asked - less controls applied
+	if (showNonCampaignAds && pvAds.value) {
+		const hideAds = Campaign.hideAdverts(campaign, otherCampaigns);
+		extraAds.forEach(ad => {
+			if (!ads.includes(ad) && !hideAds.includes(ad.id)) {
 				ads.push(ad);
 			}
-        });
-    }
+		});
+	}
 
 	// Combine branding
 	// Priority: TopCampaign, TopItem, Adverts
 	let branding = {};
-	ads.forEach(ad => Object.assign(branding, ad.branding));	
+	ads.forEach(ad => Object.assign(branding, ad.branding));
 	if (pvTopItem && pvTopItem.value && pvTopItem.value.branding) {
 		Object.assign(branding, pvTopItem.value.branding);
 	}
 	Object.assign(branding, campaign.branding);
 
-    // initial donation record
-    let donation4charityUnscaled = Campaign.dntn4charity(campaign, otherCampaigns, extraAds, status);
-    console.log("[DONATION4CHARITY]", "FILLED", donation4charityUnscaled);
+	// initial donation record
+	let donation4charityUnscaled = Campaign.dntn4charity(campaign, otherCampaigns, extraAds, status);
+	console.log("[DONATION4CHARITY]", "FILLED", donation4charityUnscaled);
 
-    const ad4Charity = {};
+	const ad4Charity = {};
 	// individual charity data, attaching ad ID
 	let charities = Campaign.charities(campaign, otherCampaigns, extraAds, status);
 	// Add in any from campaign.dntn4charity - which can include strayCharities
@@ -313,34 +312,35 @@ const CampaignPage = () => {
 	strayCharities.forEach(c => {
 		if (!cids.includes(c.id)) charities.push(c);
 	});
-    // NB: Don't append extra charities found in donation data. This can include noise.
-    // Fill in blank in charities with sogive data
-    charities = NGO.fetchSogiveData(charities, campaign);
-    console.log("CHARITIESSSSSS", charities);
-    console.log("AD 4 CHARITY:",ad4Charity)
-    // Attach ads after initial sorting and merging, which can cause ad ID data to be lost
-    charities.forEach(charity => {
-        charity.ad = ad4Charity[charity.id] ? ad4Charity[charity.id].id : null;
-    });
+
+	// NB: Don't append extra charities found in donation data. This can include noise.
+	// Fill in blank in charities with sogive data
+	charities = NGO.fetchSogiveData(charities, campaign);
+	console.log("CHARITIESSSSSS", charities);
+	console.log("AD 4 CHARITY:",ad4Charity)
+	// Attach ads after initial sorting and merging, which can cause ad ID data to be lost
+	charities.forEach(charity => {
+		charity.ad = ad4Charity[charity.id] ? ad4Charity[charity.id].id : null;
+	});
 
 	// Donation total
 	assert(donation4charityUnscaled, "CampaignPage.jsx falsy donation4charity?!");
 	// NB: allow 0 for "use the live figure" as Portal doesn't save edit-to-blank (Feb 2021)
 	// Total up all campaign donations - map to donations, filter nulls
-    const donationTotal = Campaign.donationTotal(campaign, otherCampaigns, donation4charityUnscaled, forceScaleTotal);
+	const donationTotal = Campaign.donationTotal(campaign, otherCampaigns, donation4charityUnscaled, forceScaleTotal);
 
-    // Scale once to get values in the right ballpark
-    let donation4charityScaled = Campaign.scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
-    
-    console.log("[DONATION4CHARITY]", "DONATION SCALED", donation4charityScaled);
+	// Scale once to get values in the right ballpark
+	let donation4charityScaled = Campaign.scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
 
-    // filter charities by low £s and campaign.hideCharities
-    charities = Campaign.filterLowDonations({charities, campaign, donationTotal, donation4charity:donation4charityScaled});
-    
-    // Scale again to make up for discrepencies introduced by filtering
+	console.log("[DONATION4CHARITY]", "DONATION SCALED", donation4charityScaled);
+
+	// filter charities by low £s and campaign.hideCharities
+	charities = Campaign.filterLowDonations({charities, campaign, donationTotal, donation4charity:donation4charityScaled});
+
+	// Scale again to make up for discrepencies introduced by filtering
 	donation4charityScaled = Campaign.scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
 
-    console.log("After Filter CHARITIES", charities.map(c => c.id));
+	console.log("After Filter CHARITIES", charities.map(c => c.id));
 
 	// PDF version of page
 	let pdf = null;
@@ -364,12 +364,12 @@ const CampaignPage = () => {
 	sq = SearchQuery.and(sq, qads);
 
 	// Is this campaign ongoing? Guess from ad dates if unset (is this needed??)
-	if ( ! is(campaign.ongoing)) {
+	if (!is(campaign.ongoing)) {
 		// when is the last advert due to stop?
 		let endDate = new Date(2000,1,1);
 		ads.forEach(ad => {
 			let tli = ad.topLineItem;
-			if ( ! tli)	return;
+			if (!tli) return;
 			let end = asDate(tli.end) || new Date(3000,1,1); // unset will be treated as ongoing. TODO a check on last activity (but offline, periodically)
 			if (end.getTime() > endDate.getTime()) {
 				endDate = end;
@@ -379,8 +379,7 @@ const CampaignPage = () => {
 			console.warn("CampaignPage.jsx - HACK local `ongoing=true`"); // might be over-written
 			campaign.ongoing = true;
 		}
-    }
-    
+	}
 
 	// Sort by donation value, largest first
 	try {
@@ -390,11 +389,10 @@ const CampaignPage = () => {
 		console.error(err);
 	}
 
-	{	// NB: some very old ads may not have charities
-		let noCharityAds = ads.filter(ad => !ad.charities);
-		// minor todo - clean these up in the portal
-		if (noCharityAds.length) console.warn("Ads without charities data", noCharityAds.map(ad => [ad.id, ad.campaign, ad.name, ad.status]));
-	}
+	// NB: some very old ads may not have charities
+	let noCharityAds = ads.filter(ad => !ad.charities);
+	// minor todo - clean these up in the portal
+	if (noCharityAds.length) console.warn("Ads without charities data", noCharityAds.map(ad => [ad.id, ad.campaign, ad.name, ad.status]));
 
 	// Get name of advertiser from nvertiser if existing, or ad if not
 	let nvertiser = pvAdvertisers.value && List.hits(pvAdvertisers.value)[0];
@@ -407,13 +405,14 @@ const CampaignPage = () => {
 		image: campaign.bg || "https://my.good-loop.com/img/redcurve.svg",
 		description: nvertiserNameNoTrail ? "See " + nvertiserNameNoTrail + "'s impact from Good-Loop ethical advertising" : "See our impact from Good-Loop ethical advertising"
 	};
-	return (<>
+
+	return <>
 		<StyleBlock>{campaign && campaign.customCss}</StyleBlock>
 		<StyleBlock>{branding.customCss}</StyleBlock>
 		<div className="widepage CampaignPage gl-btns">
 			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" hidePages/>
 			<div className="text-center">
-				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaign} 
+				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaign}
 					donationValue={donationTotal} charities={charities}
 					totalViewCount={totalViewCount} landing={isLanding} status={status}/>
 
@@ -438,17 +437,18 @@ const CampaignPage = () => {
 						<h2 className="my-5">Where can you see our ads?</h2>
 						<p className="w-60 mx-auto">Good-Loop distributes ethical online ads to millions of people every month in premium websites across the world’s best publishers and social platforms.</p>
 					</Container>
-					{isMobile() ?
+					{isMobile() ? (
 						<img src="/img/Graphic_metro_mobile.800w.png" className="w-100" alt="publishers" />
-						:
-						<img src="/img/Graphic_metro.1920w.png" className="w-100" alt="publishers" />}
+					) : (
+						<img src="/img/Graphic_metro.1920w.png" className="w-100" alt="publishers" />
+					)}
 				</div>
 
 				<SmallPrintInfo ads={ads} charities={charities} campaign={campaign} pvTopItem={pvTopItem} />
 
 			</div>
 		</div>
-	</>);
+	</>;
 }; // ./CampaignPage
 
 
@@ -460,29 +460,29 @@ const CampaignPage = () => {
 const SmallPrintInfo = ({ads, charities, campaign, pvTopItem}) => {
 	// set min/max donation-per-ad and start/end dates from ad
 	let dmin,dmax,start,end;
-	for(let i=0; i<ads.length; i++) {
+	for(let i = 0; i < ads.length; i++) {
 		let adi = ads[i];
 		let tli = adi.topLineItem;
-		if ( ! tli)	continue;
+		if (!tli) continue;
 		let dPerAd = tli && tli.maxBid;
 		if (dPerAd) {
-            try {
-                if ( ! dmin || Money.compare(dPerAd, dmin) < 0) dmin = dPerAd;
-                if ( ! dmax || Money.compare(dPerAd, dmin) > 0) dmax = dPerAd;
-            } catch(e) {
-                // Continue without comparison
-                console.error(e);
-            }
+			try {
+				if (!dmin || Money.compare(dPerAd, dmin) < 0) dmin = dPerAd;
+				if (!dmax || Money.compare(dPerAd, dmin) > 0) dmax = dPerAd;
+			} catch(e) {
+				// Continue without comparison
+				console.error(e);
+			}
 		}
 		let starti = tli && asDate(tli.start);
 		let endi = tli && asDate(tli.end);
-		if (starti && ( ! start || starti.getTime() < start.getTime())) start = starti;
-		if (endi && ( ! end || endi.getTime() > end.getTime())) end = endi;
+		if (starti && (!start || starti.getTime() < start.getTime())) start = starti;
+		if (endi && (!end || endi.getTime() > end.getTime())) end = endi;
 	}
-	
-	let totalBudget	= campaign.maxDntn;
-	if ( ! totalBudget) {
-        let amounts = ads.map(ad => Advert.budget(ad) && Advert.budget(ad).total);
+
+	let totalBudget = campaign.maxDntn;
+	if (!totalBudget) {
+		let amounts = ads.map(ad => Advert.budget(ad) && Advert.budget(ad).total);
 		totalBudget = Money.total(amounts);
 	}
 
@@ -494,27 +494,27 @@ const SmallPrintInfo = ({ads, charities, campaign, pvTopItem}) => {
 			<Col md={6} style={{borderRight:"2px solid grey"}}><CharityDetails charities={charities} /></Col>
 			<Col md={6} className="text-center pl-md-5 smallprint">
 				 <span className="small">
-					{dmin && <>Donation Amount: <Misc.Money amount={dmin} /> { dmax && ! Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/></>}
-					50% of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies. 
+					{dmin && <>Donation Amount: <Misc.Money amount={dmin} /> { dmax &&!Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/></>}
+					50% of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies.
 					Good-Loop and the advertising exchange make a small commission. The donations depend on viewers watching the adverts.
 				</span>
-                <br/>
+				<br/>
 				<span className="small">
-					{ !! Money.value(totalBudget) && <>Limitations on Donation: <Misc.Money amount={totalBudget} /> <br/></>}
+					{!!Money.value(totalBudget) && <>Limitations on Donation: <Misc.Money amount={totalBudget} /> <br/></>}
 					{start && end && <>Dates: <Misc.DateTag date={start} /> through <Misc.DateTag date={end} /> <br/></>}
-					{ ! start && end && <>End date: <Misc.DateTag date={end} /> <br/></>}
-					{ !! impactModels.length && <span>
-						If impacts {impactModels[0].name && `such as "${impactModels[0].name}"`} are listed above, these are representative. 
-						We don't ring-fence funding, as the charity can better assess the best use of funds. 
+					{!start && end && <>End date: <Misc.DateTag date={end} /> <br/></>}
+					{!!impactModels.length && <span>
+						If impacts {impactModels[0].name && `such as "${impactModels[0].name}"`} are listed above, these are representative.
+						We don't ring-fence funding, as the charity can better assess the best use of funds.
 						Cost/impact figures are as reported by the charity or by the impact assessor SoGive.
 						</span>}
 				</span>
-                <br/>
+				<br/>
 				<span className="small">
-						Donations are provided without conditions. The charities are not recommending or endorsing the products in return.
-						They're just doing good &mdash; which we are glad to support.
+					Donations are provided without conditions. The charities are not recommending or endorsing the products in return.
+					They're just doing good &mdash; which we are glad to support.
 				</span>
-                <br/>
+				<br/>
 				<span className="small">
 					Amounts for campaigns that are in progress or recently finished are estimates and may be subject to audit.
 				</span>
@@ -522,18 +522,19 @@ const SmallPrintInfo = ({ads, charities, campaign, pvTopItem}) => {
 		</Row>
 		<br/>
 		<span className="small">This information follows the guidelines of the New York Attorney General for best practice in cause marketing,
-			<Cite href='https://www.charitiesnys.com/cause_marketing.html'/> and the Better Business Bureau's standard for donations in marketing.			
+			<Cite href='https://www.charitiesnys.com/cause_marketing.html'/> and the Better Business Bureau's standard for donations in marketing.
 		</span>
 		{campaign && campaign.id? <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/'+escape(campaign.id)} target="_portal">Campaign Editor</DevLink> : ""}
 		{pvTopItem.value? <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#'+getType(pvTopItem.value)+'/'+escape(pvTopItem.value.id)} target="_portal">{getType(pvTopItem.value)} Editor</DevLink> : ""}
-        {campaign.smallPrint &&
-        <div className="text-center">
-            <span className="small">
-                {campaign.smallPrint}
-            </span>
-        </div>}
+			{campaign.smallPrint &&
+			<div className="text-center">
+				<span className="small">
+					{campaign.smallPrint}
+				</span>
+			</div>}
 	</div>;
 }
+
 
 /**
  * HACK correct donation values that are wrong till new portal controls are released
@@ -555,8 +556,9 @@ const hackCorrectedDonations = id => {
 	return donation;
 };
 
+
 /**
- * @param {!Advert} ad 
+ * @param {!Advert} ad
  * @returns {!string} Can be "unknown" to fill in for no-campaign odd data items
  */
 const campaignNameForAd = ad => {
@@ -570,25 +572,28 @@ const campaignNameForAd = ad => {
 	return ad.campaign;
 };
 
+
 const Page404 = () => <div className="widepage CampaignPage gl-btns">
-    <MyLoopNavBar logo="/img/new-logo-with-text-white.svg" hidePages alwaysScrolled />
-    <div className="my-5 py-2"/>
-    <div className="px-5">
-        <h1>404 - Page not found</h1>
-        <p>We couldn't find anything here! Check your URL is correct, or find other campaigns <a href="/#ads">here.</a></p>
-        {Roles.isDev() && <Alert color="danger">
-            No ad data could be loaded for this page - if this URL has a correct campaign/advertiser/agency ID and should be working,
-            check that there are any associated ads to provide data.<br/>
-            <small>You are seeing this because you are using a developer account - the public cannot see this message.</small>
-        </Alert>}
-    </div>
-    <div className="my-5 py-5"/>
+	<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" hidePages alwaysScrolled />
+	<div className="my-5 py-2"/>
+	<div className="px-5">
+		<h1>404 - Page not found</h1>
+		<p>We couldn't find anything here! Check your URL is correct, or find other campaigns <a href="/#ads">here.</a></p>
+		{Roles.isDev() && <Alert color="danger">
+			No ad data could be loaded for this page - if this URL has a correct campaign/advertiser/agency ID and should be working,
+			check that there are any associated ads to provide data.<br/>
+			<small>You are seeing this because you are using a developer account - the public cannot see this message.</small>
+		</Alert>}
+	</div>
+	<div className="my-5 py-5"/>
 </div>;
+
 
 const isAll = () => {
 	const slug = DataStore.getValue('location', 'path', 1);
 	return slug === 'all';
 };
+
 
 export default CampaignPage;
 export { hackCorrectedDonations };
