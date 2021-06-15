@@ -233,7 +233,7 @@ const Impact = ({ charity, donationValue }) => {
 	}
 	// If a (number) string is present, insert the impact number there
 	const impactSplitByNum = impact.split("(number)");
-	const charityName = charity.name.replaceAll(" ", "-");
+	const charityName = charity.name.replace(/ /g, '-');
 	if (impactSplitByNum.length === 1) {
 		return <b><span className={`charity-impact-${charityName}`}>{numOfImpact}</span> <span className={`impact-text-${charityName}`}>{impact}</span></b>;
 	} else {
