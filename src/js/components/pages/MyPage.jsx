@@ -8,7 +8,8 @@ import MyLoopNavBar from '../MyLoopNavBar';
 import Roles from '../../base/Roles';
 import LandingSection, { springPageDown } from '../LandingSection';
 import SubscriptionBox from '../cards/SubscriptionBox';
-import { isPortraitMobile } from '../../base/utils/miscutils';
+import { isPortraitMobile, stopEvent } from '../../base/utils/miscutils';
+import { RegisterLink, setLoginVerb, setShowLogin } from '../../base/components/LoginWidget';
 
 window.DEBUG = false;
 
@@ -39,7 +40,25 @@ const MyPage = ({spring}) => {
 	</>);
 };
 
+const showRegisterForm = e => {
+	stopEvent(e);
+	setLoginVerb('register');
+	setShowLogin(true);
+};
+
 const HowItWorksCard = () => {
+	const setRegisterButton = (embedEl) => {
+		if (!embedEl || !embedEl.getSVGDocument) return;
+		const svgDOM = embedEl.getSVGDocument();
+		if (!svgDOM) return;
+		const registerButton = svgDOM.getElementById('register-button');
+		if (!registerButton) {
+			console.error("No element with ID #register-button within infograhpic.svg")
+			return;
+		}
+		registerButton.addEventListener('click', showRegisterForm);
+	};
+
 	return (<div className="bg-white py-5">
 		<Container>
 			<h2 className="text-center mt-5">We support your favorite causes</h2> 
@@ -47,9 +66,9 @@ const HowItWorksCard = () => {
 				<embed src="/img/LandingBackground/svg-mobile/infographic.svg" className="w-100"/>
 				{/* Center CTA btn - not included in mobile SVG */}
 				<div className="flex-row justify-content-center">
-					<a href="/#my" className="btn btn-primary">Get started</a>
+					<RegisterLink className="btn btn-primary">Get started</RegisterLink>
 				</div>
-			</>: <embed src="/img/LandingBackground/svg-desktop/infographic.svg" className="w-100"/>}
+			</>: <embed ref={setRegisterButton} src="/img/LandingBackground/svg-desktop/infographic.svg" className="w-100"/>}
 		</Container>
 	</div>);
 };
