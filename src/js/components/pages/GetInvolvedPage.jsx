@@ -16,7 +16,7 @@ const GetInvolvedPage = () => {
 		<div className="GetInvolvedPage">
 			<img src="/img/LandingBackground/involved_banner.png" alt="banner" className="w-100 mt-5"/>
 			<Container className="py-5">
-				<h1 className="text-center">Get involved and be part<br/>of the ad revolution</h1>
+				<h1 className="text-center">Get involved and <br/>make a difference</h1>
 				{/* what is this div for?? */}
 				<div className="d-flex justify-content-center align-items-center mb-5" />
 				{/* Offset this to the right - technically off-center but looks weighted otherwise, eyes are weird */}

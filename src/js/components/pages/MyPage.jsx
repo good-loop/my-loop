@@ -42,12 +42,12 @@ const MyPage = ({spring}) => {
 const HowItWorksCard = () => {
 	return (<div className="bg-white py-5">
 		<Container>
-			<h2 className="text-center mt-5">Help us change advertising for good</h2> 
+			<h2 className="text-center mt-5">We support your favorite causes</h2> 
 			{isPortraitMobile() ? <>
 				<embed src="/img/LandingBackground/svg-mobile/infographic.svg" className="w-100"/>
 				{/* Center CTA btn - not included in mobile SVG */}
 				<div className="flex-row justify-content-center">
-					<a href="/#involve" className="btn btn-primary">Get involved</a>
+					<a href="/#my" className="btn btn-primary">Get started</a>
 				</div>
 			</>: <embed src="/img/LandingBackground/svg-desktop/infographic.svg" className="w-100"/>}
 		</Container>
