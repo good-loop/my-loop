@@ -958,8 +958,7 @@
 	</image>
 	<a
    xlink:href=""
-   onclick="event.preventDefault(); window.scrollY=0; window.parent.location.href='/#involve';"
-   id="a259">
+   id="register-button">
 		<g
    id="g257">
 			<g
@@ -971,10 +970,10 @@
    inkscape:connector-curvature="0"
    style="fill:#be210d" />
 				<text
-   transform="translate(857.064,3309.4509)"
+   transform="translate(870.064,3309.4509)"
    class="st21 st4 st22"
    id="text253"
-   style="font-size:30px;font-family:Montserrat-SemiBold;fill:#ffffff">Get involved</text>
+   style="font-size:30px;font-family:Montserrat-SemiBold;fill:#ffffff;">Get started</text>
 
 			</g>
 		</g>
