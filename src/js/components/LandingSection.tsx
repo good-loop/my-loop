@@ -25,6 +25,10 @@ const springPageDown = (setY: Function): void => {
 	});
 };
 
+const emaillistButton = () => {
+	document.getElementById("subscription-box")
+};
+
 const LandingSection = ({setY}: {setY: Function}): JSX.Element => {
 	//const [, setY] = useSpring(() => ({ y: 0 }));
 
@@ -38,15 +42,6 @@ const LandingSection = ({setY}: {setY: Function}): JSX.Element => {
 		url={window.location.href}>
 			Share
 	</ShareButton>;
-
-	// const EmaillistBtn = ({className}) => {
-	//	className={className}
-	//	let newsletterBtn = document.querySelector(".btn-newsletter");
-	//	let subscriptionboxSection = document.querySelector(".subscription-box")
-	//	newsletterBtn?.addEventListener("click", function() {
-	//		subscriptionboxSection?.scrollIntoView(true);
-	//	});
-	//};
 
 	return (
 		<>
@@ -65,7 +60,7 @@ const LandingSection = ({setY}: {setY: Function}): JSX.Element => {
 									<RegisterLink className="btn btn-primary h-100 d-flex align-items-center justify-content-center">Get started</RegisterLink>
 								</div>
 								<div className="col col-xl-6">
-									<RegisterLink className="btn btn-newsletter h-100 d-flex align-items-center justify-content-center">Sign up for newsletter</RegisterLink>
+									<button id="newsletter-btn" className="btn btn-newsletter h-100 d-flex align-items-center justify-content-center">Sign up for newsletter</button>
 								</div>
 							</div>
 						</div>

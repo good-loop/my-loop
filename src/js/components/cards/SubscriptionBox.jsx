@@ -25,7 +25,7 @@ const doEmailSignUp = e => {
 const SubscriptionBox = ({className, title}) => {
 	const hasSubmittedEmail = DataStore.getValue(['misc', 'hasSubmittedEmail']) === true;
 	const thankYouMessage = <><h4>Thank you!</h4><p>We'll email you shortly :)</p></>;
-	return (<div className={space("flex-column align-items-center justify-content-center subscription-box", className)}>
+	return (<div id="subscription-box" className={space("flex-column align-items-center justify-content-center subscription-box", className)}>
 		{title ? <><h1>{title}</h1>
 		<p class="text-center">Find out about the causes you care about, the lives you’re helping to improve and the difference you’re making to the world</p>
 			<br/><br/></> : null}

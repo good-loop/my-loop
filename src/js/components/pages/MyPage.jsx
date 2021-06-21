@@ -61,7 +61,7 @@ const HowItWorksCard = () => {
 		registerButton.addEventListener('click', showRegisterForm);
 	};
 
-	return (<div className="bg-white py-5">
+	return (<div id="howitworks" className="bg-white py-5">
 		<Container>
 			<h2 className="text-center mt-5">We support your favorite causes</h2> 
 			{isPortraitMobile() ? <>

@@ -96,12 +96,19 @@ class MainDiv extends Component {
 	}
 
 	scrollToTop () {
+		const sethowitworksButton = () => {
+			document.getElementById("howitworks")
+		};
+
 		// Scroll to top on hash change - except for page How it Works, which scrolls down the homepage
 		if (window.location.hash !== "howitworks") {
 			console.log("HASH CHANGE");
 			// Allow page to load before scrolling
-			window.scrollTo(0,0);
+			sethowitworksButton.scrollIntoView()
 		}
+		else {
+			window.scrollTo(0,0);
+		};
 	}
 
 	componentDidMount() {
@@ -172,7 +179,7 @@ class MainDiv extends Component {
 		let Page = PAGES[page];
 		// HowItWorks page is just the homepage but sprung down
 		let spring = false;
-		if (page === "howitworks") spring = true;
+		// if (page === "howitworks") spring = true;
 		if ( ! Page) {
 			Page = E404Page;
 		}
