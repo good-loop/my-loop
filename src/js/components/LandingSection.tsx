@@ -39,6 +39,15 @@ const LandingSection = ({setY}: {setY: Function}): JSX.Element => {
 			Share
 	</ShareButton>;
 
+	// const EmaillistBtn = ({className}) => {
+	//	className={className}
+	//	let newsletterBtn = document.querySelector(".btn-newsletter");
+	//	let subscriptionboxSection = document.querySelector(".subscription-box")
+	//	newsletterBtn?.addEventListener("click", function() {
+	//		subscriptionboxSection?.scrollIntoView(true);
+	//	});
+	//};
+
 	return (
 		<>
 			<div className="landing-bg bg-white pt-5">
@@ -53,7 +62,7 @@ const LandingSection = ({setY}: {setY: Function}): JSX.Element => {
 							</div>
 							<div className="row cta-buttons">
 								<div className="col col-xl-4">
-								<RegisterLink className="btn btn-primary h-100 d-flex align-items-center justify-content-center">Get started</RegisterLink>
+									<RegisterLink className="btn btn-primary h-100 d-flex align-items-center justify-content-center">Get started</RegisterLink>
 								</div>
 								<div className="col col-xl-6">
 									<RegisterLink className="btn btn-newsletter h-100 d-flex align-items-center justify-content-center">Sign up for newsletter</RegisterLink>

@@ -31,7 +31,7 @@ const MyPage = ({spring}) => {
 	// <ShareAdCard /> is buggy, so removed for now
 
 	return (<>
-		<MyLoopNavBar logo="/img/new-logo-with-text.svg"/>
+		<MyLoopNavBar logo="/img/new-logo-with-text.svg" logoScroll="/img/new-logo-with-text-white.svg" />
 		<div className='MyPage widepage'>
 			<LandingSection setY={setY}/>
 			<CharitySection />
