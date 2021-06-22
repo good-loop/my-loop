@@ -10,7 +10,6 @@ import AB from './AB';
 import CSS from '../base/components/CSS';
 import Money from '../base/data/Money';
 import Ticker from './Ticker';
-import ShareButton from './ShareButton';
 import { isPortraitMobile } from '../base/utils/miscutils';
 import TickerTotal from './TickerTotal';
 import { RegisterLink, setLoginVerb, setShowLogin } from '../base/components/LoginWidget';
@@ -27,17 +26,6 @@ const springPageDown = (setY: Function): void => {
 
 const LandingSection = ({setY}: {setY: Function}): JSX.Element => {
 	//const [, setY] = useSpring(() => ({ y: 0 }));
-
-	const shareBtn = <ShareButton
-		absolute={!isPortraitMobile()}
-		className="btn-transparent fill"
-		style={isPortraitMobile() ? null : {bottom: 30, left: 30}}
-		title={"My-Loop"}
-		image={"https://my.good-loop.com/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png"}
-		description={"Using ads for good"}
-		url={window.location.href}>
-			Share
-	</ShareButton>
 
 	const scrolltoNewsletter = () => {
 		document.getElementById("subscription-box")!.scrollIntoView({behavior: "smooth"});
@@ -76,14 +64,8 @@ const LandingSection = ({setY}: {setY: Function}): JSX.Element => {
 					alt="scroll down"
 					onClick={ (): void => springPageDown(setY) }
 				/>
-				{isPortraitMobile() ?
-					null : shareBtn}
+				
 			</div>
-			{isPortraitMobile() ?
-			// separate share button off of landing section for mobile - no room
-				<div className="bg-white pt-5 flex-row justify-content-center">
-					{shareBtn}
-				</div>: null}
 		</>
 	);
 };
