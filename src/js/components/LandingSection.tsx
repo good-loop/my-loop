@@ -25,10 +25,6 @@ const springPageDown = (setY: Function): void => {
 	});
 };
 
-const emaillistButton = () => {
-	document.getElementById("subscription-box")
-};
-
 const LandingSection = ({setY}: {setY: Function}): JSX.Element => {
 	//const [, setY] = useSpring(() => ({ y: 0 }));
 
@@ -43,12 +39,20 @@ const LandingSection = ({setY}: {setY: Function}): JSX.Element => {
 			Share
 	</ShareButton>;
 
+//	let emaillistButton = document.getElementById("newsletter-btn");
+//	let scriptionSection = document.getElementById("subscription-box");
+//
+//	emaillistButton?.addEventListener("click", function () {
+//		scriptionSection.scrollIntoView();
+//	});
+// *Should Write JSX and the call in HTML*
+
 	return (
 		<>
 			<div className="landing-bg bg-white pt-5">
 				{/* 
 				//@ts-ignore */}
-				<div className="container-fluid pt-5 px-md-5 mt-5">
+				<div className="container-fluid d-flex px-md-5">
 					<div className="row mb-3 px-0 px-md-5">
 						<div className="col-md d-flex flex-column justify-content-center">
 							<div className="row title my-0"> 

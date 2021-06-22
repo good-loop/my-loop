@@ -55,8 +55,10 @@ class MyLoopNavBar extends React.Component {
 	render () {
 		// Provide fallbacks for logo
 		const logoSrc = this.props.logo || C.app.homeLogo || C.app.logo;
+		const navbarToggleSrc = "/img/Icon_Hamburger-black.png";
 		// logoScroll's fallback is logo
 		const logoScrollSrc = this.props.logoScroll;
+		const navbarToggleScrollSrc = "/img/Icon_Hamburger.200w.png";
 		// Optionally uses colour overrides for styling on scroll and default
 		const style = {background:this.state.scrolled ? (this.props.scrollColour ? this.props.scrollColour : "") : (this.props.normalColour ? this.props.normalColour : ""), ...this.props.style};
 		if (this.state.scrolled) Object.assign(style, this.props.scrollStyle);
@@ -69,7 +71,7 @@ class MyLoopNavBar extends React.Component {
 				</NavbarBrand>
 
 				<NavbarToggler onClick={this.toggle}>
-					<img src="/img/Icon_Hamburger.200w.png" className="navbar-toggler-icon"/>
+					<img src={this.state.scrolled && navbarToggleScrollSrc ? navbarToggleScrollSrc : navbarToggleSrc} alt='toggler' className='navbar-toggler-icon' />
 				</NavbarToggler>
 				<Collapse isOpen={this.state.open} navbar className="gl-bootstrap-navbar" id="navItemsDiv" style={{flexGrow:0}}>
 					<Nav navbar className={space("navbar-nav w-100", this.props.hidePages ? "justify-content-end" : "justify-content-between")}>
