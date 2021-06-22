@@ -97,10 +97,6 @@ class MainDiv extends Component {
 
 	// How It Works scrolling to section
 	scrollToTop () {
-		console.log("*************************", window.scrollY)
-		window.setTimeout(() => {
-			console.log("*************************", window.scrollY)
-		}, 1);
 		// Scroll to top on hash change - except for page How it Works, which scrolls down the homepage
 		if (window.location.hash !== "#howitworks") {
 			window.scrollTo(0, 0);
@@ -180,6 +176,11 @@ class MainDiv extends Component {
 			Page = E404Page;
 		}
 
+		// special case: #howitworks is MyPage but scrolled - so give it MyPage's id
+		// This resolves annoying behaviour with the #howitworks nav link scrolling to the page top
+		// (where <div id="howitworks" would be without this shim)
+		const pageId = (page === 'howitworks') ? 'my' : page;
+
 		if (this.state && this.state.error && this.state.errorPath === path) {
 			Page = () => (<div><h3>There was an Error :'(</h3>
 				<p>Try navigating to a different tab, or reloading the page. If this problem persists, please contact support.</p>
@@ -200,7 +201,7 @@ class MainDiv extends Component {
 
 		return (
 			<>
-				<div id={page} /* wrap in an id in case you need high-strength css rules */>
+				<div id={pageId} /* wrap in an id in case you need high-strength css rules */>
 					<HashWatcher />
 					<Page path={path} spring={spring}/>
 					<Footer />

@@ -53,13 +53,10 @@ class MyLoopNavBar extends React.Component {
 	}
 
 	scrolltoHowitworks () {
-		console.log("*************************", window.scrollY);
-		const scroll = [window.scrollX, window.scrollY]
+		// Wait a moment for MyPage to get rendered so #howitworks-section exists
 		window.setTimeout(() => {
-			console.log("*************************", window.scrollY);
-			window.scrollTo(...scroll)
-			document.getElementById("howitworks-section").scrollIntoView({behavior: "smooth"});
-		}, 1);
+			document.getElementById('howitworks-section').scrollIntoView({behavior: 'smooth'});
+		}, 50);
 	}
 
 	render () {
@@ -72,6 +69,7 @@ class MyLoopNavBar extends React.Component {
 		// Optionally uses colour overrides for styling on scroll and default
 		const style = {background:this.state.scrolled ? (this.props.scrollColour ? this.props.scrollColour : "") : (this.props.normalColour ? this.props.normalColour : ""), ...this.props.style};
 		if (this.state.scrolled) Object.assign(style, this.props.scrollStyle);
+
 		return (
 			<Navbar className={this.state.scrolled ? "scrolled" : ""}
 				style={style}
