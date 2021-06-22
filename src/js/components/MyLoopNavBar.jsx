@@ -52,6 +52,16 @@ class MyLoopNavBar extends React.Component {
 		this.setState({open: !this.state.open, scrolled: scrolled});
 	}
 
+	scrolltoHowitworks () {
+		console.log("*************************", window.scrollY);
+		const scroll = [window.scrollX, window.scrollY]
+		window.setTimeout(() => {
+			console.log("*************************", window.scrollY);
+			window.scrollTo(...scroll)
+			document.getElementById("howitworks-section").scrollIntoView({behavior: "smooth"});
+		}, 1);
+	}
+
 	render () {
 		// Provide fallbacks for logo
 		const logoSrc = this.props.logo || C.app.homeLogo || C.app.logo;
@@ -77,7 +87,7 @@ class MyLoopNavBar extends React.Component {
 					<Nav navbar className={space("navbar-nav w-100", this.props.hidePages ? "justify-content-end" : "justify-content-between")}>
 						{!this.props.hidePages && <>
 							<NavItem>
-								<NavLink href="/#howitworks">How it works</NavLink>
+								<NavLink onClick={this.scrolltoHowitworks} href="/#howitworks">How it works</NavLink>
 							</NavItem>
 							<NavItem>
 								<NavLink href="/#ads">Ad campaigns</NavLink>

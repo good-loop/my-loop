@@ -97,20 +97,13 @@ class MainDiv extends Component {
 
 	// How It Works scrolling to section
 	scrollToTop () {
-		var sethowitworksButton = document.getElementById("howitworks-section");
-
+		console.log("*************************", window.scrollY)
+		window.setTimeout(() => {
+			console.log("*************************", window.scrollY)
+		}, 1);
 		// Scroll to top on hash change - except for page How it Works, which scrolls down the homepage
-		if (window.location.hash === "#howitworks") {
-			console.log("HASH CHANGE");
-			// Allow page to load before scrolling
-			sethowitworksButton.scrollIntoView({behavior: "smooth"});
-		}
-		if (window.location.hash === "#my") {
-			window.scrollTo({
-				top: 0,
-				left: 0,
-				behavior: 'smooth'
-			  });
+		if (window.location.hash !== "#howitworks") {
+			window.scrollTo(0, 0);
 		};
 	}
 

@@ -37,15 +37,11 @@ const LandingSection = ({setY}: {setY: Function}): JSX.Element => {
 		description={"Using ads for good"}
 		url={window.location.href}>
 			Share
-	</ShareButton>;
+	</ShareButton>
 
-//	let emaillistButton = document.getElementById("newsletter-btn");
-//	let scriptionSection = document.getElementById("subscription-box");
-//
-//	emaillistButton?.addEventListener("click", function () {
-//		scriptionSection.scrollIntoView();
-//	});
-// *Should Write JSX and the call in HTML*
+	const scrolltoNewsletter = () => {
+		document.getElementById("subscription-box")!.scrollIntoView({behavior: "smooth"});
+	};
 
 	return (
 		<>
@@ -64,7 +60,7 @@ const LandingSection = ({setY}: {setY: Function}): JSX.Element => {
 									<RegisterLink className="btn btn-primary h-100 d-flex align-items-center justify-content-center">Get started</RegisterLink>
 								</div>
 								<div className="col col-xl-6">
-									<button id="newsletter-btn" className="btn btn-newsletter h-100 d-flex align-items-center justify-content-center">Sign up for newsletter</button>
+									<button id="newsletter-btn" onClick={scrolltoNewsletter} className="btn btn-newsletter h-100 d-flex align-items-center justify-content-center">Sign up for newsletter</button>
 								</div>
 							</div>
 						</div>
