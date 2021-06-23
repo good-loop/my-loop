@@ -145,7 +145,6 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 	let img = charity.images;
 
 	const testimonial = charity.testimonial;
-	console.log("[TESTIMONIAL]", "Testimonial for " + charity.id + ":", testimonial);
 
 	// TODO let's reduce the use of custom css classes (e.g. charity-quote-img etc below)
 
@@ -197,6 +196,7 @@ const Impact = ({ charity, donationValue }) => {
 	const impactFormat = charity.simpleImpact.name;
 	const numOfImpact = printer.prettyNumber(Math.round(Money.divide(donationsMoney, charity.simpleImpact.costPerBeneficiary)));
 	// Process format to use singular or plural name
+	// TODO use i18n.js instead, which does this + translations??
 	// REGEX for (singular:...) format
 	// Group 1: plural form
 	// Group 3: singular form
