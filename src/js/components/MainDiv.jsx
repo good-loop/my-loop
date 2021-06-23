@@ -191,7 +191,7 @@ class MainDiv extends Component {
 		// Fleshed out title for My-Loop custom login modal design.
 		const loginWidgetTitle = (
 			<div className="text-center">
-				<span className="modal-main-title">My GOOD-LOOP</span><br />
+				<span className="modal-main-title">JOIN MY GOOD-LOOP</span><br />
 				<span className="modal-subtitle">Raising money for charity with adverts</span>
 			</div>
 		);

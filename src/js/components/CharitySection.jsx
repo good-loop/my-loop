@@ -4,7 +4,7 @@ const CharitySection = ({}) => {
     return (
     <div className="charity-section bg-white px-5">
         <div className="gl-container p-0 p-md-3">
-            <h2 className="pb-5 text-center">Together we raised over $2,000,000 <br/> for over 100 charities</h2>
+            <h2 className="pb-5 text-center">Together we raised over $3,000,000 <br/> for over 100 charities</h2>
             <div className="row">
                 <div className="col-md d-flex flex-column align-items-center justify-content-center mb-3">
                     <img src="img/LandingCharity/wwf_logo.png" className="w-25" alt="" />
