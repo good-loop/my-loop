@@ -28,7 +28,7 @@ const LandingSection = ({setY}: {setY: Function}): JSX.Element => {
 	//const [, setY] = useSpring(() => ({ y: 0 }));
 
 	const scrolltoNewsletter = () => {
-		document.getElementById("subscription-box").scrollIntoView({behavior: "smooth"});
+		document.getElementById("subscription-box")!.scrollIntoView({behavior: "smooth"});
 	};
 
 	return (
