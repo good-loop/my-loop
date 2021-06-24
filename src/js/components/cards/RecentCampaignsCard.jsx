@@ -18,7 +18,8 @@ import KStatus from '../../base/data/KStatus';
 
 const RecentCampaignsCard = () => {
 	// TODO fetch data from portal
-	const campaigns = [
+	// HACK: an ad-hoc data format {name, adid, url: relative url to campaign page, ad:first Advert, dntn: ??}
+	const campaignInfos = [
 		{
 			name: "LEVI'S",
 			adid: "ko3s6fUOdq",
@@ -29,6 +30,7 @@ const RecentCampaignsCard = () => {
 			adid: "B1lF97utxD",
 			url: "/#campaign/?gl.vertiser=FBY5QmWQ"
 		},
+	];	[ // FIXME!!!
 		{
 			name: "Nike",
 			adid: "2qQIRm9u5Q",
@@ -55,44 +57,48 @@ const RecentCampaignsCard = () => {
 			url: "/#campaign/?gl.vertiser=zqhRrBjF"
 		}
 	];
+	const status = DataStore.getUrlValue("status") || KStatus.PUBLISHED;
 
-	campaigns.forEach(campaign => {
-		let {
-			status="PUBLISHED"
-		} = DataStore.getValue(['location', 'params']) || {};
-
+	// add dntn info
+	campaignInfos.forEach(campaignInfo => {
 		// Which advert(s)?
-		const sq = adsQuery({ adid: campaign.adid });
+		const sq = adsQuery({ adid: campaignInfo.adid });
 		let pvAds = fetchAds({ searchQuery: sq, status });
-		if (!pvAds) {
-			console.log("No ads fetched");
+		if ( ! pvAds) {
+			return;
 		}
-		if (!pvAds.resolved) {
-			return <Misc.Loading text="Loading campaign info..." />;
+		if ( ! pvAds.resolved) {
+			return		
 		}
 		if (pvAds.error) {
-			return <ErrAlert>Error loading advert data</ErrAlert>;
+			return;
 		}
-
 		// If it's remotely possible to have an ad now, we have it. Which request succeeded, if any?
 		let adHits = pvAds.value.hits;
-		if (!adHits || !adHits.length) {
-			return <Alert>Could not load adverts for {sq.query} {status}</Alert>; // No ads?!
+		if ( ! adHits || ! adHits.length) {
+			return;
 		}
 
-		campaign.ad = adHits[0];
-		console.log(campaign.ad);
-		if (!campaign.ad.id) console.warn("No id!");
+		campaignInfo.ad = adHits[0];
+		console.log(campaignInfo.ad);
+		if (!campaignInfo.ad.id) console.warn("No id!");
 
-		campaign.dntn = fetchDonationData({ads: adHits});
+		let campaignDonationForCharity = NGO.fetchDonationData({ads: adHits, status, totalOnly:true});
+		let ttl = campaignDonationForCharity.total;
+		if ( ! Money.value(ttl)) {
+			console.log("DEBUG ZERO!", campaignInfo, campaignDonationForCharity);
+			return;	
+		}
+		campaignInfo.dntn = ttl;
+		console.log("DEBUG", campaignInfo, campaignDonationForCharity);
 	});
 
 	return (
 		<div id="campaign-cards">
-			{campaigns.map(({dntn, adid, url, name}, i) => (<Row className="campaign mb-5" key={i}>
+			{campaignInfos.map(({dntn, adid, url, name}, i) => (<Row className="campaign mb-5" key={i}>
 				<TVAdPlayer adid={adid} className="col-md-6"/>
 				<Col md={6} className="flex-column align-items-center text-center justify-content-center pt-3 pt-md-0">
-					<h3 className="mb-0">This ad helped {name}<br/>raise {dntn ? <Counter currencySymbol="£" sigFigs={4} amount={dntn} minimumFractionDigits={2} preservePennies /> : "money"}</h3>
+					<h3 className="mb-0">This ad raised {dntn ? <Counter currencySymbol="£" sigFigs={4} amount={dntn} minimumFractionDigits={2} preservePennies /> : "money"}</h3>
 					<a className="btn btn-primary mt-3" href={url}>Find out more</a>
 				</Col>
 			</Row>))}
@@ -141,7 +147,7 @@ const isAll = () => {
  */
 const fetchAds = ({ searchQuery, status }) => {
 	let q = searchQuery.query;
-	if (!q && !isAll()) {
+	if ( ! q && ! isAll()) {
 		return null;
 	}
 	// TODO server side support to do this cleaner "give me published if possible, failing that archived, failing that draft"
@@ -156,49 +162,5 @@ const fetchAds = ({ searchQuery, status }) => {
 	return pvAds;
 };
 
-/**
- * 
- * Cut-down version of the function from NGO.js, which only looks for a total
- * 
- * @param {!Advert[]} ads
- * @returns {cid:Money} donationForCharity, with a .total property for the total
- */
-const fetchDonationData = ({ads}) => {
-	if ( ! ads.length) {
-		console.warn("Could not fetch donation data: empty ads list!");
-		return null; // paranoia
-	}
-	// things
-	let adIds = ads.map(ad => ad.id);
-	let campaignIds = ads.map(ad => ad.campaign);
-	// Campaign level total info?
-	let campaignPageDonations = ads.map(ad => ad.campaignPage && Campaign.dntn(ad.campaignPage)).filter(x => x);
-	if (campaignPageDonations.length === ads.length) {
-		return Money.total(campaignPageDonations);
-	}
-
-	// Fetch donations data
-	// ...by campaign or advert? campaign would be nicer 'cos we could combine different ad variants... but its not logged reliably
-	// (old data) Loop.Me have not logged vert, only campaign. But elsewhere vert is logged and not campaign.
-	let sq1 = adIds.map(id => "vert:"+id).join(" OR ");
-	// NB: quoting for campaigns if they have a space (crude not 100% bulletproof) 
-	let sq2 = campaignIds.map(id => "campaign:"+(id.includes(" ")? '"'+id+'"' : id)).join(" OR ");
-	let sqDon = SearchQuery.or(sq1, sq2);
-
-	// load the community total for the ad
-	let pvDonationsBreakdown = DataStore.fetch(['widget', 'CampaignPage', 'communityTotal', sqDon.query], () => {
-		return ServerIO.getDonationsData({ q: sqDon.query });
-	}, {cachePeriod: 5 * 60 * 1000});
-	if (pvDonationsBreakdown.error) {
-		console.error("pvDonationsBreakdown.error", pvDonationsBreakdown.error);
-		return null;
-	}
-	if ( ! pvDonationsBreakdown.value) {
-		return null; // loading
-	}
-
-	let lgCampaignTotal = pvDonationsBreakdown.value.total;
-	return new Money(lgCampaignTotal);
-};
 
 export default RecentCampaignsCard;
