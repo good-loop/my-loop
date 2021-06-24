@@ -42,40 +42,48 @@ class MyLoopNavBar extends React.Component {
 	}
 
 	toggle () {
-		let scrolled = true;
-		// If we're about to open, force the "scrolled" style
-		if (!this.state.open) {
-			scrolled = true;
-		} else {
-			scrolled = window.scrollY > 50;
-		}
-		this.setState({open: !this.state.open, scrolled: scrolled});
+		this.setState({open: !this.state.open});
+	}
+
+	scrolltoHowitworks () {
+		// Wait a moment for MyPage to get rendered so #howitworks-section exists
+		window.setTimeout(() => {
+			document.getElementById('howitworks-section').scrollIntoView({behavior: 'smooth'});
+		}, 50);
 	}
 
 	render () {
-		// Provide fallbacks for logo
-		const logoSrc = this.props.logo || C.app.homeLogo || C.app.logo;
-		// logoScroll's fallback is logo
-		const logoScrollSrc = this.props.logoScroll;
+		// ToDo: Move navbarToggleSrc outside if this component 
+		const navbarToggleSrc = "/img/Icon_Hamburger-black.png";
+		const navbarToggleScrollSrc = "/img/Icon_Hamburger.200w.png";
 		// Optionally uses colour overrides for styling on scroll and default
 		const style = {background:this.state.scrolled ? (this.props.scrollColour ? this.props.scrollColour : "") : (this.props.normalColour ? this.props.normalColour : ""), ...this.props.style};
 		if (this.state.scrolled) Object.assign(style, this.props.scrollStyle);
+
+		// Merge state.scrolled and state.open into one navClass
+		const isScrolled = this.state.scrolled || this.state.open;
+		const navClass = isScrolled ? 'scrolled' : '';
+
+		let navLogo = this.props.logo || C.app.homeLogo || C.app.logo; // defaults
+		if (isScrolled) navLogo = this.props.logoScroll || navLogo; // fall back to non-scrolled if no special logo provided for scrolled state
+		const toggleSrc = isScrolled ? navbarToggleScrollSrc : navbarToggleSrc; 
+
 		return (
-			<Navbar className={this.state.scrolled ? "scrolled" : ""}
+			<Navbar className={navClass}
 				style={style}
 				sticky='top' expand='xl'>
 				<NavbarBrand href="/#my" className="mr-auto">
-					<img src={this.state.scrolled && logoScrollSrc ? logoScrollSrc : logoSrc} alt='logo' className='logo-small' />
+					<img src={navLogo} alt='logo' className='logo-small' />
 				</NavbarBrand>
 
 				<NavbarToggler onClick={this.toggle}>
-					<img src="/img/Icon_Hamburger.200w.png" className="navbar-toggler-icon"/>
+					<img src={toggleSrc} alt='toggler' className='navbar-toggler-icon' />
 				</NavbarToggler>
 				<Collapse isOpen={this.state.open} navbar className="gl-bootstrap-navbar" id="navItemsDiv" style={{flexGrow:0}}>
 					<Nav navbar className={space("navbar-nav w-100", this.props.hidePages ? "justify-content-end" : "justify-content-between")}>
 						{!this.props.hidePages && <>
 							<NavItem>
-								<NavLink href="/#howitworks">How it works</NavLink>
+								<NavLink onClick={this.scrolltoHowitworks} href="/#howitworks">How it works</NavLink>
 							</NavItem>
 							<NavItem>
 								<NavLink href="/#ads">Ad campaigns</NavLink>

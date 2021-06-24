@@ -95,13 +95,12 @@ class MainDiv extends Component {
 		super(props);
 	}
 
+	// How It Works scrolling to section
 	scrollToTop () {
 		// Scroll to top on hash change - except for page How it Works, which scrolls down the homepage
-		if (window.location.hash !== "howitworks") {
-			console.log("HASH CHANGE");
-			// Allow page to load before scrolling
-			window.scrollTo(0,0);
-		}
+		if (window.location.hash !== "#howitworks") {
+			window.scrollTo(0, 0);
+		};
 	}
 
 	componentDidMount() {
@@ -172,10 +171,15 @@ class MainDiv extends Component {
 		let Page = PAGES[page];
 		// HowItWorks page is just the homepage but sprung down
 		let spring = false;
-		if (page === "howitworks") spring = true;
+		// if (page === "howitworks") spring = true;
 		if ( ! Page) {
 			Page = E404Page;
 		}
+
+		// special case: #howitworks is MyPage but scrolled - so give it MyPage's id
+		// This resolves annoying behaviour with the #howitworks nav link scrolling to the page top
+		// (where <div id="howitworks" would be without this shim)
+		const pageId = (page === 'howitworks') ? 'my' : page;
 
 		if (this.state && this.state.error && this.state.errorPath === path) {
 			Page = () => (<div><h3>There was an Error :'(</h3>
@@ -187,7 +191,7 @@ class MainDiv extends Component {
 		// Fleshed out title for My-Loop custom login modal design.
 		const loginWidgetTitle = (
 			<div className="text-center">
-				<span className="modal-main-title">My GOOD-LOOP</span><br />
+				<span className="modal-main-title">JOIN MY GOOD-LOOP</span><br />
 				<span className="modal-subtitle">Raising money for charity with adverts</span>
 			</div>
 		);
@@ -197,7 +201,7 @@ class MainDiv extends Component {
 
 		return (
 			<>
-				<div id={page} /* wrap in an id in case you need high-strength css rules */>
+				<div id={pageId} /* wrap in an id in case you need high-strength css rules */>
 					<HashWatcher />
 					<Page path={path} spring={spring}/>
 					<Footer />

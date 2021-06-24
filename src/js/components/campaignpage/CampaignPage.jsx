@@ -490,9 +490,8 @@ const SmallPrintInfo = ({ads, charities, campaign, pvTopItem}) => {
 	const impactModels = charities.map(c => c.simpleImpact).filter(m => m);
 
 	return <div className="container py-5">
-		<Row>
-			<Col md={6} style={{borderRight:"2px solid grey"}}><CharityDetails charities={charities} /></Col>
-			<Col md={6} className="text-center pl-md-5 smallprint">
+			<CharityDetails charities={charities} />
+			<div className="text-center smallprint">
 				 <span className="small">
 					{dmin && <>Donation Amount: <Misc.Money amount={dmin} /> { dmax &&!Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/></>}
 					50% of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies.
@@ -518,9 +517,7 @@ const SmallPrintInfo = ({ads, charities, campaign, pvTopItem}) => {
 				<span className="small">
 					Amounts for campaigns that are in progress or recently finished are estimates and may be subject to audit.
 				</span>
-			</Col>
-		</Row>
-		<br/>
+			</div>
 		<span className="small">This information follows the guidelines of the New York Attorney General for best practice in cause marketing,
 			<Cite href='https://www.charitiesnys.com/cause_marketing.html'/> and the Better Business Bureau's standard for donations in marketing.
 		</span>

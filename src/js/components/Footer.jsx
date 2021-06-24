@@ -10,38 +10,47 @@ import LinkOut from '../base/components/LinkOut';
  * @param rightFooter {String} Markdown text
  * @param style {Object} css styling 
  */
-const Footer = ({className, leftFooter, rightFooter, style, showSocialMediaLinks}) => (
-	<div className={space('footer p-3', className)} style={style}>
-		{showSocialMediaLinks? 
-			<SocialMediaFooterWidget 
-				type="goodloop"
-				fb_url="https://www.facebook.com/the.good.loop/"
-				tw_url="https://twitter.com/goodloophq"
-				insta_url="https://www.instagram.com/goodloophq/"
-			/> : null}
-		<div className="footer-col leftFooter">
-			<div className="innerLeftFooter">
-				<MDText source={leftFooter} />
+const Footer = ({className, style }) => (
+	<footer className={space('footer container-fluid', className)} style={style}>
+		<div className="mainFooter container py-5">
+			<div className="row justify-content-between">
+				<div className="col-4">
+					<hr/>
+				</div>
+				<div className="col-4 row text-center text-lg-right px-0 px-lg-5">
+					<div className="col d-flex flex-row justify-content-center align-items-center px-0 px-lg-3 mx-1 mx-lg-0">
+						<a href="https://twitter.com/MyGood_Loop" target="_blank">
+							<img alt='twitter' src="/img/footer-logos/HomePage_footer_twitter.200w.png" className="w-100 noaos"/>
+						</a>
+					</div>
+					<div className="col d-flex flex-row justify-content-center align-items-center px-0 px-lg-3 mx-1 mx-lg-0">
+						<a href="https://www.facebook.com/My-Good-Loop-100134565560826" target="_blank">
+							<img alt='facebook' src="/img/footer-logos/HomePage_footer_facebook_icon.200w.png" className="w-100 noaos"/>
+						</a>
+					</div>
+					<div className="col d-flex flex-row justify-content-center align-items-center px-0 px-lg-3 mx-1 mx-lg-0">
+						<a href="https://www.instagram.com/my.goodloop/" target="_blank">
+							<img alt='instagram' src="/img/footer-logos/HomePage_Insta_icon.200w.png" className="w-100 noaos"/>
+						</a>	
+					</div>
+					<div className="col d-flex flex-row justify-content-center align-items-center px-0 px-lg-3 mx-1 mx-lg-0">
+						<a href="https://www.linkedin.com/showcase/my-good-loop/" target="_blank">
+							<img alt='linkedin' src="/img/footer-logos/HomePage_footer_LinkedIn_icon.200w.png" className="w-100 noaos"/>
+						</a>
+					</div>
+				</div>
+				<div className="col-4">
+					<hr/>
+				</div>
+			</div>
+			<div className="row mt-3 justify-content-center">
+				<img src="/img/new-logo-with-text-white.svg" width="200px" alt="Good-Loop-Logo" />
+			</div>
+			<div className="row mt-1 justify-content-center">
+				<small>&copy; Good-Loop Ltd, all rights reserved. Good-Loop&trade; is a registered UK company no. SC548356.</small>
 			</div>
 		</div>
-		<div className="mainFooter flex-column p-3">
-			<p>
-				&copy; 2016-2021 <a href="https://good-loop.com/">Good-Loop Ltd</a>, all rights reserved.<br />
-				<a href="https://doc.good-loop.com/policy/privacy-policy.html">Privacy policy</a> and <a href="https://doc.good-loop.com/policy/cookie-policy.html">Cookie policy</a>
-			</p>
-			<p>
-				Good-Loop&trade; is registered in Scotland, U.K. (No. SC548356), and is a <LinkOut href="https://bcorporation.uk/directory/good-loop">certified B-Corp</LinkOut>
-			</p>
-			<p>
-				This web-app is open-source on <LinkOut target="_blank" href="https://github.com/good-loop/my-loop">GitHub</LinkOut>.
-			</p>
-		</div>
-		<div className="footer-col rightFooter">
-			<div className="innerRightFooter">
-				<MDText source={rightFooter} />
-			</div>
-		</div>
-	</div>
+	</footer>
 );
 
 export default Footer;

@@ -31,6 +31,7 @@ For the css below that deals in font/text matters:
 	width: 100%;
 	display: flex;
 
+
 	@media @width-mobile {
 		.share-btn {
 			bottom: 100px !important;
@@ -40,47 +41,22 @@ For the css below that deals in font/text matters:
 		}
 	}
 
-	.background-image {
-		filter: brightness(0.9);
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		max-height: 100vh;
-		display: flex;
-		flex-direction: row;
+	.btn-newsletter {
+		color: @gl-orange;
+		border: 3px solid @gl-orange;
+	}
 
-		.mobile-img {
-			height: 100%;
-			width: 100%;
-			object-fit: cover;
-		}
-
-		/* Thin vertical strips of a few images - if you hover over one, it will expand.
-		NB: mobile uses one fixed image (which is done in code) */
-		.hover-expand-image {
-			img {
-				height: 100%;
-				width: 100%;
-				object-fit: cover;
-			}
-			flex-grow: 1;
-			flex-basis: 0;
-			transition: flex-grow 0.85s;
-			&:hover {
-				flex-grow: 3;
-				transition: flex-grow 0.85s;
-			}
-		}
+	.btn-newsletter:hover:not(.disabled) {
+		color: @gl-btn-hover !important;
+		border: 3px solid @gl-btn-hover !important;
 	}
 
 	.title {
 		margin: auto;
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
-		text-align: center;
 		z-index: 1;
-		color: white;
+		color: black;
 	
 		//// CTA Header text /////
 		// TODO avoid pverriding text styles (or document it)
@@ -88,9 +64,8 @@ For the css below that deals in font/text matters:
 			font-family: 'Montserrat', sans-serif;
 			font-weight: normal;
 			font-size: 2.5rem;
-			text-shadow: 0px 1px 3px black;
+			/* text-shadow: 0px 1px 3px black; */
 			margin-bottom: 1.3rem; // Overrides Bootstrap default to separate elements.
-			align-self: center;
 			@media @width-mobile {
 				font-size: 2rem;
 			}
@@ -98,11 +73,10 @@ For the css below that deals in font/text matters:
 		// Hack - will globalise later, put like this to not interfere with CampaignPage styling for now
 		p {
 			font-size: 1.5rem;
-			text-shadow: 0px 3px 6px rgba(0,0,0,0.5);
+			/* text-shadow: 0px 3px 6px rgba(0,0,0,0.5); */
 			font-family: 'Montserrat', sans-serif;
 			@media @width-mobile {
 				font-size: 1.2rem;
-				padding: 0 20px;
 			}
 		}
 	}

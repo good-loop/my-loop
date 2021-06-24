@@ -10,9 +10,9 @@ import AB from './AB';
 import CSS from '../base/components/CSS';
 import Money from '../base/data/Money';
 import Ticker from './Ticker';
-import ShareButton from './ShareButton';
 import { isPortraitMobile } from '../base/utils/miscutils';
 import TickerTotal from './TickerTotal';
+import { RegisterLink, setLoginVerb, setShowLogin } from '../base/components/LoginWidget';
 
 const springPageDown = (setY: Function): void => {
 	const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -27,71 +27,46 @@ const springPageDown = (setY: Function): void => {
 const LandingSection = ({setY}: {setY: Function}): JSX.Element => {
 	//const [, setY] = useSpring(() => ({ y: 0 }));
 
-	const shareBtn = <ShareButton
-		absolute={!isPortraitMobile()}
-		className="btn-transparent fill"
-		style={isPortraitMobile() ? null : {bottom: 30, left: 30}}
-		title={"My-Loop"}
-		image={"https://my.good-loop.com/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png"}
-		description={"Using ads for good"}
-		url={window.location.href}>
-			Share
-	</ShareButton>;
+	const scrolltoNewsletter = () => {
+		document.getElementById("subscription-box")!.scrollIntoView({behavior: "smooth"});
+	};
 
 	return (
 		<>
-			<div className="landing-bg">
+			<div className="landing-bg bg-white pt-5">
 				{/* 
 				//@ts-ignore */}
-				<LandingBackground />
-				<CtaBox />
+				<div className="container-fluid d-flex px-md-5">
+					<div className="row mb-3 px-0 px-md-5">
+						<div className="col-md d-flex flex-column justify-content-center">
+							<div className="row title my-0"> 
+								<h1>Raise money for<br/>charities simply by<br/>browsing the web</h1>
+								<p> With your help we are redirecting ad money to tackle global issues. </p>
+							</div>
+							<div className="row cta-buttons">
+								<div className="col col-xl-4">
+									<RegisterLink className="btn btn-primary h-100 d-flex align-items-center justify-content-center">Get started</RegisterLink>
+								</div>
+								<div className="col col-xl-6">
+									<button id="newsletter-btn" onClick={scrolltoNewsletter} className="btn btn-newsletter h-100 d-flex align-items-center justify-content-center">Sign up for newsletter</button>
+								</div>
+							</div>
+						</div>
+						<div className="col d-flex flex-column align-items-center justify-content-center">
+							<img src="/img/LandingBackground/Good-Loop_YinYang.gif" className="w-100" alt="Good-Loop" />
+						</div>
+					</div>
+				</div>
+
 				<img
 					className="scroll-down-button"
 					src="/img/LandingBackground/arrow.png"
 					alt="scroll down"
 					onClick={ (): void => springPageDown(setY) }
 				/>
-				{isPortraitMobile() ?
-					null : shareBtn}
+				
 			</div>
-			{isPortraitMobile() ?
-			// separate share button off of landing section for mobile - no room
-				<div className="bg-white pt-5 flex-row justify-content-center">
-					{shareBtn}
-				</div>: null}
 		</>
-	);
-};
-
-const LandingBackground = () => {
-	const [selImg,] = useState(Math.floor(Math.random() * 4) + 1);
-	return (<div className="background-image" >
-		{isPortraitMobile() ?
-			<img src={"/img/LandingBackground/back-" + selImg + ".png"} className="mobile-img"/>
-			:<>
-				<div className="hover-expand-image">
-					<img src="/img/LandingBackground/back-1.png"/>
-				</div>
-				<div className="hover-expand-image">
-					<img src="/img/LandingBackground/back-2.png"/>
-				</div>
-				<div className="hover-expand-image">
-					<img src="/img/LandingBackground/back-3.png"/>
-				</div>
-				<div className="hover-expand-image">
-					<img src="/img/LandingBackground/back-4.png"/>
-				</div>
-			</>}
-	</div>);
-};
-
-const CtaBox: React.FC = () => {
-	//@ts-ignore
-	return (
-		<div className="title"> 
-			<h1>Raise money for charities<br/>simply by browsing the web</h1>
-			<p> With your help we are redirecting ad money to tackle global issues. </p>
-		</div>
 	);
 };
 

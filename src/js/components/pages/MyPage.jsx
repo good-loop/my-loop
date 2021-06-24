@@ -10,6 +10,7 @@ import LandingSection, { springPageDown } from '../LandingSection';
 import SubscriptionBox from '../cards/SubscriptionBox';
 import { isPortraitMobile, stopEvent } from '../../base/utils/miscutils';
 import { RegisterLink, setLoginVerb, setShowLogin } from '../../base/components/LoginWidget';
+import CharitySection from '../CharitySection';
 
 window.DEBUG = false;
 
@@ -30,9 +31,10 @@ const MyPage = ({spring}) => {
 	// <ShareAdCard /> is buggy, so removed for now
 
 	return (<>
-		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg"/>
+		<MyLoopNavBar logo="/img/new-logo-with-text.svg" logoScroll="/img/new-logo-with-text-white.svg" />
 		<div className='MyPage widepage'>
 			<LandingSection setY={setY}/>
+			<CharitySection />
 			<HowItWorksCard />
 			{false && <AttentionIsValuableCard /> /* was this cut for a reason? */}
 			<SubscriptionBox title="Subscribe to our monthly newsletter" className="bg-gl-light-red big-sub-box"/>
@@ -59,7 +61,7 @@ const HowItWorksCard = () => {
 		registerButton.addEventListener('click', showRegisterForm);
 	};
 
-	return (<div className="bg-white py-5">
+	return (<div id="howitworks-section" className="bg-white py-5">
 		<Container>
 			<h2 className="text-center mt-5">We support your favorite causes</h2> 
 			{isPortraitMobile() ? <>
