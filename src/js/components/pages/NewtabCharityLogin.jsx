@@ -33,6 +33,8 @@ const NewtabCharityLogin = () => {
 
 	// Remove cookie consent - blocks iframe content ??
 	window.$(".ch2").remove();
+	// Stop footer appearing
+	window.$(".footer").remove();
 
 	const verb = DataStore.getValue(LOGIN_VERB_PATH);
 	// Default to register
