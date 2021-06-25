@@ -30,17 +30,16 @@ const RecentCampaignsCard = () => {
 			adid: "B1lF97utxD",
 			url: "/#campaign/?gl.vertiser=FBY5QmWQ"
 		},
-	];	[ // FIXME!!!
-		{
-			name: "Nike",
-			adid: "2qQIRm9u5Q",
-			url: "/#campaign?gl.vertiser=TNXHvb5j"
-		},
-		{
-			name: "Reebok",
-			adid: "HtREj0pifC",
-			url: "/#campaign/?gl.vertiser=KpgM78Lg"
-		},
+		// {
+		// 	name: "Nike",
+		// 	adid: "2qQIRm9u5Q",
+		// 	url: "/#campaign?gl.vertiser=TNXHvb5j"
+		// },
+		// {
+		// 	name: "Reebok",
+		// 	adid: "HtREj0pifC",
+		// 	url: "/#campaign/?gl.vertiser=KpgM78Lg"
+		// },
 		{
 			name: "Mango",
 			adid: "ojjiPf7kbB",
