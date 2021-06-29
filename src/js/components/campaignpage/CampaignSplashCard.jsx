@@ -23,7 +23,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 	let charityName = 'charity';
 	if (charities && charities.length === 1 && charities[0]) charityName = charities[0].displayName || charities[0].name;
 
-	const donationDisplay = <b>{donationValue ? <Counter currencySymbol="£" sigFigs={4} amount={donationValue} minimumFractionDigits={2} preserveSize/> : "money"}</b>;
+	const donationDisplay = <b>{donationValue ? <Counter currencySymbol="£" amount={donationValue} minimumFractionDigits={2} preserveSize/> : "money"}</b>;
 
 	let splashText = <>
 		<div className="header text-white">
