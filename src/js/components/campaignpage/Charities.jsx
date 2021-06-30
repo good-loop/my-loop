@@ -181,6 +181,12 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 	);
 };
 
+// non-exhaustive list of verbs whose infinitive ends with E (fixing RNLI "to help sav lives" bug Jun 2021)
+// TODO follow the (singular: xxx) pattern with e.g. "saved (infinitive: save, gerund: saving)"?
+const eVerbs = ['rescue', 'save'];
+
+const infinitive = verb => verb.replace(/ed$/, eVerbs.includes(verb) ? 'e' : '');
+
 /**
  * Get charity impacts from impact model, if any data on it exists
  * @param {Output} impact
@@ -210,7 +216,7 @@ const Impact = ({ charity, donationValue }) => {
 		const plural = match[1];
 		// Use generic phrasing for 0 impact
 		if (numOfImpact === "0") {
-			impact = "To help " + verb.replace(/ed$/, "") + " " + plural;
+			impact = "To help " + infinitive(verb) + " " + plural;
 		} else {
 			impact = (isSingular ? singular : plural) + " " + verb;
 		}
@@ -223,7 +229,7 @@ const Impact = ({ charity, donationValue }) => {
 			let verb = match[2];
 			// If plural/singular versions can't be found, fall back to whatever was given
 			if (numOfImpact === "0") {
-				impact = "To help " + verb.replace(/ed$/, "ing") + " " + name;
+				impact = "To help " + infinitive(verb) + " " + name;
 			} else {
 				impact = name + " " + verb;
 			}
