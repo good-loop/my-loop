@@ -183,7 +183,7 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 
 // non-exhaustive list of verbs whose infinitive ends with E (fixing RNLI "to help sav lives" bug Jun 2021)
 // TODO follow the (singular: xxx) pattern with e.g. "saved (infinitive: save, gerund: saving)"?
-const eVerbs = ['rescue', 'save'];
+const eVerbs = ['rescued', 'saved'];
 
 const infinitive = verb => verb.replace(/ed$/, eVerbs.includes(verb) ? 'e' : '');
 
@@ -241,7 +241,7 @@ const Impact = ({ charity, donationValue }) => {
 	const impactSplitByNum = impact.split("(number)");
 	const charityName = charity.name.replace(/ /g, '-');
 	if (impactSplitByNum.length === 1) {
-		return <b><span className={`charity-impact-${charityName}`}>{numOfImpact}</span> <span className={`impact-text-${charityName}`}>{impact}</span></b>;
+		return <b>{numOfImpact === '0' ? '' : <span className={`charity-impact-${charityName}`}>{numOfImpact} </span>}<span className={`impact-text-${charityName}`}>{impact}</span></b>;
 	} else {
 		return <b><span className={`impact-text-${charityName}-start`}>{impactSplitByNum[0]}</span> <span className={`charity-impact-${charityName}`}>{numOfImpact}</span> <span className={`impact-text-${charityName}-end`}>{impactSplitByNum[1]}</span></b>;
 	}
