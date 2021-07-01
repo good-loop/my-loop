@@ -206,8 +206,8 @@ const Impact = ({ charity, donationValue }) => {
 	// REGEX for (singular:...) format
 	// Group 1: plural form
 	// Group 3: singular form
-	// Group 4: verb
-	const singularFormatRegex = /(.*) (\(singular: (.*)\)) (.*)/g;
+	// Group 4: verb (optional: eg https://my.good-loop.com/#campaign/?gl.vertiser=cadbury_bpngtolk has "100 noun(s)", no verb)
+	const singularFormatRegex = /(.*)\s+(\(singular:\s*(\S+)\))\s*(.*)/g; // last \s is * instead of + to allow strings with nothing after (singular: noun)
 	let match = singularFormatRegex.exec(impactFormat);
 	if (match) {
 		const verb = match[4];
