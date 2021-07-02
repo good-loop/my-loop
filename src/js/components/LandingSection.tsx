@@ -36,8 +36,8 @@ const LandingSection = ({setY}: {setY: Function}): JSX.Element => {
 			<div className="landing-bg bg-white pt-5">
 				{/* 
 				//@ts-ignore */}
-				<div className="container-fluid d-flex px-md-5">
-					<div className="row mb-3 px-0 px-md-5">
+				<div className="container-fluid d-flex justify-content-center">
+					<div className="row mb-3">
 						<div className="col-md d-flex flex-column justify-content-center">
 							<div className="row title my-0"> 
 								<h1>Raise money for<br/>charities simply by<br/>browsing the web</h1>
