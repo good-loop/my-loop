@@ -22,12 +22,15 @@ const doEmailSignUp = e => {
  * Displays email register form
  * @param {String} title header to give the box 
  */
-const SubscriptionBox = ({className, title}) => {
+const SubscriptionBox = ({className, title="Support the causes you care about, and see the lives you're helping to improve"}) => {
 	const hasSubmittedEmail = DataStore.getValue(['misc', 'hasSubmittedEmail']) === true;
 	const thankYouMessage = <><h4>Thank you!</h4><p>We'll email you shortly :)</p></>;
+	
 	return (<div id="subscription-box" className={space("flex-column align-items-center justify-content-center subscription-box", className)}>
 		{title ? <><h1>{title}</h1>
-		<p className="text-center">Find out about the causes you care about, the lives you’re helping to improve and the difference you’re making to the world</p>
+		<p className="text-center">
+			A short monthly email with easy ways to support your charity, updates on our impact as a community, and other news from Good-Loop.			
+		</p>
 			<br/><br/></> : null}
 		{hasSubmittedEmail ? thankYouMessage :
 			<Container>

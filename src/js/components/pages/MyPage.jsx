@@ -37,7 +37,7 @@ const MyPage = ({spring}) => {
 			<CharitySection />
 			<HowItWorksCard />
 			{false && <AttentionIsValuableCard /> /* was this cut for a reason? */}
-			<SubscriptionBox title="Subscribe to our monthly newsletter" className="bg-gl-light-red big-sub-box"/>
+			<SubscriptionBox className="bg-gl-light-red big-sub-box"/>
 		</div>
 	</>);
 };
