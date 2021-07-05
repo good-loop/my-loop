@@ -50,17 +50,17 @@ const showRegisterForm = e => {
 
 const HowItWorksCard = () => {
 	{/* Updated design remove this CTA btn, moving it to the LandingSection */}
-	// const setRegisterButton = (embedEl) => {
-	// 	if (!embedEl || !embedEl.getSVGDocument) return;
-	// 	const svgDOM = embedEl.getSVGDocument();
-	// 	if (!svgDOM) return;
-	// 	const registerButton = svgDOM.getElementById('register-button');
-	// 	if (!registerButton) {
-	// 		console.error("No element with ID #register-button within infograhpic.svg")
-	// 		return;
-	// 	}
-	// 	registerButton.addEventListener('click', showRegisterForm);
-	// };
+	const setRegisterButton = (embedEl) => {
+		if (!embedEl || !embedEl.getSVGDocument) return;
+		const svgDOM = embedEl.getSVGDocument();
+		if (!svgDOM) return;
+		const registerButton = svgDOM.getElementById('register-button');
+		if (!registerButton) {
+			console.error("No element with ID #register-button within infograhpic.svg")
+			return;
+		}
+		registerButton.addEventListener('click', showRegisterForm);
+	};
 
 	return (<div id="howitworks-section" className="bg-white py-5">
 		<Container>
@@ -68,10 +68,10 @@ const HowItWorksCard = () => {
 			{isPortraitMobile() ? <>
 				<embed src="/img/LandingBackground/svg-mobile/infographic.svg" className="w-100"/>
 				{/* Center CTA btn - not included in mobile SVG */}
-				{/* <div className="flex-row justify-content-center">
+				<div className="flex-row justify-content-center">
 					<RegisterLink className="btn btn-primary">Get started</RegisterLink>
-				</div> */}
-			</>: <embed src="/img/LandingBackground/svg-desktop/infographic.svg" className="w-100"/>}
+				</div>
+			</>: <embed ref={setRegisterButton} src="/img/LandingBackground/svg-desktop/infographic.svg" className="w-100"/>}
 		</Container>
 	</div>);
 };

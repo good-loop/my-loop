@@ -41,13 +41,13 @@ const LandingSection = ({setY}: {setY: Function}): JSX.Element => {
 						<div className="col-md d-flex flex-column justify-content-center">
 							<div className="row title my-0"> 
 								<h1>Raise money for<br/>charities simply by<br/>browsing the web</h1>
-								<p> With your help we are redirecting ad money to tackle global issues. </p>
+								<p> With your help we are redirecting ad<br/>money to tackle global issues. </p>
 							</div>
-							<div className="row cta-buttons">
-								<div className="col col-xl-4">
+							<div className="row cta-buttons justify-content-center ml-xl-3">
+								<div className="col col-xl-5">
 									<RegisterLink className="btn btn-primary h-100 d-flex align-items-center justify-content-center">Get started</RegisterLink>
 								</div>
-								<div className="col col-xl-6">
+								<div className="col col-xl-7">
 									<button id="newsletter-btn" onClick={scrolltoNewsletter} className="btn btn-newsletter h-100 d-flex align-items-center justify-content-center">Sign up for newsletter</button>
 								</div>
 							</div>
