@@ -141,8 +141,8 @@ export const MoreToDo = ({ xids }) => {
 				<img className="w-50" src="/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png" alt="logo" />
 			</DoSection>
 			<DoSection title="Newsletter" tqTitle="Thanks for subscribing to our newsletter" img="/img/LandingBackground/Group33.png" done={subbed}>
-				<p>Find out about the causes you care about, the lives you’re helping to improve and the difference you’re making to the world.</p>
-				<SubscriptionBox />
+				<p>Support the causes you care about, and see the lives you're helping to improve and the difference you're making to the world - a monthly email.</p>
+				<SubscriptionBox title="" />
 				{email && <div><small>Email: {email}</small></div>}
 			</DoSection>
 			<DoSection title="Share the good news" img="/img/LandingBackground/share.png" last>

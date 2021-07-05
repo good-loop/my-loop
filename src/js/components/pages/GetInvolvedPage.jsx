@@ -45,7 +45,7 @@ const GetInvolvedPage = () => {
 					<p>Interested in hosting Ads For Good on your blog or website? <a href='https://www.good-loop.com/contact'>Let us know</a>.</p>
 				</div>
 			</Container>
-			<SubscriptionBox title="Subscribe to our monthly newsletter" className="bg-gl-light-red big-sub-box"/>
+			<SubscriptionBox className="bg-gl-light-red big-sub-box"/>
 		</div>
 	</>);
 };
