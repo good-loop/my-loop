@@ -90,6 +90,10 @@ const HowItWorksCard = () => {
 		<div className="flex-row justify-content-center">
 					<RegisterLink className="btn btn-primary">Get started</RegisterLink>
 		</div>
+		<Container>
+			{isPortraitMobile() ? <>
+			</>: <embed src="/img/LandingBackground/svg-desktop/infographic-2.svg" className="w-100"/>}
+		</Container>
 	</div>);
 };
 
