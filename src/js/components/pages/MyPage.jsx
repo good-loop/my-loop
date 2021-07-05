@@ -48,31 +48,48 @@ const showRegisterForm = e => {
 	setShowLogin(true);
 };
 
-const HowItWorksCard = () => {
-	{/* Updated design remove this CTA btn, moving it to the LandingSection */}
-	const setRegisterButton = (embedEl) => {
-		if (!embedEl || !embedEl.getSVGDocument) return;
-		const svgDOM = embedEl.getSVGDocument();
-		if (!svgDOM) return;
-		const registerButton = svgDOM.getElementById('register-button');
-		if (!registerButton) {
-			console.error("No element with ID #register-button within infograhpic.svg")
-			return;
-		}
-		registerButton.addEventListener('click', showRegisterForm);
-	};
+// OLD HOW IS WORKS CARD
+// const HowItWorksCard = () => {
+// 	const setRegisterButton = (embedEl) => {
+// 		console.log("embedEl" + embedEl)
+// 		if (!embedEl || !embedEl.getSVGDocument) return;
+// 		const svgDOM = embedEl.getSVGDocument();
+// 		console.log("svgDOM" + svgDOM)
+// 		if (!svgDOM) return;
+// 		const registerButton = svgDOM.getElementById('register-button');
+// 		if (!registerButton) {
+// 			console.error("No element with ID #register-button within infograhpic.svg")
+// 			return;
+// 		}
+// 		registerButton.addEventListener('click', showRegisterForm);
+// 	};
 
+// 	return (<div id="howitworks-section" className="bg-white py-5">
+// 		<Container>
+// 			<h2 className="text-center mt-5">We support your favorite causes</h2> 
+// 			{isPortraitMobile() ? <>
+// 				<embed src="/img/LandingBackground/svg-mobile/infographic.svg" className="w-100"/>
+// 				{/* Center CTA btn - not included in mobile SVG */}
+// 				<div className="flex-row justify-content-center">
+// 					<RegisterLink className="btn btn-primary">Get started</RegisterLink>
+// 				</div>
+// 			</>: <embed ref={setRegisterButton} src="/img/LandingBackground/svg-desktop/infographic.svg" className="w-100"/>}
+// 		</Container>
+// 	</div>);
+// };
+
+// Move the CTA Register Button out of SVG File to avoid Safari unsupporting getSVGDocument (For now) 
+const HowItWorksCard = () => {
 	return (<div id="howitworks-section" className="bg-white py-5">
 		<Container>
 			<h2 className="text-center mt-5">We support your favorite causes</h2> 
 			{isPortraitMobile() ? <>
 				<embed src="/img/LandingBackground/svg-mobile/infographic.svg" className="w-100"/>
-				{/* Center CTA btn - not included in mobile SVG */}
-				<div className="flex-row justify-content-center">
-					<RegisterLink className="btn btn-primary">Get started</RegisterLink>
-				</div>
-			</>: <embed ref={setRegisterButton} src="/img/LandingBackground/svg-desktop/infographic.svg" className="w-100"/>}
+			</>: <embed src="/img/LandingBackground/svg-desktop/infographic.svg" className="w-100"/>}
 		</Container>
+		<div className="flex-row justify-content-center">
+					<RegisterLink className="btn btn-primary">Get started</RegisterLink>
+		</div>
 	</div>);
 };
 
