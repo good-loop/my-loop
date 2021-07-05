@@ -14,11 +14,11 @@
    id="Layer_1"
    x="0px"
    y="0px"
-   viewBox="0 0 2112.6765 3811.4086"
+   viewBox="0 0 2112.6765 2811.4086"
    xml:space="preserve"
    sodipodi:docname="infographic.svg"
    width="2112.6765"
-   height="3811.4087"
+   height="2811.4086"
    inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"><metadata
    id="metadata270"><rdf:RDF><cc:Work
        rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
@@ -978,7 +978,7 @@
 			</g>
 		</g>
 	</a>
-</g>
+</g> -->
 <line
    class="st16"
    x1="1082.3"
@@ -986,5 +986,5 @@
    x2="1082.3"
    y2="2710.1089"
    id="line263"
-   style="fill:none;stroke:#be2318;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10" /> -->
+   style="fill:none;stroke:#be2318;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10" />
 </svg>
