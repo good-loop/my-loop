@@ -39,11 +39,11 @@ const LandingSection = ({setY}: {setY: Function}): JSX.Element => {
 				<div className="container-fluid d-flex justify-content-center">
 					<div className="row mb-3">
 						<div className="col-md d-flex flex-column justify-content-center">
-							<div className="row title my-0"> 
+							<div className="row title m-0"> 
 								<h1>Raise money for<br/>charities simply by<br/>browsing the web</h1>
 								<p> With your help we are redirecting ad<br/>money to tackle global issues. </p>
 							</div>
-							<div className="row cta-buttons justify-content-center ml-xl-3">
+							<div className="row cta-buttons justify-content-center">
 								<div className="col col-xl-5">
 									<RegisterLink className="btn btn-primary h-100 d-flex align-items-center justify-content-center">Get started</RegisterLink>
 								</div>
