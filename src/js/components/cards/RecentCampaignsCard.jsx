@@ -95,7 +95,8 @@ const RecentCampaignsCard = () => {
 	return (
 		<div id="campaign-cards">
 			{campaignInfos.map(({dntn, adid, url, name}, i) => (<Row className="campaign mb-5" key={i}>
-				<TVAdPlayer adid={adid} className="col-md-6"/>
+				{/* <TVAdPlayer adid={adid} className="col-md-6"/> */}
+				<TVAdImage brandname={name} className="col-md-6" url={url}/>
 				<Col md={6} className="flex-column align-items-center text-center justify-content-center pt-3 pt-md-0">
 					<h3 className="mb-0">This ad raised {dntn ? <Counter currencySymbol="£" sigFigs={4} amount={dntn} minimumFractionDigits={2} preservePennies /> : "money"}</h3>
 					<a className="btn btn-primary mt-3" href={url}>Find out more</a>
@@ -105,14 +106,27 @@ const RecentCampaignsCard = () => {
 	);
 };
 
-const TVAdPlayer = ({adid, className}) => {
-	const size = "landscape";
+// const TVAdPlayer = ({adid, className}) => {
+// 	const size = "landscape";
+// 	return <div className={space("position-relative", className)}>
+// 		<img src="/img/LandingBackground/white_iphone.png" className="w-100 invisible"/>
+// 		{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
+// 		<img src="/img/LandingBackground/white_iphone.png" className="position-absolute d-none d-md-block unit-shadow" style={{left: "-5%", width:"110%", top:0, zIndex:2, pointerEvents:"none"}}/>
+// 		<div className="position-absolute tv-ad-player">
+// 			<GoodLoopUnit vertId={adid} size={size} />
+// 		</div>
+// 	</div>;
+// };
+
+// Swaping TVAdPlayer to Static Image for better performance:
+const TVAdImage = ({brandname, className, url}) => {
+	const imgurl = "/img/adsunit/ads-unit-" + brandname + ".png" 
 	return <div className={space("position-relative", className)}>
 		<img src="/img/LandingBackground/white_iphone.png" className="w-100 invisible"/>
 		{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
 		<img src="/img/LandingBackground/white_iphone.png" className="position-absolute d-none d-md-block unit-shadow" style={{left: "-5%", width:"110%", top:0, zIndex:2, pointerEvents:"none"}}/>
 		<div className="position-absolute tv-ad-player">
-			<GoodLoopUnit vertId={adid} size={size} />
+			<a href={url}><img src={imgurl} alt={imgurl} width="100%" /></a>
 		</div>
 	</div>;
 };
