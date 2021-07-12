@@ -187,64 +187,59 @@ const eVerbs = ['rescued', 'saved'];
 
 const infinitive = verb => verb.replace(/ed$/, eVerbs.includes(verb) ? 'e' : '');
 
+// TODO use i18n.js instead, which does this + translations??
+// For impact strings of format "nouns (singular: noun) verbed"
+// Updated to accept (singular:noun) with no space, "nouns (singular: noun)" with no trailing verb
+const singularRegex = /(.*)\s+\(singular:\s*(\S+)\)\s*(.*)/g;
+// For impact strings of format "nouns verbed"
+const simpleRegex = /(.*) (.*)$/g;
+// For impact strings of format "verbed (number) nouns"
+const numberRegex = /(\w+)\W*\(number\)\W*(\w+)/g
 /**
  * Get charity impacts from impact model, if any data on it exists
  * @param {Output} impact
  * @param {Money} donationValue
  */
 const Impact = ({ charity, donationValue }) => {
-	if ( ! charity.simpleImpact) return null;
-	if ( ! charity.simpleImpact.name || ! charity.simpleImpact.costPerBeneficiary || ! donationValue) {
-		return null;
-	}
-	let impact = "";
+	const impact = charity.simpleImpact;
+	if (!impact || !impact.name || !impact.costPerBeneficiary || !donationValue) return;
+	
+	let impactDesc = impact.name;
 	let donationsMoney = new Money(donationValue);
-	const impactFormat = charity.simpleImpact.name;
-	const numOfImpact = printer.prettyNumber(Math.round(Money.divide(donationsMoney, charity.simpleImpact.costPerBeneficiary)));
-	// Process format to use singular or plural name
-	// TODO use i18n.js instead, which does this + translations??
-	// REGEX for (singular:...) format
-	// Group 1: plural form
-	// Group 3: singular form
-	// Group 4: verb (optional: eg https://my.good-loop.com/#campaign/?gl.vertiser=cadbury_bpngtolk has "100 noun(s)", no verb)
-	const singularFormatRegex = /(.*)\s+(\(singular:\s*(\S+)\))\s*(.*)/g; // last \s is * instead of + to allow strings with nothing after (singular: noun)
-	let match = singularFormatRegex.exec(impactFormat);
+	const impactCount = Math.round(Money.divide(donationsMoney, impact.costPerBeneficiary));
+	const charityClassBit = charity.name.replace(/ /g, '-');
+	
+	// Handle impact description format "Verbed 100 nouns"
+	let match = numberRegex.exec(impactDesc);
 	if (match) {
-		const verb = match[4];
-		const isSingular = numOfImpact === "1";
-		const singular = match[3];
-		const plural = match[1];
-		// Use generic phrasing for 0 impact
-		if (numOfImpact === "0") {
-			impact = "To help " + infinitive(verb) + " " + plural;
-		} else {
-			impact = (isSingular ? singular : plural) + " " + verb;
-		}
-	} else {
-		// Separate impact string into its name and verb using space
-		const separatorRegex = /(.*) (.*)$/g;
-		match = separatorRegex.exec(impactFormat);
-		if (match) {
-			let name = match[1];
-			let verb = match[2];
-			// If plural/singular versions can't be found, fall back to whatever was given
-			if (numOfImpact === "0") {
-				impact = "To help " + infinitive(verb) + " " + name;
-			} else {
-				impact = name + " " + verb;
-			}
-		} else {
-			impact = impactFormat;
-		}
+		const [, verbed, nouns] = numberRegex.exec(impactDesc);
+		return <b>
+			<span className={`impact-text-${charityClassBit}-start`}>{verbed}</span>{' '}
+			<span className={`charity-impact-${charityClassBit}`}>{impactCount}</span>{' '}
+			<span className={`impact-text-${charityClassBit}-end`}>{nouns}</span>
+		</b>;
 	}
-	// If a (number) string is present, insert the impact number there
-	const impactSplitByNum = impact.split("(number)");
-	const charityName = charity.name.replace(/ /g, '-');
-	if (impactSplitByNum.length === 1) {
-		return <b>{numOfImpact === '0' ? '' : <span className={`charity-impact-${charityName}`}>{numOfImpact} </span>}<span className={`impact-text-${charityName}`}>{impact}</span></b>;
-	} else {
-		return <b><span className={`impact-text-${charityName}-start`}>{impactSplitByNum[0]}</span> <span className={`charity-impact-${charityName}`}>{numOfImpact}</span> <span className={`impact-text-${charityName}-end`}>{impactSplitByNum[1]}</span></b>;
+
+	// Extract verb and noun from the impact description - assume "100 nouns verbed" format
+	let [, nouns, verbed] = simpleRegex.exec(impactDesc);
+
+	// Upgrade to the "specified singular noun" format if it's used
+	const singularMatch = singularRegex.exec(impactDesc);
+	if (singularMatch) {
+		nouns = (impactCount === 1) ? singularMatch[2] : singularMatch[1];
+		verbed = singularMatch[3];
 	}
+
+	// Use generic "to help verb nouns" phrasing for 0 impact count
+	impactDesc = impactCount ? `${nouns} ${verbed}` : `To help ${infinitive(verbed)} ${nouns}`;
+
+	// Don't say "0 To help verb nouns"...
+	let countSpan = count ? <span className={`charity-impact-${charityClassBit}`}>{printer.prettyNumber(impactCount)} </span> : '';
+
+	return <b>
+		{countSpan}
+		<span className={`impact-text-${charityClassBit}`}>{impactDesc}</span>
+	</b>;
 };
 
 export { CharityDetails };
