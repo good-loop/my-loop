@@ -11,10 +11,7 @@ import C from '../C';
 import Crud from '../base/plumbing/Crud'; // Crud is loaded here to init (but not used here)
 
 // Templates
-import MessageBar from '../base/components/MessageBar';
-import LoginWidget, {LoginLink, setShowLogin} from '../base/components/LoginWidget';
-import NavBar from './MyLoopNavBar';
-import Misc from '../base/components/Misc';
+import LoginWidget from '../base/components/LoginWidget';
 
 // Pages
 import MyPage, { HowItWorksCard } from './pages/MyPage';
@@ -22,7 +19,6 @@ import MyCharitiesPage from './pages/MyCharitiesPage';
 import MyAdCampaignsPage from './pages/MyAdCampaignsPage';
 import GetInvolvedPage from './pages/GetInvolvedPage';
 import CampaignPage from './campaignpage/CampaignPage';
-import {BasicAccountPage} from '../base/components/AccountPageWidgets';
 import E404Page from '../base/components/E404Page';
 // import TestPage from '../base/components/TestPage';
 import AccountPage from './pages/AccountPage';
@@ -32,7 +28,6 @@ import MyLoopNavBar from './MyLoopNavBar';
 import SubscriptionBox from './cards/SubscriptionBox';
 import { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
 import TabsForGoodOnboard from './pages/TabsForGoodOnboard';
-import { getAllXIds } from '../base/data/Person';
 import NewtabCharityLogin from './pages/NewtabCharityLogin';
 import ServerIO from '../plumbing/ServerIO';
 import { track } from '../base/plumbing/log';
@@ -46,13 +41,13 @@ C.setupDataStore();
 ServerIO.USE_PROFILER = true;
 
 /**
- * Subscribe box as a single page 
+ * Subscribe box as a single page
  */
 const SubscribePage = ({}) => {
 
 	return (<>
 		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg"/>
-		<div className='Subscribe widepage'>
+		<div className="Subscribe widepage">
 			<SubscriptionBox title="Subscribe to our monthly newsletter" className="bg-gl-light-red big-sub-box"/>
 			<HowItWorksCard />
 		</div>
@@ -155,7 +150,7 @@ class MainDiv extends Component {
 	componentDidCatch(error, info) {
 		// Display fallback UI
 		this.setState({error, info, errorPath: DataStore.getValue('location', 'path')});
-		console.error(error, info); 
+		console.error(error, info);
 		if (window.onerror) window.onerror("Caught error", null, null, null, error);
 	}
 
@@ -206,7 +201,7 @@ class MainDiv extends Component {
 					<Page path={path} spring={spring}/>
 					<Footer />
 				</div>
-				<LoginWidget logo={<img src='/img/new-logo.svg' style={{height: '64px'}} />} title={loginWidgetTitle} services={['twitter']} />
+				<LoginWidget logo={<img src="/img/new-logo.svg" style={{height: '64px'}} />} title={loginWidgetTitle} services={['twitter']} />
 			</>
 		);
 	} // ./render()

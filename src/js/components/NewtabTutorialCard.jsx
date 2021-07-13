@@ -287,7 +287,7 @@ const PopupWindow = () => {
 					}}
 				/>
 			</div>
-			<a className="position-absolute" style={{top:10, right:20}} 
+			<a className="position-absolute" style={{top:10, right:20}}
 				onClick={e => {
 					e.preventDefault();
 					setShowing(false);

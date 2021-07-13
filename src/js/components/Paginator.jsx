@@ -12,7 +12,7 @@ import { space, isPortraitMobile } from '../base/utils/miscutils';
 @param {?Boolean} displayCounter show the number of items and number per page
 @param {?Boolean} displayLoad set the counter to "Loading..." when no items are present
 @param {?String} textWhenNoResults text to show when there are no results. Does not show in place of "loading"
-*/ 
+*/
 const Paginator = ({rows, cols, rowsMD, colsMD, pageButtonRange, pageButtonRangeMD, children, displayCounter=false, displayLoad=false, textWhenNoResults}) => {
 	if (isPortraitMobile() && rowsMD) rows = rowsMD;
 	if (isPortraitMobile() && colsMD) cols = colsMD;

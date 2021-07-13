@@ -102,7 +102,7 @@ const fetchAllCharityIDs = () => {
 					output: "csv"
 				})
 					.fromString(csvStr)
-					.then(csvRow => { 
+					.then(csvRow => {
 						let charList = [];
 						for (let i = 5; i < csvRow.length; i++) {
 							const charity = csvRow[i][7];
@@ -113,10 +113,10 @@ const fetchAllCharityIDs = () => {
 			});
 	});
 };
-/** TODO refactor. Split munging csv data out from fetching SoGive data. If something is doing a fetch, it should return a PromiseValue */ 
+/** TODO refactor. Split munging csv data out from fetching SoGive data. If something is doing a fetch, it should return a PromiseValue */
 const fetchAllCharities = (csvData) => {
 	let charities = [];
-	// Get sogive data for charities 
+	// Get sogive data for charities
 	for (let i = 0; i < csvData.length; i ++) {
 		const charity = fetchCharity(csvData[i]);
 		if (charity) charities.push(charity);

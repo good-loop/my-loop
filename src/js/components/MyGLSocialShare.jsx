@@ -7,7 +7,7 @@ import {IntentLink} from '../base/components/SocialShare';
 
 const BaseSocialLogo = ({className='', service, style}) => (
 	<div style={{display: 'inline-block'}}>
-		<div 
+		<div
 			className={'color-gl-red intent-link intent-link-border ' + className}
 			style={style}
 		>
@@ -21,9 +21,9 @@ const MyLoopIntentLink = ({style, ...props}) => (
 	<IntentLink
 		{...props}
 	>
-		<BaseSocialLogo 
+		<BaseSocialLogo
 			style={style}
-			service={props.service} 
+			service={props.service}
 		/>
 	</IntentLink>
 );

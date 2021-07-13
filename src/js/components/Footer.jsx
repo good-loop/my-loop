@@ -1,14 +1,11 @@
 import React from 'react';
-import {space} from '../base/utils/miscutils';
-import { SocialMediaFooterWidget } from './SocialLinksWidget';
-import MDText from '../base/components/MDText';
-import LinkOut from '../base/components/LinkOut';
+import { space } from '../base/utils/miscutils';
 
 /**
- * 
+ *
  * @param leftFooter {String} Markdown text
  * @param rightFooter {String} Markdown text
- * @param style {Object} css styling 
+ * @param style {Object} css styling
  */
 const Footer = ({className, style }) => (
 	<footer className={space('footer container-fluid', className)} style={style}>
@@ -20,22 +17,22 @@ const Footer = ({className, style }) => (
 				<div className="col-4 row text-center text-lg-right px-0 px-lg-5">
 					<div className="col d-flex flex-row justify-content-center align-items-center px-0 px-lg-3 mx-1 mx-lg-0">
 						<a href="https://twitter.com/MyGood_Loop" target="_blank">
-							<img alt='twitter' src="/img/footer-logos/HomePage_footer_twitter.200w.png" className="w-100 noaos"/>
+							<img alt="twitter" src="/img/footer-logos/HomePage_footer_twitter.200w.png" className="w-100 noaos"/>
 						</a>
 					</div>
 					<div className="col d-flex flex-row justify-content-center align-items-center px-0 px-lg-3 mx-1 mx-lg-0">
 						<a href="https://www.facebook.com/My-Good-Loop-100134565560826" target="_blank">
-							<img alt='facebook' src="/img/footer-logos/HomePage_footer_facebook_icon.200w.png" className="w-100 noaos"/>
+							<img alt="facebook" src="/img/footer-logos/HomePage_footer_facebook_icon.200w.png" className="w-100 noaos"/>
 						</a>
 					</div>
 					<div className="col d-flex flex-row justify-content-center align-items-center px-0 px-lg-3 mx-1 mx-lg-0">
 						<a href="https://www.instagram.com/my.goodloop/" target="_blank">
-							<img alt='instagram' src="/img/footer-logos/HomePage_Insta_icon.200w.png" className="w-100 noaos"/>
-						</a>	
+							<img alt="instagram" src="/img/footer-logos/HomePage_Insta_icon.200w.png" className="w-100 noaos"/>
+						</a>
 					</div>
 					<div className="col d-flex flex-row justify-content-center align-items-center px-0 px-lg-3 mx-1 mx-lg-0">
 						<a href="https://www.linkedin.com/showcase/my-good-loop/" target="_blank">
-							<img alt='linkedin' src="/img/footer-logos/HomePage_footer_LinkedIn_icon.200w.png" className="w-100 noaos"/>
+							<img alt="linkedin" src="/img/footer-logos/HomePage_footer_LinkedIn_icon.200w.png" className="w-100 noaos"/>
 						</a>
 					</div>
 				</div>

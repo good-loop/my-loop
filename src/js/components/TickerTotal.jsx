@@ -1,5 +1,5 @@
 
-import React, { Component, useState, useRef, useEffect } from 'react';
+import React from 'react';
 import Money from '../base/data/Money';
 import Ticker from './Ticker';
 /**

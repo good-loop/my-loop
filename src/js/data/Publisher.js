@@ -3,5 +3,5 @@ import DataClass from '../base/data/DataClass';
 
 class Publisher extends DataClass {
 }
-DataClass.register(Publisher,"Publisher");
+DataClass.register(Publisher, 'Publisher');
 export default Publisher;

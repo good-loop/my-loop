@@ -3,12 +3,13 @@
  * TODO refactor to reuse code from LoginWidget. Login flows are notoriously error-prone, so we don't want to maintain two copies.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { Row, Col } from 'reactstrap';
+
 import Login from '../base/youagain';
-import { assert, assMatch } from '../base/utils/assert';
+import { assMatch } from '../base/utils/assert';
 import C from '../C';
 import { emailLogin } from '../base/components/LoginWidget';
-import { Row, Col } from 'reactstrap';
 import DataStore from '../base/plumbing/DataStore';
 import PropControl from '../base/components/PropControl';
 import ErrAlert from '../base/components/ErrAlert';
@@ -64,7 +65,7 @@ const NewtabLoginWidget = ({onLogin, onRegister}) => {
 	// why not use a BS modal??
 	return <>
 		<div className="position-absolute" style={{width: "100vw", height: "100vh", top: 0, left: 0, zIndex: 999, background:"rgba(0,0,0,0.5)"}} />
-		<Row className={space("tab-login-widget position-absolute bg-white shadow", register? "" : "flex-row-reverse", verb==="thankyou" && "thankyou")} 
+		<Row className={space("tab-login-widget position-absolute bg-white shadow", register? "" : "flex-row-reverse", verb==="thankyou" && "thankyou")}
 			style={{width: 700, height:450, zIndex:9999, top: "50%", left:"50%", transform:"translate(-50%, -75%)"}}>
 			{verb === "thankyou" ? <RegisterThankYou/> : <>
 				{/* BLUE SIDE - shows the OPPOSITE of the current login verb, allows switching */}

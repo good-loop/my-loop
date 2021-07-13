@@ -1,6 +1,6 @@
 // https://schema.org/WebSite
 
-import {isa} from './DataClass';
+import { isa } from './DataClass';
 
 const WebSite = {};
 export default WebSite;

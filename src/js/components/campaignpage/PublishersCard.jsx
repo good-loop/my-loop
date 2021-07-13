@@ -1,7 +1,7 @@
-import Misc from "../../base/components/Misc";
-import React, { memo, useEffect, createRef } from 'react';
+import React from 'react';
 import _ from 'lodash';
-import { Container } from 'reactstrap';
+
+import Misc from "../../base/components/Misc";
 import publishers from '../../data/PublisherList';
 
 /**

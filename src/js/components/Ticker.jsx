@@ -6,10 +6,7 @@
 
 /* Possible TODO MAYBE! use react-spring for smoother, less expensive animations?? Should be default tool?? */
 
-import React, {useState, useEffect, useRef} from 'react';
-import { space } from '../base/utils/miscutils';
-import printer from '../base/utils/printer';
-import {useDoesIfVisible} from '../base/components/CustomHooks';
+import React, { useState, useEffect } from 'react';
 import Money from '../base/data/Money';
 
 /**
@@ -19,13 +16,13 @@ import Money from '../base/data/Money';
  * @param {Number} value Initial value to display
  * @param {String} currencySymbol
  * @param {Money} amount - Convenient way to set value + currencySymbol
- * @param {Number} rate - 
+ * @param {Number} rate -
  * @param {Number} tickTime - time between ticks in milliseconds
  * @param {Boolean} preservePennies Preserves 2 digits on the pennies count. This overrides sigFigs. True by default for money.
  * @param {Boolean} centerText Centers the text when counting up in the animation.
  * @param {Date} startTime Calculates the start value based on a start time so the ticker updates on refreshes
  */
-const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty = true, preservePennies, centerText=false, startTime}) => 
+const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty = true, preservePennies, centerText=false, startTime}) =>
 {
 	if (amount) {
 		value = Money.value(amount);
@@ -81,7 +78,7 @@ const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty
 	let dispArr = disp.split("");
 	// TODO comment on what the css below is for
 	return (
-		<span className="Ticker position-relative d-inline-flex flex-row justify-content-center align-items-center" 
+		<span className="Ticker position-relative d-inline-flex flex-row justify-content-center align-items-center"
 			style={{padding: "0 " + (centerText ? "0.1rem" : "0")}}>
 			{dispArr.map((digit, i) => <span key={i} style={{width: (digit===','||digit==='.'? '0.3' : '0.6')+'em'}}>{digit}</span>)}
 		</span>

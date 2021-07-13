@@ -1,8 +1,7 @@
 import React from 'react';
-import { space, toTitleCase } from '../../base/utils/miscutils';
+import { space } from '../../base/utils/miscutils';
 import { LoginLink, SocialSignInButton } from '../../base/components/LoginWidget';
 import Misc from '../../base/components/Misc';
-import DataStore from '../../base/plumbing/DataStore';
 import XId from '../../base/data/XId';
 import { getAllXIds, getClaimValue, getProfileFor } from '../../base/data/Person';
 
@@ -10,11 +9,11 @@ const signInOrConnected = ({service, xid}) => {
 	if (xid) return <Connected service={service} xid={xid} />;
 
 	if (service === 'good-loop') {
-		return <LoginLink className='btn bg-gl-red white'>Sign Up by Email</LoginLink>;
+		return <LoginLink className="btn bg-gl-red white">Sign Up by Email</LoginLink>;
 	}
 
 	return (
-		<SocialSignInButton service={service} verb='connect' />
+		<SocialSignInButton service={service} verb="connect" />
 	);
 };
 

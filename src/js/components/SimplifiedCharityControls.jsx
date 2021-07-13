@@ -1,15 +1,14 @@
 import React from 'react';
-
-import { assert, assMatch } from '../base/utils/assert';
 import { Row, Col } from 'reactstrap';
+import $ from 'jquery';
+
+import { assert } from '../base/utils/assert';
 import C from '../C';
 import DataStore from '../base/plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
 import Misc from '../base/components/Misc';
-import {getType, getId} from '../base/data/DataClass';
-import {encURI} from '../base/utils/miscutils';
+import { getType, getId } from '../base/data/DataClass';
 import NGO from '../base/data/NGO';
-import $ from 'jquery';
 
 const COOPLABELS = {
 	ALLOW_OTHERS: "allow other charities (recommended)",
@@ -24,12 +23,12 @@ const SimplifiedCharityControls = ({entity, path, ...other}) => {
 	assert(entity.id, "CharityControls.jsx - no id", entity);
 
 	return (
-		<Misc.Card title='Charities' {...other} >
-			<Misc.PropControl label='Allow other charities?'
+		<Misc.Card title="Charities" {...other} >
+			<Misc.PropControl label="Allow other charities?"
 				help={`Where possible, we prefer to show one charity each picked by the publisher, the advertiser, and the user.
-				Some advertisers / publishers insist on more control. 
+				Some advertisers / publishers insist on more control.
 				Allowing other charities will give you the maximum £ value.`}
-				item={charities} path={['data', type, entity.id, 'charities']} prop='otherCharities' type='select'
+				item={charities} path={['data', type, entity.id, 'charities']} prop="otherCharities" type="select"
 				options={['ALLOW_OTHERS', 'MUST_USE_ONLY_MINE', 'MUST_USE_SOME_OF_MINE']}
 				labels={COOPLABELS}
 			/>
@@ -47,14 +46,14 @@ const SimplifiedCharityForm = ({path, i}) => {
 	const proppath = path.concat(`${i}`);
 	let charity = DataStore.getValue(proppath);//entity.charities && entity.charities.list && entity.charities.list[i] || {};
 	return (
-		<div className='well'>
+		<div className="well">
 			<h4>Charity {i+1}</h4>
 			<Misc.PropControl
-				label='Name:	'
+				label="Name:	"
 				item={charity}
 				path={proppath}
 				prop={'name'}
-				type='autocomplete'
+				type="autocomplete"
 				modelValueFromInput={(v) => {
 					if ( ! v) return v;
 					// NB: runs on change only, otherwise it keeps looping, as the adserver & sogive servers return !== json.
@@ -92,11 +91,11 @@ const SimplifiedCharityForm = ({path, i}) => {
 					});
 				}}
 			/>
-			<button 
+			<button
 				title={'Click to remove this charity'}
 				onClick={() => DataStore.setValue(proppath, {})}
-			> 
-				<Misc.Icon glyph='remove' />
+			>
+				<Misc.Icon glyph="remove" />
 			</button>
 			<div style={{backgroundColor: 'white', borderRadius: '50%', border: '1px solid grey', height: '100px', width: '100px', textAlign: 'center', overflow: 'hidden'}}>
 				<img

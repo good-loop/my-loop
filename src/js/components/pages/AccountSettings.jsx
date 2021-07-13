@@ -1,15 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Row, Col } from 'reactstrap';
-import { is, isPortraitMobile, space } from '../../base/utils/miscutils';
-import Roles from '../../base/Roles';
+import { is, space } from '../../base/utils/miscutils';
 import PropControl from '../../base/components/PropControl';
 import ConsentWidget from '../ConsentWidget';
 import Person, { getAllXIds, getClaimValue, getProfile, savePersons, setClaimValue} from '../../base/data/Person';
 import SignUpConnectCard from '../cards/SignUpConnectCard';
-import Login from '../../base/youagain';
 import { LoginLink } from '../../base/components/LoginWidget';
-import XId from '../../base/data/XId';
-import { nonce } from '../../base/data/DataClass';
 import { assert } from '../../base/utils/assert';
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
@@ -23,7 +19,7 @@ const AccountSettings = () => {
 		<YourDataSettings />
 		{/* Spacer for mobile */}
 		<div className="pb-3 pb-md-0"/>
-		<small>We will never share your data without your consent unless there is a legal obligation.<br/>See our <a href='https://doc.good-loop.com/policy/privacy-policy.html' rel='noopener noreferrer' target='_blank'>privacy policy</a> for more information.</small>
+		<small>We will never share your data without your consent unless there is a legal obligation.<br/>See our <a href="https://doc.good-loop.com/policy/privacy-policy.html" rel="noopener noreferrer" target="_blank">privacy policy</a> for more information.</small>
 	</div>;
 };
 
@@ -79,10 +75,10 @@ const YourDataSettings = ({className}) => {
 		<Row className="align-items-center user-setting">
 			<Col md={2}>Name:</Col>
 			<Col md={6}>
-				<PersonPropControl 
-					person={person} 
+				<PersonPropControl
+					person={person}
 					prop="name"
-					type="text" 
+					type="text"
 					placeholder="James Bond"
 				/>
 			</Col>

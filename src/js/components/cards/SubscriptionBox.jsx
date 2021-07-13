@@ -1,6 +1,6 @@
 import React from 'react';
-import { Container, Button, Form, FormGroup, Label} from 'reactstrap';
-import {space, stopEvent, yessy} from '../../base/utils/miscutils';
+import { Container, Button, Form, FormGroup } from 'reactstrap';
+import { space, stopEvent } from '../../base/utils/miscutils';
 
 import DataStore from '../../base/plumbing/DataStore';
 import PropControl from '../../base/components/PropControl';
@@ -20,7 +20,7 @@ const doEmailSignUp = e => {
 
 /**
  * Displays email register form
- * @param {String} title header to give the box 
+ * @param {String} title header to give the box
  */
 const SubscriptionBox = ({className="", title="Support the causes you care about, and see the lives you're helping to improve"}) => {
 	const hasSubmittedEmail = DataStore.getValue(['misc', 'hasSubmittedEmail']) === true;

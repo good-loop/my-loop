@@ -3,7 +3,7 @@ import { space } from '../../base/utils/miscutils';
 
 /**
  * ?? doc how sizing works
- * @param {*} param0 
+ * @param {*} param0
  */
 const WhiteCircle = ({width, children, circleCrop, className, style}) => {
 	let contentStyle = {

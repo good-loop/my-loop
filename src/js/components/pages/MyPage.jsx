@@ -32,7 +32,7 @@ const MyPage = ({spring}) => {
 
 	return (<>
 		<MyLoopNavBar logo="/img/new-logo-with-text.svg" logoScroll="/img/new-logo-with-text-white.svg" />
-		<div className='MyPage widepage'>
+		<div className="MyPage widepage">
 			<LandingSection setY={setY}/>
 			<CharitySection />
 			<HowItWorksCard />
@@ -66,7 +66,7 @@ const showRegisterForm = e => {
 
 // 	return (<div id="howitworks-section" className="bg-white py-5">
 // 		<Container>
-// 			<h2 className="text-center mt-5">We support your favorite causes</h2> 
+// 			<h2 className="text-center mt-5">We support your favorite causes</h2>
 // 			{isPortraitMobile() ? <>
 // 				<embed src="/img/LandingBackground/svg-mobile/infographic.svg" className="w-100"/>
 // 				{/* Center CTA btn - not included in mobile SVG */}
@@ -78,11 +78,11 @@ const showRegisterForm = e => {
 // 	</div>);
 // };
 
-// Move the CTA Register Button out of SVG File to avoid Safari unsupporting getSVGDocument (For now) 
+// Move the CTA Register Button out of SVG File to avoid Safari unsupporting getSVGDocument (For now)
 const HowItWorksCard = () => {
 	return (<div id="howitworks-section" className="bg-white py-5">
 		<Container>
-			<h2 className="text-center mt-5">We support your favorite causes</h2> 
+			<h2 className="text-center mt-5">We support your favorite causes</h2>
 			{isPortraitMobile() ? <>
 				<embed src="/img/LandingBackground/svg-mobile/infographic.svg" className="w-100"/>
 			</>: <embed src="/img/LandingBackground/svg-desktop/infographic.svg" className="w-100"/>}
@@ -105,7 +105,7 @@ const AttentionIsValuableCard = () => {
 		<h4>Time and attention online are valuable.</h4>
 		<h4>Let's harness that value and use it for good.</h4>
 		<p>
-			Good-Loop will never force you to engage with an ad. 
+			Good-Loop will never force you to engage with an ad.
 			But, if you choose to give an advertiser some of your valuable time and attention, you get to give 50% of the advertisers' money to a relevant charitable cause.
 		</p>
 	</div>);

@@ -3,21 +3,17 @@
  * Shareable page dedicated to creating an account for T4G and myloop, and selecting a charity by default at the same time
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Login from '../../base/youagain';
-import MyLoopNavBar from '../MyLoopNavBar';
-import WhiteCircle from '../campaignpage/WhiteCircle';
-import { assert, assMatch } from '../../base/utils/assert';
 import C from '../../C';
 import { emailLogin } from '../../base/components/LoginWidget';
-import { Row, Col } from 'reactstrap';
 import DataStore from '../../base/plumbing/DataStore';
 import PropControl from '../../base/components/PropControl';
 import ErrAlert from '../../base/components/ErrAlert';
-import { space, stopEvent } from '../../base/utils/miscutils';
+import { stopEvent } from '../../base/utils/miscutils';
 import { setPersonSetting } from './TabsForGoodSettings';
 import { fetchCharity } from './MyCharitiesPage';
-import { getAllXIds, getClaimValue, savePersons, setClaimValue } from '../../base/data/Person';
+
 
 const LOGIN_PATH = ['widget', 'tabLogin', 'login'];
 const LOGIN_VERB_PATH = [...LOGIN_PATH, 'verb'];

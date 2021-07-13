@@ -519,7 +519,7 @@ const SmallPrintInfo = ({ads, charities, campaign, pvTopItem}) => {
 				</span>
 			</div>
 		<span className="small">This information follows the guidelines of the New York Attorney General for best practice in cause marketing,
-			<Cite href='https://www.charitiesnys.com/cause_marketing.html'/> and the Better Business Bureau's standard for donations in marketing.
+			<Cite href="https://www.charitiesnys.com/cause_marketing.html"/> and the Better Business Bureau's standard for donations in marketing.
 		</span>
 		{campaign && campaign.id? <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/'+escape(campaign.id)} target="_portal">Campaign Editor</DevLink> : ""}
 		{pvTopItem.value? <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#'+getType(pvTopItem.value)+'/'+escape(pvTopItem.value.id)} target="_portal">{getType(pvTopItem.value)} Editor</DevLink> : ""}

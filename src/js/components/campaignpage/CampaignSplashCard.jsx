@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Counter from '../../base/components/Counter';
 import WhiteCircle from './WhiteCircle';
 import printer from '../../base/utils/printer';
 import { space } from '../../base/utils/miscutils';
 import ShareButton from '../ShareButton';
 import DevLink from './DevLink';
-import Money from '../../base/data/Money';
 import MDText from '../../base/components/MDText';
-import C from '../../C';
 import KStatus from '../../base/data/KStatus';
 
 /**

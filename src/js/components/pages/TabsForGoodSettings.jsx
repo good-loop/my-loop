@@ -3,15 +3,12 @@ import { Col, Form, Row } from 'reactstrap';
 import ListLoad from '../../base/components/ListLoad';
 import PropControl from '../../base/components/PropControl';
 import { getId } from '../../base/data/DataClass';
-import JSend from '../../base/data/JSend';
-import Person, { getAllXIds, getPVClaimValue, getProfile, savePersons, setClaimValue, getClaimValue } from '../../base/data/Person';
+import Person, { getPVClaimValue, getProfile, savePersons, setClaimValue, getClaimValue } from '../../base/data/Person';
 import { getDataItem } from '../../base/plumbing/Crud';
 import DataStore, { getListPath } from '../../base/plumbing/DataStore';
 import { assert, assMatch } from '../../base/utils/assert';
 import { space } from '../../base/utils/miscutils';
 import Login from '../../base/youagain';
-import ServerIO from '../../plumbing/ServerIO';
-import Cookies from 'js-cookie';
 import Icon from '../../base/components/Icon';
 import PromiseValue from 'promise-value';
 import Misc from '../../base/components/Misc';
@@ -72,15 +69,15 @@ const CharityPicker = () => {
 	DataStore.setValue(charityPath, {hits, total:hits.length}, false);
 
 	return <div>
-		{selId && 
-			<><p className='large'>Your selected charity:</p>
+		{selId &&
+			<><p className="large">Your selected charity:</p>
 				<div className="gridbox gridbox-md-3">
 					<CharitySelectBox item={pvSelectedCharity.value || {id:selId}} />
 				</div>
 				<br/>
 			</>}
 		<div className="d-md-flex flex-md-row justify-content-between unset-margins mb-3">
-			<p className='large'>Can't see your favourite charity?&nbsp;<br className="d-md-none"/>Search for it:</p>
+			<p className="large">Can't see your favourite charity?&nbsp;<br className="d-md-none"/>Search for it:</p>
 			<Search onSubmit={e => e.preventDefault()} placeholder="Find your charity" className="flex-grow ml-md-5"/>
 		</div>
 		<ListLoad className={"gridbox gridbox-md-3"} type="NGO" status="PUBLISHED" q={q || dq} sort="impact" ListItem={CharitySelectBox} unwrapped hideTotal />
@@ -90,7 +87,7 @@ const CharityPicker = () => {
 /**
  * Show a selectable charity in the charity list
  * @param charity the charity to show
- * @param {boolean} selected 
+ * @param {boolean} selected
  */
 const CharitySelectBox = ({item, className}) => {
 	assert(item, "CharitySelectBox - no item");
@@ -106,7 +103,7 @@ const CharitySelectBox = ({item, className}) => {
 		>
 			{item.logo? <img className="logo-xl mt-4 mb-2" src={item.logo} /> : <span>{item.name || item.id}</span>}
 			<p>{item.summaryDescription}</p>
-			{selected ? <span className="text-success thin"><Icon name='tick' /> Selected</span>
+			{selected ? <span className="text-success thin"><Icon name="tick" /> Selected</span>
 				: <button onClick={() => setPersonSetting("charity", getId(item))} className="btn btn-outline-primary thin">Select</button>
 			}
 			{item.url && <a className="position-absolute" style={{top: 10, right: 10}} href={item.url} target="_blank" rel="noreferrer">About</a>}
@@ -154,7 +151,7 @@ const isSafeToLoadUserSettings = () => {
 	return !!(Login.isLoggedIn() && Login.getUser().jwt);
 }
 
-/** 
+/**
  * Fetch the number of tabs opened by the user.
  * @returns ?PromiseValue<Number> null if not logged in yet
  */

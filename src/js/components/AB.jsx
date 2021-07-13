@@ -1,9 +1,8 @@
-import React from 'react';
 import DataStore from '../base/plumbing/DataStore';
 
 /*
 A CSS example:
-<AB label='bgcol'>
+<AB label="bgcol">
 	<CSS css=".mything {background:red;}" />
 	<CSS css=".mything {background:blue;}" />
 </AB>

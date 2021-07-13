@@ -48,16 +48,16 @@
 // 	const value = DataStore.getValue([...path, prop]);
 
 // 	return (
-// 		<div className='row flex-row flex-centre top-p-1'> 
-// 			<div className='col-md-1 input-label'>
+// 		<div className="row flex-row flex-centre top-p-1">
+// 			<div className="col-md-1 input-label">
 // 				{iconFn && iconFn(value)}
 // 			</div>
 // 			<div className={'col-md-11' + (value ? '' : ' text-muted')}>
 // 				{
 // 					editModeEnabled
-// 						? <PropControl 
+// 						? <PropControl
 // 							type={fieldType}
-// 							path={path} 
+// 							path={path}
 // 							prop={prop}
 // 							options={selectOptions}
 // 							saveFn={() => debounceSaveFn({data: DataStore.getValue(path), from: 'myloop@app', prop, xid})}
@@ -69,7 +69,7 @@
 // 	);
 // };
 
-// /** 
+// /**
 //  * Checkboxes for all items in 'dataFields'
 //  *  Can also edit data field when 'edit mode' is enabled.
 //  */
@@ -92,59 +92,59 @@
 // 	return (
 // 		<div>
 // 			<div className="mirror">
-// 				<div className='description'>
+// 				<div className="description">
 // 					<p>Your data can help us boost the amount that is donated whenever you see one of our ads.</p>
 // 				</div>
-// 				<div className='container-fluid word-wrap'>
-// 					<div className='col-sm-2' />
-// 					<div className='col-sm-3 profile-photo'>
-// 						{img && <img className='img-thumbnail img-profile' src={img} alt='user-profile' />}
+// 				<div className="container-fluid word-wrap">
+// 					<div className="col-sm-2" />
+// 					<div className="col-sm-3 profile-photo">
+// 						{img && <img className="img-thumbnail img-profile" src={img} alt="user-profile" />}
 // 					</div>
 // 					<div className="col-sm-5 profile-details">
-// 						<ConsentControlRow 
+// 						<ConsentControlRow
 // 							xid={xid}
 // 							path={path}
-// 							prop='name' 
-// 							fieldType='text'
+// 							prop="name"
+// 							fieldType="text"
 // 						/>
-// 						<ConsentControlRow 
+// 						<ConsentControlRow
 // 							xid={xid}
 // 							path={path}
-// 							prop='gender' 
-// 							fieldType='select'
+// 							prop="gender"
+// 							fieldType="select"
 // 							selectOptions={['', 'male', 'female']}
-// 							iconFn={value => value === 'female' ? <i className='fa fa-venus' /> : ( value === 'male' ? <i className='fa fa-mars' /> : <i className='fa fa-genderless' />)} 
+// 							iconFn={value => value === 'female' ? <i className="fa fa-venus" /> : ( value === 'male' ? <i className="fa fa-mars" /> : <i className="fa fa-genderless" />)}
 // 						/>
-// 						<ConsentControlRow 
-// 							xid={xid} 
+// 						<ConsentControlRow
+// 							xid={xid}
 // 							path={path}
-// 							prop='location' 
-// 							fieldType='text' 
-// 							iconFn={() => <i className='fa fa-globe' />} 
+// 							prop="location"
+// 							fieldType="text"
+// 							iconFn={() => <i className="fa fa-globe" />}
 // 						/>
-// 						<ConsentControlRow 
-// 							xid={xid} 
+// 						<ConsentControlRow
+// 							xid={xid}
 // 							path={path}
-// 							prop='job' 
-// 							fieldType='text' 
-// 							iconFn={() => <i className='fa fa-briefcase' />} 
+// 							prop="job"
+// 							fieldType="text"
+// 							iconFn={() => <i className="fa fa-briefcase" />}
 // 						/>
-// 						<ConsentControlRow 
-// 							xid={xid} 
+// 						<ConsentControlRow
+// 							xid={xid}
 // 							path={path}
-// 							prop='relationship' 
-// 							fieldType='select'
+// 							prop="relationship"
+// 							fieldType="select"
 // 							selectOptions={['', 'Single', 'In a relationship', 'Engaged', 'Married', 'Divorced', 'Widowed', 'Not specified']}
-// 							iconFn={() => <i className='fa fa-heart' />} 
+// 							iconFn={() => <i className="fa fa-heart" />}
 // 						/>
 // 					</div>
-// 					<div className='col-sm-2' />
+// 					<div className="col-sm-2" />
 // 				</div>
 // 			</div>
-// 			<div className='p-1'>
+// 			<div className="p-1">
 // 				<div>
-// 					<button className='btn btn-default edit' onClick={toggleEditMode} type='button'> Edit </button>
-// 					{ hasSaved && <span className='autosave'>Saved Successfully</span> }
+// 					<button className="btn btn-default edit" onClick={toggleEditMode} type="button"> Edit </button>
+// 					{ hasSaved && <span className="autosave">Saved Successfully</span> }
 // 				</div>
 // 			</div>
 // 		</div>
@@ -153,7 +153,7 @@
 
 // // TODO use Crud instead
 // // Save updated parameters to user's Profiler space
-// // Note that this 
+// // Note that this
 // // Want to deal be a able to deal with an array of fields
 // // Important for editing data held where we use a "Save" button
 // /**

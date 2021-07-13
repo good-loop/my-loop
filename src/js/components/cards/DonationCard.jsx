@@ -48,7 +48,7 @@ const DonationCard = ({xids}) => {
 	});
 
 	if ( ! pvDonationData.resolved) {
-		return <Misc.Loading text='Loading your donations...' />;
+		return <Misc.Loading text="Loading your donations..." />;
 	}
 
 	// TODO Warning: possibly broken by changes to returned data Sept 2018 ^DW
@@ -65,7 +65,7 @@ const DonationCard = ({xids}) => {
 		return (
 			<>
 				<p className="word-wrap">You do not appear to have made a donation via a Good-Loop ad</p>
-				<a href='https://as.good-loop.com'>Watch a Good-Loop ad to donate</a>
+				<a href="https://as.good-loop.com">Watch a Good-Loop ad to donate</a>
 			</>
 		);
 	}
@@ -113,7 +113,7 @@ const CharityDonation = ({cid, communityTotal, onlyOneCharity}) => {
 	if (communityTotal > 20000) communityTotal *= 0.06;
 
 	// TODO show the users donations - if they're above a threshold, e.g. £1
-	// Below that and users will feel dispirited 
+	// Below that and users will feel dispirited
 
 	// load charity info from SoGive
 	// NB: can 404
@@ -131,7 +131,7 @@ const CharityDonation = ({cid, communityTotal, onlyOneCharity}) => {
 		<div className={onlyOneCharity ? "" : "col-md-4"}>
 			<div className="charity-circle">
 				<div className="top">
-					<img src={img} alt={`Logo for ${charity.displayName}`} className='charity-logo mx-auto' />
+					<img src={img} alt={`Logo for ${charity.displayName}`} className="charity-logo mx-auto" />
 				</div>
 				<div className="bottom">
 					<p className="stats">
@@ -139,7 +139,7 @@ const CharityDonation = ({cid, communityTotal, onlyOneCharity}) => {
 					</p>
 				</div>
 			</div>
-			<div className='top-p-1'>{charity.displayName || charity.name || cid}</div>
+			<div className="top-p-1">{charity.displayName || charity.name || cid}</div>
 		</div>
 	);
 };

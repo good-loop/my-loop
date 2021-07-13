@@ -1,5 +1,4 @@
 import React from 'react';
-import DataStore from '../base/plumbing/DataStore';
 import { space } from '../base/utils/miscutils';
 
 // FIXME this doesnt get printed 'cos Bootstrap sets background to off for printing.
@@ -44,7 +43,7 @@ const optimise = url => {
 	return optiurl;
 };
 
-// TODO Instead of a jsx widget, have a function url -> optimised url. 
+// TODO Instead of a jsx widget, have a function url -> optimised url.
 /** Grabs either standard or mobile-optimised image depending on context
  * @render (21/03/19) made this render props to deal with unusual way that bg image is handled
  * Just providing a thin wrapper to an img element might be easier going forward
@@ -64,4 +63,4 @@ export {
 	RoundLogo,
 	SquareLogo,
 	OptimisedImage
-}; 
+};

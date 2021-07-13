@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Container } from 'reactstrap';
 import MyLoopNavBar from '../MyLoopNavBar';
 import RecentCampaignsCard from '../cards/RecentCampaignsCard';

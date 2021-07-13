@@ -1,5 +1,5 @@
 import React from 'react';
-import {Row} from 'reactstrap';
+import { Row } from 'reactstrap';
 import { encURI, space } from '../base/utils/miscutils';
 
 /*

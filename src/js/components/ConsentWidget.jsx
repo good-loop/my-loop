@@ -1,19 +1,20 @@
 import React from 'react';
-import { Container, Col, Row } from 'reactstrap';
+import { Row } from 'reactstrap';
 import _ from 'lodash';
 import Cookies from 'js-cookie';
+
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
 import PropControl from '../base/components/PropControl';
-import {convertConsents, getConsents, setConsents, savePersons, PURPOSES, saveConsents, getProfile} from '../base/data/Person';
+import { getConsents, setConsents, PURPOSES, saveConsents, getProfile } from '../base/data/Person';
 
 // const _debounceFnForKey = {};
 // /**
 //  * Cache the debounce function.
 //  * This allows you to use "overlapping" debounces
 //  * 
-//  * @param {!String} key 
-//  * @param {!Function} fn 
+//  * @param {!String} key
+//  * @param {!Function} fn
 //  * @param other extra _.debounce args
 //  */
 // const debounceForSameInput = (key, fn, ...other) => {
@@ -29,7 +30,7 @@ import {convertConsents, getConsents, setConsents, savePersons, PURPOSES, saveCo
 const path = ['widget', 'ConsentWidget', 'perms'];
 
 /** handle an edit
- * 
+ *
  * ??What does this do exactly??
  *  */
 const togglePerm = ({prop, value, persons, ...props}) => {
@@ -55,13 +56,13 @@ const toggleDNT = ({perms, dnt, newValue}) => {
 	// ref: https://web.dev/samesite-cookies-explained/
 	Cookies.set('DNT', dnt, {path:'/', domain:'good-loop.com', expires:365, sameSite:secure?'None':'Lax', secure});
 };
-window.Cookies = Cookies; // debug 
+window.Cookies = Cookies; // debug
 
 
-/** 
- *  @param label (String) header (e.g "Allow cookies") 
+/**
+ *  @param label (String) header (e.g "Allow cookies")
  *  @param subtext (String) smaller text that provides a bit more info
- *  @param textOn (String) will only appear if the user has given permission 
+ *  @param textOn (String) will only appear if the user has given permission
  *  @param saveFn {!Function} Do the edit! `({event, path, prop, newValue}) -> any`
 */
 const PermissionControl = ({header, prop, subtext, textOn, saveFn}) => {
@@ -69,7 +70,7 @@ const PermissionControl = ({header, prop, subtext, textOn, saveFn}) => {
 
 	return (
 		<Row>
-			<div className='col-md-6 text-left'>
+			<div className="col-md-6 text-left">
 				<div className="hover-info">
 					{header}
 					{subtext ? <div className="extra-info">
@@ -77,16 +78,16 @@ const PermissionControl = ({header, prop, subtext, textOn, saveFn}) => {
 					</div> : null}
 				</div>
 			</div>
-			<div className='col-md-3 flex-row'>
-				<PropControl 
-					path={path} 
+			<div className="col-md-3 flex-row">
+				<PropControl
+					path={path}
 					prop={prop}
-					type='yesNo' 
-					saveFn={saveFn} 
+					type="yesNo"
+					saveFn={saveFn}
 				/>
 			</div>
-			<div className='col-md-3'>
-				{ value && <div className='color-gl-light-red'>{textOn}</div> }
+			<div className="col-md-3">
+				{ value && <div className="color-gl-light-red">{textOn}</div> }
 			</div>
 		</Row>
 	);
@@ -110,29 +111,29 @@ const ConsentWidget = ({xids}) => {
 	// TODO allow all
 	return (
 		<>
-			<PermissionControl 
-				header='Allow analytical cookies'
+			<PermissionControl
+				header="Allow analytical cookies"
 				prop={PURPOSES.cookies_analytical}
 				saveFn={props => { toggleDNT({...props, perms, dnt}); togglePerm({...props, persons}); }}
-				subtext='Allow us to track your donations and avoid showing you the same advert twice'
-				textOn='Thank you!'
+				subtext="Allow us to track your donations and avoid showing you the same advert twice"
+				textOn="Thank you!"
 			/>
 			{/* Spacer for mobile */}
 			<div className="pb-3 pb-md-0"/>
-			<PermissionControl 
-				header='Allow ad targeting'
+			<PermissionControl
+				header="Allow ad targeting"
 				prop={PURPOSES.personalize_ads}
 				saveFn={props => togglePerm({...props, persons})}
-				subtext='Get Good-Loop ads tailored to you'
-				textOn='Thank you!'
+				subtext="Get Good-Loop ads tailored to you"
+				textOn="Thank you!"
 			/>
 			{/* Spacer for mobile */}
 			<div className="pb-3 pb-md-0"/>
-			<PermissionControl 
-				header='Allow Good-Loop marketing emails'
+			<PermissionControl
+				header="Allow Good-Loop marketing emails"
 				prop={PURPOSES.email_marketing}
 				saveFn={props => togglePerm({...props, persons})}
-				textOn='Thank you!'
+				textOn="Thank you!"
 			/>
 		</>
 	);

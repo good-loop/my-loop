@@ -1,17 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { Container } from 'reactstrap';
-import ActionMan from '../../plumbing/ActionMan';
-import Roles from '../../base/Roles';
-import CharityLogo from '../CharityLogo';
 import PageCard from '../../base/components/PageCard';
 import Money from '../../base/data/Money';
 import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
-import C from '../../C';
 import Counter from '../../base/components/Counter';
 import { space } from '../../base/utils/miscutils';
 import printer from '../../base/utils/printer';
 import MDText from '../../base/components/MDText';
-import WhiteCircle from './WhiteCircle';
 import DevLink from './DevLink';
 import LinkOut from '../../base/components/LinkOut';
 import TestimonialPlayer from './TestimonialPlayer';
@@ -28,7 +23,7 @@ const tq = charity => {
 	let cid = normaliseSogiveId(charity.id);
 	return {
 		helenbamber: {
-			quote: `"That is absolutely fantastic news, thank you so much! Congratulations everyone on a successful Spring/Summer Campaign! 
+			quote: `"That is absolutely fantastic news, thank you so much! Congratulations everyone on a successful Spring/Summer Campaign!
 		The donation will go a huge way in supporting our clients to recover and rebuild their lives."`,
 			source: "Sophie at Helen Bamber"
 		},

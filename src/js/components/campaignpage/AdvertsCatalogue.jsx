@@ -1,11 +1,12 @@
-import React, {useState, useRef} from 'react';
-import { space, yessy, uniq } from '../../base/utils/miscutils';
+import React, { useState } from 'react';
 import {
-	Alert,
 	Carousel,
 	CarouselCaption, CarouselControl,
-	CarouselIndicators, CarouselItem, Col, Container, Row
+	CarouselIndicators, CarouselItem, Container
 } from 'reactstrap';
+
+import { uniq } from '../../base/utils/miscutils';
+
 import Misc from '../../base/components/Misc';
 import Advert from '../../base/data/Advert';
 import Campaign from '../../base/data/Campaign';
@@ -43,7 +44,7 @@ const viewCount = (viewcount4campaign, ad) => {
 };
 
 /**
- * @param {!Advert} ad 
+ * @param {!Advert} ad
  * @returns {!string} Can be "unknown" to fill in for no-campaign odd data items
  */
 const campaignNameForAd = ad => {
@@ -276,7 +277,7 @@ const AdvertCard = ({ ad, active }) => {
  * How does this relate to AdvertCard?? Could they share code??
  * @param {Object} p
  * @param {Advert} p.ad
- * @returns 
+ * @returns
  */
 const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
 	if (!ad) {

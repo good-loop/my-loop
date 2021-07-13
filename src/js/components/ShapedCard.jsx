@@ -2,7 +2,6 @@
 
 import React from 'react';
 import ServerIO from '../plumbing/ServerIO';
-import { relative } from 'path';
 
 /**
  * Fill the top-left corner
@@ -17,9 +16,9 @@ const TopLeftCornerSwerve = ({children}) => {
  */
 const TopRightBulge = ({children, background}) => {
 	// ??do we need absolute urls??
-	let bgurl = background.substr(0,4)==='http'? background : ServerIO.MYLOOP_ENDPONT+'/'+background;
+	let bgurl = background.match(/^http/) ? background : ServerIO.MYLOOP_ENDPONT+'/'+background;
 	// Use abs positioning within the card to put contents over backdrop
-	return (<div name='TopRightBulge' style={{position:'relative'}}>
+	return (<div name="TopRightBulge" style={{position:'relative'}}>
 		<svg
 			viewBox="0 0 1062.992 850.39327"
 			style={{
@@ -32,11 +31,11 @@ const TopRightBulge = ({children, background}) => {
 				<pattern id="image" x="0" y="0" height="1" width="1"
 					viewBox="0 0 1000 666" preserveAspectRatio="xMidYMid slice"
 				>
-					<image 
-						width="1000" 
-						height="666" 
+					<image
+						width="1000"
+						height="666"
 						xlinkHref={bgurl}
-						preserveAspectRatio="xMidYMid slice" 
+						preserveAspectRatio="xMidYMid slice"
 					/>
 				</pattern>
 			</defs>

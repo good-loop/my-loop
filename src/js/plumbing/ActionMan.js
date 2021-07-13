@@ -1,7 +1,3 @@
-import PV from 'promise-value';
-
-import C from '../C';
-import DataStore from '../base/plumbing/DataStore';
 import ActionMan from '../base/plumbing/ActionManBase';
 
 export default ActionMan;

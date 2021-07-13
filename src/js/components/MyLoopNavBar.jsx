@@ -1,10 +1,11 @@
 import React from 'react';
-import Login from '../base/youagain';
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+
+import Login from '../base/youagain';
 import { LoginLink } from '../base/components/LoginWidget';
 // import NavBar from '../base/components/NavBar';
 import C from '../C';
-import { space, isPortraitMobile } from '../base/utils/miscutils';
+import { space } from '../base/utils/miscutils';
 
 /**
  * Why do we need our own jsx??
@@ -53,7 +54,7 @@ class MyLoopNavBar extends React.Component {
 	}
 
 	render () {
-		// ToDo: Move navbarToggleSrc outside if this component 
+		// ToDo: Move navbarToggleSrc outside if this component
 		const navbarToggleSrc = "/img/Icon_Hamburger-black.png";
 		const navbarToggleScrollSrc = "/img/Icon_Hamburger.200w.png";
 		// Optionally uses colour overrides for styling on scroll and default
@@ -66,18 +67,18 @@ class MyLoopNavBar extends React.Component {
 
 		let navLogo = this.props.logo || C.app.homeLogo || C.app.logo; // defaults
 		if (isScrolled) navLogo = this.props.logoScroll || navLogo; // fall back to non-scrolled if no special logo provided for scrolled state
-		const toggleSrc = isScrolled ? navbarToggleScrollSrc : navbarToggleSrc; 
+		const toggleSrc = isScrolled ? navbarToggleScrollSrc : navbarToggleSrc;
 
 		return (
 			<Navbar className={navClass}
 				style={style}
-				sticky='top' expand='xl'>
+				sticky="top" expand="xl">
 				<NavbarBrand href="/#my" className="mr-auto">
-					<img src={navLogo} alt='logo' className='logo-small' />
+					<img src={navLogo} alt="logo" className="logo-small" />
 				</NavbarBrand>
 
 				<NavbarToggler onClick={this.toggle}>
-					<img src={toggleSrc} alt='toggler' className='navbar-toggler-icon' />
+					<img src={toggleSrc} alt="toggler" className="navbar-toggler-icon" />
 				</NavbarToggler>
 				<Collapse isOpen={this.state.open} navbar className="gl-bootstrap-navbar" id="navItemsDiv" style={{flexGrow:0}}>
 					<Nav navbar className={space("navbar-nav w-100", this.props.hidePages ? "justify-content-end" : "justify-content-between")}>
@@ -113,10 +114,10 @@ class MyLoopNavBar extends React.Component {
  * @param children enter extra DropdownItem components to add more entries to the menu here
  */
 const AccountMenu = ({logoutLink, small, accountLink, customLogin, children}) => {
-	if (!Login.isLoggedIn()) { 
+	if (!Login.isLoggedIn()) {
 		return (
 			customLogin || <LoginLink verb="register" className="login-menu btn btn-transparent fill">Get started</LoginLink>
-		); 
+		);
 	}
 
 	let user = Login.getUser();

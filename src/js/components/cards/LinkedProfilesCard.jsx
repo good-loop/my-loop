@@ -18,10 +18,10 @@ const LinkedProfilesCard = ({xids}) => {
 
 	return (
 		<div>
-			<p>We all have multiple online identities -- e.g. emails, social media, and with retail companies. 
+			<p>We all have multiple online identities -- e.g. emails, social media, and with retail companies.
 			Here are the IDs Good-Loop recognises as you:</p>
 			<div>
-				<div className='word-wrap'>
+				<div className="word-wrap">
 					{ nonTrackers.map(xid => <>
 						<div key={xid}>
 							{XId.service(xid)+': '+XId.id(xid)}
@@ -31,8 +31,8 @@ const LinkedProfilesCard = ({xids}) => {
 				</div>
 				<div>
 					Good-Loop cookies (random IDs, used by us to record your donations and avoid repeating ads):
-					<br /> 
-					<div className='word-wrap'>
+					<br />
+					<div className="word-wrap">
 						{trackers.map(xid => <>
 							<div>{XId.id(xid)}</div>
 							<br />
@@ -40,8 +40,8 @@ const LinkedProfilesCard = ({xids}) => {
 					</div>
 				</div>
 				<div>
-					Currently logged into Good-Loop via: 
-					<div className='word-wrap'>
+					Currently logged into Good-Loop via:
+					<div className="word-wrap">
 						{authd.map(xid => XId.service(xid)+': '+XId.id(xid)).join(", ")}
 					</div>
 					<br />
@@ -58,7 +58,7 @@ const LinkedProfilesCard = ({xids}) => {
  * 
  * @param {{
  * 	peeps: Person[]
- * }} 
+ * }}
  */
 const ListLinks = ({peeps}) => {
 	if ( ! peeps.length) return ' no links found ';

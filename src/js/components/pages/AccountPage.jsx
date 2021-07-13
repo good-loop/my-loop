@@ -12,7 +12,7 @@ import SubscriptionBox from '../cards/SubscriptionBox';
 import MyLoopNavBar from '../MyLoopNavBar';
 import ShareButton from '../ShareButton';
 import AccountSettings from './AccountSettings';
-import TabsForGoodSettings, { doesUserHaveT4G } from './TabsForGoodSettings';
+import TabsForGoodSettings from './TabsForGoodSettings';
 
 
 

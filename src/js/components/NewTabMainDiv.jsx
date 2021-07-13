@@ -107,7 +107,7 @@ const WebtopPage = () => {
 					</TutorialComponent>
 					<TutorialComponent page={4} className="user-controls flex-row align-items-center">
 						{Login.isLoggedIn() ? <TabsOpenedCounter/> : null}
-						<AccountMenu small accountLink="/#account?tab=tabsForGood" 
+						<AccountMenu small accountLink="/#account?tab=tabsForGood"
 							customLogin={<NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>}
 						/>
 					</TutorialComponent>
@@ -125,7 +125,7 @@ const WebtopPage = () => {
 		{showPopup && <PopupWindow/>}
 		<NewtabLoginWidget onRegister={() => {checkIfOpened();}}/>
 		<AdBlockPopup />
-	</>); 
+	</>);
 };
 
 const TabsOpenedCounter = () => {

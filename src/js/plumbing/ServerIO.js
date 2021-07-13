@@ -9,7 +9,6 @@ import C from '../C.js';
 import DataStore from '../base/plumbing/DataStore';
 
 import ServerIO from '../base/plumbing/ServerIOBase';
-import { getUrlVars } from '../base/utils/miscutils';
 import { assMatch } from '../base/utils/assert.js';
 import Login from '../base/youagain.js';
 

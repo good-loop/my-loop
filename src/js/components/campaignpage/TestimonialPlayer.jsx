@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 const PlayButton = ({onClick, style, className}) => <svg fill="white" onClick={onClick} className={"testimonial-play-btn " + className} style={style} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
 	<path d="M4.378.003A4.546 4.546 0 0 0 0 4.543v90.905c0 3.378 3.555 5.577 6.578 4.067L97.492 54.06c3.344-1.677 3.344-6.45 0-8.127L6.578.476a4.546 4.546 0 0 0-2.2-.473z"></path>

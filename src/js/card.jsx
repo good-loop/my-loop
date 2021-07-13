@@ -27,7 +27,7 @@ const CardMainDiv = () => {
 		about: AboutPage
 	};
 	return <MainDivBase pageForPath={pageForPath}
-		navbarPages={[]} defaultPage='card' />
+		navbarPages={[]} defaultPage="card" />
 };
 
 ReactDOM.render(

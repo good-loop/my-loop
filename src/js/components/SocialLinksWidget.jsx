@@ -1,13 +1,14 @@
 import React from 'react';
 import _ from 'lodash';
+
 import MDText from '../base/components/MDText';
-import {IntentLink, FacebookLogo, TwitterLogo, InstagramLogo} from './MyGLSocialShare';
+import { IntentLink, FacebookLogo, TwitterLogo, InstagramLogo } from './MyGLSocialShare';
 import Money from '../base/data/Money';
 
 /** What should appear in Tweet/Facebook link/LinkedIn article
 // Contains fallbacks for where donation amount, charities or advertiser name is not specified
 @returns {String} e.g. TOMS helped raise £££ for Crisis
- */ 
+ */
 const shareTextFn = ({donationValue, charities, adName="We"}) => {
 	const amount = new Money({currency: 'GBP', value: donationValue});
 
@@ -28,7 +29,7 @@ const shareTextFn = ({donationValue, charities, adName="We"}) => {
 			const finalTwoCharityNames = charityNames.splice(charityNames.length - 2, 2);
 
 			charityText = `${charityNames.map( charityName => charityName + ', ')}${finalTwoCharityNames[0]} and ${finalTwoCharityNames[1]}`;
-		} 
+		}
 	}
 
 	return `${adName} helped to raise ${currencySymbol}${amountText} for ${charityText}`;
@@ -39,22 +40,22 @@ const SocialMediaShareWidget = ({donationValue, charities, adName, url=window.lo
 
 	return (
 		<div className="social share-page">
-			<MDText source='Share this page' />
+			<MDText source="Share this page" />
 			<div className="social-links">
-				<IntentLink 
-					service='facebook' 
-					text={shareText} 
-					url={url} 
+				<IntentLink
+					service="facebook"
+					text={shareText}
+					url={url}
 				/>
-				<IntentLink 
-					service='twitter' 
-					text={shareText} 
-					url={url} 
+				<IntentLink
+					service="twitter"
+					text={shareText}
+					url={url}
 				/>
-				<IntentLink 
-					service='linkedin' 
-					text={shareText} 
-					url={url} 
+				<IntentLink
+					service="linkedin"
+					text={shareText}
+					url={url}
 				/>
 			</div>
 		</div>
@@ -71,10 +72,10 @@ const SocialMediaFooterWidget = ({type, name, fb_url, tw_url, insta_url, yt_url}
 		<div className={'social '.concat(type)}>
 			<MDText source={name} />
 			<div className="social-links">
-				{fb_url && <a className='social-button-link' href={fb_url} target='_blank'><FacebookLogo /></a>}
-				{tw_url && <a className='social-button-link' href={tw_url} target='_blank'><TwitterLogo /></a>}
-				{insta_url && <a className='social-button-link' href={insta_url} target='_blank'><InstagramLogo /></a>}
-				{yt_url && <a className='social-button-link' href={yt_url} target='_blank'><img src='https://gl-es-04.good-loop.com/cdn/images/youtube.png' /></a>}
+				{fb_url && <a className="social-button-link" href={fb_url} target="_blank"><FacebookLogo /></a>}
+				{tw_url && <a className="social-button-link" href={tw_url} target="_blank"><TwitterLogo /></a>}
+				{insta_url && <a className="social-button-link" href={insta_url} target="_blank"><InstagramLogo /></a>}
+				{yt_url && <a className="social-button-link" href={yt_url} target="_blank"><img src="https://gl-es-04.good-loop.com/cdn/images/youtube.png" /></a>}
 			</div>
 		</div>
 	);

@@ -1,6 +1,6 @@
 import React from 'react';
 import Roles from '../../base/Roles';
-import {space} from '../../base/utils/miscutils';
+import { space } from '../../base/utils/miscutils';
 
 const DevLink = ({href, target, children, style, className}) => {
 	if ( ! Roles.isDev()) {

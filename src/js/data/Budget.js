@@ -1,8 +1,6 @@
 /** Data model functions for the Budget data-type. */
-import { assert, assMatch } from '../base/utils/assert';
-
+import { assert } from '../base/utils/assert';
 import DataClass from '../base/data/DataClass';
-import C from '../C';
 import Money from '../base/data/Money';
 
 

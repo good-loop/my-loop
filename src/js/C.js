@@ -1,5 +1,5 @@
 import Enum from 'easy-enums';
-import Roles, {defineRole} from './base/Roles';
+import { defineRole } from './base/Roles';
 import C from './base/CBase';
 import GLAppManifest from '../../GLAppManifest';
 
