@@ -44,7 +44,8 @@ const Footer = ({className, style }) => (
 				<img src="/img/new-logo-with-text-white.svg" width="200px" alt="Good-Loop-Logo" />
 			</div>
 			<div className="row mt-1 justify-content-center">
-				<small>&copy; Good-Loop Ltd, all rights reserved. Good-Loop&trade; is a registered UK company no. SC548356.</small>
+				<small>&copy; Good-Loop Ltd, all rights reserved. This website contains logos, trademarks, and branding material such as adverts that are the property of the respective brands. Good-Loop&trade; is a registered UK company no. SC548356.
+				</small>
 			</div>
 		</div>
 	</footer>
