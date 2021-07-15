@@ -8,8 +8,9 @@ import C from '../C';
 import { space } from '../base/utils/miscutils';
 
 /**
- * Why do we need our own jsx??
- * MyLoop Navbar now has separate scroll functionality - could be moved into base if this is wanted across all our services
+ * TODO refactor to merge with NavBar.jsx
+ * 
+ * MyLoop Navbar has separate scroll functionality - could be moved into base if this is wanted across all our services
  */
 
 /*
@@ -69,13 +70,22 @@ class MyLoopNavBar extends React.Component {
 		if (isScrolled) navLogo = this.props.logoScroll || navLogo; // fall back to non-scrolled if no special logo provided for scrolled state
 		const toggleSrc = isScrolled ? navbarToggleScrollSrc : navbarToggleSrc;
 
+		let {brandLink, brandLogo, brandName} = DataStore.getValue(['widget','NavBar']) || {}; // HACK copy in some of our std NavBar
+		// isScrolled && ??Show only on scrolled to simplify logo colours vs backdrop
+		const isShowBrandLogo = brandLink && (brandLogo || brandName);
+
 		return (
 			<Navbar className={navClass}
 				style={style}
 				sticky="top" expand="xl">
-				<NavbarBrand href="/#my" className="mr-auto">
-					<img src={navLogo} alt="logo" className="logo-small" />
+				<NavbarBrand href="/#my" className={ ! isShowBrandLogo && "mr-auto"}>
+					<img src={navLogo} alt="logo" className="logo-sm" />
 				</NavbarBrand>
+				{isShowBrandLogo && // a 2nd brand? 
+					<NavbarBrand className="nav-brand mr-auto btn btn-transparent fill" title={brandName} href={brandLink}>
+						{brandLogo? <img className='logo-sm' alt={brandName} src={brandLogo} /> : brandName}
+					</NavbarBrand>
+				}
 
 				<NavbarToggler onClick={this.toggle}>
 					<img src={toggleSrc} alt="toggler" className="navbar-toggler-icon" />
