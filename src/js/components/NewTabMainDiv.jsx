@@ -22,6 +22,8 @@ import { fetchCharity } from './pages/MyCharitiesPage';
 import { getPVSelectedCharityId, getTabsOpened, Search} from './pages/TabsForGoodSettings';
 import TickerTotal from './TickerTotal';
 import { getProfile, getPVClaimValue } from '../base/data/Person';
+import NGO from '../base/data/NGO';
+import TickerCharity from './TickerCharity';
 
 
 // DataStore
@@ -176,6 +178,17 @@ const NormalTabCenter = ({charityID, loadingCharity}) => {
 				<TutorialComponent page={2} className="d-inline-block">
 					<TickerTotal />
 				</TutorialComponent>
+			</h3>
+			<img src="https://my.good-loop.com/img/TabsForGood/sparkle.png" alt="sparkle" style={{width: 50}} className="pl-1"/></> }
+		</div>
+		<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
+			{ charityID && <>
+			<h3 className="text-center">
+				Together we've raised&nbsp;
+				<TutorialComponent page={2} className="d-inline-block">
+					<TickerCharity />
+				</TutorialComponent>
+				<br /> for your selected charity
 			</h3>
 			<img src="https://my.good-loop.com/img/TabsForGood/sparkle.png" alt="sparkle" style={{width: 50}} className="pl-1"/></> }
 		</div>
