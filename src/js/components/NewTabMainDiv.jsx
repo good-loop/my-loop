@@ -65,7 +65,7 @@ const WebtopPage = () => {
 		// Wait 1.5 seconds before logging ad view - 1 second for ad view profit + .5 to load
 		setTimeout(() => {
 			// Avoid race condition: don't log until we know we have charity ID
-			pvCharityID.then(cid => lg("tabadview", {user: Login.getId(), nonce: nonce(6), cid}));
+			pvCharityID.promise.then(cid => lg("tabadview", {user: Login.getId(), nonce: nonce(6), cid}));
 		}, 1500);
 		logOnceFlag = true;
 	}
