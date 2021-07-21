@@ -51,21 +51,22 @@ const WebtopPage = () => {
 	Login.app = "t4g.good-loop.com"; // Not My.GL!
 	const pvCharityID = getPVSelectedCharityId();
 	const loadingCharity = !pvCharityID || !pvCharityID.resolved;
-	const charityID = pvCharityID&&pvCharityID.value;
+	const charityID = pvCharityID && pvCharityID.value;
 	let [showPopup, setShowPopup] = useState(false);
 
 	// Yeh - a tab is opened -- let's log that (once only)
-	if ( ! logOnceFlag && Login.isLoggedIn()) {
+	if (!logOnceFlag && Login.isLoggedIn()) {
 		let pvPerson = getProfile();
 		pvPerson.promise.then(person => { // Hurrah - T4G is definitely installed
-			if ( ! person) console.warn("no person?!");
+			if (!person) console.warn("no person?!");
 			else Person.setHasApp(person, Login.app);
 		});
 		// NB: include a nonce, as otherwise identical events (you open a few tabs) within a 15 minute time bucket get treated as 1
-		lg("tabopen", {user:Login.getId(), nonce:nonce(6)});
+		lg("tabopen", {user: Login.getId(), nonce: nonce(6)});
 		// Wait 1.5 seconds before logging ad view - 1 second for ad view profit + .5 to load
 		setTimeout(() => {
-			lg("tabadview", {user:Login.getId(), nonce:nonce(6), charity:charityID});
+			// Avoid race condition: don't log until we know we have charity ID
+			pvCharityID.then(cid => lg("tabadview", {user: Login.getId(), nonce: nonce(6), cid}));
 		}, 1500);
 		logOnceFlag = true;
 	}
