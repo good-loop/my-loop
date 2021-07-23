@@ -21,7 +21,7 @@ import DataStore from '../../base/plumbing/DataStore';
 import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
 import SearchQuery from '../../base/searchquery';
 import { assert, assMatch } from '../../base/utils/assert';
-import { asDate, is, isMobile, mapkv, space, sum, uniq, uniqById, yessy } from '../../base/utils/miscutils';
+import { asDate, encURI, is, isMobile, mapkv, space, sum, uniq, uniqById, yessy } from '../../base/utils/miscutils';
 import C from '../../C';
 import ActionMan from '../../plumbing/ActionMan';
 import ServerIO from '../../plumbing/ServerIO';
@@ -33,6 +33,7 @@ import DevLink from './DevLink';
 import Roles from '../../base/Roles';
 import HowDoesItWork from './HowDoesItWork';
 import NGO from '../../base/data/NGO';
+import { setNavContext, setNavProps } from '../../base/components/NavBar';
 
 
 /**
@@ -294,10 +295,28 @@ const CampaignPage = () => {
 	// Priority: TopCampaign, TopItem, Adverts
 	let branding = {};
 	ads.forEach(ad => Object.assign(branding, ad.branding));
-	if (pvTopItem && pvTopItem.value && pvTopItem.value.branding) {
-		Object.assign(branding, pvTopItem.value.branding);
+	const topItem = pvTopItem && pvTopItem.value;
+	if (topItem && topItem.branding) {
+		Object.assign(branding, topItem.branding);
 	}
 	Object.assign(branding, campaign.branding);
+
+	// set NavBar brand
+	let brandItem = null;
+	if (topItem && (C.TYPES.isAdvertiser(getType(topItem)) || C.TYPES.isAgency(getType(topItem)))) {
+		brandItem = topItem;
+	} else if (pvAdvertisers.value && List.hits(pvAdvertisers.value).length === 1) {
+		brandItem = List.hits(pvAdvertisers.value)[0];
+	}
+	if (brandItem) {
+		const prop = {Agency:"agency", Advertiser:"gl.vertiser"}[getType(brandItem)]; // bleurgh - we don't use standard naming for url params
+		let nprops = { // advertiser link and logo			
+			brandLink:'/#campaign?'+prop+'='+encURI(getId(brandItem)),
+			brandLogo: brandItem.branding && (brandItem.branding.logo_white || brandItem.branding.logo),
+			brandName: brandItem.name || getId(brandItem)
+		};
+		setNavProps(nprops);
+	}
 
 	// initial donation record
 	let donation4charityUnscaled = Campaign.dntn4charity(campaign, otherCampaigns, extraAds, status);
