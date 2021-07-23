@@ -197,7 +197,7 @@ const numberRegex = /(\w+)\W*\(number\)\W*(\w+)/g
  */
 const Impact = ({ charity, donationValue }) => {
 	const impact = charity.simpleImpact;
-	if (!impact || !impact.name || !impact.costPerBeneficiary || !donationValue) return;
+	if (!impact || !impact.name || !impact.costPerBeneficiary || !donationValue) return null;
 	
 	let impactDesc = impact.name;
 	let donationsMoney = new Money(donationValue);
