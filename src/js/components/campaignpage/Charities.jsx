@@ -11,6 +11,8 @@ import DevLink from './DevLink';
 import LinkOut from '../../base/components/LinkOut';
 import TestimonialPlayer from './TestimonialPlayer';
 import { lgError } from '../../base/plumbing/log';
+import {I18N} from 'easyi18n';
+// window.I18N = I18N; debug
 
 /**
  * HACK hardcode some thank you messages.
@@ -203,7 +205,17 @@ const Impact = ({ charity, donationValue }) => {
 	let impactDesc = impact.name;
 	let donationsMoney = new Money(donationValue);
 	const impactCount = Math.round(Money.divide(donationsMoney, impact.costPerBeneficiary));
-	const charityClassBit = charity.name.replace(/ /g, '-');
+
+	const charityClassBit = charity.name.replace(/ /g, '-'); // Why not use getId(charity)?? Is this used for anything anyway?? Jul 2021
+	// There are no uses of "charity-impact" in any other file -- Is this old unwanted code??
+
+	// Use i18N instead
+	if (true) {
+		// Don't say "0 To help verb nouns"...
+		let sImpactCount = impactCount? printer.prettyNumber(impactCount) : '';
+		const s = I18N.tr(sImpactCount+" "+impactDesc);
+		return <b>{s}</b>;
+	}
 
 	// Don't say "0 To help verb nouns"...
 	let countSpan = impactCount ? <span className={`charity-impact-${charityClassBit}`}>{printer.prettyNumber(impactCount)} </span> : '';
