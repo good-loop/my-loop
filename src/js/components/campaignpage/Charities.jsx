@@ -10,6 +10,7 @@ import MDText from '../../base/components/MDText';
 import DevLink from './DevLink';
 import LinkOut from '../../base/components/LinkOut';
 import TestimonialPlayer from './TestimonialPlayer';
+import { lgError } from '../../base/plumbing/log';
 
 /**
  * HACK hardcode some thank you messages.
@@ -190,6 +191,7 @@ const singularRegex = /(.*)\s+\(singular:\s*(\S+)\)\s*(.*)/g;
 const simpleRegex = /(.*) (.*)$/g;
 // For impact strings of format "verbed (number) nouns"
 const numberRegex = /(\w+)\W*\(number\)\W*(\w+)/g
+
 /**
  * Get charity impacts from impact model, if any data on it exists
  * @param {Output} impact
@@ -205,8 +207,8 @@ const Impact = ({ charity, donationValue }) => {
 	const charityClassBit = charity.name.replace(/ /g, '-');
 	
 	// Handle impact description format "Verbed 100 nouns"
-	let match = numberRegex.exec(impactDesc);
-	if (match) {
+	let numberMatch = numberRegex.exec(impactDesc);
+	if (numberMatch) {
 		const [, verbed, nouns] = numberRegex.exec(impactDesc);
 		return <b>
 			<span className={`impact-text-${charityClassBit}-start`}>{verbed}</span>{' '}
@@ -216,13 +218,22 @@ const Impact = ({ charity, donationValue }) => {
 	}
 
 	// Extract verb and noun from the impact description - assume "100 nouns verbed" format
-	let [, nouns, verbed] = simpleRegex.exec(impactDesc);
+	let nouns, verbed;
+	const simpleMatch = simpleRegex.exec(impactDesc);
+	if (simpleMatch) {
+		[, nouns, verbed] = simpleMatch;
+	}
 
-	// Upgrade to the "specified singular noun" format if it's used
+	// Upgrade to the specified-singular-noun format "nouns (singular: noun) verbed" if it's used
 	const singularMatch = singularRegex.exec(impactDesc);
 	if (singularMatch) {
 		nouns = (impactCount === 1) ? singularMatch[2] : singularMatch[1];
 		verbed = singularMatch[3];
+	}
+
+	if (!nouns || !verbed) {
+		lgError((`Couldn't format impact description string "${impactDesc}" for charity ID ${charity.id}`));
+		return '';
 	}
 
 	// Use generic "to help verb nouns" phrasing for 0 impact count
