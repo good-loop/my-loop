@@ -11,6 +11,8 @@ import DevLink from './DevLink';
 import LinkOut from '../../base/components/LinkOut';
 import TestimonialPlayer from './TestimonialPlayer';
 import { lgError } from '../../base/plumbing/log';
+import {I18N} from 'easyi18n';
+// window.I18N = I18N; debug
 
 /**
  * HACK hardcode some thank you messages.
@@ -184,13 +186,12 @@ const eVerbs = ['rescued', 'saved'];
 const infinitive = verb => verb.replace(/ed$/, eVerbs.includes(verb) ? 'e' : '');
 
 // TODO use i18n.js instead, which does this + translations??
-// For impact strings of format "nouns (singular: noun) verbed"
-// Updated to accept (singular:noun) with no space, "nouns (singular: noun)" with no trailing verb
-const singularRegex = /(.*)\s+\(singular:\s*(\S+)\)\s*(.*)/g;
-// For impact strings of format "nouns verbed"
-const simpleRegex = /(.*) (.*)$/g;
+// For picking appropriate noun form when using "nouns (singular: noun)" format
+const singularRegex = /(\S*)\s+\(singular:\s*(\S+)\)/g;
+// For impact strings of format "(possibly multiword nouns) (verbed)"
+const simpleRegex = /(.*)\s+(\S+)$/g;
 // For impact strings of format "verbed (number) nouns"
-const numberRegex = /(\w+)\W*\(number\)\W*(\w+)/g
+const numberRegex = /(\w+)\W*\(number\)\W*(\w+)/g;
 
 /**
  * Get charity impacts from impact model, if any data on it exists
@@ -204,46 +205,60 @@ const Impact = ({ charity, donationValue }) => {
 	let impactDesc = impact.name;
 	let donationsMoney = new Money(donationValue);
 	const impactCount = Math.round(Money.divide(donationsMoney, impact.costPerBeneficiary));
-	const charityClassBit = charity.name.replace(/ /g, '-');
-	
-	// Handle impact description format "Verbed 100 nouns"
-	let numberMatch = numberRegex.exec(impactDesc);
-	if (numberMatch) {
-		const [, verbed, nouns] = numberRegex.exec(impactDesc);
-		return <b>
-			<span className={`impact-text-${charityClassBit}-start`}>{verbed}</span>{' '}
-			<span className={`charity-impact-${charityClassBit}`}>{impactCount}</span>{' '}
-			<span className={`impact-text-${charityClassBit}-end`}>{nouns}</span>
-		</b>;
-	}
 
-	// Extract verb and noun from the impact description - assume "100 nouns verbed" format
-	let nouns, verbed;
-	const simpleMatch = simpleRegex.exec(impactDesc);
-	if (simpleMatch) {
-		[, nouns, verbed] = simpleMatch;
-	}
+	const charityClassBit = charity.name.replace(/ /g, '-'); // Why not use getId(charity)?? Is this used for anything anyway?? Jul 2021
+	// There are no uses of "charity-impact" in any other file -- Is this old unwanted code??
 
-	// Upgrade to the specified-singular-noun format "nouns (singular: noun) verbed" if it's used
-	const singularMatch = singularRegex.exec(impactDesc);
-	if (singularMatch) {
-		nouns = (impactCount === 1) ? singularMatch[2] : singularMatch[1];
-		verbed = singularMatch[3];
+	// Use i18N instead
+	if (true) {
+		// Don't say "0 To help verb nouns"...
+		let sImpactCount = impactCount? printer.prettyNumber(impactCount) : '';
+		const s = I18N.tr(sImpactCount+" "+impactDesc);
+		return <b>{s}</b>;
 	}
-
-	if (!nouns || !verbed) {
-		lgError((`Couldn't format impact description string "${impactDesc}" for charity ID ${charity.id}`));
-		return '';
-	}
-
-	// Use generic "to help verb nouns" phrasing for 0 impact count
-	impactDesc = impactCount ? `${nouns} ${verbed}` : `To help ${infinitive(verbed)} ${nouns}`;
 
 	// Don't say "0 To help verb nouns"...
-	let countSpan = count ? <span className={`charity-impact-${charityClassBit}`}>{printer.prettyNumber(impactCount)} </span> : '';
+	let countSpan = impactCount ? <span className={`charity-impact-${charityClassBit}`}>{printer.prettyNumber(impactCount)} </span> : '';
+
+	// Replace "nouns (singular: noun)" with appropriate form for number of impact
+	const singularMatch = singularRegex.exec(impactDesc);
+	singularRegex.lastIndex = 0; // Reset regex state after exec
+	if (singularMatch) {
+		const newNoun = (impactCount === 1) ? singularMatch[2] : singularMatch[1];
+		impactDesc = impactDesc.replace(singularRegex, newNoun);
+	}
+
+	// Handle impact description format "Verbed 100 nouns"
+	let numberMatch = numberRegex.exec(impactDesc);
+	numberRegex.lastIndex = 0; // Reset regex state after exec
+	if (numberMatch) {
+		let [, verbed, nouns] = numberMatch;
+		// Only output "Verbed X nouns" for non-zero impact
+		if (impactCount) {
+			return <b>
+				<span className={`impact-text-${charityClassBit}-start`}>{verbed}</span>{' '}
+				{countSpan}{' '}
+				<span className={`impact-text-${charityClassBit}-end`}>{nouns}</span>
+			</b>;
+		}
+	}
+
+	// Zero or unknown impact? Rephrase "X nouns verbed" to "To help verb nouns"
+	if (!impactCount) {
+		const simpleMatch = simpleRegex.exec(impactDesc); // assumes last word is verb
+		simpleRegex.lastIndex = 0; // Reset regex state after exec
+		if (simpleMatch) {
+			let [, nouns, verbed] = simpleMatch;
+			return <b>To help {infinitive(verbed)} {nouns}</b>;
+		}
+	}
+
+	// Impact is non-zero and description doesn't have "(number)" in the middle
+	// Assume "100 nouns verbed" format and just prefix number
+	// We've already corrected noun vs nouns above
 
 	return <b>
-		{countSpan}
+		{countSpan}{' '}
 		<span className={`impact-text-${charityClassBit}`}>{impactDesc}</span>
 	</b>;
 };
