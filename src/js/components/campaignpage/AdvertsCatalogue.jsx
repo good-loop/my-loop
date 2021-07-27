@@ -257,9 +257,9 @@ const AdvertCard = ({ ad, active }) => {
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
 			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{position:"absolute", zIndex:999}}>Advert Editor ({ad.id})</DevLink>
 			<div className="position-relative ad-card">
-				<img src="/img/LandingBackground/white_iphone.png" className="w-100 invisible" />
+				<img src="/img/LandingBackground/iphone-mockup-landscape.svg" className="w-100 invisible" />
 				{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
-				<img src="/img/LandingBackground/white_iphone.png" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "50%", width: "80%", top: "50%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }} />
+				<img src="/img/LandingBackground/iphone-mockup-landscape.svg" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "49.8%", width: "67%", top: "50%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }} />
 				<div className="position-absolute theunit">
 					{hasShown ? (
 						<GoodLoopUnit vertId={ad.id} size={size} />
