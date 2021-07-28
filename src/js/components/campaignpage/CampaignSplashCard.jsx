@@ -86,7 +86,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 						</WhiteCircle>
 						<img src="/img/plus.png" className="plus" alt="+"/>
 						<WhiteCircle>
-							<div className="sub-header">{numPeople ? <><span className="num">{numPeople}</span> people</> : "Loading..."}</div>
+							<div className="sub-header">{numPeople ? <><span className="num">{numPeople}</span> people</> : "The Community"}</div>
 						</WhiteCircle>
 					</div>
 					<div className="flex-column flex-center pt-5 splash-text">
