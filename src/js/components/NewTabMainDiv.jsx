@@ -170,15 +170,23 @@ const NormalTabCenter = ({charityID, loadingCharity}) => {
 	let searchEngine = (pvSE && pvSE.value) || "google";
 	const engineData = ENGINES[searchEngine];
 
-	return <>
-		<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
-			{ !charityID && <><h3 className="text-center">
+	// Show the total raised across all charities, if the user hasn't selected one.
+	let totalRaised = null;
+	if (!loadingCharity && !charityID) {
+		totalRaised = <>
+			<h3 className="text-center">
 				Together we've raised&nbsp;
 				<TutorialComponent page={2} className="d-inline-block">
 					<TickerTotal />
 				</TutorialComponent>
 			</h3>
-			<img src="https://my.good-loop.com/img/TabsForGood/sparkle.png" alt="sparkle" style={{width: 50}} className="pl-1"/></> }
+			<img src="https://my.good-loop.com/img/TabsForGood/sparkle.png" alt="sparkle" style={{width: 50}} className="pl-1"/>
+		</>;
+	}
+
+	return <>
+		<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
+			{ totalRaised }
 		</div>
 		<div className="w-100 pb-3">
 			<div className="tab-search-container mx-auto">
