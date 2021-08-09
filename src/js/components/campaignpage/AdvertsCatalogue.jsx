@@ -100,6 +100,7 @@ const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalVie
 				donationTotal={donationTotal}
 				totalViewCount={totalViewCount}
 				active={true}
+				// social={true}
 			/>
 			<AdvertFilters campaign={campaign} vertisers={vertisers} ads={sampleAds} canonicalAds={canonicalAds}/>
 		</Container>
@@ -117,6 +118,7 @@ const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalVie
 				donationTotal={donationTotal}
 				totalViewCount={totalViewCount}
 				active={activeIndex === i}
+				social={true}
 			/>
 			<CarouselCaption captionText={<Misc.DateDuration startDate={ad.start} endDate={ad.end} />}/>
 		</CarouselItem>
@@ -212,6 +214,7 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 						selected={selectedIndex == adIndex}
 						handleClick={() => setSelected(adIndex)}
 						active={activeIndex === i}
+						social={true}
 					/>
 					<AdvertPreviewCard
 						key={adIndex + 1}
@@ -219,6 +222,7 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 						selected={selectedIndex == adIndex + 1}
 						handleClick={() => setSelected(adIndex + 1)}
 						active={activeIndex === i}
+						social={true}
 					/>
 					<AdvertPreviewCard
 						key={adIndex + 2}
@@ -226,6 +230,7 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 						selected={selectedIndex == adIndex + 2}
 						handleClick={() => setSelected(adIndex + 2)}
 						active={activeIndex === i}
+						social={true}
 					/>
 				</div>
 			</CarouselItem>
@@ -249,18 +254,36 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 	</div>;
 }
 
-const AdvertCard = ({ ad, active }) => {
-	const size = 'landscape';
+// Support SocialAds
+const IPhoneMockup = ({size}) => {
+	if (size == 'portrait') {
+		return (
+			<div>
+					<img src="/img/LandingBackground/iphone-mockup-portrait.svg" className="w-100 invisible" />
+					<img src="/img/LandingBackground/iphone-mockup-portrait.svg" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "49.8%", width: "35%", top: "18%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }} />
+			</div>
+		)	
+	} else {
+		return (
+			<div>
+				<img src="/img/LandingBackground/iphone-mockup-landscape.svg" className="w-100 invisible" />
+				{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
+				<img src="/img/LandingBackground/iphone-mockup-landscape.svg" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "49.8%", width: "67%", top: "50%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }} />
+			</div>
+		)
+	}
+}
+
+const AdvertCard = ({ ad, active, social }) => {
+	const size = (social == true ? 'portrait' :'landscape');
 	const [hasShown, setHasShown] = useState(false);
 	if (active && !hasShown) setHasShown(true);
 	return (
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
 			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{position:"absolute", zIndex:999}}>Advert Editor ({ad.id})</DevLink>
 			<div className="position-relative ad-card">
-				<img src="/img/LandingBackground/iphone-mockup-landscape.svg" className="w-100 invisible" />
-				{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
-				<img src="/img/LandingBackground/iphone-mockup-landscape.svg" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "49.8%", width: "67%", top: "50%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }} />
-				<div className="position-absolute theunit">
+				<IPhoneMockup size={size} />
+				<div className={"position-absolute theunit-" + size} >
 					{hasShown ? (
 						<GoodLoopUnit vertId={ad.id} size={size} />
 					) : (
@@ -279,18 +302,18 @@ const AdvertCard = ({ ad, active }) => {
  * @param {Advert} p.ad
  * @returns
  */
-const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
+const AdvertPreviewCard = ({ ad, handleClick, selected = false, active, social }) => {
 	if (!ad) {
 		console.warn("AdvertPreviewCard - NO ad?!");
 		return null;
 	}
-	let size = 'landscape';
+	const size = (social == true ? 'portrait' :'landscape');
 	const [hasShown, setHasShown] = useState(false);
 	if (active && !hasShown) setHasShown(true);
 
 	return (
-		<div className="col-md-4 col-6">
-			<div onClick={e => { e.preventDefault(); handleClick(); }} className={"pointer-wrapper" + (selected ? " selected" : "")}>
+		<div className={"col-6 	" + (social ? "col-md-2" : "col-md-4")}>
+			<div onClick={e => { e.preventDefault(); handleClick(); }} className={"d-flex justify-content-center pointer-wrapper" + (selected ? " selected" : "")}>
 				<div className="ad-prev shadow">
 					{hasShown ? (
 						<GoodLoopUnit vertId={ad.id} size={size} advert={ad} />
