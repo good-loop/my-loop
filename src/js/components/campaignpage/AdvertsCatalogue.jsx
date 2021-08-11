@@ -274,8 +274,8 @@ const IPhoneMockup = ({size}) => {
 	}
 }
 
-// If 
-const AdvertCard = ({ ad, active, ...other }) => {
+// If social is null (not specific) or false, it will fall back to landscape ads
+const AdvertCard = ({ ad, active, social }) => {
 	const size = (social == true ? 'portrait' :'landscape');
 	const [hasShown, setHasShown] = useState(false);
 	if (active && !hasShown) setHasShown(true);
