@@ -118,7 +118,7 @@ const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalVie
 				donationTotal={donationTotal}
 				totalViewCount={totalViewCount}
 				active={activeIndex === i}
-				social={true}
+				// social={true}
 			/>
 			<CarouselCaption captionText={<Misc.DateDuration startDate={ad.start} endDate={ad.end} />}/>
 		</CarouselItem>
@@ -254,7 +254,7 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 	</div>;
 }
 
-// Support SocialAds
+// Support portrait ads
 const IPhoneMockup = ({size}) => {
 	if (size == 'portrait') {
 		return (
@@ -274,7 +274,8 @@ const IPhoneMockup = ({size}) => {
 	}
 }
 
-const AdvertCard = ({ ad, active, social }) => {
+// If 
+const AdvertCard = ({ ad, active, ...other }) => {
 	const size = (social == true ? 'portrait' :'landscape');
 	const [hasShown, setHasShown] = useState(false);
 	if (active && !hasShown) setHasShown(true);
