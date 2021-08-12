@@ -72,7 +72,7 @@ class MyLoopNavBar extends React.Component {
 
 		let {brandLink, brandLogo, brandName} = DataStore.getValue(['widget','NavBar']) || {}; // HACK copy in some of our std NavBar
 		// isScrolled && ??Show only on scrolled to simplify logo colours vs backdrop
-		const isShowBrandLogo = ( window.location.href.includes("#campaign") ? brandLink && (brandLogo || brandName) : undefined ) ;
+		const isShowBrandLogo = window.location.href.includes("#campaign") ? brandLink && (brandLogo || brandName) : undefined;
 
 		return (
 			<Navbar className={navClass}
