@@ -214,7 +214,7 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 						selected={selectedIndex == adIndex}
 						handleClick={() => setSelected(adIndex)}
 						active={activeIndex === i}
-						social={true}
+						// social={true}
 					/>
 					<AdvertPreviewCard
 						key={adIndex + 1}
@@ -222,7 +222,7 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 						selected={selectedIndex == adIndex + 1}
 						handleClick={() => setSelected(adIndex + 1)}
 						active={activeIndex === i}
-						social={true}
+						// social={true}
 					/>
 					<AdvertPreviewCard
 						key={adIndex + 2}
@@ -230,7 +230,7 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 						selected={selectedIndex == adIndex + 2}
 						handleClick={() => setSelected(adIndex + 2)}
 						active={activeIndex === i}
-						social={true}
+						// social={true}
 					/>
 				</div>
 			</CarouselItem>
