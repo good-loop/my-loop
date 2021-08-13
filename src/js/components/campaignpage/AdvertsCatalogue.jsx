@@ -100,7 +100,6 @@ const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalVie
 				donationTotal={donationTotal}
 				totalViewCount={totalViewCount}
 				active={true}
-				// social={true}
 			/>
 			<AdvertFilters campaign={campaign} vertisers={vertisers} ads={sampleAds} canonicalAds={canonicalAds}/>
 		</Container>
@@ -118,7 +117,6 @@ const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalVie
 				donationTotal={donationTotal}
 				totalViewCount={totalViewCount}
 				active={activeIndex === i}
-				// social={true}
 			/>
 			<CarouselCaption captionText={<Misc.DateDuration startDate={ad.start} endDate={ad.end} />}/>
 		</CarouselItem>
@@ -214,7 +212,6 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 						selected={selectedIndex == adIndex}
 						handleClick={() => setSelected(adIndex)}
 						active={activeIndex === i}
-						// social={true}
 					/>
 					<AdvertPreviewCard
 						key={adIndex + 1}
@@ -222,7 +219,6 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 						selected={selectedIndex == adIndex + 1}
 						handleClick={() => setSelected(adIndex + 1)}
 						active={activeIndex === i}
-						// social={true}
 					/>
 					<AdvertPreviewCard
 						key={adIndex + 2}
@@ -230,7 +226,6 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 						selected={selectedIndex == adIndex + 2}
 						handleClick={() => setSelected(adIndex + 2)}
 						active={activeIndex === i}
-						// social={true}
 					/>
 				</div>
 			</CarouselItem>
@@ -275,10 +270,17 @@ const IPhoneMockup = ({size}) => {
 }
 
 // If social is null (not specific) or false, it will fall back to landscape ads
-const AdvertCard = ({ ad, active, social }) => {
-	const size = (social == true ? 'portrait' :'landscape');
+const AdvertCard = ({ ad, active }) => {
+	const social = ad.format === "social";
+	let size = 'landscape';
 	const [hasShown, setHasShown] = useState(false);
 	if (active && !hasShown) setHasShown(true);
+	const extraParams = {};
+	if (social) {
+		size = "portrait";
+		extraParams.delivery = "app";
+		extraParams.after = "persist";
+	}
 	return (
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
 			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{position:"absolute", zIndex:999}}>Advert Editor ({ad.id})</DevLink>
@@ -286,7 +288,7 @@ const AdvertCard = ({ ad, active, social }) => {
 				<IPhoneMockup size={size} />
 				<div className={"position-absolute theunit-" + size} >
 					{hasShown ? (
-						<GoodLoopUnit vertId={ad.id} size={size} />
+						<GoodLoopUnit vertId={ad.id} size={size} extraParams={extraParams} />
 					) : (
 						<div style={{background:"black", width:"100%", height:"100%"}}></div>
 					)}
@@ -303,11 +305,12 @@ const AdvertCard = ({ ad, active, social }) => {
  * @param {Advert} p.ad
  * @returns
  */
-const AdvertPreviewCard = ({ ad, handleClick, selected = false, active, social }) => {
+const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
 	if (!ad) {
 		console.warn("AdvertPreviewCard - NO ad?!");
 		return null;
 	}
+	const social = ad.format === "social";
 	const size = (social == true ? 'portrait' :'landscape');
 	const [hasShown, setHasShown] = useState(false);
 	if (active && !hasShown) setHasShown(true);
