@@ -311,7 +311,8 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
 		return null;
 	}
 	const social = ad.format === "social";
-	const size = (social == true ? 'portrait' :'landscape');
+	let size = 'landscape'
+	if (social) {size = "portrait";}
 	const [hasShown, setHasShown] = useState(false);
 	if (active && !hasShown) setHasShown(true);
 
