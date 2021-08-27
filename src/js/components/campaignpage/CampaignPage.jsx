@@ -274,7 +274,8 @@ const CampaignPage = () => {
 	// Get filtered ad list
 	const otherCampaigns = pvCampaigns.value && List.hits(pvCampaigns.value).filter(c => c.id!==campaign.id);
 	let adStatusList = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, status, query, extraAds:pvAds.value && List.hits(pvAds.value)}) : [];
-	const ads = adStatusList.filter(ad => ad.ihStatus==="SHOWING");
+	// const ads = adStatusList.filter(ad => ad.ihStatus==="SHOWING"); TODO Put this back
+	const ads = adStatusList.filter(ad => true);
 	let canonicalAds = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, status, extraAds:pvAds.value && List.hits(pvAds.value)}).filter(ad => ad.ihStatus==="SHOWING") : [];
 	let extraAds = adStatusList.filter(ad => ad.ihStatus==="NO CAMPAIGN");
 	console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", otherCampaigns && otherCampaigns.map(c => c.name || c.id), "and extra ads", extraAds);

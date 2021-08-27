@@ -249,20 +249,46 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 	</div>;
 }
 
+// Support portrait ads
+const IPhoneMockup = ({size}) => {
+	if (size == 'portrait') {
+		return (
+			<div>
+					<img src="/img/LandingBackground/iphone-mockup-portrait.svg" className="w-100 invisible" />
+					<img src="/img/LandingBackground/iphone-mockup-portrait.svg" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "49.8%", width: "35%", top: "18%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }} />
+			</div>
+		)	
+	} else {
+		return (
+			<div>
+				<img src="/img/LandingBackground/iphone-mockup-landscape.svg" className="w-100 invisible" />
+				{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
+				<img src="/img/LandingBackground/iphone-mockup-landscape.svg" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "49.8%", width: "67%", top: "50%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }} />
+			</div>
+		)
+	}
+}
+
+// If social is null (not specific) or false, it will fall back to landscape ads
 const AdvertCard = ({ ad, active }) => {
-	const size = 'landscape';
+	const social = ad.format === "social";
+	let size = 'landscape';
 	const [hasShown, setHasShown] = useState(false);
 	if (active && !hasShown) setHasShown(true);
+	const extraParams = {};
+	if (social) {
+		size = "portrait";
+		extraParams.delivery = "app";
+		extraParams.after = "persist";
+	}
 	return (
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
 			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{position:"absolute", zIndex:999}}>Advert Editor ({ad.id})</DevLink>
 			<div className="position-relative ad-card">
-				<img src="/img/LandingBackground/white_iphone.png" className="w-100 invisible" />
-				{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
-				<img src="/img/LandingBackground/white_iphone.png" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "50%", width: "80%", top: "50%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }} />
-				<div className="position-absolute theunit">
+				<IPhoneMockup size={size} />
+				<div className={"position-absolute theunit-" + size} >
 					{hasShown ? (
-						<GoodLoopUnit vertId={ad.id} size={size} />
+						<GoodLoopUnit vertId={ad.id} size={size} extraParams={extraParams} />
 					) : (
 						<div style={{background:"black", width:"100%", height:"100%"}}></div>
 					)}
@@ -284,13 +310,15 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
 		console.warn("AdvertPreviewCard - NO ad?!");
 		return null;
 	}
-	let size = 'landscape';
+	const social = ad.format === "social";
+	let size = 'landscape'
+	if (social) {size = "portrait";}
 	const [hasShown, setHasShown] = useState(false);
 	if (active && !hasShown) setHasShown(true);
 
 	return (
-		<div className="col-md-4 col-6">
-			<div onClick={e => { e.preventDefault(); handleClick(); }} className={"pointer-wrapper" + (selected ? " selected" : "")}>
+		<div className={"col-6 	" + (social ? "col-md-2" : "col-md-4")}>
+			<div onClick={e => { e.preventDefault(); handleClick(); }} className={"d-flex justify-content-center pointer-wrapper" + (selected ? " selected" : "")}>
 				<div className="ad-prev shadow">
 					{hasShown ? (
 						<GoodLoopUnit vertId={ad.id} size={size} advert={ad} />
