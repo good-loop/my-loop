@@ -62,11 +62,11 @@ const WebtopPage = () => {
 			else Person.setHasApp(person, Login.app);
 		});
 		// NB: include a nonce, as otherwise identical events (you open a few tabs) within a 15 minute time bucket get treated as 1
-		lg("tabopen", {user: Login.getId(), nonce: nonce(6)});
+		lg("tabopen", {nonce: nonce(6)});
 		// Wait 1.5 seconds before logging ad view - 1 second for ad view profit + .5 to load
 		setTimeout(() => {
 			// Avoid race condition: don't log until we know we have charity ID
-			pvCharityID.promise.then(cid => lg("tabadview", {user: Login.getId(), nonce: nonce(6), cid}));
+			pvCharityID.promise.then(cid => lg("tabadview", {nonce: nonce(6), cid}));
 		}, 1500);
 		logOnceFlag = true;
 	}
