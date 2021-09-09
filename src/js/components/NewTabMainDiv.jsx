@@ -239,12 +239,14 @@ const AdBlockPopup = () => {
 	const pvHasAdBlock = detectAdBlock();
 	const hasAdBlock = pvHasAdBlock.value;
 
+	// Check if user using T4G
+
 	return hasAdBlock && adblockPopup ? (
 		<div style={{background:"white", borderRadius:10, left:"50%", top:"50%", transform:"translate(-50%, -50%)", width:500, zIndex:99999}}
 			className="shadow position-absolute text-center p-3"
 			>
 			<h3 className="text-dark">It looks like you have AdBlock enabled</h3>
-			<p>We can't raise money for charity without displaying ads. Please disable your adblocker so Tabs for Good can work!</p>
+			<p>We can't raise money for charity without displaying ads. Please disable your adblocker or <a href="https://my.good-loop.com/#whitelist">whitelist us</a> so Tabs for Good can work!</p>
 			<b style={{position:"absolute", top:10, right:20, cursor:"pointer"}} onClick={() => setAdblockPopup(false)}>X</b>
 		</div>
 	) : null;
