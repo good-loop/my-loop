@@ -32,7 +32,8 @@ const WhitelistUs = () => {
 					<Col md={6}>
 						<div className="w-100 h-100 flex-column unset-margins justify-content-center mission">
 							<h2 className="mr-auto mb-3">Whitelist Tabs For Good</h2>
-							<p>Simply pause or disable adblock on my.good-loop.com, we can start rasing money for charity.</p>
+							<p>Simply pause ad blocker on this page, or manually add <code>my.good-loop.com</code> to your ad blocker whitelist filter.</p>
+							<p>We can start rasing money for charity.</p>
 						</div>
 					</Col>
 				</Row>
