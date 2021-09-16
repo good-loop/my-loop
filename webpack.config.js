@@ -12,7 +12,7 @@ const webDir = process.env.OUTPUT_WEB_DIR || 'web';
 
 const baseConfig = {
 	// NB When editing keep the "our code" entry point last in this list - makeConfig override depends on this position.
-	entry: ['@babel/polyfill', './src/js/app.jsx'],
+	entry: ['core-js', './src/js/app.jsx'],
 	output: {
 		path: path.resolve(__dirname, './' + webDir + '/build/'), // NB: this should include js and css outputs
 		// filename: is left undefined and filled in by makeConfig
@@ -20,7 +20,10 @@ const baseConfig = {
 	devtool: 'source-map',
 	resolve: {
 		extensions: ['.ts', '.tsx', '.js', '.jsx'],
-		symlinks: false
+		symlinks: false,
+		alias: { querystring: "querystring-es3",
+                         util: 'util'
+                }
 	},
 	module: {
 		rules: [
@@ -31,12 +34,14 @@ const baseConfig = {
 				options: {
 					presets: [
 						['@babel/preset-typescript', { targets: { ie: "11" }, loose: true }],
+						["@babel/preset-env", { targets: { ie: "11" }, loose: true }],
 						'@babel/react'
 					],
 					plugins: [
 						'@babel/plugin-transform-typescript',
 						'@babel/plugin-proposal-object-rest-spread',
-						'babel-plugin-const-enum'
+						'babel-plugin-const-enum',
+						'@babel/plugin-proposal-private-methods'
 					]
 				}
 			},
@@ -49,7 +54,9 @@ const baseConfig = {
 						['@babel/preset-env', { targets: { ie: "11" }, loose: true }]
 					],
 					plugins: [
-						'@babel/plugin-proposal-class-properties',
+						["@babel/plugin-proposal-class-properties", { "loose": false }],
+						'@babel/plugin-proposal-private-methods',
+						'@babel/plugin-proposal-private-property-in-object',
 						'@babel/plugin-transform-react-jsx',
 					]
 				}
@@ -69,7 +76,6 @@ const baseConfig = {
 * @param {?string} entry (unusual) Compile a different top-level file instead of app.jsx
 * ## process.env
 * process is always globally available to runtime code.
-
 */
 const makeConfig = ({ filename, mode, entry }) => {
 	// config.mode can be "development" or "production" & dictates whether JS is minified
@@ -109,7 +115,6 @@ if (process.env.NO_PROD !== 'true') {
 		configs.push(prodc);		
 	});
 }
-// console.log(configs);
 
 // Output bundle files for production and dev/debug
 module.exports = configs;
