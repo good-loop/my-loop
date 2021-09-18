@@ -28,7 +28,7 @@ import ServerIO from '../../plumbing/ServerIO';
 import MyLoopNavBar from '../MyLoopNavBar';
 import AdvertsCatalogue from './AdvertsCatalogue';
 import CampaignSplashCard from './CampaignSplashCard';
-import Charities, { CharityDetails } from './Charities';
+import CharitiesSection, { CharityDetails } from './CharitiesSection';
 import DevLink from './DevLink';
 import Roles from '../../base/Roles';
 import HowDoesItWork from './HowDoesItWork';
@@ -80,118 +80,69 @@ const viewCount = (viewcount4campaign, ad) => {
 
 
 /**
- * @returns fetches for all the data: `{pvTopCampaign, pvCampaigns, pvAgencies, pvAds, pvAdvertisers}`
+ * @returns fetches for all the data: `{pvTopCampaign, pvAgencies, pvAds, pvAdvertisers}`
  */
  const fetchIHubData = () => {
+	const path = DataStore.getValue(['location', 'path']);
+	let topCampaignId = path[1];
 	// What adverts should we look at?
 	let {
-		'gl.vert': adid, // deprecated - prefer campaign
-		'gl.vertiser': vertiserid,
-		'gl.status': glStatus,
+		'gl.status': glStatus, // deprecated
 		status,
-		agency,
 		query
 		// q = '', TODO
 	} = DataStore.getValue(['location', 'params']) || {};
-	let campaignId1 = DataStore.getValue(['location','path'])[1];
 	// Merge gl.status into status & take default value
-	if (!status) status = (glStatus || C.KStatus.PUB_OR_ARC);
+	if ( ! status) status = (glStatus || C.KStatus.PUB_OR_ARC);
 	// Data, assemble
-	// let campaignIds, agencyIds, adIds, advertiserIds;
-	let pvTopItem, pvTopCampaign, pvCampaigns, pvAgencies, pvAds, pvAdvertisers;
-	// ...by Campaign?
-	if (campaignId1) {
-		pvTopItem = pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:campaignId1});
-		pvCampaigns = null;
-		// ads
-		pvAds = pvTopCampaign.value && Campaign.fetchAds(pvTopCampaign.value, null, status, query);
-		// advertiser
-		if (pvTopCampaign.value && pvTopCampaign.value.vertiser) {
-			const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:pvTopCampaign.value.vertiser});
-			// wrap as a list
-			pvAdvertisers = fetchIHubData2_wrapAsList(pvAdvertiser);
+	let pvTopCampaign, pvAgencies, pvAdvertisers;
+	if ( ! topCampaignId) {
+		// by advertiser or agency?
+		let pvTop;
+		let advid = DataStore.getUrlValue("advertiser");
+		if (advid) {
+			pvTop = getDataItem({type:"Advertiser", id:advid, status});
+		} else {
+			let agid = DataStore.getUrlValue("agency");
+			if ( ! agid) throw new Error("Need Campaign, Advertiser, or Agency");
+			pvTop = getDataItem({type:"Agency", id:agid, status});
 		}
+		if ( ! pvTop.value) {
+			return {
+				pvTopCampaign:{},
+				pvAgencies:{},
+				pvAds:{},
+				pvAdvertisers:{}
+			};
+		}
+		// master campaign
+		topCampaignId = pvTop.value.campaign;
+		assert(topCampaignId);
 	}
 
-	// ...by Advert?
-	// !!! DEPRECATED
-	if (adid) {
-		pvTopItem = getDataItem({type:C.TYPES.Advert,status,id:adid});
+	// ...by Campaign (this is now the only supported way - Sept 2021)
+	pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:topCampaignId});
+	// ads
+	const pvAds = pvTopCampaign.value? Campaign.pvAds({campaign: pvTopCampaign.value, status, query}) : null;
+	// advertiser
+	if (pvTopCampaign.value && pvTopCampaign.value.vertiser) {
+		const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:pvTopCampaign.value.vertiser});
 		// wrap as a list
-		pvAds = fetchIHubData2_wrapAsList(pvTopItem);
+		pvAdvertisers = fetchIHubData2_wrapAsList(pvAdvertiser);
 	}
-	// ...by Advertiser?
-	if (vertiserid) {
-		const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:vertiserid});
-		// ads
-		let sq = SearchQuery.setProp(new SearchQuery(), "vertiser", vertiserid);
-			if (query) sq = SearchQuery.and(sq, new SearchQuery(query));
-			const q = sq.query;
-			pvAds = ActionMan.list({type: C.TYPES.Advert, status, q});
-			pvTopItem = pvAdvertiser;
-			if (pvAdvertiser.value) pvTopCampaign = Campaign.fetchMasterCampaign(pvAdvertiser.value, status);
-			pvCampaigns = Campaign.fetchForAdvertiser(vertiserid, status);
-	}
-	// ...by Agency?
-	if (agency) {
-		pvTopItem = getDataItem({type:C.TYPES.Agency,status,id:agency});
-		// wrap as a list
-		pvAgencies = fetchIHubData2_wrapAsList(pvTopItem);
-		// advertisers
-		let q = SearchQuery.setProp(new SearchQuery(), "agencyId", agency).query;
-		pvAdvertisers = ActionMan.list({type: C.TYPES.Advertiser, status, q});
-		// query adverts by advertisers
-			if (pvAdvertisers.value) {
-			assert(!pvAds, pvAds);
-			const ids = uniq(pvAdvertisers.value.hits.map(getId));
-			if (yessy(ids)) {
-				let adq = SearchQuery.setPropOr(new SearchQuery(), "vertiser", ids);
-				if (query) adq = SearchQuery.and(adq, new SearchQuery(query));
-				pvAds = ActionMan.list({type: C.TYPES.Advert, status, q:adq.query});
-			} else {
-				console.warn("No Advertisers found for agency",agency,pvTopItem);
-			}
-		}
-		pvCampaigns = Campaign.fetchForAgency(agency, status);
-	} // ./agency
 
-	if (!agency && !vertiserid && !adid && !campaignId1) {
-		throw new Error("No Campaign info specified");
-	}
-	// top campaign?
-	if (!pvTopCampaign && pvTopItem && pvTopItem.value && pvTopItem.value.campaign) {
-		pvTopCampaign = getDataItem({type:C.TYPES.Campaign, status, id:pvTopItem.value.campaign});
-	}
 	// ...fill in from adverts
 	if (pvAds && pvAds.value && pvAds.value.hits && pvAds.value.hits.length && pvAds.value.hits[0]) {
-		if (!pvAdvertisers) {
-			// NB: This should be only one advertiser and agency
-			let ids = uniq(pvAds.value.hits.map(Advert.advertiserId));
-			if (yessy(ids)) {
-				let advq = SearchQuery.setPropOr(null, "id", ids).query;
-				pvAdvertisers = ActionMan.list({type: C.TYPES.Advertiser, status, q:advq});
-			}
-		}
-		if (!pvAgencies) {
-			let ids = uniq(pvAds.value.hits.map(ad => ad.agencyId));
-			if (yessy(ids)) {
-				let agq = SearchQuery.setPropOr(null, "id", ids).query;
-				pvAgencies = ActionMan.list({type: C.TYPES.Agency, status, q:agq});
-			}
-		}
-		if (!pvCampaigns) {
-			let ids = uniq(pvAds.value.hits.map(ad => ad.campaign));
-			if (yessy(ids)) {
-				let q = SearchQuery.setPropOr(null, "id", ids).query;
-				pvCampaigns = ActionMan.list({type: C.TYPES.Campaign, status, q});
-			}
+		// NB: This should be only one advertiser and agency
+		let ids = uniq(pvAds.value.hits.map(Advert.advertiserId));
+		if (yessy(ids)) {
+			let advq = SearchQuery.setPropOr(null, "id", ids).query;
+			pvAdvertisers = ActionMan.list({type: C.TYPES.Advertiser, status, q:advq});
 		}
 	}
 	// fill in any waiting ones with blanks for convenience
 	return {
-		pvTopItem:pvTopItem||{},
 		pvTopCampaign:pvTopCampaign||{},
-		pvCampaigns:pvCampaigns||{},
 		pvAgencies:pvAgencies||{},
 		pvAds:pvAds||{},
 		pvAdvertisers:pvAdvertisers||{}
@@ -215,7 +166,6 @@ const fetchIHubData2_wrapAsList = pvTopItem => {
 
 
 /**
- * Expects url parameters: `gl.vert` or `gl.vertiser` or `via`
  * TODO support q=... flexible query
  * TODO support agency and ourselves! with multiple adverts
  * Split: branding - a vertiser ID, vs ad-params
@@ -231,7 +181,7 @@ const CampaignPage = () => {
 	if (!status) status = (glStatus || C.KStatus.PUB_OR_ARC);
 
 	// What adverts etc should we look at?
-	let {pvTopItem, pvTopCampaign, pvCampaigns, pvAds, pvAdvertisers, pvAgencies} = fetchIHubData();
+	let {pvTopItem, pvTopCampaign, pvAds, pvAdvertisers, pvAgencies} = fetchIHubData();
 
 	// Is the campaign page being used as a click-through advert landing page?
 	// If so, change the layout slightly, positioning the advert video on top.
@@ -242,28 +192,21 @@ const CampaignPage = () => {
 		// TODO display some stuff whilst ads are loading
 		// Debug info - What are we loading??
 		let msg = space("Loading page info...",
-			pvTopItem.value? getType(pvTopItem.value)+" "+pvTopItem.value.id : pvTopItem.error,
 			pvTopCampaign.value? "Top Campaign: "+pvTopCampaign.value.id : pvTopCampaign.error,
-			pvCampaigns.value? "Campaigns loaded" : pvCampaigns.error,
-			pvAds.value? "Ads loaded" : pvAds.error,
-			pvAdvertisers.value? "Advertisers loaded" : pvAdvertisers.error,
-			pvAgencies.value? "Agencies loaded" : pvAgencies.error,
+			pvAds.value? "Ads loaded" : pvAds.error
 		);
 		return <Misc.Loading text={msg} />;
 	}
-	if (!pvTopCampaign.value && !pvCampaigns.value) {
-		console.warn("NO CAMPAIGNS FOUND, aborting page generation");
-		return <Page404/>;
+	if ( ! pvTopCampaign.value) {
+		return <Misc.Loading pv={pvTopCampaign} />
 	}
 
 	// Combine Campaign settings
+	/** @type{Campaign} */
 	let campaign = pvTopCampaign.value;
-	if (!campaign && pvCampaigns.value) {
-		let cs = List.hits(pvCampaigns.value);
-		campaign = Object.assign({}, ...cs);
-		console.warn("No master campaign found, using:", campaign.name || campaign.id);
+	if ( ! campaign) {
+		return <Misc.Loading pv={pvTopCampaign} />;
 	}
-	if (!campaign) campaign = {};
 
 	// CAMPAIGN IMPACT HUB SETTINGS
 	let {
@@ -271,46 +214,25 @@ const CampaignPage = () => {
 		forceScaleTotal,
 	} = campaign;
 
-	// Get filtered ad list
-	const otherCampaigns = pvCampaigns.value && List.hits(pvCampaigns.value).filter(c => c.id!==campaign.id);
-	let adStatusList = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, status, query, extraAds:pvAds.value && List.hits(pvAds.value)}) : [];
-	// const ads = adStatusList.filter(ad => ad.ihStatus==="SHOWING"); TODO Put this back
-	const ads = adStatusList.filter(ad => true);
-	let canonicalAds = campaign ? Campaign.advertStatusList({topCampaign:campaign, campaigns:otherCampaigns, status, extraAds:pvAds.value && List.hits(pvAds.value)}).filter(ad => ad.ihStatus==="SHOWING") : [];
-	let extraAds = adStatusList.filter(ad => ad.ihStatus==="NO CAMPAIGN");
-	console.log("Fetching data with campaign", campaign.name || campaign.id, "and extra campaigns", otherCampaigns && otherCampaigns.map(c => c.name || c.id), "and extra ads", extraAds);
+	const ads = List.hits(pvAds.value) || [];
 
-	let totalViewCount = Campaign.viewcount({topCampaign:campaign, campaigns:otherCampaigns, extraAds, status});
+	let totalViewCount = Campaign.viewcount({campaign, status});
 
-	// Merge in ads with no campaigns if asked - less controls applied
-	if (showNonCampaignAds && pvAds.value) {
-		const hideAds = Campaign.hideAdverts(campaign, otherCampaigns);
-		extraAds.forEach(ad => {
-			if (!ads.includes(ad) && !hideAds.includes(ad.id)) {
-				ads.push(ad);
-			}
-		});
-	}
 
 	// Combine branding
-	// Priority: TopCampaign, TopItem, Adverts
+	// Priority: TopCampaign, Adverts
 	let branding = {};
 	ads.forEach(ad => Object.assign(branding, ad.branding));
-	const topItem = pvTopItem && pvTopItem.value;
-	if (topItem && topItem.branding) {
-		Object.assign(branding, topItem.branding);
+	if (campaign.branding) {
+		Object.assign(branding, campaign.branding);
 	}
-	Object.assign(branding, campaign.branding);
 
 	// set NavBar brand
-	let brandItem = null;
-	if (topItem && (C.TYPES.isAdvertiser(getType(topItem)) || C.TYPES.isAgency(getType(topItem)))) {
-		brandItem = topItem;
-	} else if (pvAdvertisers.value && List.hits(pvAdvertisers.value).length === 1) {
-		brandItem = List.hits(pvAdvertisers.value)[0];
-	}
+	let {type, id} = Campaign.masterFor(campaign);
+	let pvBrandItem = getDataItem({type, id, status});
+	let brandItem = pvBrandItem.value;
 	if (brandItem) {
-		const prop = {Agency:"agency", Advertiser:"gl.vertiser"}[getType(brandItem)]; // bleurgh - we don't use standard naming for url params
+		const prop = type.toLowerCase();
 		let nprops = { // advertiser link and logo			
 			brandLink:'/#campaign?'+prop+'='+encURI(getId(brandItem)),
 			brandLogo: brandItem.branding && (brandItem.branding.logo_white || brandItem.branding.logo),
@@ -320,47 +242,30 @@ const CampaignPage = () => {
 	}
 
 	// initial donation record
-	let donation4charityUnscaled = Campaign.dntn4charity(campaign, otherCampaigns, extraAds, status);
+	let donation4charityUnscaled = Campaign.dntn4charity(campaign, status);
+	assert(donation4charityUnscaled, "CampaignPage.jsx falsy donation4charity?!");
 	console.log("[DONATION4CHARITY]", "FILLED", donation4charityUnscaled);
-
 	const ad4Charity = {};
 	// individual charity data, attaching ad ID
-	let charities = Campaign.charities(campaign, otherCampaigns, extraAds, status);
-	// Add in any from campaign.dntn4charity - which can include strayCharities
-	const strayCharities = Campaign.strayCharities(campaign, status);
-	const cids = charities.map(c => c.id);
-	strayCharities.forEach(c => {
-		if (!cids.includes(c.id)) charities.push(c);
-	});
-
-	// NB: Don't append extra charities found in donation data. This can include noise.
-	// Fill in blank in charities with sogive data
-	charities = NGO.fetchSogiveData(charities, campaign);
-	console.log("CHARITIESSSSSS", charities);
-	console.log("AD 4 CHARITY:",ad4Charity)
+	let charities = Campaign.charities(campaign, status);
 	// Attach ads after initial sorting and merging, which can cause ad ID data to be lost
 	charities.forEach(charity => {
 		charity.ad = ad4Charity[charity.id] ? ad4Charity[charity.id].id : null;
 	});
 
 	// Donation total
-	assert(donation4charityUnscaled, "CampaignPage.jsx falsy donation4charity?!");
 	// NB: allow 0 for "use the live figure" as Portal doesn't save edit-to-blank (Feb 2021)
 	// Total up all campaign donations - map to donations, filter nulls
-	const donationTotal = Campaign.donationTotal(campaign, otherCampaigns, donation4charityUnscaled, forceScaleTotal);
+	const donationTotal = Campaign.dntn(campaign, dntn4charity) || new Money(0);
 
 	// Scale once to get values in the right ballpark
 	let donation4charityScaled = Campaign.scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
-
-	console.log("[DONATION4CHARITY]", "DONATION SCALED", donation4charityScaled);
 
 	// filter charities by low £s and campaign.hideCharities
 	charities = Campaign.filterLowDonations({charities, campaign, donationTotal, donation4charity:donation4charityScaled});
 
 	// Scale again to make up for discrepencies introduced by filtering
 	donation4charityScaled = Campaign.scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
-
-	console.log("After Filter CHARITIES", charities.map(c => c.id));
 
 	// PDF version of page
 	let pdf = null;
@@ -450,7 +355,7 @@ const CampaignPage = () => {
 					/>
 				)}
 
-				<Charities charities={charities} donation4charity={donation4charityScaled} campaign={campaign}/>
+				<CharitiesSection charities={charities} donation4charity={donation4charityScaled} campaign={campaign}/>
 
 				<div className="bg-white">
 					<Container>

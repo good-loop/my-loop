@@ -47,12 +47,11 @@ challenges facing our planet."`,
  * @param {{string:Money}} donation4charity - charity ID to donation amount
  * @param {!Campaign} campaign
  */
-const Charities = ({ charities, donation4charity, campaign }) => {
+const CharitiesSection = ({ charities, donation4charity, campaign }) => {
 	// The portal control data
 	let hideImpact = campaign.hideImpact || {};
 	// Filter nulls (paranoia)
 	charities = charities.filter(x => x);
-	//let sogiveCharities = fetchSogiveData(charities);
 
 	const getDonation = c => {
 		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
@@ -169,7 +168,7 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 						{charity.ad ? (
 							<DevLink href={ServerIO.PORTAL_ENDPOINT+'/#advert/' + escape(charity.ad)} target="_portal" className="ml-2">Advert Editor</DevLink>
 						) : (
-							<DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/' + escape(campaign.id) + '?strayCharities=' + escape(charity.id)} target="_portal" className="ml-2">Stray charity from {campaign.id}</DevLink>
+							<DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/' + escape(campaign.id)} target="_portal" className="ml-2">Stray charity from {campaign.id}</DevLink>
 						)}
 					</div>
 				</div>
@@ -266,4 +265,4 @@ const Impact = ({ charity, donationValue }) => {
 // };
 
 export { CharityDetails };
-export default Charities;
+export default CharitiesSection;
