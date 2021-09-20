@@ -146,7 +146,7 @@ const viewCount = (viewcount4campaign, ad) => {
 		pvAgencies:pvAgencies||{},
 		pvAds:pvAds||{},
 		pvAdvertisers:pvAdvertisers||{}
-	}
+	};
 };
 
 /**
@@ -256,7 +256,7 @@ const CampaignPage = () => {
 	// Donation total
 	// NB: allow 0 for "use the live figure" as Portal doesn't save edit-to-blank (Feb 2021)
 	// Total up all campaign donations - map to donations, filter nulls
-	const donationTotal = Campaign.dntn(campaign, dntn4charity) || new Money(0);
+	const donationTotal = Campaign.dntn(campaign) || new Money(0);
 
 	// Scale once to get values in the right ballpark
 	let donation4charityScaled = Campaign.scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
@@ -347,7 +347,6 @@ const CampaignPage = () => {
 					<AdvertsCatalogue
 						campaign={campaign}
 						ads={ads}
-						canonicalAds={canonicalAds}
 						donationTotal={donationTotal}
 						nvertiserName={nvertiserName}
 						totalViewCount={totalViewCount}
@@ -447,15 +446,13 @@ const SmallPrintInfo = ({ads, charities, campaign, pvTopItem}) => {
 			<Cite href="https://www.charitiesnys.com/cause_marketing.html"/> and the Better Business Bureau's standard for donations in marketing.
 		</span>
 		{campaign && campaign.id? <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/'+escape(campaign.id)} target="_portal">Campaign Editor</DevLink> : ""}
-		{pvTopItem.value? <DevLink href={ServerIO.PORTAL_ENDPOINT+'/#'+getType(pvTopItem.value)+'/'+escape(pvTopItem.value.id)} target="_portal">{getType(pvTopItem.value)} Editor</DevLink> : ""}
-			{campaign.smallPrint &&
-			<div className="text-center">
-				<span className="small">
-					{campaign.smallPrint}
-				</span>
-			</div>}
+		{campaign.smallPrint &&	<div className="text-center">
+			<span className="small">
+				{campaign.smallPrint}
+			</span>
+		</div>}
 	</div>;
-}
+};
 
 
 /**
