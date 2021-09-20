@@ -6,6 +6,7 @@ import { LoginLink } from '../base/components/LoginWidget';
 // import NavBar from '../base/components/NavBar';
 import C from '../C';
 import { space } from '../base/utils/miscutils';
+import DataStore from '../base/plumbing/DataStore';
 
 /**
  * TODO refactor to merge with NavBar.jsx
@@ -78,7 +79,7 @@ class MyLoopNavBar extends React.Component {
 			<Navbar className={navClass}
 				style={style}
 				sticky="top" expand="xl">
-				<NavbarBrand href="/#my" className={ ! isShowBrandLogo && "mr-auto"}>
+				<NavbarBrand href="/#my" className={space(! isShowBrandLogo && "mr-auto")}>
 					<img src={navLogo} alt="logo" className="logo-sm" />
 				</NavbarBrand>
 				{isShowBrandLogo && // a 2nd brand? 

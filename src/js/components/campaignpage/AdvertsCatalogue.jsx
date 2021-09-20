@@ -16,6 +16,7 @@ import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import DevLink from './DevLink';
 import DataStore from '../../base/plumbing/DataStore';
 import printer from '../../base/utils/printer';
+import { assert } from '../../base/utils/assert';
 
 /**
  * List of adverts with some info about them (like views, dates)
@@ -27,10 +28,10 @@ import printer from '../../base/utils/printer';
  * @param {String} p.nvertiserName name of main advertiser/agency
  * @param {Number} p.totalViewCount
  * @param {Advertiser[]} p.vertisers associated advertisers of all ads
- * @param {Advert[]} p.canonicalAds all ads, unfiltered by the filtering query parameter
+ * @param {Advert[]} p.canonicalAds All ads, unfiltered by the filtering query parameter
  */
 const AdvertsCatalogue = ({ campaign, ads, donationTotal, nvertiserName, totalViewCount, vertisers, canonicalAds }) => {
-
+	assert(canonicalAds);
 	let ongoing = campaign.ongoing;
 
 	// filter out any hidden ads

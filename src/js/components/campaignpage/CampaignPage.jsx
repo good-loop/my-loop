@@ -99,7 +99,7 @@ const viewCount = (viewcount4campaign, ad) => {
 	if ( ! topCampaignId) {
 		// by advertiser or agency?
 		let pvTop;
-		let advid = DataStore.getUrlValue("advertiser");
+		let advid = DataStore.getUrlValue("advertiser") || DataStore.getUrlValue("gl.vertiser");
 		if (advid) {
 			pvTop = getDataItem({type:"Advertiser", id:advid, status});
 		} else {
@@ -208,12 +208,6 @@ const CampaignPage = () => {
 		return <Misc.Loading pv={pvTopCampaign} />;
 	}
 
-	// CAMPAIGN IMPACT HUB SETTINGS
-	let {
-		showNonCampaignAds,
-		forceScaleTotal,
-	} = campaign;
-
 	const ads = List.hits(pvAds.value) || [];
 
 	let totalViewCount = Campaign.viewcount({campaign, status});
@@ -284,9 +278,9 @@ const CampaignPage = () => {
 
 	console.log("CAMPAIGN BY NAME: ", campaignByName);
 	// Get ad viewing data
-	let sq = new SearchQuery("evt:minview");
-	let qads = ads.map(({ id }) => `vert:${id}`).join(' OR ');
-	sq = SearchQuery.and(sq, qads);
+	let sqe = new SearchQuery("evt:minview");
+	let sqads = ads.length && SearchQuery.setPropOr(null, "vert", ads.map(ad => ad.id));
+	let sq = SearchQuery.and(sqe, sqads);
 
 	// Is this campaign ongoing? Guess from ad dates if unset (is this needed??)
 	if (!is(campaign.ongoing)) {
@@ -351,6 +345,7 @@ const CampaignPage = () => {
 						nvertiserName={nvertiserName}
 						totalViewCount={totalViewCount}
 						vertisers={pvAdvertisers.value && List.hits(pvAdvertisers.value)}
+						canonicalAds={ads} // maybe wrong should be all ads
 					/>
 				)}
 
