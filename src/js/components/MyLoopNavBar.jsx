@@ -136,6 +136,7 @@ const AccountMenu = ({logoutLink, small, accountLink, customLogin, children}) =>
 	let person = getProfile(user.xid).value || getProfile(user.xid).interim;
 	// person.std.name is the user define name, user.name is the email name
 	let name = person.std.name || user.name || user.xid;
+	if ( name.length > 20 ) name = name.substr(0,20);
 	let initial = name.substr(0, 1);
 
 	return (
