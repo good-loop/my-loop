@@ -3,6 +3,7 @@ import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, Un
 
 import Login from '../base/youagain';
 import { LoginLink } from '../base/components/LoginWidget';
+import { getProfile } from '../base/data/Person';
 // import NavBar from '../base/components/NavBar';
 import C from '../C';
 import { space } from '../base/utils/miscutils';
@@ -129,9 +130,12 @@ const AccountMenu = ({logoutLink, small, accountLink, customLogin, children}) =>
 			customLogin || <LoginLink verb="register" className="login-menu btn btn-transparent fill">Get started</LoginLink>
 		);
 	}
-
+	
 	let user = Login.getUser();
-	let name = user.name || user.xid;
+	// values of getProfile(user.xid) return in .interim at first, then changed to .value
+	let person = getProfile(user.xid).value || getProfile(user.xid).interim;
+	// person.std.name is the user define name, user.name is the email name
+	let name = person.std.name || user.name || user.xid;
 	let initial = name.substr(0, 1);
 
 	return (
