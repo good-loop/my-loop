@@ -132,11 +132,9 @@ const AccountMenu = ({logoutLink, small, accountLink, customLogin, children}) =>
 	}
 	
 	let user = Login.getUser();
-	// values of getProfile(user.xid) return in .interim at first, then changed to .value
-	let person = getProfile(user.xid).value || getProfile(user.xid).interim;
-	// person.std.name is the user define name, user.name is the email name
-	let name = person.std.name || user.name || user.xid;
-	if ( name.length > 20 ) name = name.substr(0,20);
+	let person = getProfile(user.xid).value || getProfile(user.xid).interim; 	// values of getProfile(user.xid) return in .interim at first, then changed to .value
+	let name = person.std.name || user.name || user.xid; 	// person.std.name is the user define name, user.name is the email name
+	if ( name.length > 20 ) name = name.substr(0,20); // Stop UI breaking display name
 	let initial = name.substr(0, 1);
 
 	return (
