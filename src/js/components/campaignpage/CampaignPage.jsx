@@ -216,6 +216,12 @@ const CampaignPage = () => {
 	// Combine branding
 	// Priority: TopCampaign, Adverts
 	let branding = {};
+	if (pvAdvertisers.value) {
+		List.hits(pvAdvertisers.value).forEach(adv => Object.assign(branding, adv.branding));
+	}
+	if (pvAgencies.value) {
+		List.hits(pvAgencies.value).forEach(adv => Object.assign(branding, adv.branding));
+	}
 	ads.forEach(ad => Object.assign(branding, ad.branding));
 	if (campaign.branding) {
 		Object.assign(branding, campaign.branding);

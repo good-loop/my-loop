@@ -136,8 +136,6 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 		desc = firstParagraph[0];
 	}
 
-	//console.log("SHOWING THE CHARITY",charity);
-
 	const quote = charity.charityQuote;
 	let img = charity.images;
 
@@ -154,7 +152,7 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 			}
 			<div className={space("charity-quote-content", img && "col-md-7")}>
 				<div className="charity-quote-logo">
-					<img src={charity.logo} alt="logo"/>
+					{charity.logo && <img src={charity.logo} alt="logo"/>}
 				</div>
 				<div className="charity-quote-text">
 					{testimonial && <TestimonialPlayer src={testimonial} />}
