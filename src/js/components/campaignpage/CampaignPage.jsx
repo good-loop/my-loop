@@ -198,7 +198,7 @@ const CampaignPage = () => {
 		return <Misc.Loading text={msg} />;
 	}
 	if ( ! pvTopCampaign.value) {
-		return <Misc.Loading pv={pvTopCampaign} />
+		return <Misc.Loading pv={pvTopCampaign} />;
 	}
 
 	// Combine Campaign settings
