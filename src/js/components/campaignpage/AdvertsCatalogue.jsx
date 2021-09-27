@@ -36,36 +36,32 @@ const AdvertsCatalogue = ({ campaign, ads, donationTotal, nvertiserName, totalVi
 
 	// filter out any hidden ads
 	// NB: done here as the hiding is a shallow cosmetic -- we still want the view and £ donation data included (or if not, there are other controls)
+	let showAds = ads;
 	if (campaign && campaign.hideAdverts) {
-		ads = ads.filter(ad => !campaign.hideAdverts[ad.id]);
+		showAds = ads.filter(ad => ! ad._hidden);
 	}
-	console.log("Ads for catalogue: ", ads, "Hiding: ", campaign && campaign.hideAdverts);
+	console.log("Ads for catalogue: ", ads, "showing",showAds);
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [animating, setAnimating] = useState(false);
 
-	let sampleAds = ads;
-
-	// console.log("Sample ads: ", sampleAds.map(ad => ad.id));
-	// console.log("ONGOING? ", ongoing);
-
 	let views = printer.prettyNumber(totalViewCount);
 
-	if (sampleAds.length === 1) {
+	if (showAds.length === 1) {
 		return (<Container className="py-5">
 			<h2>Watch one of the <AdvertiserName name={nvertiserName} /> ads&nbsp;
 				{ongoing ? "raising" : "that raised"} <Counter currencySymbol="£" noPennies amount={donationTotal} minimumFractionDigits={2} preserveSize /><br /> with {views} ad viewers</h2>
 			<AdvertCard
-				ad={ads[0]}
+				ad={showAds[0]}
 				viewCountProp={views}
 				donationTotal={donationTotal}
 				totalViewCount={totalViewCount}
-				active={true}
+				active
 			/>
-			<AdvertFilters campaign={campaign} vertisers={vertisers} ads={sampleAds} canonicalAds={canonicalAds} />
+			<AdvertFilters campaign={campaign} vertisers={vertisers} ads={showAds} canonicalAds={canonicalAds} />
 		</Container>);
 	}
 
-	const carouselSlides = sampleAds.map((ad, i) =>
+	const carouselSlides = showAds.map((ad, i) =>
 		<CarouselItem
 			onExiting={() => setAnimating(true)}
 			onExited={() => setAnimating(false)}
@@ -119,8 +115,8 @@ const AdvertsCatalogue = ({ campaign, ads, donationTotal, nvertiserName, totalVi
 			</Carousel>
 			<br />
 			<br />
-			<AdvertFilters campaign={campaign} vertisers={vertisers} ads={sampleAds} canonicalAds={canonicalAds} />
-			<AdPreviewCarousel ads={sampleAds} setSelected={goToIndex} selectedIndex={activeIndex} />
+			<AdvertFilters campaign={campaign} vertisers={vertisers} ads={showAds} canonicalAds={canonicalAds} />
+			<AdPreviewCarousel ads={showAds} setSelected={goToIndex} selectedIndex={activeIndex} />
 		</Container>
 	</>);
 };
