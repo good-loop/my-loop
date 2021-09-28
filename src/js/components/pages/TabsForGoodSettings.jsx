@@ -14,71 +14,73 @@ import PromiseValue from 'promise-value';
 import Misc from '../../base/components/Misc';
 import KStatus from '../../base/data/KStatus';
 import { getDataLogData } from '../../base/plumbing/DataLog';
+import C from '../../C';
 
 
 const TabsForGoodSettings = () => {
 	const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
 	return <>
-		{ ! task && <TabStats/>}
-		<div className="py-3"/>
+		{!task && <TabStats />}
+		<div className="py-3" />
 		<h2>Choose a different search engine</h2>
-		<SearchEnginePicker/>
-		<div className="py-3"/>
+		<SearchEnginePicker />
+		<div className="py-3" />
 		<h1>Pick your charity</h1>
-		<br/>
-		<CharityPicker/>
+		<br />
+		<CharityPicker />
 	</>;
 };
 
 const SearchEnginePicker = () => {
 	const person = getProfile().value;
-	if ( ! person) return <Misc.Loading />;
-	let searchEngine = getClaimValue({person, key:"searchEngine"});
+	if (!person) return <Misc.Loading />;
+	let searchEngine = getClaimValue({ person, key: "searchEngine" });
 	const dpath = ['widget', 'TabsForGoodSettings'];
-	if ( ! searchEngine) {
+	if (!searchEngine) {
 		searchEngine = "google";
 	} else {
 		DataStore.setValue(dpath.concat("searchEnginePicker"), searchEngine, false); // set it for the PropControl
 	}
-	const onSelect = ({value}) => {
+	const onSelect = ({ value }) => {
 		console.log("newEngine", value);
 		setPersonSetting("searchEngine", value);
-	}
+	};
 
 	return <PropControl type="select" prop="searchEnginePicker" options={["google", "ecosia", "duckduckgo", "bing"]}
 		labels={["Google", "Ecosia", "DuckDuckGo", "Bing"]} dflt={"google"} saveFn={onSelect}
-		path={dpath}/>;
-}
+		path={dpath} />;
+};
+
 
 const CharityPicker = () => {
 	const person = getProfile().value;
-	if ( ! person) return <Misc.Loading />;
-	let selId = getClaimValue({person, key:"charity"});
+	if (!person) return <Misc.Loading />;
+	let selId = getClaimValue({ person, key: "charity" });
 
-	const pvSelectedCharity = selId && getDataItem({type:C.TYPES.NGO, id:selId, status:C.KStatus.Published, swallow:true});
-	let q = DataStore.getValue('widget','search','q');
+	const pvSelectedCharity = selId && getDataItem({ type: C.TYPES.NGO, id: selId, status: KStatus.Published, swallow: true });
+	let q = DataStore.getValue('widget', 'search', 'q');
 
 	// HACK: default list - poke it into appstate
 	const dq = "LISTLOADHACK"; // NB: an OR over "id:X" doesn't work as SoGive is annoyingly using the schema.org "@id" property
 	const DEFAULT_LIST = "against-malaria-foundation oxfam helen-keller-international clean-air-task-force strong-minds give-directly pratham wwf-uk cancer-research-uk";
-	const type = "NGO"; const status="PUBLISHED";
+	const type = "NGO"; const status = "PUBLISHED";
 	// fetch the full item - and make a Ref
-	let hits = DEFAULT_LIST.split(" ").map(cid => getDataItem({type, id:cid, status}) && {id:cid, "@type":type, status});
+	let hits = DEFAULT_LIST.split(" ").map(cid => getDataItem({ type, id: cid, status }) && { id: cid, "@type": type, status });
 	// HACK: This is whereListLoad will look!
-	const charityPath = getListPath({type:"NGO", status:KStatus.PUBLISHED, q:"LISTLOADHACK",sort:"impact"}); // "list.NGO.PUBLISHED.nodomain.LISTLOADHACK.whenever.impact".split(".");
-	DataStore.setValue(charityPath, {hits, total:hits.length}, false);
+	const charityPath = getListPath({ type: "NGO", status: KStatus.PUBLISHED, q: "LISTLOADHACK", sort: "impact" }); // "list.NGO.PUBLISHED.nodomain.LISTLOADHACK.whenever.impact".split(".");
+	DataStore.setValue(charityPath, { hits, total: hits.length }, false);
 
 	return <div>
 		{selId &&
 			<><p className="large">Your selected charity:</p>
 				<div className="gridbox gridbox-md-3">
-					<CharitySelectBox item={pvSelectedCharity.value || {id:selId}} />
+					<CharitySelectBox item={pvSelectedCharity.value || { id: selId }} />
 				</div>
-				<br/>
+				<br />
 			</>}
 		<div className="d-md-flex flex-md-row justify-content-between unset-margins mb-3">
-			<p className="large">Can't see your favourite charity?&nbsp;<br className="d-md-none"/>Search for it:</p>
-			<Search onSubmit={e => e.preventDefault()} placeholder="Find your charity" className="flex-grow ml-md-5"/>
+			<p className="large">Can't see your favourite charity?&nbsp;<br className="d-md-none" />Search for it:</p>
+			<Search onSubmit={e => e.preventDefault()} placeholder="Find your charity" className="flex-grow ml-md-5" />
 		</div>
 		<ListLoad className={"gridbox gridbox-md-3"} type="NGO" status="PUBLISHED" q={q || dq} sort="impact" ListItem={CharitySelectBox} unwrapped hideTotal />
 	</div>;
@@ -89,10 +91,10 @@ const CharityPicker = () => {
  * @param charity the charity to show
  * @param {boolean} selected
  */
-const CharitySelectBox = ({item, className}) => {
+const CharitySelectBox = ({ item, className }) => {
 	assert(item, "CharitySelectBox - no item");
 	const person = getProfile().value;
-	let selId = person && getClaimValue({person, key:"charity"});
+	let selId = person && getClaimValue({ person, key: "charity" });
 
 	let selected = getId(item) === selId;
 	// NB: to deselect, pick a different charity (I think that's intuitive enough)
@@ -101,12 +103,12 @@ const CharitySelectBox = ({item, className}) => {
 		<div
 			className={space("charity-select-box flex-column justify-content-between align-items-center unset-margins p-md-3 w-100 position-relative")}
 		>
-			{item.logo? <img className="logo-xl mt-4 mb-2" src={item.logo} /> : <span>{item.name || item.id}</span>}
+			{item.logo ? <img className="logo-xl mt-4 mb-2" src={item.logo} /> : <span>{item.name || item.id}</span>}
 			<p>{item.summaryDescription}</p>
 			{selected ? <span className="text-success thin"><Icon name="tick" /> Selected</span>
 				: <button onClick={() => setPersonSetting("charity", getId(item))} className="btn btn-outline-primary thin">Select</button>
 			}
-			{item.url && <a className="position-absolute" style={{top: 10, right: 10}} href={item.url} target="_blank" rel="noreferrer">About</a>}
+			{item.url && <a className="position-absolute" style={{ top: 10, right: 10 }} href={item.url} target="_blank" rel="noreferrer">About</a>}
 		</div>
 	</div>;
 }; // ./CharitySelectBox
@@ -115,7 +117,7 @@ const CharitySelectBox = ({item, className}) => {
 const TabStats = () => {
 	let pvTabsOpened = getTabsOpened();
 	let daysWithGoodLoop = getDaysWithGoodLoop();
-	let weeklyAvg = Math.round(7*pvTabsOpened.value / daysWithGoodLoop);
+	let weeklyAvg = Math.round(7 * pvTabsOpened.value / daysWithGoodLoop);
 
 	const goodStat = (stat) => {
 		return stat && stat !== Infinity;
@@ -123,66 +125,60 @@ const TabStats = () => {
 
 	return (
 		<><h1>Your stats</h1>
-		<Row>
-			<StatCard md={4} number={goodStat(daysWithGoodLoop) ? daysWithGoodLoop : "-"} label="Days with My-Loop"/>
-			<StatCard md={4} number={goodStat(pvTabsOpened) && (pvTabsOpened && pvTabsOpened.value) ? pvTabsOpened.value : "-"} label="Tabs opened"/>
-			<StatCard md={4} number={goodStat(weeklyAvg) ? weeklyAvg : "-"} label="Weekly tab average"/>
-		</Row></>
+			<Row>
+				<StatCard md={4} number={goodStat(daysWithGoodLoop) ? daysWithGoodLoop : "-"} label="Days with My-Loop" />
+				<StatCard md={4} number={goodStat(pvTabsOpened) && (pvTabsOpened && pvTabsOpened.value) ? pvTabsOpened.value : "-"} label="Tabs opened" />
+				<StatCard md={4} number={goodStat(weeklyAvg) ? weeklyAvg : "-"} label="Weekly tab average" />
+			</Row></>
 	);
 };
 
-/** Search box - a magnifying-glass icon by a text input ??This is a nice search box - Should this move to PropControl type=search??
+/** Search box - a magnifying-glass icon by a text input ??Refactor with PropControl type=search??
  */
-const Search = ({onSubmit, placeholder, icon, className}) => {
+const Search = ({ onSubmit, placeholder, icon, className }) => {
 	return (<>
 		<Form onSubmit={onSubmit} inline className={space("flex-row tab-search-form px-2", className)} >
 			{icon && icon}
 			<PropControl placeholder={placeholder} type="search" prop="q" path={['widget', 'search']} className="flex-grow w-100" />
-			<i className="fa fa-search tab-search mr-2" onClick={onSubmit}/>
+			<i className="fa fa-search tab-search mr-2" onClick={onSubmit} />
 		</Form>
 	</>);
 };
-
-/**
- * Check if it is safe to load settings for the user yet
- * @returns {Boolean}
- */
-const isSafeToLoadUserSettings = () => {
-	return !!(Login.isLoggedIn() && Login.getUser().jwt);
-}
 
 /**
  * Fetch the number of tabs opened by the user.
  * @returns ?PromiseValue<Number> null if not logged in yet
  */
 const getTabsOpened = () => {
+	// start:0 = all time (otherwise defaults to 1 month)
+	return getTabsOpened2({start:0, user:Login.getId()});
+};
+
+/**
+ * Fetch the number of tabs opened by the user.
+ * @returns ?PromiseValue<Number> null if not logged in yet
+ */
+ export const getTabsOpened2 = ({start, user}) => {
 	const trkreq = {
-		q: "user:"+Login.getId()+" AND evt:tabopen",
+		q: space(user && "user:"+Login.getId()+ " AND", "evt:tabopen"),
 		name: "tabopens",
 		dataspace: 'gl',
-		start: 0 // all time (otherwise defaults to 1 month)
+		start
 	}; // ??future, end, breakdowns: [byHostOrAd]};
 	let pvData = getDataLogData(trkreq);
 	let pvAllCount = PromiseValue.then(pvData, res => {
 		return res.allCount;
 	});
-	// let pData = ServerIO.getDataLogData(trkreq); old code Apr 2021
-	// ??unwrap the count
-	// return pData.then(getTabsOpened2_unwrap);
-	// });
 	return pvAllCount;
 };
-// const getTabsOpened2_unwrap = res => {
-// 	const data = JSend.data(res);
-// 	return data.all;
-// }
+
 
 /**
  * @returns {!Number}
  */
 const getDaysWithGoodLoop = () => {
 	const person = getProfile().value;
-	if ( ! person) {
+	if (!person) {
 		return 1;
 	}
 	// use the oldest claim (TODO lets have a register claim and use that)
@@ -192,12 +188,12 @@ const getDaysWithGoodLoop = () => {
 	const claimDates = claims.map(c => c.t).filter(t => t);
 	claimDates.sort();
 	const oldest = claimDates[0];
-	if ( ! oldest) {
+	if (!oldest) {
 		console.warn("getDaysWithGoodLoop - No claim date");
 		return 1;
 	}
 	const dmsecs = new Date().getTime() - new Date(oldest).getTime();
-	const days = Math.floor(dmsecs / (1000*60*60*24));
+	const days = Math.floor(dmsecs / (1000 * 60 * 60 * 24));
 	return days;
 };
 
@@ -205,38 +201,38 @@ const getDaysWithGoodLoop = () => {
 	@returns ?PromiseValue(String)
  */
 const getPVSelectedCharityId = (xid) => {
-	return getPVClaimValue({xid, key:"charity"});
+	return getPVClaimValue({ xid, key: "charity" });
 };
 
 const setPersonSetting = (key, value) => {
-	assMatch(key,String,"setPersonSetting - no key");
+	assMatch(key, String, "setPersonSetting - no key");
 	assMatch(value, "String|Number|Boolean");
 	const xid = Login.getId();
 	assert(xid, "setPersonSetting - no login");
-	let pvp = getProfile({xid});
+	let pvp = getProfile({ xid });
 	let person = pvp.value || pvp.interim;
-	assert(person, "setPersonSetting - no person",pvp);
+	assert(person, "setPersonSetting - no person", pvp);
 	console.log("setPersonSetting", xid, key, value, person);
-	setClaimValue({person, key, value});
+	setClaimValue({ person, key, value });
 	DataStore.update();
-	const pv = savePersons({person});
+	const pv = savePersons({ person });
 	const task = DataStore.getUrlValue("task"); // e.g. "select-charity"
 	const link = DataStore.getUrlValue("link");
 	pv.promise.then(re => {
 		console.log("... saved person setting ", key, value);
-		if (task==="return" && link) {
+		if (task === "return" && link) {
 			window.location = link;
 		}
 	}).catch(e => {
 		console.error("FAILED PERSON SAVE", e);
-	})
+	});
 };
 
-const StatCard = ({md, lg, xs, number, label, className, padding, children}) => {
-	return <Col md={md} lg={lg} xs={xs} className={space("stat-card", className)} style={{padding:(padding || "20px")}}>
+const StatCard = ({ md, lg, xs, number, label, className, padding, children }) => {
+	return <Col md={md} lg={lg} xs={xs} className={space("stat-card", className)} style={{ padding: (padding || "20px") }}>
 		<div className="stat-content w-100 h-100 p-4 bg-gl-pink color-gl-red text-center">
 			<h1>{number}</h1>
-			<p className="large" style={{marginBottom: 0}}>{label}</p>
+			<p className="large" style={{ marginBottom: 0 }}>{label}</p>
 			{children}
 		</div>
 	</Col>;
