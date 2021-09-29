@@ -242,7 +242,7 @@ const CampaignPage = () => {
 	}
 
 	// initial donation record
-	let donation4charityUnscaled = Campaign.dntn4charity(campaign, status);
+	let donation4charity = Campaign.dntn4charity(campaign, status);
 	const ad4Charity = {};
 	// individual charity data, attaching ad ID
 	let charities = Campaign.charities(campaign, status);
@@ -256,14 +256,8 @@ const CampaignPage = () => {
 	// Total up all campaign donations - map to donations, filter nulls
 	const donationTotal = Campaign.dntn(campaign) || new Money(0);
 
-	// Scale once to get values in the right ballpark
-	let donation4charityScaled = Campaign.scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
-
 	// filter charities by low £s and campaign.hideCharities
-	charities = Campaign.filterLowDonations({charities, campaign, donationTotal, donation4charity:donation4charityScaled});
-
-	// Scale again to make up for discrepencies introduced by filtering
-	donation4charityScaled = Campaign.scaleCharityDonations(campaign, donationTotal, donation4charityUnscaled, charities);
+	charities = Campaign.filterLowDonations({charities, campaign, donationTotal, donation4charity});
 
 	// PDF version of page
 	let pdf = null;
@@ -306,7 +300,7 @@ const CampaignPage = () => {
 
 	// Sort by donation value, largest first
 	try {
-		charities.sort((a,b) => - Money.compare(donation4charityScaled[a.id], donation4charityScaled[b.id]));
+		charities.sort((a,b) => - Money.compare(donation4charity[a.id], donation4charity[b.id]));
 	} catch(err) {
 		// currency conversion?? Keep on going unsorted
 		console.error(err);
@@ -353,7 +347,7 @@ const CampaignPage = () => {
 					/>
 				)}
 
-				<CharitiesSection charities={charities} donation4charity={donation4charityScaled} campaign={campaign}/>
+				<CharitiesSection charities={charities} donation4charity={donation4charity} campaign={campaign}/>
 
 				<div className="bg-white">
 					<Container>
