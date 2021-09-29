@@ -243,8 +243,6 @@ const CampaignPage = () => {
 
 	// initial donation record
 	let donation4charityUnscaled = Campaign.dntn4charity(campaign, status);
-	assert(donation4charityUnscaled, "CampaignPage.jsx falsy donation4charity?!");
-	console.log("[DONATION4CHARITY]", "FILLED", donation4charityUnscaled);
 	const ad4Charity = {};
 	// individual charity data, attaching ad ID
 	let charities = Campaign.charities(campaign, status);
