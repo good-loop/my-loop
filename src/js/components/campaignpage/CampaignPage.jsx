@@ -242,7 +242,7 @@ const CampaignPage = () => {
 	}
 
 	// initial donation record
-	let donation4charity = Campaign.dntn4charity(campaign, status);
+	let donation4charity = Campaign.dntn4charity(campaign);
 	const ad4Charity = {};
 	// individual charity data, attaching ad ID
 	let charities = Campaign.charities(campaign, status);
@@ -409,7 +409,7 @@ const SmallPrintInfo = ({ads, charities, campaign, pvTopItem}) => {
 	return <div className="container py-5">
 			<CharityDetails charities={charities} />
 			<div className="text-center smallprint">
-				 <span className="small">
+				<span className="small">
 					{dmin && <>Donation Amount: <Misc.Money amount={dmin} /> { dmax &&!Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/></>}
 					50% of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies.
 					Good-Loop and the advertising exchange make a small commission. The donations depend on viewers watching the adverts.
