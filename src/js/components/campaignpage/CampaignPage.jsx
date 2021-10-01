@@ -280,24 +280,6 @@ const CampaignPage = () => {
 	let sqads = ads.length && SearchQuery.setPropOr(null, "vert", ads.map(ad => ad.id));
 	let sq = SearchQuery.and(sqe, sqads);
 
-	// Is this campaign ongoing? Guess from ad dates if unset (is this needed??)
-	if (!is(campaign.ongoing)) {
-		// when is the last advert due to stop?
-		let endDate = new Date(2000,1,1);
-		ads.forEach(ad => {
-			let tli = ad.topLineItem;
-			if (!tli) return;
-			let end = asDate(tli.end) || new Date(3000,1,1); // unset will be treated as ongoing. TODO a check on last activity (but offline, periodically)
-			if (end.getTime() > endDate.getTime()) {
-				endDate = end;
-			}
-		});
-		if (endDate.getTime() > new Date().getTime()) {
-			console.warn("CampaignPage.jsx - HACK local `ongoing=true`"); // might be over-written
-			campaign.ongoing = true;
-		}
-	}
-
 	// Sort by donation value, largest first
 	try {
 		charities.sort((a,b) => - Money.compare(donation4charity[a.id], donation4charity[b.id]));
