@@ -32,7 +32,7 @@ import { assert } from '../../base/utils/assert';
  */
 const AdvertsCatalogue = ({ campaign, ads, donationTotal, nvertiserName, totalViewCount, vertisers, canonicalAds }) => {
 	assert(canonicalAds);
-	let ongoing = campaign.ongoing;
+	let ongoing = Campaign.isOngoing(campaign);
 
 	// filter out any hidden ads
 	// NB: done here as the hiding is a shallow cosmetic -- we still want the view and £ donation data included (or if not, there are other controls)

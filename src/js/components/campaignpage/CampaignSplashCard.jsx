@@ -9,6 +9,7 @@ import MDText from '../../base/components/MDText';
 import KStatus from '../../base/data/KStatus';
 import LinkOut from '../../base/components/LinkOut';
 import ServerIO from '../../plumbing/ServerIO';
+import Campaign from '../../base/data/Campaign';
 
 /**
  * @param {Object} p
@@ -17,7 +18,7 @@ import ServerIO from '../../plumbing/ServerIO';
  */
 const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, totalViewCount, charities, status }) => {
 
-	let { ongoing } = campaignPage;
+	let ongoing = Campaign.isOngoing(campaignPage);
 	console.log("SPLASH CARD TOTAL VIEW COUNT", totalViewCount);
 	let numPeople = printer.prettyNumber(Math.round(totalViewCount), 10);
 	if (numPeople === "0") numPeople = false;

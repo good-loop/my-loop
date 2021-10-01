@@ -6,12 +6,14 @@ import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
 import Counter from '../../base/components/Counter';
 import { space } from '../../base/utils/miscutils';
 import printer from '../../base/utils/printer';
+import ServerIO from '../../plumbing/ServerIO';
 import MDText from '../../base/components/MDText';
 import DevLink from './DevLink';
 import LinkOut from '../../base/components/LinkOut';
 import TestimonialPlayer from './TestimonialPlayer';
 import { lgError } from '../../base/plumbing/log';
 import {I18N} from 'easyi18n';
+import Campaign from '../../base/data/Campaign';
 // window.I18N = I18N; debug
 
 /**
@@ -127,7 +129,7 @@ const RegNum = ({label, regNum}) => {
  * @param {?Money} donationValue
  */
 const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
-	const ongoing = campaign.ongoing;
+	const ongoing = Campaign.isOngoing(campaign);
 	// Prefer full descriptions here. If unavailable switch to summary desc.
 	let desc = charity.description || charity.summaryDescription || '';
 	// But do cut descriptions down to 1 paragraph.
