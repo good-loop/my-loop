@@ -8,6 +8,7 @@ window.DEBUG = false;
 const WhitelistUs = () => {
 	return (<>
 		<MyLoopNavBar logo="/img/new-logo-with-text.svg" logoScroll="/img/new-logo-with-text-white.svg" />
+		<img className="adblock-arrow" src="/img/whitelist/adblock-arrow.png" alt="" />
 		<div className="WhitelistUs">
 			<div className="m-5">
 				<br/> <br/>
