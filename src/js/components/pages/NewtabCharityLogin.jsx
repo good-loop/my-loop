@@ -13,6 +13,7 @@ import ErrAlert from '../../base/components/ErrAlert';
 import { stopEvent } from '../../base/utils/miscutils';
 import { setPersonSetting } from './TabsForGoodSettings';
 import { fetchCharity } from './MyCharitiesPage';
+import { doRegisterEmail } from '../../base/data/Person';
 
 
 const LOGIN_PATH = ['widget', 'tabLogin', 'login'];
@@ -86,6 +87,7 @@ const LogInForm = ({onRegister, onLogin}) => {
 	// we need a place to stash form info. Maybe appstate.widget.LoginWidget.name etc would be better?
 	const path = ['data', C.TYPES.User, 'loggingIn'];
 	let person = DataStore.getValue(path);
+	let subscribebox = DataStore.getValue(path);
 
 	const doItFn = e => {
 		stopEvent(e);
@@ -99,6 +101,14 @@ const LogInForm = ({onRegister, onLogin}) => {
 			DataStore.update();
 			return;
 		}
+		// Adding option to subscribe to email list
+		if ( subscribebox.subscribe ) {
+			if ( ! person.email) {
+				console.error("No email to subscribe")
+				return; // quiet fail NB: we didnt like the disabled look for a CTA
+			}
+			doRegisterEmail(person);
+		}
 		emailLogin({verb, onRegister, onLogin, ...person});
 	};
 
@@ -108,6 +118,7 @@ const LogInForm = ({onRegister, onLogin}) => {
 			<PropControl type="email" path={path} item={person} prop="email" placeholder="Email" className="mb-3"/>
 			<PropControl type="password" path={path} item={person} prop="password" placeholder="Password" className="mb-3"/>
 			<PropControl type="password" path={path} item={person} prop="confpassword" placeholder="Confirm password" className="mb-3"/>
+			<PropControl type="checkbox" path={path} item={subscribebox} prop="subscribe" className="mb-3" label="Subscribe to our mailing list"/>
 			<div className="form-group mb-3">
 				<button className="btn btn-primary w-100" type="submit">
 					SUBMIT

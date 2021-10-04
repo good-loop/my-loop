@@ -12,48 +12,56 @@ import NGO from '../../base/data/NGO';
 
 import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import Counter from '../../base/components/Counter';
+import Campaign from '../../base/data/Campaign';
+import { getDataItem } from '../../base/plumbing/Crud';
+
+// TODO fetch data from portal instead of hard-coding
+// HACK: an ad-hoc data format {name, adid, url: relative url to campaign page, ad:first Advert, dntn: Money}
+const campaignInfos = [
+	{
+		name: "LEVI'S",
+		adid: "ko3s6fUOdq",
+		url: "/#campaign/?gl.vertiser=XR67PcGn",
+		vertiser:"XR67PcGn"
+	},
+	{
+		name: "Ribena",
+		adid: "B1lF97utxD",
+		url: "/#campaign/?gl.vertiser=FBY5QmWQ",
+		vertiser:"FBY5QmWQ"
+	},
+	// {
+	// 	name: "Nike",
+	// 	adid: "2qQIRm9u5Q",
+	// 	url: "/#campaign?gl.vertiser=TNXHvb5j"
+	// },
+	// {
+	// 	name: "Reebok",
+	// 	adid: "HtREj0pifC",
+	// 	url: "/#campaign/?gl.vertiser=KpgM78Lg"
+	// },
+	{
+		name: "Mango",
+		adid: "ojjiPf7kbB",
+		url: "/#campaign/?gl.vertiser=1JBFB6K4",
+		vertiser:"1JBFB6K4"
+	},
+	{
+		name: "Cadbury",
+		adid: "qgbiSQ0crN",
+		url: "/#campaign/?gl.vertiser=cadbury_bpngtolk",
+		vertiser:"cadbury_bpngtolk"
+	},
+	{
+		name: "Pantene",
+		adid: "hwtjNncj",
+		url: "/#campaign/?gl.vertiser=zqhRrBjF",
+		vertiser:"zqhRrBjF"
+	}
+];
 
 
 const RecentCampaignsCard = () => {
-	// TODO fetch data from portal
-	// HACK: an ad-hoc data format {name, adid, url: relative url to campaign page, ad:first Advert, dntn: ??}
-	const campaignInfos = [
-		{
-			name: "LEVI'S",
-			adid: "ko3s6fUOdq",
-			url: "/#campaign/?gl.vertiser=XR67PcGn"
-		},
-		{
-			name: "Ribena",
-			adid: "B1lF97utxD",
-			url: "/#campaign/?gl.vertiser=FBY5QmWQ"
-		},
-		// {
-		// 	name: "Nike",
-		// 	adid: "2qQIRm9u5Q",
-		// 	url: "/#campaign?gl.vertiser=TNXHvb5j"
-		// },
-		// {
-		// 	name: "Reebok",
-		// 	adid: "HtREj0pifC",
-		// 	url: "/#campaign/?gl.vertiser=KpgM78Lg"
-		// },
-		{
-			name: "Mango",
-			adid: "ojjiPf7kbB",
-			url: "/#campaign/?gl.vertiser=1JBFB6K4"
-		},
-		{
-			name: "Cadbury",
-			adid: "qgbiSQ0crN",
-			url: "/#campaign/?gl.vertiser=cadbury_bpngtolk"
-		},
-		{
-			name: "Pantene",
-			adid: "hwtjNncj",
-			url: "/#campaign/?gl.vertiser=zqhRrBjF"
-		}
-	];
 	const status = DataStore.getUrlValue("status") || KStatus.PUBLISHED;
 
 	// add dntn info
@@ -75,19 +83,21 @@ const RecentCampaignsCard = () => {
 		if ( ! adHits || ! adHits.length) {
 			return;
 		}
-
 		campaignInfo.ad = adHits[0];
-		console.log(campaignInfo.ad);
-		if (!campaignInfo.ad.id) console.warn("No id!");
-
-		let campaignDonationForCharity = NGO.fetchDonationData({ads: adHits, status, totalOnly:true});
-		let ttl = campaignDonationForCharity.total;
-		if ( ! Money.value(ttl)) {
-			console.log("DEBUG ZERO!", campaignInfo, campaignDonationForCharity);
-			return;
+		// fetch campaign dntn
+		if ( ! campaignInfo.campaign) {
+			let pvAdvertiser = getDataItem({type:"Advertiser",id:campaignInfo.vertiser,status});
+			if (pvAdvertiser.value) {
+				campaignInfo.campaign = pvAdvertiser.value.campaign;
+			}
 		}
-		campaignInfo.dntn = ttl;
-		console.log("DEBUG", campaignInfo, campaignDonationForCharity);
+		if (campaignInfo.campaign) {
+			let pvCampaign = getDataItem({type:"Campaign",id:campaignInfo.campaign,status});
+			if (pvCampaign.value) {
+				let ttl = Campaign.dntn(pvCampaign.value);
+				campaignInfo.dntn = ttl;
+			}
+		}
 	});
 
 	return (

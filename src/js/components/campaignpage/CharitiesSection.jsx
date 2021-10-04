@@ -6,12 +6,14 @@ import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
 import Counter from '../../base/components/Counter';
 import { space } from '../../base/utils/miscutils';
 import printer from '../../base/utils/printer';
+import ServerIO from '../../plumbing/ServerIO';
 import MDText from '../../base/components/MDText';
 import DevLink from './DevLink';
 import LinkOut from '../../base/components/LinkOut';
 import TestimonialPlayer from './TestimonialPlayer';
 import { lgError } from '../../base/plumbing/log';
 import {I18N} from 'easyi18n';
+import Campaign from '../../base/data/Campaign';
 // window.I18N = I18N; debug
 
 /**
@@ -47,12 +49,11 @@ challenges facing our planet."`,
  * @param {{string:Money}} donation4charity - charity ID to donation amount
  * @param {!Campaign} campaign
  */
-const Charities = ({ charities, donation4charity, campaign }) => {
+const CharitiesSection = ({ charities, donation4charity, campaign }) => {
 	// The portal control data
 	let hideImpact = campaign.hideImpact || {};
 	// Filter nulls (paranoia)
 	charities = charities.filter(x => x);
-	//let sogiveCharities = fetchSogiveData(charities);
 
 	const getDonation = c => {
 		let d = donation4charity[c.id] || donation4charity[c.originalId]; // TODO sum if the ids are different
@@ -128,7 +129,7 @@ const RegNum = ({label, regNum}) => {
  * @param {?Money} donationValue
  */
 const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
-	const ongoing = campaign.ongoing;
+	const ongoing = Campaign.isOngoing(campaign);
 	// Prefer full descriptions here. If unavailable switch to summary desc.
 	let desc = charity.description || charity.summaryDescription || '';
 	// But do cut descriptions down to 1 paragraph.
@@ -136,8 +137,6 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 	if (firstParagraph) {
 		desc = firstParagraph[0];
 	}
-
-	//console.log("SHOWING THE CHARITY",charity);
 
 	const quote = charity.charityQuote;
 	let img = charity.images;
@@ -155,7 +154,7 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 			}
 			<div className={space("charity-quote-content", img && "col-md-7")}>
 				<div className="charity-quote-logo">
-					<img src={charity.logo} alt="logo"/>
+					{charity.logo && <img src={charity.logo} alt="logo"/>}
 				</div>
 				<div className="charity-quote-text">
 					{testimonial && <TestimonialPlayer src={testimonial} />}
@@ -169,7 +168,7 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 						{charity.ad ? (
 							<DevLink href={ServerIO.PORTAL_ENDPOINT+'/#advert/' + escape(charity.ad)} target="_portal" className="ml-2">Advert Editor</DevLink>
 						) : (
-							<DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/' + escape(campaign.id) + '?strayCharities=' + escape(charity.id)} target="_portal" className="ml-2">Stray charity from {campaign.id}</DevLink>
+							<DevLink href={ServerIO.PORTAL_ENDPOINT+'/#campaign/' + escape(campaign.id)} target="_portal" className="ml-2">Stray charity from {campaign.id}</DevLink>
 						)}
 					</div>
 				</div>
@@ -266,4 +265,4 @@ const Impact = ({ charity, donationValue }) => {
 // };
 
 export { CharityDetails };
-export default Charities;
+export default CharitiesSection;

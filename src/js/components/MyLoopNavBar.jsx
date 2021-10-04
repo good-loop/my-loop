@@ -3,9 +3,11 @@ import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, Un
 
 import Login from '../base/youagain';
 import { LoginLink } from '../base/components/LoginWidget';
+import { getProfile } from '../base/data/Person';
 // import NavBar from '../base/components/NavBar';
 import C from '../C';
 import { space } from '../base/utils/miscutils';
+import DataStore from '../base/plumbing/DataStore';
 
 /**
  * TODO refactor to merge with NavBar.jsx
@@ -78,7 +80,7 @@ class MyLoopNavBar extends React.Component {
 			<Navbar className={navClass}
 				style={style}
 				sticky="top" expand="xl">
-				<NavbarBrand href="/#my" className={ ! isShowBrandLogo && "mr-auto"}>
+				<NavbarBrand href="/#my" className={space(! isShowBrandLogo && "mr-auto")}>
 					<img src={navLogo} alt="logo" className="logo-sm" />
 				</NavbarBrand>
 				{isShowBrandLogo && // a 2nd brand? 
@@ -129,9 +131,11 @@ const AccountMenu = ({logoutLink, small, accountLink, customLogin, children}) =>
 			customLogin || <LoginLink verb="register" className="login-menu btn btn-transparent fill">Get started</LoginLink>
 		);
 	}
-
+	
 	let user = Login.getUser();
-	let name = user.name || user.xid;
+	let person = getProfile(user.xid).value || getProfile(user.xid).interim; 	// values of getProfile(user.xid) return in .interim at first, then changed to .value
+	let name = (person && person.std && person.std.name) || user.name || user.xid; 	// person.std.name is the user define name, user.name is the email name
+	if ( name.length > 20 ) name = name.substr(0,20); // Stop UI breaking display name
 	let initial = name.substr(0, 1);
 
 	return (

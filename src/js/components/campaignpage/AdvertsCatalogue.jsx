@@ -14,49 +14,9 @@ import Money from '../../base/data/Money';
 import Counter from '../../base/components/Counter';
 import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import DevLink from './DevLink';
-
-const tomsCampaigns = /(josh|sara|ella)/; // For matching TOMS campaign names needing special treatment
-/**
- * HACK fix campaign name changes to clean up historical campaigns
- * @param {Object} viewcount4campaign
- * @param {!Advert} ad
- * @returns {Number}
- */
-const viewCount = (viewcount4campaign, ad) => {
-	if (!ad.campaign) return null;
-
-	// HACK TOMS?? ella / josh / sara
-	// Don't crunch down TOMS ads that aren't in the sara/ella/josh campaign group
-	if (ad.vertiser === 'bPe6TXq8' && ad.campaign.match(tomsCampaigns)) {
-		let keyword = 'josh';
-		if (ad.campaign.includes('sara')) keyword = 'sara';
-		if (ad.campaign.includes('ella')) keyword = 'ella';
-		// Total views across all ads for this influencer
-		return Object.keys(viewcount4campaign).reduce((acc, cname) => {
-			return cname.includes(keyword) ? acc + viewcount4campaign[cname] : acc;
-		}, 0);
-	}
-
-
-	let vc = viewcount4campaign[ad.campaign];
-	if (vc) return vc;
-	return null;
-};
-
-/**
- * @param {!Advert} ad
- * @returns {!string} Can be "unknown" to fill in for no-campaign odd data items
- */
-const campaignNameForAd = ad => {
-	if (!ad.campaign) return "unknown";
-	// HACK FOR TOMS 2019 The normal code returns 5 campaigns where there are 3 synthetic campaign groups
-	// Dedupe on "only the first josh/sara/ella campaign" instead
-	if (ad.vertiser === 'bPe6TXq8' && ad.campaign && ad.campaign.match(tomsCampaigns)) {
-		let cname = ad.campaign.match(tomsCampaigns)[0];
-		return cname;
-	}
-	return ad.campaign;
-};
+import DataStore from '../../base/plumbing/DataStore';
+import printer from '../../base/utils/printer';
+import { assert } from '../../base/utils/assert';
 
 /**
  * List of adverts with some info about them (like views, dates)
@@ -68,44 +28,40 @@ const campaignNameForAd = ad => {
  * @param {String} p.nvertiserName name of main advertiser/agency
  * @param {Number} p.totalViewCount
  * @param {Advertiser[]} p.vertisers associated advertisers of all ads
- * @param {Advert[]} p.canonicalAds all ads, unfiltered by the filtering query parameter
+ * @param {Advert[]} p.canonicalAds All ads, unfiltered by the filtering query parameter
  */
-const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalViewCount, vertisers, canonicalAds }) => {
-
-	let ongoing = campaign.ongoing;
+const AdvertsCatalogue = ({ campaign, ads, donationTotal, nvertiserName, totalViewCount, vertisers, canonicalAds }) => {
+	assert(canonicalAds);
+	let ongoing = Campaign.isOngoing(campaign);
 
 	// filter out any hidden ads
 	// NB: done here as the hiding is a shallow cosmetic -- we still want the view and £ donation data included (or if not, there are other controls)
+	let showAds = ads;
 	if (campaign && campaign.hideAdverts) {
-		ads = ads.filter(ad => ! campaign.hideAdverts[ad.id]);
+		showAds = ads.filter(ad => ! ad._hidden);
 	}
-	console.log("Ads for catalogue: ", ads, "Hiding: ",campaign && campaign.hideAdverts);
+	console.log("Ads for catalogue: ", ads, "showing",showAds);
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [animating, setAnimating] = useState(false);
 
-	let sampleAds = ads;
-
-	// console.log("Sample ads: ", sampleAds.map(ad => ad.id));
-	// console.log("ONGOING? ", ongoing);
-
 	let views = printer.prettyNumber(totalViewCount);
 
-	if (sampleAds.length == 1) {
-		return <Container className="py-5">
+	if (showAds.length === 1) {
+		return (<Container className="py-5">
 			<h2>Watch one of the <AdvertiserName name={nvertiserName} /> ads&nbsp;
-			{ongoing ? "raising" : "that raised"} <Counter currencySymbol="£" noPennies amount={donationTotal} minimumFractionDigits={2} preserveSize /><br /> with {views} ad viewers</h2>
+				{ongoing ? "raising" : "that raised"} <Counter currencySymbol="£" noPennies amount={donationTotal} minimumFractionDigits={2} preserveSize /><br /> with {views} ad viewers</h2>
 			<AdvertCard
-				ad={ads[0]}
+				ad={showAds[0]}
 				viewCountProp={views}
 				donationTotal={donationTotal}
 				totalViewCount={totalViewCount}
-				active={true}
+				active
 			/>
-			<AdvertFilters campaign={campaign} vertisers={vertisers} ads={sampleAds} canonicalAds={canonicalAds}/>
-		</Container>
+			<AdvertFilters campaign={campaign} vertisers={vertisers} ads={showAds} canonicalAds={canonicalAds} />
+		</Container>);
 	}
 
-	const carouselSlides = sampleAds.map((ad, i) =>
+	const carouselSlides = showAds.map((ad, i) =>
 		<CarouselItem
 			onExiting={() => setAnimating(true)}
 			onExited={() => setAnimating(false)}
@@ -118,7 +74,7 @@ const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalVie
 				totalViewCount={totalViewCount}
 				active={activeIndex === i}
 			/>
-			<CarouselCaption captionText={<Misc.DateDuration startDate={ad.start} endDate={ad.end} />}/>
+			<CarouselCaption captionText={<Misc.DateDuration startDate={ad.start} endDate={ad.end} />} />
 		</CarouselItem>
 	);
 
@@ -126,18 +82,18 @@ const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalVie
 		if (animating) return;
 		const nextIndex = activeIndex === carouselSlides.length - 1 ? 0 : activeIndex + 1;
 		setActiveIndex(nextIndex);
-	}
+	};
 
 	const previous = () => {
 		if (animating) return;
 		const nextIndex = activeIndex === 0 ? carouselSlides.length - 1 : activeIndex - 1;
 		setActiveIndex(nextIndex);
-	}
+	};
 
 	const goToIndex = (newIndex) => {
 		if (animating) return;
 		setActiveIndex(newIndex);
-	}
+	};
 
 	return (<>
 		<Container className="py-5">
@@ -149,18 +105,18 @@ const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalVie
 				interval={false}
 			>
 				<div className="d-block d-md-none">
-					<CarouselIndicators items={carouselSlides} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{backgroundColor:"#000"}}/>
+					<CarouselIndicators items={carouselSlides} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{ backgroundColor: "#000" }} />
 				</div>
 				{carouselSlides}
 				<div className="d-none d-md-block">
-					<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous}/>
-					<CarouselControl direction="next" directionText="Next" onClickHandler={next}/>
+					<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
+					<CarouselControl direction="next" directionText="Next" onClickHandler={next} />
 				</div>
 			</Carousel>
-			<br/>
-			<br/>
-			<AdvertFilters campaign={campaign} vertisers={vertisers} ads={sampleAds} canonicalAds={canonicalAds}/>
-			<AdPreviewCarousel ads={sampleAds} setSelected={goToIndex} selectedIndex={activeIndex}/>
+			<br />
+			<br />
+			<AdvertFilters campaign={campaign} vertisers={vertisers} ads={showAds} canonicalAds={canonicalAds} />
+			<AdPreviewCarousel ads={showAds} setSelected={goToIndex} selectedIndex={activeIndex} />
 		</Container>
 	</>);
 };
@@ -170,9 +126,9 @@ const AdvertsCatalogue = ({campaign, ads, donationTotal, nvertiserName, totalVie
  * 
  * 
  */
-const AdvertiserName = ({name}) => <span className="advertiser-name"><span>{name}</span></span>
+const AdvertiserName = ({ name }) => <span className="advertiser-name"><span>{name}</span></span>;
 
-const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
+const AdPreviewCarousel = ({ ads, selectedIndex, setSelected }) => {
 
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [animating, setAnimating] = useState(false);
@@ -183,18 +139,18 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 		if (animating) return;
 		const nextIndex = activeIndex === carouselSlides.length - 1 ? 0 : activeIndex + 1;
 		setActiveIndex(nextIndex);
-	}
+	};
 
 	const previous = () => {
 		if (animating) return;
 		const nextIndex = activeIndex === 0 ? carouselSlides.length - 1 : activeIndex - 1;
 		setActiveIndex(nextIndex);
-	}
+	};
 
 	const goToIndex = (newIndex) => {
 		if (animating) return;
 		setActiveIndex(newIndex);
-	}
+	};
 
 	let carouselSlides = [];
 	for (let i = 0; i < slidesNum; i++) {
@@ -223,7 +179,7 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 					<AdvertPreviewCard
 						key={adIndex + 2}
 						ad={ads[adIndex + 2]}
-						selected={selectedIndex == adIndex + 2}
+						selected={selectedIndex === adIndex + 2}
 						handleClick={() => setSelected(adIndex + 2)}
 						active={activeIndex === i}
 					/>
@@ -239,35 +195,35 @@ const AdPreviewCarousel = ({ads, selectedIndex, setSelected}) => {
 			previous={previous}
 			interval={false}
 		>
-			<CarouselIndicators items={carouselSlides} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{backgroundColor:"#000"}}/>
+			<CarouselIndicators items={carouselSlides} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{ backgroundColor: "#000" }} />
 			{carouselSlides}
 			<div className="wide-controls">
-				<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous}/>
-				<CarouselControl direction="next" directionText="Next" onClickHandler={next}/>
+				<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
+				<CarouselControl direction="next" directionText="Next" onClickHandler={next} />
 			</div>
 		</Carousel>
 	</div>;
 }
 
 // Support portrait ads
-const IPhoneMockup = ({size}) => {
+const IPhoneMockup = ({ size }) => {
 	if (size == 'portrait') {
 		return (
 			<div>
-					<img src="/img/LandingBackground/iphone-mockup-portrait.svg" className="w-100 invisible" />
-					<img src="/img/LandingBackground/iphone-mockup-portrait.svg" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "49.8%", width: "35%", top: "18%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }} />
+				<img src="/img/LandingBackground/iphone-mockup-portrait.svg" className="w-100 invisible" />
+				<img src="/img/LandingBackground/iphone-mockup-portrait.svg" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "49.8%", width: "35%", top: "18%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }} />
 			</div>
-		)	
-	} else {
-		return (
-			<div>
-				<img src="/img/LandingBackground/iphone-mockup-landscape.svg" className="w-100 invisible" />
-				{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
-				<img src="/img/LandingBackground/iphone-mockup-landscape.svg" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "49.8%", width: "67%", top: "50%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }} />
-			</div>
-		)
+		);
 	}
-}
+	return (
+		<div>
+			<img src="/img/LandingBackground/iphone-mockup-landscape.svg" className="w-100 invisible" />
+			{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
+			<img src="/img/LandingBackground/iphone-mockup-landscape.svg" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "49.8%", width: "67%", top: "50%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }} />
+		</div>
+	);
+
+};
 
 // If social is null (not specific) or false, it will fall back to landscape ads
 const AdvertCard = ({ ad, active }) => {
@@ -283,14 +239,14 @@ const AdvertCard = ({ ad, active }) => {
 	}
 	return (
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
-			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{position:"absolute", zIndex:999}}>Advert Editor ({ad.id})</DevLink>
+			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{ position: "absolute", zIndex: 999 }}>Advert Editor ({ad.id})</DevLink>
 			<div className="position-relative ad-card">
 				<IPhoneMockup size={size} />
 				<div className={"position-absolute theunit-" + size} >
 					{hasShown ? (
 						<GoodLoopUnit vertId={ad.id} size={size} extraParams={extraParams} />
 					) : (
-						<div style={{background:"black", width:"100%", height:"100%"}}></div>
+						<div style={{ background: "black", width: "100%", height: "100%" }}></div>
 					)}
 				</div>
 			</div>
@@ -311,8 +267,8 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
 		return null;
 	}
 	const social = ad.format === "social";
-	let size = 'landscape'
-	if (social) {size = "portrait";}
+	let size = 'landscape';
+	if (social) { size = "portrait"; }
 	const [hasShown, setHasShown] = useState(false);
 	if (active && !hasShown) setHasShown(true);
 
@@ -323,12 +279,12 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
 					{hasShown ? (
 						<GoodLoopUnit vertId={ad.id} size={size} advert={ad} />
 					) : (
-						<div style={{background:"black", width:"100%", height:"100%"}}></div>
+						<div style={{ background: "black", width: "100%", height: "100%" }}></div>
 					)}
 				</div>
 			</div>
 			<div>
-				<Misc.DateDuration startDate={ad.start} endDate={ad.end} invisOnEmpty/>
+				<Misc.DateDuration startDate={ad.start} endDate={ad.end} invisOnEmpty />
 			</div>
 		</div>
 	);
@@ -341,7 +297,7 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
  * @param {Advertiser[]} vertisers associated advertisers
  * @param {Advert[]} canonicalAds list of unfiltered ads
  */
-const AdvertFilters = ({campaign, vertisers, canonicalAds}) => {
+const AdvertFilters = ({ campaign, vertisers, canonicalAds }) => {
 	const adsVertisers = uniq(canonicalAds.map(ad => ad.vertiser));
 	if (vertisers) vertisers = uniq(vertisers).filter(vertiser => adsVertisers.includes(vertiser.id));
 	const filterButtons = campaign.filterButtons;
@@ -349,7 +305,7 @@ const AdvertFilters = ({campaign, vertisers, canonicalAds}) => {
 
 	const customFilters = filterButtons && (
 		Object.keys(filterButtons).map(category => (
-			<AdvertFilterCategory category={category} filterButtons={filterButtons}/>
+			<AdvertFilterCategory category={category} filterButtons={filterButtons} />
 		))
 	);
 
@@ -360,8 +316,8 @@ const AdvertFilters = ({campaign, vertisers, canonicalAds}) => {
 	if (!containsNonNull && !vertisers) return null;
 
 	return <div className="position-relative ad-filters">
-		{filterCount || campaign.showVertiserFilters ? <ClearFilters/> : null}
-		{campaign.showVertiserFilters && <AdvertFilterCategory vertisers={vertisers}/>}
+		{filterCount || campaign.showVertiserFilters ? <ClearFilters /> : null}
+		{campaign.showVertiserFilters && <AdvertFilterCategory vertisers={vertisers} />}
 		{customFilters}
 	</div>;
 };
@@ -371,7 +327,7 @@ const AdvertFilters = ({campaign, vertisers, canonicalAds}) => {
  * Display a filter category
  * @param {Advertiser[]} vertisers if set, generates a vertiser category
  */
-const AdvertFilterCategory = ({category, filterButtons, vertisers}) => {
+const AdvertFilterCategory = ({ category, filterButtons, vertisers }) => {
 
 	// Return null if there is no data, or if no queries are set
 	if (!vertisers) {
@@ -390,7 +346,7 @@ const AdvertFilterCategory = ({category, filterButtons, vertisers}) => {
 	 * Legacy, for preventing collapse (categories no longer collapse)
 	 */
 	const containsSelectedButton = () => {
-		const {'query':dsQuery} = DataStore.getValue(['location', 'params']);
+		const { 'query': dsQuery } = DataStore.getValue(['location', 'params']);
 		if (!dsQuery) return false;
 		if (filterButtons) {
 			if (!filterButtons[category]) return false;
@@ -411,41 +367,41 @@ const AdvertFilterCategory = ({category, filterButtons, vertisers}) => {
 	console.log("FILTER Vertisers? ", vertisers);
 
 	return <div className="ad-filter">
-			<h5>Filter by {vertisers ? "advertiser" : category}</h5>
-			<div className="ad-filter-list w-100 text-center d-flex flex-row justify-content-center">
-				{vertisers ? (
-					vertisers.map(vertiser => (
-						<FilterButton key={vertiser.id} query={"vertiser:" + vertiser.id}>
-							{vertiser.branding ? <img src={vertiser.branding.logo} className="w-75"/>
+		<h5>Filter by {vertisers ? "advertiser" : category}</h5>
+		<div className="ad-filter-list w-100 text-center d-flex flex-row justify-content-center">
+			{vertisers ? (
+				vertisers.map(vertiser => (
+					<FilterButton key={vertiser.id} query={"vertiser:" + vertiser.id}>
+						{vertiser.branding ? <img src={vertiser.branding.logo} className="w-75" />
 							: <h3>{vertiser.name || vertiser.id}</h3>}
-						</FilterButton>
-					))
-				) : (
-					filterButtons[category].filter(x=>x).map((filterBtn, i) => (
-						<FilterButton key={i} query={filterBtn.query}>
-							{filterBtn.imgUrl ? <img src={filterBtn.imgUrl} className="w-75"/>
+					</FilterButton>
+				))
+			) : (
+				filterButtons[category].filter(x => x).map((filterBtn, i) => (
+					<FilterButton key={i} query={filterBtn.query}>
+						{filterBtn.imgUrl ? <img src={filterBtn.imgUrl} className="w-75" />
 							: <h3>{filterBtn.displayName}</h3>}
-						</FilterButton>
-					))
-				)}
-			</div>
-			<br/>
-		</div>;
+					</FilterButton>
+				))
+			)}
+		</div>
+		<br />
+	</div>;
 
 };
 
-const ClearFilters = ({}) => {
+const ClearFilters = ({ }) => {
 	const clearable = !!DataStore.getValue(['location', 'params', 'query']);
 	return <a
 		onClick={() => clearable && DataStore.setValue(['location', 'params', 'query'], null)}
-		style={{position:"absolute", right:10, bottom: -10, color: clearable ? "black" : "grey", cursor:clearable ? "pointer" : "default"}}>
-			CLEAR FILTERS
+		style={{ position: "absolute", right: 10, bottom: -10, color: clearable ? "black" : "grey", cursor: clearable ? "pointer" : "default" }}>
+		CLEAR FILTERS
 	</a>;
-}
+};
 
-const FilterButton = ({query, children}) => {
+const FilterButton = ({ query, children }) => {
 	if (!query) return null;
-	const {'query':dsQuery} = DataStore.getValue(['location', 'params']);
+	const { 'query': dsQuery } = DataStore.getValue(['location', 'params']);
 	const selected = dsQuery === query;
 	const setQuery = () => {
 		DataStore.setValue(['location', 'params', 'query'], query);
@@ -453,6 +409,6 @@ const FilterButton = ({query, children}) => {
 	return <div className={"ad-filter-btn d-inline-flex flex-row align-items-center justify-content-center " + (selected ? "selected" : "")} onClick={setQuery}>
 		{children}
 	</div>;
-}
+};
 
 export default AdvertsCatalogue;
