@@ -264,6 +264,8 @@ const AdBlockPopup = () => {
 	const pvHasAdBlock = detectAdBlock();
 	const hasAdBlock = pvHasAdBlock.value;
 
+	// Check if user using T4G
+
 	return hasAdBlock && adblockPopup ? (
 		<div style={{ background: "white", borderRadius: 10, left: "50%", top: "50%", transform: "translate(-50%, -50%)", width: 500, zIndex: 99999 }}
 			className="shadow position-absolute text-center p-3"

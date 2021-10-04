@@ -32,6 +32,7 @@ import NewtabCharityLogin from './pages/NewtabCharityLogin';
 import ServerIO from '../plumbing/ServerIO';
 import { track } from '../base/plumbing/log';
 import HashWatcher from './HashWatcher';
+import WhitelistUs from './pages/WhitelistUs';
 // import RedesignPage from './pages/RedesignPage';
 
 // DataStore
@@ -69,7 +70,8 @@ const PAGES = {
 	subscribe: SubscribePage,
 	about: MyGLAboutPage,
 	tabsForGood: TabsForGoodOnboard,
-	register: NewtabCharityLogin
+	register: NewtabCharityLogin,
+	whitelist: WhitelistUs
 };
 
 addFunderCredit("Scottish Enterprise");
