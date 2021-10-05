@@ -21,7 +21,7 @@ import DataStore from '../../base/plumbing/DataStore';
 import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
 import SearchQuery from '../../base/searchquery';
 import { assert, assMatch } from '../../base/utils/assert';
-import { asDate, ellipsize, encURI, is, isMobile, mapkv, space, sum, uniq, uniqById, yessy } from '../../base/utils/miscutils';
+import { asDate, ellipsize, encURI, getUrlVars, is, isMobile, mapkv, space, sum, uniq, uniqById, yessy } from '../../base/utils/miscutils';
 import C from '../../C';
 import ActionMan from '../../plumbing/ActionMan';
 import ServerIO from '../../plumbing/ServerIO';
@@ -102,10 +102,15 @@ const viewCount = (viewcount4campaign, ad) => {
 		let advid = DataStore.getUrlValue("advertiser") || DataStore.getUrlValue("gl.vertiser");
 		if (advid) {
 			pvTop = getDataItem({type:"Advertiser", id:advid, status});
-		} else {
-			let agid = DataStore.getUrlValue("agency");
-			if ( ! agid) throw new Error("Need Campaign, Advertiser, or Agency");
+		} else if (DataStore.getUrlValue("agency")) {
+			let agid = DataStore.getUrlValue("agency");			
 			pvTop = getDataItem({type:"Agency", id:agid, status});
+		} else if (DataStore.getUrlValue("gl.vert")) {
+			let adid = DataStore.getUrlValue("gl.vert");			
+			pvTop = getDataItem({type:"Advert", id:adid, status});
+		} else {
+			console.error("Should give Campaign, Advertiser, or Agency");
+			pvTop = {};
 		}
 		if ( ! pvTop.value) {
 			return {
@@ -229,18 +234,20 @@ const CampaignPage = () => {
 
 	// set NavBar brand
 	let {type, id} = Campaign.masterFor(campaign);
-	let pvBrandItem = getDataItem({type, id, status});
-	let brandItem = pvBrandItem.value;
-	if (brandItem) {
-		const prop = type.toLowerCase();
-		let nprops = { // advertiser link and logo			
-			brandLink:'/#campaign?'+prop+'='+encURI(getId(brandItem)),
-			brandLogo: brandItem.branding && (brandItem.branding.logo_white || brandItem.branding.logo),
-			brandName: brandItem.name || getId(brandItem)
-		};
-		setNavProps(nprops);
+	if (type && id) {
+		let pvBrandItem = getDataItem({type, id, status});
+		let brandItem = pvBrandItem.value;
+		if (brandItem) {
+			const prop = type.toLowerCase();
+			let nprops = { // advertiser link and logo			
+				brandLink:'/#campaign?'+prop+'='+encURI(getId(brandItem)),
+				brandLogo: brandItem.branding && (brandItem.branding.logo_white || brandItem.branding.logo),
+				brandName: brandItem.name || getId(brandItem)
+			};
+			setNavProps(nprops);
+		}
 	}
-
+	
 	// initial donation record
 	let donation4charity = Campaign.dntn4charity(campaign);
 	const ad4Charity = {};
