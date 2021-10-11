@@ -105,6 +105,11 @@ const WebtopPage = () => {
 
 	// Background images on tab plugin sourced locally
 
+	window.onload = () => {
+		console.log('MY-LOOP LOADED');
+		window.parent.postMessage("loadMyOrders","*");
+	}
+
 	return (<>
 		<BG src={null} fullscreen opacity={0.9} bottom={110} style={{ backgroundPosition: "center" }}>
 			<TutorialHighlighter page={[4, 5]} className="position-fixed p-3" style={{ top: 0, left: 0, width: "100vw", zIndex: 1 }}>
