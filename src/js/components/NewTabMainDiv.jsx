@@ -106,9 +106,15 @@ const WebtopPage = () => {
 	// Background images on tab plugin sourced locally
 
 	window.onload = () => {
-		console.log('MY-LOOP LOADED');
-		window.parent.postMessage("loadMyOrders","*");
+		let message = "This is a message from my-loop newtab.html"
+		window.parent.postMessage(message,"*");
+		window.addEventListener('message', (messageEvent) => {
+			if (messageEvent.origin.startsWith('safari-web-extension')) {
+				console.log("Login details recieved from Safari:", messageEvent.data);
+			}
+		});
 	}
+
 
 	return (<>
 		<BG src={null} fullscreen opacity={0.9} bottom={110} style={{ backgroundPosition: "center" }}>
