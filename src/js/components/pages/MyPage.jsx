@@ -88,7 +88,7 @@ const HowItWorksCard = () => {
 			</>: <embed src="/img/LandingBackground/svg-desktop/infographic.svg" className="w-100"/>}
 		</Container>
 		<div className="flex-row justify-content-center">
-					<RegisterLink className="btn btn-primary">Get started</RegisterLink>
+					<RegisterLink style={{position: 'relative',top: '-.7em'}} className="btn btn-primary">Get started</RegisterLink>
 		</div>
 		<Container>
 			{isPortraitMobile() ? <>
