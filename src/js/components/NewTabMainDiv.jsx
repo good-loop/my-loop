@@ -110,7 +110,15 @@ const WebtopPage = () => {
 		window.parent.postMessage(message,"*");
 		window.addEventListener('message', (messageEvent) => {
 			if (messageEvent.origin.startsWith('safari-web-extension')) {
-				console.log("Login details recieved from Safari:", messageEvent.data);
+				let safariJwt = messageEvent.data.jwt;
+				let safariXid = messageEvent.data.xid;
+				// console.log("Login details recieved from Safari:", safariXid, safariJwt);
+				Login.setUser({
+					"xid": safariXid,
+					"service": "email",
+					"jwt": safariJwt
+				});
+				setShowTabLogin(false);
 			}
 		});
 	}
