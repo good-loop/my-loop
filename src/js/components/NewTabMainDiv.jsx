@@ -105,8 +105,9 @@ const WebtopPage = () => {
 
 	// Background images on tab plugin sourced locally
 
+	// Login for Safari 
 	window.onload = () => {
-		let message = "This is a message from my-loop newtab.html"
+		let message = "safari ready to login"
 		window.parent.postMessage(message,"*");
 		window.addEventListener('message', (messageEvent) => {
 			if (messageEvent.origin.startsWith('safari-web-extension')) {
