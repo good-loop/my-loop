@@ -271,7 +271,7 @@ const AdBlockPopup = () => {
 			className="shadow position-absolute text-center p-3"
 		>
 			<h3 className="text-dark">It looks like you have AdBlock enabled</h3>
-			<p>We can't raise money for charity without displaying ads. Please disable your adblocker so Tabs for Good can work!</p>
+			<p>We can't raise money for charity without displaying ads. Please <a href="https://my.good-loop.com/#allowlist">disable your adblocker</a> so Tabs for Good can work!</p>
 			<b style={{ position: "absolute", top: 10, right: 20, cursor: "pointer" }} onClick={() => setAdblockPopup(false)}>X</b>
 		</div>
 	) : null;

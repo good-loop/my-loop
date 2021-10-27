@@ -5,7 +5,7 @@ import { Col, Container, Row } from 'reactstrap';
 
 window.DEBUG = false;
 
-const WhitelistUs = () => {
+const AllowlistUs = () => {
 	return (<>
 		<MyLoopNavBar logo="/img/new-logo-with-text.svg" logoScroll="/img/new-logo-with-text-white.svg" />
 		<img className="adblock-arrow" src="/img/whitelist/adblock-arrow.png" alt="" />
@@ -55,4 +55,4 @@ const WhitelistUs = () => {
 };
 
 
-export default WhitelistUs;
+export default AllowlistUs;
