@@ -10,6 +10,7 @@ import KStatus from '../../base/data/KStatus';
 import LinkOut from '../../base/components/LinkOut';
 import ServerIO from '../../plumbing/ServerIO';
 import Campaign from '../../base/data/Campaign';
+import DynImg from '../../base/components/DynImg';
 
 /**
  * @param {Object} p
@@ -55,7 +56,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 
 	return (<>
 		<div className="impact-hub-splash position-relative">
-			<img src={campaignPage.bg ? campaignPage.bg : "/img/lightcurve.svg"} className={space("w-100", campaignPage.bg ? "splash-img" : "splash-curve")} alt="splash" />
+			<DynImg src={campaignPage.bg ? campaignPage.bg : "/img/lightcurve.svg"} className={space("w-100", campaignPage.bg ? "splash-img" : "splash-curve")} alt="splash" />
 			<div className="dark-overlay" />
 			<img src="/img/redcurve.svg" className="w-100 splash-curve" alt="curve" />
 			<div className="hero splash-card px-5">

@@ -14,6 +14,7 @@ import TestimonialPlayer from './TestimonialPlayer';
 import { lgError } from '../../base/plumbing/log';
 import {I18N} from 'easyi18n';
 import Campaign from '../../base/data/Campaign';
+import DynImg from '../../base/components/DynImg';
 // window.I18N = I18N; debug
 
 /**
@@ -149,7 +150,7 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 		<div className={space("charity-quote row", !img && "no-img")}>
 			{img &&
 				<div className="charity-quote-img col-md-5 p-0">
-					<img src={img} alt="charity" />
+					<DynImg src={img} alt="charity" />
 				</div>
 			}
 			<div className={space("charity-quote-content", img && "col-md-7")}>
