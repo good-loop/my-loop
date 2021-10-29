@@ -5,6 +5,10 @@ import { Col, Container, Row } from 'reactstrap';
 
 window.DEBUG = false;
 
+window.onload = () => {
+	window.scroll(0,0);
+}
+
 const AllowlistUs = () => {
 	return (<>
 		<MyLoopNavBar logo="/img/new-logo-with-text.svg" logoScroll="/img/new-logo-with-text-white.svg" />
