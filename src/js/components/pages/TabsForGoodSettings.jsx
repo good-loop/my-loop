@@ -155,12 +155,16 @@ const getTabsOpened = () => {
 };
 
 /**
- * Fetch the number of tabs opened by the user.
+ * Fetch the number of tabs opened (by the user) (for a charity).
  * @returns ?PromiseValue<Number> null if not logged in yet
  */
- export const getTabsOpened2 = ({start, user}) => {
+ export const getTabsOpened2 = ({start, user, cid}) => {
+	let q = space( // HACK! It'd be better to use searchquery.js
+		user && "user:"+Login.getId()+ " AND", 
+		cid && "cid:"+cid+ " AND", 
+		"evt:tabopen");
 	const trkreq = {
-		q: space(user && "user:"+Login.getId()+ " AND", "evt:tabopen"),
+		q,
 		name: "tabopens",
 		dataspace: 'gl',
 		start
