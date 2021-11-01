@@ -50,7 +50,7 @@ const AllowlistUs = () => {
 					</Col>
 					<Col md={6}>
 						<div className="justify-content-center">
-							<p>Simply pause Adblocker on this page or manually add <br/> <code>my.good-loop.com</code> to your ad blocker allowlist/ allowlist filter to <br/> enable us to start raising money for charity.</p>
+							<p>Simply pause Adblocker on this page or manually add <br/> <code>my.good-loop.com</code> to your ad blocker allowlist/ whitelist filter to <br/> enable us to start raising money for charity.</p>
 						</div>
 					</Col>
 				</Row>
