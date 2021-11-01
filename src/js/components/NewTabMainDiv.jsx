@@ -208,7 +208,7 @@ const NormalTabCenter = ({ charityID, loadingCharity }) => {
 		<div className="w-100 pb-3">
 			<div className="tab-search-container mx-auto">
 				<Search onSubmit={e => doSearch(e, searchEngine)} placeholder={"Search with " + engineData.title} icon={
-					<a href="/#account?tab=tabsForGood"><img src={engineData.logo} alt="search icon" style={{ width: engineData.size.width, height: engineData.size.height }} /></a>
+					<a href="/#account?tab=tabsForGood" title="click here to change the search engine"><img src={engineData.logo} alt="search icon" style={{ width: engineData.size.width, height: engineData.size.height }} /></a>
 				} />
 			</div>
 		</div>
@@ -236,7 +236,7 @@ const NewTabCharityCard = ({ cid, loading }) => {
 		totalMoney = Money.add(pvTotalForCharity.value.total, tabEst);
 	}
 
-	return (<div className="mx-auto" >
+	return (<div className="mx-auto rounded-3 NewTabCharityCard" >
 		<div>
 		<a href={"/#account?tab=tabsForGood" + params}>
 			<TutorialComponent page={1}>

@@ -162,7 +162,8 @@ const getTabsOpened = () => {
 	let q = space( // HACK! It'd be better to use searchquery.js
 		user && "user:"+Login.getId()+ " AND", 
 		cid && "cid:"+cid+ " AND", 
-		"evt:tabopen");
+		cid? "evt:tabadview" : "evt:tabopen" // HACK count adviews for charity-specific stats which are used to estimate £s
+		);
 	const trkreq = {
 		q,
 		name: "tabopens",
