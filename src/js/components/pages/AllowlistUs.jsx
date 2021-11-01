@@ -5,11 +5,13 @@ import { Col, Container, Row } from 'reactstrap';
 
 window.DEBUG = false;
 
-window.onload = () => {
-	window.scroll(0,0);
-}
-
 const AllowlistUs = () => {
+	window.scroll(0,0);
+
+	let noNavbar = document.createElement('style');
+	noNavbar.innerHTML = '.nav-item:last-child {visibility: hidden;}';
+	document.head.appendChild(noNavbar);
+	
 	return (<>
 		<MyLoopNavBar logo="/img/new-logo-with-text.svg" logoScroll="/img/new-logo-with-text-white.svg" />
 		<img className="adblock-arrow" src="/img/allowlist/adblock-arrow.png" alt="" />
