@@ -228,8 +228,7 @@ const NewTabCharityCard = ({ cid, loading }) => {
 	// HACK we want to show the total going up as tabs are opened. But we only reconcile on a quarterly basis.
 	// SO: take 1 month of data, which will usually be an under-estimate, and combine it with an underestimate of CPM
 	// to give a counter that ticks up about right.
-	by cid!
-	let pvNumTabsOpenedEveryone = getTabsOpened2({}); // 1 month's data -- which is alsmost certainly not included in the total
+	let pvNumTabsOpenedEveryone = getTabsOpened2({cid}); // 1 month's data -- which is alsmost certainly not included in the total
 	let totalMoney;
 	if (isTester() && pvTotalForCharity.value && pvNumTabsOpenedEveryone.value) {
 		// TODO other currencies e.g. USD
