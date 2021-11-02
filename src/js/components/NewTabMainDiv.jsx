@@ -236,7 +236,7 @@ const NewTabCharityCard = ({ cid, loading }) => {
 		totalMoney = Money.add(pvTotalForCharity.value.total, tabEst);
 	}
 
-	return (<div className="mx-auto rounded-3 NewTabCharityCard" >
+	return (<div className="mx-auto rounded-lg NewTabCharityCard" >
 		<div>
 		<a href={"/#account?tab=tabsForGood" + params}>
 			<TutorialComponent page={1}>
