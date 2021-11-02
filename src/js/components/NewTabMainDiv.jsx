@@ -212,7 +212,6 @@ const NormalTabCenter = ({ charityID, loadingCharity }) => {
 				} />
 			</div>
 		</div>
-		<small className="text-center text-white font-weight-bold">You are supporting</small>
 		<NewTabCharityCard cid={charityID} loading={loadingCharity} />
 	</>;
 };
@@ -236,8 +235,8 @@ const NewTabCharityCard = ({ cid, loading }) => {
 		totalMoney = Money.add(pvTotalForCharity.value.total, tabEst);
 	}
 
-	return (<div className="mx-auto rounded-lg NewTabCharityCard" >
-		<div>
+	return (<div className="mx-auto rounded-lg text-center NewTabCharityCard" >
+		<small className="">You are supporting</small>
 		<a href={"/#account?tab=tabsForGood" + params}>
 			<TutorialComponent page={1}>
 				<WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}>
@@ -251,8 +250,9 @@ const NewTabCharityCard = ({ cid, loading }) => {
 				</WhiteCircle>
 			</TutorialComponent>
 		</a>
-		{totalMoney && charity && <p className="text-center">Together we've raised<br/><b><Misc.Money amount={totalMoney} /></b><br/>for {NGO.displayName(charity)}</p>}
-		</div>
+		{totalMoney && charity && 
+			<p>Together we've raised<br/><b><Misc.Money amount={totalMoney} /></b><br/>
+			for {NGO.displayName(charity)}</p>}
 	</div>);
 };
 
