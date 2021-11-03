@@ -27,7 +27,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 	let charityName = 'charity';
 	if (charities && charities.length === 1 && charities[0]) charityName = charities[0].displayName || charities[0].name;
 
-	const donationDisplay = <b>{donationValue ? <Counter currencySymbol="£" amount={donationValue} minimumFractionDigits={2} preserveSize /> : "money"}</b>;
+	const donationDisplay = <b>{donationValue ? <Counter amount={donationValue} minimumFractionDigits={2} preserveSize /> : "money"}</b>;
 
 	let splashText = <>
 		<div className="header text-white">
@@ -44,7 +44,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 		splashText = <div className="header text-white text-right">
 			<div>
 				We donate <LinkOut href={campaignPage.widerUrl}>
-					<b><Counter currencySymbol="£" sigFigs={4} amount={campaignPage.widerAnnualDntn} minimumFractionDigits={2} preserveSize /></b> a year
+					<b><Counter sigFigs={4} amount={campaignPage.widerAnnualDntn} minimumFractionDigits={2} preserveSize /></b> a year
 				</LinkOut>
 				<br /><br />
 				<div>

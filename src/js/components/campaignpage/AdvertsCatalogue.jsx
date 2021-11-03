@@ -97,7 +97,7 @@ const AdvertsCatalogue = ({ campaign, ads, donationTotal, nvertiserName, totalVi
 
 	return (<>
 		<Container className="py-5">
-			<h2>Watch the <AdvertiserName name={nvertiserName} /> ads {ongoing ? "raising" : "that raised"} <Counter currencySymbol="£" noPennies amount={donationTotal} minimumFractionDigits={2} preserveSize /><br />with {views} ad viewers</h2>
+			<h2>Watch the <AdvertiserName name={nvertiserName} /> ads {ongoing ? "raising" : "that raised"} <Counter noPennies amount={donationTotal} minimumFractionDigits={2} preserveSize /><br />with {views} ad viewers</h2>
 			<Carousel
 				activeIndex={activeIndex}
 				next={next}
