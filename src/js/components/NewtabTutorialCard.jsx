@@ -57,7 +57,7 @@ const NewtabTutorialCard = ({tutorialPages, charityId, onClose}) => {
 	}
 	const beforeLastPage = page < tutorialPages.length - 1;
 
-	let desiredSize = {width: 370, height: 350}
+	let desiredSize = {width: 370, height: 350};
 	// NOTE: The following code gets the tutorial box to automatically size and position itself to any given component.
 	// It's no longer used, but I have left it here in case the same functionality is needed later
 	/*
@@ -144,7 +144,8 @@ const NewtabTutorialCard = ({tutorialPages, charityId, onClose}) => {
 		right:rect.right,
 		bottom:rect.bottom,*/
 		width:desiredSize.width,
-		height:desiredSize.height
+		height:desiredSize.height,
+		maxWidth:"28vw" // fix "card goes off-screen" for some laptops, layout bug of 2021-11-15
 	};
 
 	if (page == 0) {
@@ -296,7 +297,7 @@ const PopupWindow = () => {
 				<h5 className="color-gl-light-red" style={{fontSize:"1rem"}}>X</h5>
 			</a>
 		</div>;
-}
+};
 
 export { openTutorial, TutorialComponent, TutorialHighlighter, PopupWindow };
 export default NewtabTutorialCard;
