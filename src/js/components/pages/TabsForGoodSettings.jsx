@@ -15,6 +15,7 @@ import Misc from '../../base/components/Misc';
 import KStatus from '../../base/data/KStatus';
 import { getDataLogData } from '../../base/plumbing/DataLog';
 import C from '../../C';
+import LinkOut from '../../base/components/LinkOut';
 
 
 const TabsForGoodSettings = () => {
@@ -108,7 +109,7 @@ const CharitySelectBox = ({ item, className }) => {
 			{selected ? <span className="text-success thin"><Icon name="tick" /> Selected</span>
 				: <button onClick={() => setPersonSetting("charity", getId(item))} className="btn btn-outline-primary thin">Select</button>
 			}
-			{item.url && <a className="position-absolute" style={{ top: 10, right: 10 }} href={item.url} target="_blank" rel="noreferrer">About</a>}
+			{item.url && <LinkOut className="position-absolute" style={{ top: 10, right: 10 }} href={item.url}>About</LinkOut>}
 		</div>
 	</div>;
 }; // ./CharitySelectBox
