@@ -26,6 +26,10 @@ const CharityLogo = ({charity, className, style, link=false}) => {
 	}
 	// with / without `a` link?
 	if (charity.url && link) {
+		// if charity URL doesn't start with "http://" or "https://" then add it ourselves, otherwise the href will break when being rendered
+		if (!/^https?:\/\//.test(charity.url)) {
+			charity.url = 'https://' + charity.url;
+		}
 		return <a href={charity.url} style={style} className="charity-logo w-100 h-100 d-flex justify-content-center align-items-center" target="_blank" rel="noopener noreferrer">{$logo}</a>;
 	}
 	return $logo;
