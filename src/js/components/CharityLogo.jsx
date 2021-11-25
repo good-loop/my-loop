@@ -19,7 +19,8 @@ const CharityLogo = ({charity, className, style, link=false}) => {
 		}
 	}
 	// 'logo' class forces the logos to be too small for the circle - so leaving it out
-	let $logo = <img className={space(className, svgClasses)} style={style} src={charity.logo} alt={charity.displayName} />;
+	let altText = charity.displayName || NGO.id(charity);
+	let $logo = <img className={space(className, svgClasses)} style={style} src={charity.logo} alt={altText} />;
 	if ( ! charity.logo) {
 		console.warn("Charity without a logo",NGO.id(charity),charity);
 		$logo = <span className={className} style={style}>{charity.displayName || NGO.id(charity)}</span>; // fallback to their name
@@ -30,7 +31,7 @@ const CharityLogo = ({charity, className, style, link=false}) => {
 		if (!/^https?:\/\//.test(charity.url)) {
 			charity.url = 'https://' + charity.url;
 		}
-		return <a href={charity.url} style={style} className="charity-logo w-100 h-100 d-flex justify-content-center align-items-center" target="_blank" rel="noopener noreferrer">{$logo}</a>;
+		return <a href={charity.url} style={style} className="charity-logo w-100 h-100 d-flex justify-content-center align-items-center" target="_blank" rel="noopener noreferrer" aria-label={"Read more about " + altText}>{$logo}</a>;
 	}
 	return $logo;
 };
