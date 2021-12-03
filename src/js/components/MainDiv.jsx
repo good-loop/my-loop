@@ -200,7 +200,9 @@ class MainDiv extends Component {
 			<>
 				<div id={pageId} /* wrap in an id in case you need high-strength css rules */>
 					<HashWatcher />
-					<Page path={path} spring={spring}/>
+					<div id="main" role="main">
+						<Page path={path} spring={spring}/>
+					</div>
 					<Footer />
 				</div>
 				<LoginWidget logo={<img src="/img/new-logo.svg" style={{height: '64px'}} />} title={loginWidgetTitle} services={['twitter']} />

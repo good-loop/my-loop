@@ -7,7 +7,7 @@ const MyAdCampaignsPage = () => {
 	return (<>
 		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" alwaysScrolled/>
 		<div className="MyAdCampaignsPage">
-			<img src="/img/LandingBackground/Banner_Ourads.png" className="w-100 mt-5"/>
+			<img src="/img/LandingBackground/Banner_Ourads.png" className="w-100 mt-5" alt="ad campaigns banner"/>
 			<Container className="py-5">
 				<h1>Ad campaigns</h1>
 				<RecentCampaignsCard/>
