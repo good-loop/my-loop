@@ -177,7 +177,10 @@ const DoSection = ({ title, tqTitle, done = false, img, last = false, children, 
 		<Row className={space("position-relative", done ? "done" : "")}>
 			{!last ? <div className="TubeLine-line" style={lineTop ? { top: lineTop + "%" } : null} /> : null}
 			<Col md={2} className="mb-5 text-center position-relative">
-				<img src={done ? "/img/LandingBackground/Group30.png" : img} className={space("w-100 TubeLine-img", circleClassName)} style={circleStyle} />
+				<img src={done ? "/img/LandingBackground/Group30.png" : img}
+					className={space("w-100 TubeLine-img", circleClassName)}
+					style={circleStyle} alt={(done ? "done " : "not done ") + title}
+				/>
 			</Col>
 			<Col className="offset-md-1 flex-column unset-margins justify-content-center mb-5">
 				<div> {/* NB: div needed to avoid centering children */}
