@@ -63,7 +63,7 @@ const Paginator = ({rows, cols, rowsMD, colsMD, pageButtonRange, pageButtonRange
 					: "Loading..."}
 			</div> : null}
 		{page}
-		<div className={"paginator-controls flex-row justify-content-between" + (isPortraitMobile() ? "w-100" : "w-50") + " mx-auto mt-5"}>
+		<div className={"paginator-controls flex-row justify-content-between " + (isPortraitMobile() ? "w-100" : "w-50") + " mx-auto mt-5"}>
 			<PageButton pageNum={pageNum-1<0 ? 0 : pageNum-1} setPage={setPage} disabled={pageNum-1<0}>
 				Previous
 			</PageButton>

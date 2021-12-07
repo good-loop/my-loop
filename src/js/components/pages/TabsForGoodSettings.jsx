@@ -49,7 +49,7 @@ const SearchEnginePicker = () => {
 
 	return <PropControl type="select" prop="searchEnginePicker" options={["google", "ecosia", "duckduckgo", "bing"]}
 		labels={["Google", "Ecosia", "DuckDuckGo", "Bing"]} dflt={"google"} saveFn={onSelect}
-		path={dpath} />;
+		path={dpath} aria-label="Choose a search engine"/>;
 };
 
 
@@ -104,12 +104,12 @@ const CharitySelectBox = ({ item, className }) => {
 		<div
 			className={space("charity-select-box flex-column justify-content-between align-items-center unset-margins p-md-3 w-100 position-relative")}
 		>
-			{item.logo ? <img className="logo-xl mt-4 mb-2" src={item.logo} /> : <span>{item.name || item.id}</span>}
+			{item.logo ? <img className="logo-xl mt-4 mb-2" src={item.logo} alt={item.name || item.id} /> : <span>{item.name || item.id}</span>}
 			<p>{item.summaryDescription}</p>
 			{selected ? <span className="text-success thin"><Icon name="tick" /> Selected</span>
 				: <button onClick={() => setPersonSetting("charity", getId(item))} className="btn btn-outline-primary thin">Select</button>
 			}
-			{item.url && <LinkOut className="position-absolute" style={{ top: 10, right: 10 }} href={item.url}>About</LinkOut>}
+			{item.url && <LinkOut className="position-absolute" style={{ top: 10, right: 10 }} href={item.url} aria-label={"Read more about " + (item.name || item.id)}>About</LinkOut>}
 		</div>
 	</div>;
 }; // ./CharitySelectBox
