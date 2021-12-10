@@ -25,7 +25,7 @@ import Person, { getProfile, getPVClaimValue } from '../base/data/Person';
 import Misc from '../base/components/Misc';
 import Money from '../base/data/Money';
 import NGO from '../base/data/NGO';
-import { isTester } from '../base/Roles';
+import Roles, { isTester } from '../base/Roles';
 
 
 // DataStore
@@ -106,9 +106,9 @@ const WebtopPage = () => {
 	// Background images on tab plugin sourced locally
 
 	return (<>
-		<style>
+		{ ! Roles.isDev() && <style>
 			{ '.MessageBar .alert {display: none;}' }
-		</style>
+		</style>}
 		<BG src={null} fullscreen opacity={0.9} bottom={110} style={{ backgroundPosition: "center" }}>
 			<TutorialHighlighter page={[4, 5]} className="position-fixed p-3" style={{ top: 0, left: 0, width: "100vw", zIndex: 1 }}>
 				<div className="d-flex justify-content-between">
