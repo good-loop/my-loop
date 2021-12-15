@@ -128,16 +128,13 @@ const LogInForm = ({onRegister, onLogin}) => {
 	}
 
 	return (<>
-		{/* <p>Step 1 complete!<br/>
+		<p>Step 1 complete!<br/>
 		Now install the plugin for Chrome.</p>
 		<a className="btn btn-primary mt-2"
 			target="_blank"
 			href="https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1">
 			CHROME STORE
-		</a> */}
-		<p>Sorry: Step 2 is offline for maintenance. <br/>
-		Thank you for signing up! Sorry for the delay. <br/>
-		We will be in touch soon.</p>
+		</a>
 	</>);
 };
 
