@@ -34,6 +34,7 @@ import Roles from '../../base/Roles';
 import HowDoesItWork from './HowDoesItWork';
 import NGO from '../../base/data/NGO';
 import { setNavContext, setNavProps } from '../../base/components/NavBar';
+import Messaging, { notifyUser } from '../../base/plumbing/Messaging';
 
 
 /**
@@ -120,9 +121,13 @@ const viewCount = (viewcount4campaign, ad) => {
 				pvAdvertisers:{}
 			};
 		}
-		// master campaign
 		topCampaignId = pvTop.value.campaign;
-		assert(topCampaignId);
+		if ( ! topCampaignId) {
+			console.warn("Advert without a campaign", pvTop.value);
+			const msg = {text:"This advert does not specify a campaign", type:"warning", id:"no-campaign-id"};
+			return {warning: msg};
+		}
+		// master campaign
 	}
 
 	// ...by Campaign (this is now the only supported way - Sept 2021)
@@ -186,8 +191,12 @@ const CampaignPage = () => {
 	if (!status) status = (glStatus || C.KStatus.PUB_OR_ARC);
 
 	// What adverts etc should we look at?
-	let {pvTopItem, pvTopCampaign, pvAds, pvAdvertisers, pvAgencies} = fetchIHubData();
+	let {pvTopItem, pvTopCampaign, pvAds, pvAdvertisers, pvAgencies, warning} = fetchIHubData();
 
+	if (warning) {
+		notifyUser(warning);
+		return <ErrAlert color="warning" error={"Sorry, something went wrong: "+warning.text} />;
+	}
 	// Is the campaign page being used as a click-through advert landing page?
 	// If so, change the layout slightly, positioning the advert video on top.
 	const isLanding = (landing !== undefined) && (landing !== 'false');
