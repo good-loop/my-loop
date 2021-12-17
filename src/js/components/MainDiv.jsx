@@ -203,7 +203,7 @@ class MainDiv extends Component {
 					<Page path={path} spring={spring}/>
 					<Footer />
 				</div>
-				<LoginWidget logo={<img src="/img/new-logo.svg" style={{height: '64px'}} />} title={loginWidgetTitle} services={['twitter']} />
+				<LoginWidget logo={<img src="/img/new-logo.svg" style={{height: '64px'}} />} title={loginWidgetTitle} services={[]} /* disable login via Facebook and Twitter for now */ /> 
 			</>
 		);
 	} // ./render()
