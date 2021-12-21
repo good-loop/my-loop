@@ -11,7 +11,7 @@ export default C;
 C.app = GLAppManifest;
 
 // NB: MonetaryAmount is deprecated - left here for old data
-C.TYPES = new Enum("Publisher NGO Advert Campaign Advertiser Agency User Person Money MonetaryAmount");
+C.TYPES = new Enum("Publisher NGO Advert Campaign Advertiser Agency User Person Money MonetaryAmount GreenTag");
 
 C.ROLES = new Enum("user admin marketing");
 C.CAN = new Enum("view edit admin sudo viewmarketingreports");

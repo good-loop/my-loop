@@ -33,6 +33,7 @@ import ServerIO from '../plumbing/ServerIO';
 import { track } from '../base/plumbing/log';
 import HashWatcher from './HashWatcher';
 import AllowlistUs from './pages/AllowlistUs';
+import GreenTagGeneratePage from './GreenTagGeneratePage';
 // import RedesignPage from './pages/RedesignPage';
 
 // DataStore
@@ -71,7 +72,8 @@ const PAGES = {
 	about: MyGLAboutPage,
 	tabsForGood: TabsForGoodOnboard,
 	register: NewtabCharityLogin,
-	allowlist: AllowlistUs
+	allowlist: AllowlistUs,
+	green: GreenTagGeneratePage,
 };
 
 addFunderCredit("Scottish Enterprise");

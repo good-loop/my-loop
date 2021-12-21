@@ -1,0 +1,81 @@
+
+@gat-green: #4f706a;
+
+#green {
+  // Grey background for Green Page
+  background-color: #d9d9d9;
+}
+
+#green-box {
+  font-family: 'Montserrat', sans-serif;
+  background-color: white;
+
+  .btn {
+    padding: 0.375rem 0.75rem;
+    border: 1px solid @gat-green;
+    color: @gat-green;
+    background-color: white;
+  }
+
+  .btn-primary {
+    color: white;
+    background-color: @gat-green !important;
+  }
+
+	.left-pane {
+		height: 100%;
+		margin: 0 -15px; 
+	}
+
+	.left-pane, .left-pane .card-header, .left-pane .card-body {
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+	}
+
+  .pane-header {
+    color: white;
+    background-color: @gat-green;
+    font-weight: bold;
+    font-size: 125%;
+    padding: 0.75em;
+    text-transform: uppercase;
+    
+    .back-chevron {
+      float: right;
+			cursor: pointer;
+    }
+  }
+
+
+  .GreenTagItem {
+    .inner {
+      background-color: white;
+      box-shadow: 0 0.25em 0.5em rgb(0 0 0 / 40%);
+      border-radius: 0.5em;
+      cursor: pointer;
+      // Highlight currently active list item
+      &.focused {
+        border: 2px solid @gat-green;
+        cursor: default;
+      }
+    }
+  }
+
+	// Tag export box
+	.tag-export {
+		font-family: monospace;
+		line-break: anywhere; // best for putting a URL into
+		border: 1px solid #ced4da;
+		padding: 0.25em;
+		font-size: 80%;
+	}
+
+	.edit-pane {
+		// Border around radio buttons
+		form {
+			border: 1px solid #ced4da;
+			border-radius: 0.25rem;
+			padding: 0.5em;
+		}
+	}
+}
