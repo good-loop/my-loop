@@ -23,18 +23,10 @@ ServerIO.dataspace = 'gl';
  */
 ServerIO.NO_API_AT_THIS_HOST = true;
 
-// Default to using local services on local machine, test cluster on test, and production cluster on production.
-// Rather than changing these, create a file config/$hostname.js to set overrides on your machine.
-ServerIO.DATALOG_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}lg.good-loop.com/data`;
-
-ServerIO.PROFILER_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}profiler.good-loop.com`;
-
-ServerIO.PORTAL_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}portal.good-loop.com`;
-
 // Usually use the live adserver, since our showcase ad selection is hard-coded to live ads.
 ServerIO.AS_ENDPOINT = 'https://as.good-loop.com';
 
-ServerIO.MEDIA_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}uploads.good-loop.com/`;
+// ServerIO.MEDIA_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}uploads.good-loop.com/`;
 
 // Useful where relative links can not be used (eg inline-CSS 'url' image links)
 ServerIO.MYLOOP_ENDPONT = `${C.HTTPS}://${C.SERVER_TYPE}my.good-loop.com`;
