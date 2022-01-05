@@ -6,3 +6,4 @@ node_modules
 web/build
 .vscode
 package-lock.json
+web/*.html
