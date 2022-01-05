@@ -81,11 +81,11 @@ class MyLoopNavBar extends React.Component {
 				style={style}
 				sticky="top" expand="xl">
 				<NavbarBrand href="/#my" className={space(! isShowBrandLogo && "mr-auto")}>
-					<img src={navLogo} alt="logo" className="logo-sm" />
+					<img src={navLogo} alt="logo" className="logo logo-sm" />
 				</NavbarBrand>
 				{isShowBrandLogo && // a 2nd brand? 
 					<NavbarBrand className="nav-brand mr-auto btn btn-transparent fill" title={brandName} href={brandLink}>
-						{brandLogo? <img className='logo-sm' alt={brandName} src={brandLogo} /> : brandName}
+						{brandLogo? <img className="logo-sm" alt={brandName} src={brandLogo} /> : brandName}
 					</NavbarBrand>
 				}
 
