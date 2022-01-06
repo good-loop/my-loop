@@ -1,5 +1,5 @@
 /* global navigator */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BG from '../base/components/BG';
 import MainDivBase from '../base/components/MainDivBase';
 import { nonce } from '../base/data/DataClass';
@@ -136,7 +136,7 @@ const WebtopPage = () => {
 		<NewtabTutorialCard tutorialPages={tutorialPages} charityId={charityID} onClose={() => setShowPopup(true)} />
 		{showPopup && <PopupWindow />}
 		<NewtabLoginWidget onRegister={() => { checkIfOpened(); }} />
-		<AdBlockPopup />
+		<ConnectionStatusPopup />
 	</>);
 }; // ./WebTopPage
 
@@ -259,23 +259,31 @@ const NewTabCharityCard = ({ cid, loading }) => {
 	</div>);
 };
 
+// Checks for internet connection and any adblock interference
+const ConnectionStatusPopup = () => {
 
-const AdBlockPopup = () => {
-
-	let [adblockPopup, setAdblockPopup] = useState(true);
+	let [popup, setPopup] = useState(true);
 
 	const pvHasAdBlock = detectAdBlock();
 	const hasAdBlock = pvHasAdBlock.value;
+	const isOffline = pvHasAdBlock.error;
+	const showPopup = (hasAdBlock || isOffline) && popup;
+	console.log("CONNECTION STATUS", isOffline, hasAdBlock, pvHasAdBlock);
 
-	// Check if user using T4G
-
-	return hasAdBlock && adblockPopup ? (
+	return showPopup ? (
 		<div style={{ background: "white", borderRadius: 10, left: "50%", top: "50%", transform: "translate(-50%, -50%)", width: 500, zIndex: 99999 }}
 			className="shadow position-absolute text-center p-3"
 		>
-			<h3 className="text-dark">It looks like you have AdBlock enabled</h3>
-			<p>We can't raise money for charity without displaying ads. Please <a href="https://my.good-loop.com/#allowlist">disable your adblocker</a> so Tabs for Good can work!</p>
-			<b style={{ position: "absolute", top: 10, right: 20, cursor: "pointer" }} onClick={() => setAdblockPopup(false)}>X</b>
+			{hasAdBlock && !isOffline && <>
+				<h3 className="text-dark">It looks like you have AdBlock enabled</h3>
+				<p>We can't raise money for charity without displaying ads. Please <a href="https://my.good-loop.com/#allowlist">disable your adblocker</a> so Tabs for Good can work!</p>
+			</>}
+			{isOffline && <>
+				<h3 className="text-dark">We can't find the internet :(</h3>
+				<p>We couldn't load your Tabs-for-Good page. Check your connection.</p>
+				<small>If your internet is working, contact help@good-loop.com!</small>
+			</>}
+			<b style={{ position: "absolute", top: 10, right: 20, cursor: "pointer" }} onClick={() => setPopup(false)} role="button">X</b>
 		</div>
 	) : null;
 }
