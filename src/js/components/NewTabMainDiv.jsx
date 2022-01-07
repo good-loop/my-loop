@@ -276,7 +276,6 @@ const ConnectionStatusPopup = () => {
 	const isOffline = pvHasAdBlock.error;
 	const determining = !(pvHasAdBlock.resolved || pvHasAdBlock.error) && timedout;
 	const showPopup = (hasAdBlock || isOffline || determining) && popup;
-	console.log("CONNECTION STATUS", isOffline, hasAdBlock, pvHasAdBlock);
 
 	return showPopup ? (
 		<div style={{ background: "white", borderRadius: 10, left: "50%", top: "50%", transform: "translate(-50%, -50%)", width: 500, zIndex: 99999 }}
