@@ -263,25 +263,37 @@ const NewTabCharityCard = ({ cid, loading }) => {
 const ConnectionStatusPopup = () => {
 
 	let [popup, setPopup] = useState(true);
+	let [timedout, setTimedout] = useState(false);
+
+	useEffect (() => {
+		setTimeout(() => {
+			setTimedout(true);
+		}, 10000);
+	}, []);
 
 	const pvHasAdBlock = detectAdBlock();
 	const hasAdBlock = pvHasAdBlock.value;
 	const isOffline = pvHasAdBlock.error;
-	const showPopup = (hasAdBlock || isOffline) && popup;
+	const determining = !(pvHasAdBlock.resolved || pvHasAdBlock.error) && timedout;
+	const showPopup = (hasAdBlock || isOffline || determining) && popup;
 	console.log("CONNECTION STATUS", isOffline, hasAdBlock, pvHasAdBlock);
 
 	return showPopup ? (
 		<div style={{ background: "white", borderRadius: 10, left: "50%", top: "50%", transform: "translate(-50%, -50%)", width: 500, zIndex: 99999 }}
-			className="shadow position-absolute text-center p-3"
+			className="shadow position-absolute text-center p-3 pt-4"
 		>
-			{hasAdBlock && !isOffline && <>
+			{hasAdBlock && !isOffline && !determining && <>
 				<h3 className="text-dark">It looks like you have AdBlock enabled</h3>
 				<p>We can't raise money for charity without displaying ads. Please <a href="https://my.good-loop.com/#allowlist">disable your adblocker</a> so Tabs for Good can work!</p>
 			</>}
-			{isOffline && <>
+			{isOffline && !determining && <>
 				<h3 className="text-dark">We can't find the internet :(</h3>
 				<p>We couldn't load your Tabs-for-Good page. Check your connection.</p>
 				<small>If your internet is working, contact help@good-loop.com!</small>
+			</>}
+			{determining && <>
+				<h3 className="text-dark">We're having trouble connecting</h3>
+				<p>One moment...</p>
 			</>}
 			<b style={{ position: "absolute", top: 10, right: 20, cursor: "pointer" }} onClick={() => setPopup(false)} role="button">X</b>
 		</div>
