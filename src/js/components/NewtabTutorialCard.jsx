@@ -20,7 +20,6 @@ const NewtabTutorialCard = ({tutorialPages, charityId, onClose}) => {
 		// Update only on second setting
 		if (tutOpen) DataStore.setValue(tutorialOpenPath, tutOpen, false);
 		if (tutPage) DataStore.setValue(tutorialPagePath, tutPage, true);
-		console.log("DO WE MANUALLY SET THE TUTORIAL? ", tutOpen, tutPage);
 	}, []);
 
 	if ( ! open) return null;
