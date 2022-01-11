@@ -40,7 +40,7 @@ PROJECT_USES_BOB='no'  #yes or no :: If 'yes', then you must also supply the nam
 NAME_OF_SERVICE='' # This can be blank, but if your service uses a JVM, then you must put in the service name which is used to start,stop,or restart the JVM on the server.
 PROJECT_USES_NPM='yes' # yes or no
 PROJECT_USES_WEBPACK='yes' #yes or no
-PROJECT_USES_JERBIL='no' #yes or no
+PROJECT_USES_JERBIL='yes' #yes or no
 PROJECT_USES_WWAPPBASE_SYMLINK='yes'
 
 
