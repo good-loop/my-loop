@@ -1,10 +1,28 @@
 title: My.Good-Loop
 
-# Hello World
+<div id="splash" class="container text-center">
+	<div class="splash-content row">
+		<div class="col">
+			<img id="splash-img" src="" alt="splash image"/>
+		</div>
+		<div class="splash-text col">
+			<h1>Do Something Amazing while you Surt the Web</h1>
+			<p>Couple of lines with emotional hook that link what we do to Tabs for Good - e.g. now you can use Tabs For Good our new chrome plugin</p>
+			<a class="btn btn-primary" href="#">Get Tabs For Good</a> <br/>
+			<a class="btn btn-primary" href="/blog">Find Out More </a>
+		</div>
+	</div>
+</div>
 
-<section src="splash.html">
-image:
-text: Home
+<section src="howtabsforgoodworks.html">
+title: How Tabs For Good Works
+description: Transform your internet activity into meals for children, life-saving medicines 
+image1: 
+text1: A Place For Good
+image2: 
+text2: 50% To Charity
+image3: 
+text3: Here to Give
 </section>
 
 <section src="ctaslice-imgleft.html">
@@ -25,15 +43,6 @@ ctatext: Get Tabs for Good
 
 Press/Awards Links
 
-<section src="tri-cards.html">
-image1: 
-text1: Audience x Good-Loop Values
-image2: 
-text2: Audience x Good-Loop Values
-image3: 
-text3: Audience x Good-Loop Values
-</section>
-
 <section src="ctaslice-imgleft.html">
 image: 
 title: Charity Highlight
@@ -44,15 +53,6 @@ ctatext: Explore our charity impact
 
 <section src="cardslice-imgright.html">
 title: Second Highlight - e.g. sign up for newsletter
-</section>
-
-<section src="tri-cards.html">
-image1: 
-text1: page link
-image2: 
-text2: page link
-image3: 
-text3: page link
 </section>
 
 <section src="getinvolved.html">

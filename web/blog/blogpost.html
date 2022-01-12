@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<meta property="og:image" content="https://my.good-loop.com/img/gl-logo/rectangle/logo.svg" />
+		<meta property="og:title" content="Blogpost" />
+		<!-- Explicit Content-Security-Policy is required for the GoodLoop app why?? -->
+		<meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file:; style-src 'self' 'unsafe-inline' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; media-src * 'self' data: https: http:; img-src * data: 'unsafe-inline'; connect-src * data: 'unsafe-inline'; frame-src * 'unsafe-inline' 'unsafe-eval';" />  
+		<link rel="manifest" href="/manifest.webmanifest">
+		<meta name="theme-color" content="#770f00">
+		<title>My Good-Loop - Raise money for charities simply by browsing the web.</title>
+		<link rel="shortcut icon" href="/favicon-32.png" />
+
+		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+		<link rel="stylesheet" type="text/css" href="/build/style/main.css">
+		
+		<script type="text/javascript">
+			var cpm = {};
+			(function(h,u,b){
+			var d=h.getElementsByTagName("script")[0],e=h.createElement("script");
+			e.async=true;e.src='https://cookiehub.net/c2/1ac697d7.js';
+			e.onload=function(){u.cookiehub.load(b);}
+			d.parentNode.insertBefore(e,d);
+			})(document,window,cpm);
+		</script>
+		<!-- Google Analytics -->
+		<script>
+			window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+			ga('create', 'UA-89730678-7', 'auto');
+			// Don't send initial pageview - HashWatcher.jsx will translate hash to a more informative synthetic URL.
+			// ga('send', 'pageview');
+		</script>
+		<script async src='https://www.google-analytics.com/analytics.js'></script>
+		<!-- End Google Analytics -->
+	<meta name='generator' content='Jerbil vnull' />
+</head>
+	<body>
+		
+		<div id="mainDiv">
+			TODO NavBar
+			<h1><a href="#this-is-a-blog-post" id="this-is-a-blog-post">This is a blog post</a></h1>
+<p>I am blogging.</p>
+<p><a href="/blog">Link to blog page</a></p>
+
+			<div class="footer">
+<div class="d-flex justify-content-between">
+<div class="">
+Sign Up To Our Newsletter For Some Good News :)
+<input type="text"> </input>
+<a class="subscribe btn" href="#">SUBSCRIBE</a>
+</div>
+<div class="">
+<img src="/img/footer-logos/Net carbon negative.png" class="logo" alt=""/>
+<img src="/img/footer-logos/B-corp.png" class="logo" alt=""/>
+</div>
+</div>
+</div>
+		</div>
+		
+		<!-- everything comes via webpack -->
+		<script>
+			// Insert bundle[-debug].js - but allow dynamic test/production build switch.
+			// Default to debug build on test and local servers.
+			var isDebug = window.location.hostname.match(/^local/) || window.location.hostname.match(/^test/);
+			
+			// Has the user specified debug/production build with a URL param?
+			var debugParam = window.location.search.match(/debug=(\w+)/i);
+			if (debugParam && debugParam[1]) {
+				// Require an exact match to change from default
+				if (debugParam[1] === 'false') isDebug = false;
+				else if (debugParam[1] === 'true') isDebug = true;
+			}
+			
+			var filename = isDebug ? 'static-bundle-debug.js' : 'static-bundle.js';
+			document.write('<script src="/build/js/' + filename + '"/><\/script>');
+		</script>
+	</body>
+</html>
