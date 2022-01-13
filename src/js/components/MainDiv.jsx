@@ -17,6 +17,7 @@ import MyPage, { HowItWorksCard } from './pages/MyPage';
 import MyCharitiesPage from './pages/MyCharitiesPage';
 import MyAdCampaignsPage from './pages/MyAdCampaignsPage';
 import GetInvolvedPage from './pages/GetInvolvedPage';
+import CharityLandingPage from './pages/CharityLandingPage';
 import CampaignPage from './campaignpage/CampaignPage';
 import E404Page from '../base/components/E404Page';
 import AccountPage from './pages/AccountPage';
@@ -28,7 +29,7 @@ import NewtabCharityLogin from './pages/NewtabCharityLogin';
 import ServerIO from '../plumbing/ServerIO';
 import AllowlistUs from './pages/AllowlistUs';
 import MainDivBase from '../base/components/MainDivBase';
-import {A} from '../base/plumbing/glrouter';
+import {A, initRouter} from '../base/plumbing/glrouter';
 // import RedesignPage from './pages/RedesignPage';
 
 // DataStore
@@ -61,6 +62,7 @@ const PAGES = {
 	// test: TestPage,
 	account: AccountPage,
 	charities: MyCharitiesPage,
+	charity: CharityLandingPage,
 	ads: MyAdCampaignsPage,
 	involve: GetInvolvedPage,
 	howitworks: MyPage,
@@ -84,11 +86,7 @@ addDataCredit({name:"The charity impact database", url:"https://sogive.org", aut
 Login.app = C.app.id;
 Login.dataspace = C.app.dataspace;
 
-// Switch DataStore to /page over #page
-DataStore.useHashPath = false;
-DataStore.usePathname = true;
-DataStore.parseUrlVars(false); // update the parsing since we've changed the method
-// NB: Catch beforeunload? No - Modern Chrome insists on a user popup for this
+initRouter();
 
 const MainDiv = () => {
 
