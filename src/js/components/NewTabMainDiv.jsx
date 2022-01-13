@@ -14,7 +14,7 @@ import C from '../C';
 import WhiteCircle from './campaignpage/WhiteCircle';
 // Components
 import CharityLogo from './CharityLogo';
-import { AccountMenu } from './NavBar';
+import { AccountMenu } from '../base/components/NavBar';
 import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLoginWidget';
 // import RedesignPage from './pages/RedesignPage';
 import NewtabTutorialCard, { openTutorial, TutorialComponent, TutorialHighlighter, PopupWindow } from './NewtabTutorialCard';
