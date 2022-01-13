@@ -1,11 +1,9 @@
 import React from 'react';
 import { Container } from 'reactstrap';
-import MyLoopNavBar from '../MyLoopNavBar';
 import RecentCampaignsCard from '../cards/RecentCampaignsCard';
 
 const MyAdCampaignsPage = () => {
 	return (<>
-		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" alwaysScrolled/>
 		<div className="MyAdCampaignsPage">
 			<img src="/img/LandingBackground/Banner_Ourads.png" className="w-100 mt-5"/>
 			<Container className="py-5">

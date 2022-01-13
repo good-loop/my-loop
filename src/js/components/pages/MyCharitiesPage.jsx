@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import csv from 'csvtojson';
 import { Container } from 'reactstrap';
 import Paginator from '../Paginator';
-import MyLoopNavBar from '../MyLoopNavBar';
 import C from '../../C';
 import ActionMan from '../../plumbing/ActionMan';
 import { yessy } from '../../base/utils/miscutils';
@@ -65,7 +64,6 @@ const MyCharitiesPage = () => {
 	}
 
 	return (<>
-		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" alwaysScrolled/>
 		<div className="MyCharitiesPage">
 			<img src="/img/LandingBackground/Charities_banner.png" className="w-100 mt-5" alt="banner" />
 			<Container className="py-5">

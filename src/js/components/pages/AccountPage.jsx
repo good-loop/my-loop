@@ -9,7 +9,6 @@ import { lg } from '../../base/plumbing/log';
 import { space } from '../../base/utils/miscutils';
 import Login from '../../base/youagain';
 import SubscriptionBox from '../cards/SubscriptionBox';
-import MyLoopNavBar from '../MyLoopNavBar';
 import ShareButton from '../ShareButton';
 import AccountSettings from './AccountSettings';
 import TabsForGoodSettings from './TabsForGoodSettings';
@@ -51,8 +50,7 @@ const Page = () => {
 	// handle the not-logged-in case
 	if ( ! Login.isLoggedIn()) {
 		return (
-			<div className="AccountPage">
-				<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" alwaysScrolled />
+			<div className="AccountPage">				
 				<div className="container mt-5 pt-5">
 					<h1>You need an account to see this page.</h1>
 					<LoginLink verb="register" className="btn btn-transparent fill">Register / Log in</LoginLink>
@@ -70,7 +68,6 @@ const Page = () => {
 	const tab = DataStore.getUrlValue('tab') || 'account';
 
 	return (<>
-		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" alwaysScrolled />
 		<div className="AccountPage avoid-navbar">
 			<Editor3ColLayout>
 				<LeftSidebar>

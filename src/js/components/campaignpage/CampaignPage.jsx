@@ -25,7 +25,6 @@ import { asDate, ellipsize, encURI, getUrlVars, is, isMobile, mapkv, space, sum,
 import C from '../../C';
 import ActionMan from '../../plumbing/ActionMan';
 import ServerIO from '../../plumbing/ServerIO';
-import MyLoopNavBar from '../MyLoopNavBar';
 import AdvertsCatalogue from './AdvertsCatalogue';
 import CampaignSplashCard from './CampaignSplashCard';
 import CharitiesSection, { CharityDetails } from './CharitiesSection';
@@ -100,7 +99,7 @@ const viewCount = (viewcount4campaign, ad) => {
 	if ( ! topCampaignId) {
 		// by advertiser or agency?
 		let pvTop;
-		let advid = DataStore.getUrlValue("advertiser") || DataStore.getUrlValue("gl.vertiser");
+		let advid = DataStore.getUrlValue("brand");
 		if (advid) {
 			pvTop = getDataItem({type:"Advertiser", id:advid, status});
 		} else if (DataStore.getUrlValue("agency")) {
@@ -249,7 +248,7 @@ const CampaignPage = () => {
 		if (brandItem) {
 			const prop = type.toLowerCase();
 			let nprops = { // advertiser link and logo			
-				brandLink:'/#campaign?'+prop+'='+encURI(getId(brandItem)),
+				brandLink:'/impact/'+prop+'='+encURI(getId(brandItem))+".html",
 				brandLogo: brandItem.branding && (brandItem.branding.logo_white || brandItem.branding.logo),
 				brandName: brandItem.name || getId(brandItem)
 			};
@@ -325,12 +324,15 @@ const CampaignPage = () => {
 		<StyleBlock>{campaign && campaign.customCss}</StyleBlock>
 		<StyleBlock>{branding.customCss}</StyleBlock>
 		<div className="widepage CampaignPage gl-btns">
-			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" hidePages/>
+			
 			<div className="text-center">
+				
 				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaign}
 					donationValue={donationTotal} charities={charities}
 					totalViewCount={totalViewCount} landing={isLanding} status={status}/>
-
+				<h1><C.A href="/impact/vertiser=foo">TEST NAV A</C.A></h1>
+				<h1><a href="/impact/vertiser=foo">TEST NAV 2 beforeunload</a></h1>
+				<h1><a href="https://bbc.co.uk">TEST NAV out</a></h1>
 				<HowDoesItWork nvertiserName={nvertiserName} charities={charities} ongoing={campaign.ongoing}/>
 
 				{isLanding ? null : (
@@ -484,7 +486,6 @@ const campaignNameForAd = ad => {
 
 
 const Page404 = () => <div className="widepage CampaignPage gl-btns">
-	<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" hidePages alwaysScrolled />
 	<div className="my-5 py-2"/>
 	<div className="px-5">
 		<h1>404 - Page not found</h1>

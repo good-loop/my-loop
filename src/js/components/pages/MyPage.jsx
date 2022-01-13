@@ -4,7 +4,6 @@ import { Container } from 'reactstrap';
 import { useSpring } from 'react-spring';
 
 import DataStore from '../../base/plumbing/DataStore';
-import MyLoopNavBar from '../MyLoopNavBar';
 import Roles from '../../base/Roles';
 import LandingSection, { springPageDown } from '../LandingSection';
 import SubscriptionBox from '../cards/SubscriptionBox';
@@ -31,7 +30,6 @@ const MyPage = ({spring}) => {
 	// <ShareAdCard /> is buggy, so removed for now
 
 	return (<>
-		<MyLoopNavBar logo="/img/new-logo-with-text.svg" logoScroll="/img/new-logo-with-text-white.svg" />
 		<div className="MyPage widepage">
 			<LandingSection setY={setY}/>
 			<CharitySection />

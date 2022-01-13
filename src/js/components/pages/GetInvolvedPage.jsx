@@ -2,7 +2,6 @@ import React from 'react';
 import { Col, Container, Row } from 'reactstrap';
 import { getAllXIds } from '../../base/data/Person';
 import SubscriptionBox from '../cards/SubscriptionBox';
-import MyLoopNavBar from '../MyLoopNavBar';
 import { MoreToDo } from './AccountPage';
 
 const Ref = ({href}) => {
@@ -12,7 +11,6 @@ const Ref = ({href}) => {
 const GetInvolvedPage = () => {
 	let xids = getAllXIds();
 	return (<>
-		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" alwaysScrolled/>
 		<div className="GetInvolvedPage">
 			<img src="/img/LandingBackground/involved_banner.png" alt="banner" className="w-100 mt-5"/>
 			<Container className="py-5">

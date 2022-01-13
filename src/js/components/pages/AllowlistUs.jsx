@@ -1,5 +1,4 @@
 import React from 'react';
-import MyLoopNavBar from '../MyLoopNavBar';
 import SubscriptionBox from '../cards/SubscriptionBox';
 import { Col, Container, Row } from 'reactstrap';
 
@@ -13,7 +12,6 @@ const AllowlistUs = () => {
 	document.head.appendChild(noNavbar);
 	
 	return (<>
-		<MyLoopNavBar logo="/img/new-logo-with-text.svg" logoScroll="/img/new-logo-with-text-white.svg" />
 		<img className="adblock-arrow" src="/img/allowlist/adblock-arrow.png" alt="" />
 		<div className="AllowlistUs">
 			<div className="m-5">

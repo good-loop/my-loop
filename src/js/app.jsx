@@ -13,6 +13,7 @@ Misc.FontAwesome = 5;
 // global jquery for You-Again
 window.$ = $;
 
+
 ReactDOM.render(
 	<MainDiv />,
 	document.getElementById('mainDiv')
