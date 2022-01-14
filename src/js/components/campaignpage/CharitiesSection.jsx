@@ -15,6 +15,7 @@ import { lgError } from '../../base/plumbing/log';
 import {I18N} from 'easyi18n';
 import Campaign from '../../base/data/Campaign';
 import DynImg from '../../base/components/DynImg';
+import C from '../../C';
 // window.I18N = I18N; debug
 
 /**
@@ -163,7 +164,7 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 					{charity.simpleImpact && showImpact ? <Impact charity={charity} donationValue={donationValue} /> : null}
 					{quote && quote.quote ? <><p className="font-italic">"{quote.quote}"</p><p>— {quote.source}</p></> : null}
 					{!quote || !quote.quote ? <MDText source={desc} /> : null}
-					{charity.url && <a href={charity.url} className="btn btn-primary mb-3">Learn more</a>}
+					{charity.url && <LinkOut href={charity.url} className="btn btn-primary mb-3">Learn more</LinkOut>}
 					<div className="flex-row">
 						<DevLink href={'https://app.sogive.org/#edit?action=getornew&charityId='+escape(normaliseSogiveId(charity.id))} target="_sogive">SoGive Editor</DevLink>
 						{charity.ad ? (

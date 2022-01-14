@@ -94,6 +94,7 @@ const MainDiv = () => {
 		pageForPath={PAGES}
 		defaultPage='my'
 		navbarPages={['impact','blog']}
+		navbarSpace
 		// navbarLabels={getNavbarLabels}
 		fullWidthPages={["impact"]}
 		noRegister
