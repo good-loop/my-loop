@@ -8,6 +8,7 @@ import com.goodloop.data.Campaign;
 import com.goodloop.data.NGO;
 import com.winterwell.utils.SimpleTemplateVars;
 import com.winterwell.utils.io.FileUtils;
+import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebPage;
 import com.winterwell.web.ajax.JThing;
@@ -76,9 +77,14 @@ public class MetaHtmlServlet implements IServlet {
 		String cid = state.getSlugBits(1);
 		if (cid != null) {
 			CrudClient<NGO> cc = new CrudClient<NGO>(NGO.class, "https://app.sogive.org/charity");
-			NGO ngo = cc.get(cid).java();
-			vars.put("title", "Good-Loop for "+ngo.getDisplayName());
-			vars.put("ogImage", ngo.getPhoto());
+			try { // Handle invalid charity 
+				NGO ngo = cc.get(cid).java();
+				vars.put("title", "Good-Loop for "+ngo.getDisplayName());
+				vars.put("ogImage", ngo.getPhoto());
+			} catch(Exception e) {
+				Log.d("My-Loop", "Error loading charity "+ e);
+				vars.put("title", "Good-Loop");
+			}
 		}				
 		return vars;
 	}
