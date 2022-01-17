@@ -39,7 +39,9 @@ ServerIO.LOGENDPOINT = ServerIO.PROFILER_ENDPOINT + '/log';
 ServerIO.checkBase();
 
 /** The initial part of an API call. Allows for local to point at live for debugging */
-ServerIO.APIBASE = ServerIO.PORTAL_ENDPOINT; //  My-Loop has no backend of its own - just use portal domain matching local/test/prod
+ServerIO.APIBASE = 'https://portal.good-loop.com';//ServerIO.PORTAL_ENDPOINT; //  My-Loop has no backend of its own - just use portal domain matching local/test/prod
+
+ServerIO.ENDPOINT_NGO = `https://app.sogive.org/charity`;
 
 /** 
  * NB: Copy-pasta from Portal ServerIO.js

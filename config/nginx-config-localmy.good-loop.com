@@ -1,1 +1,0 @@
-localmy.good-loop.com.nginx
