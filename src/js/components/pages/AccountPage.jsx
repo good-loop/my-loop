@@ -94,7 +94,7 @@ const Page = () => {
  * @param {boolean} selected
  */
 const SidebarTabLink = ({ tab, label, selected }) => {
-	let url = "/#account?tab=" + escape(tab);
+	let url = "/account?tab=" + escape(tab);
 	if (tab === "tabsForGood") {
 		// TODO detect whether T4G is installed on this specific browser.
 		let pvPerson = getProfile();
