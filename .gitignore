@@ -9,3 +9,6 @@ package-lock.json
 web/*.html
 /bin/
 logs
+build-lib
+my-loop.jar
+config/version.properties
