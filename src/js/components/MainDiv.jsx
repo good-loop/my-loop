@@ -30,6 +30,7 @@ import ServerIO from '../plumbing/ServerIO';
 import AllowlistUs from './pages/AllowlistUs';
 import MainDivBase from '../base/components/MainDivBase';
 import {A, initRouter} from '../base/plumbing/glrouter';
+import HomePage from './pages/HomePage';
 // import RedesignPage from './pages/RedesignPage';
 
 // DataStore
@@ -69,7 +70,9 @@ const PAGES = {
 	subscribe: SubscribePage,
 	about: MyGLAboutPage,
 	register: NewtabCharityLogin,
-	allowlist: AllowlistUs
+	allowlist: AllowlistUs,
+
+	home: HomePage
 };
 // ?? switch to router??
 // const ROUTES = {
@@ -92,7 +95,7 @@ const MainDiv = () => {
 
 	return (<MainDivBase
 		pageForPath={PAGES}
-		defaultPage='my'
+		defaultPage='home'
 		navbarPages={['impact','blog']}
 		navbarSpace
 		// navbarLabels={getNavbarLabels}
