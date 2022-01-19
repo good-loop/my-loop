@@ -31,6 +31,9 @@ import AllowlistUs from './pages/AllowlistUs';
 import MainDivBase from '../base/components/MainDivBase';
 import {A, initRouter} from '../base/plumbing/glrouter';
 // import RedesignPage from './pages/RedesignPage';
+import GreenDashboard from './pages/GreenDashboard';
+import GreenLanding from './pages/GreenLanding';
+
 
 // DataStore
 C.setupDataStore();
@@ -69,7 +72,9 @@ const PAGES = {
 	subscribe: SubscribePage,
 	about: MyGLAboutPage,
 	register: NewtabCharityLogin,
-	allowlist: AllowlistUs
+	allowlist: AllowlistUs,
+	greendash: GreenDashboard,
+	green: GreenLanding,
 };
 // ?? switch to router??
 // const ROUTES = {
