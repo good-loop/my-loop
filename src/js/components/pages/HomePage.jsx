@@ -28,7 +28,8 @@ const HowTabsForGoodWorks = () => {
 			<div className="col-md-4">
 				<img src="" alt="" />
 				<h3>Unlock a donation</h3>
-				<p>As a thank you for letting the ad appear on your page, you'll get to make a free donaiton to charity, funded by us. 50% of the ad money to be precise. </p>
+				<p>As a thank you for letting the ad appear on your page, 
+					you make a free donation to charity, funded by us. 50% of the ad money to be precise. </p>
 			</div>
 			<div className="col-md-4">
 				<img src="" alt="" />
