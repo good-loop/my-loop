@@ -90,11 +90,27 @@ initRouter();
 
 const MainDiv = () => {
 
+	const navPageLinks = {
+		"about-us": ['our-story', 'for-business', 'for-charity'],
+		"our-impact": ['charity-impact', 'impact', 'green-media'],
+		"our-products": ['products-overview', 'tabs-for-good'],
+		"blog":[]
+	};
+
+	const navPageLabels = {
+		"About Us": ['Our Story', 'Good-Loop for Business', 'Good-Loop for Charity'],
+		"Our Impact": ['Charity Impact', 'Impact Hub', 'Green Media'],
+		"Our Products": ['Products Overview', 'Tabs for Good'],
+		"Blog":[]
+	};
+
 	return (<MainDivBase
 		pageForPath={PAGES}
 		defaultPage='my'
-		navbarPages={['impact','blog']}
-		navbarSpace
+		navbarPages={navPageLinks}
+		navbarLabels={navPageLabels}
+		navbarDarkTheme={false}
+		navbarBackgroundColour="white"
 		// navbarLabels={getNavbarLabels}
 		fullWidthPages={["impact"]}
 		noRegister
