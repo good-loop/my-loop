@@ -36,8 +36,8 @@
 ## which uses very similar, if not, the exact same, functions as the teamcity builder template script.
 PROJECT_NAME='my-loop' #This is simply a human readable name
 GIT_REPO_URL='github.com:/good-loop/my-loop'
-PROJECT_USES_BOB='no'  #yes or no :: If 'yes', then you must also supply the name of the service which is used to start,stop,or restart the jvm
-NAME_OF_SERVICE='' # This can be blank, but if your service uses a JVM, then you must put in the service name which is used to start,stop,or restart the JVM on the server.
+PROJECT_USES_BOB='yes'  #yes or no :: If 'yes', then you must also supply the name of the service which is used to start,stop,or restart the jvm
+NAME_OF_SERVICE='my-loop' # This can be blank, but if your service uses a JVM, then you must put in the service name which is used to start,stop,or restart the JVM on the server.
 PROJECT_USES_NPM='yes' # yes or no
 PROJECT_USES_WEBPACK='yes' #yes or no
 PROJECT_USES_JERBIL='yes' #yes or no
@@ -436,10 +436,10 @@ cleanup_repo
 cleanup_wwappbasejs_repo
 cleanup_bobwarehouse_repos
 git_checkout_release_branch
-stop_service
 use_bob
 use_npm
 use_webpack
 use_jerbil
+stop_service
 start_service
 catch_JVM_success_or_error
