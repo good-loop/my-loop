@@ -136,7 +136,7 @@ const LogInForm = ({onRegister, onLogin}) => {
 const RegisterThankYou = () => {
 	return <>
 		<h3>Welcome!</h3>
-		<p>Thanks for signing up with us! You can now choose a charity to fund, and access all the benefits of My-Loop. See your new account <a href="/#account" className="text-primary">here</a>.</p>
+		<p>Thanks for signing up with us! You can now choose a charity to fund, and access all the benefits of My-Loop. See your new account <a href="/account" className="text-primary">here</a>.</p>
 		<a onClick={() => setShowTabLogin(false)} className="btn btn-primary">Back to Tabs-for-Good</a>
 	</>;
 };
