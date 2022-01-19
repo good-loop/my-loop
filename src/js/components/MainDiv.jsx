@@ -32,6 +32,9 @@ import MainDivBase from '../base/components/MainDivBase';
 import {A, initRouter} from '../base/plumbing/glrouter';
 import HomePage from './pages/HomePage';
 // import RedesignPage from './pages/RedesignPage';
+import GreenDashboard from './pages/GreenDashboard';
+import GreenLanding from './pages/GreenLanding';
+
 
 // DataStore
 C.setupDataStore();
@@ -72,7 +75,9 @@ const PAGES = {
 	register: NewtabCharityLogin,
 	allowlist: AllowlistUs,
 
-	home: HomePage
+	home: HomePage,
+	greendash: GreenDashboard,
+	green: GreenLanding
 };
 // ?? switch to router??
 // const ROUTES = {
