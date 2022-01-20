@@ -96,13 +96,34 @@ Login.dataspace = C.app.dataspace;
 
 initRouter();
 
+const TabsForGoodCTA = () => {
+	return <C.A className="btn mb-1 mr-2" href="/tabs-for-good">GET TABS FOR GOOD</C.A>;
+}
+
 const MainDiv = () => {
+
+	const navPageLinks = {
+		"about-us": ['our-story', 'for-business', 'for-charity'],
+		"our-impact": ['charity-impact', 'impact', 'green-media'],
+		"our-products": ['products-overview', 'tabs-for-good'],
+		"blog":[]
+	};
+
+	const navPageLabels = {
+		"About Us": ['Our Story', 'Good-Loop for Business', 'Good-Loop for Charity'],
+		"Our Impact": ['Charity Impact', 'Impact Hub', 'Green Media'],
+		"Our Products": ['Products Overview', 'Tabs for Good'],
+		"Blog":[]
+	};
 
 	return (<MainDivBase
 		pageForPath={PAGES}
 		defaultPage='home'
-		navbarPages={['impact','blog']}
-		navbarSpace
+		navbarPages={navPageLinks}
+		navbarLabels={navPageLabels}
+		navbarDarkTheme={false}
+		navbarChildren={<TabsForGoodCTA/>}
+		navbarBackgroundColour="white"
 		// navbarLabels={getNavbarLabels}
 		fullWidthPages={["impact", 'home']}
 		noRegister

@@ -16,32 +16,34 @@
 .navbar {
 	background: transparent;
 	transition: 0.2s;
-
+	
 	.font-sizes();
 
 	&.scrolled {
 		background: @gl-light-red;
 		box-shadow: 0px 0px 5px rgba(0,0,0,0.75);
 		transition: 0.2s;
-
-		.nav-link:not(.btn) {
-			text-transform: uppercase;
-			font-weight: 600;
-			color: white;
-			text-decoration: none;
-			text-shadow: 0px 1px 5px rgba(0,0,0,0.75);
-		}
 	}
 
 	.nav-link:not(.btn) {
 		text-transform: uppercase;
-		font-weight: 600;
+		font-weight: normal;
 		color: black;
 		text-decoration: none;
 	}
 
+	.page-links {
+		.nav-item:not(:first-child) {
+			margin-left: 4rem;
+		}
+	}
+
 	.btn {
-		padding: .5rem 2rem !important;
+		padding: .2rem 2rem !important;
+		background-color: #063342;
+		color: white;
+		font-weight: 600;
+		font-size: inherit;
 	}
 
 	.navbar-toggler-icon {
@@ -76,6 +78,11 @@
 
 	.dropdown-toggle::after {
 		display: none;
+	}
+
+	.login-link {
+		text-decoration: none;
+		text-transform: uppercase;
 	}
 
 	#navItemsDiv {
