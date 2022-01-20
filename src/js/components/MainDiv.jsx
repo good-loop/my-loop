@@ -30,7 +30,11 @@ import ServerIO from '../plumbing/ServerIO';
 import AllowlistUs from './pages/AllowlistUs';
 import MainDivBase from '../base/components/MainDivBase';
 import {A, initRouter} from '../base/plumbing/glrouter';
+import HomePage from './pages/HomePage';
 // import RedesignPage from './pages/RedesignPage';
+import GreenDashboard from './pages/GreenDashboard';
+import GreenLanding from './pages/GreenLanding';
+
 
 // DataStore
 C.setupDataStore();
@@ -69,7 +73,11 @@ const PAGES = {
 	subscribe: SubscribePage,
 	about: MyGLAboutPage,
 	register: NewtabCharityLogin,
-	allowlist: AllowlistUs
+	allowlist: AllowlistUs,
+
+	home: HomePage,
+	greendash: GreenDashboard,
+	green: GreenLanding
 };
 // ?? switch to router??
 // const ROUTES = {
@@ -106,7 +114,7 @@ const MainDiv = () => {
 
 	return (<MainDivBase
 		pageForPath={PAGES}
-		defaultPage='my'
+		defaultPage='home'
 		navbarPages={navPageLinks}
 		navbarLabels={navPageLabels}
 		navbarDarkTheme={false}

@@ -1,0 +1,87 @@
+@green-bg: #52727a;
+@green-highlight: #698983;
+@nav-width: 20em;
+
+#green-dashboard {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  
+}
+
+#green-navbar {
+  width: @nav-width;
+  height: 100%;
+  background-color: @green-bg;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  font-family: 'Montserrat';
+
+  > * {
+    width: 100%;
+  }
+
+
+  .logo {
+    margin: 3em auto;
+  }
+
+  .nav-item {
+    &.active {
+      background: @green-highlight;
+    }
+    display: flex;
+    align-items: center;
+    color: white;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.5em 0 0.5em 3em;
+  }
+
+  .green-nav-icon {
+    position: relative;
+    display: inline-blaock;
+    width: 3em;
+    height: 3em;
+    border-radius: 50%;
+    background-color: white;
+    margin-right: 1em;
+  }
+
+
+}
+
+.green-subpage {
+  flex-grow: 1;
+  height: 100%;
+}
+
+.green-card {
+  display: flex;
+  flex-direction: column;
+  .gc-body {
+    background-color: white;
+    box-shadow: 0 0.25em 0.5em rgb(0 0 0 / 40%);
+    border-radius: 0.5em;
+    flex-grow: 1;
+  }
+}
+
+#green-landing {
+  .green-landing-splash {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 80vh;
+    width: 80vh;
+    background-color: #5f7d93;
+    border-radius: 50%;
+
+  }
+}
