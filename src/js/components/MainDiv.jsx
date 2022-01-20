@@ -96,6 +96,10 @@ Login.dataspace = C.app.dataspace;
 
 initRouter();
 
+const TabsForGoodCTA = () => {
+	return <C.A className="btn mb-1 mr-2" href="/tabs-for-good">GET TABS FOR GOOD</C.A>;
+}
+
 const MainDiv = () => {
 
 	const navPageLinks = {
@@ -118,6 +122,7 @@ const MainDiv = () => {
 		navbarPages={navPageLinks}
 		navbarLabels={navPageLabels}
 		navbarDarkTheme={false}
+		navbarChildren={<TabsForGoodCTA/>}
 		navbarBackgroundColour="white"
 		// navbarLabels={getNavbarLabels}
 		fullWidthPages={["impact"]}
