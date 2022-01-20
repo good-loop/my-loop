@@ -112,7 +112,7 @@ const WatchVideoSection = () => {
 				<h1 className='pt-5'>Let's make the internet a more positive place. Together.</h1>
 				<div className="row pt-5">
 					<div className="col-md-4">
-						<img className='w-50' src="/img/homepage/globe.png" alt="" />
+						<img className='w-50' src="/img/homepage/bird-circle.png" alt="" />
 						<h3 className='pt-4'>50% of online ad fees donated to charity </h3>
 					</div>
 					<div className="col-md-4">
@@ -120,7 +120,7 @@ const WatchVideoSection = () => {
 						<h3 className='pt-4'>Helping brands offset their digital carbon footprint</h3>
 					</div>
 					<div className="col-md-4">
-						<img className='w-50' src="/img/homepage/world.png" alt="" />
+						<img className='w-50' src="/img/homepage/girl-circle.png" alt="" />
 						<h3 className='pt-4'>Keeping your online privacy safe no matter what</h3>
 					</div>
 				</div>
@@ -163,7 +163,15 @@ const TestimonialSection = () => {
 					<a className='btn btn-primary' href="#">Explore our charity impact</a>
 				</div>
 				<div className="testimonial-card">
-
+					<div className="row">
+						<div className="col-md-6">
+							<img className='w-100' src="img/homepage/testimonial-1.png" alt="" />
+						</div>
+						<div className="col-md-6">
+								<h3>Testimonial</h3>
+								<p>Working with Good-Loop we have achieved xxxxx, a charity testimonial... </p>
+						</div>
+					</div>
 				</div>
 				<div className="testimonial-lower text-center">
 
@@ -212,24 +220,24 @@ const GetInvolvedSection = () => {
 const TriCards = () => {
 	return(
 		<div className="container">
-			<div className="row">
+			<div className="row mt-5">
 				<div className="col-4">
 					<div className="tircard-inner">
-						<img src="" alt="" />
+						<img className='w-100' src="img/homepage/good-loop-for-business.png" alt="" />
 						<h4>Good Loop For Business</h4>
 						<p>Discover... a sentence about this page/article <a href="#">Read More</a></p>
 					</div>
 				</div>
 				<div className="col-4">
 					<div className="tircard-inner">
-						<img src="" alt="" />
+						<img className='w-100' src="img/homepage/tree-planting.png" alt="" />
 						<h4>Tree Planting For The Future</h4>
 						<p>Discover... a sentence about this page/article <a href="#">Read More</a></p>
 					</div>
 				</div>
 				<div className="col-4">
 					<div className="tircard-inner">
-						<img src="" alt="" />
+						<img className='w-100' src="img/homepage/amyanddaniel.png" alt="" />
 						<h4>How It All Began</h4>
 						<p>Discover... a sentence about this page/article <a href="#">Read More</a></p>
 					</div>
