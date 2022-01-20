@@ -104,7 +104,7 @@ const MainDiv = () => {
 		navbarPages={['impact','blog']}
 		navbarSpace
 		// navbarLabels={getNavbarLabels}
-		fullWidthPages={["impact"]}
+		fullWidthPages={["impact", 'home']}
 		noRegister
 	/>);
 };
