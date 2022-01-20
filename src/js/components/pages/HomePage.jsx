@@ -105,9 +105,9 @@ const CharityBanner = () => {
 	)
 }
 
-const WatchVideoCard = () => {
+const WatchVideoSection = () => {
 	return(
-		<div className="watch-video-card">
+		<div className="watch-video-section">
 			<div className="container text-center">
 				<h1 className='pt-5'>Let's make the internet a more positive place. Together.</h1>
 				<div className="row pt-5">
@@ -137,6 +137,108 @@ const WatchVideoCard = () => {
 	)
 }
 
+const NewsSection = () => {
+	return(
+	<div className="news-section">
+		<div className="container">
+			<div className="row my-5">
+				<div className="col"><img className='logo' src="img/homepage/Stars.png" alt="" /></div>
+				<div className="col"><img className='logo' src="img/homepage/BBCNews.png" alt="" /></div>
+				<div className="col"><img className='logo' src="img/homepage/BBCNews.png" alt="" /></div>
+				<div className="col"><img className='logo' src="img/homepage/BBCNews.png" alt="" /></div>
+				<div className="col"><img className='logo' src="img/homepage/Stars.png" alt="" /></div>
+			</div>
+		</div>
+	</div>
+	)
+}
+
+const TestimonialSection = () => {
+	return(
+		<div className="testimonial-section">
+			<div className="container">
+				<div className="testimonial-upper text-center">
+					<h1>TOGETHER WE’VE RAISED OVER £X MILLION!</h1>
+					<p>Throughout 2021 we donated to XX charities worldwide. Spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
+					<a className='btn btn-primary' href="#">Explore our charity impact</a>
+				</div>
+				<div className="testimonial-card">
+
+				</div>
+				<div className="testimonial-lower text-center">
+
+				</div>
+			</div>
+		</div>
+	)
+}
+
+const GetInvolvedSection = () => {
+	return(
+		<div className="get-involved-section">
+			<div className="container text-center">
+				<h1>THIS IS JUST THE BEGINNING. SIGN UP AND JOIN OUR MOVEMENT.</h1>
+				<p>We’re developing exciting new products that will help us all make the internet a more positive place. Register below to get exclusive access to future product launches and join the Good-Loop movement.</p>
+				<div className="row pt-5">
+					<div className="col-md-4">
+						<img className='w-50' src="/img/homepage/globe.png" alt="" />
+						<h3 className='pt-4'>Donate to charity. For free. </h3>
+					</div>
+					<div className="col-md-4">
+						<img className='w-50' src="/img/homepage/heart.png" alt="" />
+						<h3 className='pt-4'>Make the world a better place</h3>
+					</div>
+					<div className="col-md-4">
+						<img className='w-50' src="/img/homepage/world.png" alt="" />
+						<h3 className='pt-4'>Just by browsing the internet</h3>
+					</div>
+				</div>
+				<a className='btn btn-primary' href="#">Join the Good-Loop Movement</a>
+				<div className="social-links">
+					<div className="row my-5">
+						<div className="col">
+							<a href=""><img src="" alt="twitter" /></a>
+							<a href=""><img src="" alt="facebook" /></a>
+							<a href=""><img src="" alt="instagram" /></a>
+							<a href=""><img src="" alt="linkedin" /></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	)
+}
+
+const TriCards = () => {
+	return(
+		<div className="container">
+			<div className="row">
+				<div className="col-4">
+					<div className="tircard-inner">
+						<img src="" alt="" />
+						<h4>Good Loop For Business</h4>
+						<p>Discover... a sentence about this page/article <a href="#">Read More</a></p>
+					</div>
+				</div>
+				<div className="col-4">
+					<div className="tircard-inner">
+						<img src="" alt="" />
+						<h4>Tree Planting For The Future</h4>
+						<p>Discover... a sentence about this page/article <a href="#">Read More</a></p>
+					</div>
+				</div>
+				<div className="col-4">
+					<div className="tircard-inner">
+						<img src="" alt="" />
+						<h4>How It All Began</h4>
+						<p>Discover... a sentence about this page/article <a href="#">Read More</a></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	)
+}
+
 const HomePage = ({spring}) => {
 	//spring the page down if asked to for how it works section
 	const [, setY] = useSpring(() => ({ y: 0 }));
@@ -159,8 +261,12 @@ const HomePage = ({spring}) => {
 			<HowTabsForGoodWorks />
 			<TabsForGoodSlideCard />
 			<CharityBanner />
-			<WatchVideoCard />
+			<WatchVideoSection />
+			<NewsSection />
+			<TestimonialSection />
+			<GetInvolvedSection />
 			<SubscriptionBox className="bg-gl-light-red big-sub-box"/>
+			<TriCards />
 		</div>
 	</>);
 };
