@@ -273,7 +273,7 @@ const ConnectionStatusPopup = () => {
 
 	const pvHasAdBlock = detectAdBlock();
 	const hasAdBlock = pvHasAdBlock.value;
-	const isOffline = pvHasAdBlock.error;
+	const isOffline = ! navigator.online; // pvHasAdBlock.error;
 	const determining = !(pvHasAdBlock.resolved || pvHasAdBlock.error) && timedout;
 	const showPopup = (hasAdBlock || isOffline || determining) && popup;
 
