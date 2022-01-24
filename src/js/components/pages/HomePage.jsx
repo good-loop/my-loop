@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container } from 'reactstrap';
 // import PV from 'promise-value';
 import { useSpring } from 'react-spring';
@@ -40,7 +40,53 @@ const HowTabsForGoodWorks = () => {
 	)
 }
 
-const TabsForGoodSlideCard = () => {
+const SlideShows = () => {
+	return (
+		<div className="slideshow">
+			<div className="slideshowSlider">
+				<div className="slide row" key="0">
+					<div className="col-6">
+						<h3>Slide 1 of 2</h3>
+						Visualaisation of picking a charity and getting browsing with T4G
+					</div>
+					<div className="col-6">
+						<h3>It Couldn't be easier to get started</h3>
+						Sign up for Tabs For Good.
+						Pick the charity you want to support.
+						Start browsing with the Tabs for Good plugin and raise money for charity. For Free.
+					</div>
+				</div>
+				<div className="slide row" key="1">
+					<div className="col-6">
+						<h3>Slide 2 of 2</h3>
+						Visualaisation of picking a charity and getting browsing with T4G
+					</div>
+					<div className="col-6">
+						<h3>It Couldn't be easier to get started</h3>
+						Sign up for Tabs For Good.
+						Pick the charity you want to support.
+						Start browsing with the Tabs for Good plugin and raise money for charity. For Free.
+					</div>
+				</div>
+			</div>
+		</div>
+	)
+}
+
+const TabsForGoodSlideSection = () => {
+
+	const [slider1, setSlider1] = useState('active');
+	const [slider2, setSlider2] = useState('inactive');
+
+	const clickSlider1 = () => {
+		setSlider1('active');
+		setSlider2('inactive');
+	}
+	const clickSlider2 = () => {
+		setSlider1('inactive');
+		setSlider2('active');
+	}
+
 	return (
 		<div className="tabs-for-goods-slide-card">
 			<div className="container">
@@ -53,20 +99,42 @@ const TabsForGoodSlideCard = () => {
 						Learn More About Tabs For Good
 					</button>
 				</div>
-
-				<div className="slide-cards row">
-					<div className="col-6">
-						<h3>Slide 1 of 2</h3>
-						Visualaisation of picking a charity and getting browsing with T4G
+				<div className="slideshow">
+					<div className={"slide row "+slider1}>
+						<div className="col-6">
+							<h3>Slide 1 of 2</h3>
+							<p>Visualisation of picking a charity and getting browsing with T4G</p>
+							<div className="slideshowDots">
+								<div className={"slideshowDot "+slider1} onClick={clickSlider1}></div>
+								<div className={"slideshowDot "+slider2} onClick={clickSlider2}></div>
+							</div>
+						</div>
+						<div className="col-6">
+							<h3>It couldn't be easier to get started</h3>
+							<p>Sign up for Tabs For Good. <br/>
+							Pick the charity you want to support. <br/>
+							Start browsing with the Tabs for Good plugin and raise money for charity. For free.</p>
+							<a className="btn btn-primary" href="#">Sign up for Tabs for Good</a>
+						</div>
 					</div>
-					<div className="col-6">
-						<h3>It Couldn't be easier to get started</h3>
-						Sign up for Tabs For Good.
-						Pick the charity you want to support.
-						Start browsing with the Tabs for Good plugin and raise money for charity. For Free.
+					<div className={"slide row "+slider2}>
+						<div className="col-6">
+							<h3>Slide 2 of 2</h3>
+							<p>Visualisation of picking a charity and getting browsing with T4G</p>
+							<div className="slideshowDots">
+								<div className={"slideshowDot "+slider1} onClick={clickSlider1}></div>
+								<div className={"slideshowDot "+slider2} onClick={clickSlider2}></div>
+							</div>
+						</div>
+						<div className="col-6">
+							<h3>It couldn't be easier to get started</h3>
+							<p>Follow your online impact in the My.Good-Loop hub and see how much you're raising for charity - just be browsing the internet.</p>
+							<a className="btn btn-primary" href="#">Sign up for Tabs for Good</a>
+						</div>
 					</div>
 				</div>
 			</div>
+
 		</div>
 	)
 }
@@ -221,7 +289,7 @@ const TriCards = () => {
 	return(
 		<div className="container">
 			<div className="row mt-5">
-				<div className="col-4">
+				<div className="col-4"> 
 					<div className="tircard-inner">
 						<img className='w-100' src="img/homepage/good-loop-for-business.png" alt="" />
 						<h4>Good Loop For Business</h4>
@@ -267,7 +335,7 @@ const HomePage = ({spring}) => {
 		<div className="HomePage widepage">
 			<MyLandingSection />
 			<HowTabsForGoodWorks />
-			<TabsForGoodSlideCard />
+			<TabsForGoodSlideSection />
 			<CharityBanner />
 			<WatchVideoSection />
 			<NewsSection />
