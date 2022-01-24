@@ -1,9 +1,22 @@
 @import "../js/base/style/fonts.less";
 
 .landing-bg {
-	// height: 100vh;
-	// width: 100%;
-	// display: flex;
+	height: 900px;
+	width: 100%;
+	background-image: url('../../img/homepage/above-fold-placeholder.png');
+	background-repeat: no-repeat;
+	background-position: center;
+	background-position-y: 0;
+
+	.landing-left {
+		position: relative;
+		left: -10%;
+	}
+	@media (max-width:1200px) {
+		.landing-left {
+			left: 0%;
+		}
+	}
 
 	h1, p, a{
 		font-family: 'Montserrat', sans-serif;
@@ -11,6 +24,7 @@
 	}
 
 	.title {
+		margin: 0;
 		h1 {
 			font-size: 2rem;
 			text-transform: unset;
@@ -57,17 +71,30 @@
 .testimonial-section {
 	background-color: @ml-dark-blue;
 	color: white;
+
+	.testimonial-right {
+		background-color: white;
+		color: black;
+	}
 }
 
 .slideshow {
 	position: relative;
-	height: 300px;
+	height: 550px;
+
 	.slide {
 		position: absolute;
+		height: 500px;
+		overflow: hidden;
+  	border-radius: 10px;
 	}
 	.slide.inactive {
 		display: none;
 	}
+
+	.slide-left { background-color: #7CBAFC; }
+	.slide-left-2 { background-color: #F1D7D3; }
+	.slide-right { background-color: white; }
 
 	.slideshowDots {
 		text-align: center;
@@ -87,5 +114,11 @@
 	
 	.slideshowDot.active {
 		background-color: @gl-dark-grey;
+	}
+}
+
+.get-involved-section {
+	h3 {
+		color: @ml-dark-blue;
 	}
 }
