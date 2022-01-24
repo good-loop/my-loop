@@ -68,7 +68,7 @@ const TabsForGoodSlideSection = () => {
 				</div>
 				<div className="slideshow">
 					<div className={"slide row "+slider1}>
-						<div className="col-6 slide-left">
+						<div className="col-md-6 slide-left">
 							<h3>Slide 1 of 2</h3>
 							<p>Visualisation of picking a charity and getting browsing with T4G</p>
 							<div className="slideshowDots">
@@ -76,7 +76,7 @@ const TabsForGoodSlideSection = () => {
 								<div className={"slideshowDot "+slider2} onClick={clickSlider2}></div>
 							</div>
 						</div>
-						<div className="col-6 slide-right">
+						<div className="col-md-6 slide-right">
 							<h3>It couldn't be easier to get started</h3>
 							<p>Sign up for Tabs For Good. <br/>
 							Pick the charity you want to support. <br/>
@@ -85,7 +85,7 @@ const TabsForGoodSlideSection = () => {
 						</div>
 					</div>
 					<div className={"slide row "+slider2}>
-						<div className="col-6 slide-left-2">
+						<div className="col-md-6 slide-left-2">
 							<h3>Slide 2 of 2</h3>
 							<p>Visualisation of picking a charity and getting browsing with T4G</p>
 							<div className="slideshowDots">
@@ -93,7 +93,7 @@ const TabsForGoodSlideSection = () => {
 								<div className={"slideshowDot "+slider2} onClick={clickSlider2}></div>
 							</div>
 						</div>
-						<div className="col-6 slide-right">
+						<div className="col-md-6 slide-right">
 							<h3>It couldn't be easier to get started</h3>
 							<p>Follow your online impact in the My.Good-Loop hub and see how much you're raising for charity - just be browsing the internet.</p>
 							<a className="btn btn-primary" href="#">Sign up for Tabs for Good</a>
@@ -272,21 +272,21 @@ const TriCards = () => {
 	return(
 		<div className="container">
 			<div className="row mt-5">
-				<div className="col-4"> 
+				<div className="col-md-4"> 
 					<div className="tircard-inner">
 						<img className='w-100' src="img/homepage/good-loop-for-business.png" alt="" />
 						<h4>Good Loop For Business</h4>
 						<p>Discover... a sentence about this page/article <a href="#">Read More</a></p>
 					</div>
 				</div>
-				<div className="col-4">
+				<div className="col-md-4">
 					<div className="tircard-inner">
 						<img className='w-100' src="img/homepage/tree-planting.png" alt="" />
 						<h4>Tree Planting For The Future</h4>
 						<p>Discover... a sentence about this page/article <a href="#">Read More</a></p>
 					</div>
 				</div>
-				<div className="col-4">
+				<div className="col-md-4">
 					<div className="tircard-inner">
 						<img className='w-100' src="img/homepage/amyanddaniel.png" alt="" />
 						<h4>How It All Began</h4>
