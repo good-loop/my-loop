@@ -1,12 +1,13 @@
 @import "../js/base/style/fonts.less";
 
 .landing-bg {
-	height: 900px;
+	height: 960px;
 	width: 100%;
-	background-image: url('../../img/homepage/above-fold-placeholder.png');
+	background-image: url('../../img/homepage/splash-screen-bground.svg');
 	background-repeat: no-repeat;
 	background-position: center;
 	background-position-y: 0;
+	background-size: cover;
 
 	.landing-left {
 		position: relative;
@@ -20,7 +21,6 @@
 
 	h1, p, a{
 		font-family: 'Montserrat', sans-serif;
-		font-weight: normal;
 	}
 
 	.title {
@@ -28,7 +28,12 @@
 		h1 {
 			font-size: 2rem;
 			text-transform: unset;
+			font-weight: 600;
 		}
+	}
+
+	.title > * {
+		margin-bottom: 2rem;
 	}
 
 	.btn-newsletter {
@@ -36,7 +41,15 @@
 		color: @gl-red !important;
 		border: 3px solid @gl-red !important;
 	}
+}
 
+.charity-icons  {
+	img {
+		height: 70px;
+	}
+	.circle-arrow {
+		cursor: pointer;
+	}
 }
 
 .how-tabs-for-good-works {
