@@ -57,26 +57,28 @@ const TabsForGoodSlideSection = () => {
 	return (
 		<div className="tabs-for-goods-slide-card">
 			<div className="container">
-				<div className="upper-cta">
+				<div className="upper-cta text-center white">
 					<p>Start transforming your web browsing into life saving vaccines, meals for children in need, preserving habitats for endangered animals, plus many more good causes.</p>
-					<RegisterLink className="btn btn-primary h-100 d-flex align-items-center justify-content-center">
-						Sign up for the Tabs For Good
-					</RegisterLink>
-					<button id="newsletter-btn" className="btn btn-newsletter h-100 d-flex align-items-center justify-content-center">
-						Learn More About Tabs For Good
-					</button>
+					<div className="upper-cta-btn">
+						<RegisterLink className="btn btn-primary w-100 text-uppercase">
+							Sign up for the Tabs For Good
+						</RegisterLink>
+						<button className="btn btn-myloop-secondary w-100 text-uppercase mt-3">
+							Learn More About Tabs For Good
+						</button>
+					</div>
 				</div>
-				<div className="slideshow">
+				<div className="slideshow mt-5">
 					<div className={"slide row "+slider1}>
-						<div className="col-md-6 slide-left">
-							<h3>Slide 1 of 2</h3>
-							<p>Visualisation of picking a charity and getting browsing with T4G</p>
+						<div className="col-md-6 slide-left text-center p-5">
+							<h3 className='mt-5'>Slide 1 of 2</h3>
+							<p className='mt-5'>Visualisation of picking a charity and getting browsing with T4G</p>
 							<div className="slideshowDots">
 								<div className={"slideshowDot "+slider1} onClick={clickSlider1}></div>
 								<div className={"slideshowDot "+slider2} onClick={clickSlider2}></div>
 							</div>
 						</div>
-						<div className="col-md-6 slide-right">
+						<div className="col-md-6 slide-right p-5">
 							<h3>It couldn't be easier to get started</h3>
 							<p>Sign up for Tabs For Good. <br/>
 							Pick the charity you want to support. <br/>
@@ -85,15 +87,15 @@ const TabsForGoodSlideSection = () => {
 						</div>
 					</div>
 					<div className={"slide row "+slider2}>
-						<div className="col-md-6 slide-left-2">
-							<h3>Slide 2 of 2</h3>
-							<p>Visualisation of picking a charity and getting browsing with T4G</p>
+						<div className="col-md-6 slide-left-2 text-center p-5">
+							<h3 className='mt-5'>Slide 2 of 2</h3>
+							<p className='mt-5'>Visualisation of picking a charity and getting browsing with T4G</p>
 							<div className="slideshowDots">
 								<div className={"slideshowDot "+slider1} onClick={clickSlider1}></div>
 								<div className={"slideshowDot "+slider2} onClick={clickSlider2}></div>
 							</div>
 						</div>
-						<div className="col-md-6 slide-right">
+						<div className="col-md-6 slide-right p-5">
 							<h3>It couldn't be easier to get started</h3>
 							<p>Follow your online impact in the My.Good-Loop hub and see how much you're raising for charity - just be browsing the internet.</p>
 							<a className="btn btn-primary" href="#">Sign up for Tabs for Good</a>
@@ -146,15 +148,15 @@ const WatchVideoSection = () => {
 			<div className="container text-center">
 				<h1 className='pt-5'>Let's make the internet a more positive place. Together.</h1>
 				<div className="row pt-5">
-					<div className="col-md-4">
+					<div className="col-md-4 video-points">
 						<img className='w-50' src="/img/homepage/bird-circle.png" alt="" />
 						<h3 className='pt-4'>50% of online ad fees donated to charity </h3>
 					</div>
-					<div className="col-md-4">
+					<div className="col-md-4 video-points">
 						<img className='w-50' src="/img/homepage/heart.png" alt="" />
 						<h3 className='pt-4'>Helping brands offset their digital carbon footprint</h3>
 					</div>
-					<div className="col-md-4">
+					<div className="col-md-4 video-points">
 						<img className='w-50' src="/img/homepage/girl-circle.png" alt="" />
 						<h3 className='pt-4'>Keeping your online privacy safe no matter what</h3>
 					</div>
@@ -163,10 +165,10 @@ const WatchVideoSection = () => {
 				<video src=""></video>
 				<h4>We’re working with fantastic brands that want to join us in making the internet a more positive place. <br/><br/>
 				The way we’re doing it couldn’t be simpler. We just need the final piece of the puzzle to make it happen – you. Sign up and join the Good-Loop movement today. </h4>
-				<RegisterLink className="btn btn-primary w-50">
+				<RegisterLink className="btn btn-primary w-50 mt-5">
 					Sign up for the Tabs For Good
 				</RegisterLink>
-				<p className='our-story'>Want to learn more? Check out <a href="#">OUR STORY</a></p>
+				<p className='our-story black m-5 pb-5'>Want to learn more? Check out <a href="#">OUR STORY</a></p>
 			</div>
 		</div>
 	)
@@ -175,13 +177,13 @@ const WatchVideoSection = () => {
 const NewsSection = () => {
 	return(
 	<div className="news-section">
-		<div className="container">
+		<div className="container text-center">
 			<div className="row my-5">
-				<div className="col"><img className='logo' src="img/homepage/Stars.png" alt="" /></div>
+				<div className="col sparks"><img className='logo' src="img/homepage/Stars.png" alt="" /></div>
 				<div className="col"><img className='logo' src="img/homepage/BBCNews.png" alt="" /></div>
 				<div className="col"><img className='logo' src="img/homepage/The-Guardian.png" alt="" /></div>
 				<div className="col"><img className='logo' src="img/homepage/BBCNews.png" alt="" /></div>
-				<div className="col"><img className='logo' src="img/homepage/Stars.png" alt="" /></div>
+				<div className="col sparks"><img className='logo' src="img/homepage/Stars.png" alt="" /></div>
 			</div>
 		</div>
 	</div>
@@ -191,36 +193,38 @@ const NewsSection = () => {
 const TestimonialSection = () => {
 	return(
 		<div className="testimonial-section">
-			<div className="container">
+			<div className="container py-5">
 				<div className="testimonial-upper text-center">
 					<h1>TOGETHER WE’VE RAISED OVER £X MILLION!</h1>
 					<p>Throughout 2021 we donated to XX charities worldwide. Spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
-					<a className='btn btn-primary' href="#">Explore our charity impact</a>
+					<a className='btn btn-primary text-uppercase' href="#">Explore our charity impact</a>
 				</div>
 				<div className="testimonial-card my-5">
 					<div className="row">
 						<div className="col-md-6 p-0">
 							<img className='w-100' src="img/homepage/testimonial-1.png" alt="" />
 						</div>
-						<div className="col-md-6 testimonial-right">
+						<div className="col-md-6 testimonial-right p-5">
 								<h3>Testimonial</h3>
-								<p>Working with Good-Loop we have achieved xxxxx, a charity testimonial... </p>
+								<p>Working with Good-Loop we have achieved xxxxx, a charity testimonial... Working with Good-Loop we have achieved xxxxx, a charity testimonial... Working with Good-Loop we have achieved xxxxx, a charity testimonial... </p>
+								<p>Charity Representative, Charity Name</p>
+								<p className='read-more'>READ MORE ABOUT OUR <a href="#">CHARITY IMPACT</a></p>
 						</div>
 					</div>
 				</div>
 				<div className="testimonial-lower text-center">
 					<div className="row pt-5">
-						<div className="col-md-4">
+						<div className="col-md-4 testimonial-points">
 							<img className='w-25' src="/img/homepage/globe.png" alt="" />
 							<h3 className='pt-4'>Charity Impact</h3>
 							<p className='pt-3'>Example - People + UK </p>
 						</div>
-						<div className="col-md-4">
+						<div className="col-md-4 testimonial-points">
 							<img className='w-25' src="/img/homepage/heart.png" alt="" />
 							<h3 className='pt-4'>Charity Impact</h3>
 							<p className='pt-3'>Example - People + Global</p>
 						</div>
-						<div className="col-md-4">
+						<div className="col-md-4 testimonial-points">
 							<img className='w-25' src="/img/homepage/world.png" alt="" />
 							<h3 className='pt-4'>Charity Impact</h3>
 							<p className='pt-3'>Example - People + Nature</p>
