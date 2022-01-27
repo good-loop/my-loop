@@ -125,7 +125,7 @@ const MainDiv = () => {
 		navbarChildren={<TabsForGoodCTA/>}
 		navbarBackgroundColour="white"
 		// navbarLabels={getNavbarLabels}
-		fullWidthPages={["impact", 'home']}
+		fullWidthPages={["impact", 'home', 'charity']}
 		noRegister
 	/>);
 };

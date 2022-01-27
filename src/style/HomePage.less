@@ -1,22 +1,31 @@
 @import "../js/base/style/fonts.less";
 
 .landing-bg {
-	height: 900px;
+	height: 85vh;
 	width: 100%;
-	background-image: url('../../img/homepage/splash-screen-bground.svg');
 	background-repeat: no-repeat;
 	background-position: center;
 	background-position-y: 0;
 	background-size: auto;
 
+	.landing-splash {
+		// Make sure image behind is covered
+		height: 101%;
+	}
+
 	.landing-left {
 		position: relative;
 		left: -10%;
 	}
-	@media (max-width:1300px) {
+
+	@media @xl-max {
 		.landing-left {
 			left: 0%;
 		}
+	}
+
+	@media @width-mobile {
+		height: 100vh;
 	}
 
 	h1, p, a{
@@ -54,21 +63,6 @@
 	}
 	.circle-arrow {
 		cursor: pointer;
-	}
-}
-
-.how-tabs-for-good-works {
-	background-color: white;
-
-	h1 {
-		color: @gl-red;
-		text-transform: uppercase;
-	}
-	h3 {
-		color: @ml-dark-blue;
-		text-transform: uppercase;
-		font-size: 1.5rem;
-		font-weight: bold;
 	}
 }
 

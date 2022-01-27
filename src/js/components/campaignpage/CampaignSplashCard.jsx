@@ -73,9 +73,6 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 					</div>
 					<div className="flex-column flex-center pt-5 splash-text">
 						{splashText}
-						<C.A href="/test">A test in-site link!</C.A>
-						<C.A href="https://www.google.com/?q=test">A test off-site link!</C.A>
-						<C.A onClick={e => {C.A.stopEvent(e); console.log("HAHA! STOPPED!")}} href="/shouldntbehere">A test no redirect link!</C.A>
 						{campaignPage.id && <DevLink href={ServerIO.PORTAL_ENDPOINT + '/#campaign/' + escape(campaignPage.id)} target="_portal">Campaign Editor (using {campaignPage.id})</DevLink>}
 					</div>
 				</div>

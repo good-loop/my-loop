@@ -5,6 +5,31 @@ import KStatus from '../../base/data/KStatus';
 import { getDataItem } from '../../base/plumbing/Crud';
 import C from '../../C';
 import CharityLogo from '../CharityLogo';
+import { MyLandingSection, T4GCTAButton } from './CommonComponents';
+
+const WhatIsTabsForGood = ({ngo}) => {
+	const causesText = (
+		ngo && `Tabs for Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into money for ${ngo.name}.`
+	) || "Tabs for Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes. ";
+	
+	return <Container className="how-tabs-for-good-works text-center pt-3">
+		<h1>How Tabs For Good Works</h1>
+		<p className='pt-3'>{causesText}</p>
+		<Row className="pt-5">
+			<Col md={4}>
+				<img className='w-100' src={(ngo && ngo.images) || "/img/homepage/globe.png"} alt="" />
+			</Col>
+			<Col md={4}>
+				<img className='w-100' src={(ngo && ngo.images) || "/img/homepage/heart.png"} alt="" />
+			</Col>
+			<Col md={4}>
+				<img className='w-100' src={(ngo && ngo.images) || "/img/homepage/world.png"} alt="" />
+			</Col>
+		</Row>
+		<br/>
+		<T4GCTAButton className="mx-auto"/>
+	</Container>;
+}
 
 const CharityLandingPage = () => {
 	const path = DataStore.getValue(['location', 'path']);
@@ -24,25 +49,15 @@ const CharityLandingPage = () => {
 	}
 
 	return (<>
-		<h1 className='mb-5'>{NGO.displayName(ngo)}</h1>		
-		{/* <CharityLogo className="w-100" charity={ngo} /> */}
+		<MyLandingSection ngo={ngo}/>
 		<Row>
-			<Col>
-				<h2>Every time you open a new tab in your browser you raise money for {ngo.name}</h2>
-				<p>Download the free Tabs for Good Chrome plugin and start raising money for {ngo.name} now. </p>
-				<a className='btn btn-primary' href='#'>Sign Up & Download</a>
-			</Col>
-			<Col></Col>
-		</Row>
-		<Row>
-			<Col>
-			<img className='w-100' src={ngo.images}/>
-			</Col>
-			<Col>
-			<h2>WHAT WE DO</h2>
-			<p>{ngo.summaryDescription}</p>
+			<Col md={8} className='d-none d-md-block'></Col>
+			<Col md={4} className='d-flex justify-content-center px-2'>
+				<CharityLogo charity={ngo} style={{maxWidth:100}}/>
+				<img src="https://i.imgur.com/TSmMRez.png"/>
 			</Col>
 		</Row>
+		<WhatIsTabsForGood ngo={ngo}/>
 	</>);
 };
 
