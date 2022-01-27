@@ -30,7 +30,7 @@ const GreenLanding = ({ }) => {
 	if ( ! pvCampaign.value) {
 		return <Misc.Loading />
 	}
-
+	const campaign = pvCampaign.value;
 	// TODO only fetch eco charities
 	let dntn4charity = Campaign.dntn4charity(campaign);
 	console.log(dntn4charity);

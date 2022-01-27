@@ -12,3 +12,4 @@ logs
 build-lib
 my-loop.jar
 config/version.properties
+web/green/index.html
