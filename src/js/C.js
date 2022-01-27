@@ -2,8 +2,13 @@ import Enum from 'easy-enums';
 import { defineRole } from './base/Roles';
 import C from './base/CBase';
 import GLAppManifest from '../../GLAppManifest';
+import { A, initRouter } from './base/plumbing/glrouter';
 
 export default C;
+
+// HACK <a> vs <A> for optional replacement with import { A } from "hookrouter";
+C.A = A;
+initRouter();
 
 /**
  * app config NOW DONE IN GLAppManifest.js

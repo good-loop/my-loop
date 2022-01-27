@@ -33,8 +33,11 @@ ServerIO.MYLOOP_ENDPONT = `${C.HTTPS}://${C.SERVER_TYPE}my.good-loop.com`;
 
 /**
  * My Loop has no backend, so use profiler
+ * TODO use my-loop now??
  */
 ServerIO.LOGENDPOINT = ServerIO.PROFILER_ENDPOINT + '/log';
+
+ServerIO.DATALOG_ENDPOINT = "https://lg.good-loop.com/data";
 
 ServerIO.checkBase();
 

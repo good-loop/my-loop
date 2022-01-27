@@ -142,10 +142,10 @@ const WebtopPage = () => {
 
 
 const PAGES = {
-	webtop: WebtopPage
+	newtab: WebtopPage
 };
 const NewTabMainDiv = () => {
-	return <MainDivBase pageForPath={PAGES} defaultPage="webtop" navbar={false} className="newtab" />;
+	return <MainDivBase pageForPath={PAGES} defaultPage="newtab" navbar={false} className="newtab" />;
 };
 
 
@@ -273,7 +273,7 @@ const ConnectionStatusPopup = () => {
 
 	const pvHasAdBlock = detectAdBlock();
 	const hasAdBlock = pvHasAdBlock.value;
-	const isOffline = ! navigator.online; // pvHasAdBlock.error;
+	const isOffline = ! navigator.onLine; // pvHasAdBlock.error;
 	const determining = !(pvHasAdBlock.resolved || pvHasAdBlock.error) && timedout;
 	const showPopup = (hasAdBlock || isOffline || determining) && popup;
 

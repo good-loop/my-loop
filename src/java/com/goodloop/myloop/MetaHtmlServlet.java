@@ -52,6 +52,7 @@ public class MetaHtmlServlet implements IServlet {
 		Map vars = new HashMap();
 		vars.put("title", state.getRequestPath());
 		vars.put("ogImage", "");
+		vars.put("contents", "");
 		return vars;
 	}
 
