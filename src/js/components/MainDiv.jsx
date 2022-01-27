@@ -85,16 +85,12 @@ const PAGES = {
 // 	"/impact": CampaignPage, 
 // };
 
-// HACK <a> vs <A> for optional replacement with import { A } from "hookrouter";
-C.A = A;
-
 addFunderCredit("Scottish Enterprise");
 addDataCredit({name:"The charity impact database", url:"https://sogive.org", author:"SoGive"});
 
+
 Login.app = C.app.id;
 Login.dataspace = C.app.dataspace;
-
-initRouter();
 
 const TabsForGoodCTA = () => {
 	return <C.A className="btn mb-1 mr-2" href="/tabs-for-good">GET TABS FOR GOOD</C.A>;
