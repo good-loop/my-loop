@@ -1,10 +1,13 @@
 import React from 'react';
 import Misc from '../../base/components/Misc';
+import { setNavProps } from '../../base/components/NavBar';
 import Campaign from '../../base/data/Campaign';
+import { getId } from '../../base/data/DataClass';
 import KStatus from '../../base/data/KStatus';
 import { getDataItem } from '../../base/plumbing/Crud';
 import { getDataLogData } from '../../base/plumbing/DataLog';
 import DataStore, { getPath } from '../../base/plumbing/DataStore';
+import { encURI } from '../../base/utils/miscutils';
 import C from '../../C';
 
 
@@ -34,13 +37,34 @@ const GreenLanding = ({ }) => {
 	// TODO only fetch eco charities
 	let dntn4charity = Campaign.dntn4charity(campaign);
 	console.log(dntn4charity);
+	let co2 = campaign.co2;
+	let trees = campaign.offsets && campaign.offsets[0] && campaign.offsets[0].n;
+
+	// Branding
+	let branding = campaign.branding || {name:"TODO branding"};	
+	// set NavBar brand (copy pasta from CampaignPage.jsx)
+	let {type, id} = Campaign.masterFor(campaign);
+	if (type && id) {
+		let pvBrandItem = getDataItem({type, id, status});
+		let brandItem = pvBrandItem.value;
+		if (brandItem) {
+			const prop = type.toLowerCase();
+			let nprops = { // advertiser link and logo			
+				brandLink:'/impact/'+prop+'='+encURI(getId(brandItem))+".html",
+				brandLogo: brandItem.branding && (brandItem.branding.logo_white || brandItem.branding.logo),
+				brandName: brandItem.name || getId(brandItem)
+			};
+			setNavProps(nprops);
+		}
+	}
+
 
 	return <div id="green-landing">
 		<div className="green-landing-splash">
-			BRAND LOGO HERE<br />
-			<div className="splash-tonnes">XXXX TONNES</div>
+			<div>{branding.logo ? <img src={branding.logo} alt="brand logo" /> : JSON.stringify(branding)}</div>
+			<div className="splash-tonnes">{co2} TONNES</div>
 			carbon offset
-			<div className="splash-trees">XXXX</div>
+			<div className="splash-trees">{trees}</div>
 			trees planted<br />
 			with
 			<div className="splash-carbon-neutral">
