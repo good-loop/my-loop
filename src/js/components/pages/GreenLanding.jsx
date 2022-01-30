@@ -11,6 +11,16 @@ import { encURI } from '../../base/utils/miscutils';
 import C from '../../C';
 
 
+
+
+// TODO Design! and Content!
+// Latest Layout Design: https://miro.com/app/board/o9J_lxO4FyI=/?moveToWidget=3458764516138790976&cot=14
+// Visual Design: https://miro.com/app/board/o9J_lncRn5E=/ (note: some layout changes above)
+// Copy: https://docs.google.com/document/d/1_mpbdWBeaIEyKHRr-mtC1FHAPEfokcRZTHXgMkYJyVk/edit?usp=sharing
+
+
+
+
 const GreenLanding = ({ }) => {
 	// like CampaignPage, this would prefer to run by a campaign id
 	const path = DataStore.getValue("location","path");
