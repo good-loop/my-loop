@@ -44,7 +44,7 @@ const SubscriptionBox = ({className="", title="Support the causes you care about
 						/>
 					</FormGroup>
 					<div className="mobile-break"/>
-					<Button color="primary" disabled={hasSubmittedEmail} className="flex-grow-0">
+					<Button color="secondary" disabled={hasSubmittedEmail} className="flex-grow-0">
 						Sign me up
 					</Button>
 				</Form>
