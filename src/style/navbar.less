@@ -1,23 +1,8 @@
-.font-sizes {
-	@media (max-width: 1500px) {
-        font-size: 0.85rem;
-    }
-    @media (max-width: 1400px) {
-        font-size: 0.7rem;
-    }
-    @media @xl-max {
-        font-size: 1.5rem;
-	}
-	@media @width-mobile {
-		font-size: 1rem;
-	}
-}
 
 .navbar {
-	background: transparent;
 	transition: 0.2s;
 	
-	.font-sizes();
+	// .font-sizes();
 
 	&.scrolled {
 		background: @gl-light-red;
@@ -40,14 +25,6 @@
 		}
 	}
 
-	.btn {
-		padding: .2rem 2rem !important;
-		background-color: #063342;
-		color: white;
-		font-weight: 600;
-		font-size: inherit;
-	}
-
 	.navbar-toggler-icon {
 		// By default bootstrap uses the rule content:"", which for some reason erases the hamburger on safari
 		content: unset !important;
@@ -55,7 +32,6 @@
 
 	// Dropdown styling
 	.dropdown.show:not(.account-menu) {
-		background: white;
 		a {
 			color: black !important;
 			text-shadow: none !important;
@@ -63,7 +39,6 @@
 	}
 
 	.dropdown-menu {
-		background: white;
 		box-shadow: 0px 3px 2px rgba(0,0,0,0.5);
 		margin: 0;
 		border: none;
@@ -75,7 +50,7 @@
 		text-decoration: none;
 		text-transform: uppercase;
 		padding: 1rem 1.5rem;
-		.font-sizes();
+		// .font-sizes();
 	}
 
 	.dropdown-toggle::after {

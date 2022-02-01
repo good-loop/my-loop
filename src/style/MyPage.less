@@ -1,27 +1,4 @@
 
-// TODO Why is this not on navbar.less?
-.navbar {
-
-	// Overwrites .fixed-top class from base element. Necessary due to the pages style.
-	position: fixed!important;
-	width: 100%;
-
-	background-color: transparent;
-	// Logo is fixed and should appear in front of other content
-	.navbar-brand {
-		z-index: 1;
-		// Override logo size - we use a rectangulat GL logo here
-		.logo {
-			width: 10em;
-			height: 2em;
-		}
-	}
-	// Make text more readable against dark sections of the page
-	#top-right-menu, .dropdown-toggle {
-		text-shadow: 0 0 1px #000;
-	}
-}
-
 .MyPage {
 	background-color:#eeeaea; // warm off-white - still feels open but falls back from page content
 	width: 100%;
@@ -29,13 +6,6 @@
 		font-weight: normal;
 		text-transform: capitalize;
 		color: @gl-light-red;
-	}
-}
-
-// Special cases for extra-tiny screens
-@media (max-width: 450px) {
-	.navbar .dropdown-toggle {
-		font-size: 100%; // overriding BS (intended for desktop, because we overrode the hamburger) value of 1rem
 	}
 }
 

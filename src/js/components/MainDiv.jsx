@@ -105,7 +105,7 @@ Login.app = C.app.id;
 Login.dataspace = C.app.dataspace;
 
 const TabsForGoodCTA = () => {
-	return <C.A className="btn mb-1 mr-2" href="/tabsforgood">GET TABS FOR GOOD</C.A>;
+	return <C.A className="btn btn-info mb-1 mr-2" href="/tabsforgood">GET TABS FOR GOOD</C.A>;
 }
 
 const MainDiv = () => {

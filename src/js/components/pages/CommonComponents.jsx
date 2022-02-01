@@ -124,7 +124,7 @@ const TabsForGoodSlideSection = () => {
 						<RegisterLink className="btn btn-primary w-100 text-uppercase">
 							Sign up for the Tabs For Good
 						</RegisterLink>
-						<button className="btn btn-myloop-secondary w-100 text-uppercase mt-3">
+						<button className="btn btn-secondary w-100 text-uppercase mt-3">
 							Learn More About Tabs For Good
 						</button>
 					</div>

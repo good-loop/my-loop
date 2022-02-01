@@ -119,6 +119,27 @@
     border: solid 2px @gl-red !important;
 }
 
+
+
+.btn-info {
+    background-color: @gl-dark-blue !important;
+    color:white !important;
+    border: none !important;
+}
+
+.btn-info:hover:not(.disabled) {
+    background-color: lighten(@gl-dark-blue, 10%) !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.btn-info:active:not(.disabled),
+.btn-info:focus:not(.disabled) {
+    background-color: @gl-dark-blue !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
 /*
 .btn-transparent-white {
     background-color: transparent;
