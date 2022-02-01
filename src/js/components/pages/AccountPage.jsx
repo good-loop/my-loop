@@ -103,7 +103,7 @@ const SidebarTabLink = ({ tab, label, selected }) => {
 			// Detect whether we're on Chrome or not
 			let isChrome = navigator && navigator.vendor === "Google Inc.";
 			if ( ! isChrome) {
-				url = "https://welcome.good-loop.com"
+				url = "https://my.good-loop.com/tabsforgood"
 				label = "About Tabs for Good";
 			} else {
 				url = "https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1"

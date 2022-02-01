@@ -17,7 +17,6 @@ import MyPage, { HowItWorksCard } from './pages/MyPage';
 import MyCharitiesPage from './pages/MyCharitiesPage';
 import MyAdCampaignsPage from './pages/MyAdCampaignsPage';
 import GetInvolvedPage from './pages/GetInvolvedPage';
-import CharityLandingPage from './pages/CharityLandingPage';
 import CampaignPage from './campaignpage/CampaignPage';
 import E404Page from '../base/components/E404Page';
 import AccountPage from './pages/AccountPage';
@@ -34,7 +33,9 @@ import HomePage from './pages/HomePage';
 // import RedesignPage from './pages/RedesignPage';
 import GreenDashboard from './pages/GreenDashboard';
 import GreenLanding from './pages/GreenLanding';
-
+import TabsForGoodLandingPage from './pages/TabsForGoodLandingPage';
+import CharityLandingPage from './pages/CharityLandingPage';
+import ProductsOverviewPage from './pages/ProductsOverviewPage';
 
 // DataStore
 C.setupDataStore();
@@ -73,6 +74,8 @@ const PAGES = {
 	subscribe: SubscribePage,
 	about: MyGLAboutPage,
 	register: NewtabCharityLogin,
+	productsoverview: ProductsOverviewPage,
+	tabsforgood: TabsForGoodLandingPage,
 	allowlist: AllowlistUs,
 
 	home: HomePage,
@@ -93,15 +96,15 @@ Login.app = C.app.id;
 Login.dataspace = C.app.dataspace;
 
 const TabsForGoodCTA = () => {
-	return <C.A className="btn mb-1 mr-2" href="/tabs-for-good">GET TABS FOR GOOD</C.A>;
+	return <C.A className="btn mb-1 mr-2" href="/tabsforgood">GET TABS FOR GOOD</C.A>;
 }
 
 const MainDiv = () => {
 
 	const navPageLinks = {
 		"about-us": ['our-story', 'for-business', 'for-charity'],
-		"our-impact": ['charity-impact', 'impact', 'green-media'],
-		"our-products": ['products-overview', 'tabs-for-good'],
+		"our-impact": ['charities', 'impact', 'green'],
+		"our-products": ['productsoverview', 'tabsforgood'],
 		"blog":[]
 	};
 

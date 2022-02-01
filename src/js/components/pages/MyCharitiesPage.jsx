@@ -7,6 +7,7 @@ import ActionMan from '../../plumbing/ActionMan';
 import { yessy } from '../../base/utils/miscutils';
 import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
 import CharityLogo from '../CharityLogo';
+import LinkOut from '../../base/components/LinkOut';
 
 /**
  * TODO refactor - merge with the lower level handling of mapping Good-Loop data to SoGive IDs
@@ -67,6 +68,7 @@ const MyCharitiesPage = () => {
 		<div className="MyCharitiesPage">
 			<img src="/img/LandingBackground/Charities_banner.png" className="w-100 mt-5" alt="banner" />
 			<Container className="py-5">
+				<h2><LinkOut href="https://miro.com/app/board/o9J_lxO4FyI=/?moveToWidget=3458764516138128011&cot=14">TODO</LinkOut></h2>
 				<h1>Charities that benefit</h1>
 				<Paginator rows={5} cols={7} rowsMD={2} colsMD={5} pageButtonRangeMD={1} displayCounter displayLoad>
 					{charities.map((c, i) => <div className="p-3 d-flex justify-content-center align-items-center" style={{height: "140px"}}>

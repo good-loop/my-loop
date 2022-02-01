@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { RegisterLink, setLoginVerb, setShowLogin } from '../../base/components/LoginWidget';
 import { Col, Container, Row } from 'reactstrap';
 import BG from '../../base/components/BG';
-import { isPortraitMobile, space } from '../../base/utils/miscutils';
+import { getBrowserVendor, isPortraitMobile, space } from '../../base/utils/miscutils';
 import C from '../../C';
 import Icon from '../../base/components/Icon';
 
@@ -16,6 +16,18 @@ const T4GCTAButton = ({className}) => {
 				Sign up for Tabs For Good
 			</RegisterLink>
 		);
+};
+
+export const T4GPluginButton = ({className}) => {
+	const browser = getBrowserVendor();
+	let href = {
+		CHROME: "https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1",
+		EDGE: "https://microsoftedge.microsoft.com/addons/detail/goodloop-tabs-for-good/affgfbmpcboljigkpdeamhieippkglkn"
+	}[browser];
+	if ( ! href) {
+		return <span className={space(className, "disabled btn btn-secondary mt-2")} >Not available for {browser} yet</span>;
+	}
+	return <LinkOut className={space(className, "btn btn-primary mt-2")} href={href}>{browser} STORE</LinkOut>;
 };
 
 const MyLandingSection = ({ngo}) => {
