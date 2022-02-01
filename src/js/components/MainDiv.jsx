@@ -36,6 +36,11 @@ import GreenLanding from './pages/GreenLanding';
 import TabsForGoodLandingPage from './pages/TabsForGoodLandingPage';
 import CharityLandingPage from './pages/CharityLandingPage';
 import ProductsOverviewPage from './pages/ProductsOverviewPage';
+import BlogPage from './pages/BlogPage';
+import ImpactOverviewPage from './pages/ImpactOverviewPage';
+import OurStoryPage from './pages/OurStoryPage';
+import ForBusinessPage from './pages/ForBusinessPage';
+import ForCharityPage from './pages/ForCharityPage';
 
 // DataStore
 C.setupDataStore();
@@ -61,9 +66,10 @@ const SubscribePage = ({}) => {
 const PAGES = {
 	// account: BasicAccountPage,
 	my: MyPage,
-	blog: MyPage, // TODO
+	blog: BlogPage, // TODO
 	campaign: CampaignPage,
 	impact: CampaignPage,
+	impactoverview: ImpactOverviewPage,
 	// test: TestPage,
 	account: AccountPage,
 	charities: MyCharitiesPage,
@@ -80,7 +86,10 @@ const PAGES = {
 
 	home: HomePage,
 	greendash: GreenDashboard,
-	green: GreenLanding
+	green: GreenLanding,
+	ourstory: OurStoryPage,
+	forbusiness: ForBusinessPage,
+	forcharity: ForCharityPage,
 };
 // ?? switch to router??
 // const ROUTES = {
@@ -102,8 +111,8 @@ const TabsForGoodCTA = () => {
 const MainDiv = () => {
 
 	const navPageLinks = {
-		"about-us": ['our-story', 'for-business', 'for-charity'],
-		"our-impact": ['charities', 'impact', 'green'],
+		"about-us": ['ourstory', 'forbusiness', 'forcharity'],
+		"our-impact": ['charities', 'impactoverview', 'green'],
 		"our-products": ['productsoverview', 'tabsforgood'],
 		"blog":[]
 	};
