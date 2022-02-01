@@ -4,6 +4,7 @@ import { Col, Container, Row } from 'reactstrap';
 import BG from '../../base/components/BG';
 import { isPortraitMobile, space } from '../../base/utils/miscutils';
 import C from '../../C';
+import Icon from '../../base/components/Icon';
 
 const T4GCTAButton = ({className}) => {
 	return isPortraitMobile() ? (
@@ -308,10 +309,10 @@ const GetInvolvedSection = () => {
 				<div className="social-links">
 					<div className="row my-5">
 						<div className="col">
-							<a href=""><img src="" alt="twitter" /></a>
-							<a href=""><img src="" alt="facebook" /></a>
-							<a href=""><img src="" alt="instagram" /></a>
-							<a href=""><img src="" alt="linkedin" /></a>
+							<a href="https://twitter.com/goodloophq"><Icon name="twitter" /></a>
+							<a href="https://www.facebook.com/the.good.loop/"><Icon name="facebook" /></a>
+							<a href="https://www.instagram.com/goodloophq/"><Icon name="instagram" /></a>
+							<a href="https://www.linkedin.com/company/good.loop"><Icon name="linkedin" /></a>
 						</div>
 					</div>
 				</div>
