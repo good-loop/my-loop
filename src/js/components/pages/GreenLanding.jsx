@@ -35,8 +35,8 @@ const GreenLanding = ({ }) => {
 	// Originally: https://lg.good-loop.com/data?q=&start=2021-10-01&end=now&dataspace=trk&evt=pxl_green
 	// and https://lg.good-loop.com/data?q=&start=2021-10-01&end=now&dataspace=gl&evt=pxl_green
 	// New activity (2022+) will go into its own d=green dataspace with evt=pixel|redirect|?
-	let q = cid && cid !== "TOTAL_IMPACT"? "campaign:"+cid : ""; // everything?
-	let pvData = getDataLogData({q,dataspace:"green",start:"2021-10-01",breakdowns:[]});
+	// let q = cid && cid !== "TOTAL_IMPACT"? "campaign:"+cid : ""; // everything?
+	// let pvData = getDataLogData({q,dataspace:"green",start:"2021-10-01",breakdowns:[]});
 
 	// TODO Fetch dntnblock info
 
