@@ -47,8 +47,8 @@ const GreenLanding = ({ }) => {
 	// TODO only fetch eco charities
 	let dntn4charity = Campaign.dntn4charity(campaign);
 	console.log(dntn4charity);
-	let co2 = campaign.co2;
-	let trees = campaign.offsets && campaign.offsets[0] && campaign.offsets[0].n;
+	let co2 = campaign.co2 || 'XXXX';
+	let trees = campaign.offsets && campaign.offsets[0] && campaign.offsets[0].n || 'XXXX';
 
 	// Branding
 	let branding = campaign.branding || {name:"TODO branding"};	
@@ -68,22 +68,36 @@ const GreenLanding = ({ }) => {
 		}
 	}
 
-
-	return <div id="green-landing">
-		<div className="green-landing-splash">
-			<div>{branding.logo ? <img src={branding.logo} alt="brand logo" /> : JSON.stringify(branding)}</div>
-			<div className="splash-tonnes">{co2} TONNES</div>
-			carbon offset
-			<div className="splash-trees">{trees}</div>
-			trees planted<br />
-			with
-			<div className="splash-carbon-neutral">
-				CARBON NEUTRAL ADS<br />
-				BY GOOD-LOOP
+	return (
+		<div id="green-landing">
+			<div className="landing-splash full-width">
+				<img className="hummingbird" src="/img/green/hummingbird.png" />
+				<div className="splash-circle">
+					<div className="branding">{branding.logo ? <img src={branding.logo} alt="brand logo" /> : JSON.stringify(branding)}</div>
+					<div className="big-number tonnes">{co2}  TONNES</div>
+						carbon offset
+						<div className="big-number trees">{trees}</div>
+						trees planted<br/>
+						with
+						<div className="carbon-neutral-logo">
+							<img className="left" src="/img/new-logo-white.svg" />
+							<div className="right">
+								<div>CARBON NEUTRAL ADS</div>
+								<div>BY GOOD-LOOP</div>
+							</div>
+						</div>
+						<a className="btn splash-explore">EXPLORE OUR IMPACT</a>
+					</div>
 			</div>
-			<a className="splash-explore">EXPLORE OUR IMPACT</a>
+			<div className="landing-map transition-top full-width" />
+			<div className="landing-map full-width">
+				Map stuff goes here
+			</div>
+			<div className="landing-extra full-width">
+				More info
+			</div>
 		</div>
-	</div>;
+	);
 };
 
 export default GreenLanding;

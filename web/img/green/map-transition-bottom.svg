@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="2560"
+   height="1080"
+   viewBox="0 0 2560 1080"
+   version="1.1"
+   id="svg482"
+   sodipodi:docname="map-transition-bottom.svg"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview484"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="0.50351562"
+     inkscape:cx="1488.5338"
+     inkscape:cy="682.20327"
+     inkscape:window-width="2326"
+     inkscape:window-height="1106"
+     inkscape:window-x="1924"
+     inkscape:window-y="193"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="world_1_" />
+  <defs
+     id="defs5">
+    <clipPath
+       id="clip-world-map">
+      <rect
+         width="2560"
+         height="1080"
+         id="rect2" />
+    </clipPath>
+  </defs>
+  <g
+     id="world_1_"
+     data-name="world (1)"
+     transform="translate(67,20.139)"
+     opacity="1">
+    <path
+       style="fill:#52727a;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m -68,554.861 c 745.54594,451.957 1678.859,795.8403 2562,20 v 486 H -68 Z"
+       id="path2021"
+       sodipodi:nodetypes="ccccc" />
+  </g>
+</svg>

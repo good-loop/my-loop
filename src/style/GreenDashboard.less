@@ -3,85 +3,139 @@
 @nav-width: 20em;
 
 #green-dashboard {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	display: flex;
+	
 }
 
 #green-navbar {
-  width: @nav-width;
-  height: 100%;
-  background-color: @green-bg;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+	width: @nav-width;
+	height: 100%;
+	background-color: @green-bg;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
 
-  font-family: 'Montserrat';
+	font-family: 'Montserrat';
 
-  > * {
-    width: 100%;
-  }
+	> * {
+		width: 100%;
+	}
 
 
-  .logo {
-    margin: 3em auto;
-  }
+	.logo {
+		margin: 3em auto;
+	}
 
-  .nav-item {
-    &.active {
-      background: @green-highlight;
-    }
-    display: flex;
-    align-items: center;
-    color: white;
-    text-transform: uppercase;
-    text-decoration: none;
-    padding: 0.5em 0 0.5em 3em;
-  }
+	.nav-item {
+		&.active {
+			background: @green-highlight;
+		}
+		display: flex;
+		align-items: center;
+		color: white;
+		text-transform: uppercase;
+		text-decoration: none;
+		padding: 0.5em 0 0.5em 3em;
+	}
 
-  .green-nav-icon {
-    position: relative;
-    display: inline-blaock;
-    width: 3em;
-    height: 3em;
-    border-radius: 50%;
-    background-color: white;
-    margin-right: 1em;
-  }
+	.green-nav-icon {
+		position: relative;
+		display: inline-blaock;
+		width: 3em;
+		height: 3em;
+		border-radius: 50%;
+		background-color: white;
+		margin-right: 1em;
+	}
 
 
 }
 
 .green-subpage {
-  flex-grow: 1;
-  height: 100%;
+	flex-grow: 1;
+	height: 100%;
 }
 
 .green-card {
-  display: flex;
-  flex-direction: column;
-  .gc-body {
-    background-color: white;
-    box-shadow: 0 0.25em 0.5em rgb(0 0 0 / 40%);
-    border-radius: 0.5em;
-    flex-grow: 1;
-  }
+	display: flex;
+	flex-direction: column;
+	.gc-body {
+		background-color: white;
+		box-shadow: 0 0.25em 0.5em rgb(0 0 0 / 40%);
+		border-radius: 0.5em;
+		flex-grow: 1;
+	}
 }
 
 #green-landing {
-  .green-landing-splash {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    height: 80vh;
-    width: 80vh;
-    background-color: #5f7d93;
-    border-radius: 50%;
+	.landing-splash, .landing-map {
+		height: 100vh;
+		background-size: cover;
+		background-position:center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
 
-  }
+	.landing-splash {
+		background-image: url("/img/green/dashboard-background.svg");
+	}
+	.hummingbird {
+		position: absolute;
+		height: 15vw;
+		width: 15vw;
+		top: 30vh;
+		left: 5vw;
+		object-fit: contain;
+	}
+
+	.splash-circle {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		height: 80vh;
+		width: 80vh;
+		background-color: rgba(40, 105, 132, 0.8);
+		border-radius: 50%;
+		text-transform: uppercase;
+		.big-number {
+			font-family: "Montserrat";
+			font-weight: bold;
+			font-size: 200%;
+		}
+		.carbon-neutral-logo {
+			height: 2em;
+
+			.left {
+				display: inline-block;
+				width: 2em;
+			}
+			.right {
+				display: inline-flex;
+				flex-direction: column;
+				justify-content: space-between;
+				align-items: center;
+				> * {
+					text-align: justify;
+					text-justify: inter-character;
+					font-weight: bold;
+					width: 100%;
+				}
+			}
+		}
+	}
+
+	.landing-map {
+		background-image: url("/img/green/world-map.svg");
+	}
+
+	.landing-extra {
+		background-color: #52727a;
+	}
 }
