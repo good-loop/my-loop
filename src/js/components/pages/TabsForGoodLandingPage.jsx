@@ -7,6 +7,12 @@ import C from '../../C';
 import CharityLogo from '../CharityLogo';
 import { MyLandingSection, T4GCTAButton } from './CommonComponents';
 
+
+// Copywriting https://docs.google.com/document/d/1_mpbdWBeaIEyKHRr-mtC1FHAPEfokcRZTHXgMkYJyVk/edit#heading=h.5r45wnjwbf7j
+// Design https://miro.com/app/board/o9J_lxO4FyI=/?moveToWidget=3458764517456508960&cot=14
+// https://miro.com/app/board/o9J_lxO4FyI=/?moveToWidget=3458764516139446040&cot=14
+
+
 export const WhatIsTabsForGood = ({ngo}) => {
 	const causesText = (
 		ngo && `Tabs for Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into money for ${ngo.name}.`
