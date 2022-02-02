@@ -1,4 +1,5 @@
 import React from 'react';
+import { Container } from 'reactstrap';
 import Misc from '../../base/components/Misc';
 import { setNavProps } from '../../base/components/NavBar';
 import Campaign from '../../base/data/Campaign';
@@ -75,26 +76,35 @@ const GreenLanding = ({ }) => {
 				<div className="splash-circle">
 					<div className="branding">{branding.logo ? <img src={branding.logo} alt="brand logo" /> : JSON.stringify(branding)}</div>
 					<div className="big-number tonnes">{co2}  TONNES</div>
-						carbon offset
-						<div className="big-number trees">{trees}</div>
-						trees planted<br/>
-						with
-						<div className="carbon-neutral-logo">
-							<img className="left" src="/img/new-logo-white.svg" />
-							<div className="right">
-								<div>CARBON NEUTRAL ADS</div>
-								<div>BY GOOD-LOOP</div>
-							</div>
-						</div>
-						<a className="btn splash-explore">EXPLORE OUR IMPACT</a>
+					carbon offset
+					<div className="big-number trees">{trees}</div>
+					trees planted<br/>
+					<div className="carbon-neutral-container">
+						with <img className="carbon-neutral-logo" src="/img/green/gl-carbon-neutral.svg" />
 					</div>
+					<a className="btn splash-explore">EXPLORE OUR IMPACT</a>
+				</div>
 			</div>
-			<div className="landing-map transition-top full-width" />
+			<div className="mission full-width pb-1">
+				<Container>
+					<h2>CARBON NEUTRAL ADVERTISING</h2>
+					<p>Text about Good-Loop's mission to make advertising carbon neutral and climate positive</p>
+					<p>Mention of certified carbon offsets; global NGO projects</p>
+				</Container>
+			</div>
+
 			<div className="landing-map full-width">
+				<div className="map-transition-top" />
+				<div className="map-transition-bottom" />
 				Map stuff goes here
 			</div>
-			<div className="landing-extra full-width">
-				More info
+			
+			<div className="landing-extra full-width pb-1">
+				<Container>
+					<h2>OPPORTUNITY FOR FURTHER INFO</h2>
+					<p>Info about the small print, link to further info...</p>
+					<p>More information or stories related to impact of projects</p>
+				</Container>
 			</div>
 		</div>
 	);

@@ -1,5 +1,7 @@
-@green-bg: #52727a;
+@green-bg-light: #477b73;
+@green-bg-dark: #52727a;
 @green-highlight: #698983;
+@blue-highlight: #69a4b9;
 @nav-width: 20em;
 
 #green-dashboard {
@@ -13,7 +15,7 @@
 #green-navbar {
 	width: @nav-width;
 	height: 100%;
-	background-color: @green-bg;
+	background-color: @green-bg-dark;
 	z-index: 1;
 	display: flex;
 	flex-direction: column;
@@ -72,10 +74,13 @@
 }
 
 #green-landing {
+	font-family: "Montserrat";
+	color: white;
+
 	.landing-splash, .landing-map {
 		height: 100vh;
 		background-size: cover;
-		background-position:center;
+		background-position: center;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -84,6 +89,7 @@
 	.landing-splash {
 		background-image: url("/img/green/dashboard-background.svg");
 	}
+
 	.hummingbird {
 		position: absolute;
 		height: 15vw;
@@ -104,38 +110,68 @@
 		background-color: rgba(40, 105, 132, 0.8);
 		border-radius: 50%;
 		text-transform: uppercase;
+		font-size: 2.5vh;
+		.branding {
+			height: 4em;
+			padding: 0.25em;
+			border-radius: 2em;
+			background-color: white;
+			img {
+				position: relative;
+				height: 3.5em;
+			}
+		}
 		.big-number {
-			font-family: "Montserrat";
 			font-weight: bold;
 			font-size: 200%;
 		}
-		.carbon-neutral-logo {
-			height: 2em;
-
-			.left {
-				display: inline-block;
-				width: 2em;
-			}
-			.right {
-				display: inline-flex;
-				flex-direction: column;
-				justify-content: space-between;
-				align-items: center;
-				> * {
-					text-align: justify;
-					text-justify: inter-character;
-					font-weight: bold;
-					width: 100%;
-				}
-			}
+		.carbon-neutral-container {
+			display: flex;
+			align-items: center;
+			text-transform: none;
 		}
+		.carbon-neutral-logo {
+			height: 7em;
+		}
+		.splash-explore {
+			background-color: @blue-highlight;
+			border: 2px solid white;
+		}
+	}
+
+	.mission {
+		background-color: @green-bg-light;
+		text-align: center;
 	}
 
 	.landing-map {
 		background-image: url("/img/green/world-map.svg");
+		background-repeat: no-repeat;
+		background-color: #76a1b7;
+	}
+
+	.map-transition-top, .map-transition-bottom {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		background-repeat: no-repeat;
+	}
+
+	.map-transition-top {
+		background-image: url("/img/green/map-transition-top.svg");
+		background-position: top;
+	}
+
+	.map-transition-bottom {
+		background-image: url("/img/green/map-transition-bottom.svg");
+		background-position: bottom;
 	}
 
 	.landing-extra {
-		background-color: #52727a;
+		background-color: @green-bg-dark;
+		text-align: center;
+		background-image: url("/img/green/more-info-bg.svg");
+		background-size: 100%; // 100% width; height maintains aspect
+		background-repeat: repeat-y;
 	}
 }
