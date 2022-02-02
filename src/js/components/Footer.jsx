@@ -1,10 +1,10 @@
 import React from 'react';
-import { space } from '../base/utils/miscutils';
+import { Container, Row, Col } from 'reactstrap';
+import PropControl from '../base/components/PropControl';
+import { space, equals } from '../base/utils/miscutils';
 
 /**
- *
- * @param leftFooter {String} Markdown text
- * @param rightFooter {String} Markdown text
+ * @deprecated No longer used in My-Loop - remove?
  * @param style {Object} css styling
  */
 const Footer = ({className, style }) => (
@@ -52,4 +52,45 @@ const Footer = ({className, style }) => (
 	</footer>
 );
 
+const setFooterClassName = (className) => {
+	// NB: update if not equals, which avoids the infinite loop bug of default update behaviour
+	if (equals(getFooterClassName(), className)) {
+		return; // no-op
+	}
+	DataStore.setValue(['widget','Footer', 'className'], className);
+}
+
+const getFooterClassName = () => DataStore.getValue(['widget','Footer', 'className']) || DataStore.setValue(['widget','Footer', 'className'], '', false);
+
+/**
+ * The current My-Loop footer
+ * @param {?String} className
+ * @param {?String} style
+ */
+const MyLoopFooter = ({className, style}) => {
+	// Allow inner pages to modify className for styling
+	let dsClassName = getFooterClassName();
+	const fullClassName = space('my-loop-footer', className, dsClassName);
+	return <Container fluid className={fullClassName} style={style}>
+		<Row>
+			<img src="/img/curves/curve-dark-turquoise.svg" className='w-100 footer-curve'/>
+			<img src="/img/footer/Hummingbird.png" className='hummingbird'/>
+			<div className='bg-gl-dark-turquoise w-100 p-5' style={{marginTop:-1}}>
+				<Row>
+					<Col md={6}>
+						<p className='white'><b>Sign up to our Newsletter for some Good News :)</b></p>
+						{/* TODO make function */}
+						<PropControl prop="email" path={["widget", "newsletter"]} type="text" placeholder="yourname@youremail.com" className="newsletter-email"/>
+						<button className="btn btn-subscribe">Subscribe</button>
+					</Col>
+					<Col md={6}>
+						
+					</Col>
+				</Row>
+			</div>
+		</Row>
+	</Container>;
+}
+
 export default Footer;
+export {MyLoopFooter, setFooterClassName};

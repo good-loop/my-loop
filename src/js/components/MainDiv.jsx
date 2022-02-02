@@ -20,7 +20,7 @@ import GetInvolvedPage from './pages/GetInvolvedPage';
 import CampaignPage from './campaignpage/CampaignPage';
 import E404Page from '../base/components/E404Page';
 import AccountPage from './pages/AccountPage';
-import Footer from './Footer';
+import Footer, {MyLoopFooter} from './Footer';
 import MyGLAboutPage from './MyGLAboutPage';
 import SubscriptionBox from './cards/SubscriptionBox';
 import { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
@@ -134,6 +134,7 @@ const MainDiv = () => {
 		navbarBackgroundColour="white"
 		// navbarLabels={getNavbarLabels}
 		fullWidthPages={["impact", 'home', 'charity']}
+		Footer={MyLoopFooter}
 		noRegister
 	/>);
 };

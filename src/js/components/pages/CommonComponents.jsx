@@ -6,8 +6,17 @@ import { getBrowserVendor, isPortraitMobile, space } from '../../base/utils/misc
 import C from '../../C';
 import Icon from '../../base/components/Icon';
 
+const PageCard = ({className, children}) => {
+	return <Container fluid className={space('page-card', className)}>
+		<Container>
+			{children}
+		</Container>
+	</Container>
+};
+
 const T4GCTAButton = ({className}) => {
 	return isPortraitMobile() ? (
+		// TODO make this button function
 			<C.A className={space("btn btn-primary", className)}>
 				Email me a link for desktop
 			</C.A>
@@ -34,7 +43,7 @@ const MyLandingSection = ({ngo}) => {
 
 	return (
 		<>
-            <BG src={(ngo && ngo.images) || ""} className="landing-bg">
+            <BG src={isPortraitMobile() ? null : ((ngo && ngo.images) || "")} className="landing-bg">
                 <BG src="/img/LandingCharity/t4g-splash-screen-background.svg" className="landing-splash">
                     <Container fluid className="d-flex justify-content-center">
                         <Row className="mb-3 mt-5">
@@ -75,29 +84,29 @@ const CharityCarousel = () => {
 };
 
 
-const HowTabsForGoodWorks = () => {
+const HowTabsForGoodWorks = ({classname}) => {
 	return (
-		<Container className="how-tabs-for-good-works text-center pt-3">
+		<PageCard className={space("how-tabs-for-good-works bg-gl-pale-orange text-center", classname)}>
 			<h1>How Tabs For Good Works</h1>
 			<Row className="pt-5">
-				<Col md={4}>
+				<Col md={4} className='pt-2 pt-md-0'>
 					<img className='w-50' src="/img/homepage/globe.png" alt="" />
 					<h3 className='pt-4'>Open a tab</h3>
 					<p className='pt-3'>When you open a new tab, we display a small unobtrusive banner ad at the bottom of your page while you're busy browsing away. </p>
 				</Col>
-				<Col md={4}>
+				<Col md={4} className='pt-2 pt-md-0'>
 					<img className='w-50' src="/img/homepage/heart.png" alt="" />
 					<h3 className='pt-4'>Unlock a donation</h3>
 					<p className='pt-3'>As a thank you for letting the ad appear on your page, 
 						you make a free donation to charity, funded by us. 50% of the ad money to be precise. </p>
 				</Col>
-				<Col md={4}>
+				<Col md={4} className='pt-2 pt-md-0'>
 					<img className='w-50' src="/img/homepage/world.png" alt="" />
 					<h3 className='pt-4'>That's it!</h3>
 					<p className='pt-3'>We don't track your online activity and you don't even have to click on the ad to make the donation happen. It really is that simple. </p>
 				</Col>
 			</Row>
-		</Container>
+		</PageCard>
 	);
 };
 
@@ -116,56 +125,51 @@ const TabsForGoodSlideSection = () => {
 	}
 
 	return (
-		<div className="tabs-for-goods-slide-card">
-			<div className="container">
-				<div className="upper-cta text-center white">
-					<p>Start transforming your web browsing into life saving vaccines, meals for children in need, preserving habitats for endangered animals, plus many more good causes.</p>
-					<div className="upper-cta-btn">
-						<RegisterLink className="btn btn-primary w-100 text-uppercase">
-							Sign up for the Tabs For Good
-						</RegisterLink>
-						<button className="btn btn-secondary w-100 text-uppercase mt-3">
-							Learn More About Tabs For Good
-						</button>
+		<PageCard className="tabs-for-goods-slide-card">
+			<div className="upper-cta text-center white">
+				<h4>Start transforming your web browsing into life saving vaccines, meals for children in need, preserving habitats for endangered animals, plus many more good causes.</h4>
+				<div className="upper-cta-btn mt-5">
+					<T4GCTAButton className="w-100"/>
+					<button className="btn btn-secondary w-100 text-uppercase mt-3">
+						Learn More About Tabs For Good
+					</button>
+				</div>
+			</div>
+			<div className="slideshow mt-5">
+				<div className={"slide row "+slider1}>
+					<div className="col-md-6 slide-left text-center p-5">
+						<h3 className='mt-5'>Slide 1 of 2</h3>
+						<p className='mt-5'>Visualisation of picking a charity and getting browsing with T4G</p>
+						<div className="slideshowDots">
+							<div className={"slideshowDot "+slider1} onClick={clickSlider1}></div>
+							<div className={"slideshowDot "+slider2} onClick={clickSlider2}></div>
+						</div>
+					</div>
+					<div className="col-md-6 slide-right p-5">
+						<h3>It couldn't be easier to get started</h3>
+						<p>Sign up for Tabs For Good. <br/>
+						Pick the charity you want to support. <br/>
+						Start browsing with the Tabs for Good plugin and raise money for charity. For free.</p>
+						<a className="btn btn-primary" href="#">Sign up for Tabs for Good</a>
 					</div>
 				</div>
-				<div className="slideshow mt-5">
-					<div className={"slide row "+slider1}>
-						<div className="col-md-6 slide-left text-center p-5">
-							<h3 className='mt-5'>Slide 1 of 2</h3>
-							<p className='mt-5'>Visualisation of picking a charity and getting browsing with T4G</p>
-							<div className="slideshowDots">
-								<div className={"slideshowDot "+slider1} onClick={clickSlider1}></div>
-								<div className={"slideshowDot "+slider2} onClick={clickSlider2}></div>
-							</div>
-						</div>
-						<div className="col-md-6 slide-right p-5">
-							<h3>It couldn't be easier to get started</h3>
-							<p>Sign up for Tabs For Good. <br/>
-							Pick the charity you want to support. <br/>
-							Start browsing with the Tabs for Good plugin and raise money for charity. For free.</p>
-							<a className="btn btn-primary" href="#">Sign up for Tabs for Good</a>
+				<div className={"slide row "+slider2}>
+					<div className="col-md-6 slide-left-2 text-center p-5">
+						<h3 className='mt-5'>Slide 2 of 2</h3>
+						<p className='mt-5'>Visualisation of picking a charity and getting browsing with T4G</p>
+						<div className="slideshowDots">
+							<div className={"slideshowDot "+slider1} onClick={clickSlider1}></div>
+							<div className={"slideshowDot "+slider2} onClick={clickSlider2}></div>
 						</div>
 					</div>
-					<div className={"slide row "+slider2}>
-						<div className="col-md-6 slide-left-2 text-center p-5">
-							<h3 className='mt-5'>Slide 2 of 2</h3>
-							<p className='mt-5'>Visualisation of picking a charity and getting browsing with T4G</p>
-							<div className="slideshowDots">
-								<div className={"slideshowDot "+slider1} onClick={clickSlider1}></div>
-								<div className={"slideshowDot "+slider2} onClick={clickSlider2}></div>
-							</div>
-						</div>
-						<div className="col-md-6 slide-right p-5">
-							<h3>It couldn't be easier to get started</h3>
-							<p>Follow your online impact in the My.Good-Loop hub and see how much you're raising for charity - just be browsing the internet.</p>
-							<a className="btn btn-primary" href="#">Sign up for Tabs for Good</a>
-						</div>
+					<div className="col-md-6 slide-right p-5">
+						<h3>It couldn't be easier to get started</h3>
+						<p>Follow your online impact in the My.Good-Loop hub and see how much you're raising for charity - just be browsing the internet.</p>
+						<a className="btn btn-primary" href="#">Sign up for Tabs for Good</a>
 					</div>
 				</div>
 			</div>
-
-		</div>
+		</PageCard>
 	)
 };
 
@@ -299,67 +303,71 @@ const WatchVideoSection = () => {
 
 const GetInvolvedSection = () => {
 	return(
-		<div className="get-involved-section">
-			<div className="container text-center">
-				<h1>THIS IS JUST THE BEGINNING. SIGN UP AND JOIN OUR MOVEMENT.</h1>
-				<p>We’re developing exciting new products that will help us all make the internet a more positive place. Register below to get exclusive access to future product launches and join the Good-Loop movement.</p>
-				<div className="row pt-5">
-					<div className="col-md-4">
-						<img className='w-50' src="/img/homepage/globe.png" alt="" />
-						<h3 className='pt-4'>Donate to charity. For free. </h3>
-					</div>
-					<div className="col-md-4">
-						<img className='w-50' src="/img/homepage/heart.png" alt="" />
-						<h3 className='pt-4'>Make the world a better place</h3>
-					</div>
-					<div className="col-md-4">
-						<img className='w-50' src="/img/homepage/world.png" alt="" />
-						<h3 className='pt-4'>Just by browsing the internet</h3>
-					</div>
+		<PageCard className="get-involved-section text-center">
+			<h1>THIS IS JUST THE BEGINNING. SIGN UP AND JOIN OUR MOVEMENT.</h1>
+			<p>We’re developing exciting new products that will help us all make the internet a more positive place. Register below to get exclusive access to future product launches and join the Good-Loop movement.</p>
+			<div className="row pt-5">
+				<div className="col-md-4">
+					<img className='w-50' src="/img/homepage/globe.png" alt="" />
+					<h3 className='pt-4'>Donate to charity. For free. </h3>
 				</div>
-				<a className='btn btn-primary' href="#">Join the Good-Loop Movement</a>
-				<div className="social-links">
-					<div className="row my-5">
-						<div className="col">
-							<a href="https://twitter.com/goodloophq"><Icon name="twitter" /></a>
-							<a href="https://www.facebook.com/the.good.loop/"><Icon name="facebook" /></a>
-							<a href="https://www.instagram.com/goodloophq/"><Icon name="instagram" /></a>
-							<a href="https://www.linkedin.com/company/good.loop"><Icon name="linkedin" /></a>
-						</div>
+				<div className="col-md-4">
+					<img className='w-50' src="/img/homepage/heart.png" alt="" />
+					<h3 className='pt-4'>Make the world a better place</h3>
+				</div>
+				<div className="col-md-4">
+					<img className='w-50' src="/img/homepage/world.png" alt="" />
+					<h3 className='pt-4'>Just by browsing the internet</h3>
+				</div>
+			</div>
+			<a className='btn btn-primary' href="#">Join the Good-Loop Movement</a>
+			<div className="social-links">
+				<div className="row my-5">
+					<div className="col">
+						<a href="https://twitter.com/goodloophq"><Icon name="twitter" /></a>
+						<a href="https://www.facebook.com/the.good.loop/"><Icon name="facebook" /></a>
+						<a href="https://www.instagram.com/goodloophq/"><Icon name="instagram" /></a>
+						<a href="https://www.linkedin.com/company/good.loop"><Icon name="linkedin" /></a>
 					</div>
 				</div>
 			</div>
-		</div>
+		</PageCard>
 	)
 };
 
 const TriCards = () => {
 	return(
-		<div className="container">
-			<div className="row mt-5">
-				<div className="col-md-4"> 
-					<div className="tircard-inner">
-						<img className='w-100' src="img/homepage/good-loop-for-business.png" alt="" />
-						<h4>Good Loop For Business</h4>
-						<p>Discover... a sentence about this page/article <a href="#">Read More</a></p>
+		<Container>
+			<Row className="mt-5">
+				<Col md={4} className='pt-2 pt-md-0'> 
+					<div className="tricard-inner">
+						<img className='w-100' src="/img/homepage/good-loop-for-business.png" alt="" />
+						<div className='p-3'>
+							<h3>Good Loop For Business</h3>
+							<p>Discover... a sentence about this page/article <C.A href="#">Read More</C.A></p>
+						</div>
 					</div>
-				</div>
-				<div className="col-md-4">
-					<div className="tircard-inner">
-						<img className='w-100' src="img/homepage/tree-planting.png" alt="" />
-						<h4>Tree Planting For The Future</h4>
-						<p>Discover... a sentence about this page/article <a href="#">Read More</a></p>
+				</Col>
+				<Col md={4} className='pt-2 pt-md-0'>
+					<div className="tricard-inner">
+						<img className='w-100' src="/img/homepage/tree-planting.png" alt="" />
+						<div className='p-3'>
+							<h3>Tree Planting For The Future</h3>
+							<p>Discover... a sentence about this page/article <C.A href="#">Read More</C.A></p>
+						</div>
 					</div>
-				</div>
-				<div className="col-md-4">
-					<div className="tircard-inner">
-						<img className='w-100' src="img/homepage/amyanddaniel.png" alt="" />
-						<h4>How It All Began</h4>
-						<p>Discover... a sentence about this page/article <a href="#">Read More</a></p>
+				</Col>
+				<Col md={4} className='pt-2 pt-md-0'>
+					<div className="tricard-inner">
+						<img className='w-100' src="/img/homepage/amyanddaniel.png" alt="" />
+						<div className='p-3'>
+							<h3>How It All Began</h3>
+							<p>Discover... a sentence about this page/article <C.A href="#">Read More</C.A></p>
+						</div>
 					</div>
-				</div>
-			</div>
-		</div>
+				</Col>
+			</Row>
+		</Container>
 	)
 };
 
@@ -374,5 +382,6 @@ export {
     CharityBanner,
     CharityCarousel,
     MyLandingSection,
-	T4GCTAButton
+	T4GCTAButton,
+	PageCard
 };
