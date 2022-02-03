@@ -45,7 +45,7 @@ const HomePage = ({spring}) => {
 			<MyLandingSection />
 			<CharityCarousel />
 			<HowTabsForGoodWorks />
-			<TabsForGoodSlideSection />
+			<TabsForGoodSlideSection img="/img/homepage/charities.png" />
 			<CharityBanner />
 			<WatchVideoSection />
 			<NewsSection />
