@@ -32,7 +32,6 @@ export const T4GSignUpModal = () => {
 	}, [""+window.location]);
 
 	return (
-		<>
 		<Modal
 			isOpen={show}
 			className="login-modal"
@@ -46,7 +45,5 @@ export const T4GSignUpModal = () => {
 				TODO
 			</ModalBody>
 		</Modal>
-		<h2>{""+show}</h2>
-		</>
 	);
 };

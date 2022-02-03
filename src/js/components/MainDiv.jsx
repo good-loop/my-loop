@@ -42,6 +42,7 @@ import OurStoryPage from './pages/OurStoryPage';
 import ForBusinessPage from './pages/ForBusinessPage';
 import ForCharityPage from './pages/ForCharityPage';
 import { T4GSignUpModal } from './T4GSignUp';
+import { nonce } from '../base/data/DataClass';
 
 // DataStore
 C.setupDataStore();
@@ -131,7 +132,7 @@ const MainDiv = () => {
 		navbarPages={navPageLinks}
 		navbarLabels={navPageLabels}
 		navbarDarkTheme={false}
-		navbarChildren={<><TabsForGoodCTA/><T4GSignUpModal /></>}		
+		navbarChildren={() => <><TabsForGoodCTA/><T4GSignUpModal /></>}	
 		navbarBackgroundColour="white"
 		// navbarLabels={getNavbarLabels}
 		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood']}

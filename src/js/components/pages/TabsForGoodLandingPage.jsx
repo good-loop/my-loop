@@ -5,12 +5,8 @@ import KStatus from '../../base/data/KStatus';
 import { getDataItem } from '../../base/plumbing/Crud';
 import C from '../../C';
 import CharityLogo from '../CharityLogo';
-<<<<<<< HEAD
 import { T4GSignUpModal } from '../T4GSignUp';
-import { MyLandingSection, T4GCTAButton } from './CommonComponents';
-=======
 import { MyLandingSection, T4GCTAButton, WhatIsTabsForGood, HowTabsForGoodWorks, TabsForGoodSlideSection, WatchVideoSection, TriCards } from './CommonComponents';
->>>>>>> d39b5f2203b41364c4bda2569e8c496f7f986ddc
 
 
 // Copywriting https://docs.google.com/document/d/1_mpbdWBeaIEyKHRr-mtC1FHAPEfokcRZTHXgMkYJyVk/edit#heading=h.5r45wnjwbf7j
