@@ -1,10 +1,15 @@
 
 import React, { useState, useEffect } from 'react';
-import { Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Button, Form, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import CloseButton from '../base/components/CloseButton';
 import { getShowLogin, setShowLogin } from '../base/components/LoginWidget';
 import Misc from '../base/components/Misc';
 import DataStore from '../base/plumbing/DataStore';
-import { space, stopEvent } from '../base/utils/miscutils';
+import { getBrowserVendor, isMobile, space, stopEvent } from '../base/utils/miscutils';
+
+// Design: https://miro.com/app/board/o9J_lxO4FyI=/?moveToWidget=3458764517111672164&cot=14
+// Copy: https://docs.google.com/document/d/1_mpbdWBeaIEyKHRr-mtC1FHAPEfokcRZTHXgMkYJyVk/edit?usp=sharing
+
 
 const WIDGET_PATH = ['widget', 'T4GSignUp'];
 const SHOW_PATH = [...WIDGET_PATH, 'show'];
@@ -12,7 +17,6 @@ const STATUS_PATH = [...WIDGET_PATH, 'status'];
 
 const showLogin = (s=true) => {
 	DataStore.setValue(SHOW_PATH, s);
-	DataStore.update();
 };
 
 export const T4GSignUpButton = ({className,children}) => {		
@@ -34,16 +38,24 @@ export const T4GSignUpModal = () => {
 	return (
 		<Modal
 			isOpen={show}
-			className="login-modal"
+			className="T4G-modal"
 			toggle={() => showLogin(!show)}
 			size="lg"
 		>
-			<ModalHeader toggle={() => showLogin(!show)}>				
-				Sign Up
-			</ModalHeader>
 			<ModalBody>
-				TODO
+				<div className='pull-left'><CloseButton size='lg' onClick={() => showLogin(false)}/></div>
+				{isMobile()? <DesktopSignUp /> : <MobileSendEmail />}
 			</ModalBody>
 		</Modal>
 	);
+};
+
+const MobileSendEmail = () => {
+	return (<Form>
+		<div style={{textTransform:"capitalize"}}>
+			We'll email you a link for desktop so you can start raising money for charity while you browse
+		</div>
+		
+		<Button>Submit</Button>
+	</Form>);
 };

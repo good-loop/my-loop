@@ -13,14 +13,13 @@ import Crud from '../base/plumbing/Crud'; // Crud is loaded here to init (but no
 import LoginWidget from '../base/components/LoginWidget';
 
 // Pages
-import MyPage, { HowItWorksCard } from './pages/MyPage';
 import MyCharitiesPage from './pages/MyCharitiesPage';
 import MyAdCampaignsPage from './pages/MyAdCampaignsPage';
 import GetInvolvedPage from './pages/GetInvolvedPage';
 import CampaignPage from './campaignpage/CampaignPage';
 import E404Page from '../base/components/E404Page';
 import AccountPage from './pages/AccountPage';
-import Footer, {MyLoopFooter} from './Footer';
+import Footer from './Footer';
 import MyGLAboutPage from './MyGLAboutPage';
 import SubscriptionBox from './cards/SubscriptionBox';
 import { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
@@ -41,7 +40,7 @@ import ImpactOverviewPage from './pages/ImpactOverviewPage';
 import OurStoryPage from './pages/OurStoryPage';
 import ForBusinessPage from './pages/ForBusinessPage';
 import ForCharityPage from './pages/ForCharityPage';
-import { T4GSignUpModal } from './T4GSignUp';
+import { T4GSignUpButton, T4GSignUpModal } from './T4GSignUp';
 import { nonce } from '../base/data/DataClass';
 
 // DataStore
@@ -51,14 +50,12 @@ C.setupDataStore();
 ServerIO.USE_PROFILER = true;
 
 /**
- * Subscribe box as a single page
+ * Subscribe box as a single page??
  */
 const SubscribePage = ({}) => {
-
 	return (<>
 		<div className="Subscribe widepage">
 			<SubscriptionBox title="Subscribe to our monthly newsletter" className="bg-gl-light-red big-sub-box"/>
-			<HowItWorksCard />
 		</div>
 	</>);
 }
@@ -66,8 +63,6 @@ const SubscribePage = ({}) => {
 // Actions
 
 const PAGES = {
-	// account: BasicAccountPage,
-	my: MyPage,
 	blog: BlogPage, // TODO
 	campaign: CampaignPage,
 	impact: CampaignPage,
@@ -78,7 +73,6 @@ const PAGES = {
 	charity: CharityLandingPage,
 	ads: MyAdCampaignsPage,
 	involve: GetInvolvedPage,
-	howitworks: MyPage,
 	subscribe: SubscribePage,
 	about: MyGLAboutPage,
 	register: NewtabCharityLogin,
@@ -107,7 +101,9 @@ Login.app = C.app.id;
 Login.dataspace = C.app.dataspace;
 
 const TabsForGoodCTA = () => {
-	return <C.A className="btn btn-info mb-1 mr-2" href="/tabsforgood">GET TABS FOR GOOD</C.A>;
+	let path = DataStore.getValue("location","path");
+	return path[0]==="tabsforgood"? <T4GSignUpButton />
+		: <C.A className="btn btn-info mb-1 mr-2" href="/tabsforgood">GET TABS FOR GOOD</C.A>;
 }
 
 const MainDiv = () => {
@@ -136,7 +132,7 @@ const MainDiv = () => {
 		navbarBackgroundColour="white"
 		// navbarLabels={getNavbarLabels}
 		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood']}
-		Footer={MyLoopFooter}
+		Footer={Footer}
 		noRegister
 	></MainDivBase>);
 };
