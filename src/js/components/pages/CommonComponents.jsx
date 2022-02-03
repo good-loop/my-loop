@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { RegisterLink, setLoginVerb, setShowLogin } from '../../base/components/LoginWidget';
-import { Col, Container, Row } from 'reactstrap';
+import { Col, Container, Row, Carousel, CarouselControl, CarouselItem } from 'reactstrap';
 import BG from '../../base/components/BG';
 import { getBrowserVendor, isPortraitMobile, space } from '../../base/utils/miscutils';
 import C from '../../C';
@@ -112,23 +112,61 @@ const HowTabsForGoodWorks = ({classname}) => {
 	);
 };
 
-const TabsForGoodSlideSection = () => {
+const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassName}) => {
 
-	const [slider1, setSlider1] = useState('active');
-	const [slider2, setSlider2] = useState('inactive');
+	const [animating, setAnimating] = useState(false);
+	const [index, setIndex] = useState(0);
 
-	const clickSlider1 = () => {
-		setSlider1('active');
-		setSlider2('inactive');
+	const name = (ngo && ngo.name) || "charity";
+
+	const items = [
+		<>
+			<p>Sign up for Tabs for Good.</p>
+			<p>Start browsing with the Tabs for Good plugin.</p>
+			<p>Raise money for {name}. For free.</p>
+		</>,
+		<>
+			<p>Follow your online impact in the My.Good-Loop hub and see how much you’re raising for {name} – just by browsing the internet.</p>
+		</>
+	];
+
+	const next = () => {
+		if (animating) return;
+		const nextIndex = index === items.length - 1 ? 0 : index + 1;
+		setIndex(nextIndex);
 	}
-	const clickSlider2 = () => {
-		setSlider1('inactive');
-		setSlider2('active');
+	
+	const previous = () => {
+		if (animating) return;
+		const nextIndex = index === 0 ? items.length - 1 : index - 1;
+		setIndex(nextIndex);
+	}
+	
+	const goToIndex = (newIndex) => {
+		if (animating) return;
+		setIndex(newIndex);
 	}
 
-	return (
-		<PageCard className="tabs-for-goods-slide-card">
-			<div className="upper-cta text-center white">
+	const slides = items.map((content, i) => (
+		<CarouselItem
+			key={i}
+			//className="slide-right"
+			onExiting={() => setAnimating(true)}
+			onExited={() => setAnimating(false)}
+		>
+			<div className='d-flex flex-column justify-content-between h-100'>
+				<h3>It couldn't be easier to get started</h3>
+				<div className='slide-content'>
+					{content}
+				</div>
+				<T4GCTAButton className="t4gcta"/>
+			</div>
+		</CarouselItem>
+	));
+
+	return (<>
+		<PageCard className={space("tabs-for-goods-slide-card", bgClassName)}>
+			{showUpperCTA && <div className="upper-cta text-center white">
 				<h4>Start transforming your web browsing into life saving vaccines, meals for children in need, preserving habitats for endangered animals, plus many more good causes.</h4>
 				<div className="upper-cta-btn mt-5">
 					<T4GCTAButton className="w-100"/>
@@ -136,43 +174,61 @@ const TabsForGoodSlideSection = () => {
 						Learn More About Tabs For Good
 					</button>
 				</div>
-			</div>
-			<div className="slideshow mt-5">
-				<div className={"slide row "+slider1}>
-					<div className="col-md-6 slide-left text-center p-5">
-						<h3 className='mt-5'>Slide 1 of 2</h3>
-						<p className='mt-5'>Visualisation of picking a charity and getting browsing with T4G</p>
-						<div className="slideshowDots">
-							<div className={"slideshowDot "+slider1} onClick={clickSlider1}></div>
-							<div className={"slideshowDot "+slider2} onClick={clickSlider2}></div>
-						</div>
-					</div>
-					<div className="col-md-6 slide-right p-5">
-						<h3>It couldn't be easier to get started</h3>
-						<p>Sign up for Tabs For Good. <br/>
-						Pick the charity you want to support. <br/>
-						Start browsing with the Tabs for Good plugin and raise money for charity. For free.</p>
-						<a className="btn btn-primary" href="#">Sign up for Tabs for Good</a>
-					</div>
-				</div>
-				<div className={"slide row "+slider2}>
-					<div className="col-md-6 slide-left-2 text-center p-5">
-						<h3 className='mt-5'>Slide 2 of 2</h3>
-						<p className='mt-5'>Visualisation of picking a charity and getting browsing with T4G</p>
-						<div className="slideshowDots">
-							<div className={"slideshowDot "+slider1} onClick={clickSlider1}></div>
-							<div className={"slideshowDot "+slider2} onClick={clickSlider2}></div>
-						</div>
-					</div>
-					<div className="col-md-6 slide-right p-5">
-						<h3>It couldn't be easier to get started</h3>
-						<p>Follow your online impact in the My.Good-Loop hub and see how much you're raising for charity - just be browsing the internet.</p>
-						<a className="btn btn-primary" href="#">Sign up for Tabs for Good</a>
-					</div>
-				</div>
-			</div>
+			</div>}
+			<Row className="slideshow mt-5" noGutters>
+				<Col md={6} className="slide-left overflow-hidden d-none d-md-flex">
+					<BG src={(ngo && ngo.images) || img} className="slide-img">
+					</BG>
+				</Col>
+				<Col md={6} className="slide-right p-5">
+					<Carousel
+						activeIndex={index}
+						next={next}
+						previous={previous}
+						interval={false}
+					>
+						{slides}
+						<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
+						<CarouselControl direction="next" directionText="Next" onClickHandler={next} />
+					</Carousel>
+				</Col>
+			</Row>
 		</PageCard>
-	)
+		{showLowerCTA && <>
+			<div className={bgClassName} style={{marginTop:-1}}>
+				<img src="/img/curves/curve-desat-blue.svg" className='w-100'/>
+			</div>
+			<PageCard className="bg-gl-desat-blue" style={{marginTop:-100}}>
+				<h1 className='white'>Start using tabs for good today and together we'll...</h1>
+				<Row className="mt-5">
+					<Col md={4} className='pt-2 pt-md-0'> 
+						<div className="tricard-inner">
+							<img className='w-100' src={(ngo && ngo.logo) || ""} alt="" />
+							<div className='p-3'>
+								<h3>Donate 50% of online ad fees to {name}</h3>
+							</div>
+						</div>
+					</Col>
+					<Col md={4} className='pt-2 pt-md-0'>
+						<div className="tricard-inner">
+							<img className='w-100' src="/img/homepage/tree-planting.png" alt="" />
+							<div className='p-3'>
+								<h3>{ngo ? "Help (insert cause) TODO FIND BETTER TEXT" : "Give that money to a charity of your choice"}</h3>
+							</div>
+						</div>
+					</Col>
+					<Col md={4} className='pt-2 pt-md-0'>
+						<div className="tricard-inner">
+							<img className='w-100' src="/img/homepage/amyanddaniel.png" alt="" />
+							<div className='p-3'>
+								<h3>Do good without taking up any time or effort</h3>
+							</div>
+						</div>
+					</Col>
+				</Row>
+			</PageCard>
+		</>}
+	</>)
 };
 
 const NewsSection = () => {
@@ -373,6 +429,28 @@ const TriCards = () => {
 	)
 };
 
+const WhatIsTabsForGood	= ({ngo}) => {
+	return (<>
+		<PageCard className="how-tabs-for-good-works text-center">
+			<h1 className='mb-4'>What is Tabs for Good?</h1>
+			<p className=''><b>Tabs for Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</b></p>
+			<Row className="py-5">
+				<Col md={4}>
+					<img className='w-100' src={(ngo && ngo.images) || "/img/homepage/globe.png"} alt="" />
+				</Col>
+				<Col md={4}>
+					<img className='w-100' src={(ngo && ngo.images) || "/img/homepage/heart.png"} alt="" />
+				</Col>
+				<Col md={4}>
+					<img className='w-100' src={(ngo && ngo.images) || "/img/homepage/world.png"} alt="" />
+				</Col>
+			</Row>
+			<T4GCTAButton className="mx-auto"/>
+		</PageCard>
+	</>);
+};
+
+
 export {
     TabsForGoodSlideSection,
     HowTabsForGoodWorks,
@@ -385,5 +463,6 @@ export {
     CharityCarousel,
     MyLandingSection,
 	T4GCTAButton,
-	PageCard
+	PageCard,
+	WhatIsTabsForGood
 };

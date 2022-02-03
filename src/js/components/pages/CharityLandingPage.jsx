@@ -7,11 +7,12 @@ import { isPortraitMobile } from '../../base/utils/miscutils';
 import C from '../../C';
 import CharityLogo from '../CharityLogo';
 import { setFooterClassName } from '../Footer';
-import { MyLandingSection, T4GCTAButton, HowTabsForGoodWorks, PageCard, TabsForGoodSlideSection, TriCards } from './CommonComponents';
+import { MyLandingSection, T4GCTAButton, HowTabsForGoodWorks, PageCard, TabsForGoodSlideSection, TriCards, WhatIsTabsForGood } from './CommonComponents';
 
-const CharityT4GLogos = ({ngo, className}) => {
-	return <Container fluid>
-		<Row className={className}>
+const CharityT4GLogos = ({ngo, className, style, autosize}) => {
+	const containerStyle = (!isPortraitMobile() && autosize) ? {width:"40%"} : {};
+	return <Container fluid style={containerStyle}>
+		<Row className={className} style={style} noGutters>
 			<Col xs={6}>
 				<CharityLogo charity={ngo} className="charity-banner-logo" />
 			</Col>
@@ -21,27 +22,6 @@ const CharityT4GLogos = ({ngo, className}) => {
 		</Row>
 	</Container>;
 }
-
-const WhatIsTabsForGood	= ({ngo}) => {
-	return (<>
-		<PageCard className="how-tabs-for-good-works text-center">
-			<h1 className='mb-4'>What is Tabs for Good?</h1>
-			<p className=''><b>Tabs for Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</b></p>
-			<Row className="py-5">
-				<Col md={4} className='pt-2 pt-md-0'>
-					<img className='w-100' src={ngo.images} alt="" />
-				</Col>
-				<Col md={4} className='pt-2 pt-md-0'>
-					<img className='w-100' src={ngo.images} alt="" />
-				</Col>
-				<Col md={4} className='pt-2 pt-md-0'>
-					<img className='w-100' src={ngo.images} alt="" />
-				</Col>
-			</Row>
-			<T4GCTAButton className="mx-auto"/>
-		</PageCard>
-	</>);
-};
 
 const HelpCharityTogetherCard = ({ngo}) => {
 
@@ -60,7 +40,7 @@ const HelpCharityTogetherCard = ({ngo}) => {
 
 	return <PageCard>
 		<h1>Let's help {ngo.name}<br/>do even more good.<br/>Together.</h1>
-		<Row className='mt-5'>
+		<Row className='mt-5 pt-5'>
 			<Col md={6}>
 				<img src={ngo.images} className='w-100'/>
 			</Col>
@@ -72,18 +52,18 @@ const HelpCharityTogetherCard = ({ngo}) => {
 				<T4GCTAButton className="w-100"/>
 			</Col>
 		</Row>
-		<Row className='my-4'>
+		<Row className='mb-4 mt-5 pt-5'>
 			{isPortraitMobile() ? secondSection.reverse() : secondSection}
 		</Row>
 		<div className='d-flex justify-content-center mt-5 pt-5'>
-			<CharityT4GLogos ngo={ngo}/>
+			<CharityT4GLogos ngo={ngo} autosize/>
 		</div>
 	</PageCard>;
 };
 
 const SignUpSection = ({ngo}) => {
 	return(
-		<PageCard className="sign-up-section text-center">
+		<PageCard className="sign-up-section text-center bg-gl-pale-orange">
 			<h1>Sign up today and raise money for {ngo.name}. For free.</h1>
 			{isPortraitMobile() ? <>
 				<Row className="pt-5">
@@ -127,14 +107,14 @@ const SignUpSection = ({ngo}) => {
 					</Col>
 				</Row>
 			}
-			<T4GCTAButton/>
-			<CharityT4GLogos ngo={ngo} className="mt-5"/>
+			<T4GCTAButton className="mt-5"/>
+			<CharityT4GLogos ngo={ngo} className="mt-5" autosize/>
 		</PageCard>
 	)
 };
 
 const JustTheBeginning = () => {
-	return <div className='w-100' style={{marginTop:-100}}>
+	return <div className='w-100 bg-gl-pale-orange' style={{marginTop:-100}}>
 		<img src="/img/curves/curve-desat-blue.svg" className='w-100'/>
 		<PageCard className="bg-gl-desat-blue" style={{marginTop:-100}}>
 			<h1 className='white'>This is just the beginning.</h1>
@@ -177,7 +157,7 @@ const CharityLandingPage = () => {
 		}
 		<WhatIsTabsForGood ngo={ngo} />
 		<HowTabsForGoodWorks classname="mt-5"/>
-		<TabsForGoodSlideSection />
+		<TabsForGoodSlideSection ngo={ngo} showLowerCTA bgClassName="bg-gl-light-blue"/>
 		<HelpCharityTogetherCard ngo={ngo}/>
 		<SignUpSection ngo={ngo}/>
 		<JustTheBeginning/>
