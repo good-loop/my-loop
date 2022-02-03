@@ -6,6 +6,7 @@ import { getBrowserVendor, isPortraitMobile, space } from '../../base/utils/misc
 import C from '../../C';
 import Icon from '../../base/components/Icon';
 import { T4GSignUpButton } from '../T4GSignUp';
+import LinkOut from '../../base/components/LinkOut';
 
 const PageCard = ({className, children}) => {
 	return <Container fluid className={space('page-card', className)}>

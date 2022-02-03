@@ -210,6 +210,11 @@ const getPVSelectedCharityId = (xid) => {
 	return getPVClaimValue({ xid, key: "charity" });
 };
 
+/**
+ * Set and save
+ * @param {*} key 
+ * @param {*} value 
+ */
 const setPersonSetting = (key, value) => {
 	assMatch(key, String, "setPersonSetting - no key");
 	assMatch(value, "String|Number|Boolean");

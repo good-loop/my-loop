@@ -23,7 +23,6 @@ import Footer from './Footer';
 import MyGLAboutPage from './MyGLAboutPage';
 import SubscriptionBox from './cards/SubscriptionBox';
 import { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
-import NewtabCharityLogin from './pages/NewtabCharityLogin';
 import ServerIO from '../plumbing/ServerIO';
 import AllowlistUs from './pages/AllowlistUs';
 import MainDivBase from '../base/components/MainDivBase';
@@ -75,7 +74,6 @@ const PAGES = {
 	involve: GetInvolvedPage,
 	subscribe: SubscribePage,
 	about: MyGLAboutPage,
-	register: NewtabCharityLogin,
 	productsoverview: ProductsOverviewPage,
 	tabsforgood: TabsForGoodLandingPage,
 	allowlist: AllowlistUs,

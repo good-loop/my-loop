@@ -2,14 +2,21 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import CloseButton from '../base/components/CloseButton';
-import { getShowLogin, setShowLogin } from '../base/components/LoginWidget';
+import { getShowLogin, LoginWidgetEmbed, setShowLogin } from '../base/components/LoginWidget';
 import Misc from '../base/components/Misc';
+import { getId } from '../base/data/DataClass';
 import DataStore from '../base/plumbing/DataStore';
-import { getBrowserVendor, isMobile, space, stopEvent } from '../base/utils/miscutils';
+import { getBrowserVendor, isMobile, space, stopEvent, toTitleCase } from '../base/utils/miscutils';
+import Login from '../base/youagain';
+import SubscriptionBox, { SubscriptionForm } from './cards/SubscriptionBox';
+import CharityLogo from './CharityLogo';
+import { T4GPluginButton } from './pages/CommonComponents';
 
 // Design: https://miro.com/app/board/o9J_lxO4FyI=/?moveToWidget=3458764517111672164&cot=14
 // Copy: https://docs.google.com/document/d/1_mpbdWBeaIEyKHRr-mtC1FHAPEfokcRZTHXgMkYJyVk/edit?usp=sharing
 
+
+const SUPPORTED_BROWSERS = ["CHROME","EDGE"];
 
 const WIDGET_PATH = ['widget', 'T4GSignUp'];
 const SHOW_PATH = [...WIDGET_PATH, 'show'];
@@ -28,7 +35,12 @@ export const T4GSignUpButton = ({className,children}) => {
 	);
 };
 
-export const T4GSignUpModal = () => {
+/**
+ * 
+ * @param {Object} p
+ * @param {?NGO} p.charity For a charity-specific sign up
+ */
+export const T4GSignUpModal = ({charity}) => {
 	const show = DataStore.getValue(SHOW_PATH);
 	// close on nav
 	useEffect(function() {
@@ -43,19 +55,38 @@ export const T4GSignUpModal = () => {
 			size="lg"
 		>
 			<ModalBody>
-				<div className='pull-left'><CloseButton size='lg' onClick={() => showLogin(false)}/></div>
-				{isMobile()? <DesktopSignUp /> : <MobileSendEmail />}
+				<CloseButton size='lg' onClick={() => showLogin(false)}/>
+				{charity && <CharityLogo charity={charity} />}
+				{isMobile()? <MobileSendEmail charity={charity} /> : <DesktopSignUp charity={charity} />}
 			</ModalBody>
 		</Modal>
 	);
 };
 
-const MobileSendEmail = () => {
+const DesktopSignUp = ({charity}) => {
+	const browser = getBrowserVendor();
+	if ( ! SUPPORTED_BROWSERS.includes(browser)) {
+		return <NotAvailableYet browser={browser} />
+	}	
+	// Step one or two?
+	if (Login.isLoggedIn()) {
+		return <>TODO <T4GPluginButton /></>
+	}
+	return <LoginWidgetEmbed verb='register' onLogin={() => console.warn("TODO set charity??")}/>;
+};
+
+const NotAvailableYet = ({browser,charity}) => {
+	return (<>
+		<p>We'll send you an email to let you know when Tabs-for-Good is available on <span>{toTitleCase(browser)}</span></p>
+		<SubscriptionForm purpose="preregister" charityId={getId(charity)} />
+		</>);
+};
+
+const MobileSendEmail = ({charity}) => {
 	return (<Form>
 		<div style={{textTransform:"capitalize"}}>
 			We'll email you a link for desktop so you can start raising money for charity while you browse
 		</div>
-		
-		<Button>Submit</Button>
+		<SubscriptionForm purpose="getT4Glink" charityId={getId(charity)} />
 	</Form>);
 };
