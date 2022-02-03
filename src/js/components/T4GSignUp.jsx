@@ -11,12 +11,13 @@ const SHOW_PATH = [...WIDGET_PATH, 'show'];
 const STATUS_PATH = [...WIDGET_PATH, 'status'];
 
 const showLogin = (s=true) => {
-	DataStore.setValue(SHOW_PATH, true);
+	DataStore.setValue(SHOW_PATH, s);
+	DataStore.update();
 };
 
 export const T4GSignUpButton = ({className,children}) => {		
 	return (
-		<a className={space("btn btn-primary", className)} href={window.location} 
+		<a className={space("T4GSignUpButton btn btn-primary", className)} href={window.location} 
 			onClick={e => stopEvent(e) && showLogin()} >
 			{children || "Sign Up For Tabs For Good"}
 		</a>
@@ -31,6 +32,7 @@ export const T4GSignUpModal = () => {
 	}, [""+window.location]);
 
 	return (
+		<>
 		<Modal
 			isOpen={show}
 			className="login-modal"
@@ -44,5 +46,7 @@ export const T4GSignUpModal = () => {
 				TODO
 			</ModalBody>
 		</Modal>
+		<h2>{""+show}</h2>
+		</>
 	);
 };

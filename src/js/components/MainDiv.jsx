@@ -125,19 +125,19 @@ const MainDiv = () => {
 		"Blog":[]
 	};
 
-	return (<><MainDivBase
+	return (<MainDivBase
 		pageForPath={PAGES}
 		defaultPage='home'
 		navbarPages={navPageLinks}
 		navbarLabels={navPageLabels}
 		navbarDarkTheme={false}
-		navbarChildren={<TabsForGoodCTA/>}
+		navbarChildren={<><TabsForGoodCTA/><T4GSignUpModal /></>}		
 		navbarBackgroundColour="white"
 		// navbarLabels={getNavbarLabels}
 		fullWidthPages={["impact", 'home', 'charity']}
 		Footer={MyLoopFooter}
 		noRegister
-	/><T4GSignUpModal /></>);
+	></MainDivBase>);
 };
 
 export default MainDiv;
