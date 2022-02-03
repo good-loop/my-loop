@@ -41,6 +41,7 @@ import ImpactOverviewPage from './pages/ImpactOverviewPage';
 import OurStoryPage from './pages/OurStoryPage';
 import ForBusinessPage from './pages/ForBusinessPage';
 import ForCharityPage from './pages/ForCharityPage';
+import { T4GSignUpModal } from './T4GSignUp';
 
 // DataStore
 C.setupDataStore();
@@ -124,7 +125,7 @@ const MainDiv = () => {
 		"Blog":[]
 	};
 
-	return (<MainDivBase
+	return (<><MainDivBase
 		pageForPath={PAGES}
 		defaultPage='home'
 		navbarPages={navPageLinks}
@@ -136,7 +137,7 @@ const MainDiv = () => {
 		fullWidthPages={["impact", 'home', 'charity']}
 		Footer={MyLoopFooter}
 		noRegister
-	/>);
+	/><T4GSignUpModal /></>);
 };
 
 export default MainDiv;

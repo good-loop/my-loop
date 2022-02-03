@@ -5,6 +5,7 @@ import BG from '../../base/components/BG';
 import { getBrowserVendor, isPortraitMobile, space } from '../../base/utils/miscutils';
 import C from '../../C';
 import Icon from '../../base/components/Icon';
+import { T4GSignUpButton } from '../T4GSignUp';
 
 const PageCard = ({className, children}) => {
 	return <Container fluid className={space('page-card', className)}>
@@ -21,9 +22,10 @@ const T4GCTAButton = ({className}) => {
 				Email me a link for desktop
 			</C.A>
 		) : (
-			<RegisterLink className={space("btn btn-primary", className)}>
+			<T4GSignUpButton
+			 className={className}>
 				Sign up for Tabs For Good
-			</RegisterLink>
+			</T4GSignUpButton>
 		);
 };
 
