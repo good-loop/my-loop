@@ -7,7 +7,7 @@ import { isPortraitMobile } from '../../base/utils/miscutils';
 import C from '../../C';
 import CharityLogo from '../CharityLogo';
 import { setFooterClassName } from '../Footer';
-import { MyLandingSection, T4GCTAButton, HowTabsForGoodWorks, PageCard, TabsForGoodSlideSection, TriCards } from './CommonComponents';
+import { MyLandingSection, T4GCTAButton, HowTabsForGoodWorks, PageCard, TabsForGoodSlideSection, TriCards, WhatIsTabsForGood } from './CommonComponents';
 
 const CharityT4GLogos = ({ngo, className, style, autosize}) => {
 	const containerStyle = (!isPortraitMobile() && autosize) ? {width:"40%"} : {};
@@ -22,27 +22,6 @@ const CharityT4GLogos = ({ngo, className, style, autosize}) => {
 		</Row>
 	</Container>;
 }
-
-const WhatIsTabsForGood	= ({ngo}) => {
-	return (<>
-		<PageCard className="how-tabs-for-good-works text-center">
-			<h1 className='mb-4'>What is Tabs for Good?</h1>
-			<p className=''><b>Tabs for Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</b></p>
-			<Row className="py-5">
-				<Col md={4} className='pt-2 pt-md-0'>
-					<img className='w-100' src={ngo.images} alt="" />
-				</Col>
-				<Col md={4} className='pt-2 pt-md-0'>
-					<img className='w-100' src={ngo.images} alt="" />
-				</Col>
-				<Col md={4} className='pt-2 pt-md-0'>
-					<img className='w-100' src={ngo.images} alt="" />
-				</Col>
-			</Row>
-			<T4GCTAButton className="mx-auto"/>
-		</PageCard>
-	</>);
-};
 
 const HelpCharityTogetherCard = ({ngo}) => {
 
@@ -178,7 +157,7 @@ const CharityLandingPage = () => {
 		}
 		<WhatIsTabsForGood ngo={ngo} />
 		<HowTabsForGoodWorks classname="mt-5"/>
-		<TabsForGoodSlideSection ngo={ngo}/>
+		<TabsForGoodSlideSection ngo={ngo} showLowerCTA bgClassName="bg-gl-light-blue"/>
 		<HelpCharityTogetherCard ngo={ngo}/>
 		<SignUpSection ngo={ngo}/>
 		<JustTheBeginning/>

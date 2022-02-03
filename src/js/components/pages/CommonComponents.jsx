@@ -112,7 +112,7 @@ const HowTabsForGoodWorks = ({classname}) => {
 	);
 };
 
-const TabsForGoodSlideSection = ({ngo, img}) => {
+const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassName}) => {
 
 	const [animating, setAnimating] = useState(false);
 	const [index, setIndex] = useState(0);
@@ -165,8 +165,8 @@ const TabsForGoodSlideSection = ({ngo, img}) => {
 	));
 
 	return (<>
-		<PageCard className="tabs-for-goods-slide-card">
-			{!ngo && <div className="upper-cta text-center white">
+		<PageCard className={space("tabs-for-goods-slide-card", bgClassName)}>
+			{showUpperCTA && <div className="upper-cta text-center white">
 				<h4>Start transforming your web browsing into life saving vaccines, meals for children in need, preserving habitats for endangered animals, plus many more good causes.</h4>
 				<div className="upper-cta-btn mt-5">
 					<T4GCTAButton className="w-100"/>
@@ -194,8 +194,8 @@ const TabsForGoodSlideSection = ({ngo, img}) => {
 				</Col>
 			</Row>
 		</PageCard>
-		{ngo && <>
-			<div className='bg-gl-light-blue' style={{marginTop:-1}}>
+		{showLowerCTA && <>
+			<div className={bgClassName} style={{marginTop:-1}}>
 				<img src="/img/curves/curve-desat-blue.svg" className='w-100'/>
 			</div>
 			<PageCard className="bg-gl-desat-blue" style={{marginTop:-100}}>
@@ -203,7 +203,7 @@ const TabsForGoodSlideSection = ({ngo, img}) => {
 				<Row className="mt-5">
 					<Col md={4} className='pt-2 pt-md-0'> 
 						<div className="tricard-inner">
-							<img className='w-100' src={ngo.logo} alt="" />
+							<img className='w-100' src={(ngo && ngo.logo) || ""} alt="" />
 							<div className='p-3'>
 								<h3>Donate 50% of online ad fees to {name}</h3>
 							</div>
@@ -213,7 +213,7 @@ const TabsForGoodSlideSection = ({ngo, img}) => {
 						<div className="tricard-inner">
 							<img className='w-100' src="/img/homepage/tree-planting.png" alt="" />
 							<div className='p-3'>
-								<h3>Help (insert cause) TODO FIND BETTER TEXT</h3>
+								<h3>{ngo ? "Help (insert cause) TODO FIND BETTER TEXT" : "Give that money to a charity of your choice"}</h3>
 							</div>
 						</div>
 					</Col>
@@ -429,6 +429,28 @@ const TriCards = () => {
 	)
 };
 
+const WhatIsTabsForGood	= ({ngo}) => {
+	return (<>
+		<PageCard className="how-tabs-for-good-works text-center">
+			<h1 className='mb-4'>What is Tabs for Good?</h1>
+			<p className=''><b>Tabs for Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</b></p>
+			<Row className="py-5">
+				<Col md={4}>
+					<img className='w-100' src={(ngo && ngo.images) || "/img/homepage/globe.png"} alt="" />
+				</Col>
+				<Col md={4}>
+					<img className='w-100' src={(ngo && ngo.images) || "/img/homepage/heart.png"} alt="" />
+				</Col>
+				<Col md={4}>
+					<img className='w-100' src={(ngo && ngo.images) || "/img/homepage/world.png"} alt="" />
+				</Col>
+			</Row>
+			<T4GCTAButton className="mx-auto"/>
+		</PageCard>
+	</>);
+};
+
+
 export {
     TabsForGoodSlideSection,
     HowTabsForGoodWorks,
@@ -441,5 +463,6 @@ export {
     CharityCarousel,
     MyLandingSection,
 	T4GCTAButton,
-	PageCard
+	PageCard,
+	WhatIsTabsForGood
 };
