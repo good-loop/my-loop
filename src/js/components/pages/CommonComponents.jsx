@@ -7,6 +7,7 @@ import C from '../../C';
 import Icon from '../../base/components/Icon';
 import { T4GSignUpButton } from '../T4GSignUp';
 import LinkOut from '../../base/components/LinkOut';
+import CharityLogo from '../CharityLogo';
 
 const PageCard = ({className, children}) => {
 	return <Container fluid className={space('page-card', className)}>
@@ -14,6 +15,23 @@ const PageCard = ({className, children}) => {
 			{children}
 		</Container>
 	</Container>
+};
+
+/**
+ * A page card with a curve SVG sitting on top
+ * @param {String} color a gl-color for the background and curve - requires a curve svg of matching name in /img/curves/, e.g. light-blue = curve-light-blue.svg
+ * @returns 
+ */
+const CurvePageCard = ({color, className, bgClassName, bgImg, children}) => {
+	const TopComponent = bgImg ? BG : 'div';
+	return <>
+		<TopComponent className={bgClassName} style={{marginTop:-1}} src={bgImg}>
+			<img src={"/img/curves/curve-"+color+".svg"} className='w-100'/>
+		</TopComponent>
+		<PageCard className={space("bg-gl-"+color, className)} style={{marginTop:-100}}>
+			{children}
+		</PageCard>
+	</>;
 };
 
 const T4GCTAButton = ({className}) => {
@@ -151,10 +169,10 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 		setIndex(nextIndex);
 	}
 	
-	const goToIndex = (newIndex) => {
+	/*const goToIndex = (newIndex) => {
 		if (animating) return;
 		setIndex(newIndex);
-	}
+	}*/
 
 	const slides = items.map((content, i) => (
 		<CarouselItem
@@ -186,7 +204,8 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 			</div>}
 			<Row className="slideshow mt-5" noGutters>
 				<Col md={6} className="slide-left overflow-hidden d-none d-md-flex">
-					<BG src={(ngo && ngo.images) || img} className="slide-img">
+					<BG src={(ngo && "/img/LandingCharity/T4GScreenshot.png") || img} className="slide-img" center>
+						{ngo && <CharityLogo charity={ngo} className="t4gscreenshot-logo"/>}
 					</BG>
 				</Col>
 				<Col md={6} className="slide-right p-5">
@@ -204,10 +223,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 			</Row>
 		</PageCard>
 		{showLowerCTA && <>
-			<div className={bgClassName} style={{marginTop:-1}}>
-				<img src="/img/curves/curve-desat-blue.svg" className='w-100'/>
-			</div>
-			<PageCard className="bg-gl-desat-blue" style={{marginTop:-100}}>
+			<CurvePageCard color="desat-blue" bgClassName={bgClassName} style={{marginTop:-100}}>
 				<h1 className='white'>Start using tabs for good today and together we'll...</h1>
 				<Row className="mt-5">
 					<Col md={4} className='pt-2 pt-md-0'> 
@@ -235,7 +251,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 						</div>
 					</Col>
 				</Row>
-			</PageCard>
+			</CurvePageCard>
 		</>}
 	</>)
 };
@@ -438,20 +454,20 @@ const TriCards = () => {
 	)
 };
 
-const WhatIsTabsForGood	= ({ngo}) => {
+const WhatIsTabsForGood	= ({ngo, imgs}) => {
 	return (<>
 		<PageCard className="how-tabs-for-good-works text-center">
 			<h1 className='mb-4'>What is Tabs for Good?</h1>
 			<p className=''><b>Tabs for Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</b></p>
 			<Row className="py-5">
 				<Col md={4}>
-					<img className='w-100' src={(ngo && ngo.images) || "/img/homepage/globe.png"} alt="" />
+					<BG center src={(ngo && ngo.images) || (imgs && imgs[0]) || "/img/homepage/globe.png"} ratio={100} alt="" />
 				</Col>
 				<Col md={4}>
-					<img className='w-100' src={(ngo && ngo.images) || "/img/homepage/heart.png"} alt="" />
+					<BG center src={(ngo && ngo.images) || (imgs && imgs[1]) || "/img/homepage/heart.png"} ratio={100} alt="" />
 				</Col>
 				<Col md={4}>
-					<img className='w-100' src={(ngo && ngo.images) || "/img/homepage/world.png"} alt="" />
+					<BG center src={(ngo && ngo.images) || (imgs && imgs[2]) || "/img/homepage/world.png"} ratio={100} alt="" />
 				</Col>
 			</Row>
 			<T4GCTAButton className="mx-auto"/>
@@ -473,5 +489,6 @@ export {
     MyLandingSection,
 	T4GCTAButton,
 	PageCard,
+	CurvePageCard,
 	WhatIsTabsForGood
 };
