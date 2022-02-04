@@ -18,7 +18,6 @@ import {
     TestimonialSection,
     GetInvolvedSection,
     CharityBanner,
-	CharityCarousel,
 	MyLandingSection,
 	PositivePlaceSection
 } from './CommonComponents';
@@ -44,10 +43,9 @@ const HomePage = ({spring}) => {
 	return (<>
 		<div className="HomePage widepage">
 			<MyLandingSection />
-			<CharityCarousel />
+			<CharityBanner />
 			<HowTabsForGoodWorks />
 			<TabsForGoodSlideSection img="/img/homepage/charities.png" showUpperCTA />
-			<CharityBanner />
 			<PositivePlaceSection className="blue-gradient"/>
 			<WatchVideoSection />
 			<NewsSection />

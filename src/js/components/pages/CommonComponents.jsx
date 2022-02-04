@@ -88,18 +88,18 @@ const MyLandingSection = ({ngo}) => {
 	);
 };
 
-const CharityCarousel = () => {
+const CharityBanner = () => {
     return <Container className="charity-icons mb-5">
-        <Row className="text-center ">
-					<Col><img src="img/homepage/charitycarousel/tommys.png" alt="" /></Col>
-					<Col><img src="img/homepage/charitycarousel/refuge.png" alt="" /></Col>
-					<Col><img src="img/homepage/charitycarousel/save-the-children.png" alt="" /></Col>
-					<Col><img src="img/homepage/charitycarousel/NSPCC.png" alt="" /></Col>
-					<Col className='d-none d-md-block'><img src="img/homepage/charitycarousel/dementiauk.png" alt="" /></Col>
-					<Col><img src="img/homepage/charitycarousel/wwf.png" alt="" /></Col>
-					<Col><img src="img/homepage/charitycarousel/mssociety.png" alt="" /></Col>
-					<Col><img src="img/homepage/charitycarousel/centrepoint.png" alt="" /></Col>
-					<Col><img src="img/homepage/charitycarousel/GOSH.png" alt="" /></Col>
+        <Row className="text-center">
+					<Col><img src="img/LandingCharity/tommys.png" alt="" /></Col>
+					<Col><img src="img/LandingCharity/refuge.png" alt="" /></Col>
+					<Col><img src="img/LandingCharity/save-the-children.png" alt="" /></Col>
+					<Col><img src="img/LandingCharity/NSPCC.png" alt="" /></Col>
+					<Col className='d-none d-md-block'><img src="img/LandingCharity/dementiauk.png" alt="" /></Col>
+					<Col><img src="img/LandingCharity/wwf.png" alt="" /></Col>
+					<Col><img src="img/LandingCharity/mssociety.png" alt="" /></Col>
+					<Col><img src="img/LandingCharity/centrepoint.png" alt="" /></Col>
+					<Col><img src="img/LandingCharity/GOSH.png" alt="" /></Col>
         </Row>
     </Container>;
 };
@@ -318,40 +318,6 @@ const TestimonialSection = () => {
 	)
 };
 
-const CharityBanner = () => {
-	return(
-		<div className="row my-3">
-			<div className="col">
-				<img src="" alt="" />
-			</div>
-			<div className="col">
-				<img src="" alt="" />
-			</div>
-			<div className="col">
-				<img className='logo' src="img/LandingCharity/save-the-children-logo.png" alt="" />
-			</div>
-			<div className="col">
-				<img src="" alt="" />
-			</div>
-			<div className="col">
-				<img src="" alt="" />
-			</div>
-			<div className="col">
-				<img className='logo' src="img/LandingCharity/wwf_logo.png" alt="" />
-			</div>
-			<div className="col">
-				<img src="" alt="" />
-			</div>
-			<div className="col">
-				<img className='logo' src="img/LandingCharity/centrepoint-logo.png" alt="" />
-			</div>
-			<div className="col">
-				<img className='logo' src="img/LandingCharity/GOSH-logo.png" alt="" />
-			</div>
-		</div>
-	)
-};
-
 const PositivePlaceSection = ({className, showCTA}) => {
 	return <PageCard className={space("positive-place-section text-center", className)}>
 		<h1 className='pt-5'>Let's make the internet a more positive place. Together.</h1>
@@ -492,7 +458,6 @@ export {
     TestimonialSection,
     GetInvolvedSection,
     CharityBanner,
-    CharityCarousel,
     MyLandingSection,
 	T4GCTAButton,
 	PageCard,
