@@ -66,24 +66,24 @@ const MyLandingSection = ({ngo}) => {
 	return (
 		<>
 		<BG src={isPortraitMobile() ? null : ((ngo && ngo.images) || "")} className="landing-bg">
-				<BG src="/img/LandingCharity/t4g-splash-screen-background.svg" className="landing-splash">
-						<Container fluid className="d-flex justify-content-center">
-								<Row className="mb-3 mt-5">
-										<Col md={6} className="landing-left">
-												<div className="title mt-5"> 
-														<h2>Turn your web browsing into {(ngo && "cash for " + ngo.name) || "charity donations"}. For free.</h2>
-														<p>Get our Tabs For Good Browser Plugin today and start raising money for {(ngo && ngo.name) || "good causes"} – just by browsing the internet. </p>
-												</div>
-												<div className="cta-buttons text-uppercase mt-5">
-														<T4GCTAButton className="w-100"/>
-														<button className="btn btn-secondary w-100 text-uppercase mt-3">
-																See how it works
-														</button>
-												</div>
-										</Col>
-								</Row>
-						</Container>				
-				</BG>
+			<BG src="/img/LandingCharity/t4g-splash-screen-background.svg" className="landing-splash">
+				<Container fluid className="d-flex justify-content-center">
+					<Row className="mb-3 mt-5">
+							<Col md={6} className="landing-left">
+									<div className="title mt-5"> 
+											<h2>Turn your web browsing into {(ngo && "cash for " + ngo.name) || "charity donations"}. For free.</h2>
+											<p>Get our Tabs For Good Browser Plugin today and start raising money for {(ngo && ngo.name) || "good causes"} – just by browsing the internet. </p>
+									</div>
+									<div className="cta-buttons text-uppercase mt-5">
+											<T4GCTAButton className="w-100"/>
+											<button className="btn btn-secondary w-100 text-uppercase mt-3">
+													See how it works
+											</button>
+									</div>
+							</Col>
+					</Row>
+				</Container>				
+			</BG>
 		</BG>
 		</>
 	);
@@ -454,16 +454,16 @@ const WhatIsTabsForGood	= ({ngo, imgs}) => {
 
 
 export {
-    TabsForGoodSlideSection,
-    HowTabsForGoodWorks,
-    NewsSection,
-    WatchVideoSection,
+	TabsForGoodSlideSection,
+	HowTabsForGoodWorks,
+	NewsSection,
+	WatchVideoSection,
 	PositivePlaceSection,
-    TriCards,
-    TestimonialSection,
-    GetInvolvedSection,
-    CharityBanner,
-    MyLandingSection,
+	TriCards,
+	TestimonialSection,
+	GetInvolvedSection,
+	CharityBanner,
+	MyLandingSection,
 	T4GCTAButton,
 	PageCard,
 	CurvePageCard,
