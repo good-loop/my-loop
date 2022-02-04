@@ -48,11 +48,11 @@ export const SubscriptionForm = ({label="", purpose=PURPOSES.email_mailing_list,
 		return <><h4>Thank you!</h4><p>We'll email you shortly :)</p></>;
 	}		
 	
-	return (<Form inline className="flex-row align-items-stretch justify-content-center m-auto" onSubmit={doEmailSignUp}>				
+	return (<Form onSubmit={doEmailSignUp}>
+				<p className='white'><b>{label}</b></p>
 				<FormGroup className="mb-2 mr-sm-2 mb-sm-0 outer-form-group flex-grow-1 m-0 pr-md-3">
 					<PropControl
-						label={label}
-						className="w-100 h-100"
+						className="newsletter-email"
 						prop="email"
 						path={ctaFormPath}
 						placeholder="yourname@youremail.com"
@@ -60,7 +60,7 @@ export const SubscriptionForm = ({label="", purpose=PURPOSES.email_mailing_list,
 				</FormGroup>
 				{purpose!==PURPOSES.email_mailing_list 
 					&& <PropControl type="checkbox" path={ctaFormPath} label="Subscribe to our good news mailing list :)" prop="purpose2" value={PURPOSES.email_mailing_list} />}
-				<Button color="secondary" disabled={hasSubmittedEmail} className="flex-grow-0">
+				<Button color="subscribe" disabled={hasSubmittedEmail} className="flex-grow-0">
 					Sign me up
 				</Button>				
 			</Form>);

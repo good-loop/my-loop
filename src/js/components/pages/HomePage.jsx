@@ -19,6 +19,7 @@ import {
 	GetInvolvedSection,
 	CharityBanner,
 	MyLandingSection,
+	PositivePlaceSection,
 	CurvePageCard
 } from './CommonComponents';
 
@@ -54,6 +55,8 @@ const HomePage = ({spring}) => {
 			<CharityBanner />
 			<HowTabsForGoodWorks />
 			<TabsForGoodSlideSection img="/img/homepage/charities.png" showUpperCTA />
+			<PositivePlaceSection className="blue-gradient"/>
+			<WatchVideoSection />
 			<NewsSection />
 			<WatchVideoSection />
 			<CurvePageCard color='dark-turquoise' className='' bgclassName='' bgImg=''>
