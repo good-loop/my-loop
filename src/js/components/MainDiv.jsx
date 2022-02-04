@@ -129,7 +129,7 @@ const MainDiv = () => {
 		navbarChildren={() => <><TabsForGoodCTA/><T4GSignUpModal /></>}	
 		navbarBackgroundColour="white"
 		// navbarLabels={getNavbarLabels}
-		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood']}
+		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account']}
 		Footer={Footer}
 		noRegister
 	></MainDivBase>);

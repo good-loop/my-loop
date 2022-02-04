@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Button, Form, Modal, ModalBody, ModalHeader, Container, Row, Col } from 'reactstrap';
 import CloseButton from '../base/components/CloseButton';
 import { getShowLogin, LoginWidgetEmbed, setShowLogin } from '../base/components/LoginWidget';
 import Misc from '../base/components/Misc';
@@ -72,7 +72,32 @@ const DesktopSignUp = ({charity}) => {
 	if (Login.isLoggedIn()) {
 		return <>TODO <T4GPluginButton /></>
 	}
-	return <LoginWidgetEmbed verb='register' onLogin={() => console.warn("TODO set charity??")}/>;
+	return <Container fluid>
+		<Row>
+			<Col md={8}>
+				<p className="text-center">Thanks for joining us and getting Tabs for Good. You'll be all set in two simple steps:</p>
+				<Row>
+					<Col md={3}>
+						<h1 style={{fontSize:"1rem"}}>Step 1</h1>
+					</Col>
+					<Col md={9}>
+						<p>Sign up</p>
+					</Col>
+				</Row>
+				<Row>
+					<Col md={3}>
+						<h1 style={{fontSize:"1rem"}}>Step 2</h1>
+					</Col>
+					<Col md={9}>
+						We'll take you to the Chrome Store to install the Tabs for Good plugin.
+					</Col>
+				</Row>
+			</Col>
+			<Col md={4}>
+
+			</Col>
+		</Row>
+	</Container>
 };
 
 const NotAvailableYet = ({browser,charity}) => {
