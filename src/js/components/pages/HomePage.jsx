@@ -10,15 +10,14 @@ import SubscriptionBox from '../cards/SubscriptionBox';
 import { isPortraitMobile, stopEvent } from '../../base/utils/miscutils';
 import CharitySection from '../CharitySection';
 import {
-    TabsForGoodSlideSection,
-    HowTabsForGoodWorks,
-    NewsSection,
-    WatchVideoSection,
-    TriCards,
-    TestimonialSection,
-    GetInvolvedSection,
-    CharityBanner,
-	CharityCarousel,
+	TabsForGoodSlideSection,
+	HowTabsForGoodWorks,
+	NewsSection,
+	WatchVideoSection,
+	TriCards,
+	TestimonialSection,
+	GetInvolvedSection,
+	CharityBanner,
 	MyLandingSection
 } from './CommonComponents';
 
@@ -43,10 +42,9 @@ const HomePage = ({spring}) => {
 	return (<>
 		<div className="HomePage widepage">
 			<MyLandingSection />
-			<CharityCarousel />
+			<CharityBanner />
 			<HowTabsForGoodWorks />
 			<TabsForGoodSlideSection img="/img/homepage/charities.png" showUpperCTA />
-			<CharityBanner />
 			<WatchVideoSection />
 			<NewsSection />
 			<TestimonialSection />
