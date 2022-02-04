@@ -352,25 +352,31 @@ const CharityBanner = () => {
 	)
 };
 
+const PositivePlaceSection = ({className, showCTA}) => {
+	return <PageCard className={space("positive-place-section text-center", className)}>
+		<h1 className='pt-5'>Let's make the internet a more positive place. Together.</h1>
+		<Row className="pt-5">
+			<Col md={4} className="video-points">
+				<img className='w-50' src="/img/homepage/bird-circle.png" alt="" />
+				<h3 className='pt-4'>50% of online ad fees donated to charity </h3>
+			</Col>
+			<Col md={4} className="video-points">
+				<img className='w-50' src="/img/homepage/heart.png" alt="" />
+				<h3 className='pt-4'>Helping brands offset their digital carbon footprint</h3>
+			</Col>
+			<Col md={4} className="video-points">
+				<img className='w-50' src="/img/homepage/girl-circle.png" alt="" />
+				<h3 className='pt-4'>Keeping your online privacy safe no matter what</h3>
+			</Col>
+		</Row>
+		{showCTA && <T4GCTAButton className="mt-5" />}
+	</PageCard>
+}
+
 const WatchVideoSection = () => {
 	return(
 		<div className="watch-video-section">
 			<div className="container text-center">
-				<h1 className='pt-5'>Let's make the internet a more positive place. Together.</h1>
-				<div className="row pt-5">
-					<div className="col-md-4 video-points">
-						<img className='w-50' src="/img/homepage/bird-circle.png" alt="" />
-						<h3 className='pt-4'>50% of online ad fees donated to charity </h3>
-					</div>
-					<div className="col-md-4 video-points">
-						<img className='w-50' src="/img/homepage/heart.png" alt="" />
-						<h3 className='pt-4'>Helping brands offset their digital carbon footprint</h3>
-					</div>
-					<div className="col-md-4 video-points">
-						<img className='w-50' src="/img/homepage/girl-circle.png" alt="" />
-						<h3 className='pt-4'>Keeping your online privacy safe no matter what</h3>
-					</div>
-				</div>
 				<h1 className='pt-5'>WATCH TO SEE HOW WE’RE CREATING A MOVEMENT</h1>
 				<video src=""></video>
 				<h4>We’re working with fantastic brands that want to join us in making the internet a more positive place. <br/><br/>
@@ -481,6 +487,7 @@ export {
     HowTabsForGoodWorks,
     NewsSection,
     WatchVideoSection,
+	PositivePlaceSection,
     TriCards,
     TestimonialSection,
     GetInvolvedSection,

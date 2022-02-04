@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import PropControl from '../base/components/PropControl';
-import { space, equals } from '../base/utils/miscutils';
+import { space, equals, isPortraitMobile } from '../base/utils/miscutils';
 import SubscriptionBox, { SubscriptionForm } from './cards/SubscriptionBox';
 
 const setFooterClassName = (className) => {
@@ -30,10 +30,45 @@ const MyLoopFooter = ({}) => {
 					<Col md={6}>
 						<SubscriptionForm label={"Sign up to our Newsletter for some Good News :)"} />
 					</Col>
-					<Col md={6}>
-						
+					{!isPortraitMobile() &&
+						<Col md={6} className="d-flex justify-content-end">
+							<div className="stamps d-flex flex-row align-items-end py-3 px-5">
+								<div>
+									<img src="/img/footer/Net-carbon-negative.png" className="w-100"/>
+								</div>
+								<div>
+									<img src="/img/footer/B-corp.png" className="w-100"/>
+								</div>
+							</div>
+						</Col>
+					}
+				</Row>
+				<Row className="social-icons mx-auto pt-5 mt-5">
+					<Col xs={3}>
+						<img src="/img/footer/twitter_icon.200w.png" className="w-100"/>
+					</Col>
+					<Col xs={3}>
+						<img src="/img/footer/facebook_icon.200w.png" className="w-100"/>
+					</Col>
+					<Col xs={3}>
+						<img src="/img/footer/insta_icon.200w.png" className="w-100"/>
+					</Col>
+					<Col xs={3}>
+						<img src="/img/footer/linkedin_icon.200w.png" className="w-100"/>
 					</Col>
 				</Row>
+				{isPortraitMobile() &&
+					<Col md={6} className="d-flex justify-content-center pt-5 mt-5">
+						<div className="stamps d-flex flex-row align-items-end py-1 px-3">
+							<div>
+								<img src="/img/footer/Net-carbon-negative.png" className="w-100"/>
+							</div>
+							<div>
+								<img src="/img/footer/B-corp.png" className="w-100"/>
+							</div>
+						</div>
+					</Col>
+				}
 			</div>
 		</Row>
 	</Container>;

@@ -42,7 +42,23 @@ footer {
 
 	position: relative;
 
-	.footer-curve {
+	@media @width-mobile {
+		margin-top: 50px;
+	}
+
+	.social-icons {
+		width: 300px;
+		@media @width-mobile {
+			width: 100%;
+		}
+	}
+
+	.stamps {
+		background-color: @dark0;
+		width: 30%;
+		@media @width-mobile {
+			width: 50%;
+		}
 	}
 
 	.hummingbird {
@@ -51,11 +67,18 @@ footer {
 		transform: scaleX(-1);
 		right: 10%;
 		top: 10%;
+		@media @width-mobile {
+			width: 25%;
+			top: 0;
+		}
 	}
 
 	.newsletter-email input {
 		width: 50%;
 		border-radius: 0;
+		@media @width-mobile {
+			width: 100%;
+		}
 	}
 
 	.btn-subscribe {

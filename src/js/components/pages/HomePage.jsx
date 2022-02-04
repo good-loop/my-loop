@@ -19,7 +19,8 @@ import {
     GetInvolvedSection,
     CharityBanner,
 	CharityCarousel,
-	MyLandingSection
+	MyLandingSection,
+	PositivePlaceSection
 } from './CommonComponents';
 
 window.DEBUG = false;
@@ -47,6 +48,7 @@ const HomePage = ({spring}) => {
 			<HowTabsForGoodWorks />
 			<TabsForGoodSlideSection img="/img/homepage/charities.png" showUpperCTA />
 			<CharityBanner />
+			<PositivePlaceSection className="blue-gradient"/>
 			<WatchVideoSection />
 			<NewsSection />
 			<TestimonialSection />
