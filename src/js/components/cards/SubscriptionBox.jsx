@@ -12,7 +12,7 @@ import { setPersonSetting } from '../pages/TabsForGoodSettings';
  * Displays email register form
  * @param {String} title header to give the box
  */
-const SubscriptionBox = ({title="Support the causes you care about, and see the lives you're helping to improve"}) => {	
+const SubscriptionBox = ({title="Support the causes you care about, and see the lives you're helping to improve", className}) => {	
 	return (<div id="subscription-box" className={space("flex-column align-items-center justify-content-center subscription-box", className)}>
 		<Container className="text-center">
 			{title && <><h1>{title}</h1>
