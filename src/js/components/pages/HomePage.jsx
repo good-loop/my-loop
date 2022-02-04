@@ -55,9 +55,8 @@ const HomePage = ({spring}) => {
 			<CharityBanner />
 			<HowTabsForGoodWorks />
 			<TabsForGoodSlideSection img="/img/homepage/charities.png" showUpperCTA />
-			<PositivePlaceSection className="blue-gradient"/>
-			<WatchVideoSection />
 			<NewsSection />
+			<PositivePlaceSection className="blue-gradient"/>
 			<WatchVideoSection />
 			<CurvePageCard color='dark-turquoise' className='' bgclassName='' bgImg=''>
 				<TestimonialSection />

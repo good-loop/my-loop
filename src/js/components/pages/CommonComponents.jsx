@@ -345,26 +345,6 @@ const PositivePlaceSection = ({className, showCTA}) => {
 
 const WatchVideoSection = () => {
 	return(<>
-	<PageCard className="positive-section">
-		<div className="container text-center my-5">
-			<h1 className=''>Let's make the internet a more positive place. Together.</h1>
-			<div className="row pt-5">
-				<div className="col-md-4 positive-points">
-					<img className='w-50' src="/img/homepage/bird-circle.png" alt="" />
-					<h3 className='pt-4'>50% of online ad fees donated to charity </h3>
-				</div>
-				<div className="col-md-4 positive-points">
-					<img className='w-50' src="/img/homepage/heart.png" alt="" />
-					<h3 className='pt-4'>Helping brands offset their digital carbon footprint</h3>
-				</div>
-				<div className="col-md-4 positive-points">
-					<img className='w-50' src="/img/homepage/girl-circle.png" alt="" />
-					<h3 className='pt-4'>Keeping your online privacy safe no matter what</h3>
-				</div>
-			</div>
-		</div>
-	</PageCard>
-	
 	<PageCard className="watch-video-section">
 		<div className="container text-center">
 			<h1 className='pt-5'>WATCH TO SEE HOW WE’RE CREATING A MOVEMENT</h1>
