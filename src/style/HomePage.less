@@ -6,7 +6,7 @@
 	background-repeat: no-repeat;
 	background-position: center;
 	background-position-y: 0;
-	background-size: auto;
+	background-size: cover;
 
 	.landing-splash {
 		// Make sure image behind is covered
@@ -15,7 +15,7 @@
 
 	.landing-left {
 		position: relative;
-		left: -10%;
+		left: -5%;
 	}
 
 	@media @xl-max {
@@ -57,6 +57,11 @@
 }
 
 .tabs-for-goods-slide-card {
+	background-color: @gl-light-blue;
+	
+	h1 {
+		color: white;
+	}
 
 	.upper-cta {
 		margin: 0 10em;
@@ -119,12 +124,15 @@
 
 }
 
-.watch-video-section {
+.positive-section {
 	background: linear-gradient(180deg, @ml-dark-blue 0%, @ml-blue 50%, @gl-light-blue 100%);
-	color: white;
+	
+	h1, h3 {
+		color: white;
+	}
 
 	@media (max-width: 768px) {
-		.video-points {
+		.positive-points {
 			margin-bottom: 2em;
 			display: flex;
 			img { width: 150px !important; height: 150px; }
@@ -138,13 +146,16 @@
 
 .testimonial-section {
 	background-color: @ml-dark-blue;
-	color: white;
+
+	h1, h3, p {
+		color: white;
+	}
 
 	.testimonial-upper > * {margin-bottom: 2rem;}
 
 	.testimonial-right {
 		background-color: white;
-		color: @ml-dark-blue;
+		h3, p {color: @ml-dark-blue;}
 		.read-more {
 			font-weight: bold;
 			a {color: @ml-dark-blue}

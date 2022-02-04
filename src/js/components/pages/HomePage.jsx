@@ -18,7 +18,8 @@ import {
 	TestimonialSection,
 	GetInvolvedSection,
 	CharityBanner,
-	MyLandingSection
+	MyLandingSection,
+	CurvePageCard
 } from './CommonComponents';
 
 window.DEBUG = false;
@@ -39,15 +40,25 @@ const HomePage = ({spring}) => {
 
 	// <ShareAdCard /> is buggy, so removed for now
 
+	const TestSection = () => {
+		return (
+			<div className="">
+				<h1>Testing</h1>
+			</div>
+		)
+	}
+
 	return (<>
 		<div className="HomePage widepage">
 			<MyLandingSection />
 			<CharityBanner />
 			<HowTabsForGoodWorks />
 			<TabsForGoodSlideSection img="/img/homepage/charities.png" showUpperCTA />
-			<WatchVideoSection />
 			<NewsSection />
-			<TestimonialSection />
+			<WatchVideoSection />
+			<CurvePageCard color='dark-turquoise' className='' bgclassName='' bgImg=''>
+				<TestimonialSection />
+			</CurvePageCard>
 			<GetInvolvedSection />
 			<SubscriptionBox className="bg-gl-light-red big-sub-box"/>
 			<TriCards />

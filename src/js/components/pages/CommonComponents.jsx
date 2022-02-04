@@ -28,9 +28,10 @@ const CurvePageCard = ({color, className, bgClassName, bgImg, children}) => {
 		<TopComponent className={bgClassName} style={{marginTop:-1}} src={bgImg}>
 			<img src={"/img/curves/curve-"+color+".svg"} className='w-100'/>
 		</TopComponent>
-		<PageCard className={space("bg-gl-"+color, className)} style={{marginTop:-100}}>
+		{/* Not using PageCard here */}
+		<div className={space("bg-gl-"+color, className)}>
 			{children}
-		</PageCard>
+		</div>
 	</>;
 };
 
@@ -64,26 +65,26 @@ const MyLandingSection = ({ngo}) => {
 
 	return (
 		<>
-            <BG src={isPortraitMobile() ? null : ((ngo && ngo.images) || "")} className="landing-bg">
-                <BG src="/img/LandingCharity/t4g-splash-screen-background.svg" className="landing-splash">
-                    <Container fluid className="d-flex justify-content-center">
-                        <Row className="mb-3 mt-5">
-                            <Col md={6} className="landing-left">
-                                <div className="title mt-5"> 
-                                    <h2>Turn your web browsing into {(ngo && "cash for " + ngo.name) || "charity donations"}. For free.</h2>
-                                    <p>Get our Tabs For Good Browser Plugin today and start raising money for {(ngo && ngo.name) || "good causes"} – just by browsing the internet. </p>
-                                </div>
-                                <div className="cta-buttons text-uppercase mt-5">
-                                    <T4GCTAButton className="w-100"/>
-                                    <button className="btn btn-secondary w-100 text-uppercase mt-3">
-                                        See how it works
-                                    </button>
-                                </div>
-                            </Col>
-                        </Row>
-                    </Container>				
-                </BG>
-            </BG>
+		<BG src={isPortraitMobile() ? null : ((ngo && ngo.images) || "")} className="landing-bg">
+				<BG src="/img/LandingCharity/t4g-splash-screen-background.svg" className="landing-splash">
+						<Container fluid className="d-flex justify-content-center">
+								<Row className="mb-3 mt-5">
+										<Col md={6} className="landing-left">
+												<div className="title mt-5"> 
+														<h2>Turn your web browsing into {(ngo && "cash for " + ngo.name) || "charity donations"}. For free.</h2>
+														<p>Get our Tabs For Good Browser Plugin today and start raising money for {(ngo && ngo.name) || "good causes"} – just by browsing the internet. </p>
+												</div>
+												<div className="cta-buttons text-uppercase mt-5">
+														<T4GCTAButton className="w-100"/>
+														<button className="btn btn-secondary w-100 text-uppercase mt-3">
+																See how it works
+														</button>
+												</div>
+										</Col>
+								</Row>
+						</Container>				
+				</BG>
+		</BG>
 		</>
 	);
 };
@@ -194,6 +195,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 	return (<>
 		<PageCard className={space("tabs-for-goods-slide-card", bgClassName)}>
 			{showUpperCTA && <div className="upper-cta text-center white">
+				<h1 className='mb-5'>Sign Up Today!</h1>
 				<h4>Start transforming your web browsing into life saving vaccines, meals for children in need, preserving habitats for endangered animals, plus many more good causes.</h4>
 				<div className="upper-cta-btn mt-5">
 					<T4GCTAButton className="w-100"/>
@@ -273,80 +275,88 @@ const NewsSection = () => {
 };
 
 const TestimonialSection = () => {
-	return(
-		<div className="testimonial-section">
-			<div className="container py-5">
-				<div className="testimonial-upper text-center">
-					<h1>TOGETHER WE’VE RAISED OVER £X MILLION!</h1>
-					<p>Throughout 2021 we donated to XX charities worldwide. Spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
-					<a className='btn btn-primary text-uppercase' href="#">Explore our charity impact</a>
-				</div>
-				<div className="testimonial-card my-5">
-					<div className="row">
-						<div className="col-md-6 p-0">
-							<img className='w-100' src="img/homepage/testimonial-1.png" alt="" />
-						</div>
-						<div className="col-md-6 testimonial-right p-5">
-								<h3>Testimonial</h3>
-								<p>Working with Good-Loop we have achieved xxxxx, a charity testimonial... Working with Good-Loop we have achieved xxxxx, a charity testimonial... Working with Good-Loop we have achieved xxxxx, a charity testimonial... </p>
-								<p>Charity Representative, Charity Name</p>
-								<p className='read-more'>READ MORE ABOUT OUR <a href="#">CHARITY IMPACT</a></p>
-						</div>
+	return(<>
+	{/* <img className='w-100' src="img/homepage/curve.svg" alt="" /> */}
+	<div className="testimonial-section">
+		<div className="container">
+			<div className="testimonial-upper text-center">
+				<h1>TOGETHER WE’VE RAISED OVER £X MILLION!</h1>
+				<p>Throughout 2021 we donated to XX charities worldwide. Spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
+				{/* <a className='btn btn-primary text-uppercase' href="#">Explore our charity impact</a> */}
+			</div>
+			<div className="testimonial-card my-5">
+				<div className="row">
+					<div className="col-md-6 p-0">
+						<img className='w-100' src="img/homepage/testimonial-1.png" alt="" />
+					</div>
+					<div className="col-md-6 testimonial-right p-5">
+							<h3>Testimonial</h3>
+							<p>Working with Good-Loop we have achieved xxxxx, a charity testimonial... Working with Good-Loop we have achieved xxxxx, a charity testimonial... Working with Good-Loop we have achieved xxxxx, a charity testimonial... </p>
+							<p>Charity Representative, Charity Name</p>
+							<p className='read-more'>READ MORE ABOUT OUR <a href="#">CHARITY IMPACT</a></p>
 					</div>
 				</div>
-				<div className="testimonial-lower text-center">
-					<div className="row pt-5">
-						<div className="col-md-4 testimonial-points">
-							<img className='w-25' src="/img/homepage/globe.png" alt="" />
-							<h3 className='pt-4'>Charity Impact</h3>
-							<p className='pt-3'>Example - People + UK </p>
-						</div>
-						<div className="col-md-4 testimonial-points">
-							<img className='w-25' src="/img/homepage/heart.png" alt="" />
-							<h3 className='pt-4'>Charity Impact</h3>
-							<p className='pt-3'>Example - People + Global</p>
-						</div>
-						<div className="col-md-4 testimonial-points">
-							<img className='w-25' src="/img/homepage/world.png" alt="" />
-							<h3 className='pt-4'>Charity Impact</h3>
-							<p className='pt-3'>Example - People + Nature</p>
-						</div>
+			</div>
+			<div className="testimonial-lower text-center">
+				<div className="row pt-5">
+					<div className="col-md-4 testimonial-points">
+						<img className='w-25' src="/img/homepage/globe.png" alt="" />
+						<h3 className='pt-4'>Charity Impact</h3>
+						<p className='pt-3'>Example - People + UK </p>
+					</div>
+					<div className="col-md-4 testimonial-points">
+						<img className='w-25' src="/img/homepage/heart.png" alt="" />
+						<h3 className='pt-4'>Charity Impact</h3>
+						<p className='pt-3'>Example - People + Global</p>
+					</div>
+					<div className="col-md-4 testimonial-points">
+						<img className='w-25' src="/img/homepage/world.png" alt="" />
+						<h3 className='pt-4'>Charity Impact</h3>
+						<p className='pt-3'>Example - People + Nature</p>
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
+	</>
 	)
 };
 
 const WatchVideoSection = () => {
-	return(
-		<div className="watch-video-section">
-			<div className="container text-center">
-				<h1 className='pt-5'>Let's make the internet a more positive place. Together.</h1>
-				<div className="row pt-5">
-					<div className="col-md-4 video-points">
-						<img className='w-50' src="/img/homepage/bird-circle.png" alt="" />
-						<h3 className='pt-4'>50% of online ad fees donated to charity </h3>
-					</div>
-					<div className="col-md-4 video-points">
-						<img className='w-50' src="/img/homepage/heart.png" alt="" />
-						<h3 className='pt-4'>Helping brands offset their digital carbon footprint</h3>
-					</div>
-					<div className="col-md-4 video-points">
-						<img className='w-50' src="/img/homepage/girl-circle.png" alt="" />
-						<h3 className='pt-4'>Keeping your online privacy safe no matter what</h3>
-					</div>
+	return(<>
+	<PageCard className="positive-section">
+		<div className="container text-center my-5">
+			<h1 className=''>Let's make the internet a more positive place. Together.</h1>
+			<div className="row pt-5">
+				<div className="col-md-4 positive-points">
+					<img className='w-50' src="/img/homepage/bird-circle.png" alt="" />
+					<h3 className='pt-4'>50% of online ad fees donated to charity </h3>
 				</div>
-				<h1 className='pt-5'>WATCH TO SEE HOW WE’RE CREATING A MOVEMENT</h1>
-				<video src=""></video>
-				<h4>We’re working with fantastic brands that want to join us in making the internet a more positive place. <br/><br/>
-				The way we’re doing it couldn’t be simpler. We just need the final piece of the puzzle to make it happen – you. Sign up and join the Good-Loop movement today. </h4>
-				<RegisterLink className="btn btn-primary w-50 mt-5">
-					Sign up for the Tabs For Good
-				</RegisterLink>
-				<p className='our-story black m-5 pb-5'>Want to learn more? Check out <a href="#">OUR STORY</a></p>
+				<div className="col-md-4 positive-points">
+					<img className='w-50' src="/img/homepage/heart.png" alt="" />
+					<h3 className='pt-4'>Helping brands offset their digital carbon footprint</h3>
+				</div>
+				<div className="col-md-4 positive-points">
+					<img className='w-50' src="/img/homepage/girl-circle.png" alt="" />
+					<h3 className='pt-4'>Keeping your online privacy safe no matter what</h3>
+				</div>
 			</div>
 		</div>
+	</PageCard>
+	
+	<PageCard className="watch-video-section">
+		<div className="container text-center">
+			<h1 className='pt-5'>WATCH TO SEE HOW WE’RE CREATING A MOVEMENT</h1>
+			<img className='w-100 my-5' src="img/homepage/video.png" alt="" />
+			<h4>We’re working with fantastic brands that want to join us in making the internet a more positive place. <br/><br/>
+			The way we’re doing it couldn’t be simpler. We just need the final piece of the puzzle to make it happen – you. Sign up and join the Good-Loop movement today. </h4>
+			<RegisterLink className="btn btn-primary w-50 mt-5">
+				Sign up for the Tabs For Good
+			</RegisterLink>
+			{/* <p className='our-story black m-5 pb-5'>Want to learn more? Check out <a href="#">OUR STORY</a></p> */}
+		</div>
+	</PageCard>
+	</>
 	)
 };
 
