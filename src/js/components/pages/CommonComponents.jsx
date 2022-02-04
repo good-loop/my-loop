@@ -120,7 +120,6 @@ const HowTabsForGoodWorks = ({classname}) => {
  * @param {?Boolean} showUpperCTA shows the upper CTA section (e.g. on the HomePage) 
  * @param {?Boolean} showLowerCTA shows the lower CTA section (e.g. on the T4G charity pages)
  * @param {?String} bgClassName change the background colour of the carousel section with a bg-class
- * @returns 
  */
 const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassName}) => {
 
