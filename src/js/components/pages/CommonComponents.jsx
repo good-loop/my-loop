@@ -72,16 +72,16 @@ const MyLandingSection = ({ngo}) => {
 
 const CharityCarousel = () => {
     return <Container className="charity-icons mb-5">
-        <Row className="text-center">
-            <Col className="d-none d-md-block"><img className='circle-arrow' src="img/homepage/left-arrow.png" alt="" /></Col>
-            <Col className="d-flex justify-content-between">
-                <div className=""><img src="img/homepage/safethechildren_circle.png" alt="" /></div>
-                <div className=""><img src="img/homepage/circle-image-1.png" alt="" /></div>
-                <div className=""><img src="img/homepage/wwf-circle.png" alt="" /></div>
-                <div className=""><img src="img/homepage/circle-image-2.png" alt="" /></div>
-                <div className=""><img src="img/homepage/nspcc_circle.png" alt="" /></div>
-            </Col>
-            <Col className="d-none d-md-block"><img className='circle-arrow' src="img/homepage/right-arrow.png" alt="" /></Col>
+        <Row className="text-center ">
+					<Col><img src="img/homepage/charitycarousel/tommys.png" alt="" /></Col>
+					<Col><img src="img/homepage/charitycarousel/refuge.png" alt="" /></Col>
+					<Col><img src="img/homepage/charitycarousel/save-the-children.png" alt="" /></Col>
+					<Col><img src="img/homepage/charitycarousel/NSPCC.png" alt="" /></Col>
+					<Col className='d-none d-md-block'><img src="img/homepage/charitycarousel/dementiauk.png" alt="" /></Col>
+					<Col><img src="img/homepage/charitycarousel/wwf.png" alt="" /></Col>
+					<Col><img src="img/homepage/charitycarousel/mssociety.png" alt="" /></Col>
+					<Col><img src="img/homepage/charitycarousel/centrepoint.png" alt="" /></Col>
+					<Col><img src="img/homepage/charitycarousel/GOSH.png" alt="" /></Col>
         </Row>
     </Container>;
 };
