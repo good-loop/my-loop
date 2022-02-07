@@ -8,6 +8,7 @@ import Icon from '../../base/components/Icon';
 import { T4GSignUpButton } from '../T4GSignUp';
 import LinkOut from '../../base/components/LinkOut';
 import CharityLogo from '../CharityLogo';
+import { SubscriptionForm } from '../cards/SubscriptionBox';
 
 const PageCard = ({className, children}) => {
 	return <Container fluid className={space('page-card', className)}>
@@ -25,7 +26,7 @@ const PageCard = ({className, children}) => {
 const CurvePageCard = ({color, className, bgClassName, bgImg, children}) => {
 	const TopComponent = bgImg ? BG : 'div';
 	return <>
-		<TopComponent className={bgClassName} style={{marginTop:-1, marginBottom:-30}} src={bgImg}>
+		<TopComponent className={bgClassName} style={{marginTop:-1, marginBottom:-10}} src={bgImg}>
 			<img src={"/img/curves/curve-"+color+".svg"} className='w-100'/>
 		</TopComponent>
 		{/* Not using PageCard here */}
@@ -111,18 +112,18 @@ const HowTabsForGoodWorks = ({classname}) => {
 		<PageCard className={space("how-tabs-for-good-works bg-gl-pale-orange text-center", classname)}>
 			<h1>How Tabs For Good Works</h1>
 			<Row className="pt-5">
-				<Col md={4} className='pt-2 pt-md-0'>
+				<Col md={4} className='pt-2 pt-md-0 how-it-works-points'>
 					<img className='w-50' src="/img/homepage/globe.png" alt="" />
 					<h3 className='pt-4'>Open a tab</h3>
 					<p className='pt-3'>When you open a new tab, we display a small unobtrusive banner ad at the bottom of your page while you're busy browsing away. </p>
 				</Col>
-				<Col md={4} className='pt-2 pt-md-0'>
+				<Col md={4} className='pt-2 pt-md-0 how-it-works-points'>
 					<img className='w-50' src="/img/homepage/heart.png" alt="" />
 					<h3 className='pt-4'>Unlock a donation</h3>
 					<p className='pt-3'>As a thank you for letting the ad appear on your page, 
 						you make a free donation to charity, funded by us. 50% of the ad money to be precise. </p>
 				</Col>
-				<Col md={4} className='pt-2 pt-md-0'>
+				<Col md={4} className='pt-2 pt-md-0 how-it-works-points'>
 					<img className='w-50' src="/img/homepage/world.png" alt="" />
 					<h3 className='pt-4'>That's it!</h3>
 					<p className='pt-3'>We don't track your online activity and you don't even have to click on the ad to make the donation happen. It really is that simple. </p>
@@ -294,9 +295,9 @@ const TestimonialSectionTitle = () => {
 const TestimonialSectionLower = () => {
 	return(<>
 		<div className="testimonial-lower">
-			<img className='w-100' src="img/curves/curve-dark-turquoise-bottom.svg" alt="" />
+			<img className='w-100 d-none d-md-block' src="img/curves/curve-dark-turquoise-bottom.svg" alt="" />
 			<div className="container">
-				<div className="testimonial-card my-5">
+				<div className="testimonial-card my-0 my-md-5">
 					<div className="row">
 						<div className="col-md-6 p-0">
 							<img className='w-100 h-100' src="img/homepage/testimonial-1.png" alt="" />
@@ -313,17 +314,17 @@ const TestimonialSectionLower = () => {
 					<div className="row pt-5">
 						<div className="col-md-4 testimonial-points">
 							<img className='w-25' src="/img/homepage/globe.png" alt="" />
-							<h3 className='pt-4'>Charity Impact</h3>
+							<h3 className='pt-md-4'>Charity Impact</h3>
 							<p className='pt-3'>Example - People + UK </p>
 						</div>
 						<div className="col-md-4 testimonial-points">
 							<img className='w-25' src="/img/homepage/heart.png" alt="" />
-							<h3 className='pt-4'>Charity Impact</h3>
+							<h3 className='pt-md-4'>Charity Impact</h3>
 							<p className='pt-3'>Example - People + Global</p>
 						</div>
 						<div className="col-md-4 testimonial-points">
 							<img className='w-25' src="/img/homepage/world.png" alt="" />
-							<h3 className='pt-4'>Charity Impact</h3>
+							<h3 className='pt-md-4'>Charity Impact</h3>
 							<p className='pt-3'>Example - People + Nature</p>
 						</div>
 					</div>
@@ -363,7 +364,7 @@ const WatchVideoSection = () => {
 			<img className='w-100 my-5' src="img/homepage/video.png" alt="" />
 			<p>We’re working with fantastic brands that want to join us in making the internet a more positive place. <br/><br/>
 			The way we’re doing it couldn’t be simpler. We just need the final piece of the puzzle to make it happen – you. Sign up and join the Good-Loop movement today. </p>
-			<RegisterLink className="btn btn-primary w-50 mt-5">
+			<RegisterLink className="btn btn-primary mt-5">
 				Sign up for the Tabs For Good
 			</RegisterLink>
 			{/* <p className='our-story black m-5 pb-5'>Want to learn more? Check out <a href="#">OUR STORY</a></p> */}
@@ -377,23 +378,24 @@ const GetInvolvedSection = () => {
 	return(
 		<PageCard className="get-involved-section text-center">
 			<h1>THIS IS JUST THE BEGINNING. SIGN UP AND JOIN OUR MOVEMENT.</h1>
-			<p>We’re developing exciting new products that will help us all make the internet a more positive place. Register below to get exclusive access to future product launches and join the Good-Loop movement.</p>
+			<p>We’re developing exciting new products that will help us all make the internet a more positive place. Register below to get exclusive access to future product launches and more ways to raise money for charity while you browse.</p>
+			<SubscriptionForm />
 			<div className="row pt-5">
-				<div className="col-md-4">
+				<div className="col-md-4 get-involved-points">
 					<img className='w-50' src="/img/homepage/globe.png" alt="" />
-					<h3 className='pt-4'>Donate to charity. For free. </h3>
+					<h3 className='pt-md-4 mb-0 ml-1'>Donate to charity. For free. </h3>
 				</div>
-				<div className="col-md-4">
+				<div className="col-md-4 get-involved-points">
 					<img className='w-50' src="/img/homepage/heart.png" alt="" />
-					<h3 className='pt-4'>Make the world a better place</h3>
+					<h3 className='pt-md-4 mb-0 ml-1'>Make the world a better place</h3>
 				</div>
-				<div className="col-md-4">
+				<div className="col-md-4 get-involved-points">
 					<img className='w-50' src="/img/homepage/world.png" alt="" />
-					<h3 className='pt-4'>Just by browsing the internet</h3>
+					<h3 className='pt-md-4 mb-0 ml-1'>Just by browsing the internet</h3>
 				</div>
 			</div>
-			<a className='btn btn-primary' href="#">Join the Good-Loop Movement</a>
-			<div className="social-links">
+			{/* <a className='btn btn-primary' href="#">Join the Good-Loop Movement</a> */}
+			{/* <div className="social-links">
 				<div className="row my-5">
 					<div className="col">
 						<a href="https://twitter.com/goodloophq"><Icon name="twitter" /></a>
@@ -402,7 +404,7 @@ const GetInvolvedSection = () => {
 						<a href="https://www.linkedin.com/company/good.loop"><Icon name="linkedin" /></a>
 					</div>
 				</div>
-			</div>
+			</div> */}
 		</PageCard>
 	)
 };
@@ -414,7 +416,7 @@ const TriCards = () => {
 				<Col md={4} className='pt-2 pt-md-0'> 
 					<div className="tricard-inner">
 						<img className='w-100' src="/img/homepage/good-loop-for-business.png" alt="" />
-						<div className='p-3'>
+						<div className='tricard-text p-3'>
 							<h3>Good Loop For Business</h3>
 							<p>Discover... a sentence about this page/article <C.A href="#">Read More</C.A></p>
 						</div>
@@ -423,7 +425,7 @@ const TriCards = () => {
 				<Col md={4} className='pt-2 pt-md-0'>
 					<div className="tricard-inner">
 						<img className='w-100' src="/img/homepage/tree-planting.png" alt="" />
-						<div className='p-3'>
+						<div className='tricard-text p-3'>
 							<h3>Tree Planting For The Future</h3>
 							<p>Discover... a sentence about this page/article <C.A href="#">Read More</C.A></p>
 						</div>
@@ -432,7 +434,7 @@ const TriCards = () => {
 				<Col md={4} className='pt-2 pt-md-0'>
 					<div className="tricard-inner">
 						<img className='w-100' src="/img/homepage/amyanddaniel.png" alt="" />
-						<div className='p-3'>
+						<div className='tricard-text p-3'>
 							<h3>How It All Began</h3>
 							<p>Discover... a sentence about this page/article <C.A href="#">Read More</C.A></p>
 						</div>

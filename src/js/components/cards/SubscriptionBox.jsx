@@ -24,7 +24,7 @@ const SubscriptionBox = ({title="Support the causes you care about, and see the 
 };
 
 
-export const SubscriptionForm = ({label="", purpose=PURPOSES.email_mailing_list, charityId}) => {
+export const SubscriptionForm = ({label="", purpose=PURPOSES.email_mailing_list, charityId, buttonText="Sign me up"}) => {
 	// NB: suppose we have a subscribe-to-mailing-list and a preregister form on the same page? Keep the data separate.
 	// OTOH two subscribe-to-mailing-list forms are treated as overlapping
 	// ??
@@ -61,7 +61,7 @@ export const SubscriptionForm = ({label="", purpose=PURPOSES.email_mailing_list,
 				{purpose!==PURPOSES.email_mailing_list 
 					&& <PropControl type="checkbox" path={ctaFormPath} label="Subscribe to our good news mailing list :)" prop="purpose2" value={PURPOSES.email_mailing_list} />}
 				<Button color="subscribe" disabled={hasSubmittedEmail} className="flex-grow-0">
-					Sign me up
+					{buttonText}
 				</Button>				
 			</Form>);
 };
