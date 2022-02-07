@@ -47,7 +47,7 @@
        id="foreground-curve-white"
        d="M13314.5,1284.528s356.72,665.074,1297.3,296.564,1468.515,280.543,1468.515,280.543v221.17H13314.5Z"
        transform="translate(-13314.497 -1284.529)"
-       opacity="0.999"
+       opacity="1"
        style="fill:#286984;fill-opacity:1" />
   </g>
 </svg>

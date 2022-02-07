@@ -128,6 +128,7 @@ const MainDiv = () => {
 		navbarDarkTheme={false}
 		navbarChildren={() => <><TabsForGoodCTA/><T4GSignUpModal /></>}	
 		navbarBackgroundColour="white"
+		NavExpandSize="xl"
 		// navbarLabels={getNavbarLabels}
 		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account']}
 		Footer={Footer}

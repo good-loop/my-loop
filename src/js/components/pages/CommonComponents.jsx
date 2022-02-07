@@ -359,7 +359,7 @@ const PositivePlaceSection = ({className, showCTA}) => {
 const WatchVideoSection = () => {
 	return(<>
 	<PageCard className="watch-video-section">
-		<div className="container text-center">
+		<div className="text-center">
 			<h1 className='pt-5'>WATCH TO SEE HOW WE’RE CREATING A MOVEMENT</h1>
 			<img className='w-100 my-5' src="img/homepage/video.png" alt="" />
 			<p>We’re working with fantastic brands that want to join us in making the internet a more positive place. <br/><br/>
