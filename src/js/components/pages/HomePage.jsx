@@ -15,7 +15,8 @@ import {
 	NewsSection,
 	WatchVideoSection,
 	TriCards,
-	TestimonialSection,
+	TestimonialSectionTitle,
+	TestimonialSectionLower,
 	GetInvolvedSection,
 	CharityBanner,
 	MyLandingSection,
@@ -59,10 +60,11 @@ const HomePage = ({spring}) => {
 			<PositivePlaceSection className="blue-gradient"/>
 			<WatchVideoSection />
 			<CurvePageCard color='dark-turquoise' className='' bgclassName='' bgImg=''>
-				<TestimonialSection />
+				<TestimonialSectionTitle />
 			</CurvePageCard>
+			<TestimonialSectionLower />
 			<GetInvolvedSection />
-			<SubscriptionBox className="bg-gl-light-red big-sub-box"/>
+			{/* <SubscriptionBox className="bg-gl-light-red big-sub-box"/> */}
 			<TriCards />
 		</div>
 	</>);

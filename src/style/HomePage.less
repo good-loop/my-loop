@@ -150,14 +150,31 @@
 	.sparks {display: none;}
 }
 
-.testimonial-section {
-	background-color: @ml-dark-blue;
+.testimonial-title {
 
 	h1, h3, p {
 		color: white;
 	}
 
 	.testimonial-upper > * {margin-bottom: 2rem;}
+}
+
+.testimonial-lower {
+	margin-top: -2em;
+
+	background-image: url("/img/green/world-map.svg");
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	background-color: @gl-desat-blue;
+
+	h1, h3, p {
+		color: white;
+	}
+
+	.testimonial-card {
+		img {object-fit: cover;}
+	}
 
 	.testimonial-right {
 		background-color: white;
