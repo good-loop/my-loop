@@ -97,11 +97,17 @@ const CharityBanner = () => {
 					<Col><img src="img/LandingCharity/refuge.png" alt="" /></Col>
 					<Col><img src="img/LandingCharity/save-the-children.png" alt="" /></Col>
 					<Col><img src="img/LandingCharity/NSPCC.png" alt="" /></Col>
-					<Col className='d-none d-md-block'><img src="img/LandingCharity/dementiauk.png" alt="" /></Col>
-					<Col><img src="img/LandingCharity/wwf.png" alt="" /></Col>
-					<Col><img src="img/LandingCharity/mssociety.png" alt="" /></Col>
-					<Col><img src="img/LandingCharity/centrepoint.png" alt="" /></Col>
-					<Col><img src="img/LandingCharity/GOSH.png" alt="" /></Col>
+					<Col className='d-none d-lg-block'><img src="img/LandingCharity/dementiauk.png" alt="" /></Col>
+					<Col className='d-none d-lg-block'><img src="img/LandingCharity/wwf.png" alt="" /></Col>
+					<Col className='d-none d-lg-block'><img src="img/LandingCharity/mssociety.png" alt="" /></Col>
+					<Col className='d-none d-lg-block'><img src="img/LandingCharity/centrepoint.png" alt="" /></Col>
+					<Col className='d-none d-lg-block'><img src="img/LandingCharity/GOSH.png" alt="" /></Col>
+        </Row>
+				<Row className="text-center">
+					<Col className='d-block d-lg-none'><img src="img/LandingCharity/wwf.png" alt="" /></Col>
+					<Col className='d-block d-lg-none'><img src="img/LandingCharity/mssociety.png" alt="" /></Col>
+					<Col className='d-block d-lg-none'><img src="img/LandingCharity/centrepoint.png" alt="" /></Col>
+					<Col className='d-block d-lg-none'><img src="img/LandingCharity/GOSH.png" alt="" /></Col>
         </Row>
     </Container>;
 };
@@ -200,8 +206,11 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 				<h4>Start transforming your web browsing into life saving vaccines, meals for children in need, preserving habitats for endangered animals, plus many more good causes.</h4>
 				<div className="upper-cta-btn mt-5">
 					<T4GCTAButton className="w-100"/>
-					<button className="btn btn-secondary w-100 text-uppercase mt-3">
+					<button className="btn btn-secondary w-100 text-uppercase mt-3 d-none d-md-block">
 						Learn More About Tabs For Good
+					</button>
+					<button className="btn btn-secondary w-100 text-uppercase mt-3 d-block d-md-none">
+						Learn More
 					</button>
 				</div>
 			</div>}

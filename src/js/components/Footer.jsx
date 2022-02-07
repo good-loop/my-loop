@@ -32,7 +32,7 @@ const MyLoopFooter = ({}) => {
 					</Col>
 					{!isPortraitMobile() &&
 						<Col md={6} className="d-flex justify-content-end">
-							<div className="stamps d-flex flex-row align-items-end py-3 px-5">
+							<div className="stamps d-flex flex-row align-items-end p-3">
 								<div>
 									<img src="/img/footer/Net-carbon-negative.png" className="w-100"/>
 								</div>
