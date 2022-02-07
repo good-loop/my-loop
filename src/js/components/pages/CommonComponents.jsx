@@ -37,17 +37,23 @@ const CurvePageCard = ({color, className, bgClassName, bgImg, children}) => {
 };
 
 const T4GCTAButton = ({className}) => {
-	return isPortraitMobile() ? (
-		// TODO make this button function
-			<C.A className={space("btn btn-primary", className)}>
-				Email me a link for desktop
-			</C.A>
-		) : (
-			<T4GSignUpButton
-			 className={className}>
-				Sign up for Tabs For Good
-			</T4GSignUpButton>
-		);
+	// return isPortraitMobile() ? (
+	// 	// TODO make this button function
+	// 		<C.A className={space("btn btn-primary", className)}>
+	// 			Email me a link for desktop
+	// 		</C.A>
+	// 	) : (
+	// 		<T4GSignUpButton
+	// 		 className={className}>
+	// 			Sign up for Tabs For Good
+	// 		</T4GSignUpButton>
+	// 	);
+	return (
+		<T4GSignUpButton
+	 		 className={className}>
+	 			Sign up for Tabs For Good
+	 	</T4GSignUpButton>
+	)
 };
 
 export const T4GPluginButton = ({className}) => {
@@ -214,8 +220,8 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 					</button>
 				</div>
 			</div>}
-			<Row className="slideshow mt-5" noGutters>
-				<Col md={6} className="slide-left overflow-hidden d-none d-md-flex">
+			<Row className="slideshow mt-5 d-none d-md-flex" noGutters>
+				<Col md={6} className="slide-left overflow-hidden">
 					<BG src={(ngo && "/img/LandingCharity/T4GScreenshot.png") || img} className="slide-img" center>
 						{ngo && <CharityLogo charity={ngo} className="t4gscreenshot-logo"/>}
 					</BG>
