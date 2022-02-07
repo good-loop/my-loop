@@ -130,7 +130,7 @@ const MainDiv = () => {
 		navbarBackgroundColour="white"
 		NavExpandSize="xl"
 		// navbarLabels={getNavbarLabels}
-		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account']}
+		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account', 'green']}
 		Footer={Footer}
 		noRegister
 	></MainDivBase>);
