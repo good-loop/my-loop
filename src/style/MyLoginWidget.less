@@ -44,15 +44,63 @@
 	}
 
 	.modal-body {
-		background-color: #fff;
-        // Combine three images for the background
-		background-image: url(/img/redgirl-crop-Xflipped.svg), url(/img/background-curve-plus-bar.svg);
-		background-repeat: no-repeat;
-		background-size: 15%, 110%;
-		background-position-y: bottom, 144%;
-		background-position-x: 95%, 14%;
+		background-color: @ml-pink;
+		padding: 0;
 		
-		min-height: 20em; // stable height when switching between login and register
+		min-height: 30em; // stable height when switching between login and register
+
+		.hummingbird {
+			position: absolute;
+			z-index: 99;
+			transform: scaleX(-1);
+			width: 100px;
+			top: .5rem;
+			right: 35%;
+		}
+
+		.dots-array {
+			position: absolute;
+			z-index: 99;
+			transform: translate(-50%, -50%);
+			bottom: 1rem;
+			left: 25%;
+			display: flex;
+			justify-content: center;
+			.dot {
+				width: 15px;
+				height: 15px;
+				background-color: #626262;
+				border-radius: 50%;
+				border: 1px solid grey;
+				margin-right: .5rem;
+			}
+			.dot-active {
+				background-color: white;
+			}
+		}
+
+		.sign-up-left {
+			padding-left: 0;
+			padding-right: 0;
+			.slide {
+				.slide-item{
+					min-height: 30em;
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+				}
+				.bg-ml-pink {
+					background-color: @ml-pink;
+				}
+				.bg-ml-bluepink {
+					background-color: #deeef3;
+				}
+			}
+		}
+
+		.sign-up-right {
+			background-color: white;
+		}
 
 		.login-guts {
 			.btn.signin {
@@ -80,6 +128,7 @@
 		left: .4em;
 		top: .2em;
 		text-shadow: none; // default has white shadow to "pop it out"
+		z-index: 999;
 	}
 
 	@media (max-width: 767px) { // Small fixes in mobile devices
