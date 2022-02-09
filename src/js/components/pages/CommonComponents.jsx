@@ -26,14 +26,17 @@ const PageCard = ({className, children}) => {
 const CurvePageCard = ({color, className, style, bgClassName, bgImg, children}) => {
 	const TopComponent = bgImg ? BG : 'div';
 	const myStyle = {marginTop:-1, marginBottom:-10, ...style};
+	console.log("CURVE CARD BG CLASSNAME ", bgClassName);
 	return <>
 		<TopComponent className={bgClassName} style={myStyle} src={bgImg}>
 			<img src={"/img/curves/curve-"+color+".svg"} className='w-100'/>
 		</TopComponent>
 		{/* Not using PageCard here */}
-		<Container className={space("bg-gl-"+color, className, "pb-1")}>
-			{children}
-		</Container>
+		<div className={space("bg-gl-"+color, className, "pb-5 w-100")}>
+			<Container>
+				{children}
+			</Container>
+		</div>
 	</>;
 };
 
@@ -68,6 +71,19 @@ export const T4GPluginButton = ({className}) => {
 	}
 	return <LinkOut className={space(className, "btn btn-primary mt-2")} href={href}>{browser} STORE</LinkOut>;
 };
+
+const CardImgLeft = ({classname, imgUrl, children}) =>{
+	return(
+	<Row className={space('mt-5 rounded', classname)}>
+		<Col className='p-0' md={6}>
+			<img className="w-100 p-0" src={imgUrl} alt="" />
+		</Col>
+		<Col md={6} className='text-left d-flex flex-column justify-content-around py-5 px-3'>
+			{children}
+		</Col>
+	</Row>
+	)
+}
 
 const MyLandingSection = ({ngo}) => {
 
@@ -146,6 +162,12 @@ const HowTabsForGoodWorks = ({classname}) => {
 	);
 };
 
+const T4GCharityScreenshot = ({ngo, className, ...props}) => {
+	return <BG src="/img/LandingCharity/T4GScreenshot.png" className={className} center {...props}>
+		{ngo && <CharityLogo charity={ngo} className="t4gscreenshot-logo"/>}
+	</BG>;
+}
+
 /**
  * 
  * @param {?NGO} ngo if specified, inserts the charity images and info into the slides
@@ -155,6 +177,8 @@ const HowTabsForGoodWorks = ({classname}) => {
  * @param {?String} bgClassName change the background colour of the carousel section with a bg-class
  */
 const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassName}) => {
+
+	console.log("T4G BG CLASSNAME", bgClassName);
 
 	const [animating, setAnimating] = useState(false);
 	const [index, setIndex] = useState(0);
@@ -223,9 +247,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 			</div>}
 			<Row className="slideshow mt-5 d-none d-md-flex" noGutters>
 				<Col md={6} className="slide-left overflow-hidden">
-					<BG src={(ngo && "/img/LandingCharity/T4GScreenshot.png") || img} className="slide-img" center>
-						{ngo && <CharityLogo charity={ngo} className="t4gscreenshot-logo"/>}
-					</BG>
+					<T4GCharityScreenshot ngo={ngo} className="slide-img"/>
 				</Col>
 				<Col md={6} className="slide-right p-5">
 					<Carousel
@@ -256,9 +278,9 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 					</Col>
 					<Col md={4} className='pt-2 pt-md-0'>
 						<div className="tricard-inner">
-							<img className='w-100' src="/img/homepage/tree-planting.png" alt="" />
+							<img className='w-100' src={(ngo && ngo.images) || "/img/homepage/tree-planting.png"} alt="" />
 							<div className='p-3'>
-								<h3>{ngo ? "Help (insert cause) TODO FIND BETTER TEXT" : "Give that money to a charity of your choice"}</h3>
+								<h3>{ngo ? "Let's help "+name+" do even more good. Together." : "Give that money to a charity of your choice"}</h3>
 							</div>
 						</div>
 					</Col>
@@ -276,19 +298,26 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 	</>)
 };
 
-const NewsSection = () => {
+const NewsAwards = ({firstIMG, firstLink="#", secondIMG, secondLink="#", thirdIMG, thirdLink="#", children}) => {
 	return(
-	<div className="news-section">
-		<div className="container text-center">
-			<div className="row my-5">
-				<div className="col sparks"><img className='logo' src="img/homepage/Stars.png" alt="" /></div>
-				<div className="col"><img className='logo' src="img/homepage/BBCNews.png" alt="" /></div>
-				<div className="col"><img className='logo' src="img/homepage/The-Guardian.png" alt="" /></div>
-				<div className="col"><img className='logo' src="img/homepage/BBCNews.png" alt="" /></div>
-				<div className="col sparks"><img className='logo' src="img/homepage/Stars.png" alt="" /></div>
+		<PageCard>
+			{children}
+			<div className="container text-center">
+				<div className="row">
+					<div className="col sparks"><img className='logo' src="img/homepage/Stars.png" alt="" /></div>
+					<div className="col">
+						<a href={firstLink}><img className='logo' src={firstIMG} alt="" /></a>
+					</div>
+					<div className="col">
+						<a href={secondLink}><img className='logo' src={secondIMG} alt="" /></a>
+					</div>
+					<div className="col">
+						<a href={thirdLink}><img className='logo' src={thirdIMG} alt="" /></a>
+					</div>
+					<div className="col sparks"><img className='logo' src="img/homepage/Stars.png" alt="" /></div>
+				</div>
 			</div>
-		</div>
-	</div>
+		</PageCard>
 	)
 };
 
@@ -425,39 +454,40 @@ const GetInvolvedSection = () => {
 	)
 };
 
-const TriCards = () => {
+const TriCards = ({className, firstTitle, firstText, secondTitle, secondText, thirdTitle, thirdText,
+firstIMG, secondIMG, thirdIMG, firstLink="#", secondLink="#", thirdLink="#" }) => {
 	return(
-		<Container>
+		<PageCard className={space("tri-card", className)}>
 			<Row className="mt-5">
 				<Col md={4} className='pt-2 pt-md-0'> 
 					<div className="tricard-inner">
-						<img className='w-100' src="/img/homepage/good-loop-for-business.png" alt="" />
+						<img className='w-100' src={firstIMG} alt="" />
 						<div className='tricard-text p-3'>
-							<h3>Good Loop For Business</h3>
-							<p>Discover... a sentence about this page/article <C.A href="#">Read More</C.A></p>
+							<h3>{firstTitle}</h3>
+							<span>{firstText} </span><C.A href={firstLink}>Read More</C.A>
 						</div>
 					</div>
 				</Col>
 				<Col md={4} className='pt-2 pt-md-0'>
 					<div className="tricard-inner">
-						<img className='w-100' src="/img/homepage/tree-planting.png" alt="" />
+						<img className='w-100' src={secondIMG} alt="" />
 						<div className='tricard-text p-3'>
-							<h3>Tree Planting For The Future</h3>
-							<p>Discover... a sentence about this page/article <C.A href="#">Read More</C.A></p>
+							<h3>{secondTitle}</h3>
+							<span>{secondText} </span><C.A href={secondLink}>Read More</C.A>
 						</div>
 					</div>
 				</Col>
 				<Col md={4} className='pt-2 pt-md-0'>
 					<div className="tricard-inner">
-						<img className='w-100' src="/img/homepage/amyanddaniel.png" alt="" />
+						<img className='w-100' src={thirdIMG} alt="" />
 						<div className='tricard-text p-3'>
-							<h3>How It All Began</h3>
-							<p>Discover... a sentence about this page/article <C.A href="#">Read More</C.A></p>
+							<h3>{thirdTitle}</h3>
+							<span>{thirdText} </span><C.A href={thirdLink}>Read More</C.A>
 						</div>
 					</div>
 				</Col>
 			</Row>
-		</Container>
+		</PageCard>
 	)
 };
 
@@ -467,15 +497,15 @@ const WhatIsTabsForGood	= ({ngo, imgs}) => {
 			<h1 className='mb-4'>What is Tabs for Good?</h1>
 			<p className=''><b>Tabs for Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</b></p>
 			<Row className="py-5">
-				<Col md={4}>
-					<BG center src={(ngo && ngo.images) || (imgs && imgs[0]) || "/img/homepage/globe.png"} ratio={100} alt="" />
+				<Col md={6}>
+					<T4GCharityScreenshot ngo={ngo} ratio={100}/>
 				</Col>
-				<Col md={4}>
+				<Col md={6}>
 					<BG center src={(ngo && ngo.images) || (imgs && imgs[1]) || "/img/homepage/heart.png"} ratio={100} alt="" />
 				</Col>
-				<Col md={4}>
+				{/*<Col md={4}>
 					<BG center src={(ngo && ngo.images) || (imgs && imgs[2]) || "/img/homepage/world.png"} ratio={100} alt="" />
-				</Col>
+				</Col>*/}
 			</Row>
 			<T4GCTAButton className="mx-auto"/>
 		</PageCard>
@@ -486,7 +516,7 @@ const WhatIsTabsForGood	= ({ngo, imgs}) => {
 export {
 	TabsForGoodSlideSection,
 	HowTabsForGoodWorks,
-	NewsSection,
+	NewsAwards,
 	WatchVideoSection,
 	PositivePlaceSection,
 	TriCards,
@@ -498,5 +528,6 @@ export {
 	T4GCTAButton,
 	PageCard,
 	CurvePageCard,
-	WhatIsTabsForGood
+	WhatIsTabsForGood,
+	CardImgLeft
 };

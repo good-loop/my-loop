@@ -12,7 +12,7 @@ import CharitySection from '../CharitySection';
 import {
 	TabsForGoodSlideSection,
 	HowTabsForGoodWorks,
-	NewsSection,
+	NewsAwards,
 	WatchVideoSection,
 	TriCards,
 	TestimonialSectionTitle,
@@ -42,21 +42,13 @@ const HomePage = ({spring}) => {
 
 	// <ShareAdCard /> is buggy, so removed for now
 
-	const TestSection = () => {
-		return (
-			<div className="">
-				<h1>Testing</h1>
-			</div>
-		)
-	}
-
 	return (<>
 		<div className="HomePage widepage">
 			<MyLandingSection />
 			<CharityBanner />
 			<HowTabsForGoodWorks />
 			<TabsForGoodSlideSection img="/img/homepage/charities.png" showUpperCTA />
-			<NewsSection />
+			<NewsAwards firstIMG="img/homepage/BBCNews.png" secondIMG="img/homepage/The-Guardian.png" thirdIMG="img/homepage/BBCNews.png" />
 			<PositivePlaceSection className="blue-gradient"/>
 			<WatchVideoSection />
 			<CurvePageCard color='dark-turquoise' className='' bgclassName='' bgImg=''>
@@ -65,7 +57,11 @@ const HomePage = ({spring}) => {
 			<TestimonialSectionLower />
 			<GetInvolvedSection />
 			{/* <SubscriptionBox className="bg-gl-light-red big-sub-box"/> */}
-			<TriCards />
+			<TriCards 
+				firstTitle="Good Loop For Business" firstText="Discover... a sentence about this page/article" firstIMG="/img/homepage/good-loop-for-business.png"
+				secondTitle="Tree Planting For The Future" secondText="Discover... a sentence about this page/article" secondIMG="/img/homepage/tree-planting.png"
+				thirdTitle="How It All Began" thirdText="Discover... a sentence about this page/article" thirdIMG="/img/homepage/amyanddaniel.png"
+			/>
 		</div>
 	</>);
 };
