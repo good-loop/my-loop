@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button, Form, Modal, ModalBody, ModalHeader, Container, Row, Col, Carousel, CarouselControl, CarouselItem, CarouselIndicators } from 'reactstrap';
+import { id } from '../../../GLAppManifest';
 import CloseButton from '../base/components/CloseButton';
 import { getShowLogin, LoginWidgetEmbed, setShowLogin } from '../base/components/LoginWidget';
 import Misc from '../base/components/Misc';
@@ -81,6 +82,11 @@ const DesktopSignUp = ({charity}) => {
 			setIndex(nextIndex);
 		}
 
+		const goToIndex = (newIndex) => {
+			if (animating) return;
+			setIndex(newIndex);
+		}
+
 		const items = [
 			<div className='slide-item bg-ml-pink'>
 				<p className="text-center">Thanks for joining us and getting Tabs for Good. You'll be all set in two simple steps:</p>
@@ -127,13 +133,6 @@ const DesktopSignUp = ({charity}) => {
 		));
 
 		return (<>
-			<div className="dots-array">
-				<div className="dot dot-active"></div>
-				<div className="dot"></div>
-				<div className="dot"></div>
-				<div className="dot"></div>
-			</div>
-			{/* TODO Use CarouselIndicators */}
 			<Col className='sign-up-left' md={7}>
 				<Carousel
 					activeIndex={index}
@@ -141,6 +140,7 @@ const DesktopSignUp = ({charity}) => {
 					previous={previous}
 					interval={false}
 				>
+					<CarouselIndicators items={slides} activeIndex={index} onClickHandler={goToIndex} />
 					{slides}
 					<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
 					<CarouselControl direction="next" directionText="Next" onClickHandler={next} />
