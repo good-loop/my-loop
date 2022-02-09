@@ -36,6 +36,15 @@ export const T4GSignUpButton = ({className,children}) => {
 	);
 };
 
+export const T4GSignUpLink = ({className,children}) => {		
+	return (
+		<a className={className} href={window.location} 
+			onClick={e => stopEvent(e) && showLogin()} >
+			{children || "Sign Up For Tabs For Good"}
+		</a>
+	);
+};
+
 /**
  * 
  * @param {Object} p

@@ -39,7 +39,7 @@ import ImpactOverviewPage from './pages/ImpactOverviewPage';
 import OurStoryPage from './pages/OurStoryPage';
 import ForBusinessPage from './pages/ForBusinessPage';
 import ForCharityPage from './pages/ForCharityPage';
-import { T4GSignUpButton, T4GSignUpModal } from './T4GSignUp';
+import { T4GSignUpButton, T4GSignUpModal, T4GSignUpLink } from './T4GSignUp';
 import { nonce } from '../base/data/DataClass';
 
 // DataStore
@@ -107,14 +107,14 @@ const TabsForGoodCTA = () => {
 const MainDiv = () => {
 
 	const navPageLinks = {
-		"about-us": ['ourstory', 'forbusiness', 'forcharity'],
+		"ourstory":[],
 		"our-impact": ['charities', 'impactoverview', 'green'],
 		'tabsforgood':[],
 		"blog":[]
 	};
 
 	const navPageLabels = {
-		"About Us": ['Our Story', 'Good-Loop for Business', 'Good-Loop for Charity'],
+		"About Us":[],
 		"Our Impact": ['Charity Impact', 'Impact Hub', 'Green Media'],
 		"Tabs for Good":[],
 		"Blog":[]
@@ -122,8 +122,6 @@ const MainDiv = () => {
 
 	// HACK hide whilst we finish it
 	if ( ! Roles.isTester()) {
-		delete navPageLinks["about-us"];
-		delete navPageLabels["About Us"];
 
 		delete navPageLinks["our-impact"].green;
 		delete navPageLabels["Our Impact"]["Green Media"];
@@ -149,6 +147,7 @@ const MainDiv = () => {
 		loginLogo="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png"
 		loginSubtitle="Sign in to see how your web browsing has transformed into charity donations"
 		noSocials
+		loginChildren={() => <div className='text-center'><T4GSignUpLink>Not got an account? Sign up and get Tabs for Good</T4GSignUpLink></div>}
 	></MainDivBase>);
 };
 
