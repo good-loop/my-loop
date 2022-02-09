@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button, Form, Modal, ModalBody, ModalHeader, Container, Row, Col, Carousel, CarouselControl, CarouselItem, CarouselIndicators } from 'reactstrap';
+import { id } from '../../../GLAppManifest';
 import CloseButton from '../base/components/CloseButton';
 import { getShowLogin, LoginWidgetEmbed, setShowLogin } from '../base/components/LoginWidget';
 import Misc from '../base/components/Misc';
@@ -81,37 +82,42 @@ const DesktopSignUp = ({charity}) => {
 			setIndex(nextIndex);
 		}
 
+		const goToIndex = (newIndex) => {
+			if (animating) return;
+			setIndex(newIndex);
+		}
+
 		const items = [
 			<div className='slide-item bg-ml-pink'>
-				<p className="text-center">Thanks for joining us and getting Tabs for Good. You'll be all set in two simple steps:</p>
-				<Row>
-					<Col md={3}>
+				<p className="text-center px-3">Thanks for joining us and getting Tabs for Good. You'll be all set in two simple steps:</p>
+				<Row className='px-5'>
+					<Col md={4}>
 						<h1 style={{fontSize:"1rem"}}>Step 1</h1>
 					</Col>
-					<Col md={9}>
+					<Col md={8}>
 						<p>Sign up</p>
 					</Col>
 				</Row>
-				<Row>
-					<Col md={3}>
+				<Row className='px-5'>
+					<Col md={4}>
 						<h1 style={{fontSize:"1rem"}}>Step 2</h1>
 					</Col>
-					<Col md={9}>
+					<Col md={8}>
 						We'll take you to the Chrome Store to install the Tabs for Good plugin.
 					</Col>
 				</Row>
 			</div>,
 			<div className='slide-item text-center align-items-center bg-ml-bluepink'>
 				<img className='w-50 mb-3' src="img/signup/step-2.png" alt="" />
-				<p>When you sign up, you'll get your own personalised portal where you can select the charity you want to support and see your impact grow</p>
+				<p className='px-3'>When you sign up, you'll get your own personalised portal where you can select the charity you want to support and see your impact grow</p>
 			</div>,
 			<div className='slide-item text-center align-items-center bg-ml-pink'>
 				<img className='w-50 mb-3' src="img/signup/step-3.png" alt="" />
-				<p>Once you're signed up, we'll immeditatly provide you with a link to the Chrome Store where you can add Tabs for Good to your browser </p>
+				<p className='px-3'>Once you're signed up, we'll immeditatly provide you with a link to the Chrome Store where you can add Tabs for Good to your browser </p>
 				</div>,
 			<div className='slide-item text-center align-items-center bg-ml-bluepink'>
 				<img className='w-50 mb-3' src="img/signup/step-4.png" alt="" />
-				<p>Once you've installed Tabs for Good, you can feel confident that your browsing is adding up into a force for good</p>
+				<p className='px-3'>Once you've installed Tabs for Good, you can feel confident that your browsing is adding up into a force for good</p>
 			</div>
 		];
 
@@ -127,13 +133,6 @@ const DesktopSignUp = ({charity}) => {
 		));
 
 		return (<>
-			<div className="dots-array">
-				<div className="dot dot-active"></div>
-				<div className="dot"></div>
-				<div className="dot"></div>
-				<div className="dot"></div>
-			</div>
-			{/* TODO Use CarouselIndicators */}
 			<Col className='sign-up-left' md={7}>
 				<Carousel
 					activeIndex={index}
@@ -141,6 +140,7 @@ const DesktopSignUp = ({charity}) => {
 					previous={previous}
 					interval={false}
 				>
+					<CarouselIndicators items={slides} activeIndex={index} onClickHandler={goToIndex} />
 					{slides}
 					<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
 					<CarouselControl direction="next" directionText="Next" onClickHandler={next} />
