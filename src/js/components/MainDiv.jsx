@@ -65,7 +65,7 @@ const PAGES = {
 	blog: BlogPage, // TODO
 	campaign: CampaignPage,
 	impact: CampaignPage,
-	impactoverview: ImpactOverviewPage,
+	impactoverview: MyAdCampaignsPage,
 	// test: TestPage,
 	account: AccountPage,
 	charities: MyCharitiesPage,
@@ -130,7 +130,7 @@ const MainDiv = () => {
 		navbarBackgroundColour="white"
 		NavExpandSize="xl"
 		// navbarLabels={getNavbarLabels}
-		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account', 'green']}
+		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account', 'green', 'charities', 'impactoverview']}
 		Footer={Footer}
 		noRegister
 	></MainDivBase>);

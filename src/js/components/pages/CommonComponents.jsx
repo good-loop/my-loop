@@ -23,16 +23,17 @@ const PageCard = ({className, children}) => {
  * @param {String} color a gl-color for the background and curve - requires a curve svg of matching name in /img/curves/, e.g. light-blue = curve-light-blue.svg
  * @returns 
  */
-const CurvePageCard = ({color, className, bgClassName, bgImg, children}) => {
+const CurvePageCard = ({color, className, style, bgClassName, bgImg, children}) => {
 	const TopComponent = bgImg ? BG : 'div';
+	const myStyle = {marginTop:-1, marginBottom:-10, ...style};
 	return <>
-		<TopComponent className={bgClassName} style={{marginTop:-1, marginBottom:-10}} src={bgImg}>
+		<TopComponent className={bgClassName} style={myStyle} src={bgImg}>
 			<img src={"/img/curves/curve-"+color+".svg"} className='w-100'/>
 		</TopComponent>
 		{/* Not using PageCard here */}
-		<div className={space("bg-gl-"+color, className, "pb-1")}>
+		<Container className={space("bg-gl-"+color, className, "pb-1")}>
 			{children}
-		</div>
+		</Container>
 	</>;
 };
 
