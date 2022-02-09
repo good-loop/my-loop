@@ -120,6 +120,12 @@ const MainDiv = () => {
 		"Blog":[]
 	};
 
+	// HACK
+	if ( ! Roles.isTester()) {
+		delete navPageLinks["about-us"];
+		delete navPageLabels["About Us"];
+	}
+
 	return (<MainDivBase
 		pageForPath={PAGES}
 		defaultPage='home'
