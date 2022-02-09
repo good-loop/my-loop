@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import PropControl from '../base/components/PropControl';
 import { space, equals, isPortraitMobile } from '../base/utils/miscutils';
+import C from '../C';
 import SubscriptionBox, { SubscriptionForm } from './cards/SubscriptionBox';
 
 const setFooterClassName = (className) => {
@@ -45,16 +46,51 @@ const MyLoopFooter = ({}) => {
 				</Row>
 				<Row className="social-icons mx-auto pt-5 mt-5">
 					<Col xs={3}>
-						<img src="/img/footer/twitter_icon.200w.png" className="w-100"/>
+						<C.A href="https://twitter.com/goodloophq">
+							<img src="/img/footer/twitter_icon.200w.png" className="w-100"/>
+						</C.A>
 					</Col>
 					<Col xs={3}>
-						<img src="/img/footer/facebook_icon.200w.png" className="w-100"/>
+						<C.A href="https://www.facebook.com/the.good.loop/">
+							<img src="/img/footer/facebook_icon.200w.png" className="w-100"/>
+						</C.A>
 					</Col>
 					<Col xs={3}>
-						<img src="/img/footer/insta_icon.200w.png" className="w-100"/>
+						<C.A href="https://www.instagram.com/goodloophq/">
+							<img src="/img/footer/insta_icon.200w.png" className="w-100"/>
+						</C.A>
 					</Col>
 					<Col xs={3}>
-						<img src="/img/footer/linkedin_icon.200w.png" className="w-100"/>
+						<C.A href="https://www.linkedin.com/company/good.loop?trk=biz-companies-cym">
+							<img src="/img/footer/linkedin_icon.200w.png" className="w-100"/>
+						</C.A>
+					</Col>
+				</Row>
+				<Row className='mt-5 footer-links text-md-center small'>
+					<Col>
+						<C.A href="https://doc.good-loop.com/policy/privacy-policy.html">
+							<p>Privacy policy</p>
+						</C.A>
+					</Col>
+					<Col>
+						<C.A href="https://doc.good-loop.com/policy/cookie-policy.html">
+							<p>Cookie policy</p>
+						</C.A>
+					</Col>
+					<Col>
+						<C.A href="https://doc.good-loop.com/terms/terms-of-use.html">
+							<p>Terms of use</p>
+						</C.A>
+					</Col>
+					<Col>
+						<C.A href="https://doc.good-loop.com/">
+							<p>Documentation</p>
+						</C.A>
+					</Col>
+					<Col>
+						<C.A href="https://doc.good-loop.com/policy/brand-safety-policy.html">
+							<p>Brand safety policy</p>
+						</C.A>
 					</Col>
 				</Row>
 				{isPortraitMobile() &&
