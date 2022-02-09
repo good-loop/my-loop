@@ -1,9 +1,15 @@
 
 // Custom CSS for MyGL site.
 
-.modal-dialog { // Trims extra space. Makes modal look more compact.
+.modal .modal-dialog { // Trims extra space. Makes modal look more compact.
 	max-width: 600px;
     border-radius: 15px;
+	&.login-modal {
+		max-width: 1000px;
+		@media @width-mobile {
+			max-width: 700px;
+		}
+	}
 }
 
 .modal-content {
@@ -13,41 +19,43 @@
 	overflow-y: auto;
 	overflow-x: hidden; // The above line triggers an horizontal overflow in some cases, this disables that effect.
 
-	border-radius: 15px;
+	border-radius: 0;
 	border: none;
 
-	background-color: transparent; // Needed to get rid of white border around top edges
+	background-color: white; // Needed to get rid of white border around top edges
 
-	.btn-primary {
+	/*.btn-primary {
 		background: linear-gradient(#b91c08, #621208);
 		border: none;
 		padding: 0.2em 1.2em;
-	}
+	}*/
 
 	.modal-header {
-	background: linear-gradient(#b91c08, #621208);
-	border-radius: 15px 15px 0px 0px;
-		#text {
-			display: none;
-		}
-		.modal-title {
-			color: #fff;
-			margin: 0 auto;
-			position: relative;
-			.modal-main-title {
-				font-weight: 700;
-				font-size: 2em;
-				font-family: 'Montserrat', sans-serif;
-			}
-			.modal-subtitle { font-size: .85em; }
-		}
+		border: none;
 	}
 
 	.modal-body {
-		background-color: @ml-pink;
 		padding: 0;
-		
+		@media @width-mobile {
+			padding-top: 150px;
+		}
+
 		min-height: 30em; // stable height when switching between login and register
+
+		.login-logo {
+			width: 25%;
+			@media @width-mobile {
+				width: 50%;
+			}
+		}
+
+		.login-subtitle {
+			text-align: center;
+			width: 50%;
+			@media @width-mobile {
+				width: 90%;
+			}
+		}
 
 		.hummingbird {
 			position: absolute;
@@ -56,25 +64,32 @@
 			width: 100px;
 			top: .5rem;
 			right: 35%;
+			&.login {
+				top: 0;
+				right: 5%;
+				width: 150px;
+				@media @width-mobile {
+					right: 50%;
+					transform: translateX(50%) scaleX(-1);
+				}
+			}
 		}
 
-		.dots-array {
-			position: absolute;
-			z-index: 99;
-			transform: translate(-50%, -50%);
-			bottom: 1rem;
-			left: 25%;
-			display: flex;
-			justify-content: center;
-			.dot {
+		.carousel-control-prev-icon,
+		.carousel-control-next-icon{
+			filter: invert(1)
+		}
+
+		.carousel-indicators {
+			li {
 				width: 15px;
 				height: 15px;
 				background-color: #626262;
 				border-radius: 50%;
 				border: 1px solid grey;
-				margin-right: .5rem;
+				// margin-right: .5rem;
 			}
-			.dot-active {
+			.active {
 				background-color: white;
 			}
 		}
@@ -103,32 +118,26 @@
 		}
 
 		.login-guts {
-			.btn.signin {
-				box-shadow: 1px 2px 4px rgba(0, 0, 0, .2);
-			}
 			#loginByEmail {
-				.btn { // login/register buttton
-					&:hover { color: black; }
-				}
 				a { // no account and forgotten pass links
 					&:hover { color: #b91c08; }
 				}
 			}
-		}
-		.social-signin {
-			p { // made smaller to make room for GL girl
-				max-width: 80%;
-                font-size: .8em;
+			.login-email label {
+				text-transform: uppercase;
+				margin-bottom: 0;
 			}
 		}
 	}
 
 	.close { // pushes close button to the corner so it doesn't interfer with title
 		position: absolute;
-		left: .4em;
+		left: -.05em;
 		top: .2em;
 		text-shadow: none; // default has white shadow to "pop it out"
 		z-index: 999;
+		font-size: 3rem;
+		font-weight: normal;
 	}
 
 	@media (max-width: 767px) { // Small fixes in mobile devices

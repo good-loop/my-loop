@@ -23,16 +23,17 @@ const PageCard = ({className, children}) => {
  * @param {String} color a gl-color for the background and curve - requires a curve svg of matching name in /img/curves/, e.g. light-blue = curve-light-blue.svg
  * @returns 
  */
-const CurvePageCard = ({color, className, bgClassName, bgImg, children}) => {
+const CurvePageCard = ({color, className, style, bgClassName, bgImg, children}) => {
 	const TopComponent = bgImg ? BG : 'div';
+	const myStyle = {marginTop:-1, marginBottom:-10, ...style};
 	return <>
-		<TopComponent className={bgClassName} style={{marginTop:-1, marginBottom:-10}} src={bgImg}>
+		<TopComponent className={bgClassName} style={myStyle} src={bgImg}>
 			<img src={"/img/curves/curve-"+color+".svg"} className='w-100'/>
 		</TopComponent>
 		{/* Not using PageCard here */}
-		<div className={space("bg-gl-"+color, className, "pb-1")}>
+		<Container className={space("bg-gl-"+color, className, "pb-1")}>
 			{children}
-		</div>
+		</Container>
 	</>;
 };
 
@@ -67,6 +68,19 @@ export const T4GPluginButton = ({className}) => {
 	}
 	return <LinkOut className={space(className, "btn btn-primary mt-2")} href={href}>{browser} STORE</LinkOut>;
 };
+
+const CardImgLeft = ({classname, imgUrl, children}) =>{
+	return(
+	<Row className={space('mt-5 rounded', classname)}>
+		<Col className='p-0' md={6}>
+			<img className="w-100 p-0" src={imgUrl} alt="" />
+		</Col>
+		<Col md={6} className='text-left d-flex flex-column justify-content-around py-5 px-3'>
+			{children}
+		</Col>
+	</Row>
+	)
+}
 
 const MyLandingSection = ({ngo}) => {
 
@@ -497,5 +511,6 @@ export {
 	T4GCTAButton,
 	PageCard,
 	CurvePageCard,
-	WhatIsTabsForGood
+	WhatIsTabsForGood,
+	CardImgLeft
 };
