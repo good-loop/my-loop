@@ -289,19 +289,26 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 	</>)
 };
 
-const NewsSection = () => {
+const NewsAwards = ({firstIMG, firstLink="#", secondIMG, secondLink="#", thirdIMG, thirdLink="#", children}) => {
 	return(
-	<div className="news-section">
-		<div className="container text-center">
-			<div className="row my-5">
-				<div className="col sparks"><img className='logo' src="img/homepage/Stars.png" alt="" /></div>
-				<div className="col"><img className='logo' src="img/homepage/BBCNews.png" alt="" /></div>
-				<div className="col"><img className='logo' src="img/homepage/The-Guardian.png" alt="" /></div>
-				<div className="col"><img className='logo' src="img/homepage/BBCNews.png" alt="" /></div>
-				<div className="col sparks"><img className='logo' src="img/homepage/Stars.png" alt="" /></div>
+		<PageCard>
+			{children}
+			<div className="container text-center">
+				<div className="row">
+					<div className="col sparks"><img className='logo' src="img/homepage/Stars.png" alt="" /></div>
+					<div className="col">
+						<a href={firstLink}><img className='logo' src={firstIMG} alt="" /></a>
+					</div>
+					<div className="col">
+						<a href={secondLink}><img className='logo' src={secondIMG} alt="" /></a>
+					</div>
+					<div className="col">
+						<a href={thirdLink}><img className='logo' src={thirdIMG} alt="" /></a>
+					</div>
+					<div className="col sparks"><img className='logo' src="img/homepage/Stars.png" alt="" /></div>
+				</div>
 			</div>
-		</div>
-	</div>
+		</PageCard>
 	)
 };
 
@@ -438,39 +445,40 @@ const GetInvolvedSection = () => {
 	)
 };
 
-const TriCards = () => {
+const TriCards = ({className, firstTitle, firstText, secondTitle, secondText, thirdTitle, thirdText,
+firstIMG, secondIMG, thirdIMG, firstLink="#", secondLink="#", thirdLink="#" }) => {
 	return(
-		<Container>
+		<PageCard className={space("tri-card", className)}>
 			<Row className="mt-5">
 				<Col md={4} className='pt-2 pt-md-0'> 
 					<div className="tricard-inner">
-						<img className='w-100' src="/img/homepage/good-loop-for-business.png" alt="" />
+						<img className='w-100' src={firstIMG} alt="" />
 						<div className='tricard-text p-3'>
-							<h3>Good Loop For Business</h3>
-							<p>Discover... a sentence about this page/article <C.A href="#">Read More</C.A></p>
+							<h3>{firstTitle}</h3>
+							<span>{firstText} </span><C.A href={firstLink}>Read More</C.A>
 						</div>
 					</div>
 				</Col>
 				<Col md={4} className='pt-2 pt-md-0'>
 					<div className="tricard-inner">
-						<img className='w-100' src="/img/homepage/tree-planting.png" alt="" />
+						<img className='w-100' src={secondIMG} alt="" />
 						<div className='tricard-text p-3'>
-							<h3>Tree Planting For The Future</h3>
-							<p>Discover... a sentence about this page/article <C.A href="#">Read More</C.A></p>
+							<h3>{secondTitle}</h3>
+							<span>{secondText} </span><C.A href={secondLink}>Read More</C.A>
 						</div>
 					</div>
 				</Col>
 				<Col md={4} className='pt-2 pt-md-0'>
 					<div className="tricard-inner">
-						<img className='w-100' src="/img/homepage/amyanddaniel.png" alt="" />
+						<img className='w-100' src={thirdIMG} alt="" />
 						<div className='tricard-text p-3'>
-							<h3>How It All Began</h3>
-							<p>Discover... a sentence about this page/article <C.A href="#">Read More</C.A></p>
+							<h3>{thirdTitle}</h3>
+							<span>{thirdText} </span><C.A href={thirdLink}>Read More</C.A>
 						</div>
 					</div>
 				</Col>
 			</Row>
-		</Container>
+		</PageCard>
 	)
 };
 
@@ -499,7 +507,7 @@ const WhatIsTabsForGood	= ({ngo, imgs}) => {
 export {
 	TabsForGoodSlideSection,
 	HowTabsForGoodWorks,
-	NewsSection,
+	NewsAwards,
 	WatchVideoSection,
 	PositivePlaceSection,
 	TriCards,
