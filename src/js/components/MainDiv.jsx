@@ -120,7 +120,7 @@ const MainDiv = () => {
 		"Blog":[]
 	};
 
-	// HACK
+	// HACK hide whilst we finish it
 	if ( ! Roles.isTester()) {
 		delete navPageLinks["about-us"];
 		delete navPageLabels["About Us"];
