@@ -9,6 +9,7 @@ import { LoginLink } from '../../base/components/LoginWidget';
 import { assert } from '../../base/utils/assert';
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../../base/components/Misc';
+import C from '../../C';
 
 const AccountSettings = () => {
 	let xids = getAllXIds();
@@ -19,7 +20,7 @@ const AccountSettings = () => {
 		<YourDataSettings />
 		{/* Spacer for mobile */}
 		<div className="pb-3 pb-md-0"/>
-		<small>We will never share your data without your consent unless there is a legal obligation.<br/>See our <a href="https://doc.good-loop.com/policy/privacy-policy.html" rel="noopener noreferrer" target="_blank">privacy policy</a> for more information.</small>
+		<small>We will never share your data without your consent unless there is a legal obligation.<br/>See our <C.A href="https://doc.good-loop.com/policy/privacy-policy.html" rel="noopener noreferrer" target="_blank">privacy policy</C.A> for more information.</small>
 	</div>;
 };
 

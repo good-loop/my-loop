@@ -12,7 +12,7 @@ import SubscriptionBox from '../cards/SubscriptionBox';
 import ShareButton from '../ShareButton';
 import AccountSettings from './AccountSettings';
 import TabsForGoodSettings from './TabsForGoodSettings';
-
+import C from '../../C';
 
 
 const Account = () => {
@@ -111,7 +111,7 @@ const SidebarTabLink = ({ tab, label, selected }) => {
 			}
 		}
 	}
-	return <div><a href={url} className={space("account-tab p-2", selected && "active")}>{label || tab}</a></div>;
+	return <div><C.A href={url} className={space("account-tab p-2", selected && "active")}>{label || tab}</C.A></div>;
 };
 
 addImageCredit({ name: "add-user", author: "Icons8", url: "https://icons8.com/icons/set/add-user-male" });
