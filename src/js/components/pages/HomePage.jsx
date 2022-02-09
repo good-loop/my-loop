@@ -42,14 +42,6 @@ const HomePage = ({spring}) => {
 
 	// <ShareAdCard /> is buggy, so removed for now
 
-	const TestSection = () => {
-		return (
-			<div className="">
-				<h1>Testing</h1>
-			</div>
-		)
-	}
-
 	return (<>
 		<div className="HomePage widepage">
 			<MyLandingSection />
