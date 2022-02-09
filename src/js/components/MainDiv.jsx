@@ -125,6 +125,9 @@ const MainDiv = () => {
 		delete navPageLinks["about-us"];
 		delete navPageLabels["About Us"];
 
+		delete navPageLinks["blog"];
+		delete navPageLabels["Blog"];
+
 		delete navPageLinks["our-impact"].green;
 		delete navPageLabels["Our Impact"]["Green Media"];
 	}
