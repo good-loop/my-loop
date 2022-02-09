@@ -140,7 +140,8 @@ const CharityLandingPage = () => {
 	const ngo = pvCharity.value;
 
 	useEffect(() => {
-		setFooterClassName('bg-gl-desat-blue');
+		//setFooterClassName('bg-gl-desat-blue');
+		setFooterClassName('bg-gl-pale-orange');
 	}, []);
 
 	return (<>
@@ -160,7 +161,7 @@ const CharityLandingPage = () => {
 		<TabsForGoodSlideSection ngo={ngo} showLowerCTA bgClassName="bg-gl-light-blue"/>
 		<HelpCharityTogetherCard ngo={ngo}/>
 		<SignUpSection ngo={ngo}/>
-		<JustTheBeginning/>
+		{/*<JustTheBeginning/>*/}
 	</>);
 };
 

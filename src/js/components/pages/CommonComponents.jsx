@@ -26,14 +26,17 @@ const PageCard = ({className, children}) => {
 const CurvePageCard = ({color, className, style, bgClassName, bgImg, children}) => {
 	const TopComponent = bgImg ? BG : 'div';
 	const myStyle = {marginTop:-1, marginBottom:-10, ...style};
+	console.log("CURVE CARD BG CLASSNAME ", bgClassName);
 	return <>
 		<TopComponent className={bgClassName} style={myStyle} src={bgImg}>
 			<img src={"/img/curves/curve-"+color+".svg"} className='w-100'/>
 		</TopComponent>
 		{/* Not using PageCard here */}
-		<Container className={space("bg-gl-"+color, className, "pb-1")}>
-			{children}
-		</Container>
+		<div className={space("bg-gl-"+color, className, "pb-5 w-100")}>
+			<Container>
+				{children}
+			</Container>
+		</div>
 	</>;
 };
 
@@ -159,6 +162,12 @@ const HowTabsForGoodWorks = ({classname}) => {
 	);
 };
 
+const T4GCharityScreenshot = ({ngo, className, ...props}) => {
+	return <BG src="/img/LandingCharity/T4GScreenshot.png" className={className} center {...props}>
+		{ngo && <CharityLogo charity={ngo} className="t4gscreenshot-logo"/>}
+	</BG>;
+}
+
 /**
  * 
  * @param {?NGO} ngo if specified, inserts the charity images and info into the slides
@@ -168,6 +177,8 @@ const HowTabsForGoodWorks = ({classname}) => {
  * @param {?String} bgClassName change the background colour of the carousel section with a bg-class
  */
 const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassName}) => {
+
+	console.log("T4G BG CLASSNAME", bgClassName);
 
 	const [animating, setAnimating] = useState(false);
 	const [index, setIndex] = useState(0);
@@ -236,9 +247,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 			</div>}
 			<Row className="slideshow mt-5 d-none d-md-flex" noGutters>
 				<Col md={6} className="slide-left overflow-hidden">
-					<BG src={(ngo && "/img/LandingCharity/T4GScreenshot.png") || img} className="slide-img" center>
-						{ngo && <CharityLogo charity={ngo} className="t4gscreenshot-logo"/>}
-					</BG>
+					<T4GCharityScreenshot ngo={ngo} className="slide-img"/>
 				</Col>
 				<Col md={6} className="slide-right p-5">
 					<Carousel
@@ -269,9 +278,9 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 					</Col>
 					<Col md={4} className='pt-2 pt-md-0'>
 						<div className="tricard-inner">
-							<img className='w-100' src="/img/homepage/tree-planting.png" alt="" />
+							<img className='w-100' src={(ngo && ngo.images) || "/img/homepage/tree-planting.png"} alt="" />
 							<div className='p-3'>
-								<h3>{ngo ? "Help (insert cause) TODO FIND BETTER TEXT" : "Give that money to a charity of your choice"}</h3>
+								<h3>{ngo ? "Let's help "+name+" do even more good. Together." : "Give that money to a charity of your choice"}</h3>
 							</div>
 						</div>
 					</Col>
@@ -488,15 +497,15 @@ const WhatIsTabsForGood	= ({ngo, imgs}) => {
 			<h1 className='mb-4'>What is Tabs for Good?</h1>
 			<p className=''><b>Tabs for Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</b></p>
 			<Row className="py-5">
-				<Col md={4}>
-					<BG center src={(ngo && ngo.images) || (imgs && imgs[0]) || "/img/homepage/globe.png"} ratio={100} alt="" />
+				<Col md={6}>
+					<T4GCharityScreenshot ngo={ngo} ratio={100}/>
 				</Col>
-				<Col md={4}>
+				<Col md={6}>
 					<BG center src={(ngo && ngo.images) || (imgs && imgs[1]) || "/img/homepage/heart.png"} ratio={100} alt="" />
 				</Col>
-				<Col md={4}>
+				{/*<Col md={4}>
 					<BG center src={(ngo && ngo.images) || (imgs && imgs[2]) || "/img/homepage/world.png"} ratio={100} alt="" />
-				</Col>
+				</Col>*/}
 			</Row>
 			<T4GCTAButton className="mx-auto"/>
 		</PageCard>
