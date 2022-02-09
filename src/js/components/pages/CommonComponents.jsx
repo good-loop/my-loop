@@ -69,6 +69,19 @@ export const T4GPluginButton = ({className}) => {
 	return <LinkOut className={space(className, "btn btn-primary mt-2")} href={href}>{browser} STORE</LinkOut>;
 };
 
+const CardImgLeft = ({classname, imgUrl, children}) =>{
+	return(
+	<Row className={space('mt-5 rounded', classname)}>
+		<Col className='p-0' md={6}>
+			<img className="w-100 p-0" src={imgUrl} alt="" />
+		</Col>
+		<Col md={6} className='text-left d-flex flex-column justify-content-around py-5 px-3'>
+			{children}
+		</Col>
+	</Row>
+	)
+}
+
 const MyLandingSection = ({ngo}) => {
 
 	return (
@@ -498,5 +511,6 @@ export {
 	T4GCTAButton,
 	PageCard,
 	CurvePageCard,
-	WhatIsTabsForGood
+	WhatIsTabsForGood,
+	CardImgLeft
 };
