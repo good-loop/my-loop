@@ -66,7 +66,7 @@ const MyCharitiesPage = () => {
 
 	return (<>
 		<div className="MyCharitiesPage">
-			<img src="/img/LandingBackground/Charities_banner.png" className="w-100 mt-5" alt="banner" />
+			<img src="/img/LandingBackground/Charities_banner.png" className="w-100" alt="banner" />
 			<Container className="py-5">
 				<h1>Charities that benefit</h1>
 				<Paginator rows={5} cols={7} rowsMD={2} colsMD={5} pageButtonRangeMD={1} displayCounter displayLoad>
