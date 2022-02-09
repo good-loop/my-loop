@@ -109,14 +109,14 @@ const MainDiv = () => {
 	const navPageLinks = {
 		"about-us": ['ourstory', 'forbusiness', 'forcharity'],
 		"our-impact": ['charities', 'impactoverview', 'green'],
-		"our-products": ['productsoverview', 'tabsforgood'],
+		'tabsforgood':[],
 		"blog":[]
 	};
 
 	const navPageLabels = {
 		"About Us": ['Our Story', 'Good-Loop for Business', 'Good-Loop for Charity'],
 		"Our Impact": ['Charity Impact', 'Impact Hub', 'Green Media'],
-		"Our Products": ['Products Overview', 'Tabs for Good'],
+		"Tabs for Good":[],
 		"Blog":[]
 	};
 
@@ -127,6 +127,9 @@ const MainDiv = () => {
 
 		delete navPageLinks["our-impact"].green;
 		delete navPageLabels["Our Impact"]["Green Media"];
+
+		delete navPageLinks["blog"];
+		delete navPageLabels["Blog"];
 	}
 
 	return (<MainDivBase
