@@ -6,7 +6,7 @@ import { getDataItem } from '../../base/plumbing/Crud';
 import C from '../../C';
 import CharityLogo from '../CharityLogo';
 import { T4GSignUpModal } from '../T4GSignUp';
-import { WhatIsTabsForGood, HowTabsForGoodWorks, TabsForGoodSlideSection, TriCards, CurvePageCard, T4GCTAButton, MyLandingSection, PageCard, PositivePlaceSection } from './CommonComponents';
+import { WhatIsTabsForGood, HowTabsForGoodWorks, TabsForGoodSlideSection, TriCards, CurvePageCard, T4GCTAButton, MyLandingSection, PageCard, PositivePlaceSection, CornerHummingbird } from './CommonComponents';
 
 
 // Copywriting https://docs.google.com/document/d/1_mpbdWBeaIEyKHRr-mtC1FHAPEfokcRZTHXgMkYJyVk/edit#heading=h.5r45wnjwbf7j
@@ -37,12 +37,13 @@ const WellMakeItHappenSection = () => {
 const TabsForGoodLandingPage = () => {
 	return (<>
 		<MyLandingSection/>
+		<CornerHummingbird/>
 		<WhatIsTabsForGood imgs={['/img/LandingCharity/T4GScreenshot.png']} />
 		<HowTabsForGoodWorks />
 		<TabsForGoodSlideSection img="/img/homepage/charities.png" showLowerCTA />
 		<WellMakeItHappenSection/>
 		<PositivePlaceSection className="bg-gl-pale-orange" showCTA />
-		<TriCards />
+		{/*<TriCards />*/}
 	</>);
 };
 

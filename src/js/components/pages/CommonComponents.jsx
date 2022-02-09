@@ -9,6 +9,7 @@ import { T4GSignUpButton } from '../T4GSignUp';
 import LinkOut from '../../base/components/LinkOut';
 import CharityLogo from '../CharityLogo';
 import { SubscriptionForm } from '../cards/SubscriptionBox';
+import Login from '../../base/youagain';
 
 const PageCard = ({className, children}) => {
 	return <Container fluid className={space('page-card', className)}>
@@ -26,7 +27,6 @@ const PageCard = ({className, children}) => {
 const CurvePageCard = ({color, className, style, bgClassName, bgImg, children}) => {
 	const TopComponent = bgImg ? BG : 'div';
 	const myStyle = {marginTop:-1, marginBottom:-10, ...style};
-	console.log("CURVE CARD BG CLASSNAME ", bgClassName);
 	return <>
 		<TopComponent className={bgClassName} style={myStyle} src={bgImg}>
 			<img src={"/img/curves/curve-"+color+".svg"} className='w-100'/>
@@ -52,12 +52,18 @@ const T4GCTAButton = ({className}) => {
 	// 			Sign up for Tabs For Good
 	// 		</T4GSignUpButton>
 	// 	);
-	return (
+	return !Login.isLoggedIn() ? (
 		<T4GSignUpButton
 	 		 className={className}>
 	 			Sign up for Tabs For Good
 	 	</T4GSignUpButton>
-	)
+	) : (
+		<C.A href="https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en-GB"
+			target="_blank"
+			className={space("btn btn-primary", className)}>
+			Get Tabs for Good
+		</C.A>
+	);
 };
 
 export const T4GPluginButton = ({className}) => {
@@ -112,6 +118,12 @@ const MyLandingSection = ({ngo}) => {
 		</>
 	);
 };
+
+const CornerHummingbird = () => {
+	return (
+		<img src="/img/footer/Hummingbird.png" className="corner-hummingbird"/>
+	);
+}
 
 const CharityBanner = () => {
     return <Container className="charity-icons mb-5">
@@ -521,5 +533,6 @@ export {
 	PageCard,
 	CurvePageCard,
 	WhatIsTabsForGood,
-	CardImgLeft
+	CardImgLeft,
+	CornerHummingbird
 };

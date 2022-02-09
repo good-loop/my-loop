@@ -7,7 +7,7 @@ import { isPortraitMobile } from '../../base/utils/miscutils';
 import C from '../../C';
 import CharityLogo from '../CharityLogo';
 import { setFooterClassName } from '../Footer';
-import { MyLandingSection, T4GCTAButton, HowTabsForGoodWorks, PageCard, TabsForGoodSlideSection, TriCards, WhatIsTabsForGood } from './CommonComponents';
+import { MyLandingSection, T4GCTAButton, HowTabsForGoodWorks, PageCard, TabsForGoodSlideSection, TriCards, WhatIsTabsForGood, CornerHummingbird } from './CommonComponents';
 
 const CharityT4GLogos = ({ngo, className, style, autosize}) => {
 	const containerStyle = (!isPortraitMobile() && autosize) ? {width:"40%"} : {};
@@ -25,7 +25,7 @@ const CharityT4GLogos = ({ngo, className, style, autosize}) => {
 
 const HelpCharityTogetherCard = ({ngo}) => {
 
-	const secondSection = [
+	/*const secondSection = [
 		<Col md={6} key={1} className='p-5 d-flex flex-column justify-content-between'>
 			<div>
 				<h3>Together we'll (INSERT CAUSE)</h3>
@@ -36,7 +36,7 @@ const HelpCharityTogetherCard = ({ngo}) => {
 		<Col md={6} key={2}>
 			<img src={ngo.images} className='w-100'/>
 		</Col>
-	];
+	];*/
 
 	return <PageCard>
 		<h1>Let's help {ngo.name}<br/>do even more good.<br/>Together.</h1>
@@ -47,14 +47,16 @@ const HelpCharityTogetherCard = ({ngo}) => {
 			<Col md={6} className='p-5 d-flex flex-column justify-content-between'>
 				<div>
 					<h3>What {ngo.name} is doing</h3>
-					<p>INFORMATION ABOUT CHARITY MISSION</p>
+					<p>{ngo.summaryDescription || ngo.description}</p>
 				</div>
 				<T4GCTAButton className="w-100"/>
 			</Col>
 		</Row>
+		{/*
 		<Row className='mb-4 mt-5 pt-5'>
 			{isPortraitMobile() ? secondSection.reverse() : secondSection}
 		</Row>
+		*/}
 		<div className='d-flex justify-content-center mt-5 pt-5'>
 			<CharityT4GLogos ngo={ngo} autosize/>
 		</div>
@@ -87,7 +89,7 @@ const SignUpSection = ({ngo}) => {
 						<img className='w-50' src="/img/homepage/world.png" alt="" />
 					</Col>
 					<Col xs={6}>
-						<p><b>Help {ngo.name} (INSERT CAUSE)</b></p>
+						<p><b>Help {ngo.name} raise money</b></p>
 					</Col>
 				</Row>
 				<br/><br/>
@@ -103,7 +105,7 @@ const SignUpSection = ({ngo}) => {
 					</Col>
 					<Col md={4}>
 						<img className='w-50' src="/img/homepage/world.png" alt="" />
-						<h3 className='pt-4'>Help {ngo.name} (INSERT CAUSE)</h3>
+						<h3 className='pt-4'>Help {ngo.name} raise money</h3>
 					</Col>
 				</Row>
 			}
@@ -146,6 +148,7 @@ const CharityLandingPage = () => {
 
 	return (<>
 		<MyLandingSection ngo={ngo} />
+		<CornerHummingbird/>
 		{isPortraitMobile() ?
 			<CharityT4GLogos ngo={ngo}/>
 		:
