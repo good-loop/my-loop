@@ -10,7 +10,7 @@ import C from '../C';
 import Crud from '../base/plumbing/Crud'; // Crud is loaded here to init (but not used here)
 
 // Templates
-import LoginWidget from '../base/components/LoginWidget';
+import {setShowLogin} from '../base/components/LoginWidget';
 
 // Pages
 import MyCharitiesPage from './pages/MyCharitiesPage';
@@ -147,7 +147,7 @@ const MainDiv = () => {
 		loginLogo="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png"
 		loginSubtitle="Sign in to see how your web browsing has transformed into charity donations"
 		noSocials
-		loginChildren={() => <div className='text-center'><T4GSignUpLink>Not got an account? Sign up and get Tabs for Good</T4GSignUpLink></div>}
+		loginChildren={() => <div className='text-center'><T4GSignUpLink onClick={() => setShowLogin(false)}>Not got an account? Sign up and get Tabs for Good</T4GSignUpLink></div>}
 	></MainDivBase>);
 };
 
