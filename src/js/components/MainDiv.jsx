@@ -138,13 +138,17 @@ const MainDiv = () => {
 		navbarPages={navPageLinks}
 		navbarLabels={navPageLabels}
 		navbarDarkTheme={false}
-		navbarChildren={() => <><TabsForGoodCTA/><T4GSignUpModal /></>}	
+		navbarChildren={() => <><TabsForGoodCTA/><T4GSignUpModal /></>}
 		navbarBackgroundColour="white"
 		NavExpandSize="xl"
 		// navbarLabels={getNavbarLabels}
 		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account', 'green', 'charities', 'impactoverview']}
 		Footer={Footer}
 		noRegister
+		noLoginTitle
+		loginLogo="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png"
+		loginSubtitle="Sign in to see how your web browsing has transformed into charity donations"
+		noSocials
 	></MainDivBase>);
 };
 
