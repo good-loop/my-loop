@@ -123,6 +123,9 @@ const MainDiv = () => {
 	// HACK hide whilst we finish it
 	if ( ! Roles.isTester()) {
 
+		delete navPageLinks["blog"];
+		delete navPageLabels["Blog"];
+
 		delete navPageLinks["our-impact"].green;
 		delete navPageLabels["Our Impact"]["Green Media"];
 
