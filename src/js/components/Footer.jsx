@@ -19,9 +19,12 @@ const getFooterClassName = () => DataStore.getValue(['widget','Footer', 'classNa
  * The current My-Loop footer
  */
 const MyLoopFooter = ({}) => {
+	let bgColour = 'bg-white';
+	if (window.location.pathname.startsWith('/ourstory')) bgColour = 'bg-gl-light-pink'
+
 	// Allow inner pages to modify className for styling
 	let dsClassName = getFooterClassName();
-	const fullClassName = space('my-loop-footer', dsClassName);
+	const fullClassName = space('my-loop-footer', bgColour, dsClassName);
 	return <Container fluid className={fullClassName}>
 		<Row>
 			<img src="/img/curves/curve-dark-turquoise.svg" className='w-100 footer-curve'/>

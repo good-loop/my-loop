@@ -7,12 +7,15 @@ import { getDataItem } from '../../base/plumbing/Crud';
 import C from '../../C';
 import CharityLogo from '../CharityLogo';
 import { getBrowserVendor, isPortraitMobile, space } from '../../base/utils/miscutils';
-import { PageCard, CardImgLeft, NewsSection } from './CommonComponents';
+import { PageCard, CardImgLeft, NewsAwards, TriCards } from './CommonComponents';
 import {T4GSignUpButton} from '../T4GSignUp';
 
 const OurStorySplash = () => {
 	return (<>
-		<PageCard className="text-center">
+		<div className="our-story-curve-banner">
+			<img className='w-100 curve' src="img/curves/curve-white.svg" alt="" />
+		</div>
+		<PageCard className="text-center pt-0">
 			<h1>Our Story</h1>
 			<p>At Good-Loop, we're on a mission to make the internet a more postive place and to make online advertising a more positive force in the world.</p>
 		</PageCard>
@@ -27,9 +30,9 @@ const OurStorySplash = () => {
 	</>)
 }
 
-const OutMissionSection = ({classname}) => {
+const OutMissionSection = ({className}) => {
 	return (<>
-		<PageCard className={space("text-center bg-gl-light-pink", classname)}>
+		<PageCard className={space("text-center bg-gl-light-pink", className)}>
 			<div>
 				<h1>Let's make the internet a more postive place</h1>
 				<p>At Good-Loop, we work with fantastic brands that want to make advertising good for everyone. The way we do it couldn't be simpler. We just need the final piece of the puzzle to make it happen - you.</p>
@@ -44,9 +47,9 @@ const OutMissionSection = ({classname}) => {
 	</>)
 }
 
-const CaringCommunitySection = ({classname}) => {
+const CaringCommunitySection = ({className}) => {
 	return (<>
-		<PageCard className={space("text-center bg-gl-light-pink", classname)}>
+		<PageCard className={space("text-center bg-gl-light-pink", className)}>
 			<div>
 				<h1>We're one big caring community</h1>
 				<p>Today we're a fast-growing community of passionate, kind and caring people united by one ambition - to use online tech to make the world a better place.</p>
@@ -63,7 +66,7 @@ const CaringCommunitySection = ({classname}) => {
 				</Col>
 			</Row>
 			</PageCard>
-			<PageCard className={space("text-center bg-gl-light-pink pt-0", classname)}>
+			<PageCard className={space("text-center bg-gl-light-pink pt-0", className)}>
 				<h1>We're all driven by the same value too</h1>
 				<Row className="pt-5">
 					<Col md={4} className="video-points">
@@ -97,13 +100,40 @@ const CaringCommunitySection = ({classname}) => {
 		</>)
 }
 
+const MyGetInvolvedSection = () =>{
+
+	return(<>
+	<PageCard className={"my-get-involved white text-center bg-gl-desat-blue pb-0"}>
+		<h1 className='white mb-5'>Get Involved!</h1>
+		<p className='mb-5'>Join the My.Good-Loop community today and start raising money for chairty. For free.</p>
+		<T4GSignUpButton />
+	</PageCard>
+	<img className='w-100 d-none d-md-block' src="img/curves/curve-desat-blue-bottom.svg" alt="" />
+	<div className="text-center">
+		<p>We're developing exciting new products that will help us all make the internet a more positive place. Register below to get exlusive access to future product launches and join the Good-Loop movement.</p>
+		<p>Your email</p>
+		<input type="email" />
+		<p><b>TODO</b> Register Area</p>
+	</div>
+	</>)
+}
+
 export const OurStoryPage = () => {
 	return (<>
 	<div className="OurStoryPage widepage">
 		<OurStorySplash />
 		<OutMissionSection />
-		<NewsSection />
+		<NewsAwards firstIMG="img/homepage/BBCNews.png" secondIMG="img/homepage/The-Guardian.png" thirdIMG="img/homepage/BBCNews.png">
+			<h1 className='mb-5'>We've been featured by</h1>
+		</NewsAwards>
 		<CaringCommunitySection />
+		<NewsAwards firstIMG="Awards1" secondIMG="Awards2" thirdIMG="Awards3" />
+		<MyGetInvolvedSection classname="" />
+		<TriCards className="bg-gl-light-pink" 
+			firstTitle="Check out our podcast" firstText="Discover... a sentence about this page/article" firstIMG="img/ourstory/podcast-mic.png"
+			secondTitle="Good-Loop for business" secondText="Discover... a sentence about this page/article" secondIMG="img/homepage/good-loop-for-business.png"
+			thirdTitle="Good-Loop for charities" thirdText="Discover... a sentence about this page/article" thirdIMG="img/ourstory/part-of-earth.png"
+		/>
 	</div>
 	</>)
 }
