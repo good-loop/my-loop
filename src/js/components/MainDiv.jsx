@@ -124,6 +124,9 @@ const MainDiv = () => {
 	if ( ! Roles.isTester()) {
 		delete navPageLinks["about-us"];
 		delete navPageLabels["About Us"];
+
+		delete navPageLinks["our-impact"].green;
+		delete navPageLabels["Our Impact"]["Green Media"];
 	}
 
 	return (<MainDivBase
