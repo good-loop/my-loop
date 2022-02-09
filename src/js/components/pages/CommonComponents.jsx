@@ -26,6 +26,7 @@ const PageCard = ({className, children}) => {
 const CurvePageCard = ({color, className, style, bgClassName, bgImg, children}) => {
 	const TopComponent = bgImg ? BG : 'div';
 	const myStyle = {marginTop:-1, marginBottom:-10, ...style};
+	console.log("CURVE CARD BG CLASSNAME ", bgClassName);
 	return <>
 		<TopComponent className={bgClassName} style={myStyle} src={bgImg}>
 			<img src={"/img/curves/curve-"+color+".svg"} className='w-100'/>
@@ -176,6 +177,8 @@ const T4GCharityScreenshot = ({ngo, className, ...props}) => {
  * @param {?String} bgClassName change the background colour of the carousel section with a bg-class
  */
 const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassName}) => {
+
+	console.log("T4G BG CLASSNAME", bgClassName);
 
 	const [animating, setAnimating] = useState(false);
 	const [index, setIndex] = useState(0);
