@@ -121,7 +121,7 @@ const GreenLanding = ({ }) => {
 		}
 	}
 
-	// TODO Mobile view wants pin markers + list of descriptions below
+	// TODO Mobile view should have pin markers only + list of descriptions below
 	const projectMarkers = mapProjects.map(project => {
 		const coords = toRobinson(project.lat, project.long);
 		const style = {left: `calc(${coords[0] - 1}% - 14em)`, top: `calc(${coords[1] - 4}% - 8em)`};
@@ -137,6 +137,11 @@ const GreenLanding = ({ }) => {
 		)
 	});
 
+	// "Explore Our Impact" button scrolls to the map
+	const scrollToMap = () => {
+		document.querySelectorAll('.projects-map')[0].scrollIntoView({block: 'start', behavior: 'smooth'});
+	};
+
 	return (
 		<div className="GreenLandingPage widepage">
 			<div className="landing-splash">
@@ -150,7 +155,7 @@ const GreenLanding = ({ }) => {
 					<div className="carbon-neutral-container">
 						with <img className="carbon-neutral-logo" src="/img/green/gl-carbon-neutral.svg" />
 					</div>
-					<a className="btn splash-explore">EXPLORE OUR IMPACT</a>
+					<a className="btn splash-explore" onClick={scrollToMap}>EXPLORE OUR IMPACT</a>
 				</div>
 			</div>
 			<div className="mission pb-1">
