@@ -55,6 +55,26 @@ const CardImgLeft = ({classname, imgUrl, children}) =>{
 	)
 }
 
+const MyLandingBackgroundImage = ({bgImg, children}) => {
+	return bgImg ? (
+		<BG src={isPortraitMobile() ? null : bgImg} className="landing-bg">
+			<BG src="/img/LandingCharity/t4g-splash-screen-background.svg" className="landing-splash">
+				{children}
+			</BG>
+		</BG>
+	) : (
+		<BG src="/img/splash-screen/background-0.svg" className="landing-bg">
+			<BG src="/img/splash-screen/background-1.png">
+				<BG src="/img/splash-screen/background-2.svg">
+					<BG src="/img/splash-screen/background-3.png" className="landing-bg">
+						{children}
+					</BG>
+				</BG>
+			</BG>
+		</BG>
+	);
+}
+
 const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 	if ( ! title) {
 		title = `Turn your web browsing into ${(ngo && "cash for " + ngo.name) || "charity donations"}. For free.`;
@@ -65,30 +85,28 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 	if ( ! bgImg && ngo) bgImg = ngo.images;
 	return (
 		<>
-		<BG src={isPortraitMobile() ? null : bgImg} className="landing-bg">
-			<BG src="/img/LandingCharity/t4g-splash-screen-background.svg" className="landing-splash">
-				<Container fluid className={space("d-flex", !shiftLeft ? "justify-content-center" : "left-padding")}>
-					<Row className="mb-3 mt-5">
-							{!shiftLeft && <Col md={1} sm={0} /* left padding, but not on mobile */></Col>}
-							<Col md={6} className="landing-left">
-									<div className="title mt-5"> 
-											<h2>{title}</h2>
-											<p>{text}</p>
-									</div>
-									<div className="cta-buttons text-uppercase mt-5">
-											<T4GCTA className="w-100"/>
-											<button className="btn btn-secondary w-100 text-uppercase mt-3"	
-												onClick={e => scrollTo("howitworks")}										
-											>
-													See how it works
-											</button>
-									</div>
-							</Col>
-							{shiftLeft && <Col md={6}></Col>}
-					</Row>
-				</Container>				
-			</BG>
-		</BG>
+		<MyLandingBackgroundImage bgImg={bgImg}>
+			<Container fluid className={space("d-flex", !shiftLeft ? "justify-content-center" : "left-padding")}>
+				<Row className="mb-3 mt-5">
+						{!shiftLeft && <Col md={1} sm={0} /* left padding, but not on mobile */></Col>}
+						<Col md={6} className="landing-left">
+								<div className="title mt-5"> 
+										<h1 className='text-left bolder'>{title}</h1>
+										<p>{text}</p>
+								</div>
+								<div className="cta-buttons text-uppercase mt-5">
+										<T4GCTA className="w-100"/>
+										<button className="btn btn-secondary w-100 text-uppercase mt-3"	
+											onClick={e => scrollTo("howitworks")}										
+										>
+												See how it works
+										</button>
+								</div>
+						</Col>
+						{shiftLeft && <Col md={6}></Col>}
+				</Row>
+			</Container>
+		</MyLandingBackgroundImage>
 		</>
 	);
 };
@@ -194,14 +212,14 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 	return (<>
 		<PageCard className={space("tabs-for-goods-slide-card", bgClassName)}>
 			{showUpperCTA && <div className="upper-cta white">
-				<h1 className='mb-5'>Sign Up Today!</h1>
-				<p className='leader-text'>Start transforming your web browsing into life saving vaccines, meals for children in need, preserving habitats for endangered animals, plus many more good causes.</p>
+				<h1 className='mb-5 white'>Sign Up Today!</h1>
+				<p className='leader-text text-center'>Start transforming your web browsing into life saving vaccines, meals for children in need, preserving habitats for endangered animals, plus many more good causes.</p>
 				<div className="mt-5">
-					<T4GCTA className="w-100"/>
-					<button className="btn btn-secondary w-100 text-uppercase mt-3 d-none d-md-block">
+					<T4GCTA className="w-50 mx-auto"/>
+					<button className="btn btn-secondary w-50 text-uppercase mt-3 d-none d-md-block mx-auto">
 						Learn More About Tabs For Good
 					</button>
-					<button className="btn btn-secondary w-100 text-uppercase mt-3 d-block d-md-none">
+					<button className="btn btn-secondary w-50 text-uppercase mt-3 d-block d-md-none mx-auto">
 						Learn More
 					</button>
 				</div>
@@ -289,7 +307,7 @@ const TestimonialSectionTitle = () => {
 		<div className="container">
 			<div className="testimonial-upper text-center">
 				<h1>TOGETHER WE'VE RAISED OVER £3.9 MILLION!</h1>
-				<p>We donate to charities worldwide. Spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
+				<p className='leader-text'>We donate to charities worldwide. Spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
 				{/* <a className='btn btn-primary text-uppercase' href="#">Explore our charity impact</a> */}
 			</div>
 		</div>
@@ -306,7 +324,7 @@ const TestimonialSectionLower = () => {
 				<div className="testimonial-card my-0 my-md-5">
 					<div className="row">
 						<div className="col-md-6 p-0">
-							<img className='w-100 h-100' src="img/homepage/testimonial-1.png" alt="" />
+							<img className='w-100 h-100' src="/img/homepage/photo-by-priscilla-du-preez-unsplash.jpg" alt="" />
 						</div>
 						<div className="col-md-6 testimonial-right p-5">
 								<h3>Testimonial</h3>
@@ -324,21 +342,21 @@ const TestimonialSectionLower = () => {
 								<img className='logo logo-lg' src="/img/charity-logos/we-forest.jpeg" alt="We Forest logo" />
 							</Circle>
 							<h3 className='pt-md-4'>721.3 Hectares</h3>
-							<p className=''>of forest restored - that's 1,000+ football pitches!</p>
+							<p className='leader-text text-uppercase nomargin'>of forest restored - that's 1,000+ football pitches!</p>
 						</div>
 						<div className="col-md-4 testimonial-points">
 							<Circle className="mx-auto" width='8em'>
 								<img className='logo logo-lg' src="/img/charity-logos/no-kid-hungry.png" alt="No Kid Hungry logo" />
 							</Circle>
 							<h3 className='pt-md-4'>183,318 Meals</h3>
-							<p className=''>provided for children</p>
+							<p className='leader-text text-uppercase nomargin'>provided for children</p>
 						</div>
 						<div className="col-md-4 testimonial-points">
 							<Circle className="mx-auto" width='8em'>
 								<img className='logo logo-lg' src="/img/charity-logos/mind.png" alt="Mind logo" />
 							</Circle>
 							<h3 className='pt-md-4'>500+ Helpline Calls</h3>
-							<p className=''>and 195 hours of online peer-to-peer support</p>
+							<p className='leader-text text-uppercase nomargin'>and 195 hours of online peer-to-peer support</p>
 						</div>
 					</div>
 				</div>
@@ -353,7 +371,7 @@ const TestimonialSectionLower = () => {
  */
 const Circle = ({className, color="bg-light", width,children}) => {
 	return <div 
-		className={space(className, color, 'rounded-circle d-flex justify-content-center align-items-center')} 
+		className={space(className, color, 'rounded-circle d-flex justify-content-center align-items-center overflow-hidden')} 
 		style={{width,height:width}}>
 		{children}
 		</div>;

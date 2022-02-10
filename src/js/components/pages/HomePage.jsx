@@ -44,15 +44,15 @@ const HomePage = ({spring}) => {
 
 	return (<>
 		<div className="HomePage widepage">
-			<MyLandingSection />
+			<MyLandingSection shiftLeft/>
 			<CharityBanner />
 			<HowTabsForGoodWorks />
 			<TabsForGoodSlideSection img="/img/homepage/charities.png" showUpperCTA />
 			<NewsAwards />
 			<PositivePlaceSection className="blue-gradient"/>
 			<WatchVideoSection />
-			<CurvePageCard color='dark-turquoise' className='' bgclassName='' bgImg=''>
-				<TestimonialSectionTitle />
+			<CurvePageCard color='dark-turquoise' className='' bgClassName='bg-gl-light-blue' bgImg=''>
+			<TestimonialSectionTitle />
 			</CurvePageCard>
 			<TestimonialSectionLower />
 			<GetInvolvedSection />

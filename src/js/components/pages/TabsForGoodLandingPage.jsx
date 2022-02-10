@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Col, Container, Row } from 'reactstrap';
 import Misc from '../../base/components/Misc';
 import KStatus from '../../base/data/KStatus';
 import { getDataItem } from '../../base/plumbing/Crud';
 import C from '../../C';
 import CharityLogo from '../CharityLogo';
+import { setFooterClassName } from '../Footer';
 import { T4GCTA } from '../T4GSignUp';
 import { WhatIsTabsForGood, HowTabsForGoodWorks, TabsForGoodSlideSection, TriCards, CurvePageCard, MyLandingSection, PageCard, PositivePlaceSection, CornerHummingbird } from './CommonComponents';
 
@@ -25,6 +26,11 @@ const WellMakeItHappenSection = () => {
 };
 
 const TabsForGoodLandingPage = () => {
+
+	useEffect(() => {
+		setFooterClassName('bg-gl-light-blue');
+	}, []);
+
 	return (<>
 		<MyLandingSection title={<>Tabs-for-Good<br/>The browser plugin that allows you to do good just by opening a new tab</>} text=" " />
 		<CornerHummingbird/>
