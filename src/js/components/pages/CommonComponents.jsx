@@ -54,18 +54,25 @@ const CardImgLeft = ({classname, imgUrl, children}) =>{
 	)
 }
 
-const MyLandingSection = ({ngo}) => {
-
+const MyLandingSection = ({ngo, title, text, bgImg}) => {
+	if ( ! title) {
+		title = `Turn your web browsing into ${(ngo && "cash for " + ngo.name) || "charity donations"}. For free.`;
+	}
+	if ( ! text) {
+		text = `Get our Tabs For Good Browser Plugin today and start raising money for ${(ngo && ngo.name) || "good causes"} - just by browsing the internet.`;
+	}
+	if ( ! bgImg && ngo) bgImg = ngo.images;
 	return (
 		<>
-		<BG src={isPortraitMobile() ? null : ((ngo && ngo.images) || "")} className="landing-bg">
+		<BG src={isPortraitMobile() ? null : bgImg} className="landing-bg">
 			<BG src="/img/LandingCharity/t4g-splash-screen-background.svg" className="landing-splash">
 				<Container fluid className="d-flex justify-content-center">
 					<Row className="mb-3 mt-5">
+							<Col md={1} sm={0} /* left padding, but not on mobile */></Col>
 							<Col md={6} className="landing-left">
 									<div className="title mt-5"> 
-											<h2>Turn your web browsing into {(ngo && "cash for " + ngo.name) || "charity donations"}. For free.</h2>
-											<p>Get our Tabs For Good Browser Plugin today and start raising money for {(ngo && ngo.name) || "good causes"} – just by browsing the internet. </p>
+											<h2>{title}</h2>
+											<p>{text}</p>
 									</div>
 									<div className="cta-buttons text-uppercase mt-5">
 											<T4GCTA className="w-100"/>

@@ -26,7 +26,7 @@ const WellMakeItHappenSection = () => {
 
 const TabsForGoodLandingPage = () => {
 	return (<>
-		<MyLandingSection/>
+		<MyLandingSection title={<>Tabs-for-Good<br/>The browser plugin that allows you to do good just by opening a new tab</>} text=" " />
 		<CornerHummingbird/>
 		<WhatIsTabsForGood imgs={['/img/LandingCharity/T4GScreenshot.png']} />
 		<HowTabsForGoodWorks />
