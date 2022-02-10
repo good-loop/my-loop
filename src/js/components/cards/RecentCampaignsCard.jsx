@@ -21,35 +21,35 @@ const campaignInfos = [
 	{
 		name: "LEVI'S",
 		adid: "ko3s6fUOdq",
-		url: "/#campaign/?gl.vertiser=XR67PcGn",
+		url: "/campaign/?gl.vertiser=XR67PcGn",
 		vertiser:"XR67PcGn",
 		title: "LEVI's advert"
 	},
 	{
 		name: "Ribena",
 		adid: "B1lF97utxD",
-		url: "/#campaign/?gl.vertiser=FBY5QmWQ",
+		url: "/campaign/?gl.vertiser=FBY5QmWQ",
 		vertiser:"FBY5QmWQ",
 		title: "Ribena advert"
 	},
 	{
 		name: "Mango",
 		adid: "ojjiPf7kbB",
-		url: "/#campaign/?gl.vertiser=1JBFB6K4",
+		url: "/campaign/?gl.vertiser=1JBFB6K4",
 		vertiser:"1JBFB6K4",
 		title: "Mango advert"
 	},
 	{
 		name: "Cadbury",
 		adid: "qgbiSQ0crN",
-		url: "/#campaign/?gl.vertiser=cadbury_bpngtolk",
+		url: "/campaign/?gl.vertiser=cadbury_bpngtolk",
 		vertiser:"cadbury_bpngtolk",
 		title: "Cadbury advert"
 	},
 	{
 		name: "Pantene",
 		adid: "hwtjNncj",
-		url: "/#campaign/?gl.vertiser=zqhRrBjF",
+		url: "/campaign/?gl.vertiser=zqhRrBjF",
 		vertiser:"zqhRrBjF",
 		title: "Pantene advert"
 	}

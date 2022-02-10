@@ -25,6 +25,7 @@ ServerIO.NO_API_AT_THIS_HOST = true;
 
 // Usually use the live adserver, since our showcase ad selection is hard-coded to live ads.
 ServerIO.AS_ENDPOINT = 'https://as.good-loop.com';
+ServerIO.PORTAL_ENDPOINT = 'https://portal.good-loop.com';
 
 // ServerIO.MEDIA_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}uploads.good-loop.com/`;
 
@@ -41,10 +42,6 @@ ServerIO.DATALOG_ENDPOINT = "https://lg.good-loop.com/data";
 
 ServerIO.checkBase();
 
-/** The initial part of an API call. Allows for local to point at live for debugging */
-ServerIO.APIBASE = 
-	ServerIO.PORTAL_ENDPOINT; //  My-Loop has no backend of its own - just use portal domain matching local/test/prod
-	// 'https://portal.good-loop.com';//
 
 ServerIO.ENDPOINT_NGO = `https://app.sogive.org/charity`;
 
