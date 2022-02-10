@@ -208,8 +208,8 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 				<Col md={6} className="slide-left overflow-hidden">
 					<T4GCharityScreenshot ngo={ngo} className="slide-img"/>
 				</Col>
-				<Col md={6} className="slide-right p-5">
-					<BSCarousel>
+				<Col md={6} className="slide-right">
+					<BSCarousel className="p-5">
 						{slides}
 					</BSCarousel>
 				</Col>
