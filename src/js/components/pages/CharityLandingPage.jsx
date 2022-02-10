@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import { Col, Container, Row } from 'reactstrap';
 import Misc from '../../base/components/Misc';
+import { setNavProps } from '../../base/components/NavBar';
 import KStatus from '../../base/data/KStatus';
 import { getDataItem } from '../../base/plumbing/Crud';
+import DataStore from '../../base/plumbing/DataStore';
 import { isPortraitMobile } from '../../base/utils/miscutils';
 import C from '../../C';
 import CharityLogo from '../CharityLogo';
@@ -127,6 +129,9 @@ const CharityLandingPage = () => {
 		return <Misc.Loading />;
 	}
 	const ngo = pvCharity.value;
+
+	// set NavBar brand
+	setNavProps(ngo);
 
 	useEffect(() => {
 		//setFooterClassName('bg-gl-desat-blue');

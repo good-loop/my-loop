@@ -6,6 +6,7 @@ import DataStore from '../../base/plumbing/DataStore';
 import PropControl from '../../base/components/PropControl';
 import { doRegisterEmail, PURPOSES } from '../../base/data/Person';
 import { setPersonSetting } from '../pages/TabsForGoodSettings';
+import { getNavProps } from '../../base/components/NavBar';
 
 
 /**
@@ -24,17 +25,22 @@ const SubscriptionBox = ({title="Support the causes you care about, and see the 
 };
 
 
-export const SubscriptionForm = ({label="", purpose=PURPOSES.email_mailing_list, charityId, buttonText="Sign me up"}) => {
+export const SubscriptionForm = ({label="", product, purpose=PURPOSES.email_mailing_list, charityId, buttonText="Sign me up"}) => {
 	// NB: suppose we have a subscribe-to-mailing-list and a preregister form on the same page? Keep the data separate.
 	// OTOH two subscribe-to-mailing-list forms are treated as overlapping
 	// ??
-	const ctaFormPath = ['misc', 'ctaForm', purpose];
-
+	const ctaFormPath = ['misc', 'ctaForm', purpose];	
 	DataStore.setValue(ctaFormPath.concat("purpose"), purpose);
+	const formData = DataStore.getValue(ctaFormPath);
+	formData.product = product; // optional extra info, will default to app = my.good-loop.com
+	// charity (NGO) or brand (Advertiser) specific?
+	const nprops = getNavProps();
+	if (nprops && nprops.brandType) {
+		formData[nprops.brandType] = nprops.brandId;
+	}
 
 	const doEmailSignUp = e => {
-		stopEvent(e);
-		const formData = DataStore.getValue(ctaFormPath);
+		stopEvent(e);		
 		if ( ! formData || ! formData.email) return; // quiet fail NB: we didnt like the disabled look for a CTA
 		doRegisterEmail(formData);
 		if (charityId) {
@@ -50,6 +56,7 @@ export const SubscriptionForm = ({label="", purpose=PURPOSES.email_mailing_list,
 	
 	return (<Form onSubmit={doEmailSignUp}>
 				<p className='white'><b>{label}</b></p>
+				<input type="hidden" name="purpose" value={purpose} />
 				<FormGroup className="mb-2 mr-sm-2 mb-sm-0 outer-form-group flex-grow-1 m-0 pr-md-3">
 					<PropControl
 						className="newsletter-email"
@@ -59,8 +66,9 @@ export const SubscriptionForm = ({label="", purpose=PURPOSES.email_mailing_list,
 					/>
 				</FormGroup>
 				{purpose!==PURPOSES.email_mailing_list 
-					&& <PropControl type="checkbox" path={ctaFormPath} label="Subscribe to our good news mailing list :)" prop="purpose2" value={PURPOSES.email_mailing_list} />}
-				<Button color="subscribe" disabled={hasSubmittedEmail} className="flex-grow-0">
+					&& <PropControl type="checkbox" path={ctaFormPath} label="Subscribe to our good news mailing list :)" prop="purpose2" value={PURPOSES.email_mailing_list} />
+				}
+				<Button onClick={doEmailSignUp} color="primary" disabled={ ! formData.email || hasSubmittedEmail} className="flex-grow-0">
 					{buttonText}
 				</Button>				
 			</Form>);
