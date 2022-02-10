@@ -191,10 +191,10 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 
 	return (<>
 		<PageCard className={space("tabs-for-goods-slide-card", bgClassName)}>
-			{showUpperCTA && <div className="upper-cta text-center white">
+			{showUpperCTA && <div className="upper-cta white">
 				<h1 className='mb-5'>Sign Up Today!</h1>
-				<h4>Start transforming your web browsing into life saving vaccines, meals for children in need, preserving habitats for endangered animals, plus many more good causes.</h4>
-				<div className="upper-cta-btn mt-5">
+				<p className='leader-text'>Start transforming your web browsing into life saving vaccines, meals for children in need, preserving habitats for endangered animals, plus many more good causes.</p>
+				<div className="mt-5">
 					<T4GCTA className="w-100"/>
 					<button className="btn btn-secondary w-100 text-uppercase mt-3 d-none d-md-block">
 						Learn More About Tabs For Good
