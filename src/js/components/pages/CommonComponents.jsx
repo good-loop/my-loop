@@ -127,18 +127,18 @@ const HowTabsForGoodWorks = ({classname}) => {
 			<h1>How Tabs For Good Works</h1>
 			<Row className="pt-5">
 				<Col md={4} className='pt-2 pt-md-0 how-it-works-points'>
-					<img className='w-50' src="/img/homepage/globe.png" alt="" />
+					<img className='w-50' src="/img/icons/laptop.png" alt="" />
 					<h3 className='pt-4'>Open a tab</h3>
 					<p className='pt-3'>When you open a new tab, we display a small unobtrusive banner ad at the bottom of your page while you're busy browsing away. </p>
 				</Col>
 				<Col md={4} className='pt-2 pt-md-0 how-it-works-points'>
-					<img className='w-50' src="/img/homepage/heart.png" alt="" />
+					<img className='w-50' src="/img/icons/coin.png" alt="" />
 					<h3 className='pt-4'>Unlock a donation</h3>
 					<p className='pt-3'>As a thank you for letting the ad appear on your page, 
 						you make a free donation to charity, funded by us. 50% of the ad money to be precise. </p>
 				</Col>
 				<Col md={4} className='pt-2 pt-md-0 how-it-works-points'>
-					<img className='w-50' src="/img/homepage/world.png" alt="" />
+					<img className='w-50' src="/img/icons/tick.png" alt="" />
 					<h3 className='pt-4'>That's it!</h3>
 					<p className='pt-3'>We don't track your online activity and you don't even have to click on the ad to make the donation happen. It really is that simple. </p>
 				</Col>
