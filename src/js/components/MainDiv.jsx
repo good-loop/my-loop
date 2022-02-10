@@ -40,6 +40,7 @@ import OurStoryPage from './pages/OurStoryPage';
 import ForBusinessPage from './pages/ForBusinessPage';
 import ForCharityPage from './pages/ForCharityPage';
 import { T4GCTA, T4GSignUpModal, T4GPluginButton } from './T4GSignUp';
+import { MyLoginWidgetGuts } from './MyLoginWidgetGuts';
 
 // DataStore
 C.setupDataStore();
@@ -144,6 +145,7 @@ const MainDiv = () => {
 		loginSubtitle="Sign in to see how your web browsing has transformed into charity donations"
 		noSocials
 		loginChildren={() => <div className='text-center'><T4GPluginButton onClick={() => setShowLogin(false)}>Not got an account? Sign up and get Tabs for Good</T4GPluginButton></div>}
+		LoginGuts={MyLoginWidgetGuts}
 	></MainDivBase>);
 };
 
