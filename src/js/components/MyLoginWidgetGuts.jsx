@@ -7,7 +7,9 @@ import { T4GSignUpLink } from './T4GSignUp';
 export const MyLoginWidgetGuts = ({services, verb, onLogin, onRegister, noRegister}) => {
 	if (!verb) verb = DataStore.getValue(VERB_PATH) || 'login';
 	return (
-		<div className="login-guts container-fluid">
+		<div className="login-guts container-fluid position-relative">
+			<img src="/img/green/hummingbird.png" className='hummingbird login'/>
+			<img src="/img/signup/hand-globe-coins.png" className='hand-globe'/>
 			<div className='d-flex flex-column justify-content-center align-items-center p-5'>
 				<img src="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" className='login-logo'/>
 				<p className='leader-text black login-subtitle my-4'>Sign in to see how your web browsing has transformed into charity donations</p>
