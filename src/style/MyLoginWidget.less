@@ -28,6 +28,19 @@
 		display: none;
 	}
 
+	.myloop-email-login {
+		.action-btns {
+			display: flex;
+			flex-direction: column-reverse;
+			.reset-link,.btn {
+				width: 100%;
+			}
+			.btn {
+				margin-top: 1.5rem;
+			}
+		}
+	}
+
 	.modal-body {
 		padding: 0;
 		@media @width-mobile {
@@ -46,6 +59,7 @@
 		.login-subtitle {
 			text-align: center;
 			width: 50%;
+			font-size: 1.3rem;
 			@media @width-mobile {
 				width: 90%;
 			}
