@@ -94,7 +94,7 @@ export const T4GSignUpModal = ({charity}) => {
 			toggle={() => showT4GSignUpModal(!show)}
 			size="lg"
 		>
-			<ModalBody className='m-2'>
+			<ModalBody>
 				<div>
 					<CloseButton size='lg' onClick={() => showT4GSignUpModal(false)}/>
 					<img className="hummingbird" src="/img/green/hummingbird.png" />
@@ -116,38 +116,78 @@ const DesktopSignUp = ({charity}) => {
 		return <NotAvailableYet browser={browser} />
 	}	
 	// NB: we have the left and right step 1 / 2 below
+
+	const SlideItems = [
+		<div className='slide-item text-center align-items-center'>
+			<p className="text-center px-3">Thanks for joining us and getting Tabs for Good. You'll be all set in two simple steps:</p>
+			<Row className='px-5'>
+				<Col md={4}>
+					<h1 style={{fontSize:"1rem"}}>Step 1</h1>
+				</Col>
+				<Col md={8}>
+					<p>Sign up</p>
+				</Col>
+			</Row>
+			<Row className='px-5'>
+				<Col md={4}>
+					<h1 style={{fontSize:"1rem"}}>Step 2</h1>
+				</Col>
+				<Col md={8}>
+					We'll take you to the Chrome Store to install the Tabs for Good plugin.
+				</Col>
+			</Row>
+		</div>,
+		<div className='slide-item text-center align-items-center'>
+			<img className='w-50 mb-3' src="img/signup/charities.png" alt="" />
+			<p className='px-3'>When you sign up, you'll get your own personalised portal where you can select the charity you want to support and see your impact grow</p>
+		</div>,
+		<div className='slide-item text-center align-items-center'>
+			<img className='w-50 mb-3' src="img/signup/step-3.png" alt="" />
+			<p className='px-3'>Once you're signed up, we'll immeditatly provide you with a link to the Chrome Store where you can add Tabs for Good to your browser </p>
+			</div>,
+		<div className='slide-item text-center align-items-center'>
+			<img className='w-50 mb-3' src="img/signup/browse-good.png" alt="" />
+			<p className='px-3'>Once you've installed Tabs for Good, you can feel confident that your browsing is adding up into a force for good</p>
+		</div>
+	];
+
+	const SlideBG = ['bg-gl-light-pink', 'bg-gl-lighter-blue', 'bg-gl-light-pink', 'bg-gl-lighter-blue'];
+
+	const slides = SlideItems.map((content, i) => (
+		<div key={i} className={space('d-flex flex-column justify-content-center h-100', SlideBG[i])}>
+			{content}
+		</div>
+));
+
 	return <Container fluid>
 		<Row>
-			<Col className='sign-up-left'>
+			<Col className='sign-up-left px-0'>
 				{ ! Login.isLoggedIn()?
-					<BSCarousel className="px-5" light>
-						<div className='d-flex flex-column justify-content-center h-100'>
-							<p>You'll be all set in two simple steps</p>
-							
-							<p>Step 1: Sign Up</p>
-
-							<p>Step 2: We'll take you to the {toTitleCase(browser)} store to install the Tabs-for-Good plugin.</p>
-						</div>
-						<div className='d-flex flex-column justify-content-center h-100'>
-							Once you've installed Tabs-for-Good 
-							your browsing will add up into a force for good.
-						</div>
+					<BSCarousel className="px-0" light hasIndicators>
+						{slides}
 					</BSCarousel>
-				: /* Step 2 */ <div>
-					<p>Successs! You've signed up.</p>
-					<p>Now click on the button to install Tabs-for-Good.</p>
+				: /* Step 2 */ <div className="d-flex flex-column justify-content-center h-100 bg-gl-light-pink">
+					<div className='slide-item text-center align-items-center'>
+						<p>Successs! You've signed up.</p>
+						<p>Now click on the button to install Tabs-for-Good.</p>
+						<img id="globe-piggy-step-2" className='w-50' src="img/signup/globe-piggy-bank-crop.png" alt="" />
+					</div>
 				</div>
 				}
 			</Col>
-			<Col className='sign-up-right m-0 d-flex flex-column justify-content-center h-100'>
-				<p>Tabs For Good By Good-Loop (Logo)</p>
+			<Col className='sign-up-right m-0 d-flex flex-column justify-content-center align-items-center h-100'>
+				<img className="w-50" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
 				{ ! Login.isLoggedIn()?
 					<div>						
-						Step 1 - Sign Up
+						<p>Step 1 - Sign Up</p>
+						 <div className="steps-graphic">
+							 <div className="circle circle-active"></div>
+							 <div className="circle"></div>
+						 </div>
 						<LoginWidgetEmbed verb='register' onLogin={() => console.warn("TODO set charity??")}/>
 					</div>
 					: /* Step 2 */ <div>
-						Step 2 - Install the Plugin
+						<p>Step 2 - Install the Plugin</p>
 						<T4GPluginButton />
 					</div>
 				}
