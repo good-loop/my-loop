@@ -4,7 +4,7 @@ import { EmailSignin, setShowLogin, VERB_PATH } from '../base/components/LoginWi
 import DataStore from '../base/plumbing/DataStore';
 import { T4GSignUpLink } from './T4GSignUp';
 
-export const MyLoginWidgetGuts = ({services, verb, onLogin, onRegister, noRegister}) => {
+export const MyLoginWidgetGuts = ({services, verb, onLogin, onRegister, canRegister}) => {
 	if (!verb) verb = DataStore.getValue(VERB_PATH) || 'login';
 	return (
 		<div className="login-guts container-fluid position-relative">
@@ -19,7 +19,7 @@ export const MyLoginWidgetGuts = ({services, verb, onLogin, onRegister, noRegist
 							verb={verb}
 							onLogin={onLogin}
 							onRegister={onRegister}
-							noRegister={noRegister}
+							canRegister={canRegister}
 							className="myloop-email-login"
 						/>
 					</Col>

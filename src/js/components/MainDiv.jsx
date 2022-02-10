@@ -139,7 +139,7 @@ const MainDiv = () => {
 		// navbarLabels={getNavbarLabels}
 		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account', 'green', 'charities', 'impactoverview', 'campaign', 'ourstory']}
 		Footer={Footer}
-		noRegister
+		canRegister
 		noLoginTitle
 		loginLogo="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png"
 		loginSubtitle="Sign in to see how your web browsing has transformed into charity donations"

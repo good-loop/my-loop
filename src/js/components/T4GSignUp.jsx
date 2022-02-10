@@ -10,6 +10,7 @@ import { getShowLogin, LoginWidgetEmbed, setShowLogin } from '../base/components
 import Misc from '../base/components/Misc';
 import { getNavProps } from '../base/components/NavBar';
 import { getId } from '../base/data/DataClass';
+import NGO from '../base/data/NGO';
 import { getDataItem } from '../base/plumbing/Crud';
 import DataStore from '../base/plumbing/DataStore';
 import { getBrowserVendor, isMobile, space, stopEvent, toTitleCase } from '../base/utils/miscutils';
@@ -214,7 +215,8 @@ const DesktopSignUp = ({charity}) => {
 							<span id="circle-step-2">Step 2 - Install the Plugin</span>
 						</div>
 						<div className="w-100">
-							<LoginWidgetEmbed verb='register' product="T4G" onLogin={onRegister} />
+							<LoginWidgetEmbed verb='register' product="T4G" onLogin={onRegister} onRegister={onRegister} />
+							{charity && <div>This will set your charity to {NGO.displayName(charity)}. You can change settings at anytime.</div>}
 						</div>
 					</>
 					: /* Step 2 */ <div>
