@@ -113,10 +113,10 @@ const DesktopSignUp = ({charity}) => {
 	}	
 	// NB: we have the left and right step 1 / 2 below
 	return <Container fluid>
-		<Row className="h-100">
-			<Col className='sign-up-left m-0 h-100'>
+		<Row>
+			<Col className='sign-up-left'>
 				{ ! Login.isLoggedIn()?
-					<BSCarousel className="h-100 pl-4 pr-4" light>
+					<BSCarousel className="px-4" light>
 						<div>
 							You'll be all set in two simple steps
 							
