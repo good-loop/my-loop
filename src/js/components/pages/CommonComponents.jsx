@@ -10,6 +10,7 @@ import LinkOut from '../../base/components/LinkOut';
 import CharityLogo from '../CharityLogo';
 import { SubscriptionForm } from '../cards/SubscriptionBox';
 import Login from '../../base/youagain';
+import BSCarousel from '../../base/components/BSCarousel';
 
 const PageCard = ({className, children}) => {
 	return <Container fluid className={space('page-card', className)}>
@@ -190,11 +191,6 @@ const T4GCharityScreenshot = ({ngo, className, ...props}) => {
  */
 const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassName}) => {
 
-	console.log("T4G BG CLASSNAME", bgClassName);
-
-	const [animating, setAnimating] = useState(false);
-	const [index, setIndex] = useState(0);
-
 	const name = (ngo && ngo.name) || "charity";
 
 	const items = [
@@ -207,39 +203,19 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 			<p>Follow your online impact in the My.Good-Loop hub and see how much you’re raising for {name} – just by browsing the internet.</p>
 		</>
 	];
-
-	const next = () => {
-		if (animating) return;
-		const nextIndex = index === items.length - 1 ? 0 : index + 1;
-		setIndex(nextIndex);
-	}
-	
-	const previous = () => {
-		if (animating) return;
-		const nextIndex = index === 0 ? items.length - 1 : index - 1;
-		setIndex(nextIndex);
-	}
-	
-	/*const goToIndex = (newIndex) => {
-		if (animating) return;
-		setIndex(newIndex);
-	}*/
+	const titles = [
+		"It couldn't be easier to get started",
+		"...And see your impact grow"
+	];
 
 	const slides = items.map((content, i) => (
-		<CarouselItem
-			key={i}
-			//className="slide-right"
-			onExiting={() => setAnimating(true)}
-			onExited={() => setAnimating(false)}
-		>
-			<div className='d-flex flex-column justify-content-between h-100'>
-				<h3>It couldn't be easier to get started</h3>
+			<div key={i} className='d-flex flex-column justify-content-between h-100'>
+				<h3>{titles[i]}</h3>
 				<div className='slide-content'>
 					{content}
 				</div>
 				<T4GCTAButton className="t4gcta"/>
 			</div>
-		</CarouselItem>
 	));
 
 	return (<>
@@ -262,16 +238,9 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 					<T4GCharityScreenshot ngo={ngo} className="slide-img"/>
 				</Col>
 				<Col md={6} className="slide-right p-5">
-					<Carousel
-						activeIndex={index}
-						next={next}
-						previous={previous}
-						interval={false}
-					>
+					<BSCarousel>
 						{slides}
-						<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
-						<CarouselControl direction="next" directionText="Next" onClickHandler={next} />
-					</Carousel>
+					</BSCarousel>
 				</Col>
 			</Row>
 		</PageCard>
@@ -310,23 +279,30 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 	</>)
 };
 
-const NewsAwards = ({firstIMG, firstLink="#", secondIMG, secondLink="#", thirdIMG, thirdLink="#", children}) => {
+const NewsAwards = ({children}) => {
+	let firstIMG="/img/pub-logos/campaign-logo.png";
+	let firstLink="https://www.campaignlive.co.uk/article/meet-start-up-helping-nestle-nike-unilever-unite-programmatic-purpose/1722847";
+	let secondIMG="/img/pub-logos/marketing-brew-logo.png" ;
+	let secondLink="https://www.morningbrew.com/marketing/stories/2021/11/24/good-loop-is-creating-tools-to-make-ad-tech-more-ethical-and-sustainable"				;
+	let thirdIMG="/img/pub-logos/forbes-logo.jpeg" ;
+	let thirdLink="https://www.forbes.com/sites/afdhelaziz/2020/06/25/goodloop-an-ethical-advertising-platform-that-allows-brands-to-spend-media-dollars-and-do-good-at-the-same-time-launches-in-the-united-states/?sh=22ac280c3987";
+
 	return(
 		<PageCard>
 			{children}
 			<div className="container text-center">
 				<div className="row">
-					<div className="col sparks"><img className='logo' src="img/homepage/Stars.png" alt="" /></div>
+					<div className="col sparks"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>
 					<div className="col">
-						<a href={firstLink}><img className='logo' src={firstIMG} alt="" /></a>
+						<LinkOut href={firstLink}><img className='logo logo-lg' src={firstIMG} alt="" /></LinkOut>
 					</div>
 					<div className="col">
-						<a href={secondLink}><img className='logo' src={secondIMG} alt="" /></a>
+						<LinkOut href={secondLink}><img className='logo logo-lg' src={secondIMG} alt="" /></LinkOut>
 					</div>
 					<div className="col">
-						<a href={thirdLink}><img className='logo' src={thirdIMG} alt="" /></a>
+						<LinkOut href={thirdLink}><img className='logo logo-lg' src={thirdIMG} alt="" /></LinkOut>
 					</div>
-					<div className="col sparks"><img className='logo' src="img/homepage/Stars.png" alt="" /></div>
+					<div className="col sparks"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>
 				</div>
 			</div>
 		</PageCard>
@@ -339,8 +315,8 @@ const TestimonialSectionTitle = () => {
 	<div className="testimonial-title">
 		<div className="container">
 			<div className="testimonial-upper text-center">
-				<h1>TOGETHER WE’VE RAISED OVER £X MILLION!</h1>
-				<p>Throughout 2021 we donated to XX charities worldwide. Spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
+				<h1>TOGETHER WE'VE RAISED OVER £3.9 MILLION!</h1>
+				<p>We donate to charities worldwide. Spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
 				{/* <a className='btn btn-primary text-uppercase' href="#">Explore our charity impact</a> */}
 			</div>
 		</div>
@@ -352,7 +328,7 @@ const TestimonialSectionTitle = () => {
 const TestimonialSectionLower = () => {
 	return(<>
 		<div className="testimonial-lower">
-			<img className='w-100 d-none d-md-block' src="img/curves/curve-dark-turquoise-bottom.svg" alt="" />
+			<img className='w-100 d-none d-md-block' src="/img/curves/curve-dark-turquoise-bottom.svg" alt="" />
 			<div className="container">
 				<div className="testimonial-card my-0 my-md-5">
 					<div className="row">
@@ -361,28 +337,35 @@ const TestimonialSectionLower = () => {
 						</div>
 						<div className="col-md-6 testimonial-right p-5">
 								<h3>Testimonial</h3>
-								<p>Working with Good-Loop we have achieved xxxxx, a charity testimonial... Working with Good-Loop we have achieved xxxxx, a charity testimonial... Working with Good-Loop we have achieved xxxxx, a charity testimonial... </p>
-								<p>Charity Representative, Charity Name</p>
-								<p className='read-more'>READ MORE ABOUT OUR <a href="#">CHARITY IMPACT</a></p>
+
+								<p>"The amazing income generated by GoodLoop will support a wider selection of teams and projects - unrestricted funds are really useful and enable Centrepoint to be dynamic with the way we support young people."</p>
+								<p>Lucy Coleman, Senior Corporate Development Manager, Centrepoint (2020)</p>
+								<p className='TODO read-more'>READ MORE ABOUT OUR <a href="#">CHARITY IMPACT</a></p>
 						</div>
 					</div>
 				</div>
 				<div className="testimonial-impact text-center">
 					<div className="row pt-5">
-						<div className="col-md-4 testimonial-points">
-							<img className='w-25' src="/img/homepage/globe.png" alt="" />
-							<h3 className='pt-md-4'>Charity Impact</h3>
-							<p className='pt-3'>Example - People + UK </p>
+						<div className="col-md-4 testimonial-points">							
+							<Circle className="mx-auto" width='8em'>
+								<img className='logo logo-lg' src="/img/charity-logos/we-forest.jpeg" alt="We Forest logo" />
+							</Circle>
+							<h3 className='pt-md-4'>721.3 Hectares</h3>
+							<p className=''>of forest restored - that's 1,000+ football pitches!</p>
 						</div>
 						<div className="col-md-4 testimonial-points">
-							<img className='w-25' src="/img/homepage/heart.png" alt="" />
-							<h3 className='pt-md-4'>Charity Impact</h3>
-							<p className='pt-3'>Example - People + Global</p>
+							<Circle className="mx-auto" width='8em'>
+								<img className='logo logo-lg' src="/img/charity-logos/no-kid-hungry.png" alt="No Kid Hungry logo" />
+							</Circle>
+							<h3 className='pt-md-4'>183,318 Meals</h3>
+							<p className=''>provided for children</p>
 						</div>
 						<div className="col-md-4 testimonial-points">
-							<img className='w-25' src="/img/homepage/world.png" alt="" />
-							<h3 className='pt-md-4'>Charity Impact</h3>
-							<p className='pt-3'>Example - People + Nature</p>
+							<Circle className="mx-auto" width='8em'>
+								<img className='logo logo-lg' src="/img/charity-logos/mind.png" alt="Mind logo" />
+							</Circle>
+							<h3 className='pt-md-4'>500+ Helpline Calls</h3>
+							<p className=''>and 195 hours of online peer-to-peer support</p>
 						</div>
 					</div>
 				</div>
@@ -390,7 +373,19 @@ const TestimonialSectionLower = () => {
 		</div>
 		<img src="/img/curves/curve-desat-blue-round-bottom.svg" className='w-100' alt="" />
 	</>)
-}
+};
+
+/**
+ * A white circle with centered content
+ */
+const Circle = ({className, color="bg-light", width,children}) => {
+	return <div 
+		className={space(className, color, 'rounded-circle d-flex justify-content-center align-items-center')} 
+		style={{width,height:width}}>
+		{children}
+		</div>;
+};
+
 
 const PositivePlaceSection = ({className, showCTA}) => {
 	return <PageCard className={space("positive-place-section text-center", className)}>

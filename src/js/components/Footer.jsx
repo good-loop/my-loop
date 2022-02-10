@@ -34,14 +34,14 @@ const MyLoopFooter = ({}) => {
 					<Col md={6}>
 						<SubscriptionForm label={"Sign up to our Newsletter for some Good News :)"} />
 					</Col>
-					{!isPortraitMobile() &&
+					{ ! isPortraitMobile() &&
 						<Col md={6} className="d-flex justify-content-end">
 							<div className="stamps d-flex flex-row align-items-end p-3">
 								<div>
-									<img src="/img/footer/Net-carbon-negative.png" className="w-100"/>
+									<img src="/img/footer/Net-carbon-negative.png" className="logo logo-lg"/>
 								</div>
 								<div>
-									<img src="/img/footer/B-corp.png" className="w-100"/>
+									<img src="/img/footer/B-corp.png" className="logo logo-lg"/>
 								</div>
 							</div>
 						</Col>
@@ -86,11 +86,6 @@ const MyLoopFooter = ({}) => {
 						</C.A>
 					</Col>
 					<Col>
-						<C.A href="https://doc.good-loop.com/">
-							<p>Documentation</p>
-						</C.A>
-					</Col>
-					<Col>
 						<C.A href="https://doc.good-loop.com/policy/brand-safety-policy.html">
 							<p>Brand safety policy</p>
 						</C.A>
@@ -100,10 +95,10 @@ const MyLoopFooter = ({}) => {
 					<Col md={6} className="d-flex justify-content-center pt-5 mt-5">
 						<div className="stamps d-flex flex-row align-items-end py-1 px-3">
 							<div>
-								<img src="/img/footer/Net-carbon-negative.png" className="w-100"/>
+								<img src="/img/footer/Net-carbon-negative.png" className="logo logo-lg"/>
 							</div>
 							<div>
-								<img src="/img/footer/B-corp.png" className="w-100"/>
+								<img src="/img/footer/B-corp.png" className="logo logo-lg"/>
 							</div>
 						</div>
 					</Col>

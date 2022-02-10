@@ -123,11 +123,11 @@ export const OurStoryPage = () => {
 	<div className="OurStoryPage widepage">
 		<OurStorySplash />
 		<OutMissionSection />
-		<NewsAwards firstIMG="img/homepage/BBCNews.png" secondIMG="img/homepage/The-Guardian.png" thirdIMG="img/homepage/BBCNews.png">
+		<NewsAwards>
 			<h1 className='mb-5'>We've been featured by</h1>
 		</NewsAwards>
 		<CaringCommunitySection />
-		<NewsAwards firstIMG="Awards1" secondIMG="Awards2" thirdIMG="Awards3" />
+		{/* TODO <NewsAwards firstIMG="Awards1" secondIMG="Awards2" thirdIMG="Awards3" /> */}
 		<MyGetInvolvedSection classname="" />
 		<TriCards className="bg-gl-light-pink" 
 			firstTitle="Check out our podcast" firstText="Discover... a sentence about this page/article" firstIMG="img/ourstory/podcast-mic.png"

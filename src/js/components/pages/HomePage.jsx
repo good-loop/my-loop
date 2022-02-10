@@ -48,7 +48,7 @@ const HomePage = ({spring}) => {
 			<CharityBanner />
 			<HowTabsForGoodWorks />
 			<TabsForGoodSlideSection img="/img/homepage/charities.png" showUpperCTA />
-			<NewsAwards firstIMG="img/homepage/BBCNews.png" secondIMG="img/homepage/The-Guardian.png" thirdIMG="img/homepage/BBCNews.png" />
+			<NewsAwards />
 			<PositivePlaceSection className="blue-gradient"/>
 			<WatchVideoSection />
 			<CurvePageCard color='dark-turquoise' className='' bgclassName='' bgImg=''>
@@ -57,7 +57,7 @@ const HomePage = ({spring}) => {
 			<TestimonialSectionLower />
 			<GetInvolvedSection />
 			{/* <SubscriptionBox className="bg-gl-light-red big-sub-box"/> */}
-			<TriCards 
+			<TriCards className="TODO"
 				firstTitle="Good Loop For Business" firstText="Discover... a sentence about this page/article" firstIMG="/img/homepage/good-loop-for-business.png"
 				secondTitle="Tree Planting For The Future" secondText="Discover... a sentence about this page/article" secondIMG="/img/homepage/tree-planting.png"
 				thirdTitle="How It All Began" thirdText="Discover... a sentence about this page/article" thirdIMG="/img/homepage/amyanddaniel.png"
