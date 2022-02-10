@@ -44,7 +44,7 @@ const HomePage = ({spring}) => {
 
 	return (<>
 		<div className="HomePage widepage">
-			<MyLandingSection />
+			<MyLandingSection shiftLeft/>
 			<CharityBanner />
 			<HowTabsForGoodWorks />
 			<TabsForGoodSlideSection img="/img/homepage/charities.png" showUpperCTA />
