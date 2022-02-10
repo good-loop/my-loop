@@ -383,15 +383,15 @@ const PositivePlaceSection = ({className, showCTA}) => {
 		<h1 className='pt-5'>Let's make the internet a more positive place. Together.</h1>
 		<Row className="pt-5">
 			<Col md={4} className="video-points">
-				<img className='w-50' src="/img/homepage/bird-circle.png" alt="" />
+				<img className='w-50' src="/img/icons/fifty-percent.png" alt="" />
 				<h3 className='pt-4'>50% of online ad fees donated to charity </h3>
 			</Col>
 			<Col md={4} className="video-points">
-				<img className='w-50' src="/img/homepage/heart.png" alt="" />
+				<img className='w-50' src="/img/icons/world-hand.png" alt="" />
 				<h3 className='pt-4'>Helping brands offset their digital carbon footprint</h3>
 			</Col>
 			<Col md={4} className="video-points">
-				<img className='w-50' src="/img/homepage/girl-circle.png" alt="" />
+				<img className='w-50' src="/img/icons/padlock.png" alt="" />
 				<h3 className='pt-4'>Keeping your online privacy safe no matter what</h3>
 			</Col>
 		</Row>
