@@ -134,7 +134,7 @@ const CharityLandingPage = () => {
 	}, []);
 
 	return (<>
-		<MyLandingSection ngo={ngo} />
+		<MyLandingSection ngo={ngo} shiftLeft/>
 		<CornerHummingbird/>
 		{isPortraitMobile() ?
 			<CharityT4GLogos ngo={ngo}/>

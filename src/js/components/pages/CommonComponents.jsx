@@ -54,7 +54,7 @@ const CardImgLeft = ({classname, imgUrl, children}) =>{
 	)
 }
 
-const MyLandingSection = ({ngo, title, text, bgImg}) => {
+const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 	if ( ! title) {
 		title = `Turn your web browsing into ${(ngo && "cash for " + ngo.name) || "charity donations"}. For free.`;
 	}
@@ -66,9 +66,9 @@ const MyLandingSection = ({ngo, title, text, bgImg}) => {
 		<>
 		<BG src={isPortraitMobile() ? null : bgImg} className="landing-bg">
 			<BG src="/img/LandingCharity/t4g-splash-screen-background.svg" className="landing-splash">
-				<Container fluid className="d-flex justify-content-center">
+				<Container fluid className={space("d-flex", !shiftLeft ? "justify-content-center" : "left-padding")}>
 					<Row className="mb-3 mt-5">
-							<Col md={1} sm={0} /* left padding, but not on mobile */></Col>
+							{!shiftLeft && <Col md={1} sm={0} /* left padding, but not on mobile */></Col>}
 							<Col md={6} className="landing-left">
 									<div className="title mt-5"> 
 											<h2>{title}</h2>
@@ -83,6 +83,7 @@ const MyLandingSection = ({ngo, title, text, bgImg}) => {
 											</button>
 									</div>
 							</Col>
+							{shiftLeft && <Col md={6}></Col>}
 					</Row>
 				</Container>				
 			</BG>
