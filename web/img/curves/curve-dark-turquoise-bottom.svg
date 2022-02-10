@@ -1,5 +1,3 @@
-<svg viewBox="0 0 2560 593" xmlns="http://www.w3.org/2000/svg">
-  <g id="curve" style="fill:#286984" transform="matrix(-1, 0, 0, -1, 2560.00293, 593)">
-    <path id="foreground-curve-white" d="M13314.5,1284.528s356.72,665.074,1297.3,296.564,1468.515,280.543,1468.515,280.543v221.17H13314.5Z" transform="translate(-13314.497 -1284.529)"/>
-  </g>
+<svg viewBox="0 0 2560 593" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="m 2560,593.001 c 0,0 -356.72,-665.074 -1297.3,-296.564 C 322.12,664.947 -205.815,15.894 -205.815,15.894 v -221.17 H 2560 Z" style="fill:#286984" />
 </svg>
