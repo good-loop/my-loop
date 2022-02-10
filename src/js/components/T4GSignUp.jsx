@@ -120,15 +120,15 @@ const DesktopSignUp = ({charity}) => {
 		<Row>
 			<Col className='sign-up-left'>
 				{ ! Login.isLoggedIn()?
-					<BSCarousel className="px-4" light>
-						<div>
-							You'll be all set in two simple steps
+					<BSCarousel className="px-5" light>
+						<div className='d-flex flex-column justify-content-center h-100'>
+							<p>You'll be all set in two simple steps</p>
 							
 							<p>Step 1: Sign Up</p>
 
 							<p>Step 2: We'll take you to the {toTitleCase(browser)} store to install the Tabs-for-Good plugin.</p>
 						</div>
-						<div>
+						<div className='d-flex flex-column justify-content-center h-100'>
 							Once you've installed Tabs-for-Good 
 							your browsing will add up into a force for good.
 						</div>
@@ -139,7 +139,7 @@ const DesktopSignUp = ({charity}) => {
 				</div>
 				}
 			</Col>
-			<Col className='sign-up-right m-0'>
+			<Col className='sign-up-right m-0 d-flex flex-column justify-content-center h-100'>
 				<p>Tabs For Good By Good-Loop (Logo)</p>
 				{ ! Login.isLoggedIn()?
 					<div>						
@@ -176,85 +176,85 @@ const MobileSendEmail = ({charity}) => {
 
 
 
-const SignUpSlideSection = () => {
-	const [animating, setAnimating] = useState(false);
-	const [index, setIndex] = useState(0);
+// const SignUpSlideSection = () => {
+// 	const [animating, setAnimating] = useState(false);
+// 	const [index, setIndex] = useState(0);
 
-	const next = () => {
-		if (animating) return;
-		const nextIndex = index === items.length - 1 ? 0 : index + 1;
-		setIndex(nextIndex);
-	}
+// 	const next = () => {
+// 		if (animating) return;
+// 		const nextIndex = index === items.length - 1 ? 0 : index + 1;
+// 		setIndex(nextIndex);
+// 	}
 	
-	const previous = () => {
-		if (animating) return;
-		const nextIndex = index === 0 ? items.length - 1 : index - 1;
-		setIndex(nextIndex);
-	}
+// 	const previous = () => {
+// 		if (animating) return;
+// 		const nextIndex = index === 0 ? items.length - 1 : index - 1;
+// 		setIndex(nextIndex);
+// 	}
 
-	const goToIndex = (newIndex) => {
-		if (animating) return;
-		setIndex(newIndex);
-	}
+// 	const goToIndex = (newIndex) => {
+// 		if (animating) return;
+// 		setIndex(newIndex);
+// 	}
 
-	const items = [
-		<div className='slide-item bg-ml-pink'>
-			<p className="text-center px-3">Thanks for joining us and getting Tabs for Good. You'll be all set in two simple steps:</p>
-			<Row className='px-5'>
-				<Col md={4}>
-					<h1 style={{fontSize:"1rem"}}>Step 1</h1>
-				</Col>
-				<Col md={8}>
-					<p>Sign up</p>
-				</Col>
-			</Row>
-			<Row className='px-5'>
-				<Col md={4}>
-					<h1 style={{fontSize:"1rem"}}>Step 2</h1>
-				</Col>
-				<Col md={8}>
-					We'll take you to the Chrome Store to install the Tabs for Good plugin.
-				</Col>
-			</Row>
-		</div>,
-		<div className='slide-item text-center align-items-center bg-ml-bluepink'>
-			<img className='w-50 mb-3' src="img/signup/step-2.png" alt="" />
-			<p className='px-3'>When you sign up, you'll get your own personalised portal where you can select the charity you want to support and see your impact grow</p>
-		</div>,
-		<div className='slide-item text-center align-items-center bg-ml-pink'>
-			<img className='w-50 mb-3' src="img/signup/step-3.png" alt="" />
-			<p className='px-3'>Once you're signed up, we'll immeditatly provide you with a link to the Chrome Store where you can add Tabs for Good to your browser </p>
-			</div>,
-		<div className='slide-item text-center align-items-center bg-ml-bluepink'>
-			<img className='w-50 mb-3' src="img/signup/step-4.png" alt="" />
-			<p className='px-3'>Once you've installed Tabs for Good, you can feel confident that your browsing is adding up into a force for good</p>
-		</div>
-	];
+// 	const items = [
+// 		<div className='slide-item bg-ml-pink'>
+// 			<p className="text-center px-3">Thanks for joining us and getting Tabs for Good. You'll be all set in two simple steps:</p>
+// 			<Row className='px-5'>
+// 				<Col md={4}>
+// 					<h1 style={{fontSize:"1rem"}}>Step 1</h1>
+// 				</Col>
+// 				<Col md={8}>
+// 					<p>Sign up</p>
+// 				</Col>
+// 			</Row>
+// 			<Row className='px-5'>
+// 				<Col md={4}>
+// 					<h1 style={{fontSize:"1rem"}}>Step 2</h1>
+// 				</Col>
+// 				<Col md={8}>
+// 					We'll take you to the Chrome Store to install the Tabs for Good plugin.
+// 				</Col>
+// 			</Row>
+// 		</div>,
+// 		<div className='slide-item text-center align-items-center bg-ml-bluepink'>
+// 			<img className='w-50 mb-3' src="img/signup/step-2.png" alt="" />
+// 			<p className='px-3'>When you sign up, you'll get your own personalised portal where you can select the charity you want to support and see your impact grow</p>
+// 		</div>,
+// 		<div className='slide-item text-center align-items-center bg-ml-pink'>
+// 			<img className='w-50 mb-3' src="img/signup/step-3.png" alt="" />
+// 			<p className='px-3'>Once you're signed up, we'll immeditatly provide you with a link to the Chrome Store where you can add Tabs for Good to your browser </p>
+// 			</div>,
+// 		<div className='slide-item text-center align-items-center bg-ml-bluepink'>
+// 			<img className='w-50 mb-3' src="img/signup/step-4.png" alt="" />
+// 			<p className='px-3'>Once you've installed Tabs for Good, you can feel confident that your browsing is adding up into a force for good</p>
+// 		</div>
+// 	];
 
-	const slides = items.map((content, i) => (
-		<CarouselItem
-			key={i}
-			//className="slide-right"
-			onExiting={() => setAnimating(true)}
-			onExited={() => setAnimating(false)}
-		>
-			{content}	
-		</CarouselItem>
-	));
+// 	const slides = items.map((content, i) => (
+// 		<CarouselItem
+// 			key={i}
+// 			//className="slide-right"
+// 			onExiting={() => setAnimating(true)}
+// 			onExited={() => setAnimating(false)}
+// 		>
+// 			{content}	
+// 		</CarouselItem>
+// 	));
 
-	return (<>
-		<Col className='sign-up-left' md={7}>
-			<Carousel
-				activeIndex={index}
-				next={next}
-				previous={previous}
-				interval={false}
-			>
-				<CarouselIndicators items={slides} activeIndex={index} onClickHandler={goToIndex} />
-				{slides}
-				<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
-				<CarouselControl direction="next" directionText="Next" onClickHandler={next} />
-			</Carousel>
-		</Col>
-	</>)
-}
+// 	return (<>
+// 		<Col className='sign-up-left' md={7}>
+// 			<Carousel
+// 				activeIndex={index}
+// 				next={next}
+// 				previous={previous}
+// 				interval={false}
+// 			>
+// 				<CarouselIndicators items={slides} activeIndex={index} onClickHandler={goToIndex} />
+// 				{slides}
+// 				<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
+// 				<CarouselControl direction="next" directionText="Next" onClickHandler={next} />
+// 			</Carousel>
+// 		</Col>
+// 	</>)
+// }
