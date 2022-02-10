@@ -39,6 +39,7 @@ public class MetaHtmlServlet implements IServlet {
 	@Override
 	public void process(WebRequest state) throws Exception {					
 		String slug = state.getSlug();
+		if (slug==null) slug="null"; // so we can cache it anyway
 		String html = html4slug.get(slug);
 		if (html==null) {
 			// make a file

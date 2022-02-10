@@ -35,12 +35,11 @@ import TabsForGoodLandingPage from './pages/TabsForGoodLandingPage';
 import CharityLandingPage from './pages/CharityLandingPage';
 import ProductsOverviewPage from './pages/ProductsOverviewPage';
 import BlogPage from './pages/BlogPage';
-import ImpactOverviewPage from './pages/ImpactOverviewPage';
+// import ImpactOverviewPage from './pages/ImpactOverviewPage';
 import OurStoryPage from './pages/OurStoryPage';
 import ForBusinessPage from './pages/ForBusinessPage';
 import ForCharityPage from './pages/ForCharityPage';
 import { T4GCTA, T4GSignUpModal, T4GSignUpLink } from './T4GSignUp';
-import { nonce } from '../base/data/DataClass';
 
 // DataStore
 C.setupDataStore();
