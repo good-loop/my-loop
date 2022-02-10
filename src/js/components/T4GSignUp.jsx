@@ -39,12 +39,22 @@ const showT4GSignUpModal = (s=true) => {
 		return <T4GPluginButton className={className} />
 	}
 	return (
-		<a className={space("T4GSignUpButton btn btn-primary", className)} href={window.location} 
-			onClick={e => stopEvent(e) && showT4GSignUpModal()} >
+		<T4GSignUpLink className={space("T4GSignUpButton btn btn-primary", className)}/>
+	);
+};
+
+export const T4GSignUpLink = ({className, children, onClick}) => {
+	return (
+		<a className={space(className)} href={window.location} 
+			onClick={e => {
+				stopEvent(e);
+				showT4GSignUpModal();
+				if (onClick) onClick();
+			}} >
 			{children || "Sign Up for "+C.T4G}
 		</a>
 	);
-};
+}
 
 /**
  * Actually -- always open the modal

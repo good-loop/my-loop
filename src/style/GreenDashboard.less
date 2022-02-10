@@ -1,13 +1,15 @@
+// have a MyGL colours file which collects these??
 @green-bg-light: #477b73;
 @green-bg-dark: #52727a;
 @green-highlight: #698983;
 @blue-highlight: #69a4b9;
 @sea-blue: #76a1b7;
-@nav-width: 20em;
+
+@nav-width: 20em; // why isnt the nav either 100% or container??
 
 #green-dashboard {
 	width: 100vw;
-	height: 100vh;
+	height: @fullHeight;
 	overflow: hidden;
 	display: flex;
 	
@@ -80,7 +82,7 @@
 	position: relative; // See .landing-behind-footer below - overall page div needs to be a position reference
 
 	.landing-splash, .landing-map {
-		height: 100vh;
+		height: @fullHeight;
 		background-size: cover;
 		background-position: center;
 		display: flex;
