@@ -59,7 +59,7 @@ export const T4GSignUpButton = ({className,children}) => {
 
 export const T4GPluginButton = ({className, label}) => {
 	const browser = getBrowserVendor();
-	if ( ! label) label = browser+" Store";
+	if ( ! label) label = <span className='ml-1'>{browser} Store</span>;
 	let href = {
 		CHROME: "https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1",
 		EDGE: "https://microsoftedge.microsoft.com/addons/detail/goodloop-tabs-for-good/affgfbmpcboljigkpdeamhieippkglkn"
@@ -67,7 +67,7 @@ export const T4GPluginButton = ({className, label}) => {
 	if ( ! href) {
 		return <span className={space(className, "disabled btn btn-secondary")} >Not available for {browser} yet</span>;
 	}
-	return <LinkOut className={space(className, "btn btn-primary")} href={href}><Icon name={browser.toLowerCase()}/> {label}</LinkOut>;
+	return <LinkOut className={space(className, "btn btn-primary d-flex justify-content-center align-items-center")} href={href}><Icon name={browser.toLowerCase()}/> {label}</LinkOut>;
 };
 
 

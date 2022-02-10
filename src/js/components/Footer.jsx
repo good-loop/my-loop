@@ -38,10 +38,10 @@ const MyLoopFooter = ({}) => {
 						<Col md={6} className="d-flex justify-content-end">
 							<div className="stamps d-flex flex-row align-items-end p-3">
 								<div>
-									<img src="/img/footer/Net-carbon-negative.png" className="logo logo-lg"/>
+									<img src="/img/footer/Net-carbon-negative.svg" className="logo logo-lg"/>
 								</div>
 								<div>
-									<img src="/img/footer/B-corp.png" className="logo logo-lg"/>
+									<img src="/img/footer/B-corp.svg" className="logo logo-lg"/>
 								</div>
 							</div>
 						</Col>
@@ -95,10 +95,10 @@ const MyLoopFooter = ({}) => {
 					<Col md={6} className="d-flex justify-content-center pt-5 mt-5">
 						<div className="stamps d-flex flex-row align-items-end py-1 px-3">
 							<div>
-								<img src="/img/footer/Net-carbon-negative.png" className="logo logo-lg"/>
+								<img src="/img/footer/Net-carbon-negative.svg" className="logo logo-lg"/>
 							</div>
 							<div>
-								<img src="/img/footer/B-corp.png" className="logo logo-lg"/>
+								<img src="/img/footer/B-corp.svg" className="logo logo-lg"/>
 							</div>
 						</div>
 					</Col>
