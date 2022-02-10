@@ -15,6 +15,9 @@ initRouter();
  */
 C.app = GLAppManifest;
 
+/** To help us standardise on the use or not of -s */
+C.T4G = "Tabs-For-Good";
+
 // NB: MonetaryAmount is deprecated - left here for old data
 C.TYPES = new Enum("Publisher NGO Advert Campaign Advertiser Agency User Person Money MonetaryAmount");
 
