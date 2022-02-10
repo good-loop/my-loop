@@ -54,7 +54,7 @@ const CardImgLeft = ({classname, imgUrl, children}) =>{
 	)
 }
 
-const MyLandingSection = ({ngo, title, text, bgImg}) => {
+const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 	if ( ! title) {
 		title = `Turn your web browsing into ${(ngo && "cash for " + ngo.name) || "charity donations"}. For free.`;
 	}
@@ -66,9 +66,9 @@ const MyLandingSection = ({ngo, title, text, bgImg}) => {
 		<>
 		<BG src={isPortraitMobile() ? null : bgImg} className="landing-bg">
 			<BG src="/img/LandingCharity/t4g-splash-screen-background.svg" className="landing-splash">
-				<Container fluid className="d-flex justify-content-center">
+				<Container fluid className={space("d-flex", !shiftLeft ? "justify-content-center" : "left-padding")}>
 					<Row className="mb-3 mt-5">
-							<Col md={1} sm={0} /* left padding, but not on mobile */></Col>
+							{!shiftLeft && <Col md={1} sm={0} /* left padding, but not on mobile */></Col>}
 							<Col md={6} className="landing-left">
 									<div className="title mt-5"> 
 											<h2>{title}</h2>
@@ -83,6 +83,7 @@ const MyLandingSection = ({ngo, title, text, bgImg}) => {
 											</button>
 									</div>
 							</Col>
+							{shiftLeft && <Col md={6}></Col>}
 					</Row>
 				</Container>				
 			</BG>
@@ -126,18 +127,18 @@ const HowTabsForGoodWorks = ({classname}) => {
 			<h1>How Tabs For Good Works</h1>
 			<Row className="pt-5">
 				<Col md={4} className='pt-2 pt-md-0 how-it-works-points'>
-					<img className='w-50' src="/img/homepage/globe.png" alt="" />
+					<img className='w-50' src="/img/icons/laptop.png" alt="" />
 					<h3 className='pt-4'>Open a tab</h3>
 					<p className='pt-3'>When you open a new tab, we display a small unobtrusive banner ad at the bottom of your page while you're busy browsing away. </p>
 				</Col>
 				<Col md={4} className='pt-2 pt-md-0 how-it-works-points'>
-					<img className='w-50' src="/img/homepage/heart.png" alt="" />
+					<img className='w-50' src="/img/icons/coin.png" alt="" />
 					<h3 className='pt-4'>Unlock a donation</h3>
 					<p className='pt-3'>As a thank you for letting the ad appear on your page, 
 						you make a free donation to charity, funded by us. 50% of the ad money to be precise. </p>
 				</Col>
 				<Col md={4} className='pt-2 pt-md-0 how-it-works-points'>
-					<img className='w-50' src="/img/homepage/world.png" alt="" />
+					<img className='w-50' src="/img/icons/tick.png" alt="" />
 					<h3 className='pt-4'>That's it!</h3>
 					<p className='pt-3'>We don't track your online activity and you don't even have to click on the ad to make the donation happen. It really is that simple. </p>
 				</Col>
@@ -209,7 +210,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 					<T4GCharityScreenshot ngo={ngo} className="slide-img"/>
 				</Col>
 				<Col md={6} className="slide-right">
-					<BSCarousel className="p-5">
+					<BSCarousel className="p-5" >
 						{slides}
 					</BSCarousel>
 				</Col>
