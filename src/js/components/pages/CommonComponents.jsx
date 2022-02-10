@@ -63,9 +63,13 @@ const MyLandingBackgroundImage = ({bgImg, children}) => {
 			</BG>
 		</BG>
 	) : (
-		<BG src={isPortraitMobile() ? null : bgImg} className="landing-bg">
-			<BG src="/img/LandingCharity/t4g-splash-screen-background.svg" className="landing-splash">
-				{children}
+		<BG src="/img/splash-screen/background-0.svg" className="landing-bg">
+			<BG src="/img/splash-screen/background-1.png">
+				<BG src="/img/splash-screen/background-2.svg">
+					<BG src="/img/splash-screen/background-3.png" className="landing-bg">
+						{children}
+					</BG>
+				</BG>
 			</BG>
 		</BG>
 	);
