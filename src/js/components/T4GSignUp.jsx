@@ -12,6 +12,7 @@ import { getId } from '../base/data/DataClass';
 import DataStore from '../base/plumbing/DataStore';
 import { getBrowserVendor, isMobile, space, stopEvent, toTitleCase } from '../base/utils/miscutils';
 import Login from '../base/youagain';
+import C from '../C';
 import SubscriptionBox, { SubscriptionForm } from './cards/SubscriptionBox';
 import CharityLogo from './CharityLogo';
 
@@ -29,33 +30,36 @@ const showT4GSignUpModal = (s=true) => {
 	DataStore.setValue(SHOW_PATH, s);
 };
 
-/**
- * Drop this CTA in -- on most pages, it will take you to the T4G page.
- * On the T4G page, it will open the sign-up flow.
- * 	...Unless you are signed-up (logged-in) then it offers a link to the pluginstore
- */
-export const T4GCTA = ({className, children}) => {
-	let path = DataStore.getValue("location","path");
-	// NB: don't change into a chrome-store button (T4GPluginButton) -- that can be confusing
-	return path[0]==="tabsforgood"? <T4GSignUpButton className={className} />
-		: <C.A className={space(className, "btn btn-info mb-1 mr-2 text-uppercase")} href="/tabsforgood">Get Tabs-for-Good</C.A>;
-}
-
 
 /**
  * A button to start the sign-up flow.
  */
-export const T4GSignUpButton = ({className,children}) => {		
+ export const T4GSignUpButton = ({className,children}) => {		
 	if (Login.isLoggedIn()) {
 		return <T4GPluginButton className={className} />
 	}
 	return (
 		<a className={space("T4GSignUpButton btn btn-primary", className)} href={window.location} 
 			onClick={e => stopEvent(e) && showT4GSignUpModal()} >
-			{children || "Sign Up For Tabs For Good"}
+			{children || "Sign Up for "+C.T4G}
 		</a>
 	);
 };
+
+/**
+ * Actually -- always open the modal
+ */
+export const T4GCTA = T4GSignUpButton;
+// Old code
+// * Drop this CTA in -- on most pages, it will take you to the T4G page.
+// * On the T4G page, it will open the sign-up flow.
+// * 	...Unless you are signed-up (logged-in) then it offers a link to the pluginstore
+// ({className, children}) => {	
+// 	let path = DataStore.getValue("location","path");
+	
+// 	return path[0]==="tabsforgood"? <T4GSignUpButton className={className} />
+// 		: <C.A className={space(className, "btn btn-info mb-1 mr-2 text-uppercase")} href="/tabsforgood">Get Tabs-for-Good</C.A>;
+// }
 
 export const T4GPluginButton = ({className, label}) => {
 	const browser = getBrowserVendor();

@@ -101,13 +101,14 @@ const SidebarTabLink = ({ tab, label, selected }) => {
 		let hasT4G = Person.hasApp(pvPerson.value, "t4g.good-loop.com");
 		if ( ! hasT4G) {
 			// Detect whether we're on Chrome or not
+			// TODO Edge too -- see T4GSignUp
 			let isChrome = navigator && navigator.vendor === "Google Inc.";
 			if ( ! isChrome) {
 				url = "https://my.good-loop.com/tabsforgood"
-				label = "About Tabs for Good";
+				label = "About "+C.T4G;
 			} else {
 				url = "https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1"
-				label = "Get Tabs for Good";
+				label = "Get "+C.T4G;
 			}
 		}
 	}
