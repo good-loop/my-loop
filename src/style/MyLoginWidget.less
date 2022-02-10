@@ -3,8 +3,14 @@
 
 .modal .modal-dialog { // Trims extra space. Makes modal look more compact.
 	max-width: 600px;
-    border-radius: 15px;
+  border-radius: 15px;
 	&.login-modal {
+		max-width: 1000px;
+		@media @width-mobile {
+			max-width: 700px;
+		}
+	}
+	&.T4G-modal {
 		max-width: 1000px;
 		@media @width-mobile {
 			max-width: 700px;
@@ -43,11 +49,18 @@
 
 	.modal-body {
 		padding: 0;
+		position: relative;
 		@media @width-mobile {
 			padding-top: 150px;
 		}
 
 		min-height: 30em; // stable height when switching between login and register
+
+		#globe-piggy-step-2 {
+			position: absolute;
+			left: 25%;
+			bottom: 0;
+		}
 
 		.login-logo {
 			width: 25%;
@@ -71,7 +84,7 @@
 			transform: scaleX(-1);
 			width: 100px;
 			top: .5rem;
-			right: 35%;
+			right: 47%;
 			&.login {
 				top: 5%;
 				right: 5%;
@@ -112,6 +125,50 @@
 		.sign-up-right {
 			background-color: white;
 			min-height: 30em;
+
+			.steps-graphic {
+				position: relative;
+				padding-bottom: 3rem;
+
+				:nth-child(1) {
+					margin-right: 10rem;
+				}
+				:nth-child(1):after {
+					position: absolute;
+					content: '';
+					left: 2rem;
+					top: 1rem;
+					width: 10rem;
+					border-bottom: 2px solid black;
+				}
+
+				.circle {
+					height: 2rem;
+					width: 2rem;
+					background-color: white;
+					border-radius: 50%;
+					display: inline-block;
+					border: 1px solid black;
+					&.circle-active {
+						background-color: @gl-light-pink;
+					}
+				}
+
+				span {
+					margin: 0;
+					position: absolute;
+					transform: translate(-50%, 0);
+					top: 2rem;
+				}
+
+				#circle-step-1 {
+					left: 1rem;
+				}
+
+				#circle-step-2 {
+					right: -9rem;
+				}
+			}
 		}
 
 		.login-guts {
@@ -129,7 +186,7 @@
 
 	.close { // pushes close button to the corner so it doesn't interfer with title
 		position: absolute;
-		left: -.05em;
+		left: .2em;
 		top: .2em;
 		text-shadow: none; // default has white shadow to "pop it out"
 		z-index: 999;
