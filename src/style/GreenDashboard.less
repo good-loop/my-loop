@@ -149,24 +149,35 @@
 	// The world map
 	.projects-map {
 		background-color: @sea-blue;
-		img {
+		overflow-x: hidden; // Don't stretch page out when map is zoomed off the sides
+		.map-graphic {
 			width: 100%;
 		}
 		.map-markers {
 			position: relative; // Needs to be position ref for project marker pins
-			margin: -16vw auto; // Collapse the wave transition graphics above and below into the map
+			 // Collapse the wave transition graphics above and below into the map
+			margin-top: -16vw;
+			margin-bottom: -16vw;
+			// Place map graphic behind the top and bottom curves
+			z-index: 9;
+			position: relative;
 		}
 		.map-transition-top {
 			fill: @greenmedia-seagreen;
+			z-index: 10;
+			position: relative;
 		}
 		.map-transition-bottom {
 			fill: @greenmedia-darkcyan;
+			z-index: 10;
+			position: relative;
 		}
 	}
 
 	// The project descriptions on the world map
 	.project-marker {
 		position: absolute;
+		display: block; // <a> wrapper would make it inline otherwise
 		width: 20em;
 		height: 8em;
 		filter: drop-shadow(0 0.2em 0.2em rgba(0, 0, 0, 0.4));
@@ -252,8 +263,8 @@
 		display: none; // Hide unless on mobile sized screen
 		height: 2em;
 		width: 2em;
-		margin-top: -1em;
-		margin-left: -2em;
+		margin: -1em 0 0 -1em; // Bump up and left to centre on origin
+		padding: 0.2em;
 	}
 
 	// Second list of project descriptions for display on mobile
@@ -294,6 +305,12 @@
 		.splash-circle {
 			background-color: transparent;
 			border-radius: none;
+		}
+
+		// Zoom into the map since we only have projects in a small area
+		.map-markers {
+			width: 300%;
+			margin-left: -120%;
 		}
 
 		// Show the project markers instead of full description bubbles on the map

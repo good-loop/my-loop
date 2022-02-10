@@ -78,12 +78,12 @@ const mapProjects = [
 	}
 ];
 
-const ProjectMarker = ({project, setActive, index}) => {
+const ProjectMarker = ({project, active, setActive, index}) => {
 	const coords = toRobinson(project.lat, project.long);
 	const style = {left: `${coords[0]}%`, top: `${coords[1]}%`};
 	
 	return <>
-		<a className={space('project-marker', `arrow-${project.arrow}`)} style={style} onClick={() => setActive(index)}>
+		<a className={space('project-marker', `arrow-${project.arrow}`, active && 'active')} style={style} onClick={() => setActive(index)}>
 			<img className="photo" src={project.img} />
 			<div className="desc">{project.desc}</div>
 			<svg viewBox="0 0 10 10" className="pointer pointer-top-left">
@@ -105,11 +105,11 @@ const ProjectMarker = ({project, setActive, index}) => {
 				<path d="M 10,0 V 10 L 0,5 Z" />
 			</svg>
 		</a>
-		<a className="project-marker-mobile" style={style} onClick={() => setActive(index)}>
+		<a className={space('project-marker-mobile', active && 'active')} style={style} onClick={() => setActive(index)}>
 			<img src="/img/green/tree.svg" />
 		</a>
 	</>;
-}
+};
 
 
 
@@ -168,9 +168,13 @@ const GreenLanding = ({ }) => {
 		<ProjectMarker project={project} active={activeProject === index} index={index} setActive={setActiveProject} />
 	));
 
-	// "Explore Our Impact" button scrolls to the map
+	// "Explore Our Impact" button scrolls to the next section
 	const scrollToMap = () => {
-		document.querySelectorAll('.projects-map')[0].scrollIntoView({block: 'start', behavior: 'smooth'});
+		// Can't just use element.scrollTo() because the navbar will cover the top...
+		const targetEl = document.querySelector('.GreenLandingPage .mission');
+		const navbar = document.querySelector('nav.navbar');
+		const targetY = targetEl.getBoundingClientRect().top + navbar.offsetHeight + window.scrollY;
+		window.scrollTo({top: targetY, behavior: 'smooth'});
 	};
 
 	return (
@@ -199,18 +203,18 @@ const GreenLanding = ({ }) => {
 
 			<div className="projects-map">
 				{/* TODO Transition curves should SOMEWHAT overlap the map image*/}
-				<svg className="map-transition map-transition-top" viewBox="0 0 2560 768" version="1.1" xmlns="http://www.w3.org/2000/svg">
-  				<path d="M -1,55 C 1342.5636,1074.0441 1574.8302,-681.27725 2561,745 V -1 H -1 Z" />
+				<svg className="map-transition map-transition-top" viewBox="0 0 2560 400" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  				<path d="M 0,0 V 324 C 1010.1193,660.09803 1815.6015,-393.13264 2560,192 V 0 Z" />
 				</svg>
 				<div className="map-markers">
 					<img className="map-graphic" src="/img/green/world-map.svg" />
 					{projectMarkers}
 				</div>
-				<svg className="map-transition map-transition-bottom" viewBox="0 0 2560 512" version="1.1" xmlns="http://www.w3.org/2000/svg">
-  				<path d="M -1,7 C 744.54594,458.957 1677.859,802.8403 2561,27 V 513 H -1 Z" />
+				<svg className="map-transition map-transition-bottom" viewBox="0 0 2560 310" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  				<path d="M 0,0 V 310 H 2560 V 34 C 1938.7303,249.1461 1390.9943,536.0566 0,0 Z" />
 				</svg>
 			</div>
-			<div className="project-descriptions-mobile">
+			<div className="project-descriptions-mobile bg-greenmedia-darkcyan">
 				{projectMarkers}
 			</div>
 			<div className="landing-extra pb-1">
