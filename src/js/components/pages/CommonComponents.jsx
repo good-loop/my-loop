@@ -14,6 +14,7 @@ import { T4GCTA } from '../T4GSignUp';
 import Roles from '../../base/Roles';
 
 const PageCard = ({id, className, children}) => {
+	// Why two containers?? Is the outer one for card-specific css rules to latch onto??
 	return <Container id={id} fluid className={space('page-card', className)}>
 		<Container>
 			{children}
@@ -215,12 +216,10 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 				<h1 className='mb-5 white'>Sign Up Today!</h1>
 				<p className='leader-text text-center'>Start transforming your web browsing into life saving vaccines, meals for children in need, preserving habitats for endangered animals, plus many more good causes.</p>
 				<div className="mt-5">
-					<T4GCTA className="w-50 mx-auto"/>
-					<button className="btn btn-secondary w-50 text-uppercase mt-3 d-none d-md-block mx-auto">
-						Learn More About Tabs For Good
-					</button>
-					<button className="btn btn-secondary w-50 text-uppercase mt-3 d-block d-md-none mx-auto">
-						Learn More
+					<T4GCTA className="w-50 d-block mx-auto"/>
+
+					<button className="btn btn-secondary text-uppercase mt-3 w-50 d-block mx-auto">						
+						Learn More <span className="d-none d-md-inline">About Tabs For Good</span>
 					</button>
 				</div>
 			</div>}
@@ -279,24 +278,24 @@ const NewsAwards = ({children}) => {
 	let thirdLink="https://www.forbes.com/sites/afdhelaziz/2020/06/25/goodloop-an-ethical-advertising-platform-that-allows-brands-to-spend-media-dollars-and-do-good-at-the-same-time-launches-in-the-united-states/?sh=22ac280c3987";
 
 	return(
-		<PageCard>
+		<Container className='my-2'>
 			{children}
 			<div className="container text-center">
 				<div className="row">
-					<div className="col sparks"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>
+					<div className="col v-centre"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>
 					<div className="col">
-						<LinkOut href={firstLink}><img className='logo logo-lg' src={firstIMG} alt="" /></LinkOut>
+						<LinkOut href={firstLink}><img className='logo logo-xl' src={firstIMG} alt="" /></LinkOut>
 					</div>
 					<div className="col">
-						<LinkOut href={secondLink}><img className='logo logo-lg' src={secondIMG} alt="" /></LinkOut>
+						<LinkOut href={secondLink}><img className='logo logo-xl' src={secondIMG} alt="" /></LinkOut>
 					</div>
 					<div className="col">
-						<LinkOut href={thirdLink}><img className='logo logo-lg' src={thirdIMG} alt="" /></LinkOut>
+						<LinkOut href={thirdLink}><img className='logo logo-xl' src={thirdIMG} alt="" /></LinkOut>
 					</div>
-					<div className="col sparks"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>
+					<div className="col v-centre"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>
 				</div>
 			</div>
-		</PageCard>
+		</Container>
 	)
 };
 

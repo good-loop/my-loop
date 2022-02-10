@@ -3,6 +3,8 @@ import { Col, Container, Row } from 'reactstrap';
 import Misc from '../../base/components/Misc';
 import KStatus from '../../base/data/KStatus';
 import { getDataItem } from '../../base/plumbing/Crud';
+import DataStore from '../../base/plumbing/DataStore';
+import { modifyPage } from '../../base/plumbing/glrouter';
 import C from '../../C';
 import CharityLogo from '../CharityLogo';
 import { setFooterClassName } from '../Footer';
@@ -26,6 +28,11 @@ const WellMakeItHappenSection = () => {
 };
 
 const TabsForGoodLandingPage = () => {
+	// switch to a charity page? NB: this is handy for links in sign-up emails
+	if (DataStore.getUrlValue("charity")) {
+		modifyPage(['charity', DataStore.getUrlValue("charity")], {charity:null});
+		return <Misc.Loading />;
+	}
 
 	useEffect(() => {
 		setFooterClassName('bg-gl-light-blue');
