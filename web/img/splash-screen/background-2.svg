@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2560" height="1080" viewBox="0 0 2560 1080">
+  <defs>
+    <clipPath id="clip-background-2">
+      <rect width="2560" height="1080"/>
+    </clipPath>
+  </defs>
+  <g id="background-2" clip-path="url(#clip-background-2)">
+    <path id="foreground-curve-white" d="M13314.5,1284.528s356.72,665.074,1297.3,296.564,1468.515,280.543,1468.515,280.543v221.17H13314.5Z" transform="translate(-13314.496 -795.784)" fill="#fff" opacity="0.999"/>
+  </g>
+</svg>

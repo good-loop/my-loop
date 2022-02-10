@@ -128,10 +128,12 @@
 
 			.steps-graphic {
 				position: relative;
-				:not(:last-child) {
+				padding-bottom: 3rem;
+
+				:nth-child(1) {
 					margin-right: 10rem;
 				}
-				:not(:last-child):after {
+				:nth-child(1):after {
 					position: absolute;
 					content: '';
 					left: 2rem;
@@ -150,6 +152,21 @@
 					&.circle-active {
 						background-color: @gl-light-pink;
 					}
+				}
+
+				span {
+					margin: 0;
+					position: absolute;
+					transform: translate(-50%, 0);
+					top: 2rem;
+				}
+
+				#circle-step-1 {
+					left: 1rem;
+				}
+
+				#circle-step-2 {
+					right: -9rem;
 				}
 			}
 		}

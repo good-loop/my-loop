@@ -55,6 +55,26 @@ const CardImgLeft = ({classname, imgUrl, children}) =>{
 	)
 }
 
+const MyLandingBackgroundImage = ({bgImg, children}) => {
+	return bgImg ? (
+		<BG src={isPortraitMobile() ? null : bgImg} className="landing-bg">
+			<BG src="/img/LandingCharity/t4g-splash-screen-background.svg" className="landing-splash">
+				{children}
+			</BG>
+		</BG>
+	) : (
+		<BG src="/img/splash-screen/background-0.svg" className="landing-bg">
+			<BG src="/img/splash-screen/background-1.png">
+				<BG src="/img/splash-screen/background-2.svg">
+					<BG src="/img/splash-screen/background-3.png" className="landing-bg">
+						{children}
+					</BG>
+				</BG>
+			</BG>
+		</BG>
+	);
+}
+
 const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 	if ( ! title) {
 		title = `Turn your web browsing into ${(ngo && "cash for " + ngo.name) || "charity donations"}. For free.`;
@@ -65,30 +85,28 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 	if ( ! bgImg && ngo) bgImg = ngo.images;
 	return (
 		<>
-		<BG src={isPortraitMobile() ? null : bgImg} className="landing-bg">
-			<BG src="/img/LandingCharity/t4g-splash-screen-background.svg" className="landing-splash">
-				<Container fluid className={space("d-flex", !shiftLeft ? "justify-content-center" : "left-padding")}>
-					<Row className="mb-3 mt-5">
-							{!shiftLeft && <Col md={1} sm={0} /* left padding, but not on mobile */></Col>}
-							<Col md={6} className="landing-left">
-									<div className="title mt-5"> 
-											<h2>{title}</h2>
-											<p>{text}</p>
-									</div>
-									<div className="cta-buttons text-uppercase mt-5">
-											<T4GCTA className="w-100"/>
-											<button className="btn btn-secondary w-100 text-uppercase mt-3"	
-												onClick={e => scrollTo("howitworks")}										
-											>
-													See how it works
-											</button>
-									</div>
-							</Col>
-							{shiftLeft && <Col md={6}></Col>}
-					</Row>
-				</Container>				
-			</BG>
-		</BG>
+		<MyLandingBackgroundImage bgImg={bgImg}>
+			<Container fluid className={space("d-flex", !shiftLeft ? "justify-content-center" : "left-padding")}>
+				<Row className="mb-3 mt-5">
+						{!shiftLeft && <Col md={1} sm={0} /* left padding, but not on mobile */></Col>}
+						<Col md={6} className="landing-left">
+								<div className="title mt-5"> 
+										<h1 className='text-left bolder'>{title}</h1>
+										<p>{text}</p>
+								</div>
+								<div className="cta-buttons text-uppercase mt-5">
+										<T4GCTA className="w-100"/>
+										<button className="btn btn-secondary w-100 text-uppercase mt-3"	
+											onClick={e => scrollTo("howitworks")}										
+										>
+												See how it works
+										</button>
+								</div>
+						</Col>
+						{shiftLeft && <Col md={6}></Col>}
+				</Row>
+			</Container>
+		</MyLandingBackgroundImage>
 		</>
 	);
 };

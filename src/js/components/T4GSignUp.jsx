@@ -186,16 +186,19 @@ const DesktopSignUp = ({charity}) => {
 				}
 			</Col>
 			<Col className='sign-up-right m-0 d-flex flex-column justify-content-center align-items-center h-100'>
-				<img className="w-50" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
+				<img className="w-50 mb-3" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
 				{ ! Login.isLoggedIn()?
-					<div>						
-						<p>Step 1 - Sign Up</p>
-						 <div className="steps-graphic">
-							 <div className="circle circle-active"></div>
-							 <div className="circle"></div>
-						 </div>
-						<LoginWidgetEmbed verb='register' onLogin={() => console.warn("TODO set charity??")}/>
-					</div>
+					<>
+						<div className="steps-graphic">
+							<div className="circle circle-active"></div>
+							<div className="circle"></div>
+							<span id="circle-step-1">Step 1 - Sign Up</span>
+							<span id="circle-step-2">Step 2 - Install the Plugin</span>
+						</div>
+						<div className="w-100">
+							<LoginWidgetEmbed verb='register' onLogin={() => console.warn("TODO set charity??")}/>
+						</div>
+					</>
 					: /* Step 2 */ <div>
 						<p>Step 2 - Install the Plugin</p>
 						<T4GPluginButton />
