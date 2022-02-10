@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Button, Form, Modal, ModalBody, ModalHeader, Container, Row, Col, Carousel, CarouselControl, CarouselItem, CarouselIndicators } from 'reactstrap';
 import { id } from '../../../GLAppManifest';
 import CloseButton from '../base/components/CloseButton';
+import Icon from '../base/components/Icon';
+import LinkOut from '../base/components/LinkOut';
 import { getShowLogin, LoginWidgetEmbed, setShowLogin } from '../base/components/LoginWidget';
 import Misc from '../base/components/Misc';
 import { getId } from '../base/data/DataClass';
@@ -11,7 +13,6 @@ import { getBrowserVendor, isMobile, space, stopEvent, toTitleCase } from '../ba
 import Login from '../base/youagain';
 import SubscriptionBox, { SubscriptionForm } from './cards/SubscriptionBox';
 import CharityLogo from './CharityLogo';
-import { T4GPluginButton } from './pages/CommonComponents';
 
 // Design: https://miro.com/app/board/o9J_lxO4FyI=/?moveToWidget=3458764517111672164&cot=14
 // Copy: https://docs.google.com/document/d/1_mpbdWBeaIEyKHRr-mtC1FHAPEfokcRZTHXgMkYJyVk/edit?usp=sharing
@@ -23,31 +24,51 @@ const WIDGET_PATH = ['widget', 'T4GSignUp'];
 const SHOW_PATH = [...WIDGET_PATH, 'show'];
 const STATUS_PATH = [...WIDGET_PATH, 'status'];
 
-const showLogin = (s=true) => {
+const showT4GSignUpModal = (s=true) => {
 	DataStore.setValue(SHOW_PATH, s);
 };
 
+/**
+ * Drop this CTA in -- on most pages, it will take you to the T4G page.
+ * On the T4G page, it will open the sign-up flow.
+ * 	...Unless you are signed-up (logged-in) then it offers a link to the pluginstore
+ */
+export const T4GCTA = ({className, children}) => {
+	let path = DataStore.getValue("location","path");
+	// NB: don't change into a chrome-store button (T4GPluginButton) -- that can be confusing
+	return path[0]==="tabsforgood"? <T4GSignUpButton className={className} />
+		: <C.A className={space(className, "btn btn-info mb-1 mr-2 text-uppercase")} href="/tabsforgood">Get Tabs-for-Good</C.A>;
+}
+
+
+/**
+ * A button to start the sign-up flow.
+ */
 export const T4GSignUpButton = ({className,children}) => {		
+	if (Login.isLoggedIn()) {
+		return <T4GPluginButton className={className} />
+	}
 	return (
 		<a className={space("T4GSignUpButton btn btn-primary", className)} href={window.location} 
-			onClick={e => stopEvent(e) && showLogin()} >
+			onClick={e => stopEvent(e) && showT4GSignUpModal()} >
 			{children || "Sign Up For Tabs For Good"}
 		</a>
 	);
 };
 
-export const T4GSignUpLink = ({className,children, onClick}) => {
-	return (
-		<a className={className} href={window.location} 
-			onClick={e => {
-				stopEvent(e);
-				showLogin();
-				onClick();
-			}} >
-			{children || "Sign Up For Tabs For Good"}
-		</a>
-	);
+export const T4GPluginButton = ({className, label}) => {
+	const browser = getBrowserVendor();
+	if ( ! label) label = browser+" Store";
+	let href = {
+		CHROME: "https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1",
+		EDGE: "https://microsoftedge.microsoft.com/addons/detail/goodloop-tabs-for-good/affgfbmpcboljigkpdeamhieippkglkn"
+	}[browser];
+	if ( ! href) {
+		return <span className={space(className, "disabled btn btn-secondary")} >Not available for {browser} yet</span>;
+	}
+	return <LinkOut className={space(className, "btn btn-primary")} href={href}><Icon name={browser.toLowerCase()}/> {label}</LinkOut>;
 };
+
 
 /**
  * 
@@ -65,11 +86,11 @@ export const T4GSignUpModal = ({charity}) => {
 		<Modal
 			isOpen={show}
 			className="T4G-modal"
-			toggle={() => showLogin(!show)}
+			toggle={() => showT4GSignUpModal(!show)}
 			size="lg"
 		>
 			<ModalBody>
-				<CloseButton size='lg' onClick={() => showLogin(false)}/>
+				<CloseButton size='lg' onClick={() => showT4GSignUpModal(false)}/>
 				{charity && <CharityLogo charity={charity} />}
 				{isMobile()? <MobileSendEmail charity={charity} /> 
 					: <DesktopSignUp charity={charity} />}

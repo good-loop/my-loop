@@ -7,7 +7,7 @@ import { isPortraitMobile } from '../../base/utils/miscutils';
 import C from '../../C';
 import CharityLogo from '../CharityLogo';
 import { setFooterClassName } from '../Footer';
-import { MyLandingSection, T4GCTAButton, HowTabsForGoodWorks, PageCard, TabsForGoodSlideSection, TriCards, WhatIsTabsForGood, CornerHummingbird } from './CommonComponents';
+import { MyLandingSection, HowTabsForGoodWorks, PageCard, TabsForGoodSlideSection, TriCards, WhatIsTabsForGood, CornerHummingbird } from './CommonComponents';
 
 const CharityT4GLogos = ({ngo, className, style, autosize}) => {
 	const containerStyle = (!isPortraitMobile() && autosize) ? {width:"40%"} : {};
@@ -24,20 +24,6 @@ const CharityT4GLogos = ({ngo, className, style, autosize}) => {
 }
 
 const HelpCharityTogetherCard = ({ngo}) => {
-
-	/*const secondSection = [
-		<Col md={6} key={1} className='p-5 d-flex flex-column justify-content-between'>
-			<div>
-				<h3>Together we'll (INSERT CAUSE)</h3>
-				<p>INFORMATION ABOUT CHARITY PROJECTS</p>
-			</div>
-			<T4GCTAButton className="w-100"/>
-		</Col>,
-		<Col md={6} key={2}>
-			<img src={ngo.images} className='w-100'/>
-		</Col>
-	];*/
-
 	return <PageCard>
 		<h1>Let's help {ngo.name}<br/>do even more good.<br/>Together.</h1>
 		<Row className='mt-5 pt-5'>
@@ -49,7 +35,7 @@ const HelpCharityTogetherCard = ({ngo}) => {
 					<h3>What {ngo.name} is doing</h3>
 					<p>{ngo.summaryDescription || ngo.description}</p>
 				</div>
-				<T4GCTAButton className="w-100"/>
+				<T4GCTA className="w-100"/>
 			</Col>
 		</Row>
 		{/*
@@ -109,7 +95,7 @@ const SignUpSection = ({ngo}) => {
 					</Col>
 				</Row>
 			}
-			<T4GCTAButton className="mt-5"/>
+			<T4GCTA className="mt-5"/>
 			<CharityT4GLogos ngo={ngo} className="mt-5" autosize/>
 		</PageCard>
 	)

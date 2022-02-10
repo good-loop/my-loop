@@ -2,18 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { RegisterLink, setLoginVerb, setShowLogin } from '../../base/components/LoginWidget';
 import { Col, Container, Row, Carousel, CarouselControl, CarouselItem } from 'reactstrap';
 import BG from '../../base/components/BG';
-import { getBrowserVendor, isPortraitMobile, space } from '../../base/utils/miscutils';
+import { getBrowserVendor, isPortraitMobile, modifyHash, scrollTo, space } from '../../base/utils/miscutils';
 import C from '../../C';
 import Icon from '../../base/components/Icon';
-import { T4GSignUpButton } from '../T4GSignUp';
 import LinkOut from '../../base/components/LinkOut';
 import CharityLogo from '../CharityLogo';
 import { SubscriptionForm } from '../cards/SubscriptionBox';
 import Login from '../../base/youagain';
 import BSCarousel from '../../base/components/BSCarousel';
+import { T4GCTA } from '../T4GSignUp';
 
-const PageCard = ({className, children}) => {
-	return <Container fluid className={space('page-card', className)}>
+const PageCard = ({id, className, children}) => {
+	return <Container id={id} fluid className={space('page-card', className)}>
 		<Container>
 			{children}
 		</Container>
@@ -39,44 +39,6 @@ const CurvePageCard = ({color, className, style, bgClassName, bgImg, children}) 
 			</Container>
 		</div>
 	</>;
-};
-
-const T4GCTAButton = ({className}) => {
-	// return isPortraitMobile() ? (
-	// 	// TODO make this button function
-	// 		<C.A className={space("btn btn-primary", className)}>
-	// 			Email me a link for desktop
-	// 		</C.A>
-	// 	) : (
-	// 		<T4GSignUpButton
-	// 		 className={className}>
-	// 			Sign up for Tabs For Good
-	// 		</T4GSignUpButton>
-	// 	);
-	return !Login.isLoggedIn() ? (
-		<T4GSignUpButton
-	 		 className={className}>
-	 			Sign up for Tabs For Good
-	 	</T4GSignUpButton>
-	) : (
-		<C.A href="https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en-GB"
-			target="_blank"
-			className={space("btn btn-primary", className)}>
-			Get Tabs for Good
-		</C.A>
-	);
-};
-
-export const T4GPluginButton = ({className}) => {
-	const browser = getBrowserVendor();
-	let href = {
-		CHROME: "https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1",
-		EDGE: "https://microsoftedge.microsoft.com/addons/detail/goodloop-tabs-for-good/affgfbmpcboljigkpdeamhieippkglkn"
-	}[browser];
-	if ( ! href) {
-		return <span className={space(className, "disabled btn btn-secondary mt-2")} >Not available for {browser} yet</span>;
-	}
-	return <LinkOut className={space(className, "btn btn-primary mt-2")} href={href}>{browser} STORE</LinkOut>;
 };
 
 const CardImgLeft = ({classname, imgUrl, children}) =>{
@@ -106,8 +68,10 @@ const MyLandingSection = ({ngo}) => {
 											<p>Get our Tabs For Good Browser Plugin today and start raising money for {(ngo && ngo.name) || "good causes"} – just by browsing the internet. </p>
 									</div>
 									<div className="cta-buttons text-uppercase mt-5">
-											<T4GCTAButton className="w-100"/>
-											<button className="btn btn-secondary w-100 text-uppercase mt-3">
+											<T4GCTA className="w-100"/>
+											<button className="btn btn-secondary w-100 text-uppercase mt-3"	
+												onClick={e => scrollTo("howitworks")}										
+											>
 													See how it works
 											</button>
 									</div>
@@ -151,7 +115,7 @@ const CharityBanner = () => {
 
 const HowTabsForGoodWorks = ({classname}) => {
 	return (
-		<PageCard className={space("how-tabs-for-good-works bg-gl-pale-orange text-center", classname)}>
+		<PageCard id="howitworks" className={space("how-tabs-for-good-works bg-gl-pale-orange text-center", classname)}>
 			<h1>How Tabs For Good Works</h1>
 			<Row className="pt-5">
 				<Col md={4} className='pt-2 pt-md-0 how-it-works-points'>
@@ -214,7 +178,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 				<div className='slide-content'>
 					{content}
 				</div>
-				<T4GCTAButton className="t4gcta"/>
+				<T4GCTA className="t4gcta"/>
 			</div>
 	));
 
@@ -224,7 +188,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 				<h1 className='mb-5'>Sign Up Today!</h1>
 				<h4>Start transforming your web browsing into life saving vaccines, meals for children in need, preserving habitats for endangered animals, plus many more good causes.</h4>
 				<div className="upper-cta-btn mt-5">
-					<T4GCTAButton className="w-100"/>
+					<T4GCTA className="w-100"/>
 					<button className="btn btn-secondary w-100 text-uppercase mt-3 d-none d-md-block">
 						Learn More About Tabs For Good
 					</button>
@@ -404,7 +368,7 @@ const PositivePlaceSection = ({className, showCTA}) => {
 				<h3 className='pt-4'>Keeping your online privacy safe no matter what</h3>
 			</Col>
 		</Row>
-		{showCTA && <T4GCTAButton className="mt-5" />}
+		{showCTA && <T4GCTA className="mt-5" />}
 	</PageCard>
 }
 
@@ -514,7 +478,7 @@ const WhatIsTabsForGood	= ({ngo, imgs}) => {
 					<BG center src={(ngo && ngo.images) || (imgs && imgs[2]) || "/img/homepage/world.png"} ratio={100} alt="" />
 				</Col>*/}
 			</Row>
-			<T4GCTAButton className="mx-auto"/>
+			<T4GCTA className="mx-auto"/>
 		</PageCard>
 	</>);
 };
@@ -531,8 +495,7 @@ export {
 	TestimonialSectionLower,
 	GetInvolvedSection,
 	CharityBanner,
-	MyLandingSection,
-	T4GCTAButton,
+	MyLandingSection,	
 	PageCard,
 	CurvePageCard,
 	WhatIsTabsForGood,

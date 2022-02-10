@@ -39,9 +39,8 @@ import ImpactOverviewPage from './pages/ImpactOverviewPage';
 import OurStoryPage from './pages/OurStoryPage';
 import ForBusinessPage from './pages/ForBusinessPage';
 import ForCharityPage from './pages/ForCharityPage';
-import { T4GSignUpButton, T4GSignUpModal, T4GSignUpLink } from './T4GSignUp';
+import { T4GCTA, T4GSignUpModal, T4GSignUpLink } from './T4GSignUp';
 import { nonce } from '../base/data/DataClass';
-import { T4GCTAButton } from './pages/CommonComponents';
 
 // DataStore
 C.setupDataStore();
@@ -99,12 +98,6 @@ addDataCredit({name:"The charity impact database", url:"https://sogive.org", aut
 Login.app = C.app.id;
 Login.dataspace = C.app.dataspace;
 
-const TabsForGoodCTA = () => {
-	let path = DataStore.getValue("location","path");
-	return path[0]==="tabsforgood"? <T4GCTAButton />
-		: <C.A className="btn btn-info mb-1 mr-2" href="/tabsforgood">GET TABS FOR GOOD</C.A>;
-}
-
 const MainDiv = () => {
 
 	const navPageLinks = {
@@ -140,7 +133,7 @@ const MainDiv = () => {
 		navbarPages={navPageLinks}
 		navbarLabels={navPageLabels}
 		navbarDarkTheme={false}
-		navbarChildren={() => <><TabsForGoodCTA/><T4GSignUpModal /></>}
+		navbarChildren={() => <><T4GCTA/><T4GSignUpModal /></>}
 		navbarBackgroundColour="white"
 		NavExpandSize="xl"
 		// navbarLabels={getNavbarLabels}

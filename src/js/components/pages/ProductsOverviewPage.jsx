@@ -4,9 +4,6 @@ import LinkOut from '../../base/components/LinkOut';
 import Misc from '../../base/components/Misc';
 import KStatus from '../../base/data/KStatus';
 import { getDataItem } from '../../base/plumbing/Crud';
-import C from '../../C';
-import CharityLogo from '../CharityLogo';
-import { MyLandingSection, T4GCTAButton } from './CommonComponents';
 
 export const ProductsOverviewPage = () => {
 	return <Container>

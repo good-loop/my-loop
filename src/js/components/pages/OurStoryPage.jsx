@@ -39,7 +39,7 @@ const OutMissionSection = ({className}) => {
 			</div>
 			<CardImgLeft imgUrl='img/ourstory/nyc.png' classname='bg-white border'>
 				<h3>Our Misson</h3>
-				<p>With MY.Good-Loop. Every time you see, watch or engage with a brand's ad ad through our platforms, we'll donate 50% of the ad fee to charity. Told you it was simple. </p>
+				<p>With My.Good-Loop. Every time you see, watch or engage with a brand's ad ad through our platforms, we'll donate 50% of the ad fee to charity. Told you it was simple. </p>
 				<p>Since 2016, people like you have helped us raise millions of pounds for 100s of incredible causes all over the world. Just from seeing an ad. So what do you say? Fancy joining the Good-Loop community and helping us raise even more?</p>
 				<T4GSignUpButton/>
 			</CardImgLeft>
