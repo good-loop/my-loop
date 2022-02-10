@@ -8,19 +8,19 @@ import NGO from '../base/data/NGO';
  * TODO can standardise this with brand logos
  * @param {?boolean} link true to make the logo a link
  */
-const CharityLogo = ({charity, className, style, link=false}) => {
+const CharityLogo = ({charity, className, size, style, link=false}) => {
 	// Check for SVG and use specific width if so
 	let svgClasses="";
 	let imgType = /^.*\.([a-zA-Z]*).*$/g.exec(charity.logo);
 	if (imgType) {
 		imgType = imgType[1];
 		if (imgType.toLowerCase() === "svg") {
-			svgClasses = "w-100";
+			svgClasses = "w-100"; // width 100?? won't that make it giant in the wrong setting??
 		}
 	}
 	// 'logo' class forces the logos to be too small for the circle - so leaving it out
 	let altText = charity.displayName || NGO.id(charity);
-	let $logo = <img className={space(className, svgClasses)} style={style} src={charity.logo} alt={altText} />;
+	let $logo = <img className={space(className, "logo", size&&"logo-"+size, svgClasses)} style={style} src={charity.logo} alt={altText} />;
 	if ( ! charity.logo) {
 		console.warn("Charity without a logo",NGO.id(charity),charity);
 		$logo = <span className={className} style={style}>{charity.displayName || NGO.id(charity)}</span>; // fallback to their name

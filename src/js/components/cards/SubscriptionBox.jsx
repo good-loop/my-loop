@@ -25,7 +25,7 @@ const SubscriptionBox = ({title="Support the causes you care about, and see the 
 };
 
 
-export const SubscriptionForm = ({label="", product, purpose=PURPOSES.email_mailing_list, charityId, buttonText="Sign me up"}) => {
+export const SubscriptionForm = ({label="", product, purpose=PURPOSES.email_mailing_list, buttonText="Sign me up"}) => {
 	// NB: suppose we have a subscribe-to-mailing-list and a preregister form on the same page? Keep the data separate.
 	// OTOH two subscribe-to-mailing-list forms are treated as overlapping
 	// ??
@@ -37,6 +37,11 @@ export const SubscriptionForm = ({label="", product, purpose=PURPOSES.email_mail
 	const nprops = getNavProps();
 	if (nprops && nprops.brandType) {
 		formData[nprops.brandType] = nprops.brandId;
+	}
+	// ...set their charity if they sign up?
+	let charityId = null;
+	if (product==="T4G" && nprops && nprops.brandType==='NGO') {
+		charityId = nprops.brandId;
 	}
 
 	const doEmailSignUp = e => {
