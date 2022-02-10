@@ -7,6 +7,7 @@ import { isPortraitMobile } from '../../base/utils/miscutils';
 import C from '../../C';
 import CharityLogo from '../CharityLogo';
 import { setFooterClassName } from '../Footer';
+import { T4GCTA } from '../T4GSignUp';
 import { MyLandingSection, HowTabsForGoodWorks, PageCard, TabsForGoodSlideSection, TriCards, WhatIsTabsForGood, CornerHummingbird } from './CommonComponents';
 
 const CharityT4GLogos = ({ngo, className, style, autosize}) => {
