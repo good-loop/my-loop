@@ -44,7 +44,7 @@ const CharitySection = ({}) => {
                     <img src="img/LandingCharity/ICI-Logo.jpeg" className="w-50" alt="international cocoa initiative" />
                 </div>
                 <div className="col-md d-flex flex-column align-items-center justify-content-center mb-3">
-                    <img src="img/LandingCharity/centrepoint-logo.png" className="w-50" alt="centrepoint" />
+                    <img src="/img/charity-logos/centrepoint-logo.png" className="w-50" alt="centrepoint" />
                 </div>
                 <div className="col-md d-flex flex-column align-items-center justify-content-center mb-3">
                     <img src="img/LandingCharity/GOSH-logo.png" className="w-50" alt="great ormond street hospital charity" />

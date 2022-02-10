@@ -231,8 +231,14 @@ const DesktopSignUp = ({charity}) => {
 
 const NotAvailableYet = ({browser,charity}) => {
 	return (<>
-		<p>We'll send you an email to let you know when Tabs-for-Good is available on <span>{toTitleCase(browser)}</span></p>
-		<SubscriptionForm purpose="preregister" product="T4G" charityId={getId(charity)} />
+		<img src="/img/signup/hand-globe-coins.png" className='hand-globe'/>
+		<div className='clearfix'>
+			<img className="pull-right w-25 m-3" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="Tabs-for-Good" />
+		</div>
+		<div className='mx-auto w-50 d-flex flex-column align-items-center'>
+			<p class="mt-5">We'll send you an email to let you know when Tabs-for-Good is available on <span>{toTitleCase(browser)}</span></p>
+			<SubscriptionForm purpose="preregister" product="T4G" charityId={getId(charity)} buttonText="Keep me Informed"/>
+		</div>
 		</>);
 };
 
