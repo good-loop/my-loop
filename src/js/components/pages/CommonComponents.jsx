@@ -289,7 +289,7 @@ const TestimonialSectionTitle = () => {
 		<div className="container">
 			<div className="testimonial-upper text-center">
 				<h1>TOGETHER WE'VE RAISED OVER £3.9 MILLION!</h1>
-				<p>We donate to charities worldwide. Spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
+				<p className='leader-text'>We donate to charities worldwide. Spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
 				{/* <a className='btn btn-primary text-uppercase' href="#">Explore our charity impact</a> */}
 			</div>
 		</div>
@@ -306,7 +306,7 @@ const TestimonialSectionLower = () => {
 				<div className="testimonial-card my-0 my-md-5">
 					<div className="row">
 						<div className="col-md-6 p-0">
-							<img className='w-100 h-100' src="img/homepage/testimonial-1.png" alt="" />
+							<img className='w-100 h-100' src="/img/homepage/photo-by-priscilla-du-preez-unsplash.jpg" alt="" />
 						</div>
 						<div className="col-md-6 testimonial-right p-5">
 								<h3>Testimonial</h3>
@@ -324,21 +324,21 @@ const TestimonialSectionLower = () => {
 								<img className='logo logo-lg' src="/img/charity-logos/we-forest.jpeg" alt="We Forest logo" />
 							</Circle>
 							<h3 className='pt-md-4'>721.3 Hectares</h3>
-							<p className=''>of forest restored - that's 1,000+ football pitches!</p>
+							<p className='leader-text text-uppercase nomargin'>of forest restored - that's 1,000+ football pitches!</p>
 						</div>
 						<div className="col-md-4 testimonial-points">
 							<Circle className="mx-auto" width='8em'>
 								<img className='logo logo-lg' src="/img/charity-logos/no-kid-hungry.png" alt="No Kid Hungry logo" />
 							</Circle>
 							<h3 className='pt-md-4'>183,318 Meals</h3>
-							<p className=''>provided for children</p>
+							<p className='leader-text text-uppercase nomargin'>provided for children</p>
 						</div>
 						<div className="col-md-4 testimonial-points">
 							<Circle className="mx-auto" width='8em'>
 								<img className='logo logo-lg' src="/img/charity-logos/mind.png" alt="Mind logo" />
 							</Circle>
 							<h3 className='pt-md-4'>500+ Helpline Calls</h3>
-							<p className=''>and 195 hours of online peer-to-peer support</p>
+							<p className='leader-text text-uppercase nomargin'>and 195 hours of online peer-to-peer support</p>
 						</div>
 					</div>
 				</div>
