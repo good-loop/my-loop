@@ -15,19 +15,26 @@ const setFooterClassName = (className) => {
 
 const getFooterClassName = () => DataStore.getValue(['widget','Footer', 'className']) || DataStore.setValue(['widget','Footer', 'className'], '', false);
 
+const pageBGs = {
+	'ourstory': 'bg-gl-light-pink',
+	'green': 'bg-greenmedia-darkcyan',
+};
+
 /**
  * The current My-Loop footer
  */
-const MyLoopFooter = ({}) => {
-	let bgColour = 'bg-white';
-	if (window.location.pathname.startsWith('/ourstory')) bgColour = 'bg-gl-light-pink'
+const MyLoopFooter = ({page}) => {
+	// Some pages take custom background colours above the curve
+	const bgColour = pageBGs[page] || 'bg-white'
 
 	// Allow inner pages to modify className for styling
 	let dsClassName = getFooterClassName();
 	const fullClassName = space('my-loop-footer', bgColour, dsClassName);
 	return <Container fluid className={fullClassName}>
 		<Row>
-			<img src="/img/curves/curve-dark-turquoise.svg" className='w-100 footer-curve'/>
+			<svg className="w-100 footer-curve color-gl-dark-turquoise" viewBox="0 0 2560 593" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  			<path d="m 0.003,-0.001 c 0,0 356.72,665.074 1297.3,296.564 940.58,-368.51 1468.515,280.543 1468.515,280.543 v 221.17 H 0.003 Z" fill="currentColor" />
+			</svg>
 			<img src="/img/green/hummingbird.png" className='hummingbird'/>
 			<div className='bg-gl-dark-turquoise w-100 p-5' style={{marginTop:-1}}>
 				<Row>
