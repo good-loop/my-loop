@@ -353,7 +353,7 @@ const TestimonialSectionLower = () => {
  */
 const Circle = ({className, color="bg-light", width,children}) => {
 	return <div 
-		className={space(className, color, 'rounded-circle d-flex justify-content-center align-items-center')} 
+		className={space(className, color, 'rounded-circle d-flex justify-content-center align-items-center overflow-hidden')} 
 		style={{width,height:width}}>
 		{children}
 		</div>;
