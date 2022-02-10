@@ -56,7 +56,8 @@ import Messaging, { notifyUser } from '../../base/plumbing/Messaging';
 	if ( ! topCampaignId) {
 		// by advertiser or agency?
 		let pvTop;
-		let advid = DataStore.getUrlValue("brand");
+		let advid = DataStore.getUrlValue("brand") // do we use "brand"??
+					|| DataStore.getUrlValue("gl.vertiser");
 		if (advid) {
 			pvTop = getDataItem({type:"Advertiser", id:advid, status});
 		} else if (DataStore.getUrlValue("agency")) {
