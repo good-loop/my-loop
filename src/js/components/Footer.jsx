@@ -28,7 +28,7 @@ const MyLoopFooter = ({}) => {
 	return <Container fluid className={fullClassName}>
 		<Row>
 			<img src="/img/curves/curve-dark-turquoise.svg" className='w-100 footer-curve'/>
-			<img src="/img/footer/Hummingbird.png" className='hummingbird'/>
+			<img src="/img/green/hummingbird.png" className='hummingbird'/>
 			<div className='bg-gl-dark-turquoise w-100 p-5' style={{marginTop:-1}}>
 				<Row>
 					<Col md={6}>

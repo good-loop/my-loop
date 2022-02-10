@@ -86,7 +86,7 @@ const MyLandingSection = ({ngo}) => {
 
 const CornerHummingbird = () => {
 	return (
-		<img src="/img/footer/Hummingbird.png" className="corner-hummingbird"/>
+		<img src="/img/green/hummingbird.png" className="corner-hummingbird"/>
 	);
 }
 

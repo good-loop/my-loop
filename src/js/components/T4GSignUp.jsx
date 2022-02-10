@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form, Modal, ModalBody, ModalHeader, Container, Row, Col, Carousel, CarouselControl, CarouselItem, CarouselIndicators } from 'reactstrap';
 import { id } from '../../../GLAppManifest';
+import BSCarousel from '../base/components/BSCarousel';
 import CloseButton from '../base/components/CloseButton';
 import Icon from '../base/components/Icon';
 import LinkOut from '../base/components/LinkOut';
@@ -89,8 +90,12 @@ export const T4GSignUpModal = ({charity}) => {
 			toggle={() => showT4GSignUpModal(!show)}
 			size="lg"
 		>
-			<ModalBody>
-				<CloseButton size='lg' onClick={() => showT4GSignUpModal(false)}/>
+			<ModalBody className='m-2'>
+				<div>
+					<CloseButton size='lg' onClick={() => showT4GSignUpModal(false)}/>
+					<img className="hummingbird" src="/img/green/hummingbird.png" />
+				</div>
+
 				{charity && <CharityLogo charity={charity} />}
 				{isMobile()? <MobileSendEmail charity={charity} /> 
 					: <DesktopSignUp charity={charity} />}
@@ -106,21 +111,42 @@ const DesktopSignUp = ({charity}) => {
 	if ( ! SUPPORTED_BROWSERS.includes(browser)) {
 		return <NotAvailableYet browser={browser} />
 	}	
-	// Step one or two?
-	if (Login.isLoggedIn()) {
-		return(<>
-		TODO
-		<T4GPluginButton />
-		</>)
-	}
+	// NB: we have the left and right step 1 / 2 below
 	return <Container fluid>
-		<Row>
-			<img className="hummingbird" src="/img/green/hummingbird.png" alt="" />			
+		<Row className="h-100">
+			<Col className='sign-up-left m-0 h-100'>
+				{ ! Login.isLoggedIn()?
+					<BSCarousel className="h-100 pl-4 pr-4" light>
+						<div>
+							You'll be all set in two simple steps
+							
+							<p>Step 1: Sign Up</p>
 
-			<Col className='sign-up-right m-0' md={5}>
+							<p>Step 2: We'll take you to the {toTitleCase(browser)} store to install the Tabs-for-Good plugin.</p>
+						</div>
+						<div>
+							Once you've installed Tabs-for-Good 
+							your browsing will add up into a force for good.
+						</div>
+					</BSCarousel>
+				: /* Step 2 */ <div>
+					<p>Successs! You've signed up.</p>
+					<p>Now click on the button to install Tabs-for-Good.</p>
+				</div>
+				}
+			</Col>
+			<Col className='sign-up-right m-0'>
 				<p>Tabs For Good By Good-Loop (Logo)</p>
-				
-				<LoginWidgetEmbed verb='register' onLogin={() => console.warn("TODO set charity??")}/>
+				{ ! Login.isLoggedIn()?
+					<div>						
+						Step 1 - Sign Up
+						<LoginWidgetEmbed verb='register' onLogin={() => console.warn("TODO set charity??")}/>
+					</div>
+					: /* Step 2 */ <div>
+						Step 2 - Install the Plugin
+						<T4GPluginButton />
+					</div>
+				}
 			</Col>
 		</Row>
 	</Container>
