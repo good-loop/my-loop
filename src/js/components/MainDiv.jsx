@@ -39,7 +39,7 @@ import BlogPage from './pages/BlogPage';
 import OurStoryPage from './pages/OurStoryPage';
 import ForBusinessPage from './pages/ForBusinessPage';
 import ForCharityPage from './pages/ForCharityPage';
-import { T4GCTA, T4GSignUpModal, T4GSignUpLink } from './T4GSignUp';
+import { T4GCTA, T4GSignUpModal, T4GPluginButton } from './T4GSignUp';
 
 // DataStore
 C.setupDataStore();
@@ -143,7 +143,7 @@ const MainDiv = () => {
 		loginLogo="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png"
 		loginSubtitle="Sign in to see how your web browsing has transformed into charity donations"
 		noSocials
-		loginChildren={() => <div className='text-center'><T4GSignUpLink onClick={() => setShowLogin(false)}>Not got an account? Sign up and get Tabs for Good</T4GSignUpLink></div>}
+		loginChildren={() => <div className='text-center'><T4GPluginButton onClick={() => setShowLogin(false)}>Not got an account? Sign up and get Tabs for Good</T4GPluginButton></div>}
 	></MainDivBase>);
 };
 
