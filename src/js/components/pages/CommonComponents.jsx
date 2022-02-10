@@ -11,6 +11,7 @@ import { SubscriptionForm } from '../cards/SubscriptionBox';
 import Login from '../../base/youagain';
 import BSCarousel from '../../base/components/BSCarousel';
 import { T4GCTA } from '../T4GSignUp';
+import Roles from '../../base/Roles';
 
 const PageCard = ({id, className, children}) => {
 	return <Container id={id} fluid className={space('page-card', className)}>
@@ -381,8 +382,9 @@ const PositivePlaceSection = ({className, showCTA}) => {
 }
 
 const WatchVideoSection = () => {
+	if ( ! Roles.isTester()) return null;
 	return(<>
-	<PageCard className="watch-video-section">
+	<PageCard className="TODO watch-video-section">
 		<div className="text-center">
 			<h1 className='pt-5'>WATCH TO SEE HOW WE’RE CREATING A MOVEMENT</h1>
 			<img className='w-100 my-5' src="img/homepage/video.png" alt="" />
