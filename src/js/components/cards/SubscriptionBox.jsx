@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Button, Form, FormGroup } from 'reactstrap';
-import { space, stopEvent } from '../../base/utils/miscutils';
+import { getBrowserVendor, space, stopEvent } from '../../base/utils/miscutils';
 
 import DataStore from '../../base/plumbing/DataStore';
 import PropControl from '../../base/components/PropControl';
@@ -25,7 +25,7 @@ const SubscriptionBox = ({title="Support the causes you care about, and see the 
 };
 
 
-export const SubscriptionForm = ({label="", product, purpose=PURPOSES.email_mailing_list, buttonText="Sign me up"}) => {
+export const SubscriptionForm = ({label="", product, purpose=PURPOSES.email_mailing_list, browser, buttonText="Sign me up"}) => {
 	// NB: suppose we have a subscribe-to-mailing-list and a preregister form on the same page? Keep the data separate.
 	// OTOH two subscribe-to-mailing-list forms are treated as overlapping
 	// ??
@@ -33,6 +33,7 @@ export const SubscriptionForm = ({label="", product, purpose=PURPOSES.email_mail
 	DataStore.setValue(ctaFormPath.concat("purpose"), purpose);
 	const formData = DataStore.getValue(ctaFormPath);
 	formData.product = product; // optional extra info, will default to app = my.good-loop.com
+	formData.browser = browser;
 	// charity (NGO) or brand (Advertiser) specific?
 	const nprops = getNavProps();
 	if (nprops && nprops.brandType) {

@@ -237,7 +237,10 @@ const NotAvailableYet = ({browser,charity}) => {
 		</div>
 		<div className='mx-auto w-50 d-flex flex-column align-items-center'>
 			<p class="mt-5">We'll send you an email to let you know when Tabs-for-Good is available on <span>{toTitleCase(browser)}</span></p>
-			<SubscriptionForm purpose="preregister" product="T4G" charityId={getId(charity)} buttonText="Keep me Informed"/>
+			<SubscriptionForm purpose="preregister" 
+				product="T4G" 
+				charityId={getId(charity)} browser={browser} 
+				buttonText="Keep me Informed"/>
 		</div>
 		</>);
 };
