@@ -1,13 +1,13 @@
-@green-bg-light: #477b73;
-@green-bg-dark: #52727a;
+// have a MyGL colours file which collects these??
 @green-highlight: #698983;
 @blue-highlight: #69a4b9;
 @sea-blue: #76a1b7;
-@nav-width: 20em;
+
+@nav-width: 20em; // why isnt the nav either 100% or container??
 
 #green-dashboard {
 	width: 100vw;
-	height: 100vh;
+	height: @fullHeight;
 	overflow: hidden;
 	display: flex;
 	
@@ -16,7 +16,7 @@
 #green-navbar {
 	width: @nav-width;
 	height: 100%;
-	background-color: @green-bg-dark;
+	background-color: @greenmedia-darkcyan;
 	z-index: 1;
 	display: flex;
 	flex-direction: column;
@@ -80,7 +80,7 @@
 	position: relative; // See .landing-behind-footer below - overall page div needs to be a position reference
 
 	.landing-splash, .landing-map {
-		height: 100vh;
+		height: @fullHeight;
 		background-size: cover;
 		background-position: center;
 		display: flex;
@@ -142,7 +142,7 @@
 	}
 
 	.mission {
-		background-color: @green-bg-light;
+		background-color: @greenmedia-seagreen;
 		text-align: center;
 	}
 
@@ -154,7 +154,13 @@
 		}
 		.map-markers {
 			position: relative; // Needs to be position ref for project marker pins
-			margin: -16vw auto; // Collapse the wave transition graphics into the map
+			margin: -16vw auto; // Collapse the wave transition graphics above and below into the map
+		}
+		.map-transition-top {
+			fill: @greenmedia-seagreen;
+		}
+		.map-transition-bottom {
+			fill: @greenmedia-darkcyan;
 		}
 	}
 
@@ -193,14 +199,70 @@
 			position: absolute;
 			width: 2em;
 			height: 2em;
-			top: 100%;
-			right: 4em;
+			display: none; // hide all by default
+			//top: 100%;
+			//right: 4em;
 			fill: white;
+			&.pointer-top-left { bottom: 100%; left: 4em; }
+			&.pointer-top-right { bottom: 100%; right: 4em; }
+			&.pointer-right { top: 3em; left: 100%; }
+			&.pointer-bottom-right { top: 100%; right: 4em; }
+			&.pointer-bottom-left { top: 100%; left: 4em; }
+			&.pointer-left { top: 3em; right: 100%; }
+		}
+		/* Offsets and pointer display rules for different arrow positions*/
+		/* TODO Use variables for size/position so we can reshape later without hand-rewriting all position rules*/
+		&.arrow-top-left {
+			margin-top: 2em;
+			margin-left: -5em;
+			.pointer-top-left { display: block; }
+		}
+		&.arrow-top-right {
+			margin-top: 2em;
+			margin-left: -15em;
+			.pointer-top-right { display: block; }
+		}
+		&.arrow-right {
+			margin-top: -4em;
+			margin-left: -22em;
+			.pointer-right { display: block; }
+		}
+		&.arrow-bottom-right {
+			margin-top: -10em;
+			margin-left: -15em;
+			.pointer-bottom-right { display: block; }
+		}
+		&.arrow-bottom-left {
+			margin-top: -10em;
+			margin-left: -5em;
+			.pointer-bottom-left { display: block; }
+		}
+		&.arrow-left {
+			margin-top: -4em;
+			margin-left: 2em;
+			.pointer-left { display: block; }
 		}
 	}
 
+	// The tree-in-a-circle project map marker we use on mobile
+	.project-marker-mobile {
+		position: absolute;
+		background-color: white;
+		border-radius: 50%;
+		display: none; // Hide unless on mobile sized screen
+		height: 2em;
+		width: 2em;
+		margin-top: -1em;
+		margin-left: -2em;
+	}
+
+	// Second list of project descriptions for display on mobile
+	.project-descriptions-mobile {
+		display: none;
+	}
+
 	.landing-extra {
-		background-color: @green-bg-dark;
+		background-color: @greenmedia-darkcyan;
 		text-align: center;
 		background-image: url("/img/green/more-info-bg.svg");
 		background-size: 100%; // 100% width; height maintains aspect
@@ -214,5 +276,45 @@
 		height: 24vw; // Footer curve svg aspect is ~1:0.23, this will make sure it covers the white space
 		width: 100%;
 		background-color: #52727a;
+	}
+
+	@media (max-width: 767px) {
+		// Mobile splash section
+		.landing-splash {
+			background-size: auto 40vh; // Hillside picture to the top
+			background-position: top;
+			background-repeat: no-repeat;
+			padding-top: 20vh; // Text further down so it's against the green
+			.hummingbird {
+				top: 20vh;
+			}
+		}
+
+		// No background circle
+		.splash-circle {
+			background-color: transparent;
+			border-radius: none;
+		}
+
+		// Show the project markers instead of full description bubbles on the map
+		.projects-map {
+			.project-marker { display: none; }
+			.project-marker-mobile { display: block; }
+		}
+		
+		
+		// Don't apply map positioning to the project description bubbles on mobile - they flow normally
+		.project-descriptions-mobile {
+			display: block;
+			.project-marker {
+				position: relative;
+				margin: auto !important;
+				top: 0 !important;
+				left: 0 !important;
+				.pointer {
+					display: none !important;
+				}
+			}
+		}
 	}
 }

@@ -11,6 +11,7 @@ import { SubscriptionForm } from '../cards/SubscriptionBox';
 import Login from '../../base/youagain';
 import BSCarousel from '../../base/components/BSCarousel';
 import { T4GCTA } from '../T4GSignUp';
+import Roles from '../../base/Roles';
 
 const PageCard = ({id, className, children}) => {
 	return <Container id={id} fluid className={space('page-card', className)}>
@@ -193,14 +194,14 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 	return (<>
 		<PageCard className={space("tabs-for-goods-slide-card", bgClassName)}>
 			{showUpperCTA && <div className="upper-cta white">
-				<h1 className='mb-5'>Sign Up Today!</h1>
-				<p className='leader-text'>Start transforming your web browsing into life saving vaccines, meals for children in need, preserving habitats for endangered animals, plus many more good causes.</p>
+				<h1 className='mb-5 white'>Sign Up Today!</h1>
+				<p className='leader-text text-center'>Start transforming your web browsing into life saving vaccines, meals for children in need, preserving habitats for endangered animals, plus many more good causes.</p>
 				<div className="mt-5">
-					<T4GCTA className="w-100"/>
-					<button className="btn btn-secondary w-100 text-uppercase mt-3 d-none d-md-block">
+					<T4GCTA className="w-50 mx-auto"/>
+					<button className="btn btn-secondary w-50 text-uppercase mt-3 d-none d-md-block mx-auto">
 						Learn More About Tabs For Good
 					</button>
-					<button className="btn btn-secondary w-100 text-uppercase mt-3 d-block d-md-none">
+					<button className="btn btn-secondary w-50 text-uppercase mt-3 d-block d-md-none mx-auto">
 						Learn More
 					</button>
 				</div>
@@ -288,7 +289,7 @@ const TestimonialSectionTitle = () => {
 		<div className="container">
 			<div className="testimonial-upper text-center">
 				<h1>TOGETHER WE'VE RAISED OVER £3.9 MILLION!</h1>
-				<p>We donate to charities worldwide. Spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
+				<p className='leader-text'>We donate to charities worldwide. Spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
 				{/* <a className='btn btn-primary text-uppercase' href="#">Explore our charity impact</a> */}
 			</div>
 		</div>
@@ -305,7 +306,7 @@ const TestimonialSectionLower = () => {
 				<div className="testimonial-card my-0 my-md-5">
 					<div className="row">
 						<div className="col-md-6 p-0">
-							<img className='w-100 h-100' src="img/homepage/testimonial-1.png" alt="" />
+							<img className='w-100 h-100' src="/img/homepage/photo-by-priscilla-du-preez-unsplash.jpg" alt="" />
 						</div>
 						<div className="col-md-6 testimonial-right p-5">
 								<h3>Testimonial</h3>
@@ -323,21 +324,21 @@ const TestimonialSectionLower = () => {
 								<img className='logo logo-lg' src="/img/charity-logos/we-forest.jpeg" alt="We Forest logo" />
 							</Circle>
 							<h3 className='pt-md-4'>721.3 Hectares</h3>
-							<p className=''>of forest restored - that's 1,000+ football pitches!</p>
+							<p className='leader-text text-uppercase nomargin'>of forest restored - that's 1,000+ football pitches!</p>
 						</div>
 						<div className="col-md-4 testimonial-points">
 							<Circle className="mx-auto" width='8em'>
 								<img className='logo logo-lg' src="/img/charity-logos/no-kid-hungry.png" alt="No Kid Hungry logo" />
 							</Circle>
 							<h3 className='pt-md-4'>183,318 Meals</h3>
-							<p className=''>provided for children</p>
+							<p className='leader-text text-uppercase nomargin'>provided for children</p>
 						</div>
 						<div className="col-md-4 testimonial-points">
 							<Circle className="mx-auto" width='8em'>
 								<img className='logo logo-lg' src="/img/charity-logos/mind.png" alt="Mind logo" />
 							</Circle>
 							<h3 className='pt-md-4'>500+ Helpline Calls</h3>
-							<p className=''>and 195 hours of online peer-to-peer support</p>
+							<p className='leader-text text-uppercase nomargin'>and 195 hours of online peer-to-peer support</p>
 						</div>
 					</div>
 				</div>
@@ -352,7 +353,7 @@ const TestimonialSectionLower = () => {
  */
 const Circle = ({className, color="bg-light", width,children}) => {
 	return <div 
-		className={space(className, color, 'rounded-circle d-flex justify-content-center align-items-center')} 
+		className={space(className, color, 'rounded-circle d-flex justify-content-center align-items-center overflow-hidden')} 
 		style={{width,height:width}}>
 		{children}
 		</div>;
@@ -381,8 +382,9 @@ const PositivePlaceSection = ({className, showCTA}) => {
 }
 
 const WatchVideoSection = () => {
+	if ( ! Roles.isTester()) return null;
 	return(<>
-	<PageCard className="watch-video-section">
+	<PageCard className="TODO watch-video-section">
 		<div className="text-center">
 			<h1 className='pt-5'>WATCH TO SEE HOW WE’RE CREATING A MOVEMENT</h1>
 			<img className='w-100 my-5' src="img/homepage/video.png" alt="" />

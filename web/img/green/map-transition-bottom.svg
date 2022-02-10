@@ -1,5 +1,3 @@
 <svg viewBox="0 0 2560 512" version="1.1" xmlns="http://www.w3.org/2000/svg">
-  <g transform="translate(67,20.139)">
-    <path style="fill:#52727a" d="m -68,-13.139 c 745.54594,451.957 1678.859,795.8403 2562,20 v 486 H -68 Z" />
-  </g>
+  <path style="fill:#52727a" d="M -1,7 C 744.54594,458.957 1677.859,802.8403 2561,27 V 513 H -1 Z" />
 </svg>
