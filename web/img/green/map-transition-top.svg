@@ -1,10 +1,3 @@
-<svg viewBox="0 0 2560 768" version="1.1" id="svg482" xmlns="http://www.w3.org/2000/svg">
-  <defs id="defs5">
-    <clipPath id="clip-world-map">
-      <path id="rect2" d="M0 0H2560V1080H0z"/>
-    </clipPath>
-  </defs>
-  <g id="world_1_" data-name="world (1)" transform="translate(67,20.139)" opacity="1">
-    <path style="opacity:1;fill:#477b73;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="m -68,34.861 c 1343.5636,1019.0441 1575.8302,-736.27725 2562,690 v -746 H -68 Z" id="path3072"/>
-  </g>
+<svg viewBox="0 0 2560 768" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path style="fill:#477b73" d="M -1,55 C 1342.5636,1074.0441 1574.8302,-681.27725 2561,745 V -1 H -1 Z" />
 </svg>

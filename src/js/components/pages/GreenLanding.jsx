@@ -1,5 +1,5 @@
-import React from 'react';
-import { Container } from 'reactstrap';
+import React, { useState } from 'react';
+import { Col, Container, Row } from 'reactstrap';
 import Misc from '../../base/components/Misc';
 import { setNavProps } from '../../base/components/NavBar';
 import Campaign from '../../base/data/Campaign';
@@ -8,7 +8,7 @@ import KStatus from '../../base/data/KStatus';
 import { getDataItem } from '../../base/plumbing/Crud';
 import { getDataLogData } from '../../base/plumbing/DataLog';
 import DataStore, { getPath } from '../../base/plumbing/DataStore';
-import { encURI } from '../../base/utils/miscutils';
+import { encURI, space } from '../../base/utils/miscutils';
 import C from '../../C';
 
 
@@ -50,27 +50,66 @@ window.toRobinson = toRobinson;
 
 const mapProjects = [
 	{
-		placeName: 'Edinburgh',
-		desc: 'Weirdo sanctuary in Scotland',
+		placeName: 'Kenya',
+		desc: 'Reforestation projects in Kenya',
 		img: '/img/green/edi-office.jpg',
-		lat: 55.95,
-		long: -3.19,
+		marker: '/img/green/marker-tree.svg',
+		arrow: 'bottom-right',
+		lat: 0.45,
+		long: 38.14,
 	},
 	{
-		placeName: 'Brazil',
-		desc: 'Rainforest protection in Brazil',
+		placeName: 'Mozambique',
+		desc: 'Reforestation projects in Mozambique',
 		img: '/img/green/rainforest.jpg',
-		lat: -7.13,
-		long: -52.05,
+		marker: '/img/green/marker-tree.svg',
+		arrow: 'right',
+		lat: -17.58,
+		long: 35.54,
 	},
 	{
-		placeName: 'Indian Ocean',
-		desc: 'Classified activities at INDIAN OCEAN FLOOR SITE 2',
+		placeName: 'Madagascar',
+		desc: 'Reforestation projects in Madagascar',
 		img: '/img/green/ocean-floor.jpg',
-		lat: -15.25,
-		long: 80.18,
+		marker: '/img/green/marker-tree.svg',
+		arrow: 'top-right',
+		lat: -19.43,
+		long: 46.57,
 	}
 ];
+
+const ProjectMarker = ({project, setActive, index}) => {
+	const coords = toRobinson(project.lat, project.long);
+	const style = {left: `${coords[0]}%`, top: `${coords[1]}%`};
+	
+	return <>
+		<a className={space('project-marker', `arrow-${project.arrow}`)} style={style} onClick={() => setActive(index)}>
+			<img className="photo" src={project.img} />
+			<div className="desc">{project.desc}</div>
+			<svg viewBox="0 0 10 10" className="pointer pointer-top-left">
+				<path d="M 0,10 H 10 L 5,0 Z" />
+			</svg>
+			<svg viewBox="0 0 10 10" className="pointer pointer-top-right">
+				<path d="M 0,10 H 10 L 5,0 Z" />
+			</svg>
+			<svg viewBox="0 0 10 10" className="pointer pointer-right">
+				<path d="M 0,0 V 10 L 10,5 Z" />
+			</svg>
+			<svg viewBox="0 0 10 10" className="pointer pointer-bottom-right">
+				<path d="M 0,0 H 10 L 5,10 Z" />
+			</svg>
+			<svg viewBox="0 0 10 10" className="pointer pointer-bottom-left">
+				<path d="M 0,0 H 10 L 5,10 Z" />
+			</svg>
+			<svg viewBox="0 0 10 10" className="pointer pointer-left">
+				<path d="M 10,0 V 10 L 0,5 Z" />
+			</svg>
+		</a>
+		<a className="project-marker-mobile" style={style} onClick={() => setActive(index)}>
+			<img src="/img/green/tree.svg" />
+		</a>
+	</>;
+}
 
 
 
@@ -121,21 +160,13 @@ const GreenLanding = ({ }) => {
 		}
 	}
 
+	// Projects map (mobile) - clicking a map dot should highlight it and the description 
+	const [activeProject, setActiveProject] = useState(0);
+
 	// TODO Mobile view should have pin markers only + list of descriptions below
-	const projectMarkers = mapProjects.map(project => {
-		const coords = toRobinson(project.lat, project.long);
-		const style = {left: `calc(${coords[0] - 1}% - 14em)`, top: `calc(${coords[1] - 4}% - 8em)`};
-		
-		return (
-			<div className="project-marker" style={style}>
-				<img className="photo" src={project.img} />
-				<div className="desc">{project.desc}</div>
-				<svg viewBox="0 0 10 10" className="pointer">
-					<path d="M 0,0 H 10 L 5,10 Z" />
-				</svg>
-			</div>
-		)
-	});
+	const projectMarkers = mapProjects.map((project, index) => (
+		<ProjectMarker project={project} active={activeProject === index} index={index} setActive={setActiveProject} />
+	));
 
 	// "Explore Our Impact" button scrolls to the map
 	const scrollToMap = () => {
@@ -144,14 +175,14 @@ const GreenLanding = ({ }) => {
 
 	return (
 		<div className="GreenLandingPage widepage">
-			<div className="landing-splash">
+			<div className="landing-splash bg-greenmedia-seagreen">
 				<img className="hummingbird" src="/img/green/hummingbird.png" />
 				<div className="splash-circle">
 					<div className="branding">{branding.logo ? <img src={branding.logo} alt="brand logo" /> : JSON.stringify(branding)}</div>
-					<div className="big-number tonnes">{co2}  TONNES</div>
+					<div className="big-number tonnes">{co2} TONNES</div>
 					carbon offset
 					<div className="big-number trees">{trees}</div>
-					trees planted<br/>
+					trees<br/>
 					<div className="carbon-neutral-container">
 						with <img className="carbon-neutral-logo" src="/img/green/gl-carbon-neutral.svg" />
 					</div>
@@ -160,30 +191,49 @@ const GreenLanding = ({ }) => {
 			</div>
 			<div className="mission pb-1">
 				<Container>
-					<h2>CARBON NEUTRAL ADVERTISING</h2>
-					<p>Text about Good-Loop's mission to make advertising carbon neutral and climate positive</p>
-					<p>Mention of certified carbon offsets; global NGO projects</p>
+					<h2>HELPING BRANDS GO GREEN WITH GOOD-LOOP</h2>
+					<p>The internet has a larger carbon footprint than the entire airline industry, and digital media is fuelling this. But we’re here to help.</p>
+					<p>Thanks to our green media products that help measure, offset and improve the carbon footprint of digital advertising, we’re helping the industry make changes to become carbon negative.</p>
 				</Container>
 			</div>
 
 			<div className="projects-map">
 				{/* TODO Transition curves should SOMEWHAT overlap the map image*/}
-				<img className="map-transition" src="/img/green/map-transition-top.svg" />
+				<svg className="map-transition map-transition-top" viewBox="0 0 2560 768" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  				<path d="M -1,55 C 1342.5636,1074.0441 1574.8302,-681.27725 2561,745 V -1 H -1 Z" />
+				</svg>
 				<div className="map-markers">
 					<img className="map-graphic" src="/img/green/world-map.svg" />
 					{projectMarkers}
 				</div>
-				<img className="map-transition" src="/img/green/map-transition-bottom.svg" />
+				<svg className="map-transition map-transition-bottom" viewBox="0 0 2560 512" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  				<path d="M -1,7 C 744.54594,458.957 1677.859,802.8403 2561,27 V 513 H -1 Z" />
+				</svg>
+			</div>
+			<div className="project-descriptions-mobile">
+				{projectMarkers}
 			</div>
 			<div className="landing-extra pb-1">
 				<Container>
-					<h2>OPPORTUNITY FOR FURTHER INFO</h2>
-					<p>Info about the small print, link to further info...</p>
-					<p>More information or stories related to impact of projects</p>
+					<Row>
+						<Col xs="12" sm="6">
+							<img src="" />
+						</Col>
+						<Col xs="12" sm="6">
+							<h2>OFFSETTING CARBON</h2>
+							<p>We help brands measure their digital campaign’s carbon costs in real time and see how they can reduce their footprint with our exciting new Green Ad Tag.</p>
+						</Col>
+					</Row>
+				</Container>
+				<Container>
+					<Row>
+						<Col xs="12" sm="6">
+							<h2>PLANTING TREES</h2>
+							<p>Our Green Media products plant trees via Eden Reforestation Projects where reforestation has a positive and long-lasting environmental and socio-economic impact.</p>
+						</Col>
+					</Row>
 				</Container>
 			</div>
-
-			<div className="landing-behind-footer" />
 		</div>
 	);
 };
