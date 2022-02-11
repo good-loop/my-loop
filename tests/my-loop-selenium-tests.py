@@ -3,24 +3,18 @@ import requests
 import warnings
 import argparse
 import time
-from pprint import pprint
 from loguru import logger
 
-import selenium
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
-
-from selenium.common.exceptions import TimeoutException
-from sqlalchemy import true
 
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
 
-# THIS IS A WIP
+# WIP
 #
 # You will need to install either the Chrome or Firefox webdrivers to use this script locally.
 # Ideally you will want to test on both browsers locally, and several combos remotely using CBT.
@@ -88,15 +82,19 @@ class MyLoopTestDriver:
         except:
             pass
 
-    # Returns an API session with CBT
     def _get_api_session(self) -> requests.Session:
+        """
+        Returns a requests.session object for using the CBT API.
+        """
         session = requests.session()
         session.auth = (self._CBT_USER, self._CBT_KEY)
 
         return session
     
-    # This is the driver that will carrying out our tests
     def _get_driver(self) -> webdriver:
+        """
+        Returns either a local or remote driver which will carry out our tests.
+        """
         logger.info('Attempting to create {} WebDriver...'.format(self.browser))
         logger.info('This can take a second...')
 
@@ -135,6 +133,9 @@ class MyLoopTestDriver:
         )
 
     def _run_tests(self):
+        """
+        Runs tests passed to the MyLoopTestDriver object when it's created.
+        """
         for test in self.tests:
             logger.info('Running {}'.format(test))
             
@@ -153,16 +154,24 @@ class MyLoopTestDriver:
 
         self.driver.quit()
 
-    # Baseline to make sure everything is working properly.
     def test_page_title_is_correct(self) -> bool:
+        """
+        Baseline to make sure everything is working properly.
+        """
         self.driver.get(self.endpoint)
         
         page_title = self.driver.title
 
         return page_title == 'My Good-Loop - Raise money for charities simply by browsing the web.'
 
-
     def test_can_login(self) -> bool:
+        """
+        Test the login flow.
+
+        Sign in using dummy account - check for existence of uxid cookie.
+
+        TODO: Less explicit XPath selections.
+        """
         self.driver.get(self.endpoint)
 
         logger.info('Clicking Sign-In dialog button')
@@ -171,10 +180,10 @@ class MyLoopTestDriver:
             TODO: This fails - but only on headless Chrome. Why?
             """
             WebDriverWait(self.driver, 100000).until(
-                EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div/nav/div/ul[2]/li[2]/a"))
+                EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div/nav/div/ul[2]/li[2]/a'))
             ).click()
         except Exception as e:
-            return selenium_error("Unable to click Sign-In dialog button", e)
+            return selenium_error('Unable to click Sign-In dialog button', e)
             
         logger.info('Sending input to login form')
         try:
@@ -194,7 +203,7 @@ class MyLoopTestDriver:
             email_address_input.send_keys(self._DUMMY_ACCOUNT_EMAIL)
             password_input.send_keys(self._DUMMY_ACCOUNT_PASSWORD)
         except Exception as e:
-            return selenium_error('Unable to locate login form', e)
+            return selenium_error('Unable send input to login form', e)
             
 
         logger.info('Attempting to sign in')
@@ -256,14 +265,14 @@ if __name__ == "__main__":
 
     if args.remote:
         for config in REMOTE_TESTS:
-            driver = MyLoopTestDriver(
+            MyLoopTestDriver(
                 remote=True,
                 caps=CAPS[config],
                 tests=REMOTE_TESTS[config],
                 endpoint=args.endpoint
             )
     else:
-        AdServerTester = MyLoopTestDriver(
+        MyLoopTestDriver(
             browser=args.browser,
             headless=args.no_headless,
             wait=args.wait,
