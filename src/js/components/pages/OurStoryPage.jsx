@@ -111,10 +111,10 @@ const MyGetInvolvedSection = () =>{
 		<T4GSignUpButton />
 	</PageCard>
 	<img className='w-100 d-none d-md-block' src="img/curves/curve-desat-blue-bottom.svg" alt="" />
-	<div className="container text-center mb-5">
+	<PageCard className="container text-center mb-5">
 		<p className='leader-text'>We're developing exciting new products that will help us all make the internet a more positive place. Register below to get exlusive access to future product launches and join the Good-Loop movement.</p>
 		<SubscriptionForm purpose="preregister" />
-	</div>
+	</PageCard>
 	</>)
 }
 
@@ -124,7 +124,7 @@ export const OurStoryPage = () => {
 		<OurStorySplash />
 		<OutMissionSection />
 		<NewsAwards>
-			<h1 className='mb-5'>We've been featured by</h1>
+			<h1 className='mb-3'>We've been featured by</h1>
 		</NewsAwards>
 		<CaringCommunitySection />
 		{/* TODO <NewsAwards firstIMG="Awards1" secondIMG="Awards2" thirdIMG="Awards3" /> */}

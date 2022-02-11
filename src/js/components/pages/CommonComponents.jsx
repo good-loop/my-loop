@@ -171,7 +171,7 @@ const HowTabsForGoodWorks = ({classname}) => {
  * ??describe this
  */
 const T4GCharityScreenshot = ({ngo, className, ...props}) => {
-	return <BG src="/img/LandingCharity/T4GScreenshot.png" className={className} center {...props}>
+	return <BG src="/img/homepage/slide-1.png" className={className} center {...props}>
 		{ngo && <CharityLogo charity={ngo} className="t4gscreenshot-logo"/>}
 	</BG>;
 }
@@ -244,7 +244,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 				<Row className="mt-5">
 					<Col md={4} className='pt-2 pt-md-0'> 
 						<div className="tricard-inner">
-							<img className='w-100' src={(ngo && ngo.logo) || ""} alt="" />
+							<img className='w-100' src={(ngo && ngo.logo) || "img/TabsForGood/fifty-card.png"} alt="" />
 							<div className='p-3'>
 								<h3>Donate 50% of online ad fees to {name}</h3>
 							</div>
@@ -252,7 +252,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 					</Col>
 					<Col md={4} className='pt-2 pt-md-0'>
 						<div className="tricard-inner">
-							<img className='w-100' src={(ngo && ngo.images) || "/img/homepage/tree-planting.png"} alt="" />
+							<img className='w-100' src={(ngo && ngo.images) || "img/TabsForGood/world-card.png"} alt="" />
 							<div className='p-3'>
 								<h3>{ngo ? "Let's help "+name+" do even more good. Together." : "Give that money to a charity of your choice"}</h3>
 							</div>
@@ -260,7 +260,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 					</Col>
 					<Col md={4} className='pt-2 pt-md-0'>
 						<div className="tricard-inner">
-							<img className='w-100' src="/img/homepage/amyanddaniel.png" alt="" />
+							<img className='w-100' src="img/TabsForGood/girl-card.png" alt="" />
 							<div className='p-3'>
 								<h3>Do good without taking up any time or effort</h3>
 							</div>
@@ -281,11 +281,11 @@ const NewsAwards = ({children}) => {
 	let thirdLink="https://www.forbes.com/sites/afdhelaziz/2020/06/25/goodloop-an-ethical-advertising-platform-that-allows-brands-to-spend-media-dollars-and-do-good-at-the-same-time-launches-in-the-united-states/?sh=22ac280c3987";
 
 	return(
-		<Container className='my-2'>
-			{children}
-			<div className="container text-center">
+		<PageCard>
+			<div className="text-center">
+				{children}
 				<div className="row">
-					<div className="col v-centre d-none d-md-block"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>
+					<div className="col v-centre d-none d-md-flex"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>
 					<div className="col">
 						<LinkOut href={firstLink}><img className='logo logo-xl' src={firstIMG} alt="" /></LinkOut>
 					</div>
@@ -295,10 +295,10 @@ const NewsAwards = ({children}) => {
 					<div className="col">
 						<LinkOut href={thirdLink}><img className='logo logo-xl' src={thirdIMG} alt="" /></LinkOut>
 					</div>
-					<div className="col v-centre d-none d-md-block"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>
+					<div className="col v-centre d-none d-md-flex"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>
 				</div>
 			</div>
-		</Container>
+		</PageCard>
 	)
 };
 
