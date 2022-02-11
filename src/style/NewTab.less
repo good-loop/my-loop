@@ -1,10 +1,17 @@
 
 
 .tab-search-container {
-    width: 50%;
+    width: 70%;
     @media @width-mobile {
         width: 100%;
     }
+}
+
+.tab-center .sparkle {
+    position: absolute;
+    right: -15px;
+    top: 50%;
+    transform: translateY(-180px);
 }
 
 .tab-search {
@@ -265,4 +272,11 @@
     padding-right: 1rem;
     border-radius: 15%;
     /* NB: top-bottom padding seem to be covered by something else some reason */
+}
+
+.charity-custom-content {
+    background-color: white;
+    padding: 1rem;
+    max-height: 750px;
+    overflow-y: auto;
 }
