@@ -18,6 +18,7 @@ module.exports = {
 		MEDIA_ENDPOINT: `${protocol}://${cluster}uploads.good-loop.com`,
 		ANIM_ENDPOINT: `${protocol}://${cluster}portal.good-loop.com/_anim`,
 		CHAT_ENDPOINT: `${protocol}://${cluster}chat.good-loop.com/reply`,
+		PROFILER_ENDPOINT: `${protocol}://${cluster}profiler.good-loop.com`
 		// DATALOG_DATASPACE: 'gl',
 		// ENDPOINT_NGO: 'https://test.sogive.org/charity',
 		// JUICE_ENDPOINT: 'https://localjuice.good-loop.com',
