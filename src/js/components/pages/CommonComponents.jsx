@@ -167,6 +167,9 @@ const HowTabsForGoodWorks = ({classname}) => {
 	);
 };
 
+/**
+ * ??describe this
+ */
 const T4GCharityScreenshot = ({ngo, className, ...props}) => {
 	return <BG src="/img/LandingCharity/T4GScreenshot.png" className={className} center {...props}>
 		{ngo && <CharityLogo charity={ngo} className="t4gscreenshot-logo"/>}
@@ -488,7 +491,9 @@ const WhatIsTabsForGood	= ({ngo, imgs}) => {
 					<T4GCharityScreenshot ngo={ngo} ratio={100}/>
 				</Col>
 				<Col md={6}>
-					<BG center src={(ngo && ngo.images) || (imgs && imgs[1]) || "/img/homepage/heart.png"} ratio={100} alt="" />
+					<BG center 
+					src={(ngo && ngo.images) || (imgs && imgs[1]) || "/img/wateraid-bg.jpg"} 
+					ratio={100} alt="" />
 				</Col>
 				{/*<Col md={4}>
 					<BG center src={(ngo && ngo.images) || (imgs && imgs[2]) || "/img/homepage/world.png"} ratio={100} alt="" />
