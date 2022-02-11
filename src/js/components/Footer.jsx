@@ -76,7 +76,7 @@ const MyLoopFooter = ({page}) => {
 						</C.A>
 					</Col>
 				</Row>
-				<Row className='mt-5 footer-links text-md-center small'>
+				<Row className='mt-5 footer-links text-center small mx-auto'>
 					<Col>
 						<C.A href="https://doc.good-loop.com/policy/privacy-policy.html">
 							<p>Privacy policy</p>

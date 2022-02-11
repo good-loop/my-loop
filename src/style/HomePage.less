@@ -45,6 +45,7 @@ img {
 
 	@media @width-mobile {
 		height: @fullHeight;
+		.left-padding {padding: 0 15px;}
 	}
 
 	// NB: avoid local font css by default for consistency. If it is needed -- include a comment
@@ -70,9 +71,12 @@ img {
 @media (min-width: 2100px) { .landing-bg { background-size: cover; } }
 @media (min-width: 2580px) { .landing-bg { background-size: 3430px auto; } }
 
-.charity-icons  {
+.charity-icons {
 	img {
 		height: 70px;
+	}
+	.col {
+		padding: 0;
 	}
 }
 
@@ -174,6 +178,7 @@ img {
 		background-position-x: -72em;
 
 		.testimonial-points {
+			margin: 0 1em;
 			margin-bottom: 2em;
 			display: flex;
 			align-items: center;
