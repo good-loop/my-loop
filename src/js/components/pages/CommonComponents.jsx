@@ -64,10 +64,10 @@ const MyLandingBackgroundImage = ({bgImg, children}) => {
 			</BG>
 		</BG>
 	) : (
-		<BG src="/img/splash-screen/background-0.svg" className="landing-bg">
-			<BG src="/img/splash-screen/background-1.png">
-				<BG src="/img/splash-screen/background-2.svg">
-					<BG src="/img/splash-screen/background-3.png" className="landing-bg">
+		<BG src="/img/splash-screen/background-0.svg" className="landing-bg" center>
+			<BG src="/img/splash-screen/background-1.png" center>
+				<BG src="/img/splash-screen/background-2.svg" center>
+					<BG src="/img/splash-screen/background-3.png" className="landing-bg" center>
 						{children}
 					</BG>
 				</BG>
