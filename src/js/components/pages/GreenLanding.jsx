@@ -196,8 +196,8 @@ const GreenLanding = ({ }) => {
 			<div className="mission pb-1">
 				<Container>
 					<h2>HELPING BRANDS GO GREEN WITH GOOD-LOOP</h2>
-					<p>The internet has a larger carbon footprint than the entire airline industry, and digital media is fuelling this. But we’re here to help.</p>
-					<p>Thanks to our green media products that help measure, offset and improve the carbon footprint of digital advertising, we’re helping the industry make changes to become carbon negative.</p>
+					<p className='leader-text'>The internet has a larger carbon footprint than the entire airline industry, and digital media is fuelling this. But we’re here to help.</p>
+					<p className='leader-text'>Thanks to our green media products that help measure, offset and improve the carbon footprint of digital advertising, we’re helping the industry make changes to become carbon negative.</p>
 				</Container>
 			</div>
 
