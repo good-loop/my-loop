@@ -43,7 +43,7 @@ const TabsForGoodLandingPage = () => {
 		<CornerHummingbird/>
 		<WhatIsTabsForGood imgs={['/img/homepage/slide-1.png']} />
 		<HowTabsForGoodWorks />
-		<TabsForGoodSlideSection img="/img/homepage/charities.png" showLowerCTA />
+		<TabsForGoodSlideSection img="/img/homepage/charities.png" showLowerCTA bgClassName="bg-gl-light-blue" />
 		<WellMakeItHappenSection/>
 		<PositivePlaceSection className="bg-gl-pale-orange" showCTA />
 		{/*<TriCards />*/}
