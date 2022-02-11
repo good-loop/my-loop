@@ -51,13 +51,7 @@ public class MetaHtmlServlet implements IServlet {
 			SimpleTemplateVars stv = new SimpleTemplateVars(vars);
 			stv.setUseJS(false);
 			stv.setUseJSLite(false);
-			html = stv.process(html);
-			
-//			// WTF
-//			if (html.contains("$contents")) {
-//				html = html.replace("$contents", "Loading...");
-//				Log.w("meta", "Odd -- $contents not replaced?! vars: "+vars);
-//			}
+			html = stv.process(html);			
 			
 			html4slug.put(slug, html);
 		}

@@ -420,9 +420,9 @@ const WatchVideoSection = () => {
 const GetInvolvedSection = () => {
 	return(
 		<PageCard className="get-involved-section text-center">
-			<h1>THIS IS JUST THE BEGINNING. SIGN UP AND JOIN OUR MOVEMENT.</h1>
-			<p>We’re developing exciting new products that will help us all make the internet a more positive place. Register below to get exclusive access to future product launches and more ways to raise money for charity while you browse.</p>
-			<SubscriptionForm />
+			<h1 className='text-uppercase'>This is just the beginning. sign up and join our movement.</h1>
+			<p className='leader-text'>We’re developing exciting new products that will help us all make the internet a more positive place. Register below to get exclusive access to future product launches and more ways to raise money for charity while you browse.</p>
+			<SubscriptionForm purpose='preregister' />
 			<div className="row pt-5">
 				<div className="col-md-4 get-involved-points">
 					<img className='w-50' src="/img/homepage/globe.png" alt="" />
@@ -437,17 +437,6 @@ const GetInvolvedSection = () => {
 					<h3 className='pt-md-4 mb-0 ml-1'>Just by browsing the internet</h3>
 				</div>
 			</div>
-			{/* <a className='btn btn-primary' href="#">Join the Good-Loop Movement</a> */}
-			{/* <div className="social-links">
-				<div className="row my-5">
-					<div className="col">
-						<a href="https://twitter.com/goodloophq"><Icon name="twitter" /></a>
-						<a href="https://www.facebook.com/the.good.loop/"><Icon name="facebook" /></a>
-						<a href="https://www.instagram.com/goodloophq/"><Icon name="instagram" /></a>
-						<a href="https://www.linkedin.com/company/good.loop"><Icon name="linkedin" /></a>
-					</div>
-				</div>
-			</div> */}
 		</PageCard>
 	)
 };

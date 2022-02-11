@@ -40,6 +40,9 @@ const showT4GSignUpModal = (s=true) => {
  */
  export const T4GSignUpButton = ({className,children}) => {		
 	if (Login.isLoggedIn()) {
+		if (isMobile()) {
+			return <T4GSignUpLink>Email me a desktop link</T4GSignUpLink>;
+		}
 		return <T4GPluginButton className={className} />
 	}
 	return (
