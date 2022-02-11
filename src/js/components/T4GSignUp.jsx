@@ -246,7 +246,7 @@ const NotAvailableYet = ({browser,charity}) => {
 };
 
 const MobileSendEmail = ({charity}) => {
-	return (<Form>
+	return (<Form className='mx-2'>
 		<div style={{textTransform:"capitalize"}}>
 			We'll email you a link for desktop so you can start raising money for charity while you browse
 		</div>
