@@ -28,11 +28,13 @@ const PageCard = ({id, className, children}) => {
  * @returns 
  */
 const CurvePageCard = ({color, className, style, bgClassName, bgImg, children}) => {
+
 	const TopComponent = bgImg ? BG : 'div';
 	const myStyle = {marginTop:-1, marginBottom:-10, ...style};
 	return <>
 		<TopComponent className={bgClassName} style={myStyle} src={bgImg}>
-			<img src={"/img/curves/curve-"+color+".svg"} className='w-100'/>
+			<BG src={"/img/curves/curve-"+color+".svg"} className="w-100 curves"/>
+			{/* <img src={"/img/curves/curve-"+color+".svg"} className='w-100'/> */}
 		</TopComponent>
 		{/* Not using PageCard here */}
 		<div className={space("bg-gl-"+color, className, "pb-5 w-100")}>
@@ -309,7 +311,6 @@ const NewsAwards = ({children}) => {
 
 const TestimonialSectionTitle = () => {
 	return(<>
-	{/* <img className='w-100' src="img/homepage/curve.svg" alt="" /> */}
 	<div className="testimonial-title">
 		<div className="container">
 			<div className="testimonial-upper text-center">
@@ -326,7 +327,7 @@ const TestimonialSectionTitle = () => {
 const TestimonialSectionLower = () => {
 	return(<>
 		<div className="testimonial-lower">
-			<img className='w-100 d-none d-md-block' src="/img/curves/curve-dark-turquoise-bottom.svg" alt="" />
+			<BG src="/img/curves/curve-dark-turquoise-bottom.svg" className="w-100 d-none d-md-block curves"/>
 			<div className="container">
 				<div className="testimonial-card my-0 my-md-5">
 					<div className="row">

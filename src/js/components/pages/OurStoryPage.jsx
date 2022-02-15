@@ -11,12 +11,14 @@ import { PageCard, CardImgLeft, NewsAwards, TriCards } from './CommonComponents'
 import {T4GSignUpButton} from '../T4GSignUp';
 import SubscriptionBox, { SubscriptionForm } from '../cards/SubscriptionBox';
 import DynImg from '../../base/components/DynImg';
+import BG from '../../base/components/BG';
 
 const OurStorySplash = () => {
 	return (<>
-		<div className="our-story-curve-banner">
-			<img className='w-100 curve' src="img/curves/curve-white.svg" alt="" />
-		</div>
+		<BG src="img/ourstory/Good-Loop_WatchAnAdToGiveBack.png" className="our-story-curve-banner" center> 
+			{/* <img className='w-100' src="img/curves/curve-white.svg" alt="" /> */}
+			<BG src="img/curves/curve-white.svg" className="curves"/>
+		</BG>
 		<PageCard className="text-center pt-0">
 			<h1>Our Story</h1>
 			<p className='leader-text'>At Good-Loop, we're on a mission to make the internet a more postive place and to make online advertising a more positive force in the world.</p>
@@ -110,7 +112,7 @@ const MyGetInvolvedSection = () =>{
 		<p className='mb-5 leader-text'>Join the My.Good-Loop community today and start raising money for chairty. For free.</p>
 		<T4GSignUpButton />
 	</PageCard>
-	<img className='w-100 d-none d-md-block' src="img/curves/curve-desat-blue-bottom.svg" alt="" />
+	<BG className='w-100 curves d-none d-md-block' src="img/curves/curve-desat-blue-bottom.svg" alt="" />
 	<PageCard className="container text-center mb-5">
 		<p className='leader-text'>We're developing exciting new products that will help us all make the internet a more positive place. Register below to get exlusive access to future product launches and join the Good-Loop movement.</p>
 		<SubscriptionForm purpose="preregister" />
