@@ -202,16 +202,28 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 		"It couldn't be easier to get started",
 		"...And see your impact grow"
 	];
+	const images = [
+		<T4GCharityScreenshot ngo={ngo} className="slide-img"/>,
+		<BG src="/img/homepage/slide-2.png" className="slide-img" center>
+	</BG>
+	]
 
-	const slides = items.map((content, i) => (
-			<div key={i} className='d-flex flex-column justify-content-between h-100'>
-				<h3>{titles[i]}</h3>
-				<div className='slide-content'>
-					{content}
+	const slides = items.map((content, i) => (<>
+		<Row className="slideshow mt-5" noGutters>
+			<Col md={6} className="slide-left overflow-hidden">
+				{images[i]}
+			</Col>
+			<Col md={6} className="slide-right p-5">
+				<div key={i} className='d-flex flex-column justify-content-between h-100'>
+					<h3>{titles[i]}</h3>
+					<div className='slide-content'>
+						{content}
+					</div>
+					<T4GCTA className="t4gcta"/>
 				</div>
-				<T4GCTA className="t4gcta"/>
-			</div>
-	));
+			</Col>
+		</Row>
+	</>));
 
 	return (<>
 		<PageCard className={space("tabs-for-goods-slide-card", bgClassName)}>
@@ -226,16 +238,9 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 					</button>
 				</div>
 			</div>}
-			<Row className="slideshow mt-5 d-none d-md-flex" noGutters>
-				<Col md={6} className="slide-left overflow-hidden">
-					<T4GCharityScreenshot ngo={ngo} className="slide-img"/>
-				</Col>
-				<Col md={6} className="slide-right">
-					<BSCarousel className="p-5" >
-						{slides}
-					</BSCarousel>
-				</Col>
-			</Row>
+			<BSCarousel className="d-none d-md-flex">
+				{slides}
+			</BSCarousel>
 		</PageCard>
 
 		{showLowerCTA && <>
