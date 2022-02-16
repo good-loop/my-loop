@@ -15,8 +15,7 @@ import BG from '../../base/components/BG';
 
 const OurStorySplash = () => {
 	return (<>
-		<BG src="img/ourstory/Good-Loop_WatchAnAdToGiveBack.png" className="our-story-curve-banner" center> 
-			{/* <img className='w-100' src="img/curves/curve-white.svg" alt="" /> */}
+		<BG src="img/ourstory/Good-Loop_WatchAnAdToGiveBack.png" className="curve-banner" center> 
 			<BG src="img/curves/curve-white.svg" className="curves"/>
 		</BG>
 		<PageCard className="text-center pt-0">

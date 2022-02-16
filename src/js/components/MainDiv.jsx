@@ -137,7 +137,7 @@ const MainDiv = () => {
 		navbarBackgroundColour="white"
 		NavExpandSize="xl"
 		// navbarLabels={getNavbarLabels}
-		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account', 'green', 'charities', 'impactoverview', 'campaign', 'ourstory']}
+		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account', 'green', 'charities', 'impactoverview', 'campaign', 'ourstory', 'ads']}
 		Footer={Footer}
 		canRegister
 		noLoginTitle

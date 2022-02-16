@@ -119,11 +119,8 @@ export const T4GSignUpModal = () => {
 			toggle={() => showT4GSignUpModal(!show)}
 			size="lg"
 		>
-			<ModalBody>
-				<div>
-					<CloseButton size='lg' onClick={() => showT4GSignUpModal(false)}/>
-					<img className="hummingbird" src="/img/green/hummingbird.png" />
-				</div>
+			<ModalBody className='pt-0'>
+				<CloseButton size='lg' onClick={() => showT4GSignUpModal(false)}/>
 
 				{charity && <CharityLogo charity={charity} />}
 				{isMobile()? <MobileSendEmail charity={charity} /> 
@@ -132,7 +129,6 @@ export const T4GSignUpModal = () => {
 		</Modal>
 	);
 };
-
 
 const DesktopSignUp = ({charity}) => {
 	const browser = getBrowserVendor();
@@ -209,6 +205,7 @@ const DesktopSignUp = ({charity}) => {
 	}
 
 	return <Container fluid>
+		<img className="hummingbird" src="/img/green/hummingbird.png" />
 		<Row>
 			<Col className='sign-up-left px-0'>
 				{ ! Login.isLoggedIn()?
@@ -243,6 +240,21 @@ const DesktopSignUp = ({charity}) => {
 	</Container>
 };
 
+const MobileSendEmail = ({charity}) => {
+	return (
+	<Container fluid>
+		<div className='mobile-send-email d-flex flex-column justify-content-between align-items-center'>
+			<img className="hummingbird-mobile logo mt-3" src="/img/green/hummingbird.png" />
+			<img className="w-50 mb-3" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
+			<div style={{textTransform:"capitalize"}}>
+				We'll email you a link for desktop so you can start raising money for charity while you browse
+			</div>
+			<SubscriptionForm purpose="getT4Glink" product="T4G" charityId={getId(charity)} textCenter />
+		</div>
+	</Container>
+	);
+};
+
 const NotAvailableYet = ({browser,charity}) => {
 	return (<>
 		<img src="/img/signup/hand-globe-coins.png" className='hand-globe'/>
@@ -257,13 +269,4 @@ const NotAvailableYet = ({browser,charity}) => {
 				buttonText="Keep me Informed"/>
 		</div>
 		</>);
-};
-
-const MobileSendEmail = ({charity}) => {
-	return (<Form className='mx-2'>
-		<div style={{textTransform:"capitalize"}}>
-			We'll email you a link for desktop so you can start raising money for charity while you browse
-		</div>
-		<SubscriptionForm purpose="getT4Glink" product="T4G" charityId={getId(charity)} />
-	</Form>);
 };

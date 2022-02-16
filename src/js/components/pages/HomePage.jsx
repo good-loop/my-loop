@@ -51,7 +51,7 @@ const HomePage = ({spring}) => {
 			<NewsAwards />
 			<PositivePlaceSection className="blue-gradient"/>
 			<WatchVideoSection />
-			<CurvePageCard color='dark-turquoise' className='' bgClassName='white' bgImg=''>
+			<CurvePageCard color='dark-turquoise' className='' bgClassName='bg-gl-light-blue' bgImg=''>
 				<TestimonialSectionTitle />
 			</CurvePageCard>
 			<TestimonialSectionLower />
