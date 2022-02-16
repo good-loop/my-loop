@@ -25,7 +25,7 @@ const SubscriptionBox = ({title="Support the causes you care about, and see the 
 };
 
 
-export const SubscriptionForm = ({label="", product, purpose=PURPOSES.email_mailing_list, browser, buttonText="Sign me up"}) => {
+export const SubscriptionForm = ({label="", product, purpose=PURPOSES.email_mailing_list, browser, buttonText="Sign me up", textCenter}) => {
 	// NB: suppose we have a subscribe-to-mailing-list and a preregister form on the same page? Keep the data separate.
 	// OTOH two subscribe-to-mailing-list forms are treated as overlapping
 	// ??
@@ -60,7 +60,9 @@ export const SubscriptionForm = ({label="", product, purpose=PURPOSES.email_mail
 		return <><h4>Thank you!</h4><p>We'll email you shortly :)</p></>;
 	}		
 	
-	return (<Form onSubmit={doEmailSignUp}>
+	const formClass = textCenter ? "text-center" : "";
+
+	return (<Form className={formClass} onSubmit={doEmailSignUp}>
 				<p className='white'><b>{label}</b></p>
 				<input type="hidden" name="purpose" value={purpose} />
 				<FormGroup className="mb-2 mr-sm-2 mb-sm-0 outer-form-group flex-grow-1 m-0 pr-md-3">
