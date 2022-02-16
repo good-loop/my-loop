@@ -8,7 +8,7 @@ import { T4GSignUpLink } from './T4GSignUp';
 export const MyLoginWidgetGuts = ({services, verb, onLogin, onRegister, canRegister}) => {
 	if (!verb) verb = DataStore.getValue(VERB_PATH) || 'login';
 
-	let rowClass = isMobile ? "w-100" : 'w-50'
+	let rowClass = isMobile == true ? "w-100" : 'w-50'
 	return (
 		<div className="login-guts container-fluid position-relative">
 			<div className='d-flex flex-column justify-content-center align-items-center p-5'>
