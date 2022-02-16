@@ -191,6 +191,23 @@ const DesktopSignUp = ({charity}) => {
 		}
 	};
 
+	const Steps = (stepTwo) => {
+		let circleOne = stepTwo ? "circle" : "circle circle-active";
+		let circleTwo = stepTwo ? "circle circle-active" : "circle";
+
+		return (
+			<div className='d-flex flex-column justify-content-center align-items-center'>
+				<img className="w-50 mb-3" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
+				<div className="steps-graphic">
+					<div className={circleOne}></div>
+					<div className={circleTwo}></div>
+					<span id="circle-step-1">Step 1 - Sign Up</span>
+					<span id="circle-step-2">Step 2 - Install the Plugin</span>
+				</div>
+			</div>
+		)
+	}
+
 	return <Container fluid>
 		<Row>
 			<Col className='sign-up-left px-0'>
@@ -207,23 +224,17 @@ const DesktopSignUp = ({charity}) => {
 				</div>
 				}
 			</Col>
-			<Col className='sign-up-right m-0 d-flex flex-column justify-content-center align-items-center h-100'>
-				<img className="w-50 mb-3" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
+			<Col className='sign-up-right m-0 py-5 d-flex flex-column justify-content-between align-items-center h-100'>
 				{ ! Login.isLoggedIn()?
 					<>
-						<div className="steps-graphic">
-							<div className="circle circle-active"></div>
-							<div className="circle"></div>
-							<span id="circle-step-1">Step 1 - Sign Up</span>
-							<span id="circle-step-2">Step 2 - Install the Plugin</span>
-						</div>
+						<Steps />
 						<div className="w-100">
 							<LoginWidgetEmbed verb='register' product="T4G" onLogin={onRegister} onRegister={onRegister} />
 							{charity && <div>This will set your charity to {NGO.displayName(charity)}. You can change settings at anytime.</div>}
 						</div>
 					</>
 					: /* Step 2 */ <div>
-						<p>Step 2 - Install the Plugin</p>
+						<Steps />
 						<T4GPluginButton />
 					</div>
 				}

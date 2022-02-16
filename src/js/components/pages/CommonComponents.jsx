@@ -211,7 +211,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 	]
 
 	const slides = items.map((content, i) => (<>
-		<Row className="slideshow mt-5" noGutters>
+		<Row className="slideshow" noGutters>
 			<Col md={6} className="slide-left overflow-hidden">
 				{images[i]}
 			</Col>
@@ -240,7 +240,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 					</button>
 				</div>
 			</div>}
-			<BSCarousel className="d-none d-md-flex">
+			<BSCarousel className="d-none d-md-flex mt-5">
 				{slides}
 			</BSCarousel>
 		</PageCard>
