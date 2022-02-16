@@ -41,7 +41,7 @@ const showT4GSignUpModal = (s=true) => {
  export const T4GSignUpButton = ({className,children}) => {		
 	if (Login.isLoggedIn()) {
 		if (isMobile()) {
-			return <T4GSignUpLink>Email me a desktop link</T4GSignUpLink>;
+			return <T4GSignUpLink className={space("T4GSignUpButton btn btn-primary", className)}>Email me a desktop link</T4GSignUpLink>;
 		}
 		return <T4GPluginButton className={className} />
 	}
@@ -191,9 +191,9 @@ const DesktopSignUp = ({charity}) => {
 		}
 	};
 
-	const Steps = (stepTwo) => {
-		let circleOne = stepTwo ? "circle" : "circle circle-active";
-		let circleTwo = stepTwo ? "circle circle-active" : "circle";
+	const Steps = ({step}) => {
+		let circleOne = step == 1 ? "circle circle-active" : "circle";
+		let circleTwo = step == 2 ? "circle circle-active" : "circle";
 
 		return (
 			<div className='d-flex flex-column justify-content-center align-items-center'>
@@ -227,14 +227,14 @@ const DesktopSignUp = ({charity}) => {
 			<Col className='sign-up-right m-0 py-5 d-flex flex-column justify-content-between align-items-center h-100'>
 				{ ! Login.isLoggedIn()?
 					<>
-						<Steps />
+						<Steps step={1}/>
 						<div className="w-100">
 							<LoginWidgetEmbed verb='register' product="T4G" onLogin={onRegister} onRegister={onRegister} />
 							{charity && <div>This will set your charity to {NGO.displayName(charity)}. You can change settings at anytime.</div>}
 						</div>
 					</>
 					: /* Step 2 */ <div>
-						<Steps />
+						<Steps step={2}/>
 						<T4GPluginButton />
 					</div>
 				}
