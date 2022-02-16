@@ -27,14 +27,16 @@ const PageCard = ({id, className, children}) => {
  * @param {String} color a gl-color for the background and curve - requires a curve svg of matching name in /img/curves/, e.g. light-blue = curve-light-blue.svg
  * @returns 
  */
-const CurvePageCard = ({color, className, style, bgClassName, bgImg, children}) => {
+const CurvePageCard = ({color, className, style, bgClassName, bgImg, bgSize, bgPosition, topSpace, children}) => {
 
 	const TopComponent = bgImg ? BG : 'div';
-	const myStyle = {marginTop:-1, marginBottom:-10, ...style};
+	const myStyle = {marginTop:-1, marginBottom:-10, backgroundSize:bgSize, backgroundPosition:bgPosition, ...style};
 	return <>
 		<TopComponent className={bgClassName} style={myStyle} src={bgImg}>
-			<BG src={"/img/curves/curve-"+color+".svg"} className="w-100 curves"/>
-			{/* <img src={"/img/curves/curve-"+color+".svg"} className='w-100'/> */}
+			{/*
+			BG approach was causing weird clipping behaviour with the SVG - reverted to a safer option for now
+			<BG src={"/img/curves/curve-"+color+".svg"} className="w-100 curves"/>*/}
+			<img src={"/img/curves/curve-"+color+".svg"} className='w-100' style={{paddingTop:topSpace}}/>
 		</TopComponent>
 		{/* Not using PageCard here */}
 		<div className={space("bg-gl-"+color, className, "pb-5 w-100")}>
@@ -45,13 +47,13 @@ const CurvePageCard = ({color, className, style, bgClassName, bgImg, children}) 
 	</>;
 };
 
-const CardImgLeft = ({classname, imgUrl, children}) =>{
+const CardImgLeft = ({classname, imgUrl, roundedImg, children}) =>{
 	return(
-	<Row className={space('mt-5 rounded', classname)}>
+	<Row className={space('mt-5 rounded overflow-hidden', classname)}>
 		<Col className='p-0' md={6}>
-			<img className="w-100 p-0" src={imgUrl} alt="" />
+			<BG className={space("w-100", roundedImg ? "round-img" : "")} src={imgUrl} alt="" center ratio={100}/>
 		</Col>
-		<Col md={6} className='text-left d-flex flex-column justify-content-around py-5 px-3'>
+		<Col md={6} className='text-left d-flex flex-column justify-content-around p-5'>
 			{children}
 		</Col>
 	</Row>
@@ -94,8 +96,8 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 						{!shiftLeft && <Col md={1} sm={0} /* left padding, but not on mobile */></Col>}
 						<Col md={6} className="landing-left">
 								<div className="title mt-5"> 
-										<h1 className='text-left bolder'>{title}</h1>
-										<p>{text}</p>
+									<h1 className='text-left bolder'>{title}</h1>
+									<p className='leader-text nomargin'>{text}</p>
 								</div>
 								<div className="cta-buttons text-uppercase mt-5">
 										<T4GCTA className="w-100"/>
@@ -145,7 +147,7 @@ const CharityBanner = () => {
 
 const HowTabsForGoodWorks = ({classname}) => {
 	return (
-		<PageCard id="howitworks" className={space("how-tabs-for-good-works bg-gl-pale-orange text-center", classname)}>
+		<PageCard id="howitworks" className={space("how-tabs-for-good-works text-center", classname)}>
 			<h1>How Tabs For Good Works</h1>
 			<Row className="pt-5">
 				<Col md={4} className='pt-2 pt-md-0 how-it-works-points'>
@@ -232,6 +234,8 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 			{showUpperCTA && <div className="upper-cta white">
 				<h1 className='mb-5 white'>Sign Up Today!</h1>
 				<p className='leader-text text-center'>Start transforming your web browsing into life saving vaccines, meals for children in need, preserving habitats for endangered animals, plus many more good causes.</p>
+				<img src="/img/green/hummingbird.png" className='hummingbird'/>
+				<img src="/img/signup/hand-globe-coins.png" className='hand-globe'/>
 				<div className="mt-5">
 					<T4GCTA className="w-50 d-block mx-auto"/>
 
@@ -327,7 +331,7 @@ const TestimonialSectionTitle = () => {
 const TestimonialSectionLower = () => {
 	return(<>
 		<div className="testimonial-lower">
-			<BG src="/img/curves/curve-dark-turquoise-bottom.svg" className="w-100 d-none d-md-block curves"/>
+			<img src="/img/curves/curve-dark-turquoise-bottom.svg" className="w-100 d-none d-md-block"/>
 			<div className="container">
 				<div className="testimonial-card my-0 my-md-5">
 					<div className="row">
@@ -423,13 +427,13 @@ const PositivePlaceSection = ({className, showCTA}) => {
 }
 
 const WatchVideoSection = () => {
-	if ( ! Roles.isTester()) return null;
+	//if ( ! Roles.isTester()) return null;
 	return(<>
-	<PageCard className="TODO watch-video-section">
+	<PageCard className="watch-video-section">
 		<div className="text-center">
 			<h1 className='pt-5'>WATCH TO SEE HOW WE’RE CREATING A MOVEMENT</h1>
 			<img className='w-100 my-5' src="img/homepage/video.png" alt="" />
-			<p>We’re working with fantastic brands that want to join us in making the internet a more positive place. <br/><br/>
+			<p className='leader-text'>We’re working with fantastic brands that want to join us in making the internet a more positive place. <br/><br/>
 			The way we’re doing it couldn’t be simpler. We just need the final piece of the puzzle to make it happen – you. Sign up and join the Good-Loop movement today. </p>
 			<RegisterLink className="btn btn-primary mt-5">
 				Sign up for the Tabs For Good
