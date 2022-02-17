@@ -61,9 +61,33 @@ const CardImgLeft = ({classname, imgUrl, roundedImg, children}) =>{
 }
 
 const MyLandingBackgroundImage = ({bgImg, children}) => {
+	if (isPortraitMobile()) return bgImg ? (
+		<div className='mobile-landing-curve'>
+			<BG src={bgImg} className="mobile-curve-container">
+				<img src="/img/curves/mobile-curve-white.svg" className='mobile-curve'/>
+			</BG>
+			<div className='bg-white mobile-curve-fill'>
+				{children}
+			</div>
+		</div>
+	) : (
+		<div className='mobile-landing-curve'>
+			<BG src="/img/LandingBackground/svg-mobile/mobile-splash-background-0.svg" className="mobile-curve-container">
+				<BG src="/img/LandingBackground/svg-mobile/Mobile-splash-background-1.png">
+					<BG src="/img/LandingBackground/svg-mobile/mobile-splash-background-2.svg">
+						<img src="/img/LandingBackground/svg-mobile/Mobile-splash-background-4.png" className="w-100"/>
+					</BG>
+				</BG>
+			</BG>
+			<div className='bg-white mobile-curve-fill'>
+				{children}
+			</div>
+		</div>
+	);
+
 	return bgImg ? (
-		<BG src={isPortraitMobile() ? null : bgImg} className="landing-bg">
-			<BG src="/img/LandingCharity/t4g-splash-screen-background.svg" className="landing-splash">
+		<BG src={bgImg} className="landing-bg">
+			<BG src={"/img/LandingCharity/t4g-splash-screen-background.svg"} className="landing-splash">
 				{children}
 			</BG>
 		</BG>
@@ -125,7 +149,7 @@ const CornerHummingbird = () => {
 const CharityBanner = () => {
     return <Container className="charity-icons mb-5">
         <Row className="text-center">
-					<Col><img src="img/LandingCharity/tommys.png" alt="" /></Col>
+					<Col className='d-none d-md-block'><img src="img/LandingCharity/tommys.png" alt="" /></Col>
 					<Col><img src="img/LandingCharity/refuge.png" alt="" /></Col>
 					<Col><img src="img/LandingCharity/save-the-children.png" alt="" /></Col>
 					<Col><img src="img/LandingCharity/NSPCC.png" alt="" /></Col>
@@ -137,7 +161,7 @@ const CharityBanner = () => {
         </Row>
 				<Row className="text-center">
 					<Col className='d-block d-lg-none'><img src="img/LandingCharity/wwf.png" alt="" /></Col>
-					<Col className='d-block d-lg-none'><img src="img/LandingCharity/mssociety.png" alt="" /></Col>
+					<Col className='d-none d-md-block d-lg-none'><img src="img/LandingCharity/mssociety.png" alt="" /></Col>
 					<Col className='d-block d-lg-none'><img src="img/LandingCharity/centrepoint.png" alt="" /></Col>
 					<Col className='d-block d-lg-none'><img src="img/LandingCharity/GOSH.png" alt="" /></Col>
         </Row>
@@ -250,7 +274,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 		</PageCard>
 
 		{showLowerCTA && <>
-			<CurvePageCard color="desat-blue" bgClassName={bgClassName} style={{marginTop:-100}}>
+			<CurvePageCard color="desat-blue" bgClassName={bgClassName}>
 				<h1 className='white'>Start using tabs for good today and together we'll...</h1>
 				<Row className="mt-5">
 					<Col md={4} className='pt-2 pt-md-0'> 
@@ -410,15 +434,15 @@ const PositivePlaceSection = ({className, showCTA}) => {
 		<h1 className='pt-5'>Let's make the internet a more positive place. Together.</h1>
 		<Row className="pt-5">
 			<Col md={4} className="video-points">
-				<img className='w-50' src="/img/icons/fifty-percent.png" alt="" />
+				<img className='w-50' src="/img/icons/one.png" alt="" />
 				<h3 className='pt-4'>50% of online ad fees donated to charity </h3>
 			</Col>
 			<Col md={4} className="video-points">
-				<img className='w-50' src="/img/icons/world-hand.png" alt="" />
+				<img className='w-50' src="/img/icons/two.png" alt="" />
 				<h3 className='pt-4'>Helping brands offset their digital carbon footprint</h3>
 			</Col>
 			<Col md={4} className="video-points">
-				<img className='w-50' src="/img/icons/padlock.png" alt="" />
+				<img className='w-50' src="/img/icons/three.png" alt="" />
 				<h3 className='pt-4'>Keeping your online privacy safe no matter what</h3>
 			</Col>
 		</Row>

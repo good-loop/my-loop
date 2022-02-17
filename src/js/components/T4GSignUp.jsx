@@ -41,7 +41,7 @@ const showT4GSignUpModal = (s=true) => {
  export const T4GSignUpButton = ({className,children}) => {		
 	if (Login.isLoggedIn()) {
 		if (isMobile()) {
-			return <T4GSignUpLink className={space("T4GSignUpButton btn btn-primary", className)}>Email me a desktop link</T4GSignUpLink>;
+			return <T4GSignUpLink className={space("T4GSignUpButton btn btn-primary", className)}>{children || "Email me a desktop link"}</T4GSignUpLink>;
 		}
 		return <T4GPluginButton className={className} />
 	}
@@ -145,7 +145,7 @@ const DesktopSignUp = ({charity}) => {
 				<Col md={4}>
 					<h1 style={{fontSize:"1rem"}}>Step 1</h1>
 				</Col>
-				<Col md={8}>
+				<Col md={8} className='text-left'>
 					<p>Sign up</p>
 				</Col>
 			</Row>
@@ -153,7 +153,7 @@ const DesktopSignUp = ({charity}) => {
 				<Col md={4}>
 					<h1 style={{fontSize:"1rem"}}>Step 2</h1>
 				</Col>
-				<Col md={8}>
+				<Col md={8} className='text-left'>
 					We'll take you to the Chrome Store to install the Tabs for Good plugin.
 				</Col>
 			</Row>

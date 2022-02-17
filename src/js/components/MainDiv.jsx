@@ -133,7 +133,7 @@ const MainDiv = () => {
 		navbarPages={navPageLinks}
 		navbarLabels={navPageLabels}
 		navbarDarkTheme={false}
-		navbarChildren={() => <><T4GCTA/><T4GSignUpModal /></>}
+		navbarChildren={() => <><T4GCTA>Get Tabs for Good on Desktop</T4GCTA><T4GSignUpModal /></>}
 		navbarBackgroundColour="white"
 		NavExpandSize="xl"
 		// navbarLabels={getNavbarLabels}

@@ -112,7 +112,7 @@ const SidebarTabLink = ({ tab, label, selected }) => {
 			}
 		}
 	}
-	return <div><C.A href={url} className={space("account-tab p-2", selected && "active")}>{label || tab}</C.A></div>;
+	return <div className='my-2'><C.A href={url} className={space("account-tab p-2", selected && "active")}>{label || tab}</C.A></div>;
 };
 
 addImageCredit({ name: "add-user", author: "Icons8", url: "https://icons8.com/icons/set/add-user-male" });
