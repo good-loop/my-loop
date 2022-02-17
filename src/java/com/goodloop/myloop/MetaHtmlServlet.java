@@ -68,7 +68,9 @@ public class MetaHtmlServlet implements IServlet {
 			return getPageSettings2_charity(state);
 		}
 		Map vars = new HashMap();
-		vars.put("title", state.getRequestPath());
+		String subtitle = state.getRequestPath().replace("/", "");
+		subtitle = subtitle.substring(0, 1).toUpperCase() + subtitle.substring(1);
+		vars.put("title", subtitle);
 		vars.put("ogImage", "");
 		vars.put("contents", "");
 		return vars;
