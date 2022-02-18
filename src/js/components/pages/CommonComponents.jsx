@@ -86,8 +86,8 @@ const MyLandingBackgroundImage = ({bgImg, children}) => {
 	);
 
 	return bgImg ? (
-		<BG src={bgImg} className="landing-bg d-md-block d-none">
-			<BG src={"/img/LandingCharity/t4g-splash-screen-background.svg"} className="landing-splash">
+		<BG src={bgImg} className="landing-bg d-md-block d-none" center>
+			<BG src={"/img/LandingCharity/t4g-splash-screen-background.svg"} className="landing-splash" center>
 				{children}
 			</BG>
 		</BG>
