@@ -69,7 +69,7 @@ public class MetaHtmlServlet implements IServlet {
 		}
 		Map vars = new HashMap();
 		String subtitle = state.getRequestPath().replace("/", "");
-		subtitle = subtitle.substring(0, 1).toUpperCase() + subtitle.substring(1);
+		subtitle = subtitle.length() > 0 ? subtitle.substring(0, 1).toUpperCase() + subtitle.substring(1) : "";
 		vars.put("title", subtitle);
 		vars.put("ogImage", "");
 		vars.put("contents", "");

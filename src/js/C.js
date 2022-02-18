@@ -24,7 +24,7 @@ C.T4G = "Tabs-For-Good";
 C.DONATIONS_TOTAL = "£3,900,000";
 
 // NB: MonetaryAmount is deprecated - left here for old data
-C.TYPES = new Enum("Publisher NGO Advert Campaign Advertiser Agency User Person Money MonetaryAmount");
+C.TYPES = new Enum("Publisher NGO Advert Campaign Advertiser Agency User Person Money MonetaryAmount BlogPost");
 
 C.ROLES = new Enum("user admin marketing");
 C.CAN = new Enum("view edit admin sudo viewmarketingreports");
