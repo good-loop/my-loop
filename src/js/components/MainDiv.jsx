@@ -42,6 +42,7 @@ import ForCharityPage from './pages/ForCharityPage';
 import { T4GCTA, T4GSignUpModal, T4GPluginButton } from './T4GSignUp';
 import { MyLoginWidgetGuts } from './MyLoginWidgetGuts';
 import BlogContent from './pages/BlogContent';
+// import TestPage from './pages/TestPage';
 
 // DataStore
 C.setupDataStore();

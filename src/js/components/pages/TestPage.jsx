@@ -1,12 +1,9 @@
-import React from 'react';
-import { Container } from 'reactstrap';
-import {PageCard} from './CommonComponents';
-import RecentCampaignsCard from '../cards/RecentCampaignsCard';
-import DynImg from '../../base/components/DynImg';
-import C from '../../C';
+import React from "react";
 import BG from '../../base/components/BG';
+import {PageCard} from './CommonComponents';
 
-const MyAdCampaignsPage = () => {
+const TestPage = ({spring}) => {
+
 	return (
 		<div className="MyAdCampaignsPage">
 			<BG src="img/LandingBackground/Banner_Ourads.png" className="curve-banner" center> 
@@ -15,10 +12,10 @@ const MyAdCampaignsPage = () => {
 			<PageCard className="pt-0" style={{marginTop:"-20%"}} color="white">
 				<h1>Ad campaigns</h1>
 				<p className='leader-text'>See how we've helped these brands raise over {C.DONATIONS_TOTAL} for charity. All thanks to you.</p>
-				<RecentCampaignsCard/>
 			</PageCard>
 		</div>
 	);
 };
 
-export default MyAdCampaignsPage;
+
+export default TestPage;
