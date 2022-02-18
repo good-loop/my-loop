@@ -79,17 +79,14 @@
 	color: white;
 	position: relative; // See .landing-behind-footer below - overall page div needs to be a position reference
 
-	.landing-splash, .landing-map {
+	.landing-splash {
+		background-image: url("/img/green/dashboard-background.svg");
+		background-position: bottom;
 		height: @fullHeight;
 		background-size: cover;
-		background-position: center;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-	}
-
-	.landing-splash {
-		background-image: url("/img/green/dashboard-background.svg");
 	}
 
 	.hummingbird {
@@ -149,7 +146,7 @@
 	// The world map
 	.projects-map {
 		background-color: @sea-blue;
-		overflow-x: hidden; // Don't stretch page out when map is zoomed off the sides
+		overflow: hidden; // Don't stretch page out when map is zoomed off the sides; don't vertically scroll because of margin hacks
 		.map-graphic {
 			width: 100%;
 		}
@@ -166,11 +163,13 @@
 			fill: @greenmedia-seagreen;
 			z-index: 10;
 			position: relative;
+			pointer-events: none;
 		}
 		.map-transition-bottom {
 			fill: @greenmedia-darkcyan;
 			z-index: 10;
 			position: relative;
+			pointer-events: none;
 		}
 	}
 
@@ -205,6 +204,7 @@
 			background-color: white;
 			color: black;
 			font-weight: 600;
+			flex-direction: column;
 		}
 		.pointer {
 			position: absolute;
@@ -220,6 +220,9 @@
 			&.pointer-bottom-right { top: 100%; right: 4em; }
 			&.pointer-bottom-left { top: 100%; left: 4em; }
 			&.pointer-left { top: 3em; right: 100%; }
+		}
+		.project-more-info {
+			text-transform: none;
 		}
 		/* Offsets and pointer display rules for different arrow positions*/
 		/* TODO Use variables for size/position so we can reshape later without hand-rewriting all position rules*/
@@ -272,21 +275,30 @@
 		display: none;
 	}
 
-	.landing-extra {
+	.partnerships {
 		background-color: @greenmedia-darkcyan;
 		text-align: center;
-		background-image: url("/img/green/more-info-bg.svg");
+		background-image: url("/img/green/more-info-background.svg");
 		background-size: 100%; // 100% width; height maintains aspect
 		background-repeat: repeat-y;
-	}
-
-	/* Hack - extend the dark sea green of the last div behind the footer curve */
-	.landing-behind-footer {
-		position: absolute;
-		top: 100%;
-		height: 24vw; // Footer curve svg aspect is ~1:0.23, this will make sure it covers the white space
-		width: 100%;
-		background-color: #52727a;
+		.logos {
+			.logo {
+				width: 65%;
+				height: 10em;
+			}
+		}
+		.partner-text {
+			color: black;
+			background-color: white;
+		}
+		.partner-image {
+			img {
+				width: 100%;
+				height: 20em;
+				object-fit: cover;
+			}
+			
+		}
 	}
 
 	@media (max-width: 767px) {
@@ -333,5 +345,22 @@
 				}
 			}
 		}
+	}
+}
+
+// Modal + Carousel for project info is inserted outside of main page element
+.green-map-modal {
+	// Modal with carousel of deeper description & photos from project
+	.project-slides {
+		height: 80vh;
+		.carousel-control-prev, .carousel-control-next {
+			height: 80%; // Match prev/next button height to photos for prettier vertical centring
+		}
+	}
+
+	.slide-img {
+		width: 100%;
+		height: 80%;
+		object-fit: cover;
 	}
 }
