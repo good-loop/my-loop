@@ -63,7 +63,7 @@
 		.login-logo {
 			width: 25%;
 			@media @width-mobile {
-				width: 50%;
+				width: 75%;
 			}
 		}
 
@@ -73,6 +73,13 @@
 			font-size: 1.3rem;
 			@media @width-mobile {
 				width: 90%;
+			}
+		}
+
+		.login-row {
+			width: 50%;
+			@media @width-mobile {
+				width: 100%;
 			}
 		}
 
@@ -88,8 +95,8 @@
 				right: 5%;
 				width: 150px;
 				@media @width-mobile {
-					right: 50%;
-					transform: translateX(50%) scaleX(-1);
+					position: unset;
+					width: 80px;
 				}
 			}
 		}
@@ -166,6 +173,14 @@
 				#circle-step-2 {
 					right: -9rem;
 				}
+			}
+		}
+
+		.mobile-send-email {
+			min-height: 25em;
+
+			.hummingbird-mobile {
+				transform: scaleX(-1);
 			}
 		}
 

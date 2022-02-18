@@ -57,13 +57,37 @@ img {
 		margin: 0;
 		h1 {
 			font-size: 2rem;
-			text-transform: unset;
-			font-weight: 600;
 		}
 	}
 
 	.title > * {
 		margin-bottom: 2rem;
+	}
+}
+
+.mobile-landing-curve {
+	width: 100vw;
+	height: 100vh;
+
+	.mobile-curve-container {
+		height: 30%;
+		display: flex;
+		flex-direction: column;
+		justify-content: end;
+		.mobile-curve {
+			width: 100%;
+		}
+	}
+	/*.mobile-curve {
+		width: 100%;
+		position: absolute;
+		top: 20%;
+	}*/
+	.mobile-curve-fill {
+		position: absolute;
+		top: 35%;
+		height: 65%;
+		width: 100%;
 	}
 }
 
@@ -89,14 +113,32 @@ img {
 }
 
 .tabs-for-goods-slide-card {
+
+	position: relative;
 	background-color: @gl-light-blue;
 	// color: white; done with .white instead
 	
-	.slideshow {
+	.BSCarousel.carousel.slide {
 		border: 1px solid @gl-dark-grey;
 		border-radius: 10px;
 		overflow: hidden;
-			height: 500px;
+		padding-top: 0;
+	}
+
+	.BSCarousel {
+		.carousel-control-next {
+			right: -4%;
+		}
+		.carousel-control-prev {
+			left: 45%;
+		}
+	}
+
+	.slideshow {
+		// border: 1px solid @gl-dark-grey;
+		// border-radius: 10px;
+		// overflow: hidden;
+		height: 500px;
 		.slide-img {
 			width: 100%;
 			height: 100%;
@@ -108,14 +150,30 @@ img {
 			}
 		}
 	}
+
+	.hummingbird {
+		position: absolute;
+		width: 10%;
+		top: 3%;
+		right: 3%;
+		transform: scaleX(-1);
+	}
+	.hand-globe {
+		position: absolute;
+		top: 7%;
+		width: 10%;
+		left: 0;
+	}
 }
 
 
 .positive-place-section {
-	background: linear-gradient(180deg, @gl-dark-turquoise 0%, @gl-desat-blue 50%, @gl-light-blue 100%);
-	
-	h1, h3 {
-		color: white;
+	//background: linear-gradient(180deg, @gl-dark-turquoise 0%, @gl-desat-blue 50%, @gl-light-blue 100%);
+	&.blue-gradient {
+		background: linear-gradient(180deg, @gl-dark-turquoise 0%, @gl-desat-blue 50%, @gl-light-blue 100%);
+		h1, h3 {
+			color: white;
+		}
 	}
 
 	@media (max-width: 768px) {
@@ -124,12 +182,6 @@ img {
 			display: flex;
 			img { width: 150px !important; height: 150px; }
 		}
-	}
-}
-
-.positive-place-section {
-	&.blue-gradient {
-		background: linear-gradient(180deg, @gl-dark-turquoise 0%, @gl-desat-blue 50%, @gl-light-blue 100%);
 	}
 }
 
@@ -235,5 +287,21 @@ img {
 	max-width: 200px;
 	@media @width-mobile {
 		max-width: 100%;
+	}
+}
+
+.round-img {
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+.make-it-happen-charities {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	img {
+		width: 60%;
 	}
 }

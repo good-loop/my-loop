@@ -41,7 +41,7 @@ const showT4GSignUpModal = (s=true) => {
  export const T4GSignUpButton = ({className,children}) => {		
 	if (Login.isLoggedIn()) {
 		if (isMobile()) {
-			return <T4GSignUpLink>Email me a desktop link</T4GSignUpLink>;
+			return <T4GSignUpLink className={space("T4GSignUpButton btn btn-primary", className)}>{children || "Email me a desktop link"}</T4GSignUpLink>;
 		}
 		return <T4GPluginButton className={className} />
 	}
@@ -119,11 +119,8 @@ export const T4GSignUpModal = () => {
 			toggle={() => showT4GSignUpModal(!show)}
 			size="lg"
 		>
-			<ModalBody>
-				<div>
-					<CloseButton size='lg' onClick={() => showT4GSignUpModal(false)}/>
-					<img className="hummingbird" src="/img/green/hummingbird.png" />
-				</div>
+			<ModalBody className='pt-0'>
+				<CloseButton size='lg' onClick={() => showT4GSignUpModal(false)}/>
 
 				{charity && <CharityLogo charity={charity} />}
 				{isMobile()? <MobileSendEmail charity={charity} /> 
@@ -132,7 +129,6 @@ export const T4GSignUpModal = () => {
 		</Modal>
 	);
 };
-
 
 const DesktopSignUp = ({charity}) => {
 	const browser = getBrowserVendor();
@@ -149,7 +145,7 @@ const DesktopSignUp = ({charity}) => {
 				<Col md={4}>
 					<h1 style={{fontSize:"1rem"}}>Step 1</h1>
 				</Col>
-				<Col md={8}>
+				<Col md={8} className='text-left'>
 					<p>Sign up</p>
 				</Col>
 			</Row>
@@ -157,7 +153,7 @@ const DesktopSignUp = ({charity}) => {
 				<Col md={4}>
 					<h1 style={{fontSize:"1rem"}}>Step 2</h1>
 				</Col>
-				<Col md={8}>
+				<Col md={8} className='text-left'>
 					We'll take you to the Chrome Store to install the Tabs for Good plugin.
 				</Col>
 			</Row>
@@ -191,7 +187,25 @@ const DesktopSignUp = ({charity}) => {
 		}
 	};
 
+	const Steps = ({step}) => {
+		let circleOne = step == 1 ? "circle circle-active" : "circle";
+		let circleTwo = step == 2 ? "circle circle-active" : "circle";
+
+		return (
+			<div className='d-flex flex-column justify-content-center align-items-center'>
+				<img className="w-50 mb-3" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
+				<div className="steps-graphic">
+					<div className={circleOne}></div>
+					<div className={circleTwo}></div>
+					<span id="circle-step-1">Step 1 - Sign Up</span>
+					<span id="circle-step-2">Step 2 - Install the Plugin</span>
+				</div>
+			</div>
+		)
+	}
+
 	return <Container fluid>
+		<img className="hummingbird" src="/img/green/hummingbird.png" />
 		<Row>
 			<Col className='sign-up-left px-0'>
 				{ ! Login.isLoggedIn()?
@@ -207,29 +221,38 @@ const DesktopSignUp = ({charity}) => {
 				</div>
 				}
 			</Col>
-			<Col className='sign-up-right m-0 d-flex flex-column justify-content-center align-items-center h-100'>
-				<img className="w-50 mb-3" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
+			<Col className='sign-up-right m-0 py-5 d-flex flex-column justify-content-between align-items-center h-100'>
 				{ ! Login.isLoggedIn()?
 					<>
-						<div className="steps-graphic">
-							<div className="circle circle-active"></div>
-							<div className="circle"></div>
-							<span id="circle-step-1">Step 1 - Sign Up</span>
-							<span id="circle-step-2">Step 2 - Install the Plugin</span>
-						</div>
+						<Steps step={1}/>
 						<div className="w-100">
 							<LoginWidgetEmbed verb='register' product="T4G" onLogin={onRegister} onRegister={onRegister} />
 							{charity && <div>This will set your charity to {NGO.displayName(charity)}. You can change settings at anytime.</div>}
 						</div>
 					</>
 					: /* Step 2 */ <div>
-						<p>Step 2 - Install the Plugin</p>
+						<Steps step={2}/>
 						<T4GPluginButton />
 					</div>
 				}
 			</Col>
 		</Row>
 	</Container>
+};
+
+const MobileSendEmail = ({charity}) => {
+	return (
+	<Container fluid>
+		<div className='mobile-send-email d-flex flex-column justify-content-between align-items-center'>
+			<img className="hummingbird-mobile logo mt-3" src="/img/green/hummingbird.png" />
+			<img className="w-50 mb-3" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
+			<div style={{textTransform:"capitalize"}}>
+				We'll email you a link for desktop so you can start raising money for charity while you browse
+			</div>
+			<SubscriptionForm purpose="getT4Glink" product="T4G" charityId={getId(charity)} textCenter />
+		</div>
+	</Container>
+	);
 };
 
 const NotAvailableYet = ({browser,charity}) => {
@@ -246,13 +269,4 @@ const NotAvailableYet = ({browser,charity}) => {
 				buttonText="Keep me Informed"/>
 		</div>
 		</>);
-};
-
-const MobileSendEmail = ({charity}) => {
-	return (<Form className='mx-2'>
-		<div style={{textTransform:"capitalize"}}>
-			We'll email you a link for desktop so you can start raising money for charity while you browse
-		</div>
-		<SubscriptionForm purpose="getT4Glink" product="T4G" charityId={getId(charity)} />
-	</Form>);
 };

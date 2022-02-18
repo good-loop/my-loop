@@ -8,6 +8,7 @@ import { yessy } from '../../base/utils/miscutils';
 import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
 import CharityLogo from '../CharityLogo';
 import LinkOut from '../../base/components/LinkOut';
+import BG from '../../base/components/BG';
 
 /**
  * TODO refactor - merge with the lower level handling of mapping Good-Loop data to SoGive IDs
@@ -66,7 +67,9 @@ const MyCharitiesPage = () => {
 
 	return (<>
 		<div className="MyCharitiesPage">
-			<img src="/img/LandingBackground/Charities_banner.png" className="w-100" alt="banner" />
+			<BG src="/img/LandingBackground/Charities_banner.png" className="curve-banner" center> 
+				<BG src="img/curves/curve-white.svg" className="curves"/>
+			</BG>
 			<Container className="py-5">
 				<h1>Charities that benefit</h1>
 				<Paginator rows={5} cols={7} rowsMD={2} colsMD={5} pageButtonRangeMD={1} displayCounter displayLoad>

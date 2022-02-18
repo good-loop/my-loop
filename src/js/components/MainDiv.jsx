@@ -41,6 +41,7 @@ import ForBusinessPage from './pages/ForBusinessPage';
 import ForCharityPage from './pages/ForCharityPage';
 import { T4GCTA, T4GSignUpModal, T4GPluginButton } from './T4GSignUp';
 import { MyLoginWidgetGuts } from './MyLoginWidgetGuts';
+// import TestPage from './pages/TestPage';
 
 // DataStore
 C.setupDataStore();
@@ -133,11 +134,11 @@ const MainDiv = () => {
 		navbarPages={navPageLinks}
 		navbarLabels={navPageLabels}
 		navbarDarkTheme={false}
-		navbarChildren={() => <><T4GCTA/><T4GSignUpModal /></>}
+		navbarChildren={() => <><T4GCTA>Get Tabs for Good on Desktop</T4GCTA><T4GSignUpModal /></>}
 		navbarBackgroundColour="white"
 		NavExpandSize="xl"
 		// navbarLabels={getNavbarLabels}
-		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account', 'green', 'charities', 'impactoverview', 'campaign', 'ourstory']}
+		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account', 'green', 'charities', 'impactoverview', 'campaign', 'ourstory', 'ads']}
 		Footer={Footer}
 		canRegister
 		noLoginTitle

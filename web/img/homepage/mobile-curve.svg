@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="375" height="130" viewBox="0 0 375 130">
+  <defs>
+    <clipPath id="clip-mobile-curve">
+      <rect width="375" height="130"/>
+    </clipPath>
+  </defs>
+  <g id="mobile-curve" clip-path="url(#clip-mobile-curve)">
+    <path id="Path_1280" data-name="Path 1280" d="M13542.33,1403.805s49.077,102.614,227.2,33.676,218.294,22.213,218.294,22.213v85.161h-441.891Z" transform="translate(-13594.33 -1409.806)" fill="#fff" opacity="0.995"/>
+  </g>
+</svg>

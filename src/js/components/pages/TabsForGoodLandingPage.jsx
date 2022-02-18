@@ -17,14 +17,18 @@ import { WhatIsTabsForGood, HowTabsForGoodWorks, TabsForGoodSlideSection, TriCar
 // https://miro.com/app/board/o9J_lxO4FyI=/?moveToWidget=3458764516139446040&cot=14
 
 const WellMakeItHappenSection = () => {
-	return <PageCard className="text-center">
-		<div className="w-75 mx-auto">
-			<h1>You pick the charity you want to support. We'll make it happen.</h1>
-			<p className="mt-5"><b>Clean the oceans from plastic, feed children in need, save endangered species, support women's education in developing countries - pick the charity you care about and we'll donate the cash you raise to help their cause.</b></p>
-			<T4GCTA className="mt-5 w-100"/>
-			{/* TODO add charities image */}
+	return <>
+		<PageCard className="text-center">
+			<div className="w-75 mx-auto">
+				<h1>You pick the charity you want to support. We'll make it happen.</h1>
+				<p className="mt-5"><b>Clean the oceans from plastic, feed children in need, save endangered species, support women's education in developing countries - pick the charity you care about and we'll donate the cash you raise to help their cause.</b></p>
+				<T4GCTA className="mt-5 w-100"/>
+			</div>
+		</PageCard>
+		<div className='make-it-happen-charities mb-5'>
+			<img src="/img/TabsForGood/charities2.png"/>
 		</div>
-	</PageCard>
+	</>
 };
 
 const TabsForGoodLandingPage = () => {
@@ -35,15 +39,15 @@ const TabsForGoodLandingPage = () => {
 	}
 
 	useEffect(() => {
-		setFooterClassName('bg-gl-light-blue');
+		setFooterClassName('bg-gl-pale-orange');
 	}, []);
 
 	return (<>
-		<MyLandingSection title={<>Tabs-for-Good<br/>The browser plugin that allows you to do good just by opening a new tab</>} text=" " />
+		<MyLandingSection shiftLeft title={<>Tabs-for-Good<br/>The browser plugin that allows you to do good just by opening a new tab</>} text=" " bgImg="/img/TabsForGood/photo-by-larm-rmah-unsplash.jpg" />
 		<CornerHummingbird/>
-		<WhatIsTabsForGood imgs={['/img/LandingCharity/T4GScreenshot.png']} />
+		<WhatIsTabsForGood imgs={['/img/homepage/slide-1.png']} />
 		<HowTabsForGoodWorks />
-		<TabsForGoodSlideSection img="/img/homepage/charities.png" showLowerCTA />
+		<TabsForGoodSlideSection img="/img/homepage/charities.png" showLowerCTA bgClassName="bg-gl-light-blue" />
 		<WellMakeItHappenSection/>
 		<PositivePlaceSection className="bg-gl-pale-orange" showCTA />
 		{/*<TriCards />*/}

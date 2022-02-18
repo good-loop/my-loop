@@ -16,7 +16,7 @@ const setFooterClassName = (className) => {
 const getFooterClassName = () => DataStore.getValue(['widget','Footer', 'className']) || DataStore.setValue(['widget','Footer', 'className'], '', false);
 
 const pageBGs = {
-	'ourstory': 'bg-gl-light-pink',
+	// 'ourstory': 'bg-gl-light-pink',
 	'green': 'bg-greenmedia-darkcyan',
 };
 

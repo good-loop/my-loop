@@ -45,6 +45,20 @@ const HomePage = ({spring}) => {
 	return (<>
 		<div className="HomePage widepage">
 			<MyLandingSection shiftLeft/>
+
+			{/*
+			<br/>
+
+			<h1>Test H1</h1>
+			<h2>Test H2</h2>
+			<h3>Test H3</h3>
+			<p className='splash-text'>Splash screen paragraph</p>
+			<p className='leader-text'>Leader paragraph</p>
+			<p>Body copy</p>
+
+			<br/>
+			*/}
+
 			<CharityBanner />
 			<HowTabsForGoodWorks />
 			<TabsForGoodSlideSection img="/img/homepage/charities.png" showUpperCTA />
@@ -52,7 +66,7 @@ const HomePage = ({spring}) => {
 			<PositivePlaceSection className="blue-gradient"/>
 			<WatchVideoSection />
 			<CurvePageCard color='dark-turquoise' className='' bgClassName='bg-gl-light-blue' bgImg=''>
-			<TestimonialSectionTitle />
+				<TestimonialSectionTitle />
 			</CurvePageCard>
 			<TestimonialSectionLower />
 			<GetInvolvedSection />

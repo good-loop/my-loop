@@ -1,5 +1,6 @@
 /* global navigator */
 import React, { useState, useEffect } from 'react';
+import {Container, Row, Col} from 'reactstrap';
 import BG from '../base/components/BG';
 import MainDivBase from '../base/components/MainDivBase';
 import { nonce } from '../base/data/DataClass';
@@ -48,7 +49,19 @@ let logOnceFlag;
 let verifiedLoginOnceFlag;
 
 
+const LoremIpsum = () => {
+	return <p>
+		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet ornare neque. Cras egestas pretium risus, ac maximus justo tempus ac. Etiam vitae aliquam nulla, ut lobortis nibh. Ut et massa sit amet nulla eleifend bibendum. Proin elementum maximus lorem, ut tempor ante pharetra id. Integer et sem eget turpis fermentum consequat. Pellentesque vulputate laoreet metus. Donec hendrerit risus mauris, non ultrices ex venenatis non. Donec congue sem vitae diam molestie ornare. Pellentesque sit amet efficitur risus, ornare dictum magna. Donec a purus eu erat luctus dapibus eu et metus. Etiam at pulvinar ex. In convallis tempor consequat.
 
+		Nam enim leo, maximus id lacus sed, varius cursus sapien. Praesent at mi sit amet augue sollicitudin ultrices. Nam tincidunt metus sit amet massa dapibus maximus. Morbi id mollis diam. Maecenas odio lectus, vehicula a massa a, mollis finibus sem. Sed ante nibh, molestie vitae urna eget, congue tincidunt lorem. Etiam et sollicitudin leo. Phasellus luctus interdum leo et consequat. Etiam ornare, arcu eu rhoncus venenatis, nisl ipsum laoreet dui, nec ultrices augue purus id felis. Duis feugiat erat diam, quis placerat ipsum ultrices quis. Morbi diam urna, interdum aliquam placerat non, elementum a urna. Vivamus consequat lacus nunc, nec elementum felis lobortis sit amet.
+
+		Praesent arcu tellus, vulputate sit amet felis nec, convallis porta mi. Cras eu dolor nisi. Ut convallis vulputate sapien sit amet lacinia. Pellentesque quam metus, cursus vitae leo non, congue rutrum erat. Mauris non pretium odio. Curabitur dapibus pretium massa, vel vulputate mauris mollis ac. Proin et ipsum dignissim nunc mollis eleifend. Curabitur varius ipsum sed odio pulvinar, non suscipit augue tincidunt. Nulla quis diam quis ante elementum semper. In at libero diam. Mauris semper hendrerit sem at vehicula. Praesent blandit sapien sem, eu luctus ligula facilisis eu. Sed posuere erat ultrices nisl feugiat, eget pulvinar felis convallis. Nunc sollicitudin arcu tellus, a lacinia ligula dictum non.
+
+		Morbi sed lacus ante. Duis sed tortor sollicitudin, fermentum urna nec, cursus mi. In euismod in sem sit amet feugiat. Quisque tincidunt nisl vitae mauris facilisis, eget tristique tortor dignissim. Phasellus feugiat, nulla sed ultricies pulvinar, justo urna mattis felis, nec maximus nisi elit ut ex. In iaculis neque a tortor dignissim cursus. Ut tristique nisi et ligula mollis, non tristique nulla pretium. Sed elementum pulvinar nisl, at posuere magna maximus non. Pellentesque odio turpis, luctus vel sollicitudin sit amet, placerat consequat odio. Fusce pretium elit metus, sit amet scelerisque turpis fermentum in. Phasellus mattis, quam consequat mollis auctor, dolor eros aliquam orci, sit amet interdum augue tortor ut ipsum. Curabitur bibendum pharetra eros. Donec nec euismod massa, ut pulvinar ex. Sed a urna vel odio volutpat rutrum semper in urna.
+
+		Aenean feugiat dui at scelerisque convallis. Donec consequat ac velit ac feugiat. Ut in libero enim. Integer et est odio. Sed in ex felis. Proin id tempor mauris. Nulla eu purus ut metus imperdiet interdum. In vitae enim et nunc faucibus cursus non vel dolor. Donec vitae neque finibus, tincidunt purus eu, iaculis mauris. Nam id pharetra odio. Nullam eget pharetra ex. Aliquam efficitur sapien turpis, sit amet sodales justo feugiat nec. Curabitur in nibh nisl.
+	</p>;
+}
 
 /**
  * The main Tabs-for-Good page
@@ -125,11 +138,17 @@ const WebtopPage = () => {
 					</TutorialComponent>
 				</div>
 			</TutorialHighlighter>
-			<div className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{ top: 0, left: 0, width: "100vw", height: "100vh" }}>
-				<div className="container h-100 flex-column justify-content-center unset-margins">
-					<NormalTabCenter charityID={charityID} loadingCharity={loadingCharity} />
-				</div>
-			</div>
+			<Container fluid className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{ top: 0, left: 0, width: "100vw", height: "100vh" }}>
+				<Row className="h-100 w-100" noGutters>
+					<Col sm={3} md={4} />
+					<Col sm={6} md={4} className="h-100 flex-column justify-content-center unset-margins">
+						<NormalTabCenter charityID={charityID} loadingCharity={loadingCharity} />
+					</Col>
+					<Col sm={3} md={4} className="flex-column justify-content-center align-items-center p-2">
+						<CharityCustomContent content={<LoremIpsum/>}/>
+					</Col>
+				</Row>
+			</Container>
 			{/* Tutorial highlight to cover adverts */}
 		</BG>
 		<TutorialComponent page={3} className="position-absolute" style={{ bottom: 0, left: 0, right: 0, height: 110, width: "100vw" }} />
@@ -196,8 +215,8 @@ const NormalTabCenter = ({ charityID, loadingCharity }) => {
 	const engineData = ENGINES[searchEngine];
 
 	return <>
-		<div className="flex-row unset-margins justify-content-center align-items-end mb-3">
-			{ ! loadingCharity && ! charityID &&
+		<div className="flex-row unset-margins justify-content-center align-items-end mb-3 tab-center">
+			{ true && //! loadingCharity && ! charityID &&
 				// Show the total raised across all charities, if the user hasn't selected one.
 				<><h3 className="text-center">
 					Together we've raised&nbsp;
@@ -205,7 +224,7 @@ const NormalTabCenter = ({ charityID, loadingCharity }) => {
 						<TickerTotal />
 					</TutorialComponent>
 				</h3>
-					<img src="https://my.good-loop.com/img/TabsForGood/sparkle.png" alt="sparkle" style={{ width: 50 }} className="pl-1" />
+				<img src="https://my.good-loop.com/img/TabsForGood/sparkle.png" alt="sparkle" style={{ width: 50 }} className="pl-1 sparkle" />
 			</>}
 		</div>
 		<div className="w-100 pb-3">
@@ -258,6 +277,12 @@ const NewTabCharityCard = ({ cid, loading }) => {
 			for {NGO.displayName(charity)}</p>}
 	</div>);
 };
+
+const CharityCustomContent = ({content, className}) => {
+	return <div className="charity-custom-content">
+		{content}
+	</div>;
+}
 
 // Checks for internet connection and any adblock interference
 const ConnectionStatusPopup = () => {
