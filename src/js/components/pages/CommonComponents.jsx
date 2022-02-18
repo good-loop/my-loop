@@ -86,13 +86,13 @@ const MyLandingBackgroundImage = ({bgImg, children}) => {
 	);
 
 	return bgImg ? (
-		<BG src={bgImg} className="landing-bg">
+		<BG src={bgImg} className="landing-bg d-md-block d-none">
 			<BG src={"/img/LandingCharity/t4g-splash-screen-background.svg"} className="landing-splash">
 				{children}
 			</BG>
 		</BG>
 	) : (
-		<BG src="/img/splash-screen/background-0.svg" className="landing-bg" center>
+		<BG src="/img/splash-screen/background-0.svg" className="landing-bg d-md-block d-none" center>
 			<BG src="/img/splash-screen/background-1.png" center>
 				<BG src="/img/splash-screen/background-2.svg" center>
 					<BG src="/img/splash-screen/background-3.png" className="landing-bg" center>
@@ -112,8 +112,7 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 		text = `Get our Tabs For Good Browser Plugin today and start raising money for ${(ngo && ngo.name) || "good causes"} - just by browsing the internet.`;
 	}
 	if ( ! bgImg && ngo) bgImg = ngo.images;
-	return (
-		<>
+	return (<>
 		<MyLandingBackgroundImage bgImg={bgImg}>
 			<Container fluid className={space("d-flex", !shiftLeft ? "justify-content-center" : "left-padding")}>
 				<Row className="mb-3 mt-5">
@@ -136,8 +135,7 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 				</Row>
 			</Container>
 		</MyLandingBackgroundImage>
-		</>
-	);
+</>);
 };
 
 const CornerHummingbird = () => {

@@ -9,7 +9,6 @@ import BG from '../../base/components/BG';
 const MyAdCampaignsPage = () => {
 	return (
 		<div className="MyAdCampaignsPage">
-			{/* <img src="/img/LandingBackground/Banner_Ourads.png" className="w-100"/> */}
 			<BG src="img/LandingBackground/Banner_Ourads.png" className="curve-banner" center> 
 				<BG src="img/curves/curve-white.svg" className="curves"/>
 			</BG>

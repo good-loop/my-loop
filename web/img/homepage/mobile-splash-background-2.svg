@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800" height="553" viewBox="0 0 800 553">
+  <defs>
+    <clipPath id="clip-mobile-splash-background-2">
+      <rect width="800" height="553"/>
+    </clipPath>
+  </defs>
+  <g id="mobile-splash-background-2" clip-path="url(#clip-mobile-splash-background-2)">
+    <g id="Group_805" data-name="Group 805" transform="translate(-269.075 105)">
+      <g id="Group_801" data-name="Group 801" transform="translate(156.594 166.36)">
+        <path id="Path_1280" data-name="Path 1280" d="M13542.33,1403.805s105.075,219.7,486.441,72.1,467.371,47.558,467.371,47.558V1705.8h-946.091Z" transform="translate(-13542.33 -1291.984)" fill="#fff" opacity="0.995"/>
+      </g>
+    </g>
+  </g>
+</svg>

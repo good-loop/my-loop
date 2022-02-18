@@ -68,11 +68,16 @@ public class MetaHtmlServlet implements IServlet {
 			return getPageSettings2_charity(state);
 		}
 		Map vars = new HashMap();
+		
+		// TODO Better Title
 		String subtitle = state.getRequestPath().replace("/", "");
-		subtitle = subtitle.substring(0, 1).toUpperCase() + subtitle.substring(1);
+		if ( subtitle.length() > 1 ) subtitle = subtitle.substring(0, 1).toUpperCase() + subtitle.substring(1);
 		vars.put("title", subtitle);
+		
 		vars.put("ogImage", "");
-		vars.put("contents", "");
+		
+		String loadingIMG = "img/splash-screen/background-loading.svg";
+		vars.put("contents", "<div style='height:100vh;background-color:#71ACBB;'><img src="+loadingIMG+" alt='loading'/></div>");
 		return vars;
 	}
 
