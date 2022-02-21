@@ -4,11 +4,12 @@
 .btn {
     border-radius: 100px;
     vertical-align: middle;
-    padding: 15px 40px;
-    box-shadow: none !important; // why important??
-    font-weight: bold;
+    padding: .4rem 2rem;
+    box-shadow: 0px 2px 3px rgba(0,0,0,0.3);
+    font-weight: 600;
     font-family: 'Montserrat'; // use the header font
     font-size: 0.9rem;
+    text-transform: uppercase;
     cursor: pointer;
     p {
         margin: 0 !important;
@@ -31,13 +32,13 @@
 }
 
 .btn-primary {
-    background-color: @gl-orange !important;
+    background-color: @gl-red !important;
     color:white !important;
     border: none !important;
 }
 
 .btn-primary:hover:not(.disabled) {
-    background-color: @gl-btn-hover !important;
+    background-color: @gl-orange !important;
     box-shadow: none !important;
     border: none !important;
 }
@@ -61,23 +62,20 @@
 
 .btn-secondary {
     background-color: white;
-    color:black !important;
-    mix-blend-mode: screen;
-    border: none !important;
+    color: @gl-red !important;
+    border: 1px solid @gl-red;
 }
 
 .btn-secondary:hover:not(.disabled) {
-    background-color: @gl-btn-hover !important;
-    box-shadow: none !important;
-    border: none !important;
+    background-color: white;
+    color: @gl-light-orange !important;
 }
 
 // TODO: btn-secondary:focus not working??
 .btn-secondary:active:not(.disabled),
 .btn-secondary:focus:not(.disabled) {
-    background-color: @gl-red !important;
-    box-shadow: none !important;
-    border: none !important;
+    background-color: white;
+    color: @gl-light-orange !important;
 }
 
 // ??Could this use e.g. Bootstrap's btn-outline-primary instead??
@@ -108,9 +106,9 @@
 }
 
 .btn-transparent:hover:not(.disabled) {
-    color: @gl-btn-hover !important;
+    color: @gl-light-orange !important;
     box-shadow: none !important;
-    border: solid 2px @gl-btn-hover !important;
+    border: solid 2px @gl-light-orange !important;
 }
 
 // TODO: btn-secondary:focus not working??
@@ -119,6 +117,27 @@
     color: @gl-red !important;
     box-shadow: none !important;
     border: solid 2px @gl-red !important;
+}
+
+
+
+.btn-info {
+    background-color: @gl-dark-blue !important;
+    color:white !important;
+    border: none !important;
+}
+
+.btn-info:hover:not(.disabled) {
+    background-color: lighten(@gl-dark-blue, 10%) !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.btn-info:active:not(.disabled),
+.btn-info:focus:not(.disabled) {
+    background-color: @gl-dark-blue !important;
+    box-shadow: none !important;
+    border: none !important;
 }
 
 /*

@@ -12,11 +12,14 @@
 @import "TabsForGoodSettings.less";
 @import "NewTab.less";
 @import "navbar.less";
-@import "WhitelistUs.less";
+@import "AllowlistUs.less";
 @import "MyLoginWidget.less";
 @import "CharityPicker.less";
-@import "LandingSection.less";
+// @import "LandingSection.less";
+@import "HomePage.less";
+@import "Blog.less";
 @import "CharitySection.less";
+@import "GreenDashboard.less";
 @import "WhiteCircle.less";
 @import "ShareButton.less";
 @import "DevLink.less";
@@ -24,6 +27,7 @@
 @import "website-colours.less";
 @import "landingpage.less";
 @import "footer.less";
+@import "fonts.less";
 
 /*
 
@@ -95,11 +99,6 @@ a {
 a.btn {
 	text-decoration: none;
 }
-
-// .btn-primary {
-// 	background-color: @gl-red !important;
-// 	border-color: darken(@gl-red, 10%) !important;
-// }
 
 .word-wrap {
 	/* c.f. https://stackoverflow.com/posts/40442295/revisions */
@@ -183,25 +182,6 @@ a.btn {
 	}
 }
 
-.login-menu .btn, .login-menu.btn {
-	// TODO document
-	font-weight: 600;
-	padding: 10px;
-	// ?? what is mix-blend-mode
-	mix-blend-mode: normal;
-	a {
-		color: @gl-light-red;
-		text-decoration: none;
-	}
-	&:hover:not(.disabled) {
-		background-color: white !important;
-	}
-	&:focus:not(.disabled) {
-		background-color: white !important;
-	}
-}
-
-
 .logo-base {
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -256,8 +236,23 @@ b {
 	font-weight: bold;
 }
 
-// Subscribe checkout margin fix for NewtabCharityLogin
-#loginByEmail .form-check-input{
-	margin-top: .25rem;
-	margin-left: -1rem;
+.page-card {
+	padding: 5rem 0;
+}
+
+.curves {
+	height: 30vh;
+	background-position: center;
+	@media (min-width: 1630px) {height: 40vh;}
+	@media (min-width: 2200px) {height: 50vh;}
+}
+
+.curve-banner {
+	overflow: hidden;
+	background-color: @gl-desat-blue;
+	background-size: cover;
+	.curves {
+		margin-top: 10em;
+		margin-bottom: -2em;
+	}
 }

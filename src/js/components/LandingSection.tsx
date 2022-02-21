@@ -3,7 +3,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */ // So ESLint don't yell at us for having an img as a button
 import React, { useState } from 'react';
 
-import MyLoopNavBar from './MyLoopNavBar';
 import BackgroundFader from './BackgroundFader';
 import DataStore from '../base/plumbing/DataStore';
 import AB from './AB';

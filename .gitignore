@@ -6,3 +6,12 @@ node_modules
 web/build
 .vscode
 package-lock.json
+web/*.html
+/bin/
+logs
+build-lib
+my-loop.jar
+config/version.properties
+web/green/index.html
+web/*.html
+web/charity

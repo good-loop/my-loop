@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import csv from 'csvtojson';
 import { Container } from 'reactstrap';
 import Paginator from '../Paginator';
-import MyLoopNavBar from '../MyLoopNavBar';
 import C from '../../C';
 import ActionMan from '../../plumbing/ActionMan';
 import { yessy } from '../../base/utils/miscutils';
 import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
 import CharityLogo from '../CharityLogo';
+import LinkOut from '../../base/components/LinkOut';
+import BG from '../../base/components/BG';
 
 /**
  * TODO refactor - merge with the lower level handling of mapping Good-Loop data to SoGive IDs
@@ -65,9 +66,10 @@ const MyCharitiesPage = () => {
 	}
 
 	return (<>
-		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" alwaysScrolled/>
 		<div className="MyCharitiesPage">
-			<img src="/img/LandingBackground/Charities_banner.png" className="w-100 mt-5" alt="banner" />
+			<BG src="/img/LandingBackground/Charities_banner.png" className="curve-banner" center> 
+				<BG src="img/curves/curve-white.svg" className="curves"/>
+			</BG>
 			<Container className="py-5">
 				<h1>Charities that benefit</h1>
 				<Paginator rows={5} cols={7} rowsMD={2} colsMD={5} pageButtonRangeMD={1} displayCounter displayLoad>

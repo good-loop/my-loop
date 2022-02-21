@@ -37,3 +37,50 @@ footer {
 	}
 
 }
+
+.my-loop-footer {
+
+	position: relative;
+
+	@media @width-mobile {
+		padding-top: 50px;
+	}
+
+	.social-icons {
+		width: 300px;
+		@media @width-mobile {
+			width: 100%;
+		}
+	}
+
+	.footer-links a {
+		color: white !important;
+	}
+
+	.hummingbird {
+		position: absolute;
+		width: 15%;
+		transform: scaleX(-1);
+		right: 10%;
+		top: 10%;
+		@media @width-mobile {
+			width: 25%;
+			top: 50px;
+		}
+	}
+
+	.newsletter-email input {
+		width: 50%;
+		border-radius: 0;
+		@media @width-mobile {
+			width: 100%;
+		}
+	}
+
+	.btn-subscribe {
+		border-radius: 0;
+		background-color: white;
+		color: black;
+	}
+
+} // ./my-loop-footer

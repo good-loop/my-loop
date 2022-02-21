@@ -1,9 +1,21 @@
 
 // Custom CSS for MyGL site.
 
-.modal-dialog { // Trims extra space. Makes modal look more compact.
+.modal .modal-dialog { // Trims extra space. Makes modal look more compact.
 	max-width: 600px;
-    border-radius: 15px;
+  border-radius: 15px;
+	&.login-modal {
+		max-width: 1000px;
+		@media @width-mobile {
+			max-width: 700px;
+		}
+	}
+	&.T4G-modal {
+		max-width: 1000px;
+		@media @width-mobile {
+			max-width: 700px;
+		}
+	}
 }
 
 .modal-content {
@@ -13,77 +25,188 @@
 	overflow-y: auto;
 	overflow-x: hidden; // The above line triggers an horizontal overflow in some cases, this disables that effect.
 
-	border-radius: 15px;
+	border-radius: 0;
 	border: none;
 
-	background-color: transparent; // Needed to get rid of white border around top edges
-
-	.btn-primary {
-		background: linear-gradient(#b91c08, #621208);
-		border: none;
-		padding: 0.2em 1.2em;
-	}
+	background-color: white; // Needed to get rid of white border around top edges
 
 	.modal-header {
-	background: linear-gradient(#b91c08, #621208);
-	border-radius: 15px 15px 0px 0px;
-		#text {
-			display: none;
-		}
-		.modal-title {
-			color: #fff;
-			margin: 0 auto;
-			position: relative;
-			.modal-main-title {
-				font-weight: 700;
-				font-size: 2em;
-				font-family: 'Montserrat', sans-serif;
+		display: none;
+	}
+
+	.myloop-email-login {
+		.action-btns {
+			display: flex;
+			flex-direction: column-reverse;
+			.reset-link,.btn {
+				width: 100%;
 			}
-			.modal-subtitle { font-size: .85em; }
+			.btn {
+				margin-top: 1.5rem;
+			}
 		}
 	}
 
 	.modal-body {
-		background-color: #fff;
-        // Combine three images for the background
-		background-image: url(/img/redgirl-crop-Xflipped.svg), url(/img/background-curve-plus-bar.svg);
-		background-repeat: no-repeat;
-		background-size: 15%, 110%;
-		background-position-y: bottom, 144%;
-		background-position-x: 95%, 14%;
-		
-		min-height: 20em; // stable height when switching between login and register
+		padding: 0;
+		position: relative;
+		@media @width-mobile {
+			padding-top: 150px;
+		}
+
+		min-height: 30em; // stable height when switching between login and register
+
+		#globe-piggy-step-2 {
+			position: absolute;
+			left: 25%;
+			bottom: 0;
+		}
+
+		.login-logo {
+			width: 25%;
+			@media @width-mobile {
+				width: 75%;
+			}
+		}
+
+		.login-subtitle {
+			text-align: center;
+			width: 50%;
+			font-size: 1.3rem;
+			@media @width-mobile {
+				width: 90%;
+			}
+		}
+
+		.login-row {
+			width: 50%;
+			@media @width-mobile {
+				width: 100%;
+			}
+		}
+
+		.hummingbird {
+			position: absolute;
+			z-index: 99;
+			transform: scaleX(-1);
+			width: 100px;
+			top: .5rem;
+			right: 47%;
+			&.login {
+				top: 5%;
+				right: 5%;
+				width: 150px;
+				@media @width-mobile {
+					position: unset;
+					width: 80px;
+				}
+			}
+		}
+
+		.hand-globe {
+			position: absolute;
+			z-index: 99;
+			width: 150px;
+			bottom: 0;
+			left:0;
+		}
+
+		.carousel-indicators {
+			li {
+				width: 15px;
+				height: 15px;
+				background-color: #626262;
+				border-radius: 50%;
+				border: 1px solid grey;
+				// margin-right: .5rem;
+			}
+			.active {
+				background-color: white;
+			}
+		}
+
+		.sign-up-left {
+			min-height: 30em;
+		}
+
+		.sign-up-right {
+			background-color: white;
+			min-height: 30em;
+
+			.steps-graphic {
+				position: relative;
+				padding-bottom: 3rem;
+
+				:nth-child(1) {
+					margin-right: 10rem;
+				}
+				:nth-child(1):after {
+					position: absolute;
+					content: '';
+					left: 2rem;
+					top: 1rem;
+					width: 10rem;
+					border-bottom: 2px solid black;
+				}
+
+				.circle {
+					height: 2rem;
+					width: 2rem;
+					background-color: white;
+					border-radius: 50%;
+					display: inline-block;
+					border: 1px solid black;
+					&.circle-active {
+						background-color: @gl-light-pink;
+					}
+				}
+
+				span {
+					margin: 0;
+					position: absolute;
+					transform: translate(-50%, 0);
+					top: 2rem;
+				}
+
+				#circle-step-1 {
+					left: 1rem;
+				}
+
+				#circle-step-2 {
+					right: -9rem;
+				}
+			}
+		}
+
+		.mobile-send-email {
+			min-height: 25em;
+
+			.hummingbird-mobile {
+				transform: scaleX(-1);
+			}
+		}
 
 		.login-guts {
-			.btn.signin {
-				box-shadow: 1px 2px 4px rgba(0, 0, 0, .2);
-			}
 			#loginByEmail {
-				.btn { // login/register buttton
-					&:hover { color: black; }
-				}
 				a { // no account and forgotten pass links
 					&:hover { color: #b91c08; }
 				}
 			}
-		}
-		.social-signin {
-			p { // made smaller to make room for GL girl
-				max-width: 80%;
-                font-size: .8em;
+			.login-email label {
+				text-transform: uppercase;
+				margin-bottom: 0;
 			}
 		}
 	}
 
-	img { // No GL logo in this version
-		display: none;
-	}
-
 	.close { // pushes close button to the corner so it doesn't interfer with title
 		position: absolute;
-		right: .4em;
+		left: .2em;
 		top: .2em;
 		text-shadow: none; // default has white shadow to "pop it out"
+		z-index: 999;
+		font-size: 3rem;
+		font-weight: normal;
 	}
 
 	@media (max-width: 767px) { // Small fixes in mobile devices

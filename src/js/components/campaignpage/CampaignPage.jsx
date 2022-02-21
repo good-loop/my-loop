@@ -25,7 +25,6 @@ import { asDate, ellipsize, encURI, getUrlVars, is, isMobile, mapkv, space, sum,
 import C from '../../C';
 import ActionMan from '../../plumbing/ActionMan';
 import ServerIO from '../../plumbing/ServerIO';
-import MyLoopNavBar from '../MyLoopNavBar';
 import AdvertsCatalogue from './AdvertsCatalogue';
 import CampaignSplashCard from './CampaignSplashCard';
 import CharitiesSection, { CharityDetails } from './CharitiesSection';
@@ -34,49 +33,7 @@ import Roles from '../../base/Roles';
 import HowDoesItWork from './HowDoesItWork';
 import NGO from '../../base/data/NGO';
 import { setNavContext, setNavProps } from '../../base/components/NavBar';
-
-
-/**
- * HACK hard-coded list of campaigns which have PDF versions
- * TODO put this in portal or somewhere else
- * @param {Campaign} campaign
- */
-const pdfLookup = (campaign) => {
-	let pdf = {
-		//"collectivecampaign" : "/resources/Good-loop_H&M_campaign.pdf"
-		coop_selfserve: "/resources/Good-loop_and_TheCooperativeBank.pdf",
-		drynites: "/resources/Good-loop_and_KimberlyClark.pdf"
-	}[campaign];
-
-	return pdf;
-};
-
-const tomsCampaigns = /(josh|sara|ella)/; // For matching TOMS campaign names needing special treatment
-/**
- * HACK fix campaign name changes to clean up historical campaigns
- * @param {Object} viewcount4campaign
- * @param {!Advert} ad
- * @returns {Number}
- */
-const viewCount = (viewcount4campaign, ad) => {
-	if (!ad.campaign) return null;
-
-	// HACK TOMS?? ella / josh / sara
-	// Don't crunch down TOMS ads that aren't in the sara/ella/josh campaign group
-	if (ad.vertiser === 'bPe6TXq8' && ad.campaign.match(tomsCampaigns)) {
-		let keyword = 'josh';
-		if (ad.campaign.includes('sara')) keyword = 'sara';
-		if (ad.campaign.includes('ella')) keyword = 'ella';
-		// Total views across all ads for this influencer
-		return Object.keys(viewcount4campaign).reduce((acc, cname) => {
-			return cname.includes(keyword) ? acc + viewcount4campaign[cname] : acc;
-		}, 0);
-	}
-
-	let vc = viewcount4campaign[ad.campaign];
-	if (vc) return vc;
-	return null;
-};
+import Messaging, { notifyUser } from '../../base/plumbing/Messaging';
 
 
 /**
@@ -99,7 +56,8 @@ const viewCount = (viewcount4campaign, ad) => {
 	if ( ! topCampaignId) {
 		// by advertiser or agency?
 		let pvTop;
-		let advid = DataStore.getUrlValue("advertiser") || DataStore.getUrlValue("gl.vertiser");
+		let advid = DataStore.getUrlValue("brand") // do we use "brand"??
+					|| DataStore.getUrlValue("gl.vertiser");
 		if (advid) {
 			pvTop = getDataItem({type:"Advertiser", id:advid, status});
 		} else if (DataStore.getUrlValue("agency")) {
@@ -120,9 +78,13 @@ const viewCount = (viewcount4campaign, ad) => {
 				pvAdvertisers:{}
 			};
 		}
-		// master campaign
 		topCampaignId = pvTop.value.campaign;
-		assert(topCampaignId);
+		if ( ! topCampaignId) {
+			console.warn("Advert without a campaign", pvTop.value);
+			const msg = {text:"This advert does not specify a campaign", type:"warning", id:"no-campaign-id"};
+			return {warning: msg};
+		}
+		// master campaign
 	}
 
 	// ...by Campaign (this is now the only supported way - Sept 2021)
@@ -186,8 +148,12 @@ const CampaignPage = () => {
 	if (!status) status = (glStatus || C.KStatus.PUB_OR_ARC);
 
 	// What adverts etc should we look at?
-	let {pvTopItem, pvTopCampaign, pvAds, pvAdvertisers, pvAgencies} = fetchIHubData();
+	let {pvTopItem, pvTopCampaign, pvAds, pvAdvertisers, pvAgencies, warning} = fetchIHubData();
 
+	if (warning) {
+		notifyUser(warning);
+		return <ErrAlert color="warning" error={"Sorry, something went wrong: "+warning.text} />;
+	}
 	// Is the campaign page being used as a click-through advert landing page?
 	// If so, change the layout slightly, positioning the advert video on top.
 	const isLanding = (landing !== undefined) && (landing !== 'false');
@@ -222,12 +188,12 @@ const CampaignPage = () => {
 	// Priority: TopCampaign, Adverts
 	let branding = {};
 	if (pvAdvertisers.value) {
-		List.hits(pvAdvertisers.value).forEach(adv => Object.assign(branding, adv.branding));
+		List.hits(pvAdvertisers.value).forEach(adv => adv && Object.assign(branding, adv.branding));
 	}
 	if (pvAgencies.value) {
-		List.hits(pvAgencies.value).forEach(adv => Object.assign(branding, adv.branding));
+		List.hits(pvAgencies.value).forEach(adv => adv && Object.assign(branding, adv.branding));
 	}
-	ads.forEach(ad => Object.assign(branding, ad.branding));
+	ads.forEach(ad => ad && Object.assign(branding, ad.branding));
 	if (campaign.branding) {
 		Object.assign(branding, campaign.branding);
 	}
@@ -238,13 +204,13 @@ const CampaignPage = () => {
 		let pvBrandItem = getDataItem({type, id, status});
 		let brandItem = pvBrandItem.value;
 		if (brandItem) {
-			const prop = type.toLowerCase();
-			let nprops = { // advertiser link and logo			
-				brandLink:'/#campaign?'+prop+'='+encURI(getId(brandItem)),
-				brandLogo: brandItem.branding && (brandItem.branding.logo_white || brandItem.branding.logo),
-				brandName: brandItem.name || getId(brandItem)
-			};
-			setNavProps(nprops);
+			// const prop = type.toLowerCase();
+			// let nprops = { // advertiser link and logo			
+			// 	brandLink:'/impact/'+prop+'='+encURI(getId(brandItem))+".html",
+			// 	brandLogo: brandItem.branding && (brandItem.branding.logo_white || brandItem.branding.logo),
+			// 	brandName: brandItem.name || getId(brandItem)
+			// };
+			setNavProps(brandItem);
 		}
 	}
 	
@@ -277,8 +243,6 @@ const CampaignPage = () => {
 			...campaignByName[name],
 			...ad
 		};
-		// Fetch PDF by campaign (last ad wins)
-		pdf = pdfLookup(ad.campaign);
 	});
 
 	console.log("CAMPAIGN BY NAME: ", campaignByName);
@@ -316,12 +280,12 @@ const CampaignPage = () => {
 		<StyleBlock>{campaign && campaign.customCss}</StyleBlock>
 		<StyleBlock>{branding.customCss}</StyleBlock>
 		<div className="widepage CampaignPage gl-btns">
-			<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" hidePages/>
+			
 			<div className="text-center">
+				
 				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaign}
 					donationValue={donationTotal} charities={charities}
 					totalViewCount={totalViewCount} landing={isLanding} status={status}/>
-
 				<HowDoesItWork nvertiserName={nvertiserName} charities={charities} ongoing={campaign.ongoing}/>
 
 				{isLanding ? null : (
@@ -475,11 +439,10 @@ const campaignNameForAd = ad => {
 
 
 const Page404 = () => <div className="widepage CampaignPage gl-btns">
-	<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" hidePages alwaysScrolled />
 	<div className="my-5 py-2"/>
 	<div className="px-5">
 		<h1>404 - Page not found</h1>
-		<p>We couldn't find anything here! Check your URL is correct, or find other campaigns <a href="/#ads">here.</a></p>
+		<p>We couldn't find anything here! Check your URL is correct, or find other campaigns <C.A href="/ads">here.</C.A></p>
 		{Roles.isDev() && <Alert color="danger">
 			No ad data could be loaded for this page - if this URL has a correct campaign/advertiser/agency ID and should be working,
 			check that there are any associated ads to provide data.<br/>

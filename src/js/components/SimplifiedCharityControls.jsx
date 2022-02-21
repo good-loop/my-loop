@@ -7,6 +7,7 @@ import C from '../C';
 import DataStore from '../base/plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
 import Misc from '../base/components/Misc';
+import PropControl from '../base/components/PropControl';
 import { getType, getId } from '../base/data/DataClass';
 import NGO from '../base/data/NGO';
 
@@ -24,7 +25,7 @@ const SimplifiedCharityControls = ({entity, path, ...other}) => {
 
 	return (
 		<Misc.Card title="Charities" {...other} >
-			<Misc.PropControl label="Allow other charities?"
+			<PropControl label="Allow other charities?"
 				help={`Where possible, we prefer to show one charity each picked by the publisher, the advertiser, and the user.
 				Some advertisers / publishers insist on more control.
 				Allowing other charities will give you the maximum £ value.`}
@@ -48,7 +49,7 @@ const SimplifiedCharityForm = ({path, i}) => {
 	return (
 		<div className="well">
 			<h4>Charity {i+1}</h4>
-			<Misc.PropControl
+			<PropControl
 				label="Name:	"
 				item={charity}
 				path={proppath}

@@ -1,10 +1,17 @@
 
 
 .tab-search-container {
-    width: 50%;
+    width: 70%;
     @media @width-mobile {
         width: 100%;
     }
+}
+
+.tab-center .sparkle {
+    position: absolute;
+    right: -15px;
+    top: 50%;
+    transform: translateY(-180px);
 }
 
 .tab-search {
@@ -74,7 +81,7 @@
     }
 }
 
-#webtop {
+#newtab {
     h1,h2,h3,h4,h5 {
 		color: white;
 		// TODO avoid/comment local font css
@@ -101,7 +108,7 @@
 	/* Why no rounding here? ask Kati */
 	border-radius: 0;
 	&:hover {
-		background: @gl-btn-hover !important;
+		background: @gl-light-orange!important;
 		box-shadow: 0px 3px 6px rgba(0,0,0,0.5) !important;
 	}
 }
@@ -254,4 +261,22 @@
         text-transform: uppercase;
         color: grey;
     }
+}
+
+/** Make it readable against any backdrop
+*/
+.NewTabCharityCard {
+    color: white;
+    background-color: rgba(0,0,0,0.35);
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-radius: 15%;
+    /* NB: top-bottom padding seem to be covered by something else some reason */
+}
+
+.charity-custom-content {
+    background-color: white;
+    padding: 1rem;
+    max-height: 750px;
+    overflow-y: auto;
 }

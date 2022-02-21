@@ -15,6 +15,7 @@ import Misc from '../../base/components/Misc';
 import KStatus from '../../base/data/KStatus';
 import { getDataLogData } from '../../base/plumbing/DataLog';
 import C from '../../C';
+import LinkOut from '../../base/components/LinkOut';
 
 
 const TabsForGoodSettings = () => {
@@ -48,7 +49,7 @@ const SearchEnginePicker = () => {
 
 	return <PropControl type="select" prop="searchEnginePicker" options={["google", "ecosia", "duckduckgo", "bing"]}
 		labels={["Google", "Ecosia", "DuckDuckGo", "Bing"]} dflt={"google"} saveFn={onSelect}
-		path={dpath} />;
+		path={dpath} aria-label="Choose a search engine"/>;
 };
 
 
@@ -103,12 +104,12 @@ const CharitySelectBox = ({ item, className }) => {
 		<div
 			className={space("charity-select-box flex-column justify-content-between align-items-center unset-margins p-md-3 w-100 position-relative")}
 		>
-			{item.logo ? <img className="logo-xl mt-4 mb-2" src={item.logo} /> : <span>{item.name || item.id}</span>}
+			{item.logo ? <img className="logo-xl mt-4 mb-2" src={item.logo} alt={item.name || item.id} /> : <span>{item.name || item.id}</span>}
 			<p>{item.summaryDescription}</p>
 			{selected ? <span className="text-success thin"><Icon name="tick" /> Selected</span>
 				: <button onClick={() => setPersonSetting("charity", getId(item))} className="btn btn-outline-primary thin">Select</button>
 			}
-			{item.url && <a className="position-absolute" style={{ top: 10, right: 10 }} href={item.url} target="_blank" rel="noreferrer">About</a>}
+			{item.url && <LinkOut className="position-absolute" style={{ top: 10, right: 10 }} href={item.url} aria-label={"Read more about " + (item.name || item.id)}>About</LinkOut>}
 		</div>
 	</div>;
 }; // ./CharitySelectBox
@@ -155,12 +156,17 @@ const getTabsOpened = () => {
 };
 
 /**
- * Fetch the number of tabs opened by the user.
+ * Fetch the number of tabs opened (by the user) (for a charity).
  * @returns ?PromiseValue<Number> null if not logged in yet
  */
- export const getTabsOpened2 = ({start, user}) => {
+ export const getTabsOpened2 = ({start, user, cid}) => {
+	let q = space( // HACK! It'd be better to use searchquery.js
+		user && "user:"+Login.getId()+ " AND", 
+		cid && "cid:"+cid+ " AND", 
+		cid? "evt:tabadview" : "evt:tabopen" // HACK count adviews for charity-specific stats which are used to estimate £s
+		);
 	const trkreq = {
-		q: space(user && "user:"+Login.getId()+ " AND", "evt:tabopen"),
+		q,
 		name: "tabopens",
 		dataspace: 'gl',
 		start
@@ -204,6 +210,11 @@ const getPVSelectedCharityId = (xid) => {
 	return getPVClaimValue({ xid, key: "charity" });
 };
 
+/**
+ * Set and save
+ * @param {*} key 
+ * @param {*} value 
+ */
 const setPersonSetting = (key, value) => {
 	assMatch(key, String, "setPersonSetting - no key");
 	assMatch(value, "String|Number|Boolean");

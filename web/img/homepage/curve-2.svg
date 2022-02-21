@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2560" height="360" viewBox="0 0 2560 360">
+  <defs>
+    <clipPath id="clip-curve-2">
+      <rect width="2560" height="360"/>
+    </clipPath>
+  </defs>
+  <g id="curve-2" clip-path="url(#clip-curve-2)">
+    <g id="Group_690" data-name="Group 690" transform="translate(0.105 -631)">
+      <ellipse id="Ellipse_194" data-name="Ellipse 194" cx="1462.5" cy="689.5" rx="1462.5" ry="689.5" transform="translate(-182.105 -392.021)"/>
+    </g>
+  </g>
+</svg>

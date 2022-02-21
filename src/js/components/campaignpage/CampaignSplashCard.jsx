@@ -10,6 +10,8 @@ import KStatus from '../../base/data/KStatus';
 import LinkOut from '../../base/components/LinkOut';
 import ServerIO from '../../plumbing/ServerIO';
 import Campaign from '../../base/data/Campaign';
+import DynImg from '../../base/components/DynImg';
+import C from '../../C';
 
 /**
  * @param {Object} p
@@ -26,7 +28,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 	let charityName = 'charity';
 	if (charities && charities.length === 1 && charities[0]) charityName = charities[0].displayName || charities[0].name;
 
-	const donationDisplay = <b>{donationValue ? <Counter currencySymbol="£" amount={donationValue} minimumFractionDigits={2} preserveSize /> : "money"}</b>;
+	const donationDisplay = <b>{donationValue ? <Counter amount={donationValue} minimumFractionDigits={2} preserveSize /> : "money"}</b>;
 
 	let splashText = <>
 		<div className="header text-white">
@@ -43,7 +45,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 		splashText = <div className="header text-white text-right">
 			<div>
 				We donate <LinkOut href={campaignPage.widerUrl}>
-					<b><Counter currencySymbol="£" sigFigs={4} amount={campaignPage.widerAnnualDntn} minimumFractionDigits={2} preserveSize /></b> a year
+					<b><Counter sigFigs={4} amount={campaignPage.widerAnnualDntn} minimumFractionDigits={2} preserveSize /></b> a year
 				</LinkOut>
 				<br /><br />
 				<div>
@@ -55,7 +57,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 
 	return (<>
 		<div className="impact-hub-splash position-relative">
-			<img src={campaignPage.bg ? campaignPage.bg : "/img/lightcurve.svg"} className={space("w-100", campaignPage.bg ? "splash-img" : "splash-curve")} alt="splash" />
+			<DynImg src={campaignPage.bg ? campaignPage.bg : "/img/lightcurve.svg"} className={space("w-100", campaignPage.bg ? "splash-img" : "splash-curve")} alt="splash" />
 			<div className="dark-overlay" />
 			<img src="/img/redcurve.svg" className="w-100 splash-curve" alt="curve" />
 			<div className="hero splash-card px-5">
@@ -76,7 +78,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 				</div>
 			</div>
 			<div className="splash-buttons">
-				{pdf && <a className="btn btn-primary mr-md-3" href={pdf} target="_blank">Download in pdf</a>}
+				{pdf && <C.A className="btn btn-primary mr-md-3" href={pdf} target="_blank">Download in pdf</C.A>}
 				<ShareButton meta={shareMeta} className="btn-transparent fill" url={window.location.href}>Share</ShareButton>
 			</div>
 			<DraftBanner status={status} />

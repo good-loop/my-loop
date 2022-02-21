@@ -1,0 +1,305 @@
+@import "../js/base/style/fonts.less";
+
+// Undragable
+img {
+	-webkit-user-drag: none;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+}
+
+.corner-hummingbird {
+	position: absolute;
+	width: 10%;
+	top: 10%;
+}
+
+.landing-bg {
+	// using vh as splash height will mess up in shorter viewpoint
+	height: 40em;
+
+	.left-padding {
+		padding-left: 10%;
+	}
+
+	.landing-splash {
+		// Make sure image behind is covered
+		height: 101%;
+		width: 100%;
+		background-repeat: no-repeat;
+		background-position: center;
+		background-position-y: 0;
+		background-size: cover;
+	}
+
+	.landing-left {
+		position: relative;
+		// left: -5%; breaks layout at some laptop resolutions
+	}
+
+	@media @xl-max {
+		.landing-left {
+			left: 0%;
+		}
+	}
+
+	@media @width-mobile {
+		height: @fullHeight;
+		.left-padding {padding: 0 15px;}
+	}
+
+	// NB: avoid local font css by default for consistency. If it is needed -- include a comment
+	// h1, p, a{
+	// 	font-family: 'Montserrat', sans-serif;
+	// }
+
+	.title {
+		margin: 0;
+		h1 {
+			font-size: 2rem;
+		}
+	}
+
+	.title > * {
+		margin-bottom: 2rem;
+	}
+}
+
+.mobile-landing-curve {
+	width: 100vw;
+
+	.mobile-curve-container {
+		height: 30%;
+		display: flex;
+		flex-direction: column;
+		justify-content: end;
+		.mobile-curve {
+			width: 100%;
+		}
+	}
+	.mobile-curve {
+		margin-top: 10em;
+	}
+	.mobile-curve-fill {
+		// position: absolute;
+		// top: 35%;
+		height: 65%;
+		width: 100%;
+	}
+}
+
+// Handle Ultra Wide Screen
+@media (min-width: 2100px) { .landing-bg { background-size: cover; } }
+@media (min-width: 2580px) { .landing-bg { background-size: 3430px auto; } }
+
+.charity-icons {
+	img {
+		height: 70px;
+	}
+	.col {
+		padding: 0;
+	}
+}
+
+.t4gscreenshot-logo {
+	position: absolute;
+	top:59%;
+	left:50%;
+	transform: translate(-50%, -50%);
+	width: 10%;
+}
+
+.tabs-for-goods-slide-card {
+
+	position: relative;
+	background-color: @gl-light-blue;
+	// color: white; done with .white instead
+	
+	.BSCarousel.carousel.slide {
+		border: 1px solid @gl-dark-grey;
+		border-radius: 10px;
+		overflow: hidden;
+		padding-top: 0;
+	}
+
+	.BSCarousel {
+		.carousel-control-next {
+			right: -4%;
+		}
+		.carousel-control-prev {
+			left: 45%;
+		}
+	}
+
+	.slideshow {
+		// border: 1px solid @gl-dark-grey;
+		// border-radius: 10px;
+		// overflow: hidden;
+		height: 500px;
+		.slide-img {
+			width: 100%;
+			height: 100%;
+		}
+		.slide-right {
+			background-color: white; 
+			.t4gcta {
+				width: 90%;
+			}
+		}
+	}
+
+	.hummingbird {
+		position: absolute;
+		width: 10%;
+		top: 3%;
+		right: 3%;
+		transform: scaleX(-1);
+	}
+	.hand-globe {
+		position: absolute;
+		top: 7%;
+		width: 10%;
+		left: 0;
+	}
+}
+
+
+.positive-place-section {
+	//background: linear-gradient(180deg, @gl-dark-turquoise 0%, @gl-desat-blue 50%, @gl-light-blue 100%);
+	&.blue-gradient {
+		background: linear-gradient(180deg, @gl-dark-turquoise 0%, @gl-desat-blue 50%, @gl-light-blue 100%);
+		h1, h3 {
+			color: white;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.positive-points {
+			margin-bottom: 2em;
+			display: flex;
+			img { width: 150px !important; height: 150px; }
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	.sparks {display: none;}
+}
+
+.testimonial-title {
+
+	h1, h3, p {
+		color: white;
+	}
+
+	.testimonial-upper > * {margin-bottom: 2rem;}
+}
+
+.testimonial-lower {
+	margin-top: -2em;
+
+	background-image: url("/img/green/world-map.svg");
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	background-color: @gl-desat-blue;
+
+	h1, h3, p {
+		color: white;
+	}
+
+	.testimonial-card {
+		img {object-fit: cover;}
+	}
+
+	.testimonial-right {
+		background-color: white;
+		h3, p {color: @gl-dark-turquoise;}
+		.read-more {
+			font-weight: bold;
+			a {color: @gl-dark-turquoise}
+		}
+	}
+	.testimonial-right > * {margin-bottom: 2rem;}
+
+	@media @width-mobile {
+		background-position-y: 36em;
+		background-position-x: -72em;
+
+		.testimonial-points {
+			margin: 0 1em;
+			margin-bottom: 2em;
+			display: flex;
+			align-items: center;
+  		justify-content: center;
+			img { width: 130px !important; height: 130px; }
+			p {display: none;}
+			h3 {margin-left: 1rem;}
+		}
+	}
+}
+
+.get-involved-section {
+	h3 {
+		color: @gl-dark-turquoise;
+	}
+
+	@media @width-mobile {
+		.get-involved-points {
+			display: flex;
+			align-items: center;
+  		justify-content: center;
+			margin-bottom: 1rem;
+			img { width: 130px !important; height: 130px;}
+		}
+	} 
+}
+
+.tricard-inner {
+	background: white;
+	border-radius: 10px;
+	height: 100%;
+	text-align: center;
+	box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+	overflow: hidden;
+
+	@media @width-mobile {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		img {
+			object-fit: cover;
+			width: 33% !important;
+			height: 100%;
+		}
+		.tricard-text {
+			width: 75%;
+		}
+	}
+
+}
+
+.charity-banner-logo {
+	max-height: 200px;
+	max-width: 200px;
+	@media @width-mobile {
+		max-width: 100%;
+	}
+}
+
+.round-img {
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+.make-it-happen-charities {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	img {
+		width: 60%;
+	}
+}

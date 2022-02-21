@@ -21,42 +21,37 @@ const campaignInfos = [
 	{
 		name: "LEVI'S",
 		adid: "ko3s6fUOdq",
-		url: "/#campaign/?gl.vertiser=XR67PcGn",
-		vertiser:"XR67PcGn"
+		url: "/campaign/?gl.vertiser=XR67PcGn",
+		vertiser:"XR67PcGn",
+		title: "LEVI's advert"
 	},
 	{
 		name: "Ribena",
 		adid: "B1lF97utxD",
-		url: "/#campaign/?gl.vertiser=FBY5QmWQ",
-		vertiser:"FBY5QmWQ"
+		url: "/campaign/?gl.vertiser=FBY5QmWQ",
+		vertiser:"FBY5QmWQ",
+		title: "Ribena advert"
 	},
-	// {
-	// 	name: "Nike",
-	// 	adid: "2qQIRm9u5Q",
-	// 	url: "/#campaign?gl.vertiser=TNXHvb5j"
-	// },
-	// {
-	// 	name: "Reebok",
-	// 	adid: "HtREj0pifC",
-	// 	url: "/#campaign/?gl.vertiser=KpgM78Lg"
-	// },
 	{
 		name: "Mango",
 		adid: "ojjiPf7kbB",
-		url: "/#campaign/?gl.vertiser=1JBFB6K4",
-		vertiser:"1JBFB6K4"
+		url: "/campaign/?gl.vertiser=1JBFB6K4",
+		vertiser:"1JBFB6K4",
+		title: "Mango advert"
 	},
 	{
 		name: "Cadbury",
 		adid: "qgbiSQ0crN",
-		url: "/#campaign/?gl.vertiser=cadbury_bpngtolk",
-		vertiser:"cadbury_bpngtolk"
+		url: "/campaign/?gl.vertiser=cadbury_bpngtolk",
+		vertiser:"cadbury_bpngtolk",
+		title: "Cadbury advert"
 	},
 	{
 		name: "Pantene",
 		adid: "hwtjNncj",
-		url: "/#campaign/?gl.vertiser=zqhRrBjF",
-		vertiser:"zqhRrBjF"
+		url: "/campaign/?gl.vertiser=zqhRrBjF",
+		vertiser:"zqhRrBjF",
+		title: "Pantene advert"
 	}
 ];
 
@@ -102,8 +97,8 @@ const RecentCampaignsCard = () => {
 
 	return (
 		<div id="campaign-cards">
-			{campaignInfos.map(({dntn, adid, url, name}, i) => (<Row className="campaign mb-5" key={i}>
-				<TVAdPlayer adid={adid} className="col-md-6"/>
+			{campaignInfos.map(({dntn, adid, url, name, title}, i) => (<Row className="campaign mb-5" key={i}>
+				<TVAdPlayer adid={adid} className="col-md-6" title={title}/>
 				<Col md={6} className="flex-column align-items-center text-center justify-content-center pt-3 pt-md-0">
 					<h3 className="mb-0">This ad raised {dntn ? <Counter currencySymbol="£" sigFigs={4} amount={dntn} minimumFractionDigits={2} preservePennies /> : "money"}</h3>
 					<a className="btn btn-primary mt-3" href={url}>Find out more</a>
@@ -113,14 +108,14 @@ const RecentCampaignsCard = () => {
 	);
 };
 
-const TVAdPlayer = ({adid, className}) => {
+const TVAdPlayer = ({adid, className, title}) => {
 	const size = "landscape";
 	return <div className={space("position-relative", className)}>
 		<img src="/img/LandingBackground/iphone-mockup-landscape.svg" className="w-100 invisible"/>
 		{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
 		<img src="/img/LandingBackground/iphone-mockup-landscape.svg" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "49.7%", width: "91.5%", top: "55%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }}/>
 		<div className="position-absolute tv-ad-player">
-			<GoodLoopUnit vertId={adid} size={size} />
+			<GoodLoopUnit vertId={adid} size={size} title={title}/>
 		</div>
 	</div>;
 };

@@ -36,11 +36,11 @@
 ## which uses very similar, if not, the exact same, functions as the teamcity builder template script.
 PROJECT_NAME='my-loop' #This is simply a human readable name
 GIT_REPO_URL='github.com:/good-loop/my-loop'
-PROJECT_USES_BOB='no'  #yes or no :: If 'yes', then you must also supply the name of the service which is used to start,stop,or restart the jvm
-NAME_OF_SERVICE='' # This can be blank, but if your service uses a JVM, then you must put in the service name which is used to start,stop,or restart the JVM on the server.
+PROJECT_USES_BOB='yes'  #yes or no :: If 'yes', then you must also supply the name of the service which is used to start,stop,or restart the jvm
+NAME_OF_SERVICE='my-loop' # This can be blank, but if your service uses a JVM, then you must put in the service name which is used to start,stop,or restart the JVM on the server.
 PROJECT_USES_NPM='yes' # yes or no
 PROJECT_USES_WEBPACK='yes' #yes or no
-PROJECT_USES_JERBIL='no' #yes or no
+PROJECT_USES_JERBIL='yes' #yes or no
 PROJECT_USES_WWAPPBASE_SYMLINK='yes'
 
 
@@ -151,11 +151,11 @@ function check_java_home {
     fi
 }
 
-# Dependency Check Function - nodejs is at version 14.x - This Function's Version is 0.02
+# Dependency Check Function - nodejs is at version 16.x - This Function's Version is 0.03
 function check_nodejs_version {
     if [[ $PROJECT_USES_NPM = 'yes' ]]; then
-        if [[ $(node -v | grep "v14") = '' ]]; then
-            printf "Either nodejs is not installed, or it is not at version 14.x.x\n"
+        if [[ $(node -v | grep "v16") = '' ]]; then
+            printf "Either nodejs is not installed, or it is not at version 16.x.x\n"
             exit 0
         fi
     fi
@@ -326,7 +326,8 @@ function use_webpack {
         printf "\nNPM is now running a Webpack process for $PROJECT_NAME\n"
         cd $PROJECT_ROOT_ON_SERVER && npm run compile &> $NPM_RUN_COMPILE_LOGFILE
         printf "\nChecking for errors that occurred during Webpacking process ...\n"
-        if [[ $(cat $NPM_RUN_COMPILE_LOGFILE | grep -i 'error' | grep -iv 'ErrorAlert.jsx') = '' ]]; then
+	# NB: mean_squared_error is one of the TensorFlow library files - which includes the keyword "error"
+        if [[ $(cat $NPM_RUN_COMPILE_LOGFILE | grep -i 'error' | grep -iv 'ErrorAlert.jsx' | grep -v 'mean_squared_error') = '' ]]; then
             printf "\nNo Webpacking errors detected\n"
         else
             printf "\nOne or more errors were recorded during the webpacking process. Breaking Operation\n"
@@ -362,9 +363,15 @@ function start_service {
 ###                         chance to back out if this was executed accidentally.
 ################
 function get_branch_and_print_warning {
-    printf "\n\e[34;107mWhat branch would you like to use for this production build?\033[0m\n"
+    # git incantation for "What's the current branch?"
+    cbranch=`git symbolic-ref --short HEAD`
+    printf "\n\e[34;107mWhat branch would you like to use for this production build? (return for current branch $cbranch)\033[0m\n"
     read branch
     BRANCH_NAME=$branch
+    if [[ -z "$BRANCH_NAME" ]]; then
+        BRANCH_NAME=$cbranch
+    fi
+
     printf "\n\e[34;107mAre you absolutely certain that you want to build and release $PROJECT_NAME on this Production Server\033[0m\n\e[34;107mBased on your specified branch of $BRANCH_NAME ?\033[0m"
     if [[ $PROJECT_USES_WWAPPBASE_SYMLINK = 'yes' ]]; then
         printf "\n\t\e[34;107mFurther, are you certain that the branch $BRANCH_NAME exists in the wwappbase.js repo?\033[0m\n"
@@ -436,10 +443,10 @@ cleanup_repo
 cleanup_wwappbasejs_repo
 cleanup_bobwarehouse_repos
 git_checkout_release_branch
-stop_service
 use_bob
 use_npm
 use_webpack
 use_jerbil
+stop_service
 start_service
 catch_JVM_success_or_error

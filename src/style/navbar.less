@@ -1,47 +1,31 @@
-.font-sizes {
-	@media (max-width: 1500px) {
-        font-size: 0.85rem;
-    }
-    @media (max-width: 1400px) {
-        font-size: 0.7rem;
-    }
-    @media @xl-max {
-        font-size: 1.5rem;
-	}
-	@media @width-mobile {
-		font-size: 1rem;
-	}
-}
 
 .navbar {
-	background: transparent;
 	transition: 0.2s;
+	
+	// .font-sizes();
 
-	.font-sizes();
+	@media (max-width: 1220px) {
+		font-size: 16px;
+	}
 
 	&.scrolled {
 		background: @gl-light-red;
 		box-shadow: 0px 0px 5px rgba(0,0,0,0.75);
 		transition: 0.2s;
-
-		.nav-link:not(.btn) {
-			text-transform: uppercase;
-			font-weight: 600;
-			color: white;
-			text-decoration: none;
-			text-shadow: 0px 1px 5px rgba(0,0,0,0.75);
-		}
 	}
 
 	.nav-link:not(.btn) {
 		text-transform: uppercase;
-		font-weight: 600;
+		font-weight: normal;
 		color: black;
 		text-decoration: none;
 	}
 
-	.btn {
-		padding: .5rem 2rem !important;
+	// What glitch does this fix??
+	@media @md-min {
+		.page-links>.top-level:not(:first-child) {
+			margin-left: 4rem;
+		}
 	}
 
 	.navbar-toggler-icon {
@@ -51,7 +35,6 @@
 
 	// Dropdown styling
 	.dropdown.show:not(.account-menu) {
-		background: white;
 		a {
 			color: black !important;
 			text-shadow: none !important;
@@ -59,7 +42,6 @@
 	}
 
 	.dropdown-menu {
-		background: white;
 		box-shadow: 0px 3px 2px rgba(0,0,0,0.5);
 		margin: 0;
 		border: none;
@@ -71,11 +53,16 @@
 		text-decoration: none;
 		text-transform: uppercase;
 		padding: 1rem 1.5rem;
-		.font-sizes();
+		// .font-sizes();
 	}
 
 	.dropdown-toggle::after {
 		display: none;
+	}
+
+	.login-link {
+		text-decoration: none;
+		text-transform: uppercase;
 	}
 
 	#navItemsDiv {
@@ -83,7 +70,17 @@
 			flex-basis: 60%;
 		}
 	}
-}
+
+	/* avoid the navbar going off the screen right if the user has a short name*/
+	.account-menu {
+		min-width: 9.5rem;
+	}
+
+	.btn.btn-primary {
+		font-size: 0.8rem;
+		padding: 0.2rem 2rem;
+	}
+} // ./navbar
 
 .account-menu {
 	.btn.btn-transparent {

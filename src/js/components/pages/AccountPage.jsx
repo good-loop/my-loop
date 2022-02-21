@@ -9,11 +9,10 @@ import { lg } from '../../base/plumbing/log';
 import { space } from '../../base/utils/miscutils';
 import Login from '../../base/youagain';
 import SubscriptionBox from '../cards/SubscriptionBox';
-import MyLoopNavBar from '../MyLoopNavBar';
 import ShareButton from '../ShareButton';
 import AccountSettings from './AccountSettings';
 import TabsForGoodSettings from './TabsForGoodSettings';
-
+import C from '../../C';
 
 
 const Account = () => {
@@ -51,8 +50,7 @@ const Page = () => {
 	// handle the not-logged-in case
 	if ( ! Login.isLoggedIn()) {
 		return (
-			<div className="AccountPage">
-				<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" alwaysScrolled />
+			<div className="AccountPage">				
 				<div className="container mt-5 pt-5">
 					<h1>You need an account to see this page.</h1>
 					<LoginLink verb="register" className="btn btn-transparent fill">Register / Log in</LoginLink>
@@ -70,7 +68,6 @@ const Page = () => {
 	const tab = DataStore.getUrlValue('tab') || 'account';
 
 	return (<>
-		<MyLoopNavBar logo="/img/new-logo-with-text-white.svg" alwaysScrolled />
 		<div className="AccountPage avoid-navbar">
 			<Editor3ColLayout>
 				<LeftSidebar>
@@ -97,24 +94,25 @@ const Page = () => {
  * @param {boolean} selected
  */
 const SidebarTabLink = ({ tab, label, selected }) => {
-	let url = "/#account?tab=" + escape(tab);
+	let url = "/account?tab=" + escape(tab);
 	if (tab === "tabsForGood") {
 		// TODO detect whether T4G is installed on this specific browser.
 		let pvPerson = getProfile();
 		let hasT4G = Person.hasApp(pvPerson.value, "t4g.good-loop.com");
 		if ( ! hasT4G) {
 			// Detect whether we're on Chrome or not
+			// TODO Edge too -- see T4GSignUp
 			let isChrome = navigator && navigator.vendor === "Google Inc.";
 			if ( ! isChrome) {
-				url = "https://welcome.good-loop.com"
-				label = "About Tabs for Good";
+				url = "https://my.good-loop.com/tabsforgood"
+				label = "About "+C.T4G;
 			} else {
 				url = "https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1"
-				label = "Get Tabs for Good";
+				label = "Get "+C.T4G;
 			}
 		}
 	}
-	return <div><a href={url} className={space("account-tab p-2", selected && "active")}>{label || tab}</a></div>;
+	return <div className='my-2'><C.A href={url} className={space("account-tab p-2", selected && "active")}>{label || tab}</C.A></div>;
 };
 
 addImageCredit({ name: "add-user", author: "Icons8", url: "https://icons8.com/icons/set/add-user-male" });

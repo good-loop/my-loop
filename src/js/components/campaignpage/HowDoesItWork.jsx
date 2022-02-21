@@ -44,7 +44,7 @@ const HowDoesItWork = ({ nvertiserName, charities, ongoing }) => {
 				</div>
 			</div>
 			<div className="flex-row justify-content-center align-items-center">
-				<a className="btn btn-primary" href="https://my.good-loop.com/#howitworks">Learn more</a>
+				<C.A className="btn btn-primary" href="/howitworks">Learn more</C.A>
 			</div>
 		</div>
 	);

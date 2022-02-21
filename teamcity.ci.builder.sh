@@ -6,7 +6,7 @@
 # The script uses ssh remote commands to target a server -- it does not affect the local machine.
 # For testing, the script can also be run from your local computer.
 #Version 1.4.9
-# Latest Change -- nodejs version checker now checks for version 14.x being present
+# Latest Change -- nodejs version checker now checks for version 16.x being present
 
 #####  GENERAL SETTINGS
 ## This section should be the most widely edited part of this script
@@ -15,8 +15,8 @@
 #####
 PROJECT_NAME='my-loop' #This name will be used to create/or/refer-to the directory of the project in /home/winterwell/
 GIT_REPO_URL='github.com:/good-loop/my-loop' #
-PROJECT_USES_BOB='no'  #yes or no :: If 'yes', then you must also supply the name of the service which is used to start,stop,or restart the jvm
-NAME_OF_SERVICE='' # This can be blank, but if your service uses a JVM, then you must put in the service name which is used to start,stop,or restart the JVM on the server.
+PROJECT_USES_BOB='yes'  #yes or no :: If 'yes', then you must also supply the name of the service which is used to start,stop,or restart the jvm
+NAME_OF_SERVICE='my-loop' # This can be blank, but if your service uses a JVM, then you must put in the service name which is used to start,stop,or restart the JVM on the server.
 PROJECT_USES_NPM='yes' # yes or no
 PROJECT_USES_WEBPACK='yes' #yes or no
 PROJECT_USES_JERBIL='no' #yes or no
@@ -127,14 +127,14 @@ function check_maven_exists {
     fi
 }
 
-# Dependency Check Function - nodejs is at version 14.x - This Function's Version is 0.02
+# Dependency Check Function - nodejs is at version 16.x - This Function's Version is 0.03
 function check_nodejs_version {
     BUILD_PROCESS_NAME='verifying nodejs version'
-    BUILD_STEP='verifying that nodejs is at version 14.x.x'
+    BUILD_STEP='verifying that nodejs is at version 16.x.x'
     if [[ $PROJECT_USES_NPM = 'yes' ]]; then
         for server in ${TARGET_SERVERS[@]}; do
-            if [[ $(ssh winterwell@$server 'node -v | grep "v14"') = '' ]]; then
-                printf "Either nodejs is not installed, or it is not at version 14.x.x\n"
+            if [[ $(ssh winterwell@$server 'node -v | grep "v16"') = '' ]]; then
+                printf "Either nodejs is not installed, or it is not at version 16.x.x\n"
                 send_alert_email
                 exit 0
             fi
