@@ -16,7 +16,8 @@ img {
 }
 
 .landing-bg {
-	height: 85vh;
+	// using vh as splash height will mess up in shorter viewpoint
+	height: 40em;
 
 	.left-padding {
 		padding-left: 10%;
@@ -67,7 +68,6 @@ img {
 
 .mobile-landing-curve {
 	width: 100vw;
-	height: 100vh;
 
 	.mobile-curve-container {
 		height: 30%;
@@ -78,14 +78,12 @@ img {
 			width: 100%;
 		}
 	}
-	/*.mobile-curve {
-		width: 100%;
-		position: absolute;
-		top: 20%;
-	}*/
+	.mobile-curve {
+		margin-top: 10em;
+	}
 	.mobile-curve-fill {
-		position: absolute;
-		top: 35%;
+		// position: absolute;
+		// top: 35%;
 		height: 65%;
 		width: 100%;
 	}

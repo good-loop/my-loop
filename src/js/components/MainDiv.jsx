@@ -41,6 +41,7 @@ import ForBusinessPage from './pages/ForBusinessPage';
 import ForCharityPage from './pages/ForCharityPage';
 import { T4GCTA, T4GSignUpModal, T4GPluginButton } from './T4GSignUp';
 import { MyLoginWidgetGuts } from './MyLoginWidgetGuts';
+import BlogContent from './pages/BlogContent';
 // import TestPage from './pages/TestPage';
 
 // DataStore
@@ -64,6 +65,7 @@ const SubscribePage = ({}) => {
 
 const PAGES = {
 	blog: BlogPage, // TODO
+	blogcontent: BlogContent,
 	campaign: CampaignPage,
 	impact: CampaignPage,
 	impactoverview: MyAdCampaignsPage,
@@ -118,14 +120,9 @@ const MainDiv = () => {
 	// HACK hide whilst we finish it
 	if ( ! Roles.isTester()) {
 
-		delete navPageLinks["blog"];
-		delete navPageLabels["Blog"];
-
 		delete navPageLinks["our-impact"].green;
 		delete navPageLabels["Our Impact"]["Green Media"];
-
-		delete navPageLinks["blog"];
-		delete navPageLabels["Blog"];
+		
 	}
 
 	return (<MainDivBase
@@ -138,7 +135,8 @@ const MainDiv = () => {
 		navbarBackgroundColour="white"
 		NavExpandSize="xl"
 		// navbarLabels={getNavbarLabels}
-		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account', 'green', 'charities', 'impactoverview', 'campaign', 'ourstory', 'ads']}
+		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account', 'green', 'charities', 'impactoverview', 'campaign', 'ourstory', 'ads', 'blog', 'blogcontent']}
+		//undecoratedPages={["blogcontent"]}
 		Footer={Footer}
 		canRegister
 		noLoginTitle
