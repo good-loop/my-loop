@@ -119,20 +119,28 @@ const WebtopPage = () => {
 	// Background images on tab plugin sourced locally
 
 	// Login for Safari 
+	console.log('MyGL first performance.now()', performance.now())
 	window.onload = () => {
+		console.log('MyGL onload performance.now()', performance.now())
 		let message = "safari ready to login"
 		window.parent.postMessage(message,"*");
+		console.log('Sent message to Safari', performance.now());
 		window.addEventListener('message', (messageEvent) => {
 			if (messageEvent.origin.startsWith('safari-web-extension')) {
+				console.log('Recieved message from Safari', performance.now())
 				let safariJwt = messageEvent.data.jwt;
 				let safariXid = messageEvent.data.xid;
-				// console.log("Login details recieved from Safari:", safariXid, safariJwt);
-				Login.setUser({
-					"xid": safariXid,
-					"service": "email",
-					"jwt": safariJwt
-				});
-				setShowTabLogin(false);
+				console.log("Login details recieved from Safari:", safariXid, safariJwt, performance.now());
+				if (safariJwt !== '' && safariXid !== '') {
+					console.log('Try to login with localStorage...', performance.now())
+					Login.setUser({
+						"xid": safariXid,
+						"service": "email",
+						"jwt": safariJwt
+					});
+					console.log('Finished Login', performance.now())
+					setShowTabLogin(false);
+				}
 			}
 		});
 	}
@@ -165,7 +173,7 @@ const WebtopPage = () => {
 						<NormalTabCenter charityID={charityID} loadingCharity={loadingCharity} />
 					</Col>
 					<Col sm={3} md={4} className="flex-column justify-content-center align-items-center p-2">
-						<CharityCustomContent content={<LoremIpsum/>}/>
+						{/* <CharityCustomContent content={<LoremIpsum/>}/> */}
 					</Col>
 				</Row>
 			</Container>
