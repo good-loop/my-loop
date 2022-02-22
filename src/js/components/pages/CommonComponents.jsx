@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { RegisterLink, setLoginVerb, setShowLogin } from '../../base/components/LoginWidget';
-import { Col, Container, Row, Carousel, CarouselControl, CarouselItem } from 'reactstrap';
+import { Col, Container, Row, Carousel, CarouselControl, CarouselItem, Button } from 'reactstrap';
 import BG from '../../base/components/BG';
 import { getBrowserVendor, isPortraitMobile, modifyHash, scrollTo, space } from '../../base/utils/miscutils';
 import C from '../../C';
@@ -12,6 +12,7 @@ import Login from '../../base/youagain';
 import BSCarousel from '../../base/components/BSCarousel';
 import { T4GCTA } from '../T4GSignUp';
 import Roles from '../../base/Roles';
+import { A } from '../../base/plumbing/glrouter';
 
 const PageCard = ({id, className, children}) => {
 	// Why two containers?? Is the outer one for card-specific css rules to latch onto??
@@ -261,9 +262,9 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 				<div className="mt-5">
 					<T4GCTA className="w-50 d-block mx-auto"/>
 
-					<button className="btn btn-secondary text-uppercase mt-3 w-50 d-block mx-auto">						
+					<Button className="btn btn-secondary text-uppercase mt-3 w-50 d-block mx-auto" href="/tabsforgood">						
 						Learn More <span className="d-none d-md-inline">About Tabs For Good</span>
-					</button>
+					</Button>
 				</div>
 			</div>}
 			<BSCarousel className="d-none d-md-flex mt-5">
@@ -411,7 +412,9 @@ const TestimonialSectionLower = () => {
 				</div>
 			</div>
 		</div>
-		<img src="/img/curves/curve-desat-blue-round-bottom.svg" className='w-100' alt="" />
+		<div className="bg-gl-light-pink">
+			<img src="/img/curves/curve-desat-blue-round-bottom.svg" className='w-100' alt="" />
+		</div>
 	</>)
 };
 
@@ -432,15 +435,15 @@ const PositivePlaceSection = ({className, showCTA}) => {
 		<h1 className='pt-5'>Let's make the internet a more positive place. Together.</h1>
 		<Row className="pt-5">
 			<Col md={4} className="video-points">
-				<img className='w-50' src="/img/icons/one.png" alt="" />
+				<img className='w-50' src="img/icons/fifty-percent.png" alt="" />
 				<h3 className='pt-4'>50% of online ad fees donated to charity </h3>
 			</Col>
 			<Col md={4} className="video-points">
-				<img className='w-50' src="/img/icons/two.png" alt="" />
+				<img className='w-50' src="img/icons/world-hand.png" alt="" />
 				<h3 className='pt-4'>Helping brands offset their digital carbon footprint</h3>
 			</Col>
 			<Col md={4} className="video-points">
-				<img className='w-50' src="/img/icons/three.png" alt="" />
+				<img className='w-50' src="img/icons/padlock.png" alt="" />
 				<h3 className='pt-4'>Keeping your online privacy safe no matter what</h3>
 			</Col>
 		</Row>
@@ -469,7 +472,7 @@ const WatchVideoSection = () => {
 
 const GetInvolvedSection = () => {
 	return(
-		<PageCard className="get-involved-section text-center">
+		<PageCard className="get-involved-section text-center bg-gl-light-pink">
 			<h1 className='text-uppercase'>This is just the beginning. sign up and join our movement.</h1>
 			<p className='leader-text'>We’re developing exciting new products that will help us all make the internet a more positive place. Register below to get exclusive access to future product launches and more ways to raise money for charity while you browse.</p>
 			<SubscriptionForm purpose='preregister' />
