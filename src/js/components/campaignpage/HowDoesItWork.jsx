@@ -43,9 +43,9 @@ const HowDoesItWork = ({ nvertiserName, charities, ongoing }) => {
 					</div>
 				</div>
 			</div>
-			<div className="flex-row justify-content-center align-items-center">
+			{/* <div className="flex-row justify-content-center align-items-center">
 				<C.A className="btn btn-primary" href="/howitworks">Learn more</C.A>
-			</div>
+			</div> */}
 		</div>
 	);
 };

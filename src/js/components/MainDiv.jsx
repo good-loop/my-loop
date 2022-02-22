@@ -111,7 +111,7 @@ const MainDiv = () => {
 	};
 
 	const navPageLabels = {
-		"About Us":[],
+		"Our Story":[],
 		"Our Impact": ['Charity Impact', 'Impact Hub', 'Green Media'],
 		"Tabs for Good":[],
 		"Blog":[]

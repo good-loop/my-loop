@@ -25,7 +25,7 @@ const OurStorySplash = () => {
 			className="text-center pt-0"
 		>
 			<h1>Our Story</h1>
-			<p className='leader-text'>At Good-Loop, we're on a mission to make the internet a more postive place and to make online advertising a more positive force in the world.</p>
+			<p className='leader-text'>At Good-Loop, we're on a mission to make the internet a more positive place and to make online advertising a more positive force in the world.</p>
 		</CurvePageCard>
 		<PageCard className="text-center">
 			<CardImgLeft imgUrl='img/homepage/amyanddaniel.png' roundedImg>
@@ -41,7 +41,7 @@ const OurMissionSection = ({className}) => {
 	return (<>
 		<PageCard className={space("text-center bg-gl-light-pink", className)}>
 			<div>
-				<h1>Let's make the internet a more postive place</h1>
+				<h1>Let's make the internet a more positive place</h1>
 				<p className='leader-text mt-4'>At Good-Loop, we work with fantastic brands that want to make advertising good for everyone. The way we do it couldn't be simpler. We just need the final piece of the puzzle to make it happen - you.</p>
 			</div>
 			<br/>
@@ -79,7 +79,7 @@ const CaringCommunitySection = ({className}) => {
 				<Row className="pt-5">
 					<Col md={4} >
 						<img className='w-50' src="/img/icons/fifty-percent.png" alt="" />
-						<h3 className='pt-4'>Keep giving 50% of ad money to charity </h3>
+						<h3 className='pt-4'>Give 50% of Ad money to chairty </h3>
 					</Col>
 					<Col md={4} >
 						<img className='w-50' src="/img/icons/padlock.png" alt="" />
@@ -97,11 +97,11 @@ const CaringCommunitySection = ({className}) => {
 					</Col>
 					<Col md={4} >
 						<img className='w-50' src="/img/icons/world-hand.png" alt="" />
-						<h3 className='pt-4'>Be decent humans</h3>
+						<h3 className='pt-4'>Be ethical</h3>
 					</Col>
 					<Col md={4} >
 						<img className='w-50' src="/img/icons/heart.png" alt="" />
-						<h3 className='pt-4'>Be ethical</h3>
+						<h3 className='pt-4'>Be decent humans</h3>
 					</Col>
 				</Row>
 			</PageCard>		
@@ -112,6 +112,7 @@ const MyGetInvolvedSection = () =>{
 
 	return(<>
 	<PageCard className={"my-get-involved white text-center bg-gl-desat-blue pb-0"}>
+		<img src="img/icons/Heart_single.png" className='logo' alt="" />
 		<h1 className='white mb-5'>Get Involved!</h1>
 		<p className='mb-5 leader-text'>Join the My.Good-Loop community today and start raising money for chairty. For free.</p>
 		<T4GSignUpButton />
