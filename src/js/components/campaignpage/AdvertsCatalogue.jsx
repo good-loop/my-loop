@@ -116,7 +116,7 @@ const AdvertsCatalogue = ({ campaign, ads, donationTotal, nvertiserName, totalVi
 			<br />
 			<br />
 			<AdvertFilters campaign={campaign} vertisers={vertisers} ads={showAds} canonicalAds={canonicalAds} />
-			{/* <AdPreviewCarousel ads={showAds} setSelected={goToIndex} selectedIndex={activeIndex} /> */}
+			<AdPreviewCarousel ads={showAds} setSelected={goToIndex} selectedIndex={activeIndex} />
 		</Container>
 	</>);
 };

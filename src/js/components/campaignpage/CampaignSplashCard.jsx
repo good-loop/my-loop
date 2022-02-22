@@ -82,6 +82,12 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 				<ShareButton meta={shareMeta} className="btn-transparent fill" url={window.location.href}>Share</ShareButton>
 			</div>
 			<DraftBanner status={status} />
+			<div className="splash-cta d-flex flex-column">
+				<button className="btn btn-secondary text-uppercase"	>
+					See what we've achieved
+				</button>
+				<a className='text-uppercase mt-3' href="#">Join the good-loop movement</a>
+			</div>
 		</div>
 		<WiderImpactQuote campaign={campaignPage} />
 	</>);
