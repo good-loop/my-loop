@@ -18,6 +18,7 @@ img {
 .landing-bg {
 	// using vh as splash height will mess up in shorter viewpoint
 	height: 40em;
+	@media (min-width: 2600px) { height: 50em; }
 
 	.left-padding {
 		padding-left: 10%;
@@ -38,6 +39,9 @@ img {
 
 		// Hack: Make Splash Text *mostly* stay in pink area
 		margin-right: 0;
+		@media (min-width: 2600px) {
+			margin-left: 10em;
+		}
 		@media (max-width: 1700px) {margin-right: -16em;}
 		@media (max-width: 1500px) {
 			margin-right: -20em;

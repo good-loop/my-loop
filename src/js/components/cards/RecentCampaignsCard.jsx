@@ -101,7 +101,7 @@ const RecentCampaignsCard = () => {
 				<TVAdPlayer adid={adid} className="col-md-6" title={title}/>
 				<Col md={6} className="flex-column align-items-center text-center justify-content-center pt-3 pt-md-0">
 					<h3 className="mb-0">This ad raised {dntn ? <Counter currencySymbol="£" sigFigs={4} amount={dntn} minimumFractionDigits={2} preservePennies /> : "money"}</h3>
-					<a className="btn btn-primary mt-3" href={url}>Find out more</a>
+					<a className="btn btn-primary mt-3 mx-3" href={url}>Discover How</a>
 				</Col>
 			</Row>))}
 		</div>

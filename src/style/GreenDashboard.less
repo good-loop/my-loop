@@ -112,12 +112,12 @@
 		font-size: 2.5vh;
 		.branding {
 			height: 4em;
-			padding: 0.25em;
+			padding: 0.5em 1.25em;
 			border-radius: 2em;
 			background-color: white;
 			img {
 				position: relative;
-				height: 3.5em;
+				height: 3em;
 			}
 		}
 		.big-number {
@@ -371,6 +371,9 @@
 		}
 		.carousel-control-prev, .carousel-control-next {
 			height: 80%; // Match prev/next button height to photos for prettier vertical centring
+			@media (max-width: 767px) {
+				height: 58vw;
+			}
 		}
 	}
 
