@@ -109,13 +109,13 @@ const RecentCampaignsCard = () => {
 };
 
 const TVAdPlayer = ({adid, className, title}) => {
-	const size = "landscape";
+	const size = "landscape";	
 	return <div className={space("position-relative", className)}>
+		{/* why the two img tags?? Couldn't a background image and padding be used? */}
 		<img src="/img/LandingBackground/iphone-mockup-landscape.svg" className="w-100 invisible"/>
-		{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
 		<img src="/img/LandingBackground/iphone-mockup-landscape.svg" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "49.7%", width: "91.5%", top: "55%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }}/>
 		<div className="position-absolute tv-ad-player">
-			<GoodLoopUnit vertId={adid} size={size} title={title}/>
+			<GoodLoopUnit vertId={adid} size={size} title={title} useScreenshot="landscape" />
 		</div>
 	</div>;
 };
