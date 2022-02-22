@@ -34,24 +34,6 @@ window.toRobinson = toRobinson;
 
 const mapProjects = [
 	{
-		placeName: 'Kenya',
-		desc: 'Reforestation projects in Kenya',
-		img: '/img/green/project-thumb-kenya.jpg',
-		marker: '/img/green/marker-tree.svg',
-		arrow: 'bottom-right',
-		lat: 0.45,
-		long: 38.14,
-	},
-	{
-		placeName: 'Mozambique',
-		desc: 'Reforestation projects in Mozambique',
-		img: '/img/green/project-thumb-mozambique.jpg',
-		marker: '/img/green/marker-tree.svg',
-		arrow: 'right',
-		lat: -17.58,
-		long: 35.54,
-	},
-	{
 		placeName: 'Madagascar',
 		desc: 'Reforestation projects in Madagascar',
 		img: '/img/green/project-thumb-madagascar.jpg',
@@ -91,6 +73,24 @@ const mapProjects = [
 				footnote: 'https://www.theguardian.com/environment/2021/nov/04/can-blue-carbon-make-offsetting-work-these-pioneers-think-so',
 			}
 		]
+	},
+	{
+		placeName: 'Kenya',
+		desc: 'Reforestation projects in Kenya',
+		img: '/img/green/project-thumb-kenya.jpg',
+		marker: '/img/green/marker-tree.svg',
+		arrow: 'bottom-right',
+		lat: 0.45,
+		long: 38.14,
+	},
+	{
+		placeName: 'Mozambique',
+		desc: 'Reforestation projects in Mozambique',
+		img: '/img/green/project-thumb-mozambique.jpg',
+		marker: '/img/green/marker-tree.svg',
+		arrow: 'right',
+		lat: -17.58,
+		long: 35.54,
 	}
 ];
 
@@ -109,7 +109,7 @@ const ProjectSlides = ({project}) => {
 
 	return <>
 		<Button size="sm" className="project-more-info" onClick={openCarousel}>More Info</Button>
-		<Modal className="green-map-modal" isOpen={open} toggle={() => setOpen(current => !current)}>
+		<Modal className="green-map-modal" centered isOpen={open} toggle={() => setOpen(current => !current)}>
 			<ModalBody className="project-slides">
 				<Carousel activeIndex={currentSlide} previous={prev} next={next}>
 					{project.slides.map((slide, i) => (
@@ -131,9 +131,9 @@ const ProjectSlides = ({project}) => {
 const ProjectMarker = ({project, active, setActive, index}) => {
 	const coords = toRobinson(project.lat, project.long);
 	const style = {left: `${coords[0]}%`, top: `${coords[1]}%`};
-	
+	const key = `${project.desc}: ${project.lat}N ${project.long}E`;
 	return <>
-		<div className={space('project-marker', `arrow-${project.arrow}`, active && 'active')} style={style} onClick={() => setActive(index)} key={`${project.desc}: ${project.lat}N ${project.long}E`}>
+		<div className={space('project-marker', `arrow-${project.arrow}`, active && 'active')} style={style} onClick={() => setActive(index)} key={key}>
 			<img className="photo" src={project.img} />
 			<div className="desc">
 				{project.desc}
@@ -158,7 +158,7 @@ const ProjectMarker = ({project, active, setActive, index}) => {
 				<path d="M 10,0 V 10 L 0,5 Z" />
 			</svg>
 		</div>
-		<a className={space('project-marker-mobile', active && 'active')} style={style} onClick={() => setActive(index)}>
+		<a className={space('project-marker-mobile', active && 'active')} style={style} onClick={() => setActive(index)} key={key + ' mobile'}>
 			<img src="/img/green/tree.svg" />
 		</a>
 	</>;
@@ -188,7 +188,7 @@ const GreenMap = () => {
 				<path d="M 0,0 V 310 H 2560 V 34 C 1938.7303,249.1461 1390.9943,536.0566 0,0 Z" />
 			</svg>
 		</div>
-		<div className="project-descriptions-mobile bg-greenmedia-darkcyan">
+		<div className="project-descriptions-mobile bg-greenmedia-darkcyan pt-4">
 			{projectMarkers}
 		</div>
 	</>;

@@ -48,7 +48,7 @@ const GreenLanding = ({ }) => {
 	}
 	const campaign = pvCampaign.value;
 	// TODO only fetch eco charities
-	let dntn4charity = Campaign.dntn4charity(campaign);
+	let dntn4charity = {} || Campaign.dntn4charity(campaign);
 	console.log(dntn4charity);
 	let co2 = campaign.co2 || 'XXXX';
 	let trees = campaign.offsets && campaign.offsets[0] && campaign.offsets[0].n || 'XXXX';
@@ -96,38 +96,38 @@ const GreenLanding = ({ }) => {
 					<a className="btn splash-explore" onClick={scrollToMap}>EXPLORE OUR IMPACT</a>
 				</div>
 			</div>
-			<div className="mission pb-1">
+			<div className="mission py-4">
 				<Container>
-					<h2>HELPING BRANDS GO GREEN WITH GOOD-LOOP</h2>
-					<p className='leader-text'>The internet has a larger carbon footprint than the entire airline industry, and digital media is fuelling this. But we’re here to help.</p>
-					<p className='leader-text'>Thanks to our green media products that help measure, offset and improve the carbon footprint of digital advertising, we’re helping the industry make changes to become carbon negative.</p>
+					<h2 className="mb-4">HELPING BRANDS GO GREEN WITH GOOD-LOOP</h2>
+					<p className="leader-text mb-4">The internet has a larger carbon footprint than the entire airline industry, and digital media is fuelling this. But we’re here to help.</p>
+					<p className="leader-text">Thanks to our green media products that help measure, offset and improve the carbon footprint of digital advertising, we’re helping the industry make changes to become carbon negative.</p>
 				</Container>
 			</div>
 
 			<GreenMap />
 			
-			<div className="partnerships">
+			<div className="partnerships py-4">
 				<h2>CLIMATE POSITITIVE PARTNERSHIPS</h2>
 				<Container>
-					<Row className="logos mb-4">
-						<Col xs="12" sm="6">
-							<img className="logo eden-logo" src="/img/green/eden-projects-logo.svg" />
+					<Row className="logos py-4">
+					<Col xs="12" sm="6">
+							<img className="logo ecologi-logo" src="img/green/ecologi-logo.svg" />
 						</Col>
 						<Col xs="12" sm="6">
-							<img className="logo ecologi-logo" src="img/green/ecologi-logo.svg" />
+							<img className="logo eden-logo" src="/img/green/eden-projects-logo.svg" />
 						</Col>
 					</Row>
 					<Row className="partnership carbon no-gutters mb-4">
 						<Col className="partner-image" xs="12" sm="6">
 							<img src="/img/green/ecologi-wind-farm-thailand.jpg" />
 						</Col>
-						<Col className="partner-text" xs="12" sm="6">
+						<Col className="partner-text p-4" xs="12" sm="6">
 							<h2>OFFSETTING CARBON</h2>
 							<p>We help brands measure their digital campaign’s carbon costs in real time and see how they can reduce their footprint with our exciting new Green Ad Tag.</p>
 						</Col>
 					</Row>
 					<Row className="partnership trees no-gutters">
-						<Col className="partner-text" xs="12" sm="6">
+						<Col className="partner-text p-4" xs="12" sm="6">
 							<h2>PLANTING TREES</h2>
 							<p>Our Green Media products plant trees via Eden Reforestation Projects where reforestation has a positive and long-lasting environmental and socio-economic impact.</p>
 						</Col>

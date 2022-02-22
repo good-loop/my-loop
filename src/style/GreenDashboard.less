@@ -180,6 +180,10 @@
 		width: 20em;
 		height: 8em;
 		filter: drop-shadow(0 0.2em 0.2em rgba(0, 0, 0, 0.4));
+
+		&.active {
+			z-index: 1;
+		}
 		
 		.photo, .desc {
 			display: flex;
@@ -268,11 +272,14 @@
 		width: 2em;
 		margin: -1em 0 0 -1em; // Bump up and left to centre on origin
 		padding: 0.2em;
+		&.active {
+			border: 1px solid @greenmedia-darkcyan;
+		}
 	}
 
 	// Second list of project descriptions for display on mobile
 	.project-descriptions-mobile {
-		display: none;
+		display: none; // default off
 	}
 
 	.partnerships {
@@ -290,6 +297,9 @@
 		.partner-text {
 			color: black;
 			background-color: white;
+			h1, h2, h3 {
+				color: @greenmedia-darkcyan;
+			}
 		}
 		.partner-image {
 			img {
@@ -323,6 +333,8 @@
 		.map-markers {
 			width: 300%;
 			margin-left: -120%;
+			margin-top: -15vw;
+			margin-bottom: -50vw;
 		}
 
 		// Show the project markers instead of full description bubbles on the map
@@ -337,11 +349,12 @@
 			display: block;
 			.project-marker {
 				position: relative;
-				margin: auto !important;
+				margin: auto;
+				margin-top: 1em;
 				top: 0 !important;
 				left: 0 !important;
 				.pointer {
-					display: none !important;
+					display: none;
 				}
 			}
 		}
@@ -353,6 +366,9 @@
 	// Modal with carousel of deeper description & photos from project
 	.project-slides {
 		height: 80vh;
+		@media (max-width: 767px) {
+			height: unset; // Take natural height on mobile
+		}
 		.carousel-control-prev, .carousel-control-next {
 			height: 80%; // Match prev/next button height to photos for prettier vertical centring
 		}
