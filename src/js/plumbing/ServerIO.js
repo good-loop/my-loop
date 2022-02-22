@@ -27,7 +27,7 @@ ServerIO.NO_API_AT_THIS_HOST = true;
 ServerIO.AS_ENDPOINT = 'https://as.good-loop.com';
 ServerIO.PORTAL_ENDPOINT = 'https://portal.good-loop.com';
 
-ServerIO.MEDIA_ENDPOINT = 'https://uploads.good-loop.com/';
+ServerIO.MEDIA_ENDPOINT = 'https://uploads.good-loop.com';
 
 // Useful where relative links can not be used (eg inline-CSS 'url' image links)
 ServerIO.MYLOOP_ENDPONT = `${C.HTTPS}://${C.SERVER_TYPE}my.good-loop.com`;
