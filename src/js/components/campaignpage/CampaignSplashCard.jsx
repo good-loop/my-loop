@@ -86,7 +86,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 				<button className="btn btn-secondary text-uppercase"	>
 					See what we've achieved
 				</button>
-				<a className='text-uppercase mt-3' href="#">Join the good-loop movement</a>
+				<a className='text-uppercase mt-3' href="/tabsforgood">Join the good-loop movement</a>
 			</div>
 		</div>
 		<WiderImpactQuote campaign={campaignPage} />
