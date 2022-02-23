@@ -353,10 +353,10 @@ const TestimonialSectionTitle = () => {
 
 const TestimonialSectionLower = () => {
 	return(<>
-		<div className="testimonial-lower">
+		<div className="testimonial-lower" style={{marginTop:-180}}>
 			<img src="/img/curves/curve-dark-turquoise-bottom.svg" className="w-100 d-none d-md-block"/>
 			<div className="container">
-				<div className="testimonial-card my-0 my-md-5">
+				<div className="testimonial-card my-0 mb-md-5">
 					<div className="row">
 						<div className="col-md-6 p-0">
 							<img className='w-100 h-100' src="/img/homepage/photo-by-priscilla-du-preez-unsplash.jpg" alt="" />

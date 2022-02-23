@@ -217,7 +217,11 @@ img {
 		color: white;
 	}
 
-	.testimonial-upper > * {margin-bottom: 2rem;}
+	.testimonial-upper {
+		& > * {margin-bottom: 2rem;}
+		position: relative;
+		z-index: 999;
+	}
 }
 
 .testimonial-lower {
