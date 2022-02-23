@@ -460,9 +460,9 @@ const WatchVideoSection = () => {
 			<img className='w-100 my-5' src="img/homepage/video.png" alt="" />
 			<p className='leader-text'>We’re working with fantastic brands that want to join us in making the internet a more positive place. <br/><br/>
 			The way we’re doing it couldn’t be simpler. We just need the final piece of the puzzle to make it happen – you. Sign up and join the Good-Loop movement today. </p>
-			<RegisterLink className="btn btn-primary mt-5">
-				Sign up for the Tabs For Good
-			</RegisterLink>
+			<div className="mt-5 mx-5">
+				<T4GCTA className="mx-5"/>
+			</div>
 			{/* <p className='our-story black m-5 pb-5'>Want to learn more? Check out <a href="#">OUR STORY</a></p> */}
 		</div>
 	</PageCard>
