@@ -457,7 +457,7 @@ const WatchVideoSection = () => {
 	return(<>
 	<PageCard className="watch-video-section">
 		<div className="text-center">
-			<h1 className='pt-5'>WATCH TO SEE HOW WE’RE CREATING A MOVEMENT</h1>
+			<h1 className='pt-5'>Watch To See How We’re Creating A Movement</h1>
 			<img className='w-100 my-5' src="img/homepage/video.png" alt="" />
 			<img src="/img/green/hummingbird.png" className='hummingbird d-none d-md-block'/>
 			<img src="/img/signup/hand-globe-coins.png" className='hand-globe-coins d-none d-md-block' />
