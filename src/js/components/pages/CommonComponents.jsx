@@ -241,7 +241,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 				{images[i]}
 			</Col>
 			<Col md={6} className="slide-right p-5">
-				<div key={i} className='d-flex flex-column justify-content-between h-100'>
+				<div key={i} className='d-flex flex-column justify-content-between h-100 p-3'>
 					<h3>{titles[i]}</h3>
 					<div className='slide-content'>
 						{content}
