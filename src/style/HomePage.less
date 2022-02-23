@@ -15,6 +15,12 @@ img {
 	top: 10%;
 }
 
+.splash-top-margin {
+	@media @md-min {
+		margin-top: 3em;
+	}
+}
+
 .landing-bg {
 	// using vh as splash height will mess up in shorter viewpoint
 	height: 40em;
@@ -45,7 +51,7 @@ img {
 		@media (max-width: 1700px) {margin-right: -16em;}
 		@media (max-width: 1500px) {
 			margin-right: -20em;
-			margin-top: -3em;
+			// margin-top: -3em;
 			.title p {font-size: 1.2rem;}
 		}
 		@media (max-width: 1300px) {

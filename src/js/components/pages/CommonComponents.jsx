@@ -116,10 +116,10 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 	return (<>
 		<MyLandingBackgroundImage bgImg={bgImg}>
 			<Container fluid className={space("d-flex", !shiftLeft ? "justify-content-center" : "left-padding")}>
-				<Row className="mb-3 mt-5">
+				<Row className="splash-top-margin">
 						{!shiftLeft && <Col md={1} sm={0} /* left padding, but not on mobile */></Col>}
 						<Col md={6} className="landing-left">
-								<div className="title mt-5"> 
+								<div className="title"> 
 									<h1 className='text-left bolder'>{title}</h1>
 									<p className='leader-text nomargin'>{text}</p>
 								</div>
