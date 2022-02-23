@@ -6,6 +6,7 @@ import { getDataItem } from '../../base/plumbing/Crud';
 import DataStore from '../../base/plumbing/DataStore';
 import { modifyPage } from '../../base/plumbing/glrouter';
 import C from '../../C';
+import { space } from '../../base/utils/miscutils';
 import CharityLogo from '../CharityLogo';
 import { setFooterClassName } from '../Footer';
 import { T4GCTA } from '../T4GSignUp';
@@ -31,6 +32,27 @@ const WellMakeItHappenSection = () => {
 	</>
 };
 
+const PositivePlace123Section = ({className, showCTA}) => {
+	return <PageCard className={space("positive-place-section text-center", className)}>
+		<h1 className='pt-5'>Let's make the internet a more positive place. Together.</h1>
+		<Row className="pt-5 d-flex justify-content-around">
+			<Col md={3} className="video-points">
+				<img className='w-50' src="img/icons/one.png" alt="" />
+				<h3 className='pt-4'>Sign up for Tabs for Good</h3>
+			</Col>
+			<Col md={3} className="video-points">
+				<img className='w-50' src="img/icons/two.png" alt="" />
+				<h3 className='pt-4'>Pick the charity you want to support</h3>
+			</Col>
+			<Col md={3} className="video-points">
+				<img className='w-50' src="img/icons/three.png" alt="" />
+				<h3 className='pt-4'>Start browsing and raise money for charity. For free.</h3>
+			</Col>
+		</Row>
+		{showCTA && <T4GCTA className="mt-5" />}
+	</PageCard>
+}
+
 const TabsForGoodLandingPage = () => {
 	// switch to a charity page? NB: this is handy for links in sign-up emails
 	if (DataStore.getUrlValue("charity")) {
@@ -49,7 +71,7 @@ const TabsForGoodLandingPage = () => {
 		<HowTabsForGoodWorks />
 		<TabsForGoodSlideSection img="/img/homepage/charities.png" showLowerCTA bgClassName="bg-white" />
 		<WellMakeItHappenSection/>
-		<PositivePlaceSection className="bg-gl-pale-orange" showCTA />
+		<PositivePlace123Section className="bg-gl-pale-orange" showCTA />
 		{/*<TriCards />*/}
 	</>);
 };

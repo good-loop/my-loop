@@ -23,6 +23,7 @@ import {
 	PositivePlaceSection,
 	CurvePageCard
 } from './CommonComponents';
+import { setFooterClassName } from '../Footer';
 
 window.DEBUG = false;
 
@@ -38,7 +39,8 @@ const HomePage = ({spring}) => {
 		if (Object.keys(urlParams).includes('gl.vert')) {
 			window.location.href = `/#campaign/?gl.vert=${urlParams['gl.vert']}`;
 		}
-	});
+		setFooterClassName("bg-white");
+	}, []);
 
 	// <ShareAdCard /> is buggy, so removed for now
 

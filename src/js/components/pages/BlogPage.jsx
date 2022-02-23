@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Col, Container, Row } from 'reactstrap';
 import Misc from '../../base/components/Misc';
 import KStatus from '../../base/data/KStatus';
@@ -9,6 +9,7 @@ import BG from '../../base/components/BG';
 import { CurvePageCard, PageCard } from './CommonComponents';
 import BlogContent from './BlogContent';
 import DataStore from '../../base/plumbing/DataStore';
+import { setFooterClassName } from '../Footer';
 
 const BlogCard = ({page, title, subtitle, thumbnail, date, readTime}) => {
 
@@ -38,6 +39,11 @@ const BlogCard = ({page, title, subtitle, thumbnail, date, readTime}) => {
 };
 
 const BlogPage = () => {
+
+	useEffect(() => {
+		setFooterClassName("bg-white");
+	}, []);
+
 	// Is this for a page?
 	const path = DataStore.getValue(['location', 'path']);
 	let pageUrl = path[1];
