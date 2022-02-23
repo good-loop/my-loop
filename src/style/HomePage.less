@@ -217,11 +217,19 @@ img {
 		color: white;
 	}
 
-	.testimonial-upper > * {margin-bottom: 2rem;}
+	.testimonial-upper {
+		& > * {margin-bottom: 2rem;}
+		position: relative;
+		z-index: 999;
+	}
 }
 
 .testimonial-lower {
-	margin-top: -2em;
+	margin-top: -170px;
+
+	@media @width-mobile {
+		margin-top: 0;
+	}
 
 	background-image: url("/img/green/world-map.svg");
 	background-repeat: no-repeat;
