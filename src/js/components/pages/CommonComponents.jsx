@@ -132,7 +132,7 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 										</button>
 								</div>
 						</Col>
-						{shiftLeft && <Col md={6} className='d-none d-xl-block'></Col>}
+						{shiftLeft && <Col md={6} className='d-none d-xl-block' style={{zIndex:'-99'}}></Col>}
 				</Row>
 			</Container>
 		</MyLandingBackgroundImage>
@@ -278,7 +278,8 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 				<Row className="mt-5">
 					<Col md={4} className='pt-2 pt-md-0'> 
 						<div className="tricard-inner">
-							<img className='w-100' src={(ngo && ngo.logo) || "img/TabsForGood/fifty-card.png"} alt="" />
+							{/* <img className='w-100' src={(ngo && ngo.logo) || "img/TabsForGood/fifty-card.png"} alt="" /> */}
+							<img className='w-100' src={(ngo ? "../img/TabsForGood/fifty-card.png" : "img/TabsForGood/fifty-card.png")} alt="" />
 							<div className='p-3'>
 								<h3>Donate 50% of online ad fees to {name}</h3>
 							</div>
@@ -286,7 +287,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 					</Col>
 					<Col md={4} className='pt-2 pt-md-0'>
 						<div className="tricard-inner">
-							<img className='w-100' src={(ngo && ngo.images) || "img/TabsForGood/world-card.png"} alt="" />
+							<img className='w-100' src={(ngo ? "../img/TabsForGood/world-card.png" : "img/TabsForGood/world-card.png")} alt="" />
 							<div className='p-3'>
 								<h3>{ngo ? "Let's help "+name+" do even more good. Together." : "Give that money to a charity of your choice"}</h3>
 							</div>
@@ -294,7 +295,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 					</Col>
 					<Col md={4} className='pt-2 pt-md-0'>
 						<div className="tricard-inner">
-							<img className='w-100' src="img/TabsForGood/girl-card.png" alt="" />
+							<img className='w-100' src="../img/TabsForGood/girl-card.png" alt="" />
 							<div className='p-3'>
 								<h3>Do good without taking up any time or effort</h3>
 							</div>
