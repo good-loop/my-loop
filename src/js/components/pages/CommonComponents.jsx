@@ -341,7 +341,7 @@ const TestimonialSectionTitle = () => {
 	<div className="testimonial-title">
 		<div className="container">
 			<div className="testimonial-upper text-center">
-				<h1>TOGETHER WE'VE RAISED OVER £3.9 MILLION!</h1>
+				<h1>Together we've raised over £3.9 million!</h1>
 				<p className='leader-text'>We donate to charities worldwide. Spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
 				{/* <a className='btn btn-primary text-uppercase' href="#">Explore our charity impact</a> */}
 			</div>
@@ -353,7 +353,7 @@ const TestimonialSectionTitle = () => {
 
 const TestimonialSectionLower = () => {
 	return(<>
-		<div className="testimonial-lower" style={{marginTop:-180}}>
+		<div className="testimonial-lower">
 			<img src="/img/curves/curve-dark-turquoise-bottom.svg" className="w-100 d-none d-md-block"/>
 			<div className="container">
 				<div className="testimonial-card my-0 mb-md-5">
