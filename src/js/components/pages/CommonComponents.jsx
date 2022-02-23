@@ -437,15 +437,18 @@ const PositivePlaceSection = ({className, showCTA}) => {
 		<Row className="pt-5 d-flex justify-content-around">
 			<Col md={3} className="video-points">
 				<img className='w-50' src="img/icons/fifty-percent.png" alt="" />
-				<h3 className='pt-4'>50% of online ad fees donated to charity </h3>
+				<h3 className='pt-4'>Supporting charity</h3>
+				<p className="white">50% of online ad fees donated to charity</p>
 			</Col>
 			<Col md={3} className="video-points">
 				<img className='w-50' src="img/icons/world-hand.png" alt="" />
-				<h3 className='pt-4'>Helping brands offset their digital carbon footprint</h3>
+				<h3 className='pt-4'>Planet positive</h3>
+				<p className="white">Helping brands offset their digital carbon footprint</p>
 			</Col>
 			<Col md={3} className="video-points">
 				<img className='w-50' src="img/icons/padlock.png" alt="" />
-				<h3 className='pt-4'>Keeping your online privacy safe no matter what</h3>
+				<h3 className='pt-4'>Privacy friendly</h3>
+				<p className="white">Keeping your online privacy safe no matter what</p>
 			</Col>
 		</Row>
 		{showCTA && <T4GCTA className="mt-5" />}

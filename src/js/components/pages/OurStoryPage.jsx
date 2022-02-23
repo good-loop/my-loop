@@ -79,7 +79,7 @@ const CaringCommunitySection = ({className}) => {
 				<Row className="pt-5">
 					<Col md={4} >
 						<img className='w-50' src="/img/icons/fifty-percent.png" alt="" />
-						<h3 className='pt-4'>Give 50% of Ad money to chairty </h3>
+						<h3 className='pt-4'>Give 50% of Ad money to charity </h3>
 					</Col>
 					<Col md={4} >
 						<img className='w-50' src="/img/icons/padlock.png" alt="" />
