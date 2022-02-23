@@ -132,7 +132,7 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 										</button>
 								</div>
 						</Col>
-						{shiftLeft && <Col md={6}></Col>}
+						{shiftLeft && <Col md={6} className='d-none d-xl-block'></Col>}
 				</Row>
 			</Container>
 		</MyLandingBackgroundImage>
