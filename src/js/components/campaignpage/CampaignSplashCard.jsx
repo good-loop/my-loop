@@ -83,10 +83,10 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 			</div>
 			<DraftBanner status={status} />
 			<div className="splash-cta d-flex flex-column">
-				<button className="btn btn-secondary text-uppercase"	>
+				<button className="btn btn-secondary text-uppercase">
 					See what we've achieved
 				</button>
-				<a className='text-uppercase mt-3 white' href="/tabsforgood">Join the good-loop movement</a>
+				<a className='text-uppercase mt-3 join' href="/tabsforgood">Join the good-loop movement</a>
 			</div>
 		</div>
 		<WiderImpactQuote campaign={campaignPage} />

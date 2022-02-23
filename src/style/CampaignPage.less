@@ -48,6 +48,10 @@ body {
 			background-color: #ffffff;
 		}
 
+		@media @width-mobile {
+			margin-bottom: 3rem;
+		}
+
 		.splash-curve {
 			position: absolute;
 			top: 0;
@@ -216,6 +220,20 @@ body {
 			top: 80%;
 			z-index: 99;
 			width: 20rem;
+			.join {
+				color: white;
+			}
+			@media @width-mobile {
+				position:relative;
+				transform: unset;
+				left: unset;
+				top: unset;
+				width: 100%;
+				margin-top: 1rem;
+				.join {
+					color: black;
+				}
+			}
 		}
 	} // ./impact-hub-splash
 
