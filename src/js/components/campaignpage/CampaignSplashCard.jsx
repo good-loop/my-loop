@@ -2,7 +2,7 @@ import React from 'react';
 import Counter from '../../base/components/Counter';
 import WhiteCircle from './WhiteCircle';
 import printer from '../../base/utils/printer';
-import { space } from '../../base/utils/miscutils';
+import { space, scrollTo } from '../../base/utils/miscutils';
 import ShareButton from '../ShareButton';
 import DevLink from './DevLink';
 import MDText from '../../base/components/MDText';
@@ -83,7 +83,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 			</div>
 			<DraftBanner status={status} />
 			<div className="splash-cta d-flex flex-column">
-				<button className="btn btn-secondary text-uppercase">
+				<button className="btn btn-secondary text-uppercase" onClick={e => scrollTo("our-impact")}>
 					See what we've achieved
 				</button>
 				<a className='text-uppercase mt-3 join' href="/tabsforgood">Join the good-loop movement</a>

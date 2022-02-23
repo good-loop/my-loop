@@ -64,7 +64,7 @@ const CharitiesSection = ({ charities, donation4charity, campaign }) => {
 	};
 
 	return (
-		<div className="charity-card-container bg-gl-light-pink">
+		<div id="our-impact" className="charity-card-container bg-gl-light-pink">
 			<div className="py-5">
 				<h2>Our Impact</h2>
 			</div>
