@@ -122,7 +122,7 @@ const MyGetInvolvedSection = () =>{
 		<p className='leader-text'>We're developing exciting new products that will help us all make the internet a more positive place. Register below to get exlusive access to future product launches and join the Good-Loop movement.</p>
 		<SubscriptionForm purpose="preregister" />
 	</PageCard>
-	</>)
+	</>) 
 }
 
 export const OurStoryPage = () => {

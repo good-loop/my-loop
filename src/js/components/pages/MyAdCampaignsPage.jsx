@@ -13,7 +13,7 @@ const MyAdCampaignsPage = () => {
 				<BG src="img/curves/curve-white.svg" className="curves"/>
 			</BG>
 			<PageCard className="pt-0" style={{marginTop:"-20%"}} color="white">
-				<h1>Ad campaigns</h1>
+				<h1 className='text-uppercase'>Ad campaigns</h1>
 				<p className='leader-text'>See how we've helped these brands raise over {C.DONATIONS_TOTAL} for charity. All thanks to you.</p>
 				<RecentCampaignsCard/>
 			</PageCard>

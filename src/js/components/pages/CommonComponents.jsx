@@ -287,7 +287,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 					</Col>
 					<Col md={4} className='pt-2 pt-md-0'>
 						<div className="tricard-inner">
-							<img className='w-100' src={(ngo ? "../img/TabsForGood/world-card.png" : "img/TabsForGood/world-card.png")} alt="" />
+							<img className='w-100 bg-gl-light-pink' src={(ngo ? "../img/TabsForGood/world-card.png" : "img/TabsForGood/world-card.png")} alt="" />
 							<div className='p-3'>
 								<h3>{ngo ? "Let's help "+name+" do even more good. Together." : "Give that money to a charity of your choice"}</h3>
 							</div>
@@ -459,12 +459,12 @@ const WatchVideoSection = () => {
 		<div className="text-center">
 			<h1 className='pt-5'>WATCH TO SEE HOW WE’RE CREATING A MOVEMENT</h1>
 			<img className='w-100 my-5' src="img/homepage/video.png" alt="" />
+			<img src="/img/green/hummingbird.png" className='hummingbird d-none d-md-block'/>
+			<img src="/img/signup/hand-globe-coins.png" className='hand-globe-coins d-none d-md-block' />
 			<div className="mx-5">
 				<p className='leader-text'>We’re working with fantastic brands that want to join us in making the internet a more positive place. <br/><br/>
 				The way we’re doing it couldn’t be simpler. We just need the final piece of the puzzle to make it happen – you. Sign up and join the Good-Loop movement today. </p>
-				<div className="mt-5 mx-5">
-					<T4GCTA className="mx-5"/>
-				</div>
+				<T4GCTA className="mx-5 mt-5"/>
 				{/* <p className='our-story black m-5 pb-5'>Want to learn more? Check out <a href="#">OUR STORY</a></p> */}
 			</div>
 			
