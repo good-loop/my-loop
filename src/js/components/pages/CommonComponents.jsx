@@ -315,11 +315,11 @@ const NewsAwards = ({children}) => {
 	let thirdLink="https://www.forbes.com/sites/afdhelaziz/2020/06/25/goodloop-an-ethical-advertising-platform-that-allows-brands-to-spend-media-dollars-and-do-good-at-the-same-time-launches-in-the-united-states/?sh=22ac280c3987";
 
 	return(
-		<PageCard>
+		<PageCard className="py-3">
 			<div className="text-center">
 				{children}
 				<div className="row">
-					<div className="col v-centre d-none d-md-flex"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>
+					<div className="col align-items-center justify-content-center d-none d-md-flex"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>
 					<div className="col">
 						<LinkOut href={firstLink}><img className='logo logo-xl' src={firstIMG} alt="" /></LinkOut>
 					</div>
@@ -329,7 +329,7 @@ const NewsAwards = ({children}) => {
 					<div className="col">
 						<LinkOut href={thirdLink}><img className='logo logo-xl' src={thirdIMG} alt="" /></LinkOut>
 					</div>
-					<div className="col v-centre d-none d-md-flex"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>
+					<div className="col align-items-center justify-content-center d-none d-md-flex"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>
 				</div>
 			</div>
 		</PageCard>
@@ -433,16 +433,16 @@ const Circle = ({className, color="bg-light", width,children}) => {
 const PositivePlaceSection = ({className, showCTA}) => {
 	return <PageCard className={space("positive-place-section text-center", className)}>
 		<h1 className='pt-5'>Let's make the internet a more positive place. Together.</h1>
-		<Row className="pt-5">
-			<Col md={4} className="video-points">
+		<Row className="pt-5 d-flex justify-content-around">
+			<Col md={3} className="video-points">
 				<img className='w-50' src="img/icons/fifty-percent.png" alt="" />
 				<h3 className='pt-4'>50% of online ad fees donated to charity </h3>
 			</Col>
-			<Col md={4} className="video-points">
+			<Col md={3} className="video-points">
 				<img className='w-50' src="img/icons/world-hand.png" alt="" />
 				<h3 className='pt-4'>Helping brands offset their digital carbon footprint</h3>
 			</Col>
-			<Col md={4} className="video-points">
+			<Col md={3} className="video-points">
 				<img className='w-50' src="img/icons/padlock.png" alt="" />
 				<h3 className='pt-4'>Keeping your online privacy safe no matter what</h3>
 			</Col>
@@ -458,12 +458,15 @@ const WatchVideoSection = () => {
 		<div className="text-center">
 			<h1 className='pt-5'>WATCH TO SEE HOW WE’RE CREATING A MOVEMENT</h1>
 			<img className='w-100 my-5' src="img/homepage/video.png" alt="" />
-			<p className='leader-text'>We’re working with fantastic brands that want to join us in making the internet a more positive place. <br/><br/>
-			The way we’re doing it couldn’t be simpler. We just need the final piece of the puzzle to make it happen – you. Sign up and join the Good-Loop movement today. </p>
-			<div className="mt-5 mx-5">
-				<T4GCTA className="mx-5"/>
+			<div className="mx-5">
+				<p className='leader-text'>We’re working with fantastic brands that want to join us in making the internet a more positive place. <br/><br/>
+				The way we’re doing it couldn’t be simpler. We just need the final piece of the puzzle to make it happen – you. Sign up and join the Good-Loop movement today. </p>
+				<div className="mt-5 mx-5">
+					<T4GCTA className="mx-5"/>
+				</div>
+				{/* <p className='our-story black m-5 pb-5'>Want to learn more? Check out <a href="#">OUR STORY</a></p> */}
 			</div>
-			{/* <p className='our-story black m-5 pb-5'>Want to learn more? Check out <a href="#">OUR STORY</a></p> */}
+			
 		</div>
 	</PageCard>
 	</>
@@ -473,9 +476,12 @@ const WatchVideoSection = () => {
 const GetInvolvedSection = () => {
 	return(
 		<PageCard className="get-involved-section text-center bg-gl-light-pink">
-			<h1 className='text-uppercase'>This is just the beginning. sign up and join our movement.</h1>
-			<p className='leader-text'>We’re developing exciting new products that will help us all make the internet a more positive place. Register below to get exclusive access to future product launches and more ways to raise money for charity while you browse.</p>
-			<SubscriptionForm purpose='preregister' />
+			<img src="/img/green/hummingbird.png" className='hummingbird'/>
+			<div className='get-involved-text'>
+				<h1 className='text-uppercase'>This is just the beginning. sign up and join our movement.</h1>
+				<p className='leader-text mt-5'>We’re developing exciting new products that will help us all make the internet a more positive place. Register below to get exclusive access to future product launches and more ways to raise money for charity while you browse.</p>
+				<SubscriptionForm purpose='preregister' />
+			</div>
 			<div className="row pt-5">
 				<div className="col-md-4 get-involved-points">
 					<img className='w-50' src="/img/homepage/globe.png" alt="" />

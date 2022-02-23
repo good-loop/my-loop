@@ -273,6 +273,16 @@ img {
 }
 
 .get-involved-section {
+	.get-involved-text{
+		h1 {
+			font-size: 2rem;
+		}
+		margin: 0 8em;
+		@media @width-mobile {
+			margin: unset;
+		}
+	}
+
 	h3 {
 		color: @gl-dark-turquoise;
 	}
@@ -286,6 +296,15 @@ img {
 			img { width: 130px !important; height: 130px;}
 		}
 	} 
+
+	position: relative;
+	.hummingbird {
+		position: absolute;
+		transform: scaleX(-1);
+		width: 15%;
+		right: 1em;
+		top: 0;
+	}
 }
 
 .tricard-inner {
