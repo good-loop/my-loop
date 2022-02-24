@@ -16,7 +16,7 @@ public class MyLoopMain extends AMain<BasicSiteConfig> {
 	}
 	
 	@Override
-	protected void addJettyServlets(JettyLauncher jl) {		
+	protected void addJettyServlets(JettyLauncher jl) {
 		super.addJettyServlets(jl);
 		jl.addServlet("/*", MetaHtmlServlet.class);
 	}

@@ -38,15 +38,15 @@ const PositivePlace123Section = ({className, showCTA}) => {
 		<Row className="pt-5 d-flex justify-content-around">
 			<Col md={3} className="video-points">
 				<img className='w-50' src="img/icons/one.png" alt="" />
-				<h3 className='pt-4'>Sign up for Tabs for Good</h3>
+				<h3 className='pt-4 sm'>Sign up for Tabs for Good</h3>
 			</Col>
 			<Col md={3} className="video-points">
 				<img className='w-50' src="img/icons/two.png" alt="" />
-				<h3 className='pt-4'>Pick the charity you want to support</h3>
+				<h3 className='pt-4 sm'>Pick the charity you want to support</h3>
 			</Col>
 			<Col md={3} className="video-points">
 				<img className='w-50' src="img/icons/three.png" alt="" />
-				<h3 className='pt-4'>Start browsing and raise money for charity. For free.</h3>
+				<h3 className='pt-4 sm'>Start browsing and raise money for charity. For free.</h3>
 			</Col>
 		</Row>
 		{showCTA && <T4GCTA className="mt-5" />}
@@ -68,8 +68,8 @@ const TabsForGoodLandingPage = () => {
 		<MyLandingSection shiftLeft title={<>Tabs-for-Good<br/>The browser plugin that allows you to do good just by opening a new tab</>} text=" " bgImg="/img/TabsForGood/photo-by-larm-rmah-unsplash.jpg" />
 		<CornerHummingbird/>
 		<WhatIsTabsForGood imgs={['/img/homepage/slide-1.png']} />
-		<HowTabsForGoodWorks />
-		<TabsForGoodSlideSection img="/img/homepage/charities.png" showLowerCTA bgClassName="bg-white" />
+		<HowTabsForGoodWorks className="bg-gl-pale-orange" shortTitle />
+		<TabsForGoodSlideSection img="/img/homepage/charities.png" showLowerCTA bgClassName="bg-gl-light-blue" />
 		<WellMakeItHappenSection/>
 		<PositivePlace123Section className="bg-gl-pale-orange" showCTA />
 		{/*<TriCards />*/}

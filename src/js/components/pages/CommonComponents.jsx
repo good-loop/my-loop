@@ -168,10 +168,10 @@ const CharityBanner = () => {
 };
 
 
-const HowTabsForGoodWorks = ({classname}) => {
+const HowTabsForGoodWorks = ({className, shortTitle}) => {
 	return (
-		<PageCard id="howitworks" className={space("how-tabs-for-good-works text-center", classname)}>
-			<h1>How Tabs For Good Works</h1>
+		<PageCard id="howitworks" className={space("how-tabs-for-good-works text-center", className)}>
+			<h1>{shortTitle ? "Here's how it works" : "How Tabs For Good Works"}</h1>
 			<Row className="pt-5">
 				<Col md={4} className='pt-2 pt-md-0 how-it-works-points'>
 					<img className='w-50' src="/img/icons/laptop.png" alt="" />
