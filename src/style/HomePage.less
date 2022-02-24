@@ -253,13 +253,26 @@ img {
 
 	.testimonial-right {
 		background-color: white;
+		position: relative;
+		padding: 5rem;
+		@media @width-mobile {
+			padding: 2rem;
+		}
 		h3, p {color: @gl-dark-turquoise;}
 		.read-more {
 			font-weight: bold;
 			a {color: @gl-dark-turquoise}
 		}
+		.quote-img {
+			position: absolute;
+			width: 20%;
+			left: 5%;
+			top: 26%;
+		}
 	}
 	.testimonial-right > * {margin-bottom: 2rem;}
+
+	
 
 	@media @width-mobile {
 		background-position-y: 36em;
