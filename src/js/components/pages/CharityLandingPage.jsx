@@ -53,48 +53,51 @@ const HelpCharityTogetherCard = ({ngo}) => {
 };
 
 const SignUpSection = ({ngo}) => {
+	let iconImg = ['../img/icons/one.png', '../img/icons/two.png', '../img/icons/three.png']
+	let iconText = ['Sign up for Tabs For Good', 'Start browsing and raise money for '+ngo.name, 'Help '+ngo.name+'raise money']
+
 	return(
 		<PageCard className="sign-up-section text-center bg-gl-pale-orange">
 			<h1>Sign up today and raise money for {ngo.name}. For free.</h1>
 			{isPortraitMobile() ? <>
 				<Row className="pt-5">
 					<Col xs={6}>
-						<img className='w-50' src="/img/homepage/globe.png" alt="" />
+						<img className='w-50' src={iconImg[0]} alt="" />
 					</Col>
 					<Col xs={6}>
-						<p><b>Sign up for Tabs for Good</b></p>
-					</Col>
-				</Row>
-				<Row className="pt-5">
-					<Col xs={6}>
-						<img className='w-50' src="/img/homepage/heart.png" alt="" />
-					</Col>
-					<Col xs={6}>
-						<p><b>Start browsing and raise money for {ngo.name}</b></p>
+						<p><b>{iconText[0]}</b></p>
 					</Col>
 				</Row>
 				<Row className="pt-5">
 					<Col xs={6}>
-						<img className='w-50' src="/img/homepage/world.png" alt="" />
+						<img className='w-50' src={iconImg[1]} alt="" />
 					</Col>
 					<Col xs={6}>
-						<p><b>Help {ngo.name} raise money</b></p>
+						<p><b>{iconText[1]}</b></p>
+					</Col>
+				</Row>
+				<Row className="pt-5">
+					<Col xs={6}>
+						<img className='w-50' src={iconImg[2]} alt="" />
+					</Col>
+					<Col xs={6}>
+						<p><b>{iconText[2]}</b></p>
 					</Col>
 				</Row>
 				<br/><br/>
 			</> :
 				<Row className="pt-5">
 					<Col md={4}>
-						<img className='w-50' src="/img/homepage/globe.png" alt="" />
-						<h3 className='pt-4'>Sign up for Tabs for Good</h3>
+						<img className='w-50' src={iconImg[0]} alt="" />
+						<h3 className='pt-4'>{iconText[0]}</h3>
 					</Col>
 					<Col md={4}>
-						<img className='w-50' src="/img/homepage/heart.png" alt="" />
-						<h3 className='pt-4'>Start browsing and raise money for {ngo.name}</h3>
+						<img className='w-50' src={iconImg[1]} alt="" />
+						<h3 className='pt-4'>{iconText[1]}</h3>
 					</Col>
 					<Col md={4}>
-						<img className='w-50' src="/img/homepage/world.png" alt="" />
-						<h3 className='pt-4'>Help {ngo.name} raise money</h3>
+						<img className='w-50' src={iconImg[2]} alt="" />
+						<h3 className='pt-4'>{iconText[2]}</h3>
 					</Col>
 				</Row>
 			}
