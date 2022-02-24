@@ -94,7 +94,7 @@ const CharityDetails = ({charities}) => {
 	// Registration numbers for all possible types of reg num for each charity
 	// Include no-reg-info too, so no confusing gaps (and we still have the link)
 	let regNums = charities.map(c => {
-		return <div className="charityInfo" key={c.id}><small>
+		return hasRegNum(c) ? <div className="charityInfo" key={c.id}><small>
 			<b><LinkOut href={c.url}>{c.displayName || c.name}</LinkOut></b>
 			<RegNum label="England & Wales Charity Commission registration number" regNum={c.englandWalesCharityRegNum}/>
 			<RegNum label="Scottish OSCR registration number" regNum={c.scotlandCharityRegNum}/>
@@ -102,7 +102,7 @@ const CharityDetails = ({charities}) => {
 			<RegNum label="UK Companies House number" regNum={c.ukCompanyRegNum}/>
 			<RegNum label="USA registration number (EIN)" regNum={c.usCharityRegNum}/>
 			<br/>
-		</small></div>;
+		</small></div> : null;
 	});
 	// Remove null values
 	regNums = regNums.filter(x => x);
