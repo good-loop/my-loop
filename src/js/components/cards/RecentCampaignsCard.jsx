@@ -39,13 +39,13 @@ const campaignInfos = [
 		vertiser:"1JBFB6K4",
 		title: "Mango advert"
 	},
-	{
-		name: "Cadbury",
-		adid: "qgbiSQ0crN",
-		url: "/campaign/?gl.vertiser=cadbury_bpngtolk",
-		vertiser:"cadbury_bpngtolk",
-		title: "Cadbury advert"
-	},
+	// {
+	// 	name: "Cadbury",
+	// 	adid: "qgbiSQ0crN",
+	// 	url: "/campaign/?gl.vertiser=cadbury_bpngtolk",
+	// 	vertiser:"cadbury_bpngtolk",
+	// 	title: "Cadbury advert"
+	// },
 	{
 		name: "Pantene",
 		adid: "hwtjNncj",
