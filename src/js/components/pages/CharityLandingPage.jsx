@@ -111,7 +111,7 @@ export const JustTheBeginning = () => {
 	return <div className='w-100 bg-gl-pale-orange' style={{marginTop:-100}}>
 		<img src="/img/curves/curve-desat-blue.svg" className='w-100'/>
 		<PageCard className="bg-gl-desat-blue" style={{marginTop:-100}}>
-			<h1 className='white'>This is just the beginning.</h1>
+			<h1 style={{color:"white",fontWeight:'bold'}}>This is just the beginning.</h1>
 			<br/>
 			<p className='white text-center'><b>See what else we're doing and join the Good-Loop movement.</b></p>
 			<br/>
