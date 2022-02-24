@@ -66,7 +66,7 @@ const CharitiesSection = ({ charities, donation4charity, campaign }) => {
 	return (
 		<div id="our-impact" className="charity-card-container bg-gl-light-pink">
 			<div className="py-5">
-				<h2>Our Impact</h2>
+				<h2>This is the different you're making</h2>
 			</div>
 			<Container className="pb-5">
 				{charities.map((charity, i) =>
