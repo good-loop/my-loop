@@ -137,9 +137,9 @@ export const OurStoryPage = () => {
 		{/* TODO <NewsAwards firstIMG="Awards1" secondIMG="Awards2" thirdIMG="Awards3" /> */}
 		<MyGetInvolvedSection classname="" />
 		<TriCards className="TODO bg-gl-light-pink" 
-			firstTitle="Check out our podcast" firstText="Discover... a sentence about this page/article" firstIMG="img/ourstory/podcast-mic.png"
-			secondTitle="Good-Loop for business" secondText="Discover... a sentence about this page/article" secondIMG="img/homepage/good-loop-for-business.png"
-			thirdTitle="Good-Loop for charities" thirdText="Discover... a sentence about this page/article" thirdIMG="img/ourstory/part-of-earth.png"
+			titles={["Check out our podcast", "Good-Loop for business", "Good-Loop for charities"]}
+			texts={["Discover... a sentence about this page/article", "Discover... a sentence about this page/article", "Discover... a sentence about this page/article"]}
+			images={["img/ourstory/podcast-mic.png", "img/homepage/good-loop-for-business.png", "img/ourstory/part-of-earth.png"]}
 		/>
 	</div>
 	</>)

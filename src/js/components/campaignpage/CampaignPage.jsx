@@ -34,6 +34,7 @@ import HowDoesItWork from './HowDoesItWork';
 import NGO from '../../base/data/NGO';
 import { setNavContext, setNavProps } from '../../base/components/NavBar';
 import Messaging, { notifyUser } from '../../base/plumbing/Messaging';
+import { JustTheBeginning } from '../pages/CharityLandingPage'
 
 
 /**
@@ -313,9 +314,8 @@ const CampaignPage = () => {
 						<img src="/img/Graphic_metro.1920w.png" className="w-100" alt="publishers" />
 					)}
 				</div>
-
+				<JustTheBeginning />
 				<SmallPrintInfo ads={ads} charities={charities} campaign={campaign} pvTopItem={pvTopItem} />
-
 			</div>
 		</div>
 	</>;

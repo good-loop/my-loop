@@ -504,35 +504,34 @@ const GetInvolvedSection = () => {
 	)
 };
 
-const TriCards = ({className, firstTitle, firstText, secondTitle, secondText, thirdTitle, thirdText,
-firstIMG, secondIMG, thirdIMG, firstLink="#", secondLink="#", thirdLink="#" }) => {
+const TriCards = ({className, titles, texts, images, links=["#", "#", "#"] }) => {
 	return(
 		<PageCard className={space("tri-card", className)}>
 			<Row className="mt-5">
 				<Col md={4} className='pt-2 pt-md-0'> 
 					<div className="tricard-inner">
-						<img className='w-100' src={firstIMG} alt="" />
+						<img className='w-100' src={images[0]} alt="" />
 						<div className='tricard-text p-3'>
-							<h3>{firstTitle}</h3>
-							<span>{firstText} </span><C.A href={firstLink}>Read More</C.A>
+							<h3>{titles[0]}</h3>
+							<span>{texts[0]} </span><C.A href={links[0]}>Read More</C.A>
 						</div>
 					</div>
 				</Col>
 				<Col md={4} className='pt-2 pt-md-0'>
 					<div className="tricard-inner">
-						<img className='w-100' src={secondIMG} alt="" />
+						<img className='w-100' src={images[1]} alt="" />
 						<div className='tricard-text p-3'>
-							<h3>{secondTitle}</h3>
-							<span>{secondText} </span><C.A href={secondLink}>Read More</C.A>
+							<h3>{titles[1]}</h3>
+							<span>{texts[1]} </span><C.A href={links[1]}>Read More</C.A>
 						</div>
 					</div>
 				</Col>
 				<Col md={4} className='pt-2 pt-md-0'>
 					<div className="tricard-inner">
-						<img className='w-100' src={thirdIMG} alt="" />
+						<img className='w-100' src={images[2]} alt="" />
 						<div className='tricard-text p-3'>
-							<h3>{thirdTitle}</h3>
-							<span>{thirdText} </span><C.A href={thirdLink}>Read More</C.A>
+							<h3>{titles[2]}</h3>
+							<span>{texts[2]} </span><C.A href={links[2]}>Read More</C.A>
 						</div>
 					</div>
 				</Col>
