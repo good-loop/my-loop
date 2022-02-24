@@ -78,7 +78,7 @@ export const T4GCTA = T4GSignUpButton;
 // 		: <C.A className={space(className, "btn btn-info mb-1 mr-2 text-uppercase")} href="/tabsforgood">Get Tabs-for-Good</C.A>;
 // }
 
-export const T4GPluginButton = ({className, label}) => {
+export const T4GPluginButton = ({className, label, dUnset}) => {
 	const browser = getBrowserVendor();
 	if ( ! label) label = <span className='ml-1'>{browser} Store</span>;
 	let href = {
@@ -88,7 +88,7 @@ export const T4GPluginButton = ({className, label}) => {
 	if ( ! href) {
 		return <span className={space(className, "disabled btn btn-secondary")} >Not available for {browser} yet</span>;
 	}
-	return <LinkOut className={space(className, "btn btn-primary d-flex justify-content-center align-items-center")} href={href}><Icon name={browser.toLowerCase()}/> {label}</LinkOut>;
+	return <LinkOut className={space(className, "btn btn-primary", (dUnset ? "d-unset" : "d-flex justify-content-center align-items-center"))} href={href}><Icon name={browser.toLowerCase()}/> {label}</LinkOut>;
 };
 
 
