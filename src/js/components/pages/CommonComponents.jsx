@@ -168,10 +168,10 @@ const CharityBanner = () => {
 };
 
 
-const HowTabsForGoodWorks = ({classname}) => {
+const HowTabsForGoodWorks = ({className, shortTitle}) => {
 	return (
-		<PageCard id="howitworks" className={space("how-tabs-for-good-works text-center", classname)}>
-			<h1>How Tabs For Good Works</h1>
+		<PageCard id="howitworks" className={space("how-tabs-for-good-works text-center", className)}>
+			<h1>{shortTitle ? "Here's how it works" : "How Tabs For Good Works"}</h1>
 			<Row className="pt-5">
 				<Col md={4} className='pt-2 pt-md-0 how-it-works-points'>
 					<img className='w-50' src="/img/icons/laptop.png" alt="" />
@@ -257,7 +257,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 			{showUpperCTA && <div className="upper-cta white">
 				<h1 className='mb-5 white'>Sign Up Today!</h1>
 				<p className='leader-text text-center'>Start transforming your web browsing into life saving vaccines, meals for children in need, preserving habitats for endangered animals, plus many more good causes.</p>
-				<img src="/img/green/hummingbird.png" className='hummingbird'/>
+				<img src="/img/homepage/bird-cloud.png" className='hummingbird'/>
 				<img src="/img/signup/hand-globe-coins.png" className='hand-globe'/>
 				<div className="mt-5">
 					<T4GCTA className="w-50 d-block mx-auto"/>
