@@ -257,7 +257,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 			{showUpperCTA && <div className="upper-cta white">
 				<h1 className='mb-5 white'>Sign Up Today!</h1>
 				<p className='leader-text text-center'>Start transforming your web browsing into life saving vaccines, meals for children in need, preserving habitats for endangered animals, plus many more good causes.</p>
-				<img src="/img/green/hummingbird.png" className='hummingbird'/>
+				<img src="/img/homepage/bird-cloud.png" className='hummingbird'/>
 				<img src="/img/signup/hand-globe-coins.png" className='hand-globe'/>
 				<div className="mt-5">
 					<T4GCTA className="w-50 d-block mx-auto"/>
