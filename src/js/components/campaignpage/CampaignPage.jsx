@@ -304,8 +304,8 @@ const CampaignPage = () => {
 
 				<div className="bg-white">
 					<Container>
-						<h2 className="my-5">Where can you see our ads?</h2>
-						<p className="w-60 mx-auto">Good-Loop distributes ethical online ads to millions of people every month in premium websites across the world’s best publishers and social platforms.</p>
+						<h2 className="my-5">Look out for our ads</h2>
+						<p className="w-60 mx-auto">If you see one of our shiny Good-Loop ads online, remember to engage with it to unlock your charity donation. Together we can raise even more money for good causes.</p>
 					</Container>
 					{isMobile() ? (
 						<img src="/img/Graphic_metro_mobile.800w.png" className="w-100" alt="publishers" />
