@@ -88,7 +88,7 @@ export const T4GPluginButton = ({className, label, dUnset}) => {
 	if ( ! href) {
 		return <span className={space(className, "disabled btn btn-secondary")} >Not available for {browser} yet</span>;
 	}
-	return <LinkOut className={space(className, "btn btn-primary", (dUnset ? "d-unset" : "d-flex justify-content-center align-items-center"))} href={href}><Icon name={browser.toLowerCase()}/> {label}</LinkOut>;
+	return <LinkOut className={space(className, "btn btn-primary", (dUnset ? "d-unset" : "d-flex-block justify-content-center align-items-center"))} href={href}><Icon name={browser.toLowerCase()}/> {label}</LinkOut>;
 };
 
 

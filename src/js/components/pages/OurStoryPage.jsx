@@ -74,34 +74,34 @@ const CaringCommunitySection = ({className}) => {
 				</Col>
 			</Row>
 			</PageCard>
-			<PageCard className={space("text-center bg-gl-light-pink pt-0", className)}>
+			<PageCard className={space("text-center bg-gl-light-pink pt-0 shared-values", className)}>
 				<h1>We're driven by shared values</h1>
 				<Row className="pt-5">
-					<Col md={4} >
-						<img className='w-50' src="/img/icons/fifty-percent.png" alt="" />
-						<h3 className='pt-4'>Give 50% of Ad money to charity </h3>
+					<Col md={4} className='mt-md-0 mt-4' >
+						<img className='w-25' src="/img/icons/fifty-percent.png" alt="" />
+						<h4 className='pt-4'>Give 50% of Ad money to charity </h4>
 					</Col>
-					<Col md={4} >
-						<img className='w-50' src="/img/icons/padlock.png" alt="" />
-						<h3 className='pt-4'>Protect online privacy</h3>
+					<Col md={4} className='mt-md-0 mt-4' >
+						<img className='w-25' src="/img/icons/padlock.png" alt="" />
+						<h4 className='pt-4'>Protect online privacy</h4>
 					</Col>
-					<Col md={4} >
-						<img className='w-50' src="/img/icons/planet.png" alt="" />
-						<h3 className='pt-4'>Do good for the planet</h3>
+					<Col md={4} className='mt-md-0 mt-4' >
+						<img className='w-25' src="/img/icons/planet.png" alt="" />
+						<h4 className='pt-4'>Do good for the planet</h4>
 					</Col>
 				</Row>
 				<Row className="pt-5">
 					<Col md={4} >
-						<img className='w-50' src="/img/icons/handshake.png" alt="" />
-						<h3 className='pt-4'>Be honest and transparent </h3>
+						<img className='w-25' src="/img/icons/handshake.png" alt="" />
+						<h4 className='pt-4'>Be honest and transparent </h4>
 					</Col>
-					<Col md={4} >
-						<img className='w-50' src="/img/icons/world-hand.png" alt="" />
-						<h3 className='pt-4'>Be ethical</h3>
+					<Col md={4} className='mt-md-0 mt-4' >
+						<img className='w-25' src="/img/icons/world-hand.png" alt="" />
+						<h4 className='pt-4'>Be ethical</h4>
 					</Col>
-					<Col md={4} >
-						<img className='w-50' src="/img/icons/heart.png" alt="" />
-						<h3 className='pt-4'>Be decent humans</h3>
+					<Col md={4} className='mt-md-0 mt-4' >
+						<img className='w-25' src="/img/icons/heart.png" alt="" />
+						<h4 className='pt-4'>Be decent humans</h4>
 					</Col>
 				</Row>
 			</PageCard>		
