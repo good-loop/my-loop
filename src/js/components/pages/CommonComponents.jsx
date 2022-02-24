@@ -40,7 +40,7 @@ const CurvePageCard = ({color, className, style, bgClassName, bgImg, bgSize, bgP
 			<img src={"/img/curves/curve-"+color+".svg"} className='w-100' style={{paddingTop:topSpace}}/>
 		</TopComponent>
 		{/* Not using PageCard here */}
-		<div className={space("bg-gl-"+color, className, "pb-5 w-100")}>
+		<div className={space("bg-gl-"+color, className, "pb-3 w-100")}>
 			<Container>
 				{children}
 			</Container>

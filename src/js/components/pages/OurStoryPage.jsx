@@ -27,7 +27,7 @@ const OurStorySplash = () => {
 			<h1>Our Story</h1>
 			<p className='leader-text'>At Good-Loop, we're on a mission to make the internet a more positive place and to make online advertising a more positive force in the world.</p>
 		</CurvePageCard>
-		<PageCard className="text-center">
+		<PageCard className="text-center pt-0">
 			<CardImgLeft imgUrl='img/homepage/amyanddaniel.png' roundedImg>
 				<h3>How it all began</h3>
 				<p>In 2016 our co-founder, Amy Williams put a question out to the advertising world - can we redesign online advertising to make annoying internet ads a force for good in the world?</p>
