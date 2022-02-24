@@ -308,7 +308,7 @@ const ConnectionStatusPopup = () => {
 		>
 			{hasAdBlock && !isOffline && !determining && <>
 				<h3 className="text-dark">It looks like you have AdBlock enabled</h3>
-				<p>We can't raise money for charity without displaying ads. Please <a href="https://my.good-loop.com/#allowlist">disable your adblocker</a> so Tabs for Good can work!</p>
+				<p>We can't raise money for charity without displaying ads. Please <a href="https://my.good-loop.com/#allowlist">disable your adblocker</a> so Tabs-for-Good can work!</p>
 			</>}
 			{isOffline && !determining && <>
 				<h3 className="text-dark">We can't find the internet :(</h3>
@@ -343,14 +343,14 @@ const tutorialPages = [
 	<>
 		<h2>Success!</h2>
 		<p>
-			Thanks for signing up to Tabs for Good!<br />
+			Thanks for signing up to Tabs-for-Good!<br />
 			You are now raising money for your favourite charity every time you open a new tab.
 		</p>
 	</>,
 	<>
 		<h2>It's your choice</h2>
 		<p>
-			Choose the charity you want to support. We will send them 50% of the money that brands pay for their ads on Tabs for Good.
+			Choose the charity you want to support. We will send them 50% of the money that brands pay for their ads on Tabs-for-Good.
 		</p>
 	</>,
 	<>
@@ -362,7 +362,7 @@ const tutorialPages = [
 	<>
 		<h2>Where the money comes from</h2>
 		<p>
-			We generate money by displaying ads at the bottom of each Tabs for Good window. You don't need to click on them for it to work.
+			We generate money by displaying ads at the bottom of each Tabs-for-Good window. You don't need to click on them for it to work.
 		</p>
 	</>,
 	<>

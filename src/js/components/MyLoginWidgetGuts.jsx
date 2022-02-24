@@ -32,7 +32,7 @@ export const MyLoginWidgetGuts = ({services, verb, onLogin, onRegister, canRegis
 					</Col>
 					*/}
 				</Row>
-				<T4GSignUpLink onClick={() => setShowLogin(false)} className="mt-5">Not got an account? Sign up and get Tabs for Good</T4GSignUpLink>
+				<T4GSignUpLink onClick={() => setShowLogin(false)} className="mt-5">Not got an account? Sign up and get Tabs-for-Good</T4GSignUpLink>
 			</div>
 		</div>
 	);

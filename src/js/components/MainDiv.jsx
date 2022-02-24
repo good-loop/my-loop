@@ -113,7 +113,7 @@ const MainDiv = () => {
 	const navPageLabels = {
 		"Our Story":[],
 		"Our Impact": ['Charity Impact', 'Impact Hub', 'Green Media'],
-		"Tabs for Good":[],
+		"Tabs-for-Good":[],
 		"Blog":[]
 	};
 
@@ -131,7 +131,7 @@ const MainDiv = () => {
 		navbarPages={navPageLinks}
 		navbarLabels={navPageLabels}
 		navbarDarkTheme={false}
-		navbarChildren={() => <><T4GCTA>Get Tabs for Good on Desktop</T4GCTA><T4GSignUpModal /></>}
+		navbarChildren={() => <><T4GCTA>Get Tabs-for-Good on Desktop</T4GCTA><T4GSignUpModal /></>}
 		navbarBackgroundColour="white"
 		NavExpandSize="md"
 		// navbarLabels={getNavbarLabels}
@@ -143,7 +143,7 @@ const MainDiv = () => {
 		loginLogo="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png"
 		loginSubtitle="Sign in to see how your web browsing has transformed into charity donations"
 		noSocials
-		loginChildren={() => <div className='text-center'><T4GPluginButton onClick={() => setShowLogin(false)}>Not got an account? Sign up and get Tabs for Good</T4GPluginButton></div>}
+		loginChildren={() => <div className='text-center'><T4GPluginButton onClick={() => setShowLogin(false)}>Not got an account? Sign up and get Tabs-for-Good</T4GPluginButton></div>}
 		LoginGuts={MyLoginWidgetGuts}
 	></MainDivBase>);
 };

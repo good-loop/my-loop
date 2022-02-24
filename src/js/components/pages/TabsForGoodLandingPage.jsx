@@ -38,7 +38,7 @@ const PositivePlace123Section = ({className, showCTA}) => {
 		<Row className="pt-5 d-flex justify-content-around">
 			<Col md={3} className="video-points">
 				<img className='w-50' src="img/icons/one.png" alt="" />
-				<h3 className='pt-4 sm'>Sign up for Tabs for Good</h3>
+				<h3 className='pt-4 sm'>Sign up for Tabs-for-Good</h3>
 			</Col>
 			<Col md={3} className="video-points">
 				<img className='w-50' src="img/icons/two.png" alt="" />

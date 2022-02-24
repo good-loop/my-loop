@@ -140,7 +140,7 @@ const DesktopSignUp = ({charity}) => {
 
 	const SlideItems = [
 		<div className='slide-item text-center align-items-center'>
-			<p className="text-center px-3">Thanks for joining us and getting Tabs for Good. You'll be all set in two simple steps:</p>
+			<p className="text-center px-3">Thanks for joining us and getting Tabs-for-Good. You'll be all set in two simple steps:</p>
 			<Row className='px-5'>
 				<Col md={4}>
 					<h1 style={{fontSize:"1rem"}}>Step 1</h1>
@@ -154,7 +154,7 @@ const DesktopSignUp = ({charity}) => {
 					<h1 style={{fontSize:"1rem"}}>Step 2</h1>
 				</Col>
 				<Col md={8} className='text-left'>
-					We'll take you to the Chrome Store to install the Tabs for Good plugin.
+					We'll take you to the Chrome Store to install the Tabs-for-Good plugin.
 				</Col>
 			</Row>
 		</div>,
@@ -164,11 +164,11 @@ const DesktopSignUp = ({charity}) => {
 		</div>,
 		<div className='slide-item text-center align-items-center'>
 			<img className='w-50 mb-3' src="img/signup/step-3.png" alt="" />
-			<p className='px-3'>Once you're signed up, we'll immeditatly provide you with a link to the Chrome Store where you can add Tabs for Good to your browser </p>
+			<p className='px-3'>Once you're signed up, we'll immeditatly provide you with a link to the Chrome Store where you can add Tabs-for-Good to your browser </p>
 			</div>,
 		<div className='slide-item text-center align-items-center'>
 			<img className='w-50 mb-3' src="img/signup/browse-good.png" alt="" />
-			<p className='px-3'>Once you've installed Tabs for Good, you can feel confident that your browsing is adding up into a force for good</p>
+			<p className='px-3'>Once you've installed Tabs-for-Good, you can feel confident that your browsing is adding up into a force for good</p>
 		</div>
 	];
 

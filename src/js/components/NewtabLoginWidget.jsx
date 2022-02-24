@@ -75,7 +75,7 @@ const NewtabLoginWidget = ({onLogin, onRegister}) => {
 						<p className="mb-3">Already have an account?<br/>Please login to keep track of your results.</p>
 					</> : <>
 						<h4 className="mb-3">Create account</h4>
-						<p className="mb-3">Create an account to track how much you contribute to good causes by using Tabs for Good!</p>
+						<p className="mb-3">Create an account to track how much you contribute to good causes by using Tabs-for-Good!</p>
 					</>}
 					<a className="btn btn-secondary" onClick={e => switchToVerb(e, register ? "login" : "register")}>{register ? "Log in" : "Register"}</a>
 				</Col>
