@@ -10,7 +10,7 @@ import CharityLogo from '../CharityLogo';
 import { SubscriptionForm } from '../cards/SubscriptionBox';
 import Login from '../../base/youagain';
 import BSCarousel from '../../base/components/BSCarousel';
-import { T4GCTA, T4GPluginButton } from '../T4GSignUp';
+import { T4GCTA } from '../T4GSignUp';
 import Roles from '../../base/Roles';
 import { A } from '../../base/plumbing/glrouter';
 
@@ -468,7 +468,7 @@ const WatchVideoSection = () => {
 			<div className="mx-5">
 				<p className='leader-text'>We’re working with fantastic brands that want to join us in making the internet a more positive place. <br/><br/>
 				The way we’re doing it couldn’t be simpler. We just need the final piece of the puzzle to make it happen – you. Sign up and join the Good-Loop movement today. </p>
-				<T4GPluginButton className="mx-5 mt-5" dUnset />
+				<T4GCTA className="mx-5 mt-5" dUnset />
 				{/* <p className='our-story black m-5 pb-5'>Want to learn more? Check out <a href="#">OUR STORY</a></p> */}
 			</div>
 			

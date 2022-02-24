@@ -115,7 +115,7 @@ const MyGetInvolvedSection = () =>{
 		<img src="img/icons/Heart_single.png" className='logo' alt="" />
 		<h1 className='white mb-5'>Get Involved!</h1>
 		<p className='mb-5 leader-text'>Join the My.Good-Loop community today and start raising money for chairty. For free.</p>
-		<T4GSignUpButton />
+		<T4GSignUpButton className="mb-5"/>
 	</PageCard>
 	<img className='w-100 d-none d-md-block' src="img/curves/curve-desat-blue-bottom.svg" alt="" />
 	<PageCard className="container text-center mb-5">
