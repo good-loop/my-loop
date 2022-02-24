@@ -484,7 +484,7 @@ const GetInvolvedSection = () => {
 			<div className='get-involved-text'>
 				<h1>This is just the beginning. sign up and join our movement.</h1>
 				<p className='leader-text mt-5'>We’re developing exciting new products that will help us all make the internet a more positive place. Register below to get exclusive access to future product launches and more ways to raise money for charity while you browse.</p>
-				<SubscriptionForm purpose='preregister' buttonText="REGISTER" />
+				<SubscriptionForm purpose='preregister' buttonText="Register for Updates" />
 			</div>
 			<div className="row pt-5">
 				<div className="col-md-4 get-involved-points">
