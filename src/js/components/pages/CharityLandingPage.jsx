@@ -107,7 +107,7 @@ const SignUpSection = ({ngo}) => {
 	)
 };
 
-const JustTheBeginning = () => {
+export const JustTheBeginning = () => {
 	return <div className='w-100 bg-gl-pale-orange' style={{marginTop:-100}}>
 		<img src="/img/curves/curve-desat-blue.svg" className='w-100'/>
 		<PageCard className="bg-gl-desat-blue" style={{marginTop:-100}}>
@@ -115,7 +115,12 @@ const JustTheBeginning = () => {
 			<br/>
 			<p className='white text-center'><b>See what else we're doing and join the Good-Loop movement.</b></p>
 			<br/>
-			<TriCards/>
+			<TriCards
+				titles={["Tabs For Good", "Ad Campaigns", "Our Story"]}
+				texts={['Raise money for chairty every time you open a new tab', 'Explore more examples of our campaigns', 'Meet the cofounders adn discover the story of Good-Loop']}
+				images={['../img/homepage/slide-1.png', '../img/homepage/adcampaigns.png', '../img/homepage/amyanddaniel.png']}
+				links={['tabsforgood', 'impactoverview', 'ourstory']}
+			/>
 		</PageCard>
 	</div>
 }
@@ -159,7 +164,6 @@ const CharityLandingPage = () => {
 		<TabsForGoodSlideSection ngo={ngo} showLowerCTA bgClassName="bg-gl-light-blue"/>
 		<HelpCharityTogetherCard ngo={ngo}/>
 		<SignUpSection ngo={ngo}/>
-		{/*<JustTheBeginning/>*/}
 	</>);
 };
 
