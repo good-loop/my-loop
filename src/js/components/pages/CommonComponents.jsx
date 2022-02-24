@@ -482,22 +482,22 @@ const GetInvolvedSection = () => {
 		<PageCard className="get-involved-section text-center bg-gl-light-pink">
 			<img src="/img/green/hummingbird.png" className='hummingbird'/>
 			<div className='get-involved-text'>
-				<h1 className='text-uppercase'>This is just the beginning. sign up and join our movement.</h1>
+				<h1>This is just the beginning. sign up and join our movement.</h1>
 				<p className='leader-text mt-5'>We’re developing exciting new products that will help us all make the internet a more positive place. Register below to get exclusive access to future product launches and more ways to raise money for charity while you browse.</p>
-				<SubscriptionForm purpose='preregister' buttonText="REGISTER" />
+				<SubscriptionForm purpose='preregister' buttonText="Register for Updates" />
 			</div>
 			<div className="row pt-5">
 				<div className="col-md-4 get-involved-points">
-					<img className='w-50' src="/img/homepage/globe.png" alt="" />
-					<h3 className='pt-md-4 mb-0 ml-1'>Donate to charity. For free. </h3>
+					<img className='w-25' src="/img/homepage/globe.png" alt="" />
+					<h3 className='pt-md-4 mb-0 ml-1 sm'>Donate to charity. For free. </h3>
 				</div>
 				<div className="col-md-4 get-involved-points">
-					<img className='w-50' src="/img/homepage/heart.png" alt="" />
-					<h3 className='pt-md-4 mb-0 ml-1'>Make the world a better place</h3>
+					<img className='w-25' src="/img/homepage/heart.png" alt="" />
+					<h3 className='pt-md-4 mb-0 ml-1 sm'>Make the world a better place</h3>
 				</div>
 				<div className="col-md-4 get-involved-points">
-					<img className='w-50' src="/img/homepage/world.png" alt="" />
-					<h3 className='pt-md-4 mb-0 ml-1'>Just by browsing the internet</h3>
+					<img className='w-25' src="/img/homepage/world.png" alt="" />
+					<h3 className='pt-md-4 mb-0 ml-1 sm'>Just by browsing the internet</h3>
 				</div>
 			</div>
 		</PageCard>
