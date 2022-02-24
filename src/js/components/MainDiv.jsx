@@ -133,7 +133,7 @@ const MainDiv = () => {
 		navbarDarkTheme={false}
 		navbarChildren={() => <><T4GCTA>Get Tabs for Good on Desktop</T4GCTA><T4GSignUpModal /></>}
 		navbarBackgroundColour="white"
-		NavExpandSize="xl"
+		NavExpandSize="md"
 		// navbarLabels={getNavbarLabels}
 		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account', 'green', 'charities', 'impactoverview', 'campaign', 'ourstory', 'ads', 'blog', 'blogcontent']}
 		//undecoratedPages={["blogcontent"]}
