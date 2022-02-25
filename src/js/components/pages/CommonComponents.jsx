@@ -110,7 +110,7 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 		title = `Turn your web browsing into ${(ngo && "cash for " + ngo.name) || "charity donations"}. For free.`;
 	}
 	if ( ! text) {
-		text = `Get our Tabs-for-Good Browser Plugin today and start raising money for ${(ngo && ngo.name) || "good causes"} - just by browsing the internet.`;
+		text = `Get our Tabs for Good Browser Plugin today and start raising money for ${(ngo && ngo.name) || "good causes"} - just by browsing the internet.`;
 	}
 	if ( ! bgImg && ngo) bgImg = ngo.images;
 	return (<>
@@ -171,7 +171,7 @@ const CharityBanner = () => {
 const HowTabsForGoodWorks = ({className, shortTitle}) => {
 	return (
 		<PageCard id="howitworks" className={space("how-tabs-for-good-works text-center", className)}>
-			<h1>{shortTitle ? "Here's how it works" : "How Tabs-for-Good Works"}</h1>
+			<h1>{shortTitle ? "Here's how it works" : "How Tabs for Good Works"}</h1>
 			<Row className="pt-5">
 				<Col md={4} className='pt-2 pt-md-0 how-it-works-points'>
 					<img className='w-50' src="/img/icons/laptop.png" alt="" />
@@ -217,8 +217,8 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 
 	const items = [
 		<>
-			<p>Sign up for Tabs-for-Good.</p>
-			<p>Start browsing with the Tabs-for-Good plugin.</p>
+			<p>Sign up for Tabs for Good.</p>
+			<p>Start browsing with the Tabs for Good plugin.</p>
 			<p>Raise money for {name}. For free.</p>
 		</>,
 		<>
@@ -263,7 +263,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 					<T4GCTA className="w-50 d-block mx-auto"/>
 
 					<Button className="btn btn-secondary text-uppercase mt-3 w-50 d-block mx-auto" href="/tabsforgood">						
-						Learn More <span className="d-none d-md-inline">About Tabs-for-Good</span>
+						Learn More <span className="d-none d-md-inline">About Tabs for Good</span>
 					</Button>
 				</div>
 			</div>}
@@ -274,7 +274,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 
 		{showLowerCTA && <>
 			<CurvePageCard color="desat-blue" bgClassName={bgClassName}>
-				<h1 className='white'>Start using Tabs-for-Good today and together we'll...</h1>
+				<h1 className='white'>Start using Tabs for Good today and together we'll...</h1>
 				<Row className="mt-5">
 					<Col md={4} className='pt-2 pt-md-0'> 
 						<div className="tricard-inner">
@@ -544,8 +544,8 @@ const TriCards = ({className, titles, texts, images, links=["#", "#", "#"] }) =>
 const WhatIsTabsForGood	= ({ngo, imgs}) => {
 	return (<>
 		<PageCard className="how-tabs-for-good-works text-center">
-			<h1 className='mb-4'>What is Tabs-for-Good?</h1>
-			<p className=''><b>Tabs-for-Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</b></p>
+			<h1 className='mb-4'>What is Tabs for Good?</h1>
+			<p className=''><b>Tabs for Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</b></p>
 			<Row className="py-5">
 				<Col md={6}>
 					<T4GCharityScreenshot ngo={ngo} ratio={100}/>

@@ -75,7 +75,7 @@ export const T4GCTA = T4GSignUpButton;
 // 	let path = DataStore.getValue("location","path");
 	
 // 	return path[0]==="tabsforgood"? <T4GSignUpButton className={className} />
-// 		: <C.A className={space(className, "btn btn-info mb-1 mr-2 text-uppercase")} href="/tabsforgood">Get Tabs-for-Good</C.A>;
+// 		: <C.A className={space(className, "btn btn-info mb-1 mr-2 text-uppercase")} href="/tabsforgood">Get Tabs for Good</C.A>;
 // }
 
 export const T4GPluginButton = ({className, label, dUnset}) => {
@@ -140,7 +140,7 @@ const DesktopSignUp = ({charity}) => {
 
 	const SlideItems = [
 		<div className='slide-item text-center align-items-center'>
-			<p className="text-center px-3">Thanks for joining us and getting Tabs-for-Good. You'll be all set in two simple steps:</p>
+			<p className="text-center px-3">Thanks for joining us and getting Tabs for Good. You'll be all set in two simple steps:</p>
 			<Row className='px-5'>
 				<Col md={4}>
 					<h1 style={{fontSize:"1rem"}}>Step 1</h1>
@@ -154,7 +154,7 @@ const DesktopSignUp = ({charity}) => {
 					<h1 style={{fontSize:"1rem"}}>Step 2</h1>
 				</Col>
 				<Col md={8} className='text-left'>
-					We'll take you to the Chrome Store to install the Tabs-for-Good plugin.
+					We'll take you to the Chrome Store to install the Tabs for Good plugin.
 				</Col>
 			</Row>
 		</div>,
@@ -164,11 +164,11 @@ const DesktopSignUp = ({charity}) => {
 		</div>,
 		<div className='slide-item text-center align-items-center'>
 			<img className='w-50 mb-3' src="img/signup/step-3.png" alt="" />
-			<p className='px-3'>Once you're signed up, we'll immeditatly provide you with a link to the Chrome Store where you can add Tabs-for-Good to your browser </p>
+			<p className='px-3'>Once you're signed up, we'll immeditatly provide you with a link to the Chrome Store where you can add Tabs for Good to your browser </p>
 			</div>,
 		<div className='slide-item text-center align-items-center'>
 			<img className='w-50 mb-3' src="img/signup/browse-good.png" alt="" />
-			<p className='px-3'>Once you've installed Tabs-for-Good, you can feel confident that your browsing is adding up into a force for good</p>
+			<p className='px-3'>Once you've installed Tabs for Good, you can feel confident that your browsing is adding up into a force for good</p>
 		</div>
 	];
 
@@ -215,7 +215,7 @@ const DesktopSignUp = ({charity}) => {
 				: /* Step 2 */ <div className="d-flex flex-column justify-content-center h-100 bg-gl-light-pink">
 					<div className='slide-item text-center align-items-center'>
 						<p>Successs! You've signed up.</p>
-						<p>Now click on the button to install Tabs-for-Good.</p>
+						<p>Now click on the button to install Tabs for Good.</p>
 						<img id="globe-piggy-step-2" className='w-50' src="img/signup/globe-piggy-bank-crop.png" alt="" />
 					</div>
 				</div>
@@ -259,10 +259,10 @@ const NotAvailableYet = ({browser,charity}) => {
 	return (<>
 		<img src="/img/signup/hand-globe-coins.png" className='hand-globe'/>
 		<div className='clearfix'>
-			<img className="pull-right w-25 m-3" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="Tabs-for-Good" />
+			<img className="pull-right w-25 m-3" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="Tabs for Good" />
 		</div>
 		<div className='mx-auto w-50 d-flex flex-column align-items-center'>
-			<p class="mt-5">We'll send you an email to let you know when Tabs-for-Good is available on <span>{toTitleCase(browser)}</span></p>
+			<p class="mt-5">We'll send you an email to let you know when Tabs for Good is available on <span>{toTitleCase(browser)}</span></p>
 			<SubscriptionForm purpose="preregister" 
 				product="T4G" 
 				charityId={getId(charity)} browser={browser} 

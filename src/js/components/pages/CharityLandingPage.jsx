@@ -54,7 +54,7 @@ const HelpCharityTogetherCard = ({ngo}) => {
 
 const SignUpSection = ({ngo}) => {
 	let iconImg = ['../img/icons/one.png', '../img/icons/two.png', '../img/icons/three.png']
-	let iconText = ['Sign up for Tabs-for-Good', 'Start browsing and raise money for '+ngo.name, 'Help '+ngo.name+'raise money']
+	let iconText = ['Sign up for Tabs for Good', 'Start browsing and raise money for '+ngo.name, 'Help '+ngo.name+'raise money']
 
 	return(
 		<PageCard className="sign-up-section text-center bg-gl-pale-orange">
@@ -116,7 +116,7 @@ export const JustTheBeginning = () => {
 			<p className='white text-center'><b>See what else we're doing and join the Good-Loop movement.</b></p>
 			<br/>
 			<TriCards
-				titles={["Tabs-for-Good", "Ad Campaigns", "Our Story"]}
+				titles={["Tabs for Good", "Ad Campaigns", "Our Story"]}
 				texts={['Raise money for charity every time you open a new tab', 'Explore more examples of our campaigns', 'Meet the cofounders and discover the story of Good-Loop']}
 				images={['../img/homepage/slide-1.png', '../img/homepage/adcampaigns.png', '../img/homepage/amyanddaniel.png']}
 				links={['tabsforgood', 'impactoverview', 'ourstory']}

@@ -43,7 +43,7 @@ const Account = () => {
 const label4tab = {
 	account: "My Account",
 	settings: "Settings",
-	tabsForGood: "Tabs-for-Good"
+	tabsForGood: "Tabs for Good"
 };
 
 const Page = () => {

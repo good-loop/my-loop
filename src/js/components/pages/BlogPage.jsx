@@ -47,61 +47,28 @@ const BlogPage = () => {
 	// Is this for a page?
 	const path = DataStore.getValue(['location', 'path']);
 	let pageUrl = path[1];
-	const content = DataStore.getUrlValue('content');
+	const preview = DataStore.getUrlValue('preview');
 	const undecorated = DataStore.getUrlValue('undecorated');
 	const status = DataStore.getUrlValue('gl.status') || DataStore.getUrlValue('status') || KStatus.PUBLISHED;
 
 	let guts;
 
-	if (!pageUrl && !content) {
+	if (!pageUrl && !preview) {
 		guts = <>
 			<Row className="blog-card-row">
-				<BlogCard
-					title="Tabs for Good"
-					subtitle="How it works and how it will help you save the world"
-					date="Feb 17"
-					readTime="2 min"
-					thumbnail="/img/dew-grass.jpg"
-				/>
-				<BlogCard
-					title="Tabs for Good"
-					subtitle="How it works and how it will help you save the world"
-					date="Feb 17"
-					readTime="2 min"
-					thumbnail="/img/dew-grass.jpg"
-				/>
-				<BlogCard
-					title="Tabs for Good"
-					subtitle="How it works and how it will help you save the world"
-					date="Feb 17"
-					readTime="2 min"
-					thumbnail="/img/dew-grass.jpg"
-				/>
-				<BlogCard
-					title="Tabs for Good"
-					subtitle="How it works and how it will help you save the world"
-					date="Feb 17"
-					readTime="2 min"
-					thumbnail="/img/dew-grass.jpg"
-				/>
-				<BlogCard
-					title="Tabs for Good"
-					subtitle="How it works and how it will help you save the world"
-					date="Feb 17"
-					readTime="2 min"
-					thumbnail="/img/dew-grass.jpg"
-				/>
-				<BlogCard
-					title="Tabs for Good"
-					subtitle="How it works and how it will help you save the world"
-					date="Feb 17"
-					readTime="2 min"
-					thumbnail="/img/dew-grass.jpg"
-				/>
+				{blogPages.map(blogPage =>
+					<BlogCard
+						title={blogPage.title}
+						subtitle={blogPage.subtitle}
+						date={blogPage.publishedDate || "Feb 17"}
+						readTime={blogPage.readTime+" min" || "2 min"}
+						thumbnail="/img/dew-grass.jpg"
+					/>
+				)}
 			</Row>
 		</>;
-	} else if (content) {
-		guts = <BlogContent content={content}/>
+	} else if (preview) {
+		guts = <BlogContent preview />
 	} else {
 		let pvBlogPost = getDataItem({ type: 'BlogPost', id:pageUrl, status });
 		if (!pvBlogPost.resolved) {

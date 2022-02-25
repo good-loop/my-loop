@@ -38,7 +38,7 @@ const PositivePlace123Section = ({className, showCTA}) => {
 		<Row className="pt-5 d-flex justify-content-around">
 			<Col md={3} className="video-points">
 				<img className='w-50' src="img/icons/one.png" alt="" />
-				<h3 className='pt-4 sm'>Sign up for Tabs-for-Good</h3>
+				<h3 className='pt-4 sm'>Sign up for Tabs for Good</h3>
 			</Col>
 			<Col md={3} className="video-points">
 				<img className='w-50' src="img/icons/two.png" alt="" />
@@ -65,7 +65,7 @@ const TabsForGoodLandingPage = () => {
 	}, []);
 
 	return (<>
-		<MyLandingSection shiftLeft title={<>Tabs-for-Good<br/>The browser plugin that allows you to do good just by opening a new tab</>} text=" " bgImg="/img/TabsForGood/photo-by-larm-rmah-unsplash.jpg" />
+		<MyLandingSection shiftLeft title={<>Tabs for Good<br/>The browser plugin that allows you to do good just by opening a new tab</>} text=" " bgImg="/img/TabsForGood/photo-by-larm-rmah-unsplash.jpg" />
 		<CornerHummingbird/>
 		<WhatIsTabsForGood imgs={['/img/homepage/slide-1.png']} />
 		<HowTabsForGoodWorks className="bg-gl-pale-orange" shortTitle />

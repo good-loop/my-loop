@@ -1,2 +1,2 @@
-title: Sign Up for Tabs-for-Good
+title: Sign Up for Tabs for Good
 

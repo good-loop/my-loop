@@ -75,7 +75,7 @@ const NewtabLoginWidget = ({onLogin, onRegister}) => {
 						<p className="mb-3">Already have an account?<br/>Please login to keep track of your results.</p>
 					</> : <>
 						<h4 className="mb-3">Create account</h4>
-						<p className="mb-3">Create an account to track how much you contribute to good causes by using Tabs-for-Good!</p>
+						<p className="mb-3">Create an account to track how much you contribute to good causes by using Tabs for Good!</p>
 					</>}
 					<a className="btn btn-secondary" onClick={e => switchToVerb(e, register ? "login" : "register")}>{register ? "Log in" : "Register"}</a>
 				</Col>
@@ -137,7 +137,7 @@ const RegisterThankYou = () => {
 	return <>
 		<h3>Welcome!</h3>
 		<p>Thanks for signing up with us! You can now choose a charity to fund, and access all the benefits of My-Loop. See your new account <a href="/account" className="text-primary">here</a>.</p>
-		<a onClick={() => setShowTabLogin(false)} className="btn btn-primary">Back to Tabs-for-Good</a>
+		<a onClick={() => setShowTabLogin(false)} className="btn btn-primary">Back to Tabs for Good</a>
 	</>;
 };
 

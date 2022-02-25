@@ -27,7 +27,7 @@ const AllowlistUs = () => {
 				<Row className="text-center text-md-left">
 					<Col md={6}>
 						<div className="justify-content-left">
-							<p>We can't raise money for charity without displaying ads. Please disable your adblocker or allowlist us so Tabs-for-Good can work!</p>
+							<p>We can't raise money for charity without displaying ads. Please disable your adblocker or allowlist us so Tabs for Good can work!</p>
 						</div>
 					</Col>
 					<Col md={6}>
@@ -39,7 +39,7 @@ const AllowlistUs = () => {
 				</div>
 				<Row className="text-center text-md-right justify-content-end">
 					<Col md={8}>
-						<h1 className="ml-auto">Allowlist Tabs-for-Good.</h1>
+						<h1 className="ml-auto">Allowlist Tabs for Good.</h1>
 					</Col>
 				</Row>
 				<Row className="text-center text-md-right">
