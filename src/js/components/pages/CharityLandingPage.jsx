@@ -117,7 +117,7 @@ export const JustTheBeginning = () => {
 			<br/>
 			<TriCards
 				titles={["Tabs-for-Good", "Ad Campaigns", "Our Story"]}
-				texts={['Raise money for chairty every time you open a new tab', 'Explore more examples of our campaigns', 'Meet the cofounders adn discover the story of Good-Loop']}
+				texts={['Raise money for chairty every time you open a new tab', 'Explore more examples of our campaigns', 'Meet the cofounders and discover the story of Good-Loop']}
 				images={['../img/homepage/slide-1.png', '../img/homepage/adcampaigns.png', '../img/homepage/amyanddaniel.png']}
 				links={['tabsforgood', 'impactoverview', 'ourstory']}
 			/>
