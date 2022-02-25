@@ -68,6 +68,7 @@ public class MetaHtmlServlet implements IServlet {
 			aMap.put("ourstory", "Our Story");
 			aMap.put("impactoverview", "Impact Hub");
 			aMap.put("green", "Green Media");
+			aMap.put("tabsforgood", "Sign Up for Tabs-for-Good");
 			pageTitles = Collections.unmodifiableMap(aMap);
 		}
 
@@ -88,7 +89,7 @@ public class MetaHtmlServlet implements IServlet {
 		} else {
 			subtitle = subtitle.length() > 0 ? subtitle.substring(0, 1).toUpperCase() + subtitle.substring(1) : "";
 		}
-		vars.put("title", subtitle);
+		vars.put("title", "My Good-Loop "+subtitle);
 		vars.put("ogImage", "");
 		
 		String loadingIMG = "img/splash-screen/background-loading.svg";
