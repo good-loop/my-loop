@@ -34,7 +34,7 @@ import HowDoesItWork from './HowDoesItWork';
 import NGO from '../../base/data/NGO';
 import { setNavContext, setNavProps } from '../../base/components/NavBar';
 import Messaging, { notifyUser } from '../../base/plumbing/Messaging';
-import { JustTheBeginning } from '../pages/CharityLandingPage'
+import { PageCard, TriCards } from '../pages/CommonComponents';
 
 
 /**
@@ -132,6 +132,21 @@ const fetchIHubData2_wrapAsList = pvTopItem => {
 	));
 };
 
+const JustTheBeginning = () => {
+	return <div className='w-100 bg-gl-pale-orange' >
+		<PageCard className="bg-gl-desat-blue">
+			<h1 style={{color:"white",fontWeight:'bold'}}>This is just the beginning.</h1>
+			<br/>
+			<p className='white text-center'><b>See what else we're doing and join the Good-Loop movement.</b></p>
+			<TriCards className="pt-0"
+				titles={["Tabs-for-Good", "Ad Campaigns", "Our Story"]}
+				texts={['Raise money for charity every time you open a new tab', 'Explore more examples of our campaigns', 'Meet the cofounders and discover the story of Good-Loop']}
+				images={['../img/homepage/slide-1.png', '../img/homepage/UsingAdMoneyForGood.png', '../img/homepage/amyanddaniel.png']}
+				links={['../tabsforgood', '../impactoverview', '../ourstory']}
+			/>
+		</PageCard>
+	</div>
+}
 
 /**
  * TODO support q=... flexible query

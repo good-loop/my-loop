@@ -1,6 +1,7 @@
 package com.goodloop.myloop;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
@@ -58,6 +59,18 @@ public class MetaHtmlServlet implements IServlet {
 		// send it back
 		WebUtils2.sendHtml(html, state.getResponse());
 	}
+	
+	// Parse multi-words title
+	private static final Map<String, String> pageTitles;
+		static {
+			Map<String, String> aMap = new HashMap<String, String>();
+			aMap.put("home", "");
+			aMap.put("ourstory", "Our Story");
+			aMap.put("impactoverview", "Impact Hub");
+			aMap.put("green", "Green Media");
+			aMap.put("tabsforgood", "Sign Up for Tabs-for-Good");
+			pageTitles = Collections.unmodifiableMap(aMap);
+		}
 
 	private Map getPageSettings(WebRequest state) {
 		String bit0 = state.getSlugBits(0);
@@ -71,9 +84,12 @@ public class MetaHtmlServlet implements IServlet {
 		
 		// TODO Better Title
 		String subtitle = state.getRequestPath().replace("/", "");
-		subtitle = subtitle.length() > 0 ? subtitle.substring(0, 1).toUpperCase() + subtitle.substring(1) : "";
-		vars.put("title", subtitle);
-		
+		if (pageTitles.get(subtitle) != null) {
+			subtitle = pageTitles.get(subtitle);
+		} else {
+			subtitle = subtitle.length() > 0 ? subtitle.substring(0, 1).toUpperCase() + subtitle.substring(1) : "";
+		}
+		vars.put("title", "My Good-Loop "+subtitle);
 		vars.put("ogImage", "");
 		
 		String loadingIMG = "img/splash-screen/background-loading.svg";

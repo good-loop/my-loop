@@ -73,10 +73,10 @@ const HomePage = ({spring}) => {
 			<TestimonialSectionLower />
 			<GetInvolvedSection />
 			{/* <SubscriptionBox className="bg-gl-light-red big-sub-box"/> */}
-			<TriCards titles={["See How Our Ads Work", "Charity Directory", "Our Story", ]}
-				texts={["Raise money for charity every time you open a new tab", "Explore the charities we've helped so far", "Meet the cofounders and discover the story of Good-Loop"]}
-				images={["img/homepage/good-loop-for-business.png", "img/homepage/tree-planting.png", "img/homepage/amyanddaniel.png"]}
-				links={["tabsforgood", "charities", "ourstory"]}
+			<TriCards titles={["See How Our Ads Work", "Tabs-for-Good", "Our Story", ]}
+				texts={["Explore more examples of our campaigns", "Raise money for charity every time you open a new tab", "Meet the cofounders and discover the story of Good-Loop"]}
+				images={["img/homepage/good-loop-for-business.png", "img/homepage/slide-1.png", "img/homepage/amyanddaniel.png"]}
+				links={["tabsforgood", "tabsforgood", "ourstory"]}
 			/>
 		</div>
 	</>);
