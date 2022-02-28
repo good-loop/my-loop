@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { RegisterLink, setLoginVerb, setShowLogin } from '../../base/components/LoginWidget';
 import { Col, Container, Row, Carousel, CarouselControl, CarouselItem, Button } from 'reactstrap';
 import BG from '../../base/components/BG';
-import { getBrowserVendor, isPortraitMobile, modifyHash, scrollTo, space } from '../../base/utils/miscutils';
+import { getBrowserVendor, isMobile, isPortraitMobile, modifyHash, scrollTo, space } from '../../base/utils/miscutils';
 import C from '../../C';
 import Icon from '../../base/components/Icon';
 import LinkOut from '../../base/components/LinkOut';
@@ -448,14 +448,24 @@ const PositivePlaceSection = ({className, showCTA}) => {
 }
 
 const WatchVideoSection = () => {
-	//if ( ! Roles.isTester()) return null;
+	let videoLink = isMobile ? "img/homepage/t4gpromovid_480p.m4v" : "img/homepage/t4gpromovid_720p.m4v";
+
+	const [preview, setPreview] = useState('');
+	const vidRef = useRef(null);
+
+	const playVideo = () => {
+		setPreview("d-none");
+		vidRef.current.play();
+	}
+
 	return(<>
 	<PageCard className="watch-video-section">
 		<div className="text-center">
 			<h1 className='pt-5'>Watch To See How We’re Creating A Movement</h1>
 			<div className="promovid">
-				<video id='t4gpromovid' className='w-100' preload="auto" controls>
-					<source src="img/homepage/t4gpromovid_480p.m4v" type="video/mp4" />
+				<img className={space(preview, 'w-100')} src="img/homepage/video.png" alt="video preview" onClick={playVideo}/>
+				<video ref={vidRef} className='w-100' preload="auto" controls>
+					<source src={videoLink} type="video/mp4" />
 				</video>
 			</div>
 			<img src="/img/green/hummingbird.png" className='hummingbird d-none d-md-block'/>
