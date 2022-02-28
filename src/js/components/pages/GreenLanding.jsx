@@ -107,7 +107,7 @@ const GreenLanding = ({ }) => {
 			<GreenMap />
 			
 			<div className="partnerships py-4">
-				<h2>CLIMATE POSITITIVE PARTNERSHIPS</h2>
+				<h2>CLIMATE POSITIVE PARTNERSHIPS</h2>
 				<Container>
 					<Row className="logos py-4">
 					<Col xs="12" sm="6">
