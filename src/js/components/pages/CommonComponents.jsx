@@ -453,7 +453,11 @@ const WatchVideoSection = () => {
 	<PageCard className="watch-video-section">
 		<div className="text-center">
 			<h1 className='pt-5'>Watch To See How We’re Creating A Movement</h1>
-			<img className='w-100 my-5' src="img/homepage/video.png" alt="" />
+			<div className="promovid">
+				<video id='t4gpromovid' preload="auto" controls>
+					<source src="img/homepage/t4gpromovid_480p.m4v" type="video/mp4" />
+				</video>
+			</div>
 			<img src="/img/green/hummingbird.png" className='hummingbird d-none d-md-block'/>
 			<img src="/img/signup/hand-globe-coins.png" className='hand-globe-coins d-none d-md-block' />
 			<div className="mx-5">
