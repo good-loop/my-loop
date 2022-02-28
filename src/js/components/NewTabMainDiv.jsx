@@ -16,7 +16,6 @@ import WhiteCircle from './campaignpage/WhiteCircle';
 // Components
 import CharityLogo from './CharityLogo';
 import AccountMenu from '../base/components/AccountMenu';
-import AccountPage from './pages/AccountPage';
 import NewtabLoginWidget, { NewtabLoginLink, setShowTabLogin } from './NewtabLoginWidget';
 // import RedesignPage from './pages/RedesignPage';
 import NewtabTutorialCard, { openTutorial, TutorialComponent, TutorialHighlighter, PopupWindow } from './NewtabTutorialCard';
@@ -162,11 +161,10 @@ const WebtopPage = () => {
 
 
 const PAGES = {
-	newtab: WebtopPage,
-	account: AccountPage
+	newtab: WebtopPage
 };
 const NewTabMainDiv = () => {
-	return <MainDivBase pageForPath={PAGES} defaultPage="newtab" navbar={false} className="newtab" fullWidthPages={["account"]} />;
+	return <MainDivBase pageForPath={PAGES} defaultPage="newtab" navbar={false} className="newtab" />;
 };
 
 
