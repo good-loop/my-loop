@@ -144,9 +144,9 @@ const WebtopPage = () => {
 					<Col sm={6} md={4} className="h-100 flex-column justify-content-center unset-margins">
 						<NormalTabCenter charityID={charityID} loadingCharity={loadingCharity} />
 					</Col>
-					<Col sm={3} md={4} className="flex-column justify-content-center align-items-center p-2">
+					{/* <Col sm={3} md={4} className="flex-column justify-content-center align-items-center p-2">
 						<CharityCustomContent content={<LoremIpsum/>}/>
-					</Col>
+					</Col> */}
 				</Row>
 			</Container>
 			{/* Tutorial highlight to cover adverts */}
