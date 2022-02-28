@@ -463,7 +463,7 @@ const WatchVideoSection = () => {
 		<div className="text-center">
 			<h1 className='pt-5'>Watch To See How We’re Creating A Movement</h1>
 			<div className="promovid">
-				<img className={space(preview, 'w-100')} src="img/homepage/video.png" alt="video preview" onClick={playVideo}/>
+				<img className={space(preview, 'w-100')} src="img/homepage/video_preview.png" alt="video preview" onClick={playVideo}/>
 				<video ref={vidRef} className='w-100' preload="auto" controls>
 					<source src={videoLink} type="video/mp4" />
 				</video>
