@@ -64,8 +64,8 @@ const SubscribePage = ({}) => {
 // Actions
 
 const PAGES = {
-	blog: BlogPage, // TODO
-	blogcontent: BlogContent,
+	// blog: BlogPage, // TODO
+	// blogcontent: BlogContent,
 	campaign: CampaignPage,
 	impact: CampaignPage,
 	impactoverview: MyAdCampaignsPage,
@@ -107,14 +107,14 @@ const MainDiv = () => {
 		"ourstory":[],
 		"our-impact": ['charities', 'impactoverview', 'green'],
 		'tabsforgood':[],
-		"blog":[]
+		// "blog":[]
 	};
 
 	const navPageLabels = {
 		"Our Story":[],
 		"Our Impact": ['Charity Impact', 'Impact Hub', 'Green Media'],
 		"Tabs for Good":[],
-		"Blog":[]
+		// "Blog":[]
 	};
 
 	// HACK hide whilst we finish it
@@ -123,8 +123,8 @@ const MainDiv = () => {
 		delete navPageLinks["our-impact"].green;
 		delete navPageLabels["Our Impact"]["Green Media"];
 
-		delete navPageLinks["blog"];
-		delete navPageLabels["Blog"];
+		// delete navPageLinks["blog"];
+		// delete navPageLabels["Blog"];
 		
 	}
 
