@@ -14,6 +14,7 @@ import com.winterwell.utils.SimpleTemplateVars;
 import com.winterwell.utils.containers.Cache;
 import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.Log;
+import com.winterwell.utils.web.WebUtils;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebPage;
 import com.winterwell.web.ajax.JThing;
@@ -60,7 +61,7 @@ public class MetaHtmlServlet implements IServlet {
 		WebUtils2.sendHtml(html, state.getResponse());
 	}
 	
-	// Parse multi-words title
+	/** HACK "special" titles */
 	private static final Map<String, String> pageTitles;
 		static {
 			Map<String, String> aMap = new HashMap<String, String>();
@@ -84,6 +85,8 @@ public class MetaHtmlServlet implements IServlet {
 		
 		// TODO Better Title
 		String subtitle = state.getRequestPath().replace("/", "");
+		// defend against an injection attack
+		subtitle = WebUtils.stripTags(subtitle); // WebUtils.defuseTagByEncoding(subtitle);
 		if (pageTitles.get(subtitle) != null) {
 			subtitle = pageTitles.get(subtitle);
 		} else {
