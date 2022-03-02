@@ -280,3 +280,33 @@
     max-height: 750px;
     overflow-y: auto;
 }
+
+#newtab {
+    .dropdown-menu {
+        position: absolute !important;
+        left: unset;
+        right: 0;
+    }
+
+    .account-menu {
+        background-color: @gl-red;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+    }
+
+    .dropdown-toggle {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: end;
+        justify-content: center;
+        height: 50px;
+        width: 50px;
+        font-weight: bold;
+    }
+
+    .dropdown-toggle::after {
+        display: none;
+    }
+}

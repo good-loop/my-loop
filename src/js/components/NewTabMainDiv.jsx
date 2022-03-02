@@ -9,7 +9,7 @@ import DataStore from '../base/plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
 import detectAdBlock from '../base/utils/DetectAdBlock';
 import { lg } from '../base/plumbing/log';
-import { encURI, stopEvent } from '../base/utils/miscutils';
+import { encURI, stopEvent, getBrowserVendor } from '../base/utils/miscutils';
 import Login from '../base/youagain';
 import C from '../C';
 import WhiteCircle from './campaignpage/WhiteCircle';
@@ -116,13 +116,15 @@ const WebtopPage = () => {
 	// iframe src change?
 	// https://stackoverflow.com/posts/17316521/revisions
 
-	// Background images on tab plugin sourced locally
+	// Background images on tab plugin sourced locally, but not on safari and local dev mode
+	const browser = getBrowserVendor();
+	let backgroundColor = browser == 'SAFARI' || window.location.hostname.startsWith('local') ? 'lightgrey' : '';
 
 	return (<>
 		{ ! Roles.isDev() && <style>
 			{ '.MessageBar .alert {display: none;}' }
 		</style>}
-		<BG src={null} fullscreen opacity={0.9} bottom={110} style={{ backgroundPosition: "center" }}>
+		<BG src={null} fullscreen opacity={0.9} bottom={110} style={{ backgroundPosition: "center" }} color={backgroundColor}>
 			<TutorialHighlighter page={[4, 5]} className="position-fixed p-3" style={{ top: 0, left: 0, width: "100vw", zIndex: 1 }}>
 				<div className="d-flex justify-content-between">
 					<TutorialComponent page={5} className="logo pl-5 flex-row" style={{ width: 400 }}>
