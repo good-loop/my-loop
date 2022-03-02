@@ -130,7 +130,7 @@ const CharityLandingPage = () => {
 	}, []);
 
 	const shareMeta = {
-		title: "Tabs for " + ngo.name,
+		title: ngo.name + ": Tabs for Good",
 		description: "Raise money for " + ngo.name + " just by opening tabs.",
 		image: ngo.images
 	};
