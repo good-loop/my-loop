@@ -310,7 +310,7 @@ const ConnectionStatusPopup = () => {
 		>
 			{hasAdBlock && !isOffline && !determining && <>
 				<h3 className="text-dark">It looks like you have AdBlock enabled</h3>
-				<p>We can't raise money for charity without displaying ads. Please <a href="https://my.good-loop.com/#allowlist">disable your adblocker</a> so Tabs for Good can work!</p>
+				<p>We can't raise money for charity without displaying ads. Please <a href="https://my.good-loop.com/allowlist">disable your adblocker</a> so Tabs for Good can work!</p>
 			</>}
 			{isOffline && !determining && <>
 				<h3 className="text-dark">We can't find the internet :(</h3>
