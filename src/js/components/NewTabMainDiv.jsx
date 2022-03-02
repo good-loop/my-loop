@@ -118,7 +118,7 @@ const WebtopPage = () => {
 
 	// Background images on tab plugin sourced locally, but not on safari and local dev mode
 	const browser = getBrowserVendor();
-	let backgroundColor = browser == 'SAFARI' || window.location.hostname.startsWith('local') ? 'lightgrey' : '';
+	let backgroundColor = browser == 'SAFARI' || window.location.hostname.startsWith('local') || window.location.hostname.startsWith('test') ? 'lightgrey' : '';
 
 	return (<>
 		{ ! Roles.isDev() && <style>
