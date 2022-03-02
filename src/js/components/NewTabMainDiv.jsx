@@ -116,15 +116,13 @@ const WebtopPage = () => {
 	// iframe src change?
 	// https://stackoverflow.com/posts/17316521/revisions
 
-	// Background images on tab plugin sourced locally, but not on safari and local dev mode
-	const browser = getBrowserVendor();
-	let backgroundColor = browser == 'SAFARI' || window.location.hostname.startsWith('local') || window.location.hostname.startsWith('test') ? 'lightgrey' : '';
+	// Background images on tab plugin sourced locally, but not on Safari
 
 	return (<>
 		{ ! Roles.isDev() && <style>
 			{ '.MessageBar .alert {display: none;}' }
 		</style>}
-		<BG src={null} fullscreen opacity={0.9} bottom={110} style={{ backgroundPosition: "center" }} color={backgroundColor}>
+		<BG src={null} fullscreen opacity={0.9} bottom={110} style={{ backgroundPosition: "center" }}>
 			<TutorialHighlighter page={[4, 5]} className="position-fixed p-3" style={{ top: 0, left: 0, width: "100vw", zIndex: 1 }}>
 				<div className="d-flex justify-content-between">
 					<TutorialComponent page={5} className="logo pl-5 flex-row" style={{ width: 400 }}>
@@ -161,11 +159,21 @@ const WebtopPage = () => {
 	</>);
 }; // ./WebTopPage
 
-
 const PAGES = {
 	newtab: WebtopPage
 };
 const NewTabMainDiv = () => {
+	// make ui in local development easier to read
+	window.location.hostname.startsWith('local', 'test') ? document.body.style.backgroundColor = "lightgrey" : '';
+
+	let browser = getBrowserVendor();
+	if (browser == 'SAFARI') {
+		let bgImgs = 9;
+		let bg = "img/newtab/bg" + (Math.round(Math.random() * bgImgs) + 1) + ".jpg";
+		document.body.style.backgroundImage = "url(" + bg + ")";
+		document.body.style.backgroundSize = "cover";
+	}
+
 	return <MainDivBase pageForPath={PAGES} defaultPage="newtab" navbar={false} className="newtab" />;
 };
 
