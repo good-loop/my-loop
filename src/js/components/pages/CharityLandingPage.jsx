@@ -11,6 +11,7 @@ import CharityLogo from '../CharityLogo';
 import { setFooterClassName } from '../Footer';
 import { T4GCTA } from '../T4GSignUp';
 import { MyLandingSection, HowTabsForGoodWorks, PageCard, TabsForGoodSlideSection, TriCards, WhatIsTabsForGood, CornerHummingbird } from './CommonComponents';
+import ShareButton from '../ShareButton';
 
 const CharityT4GLogos = ({ngo, className, style, autosize}) => {
 	const containerStyle = (!isPortraitMobile() && autosize) ? {width:"40%"} : {};
@@ -128,14 +129,25 @@ const CharityLandingPage = () => {
 		setFooterClassName('bg-gl-pale-orange');
 	}, []);
 
+	const shareMeta = {
+		title: ngo.name + ": Tabs for Good",
+		description: "Raise money for " + ngo.name + " just by opening tabs.",
+		image: ngo.images
+	};
+
 	return (<>
 		<MyLandingSection ngo={ngo} shiftLeft/>
 		<CornerHummingbird/>
-		{isPortraitMobile() ?
+		{isPortraitMobile() ? <>
 			<CharityT4GLogos ngo={ngo}/>
-		:
+			<div className='d-flex flex-row justify-content-center align-items-center mt-2'>
+				<ShareButton meta={shareMeta} className="btn-transparent fill" url={window.location.href}>Share</ShareButton>
+			</div>
+		</>:
 			<Row>
-				<Col md={8} className='d-none d-md-block'></Col>
+				<Col md={8} className='d-none d-md-block'>
+					<ShareButton meta={shareMeta} className="btn-transparent fill ml-5" url={window.location.href}>Share</ShareButton>
+				</Col>
 				<Col md={4} className='d-flex justify-content-center px-2'>
 					<CharityT4GLogos ngo={ngo}/>
 				</Col>
