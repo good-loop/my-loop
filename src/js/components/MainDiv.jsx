@@ -138,7 +138,7 @@ const MainDiv = () => {
 		navbarBackgroundColour="white"
 		NavExpandSize="md"
 		// navbarLabels={getNavbarLabels}
-		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account', 'green', 'charities', 'impactoverview', 'campaign', 'ourstory', 'ads', 'blog', 'blogcontent']}
+		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account', 'green', 'charities', 'impactoverview', 'campaign', 'ourstory', 'ads', 'blog', 'blogcontent', 'allowlist']}
 		//undecoratedPages={["blogcontent"]}
 		Footer={Footer}
 		canRegister

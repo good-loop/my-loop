@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import SubscriptionBox from '../cards/SubscriptionBox';
+import detectAdBlock from '../../base/utils/DetectAdBlock';
 import { Col, Container, Row } from 'reactstrap';
+import C from '../../C';
 
 window.DEBUG = false;
 
@@ -10,8 +12,11 @@ const AllowlistUs = () => {
 	let noNavbar = document.createElement('style');
 	noNavbar.innerHTML = '.nav-item:last-child {visibility: hidden;}';
 	document.head.appendChild(noNavbar);
-	
-	return (<>
+
+	const pvHasAdBlock = detectAdBlock();
+	const [hasAdblock, setHasAdblock] = useState(true);
+
+	let guts = <>
 		<img className="adblock-arrow" src="/img/allowlist/adblock-arrow.png" alt="" />
 		<div className="AllowlistUs">
 			<div className="m-5">
@@ -55,7 +60,27 @@ const AllowlistUs = () => {
 			</Container>
 			<SubscriptionBox className="bg-gl-light-red big-sub-box"/>
 		</div>
-	</>);
+	</>;
+	if (!hasAdblock) guts = <>
+		<img className="adblock-arrow" src="/img/allowlist/adblock-arrow.png" alt="" />
+		<div className="AllowlistUs">
+			<div className="m-5">
+				<br/> <br/>
+			</div>
+			<h1>Your adblocker is off - thank you!</h1>
+			<div className='text-center'>
+				<C.A href="/newtab.html"><h3>Return to Tabs-for-Good</h3></C.A>
+			</div>
+		</div>
+	</>;
+
+	useEffect(() => {
+		if (pvHasAdBlock.resolved && !pvHasAdBlock.value) {
+			setHasAdblock(false);
+		}
+	}, [pvHasAdBlock.resolved]);
+	
+	return guts;
 };
 
 
