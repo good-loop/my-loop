@@ -54,7 +54,7 @@ const HelpCharityTogetherCard = ({ngo}) => {
 
 const SignUpSection = ({ngo}) => {
 	let iconImg = ['../img/icons/one.png', '../img/icons/two.png', '../img/icons/three.png']
-	let iconText = ['Sign up for Tabs for Good', 'Start browsing and raise money for '+ngo.name, 'Help '+ngo.name+'raise money']
+	let iconText = ['Sign up for Tabs for Good', 'Start browsing and raise money for '+ngo.name, 'Help '+ngo.name+' raise money']
 
 	return(
 		<PageCard className="sign-up-section text-center bg-gl-pale-orange">
