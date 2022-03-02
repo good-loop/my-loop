@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Row } from 'reactstrap';
 import { encURI, space } from '../base/utils/miscutils';
 
@@ -10,47 +10,40 @@ import { encURI, space } from '../base/utils/miscutils';
  * image
  * description
  */
-class ShareButton extends React.Component {
-	constructor (props) {
-		super(props);
-		this.state = {
-			showing: false
-		};
-	}
+const ShareButton = ({url, meta, title, image, description, absolute, className, style, children, onShare}) => {
 
-	render () {
-		// Generate ShareServlet sharing url
-		let url = new URL("https://as.good-loop.com/share");
-		let metaProps = this.props.meta;
-		if (!metaProps) metaProps = this.props;
-		if (metaProps.title) url.searchParams.append('title', metaProps.title);
-		if (metaProps.image) url.searchParams.append('image', metaProps.image);
-		if (metaProps.description) url.searchParams.append('desc', metaProps.description);
-		url.searchParams.append("link", this.props.url);
-		//console.log("ShareServlet generated URL: " + url);
-		url = encURI(url.href);
+	const [showing, setShowing] = useState(false);
 
-		// NB: theres no unicode character for share
-		// c.f. https://stackoverflow.com/questions/23358594/is-there-a-unicode-character-for-the-share-icon
-		// (which includes a css hack for making .<: look like it)
+	// Generate ShareServlet sharing url
+	let shareUrl = new URL("https://as.good-loop.com/share");
+	if (!meta) meta = {title, image, description};
+	if (meta.title) shareUrl.searchParams.append('title', meta.title);
+	if (meta.image) shareUrl.searchParams.append('image', meta.image);
+	if (meta.description) shareUrl.searchParams.append('desc', meta.description);
+	shareUrl.searchParams.append("link", url);
+	//console.log("ShareServlet generated URL: " + url);
+	shareUrl = encURI(shareUrl.href);
 
-		return (
-			<div className={space(this.props.absolute ? "position-absolute" : "position-relative", "d-inline-block share-btn")} style={this.props.style}>
-				<div className={space("btn", this.props.className)} onClick={() => this.setState({showing: !this.state.showing})}><i className="fas fa-share-alt mr-2" />{this.props.children}</div>
-				{this.state.showing &&
-					<div className="share-popup">
-						<img src="/img/share/ShareBubble.svg" className="w-100 bubble" alt="share icon"/>
-						<Row className="popup-btns no-gutters w-100">
-							<a className="col p-2" onClick={this.props.onShare} target="_blank" href={"https://www.facebook.com/sharer/sharer.php?u=" + url}><img src="/img/share/Facebook.png" className="w-100"/></a>
-							<a className="col p-2" onClick={this.props.onShare} target="_blank" href={"https://twitter.com/intent/tweet?url=" + url}><img src="/img/share/Twitter.png" className="w-100"/></a>
-							<a className="col p-2" onClick={this.props.onShare} target="_blank" href={"http://www.linkedin.com/shareArticle?mini=true&url=" + url}><img src="/img/share/LinkedIn.png" className="w-100"/></a>
-							<a className="col p-2" onClick={this.props.onShare} target="_blank" href={"mailto:?&subject=&body=" + this.props.url}><img src="/img/share/Email.png" className="w-100"/></a>
-						</Row>
-					</div>
-				}
-			</div>
-		);
-	}
+	// NB: theres no unicode character for share
+	// c.f. https://stackoverflow.com/questions/23358594/is-there-a-unicode-character-for-the-share-icon
+	// (which includes a css hack for making .<: look like it)
+
+	return (
+		<div className={space(absolute ? "position-absolute" : "position-relative", "d-inline-block share-btn")} style={style}>
+			<div className={space("btn", className)} onClick={() => setShowing(!showing)}><i className="fas fa-share-alt mr-2" />{children}</div>
+			{showing &&
+				<div className="share-popup">
+					<img src="/img/share/ShareBubble.svg" className="w-100 bubble" alt="share icon"/>
+					<Row className="popup-btns no-gutters w-100">
+						<a className="col p-2" onClick={onShare} target="_blank" href={"https://www.facebook.com/sharer/sharer.php?u=" + shareUrl}><img src="/img/share/Facebook.png" className="w-100"/></a>
+						<a className="col p-2" onClick={onShare} target="_blank" href={"https://twitter.com/intent/tweet?url=" + shareUrl}><img src="/img/share/Twitter.png" className="w-100"/></a>
+						<a className="col p-2" onClick={onShare} target="_blank" href={"http://www.linkedin.com/shareArticle?mini=true&url=" + shareUrl}><img src="/img/share/LinkedIn.png" className="w-100"/></a>
+						<a className="col p-2" onClick={onShare} target="_blank" href={"mailto:?&subject=&body=" + url}><img src="/img/share/Email.png" className="w-100"/></a>
+					</Row>
+				</div>
+			}
+		</div>
+	);
 };
 
 export default ShareButton;
