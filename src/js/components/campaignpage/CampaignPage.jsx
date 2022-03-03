@@ -324,7 +324,7 @@ const CampaignPage = () => {
 						<p className="w-60 mx-auto">If you see one of our shiny Good-Loop ads online, remember to engage with it to unlock your charity donation. Together we can raise even more money for good causes.</p>
 					</Container>
 					{isMobile() ? (
-						<img src="/img/Graphic_metro_mobile.800w.png" className="w-100" alt="publishers" />
+						<img src="/img/Graphic_metro_mobile_large.png" className="w-100" alt="publishers" />
 					) : (
 						<img src="/img/Graphic_metro.1920w.png" className="w-100" alt="publishers" />
 					)}
