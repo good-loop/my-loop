@@ -64,7 +64,7 @@ const SubscribePage = ({}) => {
 // Actions
 
 const PAGES = {
-	// blog: BlogPage, // TODO
+	blog: BlogPage, // TODO
 	// blogcontent: BlogContent,
 	campaign: CampaignPage,
 	impact: CampaignPage,
