@@ -14,6 +14,7 @@ import SearchQuery from '../../base/searchquery';
 import List from '../../base/data/List';
 import { setFooterClassName } from '../Footer';
 import { formatDate } from './BlogContent';
+import BlogPost from '../../base/data/BlogPost';
 
 const BlogCard = ({id, title, subtitle, thumbnail, date, readTime, status}) => {
 	return <Col md={4} xs={12} className="p-3">
@@ -53,13 +54,12 @@ const BlogPage = () => {
 	const undecorated = DataStore.getUrlValue('undecorated');
 	const status = DataStore.getUrlValue('gl.status') || DataStore.getUrlValue('status') || KStatus.PUBLISHED;
 
-	const pvBlogPosts = fetchBlogPosts({status});
-	const blogPosts = pvBlogPosts.value && List.hits(pvBlogPosts.value);
-	console.log(blogPosts);
-
 	let guts;
+	let blogPost;
 
 	if (!pageUrl) {
+		const pvBlogPosts = fetchBlogPosts({status});
+		const blogPosts = pvBlogPosts.value && List.hits(pvBlogPosts.value);
 		guts = <>
 			<h1>Our Blog</h1>
 			<p className='leader-text mt-3 text-center'>Grab a cuppa and have a read through our feel-good news, views and opinions</p>
@@ -70,7 +70,7 @@ const BlogPage = () => {
 							title={blogPost.title}
 							subtitle={blogPost.subtitle}
 							date={blogPost.created}
-							readTime={blogPost.readTime || "2"}
+							readTime={BlogPost.readTime(blogPost)}
 							thumbnail={blogPost.thumbnail}
 							id={blogPost.id}
 							status={status}
@@ -84,7 +84,7 @@ const BlogPage = () => {
 		if (!pvBlogPost.resolved) {
 			return <Misc.Loading />;
 		}
-		const blogPost = pvBlogPost.value;
+		blogPost = pvBlogPost.value;
 		if (!blogPost) {
 			guts = <div className="text-center">
 				<h2>Oops - we can't find that!</h2>
@@ -100,7 +100,7 @@ const BlogPage = () => {
 		{!undecorated &&
 			<CurvePageCard
 				color="white"
-				bgImg="/img/blog/header.png"
+				bgImg={(blogPost && blogPost.headerImg) || "/img/blog/header.png"}
 				bgSize="cover"
 				bgPosition="center 80%"
 				bgClassName="bg-gl-desat-blue"
