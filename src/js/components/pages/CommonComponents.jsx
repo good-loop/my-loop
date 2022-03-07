@@ -106,7 +106,7 @@ const MyLandingBackgroundImage = ({bgImg, children}) => {
 }
 
 const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
-	const name = ngo &&ngo.displayName || ngo.name;
+	const name = ngo && ngo.displayName;
 	
 	if ( ! title) {
 		title = `Turn your web browsing into ${(ngo && "cash for " + name) || "charity donations"}. For free.`;
@@ -215,7 +215,7 @@ const T4GCharityScreenshot = ({ngo, className, ...props}) => {
  */
 const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassName}) => {
 
-	const name = (ngo && ngo.displayName || ngo.name) || "charity";
+	const name = ngo && ngo.displayName;
 
 	const items = [
 		<>
