@@ -137,6 +137,10 @@ const TabStats = () => {
 /** Search box - a magnifying-glass icon by a text input ??Refactor with PropControl type=search??
  */
 const Search = ({ onSubmit, placeholder, icon, className }) => {
+	window.onload = function() {
+		document.getElementById('search').focus();
+	}
+
 	return (<>
 		<Form onSubmit={onSubmit} inline className={space("flex-row tab-search-form px-2", className)} >
 			{icon && icon}

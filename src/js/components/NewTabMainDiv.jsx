@@ -68,6 +68,7 @@ const LoremIpsum = () => {
  * 
  */
 const WebtopPage = () => {
+
 	Login.app = "t4g.good-loop.com"; // Not My.GL!
 	const pvCharityID = getPVSelectedCharityId();
 	const loadingCharity = !pvCharityID || !pvCharityID.resolved;
@@ -172,10 +173,6 @@ const NewTabMainDiv = () => {
 		let bg = "img/newtab/bg" + (Math.round(Math.random() * bgImgs) + 1) + ".jpg";
 		document.body.style.backgroundImage = "url(" + bg + ")";
 		document.body.style.backgroundSize = "cover";
-	}
-
-	window.onload = function() {
-		document.getElementById('search').focus();
 	}
 
 	return <MainDivBase pageForPath={PAGES} defaultPage="newtab" navbar={false} className="newtab" />;
