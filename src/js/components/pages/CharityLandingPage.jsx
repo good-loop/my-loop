@@ -28,15 +28,16 @@ const CharityT4GLogos = ({ngo, className, style, autosize}) => {
 }
 
 const HelpCharityTogetherCard = ({ngo}) => {
+	const name = ngo && ngo.displayName || ngo.name;
 	return <PageCard>
-		<h1>Let's help {ngo.name}<br/>do even more good.<br/>Together.</h1>
+		<h1>Let's help {name}<br/>do even more good.<br/>Together.</h1>
 		<Row className='mt-5 pt-5'>
 			<Col md={6}>
 				<img src={ngo.images} className='w-100'/>
 			</Col>
 			<Col md={6} className='p-5 d-flex flex-column justify-content-between'>
 				<div>
-					<h3>What {ngo.name} is doing</h3>
+					<h3>What {name} is doing</h3>
 					<p>{ngo.summaryDescription || ngo.description}</p>
 				</div>
 				<T4GCTA className="w-100"/>
@@ -54,12 +55,14 @@ const HelpCharityTogetherCard = ({ngo}) => {
 };
 
 const SignUpSection = ({ngo}) => {
+	const name = ngo && ngo.displayName || ngo.name
 	let iconImg = ['../img/icons/one.png', '../img/icons/two.png', '../img/icons/three.png']
-	let iconText = ['Sign up for Tabs for Good', 'Start browsing and raise money for '+ngo.name, 'Help '+ngo.name+' raise money']
+	let iconText = ['Sign up for Tabs for Good', 'Start browsing and raise money for ' + name, 'Help ' + name + ' raise money']
+	
 
 	return(
 		<PageCard className="sign-up-section text-center bg-gl-pale-orange">
-			<h1>Sign up today and raise money for {ngo.name}. For free.</h1>
+			<h1>Sign up today and raise money for {name}. For free.</h1>
 			{isPortraitMobile() ? <>
 				<Row className="pt-5">
 					<Col xs={6}>
@@ -120,6 +123,7 @@ const CharityLandingPage = () => {
 		return <Misc.Loading />;
 	}
 	const ngo = pvCharity.value;
+	const name = ngo && ngo.displayName || ngo.name
 
 	// set NavBar brand
 	setNavProps(ngo);
@@ -130,8 +134,8 @@ const CharityLandingPage = () => {
 	}, []);
 
 	const shareMeta = {
-		title: ngo.name + ": Tabs for Good",
-		description: "Raise money for " + ngo.name + " just by opening tabs.",
+		title: name + ": Tabs for Good",
+		description: "Raise money for " + name + " just by opening tabs.",
 		image: ngo.images
 	};
 
