@@ -140,8 +140,8 @@ const Search = ({ onSubmit, placeholder, icon, className }) => {
 	return (<>
 		<Form onSubmit={onSubmit} inline className={space("flex-row tab-search-form px-2", className)} >
 			{icon && icon}
-			<PropControl placeholder={placeholder} type="search" prop="q" path={['widget', 'search']} className="flex-grow w-100" />
-			<i className="fa fa-search tab-search mr-2" onClick={onSubmit} />
+			<PropControl placeholder={placeholder} type="search" id="search" prop="q" path={['widget', 'search']} className="flex-grow w-100" />
+			<i className="fa fa-search tab-search mr-2" onClick={onSubmit}/>
 		</Form>
 	</>);
 };

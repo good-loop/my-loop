@@ -174,6 +174,10 @@ const NewTabMainDiv = () => {
 		document.body.style.backgroundSize = "cover";
 	}
 
+	window.onload = function() {
+		document.getElementById('search').focus();
+	}
+
 	return <MainDivBase pageForPath={PAGES} defaultPage="newtab" navbar={false} className="newtab" />;
 };
 
