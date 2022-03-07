@@ -31,10 +31,10 @@ const MyLoopFooter = ({page}) => {
 	let dsClassName = getFooterClassName();
 	const fullClassName = space('my-loop-footer', bgColour, dsClassName);
 	return <Container fluid className={fullClassName}>
+		<svg className="w-100 footer-curve color-gl-dark-turquoise" viewBox="0 0 2560 593" version="1.1" xmlns="http://www.w3.org/2000/svg">
+			<path d="m 0.003,-0.001 c 0,0 356.72,665.074 1297.3,296.564 940.58,-368.51 1468.515,280.543 1468.515,280.543 v 221.17 H 0.003 Z" fill="currentColor" />
+		</svg>
 		<Row>
-			<svg className="w-100 footer-curve color-gl-dark-turquoise" viewBox="0 0 2560 593" version="1.1" xmlns="http://www.w3.org/2000/svg">
-  			<path d="m 0.003,-0.001 c 0,0 356.72,665.074 1297.3,296.564 940.58,-368.51 1468.515,280.543 1468.515,280.543 v 221.17 H 0.003 Z" fill="currentColor" />
-			</svg>
 			<img src="/img/green/hummingbird.png" className='hummingbird'/>
 			<div className='bg-gl-dark-turquoise w-100 p-5' style={{marginTop:-1}}>
 				<Row>
@@ -45,10 +45,10 @@ const MyLoopFooter = ({page}) => {
 						<Col md={6} className="d-flex justify-content-end">
 							<div className="stamps d-flex flex-row align-items-end p-3">
 								<div>
-									<img src="/img/footer/Net-carbon-negative.svg" className="logo logo-lg"/>
+									<img src="/img/footer/Net-carbon-negative.svg" className="logo-lg"/>
 								</div>
 								<div>
-									<img src="/img/footer/B-corp.svg" className="logo logo-lg"/>
+									<img src="/img/footer/B-corp.svg" className="logo-lg"/>
 								</div>
 							</div>
 						</Col>
@@ -102,10 +102,10 @@ const MyLoopFooter = ({page}) => {
 					<Col md={6} className="d-flex justify-content-center pt-5 mt-5">
 						<div className="stamps d-flex flex-row align-items-end py-1 px-3">
 							<div>
-								<img src="/img/footer/Net-carbon-negative.svg" className="logo logo-lg"/>
+								<img src="/img/footer/Net-carbon-negative.svg" className="logo-lg"/>
 							</div>
 							<div>
-								<img src="/img/footer/B-corp.svg" className="logo logo-lg"/>
+								<img src="/img/footer/B-corp.svg" className="logo-lg"/>
 							</div>
 						</div>
 					</Col>
