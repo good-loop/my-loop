@@ -106,11 +106,13 @@ const MyLandingBackgroundImage = ({bgImg, children}) => {
 }
 
 const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
+	const name = ngo &&ngo.displayName || ngo.name;
+	
 	if ( ! title) {
-		title = `Turn your web browsing into ${(ngo && "cash for " + ngo.name) || "charity donations"}. For free.`;
+		title = `Turn your web browsing into ${(ngo && "cash for " + name) || "charity donations"}. For free.`;
 	}
 	if ( ! text) {
-		text = `Get our Tabs for Good Browser Plugin today and start raising money for ${(ngo && ngo.name) || "good causes"} - just by browsing the internet.`;
+		text = `Get our Tabs for Good Browser Plugin today and start raising money for ${(ngo && name) || "good causes"} - just by browsing the internet.`;
 	}
 	if ( ! bgImg && ngo) bgImg = ngo.images;
 	return (<>
@@ -213,7 +215,7 @@ const T4GCharityScreenshot = ({ngo, className, ...props}) => {
  */
 const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassName}) => {
 
-	const name = (ngo && ngo.name) || "charity";
+	const name = (ngo && ngo.displayName || ngo.name) || "charity";
 
 	const items = [
 		<>
