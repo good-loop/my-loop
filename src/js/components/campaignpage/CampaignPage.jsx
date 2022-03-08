@@ -51,7 +51,7 @@ import { PageCard, TriCards } from '../pages/CommonComponents';
 		// q = '', TODO
 	} = DataStore.getValue(['location', 'params']) || {};
 	// Merge gl.status into status & take default value
-	if ( ! status) status = (glStatus || C.KStatus.PUB_OR_ARC);
+	if ( ! status) status = (glStatus || KStatus.PUB_OR_ARC);
 	// Data, assemble
 	let pvTopCampaign, pvAgencies, pvAdvertisers;
 	if ( ! topCampaignId) {
