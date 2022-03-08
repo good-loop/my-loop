@@ -88,6 +88,7 @@ export const T4GPluginButton = ({className, label, dUnset}) => {
 	if (browser == 'SAFARI') {
 		label = <span className='ml-1'>Set Homepage for {browser}</span>;
 		href = 'safari'
+		return <C.A className={space(className, "btn btn-primary", (dUnset ? "d-unset" : "d-flex-block justify-content-center align-items-center"))} href={href}><Icon name={browser.toLowerCase()}/> {label}</C.A>
 	}
 	if ( ! href) {
 		return <span className={space(className, "disabled btn btn-secondary")} >Not available for {browser} yet</span>;

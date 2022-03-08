@@ -42,6 +42,7 @@ import ForCharityPage from './pages/ForCharityPage';
 import { T4GCTA, T4GSignUpModal, T4GPluginButton } from './T4GSignUp';
 import { MyLoginWidgetGuts } from './MyLoginWidgetGuts';
 import BlogContent from './pages/BlogContent';
+import SafariPage from './pages/SafariPage';
 // import TestPage from './pages/TestPage';
 
 // DataStore
@@ -87,6 +88,7 @@ const PAGES = {
 	ourstory: OurStoryPage,
 	forbusiness: ForBusinessPage,
 	forcharity: ForCharityPage,
+	safari: SafariPage,
 };
 // ?? switch to router??
 // const ROUTES = {
@@ -138,7 +140,7 @@ const MainDiv = () => {
 		navbarBackgroundColour="white"
 		NavExpandSize="md"
 		// navbarLabels={getNavbarLabels}
-		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account', 'green', 'charities', 'impactoverview', 'campaign', 'ourstory', 'ads', 'blog', 'blogcontent', 'allowlist']}
+		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account', 'green', 'charities', 'impactoverview', 'campaign', 'ourstory', 'ads', 'blog', 'blogcontent', 'allowlist', 'safari']}
 		//undecoratedPages={["blogcontent"]}
 		Footer={Footer}
 		canRegister
