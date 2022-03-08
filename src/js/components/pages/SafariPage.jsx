@@ -16,7 +16,7 @@ export const SafariPage = () => {
 			<li>Click the “New windows open with” pop-up menu, then choose Homepage.</li>
 			<li>Click the “New tabs open with” pop-up menu, then choose Homepage.</li>
 		</ol>
-		<video className='w-75' preload="auto" controls>
+		<video className='w-75' preload="auto" autoPlay loop>
 					<source src="img/safari_homepage.mp4" type="video/mp4" />
 				</video>
 	</PageCard>
