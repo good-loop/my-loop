@@ -37,7 +37,7 @@ const HomePage = ({spring}) => {
 	useEffect(() => {
 		const urlParams = DataStore.getValue(['location', 'params']);
 		if (Object.keys(urlParams).includes('gl.vert')) {
-			window.location.href = `/#campaign/?gl.vert=${urlParams['gl.vert']}`;
+			window.location.href = `/campaign/?gl.vert=${urlParams['gl.vert']}`;
 		}
 		setFooterClassName("bg-white");
 	}, []);
