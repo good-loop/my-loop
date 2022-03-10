@@ -5,7 +5,7 @@ import { PageCard, CardImgLeft, NewsAwards, TriCards, CurvePageCard } from './Co
 import {T4GSignUpButton} from '../T4GSignUp';
 import DynImg from '../../base/components/DynImg';
 import BG from '../../base/components/BG';
-import BSCarousel from '../../base/components/BSCarousel';
+import BSCarousel, { next } from '../../base/components/BSCarousel';
 import Page from './AccountPage';
 
 export const SafariPage = () => {
@@ -48,9 +48,11 @@ export const SafariPage = () => {
 				<img src="img/safari-preference/safari-paste.png" className='safari-paste' alt="" />
 			</div>
 			<p>In the Homepage field, enter a the Tabs For Good address:</p>
-			<code>https://my.good-loop.com/newtab.html</code> <br/>
-			<button onClick={() => {navigator.clipboard.writeText('https://my.good-loop.com/newtab.html')}} 
-				className='btn btn-primary'>Copy To Clipboard</button>
+			<span>
+				<code>https://my.good-loop.com/newtab.html</code>
+				<button onClick={() => {navigator.clipboard.writeText('https://my.good-loop.com/newtab.html')}} 
+					className='btn btn-primary ml-3'>Copy To Clipboard</button>
+			</span>
 		</>,
 		<>
 			<h3>All Done</h3>
@@ -60,7 +62,7 @@ export const SafariPage = () => {
 	];
 
 	const slides = SlideItems.map((content, i) => (
-		<div key={i} style={{height:'40em'}} className='p-5 text-center'>
+		<div key={i} className='p-5 text-center safari-slideshow'>
 			{content}
 		</div>
 	));
@@ -68,7 +70,7 @@ export const SafariPage = () => {
 	return (<>
 	<PageCard className="SafariPage widepage">
 		<h1>Using Tabs For Good in Safari on Mac</h1>
-		<BSCarousel className="bg-gl-light-pink mt-5 rounded" hasIndicators>
+		<BSCarousel className="mt-3 rounded" hasIndicators nextButton>
 			{slides}
 		</BSCarousel>
 	</PageCard>
