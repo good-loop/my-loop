@@ -24,7 +24,7 @@ import { setPersonSetting } from './pages/TabsForGoodSettings';
 // Copy: https://docs.google.com/document/d/1_mpbdWBeaIEyKHRr-mtC1FHAPEfokcRZTHXgMkYJyVk/edit?usp=sharing
 
 
-const SUPPORTED_BROWSERS = ["CHROME","EDGE"];
+const SUPPORTED_BROWSERS = ["CHROME","EDGE", "SAFARI"];
 
 const WIDGET_PATH = ['widget', 'T4GSignUp'];
 const SHOW_PATH = [...WIDGET_PATH, 'show'];
@@ -85,6 +85,11 @@ export const T4GPluginButton = ({className, label, dUnset}) => {
 		CHROME: "https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1",
 		EDGE: "https://microsoftedge.microsoft.com/addons/detail/goodloop-tabs-for-good/affgfbmpcboljigkpdeamhieippkglkn"
 	}[browser];
+	if (browser == 'SAFARI') {
+		label = <span className='ml-1'>Set Homepage for {browser}</span>;
+		href = 'safari'
+		return <C.A className={space(className, "btn btn-primary", (dUnset ? "d-unset" : "d-flex-block justify-content-center align-items-center"))} href={href}><Icon name={browser.toLowerCase()}/> {label}</C.A>
+	}
 	if ( ! href) {
 		return <span className={space(className, "disabled btn btn-secondary")} >Not available for {browser} yet</span>;
 	}
