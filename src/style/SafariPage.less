@@ -19,6 +19,58 @@
 		}
 	}
 
+	.steps-graphic {
+		position: absolute;
+		width: 42rem;
+		transform: translate(-50%, 0);
+		left: 50%;
+		top: -1rem;
+		padding-bottom: 3rem;
+
+		div {margin-right: 5rem;}
+		div:nth-child(6) {margin-right: 0 !important;}
+
+		div:after {
+			position: absolute;
+			content: '';
+			top: 1rem;
+			width: 5rem;
+			border-bottom: 2px solid black;
+		}
+		:nth-child(1):after{left: 4.5rem;}
+		:nth-child(2):after{left: 11.5rem;}
+		:nth-child(3):after{left: 18.5rem;}
+		:nth-child(4):after{left: 25.5rem;}
+		:nth-child(5):after{left: 32.5rem;}
+		:nth-child(6):after{display: none;}
+
+		.circle {
+			height: 2rem;
+			width: 2rem;
+			background-color: white;
+			border-radius: 50%;
+			display: inline-block;
+			border: 1px solid black;
+			&.circle-active {
+				background-color: @gl-light-pink;
+			}
+		}
+
+		span {
+			margin: 0;
+			position: absolute;
+			transform: translate(-50%, 0);
+			top: 2rem;
+		}
+
+		#circle-step-1 {left: 3.5rem;}
+		#circle-step-2 {left: 10.5rem;}
+		#circle-step-3 {left: 17.5rem;}
+		#circle-step-4 {left: 24.5rem;}
+		#circle-step-5 {left: 31.5rem;}
+		#circle-step-6 {left: 38.5rem;}
+	}
+
 	.safari-dropdown {
 		position: relative;
 		
