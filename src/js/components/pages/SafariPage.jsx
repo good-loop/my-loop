@@ -44,12 +44,12 @@ export const SafariPage = () => {
 			let circle6 = step == 5 ? "circle circle-active" : "circle";
 	
 			return (<>
-				<div className={circle1}></div>
-				<div className={circle2}></div>
-				<div className={circle3}></div>
-				<div className={circle4}></div>
-				<div className={circle5}></div>
-				<div className={circle6}></div>
+				<div onClick={() => goToIndex(0)} className={circle1}></div>
+				<div onClick={() => goToIndex(1)} className={circle2}></div>
+				<div onClick={() => goToIndex(2)} className={circle3}></div>
+				<div onClick={() => goToIndex(3)} className={circle4}></div>
+				<div onClick={() => goToIndex(4)} className={circle5}></div>
+				<div onClick={() => goToIndex(5)} className={circle6}></div>
 				<span id="circle-step-1">Step 1</span>
 				<span id="circle-step-2">Step 2</span>
 				<span id="circle-step-3">Step 3</span>
@@ -108,7 +108,7 @@ export const SafariPage = () => {
 				<img src="/img/safari-preference/safari-final.png" className='w-75' alt="" />
 				<img src="img/safari-preference/new-window.png" className='new-window' alt="" />
 			</div>
-		<p>Make sure your Safari opens with "A new window"</p>
+		<p>Make sure your Safari opens with "A new window".</p>
 	</>,
 		<>
 			<div className="safari-dropdown">
