@@ -198,10 +198,11 @@ const HowTabsForGoodWorks = ({className, shortTitle}) => {
 
 /**
  * ??describe this
+ * Did put the charity logo onto a screenshot of T4G - but the current image no longer works for that
  */
 const T4GCharityScreenshot = ({ngo, className, ...props}) => {
 	return <BG src="/img/homepage/slide-1.png" className={className} center {...props}>
-		{ngo && <CharityLogo charity={ngo} className="t4gscreenshot-logo"/>}
+		{/*ngo && <CharityLogo charity={ngo} className="t4gscreenshot-logo"/>*/}
 	</BG>;
 }
 
@@ -233,8 +234,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 	];
 	const images = [
 		<T4GCharityScreenshot ngo={ngo} className="slide-img"/>,
-		<BG src="/img/homepage/slide-2.png" className="slide-img" center>
-	</BG>
+		<BG src="/img/homepage/slide-2.png" className="slide-img" center></BG>
 	]
 
 	const slides = items.map((content, i) => (<>
@@ -554,10 +554,15 @@ const WhatIsTabsForGood	= ({ngo, imgs}) => {
 			<h1 className='mb-4'>What is Tabs for Good?</h1>
 			<p className=''><b>Tabs for Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</b></p>
 			<Row className="py-5">
-				<Col md={6}>
+				<Col md={4}>
 					<T4GCharityScreenshot ngo={ngo} ratio={100}/>
 				</Col>
-				<Col md={6}>
+				<Col md={4}>
+					<BG center 
+					src={(ngo && ngo.images) || (imgs && imgs[1]) || "/img/wateraid-bg.jpg"} 
+					ratio={100} alt="" />
+				</Col>
+				<Col md={4}>
 					<BG center 
 					src={(ngo && ngo.images) || (imgs && imgs[1]) || "/img/wateraid-bg.jpg"} 
 					ratio={100} alt="" />

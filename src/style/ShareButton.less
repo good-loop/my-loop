@@ -1,16 +1,23 @@
 .share-popup {
-    position: absolute;
-    left: 105%;
-    top: 0;
     z-index: 5;
     width: 200px;
-    @media @width-mobile {
-        top: 105%;
-        left: 50%;
-        transform: translateX(-50%);
-        .bubble {
-            transform: scaleX(-1);
+    &:not(.menu-only) {
+        position: absolute;
+        left: 105%;
+        top: 0;
+        z-index: 5;
+        width: 200px;
+        @media @width-mobile {
+            top: 105%;
+            left: 50%;
+            transform: translateX(-50%);
+            .bubble {
+                transform: scaleX(-1);
+            }
         }
+    }
+    &.menu-only {
+        position: relative;
     }
     .popup-btns {
         position: absolute;
