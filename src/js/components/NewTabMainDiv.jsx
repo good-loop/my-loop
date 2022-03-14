@@ -61,8 +61,8 @@ const WebtopPage = () => {
 	let [showPopup, setShowPopup] = useState(false);
 	
 	// TODO charity custom BG
-	if (pvCharityID.resolved) {
-		console.log("Load charity description: "+NGO.description(pvCharityID));
+	if (charityID == "amnesty-international") {
+		if (fetchCharity(charityID)) HandleBG(fetchCharity(charityID).images);
 	}
 
 	// Yeh - a tab is opened -- let's log that (once only)
@@ -150,9 +150,11 @@ const WebtopPage = () => {
 	</>);
 }; // ./WebTopPage
 
-const HandleBG = (cid) => {
+const HandleBG = (charityIMG) => {
 	// TODO let charity have custom background image
-	if (cid) {
+	if (charityIMG) {
+		document.body.style.backgroundImage = "url(" + charityIMG + ")";
+		document.body.style.backgroundSize = "cover";
 		return;
 	}
 
