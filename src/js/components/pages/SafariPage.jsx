@@ -134,7 +134,7 @@ export const SafariPage = () => {
 				<img src="/img/safari-preference/safari-final.png" className='w-75' alt="" />
 				<img src="img/safari-preference/safari-paste.png" className='safari-paste' alt="" />
 			</div>
-			<p>In the Homepage field, enter the Tabs For Good address: <br/> <code>https://my.good-loop.com/newtab.html</code> <button onClick={() => {navigator.clipboard.writeText('https://my.good-loop.com/newtab.html')}} 
+			<p style={{position:"relative",top:"-1rem"}}>In the Homepage field, enter the Tabs For Good address: <br/> <code>https://my.good-loop.com/newtab.html</code> <button onClick={() => {navigator.clipboard.writeText('https://my.good-loop.com/newtab.html')}} 
 					className='btn btn-primary ml-3'>Copy To Clipboard</button></p>
 		</>,
 		<>
