@@ -62,11 +62,7 @@ const WebtopPage = () => {
 	
 	// TODO charity custom BG
 	if (charityID == "amnesty-international") {
-		console.log("performance: "+charityID.value+performance.now())
-		if (fetchCharity(charityID)) {
-			console.log("performance: "+fetchCharity(charityID).images+performance.now())
-			HandleBG(fetchCharity(charityID).images);
-		}
+		HandleBG("https://app.sogive.org/uploads/katalingood-loop.comemail/AmnestyInternational-8902261514600495926.jpg");
 	}
 
 	// Yeh - a tab is opened -- let's log that (once only)
