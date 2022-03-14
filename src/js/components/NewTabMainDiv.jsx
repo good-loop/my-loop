@@ -165,7 +165,7 @@ const PAGES = {
 };
 const NewTabMainDiv = () => {
 	// make ui in local development easier to read
-	window.location.hostname.startsWith('local', 'test') ? document.body.style.backgroundColor = "lightgrey" : '';
+	["localmy", "testmy"].includes(window.location.hostname.split('.')[0]) ? document.body.style.backgroundColor = "lightgrey" : '';
 
 	let browser = getBrowserVendor();
 	if (browser == 'SAFARI') {
