@@ -62,7 +62,11 @@ const WebtopPage = () => {
 	
 	// TODO charity custom BG
 	if (charityID == "amnesty-international") {
-		if (fetchCharity(charityID)) HandleBG(fetchCharity(charityID).images);
+		console.log("performance: "+charityID.value+performance.now())
+		if (fetchCharity(charityID)) {
+			console.log("performance: "+fetchCharity(charityID).images+performance.now())
+			HandleBG(fetchCharity(charityID).images);
+		}
 	}
 
 	// Yeh - a tab is opened -- let's log that (once only)
