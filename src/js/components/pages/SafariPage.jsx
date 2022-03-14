@@ -10,6 +10,7 @@ import Page from './AccountPage';
 
 export const SafariPage = () => {
 
+	// Not using BSCarousel here becasue of too many customised parts
 	const SafariCarousel = ({className, hasIndicators, light, children, nextButton}) => {
 		const [animating, setAnimating] = useState(false);
 		const [index, setIndex] = useState(0);
@@ -133,12 +134,8 @@ export const SafariPage = () => {
 				<img src="/img/safari-preference/safari-final.png" className='w-75' alt="" />
 				<img src="img/safari-preference/safari-paste.png" className='safari-paste' alt="" />
 			</div>
-			<p>In the Homepage field, enter the Tabs For Good address:</p>
-			<span>
-				<code>https://my.good-loop.com/newtab.html</code>
-				<button onClick={() => {navigator.clipboard.writeText('https://my.good-loop.com/newtab.html')}} 
-					className='btn btn-primary ml-3'>Copy To Clipboard</button>
-			</span>
+			<p>In the Homepage field, enter the Tabs For Good address: <br/> <code>https://my.good-loop.com/newtab.html</code> <button onClick={() => {navigator.clipboard.writeText('https://my.good-loop.com/newtab.html')}} 
+					className='btn btn-primary ml-3'>Copy To Clipboard</button></p>
 		</>,
 		<>
 			<img src="/img/safari-preference/safari-final.png" className='w-75' alt="" />
@@ -153,8 +150,8 @@ export const SafariPage = () => {
 	));
 
 	return (<>
-	<PageCard className="SafariPage widepage text-center">
-		<img className="w-50 mb-1" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
+	<PageCard className="SafariPage widepage text-center pt-0">
+		{/* <img className="w-50 mb-1" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" /> */}
 		<h1>Using Tabs For Good in Safari on Mac</h1>
 		<SafariCarousel className="mt-5 rounded" nextButton>
 			{slides}
