@@ -45,12 +45,13 @@ public class MetaHtmlServlet implements IServlet {
 	
 	static {
 		Map<String, String> aMap = new HashMap<String, String>();
-		aMap.put("home", "");
+		aMap.put("home", "Raise money for charities simply by browsing the web");
 		aMap.put("impactoverview", "Impact Hub");
 		aMap.put("green", "Green Media");
 		aMap.put("tabsforgood", "Sign Up for Tabs-for-Good");
 		pageTitles = Collections.unmodifiableMap(aMap);
 	}
+	
 		private Map getPageSettings(WebRequest state) {
 			String bit0 = state.getSlugBits(0);
 			if ("impact".equals(bit0)) {
