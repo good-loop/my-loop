@@ -108,7 +108,7 @@ public class MetaHtmlServlet implements IServlet {
 		// do we have a campaign?
 		String cid = state.getSlugBits(1);
 		if (cid != null) {
-			CrudClient<Campaign> cc = new CrudClient<Campaign>(Campaign.class, "https://portal.good-loop.com/campaign");
+//			CrudClient<Campaign> cc = new CrudClient<Campaign>(Campaign.class, "https://portal.good-loop.com/campaign");
 //			Campaign campaign = cc.get(cid).java(); TODO
 		}
 		Map vars = new HashMap();		
