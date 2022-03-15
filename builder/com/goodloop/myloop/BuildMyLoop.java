@@ -1,7 +1,5 @@
 package com.goodloop.myloop;
 
-import java.io.File;
-
 import com.winterwell.bob.wwjobs.BuildWinterwellProject;
 
 public class BuildMyLoop extends BuildWinterwellProject {

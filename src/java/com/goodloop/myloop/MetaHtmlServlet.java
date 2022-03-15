@@ -13,18 +13,13 @@ import com.goodloop.jerbil.BuildJerbilPage;
 import com.goodloop.jerbil.JerbilConfig;
 import com.google.common.cache.CacheBuilder;
 import com.winterwell.utils.Dep;
-import com.winterwell.utils.SimpleTemplateVars;
-import com.winterwell.utils.containers.Cache;
 import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.WebUtils;
 import com.winterwell.utils.web.WebUtils2;
-import com.winterwell.web.WebPage;
-import com.winterwell.web.ajax.JThing;
 import com.winterwell.web.app.CrudClient;
 import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.WebRequest;
-import com.winterwell.youagain.client.BuildYouAgainJavaClient;
 
 /**
  * Make a meta data page for SEO
