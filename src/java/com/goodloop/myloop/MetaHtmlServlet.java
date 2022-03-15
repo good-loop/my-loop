@@ -97,6 +97,16 @@ public class MetaHtmlServlet implements IServlet {
 		
 		String loadingIMG = "img/splash-screen/background-loading.svg";
 		vars.put("contents", "<div style='height:100vh;background-color:#71ACBB;'><img src="+loadingIMG+" alt='loading'/></div>");
+		
+		// custom meta/SEO info?
+		// BlogPost??
+		File f = new File("pages", state.getSlug()+".md");
+		if (f.isFile()) {
+			String md = FileUtils.read(f);
+			// TODO copy/use Jerbil code to parse
+			// TODO squirt id-to-alt values into js so DynImg can access them??
+		}
+		
 		return vars;
 	}
 
@@ -105,7 +115,7 @@ public class MetaHtmlServlet implements IServlet {
 		String cid = state.getSlugBits(1);
 		if (cid != null) {
 			CrudClient<Campaign> cc = new CrudClient<Campaign>(Campaign.class, "https://portal.good-loop.com/campaign");
-			Campaign campaign = cc.get(cid).java();
+//			Campaign campaign = cc.get(cid).java(); TODO
 		}
 		Map vars = new HashMap();		
 		vars.put("title", state.getRequestPath()+" Campaign: "+cid);
