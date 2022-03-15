@@ -9,7 +9,10 @@ import java.util.concurrent.TimeUnit;
 
 import com.goodloop.data.Campaign;
 import com.goodloop.data.NGO;
+import com.goodloop.jerbil.BuildJerbilPage;
+import com.goodloop.jerbil.JerbilConfig;
 import com.google.common.cache.CacheBuilder;
+import com.winterwell.utils.Dep;
 import com.winterwell.utils.SimpleTemplateVars;
 import com.winterwell.utils.containers.Cache;
 import com.winterwell.utils.io.FileUtils;
@@ -20,6 +23,7 @@ import com.winterwell.web.ajax.JThing;
 import com.winterwell.web.app.CrudClient;
 import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.WebRequest;
+import com.winterwell.youagain.client.BuildYouAgainJavaClient;
 
 /**
  * Make a meta data page for SEO
@@ -42,18 +46,32 @@ public class MetaHtmlServlet implements IServlet {
 		String slug = state.getSlug();
 		if (slug==null) slug="null"; // so we can cache it anyway
 		String html = html4slug.get(slug);
-		if (html==null) {
-			// make a file
-			html = FileUtils.read(new File("templates/template.html"));
+		if (html==null || state.debug) {
+			JerbilConfig jc = new JerbilConfig();
+			jc.useJS = false;
+			Dep.set(JerbilConfig.class, jc);
 			
-			// TODO fill in the SEO and social stuff
+			// make the page and cache it
+			File template = new File("templates/template.html");
+			File src = new File("pages", FileUtils.safeFilename(state.getSlug()+".md"));
+			String srcText = "";
+			if (src.isFile()) {
+				srcText = FileUtils.read(src);
+			} else {
+				src = null;
+			}
+			File out = null;			
+			BuildJerbilPage bjp = new BuildJerbilPage(src, "", template, out);
+			String templateHtml = FileUtils.read(template);
+
+			// TODO fill in the SEO and social stuff from file or API
 			Map vars = getPageSettings(state);
 			
-			SimpleTemplateVars stv = new SimpleTemplateVars(vars);
-			stv.setUseJS(false);
-			stv.setUseJSLite(false);
-			html = stv.process(html);			
+			// Jerbil it!
+			String pageHtml = bjp.run2_render(false, srcText, templateHtml, vars);
 			
+			// cache it
+			html = pageHtml;
 			html4slug.put(slug, html);
 		}
 		// send it back
@@ -65,7 +83,6 @@ public class MetaHtmlServlet implements IServlet {
 		static {
 			Map<String, String> aMap = new HashMap<String, String>();
 			aMap.put("home", "");
-			aMap.put("ourstory", "Our Story");
 			aMap.put("impactoverview", "Impact Hub");
 			aMap.put("green", "Green Media");
 			aMap.put("tabsforgood", "Sign Up for Tabs-for-Good");
@@ -97,12 +114,6 @@ public class MetaHtmlServlet implements IServlet {
 		
 		// custom meta/SEO info?
 		// BlogPost??
-		File f = new File("pages", state.getSlug()+".md");
-		if (f.isFile()) {
-			String md = FileUtils.read(f);
-			// TODO copy/use Jerbil code to parse
-			// TODO squirt id-to-alt values into js so DynImg can access them??
-		}
 		
 		return vars;
 	}
