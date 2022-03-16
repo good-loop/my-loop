@@ -139,7 +139,7 @@ export const SafariPage = () => {
 		</>,
 		<>
 			<img src="/img/safari-preference/safari-final.png" className='w-75' alt="" />
-			<p>You're ready to use Tabs For Good and start raising money for good causes - just by browsing the internet. Open a new tab to try it out!</p>
+			<p>Now, all that's left to do is to open a new tab, and you're ready to start raising money for the causes you care most about - just by browsing the internet.</p>
 		</>
 	];
 
