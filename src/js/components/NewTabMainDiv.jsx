@@ -157,7 +157,7 @@ const WebtopPage = () => {
 const HandleBG = (charityIMG) => {
 	const checkImgUrl = (url) => {
 		if (url == null || url == '') return false;
-		if (url.startsWith('http') && (url.endsWith('.jpg') || url.endsWith('.jpeg'))) return true;
+		if (url.endsWith('.jpg') || url.endsWith('.jpeg')) return true;
 		else return false;
 	}
 	
