@@ -63,10 +63,8 @@ const WebtopPage = () => {
 	if (charityID == "amnesty-international") {
 		// HandleBG("https://app.sogive.org/uploads/katalingood-loop.comemail/Amnesty__fellgood-10410803962049040907.jpg");
 		HandleBG("img/newtab/bg1.jpg");
-		console.log("Wrote customBG to localStorage");
 	} else if (charityID != null) {
-		window.localStorage.removeItem('customBG')
-		console.log("Remove customBG from localStorage");
+		window.localStorage.removeItem('customBG');
 	}
 
 	// Yeh - a tab is opened -- let's log that (once only)
@@ -170,7 +168,7 @@ const HandleBG = (charityIMG) => {
 
 	// Check Localstorage
 	const customBG = window.localStorage.getItem('customBG');
-	console.log('customBG', customBG);
+	console.log('customBG in loacalStorage:', customBG);
 	if (checkImgUrl(customBG)) {
 		document.body.style.backgroundImage = "url(" + customBG + ")";
 		document.body.style.backgroundSize = "cover";
@@ -182,7 +180,6 @@ const HandleBG = (charityIMG) => {
 
 	// Safari
 	let browser = getBrowserVendor();
-	browser = 'SAFARI'
 	if (browser == 'SAFARI') {
 		let bgImgs = 9;
 		let bg = "img/newtab/bg" + (Math.round(Math.random() * bgImgs) + 1) + ".jpg";
