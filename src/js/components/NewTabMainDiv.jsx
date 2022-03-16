@@ -59,15 +59,17 @@ const WebtopPage = () => {
 	const loadingCharity = !pvCharityID || !pvCharityID.resolved;
 	const charityID = pvCharityID && pvCharityID.value;
 	let [showPopup, setShowPopup] = useState(false);
-	
-	// TODO charity custom BG
-	if (charityID == "amnesty-international") {
-		// HandleBG("https://app.sogive.org/uploads/katalingood-loop.comemail/Amnesty__fellgood-10410803962049040907.jpg");
-		HandleBG("img/newtab/bg1.jpg");
-		console.log("Wrote customBG to localStorage");
-	} else {
-		window.localStorage.removeItem('customBG')
-	}
+
+	useEffect(()=> {
+		if (charityID == "amnesty-international") {
+			// HandleBG("https://app.sogive.org/uploads/katalingood-loop.comemail/Amnesty__fellgood-10410803962049040907.jpg");
+			HandleBG("img/newtab/bg1.jpg");
+			console.log("Wrote customBG to localStorage");
+		} else {
+			window.localStorage.removeItem('customBG')
+			console.log("Remove customBG from localStorage");
+		}
+	}, [charityID]);
 
 	// Yeh - a tab is opened -- let's log that (once only)
 	if (!logOnceFlag && Login.isLoggedIn()) {
@@ -182,6 +184,7 @@ const HandleBG = (charityIMG) => {
 
 	// Safari
 	let browser = getBrowserVendor();
+	browser = 'SAFARI'
 	if (browser == 'SAFARI') {
 		let bgImgs = 9;
 		let bg = "img/newtab/bg" + (Math.round(Math.random() * bgImgs) + 1) + ".jpg";
