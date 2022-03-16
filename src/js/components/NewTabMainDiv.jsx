@@ -180,7 +180,7 @@ const HandleBG = (charityIMG) => {
 
 	// Safari
 	let browser = getBrowserVendor();
-	if (browser == 'SAFARI' || browser == 'CHROME') { // Remove Chrome after dev
+	if (browser == 'SAFARI') {
 		let bgImgs = 9;
 		let bg = "img/newtab/bg" + (Math.round(Math.random() * bgImgs) + 1) + ".jpg";
 		document.body.style.backgroundImage = "url(" + bg + ")";
