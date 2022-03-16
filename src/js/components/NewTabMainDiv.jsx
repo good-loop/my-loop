@@ -62,7 +62,9 @@ const WebtopPage = () => {
 	
 	// TODO charity custom BG
 	if (charityID == "amnesty-international") {
-		HandleBG("https://app.sogive.org/uploads/katalingood-loop.comemail/Amnesty__fellgood-10410803962049040907.jpg");
+		// HandleBG("https://app.sogive.org/uploads/katalingood-loop.comemail/Amnesty__fellgood-10410803962049040907.jpg");
+		HandleBG("img/newtab/bg1.jpg");
+		console.log("Wrote customBG to localStorage");
 	} else {
 		window.localStorage.removeItem('customBG')
 	}
