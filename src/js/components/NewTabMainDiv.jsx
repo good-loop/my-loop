@@ -59,17 +59,19 @@ const WebtopPage = () => {
 	const loadingCharity = !pvCharityID || !pvCharityID.resolved;
 	const charityID = pvCharityID && pvCharityID.value;
 	let [showPopup, setShowPopup] = useState(false);
-
-	useEffect(()=> {
-		if (charityID == "amnesty-international") {
-			// HandleBG("https://app.sogive.org/uploads/katalingood-loop.comemail/Amnesty__fellgood-10410803962049040907.jpg");
-			HandleBG("img/newtab/bg1.jpg");
-			console.log("Wrote customBG to localStorage");
-		} else {
-			window.localStorage.removeItem('customBG')
-			console.log("Remove customBG from localStorage");
-		}
-	}, [charityID]);
+	
+	if (charityID == "amnesty-international") {
+		// HandleBG("https://app.sogive.org/uploads/katalingood-loop.comemail/Amnesty__fellgood-10410803962049040907.jpg");
+		HandleBG("img/newtab/bg1.jpg");
+		console.log("Wrote customBG to localStorage");
+	} else {
+		setTimeout(() => {
+			if (charityID != "amnesty-international") {
+				window.localStorage.removeItem('customBG')
+				console.log("Remove customBG from localStorage");
+			}
+		}, 1500)
+	}
 
 	// Yeh - a tab is opened -- let's log that (once only)
 	if (!logOnceFlag && Login.isLoggedIn()) {
