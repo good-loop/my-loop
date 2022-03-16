@@ -64,13 +64,9 @@ const WebtopPage = () => {
 		// HandleBG("https://app.sogive.org/uploads/katalingood-loop.comemail/Amnesty__fellgood-10410803962049040907.jpg");
 		HandleBG("img/newtab/bg1.jpg");
 		console.log("Wrote customBG to localStorage");
-	} else {
-		setTimeout(() => {
-			if (charityID != "amnesty-international") {
-				window.localStorage.removeItem('customBG')
-				console.log("Remove customBG from localStorage");
-			}
-		}, 1500)
+	} else if (charityID != null) {
+		window.localStorage.removeItem('customBG')
+		console.log("Remove customBG from localStorage");
 	}
 
 	// Yeh - a tab is opened -- let's log that (once only)
