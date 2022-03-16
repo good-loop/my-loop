@@ -62,7 +62,9 @@ const WebtopPage = () => {
 	
 	// TODO charity custom BG
 	if (charityID == "amnesty-international") {
-		HandleBG("https://app.sogive.org/uploads/katalingood-loop.comemail/AmnestyInternational-8902261514600495926.jpg");
+		HandleBG("https://app.sogive.org/uploads/katalingood-loop.comemail/Amnesty__fellgood-10410803962049040907.jpg");
+	} else {
+		window.localStorage.removeItem('customBG')
 	}
 
 	// Yeh - a tab is opened -- let's log that (once only)
@@ -151,9 +153,24 @@ const WebtopPage = () => {
 }; // ./WebTopPage
 
 const HandleBG = (charityIMG) => {
-	// TODO let charity have custom background image
+	const checkImgUrl = (url) => {
+		if (url == null || url == '') return false;
+		if (url.startsWith('http') && (url.endsWith('.jpg') || url.endsWith('.jpeg'))) return true;
+		else return false;
+	}
+	
 	if (charityIMG) {
 		document.body.style.backgroundImage = "url(" + charityIMG + ")";
+		document.body.style.backgroundSize = "cover";
+		window.localStorage.setItem('customBG', charityIMG);
+		return;
+	}
+
+	// Check Localstorage
+	const customBG = window.localStorage.getItem('customBG');
+	console.log('customBG', customBG);
+	if (checkImgUrl(customBG)) {
+		document.body.style.backgroundImage = "url(" + customBG + ")";
 		document.body.style.backgroundSize = "cover";
 		return;
 	}
@@ -163,7 +180,7 @@ const HandleBG = (charityIMG) => {
 
 	// Safari
 	let browser = getBrowserVendor();
-	if (browser == 'SAFARI') {
+	if (browser == 'SAFARI' || browser == 'CHROME') { // Remove Chrome after dev
 		let bgImgs = 9;
 		let bg = "img/newtab/bg" + (Math.round(Math.random() * bgImgs) + 1) + ".jpg";
 		document.body.style.backgroundImage = "url(" + bg + ")";
