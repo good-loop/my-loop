@@ -12,11 +12,16 @@ server {
 	listen   80; ## listen for ipv4; this line is default and implied
 
 	root /home/winterwell/my-loop/web;
-	index index.html;
+#	index index.html;
 
     expires $expires;
 
 	server_name localmy.good-loop.com;
+
+    # index.html doesn't exist as of 16/03/22 - pass / to backend
+    location = / {
+        proxy_pass  http://localhost:8733/home;
+    }
 
 	location / {
 			try_files $uri $uri.html @backend;
