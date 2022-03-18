@@ -11,6 +11,7 @@ import MDText from '../../base/components/MDText';
 import DataStore from '../../base/plumbing/DataStore';
 import SignatureSVG from '../../base/components/SignatureSVG';
 import BlogPost from '../../base/data/BlogPost';
+import LivePreviewable from '../../base/components/LivePreviewable';
 
 const formatDate = (date) => {
     const dateObj = new Date(date);
@@ -22,28 +23,18 @@ const formatDate = (date) => {
     return newdate;
 };
 
-const BlogContent = ({blogPost, preview}) => {
+/**
+ * Display a blog post
+ * @param {Object} blogPost
+ */
+const BlogContent = ({blogPost}) => {
+    return <LivePreviewable object={blogPost} Child={BlogContentChild}/>
+}
 
-    //const storeContent = DataStore.getUrlValue("content");
-    const [msgContent, setMsgContent] = useState(null);
-    const useContent = msgContent || (blogPost && blogPost.content);// || storeContent;
-    
-    const [msgDetails, setMsgDetails] = useState({});
-    Object.assign(blogPost, msgDetails);
-
-    useEffect (() => {
-        // For portal editing, allows content to be edited while in an iframe without reloading
-        window.addEventListener("message", event => {
-            if (event.origin.includes('portal.good-loop.com')) {
-                if (event.data.startsWith("content:")) {
-                    setMsgContent(event.data.substr(8, event.data.length - 7));
-                } else if (event.data.startsWith("details:")) {
-                    setMsgDetails(JSON.parse(event.data.substr(8, event.data.length - 7)));
-                }
-            }
-        });
-        return () => {window.removeEventListener("message")}
-    }, []);
+/**
+ * Display a blog post. Wrapped in a LivePreviewable
+ */
+const BlogContentChild = ({object: blogPost}) => {
 
     return <>
         <h1>{blogPost.title}</h1>
@@ -58,7 +49,7 @@ const BlogContent = ({blogPost, preview}) => {
             <hr/>
             <div className="blog-content mt-5">
                 <style>{blogPost.customCSS}</style>
-                <MDText source={useContent} linkOut/>
+                <MDText source={blogPost.content} linkOut/>
             </div>
         </PageCard>
     </>;

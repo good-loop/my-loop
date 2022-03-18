@@ -13,6 +13,8 @@ import { T4GCTA } from '../T4GSignUp';
 import { MyLandingSection, HowTabsForGoodWorks, PageCard, TabsForGoodSlideSection, TriCards, WhatIsTabsForGood, CornerHummingbird } from './CommonComponents';
 import ShareButton from '../ShareButton';
 import ServerIO from '../../plumbing/ServerIO';
+import LivePreviewable from '../../base/components/LivePreviewable';
+import NGODescription from '../../base/components/NGODescription';
 
 const CharityT4GLogos = ({ngo, className, style, autosize}) => {
 	const containerStyle = (!isPortraitMobile() && autosize) ? {width:"40%"} : {};
@@ -29,7 +31,7 @@ const CharityT4GLogos = ({ngo, className, style, autosize}) => {
 }
 
 const HelpCharityTogetherCard = ({ngo}) => {
-	const name = ngo && ngo.displayName || ngo.name;
+	const name = NGO.displayName(ngo);
 	return <PageCard>
 		<h1>Let's help {name}<br/>do even more good.<br/>Together.</h1>
 		<Row className='mt-5 pt-5'>
@@ -39,7 +41,7 @@ const HelpCharityTogetherCard = ({ngo}) => {
 			<Col md={6} className='p-5 d-flex flex-column justify-content-between'>
 				<div>
 					<h3>What {name} is doing</h3>
-					<p>{ngo.summaryDescription || ngo.description}</p>
+					<NGODescription ngo={ngo}/>
 				</div>
 				<T4GCTA className="w-100"/>
 			</Col>
@@ -48,7 +50,7 @@ const HelpCharityTogetherCard = ({ngo}) => {
 			<Col md={6} className='p-5 d-flex flex-column justify-content-between'>
 				<div>
 					<h3>Together we'll (INSERT CAUSE)</h3>
-					<p>{ngo.summaryDescription || ngo.description}</p>
+					<NGODescription ngo={ngo} extended/>
 				</div>
 				<T4GCTA className="w-100"/>
 			</Col>
@@ -68,7 +70,7 @@ const HelpCharityTogetherCard = ({ngo}) => {
 };
 
 const SignUpSection = ({ngo}) => {
-	const name = ngo && ngo.displayName || ngo.name
+	const name = NGO.displayName(ngo);
 	let iconImg = ['../img/icons/one.png', '../img/icons/two.png', '../img/icons/three.png']
 	let iconText = ['Sign up for Tabs for Good', 'Start browsing and raise money for ' + name, 'Help ' + name + ' raise money']
 	
@@ -124,40 +126,9 @@ const SignUpSection = ({ngo}) => {
 	)
 };
 
-const CharityLandingPage = () => {
-	// Is this for a charity?
-	const path = DataStore.getValue(['location', 'path']);
-	const status = DataStore.getUrlValue('status') || DataStore.getUrlValue('gl.status') || KStatus.PUBLISHED;
-	let cid = path[1];
-	if (!cid) {
-		return <h1>No charity</h1>;
-	}
-	let pvCharity = getDataItem({ type: 'NGO', id: cid, status });
-	if (!pvCharity.resolved) {
-		return <Misc.Loading />;
-	}
-	const ngo = pvCharity.value;
-	const name = ngo && ngo.displayName || ngo.name;
+const CharityLandingPageContent = ({object: ngo}) => {
 
-	const [msgNGO, setMsgNGO] = useState({});
-	Object.assign(ngo, msgNGO);
-
-	// set NavBar brand
-	setNavProps(ngo);
-
-	useEffect(() => {
-		//setFooterClassName('bg-gl-desat-blue');
-		setFooterClassName('bg-gl-pale-orange');
-		// For portal editing, allows content to be edited while in an iframe without reloading
-        window.addEventListener("message", event => {
-            if (event.origin.includes('portal.good-loop.com')) {
-                if (event.data.startsWith("ngo:")) {
-                    setMsgNGO(JSON.parse(event.data.substr(4, event.data.length - 3)));
-                }
-            }
-        });
-        return () => {window.removeEventListener("message")}
-	}, []);
+	const name = NGO.displayName(ngo);
 
 	const shareMeta = {
 		title: name + ": Tabs for Good",
@@ -189,6 +160,36 @@ const CharityLandingPage = () => {
 		<TabsForGoodSlideSection ngo={ngo} showLowerCTA bgClassName="bg-gl-light-blue"/>
 		<SignUpSection ngo={ngo}/>
 	</>);
+}
+
+
+const CharityLandingPage = () => {
+	// Is this for a charity?
+	const path = DataStore.getValue(['location', 'path']);
+	const status = DataStore.getUrlValue('status') || DataStore.getUrlValue('gl.status') || KStatus.PUBLISHED;
+	let cid = path[1];
+	if (!cid) {
+		return <h1>No charity</h1>;
+	}
+	let pvCharity = getDataItem({ type: 'NGO', id: cid, status });
+	if (!pvCharity.resolved) {
+		return <Misc.Loading />;
+	}
+	const ngo = pvCharity.value;
+
+	if (!ngo) return <>
+		<h1>Not found :((</h1>
+		<h3 className="text-center">We couldn't find that charity.</h3>
+	</>;
+
+	useEffect(() => {
+		// set NavBar brand
+		setNavProps(ngo);
+		//setFooterClassName('bg-gl-desat-blue');
+		setFooterClassName('bg-gl-pale-orange');
+	}, []);
+
+	return <LivePreviewable object={ngo} Child={CharityLandingPageContent}/>;
 };
 
 export default CharityLandingPage;
