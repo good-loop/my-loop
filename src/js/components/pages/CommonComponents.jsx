@@ -13,6 +13,7 @@ import BSCarousel from '../../base/components/BSCarousel';
 import { T4GCTA } from '../T4GSignUp';
 import Roles from '../../base/Roles';
 import { A } from '../../base/plumbing/glrouter';
+import NGOImage from '../../base/components/NGOImage';
 
 const PageCard = ({id, className, children}) => {
 	// Why two containers?? Is the outer one for card-specific css rules to latch onto??
@@ -558,13 +559,13 @@ const WhatIsTabsForGood	= ({ngo, imgs}) => {
 					<T4GCharityScreenshot ngo={ngo} ratio={100}/>
 				</Col>
 				<Col md={4}>
-					<BG center 
-					src={(ngo && ngo.images) || (imgs && imgs[1]) || "/img/wateraid-bg.jpg"} 
+					<NGOImage bg center ngo={ngo}
+					src="/img/wateraid-bg.jpg"
 					ratio={100} alt="" />
 				</Col>
 				<Col md={4}>
-					<BG center 
-					src={(ngo && ngo.images) || (imgs && imgs[1]) || "/img/wateraid-bg.jpg"} 
+					<NGOImage bg center ngo={ngo}
+					src="/img/wateraid-bg.jpg"
 					ratio={100} alt="" />
 				</Col>
 				{/*<Col md={4}>

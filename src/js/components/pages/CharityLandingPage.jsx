@@ -15,6 +15,7 @@ import ShareButton from '../ShareButton';
 import ServerIO from '../../plumbing/ServerIO';
 import LivePreviewable from '../../base/components/LivePreviewable';
 import NGODescription from '../../base/components/NGODescription';
+import NGOImage from '../../base/components/NGOImage';
 
 const CharityT4GLogos = ({ngo, className, style, autosize}) => {
 	const containerStyle = (!isPortraitMobile() && autosize) ? {width:"40%"} : {};
@@ -36,7 +37,7 @@ const HelpCharityTogetherCard = ({ngo}) => {
 		<h1>Let's help {name}<br/>do even more good.<br/>Together.</h1>
 		<Row className='mt-5 pt-5'>
 			<Col md={6}>
-				<img src={ngo.images} className='w-100'/>
+				<NGOImage ngo={ngo} className="w-100"/>
 			</Col>
 			<Col md={6} className='p-5 d-flex flex-column justify-content-between'>
 				<div>
@@ -55,7 +56,7 @@ const HelpCharityTogetherCard = ({ngo}) => {
 				<T4GCTA className="w-100"/>
 			</Col>
 			<Col md={6}>
-				<img src={ngo.images} className='w-100'/>
+				<NGOImage ngo={ngo} className="w-100"/>
 			</Col>
 		</Row>
 		{/*
