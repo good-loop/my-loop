@@ -62,12 +62,12 @@ const CardImgLeft = ({classname, imgUrl, roundedImg, children}) =>{
 	)
 }
 
-const MyLandingBackgroundImage = ({bgImg, children}) => {
-	if (isPortraitMobile()) return bgImg ? (
+const MyLandingBackgroundImage = ({bgImg, ngo, children}) => {
+	if (isPortraitMobile()) return bgImg || ngo ? (
 		<div className='mobile-landing-curve'>
-			<BG src={bgImg} className="mobile-curve-container">
+			<NGOImage bg header ngo={ngo} src={bgImg} className="mobile-curve-container">
 				<img src="/img/curves/mobile-curve-white.svg" className='mobile-curve'/>
-			</BG>
+			</NGOImage>
 			<div className='bg-white mobile-curve-fill'>
 				{children}
 			</div>
@@ -115,9 +115,8 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 	if ( ! text) {
 		text = `Get our Tabs for Good Browser Plugin today and start raising money for ${(ngo && name) || "good causes"} - just by browsing the internet.`;
 	}
-	if ( ! bgImg && ngo) bgImg = ngo.images;
 	return (<>
-		<MyLandingBackgroundImage bgImg={bgImg}>
+		<MyLandingBackgroundImage bgImg={bgImg} ngo={ngo}>
 			<Container fluid className={space("d-flex", !shiftLeft ? "justify-content-center" : "left-padding")}>
 				<Row className="splash-top-margin">
 						{!shiftLeft && <Col md={1} sm={0} /* left padding, but not on mobile */></Col>}
@@ -239,7 +238,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 	]
 
 	const slides = items.map((content, i) => (<>
-		<Row className="slideshow" noGutters>
+		<Row className="slideshow" noGutters key={content}>
 			<Col md={6} className="slide-left overflow-hidden">
 				{images[i]}
 			</Col>
@@ -554,24 +553,25 @@ const WhatIsTabsForGood	= ({ngo, imgs}) => {
 		<PageCard className="how-tabs-for-good-works text-center">
 			<h1 className='mb-4'>What is Tabs for Good?</h1>
 			<p className=''><b>Tabs for Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</b></p>
-			<Row className="py-5">
+			<Row className="py-5 d-none d-md-flex">
 				<Col md={4}>
-					<T4GCharityScreenshot ngo={ngo} ratio={100}/>
+					{/* Center image remains as the T4G graphic */}
+					<BG center src="/img/homepage/slide-1.png"
+						ratio={100} alt="" />
 				</Col>
 				<Col md={4}>
-					<NGOImage bg center ngo={ngo}
-					src="/img/wateraid-bg.jpg"
-					ratio={100} alt="" />
+					<NGOImage bg center ngo={ngo} imgIdx={0}
+						ratio={100} alt=""/>
 				</Col>
 				<Col md={4}>
-					<NGOImage bg center ngo={ngo}
-					src="/img/wateraid-bg.jpg"
-					ratio={100} alt="" />
+					<NGOImage bg center ngo={ngo} imgIdx={1}
+						ratio={100} alt="" />
 				</Col>
 				{/*<Col md={4}>
 					<BG center src={(ngo && ngo.images) || (imgs && imgs[2]) || "/img/homepage/world.png"} ratio={100} alt="" />
 				</Col>*/}
 			</Row>
+			<img className="d-md-none w-100" src="/img/LandingCharity/laptop-1.png" />
 			<T4GCTA className="mx-auto"/>
 		</PageCard>
 	</>);
