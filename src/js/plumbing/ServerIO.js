@@ -120,7 +120,7 @@ ServerIO.mixPanelTrack = ({mixPanelTag, data = {}}) => {
 // override for (ad)vert
 let super_geft = ServerIO.getEndpointForType;
 ServerIO.getEndpointForType = (type) => {
-	if (C.TYPES.isBlogPost(type)) return `${ServerIO.PORTAL_ENDPOINT}/blogpost`;
+	if (C.TYPES.isBlogPost(type)) return `${C.HTTPS}://${C.SERVER_TYPE}portal.good-loop.com/blogpost`;
 	return super_geft(type);
 };
 
