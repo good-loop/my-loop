@@ -361,7 +361,7 @@ const tutorialPages = [
 	<>
 		<h2>It's your choice</h2>
 		<p>
-			Choose the charity you want to support. We will send them 50% of the money that brands pay for their ads on Tabs for Good.
+			Choose the charity you want to support. We will send them 50% of the money from brands for their ads on Tabs for Good.
 		</p>
 	</>,
 	<>
