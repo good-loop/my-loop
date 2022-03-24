@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Col, Container, Row } from 'reactstrap';
 import Misc from '../../base/components/Misc';
 import KStatus from '../../base/data/KStatus';
-import { getDataItem } from '../../base/plumbing/Crud';
+import { getDataItem, setWindowTitle } from '../../base/plumbing/Crud';
 import C from '../../C';
 import CharityLogo from '../CharityLogo';
 import BG from '../../base/components/BG';
@@ -17,8 +17,10 @@ import { formatDate } from './BlogContent';
 import BlogPost from '../../base/data/BlogPost';
 
 const BlogCard = ({id, title, subtitle, thumbnail, date, readTime, status}) => {
+	// Remove status if its PUBLISHED - neatens the URL
+	const urlStatus = status && (status === KStatus.PUBLISHED ? "" : "?gl.status="+status);
 	return <Col md={4} xs={12} className="p-3">
-		<C.A href={"/blog/" + id + (status ? "?gl.status="+status : "")}>
+		<C.A href={"/blog/" + id + urlStatus}>
 			<div className="blog-card h-100">
 				<BG src={thumbnail} className="w-100" ratio={60}/>
 				<div className="blog-titles p-3">
@@ -92,6 +94,7 @@ const BlogPage = () => {
 				<C.A href="/blog">Return to all blogs</C.A>
 			</div>;
 		} else {
+			setWindowTitle("My Good-Loop Blog: " + blogPost.title);
 			guts = <BlogContent blogPost={blogPost} preview={preview}/>;
 		}
 	}
