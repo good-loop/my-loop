@@ -153,9 +153,6 @@ const CharityLandingPageContent = ({object: ngo}) => {
 				<Col md={8} className='d-none d-md-block'>
 					<ShareButton meta={shareMeta} className="ml-5" url={window.location.href} menuOnly>Share</ShareButton>
 				</Col>
-				<Col md={4} className='d-flex justify-content-center px-2'>
-					<CharityT4GLogos ngo={ngo}/>
-				</Col>
 			</Row>
 		}
 		<WhatIsTabsForGood ngo={ngo} />
