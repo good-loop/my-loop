@@ -10,6 +10,7 @@ import Page from './AccountPage';
 
 export const SafariPage = () => {
 
+	// Not using BSCarousel here becasue of too many customised parts
 	const SafariCarousel = ({className, hasIndicators, light, children, nextButton}) => {
 		const [animating, setAnimating] = useState(false);
 		const [index, setIndex] = useState(0);
@@ -42,7 +43,9 @@ export const SafariPage = () => {
 			let circle4 = step == 3 ? "circle circle-active" : "circle";
 			let circle5 = step == 4 ? "circle circle-active" : "circle";
 			let circle6 = step == 5 ? "circle circle-active" : "circle";
-	
+			let circle7 = step == 6 ? "circle circle-active" : "circle";
+
+
 			return (<>
 				<div onClick={() => goToIndex(0)} className={circle1}></div>
 				<div onClick={() => goToIndex(1)} className={circle2}></div>
@@ -50,12 +53,14 @@ export const SafariPage = () => {
 				<div onClick={() => goToIndex(3)} className={circle4}></div>
 				<div onClick={() => goToIndex(4)} className={circle5}></div>
 				<div onClick={() => goToIndex(5)} className={circle6}></div>
+				<div onClick={() => goToIndex(6)} className={circle7}></div>
 				<span id="circle-step-1">Step 1</span>
 				<span id="circle-step-2">Step 2</span>
 				<span id="circle-step-3">Step 3</span>
 				<span id="circle-step-4">Step 4</span>
 				<span id="circle-step-5">Step 5</span>
-				<span id="circle-step-6">All Done</span>
+				<span id="circle-step-6">Step 6</span>
+				<span id="circle-step-7">All Done</span>
 			</>)
 		}
 	
@@ -116,6 +121,12 @@ export const SafariPage = () => {
 				<img src="img/safari-preference/homepage.png" className='set-homepage' alt="" />
 			</div>
 			<p>Click the “New windows open with” pop-up menu, then choose Homepage.</p>
+		</>,
+		<>
+			<div className="safari-dropdown">
+				<img src="/img/safari-preference/safari-final.png" className='w-75' alt="" />
+				<img src="img/safari-preference/homepage.png" className='set-homepage-2' alt="" />
+			</div>
 			<p>Click the “New tabs open with” pop-up menu, then choose Homepage.</p>
 		</>,
 		<>
@@ -123,16 +134,12 @@ export const SafariPage = () => {
 				<img src="/img/safari-preference/safari-final.png" className='w-75' alt="" />
 				<img src="img/safari-preference/safari-paste.png" className='safari-paste' alt="" />
 			</div>
-			<p>In the Homepage field, enter a the Tabs For Good address:</p>
-			<span>
-				<code>https://my.good-loop.com/newtab.html</code>
-				<button onClick={() => {navigator.clipboard.writeText('https://my.good-loop.com/newtab.html')}} 
-					className='btn btn-primary ml-3'>Copy To Clipboard</button>
-			</span>
+			<p style={{position:"relative",top:"-1rem"}}>In the Homepage field, enter the Tabs For Good address: <br/> <code>https://my.good-loop.com/newtab.html</code> <button onClick={() => {navigator.clipboard.writeText('https://my.good-loop.com/newtab.html')}} 
+					className='btn btn-primary ml-3'>Copy To Clipboard</button></p>
 		</>,
 		<>
 			<img src="/img/safari-preference/safari-final.png" className='w-75' alt="" />
-			<p>You're ready to use Tabs For Good and start raising money for good causes - just by browsing the internet.</p>
+			<p>Now, all that's left to do is to open a new tab, and you're ready to start raising money for the causes you care most about - just by browsing the internet.</p>
 		</>
 	];
 
@@ -143,8 +150,8 @@ export const SafariPage = () => {
 	));
 
 	return (<>
-	<PageCard className="SafariPage widepage text-center">
-		<img className="w-50 mb-1" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
+	<PageCard className="SafariPage widepage text-center pt-0">
+		{/* <img className="w-50 mb-1" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" /> */}
 		<h1>Using Tabs For Good in Safari on Mac</h1>
 		<SafariCarousel className="mt-5 rounded" nextButton>
 			{slides}

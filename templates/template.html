@@ -4,8 +4,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
-		<meta property="og:image" content="$ogImage" />
-		<meta property="og:title" content="$title" />
+		<section src="meta.html" />
 		<!-- Explicit Content-Security-Policy is required for the GoodLoop app why?? -->
 		<meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file:; style-src 'self' 'unsafe-inline' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; media-src * 'self' data: https: http:; img-src * data: 'unsafe-inline'; connect-src * data: 'unsafe-inline'; frame-src * 'unsafe-inline' 'unsafe-eval';" />  
 		<link rel="manifest" href="/manifest.webmanifest">
@@ -54,14 +53,6 @@
 			d.parentNode.insertBefore(e,d);
 			})(document,window,cpm);
 		</script>
-		<!-- Google Analytics -->
-		<script>
-			window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-			ga('create', 'UA-89730678-7', 'auto');
-			// Don't send initial pageview - HashWatcher.jsx will translate hash to a more informative synthetic URL.
-			// ga('send', 'pageview');
-		</script>
-		<script async src='https://www.google-analytics.com/analytics.js'></script>
-		<!-- End Google Analytics -->		
+		<section src="google-analytics.html" />
 	</body>
 </html>

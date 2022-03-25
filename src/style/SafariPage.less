@@ -1,25 +1,11 @@
 .SafariPage {
 	.safari-slideshow {
-		height: 35em;
-		@media (max-width: 1280px) {height: 38em;}
-		@media (max-width: 1200px) {height: 33em;}
-		@media (max-width: 1000px) {height: 26em;}
-		@media @width-mobile {height: 22em;}
+		height: 32em;
+		@media (max-width: 1280px) {height: 35em;}
+		@media (max-width: 1200px) {height: 31em;}
+		@media (max-width: 1000px) {height: 24em;}
+		@media @width-mobile {height: 20em;}
 	}
-
-	// .carousel-indicators {
-	// 	li {
-	// 		width: 15px;
-	// 		height: 15px;
-	// 		background-color: #626262;
-	// 		border-radius: 50%;
-	// 		border: 1px solid grey;
-	// 		// margin-right: .5rem;
-	// 	}
-	// 	.active {
-	// 		background-color: white;
-	// 	}
-	// }
 
 	.steps-graphic {
 		position: absolute;
@@ -29,24 +15,24 @@
 		top: -1rem;
 		padding-bottom: 3rem;
 
-		div:not(:nth-child(6)) {
-			margin-right: 5rem;
-			cursor: pointer;
-		}
+		div {cursor: pointer;}
+
+		div:not(:nth-child(7)) {margin-right: 3rem;}
 
 		div:after {
 			position: absolute;
 			content: '';
 			top: 1rem;
-			width: 5rem;
+			width: 3rem;
 			border-bottom: 2px solid black;
 		}
-		:nth-child(1):after{left: 4.5rem;}
-		:nth-child(2):after{left: 11.5rem;}
-		:nth-child(3):after{left: 18.5rem;}
-		:nth-child(4):after{left: 25.5rem;}
-		:nth-child(5):after{left: 32.5rem;}
-		:nth-child(6):after{display: none;}
+		:nth-child(1):after{left: 7rem;}
+		:nth-child(2):after{left: 12rem;}
+		:nth-child(3):after{left: 17rem;}
+		:nth-child(4):after{left: 22rem;}
+		:nth-child(5):after{left: 27rem;}
+		:nth-child(6):after{left: 32rem;}
+		:nth-child(7):after{display: none;}
 
 		.circle {
 			height: 2rem;
@@ -67,20 +53,19 @@
 			top: 2rem;
 		}
 
-		#circle-step-1 {left: 3.5rem;}
-		#circle-step-2 {left: 10.5rem;}
-		#circle-step-3 {left: 17.5rem;}
-		#circle-step-4 {left: 24.5rem;}
-		#circle-step-5 {left: 31.5rem;}
-		#circle-step-6 {left: 38.5rem;}
+		#circle-step-1 {left: 6rem;}
+		#circle-step-2 {left: 11rem;}
+		#circle-step-3 {left: 16rem;}
+		#circle-step-4 {left: 21rem;}
+		#circle-step-5 {left: 26rem;}
+		#circle-step-6 {left: 31rem;}
+		#circle-step-7 {left: 36rem;}
 	}
 
 	.safari-dropdown {
 		position: relative;
 		
-		:nth-child(1) {
-			opacity: 0.6;
-		}
+		:nth-child(1) {opacity: 0.6;}
 
 		:nth-child(2) {
 			position: absolute;
@@ -93,13 +78,11 @@
 			width: 39%;
 		}
 
-		.new-window {
-			top: 20%;
-		}
+		.new-window {top: 20%;}
 
-		.set-homepage {
-			top: 25%;
-		}
+		.set-homepage {top: 25%;}
+
+		.set-homepage-2 {top: 31%;}
 
 		.safari-paste {
 			top: 37%;
