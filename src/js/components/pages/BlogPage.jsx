@@ -82,11 +82,16 @@ const BlogPage = () => {
 			</PageCard>
 		</>;
 	} else {
-		let pvBlogPost = getDataItem({ type: 'BlogPost', id:pageUrl, status });
-		if (!pvBlogPost.resolved) {
+		let pvBlogPosts = fetchBlogPostsBySlug({slug: pageUrl, status});
+		if (!pvBlogPosts.resolved) {
 			return <Misc.Loading />;
 		}
-		blogPost = pvBlogPost.value;
+		const blogPostList = List.hits(pvBlogPosts.value);
+		if (blogPostList.length > 1) {
+			console.error("Multiple blog posts with the same slug???");
+			return <h1>Something went wrong :(</h1>;
+		}
+		blogPost = blogPostList.length && blogPostList[0];
 		if (!blogPost) {
 			guts = <div className="text-center">
 				<h2>Oops - we can't find that!</h2>
@@ -128,6 +133,24 @@ const fetchBlogPosts = ({query, status=KStatus.PUBLISHED}) => {
 	if (!query) query = "";
     // Campaigns with set agencies
     let sq = new SearchQuery(query);
+    //let pvCampaigns = ActionMan.list({type: C.TYPES.Campaign, status, q});
+    // Campaigns with advertisers belonging to agency
+    let pvBlogPosts = ActionMan.list({type: C.TYPES.BlogPost, status, q:sq.query});
+
+    return pvBlogPosts;
+}
+
+/**
+ * @param {String} slug
+ * @param {?String} query
+ * @param {?KStatus} status
+ * @returns PromiseValue(BlogPage[])
+ */
+ const fetchBlogPostsBySlug = ({slug, query, status=KStatus.PUBLISHED}) => {
+	if (!query) query = "";
+    // Campaigns with set agencies
+    let sq = new SearchQuery(query);
+	sq = SearchQuery.setProp(sq, "slug", slug);
     //let pvCampaigns = ActionMan.list({type: C.TYPES.Campaign, status, q});
     // Campaigns with advertisers belonging to agency
     let pvBlogPosts = ActionMan.list({type: C.TYPES.BlogPost, status, q:sq.query});
