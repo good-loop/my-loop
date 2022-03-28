@@ -70,6 +70,11 @@ export const SafariPage = () => {
 			previous={previous}
 			interval={false}
 		>
+			{nextButton && <>
+			<a className='btn btn-secondary btn-next-carousel' onClick={next} >{index != children.length -1 ? 'Next Step' : 'Start Again'}</a>
+			<div className="steps-graphic d-none d-md-block">
+				<Steps step={index}/> 
+			</div></>}
 			{children.map((content, i) =>
 				<CarouselItem
 					key={i}
@@ -88,11 +93,6 @@ export const SafariPage = () => {
 				<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
 				<CarouselControl direction="next" directionText="Next" onClickHandler={next} />
 			</div>}
-			{nextButton && <>
-			<a className='btn btn-secondary btn-next-carousel' onClick={next} >{index != children.length -1 ? 'Next Step' : 'Start Again'}</a>
-			<div className="steps-graphic d-none d-md-block">
-				<Steps step={index}/> 
-			</div></>}
 		</Carousel>)
 	};
 
