@@ -144,7 +144,7 @@ export const SafariPage = () => {
 	];
 
 	const slides = SlideItems.map((content, i) => (
-		<div key={i} className='p-5 text-center safari-slideshow'>
+		<div key={i} className='mt-1 mx-5 mb-5 text-center safari-slideshow'>
 			{content}
 		</div>
 	));
