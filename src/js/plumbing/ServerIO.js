@@ -43,7 +43,7 @@ ServerIO.DATALOG_ENDPOINT = "https://lg.good-loop.com/data";
 ServerIO.checkBase();
 
 
-ServerIO.ENDPOINT_NGO = `https://app.sogive.org/charity`;
+//ServerIO.ENDPOINT_NGO = `https://app.sogive.org/charity`;
 
 /** 
  * NB: Copy-pasta from Portal ServerIO.js
