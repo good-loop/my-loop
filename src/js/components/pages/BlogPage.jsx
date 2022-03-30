@@ -147,6 +147,7 @@ const fetchBlogPosts = ({query, status=KStatus.PUBLISHED}) => {
  * @returns PromiseValue(BlogPage[])
  */
  const fetchBlogPostsBySlug = ({slug, query, status=KStatus.PUBLISHED}) => {
+	if (!slug) return {value:{hits:[]}};
 	if (!query) query = "";
     // Campaigns with set agencies
     let sq = new SearchQuery(query);

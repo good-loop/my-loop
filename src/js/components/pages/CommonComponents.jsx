@@ -107,7 +107,7 @@ const MyLandingBackgroundImage = ({bgImg, ngo, children}) => {
 }
 
 const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
-	const name = ngo && ngo.displayName;
+	const name = NGO.displayName(ngo);
 	
 	if ( ! title) {
 		title = `Turn your web browsing into ${(ngo && "cash for " + name) || "charity donations"}. For free.`;
