@@ -16,11 +16,11 @@ import { setFooterClassName } from '../Footer';
 import { formatDate } from './BlogContent';
 import BlogPost from '../../base/data/BlogPost';
 
-const BlogCard = ({id, title, subtitle, thumbnail, date, readTime, status}) => {
+const BlogCard = ({slug, title, subtitle, thumbnail, date, readTime, status}) => {
 	// Remove status if its PUBLISHED - neatens the URL
 	const urlStatus = status && (status === KStatus.PUBLISHED ? "" : "?gl.status="+status);
 	return <Col md={4} xs={12} className="p-3">
-		<C.A href={"/blog/" + id + urlStatus}>
+		<C.A href={"/blog/" + slug + urlStatus}>
 			<div className="blog-card h-100">
 				<BG src={thumbnail} className="w-100" ratio={60}/>
 				<div className="blog-titles p-3">
@@ -74,7 +74,7 @@ const BlogPage = () => {
 							date={blogPost.created}
 							readTime={BlogPost.readTime(blogPost)}
 							thumbnail={blogPost.thumbnail}
-							id={blogPost.id}
+							slug={blogPost.slug}
 							status={status}
 						/>
 					)}
