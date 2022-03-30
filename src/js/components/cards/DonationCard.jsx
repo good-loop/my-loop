@@ -139,7 +139,7 @@ const CharityDonation = ({cid, communityTotal, onlyOneCharity}) => {
 					</p>
 				</div>
 			</div>
-			<div className="top-p-1">{charity.displayName || charity.name || cid}</div>
+			<div className="top-p-1">{NGO.displayName(charity)}</div>
 		</div>
 	);
 };
