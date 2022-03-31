@@ -156,7 +156,7 @@ const CharityLandingPageContent = ({object: ngo}) => {
 			</Row>
 		}
 		<WhatIsTabsForGood ngo={ngo} />
-		<HowTabsForGoodWorks classname="mt-5"/>
+		<HowTabsForGoodWorks className="bg-gl-light-pink"/>
 		<HelpCharityTogetherCard ngo={ngo}/>
 		<TabsForGoodSlideSection ngo={ngo} showLowerCTA bgClassName="bg-gl-light-blue"/>
 		<SignUpSection ngo={ngo}/>
