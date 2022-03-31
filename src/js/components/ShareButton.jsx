@@ -9,6 +9,7 @@ import { encURI, space } from '../base/utils/miscutils';
  * @param {String} image for meta
  * @param {String} descriptions for meta
  * @param {?String} tweep twitter handle (defaults to @GoodLoopHQ)
+ * @param {?String} card twitter card type, defaults to summary (https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards)
  * @param {Object} meta an object with title, image and description to use as a convinience prop in place of those 3
  * @param {Boolean} absolute render a button that can handle absolute positioning
  * @param {String} className
@@ -16,17 +17,18 @@ import { encURI, space } from '../base/utils/miscutils';
  * @param {Function} onShare triggers after the share has been clicked
  * @param {Boolean} menuOnly renders the button menu with no button if true
  */
-const ShareButton = ({url, meta, title, image, description, tweep, absolute, className, style, children, onShare, menuOnly}) => {
+const ShareButton = ({url, meta, title, image, description, tweep, card, absolute, className, style, children, onShare, menuOnly}) => {
 
 	const [showing, setShowing] = useState(false);
 
 	// Generate ShareServlet sharing url
 	let shareUrl = new URL("https://as.good-loop.com/share");
-	if (!meta) meta = {title, image, description, tweep};
+	if (!meta) meta = {title, image, description, tweep, card};
 	if (meta.title) shareUrl.searchParams.append('title', meta.title);
 	if (meta.image) shareUrl.searchParams.append('image', meta.image);
 	if (meta.description) shareUrl.searchParams.append('desc', meta.description);
 	shareUrl.searchParams.append('tweep', meta.tweep || "GoodLoopHQ");
+	shareUrl.searchParams.append('card', meta.card || "summary");
 
 	shareUrl.searchParams.append("link", url);
 	//console.log("ShareServlet generated URL: " + url);
