@@ -555,13 +555,13 @@ const WhatIsTabsForGood	= ({ngo, imgs}) => {
 			<p className=''><b>Tabs for Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</b></p>
 			<Row className="py-5 d-none d-md-flex">
 				<Col md={4}>
+					<NGOImage bg center ngo={ngo} imgIdx={0}
+						ratio={100} alt=""/>
+				</Col>
+				<Col md={4}>
 					{/* Center image remains as the T4G graphic */}
 					<BG center src="/img/homepage/slide-1.png"
 						ratio={100} alt="" />
-				</Col>
-				<Col md={4}>
-					<NGOImage bg center ngo={ngo} imgIdx={0}
-						ratio={100} alt=""/>
 				</Col>
 				<Col md={4}>
 					<NGOImage bg center ngo={ngo} imgIdx={1}
