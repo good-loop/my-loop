@@ -87,12 +87,12 @@ const MyLandingBackgroundImage = ({bgImg, ngo, children}) => {
 		</div>
 	);
 
-	return bgImg ? (
-		<BG src={bgImg} className="landing-bg d-md-block d-none" center>
+	return bgImg || ngo ? (
+		<NGOImage bg header ngo={ngo} src={bgImg} className="landing-bg d-md-block d-none" center>
 			<BG src={"/img/LandingCharity/t4g-splash-screen-background.svg"} className="landing-splash" center>
 				{children}
 			</BG>
-		</BG>
+		</NGOImage>
 	) : (
 		<BG src="/img/splash-screen/background-0.svg" className="landing-bg d-md-block d-none" center>
 			<BG src="/img/splash-screen/background-1.png" center>
@@ -555,7 +555,7 @@ const WhatIsTabsForGood	= ({ngo, imgs}) => {
 			<p className=''><b>Tabs for Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</b></p>
 			<Row className="py-5 d-none d-md-flex">
 				<Col md={4}>
-					<NGOImage bg center ngo={ngo} imgIdx={0}
+					<NGOImage bg center ngo={ngo} main
 						ratio={100} alt=""/>
 				</Col>
 				<Col md={4}>
@@ -564,7 +564,7 @@ const WhatIsTabsForGood	= ({ngo, imgs}) => {
 						ratio={100} alt="" />
 				</Col>
 				<Col md={4}>
-					<NGOImage bg center ngo={ngo} imgIdx={1}
+					<NGOImage bg center ngo={ngo} imgIdx={0}
 						ratio={100} alt="" />
 				</Col>
 				{/*<Col md={4}>
