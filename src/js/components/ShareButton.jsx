@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import { Row } from 'reactstrap';
 import { encURI, space } from '../base/utils/miscutils';
+import C from '../C';
 
 /**
  * Produces a button with sharing links and dynamic meta, using ShareServlet
@@ -22,7 +23,8 @@ const ShareButton = ({url, meta, title, image, description, tweep, card, absolut
 	const [showing, setShowing] = useState(false);
 
 	// Generate ShareServlet sharing url
-	let shareUrl = new URL("https://as.good-loop.com/share");
+	// Don't use ServerIO.AS_ENDPOINT - it is set to live for my-loop
+	let shareUrl = new URL(`${C.HTTPS}://${C.SERVER_TYPE}as.good-loop.com/share`);
 	if (!meta) meta = {title, image, description, tweep, card};
 	if (meta.title) shareUrl.searchParams.append('title', meta.title);
 	if (meta.image) shareUrl.searchParams.append('image', meta.image);
