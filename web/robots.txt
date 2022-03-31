@@ -4,5 +4,9 @@ Allow: /
 User-agent: Mediapartners-Google
 Allow: /
 
+# Twitter also needs its own entry
+User-agent: Twitterbot
+Disallow:
+
 User-agent: *
 Allow: /
