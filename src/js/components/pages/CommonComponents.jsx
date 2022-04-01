@@ -63,6 +63,7 @@ const CardImgLeft = ({classname, imgUrl, roundedImg, children}) =>{
 }
 
 const MyLandingBackgroundImage = ({bgImg, ngo, children}) => {
+
 	if (isPortraitMobile()) return bgImg || ngo ? (
 		<div className='mobile-landing-curve'>
 			<NGOImage bg header ngo={ngo} src={bgImg} className="mobile-curve-container">
@@ -555,7 +556,7 @@ const WhatIsTabsForGood	= ({ngo, imgs}) => {
 			<p className=''><b>Tabs for Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</b></p>
 			<Row className="py-5 d-none d-md-flex">
 				<Col md={4}>
-					<NGOImage bg center ngo={ngo} main
+					<NGOImage bg center ngo={ngo} main src="/img/LandingCharity/photo-by-andrii-ryzhkov-unsplash.jpg"
 						ratio={100} alt=""/>
 				</Col>
 				<Col md={4}>
@@ -564,7 +565,7 @@ const WhatIsTabsForGood	= ({ngo, imgs}) => {
 						ratio={100} alt="" />
 				</Col>
 				<Col md={4}>
-					<NGOImage bg center ngo={ngo} imgIdx={0}
+					<NGOImage bg center ngo={ngo} imgIdx={0} src="/img/LandingCharity/photo-by-larm-rmah-unsplash.jpg"
 						ratio={100} alt="" />
 				</Col>
 				{/*<Col md={4}>
