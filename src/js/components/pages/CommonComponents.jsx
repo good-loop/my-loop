@@ -13,6 +13,7 @@ import BSCarousel from '../../base/components/BSCarousel';
 import { T4GCTA } from '../T4GSignUp';
 import Roles from '../../base/Roles';
 import { A } from '../../base/plumbing/glrouter';
+import NGOImage from '../../base/components/NGOImage';
 
 const PageCard = ({id, className, children}) => {
 	// Why two containers?? Is the outer one for card-specific css rules to latch onto??
@@ -61,12 +62,12 @@ const CardImgLeft = ({classname, imgUrl, roundedImg, children}) =>{
 	)
 }
 
-const MyLandingBackgroundImage = ({bgImg, children}) => {
-	if (isPortraitMobile()) return bgImg ? (
+const MyLandingBackgroundImage = ({bgImg, ngo, children}) => {
+	if (isPortraitMobile()) return bgImg || ngo ? (
 		<div className='mobile-landing-curve'>
-			<BG src={bgImg} className="mobile-curve-container">
+			<NGOImage bg header ngo={ngo} src={bgImg} className="mobile-curve-container">
 				<img src="/img/curves/mobile-curve-white.svg" className='mobile-curve'/>
-			</BG>
+			</NGOImage>
 			<div className='bg-white mobile-curve-fill'>
 				{children}
 			</div>
@@ -86,12 +87,12 @@ const MyLandingBackgroundImage = ({bgImg, children}) => {
 		</div>
 	);
 
-	return bgImg ? (
-		<BG src={bgImg} className="landing-bg d-md-block d-none" center>
+	return bgImg || ngo ? (
+		<NGOImage bg header ngo={ngo} src={bgImg} className="landing-bg d-md-block d-none" center>
 			<BG src={"/img/LandingCharity/t4g-splash-screen-background.svg"} className="landing-splash" center>
 				{children}
 			</BG>
-		</BG>
+		</NGOImage>
 	) : (
 		<BG src="/img/splash-screen/background-0.svg" className="landing-bg d-md-block d-none" center>
 			<BG src="/img/splash-screen/background-1.png" center>
@@ -106,7 +107,7 @@ const MyLandingBackgroundImage = ({bgImg, children}) => {
 }
 
 const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
-	const name = ngo && ngo.displayName;
+	const name = NGO.displayName(ngo);
 	
 	if ( ! title) {
 		title = `Turn your web browsing into ${(ngo && "cash for " + name) || "charity donations"}. For free.`;
@@ -114,9 +115,8 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 	if ( ! text) {
 		text = `Get our Tabs for Good Browser Plugin today and start raising money for ${(ngo && name) || "good causes"} - just by browsing the internet.`;
 	}
-	if ( ! bgImg && ngo) bgImg = ngo.images;
 	return (<>
-		<MyLandingBackgroundImage bgImg={bgImg}>
+		<MyLandingBackgroundImage bgImg={bgImg} ngo={ngo}>
 			<Container fluid className={space("d-flex", !shiftLeft ? "justify-content-center" : "left-padding")}>
 				<Row className="splash-top-margin">
 						{!shiftLeft && <Col md={1} sm={0} /* left padding, but not on mobile */></Col>}
@@ -198,10 +198,11 @@ const HowTabsForGoodWorks = ({className, shortTitle}) => {
 
 /**
  * ??describe this
+ * Did put the charity logo onto a screenshot of T4G - but the current image no longer works for that
  */
 const T4GCharityScreenshot = ({ngo, className, ...props}) => {
 	return <BG src="/img/homepage/slide-1.png" className={className} center {...props}>
-		{ngo && <CharityLogo charity={ngo} className="t4gscreenshot-logo"/>}
+		{/*ngo && <CharityLogo charity={ngo} className="t4gscreenshot-logo"/>*/}
 	</BG>;
 }
 
@@ -233,12 +234,11 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 	];
 	const images = [
 		<T4GCharityScreenshot ngo={ngo} className="slide-img"/>,
-		<BG src="/img/homepage/slide-2.png" className="slide-img" center>
-	</BG>
+		<BG src="/img/homepage/slide-2.png" className="slide-img" center></BG>
 	]
 
 	const slides = items.map((content, i) => (<>
-		<Row className="slideshow" noGutters>
+		<Row className="slideshow" noGutters key={content}>
 			<Col md={6} className="slide-left overflow-hidden">
 				{images[i]}
 			</Col>
@@ -553,19 +553,25 @@ const WhatIsTabsForGood	= ({ngo, imgs}) => {
 		<PageCard className="how-tabs-for-good-works text-center">
 			<h1 className='mb-4'>What is Tabs for Good?</h1>
 			<p className=''><b>Tabs for Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</b></p>
-			<Row className="py-5">
-				<Col md={6}>
-					<T4GCharityScreenshot ngo={ngo} ratio={100}/>
+			<Row className="py-5 d-none d-md-flex">
+				<Col md={4}>
+					<NGOImage bg center ngo={ngo} main
+						ratio={100} alt=""/>
 				</Col>
-				<Col md={6}>
-					<BG center 
-					src={(ngo && ngo.images) || (imgs && imgs[1]) || "/img/wateraid-bg.jpg"} 
-					ratio={100} alt="" />
+				<Col md={4}>
+					{/* Center image remains as the T4G graphic */}
+					<BG center src="/img/homepage/slide-1.png"
+						ratio={100} alt="" />
+				</Col>
+				<Col md={4}>
+					<NGOImage bg center ngo={ngo} imgIdx={0}
+						ratio={100} alt="" />
 				</Col>
 				{/*<Col md={4}>
 					<BG center src={(ngo && ngo.images) || (imgs && imgs[2]) || "/img/homepage/world.png"} ratio={100} alt="" />
 				</Col>*/}
 			</Row>
+			<img className="d-md-none w-100" src="/img/LandingCharity/laptop-1.png" />
 			<T4GCTA className="mx-auto"/>
 		</PageCard>
 	</>);
