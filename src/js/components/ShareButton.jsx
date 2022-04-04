@@ -43,6 +43,7 @@ const ShareButton = ({url, meta, title, image, description, tweep, card, absolut
 	
 	// Deprecate ShareServlet sharing url
 	let shareUrl = new URL(window.location.href);
+	shareUrl = encURI(shareUrl.href);
 	
 	const ShareMenu = () => <div className={space("share-popup", menuOnly ? space("menu-only", className) : "")}>
 		<img src="/img/share/ShareBubble.svg" className="w-100 bubble" alt="share icon"/>
