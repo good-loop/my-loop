@@ -53,7 +53,7 @@ const HelpCharityTogetherCard = ({ngo}) => {
 			</Col>
 			<Col md={6} className='p-5 d-flex flex-column justify-content-between'>
 				<div>
-					<h3>Together we'll (INSERT CAUSE)</h3>
+					<h3>Together we'll do more</h3>
 					<NGODescription ngo={ngo} extended/>
 				</div>
 				<T4GCTA className="w-100"/>
