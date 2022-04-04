@@ -14,6 +14,7 @@ import { T4GCTA } from '../T4GSignUp';
 import Roles from '../../base/Roles';
 import { A } from '../../base/plumbing/glrouter';
 import NGOImage from '../../base/components/NGOImage';
+import NGO from '../../base/data/NGO';
 
 const PageCard = ({id, className, children}) => {
 	// Why two containers?? Is the outer one for card-specific css rules to latch onto??
@@ -216,7 +217,7 @@ const T4GCharityScreenshot = ({ngo, className, ...props}) => {
  * @param {?String} bgClassName change the background colour of the carousel section with a bg-class
  */
 const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassName}) => {
-	const name = ngo && (ngo.displayName || ngo.name);
+	const name = NGO.displayName(ngo);
 
 	const items = [
 		<>
