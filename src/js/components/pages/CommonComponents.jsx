@@ -216,8 +216,7 @@ const T4GCharityScreenshot = ({ngo, className, ...props}) => {
  * @param {?String} bgClassName change the background colour of the carousel section with a bg-class
  */
 const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassName}) => {
-
-	const name = ngo && ngo.displayName;
+	const name = ngo && (ngo.displayName || ngo.name);
 
 	const items = [
 		<>
