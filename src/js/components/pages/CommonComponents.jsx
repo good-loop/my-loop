@@ -284,7 +284,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 							{/* <img className='w-100' src={(ngo && ngo.logo) || "img/TabsForGood/fifty-card.png"} alt="" /> */}
 							<img className='w-100' src={(ngo ? "../img/TabsForGood/fifty-card.png" : "img/TabsForGood/fifty-card.png")} alt="" />
 							<div className='p-3'>
-								<h3>Donate 50% of online ad fees to {name}</h3>
+								<h3>Donate 50% of online ad fees to {ngo ? name : "good causes"}</h3>
 							</div>
 						</div>
 					</Col>
