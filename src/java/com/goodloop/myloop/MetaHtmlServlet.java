@@ -87,7 +87,7 @@ public class MetaHtmlServlet implements IServlet {
 	private Map getPageSettings2_charity(WebRequest state) {
 		Map vars = new HashMap();
 		vars.put("title", state.getRequestPath());
-		vars.put("image", "");
+		vars.put("image", "https://good-loop.com/img/logo/good-loop-logo-text.png");
 		vars.put("contents", "");
 		// do we have a campaign?
 		String cid = state.getSlugBits(1);
@@ -96,7 +96,7 @@ public class MetaHtmlServlet implements IServlet {
 			try { // Handle invalid charity 
 				NGO ngo = cc.get(cid).java();
 				vars.put("title", "Good-Loop for "+ngo.getDisplayName());
-				vars.put("image", ngo.getPhoto());
+				if (ngo.getPhoto() != null) vars.put("image", ngo.getPhoto());
 			} catch(Exception e) {
 				Log.d("My-Loop", "Error loading charity "+ e);
 				vars.put("title", "Good-Loop");
