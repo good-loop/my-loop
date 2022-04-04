@@ -24,22 +24,26 @@ const ShareButton = ({url, meta, title, image, description, tweep, card, absolut
 
 	// Generate ShareServlet sharing url
 	// Don't use ServerIO.AS_ENDPOINT - it is set to live for my-loop
-	let shareUrl = new URL(`${C.HTTPS}://${C.SERVER_TYPE}as.good-loop.com/share`);
-	if (!meta) meta = {title, image, description, tweep, card};
-	if (meta.title) shareUrl.searchParams.append('title', meta.title);
-	if (meta.image) shareUrl.searchParams.append('image', meta.image);
-	if (meta.description) shareUrl.searchParams.append('desc', meta.description);
-	shareUrl.searchParams.append('tweep', meta.tweep || "GoodLoopHQ");
-	shareUrl.searchParams.append('card', meta.card || "summary");
+	// let shareUrl = new URL(`${C.HTTPS}://${C.SERVER_TYPE}as.good-loop.com/share`);
+	// if (!meta) meta = {title, image, description, tweep, card};
+	// if (meta.title) shareUrl.searchParams.append('title', meta.title);
+	// if (meta.image) shareUrl.searchParams.append('image', meta.image);
+	// if (meta.description) shareUrl.searchParams.append('desc', meta.description);
+	// shareUrl.searchParams.append('tweep', meta.tweep || "GoodLoopHQ");
+	// shareUrl.searchParams.append('card', meta.card || "summary");
 
-	shareUrl.searchParams.append("link", url);
-	//console.log("ShareServlet generated URL: " + url);
-	shareUrl = encURI(shareUrl.href);
+	// shareUrl.searchParams.append("link", url);
+	// //console.log("ShareServlet generated URL: " + url);
+	// shareUrl = encURI(shareUrl.href);
 
+	
 	// NB: theres no unicode character for share
 	// c.f. https://stackoverflow.com/questions/23358594/is-there-a-unicode-character-for-the-share-icon
 	// (which includes a css hack for making .<: look like it)
-
+	
+	// Deprecate ShareServlet sharing url
+	let shareUrl = new URL(window.location.href);
+	
 	const ShareMenu = () => <div className={space("share-popup", menuOnly ? space("menu-only", className) : "")}>
 		<img src="/img/share/ShareBubble.svg" className="w-100 bubble" alt="share icon"/>
 		<Row className="popup-btns no-gutters w-100">
