@@ -46,6 +46,28 @@ const campaignInfos = [
 	// 	vertiser:"cadbury_bpngtolk",
 	// 	title: "Cadbury advert"
 	// },
+	// {
+	// 	name: "Pantene",
+	// 	adid: "hwtjNncj",
+	// 	url: "/campaign/?gl.vertiser=zqhRrBjF",
+	// 	vertiser:"zqhRrBjF",
+	// 	title: "Pantene advert"
+	// }
+	// Update in April 2022:
+	{
+		name: "MINI", 
+		adid: "ofPtTdAX",
+		url: "/campaign/?gl.vert=ofPtTdAX",
+		vertiser:"UFZpmeFm",
+		title: "MINI advert"
+	}, 
+	{
+		name: "Pepsi",
+		adid: "81RhZgys",
+		url: "/campaign/?gl.vert=81RhZgys",
+		vertiser:"rB6PkFMq",
+		title: "Pepsi advert"
+	},
 	{
 		name: "Pantene",
 		adid: "hwtjNncj",
