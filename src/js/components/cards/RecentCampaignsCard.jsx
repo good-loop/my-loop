@@ -53,7 +53,7 @@ const campaignInfos = [
 	// 	vertiser:"zqhRrBjF",
 	// 	title: "Pantene advert"
 	// }
-	// Update in March 2022:
+	// Update in April 2022:
 	{
 		name: "MINI", 
 		adid: "ofPtTdAX",

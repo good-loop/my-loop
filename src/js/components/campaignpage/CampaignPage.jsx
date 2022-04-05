@@ -83,6 +83,7 @@ import { PageCard, TriCards } from '../pages/CommonComponents';
 		if ( ! topCampaignId) {
 			console.warn("Advert without a campaign", pvTop.value);
 			const msg = {text:"This advert does not specify a campaign", type:"warning", id:"no-campaign-id"};
+			window.location.replace("/impactoverview"); // HACK Quick redirect
 			return {warning: msg};
 		}
 		// master campaign
