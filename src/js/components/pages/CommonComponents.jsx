@@ -114,7 +114,7 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 		title = `Turn your web browsing into ${(ngo && "cash for " + name) || "charity donations"}. For free.`;
 	}
 	if ( ! text) {
-		text = `Get our Tabs for Good Browser Plugin today and start raising money for ${(ngo && name) || "good causes"} - just by browsing the internet.`;
+		text = `Get our Tabs for Good Browser Plugin today and raise money for ${(ngo && name) || "good causes"} - just by browsing the internet.`;
 	}
 	return (<>
 		<MyLandingBackgroundImage bgImg={bgImg} ngo={ngo}>
