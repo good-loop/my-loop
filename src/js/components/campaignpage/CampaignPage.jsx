@@ -81,16 +81,32 @@ import { PageCard, TriCards } from '../pages/CommonComponents';
 		}
 		topCampaignId = pvTop.value.campaign;
 		if ( ! topCampaignId) {
-			console.warn("Advert without a campaign", pvTop.value);
-			const msg = {text:"This advert does not specify a campaign", type:"warning", id:"no-campaign-id"};
-			window.location.replace("/impactoverview"); // HACK Quick redirect
-			return {warning: msg};
+			console.error("Advert without a campaign (check for unpublished!)", query, status);
+			// HACK create an ersatz campaign 
+			let pvAds={}, pvAdvertisers={};
+			if (Advert.isa(pvTop.value)) {
+				let ad = pvTop.value;
+				let strayCharities = Advert.charityList(ad).map(getId);
+				pvTopCampaign = new PromiseValue(new Campaign({vertiser:ad.vertiser, id:"DUMMY", strayCharities}));
+				pvAds = fetchIHubData2_wrapAsList(pvTop);
+			} else if (Advertiser.isa(pvTop.value)) {
+				pvTopCampaign = new PromiseValue(new Campaign({vertiser:pvTop.value.id, id:"DUMMY"}));
+				pvAdvertisers = fetchIHubData2_wrapAsList(pvTop);
+			}
+			return {
+				pvTopCampaign,
+				pvAgencies:{},
+				pvAds,
+				pvAdvertisers
+			};
 		}
-		// master campaign
 	}
 
-	// ...by Campaign (this is now the only supported way - Sept 2021)
-	pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:topCampaignId});
+	// ...by Campaign (this is now the only supported way - Sept 2021)	
+	if ( ! pvTopCampaign) {
+		pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:topCampaignId});		
+	}
+
 	// ads
 	const pvAds = pvTopCampaign.value? Campaign.pvAds({campaign: pvTopCampaign.value, status, query}) : null;
 	// advertiser
@@ -101,7 +117,7 @@ import { PageCard, TriCards } from '../pages/CommonComponents';
 	}
 
 	// ...fill in from adverts
-	if (pvAds && pvAds.value && pvAds.value.hits && pvAds.value.hits.length && pvAds.value.hits[0]) {
+	if ( ! pvAdvertisers && pvAds && pvAds.value && pvAds.value.hits && pvAds.value.hits.length && pvAds.value.hits[0]) {
 		// NB: This should be only one advertiser and agency
 		let ids = uniq(pvAds.value.hits.map(Advert.advertiserId));
 		if (yessy(ids)) {
@@ -233,13 +249,8 @@ const CampaignPage = () => {
 	
 	// initial donation record
 	let donation4charity = Campaign.dntn4charity(campaign);
-	const ad4Charity = {};
 	// individual charity data, attaching ad ID
 	let charities = Campaign.charities(campaign, status);
-	// Attach ads after initial sorting and merging, which can cause ad ID data to be lost
-	charities.forEach(charity => {
-		charity.ad = ad4Charity[charity.id] ? ad4Charity[charity.id].id : null;
-	});
 
 	// Donation total
 	// NB: allow 0 for "use the live figure" as Portal doesn't save edit-to-blank (Feb 2021)
@@ -248,6 +259,11 @@ const CampaignPage = () => {
 
 	// filter charities by low £s and campaign.hideCharities
 	charities = Campaign.filterLowDonations({charities, campaign, donationTotal, donation4charity});
+	
+	// HACK: ersatz campaign? grab charities from advert (NB: unfiltered by low £s)
+	if (campaign.id==="DUMMY"&&pvAds&&pvAds.value) {
+		charities = Advert.charityList(List.first(pvAds.value));
+	}
 
 	// PDF version of page
 	let pdf = null;
@@ -379,7 +395,9 @@ const SmallPrintInfo = ({ads, charities, campaign, pvTopItem}) => {
 			<CharityDetails charities={charities} />
 			<div className="text-center smallprint">
 				<span className="small">
-					{dmin && <>Donation Amount: <Misc.Money amount={dmin} /> { dmax &&!Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/></>}
+					X{dmin && (Money.value(dmin) || Money.value(dmax)) && 
+						<>Donation Amount: <Misc.Money amount={dmin} /> { dmax &&!Money.eq(dmin,dmax) && <> to <Misc.Money amount={dmax} /></>} per video viewed <br/></>
+					}Y
 					50% of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies.
 					Good-Loop and the advertising exchange make a small commission. The donations depend on viewers watching the adverts.
 				</span>
