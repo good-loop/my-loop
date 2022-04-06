@@ -47,21 +47,24 @@ const HelpCharityTogetherCard = ({ngo}) => {
 				<T4GCTA className="w-100"/>
 			</Col>
 		</Row>
-		<Row className='mt-5 pt-5'>
-			<Col className="d-md-none" md={6}>
-				<NGOImage ngo={ngo} className="w-100" imgIdx={2}/>
-			</Col>
-			<Col md={6} className='p-5 d-flex flex-column justify-content-between'>
-				<div>
-					<h3>Together we'll (INSERT CAUSE)</h3>
-					<NGODescription ngo={ngo} extended/>
-				</div>
-				<T4GCTA className="w-100"/>
-			</Col>
-			<Col className="d-none d-md-block" md={6}>
-				<NGOImage ngo={ngo} className="w-100" imgIdx={2}/>
-			</Col>
-		</Row>
+
+		{ngo.extendedDescription && 
+			<Row className='mt-5 pt-5'>
+				<Col className="d-md-none" md={6}>
+					<NGOImage ngo={ngo} className="w-100" imgIdx={2}/>
+				</Col>
+				<Col md={6} className='p-5 d-flex flex-column justify-content-between'>
+					<div>
+						<h3>Together we'll do more</h3>
+						<NGODescription ngo={ngo} extended/>
+					</div>
+					<T4GCTA className="w-100"/>
+				</Col>
+				<Col className="d-none d-md-block" md={6}>
+					<NGOImage ngo={ngo} className="w-100" imgIdx={2}/>
+				</Col>
+			</Row>
+		}
 		{/*
 		<Row className='mb-4 mt-5 pt-5'>
 			{isPortraitMobile() ? secondSection.reverse() : secondSection}
