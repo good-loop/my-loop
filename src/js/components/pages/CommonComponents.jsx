@@ -549,7 +549,7 @@ const TriCards = ({className, titles, texts, images, links=["#", "#", "#"] }) =>
 	)
 };
 
-const WhatIsTabsForGood	= ({ngo, imgs}) => {
+const WhatIsTabsForGood	= ({ngo}) => {
 	return (<>
 		<PageCard className="how-tabs-for-good-works text-center">
 			<h1 className='mb-4'>What is Tabs for Good?</h1>

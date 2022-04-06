@@ -39,4 +39,24 @@
         overflow: hidden;
         width: 100%;
     }
+
+    blockquote {
+        font-size: 1.2rem;
+        padding-left: 3rem;
+        margin-top: 2rem;
+        margin-bottom: 8%;
+        position: relative;
+        &::before {
+            content: "";
+            background: url("/img/homepage/quote.svg");
+            background-size: contain;
+            background-repeat: no-repeat;
+            width: 20%;
+            height: 100px;
+            left: -7%;
+            top: -20px;
+            display: block;
+            position: absolute
+        }
+    }
 }
