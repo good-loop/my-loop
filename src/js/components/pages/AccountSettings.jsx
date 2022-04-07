@@ -16,7 +16,8 @@ const AccountSettings = () => {
 	return <div className="settings">
 		<h2 className="text-center mb-5">Your settings</h2>
 		<ConsentSettings xids={xids}/>
-		<SignUpConnectCard className="mb-5" allIds={xids}/>
+		{/* Hide Connect to Twitter card before it got fixed */}
+		{/* <SignUpConnectCard className="mb-5" allIds={xids}/> */} 
 		<YourDataSettings />
 		{/* Spacer for mobile */}
 		<div className="pb-3 pb-md-0"/>
