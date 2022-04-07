@@ -115,7 +115,7 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 		title = `Turn your web browsing into ${(ngo && "cash for " + name) || "charity donations"}. For free.`;
 	}
 	if ( ! text) {
-		text = `Get our Tabs for Good Browser Plugin today and start raising money for ${(ngo && name) || "good causes"} - just by browsing the internet.`;
+		text = `Get our Tabs for Good Browser Plugin today and raise money for ${(ngo && name) || "good causes"} - just by browsing the internet.`;
 	}
 	return (<>
 		<MyLandingBackgroundImage bgImg={bgImg} ngo={ngo}>
@@ -284,7 +284,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 							{/* <img className='w-100' src={(ngo && ngo.logo) || "img/TabsForGood/fifty-card.png"} alt="" /> */}
 							<img className='w-100' src={(ngo ? "../img/TabsForGood/fifty-card.png" : "img/TabsForGood/fifty-card.png")} alt="" />
 							<div className='p-3'>
-								<h3>Donate 50% of online ad fees to {name}</h3>
+								<h3>Donate 50% of online ad fees to {ngo ? name : "good causes"}</h3>
 							</div>
 						</div>
 					</Col>
@@ -549,7 +549,7 @@ const TriCards = ({className, titles, texts, images, links=["#", "#", "#"] }) =>
 	)
 };
 
-const WhatIsTabsForGood	= ({ngo, imgs}) => {
+const WhatIsTabsForGood	= ({ngo}) => {
 	return (<>
 		<PageCard className="how-tabs-for-good-works text-center">
 			<h1 className='mb-4'>What is Tabs for Good?</h1>

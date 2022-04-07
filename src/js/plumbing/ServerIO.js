@@ -42,8 +42,8 @@ ServerIO.DATALOG_ENDPOINT = "https://lg.good-loop.com/data";
 
 ServerIO.checkBase();
 
-
-//ServerIO.ENDPOINT_NGO = `https://app.sogive.org/charity`;
+// Impact hub needs to connect to the production sogive server
+ServerIO.ENDPOINT_NGO = `https://app.sogive.org/charity`;
 
 /** 
  * NB: Copy-pasta from Portal ServerIO.js
