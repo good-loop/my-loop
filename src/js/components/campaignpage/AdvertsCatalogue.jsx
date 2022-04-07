@@ -40,6 +40,7 @@ const AdvertsCatalogue = ({ campaign, ads, donationTotal, nvertiserName, totalVi
 	if (campaign && campaign.hideAdverts) {
 		showAds = ads.filter(ad => ! ad._hidden);
 	}
+
 	console.log("Ads for catalogue: ", ads, "showing",showAds);
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [animating, setAnimating] = useState(false);

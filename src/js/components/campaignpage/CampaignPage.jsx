@@ -62,10 +62,10 @@ import { PageCard, TriCards } from '../pages/CommonComponents';
 		if (advid) {
 			pvTop = getDataItem({type:"Advertiser", id:advid, status});
 		} else if (DataStore.getUrlValue("agency")) {
-			let agid = DataStore.getUrlValue("agency");			
+			let agid = DataStore.getUrlValue("agency");
 			pvTop = getDataItem({type:"Agency", id:agid, status});
 		} else if (DataStore.getUrlValue("gl.vert")) {
-			let adid = DataStore.getUrlValue("gl.vert");			
+			let adid = DataStore.getUrlValue("gl.vert");
 			pvTop = getDataItem({type:"Advert", id:adid, status});
 		} else {
 			console.error("Should give Campaign, Advertiser, or Agency");
@@ -102,9 +102,9 @@ import { PageCard, TriCards } from '../pages/CommonComponents';
 		}
 	}
 
-	// ...by Campaign (this is now the only supported way - Sept 2021)	
+	// ...by Campaign (this is now the only supported way - Sept 2021)
 	if ( ! pvTopCampaign) {
-		pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:topCampaignId});		
+		pvTopCampaign = getDataItem({type:C.TYPES.Campaign,status,id:topCampaignId});
 	}
 
 	// ads
