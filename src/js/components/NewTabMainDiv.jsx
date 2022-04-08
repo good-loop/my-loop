@@ -27,6 +27,7 @@ import Misc from '../base/components/Misc';
 import Money from '../base/data/Money';
 import NGO from '../base/data/NGO';
 import Roles, { isTester } from '../base/Roles';
+import PropControl from '../base/components/PropControl';
 
 
 // DataStore
@@ -157,6 +158,7 @@ const WebtopPage = () => {
 		{showPopup && <PopupWindow />}
 		<NewtabLoginWidget onRegister={() => { checkIfOpened(); }} />
 		<ConnectionStatusPopup />
+		<ServerToggle/>
 	</>);
 }; // ./WebTopPage
 
@@ -334,6 +336,19 @@ const ConnectionStatusPopup = () => {
 		</div>
 	) : null;
 }
+
+const ServerToggle = () => {
+	//if (!Roles.isDev() && !Roles.isTester()) return null;
+	const onServerChange = ({value}) => {
+		console.log("SENDING CHANGE:",value);
+		window.parent.postMessage(JSON.stringify({server:value}));
+	}
+	return <div className="position-absolute bg-white" style={{top: 10, left: 10, zIndex:999}}>
+		<PropControl
+			type="select" labels={["Production", "Test", "Local"]} options={["prod", "test", "local"]}
+			path={["widget", "ServerToggle"]} prop="serverType" label="Server:" saveFn={onServerChange}/>
+	</div>;
+};
 
 /**
  * redirect to Ecosia
