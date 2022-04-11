@@ -14,7 +14,7 @@ const MyAdCampaignsPage = () => {
 			</BG>
 			<PageCard className="pt-0" style={{marginTop:"-20%"}} color="white">
 				<h1 className='text-uppercase'>Ad campaigns</h1>
-				<p className='leader-text text-center'>See how we've helped these brands raise over {C.DONATIONS_TOTAL} for charity. All thanks to you.</p>
+				<p className='leader-text text-center mb-5'>See how we've helped these brands raise over {C.DONATIONS_TOTAL} for charity. All thanks to you.</p>
 				<RecentCampaignsCard/>
 			</PageCard>
 		</div>

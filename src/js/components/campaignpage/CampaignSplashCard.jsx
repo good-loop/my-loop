@@ -38,7 +38,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 				{' '}{charityName}
 			</span>
 		</div>
-		<p className="text-white subtext">by using ethical online ads</p>
+		<p className="text-white subtext">by using purpose led online ads</p>
 	</>;
 	// Change the splashText to show wider impact?
 	if (campaignPage.showWiderImpact && campaignPage.widerAnnualDntn) {
@@ -49,7 +49,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 				</LinkOut>
 				<br /><br />
 				<div>
-					{donationDisplay} of it is raised by<br />ethical online ads
+					{donationDisplay} of it is raised by<br />purpose led online ads
 				</div>
 			</div>
 		</div>;
