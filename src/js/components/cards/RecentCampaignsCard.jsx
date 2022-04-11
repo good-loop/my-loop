@@ -75,13 +75,13 @@ const campaignInfos = [
 		vertiser:"zqhRrBjF",
 		title: "Pantene advert"
 	},
-	{
-		name: "Nespresso",
-		adid: "IDRfNfi4",
-		url: "/campaign/?gl.vert=IDRfNfi4",
-		vertiser:"q44DhUNr",
-		title: "Nespresso advert"
-	},
+	// {
+	// 	name: "Nespresso",
+	// 	adid: "IDRfNfi4",
+	// 	url: "/campaign/?gl.vert=IDRfNfi4",
+	// 	vertiser:"q44DhUNr",
+	// 	title: "Nespresso advert"
+	// },
 	{
 		name: "McDonald's",
 		adid: "zCUu18emxs",
