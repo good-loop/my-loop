@@ -39,7 +39,7 @@ const MyLoopFooter = ({page}) => {
 			<div className='bg-gl-dark-turquoise w-100 p-5' style={{marginTop:-1}}>
 				<Row>
 					<Col md={6}>
-						<SubscriptionForm label={"Sign up to our Newsletter for some Good News :)"} />
+						<SubscriptionForm label={"Sign up to our Newsletter for some Good News :)"} thankYouTextcolour="white" />
 					</Col>
 					{ ! isPortraitMobile() &&
 						<Col md={6} className="d-flex justify-content-end">

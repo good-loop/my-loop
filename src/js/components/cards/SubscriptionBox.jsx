@@ -25,7 +25,7 @@ const SubscriptionBox = ({title="Support the causes you care about, and see the 
 };
 
 
-export const SubscriptionForm = ({label="", product, purpose=PURPOSES.email_mailing_list, browser, buttonText="Sign me up", textCenter}) => {
+export const SubscriptionForm = ({label="", product, purpose=PURPOSES.email_mailing_list, browser, buttonText="Sign me up", textCenter, thankYouTextcolour="black"}) => {
 	// NB: suppose we have a subscribe-to-mailing-list and a preregister form on the same page? Keep the data separate.
 	// OTOH two subscribe-to-mailing-list forms are treated as overlapping
 	// ??
@@ -48,7 +48,7 @@ export const SubscriptionForm = ({label="", product, purpose=PURPOSES.email_mail
 	const doEmailSignUp = e => {
 		stopEvent(e);		
 		if ( ! formData || ! formData.email) return; // quiet fail NB: we didnt like the disabled look for a CTA
-		doRegisterEmail(formData);
+		doRegisterEmail({...formData, swallow: true});
 		if (charityId) {
 			setPersonSetting("charity", charityId);
 		}
@@ -57,7 +57,12 @@ export const SubscriptionForm = ({label="", product, purpose=PURPOSES.email_mail
 
 	const hasSubmittedEmail = DataStore.getValue(ctaFormPath.concat("hasSubmittedEmail")) === true;
 	if (hasSubmittedEmail) {
-		return <><h4>Thank you!</h4><p>We'll email you shortly :)</p></>;
+		return (
+			<p className={thankYouTextcolour}>
+				<h4>Thank you!</h4>
+				<p>We'll email you shortly :)</p>
+			</p>
+		)
 	}		
 	
 	const formClass = textCenter ? "text-center" : "";
