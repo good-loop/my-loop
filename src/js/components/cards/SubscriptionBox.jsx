@@ -48,7 +48,7 @@ export const SubscriptionForm = ({label="", product, purpose=PURPOSES.email_mail
 	const doEmailSignUp = e => {
 		stopEvent(e);		
 		if ( ! formData || ! formData.email) return; // quiet fail NB: we didnt like the disabled look for a CTA
-		doRegisterEmail({...formData, swallow: true});
+		doRegisterEmail(formData);
 		if (charityId) {
 			setPersonSetting("charity", charityId);
 		}
