@@ -115,7 +115,6 @@ const makeConfig = ({ filename, mode, entry }) => {
 const configs = [
 	makeConfig({filename: 'js/bundle-debug.js', mode: 'development' }),
 	makeConfig({filename: 'js/newtab-bundle-debug.js', mode: 'development', entry:'./src/js/newtab.jsx'}),
-	makeConfig({filename: 'js/mydata-bundle-debug.js', mode: 'development', entry:'./src/js/mydata.jsx'}),
 	makeConfig({filename: 'js/static-bundle-debug.js', mode: 'development', entry:'./src/js/static.js'}),
 	// makeConfig({filename: 'js/card-bundle-debug.js', mode: 'development', entry:'./src/js/card.jsx'}),
 //	Add additional configs (eg with different entry points) like this:

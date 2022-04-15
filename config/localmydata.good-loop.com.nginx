@@ -16,7 +16,7 @@ server {
 
     expires $expires;
 
-	server_name localmy.good-loop.com;
+	server_name localmydata.good-loop.com;
 
     # index.html doesn't exist as of 16/03/22 - pass / to backend
     location = / {

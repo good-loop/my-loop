@@ -43,6 +43,7 @@ import { T4GCTA, T4GSignUpModal, T4GPluginButton } from './T4GSignUp';
 import { MyLoginWidgetGuts } from './MyLoginWidgetGuts';
 import BlogContent from './pages/BlogContent';
 import SafariPage from './pages/SafariPage';
+import MyDataPage from './mydata/pages/MyDataPage';
 // import TestPage from './pages/TestPage';
 
 // DataStore
@@ -71,7 +72,8 @@ const PAGES = {
 	impact: CampaignPage,
 	impactoverview: MyAdCampaignsPage,
 	// test: TestPage,
-	account: AccountPage,
+	account: MyDataPage,
+	data: MyDataPage.apply,
 	charities: MyCharitiesPage,
 	charity: CharityLandingPage,
 	ads: MyAdCampaignsPage,
