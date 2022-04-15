@@ -25,20 +25,10 @@ const label4tab = {
 const MyDataPage = () => {
 	// handle the not-logged-in case
 	if ( ! Login.isLoggedIn()) {
-		return (
-			<div className="AccountPage">				
-				<div className="container mt-5 pt-5">
-					<h1>You need an account to see this page.</h1>
-					<LoginLink verb="register" className="btn btn-transparent fill">Register / Log in</LoginLink>
-				</div>
-			</div>
-		);
+		DataStore.setUrlValue("tab", "signup");
 	}
 	// // NB: race conditions with Login and profile fetch (for linked IDs) mean all-xids should be refreshed.
 	// let xids = getAllXIds();
-
-	const user = Login.getUser();
-	const name = user.name || user.xid;
 
 	// Which tab? (default to account)
 	const tab = DataStore.getUrlValue('tab') || 'home';

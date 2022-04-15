@@ -3,4 +3,28 @@
     input[type="text"],input[type="email"],input[type="password"] {
         border-radius: 0;
     }
+    .charity-search {
+        input[type="text"] {
+            border-radius: 100px;
+        }
+    }
+    .charity-card {
+        border-radius: 20px;
+        overflow: hidden;
+        .more-info-btn {
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-weight: bold;
+            border: 2px solid @gl-dark-grey;
+        }
+        .more-info {
+            position: fixed;
+            width: 80vw;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 20px;
+            border: 1px solid @gl-light-grey;
+        }
+    }
 }

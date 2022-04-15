@@ -68,7 +68,9 @@ const MyDataSignUpPage = () => {
 	const page = DataStore.getUrlValue("page") || 0;
 	const PageComponent = PAGES[page];
 
-	return <PageComponent/>;
+	return <div className="mydata-signup">
+		<PageComponent/>
+	</div>;
 
 };
 
