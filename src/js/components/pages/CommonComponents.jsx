@@ -473,7 +473,7 @@ const WatchVideoSection = () => {
 			</div>
 			<img src="/img/green/hummingbird.png" className='hummingbird d-none d-md-block'/>
 			<img src="/img/signup/hand-globe-coins.png" className='hand-globe-coins d-none d-md-block' />
-			<div className="mx-5">
+			<div className="m-5">
 				<p className='leader-text'>We’re working with fantastic brands that want to join us in making the internet a more positive place. <br/><br/>
 				The way we’re doing it couldn’t be simpler. We just need the final piece of the puzzle to make it happen – you. Sign up and join the Good-Loop movement today. </p>
 				<T4GCTA className="mx-5 mt-5" dUnset />
