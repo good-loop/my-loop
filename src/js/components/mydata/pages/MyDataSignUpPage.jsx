@@ -51,7 +51,7 @@ const SignUpForm = () => {
 				help="Permission to use your email address - opt in to xyzyzxy... Permission to use your email for nefarious purposes..."/>
 		</EmailSignin>
 
-		<p>EMAIL PERMS?? {user && `${ep} ${fn} ${sn}`}</p>
+		{/* <p>EMAIL PERMS?? {user && `${ep} ${fn} ${sn}`}</p> */}
 	</>);
 };
 

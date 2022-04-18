@@ -14,6 +14,7 @@ import ShareButton from '../../ShareButton';
 import AccountSettings from '../../pages/AccountSettings';
 import TabsForGoodSettings from '../../pages/TabsForGoodSettings'
 import MyDataSignUpPage from './MyDataSignUpPage';
+import { getPersonSetting } from '../MyDataUtil';
 
 const label4tab = {
 	home: "My Account",
@@ -32,6 +33,14 @@ const MyDataPage = () => {
 
 	// Which tab? (default to account)
 	const tab = DataStore.getUrlValue('tab') || 'home';
+	
+	const testButton = () => {
+		let fn = getPersonSetting("firstname");
+		let sn = getPersonSetting("surname");
+		let ep = getPersonSetting("emailperms");
+		let ch = getPersonSetting("charity");
+		console.log(fn, sn, ep, ch);
+	}
 
 	return (<>
 		<div className="AccountPage avoid-navbar">
@@ -40,6 +49,7 @@ const MyDataPage = () => {
 					<div className="account-sidebar pl-3">
 						<h5 className="p-2">My Good-Loop</h5>
 						{Object.keys(label4tab).map(t => <SidebarTabLink key={t} tab={t} label={label4tab[t]} selected={t === tab} />)}
+						<a className='btn btn-secondary' onClick={testButton}>Test log</a>
 					</div>
 				</LeftSidebar>
 				<MainPane>

@@ -10,7 +10,8 @@ import ListLoad from '../../../../base/components/ListLoad';
 
 const featuredCharities = [
     "against-malaria-foundation",
-    "oxfam helen-keller-international",
+    "oxfam",
+    "helen-keller-international",
     "clean-air-task-force",
     "strong-minds",
     "give-directly",
@@ -29,7 +30,8 @@ const SelectCharityPage = () => {
 
 	// HACK: default list - poke it into appstate
 	const dq = "LISTLOADHACK"; // NB: an OR over "id:X" doesn't work as SoGive is annoyingly using the schema.org "@id" property
-	const type = "NGO"; const status = "PUBLISHED";
+	const type = "NGO"; 
+    const status = "PUBLISHED";
 	// fetch the full item - and make a Ref
 	let hits = featuredCharities.map(cid => getDataItem({ type, id: cid, status }) && { id: cid, "@type": type, status });
 	// HACK: This is whereListLoad will look!
