@@ -14,7 +14,7 @@ import AccountSettings from './AccountSettings';
 import TabsForGoodSettings from './TabsForGoodSettings';
 import C from '../../C';
 
-import {MyDataSignUpButton, MyDataSignUpModal} from '../MyDataSignUp';
+import {MyDataSignUpButton, MyDataSignUpModal} from '../mydata/MyDataSignUp';
 
 
 const Account = () => {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { getClaimValue, getProfile, setClaimValue, savePersons } from '../base/data/Person';
-import DataStore from '../base/plumbing/DataStore';
-import Login from '../base/youagain';
+import { getClaimValue, getProfile, setClaimValue, savePersons } from '../../base/data/Person';
+import DataStore from '../../base/plumbing/DataStore';
+import Login from '../../base/youagain';
 
 
 /**

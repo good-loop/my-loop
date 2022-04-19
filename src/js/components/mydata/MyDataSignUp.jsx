@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import DataStore from '../base/plumbing/DataStore';
+import DataStore from '../../base/plumbing/DataStore';
 import { Modal, ModalBody, Container, Row, Col } from 'reactstrap';
-import CloseButton from '../base/components/CloseButton';
-import { getBrowserVendor, isMobile, space, stopEvent, toTitleCase } from '../base/utils/miscutils';
-import C from '../C';
-import Login from '../base/youagain';
-import PropControl from '../base/components/PropControl';
-import { EmailSignin, PERSON_PATH, VERB_PATH } from '../base/components/LoginWidget';
+import CloseButton from '../../base/components/CloseButton';
+import { getBrowserVendor, isMobile, space, stopEvent, toTitleCase } from '../../base/utils/miscutils';
+import C from '../../C';
+import Login from '../../base/youagain';
+import PropControl from '../../base/components/PropControl';
+import { EmailSignin, PERSON_PATH, VERB_PATH } from '../../base/components/LoginWidget';
 import { setPersonSetting, getPersonSetting, savePersonSettings } from './MyDataUtil';
+import MyDataSelectCharity from './MyDataSelectCharity';
 
 const WIDGET_PATH = ['widget', 'MyDataSignUp'];
 const SHOW_PATH = [...WIDGET_PATH, 'show'];
@@ -102,13 +103,20 @@ const SignUpForm = () => {
 
 const MyDataSignUp = () => {
 	const PAGES = [
-		SignUpForm
+		SignUpForm,
+		MyDataSelectCharity
 	];
+
+	// TODO logic for advance to next page
+	const prevPage = () => DataStore.setUrlValue("page", Math.max(DataStore.getUrlValue("page") - 1, 0));
+	const nextPage = () => DataStore.setUrlValue("page", Math.min(DataStore.getUrlValue("page") + 1, PAGES.length - 1));
 
 	const page = DataStore.getUrlValue("page") || 0;
 	const PageComponent = PAGES[page];
 
 	return <div className="mydata-signup">
 		<PageComponent/>
+		<a className="btn btn-primary" onClick={prevPage}>Back</a>
+		<a className="btn btn-primary" onClick={nextPage}>Next</a>
 	</div>;
 };
