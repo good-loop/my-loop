@@ -102,16 +102,22 @@ const SignUpForm = () => {
 };
 
 const MyDataSignUp = () => {
+	
 	const PAGES = [
 		SignUpForm,
 		MyDataSelectCharity
 	];
+	
+	const [page, setPage] = useState(0);
 
-	// TODO logic for advance to next page
-	const prevPage = () => DataStore.setUrlValue("page", Math.max(DataStore.getUrlValue("page") - 1, 0));
-	const nextPage = () => DataStore.setUrlValue("page", Math.min(DataStore.getUrlValue("page") + 1, PAGES.length - 1));
+	const prevPage = () => {
+		if (page !== 0) setPage(page - 1);
+	};
 
-	const page = DataStore.getUrlValue("page") || 0;
+	const nextPage = () => {
+		if (page !== PAGES.length - 1) setPage(page + 1);
+	};
+
 	const PageComponent = PAGES[page];
 
 	return <div className="mydata-signup">
