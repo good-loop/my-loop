@@ -60,7 +60,7 @@ export const SubscriptionForm = ({label="", product, purpose=PURPOSES.email_mail
 		return <><h4>Thank you!</h4><p>We'll email you shortly :)</p></>;
 	}		
 	
-	const formClass = textCenter ? "text-center" : "";
+	const formClass = textCenter ? "text-center mx-auto" : "";
 
 	return (<Form className={formClass} onSubmit={doEmailSignUp}>
 				<p className='white'><b>{label}</b></p>
@@ -75,7 +75,7 @@ export const SubscriptionForm = ({label="", product, purpose=PURPOSES.email_mail
 					/>
 				</FormGroup>
 				{purpose!==PURPOSES.email_mailing_list 
-					&& <PropControl type="checkbox" path={ctaFormPath} label="Subscribe to our good news mailing list and get feel-good news delivered to your inbox :)" prop="purpose2" value={PURPOSES.email_mailing_list} />
+					&& <PropControl className="text-left" type="checkbox" path={ctaFormPath} label="Subscribe to our good news mailing list and get feel-good news delivered to your inbox :)" prop="purpose2" value={PURPOSES.email_mailing_list} />
 				}
 				<Button onClick={doEmailSignUp} color="secondary" disabled={ ! formData.email || hasSubmittedEmail} className="flex-grow-0 email-submit mt-3">
 					{buttonText}

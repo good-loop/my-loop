@@ -118,9 +118,11 @@ const MyGetInvolvedSection = () =>{
 		<T4GSignUpButton className="mb-5"/>
 	</PageCard>
 	<img className='w-100 d-none d-md-block' src="img/curves/curve-desat-blue-bottom.svg" alt="" />
-	<PageCard className="container text-center mb-5">
+	<PageCard className="text-center register-card">
 		<p className='leader-text'>We're developing exciting new products that will help us all make the internet a more positive place. Register below to get exlusive access to future product launches and join the Good-Loop movement.</p>
-		<SubscriptionForm purpose="preregister" />
+		<SubscriptionForm textCenter purpose="preregister" buttonText="REGISTER" />
+		
+		<img src="/img/signup/hand-globe-coins.png" className='hand-globe-coins d-none d-md-block' />
 	</PageCard>
 	</>) 
 }
