@@ -14,6 +14,8 @@ import AccountSettings from './AccountSettings';
 import TabsForGoodSettings from './TabsForGoodSettings';
 import C from '../../C';
 
+import {MyDataSignUpButton, MyDataSignUpModal} from '../MyDataSignUp';
+
 
 const Account = () => {
 	let xids = getAllXIds();
@@ -40,7 +42,25 @@ const Account = () => {
 	</>;
 };
 
+const Dashboard = () => {
+	let xids = getAllXIds();
+	let user = Login.getUser();
+	let name = user.name || user.xid;
+
+	return <>
+		<Row>
+			<h1>Dashboard</h1>
+			<h2>Hello, {name}</h2>
+		</Row>
+		<Row>
+			<MyDataSignUpButton />
+			<MyDataSignUpModal />
+		</Row>
+	</>
+}
+
 const label4tab = {
+	dashboard: 'Dashboard',
 	account: "My Account",
 	settings: "Settings",
 	tabsForGood: "Tabs for Good"
@@ -78,6 +98,7 @@ const Page = () => {
 				</LeftSidebar>
 				<MainPane>
 					<div className="pt-5">
+						{tab === 'dashboard' && <Dashboard />}
 						{tab === 'account' && <Account />}
 						{tab === 'settings' && <AccountSettings />}
 						{tab === 'tabsForGood' && <TabsForGoodSettings />}

@@ -36,7 +36,7 @@ const showT4GSignUpModal = (s=true) => {
 
 
 /**
- * A button to start the sign-up flow.
+ * A button to start the T4G sign-up flow.
  */
  export const T4GSignUpButton = ({className, children, dUnset}) => {		
 	if (Login.isLoggedIn()) {
