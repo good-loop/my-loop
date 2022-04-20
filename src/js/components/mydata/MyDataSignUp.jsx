@@ -9,6 +9,7 @@ import PropControl from '../../base/components/PropControl';
 import { EmailSignin, PERSON_PATH, VERB_PATH } from '../../base/components/LoginWidget';
 import { setPersonSetting, getPersonSetting, savePersonSettings } from './MyDataUtil';
 import MyDataSelectCharity from './MyDataSelectCharity';
+import MyDataGetStarted from './MyDataGetStarted';
 
 const WIDGET_PATH = ['widget', 'MyDataSignUp'];
 const SHOW_PATH = [...WIDGET_PATH, 'show'];
@@ -105,7 +106,8 @@ const MyDataSignUp = () => {
 	
 	const PAGES = [
 		SignUpForm,
-		MyDataSelectCharity
+		MyDataSelectCharity,
+		MyDataGetStarted
 	];
 	
 	const [page, setPage] = useState(0);

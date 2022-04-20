@@ -10,6 +10,7 @@ import { assert } from '../../base/utils/assert';
 import Login from '../../base/youagain';
 import NGO from '../../base/data/NGO';
 import { getId } from '../../base/data/DataClass';
+import { space } from '../../base/utils/miscutils';
 
 export const CharityCard = ({cid, item, onSelect}) => {
 
@@ -56,3 +57,26 @@ export const CharityCard = ({cid, item, onSelect}) => {
 
 };
 
+export const Steps = ({step, steps}) => {
+
+    assert(steps);
+
+    const StepCircle = ({idx, active}) => <>
+        <div className={space("step-circle", active==idx && "step-circle-active")}/>
+        {idx != steps.length - 1 && <div className="step-circle-connector"/>}
+    </>;
+
+    const StepLabel = ({idx}) => <>
+        <span className="step-label">{steps[idx]}</span>
+        {idx != steps.length - 1 && <div className="step-label-spacer"/>}
+    </>;
+
+    return (<div className="steps-graphic">
+        <div className="step-circles d-flex flex-row justify-content-between align-items-center">
+            {steps.map((e, i) => <StepCircle idx={i} active={step} key={e}/>)}
+        </div>
+        <div className="step-labels d-flex flex-row justify-content-between align-items-start">
+            {steps.map((e, i) => <StepLabel idx={i} key={e}/>)}
+        </div>
+    </div>)
+}

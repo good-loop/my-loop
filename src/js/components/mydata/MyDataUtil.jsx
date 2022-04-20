@@ -5,10 +5,9 @@ import Login from '../../base/youagain';
 
 
 /**
- * Set and save
- * @param {*} key 
- * @param {*} value 
- * @param {*} callback
+ * Set a claim value on a person locally
+ * @param {String} key 
+ * @param {String|Boolean|Number} value 
  */
  const setPersonSetting = (key, value) => {
 	assMatch(key, String, "setPersonSetting - no key");
@@ -23,6 +22,10 @@ import Login from '../../base/youagain';
 	DataStore.update();
 };
 
+/**
+ * Save all current local edits to server
+ * @param {Function} callback triggers once save is complete
+ */
 const savePersonSettings = (callback) => {
 	let xid = Login.getId();
 	if (!xid) return null;
@@ -37,6 +40,11 @@ const savePersonSettings = (callback) => {
 	});
 }
 
+/**
+ * Get a claim value
+ * @param {String} key 
+ * @returns 
+ */
 const getPersonSetting = (key) => {
 	let xid = Login.getId();
 	if (!xid) return null;

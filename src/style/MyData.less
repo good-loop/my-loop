@@ -1,0 +1,49 @@
+
+.mydata-signup {
+    .btn-primary {
+        background: @gl-darker-grey !important;
+        &:active:not(.disabled),&:focus:not(.disabled) {
+            background: #363636 !important;
+        }
+        &:hover:not(.disabled) {
+            background: @gl-dark-grey !important;
+        }
+    }
+    .circle {
+        border-radius: 1000px;
+        overflow: hidden;
+    }
+
+    .steps-graphic {
+        position: relative;
+        padding-bottom: 3rem;
+
+        .step-circle {
+            height: 2rem;
+            width: 2rem;
+            background-color: white;
+            border-radius: 50%;
+            display: inline-block;
+            border: 3px solid @gl-darker-grey;
+            &.step-circle-active {
+                background-color: @gl-darker-grey;
+            }
+        }
+
+        .step-circle-connector {
+            flex-grow: 1;
+            border-bottom: 2px solid @gl-darker-grey;
+        }
+
+        .step-label-spacer {
+            flex-grow: 1;
+        }
+
+        span {
+            margin: 0;
+            //position: absolute;
+            //transform: translate(-50%, 0);
+            //top: 2rem;
+        }
+    }
+}

@@ -9,6 +9,7 @@ import NGO from '../base/data/NGO';
  * @param {?boolean} link true to make the logo a link
  */
 const CharityLogo = ({charity, className, size, style, link=false}) => {
+	//if (!charity) return null;
 	// Check for SVG and use specific width if so
 	let svgClasses="";
 	let imgType = /^.*\.([a-zA-Z]*).*$/g.exec(charity.logo);
