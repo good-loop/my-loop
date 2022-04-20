@@ -25,6 +25,8 @@ export const CharityCard = ({cid, item, onSelect}) => {
 
     assert(getId(ngo), ngo);
 
+    if (!cid) cid = getId(ngo);
+
     const onClick = () => {
         assert(Login.isLoggedIn());
         setPersonSetting("charity", cid);
