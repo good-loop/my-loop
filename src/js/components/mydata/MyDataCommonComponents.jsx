@@ -6,11 +6,37 @@ import CharityLogo from '../CharityLogo';
 import { getDataItem } from '../../base/plumbing/Crud';
 import NGOImage from '../../base/components/NGOImage';
 import { savePersonSettings, setPersonSetting } from './MyDataUtil';
-import { assert } from '../../base/utils/assert';
+import { assert, assMatch } from '../../base/utils/assert';
 import Login from '../../base/youagain';
 import NGO from '../../base/data/NGO';
 import { getId } from '../../base/data/DataClass';
 import { space } from '../../base/utils/miscutils';
+
+export const MyDataCard = ({img, info, className, children}) => {
+
+    //assMatch(img, "String|Function");
+    console.log("IS STRING???", _.isString(img));
+    let imgComponent = _.isString(img) && <BG src={img} className="w-100" ratio={30} center/>;
+    if (!imgComponent) imgComponent = img; // && _.isFunction(img)) ImgComponent = img; 
+
+    const [showInfo, setShowInfo] = useState(false);
+
+    const onMoreInfo = e => {
+        e.preventDefault();
+        setShowInfo(!showInfo);
+    }
+
+    return <div className={space("mydata-card", className)}>
+        {imgComponent}
+        <a className="more-info-btn" onClick={onMoreInfo}>?</a>
+        {showInfo && <div className="more-info">
+            {info}
+        </div>}
+        <div className="card-content">
+            {children}
+        </div>
+    </div>
+};
 
 export const CharityCard = ({cid, item, onSelect}) => {
 
@@ -35,25 +61,15 @@ export const CharityCard = ({cid, item, onSelect}) => {
         onSelect && onSelect();
     }
 
-    const [showInfo, setShowInfo] = useState(false);
-
-    const onMoreInfo = e => {
-        e.preventDefault();
-        setShowInfo(!showInfo);
-    }
-
-    return <div className="charity-card">
-        <NGOImage bg main ratio={50} center className="w-100 position-relative" ngo={ngo}>
-            <a className="more-info-btn" onClick={onMoreInfo}>?</a>
-            {showInfo && <div className="more-info">
-                <NGODescription extended ngo={ngo}/>
-                {ngo.url && <a href={ngo.url}>Go to charity website</a>}
-            </div>}
-        </NGOImage>
+    return <MyDataCard
+        className="charity-card"
+        img = {<NGOImage bg main ratio={30} center className="w-100" ngo={ngo}/>}
+        info={<NGODescription extended ngo={ngo}/>}
+    >
         <CharityLogo charity={ngo}/>
         <NGODescription summarize ngo={ngo} />
         <Button color="secondary" onClick={onClick}>Select</Button>
-    </div>
+    </MyDataCard>
 
 };
 
@@ -73,10 +89,10 @@ export const Steps = ({step, steps}) => {
 
     return (<div className="steps-graphic">
         <div className="step-circles d-flex flex-row justify-content-between align-items-center">
-            {steps.map((e, i) => <StepCircle idx={i} active={step} key={e}/>)}
+            {steps.map((e, i) => <StepCircle idx={i} active={step} key={i}/>)}
         </div>
         <div className="step-labels d-flex flex-row justify-content-between align-items-start">
-            {steps.map((e, i) => <StepLabel idx={i} key={e}/>)}
+            {steps.map((e, i) => <StepLabel idx={i} key={i}/>)}
         </div>
     </div>)
-}
+};

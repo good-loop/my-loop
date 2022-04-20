@@ -1,5 +1,44 @@
 
 .mydata-signup {
+
+    .mydata-card {
+        position: relative;
+        border-radius: 10px;
+        border: 1px solid @gl-darker-grey;
+        overflow: hidden;
+        .more-info-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: @gl-darker-grey;
+            background-color: white;
+            border: 2px solid @gl-darker-grey;
+            border-radius: 50%;
+            overflow: hidden;
+            width: 30px;
+            height: 30px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .more-info {
+            position: absolute;
+            border-radius: 10px;
+            padding: 1rem;
+            background: white;
+            border: @gl-darker-grey;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.5);
+            top: 60px;
+            width: 90%;
+            left: 50%;
+            transform: translateX(-50%);
+            max-height: 70%;
+            overflow-y: auto;
+        }
+        .card-content {
+            padding: 2rem;
+        }
+    }
+
     .btn-primary {
         background: @gl-darker-grey !important;
         &:active:not(.disabled),&:focus:not(.disabled) {

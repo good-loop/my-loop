@@ -10,6 +10,7 @@ import { EmailSignin, PERSON_PATH, VERB_PATH } from '../../base/components/Login
 import { setPersonSetting, getPersonSetting, savePersonSettings } from './MyDataUtil';
 import MyDataSelectCharity from './MyDataSelectCharity';
 import MyDataGetStarted from './MyDataGetStarted';
+import MyDataInterests from './MyDataInterests';
 
 const WIDGET_PATH = ['widget', 'MyDataSignUp'];
 const SHOW_PATH = [...WIDGET_PATH, 'show'];
@@ -103,7 +104,8 @@ const SignUpForm = () => {
 const PAGES = [
 	SignUpForm,
 	MyDataSelectCharity,
-	MyDataGetStarted
+	MyDataGetStarted,
+	MyDataInterests
 ];
 
 export const prevSignupPage = () => {
