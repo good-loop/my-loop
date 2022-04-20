@@ -15,6 +15,7 @@ import Roles from '../../base/Roles';
 import { A } from '../../base/plumbing/glrouter';
 import NGOImage from '../../base/components/NGOImage';
 import NGO from '../../base/data/NGO';
+import {MyDataSignUpButton, MyDataSignUpModal} from '../mydata/MyDataSignUp';
 
 const PageCard = ({id, className, children}) => {
 	// Why two containers?? Is the outer one for card-specific css rules to latch onto??
@@ -135,6 +136,12 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 												See how it works
 										</button>
 								</div>
+
+								<Row>
+									<MyDataSignUpButton />
+									<MyDataSignUpModal />
+								</Row>
+
 						</Col>
 						{shiftLeft && <Col md={6} className='d-none d-xl-block' style={{zIndex:'-99'}}></Col>}
 				</Row>
