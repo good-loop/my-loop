@@ -13,8 +13,7 @@ import ShareButton from '../ShareButton';
 import AccountSettings from './AccountSettings';
 import TabsForGoodSettings from './TabsForGoodSettings';
 import C from '../../C';
-
-import {MyDataSignUpButton, MyDataSignUpModal} from '../mydata/MyDataSignUp';
+import MyDataDashboard from '../mydata/MyDataDashboard'
 
 
 const Account = () => {
@@ -41,26 +40,6 @@ const Account = () => {
 		</div>
 	</>;
 };
-
-const Dashboard = () => {
-	let xids = getAllXIds();
-	let user = Login.getUser();
-	let name = user.name || user.xid;
-
-	return <>
-		<Row>
-			<h1>Dashboard</h1>
-			<h2>Hello, {name}</h2>
-		</Row>
-		<Row>
-			<MyDataSignUpButton />
-			<MyDataSignUpModal />
-		</Row>
-		<Row>
-			<a className='btn btn-seconday'>Print my Data</a>
-		</Row>
-	</>
-}
 
 const label4tab = {
 	dashboard: 'Dashboard',
@@ -101,7 +80,7 @@ const Page = () => {
 				</LeftSidebar>
 				<MainPane>
 					<div className="pt-5">
-						{tab === 'dashboard' && <Dashboard />}
+						{tab === 'dashboard' && <MyDataDashboard />}
 						{tab === 'account' && <Account />}
 						{tab === 'settings' && <AccountSettings />}
 						{tab === 'tabsForGood' && <TabsForGoodSettings />}
