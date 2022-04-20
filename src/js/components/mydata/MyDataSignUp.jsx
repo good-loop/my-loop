@@ -72,11 +72,9 @@ const SignUpForm = () => {
 	const user = Login.isLoggedIn() ? Login.getUser() : null;
 
 	const onRegister = () => {
-		const firstname = DataStore.getValue(PERSON_PATH.concat("firstname"));
-		const surname = DataStore.getValue(PERSON_PATH.concat("surname"));
+		const name = DataStore.getValue(PERSON_PATH.concat("name"));
 		const emailperms = DataStore.getValue(PERSON_PATH.concat("emailperms"));
-		setPersonSetting("firstname", firstname);
-		setPersonSetting("surname", surname);
+		setPersonSetting("name", name);
 		setPersonSetting("emailperms", emailperms);
 		savePersonSettings(() => {
 			nextPage();
@@ -86,7 +84,7 @@ const SignUpForm = () => {
 	return (<>
 		<h1>Sign Up for My.Data</h1>
 		<p>Use your data as a force for good and help us transform online advertising</p>
-		
+		{/* <a className="btn btn-secondary" onClick={nextPage}>Next</a> */}
 
 		<PropControl type="text" prop="name" path={PERSON_PATH} label="Your name"/>
 
@@ -121,10 +119,10 @@ const MyDataSignUp = () => {
 	};
 
 	const PageComponent = PAGES[page];
-
+	
 	return <div className="mydata-signup">
-		<PageComponent/>
-		<a className="btn btn-primary" onClick={prevPage}>Back</a>
-		<a className="btn btn-primary" onClick={nextPage}>Next</a>
+		<PageComponent />
+		<a className="btn btn-secondary" onClick={prevPage}>Back</a>
+		<a className="btn btn-secondary" onClick={nextPage}>Next</a>
 	</div>;
 };

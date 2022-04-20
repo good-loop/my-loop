@@ -56,6 +56,9 @@ const Dashboard = () => {
 			<MyDataSignUpButton />
 			<MyDataSignUpModal />
 		</Row>
+		<Row>
+			<a className='btn btn-seconday'>Print my Data</a>
+		</Row>
 	</>
 }
 
