@@ -6,6 +6,7 @@ import { getPersonSetting } from './MyDataUtil';
 import { getDataItem } from '../../base/plumbing/Crud';
 import NGOImage from '../../base/components/NGOImage';
 import { Steps } from './MyDataCommonComponents';
+import { nextSignupPage } from './MyDataSignUp';
 
 const MyDataGetStarted = () => {
 
@@ -34,7 +35,7 @@ const MyDataGetStarted = () => {
         <h1>Nice Choice!</h1>
         <p className="leader-text">We'll help you build your profile so you can start raising money for {NGO.displayName(ngo)} with your data</p>
         <div className="d-flex flex-row align-items-center justify-content-center">
-            <Button color="primary">Get Started</Button>
+            <Button color="primary" onClick={nextSignupPage}>Get Started</Button>
         </div>
         <br/>
         <br/>

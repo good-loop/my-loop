@@ -13,7 +13,7 @@ import MyDataGetStarted from './MyDataGetStarted';
 
 const WIDGET_PATH = ['widget', 'MyDataSignUp'];
 const SHOW_PATH = [...WIDGET_PATH, 'show'];
-const STATUS_PATH = [...WIDGET_PATH, 'status'];
+const PAGE_PATH = [...WIDGET_PATH, 'page'];
 
 const showMyDataSignUpModal = (s=true) => {
 	DataStore.setValue(SHOW_PATH, s); 
@@ -100,29 +100,30 @@ const SignUpForm = () => {
 	</>);
 };
 
+const PAGES = [
+	SignUpForm,
+	MyDataSelectCharity,
+	MyDataGetStarted
+];
+
+export const prevSignupPage = () => {
+	const page = DataStore.getValue(PAGE_PATH) || 0;
+	if (page !== 0) DataStore.setValue(PAGE_PATH, page - 1);
+};
+
+export const nextSignupPage = () => {
+	const page = DataStore.getValue(PAGE_PATH) || 0;
+	if (page !== PAGES.length - 1) DataStore.setValue(PAGE_PATH, page + 1);
+};
+
 const MyDataSignUp = () => {
 	
-	const PAGES = [
-		SignUpForm,
-		MyDataSelectCharity,
-		MyDataGetStarted
-	];
-	
-	const [page, setPage] = useState(0);
-
-	const prevPage = () => {
-		if (page !== 0) setPage(page - 1);
-	};
-
-	const nextPage = () => {
-		if (page !== PAGES.length - 1) setPage(page + 1);
-	};
-
+	const page = DataStore.getValue(PAGE_PATH) || 0;
 	const PageComponent = PAGES[page];
 	
 	return <div className="mydata-signup">
 		<PageComponent />
-		<a className="btn btn-secondary" onClick={prevPage}>Back</a>
-		<a className="btn btn-secondary" onClick={nextPage}>Next</a>
+		<a className="btn btn-secondary" onClick={prevSignupPage}>Back</a>
+		<a className="btn btn-secondary" onClick={nextSignupPage}>Next</a>
 	</div>;
 };
