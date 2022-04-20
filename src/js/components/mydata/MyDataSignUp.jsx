@@ -77,14 +77,13 @@ const SignUpForm = () => {
 		setPersonSetting("name", name);
 		setPersonSetting("emailperms", emailperms);
 		savePersonSettings(() => {
-			nextPage();
+			nextSignupPage();
 		});
 	}
 
 	return (<>
 		<h1>Sign Up for My.Data</h1>
 		<p>Use your data as a force for good and help us transform online advertising</p>
-		{/* <a className="btn btn-secondary" onClick={nextPage}>Next</a> */}
 
 		<PropControl type="text" prop="name" path={PERSON_PATH} label="Your name"/>
 
