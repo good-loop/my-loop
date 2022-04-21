@@ -1,10 +1,13 @@
 import React from 'react';
-import { Col, Row, Container } from 'reactstrap';
+import { Col, Row, Container, TabContent, TabPane, Card, CardTitle, CardText, Button, Nav, NavItem, NavLink } from 'reactstrap';
 import Person, { getAllXIds, getEmail, getProfile, hasConsent, PURPOSES } from '../../base/data/Person';
 import DataStore from '../../base/plumbing/DataStore';
 import Login from '../../base/youagain';
 import {MyDataSignUpButton, MyDataSignUpModal} from './MyDataSignUp';
 import { getPersonSetting, setPersonSetting, savePersonSettings } from './MyDataUtil';
+import classnames from 'classnames';
+import DashboardHome from './DashboardHome';
+import { ProfileDot } from './MyDataCommonComponents';
 
 /**
  * @returns {!Number}
@@ -30,6 +33,57 @@ import { getPersonSetting, setPersonSetting, savePersonSettings } from './MyData
 	return monthYear;
 };
 
+class DashboardTab extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.toggle = this.toggle.bind(this);
+		this.state = {
+			activeTab: '1'
+		};
+	}
+
+	toggle(tab) {
+		if (this.state.activeTab !== tab) {
+			this.setState({
+				activeTab: tab
+			});
+		}
+	}
+	render() {
+		return (
+			<div>
+				<Nav tabs>
+					<NavItem>
+						<NavLink
+							className={classnames({ active: this.state.activeTab === '1' })}
+							onClick={() => { this.toggle('1'); }}
+						>
+							HOME
+						</NavLink>
+					</NavItem>
+					<NavItem>
+						<NavLink
+							className={classnames({ active: this.state.activeTab === '2' })}
+							onClick={() => { this.toggle('2'); }}
+						>
+							DATA PROFILE
+						</NavLink>
+					</NavItem>
+				</Nav>
+				<TabContent activeTab={this.state.activeTab}>
+					<TabPane tabId="1">
+						<DashboardHome />
+					</TabPane>
+
+					<TabPane tabId="2">
+						<h1>TODO</h1>
+					</TabPane>
+				</TabContent>
+			</div>
+		);
+	}
+}
 
 const MyDataDashboard = () => {
 	let xids = getAllXIds();
@@ -38,19 +92,6 @@ const MyDataDashboard = () => {
 	const joinedMonthYear = getJoinedMonthYear();
 	
 	const charity = getPersonSetting("charity");
-	
-	const ProfileDot = ({children}) => {
-		return (
-			<Row>
-				<Col xs={1}>
-					<img src="/img/placeholder-circle.png" style={{width:'1rem'}} />
-				</Col>
-				<Col xs={9}>
-					{children}
-				</Col>
-			</Row>
-		)
-	}
 	
 	return <>
 		<Container id='profile'> 
@@ -84,6 +125,8 @@ const MyDataDashboard = () => {
 				</Col>
 			</Row>
 		</Container>
+
+		<DashboardTab charity={charity} />
 
 		<Container>
 			<MyDataSignUpButton />

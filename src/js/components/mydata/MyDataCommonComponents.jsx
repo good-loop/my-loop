@@ -102,3 +102,16 @@ export const Steps = ({step, steps}) => {
         </div>
     </div>)
 };
+
+export const ProfileDot = ({children}) => {
+    return (
+        <Row>
+            <Col xs={1}>
+                <img src="/img/placeholder-circle.png" style={{width:'1rem'}} />
+            </Col>
+            <Col xs={9}>
+                {children}
+            </Col>
+        </Row>
+    )
+}
