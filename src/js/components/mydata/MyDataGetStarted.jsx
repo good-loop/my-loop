@@ -35,7 +35,7 @@ const MyDataGetStarted = () => {
         <h1>Nice Choice!</h1>
         <p className="leader-text">We'll help you build your profile so you can start raising money for {NGO.displayName(ngo)} with your data</p>
         <div className="d-flex flex-row align-items-center justify-content-center">
-            <Button color="primary" onClick={nextSignupPage}>Get Started</Button>
+            <Button color="primary" onClick={nextSignupPage}>Build your profile</Button>
         </div>
         <br/>
         <br/>
