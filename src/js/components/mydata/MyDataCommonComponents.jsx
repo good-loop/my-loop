@@ -12,10 +12,16 @@ import NGO from '../../base/data/NGO';
 import { getId } from '../../base/data/DataClass';
 import { space } from '../../base/utils/miscutils';
 
+/**
+ * A base component for the image, help, content card format that is common in MyData
+ * @param {String|Component} img if string, will display automatically, but a custom component can be rendered instead
+ * @param {String|Component} info to appear in the ? button popup
+ * @param {?String} className
+ * @returns 
+ */
 export const MyDataCard = ({img, info, className, children}) => {
 
     //assMatch(img, "String|Function");
-    console.log("IS STRING???", _.isString(img));
     let imgComponent = _.isString(img) && <BG src={img} className="w-100" ratio={30} center/>;
     if (!imgComponent) imgComponent = img; // && _.isFunction(img)) ImgComponent = img; 
 

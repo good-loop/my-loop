@@ -47,7 +47,7 @@ const MyDataSignUpLink = ({className, children, onClick}) => {
  * @param {Object} p
  */
 export const MyDataSignUpModal = () => {
-	const show = DataStore.getValue(SHOW_PATH);
+	const show = DataStore.getUrlValue("page") !== null || DataStore.getValue(SHOW_PATH);
 
 	// close on nav
 	useEffect(function() {
@@ -61,7 +61,7 @@ export const MyDataSignUpModal = () => {
 			toggle={() => showMyDataSignUpModal(!show)}
 			size="lg"
 		>
-			<ModalBody className='pt-0'>
+			<ModalBody>
 				<CloseButton size='lg' onClick={() => showMyDataSignUpModal(false)}/>
 				<MyDataSignUp />
 			</ModalBody>
@@ -119,7 +119,7 @@ export const nextSignupPage = () => {
 
 const MyDataSignUp = () => {
 	
-	const page = DataStore.getValue(PAGE_PATH) || 0;
+	const page = DataStore.getUrlValue("page") || DataStore.getValue(PAGE_PATH) || 0;
 	const PageComponent = PAGES[page];
 	
 	return <div className="mydata-signup">

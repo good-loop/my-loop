@@ -10,21 +10,21 @@ import { nextSignupPage } from './MyDataSignUp';
 
 const InterestsCard = ({title, interests}) => {
 
-    return <div className="mydata-card">
-
-    </div>
+    return <MyDataCard
+        img="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/spring-flowers-1613759017.jpg?crop=0.669xw:1.00xh;0.0635xw,0&resize=640:*"
+        info="An extended explanation of this category of interests, whatever that may be!"
+    >
+        <h2>Causes your interested in</h2>
+        <hr/>
+        <p>A bit of testing information!</p>
+    </MyDataCard>;
 
 };
 
 const MyDataInterests = ({}) => {
 
     return <>
-        <MyDataCard img="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/spring-flowers-1613759017.jpg?crop=0.669xw:1.00xh;0.0635xw,0&resize=640:*"
-            info="A test of information!"
-        >
-            <h2>Oh hell yeah!</h2>
-            Whats up peeps its the new MyData card!
-        </MyDataCard>
+        <InterestsCard/>
     </>;
 
 };
