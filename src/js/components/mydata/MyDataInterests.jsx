@@ -2,21 +2,31 @@ import React from 'react';
 import { Button } from 'reactstrap';
 import NGO from '../../base/data/NGO';
 import CharityLogo from '../CharityLogo';
-import { getPersonSetting } from './MyDataUtil';
+import UserClaimControl, { getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
 import { getDataItem } from '../../base/plumbing/Crud';
 import NGOImage from '../../base/components/NGOImage';
 import { MyDataCard, Steps } from './MyDataCommonComponents';
 import { nextSignupPage } from './MyDataSignUp';
 
-const InterestsCard = ({title, interests}) => {
+/**
+ * A card showing a selection of selectors for a category
+ * @param {String} title
+ * @param {*} img see MyDataCard
+ * @param {*} info see MyDataCard
+ * @param {String} prop key to save the interest under
+ * @param {Array} options values for interest
+ * @param {Array} labels nice text for values
+ */
+const CategoryCard = ({title, img, info, prop, options, labels, ...props}) => {
 
     return <MyDataCard
-        img="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/spring-flowers-1613759017.jpg?crop=0.669xw:1.00xh;0.0635xw,0&resize=640:*"
-        info="An extended explanation of this category of interests, whatever that may be!"
+        img={img}
+        info={info}
+        {...props}
     >
-        <h2>Causes your interested in</h2>
+        <h2>{title}</h2>
         <hr/>
-        <p>A bit of testing information!</p>
+        <UserClaimControl prop={prop} type="checkboxes" options={options} labels={labels}/>
     </MyDataCard>;
 
 };
@@ -24,7 +34,14 @@ const InterestsCard = ({title, interests}) => {
 const MyDataInterests = ({}) => {
 
     return <>
-        <InterestsCard/>
+        <CategoryCard
+            title="Causes you're interested in"
+            img="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/spring-flowers-1613759017.jpg?crop=0.669xw:1.00xh;0.0635xw,0&resize=640:*"
+            info="What do you want to support?"
+            prop="causes"
+            options={["arts", "education", "health", "community", "environment", "civil rights", "animals", "science", "international"]}
+            labels={["Arts and Culture", "Education", "Health", "Community Development", "Environment", "Civil Rights", "Animals", "Science and Research", "International Development"]}
+        />
     </>;
 
 };

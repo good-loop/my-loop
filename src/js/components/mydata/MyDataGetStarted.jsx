@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from 'reactstrap';
 import NGO from '../../base/data/NGO';
 import CharityLogo from '../CharityLogo';
-import { getPersonSetting } from './MyDataUtil';
+import { getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
 import { getDataItem } from '../../base/plumbing/Crud';
 import NGOImage from '../../base/components/NGOImage';
 import { Steps } from './MyDataCommonComponents';

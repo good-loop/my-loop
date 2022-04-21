@@ -7,7 +7,7 @@ import C from '../../C';
 import Login from '../../base/youagain';
 import PropControl from '../../base/components/PropControl';
 import { EmailSignin, PERSON_PATH, VERB_PATH } from '../../base/components/LoginWidget';
-import { setPersonSetting, getPersonSetting, savePersonSettings } from './MyDataUtil';
+import { getPersonSetting, savePersonSettings } from '../../base/components/PropControls/UserClaimControl';
 import MyDataSelectCharity from './MyDataSelectCharity';
 import MyDataGetStarted from './MyDataGetStarted';
 import MyDataInterests from './MyDataInterests';

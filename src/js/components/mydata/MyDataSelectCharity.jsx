@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropControl from '../../base/components/PropControl';
 import { Search } from '../pages/TabsForGoodSettings';
 import { CharityCard } from './MyDataCommonComponents';
-import { getPersonSetting } from './MyDataUtil';
+import { getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
 import { getDataItem } from '../../base/plumbing/Crud';
 import { getListPath } from '../../base/plumbing/DataStore';
 import KStatus from '../../base/data/KStatus';

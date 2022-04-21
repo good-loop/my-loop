@@ -5,7 +5,7 @@ import NGODescription from '../../base/components/NGODescription';
 import CharityLogo from '../CharityLogo';
 import { getDataItem } from '../../base/plumbing/Crud';
 import NGOImage from '../../base/components/NGOImage';
-import { savePersonSettings, setPersonSetting } from './MyDataUtil';
+import { setPersonSetting } from '../../base/components/PropControls/UserClaimControl';
 import { assert, assMatch } from '../../base/utils/assert';
 import Login from '../../base/youagain';
 import NGO from '../../base/data/NGO';
