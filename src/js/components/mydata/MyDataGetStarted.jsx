@@ -10,7 +10,7 @@ import { nextSignupPage } from './MyDataSignUp';
 
 const MyDataGetStarted = () => {
 
-    const cid = getPersonSetting("charity");
+    const cid = getPersonSetting({key:"charity"});
     let pvCharity = getDataItem({ type: 'NGO', id: cid });
     if (!pvCharity.resolved) {
         return null;
