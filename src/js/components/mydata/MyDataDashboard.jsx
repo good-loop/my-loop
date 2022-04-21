@@ -91,7 +91,7 @@ const MyDataDashboard = () => {
 	let name = user.name || user.xid;
 	const joinedMonthYear = getJoinedMonthYear();
 	
-	const charity = getPersonSetting("charity");
+	const charity = getPersonSetting({key:"charity"});
 	
 	return <>
 		<Container id='profile'> 

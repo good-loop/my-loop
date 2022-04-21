@@ -7,7 +7,7 @@ import C from '../../C';
 import Login from '../../base/youagain';
 import PropControl from '../../base/components/PropControl';
 import { EmailSignin, PERSON_PATH, VERB_PATH } from '../../base/components/LoginWidget';
-import { getPersonSetting, savePersonSettings } from '../../base/components/PropControls/UserClaimControl';
+import { getPersonSetting, setPersonSetting } from '../../base/components/PropControls/UserClaimControl';
 import MyDataSelectCharity from './MyDataSelectCharity';
 import MyDataGetStarted from './MyDataGetStarted';
 import MyDataInterests from './MyDataInterests';
@@ -75,11 +75,8 @@ const SignUpForm = () => {
 	const onRegister = () => {
 		const name = DataStore.getValue(PERSON_PATH.concat("name"));
 		const emailperms = DataStore.getValue(PERSON_PATH.concat("emailperms"));
-		setPersonSetting("name", name);
-		setPersonSetting("emailperms", emailperms);
-		savePersonSettings(() => {
-			nextSignupPage();
-		});
+		setPersonSetting({key:"name", value:name});
+		setPersonSetting({key: "emailperms", value: emailperms, callback:nextSignupPage});
 	}
 
 	return (<>

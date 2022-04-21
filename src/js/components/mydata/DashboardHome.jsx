@@ -4,7 +4,7 @@ import { ProfileDot } from './MyDataCommonComponents';
 import { getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
 
 const LatestNewsCard = () => {
-	let charity = getPersonSetting("charity");
+	let charity = getPersonSetting({key:"charity"});
 
 	return (<>
 	<h1>Latest News</h1>
