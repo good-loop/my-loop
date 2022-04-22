@@ -11,6 +11,7 @@ import Login from '../../base/youagain';
 import NGO from '../../base/data/NGO';
 import { getId } from '../../base/data/DataClass';
 import { space } from '../../base/utils/miscutils';
+import { nextSignupPage } from './MyDataSignUp';
 
 /**
  * A base component for the image, help, content card format that is common in MyData
@@ -44,7 +45,7 @@ export const MyDataCard = ({img, info, className, children}) => {
     </div>
 };
 
-export const CharityCard = ({cid, item, onSelect}) => {
+export const CharityCard = ({cid, item}) => {
 
     let ngo = item;
 
@@ -62,9 +63,7 @@ export const CharityCard = ({cid, item, onSelect}) => {
 
     const onClick = () => {
         assert(Login.isLoggedIn());
-        setPersonSetting("charity", cid);
-        savePersonSettings();
-        onSelect && onSelect();
+        setPersonSetting({key: "charity", value: cid, callback:nextSignupPage});
     }
 
     return <MyDataCard
