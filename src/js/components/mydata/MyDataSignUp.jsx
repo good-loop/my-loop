@@ -11,6 +11,7 @@ import { getPersonSetting, setPersonSetting } from '../../base/components/PropCo
 import MyDataSelectCharity from './MyDataSelectCharity';
 import MyDataGetStarted from './MyDataGetStarted';
 import MyDataInterests from './MyDataInterests';
+import MyDataDetails from './MyDataDetails';
 
 const WIDGET_PATH = ['widget', 'MyDataSignUp'];
 const SHOW_PATH = [...WIDGET_PATH, 'show'];
@@ -98,10 +99,11 @@ const SignUpForm = () => {
 };
 
 const PAGES = [
+	MyDataDetails,
 	SignUpForm,
 	MyDataSelectCharity,
 	MyDataGetStarted,
-	MyDataInterests
+	MyDataInterests,
 ];
 
 export const prevSignupPage = () => {
