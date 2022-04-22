@@ -22,7 +22,7 @@ const featuredCharities = [
 
 const MyDataSelectCharity = () => {
 
-    const charity = getPersonSetting("charity");
+    const charity = getPersonSetting({key:"charity"});
     const CHARITY_WIDGET_PATH = ["widget", "MyDataCharitySelection"];
 
     let q = DataStore.getValue(CHARITY_WIDGET_PATH.concat("charitySearch"));

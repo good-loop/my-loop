@@ -4,7 +4,7 @@ import Person, { getAllXIds, getEmail, getProfile, hasConsent, PURPOSES } from '
 import DataStore from '../../base/plumbing/DataStore';
 import Login from '../../base/youagain';
 import {MyDataSignUpButton, MyDataSignUpModal} from './MyDataSignUp';
-import { getPersonSetting, setPersonSetting, savePersonSettings } from './MyDataUtil';
+import { getPersonSetting, setPersonSetting, savePersonSettings } from '../../base/components/PropControls/UserClaimControl';
 import classnames from 'classnames';
 import DashboardHome from './DashboardHome';
 import { ProfileDot } from './MyDataCommonComponents';
@@ -91,7 +91,7 @@ const MyDataDashboard = () => {
 	let name = user.name || user.xid;
 	const joinedMonthYear = getJoinedMonthYear();
 	
-	const charity = getPersonSetting("charity");
+	const charity = getPersonSetting({key:"charity"});
 	
 	return <>
 		<Container id='profile'> 

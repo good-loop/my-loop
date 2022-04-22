@@ -1,10 +1,10 @@
 import React from 'react';
 import { Container, Row, Col} from 'reactstrap';
 import { ProfileDot } from './MyDataCommonComponents';
-import { getPersonSetting } from './MyDataUtil';
+import { getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
 
 const LatestNewsCard = () => {
-	let charity = getPersonSetting("charity");
+	let charity = getPersonSetting({key:"charity"});
 
 	return (<>
 	<h1>Latest News</h1>
