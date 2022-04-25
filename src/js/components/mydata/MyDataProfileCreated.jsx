@@ -28,7 +28,7 @@ const MyDataProfileCreated = () => {
 				</Col>
 			</Row>
 			<p className='speech-bubble'>
-				What default privacy means and how it related to charity doncations
+				What default privacy means and how it related to charity donations
 			</p>
 			
 		</>,
