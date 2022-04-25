@@ -12,6 +12,7 @@ import MyDataSelectCharity from './MyDataSelectCharity';
 import MyDataGetStarted from './MyDataGetStarted';
 import MyDataInterests from './MyDataInterests';
 import MyDataDetails from './MyDataDetails';
+import MyDataProfileCreated from './MyDataProfileCreated';
 
 const WIDGET_PATH = ['widget', 'MyDataSignUp'];
 const SHOW_PATH = [...WIDGET_PATH, 'show'];
@@ -99,11 +100,12 @@ const SignUpForm = () => {
 };
 
 const PAGES = [
-	MyDataInterests, //4
-	MyDataDetails, //5
 	SignUpForm, // 1
 	MyDataSelectCharity, //2
 	MyDataGetStarted, //3
+	MyDataInterests, //4
+	MyDataDetails, //5
+	MyDataProfileCreated, //6
 ];
 
 export const prevSignupPage = () => {

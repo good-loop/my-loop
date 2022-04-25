@@ -1,9 +1,7 @@
 import React from 'react';
-import PropControl from '../../base/components/PropControl';
 import { PERSON_PATH, VERB_PATH } from '../../base/components/LoginWidget';
-import { MyDataCard, Steps, SkipNextBtn } from './MyDataCommonComponents';
+import { MyDataCard, SkipNextBtn } from './MyDataCommonComponents';
 import UserClaimControl, { getEmailProp } from '../../base/components/PropControls/UserClaimControl';
-import Person, { getAllXIds, getClaimValue, getProfile, savePersons, setClaimValue} from '../../base/data/Person';
 
 const DetailsCard = ({title, prop, options, labels, ...props}) => {
 	const path = PERSON_PATH;

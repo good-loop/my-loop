@@ -16,7 +16,7 @@ import { nextSignupPage } from './MyDataSignUp';
 /**
  * A base component for the image, help, content card format that is common in MyData
  * @param {String|Component} img if string, will display automatically, but a custom component can be rendered instead
- * @param {String|Component} info to appear in the ? button popup
+ * @param {String|Component} info to appear in the ? button popup. If not set, will not show the button.
  * @param {?String} className
  * @returns 
  */
@@ -35,7 +35,7 @@ export const MyDataCard = ({img, info, className, children}) => {
 
     return <div className={space("mydata-card", className)}>
         {imgComponent}
-        <a className="more-info-btn" onClick={onMoreInfo}>?</a>
+        {info && <a className="more-info-btn" onClick={onMoreInfo}>?</a>}
         {showInfo && <div className="more-info">
             {info}
         </div>}
