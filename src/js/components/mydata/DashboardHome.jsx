@@ -1,10 +1,10 @@
 import React from 'react';
 import { Container, Row, Col} from 'reactstrap';
 import { ProfileDot } from './MyDataCommonComponents';
-import { getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
+import { getCharityObject, getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
 
 const LatestNewsCard = () => {
-	let charity = getPersonSetting({key:"charity"});
+	const ngo = getCharityObject();
 
 	return (<>
 	<h1>Latest News</h1>
@@ -16,7 +16,7 @@ const LatestNewsCard = () => {
 			<img src="/img/placeholder-circle.png" className='w-100' alt="" />
 			</Col>
 			<Col xs={8}>
-				<p>Complete Your Profile To Unlock More Donations for {charity}.</p>
+				<p>Complete Your Profile To Unlock More Donations for {ngo && ngo.name}.</p>
 			</Col>
 		</Row>
 	</Container>

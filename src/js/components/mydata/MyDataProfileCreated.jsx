@@ -1,14 +1,17 @@
 import React from 'react';
 import { Row, Col } from 'reactstrap';
-import { getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
+import { getPersonSetting, getCharityObject } from '../../base/components/PropControls/UserClaimControl';
 import { MyDataCard, SkipNextBtn } from './MyDataCommonComponents';
 import BSCarousel from '../../base/components/BSCarousel';
 import { countryListAlpha2 } from '../../base/data/CountryRegion';
+import CharityLogo from '../CharityLogo';
 
 const MyDataProfileCreated = () => {
 
 	let locationCountryCode = getPersonSetting({key:"location-country"});
 	let locationCountry = countryListAlpha2[locationCountryCode];
+
+	let ngo = getCharityObject();
 
 	const slidesItems = [
 		<>
@@ -32,6 +35,7 @@ const MyDataProfileCreated = () => {
 			
 		</>,
 		<>
+			{ngo && <CharityLogo charity={ngo} className="w-100"/>}
 			<p>Donation Level Enabled</p>
 		</>
 	]

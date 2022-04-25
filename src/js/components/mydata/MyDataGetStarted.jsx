@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from 'reactstrap';
 import NGO from '../../base/data/NGO';
 import CharityLogo from '../CharityLogo';
-import { getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
+import { getCharityObject } from '../../base/components/PropControls/UserClaimControl';
 import { getDataItem } from '../../base/plumbing/Crud';
 import NGOImage from '../../base/components/NGOImage';
 import { Steps } from './MyDataCommonComponents';
@@ -10,12 +10,7 @@ import { nextSignupPage } from './MyDataSignUp';
 
 const MyDataGetStarted = () => {
 
-    const cid = getPersonSetting({key:"charity"});
-    let pvCharity = getDataItem({ type: 'NGO', id: cid });
-    if (!pvCharity.resolved) {
-        return null;
-    }
-    const ngo = pvCharity.value;
+    const ngo = getCharityObject();
 
     const steps = [
         <>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropControl from '../../base/components/PropControl';
 import { Search } from '../pages/TabsForGoodSettings';
 import { CharityCard } from './MyDataCommonComponents';
-import { getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
+import { getCharityObject } from '../../base/components/PropControls/UserClaimControl';
 import { getDataItem } from '../../base/plumbing/Crud';
 import { getListPath } from '../../base/plumbing/DataStore';
 import KStatus from '../../base/data/KStatus';
@@ -22,7 +22,7 @@ const featuredCharities = [
 
 const MyDataSelectCharity = () => {
 
-    const charity = getPersonSetting({key:"charity"});
+    const ngo = getCharityObject();
     const CHARITY_WIDGET_PATH = ["widget", "MyDataCharitySelection"];
 
     let q = DataStore.getValue(CHARITY_WIDGET_PATH.concat("charitySearch"));
@@ -42,7 +42,7 @@ const MyDataSelectCharity = () => {
         <h2>My.Data</h2>
         <h1>Welcome!</h1>
         <h4>To get started, select the charity you would like to support</h4>
-        <h3>Selected charity: {charity}</h3>
+        <h3>Selected charity: {ngo.name}</h3>
 
         <PropControl type="text" path={CHARITY_WIDGET_PATH} prop="charitySearch" label="Search our Charity Directory" className="charity-search" placeholder="Search Charities"/>
 

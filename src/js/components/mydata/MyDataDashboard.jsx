@@ -4,7 +4,7 @@ import Person, { getAllXIds, getEmail, getProfile, hasConsent, PURPOSES } from '
 import DataStore from '../../base/plumbing/DataStore';
 import Login from '../../base/youagain';
 import {MyDataSignUpButton, MyDataSignUpModal} from './MyDataSignUp';
-import { getPersonSetting, setPersonSetting, savePersonSettings } from '../../base/components/PropControls/UserClaimControl';
+import { getPersonSetting, getCharityObject } from '../../base/components/PropControls/UserClaimControl';
 import classnames from 'classnames';
 import DashboardHome from './DashboardHome';
 import { ProfileDot } from './MyDataCommonComponents';
@@ -92,7 +92,7 @@ const MyDataDashboard = () => {
 	let name = user.name || user.xid;
 
 	let joinedMonthYear = getJoinedMonthYear();
-	let charity = getPersonSetting({key:"charity"});
+	const ngo = getCharityObject();
 	let locationCountryCode = getPersonSetting({key:"location-country"});
 	let locationCountry = countryListAlpha2[locationCountryCode];
 	
@@ -108,7 +108,7 @@ const MyDataDashboard = () => {
 				</Col>
 			</Row>
 			<ProfileDot>{joinedMonthYear && <p>Joined {joinedMonthYear}</p>}</ProfileDot>
-			<ProfileDot>{charity && <p>Supporting {charity}</p>}</ProfileDot>
+			<ProfileDot>{ngo && <p>Supporting {ngo.name}</p>}</ProfileDot>
 			<ProfileDot><p>£3,928,120 Rasied With Our Global Community</p></ProfileDot>
 		</Container>
 
@@ -129,7 +129,7 @@ const MyDataDashboard = () => {
 			</Row>
 		</Container>
 
-		<DashboardTab charity={charity} />
+		<DashboardTab />
 
 		<Container>
 			<MyDataSignUpButton />
