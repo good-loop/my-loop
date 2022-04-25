@@ -1,7 +1,7 @@
 import React from 'react';
 import NGO from '../../base/data/NGO';
 import CharityLogo from '../CharityLogo';
-import UserClaimControl, { getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
+import UserClaimControl from '../../base/components/PropControls/UserClaimControl';
 import { getDataItem } from '../../base/plumbing/Crud';
 import NGOImage from '../../base/components/NGOImage';
 import { MyDataCard, Steps, SkipNextBtn } from './MyDataCommonComponents';
