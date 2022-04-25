@@ -99,11 +99,11 @@ const SignUpForm = () => {
 };
 
 const PAGES = [
-	MyDataDetails,
-	SignUpForm,
-	MyDataSelectCharity,
-	MyDataGetStarted,
-	MyDataInterests,
+	MyDataInterests, //4
+	MyDataDetails, //5
+	SignUpForm, // 1
+	MyDataSelectCharity, //2
+	MyDataGetStarted, //3
 ];
 
 export const prevSignupPage = () => {

@@ -49,7 +49,7 @@ const MyDataInterests = ({}) => {
             options={["videoads", "bannerads"]}
             labels={["Video Ads", "Banner Ads"]}
         />
-        <SkipNextBtn />
+        <SkipNextBtn skip={true} />
     </>;
 
 };

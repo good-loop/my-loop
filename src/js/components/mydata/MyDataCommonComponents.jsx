@@ -115,13 +115,13 @@ export const ProfileDot = ({children}) => {
     )
 }
 
-export const SkipNextBtn = (noSkip) => {
+export const SkipNextBtn = ({skip}) => {
     return (
         <Row className='my-3'>
             <Col xs={6}>
             </Col>
             <Col xs={6} className="d-flex align-items-center justify-content-around p-0">
-                {!noSkip && <a className='skip-btn' style={{textDecoration:'underline'}} onClick={nextSignupPage}>Skip</a>}
+                {skip && <a className='skip-btn' style={{textDecoration:'underline'}} onClick={nextSignupPage}>Skip</a>}
                 <a className='btn btn-primary next-btn' onClick={nextSignupPage}>Next</a>
             </Col>
         </Row>
