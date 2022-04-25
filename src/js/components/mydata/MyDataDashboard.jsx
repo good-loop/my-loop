@@ -8,6 +8,7 @@ import { getPersonSetting, setPersonSetting, savePersonSettings } from '../../ba
 import classnames from 'classnames';
 import DashboardHome from './DashboardHome';
 import { ProfileDot } from './MyDataCommonComponents';
+import { countryListAlpha2 } from '../../base/data/CountryRegion';
 
 /**
  * @returns {!Number}
@@ -89,16 +90,18 @@ const MyDataDashboard = () => {
 	let xids = getAllXIds();
 	let user = Login.getUser();
 	let name = user.name || user.xid;
-	const joinedMonthYear = getJoinedMonthYear();
-	
-	const charity = getPersonSetting({key:"charity"});
+
+	let joinedMonthYear = getJoinedMonthYear();
+	let charity = getPersonSetting({key:"charity"});
+	let locationCountryCode = getPersonSetting({key:"location-country"});
+	let locationCountry = countryListAlpha2[locationCountryCode];
 	
 	return <>
 		<Container id='profile'> 
 			<Row>
 				<Col xs={8}>
-					{name && <h3>{name}</h3>}
-					<h3 className='TODO'>Location?</h3>
+					{name && <h4>{name}</h4>}
+					{locationCountry && <h5>{locationCountry}</h5>}
 				</Col>
 				<Col xs={4}>
 					<img src="/img/placeholder-circle.png" className='w-100' />
