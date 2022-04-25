@@ -223,10 +223,10 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 		<>
 			<p>Sign up for Tabs for Good.</p>
 			<p>Start browsing with the Tabs for Good plugin.</p>
-			<p>Raise money for {name}. For free.</p>
+			<p>Raise money for {name ? name : "charities"}. For free.</p>
 		</>,
 		<>
-			<p>Follow your online impact in the My.Good-Loop hub and see how much you’re raising for {name} – just by browsing the internet.</p>
+			<p>Follow your online impact in the My.Good-Loop hub and see how much you’re raising for {name ? name : "charity"} – just by browsing the internet.</p>
 		</>
 	];
 	const titles = [
