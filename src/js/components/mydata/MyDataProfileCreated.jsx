@@ -15,10 +15,8 @@ const MyDataProfileCreated = () => {
 
 	const slidesItems = [
 		<>
-			<Row>
-				<p style={{fontSize:'.8rem'}}>Your Location</p>
-				{locationCountry && <p>{locationCountry}</p>}
-			</Row>
+			<p style={{fontSize:'.8rem'}}>Your Location</p>
+			{locationCountry && <p>{locationCountry}</p>}
 			<Row>
 				<Col xs={6}>
 					<p className='text-muted' style={{fontSize:'.8rem'}}>Default Privary</p>
