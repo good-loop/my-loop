@@ -3,13 +3,41 @@
 @blue-highlight: #69a4b9;
 @sea-blue: #76a1b7;
 
-@nav-width: 20em; // why isnt the nav either 100% or container??
+// The navigation column
+@nav-width: 20em;
 
 #green-dashboard {
-	width: 100vw;
+	// width: 100vw;
 	height: @fullHeight;
 	overflow: hidden;
 	display: flex;
+
+	.greendash-filters {
+		font-family: 'Montserrat';
+		text-transform: uppercase;
+		width: 100%;
+		display: flex;
+
+		.btn {
+			border: none;
+			box-shadow: none;
+		}
+	}
+
+	.greendash-overview {
+		font-family: 'Montserrat';
+		text-transform: uppercase;
+		color: @greenmedia-darkcyan;
+		font-weight: 600;
+	}
+
+	.green-card {
+		.gc-title {
+			font-family: 'Montserrat';
+			text-transform: uppercase;
+		}
+	}
+
 	
 }
 
@@ -27,7 +55,6 @@
 	> * {
 		width: 100%;
 	}
-
 
 	.logo {
 		margin: 3em auto;
