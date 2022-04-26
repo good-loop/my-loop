@@ -102,16 +102,13 @@ export const Steps = ({step, steps}) => {
     </div>)
 };
 
-export const ProfileDot = ({children}) => {
+export const ProfileDot = ({className, imgUrl, children}) => {
+    if (!imgUrl) imgUrl = "/img/placeholder-circle.png"
     return (
-        <Row>
-            <Col xs={1}>
-                <img src="/img/placeholder-circle.png" style={{width:'1rem'}} />
-            </Col>
-            <Col xs={9}>
-                {children}
-            </Col>
-        </Row>
+        <div className={space(className, 'd-flex align-items-center mb-3')}>
+            <img src={imgUrl} style={{width:'2rem',height:'2rem',marginRight:'1rem'}} />
+            {children}
+        </div>
     )
 }
 

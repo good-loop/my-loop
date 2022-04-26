@@ -7,8 +7,10 @@ import {MyDataSignUpButton, MyDataSignUpModal} from './MyDataSignUp';
 import { getPersonSetting, getCharityObject } from '../../base/components/PropControls/UserClaimControl';
 import classnames from 'classnames';
 import DashboardHome from './DashboardHome';
+import DashboardProfile from './DashboardProfile';
 import { ProfileDot } from './MyDataCommonComponents';
 import { countryListAlpha2 } from '../../base/data/CountryRegion';
+import CharityLogo from '../CharityLogo';
 
 /**
  * @returns {!Number}
@@ -39,9 +41,12 @@ class DashboardTab extends React.Component {
 		super(props);
 
 		this.toggle = this.toggle.bind(this);
-		this.state = {
-			activeTab: '1'
-		};
+		
+		if (DataStore.getUrlValue('dashboard') == "profile") {
+			this.state = {activeTab: '2'};
+		} else {
+			this.state = {activeTab: '1'};
+		}
 	}
 
 	toggle(tab) {
@@ -51,6 +56,7 @@ class DashboardTab extends React.Component {
 			});
 		}
 	}
+
 	render() {
 		return (
 			<div>
@@ -78,7 +84,7 @@ class DashboardTab extends React.Component {
 					</TabPane>
 
 					<TabPane tabId="2">
-						<h1>TODO</h1>
+						<DashboardProfile />
 					</TabPane>
 				</TabContent>
 			</div>
@@ -104,25 +110,25 @@ const MyDataDashboard = () => {
 					{locationCountry && <h5>{locationCountry}</h5>}
 				</Col>
 				<Col xs={4}>
-					<img src="/img/placeholder-circle.png" className='w-100' />
+					{ngo && <CharityLogo charity={ngo} className="w-100"/>}
 				</Col>
 			</Row>
-			<ProfileDot>{joinedMonthYear && <p>Joined {joinedMonthYear}</p>}</ProfileDot>
-			<ProfileDot>{ngo && <p>Supporting {ngo.name}</p>}</ProfileDot>
-			<ProfileDot><p>£3,928,120 Rasied With Our Global Community</p></ProfileDot>
+			<ProfileDot className="mt-3">{joinedMonthYear && <>Joined {joinedMonthYear}</>}</ProfileDot>
+			<ProfileDot>{ngo && <>Supporting {ngo.name}</>}</ProfileDot>
+			<ProfileDot><>£3,928,120 Rasied With Our Global Community</></ProfileDot>
 		</Container>
 
 		<Container id='badges'>
 			<Row>
-				<Col xs={4}>
+				<Col xs={4} className="text-center">
 					<img src="/img/placeholder-circle.png" className='w-100' />
 					Badge Name
 				</Col>
-				<Col xs={4}>
+				<Col xs={4} className="text-center">
 					<img src="/img/placeholder-circle.png" className='w-100' />
 					Badge Name
 				</Col>
-				<Col xs={4}>
+				<Col xs={4} className="text-center">
 					<img src="/img/placeholder-circle.png" className='w-100' />
 					Badge Name
 				</Col>

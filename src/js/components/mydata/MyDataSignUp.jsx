@@ -100,12 +100,12 @@ const SignUpForm = () => {
 };
 
 const PAGES = [
-	MyDataProfileCreated, //6
 	SignUpForm, // 1
 	MyDataSelectCharity, //2
 	MyDataGetStarted, //3
 	MyDataInterests, //4
 	MyDataDetails, //5
+	MyDataProfileCreated, //6
 ];
 
 export const prevSignupPage = () => {

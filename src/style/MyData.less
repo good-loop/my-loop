@@ -1,83 +1,82 @@
-
-.mydata-signup {
-
-    .mydata-card {
-        position: relative;
-        border-radius: 10px;
-        border: 1px solid @gl-darker-grey;
+.mydata-card { // mydata-card get used outside of mydata-signup
+    position: relative;
+    border-radius: 10px;
+    border: 1px solid @gl-darker-grey;
+    overflow: hidden;
+    .more-info-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        color: @gl-darker-grey;
+        background-color: white;
+        border: 2px solid @gl-darker-grey;
+        border-radius: 50%;
         overflow: hidden;
-        .more-info-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            color: @gl-darker-grey;
-            background-color: white;
-            border: 2px solid @gl-darker-grey;
+        width: 30px;
+        height: 30px;
+        font-weight: bold;
+        text-align: center;
+    }
+    .more-info {
+        position: absolute;
+        border-radius: 10px;
+        padding: 1rem;
+        background: white;
+        border: @gl-darker-grey;
+        box-shadow: 0 2px 3px rgba(0,0,0,0.5);
+        top: 60px;
+        width: 90%;
+        left: 50%;
+        transform: translateX(-50%);
+        max-height: 70%;
+        overflow-y: auto;
+    }
+    .card-content {
+        padding: 1rem;
+    }
+
+    .carousel-indicators {
+        li {
+            width: 15px;
+            height: 15px;
+            background-color: #626262;
             border-radius: 50%;
-            overflow: hidden;
-            width: 30px;
-            height: 30px;
-            font-weight: bold;
-            text-align: center;
+            border: 1px solid grey;
+            // margin-right: .5rem;
         }
-        .more-info {
-            position: absolute;
-            border-radius: 10px;
-            padding: 1rem;
-            background: white;
-            border: @gl-darker-grey;
-            box-shadow: 0 2px 3px rgba(0,0,0,0.5);
-            top: 60px;
-            width: 90%;
-            left: 50%;
-            transform: translateX(-50%);
-            max-height: 70%;
-            overflow-y: auto;
-        }
-        .card-content {
-            padding: 1rem;
-        }
-
-        .carousel-indicators {
-            li {
-                width: 15px;
-                height: 15px;
-                background-color: #626262;
-                border-radius: 50%;
-                border: 1px solid grey;
-                // margin-right: .5rem;
-            }
-            .active {
-                background-color: white;
-            }
-        }
-
-        .profile-created-slides {
-            height: 50vh;
-        }
-
-        .speech-bubble {
-            position: relative;
+        .active {
             background-color: white;
-            margin: 5px;
-            margin-top: 1em;
-            padding: 2em 2.5em;
-            box-shadow:	0 0.125rem 0.5rem rgba(0, 0, 0, .3), 0 0.0625rem 0.125rem rgba(0, 0, 0, .2);
-            &::before {
-                content: '';
-                position: absolute;
-                width: 0;
-                height: 0;
-                bottom: 100%;
-                left: 13em; 
-                border: .75rem solid transparent;
-                border-top: none;
-
-                border-bottom-color: white;
-                filter: drop-shadow(0 -0.0625rem 0.0625rem rgba(0, 0, 0, .1));
-            }
         }
     }
+
+    .profile-created-slides {
+        height: 50vh;
+    }
+
+    .speech-bubble {
+        position: relative;
+        background-color: white;
+        margin: 5px;
+        margin-top: 1em;
+        padding: 2em 2.5em;
+        box-shadow:	0 0.125rem 0.5rem rgba(0, 0, 0, .3), 0 0.0625rem 0.125rem rgba(0, 0, 0, .2);
+        &::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            bottom: 100%;
+            left: 13em; 
+            border: .75rem solid transparent;
+            border-top: none;
+
+            border-bottom-color: white;
+            filter: drop-shadow(0 -0.0625rem 0.0625rem rgba(0, 0, 0, .1));
+        }
+    }
+}
+
+.mydata-signup {
 
     .btn-primary {
         background: @gl-darker-grey !important;

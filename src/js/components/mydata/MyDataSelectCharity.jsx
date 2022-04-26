@@ -42,7 +42,7 @@ const MyDataSelectCharity = () => {
         <h2>My.Data</h2>
         <h1>Welcome!</h1>
         <h4>To get started, select the charity you would like to support</h4>
-        <h3>Selected charity: {ngo.name}</h3>
+        {ngo && <h3>Selected charity: {ngo.name}</h3>}
 
         <PropControl type="text" path={CHARITY_WIDGET_PATH} prop="charitySearch" label="Search our Charity Directory" className="charity-search" placeholder="Search Charities"/>
 

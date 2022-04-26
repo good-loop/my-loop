@@ -66,8 +66,8 @@ const Page = () => {
 	const user = Login.getUser();
 	const name = user.name || user.xid;
 
-	// Which tab? (default to account)
-	const tab = DataStore.getUrlValue('tab') || 'account';
+	// Which tab? (default to dashboard)
+	const tab = DataStore.getUrlValue('tab') || 'dashboard';
 
 	return (<>
 		<div className="AccountPage avoid-navbar">

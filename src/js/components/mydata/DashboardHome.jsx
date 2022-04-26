@@ -35,9 +35,9 @@ const AchievementCard = () => {
 			<img src="/img/placeholder-circle.png" className='w-100' alt="" />
 			<Container className='achievement-card border border-white rounded bg-white my-3 py-3'>
 				<p className='text-center'>Some Things We've Achieved</p>
-				<ProfileDot><p>20,001 Meals For Children</p></ProfileDot>
-				<ProfileDot><p>600 Life-Saving Medicine Kets</p></ProfileDot>
-				<ProfileDot><p>100 Guide Dog Puppies Trained</p></ProfileDot>
+				<ProfileDot><>20,001 Meals For Children</></ProfileDot>
+				<ProfileDot><>600 Life-Saving Medicine Kets</></ProfileDot>
+				<ProfileDot><>100 Guide Dog Puppies Trained</></ProfileDot>
 			</Container>
 		</Container>
 		</>);
