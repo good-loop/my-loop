@@ -9,8 +9,8 @@ import { countryListAlpha2 } from '../../base/data/CountryRegion';
 
 const SupportingCard = () => {
 	const pvNgo = getCharityObject();
-    let ngo = null;
-    if (pvNgo) ngo = pvNgo.value || pvNgo.interim;
+	let ngo = null;
+	if (pvNgo) ngo = pvNgo.value || pvNgo.interim;
 
 	return (<Container className='text-center'>
 		<h5>Your Data is Supporting</h5>

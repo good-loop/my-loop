@@ -11,7 +11,9 @@ const MyDataProfileCreated = () => {
 	let locationCountryCode = getPersonSetting({key:"location-country"});
 	let locationCountry = countryListAlpha2[locationCountryCode];
 
-	let ngo = getCharityObject();
+	const pvNgo = getCharityObject();
+	let ngo = null;
+	if (pvNgo) ngo = pvNgo.value || pvNgo.interim;
 
 	const slidesItems = [
 		<>

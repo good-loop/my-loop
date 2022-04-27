@@ -10,7 +10,9 @@ import { nextSignupPage } from './MyDataSignUp';
 
 const MyDataGetStarted = () => {
 
-    const ngo = getCharityObject();
+    const pvNgo = getCharityObject();
+    let ngo = null;
+    if (pvNgo) ngo = pvNgo.value || pvNgo.interim;
 
     const steps = [
         <>
