@@ -20,8 +20,9 @@ const SupportingCard = () => {
 	</Container>)
 }
 
-const CollapseSettings = ({title, children}) => {
-	const [settingsOpen, setSettingsOpen] = useState(false);
+const CollapseSettings = ({title, defaultCollapse, children}) => {
+	if (!defaultCollapse) defaultCollapse = false;
+	const [settingsOpen, setSettingsOpen] = useState(defaultCollapse);
 	const settingsToggle = () => setSettingsOpen(!settingsOpen);
 
 	return (
@@ -95,7 +96,7 @@ const SettingItem = ({description, itemKey, type, emailPropControl, ...props}) =
 const DataProfile = () => {
 
 	return (<>
-		<CollapseSettings title="Personal Info" >
+		<CollapseSettings title="Personal Info" defaultCollapse={true}>
 			<SettingItem description="Your name" itemKey="name"/>
 			<SettingItem description="Your email" itemKey="email"/>
 			<SettingItem description="Your date of birth" itemKey="birthday" type="date"/>
