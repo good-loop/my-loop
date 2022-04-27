@@ -36,7 +36,7 @@ const SettingItem = ({description, itemKey}) => {
 	let itemValue = getPersonSetting({key: itemKey});
 	if (itemKey == 'email') {
 		itemValue = getEmail();
-	} else if (itemKey == 'location -country') {
+	} else if (itemKey == 'location-country') {
 		itemValue = countryListAlpha2[itemValue];
 	}
 
@@ -48,7 +48,7 @@ const SettingItem = ({description, itemKey}) => {
 	<hr/>
 	<div className="d-flex justify-content-between">
 		<p style={{fontSize:'.8rem'}}>{description}</p>
-		<a onClick={editModeToggle}>Edit</a>
+		<a onClick={editModeToggle}>{editMode ? 'Done' : 'Edit'}</a>
 	</div>
 	{editMode ? <UserClaimControl prop={itemKey} type="text"/> : (itemValue ? itemValue : "Add+")}
 	</>)

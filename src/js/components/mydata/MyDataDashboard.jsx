@@ -95,7 +95,7 @@ class DashboardTab extends React.Component {
 const MyDataDashboard = () => {
 	let xids = getAllXIds();
 	let user = Login.getUser();
-	let name = user.name || user.xid;
+	let name = getPersonSetting({key:'name'}) || user.name || user.xid;
 
 	let joinedMonthYear = getJoinedMonthYear();
 	const ngo = getCharityObject();
