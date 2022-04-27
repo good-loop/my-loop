@@ -42,7 +42,7 @@ class DashboardTab extends React.Component {
 
 		this.toggle = this.toggle.bind(this);
 		
-		if (DataStore.getUrlValue('dashboard') == "profile") {
+		if (DataStore.getUrlValue('dashboard') == "profile") { // account?tab=dashboard&dashboard=profile
 			this.state = {activeTab: '2'};
 		} else {
 			this.state = {activeTab: '1'};

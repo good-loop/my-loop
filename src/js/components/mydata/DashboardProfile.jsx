@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Collapse} from 'reactstrap';
+import { Container, Row, Col, Collapse, FormGroup} from 'reactstrap';
+import { Help } from '../../base/components/PropControl';
 import { ProfileDot } from './MyDataCommonComponents';
 import UserClaimControl, { getCharityObject, getEmail, getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
 import CharityLogo from '../CharityLogo';
@@ -34,13 +35,25 @@ const CollapseSettings = ({title, children}) => {
 	</MyDataCard>)
 }
 
-const SettingItem = ({description, itemKey}) => {
+const SettingItem = ({description, itemKey, type, ...props}) => {
+	// HACK - Not allow user to change email
+
 	let itemValue = getPersonSetting({key: itemKey});
 	if (itemKey == 'email') {
 		itemValue = getEmail();
+		return (<>
+			<hr/>
+			<div className="d-flex justify-content-between">
+				<p style={{fontSize:'.8rem'}}>{description}</p>
+				<Help>Email is set from your login. Let us know if you need to change it by contacting support@good-loop.com.</Help>
+			</div>
+			{itemValue ? itemValue : "Add+"}
+		</>);
 	} else if (itemKey == 'location-country') {
 		itemValue = countryListAlpha2[itemValue];
 	}
+
+	if (!type) type = 'text';
 
 	const [editMode, setEditMode] = useState(false);
 
@@ -52,7 +65,7 @@ const SettingItem = ({description, itemKey}) => {
 		<p style={{fontSize:'.8rem'}}>{description}</p>
 		<a onClick={editModeToggle}>{editMode ? 'Done' : 'Edit'}</a>
 	</div>
-	{editMode ? <UserClaimControl prop={itemKey} type="text"/> : (itemValue ? itemValue : "Add+")}
+	{editMode ? <UserClaimControl prop={itemKey} type={type} {...props} /> : (itemValue ? itemValue : "Add+")}
 	</>)
 }
 
@@ -63,13 +76,13 @@ const DataProfile = () => {
 			<br/>
 			<SettingItem description="Your name" itemKey="name"/>
 			<SettingItem description="Your email" itemKey="email"/>
-			<SettingItem description="Your date of birth" itemKey="birthday"/>
-			<SettingItem description="Your gender" itemKey="gender"/>
+			<SettingItem description="Your date of birth" itemKey="birthday" type="date"/>
+			<SettingItem description="Your gender" itemKey="gender" type="gender" />
 		</CollapseSettings>
 
 		<CollapseSettings title="Demographic Details" >
 			<br/>
-			<SettingItem description="Your country" itemKey="location-country"/>
+			<SettingItem description="Your country" itemKey="location-country" type="country" />
 			<SettingItem description="Your region" itemKey="location-region"/>
 		</CollapseSettings>
 
