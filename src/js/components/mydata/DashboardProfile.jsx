@@ -35,23 +35,20 @@ const CollapseSettings = ({title, children}) => {
 	</MyDataCard>)
 }
 
-const SettingItem = ({description, itemKey, type, ...props}) => {
-	// HACK - Not allow user to change email
-
+const SettingItem = ({description, itemKey, type, editOff, editOffHelp, ...props}) => {
 	let itemValue = getPersonSetting({key: itemKey});
-	if (itemKey == 'email') {
+	if (itemKey == 'email') { // Not allow user to change email
 		itemValue = getEmail();
-		return (<>
-			<hr/>
-			<div className="d-flex justify-content-between">
-				<p style={{fontSize:'.8rem'}}>{description}</p>
-				<Help>Email is set from your login. Let us know if you need to change it by contacting support@good-loop.com.</Help>
-			</div>
-			{itemValue ? itemValue : "Add+"}
-		</>);
+		editOff = true;
+		editOffHelp = "Email is set from your login. Let us know if you need to change it by contacting support@good-loop.com.";
 	} else if (itemKey == 'location-country') {
 		itemValue = countryListAlpha2[itemValue];
-	}
+	} 
+	
+	// Privacy Levels
+	let privacyLevelMap = {"0": "Private Data", "1": "Default Privacy", "2": "Public Data"};
+	const privacyKey = itemKey + '-privacy';
+	const privacyLevel = privacyLevelMap[getPersonSetting({key: privacyKey})] || 'Default Privacy'; // No privacy level = default level;
 
 	if (!type) type = 'text';
 
@@ -62,10 +59,19 @@ const SettingItem = ({description, itemKey, type, ...props}) => {
 	return(<>
 	<hr/>
 	<div className="d-flex justify-content-between">
-		<p style={{fontSize:'.8rem'}}>{description}</p>
-		<a onClick={editModeToggle}>{editMode ? 'Done' : 'Edit'}</a>
+		<span style={{fontSize:'.8rem',textTransform:'uppercase'}}>{description}</span>
+		{editOff ? <Help>{editOffHelp}</Help> : <a onClick={editModeToggle}>{editMode ? 'Done' : 'Edit'}</a>}
 	</div>
-	{editMode ? <UserClaimControl prop={itemKey} type={type} {...props} /> : (itemValue ? itemValue : "Add+")}
+	{editMode ? <UserClaimControl prop={itemKey} type={type} {...props} /> : (itemValue ? <span>{itemValue}</span> : <a onClick={editModeToggle}>Add+</a>)}
+	{editMode ? <UserClaimControl prop={privacyKey} type="privacylevel" {...props} /> : 	
+	<div className="d-flex justify-content-between align-items-center">
+		<span className='text-muted' style={{fontSize:'.8rem'}}>{privacyLevel}</span>
+		<div className="d-flex">
+			<img style={{height:'1.5rem'}} src="/img/mydata/padlock-opened.png" alt="" />
+			<img style={{height:'1.5rem'}} src="/img/mydata/padlock-mid.png" alt="" />
+			<img style={{height:'1.5rem'}} src="/img/mydata/padlock-locked.png" alt="" />
+		</div>
+	</div>}
 	</>)
 }
 
