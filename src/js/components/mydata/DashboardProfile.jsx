@@ -28,19 +28,24 @@ const CollapseSettings = ({title, children}) => {
 		className="my-3"
 		img="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/spring-flowers-1613759017.jpg?crop=0.669xw:1.00xh;0.0635xw,0&resize=640:*"
 		>
-			<a onClick={settingsToggle}><h5>✓ {title}</h5></a>
+			<a onClick={settingsToggle}> <div className="d-flex justify-content-between align-items-center">
+				<h5>✓ {title}</h5> <span className='text-muted' style={{fontSize:'1.5rem'}}>{settingsOpen ? '˄' : '˅'}</span>
+			</div></a>
 			<Collapse isOpen={settingsOpen}>
 				{children}
 			</Collapse>
 	</MyDataCard>)
 }
 
-const SettingItem = ({description, itemKey, type, editOff, editOffHelp, ...props}) => {
+const SettingItem = ({description, itemKey, type, emailPropControl, ...props}) => {
 	let itemValue = getPersonSetting({key: itemKey});
 	if (itemKey == 'email') { // Not allow user to change email
 		itemValue = getEmail();
-		editOff = true;
-		editOffHelp = "Email is set from your login. Let us know if you need to change it by contacting support@good-loop.com.";
+		emailPropControl = <>{itemValue && <FormGroup>
+			<label className='mr-1'>Your Email</label>
+			<Help>Email is set from your login. Let us know if you need to change it by contacting support@good-loop.com.</Help>
+			<input type="text" name='email' className='form-control' value={itemValue || ''} readOnly/>
+			</FormGroup>}</>
 	} else if (itemKey == 'location-country') {
 		itemValue = countryListAlpha2[itemValue];
 	} 
@@ -57,13 +62,18 @@ const SettingItem = ({description, itemKey, type, editOff, editOffHelp, ...props
 	const editModeToggle = () => setEditMode(!editMode);
 
 	return(<>
-	<hr/>
+	<div style={{height:'1px'}}></div>
+	<hr />
 	<div className="d-flex justify-content-between">
 		<span style={{fontSize:'.8rem',textTransform:'uppercase'}}>{description}</span>
-		{editOff ? <Help>{editOffHelp}</Help> : <a onClick={editModeToggle}>{editMode ? 'Done' : 'Edit'}</a>}
+		<a onClick={editModeToggle}><span style={{fontSize:'.8rem'}}>{editMode ? 'DONE' : 'EDIT'}</span></a>
 	</div>
-	{editMode ? <UserClaimControl prop={itemKey} type={type} {...props} /> : (itemValue ? <span>{itemValue}</span> : <a onClick={editModeToggle}>Add+</a>)}
-	{editMode ? <UserClaimControl prop={privacyKey} type="privacylevel" label="Privacy Level" {...props} /> : 	
+
+	{!editMode ? (itemValue ? <span>{itemValue}</span> : <a onClick={editModeToggle}>Add+</a>) : 
+	(emailPropControl ? emailPropControl : <UserClaimControl prop={itemKey} type={type} {...props} />)
+	}
+
+	{!editMode && 
 	<div className="d-flex justify-content-between align-items-center">
 		<span className='text-muted' style={{fontSize:'.8rem'}}>{privacyLevel}</span>
 		<div className="d-flex">
@@ -71,7 +81,13 @@ const SettingItem = ({description, itemKey, type, editOff, editOffHelp, ...props
 			<img style={{height:'1.5rem'}} src="/img/mydata/padlock-mid.png" alt="" />
 			<img style={{height:'1.5rem'}} src="/img/mydata/padlock-locked.png" alt="" />
 		</div>
-	</div>}
+	</div>
+	}
+
+	<Collapse isOpen={editMode}>
+		<UserClaimControl prop={privacyKey} type="privacylevel" label="Privacy Level" {...props} />
+	</Collapse>
+ 
 	</>)
 }
 
@@ -79,7 +95,6 @@ const DataProfile = () => {
 
 	return (<>
 		<CollapseSettings title="Personal Info" >
-			<br/>
 			<SettingItem description="Your name" itemKey="name"/>
 			<SettingItem description="Your email" itemKey="email"/>
 			<SettingItem description="Your date of birth" itemKey="birthday" type="date"/>
@@ -87,7 +102,6 @@ const DataProfile = () => {
 		</CollapseSettings>
 
 		<CollapseSettings title="Demographic Details" >
-			<br/>
 			<SettingItem description="Your country" itemKey="location-country" type="country" />
 			<SettingItem description="Your region" itemKey="location-region"/>
 		</CollapseSettings>
