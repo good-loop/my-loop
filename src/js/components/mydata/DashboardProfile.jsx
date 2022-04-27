@@ -41,10 +41,9 @@ const SettingItem = ({description, itemKey, type, emailPropControl, ...props}) =
 	let itemValue = getPersonSetting({key: itemKey});
 	if (itemKey == 'email') { // Not allow user to change email
 		itemValue = getEmail();
-		emailPropControl = <>{itemValue && <FormGroup>
-			<label className='mr-1'>Your Email</label>
-			<Help>Email is set from your login. Let us know if you need to change it by contacting support@good-loop.com.</Help>
+		emailPropControl = <>{itemValue && <FormGroup style={{position:'relative'}}>
 			<input type="text" name='email' className='form-control' value={itemValue || ''} readOnly/>
+			<Help style={{position:'absolute',right:'.6rem',top:'.6rem'}}>Email is set from your login. Let us know if you need to change it by contacting support@good-loop.com.</Help>
 			</FormGroup>}</>
 	} else if (itemKey == 'location-country') {
 		itemValue = countryListAlpha2[itemValue];
@@ -62,6 +61,7 @@ const SettingItem = ({description, itemKey, type, emailPropControl, ...props}) =
 	const editModeToggle = () => setEditMode(!editMode);
 
 	return(<>
+	{/* HACK - Avoid bug with Collaspe and hr */}
 	<div style={{height:'1px'}}></div>
 	<hr />
 	<div className="d-flex justify-content-between">
@@ -85,7 +85,7 @@ const SettingItem = ({description, itemKey, type, emailPropControl, ...props}) =
 	}
 
 	<Collapse isOpen={editMode}>
-		<UserClaimControl prop={privacyKey} type="privacylevel" label="Privacy Level" {...props} />
+		<UserClaimControl prop={privacyKey} type="privacylevel" label="Privacy Level" labelStyle={{fontSize:'.8rem',textTransform:'uppercase'}} {...props} />
 	</Collapse>
  
 	</>)

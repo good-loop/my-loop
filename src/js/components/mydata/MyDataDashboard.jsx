@@ -106,7 +106,7 @@ const MyDataDashboard = () => {
 	let locationCountryCode = getPersonSetting({key:"location-country"});
 	let locationCountry = countryListAlpha2[locationCountryCode];
 	
-	return <>
+	return <div className='forced-mobile'>
 		<Container id='profile'> 
 			<Row>
 				<Col xs={8}>
@@ -140,12 +140,7 @@ const MyDataDashboard = () => {
 		</Container>
 
 		<DashboardTab />
-
-		<Container>
-			<MyDataSignUpButton />
-			<MyDataSignUpModal />
-		</Container>
-	</>
+	</div>
 }
 
 export default MyDataDashboard;
