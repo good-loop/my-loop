@@ -1,5 +1,5 @@
 #!/bin/bash
-BRANCH=$([[ $1 != "" ]] && echo "feature$1" || echo "master")
+BRANCH=$([[ $(sed 's/refs\/head\/master//g' <<< $1) != "" ]] && echo "feature$1" || echo "master")
 ssh winterwell@baker.good-loop.com bash <<EOF 
 /home/winterwell/config/build-scripts/builder.sh \
 BUILD_TYPE="CI" \
