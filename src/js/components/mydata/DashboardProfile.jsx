@@ -63,7 +63,7 @@ const SettingItem = ({description, itemKey, type, editOff, editOffHelp, ...props
 		{editOff ? <Help>{editOffHelp}</Help> : <a onClick={editModeToggle}>{editMode ? 'Done' : 'Edit'}</a>}
 	</div>
 	{editMode ? <UserClaimControl prop={itemKey} type={type} {...props} /> : (itemValue ? <span>{itemValue}</span> : <a onClick={editModeToggle}>Add+</a>)}
-	{editMode ? <UserClaimControl prop={privacyKey} type="privacylevel" {...props} /> : 	
+	{editMode ? <UserClaimControl prop={privacyKey} type="privacylevel" label="Privacy Level" {...props} /> : 	
 	<div className="d-flex justify-content-between align-items-center">
 		<span className='text-muted' style={{fontSize:'.8rem'}}>{privacyLevel}</span>
 		<div className="d-flex">
