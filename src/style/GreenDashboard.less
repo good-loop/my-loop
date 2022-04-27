@@ -38,7 +38,87 @@
 		}
 	}
 
-	
+	.carbon-time-series {
+		.gc-body {
+			display: flex;
+			flex-direction: row;
+		}
+
+		.chart-subcard {
+			flex-grow: 1;
+		}
+		
+		.total-subcard {
+			color: white;
+			background-color: @greenmedia-darkcyan;
+			margin: -@gc-padding -@gc-padding -@gc-padding 0;
+			padding: @gc-padding;
+			border-radius: @gc-border-radius;
+			width: 15em;
+			text-align: center;
+			font-family: 'Montserrat';
+
+			.big-number {
+				font-weight: 900;
+				.number {
+					font-size: 300%;
+					line-height: 1;
+				}
+				.unit { font-size: 150%; }
+				.desc { font-size: 100%; }
+			}
+
+			.impact-bubble {
+				color: black;
+				background-color: white;
+				border-radius: @gc-border-radius;
+				margin-bottom: 2em; // Match height of .impact-button .selected:before
+				.impact-leader {
+					font-size: 100%;
+				}
+				.impact-number {
+					font-size: 300%;
+					font-weight: 900;
+				}
+				.impact-desc {
+					font-size: 100%;
+					font-weight: 900;
+					text-transform: uppercase;
+				}
+				.impact-icon {
+					display: block;
+					height: 3em;
+				}
+			}
+
+			.impact-buttons {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-around;
+				.impact-button {
+					position: relative;
+					display: block;
+					width: 2.5em;
+					height: 2.5em;
+					border-radius: 50%;
+					border: 0.2em solid white;
+					background-image: url("/img/green/dashboard/impact-button.svg");
+					padding: 0.25em;
+					&.selected:before {
+						content: '';
+						background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath style='fill:%23fff;stroke:none' d='M 0,0 50,50 100,0 Z'/%3E%3C/svg%3E");
+						display: block;
+						position: absolute;
+						height: 2em;
+						width: 2em;
+						// 0.2em to adjust position for parent border width
+						left: -0.2em;
+						top: -2.2em;
+					}
+				}
+			}
+		}
+	}
 }
 
 #green-navbar {
@@ -74,15 +154,25 @@
 
 	.green-nav-icon {
 		position: relative;
-		display: inline-blaock;
+		display: inline-block;
 		width: 3em;
 		height: 3em;
 		border-radius: 50%;
 		background-color: white;
 		margin-right: 1em;
+		&.metrics-icon {
+			background-image: url("/img/green/dashboard/metrics-button.svg");
+		}
+		&.optimisation-icon {
+			background-image: url("/img/green/dashboard/optim-button.svg");
+		}
+		&.impact-icon {
+			background-image: url("/img/green/dashboard/impact-button.svg");
+		}
+		&.profile-icon {
+			background-image: url("/img/green/dashboard/profile-button.svg");
+		}
 	}
-
-
 }
 
 .green-subpage {
@@ -90,13 +180,17 @@
 	height: 100%;
 }
 
+@gc-border-radius: 0.5rem;
+@gc-padding: 1rem;
+
 .green-card {
 	display: flex;
 	flex-direction: column;
 	.gc-body {
 		background-color: white;
 		box-shadow: 0 0.25em 0.5em rgb(0 0 0 / 40%);
-		border-radius: 0.5em;
+		border-radius: @gc-border-radius;
+		padding: @gc-padding;
 		flex-grow: 1;
 	}
 }
