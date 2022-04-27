@@ -97,8 +97,12 @@ const MyDataDashboard = () => {
 	let user = Login.getUser();
 	let name = getPersonSetting({key:'name'}) || user.name || user.xid;
 
+	
+	const pvNgo = getCharityObject();
+	let ngo = null;
+	if (pvNgo) ngo = pvNgo.value || pvNgo.interim;
+	
 	let joinedMonthYear = getJoinedMonthYear();
-	const ngo = getCharityObject();
 	let locationCountryCode = getPersonSetting({key:"location-country"});
 	let locationCountry = countryListAlpha2[locationCountryCode];
 	

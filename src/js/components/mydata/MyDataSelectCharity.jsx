@@ -22,7 +22,10 @@ const featuredCharities = [
 
 const MyDataSelectCharity = () => {
 
-    const ngo = getCharityObject();
+    const pvNgo = getCharityObject();
+    let ngo = null;
+    if (pvNgo) ngo = pvNgo.value || pvNgo.interim;
+
     const CHARITY_WIDGET_PATH = ["widget", "MyDataCharitySelection"];
 
     let q = DataStore.getValue(CHARITY_WIDGET_PATH.concat("charitySearch"));

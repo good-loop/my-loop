@@ -4,7 +4,9 @@ import { ProfileDot } from './MyDataCommonComponents';
 import { getCharityObject, getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
 
 const LatestNewsCard = () => {
-	const ngo = getCharityObject();
+	const pvNgo = getCharityObject();
+    let ngo = null;
+    if (pvNgo) ngo = pvNgo.value || pvNgo.interim;
 
 	return (<>
 	<h1>Latest News</h1>
