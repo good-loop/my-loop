@@ -100,11 +100,11 @@ const SignUpForm = () => {
 };
 
 const PAGES = [
-	MyDataDetails, //5
 	SignUpForm, // 1
 	MyDataSelectCharity, //2
 	MyDataGetStarted, //3
 	MyDataInterests, //4
+	MyDataDetails, //5
 	MyDataProfileCreated, //6
 ];
 
@@ -124,8 +124,8 @@ const MyDataSignUp = () => {
 	const PageComponent = PAGES[page];
 	
 	return <div className="mydata-signup forced-mobile">
-		<PageComponent />
 		<a className="btn btn-secondary" onClick={prevSignupPage}>Back</a>
 		<a className="btn btn-secondary" onClick={nextSignupPage}>Next</a>
+		<PageComponent />
 	</div>;
 };

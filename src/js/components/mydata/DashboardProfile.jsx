@@ -6,6 +6,7 @@ import UserClaimControl, { getCharityObject, getEmail, getPersonSetting } from '
 import CharityLogo from '../CharityLogo';
 import { MyDataCard } from './MyDataCommonComponents';
 import { countryListAlpha2 } from '../../base/data/CountryRegion';
+import PropControl from '../../base/components/PropControl';
 
 
 const SupportingCard = () => {
