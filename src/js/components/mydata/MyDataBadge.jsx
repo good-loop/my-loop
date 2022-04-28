@@ -8,7 +8,7 @@ const MyDataBadge = ({progress, badgeName, backgroundImage}) => {
 	const radius = size / 2;
 	const stroke = 6;
 	const innerSize = size - stroke * 5;
-	const plusSignSize = size * .15;
+	const plusSignSize = size * .20;
 	const plusSignTop = size *.15;
 	const plusSignRight = size *.15;
 
