@@ -64,11 +64,14 @@ const DashboardHome = () => {
 
 
 const ThisWeeksAdCard = () => {
-	// TODO load ad from scheduledcontent
-	let pvMyAds = getDataList({type:"ScheduledContent", status:KStatus.PUBLISHED, domain:ServerIO.PORTAL_ENDPOINT});	
-	let watched = false; // FIXME query datalog for evt:donation vert:adid BUT need the adunit here to log your user id!
+	// load ad from scheduledcontent
+	// TODO filter by start, end
+	let pvMyAds = getDataList({type:"ScheduledContent", status:KStatus.PUBLISHED, domain:ServerIO.PORTAL_ENDPOINT});		
 	let schedcon = pvMyAds.value && List.first(pvMyAds.value);
 	let adid = schedcon && schedcon.adid;
+	// FIXME query datalog for evt:donation vert:adid BUT need the adunit here to log your user id!
+	const pvData = getDataLogData({q:"evt:donation",start:"3 months ago",end:"now",name:"watched-this-weeks",});
+	let watched = pvData.value; 
 	return (<Container className='dashboard-card'>
 			<h1>Watch This Week's Ad {watched && <Done />}</h1>			
 			{pvMyAds.resolved? <GoodLoopUnit vertId={adid} /> : <Misc.Loading />}
