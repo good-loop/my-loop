@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Collapse, FormGroup} from 'reactstrap';
 import { Help } from '../../base/components/PropControl';
-import { ProfileDot } from './MyDataCommonComponents';
+import { isEmail } from './MyDataCommonComponents';
 import UserClaimControl, { getCharityObject, getEmail, getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
 import CharityLogo from '../CharityLogo';
 import { MyDataCard } from './MyDataCommonComponents';
@@ -49,7 +49,9 @@ const SettingItem = ({description, itemKey, type, emailPropControl, ...props}) =
 			</FormGroup>}</>
 	} else if (itemKey == 'location-country') {
 		itemValue = countryListAlpha2[itemValue];
-	} 
+	}
+
+	if (itemKey == 'gender') itemValue = itemValue.charAt(0).toUpperCase() + itemValue.slice(1);
 	
 	// Privacy Levels
 	const privacyLevelMap = {"0": "Private Data", "1": "Default Privacy", "2": "Public Data"};
@@ -69,7 +71,7 @@ const SettingItem = ({description, itemKey, type, emailPropControl, ...props}) =
 	<hr />
 	<div className="d-flex justify-content-between">
 		<span style={{fontSize:'.8rem',textTransform:'uppercase'}}>{description}</span>
-		<a onClick={editModeToggle}><span style={{fontSize:'.8rem'}}>{editMode ? 'DONE' : 'EDIT'}</span></a>
+		<a onClick={editModeToggle}><span style={{fontSize:'.8rem'}} className='pb-3 pl-3'>{editMode ? 'DONE' : 'EDIT'}</span></a>
 	</div>
 
 	{!editMode ? (itemValue ? <span>{itemValue}</span> : <a onClick={editModeToggle}>Add+</a>) : 
