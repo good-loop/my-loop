@@ -71,7 +71,8 @@ const ThisWeeksAdCard = () => {
 	let adid = schedcon && schedcon.adid;
 	// FIXME query datalog for evt:donation vert:adid BUT need the adunit here to log your user id!
 	// const pvData = getDataLogData({dataspace:"gl",q:"evt:donation",start:"3 months ago",end:"now",name:"watched-this-weeks",});
-	let watched = pvData.value; 
+	// let watched = pvData.value; 
+	let watched = false; // TODO remmove after pvData got fixec
 	return (<Container className='dashboard-card'>
 			<h1>Watch This Week's Ad {watched && <Done />}</h1>			
 			{pvMyAds.resolved? <GoodLoopUnit vertId={adid} /> : <Misc.Loading />}
