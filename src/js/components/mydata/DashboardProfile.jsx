@@ -52,7 +52,8 @@ const SettingItem = ({description, itemKey, type, emailPropControl, ...props}) =
 	} 
 	
 	// Privacy Levels
-	let privacyLevelMap = {"0": "Private Data", "1": "Default Privacy", "2": "Public Data"};
+	const privacyLevelMap = {"0": "Private Data", "1": "Default Privacy", "2": "Public Data"};
+	const privacyLockMap = {"Private Data": "locked", "Default Privacy": "mid", "Public Data": "opened"};
 	const privacyKey = itemKey + '-privacy';
 	const privacyLevel = privacyLevelMap[getPersonSetting({key: privacyKey})] || 'Default Privacy'; // No privacy level = default level;
 
@@ -78,11 +79,7 @@ const SettingItem = ({description, itemKey, type, emailPropControl, ...props}) =
 	{!editMode && 
 	<div className="d-flex justify-content-between align-items-center">
 		<span className='text-muted' style={{fontSize:'.8rem'}}>{privacyLevel}</span>
-		<div className="d-flex">
-			<img style={{height:'1.5rem'}} src="/img/mydata/padlock-opened.png" alt="" />
-			<img style={{height:'1.5rem'}} src="/img/mydata/padlock-mid.png" alt="" />
-			<img style={{height:'1.5rem'}} src="/img/mydata/padlock-locked.png" alt="" />
-		</div>
+		<img style={{height:'1.5rem',transform:'translate(0, -.5rem)'}} src={"/img/mydata/padlock-"+privacyLockMap[privacyLevel]+".png"} alt="" />
 	</div>
 	}
 
