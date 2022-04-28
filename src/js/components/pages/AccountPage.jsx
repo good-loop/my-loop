@@ -6,7 +6,7 @@ import { LoginLink } from '../../base/components/LoginWidget';
 import Person, { getAllXIds, getEmail, getProfile, hasConsent, PURPOSES } from '../../base/data/Person';
 import DataStore from '../../base/plumbing/DataStore';
 import { lg } from '../../base/plumbing/log';
-import { space } from '../../base/utils/miscutils';
+import { getScreenSize, space } from '../../base/utils/miscutils';
 import Login from '../../base/youagain';
 import SubscriptionBox from '../cards/SubscriptionBox';
 import ShareButton from '../ShareButton';
@@ -41,8 +41,8 @@ const Account = () => {
 	</>;
 };
 
-const label4tab = {
-	dashboard: 'Dashboard',
+export const label4tab = {
+	dashboard: "Dashboard",
 	account: "My Account",
 	settings: "Settings",
 	tabsForGood: "Tabs for Good"
@@ -72,7 +72,7 @@ const Page = () => {
 	return (<>
 		<div className="AccountPage avoid-navbar">
 			<Editor3ColLayout>
-				<LeftSidebar>
+				<LeftSidebar hideOnMobile>
 					<div className="account-sidebar pl-3">
 						<h5 className="p-2">My Good-Loop</h5>
 						{Object.keys(label4tab).map(t => <SidebarTabLink key={t} tab={t} label={label4tab[t]} selected={t === tab} />)}

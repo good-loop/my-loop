@@ -11,6 +11,8 @@ import DashboardProfile from './DashboardProfile';
 import { ProfileDot } from './MyDataCommonComponents';
 import { countryListAlpha2 } from '../../base/data/CountryRegion';
 import CharityLogo from '../CharityLogo';
+import MyDataBadge from './MyDataBadge';
+import TickerTotal from '../TickerTotal';
 
 /**
  * @returns {!Number}
@@ -119,24 +121,17 @@ const MyDataDashboard = () => {
 			</Row>
 			<ProfileDot className="mt-3">{joinedMonthYear && <>Joined {joinedMonthYear}</>}</ProfileDot>
 			<ProfileDot>{ngo && <>Supporting {ngo.name}</>}</ProfileDot>
-			<ProfileDot><>£3,928,120 Rasied With Our Global Community</></ProfileDot>
+			<ProfileDot><>
+				{/* Show exactly the same amount as what displays on T4G */}
+				<p style={{margin: "0"}}><span className="font-weight-bold pr-1"><TickerTotal /></span>
+				Rasied With Our Global Community</p>
+			</></ProfileDot>
 		</Container>
 
-		<Container id='badges'>
-			<Row>
-				<Col xs={4} className="text-center">
-					<img src="/img/placeholder-circle.png" className='w-100' />
-					Badge Name
-				</Col>
-				<Col xs={4} className="text-center">
-					<img src="/img/placeholder-circle.png" className='w-100' />
-					Badge Name
-				</Col>
-				<Col xs={4} className="text-center">
-					<img src="/img/placeholder-circle.png" className='w-100' />
-					Badge Name
-				</Col>
-			</Row>
+		<Container id='badges' className='d-flex justify-content-between'>
+			<MyDataBadge progress={20} badgeName="Data" backgroundImage="img/lindamccartneypic-mobile.jpg"/>
+			<MyDataBadge progress={50} badgeName="Tabs"/>
+			<MyDataBadge badgeName="Ads"/>
 		</Container>
 
 		<DashboardTab />

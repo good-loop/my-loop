@@ -3,6 +3,8 @@
     border-radius: 10px;
     border: 1px solid @gl-darker-grey;
     overflow: hidden;
+
+	// ??why cant this use a standard btn class??
     .more-info-btn {
         position: absolute;
         top: 20px;
@@ -177,5 +179,27 @@
         .modal-content {
             min-height: 100vh;
         }
+    }
+}
+
+.mydata-badge {
+    position: relative;
+    margin-bottom: 30px;
+    circle {
+        transition: stroke-dashoffset 0.35s;
+        transform: rotate(0deg);
+        transform-origin: 50% 50%;
+    }
+    .inner {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        z-index: -1;
+        background-position: center;
+    }
+    .plus-sign {
+        position: absolute;
     }
 }
