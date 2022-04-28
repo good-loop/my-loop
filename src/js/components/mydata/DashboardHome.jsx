@@ -70,7 +70,7 @@ const ThisWeeksAdCard = () => {
 	let schedcon = pvMyAds.value && List.first(pvMyAds.value);
 	let adid = schedcon && schedcon.adid;
 	// FIXME query datalog for evt:donation vert:adid BUT need the adunit here to log your user id!
-	const pvData = getDataLogData({q:"evt:donation",start:"3 months ago",end:"now",name:"watched-this-weeks",});
+	// const pvData = getDataLogData({dataspace:"gl",q:"evt:donation",start:"3 months ago",end:"now",name:"watched-this-weeks",});
 	let watched = pvData.value; 
 	return (<Container className='dashboard-card'>
 			<h1>Watch This Week's Ad {watched && <Done />}</h1>			
