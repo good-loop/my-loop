@@ -8,6 +8,9 @@ const MyDataBadge = ({progress, badgeName, backgroundImage}) => {
 	const radius = size / 2;
 	const stroke = 6;
 	const innerSize = size - stroke * 5;
+	const plusSignSize = size * .15;
+	const plusSignTop = size *.15;
+	const plusSignRight = size *.15;
 
 	const normalizedRadius = radius - stroke * 2;
 	const circumference = normalizedRadius * 2 * Math.PI;
@@ -33,6 +36,7 @@ const MyDataBadge = ({progress, badgeName, backgroundImage}) => {
 			/>
 		</svg>
 		<span>{badgeName}</span>
+		{!progress && <img src="/img/mydata/plus_whitebg.svg" className="plus-sign" style={{width:plusSignSize,top:plusSignTop,right:plusSignRight}} />}
 	</div>)
 };
 
