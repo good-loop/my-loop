@@ -44,6 +44,8 @@ import { MyLoginWidgetGuts } from './MyLoginWidgetGuts';
 import BlogContent from './pages/BlogContent';
 import SafariPage from './pages/SafariPage';
 // import TestPage from './pages/TestPage';
+import { label4tab } from './pages/AccountPage';
+import { getScreenSize } from '../base/utils/miscutils';
 
 // DataStore
 C.setupDataStore();
@@ -104,15 +106,29 @@ Login.app = C.app.id;
 Login.dataspace = C.app.dataspace;
 
 const MainDiv = () => {
+	let navPageLinks = {};
+	let navPageLabels = {};
 
-	const navPageLinks = {
+	// If the user is logged in, and is on mobile, then push account/dashboard etc links to the top of
+	// the navbar dropdown.
+	const screenSize = getScreenSize();
+	if (Login.isLoggedIn() && (screenSize == "sm" || screenSize == "xs")) {
+		for (const [link, label] of Object.entries(label4tab)) {
+			navPageLinks[`account?tab=${link}`] = [];
+			navPageLabels[label] = [];
+		};
+	}
+
+	navPageLinks = {
+		...navPageLinks,
 		"ourstory":[],
 		"our-impact": ['charities', 'impactoverview', 'green'],
 		'tabsforgood':[],
 		// "blog":[]
 	};
 
-	const navPageLabels = {
+	navPageLabels = {
+		...navPageLabels,
 		"Our Story":[],
 		"Our Impact": ['Charity Impact', 'Impact Hub', 'Green Media'],
 		"Tabs for Good":[],
@@ -121,13 +137,11 @@ const MainDiv = () => {
 
 	// HACK hide whilst we finish it
 	if ( ! Roles.isTester()) {
-
 		delete navPageLinks["our-impact"].green;
 		delete navPageLabels["Our Impact"]["Green Media"];
 
 		// delete navPageLinks["blog"];
 		// delete navPageLabels["Blog"];
-		
 	}
 
 	return (<MainDivBase

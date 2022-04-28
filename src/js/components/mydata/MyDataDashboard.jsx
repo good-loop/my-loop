@@ -11,6 +11,7 @@ import DashboardProfile from './DashboardProfile';
 import { ProfileDot } from './MyDataCommonComponents';
 import { countryListAlpha2 } from '../../base/data/CountryRegion';
 import CharityLogo from '../CharityLogo';
+import MyDataBadge from './MyDataBadge';
 
 /**
  * @returns {!Number}
@@ -122,21 +123,10 @@ const MyDataDashboard = () => {
 			<ProfileDot><>£3,928,120 Rasied With Our Global Community</></ProfileDot>
 		</Container>
 
-		<Container id='badges'>
-			<Row>
-				<Col xs={4} className="text-center">
-					<img src="/img/placeholder-circle.png" className='w-100' />
-					Badge Name
-				</Col>
-				<Col xs={4} className="text-center">
-					<img src="/img/placeholder-circle.png" className='w-100' />
-					Badge Name
-				</Col>
-				<Col xs={4} className="text-center">
-					<img src="/img/placeholder-circle.png" className='w-100' />
-					Badge Name
-				</Col>
-			</Row>
+		<Container id='badges' className='d-flex justify-content-between'>
+			<MyDataBadge progress={20} badgeName="Data" backgroundImage="img/lindamccartneypic-mobile.jpg"/>
+			<MyDataBadge progress={50} badgeName="Tabs"/>
+			<MyDataBadge badgeName="Ads"/>
 		</Container>
 
 		<DashboardTab />
