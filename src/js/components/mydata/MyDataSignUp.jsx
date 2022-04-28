@@ -123,7 +123,7 @@ const MyDataSignUp = () => {
 	const page = DataStore.getUrlValue("page") || DataStore.getValue(PAGE_PATH) || 0;
 	const PageComponent = PAGES[page];
 	
-	return <div className="mydata-signup forced-mobile">
+	return <div className="mydata-signup">
 		<a className="btn btn-secondary" onClick={prevSignupPage}>Back</a>
 		<a className="btn btn-secondary" onClick={nextSignupPage}>Next</a>
 		<PageComponent />

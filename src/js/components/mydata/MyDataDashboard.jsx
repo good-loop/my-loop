@@ -106,7 +106,7 @@ const MyDataDashboard = () => {
 	let locationCountryCode = getPersonSetting({key:"location-country"});
 	let locationCountry = countryListAlpha2[locationCountryCode];
 	
-	return <div className='forced-mobile'>
+	return <div className=''>
 		<Container id='profile'> 
 			<Row>
 				<Col xs={8}>
