@@ -124,7 +124,7 @@ const MyDataDashboard = () => {
 		</Container>
 
 		<Container id='badges' className='d-flex justify-content-between'>
-			<MyDataBadge progress={20} badgeName="Data"/>
+			<MyDataBadge progress={20} badgeName="Data" backgroundImage="img/lindamccartneypic-mobile.jpg"/>
 			<MyDataBadge progress={50} badgeName="Tabs"/>
 			<MyDataBadge badgeName="Ads"/>
 		</Container>

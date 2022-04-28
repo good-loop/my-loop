@@ -1,6 +1,6 @@
 import React from "react";
 
-const MyDataBadge = ({progress, badgeName}) => {
+const MyDataBadge = ({progress, badgeName, backgroundImage}) => {
 	if (!progress) progress = 0;
 	if (!badgeName) badgeName = "Data";
 
@@ -15,7 +15,7 @@ const MyDataBadge = ({progress, badgeName}) => {
 
 
 	return ( <div className="mydata-badge text-center" style={{height:size+"px",width:size+"px"}}>
-		<div className="inner" style={{backgroundColor:"grey",width:innerSize+"px",height:innerSize+"px"}}></div>
+		<div className="inner" style={{backgroundColor:"grey",backgroundImage:`url('${backgroundImage}')`,width:innerSize+"px",height:innerSize+"px"}}></div>
 		<svg
 			height={radius * 2}
 			width={radius * 2}
