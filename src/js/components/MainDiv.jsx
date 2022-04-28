@@ -120,9 +120,6 @@ const MainDiv = () => {
 		// "Blog":[]
 	};
 
-	// 
-	const navbarAccountMenuItems = mobileNavAccountMenuItems;
-
 	// HACK hide whilst we finish it
 	if ( ! Roles.isTester()) {
 		delete navPageLinks["our-impact"].green;

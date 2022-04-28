@@ -51,15 +51,15 @@ const label4tab = {
 
 export const mobileNavAccountMenuItems = isMobile() ? <>
 		<DropdownItem>
-			<a href="/#account" className="nav-link">Dashboard</a>  
+			<a href="/account" className="nav-link">Dashboard</a>  
 		</DropdownItem>
 		<DropdownItem divider />
 		<DropdownItem>
-			<a href="/#account?tab=settings" className="nav-link">Settings</a> 
+			<a href="/account?tab=settings" className="nav-link">Settings</a> 
 		</DropdownItem>
 		<DropdownItem divider />
 		<DropdownItem>
-			<a href="/#account?tab=tabsForGood" className="nav-link">Tabs-for-Good Settings</a> 
+			<a href="/account?tab=tabsForGood" className="nav-link">Tabs-for-Good Settings</a> 
 		</DropdownItem>
 	</> : null;
 
