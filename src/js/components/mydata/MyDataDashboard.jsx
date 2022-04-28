@@ -119,7 +119,11 @@ const MyDataDashboard = () => {
 			</Row>
 			<ProfileDot className="mt-3">{joinedMonthYear && <>Joined {joinedMonthYear}</>}</ProfileDot>
 			<ProfileDot>{ngo && <>Supporting {ngo.name}</>}</ProfileDot>
-			<ProfileDot><>£3,928,120 Rasied With Our Global Community</></ProfileDot>
+			<ProfileDot><>
+				{/* Show exactly the same amount as what displays on T4G */}
+				<p style={{margin: "0"}}><span className="font-weight-bold pr-1"><TickerTotal /></span>
+				Rasied With Our Global Community</p>
+			</></ProfileDot>
 		</Container>
 
 		<Container id='badges'>
