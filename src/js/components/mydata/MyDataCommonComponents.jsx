@@ -124,3 +124,13 @@ export const SkipNextBtn = ({skip}) => {
         </Row>
     )
 }
+
+/**
+ * Check if a string is an email address
+ * @param {String} email 
+ * @returns {Boolean} true if it is an email address
+ */
+export const isEmail = (email) => {
+    const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return regex.test(String(email).toLowerCase());
+}
