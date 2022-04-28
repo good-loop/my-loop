@@ -4,7 +4,7 @@ import CharityLogo from '../CharityLogo';
 import UserClaimControl from '../../base/components/PropControls/UserClaimControl';
 import { getDataItem } from '../../base/plumbing/Crud';
 import NGOImage from '../../base/components/NGOImage';
-import { MyDataCard, Steps, SkipNextBtn } from './MyDataCommonComponents';
+import { MyDataCard, Steps, SkipNextBtn, ProfileCreationSteps } from './MyDataCommonComponents';
 import { nextSignupPage } from './MyDataSignUp';
 
 /**
@@ -33,6 +33,7 @@ const CategoryCard = ({title, img, info, prop, options, labels, ...props}) => {
 const MyDataInterests = ({}) => {
 
     return <>
+        <ProfileCreationSteps step={1}/>
         <CategoryCard
             title="Causes you're interested in"
             img="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/spring-flowers-1613759017.jpg?crop=0.669xw:1.00xh;0.0635xw,0&resize=640:*"

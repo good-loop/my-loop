@@ -5,7 +5,7 @@ import NGODescription from '../../base/components/NGODescription';
 import CharityLogo from '../CharityLogo';
 import { getDataItem } from '../../base/plumbing/Crud';
 import NGOImage from '../../base/components/NGOImage';
-import { setPersonSetting } from '../../base/components/PropControls/UserClaimControl';
+import UserClaimControl, { setPersonSetting, getCharityObject } from '../../base/components/PropControls/UserClaimControl';
 import { assert, assMatch } from '../../base/utils/assert';
 import Login from '../../base/youagain';
 import NGO from '../../base/data/NGO';
@@ -78,6 +78,12 @@ export const CharityCard = ({cid, item}) => {
 
 };
 
+/**
+ * A circle steps progression widget
+ * @param {Number} step
+ * @param {Component[]} steps 
+ * @returns 
+ */
 export const Steps = ({step, steps}) => {
 
     assert(steps);
@@ -101,6 +107,31 @@ export const Steps = ({step, steps}) => {
         </div>
     </div>)
 };
+
+/**
+ * A specialized version of the Steps component, used in multiple cards
+ * @param {Number} step 
+ * @returns 
+ */
+export const ProfileCreationSteps = ({step}) => {
+    const pvNgo = getCharityObject();
+    let ngo = null;
+    if (pvNgo) ngo = pvNgo.value || pvNgo.interim;
+
+    const steps = [
+        <>
+            <p>You selected</p>
+            {ngo && <CharityLogo charity={ngo} className="w-100"/>}
+        </>,
+        "Build your profile",
+        <>
+            <p>Ready to help</p>
+            {ngo && <CharityLogo charity={ngo} className="w-100"/>}
+        </>
+    ];
+
+    return <Steps step={step} steps={steps}/>;
+}
 
 export const ProfileDot = ({className, imgUrl, children}) => {
     if (!imgUrl) imgUrl = "/img/placeholder-circle.png"

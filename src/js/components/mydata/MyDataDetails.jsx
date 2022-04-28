@@ -1,6 +1,6 @@
 import React from 'react';
 import { PERSON_PATH, VERB_PATH } from '../../base/components/LoginWidget';
-import { MyDataCard, SkipNextBtn } from './MyDataCommonComponents';
+import { MyDataCard, ProfileCreationSteps, SkipNextBtn } from './MyDataCommonComponents';
 import UserClaimControl, { getEmail } from '../../base/components/PropControls/UserClaimControl';
 import { FormGroup } from 'reactstrap';
 import { Help } from '../../base/components/PropControl';
@@ -9,7 +9,9 @@ const DetailsCard = ({title, prop, options, labels, ...props}) => {
 	const path = PERSON_PATH;
 	const email = getEmail();
 
-	return <MyDataCard
+	return <>
+		<ProfileCreationSteps step={1}/>
+		<MyDataCard
 			{...props}
 	>
 			<h2>{title}</h2>
@@ -25,7 +27,8 @@ const DetailsCard = ({title, prop, options, labels, ...props}) => {
 			<UserClaimControl prop="birthday" type="date" label="Your Birthday"/>
 			<UserClaimControl prop="gender" type="gender" label="Your Gender (Optional)" />
 
-	</MyDataCard>;
+		</MyDataCard>
+	</>;
 
 };
 

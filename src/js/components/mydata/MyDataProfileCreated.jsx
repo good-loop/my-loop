@@ -1,63 +1,73 @@
-import React from 'react';
-import { Row, Col } from 'reactstrap';
+import React, { useState } from 'react';
+import { Row, Col, Button } from 'reactstrap';
 import { getPersonSetting, getCharityObject } from '../../base/components/PropControls/UserClaimControl';
-import { MyDataCard, SkipNextBtn } from './MyDataCommonComponents';
+import { MyDataCard, SkipNextBtn, ProfileCreationSteps } from './MyDataCommonComponents';
 import BSCarousel from '../../base/components/BSCarousel';
 import { countryListAlpha2 } from '../../base/data/CountryRegion';
 import CharityLogo from '../CharityLogo';
+import NGO from '../../base/data/NGO';
+import { nextSignupPage } from './MyDataSignUp';
+
+const FirstPage = ({onNext, ngo}) => {
+	return <>
+		<ProfileCreationSteps step={2}/>
+		<h1>Profile Created!</h1>
+		<p>Success, you're ready to help {NGO.displayName(ngo)}! Explore your profile in your bespoke Dashboard</p>
+		<Button color="primary" onClick={onNext}>Let's go!</Button>
+	</>;
+}
 
 const MyDataProfileCreated = () => {
 
-	let locationCountryCode = getPersonSetting({key:"location-country"});
-	let locationCountry = countryListAlpha2[locationCountryCode];
+	const pvCharity = getCharityObject();
+	const ngo = pvCharity && (pvCharity.value || pvCharity.interim);
 
-	const pvNgo = getCharityObject();
-	let ngo = null;
-	if (pvNgo) ngo = pvNgo.value || pvNgo.interim;
+	const [firstPage, setFirstPage] = useState(true);
 
 	const slidesItems = [
 		<>
-			<p style={{fontSize:'.8rem'}}>Your Location</p>
-			{locationCountry && <p>{locationCountry}</p>}
-			<Row>
-				<Col xs={6}>
-					<p className='text-muted' style={{fontSize:'.8rem'}}>Default Privary</p>
-				</Col>
-				<Col xs={6} className='d-flex justify-content-between'>
-					<img style={{height:'2rem'}} src="/img/mydata/padlock-opened.png" alt="" />
-					<img style={{height:'2rem'}} src="/img/mydata/padlock-mid.png" alt="" />
-					<img style={{height:'2rem'}} src="/img/mydata/padlock-locked.png" alt="" />
-				</Col>
-			</Row>
-			<p className='speech-bubble'>
-				What default privacy means and how it related to charity donations
-			</p>
-			
+			<img src="/img/mydata/onboarding-1.png" className="onboarding-img"/>
+			<h1>You're In Control</h1>
+			<p>For every piece of data you've shared with us, you can control how it's used.</p>
 		</>,
 		<>
-			{ngo && <CharityLogo charity={ngo} className="w-100"/>}
-			<p>Donation Level Enabled</p>
+			<img src="/img/mydata/onboarding-2.png" className="onboarding-img"/>
+			<h1>Share To Give</h1>
+			<p>The more data you choose to share, the more you can give to {NGO.displayName(ngo)}</p>
+		</>,
+		<>
+			<img src="/img/mydata/onboarding-3.png" className="onboarding-img"/>
+			<h1>Data Made Easy</h1>
+			<p>We've preset our recommended privacy settings but you can change them at any time</p>
 		</>
 	]
 
 	const slides = slidesItems.map((content, i) => (
-		<div key={i} className='profile-created-slides'>
+		<div key={i} className='profile-created-slides h-100'>
 			{content}
 		</div>
 	));
 
+	const NextButton = ({onClick, index, length}) => {
+		const fullOnClick = () => {
+			if (index === length - 1) {
+				nextSignupPage();
+			} else {
+				onClick();
+			}
+		}
+		return <div className="d-flex flex-row justify-content-center align-items-center">
+			<Button color="primary" onClick={fullOnClick}>Next</Button>
+		</div>;
+	};
+
 	return <>
-	<div className='border border-dark'>
-		<div className='p-2'>
-			<p>For every piece of data you've shared with us, you can control how it's used.</p>
-			<MyDataCard className='shadow bg-gl-light-pink'>
-				<BSCarousel hasIndicators>
-					{slides}
-				</BSCarousel>
-			</MyDataCard>
-			<SkipNextBtn /> 
-		</div>
-	</div>
+		{firstPage ? <FirstPage ngo={ngo} onNext={() => setFirstPage(false)}/>
+		: <>
+			<BSCarousel hasIndicators hideArrows NextButton={NextButton} noWrap>
+				{slides}
+			</BSCarousel>
+		</>}
 	</>;   
 
 };

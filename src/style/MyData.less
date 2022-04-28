@@ -78,7 +78,9 @@
 
 .mydata-signup {
 
-    .btn-primary {
+    min-height: 90vh;
+
+    /*.btn-primary {
         background: @gl-darker-grey !important;
         &:active:not(.disabled),&:focus:not(.disabled) {
             background: #363636 !important;
@@ -86,10 +88,29 @@
         &:hover:not(.disabled) {
             background: @gl-dark-grey !important;
         }
-    }
+    }*/
+    
     .circle {
         border-radius: 1000px;
         overflow: hidden;
+    }
+
+    .BSCarousel {
+        height: 80vh;
+
+        .carousel-indicators li {
+            width: 10px;
+            height: 10px;
+            border: 1px solid @gl-desat-blue;
+            border-radius: 50%;
+            &.active {
+                background-color: @gl-desat-blue;
+            }
+        }
+        
+        .onboarding-img {
+            width: 100%;
+        }
     }
 
     .steps-graphic {
@@ -152,6 +173,9 @@
         margin: 0;
         padding: 0;
         width: 100%;
-        height: 100%;
+        min-height: 100vh;
+        .modal-content {
+            min-height: 100vh;
+        }
     }
 }
