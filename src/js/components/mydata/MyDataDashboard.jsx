@@ -12,6 +12,7 @@ import { ProfileDot } from './MyDataCommonComponents';
 import { countryListAlpha2 } from '../../base/data/CountryRegion';
 import CharityLogo from '../CharityLogo';
 import MyDataBadge from './MyDataBadge';
+import TickerTotal from '../TickerTotal';
 
 /**
  * @returns {!Number}
