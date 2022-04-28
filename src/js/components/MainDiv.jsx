@@ -43,9 +43,9 @@ import { T4GCTA, T4GSignUpModal, T4GPluginButton } from './T4GSignUp';
 import { MyLoginWidgetGuts } from './MyLoginWidgetGuts';
 import BlogContent from './pages/BlogContent';
 import SafariPage from './pages/SafariPage';
+import { mobileNavAccountMenuItems } from './pages/AccountPage';
 // import TestPage from './pages/TestPage';
-import { label4tab } from './pages/AccountPage';
-import { isMobile } from '../base/utils/miscutils';
+// 
 
 // DataStore
 C.setupDataStore();
@@ -106,33 +106,22 @@ Login.app = C.app.id;
 Login.dataspace = C.app.dataspace;
 
 const MainDiv = () => {
-	let navPageLinks = {};
-	let navPageLabels = {};
-
-	// If the user is logged in, and is on mobile, then push account/dashboard etc links to the top of
-	// the navbar dropdown.
-	if (Login.isLoggedIn() && isMobile()) {
-		for (const [link, label] of Object.entries(label4tab)) {
-			navPageLinks[`account?tab=${link}`] = [];
-			navPageLabels[label] = [];
-		};
-	}
-
-	navPageLinks = {
-		...navPageLinks,
+	const navPageLinks = {
 		"ourstory":[],
 		"our-impact": ['charities', 'impactoverview', 'green'],
 		'tabsforgood':[],
 		// "blog":[]
 	};
 
-	navPageLabels = {
-		...navPageLabels,
+	const navPageLabels = {
 		"Our Story":[],
 		"Our Impact": ['Charity Impact', 'Impact Hub', 'Green Media'],
 		"Tabs for Good":[],
 		// "Blog":[]
 	};
+
+	// 
+	const navbarAccountMenuItems = mobileNavAccountMenuItems;
 
 	// HACK hide whilst we finish it
 	if ( ! Roles.isTester()) {
@@ -151,6 +140,7 @@ const MainDiv = () => {
 		navbarDarkTheme={false}
 		navbarChildren={() => <><T4GCTA>Get Tabs for Good on Desktop</T4GCTA><T4GSignUpModal /></>}
 		navbarBackgroundColour="white"
+		navbarAccountMenuItems={mobileNavAccountMenuItems}
 		NavExpandSize="md"
 		// navbarLabels={getNavbarLabels}
 		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account', 'green', 'charities', 'impactoverview', 'campaign', 'ourstory', 'ads', 'blog', 'blogcontent', 'allowlist', 'safari']}

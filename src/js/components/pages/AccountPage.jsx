@@ -6,14 +6,15 @@ import { LoginLink } from '../../base/components/LoginWidget';
 import Person, { getAllXIds, getEmail, getProfile, hasConsent, PURPOSES } from '../../base/data/Person';
 import DataStore from '../../base/plumbing/DataStore';
 import { lg } from '../../base/plumbing/log';
-import { getScreenSize, space } from '../../base/utils/miscutils';
+import { getScreenSize, isMobile, space } from '../../base/utils/miscutils';
 import Login from '../../base/youagain';
 import SubscriptionBox from '../cards/SubscriptionBox';
 import ShareButton from '../ShareButton';
 import AccountSettings from './AccountSettings';
 import TabsForGoodSettings from './TabsForGoodSettings';
 import C from '../../C';
-import MyDataDashboard from '../mydata/MyDataDashboard'
+import MyDataDashboard from '../mydata/MyDataDashboard';
+import { DropdownItem } from 'reactstrap';
 
 
 const Account = () => {
@@ -41,12 +42,26 @@ const Account = () => {
 	</>;
 };
 
-export const label4tab = {
+const label4tab = {
 	dashboard: "Dashboard",
 	account: "My Account",
 	settings: "Settings",
 	tabsForGood: "Tabs for Good"
 };
+
+export const mobileNavAccountMenuItems = isMobile() ? <>
+		<DropdownItem>
+			<a href="/#account" className="nav-link">Dashboard</a>  
+		</DropdownItem>
+		<DropdownItem divider />
+		<DropdownItem>
+			<a href="/#account?tab=settings" className="nav-link">Settings</a> 
+		</DropdownItem>
+		<DropdownItem divider />
+		<DropdownItem>
+			<a href="/#account?tab=tabsForGood" className="nav-link">Tabs-for-Good Settings</a> 
+		</DropdownItem>
+	</> : null;
 
 const Page = () => {
 	// handle the not-logged-in case
