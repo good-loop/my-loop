@@ -2,52 +2,76 @@
 // Button LESS
 
 .btn {
-    border-radius: 100px;
-    vertical-align: middle;
-    padding: .4rem 2rem;
-    box-shadow: 0px 2px 3px rgba(0,0,0,0.3);
-    font-weight: 600;
-    font-family: 'Montserrat'; // use the header font
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    cursor: pointer;
-    p {
-        margin: 0 !important;
-    }
-    @media @width-mobile {
-        padding: 10px 40px;
-        font-size: 0.7rem;
-        @media (max-height: 568px) {
-            padding: 10px 20px;
-        }
-    }
+	border-radius: 100px;
+	vertical-align: middle;
+	padding: .4rem 2rem;
+	box-shadow: 0px 2px 3px rgba(0,0,0,0.3);
+	font-weight: 600;
+	font-family: 'Montserrat'; // use the header font
+	font-size: 0.9rem;
+	text-transform: uppercase;
+	cursor: pointer;
+	p {
+		margin: 0 !important;
+	}
+	@media @width-mobile {
+		padding: 10px 40px;
+		font-size: 0.7rem;
+		@media (max-height: 568px) {
+			padding: 10px 20px;
+		}
+	}
+}
+
+.btn-lg {
+	font-size: 1.08rem;
+	padding: 0.48rem 2.4rem;
+	@media @width-mobile {
+		padding: 12px 48px;
+		font-size: 0.84rem;
+		@media (max-height: 568px) {
+			padding: 12px 24px;
+		}
+	}
+}
+
+.btn-sm {
+	font-size: 0.7875rem;
+	padding: .35rem 1.75rem;
+	@media @width-mobile {
+		padding: 9px 35px;
+		font-size: 0.6125rem;
+		@media (max-height: 568px) {
+			padding: 9px 18px;
+		}
+	}
 }
 
 .btn.thin {
-    padding: 5px 40px;
+	padding: 5px 40px;
 }
 
 .btn.disabled {
-    cursor: default;
+	cursor: default;
 }
 
 .btn-primary {
-    background-color: @gl-red !important;
-    color:white !important;
-    border: none !important;
+	background-color: @gl-red !important;
+	color:white !important;
+	border: none !important;
 }
 
 .btn-primary:hover:not(.disabled) {
-    background-color: @gl-orange !important;
-    box-shadow: none !important;
-    border: none !important;
+	background-color: @gl-orange !important;
+	box-shadow: none !important;
+	border: none !important;
 }
 
 .btn-primary:active:not(.disabled),
 .btn-primary:focus:not(.disabled) {
-    background-color: @gl-red !important;
-    box-shadow: none !important;
-    border: none !important;
+	background-color: @gl-red !important;
+	box-shadow: none !important;
+	border: none !important;
 }
 .btn-outline-primary {
 	border-color: @gl-orange;
@@ -61,115 +85,115 @@
 
 
 .btn-secondary {
-    background-color: white;
-    color: @gl-red !important;
-    border: 1px solid @gl-red;
+	background-color: white;
+	color: @gl-red !important;
+	border: 1px solid @gl-red;
 }
 
 .btn-secondary.disabled {
-    background-color: white;
-    color: @gl-dark-grey !important;
-    border: 1px solid @gl-dark-grey;
+	background-color: white;
+	color: @gl-dark-grey !important;
+	border: 1px solid @gl-dark-grey;
 }
 
 .btn-secondary:hover:not(.disabled) {
-    background-color: white;
-    color: @gl-light-orange !important;
+	background-color: white;
+	color: @gl-light-orange !important;
 }
 
 // TODO: btn-secondary:focus not working??
 .btn-secondary:active:not(.disabled),
 .btn-secondary:focus:not(.disabled) {
-    background-color: white;
-    color: @gl-light-orange !important;
+	background-color: white;
+	color: @gl-light-orange !important;
 }
 
 // ??Could this use e.g. Bootstrap's btn-outline-primary instead??
 .btn-transparent {
-    background-color: transparent;
-    color: @gl-orange !important;
-    padding: 13px 38px; // Account for border
-    @media @width-mobile {
-        padding: 8px 38px;
-        @media (max-height: 568px) {
-            padding: 8px 18px;
-        }
-    }
-    border: solid 2px @gl-orange !important;
+	background-color: transparent;
+	color: @gl-orange !important;
+	padding: 13px 38px; // Account for border
+	@media @width-mobile {
+		padding: 8px 38px;
+		@media (max-height: 568px) {
+			padding: 8px 18px;
+		}
+	}
+	border: solid 2px @gl-orange !important;
 }
 
 .btn-transparent.thin {
-    padding: 3px 38px;
+	padding: 3px 38px;
 }
 
 .btn-transparent.btn-white {
-    color: white !important;
-    border-color: white !important;
+	color: white !important;
+	border-color: white !important;
 }
 
 .btn-transparent.fill {
-    background: white !important;
+	background: white !important;
 }
 
 .btn-transparent:hover:not(.disabled) {
-    color: @gl-light-orange !important;
-    box-shadow: none !important;
-    border: solid 2px @gl-light-orange !important;
+	color: @gl-light-orange !important;
+	box-shadow: none !important;
+	border: solid 2px @gl-light-orange !important;
 }
 
 // TODO: btn-secondary:focus not working??
 .btn-transparent:active:not(.disabled),
 .btn-transparent:focus:not(.disabled) {
-    color: @gl-red !important;
-    box-shadow: none !important;
-    border: solid 2px @gl-red !important;
+	color: @gl-red !important;
+	box-shadow: none !important;
+	border: solid 2px @gl-red !important;
 }
 
 
 
 .btn-info {
-    background-color: @gl-dark-blue !important;
-    color:white !important;
-    border: none !important;
+	background-color: @gl-dark-blue !important;
+	color:white !important;
+	border: none !important;
 }
 
 .btn-info:hover:not(.disabled) {
-    background-color: lighten(@gl-dark-blue, 10%) !important;
-    box-shadow: none !important;
-    border: none !important;
+	background-color: lighten(@gl-dark-blue, 10%) !important;
+	box-shadow: none !important;
+	border: none !important;
 }
 
 .btn-info:active:not(.disabled),
 .btn-info:focus:not(.disabled) {
-    background-color: @gl-dark-blue !important;
-    box-shadow: none !important;
-    border: none !important;
+	background-color: @gl-dark-blue !important;
+	box-shadow: none !important;
+	border: none !important;
 }
 
 /*
 .btn-transparent-white {
-    background-color: transparent;
-    color: white !important;
-    padding: 13px 38px; // Account for border
-    @media @width-mobile {
-        padding: 8px 38px;
-        @media (max-height: 568px) {
-            padding: 8px 18px;
-        }
-    }
-    border: solid 2px white !important;
+	background-color: transparent;
+	color: white !important;
+	padding: 13px 38px; // Account for border
+	@media @width-mobile {
+		padding: 8px 38px;
+		@media (max-height: 568px) {
+			padding: 8px 18px;
+		}
+	}
+	border: solid 2px white !important;
 }
 
 .btn-transparent-white:hover:not(.disabled) {
-    color: @gl-orange !important;
-    box-shadow: none !important;
-    border: solid 2px @gl-orange !important;
+	color: @gl-orange !important;
+	box-shadow: none !important;
+	border: solid 2px @gl-orange !important;
 }
 
 // TODO: btn-secondary:focus not working??
 .btn-transparent-white:active:not(.disabled),
 .btn-transparent-white:focus:not(.disabled) {
-    color: @gl-red!important;
-    box-shadow: none !important;
-    border: solid 2px @gl-red !important;
+	color: @gl-red!important;
+	box-shadow: none !important;
+	border: solid 2px @gl-red !important;
 }*/
