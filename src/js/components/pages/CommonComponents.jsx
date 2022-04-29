@@ -595,6 +595,7 @@ export {
 	TriCards,
 	TestimonialSectionTitle,
 	TestimonialSectionLower,
+	T4GCharityScreenshot,
 	GetInvolvedSection,
 	CharityBanner,
 	MyLandingSection,	

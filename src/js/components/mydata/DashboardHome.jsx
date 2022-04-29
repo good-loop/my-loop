@@ -11,6 +11,10 @@ import TickerTotal from '../TickerTotal';
 import SearchQuery from '../../base/searchquery';
 import { getDataLogData } from '../../base/plumbing/DataLog';
 import Icon from '../../base/components/Icon';
+import { T4GCharityScreenshot } from '../pages/CommonComponents';
+import NGO from '../../base/data/NGO';
+import C from '../../C';
+import { getId } from '../../base/data/DataClass';
 
 // Hidden until we get some latest news to show
 /*
@@ -55,24 +59,10 @@ const AchievementCard = () => {
 		</>);
 }
 
-const DashboardHome = () => {
-
-	return (<>
-		{/*<LatestNewsCard />*/}
-		<AchievementCard />
-		<br/>
-		<h3>Ways to Raise Even More</h3>
-		<ThisWeeksAdCard />
-		<br/>
-		<><h1>TODO Get T4G Card</h1></>
-	</>)
-}
-
 
 const ThisWeeksAdCard = () => {
-
+	// if user clicked "watch it again", override watched
 	const [watchAnyway, setWatchAnyway] = useState(false);
-
 	// load ad from scheduledcontent
 	// TODO filter by start, end
 	let pvMyAds = getDataList({type:"ScheduledContent", status:KStatus.PUBLISHED, domain:ServerIO.PORTAL_ENDPOINT});		
@@ -105,5 +95,33 @@ const ThisWeeksAdCard = () => {
 			<p className="text-center">When you watch one of our ads 50% of the ad fee goes to charity.</p>
 		</Container>);
 };
+
+const GetT4GCard = () => {
+
+	const pvCharity = getCharityObject();
+	const ngo = pvCharity && (pvCharity.value || pvCharity.interim);
+
+	return <Container className="dashboard-card">
+		<h1>Get Tabs for Good</h1>
+		<img src="/img/homepage/slide-1.png" className="w-100"/>
+		<p className="text-center">Add Tabs for Good to your desktop browser to raise money for {NGO.displayName(ngo)} while you surf the web</p>
+		<div className="d-flex flex-row justify-content-center align-items-center">
+			<C.A href={ngo ? "/charity/" + getId(ngo) : "/tabsforgood"}><Button color="primary">Find out more</Button></C.A>
+		</div>
+	</Container>;
+};
+
+const DashboardHome = () => {
+
+	return (<>
+		{/*<LatestNewsCard />*/}
+		<AchievementCard />
+		<br/>
+		<h3>Ways to Raise Even More</h3>
+		<ThisWeeksAdCard />
+		<br/>
+		<GetT4GCard/>
+	</>)
+}
 
 export default DashboardHome;
