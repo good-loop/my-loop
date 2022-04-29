@@ -66,18 +66,18 @@ class DashboardTab extends React.Component {
 				<Nav tabs>
 					<NavItem>
 						<NavLink
-							className={classnames({ active: this.state.activeTab === '1' })}
+							className={classnames({ active: this.state.activeTab === '1' }) + " text-left"}
 							onClick={() => { this.toggle('1'); }}
 						>
-							HOME
+							<img src='img/mydata/home-tab.png' style={{height:'1.5rem',marginRight:'.5em'}} />HOME
 						</NavLink>
 					</NavItem>
 					<NavItem>
 						<NavLink
-							className={classnames({ active: this.state.activeTab === '2' })}
+							className={classnames({ active: this.state.activeTab === '2' }) + " text-left"}
 							onClick={() => { this.toggle('2'); }}
 						>
-							DATA PROFILE
+							<img src='img/mydata/data-tab.png' style={{height:'1.5rem',marginRight:'.5em'}} />DATA PROFILE
 						</NavLink>
 					</NavItem>
 				</Nav>

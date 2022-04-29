@@ -41,8 +41,8 @@ const LatestNewsCard = () => {
 };*/
 
 const AchievementCard = () => {
-	return (<>
-		<Container className='dashboard-card'>
+	return (
+	<Container className='dashboard-card'>
 			<div className='text-center text-white'>
 				<h3>Together we've raised</h3>
 				<h1><TickerTotal/></h1>
@@ -55,10 +55,9 @@ const AchievementCard = () => {
 				<ProfileDot><>600 Life-Saving Medicine Kits</></ProfileDot>
 				<ProfileDot><>100 Guide Dog Puppies Trained</></ProfileDot>
 			</Container>
-		</Container>
-		</>);
+	</Container>
+	);
 }
-
 
 const ThisWeeksAdCard = () => {
 	// if user clicked "watch it again", override watched
@@ -117,7 +116,7 @@ const DashboardHome = () => {
 		{/*<LatestNewsCard />*/}
 		<AchievementCard />
 		<br/>
-		<h3>Ways to Raise Even More</h3>
+		<h3 className="px-3">Ways to Raise Even More</h3>
 		<ThisWeeksAdCard />
 		<br/>
 		<GetT4GCard/>
