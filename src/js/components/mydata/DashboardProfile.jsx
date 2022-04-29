@@ -51,7 +51,7 @@ const SettingItem = ({description, itemKey, type, emailPropControl, ...props}) =
 		itemValue = countryListAlpha2[itemValue];
 	}
 
-	if (itemKey == 'gender') itemValue = itemValue.charAt(0).toUpperCase() + itemValue.slice(1);
+	if (itemKey == 'gender' && itemValue) itemValue = itemValue.charAt(0).toUpperCase() + itemValue.slice(1);
 	
 	// Privacy Levels
 	const privacyLevelMap = {"0": "Private Data", "1": "Default Privacy", "2": "Public Data"};
