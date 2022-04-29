@@ -13,6 +13,7 @@ import MyDataGetStarted from './MyDataGetStarted';
 import MyDataInterests from './MyDataInterests';
 import MyDataDetails from './MyDataDetails';
 import MyDataProfileCreated from './MyDataProfileCreated';
+import LinkOut from '../../base/components/LinkOut';
 
 const WIDGET_PATH = ['widget', 'MyDataSignUp'];
 const SHOW_PATH = [...WIDGET_PATH, 'show'];
@@ -91,9 +92,11 @@ const SignUpForm = () => {
 			verb="register"
 			onRegister={onRegister}
 			disableVerbSwitch
+			agreeToTerms={<>I agree to the <LinkOut href="https://doc.good-loop.com/terms/terms-of-use.html">Terms of Service</LinkOut></>}
 		>
 			<PropControl type="checkbox" prop="emailperms" path={PERSON_PATH}
-				help="Permission to use your email address - opt in to xyzyzxy... Permission to use your email for nefarious purposes..."/>
+				label="Good-Loop can send me news & marketing emails. I can unsubscribe at any time."
+				help="For My.Good-Loop to work properly for you, we want to communicate with you - so please do tick this box! Don't worry, we won't send many emails, and you can always unsubscribe." />
 
 		</EmailSignin>
 	</>);
