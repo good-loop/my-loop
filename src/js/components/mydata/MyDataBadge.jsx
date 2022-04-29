@@ -14,7 +14,7 @@ const MyDataBadge = ({progress, badgeName, backgroundImage, notification, size, 
 		progress = 0;
 		notification = null;
 	}
-	if (!badgeName) badgeName = "Data";
+	if (progress == 100) notification = "✓";
 
 	if (!size) size = 100;
 	const stroke = size * .06;

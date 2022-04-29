@@ -158,8 +158,8 @@ const MyDataDashboard = () => {
 
 		<Container id='badges' className='d-flex justify-content-between'>
 			<MyDataBadge badgeName="Data" progress={getDataProgress()} backgroundImage="img/mydata/data-badge.png" notification={1}/>
-			<MyDataBadge badgeName="Tabs" progress={getT4GProgress()} />
-			<MyDataBadge badgeName="Ads"/>
+			<MyDataBadge badgeName="Tabs" progress={getT4GProgress()} backgroundImage="img/mydata/tabs-badge.png" />
+			<MyDataBadge badgeName="Ads" backgroundImage="img/mydata/ads-badge.png" />
 		</Container>
 
 		<DashboardTab />
