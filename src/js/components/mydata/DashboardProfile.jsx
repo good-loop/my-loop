@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Collapse, FormGroup} from 'reactstrap';
+import { Container, Row, Col, Collapse, FormGroup, Progress } from 'reactstrap';
 import { Help } from '../../base/components/PropControl';
 import { isEmail } from './MyDataCommonComponents';
 import UserClaimControl, { getCharityObject, getEmail, getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
@@ -7,6 +7,7 @@ import CharityLogo from '../CharityLogo';
 import { MyDataCard } from './MyDataCommonComponents';
 import { countryListAlpha2 } from '../../base/data/CountryRegion';
 import PropControl from '../../base/components/PropControl';
+import { getDataProgress } from './MyDataDashboard';
 
 
 const SupportingCard = () => {
@@ -18,6 +19,14 @@ const SupportingCard = () => {
 		<h5>Your Data is Supporting</h5>
 		{ngo && <CharityLogo charity={ngo} />}
 	</Container>)
+}
+
+const DataSharedProgressBar = () => {
+	const sharedPercentage = getDataProgress();
+
+	return  (
+		<Progress className="data-shared-progress" value={sharedPercentage} />
+	)
 }
 
 const CollapseSettings = ({title, defaultCollapse, children}) => {
@@ -101,6 +110,7 @@ const SettingItem = ({description, itemKey, type, emailPropControl, ...props}) =
 const DataProfile = () => {
 
 	return (<>
+		<DataSharedProgressBar />
 		<CollapseSettings title="Personal Info" defaultCollapse={true}>
 			<SettingItem description="Your name" itemKey="name"/>
 			<SettingItem description="Your email" itemKey="email"/>

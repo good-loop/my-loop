@@ -97,16 +97,31 @@ class DashboardTab extends React.Component {
 
 /**
  * 
- * @returns {int}
+ * @returns int
  */
-const getDataProgress = () => {
-	const dataList = ["name", "birthday", "gender", "location-country", "location-region", "causes", "adstype"];
-	let dataCount = 0
-	for (const dataItem of dataList) {
-		let itemValue = getPersonSetting({key: dataItem});
-		if (itemValue) dataCount += 1;
+export const getDataProgress = () => { 
+	let sharedPercentage = 100;	
+	const keys = ["name", "email", "birthday", "gender", "location-country", "location-region", "causes", "adstype"]
+	const claims = keys.map(k => getPersonSetting({key: k}));
+	const privacyClaims = keys.map(k => getPersonSetting({key: k + "-privacy"}));
+
+	for (let [index, val] of claims.entries()) {
+		if (keys[index] == "email") continue; // email should always pass 
+
+		// Is this data point not set? Then deduct points and continue on to the next claim.
+		if(val == null) {
+			sharedPercentage -= 100/claims.length; 
+			continue
+		}
+		
+		// 0 = Private data setting, deduct 2/3 points
+		// 1 (or null) = Default privacy setting, deduct 1/3 points
+		// 2 = Public data setting, deduct no points
+		if (privacyClaims[index] == '0') sharedPercentage -= (100/claims.length)*2/3
+		if (privacyClaims[index] == '1' || privacyClaims[index] == null) sharedPercentage -= (100/claims.length)*1/3
 	}
-	return Math.round(dataCount / dataList.length * 100);
+
+	return Math.round(sharedPercentage);
 }
 
 /**
@@ -136,7 +151,7 @@ const MyDataDashboard = () => {
 	let locationCountryCode = getPersonSetting({key:"location-country"});
 	let locationCountry = countryListAlpha2[locationCountryCode];
 	
-	return <div className=''>
+	return <div className='my-data'>
 		<Container id='profile'> 
 			<Row>
 				<Col xs={8}>

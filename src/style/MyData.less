@@ -1,3 +1,10 @@
+.my-data {
+    h3,h4,h5 {
+        color: black !important;
+        text-align: center;
+    }
+}
+
 .mydata-card { // mydata-card get used outside of mydata-signup
     position: relative;
     border-radius: 10px;
@@ -163,15 +170,16 @@
     }
 }
 
-// .mydata-modal {
-//     .modal-content { // Temp forced mobile view in Desktop. Remove this after we got proper desktop version.
-//         max-width: 412px;
-//         margin: auto;
-//     }
-// }
+.mydata-modal {
+    .modal-content { // Temp forced mobile view in Desktop. Remove this after we got proper desktop version.
+        max-width: 412px;
+        margin: auto;
+    }
+}
 
-@media @width-mobile {
-    .mydata-modal { // Make Modal fullscreen on mobile
+.mydata-modal {
+    @media @width-mobile {
+        // Make Modal fullscreen on mobile
         margin: 0;
         padding: 0;
         width: 100%;
