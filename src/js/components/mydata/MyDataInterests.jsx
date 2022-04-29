@@ -37,7 +37,7 @@ const MyDataInterests = ({}) => {
         <ProfileCreationSteps step={1}/>
         <CategoryCard
             title="Causes you're interested in"
-            img="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/spring-flowers-1613759017.jpg?crop=0.669xw:1.00xh;0.0635xw,0&resize=640:*"
+            img="/img/mydata/charity-default.png"
             info="TODOCOPY What do you want to support? We use this to select projects and charities to show you, and to prefer adverts that support charities in these areas."
             prop="causes"
             options={
@@ -48,7 +48,7 @@ const MyDataInterests = ({}) => {
         />
         <CategoryCard
             title="Types of Ads you'd like to see"
-            img="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/spring-flowers-1613759017.jpg?crop=0.669xw:1.00xh;0.0635xw,0&resize=640:*"
+            img="/img/mydata/signup-ads.png"
             info="TODOCOPY What do you want to see?"
             prop="adstype"
             options={["videoads", "bannerads"]}

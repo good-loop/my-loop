@@ -12,6 +12,7 @@ const DetailsCard = ({title, prop, options, labels, ...props}) => {
 	return <>
 		<ProfileCreationSteps step={1}/>
 		<MyDataCard
+			img="/img/mydata/signup-about.png"
 			{...props}
 	>
 			<h2>{title}</h2>
