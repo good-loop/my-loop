@@ -1,14 +1,24 @@
 import React from "react";
 
-const MyDataBadge = ({progress, badgeName, backgroundImage}) => {
-	if (!progress) progress = 0;
+/**
+ * 
+ * @param {string} badgeName
+ * @param {int} progress 
+ * @param {int} notification
+ * @param {int} size of the badge in px, default is 100.
+ * @returns 
+ */
+const MyDataBadge = ({progress, badgeName, backgroundImage, notification, size}) => {
+	if (!progress) {
+		progress = 0;
+		notification = null;
+	}
 	if (!badgeName) badgeName = "Data";
 
-	const size = 100;
+	if (!size) size = 100;
+	const stroke = size * .06;
 	const radius = size / 2;
-	const stroke = 6;
 	const innerSize = size - stroke * 5;
-	const plusSignSize = size * .20;
 	const plusSignTop = size *.15;
 	const plusSignRight = size *.15;
 
@@ -36,7 +46,9 @@ const MyDataBadge = ({progress, badgeName, backgroundImage}) => {
 			/>
 		</svg>
 		<span>{badgeName}</span>
-		{!progress && <img src="/img/mydata/plus_whitebg.svg" className="plus-sign" style={{width:plusSignSize,top:plusSignTop,right:plusSignRight}} />}
+		{!progress && <img src="/img/mydata/plus_whitebg.svg" className="plus-sign" style={{width:size*.2,top:plusSignTop,right:plusSignRight}} />}
+		{notification && <div className="notification" style={{height:size*.2, width:size*.2,top:size*.4,right:"0"}}>
+			<div className="number" style={{fontSize:size*.125}}>{notification}</div></div>}
 	</div>)
 };
 
