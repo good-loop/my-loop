@@ -7,6 +7,7 @@ import CharityLogo from '../CharityLogo';
 import { MyDataCard } from './MyDataCommonComponents';
 import { countryListAlpha2 } from '../../base/data/CountryRegion';
 import PropControl from '../../base/components/PropControl';
+import { getDataProgress } from './MyDataDashboard';
 
 
 const SupportingCard = () => {
@@ -20,32 +21,8 @@ const SupportingCard = () => {
 	</Container>)
 }
 
-const DataSharedPercentage = () => { 
-	let sharedPercentage = 100;	
-	const keys = ["name", "email", "birthday", "gender", "location-country", "location-region", "causes", "adstype"]
-	const claims = keys.map(k => getPersonSetting({key: k}));
-	const privacyClaims = keys.map(k => getPersonSetting({key: k + "-privacy"}));
-
-	for (let [index, val] of claims.entries()) {
-		// Is this data point not set? Then deduct points and continue on to the next claim.
-		console.log(keys[index] + ": " + val)
-		if(val == null) {
-			sharedPercentage -= 100/claims.length; 
-			continue
-		}
-		
-		// 0 = Private data setting, deduct 2/3 points
-		// 1 (or null) = Default privacy setting, deduct 1/3 points
-		// 2 = Public data setting, deduct no points
-		if (privacyClaims[index] == '0') sharedPercentage -= (100/claims.length)*2/3
-		if (privacyClaims[index] == '1' || privacyClaims[index] == null) sharedPercentage -= (100/claims.length)*1/3
-	}
-
-	return Math.round(sharedPercentage);
-}
-
 const DataSharedProgressBar = () => {
-	const sharedPercentage = DataSharedPercentage();
+	const sharedPercentage = getDataProgress();
 
 	return  (
 		<Progress className="data-shared-progress" value={sharedPercentage} />
