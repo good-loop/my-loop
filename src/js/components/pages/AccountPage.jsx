@@ -93,7 +93,7 @@ const Page = () => {
 						{Object.keys(label4tab).map(t => <SidebarTabLink key={t} tab={t} label={label4tab[t]} selected={t === tab} />)}
 					</div>
 				</LeftSidebar>
-				<MainPane>
+				<MainPane className="px-0">
 					<div className="pt-3">
 						{tab === 'dashboard' && <MyDataDashboard />}
 						{tab === 'account' && <Account />}

@@ -109,7 +109,7 @@ const SettingItem = ({description, itemKey, type, emailPropControl, ...props}) =
 
 const DataProfile = () => {
 
-	return (<>
+	return (<Container>
 		<DataSharedProgressBar />
 		<CollapseSettings title="Personal Info" defaultCollapse={true}>
 			<SettingItem description="Your name" itemKey="name"/>
@@ -131,7 +131,7 @@ const DataProfile = () => {
 		<CollapseSettings title="Connect your social accounts">
 			TODO
 		</CollapseSettings>
-</>)
+</Container>)
 }
 
 const DashboardProfile = () => {
