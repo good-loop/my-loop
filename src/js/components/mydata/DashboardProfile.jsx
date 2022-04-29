@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Collapse, FormGroup} from 'reactstrap';
+import { Container, Row, Col, Collapse, FormGroup, Progress } from 'reactstrap';
 import { Help } from '../../base/components/PropControl';
 import { isEmail } from './MyDataCommonComponents';
 import UserClaimControl, { getCharityObject, getEmail, getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
@@ -18,6 +18,38 @@ const SupportingCard = () => {
 		<h5>Your Data is Supporting</h5>
 		{ngo && <CharityLogo charity={ngo} />}
 	</Container>)
+}
+
+const DataSharedPercentage = () => { 
+	let sharedPercentage = 100;	
+	const keys = ["name", "email", "birthday", "gender", "location-country", "location-region", "causes", "adstype"]
+	const claims = keys.map(k => getPersonSetting({key: k}));
+	const privacyClaims = keys.map(k => getPersonSetting({key: k + "-privacy"}));
+
+	for (let [index, val] of claims.entries()) {
+		// Is this data point not set? Then deduct points and continue on to the next claim.
+		console.log(keys[index] + ": " + val)
+		if(val == null) {
+			sharedPercentage -= 100/claims.length; 
+			continue
+		}
+		
+		// 0 = Private data setting, deduct 2/3 points
+		// 1 (or null) = Default privacy setting, deduct 1/3 points
+		// 2 = Public data setting, deduct no points
+		if (privacyClaims[index] == '0') sharedPercentage -= (100/claims.length)*2/3
+		if (privacyClaims[index] == '1' || privacyClaims[index] == null) sharedPercentage -= (100/claims.length)*1/3
+	}
+
+	return Math.round(sharedPercentage);
+}
+
+const DataSharedProgressBar = () => {
+	const sharedPercentage = DataSharedPercentage();
+
+	return  (
+		<Progress className="data-shared-progress" value={sharedPercentage} />
+	)
 }
 
 const CollapseSettings = ({title, defaultCollapse, children}) => {
@@ -101,6 +133,7 @@ const SettingItem = ({description, itemKey, type, emailPropControl, ...props}) =
 const DataProfile = () => {
 
 	return (<>
+		<DataSharedProgressBar />
 		<CollapseSettings title="Personal Info" defaultCollapse={true}>
 			<SettingItem description="Your name" itemKey="name"/>
 			<SettingItem description="Your email" itemKey="email"/>
