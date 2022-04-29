@@ -171,6 +171,10 @@ const MyDataDashboard = () => {
 	const toggleInfoTabs = () => {
 		setShowInfoTabs(!showInfoTabs);
 	}
+
+	const toggleShowInfoAds = () => {
+		setShowInfoAds(!showInfoAds);
+	}
 	
 	return <div className='my-data'>
 		<Container id='profile'>
