@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Button} from 'reactstrap';
 import { ProfileDot, ProfileDotRow } from './MyDataCommonComponents';
 import { getCharityObject, getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
@@ -17,7 +17,7 @@ import C from '../../C';
 import { getId } from '../../base/data/DataClass';
 import NGOImage from '../../base/components/NGOImage';
 import NGODescription from '../../base/components/NGODescription';
-import { isPortraitMobile } from '../../base/utils/miscutils';
+import { isPortraitMobile, space } from '../../base/utils/miscutils';
 
 // Hidden until we get some latest news to show
 /*
@@ -69,11 +69,32 @@ const AchievementCard = () => {
 const ThisWeeksAdCard = () => {
 	// if user clicked "watch it again", override watched
 	const [watchAnyway, setWatchAnyway] = useState(false);
+	// The good-loop unit is calling back too fast before its loaded - use a timeout for now
+	// TODO get proper loading callback
+	const [adLoaded, setAdLoaded] = useState(false);
+	useEffect(() => {
+		setTimeout(() => setAdLoaded(true), 2500);
+	}, [adLoaded]);
 	// load ad from scheduledcontent
 	// TODO filter by start, end
 	let pvMyAds = getDataList({type:"ScheduledContent", status:KStatus.PUBLISHED, domain:ServerIO.PORTAL_ENDPOINT});		
 	let schedcon = pvMyAds.value && List.first(pvMyAds.value);
 	let adid = schedcon && schedcon.adid;
+
+	const WatchedAd = ({className, style, showBtn}) => {
+		const watchAgain = () => {
+			setWatchAnyway(true);
+			setAdLoaded(false);
+		}
+		return <div className={space("watch-ad-done", className)} style={style}>
+			<img src="/img/mydata/green_tick.png" className="green-tick"/>
+			<div className="watched-text">
+				<h3>Weekly watch done!</h3>
+				{showBtn && <Button color="primary" onClick={watchAgain}>Watch it again</Button>}
+			</div>
+		</div>;
+	}
+
 	// if ( TODO ! adid) {
 	// 	return <p>No ad available.</p>
 	// }
@@ -83,19 +104,15 @@ const ThisWeeksAdCard = () => {
 	sq = SearchQuery.setProp(sq, "user", Login.getId());
 	let q = sq.query;
 	const pvData = getDataLogData({dataspace:"gl",q, start:"3 months ago",end:"now",name:"watched-this-weeks",});
-	let watched = !!(pvData.value && pvData.value.allCount) && !watchAnyway; 
+	let watched = !!(pvData.value && pvData.value.allCount) && !watchAnyway;
+
 	return (<Container className='dashboard-card'>
 			<h1>Watch This Week's Ad</h1>
 			<div className="position-relative">
-			{!watched ? <div className="d-flex flex-row justify-content-center align-items-center">
-				{pvMyAds.resolved? <GoodLoopUnit vertId={adid} className="dashboard-ad" /> : <Misc.Loading />}
-			</div> : <div className="watch-ad-done">
-				<img src="/img/mydata/green_tick.png" className="green-tick"/>
-				<div className="watched-text">
-					<h3>Weekly watch done!</h3>
-					<Button color="primary" onClick={() => setWatchAnyway(true)}>Watch it again</Button>
-				</div>
-			</div>}
+			{!watched ? <div className="position-relative d-flex flex-row justify-content-center align-items-center">
+				{adLoaded && <WatchedAd className="position-absolute" style={{top:0, left:0, width:"100%", height:"100%"}}/>}
+				{pvMyAds.resolved? <GoodLoopUnit vertId={adid} className="dashboard-ad"/> : <Misc.Loading />}
+			</div> : <WatchedAd showBtn/>}
 			</div>
 			<br/>
 			<p className="text-center">When you watch one of our ads 50% of the ad fee goes to charity.</p>
