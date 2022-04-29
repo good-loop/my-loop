@@ -51,7 +51,8 @@ const MyDataProfileCreated = () => {
 	const NextButton = ({onClick, index, length}) => {
 		const fullOnClick = () => {
 			if (index === length - 1) {
-				nextSignupPage();
+				// nextSignupPage();
+				window.location.href = '/account?tab=dashboard&dashboard=profile';
 			} else {
 				onClick();
 			}

@@ -35,7 +35,7 @@ export const MyDataCard = ({img, info, className, children}) => {
 
     return <div className={space("mydata-card", className)}>
         {imgComponent}
-        {info && <a className="more-info-btn" onClick={onMoreInfo}>?</a>}
+        {info && <a className="more-info-btn" onClick={onMoreInfo}><span>?</span></a>}
         {showInfo && <div className="more-info">
             {info}
         </div>}
