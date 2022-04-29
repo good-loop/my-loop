@@ -7,7 +7,10 @@ import { getDataList } from '../../base/plumbing/Crud';
 import KStatus from '../../base/data/KStatus';
 import Misc from '../../base/components/Misc';
 import ServerIO from '../../plumbing/ServerIO';
+import TickerTotal from '../TickerTotal';
 
+// Hidden until we get some latest news to show
+/*
 const LatestNewsCard = () => {
 	const pvNgo = getCharityObject();
     let ngo = null;
@@ -28,16 +31,15 @@ const LatestNewsCard = () => {
 		</Row>
 	</Container>
 	</>);
-};
+};*/
 
 const AchievementCard = () => {
 	return (<>
-		<h1>Here's What We've Achieved As a Community...</h1>
 		<Container className='dashboard-card'>
 			<div className='text-center text-white'>
-				<p>Together We've Raised</p>
-				<p>£3,928,120</p>
-				<p>For Global Causes</p>
+				<h3>Together we've raised</h3>
+				<h1><TickerTotal/></h1>
+				<h3>For global causes</h3>
 			</div>
 			<img src="/img/placeholder-circle.png" className='w-100' alt="" />
 			<Container className='border border-white rounded bg-white my-3 py-3'>
@@ -53,11 +55,12 @@ const AchievementCard = () => {
 const DashboardHome = () => {
 
 	return (<>
-		<LatestNewsCard />
+		{/*<LatestNewsCard />*/}
 		<AchievementCard />
-		<h1>Ways to Raise Even More</h1>
-		<><h1>TODO projects Card</h1></>
+		<br/>
+		<h3>Ways to Raise Even More</h3>
 		<ThisWeeksAdCard />
+		<br/>
 		<><h1>TODO Get T4G Card</h1></>
 	</>)
 }

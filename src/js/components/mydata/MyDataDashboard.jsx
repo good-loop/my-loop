@@ -108,7 +108,7 @@ const MyDataDashboard = () => {
 	let locationCountryCode = getPersonSetting({key:"location-country"});
 	let locationCountry = countryListAlpha2[locationCountryCode];
 	
-	return <div className=''>
+	return <div className='my-data'>
 		<Container id='profile'> 
 			<Row>
 				<Col xs={8}>

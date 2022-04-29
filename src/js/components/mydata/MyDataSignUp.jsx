@@ -93,7 +93,8 @@ const SignUpForm = () => {
 			disableVerbSwitch
 		>
 			<PropControl type="checkbox" prop="emailperms" path={PERSON_PATH}
-				help="Permission to use your email address - opt in to xyzyzxy... Permission to use your email for nefarious purposes..."/>
+				label="Permission to use your email address - opt in to xyzyzxy... Permission to use your email address..."
+				help="Opt in here to activate your donations in support of charity"/>
 
 		</EmailSignin>
 	</>);
