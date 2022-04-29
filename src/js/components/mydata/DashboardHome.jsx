@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Button} from 'reactstrap';
-import { ProfileDot } from './MyDataCommonComponents';
+import { ProfileDot, ProfileDotRow } from './MyDataCommonComponents';
 import { getCharityObject, getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
 import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import { getDataList } from '../../base/plumbing/Crud';
@@ -15,6 +15,9 @@ import { T4GCharityScreenshot } from '../pages/CommonComponents';
 import NGO from '../../base/data/NGO';
 import C from '../../C';
 import { getId } from '../../base/data/DataClass';
+import NGOImage from '../../base/components/NGOImage';
+import NGODescription from '../../base/components/NGODescription';
+import { isPortraitMobile } from '../../base/utils/miscutils';
 
 // Hidden until we get some latest news to show
 /*
@@ -48,12 +51,16 @@ const AchievementCard = () => {
 				<h1><TickerTotal/></h1>
 				<h3>For global causes</h3>
 			</div>
-			<img src="/img/placeholder-circle.png" className='w-100' alt="" />
+			<div className="d-flex flex-row justify-content-center align-items-center">
+				<img src="/img/placeholder-circle.png" className='img-lg' alt="" />
+			</div>
 			<Container className='border border-white rounded bg-white my-3 py-3'>
 				<p className='text-center'>Some Things We've Achieved</p>
-				<ProfileDot><>20,000 Meals For Children</></ProfileDot>
-				<ProfileDot><>600 Life-Saving Medicine Kits</></ProfileDot>
-				<ProfileDot><>100 Guide Dog Puppies Trained</></ProfileDot>
+				<ProfileDotRow>
+					<ProfileDot><>20,000 Meals For Children</></ProfileDot>
+					<ProfileDot><>600 Life-Saving Medicine Kits</></ProfileDot>
+					<ProfileDot><>100 Guide Dog Puppies Trained</></ProfileDot>
+				</ProfileDotRow>
 			</Container>
 	</Container>
 	);
@@ -80,9 +87,9 @@ const ThisWeeksAdCard = () => {
 	return (<Container className='dashboard-card'>
 			<h1>Watch This Week's Ad</h1>
 			<div className="position-relative">
-			{!watched ? <>
+			{!watched ? <div className="d-flex flex-row justify-content-center align-items-center">
 				{pvMyAds.resolved? <GoodLoopUnit vertId={adid} className="dashboard-ad" /> : <Misc.Loading />}
-			</> : <div className="watch-ad-done">
+			</div> : <div className="watch-ad-done">
 				<img src="/img/mydata/green_tick.png" className="green-tick"/>
 				<div className="watched-text">
 					<h3>Weekly watch done!</h3>
@@ -95,31 +102,49 @@ const ThisWeeksAdCard = () => {
 		</Container>);
 };
 
-const GetT4GCard = () => {
-
-	const pvCharity = getCharityObject();
-	const ngo = pvCharity && (pvCharity.value || pvCharity.interim);
-
+const GetT4GCard = ({ngo}) => {
 	return <Container className="dashboard-card">
 		<h1>Get Tabs for Good</h1>
-		<img src="/img/homepage/slide-1.png" className="w-100"/>
-		<p className="text-center">Add Tabs for Good to your desktop browser to raise money for {NGO.displayName(ngo)} while you surf the web</p>
-		<div className="d-flex flex-row justify-content-center align-items-center">
-			<C.A href={ngo ? "/charity/" + getId(ngo) : "/tabsforgood"}><Button color="primary">Find out more</Button></C.A>
-		</div>
+		<Row>
+			<Col md={6} className="mb-3 mb-md-0">
+				<img src="/img/homepage/slide-1.png" className="w-100"/>
+			</Col>
+			<Col md={6} className="d-flex flex-column align-items-center justify-content-center">
+				<p className="text-center">Add Tabs for Good to your desktop browser to raise money for {NGO.displayName(ngo)} while you surf the web</p>
+				<C.A href={ngo ? "/charity/" + getId(ngo) : "/tabsforgood"}><Button color="primary">Find out more</Button></C.A>
+			</Col>
+		</Row>
 	</Container>;
+};
+
+const AboutYourCharity = ({ngo}) => {
+	return <Container className="dashboard-card">
+		<h1>About your charity</h1>
+		<Row>
+			<Col md={6} className="mb-3 mb-md-0">
+				<NGOImage src="/img/stats1-cropped.jpg" main ngo={ngo} className="w-100"/>
+			</Col>
+			<Col md={6}>
+				<NGODescription extended ngo={ngo} className="text-center"/>
+			</Col>
+		</Row>
+	</Container>
 };
 
 const DashboardHome = () => {
 
+	const pvCharity = getCharityObject();
+	const ngo = pvCharity && (pvCharity.value || pvCharity.interim);
+	
 	return (<>
 		{/*<LatestNewsCard />*/}
 		<AchievementCard />
 		<br/>
-		<h3 className="px-3">Ways to Raise Even More</h3>
+		<AboutYourCharity ngo={ngo}/>
+		<h3 className="px-3 my-3 my-md-5">Ways to Raise Even More</h3>
 		<ThisWeeksAdCard />
 		<br/>
-		<GetT4GCard/>
+		<GetT4GCard ngo={ngo}/>
 	</>)
 }
 

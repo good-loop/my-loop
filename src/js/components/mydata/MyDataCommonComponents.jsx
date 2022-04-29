@@ -131,17 +131,23 @@ export const ProfileCreationSteps = ({step}) => {
     ];
 
     return <Steps step={step} steps={steps}/>;
-}
+};
+
+export const ProfileDotRow = ({className, children}) => {
+    return <Row className={space(className, "align-items-stretch profile-dot-row")}>
+        {children}
+    </Row>
+};
 
 export const ProfileDot = ({className, imgUrl, children}) => {
     if (!imgUrl) imgUrl = "/img/placeholder-circle.png"
     return (
-        <div className={space(className, 'd-flex align-items-center mb-3')}>
+        <Col md={4} className={space(className, 'd-flex align-items-center mb-3 mb-md-0')}>
             <img src={imgUrl} style={{width:'2rem',height:'2rem',marginRight:'1rem'}} />
             {children}
-        </div>
+        </Col>
     )
-}
+};
 
 export const SkipNextBtn = ({skip}) => {
     return (
