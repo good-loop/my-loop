@@ -9,6 +9,45 @@ import { countryListAlpha2 } from '../../base/data/CountryRegion';
 import PropControl from '../../base/components/PropControl';
 import { getDataProgress } from './MyDataDashboard';
 
+const HowItWordsGuide = () => {
+
+	const PrivacyCard = ({iconIMG, title, content}) => {
+		const [smallCardCollapse, setSmallCardCollapse] = useState(false);
+		const smallCardToggle = () => setSmallCardCollapse(!smallCardCollapse);
+
+		return (<div className="text-center privacy-card" onClick={smallCardToggle}>
+			<hr/>
+			<img src={iconIMG} className="logo mb-3" />
+			<h5>{title}</h5>
+			<span>{smallCardCollapse ? '˄' : '˅'}</span>
+			<Collapse isOpen={smallCardCollapse}>
+				<div className="small-card-content text-left p-3">{content}</div>
+			</Collapse>
+		</div>)
+	}
+
+	const [cardCollapse, setCardCollapse] = useState(false);
+	const cardToggle = () => setCardCollapse(!cardCollapse);
+
+	return (<Container>
+		<div className="how-it-works-card">
+			<div className="how-it-works-header text-center" onClick={cardToggle}>
+				<img src="img/mydata/onboarding-1.png" className='w-50' />
+				<p className='text-white font-weight-bold mb-0'>HOW IT WORKS {cardCollapse ? '˄' : '˅'}</p>
+			</div>
+				<Collapse isOpen={cardCollapse} className="how-it-works-overview text-center">
+					<h2 className='pt-3'>You're in Control</h2>
+					<p>For Every Piece Of Data You've Shared With Us, You Can Control How It's Used.</p>
+					<PrivacyCard iconIMG="img/mydata/padlock-careful.png" title="Careful Use" 
+					content="The data will not be shared. It will be used to select advertising campaigns, both within My.Good-Loop and via partners elsewhere on the internest - and this will rasied moeny for your charity. This data will be anonymous - your identity will be kept private." />
+					<PrivacyCard iconIMG="img/mydata/padlock-shared.png" title="Shared" 
+					content="The data can be shared with selected partners in return for donations to charity. This setting lets us raise the most money for your charity! You have the right to stop sharing any time. Any partners with a copy of this data would be contractually obliged to remove it at your request."/>
+					<PrivacyCard iconIMG="img/mydata/padlock-private.png" title="Private" 
+					content="This data will not be shared or used at all, except for displaying information to you wihtin MyData itself." />
+				</Collapse>
+		</div>
+	</Container>)
+};
 
 const SupportingCard = () => {
 	const pvNgo = getCharityObject();
@@ -80,7 +119,7 @@ const SettingItem = ({description, itemKey, type, emailPropControl, ...props}) =
 	const editModeToggle = () => setEditMode(!editMode);
 
 	return(<>
-	{/* HACK - Avoid bug with Collaspe and hr */}
+	{/* HACK - Avoid bug with Collapse and hr */}
 	<div style={{height:'1px'}}></div>
 	<hr />
 	<div className="d-flex justify-content-between">
@@ -137,6 +176,7 @@ const DataProfile = () => {
 const DashboardProfile = () => {
 
 	return (<>
+		<HowItWordsGuide />
 		<SupportingCard />
 		<DataProfile />
 	</>)
