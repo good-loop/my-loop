@@ -13,6 +13,7 @@ import { countryListAlpha2 } from '../../base/data/CountryRegion';
 import CharityLogo from '../CharityLogo';
 import MyDataBadge from './MyDataBadge';
 import TickerTotal from '../TickerTotal';
+import { getTabsOpened } from '../pages/TabsForGoodSettings';
 
 /**
  * @returns {!Number}
@@ -94,6 +95,33 @@ class DashboardTab extends React.Component {
 	}
 }
 
+/**
+ * 
+ * @returns {int}
+ */
+const getDataProgress = () => {
+	const dataList = ["name", "birthday", "gender", "location-country", "location-region", "causes", "adstype"];
+	let dataCount = 0
+	for (const dataItem of dataList) {
+		let itemValue = getPersonSetting({key: dataItem});
+		if (itemValue) dataCount += 1;
+	}
+	return Math.round(dataCount / dataList.length * 100);
+}
+
+/**
+ * 
+ * @returns progress of T4G, max 100
+ */
+const getT4GProgress = () =>{
+	let pvTabsOpened = getTabsOpened();
+	if (pvTabsOpened && pvTabsOpened.value) {
+		if (pvTabsOpened.value <= 100) {
+			return pvTabsOpened.value;
+		} else return 100;
+	}
+}
+
 const MyDataDashboard = () => {
 	let xids = getAllXIds();
 	let user = Login.getUser();
@@ -129,8 +157,8 @@ const MyDataDashboard = () => {
 		</Container>
 
 		<Container id='badges' className='d-flex justify-content-between'>
-			<MyDataBadge progress={20} badgeName="Data" backgroundImage="img/lindamccartneypic-mobile.jpg" notification={1}/>
-			<MyDataBadge progress={50} badgeName="Tabs"/>
+			<MyDataBadge badgeName="Data" progress={getDataProgress()} backgroundImage="img/mydata/data-badge.png" notification={1}/>
+			<MyDataBadge badgeName="Tabs" progress={getT4GProgress()} />
 			<MyDataBadge badgeName="Ads"/>
 		</Container>
 

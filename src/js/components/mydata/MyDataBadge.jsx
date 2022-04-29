@@ -29,7 +29,7 @@ const MyDataBadge = ({progress, badgeName, backgroundImage, notification, size, 
 
 	return ( <a href={linkTo}>
 	<div className="mydata-badge text-center" style={{height:size+"px",width:size+"px"}}>
-		<div className="inner" style={{backgroundColor:"grey",backgroundImage:`url('${backgroundImage}')`,width:innerSize+"px",height:innerSize+"px"}}></div>
+		<div className="inner" style={{backgroundImage:`url('${backgroundImage}')`,backgroundSize:innerSize,width:innerSize,height:innerSize}}></div>
 		<svg
 			height={radius * 2}
 			width={radius * 2}
