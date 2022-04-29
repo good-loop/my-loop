@@ -69,7 +69,7 @@ const SettingItem = ({description, itemKey, type, emailPropControl, ...props}) =
 	
 	// Privacy Levels
 	const privacyLevelMap = {"0": "Private Data", "1": "Default Privacy", "2": "Public Data"};
-	const privacyLockMap = {"Private Data": "locked", "Default Privacy": "mid", "Public Data": "opened"};
+	const privacyLockMap = {"Private Data": "private", "Default Privacy": "careful", "Public Data": "shared"};
 	const privacyKey = itemKey + '-privacy';
 	const privacyLevel = privacyLevelMap[getPersonSetting({key: privacyKey})] || 'Default Privacy'; // No privacy level = default level;
 
