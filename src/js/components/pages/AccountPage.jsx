@@ -70,7 +70,7 @@ const Page = () => {
 	const tab = DataStore.getUrlValue('tab') || 'dashboard';
 
 	return (<>
-		<div className="AccountPage avoid-navbar">
+		<div className="AccountPage">
 			<Editor3ColLayout>
 				<LeftSidebar hideOnMobile>
 					<div className="account-sidebar pl-3">
@@ -79,7 +79,7 @@ const Page = () => {
 					</div>
 				</LeftSidebar>
 				<MainPane>
-					<div className="pt-5">
+					<div className="pt-3">
 						{tab === 'dashboard' && <MyDataDashboard />}
 						{tab === 'account' && <Account />}
 						{tab === 'settings' && <AccountSettings />}
