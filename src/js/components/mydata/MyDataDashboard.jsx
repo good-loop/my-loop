@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Col, Row, Container, TabContent, TabPane, Card, CardTitle, CardText, Button, Nav, NavItem, NavLink } from 'reactstrap';
 import Person, { getAllXIds, getEmail, getProfile, hasConsent, PURPOSES } from '../../base/data/Person';
 import DataStore from '../../base/plumbing/DataStore';
@@ -14,6 +14,7 @@ import CharityLogo from '../CharityLogo';
 import MyDataBadge from './MyDataBadge';
 import TickerTotal from '../TickerTotal';
 import { getTabsOpened } from '../pages/TabsForGoodSettings';
+import { Collapse } from "reactstrap";
 
 /**
  * @returns {!Number}
@@ -150,6 +151,26 @@ const MyDataDashboard = () => {
 	let joinedMonthYear = getJoinedMonthYear();
 	let locationCountryCode = getPersonSetting({key:"location-country"});
 	let locationCountry = countryListAlpha2[locationCountryCode];
+
+	const [showInfoData, setShowInfoData] = useState(false);
+	const [showInfoTabs, setShowInfoTabs] = useState(false);
+	const [showInfoAds, setShowInfoAds] = useState(false);
+
+	const allInfoFalse = () => {
+		if (showInfoData == true) return false;
+		if (showInfoTabs == true) return false;
+		if (showInfoAds == true) return false;
+		console.log("ALL FALSE")
+		return true;
+	}
+
+	const toggleInfoData = () => {
+		setShowInfoData(!showInfoData);
+	}
+	
+	const toggleInfoTabs = () => {
+		setShowInfoTabs(!showInfoTabs);
+	}
 	
 	return <div className='my-data'>
 		<Container id='profile'> 
@@ -172,10 +193,25 @@ const MyDataDashboard = () => {
 		</Container>
 
 		<Container id='badges' className='d-flex justify-content-between'>
-			<MyDataBadge badgeName="Data" progress={getDataProgress()} backgroundImage="img/mydata/data-badge.png" notification={1}/>
-			<MyDataBadge badgeName="Tabs" progress={getT4GProgress()} backgroundImage="img/mydata/tabs-badge.png" />
-			<MyDataBadge badgeName="Ads" backgroundImage="img/mydata/ads-badge.png" />
+			<MyDataBadge badgeName="Data" progress={getDataProgress()} backgroundImage="img/mydata/data-badge.png" notification={1} toggle={toggleShowInfo}/>
+			<MyDataBadge badgeName="Tabs" progress={getT4GProgress()} backgroundImage="img/mydata/tabs-badge.png" toggle={toggleShowInfoTabs} />
+			<MyDataBadge badgeName="Ads" backgroundImage="img/mydata/ads-badge.png" toggle={toggleShowInfoAds} />
 		</Container>
+		<Collapse isOpen={showInfoData}>
+			<div className="speech-bubble">
+				<p>Complete Your Data Profile To Earn Your Badge And Raise Even More For ...</p>
+			</div>
+		</Collapse>
+		<Collapse isOpen={showInfoTabs}>
+			<div className="speech-bubble">
+				<p>Complete Your Data Profile To Earn Your Badge And Raise Even More For ...</p>
+			</div>
+		</Collapse>
+		<Collapse isOpen={showInfoAds}>
+			<div className="speech-bubble">
+				<p>Complete Your Data Profile To Earn Your Badge And Raise Even More For ...</p>
+			</div>
+		</Collapse>
 
 		<DashboardTab />
 	</div>
