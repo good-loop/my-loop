@@ -9,6 +9,45 @@ import { countryListAlpha2 } from '../../base/data/CountryRegion';
 import PropControl from '../../base/components/PropControl';
 import { getDataProgress } from './MyDataDashboard';
 
+const HowItWordsGuide = () => {
+
+	const PrivacyCard = ({iconIMG, title, content}) => {
+		const [smallCardCollapse, setSmallCardCollapse] = useState(false);
+		const smallCardToggle = () => setSmallCardCollapse(!smallCardCollapse);
+
+		return (<div className="text-center privacy-card" onClick={smallCardToggle}>
+			<hr/>
+			<img src={iconIMG} className="logo mb-3" />
+			<h5>{title}</h5>
+			<span>{smallCardCollapse ? '˄' : '˅'}</span>
+			<Collapse isOpen={smallCardCollapse}>
+				<div className="small-card-content text-left p-3">{content}</div>
+			</Collapse>
+		</div>)
+	}
+
+	const [cardCollapse, setCardCollapse] = useState(false);
+	const cardToggle = () => setCardCollapse(!cardCollapse);
+
+	return (<Container>
+		<div className="how-it-works-card">
+			<div className="how-it-works-header text-center" onClick={cardToggle}>
+				<img src="img/mydata/onboarding-1.png" className='w-50' />
+				<p className='text-white font-weight-bold mb-0'>HOW IT WORKS {cardCollapse ? '˄' : '˅'}</p>
+			</div>
+				<Collapse isOpen={cardCollapse} className="how-it-works-overview text-center">
+					<h2 className='pt-3'>You're in Control</h2>
+					<p>For Every Piece Of Data You've Shared With Us, You Can Control How It's Used.</p>
+					<PrivacyCard iconIMG="img/mydata/padlock-careful.png" title="Careful Use" 
+					content="The data will not be shared. It will be used to select advertising campaigns, both within My.Good-Loop and via partners elsewhere on the internest - and this will rasied moeny for your charity. This data will be anonymous - your identity will be kept private." />
+					<PrivacyCard iconIMG="img/mydata/padlock-shared.png" title="Shared" 
+					content="The data can be shared with selected partners in return for donations to charity. This setting lets us raise the most money for your charity! You have the right to stop sharing any time. Any partners with a copy of this data would be contractually obliged to remove it at your request."/>
+					<PrivacyCard iconIMG="img/mydata/padlock-private.png" title="Private" 
+					content="This data will not be shared or used at all, except for displaying information to you wihtin MyData itself." />
+				</Collapse>
+		</div>
+	</Container>)
+};
 
 const SupportingCard = () => {
 	const pvNgo = getCharityObject();
@@ -29,7 +68,7 @@ const DataSharedProgressBar = () => {
 	)
 }
 
-const CollapseSettings = ({title, defaultCollapse, children}) => {
+const CollapseSettings = ({title, defaultCollapse, headerIMG, children}) => {
 	if (!defaultCollapse) defaultCollapse = false;
 	const [settingsOpen, setSettingsOpen] = useState(defaultCollapse);
 	const settingsToggle = () => setSettingsOpen(!settingsOpen);
@@ -37,7 +76,7 @@ const CollapseSettings = ({title, defaultCollapse, children}) => {
 	return (
 	<MyDataCard
 		className="my-3"
-		img="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/spring-flowers-1613759017.jpg?crop=0.669xw:1.00xh;0.0635xw,0&resize=640:*"
+		img={headerIMG}
 		>
 			<a onClick={settingsToggle}> <div className="d-flex justify-content-between align-items-center">
 				<h5>✓ {title}</h5> <span className='text-muted' style={{fontSize:'1.5rem'}}>{settingsOpen ? '˄' : '˅'}</span>
@@ -80,7 +119,7 @@ const SettingItem = ({description, itemKey, type, emailPropControl, ...props}) =
 	const editModeToggle = () => setEditMode(!editMode);
 
 	return(<>
-	{/* HACK - Avoid bug with Collaspe and hr */}
+	{/* HACK - Avoid bug with Collapse and hr */}
 	<div style={{height:'1px'}}></div>
 	<hr />
 	<div className="d-flex justify-content-between">
@@ -111,24 +150,24 @@ const DataProfile = () => {
 
 	return (<Container>
 		<DataSharedProgressBar />
-		<CollapseSettings title="Personal Info" defaultCollapse={true}>
+		<CollapseSettings title="Personal Info" headerIMG="img/mydata/profile-personal.png" defaultCollapse={true}>
 			<SettingItem description="Your name" itemKey="name"/>
 			<SettingItem description="Your email" itemKey="email"/>
 			<SettingItem description="Your date of birth" itemKey="birthday" type="date"/>
 			<SettingItem description="Your gender" itemKey="gender" type="gender" />
 		</CollapseSettings>
 
-		<CollapseSettings title="Demographic Details" >
+		<CollapseSettings title="Demographic Details" headerIMG="img/mydata/profile-demographic.png" >
 			<SettingItem description="Your country" itemKey="location-country" type="country" />
 			<SettingItem description="Your region" itemKey="location-region"/>
 		</CollapseSettings>
 
-		<CollapseSettings title="Your interests" >
+		<CollapseSettings title="Your interests" headerIMG="img/mydata/profile-interests.png" >
 			<SettingItem description="Causes you're interested in" itemKey="causes"/>
 			<SettingItem description="Types of Ads you'd like to see" itemKey="adstype"/>
 		</CollapseSettings>
 
-		<CollapseSettings title="Connect your social accounts">
+		<CollapseSettings title="Connect your social accounts" headerIMG="img/mydata/profile-social.png">
 			TODO
 		</CollapseSettings>
 </Container>)
@@ -137,6 +176,7 @@ const DataProfile = () => {
 const DashboardProfile = () => {
 
 	return (<>
+		<HowItWordsGuide />
 		<SupportingCard />
 		<DataProfile />
 	</>)

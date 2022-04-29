@@ -1,10 +1,11 @@
 import React from 'react';
+import { Button } from 'reactstrap';
 import NGO from '../../base/data/NGO';
 import CharityLogo from '../CharityLogo';
 import UserClaimControl from '../../base/components/PropControls/UserClaimControl';
 import { getDataItem } from '../../base/plumbing/Crud';
 import NGOImage from '../../base/components/NGOImage';
-import { MyDataCard, Steps, SkipNextBtn, ProfileCreationSteps } from './MyDataCommonComponents';
+import { MyDataCard, Steps, ProfileCreationSteps } from './MyDataCommonComponents';
 import { nextSignupPage } from './MyDataSignUp';
 
 /**
@@ -36,8 +37,8 @@ const MyDataInterests = ({}) => {
         <ProfileCreationSteps step={1}/>
         <CategoryCard
             title="Causes you're interested in"
-            img="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/spring-flowers-1613759017.jpg?crop=0.669xw:1.00xh;0.0635xw,0&resize=640:*"
-            info="What do you want to support? We use this to select projects and charities to show you, and to prefer adverts that support charities in these areas."
+            img="img/mydata/charity-default.png"
+            info="We use this to select projects and charities to show you, and to prefer adverts that support charities in these areas."
             prop="causes"
             options={
 				// See NGO.CATEGORY
@@ -47,13 +48,17 @@ const MyDataInterests = ({}) => {
         />
         <CategoryCard
             title="Types of Ads you'd like to see"
-            img="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/spring-flowers-1613759017.jpg?crop=0.669xw:1.00xh;0.0635xw,0&resize=640:*"
-            info="What do you want to see?"
+            img="img/mydata/signup-ads.png"
+            info="Used to prefer adverts of interest to you. Advertisers pay more to show their message to an interested audience - so this will raise more for your charity."
             prop="adstype"
             options={["videoads", "bannerads"]}
             labels={["Video Ads", "Banner Ads"]}
         />
-        <SkipNextBtn skip={true} />
+        <br />
+        <div className="d-flex flex-row align-items-center justify-content-center">
+            <Button color="primary" className="w-100" onClick={nextSignupPage}>Next</Button>
+        </div>
+       
     </>;
 
 };
