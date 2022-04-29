@@ -8,7 +8,7 @@ import { getPersonSetting, getCharityObject } from '../../base/components/PropCo
 import classnames from 'classnames';
 import DashboardHome from './DashboardHome';
 import DashboardProfile from './DashboardProfile';
-import { ProfileDot } from './MyDataCommonComponents';
+import { ProfileDot, ProfileDotRow } from './MyDataCommonComponents';
 import { countryListAlpha2 } from '../../base/data/CountryRegion';
 import CharityLogo from '../CharityLogo';
 import MyDataBadge from './MyDataBadge';
@@ -173,25 +173,21 @@ const MyDataDashboard = () => {
 	}
 	
 	return <div className='my-data'>
-		<Container id='profile'> 
-			<Row>
-				<Col xs={8}>
-					{name && <h4>{name}</h4>}
-					{locationCountry && <h5>{locationCountry}</h5>}
-				</Col>
-				<Col xs={4}>
-					{ngo && <CharityLogo charity={ngo} className="w-100"/>}
-				</Col>
-			</Row>
-			<ProfileDot className="mt-3">{joinedMonthYear && <>Joined {joinedMonthYear}</>}</ProfileDot>
-			<ProfileDot>{ngo && <>Supporting {ngo.name}</>}</ProfileDot>
-			<ProfileDot><>
-				{/* Show exactly the same amount as what displays on T4G */}
-				<p style={{margin: "0"}}><span className="font-weight-bold pr-1"><TickerTotal /></span>
-				Rasied With Our Global Community</p>
-			</></ProfileDot>
+		<Container id='profile'>
+			{name && <h4>{name}</h4>}
+			{locationCountry && <h5>{locationCountry}</h5>}
+			<br/>
+			<ProfileDotRow>
+				<ProfileDot className="mt-3 mt-md-0">{joinedMonthYear && <>Joined {joinedMonthYear}</>}</ProfileDot>
+				<ProfileDot>{ngo && <>Supporting {ngo.name}</>}</ProfileDot>
+				<ProfileDot><>
+					{/* Show exactly the same amount as what displays on T4G */}
+					<p style={{margin: "0"}}><span className="font-weight-bold pr-1"><TickerTotal /></span>
+					Rasied With Our Global Community</p>
+				</></ProfileDot>
+			</ProfileDotRow>
 		</Container>
-
+		<br/>
 		<Container id='badges' className='d-flex justify-content-between'>
 			<MyDataBadge badgeName="Data" progress={getDataProgress()} backgroundImage="img/mydata/data-badge.png" notification={1} toggle={toggleShowInfo}/>
 			<MyDataBadge badgeName="Tabs" progress={getT4GProgress()} backgroundImage="img/mydata/tabs-badge.png" toggle={toggleShowInfoTabs} />
@@ -213,6 +209,7 @@ const MyDataDashboard = () => {
 			</div>
 		</Collapse>
 
+		<br/>
 		<DashboardTab />
 	</div>
 }

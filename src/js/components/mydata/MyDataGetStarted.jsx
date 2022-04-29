@@ -18,7 +18,7 @@ const MyDataGetStarted = () => {
         <ProfileCreationSteps step={0}/>
         {ngo && <NGOImage main bg className="circle w-100" ratio={100} ngo={ngo}/>}
         <h1>Nice Choice!</h1>
-        <p className="leader-text">We'll help you build your profile so you can start raising money for {NGO.displayName(ngo)} with your data</p>
+        <p className="leader-text m-0 text-center">We'll help you build your profile so you can start raising money for {NGO.displayName(ngo)} with your data</p>
         <div className="d-flex flex-row align-items-center justify-content-center">
             <Button color="primary" onClick={nextSignupPage}>Build your profile</Button>
         </div>

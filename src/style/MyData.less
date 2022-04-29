@@ -120,17 +120,31 @@
             background-color: white;
             border-radius: 50%;
             display: inline-block;
-            border: 3px solid #2F7593;
-            &.step-circle-active {
-                background-color: #2F7593;
+            border: 3px solid @gl-dark-grey;
+            text-align: center;
+
+            &.step-circle-active, &.step-circle-completed {
+                border-color: @gl-desat-blue;
+            }
+
+            &.step-circle-completed {
+                &:before {
+                    font-size: 1.5rem;
+                    color: @gl-desat-blue;
+                    content: "✓";
+                }
             }
         }
 
         .step-circle-connector {
             margin: 0 .5em;
             flex-grow: 1;
-            border-bottom: 5px solid #2F7593;
+            border-bottom: 5px solid @gl-dark-grey;
             border-radius: 100em;
+
+            &.step-circle-connector-completed {
+                border-bottom: 5px solid @gl-desat-blue;
+            }
         }
 
         .step-label {
@@ -144,6 +158,11 @@
                 top: 200%;
                 left: 50%;
                 max-width: 2rem;
+            }
+
+            &.step-label-active {
+                text-decoration: underline;
+                font-weight: bold;
             }
         }
 

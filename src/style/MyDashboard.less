@@ -8,11 +8,21 @@
 		border-radius: 0.5rem;
 		overflow: hidden;
 	}
+	.img-lg {
+		width: 30%;
+		@media @width-mobile {
+			width: 100%;
+		}
+	}
 }
 
 .dashboard-ad {
 	border-radius: 0.5rem;
 	overflow: hidden;
+	width: 70%;
+	@media @width-mobile {
+		width: 100%;
+	}
 }
 
 .watch-ad-done {
@@ -22,7 +32,10 @@
 	align-items: center;
 	position: relative;
 	.green-tick {
-		width: 80%;
+		width: 20%;
+		@media @width-mobile {
+			width: 80%;
+		}
 	}
 	.watched-text {
 		width: 100%;

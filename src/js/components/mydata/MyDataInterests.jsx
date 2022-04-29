@@ -46,6 +46,7 @@ const MyDataInterests = ({}) => {
 			}
             labels={["Arts and Culture", "Education", "Health", "Community Development", "Environment", "Civil Rights", "Animals", "Science and Research", "International Development"]}
         />
+        <br/>
         <CategoryCard
             title="Types of Ads you'd like to see"
             img="img/mydata/signup-ads.png"
