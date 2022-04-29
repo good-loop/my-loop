@@ -29,7 +29,7 @@ const DataSharedProgressBar = () => {
 	)
 }
 
-const CollapseSettings = ({title, defaultCollapse, children}) => {
+const CollapseSettings = ({title, defaultCollapse, headerIMG, children}) => {
 	if (!defaultCollapse) defaultCollapse = false;
 	const [settingsOpen, setSettingsOpen] = useState(defaultCollapse);
 	const settingsToggle = () => setSettingsOpen(!settingsOpen);
@@ -37,7 +37,7 @@ const CollapseSettings = ({title, defaultCollapse, children}) => {
 	return (
 	<MyDataCard
 		className="my-3"
-		img="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/spring-flowers-1613759017.jpg?crop=0.669xw:1.00xh;0.0635xw,0&resize=640:*"
+		img={headerIMG}
 		>
 			<a onClick={settingsToggle}> <div className="d-flex justify-content-between align-items-center">
 				<h5>✓ {title}</h5> <span className='text-muted' style={{fontSize:'1.5rem'}}>{settingsOpen ? '˄' : '˅'}</span>
@@ -111,24 +111,24 @@ const DataProfile = () => {
 
 	return (<Container>
 		<DataSharedProgressBar />
-		<CollapseSettings title="Personal Info" defaultCollapse={true}>
+		<CollapseSettings title="Personal Info" headerIMG="img/mydata/profile-personal.png" defaultCollapse={true}>
 			<SettingItem description="Your name" itemKey="name"/>
 			<SettingItem description="Your email" itemKey="email"/>
 			<SettingItem description="Your date of birth" itemKey="birthday" type="date"/>
 			<SettingItem description="Your gender" itemKey="gender" type="gender" />
 		</CollapseSettings>
 
-		<CollapseSettings title="Demographic Details" >
+		<CollapseSettings title="Demographic Details" headerIMG="img/mydata/profile-demographic.png" >
 			<SettingItem description="Your country" itemKey="location-country" type="country" />
 			<SettingItem description="Your region" itemKey="location-region"/>
 		</CollapseSettings>
 
-		<CollapseSettings title="Your interests" >
+		<CollapseSettings title="Your interests" headerIMG="img/mydata/profile-interests.png" >
 			<SettingItem description="Causes you're interested in" itemKey="causes"/>
 			<SettingItem description="Types of Ads you'd like to see" itemKey="adstype"/>
 		</CollapseSettings>
 
-		<CollapseSettings title="Connect your social accounts">
+		<CollapseSettings title="Connect your social accounts" headerIMG="img/mydata/profile-social.png">
 			TODO
 		</CollapseSettings>
 </Container>)
