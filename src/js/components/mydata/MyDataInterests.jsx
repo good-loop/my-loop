@@ -37,9 +37,12 @@ const MyDataInterests = ({}) => {
         <CategoryCard
             title="Causes you're interested in"
             img="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/spring-flowers-1613759017.jpg?crop=0.669xw:1.00xh;0.0635xw,0&resize=640:*"
-            info="What do you want to support?"
+            info="What do you want to support? We use this to select projects and charities to show you, and to prefer adverts that support charities in these areas."
             prop="causes"
-            options={["arts", "education", "health", "community", "environment", "civil rights", "animals", "science", "international"]}
+            options={
+				// See NGO.CATEGORY
+				["culture", "education", "health", "community", "environment", "civil rights", "animals", "research", "international"]
+			}
             labels={["Arts and Culture", "Education", "Health", "Community Development", "Environment", "Civil Rights", "Animals", "Science and Research", "International Development"]}
         />
         <CategoryCard

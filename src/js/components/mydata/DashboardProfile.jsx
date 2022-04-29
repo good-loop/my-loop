@@ -39,6 +39,11 @@ const CollapseSettings = ({title, defaultCollapse, children}) => {
 	</MyDataCard>)
 }
 
+/**
+ * ?? How does this overlap with the questions during sign-up??
+ * @param {Object} p
+ * @returns 
+ */
 const SettingItem = ({description, itemKey, type, emailPropControl, ...props}) => {
 	let itemValue = getPersonSetting({key: itemKey});
 	if (itemKey == 'email') { // Not allow user to change email
@@ -90,7 +95,8 @@ const SettingItem = ({description, itemKey, type, emailPropControl, ...props}) =
 	</Collapse>
  
 	</>)
-}
+} // ./SettingItem
+
 
 const DataProfile = () => {
 

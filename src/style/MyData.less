@@ -191,6 +191,8 @@
 }
 
 .mydata-badge {
+    text-decoration: none;
+
     position: relative;
     margin-bottom: 30px;
     circle {
@@ -206,8 +208,21 @@
         border-radius: 50%;
         z-index: -1;
         background-position: center;
+        background-color: grey;
     }
     .plus-sign {
         position: absolute;
+    }
+    .notification {
+        position: absolute;
+        border-radius: 50%;
+        background: red;
+        color: white;
+        .number {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -40%);
+        }
     }
 }
