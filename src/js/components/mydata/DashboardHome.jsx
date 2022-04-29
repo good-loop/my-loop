@@ -7,6 +7,9 @@ import { getDataList } from '../../base/plumbing/Crud';
 import KStatus from '../../base/data/KStatus';
 import Misc from '../../base/components/Misc';
 import ServerIO from '../../plumbing/ServerIO';
+import SearchQuery from '../../base/searchquery';
+import { getDataLogData } from '../../base/plumbing/DataLog';
+import Icon from '../../base/components/Icon';
 
 const LatestNewsCard = () => {
 	const pvNgo = getCharityObject();
@@ -69,10 +72,16 @@ const ThisWeeksAdCard = () => {
 	let pvMyAds = getDataList({type:"ScheduledContent", status:KStatus.PUBLISHED, domain:ServerIO.PORTAL_ENDPOINT});		
 	let schedcon = pvMyAds.value && List.first(pvMyAds.value);
 	let adid = schedcon && schedcon.adid;
-	// FIXME query datalog for evt:donation vert:adid BUT need the adunit here to log your user id!
-	// const pvData = getDataLogData({dataspace:"gl",q:"evt:donation",start:"3 months ago",end:"now",name:"watched-this-weeks",});
-	// let watched = pvData.value; 
-	let watched = false; // TODO remmove after pvData got fixec
+	// if ( TODO ! adid) {
+	// 	return <p>No ad available.</p>
+	// }
+	// query datalog for evt:minview vert:adid BUT need the adunit here to log your user id!
+	let sq = new SearchQuery("evt:minview");
+	sq = SearchQuery.setProp(sq, "vert", adid);
+	sq = SearchQuery.setProp(sq, "user", Login.getId());
+	let q = sq.query;
+	const pvData = getDataLogData({dataspace:"gl",q, start:"3 months ago",end:"now",name:"watched-this-weeks",});
+	let watched = pvData.value && pvData.value.allCount; 
 	return (<Container className='dashboard-card'>
 			<h1>Watch This Week's Ad {watched && <Done />}</h1>			
 			{pvMyAds.resolved? <GoodLoopUnit vertId={adid} /> : <Misc.Loading />}
