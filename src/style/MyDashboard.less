@@ -1,7 +1,34 @@
 
 .dashboard-card {
 	border: solid 1px @gl-dark-grey;
-	border-radius: 0.25rem; // .rounded 
+	border-radius: 0.75rem; // .rounded 
 	padding: 1rem; // .py3
 	.large()
+}
+
+.dashboard-ad {
+	border-radius: 0.5rem;
+	overflow: hidden;
+}
+
+.watch-ad-done {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	.green-tick {
+		width: 80%;
+	}
+	.watched-text {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
 }

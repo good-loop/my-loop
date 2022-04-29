@@ -1,5 +1,5 @@
-import React from 'react';
-import { Container, Row, Col} from 'reactstrap';
+import React, { useState } from 'react';
+import { Container, Row, Col, Button} from 'reactstrap';
 import { ProfileDot } from './MyDataCommonComponents';
 import { getCharityObject, getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
 import GoodLoopUnit from '../../base/components/GoodLoopUnit';
@@ -70,6 +70,9 @@ const DashboardHome = () => {
 
 
 const ThisWeeksAdCard = () => {
+
+	const [watchAnyway, setWatchAnyway] = useState(false);
+
 	// load ad from scheduledcontent
 	// TODO filter by start, end
 	let pvMyAds = getDataList({type:"ScheduledContent", status:KStatus.PUBLISHED, domain:ServerIO.PORTAL_ENDPOINT});		
@@ -84,14 +87,23 @@ const ThisWeeksAdCard = () => {
 	sq = SearchQuery.setProp(sq, "user", Login.getId());
 	let q = sq.query;
 	const pvData = getDataLogData({dataspace:"gl",q, start:"3 months ago",end:"now",name:"watched-this-weeks",});
-	let watched = pvData.value && pvData.value.allCount; 
+	let watched = !!(pvData.value && pvData.value.allCount) && !watchAnyway; 
 	return (<Container className='dashboard-card'>
-			<h1>Watch This Week's Ad {watched && <Done />}</h1>			
-			{pvMyAds.resolved? <GoodLoopUnit vertId={adid} /> : <Misc.Loading />}
-			<p>When you watch one of our ads 50% of the ad fee goes to charity.</p>
+			<h1>Watch This Week's Ad</h1>
+			<div className="position-relative">
+			{!watched ? <>
+				{pvMyAds.resolved? <GoodLoopUnit vertId={adid} className="dashboard-ad" /> : <Misc.Loading />}
+			</> : <div className="watch-ad-done">
+				<img src="/img/mydata/green_tick.png" className="green-tick"/>
+				<div className="watched-text">
+					<h3>Weekly watch done!</h3>
+					<Button color="primary" onClick={() => setWatchAnyway(true)}>Watch it again</Button>
+				</div>
+			</div>}
+			</div>
+			<br/>
+			<p className="text-center">When you watch one of our ads 50% of the ad fee goes to charity.</p>
 		</Container>);
 };
-
-const Done = () => <Icon name="tick" size="lg" color="green" />;
 
 export default DashboardHome;
