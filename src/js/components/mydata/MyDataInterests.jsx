@@ -1,10 +1,11 @@
 import React from 'react';
+import { Button } from 'reactstrap';
 import NGO from '../../base/data/NGO';
 import CharityLogo from '../CharityLogo';
 import UserClaimControl from '../../base/components/PropControls/UserClaimControl';
 import { getDataItem } from '../../base/plumbing/Crud';
 import NGOImage from '../../base/components/NGOImage';
-import { MyDataCard, Steps, SkipNextBtn, ProfileCreationSteps } from './MyDataCommonComponents';
+import { MyDataCard, Steps, ProfileCreationSteps } from './MyDataCommonComponents';
 import { nextSignupPage } from './MyDataSignUp';
 
 /**
@@ -53,7 +54,11 @@ const MyDataInterests = ({}) => {
             options={["videoads", "bannerads"]}
             labels={["Video Ads", "Banner Ads"]}
         />
-        <SkipNextBtn skip={true} />
+        <br />
+        <div className="d-flex flex-row align-items-center justify-content-center">
+            <Button color="primary" className="w-100" onClick={nextSignupPage}>Next</Button>
+        </div>
+       
     </>;
 
 };
