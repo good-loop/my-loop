@@ -164,11 +164,11 @@ const MyDataDashboard = () => {
 		return true;
 	}
 
-	const toggleInfoData = () => {
+	const toggleShowInfoData = () => {
 		setShowInfoData(!showInfoData);
 	}
 	
-	const toggleInfoTabs = () => {
+	const toggleShowInfoTabs = () => {
 		setShowInfoTabs(!showInfoTabs);
 	}
 
@@ -193,7 +193,7 @@ const MyDataDashboard = () => {
 		</Container>
 		<br/>
 		<Container id='badges' className='d-flex justify-content-between'>
-			<MyDataBadge badgeName="Data" progress={getDataProgress()} backgroundImage="img/mydata/data-badge.png" notification={1} toggle={toggleShowInfo}/>
+			<MyDataBadge badgeName="Data" progress={getDataProgress()} backgroundImage="img/mydata/data-badge.png" notification={1} toggle={toggleShowInfoData}/>
 			<MyDataBadge badgeName="Tabs" progress={getT4GProgress()} backgroundImage="img/mydata/tabs-badge.png" toggle={toggleShowInfoTabs} />
 			<MyDataBadge badgeName="Ads" backgroundImage="img/mydata/ads-badge.png" toggle={toggleShowInfoAds} />
 		</Container>
