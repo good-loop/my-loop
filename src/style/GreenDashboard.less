@@ -18,10 +18,25 @@
 		width: 100%;
 		display: flex;
 
-		.btn {
-			border: none;
-			box-shadow: none;
+		.filter-dropdown .btn.dropdown-toggle {
+			border: none !important;
+			box-shadow: none !important;
+			background: transparent !important;
+			color: black !important;
+			padding: 0.4rem;
 		}
+
+		// The tick next to the currently selected item
+		.selected-marker {
+			position: absolute;
+			left: 0;
+			width: 1.5rem; // matched to dropdown-button horizontal padding
+			text-align: center;
+			&:before {
+				content: "✔";
+			}
+		}
+
 	}
 
 	.greendash-overview {
@@ -116,6 +131,55 @@
 						top: -2.2em;
 					}
 				}
+			}
+		}
+	}
+}
+
+.select-date-range {
+	display: flex;
+	flex-direction: row;
+	text-transform: none;
+	margin: 0.5rem 1rem;
+
+	.months-container {
+		display: flex;
+		flex-direction: row;
+	}
+	.presets-container {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		margin-left: 0.5rem;
+		.preset {
+			white-space: nowrap; // take necessary width
+		}
+	}
+
+	.month {
+		text-align: center;
+		&:not(:first-child) {
+			margin-left: 0.5rem;
+		}
+		.day-names {
+			th { font-weight: normal; } // override browser-standard bold weight
+		}
+		.day {
+			line-height: 1;
+			padding: 0.3em 0.25em;
+			text-align: center;
+			&.selected {
+				background-color: @greenmedia-darkcyan;
+				color: white;
+				font-weight: bold;
+			}
+			&.sel-start {
+				border-top-left-radius: 0.25em;
+				border-bottom-left-radius: 0.25em;
+			}
+			&.sel-end {
+				border-top-right-radius: 0.25em;
+				border-bottom-right-radius: 0.25em;
 			}
 		}
 	}
