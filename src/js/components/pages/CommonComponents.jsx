@@ -128,20 +128,20 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 									<h1 className='text-left bolder'>{title}</h1>
 									<p className='leader-text nomargin'>{text}</p>
 								</div>
-								<div className="cta-buttons text-uppercase mt-5">
-										<T4GCTA className="w-100"/>
-										<button className="btn btn-secondary w-100 text-uppercase mt-3"	
-											onClick={e => scrollTo("howitworks")}										
-										>
-												See how it works
-										</button>
+								<div className='product'>
+									<h4>Tabs for Good</h4>
+									<T4GCTA className="w-100"/>
+									<button className="btn btn-secondary w-100 text-uppercase mt-3"	
+										onClick={e => scrollTo("howitworks")}										
+									>
+										See how Tabs-for-Good works
+									</button>
 								</div>
-
-								<Row>
-									<MyDataSignUpButton />
+								<div className='product'>
+									<h4><span className="new">new</span> My Data</h4>
+									<MyDataSignUpButton className="w-100 mt-3" />
 									<MyDataSignUpModal />
-								</Row>
-
+								</div>
 						</Col>
 						{shiftLeft && <Col md={6} className='d-none d-xl-block' style={{zIndex:'-99'}}></Col>}
 				</Row>
@@ -245,8 +245,8 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 		<BG src="/img/homepage/slide-2.png" className="slide-img" center></BG>
 	]
 
-	const slides = items.map((content, i) => (<>
-		<Row className="slideshow" noGutters key={content}>
+	const slides = items.map((content, i) => (
+		<Row className="slideshow" noGutters key={i}>
 			<Col md={6} className="slide-left overflow-hidden">
 				{images[i]}
 			</Col>
@@ -260,7 +260,7 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 				</div>
 			</Col>
 		</Row>
-	</>));
+	));
 
 	return (<>
 		<PageCard className={space("tabs-for-goods-slide-card", bgClassName)}>

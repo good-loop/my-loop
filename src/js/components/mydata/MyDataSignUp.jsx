@@ -26,19 +26,12 @@ const showMyDataSignUpModal = (s=true) => {
 /**
  * A button to start the MyData sign-up flow.
  */
- export const MyDataSignUpButton = ({className}) => {		
-	return (<>
-		<MyDataSignUpLink className={space("MyDataSignUpButton btn btn-primary", className)}/>
-	</>);
-};
-
-const MyDataSignUpLink = ({className, children, onClick}) => {
+ export const MyDataSignUpButton = ({className,children}) => {		
 	return (
-		<a className={space(className)} href={window.location} 
+		<a className={space("btn btn-primary", className)} href={window.location} 
 			onClick={e => {
 				stopEvent(e);
 				showMyDataSignUpModal();
-				if (onClick) onClick();
 			}} >
 			{children || "Sign Up for My Data"}
 		</a>
@@ -127,8 +120,8 @@ const MyDataSignUp = () => {
 	const PageComponent = PAGES[page];
 	
 	return <div className="mydata-signup">
-		<a className="btn btn-secondary" onClick={prevSignupPage}>Back</a>
-		<a className="btn btn-secondary" onClick={nextSignupPage}>Next</a>
+		{/* debug tools only <a className="btn btn-secondary" onClick={prevSignupPage}>Back</a>
+		<a className="btn btn-secondary" onClick={nextSignupPage}>Next</a> */}
 		<PageComponent />
 	</div>;
 };

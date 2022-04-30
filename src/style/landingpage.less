@@ -78,3 +78,30 @@
 		}
 	}
 }
+
+/* card for grouping product CTAs on the splash screen */
+.product {
+	margin-top: 1rem; // 1rem = mt-3
+	border: solid 1px @gl-red;
+	border-radius: 0.75rem; // 0.75rem = .rounded 
+	padding: 0.75rem;
+	h4 {	// small centred top text
+		color: @gl-red;
+		font-size: 1rem; 
+		text-align: center;
+		margin-top: -0.25rem;
+		margin-bottom: 0.25rem;
+	}
+}
+
+/* text badge for a new product */
+.new {
+	-webkit-transform: rotate(-25deg);
+    /* transform: rotateX(-25deg); only supports 90 degrees, Apr 2022 */
+    color: #e82316;
+    display: inline-block;
+	color: @gl-light-orange;
+	font-size: 80%;
+	margin-left: -2rem; // "new" doesn't affect layout of the text it is on by much
+	position: relative;	top: -0.35rem;	// a bit above the text
+}
