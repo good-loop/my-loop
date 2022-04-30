@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 /**
  * 
@@ -6,10 +6,9 @@ import React from "react";
  * @param {int} progress 
  * @param {int} notification
  * @param {int} size of the badge in px, default is 100.
- * @param {string} linkTo url to link to when clicking the badge.
  * @returns 
  */
-const MyDataBadge = ({progress, badgeName, backgroundImage, notification, size, linkTo}) => {
+const MyDataBadge = ({progress, badgeName, backgroundImage, notification, size, toggle}) => {
 	if (!progress) {
 		progress = 0;
 		notification = null;
@@ -27,8 +26,8 @@ const MyDataBadge = ({progress, badgeName, backgroundImage, notification, size, 
 	const circumference = normalizedRadius * 2 * Math.PI;
 	const strokeDashoffset = circumference - progress / 100 * circumference;
 
-	return ( <a href={linkTo}>
-	<div className="mydata-badge text-center" style={{height:size+"px",width:size+"px"}}>
+	return (
+	<div className="mydata-badge text-center" style={{height:size+"px",width:size+"px"}} onClick={toggle}>
 		<div className="inner" style={{backgroundImage:`url('${backgroundImage}')`,backgroundSize:innerSize,width:innerSize,height:innerSize}}></div>
 		<svg
 			height={radius * 2}
@@ -50,7 +49,7 @@ const MyDataBadge = ({progress, badgeName, backgroundImage, notification, size, 
 		{!progress && <img src="/img/mydata/plus_whitebg.svg" className="plus-sign" style={{width:size*.2,top:plusSignTop,right:plusSignRight}} />}
 		{notification && <div className="notification" style={{height:size*.2, width:size*.2,top:size*.4,right:"0"}}>
 			<div className="number" style={{fontSize:size*.125}}>{notification}</div></div>}
-	</div></a>)
+	</div>)
 };
 
 export default MyDataBadge;

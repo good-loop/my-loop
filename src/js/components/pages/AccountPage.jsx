@@ -1,5 +1,5 @@
-import React from 'react';
-import { Col, Row } from 'reactstrap';
+import React, { useState } from 'react';
+import { Col, Row, Container, Button } from 'reactstrap';
 import { addImageCredit } from '../../base/components/AboutPage';
 import Editor3ColLayout, { LeftSidebar, MainPane } from '../../base/components/Editor3ColLayout';
 import { LoginLink } from '../../base/components/LoginWidget';
@@ -83,25 +83,23 @@ const Page = () => {
 
 	// Which tab? (default to dashboard)
 	const tab = DataStore.getUrlValue('tab') || 'dashboard';
+	const [menuOpen, setMenuOpen] = useState(false);
 
 	return (<>
 		<div className="AccountPage">
-			<Editor3ColLayout>
-				<LeftSidebar hideOnMobile>
-					<div className="account-sidebar pl-3">
-						<h5 className="p-2">My Good-Loop</h5>
-						{Object.keys(label4tab).map(t => <SidebarTabLink key={t} tab={t} label={label4tab[t]} selected={t === tab} />)}
-					</div>
-				</LeftSidebar>
-				<MainPane className="px-0">
-					<div className="pt-3">
-						{tab === 'dashboard' && <MyDataDashboard />}
-						{tab === 'account' && <Account />}
-						{tab === 'settings' && <AccountSettings />}
-						{tab === 'tabsForGood' && <TabsForGoodSettings />}
-					</div>
-				</MainPane>
-			</Editor3ColLayout>
+			<div className={space("side-menu", menuOpen && "open")}>
+				<Button color="secondary" className="mt-2 ml-2" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? "<<" : ">>"}</Button>
+				<div className="account-sidebar pl-3">
+					<h5 className="p-2">My Good-Loop</h5>
+					{Object.keys(label4tab).map(t => <SidebarTabLink key={t} tab={t} label={label4tab[t]} selected={t === tab} />)}
+				</div>
+			</div>
+			<Container className="pt-3">
+				{tab === 'dashboard' && <MyDataDashboard />}
+				{tab === 'account' && <Account />}
+				{tab === 'settings' && <AccountSettings />}
+				{tab === 'tabsForGood' && <TabsForGoodSettings />}
+			</Container>
 		</div>
 	</>);
 };

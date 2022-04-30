@@ -89,12 +89,12 @@ export const Steps = ({step, steps}) => {
     assert(steps);
 
     const StepCircle = ({idx, active}) => <>
-        <div className={space("step-circle", active==idx && "step-circle-active")}/>
-        {idx != steps.length - 1 && <div className="step-circle-connector"/>}
+        <div className={space("step-circle", active==idx && "step-circle-active", active > idx && "step-circle-completed")}/>
+        {idx != steps.length - 1 && <div className={space("step-circle-connector", active > idx && "step-circle-connector-completed")} />}
     </>;
 
-    const StepLabel = ({idx}) => <>
-        <span className="step-label">{steps[idx]}</span>
+    const StepLabel = ({idx, active}) => <>
+        <span className={space("step-label", active==idx && "step-label-active")}>{steps[idx]}</span>
         {idx != steps.length - 1 && <div className="step-label-spacer"/>}
     </>;
 
@@ -103,7 +103,7 @@ export const Steps = ({step, steps}) => {
             {steps.map((e, i) => <StepCircle idx={i} active={step} key={i}/>)}
         </div>
         <div className="step-labels d-flex flex-row justify-content-between align-items-start">
-            {steps.map((e, i) => <StepLabel idx={i} key={i}/>)}
+            {steps.map((e, i) => <StepLabel idx={i} active={step} key={i}/>)}
         </div>
     </div>)
 };
@@ -131,17 +131,23 @@ export const ProfileCreationSteps = ({step}) => {
     ];
 
     return <Steps step={step} steps={steps}/>;
-}
+};
+
+export const ProfileDotRow = ({className, children}) => {
+    return <Row className={space(className, "align-items-stretch profile-dot-row")}>
+        {children}
+    </Row>
+};
 
 export const ProfileDot = ({className, imgUrl, children}) => {
     if (!imgUrl) imgUrl = "/img/placeholder-circle.png"
     return (
-        <div className={space(className, 'd-flex align-items-center mb-3')}>
+        <Col md={4} className={space(className, 'd-flex align-items-center mb-3 mb-md-0')}>
             <img src={imgUrl} style={{width:'2rem',height:'2rem',marginRight:'1rem'}} />
             {children}
-        </div>
+        </Col>
     )
-}
+};
 
 export const SkipNextBtn = ({skip}) => {
     return (
