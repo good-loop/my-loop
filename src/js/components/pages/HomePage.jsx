@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardBody, CardImg, CardText, CardTitle, Container } from 'reactstrap';
+import { Card, CardBody, CardImg, CardText, CardTitle, Col, Container, Row } from 'reactstrap';
 // import PV from 'promise-value';
 import { useSpring } from 'react-spring';
 
@@ -79,25 +79,27 @@ const JoinOurMovement = () => <>
 			<img src="/img/homepage/bird-cloud.png" className='top-right'/>
 			<img src="/img/signup/hand-globe-coins.png" className='top-left'/>
 		</div>
-		<Card>
-			<CardImg variant="top" src="/img/homepage/slide-1.png" />
-			<CardBody>
-				<CardTitle><h3 className='gl-dark-blue'>Tabs for Good</h3></CardTitle>
-				<CardText>Turn your web browsing into charity donations. Easy and free.</CardText>
-				<T4GSignUpButton className="w-100"/>
-				<T4GHowItWorksButton className="w-100" />
-			</CardBody>
-		</Card>
-		<Card>
-			<CardImg className='bg-gl-dark-blue' variant="top" src="/img/mydata/onboarding-2.png" />
-			<CardBody>
-				<CardTitle><h3 className='gl-dark-blue'>My.Data</h3></CardTitle>
-				<CardText>
-					Don't just give it away - support charity with your data
-				</CardText>
-				<MyDataSignUpButton className="w-100 mt-3" /> {/* NB: assume the modal is on the page already */}
-			</CardBody>
-		</Card>
+		<div className="gridbox gridbox-md-2 gridbox-gap-4">
+				<Card>
+					<CardImg variant="top" src="/img/homepage/slide-1.png" />
+					<CardBody>
+						<CardTitle><h3 className='gl-dark-blue'>Tabs for Good</h3></CardTitle>
+						<CardText>Turn your web browsing into charity donations. Easy and free.</CardText>
+						<T4GSignUpButton className="w-100"/>
+						<T4GHowItWorksButton className="w-100" />
+					</CardBody>
+				</Card>
+				<Card>
+					<CardImg className='bg-gl-dark-blue' variant="top" src="/img/mydata/onboarding-2.png" />
+					<CardBody>
+						<CardTitle><h3 className='gl-dark-blue'>My.Data</h3></CardTitle>
+						<CardText>
+							Don't just give it away - support charity with your data
+						</CardText>
+						<MyDataSignUpButton className="w-100 mt-3" /> {/* NB: assume the modal is on the page already */}
+					</CardBody>
+				</Card>
+		</div>
 	</PageCard>
 </>;
 
