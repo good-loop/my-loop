@@ -144,7 +144,7 @@ const CharityLandingPageContent = ({object: ngo}) => {
 	};
 
 	return (<>
-		<MyLandingSection ngo={ngo} shiftLeft/>
+		<MyLandingSection ngo={ngo} shiftLeft mydata={false /* should we list My Data too?? */}/>
 		<CornerHummingbird/>
 		{isPortraitMobile() ? <>
 			<CharityT4GLogos ngo={ngo}/>

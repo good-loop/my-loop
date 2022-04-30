@@ -109,7 +109,7 @@ const MyLandingBackgroundImage = ({bgImg, ngo, children}) => {
 	);
 }
 
-const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
+const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft, t4g=true, mydata=true}) => {
 	const name = NGO.displayName(ngo);
 	
 	if ( ! title) {
@@ -118,6 +118,7 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 	if ( ! text) {
 		text = `Get our Tabs for Good Browser Plugin today and raise money for ${(ngo && name) || "good causes"} - just by browsing the internet.`;
 	}
+	const multiProduct = mydata && t4g; // some extra is needed to separate multiple products
 	return (<>
 		<MyLandingBackgroundImage bgImg={bgImg} ngo={ngo}>
 			<Container fluid className={space("d-flex", !shiftLeft ? "justify-content-center" : "left-padding")}>
@@ -128,20 +129,20 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft}) => {
 									<h1 className='text-left bolder'>{title}</h1>
 									<p className='leader-text nomargin'>{text}</p>
 								</div>
-								<div className='product'>
-									<h4>Tabs for Good</h4>
+								{t4g && <div className={multiProduct && 'product'}>
+									{multiProduct && <h4>Tabs for Good</h4>}
 									<T4GCTA className="w-100"/>
 									<button className="btn btn-secondary w-100 text-uppercase mt-3"	
 										onClick={e => scrollTo("howitworks")}										
 									>
 										See how Tabs-for-Good works
 									</button>
-								</div>
-								<div className='product'>
-									<h4><span className="new">new</span> My Data</h4>
+								</div>}
+								{mydata && <div className={multiProduct && 'product'}>
+									{multiProduct && <h4><span className="new">new</span> My Data</h4>}
 									<MyDataSignUpButton className="w-100 mt-3" />
 									<MyDataSignUpModal />
-								</div>
+								</div>}
 						</Col>
 						{shiftLeft && <Col md={6} className='d-none d-xl-block' style={{zIndex:'-99'}}></Col>}
 				</Row>
