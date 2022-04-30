@@ -10,7 +10,7 @@ import CharityLogo from '../CharityLogo';
 import { SubscriptionForm } from '../cards/SubscriptionBox';
 import Login from '../../base/youagain';
 import BSCarousel from '../../base/components/BSCarousel';
-import { T4GCTA } from '../T4GSignUp';
+import { T4GSignUpButton, T4GHowItWorksButton } from '../T4GSignUp';
 import Roles from '../../base/Roles';
 import { A } from '../../base/plumbing/glrouter';
 import NGOImage from '../../base/components/NGOImage';
@@ -131,15 +131,11 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft, t4g=true, mydata=
 								</div>
 								{t4g && <div className={multiProduct && 'product'}>
 									{multiProduct && <h4>Tabs for Good</h4>}
-									<T4GCTA className="w-100"/>
-									<button className="btn btn-secondary w-100 text-uppercase mt-3"	
-										onClick={e => scrollTo("howitworks")}										
-									>
-										See how Tabs-for-Good works
-									</button>
+									<T4GSignUpButton className="w-100"/>
+									<T4GHowItWorksButton className="w-100" />
 								</div>}
 								{mydata && <div className={multiProduct && 'product'}>
-									{multiProduct && <h4><span className="new">new</span> My Data</h4>}
+									{multiProduct && <h4><span className="new">new</span> My.Data</h4>}
 									<MyDataSignUpButton className="w-100 mt-3" />
 									<MyDataSignUpModal />
 								</div>}
@@ -227,42 +223,6 @@ const T4GCharityScreenshot = ({ngo, className, ...props}) => {
 const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassName}) => {
 	const name = NGO.displayName(ngo);
 
-	const items = [
-		<>
-			<p>Sign up for Tabs for Good.</p>
-			<p>Start browsing with the Tabs for Good plugin.</p>
-			<p>Raise money for {name}. For free.</p>
-		</>,
-		<>
-			<p>Follow your online impact in the My.Good-Loop hub and see how much you’re raising for {name} – just by browsing the internet.</p>
-		</>
-	];
-	const titles = [
-		"It couldn't be easier to get started",
-		"...And see your impact grow"
-	];
-	const images = [
-		<T4GCharityScreenshot ngo={ngo} className="slide-img"/>,
-		<BG src="/img/homepage/slide-2.png" className="slide-img" center></BG>
-	]
-
-	const slides = items.map((content, i) => (
-		<Row className="slideshow" noGutters key={i}>
-			<Col md={6} className="slide-left overflow-hidden">
-				{images[i]}
-			</Col>
-			<Col md={6} className="slide-right p-5">
-				<div key={i} className='d-flex flex-column justify-content-between h-100 p-3'>
-					<h3>{titles[i]}</h3>
-					<div className='slide-content'>
-						{content}
-					</div>
-					<T4GCTA className="t4gcta"/>
-				</div>
-			</Col>
-		</Row>
-	));
-
 	return (<>
 		<PageCard className={space("tabs-for-goods-slide-card", bgClassName)}>
 			{showUpperCTA && <div className="upper-cta white">
@@ -271,16 +231,14 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 				<img src="/img/homepage/bird-cloud.png" className='hummingbird'/>
 				<img src="/img/signup/hand-globe-coins.png" className='hand-globe'/>
 				<div className="mt-5">
-					<T4GCTA className="w-50 d-block mx-auto"/>
+					<T4GSignUpButton className="w-50 d-block mx-auto"/>
 
 					<Button className="btn btn-secondary text-uppercase mt-3 w-50 d-block mx-auto" href="/tabsforgood">						
 						Learn More <span className="d-none d-md-inline">About Tabs for Good</span>
 					</Button>
 				</div>
 			</div>}
-			<BSCarousel className="d-none d-md-flex mt-5">
-				{slides}
-			</BSCarousel>
+			<TabsForGoodSlideSection2 ngo={ngo} />
 		</PageCard>
 
 		{showLowerCTA && <>
@@ -316,6 +274,50 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 			</CurvePageCard>
 		</>}
 	</>)
+};
+
+export const TabsForGoodSlideSection2 = ({ngo}) => {
+	const name = NGO.displayName(ngo) || "charity";
+	const items = [
+		<>
+			<p>Sign up for Tabs for Good.</p>
+			<p>Start browsing with the Tabs for Good plugin.</p>
+			<p>Raise money for {name}. For free.</p>
+		</>,
+		<>
+			<p>Follow your online impact in the My.Good-Loop hub and see how much you're raising for {name} - just by browsing the internet.</p>
+		</>
+	];
+
+	const titles = [
+		"It couldn't be easier to get started",
+		"...And see your impact grow"
+	];
+	const images = [
+		<T4GCharityScreenshot ngo={ngo} className="slide-img"/>,
+		<BG src="/img/homepage/slide-2.png" className="slide-img" center></BG>
+	]
+
+	return (
+	<BSCarousel className="d-none d-md-flex mt-5">
+		{items.map((content, i) => 
+			<Row className="slideshow" noGutters key={i}>
+				<Col md={6} className="slide-left overflow-hidden">
+					{images[i]}
+				</Col>
+				<Col md={6} className="slide-right p-5">
+					<div key={i} className='d-flex flex-column justify-content-between h-100 p-3'>
+						<h3>{titles[i]}</h3>
+						<div className='slide-content'>
+							{content}
+						</div>
+						<T4GSignUpButton className="t4gcta"/>
+					</div>
+				</Col>
+			</Row>
+		)}
+		</BSCarousel>
+	);
 };
 
 const NewsAwards = ({children}) => {
@@ -454,12 +456,12 @@ const PositivePlaceSection = ({className, showCTA}) => {
 				<p className="white">Keeping your online privacy safe no matter what</p>
 			</Col>
 		</Row>
-		{showCTA && <T4GCTA className="mt-5" />}
+		{showCTA && <T4GSignUpButton className="mt-5" />}
 	</PageCard>
 }
 
 const WatchVideoSection = () => {
-	let videoLink = isMobile ? "img/homepage/t4gpromovid_480p.m4v" : "img/homepage/t4gpromovid_720p.m4v";
+	let videoLink = isMobile() ? "img/homepage/t4gpromovid_480p.m4v" : "img/homepage/t4gpromovid_720p.m4v";
 
 	const [preview, setPreview] = useState('');
 	const vidRef = useRef(null);
@@ -472,7 +474,7 @@ const WatchVideoSection = () => {
 	return(<>
 	<PageCard className="watch-video-section">
 		<div className="text-center">
-			<h1 className='pt-5'>Watch To See How We’re Creating A Movement</h1>
+			<h1 className='pt-5'>Watch To See How We're Creating A Movement</h1>
 			<div className="promovid">
 				<img className={space(preview, 'w-100')} src="img/homepage/video_preview.png" alt="video preview" onClick={playVideo}/>
 				<video ref={vidRef} className='w-100' preload="auto" controls>
@@ -482,9 +484,9 @@ const WatchVideoSection = () => {
 			<img src="/img/green/hummingbird.png" className='hummingbird d-none d-md-block'/>
 			<img src="/img/signup/hand-globe-coins.png" className='hand-globe-coins d-none d-md-block' />
 			<div className="m-5">
-				<p className='leader-text'>We’re working with fantastic brands that want to join us in making the internet a more positive place. <br/><br/>
-				The way we’re doing it couldn’t be simpler. We just need the final piece of the puzzle to make it happen – you. Sign up and join the Good-Loop movement today. </p>
-				<T4GCTA className="mx-5 mt-5" dUnset />
+				<p className='leader-text'>We're working with fantastic brands that want to join us in making the internet a more positive place. <br/><br/>
+				The way we're doing it couldn't be simpler. We just need the final piece of the puzzle to make it happen - you. Sign up and join the Good-Loop movement today. </p>
+				<T4GSignUpButton className="mx-5 mt-5" dUnset />
 				{/* <p className='our-story black m-5 pb-5'>Want to learn more? Check out <a href="#">OUR STORY</a></p> */}
 			</div>
 			
@@ -581,7 +583,7 @@ const WhatIsTabsForGood	= ({ngo}) => {
 				</Col>*/}
 			</Row>
 			<img className="d-md-none w-100" src="/img/LandingCharity/laptop-1.png" />
-			<T4GCTA className="mx-auto"/>
+			<T4GSignUpButton className="mx-auto"/>
 		</PageCard>
 	</>);
 };

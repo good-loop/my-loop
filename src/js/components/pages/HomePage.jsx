@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container } from 'reactstrap';
+import { Card, CardBody, CardImg, CardText, CardTitle, Container } from 'reactstrap';
 // import PV from 'promise-value';
 import { useSpring } from 'react-spring';
 
@@ -21,9 +21,13 @@ import {
 	CharityBanner,
 	MyLandingSection,
 	PositivePlaceSection,
-	CurvePageCard
+	CurvePageCard,
+	PageCard,
+	TabsForGoodSlideSection2
 } from './CommonComponents';
 import { setFooterClassName } from '../Footer';
+import { T4GHowItWorksButton, T4GSignUpButton } from '../T4GSignUp';
+import { MyDataSignUpButton } from '../mydata/MyDataSignUp';
 
 window.DEBUG = false;
 
@@ -47,23 +51,8 @@ const HomePage = ({spring}) => {
 	return (<>
 		<div className="HomePage widepage">
 			<MyLandingSection shiftLeft/>
-
-			{/*
-			<br/>
-
-			<h1>Test H1</h1>
-			<h2>Test H2</h2>
-			<h3>Test H3</h3>
-			<p className='splash-text'>Splash screen paragraph</p>
-			<p className='leader-text'>Leader paragraph</p>
-			<p>Body copy</p>
-
-			<br/>
-			*/}
-
 			<CharityBanner />
-			<HowTabsForGoodWorks />
-			<TabsForGoodSlideSection img="/img/homepage/charities.png" showUpperCTA />
+			<JoinOurMovement />
 			<NewsAwards />
 			<PositivePlaceSection className="blue-gradient"/>
 			<WatchVideoSection />
@@ -82,11 +71,34 @@ const HomePage = ({spring}) => {
 	</>);
 };
 
-const showRegisterForm = e => {
-	stopEvent(e);
-	setLoginVerb('register');
-	setShowLogin(true);
-};
-
+const JoinOurMovement = () => <>	
+	<PageCard className="tabs-for-goods-slide-card" >
+		<div className="upper-cta white">
+			<h1 className='mb-4 white'>Join Our Movement!</h1>
+			<p className='leader-text text-center'>Start transforming your web browsing into life saving vaccines, meals for children in need, habitats for endangered animals, plus many more good causes.</p>
+			<img src="/img/homepage/bird-cloud.png" className='top-right'/>
+			<img src="/img/signup/hand-globe-coins.png" className='top-left'/>
+		</div>
+		<Card>
+			<CardImg variant="top" src="/img/homepage/slide-1.png" />
+			<CardBody>
+				<CardTitle><h3 className='gl-dark-blue'>Tabs for Good</h3></CardTitle>
+				<CardText>Turn your web browsing into charity donations. Easy and free.</CardText>
+				<T4GSignUpButton className="w-100"/>
+				<T4GHowItWorksButton className="w-100" />
+			</CardBody>
+		</Card>
+		<Card>
+			<CardImg className='bg-gl-dark-blue' variant="top" src="/img/mydata/onboarding-2.png" />
+			<CardBody>
+				<CardTitle><h3 className='gl-dark-blue'>My.Data</h3></CardTitle>
+				<CardText>
+					Don't just give it away - support charity with your data
+				</CardText>
+				<MyDataSignUpButton className="w-100 mt-3" /> {/* NB: assume the modal is on the page already */}
+			</CardBody>
+		</Card>
+	</PageCard>
+</>;
 
 export default HomePage;

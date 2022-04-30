@@ -9,7 +9,7 @@ import { isPortraitMobile } from '../../base/utils/miscutils';
 import C from '../../C';
 import CharityLogo from '../CharityLogo';
 import { setFooterClassName } from '../Footer';
-import { T4GCTA } from '../T4GSignUp';
+import { T4GSignUpButton } from '../T4GSignUp';
 import { MyLandingSection, HowTabsForGoodWorks, PageCard, TabsForGoodSlideSection, TriCards, WhatIsTabsForGood, CornerHummingbird } from './CommonComponents';
 import ShareButton from '../ShareButton';
 import ServerIO from '../../plumbing/ServerIO';
@@ -44,7 +44,7 @@ const HelpCharityTogetherCard = ({ngo}) => {
 					<h3>What {name} is doing</h3>
 					<NGODescription ngo={ngo}/>
 				</div>
-				<T4GCTA className="w-100"/>
+				<T4GSignUpButton className="w-100"/>
 			</Col>
 		</Row>
 
@@ -58,7 +58,7 @@ const HelpCharityTogetherCard = ({ngo}) => {
 						<h3>Together we'll do more</h3>
 						<NGODescription ngo={ngo} extended/>
 					</div>
-					<T4GCTA className="w-100"/>
+					<T4GSignUpButton className="w-100"/>
 				</Col>
 				<Col className="d-none d-md-block" md={6}>
 					<NGOImage ngo={ngo} className="w-100" imgIdx={2}/>
@@ -127,7 +127,7 @@ const SignUpSection = ({ngo}) => {
 					</Col>
 				</Row>
 			}
-			<T4GCTA className="mt-5"/>
+			<T4GSignUpButton className="mt-5"/>
 			<CharityT4GLogos ngo={ngo} className="mt-5" autosize/>
 		</PageCard>
 	)

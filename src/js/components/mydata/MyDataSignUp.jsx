@@ -33,7 +33,7 @@ const showMyDataSignUpModal = (s=true) => {
 				stopEvent(e);
 				showMyDataSignUpModal();
 			}} >
-			{children || "Sign Up for My Data"}
+			{children || "Sign Up for My.Data"}
 		</a>
 	);
 }

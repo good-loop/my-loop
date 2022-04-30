@@ -39,7 +39,7 @@ import BlogPage from './pages/BlogPage';
 import OurStoryPage from './pages/OurStoryPage';
 import ForBusinessPage from './pages/ForBusinessPage';
 import ForCharityPage from './pages/ForCharityPage';
-import { T4GCTA, T4GSignUpModal, T4GPluginButton } from './T4GSignUp';
+import { T4GSignUpButton, T4GSignUpModal, T4GPluginButton } from './T4GSignUp';
 import { MyLoginWidgetGuts } from './MyLoginWidgetGuts';
 import BlogContent from './pages/BlogContent';
 import SafariPage from './pages/SafariPage';
@@ -135,7 +135,7 @@ const MainDiv = () => {
 		navbarPages={navPageLinks}
 		navbarLabels={navPageLabels}
 		navbarDarkTheme={false}
-		navbarChildren={() => <><T4GCTA>Get Tabs for Good on Desktop</T4GCTA><T4GSignUpModal /></>}
+		navbarChildren={() => <><T4GSignUpButton>Get Tabs for Good on Desktop</T4GSignUpButton><T4GSignUpModal /></>}
 		navbarBackgroundColour="white"
 		navbarAccountMenuItems={mobileNavAccountMenuItems}
 		NavExpandSize="md"

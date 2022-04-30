@@ -118,6 +118,15 @@ img {
 	background-color: @gl-light-blue;
 	// color: white; done with .white instead
 	
+	.card {
+		border: 0;
+		text-align: center;
+		margin-top: 2rem;
+		.card-img {
+			max-height: 250px;
+		}
+	}
+
 	.BSCarousel.carousel.slide {
 		border: 1px solid @gl-dark-grey;
 		border-radius: 10px;
@@ -150,20 +159,23 @@ img {
 			}
 		}
 	}
+} // ./tabs-for-goods-slide-card
 
-	.hummingbird {
-		position: absolute;
-		width: 10%;
-		top: 3%;
-		right: 3%;
-	}
-	.hand-globe {
-		position: absolute;
-		top: 7%;
-		width: 10%;
-		left: 0;
-	}
+/* put the hummingbird in the top right of a card */
+.top-right {
+	position: absolute;
+	width: 10%;
+	top: 1rem;
+	right: 3%;
 }
+/* put the hand-globe in the top left of a card */
+.top-left {
+	position: absolute;
+	top: 1rem;
+	width: 10%;
+	left: 0;
+}
+
 
 
 .positive-place-section {
