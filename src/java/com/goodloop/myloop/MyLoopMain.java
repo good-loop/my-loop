@@ -3,6 +3,7 @@ package com.goodloop.myloop;
 import com.winterwell.web.app.AMain;
 import com.winterwell.web.app.BasicSiteConfig;
 import com.winterwell.web.app.JettyLauncher;
+import com.winterwell.web.app.LogServlet;
 
 public class MyLoopMain extends AMain<BasicSiteConfig> {
 
@@ -18,6 +19,7 @@ public class MyLoopMain extends AMain<BasicSiteConfig> {
 	@Override
 	protected void addJettyServlets(JettyLauncher jl) {
 		super.addJettyServlets(jl);
+		jl.addServlet("/log", LogServlet.class);	
 		jl.addServlet("/*", MetaHtmlServlet.class);
 	}
 }
