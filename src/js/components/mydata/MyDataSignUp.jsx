@@ -12,8 +12,9 @@ import MyDataSelectCharity from './MyDataSelectCharity';
 import MyDataGetStarted from './MyDataGetStarted';
 import MyDataInterests from './MyDataInterests';
 import MyDataDetails from './MyDataDetails';
-import MyDataProfileCreated from './MyDataProfileCreated';
+import MyDataProfileCreated, { ExplainPrivacyPages } from './MyDataProfileCreated';
 import LinkOut from '../../base/components/LinkOut';
+import { modifyPage } from '../../base/plumbing/glrouter';
 
 const WIDGET_PATH = ['widget', 'MyDataSignUp'];
 const SHOW_PATH = [...WIDGET_PATH, 'show'];
@@ -102,6 +103,7 @@ const PAGES = [
 	MyDataInterests, //4
 	MyDataDetails, //5
 	MyDataProfileCreated, //6
+	...ExplainPrivacyPages // 7,8,9
 ];
 
 export const prevSignupPage = () => {
@@ -111,12 +113,17 @@ export const prevSignupPage = () => {
 
 export const nextSignupPage = () => {
 	const page = DataStore.getValue(PAGE_PATH) || 0;
-	if (page !== PAGES.length - 1) DataStore.setValue(PAGE_PATH, page + 1);
+	DataStore.setValue(PAGE_PATH, page + 1); // NB: this can count off the end! which triggers moving on
 };
 
 const MyDataSignUp = () => {
 	
 	const page = DataStore.getUrlValue("page") || DataStore.getValue(PAGE_PATH) || 0;
+	if (page >= PAGES.length) {
+		// done!
+		modifyPage(["account"], {tab:"dashboard",dashboard:"profile"})
+		return null;
+	}
 	const PageComponent = PAGES[page];
 	
 	return <div className="mydata-signup">

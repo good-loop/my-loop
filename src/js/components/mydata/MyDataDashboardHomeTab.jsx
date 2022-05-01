@@ -148,7 +148,7 @@ const AboutYourCharity = ({ngo}) => {
 	</Container>
 };
 
-const DashboardHome = () => {
+const MyDataDashboardHomeTab = () => {
 
 	const pvCharity = getCharityObject();
 	const ngo = pvCharity && (pvCharity.value || pvCharity.interim);
@@ -165,4 +165,4 @@ const DashboardHome = () => {
 	</>)
 }
 
-export default DashboardHome;
+export default MyDataDashboardHomeTab;

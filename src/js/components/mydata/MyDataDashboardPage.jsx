@@ -6,8 +6,8 @@ import Login from '../../base/youagain';
 import {MyDataSignUpButton, MyDataSignUpModal} from './MyDataSignUp';
 import { getPersonSetting, getCharityObject } from '../../base/components/PropControls/UserClaimControl';
 import classnames from 'classnames';
-import DashboardHome from './DashboardHome';
-import DashboardProfile from './DashboardProfile';
+import MyDataDashboardHomeTab from './MyDataDashboardHomeTab';
+import MyDataDashboardProfileTab from './MyDataDashboardProfileTab';
 import { ProfileDot, ProfileDotRow } from './MyDataCommonComponents';
 import { countryListAlpha2 } from '../../base/data/CountryRegion';
 import CharityLogo from '../CharityLogo';
@@ -84,11 +84,11 @@ class DashboardTab extends React.Component {
 				</Nav>
 				<TabContent activeTab={this.state.activeTab}>
 					<TabPane tabId="1">
-						<DashboardHome />
+						<MyDataDashboardHomeTab />
 					</TabPane>
 
 					<TabPane tabId="2">
-						<DashboardProfile />
+						<MyDataDashboardProfileTab />
 					</TabPane>
 				</TabContent>
 			</div>
@@ -128,7 +128,7 @@ const getT4GProgress = () =>{
 	}
 }
 
-const MyDataDashboard = () => {
+const MyDataDashboardPage = () => {
 	let xids = getAllXIds();
 	let user = Login.getUser();
 	let name = getPersonSetting({key:'name'}) || user.name || user.xid;
@@ -208,4 +208,4 @@ const MyDataDashboard = () => {
 	</div>
 }
 
-export default MyDataDashboard;
+export default MyDataDashboardPage;

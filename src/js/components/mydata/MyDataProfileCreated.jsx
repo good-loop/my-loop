@@ -8,69 +8,53 @@ import CharityLogo from '../CharityLogo';
 import NGO from '../../base/data/NGO';
 import { nextSignupPage } from './MyDataSignUp';
 
-const FirstPage = ({onNext, ngo}) => {
+const MyDataProfileCreated = () => {
+	let pvCharity = getCharityObject();
+	let ngo = pvCharity && pvCharity.value;
 	return <>
 		<ProfileCreationSteps step={2}/>
 		<h1>Profile Created!</h1>
 		<p>Success, you're ready to help {NGO.displayName(ngo)}! Explore your profile in your bespoke Dashboard</p>
-		<Button color="primary" onClick={onNext}>Let's go!</Button>
+		<Button color="primary" onClick={nextSignupPage}>Let's go!</Button>
 	</>;
 }
 
-const MyDataProfileCreated = () => {
+const ExplainPrivacy1 = () => {
+	return <>
+		<ProfileCreationSteps step={2}/>
 
-	const pvCharity = getCharityObject();
-	const ngo = pvCharity && (pvCharity.value || pvCharity.interim);
+		<img src="/img/mydata/onboarding-1.png" className="w-100"/>
+		<h1>You're In Control</h1>
+		<p>For every piece of data you've shared with us, you can control how it's used.</p>
 
-	const [firstPage, setFirstPage] = useState(true);
+		<Button color="primary" onClick={nextSignupPage}>Next</Button>
+	</>;
+};
 
-	const slidesItems = [
-		<>
-			<img src="/img/mydata/onboarding-1.png" className="onboarding-img"/>
-			<h1>You're In Control</h1>
-			<p>For every piece of data you've shared with us, you can control how it's used.</p>
-		</>,
-		<>
-			<img src="/img/mydata/onboarding-2.png" className="onboarding-img"/>
-			<h1>Share To Give</h1>
-			<p>The more data you choose to share, the more you can give to {NGO.displayName(ngo)}</p>
-		</>,
-		<>
-			<img src="/img/mydata/onboarding-3.png" className="onboarding-img"/>
+const ExplainPrivacy2 = () => {
+	let pvCharity = getCharityObject();
+	let ngo = pvCharity && pvCharity.value;
+	return <>
+		<ProfileCreationSteps step={2}/>
+		<img src="/img/mydata/onboarding-2.png" className="w-100"/>
+		<h1>Share To Give</h1>
+		<p>The more data you choose to share, the more you can give to {NGO.displayName(ngo)}</p>
+
+		<Button color="primary" onClick={nextSignupPage}>Next</Button>
+	</>;
+};
+
+const ExplainPrivacy3 = () => {
+	return <>
+		<ProfileCreationSteps step={2}/>
+		<img src="/img/mydata/onboarding-3.png" className="w-100"/>
 			<h1>Data Made Easy</h1>
 			<p>We've preset our recommended privacy settings but you can change them at any time</p>
-		</>
-	]
 
-	const slides = slidesItems.map((content, i) => (
-		<div key={i} className='profile-created-slides h-100'>
-			{content}
-		</div>
-	));
-
-	const NextButton = ({onClick, index, length}) => {
-		const fullOnClick = () => {
-			if (index === length - 1) {
-				// nextSignupPage();
-				window.location.href = '/account?tab=dashboard&dashboard=profile';
-			} else {
-				onClick();
-			}
-		}
-		return <div className="d-flex flex-row justify-content-center align-items-center">
-			<Button color="primary" onClick={fullOnClick}>Next</Button>
-		</div>;
-	};
-
-	return <>
-		{firstPage ? <FirstPage ngo={ngo} onNext={() => setFirstPage(false)}/>
-		: <>
-			<BSCarousel hasIndicators hideArrows NextButton={NextButton} noWrap>
-				{slides}
-			</BSCarousel>
-		</>}
-	</>;   
-
+		<Button color="primary" onClick={nextSignupPage}>Next</Button>
+	</>;
 };
+
+export const ExplainPrivacyPages = [ExplainPrivacy1, ExplainPrivacy2, ExplainPrivacy3];
 
 export default MyDataProfileCreated;

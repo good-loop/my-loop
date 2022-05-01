@@ -26,7 +26,7 @@ import { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
 import ServerIO from '../plumbing/ServerIO';
 import AllowlistUs from './pages/AllowlistUs';
 import MainDivBase from '../base/components/MainDivBase';
-import {A, initRouter} from '../base/plumbing/glrouter';
+import {A, initRouter, modifyPage} from '../base/plumbing/glrouter';
 import HomePage from './pages/HomePage';
 // import RedesignPage from './pages/RedesignPage';
 import GreenDashboard from './pages/GreenDashboard';
@@ -43,9 +43,7 @@ import { T4GSignUpButton, T4GSignUpModal, T4GPluginButton } from './T4GSignUp';
 import { MyLoginWidgetGuts } from './MyLoginWidgetGuts';
 import BlogContent from './pages/BlogContent';
 import SafariPage from './pages/SafariPage';
-import { mobileNavAccountMenuItems } from './pages/AccountPage';
-// import TestPage from './pages/TestPage';
-// 
+import { DropdownItem } from 'reactstrap';
 
 // DataStore
 C.setupDataStore();
@@ -106,38 +104,47 @@ Login.app = C.app.id;
 Login.dataspace = C.app.dataspace;
 
 const MainDiv = () => {
-	const navPageLinks = {
-		"ourstory":[],
-		"our-impact": ['charities', 'impactoverview', 'green'],
-		'tabsforgood':[],
-		// "blog":[]
-	};
 
 	const navPageLabels = {
-		"Our Story":[],
-		"Our Impact": ['Charity Impact', 'Impact Hub', 'Green Media'],
-		"Tabs for Good":[],
-		// "Blog":[]
+		ourstory:"Our Story",
+		"our-impact": "Our Impact",
+		charities: 'Charity Impact',
+		impactoverview: 'Impact Hub',
+		green: 'Green Media',
+		tabsforgood: C.T4G,
+		blog: "Blog"
 	};
-
-	// HACK hide whilst we finish it
-	if ( ! Roles.isTester()) {
-		delete navPageLinks["our-impact"].green;
-		delete navPageLabels["Our Impact"]["Green Media"];
-
-		// delete navPageLinks["blog"];
-		// delete navPageLabels["Blog"];
-	}
 
 	return (<MainDivBase
 		pageForPath={PAGES}
 		defaultPage='home'
-		navbarPages={navPageLinks}
+		navbarPages={() => {
+			return {
+				"dashboard":Login.isLoggedIn(),
+				"ourstory":[],
+				"our-impact": ['charities', 'impactoverview', Roles.isTester() && 'green'],
+				'tabsforgood':[],
+				"blog":Roles.isTester()
+			};
+		}}
 		navbarLabels={navPageLabels}
 		navbarDarkTheme={false}
 		navbarChildren={() => <><T4GSignUpButton>Get Tabs for Good on Desktop</T4GSignUpButton><T4GSignUpModal /></>}
 		navbarBackgroundColour="white"
-		navbarAccountMenuItems={mobileNavAccountMenuItems}
+		navbarAccountMenuItems={<>
+			<DropdownItem>
+				<C.A href={modifyPage(["dashboard"],{tab:"dashboard"},true)} className="nav-link">Dashboard</C.A> 
+			</DropdownItem>
+			<DropdownItem>
+				<C.A href={modifyPage(["dashboard"],{tab:"dataprofile"},true)} className="nav-link">Data Profile</C.A> 
+			</DropdownItem>
+			<DropdownItem>
+				<C.A href={modifyPage(["account"],{tab:"tabsForGood"},true)} className="nav-link">{C.T4G}</C.A> 
+			</DropdownItem>
+			<DropdownItem>
+				<C.A href={modifyPage(["account"],{tab:"settings"},true)} className="nav-link">Settings</C.A> 
+			</DropdownItem>
+			</>}
 		NavExpandSize="md"
 		// navbarLabels={getNavbarLabels}
 		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account', 'green', 'charities', 'impactoverview', 'campaign', 'ourstory', 'ads', 'blog', 'blogcontent', 'allowlist', 'safari']}

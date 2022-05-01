@@ -71,39 +71,11 @@
 
 .mydata-signup {
 
-    min-height: 90vh;
+    min-height: 60vh; // own the page; but don't go weirdly long
 
-    /*.btn-primary {
-        background: @gl-darker-grey !important;
-        &:active:not(.disabled),&:focus:not(.disabled) {
-            background: #363636 !important;
-        }
-        &:hover:not(.disabled) {
-            background: @gl-dark-grey !important;
-        }
-    }*/
-    
     .circle {
         border-radius: 1000px;
         overflow: hidden;
-    }
-
-    .BSCarousel {
-        height: 80vh;
-
-        .carousel-indicators li {
-            width: 10px;
-            height: 10px;
-            border: 1px solid @gl-desat-blue;
-            border-radius: 50%;
-            &.active {
-                background-color: @gl-desat-blue;
-            }
-        }
-        
-        .onboarding-img {
-            width: 100%;
-        }
     }
 
     .steps-graphic {
@@ -194,8 +166,10 @@
 }
 
 .mydata-modal {
-    .modal-content { // Temp forced mobile view in Desktop. Remove this after we got proper desktop version.
-        max-width: 412px;
+    .modal-content { 
+        // max-width: 412px; // Temp forced mobile view in Desktop. Remove this after we got proper desktop version.
+		padding: 2.5rem;
+		// padding: 2rem;
         margin: auto;
     }
 }

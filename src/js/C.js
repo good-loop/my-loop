@@ -16,7 +16,7 @@ initRouter();
 C.app = GLAppManifest;
 
 /** To help us standardise on the use or not of -s */
-C.T4G = "Tabs-For-Good";
+C.T4G = "Tabs for Good";
 
 /**
  * Warning: also written as "£3.9 million" in places

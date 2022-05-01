@@ -7,7 +7,7 @@ import CharityLogo from '../CharityLogo';
 import { MyDataCard } from './MyDataCommonComponents';
 import { countryListAlpha2 } from '../../base/data/CountryRegion';
 import PropControl from '../../base/components/PropControl';
-import { getDataProgress } from './MyDataDashboard';
+import { getDataProgress } from './MyDataDashboardPage';
 import { toTitleCase } from '../../base/utils/miscutils';
 import Claim, { DEFAULT_CONSENT } from '../../base/data/Claim';
 import { getPVClaim } from '../../base/data/Person';
@@ -174,7 +174,7 @@ const DataProfile = () => {
 	</Container>)
 }
 
-const DashboardProfile = () => {
+const MyDataDashboardProfileTab = () => {
 
 	return (<>
 		<HowItWordsGuide />
@@ -183,4 +183,4 @@ const DashboardProfile = () => {
 	</>)
 }
 
-export default DashboardProfile;
+export default MyDataDashboardProfileTab;
