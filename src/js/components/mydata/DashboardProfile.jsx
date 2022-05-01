@@ -158,8 +158,8 @@ const DataProfile = () => {
 		</CollapseSettings>
 
 		<CollapseSettings title="Demographic Details" headerIMG="img/mydata/profile-demographic.png" >
-			<SettingItem description="Your country" itemKey="location-country" type="country" />
-			<SettingItem description="Your region" itemKey="location-region"/>
+			<SettingItem description="Your country" itemKey="country" type="country" />
+			<SettingItem description="Your city or region" itemKey="location-region"/>
 		</CollapseSettings>
 
 		<CollapseSettings title="Your interests" headerIMG="img/mydata/profile-interests.png" >

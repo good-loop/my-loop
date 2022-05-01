@@ -24,9 +24,9 @@ const DetailsCard = ({title, prop, options, labels, ...props}) => {
         <Help>Email is set from your login. Let us know if you need to change it by contacting support@good-loop.com.</Help>
         <input type="text" name='email' className='form-control' value={email || ''} readOnly/>
     	</FormGroup>}
-			<UserClaimControl prop="location-country" type="country" label="Country" 
+			<UserClaimControl prop="country" type="country" label="Country" 
 				help="Used to show adverts that are valid for your country." />
-			<UserClaimControl prop="location-region" type="text" label="Region" 
+			<UserClaimControl prop="location-region" type="text" label="City or Region" 
 				help="Used to pick local charities and local adverts. Not shared with anyone (unless you explicitly tell us to)." />
 			<UserClaimControl prop="dob" type="date" label="Date of birth" 
 				help='Used for your approximate age, which affects what adverts you see (e.g. drinks ads can only be shown to over 18s). Not shared  with anyone (unless you explicitly tell us to).' />

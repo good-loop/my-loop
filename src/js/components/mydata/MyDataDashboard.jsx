@@ -102,7 +102,7 @@ class DashboardTab extends React.Component {
  */
 export const getDataProgress = () => { 
 	let sharedPercentage = 100;	
-	const keys = ["name", "email", "birthday", "gender", "location-country", "location-region", "causes", "adstype"]
+	const keys = ["name", "email", "birthday", "gender", "country", "location-region", "causes", "adstype"]
 	const claims = keys.map(k => getPersonSetting({key: k}));
 	const privacyClaims = keys.map(k => getPersonSetting({key: k + "-privacy"}));
 
