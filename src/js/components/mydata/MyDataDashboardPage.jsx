@@ -16,6 +16,8 @@ import TickerTotal from '../TickerTotal';
 import { getTabsOpened } from '../pages/TabsForGoodSettings';
 import { Collapse } from "reactstrap";
 import Misc from '../../base/components/Misc';
+import { Tab, Tabs } from '../../base/components/Tabs';
+import { modifyPage } from '../../base/plumbing/glrouter';
 
 /**
  * @returns {?Date} 
@@ -39,62 +41,6 @@ import Misc from '../../base/components/Misc';
 	const dateJoined = new Date(oldest);
 	return dateJoined;
 };
-
-class DashboardTab extends React.Component {
-	constructor(props) {
-		super(props);
-
-		this.toggle = this.toggle.bind(this);
-		
-		if (DataStore.getUrlValue('dashboard') == "profile") { // account?tab=dashboard&dashboard=profile
-			this.state = {activeTab: '2'};
-		} else {
-			this.state = {activeTab: '1'};
-		}
-	}
-
-	toggle(tab) {
-		if (this.state.activeTab !== tab) {
-			this.setState({
-				activeTab: tab
-			});
-		}
-	}
-
-	render() {
-		return (
-			<div>
-				<Nav tabs>
-					<NavItem>
-						<NavLink
-							className={classnames({ active: this.state.activeTab === '1' }) + " text-left"}
-							onClick={() => { this.toggle('1'); }}
-						>
-							<img src='img/mydata/home-tab.png' style={{height:'1.5rem',marginRight:'.5em'}} />HOME
-						</NavLink>
-					</NavItem>
-					<NavItem>
-						<NavLink
-							className={classnames({ active: this.state.activeTab === '2' }) + " text-left"}
-							onClick={() => { this.toggle('2'); }}
-						>
-							<img src='img/mydata/data-tab.png' style={{height:'1.5rem',marginRight:'.5em'}} />DATA PROFILE
-						</NavLink>
-					</NavItem>
-				</Nav>
-				<TabContent activeTab={this.state.activeTab}>
-					<TabPane tabId="1">
-						<MyDataDashboardHomeTab />
-					</TabPane>
-
-					<TabPane tabId="2">
-						<MyDataDashboardProfileTab />
-					</TabPane>
-				</TabContent>
-			</div>
-		);
-	}
-}
 
 /**
  * @returns {Number} [0,1] percentage completed and shared
@@ -160,6 +106,8 @@ const MyDataDashboardPage = () => {
 		setShowInfoAds(!showInfoAds);
 	}
 	
+	let activeTabId = DataStore.getUrlValue("tab") || "dashboard"; 
+
 	return <div className='my-data'>
 		<Container id='profile'>
 			{name && <h4>{name}</h4>}
@@ -171,7 +119,7 @@ const MyDataDashboardPage = () => {
 				<ProfileDot TODOMYDATA_img ><>
 					{/* Show exactly the same amount as what displays on T4G */}
 					<p style={{margin: "0"}}><span className="font-weight-bold pr-1"><TickerTotal /></span>
-					Rasied With Our Global Community</p>
+					Raised With Our Global Community</p>
 				</></ProfileDot>
 			</ProfileDotRow>
 		</Container>
@@ -197,8 +145,14 @@ const MyDataDashboardPage = () => {
 			</div>
 		</Collapse>
 
-		<br/>
-		<DashboardTab />
+		<Tabs activeTabId={activeTabId} setActiveTabId={tabId => modifyPage(null, {tab:tabId})} >
+			<Tab tabId='dashboard' title={<><img src='img/mydata/home-tab.png' style={{height:'1.5rem',marginRight:'.5em'}} />HOME</>}>
+				<MyDataDashboardHomeTab />
+			</Tab>
+			<Tab tabId='profile' title={<><img src='img/mydata/data-tab.png' style={{height:'1.5rem',marginRight:'.5em'}} />DATA PROFILE</>}>
+				<MyDataDashboardProfileTab />
+			</Tab>
+		</Tabs>
 	</div>
 }
 

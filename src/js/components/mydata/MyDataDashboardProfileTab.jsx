@@ -67,7 +67,7 @@ const DataSharedProgressBar = () => {
 	const sharedPercentage = getDataProgress();
 
 	return (
-		<Progress className="data-shared-progress" value={100*sharedPercentage} />
+		<Progress className="data-shared-progress" value={100*sharedPercentage} title="How complete is your profile? Fill in and use more data to achieve more." />
 	)
 }
 
