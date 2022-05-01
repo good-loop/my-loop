@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Col, Row, Container, TabContent, TabPane, Card, CardTitle, CardText, Button, Nav, NavItem, NavLink } from 'reactstrap';
-import Person, { getAllXIds, getEmail, getProfile, getPVClaimValue, hasConsent, PURPOSES } from '../../base/data/Person';
+import Person, { getAllXIds, getEmail, getProfile, getPVClaim, hasConsent, PURPOSES } from '../../base/data/Person';
 import DataStore from '../../base/plumbing/DataStore';
 import Login from '../../base/youagain';
 import {MyDataSignUpButton, MyDataSignUpModal} from './MyDataSignUp';
@@ -102,7 +102,7 @@ class DashboardTab extends React.Component {
 export const getDataProgress = () => { 
 	let count = 0;
 	const keys = ["name", "email", "dob", "gender", "country", "location-region", "causes", "adstype"]
-	const claims = keys.map(key => getPVClaimValue({key}).value);
+	const claims = keys.map(key => getPVClaim({key}).value);
 
 	claims.forEach(claim => {
 		if ( ! claim || ! claim.v) return; // unset				
@@ -139,7 +139,7 @@ const MyDataDashboard = () => {
 	if (pvNgo) ngo = pvNgo.value || pvNgo.interim;
 	
 	let joinedMonthYear = getJoinedMonthYear();
-	let locationCountryCode = getPersonSetting({key:"location-country"});
+	let locationCountryCode = getPersonSetting({key:"country"});
 	let locationCountry = countryListAlpha2[locationCountryCode];
 
 	const [showInfoData, setShowInfoData] = useState(false);

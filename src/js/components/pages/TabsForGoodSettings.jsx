@@ -3,7 +3,7 @@ import { Col, Form, Row } from 'reactstrap';
 import ListLoad from '../../base/components/ListLoad';
 import PropControl from '../../base/components/PropControl';
 import { getId } from '../../base/data/DataClass';
-import Person, { getPVClaimValue, getProfile, savePersons, setClaimValue, getClaimValue } from '../../base/data/Person';
+import Person, { getPVClaim, getProfile, savePersons, setClaimValue, getClaimValue } from '../../base/data/Person';
 import { getDataItem } from '../../base/plumbing/Crud';
 import DataStore, { getListPath } from '../../base/plumbing/DataStore';
 import { assert, assMatch } from '../../base/utils/assert';
@@ -208,10 +208,16 @@ const getDaysWithGoodLoop = () => {
 };
 
 /**
-	@returns ?PromiseValue(String)
+	@returns {?PromiseValue} String charity ID
  */
 const getPVSelectedCharityId = (xid) => {
-	return getPVClaimValue({ xid, key: "charity" });
+	let pvClaim = getPVClaim({ xid, key: "charity" });
+	if ( ! pvClaim) return null;
+	let pvv = PromiseValue.then(pvClaim, claim => Claim.value(claim));
+	if ( ! pvv.value && pvClaim.interim) {
+		pvv.interim = Claim.value(pvv.interim);
+	}
+	return pvv;
 };
 
 /**

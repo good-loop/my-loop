@@ -22,11 +22,12 @@ import NewtabTutorialCard, { openTutorial, TutorialComponent, TutorialHighlighte
 import { fetchCharity } from './pages/MyCharitiesPage';
 import { getPVSelectedCharityId, getTabsOpened, getTabsOpened2, Search } from './pages/TabsForGoodSettings';
 import TickerTotal from './TickerTotal';
-import Person, { getProfile, getPVClaimValue } from '../base/data/Person';
+import Person, { getProfile, getPVClaim } from '../base/data/Person';
 import Misc from '../base/components/Misc';
 import Money from '../base/data/Money';
 import NGO from '../base/data/NGO';
 import Roles, { isTester } from '../base/Roles';
+import Claim from '../base/data/Claim';
 
 
 // DataStore
@@ -221,8 +222,8 @@ const ENGINES = {
  * @returns 
  */
 const NormalTabCenter = ({ charityID, loadingCharity }) => {
-	let pvSE = getPVClaimValue({ xid: Login.getId(), key: "searchEngine" });
-	let searchEngine = (pvSE && pvSE.value) || "google";
+	let pvSE = getPVClaim({ xid: Login.getId(), key: "searchEngine" });
+	let searchEngine = Claim.value(pvSE) || "google";
 	const engineData = ENGINES[searchEngine];
 
 	return <>

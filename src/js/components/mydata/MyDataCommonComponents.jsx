@@ -143,7 +143,7 @@ export const ProfileDot = ({className, imgUrl, children}) => {
     if (!imgUrl) imgUrl = "/img/placeholder-circle.png"
     return (
         <Col md={4} className={space(className, 'd-flex align-items-center mb-3 mb-md-0')}>
-            <img src={imgUrl} style={{width:'2rem',height:'2rem',marginRight:'1rem'}} />
+            <img src={imgUrl} className="logo mr-2" />
             {children}
         </Col>
     )

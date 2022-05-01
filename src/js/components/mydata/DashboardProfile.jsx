@@ -9,8 +9,8 @@ import { countryListAlpha2 } from '../../base/data/CountryRegion';
 import PropControl from '../../base/components/PropControl';
 import { getDataProgress } from './MyDataDashboard';
 import { toTitleCase } from '../../base/utils/miscutils';
-import { getPVClaimValue } from '../../base/data/Person';
 import Claim, { DEFAULT_CONSENT } from '../../base/data/Claim';
+import { getPVClaim } from '../../base/data/Person';
 
 const HowItWordsGuide = () => {
 
@@ -96,8 +96,8 @@ const CollapseSettings = ({ title, defaultCollapse, headerIMG, children }) => {
  * @returns 
  */
 const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
-	let pvClaim = getPVClaimValue({key: itemKey});
-	let itemValue = Claim.value(pvClaim.value);
+	let pvClaim = getPVClaim({key: itemKey});
+	let itemValue = Claim.value(pvClaim);
 	let emailPropControl;
 	if (itemKey == 'email') { // Not allow user to change email
 		itemValue = getEmail();
@@ -112,8 +112,8 @@ const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
 	// Privacy Levels
 	const privacyOptions = ["private","careful","public"]; // NB: see Consents.java 
 	const privacyLabels = ["Private Data","Default Privacy","Public Data"]; // NB: see Consents.java 
-	const privacyLevel = Claim.consent(pvClaim.value) || "careful"; // default to careful
-	if (privacyLevel===DEFAULT_CONSENT) privacyLevel = "careful";
+	let privacyLevel = Claim.consent(pvClaim.value) || "careful"; // default to careful
+	if (privacyLevel===DEFAULT_CONSENT || privacyLevel==="controller") privacyLevel = "careful";
 	const privacyLabel = privacyLabels[privacyOptions.indexOf(privacyLevel)] || "Other";
 
 	// HACK adjust some of the display for niceness
@@ -139,7 +139,7 @@ const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
 		</>}
 		{editMode &&
 			(emailPropControl? emailPropControl : 
-				<UserClaimControl prop={itemKey} type={type} {...props} privacyOptions={privacyOptions} privacyLabels={privacyLabels} />
+				<UserClaimControl prop={itemKey} type={type} {...props} privacyOptions={privacyOptions} privacyLabels={privacyLabels} privacyDefault="careful" />
 		)}
 	</>)
 } // ./SettingItem

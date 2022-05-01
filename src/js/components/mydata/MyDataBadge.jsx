@@ -39,7 +39,6 @@ const MyDataBadge = ({progress, badgeName, backgroundImage, notification, size, 
 				strokeWidth={ stroke }
 				strokeDasharray={ circumference + ' ' + circumference }
 				style={ { strokeDashoffset } }
-				stroke-width={ stroke }
 				r={ normalizedRadius }
 				cx={ radius }
 				cy={ radius }
