@@ -50,10 +50,10 @@ const MyDataInterests = ({}) => {
         <CategoryCard
             title="Types of Ads you'd like to see"
             img="img/mydata/signup-ads.png"
-            info="Used to prefer adverts of interest to you. Advertisers pay more to show their message to an interested audience - so this will raise more for your charity."
+            info="Used to pick relevant adverts. Advertisers pay more to show their message to an interested audience - so this will raise more for your charity."
             prop="adstype"
-            options={["videoads", "bannerads"]}
-            labels={["Video Ads", "Banner Ads"]}
+            options={["fashion", "food", "sports", "technology", "games", "travel", "health", "business"]} // are there IAB labels for these??
+            labels={["Fashion", "Food and Drink", "Sports", "Technology", "Gaming", "Travel", "Healthy Living", "Business"]}
         />
         <br />
         <div className="d-flex flex-row align-items-center justify-content-center">

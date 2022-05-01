@@ -72,7 +72,7 @@ const SignUpForm = () => {
 		const name = DataStore.getValue(PERSON_PATH.concat("name"));
 		const emailperms = DataStore.getValue(PERSON_PATH.concat("emailperms"));
 		setPersonSetting({key:"name", value:name});
-		setPersonSetting({key: "emailperms", value: emailperms, callback:nextSignupPage});
+		setPersonSetting({key: "emailperms", value: emailperms, callback:nextSignupPage}); // TODO do this as set-consent-on-email
 	}
 
 	return (<>

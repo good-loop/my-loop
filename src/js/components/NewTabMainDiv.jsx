@@ -72,8 +72,8 @@ const WebtopPage = () => {
 
 	Login.app = "t4g.good-loop.com"; // Not My.GL!
 	const pvCharityID = getPVSelectedCharityId();
-	const loadingCharity = !pvCharityID || !pvCharityID.resolved;
-	const charityID = pvCharityID && pvCharityID.value;
+	const charityID = pvCharityID && (pvCharityID.value || pvCharityID.interim);
+	const loadingCharity = ! pvCharityID || ! pvCharityID.resolved;	
 	let [showPopup, setShowPopup] = useState(false);
 
 	// Yeh - a tab is opened -- let's log that (once only)
@@ -274,13 +274,9 @@ const NewTabCharityCard = ({ cid, loading }) => {
 		<a href={"/account?tab=tabsForGood" + params}>
 			<TutorialComponent page={1}>
 				<WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}>
-					{loading? 
-						<p className="my-auto">Loading...</p>
-					: <>{charity ?
-							<CharityLogo charity={charity} />
-							: <p className="my-auto">Select a charity</p>}
-						</>
-					}
+					{charity && <CharityLogo charity={charity} />}
+					{ ! charity && loading && <p className="my-auto">Loading...</p>}
+					{ ! charity && ! loading && <p className="my-auto">Select a charity</p>}
 				</WhiteCircle>
 			</TutorialComponent>
 		</a>
