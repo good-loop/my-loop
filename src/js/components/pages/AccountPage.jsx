@@ -51,7 +51,7 @@ const Page = () => {
 
 addImageCredit({ name: "add-user", author: "Icons8", url: "https://icons8.com/icons/set/add-user-male" });
 
-// See also GetInvoledPage
+
 export const MoreToDo = ({ xids }) => {
 	// Count the user as subscribed if we have a linked email + a consent
 	const props = { xids, purpose: PURPOSES.email_mailing_list };

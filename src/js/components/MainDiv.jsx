@@ -118,7 +118,7 @@ const MainDiv = () => {
 		defaultPage='home'
 		navbarPages={() => {
 			return {
-				"dashboard":Login.isLoggedIn(),
+				// "dashboard":Login.isLoggedIn(), ??
 				"ourstory":[],
 				"our-impact": ['charities', 'impactoverview', Roles.isTester() && 'green'],
 				'tabsforgood':[],
@@ -130,17 +130,15 @@ const MainDiv = () => {
 		navbarChildren={() => <><T4GSignUpButton>Get Tabs for Good on Desktop</T4GSignUpButton><T4GSignUpModal /></>}
 		navbarBackgroundColour="white"
 		navbarAccountMenuItems={<>
+			{/* NB: the Account nav link = Dashboard (currently) */}
 			<DropdownItem>
-				<C.A href={modifyPage(["dashboard"],{tab:"dashboard"},true)} className="nav-link">Dashboard</C.A> 
+				<C.A href={modifyPage(["account"],{tab:"profile"},true,true)} className="nav-link">Data Profile</C.A> 
 			</DropdownItem>
 			<DropdownItem>
-				<C.A href={modifyPage(["dashboard"],{tab:"dataprofile"},true)} className="nav-link">Data Profile</C.A> 
+				<C.A href={modifyPage(["account"],{tab:"tabsForGood"},true,true)} className="nav-link">{C.T4G}</C.A> 
 			</DropdownItem>
 			<DropdownItem>
-				<C.A href={modifyPage(["account"],{tab:"tabsForGood"},true)} className="nav-link">{C.T4G}</C.A> 
-			</DropdownItem>
-			<DropdownItem>
-				<C.A href={modifyPage(["account"],{tab:"settings"},true)} className="nav-link">Settings</C.A> 
+				<C.A href={modifyPage(["account"],{tab:"settings"},true,true)} className="nav-link">Settings</C.A> 
 			</DropdownItem>
 			</>}
 		NavExpandSize="md"

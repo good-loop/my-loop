@@ -90,7 +90,10 @@ const ThisWeeksAdCard = () => {
 			<img src="/img/mydata/green_tick.png" className="green-tick"/>
 			<div className="watched-text">
 				<h3>Weekly watch done!</h3>
-				{showBtn && <Button color="primary" onClick={watchAgain}>Watch it again</Button>}
+				{showBtn && <>
+					<Button color="primary" onClick={watchAgain}>Watch it again<br/></Button>
+					<p><small>After the first view, watching again does not raise extra money.</small></p>
+				</>}
 			</div>
 		</div>;
 	}
