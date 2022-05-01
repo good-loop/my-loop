@@ -3,17 +3,17 @@ import React, { useState } from "react";
 /**
  * 
  * @param {string} badgeName
- * @param {int} progress 
+ * @param {Number} progress [0-1]
  * @param {int} notification
  * @param {int} size of the badge in px, default is 100.
  * @returns 
  */
 const MyDataBadge = ({progress, badgeName, backgroundImage, notification, size, toggle}) => {
-	if (!progress) {
+	if ( ! progress) {
 		progress = 0;
 		notification = null;
 	}
-	if (progress == 100) notification = "✓";
+	if (progress == 1) notification = "✓";
 
 	if (!size) size = 100;
 	const stroke = size * .06;
@@ -24,7 +24,7 @@ const MyDataBadge = ({progress, badgeName, backgroundImage, notification, size, 
 
 	const normalizedRadius = radius - stroke * 2;
 	const circumference = normalizedRadius * 2 * Math.PI;
-	const strokeDashoffset = circumference - progress / 100 * circumference;
+	const strokeDashoffset = circumference - progress * circumference;
 
 	return (
 	<div className="mydata-badge text-center" style={{height:size+"px",width:size+"px"}} onClick={toggle}>

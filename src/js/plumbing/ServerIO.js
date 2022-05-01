@@ -32,11 +32,14 @@ ServerIO.MEDIA_ENDPOINT = 'https://uploads.good-loop.com';
 // Useful where relative links can not be used (eg inline-CSS 'url' image links)
 ServerIO.MYLOOP_ENDPONT = `${C.HTTPS}://${C.SERVER_TYPE}my.good-loop.com`;
 
-/**
- * My Loop has no backend, so use profiler
- * TODO use my-loop now??
- */
-ServerIO.LOGENDPOINT = ServerIO.PROFILER_ENDPOINT + '/log';
+// NB: We are rarely editing profiler code, so we mostly want to just use the live one
+ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com';
+
+// /**
+//  * My Loop has no backend, so use profiler
+//  * TODO use my-loop now??
+//  */
+// ServerIO.LOGENDPOINT = ServerIO.PROFILER_ENDPOINT + '/log';
 
 ServerIO.DATALOG_ENDPOINT = "https://lg.good-loop.com/data";
 

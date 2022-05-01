@@ -52,14 +52,14 @@ const AchievementCard = () => {
 				<h3>For global causes</h3>
 			</div>
 			<div className="d-flex flex-row justify-content-center align-items-center">
-				<img src="/img/placeholder-circle.png" className='img-lg' alt="" />
+				<img TODOMYDATA_img src="/img/placeholder-circle.png" className='img-lg' alt="" />
 			</div>
 			<Container className='border border-white rounded bg-white my-3 py-3'>
 				<p className='text-center'>Some Things We've Achieved</p>
 				<ProfileDotRow>
-					<ProfileDot><>20,000 Meals For Children</></ProfileDot>
-					<ProfileDot><>600 Life-Saving Medicine Kits</></ProfileDot>
-					<ProfileDot><>100 Guide Dog Puppies Trained</></ProfileDot>
+					<ProfileDot TODOMYDATA_img><>20,000 Meals For Children</></ProfileDot>
+					<ProfileDot TODOMYDATA_img><>600 Life-Saving Medicine Kits</></ProfileDot>
+					<ProfileDot TODOMYDATA_img><>100 Guide Dog Puppies Trained</></ProfileDot>
 				</ProfileDotRow>
 			</Container>
 	</Container>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Col, Row, Container, TabContent, TabPane, Card, CardTitle, CardText, Button, Nav, NavItem, NavLink } from 'reactstrap';
-import Person, { getAllXIds, getEmail, getProfile, hasConsent, PURPOSES } from '../../base/data/Person';
+import Person, { getAllXIds, getEmail, getProfile, getPVClaimValue, hasConsent, PURPOSES } from '../../base/data/Person';
 import DataStore from '../../base/plumbing/DataStore';
 import Login from '../../base/youagain';
 import {MyDataSignUpButton, MyDataSignUpModal} from './MyDataSignUp';
@@ -97,32 +97,22 @@ class DashboardTab extends React.Component {
 }
 
 /**
- * 
- * @returns int
+ * @returns {Number} [0,1] percentage completed and shared
  */
 export const getDataProgress = () => { 
-	let sharedPercentage = 100;	
-	const keys = ["name", "email", "birthday", "gender", "country", "location-region", "causes", "adstype"]
-	const claims = keys.map(k => getPersonSetting({key: k}));
-	const privacyClaims = keys.map(k => getPersonSetting({key: k + "-privacy"}));
+	let count = 0;
+	const keys = ["name", "email", "dob", "gender", "country", "location-region", "causes", "adstype"]
+	const claims = keys.map(key => getPVClaimValue({key}).value);
 
-	for (let [index, val] of claims.entries()) {
-		if (keys[index] == "email") continue; // email should always pass 
+	claims.forEach(claim => {
+		if ( ! claim || ! claim.v) return; // unset				
+		let consent = Claim.consent(claim);
+		if (consent==="public" || consent==="careful") count++;
+		else if (consent==="private") count += 0.1; // private
+		else count += 0.25; // unset / other
+	});
 
-		// Is this data point not set? Then deduct points and continue on to the next claim.
-		if(val == null) {
-			sharedPercentage -= 100/claims.length; 
-			continue
-		}
-		
-		// 0 = Private data setting, deduct 2/3 points
-		// 1 (or null) = Default privacy setting, deduct 1/3 points
-		// 2 = Public data setting, deduct no points
-		if (privacyClaims[index] == '0') sharedPercentage -= (100/claims.length)*2/3
-		if (privacyClaims[index] == '1' || privacyClaims[index] == null) sharedPercentage -= (100/claims.length)*1/3
-	}
-
-	return Math.round(sharedPercentage);
+	return count/keys.length;
 }
 
 /**
@@ -182,9 +172,9 @@ const MyDataDashboard = () => {
 			{locationCountry && <h5>{locationCountry}</h5>}
 			<br/>
 			<ProfileDotRow>
-				<ProfileDot className="mt-3 mt-md-0">{joinedMonthYear && <>Joined {joinedMonthYear}</>}</ProfileDot>
-				<ProfileDot>{ngo && <>Supporting {ngo.name}</>}</ProfileDot>
-				<ProfileDot><>
+				<ProfileDot TODOMYDATA_img className="mt-3 mt-md-0">{joinedMonthYear && <>Joined {joinedMonthYear}</>}</ProfileDot>
+				<ProfileDot imgUrl={ngo && ngo.logo}>{ngo && <>Supporting {NGO.displayName(ngo)}</>}</ProfileDot>
+				<ProfileDot TODOMYDATA_img ><>
 					{/* Show exactly the same amount as what displays on T4G */}
 					<p style={{margin: "0"}}><span className="font-weight-bold pr-1"><TickerTotal /></span>
 					Rasied With Our Global Community</p>
