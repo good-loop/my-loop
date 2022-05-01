@@ -15,11 +15,12 @@ import MyDataBadge from './MyDataBadge';
 import TickerTotal from '../TickerTotal';
 import { getTabsOpened } from '../pages/TabsForGoodSettings';
 import { Collapse } from "reactstrap";
+import Misc from '../../base/components/Misc';
 
 /**
- * @returns {!Number}
+ * @returns {?Date} 
  */
- const getJoinedMonthYear = () => {
+ const getJoinedDate = () => {
 	const person = getProfile().value;
 	if (!person) {
 		return 1;
@@ -35,9 +36,8 @@ import { Collapse } from "reactstrap";
 		console.warn("getJoinedMonth - No claim date");
 		return null;
 	}
-	const dmsecs = new Date(oldest).getTime();
-	let monthYear = new Date(dmsecs).toUTCString().split(" ").slice(2,4).join(" ");
-	return monthYear;
+	const dateJoined = new Date(oldest);
+	return dateJoined;
 };
 
 class DashboardTab extends React.Component {
@@ -140,7 +140,7 @@ const MyDataDashboardPage = () => {
 	let ngo = null;
 	if (pvNgo) ngo = pvNgo.value || pvNgo.interim;
 	
-	let joinedMonthYear = getJoinedMonthYear();
+	let joinedDate = getJoinedDate();
 	let locationCountryCode = getPersonSetting({key:"country"});
 	let locationCountry = countryListAlpha2[locationCountryCode];
 
@@ -166,7 +166,7 @@ const MyDataDashboardPage = () => {
 			{locationCountry && <h5>{locationCountry}</h5>}
 			<br/>
 			<ProfileDotRow>
-				<ProfileDot TODOMYDATA_img className="mt-3 mt-md-0">{joinedMonthYear && <>Joined {joinedMonthYear}</>}</ProfileDot>
+				<ProfileDot TODOMYDATA_img className="mt-3 mt-md-0">{joinedDate && <>Joined <Misc.RoughDate date={joinedDate}/></>}</ProfileDot>
 				<ProfileDot imgUrl={ngo && ngo.logo}>{ngo && <>Supporting {NGO.displayName(ngo)}</>}</ProfileDot>
 				<ProfileDot TODOMYDATA_img ><>
 					{/* Show exactly the same amount as what displays on T4G */}
