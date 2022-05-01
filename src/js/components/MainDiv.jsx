@@ -15,7 +15,6 @@ import {setShowLogin} from '../base/components/LoginWidget';
 // Pages
 import MyCharitiesPage from './pages/MyCharitiesPage';
 import MyAdCampaignsPage from './pages/MyAdCampaignsPage';
-import GetInvolvedPage from './pages/GetInvolvedPage';
 import CampaignPage from './campaignpage/CampaignPage';
 import E404Page from '../base/components/E404Page';
 import AccountPage from './pages/AccountPage';
@@ -75,7 +74,6 @@ const PAGES = {
 	charities: MyCharitiesPage,
 	charity: CharityLandingPage,
 	ads: MyAdCampaignsPage,
-	involve: GetInvolvedPage,
 	subscribe: SubscribePage,
 	about: MyGLAboutPage,
 	productsoverview: ProductsOverviewPage,

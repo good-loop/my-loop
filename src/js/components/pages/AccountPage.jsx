@@ -13,6 +13,7 @@ import ShareButton from '../ShareButton';
 import AccountSettings from './AccountSettings';
 import TabsForGoodSettings from './TabsForGoodSettings';
 import C from '../../C';
+import MyDataDashboard from '../mydata/MyDataDashboardPage';
 
 
 const Page = () => {
@@ -39,7 +40,8 @@ const Page = () => {
 	return (<>
 		<div className="AccountPage">
 			<Container className="pt-3">
-				{tab === 'dashboard' && <Account />}
+				{tab === 'dashboard' && <MyDataDashboard />}
+				{tab === 'profile' && <MyDataDashboard />}
 				{tab === 'settings' && <AccountSettings />}
 				{tab === 'tabsForGood' && <TabsForGoodSettings />}
 			</Container>

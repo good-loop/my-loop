@@ -117,16 +117,18 @@ export const getDataProgress = () => {
 
 /**
  * 
- * @returns progress of T4G, max 100
+ * @returns {Number} [0,2] progress of T4G in tabs viewed
  */
 const getT4GProgress = () =>{
 	let pvTabsOpened = getTabsOpened();
-	if (pvTabsOpened && pvTabsOpened.value) {
-		if (pvTabsOpened.value <= 100) {
-			return pvTabsOpened.value;
-		} else return 100;
+	if ( ! pvTabsOpened || ! pvTabsOpened.value) {
+		return 0;
 	}
-}
+	let tabs = pvTabsOpened.value;
+	if (tabs < 25) return 0.25; // earn a chunk of the badge by installing
+	if (tabs <= 100) return tabs/100; // linear to level 1
+	return 100;	// TODO how do we do level 2??
+};
 
 const MyDataDashboardPage = () => {
 	let xids = getAllXIds();
@@ -145,14 +147,6 @@ const MyDataDashboardPage = () => {
 	const [showInfoData, setShowInfoData] = useState(false);
 	const [showInfoTabs, setShowInfoTabs] = useState(false);
 	const [showInfoAds, setShowInfoAds] = useState(false);
-
-	const allInfoFalse = () => {
-		if (showInfoData == true) return false;
-		if (showInfoTabs == true) return false;
-		if (showInfoAds == true) return false;
-		console.log("ALL FALSE")
-		return true;
-	}
 
 	const toggleShowInfoData = () => {
 		setShowInfoData(!showInfoData);
