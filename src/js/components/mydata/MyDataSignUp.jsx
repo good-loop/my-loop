@@ -128,7 +128,7 @@ const MyDataSignUp = () => {
 	
 	return <div className="mydata-signup">
 		<div className="debug">
-			*debug* page selector: <a onClick={prevSignupPage}>Back</a> /	<a onClick={nextSignupPage}>Next</a>
+			*debug page selector*: <a onClick={prevSignupPage}>Back</a> /	<a onClick={nextSignupPage}>Next</a>
 		</div>
 		<PageComponent />
 	</div>;
