@@ -165,6 +165,32 @@
         color: @gl-red;
     }
 
+    // Sign Up Form labels
+    .signup-form {
+        .form-group > label {
+            text-transform: uppercase;
+            letter-spacing: 0.05rem;
+            font-size: 0.85rem;
+            margin-bottom: 0;
+        }
+
+        
+        .action-btns {
+            label { 
+                display: inline; // Make the info tooltip display inline - instead of on it's own line
+                font-size: 0.8rem;
+                line-height: 0.8rem;
+                color: @gl-darker-grey;
+            }
+            .checkbox input {
+                margin-top: revert;
+            }
+            button {
+                margin-top: 2rem;
+            }
+        }
+    }
+
     .charity-search {
         // TODO fontawesome search glass icon
         label {
