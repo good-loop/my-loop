@@ -160,18 +160,15 @@ const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
 	if (itemKey == 'gender' && itemValue) displayValue = toTitleCase(itemValue);
 	else if (itemKey == 'country' && itemValue) displayValue = countryListAlpha2[itemValue];
 
-	// Show adstypes / causes as pills - but only these.
+	// Show adtypes / causes as pills - but only these.
 	if (!editMode) {
-		if (displayValue) {
+		if (displayValue) 
 			displayValue = parseList(displayValue);
-		} else {
+		else 
 			displayValue = <a onClick={editModeToggle}>Add+</a>;
-		}
-		if (itemKey == "adstypes" || itemKey == "causes") {
-			displayValue = <>
-				<div className="pill-container">{displayValue}</div>
-			</>
-		}
+		
+		if (itemKey == "adstype" || itemKey == "causes") 
+			displayValue = <><div className="pill-container">{displayValue}</div></>
 	}
 
 
