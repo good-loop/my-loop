@@ -186,8 +186,8 @@ const DataProfile = () => {
 		</CollapseSettings>
 
 		<CollapseSettings title="Your interests" headerIMG="img/mydata/profile-interests.png" >
-			<SettingItem description="Causes you're interested in" itemKey="causes" />
-			<SettingItem description="Types of Ads you'd like to see" itemKey="adstype" />
+			<SettingItem description="Causes you're interested in" itemKey="causes" type="checkboxes" />
+			<SettingItem description="Types of Ads you'd like to see" itemKey="adstype" type="checkboxes" />
 		</CollapseSettings>
 
 		{false && <CollapseSettings title="Connect your social accounts" headerIMG="img/mydata/profile-social.png">

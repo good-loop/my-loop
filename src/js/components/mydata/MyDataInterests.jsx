@@ -40,11 +40,7 @@ const MyDataInterests = ({}) => {
             img="img/mydata/charity-default.png"
             info="We use this to select projects and charities to show you, and to prefer adverts that support charities in these areas."
             prop="causes"
-            options={
-				// See NGO.CATEGORY
-				["culture", "education", "health", "community", "environment", "civil rights", "animals", "research", "international"]
-			}
-            labels={["Arts and Culture", "Education", "Health", "Community Development", "Environment", "Civil Rights", "Animals", "Science and Research", "International Development"]}
+            // Options and Labels are built in UserClaimControl
         />
         <br/>
         <CategoryCard
@@ -52,8 +48,7 @@ const MyDataInterests = ({}) => {
             img="img/mydata/signup-ads.png"
             info="Used to pick relevant adverts. Advertisers pay more to show their message to an interested audience - so this will raise more for your charity."
             prop="adstype"
-            options={["fashion", "food", "sports", "technology", "games", "travel", "health", "business"]} // are there IAB labels for these??
-            labels={["Fashion", "Food and Drink", "Sports", "Technology", "Gaming", "Travel", "Healthy Living", "Business"]}
+            // Options and Labels are built in UserClaimControl
         />
         <br />
         <div className="d-flex flex-row align-items-center justify-content-center">
