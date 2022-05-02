@@ -18,7 +18,7 @@ const parseList = (value) => {
 
 	if (!value) return null;
 	if (typeof value === 'string' && !value.startsWith('[') && !value.endsWith(']')) return <span>{value}</span>;
-	const value2 = JSON.parse(value);;
+	const value2 = JSON.parse(value);
 	if (Array.isArray(value2)) {
 		return value2.map((item, i) => <span key={i}>{valueMap[item]}</span>);
 	}
@@ -158,7 +158,22 @@ const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
 	let displayValue = itemValue;
 	if (displayValue === "[]") displayValue = null; // Catch empty array
 	if (itemKey == 'gender' && itemValue) displayValue = toTitleCase(itemValue);
-	else if (itemKey == 'country' && itemValue) displayValue = countryListAlpha2[itemValue];	
+	else if (itemKey == 'country' && itemValue) displayValue = countryListAlpha2[itemValue];
+
+	// Show adstypes / causes as pills - but only these.
+	if (!editMode) {
+		if (displayValue) {
+			displayValue = parseList(displayValue);
+		} else {
+			displayValue = <a onClick={editModeToggle}>Add+</a>;
+		}
+		if (itemKey == "adstypes" || itemKey == "causes") {
+			displayValue = <>
+				<div className="pill-container">{displayValue}</div>
+			</>
+		}
+	}
+
 
 	return (<>
 		{/* HACK - Avoid bug with Collapse and hr */}
@@ -168,9 +183,8 @@ const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
 			<span style={{ fontSize: '.8rem', textTransform: 'uppercase' }}>{description}</span>
 			<a onClick={editModeToggle}><span style={{ fontSize: '.8rem' }} className='pb-3 pl-3'>{editMode ? 'DONE' : 'EDIT'}</span></a>
 		</div>
-
-		{ ! editMode && <>
-			{displayValue ? parseList(displayValue) : <a onClick={editModeToggle}>Add+</a>}
+		{!editMode && <>
+			{displayValue}
 			<div className="d-flex justify-content-between align-items-center">
 				<span className='text-muted' style={{ fontSize: '.8rem' }}>{privacyLabel}</span>
 				<img style={{ height: '1.5rem', transform: 'translate(0, -.5rem)' }} src={"/img/mydata/padlock-"+privacyLevel+ ".png"} alt="padlock logo" />

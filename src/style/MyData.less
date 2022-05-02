@@ -101,35 +101,47 @@
 
     // Pills for the interest picker
     // TODO: The label text is ever so slighty unaligned vertically on these pills.
-    .checkboxes.form-group {
+    .pill-container, .checkboxes.form-group {
         display: flex;
         flex-wrap: wrap;
 
-        .form-check {
+        // Base style
+        span, .form-check {
             padding: 0;
             margin: 0.3rem;
             flex: 0 0 auto;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
 
-            input[type="checkbox"] {
-                display: none;
-            }
+        // The span is what shows up when you're not in edit mode.
+        // The checkbox is what shows up when you're in edit mode.
+        span, input[type="checkbox"] + label {
+            padding: 6px 12px; 
+            border: 1px solid @gl-desat-blue;
+            border-radius: 3rem;
+            cursor: pointer;
+        }
 
-            // Pill is unchecked
-            input[type="checkbox"] + label {
-                border: 1px solid @gl-desat-blue;
-                border-radius: 3rem;
-                background: #fff;
-                padding: 6px 12px;
-                cursor: pointer;
-                color: @gl-darker-grey;
-            }
+        // When on edit mode - hide the actual checkbox. The label is what the user will see/click.
+        input[type="checkbox"] {
+            display: none;
+        }
 
-            // Pill is checked / active
-            input[type="checkbox"]:checked + label:active,
-            input[type="checkbox"]:checked + label {
-                background: @gl-desat-blue;
-                color: #fff
-            }
+        // Span - it's a chosen option, so always show blue.
+        // Also show blue if checkbxo is active/checked.
+        span,
+        input[type="checkbox"]:checked + label:active,
+        input[type="checkbox"]:checked + label {
+            background: @gl-desat-blue;
+            color: #fff;
+        }
+
+        // Checkbox is unchecked, show white + grey text.
+        input[type="checkbox"] + label {
+            background: #fff;
+            color: @gl-darker-grey;
         }
     }
 }
