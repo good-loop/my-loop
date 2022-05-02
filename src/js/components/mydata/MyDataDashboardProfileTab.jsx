@@ -135,7 +135,7 @@ const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
 	const editModeToggle = () => setEditMode(!editMode);
 	// Privacy Levels
 	const privacyOptions = ["private","careful","public"]; // NB: see Consents.java 
-	const privacyLabels = ["Private Data","Default Privacy","Public Data"]; // NB: see Consents.java 
+	const privacyLabels = ["Private","Careful Use","Shared"]; // NB: see Consents.java 
 	let privacyLevel = Claim.consent(pvClaim.value) || "careful"; // default to careful
 	if (privacyLevel===DEFAULT_CONSENT || privacyLevel==="controller") privacyLevel = "careful";
 	const privacyLabel = privacyLabels[privacyOptions.indexOf(privacyLevel)] || "Other";
