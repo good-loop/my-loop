@@ -265,6 +265,7 @@
     background-color: white;
     margin: 5px;
     margin-top: 1em;
+    margin-bottom: 1em;
     padding: 2em 2.5em;
     box-shadow:	0 0.125rem 0.5rem rgba(0, 0, 0, .3), 0 0.0625rem 0.125rem rgba(0, 0, 0, .2);
     &::before {
@@ -273,11 +274,14 @@
         width: 0;
         height: 0;
         bottom: 100%;
-        left: 13em; 
         border: .75rem solid transparent;
         border-top: none;
+        transform: translate(-50%, 0);
 
         border-bottom-color: white;
         filter: drop-shadow(0 -0.0625rem 0.0625rem rgba(0, 0, 0, .1));
     }
+    &.bubble-left::before {left: 4em;}
+    &.bubble-mid::before {left: 50%;}
+    &.bubble-right::before {left: 18em;}
 }

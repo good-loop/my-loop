@@ -139,24 +139,24 @@ const MyDataDashboardPage = () => {
 				toggle={() => toggleShowBadgeInfo("tabs")} />
 			<MyDataBadge badgeName="Ads" backgroundImage="img/mydata/ads-badge.png" 
 				toggle={() => toggleShowBadgeInfo("ads")} />
-			<p>Collect Badges for your activity. Dip into these things when it suits you - ignore them when you're busy.</p>
 		</Container>
 		<Collapse isOpen={showBadgeInfo==="data"}>
-			<div className="speech-bubble">
+			<div className="speech-bubble bubble-left">
 				<p>The Data-Hero badge: Add to your data profile to earn more and collect this badge.</p>
 			</div>
 		</Collapse>
 		<Collapse isOpen={showBadgeInfo==="tabs"}>
-			<div className="speech-bubble">
+			<div className="speech-bubble bubble-mid">
 				<p>The Tab-Star badge: <C.A href='/tabsforgood'>Install {C.T4G}</C.A> then just open those tabs to raise donations and collect this badge.</p>				
 			</div>
 		</Collapse>
 		<Collapse isOpen={showBadgeInfo==="ads"}>
-			<div className="speech-bubble">
+			<div className="speech-bubble bubble-right">
 				{/* TODO a link that opens the MyDataDashboardHomeTab and scrolls you to the watch-an-ad card. Or otherwise takes you to that card */}
 				<p>The Ad-Audience badge: Tune in weekly to watch Ads-for-Good to raise donations and collect this badge.</p>
 			</div>
 		</Collapse>
+		<p style={{fontSize:".9rem"}}>Collect Badges for your activity. Dip into these things when it suits you - ignore them when you're busy.</p>
 
 		<Tabs activeTabId={activeTabId} setActiveTabId={tabId => modifyPage(null, {tab:tabId})} >
 			<Tab tabId='dashboard' title={<><img src='img/mydata/home-tab.png' style={{height:'1.5rem',marginRight:'.5em'}} />HOME</>}>
