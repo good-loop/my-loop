@@ -2,8 +2,9 @@ import React from 'react';
 import { PERSON_PATH, VERB_PATH } from '../../base/components/LoginWidget';
 import { MyDataCard, ProfileCreationSteps, SkipNextBtn } from './MyDataCommonComponents';
 import UserClaimControl, { getEmail } from '../../base/components/PropControls/UserClaimControl';
-import { FormGroup } from 'reactstrap';
+import { FormGroup, Button } from 'reactstrap';
 import { Help } from '../../base/components/PropControl';
+import { nextSignupPage } from './MyDataSignUp';
 
 const DetailsCard = ({title, prop, options, labels, ...props}) => {
 	const path = PERSON_PATH;
@@ -41,10 +42,13 @@ const DetailsCard = ({title, prop, options, labels, ...props}) => {
 const MyDataDetails = ({}) => {
 
     return <>
-        <DetailsCard
-            title="About you"
-        />
-        <SkipNextBtn />
+        <DetailsCard title="About you" />
+		<div className="profile-creation-step">
+			<div className="button-container">
+				<Button color="primary" onClick={nextSignupPage} className="mt-4">Next</Button>
+			</div>
+		</div>
+        
     </>;
 
 };

@@ -36,7 +36,6 @@ export const MyDataCard = ({img, info, className, children}) => {
 };
 
 export const CharityCard = ({cid, item}) => {
-
     let ngo = item;
 
     if (!ngo) {
@@ -56,14 +55,15 @@ export const CharityCard = ({cid, item}) => {
         setPersonSetting({key: "charity", value: cid, callback:nextSignupPage});
     }
 
-    return <MyDataCard
-        className="mydata-card"
-        img = {<NGOImage bg main ratio={30} center className="w-100" ngo={ngo}/>}
-        info={<NGODescription extended ngo={ngo}/>}
-    >
+    return <MyDataCard className="mydata-card charity-card"
+                       img={<NGOImage bg main ratio={30} center className="w-100" ngo={ngo} src="/img/mydata/charity-default.png" />}
+                       info={<NGODescription extended ngo={ngo}/>}
+            >
         <CharityLogo charity={ngo}/>
         <NGODescription summarize ngo={ngo} />
-        <Button color="primary" onClick={onClick}>Select</Button>
+        <div className="button-container">
+            <Button color="primary" onClick={onClick}>Select</Button>
+        </div>
     </MyDataCard>
 
 };

@@ -13,21 +13,29 @@ const MyDataProfileCreated = () => {
 	let ngo = pvCharity && pvCharity.value;
 	return <>
 		<ProfileCreationSteps step={2}/>
-		<h1>Profile Created!</h1>
-		<p>Success, you're ready to help {NGO.displayName(ngo)}! Explore your profile in your bespoke Dashboard</p>
-		<Button color="primary" onClick={nextSignupPage}>Let's go!</Button>
+		<div className="profile-creation-step">
+			<img src="/img/mydata/profile-created.png" className="w-100" />
+			<h1>Profile Created!</h1>
+			<p>Success, you're ready to help {NGO.displayName(ngo)}! Explore your profile in your bespoke Dashboard</p>
+			<div className="button-container">
+				<Button color="primary" onClick={nextSignupPage}>Let's go!</Button>
+			</div>
+		</div>
 	</>;
 }
 
 const ExplainPrivacy1 = () => {
 	return <>
 		<ProfileCreationSteps step={2}/>
+		<div className="profile-creation-step">
+			<img src="/img/mydata/onboarding-1.png" className="w-100"/>
+			<h1>You're In Control</h1>
+			<p>For every piece of data you've shared with us, you can control how it's used.</p>
 
-		<img src="/img/mydata/onboarding-1.png" className="w-100"/>
-		<h1>You're In Control</h1>
-		<p>For every piece of data you've shared with us, you can control how it's used.</p>
-
-		<Button color="primary" onClick={nextSignupPage}>Next</Button>
+			<div className="button-container">
+				<Button color="primary" onClick={nextSignupPage}>Next</Button>
+			</div>
+		</div>
 	</>;
 };
 
@@ -36,22 +44,30 @@ const ExplainPrivacy2 = () => {
 	let ngo = pvCharity && pvCharity.value;
 	return <>
 		<ProfileCreationSteps step={2}/>
-		<img src="/img/mydata/onboarding-2.png" className="w-100"/>
-		<h1>Share To Give</h1>
-		<p>The more data you choose to share, the more you can give to {NGO.displayName(ngo)}</p>
+		<div className="profile-creation-step">
+			<img src="/img/mydata/onboarding-2.png" className="w-100"/>
+			<h1>Share To Give</h1>
+			<p>The more data you choose to share, the more you can give to {NGO.displayName(ngo)}</p>
 
-		<Button color="primary" onClick={nextSignupPage}>Next</Button>
+			<div className="button-container">
+				<Button color="primary" onClick={nextSignupPage}>Next</Button>
+			</div>
+		</div>
 	</>;
 };
 
 const ExplainPrivacy3 = () => {
 	return <>
 		<ProfileCreationSteps step={2}/>
-		<img src="/img/mydata/onboarding-3.png" className="w-100"/>
+		<div className="profile-creation-step">
+			<img src="/img/mydata/onboarding-3.png" className="w-100"/>
 			<h1>Data Made Easy</h1>
 			<p>We've preset our recommended privacy settings but you can change them at any time</p>
-
-		<Button color="primary" onClick={nextSignupPage}>Next</Button>
+				
+			<div className="button-container">
+				<Button color="primary" onClick={nextSignupPage}>Next</Button>
+			</div>
+		</div>
 	</>;
 };
 
