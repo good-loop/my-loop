@@ -22,7 +22,7 @@ const HowItWordsGuide = () => {
 			<hr />
 			<img src={iconIMG} className="logo mb-3" />
 			<h5>{title}</h5>
-			<span>{smallCardCollapse ? '˄' : '˅'}</span>
+			<span><img style={{width:"2rem",height:"2rem"}} src={"img/mydata/arrow-"+(smallCardCollapse ? "down" : "up")+".svg"} /></span>
 			<Collapse isOpen={smallCardCollapse}>
 				<div className="small-card-content text-left p-3">{content}</div>
 			</Collapse>
@@ -35,8 +35,10 @@ const HowItWordsGuide = () => {
 	return (<Container>
 		<div className="how-it-works-card">
 			<div className="how-it-works-header text-center" onClick={cardToggle}>
-				<img src="img/mydata/onboarding-1.png" className='w-50' />
-				<p className='text-white font-weight-bold mb-0'>HOW IT WORKS {cardCollapse ? '˄' : '˅'}</p>
+				<img src="img/mydata/how-it-works.png" className='w-50' />
+				<p className='text-white font-weight-bold mb-0 d-flex justify-content-center align-items-end'>
+					HOW IT WORKS <img style={{width:"2rem",height:"2rem"}} src={"img/mydata/arrow-"+(cardCollapse ? "down" : "up")+"-white.svg"} />
+				</p>
 			</div>
 			<Collapse isOpen={cardCollapse} className="how-it-works-overview text-center">
 				<h2 className='pt-3'>You're in Control</h2>
@@ -76,13 +78,33 @@ const CollapseSettings = ({ title, defaultCollapse, headerIMG, children }) => {
 	const [settingsOpen, setSettingsOpen] = useState(defaultCollapse);
 	const settingsToggle = () => setSettingsOpen(!settingsOpen);
 
+	let progress = null;
+	switch (title) {
+		case "Personal Info":
+			progress = getDataProgress(["name", "dob"]);
+			break;
+		case "Demographics Details":
+			progress = getDataProgress(["gender", "gender", "country", "location-region"]);
+			break;
+		default:
+			break;
+	}
+
+	const fullTick = () => {
+		if (progress === 1) return true;
+		else return false;
+	}
+
 	return (
 		<MyDataCard
 			className="my-3"
 			img={headerIMG}
 		>
 			<a onClick={settingsToggle}> <div className="d-flex justify-content-between align-items-center">
-				<h5>✓ {title}</h5> <span className='text-muted' style={{ fontSize: '1.5rem' }}>{settingsOpen ? '˄' : '˅'}</span>
+				<h5 className='m-0'><img src={"img/mydata/circle-"+(fullTick ? "tick.svg" : "no-tick.svg")} /> {title}</h5> 
+				<span className='text-muted' style={{ fontSize: '1.5rem' }}>
+					<img style={{width:"2rem",height:"2rem"}} src={"img/mydata/arrow-"+(settingsOpen ? "down" : "up")+".svg"} />
+				</span>
 			</div></a>
 			<Collapse isOpen={settingsOpen}>
 				{children}

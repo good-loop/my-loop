@@ -44,11 +44,12 @@ import C from '../../C';
 };
 
 /**
+ * @param keys {Array<String>} keys to check
  * @returns {Number} [0,1] percentage completed and shared
  */
-export const getDataProgress = () => { 
+export const getDataProgress = (keys) => { 
 	let count = 0;
-	const keys = ["name", "email", "dob", "gender", "country", "location-region", "causes", "adstype"]
+	if (!keys) keys = ["name", "email", "dob", "gender", "country", "location-region", "causes", "adstype"]
 	const claims = keys.map(key => getPVClaim({key}).value);
 
 	claims.forEach(claim => {
@@ -74,7 +75,7 @@ const getT4GProgress = () =>{
 	let tabs = pvTabsOpened.value;
 	if (tabs < 25) return 0.25; // earn a chunk of the badge by installing
 	if (tabs <= 100) return tabs/100; // linear to level 1
-	return 100;	// TODO how do we do level 2??
+	return 1;	// TODO how do we do level 2??
 };
 
 const MyDataDashboardPage = () => {
@@ -101,16 +102,16 @@ const MyDataDashboardPage = () => {
 		}
 	};
 	
-	const toggleShowInfoTabs = () => {
-		setShowInfoTabs(!showInfoTabs);
-		// hide any others
-		if (show) setShowInfoTabs(false);
-		if (showInfoAds) setShowInfoAds(false);
-	}
+	// const toggleShowInfoTabs = () => {
+	// 	setShowInfoTabs(!showInfoTabs);
+	// 	// hide any others
+	// 	if (show) setShowInfoTabs(false);
+	// 	if (showInfoAds) setShowInfoAds(false);
+	// }
 
-	const toggleShowInfoAds = () => {
-		setShowInfoAds(!showInfoAds);
-	}
+	// const toggleShowInfoAds = () => {
+	// 	setShowInfoAds(!showInfoAds);
+	// }
 
 	let activeTabId = DataStore.getUrlValue("tab") || "dashboard"; 
 
