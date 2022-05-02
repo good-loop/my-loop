@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Button} from 'reactstrap';
+import { Container, Row, Col, Button, Form, Alert} from 'reactstrap';
 import { ProfileDot, ProfileDotRow } from './MyDataCommonComponents';
-import { getCharityObject, getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
+import { getCharityObject, getEmail, getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
 import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import { getDataList } from '../../base/plumbing/Crud';
 import KStatus from '../../base/data/KStatus';
@@ -18,6 +18,7 @@ import { getId } from '../../base/data/DataClass';
 import NGOImage from '../../base/components/NGOImage';
 import NGODescription from '../../base/components/NGODescription';
 import { isPortraitMobile, space } from '../../base/utils/miscutils';
+import DataStore from '../../base/plumbing/DataStore';
 
 // Hidden until we get some latest news to show
 /*
@@ -165,7 +166,38 @@ const MyDataDashboardHomeTab = () => {
 		<ThisWeeksAdCard />
 		<br/>
 		<GetT4GCard ngo={ngo}/>
+		<FeedbackCard />
 	</>)
-}
+};
+
+const FeedbackCard = () => {
+	let [sent, setSent] = useState();
+	const sendFeedback = () => {
+		ServerIO.post("https://profiler.good-loop.com/form/good-loop.com", {
+			name: Login.getId(),
+			email: getEmail(),
+			message: DataStore.getValue("widget","feedback","message"),
+			notify: "support@good-loop.com"
+		});
+		setSent(true);
+	};
+
+	return (<Container className="dashboard-card">
+		<h1>Send Feedback</h1>
+		<p>Let us know what you think! Feedback really helps us to learn and improve.</p>
+		<Row>
+			{/* TODO an image <Col md={6} className="mb-3 mb-md-0">
+				<img src="/img/homepage/slide-1.png" className="w-100"/>
+			</Col> */}
+			<Col className="d-flex flex-column align-items-center justify-content-center">
+				<Form onSubmit={sendFeedback} >
+					<PropControl disabled={sent} type="textarea" prop="message" path={["widget","feedback"]} />
+					<Button disabled={sent} color="primary" className='mx-auto w-75 mt-2' onClick={sendFeedback}>Send</Button>
+				</Form>
+				{send && <Alert color="success">Thank you - Your message has been sent.</Alert>}
+			</Col>
+		</Row>
+</Container>);
+};
 
 export default MyDataDashboardHomeTab;
