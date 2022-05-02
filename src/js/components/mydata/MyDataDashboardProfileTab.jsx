@@ -156,6 +156,7 @@ const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
 
 	// HACK adjust some of the display for niceness
 	let displayValue = itemValue;
+	if (displayValue === "[]") displayValue = null; // Catch empty array
 	if (itemKey == 'gender' && itemValue) displayValue = toTitleCase(itemValue);
 	else if (itemKey == 'country' && itemValue) displayValue = countryListAlpha2[itemValue];	
 
