@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Container, Row, Col, Collapse, FormGroup, Progress } from 'reactstrap';
 import { Help } from '../../base/components/PropControl';
 import { isEmail } from './MyDataCommonComponents';
-import UserClaimControl, { getCharityObject, getEmail, getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
+import UserClaimControl, { getCharityObject, getEmail, causesMap, adstypeMap } from '../../base/components/PropControls/UserClaimControl';
 import CharityLogo from '../CharityLogo';
 import { MyDataCard } from './MyDataCommonComponents';
 import { countryListAlpha2 } from '../../base/data/CountryRegion';
@@ -11,6 +11,20 @@ import { getDataProgress } from './MyDataDashboardPage';
 import { toTitleCase } from '../../base/utils/miscutils';
 import Claim, { DEFAULT_CONSENT } from '../../base/data/Claim';
 import { getPVClaim } from '../../base/data/Person';
+
+// Prase list of strings into individual spans if the input is a list of strings
+const parseList = (value) => {
+	const valueMap = {...causesMap, ...adstypeMap};
+
+	if (!value) return null;
+	if (typeof value === 'string' && !value.startsWith('[') && !value.endsWith(']')) return <span>{value}</span>;
+	const value2 = JSON.parse(value);;
+	if (Array.isArray(value2)) {
+		return value2.map((item, i) => <span key={i}>{valueMap[item]}</span>);
+	}
+	return null;
+}
+
 
 const HowItWordsGuide = () => {
 
@@ -155,7 +169,7 @@ const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
 		</div>
 
 		{ ! editMode && <>
-			{displayValue ? <span>{displayValue}</span> : <a onClick={editModeToggle}>Add+</a>}
+			{displayValue ? parseList(displayValue) : <a onClick={editModeToggle}>Add+</a>}
 			<div className="d-flex justify-content-between align-items-center">
 				<span className='text-muted' style={{ fontSize: '.8rem' }}>{privacyLabel}</span>
 				<img style={{ height: '1.5rem', transform: 'translate(0, -.5rem)' }} src={"/img/mydata/padlock-"+privacyLevel+ ".png"} alt="padlock logo" />

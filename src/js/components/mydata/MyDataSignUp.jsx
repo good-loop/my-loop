@@ -69,6 +69,8 @@ export const MyDataSignUpModal = () => {
 const SignUpForm = () => {
 	const user = Login.isLoggedIn() ? Login.getUser() : null;
 
+	if (user) DataStore.setValue(PAGE_PATH, 1); // skip email signin if already logged in
+
 	const onRegister = () => {
 		const name = DataStore.getValue(PERSON_PATH.concat("name"));
 		const emailperms = DataStore.getValue(PERSON_PATH.concat("emailperms"));
@@ -93,20 +95,20 @@ const SignUpForm = () => {
 		</div>
 	}
 	
-	const SignedInDiv = () => {
-		return <div className='text-center'>
-			<hr/>
-			<p>You are already logged in as {user.name}.</p>
-			<p>Click to sign up for My.Data under your Account</p>
-			<a className='btn btn-primary' onClick={nextSignupPage} >Continue</a>
-			</div>
-	}
+	// const SignedInDiv = () => {
+	// 	return <div className='text-center'>
+	// 		<hr/>
+	// 		<p>You are already logged in as {user.name || user.xid}.</p>
+	// 		<p>Click to sign up for My.Data under your Account</p>
+	// 		<a className='btn btn-primary' onClick={nextSignupPage} >Continue</a>
+	// 		</div>
+	// }
 
 	return (<>
 		<h1 className="mb-3">Sign Up for My.Data</h1>
 		<p className="text-center">Use your data as a force for good and help us transform online advertising</p>
 
-		{user ? <SignedInDiv /> : <SignUpDiv />	}
+		 <SignUpDiv />
 	</>);
 };
 
