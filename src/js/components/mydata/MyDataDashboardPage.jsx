@@ -44,7 +44,7 @@ import C from '../../C';
 };
 
 /**
- * @param keys {Array<String>} keys to check
+ * @param keys {Array<String>} keys to check, defaults to all
  * @returns {Number} [0,1] percentage completed and shared
  */
 export const getDataProgress = (keys) => { 
@@ -54,6 +54,7 @@ export const getDataProgress = (keys) => {
 
 	claims.forEach(claim => {
 		if ( ! claim || ! claim.v) return; // unset				
+		if (claim.v === "[]") return; // empty array
 		let consent = Claim.consent(claim);
 		if (consent==="public" || consent==="careful") count++;
 		else if (consent==="private") count += 0.1; // private
