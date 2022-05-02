@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { Container, Col, Row, Button } from 'reactstrap';
 import BG from '../../base/components/BG';
 import NGODescription from '../../base/components/NGODescription';
+import { Help } from '../../base/components/PropControl'; 
 import CharityLogo from '../CharityLogo';
 import { getDataItem } from '../../base/plumbing/Crud';
 import NGOImage from '../../base/components/NGOImage';
@@ -21,24 +22,13 @@ import { nextSignupPage } from './MyDataSignUp';
  * @returns 
  */
 export const MyDataCard = ({img, info, className, children}) => {
-
     //assMatch(img, "String|Function");
     let imgComponent = _.isString(img) && <BG src={img} className="w-100" ratio={30} center/>;
     if (!imgComponent) imgComponent = img; // && _.isFunction(img)) ImgComponent = img; 
 
-    const [showInfo, setShowInfo] = useState(false);
-
-    const onMoreInfo = e => {
-        e.preventDefault();
-        setShowInfo(!showInfo);
-    }
-
     return <div className={space("mydata-card", className)}>
         {imgComponent}
-        {info && <a className="more-info-btn" onClick={onMoreInfo}><span>?</span></a>}
-        {showInfo && <div className="more-info">
-            {info}
-        </div>}
+        {info && <Help className="more-info-btn" icon="?" children={info} />}
         <div className="card-content">
             {children}
         </div>
