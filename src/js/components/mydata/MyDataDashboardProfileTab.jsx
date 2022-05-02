@@ -83,15 +83,17 @@ const CollapseSettings = ({ title, defaultCollapse, headerIMG, children }) => {
 		case "Personal Info":
 			progress = getDataProgress(["name", "dob"]);
 			break;
-		case "Demographics Details":
-			progress = getDataProgress(["gender", "gender", "country", "location-region"]);
+		case "Demographic Details":
+			progress = getDataProgress(["age-approx", "gender", "country", "location-region"]);
 			break;
+		case "Your interests":
+			progress = getDataProgress(["causes", "adstype"]);
 		default:
 			break;
 	}
 
 	const fullTick = () => {
-		if (progress === 1) return true;
+		if (progress >= 1) return true;
 		else return false;
 	}
 
@@ -101,7 +103,7 @@ const CollapseSettings = ({ title, defaultCollapse, headerIMG, children }) => {
 			img={headerIMG}
 		>
 			<a onClick={settingsToggle}> <div className="d-flex justify-content-between align-items-center">
-				<h5 className='m-0'><img src={"img/mydata/circle-"+(fullTick ? "tick.svg" : "no-tick.svg")} /> {title}</h5> 
+				<h5 className='m-0'><img style={{height:'2rem'}} src={"img/mydata/circle-"+(fullTick() ? "tick.svg" : "no-tick.svg")} /> {title}</h5> 
 				<span className='text-muted' style={{ fontSize: '1.5rem' }}>
 					<img style={{width:"2rem",height:"2rem"}} src={"img/mydata/arrow-"+(settingsOpen ? "down" : "up")+".svg"} />
 				</span>
