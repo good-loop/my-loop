@@ -51,8 +51,12 @@
         .MDText > p {
             padding-top: 1rem;
         }
-    }
 
+        label {
+            text-transform: uppercase;
+            font-size: .8rem;
+        }
+    }
     .carousel-indicators {
         li {
             width: 15px;
@@ -62,6 +66,7 @@
             border: 1px solid grey;
             // margin-right: .5rem;
         }
+
         .active {
             background-color: white;
         }
@@ -71,6 +76,43 @@
         height: 50vh;
     }
 
+    // Pills for causes
+    // TODO: Tweak flex layout to look better on all displays
+    // TODO: Edit PropControl to assign an ID to each checkbox, and pass that ID into the label using the "for" keyword
+    //       E.g: <input type="checkbox" />
+    //            <label for="community-development">Community Development</label>
+    //            - otherwise this method of creating pills won't work.
+    .checkboxes.form-group {
+        display: flex;
+        flex-wrap: wrap;
+
+        .form-check {
+            padding: 0;
+            margin: 0.3rem;
+            flex-grow: 6;
+
+            input[type="checkbox"] {
+                display: none;
+            }
+
+            // Pill is unchecked
+            input[type="checkbox"] + label {
+                border: 1px solid @gl-desat-blue;
+                border-radius: 3rem;
+                background: #fff;
+                padding: 6px 12px;
+                cursor: pointer;
+                color: @gl-darker-grey;
+            }
+
+            // Pill is checked / active
+            input[type="checkbox"]:checked + label:active,
+            input[type="checkbox"]:checked + label {
+                background: @gl-desat-blue;
+                color: #fff
+            }
+        }
+    }
 }
 
 .mydata-signup {
