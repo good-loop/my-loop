@@ -19,6 +19,7 @@ import NGOImage from '../../base/components/NGOImage';
 import NGODescription from '../../base/components/NGODescription';
 import { isPortraitMobile, space } from '../../base/utils/miscutils';
 import DataStore from '../../base/plumbing/DataStore';
+import PropControl from '../../base/components/PropControl';
 
 // Hidden until we get some latest news to show
 /*
@@ -173,12 +174,13 @@ const MyDataDashboardHomeTab = () => {
 const FeedbackCard = () => {
 	let [sent, setSent] = useState();
 	const sendFeedback = () => {
-		ServerIO.post("https://profiler.good-loop.com/form/good-loop.com", {
+		let data = {
 			name: Login.getId(),
 			email: getEmail(),
 			message: DataStore.getValue("widget","feedback","message"),
 			notify: "support@good-loop.com"
-		});
+		};
+		ServerIO.load("https://profiler.good-loop.com/form/good-loop.com", {data, method: 'POST'});
 		setSent(true);
 	};
 
@@ -190,11 +192,11 @@ const FeedbackCard = () => {
 				<img src="/img/homepage/slide-1.png" className="w-100"/>
 			</Col> */}
 			<Col className="d-flex flex-column align-items-center justify-content-center">
-				<Form onSubmit={sendFeedback} >
-					<PropControl disabled={sent} type="textarea" prop="message" path={["widget","feedback"]} />
+				<Form onSubmit={sendFeedback} className="w-75" >
+					<PropControl label="Your Message" className="w-100" disabled={sent} type="textarea" rows={5} prop="message" path={["widget","feedback"]} />
 					<Button disabled={sent} color="primary" className='mx-auto w-75 mt-2' onClick={sendFeedback}>Send</Button>
 				</Form>
-				{send && <Alert color="success">Thank you - Your message has been sent.</Alert>}
+				{sent && <Alert color="success">Thank you - Your message has been sent.</Alert>}
 			</Col>
 		</Row>
 </Container>);
