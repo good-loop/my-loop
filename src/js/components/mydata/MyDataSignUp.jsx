@@ -59,7 +59,7 @@ export const MyDataSignUpModal = () => {
 			size="lg"
 		>
 			<ModalBody>
-				<CloseButton size='lg' onClick={() => showMyDataSignUpModal(false)}/>
+				<CloseButton className='mydata-signup-close' size='lg' onClick={() => showMyDataSignUpModal(false)}/>
 				<MyDataSignUp />
 			</ModalBody>
 		</Modal>
