@@ -57,13 +57,13 @@ export const CharityCard = ({cid, item}) => {
     }
 
     return <MyDataCard
-        className="charity-card"
+        className="mydata-card"
         img = {<NGOImage bg main ratio={30} center className="w-100" ngo={ngo}/>}
         info={<NGODescription extended ngo={ngo}/>}
     >
         <CharityLogo charity={ngo}/>
         <NGODescription summarize ngo={ngo} />
-        <Button color="secondary" onClick={onClick}>Select</Button>
+        <Button color="primary" onClick={onClick}>Select</Button>
     </MyDataCard>
 
 };
