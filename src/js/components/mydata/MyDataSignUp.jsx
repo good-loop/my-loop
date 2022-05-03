@@ -141,8 +141,9 @@ const MyDataSignUp = () => {
 		return null;
 	}
 	const PageComponent = PAGES[page];
-	
+
 	return <div className="mydata-signup">
+		{/* TODO: Remove before release */}
 		<div className="debug">
 			*debug page selector*: <a onClick={prevSignupPage}>Back</a> /	<a onClick={nextSignupPage}>Next</a>
 		</div>
