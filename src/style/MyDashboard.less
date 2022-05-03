@@ -3,15 +3,53 @@
 	border: solid 1px @gl-dark-grey;
 	border-radius: 0.75rem; // .rounded 
 	padding: 1rem; // .py3
-	.large();
-	img {
-		border-radius: 0.5rem;
-		overflow: hidden;
-	}
 	.img-lg {
 		width: 30%;
 		@media @width-mobile {
 			width: 100%;
+		}
+	}
+
+	&.achievements {
+		background-color: @gl-desat-blue;
+		max-width: 100%;
+		height: auto;
+	}
+
+	// "Together we've rasied" card on dashboard
+	.together-we-raised {
+		padding-top: 2rem; 
+		padding-bottom: 1rem; 
+		h3, h1 {
+			text-transform: capitalize;
+			color: #fff !important;
+		}
+		h3 { font-weight: 400; }
+		h1 { font-size: 3rem; }
+		.logo {
+			height: 40%;
+			width: auto;
+		}
+	}
+
+	&.supporting {
+		h5 {
+			font-size: 1rem;
+			color: @gl-light-blue !important;
+		}
+		h4 {
+			color: @gl-light-blue !important;
+		}
+		.charity-logo {
+			padding: 0;
+			margin: 0;
+			width: 100%;
+			text-align: center;
+
+			img {
+				padding: 0;
+				margin-top: -.5rem;
+			}
 		}
 	}
 }

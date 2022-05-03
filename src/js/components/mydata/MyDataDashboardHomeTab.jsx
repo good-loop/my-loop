@@ -20,6 +20,7 @@ import NGODescription from '../../base/components/NGODescription';
 import { isPortraitMobile, space } from '../../base/utils/miscutils';
 import DataStore from '../../base/plumbing/DataStore';
 import PropControl from '../../base/components/PropControl';
+import CharityLogo from '../CharityLogo';
 
 // Hidden until we get some latest news to show
 /*
@@ -46,26 +47,28 @@ const LatestNewsCard = () => {
 };*/
 
 const AchievementCard = () => {
-	return (
-	<Container className='dashboard-card'>
-			<div className='text-center text-white'>
+	return (<>
+	<h1 className="mt-4 mb-4">Our Community Impact</h1>
+	<Container className='dashboard-card achievements'>
+			<Container className='together-we-raised'>
 				<h3>Together we've raised</h3>
-				<h1><TickerTotal/></h1>
+				<h1>&lt;&nbsp;<TickerTotal/>&nbsp;&gt;</h1>
 				<h3>For global causes</h3>
-			</div>
-			<div className="d-flex flex-row justify-content-center align-items-center">
-				<img TODOMYDATA_img src="/img/placeholder-circle.png" className='img-lg' alt="" />
-			</div>
-			<Container className='border border-white rounded bg-white my-3 py-3'>
-				<p className='text-center'>Some Things We've Achieved</p>
-				<ProfileDotRow>
-					<ProfileDot TODOMYDATA_img><>20,000 Meals For Children</></ProfileDot>
-					<ProfileDot TODOMYDATA_img><>600 Life-Saving Medicine Kits</></ProfileDot>
-					<ProfileDot TODOMYDATA_img><>100 Guide Dog Puppies Trained</></ProfileDot>
-				</ProfileDotRow>
-			</Container>
+			
+				<Container className="d-flex flex-row justify-content-center">
+					<img src="/img/mydata/world-impact.png" className='img-lg' />
+				</Container>
+
+				<Container className="my-2 py-2 text-white">
+					<ProfileDotRow>
+						<ProfileDot imgUrl="/img/mydata/supporting.png"><>20,000 Meals For Children</></ProfileDot>
+						<ProfileDot imgUrl="/img/mydata/supporting.png"><>600 Life-Saving Medicine Kits</></ProfileDot>
+						<ProfileDot imgUrl="/img/mydata/supporting.png"><>100 Guide Dog Puppies Trained</></ProfileDot>
+					</ProfileDotRow>
+				</Container>
+			</Container>		
 	</Container>
-	);
+	</>)
 }
 
 const ThisWeeksAdCard = () => {
@@ -140,17 +143,17 @@ const GetT4GCard = ({ngo}) => {
 };
 
 const AboutYourCharity = ({ngo}) => {
-	return <Container className="dashboard-card">
-		<h1>About your charity</h1>
-		<Row>
-			<Col md={6} className="mb-3 mb-md-0">
-				<NGOImage src="/img/stats1-cropped.jpg" main ngo={ngo} className="w-100"/>
-			</Col>
-			<Col md={6}>
-				<NGODescription extended ngo={ngo} className="text-center"/>
-			</Col>
-		</Row>
-	</Container>
+	const name = NGO.displayName(ngo);
+	return (
+		<Container className="dashboard-card supporting">
+			<h5 className="pt-2">Your Are Supporting</h5>
+			{ngo && <div className="charity-logo"><CharityLogo charity={ngo} /></div>}
+			<NGOImage src="/img/stats1-cropped.jpg" main ngo={ngo} className="w-100"/>
+			
+			<h4 className="mt-3 text-left">What {name} Is Doing</h4>
+			<NGODescription extended ngo={ngo} className="text-center"/>
+		</Container>
+	)
 };
 
 const MyDataDashboardHomeTab = () => {
