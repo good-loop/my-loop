@@ -78,10 +78,7 @@ const ThisWeeksAdCard = () => {
 	}, [adLoaded]);
 
 	const adid = getThisWeeksAd();
-	console.log("!!! adid: " + adid);
-
 	const watched = hasWatchedThisWeeksAd(adid) && !watchAnyway;
-	console.log("!!! watched: " + (hasWatchedThisWeeksAd(adid) && !watchAnyway));
 
 	const WatchedAd = ({className, style, showBtn}) => {
 		const watchAgain = () => {
