@@ -227,6 +227,30 @@
             //top: 2rem;
         }
     }
+
+    .privacy-onboarding-steps {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 3rem;
+        margin-bottom: 2rem;
+
+        span {
+            margin: 1rem;
+            height: 1.25rem;
+            width: 1.25rem;
+            background-color: white;
+            border-radius: 50%;
+            display: inline-block;
+            border: 2px solid @gl-desat-blue;
+            text-align: center;
+
+            &.active {
+                background-color: @gl-desat-blue;
+            }
+        }
+    }
+
     .debug {
         position: absolute;
         top: 0;
@@ -240,7 +264,7 @@
     }
 
     .featured-charities {
-        margin-bottom: 1rem;
+        margin-bottom: 1.3rem;
         color: @gl-red;
     }
 
