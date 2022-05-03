@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { RegisterLink, setLoginVerb, setShowLogin } from '../../base/components/LoginWidget';
 import { Col, Container, Row, Carousel, CarouselControl, CarouselItem, Button } from 'reactstrap';
 import BG from '../../base/components/BG';
-import { getBrowserVendor, isMobile, isPortraitMobile, modifyHash, scrollTo, space } from '../../base/utils/miscutils';
+import { getBrowserVendor, isMobile, isPortraitMobile, modifyHash, scrollTo, space, stopEvent } from '../../base/utils/miscutils';
 import C from '../../C';
 import Icon from '../../base/components/Icon';
 import LinkOut from '../../base/components/LinkOut';
@@ -15,11 +15,11 @@ import Roles from '../../base/Roles';
 import { A } from '../../base/plumbing/glrouter';
 import NGOImage from '../../base/components/NGOImage';
 import NGO from '../../base/data/NGO';
-import {MyDataSignUpButton, MyDataSignUpModal} from '../mydata/MyDataSignUp';
+import {MyDataSignUpButton, MyDataSignUpModal, showMyDataSignUpModal} from '../mydata/MyDataSignUp';
 
-const PageCard = ({id, className, children}) => {
+const PageCard = ({id, className, ref, children}) => {
 	// Why two containers?? Is the outer one for card-specific css rules to latch onto??
-	return <Container id={id} fluid className={space('page-card', className)}>
+	return <Container id={id} ref={ref} fluid className={space('page-card', className)}>
 		<Container>
 			{children}
 		</Container>
@@ -149,26 +149,40 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft, t4g=true, mydata=
 
 const MyDuoLandingSection = ({ngo, title, bgImg}) => {
 	const name = NGO.displayName(ngo);
+
+	const fontSizeCTA = window.innerWidth <= 768 ? '.8rem' : '1rem';
 	
 	if ( ! title) {
 		title = `Turn your web browsing into ${(ngo && "cash for " + name) || "charity donations"}. For free.`;
 	}
 
 	return (<>
-	<Container fluid className="landing px-0 d-flex flex-column align-items-center" style={{backgroundColor:'#006A87'}}>
-		<img src='img/splash-screen/mobile-splash-new-draft.png' className="d-md-none d-block w-100" />
-		{title && <h1 className='text-left bolder text-white mx-3 mt-3'>{title}</h1>}
-		<a className='btn btn-primary btn-lg mt-3 mx-auto mb-5' href='/signup'>See how it works</a>
+	<Container fluid className="landing px-0" >
+		<BG src='img/splash-screen/background-mobile.svg'>
+		<img src='img/splash-screen/foreground-mobile.png' className="d-md-none d-block w-100" />
+		<div className="d-flex flex-column align-items-center">
+			{title && <h1 className='text-left bolder text-white mx-3 mt-3'>{title}</h1>}
+			<a className='btn btn-primary btn-lg mt-3 mx-auto mb-5' href='/ourstory'>Discover My.Good-Loop</a>
+		</div>
+		</BG>
 	</Container>
-	<Container fluid className="landing-duo-cta bg-gl-light-pink d-flex justify-content-center p-3">
-		<div style={{borderRadius:'10px', color:'#006A87'}} className="mydata-splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
-			<img src="img/mydata/data-badge.png" className='logo'/>
-			<span className='font-weight-bold p-1 pl-3' style={{fontSize:'.8rem'}}>Sign Up For My.Data</span>
-		</div>
-		<div style={{borderRadius:'10px', color:'#006A87'}} className="t4g-splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
-			<img src="img/mydata/tabs-badge.png" className='logo'/>
-			<span className='font-weight-bold p-1 pl-3' style={{fontSize:'.8rem'}}>Get Tabs For Good</span>
-		</div>
+	<Container fluid className="landing-duo-cta bg-gl-light-pink d-flex justify-content-around py-3 px-1">
+		<a onClick={e => {
+				stopEvent(e);
+				showMyDataSignUpModal();
+			}} className='text-decoration-none'>
+			<div style={{borderRadius:'10px', color:'#006A87'}} className="mydata-splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
+				<img src="img/mydata/data-badge.png" className='logo'/>
+				<span className='font-weight-bold p-1 pl-3' style={{fontSize:fontSizeCTA}} >Sign Up For My.Data</span>
+				<MyDataSignUpModal />
+			</div>
+			</a>
+		<a href='/tabsforgood' className='text-decoration-none'>
+			<div style={{borderRadius:'10px', color:'#006A87'}} className="t4g-splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
+				<img src="img/mydata/tabs-badge.png" className='logo'/>
+				<span className='font-weight-bold p-1 pl-3' style={{fontSize:fontSizeCTA}}>Get Tabs For Good</span>
+			</div>
+		</a>
 	</Container>
 	</>);
 }
@@ -180,7 +194,7 @@ const CornerHummingbird = () => {
 }
 
 const CharityBanner = () => {
-    return <Container className="charity-icons mb-5">
+    return <Container className="charity-icons my-5">
         <Row className="text-center">
 					<Col className='d-none d-md-block'><img src="img/LandingCharity/tommys.png" alt="" /></Col>
 					<Col><img src="img/LandingCharity/refuge.png" alt="" /></Col>
