@@ -170,21 +170,21 @@ const MyDuoLandingSection = ({ngo, title, bgImg}) => {
 		</div>
 		</BG>
 	</Container>
-	<Container fluid className="landing-duo-cta bg-gl-light-pink d-flex justify-content-around py-3 px-1">
+	<Container fluid className="landing-duo-cta bg-gl-light-pink d-flex justify-content-center py-3 px-1">
 		<a onClick={e => {
 				stopEvent(e);
 				showMyDataSignUpModal();
 			}} className='text-decoration-none'>
-			<div style={{borderRadius:'10px', color:'#006A87'}} className="mydata-splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
-				<img src="img/mydata/data-badge.png" className='logo'/>
-				<span className='font-weight-bold p-1 pl-3' style={{fontSize:fontSizeCTA}} >Sign Up For My.Data</span>
+			<div style={{borderRadius:'10px'}} className="mydata-splash-cta splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
+				<img src="img/mydata/data-cta.png" className='logo'/>
+				<span className='font-weight-bold p-1 pl-3 mx-auto' style={{fontSize:fontSizeCTA}} >Sign Up For My.Data</span>
 				<MyDataSignUpModal />
 			</div>
 			</a>
 		<a href='/tabsforgood' className='text-decoration-none'>
-			<div style={{borderRadius:'10px', color:'#006A87'}} className="t4g-splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
-				<img src="img/mydata/tabs-badge.png" className='logo'/>
-				<span className='font-weight-bold p-1 pl-3' style={{fontSize:fontSizeCTA}}>Get Tabs For Good</span>
+			<div style={{borderRadius:'10px'}} className="t4g-splash-cta splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
+				<img src="img/mydata/t4g-cta.png" className='logo'/>
+				<span className='font-weight-bold p-1 pl-3 mx-auto' style={{fontSize:fontSizeCTA}}>Get Tabs For Good</span>
 			</div>
 		</a>
 	</Container>
