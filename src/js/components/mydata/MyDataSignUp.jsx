@@ -20,7 +20,7 @@ const WIDGET_PATH = ['widget', 'MyDataSignUp'];
 const SHOW_PATH = [...WIDGET_PATH, 'show'];
 const PAGE_PATH = [...WIDGET_PATH, 'page'];
 
-const showMyDataSignUpModal = (s=true) => {
+export const showMyDataSignUpModal = (s=true) => {
 	DataStore.setValue(SHOW_PATH, s); 
 };
 
