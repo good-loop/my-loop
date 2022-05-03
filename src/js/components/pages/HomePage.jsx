@@ -20,6 +20,7 @@ import {
 	GetInvolvedSection,
 	CharityBanner,
 	MyLandingSection,
+	MyDuoLandingSection,
 	PositivePlaceSection,
 	CurvePageCard,
 	PageCard,
@@ -50,7 +51,8 @@ const HomePage = ({spring}) => {
 
 	return (<>
 		<div className="HomePage widepage">
-			<MyLandingSection shiftLeft/>
+			{/* <MyLandingSection shiftLeft/> */}
+			<MyDuoLandingSection />
 			<CharityBanner />
 			<JoinOurMovement />
 			<NewsAwards />

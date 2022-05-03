@@ -147,6 +147,32 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft, t4g=true, mydata=
 </>);
 };
 
+const MyDuoLandingSection = ({ngo, title, bgImg}) => {
+	const name = NGO.displayName(ngo);
+	
+	if ( ! title) {
+		title = `Turn your web browsing into ${(ngo && "cash for " + name) || "charity donations"}. For free.`;
+	}
+
+	return (<>
+	<Container fluid className="landing px-0 d-flex flex-column align-items-center" style={{backgroundColor:'#006A87'}}>
+		<img src='img/splash-screen/mobile-splash-new-draft.png' className="d-md-none d-block w-100" />
+		{title && <h1 className='text-left bolder text-white mx-3 mt-3'>{title}</h1>}
+		<a className='btn btn-primary btn-lg mt-3 mx-auto mb-5' href='/signup'>See how it works</a>
+	</Container>
+	<Container fluid className="landing-duo-cta bg-gl-light-pink d-flex justify-content-center p-3">
+		<div style={{borderRadius:'10px', color:'#006A87'}} className="mydata-splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
+			<img src="img/mydata/data-badge.png" className='logo'/>
+			<span className='font-weight-bold p-1 pl-3' style={{fontSize:'.8rem'}}>Sign Up For My.Data</span>
+		</div>
+		<div style={{borderRadius:'10px', color:'#006A87'}} className="t4g-splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
+			<img src="img/mydata/tabs-badge.png" className='logo'/>
+			<span className='font-weight-bold p-1 pl-3' style={{fontSize:'.8rem'}}>Get Tabs For Good</span>
+		</div>
+	</Container>
+	</>);
+}
+
 const CornerHummingbird = () => {
 	return (
 		<img src="/img/green/hummingbird.png" className="corner-hummingbird"/>
@@ -602,6 +628,7 @@ export {
 	GetInvolvedSection,
 	CharityBanner,
 	MyLandingSection,	
+	MyDuoLandingSection,
 	PageCard,
 	CurvePageCard,
 	WhatIsTabsForGood,
