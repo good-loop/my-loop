@@ -86,8 +86,10 @@ const SupportingCard = () => {
 const DataSharedProgressBar = () => {
 	const sharedPercentage = getDataProgress();
 
-	return (
+	return (<div className='data-shared-progress-section'>
 		<Progress className="data-shared-progress" value={100*sharedPercentage} title="How complete is your profile? Fill in and use more data to achieve more." />
+		{sharedPercentage > 0 && <img src='img/icons/Heart_single.png' className='progress-heart' style={{left:`${100*sharedPercentage}%`}}/>}
+		</div>
 	)
 }
 
