@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import PropControl from '../../base/components/PropControl';
-import { Search } from '../pages/TabsForGoodSettings';
 import { CharityCard } from './MyDataCommonComponents';
 import { getCharityObject } from '../../base/components/PropControls/UserClaimControl';
 import { getDataItem } from '../../base/plumbing/Crud';
@@ -42,7 +41,7 @@ const MyDataSelectCharity = () => {
 	DataStore.setValue(charityPath, { hits, total: hits.length }, false);
 
     return <>
-        <h2>My.Data</h2>
+        <img src="/img/mydata/charity-header.png" className="w-100"/>
         <h1 className="p-1 mb-4">Welcome!</h1>
         <h4 className="text-center p-1 mb-4">To get started, select the charity you would like to support</h4>
         <PropControl type="text" path={CHARITY_WIDGET_PATH} prop="charitySearch" label="Search our Charity Directory" className="charity-search" placeholder="Search Charities"/>
