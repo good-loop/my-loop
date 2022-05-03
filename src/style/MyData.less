@@ -346,6 +346,17 @@
 }
 
 .mydata-modal {
+    .modal-header-image {
+        width: 100%!important;
+        margin: -3.5rem;
+        padding: 0;
+        margin-bottom: 2.5rem;
+
+        img {
+            max-width: 698px; // NB: Grabbed from the base modal's max-width (minus 2 pixels). Is there a cleaner way to do this?
+        }
+    }
+
     .modal-content { 
         // max-width: 412px; // Temp forced mobile view in Desktop. Remove this after we got proper desktop version.
 		padding: 2.5rem;
@@ -439,8 +450,8 @@
 
 .mydata-signup-close {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: -15px;
+    left: -15px;
     padding-right: .5em !important;
     padding-bottom: .5em !important;
     font-size: 1.75rem;
