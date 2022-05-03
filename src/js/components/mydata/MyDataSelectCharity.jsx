@@ -43,8 +43,8 @@ const MyDataSelectCharity = () => {
 
     return <>
         <h2>My.Data</h2>
-        <h1 className="p-1">Welcome!</h1>
-        <h4 className="text-center mb-4">To get started, select the charity you would like to support</h4>
+        <h1 className="p-1 mb-4">Welcome!</h1>
+        <h4 className="text-center p-1 mb-4">To get started, select the charity you would like to support</h4>
         <PropControl type="text" path={CHARITY_WIDGET_PATH} prop="charitySearch" label="Search our Charity Directory" className="charity-search" placeholder="Search Charities"/>
         <hr />
         {noQ && <h3 className="featured-charities text-center">Featured Charities</h3>}
