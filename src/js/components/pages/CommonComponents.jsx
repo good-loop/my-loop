@@ -17,9 +17,9 @@ import NGOImage from '../../base/components/NGOImage';
 import NGO from '../../base/data/NGO';
 import {MyDataSignUpButton, MyDataSignUpModal, showMyDataSignUpModal} from '../mydata/MyDataSignUp';
 
-const PageCard = ({id, className, children}) => {
+const PageCard = ({id, className, ref, children}) => {
 	// Why two containers?? Is the outer one for card-specific css rules to latch onto??
-	return <Container id={id} fluid className={space('page-card', className)}>
+	return <Container id={id} ref={ref} fluid className={space('page-card', className)}>
 		<Container>
 			{children}
 		</Container>
@@ -166,7 +166,7 @@ const MyDuoLandingSection = ({ngo, title, bgImg}) => {
 		</div>
 		</BG>
 	</Container>
-	<Container fluid className="landing-duo-cta bg-gl-light-pink d-flex justify-content-center p-3">
+	<Container fluid className="landing-duo-cta bg-gl-light-pink d-flex justify-content-around py-3 px-1">
 		<a onClick={e => {
 				stopEvent(e);
 				showMyDataSignUpModal();
@@ -194,7 +194,7 @@ const CornerHummingbird = () => {
 }
 
 const CharityBanner = () => {
-    return <Container className="charity-icons mb-5">
+    return <Container className="charity-icons my-5">
         <Row className="text-center">
 					<Col className='d-none d-md-block'><img src="img/LandingCharity/tommys.png" alt="" /></Col>
 					<Col><img src="img/LandingCharity/refuge.png" alt="" /></Col>
