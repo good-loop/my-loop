@@ -22,11 +22,12 @@ import NewtabTutorialCard, { openTutorial, TutorialComponent, TutorialHighlighte
 import { fetchCharity } from './pages/MyCharitiesPage';
 import { getPVSelectedCharityId, getTabsOpened, getTabsOpened2, Search } from './pages/TabsForGoodSettings';
 import TickerTotal from './TickerTotal';
-import Person, { getProfile, getPVClaimValue } from '../base/data/Person';
+import Person, { getProfile, getPVClaim } from '../base/data/Person';
 import Misc from '../base/components/Misc';
 import Money from '../base/data/Money';
 import NGO from '../base/data/NGO';
 import Roles, { isTester } from '../base/Roles';
+import Claim from '../base/data/Claim';
 
 
 // DataStore
@@ -71,8 +72,8 @@ const WebtopPage = () => {
 
 	Login.app = "t4g.good-loop.com"; // Not My.GL!
 	const pvCharityID = getPVSelectedCharityId();
-	const loadingCharity = !pvCharityID || !pvCharityID.resolved;
-	const charityID = pvCharityID && pvCharityID.value;
+	const charityID = pvCharityID && (pvCharityID.value || pvCharityID.interim);
+	const loadingCharity = ! pvCharityID || ! pvCharityID.resolved;	
 	let [showPopup, setShowPopup] = useState(false);
 
 	// Yeh - a tab is opened -- let's log that (once only)
@@ -221,8 +222,8 @@ const ENGINES = {
  * @returns 
  */
 const NormalTabCenter = ({ charityID, loadingCharity }) => {
-	let pvSE = getPVClaimValue({ xid: Login.getId(), key: "searchEngine" });
-	let searchEngine = (pvSE && pvSE.value) || "google";
+	let pvSE = getPVClaim({ xid: Login.getId(), key: "searchEngine" });
+	let searchEngine = Claim.value(pvSE) || "google";
 	const engineData = ENGINES[searchEngine];
 
 	return <>
@@ -273,13 +274,9 @@ const NewTabCharityCard = ({ cid, loading }) => {
 		<a href={"/account?tab=tabsForGood" + params}>
 			<TutorialComponent page={1}>
 				<WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}>
-					{loading? 
-						<p className="my-auto">Loading...</p>
-					: <>{charity ?
-							<CharityLogo charity={charity} />
-							: <p className="my-auto">Select a charity</p>}
-						</>
-					}
+					{charity && <CharityLogo charity={charity} />}
+					{ ! charity && loading && <p className="my-auto">Loading...</p>}
+					{ ! charity && ! loading && <p className="my-auto">Select a charity</p>}
 				</WhiteCircle>
 			</TutorialComponent>
 		</a>

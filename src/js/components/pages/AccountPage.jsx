@@ -1,50 +1,20 @@
-import React from 'react';
-import { Col, Row } from 'reactstrap';
+import React, { useState } from 'react';
+import { Col, Row, Container, Button } from 'reactstrap';
 import { addImageCredit } from '../../base/components/AboutPage';
 import Editor3ColLayout, { LeftSidebar, MainPane } from '../../base/components/Editor3ColLayout';
 import { LoginLink } from '../../base/components/LoginWidget';
 import Person, { getAllXIds, getEmail, getProfile, hasConsent, PURPOSES } from '../../base/data/Person';
 import DataStore from '../../base/plumbing/DataStore';
 import { lg } from '../../base/plumbing/log';
-import { space } from '../../base/utils/miscutils';
+import { getScreenSize, isMobile, space } from '../../base/utils/miscutils';
 import Login from '../../base/youagain';
 import SubscriptionBox from '../cards/SubscriptionBox';
 import ShareButton from '../ShareButton';
 import AccountSettings from './AccountSettings';
 import TabsForGoodSettings from './TabsForGoodSettings';
 import C from '../../C';
+import MyDataDashboard from '../mydata/MyDataDashboardPage';
 
-
-const Account = () => {
-	let xids = getAllXIds();
-	let user = Login.getUser();
-	let name = user.name || user.xid;
-
-	return <>
-		<Row className="mb-5 user">
-			<Col md={3} className="d-md-block d-flex justify-content-center">
-				<img src="/img/LandingBackground/user.png" alt="user icon" />
-			</Col>
-			<Col md={8} className="flex-column justify-content-center align-items-start">
-				<h1>Hi {name},</h1>
-				<p>Thanks for being a member of the Good-loop family. Together we are changing the global ad industry and making a meaningful impact on the world.</p>
-			</Col>
-		</Row>
-		<div className="w-75 mx-auto">
-			<div className="text-center">
-				<h2>What to do now?</h2>
-				<p>You have already made the first important step in helping us: you joined our community. But there is more you can do!</p>
-			</div>
-			<MoreToDo xids={xids} />
-		</div>
-	</>;
-};
-
-const label4tab = {
-	account: "My Account",
-	settings: "Settings",
-	tabsForGood: "Tabs for Good"
-};
 
 const Page = () => {
 	// handle the not-logged-in case
@@ -64,60 +34,24 @@ const Page = () => {
 	const user = Login.getUser();
 	const name = user.name || user.xid;
 
-	// Which tab? (default to account)
-	const tab = DataStore.getUrlValue('tab') || 'account';
+	// Which tab? (default to dashboard)
+	const tab = DataStore.getUrlValue('tab') || 'dashboard';
 
 	return (<>
-		<div className="AccountPage avoid-navbar">
-			<Editor3ColLayout>
-				<LeftSidebar>
-					<div className="account-sidebar pl-3">
-						<h5 className="p-2">My Good-Loop</h5>
-						{Object.keys(label4tab).map(t => <SidebarTabLink key={t} tab={t} label={label4tab[t]} selected={t === tab} />)}
-					</div>
-				</LeftSidebar>
-				<MainPane>
-					<div className="pt-5">
-						{tab === 'account' && <Account />}
-						{tab === 'settings' && <AccountSettings />}
-						{tab === 'tabsForGood' && <TabsForGoodSettings />}
-					</div>
-				</MainPane>
-			</Editor3ColLayout>
+		<div className="AccountPage">
+			<Container className="pt-3">
+				{tab === 'dashboard' && <MyDataDashboard />}
+				{tab === 'profile' && <MyDataDashboard />}
+				{tab === 'settings' && <AccountSettings />}
+				{tab === 'tabsForGood' && <TabsForGoodSettings />}
+			</Container>
 		</div>
 	</>);
 };
 
-/**
- * 
- * @param {!string} tab The tab name
- * @param {boolean} selected
- */
-const SidebarTabLink = ({ tab, label, selected }) => {
-	let url = "/account?tab=" + escape(tab);
-	if (tab === "tabsForGood") {
-		// TODO detect whether T4G is installed on this specific browser.
-		let pvPerson = getProfile();
-		let hasT4G = Person.hasApp(pvPerson.value, "t4g.good-loop.com");
-		if ( ! hasT4G) {
-			// Detect whether we're on Chrome or not
-			// TODO Edge too -- see T4GSignUp
-			let isChrome = navigator && navigator.vendor === "Google Inc.";
-			if ( ! isChrome) {
-				url = "https://my.good-loop.com/tabsforgood"
-				label = "About "+C.T4G;
-			} else {
-				url = "https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1"
-				label = "Get "+C.T4G;
-			}
-		}
-	}
-	return <div className='my-2'><C.A href={url} className={space("account-tab p-2", selected && "active")}>{label || tab}</C.A></div>;
-};
-
 addImageCredit({ name: "add-user", author: "Icons8", url: "https://icons8.com/icons/set/add-user-male" });
 
-// See also GetInvoledPage
+
 export const MoreToDo = ({ xids }) => {
 	// Count the user as subscribed if we have a linked email + a consent
 	const props = { xids, purpose: PURPOSES.email_mailing_list };

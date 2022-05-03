@@ -16,7 +16,7 @@ initRouter();
 C.app = GLAppManifest;
 
 /** To help us standardise on the use or not of -s */
-C.T4G = "Tabs-For-Good";
+C.T4G = "Tabs for Good";
 
 /**
  * Warning: also written as "£3.9 million" in places
@@ -24,7 +24,7 @@ C.T4G = "Tabs-For-Good";
 C.DONATIONS_TOTAL = "£3,900,000";
 
 // NB: MonetaryAmount is deprecated - left here for old data
-C.TYPES = new Enum("Publisher NGO Advert Campaign Advertiser Agency User Person Money MonetaryAmount BlogPost GreenTag");
+C.TYPES = new Enum("Publisher NGO Advert Campaign Advertiser Agency User Person Money MonetaryAmount BlogPost ScheduledContent");
 
 C.ROLES = new Enum("user admin marketing");
 C.CAN = new Enum("view edit admin sudo viewmarketingreports");

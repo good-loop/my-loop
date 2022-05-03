@@ -42,18 +42,41 @@ A .TubeLine div contains seberal sections with TubeLine-img and TubeLine-line
 	}
 }
 
+/*
+@keyframes side-menu-open {
+	from {transform: translateX(-100%);}
+	to {transform: translateX(0);}
+}
+@keyframes side-menu-close {
+	from {transform: translateX(0);}
+	to {transform: translateX(-100%);}
+}*/
+
 .AccountPage {
 
-	.account-sidebar {
-		.account-tab {
-			color: black;
-			text-decoration: none;
-			&:hover {
-				background: @gl-light-pink;
+	.side-menu {
+		position: fixed;
+		width: 20%;
+		@media @width-mobile {
+			display: none;
+		}
+		.account-sidebar {
+			transform: translateX(-100%);
+			.account-tab {
+				color: black;
+				text-decoration: none;
+				&:hover {
+					background: @gl-light-pink;
+				}
+				&.active {
+					background: @gl-pink;
+					font-weight: bold;
+				}
 			}
-			&.active {
-				background: @gl-pink;
-				font-weight: bold;
+		}
+		&.open {
+			.account-sidebar {
+				transform: translateX(0);
 			}
 		}
 	}
@@ -119,4 +142,11 @@ A .TubeLine div contains seberal sections with TubeLine-img and TubeLine-line
 			}
 		}
 	} // ./settings
+
+	.nav-item { // Tabs in Dashboard
+		width: 50%;
+		a {
+			text-align: center;
+		}
+	}
 }

@@ -6,7 +6,8 @@ public class BuildMyLoop extends BuildWinterwellProject {
 
 	public BuildMyLoop() {
 		super("my-loop");
-		setVersion("0.1.1"); // Jan 2022
+		setVersion("0.2.0"); // April 2022
+		setScpToWW(false);
 		setMainClass("com.goodloop.myloop.MyLoopMain");
 	}
 	

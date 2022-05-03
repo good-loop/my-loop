@@ -10,9 +10,9 @@ const protocol = (cluster === 'local') ? 'http' : 'https';
 
 module.exports = {
 	ServerIOOverrides: {
-		APIBASE: `${protocol}://${cluster}portal.good-loop.com`,
+		// APIBASE: `${protocol}://${cluster}portal.good-loop.com`,
 		AS_ENDPOINT: `${protocol}://${cluster}as.good-loop.com`,
-		PORTAL_ENDPOINT: `${protocol}://${cluster}portal.good-loop.com`,
+		PORTAL_ENDPOINT: `${protocol}://${"local"||cluster}portal.good-loop.com`,
 		DEMO_ENDPOINT: `${protocol}://${cluster}demo.good-loop.com`,
 		DATALOG_ENDPOINT: `${protocol}://${cluster}lg.good-loop.com/data`,
 		MEDIA_ENDPOINT: `${protocol}://${cluster}uploads.good-loop.com`,

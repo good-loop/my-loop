@@ -3,7 +3,16 @@
 @import "../js/base/style/flex.less";
 @import "../js/base/style/fonts.less";
 
+@import "fonts.less";
+@import "ShareButton.less";
+@import "DevLink.less";
+@import "buttons.less";
+@import "website-colours.less";
+@import "landingpage.less";
+@import "footer.less";
+
 @import "MyPage.less";
+@import "MyDashboard.less";
 @import "MyCharitiesPage.less";
 @import "MyAdCampaignsPage.less";
 @import "GetInvolvedPage.less";
@@ -16,6 +25,7 @@
 @import "AllowlistUs.less";
 @import "MyLoginWidget.less";
 @import "CharityPicker.less";
+@import "MyData.less";
 // @import "LandingSection.less";
 @import "HomePage.less";
 @import "OurStory.less";
@@ -24,13 +34,6 @@
 @import "GreenDashboard.less";
 @import "SafariPage.less";
 @import "WhiteCircle.less";
-@import "ShareButton.less";
-@import "DevLink.less";
-@import "buttons.less";
-@import "website-colours.less";
-@import "landingpage.less";
-@import "footer.less";
-@import "fonts.less";
 
 /*
 
@@ -240,7 +243,7 @@ b {
 }
 
 .page-card {
-	padding: 5rem 0;
+	padding: 4rem 0;
 }
 
 .curves {
@@ -266,4 +269,17 @@ b {
 html, body {
 	max-width: 100%;
 	overflow-x: hidden;
+}
+
+// Stop bootstrap add padding-right when modal open
+body.modal-open {
+	overflow: auto !important;
+}
+body.modal-open[style] {
+	padding-right: 0px !important;
+}
+
+.forced-mobile {
+	max-width: 412px;
+	margin: 0 auto;
 }

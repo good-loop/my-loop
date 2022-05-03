@@ -1,0 +1,473 @@
+.my-data {
+    h3,h4,h5 {
+        color: black !important;
+        text-align: center;
+    }
+}
+
+.mydata-card { // mydata-card get used outside of mydata-signup
+    position: relative;
+    border-radius: 10px;
+    border: 1px solid @gl-darker-grey;
+    overflow: hidden;
+
+    // The charity cards specifically have a drop shadow instead of a solid border
+    &.charity-card {
+        border: rgba(0, 0, 0, .1);
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        transition: 0.3s;
+        margin-bottom: 1.25rem;
+
+        &:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
+    }
+
+	// ??why cant this use a standard btn class??
+    .more-info-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        color: @gl-red !important;
+        background-color: white;
+        border: 2px solid @gl-red;
+        border-radius: 50%;
+        overflow: hidden;
+        width: 30px;
+        height: 30px;
+        font-weight: bold;
+        text-align: center;
+        line-height: 2.1rem;
+        font-size: 1.2rem;
+
+        &:hover {
+            color: @gl-light-red !important;
+        }
+    }
+
+    .logo {
+        margin: 0.3rem;
+        width: 5rem;
+        height: 5rem;
+    }
+
+    .more-info {
+        position: absolute;
+        border-radius: 10px;
+        padding: 1rem;
+        background: white;
+        border: @gl-darker-grey;
+        box-shadow: 0 2px 3px rgba(0,0,0,0.5);
+        top: 60px;
+        width: 90%;
+        left: 50%;
+        transform: translateX(-50%);
+        max-height: 70%;
+        overflow-y: auto;
+    }
+    .card-content {
+        padding: 1rem;
+
+        .MDText > p {
+            padding-top: .75rem;
+        }
+
+        label {
+            text-transform: uppercase;
+            font-size: .8rem;
+        }
+
+        .button-container {
+            text-align: right;
+        }
+    }
+    .carousel-indicators {
+        li {
+            width: 15px;
+            height: 15px;
+            background-color: #626262;
+            border-radius: 50%;
+            border: 1px solid grey;
+            // margin-right: .5rem;
+        }
+
+        .active {
+            background-color: white;
+        }
+    }
+
+    .profile-created-slides {
+        height: 50vh;
+    }
+
+    // Pills for the interest picker
+    // TODO: The label text is ever so slighty unaligned vertically on these pills.
+    .pill-container, .checkboxes.form-group {
+        display: flex;
+        flex-wrap: wrap;
+
+        // Base style
+        span, .form-check {
+            padding: 0;
+            margin: 0.3rem;
+            flex: 0 0 auto;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        // The span is what shows up when you're not in edit mode.
+        // The checkbox is what shows up when you're in edit mode.
+        span, input[type="checkbox"] + label {
+            padding: 6px 12px; 
+            border: 1px solid @gl-desat-blue;
+            border-radius: 3rem;
+            cursor: pointer;
+        }
+
+        // When on edit mode - hide the actual checkbox. The label is what the user will see/click.
+        input[type="checkbox"] {
+            display: none;
+        }
+
+        // Span - it's a chosen option, so always show blue.
+        // Also show blue if checkbxo is active/checked.
+        span,
+        input[type="checkbox"]:checked + label:active,
+        input[type="checkbox"]:checked + label {
+            background: @gl-desat-blue;
+            color: #fff;
+        }
+
+        // Checkbox is unchecked, show white + grey text.
+        input[type="checkbox"] + label {
+            background: #fff;
+            color: @gl-darker-grey;
+        }
+    }
+}
+
+.mydata-signup {
+
+    min-height: 60vh; // own the page; but don't go weirdly long
+
+    .circle {
+        border-radius: 1000px;
+        overflow: hidden;
+    }
+
+    .steps-graphic {
+        position: relative;
+        padding-bottom: 3rem;
+
+        .step-circles {
+            padding: 0 1.25em;
+        }
+
+        .step-circle {
+            height: 2rem;
+            width: 2rem;
+            background-color: white;
+            border-radius: 50%;
+            display: inline-block;
+            border: 3px solid @gl-dark-grey;
+            text-align: center;
+
+            &.step-circle-active, &.step-circle-completed {
+                border-color: @gl-desat-blue;
+            }
+
+            &.step-circle-completed {
+                &:before {
+                    font-size: 1.5rem;
+                    color: @gl-desat-blue;
+                    content: "✓";
+                }
+            }
+        }
+
+        .step-circle-connector {
+            margin: 0 .5em;
+            flex-grow: 1;
+            border-bottom: 5px solid @gl-dark-grey;
+            border-radius: 100em;
+
+            &.step-circle-connector-completed {
+                border-bottom: 5px solid @gl-desat-blue;
+            }
+        }
+
+        .step-label {
+            font-size: .8rem;
+            text-align: center;
+            position: relative;
+            color: #2F7593;
+            .charity-logo-sm {
+                position: absolute;
+                transform: translate(-50%, -50%);
+                top: 200%;
+                left: 50%;
+                max-width: 2rem;
+            }
+
+            &.step-label-active {
+                text-decoration: underline;
+                font-weight: bold;
+            }
+        }
+
+        .step-label-spacer {
+            flex-grow: 1;
+        }
+
+        span {
+            margin: 0;
+            //position: absolute;
+            //transform: translate(-50%, 0);
+            //top: 2rem;
+        }
+    }
+
+    .privacy-onboarding-steps {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 3rem;
+        margin-bottom: 2rem;
+
+        span {
+            margin: 1rem;
+            height: 1.25rem;
+            width: 1.25rem;
+            background-color: white;
+            border-radius: 50%;
+            display: inline-block;
+            border: 2px solid @gl-desat-blue;
+            text-align: center;
+
+            &.active {
+                background-color: @gl-desat-blue;
+            }
+        }
+    }
+
+    .debug {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    hr {
+        border-top: 2px solid rgba(0,0,0,.1);
+        margin-top: 2rem !important;
+        margin-bottom: 2rem !important;
+    }
+
+    .featured-charities {
+        margin-bottom: 1.3rem;
+        color: @gl-red;
+    }
+
+    // Sign Up Form labels
+    .signup-form {
+        .form-group > label {
+            text-transform: uppercase;
+            letter-spacing: 0.05rem;
+            font-size: 0.85rem;
+            margin-bottom: 0;
+        }
+
+        
+        .action-btns {
+            label { 
+                display: inline; // Make the info tooltip display inline - instead of on it's own line
+                font-size: 0.8rem;
+                line-height: 0.8rem;
+                color: @gl-darker-grey;
+            }
+            .checkbox input {
+                margin-top: revert;
+            }
+            button {
+                width: 100%;
+                margin-top: 2rem;
+            }
+        }
+    }
+
+    .charity-search {
+        // TODO fontawesome search glass icon
+        label {
+            margin-left: 0.75rem;
+            margin-bottom: 0.15rem; 
+        }
+        input {
+            height: auto;
+            border: 1px solid @gl-darker-grey;
+            border-radius: 5rem;
+        }
+    }
+
+    .profile-creation-step {
+        p, h1 { 
+            padding-top: 1rem;
+            padding-bottom: 1rem 
+        }
+
+        p {
+            font-weight: 600;
+            line-height: 1.2;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .button-container {
+            text-align: center;
+
+            button {
+                width: 60%;
+            }
+        }
+    }
+}
+
+.latest-news-card {
+    #latest-news-title-tab {
+        min-height: 8em;
+        background-image: url("/img/placeholder-circle.png");
+        background-size: cover;
+        background-position: center;
+        background-color: grey;
+    }
+    #latest-news-content {
+        min-height: 10em;
+        padding: 1rem 0;
+    }
+}
+
+.mydata-modal {
+    .modal-content { 
+        // max-width: 412px; // Temp forced mobile view in Desktop. Remove this after we got proper desktop version.
+		padding: 2.5rem;
+		// padding: 2rem;
+        margin: auto;
+    }
+}
+
+.mydata-modal {
+    @media @width-mobile {
+        // Make Modal fullscreen on mobile
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        min-height: 100vh;
+        .modal-content {
+            min-height: 100vh;
+        }
+    }
+}
+
+.mydata-badge {
+    text-decoration: none;
+
+    position: relative;
+    margin-bottom: 30px;
+    circle {
+        transition: stroke-dashoffset 0.35s;
+        transform: rotate(0deg);
+        transform-origin: 50% 50%;
+    }
+    .inner {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        z-index: -1;
+        background-position: center;
+        background-color: grey;
+    }
+    .plus-sign {
+        position: absolute;
+    }
+    .notification {
+        position: absolute;
+        border-radius: 50%;
+        background: red;
+        color: white;
+        .number {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -40%);
+        }
+    }
+}
+
+.how-it-works-card {
+    border: 2px solid #5CA5C0;
+    border-radius: 10px;
+
+    .how-it-works-header {
+        background-color: #5CA5C0;
+        padding-bottom: .5em;
+    }
+
+    .how-it-works-overview {
+        border-radius: 10px;
+    }
+
+    .how-it-works-overview {
+
+        .privacy-card {
+            position: relative;
+            h2 {
+                color: @gl-red !important;
+            }
+            h5, span {
+                color: #5CA5C0 !important;
+            }
+            span {
+                font-size: 1.5rem;
+                position: absolute;
+                top: .5em;
+                right: .5em;
+            }
+        }
+    }
+}
+
+.mydata-signup-close {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding-right: .5em !important;
+    padding-bottom: .5em !important;
+    font-size: 1.75rem;
+}
+
+.speech-bubble {
+    position: relative;
+    background-color: white;
+    margin: 5px;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    padding: 2em 2.5em;
+    box-shadow:	0 0.125rem 0.5rem rgba(0, 0, 0, .3), 0 0.0625rem 0.125rem rgba(0, 0, 0, .2);
+    &::before {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        bottom: 100%;
+        border: .75rem solid transparent;
+        border-top: none;
+        transform: translate(-50%, 0);
+
+        border-bottom-color: white;
+        filter: drop-shadow(0 -0.0625rem 0.0625rem rgba(0, 0, 0, .1));
+    }
+    &.bubble-left::before {left: 4em;}
+    &.bubble-mid::before {left: 50%;}
+    &.bubble-right::before {right: 4em;}
+}
