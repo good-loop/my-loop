@@ -8,7 +8,7 @@ import { getPersonSetting, getCharityObject } from '../../base/components/PropCo
 import classnames from 'classnames';
 import MyDataDashboardHomeTab from './MyDataDashboardHomeTab';
 import MyDataDashboardProfileTab from './MyDataDashboardProfileTab';
-import { ProfileDot, ProfileDotRow } from './MyDataCommonComponents';
+import { hasWatchedThisWeeksAd, ProfileDot, ProfileDotRow } from './MyDataCommonComponents';
 import { countryListAlpha2 } from '../../base/data/CountryRegion';
 import CharityLogo from '../CharityLogo';
 import MyDataBadge from './MyDataBadge';
@@ -138,7 +138,7 @@ const MyDataDashboardPage = () => {
 				toggle={() => toggleShowBadgeInfo("data")} />
 			<MyDataBadge badgeName="Tabs" progress={getT4GProgress()} backgroundImage="img/mydata/tabs-badge.png" 
 				toggle={() => toggleShowBadgeInfo("tabs")} />
-			<MyDataBadge badgeName="Ads" backgroundImage="img/mydata/ads-badge.png" 
+			<MyDataBadge badgeName="Ads" progress={+hasWatchedThisWeeksAd()} backgroundImage="img/mydata/ads-badge.png" 
 				toggle={() => toggleShowBadgeInfo("ads")} />
 		</Container>
 		<Collapse isOpen={showBadgeInfo==="data"}>

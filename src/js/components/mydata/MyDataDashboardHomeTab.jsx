@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Button, Form, Alert} from 'reactstrap';
-import { ProfileDot, ProfileDotRow } from './MyDataCommonComponents';
+import { ProfileDot, ProfileDotRow, getThisWeeksAd, hasWatchedThisWeeksAd } from './MyDataCommonComponents';
 import { getCharityObject, getEmail, getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
 import GoodLoopUnit from '../../base/components/GoodLoopUnit';
-import { getDataList } from '../../base/plumbing/Crud';
-import KStatus from '../../base/data/KStatus';
-import Misc from '../../base/components/Misc';
 import ServerIO from '../../plumbing/ServerIO'
 import TickerTotal from '../TickerTotal';
-import SearchQuery from '../../base/searchquery';
-import { getDataLogData } from '../../base/plumbing/DataLog';
 import Icon from '../../base/components/Icon';
 import { T4GCharityScreenshot } from '../pages/CommonComponents';
 import NGO from '../../base/data/NGO';
@@ -21,6 +16,7 @@ import { isPortraitMobile, space } from '../../base/utils/miscutils';
 import DataStore from '../../base/plumbing/DataStore';
 import PropControl from '../../base/components/PropControl';
 import CharityLogo from '../CharityLogo';
+import Misc from '../../base/components/Misc';
 
 // Hidden until we get some latest news to show
 /*
@@ -80,11 +76,12 @@ const ThisWeeksAdCard = () => {
 	useEffect(() => {
 		setTimeout(() => setAdLoaded(true), 2500);
 	}, [adLoaded]);
-	// load ad from scheduledcontent
-	// TODO filter by start, end
-	let pvMyAds = getDataList({type:"ScheduledContent", status:KStatus.PUBLISHED, domain:ServerIO.PORTAL_ENDPOINT});		
-	let schedcon = pvMyAds.value && List.first(pvMyAds.value);
-	let adid = schedcon && schedcon.adid;
+
+	const adid = getThisWeeksAd();
+	console.log("!!! adid: " + adid);
+
+	const watched = hasWatchedThisWeeksAd(adid) && !watchAnyway;
+	console.log("!!! watched: " + (hasWatchedThisWeeksAd(adid) && !watchAnyway));
 
 	const WatchedAd = ({className, style, showBtn}) => {
 		const watchAgain = () => {
@@ -103,24 +100,15 @@ const ThisWeeksAdCard = () => {
 		</div>;
 	}
 
-	// if ( TODO ! adid) {
-	// 	return <p>No ad available.</p>
-	// }
-	// query datalog for evt:minview vert:adid BUT need the adunit here to log your user id!
-	let sq = new SearchQuery("evt:minview");
-	sq = SearchQuery.setProp(sq, "vert", adid);
-	sq = SearchQuery.setProp(sq, "user", Login.getId());
-	let q = sq.query;
-	const pvData = getDataLogData({dataspace:"gl",q, start:"3 months ago",end:"now",name:"watched-this-weeks",});
-	let watched = !!(pvData.value && pvData.value.allCount) && !watchAnyway;
-
 	return (<Container className='dashboard-card'>
 			<h1>Watch This Week's Ad</h1>
 			<div className="position-relative">
-			{!watched ? <div className="position-relative d-flex flex-row justify-content-center align-items-center">
-				{adLoaded && <WatchedAd className="position-absolute" style={{top:0, left:0, width:"100%", height:"100%"}}/>}
-				{pvMyAds.resolved? <GoodLoopUnit vertId={adid} className="dashboard-ad"/> : <Misc.Loading />}
-			</div> : <WatchedAd showBtn/>}
+			{!watched ? 
+				<div className="position-relative d-flex flex-row justify-content-center align-items-center">
+					{adLoaded && <WatchedAd className="position-absolute" style={{top:0, left:0, width:"100%", height:"100%"}}/>}
+					{adid ? <GoodLoopUnit vertId={adid} className="dashboard-ad"/> : <Misc.Loading />}
+				</div> : 
+				<WatchedAd showBtn/>}
 			</div>
 			<br/>
 			<p className="text-center">When you watch one of our ads 50% of the ad fee goes to charity.</p>

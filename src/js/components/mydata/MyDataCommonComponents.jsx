@@ -4,7 +4,7 @@ import BG from '../../base/components/BG';
 import NGODescription from '../../base/components/NGODescription';
 import { Help } from '../../base/components/PropControl'; 
 import CharityLogo from '../CharityLogo';
-import { getDataItem } from '../../base/plumbing/Crud';
+import { getDataItem, getDataList } from '../../base/plumbing/Crud';
 import NGOImage from '../../base/components/NGOImage';
 import UserClaimControl, { setPersonSetting, getCharityObject } from '../../base/components/PropControls/UserClaimControl';
 import { assert, assMatch } from '../../base/utils/assert';
@@ -13,6 +13,10 @@ import NGO from '../../base/data/NGO';
 import { getId } from '../../base/data/DataClass';
 import { space } from '../../base/utils/miscutils';
 import { nextSignupPage } from './MyDataSignUp';
+import SearchQuery from '../../base/searchquery';
+import { getDataLogData } from '../../base/plumbing/DataLog';
+import KStatus from '../../base/data/KStatus';
+
 
 /**
  * A base component for the image, help, content card format that is common in MyData
@@ -160,4 +164,42 @@ export const SkipNextBtn = ({skip}) => {
 export const isEmail = (email) => {
     const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return regex.test(String(email).toLowerCase());
+}
+
+
+/**
+ * Fetch the ad of the week from ScheduledContent (my.ads) in the Portal
+ * @returns {String} adid
+ */
+ export const getThisWeeksAd = () => {
+	// load ad from scheduledcontent
+	// TODO filter by start, end
+	let pvMyAds = getDataList({type:"ScheduledContent", status:KStatus.PUBLISHED, domain:ServerIO.PORTAL_ENDPOINT});		
+	let schedcon = pvMyAds.value && List.first(pvMyAds.value);
+	let adid = schedcon && schedcon.adid;
+
+    // if ( TODO ! adid) {
+	// 	return <p>No ad available.</p>
+	// }
+	// query datalog for evt:minview vert:adid BUT need the adunit here to log your user id!
+    return adid;
+}
+
+/**
+ * Check whether or not a user has watched the ad of the week.
+ * NB: This currently returns true if an ad of the week isn't set - meaning the user will see the "you've already watched" screen
+ * @param {String} adid 
+ * @returns {Boolean}
+ */
+export const hasWatchedThisWeeksAd = (id) => {
+    const adid = id || getThisWeeksAd();
+    if (!adid) return true;
+
+	let sq = new SearchQuery("evt:minview");
+	sq = SearchQuery.setProp(sq, "vert", adid);
+	sq = SearchQuery.setProp(sq, "user", Login.getId());
+	let q = sq.query;
+	const pvData = getDataLogData({dataspace:"gl",q, start:"3 months ago",end:"now",name:"watched-this-weeks",});
+	
+    return !!(pvData.value && pvData.value.allCount);
 }
