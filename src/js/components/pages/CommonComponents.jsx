@@ -150,37 +150,41 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft, t4g=true, mydata=
 const MyDuoLandingSection = ({ngo, title, bgImg}) => {
 	const name = NGO.displayName(ngo);
 
-	const fontSizeCTA = window.innerWidth <= 768 ? '.8rem' : '1rem';
+	const mobileWidth = window.innerWidth <= 768;
+	const fontSizeCTA = mobileWidth ? '.8rem' : '1rem';
 	
 	if ( ! title) {
 		title = `Turn your web browsing into ${(ngo && "cash for " + name) || "charity donations"}. For free.`;
 	}
 
 	return (<>
-	<Container fluid className="landing px-0" >
-		<BG src='img/splash-screen/background-mobile.svg'>
+	<Container fluid className="home-landing-splash px-0" >
+		<BG minHeight={mobileWidth ? null : "50vh"} 
+		src={mobileWidth ? 'img/splash-screen/background-mobile.svg' : 'img/splash-screen/svg-bg-lg.svg'}
+		className={mobileWidth ? null : 'd-flex justify-content-center align-items-center'}>
 		<img src='img/splash-screen/foreground-mobile.png' className="d-md-none d-block w-100" />
-		<div className="d-flex flex-column align-items-center">
+		<img src='img/splash-screen/foreground-desktop.png' className="d-none d-md-block w-100 position-absolute" />
+		<div className="splash-content d-flex flex-column align-items-center" style={!mobileWidth ? {margin:'0 25vw'} : null}>
 			{title && <h1 className='text-left bolder text-white mx-3 mt-3'>{title}</h1>}
 			<a className='btn btn-primary btn-lg mt-3 mx-auto mb-5' href='/ourstory'>Discover My.Good-Loop</a>
 		</div>
 		</BG>
 	</Container>
-	<Container fluid className="landing-duo-cta bg-gl-light-pink d-flex justify-content-around py-3 px-1">
+	<Container fluid className="landing-duo-cta bg-gl-light-pink d-flex justify-content-center py-3 px-1">
 		<a onClick={e => {
 				stopEvent(e);
 				showMyDataSignUpModal();
 			}} className='text-decoration-none'>
-			<div style={{borderRadius:'10px', color:'#006A87'}} className="mydata-splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
-				<img src="img/mydata/data-badge.png" className='logo'/>
-				<span className='font-weight-bold p-1 pl-3' style={{fontSize:fontSizeCTA}} >Sign Up For My.Data</span>
+			<div style={{borderRadius:'10px'}} className="mydata-splash-cta splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
+				<img src="img/mydata/data-cta.png" className='logo'/>
+				<span className='font-weight-bold p-1 pl-3 mx-auto' style={{fontSize:fontSizeCTA}} >Sign Up For My.Data</span>
 				<MyDataSignUpModal />
 			</div>
 			</a>
 		<a href='/tabsforgood' className='text-decoration-none'>
-			<div style={{borderRadius:'10px', color:'#006A87'}} className="t4g-splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
-				<img src="img/mydata/tabs-badge.png" className='logo'/>
-				<span className='font-weight-bold p-1 pl-3' style={{fontSize:fontSizeCTA}}>Get Tabs For Good</span>
+			<div style={{borderRadius:'10px'}} className="t4g-splash-cta splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
+				<img src="img/mydata/t4g-cta.png" className='logo'/>
+				<span className='font-weight-bold p-1 pl-3 mx-auto' style={{fontSize:fontSizeCTA}}>Get Tabs For Good</span>
 			</div>
 		</a>
 	</Container>
