@@ -74,8 +74,12 @@ const SupportingCard = () => {
 	if (pvNgo) ngo = pvNgo.value || pvNgo.interim;
 
 	return (<Container className='text-center'>
-		<h5>Your Data is Supporting</h5>
-		{ngo && <CharityLogo charity={ngo} />}
+		<hr/>
+		<h1>Your Profile</h1>
+		<p style={{color:'#3F7991',fontWeight:'bold'}}>Your Data is Supporting</p>
+		{ngo && <CharityLogo className='mb-3' charity={ngo} />}
+		<DataSharedProgressBar />
+		<hr/>
 	</Container>)
 }
 
@@ -198,7 +202,6 @@ const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
 const DataProfile = () => {
 	// NB see https://www.pickfu.com/demographic-segmentation
 	return (<Container>
-		<DataSharedProgressBar />
 		<CollapseSettings title="Personal Info" headerIMG="img/mydata/profile-personal.png" defaultCollapse={true}>
 			<SettingItem description="Your name" itemKey="name" />
 			<SettingItem description="Your email" itemKey="email" />
@@ -227,6 +230,7 @@ const DataProfile = () => {
 const MyDataDashboardProfileTab = () => {
 
 	return (<>
+		<br/>
 		<HowItWordsGuide />
 		<SupportingCard />
 		<DataProfile />
