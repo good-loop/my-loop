@@ -48,7 +48,7 @@ const LatestNewsCard = () => {
 
 const AchievementCard = () => {
 	return (<>
-	<h1 className="mt-4 mb-4">Our Community Impact</h1>
+	<h1 className="mt-4">Our Community Impact</h1>
 	<Container className='dashboard-card achievements'>
 			<Container className='together-we-raised'>
 				<h3>Together we've raised</h3>
@@ -61,9 +61,9 @@ const AchievementCard = () => {
 
 				<Container className="my-2 py-2 text-white">
 					<ProfileDotRow>
-						<ProfileDot imgUrl="/img/mydata/supporting.png"><>20,000 Meals For Children</></ProfileDot>
-						<ProfileDot imgUrl="/img/mydata/supporting.png"><>600 Life-Saving Medicine Kits</></ProfileDot>
-						<ProfileDot imgUrl="/img/mydata/supporting.png"><>100 Guide Dog Puppies Trained</></ProfileDot>
+						<ProfileDot imgUrl="/img/mydata/supporting.png"><>1 Million Trees Planted</></ProfileDot>
+						<ProfileDot imgUrl="/img/mydata/supporting.png"><>183,318 Meals For Children</></ProfileDot>
+						<ProfileDot imgUrl="/img/mydata/supporting.png"><>500+ Helpline Calls</></ProfileDot>
 					</ProfileDotRow>
 				</Container>
 			</Container>		
