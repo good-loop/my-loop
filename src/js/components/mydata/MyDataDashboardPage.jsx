@@ -122,9 +122,9 @@ const MyDataDashboardPage = () => {
 			{locationCountry && <h5>{locationCountry}</h5>}
 			<br/>
 			<ProfileDotRow>
-				<ProfileDot TODOMYDATA_img className="mt-3 mt-md-0">{joinedDate && <>Joined &nbsp; <Misc.RoughDate date={joinedDate}/></>}</ProfileDot>
+				<ProfileDot imgUrl="/img/mydata/joined.png" className="mt-3 mt-md-0">{joinedDate && <>Joined &nbsp; <Misc.RoughDate date={joinedDate}/></>}</ProfileDot>
 				<ProfileDot imgUrl={ngo && ngo.logo}>{ngo && <>Supporting {NGO.displayName(ngo)}</>}</ProfileDot>
-				<ProfileDot TODOMYDATA_img ><>
+				<ProfileDot imgUrl="/img/mydata/raised.png" ><>
 					{/* Show exactly the same amount as what displays on T4G */}
 					<p style={{margin: "0"}}><span className="font-weight-bold pr-1"><TickerTotal /></span>
 					Raised With Our Global Community</p>
