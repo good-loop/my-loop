@@ -159,13 +159,13 @@ const MyDuoLandingSection = ({ngo, title, bgImg}) => {
 
 	return (<>
 	<Container fluid className="home-landing-splash px-0" >
-		<BG minHeight={mobileWidth ? null : "50vh"} 
+		<BG minHeight={mobileWidth ? null : "32vw"} 
 		src={mobileWidth ? 'img/splash-screen/background-mobile.svg' : 'img/splash-screen/svg-bg-lg.svg'}
 		className={mobileWidth ? null : 'd-flex justify-content-center align-items-center'}>
 		<img src='img/splash-screen/foreground-mobile.png' className="d-md-none d-block w-100" />
 		<img src='img/splash-screen/foreground-desktop.png' className="d-none d-md-block w-100 position-absolute" />
-		<div className="splash-content d-flex flex-column align-items-center" style={!mobileWidth ? {margin:'0 25vw'} : null}>
-			{title && <h1 className='text-left bolder text-white mx-3 mt-3'>{title}</h1>}
+		<div className="splash-content d-flex flex-column align-items-center" style={!mobileWidth ? {margin:'0 30vw'} : null}>
+			{title && <h1 className='text-center bolder text-white mx-3 mt-3'>{title}</h1>}
 			<a className='btn btn-primary btn-lg mt-3 mx-auto mb-5' href='/ourstory'>Discover My.Good-Loop</a>
 		</div>
 		</BG>
