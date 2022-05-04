@@ -55,14 +55,14 @@ const HowItWordsGuide = () => {
 				</p>
 			</div>
 			<Collapse isOpen={cardCollapse} className="how-it-works-overview text-center">
-				<h2 className='pt-3'>You're in Control</h2>
-				<p>For Every Piece Of Data You've Shared With Us, You Can Control How It's Used.</p>
+				<h1 className='pt-3'>You're in Control</h1>
+				<p>All of your data is in your hands, so you control how we use it.</p>
 				<PrivacyCard iconIMG="img/mydata/padlock-careful.png" title="Careful Use"
-					content="The data will not be shared. It will be used to select advertising campaigns, both within My.Good-Loop and via partners elsewhere on the internest - and this will rasied moeny for your charity. This data will be anonymous - your identity will be kept private." />
+					content="To put it simply, we won’t share your data and your identity will be kept private. Instead, we’ll show you advertising campaigns based on your interests on My-Good-Loop and via our online partners. By letting us show you these ads, you will raise money for your chosen charity." />
 				<PrivacyCard iconIMG="img/mydata/padlock-public.png" title="Shared"
-					content="The data can be shared with selected partners in return for donations to charity. This setting lets us raise the most money for your charity! You have the right to stop sharing any time. Any partners with a copy of this data would be contractually obliged to remove it at your request." />
+					content="This means our data can be shared with selected partners in return for donations to your chosen charity, allowing you to raise the most money possible. Of course, you can stop sharing your data at any time and we will make sure our partners remove it from their databases." />
 				<PrivacyCard iconIMG="img/mydata/padlock-private.png" title="Private"
-					content="This data will not be shared or used at all, except for displaying information to you wihtin MyData itself." />
+					content="This means your data will not be shared or used to raise money for charity. We will only use it to display your info within My.Data." />
 			</Collapse>
 		</div>
 	</Container>)
@@ -88,7 +88,7 @@ const DataSharedProgressBar = () => {
 
 	return (<div className='data-shared-progress-section'>
 		<Progress className="data-shared-progress" value={100*sharedPercentage} title="How complete is your profile? Fill in and use more data to achieve more." />
-		{sharedPercentage > 0 && <img src='img/icons/Heart_single.png' className='progress-heart' style={{left:`${100*sharedPercentage}%`}}/>}
+		{sharedPercentage > 0 && <img src='img/icons/Heart_single.png' className='progress-heart' style={{left:`${100*sharedPercentage}%`, minHeight: "120%"}}/>}
 		</div>
 	)
 }
@@ -165,6 +165,7 @@ const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
 	if (displayValue === "[]") displayValue = null; // Catch empty array
 	if (itemKey == 'gender' && itemValue) displayValue = toTitleCase(itemValue);
 	else if (itemKey == 'country' && itemValue) displayValue = countryListAlpha2[itemValue];
+	let valueExists = displayValue;
 
 	// Show adtypes / causes as pills - but only these.
 	if (!editMode) {
