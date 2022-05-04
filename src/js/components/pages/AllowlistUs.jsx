@@ -4,8 +4,6 @@ import detectAdBlock from '../../base/utils/DetectAdBlock';
 import { Col, Container, Row } from 'reactstrap';
 import C from '../../C';
 
-window.DEBUG = false;
-
 const AllowlistUs = () => {
 	window.scroll(0,0);
 

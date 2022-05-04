@@ -30,8 +30,6 @@ import { setFooterClassName } from '../Footer';
 import { T4GHowItWorksButton, T4GSignUpButton } from '../T4GSignUp';
 import { MyDataSignUpButton } from '../mydata/MyDataSignUp';
 
-window.DEBUG = false;
-
 const HomePage = ({spring}) => {
 	//spring the page down if asked to for how it works section
 	const [, setY] = useSpring(() => ({ y: 0 }));
@@ -75,7 +73,7 @@ const HomePage = ({spring}) => {
 
 const JoinOurMovement = () => <>	
 	<PageCard className="tabs-for-goods-slide-card" >
-		<div id="homepage-cta" className="upper-cta white">
+		<div className="upper-cta white">
 			<h1 className='mb-4 white'>Join Our Movement!</h1>
 			<p className='leader-text text-center'>Start transforming your web browsing into life saving vaccines, meals for children in need, habitats for endangered animals, plus many more good causes.</p>
 			<img src="/img/homepage/bird-cloud.png" className='top-right'/>
@@ -92,6 +90,7 @@ const JoinOurMovement = () => <>
 					</CardBody>
 				</Card>
 				<Card>
+					<a id="mydata-cta" />
 					<CardImg className='bg-gl-dark-blue' variant="top" src="/img/mydata/onboarding-2.png" />
 					<CardBody>
 						<CardTitle><h3 className='gl-dark-blue'>My.Data</h3></CardTitle>

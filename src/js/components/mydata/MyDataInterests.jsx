@@ -45,7 +45,7 @@ const MyDataInterests = ({}) => {
             />
             <br/>
             <CategoryCard
-                title="Pick the types of ads you'd like to see"
+                title="Pick the types of ads you'd prefer to see"
                 img="/img/mydata/signup-ads.png"
                 info="Used to pick relevant adverts. Advertisers pay more to show their message to an interested audience - so this will raise more for your charity."
                 prop="adstype"
