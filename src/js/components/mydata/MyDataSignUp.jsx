@@ -77,24 +77,6 @@ const SignUpForm = () => {
 		setPersonSetting({key:"name", value:name});
 		setPersonSetting({key: "emailperms", value: emailperms, callback:nextSignupPage}); // TODO do this as set-consent-on-email
 	}
-
-	const SignUpDiv = () => {
-		return <div className="signup-form">
-			<PropControl type="text" prop="name" path={PERSON_PATH} label="Your name"/>
-			<EmailSignin
-				verb="register"
-				onRegister={onRegister}
-				disableVerbSwitch
-				agreeToTerms={<>I agree to the <LinkOut href="https://doc.good-loop.com/terms/terms-of-use.html">Terms of Service</LinkOut></>}
-				buttonText="Create Your Account"
-			>
-
-			<PropControl type="checkbox" prop="emailperms" path={PERSON_PATH}
-				label="Good-Loop can send me news & marketing emails. I can unsubscribe at any time."
-				help="For My.Good-Loop to work properly for you, we want to communicate with you - so please do tick this box! Don't worry, we won't send many emails, and you can always unsubscribe." />
-			</EmailSignin>
-		</div>
-	}
 	
 	// const SignedInDiv = () => {
 	// 	return <div className='text-center'>
@@ -106,12 +88,23 @@ const SignUpForm = () => {
 	// }
 
 	return (<>
-		<h1 className="mb-3">Sign Up for My.Data today</h1>
-		<p className="text-center">Share your online data with us and we’ll transform it into money for good causes</p>
-		 <SignUpDiv />
-		 <div className="planet">
-			 <img src="/img/mydata/sign-up.png" alt="" />
-		 </div>
+		<h1 className="mb-3">Sign Up for My.Data</h1>
+		<p className="text-center">Use your data as a force for good and help us transform online advertising</p>
+
+		<div className="signup-form">
+			<PropControl type="text" prop="name" path={PERSON_PATH} label="Your name"/>
+			<EmailSignin
+				verb="register"
+				onRegister={onRegister}
+				disableVerbSwitch
+				agreeToTerms={<>I agree to the <LinkOut href="https://doc.good-loop.com/terms/terms-of-use.html">Terms of Service</LinkOut></>}
+			>
+
+			<PropControl type="checkbox" prop="emailperms" path={PERSON_PATH}
+				label="Good-Loop can send me news & marketing emails. I can unsubscribe at any time."
+				help="For My.Good-Loop to work properly for you, we want to communicate with you - so please do tick this box! Don't worry, we won't send many emails, and you can always unsubscribe." />
+			</EmailSignin>
+		</div>
 	</>);
 };
 
