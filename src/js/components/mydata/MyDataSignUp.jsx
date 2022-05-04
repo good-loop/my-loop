@@ -86,6 +86,7 @@ const SignUpForm = () => {
 				onRegister={onRegister}
 				disableVerbSwitch
 				agreeToTerms={<>I agree to the <LinkOut href="https://doc.good-loop.com/terms/terms-of-use.html">Terms of Service</LinkOut></>}
+				buttonText="Create Your Account"
 			>
 
 			<PropControl type="checkbox" prop="emailperms" path={PERSON_PATH}
@@ -107,8 +108,10 @@ const SignUpForm = () => {
 	return (<>
 		<h1 className="mb-3">Sign Up for My.Data</h1>
 		<p className="text-center">Use your data as a force for good and help us transform online advertising</p>
-
 		 <SignUpDiv />
+		 <div className="planet">
+			 <img src="/img/mydata/sign-up.png" alt="" />
+		 </div>
 	</>);
 };
 
