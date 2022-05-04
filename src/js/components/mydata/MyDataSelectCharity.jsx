@@ -49,7 +49,8 @@ const MyDataSelectCharity = () => {
         <PropControl type="text" path={CHARITY_WIDGET_PATH} prop="charitySearch" label="Search our Charity Directory" className="charity-search" placeholder="Search Charities"/>
         <hr />
         {noQ && <h3 className="featured-charities text-center">Featured Charities</h3>}
-        <ListLoad type="NGO" status="PUBLISHED" q={q || dq} sort="impact" ListItem={CharitySelectCard} unwrapped hideTotal />
+        <ListLoad type="NGO" status="PUBLISHED" q={q || dq} 
+			sort={q? null : "impact"} ListItem={CharitySelectCard} unwrapped hideTotal />
     </>;
 
 };
