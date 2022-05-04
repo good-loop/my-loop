@@ -134,10 +134,11 @@ export const ProfileDotRow = ({className, children}) => {
 };
 
 export const ProfileDot = ({className, imgUrl, children}) => {
+    const dotSize = '2rem';
     if (!imgUrl) imgUrl = "/img/placeholder-circle.png"
     return (
         <Col md={4} className={space(className, 'd-flex align-items-center mb-3 mb-md-0')}>
-            <img src={imgUrl} className="logo mr-2" />
+            <img src={imgUrl} className="mr-2" style={{width:dotSize}}/>
             {children}
         </Col>
     )

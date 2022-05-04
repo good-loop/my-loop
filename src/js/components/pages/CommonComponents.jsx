@@ -164,7 +164,7 @@ const MyDuoLandingSection = ({ngo, title, bgImg}) => {
 		className={mobileWidth ? null : 'd-flex justify-content-center align-items-center'}>
 		<img src='img/splash-screen/foreground-mobile.png' className="d-md-none d-block w-100" />
 		<img src='img/splash-screen/foreground-desktop.png' className="d-none d-md-block w-100 position-absolute" />
-		<div className="splash-content d-flex flex-column align-items-center" style={!mobileWidth ? {margin:'0 30vw'} : null}>
+		<div className="splash-content d-flex flex-column align-items-center" style={!mobileWidth ? {margin:'0 34vw'} : null}>
 			{title && <h1 className='text-center bolder text-white mx-3 mt-3'>{title}</h1>}
 			<a className='btn btn-primary btn-lg mt-3 mx-auto mb-5' href='/ourstory'>Discover My.Good-Loop</a>
 		</div>
