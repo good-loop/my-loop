@@ -39,7 +39,8 @@ export const MyDataCard = ({img, info, className, children}) => {
     </div>
 };
 
-export const CharityCard = ({cid, item}) => {
+
+export const CharitySelectCard = ({cid, item}) => {
     let ngo = item;
 
     if (!ngo) {
