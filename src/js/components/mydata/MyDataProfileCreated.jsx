@@ -16,7 +16,7 @@ const MyDataProfileCreated = () => {
 		<div className="profile-creation-step">
 			<img src="/img/mydata/profile-created.png" className="w-100" />
 			<h1>Profile Created!</h1>
-			<p>Success, you're ready to help {NGO.displayName(ngo)}! Explore your profile in your bespoke Dashboard</p>
+			<p>You're now ready to help {NGO.displayName(ngo)}. Tap below to explore your profile dashboard.</p>
 			<div className="button-container">
 				<Button color="primary" onClick={nextSignupPage}>Let's go!</Button>
 			</div>
@@ -40,7 +40,7 @@ const ExplainPrivacy1 = () => {
 		<div className="profile-creation-step">
 			<img src="/img/mydata/onboarding-1.png" className="w-100"/>
 			<h1>You're In Control</h1>
-			<p>For every piece of data you've shared with us, you can control how it's used.</p>
+			<p>All of your data is in your hands, so you control how we use it.</p>
 			<PrivacyOnboardingSteps step={1} />
 			<div className="button-container">
 				<Button color="primary" onClick={nextSignupPage}>Next</Button>
@@ -56,7 +56,7 @@ const ExplainPrivacy2 = () => {
 		<div className="profile-creation-step">
 			<img src="/img/mydata/onboarding-2.png" className="w-100"/>
 			<h1>Share To Give</h1>
-			<p>The more data you choose to share, the more you can give to {NGO.displayName(ngo)}</p>
+			<p>TThe more data you choose to share, the more money you'll donate to {NGO.displayName(ngo)}.</p>
 			<PrivacyOnboardingSteps step={2} />
 			<div className="button-container">
 				<Button color="primary" onClick={nextSignupPage}>Next</Button>
@@ -70,7 +70,7 @@ const ExplainPrivacy3 = () => {
 		<div className="profile-creation-step">
 			<img src="/img/mydata/onboarding-3.png" className="w-100"/>
 			<h1>Data Made Easy</h1>
-			<p>We've preset our recommended privacy settings but you can change them at any time</p>
+			<p>We've set you up with  our recommended privacy settings but you can change them any time to suit you.</p>
 			<PrivacyOnboardingSteps step={3} />
 			<div className="button-container">
 				<Button color="primary" onClick={nextSignupPage}>Next</Button>
