@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Collapse, FormGroup, Progress } from 'reactstrap';
 import { Help } from '../../base/components/PropControl';
 import { isEmail } from './MyDataCommonComponents';
-import UserClaimControl, { getCharityObject, getEmail, causesMap, adstypeMap } from '../../base/components/PropControls/UserClaimControl';
+import UserClaimControl, { getCharityObject, getEmail, causesMap, adstypeMap, setPersonSetting } from '../../base/components/PropControls/UserClaimControl';
 import CharityLogo from '../CharityLogo';
 import { MyDataCard } from './MyDataCommonComponents';
 import { countryListAlpha2 } from '../../base/data/CountryRegion';
@@ -11,6 +11,7 @@ import { getDataProgress } from './MyDataDashboardPage';
 import { toTitleCase } from '../../base/utils/miscutils';
 import Claim, { DEFAULT_CONSENT } from '../../base/data/Claim';
 import { getPVClaim } from '../../base/data/Person';
+import Login from '../../base/youagain';
 
 // Prase list of strings into individual spans if the input is a list of strings
 const parseList = (value) => {
@@ -194,15 +195,29 @@ const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
 				<img style={{ height: '1.5rem', transform: 'translate(0, -.5rem)' }} src={"/img/mydata/padlock-"+privacyLevel+ ".png"} alt="padlock logo" />
 			</div>
 		</>}
-		{editMode &&
-			(emailPropControl? emailPropControl : 
-				<UserClaimControl prop={itemKey} type={type} {...props} privacyOptions={privacyOptions} privacyLabels={privacyLabels} privacyDefault="careful" />
-		)}
+		{editMode && <>
+			{emailPropControl}
+			<UserClaimControl prop={itemKey} type={type} {...props} privacyOptions={privacyOptions} privacyLabels={privacyLabels} privacyDefault="careful" privacyOnly={!!emailPropControl}/>
+		</>}
 	</>)
 } // ./SettingItem
 
 
 const DataProfile = () => {
+
+	const email = getEmail();
+
+	useEffect(() => {
+		if (email) {
+			// Add email as a claim - it is uneditable, but it can store a privacy value
+			let pvClaim = getPVClaim({key: "email"});
+			let itemValue = Claim.value(pvClaim);
+			if (pvClaim.resolved && !itemValue) {
+				setPersonSetting({key:"email", value:email})
+			}
+		}
+	}, [email]);
+
 	// NB see https://www.pickfu.com/demographic-segmentation
 	return (<Container>
 		<CollapseSettings title="Personal Info" headerIMG="img/mydata/profile-personal.png" defaultCollapse={true}>
