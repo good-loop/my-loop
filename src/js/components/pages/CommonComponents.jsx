@@ -166,7 +166,7 @@ const MyDuoLandingSection = ({ngo, title, bgImg}) => {
 		<img src='img/splash-screen/foreground-desktop.png' className="d-none d-md-block w-100 position-absolute" />
 		<div className="splash-content d-flex flex-column align-items-center" style={!mobileWidth ? {margin:'0 34vw'} : null}>
 			{title && <h1 className='text-center bolder text-white mx-3 mt-3'>{title}</h1>}
-			<a className='btn btn-primary btn-lg mt-3 mx-auto mb-5' href='/ourstory'>Discover My.Good-Loop</a>
+			<C.A className='btn btn-primary btn-lg mt-3 mx-auto mb-5' href='/ourstory'>Discover My.Good-Loop</C.A>
 		</div>
 		</BG>
 	</Container>
@@ -181,12 +181,12 @@ const MyDuoLandingSection = ({ngo, title, bgImg}) => {
 				<MyDataSignUpModal />
 			</div>
 			</a>
-		<a href='/tabsforgood' className='text-decoration-none'>
+		<C.A href='/tabsforgood' className='text-decoration-none'>
 			<div style={{borderRadius:'10px'}} className="t4g-splash-cta splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
 				<img src="img/mydata/t4g-cta.png" className='logo'/>
 				<span className='font-weight-bold p-1 pl-3 mx-auto' style={{fontSize:fontSizeCTA,transform:'translate(0, 10%)'}}>Get Tabs For Good</span>
 			</div>
-		</a>
+		</C.A>
 	</Container>
 	</>);
 }
