@@ -110,7 +110,8 @@ const MainDiv = () => {
 		impactoverview: 'Impact Hub',
 		green: 'Green Media',
 		tabsforgood: C.T4G,
-		blog: "Blog"
+		blog: "Blog",
+		"home#homepage-cta": "My.Data" // HACK until we get a landing page
 	};
 
 	return (<MainDivBase
@@ -122,6 +123,7 @@ const MainDiv = () => {
 				"ourstory":[],
 				"our-impact": ['charities', 'impactoverview', Roles.isTester() && 'green'],
 				'tabsforgood':[],
+				"home#homepage-cta": [],
 				"blog":Roles.isTester()
 			};
 		}}
