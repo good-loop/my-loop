@@ -165,6 +165,7 @@ const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
 	if (displayValue === "[]") displayValue = null; // Catch empty array
 	if (itemKey == 'gender' && itemValue) displayValue = toTitleCase(itemValue);
 	else if (itemKey == 'country' && itemValue) displayValue = countryListAlpha2[itemValue];
+	let valueExists = displayValue;
 
 	// Show adtypes / causes as pills - but only these.
 	if (!editMode) {
