@@ -2,6 +2,7 @@
 @import "../js/base/style/colours.less";
 @import "../js/base/style/flex.less";
 @import "../js/base/style/fonts.less";
+@import "../js/base/style/breakpoints.less";
 
 @import "fonts.less";
 @import "ShareButton.less";
@@ -282,4 +283,13 @@ body.modal-open[style] {
 .forced-mobile {
 	max-width: 412px;
 	margin: 0 auto;
+}
+
+// Stop the account dropdown menu from floating off the right of the screen.
+// TODO: Probably fix this in wwappbase so that it looks pretty on all of our other sites too.
+.dropdown-menu {
+	&.show {
+		max-width: 100%;
+		overflow: hidden;
+	}
 }
