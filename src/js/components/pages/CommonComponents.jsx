@@ -177,14 +177,14 @@ const MyDuoLandingSection = ({ngo, title, bgImg}) => {
 			}} className='text-decoration-none'>
 			<div style={{borderRadius:'10px'}} className="mydata-splash-cta splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
 				<img src="img/mydata/data-cta.png" className='logo'/>
-				<span className='font-weight-bold p-1 pl-3 mx-auto' style={{fontSize:fontSizeCTA}} >Sign Up For My.Data</span>
+				<span className='font-weight-bold p-1 pl-3 mx-auto' style={{fontSize:fontSizeCTA,transform:'translate(0, 10%)'}} >Sign Up For My.Data</span>
 				<MyDataSignUpModal />
 			</div>
 			</a>
 		<a href='/tabsforgood' className='text-decoration-none'>
 			<div style={{borderRadius:'10px'}} className="t4g-splash-cta splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
 				<img src="img/mydata/t4g-cta.png" className='logo'/>
-				<span className='font-weight-bold p-1 pl-3 mx-auto' style={{fontSize:fontSizeCTA}}>Get Tabs For Good</span>
+				<span className='font-weight-bold p-1 pl-3 mx-auto' style={{fontSize:fontSizeCTA,transform:'translate(0, 10%)'}}>Get Tabs For Good</span>
 			</div>
 		</a>
 	</Container>
