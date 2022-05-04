@@ -169,7 +169,8 @@ export const isEmail = (email) => {
 
 /**
  * Fetch the ad of the week from ScheduledContent (my.ads) in the Portal
- * @returns {String} adid
+ * Returns null while fetching the ID, then a promise value representing the ad
+ * @returns {PromiseValue} advert
  */
  export const getThisWeeksAd = () => {
 	// load ad from scheduledcontent
@@ -198,6 +199,10 @@ export const isEmail = (email) => {
  * @returns {Boolean}
  */
 export const hasWatchedThisWeeksAd = (adid) => {
+    if (!adid) {
+        const pvAd = getThisWeeksAd();
+        adid = pvAd && pvAd.resolved && pvAd.value && pvAd.value.id;
+    }
     //const adid = id || getThisWeeksAd();
     //console.log("AD ID????", adid);
     if (!adid) return true;
