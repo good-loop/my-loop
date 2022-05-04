@@ -105,6 +105,10 @@ const SignUpForm = () => {
 				help="For My.Good-Loop to work properly for you, we want to communicate with you - so please do tick this box! Don't worry, we won't send many emails, and you can always unsubscribe." />
 			</EmailSignin>
 		</div>
+
+		<div className="planet">
+			<img src="/img/mydata/sign-up.png" alt="" />
+		</div>
 	</>);
 };
 
