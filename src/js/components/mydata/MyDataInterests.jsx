@@ -24,7 +24,7 @@ const CategoryCard = ({title, img, info, prop, options, labels, ...props}) => {
         info={info}
         {...props}
     >
-        <h2>{title}</h2>
+        <h2 className="pt-3">{title}</h2>
         <hr/>
         <UserClaimControl prop={prop} type="checkboxes" options={options} labels={labels}/>
     </MyDataCard>;
@@ -34,28 +34,29 @@ const CategoryCard = ({title, img, info, prop, options, labels, ...props}) => {
 const MyDataInterests = ({}) => {
 
     return <>
-        <ProfileCreationSteps step={1}/>
-        <CategoryCard
-            title="Causes you're interested in"
-            img="/img/mydata/charity-default.png"
-            info="We use this to select projects and charities to show you, and to prefer adverts that support charities in these areas."
-            prop="causes"
-            // Options and Labels are built in UserClaimControl
-        />
-        <br/>
-        <CategoryCard
-            title="Types of Ads you'd like to see"
-            img="/img/mydata/signup-ads.png"
-            info="Used to pick relevant adverts. Advertisers pay more to show their message to an interested audience - so this will raise more for your charity."
-            prop="adstype"
-            // Options and Labels are built in UserClaimControl
-        />
-        <br />
-        <div className="profile-creation-step">
-            <div className="button-container">
-                    <Button color="primary" onClick={nextSignupPage}>Next</Button>
+            <ProfileCreationSteps step={1}/>
+            <h1 className="pt-4 pb-4">First up, tell us your interests</h1>
+            <CategoryCard
+                title="Pick the causes you're interested in"
+                img="/img/mydata/charity-default.png"
+                info="We use this to select projects and charities to show you, and to prefer adverts that support charities in these areas."
+                prop="causes"
+                // Options and Labels are built in UserClaimControl
+            />
+            <br/>
+            <CategoryCard
+                title="Pick the types of ads you'd like to see"
+                img="/img/mydata/signup-ads.png"
+                info="Used to pick relevant adverts. Advertisers pay more to show their message to an interested audience - so this will raise more for your charity."
+                prop="adstype"
+                // Options and Labels are built in UserClaimControl
+            />
+            <br />
+            <div className="profile-creation-step">
+                <div className="button-container">
+                        <Button color="primary" onClick={nextSignupPage}>Next</Button>
+                </div>
             </div>
-        </div>
     </>;
 
 };
