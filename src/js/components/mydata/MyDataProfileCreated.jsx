@@ -56,7 +56,7 @@ const ExplainPrivacy2 = () => {
 		<div className="profile-creation-step">
 			<img src="/img/mydata/onboarding-2.png" className="w-100"/>
 			<h1>Share To Give</h1>
-			<p>TThe more data you choose to share, the more money you'll donate to {NGO.displayName(ngo)}.</p>
+			<p>The more data you choose to share, the more money you'll donate to {NGO.displayName(ngo)}.</p>
 			<PrivacyOnboardingSteps step={2} />
 			<div className="button-container">
 				<Button color="primary" onClick={nextSignupPage}>Next</Button>
