@@ -178,11 +178,17 @@ export const isEmail = (email) => {
 	let schedcon = pvMyAds.value && List.first(pvMyAds.value);
 	let adid = schedcon && schedcon.adid;
 
+    if (!adid) return null;
+
+    // Check ad exists as published
+    let pvAd = getDataItem({type: "Advert", status: KStatus.PUBLISHED, swallow:true, id:adid});
+    return pvAd;
+
     // if ( TODO ! adid) {
 	// 	return <p>No ad available.</p>
 	// }
 	// query datalog for evt:minview vert:adid BUT need the adunit here to log your user id!
-    return adid;
+    //return adid;
 }
 
 /**
@@ -191,8 +197,9 @@ export const isEmail = (email) => {
  * @param {String} adid 
  * @returns {Boolean}
  */
-export const hasWatchedThisWeeksAd = (id) => {
-    const adid = id || getThisWeeksAd();
+export const hasWatchedThisWeeksAd = (adid) => {
+    //const adid = id || getThisWeeksAd();
+    //console.log("AD ID????", adid);
     if (!adid) return true;
 
 	let sq = new SearchQuery("evt:minview");

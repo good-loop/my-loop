@@ -77,8 +77,10 @@ const ThisWeeksAdCard = () => {
 		setTimeout(() => setAdLoaded(true), 2500);
 	}, [adLoaded]);
 
-	const adid = getThisWeeksAd();
-	const watched = hasWatchedThisWeeksAd(adid) && !watchAnyway;
+	const pvAd = getThisWeeksAd();
+	const exists = !!(pvAd && pvAd.resolved && pvAd.value);
+	const adid = exists && pvAd.value.id;
+	const watched = adid && hasWatchedThisWeeksAd(adid) && !watchAnyway;
 
 	const WatchedAd = ({className, style, showBtn}) => {
 		const watchAgain = () => {
@@ -101,9 +103,13 @@ const ThisWeeksAdCard = () => {
 			<h1>Watch This Week's Ad</h1>
 			<div className="position-relative">
 			{!watched ? 
-				<div className="position-relative d-flex flex-row justify-content-center align-items-center">
-					{adLoaded && <WatchedAd className="position-absolute" style={{top:0, left:0, width:"100%", height:"100%"}}/>}
-					{adid ? <GoodLoopUnit vertId={adid} className="dashboard-ad"/> : <Misc.Loading />}
+				<div className="position-relative d-flex flex-column justify-content-center align-items-center">
+					{adLoaded && exists && <WatchedAd className="position-absolute" style={{top:0, left:0, width:"100%", height:"100%"}}/>}
+					{exists && adid ? <GoodLoopUnit vertId={adid} className="dashboard-ad"/>
+						: (pvAd && pvAd.resolved ? <>
+							<h3>No ad this week!</h3>
+							<p>Check back another time to raise money for charity</p>
+						</> : <Misc.Loading />)}
 				</div> : 
 				<WatchedAd showBtn/>}
 			</div>
