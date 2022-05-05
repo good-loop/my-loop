@@ -64,8 +64,8 @@ const AchievementCard = () => {
 				<Container className="my-2 py-2 text-white">
 					<ProfileDotRow>
 						<ProfileDot imgUrl="/img/mydata/supporting.png"><>1 Million Trees Planted</></ProfileDot>
-						<ProfileDot imgUrl="/img/mydata/supporting.png"><>183,318 Meals For Children</></ProfileDot>
-						<ProfileDot imgUrl="/img/mydata/supporting.png"><>500+ Helpline Calls</></ProfileDot>
+						<ProfileDot imgUrl="/img/mydata/supporting.png"><>17,827 Children Vaccinated</></ProfileDot>
+						<ProfileDot imgUrl="/img/mydata/supporting.png"><>12,689 lbs of Trash Collected From the Ocean</></ProfileDot>
 					</ProfileDotRow>
 				</Container>
 			</Container>		
