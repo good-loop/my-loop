@@ -105,6 +105,10 @@ const SignUpForm = () => {
 				help="For My.Good-Loop to work properly for you, we want to communicate with you - so please do tick this box! Don't worry, we won't send many emails, and you can always unsubscribe." />
 			</EmailSignin>
 		</div>
+
+		<div className="planet">
+			<img src="/img/mydata/sign-up.png" alt="" />
+		</div>
 	</>);
 };
 
@@ -139,10 +143,9 @@ const MyDataSignUp = () => {
 	const PageComponent = PAGES[page];
 
 	return <div className="mydata-signup">
-		{/* TODO: Remove before release */}
-		<div className="debug">
-			*debug page selector*: <a onClick={prevSignupPage}>Back</a> /	<a onClick={nextSignupPage}>Next</a>
-		</div>
+		{window.isDebug && <div className="debug">
+			*debug page selector (hidden on live)*: <a onClick={prevSignupPage}>Back</a> /	<a onClick={nextSignupPage}>Next</a>
+		</div>}
 		<PageComponent />
 	</div>;
 };

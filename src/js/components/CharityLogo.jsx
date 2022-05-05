@@ -2,6 +2,7 @@
 import React from 'react';
 import { space } from '../base/utils/miscutils';
 import NGO from '../base/data/NGO';
+import C from '../C';
 
 /**
  * Logo (which you can click on)
@@ -32,7 +33,7 @@ const CharityLogo = ({charity, className, size, style, link=false}) => {
 		if (!/^https?:\/\//.test(charity.url)) {
 			charity.url = 'https://' + charity.url;
 		}
-		return <a href={charity.url} style={style} className="charity-logo w-100 h-100 d-flex justify-content-center align-items-center" target="_blank" rel="noopener noreferrer" aria-label={"Read more about " + altText}>{$logo}</a>;
+		return <C.A href={charity.url} style={style} className="charity-logo w-100 h-100 d-flex justify-content-center align-items-center" target="_blank" rel="noopener noreferrer" aria-label={"Read more about " + altText}>{$logo}</C.A>;
 	}
 	return $logo;
 };

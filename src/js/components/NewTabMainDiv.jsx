@@ -242,7 +242,7 @@ const NormalTabCenter = ({ charityID, loadingCharity }) => {
 		<div className="w-100 pb-3">
 			<div className="tab-search-container mx-auto">
 				<Search onSubmit={e => doSearch(e, searchEngine)} placeholder={"Search with " + engineData.title} icon={
-					<a href="/?tab=tabsForGood" title="click here to change the search engine"><img src={engineData.logo} alt="search icon" style={{ width: engineData.size.width, height: engineData.size.height }} /></a>
+					<C.A href="/?tab=tabsForGood" title="click here to change the search engine"><img src={engineData.logo} alt="search icon" style={{ width: engineData.size.width, height: engineData.size.height }} /></C.A>
 				} />
 			</div>
 		</div>
@@ -271,7 +271,7 @@ const NewTabCharityCard = ({ cid, loading }) => {
 
 	return (<div className="mx-auto rounded-lg text-center NewTabCharityCard" >
 		<small className="">You are supporting</small>
-		<a href={"/account?tab=tabsForGood" + params}>
+		<C.A href={"/account?tab=tabsForGood" + params}>
 			<TutorialComponent page={1}>
 				<WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}>
 					{charity && <CharityLogo charity={charity} />}
@@ -279,7 +279,7 @@ const NewTabCharityCard = ({ cid, loading }) => {
 					{ ! charity && ! loading && <p className="my-auto">Select a charity</p>}
 				</WhiteCircle>
 			</TutorialComponent>
-		</a>
+		</C.A>
 		{totalMoney && charity && 
 			<p>Together we've raised<br/><b><Misc.Money amount={totalMoney} /></b><br/>
 			for {NGO.displayName(charity)}</p>}

@@ -110,8 +110,15 @@ const MainDiv = () => {
 		impactoverview: 'Impact Hub',
 		green: 'Green Media',
 		tabsforgood: C.T4G,
-		blog: "Blog"
+		blog: "Blog",
+		"home#mydata-cta": "My.Data" // HACK until we get a landing page
 	};
+
+	const accountMenuItems = [
+		{page: "profile", label: "Data Profile"},
+		{page: "tabsForGood", label: C.T4G},
+		{page: "settings", label: "Settings"}
+	];
 
 	return (<MainDivBase
 		pageForPath={PAGES}
@@ -122,6 +129,7 @@ const MainDiv = () => {
 				"ourstory":[],
 				"our-impact": ['charities', 'impactoverview', Roles.isTester() && 'green'],
 				'tabsforgood':[],
+				"home#mydata-cta": [],
 				"blog":Roles.isTester()
 			};
 		}}
@@ -129,18 +137,7 @@ const MainDiv = () => {
 		navbarDarkTheme={false}
 		navbarChildren={() => <><T4GSignUpButton>Get Tabs for Good on Desktop</T4GSignUpButton><T4GSignUpModal /></>}
 		navbarBackgroundColour="white"
-		navbarAccountMenuItems={<>
-			{/* NB: the Account nav link = Dashboard (currently) */}
-			<DropdownItem>
-				<C.A href={modifyPage(["account"],{tab:"profile"},true,true)} className="nav-link">Data Profile</C.A> 
-			</DropdownItem>
-			<DropdownItem>
-				<C.A href={modifyPage(["account"],{tab:"tabsForGood"},true,true)} className="nav-link">{C.T4G}</C.A> 
-			</DropdownItem>
-			<DropdownItem>
-				<C.A href={modifyPage(["account"],{tab:"settings"},true,true)} className="nav-link">Settings</C.A> 
-			</DropdownItem>
-			</>}
+		navbarAccountMenuItems={accountMenuItems}
 		NavExpandSize="md"
 		// navbarLabels={getNavbarLabels}
 		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account', 'green', 'charities', 'impactoverview', 'campaign', 'ourstory', 'ads', 'blog', 'blogcontent', 'allowlist', 'safari', 'greendash']}

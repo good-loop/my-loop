@@ -30,8 +30,6 @@ import { setFooterClassName } from '../Footer';
 import { T4GHowItWorksButton, T4GSignUpButton } from '../T4GSignUp';
 import { MyDataSignUpButton } from '../mydata/MyDataSignUp';
 
-window.DEBUG = false;
-
 const HomePage = ({spring}) => {
 	//spring the page down if asked to for how it works section
 	const [, setY] = useSpring(() => ({ y: 0 }));
@@ -92,6 +90,7 @@ const JoinOurMovement = () => <>
 					</CardBody>
 				</Card>
 				<Card>
+					<a id="mydata-cta" />
 					<CardImg className='bg-gl-dark-blue' variant="top" src="/img/mydata/onboarding-2.png" />
 					<CardBody>
 						<CardTitle><h3 className='gl-dark-blue'>My.Data</h3></CardTitle>

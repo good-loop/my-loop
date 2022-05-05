@@ -39,7 +39,8 @@ export const MyDataCard = ({img, info, className, children}) => {
     </div>
 };
 
-export const CharityCard = ({cid, item}) => {
+
+export const CharitySelectCard = ({cid, item}) => {
     let ngo = item;
 
     if (!ngo) {
@@ -60,7 +61,7 @@ export const CharityCard = ({cid, item}) => {
     }
 
     return <MyDataCard className="mydata-card charity-card"
-                       img={<NGOImage bg main ratio={30} center className="w-100" ngo={ngo} src="/img/mydata/charity-default.png" />}
+                       img={<NGOImage bg header ratio={30} center className="w-100" ngo={ngo} src="/img/mydata/charity-default.png" />}
                        info={<NGODescription extended ngo={ngo}/>}
             >
         <CharityLogo charity={ngo}/>
@@ -135,9 +136,10 @@ export const ProfileDotRow = ({className, children}) => {
 
 export const ProfileDot = ({className, imgUrl, children}) => {
     if (!imgUrl) imgUrl = "/img/mydata/supporting.png"
+    const dotSize = '2rem';
     return (
         <Col md={4} className={space(className, 'd-flex align-items-center mb-3 mb-md-0')}>
-            <img src={imgUrl} className="logo mr-2" />
+            <img src={imgUrl} className="mr-2" style={{width:dotSize}}/>
             {children}
         </Col>
     )

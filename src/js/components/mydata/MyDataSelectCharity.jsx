@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropControl from '../../base/components/PropControl';
-import { CharityCard } from './MyDataCommonComponents';
+import { CharitySelectCard } from './MyDataCommonComponents';
 import { getCharityObject } from '../../base/components/PropControls/UserClaimControl';
 import { getDataItem } from '../../base/plumbing/Crud';
 import { getListPath } from '../../base/plumbing/DataStore';
@@ -49,7 +49,8 @@ const MyDataSelectCharity = () => {
         <PropControl type="text" path={CHARITY_WIDGET_PATH} prop="charitySearch" label="Search our Charity Directory" className="charity-search" placeholder="Search Charities"/>
         <hr />
         {noQ && <h3 className="featured-charities text-center">Featured Charities</h3>}
-        <ListLoad type="NGO" status="PUBLISHED" q={q || dq} sort="impact" ListItem={CharityCard} unwrapped hideTotal />
+        <ListLoad type="NGO" status="PUBLISHED" q={q || dq} 
+			sort={q? null : "impact"} ListItem={CharitySelectCard} unwrapped hideTotal />
     </>;
 
 };
