@@ -16,6 +16,7 @@ import { nextSignupPage } from './MyDataSignUp';
 import SearchQuery from '../../base/searchquery';
 import { getDataLogData } from '../../base/plumbing/DataLog';
 import KStatus from '../../base/data/KStatus';
+import { getProfile } from '../../base/data/Person';
 
 
 /**
@@ -57,6 +58,8 @@ export const CharitySelectCard = ({cid, item}) => {
 
     const onClick = () => {
         assert(Login.isLoggedIn());
+        const pvPerson = getProfile();
+        Person.setHasApp(pvPerson.value || pvPerson.interim, "my.data");
         setPersonSetting({key: "charity", value: cid, callback:nextSignupPage});
     }
 
