@@ -139,9 +139,11 @@ const MyDataSignUp = () => {
 	const page = DataStore.getUrlValue("page") || DataStore.getValue(PAGE_PATH) || 0;
 	if (page >= PAGES.length) {
 		// done!
-		modifyPage(["account"], {tab:"dashboard",dashboard:"profile"})
+		// TODO: Redirect to profile instead
+		modifyPage(["account"], {tab:"dashboard"})
 		return null;
 	}
+	
 	const PageComponent = PAGES[page];
 
 	return <div className="mydata-signup">
