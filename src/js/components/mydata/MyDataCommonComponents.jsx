@@ -64,8 +64,8 @@ export const CharitySelectCard = ({cid, item}) => {
     }
 
     return <MyDataCard className="mydata-card charity-card"
-                       img={<NGOImage bg header ratio={30} center className="w-100" ngo={ngo} src="/img/mydata/charity-default.png" />}
-                       info={<NGODescription extended ngo={ngo}/>}
+                img={<NGOImage bg header ratio={30} center className="w-100" ngo={ngo} src="/img/mydata/charity-default.png" />}
+                info={<NGODescription extended ngo={ngo}/>}
             >
         <CharityLogo charity={ngo}/>
         <NGODescription summarize ngo={ngo} />
