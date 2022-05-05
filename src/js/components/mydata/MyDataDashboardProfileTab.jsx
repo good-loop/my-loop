@@ -12,6 +12,8 @@ import { toTitleCase } from '../../base/utils/miscutils';
 import Claim, { DEFAULT_CONSENT } from '../../base/data/Claim';
 import { getPVClaim } from '../../base/data/Person';
 import Login from '../../base/youagain';
+import { modifyPage } from '../../base/plumbing/glrouter';
+import { CompleteDataCTA } from './MyDataDashboardPage';
 
 // Prase list of strings into individual spans if the input is a list of strings
 const parseList = (value) => {
@@ -77,9 +79,18 @@ const SupportingCard = () => {
 	return (<Container className='text-center'>
 		<hr/>
 		<h1>Your Profile</h1>
-		<p style={{color:'#3F7991',fontWeight:'bold'}}>Your Data is Supporting</p>
-		{ngo && <CharityLogo className='mb-3' charity={ngo} />}
-		<DataSharedProgressBar />
+
+		{ngo 
+			? <>
+				<p style={{color:'#3F7991',fontWeight:'bold'}}>Your Data is Supporting</p>
+				{ngo && <CharityLogo className='mb-3' charity={ngo} />}
+				<DataSharedProgressBar />
+			  </>
+			: <>
+				<CompleteDataCTA ngo={ngo} link={<C.A href="/account?tab=tabsForGood"><p className="leader-text m-0">Get started by selecting the charity you'd like to support</p></C.A>} />
+			  </>		
+		}	
+		
 		<hr/>
 	</Container>)
 }

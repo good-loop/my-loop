@@ -64,6 +64,23 @@ export const getDataProgress = (keys) => {
 	return count/keys.length;
 }
 
+export const CompleteDataCTA = ({ngo, link}) => {
+	const progress = getDataProgress();
+	if (progress === 1) return null;
+	return <div className="d-flex flex-row align-items-center justify-content-center px-1">
+		<div className="rounded shadow bg-gl-pink px-2 py-4" style={{maxWidth:400}}>
+			<Row>
+				<Col xs={3}>
+					<img src="/img/mydata/data-badge.png" className="w-100"/>
+				</Col>
+				<Col xs={9}>
+					{link}
+				</Col>
+			</Row>
+		</div>
+	</div>;
+}
+
 /**
  * 
  * @returns {Number} [0,2] progress of T4G in tabs viewed
