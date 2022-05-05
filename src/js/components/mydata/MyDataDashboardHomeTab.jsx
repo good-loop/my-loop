@@ -239,7 +239,7 @@ const MyDataDashboardHomeTab = () => {
 				  <p className="text-black m-0">Complete your data profile to raise even more for {ngo && NGO.displayName(ngo) || "charity"}!</p>
 				  {!hasRegisteredForMyData()
 				  	 ? <a onClick={scrollToMyDataSignup} style={{textDecoration: "underline"}}>Find out more</a>
-					 : <C.A href={modifyPage("account", {tab: "profile"})}>Find out more</C.A>
+					 : <C.A href={modifyPage(["account"],{tab: "profile"}, true, true)}>Find out more</C.A> 
 				  }
 				</>} 
 			/>
