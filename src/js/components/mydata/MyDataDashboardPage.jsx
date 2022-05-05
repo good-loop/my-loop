@@ -3,7 +3,7 @@ import { Col, Row, Container, TabContent, TabPane, Card, CardTitle, CardText, Bu
 import Person, { getAllXIds, getEmail, getProfile, getPVClaim, hasConsent, PURPOSES } from '../../base/data/Person';
 import DataStore from '../../base/plumbing/DataStore';
 import Login from '../../base/youagain';
-import {MyDataSignUpButton, MyDataSignUpModal} from './MyDataSignUp';
+import {MyDataSignUpButton, MyDataSignUpModal, showMyDataSignUpModal} from './MyDataSignUp';
 import { getPersonSetting, getCharityObject } from '../../base/components/PropControls/UserClaimControl';
 import classnames from 'classnames';
 import MyDataDashboardHomeTab from './MyDataDashboardHomeTab';
@@ -18,6 +18,7 @@ import { Collapse } from "reactstrap";
 import Misc from '../../base/components/Misc';
 import { Tab, Tabs } from '../../base/components/Tabs';
 import { modifyPage } from '../../base/plumbing/glrouter';
+import { hasRegisteredForMyData } from './MyDataCommonComponents';
 import C from '../../C';
 
 /**
@@ -131,7 +132,9 @@ const MyDataDashboardPage = () => {
 	// 	setShowInfoAds(!showInfoAds);
 	// }
 
-	let activeTabId = DataStore.getUrlValue("tab") || "dashboard"; 
+	const hasMyData = hasRegisteredForMyData();
+
+	let activeTabId = hasMyData && DataStore.getUrlValue("tab") || "dashboard"; 
 
 	return <div className='my-data'>
 		<Container id='profile'>
@@ -180,7 +183,14 @@ const MyDataDashboardPage = () => {
 			<Tab tabId='dashboard' title={<><img src='img/mydata/home-tab.png' style={{height:'1.5rem',marginRight:'.5em'}} />HOME</>}>
 				<MyDataDashboardHomeTab />
 			</Tab>
-			<Tab tabId='profile' title={<><img src='img/mydata/data-tab.png' style={{height:'1.5rem',marginRight:'.5em'}} />DATA PROFILE</>}>
+			<Tab tabId='profile'
+				title={<>
+					<img src='img/mydata/data-tab.png' style={{height:'1.5rem',marginRight:'.5em'}}/>
+					{hasMyData ? "DATA PROFILE" : "SIGN UP FOR MY.DATA"}
+				</>}
+				disabled={!hasMyData}
+				onTabClick={!hasMyData && showMyDataSignUpModal}
+			>
 				<MyDataDashboardProfileTab />
 			</Tab>
 		</Tabs>

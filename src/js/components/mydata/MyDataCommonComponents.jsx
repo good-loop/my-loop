@@ -220,3 +220,12 @@ export const hasWatchedThisWeeksAd = (adid) => {
 	
     return !!(pvData.value && pvData.value.allCount);
 }
+
+
+export const hasRegisteredForMyData = () => {
+	const pvPerson = getProfile();
+	const hasMyData = Person.hasApp(pvPerson.value || pvPerson.interim, "my.data");
+    console.log("HAS MY DATA??", hasMyData);
+
+	return hasMyData;
+};

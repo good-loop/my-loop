@@ -7,6 +7,7 @@ import CharityLogo from '../CharityLogo';
 import { MyDataCard } from './MyDataCommonComponents';
 import { countryListAlpha2 } from '../../base/data/CountryRegion';
 import PropControl from '../../base/components/PropControl';
+import { hasRegisteredForMyData } from './MyDataCommonComponents';
 import { getDataProgress } from './MyDataDashboardPage';
 import { toTitleCase } from '../../base/utils/miscutils';
 import Claim, { DEFAULT_CONSENT } from '../../base/data/Claim';
@@ -14,7 +15,7 @@ import { getPVClaim } from '../../base/data/Person';
 import Login from '../../base/youagain';
 import { modifyPage } from '../../base/plumbing/glrouter';
 import { CompleteDataCTA } from './MyDataDashboardPage';
-
+import C from '../../C';
 // Prase list of strings into individual spans if the input is a list of strings
 const parseList = (value) => {
 	const valueMap = {...causesMap, ...adstypeMap};
@@ -257,6 +258,11 @@ const DataProfile = () => {
 }
 
 const MyDataDashboardProfileTab = () => {
+	// Redirect to the home tab is they haven't yet signed up for MyData
+	if (!hasRegisteredForMyData()) {
+		modifyPage(["account"], {tab:"dashboard"});
+		return null;
+	}
 
 	return (<>
 		<br/>
