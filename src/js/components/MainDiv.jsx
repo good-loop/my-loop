@@ -43,6 +43,7 @@ import { MyLoginWidgetGuts } from './MyLoginWidgetGuts';
 import BlogContent from './pages/BlogContent';
 import SafariPage from './pages/SafariPage';
 import { DropdownItem } from 'reactstrap';
+import { accountMenuItems } from './pages/CommonComponents';
 
 // DataStore
 C.setupDataStore();
@@ -113,12 +114,6 @@ const MainDiv = () => {
 		blog: "Blog",
 		"home#mydata-cta": "My.Data" // HACK until we get a landing page
 	};
-
-	const accountMenuItems = [
-		{page: "profile", label: "Data Profile"},
-		{page: "tabsForGood", label: C.T4G},
-		{page: "settings", label: "Settings"}
-	];
 
 	return (<MainDivBase
 		pageForPath={PAGES}

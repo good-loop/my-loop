@@ -17,6 +17,12 @@ import NGOImage from '../../base/components/NGOImage';
 import NGO from '../../base/data/NGO';
 import {MyDataSignUpButton, MyDataSignUpModal, showMyDataSignUpModal} from '../mydata/MyDataSignUp';
 
+export const accountMenuItems = [
+	{page: "profile", label: "Data Profile"},
+	{page: "tabsForGood", label: C.T4G},
+	{page: "settings", label: "Settings"}
+];
+
 const PageCard = ({id, className, ref, children}) => {
 	// Why two containers?? Is the outer one for card-specific css rules to latch onto??
 	return <Container id={id} ref={ref} fluid className={space('page-card', className)}>
@@ -157,6 +163,9 @@ const MyDuoLandingSection = ({ngo, title, bgImg}) => {
 		title = `Turn your web browsing into ${(ngo && "cash for " + name) || "charity donations"}. For free.`;
 	}
 
+	const scrollToUpperCta = () => document.getElementById("upper-cta").scrollIntoView({behavior: "smooth"});
+
+
 	return (<>
 	<Container fluid className="home-landing-splash px-0" >
 		<BG minHeight={mobileWidth ? null : "32vw"} 
@@ -166,7 +175,7 @@ const MyDuoLandingSection = ({ngo, title, bgImg}) => {
 		<img src='img/splash-screen/foreground-desktop.png' className="d-none d-md-block w-100 position-absolute" />
 		<div className="splash-content d-flex flex-column align-items-center" style={!mobileWidth ? {margin:'0 34vw'} : null}>
 			{title && <h1 className='text-center bolder text-white mx-3 mt-3'>{title}</h1>}
-			<C.A className='btn btn-primary btn-lg mt-3 mx-auto mb-5' href='/ourstory'>Discover My.Good-Loop</C.A>
+			<button className='btn btn-primary btn-lg mt-3 mx-auto mb-5' onClick={scrollToUpperCta}>Discover My.Good-Loop</button>
 		</div>
 		</BG>
 	</Container>
