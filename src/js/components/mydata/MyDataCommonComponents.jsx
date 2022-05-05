@@ -119,12 +119,12 @@ export const ProfileCreationSteps = ({step}) => {
     const steps = [
         <>
             <span>You selected</span>
-            {ngo && <CharityLogo charity={ngo} className="charity-logo-sm"/>}
+            {ngo && <CharityLogo charity={ngo} className="charity-logo-sm" nameCap={10}/>}
         </>,
         "Build your profile",
         <>
             <span>Ready to help</span>
-            {ngo && <CharityLogo charity={ngo} className="charity-logo-sm"/>}
+            {ngo && <CharityLogo charity={ngo} className="charity-logo-sm" nameCap={10}/>}
         </>
     ];
 
