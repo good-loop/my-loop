@@ -17,7 +17,7 @@ import DataStore from '../../base/plumbing/DataStore';
 import PropControl from '../../base/components/PropControl';
 import CharityLogo from '../CharityLogo';
 import Misc from '../../base/components/Misc';
-import { getDataProgress } from './MyDataDashboardPage';
+import { CompleteDataCTA } from './MyDataDashboardPage';
 
 // Hidden until we get some latest news to show
 /*
@@ -149,22 +149,6 @@ const AboutYourCharity = ({ngo}) => {
 	)
 };
 
-const CompleteDataCTA = ({ngo}) => {
-	const progress = getDataProgress();
-	if (progress === 1) return null;
-	return <div className="d-flex flex-row align-items-center justify-content-center px-1">
-		<div className="rounded shadow bg-gl-pink px-2 py-4" style={{maxWidth:400}}>
-			<Row>
-				<Col xs={3}>
-					<img src="/img/mydata/data-badge.png" className="w-100"/>
-				</Col>
-				<Col xs={9}>
-					<C.A href="/account?tab=profile"><p className="leader-text m-0">Complete your data profile to raise even more for {NGO.displayName(ngo)}!</p></C.A>
-				</Col>
-			</Row>
-		</div>
-	</div>;
-}
 
 const MyDataDashboardHomeTab = () => {
 
@@ -174,7 +158,12 @@ const MyDataDashboardHomeTab = () => {
 	return (<>
 		{/*<LatestNewsCard />*/}
 		<br/>
-		<CompleteDataCTA ngo={ngo}/>
+		<CompleteDataCTA ngo={ngo} 
+		                 link={<C.A href="/account?tab=profile">
+							        <p className="leader-text m-0">
+										Complete your data profile to raise even more for {ngo && NGO.displayName(ngo) || "charity"}!
+									</p>
+								</C.A>} />
 		<br/>
 		<hr/>
 		<AchievementCard />
