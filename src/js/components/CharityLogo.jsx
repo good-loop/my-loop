@@ -9,7 +9,7 @@ import C from '../C';
  * TODO can standardise this with brand logos
  * @param {?boolean} link true to make the logo a link
  */
-const CharityLogo = ({charity, className, size, style, link=false}) => {
+const CharityLogo = ({charity, className, size, style, nameCap, link=false}) => {
 	//if (!charity) return null;
 	// Check for SVG and use specific width if so
 	let svgClasses="";
@@ -25,7 +25,9 @@ const CharityLogo = ({charity, className, size, style, link=false}) => {
 	let $logo = <img className={space(className, "logo", size&&"logo-"+size, svgClasses)} style={style} src={charity.logo} alt={altText} />;
 	if ( ! charity.logo) {
 		console.warn("Charity without a logo",NGO.id(charity),charity);
-		$logo = <span className={className} style={style}>{charity.displayName || NGO.id(charity)}</span>; // fallback to their name
+		let ngoName = NGO.displayName(charity);
+		if (nameCap && ngoName.length > nameCap) ngoName = ngoName.substring(0, nameCap).replace(/ $/, "") + "...";
+		$logo = <span className={className} style={style}>{ngoName}</span>; // fallback to their name
 	}
 	// with / without `a` link?
 	if (charity.url && link) {

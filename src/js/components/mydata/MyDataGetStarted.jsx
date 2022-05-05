@@ -17,7 +17,7 @@ const MyDataGetStarted = () => {
     return <>
         <ProfileCreationSteps step={0}/>
         <div className="profile-creation-step">
-            {ngo && <NGOImage main bg className="circle w-100 mb-4" ratio={100} ngo={ngo} />}
+            {ngo && <NGOImage main bg className="circle w-100 mb-4" ratio={100} src="/img/mydata/charity-default-circle.png" ngo={ngo} />}
             <h1>Nice Choice!</h1>
             <p>Lets start building your data profile so you can begin raising money for {NGO.displayName(ngo)}.</p>
             <div className="button-container">

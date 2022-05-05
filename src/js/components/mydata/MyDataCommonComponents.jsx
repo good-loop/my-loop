@@ -64,8 +64,8 @@ export const CharitySelectCard = ({cid, item}) => {
     }
 
     return <MyDataCard className="mydata-card charity-card"
-                       img={<NGOImage bg header ratio={30} center className="w-100" ngo={ngo} src="/img/mydata/charity-default.png" />}
-                       info={<NGODescription extended ngo={ngo}/>}
+                img={<NGOImage bg header ratio={30} center className="w-100" ngo={ngo} src="/img/mydata/charity-default.png" />}
+                info={<NGODescription extended ngo={ngo}/>}
             >
         <CharityLogo charity={ngo}/>
         <NGODescription summarize ngo={ngo} />
@@ -119,12 +119,12 @@ export const ProfileCreationSteps = ({step}) => {
     const steps = [
         <>
             <span>You selected</span>
-            {ngo && <CharityLogo charity={ngo} className="charity-logo-sm"/>}
+            {ngo && <CharityLogo charity={ngo} className="charity-logo-sm" nameCap={10}/>}
         </>,
         "Build your profile",
         <>
             <span>Ready to help</span>
-            {ngo && <CharityLogo charity={ngo} className="charity-logo-sm"/>}
+            {ngo && <CharityLogo charity={ngo} className="charity-logo-sm" nameCap={10}/>}
         </>
     ];
 
