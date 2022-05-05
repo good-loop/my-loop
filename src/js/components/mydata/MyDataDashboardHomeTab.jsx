@@ -172,7 +172,7 @@ const GetT4GCard = ({ngo}) => {
 	</MyDataCard>;
 };
 
-const SignUpForMyDataCard = ({modal}) => {
+const SignUpForMyDataCard = () => {
 	return <MyDataCard
 			className="mydata-dashboard-signup"
 			img={<div className="bg-gl-muddy-blue d-flex flex-row justify-content-center align-items-center">
@@ -193,7 +193,6 @@ const SignUpForMyDataCard = ({modal}) => {
 					Share your online data with us  and we’ll transform it into money for good causes.
 				</p>
 				<MyDataSignUpButton />
-				{modal}
 			</Col>
 		</Row>
 	</MyDataCard>;
@@ -230,7 +229,6 @@ const MyDataDashboardHomeTab = () => {
 
 	const dataComplete = getDataProgress() === 1;
 	const hasMyData = hasRegisteredForMyData();
-	const myDataSignUpModal = <MyDataSignUpModal />;
 
 	useEffect(() => {
 		if (isPortraitMobile()) setFooterClassName('bg-gl-light-pink');
@@ -273,7 +271,8 @@ const MyDataDashboardHomeTab = () => {
 			<h3 className="px-3 my-3 my-md-5 raise-more">Ways to Raise Even More</h3>
 			<ThisWeeksAdCard />
 			<br />
-			{ <div id="mydata-dashboard-signup" style={hasMyData ? {display: "none"} : {}}><SignUpForMyDataCard modal={myDataSignUpModal}/></div>}
+			{ <div id="mydata-dashboard-signup" style={hasMyData ? {display: "none"} : {}}><SignUpForMyDataCard/></div>}
+			<MyDataSignUpModal />;
 			<br/>
 			<GetT4GCard ngo={ngo}/>
 			<br/>
