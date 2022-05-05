@@ -15,6 +15,7 @@ import MyDataDetails from './MyDataDetails';
 import MyDataProfileCreated, { ExplainPrivacyPages } from './MyDataProfileCreated';
 import LinkOut from '../../base/components/LinkOut';
 import { modifyPage } from '../../base/plumbing/glrouter';
+import Person, { getProfile } from '../../base/data/Person';
 
 const WIDGET_PATH = ['widget', 'MyDataSignUp'];
 const SHOW_PATH = [...WIDGET_PATH, 'show'];
@@ -74,6 +75,8 @@ const SignUpForm = () => {
 	const onRegister = () => {
 		const name = DataStore.getValue(PERSON_PATH.concat("name"));
 		const emailperms = DataStore.getValue(PERSON_PATH.concat("emailperms"));
+		const pvPerson = getProfile();
+		Person.setHasApp(pvPerson.value || pvPerson.interim, "my.data");
 		setPersonSetting({key:"name", value:name});
 		setPersonSetting({key: "emailperms", value: emailperms, callback:nextSignupPage}); // TODO do this as set-consent-on-email
 	}
