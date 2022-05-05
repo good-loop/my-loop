@@ -135,7 +135,7 @@ const WebtopPage = () => {
 					</TutorialComponent>
 					<TutorialComponent page={4} className="user-controls flex-row align-items-center">
 						{Login.isLoggedIn() ? <TabsOpenedCounter /> : null}
-						<AccountMenu accountMenuItems={accountMenuItems} linkType="a" small
+						<AccountMenu accountMenuItems={accountMenuItems} accountLink={{tab: "tabsForGood"}} linkType="a" small
 							customLogin={() => <NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>}
 						/>
 					</TutorialComponent>
