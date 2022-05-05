@@ -39,7 +39,7 @@ const Page = () => {
 
 	return (<>
 		<div className="AccountPage">
-			<Container className="pt-3">
+			<Container className="pt-3 account-container">
 				{tab === 'dashboard' && <MyDataDashboard />}
 				{tab === 'profile' && <MyDataDashboard />}
 				{tab === 'settings' && <AccountSettings />}
