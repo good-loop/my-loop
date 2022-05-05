@@ -192,8 +192,8 @@ const SignUpForMyDataCard = ({modal}) => {
 					<br />
 					Share your online data with us  and we’ll transform it into money for good causes.
 				</p>
-				{modal}
 				<MyDataSignUpButton />
+				{modal}
 			</Col>
 		</Row>
 	</MyDataCard>;
@@ -230,7 +230,7 @@ const MyDataDashboardHomeTab = () => {
 
 	const dataComplete = getDataProgress() === 1;
 	const hasMyData = hasRegisteredForMyData();
-	const myDataSignUpModal = hasMyData ? <><MyDataSignUpModal /></> : null;
+	const myDataSignUpModal = <MyDataSignUpModal />;
 
 	useEffect(() => {
 		if (isPortraitMobile()) setFooterClassName('bg-gl-light-pink');
