@@ -235,7 +235,8 @@ const MyDataDashboardHomeTab = () => {
 			<CompleteDataCTA ngo={ngo} 
 			link={<>
 				  <p className="text-black m-0">Complete your data profile to raise even more for {ngo && NGO.displayName(ngo) || "charity"}!</p>
-				  <button onClick={scrollToMyDataSignup}>Find out more</button>
+				  <br/>
+				  <Button color="primary" onClick={scrollToMyDataSignup}>Find out more</Button>
 				</>} />
 		}
 		<br/>

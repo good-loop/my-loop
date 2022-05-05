@@ -223,6 +223,7 @@ export const hasWatchedThisWeeksAd = (adid) => {
 export const hasRegisteredForMyData = () => {
 	const pvPerson = getProfile();
 	const hasMyData = Person.hasApp(pvPerson.value || pvPerson.interim, "my.data");
+    console.log("HAS MY DATA??", hasMyData);
 
 	return hasMyData;
-}
+};

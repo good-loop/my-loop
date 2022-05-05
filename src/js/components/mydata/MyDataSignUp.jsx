@@ -77,6 +77,7 @@ const SignUpForm = () => {
 		const emailperms = DataStore.getValue(PERSON_PATH.concat("emailperms"));
 		const pvPerson = getProfile();
 		Person.setHasApp(pvPerson.value || pvPerson.interim, "my.data");
+		console.log("SET HAS APP");
 		setPersonSetting({key:"name", value:name});
 		setPersonSetting({key: "emailperms", value: emailperms, callback:nextSignupPage}); // TODO do this as set-consent-on-email
 	}
