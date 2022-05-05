@@ -237,12 +237,17 @@ const MyDataDashboardHomeTab = () => {
 	return (<>
 		{/*<LatestNewsCard />*/}
 		<br/>
-		{ !hasMyData || !dataComplete &&
+		{ (!hasMyData || !dataComplete) &&
 			<CompleteDataCTA ngo={ngo} 
 			link={<>
 				  <p className="text-black m-0">Complete your data profile to raise even more for {ngo && NGO.displayName(ngo) || "charity"}!</p>
 				  <br/>
-				  <C.A onClick={!hasMyData && scrollToMyDataSignup} href={!dataComplete && "/account?tab=profile"} style={{textDecoration: "underline"}}>{hasMyData ? "Complete your profile" : "Find out more"}</C.A>
+				  
+				  {/* onClick doesn't seem to work with C.A */}
+				  {!hasMyData 
+				  	? <a onClick={scrollToMyDataSignup} style={{textDecoration: "underline"}}>Find out more</a>
+					: <C.A href={"/account?tab=profile"} style={{textDecoration: "underline"}}>Complete your profile</C.A>
+			      }
 				</>} 
 			/>
 		}
