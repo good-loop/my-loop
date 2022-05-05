@@ -28,6 +28,7 @@ import Money from '../base/data/Money';
 import NGO from '../base/data/NGO';
 import Roles, { isTester } from '../base/Roles';
 import Claim from '../base/data/Claim';
+import { accountMenuItems } from './pages/CommonComponents';
 
 
 // DataStore
@@ -134,7 +135,7 @@ const WebtopPage = () => {
 					</TutorialComponent>
 					<TutorialComponent page={4} className="user-controls flex-row align-items-center">
 						{Login.isLoggedIn() ? <TabsOpenedCounter /> : null}
-						<AccountMenu small accountLink="/account?tab=tabsForGood"
+						<AccountMenu accountMenuItems={accountMenuItems} linkType="a" small
 							customLogin={() => <NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>}
 						/>
 					</TutorialComponent>
