@@ -1,97 +1,155 @@
 
-.dashboard-card {
-	border: solid 1px @gl-light-grey;
-	border-radius: 0.75rem; // .rounded 
-	padding: 1rem; // .py3
-	@media @width-mobile {
-		width: 95%;
+.my-data {
+	h1,h2,h3,h4,h5 {
+		text-transform: capitalize !important;
 	}
-	.img-lg {
-		width: 30%;
+	.dashboard-bg {
+		@media @md-min {
+			background: none !important;
+		}
+	}
+	.mydata-card {
+		h3,h4,h5 {
+			color: @gl-desat-blue !important;
+		}
+		&.get-t4g {
+			.share-link {
+				font-size: 1.3rem;
+				color: @gl-blue;
+				text-decoration: underline;
+			}
+		}
+		@media @md-min {
+			border: 1px solid @gl-light-grey;
+		}
+	}
+	.dashboard-card {
+		border: solid 1px @gl-light-grey;
+		border-radius: 0.75rem; // .rounded 
+		padding: 1rem; // .py3
+		background-color: white;
 		@media @width-mobile {
-			width: 100%;
+			width: 95%;
 		}
-	}
 
-	&.achievements {
-		background-color: @gl-desat-blue;
-		max-width: 100%;
-		height: auto;
-	}
-
-	// "Together we've rasied" card on dashboard
-	.together-we-raised {
-		padding-top: 2rem; 
-		padding-bottom: 1rem; 
-		h3, h1 {
-			text-transform: capitalize;
-			color: #fff !important;
+		h3,h4,h5 {
+			color: @gl-desat-blue !important;
 		}
-		h3 { font-weight: 400; }
-		h1 {
-			font-size: 3rem;
+
+		.img-lg {
+			width: 30%;
 			@media @width-mobile {
-				font-size: 2rem;
+				width: 100%;
 			}
 		}
-		.logo {
-			height: 40%;
-			width: auto;
-		}
-	}
 
-	&.supporting {
-		h5 {
-			font-size: 1rem;
-			color: @gl-desat-blue !important;
+		&.achievements {
+			background-color: @gl-desat-blue;
+			max-width: 100%;
+			height: auto;
 		}
-		h4 {
-			color: @gl-desat-blue !important;
-		}
-		.charity-logo {
-			padding: 0;
-			margin: 0;
-			width: 100%;
-			text-align: center;
 
-			img {
+		// "Together we've rasied" card on dashboard
+		.together-we-raised {
+			padding-top: 2rem; 
+			padding-bottom: 1rem; 
+			h3, h1 {
+				text-transform: capitalize;
+				color: #fff !important;
+			}
+			h3 { font-weight: 400; }
+			h1 {
+				font-size: 3rem;
+				@media @width-mobile {
+					font-size: 2rem;
+				}
+			}
+			.logo {
+				height: 40%;
+				width: auto;
+			}
+		}
+
+		&.supporting {
+			h5 {
+				font-size: 1rem;
+				//color: @gl-desat-blue !important;
+			}
+			.charity-logo {
 				padding: 0;
-				margin-top: -.5rem;
+				margin: 0;
+				width: 100%;
+				text-align: center;
+
+				img {
+					padding: 0;
+					margin-top: -.5rem;
+				}
+			}
+			.charity-img {
+				border-radius: 10px;
+				width: 70%;
+				@media @width-mobile {
+					border-radius: 0;
+					width: calc(100% + 2rem);
+					margin-left: -1rem;
+					margin-right: -1rem;
+					//box-sizing: border-box;
+				}
 			}
 		}
 	}
-}
 
-.dashboard-ad {
-	border-radius: 0.5rem;
-	overflow: hidden;
-	width: 70%;
-	@media @width-mobile {
-		width: 100%;
-	}
-}
-
-.watch-ad-done {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
-	position: relative;
-	.green-tick {
-		width: 20%;
+	.raise-more {
+		font-size: 2rem;
 		@media @width-mobile {
-			width: 80%;
+			font-size: 1.5rem;
 		}
 	}
-	.watched-text {
-		width: 100%;
-		height: 100%;
-		position: absolute;
-		top: 0;
-		left: 0;
+
+	.dashboard-ad {
+		border-radius: 0.5rem;
+		overflow: hidden;
+		width: 70%;
+		@media @width-mobile {
+			width: 100%;
+		}
+	}
+
+	.watch-ad-done {
 		display: flex;
-		flex-direction: column;
+		flex-direction: row;
 		justify-content: center;
 		align-items: center;
+		position: relative;
+		background-color: @gl-muddy-blue;
+		width: 100%;
+		padding-bottom: 50%;
+		border-radius: 10px;
+		.watched-text {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			h4 {
+				color: white !important;
+				font-weight: bold;
+				font-size: 1rem;
+			}
+			.tick {
+				width: 15%;
+			}
+		}
+		.fireworks {
+			position: absolute;
+			width: 30%;
+			top: 2%;
+			right: 3%;
+		}
 	}
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Button, Form, Alert} from 'reactstrap';
-import { ProfileDot, ProfileDotRow, getThisWeeksAd, hasWatchedThisWeeksAd } from './MyDataCommonComponents';
+import { ProfileDot, ProfileDotRow, getThisWeeksAd, hasWatchedThisWeeksAd, MyDataCard } from './MyDataCommonComponents';
 import { getCharityObject, getEmail, getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
 import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import ServerIO from '../../plumbing/ServerIO'
@@ -18,6 +18,8 @@ import PropControl from '../../base/components/PropControl';
 import CharityLogo from '../CharityLogo';
 import Misc from '../../base/components/Misc';
 import { getDataProgress } from './MyDataDashboardPage';
+import { setFooterClassName } from '../Footer';
+import Person, { getProfile } from '../../base/data/Person';
 
 // Hidden until we get some latest news to show
 /*
@@ -83,66 +85,102 @@ const ThisWeeksAdCard = () => {
 	const adid = exists && pvAd.value.id;
 	const watched = adid && hasWatchedThisWeeksAd(adid) && !watchAnyway;
 
-	const WatchedAd = ({className, style, showBtn}) => {
-		const watchAgain = () => {
-			setWatchAnyway(true);
-			setAdLoaded(false);
-		}
+	const watchAgain = () => {
+		setWatchAnyway(true);
+		setAdLoaded(false);
+	}
+
+	const WatchedAd = ({className, style, children}) => {
+		
 		return <div className={space("watch-ad-done", className)} style={style}>
-			<img src="/img/mydata/green_tick.png" className="green-tick"/>
 			<div className="watched-text">
-				<h3>Weekly watch done!</h3>
-				{showBtn && <>
-					<Button color="primary" onClick={watchAgain}>Watch it again<br/></Button>
-					<p><small>After the first view, watching again does not raise extra money.</small></p>
-				</>}
+				<img src="/img/mydata/tick-white.svg" className="tick"/>
+				<h4>{children}</h4>
 			</div>
+			<img src="/img/mydata/fireworks.png" className="fireworks"/>
 		</div>;
 	}
 
-	return (<Container className='dashboard-card'>
-			<h1>Watch This Week's Ad</h1>
+	return (<MyDataCard
+				className="this-weeks-ad"
+				img={<div className="bg-gl-light-blue d-flex flex-row justify-content-center align-items-center">
+					<img src="/img/mydata/ads-badge.png" className="w-25 py-3"/>
+				</div>}
+		>
+			<br/>
+			<h4>Watch This Week's Ad</h4>
+			<hr/>
 			<div className="position-relative">
 			{!watched ? 
 				<div className="position-relative d-flex flex-column justify-content-center align-items-center">
-					{adLoaded && exists && <WatchedAd className="position-absolute" style={{top:0, left:0, width:"100%", height:"100%"}}/>}
+					{adLoaded && exists && <WatchedAd className="position-absolute" style={{top:0, left:0, width:"100%", height:"100%"}}>Weekly Watch Done</WatchedAd>}
 					{exists && adid ? <GoodLoopUnit vertId={adid} className="dashboard-ad"/>
-						: (pvAd && pvAd.resolved ? <>
-							<h3>No ad this week!</h3>
-							<p>Check back another time to raise money for charity</p>
-						</> : <Misc.Loading />)}
+						: (pvAd && pvAd.resolved ? <WatchedAd>
+							No ad this week!
+						</WatchedAd> : <Misc.Loading />)}
 				</div> : 
-				<WatchedAd showBtn/>}
+				<WatchedAd>Weekly Watch Done</WatchedAd>}
 			</div>
 			<br/>
 			<p className="text-center">When you watch one of our ads 50% of the ad fee goes to charity.</p>
-		</Container>);
+			{watched && <div className="d-flex flex-row justify-content-center align-items-center">
+				<Button color="primary" onClick={watchAgain}>Watch Again</Button>
+			</div>}
+		</MyDataCard>);
 };
 
 const GetT4GCard = ({ngo}) => {
-	return <Container className="dashboard-card">
-		<h1>Get Tabs for Good</h1>
+	
+	const hasT4G = Person.hasApp(getProfile().value, "t4g.good-loop.com");
+	const [copiedLink, setCopiedLink] = useState(false);
+	const copyLink = e => {
+		e.preventDefault();
+		if (!window.isSecureContext) {
+			console.warn("Not in an HTTPS connection, so cannot copy to clipboard! Will work on HTTPS");
+		} else {
+			window.navigator.clipboard.writeText("https://my.good-loop.com/charity/" + getId(ngo));
+		}
+		setCopiedLink(true);
+	}
+
+	return <MyDataCard
+			className="get-t4g"
+			img={<div className="bg-gl-muddy-blue d-flex flex-row justify-content-center align-items-center">
+					<img src="/img/mydata/tabs-badge.png" className="w-25 py-3"/>
+				</div>}
+	>
+		<br/>
+		<h4>{hasT4G ? "Share Tabs for Good" : "Browse with Tabs for Good"}</h4>
+		<hr/>
+		<br/>
 		<Row>
 			<Col md={6} className="mb-3 mb-md-0">
-				<img src="/img/homepage/slide-1.png" className="w-100"/>
+				<img src="/img/homepage/slide-1.png" className="w-100 rounded"/>
 			</Col>
 			<Col md={6} className="d-flex flex-column align-items-center justify-content-center">
-				<p className="text-center">Add Tabs for Good to your desktop browser to raise money for {NGO.displayName(ngo)} while you surf the web</p>
-				<C.A href={ngo ? "/charity/" + getId(ngo) : "/tabsforgood"}><Button color="primary">Find out more</Button></C.A>
+				<p className="text-center">
+					{hasT4G ? "Share Tabs for Good with a friend so they can raise money for charity while they browse too!"
+						: "Add Tabs for Good to your desktop browser to raise money for {NGO.displayName(ngo)} while you surf the web"}
+				</p>
+				{hasT4G ? <a onClick={copyLink} className="share-link">{copiedLink ? "LINK COPIED!" : "SHARE TABS FOR GOOD"}</a>
+					: <C.A href={ngo ? "/charity/" + getId(ngo) : "/tabsforgood"}><Button color="primary">Find out more</Button></C.A>}
 			</Col>
 		</Row>
-	</Container>;
+	</MyDataCard>;
 };
 
 const AboutYourCharity = ({ngo}) => {
 	const name = NGO.displayName(ngo);
 	return (
-		<Container className="dashboard-card supporting">
+		<Container className="dashboard-card supporting bg-white">
 			<h5 className="pt-2">Your Are Supporting</h5>
 			<br/>
 			{ngo && <div className="charity-logo"><CharityLogo charity={ngo} /></div>}
 			<br/>
-			<NGOImage src="/img/stats1-cropped.jpg" main ngo={ngo} className="w-100"/>
+			<div className="d-flex flex-row justify-content-center align-items-center">
+				<NGOImage src="/img/stats1-cropped.jpg" main ngo={ngo} className="charity-img"/>
+			</div>
+			<br/>
 			<h4 className="mt-3 text-left">What {name} Is Doing</h4>
 			<NGODescription extended ngo={ngo} className="text-center"/>
 		</Container>
@@ -170,6 +208,10 @@ const MyDataDashboardHomeTab = () => {
 
 	const pvCharity = getCharityObject();
 	const ngo = pvCharity && (pvCharity.value || pvCharity.interim);
+
+	useEffect(() => {
+		if (isPortraitMobile()) setFooterClassName('bg-gl-light-pink');
+	}, []);
 	
 	return (<>
 		{/*<LatestNewsCard />*/}
@@ -177,17 +219,28 @@ const MyDataDashboardHomeTab = () => {
 		<CompleteDataCTA ngo={ngo}/>
 		<br/>
 		<hr/>
-		<AchievementCard />
-		<div className="bg-gl-lighter-blue">
+		<div className="bg-gl-lighter-blue-gradient dashboard-bg">
+			<AchievementCard />
+		</div>
+		<div className="bg-gl-lighter-blue dashboard-bg">
 			<br/>
 			<AboutYourCharity ngo={ngo}/>
+			<br/>
+			<div className="position-relative">
+				<img src="/img/curves/curve-light-pink.svg" className="w-100 d-md-none"/>
+				<div className="mt-5 d-none d-md-block"/>
+				<img src="/img/green/hummingbird.png" className="hummingbird"/>
+			</div>
 		</div>
-		<h3 className="px-3 my-3 my-md-5">Ways to Raise Even More</h3>
-		<ThisWeeksAdCard />
-		<br/>
-		<GetT4GCard ngo={ngo}/>
-		<br/>
-		<FeedbackCard />
+		<div className="bg-gl-light-pink dashboard-bg">
+			<br/>
+			<h3 className="px-3 my-3 my-md-5 raise-more">Ways to Raise Even More</h3>
+			<ThisWeeksAdCard />
+			<br/>
+			<GetT4GCard ngo={ngo}/>
+			<br/>
+			<FeedbackCard />
+		</div>
 	</>)
 };
 
