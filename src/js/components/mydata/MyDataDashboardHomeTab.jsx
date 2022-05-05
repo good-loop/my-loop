@@ -17,7 +17,7 @@ import DataStore from '../../base/plumbing/DataStore';
 import PropControl from '../../base/components/PropControl';
 import CharityLogo from '../CharityLogo';
 import Misc from '../../base/components/Misc';
-import { CompleteDataCTA } from './MyDataDashboardPage';
+import { CompleteDataCTA, getDataProgress } from './MyDataDashboardPage';
 import { setFooterClassName } from '../Footer';
 import Person, { getProfile } from '../../base/data/Person';
 import { MyDataSignUpButton, MyDataSignUpModal } from './MyDataSignUp';
@@ -226,6 +226,9 @@ const MyDataDashboardHomeTab = () => {
 		document.getElementById("mydata-dashboard-signup").scrollIntoView({behavior: "smooth"});
 	}
 
+	const dataComplete = getDataProgress() === 1;
+	const hasMyData = hasRegisteredForMyData();
+
 	useEffect(() => {
 		if (isPortraitMobile()) setFooterClassName('bg-gl-light-pink');
 	}, []);
@@ -233,12 +236,12 @@ const MyDataDashboardHomeTab = () => {
 	return (<>
 		{/*<LatestNewsCard />*/}
 		<br/>
-		{ !hasRegisteredForMyData() &&
+		{ !hasMyData || !dataComplete &&
 			<CompleteDataCTA ngo={ngo} 
 			link={<>
 				  <p className="text-black m-0">Complete your data profile to raise even more for {ngo && NGO.displayName(ngo) || "charity"}!</p>
 				  <br/>
-				  <a onClick={scrollToMyDataSignup} style={{textDecoration: "underline"}}>Find out more</a>
+				  <C.A onClick={!hasMyData && scrollToMyDataSignup} href={!dataComplete && "/account?tab=profile"} style={{textDecoration: "underline"}}>{hasMyData ? "Complete your profile" : "Find out more"}</C.A>
 				</>} 
 			/>
 		}
