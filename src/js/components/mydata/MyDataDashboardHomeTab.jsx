@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Button, Form, Alert} from 'reactstrap';
-import { ProfileDot, ProfileDotRow, getThisWeeksAd, hasWatchedThisWeeksAd, MyDataCard } from './MyDataCommonComponents';
+import { ProfileDot, ProfileDotRow, getThisWeeksAd, hasWatchedThisWeeksAd, MyDataCard, hasRegisteredForMyData } from './MyDataCommonComponents';
 import { getCharityObject, getEmail, getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
 import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import ServerIO from '../../plumbing/ServerIO'
@@ -20,6 +20,8 @@ import Misc from '../../base/components/Misc';
 import { CompleteDataCTA } from './MyDataDashboardPage';
 import { setFooterClassName } from '../Footer';
 import Person, { getProfile } from '../../base/data/Person';
+import { MyDataSignUpButton, MyDataSignUpModal } from './MyDataSignUp';
+
 
 // Hidden until we get some latest news to show
 /*
@@ -169,6 +171,31 @@ const GetT4GCard = ({ngo}) => {
 	</MyDataCard>;
 };
 
+const SignUpForMyDataCard = () => {
+	return <MyDataCard
+			className="mydata-dashboard-signup"
+			img={<div className="bg-gl-muddy-blue d-flex flex-row justify-content-center align-items-center">
+					<img src="/img/mydata/tabs-badge.png" className="w-25 py-3"/>
+				</div>}
+		>
+		<br/>
+		<h4>Sign Up To My.Data</h4>
+		<br/>
+		<Row>
+			<Col md={6} className="mb-3 mb-md-0">
+				<img src="/img/homepage/slide-1.png" className="w-100 rounded"/>
+			</Col>
+			<Col md={6} className="d-flex flex-column align-items-center justify-content-center">
+				<p className="text-center">
+					Paragraph about My.Data and why you should sign up
+				</p>
+				<MyDataSignUpModal />
+				<MyDataSignUpButton />
+			</Col>
+		</Row>
+	</MyDataCard>;
+}
+
 const AboutYourCharity = ({ngo}) => {
 	const name = NGO.displayName(ngo);
 	return (
@@ -192,6 +219,10 @@ const MyDataDashboardHomeTab = () => {
 
 	const pvCharity = getCharityObject();
 	const ngo = pvCharity && (pvCharity.value || pvCharity.interim);
+	const scrollToMyDataSignup = (e) => {
+		e.preventDefault();
+		document.getElementById("mydata-dashboard-signup").scrollIntoView({behavior: "smooth"});
+	}
 
 	useEffect(() => {
 		if (isPortraitMobile()) setFooterClassName('bg-gl-light-pink');
@@ -200,12 +231,13 @@ const MyDataDashboardHomeTab = () => {
 	return (<>
 		{/*<LatestNewsCard />*/}
 		<br/>
-		<CompleteDataCTA ngo={ngo} 
-		                 link={<C.A href="/account?tab=profile">
-							        <p className="leader-text m-0">
-										Complete your data profile to raise even more for {ngo && NGO.displayName(ngo) || "charity"}!
-									</p>
-								</C.A>} />
+		{ !hasRegisteredForMyData() &&
+			<CompleteDataCTA ngo={ngo} 
+			link={<>
+				  <p className="text-black m-0">Complete your data profile to raise even more for {ngo && NGO.displayName(ngo) || "charity"}!</p>
+				  <button onClick={scrollToMyDataSignup}>Find out more</button>
+				</>} />
+		}
 		<br/>
 		<hr/>
 		<div className="bg-gl-lighter-blue-gradient dashboard-bg">
@@ -225,6 +257,8 @@ const MyDataDashboardHomeTab = () => {
 			<br/>
 			<h3 className="px-3 my-3 my-md-5 raise-more">Ways to Raise Even More</h3>
 			<ThisWeeksAdCard />
+			<br />
+			{ !hasRegisteredForMyData() && <div id="mydata-dashboard-signup"><SignUpForMyDataCard /></div>}
 			<br/>
 			<GetT4GCard ngo={ngo}/>
 			<br/>

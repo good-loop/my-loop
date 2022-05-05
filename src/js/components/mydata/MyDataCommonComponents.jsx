@@ -16,6 +16,7 @@ import { nextSignupPage } from './MyDataSignUp';
 import SearchQuery from '../../base/searchquery';
 import { getDataLogData } from '../../base/plumbing/DataLog';
 import KStatus from '../../base/data/KStatus';
+import { getProfile } from '../../base/data/Person';
 
 
 /**
@@ -216,4 +217,12 @@ export const hasWatchedThisWeeksAd = (adid) => {
 	const pvData = getDataLogData({dataspace:"gl",q, start:"3 months ago",end:"now",name:"watched-this-weeks",});
 	
     return !!(pvData.value && pvData.value.allCount);
+}
+
+
+export const hasRegisteredForMyData = () => {
+	const pvPerson = getProfile();
+	const hasMyData = Person.hasApp(pvPerson.value || pvPerson.interim, "my.data");
+
+	return hasMyData;
 }

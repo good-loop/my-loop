@@ -18,6 +18,7 @@ import { Collapse } from "reactstrap";
 import Misc from '../../base/components/Misc';
 import { Tab, Tabs } from '../../base/components/Tabs';
 import { modifyPage } from '../../base/plumbing/glrouter';
+import { hasRegisteredForMyData } from './MyDataCommonComponents';
 import C from '../../C';
 
 /**
