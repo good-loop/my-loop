@@ -17,6 +17,12 @@ import NGOImage from '../../base/components/NGOImage';
 import NGO from '../../base/data/NGO';
 import {MyDataSignUpButton, MyDataSignUpModal, showMyDataSignUpModal} from '../mydata/MyDataSignUp';
 
+export const accountMenuItems = [
+	{page: "profile", label: "Data Profile"},
+	{page: "tabsForGood", label: C.T4G},
+	{page: "settings", label: "Settings"}
+];
+
 const PageCard = ({id, className, ref, children}) => {
 	// Why two containers?? Is the outer one for card-specific css rules to latch onto??
 	return <Container id={id} ref={ref} fluid className={space('page-card', className)}>
