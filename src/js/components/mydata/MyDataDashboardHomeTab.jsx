@@ -107,7 +107,7 @@ const ThisWeeksAdCard = () => {
 	return (<MyDataCard
 				className="this-weeks-ad"
 				img={<div className="bg-gl-light-blue d-flex flex-row justify-content-center align-items-center">
-					<img src="/img/mydata/ads-badge.png" className="w-25 py-3"/>
+					<img src="/img/mydata/ads-badge.png" className="title-img py-3"/>
 				</div>}
 		>
 			<br/>
@@ -149,7 +149,7 @@ const GetT4GCard = ({ngo}) => {
 	return <MyDataCard
 			className="get-t4g"
 			img={<div className="bg-gl-muddy-blue d-flex flex-row justify-content-center align-items-center">
-					<img src="/img/mydata/tabs-badge.png" className="w-25 py-3"/>
+					<img src="/img/mydata/tabs-badge.png" className="title-img py-3"/>
 				</div>}
 	>
 		<br/>
@@ -176,7 +176,7 @@ const SignUpForMyDataCard = () => {
 	return <MyDataCard
 			className="mydata-dashboard-signup"
 			img={<div className="bg-gl-muddy-blue d-flex flex-row justify-content-center align-items-center">
-					<img src="/img/mydata/data-cta.png" className="w-25 py-3"/>
+					<img src="/img/mydata/data-cta.png" className="title-img py-3"/>
 				</div>}
 		>
 		<br/>
@@ -200,6 +200,7 @@ const SignUpForMyDataCard = () => {
 }
 
 const AboutYourCharity = ({ngo}) => {
+	if (!ngo) return null;
 	const name = NGO.displayName(ngo);
 	return (
 		<Container className="dashboard-card supporting bg-white">
