@@ -227,7 +227,7 @@ const MyDataDashboardHomeTab = () => {
 		document.getElementById("mydata-dashboard-signup").scrollIntoView({behavior: "smooth"});
 	}
 
-	const dataComplete = getDataProgress() === 1;
+	const dataCompleteIsh = getDataProgress() > 0.65; // ?? ideally we'd distinguish between "complete" and "share"
 	const hasMyData = hasRegisteredForMyData();
 
 	useEffect(() => {
@@ -237,7 +237,7 @@ const MyDataDashboardHomeTab = () => {
 	return (<>
 		{/*<LatestNewsCard />*/}
 		<br/>
-		{ (!hasMyData || !dataComplete) &&
+		{ (!hasMyData || !dataCompleteIsh) &&
 			<CompleteDataCTA ngo={ngo} 
 			link={<>
 				  <p className="text-black m-0">Complete your data profile to raise even more for {ngo && NGO.displayName(ngo) || "charity"}!</p>
