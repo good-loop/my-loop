@@ -1,8 +1,11 @@
 
 .dashboard-card {
-	border: solid 1px @gl-dark-grey;
+	border: solid 1px @gl-light-grey;
 	border-radius: 0.75rem; // .rounded 
 	padding: 1rem; // .py3
+	@media @width-mobile {
+		width: 95%;
+	}
 	.img-lg {
 		width: 30%;
 		@media @width-mobile {
@@ -25,7 +28,12 @@
 			color: #fff !important;
 		}
 		h3 { font-weight: 400; }
-		h1 { font-size: 3rem; }
+		h1 {
+			font-size: 3rem;
+			@media @width-mobile {
+				font-size: 2rem;
+			}
+		}
 		.logo {
 			height: 40%;
 			width: auto;
