@@ -21,6 +21,7 @@ import { CompleteDataCTA, getDataProgress } from './MyDataDashboardPage';
 import { setFooterClassName } from '../Footer';
 import Person, { getProfile } from '../../base/data/Person';
 import { MyDataSignUpButton, MyDataSignUpModal } from './MyDataSignUp';
+import { modifyPage } from '../../base/plumbing/glrouter';
 
 
 // Hidden until we get some latest news to show
@@ -236,12 +237,22 @@ const MyDataDashboardHomeTab = () => {
 	return (<>
 		{/*<LatestNewsCard />*/}
 		<br/>
+<<<<<<< HEAD
 		{ !hasMyData || !dataComplete &&
 			<CompleteDataCTA ngo={ngo} 
 			link={<>
 				  <p className="text-black m-0">Complete your data profile to raise even more for {ngo && NGO.displayName(ngo) || "charity"}!</p>
 				  <br/>
 				  <C.A onClick={!hasMyData && scrollToMyDataSignup} href={!dataComplete && "/account?tab=profile"} style={{textDecoration: "underline"}}>{hasMyData ? "Complete your profile" : "Find out more"}</C.A>
+=======
+		{ <CompleteDataCTA ngo={ngo} 
+			link={<>
+				  <p className="text-black m-0">Complete your data profile to raise even more for {ngo && NGO.displayName(ngo) || "charity"}!</p>
+				  {!hasRegisteredForMyData()
+				  	 ? <a onClick={scrollToMyDataSignup} style={{textDecoration: "underline"}}>Find out more</a>
+					 : <C.A href={modifyPage("account", {tab: "profile"})}>Find out more</C.A>
+				  }
+>>>>>>> 87dbe85fc9d9dd3e6900b96f7fd75ceae5297cb3
 				</>} 
 			/>
 		}
