@@ -140,6 +140,8 @@ const MyDataSignUp = () => {
 	if (page >= PAGES.length) {
 		// done!
 		modifyPage(["account"], {tab:"dashboard",dashboard:"profile"})
+		DataStore.setValue(PAGE_PATH, 0);
+		showMyDataSignUpModal(false);
 		return null;
 	}
 	const PageComponent = PAGES[page];
