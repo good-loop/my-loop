@@ -58,6 +58,8 @@ export const CharitySelectCard = ({cid, item}) => {
 
     const onClick = () => {
         assert(Login.isLoggedIn());
+        const pvPerson = getProfile();
+        Person.setHasApp(pvPerson.value || pvPerson.interim, "my.data");
         setPersonSetting({key: "charity", value: cid, callback:nextSignupPage});
     }
 

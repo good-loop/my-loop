@@ -71,6 +71,7 @@ const SignUpForm = () => {
 	const user = Login.isLoggedIn() ? Login.getUser() : null;
 
 	if (user) DataStore.setValue(PAGE_PATH, 1); // skip email signin if already logged in
+	else DataStore.setValue(PAGE_PATH, 0); // If user logged out then went back to signup, make sure to reset
 
 	const onRegister = () => {
 		const name = DataStore.getValue(PERSON_PATH.concat("name"));
@@ -109,10 +110,7 @@ const SignUpForm = () => {
 				help="For My.Good-Loop to work properly for you, we want to communicate with you - so please do tick this box! Don't worry, we won't send many emails, and you can always unsubscribe." />
 			</EmailSignin>
 		</div>
-
-		<div className="planet">
-			<img src="/img/mydata/sign-up.png" alt="" />
-		</div>
+		<img src="/img/mydata/sign-up.png" alt="" className="planet"/>
 	</>);
 };
 
