@@ -175,7 +175,7 @@ const SignUpForMyDataCard = () => {
 	return <MyDataCard
 			className="mydata-dashboard-signup"
 			img={<div className="bg-gl-muddy-blue d-flex flex-row justify-content-center align-items-center">
-					<img src="/img/mydata/tabs-badge.png" className="w-25 py-3"/>
+					<img src="/img/mydata/data-cta.png" className="w-25 py-3"/>
 				</div>}
 		>
 		<br/>
@@ -183,11 +183,13 @@ const SignUpForMyDataCard = () => {
 		<br/>
 		<Row>
 			<Col md={6} className="mb-3 mb-md-0">
-				<img src="/img/homepage/slide-1.png" className="w-100 rounded"/>
+				<img src="/img/mydata/my-data.png" className="w-100 rounded"/>
 			</Col>
 			<Col md={6} className="d-flex flex-column align-items-center justify-content-center">
-				<p className="text-center">
-					Paragraph about My.Data and why you should sign up
+				<p className="text-center">	
+					Sign up for My-Data today
+					<br />
+					Share your online data with us  and we’ll transform it into money for good causes.
 				</p>
 				<MyDataSignUpModal />
 				<MyDataSignUpButton />
@@ -236,8 +238,9 @@ const MyDataDashboardHomeTab = () => {
 			link={<>
 				  <p className="text-black m-0">Complete your data profile to raise even more for {ngo && NGO.displayName(ngo) || "charity"}!</p>
 				  <br/>
-				  <Button color="primary" onClick={scrollToMyDataSignup}>Find out more</Button>
-				</>} />
+				  <a onClick={scrollToMyDataSignup} style={{textDecoration: "underline"}}>Find out more</a>
+				</>} 
+			/>
 		}
 		<br/>
 		<hr/>
