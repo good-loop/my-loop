@@ -72,7 +72,7 @@ const HomePage = ({spring}) => {
 };
 
 const JoinOurMovement = () => <>	
-	<PageCard className="tabs-for-goods-slide-card" >
+	<PageCard id="upper-cta" className="tabs-for-goods-slide-card" >
 		<div className="upper-cta white">
 			<h1 className='mb-4 white'>Join Our Movement!</h1>
 			<p className='leader-text text-center'>Start transforming your web browsing into life saving vaccines, meals for children in need, habitats for endangered animals, plus many more good causes.</p>
