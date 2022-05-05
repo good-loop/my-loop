@@ -139,11 +139,12 @@ const MyDataSignUp = () => {
 	const page = DataStore.getUrlValue("page") || DataStore.getValue(PAGE_PATH) || 0;
 	if (page >= PAGES.length) {
 		// done!
-		modifyPage(["account"], {tab:"dashboard",dashboard:"profile"})
+		modifyPage(["account"], {tab:"dashboard"});//,dashboard:"profile"})
 		DataStore.setValue(PAGE_PATH, 0);
 		showMyDataSignUpModal(false);
 		return null;
 	}
+	
 	const PageComponent = PAGES[page];
 
 	return <div className="mydata-signup">
