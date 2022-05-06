@@ -177,7 +177,9 @@ const MyDataDashboardPage = () => {
 				<p>The Ad-Audience badge: Tune in weekly to watch Ads-for-Good to raise donations and collect this badge.</p>
 			</div>
 		</Collapse>
-		<p style={{fontSize:".9rem"}}>Collect Badges for your activity. Dip into these things when it suits you - ignore them when you're busy.</p>
+		<Container>
+			<p style={{fontSize:".9rem"}}>Collect Badges for your activity. Dip into these things when it suits you - ignore them when you're busy.</p>
+		</Container>
 
 		<Tabs activeTabId={activeTabId} setActiveTabId={tabId => modifyPage(null, {tab:tabId})} >
 			<Tab tabId='dashboard' title={<><img src='img/mydata/home-tab.png' style={{height:'1.5rem',marginRight:'.5em'}} />HOME</>}>
