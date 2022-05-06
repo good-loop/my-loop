@@ -93,8 +93,8 @@ const SignUpForm = () => {
 	// }
 
 	return (<>
-		<h1 className="mb-3">Sign Up for My.Data</h1>
-		<p className="text-center">Use your data as a force for good and help us transform online advertising</p>
+		<h1 className="mb-3">Sign Up for My-Data today</h1>
+		<p className="text-center">Share your onlinedata with us and we'll transform it into money for god causes</p>
 
 		<div className="signup-form">
 			<PropControl type="text" prop="name" path={PERSON_PATH} label="Your name"/>

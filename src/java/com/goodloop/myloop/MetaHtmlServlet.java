@@ -49,7 +49,7 @@ public class MetaHtmlServlet implements IServlet {
 		aMap.put("home", "Raise money for charities simply by browsing the web");
 		aMap.put("impactoverview", "Impact Hub");
 		aMap.put("green", "Green Media");
-		aMap.put("tabsforgood", "Sign Up for Tabs-for-Good");
+		aMap.put("tabsforgood", "Sign Up for Tabs for Good");
 		pageTitles = Collections.unmodifiableMap(aMap);
 	}
 	
