@@ -163,7 +163,7 @@ const GetT4GCard = ({ngo}) => {
 			<Col md={6} className="d-flex flex-column align-items-center justify-content-center">
 				<p className="text-center">
 					{hasT4G ? "Share Tabs for Good with a friend so they can raise money for charity while they browse too!"
-						: "Add Tabs for Good to your desktop browser to raise money for {NGO.displayName(ngo)} while you surf the web"}
+						: "Add Tabs for Good to your desktop browser to raise money for "+NGO.displayName(ngo)+" while you surf the web"}
 				</p>
 				{hasT4G ? <a onClick={copyLink} className="share-link">{copiedLink ? "LINK COPIED!" : "SHARE TABS FOR GOOD"}</a>
 					: <C.A href={ngo ? "/charity/" + getId(ngo) : "/tabsforgood"}><Button color="primary">Find out more</Button></C.A>}
@@ -296,15 +296,16 @@ const FeedbackCard = () => {
 
 	return (<Container className="dashboard-card">
 		<h1>Send Feedback</h1>
-		<p>Let us know what you think! Feedback really helps us to learn and improve.</p>
+		<p className="text-center">Let us know what you think! Feedback really helps us to learn and improve.</p>
+		<br/>
 		<Row>
 			{/* TODO an image <Col md={6} className="mb-3 mb-md-0">
 				<img src="/img/homepage/slide-1.png" className="w-100"/>
 			</Col> */}
 			<Col className="d-flex flex-column align-items-center justify-content-center">
-				<Form onSubmit={sendFeedback} className="w-75" >
-					<PropControl label="Your Message" className="w-100" disabled={sent} type="textarea" rows={5} prop="message" path={["widget","feedback"]} />
-					<Button disabled={sent} color="primary" className='mx-auto w-75 mt-2' onClick={sendFeedback}>Send</Button>
+				<Form onSubmit={sendFeedback} className=" w-100 d-flex flex-column align-items-center justify-content-center">
+					<PropControl label="Your Message" className="w-100 d-flex flex-column align-items-center justify-content-center" disabled={sent} type="textarea" rows={5} prop="message" path={["widget","feedback"]} />
+					<Button disabled={sent} color="primary" className='mx-auto mt-2 w-50' onClick={sendFeedback}>Send</Button>
 				</Form>
 				{sent && <Alert color="success">Thank you - Your message has been sent.</Alert>}
 			</Col>
