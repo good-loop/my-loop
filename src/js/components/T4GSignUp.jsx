@@ -50,7 +50,7 @@ export const T4GSignUpButton = ({ className, children, dUnset }) => {
 	);
 };
 
-export const T4GHowItWorksButton = () => <a className="btn btn-secondary w-100 text-uppercase mt-3" href="/tabsforgood#howitworks">See how Tabs-for-Good works</a>;
+export const T4GHowItWorksButton = () => <a className="btn btn-secondary w-100 text-uppercase mt-3" href="/tabsforgood#howitworks">See how Tabs for Good works</a>;
 
 
 export const T4GSignUpLink = ({ className, children, onClick }) => {
