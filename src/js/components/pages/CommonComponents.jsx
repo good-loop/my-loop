@@ -15,7 +15,8 @@ import Roles from '../../base/Roles';
 import { A } from '../../base/plumbing/glrouter';
 import NGOImage from '../../base/components/NGOImage';
 import NGO from '../../base/data/NGO';
-import {MyDataSignUpButton, MyDataSignUpModal, showMyDataSignUpModal} from '../mydata/MyDataSignUp';
+import { MyDataSignUpButton, MyDataSignUpModal, showMyDataSignUpModal}  from '../mydata/MyDataSignUp';
+import { hasRegisteredForMyData } from '../mydata/MyDataCommonComponents';
 
 export const accountMenuItems = [
 	{page: "profile", label: "Data Profile"},
@@ -165,6 +166,10 @@ const MyDuoLandingSection = ({ngo, title, bgImg}) => {
 
 	const scrollToUpperCta = () => document.getElementById("upper-cta").scrollIntoView({behavior: "smooth"});
 
+	const isReg = hasRegisteredForMyData();
+
+	const myDataOnClick = isReg ? () => { window.location.href = "http://localmy.good-loop.com/account?tab=profile" } : 
+	e => {stopEvent(e); showMyDataSignUpModal();} ;
 
 	return (<>
 	<Container fluid className="home-landing-splash px-0" >
@@ -180,13 +185,11 @@ const MyDuoLandingSection = ({ngo, title, bgImg}) => {
 		</BG>
 	</Container>
 	<Container fluid className="landing-duo-cta bg-gl-light-pink d-flex justify-content-center py-3 px-1">
-		<a onClick={e => {
-			stopEvent(e);
-			showMyDataSignUpModal();
-		}} className='text-decoration-none'>
+		<a onClick={myDataOnClick} 
+			className='text-decoration-none'>
 			<div style={{borderRadius:'10px'}} className="mydata-splash-cta splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
 				<img src="img/mydata/data-cta.png" className='logo'/>
-				<span className='font-weight-bold p-1 pl-3 mx-auto' style={{fontSize:fontSizeCTA,transform:'translate(0, 10%)'}} >Sign Up For My.Data</span>
+				<span className='font-weight-bold p-1 pl-3 mx-auto' style={{fontSize:fontSizeCTA,transform:'translate(0, 10%)'}} >{isReg ? 'My.Data Profile' : 'Sign Up For My.Data'}</span>
 			</div>
 		</a>
 		<MyDataSignUpModal /> {/*NB: This Modal should be placed _outside_ of the anchor tags otherwise it can break rendering. Why? I don't know.*/}
