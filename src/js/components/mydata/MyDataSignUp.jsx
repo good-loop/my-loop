@@ -16,6 +16,7 @@ import MyDataProfileCreated, { ExplainPrivacyPages } from './MyDataProfileCreate
 import LinkOut from '../../base/components/LinkOut';
 import { modifyPage } from '../../base/plumbing/glrouter';
 import Person, { getProfile } from '../../base/data/Person';
+import Misc from '../../base/components/Misc';
 
 const WIDGET_PATH = ['widget', 'MyDataSignUp'];
 const SHOW_PATH = [...WIDGET_PATH, 'show'];
@@ -69,11 +70,13 @@ export const MyDataSignUpModal = () => {
 
 const SignUpForm = () => {
 	const user = Login.isLoggedIn() ? Login.getUser() : null;
+	const [loading, setLoading] = useState(false);
 
 	if (user) DataStore.setValue(PAGE_PATH, 1); // skip email signin if already logged in
 	else DataStore.setValue(PAGE_PATH, 0); // If user logged out then went back to signup, make sure to reset
 
 	const onRegister = () => {
+		setLoading(false);
 		const name = DataStore.getValue(PERSON_PATH.concat("name"));
 		const emailperms = DataStore.getValue(PERSON_PATH.concat("emailperms"));
 		const pvPerson = getProfile();
@@ -96,11 +99,13 @@ const SignUpForm = () => {
 		<h1 className="mb-3">Sign Up for My-Data today</h1>
 		<p className="text-center">Share your onlinedata with us and we'll transform it into money for god causes</p>
 
-		<div className="signup-form">
+		<div className={space("signup-form", loading && "d-none")}>
 			<PropControl type="text" prop="name" path={PERSON_PATH} label="Your name"/>
 			<EmailSignin
 				verb="register"
 				onRegister={onRegister}
+				onSubmit={() => setLoading(true)}
+				onError={() => setLoading(false)}
 				disableVerbSwitch
 				agreeToTerms={<>I agree to the <LinkOut href="https://doc.good-loop.com/terms/terms-of-use.html">Terms of Service</LinkOut></>}
 			>
@@ -110,6 +115,9 @@ const SignUpForm = () => {
 				help="For My.Good-Loop to work properly for you, we want to communicate with you - so please do tick this box! Don't worry, we won't send many emails, and you can always unsubscribe." />
 			</EmailSignin>
 		</div>
+		{loading && <Misc.Loading/>}
+
+		<div className="d-none d-md-block mt-5 py-5"/>
 		<img src="/img/mydata/sign-up.png" alt="" className="planet"/>
 	</>);
 };
