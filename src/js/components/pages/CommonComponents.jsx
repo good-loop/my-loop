@@ -168,7 +168,7 @@ const MyDuoLandingSection = ({ngo, title, bgImg}) => {
 
 	const isReg = hasRegisteredForMyData();
 
-	const myDataOnClick = isReg ? () => { window.location.href = "http://localmy.good-loop.com/account?tab=profile" } : 
+	const myDataOnClick = isReg ? () => { window.location.href = "/account?tab=profile" } : 
 	e => {stopEvent(e); showMyDataSignUpModal();} ;
 
 	return (<>
