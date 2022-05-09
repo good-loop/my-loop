@@ -156,9 +156,9 @@ const MyDataSignUp = () => {
 	const PageComponent = PAGES[page];
 
 	return <div className="mydata-signup">
-		{window.isDebug && <div className="debug">
+		{/* {window.isDebug && <div className="debug">
 			*debug page selector (hidden on live)*: <a onClick={prevSignupPage}>Back</a> /	<a onClick={nextSignupPage}>Next</a>
-		</div>}
+		</div>} */}
 		<PageComponent />
 	</div>;
 };

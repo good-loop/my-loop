@@ -18,27 +18,27 @@ import { getDataItem } from '../../base/plumbing/Crud';
 // TODO fetch data from portal instead of hard-coding
 // HACK: an ad-hoc data format {name, adid, url: relative url to campaign page, ad:first Advert, dntn: Money}
 const campaignInfos = [
-	// {
-	// 	name: "LEVI'S",
-	// 	adid: "ko3s6fUOdq",
-	// 	url: "/campaign/?gl.vertiser=XR67PcGn",
-	// 	vertiser:"XR67PcGn",
-	// 	title: "LEVI's advert"
-	// },
-	// {
-	// 	name: "Ribena",
-	// 	adid: "B1lF97utxD",
-	// 	url: "/campaign/?gl.vertiser=FBY5QmWQ",
-	// 	vertiser:"FBY5QmWQ",
-	// 	title: "Ribena advert"
-	// },
-	// {
-	// 	name: "Mango",
-	// 	adid: "ojjiPf7kbB",
-	// 	url: "/campaign/?gl.vertiser=1JBFB6K4",
-	// 	vertiser:"1JBFB6K4",
-	// 	title: "Mango advert"
-	// },
+	{
+		name: "LEVI'S",
+		adid: "ko3s6fUOdq",
+		url: "/campaign/?gl.vertiser=XR67PcGn",
+		vertiser:"XR67PcGn",
+		title: "LEVI's advert"
+	},
+	{
+		name: "Ribena",
+		adid: "B1lF97utxD",
+		url: "/campaign/?gl.vertiser=FBY5QmWQ",
+		vertiser:"FBY5QmWQ",
+		title: "Ribena advert"
+	},
+	{
+		name: "Mango",
+		adid: "ojjiPf7kbB",
+		url: "/campaign/?gl.vertiser=1JBFB6K4",
+		vertiser:"1JBFB6K4",
+		title: "Mango advert"
+	},
 	// {
 	// 	name: "Cadbury",
 	// 	adid: "qgbiSQ0crN",
@@ -46,49 +46,49 @@ const campaignInfos = [
 	// 	vertiser:"cadbury_bpngtolk",
 	// 	title: "Cadbury advert"
 	// },
-	// {
-	// 	name: "Pantene",
-	// 	adid: "hwtjNncj",
-	// 	url: "/campaign/?gl.vertiser=zqhRrBjF",
-	// 	vertiser:"zqhRrBjF",
-	// 	title: "Pantene advert"
-	// }
-	// Update in April 2022:
-	{
-		name: "MINI", 
-		adid: "ofPtTdAX",
-		url: "/campaign/?gl.vert=ofPtTdAX",
-		vertiser:"UFZpmeFm",
-		title: "MINI advert"
-	}, 
-	{
-		name: "Pepsi",
-		adid: "81RhZgys",
-		url: "/campaign/?gl.vert=81RhZgys",
-		vertiser:"rB6PkFMq",
-		title: "Pepsi advert"
-	},
 	{
 		name: "Pantene",
-		adid: "c22dk9HT",
-		url: "/campaign/?gl.vert=c22dk9HT",
+		adid: "hwtjNncj",
+		url: "/campaign/?gl.vertiser=zqhRrBjF",
 		vertiser:"zqhRrBjF",
 		title: "Pantene advert"
-	},
-	// {
-	// 	name: "Nespresso",
-	// 	adid: "IDRfNfi4",
-	// 	url: "/campaign/?gl.vert=IDRfNfi4",
-	// 	vertiser:"q44DhUNr",
-	// 	title: "Nespresso advert"
-	// },
-	{
-		name: "McDonald's",
-		adid: "zCUu18emxs",
-		url: "/campaign/?gl.vert=zCUu18emxs",
-		vertiser:"BsC3RmHz",
-		title: "McDonald's advert"
 	}
+	// Update in April 2022:
+	// {
+	// 	name: "MINI", 
+	// 	adid: "ofPtTdAX",
+	// 	url: "/campaign/?gl.vert=ofPtTdAX",
+	// 	vertiser:"UFZpmeFm",
+	// 	title: "MINI advert"
+	// }, 
+	// {
+	// 	name: "Pepsi",
+	// 	adid: "81RhZgys",
+	// 	url: "/campaign/?gl.vert=81RhZgys",
+	// 	vertiser:"rB6PkFMq",
+	// 	title: "Pepsi advert"
+	// },
+	// {
+	// 	name: "Pantene",
+	// 	adid: "c22dk9HT",
+	// 	url: "/campaign/?gl.vert=c22dk9HT",
+	// 	vertiser:"zqhRrBjF",
+	// 	title: "Pantene advert"
+	// },
+	// // {
+	// // 	name: "Nespresso",
+	// // 	adid: "IDRfNfi4",
+	// // 	url: "/campaign/?gl.vert=IDRfNfi4",
+	// // 	vertiser:"q44DhUNr",
+	// // 	title: "Nespresso advert"
+	// // },
+	// {
+	// 	name: "McDonald's",
+	// 	adid: "zCUu18emxs",
+	// 	url: "/campaign/?gl.vert=zCUu18emxs",
+	// 	vertiser:"BsC3RmHz",
+	// 	title: "McDonald's advert"
+	// }
 ];
 
 
