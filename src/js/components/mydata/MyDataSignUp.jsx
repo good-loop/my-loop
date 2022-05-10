@@ -83,7 +83,7 @@ const SignUpForm = () => {
 		Person.setHasApp(pvPerson.value || pvPerson.interim, "my.data");
 		console.log("SET HAS APP");
 		setPersonSetting({key:"name", value:name});
-		setPersonSetting({key: "emailperms", value: emailperms, callback:nextSignupPage}); // TODO do this as set-consent-on-email // No need to do callback
+		setPersonSetting({key: "emailperms", value: emailperms}); // TODO do this as set-consent-on-email // No need to do callback
 	}
 	
 	// const SignedInDiv = () => {
