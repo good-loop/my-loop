@@ -225,21 +225,20 @@ const NormalTabCenter = () => {
 
 	return <>
 		<div className="flex-column unset-margins justify-content-center align-items-center mb-3 tab-center">
-			<TutorialComponent page={5} className="py-5">
-				<a href="https://my.good-loop.com">
-					<img src="https://my.good-loop.com/img/TabsForGood/TabsForGood_logo.png" style={{ width: 200 }} alt="logo" />
-				</a>
-			</TutorialComponent>
 			{ true && //! loadingCharity && ! charityID &&
 				// Show the total raised across all charities, if the user hasn't selected one.
-				<><h3 className="text-center">
+				<><h3 className="text-center together-we-ve-rasied">
 					Together we've raised&nbsp;
 					<TutorialComponent page={2} className="d-inline-block">
 						<TickerTotal />
 					</TutorialComponent>
 				</h3>
-				<img src="https://my.good-loop.com/img/TabsForGood/sparkle.png" alt="sparkle" style={{ width: 50 }} className="pl-1 sparkle" />
 			</>}
+			<TutorialComponent page={5} className="py-3">
+				<a href="https://my.good-loop.com">
+					<img src="https://my.good-loop.com/img/TabsForGood/TabsForGood_logo.png" alt="logo" />
+				</a>
+			</TutorialComponent>
 		</div>
 		<div className="w-100 pb-3">
 			<div className="tab-search-container mx-auto">
@@ -271,14 +270,14 @@ const NewTabCharityCard = ({ cid, loading }) => {
 	}
 
 	return (<div className="mx-auto rounded-lg text-center NewTabCharityCard" >
-		<small className="">You are supporting</small>
+		<span className="">I am supporting</span>
 		<C.A href={"/account?tab=tabsForGood" + params}>
 			<TutorialComponent page={1}>
-				<WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}>
+				{/* <WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}> */}
 					{charity && <CharityLogo charity={charity} />}
 					{ ! charity && loading && <p className="my-auto">Loading...</p>}
 					{ ! charity && ! loading && <p className="my-auto">Select a charity</p>}
-				</WhiteCircle>
+				{/* </WhiteCircle> */}
 			</TutorialComponent>
 		</C.A>
 		{totalMoney && charity && 
