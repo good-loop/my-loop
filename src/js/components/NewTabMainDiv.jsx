@@ -137,13 +137,9 @@ const WebtopPage = () => {
 			{ '.MessageBar .alert {display: none;}' }
 		</style>}
 		<NGOImage bg ngo={ngo} imgIdx={0} src={customBG} fullscreen opacity={0.9} bottom={110} style={{ backgroundPosition: "center" }}>
+			<NewTabCharityCard cid={charityID} loading={loadingCharity} />
 			<TutorialHighlighter page={[4, 5]} className="position-fixed p-3" style={{ top: 0, left: 0, width: "100vw", zIndex: 1 }}>
-				<div className="d-flex justify-content-between">
-					<TutorialComponent page={5} className="logo pl-5 flex-row" style={{ width: 400 }}>
-						<a href="https://my.good-loop.com">
-							<img src="https://my.good-loop.com/img/TabsForGood/TabsForGood_logo.png" style={{ width: 200 }} alt="logo" />
-						</a>
-					</TutorialComponent>
+				<div className="d-flex justify-content-end">
 					<TutorialComponent page={4} className="user-controls flex-row align-items-center">
 						{Login.isLoggedIn() ? <TabsOpenedCounter /> : null}
 						<AccountMenu accountMenuItems={accountMenuItems} linkType="a" small
@@ -155,12 +151,10 @@ const WebtopPage = () => {
 			<Container fluid className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{ top: 0, left: 0, width: "100vw", height: "100vh" }}>
 				<Row className="h-100 w-100" noGutters>
 					<Col sm={3} md={4} />
-					<Col sm={6} md={4} className="h-100 flex-column justify-content-center unset-margins">
-						<NormalTabCenter charityID={charityID} loadingCharity={loadingCharity} />
+					<Col sm={6} md={4} className="h-100 flex-column justify-content-center align-items-center unset-margins">
+						<NormalTabCenter />
+						<LinksFlexbox />
 					</Col>
-					{/* <Col sm={3} md={4} className="flex-column justify-content-center align-items-center p-2">
-						<CharityCustomContent content={<LoremIpsum/>}/>
-					</Col> */}
 				</Row>
 			</Container>
 			{/* Tutorial highlight to cover adverts */}
@@ -225,23 +219,27 @@ const ENGINES = {
  * @param {Object} p
  * @returns 
  */
-const NormalTabCenter = ({ charityID, loadingCharity }) => {
+const NormalTabCenter = () => {
 	let pvSE = getPVClaim({ xid: Login.getId(), key: "searchEngine" });
 	let searchEngine = Claim.value(pvSE) || "google";
 	const engineData = ENGINES[searchEngine];
 
 	return <>
-		<div className="flex-row unset-margins justify-content-center align-items-end mb-3 tab-center">
+		<div className="flex-column unset-margins justify-content-center align-items-center mb-3 tab-center">
 			{ true && //! loadingCharity && ! charityID &&
 				// Show the total raised across all charities, if the user hasn't selected one.
-				<><h3 className="text-center">
+				<><h3 className="text-center together-we-ve-rasied">
 					Together we've raised&nbsp;
 					<TutorialComponent page={2} className="d-inline-block">
 						<TickerTotal />
 					</TutorialComponent>
 				</h3>
-				<img src="https://my.good-loop.com/img/TabsForGood/sparkle.png" alt="sparkle" style={{ width: 50 }} className="pl-1 sparkle" />
 			</>}
+			<TutorialComponent page={5} className="py-3">
+				<a href="https://my.good-loop.com">
+					<img src="https://my.good-loop.com/img/TabsForGood/TabsForGood_logo.png" alt="logo" />
+				</a>
+			</TutorialComponent>
 		</div>
 		<div className="w-100 pb-3">
 			<div className="tab-search-container mx-auto">
@@ -250,7 +248,6 @@ const NormalTabCenter = ({ charityID, loadingCharity }) => {
 				} />
 			</div>
 		</div>
-		<NewTabCharityCard cid={charityID} loading={loadingCharity} />
 	</>;
 };
 
@@ -274,14 +271,14 @@ const NewTabCharityCard = ({ cid, loading }) => {
 	}
 
 	return (<div className="mx-auto rounded-lg text-center NewTabCharityCard" >
-		<small className="">You are supporting</small>
+		<span className="">I am supporting</span>
 		<C.A href={"/account?tab=tabsForGood" + params}>
 			<TutorialComponent page={1}>
-				<WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}>
+				{/* <WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}> */}
 					{charity && <CharityLogo charity={charity} />}
 					{ ! charity && loading && <p className="my-auto">Loading...</p>}
 					{ ! charity && ! loading && <p className="my-auto">Select a charity</p>}
-				</WhiteCircle>
+				{/* </WhiteCircle> */}
 			</TutorialComponent>
 		</C.A>
 		{totalMoney && charity && 
@@ -289,6 +286,23 @@ const NewTabCharityCard = ({ cid, loading }) => {
 			for {NGO.displayName(charity)}</p>}
 	</div>);
 };
+
+const LinksFlexbox = () => {
+	return <div className='link-flexbox d-flex flex-wrap justify-content-center'>
+		<div className="link-box">1</div>
+		<div className="link-box">2</div>
+		<div className="link-box">3</div>
+		<div className="link-box">4</div>
+		<div className="link-box">5</div>
+		<div className="link-box">1</div>
+		<div className="link-box">2</div>
+		<div className="link-box">3</div>
+		<div className="link-box">4</div>
+		<div className="link-box">5</div>
+		<div className="link-box">4</div>
+		<div className="link-box">5</div>
+	</div>
+}
 
 const CharityCustomContent = ({content, className}) => {
 	return <div className="charity-custom-content">
