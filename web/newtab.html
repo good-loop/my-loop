@@ -38,6 +38,12 @@
 
 <body style="background: none; min-width: 100vw; min-height: 100vh;">
 
+	<style>
+		.adsbygoogle {
+			border: 1px solid black;
+		}
+	</style>
+
 	<div id="mainDiv"></div>
 
     <!-- Absolutely positioned and invisible - removes it from view and flow, but doesnt stop ads loading so Google can continue to assess -->
@@ -59,7 +65,7 @@
 
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
         <!-- Tabs for Good bottom display -->
-        <ins class="adsbygoogle"
+        <ins class="adsbygoogle secondad"
             style="display:inline-block;width:728px;height:90px"
             data-ad-client="ca-pub-9448086783562205"
             data-ad-slot="5736021145"></ins>
@@ -67,6 +73,20 @@
             (adsbygoogle = window.adsbygoogle || []).push({});
         </script>
 	</div>
+
+	<script>
+		const tryFit2Ads = () => {
+			// Ads are 728px wide each + 20px padding
+			if (window.innerWidth < (728 * 2) + 20) {
+				document.getElementsByClassName("secondad")[0].classList.add("d-none");
+				const adContainer = document.getElementById('tab-ads');
+				adContainer.classList.remove('justify-content-between');
+				adContainer.classList.add('justify-content-center');
+			}
+		}
+		tryFit2Ads();
+		window.addEventListener('resize', tryFit2Ads, true);
+	</script>
 
 	<!-- media.net 300x250-->
 
