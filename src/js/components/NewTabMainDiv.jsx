@@ -140,12 +140,10 @@ const WebtopPage = () => {
 			<Container fluid className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{ top: 0, left: 0, width: "100vw", height: "100vh" }}>
 				<Row className="h-100 w-100" noGutters>
 					<Col sm={3} md={4} />
-					<Col sm={6} md={4} className="h-100 flex-column justify-content-center unset-margins">
-						<NormalTabCenter charityID={charityID} loadingCharity={loadingCharity} />
+					<Col sm={6} md={4} className="h-100 flex-column justify-content-center align-items-center unset-margins">
+						<NormalTabCenter />
+						<LinksFlexbox />
 					</Col>
-					{/* <Col sm={3} md={4} className="flex-column justify-content-center align-items-center p-2">
-						<CharityCustomContent content={<LoremIpsum/>}/>
-					</Col> */}
 				</Row>
 			</Container>
 			{/* Tutorial highlight to cover adverts */}
@@ -285,6 +283,23 @@ const NewTabCharityCard = ({ cid, loading }) => {
 			for {NGO.displayName(charity)}</p>}
 	</div>);
 };
+
+const LinksFlexbox = () => {
+	return <div className='link-flexbox d-flex flex-wrap justify-content-center'>
+		<div className="link-box">1</div>
+		<div className="link-box">2</div>
+		<div className="link-box">3</div>
+		<div className="link-box">4</div>
+		<div className="link-box">5</div>
+		<div className="link-box">1</div>
+		<div className="link-box">2</div>
+		<div className="link-box">3</div>
+		<div className="link-box">4</div>
+		<div className="link-box">5</div>
+		<div className="link-box">4</div>
+		<div className="link-box">5</div>
+	</div>
+}
 
 const CharityCustomContent = ({content, className}) => {
 	return <div className="charity-custom-content">
