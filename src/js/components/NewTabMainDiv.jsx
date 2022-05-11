@@ -126,13 +126,9 @@ const WebtopPage = () => {
 			{ '.MessageBar .alert {display: none;}' }
 		</style>}
 		<BG src={null} fullscreen opacity={0.9} bottom={110} style={{ backgroundPosition: "center" }}>
+			<NewTabCharityCard cid={charityID} loading={loadingCharity} />
 			<TutorialHighlighter page={[4, 5]} className="position-fixed p-3" style={{ top: 0, left: 0, width: "100vw", zIndex: 1 }}>
-				<div className="d-flex justify-content-between">
-					<TutorialComponent page={5} className="logo pl-5 flex-row" style={{ width: 400 }}>
-						<a href="https://my.good-loop.com">
-							<img src="https://my.good-loop.com/img/TabsForGood/TabsForGood_logo.png" style={{ width: 200 }} alt="logo" />
-						</a>
-					</TutorialComponent>
+				<div className="d-flex justify-content-end">
 					<TutorialComponent page={4} className="user-controls flex-row align-items-center">
 						{Login.isLoggedIn() ? <TabsOpenedCounter /> : null}
 						<AccountMenu accountMenuItems={accountMenuItems} linkType="a" small
@@ -222,13 +218,18 @@ const ENGINES = {
  * @param {Object} p
  * @returns 
  */
-const NormalTabCenter = ({ charityID, loadingCharity }) => {
+const NormalTabCenter = () => {
 	let pvSE = getPVClaim({ xid: Login.getId(), key: "searchEngine" });
 	let searchEngine = Claim.value(pvSE) || "google";
 	const engineData = ENGINES[searchEngine];
 
 	return <>
-		<div className="flex-row unset-margins justify-content-center align-items-end mb-3 tab-center">
+		<div className="flex-column unset-margins justify-content-center align-items-center mb-3 tab-center">
+			<TutorialComponent page={5} className="py-5">
+				<a href="https://my.good-loop.com">
+					<img src="https://my.good-loop.com/img/TabsForGood/TabsForGood_logo.png" style={{ width: 200 }} alt="logo" />
+				</a>
+			</TutorialComponent>
 			{ true && //! loadingCharity && ! charityID &&
 				// Show the total raised across all charities, if the user hasn't selected one.
 				<><h3 className="text-center">
@@ -247,7 +248,6 @@ const NormalTabCenter = ({ charityID, loadingCharity }) => {
 				} />
 			</div>
 		</div>
-		<NewTabCharityCard cid={charityID} loading={loadingCharity} />
 	</>;
 };
 
