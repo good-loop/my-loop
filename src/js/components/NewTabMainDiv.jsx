@@ -29,6 +29,8 @@ import NGO from '../base/data/NGO';
 import Roles, { isTester } from '../base/Roles';
 import Claim from '../base/data/Claim';
 import { accountMenuItems } from './pages/CommonComponents';
+import { getCharityObject } from '../base/components/PropControls/UserClaimControl';
+import NGOImage from '../base/components/NGOImage';
 
 
 // DataStore
@@ -76,6 +78,7 @@ const WebtopPage = () => {
 	const charityID = pvCharityID && (pvCharityID.value || pvCharityID.interim);
 	const loadingCharity = ! pvCharityID || ! pvCharityID.resolved;	
 	let [showPopup, setShowPopup] = useState(false);
+	let [customBG, setCustomBG] = useState(null);
 
 	// Yeh - a tab is opened -- let's log that (once only)
 	if (!logOnceFlag && Login.isLoggedIn()) {
@@ -120,12 +123,20 @@ const WebtopPage = () => {
 	// https://stackoverflow.com/posts/17316521/revisions
 
 	// Background images on tab plugin sourced locally, but not on Safari
+	
+	const pvNgo = getCharityObject();
+	const ngo = pvNgo && pvNgo.resolved && pvNgo.value;
+
+	useEffect(() => {
+		let bgImgs = 9;
+		setCustomBG("/img/newtab/bg" + (Math.round(Math.random() * bgImgs) + 1) + ".jpg");
+	}, []);
 
 	return (<>
 		{ ! Roles.isDev() && <style>
 			{ '.MessageBar .alert {display: none;}' }
 		</style>}
-		<BG src={null} fullscreen opacity={0.9} bottom={110} style={{ backgroundPosition: "center" }}>
+		<NGOImage bg ngo={ngo} imgIdx={0} src={customBG} fullscreen opacity={0.9} bottom={110} style={{ backgroundPosition: "center" }}>
 			<TutorialHighlighter page={[4, 5]} className="position-fixed p-3" style={{ top: 0, left: 0, width: "100vw", zIndex: 1 }}>
 				<div className="d-flex justify-content-between">
 					<TutorialComponent page={5} className="logo pl-5 flex-row" style={{ width: 400 }}>
@@ -153,7 +164,7 @@ const WebtopPage = () => {
 				</Row>
 			</Container>
 			{/* Tutorial highlight to cover adverts */}
-		</BG>
+		</NGOImage>
 		<TutorialComponent page={3} className="position-absolute" style={{ bottom: 0, left: 0, right: 0, height: 110, width: "100vw" }} />
 		<NewtabTutorialCard tutorialPages={tutorialPages} charityId={charityID} onClose={() => setShowPopup(true)} />
 		{showPopup && <PopupWindow />}
@@ -167,15 +178,7 @@ const PAGES = {
 };
 const NewTabMainDiv = () => {
 	// make ui in local development easier to read
-	["localmy", "testmy"].includes(window.location.hostname.split('.')[0]) ? document.body.style.backgroundColor = "lightgrey" : '';
-
-	let browser = getBrowserVendor();
-	if (browser == 'SAFARI') {
-		let bgImgs = 9;
-		let bg = "img/newtab/bg" + (Math.round(Math.random() * bgImgs) + 1) + ".jpg";
-		document.body.style.backgroundImage = "url(" + bg + ")";
-		document.body.style.backgroundSize = "cover";
-	}
+	//["localmy", "testmy"].includes(window.location.hostname.split('.')[0]) ? document.body.style.backgroundColor = "lightgrey" : '';
 
 	return <MainDivBase pageForPath={PAGES} defaultPage="newtab" navbar={false} className="newtab" />;
 };
