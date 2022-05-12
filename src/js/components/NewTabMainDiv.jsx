@@ -137,7 +137,7 @@ const WebtopPage = () => {
 		{ ! Roles.isDev() && <style>
 			{ '.MessageBar .alert {display: none;}' }
 		</style>}
-		<NGOImage bg ngo={ngo} imgIdx={0} backdrop src={customBG} fullscreen opacity={0.9} bottom={110} style={{ backgroundPosition: "center" }}>
+		<NGOImage bg ngo={ngo} backdrop src={customBG} fullscreen opacity={0.9} bottom={110} style={{ backgroundPosition: "center" }}>
 			<NewTabCharityCard cid={charityID} loading={loadingCharity} />
 			<TutorialHighlighter page={[4, 5]} className="position-fixed p-3" style={{ top: 0, left: 0, width: "100vw", zIndex: 1 }}>
 				<div className="d-flex justify-content-end">
@@ -271,8 +271,8 @@ const NewTabCharityCard = ({ cid, loading }) => {
 		totalMoney = Money.add(pvTotalForCharity.value.total, tabEst);
 	}
 
-	return (<div className="mx-auto rounded-lg text-center NewTabCharityCard" >
-		<span className="">I am supporting</span>
+	return (<div className="text-center NewTabCharityCard" >
+		<h5 className="text-dark">I'm Supporting</h5>
 		<C.A href={"/account?tab=tabsForGood" + params}>
 			<TutorialComponent page={1}>
 				{/* <WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}> */}
