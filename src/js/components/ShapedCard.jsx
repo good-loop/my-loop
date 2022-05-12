@@ -16,7 +16,7 @@ const TopLeftCornerSwerve = ({children}) => {
  */
 const TopRightBulge = ({children, background}) => {
 	// ??do we need absolute urls??
-	let bgurl = background.match(/^http/) ? background : ServerIO.MYLOOP_ENDPONT+'/'+background;
+	let bgurl = background.match(/^http/) ? background : ServerIO.MYLOOP_ENDPOINT+'/'+background;
 	// Use abs positioning within the card to put contents over backdrop
 	return (<div name="TopRightBulge" style={{position:'relative'}}>
 		<svg

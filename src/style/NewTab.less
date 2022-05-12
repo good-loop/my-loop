@@ -81,6 +81,18 @@
     }
 }
 
+.user-controls {
+    .myloop-link {
+        font-weight: bold;
+        text-decoration: none;
+        color: white;
+        .heart-white-circle {
+            width: 1.3rem;
+            height: 1.3rem;
+        }
+    }
+}
+
 #newtab {
     h1,h2,h3,h4,h5 {
 		color: white;
@@ -286,15 +298,24 @@
     color: black !important;
     background-color: white;
     border-radius: 5em;
+    padding: 0.3rem 3rem;
 }
 
 .link-flexbox {
-    .link-box {
-        width: 3em;
-        height: 3em;
-        border-radius: 50%;
-        background-color: white;
-        margin: .5em;
+    .link-padding {
+        padding: 1.5rem; // p-4
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        @media (max-width:1440px) {
+            padding: 1rem; // bigger circles for smaller laptops
+        }
+        .link-box {
+            border-radius: 50%;
+            background-color: white;
+            margin: .5em;
+        }
     }
 }
 

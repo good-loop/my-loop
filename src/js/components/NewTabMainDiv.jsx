@@ -142,10 +142,7 @@ const WebtopPage = () => {
 			<TutorialHighlighter page={[4, 5]} className="position-fixed p-3" style={{ top: 0, left: 0, width: "100vw", zIndex: 1 }}>
 				<div className="d-flex justify-content-end">
 					<TutorialComponent page={4} className="user-controls flex-row align-items-center">
-						{Login.isLoggedIn() ? <TabsOpenedCounter /> : null}
-						<AccountMenu accountMenuItems={accountMenuItems} linkType="a" small
-							customLogin={() => <NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>}
-						/>
+						<UserControls/>
 					</TutorialComponent>
 				</div>
 			</TutorialHighlighter>
@@ -154,7 +151,7 @@ const WebtopPage = () => {
 					<Col sm={3} md={4} />
 					<Col sm={6} md={4} className="h-100 flex-column justify-content-center align-items-center unset-margins">
 						<NormalTabCenter />
-						<LinksFlexbox />
+						<LinksDisplay />
 					</Col>
 				</Row>
 			</Container>
@@ -176,6 +173,21 @@ const NewTabMainDiv = () => {
 	//["localmy", "testmy"].includes(window.location.hostname.split('.')[0]) ? document.body.style.backgroundColor = "lightgrey" : '';
 
 	return <MainDivBase pageForPath={PAGES} defaultPage="newtab" navbar={false} className="newtab" />;
+};
+
+const UserControls = () => {
+	return <>
+		{/*Login.isLoggedIn() ? <TabsOpenedCounter /> : null*/}
+		<a href={ServerIO.MYLOOP_ENDPOINT} className="myloop-link">
+			My.Good-Loop
+			&nbsp;
+			<img src="/img/mydata/heart-white-circle.png" className="heart-white-circle"/>
+		</a>
+		&nbsp;
+		<AccountMenu accountMenuItems={accountMenuItems} linkType="a" small
+			customLogin={() => <NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>}
+		/>
+	</>;
 };
 
 
@@ -229,12 +241,12 @@ const NormalTabCenter = () => {
 		<div className="flex-column unset-margins justify-content-center align-items-center mb-3 tab-center">
 			{ true && //! loadingCharity && ! charityID &&
 				// Show the total raised across all charities, if the user hasn't selected one.
-				<><h3 className="text-center together-we-ve-rasied">
+				<><h5 className="text-center together-we-ve-rasied">
 					Together we've raised&nbsp;
 					<TutorialComponent page={2} className="d-inline-block">
 						<TickerTotal />
 					</TutorialComponent>
-				</h3>
+				</h5>
 			</>}
 			<TutorialComponent page={5} className="py-3">
 				<a href="https://my.good-loop.com">
@@ -288,21 +300,25 @@ const NewTabCharityCard = ({ cid, loading }) => {
 	</div>);
 };
 
-const LinksFlexbox = () => {
-	return <div className='link-flexbox d-flex flex-wrap justify-content-center'>
-		<div className="link-box">1</div>
-		<div className="link-box">2</div>
-		<div className="link-box">3</div>
-		<div className="link-box">4</div>
-		<div className="link-box">5</div>
-		<div className="link-box">1</div>
-		<div className="link-box">2</div>
-		<div className="link-box">3</div>
-		<div className="link-box">4</div>
-		<div className="link-box">5</div>
-		<div className="link-box">4</div>
-		<div className="link-box">5</div>
-	</div>
+const CircleLink = ({bg, children}) => {
+	return <Col className="link-padding">
+		<BG src={bg} ratio={100} className="link-box w-100 d-flex flex-row justify-content-center align-items-center text-center"/>
+		<p className="text-white">
+			{children}
+		</p>
+	</Col>;
+}
+
+const LinksDisplay = () => {
+	return <Row className='link-flexbox'>
+		{/* test 5 long array */
+			Array.apply(null, Array(5)).map((v, i) => <CircleLink key={i}>{i}</CircleLink>)
+		}
+		<Col xs={12}/>
+		{/* test 5 long array */
+			Array.apply(null, Array(5)).map((v, i) => <CircleLink key={i}>{i}</CircleLink>)
+		}
+	</Row>
 }
 
 const CharityCustomContent = ({content, className}) => {
