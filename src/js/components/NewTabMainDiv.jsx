@@ -123,8 +123,9 @@ const WebtopPage = () => {
 	// https://stackoverflow.com/posts/17316521/revisions
 
 	// Background images on tab plugin sourced locally, but not on Safari
-	
-	const pvNgo = getCharityObject();
+
+
+	const pvNgo = Login.isLoggedIn() ? getCharityObject() : null;
 	const ngo = pvNgo && pvNgo.resolved && pvNgo.value;
 
 	useEffect(() => {
@@ -136,7 +137,7 @@ const WebtopPage = () => {
 		{ ! Roles.isDev() && <style>
 			{ '.MessageBar .alert {display: none;}' }
 		</style>}
-		<NGOImage bg ngo={ngo} backdrop src={customBG} fullscreen opacity={0.9} bottom={110} style={{ backgroundPosition: "center" }}>
+		<NGOImage bg ngo={ngo} imgIdx={0} backdrop src={customBG} fullscreen opacity={0.9} bottom={110} style={{ backgroundPosition: "center" }}>
 			<NewTabCharityCard cid={charityID} loading={loadingCharity} />
 			<TutorialHighlighter page={[4, 5]} className="position-fixed p-3" style={{ top: 0, left: 0, width: "100vw", zIndex: 1 }}>
 				<div className="d-flex justify-content-end">
