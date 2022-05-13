@@ -97,7 +97,7 @@ const SignUpForm = () => {
 
 	return (<>
 		<h1 className="mb-3">Sign Up for My-Data today</h1>
-		<p className="text-center">Share your onlinedata with us and we'll transform it into money for god causes</p>
+		<p className="text-center">Share your online data with us and we'll transform it into money for good causes</p>
 
 		<div className={space("signup-form", loading && "d-none")}>
 			<PropControl type="text" prop="name" path={PERSON_PATH} label="Your name"/>
