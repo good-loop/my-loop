@@ -52,7 +52,6 @@ let logOnceFlag;
  */
 let verifiedLoginOnceFlag;
 
-
 const LoremIpsum = () => {
 	return <p>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet ornare neque. Cras egestas pretium risus, ac maximus justo tempus ac. Etiam vitae aliquam nulla, ut lobortis nibh. Ut et massa sit amet nulla eleifend bibendum. Proin elementum maximus lorem, ut tempor ante pharetra id. Integer et sem eget turpis fermentum consequat. Pellentesque vulputate laoreet metus. Donec hendrerit risus mauris, non ultrices ex venenatis non. Donec congue sem vitae diam molestie ornare. Pellentesque sit amet efficitur risus, ornare dictum magna. Donec a purus eu erat luctus dapibus eu et metus. Etiam at pulvinar ex. In convallis tempor consequat.
@@ -128,12 +127,12 @@ const WebtopPage = () => {
 	const pvNgo = Login.isLoggedIn() ? getCharityObject() : null;
 	const ngo = pvNgo && pvNgo.resolved && pvNgo.value;
 
-	let bookmarksImportData;
+	const [bookmarksData, setBookmarksData] = useState([]);
 
 	const handleMessage = (event) => {
 		if (event.origin.includes('chrome-extension://') && typeof event.data === 'object') { 
-			bookmarksImportData = event.data;
-			console.log("bookmarks loaded", bookmarksImportData);
+			setBookmarksData(event.data);
+			// console.log("bookmarks loaded", event.data);
 		};
 	}
 
@@ -170,8 +169,8 @@ const WebtopPage = () => {
 					<Col sm={3} md={4} />
 					<Col sm={6} md={4} className="h-100 flex-column justify-content-center align-items-center unset-margins">
 						<NormalTabCenter />
-						<LinksDisplay />
-						<buton onClick={bookmarkRequest}>Bookmarks</buton>
+						<LinksDisplay bookmarksData={bookmarksData} />
+						<buton className='btn btn-secondary' onClick={bookmarkRequest}>Bookmarks</buton>
 					</Col>
 				</Row>
 			</Container>
@@ -329,7 +328,16 @@ const CircleLink = ({bg, children}) => {
 	</Col>;
 }
 
-const LinksDisplay = () => {
+const LinksDisplay = ({bookmarksData}) => {
+	if (bookmarksData.length > 1) {
+		console.log("bookmarksData", bookmarksData);
+		return <Row>
+			{bookmarksData.map((bookmark, i) => {
+				return <CircleLink key={i}>{bookmark.title}</CircleLink>;
+			}, this)}
+		</Row>
+	}
+
 	return <Row className='link-flexbox'>
 		{/* test 5 long array */
 			Array.apply(null, Array(5)).map((v, i) => <CircleLink key={i}>{i}</CircleLink>)
