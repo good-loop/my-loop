@@ -128,10 +128,29 @@ const WebtopPage = () => {
 	const pvNgo = Login.isLoggedIn() ? getCharityObject() : null;
 	const ngo = pvNgo && pvNgo.resolved && pvNgo.value;
 
+	let bookmarksImportData;
+
+	const handleMessage = (event) => {
+		if (event.origin.includes('chrome-extension://') && typeof event.data === 'object') { 
+			bookmarksImportData = event.data;
+			console.log("bookmarks loaded", bookmarksImportData);
+		};
+	}
+
 	useEffect(() => {
 		let bgImgs = 9;
 		setCustomBG("/img/newtab/bg" + (Math.round(Math.random() * bgImgs) + 1) + ".jpg");
+
+		window.addEventListener("message", (event) => handleMessage(event));
+		return () => {
+			window.removeEventListener("message", (event) => handleMessage(event));
+		}
+
 	}, []);
+
+	const bookmarkRequest = () => {
+		parent.postMessage("give-me-bookmarks", "*");
+	}
 
 	return (<>
 		{ ! Roles.isDev() && <style>
@@ -152,6 +171,7 @@ const WebtopPage = () => {
 					<Col sm={6} md={4} className="h-100 flex-column justify-content-center align-items-center unset-margins">
 						<NormalTabCenter />
 						<LinksDisplay />
+						<buton onClick={bookmarkRequest}>Bookmarks</buton>
 					</Col>
 				</Row>
 			</Container>
