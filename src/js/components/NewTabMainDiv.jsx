@@ -319,10 +319,11 @@ const NewTabCharityCard = ({ cid, loading }) => {
 	</div>);
 };
 
-const CircleLink = ({bg, children}) => {
+const CircleLink = ({bg, url, children}) => {
+	if (!url) url = '#';
 	return <Col className="link-padding">
 		<BG src={bg} ratio={100} className="link-box w-100 d-flex flex-row justify-content-center align-items-center text-center"/>
-		<p className="text-white">
+		<p onClick={() => parent.location.href = url} className="text-white">
 			{children}
 		</p>
 	</Col>;
@@ -333,7 +334,7 @@ const LinksDisplay = ({bookmarksData}) => {
 		console.log("bookmarksData", bookmarksData);
 		return <Row>
 			{bookmarksData.map((bookmark, i) => {
-				return <CircleLink key={i}>{bookmark.title}</CircleLink>;
+				return <CircleLink key={i} url={bookmark.url}>{bookmark.title}</CircleLink>;
 			}, this)}
 		</Row>
 	}
