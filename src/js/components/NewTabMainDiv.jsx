@@ -157,7 +157,8 @@ const WebtopPage = () => {
 		{ ! Roles.isDev() && <style>
 			{ '.MessageBar .alert {display: none;}' }
 		</style>}
-		<NGOImage bg ngo={ngo} imgIdx={0} backdrop src={customBG} fullscreen opacity={0.9} bottom={110} style={{ backgroundPosition: "center" }}>
+		{/* NB: Rendering background image here can avoid a flash of white before the BG get loaded */}
+		<NGOImage bg ngo={ngo} imgIdx={0} backdrop src={customBG} fullscreen opacity={0.9} bottom={0} style={{ backgroundPosition: "center" }}> 
 			<NewTabCharityCard cid={charityID} loading={loadingCharity} />
 			<TutorialHighlighter page={[4, 5]} className="position-fixed p-3" style={{ top: 0, left: 0, width: "100vw", zIndex: 1 }}>
 				<div className="d-flex justify-content-end">
@@ -320,36 +321,47 @@ const NewTabCharityCard = ({ cid, loading }) => {
 	</div>);
 };
 
-const CircleLink = ({bg, url, children}) => {
-	if (!url) url = '#';
-	return <Col onClick={() => parent.location.href = url}  className="bookmark-item d-flex flex-column align-items-center">
-		<BG src={bg} className="bookmark-box shadow" />
-		<span className="text-white text-center">
-			{children}
-		</span>
-	</Col>;
-}
 
 const LinksDisplay = ({bookmarksData}) => {
 	
-	// // Check width of the image from url
-	// const checkWidth = (url, callback) => {
-	// 	let img = new Image();
-	// 	img.src = url;
-	// 	img.onload = () => {
-	// 		callback(img.width);
-	// 	}
-	// }
+	const CircleLink = ({bg, url, children}) => {
+		if (!url) url = '#';
+		return <Col onClick={() => parent.location.href = url}  className="bookmark-item d-flex flex-column align-items-center">
+			<BG src={bg} className="bookmark-box shadow" />
+			<span className="text-white text-center">
+				{children}
+			</span>
+		</Col>;
+	}
+
+	// Check width of the image from url
+	const checkWidth = (url, callback) => {
+		let img = new Image();
+		img.src = url;
+		img.onload = () => {
+			callback(img.width);
+		}
+	}
+
+	const getFavIcon = (domain) => {
+		let favIcon = `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${domain}&size=256`;
+		return favIcon;
+	}
+
+	// To allow sites like mail.google.com get fetch app specific favicons, at the same time advoid 404 favicons
+	const favSubdomainKeywords = ['google'];
 
 	if (bookmarksData.length > 1) {
 		console.log("bookmarksData loaded", bookmarksData);
 		return <Row className='bookmark-flexbox'>
 			{bookmarksData.slice(0, 15).map((bookmark, i) => { // Max 15 bookmarks
 				const url = bookmark.url;
-				const domain = url.match("(?<=:\/\/)(.*?)(?=\/)")[0];
-				let favIcon = `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${domain}&size=256`;
-				return <CircleLink key={i} url={url} bg={favIcon}>{bookmark.title}</CircleLink>;
-			}, this)}
+				let domain = url.match("(?<=:\/\/)(.*?)(?=\/)")[0];
+				if (domain.split(".").length >= 3 && !domain.includes(favSubdomainKeywords)) {
+					domain = domain.split(".").slice(1, ).join(".");
+				}
+				return <CircleLink key={i} url={url} bg={getFavIcon(domain)}>{bookmark.title}</CircleLink>;
+			})}
 		</Row>
 	}
 
