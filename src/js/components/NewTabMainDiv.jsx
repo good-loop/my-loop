@@ -321,9 +321,9 @@ const NewTabCharityCard = ({ cid, loading }) => {
 
 const CircleLink = ({bg, url, children}) => {
 	if (!url) url = '#';
-	return <Col className="link-padding">
-		<BG src={bg} ratio={100} className="link-box w-100 d-flex flex-row justify-content-center align-items-center text-center"/>
-		<p onClick={() => parent.location.href = url} className="text-white">
+	return <Col className="bookmark-item d-flex flex-column align-items-center">
+		<BG src={bg} className="bookmark-box" />
+		<p onClick={() => parent.location.href = url} className="text-white text-center">
 			{children}
 		</p>
 	</Col>;
@@ -332,21 +332,18 @@ const CircleLink = ({bg, url, children}) => {
 const LinksDisplay = ({bookmarksData}) => {
 	if (bookmarksData.length > 1) {
 		console.log("bookmarksData", bookmarksData);
-		return <Row>
+		return <Row className='bookmark-flexbox'>
 			{bookmarksData.map((bookmark, i) => {
-				return <CircleLink key={i} url={bookmark.url}>{bookmark.title}</CircleLink>;
+				const url = bookmark.url;
+				const favIcon = `https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=256`;
+				return <CircleLink key={i} url={url} bg={favIcon}>{bookmark.title}</CircleLink>;
 			}, this)}
 		</Row>
 	}
 
-	return <Row className='link-flexbox'>
-		{/* test 5 long array */
-			Array.apply(null, Array(5)).map((v, i) => <CircleLink key={i}>{i}</CircleLink>)
-		}
-		<Col xs={12}/>
-		{/* test 5 long array */
-			Array.apply(null, Array(5)).map((v, i) => <CircleLink key={i}>{i}</CircleLink>)
-		}
+	return <Row className='bookmark-flexbox'>
+		{Array.apply(null, Array(10)).map((v, i) => <CircleLink key={i}>{i}</CircleLink>)}
+
 	</Row>
 }
 
