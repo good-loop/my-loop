@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Line } from 'react-chartjs-2';
+import { Line, Pie } from 'react-chartjs-2';
 
 import {
 	Chart as ChartJS,
@@ -8,22 +8,30 @@ import {
 	LinearScale,
 	PointElement,
 	LineElement,
+	ArcElement,
 	Title,
 	Tooltip,
 	Legend,
 } from 'chart.js';
 
+/** TODO We should be able to do this dynamically/selectively when components are rendered */
 ChartJS.register(
 	CategoryScale,
 	LinearScale,
 	PointElement,
 	LineElement,
+	ArcElement,
 	Title,
 	Tooltip,
 	Legend
 );
 
 
-const NewChartWidget = ({data}) => <Line data={data} />;
+const NewChartWidget = ({type = 'line', data}) => {
+	return {
+		line: <Line data={data} />,
+		pie: <Pie data={data} />,
+	}[type];
+};
 
 export default NewChartWidget;

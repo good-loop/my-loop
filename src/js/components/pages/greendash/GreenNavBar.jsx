@@ -10,6 +10,9 @@ const GreenNavBar = ({active}) => {
 		<A className={space('nav-item', active === 'metrics' && 'active')} href="/greendash/metrics">
 			<div className="green-nav-icon metrics-icon" /> Metrics
 		</A>
+		<A className={space('nav-item', active === 'tags' && 'active')} href="/greendash/tags">
+			<div className="green-nav-icon tags-icon" /> Manage<br/>Tags
+		</A>
 		<A className={space('nav-item', active === 'optimisation' && 'active')} href="/greendash/optimisation">
 			<div className="green-nav-icon optimisation-icon" /> Optimisation<br/>Tips
 		</A>
@@ -19,6 +22,12 @@ const GreenNavBar = ({active}) => {
 		<A className={space('nav-item', active === 'profile' && 'active')} href="/greendash/profile">
 			<div className="green-nav-icon profile-icon" /> Profile
 		</A>
+		<div className="navbar-bottom-decoration">
+			<img className="tree-side" src="/img/green/tree-light.svg" />
+			<img className="tree-centre" src="/img/green/tree-light.svg" />
+			<img className="tree-side" src="/img/green/tree-light.svg" />
+		</div>
+		
 	</div>;
 };
 

@@ -3,7 +3,7 @@ import { Button } from 'reactstrap';
 import { isoDate, space } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import NewChartWidget from '../../NewChartWidget';
-import { GreenCard, printPeriod } from './dashutils';
+import { byId, dataToCarbon, GreenCard, impsToBytes, printPeriod } from './dashutils';
 
 
 const icons = {
@@ -23,17 +23,17 @@ const icons = {
 
 const co2ImpactSpecs = {
 	flights: {
-		factor: 0.7672,
+		factor: 0.0007672,
 		desc: 'long haul flights',
 		icon: icons.flights,
 	},
 	kettles: {
-		factor: 32.67,
+		factor: .03267,
 		desc: 'kettles boiled',
 		icon: icons.kettles
 	},
 	driving: {
-		factor: 2481,
+		factor: 2.481,
 		desc: 'miles driven in a car',
 		icon: icons.driving
 	}
@@ -41,13 +41,30 @@ const co2ImpactSpecs = {
 
 
 /** Render the "That's 99,999 kettles/miles/flights" bubble */
-const CO2Impact = ({tonnes, mode}) => {
+const CO2Impact = ({kg, mode}) => {
+	const unit = kg < 1000 ? 'KG' : 'TONNES';
+
+	if (mode === 'base') {
+		const amount = kg < 1000 ? <div>
+			<span className="number">{printer.prettyInt(kg, true)}</span>
+			<span className="unit">{unit}</span>
+		</div> : <>
+			<div className="number">{printer.prettyInt(kg / 1000, true)}</div>
+			<div className="unit">{unit}</div>
+		</>;
+
+		return <div className="big-number">
+			{amount}
+			<div className="desc">CO<sub>2</sub>e EMITTED</div>
+		</div>;
+	}
+
 	assert(co2ImpactSpecs[mode], `Can't render CO2-equivalent for mode "${mode}" - no conversion factor/description/etc written`);
 	const {factor, desc, icon} = co2ImpactSpecs[mode];
 
 	return <div className="impact-bubble">
-		<div className="impact-leader">{printer.prettyNumber(tonnes, 0)} TONNES CO<sub>2</sub>e, THAT'S</div>
-		<div className="impact-number">{printer.prettyNumber(tonnes * factor, 0)}</div>
+		<div className="impact-leader">{printer.prettyInt(kg, true)} {unit} CO<sub>2</sub>e, THAT'S</div>
+		<div className="impact-number">{printer.prettyInt(kg * factor, true)}</div>
 		<div className="impact-desc">{desc}</div>
 		<div className="impact-icon" title={`Illustrative icon for "${desc}"`}>{icon}</div>
 	</div>;
@@ -66,65 +83,84 @@ const dummyChartData = {
 const CO2Card = ({ period, data: rawData, tags }) => {
 	const [mode, setMode] = useState('base');
 	const [data, setData] = useState();
+	const [totalCO2, setTotalCO2] = useState(0);
 
 	// Convert impressions + tags to CO2 time series
 	useEffect(() => {
 		if (!rawData || !tags) return;
 
-		// map tag IDs to tag objects
-		const tagsById = tags.reduce((acc, tag) => {
-			return {...acc, [tag.id]: tag};
-		}, {})
-
 		// Data format accepted by chart.js
 		let newData = {
 			labels: [],
 			datasets: [{
-				label: 'Bytes',
+				label: 'Kg CO2',
 				data: [],
+				cubicInterpolationMode: 'monotone',
+				borderColor: '#52727a'
+			}, {
+				label: 'Avg',
+				data: [],
+				pointRadius: 0,
+				borderDash: [5, 5],
+				borderColor: '#aaa'
 			}],
 		};
+
+		// Construct average line
+		let tempAvg = 0;
+
+		// Add up total carbon for period
+		let runningTotalCO2 = 0;
+
+		// map tag IDs to tag objects
+		const tagsById = byId(tags);
+
+		let maxCO2 = 0;
 
 		// Populate transformed chart data
 		rawData.by_time_adid.buckets.forEach(bkt => {
 			const bktDate = new Date(bkt.key);
 			newData.labels.push(isoDate(bktDate));
-			newData.datasets[0].data.push(
-				bkt.by_adid.buckets.reduce((acc, bkt) => {
-					// bkt.key is tag-id
-					// bkt.count is impressions for tag
-					return acc + (bkt.count * tagsById[bkt.key].weight);
-				}, 0)
-			);
+			const bytesForDate = impsToBytes(bkt.by_adid.buckets, tagsById);
+			const carbonForDate = dataToCarbon(bytesForDate); // TODO Non-default country
+			if (carbonForDate > maxCO2) maxCO2 = carbonForDate;
+			runningTotalCO2 += carbonForDate;
+			newData.datasets[0].data.push(carbonForDate);
+			tempAvg += carbonForDate;
 		});
 
+		// Display tonnes instead of kg for 10000+
+		if (maxCO2 >= 10000) {
+			newData.datasets[0].data.forEach((d, i) => {
+				newData.datasets[0].data[i] = d / 1000;
+			})
+			newData.datasets[0].label = 'Tonnes CO2';
+			tempAvg /= 1000;
+		}
+
+		// normalise avg and duplicate across range
+		tempAvg /= newData.datasets[0].data.length;
+		for (let i = 0; i < newData.datasets[0].data.length; i++) {
+			newData.datasets[1].data.push(tempAvg);
+		};
+
+
+
 		setData(newData);
+		setTotalCO2(runningTotalCO2);
 	}, [rawData, tags]);
 
 	// TODO Don't show "Per 1000 impressions" button for one-tag mode
-	
-	const tonnes = 378; // TODO Live numbers
 
-	// Just show the number, or impact equivalent in flights/kettles/etc?
-	const content = co2ImpactSpecs[mode] ? (
-		<CO2Impact tonnes={tonnes} mode={mode} />
-	) : (
-		<div className="big-number">
-			<div className="number">{printer.prettyNumber(tonnes, Infinity)}</div>
-			<div className="unit">TONNES</div>
-			<div className="desc">CO<sub>2</sub>e EMITTED</div>
-		</div>
-	);
-	
 	return <GreenCard title="How much carbon is your digital advertising emitting?" className="carbon-time-series">
 		<div className="chart-subcard">
 			<div>CO<sub>2</sub>e emissions over time</div>
-			<div><Button >Per 1000 impressions</Button> <Button>Total emissions</Button></div>
+			{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
 			<NewChartWidget data={data || dummyChartData} />
 		</div>
 		<div className="total-subcard">
 			<div>{printPeriod(period)}</div>
-			{content}
+			<CO2Impact kg={totalCO2} mode={mode} />
 			<div className="impact-buttons">
 				{Object.entries(co2ImpactSpecs).map(([key, {icon}]) => {
 					const selected = mode === key;

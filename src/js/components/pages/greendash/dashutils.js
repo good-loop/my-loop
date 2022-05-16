@@ -147,6 +147,7 @@ const quarterNames = [, '1st', '2nd', '3rd', '4th'];
 
 /** Turn period object into clear human-readable text */
 export const printPeriod = ({start, end, name = ''}) => {
+	// Is it a named period (quarter, month, year)?
 	const quarterMatches = name.match(quarterRegex);
 	if (quarterMatches) return `${quarterMatches[1]} ${quarterNames[quarterMatches[2]]} quarter`;
 
@@ -183,3 +184,27 @@ export const GreenCard = ({ title, children, className, ...rest}) => {
 		<Card body className="gc-body">{children}</Card>
 	</div>
 };
+
+
+/** Turn a list of things with IDs into an object mapping IDs to things */
+export const byId = things => things.reduce((acc, thing) => {
+	acc[thing.id] = thing;
+	return acc;
+}, {})
+
+/** TODO impsToBytes and dataToCarbon should be rolled together - allow attaching country to tag? */
+
+/** Data (bytes) to CO2 (kg) for a specific country */
+export const dataToCarbon = (bytes, country = 'GB') => (({
+	GB: 0.54,
+}[country] * bytes) / 1000000000);
+
+
+/** Take DataLog impression buckets where the keys correspond to tags & total up bytes of data transferred */
+export const impsToBytes = (buckets, tagsById) => (
+	buckets.reduce((acc, bkt) => {
+		// bkt.key is tag-id
+		// bkt.count is impressions for tag
+		return acc + (bkt.count * tagsById[bkt.key].weight); // TODO Overhead
+	}, 0)
+);
