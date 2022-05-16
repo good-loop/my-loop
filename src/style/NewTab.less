@@ -306,12 +306,19 @@
     flex-wrap: wrap;
     width: 30em;
     .bookmark-item {
+        cursor: pointer;
         .bookmark-box {
             height: 3em;
             width: 3em;
             border-radius: 50%;
             background-color: white;
             margin: .5em;
+            border: 1px solid rgba(0,0,0,0.5);
+        }
+        span {
+            font-size: .8rem;
+            font-weight: bold;
+            -webkit-text-stroke: .1px black;
         }
     }
 }

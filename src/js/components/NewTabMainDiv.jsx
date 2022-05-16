@@ -136,9 +136,14 @@ const WebtopPage = () => {
 		};
 	}
 
+	const bookmarkRequest = () => {
+		parent.postMessage("give-me-bookmarks", "*");
+	}
+
 	useEffect(() => {
 		let bgImgs = 9;
 		setCustomBG("/img/newtab/bg" + (Math.round(Math.random() * bgImgs) + 1) + ".jpg");
+		bookmarkRequest();
 
 		window.addEventListener("message", (event) => handleMessage(event));
 		return () => {
@@ -147,9 +152,6 @@ const WebtopPage = () => {
 
 	}, []);
 
-	const bookmarkRequest = () => {
-		parent.postMessage("give-me-bookmarks", "*");
-	}
 
 	return (<>
 		{ ! Roles.isDev() && <style>
@@ -170,7 +172,6 @@ const WebtopPage = () => {
 					<Col sm={6} md={4} className="h-100 flex-column justify-content-center align-items-center unset-margins">
 						<NormalTabCenter />
 						<LinksDisplay bookmarksData={bookmarksData} />
-						<buton className='btn btn-secondary' onClick={bookmarkRequest}>Bookmarks</buton>
 					</Col>
 				</Row>
 			</Container>
@@ -321,29 +322,39 @@ const NewTabCharityCard = ({ cid, loading }) => {
 
 const CircleLink = ({bg, url, children}) => {
 	if (!url) url = '#';
-	return <Col className="bookmark-item d-flex flex-column align-items-center">
-		<BG src={bg} className="bookmark-box" />
-		<p onClick={() => parent.location.href = url} className="text-white text-center">
+	return <Col onClick={() => parent.location.href = url}  className="bookmark-item d-flex flex-column align-items-center">
+		<BG src={bg} className="bookmark-box shadow" />
+		<span className="text-white text-center">
 			{children}
-		</p>
+		</span>
 	</Col>;
 }
 
 const LinksDisplay = ({bookmarksData}) => {
+	
+	// // Check width of the image from url
+	// const checkWidth = (url, callback) => {
+	// 	let img = new Image();
+	// 	img.src = url;
+	// 	img.onload = () => {
+	// 		callback(img.width);
+	// 	}
+	// }
+
 	if (bookmarksData.length > 1) {
-		console.log("bookmarksData", bookmarksData);
+		console.log("bookmarksData loaded", bookmarksData);
 		return <Row className='bookmark-flexbox'>
-			{bookmarksData.map((bookmark, i) => {
+			{bookmarksData.slice(0, 15).map((bookmark, i) => { // Max 15 bookmarks
 				const url = bookmark.url;
-				const favIcon = `https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=256`;
+				const domain = url.match("(?<=:\/\/)(.*?)(?=\/)")[0];
+				let favIcon = `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${domain}&size=256`;
 				return <CircleLink key={i} url={url} bg={favIcon}>{bookmark.title}</CircleLink>;
 			}, this)}
 		</Row>
 	}
 
 	return <Row className='bookmark-flexbox'>
-		{Array.apply(null, Array(10)).map((v, i) => <CircleLink key={i}>{i}</CircleLink>)}
-
+		{/* {Array.apply(null, Array(15)).map((v, i) => <CircleLink key={i}>{i}</CircleLink>)} */}
 	</Row>
 }
 
