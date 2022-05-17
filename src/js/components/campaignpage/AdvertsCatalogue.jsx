@@ -305,8 +305,8 @@ const AdvertFilters = ({ campaign, vertisers, canonicalAds }) => {
 	const filterCount = filterButtons ? Object.keys(filterButtons).filter(key => filterButtons[key].length).length : 0;
 
 	const customFilters = filterButtons && (
-		Object.keys(filterButtons).map(category => (
-			<AdvertFilterCategory category={category} filterButtons={filterButtons} />
+		Object.keys(filterButtons).map((category, i) => (
+			<AdvertFilterCategory category={category} filterButtons={filterButtons} key={i} />
 		))
 	);
 
