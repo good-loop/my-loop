@@ -189,7 +189,8 @@ const CampaignPage = () => {
 	}
 	// Is the campaign page being used as a click-through advert landing page?
 	// If so, change the layout slightly, positioning the advert video on top.
-	const isLanding = (landing !== undefined) && (landing !== 'false');
+	let isLanding = (landing !== undefined) && (landing !== 'false');
+	if ( DataStore.getUrlValue("utm_medium") == "adunit" ) isLanding = true;
 
 	if (!pvTopCampaign.resolved && !pvAds.resolved) {
 		console.log("Looking for master campaign...", pvTopItem);
