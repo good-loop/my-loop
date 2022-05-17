@@ -97,7 +97,7 @@ const JoinOurMovement = () => <>
 						<CardText>
 							Don't just give it away - support charity with your data
 						</CardText>
-						<MyDataSignUpButton className="w-100 mt-3" /> {/* NB: assume the modal is on the page already */}
+						<MyDataSignUpButton id="mydata-signup-button" className="w-100 mt-3" /> {/* NB: assume the modal is on the page already */}
 					</CardBody>
 				</Card>
 		</div>
