@@ -55,7 +55,7 @@ export const T4GHowItWorksButton = () => <a className="btn btn-secondary w-100 t
 
 export const T4GSignUpLink = ({ className, children, onClick }) => {
 	return (
-		<a id="t4g-signup-button" className={space(className)} href={window.location}
+		<a className={`${space(className)} t4g-signup-button`} href={window.location}
 			onClick={e => {
 				stopEvent(e);
 				showT4GSignUpModal();
