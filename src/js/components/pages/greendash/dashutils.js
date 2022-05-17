@@ -180,9 +180,20 @@ const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep
 /** Boilerplate styling for a subsection of the green dashboard */
 export const GreenCard = ({ title, children, className, ...rest}) => {
 	return <div className={space('green-card', 'mb-2', className)} {...rest}>
-		<div className="gc-title">{title}</div>
+		{title ? <div className="gc-title">{title}</div> : null}
 		<Card body className="gc-body">{children}</Card>
 	</div>
+};
+
+
+/** Utility: take a mass in kg and pretty-print in kg or tonnes if it's large enough  */
+export const Mass = ({kg}) => {
+	const number = kg >= 1000 ? kg / 1000 : kg;
+	const unit = kg >= 1000 ? 't' : 'kg';
+	return <span className="mass">
+		<span className="number">{printer.prettyInt(number)}</span>
+		<span className="unit">{unit}</span>
+	</span>
 };
 
 

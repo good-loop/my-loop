@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { Alert, Col, Container, Row } from 'reactstrap';
+import { Alert, Button, Col, Container, Row } from 'reactstrap';
 // import ChartWidget from '../../../base/components/ChartWidget';
 import DataStore from '../../../base/plumbing/DataStore';
 import printer from '../../../base/utils/printer';
@@ -16,6 +16,7 @@ import C from '../../../C';
 import KStatus from '../../../base/data/KStatus';
 import ActionMan from '../../../plumbing/ActionMan';
 import CompareCard from './CompareCard';
+import TimeOfDayCard from './TimeOfDayCard';
 
 
 const OverviewWidget = ({period, data}) => {
@@ -30,16 +31,21 @@ const OverviewWidget = ({period, data}) => {
 };
 
 
-const TimeOfDayCard = ({}) => {
-	return <GreenCard title="When are your ad carbon emissions highest?">
-
-	</GreenCard>;
-};
-
-
 const CTACard = ({}) => {
-	return <GreenCard title="Interested to know more about climate positive advertising?">
-
+	return <GreenCard>
+		Interested to know more about<br/>
+		climate positive advertising?
+		<div className="cta-card-decoration">
+			<img className="tree-side" src="/img/green/tree-light.svg" />
+			<img className="tree-centre" src="/img/green/tree-light.svg" />
+			<img className="tree-side" src="/img/green/tree-light.svg" />
+		</div>
+		<a className="pull-right text-right" href="https://www.good-loop.com/contact" target="_blank">
+			<Button color="primary" size="lg">
+				Get In Touch
+			</Button>
+		</a>
+		
 	</GreenCard>;
 };
 

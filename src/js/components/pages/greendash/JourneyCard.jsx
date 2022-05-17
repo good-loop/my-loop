@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { getDataLogData } from '../../../base/plumbing/DataLog';
 import printer from '../../../base/utils/printer';
-import { byId, dataToCarbon, GreenCard, impsToBytes } from './dashutils';
+import { byId, dataToCarbon, GreenCard, Mass, impsToBytes } from './dashutils';
 
 
 const Cloud = ({style}) => (
@@ -11,22 +11,11 @@ const Cloud = ({style}) => (
 	</svg>
 );
 
-const Mass = ({kg}) => {
-	const number = kg >= 1000 ? kg / 1000 : kg;
-	const unit = kg >= 1000 ? 't' : 'kg';
-	return <span className="mass">
-		<span className="number">{printer.prettyInt(number)}</span>
-		<span className="unit">{unit}</span>
-	</span>
-}
-
-
+/** Show mass of CO2 emitted and offset by the campaigns in focus */
 const CO2Section = ({co2Offset, co2Emitted}) => {
 	if (!co2Offset) return null;
 
-	const number = co2Offset >= 1000 ? co2Offset / 1000 : co2Offset;
-	const unit = co2Offset >= 1000 ? 't' : 'kg';
-
+	
 	const diff = co2Offset - co2Emitted;
 	const diffFactor = Math.abs(diff / co2Offset);
 
@@ -56,7 +45,7 @@ const CO2Section = ({co2Offset, co2Emitted}) => {
 	</>
 };
 
-
+/** Show number of trees planted by the campaigns in focus */
 const TreesSection = ({treesPlanted}) => {
 	if (!treesPlanted) return null;
 
@@ -70,6 +59,14 @@ const TreesSection = ({treesPlanted}) => {
 	</>;
 };
 
+
+/**
+ * Show the lifetime carbon offsets & tree-planting of the current campaign set & compare estimated emissions.
+ * @param {Object} props
+ * @param {Campaign[]} props.campaigns The campaign(s) currently in focus
+ * @param {GreenTag[]} props.tags The green ad tag(s) currently in focus
+ * @returns 
+ */
 const JourneyCard = ({ campaigns, tags }) => {
 	if (!campaigns || !campaigns.length || !tags) return 'fart';
 
@@ -78,7 +75,7 @@ const JourneyCard = ({ campaigns, tags }) => {
 		if (c.co2) acc.co2 += c.co2;
 		if (c.trees) acc.trees += c.trees;
 		return acc;
-	}, {co2: 0, trees: 100})
+	}, {co2: 0, trees: 0});
 
 	const [co2Emitted, setCo2Emitted] = useState();
 

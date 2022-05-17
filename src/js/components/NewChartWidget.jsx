@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Line, Pie } from 'react-chartjs-2';
+import { Line, Pie, Bar } from 'react-chartjs-2';
 
 import {
 	Chart as ChartJS,
@@ -9,6 +9,7 @@ import {
 	PointElement,
 	LineElement,
 	ArcElement,
+	BarElement,
 	Title,
 	Tooltip,
 	Legend,
@@ -21,16 +22,18 @@ ChartJS.register(
 	PointElement,
 	LineElement,
 	ArcElement,
+	BarElement,
 	Title,
 	Tooltip,
 	Legend
 );
 
 
-const NewChartWidget = ({type = 'line', data}) => {
+const NewChartWidget = ({type = 'line', ...props}) => {
 	return {
-		line: <Line data={data} />,
-		pie: <Pie data={data} />,
+		line: <Line {...props} />,
+		pie: <Pie {...props} />,
+		bar: <Bar {...props} />,
 	}[type];
 };
 

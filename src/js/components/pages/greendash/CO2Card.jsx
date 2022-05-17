@@ -129,8 +129,8 @@ const CO2Card = ({ period, data: rawData, tags }) => {
 			tempAvg += carbonForDate;
 		});
 
-		// Display tonnes instead of kg for 10000+
-		if (maxCO2 >= 10000) {
+		// Display tonnes instead of kg for 1000+
+		if (maxCO2 >= 1000) {
 			newData.datasets[0].data.forEach((d, i) => {
 				newData.datasets[0].data[i] = d / 1000;
 			})
