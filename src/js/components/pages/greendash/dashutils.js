@@ -72,7 +72,7 @@ export const periodFromUrl = () => {
 		const quarterMatches = periodName.match(quarterRegex);
 		if (quarterMatches) {
 			refDate.setFullYear(quarterMatches[1]);
-			refDate.setMonth(4 * (quarterMatches[2] - 1));
+			refDate.setMonth(3 * (quarterMatches[2] - 1));
 			return getPeriodQuarter(refDate);
 		}
 		// eg "2022-04"

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, DropdownItem, DropdownMenu, DropdownToggle, Form, Input, Row, UncontrolledDropdown } from 'reactstrap';
+import { nonce } from '../../../base/data/DataClass';
 import DataStore from '../../../base/plumbing/DataStore';
 import { stopEvent } from '../../../base/utils/miscutils';
 import DateRangeWidget from '../../DateRangeWidget';
@@ -42,26 +43,31 @@ const GreenDashboardFilters = ({}) => {
 	const [filterMode, setFilterMode] = useState(defaultFilterMode(brand, campaign, tag));
 	const [showCustomRange, setShowCustomRange] = useState(!period.name);
 
-	// Update whichever ID we're currently filtering by
-	const setCurrentTemp = filterMode === 'campaign' ? setCampaign : setTag;
+	// Update this to signal that the new filter values should be applied
+	const [dummy, setDummy] = useState(false);
+	const doCommit = () => setDummy(nonce());
 
 	// Write updated filter spec back to URL parameters
-	const commitFilters = () => {
+	useEffect(() => {
+		if (!dummy) return;
 		// Put currently-selected filter in URL...
 		const filterVals = { brand, campaign, tag };
 		DataStore.setUrlValue(filterMode, filterVals[filterMode], false);
 		// ...and remove the others. (Don't provoke redraw yet!)
 		delete filterVals[filterMode];
 		Object.keys(filterVals).forEach((modeName) => DataStore.setUrlValue(modeName, null, false));
-		
+
 		// Apply date filter and trigger redraw
 		periodToUrl(period);
-	};
+	}, [dummy])
+
+	// Update whichever ID we're currently filtering by
+	const setCurrentTemp = filterMode === 'campaign' ? setCampaign : setTag;
 
 	// Shorthand for a click on one of the "Xth Quarter" buttons
 	const setNamedPeriod = name => {
 		setPeriod({name});
-		commitFilters();
+		doCommit();
 	};
 
 	// TODO "Normal" access control:
@@ -85,7 +91,7 @@ const GreenDashboardFilters = ({}) => {
 							{showCustomRange ? <>
 								<DropdownItem divider />
 								<DateRangeWidget dflt={period} onChange={setPeriod} />
-								<DropdownItem className="btn btn-primary pull-right d-inline-block w-unset" onClick={commitFilters}>Apply custom timeframe</DropdownItem>
+								<DropdownItem className="btn btn-primary pull-right d-inline-block w-unset" onClick={doCommit}>Apply custom timeframe</DropdownItem>
 							</> : null}
 						</DropdownMenu>
 					</UncontrolledDropdown>
@@ -107,7 +113,7 @@ const GreenDashboardFilters = ({}) => {
 						onChange={(e) => setCurrentTemp(e.target.value)}
 						value={{ campaign, brand, tag }[filterMode]}
 					/> : null}
-					<Button className="ml-2" onClick={commitFilters} size="sm">Apply</Button>
+					<Button className="ml-2" onClick={doCommit} size="sm">Apply</Button>
 {/*
 					// TODO Reinstate when we're doing "normal" access control
 					<UncontrolledButtonDropdown type="select">
