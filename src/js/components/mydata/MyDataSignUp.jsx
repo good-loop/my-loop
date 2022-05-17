@@ -31,7 +31,7 @@ export const showMyDataSignUpModal = (s=true) => {
  */
  export const MyDataSignUpButton = ({className,children}) => {		
 	return (
-		<a className={space("btn btn-primary", className)} href={window.location} 
+		<a id="mydata-signup-button" className={space("btn btn-primary", className)} href={window.location} 
 			onClick={e => {
 				stopEvent(e);
 				showMyDataSignUpModal();
