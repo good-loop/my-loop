@@ -158,7 +158,7 @@ const WebtopPage = () => {
 			{ '.MessageBar .alert {display: none;}' }
 		</style>}
 		{/* NB: Rendering background image here can avoid a flash of white before the BG get loaded */}
-		<NGOImage bg ngo={ngo} imgIdx={0} backdrop src={customBG} fullscreen opacity={0.9} bottom={0} style={{ backgroundPosition: "center" }}> 
+		<NGOImage bg ngo={ngo} backdrop src={customBG} fullscreen opacity={0.9} bottom={0} style={{ backgroundPosition: "center" }}> 
 			<NewTabCharityCard cid={charityID} loading={loadingCharity} />
 			<TutorialHighlighter page={[4, 5]} className="position-fixed p-3" style={{ top: 0, left: 0, width: "100vw", zIndex: 1 }}>
 				<div className="d-flex justify-content-end">
@@ -190,8 +190,6 @@ const PAGES = {
 	newtab: WebtopPage
 };
 const NewTabMainDiv = () => {
-	// make ui in local development easier to read
-	//["localmy", "testmy"].includes(window.location.hostname.split('.')[0]) ? document.body.style.backgroundColor = "lightgrey" : '';
 
 	return <MainDivBase pageForPath={PAGES} defaultPage="newtab" navbar={false} className="newtab" />;
 };
