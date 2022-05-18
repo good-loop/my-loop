@@ -31,6 +31,7 @@ import Claim from '../base/data/Claim';
 import { accountMenuItems } from './pages/CommonComponents';
 import { getCharityObject } from '../base/components/PropControls/UserClaimControl';
 import NGOImage from '../base/components/NGOImage';
+import { hasRegisteredForMyData } from './mydata/MyDataCommonComponents';
 
 
 // DataStore
@@ -196,13 +197,14 @@ const NewTabMainDiv = () => {
 
 const UserControls = () => {
 	return <>
-		{/*Login.isLoggedIn() ? <TabsOpenedCounter /> : null*/}
-		<a href={ServerIO.MYLOOP_ENDPOINT} className="myloop-link">
-			My.Good-Loop
-			&nbsp;
-			<img src="/img/mydata/heart-white-circle.png" className="heart-white-circle"/>
-		</a>
-		&nbsp;
+		{!Login.isLoggedIn() || !hasRegisteredForMyData() && <>
+			<a href={ServerIO.MYLOOP_ENDPOINT + "/account?scrollMyData=true"} className="myloop-link">
+				My.Good-Loop
+				&nbsp;
+				<img src="/img/mydata/heart-white-circle.png" className="heart-white-circle"/>
+			</a>
+			&nbsp;&nbsp;&nbsp;
+		</>}
 		<AccountMenu accountMenuItems={accountMenuItems} linkType="a" small
 			customLogin={() => <NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>}
 		/>
@@ -288,7 +290,7 @@ const NewTabCharityCard = ({ cid, loading }) => {
 	const charity = cid ? fetchCharity(cid) : null;
 	const isInTutorialHighlight = DataStore.getValue(['widget', 'TutorialCard', 'open']) && DataStore.getValue(['widget', 'TutorialCard', 'page']) === 1;
 	const returnLink = encURI("/newtab.html#webtop?tutOpen=true&tutPage=2");
-	const params = isInTutorialHighlight ? "&task=return&link=" + returnLink : "";
+	//const params = isInTutorialHighlight ? "&task=return&link=" + returnLink : "";
 
 	let pvTotalForCharity = cid? DataStore.fetch(['misc','donations', cid], () => ServerIO.getDonationsData({q:"cid:"+cid})) : {};
 	// HACK we want to show the total going up as tabs are opened. But we only reconcile on a quarterly basis.
@@ -304,7 +306,7 @@ const NewTabCharityCard = ({ cid, loading }) => {
 
 	return (<div className="text-center NewTabCharityCard" >
 		<h5 className="text-dark">I'm Supporting</h5>
-		<C.A href={"/account?tab=tabsForGood" + params}>
+		<C.A href={charity && charity.url}>
 			<TutorialComponent page={1}>
 				{/* <WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}> */}
 					{charity && <CharityLogo charity={charity} />}
@@ -440,7 +442,7 @@ const tutorialPages = [
 	<>
 		<h2>It's your choice</h2>
 		<p>
-			Choose the charity you want to support. We will send them 50% of the money from brands for their ads on Tabs for Good.
+			You can choose the charity you want to support in your account settings. We will send them 50% of the money from brands for their ads on Tabs for Good.
 		</p>
 	</>,
 	<>
