@@ -29,6 +29,9 @@ import NGO from '../base/data/NGO';
 import Roles, { isTester } from '../base/Roles';
 import Claim from '../base/data/Claim';
 import { accountMenuItems } from './pages/CommonComponents';
+import { getCharityObject } from '../base/components/PropControls/UserClaimControl';
+import NGOImage from '../base/components/NGOImage';
+import { hasRegisteredForMyData } from './mydata/MyDataCommonComponents';
 
 
 // DataStore
@@ -49,7 +52,6 @@ let logOnceFlag;
  * Same for trying to verify user once ^^
  */
 let verifiedLoginOnceFlag;
-
 
 const LoremIpsum = () => {
 	return <p>
@@ -76,6 +78,7 @@ const WebtopPage = () => {
 	const charityID = pvCharityID && (pvCharityID.value || pvCharityID.interim);
 	const loadingCharity = ! pvCharityID || ! pvCharityID.resolved;	
 	let [showPopup, setShowPopup] = useState(false);
+	let [customBG, setCustomBG] = useState(null);
 
 	// Yeh - a tab is opened -- let's log that (once only)
 	if (!logOnceFlag && Login.isLoggedIn()) {
@@ -121,39 +124,61 @@ const WebtopPage = () => {
 
 	// Background images on tab plugin sourced locally, but not on Safari
 
+
+	const pvNgo = Login.isLoggedIn() ? getCharityObject() : null;
+	const ngo = pvNgo && pvNgo.resolved && pvNgo.value;
+
+	const [bookmarksData, setBookmarksData] = useState([]);
+
+	const handleMessage = (event) => {
+		if (event.origin.includes('chrome-extension://') && typeof event.data === 'object') { 
+			setBookmarksData(event.data);
+			// console.log("bookmarks loaded", event.data);
+		};
+	}
+
+	const bookmarkRequest = () => {
+		parent.postMessage("give-me-bookmarks", "*");
+	}
+
+	useEffect(() => {
+		let bgImgs = 9;
+		setCustomBG("/img/newtab/bg" + (Math.round(Math.random() * bgImgs) + 1) + ".jpg");
+		bookmarkRequest();
+
+		window.addEventListener("message", (event) => handleMessage(event));
+		return () => {
+			window.removeEventListener("message", (event) => handleMessage(event));
+		}
+
+	}, []);
+
+
 	return (<>
 		{ ! Roles.isDev() && <style>
 			{ '.MessageBar .alert {display: none;}' }
 		</style>}
-		<BG src={null} fullscreen opacity={0.9} bottom={110} style={{ backgroundPosition: "center" }}>
+		{/* NB: Rendering background image here can avoid a flash of white before the BG get loaded */}
+		<NGOImage bg ngo={ngo} backdrop src={customBG} fullscreen opacity={0.9} bottom={0} style={{ backgroundPosition: "center" }}> 
+			<NewTabCharityCard cid={charityID} loading={loadingCharity} />
 			<TutorialHighlighter page={[4, 5]} className="position-fixed p-3" style={{ top: 0, left: 0, width: "100vw", zIndex: 1 }}>
-				<div className="d-flex justify-content-between">
-					<TutorialComponent page={5} className="logo pl-5 flex-row" style={{ width: 400 }}>
-						<a href="https://my.good-loop.com">
-							<img src="https://my.good-loop.com/img/TabsForGood/TabsForGood_logo.png" style={{ width: 200 }} alt="logo" />
-						</a>
-					</TutorialComponent>
+				<div className="d-flex justify-content-end">
 					<TutorialComponent page={4} className="user-controls flex-row align-items-center">
-						{Login.isLoggedIn() ? <TabsOpenedCounter /> : null}
-						<AccountMenu accountMenuItems={accountMenuItems} linkType="a" small
-							customLogin={() => <NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>}
-						/>
+						<UserControls/>
 					</TutorialComponent>
 				</div>
 			</TutorialHighlighter>
 			<Container fluid className="flex-column justify-content-end align-items-center position-absolute unset-margins" style={{ top: 0, left: 0, width: "100vw", height: "100vh" }}>
 				<Row className="h-100 w-100" noGutters>
 					<Col sm={3} md={4} />
-					<Col sm={6} md={4} className="h-100 flex-column justify-content-center unset-margins">
-						<NormalTabCenter charityID={charityID} loadingCharity={loadingCharity} />
+					<Col sm={6} md={4} className="h-100 flex-column justify-content-center align-items-center unset-margins">
+						<NormalTabCenter />
+						<LinksDisplay bookmarksData={bookmarksData} />
 					</Col>
-					{/* <Col sm={3} md={4} className="flex-column justify-content-center align-items-center p-2">
-						<CharityCustomContent content={<LoremIpsum/>}/>
-					</Col> */}
 				</Row>
 			</Container>
 			{/* Tutorial highlight to cover adverts */}
-		</BG>
+		</NGOImage>
 		<TutorialComponent page={3} className="position-absolute" style={{ bottom: 0, left: 0, right: 0, height: 110, width: "100vw" }} />
 		<NewtabTutorialCard tutorialPages={tutorialPages} charityId={charityID} onClose={() => setShowPopup(true)} />
 		{showPopup && <PopupWindow />}
@@ -166,18 +191,24 @@ const PAGES = {
 	newtab: WebtopPage
 };
 const NewTabMainDiv = () => {
-	// make ui in local development easier to read
-	["localmy", "testmy"].includes(window.location.hostname.split('.')[0]) ? document.body.style.backgroundColor = "lightgrey" : '';
-
-	let browser = getBrowserVendor();
-	if (browser == 'SAFARI') {
-		let bgImgs = 9;
-		let bg = "img/newtab/bg" + (Math.round(Math.random() * bgImgs) + 1) + ".jpg";
-		document.body.style.backgroundImage = "url(" + bg + ")";
-		document.body.style.backgroundSize = "cover";
-	}
 
 	return <MainDivBase pageForPath={PAGES} defaultPage="newtab" navbar={false} className="newtab" />;
+};
+
+const UserControls = () => {
+	return <>
+		{!Login.isLoggedIn() || !hasRegisteredForMyData() && <>
+			<a href={ServerIO.MYLOOP_ENDPOINT + "/account?scrollMyData=true"} className="myloop-link">
+				My.Good-Loop
+				&nbsp;
+				<img src="/img/mydata/heart-white-circle.png" className="heart-white-circle"/>
+			</a>
+			&nbsp;&nbsp;&nbsp;
+		</>}
+		<AccountMenu accountMenuItems={accountMenuItems} linkType="a" small
+			customLogin={() => <NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>}
+		/>
+	</>;
 };
 
 
@@ -222,23 +253,27 @@ const ENGINES = {
  * @param {Object} p
  * @returns 
  */
-const NormalTabCenter = ({ charityID, loadingCharity }) => {
+const NormalTabCenter = () => {
 	let pvSE = getPVClaim({ xid: Login.getId(), key: "searchEngine" });
 	let searchEngine = Claim.value(pvSE) || "google";
 	const engineData = ENGINES[searchEngine];
 
 	return <>
-		<div className="flex-row unset-margins justify-content-center align-items-end mb-3 tab-center">
+		<div className="flex-column unset-margins justify-content-center align-items-center mb-3 tab-center">
 			{ true && //! loadingCharity && ! charityID &&
 				// Show the total raised across all charities, if the user hasn't selected one.
-				<><h3 className="text-center">
+				<><h5 className="text-center together-we-ve-rasied">
 					Together we've raised&nbsp;
 					<TutorialComponent page={2} className="d-inline-block">
 						<TickerTotal />
 					</TutorialComponent>
-				</h3>
-				<img src="https://my.good-loop.com/img/TabsForGood/sparkle.png" alt="sparkle" style={{ width: 50 }} className="pl-1 sparkle" />
+				</h5>
 			</>}
+			<TutorialComponent page={5} className="py-3">
+				<a href="https://my.good-loop.com">
+					<img src="https://my.good-loop.com/img/TabsForGood/TabsForGood_logo.png" alt="logo" />
+				</a>
+			</TutorialComponent>
 		</div>
 		<div className="w-100 pb-3">
 			<div className="tab-search-container mx-auto">
@@ -247,7 +282,6 @@ const NormalTabCenter = ({ charityID, loadingCharity }) => {
 				} />
 			</div>
 		</div>
-		<NewTabCharityCard cid={charityID} loading={loadingCharity} />
 	</>;
 };
 
@@ -256,7 +290,7 @@ const NewTabCharityCard = ({ cid, loading }) => {
 	const charity = cid ? fetchCharity(cid) : null;
 	const isInTutorialHighlight = DataStore.getValue(['widget', 'TutorialCard', 'open']) && DataStore.getValue(['widget', 'TutorialCard', 'page']) === 1;
 	const returnLink = encURI("/newtab.html#webtop?tutOpen=true&tutPage=2");
-	const params = isInTutorialHighlight ? "&task=return&link=" + returnLink : "";
+	//const params = isInTutorialHighlight ? "&task=return&link=" + returnLink : "";
 
 	let pvTotalForCharity = cid? DataStore.fetch(['misc','donations', cid], () => ServerIO.getDonationsData({q:"cid:"+cid})) : {};
 	// HACK we want to show the total going up as tabs are opened. But we only reconcile on a quarterly basis.
@@ -270,15 +304,15 @@ const NewTabCharityCard = ({ cid, loading }) => {
 		totalMoney = Money.add(pvTotalForCharity.value.total, tabEst);
 	}
 
-	return (<div className="mx-auto rounded-lg text-center NewTabCharityCard" >
-		<small className="">You are supporting</small>
-		<C.A href={"/account?tab=tabsForGood" + params}>
+	return (<div className="text-center NewTabCharityCard" >
+		<h5 className="text-dark">I'm Supporting</h5>
+		<C.A href={charity && charity.url}>
 			<TutorialComponent page={1}>
-				<WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}>
+				{/* <WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}> */}
 					{charity && <CharityLogo charity={charity} />}
 					{ ! charity && loading && <p className="my-auto">Loading...</p>}
 					{ ! charity && ! loading && <p className="my-auto">Select a charity</p>}
-				</WhiteCircle>
+				{/* </WhiteCircle> */}
 			</TutorialComponent>
 		</C.A>
 		{totalMoney && charity && 
@@ -286,6 +320,55 @@ const NewTabCharityCard = ({ cid, loading }) => {
 			for {NGO.displayName(charity)}</p>}
 	</div>);
 };
+
+
+const LinksDisplay = ({bookmarksData}) => {
+	
+	const CircleLink = ({bg, url, children}) => {
+		if (!url) url = '#';
+		return <Col onClick={() => parent.location.href = url}  className="bookmark-item d-flex flex-column align-items-center">
+			<BG src={bg} className="bookmark-box shadow" />
+			<span className="text-white text-center">
+				{children}
+			</span>
+		</Col>;
+	}
+
+	// Check width of the image from url
+	const checkWidth = (url, callback) => {
+		let img = new Image();
+		img.src = url;
+		img.onload = () => {
+			callback(img.width);
+		}
+	}
+
+	const getFavIcon = (domain) => {
+		let favIcon = `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${domain}&size=256`;
+		return favIcon;
+	}
+
+	// To allow sites like mail.google.com get fetch app specific favicons, at the same time advoid 404 favicons
+	const favSubdomainKeywords = ['google'];
+
+	if (bookmarksData.length > 1) {
+		console.log("bookmarksData loaded", bookmarksData);
+		return <Row className='bookmark-flexbox'>
+			{bookmarksData.slice(0, 15).map((bookmark, i) => { // Max 15 bookmarks
+				const url = bookmark.url;
+				let domain = url.match("(?<=:\/\/)(.*?)(?=\/)")[0];
+				if (domain.split(".").length >= 3 && !domain.includes(favSubdomainKeywords)) {
+					domain = domain.split(".").slice(1, ).join(".");
+				}
+				return <CircleLink key={i} url={url} bg={getFavIcon(domain)}>{bookmark.title}</CircleLink>;
+			})}
+		</Row>
+	}
+
+	return <Row className='bookmark-flexbox'>
+		{/* {Array.apply(null, Array(15)).map((v, i) => <CircleLink key={i}>{i}</CircleLink>)} */}
+	</Row>
+}
 
 const CharityCustomContent = ({content, className}) => {
 	return <div className="charity-custom-content">
@@ -359,7 +442,7 @@ const tutorialPages = [
 	<>
 		<h2>It's your choice</h2>
 		<p>
-			Choose the charity you want to support. We will send them 50% of the money from brands for their ads on Tabs for Good.
+			You can choose the charity you want to support in your account settings. We will send them 50% of the money from brands for their ads on Tabs for Good.
 		</p>
 	</>,
 	<>

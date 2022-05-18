@@ -223,7 +223,7 @@ const MyDataDashboardHomeTab = () => {
 	const pvCharity = getCharityObject();
 	const ngo = pvCharity && (pvCharity.value || pvCharity.interim);
 	const scrollToMyDataSignup = (e) => {
-		e.preventDefault();
+		e && e.preventDefault();
 		document.getElementById("mydata-dashboard-signup").scrollIntoView({behavior: "smooth"});
 	}
 
@@ -232,6 +232,7 @@ const MyDataDashboardHomeTab = () => {
 
 	useEffect(() => {
 		if (isPortraitMobile()) setFooterClassName('bg-gl-light-pink');
+		if (DataStore.getUrlValue("scrollMyData")) setTimeout(scrollToMyDataSignup, 300);
 	}, []);
 	
 	return (<>
