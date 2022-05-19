@@ -22,6 +22,8 @@ const icons = {
 
 
 const co2ImpactSpecs = {
+	// ??What are the sources for this? Please give links
+	// ??What unit is `factor` applied to? Is it kgs of CO2?
 	flights: {
 		factor: 0.0007672,
 		desc: 'long haul flights',
