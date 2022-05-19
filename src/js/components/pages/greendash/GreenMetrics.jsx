@@ -123,35 +123,39 @@ const GreenMetrics = ({}) => {
 		return <div><Alert color="danger">Couldn't find tag for {filterMode}: {filterId}</Alert></div>;
 	}
 
-	// Get impression counts
-	const pvData = getDataLogData({
+	const baseFilters = {
 		dataspace: 'green',
 		q: `evt:pixel AND ${filterMode}:${filterId}`,
 		breakdowns: ['time/adid', 'os'],
 		start: period.start.toISOString(),
 		end: period.end.toISOString(),
-	})
+	};
+
+	// Get impression counts
+	const pvData = getDataLogData(baseFilters);
+
+	const commonProps = { period, campaigns, tags, baseFilters };
 
 	if (pvData.resolved) {
 		content = <>
 			<OverviewWidget period={period} data={pvData.value} />
 			<Row>
 				<Col md="8">
-					<CO2Card period={period} data={pvData.value} tags={tags} />
+					<CO2Card {...commonProps} data={pvData.value} />
 				</Col>
 				<Col md="4">
-					<JourneyCard campaigns={campaigns} tags={tags} />
+					<JourneyCard {...commonProps} />
 				</Col>
 			</Row>
 			<Row>
 				<Col md="4">
-					<CompareCard />
+					<CompareCard {...commonProps} />
 				</Col>
 				<Col md="4">
-					<BreakdownCard />
+					<BreakdownCard {...commonProps} />
 				</Col>
 				<Col md="4">
-					<TimeOfDayCard />
+					<TimeOfDayCard {...commonProps} />
 					<CTACard />
 				</Col>
 			</Row>
