@@ -22,11 +22,16 @@ const parseList = (value) => {
 
 	if (!value) return null;
 	if (typeof value === 'string' && !value.startsWith('[') && !value.endsWith(']')) return <span>{value}</span>;
-	const value2 = JSON.parse(value);
-	if (Array.isArray(value2)) {
-		return value2.map((item, i) => <span key={i}>{valueMap[item]}</span>);
+	try {
+		const value2 = JSON.parse(value);
+		if (Array.isArray(value2)) {
+			return value2.map((item, i) => <span key={i}>{valueMap[item]}</span>);
+		}
+		return null;
+	} catch (e) {
+		console.error("Error while parsing user claim value:", e);
+		return null;
 	}
-	return null;
 }
 
 
@@ -182,8 +187,10 @@ const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
 
 	// Show adtypes / causes as pills - but only these.
 	if (!editMode) {
-		if (displayValue) 
+		if (displayValue) {
+			console.log("ATTEMPTING TO PARSE LIST:",displayValue);
 			displayValue = parseList(displayValue);
+		}
 		else 
 			displayValue = <a onClick={editModeToggle}>Add+</a>;
 		
