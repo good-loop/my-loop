@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Button } from 'reactstrap';
+import Misc from '../../../base/components/Misc';
 import NewChartWidget from '../../NewChartWidget';
-import { GreenCard } from './dashutils';
+import { byId, calcBytes, GreenCard } from './dashutils';
 
-const dummyDataTech =  {
+const dummyDataTech = {
 	labels: ['Logging', 'Media', 'Overhead (JS + XML)'],
 	datasets: [{
 		label: 'Kg CO2',
@@ -27,26 +28,38 @@ const dummyDataOSDesktop = {
 	}],
 };
 
-const TechSubcard = () => {
+const TechSubcard = ({tags, data}) => {
+	if (!tags || !data) return <Misc.Loading text="Fetching data..." />;
+
+	const {logging, media, overhead} = calcBytes(data.by_adid.buckets, byId(tags));
+	const chartData = {
+		labels: ['Logging', 'Media', 'Overhead (JS + XML)'],
+		datasets: [{
+			label: 'Kg CO2',
+			data: [logging, media, overhead],
+		}],
+	};
+
 	return <>
 		<p>CO<sub>2</sub>e emissions due to...</p>
-		<NewChartWidget type="pie" data={dummyDataTech} />
+		<NewChartWidget type="pie" data={chartData} />
 	</>;
 };
 
 const DeviceSubcard = () => {
 	return <>
-		<p></p>
+		<p>Mobile</p>
 		<NewChartWidget type="bar" data={dummyDataOSMobile} options={{indexAxis: 'y'}} />
+		<p>Desktop</p>
 		<NewChartWidget type="bar" data={dummyDataOSDesktop} options={{indexAxis: 'y'}} />
 	</>;
 }
 
-const BreakdownCard = ({}) => {
+const BreakdownCard = ({campaigns, tags, data}) => {
 	const [mode, setMode] = useState('tech');
 
 	const subcard = (mode === 'tech') ? (
-		<TechSubcard />
+		<TechSubcard tags={tags} data={data} />
 	) : (
 		<DeviceSubcard />
 	);

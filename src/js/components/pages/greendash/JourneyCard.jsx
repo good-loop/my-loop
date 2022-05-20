@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { getDataLogData } from '../../../base/plumbing/DataLog';
 import printer from '../../../base/utils/printer';
-import { byId, dataToCarbon, GreenCard, Mass, impsToBytes } from './dashutils';
+import { byId, dataToCarbon, GreenCard, Mass, calcBytes } from './dashutils';
 
 
 const Cloud = ({style}) => (
@@ -94,7 +94,7 @@ const JourneyCard = ({ campaigns, tags }) => {
 			return;
 		}
 		const atd = pvAllTimeData.value;
-		const totalBytes = impsToBytes(atd.by_adid.buckets, byId(tags));
+		const totalBytes = calcBytes(atd.by_adid.buckets, byId(tags)).total;
 		setCo2Emitted(dataToCarbon(totalBytes));
 	}, [pvAllTimeData.resolved]);
 

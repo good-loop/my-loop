@@ -5,7 +5,7 @@ import _ from 'lodash';
 import Misc from '../../../base/components/Misc';
 import { getDataLogData } from '../../../base/plumbing/DataLog';
 import NewChartWidget from '../../NewChartWidget';
-import { byId, dataToCarbon, getPeriodQuarter, GreenCard, impsToBytes, printPeriod } from './dashutils';
+import { byId, dataToCarbon, getPeriodQuarter, GreenCard, calcBytes, printPeriod } from './dashutils';
 import { isoDate } from '../../../base/utils/miscutils';
 
 const dummyDataQuarter = {
@@ -56,7 +56,7 @@ const QuartersCard = ({campaigns, tags, baseFilters}) => {
 			getDataLogData({ ...baseFilters, start, end, breakdowns: ['adid']}).promise.then(res => {
 				
 				// Calculate data usage & carbon emissions for this quarter and insert in the data array at the appropriate point
-				const bytes = impsToBytes(res.by_adid.buckets, tagsById);
+				const bytes = calcBytes(res.by_adid.buckets, tagsById).total;
 				const carbon = dataToCarbon(bytes);
 				setData(prevData => {
 					const nextData = _.cloneDeep(prevData);

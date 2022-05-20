@@ -3,7 +3,7 @@ import { Button } from 'reactstrap';
 import { isoDate, space } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import NewChartWidget from '../../NewChartWidget';
-import { byId, dataToCarbon, GreenCard, impsToBytes, printPeriod } from './dashutils';
+import { byId, dataToCarbon, GreenCard, calcBytes, printPeriod } from './dashutils';
 
 
 const icons = {
@@ -123,7 +123,7 @@ const CO2Card = ({ period, data: rawData, tags }) => {
 		rawData.by_time_adid.buckets.forEach(bkt => {
 			const bktDate = new Date(bkt.key);
 			newData.labels.push(isoDate(bktDate));
-			const bytesForDate = impsToBytes(bkt.by_adid.buckets, tagsById);
+			const bytesForDate = calcBytes(bkt.by_adid.buckets, tagsById).total;
 			const carbonForDate = dataToCarbon(bytesForDate); // TODO Non-default country
 			if (carbonForDate > maxCO2) maxCO2 = carbonForDate;
 			runningTotalCO2 += carbonForDate;

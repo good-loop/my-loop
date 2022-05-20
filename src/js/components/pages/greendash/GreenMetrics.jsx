@@ -123,10 +123,12 @@ const GreenMetrics = ({}) => {
 		return <div><Alert color="danger">Couldn't find tag for {filterMode}: {filterId}</Alert></div>;
 	}
 
+	// Fetch common data for CO2Card and BreakdownCard.
+	// JourneyCard takes all-time data, CompareCard sets its own time periods, TimeOfDayCard overrides time-series interval
 	const baseFilters = {
 		dataspace: 'green',
 		q: `evt:pixel AND ${filterMode}:${filterId}`,
-		breakdowns: ['time/adid', 'os'],
+		breakdowns: ['time/adid', 'os', 'adid'],
 		start: period.start.toISOString(),
 		end: period.end.toISOString(),
 	};
@@ -152,7 +154,7 @@ const GreenMetrics = ({}) => {
 					<CompareCard {...commonProps} />
 				</Col>
 				<Col md="4">
-					<BreakdownCard {...commonProps} />
+					<BreakdownCard {...commonProps} data={pvData.value} />
 				</Col>
 				<Col md="4">
 					<TimeOfDayCard {...commonProps} />

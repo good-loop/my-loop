@@ -212,10 +212,22 @@ export const dataToCarbon = (bytes, country = 'GB') => (({
 
 
 /** Take DataLog impression buckets where the keys correspond to tags & total up bytes of data transferred */
-export const impsToBytes = (buckets, tagsById) => (
-	buckets.reduce((acc, bkt) => {
-		// bkt.key is tag-id
-		// bkt.count is impressions for tag
-		return acc + (bkt.count * tagsById[bkt.key].weight); // TODO Overhead
-	}, 0)
-);
+export const calcBytes = (buckets, tagsById) => {
+	let imps = 0;
+	let total = 0;
+	let media = 0;
+	let overhead = 0;
+	let logging = 0;
+
+	buckets.forEach(({count, key}) => {
+		imps += count;
+		const thisCreative = count * tagsById[key].weight;
+		const thisOverhead = count * 100000; // TODO Fill in correct number
+		const thisLogging = count * 2000; // TODO Fill in correct number
+		total += (thisCreative + thisOverhead + thisLogging);
+		media += thisCreative;
+		overhead += thisOverhead;
+		logging += thisLogging;
+	});
+	return {imps, total, media, overhead, logging};
+};
