@@ -355,12 +355,14 @@ const LinksDisplay = ({bookmarksData}) => {
 		console.log("bookmarksData loaded", bookmarksData);
 		return <Row className='bookmark-flexbox'>
 			{bookmarksData.slice(0, 15).map((bookmark, i) => { // Max 15 bookmarks
-				const url = bookmark.url;
-				let domain = url.match("(?<=:\/\/)(.*?)(?=\/)")[0];
-				if (domain.split(".").length >= 3 && !domain.includes(favSubdomainKeywords)) {
-					domain = domain.split(".").slice(1, ).join(".");
+				if (bookmark.url) { // Catch bookmarks folder that do not have url
+					const url = bookmark.url;
+					let domain = url.match("(?<=:\/\/)(.*?)(?=\/)")[0];
+					if (domain.split(".").length >= 3 && !domain.includes(favSubdomainKeywords)) {
+						domain = domain.split(".").slice(1, ).join(".");
+					}
+					return <CircleLink key={i} url={url} bg={getFavIcon(domain)}>{bookmark.title}</CircleLink>;
 				}
-				return <CircleLink key={i} url={url} bg={getFavIcon(domain)}>{bookmark.title}</CircleLink>;
 			})}
 		</Row>
 	}
