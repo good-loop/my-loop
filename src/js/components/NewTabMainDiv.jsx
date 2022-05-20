@@ -304,9 +304,12 @@ const NewTabCharityCard = ({ cid, loading }) => {
 		totalMoney = Money.add(pvTotalForCharity.value.total, tabEst);
 	}
 
+	// Use top.location.href instead of C.A to advoid CORS issues.
+	const charityLink = charity && charity.url;
+
 	return (<div className="text-center NewTabCharityCard" >
 		<h5 className="text-dark">I'm Supporting</h5>
-		<C.A href={charity && charity.url}>
+		<div onClick={() => top.location.href = charityLink}> 
 			<TutorialComponent page={1}>
 				{/* <WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}> */}
 					{charity && <CharityLogo charity={charity} />}
@@ -314,7 +317,7 @@ const NewTabCharityCard = ({ cid, loading }) => {
 					{ ! charity && ! loading && <p className="my-auto">Select a charity</p>}
 				{/* </WhiteCircle> */}
 			</TutorialComponent>
-		</C.A>
+		</div>
 		{totalMoney && charity && 
 			<p>Together we've raised<br/><b><Misc.Money amount={totalMoney} /></b><br/>
 			for {NGO.displayName(charity)}</p>}
