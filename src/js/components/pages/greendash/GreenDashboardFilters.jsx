@@ -156,6 +156,10 @@ const GreenDashboardFilters = ({}) => {
 					<UncontrolledDropdown className="filter-dropdown ml-2">
 						<DropdownToggle caret>Filter by {filterMode || '...'}</DropdownToggle>
 						<DropdownMenu>
+							<DropdownItem onClick={() => setFilterMode('brand')}>
+								{filterMode === 'brand' ? <span className="selected-marker" /> : null}
+								Brand
+							</DropdownItem>
 							<DropdownItem onClick={() => setFilterMode('campaign')}>
 								{filterMode === 'campaign' ? <span className="selected-marker" /> : null}
 								Campaign
