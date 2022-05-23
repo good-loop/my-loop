@@ -30,11 +30,16 @@ ChartJS.register(
 
 
 const NewChartWidget = ({type = 'line', ...props}) => {
-	return {
-		line: <Line {...props} />,
-		pie: <Pie {...props} />,
-		bar: <Bar {...props} />,
-	}[type];
+	props.options = props.options || {};
+	props.options.maintainAspectRatio = props.options.maintainAspectRatio || false;
+
+	return <div className="chart-canvas-container">
+		{{
+			line: <Line {...props} />,
+			pie: <Pie {...props} />,
+			bar: <Bar {...props} />,
+		}[type]}
+	</div>;
 };
 
 export default NewChartWidget;

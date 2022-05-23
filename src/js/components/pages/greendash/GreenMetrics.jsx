@@ -32,7 +32,7 @@ const OverviewWidget = ({period, data}) => {
 
 
 const CTACard = ({}) => {
-	return <GreenCard>
+	return <GreenCard className="half-height">
 		Interested to know more about<br/>
 		climate positive advertising?
 		<div className="cta-card-decoration">
@@ -45,7 +45,6 @@ const CTACard = ({}) => {
 				Get In Touch
 			</Button>
 		</a>
-		
 	</GreenCard>;
 };
 
@@ -58,6 +57,46 @@ const initPeriod = () => {
 	return period;
 }
 
+/**
+ * Look for brands and campaigns shared with the user
+ * @param {*} param0 
+ * @returns 
+ */
+const InitialPicker = ({}) => {
+	const [availableBrands, setAvailableBrands] = useState([]);
+	const [availableCampaigns, setAvailableCampaigns] = useState([]);
+
+	const userId = Login.getId();
+
+	useEffect(() => {
+		Login.getSharedWith(userId).then(res => {
+			const shareList = res.cargo;
+			if (!shareList) return;
+
+			const nextBrands = [];
+			const nextCampaigns = [];
+
+			shareList.forEach(share => {
+				const brandMatches = share.item.match(/^Advertiser:(\w+)/);
+				if (brandMatches) nextBrands.push(brandMatches[1]);
+				const campaignMatches = share.item.match(/^Campaign:(\w+)/);
+				if (campaignMatches) nextCampaigns.push(campaignMatches[1]);
+			});
+			setAvailableBrands(nextBrands);
+			setAvailableCampaigns(nextCampaigns);
+		});
+	}, [userId]);
+
+	return <div className="green-subpage green-metrics">
+		<Container fluid>
+			<GreenDashboardFilters />
+			WELCOME TO GREEN DASH BOARD<br/>
+			BRANDS ARE: {availableBrands}<br/>
+			CAMPAIGNS ARE: {availableCampaigns}<br/>
+		</Container>
+	</div>;
+};
+
 
 const GreenMetrics = ({}) => {
 	// Default to current quarter, all brands, all campaigns
@@ -65,6 +104,10 @@ const GreenMetrics = ({}) => {
 	const campaignId = DataStore.getUrlValue('campaign');
 	const brandId = DataStore.getUrlValue('brand');
 	const tagId = DataStore.getUrlValue('tag');
+
+	if (!campaignId && !brandId && !tagId) {
+		return <InitialPicker />
+	}
 
 	let pvCampaigns, pvTags;
 
@@ -128,7 +171,7 @@ const GreenMetrics = ({}) => {
 	const baseFilters = {
 		dataspace: 'green',
 		q: `evt:pixel AND ${filterMode}:${filterId}`,
-		breakdowns: ['time/adid', 'os', 'adid'],
+		breakdowns: ['time/adid', 'os/adid', 'adid'],
 		start: period.start.toISOString(),
 		end: period.end.toISOString(),
 	};
@@ -142,10 +185,10 @@ const GreenMetrics = ({}) => {
 		content = <>
 			<OverviewWidget period={period} data={pvData.value} />
 			<Row>
-				<Col md="8">
+				<Col md="7">
 					<CO2Card {...commonProps} data={pvData.value} />
 				</Col>
-				<Col md="4">
+				<Col md="5">
 					<JourneyCard {...commonProps} />
 				</Col>
 			</Row>

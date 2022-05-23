@@ -15,28 +15,21 @@ const Cloud = ({style}) => (
 const CO2Section = ({co2Offset, co2Emitted}) => {
 	if (!co2Offset) return null;
 
-	
-	const diff = co2Offset - co2Emitted;
-	const diffFactor = Math.abs(diff / co2Offset);
-
 	const cloudStyle = {fill: 'white', strokeWidth: 2};
 	let cloudMessage;
-	if (diffFactor < 0.05) {
-		cloudStyle.stroke = '#aef';
-		cloudMessage = 'neutral'
-	} else if (diff < 0) {
-		cloudStyle.stroke = '#fc7';
-		cloudMessage = 'positive';
+	if (co2Offset < co2Emitted) {
+		cloudStyle.stroke = '#999';
+		cloudMessage = <>Offsets<br/>Pending</>;
 	} else {
-		cloudStyle.stroke = '#6e5';
-		cloudMessage = 'negative'
+		cloudStyle.stroke = '#aef';
+		cloudMessage = <>Carbon<br/>Neutral</>;
 	}
 	
 	return <>
 		<div className="cloud-indicator">
 			<Cloud style={cloudStyle} />
 			<h3 className="cloud-message">
-				Carbon<br/>{cloudMessage}
+				{cloudMessage}
 			</h3>
 			
 		</div>

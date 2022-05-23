@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'reactstrap';
+import Misc from '../../../base/components/Misc';
 import { isoDate, space } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import NewChartWidget from '../../NewChartWidget';
@@ -71,16 +72,6 @@ const CO2Impact = ({kg, mode}) => {
 		<div className="impact-icon" title={`Illustrative icon for "${desc}"`}>{icon}</div>
 	</div>;
 };
-
-
-const dummyChartData = {
-	labels: ['2021-09', '2021-10', '2021-11', '2021-12', '2022-01', '2022-02', '2022-03', '2022-04'],
-	datasets: [{
-		label: 'CO2 or something',
-		data: [50, 55, 60, 75, 100, 90, 85, 87]
-	}]
-};
-
 
 const CO2Card = ({ period, data: rawData, tags }) => {
 	const [mode, setMode] = useState('base');
@@ -158,7 +149,12 @@ const CO2Card = ({ period, data: rawData, tags }) => {
 		<div className="chart-subcard">
 			<div>CO<sub>2</sub>e emissions over time</div>
 			{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
-			<NewChartWidget data={data || dummyChartData} />
+			{ data ? (
+				<NewChartWidget data={data} />
+			) : (
+				<Misc.Loading text="Loading CO2 emissions data" />
+			)}
+				
 		</div>
 		<div className="total-subcard">
 			<div>{printPeriod(period)}</div>

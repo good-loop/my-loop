@@ -22,7 +22,7 @@ const GreenDashboard = ({}) => {
 
 
 	return <div id="green-dashboard">
-		<GreenNavBar active={subpage} />
+		{/* <GreenNavBar active={subpage} /> */}
 		<Subpage />
 	</div>;
 };

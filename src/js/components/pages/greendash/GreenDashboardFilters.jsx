@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, DropdownItem, DropdownMenu, DropdownToggle, Form, Input, Row, UncontrolledDropdown } from 'reactstrap';
 import { nonce } from '../../../base/data/DataClass';
+import KStatus from '../../../base/data/KStatus';
+import { getDataList } from '../../../base/plumbing/Crud';
 import DataStore from '../../../base/plumbing/DataStore';
 import { stopEvent } from '../../../base/utils/miscutils';
 import DateRangeWidget from '../../DateRangeWidget';
@@ -40,6 +42,8 @@ const GreenDashboardFilters = ({}) => {
 	const [campaign, setCampaign] = useState(() => DataStore.getUrlValue('campaign'));
 	const [tag, setTag] = useState(() => DataStore.getUrlValue('tag'));
 
+
+
 	const [filterMode, setFilterMode] = useState(defaultFilterMode(brand, campaign, tag));
 	const [showCustomRange, setShowCustomRange] = useState(!period.name);
 
@@ -62,13 +66,67 @@ const GreenDashboardFilters = ({}) => {
 	}, [dummy])
 
 	// Update whichever ID we're currently filtering by
-	const setCurrentTemp = filterMode === 'campaign' ? setCampaign : setTag;
+	const setCurrentTemp = {
+		brand: setBrand,
+		campaign: setCampaign,
+		tag: setTag,
+	}[filterMode];
 
 	// Shorthand for a click on one of the "Xth Quarter" buttons
 	const setNamedPeriod = name => {
 		setPeriod({name});
 		doCommit();
 	};
+
+	const [availableBrands, setAvailableBrands] = useState([]);
+	const [availableCampaigns, setAvailableCampaigns] = useState([]);
+	const [availableTags, setAvailableTags] = useState([]);
+
+	const userId = Login.getId();
+
+	useEffect(() => {
+		Login.getSharedWith(userId).then(res => {
+			const shareList = res.cargo;
+			if (!shareList) return;
+
+			const nextBrands = [];
+			const nextCampaigns = [];
+
+			shareList.forEach(share => {
+				const brandMatches = share.item.match(/^Advertiser:(\w+)/);
+				if (brandMatches) nextBrands.push(brandMatches[1]);
+				const campaignMatches = share.item.match(/^Campaign:(\w+)/);
+				if (campaignMatches) nextCampaigns.push(campaignMatches[1]);
+			});
+
+			// Get all the brands, campaigns and tags this user can manage
+			if (nextBrands.length) {
+					getDataList({
+					type: C.TYPES.Advertiser,
+					status: KStatus.PUBLISHED,
+					ids: nextBrands,
+				}).promise.then(cargo => {
+					if (cargo.hits) setAvailableBrands(cargo.hits);
+				});
+			}
+			if (nextCampaigns.length) {
+				getDataList({
+					type: C.TYPES.Campaign,
+					status: KStatus.PUBLISHED,
+					ids: nextCampaigns,
+				}).promise.then(cargo => {
+					if (cargo.hits) setAvailableCampaigns(cargo.hits);
+				});
+				getDataList({
+					type: C.TYPES.GreenTag,
+					status: KStatus.PUBLISHED,
+					q: `${nextCampaigns.map(c => `campaign:${c.id}`).join(' OR ')}`
+				}).promise.then(cargo => {
+					if (cargo.hits) setAvailableTags(cargo.hits);
+				});
+			}
+		});
+	}, [userId]);
 
 	// TODO "Normal" access control:
 	// - Advertisers & Campaigns will be shared with contacts
@@ -108,21 +166,19 @@ const GreenDashboardFilters = ({}) => {
 							</DropdownItem>
 						</DropdownMenu>
 					</UncontrolledDropdown>
-					{filterMode ? <Input type="text" className="ml-2"
-						placeholder={`Enter ${filterMode} ID here`}
-						onChange={(e) => setCurrentTemp(e.target.value)}
-						value={{ campaign, brand, tag }[filterMode]}
-					/> : null}
+					{filterMode && <UncontrolledDropdown className="filter-dropdown ml-2">
+						<DropdownToggle caret>{{ campaign, brand, tag }[filterMode] || `Select a ${filterMode}`}</DropdownToggle>
+						<DropdownMenu>
+							{{brand: availableBrands, campaign: availableCampaigns, tag: availableTags}[filterMode].map(item => (
+								<DropdownItem onClick={() => setCurrentTemp(item.id)}>
+									{{ campaign, brand, tag }[filterMode] === item.id ? <span className="selected-marker" /> : null}
+									{item.name}
+								</DropdownItem>
+							))}
+						</DropdownMenu>
+					</UncontrolledDropdown>}
+
 					<Button className="ml-2" onClick={doCommit} size="sm">Apply</Button>
-{/*
-					// TODO Reinstate when we're doing "normal" access control
-					<UncontrolledButtonDropdown type="select">
-						<DropdownToggle caret>All brands</DropdownToggle>
-					</UncontrolledButtonDropdown>
-					<UncontrolledButtonDropdown type="select">
-						<DropdownToggle caret>All campaigns</DropdownToggle>
-					</UncontrolledButtonDropdown>
-*/}
 				</Form>
 			</Col>
 		</Row>

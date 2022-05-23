@@ -1,0 +1,219 @@
+
+/* Params for the cards */
+@gc-border-radius: 0.5rem;
+@gc-padding: 1rem;
+
+#green-dashboard .green-metrics {
+	/* General styling for the info cards */
+	.green-card {
+		display: flex;
+		flex-direction: column;
+		height: 40vh;
+		&.half-height {
+			height: 20vh;
+		}
+		.gc-title {
+			// TODO Avoid local font definitions -- or if they're wanted, add a comment for why
+			font-family: 'Montserrat';
+			text-transform: uppercase;
+		}
+		.gc-body {
+			background-color: white;
+			box-shadow: 0 0.25em 0.5em rgb(0 0 0 / 40%);
+			border-radius: @gc-border-radius;
+			padding: @gc-padding;
+			flex-grow: 1;
+		}
+	}
+
+	/* The time / brand / campaign selector */
+	.greendash-filters {
+		// TODO Avoid local font definitions -- or if they're wanted, add a comment for why
+		font-family: 'Montserrat';
+		text-transform: uppercase;
+		width: 100%;
+		display: flex;
+	
+		.filter-dropdown .btn.dropdown-toggle {
+			border: none !important;
+			box-shadow: none !important;
+			background: transparent !important;
+			color: black !important;
+			padding: 0.4rem;
+		}
+	
+		// The tick next to the currently selected item
+		.selected-marker {
+			position: absolute;
+			left: 0;
+			width: 1.5rem; // matched to dropdown-button horizontal padding
+			text-align: center;
+			&:before {
+				content: "✔";
+			}
+		}
+	}
+
+	/* The period / total impressions at-a-glance header */
+	.greendash-overview {
+		// TODO Avoid local font definitions -- or if they're wanted, add a comment for why
+		font-family: 'Montserrat';
+		text-transform: uppercase;
+		color: @greenmedia-darkcyan;
+		font-weight: 600;
+	}
+
+	/* The hero "emissions over time + driving / flights / kettles equivalent" chart*/
+	.carbon-time-series {
+		.gc-body {
+			display: flex;
+			flex-direction: row;
+		}
+	
+		.chart-subcard {
+			flex-grow: 1;
+		}
+		
+
+		.total-subcard {
+			color: white;
+			background-color: @greenmedia-darkcyan;
+			margin: -@gc-padding -@gc-padding -@gc-padding 0;
+			padding: @gc-padding;
+			border-radius: @gc-border-radius;
+			width: 15em;
+			text-align: center;
+			// TODO Avoid local font definitions -- or if they're wanted, add a comment for why
+			font-family: 'Montserrat';
+			display: flex;
+			flex-direction: column;
+	
+			.big-number, .impact-bubble {
+				padding: 0.5em;
+				margin-bottom: 2em; // Match height of .impact-button .selected:before
+				flex-grow: 1;
+			}
+	
+			.big-number {
+				font-weight: 900;
+				.number {
+					// TODO Avoid local font definitions -- or if they're wanted, add a comment for why
+					font-size: 300%;
+					line-height: 1;
+				}
+				.unit { font-size: 150%; }
+				.desc { font-size: 100%; }
+			}
+	
+			.impact-bubble {
+				color: black;
+				background-color: white;
+				border-radius: @gc-border-radius;
+	
+				.impact-leader {
+					font-size: 100%;
+				}
+				.impact-number {
+					font-size: 300%;
+					font-weight: 900;
+				}
+				.impact-desc {
+					font-size: 100%;
+					font-weight: 900;
+					text-transform: uppercase;
+				}
+				.impact-icon {
+					height: 3em;
+				}
+			}
+	
+			.impact-buttons {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-around;
+				.impact-button {
+					position: relative;
+					display: block;
+					width: 2.5em;
+					height: 2.5em;
+					border-radius: 50%;
+					border: 0.2em solid white;
+					background-image: url("/img/green/dashboard/impact-button.svg");
+					padding: 0.25em;
+					&.selected {
+						filter: grayscale();
+						&:before {
+							content: '';
+							background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath style='fill:%23fff;stroke:none' d='M 0,0 50,50 100,0 Z'/%3E%3C/svg%3E");
+							display: block;
+							position: absolute;
+							height: 2em;
+							width: 2em;
+							// 0.2em to adjust position for parent border width
+							left: -0.2em;
+							top: -2.2em;
+						}
+					}
+				}
+			} // /.impact-buttons
+		}
+	} // /.carbon-time-series
+}
+
+
+
+
+	.carbon-journey {
+		.card-body {
+			text-align: center;
+		}
+		
+		.cloud-indicator {
+			position: relative;
+			margin-bottom: 0;
+			.cloud-graphic {
+				width: 100%;
+				height: 5em;
+				top: 0;
+				left: 0;
+				overflow: visible;
+				
+				z-index: 0;
+			}
+			.cloud-message {
+				position: absolute;
+				top: 1.5em;
+				width: 100%;
+				font-size: 1.25rem;
+				color: black;
+				z-index: 1;
+			}
+			margin-bottom: 0.5em;
+		}
+		.carbon-emission-total {
+			font-size: 1rem;
+		}
+		.journey-tree {
+			height: 3em;
+			margin: 0.5em;
+		}
+	} // /.carbon-journey
+
+
+.cta-card-decoration {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 40%;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: flex-end;
+	.tree-side {
+		height: 2.5em;
+	}
+	.tree-centre {
+		height: 3.5em;
+		margin: 0 0.5em;
+	}
+}
