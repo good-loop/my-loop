@@ -36,7 +36,7 @@ const HelpCharityTogetherCard = ({ngo}) => {
 	return <PageCard>
 		<h1>Let's help {name}<br/>do even more good.<br/>Together.</h1>
 		<Row className='mt-5 pt-5'>
-			<Col md={6}>
+			<Col md={6} className='py-5'>
 				<NGOImage ngo={ngo} className="w-100" imgIdx={1}/>
 			</Col>
 			<Col md={6} className='p-5 d-flex flex-column justify-content-between'>
@@ -50,7 +50,7 @@ const HelpCharityTogetherCard = ({ngo}) => {
 
 		{ngo.extendedDescription && 
 			<Row className='mt-5 pt-5'>
-				<Col className="d-md-none" md={6}>
+				<Col className="py-5 d-md-none" md={6}>
 					<NGOImage ngo={ngo} className="w-100" imgIdx={2}/>
 				</Col>
 				<Col md={6} className='p-5 d-flex flex-column justify-content-between'>
