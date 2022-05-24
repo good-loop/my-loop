@@ -66,6 +66,13 @@ export const periodFromUrl = () => {
 	// User has set a named period (year, quarter, month)
 	const periodName = DataStore.getUrlValue('period')
 	if (periodName) {
+		if (periodName === 'all') {
+			return {
+				start: new Date('1970-01-01'),
+				end: new Date('3000-01-01'),
+				name: 'all'
+			}
+		}
 		let refDate = new Date();
 		
 		// eg "2022-Q2"
@@ -147,6 +154,8 @@ const quarterNames = [, '1st', '2nd', '3rd', '4th'];
 
 /** Turn period object into clear human-readable text */
 export const printPeriod = ({start, end, name = ''}) => {
+	if (name === 'all') return 'All Time';
+
 	// Is it a named period (quarter, month, year)?
 	const quarterMatches = name.match(quarterRegex);
 	if (quarterMatches) return `${quarterMatches[1]} ${quarterNames[quarterMatches[2]]} quarter`;

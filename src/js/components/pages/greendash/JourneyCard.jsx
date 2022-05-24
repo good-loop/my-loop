@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { getDataLogData } from '../../../base/plumbing/DataLog';
+import { A } from '../../../base/plumbing/glrouter';
 import printer from '../../../base/utils/printer';
 import { byId, dataToCarbon, GreenCard, Mass, calcBytes } from './dashutils';
 
@@ -18,10 +19,10 @@ const CO2Section = ({co2Offset, co2Emitted}) => {
 	const cloudStyle = {fill: 'white', strokeWidth: 2};
 	let cloudMessage;
 	if (co2Offset < co2Emitted) {
-		cloudStyle.stroke = '#999';
+		cloudStyle.fill = '#999';
 		cloudMessage = <>Offsets<br/>Pending</>;
 	} else {
-		cloudStyle.stroke = '#aef';
+		cloudStyle.fill = '#aef';
 		cloudMessage = <>Carbon<br/>Neutral</>;
 	}
 	
@@ -94,6 +95,7 @@ const JourneyCard = ({ campaigns, tags }) => {
 	return <GreenCard title="Your journey so far" className="carbon-journey">
 		<CO2Section co2Offset={co2Offset} co2Emitted={co2Emitted} />
 		<TreesSection treesPlanted={treesPlanted} />
+		<A className="btn btn-primary" href="/green">Impact Overview</A>
 	</GreenCard>;
 };
 
