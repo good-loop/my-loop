@@ -305,7 +305,7 @@ const NewTabCharityCard = ({ cid, loading }) => {
 	}
 
 	// Use top.location.href instead of C.A to advoid CORS issues.
-	const charityLink = charity && charity.url;
+	const charityLink = charity && charity.url || ServerIO.MYLOOP_ENDPOINT + '/account?tab=tabsForGood';
 
 	return (<div className="text-center NewTabCharityCard" >
 		<h5 className="text-dark">I'm Supporting</h5>
