@@ -135,7 +135,7 @@ const NewtabTutorialCard = ({tutorialPages, charityId, onClose}) => {
 	let style = {
 		zIndex: 9999,
 		top:"50%",
-		left:window.innerWidth <= 1280 ? "75%" : "70%",
+		left:"70%",
 		transform:"translateY(-50%)",
 		/*
 		top:rect.top,
