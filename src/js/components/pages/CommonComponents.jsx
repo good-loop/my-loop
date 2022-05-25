@@ -19,7 +19,6 @@ import { MyDataSignUpButton, MyDataSignUpModal, showMyDataSignUpModal}  from '..
 import { hasRegisteredForMyData } from '../mydata/MyDataCommonComponents';
 
 export const accountMenuItems = [
-	{page: "profile", label: "Data Profile"},
 	{page: "tabsForGood", label: C.T4G},
 	{page: "settings", label: "Settings"}
 ];
