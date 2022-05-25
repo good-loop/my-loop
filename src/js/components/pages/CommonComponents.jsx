@@ -406,11 +406,12 @@ const NewsAwards = ({children}) => {
 };
 
 const TestimonialSectionTitle = () => {
+	// TODO fetch donationTotal From C.DONATIONS_TOTAL;
 	return(<>
 	<div className="testimonial-title">
 		<div className="container">
 			<div className="testimonial-upper text-center">
-				<h1>Together we've raised over £3.9 million!</h1>
+				<h1>Together we've raised over £4.7 million!</h1>
 				<p className='leader-text' style={{marginBottom:"6rem"}}>We donate to charities worldwide. Spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
 				{/* <a className='btn btn-primary text-uppercase' href="#">Explore our charity impact</a> */}
 			</div>
