@@ -310,7 +310,7 @@ const NewTabCharityCard = ({ cid, loading }) => {
 	return (<div className="text-center NewTabCharityCard" >
 		<h5 className="text-dark">I'm Supporting</h5>
 		{/*<div onClick={() => top.location.href = charityLink}> */}
-		<a href={charityLink} target="_blank">
+		<a href={charityLink} target="_blank" rel="noopener noreferrer">
 			<TutorialComponent page={1}>
 				{/* <WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}> */}
 					{charity && <CharityLogo charity={charity} />}
