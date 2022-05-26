@@ -259,27 +259,28 @@ const NormalTabCenter = () => {
 	const engineData = ENGINES[searchEngine];
 
 	return <>
-		<div className="flex-column unset-margins justify-content-center align-items-center mb-3 tab-center">
-			{ true && //! loadingCharity && ! charityID &&
-				// Show the total raised across all charities, if the user hasn't selected one.
-				<><h5 className="text-center together-we-ve-rasied">
-					Together we've raised&nbsp;
-					<TutorialComponent page={2} className="d-inline-block">
-						<TickerTotal />
-					</TutorialComponent>
-				</h5>
-			</>}
+		{true && //! loadingCharity && ! charityID &&
+		// Show the total raised across all charities, if the user hasn't selected one.
+		<><h5 className="text-center together-we-ve-rasied">
+			Together we've raised&nbsp;
+			<TutorialComponent page={2} className="d-inline-block">
+				<TickerTotal />
+			</TutorialComponent>
+		</h5>
+		</>}
+
+		<div className="flex-column unset-margins align-items-center mb-3 tab-center">
 			<TutorialComponent page={5} className="py-3">
 				<a href="https://my.good-loop.com">
-					<img src="https://my.good-loop.com/img/TabsForGood/TabsForGood_logo.png" alt="logo" />
+					<img className="tab-center-logo" src="https://my.good-loop.com/img/TabsForGood/TabsForGood_logo.png" alt="logo" />
 				</a>
 			</TutorialComponent>
-		</div>
-		<div className="w-100 pb-3">
-			<div className="tab-search-container mx-auto">
-				<Search onSubmit={e => doSearch(e, searchEngine)} placeholder={"Search with " + engineData.title} icon={
-					<C.A href="/?tab=tabsForGood" title="click here to change the search engine"><img src={engineData.logo} alt="search icon" style={{ width: engineData.size.width, height: engineData.size.height }} /></C.A>
-				} />
+			<div className="w-100 pb-3">
+				<div className="tab-search-container mx-auto">
+					<Search onSubmit={e => doSearch(e, searchEngine)} placeholder={"Search with " + engineData.title} icon={
+						<C.A href="/?tab=tabsForGood" title="click here to change the search engine"><img src={engineData.logo} alt="search icon" style={{ width: engineData.size.width, height: engineData.size.height }} /></C.A>
+					} />
+				</div>
 			</div>
 		</div>
 	</>;
