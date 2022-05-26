@@ -51,6 +51,8 @@ const TechSubcard = ({ tags, data }) => {
 		labels: ['Logging', 'Media', 'Overhead (JS + XML)'],
 		datasets: [{
 			label: 'Kg CO2',
+			backgroundColor: ['#49737B', '#90AAAF', '#C7D5D7'],
+			strokeColor: "#000000",
 			data: [logging, media, overhead],
 		}],
 	};

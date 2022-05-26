@@ -9,7 +9,7 @@ import DataStore from '../base/plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
 import detectAdBlock from '../base/utils/DetectAdBlock';
 import { lg } from '../base/plumbing/log';
-import { encURI, stopEvent, getBrowserVendor } from '../base/utils/miscutils';
+import { encURI, stopEvent, getBrowserVendor, ellipsize } from '../base/utils/miscutils';
 import Login from '../base/youagain';
 import C from '../C';
 import WhiteCircle from './campaignpage/WhiteCircle';
@@ -98,10 +98,11 @@ const WebtopPage = () => {
 	}
 
 	const checkIfOpened = () => {
-		if (!window.localStorage.getItem("t4gOpenedB4")) {
+		openTutorial();
+		/*if (!window.localStorage.getItem("t4gOpenedB4")) {
 			window.localStorage.setItem("t4gOpenedB4", true);
 			openTutorial();
-		}
+		}*/
 	};
 
 	if (!verifiedLoginOnceFlag) {
@@ -329,9 +330,9 @@ const NewTabCharityCard = ({ cid, loading }) => {
 
 const LinksDisplay = ({bookmarksData}) => {
 	
-	const CircleLink = ({bg, url, children}) => {
+	const CircleLink = ({bg, url, children, title}) => {
 		if (!url) url = '#';
-		return <Col onClick={() => parent.location.href = url}  className="bookmark-item d-flex flex-column align-items-center">
+		return <Col onClick={() => parent.location.href = url} title={title} className="bookmark-item d-flex flex-column align-items-center">
 			<BG src={bg} className="bookmark-box shadow" />
 			<span className="text-white text-center">
 				{children}
@@ -366,7 +367,8 @@ const LinksDisplay = ({bookmarksData}) => {
 					if (domain.split(".").length >= 3 && !domain.includes(favSubdomainKeywords)) {
 						domain = domain.split(".").slice(1, ).join(".");
 					}
-					return <CircleLink key={i} url={url} bg={getFavIcon(domain)}>{bookmark.title}</CircleLink>;
+					const title = ellipsize(bookmark.title, 10);
+					return <CircleLink key={i} url={url} title={bookmark.title} bg={getFavIcon(domain)}>{title}</CircleLink>;
 				}
 			})}
 		</Row>
@@ -449,7 +451,7 @@ const tutorialPages = [
 	<>
 		<h2>It's your choice</h2>
 		<p>
-			You can choose the charity you want to support in your account settings. We will send them 50% of the money from brands for their ads on Tabs for Good.
+			You can choose the charity you want to support. We will send them 50% of the money from brands for their ads on Tabs for Good.
 		</p>
 	</>,
 	<>
@@ -467,7 +469,7 @@ const tutorialPages = [
 	<>
 		<h2>Your account</h2>
 		<p>
-			Access settings including your <b>choice of charity</b>, <b>details</b> and <b>ad targeting preferences</b>.
+			Change your <b>charity</b> and <b>search engine</b> here, under Tabs for Good. You can also see your account details, and explore My.Data!
 		</p>
 	</>,
 	<>
