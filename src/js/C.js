@@ -19,9 +19,9 @@ C.app = GLAppManifest;
 C.T4G = "Tabs for Good";
 
 /**
- * Warning: also written as "£3.9 million" in places
+ * Warning: also written as "£4.7 million" in places
  */
-C.DONATIONS_TOTAL = "£3,900,000";
+C.DONATIONS_TOTAL = "£4,700,000";
 
 // NB: MonetaryAmount is deprecated - left here for old data
 C.TYPES = new Enum("Publisher NGO Advert Campaign Advertiser Agency User Person Money MonetaryAmount BlogPost ScheduledContent GreenTag");

@@ -17,6 +17,7 @@ import KStatus from '../../../base/data/KStatus';
 import ActionMan from '../../../plumbing/ActionMan';
 import CompareCard from './CompareCard';
 import TimeOfDayCard from './TimeOfDayCard';
+import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 
 
 const OverviewWidget = ({period, data}) => {
@@ -99,6 +100,19 @@ const InitialPicker = ({}) => {
 
 
 const GreenMetrics = ({}) => {
+	if (!Login.isLoggedIn()) {
+		return <div className="green-subpage green-metrics">
+			<h3 className="text-center">Log in to access the Green Dashboard</h3>
+			<Container>
+				<Row fluid>
+					<Col xs="12" sm="6" className="mx-auto">
+						<LoginWidgetEmbed verb="login" />
+					</Col>
+				</Row>
+			</Container>
+		</div>;
+	}
+
 	// Default to current quarter, all brands, all campaigns
 	const period = initPeriod();
 	const campaignId = DataStore.getUrlValue('campaign');
@@ -185,21 +199,21 @@ const GreenMetrics = ({}) => {
 		content = <>
 			<OverviewWidget period={period} data={pvData.value} />
 			<Row>
-				<Col md="7">
+				<Col xs="12" sm="7">
 					<CO2Card {...commonProps} data={pvData.value} />
 				</Col>
-				<Col md="5">
+				<Col xs="12" sm="5">
 					<JourneyCard {...commonProps} />
 				</Col>
 			</Row>
 			<Row>
-				<Col md="4">
+				<Col xs="12" sm="4">
 					<CompareCard {...commonProps} />
 				</Col>
-				<Col md="4">
+				<Col xs="12" sm="4">
 					<BreakdownCard {...commonProps} data={pvData.value} />
 				</Col>
-				<Col md="4">
+				<Col xs="12" sm="4">
 					<TimeOfDayCard {...commonProps} />
 					<CTACard />
 				</Col>
@@ -211,7 +225,7 @@ const GreenMetrics = ({}) => {
 
 	return (
 		<div className="green-subpage green-metrics">
-			<Container fluid>
+			<Container>
 				<GreenDashboardFilters />
 				{content}
 			</Container>

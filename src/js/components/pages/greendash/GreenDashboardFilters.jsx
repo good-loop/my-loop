@@ -142,6 +142,9 @@ const GreenDashboardFilters = ({}) => {
 						<DropdownToggle caret>Timeframe</DropdownToggle>
 						<DropdownMenu>
 							<QuarterButtons period={period} setNamedPeriod={setNamedPeriod} />
+							<DropdownItem onClick={() => setNamedPeriod('all')}>
+								All Time
+							</DropdownItem>
 							<DropdownItem toggle={false} onClick={() => setShowCustomRange(true)}>
 								Custom
 								{period.name ? null : <span className="selected-marker" />}
@@ -153,6 +156,7 @@ const GreenDashboardFilters = ({}) => {
 							</> : null}
 						</DropdownMenu>
 					</UncontrolledDropdown>
+					
 					<UncontrolledDropdown className="filter-dropdown ml-2">
 						<DropdownToggle caret>Filter by {filterMode || '...'}</DropdownToggle>
 						<DropdownMenu>
@@ -170,6 +174,7 @@ const GreenDashboardFilters = ({}) => {
 							</DropdownItem>
 						</DropdownMenu>
 					</UncontrolledDropdown>
+
 					{filterMode && <UncontrolledDropdown className="filter-dropdown ml-2">
 						<DropdownToggle caret>{{ campaign, brand, tag }[filterMode] || `Select a ${filterMode}`}</DropdownToggle>
 						<DropdownMenu>
