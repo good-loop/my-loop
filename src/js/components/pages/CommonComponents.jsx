@@ -137,12 +137,12 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft, t4g=true, mydata=
 								</div>
 								{t4g && <div className={multiProduct && 'product'}>
 									{multiProduct && <h4>Tabs for Good</h4>}
-									<T4GSignUpButton className="w-100"/>
-									<T4GHowItWorksButton className="w-100" />
+									<T4GSignUpButton className="w-75"/>
+									<T4GHowItWorksButton className="w-75" />
 								</div>}
 								{mydata && <div className={multiProduct && 'product'}>
 									{multiProduct && <h4><span className="new">new</span> My.Data</h4>}
-									<MyDataSignUpButton className="w-100 mt-3" />
+									<MyDataSignUpButton className="w-75 mt-3" />
 									<MyDataSignUpModal />
 								</div>}
 						</Col>
