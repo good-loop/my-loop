@@ -104,7 +104,7 @@ const CharityPicker = () => {
 			<Search onSubmit={e => e.preventDefault()} placeholder="Find your charity" className="flex-grow ml-md-5" />
 		</div>
 		{/* q={q || dq} */}
-		<ListLoad className={"gridbox gridbox-md-3"} type="NGO" status="PUBLISHED" filter={q} transformFn={transformFn} sort={null} ListItem={CharitySelectBox} unwrapped hideTotal />
+		<ListLoad className={"gridbox gridbox-md-3"} type="NGO" status="PUBLISHED" filter={q || dq} transformFn={transformFn} sort={null} ListItem={CharitySelectBox} unwrapped hideTotal />
 	</div>;
 };
 
