@@ -16,6 +16,7 @@ import KStatus from '../../base/data/KStatus';
 import { getDataLogData } from '../../base/plumbing/DataLog';
 import C from '../../C';
 import LinkOut from '../../base/components/LinkOut';
+import NGO from '../../base/data/NGO';
 
 
 const TabsForGoodSettings = () => {
@@ -67,9 +68,28 @@ const CharityPicker = () => {
 	const type = "NGO"; const status = "PUBLISHED";
 	// fetch the full item - and make a Ref
 	let hits = DEFAULT_LIST.split(" ").map(cid => getDataItem({ type, id: cid, status }) && { id: cid, "@type": type, status });
-	// HACK: This is whereListLoad will look!
+	// HACK: This is where ListLoad will look!
 	const charityPath = getListPath({ type: "NGO", status: KStatus.PUBLISHED, q: "LISTLOADHACK", sort: "impact" }); // "list.NGO.PUBLISHED.nodomain.LISTLOADHACK.whenever.impact".split(".");
 	DataStore.setValue(charityPath, { hits, total: hits.length }, false);
+
+	// Push no logo NGOs to the end
+	const transformFn = hits => {
+		let newHits = [];
+		// Add this array onto the end later
+		let noLogos = [];
+		hits.forEach(ngo => {
+			if (NGO.logo(ngo)) {
+				newHits.push(ngo);
+			} else noLogos.push(ngo);
+		});
+		let noDesc = [];
+		noLogos.forEach(ngo => {
+			if (NGO.anyDescription(ngo)) newHits.push(ngo);
+			else (noDesc.push(ngo));
+		});
+		noDesc.forEach(ngo => newHits.push(ngo));
+		return newHits;
+	}
 
 	return <div>
 		{selId &&
@@ -83,7 +103,8 @@ const CharityPicker = () => {
 			<p className="large">Can't see your favourite charity?&nbsp;<br className="d-md-none" />Search for it:</p>
 			<Search onSubmit={e => e.preventDefault()} placeholder="Find your charity" className="flex-grow ml-md-5" />
 		</div>
-		<ListLoad className={"gridbox gridbox-md-3"} type="NGO" status="PUBLISHED" q={q || dq} sort="impact" ListItem={CharitySelectBox} unwrapped hideTotal />
+		{/* q={q || dq} */}
+		<ListLoad className={"gridbox gridbox-md-3"} type="NGO" status="PUBLISHED" filter={q} transformFn={transformFn} sort={null} ListItem={CharitySelectBox} unwrapped hideTotal />
 	</div>;
 };
 
