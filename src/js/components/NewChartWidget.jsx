@@ -15,6 +15,7 @@ import {
 	Tooltip,
 	Legend,
 } from 'chart.js';
+import { space } from '../base/utils/miscutils';
 
 /** TODO We should be able to do this dynamically/selectively when components are rendered */
 ChartJS.register(
@@ -30,7 +31,7 @@ ChartJS.register(
 );
 
 
-const NewChartWidget = ({type = 'line', datalabels, ...props}) => {
+const NewChartWidget = ({type = 'line', datalabels, className, style, ...props}) => {
 	props.options = props.options || {};
 	props.options.maintainAspectRatio = props.options.maintainAspectRatio || false;
 	if (datalabels) {
@@ -39,7 +40,7 @@ const NewChartWidget = ({type = 'line', datalabels, ...props}) => {
 		} else props.plugins = [ChartDataLabels];
 	}
 
-	return <div className="chart-canvas-container">
+	return <div className={space("chart-canvas-container position-relative", className)} style={style}>
 		{{
 			line: <Line {...props} />,
 			pie: <Pie {...props} />,
