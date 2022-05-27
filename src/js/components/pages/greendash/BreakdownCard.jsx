@@ -43,23 +43,56 @@ const dummyDataOSDesktop = {
 	}],
 };
 
-const TechSubcard = ({ tags, data }) => {
+const TechSubcard = ({ tags, data, options }) => {
 	if (!tags || !data) return <Misc.Loading text="Fetching data..." />;
 
 	const { logging, media, overhead } = calcBytes(data.by_adid.buckets, byId(tags));
 	const chartData = {
-		labels: ['Logging', 'Media', 'Overhead (JS + XML)'],
+		labels: ['Media', 'Overhead (JS + XML)'],
 		datasets: [{
 			label: 'Kg CO2',
-			backgroundColor: ['#49737B', '#90AAAF', '#C7D5D7'],
-			strokeColor: "#000000",
-			data: [logging, media, overhead],
-		}],
+			backgroundColor: ['#90AAAF', '#C7D5D7'],
+			data: [media, overhead],
+		}]
 	};
+	const chartOptions = {
+		plugins: {
+			legend: {
+				position: "top"
+			},
+			tooltip: {
+				callbacks: {
+					label: function(ctx) {
+						//console.log("DATA", ctx);
+						const data = ctx.dataset.data;
+						let currentValue = data[ctx.dataIndex];
+						return ` ${currentValue} kg`;
+					},
+					title: function(ctx) {
+						return ctx[0].label;
+						//return data.labels[tooltipItem[0].index];
+					}
+				}
+			},
+			datalabels: {
+				formatter: (value, ctx) => {
+					let sum = 0;
+					let dataArr = ctx.chart.data.datasets[0].data;
+					dataArr.map(data => {
+						sum += data;
+					});
+					let percentage = (value*100 / sum).toFixed(2)+"%";
+					return percentage;
+				},
+				color: '#fff'
+			}
+		}
+	};
+	Object.assign(chartOptions, options || {});
 
 	return <>
 		<p>CO<sub>2</sub>e emissions due to...</p>
-		<NewChartWidget type="pie" data={chartData} />
+		<NewChartWidget type="pie" options={chartOptions} data={chartData} datalabels />
 	</>;
 };
 

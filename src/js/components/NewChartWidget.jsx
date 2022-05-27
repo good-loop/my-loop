@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Line, Pie, Bar } from 'react-chartjs-2';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import {
 	Chart as ChartJS,
@@ -29,9 +30,14 @@ ChartJS.register(
 );
 
 
-const NewChartWidget = ({type = 'line', ...props}) => {
+const NewChartWidget = ({type = 'line', datalabels, ...props}) => {
 	props.options = props.options || {};
 	props.options.maintainAspectRatio = props.options.maintainAspectRatio || false;
+	if (datalabels) {
+		if (props.plugins) {
+			if (!props.plugins.includes(ChartDataLabels)) props.plugins.push(ChartDataLabels);
+		} else props.plugins = [ChartDataLabels];
+	}
 
 	return <div className="chart-canvas-container">
 		{{
