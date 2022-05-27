@@ -43,23 +43,91 @@ const dummyDataOSDesktop = {
 	}],
 };
 
-const TechSubcard = ({ tags, data }) => {
+/**
+ * 
+ * @param {*} tags
+ * @param {Number[]} data
+ * @param {*} options
+ * @param {Number} minimumPercentLabeled the minimum percentage to include a data label for
+ * @returns 
+ */
+const TechSubcard = ({ tags, data, options, minimumPercentLabeled=0 }) => {
 	if (!tags || !data) return <Misc.Loading text="Fetching data..." />;
 
+	const labels = ['Media', 'Overhead (JS + XML)'];
 	const { logging, media, overhead } = calcBytes(data.by_adid.buckets, byId(tags));
 	const chartData = {
-		labels: ['Logging', 'Media', 'Overhead (JS + XML)'],
+		labels,
 		datasets: [{
 			label: 'Kg CO2',
-			backgroundColor: ['#49737B', '#90AAAF', '#C7D5D7'],
-			strokeColor: "#000000",
-			data: [logging, media, overhead],
-		}],
+			backgroundColor: ['#90AAAF', '#C7D5D7'],
+			data: [media, overhead],
+		}]
 	};
+	const chartOptions = {
+		layout: {
+			autoPadding: true,
+			padding: 5
+		},
+		plugins: {
+			legend: {
+				position: "top"
+			},
+			tooltip: {
+				callbacks: {
+					label: function(ctx) {
+						//console.log("DATA", ctx);
+						const data = ctx.dataset.data;
+						let currentValue = data[ctx.dataIndex];
+						return ` ${currentValue} kg`;
+					},
+					title: function(ctx) {
+						return ctx[0].label;
+						//return data.labels[tooltipItem[0].index];
+					}
+				}
+			},
+			datalabels: {
+				labels: {
+					title: {
+						anchor: "end",
+						clamp:true,
+						font: {
+							family: "Montserrat",
+							weight: "normal",
+							size: "12px"
+						},
+						formatter: (value, ctx) => {
+							return labels[ctx.dataIndex];
+						},
+					},
+					value: {
+						anchor: "center",
+						color: '#fff',
+						font: {
+							family: "Montserrat",
+							weight: "bolder",
+							size: "20px"
+						},
+						formatter: (value, ctx) => {
+							let sum = 0;
+							let dataArr = ctx.chart.data.datasets[0].data;
+							dataArr.map(data => {
+								sum += data;
+							});
+							let percentage = Math.round(value*100 / sum);
+							return percentage >= minimumPercentLabeled ? percentage+"%" : "";
+						},
+					}
+				}
+			}
+		}
+	};
+	Object.assign(chartOptions, options || {});
 
 	return <>
 		<p>CO<sub>2</sub>e emissions due to...</p>
-		<NewChartWidget type="pie" data={chartData} />
+		<NewChartWidget type="pie" options={chartOptions} data={chartData} datalabels />
 	</>;
 };
 
@@ -129,7 +197,7 @@ const BreakdownCard = ({ campaigns, tags, data }) => {
 	const [mode, setMode] = useState('tech');
 
 	const subcard = (mode === 'tech') ? (
-		<TechSubcard tags={tags} data={data} />
+		<TechSubcard tags={tags} data={data} minimumPercentLabeled={10} />
 	) : (
 		<DeviceSubcard tags={tags} data={data} />
 	);

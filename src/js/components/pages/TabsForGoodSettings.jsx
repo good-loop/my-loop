@@ -16,6 +16,8 @@ import KStatus from '../../base/data/KStatus';
 import { getDataLogData } from '../../base/plumbing/DataLog';
 import C from '../../C';
 import LinkOut from '../../base/components/LinkOut';
+import NGO from '../../base/data/NGO';
+import List from '../../base/data/List';
 
 
 const TabsForGoodSettings = () => {
@@ -61,15 +63,30 @@ const CharityPicker = () => {
 	const pvSelectedCharity = selId && getDataItem({ type: C.TYPES.NGO, id: selId, status: KStatus.Published, swallow: true });
 	let q = DataStore.getValue('widget', 'search', 'q');
 
-	// HACK: default list - poke it into appstate
-	const dq = "LISTLOADHACK"; // NB: an OR over "id:X" doesn't work as SoGive is annoyingly using the schema.org "@id" property
 	const DEFAULT_LIST = "against-malaria-foundation oxfam helen-keller-international clean-air-task-force strong-minds give-directly pratham wwf-uk cancer-research-uk";
 	const type = "NGO"; const status = "PUBLISHED";
 	// fetch the full item - and make a Ref
 	let hits = DEFAULT_LIST.split(" ").map(cid => getDataItem({ type, id: cid, status }) && { id: cid, "@type": type, status });
-	// HACK: This is whereListLoad will look!
-	const charityPath = getListPath({ type: "NGO", status: KStatus.PUBLISHED, q: "LISTLOADHACK", sort: "impact" }); // "list.NGO.PUBLISHED.nodomain.LISTLOADHACK.whenever.impact".split(".");
-	DataStore.setValue(charityPath, { hits, total: hits.length }, false);
+	hits = new List(hits);
+
+	// Push no logo NGOs to the end
+	const transformFn = hits => {
+		let newHits = [];
+		// Add this array onto the end later
+		let noLogos = [];
+		hits.forEach(ngo => {
+			if (NGO.logo(ngo)) {
+				newHits.push(ngo);
+			} else noLogos.push(ngo);
+		});
+		let noDesc = [];
+		noLogos.forEach(ngo => {
+			if (NGO.anyDescription(ngo)) newHits.push(ngo);
+			else (noDesc.push(ngo));
+		});
+		noDesc.forEach(ngo => newHits.push(ngo));
+		return newHits;
+	}
 
 	return <div>
 		{selId &&
@@ -83,7 +100,8 @@ const CharityPicker = () => {
 			<p className="large">Can't see your favourite charity?&nbsp;<br className="d-md-none" />Search for it:</p>
 			<Search onSubmit={e => e.preventDefault()} placeholder="Find your charity" className="flex-grow ml-md-5" />
 		</div>
-		<ListLoad className={"gridbox gridbox-md-3"} type="NGO" status="PUBLISHED" q={q || dq} sort="impact" ListItem={CharitySelectBox} unwrapped hideTotal />
+		{/* q={q || dq} */}
+		<ListLoad className={"gridbox gridbox-md-3"} type="NGO" status="PUBLISHED" filter={q} list={q ? null : hits} transformFn={transformFn} sort={null} ListItem={CharitySelectBox} unwrapped hideTotal />
 	</div>;
 };
 

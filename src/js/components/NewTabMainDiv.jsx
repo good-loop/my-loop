@@ -98,11 +98,10 @@ const WebtopPage = () => {
 	}
 
 	const checkIfOpened = () => {
-		openTutorial();
-		/*if (!window.localStorage.getItem("t4gOpenedB4")) {
+		if (!window.localStorage.getItem("t4gOpenedB4")) {
 			window.localStorage.setItem("t4gOpenedB4", true);
 			openTutorial();
-		}*/
+		}
 	};
 
 	if (!verifiedLoginOnceFlag) {
