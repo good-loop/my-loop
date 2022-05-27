@@ -8,10 +8,6 @@
 	.green-card {
 		display: flex;
 		flex-direction: column;
-		height: 40vh;
-		&.half-height {
-			height: 20vh;
-		}
 		.gc-title {
 			// TODO Avoid local font definitions -- or if they're wanted, add a comment for why
 			font-family: 'Montserrat';
@@ -65,16 +61,6 @@
 
 	/* The hero "emissions over time + driving / flights / kettles equivalent" chart*/
 	.carbon-time-series {
-		.gc-body {
-			display: flex;
-			flex-direction: row;
-		}
-	
-		.chart-subcard {
-			flex-grow: 1;
-		}
-		
-
 		.total-subcard {
 			color: white;
 			background-color: @greenmedia-darkcyan;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from 'reactstrap';
+import { Button, Col, Container, Row } from 'reactstrap';
 import Misc from '../../../base/components/Misc';
 import { isoDate, space } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
@@ -146,30 +146,33 @@ const CO2Card = ({ period, data: rawData, tags }) => {
 	// TODO Don't show "Per 1000 impressions" button for one-tag mode
 
 	return <GreenCard title="How much carbon is your digital advertising emitting?" className="carbon-time-series">
-		<div className="chart-subcard">
-			<div>CO<sub>2</sub>e emissions over time</div>
-			{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
-			{ data ? (
-				<NewChartWidget data={data} />
-			) : (
-				<Misc.Loading text="Loading CO2 emissions data" />
-			)}
-				
-		</div>
-		<div className="total-subcard">
-			<div>{printPeriod(period)}</div>
-			<CO2Impact kg={totalCO2} mode={mode} />
-			<div className="impact-buttons">
-				{Object.entries(co2ImpactSpecs).map(([key, {icon}]) => {
-					const selected = mode === key;
-					const onClick = () => setMode(selected ? 'base' : key);
-					const className = space('impact-button', key, selected && 'selected');
-					return <div className={className} onClick={onClick} key={key}>
-						{icon}
+		<Container>
+			<Row>
+				<Col className="chart-subcard" xs="12" sm="7">
+					<div>CO<sub>2</sub>e emissions over time</div>
+					{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
+					{ data ? (
+						<NewChartWidget data={data} />
+					) : (
+						<Misc.Loading text="Loading CO2 emissions data" />
+					)}
+				</Col>
+				<Col className="total-subcard" xs="12" sm="5">
+					<div>{printPeriod(period)}</div>
+					<CO2Impact kg={totalCO2} mode={mode} />
+					<div className="impact-buttons">
+						{Object.entries(co2ImpactSpecs).map(([key, {icon}]) => {
+							const selected = mode === key;
+							const onClick = () => setMode(selected ? 'base' : key);
+							const className = space('impact-button', key, selected && 'selected');
+							return <div className={className} onClick={onClick} key={key}>
+								{icon}
+							</div>
+						})}
 					</div>
-				})}
-			</div>
-		</div>
+				</Col>
+			</Row>
+		</Container>
 	</GreenCard>;
 };
 

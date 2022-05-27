@@ -225,18 +225,18 @@ export const calcBytes = (buckets, tagsById) => {
 	let imps = 0;
 	let total = 0;
 	let media = 0;
-	let overhead = 0;
-	let logging = 0;
+	let publisher = 0;
+	let dsp = 0;
 
 	buckets.forEach(({count, key}) => {
 		imps += count;
 		const thisCreative = count * tagsById[key].weight;
-		const thisOverhead = count * 100000; // TODO Fill in correct number
-		const thisLogging = count * 2000; // TODO Fill in correct number
-		total += (thisCreative + thisOverhead + thisLogging);
+		const thisPublisher = count * 100000; // TODO Fill in correct number
+		const thisDSP = count * 2000; // TODO Fill in correct number
+		total += (thisCreative + thisPublisher + thisDSP);
 		media += thisCreative;
-		overhead += thisOverhead;
-		logging += thisLogging;
+		publisher += thisPublisher;
+		dsp += thisDSP;
 	});
-	return {imps, total, media, overhead, logging};
+	return {imps, total, media, publisher, dsp};
 };
