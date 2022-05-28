@@ -21,22 +21,33 @@ const icons = {
 	</svg>
 };
 
+/**
+// According to "how bad are bananas" - a book by Mike Burners Lee
+// ...which is cited in this graphic: https://www.viessmann.co.uk/company/blog/the-carbon-footprint-of-nearly-everything 
 
+// -Boiling a litre of water using an electric kettle: 70g of carbon
+// -Driving a mile in an average car: 710g
+// -A plane journey from London to Hong Kong: 3.4 tonnes (this is 5982 miles, so 0.00056 tonnes per mile, or 568.99g)
+
+// Further sources for miles driven in a car: https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator
+// Further sources for a long haul flight: https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2017 
+@returns {mode: {factor:units-per-kg, desc, icon}}
+ */
 const co2ImpactSpecs = {
-	// ??What are the sources for this? Please give links
-	// ??What unit is `factor` applied to? Is it kgs of CO2?
 	flights: {
-		factor: 0.0007672,
-		desc: 'long haul flights',
+		src: "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2017",
+		factor: 1/(0.19745*5585), // CO2 per km (including radiative forcing) * London <> New York
+		desc: 'flights from London to New York',
 		icon: icons.flights,
 	},
 	kettles: {
-		factor: .03267,
+		factor: 0.07, 
 		desc: 'kettles boiled',
 		icon: icons.kettles
 	},
 	driving: {
-		factor: 2.481,
+		src: "https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator",
+		factor: 2.482,
 		desc: 'miles driven in a car',
 		icon: icons.driving
 	}
