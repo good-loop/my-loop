@@ -204,8 +204,8 @@ const BreakdownCard = ({ campaigns, tags, data }) => {
 
 	return <GreenCard title="What is the breakdown of your emissions?">
 		<div className="d-flex justify-content-around mb-2">
-			<Button size="sm" color="primary" disabled={mode === 'tech'} onClick={() => setMode('tech')}>Ad Tech</Button>
-			<Button size="sm" color="primary" disabled={mode === 'device'} onClick={() => setMode('device')}>Device Type</Button>
+			<Button size="sm" color="primary" active={mode === 'tech'} onClick={() => setMode('tech')}>Ad Tech</Button>
+			<Button size="sm" color="primary" active={mode === 'device'} onClick={() => setMode('device')}>Device Type</Button>
 		</div>
 		{subcard}
 	</GreenCard>;

@@ -89,8 +89,8 @@ const CompareCard = (props) => {
 
 	return <GreenCard title="How do your ad emissions compare?">
 		<div className="d-flex justify-content-around mb-2">
-			<Button size="sm" color="primary" disabled={mode === 'quarter'} onClick={() => setMode('quarter')}>Quarter</Button>
-			<Button size="sm" color="primary" disabled={mode === 'campaign'} onClick={() => setMode('campaign')}>Campaign</Button>
+			<Button size="sm" color="primary" active={mode === 'quarter'} onClick={() => setMode('quarter')}>Quarter</Button>
+			<Button size="sm" color="primary" active={mode === 'campaign'} onClick={() => setMode('campaign')}>Campaign</Button>
 		</div>
 		{subcard}
 	</GreenCard>;
