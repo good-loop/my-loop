@@ -152,7 +152,7 @@ const DeviceSubcard = ({ tags, data }) => {
 		data.by_os_adid.buckets.forEach(bkt => {
 			const osData = osTypes[bkt.key];
 			if (!osData) {
-				debugger;
+				// debugger;
 			}
 			let typeObj = typesGroupsBytes[osData.type];
 			if (!typeObj) {

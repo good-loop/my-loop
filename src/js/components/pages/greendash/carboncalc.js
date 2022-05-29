@@ -172,7 +172,7 @@ export const getCarbon = ({q = '', breakdowns = [], start = '1 month ago', end =
 				// and carbon emissions and append to the data series
 				buckets.forEach(({key, by_adid}) => {
 					if (breakdownName === 'total') {
-						debugger;
+						// debugger;
 					}
 					labels.push(key);
 					// total impressions for this bucket = sum counts of all bottom-level buckets
