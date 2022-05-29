@@ -1,4 +1,5 @@
 
+// TODO doc what this changes from BS standard, and from GL Portal buttons
 // Button LESS
 
 .btn {
@@ -67,11 +68,12 @@
 	border: none !important;
 }
 
-.btn-primary:active:not(.disabled),
+.btn-primary:active:not(.disabled), .btn-primary.active,
 .btn-primary:focus:not(.disabled) {
-	background-color: @gl-red !important;
+	color: green !important;
+	background-color: darken(@gl-red, 50%) !important;
 	box-shadow: none !important;
-	border: none !important;
+	border: @gl-red !important;
 }
 .btn-outline-primary {
 	border-color: @gl-orange;
