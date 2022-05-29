@@ -52,7 +52,7 @@ const GreenLanding = ({ }) => {
 	let dntn4charity = {} || Campaign.dntn4charity(campaign);
 	console.log(dntn4charity);
 	let co2 = campaign.co2;
-	let trees = campaign.offsets && campaign.offsets[0] && campaign.offsets[0].n || '...';
+	let trees = campaign.offsets && campaign.offsets[0] && campaign.offsets[0].n;
 
 	// Branding
 	// NB: copy pasta + edits from CampaignPage.jsx

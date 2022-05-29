@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { getDataLogData } from '../../../base/plumbing/DataLog';
 import { A } from '../../../base/plumbing/glrouter';
+import { encURI } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import { byId, dataToCarbon, GreenCard, Mass, calcBytes } from './dashutils';
 
@@ -102,7 +103,7 @@ const JourneyCard = ({ campaigns, tags }) => {
 	return <GreenCard title="Your journey so far" className="carbon-journey">
 		<CO2Section co2Offset={co2Offset} co2Emitted={co2Emitted} />
 		<TreesSection treesPlanted={treesPlanted} />		
-		<A className="btn btn-primary" href={"/green?brand="}>Impact Overview</A>
+		<A className="btn btn-primary" href={"/green/"+encURI(campaigns[0].id)}>Impact Overview</A>
 	</GreenCard>;
 };
 

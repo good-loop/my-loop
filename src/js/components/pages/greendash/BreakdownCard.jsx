@@ -190,10 +190,10 @@ const DeviceSubcard = ({ tags, data }) => {
 	if (!chartDatas) return <Misc.Loading text="Loading data for chart..." />;
 
 	return <>
-		{Object.entries(chartDatas).map(([key, cd]) => <>
+		{Object.entries(chartDatas).map(([key, cd]) => <div key={key}>
 			<h5><Icon name={key} /> {key}</h5>
 			<NewChartWidget type="bar" data={cd} options={{ indexAxis: 'y' }} />
-		</>)}
+		</div>)}
 	</>;
 }
 
