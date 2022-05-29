@@ -68,12 +68,11 @@
 	border: none !important;
 }
 
+/** let active state be visible -- since primary is dark-red, make it brighter */
 .btn-primary:active:not(.disabled), .btn-primary.active,
 .btn-primary:focus:not(.disabled) {
-	color: green !important;
-	background-color: darken(@gl-red, 50%) !important;
-	box-shadow: none !important;
-	border: @gl-red !important;
+	background-color: @gl-orange !important;
+	box-shadow: 0px 2px 3px @gl-red !important;
 }
 .btn-outline-primary {
 	border-color: @gl-orange;
