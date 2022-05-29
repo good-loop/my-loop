@@ -231,19 +231,13 @@ const CampaignPage = () => {
 	if (campaign.branding) {
 		Object.assign(branding, campaign.branding);
 	}
-
+	
 	// set NavBar brand
 	let {type, id} = Campaign.masterFor(campaign);
 	if (type && id) {
 		let pvBrandItem = getDataItem({type, id, status});
 		let brandItem = pvBrandItem.value;
 		if (brandItem) {
-			// const prop = type.toLowerCase();
-			// let nprops = { // advertiser link and logo			
-			// 	brandLink:'/impact/'+prop+'='+encURI(getId(brandItem))+".html",
-			// 	brandLogo: brandItem.branding && (brandItem.branding.logo_white || brandItem.branding.logo),
-			// 	brandName: brandItem.name || getId(brandItem)
-			// };
 			setNavProps(brandItem);
 		}
 	}

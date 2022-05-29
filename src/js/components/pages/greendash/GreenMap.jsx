@@ -171,7 +171,7 @@ const GreenMap = () => {
 
 	// TODO Mobile view should have pin markers only + list of descriptions below
 	const projectMarkers = mapProjects.map((project, index) => (
-		<ProjectMarker project={project} active={activeProject === index} index={index} setActive={setActiveProject} />
+		<ProjectMarker key={index} project={project} active={activeProject === index} index={index} setActive={setActiveProject} />
 	));
 	
 	return <>

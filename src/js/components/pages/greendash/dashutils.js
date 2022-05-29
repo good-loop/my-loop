@@ -198,7 +198,7 @@ export const GreenCard = ({ title, children, className, ...rest}) => {
 /** Utility: take a mass in kg and pretty-print in kg or tonnes if it's large enough  */
 export const Mass = ({kg}) => {
 	const number = kg >= 1000 ? kg / 1000 : kg;
-	const unit = kg >= 1000 ? 't' : 'kg';
+	const unit = kg >= 1000 ? 'tonnes' : 'kg';
 	return <span className="mass">
 		<span className="number">{printer.prettyInt(number)}</span>
 		<span className="unit">{unit}</span>

@@ -12,7 +12,11 @@ const Cloud = ({style}) => (
 	</svg>
 );
 
-/** Show mass of CO2 emitted and offset by the campaigns in focus */
+/** Show mass of CO2 emitted and offset by the campaigns in focus 
+ * 
+ * ??Let's rename all co2 variables to be eg "co2OffsetKgs" for clarity
+ * 
+*/
 const CO2Section = ({co2Offset, co2Emitted}) => {
 	if (!co2Offset) return null;
 
@@ -62,7 +66,10 @@ const TreesSection = ({treesPlanted}) => {
  * @returns 
  */
 const JourneyCard = ({ campaigns, tags }) => {
-	if (!campaigns || !campaigns.length || !tags) return 'fart';
+	if (!campaigns || !campaigns.length || !tags) {
+		console.warn( "JourneyCard",campaigns, tags);
+		return null;
+	}
 
 	// Total carbon offset / trees planted for all campaigns
 	const {co2: co2Offset, trees: treesPlanted} = campaigns.reduce((acc, c) => {
@@ -94,8 +101,8 @@ const JourneyCard = ({ campaigns, tags }) => {
 
 	return <GreenCard title="Your journey so far" className="carbon-journey">
 		<CO2Section co2Offset={co2Offset} co2Emitted={co2Emitted} />
-		<TreesSection treesPlanted={treesPlanted} />
-		<A className="btn btn-primary" href="/green">Impact Overview</A>
+		<TreesSection treesPlanted={treesPlanted} />		
+		<A className="btn btn-primary" href={"/green?brand="}>Impact Overview</A>
 	</GreenCard>;
 };
 

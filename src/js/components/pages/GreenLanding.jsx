@@ -10,6 +10,7 @@ import { getDataLogData } from '../../base/plumbing/DataLog';
 import DataStore, { getPath } from '../../base/plumbing/DataStore';
 import { encURI, space } from '../../base/utils/miscutils';
 import C from '../../C';
+import { Mass } from './greendash/dashutils';
 import GreenMap from './greendash/GreenMap';
 
 
@@ -25,7 +26,7 @@ import GreenMap from './greendash/GreenMap';
 
 
 const GreenLanding = ({ }) => {
-	// like CampaignPage, this would prefer to run by a campaign id
+	// like CampaignPage, this would prefer to run by a campaign id -- which should be the Brand's master campaign
 	const path = DataStore.getValue("location","path");
 	const cid = path[1] || Campaign.TOTAL_IMPACT;
 	const isTotal = cid===Campaign.TOTAL_IMPACT;
@@ -50,25 +51,19 @@ const GreenLanding = ({ }) => {
 	// TODO only fetch eco charities
 	let dntn4charity = {} || Campaign.dntn4charity(campaign);
 	console.log(dntn4charity);
-	let co2 = campaign.co2 || 'XXXX';
-	let trees = campaign.offsets && campaign.offsets[0] && campaign.offsets[0].n || 'XXXX';
+	let co2 = campaign.co2;
+	let trees = campaign.offsets && campaign.offsets[0] && campaign.offsets[0].n || '...';
 
 	// Branding
-	let branding = campaign.branding || {name:"TODO branding"};	
-	// set NavBar brand (copy pasta from CampaignPage.jsx)
+	// NB: copy pasta + edits from CampaignPage.jsx
 	let {type, id} = Campaign.masterFor(campaign);
-	if (type && id) {
-		let pvBrandItem = getDataItem({type, id, status});
-		let brandItem = pvBrandItem.value;
-		if (brandItem) {
-			// const prop = type.toLowerCase();
-			// let nprops = { // advertiser link and logo			
-			// 	brandLink:'/impact/'+prop+'='+encURI(getId(brandItem))+".html",
-			// 	brandLogo: brandItem.branding && (brandItem.branding.logo_white || brandItem.branding.logo),
-			// 	brandName: brandItem.name || getId(brandItem)
-			// };
-			setNavProps(brandItem);
-		}
+	const pvBrandItem = (type && id)? getDataItem({type, id, status:KStatus.PUB_OR_DRAFT}) : {};
+	let brandItem = pvBrandItem.value;
+	let branding = Object.assign({}, campaign.branding, brandItem? brandItem.branding : {});
+	let name = brandItem? brandItem.name : campaign.name;
+	// set NavBar brand
+	if (brandItem) {
+		setNavProps(brandItem);
 	}
 
 	// "Explore Our Impact" button scrolls to the next section
@@ -85,11 +80,9 @@ const GreenLanding = ({ }) => {
 			<div className="landing-splash bg-greenmedia-seagreen">
 				<img className="hummingbird" src="/img/green/hummingbird.png" />
 				<div className="splash-circle">
-					<div className="branding">{branding.logo ? <img src={branding.logo} alt="brand logo" /> : JSON.stringify(branding)}</div>
-					<div className="big-number tonnes">{co2} TONNES</div>
-					carbon offset
-					<div className="big-number trees">{trees}</div>
-					trees<br/>
+					<div className="branding">{branding.logo ? <img src={branding.logo} alt="brand logo" /> : name}</div>
+					{co2 && <><div className="big-number tonnes"><Mass kg={co2} /></div> carbon offset</>}
+					{trees && <><div className="big-number trees">{trees}</div> trees</>}
 					<div className="carbon-neutral-container">
 						with <img className="carbon-neutral-logo" src="/img/green/gl-carbon-neutral.svg" />
 					</div>
