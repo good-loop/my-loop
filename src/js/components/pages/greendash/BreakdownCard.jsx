@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'reactstrap';
+import Icon from '../../../base/components/Icon';
 import Misc from '../../../base/components/Misc';
 import NewChartWidget from '../../NewChartWidget';
 import { byId, calcBytes, dataToCarbon, GreenCard } from './dashutils';
@@ -137,7 +138,10 @@ const chartDataTemplate = {
 	datasets: [{ label: 'Kg CO2', data: [] }],
 };
 
-
+/**
+ * desktop vs mobile and different OS
+ * @param {Object} p
+ */
 const DeviceSubcard = ({ tags, data }) => {
 	if (!tags || !data) return <Misc.Loading text="Fetching data..." />;
 
@@ -187,7 +191,7 @@ const DeviceSubcard = ({ tags, data }) => {
 
 	return <>
 		{Object.entries(chartDatas).map(([key, cd]) => <>
-			<p>{key}</p>
+			<h5><Icon name={key} /> {key}</h5>
 			<NewChartWidget type="bar" data={cd} options={{ indexAxis: 'y' }} />
 		</>)}
 	</>;
