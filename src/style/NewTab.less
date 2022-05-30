@@ -373,3 +373,25 @@
         display: none;
     }
 }
+
+.mydata-t4g-popup {
+    width: 18em;
+    top: 3em;
+    right: 3em;
+    border-radius: 10px;
+    cursor: pointer;
+    &::before {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        bottom: 100%;
+        border: .75rem solid transparent;
+        border-top: none;
+        transform: translate(-50%, 0);
+
+        border-bottom-color: white;
+        filter: drop-shadow(0 -0.0625rem 0.0625rem rgba(0, 0, 0, .1));
+        right: 10%;
+    }
+}

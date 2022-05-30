@@ -183,9 +183,9 @@ const MyDuoLandingSection = ({ngo, title, bgImg}) => {
 		</div>
 		</BG>
 	</Container>
-	{/* {window.isDebug && <div className="debug btn btn-secondary position-absolute m-1" onClick={(e) => {stopEvent(e); showMyDataSignUpModal()}}>
+	{window.isDebug && <div className="debug btn btn-secondary position-absolute m-1" onClick={(e) => {stopEvent(e); showMyDataSignUpModal()}}>
 		MyData Debug
-	</div>} */}
+	</div>}
 	<Container fluid className="landing-duo-cta bg-gl-light-pink d-flex justify-content-center py-3 px-1">
 		<a onClick={myDataOnClick} 
 			className='text-decoration-none mydata-signup-button'> 

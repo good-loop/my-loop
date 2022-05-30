@@ -164,7 +164,7 @@ const WebtopPage = () => {
 			<TutorialHighlighter page={[4, 5]} className="position-fixed p-3" style={{ top: 0, left: 0, width: "100vw", zIndex: 1 }}>
 				<div className="d-flex justify-content-end">
 					<TutorialComponent page={4} className="user-controls flex-row align-items-center">
-						<UserControls/>
+						<UserControls cid={charityID}/>
 					</TutorialComponent>
 				</div>
 			</TutorialHighlighter>
@@ -195,15 +195,37 @@ const NewTabMainDiv = () => {
 	return <MainDivBase pageForPath={PAGES} defaultPage="newtab" navbar={false} className="newtab" />;
 };
 
-const UserControls = () => {
+const UserControls = ({cid}) => {
+	const charity = cid ? fetchCharity(cid) : null;
+
+	const [showPopup, setShowPopup] = useState(false);
+
+	if (!Login.isLoggedIn() || !hasRegisteredForMyData()) {
+		const myDataElement = document.getElementById("myloop-link");
+		if (myDataElement && myDataElement.getAttribute('listener') !== 'true') {
+			myDataElement.addEventListener("mouseover", () => {
+				setShowPopup(true);
+			});
+		}
+		
+	}
+
 	return <>
 		{!Login.isLoggedIn() || !hasRegisteredForMyData() && <>
-			<a href={ServerIO.MYLOOP_ENDPOINT + "/account?scrollMyData=true"} className="myloop-link">
+			<a href={ServerIO.MYLOOP_ENDPOINT + "/account?scrollMyData=true"} className="myloop-link" id="myloop-link">
 				My.Good-Loop
 				&nbsp;
 				<img src="/img/mydata/heart-white-circle.png" className="heart-white-circle"/>
 			</a>
 			&nbsp;&nbsp;&nbsp;
+		</>}
+		{showPopup && <>
+			<div href={ServerIO.MYLOOP_ENDPOINT + "/account?scrollMyData=true"} className='mydata-t4g-popup bg-white shadow p-3 position-absolute
+			d-flex flex-column justify-content-center align-items-center text-center'	onClick={e => setShowPopup(false)} >
+				<img src="/img/mydata/data-badge.png" className='logo' />
+				<span className='my-3' style={{fontSize:'.9rem'}}>Visit My.Good-Loop to earn your data badge and raise even more donations for {charity ? charity.displayName : 'charities'}!</span>
+				{charity && <CharityLogo charity={charity} />}
+			</div>
 		</>}
 		<AccountMenu accountMenuItems={accountMenuItems} linkType="a" small
 			customLogin={() => <NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>}
