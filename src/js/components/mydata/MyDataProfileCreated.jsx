@@ -38,7 +38,7 @@ const PrivacyOnboardingSteps = ({step}) => {
 const ExplainPrivacy1 = () => {
 	return <>
 		<div className="profile-creation-step">
-			<img src="/img/mydata/onboarding-1.png" className="w-100"/>
+			<img src="/img/mydata/onboarding-1.png" className="w-75"/>
 			<h1>You're In Control</h1>
 			<p>All of your data is in your hands, so you control how we use it.</p>
 			<PrivacyOnboardingSteps step={1} />
@@ -54,7 +54,7 @@ const ExplainPrivacy2 = () => {
 	let ngo = pvCharity && pvCharity.value;
 	return <>
 		<div className="profile-creation-step">
-			<img src="/img/mydata/onboarding-2.png" className="w-100"/>
+			<img src="/img/mydata/onboarding-2.png" className="w-75"/>
 			<h1>Share To Give</h1>
 			<p>The more data you choose to share, the more money you'll donate to {NGO.displayName(ngo)}.</p>
 			<PrivacyOnboardingSteps step={2} />
@@ -68,7 +68,7 @@ const ExplainPrivacy2 = () => {
 const ExplainPrivacy3 = () => {
 	return <>
 		<div className="profile-creation-step">
-			<img src="/img/mydata/onboarding-3.png" className="w-100"/>
+			<img src="/img/mydata/onboarding-3.png" className="w-75"/>
 			<h1>Data Made Easy</h1>
 			<p>We've set you up with  our recommended privacy settings but you can change them any time to suit you.</p>
 			<PrivacyOnboardingSteps step={3} />
