@@ -60,7 +60,8 @@ export const CharitySelectCard = ({cid, item}) => {
         assert(Login.isLoggedIn());
         const pvPerson = getProfile();
         Person.setHasApp(pvPerson.value || pvPerson.interim, "my.data");
-        setPersonSetting({key: "charity", value: cid, callback:nextSignupPage});
+        nextSignupPage(); // Not calling next page in the fallback of setPersonSetting to advoid unneccessary loading time
+        setPersonSetting({key: "charity", value: cid});
     }
 
     return <MyDataCard className="mydata-card charity-card"
