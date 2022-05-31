@@ -228,7 +228,7 @@ export const hasRegisteredForMyData = () => {
     if (!xid) return false; // escape if not logged in
 	const pvPerson = getProfile();
 	const hasMyData = Person.hasApp(pvPerson.value || pvPerson.interim, "my.data");
-    console.log("HAS MY DATA??", hasMyData);
+    // console.log("HAS MY DATA??", hasMyData);
 
 	return hasMyData;
 };

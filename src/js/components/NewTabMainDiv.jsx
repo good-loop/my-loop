@@ -196,37 +196,49 @@ const NewTabMainDiv = () => {
 };
 
 const UserControls = ({cid}) => {
+	const showMyloopLink = !Login.isLoggedIn() || !hasRegisteredForMyData();
 	const charity = cid ? fetchCharity(cid) : null;
-
 	const [showPopup, setShowPopup] = useState(false);
 
-	if (!Login.isLoggedIn() || !hasRegisteredForMyData()) {
+	useEffect(() => {
 		const myDataElement = document.getElementById("myloop-link");
 		if (myDataElement && myDataElement.getAttribute('listener') !== 'true') {
 			myDataElement.addEventListener("mouseover", () => {
 				setShowPopup(true);
 			});
 		}
-		
-	}
+		return () => {
+			if (myDataElement) {
+				myDataElement.removeEventListener("mouseover", () => {
+					setShowPopup(true);
+				});
+			}
+		}
+	}, [myloopLink]);
 
-	return <>
-		{!Login.isLoggedIn() || !hasRegisteredForMyData() && <>
+	const myloopLink = (
+		<>
 			<a href={ServerIO.MYLOOP_ENDPOINT + "/account?scrollMyData=true"} className="myloop-link" id="myloop-link">
 				My.Good-Loop
 				&nbsp;
 				<img src="/img/mydata/heart-white-circle.png" className="heart-white-circle"/>
 			</a>
 			&nbsp;&nbsp;&nbsp;
-		</>}
-		{showPopup && <>
-			<div href={ServerIO.MYLOOP_ENDPOINT + "/account?scrollMyData=true"} className='mydata-t4g-popup bg-white shadow p-3 position-absolute
+		</>
+	)
+
+	const popupDiv = (
+		<div className='mydata-t4g-popup bg-white shadow p-3 position-absolute
 			d-flex flex-column justify-content-center align-items-center text-center'	onClick={e => setShowPopup(false)} >
-				<img src="/img/mydata/data-badge.png" className='logo' />
-				<span className='my-3' style={{fontSize:'.9rem'}}>Visit My.Good-Loop to earn your data badge and raise even more donations for {charity ? charity.displayName : 'charities'}!</span>
-				{charity && <CharityLogo charity={charity} />}
-			</div>
-		</>}
+			<img src="/img/mydata/data-badge.png" className='logo' />
+			<span className='my-3' style={{fontSize:'.9rem'}}>Visit My.Good-Loop to earn your data badge and raise even more donations for {charity ? charity.displayName : 'charities'}!</span>
+			{charity && <CharityLogo charity={charity} />}
+		</div>
+	);
+
+	return <>
+		{showMyloopLink && myloopLink}
+		{showPopup && popupDiv}
 		<AccountMenu accountMenuItems={accountMenuItems} linkType="a" small
 			customLogin={() => <NewtabLoginLink className="login-menu btn btn-transparent fill">Register / Log in</NewtabLoginLink>}
 		/>
