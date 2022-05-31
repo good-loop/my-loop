@@ -380,7 +380,7 @@ const LinksDisplay = ({bookmarksData}) => {
 		if (!url) url = '#';
 		return <Col onClick={() => parent.location.href = url} title={title} className="bookmark-item d-flex flex-column align-items-center">
 			<BG src={bg} className="bookmark-box shadow" />
-			<span className="text-white text-center">
+			<span className="text-white text-center" style={{userSelect:"none"}}>
 				{children}
 			</span>
 		</Col>;
