@@ -1,5 +1,5 @@
 /* global navigator */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {Container, Row, Col} from 'reactstrap';
 import BG from '../base/components/BG';
 import MainDivBase from '../base/components/MainDivBase';
@@ -199,37 +199,50 @@ const UserControls = ({cid}) => {
 	const showMyloopLink = !Login.isLoggedIn() || !hasRegisteredForMyData();
 	const charity = cid ? fetchCharity(cid) : null;
 	const [showPopup, setShowPopup] = useState(false);
+	const mydataRef = useRef();
+
+	const mydataLink = ServerIO.MYLOOP_ENDPOINT + "/account?scrollMyData=true";
 
 	useEffect(() => {
 		const myDataElement = document.getElementById("myloop-link");
 		if (myDataElement && myDataElement.getAttribute('listener') !== 'true') {
-			myDataElement.addEventListener("mouseover", () => {
-				setShowPopup(true);
-			});
+			myDataElement.addEventListener("mouseover", () => setShowPopup(true));
 		}
 		return () => {
 			if (myDataElement) {
-				myDataElement.removeEventListener("mouseover", () => {
-					setShowPopup(true);
-				});
+				myDataElement.addEventListener("mouseover", () => setShowPopup(true));
 			}
 		}
 	}, [myloopLink]);
 
+	useEffect(() => {
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		}
+	}, [popupDiv]);
+
+	const handleClickOutside = e => {
+		if (mydataRef.current.contains(e.target)) {
+			return; // inside click
+		}
+		setShowPopup(false); // outside click 
+	};
+
 	const myloopLink = (
 		<>
-			<a href={ServerIO.MYLOOP_ENDPOINT + "/account?scrollMyData=true"} className="myloop-link" id="myloop-link">
+			<div onClick={() => top.location.href = mydataLink} className="myloop-link" id="myloop-link">
 				My.Good-Loop
 				&nbsp;
 				<img src="/img/mydata/heart-white-circle.png" className="heart-white-circle"/>
-			</a>
+			</div>
 			&nbsp;&nbsp;&nbsp;
 		</>
 	)
 
 	const popupDiv = (
-		<div className='mydata-t4g-popup bg-white shadow p-3 position-absolute
-			d-flex flex-column justify-content-center align-items-center text-center'	onClick={e => setShowPopup(false)} >
+		<div ref={mydataRef} className='mydata-t4g-popup bg-white shadow p-3 position-absolute
+			d-flex flex-column justify-content-center align-items-center text-center'	onClick={() => top.location.href = mydataLink} >
 			<img src="/img/mydata/data-badge.png" className='logo' />
 			<span className='my-3' style={{fontSize:'.9rem'}}>Visit My.Good-Loop to earn your data badge and raise even more donations for {charity ? charity.displayName : 'charities'}!</span>
 			{charity && <CharityLogo charity={charity} />}
