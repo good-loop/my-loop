@@ -231,7 +231,7 @@ const UserControls = ({cid}) => {
 
 	const myloopLink = (
 		<>
-			<div onClick={() => top.location.href = mydataLink} className="myloop-link" id="myloop-link">
+			<div onClick={() => top.location.href = mydataLink} className="myloop-link" id="myloop-link" style={{cursor:"pointer"}}>
 				My.Good-Loop
 				&nbsp;
 				<img src="/img/mydata/heart-white-circle.png" className="heart-white-circle"/>
