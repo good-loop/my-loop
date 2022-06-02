@@ -1,23 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from 'reactstrap';
 
 import DataStore from "../../../base/plumbing/DataStore";
-import { space } from '../../../base/utils/miscutils';
-
-
-/**
- * Print a Date as an ISO date string - for its specified time zone.
- * (So 2022-04-01T00:00:00.000+0100 doesn't get converted to GMT and printed as 2022-03-31.)
- */
- const isoDate = (date) => {
-	let yyyy = '' + date.getFullYear();
-	while (yyyy.length < 4) yyyy = '0' + yyyy;
-	let mm = '' + (date.getMonth() + 1);
-	while (mm.length < 2) mm = '0' + mm;
-	let dd = '' + date.getDate();
-	while (dd.length < 2) dd = '0' + dd;
-	return `${yyyy}-${mm}-${dd}`;
-};
+import { isoDate, space } from '../../../base/utils/miscutils';
 
 
 /**
@@ -148,6 +133,8 @@ export const periodToUrl = ({name, start, end}) => {
 
 /** Locale-independent date to string, formatted like "25 Apr 2022" */
 export const printDate = (date) => `${date.getDate()} ${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+/** Locale-independent date (without year) to string, formatted like "25 Apr" */
+export const printDateShort = (date) => `${date.getDate()} ${monthNames[date.getMonth()]}`;
 
 const quarterNames = [, '1st', '2nd', '3rd', '4th'];
 
@@ -187,12 +174,29 @@ const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep
 
 
 /** Boilerplate styling for a subsection of the green dashboard */
-export const GreenCard = ({ title, children, className, bodyClassName, ...rest}) => {
+export const GreenCard = ({ title, children, className, ...rest}) => {
 	return <div className={space('green-card', 'mb-2', className)} {...rest}>
-		{title ? <div className="gc-title">{title}</div> : null}
-		<Card body className={space("gc-body", bodyClassName)}>{children}</Card>
+		{title ? <h6 className="gc-title">{title}</h6> : null}
+		<Card body className="gc-body">{children}</Card>
 	</div>
 };
+
+
+export const GreenCardAbout = ({children, ...rest}) => {
+	const [open, setOpen] = useState(false);
+
+	return <div className={space('card-about', open && 'open')}>
+		<div className="about-body">
+			{children}
+		</div>
+		<a className="about-button" onClick={() => setOpen(!open)}>
+			<svg className="question-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style={{fill: 'none', stroke: 'currentColor', strokeWidth: 15.5, strokeLinecap: 'round'}}>
+  			<path d="m50 69-.035-8.643c-.048-11.948 20.336-20.833 20.336-32 0-11-8.926-20.488-20.336-20.488-9.43 0-20.336 7.321-20.336 20.184" />
+				<path d="m50 91v91" />
+			</svg>
+		</a>
+	</div>;
+}
 
 
 /** Utility: take a mass in kg and pretty-print in kg or tonnes if it's large enough  */
@@ -205,38 +209,26 @@ export const Mass = ({kg}) => {
 	</span>
 };
 
+// HSL values for the maximum and mimimum values in the series - interpolete between for others
+const dfltMaxColour = [192, 33, 48];
+const dfltMinColour = [186, 9, 84];
 
-/** Turn a list of things with IDs into an object mapping IDs to things */
-export const byId = things => things.reduce((acc, thing) => {
-	acc[thing.id] = thing;
-	return acc;
-}, {})
+export const dataColours = (series, maxColour = dfltMaxColour, minColour = dfltMinColour) => {
+	const max = Math.max(...series);
+	const min = Math.min(...series);
+	const range = max - min;
 
-/** TODO impsToBytes and dataToCarbon should be rolled together - allow attaching country to tag? */
+	const [minH, minS, minL] = minColour;
+	const rangeH = maxColour[0] - minH;
+	const rangeS = maxColour[1] - minS;
+	const rangeL = maxColour[2] - minL;
 
-/** Data (bytes) to CO2 (kg) for a specific country */
-export const dataToCarbon = (bytes, country = 'GB') => (({
-	GB: 0.54,
-}[country] * bytes) / 1000000000);
-
-
-/** Take DataLog impression buckets where the keys correspond to tags & total up bytes of data transferred */
-export const calcBytes = (buckets, tagsById) => {
-	let imps = 0;
-	let total = 0;
-	let media = 0;
-	let publisher = 0;
-	let dsp = 0;
-
-	buckets.forEach(({count, key}) => {
-		imps += count;
-		const thisCreative = count * tagsById[key].weight;
-		const thisPublisher = count * 100000; // TODO Fill in correct number
-		const thisDSP = count * 2000; // TODO Fill in correct number
-		total += (thisCreative + thisPublisher + thisDSP);
-		media += thisCreative;
-		publisher += thisPublisher;
-		dsp += thisDSP;
+	const fart = series.map(val => {
+		const quotient = (val - min) / range;
+		return `hsl(${Math.round(minH + (quotient * rangeH))} ${Math.round(minS + (quotient * rangeS))}% ${Math.round(minL + (quotient * rangeL))}%)`
 	});
-	return {imps, total, media, publisher, dsp};
+	return fart;
 };
+
+/** Minimum kg value where we should switch to displaying tonnes instead */
+export const TONNES_THRESHOLD = 1000;

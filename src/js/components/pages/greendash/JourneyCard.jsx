@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import Misc from '../../../base/components/Misc';
 
-import { getDataLogData } from '../../../base/plumbing/DataLog';
 import { A } from '../../../base/plumbing/glrouter';
 import { encURI } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
-import { byId, dataToCarbon, GreenCard, Mass, calcBytes } from './dashutils';
+import { getCarbon } from './carboncalc';
+import { GreenCard, GreenCardAbout, Mass } from './dashutils';
 
 
 const Cloud = ({style}) => (
@@ -68,42 +69,37 @@ const TreesSection = ({treesPlanted}) => {
  */
 const JourneyCard = ({ campaigns, tags }) => {
 	if (!campaigns || !campaigns.length || !tags) {
-		console.warn( "JourneyCard",campaigns, tags);
-		return null;
+		return <Misc.Loading text="Fetching your tag data..." />;
 	}
 
-	// Total carbon offset / trees planted for all campaigns
-	const {co2: co2Offset, trees: treesPlanted} = campaigns.reduce((acc, c) => {
-		if (c.co2) acc.co2 += c.co2;
-		if (c.trees) acc.trees += c.trees;
-		return acc;
-	}, {co2: 0, trees: 0});
+	const [co2Emitted, setCo2Emitted] = useState(0);
+	const [offsets, setOffsets] = useState({co2: 0, trees: 0});
 
-	const [co2Emitted, setCo2Emitted] = useState();
-
-	// Different from the data retrieved in GreenMetrics: no time limit (as it compares to all-time carbon offsets)
-	const pvAllTimeData = getDataLogData({
-		dataspace: 'green',
-		q: `evt:pixel AND (${campaigns.map(c => `campaign:${c.id}`).join(' OR ')})`,
-		breakdowns: ['adid'],
-		start: '1970-01-01'
-	});
-
-	// 
 	useEffect(() => {
-		if (!pvAllTimeData.resolved) {
-			setCo2Emitted(null);
-			return;
-		}
-		const atd = pvAllTimeData.value;
-		const totalBytes = calcBytes(atd.by_adid.buckets, byId(tags)).total;
-		setCo2Emitted(dataToCarbon(totalBytes));
-	}, [pvAllTimeData.resolved]);
+		// Different from the base data retrieved in GreenMetrics: no time limit (as it compares to all-time carbon offsets)
+		getCarbon({q: campaigns.map(c => `campaign:${c.id}`).join(' OR '), start: '1970-01-01', tags}).promise.then(value => {
+			setCo2Emitted(value.total.kgCarbon.total[0]);
+		});
+
+		// Total carbon offset / trees planted for all campaigns
+		setOffsets(
+			campaigns.reduce((acc, c) => {
+				if (c.co2) acc.co2 += c.co2;
+				if (c.trees) acc.trees += c.trees;
+				return acc;
+			}, {co2: 0, trees: 0})
+		);
+	}, [...campaigns]);
 
 	return <GreenCard title="Your journey so far" className="carbon-journey">
-		<CO2Section co2Offset={co2Offset} co2Emitted={co2Emitted} />
-		<TreesSection treesPlanted={treesPlanted} />		
+		<CO2Section co2Offset={offsets.co2} co2Emitted={co2Emitted} />
+		<TreesSection treesPlanted={offsets.trees} />
 		<A className="btn btn-primary" href={"/green/"+encURI(campaigns[0].id)}>Impact Overview</A>
+		<GreenCardAbout>
+			<p>How do we calculate campaign lifetime carbon emissions?</p>
+			<p>What carbon offsets do we use?</p>
+			<p>What tree planting projects do we support?</p>
+		</GreenCardAbout>
 	</GreenCard>;
 };
 

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Container, Row } from 'reactstrap';
+import { Col, Container, Row } from 'reactstrap';
 import Misc from '../../../base/components/Misc';
-import { isoDate, space } from '../../../base/utils/miscutils';
+import { space } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import NewChartWidget from '../../NewChartWidget';
-import { byId, dataToCarbon, GreenCard, calcBytes, printPeriod } from './dashutils';
+import { GreenCard, printPeriod, printDate, printDateShort, TONNES_THRESHOLD, GreenCardAbout } from './dashutils';
 
 
 const icons = {
@@ -89,120 +89,111 @@ const CO2Impact = ({kg, mode}) => {
 	</div>
 };
 
-const CO2Card = ({ period, data: rawData, tags, numLabels=3 }) => {
+
+const TotalSubcard = ({ period, data }) => {
 	const [mode, setMode] = useState('base');
-	const [data, setData] = useState();
-	const [totalCO2, setTotalCO2] = useState(0);
+
+	return (
+		<Col className="total-subcard" xs="12" sm="5">
+			<div>{printPeriod(period)}</div>
+			{data ? <CO2Impact kg={data.total.kgCarbon.total} mode={mode} /> : null}
+			<div className="impact-buttons">
+				{Object.entries(co2ImpactSpecs).map(([key, {icon}]) => {
+					const selected = mode === key;
+					const onClick = () => setMode(selected ? 'base' : key);
+					const className = space('impact-button', key, selected && 'selected');
+					return <div className={className} onClick={onClick} key={key}>
+						{icon}
+					</div>
+				})}
+			</div>
+		</Col>
+	);
+};
+
+/** Skip rather than rotating X axis labels */
+const chartOptions = {
+	scales: {
+		x: {
+			ticks: { maxRotation: 0, minRotation: 0 }
+		}
+	}
+}
+
+
+const TimeSeriesCard = ({ period, data }) => {
+	const [chartData, setChartData] = useState();
 
 	// Convert impressions + tags to CO2 time series
 	useEffect(() => {
-		if (!rawData || !tags) return;
+		if (!data) return;
+
+		const maxCO2 = Math.max(...data.time.kgCarbon.total);
+		const avgCO2 = data.total.kgCarbon.total[0] / data.time.labels.length;
+
+		// Omit year in labels if the period doesn't span a year boundary
+		const labelFn = (period.start.getYear() === period.end.getYear()) ? (
+			utc => printDateShort(new Date(utc))
+		) : (
+			utc => printDate(new Date(utc))
+		);
+
+		let timeLabel = 'Kg CO2';
+		let timeSeries = data.time.kgCarbon.total;
+		let avgSeries = data.time.labels.map(() => avgCO2);
+
+		// Display tonnes instead of kg? (should this be avg instead of max?)
+		if (maxCO2 >= TONNES_THRESHOLD) {
+			timeLabel = 'Tonnes CO2';
+			timeSeries = timeSeries.map(d => d / 1000);
+			avgSeries = avgSeries.map(d => d / 1000);
+		}
 
 		// Data format accepted by chart.js
-		let newData = {
-			labels: [],
+		let newChartData = {
+			labels: data.time.labels.map(labelFn),
 			datasets: [{
-				label: 'Kg CO2',
-				data: [],
+				label: timeLabel,
+				data: timeSeries,
 				cubicInterpolationMode: 'monotone',
 				borderColor: '#52727a'
 			}, {
 				label: 'Avg',
-				data: [],
+				data: avgSeries,
 				pointRadius: 0,
 				borderDash: [5, 5],
 				borderColor: '#aaa'
 			}],
 		};
 
-		// Construct average line
-		let tempAvg = 0;
-
-		// Add up total carbon for period
-		let runningTotalCO2 = 0;
-
-		// map tag IDs to tag objects
-		const tagsById = byId(tags);
-
-		let maxCO2 = 0;
-
-		// Populate transformed chart data
-		rawData.by_time_adid.buckets.forEach((bkt, i) => {
-			const bktDate = new Date(bkt.key);
-			newData.labels.push(isoDate(bktDate));
-			const bytesForDate = calcBytes(bkt.by_adid.buckets, tagsById).total;
-			const carbonForDate = dataToCarbon(bytesForDate); // TODO Non-default country
-			if (carbonForDate > maxCO2) maxCO2 = carbonForDate;
-			runningTotalCO2 += carbonForDate;
-			newData.datasets[0].data.push(carbonForDate);
-			tempAvg += carbonForDate;
-		});
-
-		// Display tonnes instead of kg for 1000+
-		if (maxCO2 >= 1000) {
-			newData.datasets[0].data.forEach((d, i) => {
-				newData.datasets[0].data[i] = d / 1000;
-			})
-			newData.datasets[0].label = 'Tonnes CO2';
-			tempAvg /= 1000;
-		}
-
-		// normalise avg and duplicate across range
-		tempAvg /= newData.datasets[0].data.length;
-		for (let i = 0; i < newData.datasets[0].data.length; i++) {
-			newData.datasets[1].data.push(tempAvg);
-		};
-
-		setData(newData);
-		setTotalCO2(runningTotalCO2);
-	}, [rawData, tags]);
+		setChartData(newChartData);
+	}, [data]);
 
 	//const labelInterval = data ? Math.round(data.labels.length / numLabels) : 1;
 
-	const options = {
-		scales: {
-			x: {
-				ticks: {
-					autoskip: false,
-					maxRotation: 0,
-					minRotation: 0,
-					maxTicksLimit: numLabels,
-				}
-			}
-		}
-	}
+
 
 	// TODO Don't show "Per 1000 impressions" button for one-tag mode
 
-	return <GreenCard title="How much carbon is your digital advertising emitting?" className="carbon-time-series" bodyClassName="pr-0">
+	return <GreenCard title="How much carbon is your digital advertising emitting?" className="carbon-time-series">
 		<Container>
 			<Row>
 				<Col className="chart-subcard" xs="12" sm="7">
 					<div>CO<sub>2</sub>e emissions over time</div>
 					{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
-					{ data ? (
-						<NewChartWidget data={data} options={options} />
+					{ chartData ? (
+						<NewChartWidget data={chartData} options={chartOptions} />
 					) : (
-						<Misc.Loading text="Loading CO2 emissions data" />
+						<Misc.Loading text="Fetching emissions-over-time data..." />
 					)}
 				</Col>
-				<Col className="total-subcard" xs="12" sm="5">
-					<div>{printPeriod(period)}</div>
-					<CO2Impact kg={totalCO2} mode={mode} />
-					<div className="impact-buttons">
-						{Object.entries(co2ImpactSpecs).map(([key, {icon}]) => {
-							const selected = mode === key;
-							const onClick = () => setMode(selected ? 'base' : key);
-							const className = space('impact-button', key, selected && 'selected');
-							return <div className={className} onClick={onClick} key={key}>
-								{icon}
-							</div>
-						})}
-					</div>
-				</Col>
+				<TotalSubcard period={period} data={data} />
 			</Row>
 		</Container>
+		<GreenCardAbout>
+			<p>How do we calculate the time-series carbon emissions?</p>
+		</GreenCardAbout>
 	</GreenCard>;
 };
 
-export default CO2Card;
+export default TimeSeriesCard;

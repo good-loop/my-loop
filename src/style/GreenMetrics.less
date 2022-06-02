@@ -3,15 +3,29 @@
 @gc-border-radius: 0.5rem;
 @gc-padding: 1rem;
 
+/* Hide the navbar on this page only */
+#mainDiv.page-greendash {
+	nav.navbar {
+		display: none;
+	}
+}
+
 #green-dashboard .green-metrics {
+	font-family: 'Montserrat';
+	text-transform: uppercase;
+	/* Instruct all cards to assume equal height within */
+	.card-column {
+		display: flex;
+		flex-direction: column;
+	}
+
 	/* General styling for the info cards */
 	.green-card {
 		display: flex;
 		flex-direction: column;
+		flex-grow: 1;
 		.gc-title {
-			// TODO Avoid local font definitions -- or if they're wanted, add a comment for why
-			font-family: 'Montserrat';
-			text-transform: uppercase;
+
 		}
 		.gc-body {
 			background-color: white;
@@ -20,13 +34,47 @@
 			padding: @gc-padding;
 			flex-grow: 1;
 		}
+		// Default chart behaviour: Fill as much of the card's natural height as possible
+		.chart-canvas-container {
+			flex-grow: 1;
+		}
+		/* The (?) button that shows an explanation of the card's data */
+		.card-about {
+			z-index: 1;
+			.about-button, .about-body {
+				position: absolute;
+				top: 0.5rem;
+				right: 0.5rem;
+				width: 1rem;
+				height: 1rem;
+				border-radius: 0.5rem;
+			}
+			&.open .about-body {
+				width: calc(100% - 1rem);
+				height: calc(100% - 1rem);
+				padding: 1em;
+			}
+
+			.about-button {
+				color: white;
+				background-color: darkred;
+				font-weight: bold;
+				font-size: 66%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				padding: 0.2em;
+			}
+			.about-body {
+				border: 1px solid darkred;
+				background-color: white;
+				overflow: hidden;
+			}
+		}
 	}
 
 	/* The time / brand / campaign selector */
 	.greendash-filters {
-		// TODO Avoid local font definitions -- or if they're wanted, add a comment for why
-		font-family: 'Montserrat';
-		text-transform: uppercase;
 		width: 100%;
 		display: flex;
 	
@@ -52,15 +100,15 @@
 
 	/* The period / total impressions at-a-glance header */
 	.greendash-overview {
-		// TODO Avoid local font definitions -- or if they're wanted, add a comment for why
-		font-family: 'Montserrat';
-		text-transform: uppercase;
 		color: @greenmedia-darkcyan;
 		font-weight: 600;
 	}
 
 	/* The hero "emissions over time + driving / flights / kettles equivalent" chart*/
 	.carbon-time-series {
+		.card-body {
+			padding-right: 0; // Let the right subcard sit flush with the card edge
+		}
 		.total-subcard {
 			color: white;
 			background-color: @greenmedia-darkcyan;
@@ -69,8 +117,6 @@
 			border-radius: @gc-border-radius;
 			width: 15em;
 			text-align: center;
-			// TODO Avoid local font definitions -- or if they're wanted, add a comment for why
-			font-family: 'Montserrat';
 			display: flex;
 			flex-direction: column;
 			
@@ -157,6 +203,13 @@
 			} // /.impact-buttons
 		}
 	} // /.carbon-time-series
+
+	.carbon-time-of-day {
+		text-transform: none;
+		.chart-canvas-container {
+			height: 6em;
+		}
+	}
 }
 
 
@@ -197,21 +250,25 @@
 		}
 	} // /.carbon-journey
 
-
-.cta-card-decoration {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: 40%;
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: flex-end;
-	.tree-side {
-		height: 2.5em;
+.carbon-cta {
+	.cta-card-decoration {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 40%;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: flex-end;
+		.tree-side {
+			height: 2.5em;
+		}
+		.tree-centre {
+			height: 3.5em;
+			margin: 0 0.5em;
+		}
 	}
-	.tree-centre {
-		height: 3.5em;
-		margin: 0 0.5em;
+	.get-in-touch {
+		z-index: 1; // place in front of the tree decoration
 	}
 }

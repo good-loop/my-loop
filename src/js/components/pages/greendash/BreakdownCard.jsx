@@ -3,46 +3,31 @@ import { Button } from 'reactstrap';
 import Icon from '../../../base/components/Icon';
 import Misc from '../../../base/components/Misc';
 import NewChartWidget from '../../NewChartWidget';
-import { byId, calcBytes, dataToCarbon, GreenCard } from './dashutils';
+import { GreenCard, GreenCardAbout } from './dashutils';
+
 
 // Classify OS strings seen in our data
 const osTypes = {
 	windows: { type: 'desktop', group: 'Windows', name: 'Windows' },
 	'mac os x': { type: 'desktop', group: 'Mac OS X', name: 'Mac OS X' },
 	'windows nt 4.0': { type: 'desktop', group: 'Windows', name: 'Windows NT 4.0' },
-	'chrome os': { type: 'desktop', group: 'Other', name: 'Chrome OS' },
-	linux: { type: 'desktop', group: 'Other', name: 'Linux' },
-	ubuntu: { type: 'desktop', group: 'Other', name: 'Ubuntu Linux' },
-	fedora: { type: 'desktop', group: 'Other', name: 'Fedora Linux' },
-	openbsd: { type: 'desktop', group: 'Other', name: 'OpenBSD' },
-	freebsd: { type: 'desktop', group: 'Other', name: 'FreeBSD' },
-	other: { type: 'desktop', group: 'Other', name: 'Other' }, // probably there are a few more smart TV etc OSs that get lumped in here
+	'chrome os': { type: 'desktop', group: 'Other Desktop', name: 'Chrome OS' },
+	linux: { type: 'desktop', group: 'Other Desktop', name: 'Linux' },
+	ubuntu: { type: 'desktop', group: 'Other Desktop', name: 'Ubuntu Linux' },
+	fedora: { type: 'desktop', group: 'Other Desktop', name: 'Fedora Linux' },
+	openbsd: { type: 'desktop', group: 'Other Desktop', name: 'OpenBSD' },
+	freebsd: { type: 'desktop', group: 'Other Desktop', name: 'FreeBSD' },
+	other: { type: 'desktop', group: 'Other Desktop', name: 'Other' }, // probably there are a few more smart TV etc OSs that get lumped in here
 	ios: { type: 'mobile', group: 'iOS', name: 'iOS' },
 	android: { type: 'mobile', group: 'Android', name: 'Android' },
-	'windows phone': { type: 'mobile', group: 'Other', name: 'Windows Phone' },
-	'blackberry os': { type: 'mobile', group: 'Other', name: 'BlackBerry' },
-	'firefox os': { type: 'mobile', group: 'Other', name: 'FireFox' },
+	'windows phone': { type: 'mobile', group: 'Other Mobile', name: 'Windows Phone' },
+	'blackberry os': { type: 'mobile', group: 'Other Mobile', name: 'BlackBerry' },
+	'firefox os': { type: 'mobile', group: 'Other Mobile', name: 'FireFox' },
 	chromecast: { type: 'smart', group: 'Smart TV', name: 'Chromecast' },
 	tizen: { type: 'smart', group: 'Smart TV', name: 'Tizen' },
 	webos: { type: 'smart', group: 'Smart TV', name: 'WebOS' },
 };
 
-
-const dummyDataOSMobile = {
-	labels: ['Android', 'iOS Phone', 'iOS Tablet'],
-	datasets: [{
-		label: 'Kg CO2',
-		data: [60, 42, 74],
-	}],
-};
-
-const dummyDataOSDesktop = {
-	labels: ['Windows', 'Mac'],
-	datasets: [{
-		label: 'Kg CO2',
-		data: [60, 42],
-	}],
-};
 
 /**
  * 
@@ -53,16 +38,16 @@ const dummyDataOSDesktop = {
  * @returns 
  */
 const TechSubcard = ({ tags, data, options, minimumPercentLabeled=0 }) => {
-	if (!tags || !data) return <Misc.Loading text="Fetching data..." />;
+	if (!tags || !data) return <Misc.Loading text="Fetching your tag data..." />;
 
-	const labels = ['Media', 'Overhead (JS + XML)'];
-	const { logging, media, overhead } = calcBytes(data.by_adid.buckets, byId(tags));
+	const labels = ['Media', 'Publisher overhead', 'DSP overhead'];
+	const { media, publisher, dsp } = data.total.kgCarbon;
 	const chartData = {
 		labels,
 		datasets: [{
 			label: 'Kg CO2',
-			backgroundColor: ['#90AAAF', '#C7D5D7'],
-			data: [media, overhead],
+			backgroundColor: ['#90AAAF', '#C7D5D7', '#FF00FF'],
+			data: [media, publisher, dsp],
 		}]
 	};
 	const chartOptions = {
@@ -122,61 +107,46 @@ const TechSubcard = ({ tags, data, options, minimumPercentLabeled=0 }) => {
 };
 
 
-const chartDataTemplate = {
-	labels: [],
-	datasets: [{ label: 'Kg CO2', data: [] }],
-};
-
 /**
  * desktop vs mobile and different OS
  * @param {Object} p
  */
 const DeviceSubcard = ({ tags, data }) => {
-	if (!tags || !data) return <Misc.Loading text="Fetching data..." />;
+	if (!tags || !data) return <Misc.Loading text="Fetching your green tag data..." />;
 
 	const [chartDatas, setChartDatas] = useState();
 
 	useEffect(() => {
-		let maxBytes = 0; // multiple charts means we should specify a common scale so they're comparable
-		const tagsById = byId(tags);
 		const typesGroupsBytes = {};
 
 		// Bundle operating systems into useful groups, eg "windows", "linux", "smart tv" and total up data usage for each
-		data.by_os_adid.buckets.forEach(bkt => {
-			const osData = osTypes[bkt.key];
-			if (!osData) {
-				// debugger;
+		data.os.labels.forEach((osName, i) => {
+			const {type, group} = osTypes[osName];
+			// First grouping: mobile/desktop
+			let groupsToBytes = typesGroupsBytes[type];
+			if (!groupsToBytes) {
+				groupsToBytes = {};
+				typesGroupsBytes[type] = groupsToBytes;
 			}
-			let typeObj = typesGroupsBytes[osData.type];
-			if (!typeObj) {
-				typeObj = {};
-				typesGroupsBytes[osData.type] = typeObj;
+			// Second grouping: all "Windows", all "Android", etc
+			if (!groupsToBytes[group]) {
+				groupsToBytes[group] = 0;
 			}
-			if (!typeObj[osData.group]) {
-				typeObj[osData.group] = 0;
-			}
-			const thisBytes = calcBytes(bkt.by_adid.buckets, tagsById);
-			typeObj[osData.group] += thisBytes.total;
-			if (maxBytes < thisBytes.total) maxBytes = thisBytes.total;
+			groupsToBytes[group] += data.os.kgCarbon.total[i];
 		});
 
 		// Transform totalled groups to chart objects
-		const nextChartDatas = {};
-		Object.entries(typesGroupsBytes).forEach(([typeName, typeObj]) => {
-			const cdForGroup = _.cloneDeep(chartDataTemplate);
-			
-			Object.entries(typeObj).forEach(([groupName, groupBytes]) => {
-				cdForGroup.labels.push(groupName);
-				cdForGroup.datasets[0].data.push(dataToCarbon(groupBytes));
-			});
-			nextChartDatas[typeName] = cdForGroup;
-		});
-
-		setChartDatas(nextChartDatas);
+		setChartDatas(Object.entries(typesGroupsBytes).reduce((acc, [osType, groupsToBytes]) => {
+			acc[osType] = {
+				labels: Object.keys(groupsToBytes),
+				datasets: [{ label: 'Kg CO2', data: Object.values(groupsToBytes) }],
+			};
+			return acc;
+		}, {}));
 	}, [tags, data]);
 
 
-	if (!chartDatas) return <Misc.Loading text="Loading data for chart..." />;
+	if (!chartDatas) return <Misc.Loading text="Fetching device data..." />;
 
 	return <>
 		{Object.entries(chartDatas).map(([key, cd]) => <div key={key}>
@@ -195,12 +165,16 @@ const BreakdownCard = ({ campaigns, tags, data }) => {
 		<DeviceSubcard tags={tags} data={data} />
 	);
 
-	return <GreenCard title="What is the breakdown of your emissions?">
+	return <GreenCard title="What is the breakdown of your emissions?" className="carbon-breakdown">
 		<div className="d-flex justify-content-around mb-2">
 			<Button size="sm" color="primary" active={mode === 'tech'} onClick={() => setMode('tech')}>Ad Tech</Button>
 			<Button size="sm" color="primary" active={mode === 'device'} onClick={() => setMode('device')}>Device Type</Button>
 		</div>
 		{subcard}
+		<GreenCardAbout>
+			<p>Where do we get numbers for each slice from?</p>
+			<p>How do we determine OS/device breakdowns?</p>
+		</GreenCardAbout>
 	</GreenCard>;
 };
 
