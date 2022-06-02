@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+	Button,
 	Carousel,
 	CarouselCaption, CarouselControl,
 	CarouselIndicators, CarouselItem, Container
@@ -236,7 +237,7 @@ const AdvertCard = ({ ad, active }) => {
 	if (social) {
 		size = "portrait";
 		extraParams.delivery = "app";
-		extraParams.after = "persist";
+		extraParams.after = "vanish";
 	}
 	return (
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
@@ -244,8 +245,11 @@ const AdvertCard = ({ ad, active }) => {
 			<div className="position-relative ad-card">
 				<IPhoneMockup size={size} />
 				<div className={"position-absolute theunit-" + size} >
+					<div className="d-flex flex-row justify-content-center align-items-center position-absolute" style={{top:0, left:0, width:"100%", height:"100%", zIndex:1}}>
+						<Button color="primary">Watch again</Button>
+					</div>
 					{hasShown ? (
-						<GoodLoopUnit vertId={ad.id} size={size} extraParams={extraParams} />
+						<GoodLoopUnit vertId={ad.id} size={size} extraParams={extraParams} style={{zIndex:2}}/>
 					) : (
 						<div style={{ background: "black", width: "100%", height: "100%" }}></div>
 					)}

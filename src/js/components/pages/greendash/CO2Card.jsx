@@ -37,7 +37,7 @@ const co2ImpactSpecs = {
 	flights: {
 		src: "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2017",
 		factor: 1/(0.19745*5585), // CO2 per km (including radiative forcing) * London <> New York
-		desc: 'flights from London to New York',
+		desc: 'long haul flights', //flights from London to New York
 		icon: icons.flights,
 	},
 	kettles: {
@@ -48,7 +48,7 @@ const co2ImpactSpecs = {
 	driving: {
 		src: "https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator",
 		factor: 2.482,
-		desc: 'miles driven in a car',
+		desc: 'miles by car',
 		icon: icons.driving
 	}
 };
@@ -57,6 +57,7 @@ const co2ImpactSpecs = {
 /** Render the "That's 99,999 kettles/miles/flights" bubble */
 const CO2Impact = ({kg, mode}) => {
 	const unit = kg < 1000 ? 'KG' : 'TONNES';
+	let guts = null;
 
 	if (mode === 'base') {
 		const amount = kg < 1000 ? <div>
@@ -67,24 +68,28 @@ const CO2Impact = ({kg, mode}) => {
 			<div className="unit">{unit}</div>
 		</>;
 
-		return <div className="big-number">
+		guts = <div className="big-number">
 			{amount}
 			<div className="desc">CO<sub>2</sub>e EMITTED</div>
 		</div>;
+	} else {
+		assert(co2ImpactSpecs[mode], `Can't render CO2-equivalent for mode "${mode}" - no conversion factor/description/etc written`);
+		const {factor, desc, icon} = co2ImpactSpecs[mode];
+
+		guts =  <div className="impact-bubble">
+			<div className="impact-leader">{printer.prettyInt(kg, true)} {unit} CO<sub>2</sub>e, THAT'S</div>
+			<div className="impact-number">{printer.prettyInt(kg * factor, true)}</div>
+			<div className="impact-desc">{desc}</div>
+			<div className="impact-icon" title={`Illustrative icon for "${desc}"`}>{icon}</div>
+		</div>;
 	}
 
-	assert(co2ImpactSpecs[mode], `Can't render CO2-equivalent for mode "${mode}" - no conversion factor/description/etc written`);
-	const {factor, desc, icon} = co2ImpactSpecs[mode];
-
-	return <div className="impact-bubble">
-		<div className="impact-leader">{printer.prettyInt(kg, true)} {unit} CO<sub>2</sub>e, THAT'S</div>
-		<div className="impact-number">{printer.prettyInt(kg * factor, true)}</div>
-		<div className="impact-desc">{desc}</div>
-		<div className="impact-icon" title={`Illustrative icon for "${desc}"`}>{icon}</div>
-	</div>;
+	return <div className="impact-container">
+		{guts}
+	</div>
 };
 
-const CO2Card = ({ period, data: rawData, tags }) => {
+const CO2Card = ({ period, data: rawData, tags, numLabels=3 }) => {
 	const [mode, setMode] = useState('base');
 	const [data, setData] = useState();
 	const [totalCO2, setTotalCO2] = useState(0);
@@ -122,7 +127,7 @@ const CO2Card = ({ period, data: rawData, tags }) => {
 		let maxCO2 = 0;
 
 		// Populate transformed chart data
-		rawData.by_time_adid.buckets.forEach(bkt => {
+		rawData.by_time_adid.buckets.forEach((bkt, i) => {
 			const bktDate = new Date(bkt.key);
 			newData.labels.push(isoDate(bktDate));
 			const bytesForDate = calcBytes(bkt.by_adid.buckets, tagsById).total;
@@ -148,22 +153,35 @@ const CO2Card = ({ period, data: rawData, tags }) => {
 			newData.datasets[1].data.push(tempAvg);
 		};
 
-
-
 		setData(newData);
 		setTotalCO2(runningTotalCO2);
 	}, [rawData, tags]);
 
+	//const labelInterval = data ? Math.round(data.labels.length / numLabels) : 1;
+
+	const options = {
+		scales: {
+			x: {
+				ticks: {
+					autoskip: false,
+					maxRotation: 0,
+					minRotation: 0,
+					maxTicksLimit: numLabels,
+				}
+			}
+		}
+	}
+
 	// TODO Don't show "Per 1000 impressions" button for one-tag mode
 
-	return <GreenCard title="How much carbon is your digital advertising emitting?" className="carbon-time-series">
+	return <GreenCard title="How much carbon is your digital advertising emitting?" className="carbon-time-series" bodyClassName="pr-0">
 		<Container>
 			<Row>
 				<Col className="chart-subcard" xs="12" sm="7">
 					<div>CO<sub>2</sub>e emissions over time</div>
 					{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
 					{ data ? (
-						<NewChartWidget data={data} />
+						<NewChartWidget data={data} options={options} />
 					) : (
 						<Misc.Loading text="Loading CO2 emissions data" />
 					)}

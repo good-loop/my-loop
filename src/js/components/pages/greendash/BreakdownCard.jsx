@@ -90,18 +90,6 @@ const TechSubcard = ({ tags, data, options, minimumPercentLabeled=0 }) => {
 			},
 			datalabels: {
 				labels: {
-					title: {
-						anchor: "end",
-						clamp:true,
-						font: {
-							family: "Montserrat",
-							weight: "normal",
-							size: "12px"
-						},
-						formatter: (value, ctx) => {
-							return labels[ctx.dataIndex];
-						},
-					},
 					value: {
 						anchor: "center",
 						color: '#fff',
@@ -111,10 +99,11 @@ const TechSubcard = ({ tags, data, options, minimumPercentLabeled=0 }) => {
 							size: "20px"
 						},
 						formatter: (value, ctx) => {
+							if (!value) value = 0;
 							let sum = 0;
 							let dataArr = ctx.chart.data.datasets[0].data;
 							dataArr.map(data => {
-								sum += data;
+								sum += data || 0;
 							});
 							let percentage = Math.round(value*100 / sum);
 							return percentage >= minimumPercentLabeled ? percentage+"%" : "";

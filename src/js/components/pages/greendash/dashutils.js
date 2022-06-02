@@ -187,10 +187,10 @@ const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep
 
 
 /** Boilerplate styling for a subsection of the green dashboard */
-export const GreenCard = ({ title, children, className, ...rest}) => {
+export const GreenCard = ({ title, children, className, bodyClassName, ...rest}) => {
 	return <div className={space('green-card', 'mb-2', className)} {...rest}>
 		{title ? <div className="gc-title">{title}</div> : null}
-		<Card body className="gc-body">{children}</Card>
+		<Card body className={space("gc-body", bodyClassName)}>{children}</Card>
 	</div>
 };
 

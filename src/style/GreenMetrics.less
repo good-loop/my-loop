@@ -73,44 +73,57 @@
 			font-family: 'Montserrat';
 			display: flex;
 			flex-direction: column;
-	
-			.big-number, .impact-bubble {
-				padding: 0.5em;
-				margin-bottom: 2em; // Match height of .impact-button .selected:before
-				flex-grow: 1;
-			}
-	
-			.big-number {
-				font-weight: 900;
-				.number {
-					// TODO Avoid local font definitions -- or if they're wanted, add a comment for why
-					font-size: 300%;
-					line-height: 1;
+			
+			.impact-container {
+
+				height: 250px;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+
+				.big-number, .impact-bubble {
+					padding: 0.5em;
 				}
-				.unit { font-size: 150%; }
-				.desc { font-size: 100%; }
-			}
-	
-			.impact-bubble {
-				color: black;
-				background-color: white;
-				border-radius: @gc-border-radius;
-	
-				.impact-leader {
-					font-size: 100%;
-				}
-				.impact-number {
-					font-size: 300%;
+		
+				.big-number {
+					//margin-top: 2em;
 					font-weight: 900;
+					.number {
+						// TODO Avoid local font definitions -- or if they're wanted, add a comment for why
+						font-size: 400%;
+						line-height: 1;
+					}
+					.unit { font-size: 150%; }
+					.desc { font-size: 100%; }
 				}
-				.impact-desc {
-					font-size: 100%;
-					font-weight: 900;
-					text-transform: uppercase;
+		
+				.impact-bubble {
+					color: black;
+					background-color: white;
+					border-radius: @gc-border-radius;
+					
+					margin-bottom: 1.5em;
+					width: 100%;
+					flex-grow: 1;
+
+					.impact-leader {
+						font-size: 100%;
+					}
+					.impact-number {
+						font-size: 300%;
+						font-weight: 900;
+					}
+					.impact-desc {
+						font-size: 100%;
+						font-weight: 900;
+						text-transform: uppercase;
+					}
+					.impact-icon {
+						height: 3em;
+					}
 				}
-				.impact-icon {
-					height: 3em;
-				}
+
 			}
 	
 			.impact-buttons {
@@ -126,7 +139,7 @@
 					border: 0.2em solid white;
 					background-image: url("/img/green/dashboard/impact-button.svg");
 					padding: 0.25em;
-					&.selected {
+					&.selected {	
 						filter: grayscale();
 						&:before {
 							content: '';
@@ -137,7 +150,7 @@
 							width: 2em;
 							// 0.2em to adjust position for parent border width
 							left: -0.2em;
-							top: -2.2em;
+							top: -1.7em;
 						}
 					}
 				}
