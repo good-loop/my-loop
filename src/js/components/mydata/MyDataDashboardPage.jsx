@@ -27,7 +27,7 @@ import C from '../../C';
  const getJoinedDate = () => {
 	const person = getProfile().value;
 	if (!person) {
-		return 1;
+		return null;
 	}
 	// use the oldest claim (TODO lets have a register claim and use that)
 	let claims = Person.claims(person);
@@ -148,7 +148,7 @@ const MyDataDashboardPage = () => {
 			{locationCountry && <h5>{locationCountry}</h5>}
 			<br/>
 			<ProfileDotRow>
-				<ProfileDot imgUrl="/img/mydata/joined.png" className="mt-3 mt-md-0">{joinedDate && <>Joined&nbsp; <Misc.RoughDate date={joinedDate}/></>}</ProfileDot>
+				<ProfileDot imgUrl="/img/mydata/joined.png" className="mt-3 mt-md-0">Joined&nbsp; {joinedDate && <Misc.RoughDate date={joinedDate}/>}</ProfileDot>
 				<ProfileDot imgUrl={ngo ? ngo.logo : 'img/homepage/Stars.png'}>{<>Supporting {ngo ? NGO.displayName(ngo) : 'Charity'}</>}</ProfileDot>
 				<ProfileDot imgUrl="/img/mydata/raised.png" ><>
 					{/* Show exactly the same amount as what displays on T4G */}
