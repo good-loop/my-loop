@@ -44,6 +44,7 @@ import BlogContent from './pages/BlogContent';
 import SafariPage from './pages/SafariPage';
 import { DropdownItem } from 'reactstrap';
 import { accountMenuItems } from './pages/CommonComponents';
+import MyDataProductPage from './mydata/MyDataProductPage';
 
 // DataStore
 C.setupDataStore();
@@ -88,6 +89,7 @@ const PAGES = {
 	forbusiness: ForBusinessPage,
 	forcharity: ForCharityPage,
 	safari: SafariPage,
+	getmydata: MyDataProductPage
 };
 // ?? switch to router??
 // const ROUTES = {
@@ -112,6 +114,7 @@ const MainDiv = () => {
 		green: 'Green Media',
 		tabsforgood: C.T4G,
 		blog: "Blog",
+		getmydata: "My.Data"
 		//"home#mydata-cta": "My.Data" // HACK until we get a landing page
 	};
 
@@ -124,6 +127,7 @@ const MainDiv = () => {
 				"ourstory":[],
 				"our-impact": ['charities', 'impactoverview', Roles.isTester() && 'green'],
 				'tabsforgood':[],
+				'getmydata':[],
 				//"home#mydata-cta": [],
 				"blog":Roles.isTester()
 			};
@@ -135,7 +139,8 @@ const MainDiv = () => {
 		navbarAccountMenuItems={accountMenuItems}
 		NavExpandSize="md"
 		// navbarLabels={getNavbarLabels}
-		fullWidthPages={["impact", 'home', 'charity', 'tabsforgood', 'account', 'green', 'charities', 'impactoverview', 'campaign', 'ourstory', 'ads', 'blog', 'blogcontent', 'allowlist', 'safari', 'greendash']}
+		// We want everything to be full width on this site
+		fullWidthPages={Object.keys(PAGES)}
 		//undecoratedPages={["blogcontent"]}
 		Footer={Footer}
 		canRegister
