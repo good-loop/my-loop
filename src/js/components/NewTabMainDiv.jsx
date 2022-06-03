@@ -333,6 +333,25 @@ const NormalTabCenter = () => {
 	</>;
 };
 
+/**
+ * *New* 
+ * Fetch total donation of charity from Monday (on ElasticSearch)
+ * @param {Object} charity
+ * @returns 
+ */
+const fetchDonationTotalMonday = ({charity}) => {
+	if (!charity) return null;
+	let pvTotalForCharityMonday = DataStore.fetch(['misc','donations-monday'], () => ServerIO.load("https://lg.good-loop.com/data?dataspace=gl&q=evt:dntnmon AND time:"+new Date().toISOString().substring(0, 10)));
+	if (pvTotalForCharityMonday && pvTotalForCharityMonday.value) {
+		const arrayTotal = pvTotalForCharityMonday.value.examples[0]._source.props;
+		const mapTotal = arrayTotal.reduce((map, obj) => {
+			map[obj.k] = obj.n;
+			return map;
+		});
+		const donationMonday = mapTotal[charity.id] || mapTotal[charity.name];
+		return donationMonday/100;
+	}
+};
 
 const NewTabCharityCard = ({ cid, loading }) => {
 	const charity = cid ? fetchCharity(cid) : null;
@@ -340,7 +359,10 @@ const NewTabCharityCard = ({ cid, loading }) => {
 	const returnLink = encURI("/newtab.html#webtop?tutOpen=true&tutPage=2");
 	//const params = isInTutorialHighlight ? "&task=return&link=" + returnLink : "";
 
-	let pvTotalForCharity = cid? DataStore.fetch(['misc','donations', cid], () => ServerIO.getDonationsData({q:"cid:"+cid})) : {};
+	let pvTotalForCharity = cid ? DataStore.fetch(['misc','donations', cid], () => ServerIO.getDonationsData({q:"cid:"+cid})) : {};
+
+	const donationTotalMonday = charity && fetchDonationTotalMonday({charity});
+
 	// HACK we want to show the total going up as tabs are opened. But we only reconcile on a quarterly basis.
 	// SO: take 1 month of data, which will usually be an under-estimate, and combine it with an underestimate of CPM
 	// to give a counter that ticks up about right.
@@ -350,6 +372,9 @@ const NewTabCharityCard = ({ cid, loading }) => {
 		// TODO other currencies e.g. USD
 		const tabEst = new Money(pvNumTabsOpenedEveryone.value* 2/1000); // $/£2 CPM as a low estimate
 		totalMoney = Money.add(pvTotalForCharity.value.total, tabEst);
+
+		// New: If donations from Monday is found, use that instead of the tab estimate
+		if (donationTotalMonday) totalMoney = donationTotalMonday;
 	}
 
 	// Use top.location.href instead of C.A to advoid CORS issues.
