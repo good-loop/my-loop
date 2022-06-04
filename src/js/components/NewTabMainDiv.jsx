@@ -343,6 +343,7 @@ const fetchDonationTotalMonday = ({charity}) => {
 	if (!charity) return null;
 	let pvTotalForCharityMonday = DataStore.fetch(['misc','donations-monday'], () => ServerIO.load("https://lg.good-loop.com/data?dataspace=gl&q=evt:dntnmon AND time:"+new Date().toISOString().substring(0, 10)));
 	if (pvTotalForCharityMonday && pvTotalForCharityMonday.value) {
+		if (pvTotalForCharityMonday.value.examples.length === 0) return null;
 		const arrayTotal = pvTotalForCharityMonday.value.examples[0]._source.props;
 		const mapTotal = arrayTotal.reduce((map, obj) => {
 			map[obj.k] = obj.n;
