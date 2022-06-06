@@ -8,9 +8,15 @@ export const byId = things => things.reduce((acc, thing) => {
 }, {})
 
 
-/** Data (gigabytes) to CO2 (kg) for each country */
+/** Kilogrammes of CO2 per gigabyte of data for each country */
 const DATA_TO_CARBON_BY_COUNTRY = {
 	GB: 0.54,
+	AU: 0.54,
+};
+
+/** Temporary fill-in for pre-geoIP data until we can put country overrides on green tags */
+const CAMPAIGN_COUNTRY_SHIMS = {
+	CaptifyNS: 'AU',
 };
 
 const PUBLISHER_OVERHEAD = 100000; // TODO Fill in correct number
@@ -74,7 +80,7 @@ const tagToCountryBreakdown = (by_adid_country) => {
  * @param {*} countries 
  * @returns 
  */
-const bytesToCarbon = (bytes, tagFractions, countries) => {
+const bytesToCarbon = (bytes, tags, tagFractions, countries) => {
 	// Iterate through all tags...
 	return Object.entries(tagFractions).reduce((acc, [tagId, tFraction]) => {
 		const bytesForThisTag = bytes * tFraction;
@@ -83,7 +89,11 @@ const bytesToCarbon = (bytes, tagFractions, countries) => {
 		// and multiply the portions by the bytes-to-carbon conversion factor for each country
 		return acc + Object.entries(countriesForThisTag).reduce((acc, [country, cFraction]) => {
 			const bytesForTagForCountry = bytesForThisTag * cFraction;
-			return acc + (bytesForTagForCountry * DATA_TO_CARBON_BY_COUNTRY[country]);
+			let carbonFactor = DATA_TO_CARBON_BY_COUNTRY[country];
+			if (!carbonFactor) {
+				carbonFactor = DATA_TO_CARBON_BY_COUNTRY[CAMPAIGN_COUNTRY_SHIMS[tags[tagId].campaign]];
+			}
+			return acc + ((bytesForTagForCountry * carbonFactor) / 1000000000);
 		}, 0);
 	}, 0);
 };
@@ -148,7 +158,7 @@ export const getCarbon = ({q = '', breakdowns = [], start = '1 month ago', end =
 			
 			// What countries did we serve in, proportionally?
 			// TODO Insert a shim for unset countries
-			const countries = tagToCountryBreakdown(cargo.by_adid_country);
+			const countries = tagToCountryBreakdown(cargo.by_adid_country, tagsById);
 			// This will hold the transformed-for-ChartJS breakdowns
 			const datasets = {};
 
@@ -185,7 +195,7 @@ export const getCarbon = ({q = '', breakdowns = [], start = '1 month ago', end =
 					Object.entries(thisBytes).forEach(([key, value]) => {
 						bytes[key].push(value);
 						// calculate carbon for each sub-value and append that too
-						kgCarbon[key].push(bytesToCarbon(value, tagFractions, countries));
+						kgCarbon[key].push(bytesToCarbon(value, tagsById, tagFractions, countries));
 					});
 				});
 				datasets[breakdownName] = { labels, imps, bytes, kgCarbon };

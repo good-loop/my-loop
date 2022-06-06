@@ -224,7 +224,7 @@ const MyDataDashboardHomeTab = () => {
 	const ngo = pvCharity && (pvCharity.value || pvCharity.interim);
 	const scrollToMyDataSignup = (e) => {
 		e && e.preventDefault();
-		document.getElementById("mydata-dashboard-signup").scrollIntoView({behavior: "smooth"});
+		scrollTo("mydata-dashboard-signup");
 	}
 
 	const dataCompleteIsh = getDataProgress() > 0.65; // ?? ideally we'd distinguish between "complete" and "share"

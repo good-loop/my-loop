@@ -27,7 +27,7 @@ import C from '../../C';
  const getJoinedDate = () => {
 	const person = getProfile().value;
 	if (!person) {
-		return 1;
+		return null;
 	}
 	// use the oldest claim (TODO lets have a register claim and use that)
 	let claims = Person.claims(person);
@@ -50,17 +50,23 @@ import C from '../../C';
  */
 export const getDataProgress = (keys) => { 
 	let count = 0;
+	let missingKeys = [];
 	if (!keys) keys = ["name", "email", "dob", "gender", "country", "location-region", "causes", "adstype"]
+
 	const claims = keys.map(key => getPVClaim({key}).value);
 
+	if (claims[0] == undefined) return 0; // Quick zero
+
 	claims.forEach(claim => {
-		if ( ! claim || ! claim.v) return; // unset				
+		if ( ! claim || ! claim.v) return; // unset
 		if (claim.v === "[]") return; // empty array
 		let consent = Claim.consent(claim);
-		if (consent==="public" || consent==="careful") count++;
+		if (consent==="public" || consent==="careful" || consent==="dflt") count++; // See default as careful
 		else if (consent==="private") count += 0.1; // private
 		else count += 0.25; // unset / other
 	});
+
+	console.log("missingKeys", missingKeys);
 
 	return count/keys.length;
 }
@@ -142,7 +148,7 @@ const MyDataDashboardPage = () => {
 			{locationCountry && <h5>{locationCountry}</h5>}
 			<br/>
 			<ProfileDotRow>
-				<ProfileDot imgUrl="/img/mydata/joined.png" className="mt-3 mt-md-0">{joinedDate && <>Joined&nbsp; <Misc.RoughDate date={joinedDate}/></>}</ProfileDot>
+				<ProfileDot imgUrl="/img/mydata/joined.png" className="mt-3 mt-md-0">Joined&nbsp; {joinedDate && <Misc.RoughDate date={joinedDate}/>}</ProfileDot>
 				<ProfileDot imgUrl={ngo ? ngo.logo : 'img/homepage/Stars.png'}>{<>Supporting {ngo ? NGO.displayName(ngo) : 'Charity'}</>}</ProfileDot>
 				<ProfileDot imgUrl="/img/mydata/raised.png" ><>
 					{/* Show exactly the same amount as what displays on T4G */}

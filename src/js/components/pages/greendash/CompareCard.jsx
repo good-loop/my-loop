@@ -3,18 +3,11 @@ import { Button } from 'reactstrap';
 import _ from 'lodash';
 
 import Misc from '../../../base/components/Misc';
-import { getDataLogData } from '../../../base/plumbing/DataLog';
 import NewChartWidget from '../../NewChartWidget';
-import { byId, dataToCarbon, getPeriodQuarter, GreenCard, calcBytes, printPeriod } from './dashutils';
+import { getPeriodQuarter, GreenCard, GreenCardAbout, printPeriod } from './dashutils';
 import { isoDate } from '../../../base/utils/miscutils';
+import { getCarbon } from './carboncalc';
 
-const dummyDataQuarter = {
-	labels: ['Q3 \'21', 'Q4 \'21', 'Q1 \'22', 'Q2 \'22',],
-	datasets: [{
-		label: 'Kg CO2',
-		data: [77, 69, 60, 32],
-	}],
-};
 
 const dummyDataCampaign = {
 	labels: ['Campaign A', 'Campaign B', 'Campaign C', 'Campaign D',],
@@ -24,24 +17,19 @@ const dummyDataCampaign = {
 	}],
 };
 
-const baseDataQuarters = {
-	labels: ['', '', '', ''],
-	datasets: [{
-		label: 'Kg CO2',
-		data: [0, 0, 0, 0]
-	}]
-};
 
-
-
-
-const QuartersCard = ({campaigns, tags, baseFilters}) => {
-	const [data, setData] = useState(_.cloneDeep(baseDataQuarters));
+const QuartersCard = ({tags, baseFilters}) => {
+	// Set up base chart data object
+	const [data, setData] = useState(() => ({
+		labels: ['', '', '', ''],
+		datasets: [{
+			label: 'Kg CO2',
+			data: [0, 0, 0, 0]
+		}]
+	}));
 
 	useEffect(() => {
-		const tagsById = byId(tags);
-
-		// construct four quarter periods, from the current quarter back
+		// Construct four quarter periods, from the current quarter back
 		const cursorDate = new Date();
 		const quarters = [];
 		for (let i = 0; i < 4; i++) {
@@ -51,19 +39,13 @@ const QuartersCard = ({campaigns, tags, baseFilters}) => {
 
 		// Get total carbon for each quarter
 		quarters.forEach((quarter, i) => {
-			const start = isoDate(quarter.start);
-			const end = isoDate(quarter.end);
-			getDataLogData({ ...baseFilters, start, end, breakdowns: ['adid']}).promise.then(res => {
-				
-				// Calculate data usage & carbon emissions for this quarter and insert in the data array at the appropriate point
-				const bytes = calcBytes(res.by_adid.buckets, tagsById).total;
-				const carbon = dataToCarbon(bytes);
-				setData(prevData => {
+			getCarbon({ ...baseFilters, breakdowns:[/* TODO REMOVE ME WHEN BASEFILTERS IS UNFUCKED*/] ,start: isoDate(quarter.start), end: isoDate(quarter.end), tags}).promise.then(value => {
+				setData(prevData => { // cumulatively insert new values as they arrive
 					const nextData = _.cloneDeep(prevData);
 					nextData.labels[i] = printPeriod(quarter);
-					nextData.datasets[0].data[i] = carbon;
+					nextData.datasets[0].data[i] = value.total.kgCarbon.total[0];
 					return nextData;
-				})
+				});
 			});
 		});
 	}, []);
@@ -87,12 +69,15 @@ const CompareCard = (props) => {
 		<CampaignCard {...props} />
 	);
 
-	return <GreenCard title="How do your ad emissions compare?">
+	return <GreenCard title="How do your ad emissions compare?" className="carbon-compare">
 		<div className="d-flex justify-content-around mb-2">
 			<Button size="sm" color="primary" active={mode === 'quarter'} onClick={() => setMode('quarter')}>Quarter</Button>
 			<Button size="sm" color="primary" active={mode === 'campaign'} onClick={() => setMode('campaign')}>Campaign</Button>
 		</div>
 		{subcard}
+		<GreenCardAbout>
+			<p>Explanation of quarterly and per-campaign emissions comparisons</p>
+		</GreenCardAbout>
 	</GreenCard>;
 };
 

@@ -1,0 +1,77 @@
+#getmydata {
+
+    h1 {
+        font-size: 1.3rem;
+    }
+    h2, .miniheader {
+        color: @gl-dark-turquoise;
+    }
+
+    .landing {
+        .mydata-topimg {
+            background: linear-gradient(180deg, white 0%, @gl-light-blue 150%);
+            position: relative;
+            .topimg-curve {
+                width: 100%;
+                position: absolute;
+                bottom: 0;
+                z-index: 1;
+            }
+            .topimg-graphic {
+                position: relative;
+                z-index: 2;
+            }
+        }
+        h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: capitalize;
+            text-align: center;
+        }
+        p {
+            color: @gl-dark-turquoise;
+            text-align: center;
+            padding: 0 2rem;
+        }
+        a:not(.btn) {
+            text-decoration: underline;
+            color: @gl-red;
+            font-weight: 600;
+        }
+    }
+
+    .control-your-data {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        h4, p {
+            text-align: center;
+        }
+        h4 {
+            color: @gl-red;
+        }
+        p {
+            color: @gl-red;
+            text-transform: capitalize;
+        }
+    }
+
+    #how-it-works {
+        @media @width-mobile {
+            background: linear-gradient(180deg, white 0%, @gl-light-blue 100%);
+        }
+        padding-bottom: 50px;
+        .inner {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin: 1rem;
+            background: white;
+            border-radius: 10px;
+        }
+    }
+
+}

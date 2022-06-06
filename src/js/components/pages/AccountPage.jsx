@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Row, Container, Button } from 'reactstrap';
 import { addImageCredit } from '../../base/components/AboutPage';
 import Editor3ColLayout, { LeftSidebar, MainPane } from '../../base/components/Editor3ColLayout';
@@ -17,16 +17,31 @@ import MyDataDashboard from '../mydata/MyDataDashboardPage';
 
 
 const Page = () => {
+	// Set a loading state for 0.2 seconds to prevent the not logged in message from flashing on the screen
+	const [loading, setLoading] = useState(true);
+	useEffect(() => {
+		setTimeout(() => {
+			setLoading(false);
+		}, 200);
+	}	, []);
+
 	// handle the not-logged-in case
 	if ( ! Login.isLoggedIn()) {
-		return (
-			<div className="AccountPage">				
-				<div className="container mt-5 pt-5">
-					<h1>You need an account to see this page.</h1>
-					<LoginLink verb="register" className="btn btn-transparent fill">Register / Log in</LoginLink>
+		if (loading) {
+			return <div className="AccountPage">
+				<Container className="pt-3 account-container">
+			</Container>
+			</div>;
+		} else {
+			return (
+				<div className="AccountPage">				
+					<div className="container mt-5 pt-5">
+						<h1>You need an account to see this page.</h1>
+						<LoginLink verb="register" className="btn btn-transparent fill">Register / Log in</LoginLink>
+					</div>
 				</div>
-			</div>
-		);
+			);
+		}
 	}
 	// // NB: race conditions with Login and profile fetch (for linked IDs) mean all-xids should be refreshed.
 	// let xids = getAllXIds();
