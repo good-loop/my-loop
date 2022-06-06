@@ -5,14 +5,24 @@
 @blue-highlight: #69a4b9;
 @sea-blue: #76a1b7;
 
-// The navigation column
-@nav-width: 20em;
+// The navigation column width
+@nav-width: 15rem;
 
-#green-dashboard {
-	// width: 100vw;
+#greendash {
+	padding-left: @nav-width;
 	overflow: hidden;
 	display: flex;
-} // /#green-dashboard
+} // /#greendash
+
+
+#mainDiv.page-greendash {
+	nav.navbar {
+		display: none; // Hide the main navbar on this page
+	}
+	.my-loop-footer {
+		padding-left: @nav-width; // Push the footer right so the left nav doesn't overlap it
+	}
+}
 
 
 // The date range selector widget (TODO Pull this out as a PropControl?)
@@ -67,9 +77,11 @@
 
 // The left navbar for the green dashboard
 #green-navbar {
-	position: relative;
+	position: fixed;
+	left: 0;
+	top: 0;
 	width: @nav-width;
-	height: 100%;
+	height: 100vh;
 	background-color: @greenmedia-darkcyan;
 	z-index: 1;
 	display: flex;
@@ -87,8 +99,12 @@
 	}
 
 	.nav-item {
+		transition: background-color 0.2s linear;
 		&.active {
-			background: @green-highlight;
+			background-color: @green-highlight;
+		}
+		&:hover {
+			background-color: lighten(@greenmedia-darkcyan, 5%);
 		}
 		display: flex;
 		align-items: center;
@@ -97,6 +113,7 @@
 		text-decoration: none;
 		padding: 0.5em 0 0.5em 3em;
 	}
+
 
 	.green-nav-icon {
 		position: relative;

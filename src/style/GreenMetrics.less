@@ -1,22 +1,37 @@
 
-/* Params for the cards */
+/* Params for card dimensions */
 @gc-border-radius: 0.5rem;
 @gc-padding: 1rem;
 
-/* Hide the navbar on this page only */
-#mainDiv.page-greendash {
-	nav.navbar {
-		display: none;
-	}
-}
+/* Button colours */
+@gc-btn-colour: #4a737b;
+@gc-btn-colour-light: lighten(@gc-btn-colour, 10%);
 
-#green-dashboard .green-metrics {
+
+#greendash .green-metrics {
 	font-family: 'Montserrat';
 	text-transform: uppercase;
-	/* Instruct all cards to assume equal height within */
-	.card-column {
-		display: flex;
-		flex-direction: column;
+
+	.btn-primary:active:not(.disabled), .btn-primary.active, .btn-primary:focus:not(.disabled) {
+		background-color: @gc-btn-colour-light !important;
+		box-shadow: 0 2px 3px rgba(0, 0, 0, 30%) !important;
+	}
+	.btn-primary {
+		background-color: @gc-btn-colour !important;
+		&:hover {
+			background-color: @gc-btn-colour-light;
+		}
+	}
+	.btn-secondary {
+		color: @gc-btn-colour !important;
+		border-color: @gc-btn-colour;
+		&:active {
+			color: #fff;
+			border-color: @gc-btn-colour-light;
+		}
+		&:hover {
+			color: @gc-btn-colour-light;
+		}
 	}
 
 	/* General styling for the info cards */
@@ -24,9 +39,12 @@
 		display: flex;
 		flex-direction: column;
 		flex-grow: 1;
-		.gc-title {
 
+		.gc-title {
+			font-size: 90%;
+			text-transform: uppercase;
 		}
+
 		.gc-body {
 			background-color: white;
 			box-shadow: 0 0.25em 0.5em rgb(0 0 0 / 40%);
@@ -34,10 +52,12 @@
 			padding: @gc-padding;
 			flex-grow: 1;
 		}
+
 		// Default chart behaviour: Fill as much of the card's natural height as possible
 		.chart-canvas-container {
 			flex-grow: 1;
 		}
+
 		/* The (?) button that shows an explanation of the card's data */
 		.card-about {
 			z-index: 1;
@@ -106,23 +126,26 @@
 
 	/* The hero "emissions over time + driving / flights / kettles equivalent" chart*/
 	.carbon-time-series {
+		// Container manages the 
+		.container {
+			flex-grow: 1;
+		}
 		.card-body {
 			padding-right: 0; // Let the right subcard sit flush with the card edge
+		}
+		.chart-subcard {
+			flex-grow: 1;
 		}
 		.total-subcard {
 			color: white;
 			background-color: @greenmedia-darkcyan;
-			margin: -@gc-padding -@gc-padding -@gc-padding 0;
+			margin: -@gc-padding 0;
 			padding: @gc-padding;
 			border-radius: @gc-border-radius;
 			width: 15em;
 			text-align: center;
-			display: flex;
-			flex-direction: column;
 			
 			.impact-container {
-
-				height: 250px;
 				display: flex;
 				flex-direction: column;
 				justify-content: center;
@@ -213,44 +236,43 @@
 }
 
 
-
-
-	.carbon-journey {
-		.card-body {
-			text-align: center;
+.carbon-journey {
+	.card-body {
+		text-align: center;
+	}
+	
+	.cloud-indicator {
+		position: relative;
+		margin-bottom: 0;
+		.cloud-graphic {
+			width: 100%;
+			height: 5em;
+			top: 0;
+			left: 0;
+			overflow: visible;
+			z-index: 0;
 		}
-		
-		.cloud-indicator {
-			position: relative;
-			margin-bottom: 0;
-			.cloud-graphic {
-				width: 100%;
-				height: 5em;
-				top: 0;
-				left: 0;
-				overflow: visible;
-				z-index: 0;
-			}
-			.cloud-message {
-				position: absolute;
-				top: 1.5em;
-				width: 100%;
-				font-size: 1.25rem;
-				color: white;
-				z-index: 1;
-			}
-			margin-bottom: 0.5em;
+		.cloud-message {
+			position: absolute;
+			top: 1.5em;
+			width: 100%;
+			font-size: 1.25rem;
+			color: white;
+			z-index: 1;
 		}
-		.carbon-emission-total {
-			font-size: 1rem;
-		}
-		.journey-tree {
-			height: 3em;
-			margin: 0.5em;
-		}
-	} // /.carbon-journey
+		margin-bottom: 0.5em;
+	}
+	.carbon-emission-total {
+		font-size: 1rem;
+	}
+	.journey-tree {
+		height: 3em;
+		margin: 0.5em;
+	}
+} // /.carbon-journey
 
 .carbon-cta {
+	flex-grow: 0 !important; // Let the time-of-day card above expand
 	.cta-card-decoration {
 		position: absolute;
 		bottom: 0;

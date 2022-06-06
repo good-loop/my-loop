@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card } from 'reactstrap';
+import { Button, Card } from 'reactstrap';
 
 import DataStore from "../../../base/plumbing/DataStore";
 import { isoDate, space } from '../../../base/utils/miscutils';
@@ -139,26 +139,43 @@ export const printDateShort = (date) => `${date.getDate()} ${monthNames[date.get
 const quarterNames = [, '1st', '2nd', '3rd', '4th'];
 
 
-/** Turn period object into clear human-readable text */
-export const printPeriod = ({start, end, name = ''}) => {
+/**
+ * Turn period object into clear human-readable text
+ * @param {*} period Period object with either a name or at least one of start/end
+ * @param {*} short True for condensed format
+ * @returns 
+ */
+export const printPeriod = ({start, end, name = ''}, short) => {
 	if (name === 'all') return 'All Time';
 
 	// Is it a named period (quarter, month, year)?
 	const quarterMatches = name.match(quarterRegex);
-	if (quarterMatches) return `${quarterMatches[1]} ${quarterNames[quarterMatches[2]]} quarter`;
+	if (quarterMatches) {
+		const [, year, num] = quarterMatches;
+		if (short) return `Q${num} ${year}`; // eg "Q1 2022"
+		return `${year} ${quarterNames[num]} quarter`; // eg "2022 1st Quarter"
+	}
 
 	const monthMatches = name.match(monthRegex);
-	if (monthMatches) return `${monthNames[monthMatches[2]]} ${monthMatches[1]}`;
+	if (monthMatches) {
+		const [, month, year] = monthMatches;
+		return `${monthNames[month]} ${year}`; // eg "Jan 2022"
+	}
 
 	const yearMatches = name.match(yearRegex);
-	if (yearMatches) return `Year ${yearMatches[1]}`;
+	if (yearMatches) {
+		const [, year] = yearMatches;
+		if (short) return `${year}`; // eg "2022"
+		return `Year ${year}`; // eg "Year 2022"
+	}
 
 	// Bump end date back by 1 second so eg 2022-03-01T00:00:00.000+0100 to 2022-04-01T00:00:00.000+0100
 	// gets printed as "1 March 2022 to 31 March 2022"
 	end = new Date(end);
 	end.setSeconds(end.getSeconds() - 1);
 
-	return `${start ? printDate(start) : ``} to ${end ? printDate(end) : `now`}`;
+	const pd = short ? printDateShort : printDate;
+	return `${start ? pd(start) : ``} to ${end ? pd(end) : `now`}`;
 };
 
 export const periodKey = ({start, end, name}) => {
@@ -174,10 +191,10 @@ const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep
 
 
 /** Boilerplate styling for a subsection of the green dashboard */
-export const GreenCard = ({ title, children, className, ...rest}) => {
-	return <div className={space('green-card', 'mb-2', className)} {...rest}>
+export const GreenCard = ({ title, children, className, row, ...rest}) => {
+	return <div className={space('green-card my-2 flex-column', className)} {...rest}>
 		{title ? <h6 className="gc-title">{title}</h6> : null}
-		<Card body className="gc-body">{children}</Card>
+		<Card body className={space('gc-body', row ? 'flex-row' : 'flex-column')}>{children}</Card>
 	</div>
 };
 
@@ -208,6 +225,16 @@ export const Mass = ({kg}) => {
 		<span className="unit">{unit}</span>
 	</span>
 };
+
+
+export const ModeButton = ({ children, name, mode, setMode, size = 'sm', ...rest}) => {
+	return (
+		<Button size={size} color={mode === name ? 'primary' : 'secondary'} onClick={() => setMode(name)} {...rest}>
+			{children}
+		</Button>
+	);
+};
+
 
 // HSL values for the maximum and mimimum values in the series - interpolete between for others
 const dfltMaxColour = [192, 33, 48];

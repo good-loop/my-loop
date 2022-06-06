@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Container, Row } from 'reactstrap';
+import { Col as div, Container, Row } from 'reactstrap';
 import Misc from '../../../base/components/Misc';
 import { space } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
@@ -94,7 +94,7 @@ const TotalSubcard = ({ period, data }) => {
 	const [mode, setMode] = useState('base');
 
 	return (
-		<Col className="total-subcard" xs="12" sm="5">
+		<div className="total-subcard d-flex flex-column">
 			<div>{printPeriod(period)}</div>
 			{data ? <CO2Impact kg={data.total.kgCarbon.total} mode={mode} /> : null}
 			<div className="impact-buttons">
@@ -107,22 +107,25 @@ const TotalSubcard = ({ period, data }) => {
 					</div>
 				})}
 			</div>
-		</Col>
+		</div>
 	);
 };
 
 /** Skip rather than rotating X axis labels */
 const chartOptions = {
 	scales: {
-		x: {
-			ticks: { maxRotation: 0, minRotation: 0 }
+
+	},
+	plugins: {
+		legend: {
+			position: 'right',
 		}
 	}
 }
 
 
 const TimeSeriesCard = ({ period, data }) => {
-	const [chartData, setChartData] = useState();
+	const [chartProps, setChartProps] = useState();
 
 	// Convert impressions + tags to CO2 time series
 	useEffect(() => {
@@ -138,35 +141,57 @@ const TimeSeriesCard = ({ period, data }) => {
 			utc => printDate(new Date(utc))
 		);
 
-		let timeLabel = 'Kg CO2';
+		let label = 'Kg CO2';
 		let timeSeries = data.time.kgCarbon.total;
-		let avgSeries = data.time.labels.map(() => avgCO2);
 
 		// Display tonnes instead of kg? (should this be avg instead of max?)
 		if (maxCO2 >= TONNES_THRESHOLD) {
-			timeLabel = 'Tonnes CO2';
+			label = 'Tonnes CO2';
 			timeSeries = timeSeries.map(d => d / 1000);
-			avgSeries = avgSeries.map(d => d / 1000);
+			avgCO2 /= 1000
 		}
 
 		// Data format accepted by chart.js
-		let newChartData = {
-			labels: data.time.labels.map(labelFn),
-			datasets: [{
-				label: timeLabel,
-				data: timeSeries,
-				cubicInterpolationMode: 'monotone',
-				borderColor: '#52727a'
-			}, {
-				label: 'Avg',
-				data: avgSeries,
-				pointRadius: 0,
-				borderDash: [5, 5],
-				borderColor: '#aaa'
-			}],
+		let newChartProps = {
+			data: {
+				labels: data.time.labels.map(labelFn),
+				datasets: [{
+					label,
+					data: timeSeries,
+					cubicInterpolationMode: 'monotone',
+					borderColor: '#52727a'
+				}],
+			},
+			options: {
+				scales: {
+					x: {
+						ticks: { maxRotation: 0, minRotation: 0 } // Don't angle date labels - skip some if space is tight
+					},
+					y: {
+						ticks: { callback: (maxCO2 >= TONNES_THRESHOLD ? v => `${v} t` : v => `${v} kg`)}, // Show appropriate unit
+					},
+				},
+				plugins: {
+					legend: { display: false },
+					autocolors: false,
+					annotation: { // add average line
+						annotations: {
+							line1: {
+								type: 'line',
+								yMin: avgCO2,
+								yMax: avgCO2,
+								borderDash: [5, 5],
+								borderColor: '#aaa',
+								borderWidth: 2,
+								label: { enabled: true, content: 'Avg', position: 'end' },
+							}
+						}
+					}
+				},
+			}
 		};
 
-		setChartData(newChartData);
+		setChartProps(newChartProps);
 	}, [data]);
 
 	//const labelInterval = data ? Math.round(data.labels.length / numLabels) : 1;
@@ -175,21 +200,17 @@ const TimeSeriesCard = ({ period, data }) => {
 
 	// TODO Don't show "Per 1000 impressions" button for one-tag mode
 
-	return <GreenCard title="How much carbon is your digital advertising emitting?" className="carbon-time-series">
-		<Container>
-			<Row>
-				<Col className="chart-subcard" xs="12" sm="7">
-					<div>CO<sub>2</sub>e emissions over time</div>
-					{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
-					{ chartData ? (
-						<NewChartWidget data={chartData} options={chartOptions} />
-					) : (
-						<Misc.Loading text="Fetching emissions-over-time data..." />
-					)}
-				</Col>
-				<TotalSubcard period={period} data={data} />
-			</Row>
-		</Container>
+	return <GreenCard title="How much carbon is your digital advertising emitting?" className="carbon-time-series" row>
+		<div className="chart-subcard flex-column">
+			<div>CO<sub>2</sub>e emissions over time</div>
+			{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
+			{ chartProps ? (
+				<NewChartWidget data={chartProps.data} options={chartProps.options} />
+			) : (
+				<Misc.Loading text="Fetching emissions-over-time data..." />
+			)}
+		</div>
+		<TotalSubcard period={period} data={data} />
 		<GreenCardAbout>
 			<p>How do we calculate the time-series carbon emissions?</p>
 		</GreenCardAbout>

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, DropdownItem, DropdownMenu, DropdownToggle, Form, Input, Row, UncontrolledDropdown } from 'reactstrap';
-import { nonce } from '../../../base/data/DataClass';
+
 import KStatus from '../../../base/data/KStatus';
-import { getDataList } from '../../../base/plumbing/Crud';
 import DataStore from '../../../base/plumbing/DataStore';
-import { stopEvent } from '../../../base/utils/miscutils';
-import DateRangeWidget from '../../DateRangeWidget';
+import { nonce } from '../../../base/data/DataClass';
+import { getDataList } from '../../../base/plumbing/Crud';
 import { getPeriodQuarter, periodFromUrl, periodToUrl, printPeriod } from './dashutils';
+
+import DateRangeWidget from '../../DateRangeWidget';
+
 
 
 /** Generate the list of quarter-period shortcuts */
@@ -75,7 +77,6 @@ const GreenDashboardFilters = ({}) => {
 	// Shorthand for a click on one of the "Xth Quarter" buttons
 	const setNamedPeriod = name => {
 		setPeriod({name});
-		doCommit();
 	};
 
 	const [availableBrands, setAvailableBrands] = useState([]);
@@ -133,17 +134,26 @@ const GreenDashboardFilters = ({}) => {
 	// - Admin users get an email entry control to "act as" contacts
 	// - When acting as non-admin, their available brands & campaigns populate dropdowns
 
+	let periodLabel = 'Timeframe:';
+	if (!period.name) periodLabel += ' Custom'
+	else periodLabel += ` ${printPeriod(period, true)}`
+
+	let filterLabel = 'Filter by:';
+	if (filterMode) filterLabel += ` ${filterMode}`;
+
+
 	return (
 		<Row className="greendash-filters mb-2">
 			<Col xs="12">
 				{ brand ? <img src="brand.png" alt="Brand Logo" /> : null }
 				<Form inline>
 					<UncontrolledDropdown className="filter-dropdown">
-						<DropdownToggle caret>Timeframe</DropdownToggle>
+						<DropdownToggle className="pl-0" caret>{periodLabel}</DropdownToggle>
 						<DropdownMenu>
 							<QuarterButtons period={period} setNamedPeriod={setNamedPeriod} />
 							<DropdownItem onClick={() => setNamedPeriod('all')}>
 								All Time
+								{period.name === 'all' ? null : <span className="selected-marker" />}
 							</DropdownItem>
 							<DropdownItem toggle={false} onClick={() => setShowCustomRange(true)}>
 								Custom
@@ -158,7 +168,7 @@ const GreenDashboardFilters = ({}) => {
 					</UncontrolledDropdown>
 					
 					<UncontrolledDropdown className="filter-dropdown ml-2">
-						<DropdownToggle caret>Filter by {filterMode || '...'}</DropdownToggle>
+						<DropdownToggle caret>Filter by: {filterMode || ''}</DropdownToggle>
 						<DropdownMenu>
 							<DropdownItem onClick={() => setFilterMode('brand')}>
 								{filterMode === 'brand' ? <span className="selected-marker" /> : null}
@@ -179,7 +189,7 @@ const GreenDashboardFilters = ({}) => {
 						<DropdownToggle caret>{{ campaign, brand, tag }[filterMode] || `Select a ${filterMode}`}</DropdownToggle>
 						<DropdownMenu>
 							{{brand: availableBrands, campaign: availableCampaigns, tag: availableTags}[filterMode].map(item => (
-								<DropdownItem onClick={() => setCurrentTemp(item.id)}>
+								<DropdownItem key={item.id} onClick={() => setCurrentTemp(item.id)}>
 									{{ campaign, brand, tag }[filterMode] === item.id ? <span className="selected-marker" /> : null}
 									{item.name}
 								</DropdownItem>

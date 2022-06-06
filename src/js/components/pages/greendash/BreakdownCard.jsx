@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from 'reactstrap';
+
 import Icon from '../../../base/components/Icon';
 import Misc from '../../../base/components/Misc';
 import NewChartWidget from '../../NewChartWidget';
-import { GreenCard, GreenCardAbout } from './dashutils';
+import { GreenCard, GreenCardAbout, ModeButton } from './dashutils';
 
 
 // Classify OS strings seen in our data
@@ -57,7 +57,7 @@ const TechSubcard = ({ tags, data, options, minimumPercentLabeled=0 }) => {
 		},
 		plugins: {
 			legend: {
-				position: "top"
+				position: 'left'
 			},
 			tooltip: {
 				callbacks: {
@@ -83,15 +83,10 @@ const TechSubcard = ({ tags, data, options, minimumPercentLabeled=0 }) => {
 							weight: "bolder",
 							size: "20px"
 						},
-						formatter: (value, ctx) => {
-							if (!value) value = 0;
-							let sum = 0;
-							let dataArr = ctx.chart.data.datasets[0].data;
-							dataArr.map(data => {
-								sum += data || 0;
-							});
-							let percentage = Math.round(value*100 / sum);
-							return percentage >= minimumPercentLabeled ? percentage+"%" : "";
+						formatter: (value = 0, ctx) => {
+							const sum = ctx.chart.data.datasets[0].data.reduce((acc, v) => acc + (v || 0), 0);
+							let percentage = Math.round(value * 100 / sum);
+							return percentage >= minimumPercentLabeled ? `${percentage}%` : '';
 						},
 					}
 				}
@@ -114,7 +109,7 @@ const TechSubcard = ({ tags, data, options, minimumPercentLabeled=0 }) => {
 const DeviceSubcard = ({ tags, data }) => {
 	if (!tags || !data) return <Misc.Loading text="Fetching your green tag data..." />;
 
-	const [chartDatas, setChartDatas] = useState();
+	const [chartProps, setChartProps] = useState();
 
 	useEffect(() => {
 		const typesGroupsBytes = {};
@@ -122,39 +117,35 @@ const DeviceSubcard = ({ tags, data }) => {
 		// Bundle operating systems into useful groups, eg "windows", "linux", "smart tv" and total up data usage for each
 		data.os.labels.forEach((osName, i) => {
 			const {type, group} = osTypes[osName];
-			// First grouping: mobile/desktop
+			// Outer grouping: mobile/desktop
 			let groupsToBytes = typesGroupsBytes[type];
 			if (!groupsToBytes) {
 				groupsToBytes = {};
 				typesGroupsBytes[type] = groupsToBytes;
 			}
-			// Second grouping: all "Windows", all "Android", etc
+			// Inner grouping: all "Windows", all "Android", etc
 			if (!groupsToBytes[group]) {
 				groupsToBytes[group] = 0;
 			}
 			groupsToBytes[group] += data.os.kgCarbon.total[i];
 		});
 
-		// Transform totalled groups to chart objects
-		setChartDatas(Object.entries(typesGroupsBytes).reduce((acc, [osType, groupsToBytes]) => {
-			acc[osType] = {
-				labels: Object.keys(groupsToBytes),
-				datasets: [{ label: 'Kg CO2', data: Object.values(groupsToBytes) }],
-			};
+		const chartData = Object.values(typesGroupsBytes).reduce((acc, [groupsToBytes]) => {
+			acc.labels = [...acc.labels, ...Object.keys(groupsToBytes)];
+			acc.datasets[0].data = [...acc.datasets[0].data, ...Object.values(groupsToBytes)];
 			return acc;
-		}, {}));
+		}, { labels: [], datasets: [{ label: 'Kg CO2', data: [] } ] });
+
+		// Transform totalled groups to chart objects
+		setChartProps(chartData);
 	}, [tags, data]);
 
 
-	if (!chartDatas) return <Misc.Loading text="Fetching device data..." />;
+	if (!chartProps) return <Misc.Loading text="Fetching device data..." />;
 
-	return <>
-		{Object.entries(chartDatas).map(([key, cd]) => <div key={key}>
-			<h5><Icon name={key} /> {key}</h5>
-			<NewChartWidget type="bar" data={cd} options={{ indexAxis: 'y' }} />
-		</div>)}
-	</>;
+	return <NewChartWidget type="bar" data={chartProps} options={{ indexAxis: 'y' }} />;
 }
+
 
 const BreakdownCard = ({ campaigns, tags, data }) => {
 	const [mode, setMode] = useState('tech');
@@ -165,10 +156,12 @@ const BreakdownCard = ({ campaigns, tags, data }) => {
 		<DeviceSubcard tags={tags} data={data} />
 	);
 
+
+
 	return <GreenCard title="What is the breakdown of your emissions?" className="carbon-breakdown">
 		<div className="d-flex justify-content-around mb-2">
-			<Button size="sm" color="primary" active={mode === 'tech'} onClick={() => setMode('tech')}>Ad Tech</Button>
-			<Button size="sm" color="primary" active={mode === 'device'} onClick={() => setMode('device')}>Device Type</Button>
+			<ModeButton name="tech" mode={mode} setMode={setMode}>Ad Tech</ModeButton>
+			<ModeButton name="device" mode={mode} setMode={setMode}>Device Type</ModeButton>
 		</div>
 		{subcard}
 		<GreenCardAbout>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 import GreenNavBar from './greendash/GreenNavBar';
 import GreenMetrics from './greendash/GreenMetrics';
@@ -21,10 +21,10 @@ const GreenDashboard = ({}) => {
 	const Subpage = subpages[subpage] || GreenMetrics;
 
 
-	return <div id="green-dashboard">
-		{/* <GreenNavBar active={subpage} /> */}
+	return <>
+		<GreenNavBar active={subpage} />
 		<Subpage />
-	</div>;
+	</>;
 };
 
 export default GreenDashboard;

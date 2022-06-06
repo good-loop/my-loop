@@ -35,7 +35,7 @@ const OverviewWidget = ({period, data}) => {
 
 
 const CTACard = ({}) => {
-	return <GreenCard className="carbon-cta">
+	return <GreenCard className="carbon-cta flex-column">
 		Interested to know more about<br/>
 		climate positive advertising?
 		<div className="cta-card-decoration">
@@ -44,7 +44,7 @@ const CTACard = ({}) => {
 			<img className="tree-side" src="/img/green/tree-light.svg" />
 		</div>
 		<a className="get-in-touch pull-right text-right" href="https://www.good-loop.com/contact" target="_blank">
-			<Button color="primary" size="lg">
+			<Button color="primary" size="md">
 				Get In Touch
 			</Button>
 		</a>
@@ -140,7 +140,7 @@ const GreenMetrics = ({}) => {
 		return <div className="green-subpage green-metrics">
 			<h3 className="text-center">Log in to access the Green Dashboard</h3>
 			<Container>
-				<Row fluid>
+				<Row>
 					<Col xs="12" sm="6" className="mx-auto">
 						<LoginWidgetEmbed verb="login" />
 					</Col>
@@ -216,22 +216,22 @@ const GreenMetrics = ({}) => {
 		if (pvChartData.resolved) {
 			content = <>
 				<OverviewWidget period={period} data={pvChartData.value} />
-				<Row>
-					<Col xs="12" sm="8" className="card-column">
+				<Row className="card-row">
+					<Col xs="12" sm="8" className="flex-column">
 						<TimeSeriesCard {...commonProps} data={pvChartData.value} />
 					</Col>
-					<Col xs="12" sm="4" className="card-column">
+					<Col xs="12" sm="4" className="flex-column">
 						<JourneyCard {...commonProps} />
 					</Col>
 				</Row>
-				<Row>
-					<Col xs="12" sm="4" className="card-column">
+				<Row className="card-row">
+					<Col xs="12" sm="4" className="flex-column">
 						<CompareCard {...commonProps} />
 					</Col>
-					<Col xs="12" sm="4" className="card-column">
+					<Col xs="12" sm="4" className="flex-column">
 						<BreakdownCard {...commonProps} data={pvChartData.value} />
 					</Col>
-					<Col xs="12" sm="4" className="card-column">
+					<Col xs="12" sm="4" className="flex-column">
 						<TimeOfDayCard {...commonProps} />
 						<CTACard />
 					</Col>
@@ -244,7 +244,7 @@ const GreenMetrics = ({}) => {
 
 	return (
 		<div className="green-subpage green-metrics">
-			<Container>
+			<Container fluid>
 				<GreenDashboardFilters />
 				{content}
 			</Container>

@@ -23,7 +23,7 @@ const TimeOfDayCard = ({baseFilters, tags}) => {
 			const hourLabels = [];
 			let hourData = [];
 			for (let i = 0; i < 24; i += 3) {
-				hourLabels.push(`${((i+11)%12)+1}${(i < 12 ? 'AM' : 'PM')}`);
+				hourLabels.push(`${((i+11)%12)+1} ${(i < 12 ? 'am' : 'pm')}`);
 				hourData.push(0);
 			}
 
@@ -45,7 +45,6 @@ const TimeOfDayCard = ({baseFilters, tags}) => {
 				datasets: [{
 					label,
 					data: hourData,
-					// backgroundColor: ['#000', '#038', '#fc0', '#9ef', '#6df', '#6af', '#f72', '#920'],
 					backgroundColor: dataColours(hourData),
 				}],
 			});
@@ -56,7 +55,7 @@ const TimeOfDayCard = ({baseFilters, tags}) => {
 	return <GreenCard title="When are your ad carbon emissions highest?" className="carbon-time-of-day">
 		{data ? <>
 			<NewChartWidget type="bar" data={data} />
-			<p><small>Time of day in your time zone: {Intl.DateTimeFormat().resolvedOptions().timeZone}</small></p>
+			<p><small>Time of day in your time zone ({Intl.DateTimeFormat().resolvedOptions().timeZone})</small></p>
 			</> : (
 			<Misc.Loading text="Fetching time-of-day data..." />
 		)}

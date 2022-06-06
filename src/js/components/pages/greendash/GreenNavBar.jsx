@@ -13,9 +13,9 @@ const GreenNavBar = ({active}) => {
 		<A className={space('nav-item', active === 'tags' && 'active')} href="/greendash/tags">
 			<div className="green-nav-icon tags-icon" /> Manage<br/>Tags
 		</A>
-		<A className={space('nav-item', active === 'optimisation' && 'active')} href="/greendash/optimisation">
+		{/* <A className={space('nav-item', active === 'optimisation' && 'active')} href="/greendash/optimisation">
 			<div className="green-nav-icon optimisation-icon" /> Optimisation<br/>Tips
-		</A>
+		</A> */}
 		<A className={space('nav-item', active === 'impact' && 'active')} href="/greendash/impact">
 			<div className="green-nav-icon impact-icon" /> Impact<br/>Overview
 		</A>

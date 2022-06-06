@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from 'reactstrap';
 import _ from 'lodash';
 
 import Misc from '../../../base/components/Misc';
 import NewChartWidget from '../../NewChartWidget';
-import { getPeriodQuarter, GreenCard, GreenCardAbout, printPeriod } from './dashutils';
+import { getPeriodQuarter, GreenCard, GreenCardAbout, ModeButton, printPeriod, TONNES_THRESHOLD } from './dashutils';
 import { isoDate } from '../../../base/utils/miscutils';
 import { getCarbon } from './carboncalc';
 
@@ -20,13 +19,21 @@ const dummyDataCampaign = {
 
 const QuartersCard = ({tags, baseFilters}) => {
 	// Set up base chart data object
-	const [data, setData] = useState(() => ({
-		labels: ['', '', '', ''],
-		datasets: [{
-			label: 'Kg CO2',
-			data: [0, 0, 0, 0]
-		}]
+	const [chartProps, setChartProps] = useState(() => ({
+		data: {
+			labels: ['', '', '', ''],
+			datasets: [{
+				label: 'CO2',
+				data: [0, 0, 0, 0]
+			}]
+		},
+		options: {
+			indexAxis: 'y',
+			plugins: { legend: { display: false } },
+			scales: { x: { ticks: { callback: v => `${v} kg` } } },
+		},
 	}));
+
 
 	useEffect(() => {
 		// Construct four quarter periods, from the current quarter back
@@ -39,19 +46,32 @@ const QuartersCard = ({tags, baseFilters}) => {
 
 		// Get total carbon for each quarter
 		quarters.forEach((quarter, i) => {
-			getCarbon({ ...baseFilters, breakdowns:[/* TODO REMOVE ME WHEN BASEFILTERS IS UNFUCKED*/] ,start: isoDate(quarter.start), end: isoDate(quarter.end), tags}).promise.then(value => {
-				setData(prevData => { // cumulatively insert new values as they arrive
-					const nextData = _.cloneDeep(prevData);
-					nextData.labels[i] = printPeriod(quarter);
-					nextData.datasets[0].data[i] = value.total.kgCarbon.total[0];
-					return nextData;
+			getCarbon({ ...baseFilters, breakdowns:[/* TODO REMOVE ME WHEN BASEFILTERS IS UNFUCKED*/], start: isoDate(quarter.start), end: isoDate(quarter.end), tags}).promise.then(value => {
+				setChartProps(prevProps => { // cumulatively insert new values as they arrive
+					const nextProps = _.cloneDeep(prevProps);
+					nextProps.data.labels[i] = printPeriod(quarter, true);
+
+					// Display kg or tonnes?
+					let thisCarbon = value.total.kgCarbon.total[0];
+					nextProps.data.datasets[0].data[i] = thisCarbon; // Default to kg
+					if (prevProps.tonnes) {
+						// There's already been at least one data point above the threshold: just scale down the latest one
+						nextProps.data.datasets[0].data[i] /= 1000;
+					} else if (thisCarbon > TONNES_THRESHOLD) {
+						// This is the first data point above the threshold: Scale down all points & change tick labels from kg to tonnes
+						nextProps.data.datasets[0].data = nextProps.data.datasets[0].data.map(d => d / 1000);
+						nextProps.options.scales.y.ticks.callback = v => `${v} t`;
+						nextProps.tonnes = true;
+					}
+
+					return nextProps;
 				});
 			});
 		});
 	}, []);
 
-	if (!data) return <Misc.Loading text="Fetching data for previous quarters..." />
-	return <NewChartWidget type="bar" data={data} options={{indexAxis: 'y'}} />
+	if (!chartProps) return <Misc.Loading text="Fetching data for previous quarters..." />
+	return <NewChartWidget type="bar" data={chartProps.data} options={chartProps.options} />
 };
 
 
@@ -71,8 +91,8 @@ const CompareCard = (props) => {
 
 	return <GreenCard title="How do your ad emissions compare?" className="carbon-compare">
 		<div className="d-flex justify-content-around mb-2">
-			<Button size="sm" color="primary" active={mode === 'quarter'} onClick={() => setMode('quarter')}>Quarter</Button>
-			<Button size="sm" color="primary" active={mode === 'campaign'} onClick={() => setMode('campaign')}>Campaign</Button>
+			<ModeButton name="quarter" mode={mode} setMode={setMode}>Quarter</ModeButton>
+			<ModeButton name="campaign" mode={mode} setMode={setMode}>Campaign</ModeButton>
 		</div>
 		{subcard}
 		<GreenCardAbout>

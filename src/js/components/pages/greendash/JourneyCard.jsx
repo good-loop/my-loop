@@ -20,28 +20,26 @@ const Cloud = ({style}) => (
  * 
 */
 const CO2Section = ({co2Offset, co2Emitted}) => {
-	if (!co2Offset) return null;
-
-	const cloudStyle = {fill: 'white', strokeWidth: 2};
-	let cloudMessage;
-	if (co2Offset < co2Emitted) {
-		cloudStyle.fill = '#999';
-		cloudMessage = <>Offsets<br/>Pending</>;
-	} else {
-		cloudStyle.fill = '#aef';
-		cloudMessage = <>Carbon<br/>Neutral</>;
+	let cloudMessage = null;
+	if (co2Offset && co2Emitted) {
+		cloudMessage = (co2Offset < co2Emitted) ? (
+			<>Offsets<br/>Pending</>
+		) : (
+			<>Carbon<br/>Neutral</>
+		);
 	}
 	
 	return <>
 		<div className="cloud-indicator">
-			<Cloud style={cloudStyle} />
-			<h3 className="cloud-message">
-				{cloudMessage}
-			</h3>
-			
+			<Cloud style={{fill: '#8bc'}} />
+			<h3 className="cloud-message">{cloudMessage}</h3>
 		</div>
-		<h3 className="carbon-offset-total"><Mass kg={co2Offset} /> of carbon offset</h3>
-		<h3 className="carbon-emission-total"><Mass kg={co2Emitted} /> emitted</h3>
+		<h3 className="carbon-offset-total">
+			{co2Offset ? <><Mass kg={co2Offset} /> of carbon offset</> : 'Fetching carbon offset...'}
+		</h3>
+		<h3 className="carbon-emission-total">
+			{co2Emitted ? <><Mass kg={co2Emitted} /> emitted</> : 'Fetching total emissions...'}
+		</h3>
 	</>
 };
 
