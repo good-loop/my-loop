@@ -10,7 +10,7 @@ import { getCarbon } from './carboncalc';
 
 
 const TimeOfDayCard = ({baseFilters, tags}) => {
-	const [data, setData] = useState();
+	const [chartProps, setChartProps] = useState();
 
 	if (!tags || !tags.length) {
 		return <Misc.Loading text="Fetching your tag data..." />;
@@ -34,27 +34,35 @@ const TimeOfDayCard = ({baseFilters, tags}) => {
 			});
 
 			let label = 'Kg CO2';
+			let tickFn = v => `${v} kg`;
 			const maxCarbon = Math.max(...hourData);
 			if (maxCarbon > TONNES_THRESHOLD) {
 				hourData = hourData.map(kg => kg / 1000);
 				label = 'Tonnes CO2';
+				tickFn = v => `${v} tonnes`;
 			}
 
-			setData({
-				labels: hourLabels,
-				datasets: [{
-					label,
-					data: hourData,
-					backgroundColor: dataColours(hourData),
-				}],
+			setChartProps({
+				data: {
+					labels: hourLabels,
+					datasets: [{
+						label,
+						data: hourData,
+						backgroundColor: dataColours(hourData),
+					}],
+				},
+				options: {
+					plugins: { legend: { display: false } },
+					scales: { y: { ticks: { callback: tickFn } } },
+				}
 			});
 		});
 	}, [baseFilters.q, baseFilters.start, baseFilters.end]);
 
 
 	return <GreenCard title="When are your ad carbon emissions highest?" className="carbon-time-of-day">
-		{data ? <>
-			<NewChartWidget type="bar" data={data} />
+		{chartProps ? <>
+			<NewChartWidget type="bar" data={chartProps.data} options={chartProps.options} />
 			<p><small>Time of day in your time zone ({Intl.DateTimeFormat().resolvedOptions().timeZone})</small></p>
 			</> : (
 			<Misc.Loading text="Fetching time-of-day data..." />

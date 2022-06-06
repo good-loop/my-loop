@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 import Misc from '../../../base/components/Misc';
 import NewChartWidget from '../../NewChartWidget';
-import { getPeriodQuarter, GreenCard, GreenCardAbout, ModeButton, printPeriod, TONNES_THRESHOLD } from './dashutils';
+import { dataColours, getPeriodQuarter, GreenCard, GreenCardAbout, ModeButton, printPeriod, TONNES_THRESHOLD } from './dashutils';
 import { isoDate } from '../../../base/utils/miscutils';
 import { getCarbon } from './carboncalc';
 
@@ -16,6 +16,12 @@ const dummyDataCampaign = {
 	}],
 };
 
+const baseOptions = {
+	indexAxis: 'y',
+	plugins: { legend: { display: false } },
+	scales: { x: { ticks: { callback: v => `${v} kg` } } },
+};
+
 
 const QuartersCard = ({tags, baseFilters}) => {
 	// Set up base chart data object
@@ -24,14 +30,10 @@ const QuartersCard = ({tags, baseFilters}) => {
 			labels: ['', '', '', ''],
 			datasets: [{
 				label: 'CO2',
-				data: [0, 0, 0, 0]
+				data: [0, 0, 0, 0],
 			}]
 		},
-		options: {
-			indexAxis: 'y',
-			plugins: { legend: { display: false } },
-			scales: { x: { ticks: { callback: v => `${v} kg` } } },
-		},
+		options: baseOptions,
 	}));
 
 
@@ -60,9 +62,12 @@ const QuartersCard = ({tags, baseFilters}) => {
 					} else if (thisCarbon > TONNES_THRESHOLD) {
 						// This is the first data point above the threshold: Scale down all points & change tick labels from kg to tonnes
 						nextProps.data.datasets[0].data = nextProps.data.datasets[0].data.map(d => d / 1000);
-						nextProps.options.scales.y.ticks.callback = v => `${v} t`;
+						nextProps.options.scales.x.ticks.callback = v => `${v} t`;
 						nextProps.tonnes = true;
 					}
+
+					// Assign bar colours
+					nextProps.data.datasets[0].backgroundColor = dataColours(nextProps.data.datasets[0].data);
 
 					return nextProps;
 				});
@@ -76,7 +81,7 @@ const QuartersCard = ({tags, baseFilters}) => {
 
 
 const CampaignCard = ({}) => {
-	return <NewChartWidget type="bar" data={dummyDataCampaign} options={{indexAxis: 'y'}} />
+	return <NewChartWidget type="bar" data={dummyDataCampaign} options={baseOptions} />
 };
 
 

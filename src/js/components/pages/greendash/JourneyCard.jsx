@@ -92,7 +92,7 @@ const JourneyCard = ({ campaigns, tags }) => {
 	return <GreenCard title="Your journey so far" className="carbon-journey">
 		<CO2Section co2Offset={offsets.co2} co2Emitted={co2Emitted} />
 		<TreesSection treesPlanted={offsets.trees} />
-		<A className="btn btn-primary" href={"/green/"+encURI(campaigns[0].id)}>Impact Overview</A>
+		<A className="btn btn-primary" href={`/green/${encURI(campaigns[0].id)}`}>Impact Overview</A>
 		<GreenCardAbout>
 			<p>How do we calculate campaign lifetime carbon emissions?</p>
 			<p>What carbon offsets do we use?</p>
