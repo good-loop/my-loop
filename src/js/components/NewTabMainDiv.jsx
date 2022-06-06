@@ -195,6 +195,12 @@ const NewTabMainDiv = () => {
 	return <MainDivBase pageForPath={PAGES} defaultPage="newtab" navbar={false} className="newtab" />;
 };
 
+/**
+ * 
+ * @param {Object} p
+ * @param {string} p.cid Charity ID
+ * @returns 
+ */
 const UserControls = ({cid}) => {
 	const showMyloopLink = !Login.isLoggedIn() || !hasRegisteredForMyData();
 	const charity = cid ? fetchCharity(cid) : null;
