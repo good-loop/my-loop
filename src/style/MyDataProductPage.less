@@ -3,7 +3,7 @@
     h1 {
         font-size: 1.3rem;
     }
-    h2, .miniheader {
+    h2,h4,.miniheader {
         color: @gl-dark-turquoise;
     }
 
@@ -40,28 +40,57 @@
         }
     }
 
-    .control-your-data {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        h4, p {
-            text-align: center;
+    .blue-gradient {
+        @media @width-mobile {
+            background: linear-gradient(180deg, @gl-white-blue 0%, @gl-lighter-blue 100%);
         }
-        h4 {
-            color: @gl-red;
+    }
+
+    .community-impact {
+        .bubble-container {
+            position: relative;
+            .photo-bubbles {
+                position: relative;
+                width: 125%;
+                top: 50%;
+                left: 50%;
+                transform: translateX(-50%);
+            }
         }
-        p {
-            color: @gl-red;
-            text-transform: capitalize;
+        h1 {
+            font-size: 2.7rem;
+        }
+        .stars {
+            width: 10%;
+        }
+        .stars-left {
+            position: absolute;
+            bottom: -30%;
+            left: 5%;
+        }
+        .stars-right {
+            position: absolute;
+            top: -40%;
+            right: 10%;
+        }
+        .stars-faded-left {
+            position: absolute;
+            opacity: 0.5;
+            bottom: 10%;
+            left: 0;
+        }
+        .stars-faded-right {
+            position: absolute;
+            opacity: 0.5;
+            top: 0;
+            right: 0;
         }
     }
 
     #how-it-works {
-        @media @width-mobile {
-            background: linear-gradient(180deg, white 0%, @gl-light-blue 100%);
-        }
+
         padding-bottom: 50px;
+
         .inner {
             display: flex;
             flex-direction: column;
@@ -71,6 +100,36 @@
             margin: 1rem;
             background: white;
             border-radius: 10px;
+
+            .control-your-data-small {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                transform: translateY(-25%);
+                h4, p {
+                    text-align: center;
+                }
+                h4 {
+                    color: @gl-red;
+                }
+                p {
+                    color: @gl-red;
+                    text-transform: capitalize;
+                }
+            }
+
+        }
+    }
+
+    .control-your-data {
+        text-align: center;
+        h3, p {
+            color: white;
+        }
+        h3 {
+            font-weight: 600;
         }
     }
 

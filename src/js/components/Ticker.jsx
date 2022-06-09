@@ -22,7 +22,7 @@ import Money from '../base/data/Money';
  * @param {Boolean} centerText Centers the text when counting up in the animation.
  * @param {Date} startTime Calculates the start value based on a start time so the ticker updates on refreshes
  */
-const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty = true, preservePennies, centerText=false, startTime}) =>
+const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty = true, preservePennies, noPennies, centerText=false, startTime}) =>
 {
 	if (amount) {
 		value = Money.value(amount);
@@ -60,6 +60,10 @@ const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty
 	if (preservePennies) {
 		options.minimumFractionDigits = 2;
 		options.maximumFractionDigits = 2;
+	}
+	if (noPennies) {
+		options.minimumFractionDigits = 0;
+		options.maximumFractionDigits = 0;
 	}
 	const formatNum = x => {
 		try {

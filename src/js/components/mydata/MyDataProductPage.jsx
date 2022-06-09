@@ -12,6 +12,8 @@ import { setFooterClassName } from '../Footer';
 import { T4GSignUpButton } from '../T4GSignUp';
 import { WhatIsTabsForGood, HowTabsForGoodWorks, TabsForGoodSlideSection, CurvePageCard, MyLandingSection, PageCard, PositivePlaceSection, CornerHummingbird } from '../pages/CommonComponents';
 import { MyDataSignUpButton, MyDataSignUpModal } from './MyDataSignUp';
+import TickerTotal from '../TickerTotal';
+import MyDataBadge from './MyDataBadge';
 
 
 const LandingSection = () => {
@@ -40,18 +42,52 @@ const LandingSection = () => {
 };
 
 const ControlYourData = () => {
-    
-    return <div className="control-your-data">
-        <img src="/img/mydata/how-it-works.png" className="w-75"/>
-        <h4>Control your data</h4>
-        <p>Do good for free</p>
-    </div>;
+
+    return <div className="control-your-data bg-gl-lighter-blue">
+        <img src="/img/curves/curve-desat-blue.svg" className="w-100"/>
+        <div className="bg-gl-desat-blue">
+            <br/>
+            <h3>Control your data</h3>
+            <p>You have control over how your data is used and can choose what to make private and what to share</p>
+            <img src="/img/mydata/product-page/phone-placeholder.svg" className="w-100"/>
+        </div>
+    </div>
+};
+
+const CommunityImpact = () => {
+
+    return <div className="community-impact text-center">
+
+        <div className="bubble-container">
+            <img src="/img/mydata/product-page/photo-bubbles-data.png" className="photo-bubbles"/>
+        </div>
+        <br/>
+        <h4 className="color-gl-dark-turquoise w-75 mx-auto">Add to our community impact with My.Data</h4>
+        
+        <div className="position-relative">
+            <h1><TickerTotal noPennies/></h1>
+            <img src="/img/homepage/Stars.png" className="stars stars-left"/>
+            <img src="/img/homepage/Stars.png" className="stars stars-right"/>
+            <img src="/img/homepage/Stars.png" className="stars stars-faded-left"/>
+            <img src="/img/homepage/Stars.png" className="stars stars-faded-right"/>
+        </div>
+
+        <h4 className="color-gl-red">Funding global causes</h4>
+        <p className="miniheader">Raised by our ads, tabs for good and My.Data</p>
+    </div>
 };
 
 const HowItWorks = () => {
 
     return <div id="how-it-works">
         <div className="inner">
+            <div className="control-your-data-small">
+                <img src="/img/mydata/how-it-works.png" className="w-75"/>
+                <br/>
+                <h4>Control your data</h4>
+                <p>Do good for free</p>
+            </div>
+
             <h1>Here's how it works:</h1>
 
             <br/>
@@ -86,9 +122,26 @@ const HowItWorks = () => {
                 <br/>
                 Couple of lines of extra info.
             </p>
+            <MyDataSignUpButton/>
+            <br/>
         </div>
     </div>;
 };
+
+const EarnDataBadge = () => {
+
+    return <div className="earn-data-badge p-3">
+        <h4>Earn your data badge</h4>
+        <p className="miniheader">It's quick and easy to start supporting the charity of your choice with your data!</p>
+        <img src="/img/mydata/product-page/earn-badge.png" className="w-100"/>
+        <br/>
+        <br/>
+        <div className="d-flex flex-row justify-content-center align-items-center">
+            <MyDataSignUpButton/>
+        </div>
+        <br/>
+    </div>
+}
 
 const MyDataProductPage = () => {
 
@@ -100,9 +153,14 @@ const MyDataProductPage = () => {
 		<LandingSection/>
         <br/>
         <br/>
+        <div className="blue-gradient">
+            <CommunityImpact/>
+            <br/>
+            <br/>
+            <HowItWorks/>
+        </div>
         <ControlYourData/>
-        <br/>
-        <HowItWorks/>
+        <EarnDataBadge/>
         <MyDataSignUpModal/>
 		{/*<TriCards />*/}
 	</>);

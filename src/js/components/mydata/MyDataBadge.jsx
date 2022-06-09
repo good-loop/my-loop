@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { space } from "../../base/utils/miscutils";
 
 /**
  * 
@@ -8,7 +9,7 @@ import React, { useState } from "react";
  * @param {int} size of the badge in px, default is 100.
  * @returns 
  */
-const MyDataBadge = ({progress, badgeName, backgroundImage, notification, size, toggle, grayscale}) => {
+const MyDataBadge = ({progress, badgeName, backgroundImage, notification, size, toggle, grayscale, className}) => {
 	if ( ! progress) {
 		progress = 0;
 		notification = null;
@@ -28,7 +29,7 @@ const MyDataBadge = ({progress, badgeName, backgroundImage, notification, size, 
 	const strokeDashoffset = circumference - progress * circumference;
 
 	return (
-	<div className="mydata-badge text-center" style={{height:size+"px",width:size+"px",filter:(grayscale && "grayscale(1)")}} onClick={toggle}>
+	<div className={space("mydata-badge text-center", className)} style={{height:size+"px",width:size+"px",filter:(grayscale && "grayscale(1)")}} onClick={toggle}>
 		<div className="inner" style={{backgroundImage:`url('${backgroundImage}')`,backgroundSize:innerSize,width:innerSize,height:innerSize}}></div>
 		<svg
 			height={radius * 2}
