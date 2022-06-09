@@ -435,7 +435,7 @@ const LinksDisplay = ({bookmarksData}) => {
 	// To allow sites like mail.google.com get fetch app specific favicons, at the same time advoid 404 favicons
 	const favSubdomainKeywords = ['google'];
 
-	if (bookmarksData.length > 1) {
+	if (bookmarksData.length >= 1) {
 		console.log("bookmarksData loaded", bookmarksData);
 		return <Row className='bookmark-flexbox'>
 			{bookmarksData.slice(0, 15).map((bookmark, i) => { // Max 15 bookmarks
