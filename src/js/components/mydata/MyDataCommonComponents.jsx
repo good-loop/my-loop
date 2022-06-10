@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Container, Col, Row, Button } from 'reactstrap';
+import { Container, Col, Row, Button, Collapse } from 'reactstrap';
 import BG from '../../base/components/BG';
 import NGODescription from '../../base/components/NGODescription';
 import { Help } from '../../base/components/PropControl'; 
@@ -26,7 +26,7 @@ import { getProfile } from '../../base/data/Person';
  * @param {?String} className
  * @returns 
  */
-export const MyDataCard = ({img, info, className, children}) => {
+export const MyDataCard = ({img, info, className, innerClassName, children}) => {
     //assMatch(img, "String|Function");
     let imgComponent = _.isString(img) && <BG src={img} className="w-100" ratio={30} center/>;
     if (!imgComponent) imgComponent = img; // && _.isFunction(img)) ImgComponent = img; 
@@ -34,7 +34,7 @@ export const MyDataCard = ({img, info, className, children}) => {
     return <div className={space("mydata-card", className)}>
         {imgComponent}
         {info && <Help className="more-info-btn" icon="?" children={info} />}
-        <div className="card-content">
+        <div className={space("card-content", innerClassName)}>
             {children}
         </div>
     </div>
@@ -162,6 +162,28 @@ export const SkipNextBtn = ({skip}) => {
     )
 }
 
+export const CollapseableCard = ({ title, defaultCollapse, headerIMG, className, innerClassName, whiteArrows, children }) => {
+	if (!defaultCollapse) defaultCollapse = false;
+	const [open, setOpen] = useState(defaultCollapse);
+	const toggle = () => setOpen(!open);
+	return (
+		<MyDataCard
+			className={space("my-3", className)}
+			img={headerIMG}
+            innerClassName={innerClassName}
+		>
+			<a onClick={toggle}> <div className="d-flex justify-content-between align-items-center">
+				<h5 className='m-0'>{title}</h5> 
+				<span className='text-muted' style={{ fontSize: '1.5rem' }}>
+					<img style={{width:"2rem",height:"2rem"}} src={"img/mydata/arrow-"+(open ? "down" : "up")+(whiteArrows ? "-white" : "")+".svg"} />
+				</span>
+			</div></a>
+			<Collapse isOpen={open}>
+				{children}
+			</Collapse>
+		</MyDataCard>)
+}
+
 /**
  * Check if a string is an email address
  * @param {String} email 
@@ -232,3 +254,5 @@ export const hasRegisteredForMyData = () => {
 
 	return hasMyData;
 };
+
+

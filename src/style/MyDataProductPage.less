@@ -6,7 +6,18 @@
     h2,h4,.miniheader {
         color: @gl-dark-turquoise;
     }
-
+    h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-transform: capitalize;
+        text-align: center;
+    }
+    h5 {
+        color: white;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+    }
+    
     .landing {
         .mydata-topimg {
             background: linear-gradient(180deg, white 0%, @gl-light-blue 150%);
@@ -21,12 +32,6 @@
                 position: relative;
                 z-index: 2;
             }
-        }
-        h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            text-transform: capitalize;
-            text-align: center;
         }
         p {
             color: @gl-dark-turquoise;
@@ -46,22 +51,24 @@
         }
     }
 
-    .community-impact {
-        .bubble-container {
+    .bubble-container {
+        position: relative;
+        .photo-bubbles {
             position: relative;
-            .photo-bubbles {
-                position: relative;
-                width: 125%;
-                top: 50%;
-                left: 50%;
-                transform: translateX(-50%);
-            }
+            width: 125%;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%);
         }
+    }
+
+    .stars {
+        width: 10%;
+    }
+    
+    .community-impact {
         h1 {
             font-size: 2.7rem;
-        }
-        .stars {
-            width: 10%;
         }
         .stars-left {
             position: absolute;
@@ -87,40 +94,58 @@
         }
     }
 
+    .inner {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background: white;
+        border-radius: 10px;
+    }
+
     #how-it-works {
 
         padding-bottom: 50px;
+        padding: 1rem;
 
-        .inner {
+        .control-your-data-small {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            margin: 1rem;
-            background: white;
-            border-radius: 10px;
+            position: relative;
+            transform: translateY(-25%);
+            h4, p {
+                text-align: center;
+            }
+            h4 {
+                color: @gl-red;
+            }
+            p {
+                color: @gl-red;
+                text-transform: capitalize;
+            }
+        }
 
-            .control-your-data-small {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                position: relative;
-                transform: translateY(-25%);
-                h4, p {
-                    text-align: center;
+        .how-it-works-section {
+            position: relative;
+
+            .bubble {
+                position: absolute;
+                width: 40%;
+
+                &.bubble-right {
+                    top: -10%;
+                    right: -22%;
                 }
-                h4 {
-                    color: @gl-red;
-                }
-                p {
-                    color: @gl-red;
-                    text-transform: capitalize;
+                &.bubble-left {
+                    top: -10%;
+                    left: -15%;
                 }
             }
-
         }
+
     }
 
     .control-your-data {
@@ -130,6 +155,28 @@
         }
         h3 {
             font-weight: 600;
+        }
+    }
+
+    .transform-your-data {
+        .bubble-container {
+            margin-top: -50px;
+        }
+        .overlap-up {
+            margin-top: -100px;
+        }
+        .faqs {
+            padding: 1rem;
+            position: relative;
+            .star-top {
+                position: absolute;
+                top: -5px;
+                left: 50%;
+                transform: translate(-50%, 0);
+            }
+            .card-content {
+                padding-top: 0;
+            }
         }
     }
 
