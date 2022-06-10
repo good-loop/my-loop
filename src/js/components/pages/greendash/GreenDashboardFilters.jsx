@@ -36,6 +36,29 @@ const defaultFilterMode = (brand, campaign, tag) => {
 	if (tag && tag !== 'all') return 'tag';
 }
 
+/** Are these two period-specs the same - ie do they refer to the same quarter / month / year / custom period? */
+const samePeriod = (periodA, periodB) => {
+	if (periodA.name && periodB.name) return periodA.name === periodB.name;
+	if ((periodA.start && periodA.start.getTime()) !== (periodB.start && periodB.start.getTime())) return false;
+	if ((periodA.end && periodA.end.getTime()) !== (periodB.end && periodB.end.getTime())) return false;
+	return false;
+}
+
+/** Should we show the "Apply New Filters" button - ie have they changed? */
+const filtersChanged = (nextPeriod, nextFilterMode, nextBrand, nextCampaign, nextTag) => {
+	const currentPeriod = periodFromUrl();
+	if (!samePeriod(currentPeriod, nextPeriod)) return true;
+	const currentBrand = DataStore.getUrlValue('brand');
+	if (currentBrand !== nextBrand) return true;
+	const currentCampaign = DataStore.getUrlValue('campaign');
+	if (currentCampaign !== nextCampaign) return true;
+	const currentTag = DataStore.getUrlValue('tag');
+	if (currentTag !== nextTag) return true;
+	const currentFilterMode = defaultFilterMode(currentBrand, currentCampaign, currentTag);
+	if (currentFilterMode !== nextFilterMode) return true;
+	return false;
+}
+
 
 /** What time period, brand, and campaign are currently in focus? */
 const GreenDashboardFilters = ({}) => {
@@ -43,8 +66,6 @@ const GreenDashboardFilters = ({}) => {
 	const [brand, setBrand] = useState(() => DataStore.getUrlValue('brand'));
 	const [campaign, setCampaign] = useState(() => DataStore.getUrlValue('campaign'));
 	const [tag, setTag] = useState(() => DataStore.getUrlValue('tag'));
-
-
 
 	const [filterMode, setFilterMode] = useState(defaultFilterMode(brand, campaign, tag));
 	const [showCustomRange, setShowCustomRange] = useState(!period.name);
@@ -141,9 +162,8 @@ const GreenDashboardFilters = ({}) => {
 	let filterLabel = 'Filter by:';
 	if (filterMode) filterLabel += ` ${filterMode}`;
 
-
 	return (
-		<Row className="greendash-filters mb-2">
+		<Row className="greendash-filters my-2">
 			<Col xs="12">
 				{ brand ? <img src="brand.png" alt="Brand Logo" /> : null }
 				<Form inline>
@@ -153,11 +173,11 @@ const GreenDashboardFilters = ({}) => {
 							<QuarterButtons period={period} setNamedPeriod={setNamedPeriod} />
 							<DropdownItem onClick={() => setNamedPeriod('all')}>
 								All Time
-								{period.name === 'all' ? null : <span className="selected-marker" />}
+								{period.name === 'all' ? <span className="selected-marker" /> : null}
 							</DropdownItem>
 							<DropdownItem toggle={false} onClick={() => setShowCustomRange(true)}>
 								Custom
-								{period.name ? null : <span className="selected-marker" />}
+								{(!period.name && (period.start || period.end)) ? <span className="selected-marker" /> : null}
 							</DropdownItem>
 							{showCustomRange ? <>
 								<DropdownItem divider />
@@ -197,7 +217,9 @@ const GreenDashboardFilters = ({}) => {
 						</DropdownMenu>
 					</UncontrolledDropdown>}
 
-					<Button className="ml-2" onClick={doCommit} size="sm">Apply</Button>
+					{filtersChanged(period, filterMode, brand, campaign, tag) ? (
+						<Button color="primary" className="ml-2" onClick={doCommit} size="sm">Apply new filters</Button>
+					) : null}
 				</Form>
 			</Col>
 		</Row>

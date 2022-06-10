@@ -39,7 +39,7 @@ const Day = ({date, className, onClick, ...rest}) => {
 	</td>;
 }
 
-const Month = ({year, month, start, end, setPeriod, leftArrow, rightArrow}) => {
+const Month = ({year, month, start, end, setPeriod}) => {
 	const refDate = new Date(year, month, 1);
 
 	let currentRow = [];
@@ -96,11 +96,9 @@ const Month = ({year, month, start, end, setPeriod, leftArrow, rightArrow}) => {
 	};
 
 	return <div className="month">
-		<div className="month-name">
-			{leftArrow && <a className="pull-left" onClick={leftArrow}>◀</a>}
-			<a onClick={clickMonth}>{months[month]} {year}</a>
-			{rightArrow && <a className="pull-right" onClick={rightArrow}>▶</a>}
-		</div>
+		<a onClick={clickMonth}>
+			<div className="month-name">{months[month]} {year}</div>
+		</a>
 		<table>
 			<thead>
 				<tr className="day-names">
@@ -161,6 +159,7 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 		if (offset) newStart.setDate(newStart.getDate() + offset);
 		setPeriod(null, newStart, newEnd);
 	};
+	
 	// Set period to "Calendar month of X months ago"
 	const setCalendarMonth = (offset) => {
 		const newEnd = new Date();
@@ -185,9 +184,11 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 
 	return <div className={space('select-date-range', className)}>
 		<div className="months-container">
-			<Month year={prevMonth.getFullYear()} month={prevMonth.getMonth()} start={start} end={end} {...monthProps} leftArrow={() => setFocusDate(prevMonth)} />
-			<Month year={focusDate.getFullYear()} month={focusDate.getMonth()} start={start} end={end} {...monthProps} />
-			<Month year={nextMonth.getFullYear()} month={nextMonth.getMonth()} start={start} end={end} {...monthProps} rightArrow={() => setFocusDate(nextMonth)} />
+			<a className="shift-focus prev" onClick={() => setFocusDate(prevMonth)}>◀</a>
+			<a className="shift-focus next" onClick={() => setFocusDate(nextMonth)}>▶</a>
+			<Month className="prev-month" year={prevMonth.getFullYear()} month={prevMonth.getMonth()} start={start} end={end} {...monthProps} />
+			<Month className="this-month" year={focusDate.getFullYear()} month={focusDate.getMonth()} start={start} end={end} {...monthProps} />
+			<Month className="next-month" year={nextMonth.getFullYear()} month={nextMonth.getMonth()} start={start} end={end} {...monthProps} />
 		</div>
 		<div className="presets-container">
 			<Button className="preset" size="sm" onClick={setYesterday}>Yesterday</Button>
