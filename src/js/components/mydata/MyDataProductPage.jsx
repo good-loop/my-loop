@@ -14,6 +14,7 @@ import { WhatIsTabsForGood, HowTabsForGoodWorks, TabsForGoodSlideSection, CurveP
 import { MyDataSignUpButton, MyDataSignUpModal } from './MyDataSignUp';
 import TickerTotal from '../TickerTotal';
 import MyDataBadge from './MyDataBadge';
+import BG from '../../base/components/BG';
 
 
 const LandingSection = () => {
@@ -79,6 +80,21 @@ const CommunityImpact = () => {
 
 const HowItWorks = () => {
 
+    const Section = ({i, title, subtitle, img, children}) => {
+
+        return <BG src={"/img/mydata/product-page/blob-"+i+".svg"}>
+            <br/>
+            <img src={img} className="w-25 mb-2"/>
+            <p className="miniheader mb-0">{i}. {title}</p>
+            <h2>{subtitle}</h2>
+            <br/>
+            <p>
+                {children}
+            </p>
+            <br/>
+        </BG>;
+    };
+
     return <div id="how-it-works">
         <div className="inner">
             <div className="control-your-data-small">
@@ -90,38 +106,24 @@ const HowItWorks = () => {
 
             <h1>Here's how it works:</h1>
 
-            <br/>
-            <img src="/img/mydata/padlock-careful.png" className="w-25 mb-2"/>
-            <p className="miniheader mb-0">1. Heading</p>
-            <h2>Key point</h2>
-            <br/>
-            <p>
+            <Section i={1} title="Heading" subtitle="Key point" img="/img/mydata/padlock-careful.png">
                 Couple of lines of extra info.
                 <br/>
                 Couple of lines of extra info.
-            </p>
+            </Section>
 
-            <br/>
-            <img src="/img/mydata/onboarding-3.png" className="w-75 mb-2"/>
-            <p className="miniheader mb-0">2. Heading</p>
-            <h2>Key point</h2>
-            <br/>
-            <p>
+            <Section i={2} title="Heading" subtitle="Key point" img="/img/mydata/onboarding-3.png">
                 Couple of lines of extra info.
                 <br/>
                 Couple of lines of extra info.
-            </p>
+            </Section>
 
-            <br/>
-            <img src="/img/mydata/profile-created.png" className="w-50 mb-2"/>
-            <p className="miniheader mb-0">3. Heading</p>
-            <h2>Key point</h2>
-            <br/>
-            <p>
+            <Section i={3} title="Heading" subtitle="Key point" img="/img/mydata/profile-created.png">
                 Couple of lines of extra info.
                 <br/>
                 Couple of lines of extra info.
-            </p>
+            </Section>
+
             <MyDataSignUpButton/>
             <br/>
         </div>
