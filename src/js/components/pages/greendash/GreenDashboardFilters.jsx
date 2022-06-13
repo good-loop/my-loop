@@ -8,6 +8,7 @@ import { getDataList } from '../../../base/plumbing/Crud';
 import { getPeriodQuarter, periodFromUrl, periodToParams, printPeriod } from './dashutils';
 
 import DateRangeWidget from '../../DateRangeWidget';
+import { modifyPage } from '../../../base/plumbing/glrouter';
 
 
 
@@ -57,7 +58,9 @@ const filtersChanged = (nextPeriod, nextFilterMode, nextBrand, nextCampaign, nex
 	const currentFilterMode = defaultFilterMode(currentBrand, currentCampaign, currentTag);
 	if (currentFilterMode !== nextFilterMode) return true;
 	return false;
-}
+};
+
+const allFilterParams = ['period', 'start', 'end', 'brand', 'campaign', 'tag']
 
 
 /** What time period, brand, and campaign are currently in focus? */
@@ -77,17 +80,15 @@ const GreenDashboardFilters = ({}) => {
 	// Write updated filter spec back to URL parameters
 	useEffect(() => {
 		if (!dummy) return;
+		// Get all params in effect, remove all params pertaining to green dashboard..
+		const { params } = DataStore.getValue('location');
+		allFilterParams.forEach(p => { delete params[p]; });
 
-		// Construct an object to overwrite current URL params all at once
-		// Populate with nulls for all the ones we don't want, then redeclare the ones we do over the top
-		const newParams = {
-			period: null, start: null, end: null,
+		// ...and re-add the ones we want.
+		modifyPage(null, {
+			[filterMode]: { brand, campaign, tag }[filterMode],
 			...periodToParams(period),
-			brand: null, campaign: null, tag: null,
-			[filterMode]: { brand, campaign, tag }[filterMode]
-		};
-	
-		modifyPage(null, newParams);
+		}, false, true);
 	}, [dummy])
 
 	// Update whichever ID we're currently filtering by
