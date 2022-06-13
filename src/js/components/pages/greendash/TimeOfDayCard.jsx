@@ -63,7 +63,7 @@ const TimeOfDayCard = ({baseFilters, tags}) => {
 	return <GreenCard title="When are your ad carbon emissions highest?" className="carbon-time-of-day">
 		{chartProps ? <>
 			<NewChartWidget type="bar" data={chartProps.data} options={chartProps.options} />
-			<p><small>Time of day in your time zone ({Intl.DateTimeFormat().resolvedOptions().timeZone})</small></p>
+			<p className="text-center mb-0"><small>Time of day in your time zone ({Intl.DateTimeFormat().resolvedOptions().timeZone})</small></p>
 			</> : (
 			<Misc.Loading text="Fetching time-of-day data..." />
 		)}

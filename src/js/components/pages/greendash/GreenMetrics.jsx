@@ -36,13 +36,15 @@ const OverviewWidget = ({period, data}) => {
 
 const CTACard = ({}) => {
 	return <GreenCard className="carbon-cta flex-column">
-		Interested to know more about<br/>
-		climate positive advertising?
 		<div className="cta-card-decoration">
 			<img className="tree-side" src="/img/green/tree-light.svg" />
 			<img className="tree-centre" src="/img/green/tree-light.svg" />
 			<img className="tree-side" src="/img/green/tree-light.svg" />
 		</div>
+		<p className="mb-2">
+			Interested to know more about<br/>
+			climate positive advertising?
+		</p>
 		<a className="get-in-touch pull-right text-right" href="https://www.good-loop.com/contact" target="_blank">
 			<Button color="primary" size="md">
 				Get In Touch

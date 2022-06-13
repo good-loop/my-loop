@@ -98,6 +98,10 @@ const TechSubcard = ({ tags, data, options, minimumPercentLabeled=0 }) => {
 	return <>
 		<p>CO<sub>2</sub>e emissions due to...</p>
 		<NewChartWidget type="pie" options={chartOptions} data={chartData} datalabels />
+		<small className="text-center">
+			The Green Ad Tag per-impression overhead is measured,<br />
+			but too small to display in this chart.
+		</small>
 	</>;
 };
 
