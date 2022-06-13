@@ -22,7 +22,7 @@ const GreenDashboard = ({}) => {
 
 
 	return <>
-		<GreenNavBar active={subpage} />
+		{Login.isLoggedIn() && <GreenNavBar active={subpage} />}
 		<Subpage />
 	</>;
 };

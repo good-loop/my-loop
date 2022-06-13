@@ -22,6 +22,15 @@
 	.my-loop-footer {
 		padding-left: @nav-width; // Push the footer right so the left nav doesn't overlap it
 	}
+	// No nav bar when not logged in - so don't push elements right
+	&:not(.logged-in) {
+		#greendash {
+			padding-left: 0;
+		}
+		.my-loop-footer {
+			padding-left: 0;
+		}
+	}
 }
 
 
