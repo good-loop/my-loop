@@ -15,6 +15,7 @@ import { MyDataSignUpButton, MyDataSignUpModal } from './MyDataSignUp';
 import TickerTotal from '../TickerTotal';
 import MyDataBadge from './MyDataBadge';
 import BG from '../../base/components/BG';
+import { CollapseableCard } from './MyDataCommonComponents';
 
 
 const LandingSection = () => {
@@ -55,13 +56,18 @@ const ControlYourData = () => {
     </div>
 };
 
+const BubblesHeader = ({src, className}) => {
+    return <div className={space("bubble-container", className)}>
+        <img src={src} className="photo-bubbles"/>
+    </div>;
+};
+
 const CommunityImpact = () => {
 
     return <div className="community-impact text-center">
 
-        <div className="bubble-container">
-            <img src="/img/mydata/product-page/photo-bubbles-data.png" className="photo-bubbles"/>
-        </div>
+        <BubblesHeader src="/img/mydata/product-page/photo-bubbles-data.png"/>
+
         <br/>
         <h4 className="color-gl-dark-turquoise w-75 mx-auto">Add to our community impact with My.Data</h4>
         
@@ -80,11 +86,11 @@ const CommunityImpact = () => {
 
 const HowItWorks = () => {
 
-    const Section = ({i, title, subtitle, img, children}) => {
+    const Section = ({i, title, subtitle, img, imgClassName, children}) => {
 
-        return <BG src={"/img/mydata/product-page/blob-"+i+".svg"}>
+        return <BG src={"/img/mydata/product-page/blob-"+i+".svg"} className="how-it-works-section">
             <br/>
-            <img src={img} className="w-25 mb-2"/>
+            <img src={img} className={space("mb-2", imgClassName)}/>
             <p className="miniheader mb-0">{i}. {title}</p>
             <h2>{subtitle}</h2>
             <br/>
@@ -106,19 +112,22 @@ const HowItWorks = () => {
 
             <h1>Here's how it works:</h1>
 
-            <Section i={1} title="Heading" subtitle="Key point" img="/img/mydata/padlock-careful.png">
+            <Section i={1} title="Heading" subtitle="Key point" img="/img/mydata/padlock-careful.png" imgClassName="w-25">
+                <img src="/img/mydata/product-page/bubble-kids.png" className="bubble bubble-right"/>
                 Couple of lines of extra info.
                 <br/>
                 Couple of lines of extra info.
             </Section>
 
-            <Section i={2} title="Heading" subtitle="Key point" img="/img/mydata/onboarding-3.png">
+            <Section i={2} title="Heading" subtitle="Key point" img="/img/mydata/onboarding-3.png" imgClassName="w-75">
+                <img src="/img/mydata/product-page/bubble-chameleon.png" className="bubble bubble-left"/>
                 Couple of lines of extra info.
                 <br/>
                 Couple of lines of extra info.
             </Section>
 
-            <Section i={3} title="Heading" subtitle="Key point" img="/img/mydata/profile-created.png">
+            <Section i={3} title="Heading" subtitle="Key point" img="/img/mydata/profile-created.png" imgClassName="w-50">
+                <img src="/img/mydata/product-page/bubble-ocean.png" className="bubble bubble-right"/>
                 Couple of lines of extra info.
                 <br/>
                 Couple of lines of extra info.
@@ -143,6 +152,52 @@ const EarnDataBadge = () => {
         </div>
         <br/>
     </div>
+};
+
+const TransformYourData = () => {
+    
+    return <div className="transform-your-data">
+        <div className="px-3">
+            <h3 className="text-left">Transforming your data into charity donations</h3>
+            <p className="miniheader mb-0">Your questions answered</p>
+        </div>
+        <BubblesHeader src="/img/mydata/product-page/photo-bubbles-data-two.png"/>
+        <div className="overlap-up">
+            <img src="/img/curves/curve-desat-blue.svg" className="w-100"/>
+            <div className="faqs bg-gl-desat-blue">
+                <img src="/img/homepage/Stars.png" className="stars star-top"/>
+                <div className="inner px-3">
+                    
+                    <br/>
+                    <br/>
+                    <p className="miniheader">FAQS</p>
+                    <br/>
+
+                    <h1 className="color-gl-dark-turquoise">1. What charities can I support with My Data?</h1>
+                    <br/>
+                    <p>
+                        Couple of lines of top information.
+                        <br/>
+                        Couple of lines of top information.
+                    </p>
+                    
+                    <CollapseableCard title="Our charity partnerships" className="w-100" whiteArrows
+                        headerIMG={<BG src={"/img/icons/world-hand.png"} className="w-100 bg-gl-dark-turquoise" size="20%" ratio={30} repeat='no-repeat' center/>}
+                        innerClassName="bg-gl-dark-turquoise"
+                    >
+                        <p>
+                            TODO put something in this spaceeee
+                        </p>
+                    </CollapseableCard>
+                </div>
+                <br/>
+                <div className="d-flex flex-row justify-content-center align-items-center">
+                    <MyDataSignUpButton/>
+                </div>
+                <br/>
+            </div>
+        </div>
+    </div>;
 }
 
 const MyDataProductPage = () => {
@@ -163,6 +218,8 @@ const MyDataProductPage = () => {
         </div>
         <ControlYourData/>
         <EarnDataBadge/>
+        <TransformYourData/>
+
         <MyDataSignUpModal/>
 		{/*<TriCards />*/}
 	</>);

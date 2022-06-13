@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Collapse, FormGroup, Progress } from 'reactstrap';
 import { Help } from '../../base/components/PropControl';
-import { isEmail } from './MyDataCommonComponents';
+import { CollapseableCard, isEmail } from './MyDataCommonComponents';
 import UserClaimControl, { getCharityObject, getEmail, causesMap, adstypeMap, setPersonSetting } from '../../base/components/PropControls/UserClaimControl';
 import CharityLogo from '../CharityLogo';
 import { MyDataCard } from './MyDataCommonComponents';
@@ -111,10 +111,7 @@ const DataSharedProgressBar = () => {
 	)
 }
 
-const CollapseSettings = ({ title, defaultCollapse, headerIMG, children }) => {
-	if (!defaultCollapse) defaultCollapse = false;
-	const [settingsOpen, setSettingsOpen] = useState(defaultCollapse);
-	const settingsToggle = () => setSettingsOpen(!settingsOpen);
+const CollapseSettings = ({ children, title, ...props }) => {
 
 	let progress = null;
 	switch (title) {
@@ -135,21 +132,11 @@ const CollapseSettings = ({ title, defaultCollapse, headerIMG, children }) => {
 		else return false;
 	}
 
-	return (
-		<MyDataCard
-			className="my-3"
-			img={headerIMG}
-		>
-			<a onClick={settingsToggle}> <div className="d-flex justify-content-between align-items-center">
-				<h5 className='m-0'><img style={{height:'2rem'}} src={"img/mydata/circle-"+(fullTick() ? "tick.svg" : "no-tick.svg")} /> {title}</h5> 
-				<span className='text-muted' style={{ fontSize: '1.5rem' }}>
-					<img style={{width:"2rem",height:"2rem"}} src={"img/mydata/arrow-"+(settingsOpen ? "down" : "up")+".svg"} />
-				</span>
-			</div></a>
-			<Collapse isOpen={settingsOpen}>
-				{children}
-			</Collapse>
-		</MyDataCard>)
+	const tickTitle = <><img style={{height:'2rem'}} src={"img/mydata/circle-"+(fullTick() ? "tick.svg" : "no-tick.svg")} /> {title}</>;
+
+	return <CollapseableCard title={tickTitle} {...props}>
+		{children}
+	</CollapseableCard>;
 }
 
 /**
