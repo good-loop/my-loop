@@ -97,7 +97,7 @@ const CompareCard = (props) => {
 	return <GreenCard title="How do your ad emissions compare?" className="carbon-compare">
 		<div className="d-flex justify-content-around mb-2">
 			<ModeButton name="quarter" mode={mode} setMode={setMode}>Quarter</ModeButton>
-			<ModeButton name="campaign" mode={mode} setMode={setMode}>Campaign</ModeButton>
+			<ModeButton disabled name="campaign" mode={mode} setMode={setMode}>Campaign</ModeButton>
 		</div>
 		{subcard}
 		<GreenCardAbout>
