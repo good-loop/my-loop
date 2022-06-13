@@ -46,7 +46,7 @@ const TechSubcard = ({ tags, data, options, minimumPercentLabeled=0 }) => {
 		labels,
 		datasets: [{
 			label: 'Kg CO2',
-			backgroundColor: ['#90AAAF', '#C7D5D7', '#FF00FF'],
+			backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
 			data: [media, publisher, dsp],
 		}]
 	};
