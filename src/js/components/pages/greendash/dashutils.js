@@ -107,27 +107,22 @@ export const periodFromUrl = () => {
 };
 
 
-/** Take a period object and put it in the URL params */
-export const periodToUrl = ({name, start, end}) => {
+/** Take a period object and transform it to use as URL params */
+export const periodToParams = ({name, start, end}) => {
+	const newVals = {};
 	if (name) {
-		// Named period (eg "2022-Q1") - put period name in URL and remove start/end
-		DataStore.setUrlValue('period', name, false);
-		DataStore.setUrlValue('start', null, false);
-		DataStore.setUrlValue('end', null, false);
+		newVals.period = name;
 	} else {
 		// Custom period - remove period name from URL params and set start/end
-		DataStore.setUrlValue('period', null, false);
-		DataStore.setUrlValue('start', start ? isoDate(start) : null, false);
+		if (start) newVals.start = isoDate(start);
 		if (end) {
 			// Machine form "Period ending 2022-04-01T00:00:00" --> intuitive form "Period ending 2022-03-31"
 			end = new Date(end);
 			end.setDate(end.getDate() - 1);
-			DataStore.setUrlValue('end', isoDate(end), false);
-		} else {
-			DataStore.setUrlValue('end', null, false);
+			newVals.end = isoDate(end);
 		}
 	}
-	DataStore.update();
+	return newVals;
 }
 
 

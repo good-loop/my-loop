@@ -20,6 +20,7 @@ import JourneyCard from './JourneyCard';
 import TimeSeriesCard from './TimeSeriesCard';
 import CompareCard from './CompareCard';
 import TimeOfDayCard from './TimeOfDayCard';
+import { modifyPage } from '../../../base/plumbing/glrouter';
 
 
 const OverviewWidget = ({period, data}) => {
@@ -59,7 +60,7 @@ const initPeriod = () => {
 	let period = periodFromUrl();
 	if (!period) {
 		period = getPeriodQuarter();
-		DataStore.setUrlValue('period', period.name);
+		modifyPage(null, {period: period.name});
 	}
 	return period;
 };

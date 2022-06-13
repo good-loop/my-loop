@@ -5,7 +5,7 @@ import KStatus from '../../../base/data/KStatus';
 import DataStore from '../../../base/plumbing/DataStore';
 import { nonce } from '../../../base/data/DataClass';
 import { getDataList } from '../../../base/plumbing/Crud';
-import { getPeriodQuarter, periodFromUrl, periodToUrl, printPeriod } from './dashutils';
+import { getPeriodQuarter, periodFromUrl, periodToParams, printPeriod } from './dashutils';
 
 import DateRangeWidget from '../../DateRangeWidget';
 
@@ -77,15 +77,17 @@ const GreenDashboardFilters = ({}) => {
 	// Write updated filter spec back to URL parameters
 	useEffect(() => {
 		if (!dummy) return;
-		// Put currently-selected filter in URL...
-		const filterVals = { brand, campaign, tag };
-		DataStore.setUrlValue(filterMode, filterVals[filterMode], false);
-		// ...and remove the others. (Don't provoke redraw yet!)
-		delete filterVals[filterMode];
-		Object.keys(filterVals).forEach((modeName) => DataStore.setUrlValue(modeName, null, false));
 
-		// Apply date filter and trigger redraw
-		periodToUrl(period);
+		// Construct an object to overwrite current URL params all at once
+		// Populate with nulls for all the ones we don't want, then redeclare the ones we do over the top
+		const newParams = {
+			period: null, start: null, end: null,
+			...periodToParams(period),
+			brand: null, campaign: null, tag: null,
+			[filterMode]: { brand, campaign, tag }[filterMode]
+		};
+	
+		modifyPage(null, newParams);
 	}, [dummy])
 
 	// Update whichever ID we're currently filtering by
