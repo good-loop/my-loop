@@ -4,7 +4,7 @@ import Campaign from '../../../base/data/Campaign';
 import KStatus from '../../../base/data/KStatus';
 import { getDataItem } from '../../../base/plumbing/Crud';
 
-import { space } from '../../../base/utils/miscutils';
+import { encURI, space } from '../../../base/utils/miscutils';
 import C from '../../../C';
 import ServerIO from '../../../plumbing/ServerIO';
 const A = C.A;
