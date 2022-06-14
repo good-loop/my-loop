@@ -492,7 +492,7 @@ const ConnectionStatusPopup = () => {
 			{isOffline && !determining && <>
 				<h3 className="text-dark">We can't find the internet :(</h3>
 				<p>We couldn't load your Tabs for Good page. Check your connection.</p>
-				<small>If your internet is working, contact help@good-loop.com!</small>
+				<small>If your internet is working, contact support@good-loop.com!</small>
 			</>}
 			{determining && <>
 				<h3 className="text-dark">We're having trouble connecting</h3>
