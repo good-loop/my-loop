@@ -43,8 +43,7 @@ const CTACard = ({}) => {
 			<img className="tree-side" src="/img/green/tree-light.svg" />
 		</div>
 		<p className="mb-2">
-			Interested to know more about<br/>
-			climate positive advertising?
+			Interested to know more about climate positive advertising?
 		</p>
 		<a className="get-in-touch pull-right text-right" href="https://www.good-loop.com/contact" target="_blank">
 			<Button color="primary" size="md">

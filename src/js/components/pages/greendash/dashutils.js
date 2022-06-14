@@ -195,6 +195,7 @@ export const GreenCard = ({ title, children, className, row, ...rest}) => {
 
 
 export const GreenCardAbout = ({children, ...rest}) => {
+	if (true) return null; // TODO write the text for these
 	const [open, setOpen] = useState(false);
 
 	return <div className={space('card-about', open && 'open')}>

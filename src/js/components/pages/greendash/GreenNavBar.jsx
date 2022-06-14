@@ -1,14 +1,35 @@
 import React, { useState } from 'react';
 import { Collapse, Nav, Navbar, NavbarToggler, NavItem } from 'reactstrap';
+import Campaign from '../../../base/data/Campaign';
+import KStatus from '../../../base/data/KStatus';
+import { getDataItem } from '../../../base/plumbing/Crud';
 
 import { space } from '../../../base/utils/miscutils';
 import C from '../../../C';
 import ServerIO from '../../../plumbing/ServerIO';
 const A = C.A;
 
+/**
+ * 
+ * @param {Object} p
+ * @param {?string} p.active
+ * @returns 
+ */
 const GreenNavBar = ({active}) => {
 	const [isOpen, setIsOpen] = useState(false)
 	const toggle = () => setIsOpen(!isOpen);
+
+	// HACK: a (master) campaign?
+	const campaignId = DataStore.getUrlValue('campaign');
+	const brandId = DataStore.getUrlValue('brand');	
+	const agencyId = DataStore.getUrlValue('agency');
+	if ( ! campaignId && (brandId || agencyId)) {
+		let pvThing = brandId? getDataItem({type:C.TYPES.Advertiser, id:brandId, status:KStatus.PUB_OR_DRAFT, swallow:true})
+			: getDataItem({type:C.TYPES.Agency, id:agencyId, status:KStatus.PUB_OR_DRAFT, swallow:true});
+		if (pvThing.value) campaignId = pvThing.value.campaign;
+	}
+	let pvCampaign = campaignId? getDataItem({type:C.TYPES.Campaign, id:campaignId,status:KStatus.PUB_OR_DRAFT, swallow:true}) : {};
+	let impactUrl = pvCampaign.value? '/green/'+encURI(pvCampaign.value.id) : '/green';
 
 	// We don't use the standard <Collapse> pattern here because that doesn't support an always-horizontal navbar
 
@@ -17,7 +38,7 @@ const GreenNavBar = ({active}) => {
 		<Nav navbar vertical>
 			<img className="logo" src="/img/logo-green-dashboard.svg" />
 			<NavItem>
-				<A className={active === 'metrics' ? 'active' : ''} href="/greendash/metrics">
+				<A className={active === 'metrics' ? 'active' : ''} href={window.location}>
 					<div className="green-nav-icon metrics-icon" /> Metrics
 				</A>
 			</NavItem>
@@ -34,15 +55,15 @@ const GreenNavBar = ({active}) => {
 			</NavItem>
 			*/}
 			<NavItem>
-				<A className={active === 'impact' ? 'active' : ''} href="/green/impact">
+				<A className={active === 'impact' ? 'active' : ''} href={impactUrl}>
 					<div className="green-nav-icon impact-icon" /> Impact<br/>Overview
 				</A>
 			</NavItem>
-			<NavItem>
+			{/* <NavItem>
 				<A className={active === 'profile' ? 'active' : ''} href="/greendash/profile">
 					<div className="green-nav-icon profile-icon" /> Profile
 				</A>
-			</NavItem>
+			</NavItem> */}
 			<div className="navbar-bottom-decoration">
 				<img className="tree-side" src="/img/green/tree-light.svg" />
 				<img className="tree-centre" src="/img/green/tree-light.svg" />
