@@ -8,11 +8,11 @@ import GreenProfile from './greendash/GreenProfile';
 import GreenTable from './greendash/GreenTable';
 
 const subpages = {
-	table: GreenTable,
-	metrics: GreenMetrics,
-	optimisation: GreenOptimisation,
-	impact: GreenImpact,
-	profile: GreenProfile,
+	table: GreenTable, // NOT implemented yet
+	metrics: GreenMetrics, // the main dashboard
+	optimisation: GreenOptimisation,  // NOT implemented yet
+	impact: GreenImpact, // the nice overview
+	profile: GreenProfile,  // NOT implemented yet
 };
 
 

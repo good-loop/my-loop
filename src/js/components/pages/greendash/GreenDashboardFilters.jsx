@@ -9,6 +9,8 @@ import { getPeriodQuarter, periodFromUrl, periodToParams, printPeriod } from './
 
 import DateRangeWidget from '../../DateRangeWidget';
 import { modifyPage } from '../../../base/plumbing/glrouter';
+import { isTester } from '../../../base/Roles';
+import SearchQuery from '../../../base/searchquery';
 
 
 
@@ -110,6 +112,7 @@ const GreenDashboardFilters = ({}) => {
 	const userId = Login.getId();
 
 	useEffect(() => {
+		// setup options
 		Login.getSharedWith(userId).then(res => {
 			const shareList = res.cargo;
 			if (!shareList) return;
@@ -125,16 +128,16 @@ const GreenDashboardFilters = ({}) => {
 			});
 
 			// Get all the brands, campaigns and tags this user can manage
-			if (nextBrands.length) {
+			if (nextBrands.length || isTester()) {
 					getDataList({
 					type: C.TYPES.Advertiser,
 					status: KStatus.PUBLISHED,
-					ids: nextBrands,
+					ids: nextBrands, // NB: a GL user should be fine with [] here
 				}).promise.then(cargo => {
 					if (cargo.hits) setAvailableBrands(cargo.hits);
 				});
 			}
-			if (nextCampaigns.length) {
+			if (nextCampaigns.length || isTester()) {
 				getDataList({
 					type: C.TYPES.Campaign,
 					status: KStatus.PUBLISHED,
@@ -142,10 +145,11 @@ const GreenDashboardFilters = ({}) => {
 				}).promise.then(cargo => {
 					if (cargo.hits) setAvailableCampaigns(cargo.hits);
 				});
+				let q = SearchQuery.setPropOr(null, "campaign", nextCampaigns.map(c => c.id));
 				getDataList({
 					type: C.TYPES.GreenTag,
 					status: KStatus.PUBLISHED,
-					q: `${nextCampaigns.map(c => `campaign:${c.id}`).join(' OR ')}`
+					q
 				}).promise.then(cargo => {
 					if (cargo.hits) setAvailableTags(cargo.hits);
 				});
@@ -210,7 +214,7 @@ const GreenDashboardFilters = ({}) => {
 
 					{filterMode && <UncontrolledDropdown className="filter-dropdown ml-2">
 						<DropdownToggle caret>{{ campaign, brand, tag }[filterMode] || `Select a ${filterMode}`}</DropdownToggle>
-						<DropdownMenu>
+						<DropdownMenu style={{maxHeight:"75vh" /* with long lists this gets clipped by the footer */, overflowY:"scroll" /* handle long lists with scroll */}} >
 							{{brand: availableBrands, campaign: availableCampaigns, tag: availableTags}[filterMode].map(item => (
 								<DropdownItem key={item.id} onClick={() => setCurrentTemp(item.id)}>
 									{{ campaign, brand, tag }[filterMode] === item.id ? <span className="selected-marker" /> : null}

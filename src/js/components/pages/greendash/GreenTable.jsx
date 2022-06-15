@@ -38,7 +38,7 @@ const CampaignTable = ({ id }) => {
 	}
 
 	return <>
-		<SimpleTable data={campaignData} />
+		<SimpleTable dataObject={campaignData} />
 	</>;
 };
 
@@ -48,7 +48,10 @@ const TagTable = ({ id }) => {
 	return `tag table for ${id}`;
 };
 
-
+/**
+ * Spreadsheet Table view -- What's the use case for this?? Is there a design / spec notes??
+ * @returns 
+ */
 const GreenTable = () => {
 	const path = DataStore.getValue(['location', 'path']);
 	const tableType = path[2]; // campaign or tag
