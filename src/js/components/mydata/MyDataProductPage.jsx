@@ -33,7 +33,7 @@ const LandingSection = () => {
         <h1>My.Data</h1>
         <h3>Harness your data to fund your favourite charity. For free</h3>
         <br/>
-        <p>How many cookies have you accepted today? We give our data away all the time without even thinking about it. What if we could use our data to help fund good causes?</p>
+        <p>How many cookies have you accepted today? We give our data away all the time without even thinking about it. What if we could safely use our data to help fund good causes?</p>
         <br/>
         <div className="d-flex flex-column justify-content-center align-items-center">
             <MyDataSignUpButton/>
@@ -51,7 +51,7 @@ const ControlYourData = () => {
             <br/>
             <h3>Control your data</h3>
             <p>You have control over how your data is used and can choose what to make private and what to share</p>
-            <img src="/img/mydata/product-page/phone-placeholder.svg" className="w-100"/>
+            <img src="/img/mydata/product-page/phone-mydata.png" className="w-100"/>
         </div>
     </div>
 };
@@ -80,7 +80,7 @@ const CommunityImpact = () => {
         </div>
 
         <h4 className="color-gl-red">Funding global causes</h4>
-        <p className="miniheader">Raised by our ads, tabs for good and My.Data</p>
+        <h5 className="miniheader">Raised by our ads, tabs for good and My.Data</h5>
     </div>
 };
 
@@ -88,15 +88,17 @@ const HowItWorks = () => {
 
     const Section = ({i, title, subtitle, img, imgClassName, children}) => {
 
-        return <BG src={"/img/mydata/product-page/blob-"+i+".svg"} className="how-it-works-section">
+        return <BG src={"/img/mydata/product-page/blob-"+i+".svg"} center className="how-it-works-section">
             <br/>
             <img src={img} className={space("mb-2", imgClassName)}/>
-            <p className="miniheader mb-0">{i}. {title}</p>
+            <p className="miniheader mb-0">{title}</p>
             <h2>{subtitle}</h2>
+            <div className="px-3">
+            {children}
+            </div>
+            {/* Extra whitespace padding at bottom, to make sure BG image stretches enough to cover text */}
             <br/>
-            <p>
-                {children}
-            </p>
+            <br/>
             <br/>
         </BG>;
     };
@@ -107,30 +109,33 @@ const HowItWorks = () => {
                 <img src="/img/mydata/how-it-works.png" className="w-75"/>
                 <br/>
                 <h4>Control your data</h4>
-                <p>Do good for free</p>
+                <p className="miniheader">Do good for free</p>
+                <p className="px-2">It feels like our data is everywhere these days but at Good-Loop we believe we should all control our own data. By running ads with global brands, we've also learnt just how valuable consumer data is to advertisers. We've decided to unite these concepts to do good…</p>
+                <img src="/img/homepage/Stars.png" className="star mx-auto"/>
             </div>
 
             <h1>Here's how it works:</h1>
+            <br/>
 
-            <Section i={1} title="Heading" subtitle="Key point" img="/img/mydata/padlock-careful.png" imgClassName="w-25">
+            <Section i={1} title="Your data in your hands" subtitle="Sign up securely" img="/img/mydata/padlock-careful.png" imgClassName="w-25">
                 <img src="/img/mydata/product-page/bubble-kids.png" className="bubble bubble-right"/>
-                Couple of lines of extra info.
-                <br/>
-                Couple of lines of extra info.
+                <p>
+                    Pick a charity you want to help and build a secure profile with us, selecting what data you want to provide.
+                </p>
             </Section>
-
-            <Section i={2} title="Heading" subtitle="Key point" img="/img/mydata/onboarding-3.png" imgClassName="w-75">
+            <br/>
+            <Section i={2} title="Turning your data into donations" subtitle="Harness your data" img="/img/mydata/onboarding-3.png" imgClassName="w-75">
                 <img src="/img/mydata/product-page/bubble-chameleon.png" className="bubble bubble-left"/>
-                Couple of lines of extra info.
-                <br/>
-                Couple of lines of extra info.
+                <p>
+                    We channel relevant online adverts based on your info, and 50% of the advert fee goes to your chosen charity.
+                </p>
             </Section>
-
-            <Section i={3} title="Heading" subtitle="Key point" img="/img/mydata/profile-created.png" imgClassName="w-50">
+            <br/>
+            <Section i={3} title="Your in control" subtitle="Share to give" img="/img/mydata/profile-created.png" imgClassName="w-50">
                 <img src="/img/mydata/product-page/bubble-ocean.png" className="bubble bubble-right"/>
-                Couple of lines of extra info.
-                <br/>
-                Couple of lines of extra info.
+                <p>
+                    The more data you choose to share, the more valuable it is to advertisers and the more you can raise for your charity!
+                </p>
             </Section>
 
             <MyDataSignUpButton/>
@@ -171,23 +176,60 @@ const TransformYourData = () => {
                     <br/>
                     <br/>
                     <p className="miniheader">FAQS</p>
-                    <br/>
-
-                    <h1 className="color-gl-dark-turquoise">1. What charities can I support with My Data?</h1>
-                    <br/>
-                    <p>
-                        Couple of lines of top information.
-                        <br/>
-                        Couple of lines of top information.
-                    </p>
                     
-                    <CollapseableCard title="Our charity partnerships" className="w-100" whiteArrows
-                        headerIMG={<BG src={"/img/icons/world-hand.png"} className="w-100 bg-gl-dark-turquoise" size="20%" ratio={30} repeat='no-repeat' center/>}
-                        innerClassName="bg-gl-dark-turquoise"
-                    >
-                        <p>
-                            TODO put something in this spaceeee
-                        </p>
+                    <CollapseableCard
+                        title="1. What charities can I support with My Data?"
+                        TitleTag="h1" className="w-100 faq faq-1"
+                        innerClassName="text-left" arrowPosition="bottom">
+                        <br/>
+                        <ul>
+                            <li>
+                                <b>You can choose any charity that's registered and regulated in the UK.</b>
+                            </li>
+                            <li>
+                                We will be expanding this to include American 501(c) organisations soon.
+                            </li>
+                            <li>
+                                Meanwhile: If you can't find your charity - please drop us an email and we'll add it for you.
+                            </li>
+                        </ul>
+
+                        <div className="d-flex flex-row justify-content-center align-items-center">
+                            <a className="text-center" href="https://app.sogive.org" target="_blank">View our charity database →</a>
+                        </div>
+                    </CollapseableCard>
+
+                    <CollapseableCard
+                        title="2. How does My Data make money for my charity?"
+                        TitleTag="h1" className="w-100 faq faq-2"
+                        innerClassName="text-left" arrowPosition="bottom">
+                        <br/>
+                        <ul>
+                            <li>
+                                Most adverts are wasted - shown to the wrong person. Based on your information (but keeping it private), we can select adverts that match your profile.
+                            </li>
+                            <li>
+                                <b>Because relevant ads are less wasteful, the advertiser will pay more. That extra money is how My Data raises money for your charity</b>
+                            </li>
+                        </ul>
+                    </CollapseableCard>
+
+                    <CollapseableCard
+                        title="3. How do I control my data privacy?"
+                        TitleTag="h1" className="w-100 faq faq-3"
+                        innerClassName="text-left" arrowPosition="bottom">
+                        <br/>
+                        <ul>
+                            <li>
+                                <b>You are always in control here and can select your desired level of privacy for each piece of data you share with us. You can explore your profile any time, and asjust which bits of your info can and cannot be used.</b>
+                            </li>
+                            <li>
+                                By default, we will not share or sell your data. We will use it carefully to help route relevant adverts your way - turning the extra payments from advertisers into charity funding.
+                            </li>
+                            <li>
+                                If you want to maximise the money raised, you can choose to switch on data-sharing permissions for some of your info. We can then sell those bits of data on your behalf to raise extra donations.
+                            </li>
+                        </ul>
                     </CollapseableCard>
                 </div>
                 <br/>
