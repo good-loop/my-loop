@@ -60,7 +60,7 @@ const HelpCharityTogetherCard = ({ngo}) => {
 					</div>
 					<T4GSignUpButton className="w-100"/>
 				</Col>
-				<Col className="d-none d-md-block" md={6}>
+				<Col className="py-5 d-none d-md-block" md={6}>
 					<NGOImage ngo={ngo} className="w-100" imgIdx={2}/>
 				</Col>
 			</Row>
