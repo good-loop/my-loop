@@ -65,7 +65,11 @@ const filtersChanged = (nextPeriod, nextFilterMode, nextBrand, nextCampaign, nex
 const allFilterParams = ['period', 'start', 'end', 'brand', 'campaign', 'tag']
 
 
-/** What time period, brand, and campaign are currently in focus? */
+/** What time period, brand, and campaign are currently in focus?
+ * 
+ * This is set/stored in the url (so links can be shared)
+ * 
+ */
 const GreenDashboardFilters = ({}) => {
 	const [period, setPeriod] = useState(periodFromUrl());
 	const [brand, setBrand] = useState(() => DataStore.getUrlValue('brand'));
