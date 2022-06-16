@@ -39,9 +39,10 @@ const osTypes = {
  */
 const TechSubcard = ({ tags, data, options, minimumPercentLabeled=0 }) => {
 	if (!tags || !data) return <Misc.Loading text="Fetching your tag data..." />;
-
+	console.log("TechSubcard", "tags", tags, "data", data);
+	
 	const labels = ['Media', 'Publisher overhead', 'DSP overhead'];
-	const { media, publisher, dsp } = data.total.kgCarbon;
+	const { media, publisher, dsp } = data.total.kgCarbon;	
 	const chartData = {
 		labels,
 		datasets: [{
