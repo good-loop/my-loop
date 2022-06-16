@@ -115,16 +115,19 @@
             justify-content: center;
             align-items: center;
             position: relative;
-            transform: translateY(-25%);
+            transform: translateY(-15%);
             h4, p {
                 text-align: center;
             }
             h4 {
                 color: @gl-red;
             }
-            p {
+            p.miniheader {
                 color: @gl-red;
                 text-transform: capitalize;
+            }
+            .star {
+                width: 10%;
             }
         }
 
@@ -174,8 +177,54 @@
                 left: 50%;
                 transform: translate(-50%, 0);
             }
+            .collapseable-card {
+                box-shadow: none;
+                border-radius: 0;
+                border-top: 1px solid rgba(0,0,0,0.2);
+                padding: 2rem 0;
+                margin: 0 !important;
+                h5 {
+                    color: @gl-dark-turquoise;
+                }
+            }
+            .faq {
+                li {
+                    margin-top: 1rem;
+                    &::marker {
+                        font-size: 3rem;
+                    }
+                }
+            }
+            .faq-1 {
+                h1 {
+                    color: @gl-dark-turquoise;
+                }
+                li::marker {
+                    color: @gl-dark-turquoise;
+                }
+                a {
+                    font-weight: bold;
+                    color: @gl-dark-turquoise;
+                }
+            }
+            .faq-2 {
+                h1 {
+                    color: @gl-red;
+                }
+                li::marker {
+                    color: @gl-red;
+                }
+            }
+            .faq-3 {
+                h1 {
+                    color: @gl-light-blue;
+                }
+                li::marker {
+                    color: @gl-light-blue;
+                }
+            }
             .card-content {
-                padding-top: 0;
+                padding: 0;
             }
         }
     }

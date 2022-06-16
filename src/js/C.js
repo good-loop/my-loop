@@ -26,8 +26,9 @@ C.DONATIONS_TOTAL = "£4,700,000";
 // NB: MonetaryAmount is deprecated - left here for old data
 C.TYPES = new Enum("Publisher NGO Advert Campaign Advertiser Agency User Person Money MonetaryAmount BlogPost ScheduledContent GreenTag");
 
-C.ROLES = new Enum("user admin marketing");
+C.ROLES = new Enum("user admin marketing agency");
 C.CAN = new Enum("view edit admin sudo viewmarketingreports");
 // setup roles
 defineRole(C.ROLES.user, [C.CAN.view]);
 defineRole(C.ROLES.admin, C.CAN.values);
+defineRole(C.ROLES.agency, [C.CAN.view]); // do we need this here??
