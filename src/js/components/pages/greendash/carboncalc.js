@@ -151,10 +151,11 @@ export const getCarbon = ({q = '', breakdowns = [], start = '1 month ago', end =
 		start, end, ...rest
 	};
 	
-	// TODO develop this then refactor to use this
-	DataStore.fetch(['misc', 'greencalc', md5(JSON.stringify(data))], () => {
-		ServerIO.load("http://localportal.good-loop.com/greencalc", {data, swallow: true});
-	});
+	// // TODO develop this then refactor to use this
+	// DataStore.fetch(['misc', 'greencalc', md5(JSON.stringify(data))], () => {
+	// NB: can call `as` or `portal` -- they run the same GreenCalcServlet
+	// 	ServerIO.load("https://as.good-loop.com/greencalc", {data, swallow: true});
+	// });
 
 	return DataStore.fetch(['misc', 'DataLog', 'green', md5(JSON.stringify(data))], () => {
 		// Chained promise: first get raw impression counts, then convert them to data and CO2 figures in chart-ready datasets
