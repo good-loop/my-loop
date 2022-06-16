@@ -31,8 +31,8 @@ const osTypes = {
 
 /**
  * 
- * @param {*} tags
- * @param {Number[]} data
+ * @param {GreenTag[]} tags
+ * @param {Number[]} data Uses dsp from carboncalc.js
  * @param {*} options
  * @param {Number} minimumPercentLabeled the minimum percentage to include a data label for
  * @returns 
@@ -40,7 +40,7 @@ const osTypes = {
 const TechSubcard = ({ tags, data, options, minimumPercentLabeled=0 }) => {
 	if (!tags || !data) return <Misc.Loading text="Fetching your tag data..." />;
 	console.log("TechSubcard", "tags", tags, "data", data);
-	
+
 	const labels = ['Media', 'Publisher overhead', 'DSP overhead'];
 	const { media, publisher, dsp } = data.total.kgCarbon;	
 	const chartData = {
