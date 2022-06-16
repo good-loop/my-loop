@@ -31,3 +31,4 @@ C.CAN = new Enum("view edit admin sudo viewmarketingreports");
 // setup roles
 defineRole(C.ROLES.user, [C.CAN.view]);
 defineRole(C.ROLES.admin, C.CAN.values);
+defineRole(C.ROLES.agency, [C.CAN.view]); // do we need this here??
