@@ -20,7 +20,6 @@ import {
 	GetInvolvedSection,
 	CharityBanner,
 	MyLandingSection,
-	MyDuoLandingSection,
 	PositivePlaceSection,
 	CurvePageCard,
 	PageCard,
@@ -29,6 +28,7 @@ import {
 import { setFooterClassName } from '../Footer';
 import { T4GHowItWorksButton, T4GSignUpButton } from '../T4GSignUp';
 import { MyDataSignUpButton } from '../mydata/MyDataSignUp';
+import TickerTotal from '../TickerTotal';
 
 const HomePage = ({spring}) => {
 	//spring the page down if asked to for how it works section
@@ -50,9 +50,9 @@ const HomePage = ({spring}) => {
 	return (<>
 		<div className="HomePage widepage">
 			{/* <MyLandingSection shiftLeft/> */}
-			<MyDuoLandingSection />
+			<MyLandingSection />
 			<CharityBanner />
-			<JoinOurMovement />
+			<FindOutMoreSection />
 			<NewsAwards />
 			<PositivePlaceSection className="blue-gradient"/>
 			<WatchVideoSection />
@@ -71,6 +71,54 @@ const HomePage = ({spring}) => {
 	</>);
 };
 
+const FindOutMoreSection = () => {
+
+	return (<>
+		<PageCard id="upper-cta" >
+			<div className='text-center'>
+				<h2>Together We've Raised</h2>
+				<TickerTotal noPennies={true} />
+				<p>For Global Causes</p>
+				<div className="conversation-bubble">
+					<span>Our Mission</span>
+					<span>Changing The World: Together</span>
+					<span>At My Good-Loop we're harnessing consumer power and advertising billions, donating 50% of ad spend to charity - connecting you with brands to fund the causes you case most about.</span>
+					<a href="#">Our Impact</a>
+				</div>
+	
+			</div>
+		</PageCard>
+		<PageCard className="tabs-for-goods-slide-card" >
+			<div className="gridbox gridbox-md-2 gridbox-gap-4">
+					<Card className='border shadow'>
+						<CardImg variant="top" src="/img/homepage/slide-1.png" />
+						<CardBody>
+							<CardTitle><h3 className='gl-dark-blue'>Tabs for Good</h3></CardTitle>
+							<CardText>Turn your web browsing into charity donations. Easy and free.</CardText>
+							<T4GSignUpButton className="w-100"/>
+							<T4GHowItWorksButton className="w-100" />
+						</CardBody>
+					</Card>
+					<Card className='border shadow'>
+						<a id="mydata-cta" />
+						<CardImg className='bg-gl-dark-blue' variant="top" src="/img/mydata/onboarding-2.png" />
+						<CardBody>
+							<CardTitle><h3 className='gl-dark-blue'>My.Data</h3></CardTitle>
+							<CardText>
+								Don't just give it away - support charity with your data
+							</CardText>
+							<MyDataSignUpButton id="mydata-signup-button" className="w-100 mt-3" /> {/* NB: assume the modal is on the page already */}
+						</CardBody>
+					</Card>
+			</div>
+		</PageCard>
+		</>);
+};
+
+/**
+ * @deprecated Replaced by FindOutMoreSection
+ * @returns {JSX.Element}
+ */
 const JoinOurMovement = () => <>	
 	<PageCard id="upper-cta" className="tabs-for-goods-slide-card" >
 		<div className="upper-cta white">

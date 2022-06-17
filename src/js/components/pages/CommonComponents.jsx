@@ -115,52 +115,56 @@ const MyLandingBackgroundImage = ({bgImg, ngo, children}) => {
 	);
 }
 
-const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft, t4g=true, mydata=true}) => {
-	const name = NGO.displayName(ngo);
+// /**
+//  * Old landing page before My.Data
+//  * @param {*} param0 
+//  * @returns 
+//  */
+// const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft, t4g=true, mydata=true}) => {
+// 	const name = NGO.displayName(ngo);
 	
-	if ( ! title) {
-		title = `Turn your web browsing into ${(ngo && "cash for " + name) || "charity donations"}. For free.`;
-	}
-	if ( ! text) {
-		text = `Get our Tabs for Good Browser Plugin today and raise money for ${(ngo && name) || "good causes"} - just by browsing the internet.`;
-	}
-	const multiProduct = mydata && t4g; // some extra is needed to separate multiple products
-	return (<>
-		<MyLandingBackgroundImage bgImg={bgImg} ngo={ngo}>
-			<Container fluid className={space("d-flex", !shiftLeft ? "justify-content-center" : "left-padding")}>
-				<Row className="splash-top-margin">
-						{!shiftLeft && <Col md={1} sm={0} /* left padding, but not on mobile */></Col>}
-						<Col md={5} className="landing-left">
-								<div className="title"> 
-									<h1 className='text-left bolder'>{title}</h1>
-									<p className='leader-text nomargin'>{text}</p>
-								</div>
-								{t4g && <div className={multiProduct && 'product'}>
-									{multiProduct && <h4>Tabs for Good</h4>}
-									<T4GSignUpButton className="w-75"/>
-									<T4GHowItWorksButton className="w-75" />
-								</div>}
-								{mydata && <div className={multiProduct && 'product'}>
-									{multiProduct && <h4><span className="new">new</span> My.Data</h4>}
-									<MyDataSignUpButton className="w-75 mt-3" />
-									<MyDataSignUpModal />
-								</div>}
-						</Col>
-						{shiftLeft && <Col md={6} className='d-none d-xl-block' style={{zIndex:'-99'}}></Col>}
-				</Row>
-			</Container>
-		</MyLandingBackgroundImage>
-</>);
-};
+// 	if ( ! title) {
+// 		title = `Turn your web browsing into ${(ngo && "cash for " + name) || "charity donations"}. For free.`;
+// 	}
+// 	if ( ! text) {
+// 		text = `Get our Tabs for Good Browser Plugin today and raise money for ${(ngo && name) || "good causes"} - just by browsing the internet.`;
+// 	}
+// 	const multiProduct = mydata && t4g; // some extra is needed to separate multiple products
+// 	return (<>
+// 		<MyLandingBackgroundImage bgImg={bgImg} ngo={ngo}>
+// 			<Container fluid className={space("d-flex", !shiftLeft ? "justify-content-center" : "left-padding")}>
+// 				<Row className="splash-top-margin">
+// 						{!shiftLeft && <Col md={1} sm={0} /* left padding, but not on mobile */></Col>}
+// 						<Col md={5} className="landing-left">
+// 								<div className="title"> 
+// 									<h1 className='text-left bolder'>{title}</h1>
+// 									<p className='leader-text nomargin'>{text}</p>
+// 								</div>
+// 								{t4g && <div className={multiProduct && 'product'}>
+// 									{multiProduct && <h4>Tabs for Good</h4>}
+// 									<T4GSignUpButton className="w-75"/>
+// 									<T4GHowItWorksButton className="w-75" />
+// 								</div>}
+// 								{mydata && <div className={multiProduct && 'product'}>
+// 									{multiProduct && <h4><span className="new">new</span> My.Data</h4>}
+// 									<MyDataSignUpButton className="w-75 mt-3" />
+// 									<MyDataSignUpModal />
+// 								</div>}
+// 						</Col>
+// 						{shiftLeft && <Col md={6} className='d-none d-xl-block' style={{zIndex:'-99'}}></Col>}
+// 				</Row>
+// 			</Container>
+// 		</MyLandingBackgroundImage>
+// </>);
+// };
 
-const MyDuoLandingSection = ({ngo, title, bgImg}) => {
-	const name = NGO.displayName(ngo);
+const MyLandingSection = ({title, bgImg}) => {
 
 	const mobileWidth = window.innerWidth <= 768;
 	const fontSizeCTA = mobileWidth ? '.8rem' : '1rem';
 	
 	if ( ! title) {
-		title = `Turn your web browsing into ${(ngo && "cash for " + name) || "charity donations"}. For free.`;
+		title = `Raise Money For The Causes You Care Most About. For free.`;
 	}
 
 	const scrollToUpperCta = () => document.getElementById("upper-cta").scrollIntoView({behavior: "smooth"});
@@ -175,18 +179,21 @@ const MyDuoLandingSection = ({ngo, title, bgImg}) => {
 		<BG minHeight={mobileWidth ? null : "32vw"} 
 		src={mobileWidth ? 'img/splash-screen/background-mobile.svg' : 'img/splash-screen/svg-bg-lg.svg'}
 		className={mobileWidth ? null : 'd-flex justify-content-center align-items-center'}>
-		<img src='img/splash-screen/foreground-mobile.png' className="d-md-none d-block w-100" />
+		<img src='img/splash-screen/splash-screen-foreground.png' className="d-md-none d-block w-100" />
 		<img src='img/splash-screen/foreground-desktop.png' className="d-none d-md-block w-100 position-absolute" />
-		<div className="splash-content d-flex flex-column align-items-center" style={!mobileWidth ? {margin:'0 34vw'} : null}>
-			{title && <h1 className='text-center bolder text-white mx-3 mt-3'>{title}</h1>}
-			<button className='btn btn-primary btn-lg mt-3 mx-auto mb-5' onClick={scrollToUpperCta}>Discover My.Good-Loop</button>
+		<div className="splash-content d-flex flex-column align-items-center" style={!mobileWidth ? {margin:'0 28vw'} : null}>
+			{title && <h1 className='text-center bolder text-white mx-2 mt-3' style={mobileWidth ? {fontSize:"1.5rem"} : null}>{title}</h1>}
+			<button className='btn btn-primary btn-lg my-3 mx-auto' onClick={scrollToUpperCta}>Find out more</button>
+			<a href='#' className='text-white text-decoration-none mt-2 mb-4'><span style={{textDecoration:"underline"}}>Sign Up For Our Product</span> →</a>
 		</div>
 		</BG>
 	</Container>
-	{window.isDebug && <div className="debug btn btn-secondary position-absolute m-1" onClick={(e) => {stopEvent(e); showMyDataSignUpModal()}}>
-		MyData Debug
-	</div>}
-	<Container fluid className="landing-duo-cta bg-gl-light-pink d-flex justify-content-center py-3 px-1">
+	{/* {window.isDebug && <div className="debug position-absolute" onClick={(e) => {stopEvent(e); showMyDataSignUpModal()}}>
+		*MyData Debug*
+	</div>} */}
+	
+	{/* 17 June 2022 Remove the Duo Cta in new design */}
+	{/* <Container fluid className="landing-duo-cta bg-gl-light-pink d-flex justify-content-center py-3 px-1">
 		<a onClick={myDataOnClick} 
 			className='text-decoration-none mydata-signup-button'> 
 			<div style={{borderRadius:'10px'}} className="mydata-signup-button mydata-splash-cta splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
@@ -194,14 +201,15 @@ const MyDuoLandingSection = ({ngo, title, bgImg}) => {
 				<span className='font-weight-bold p-1 pl-3 mx-auto mydata-signup-button' style={{fontSize:fontSizeCTA,transform:'translate(0, 10%)'}} >{isReg ? 'My.Data Profile' : 'Sign Up For My.Data'}</span>
 			</div>
 		</a>
-		<MyDataSignUpModal /> {/*NB: This Modal should be placed _outside_ of the anchor tags otherwise it can break rendering. Why? I don't know.*/}
+		<MyDataSignUpModal />
 		<C.A href='/tabsforgood' className='text-decoration-none t4g-signup-button'>
 			<div style={{borderRadius:'10px'}} className="t4g-signup-button t4g-splash-cta splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
 				<img src="img/mydata/t4g-cta.png" className='logo'/>
 				<span className='font-weight-bold p-1 pl-3 mx-auto t4g-signup-button' style={{fontSize:fontSizeCTA,transform:'translate(0, 10%)'}}>Get Tabs For Good</span>
 			</div>
 		</C.A>
-	</Container>
+	</Container> */}
+
 	</>);
 }
 
@@ -661,7 +669,6 @@ export {
 	GetInvolvedSection,
 	CharityBanner,
 	MyLandingSection,	
-	MyDuoLandingSection,
 	PageCard,
 	CurvePageCard,
 	WhatIsTabsForGood,
