@@ -272,7 +272,7 @@ const TransformYourData = () => {
                     </CollapseableCard>
                 </ProductPageContainer>
                 <br/>
-                <div className="d-flex flex-row justify-content-center align-items-center">
+                <div className="d-flex flex-row justify-content-center align-items-center mt-md-5">
                     <MyDataSignUpButton/>
                 </div>
                 <br/>
