@@ -29,9 +29,9 @@ export const showMyDataSignUpModal = (s=true) => {
 /**
  * A button to start the MyData sign-up flow.
  */
- export const MyDataSignUpButton = ({className,children}) => {		
+ export const MyDataSignUpButton = ({className,children,style}) => {		
 	return (
-		<a className={`${space("btn btn-primary", className)} mydata-signup-button`} href={window.location} 
+		<a className={`${space("btn btn-primary", className)} mydata-signup-button`} href={window.location} style={style}
 			onClick={e => {
 				stopEvent(e);
 				showMyDataSignUpModal();
