@@ -7,40 +7,9 @@ export const byId = things => things.reduce((acc, thing) => {
 	return acc;
 }, {})
 
-
-/** Kilogrammes of CO2 per gigabyte of data for each country */
-const DATA_TO_CARBON_BY_COUNTRY = {
-	GB: 0.54,
-	AU: 0.54,
-};
-
-/** Temporary fill-in for pre-geoIP data until we can put country overrides on green tags */
-const CAMPAIGN_COUNTRY_SHIMS = {
-	CaptifyNS: 'AU',
-};
-
-const PUBLISHER_OVERHEAD = 100000; // TODO Fill in correct number
-const DSP_OVERHEAD = 100000; // TODO Fill in correct number
-
-
-/** Take DataLog impression buckets where the keys correspond to tags & total up bytes of data transferred */
-const calcBytes = (buckets, tagsById) => {
-	let media = 0;
-	let publisher = 0;
-	let dsp = 0;
-
-	buckets.forEach(({count, key}) => {
-		media += count * tagsById[key].weight;
-		publisher += count * PUBLISHER_OVERHEAD;
-		dsp += count * DSP_OVERHEAD;
-	});
-	return {total: (media + publisher + dsp), media, publisher, dsp};
-};
-
-
 /**
  * Turns a list of buckets into an object containing a proportional breakdown
- * @param {*} buckets e.g. [ { key: 'one', count: 100 }, { key: 'two', count: 300} ]
+ * @param {Object[]} buckets e.g. [ { key: 'one', count: 100 }, { key: 'two', count: 300} ]
  * @return e.g. { one: 0.25, two: 0.75 }
  */
 const bucketsToFractions = (buckets) => {
@@ -53,7 +22,6 @@ const bucketsToFractions = (buckets) => {
 		return acc;
 	}, {});
 };
-
 
 /**
  * For each green tag, what proportion of of data was served in which countries?
@@ -69,33 +37,6 @@ const tagToCountryBreakdown = (by_adid_country) => {
 		toReturn[tagid] = bucketsToFractions(by_country.buckets);
 	});
 	return toReturn;
-};
-
-
-/**
- * Use the impressions-by-tag distribution and the impressions-by-tag-by-country distribution
- * to calculate the carbon emissions for transferring a quantity of data.
- * @param {*} bytes 
- * @param {*} tagFractions 
- * @param {*} countries 
- * @returns 
- */
-const bytesToCarbon = (bytes, tags, tagFractions, countries) => {
-	// Iterate through all tags...
-	return Object.entries(tagFractions).reduce((acc, [tagId, tFraction]) => {
-		const bytesForThisTag = bytes * tFraction;
-		const countriesForThisTag = countries[tagId];
-		// Divide up the bytes used by this tag into the countries where the tag served
-		// and multiply the portions by the bytes-to-carbon conversion factor for each country
-		return acc + Object.entries(countriesForThisTag).reduce((acc, [country, cFraction]) => {
-			const bytesForTagForCountry = bytesForThisTag * cFraction;
-			let carbonFactor = DATA_TO_CARBON_BY_COUNTRY[country];
-			if (!carbonFactor) {
-				carbonFactor = DATA_TO_CARBON_BY_COUNTRY[CAMPAIGN_COUNTRY_SHIMS[tags[tagId].campaign]];
-			}
-			return acc + ((bytesForTagForCountry * carbonFactor) / 1000000000);
-		}, 0);
-	}, 0);
 };
 
 
@@ -159,55 +100,11 @@ export const getCarbon = ({q = '', breakdowns = [], start = '1 month ago', end =
 
 	return DataStore.fetch(['misc', 'DataLog', 'green', md5(JSON.stringify(data))], () => {
 		// Chained promise: first get raw impression counts, then convert them to data and CO2 figures in chart-ready datasets
-		return ServerIO.load(ServerIO.DATALOG_ENDPOINT, {data, swallow: true}).then(({cargo}) => {
-			const tagsById = byId(tags);
-			
-			// What countries did we serve in, proportionally?
-			// TODO Insert a shim for unset countries
-			const countries = tagToCountryBreakdown(cargo.by_adid_country, tagsById);
-			// This will hold the transformed-for-ChartJS breakdowns
-			const datasets = {};
-
-			// Construct a fake breakdown that the code below will process into a "total" dataset
-			cargo.by_total_adid = { buckets: [{ key: 'total', by_adid: { buckets: cargo.by_adid.buckets } }] }
-
-			// For each requested breakdown...
-			Object.keys(cargo).forEach(key => {
-				 // Only process by_xxxx_adid breakdowns!
-				const matches = key.match(/by_(\w+)_adid/)
-				if (!matches) return;
-				const breakdownName = matches[1];
-				const { buckets } = cargo[key]; // These will be the buckets for the outer breakdown - eg by_time_adid for time/adid
-
-				const labels = [];
-				const imps = [];
-				const bytes = {total: [], media: [], publisher: [], dsp: []};
-				const kgCarbon = {total: [], media: [], publisher: [], dsp: []};
-
-				// For each entry in the breakdown, calculate data usage
-				// and carbon emissions and append to the data series
-				buckets.forEach(({key, by_adid}) => {
-					if (breakdownName === 'total') {
-						// debugger;
-					}
-					labels.push(key);
-					// total impressions for this bucket = sum counts of all bottom-level buckets
-					imps.push(by_adid.buckets.reduce((acc, {count}) => acc + count, 0));
-					// calculate the data transfer for impressions in this bucket
-					const thisBytes = calcBytes(by_adid.buckets, tagsById);
-					// append each sub-value of the calculated data transfer to its corresponding array
-					// eg append calcBytes.total to bytes['total'], calcBytes.media to bytes['media'] etc
-					const tagFractions = bucketsToFractions(by_adid.buckets); // fraction of this bucket's impressions corresponding to each tag ID
-					Object.entries(thisBytes).forEach(([key, value]) => {
-						bytes[key].push(value);
-						// calculate carbon for each sub-value and append that too
-						kgCarbon[key].push(bytesToCarbon(value, tagsById, tagFractions, countries));
-					});
-				});
-				datasets[breakdownName] = { labels, imps, bytes, kgCarbon };
-			});
-			
-			return datasets;
+		return ServerIO.load(ServerIO.GREENCALC_ENDPOINT, {data, swallow: true}).then(({cargo}) => {
+			// const tagsById = byId(tags);
+			// TODO
+			console.warn("TODO");
+			return exampleDataSets;
 		});
 	}); // /fetch()
 };

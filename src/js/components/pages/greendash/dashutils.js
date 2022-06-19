@@ -8,7 +8,7 @@ import { isoDate, space } from '../../../base/utils/miscutils';
 /**
  * Returns a period object for the quarter enclosing the given date
  * @param {?Date} date Default "now"
- * @returns 
+ * @returns {start, end, name}
  */
 export const getPeriodQuarter = (date = new Date()) => {
 	const qIndex = Math.floor(date.getMonth() / 3);

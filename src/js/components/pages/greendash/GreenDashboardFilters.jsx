@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, DropdownItem, DropdownMenu, DropdownToggle, Form, Input, Row, UncontrolledDropdown } from 'reactstrap';
+import { Button, Col, DropdownItem, DropdownMenu, DropdownToggle, Form, Input, Label, Row, UncontrolledDropdown } from 'reactstrap';
 
 import KStatus from '../../../base/data/KStatus';
 import DataStore from '../../../base/plumbing/DataStore';
@@ -11,6 +11,7 @@ import DateRangeWidget from '../../DateRangeWidget';
 import { modifyPage } from '../../../base/plumbing/glrouter';
 import { isTester } from '../../../base/Roles';
 import SearchQuery from '../../../base/searchquery';
+import PropControl from '../../../base/components/PropControl';
 
 
 
@@ -19,6 +20,7 @@ const QuarterButtons = ({ period, setNamedPeriod }) => {
 	const buttons = [];
 	const dateCursor = new Date();
 	dateCursor.setDate(1); // avoid month-length problems
+	// quarters
 	for (let i = 0; i < 4; i++) {
 		const q = getPeriodQuarter(dateCursor);
 
@@ -173,12 +175,18 @@ const GreenDashboardFilters = ({}) => {
 	let filterLabel = 'Filter by:';
 	if (filterMode) filterLabel += ` ${filterMode}`;
 
+	let thisQuarter = getPeriodQuarter(new Date()).name;
+	let dateCursor = new Date();
+	dateCursor.setMonth(dateCursor.getMonth() - 3);
+	let lastQuarter = getPeriodQuarter(dateCursor).name;	
+
 	return (
 		<Row className="greendash-filters my-2">
 			<Col xs="12">
 				{ brand ? <img src="brand.png" alt="Brand Logo" /> : null }
 				<Form inline>
-					<UncontrolledDropdown className="filter-dropdown">
+					{/* ??Seeing layout bugs that can block use -- refactoring to use a PropControl might be best*/}
+					<UncontrolledDropdown className="filter-dropdown">												
 						<DropdownToggle className="pl-0" caret>{periodLabel}</DropdownToggle>
 						<DropdownMenu>
 							<QuarterButtons period={period} setNamedPeriod={setNamedPeriod} />
