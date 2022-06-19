@@ -28,9 +28,26 @@ import GreenMap from './greendash/GreenMap';
 const GreenLanding = ({ }) => {
 	// like CampaignPage, this would prefer to run by a campaign id -- which should be the Brand's master campaign
 	const path = DataStore.getValue("location","path");
-	const cid = path[1] || Campaign.TOTAL_IMPACT;
-	const isTotal = cid===Campaign.TOTAL_IMPACT;
 	const status = DataStore.getUrlValue("status") || KStatus.PUBLISHED;
+	let cid = path[1]; 
+	if ( ! cid) {
+		// fetch the master campaign for ...?
+		let pvItem = null;
+		let brandId = DataStore.getUrlValue('brand');
+		if (brandId) {			
+			pvItem = getDataItem({type:C.TYPES.Advertiser, id:brandId, status, swallow:true});
+		} else if (DataStore.getUrlValue('agency')) {
+			pvItem = getDataItem({type:C.TYPES.Agency, id:DataStore.getUrlValue('agency'), status, swallow:true});
+		}
+		if (pvItem?.value) {
+			let pvC = Campaign.fetchMasterCampaign(pvItem.value, status);
+			if (pvC.value) cid = pvC.id;
+		}
+		if ( ! cid) {
+			cid = Campaign.TOTAL_IMPACT; // TODO not whilst loading; oh well
+		}
+	}	
+	const isTotal = cid===Campaign.TOTAL_IMPACT;	
 	const pvCampaign = getDataItem({type:C.TYPES.Campaign, id:cid, status});
 
 	// Green Ad Tags carry t=pixel d=green campaign=X adid=Y

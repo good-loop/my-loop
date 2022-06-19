@@ -236,6 +236,13 @@ export const ModeButton = ({ children, name, mode, setMode, size = 'sm', ...rest
 const dfltMaxColour = [192, 33, 48];
 const dfltMinColour = [186, 9, 84];
 
+/**
+ * 
+ * @param {!number[]} series 
+ * @param {?number[]} maxColour e.g. [255,0,0] bright red
+ * @param {?number[]} minColour 
+ * @returns 
+ */
 export const dataColours = (series, maxColour = dfltMaxColour, minColour = dfltMinColour) => {
 	const max = Math.max(...series);
 	const min = Math.min(...series);

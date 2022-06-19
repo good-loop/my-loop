@@ -59,46 +59,46 @@ const TreesSection = ({treesPlanted}) => {
 
 
 /**
- * Show the lifetime carbon offsets & tree-planting of the current campaign set & compare estimated emissions.
+ * Show the carbon offsets & tree-planting of the current campaign set & compare estimated emissions.
  * @param {Object} props
- * @param {Campaign[]} props.campaigns The campaign(s) currently in focus
+ * @param {?Campaign[]} props.campaigns The campaign(s) currently in focus
  * @param {GreenTag[]} props.tags The green ad tag(s) currently in focus
  * @returns 
  */
 const JourneyCard = ({ campaigns, tags }) => {
-	if (!campaigns || !campaigns.length || !tags) {
-		return <Misc.Loading text="Fetching your tag data..." />;
+	if ( ! campaigns || ! campaigns.length) {
+		return <Misc.Loading text="Fetching your campaign data..." />;
 	}
 
-	const [co2Emitted, setCo2Emitted] = useState(0);
-	const [offsets, setOffsets] = useState({co2: 0, trees: 0});
+	let offsets = campaigns.reduce((acc, c) => {
+		// live co2 data
+		// offsets
+		if (c.co2) acc.co2 += c.co2;
+		if (c.trees) acc.trees += c.trees;
+		return acc;
+	}, {co2: 0, trees: 0, coral: 0});
 
-	useEffect(() => {
-		// Different from the base data retrieved in GreenMetrics: no time limit (as it compares to all-time carbon offsets)
-		getCarbon({q: campaigns.map(c => `campaign:${c.id}`).join(' OR '), start: '1970-01-01', tags}).promise.then(value => {
-			setCo2Emitted(value.total.kgCarbon.total[0]);
-		});
-
-		// Total carbon offset / trees planted for all campaigns
-		setOffsets(
-			campaigns.reduce((acc, c) => {
-				if (c.co2) acc.co2 += c.co2;
-				if (c.trees) acc.trees += c.trees;
-				return acc;
-			}, {co2: 0, trees: 0})
-		);
-	}, [...campaigns]);
-
+	// TODO
+	let impactSplashPage = '/green?'; 
+	let brandIds = [];
+	let agencyIds = []
+	if (brandIds.length===1) {
+		impactSplashPage += '??'
+	}
+	// co2Emitted={co2Emitted}
 	return <GreenCard title="Your journey so far" className="carbon-journey">
-		<CO2Section co2Offset={offsets.co2} co2Emitted={co2Emitted} />
+		<CO2Section co2Offset={offsets.co2}  />
 		<TreesSection treesPlanted={offsets.trees} />
-		<A className="btn btn-primary" href={`/green/${encURI(campaigns[0].id)}`}>Impact Overview</A>
+		<A className="btn btn-primary" href={impactSplashPage}><BrandLogo campaigns={campaigns} /> Impact Overview</A>
 		<GreenCardAbout>
-			<p>How do we calculate campaign lifetime carbon emissions?</p>
 			<p>What carbon offsets do we use?</p>
 			<p>What tree planting projects do we support?</p>
 		</GreenCardAbout>
 	</GreenCard>;
+};
+
+const BrandLogo = ({campaigns}) => {
+	return null; // TODO if campaigns all share one brand, then show the logo
 };
 
 export default JourneyCard;

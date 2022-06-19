@@ -6,13 +6,14 @@ import DataStore from '../../../base/plumbing/DataStore';
 import printer from '../../../base/utils/printer';
 import C from '../../../C';
 import KStatus from '../../../base/data/KStatus';
+import List from '../../../base/data/List';
 import Misc from '../../../base/components/Misc';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import { getDataLogData } from '../../../base/plumbing/DataLog';
 import { getDataList } from '../../../base/plumbing/Crud';
 
 import { getPeriodQuarter, GreenCard, periodFromUrl, printPeriod } from './dashutils';
-import { getCarbon } from './carboncalc';
+import { getCampaigns, getCarbon, getSumColumn } from './carboncalc';
 
 import GreenDashboardFilters from './GreenDashboardFilters';
 import BreakdownCard from './BreakdownCard';
@@ -22,15 +23,18 @@ import CompareCard from './CompareCard';
 import TimeOfDayCard from './TimeOfDayCard';
 import { modifyPage } from '../../../base/plumbing/glrouter';
 import ErrAlert from '../../../base/components/ErrAlert';
-
+import { isNumeric } from '../../../base/utils/miscutils';
+import PromiseValue from 'promise-value';
 
 const OverviewWidget = ({period, data}) => {
+	// console.log("OverviewWidget data", data);
+	let total = getSumColumn(data.table, "count");
 	return (
 		<Row className="greendash-overview mb-2">
 			<Col xs="12">
 				<span className="period mr-4">{printPeriod(period)}</span>
 				<span className="impressions">Impressions served: 
-					{/* <span className="impressions-count">{printer.prettyInt(data.total.imps[0])}</span> */}
+					<span className="impressions-count">{printer.prettyInt(total)}</span>
 				</span>
 			</Col>
 		</Row>
@@ -102,6 +106,11 @@ const GreenMetrics2 = ({}) => {
 		// breakdowns: ['time', 'os'],
 		// tags,
 	});
+	let pvCampaigns = getCampaigns(pvChartData.value?.table);
+	if (pvCampaigns && PromiseValue.isa(pvCampaigns.value)) { // HACK unwrap nested PV
+		pvCampaigns = pvCampaigns.value;
+	}
+	console.warn("pvCampaigns",pvCampaigns);
 
 	if ( ! pvChartData.resolved) {
 		return <Misc.Loading text="Fetching campaign lifetime data..." />;
@@ -122,7 +131,7 @@ const GreenMetrics2 = ({}) => {
 				{/* <TimeSeriesCard {...commonProps} data={pvChartData.value} /> */}
 			</Col>
 			<Col xs="12" sm="4" className="flex-column">
-				<JourneyCard {...commonProps} />
+				<JourneyCard campaigns={List.hits(pvCampaigns?.value)} {...commonProps} />
 			</Col>
 		</Row>
 		<Row className="card-row">
@@ -131,8 +140,7 @@ const GreenMetrics2 = ({}) => {
 				{/* <CompareCard {...commonProps} /> */}
 			</Col>
 			<Col xs="12" sm="4" className="flex-column">
-				TODO BreakdownCard
-				{/* <BreakdownCard {...commonProps} data={pvChartData.value} /> */}
+				<BreakdownCard {...commonProps} data={pvChartData.value} />
 			</Col>
 			<Col xs="12" sm="4" className="flex-column">
 				TODO TODCard

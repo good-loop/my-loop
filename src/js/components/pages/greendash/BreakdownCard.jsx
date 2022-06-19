@@ -2,11 +2,16 @@ import React, { useEffect, useState } from 'react';
 
 import Icon from '../../../base/components/Icon';
 import Misc from '../../../base/components/Misc';
+import { sum } from '../../../base/utils/miscutils';
 import NewChartWidget from '../../NewChartWidget';
+import { getBreakdownBy, getSumColumn } from './carboncalc';
 import { dataColours, GreenCard, GreenCardAbout, ModeButton, TONNES_THRESHOLD } from './dashutils';
 
 
-// Classify OS strings seen in our data
+/** Classify OS strings seen in our data  
+ * 
+ * {raw-value: {type:desktop|mobile, group, name} }
+*/
 const osTypes = {
 	windows: { type: 'desktop', group: 'Windows', name: 'Windows' },
 	'mac os x': { type: 'desktop', group: 'Mac OS X', name: 'Mac OS X' },
@@ -31,17 +36,22 @@ const osTypes = {
 
 /**
  * 
+ * @param {Object} p
  * @param {*} tags
- * @param {Number[]} data
+ * @param {!Object} p.data {table: Object[][] }
  * @param {*} options
  * @param {Number} minimumPercentLabeled the minimum percentage to include a data label for
  * @returns 
  */
-const TechSubcard = ({ tags, data, options, minimumPercentLabeled=0 }) => {
-	if (!tags || !data) return <Misc.Loading text="Fetching your tag data..." />;
-
-	const labels = ['Media', 'Publisher overhead', 'DSP overhead'];
-	const { media, publisher, dsp } = data.total.kgCarbon;
+const TechSubcard = ({ tags, data, options, minimumPercentLabeled=1 }) => {
+	// totalEmissions","baseEmissions","creativeEmissions","supplyPathEmissions
+	let media = getSumColumn(data.table, "creativeEmissions");
+	let publisher = getSumColumn(data.table, "baseEmissions");
+	let dsp = getSumColumn(data.table, "supplyPathEmissions");
+	const total = media+dsp+publisher;
+	const total2 = getSumColumn(data.table, "totalEmissions");
+	console.log("media+dsp+pub",total,"totalEmissions", total2, "delta", total-total2);
+	const labels = ['Media', 'Publisher overhead', 'Supply-path overhead'];
 	const chartData = {
 		labels,
 		datasets: [{
@@ -84,8 +94,7 @@ const TechSubcard = ({ tags, data, options, minimumPercentLabeled=0 }) => {
 							size: "20px"
 						},
 						formatter: (value = 0, ctx) => {
-							const sum = ctx.chart.data.datasets[0].data.reduce((acc, v) => acc + (v || 0), 0);
-							let percentage = Math.round(value * 100 / sum);
+							let percentage = Math.round(value * 100 / total);
 							return percentage >= minimumPercentLabeled ? `${percentage}%` : '';
 						},
 					}
@@ -110,105 +119,62 @@ const TechSubcard = ({ tags, data, options, minimumPercentLabeled=0 }) => {
  * desktop vs mobile and different OS
  * @param {Object} p
  */
-const DeviceSubcard = ({ tags, data }) => {
-	if (!tags || !data) return <Misc.Loading text="Fetching your green tag data..." />;
-
-	const [chartProps, setChartProps] = useState();
-
-	useEffect(() => {
-		const typesGroupsBytes = {};
-
-		// Bundle operating systems into useful groups, eg "windows", "linux", "smart tv" and total up data usage for each
-		data.os.labels.forEach((osName, i) => {
-			const {type, group} = osTypes[osName];
-			// Outer grouping: mobile/desktop
-			let groupsToBytes = typesGroupsBytes[type];
-			if (!groupsToBytes) {
-				groupsToBytes = {};
-				typesGroupsBytes[type] = groupsToBytes;
-			}
-			// Inner grouping: all "Windows", all "Android", etc
-			if (!groupsToBytes[group]) {
-				groupsToBytes[group] = 0;
-			}
-			groupsToBytes[group] += data.os.kgCarbon.total[i];
-		});
-
-		// Flatten out groups, making sure "Other X" always appears at the end of the X group
-		let chartLabels = [];
-		let chartValues = [];
-		Object.values(typesGroupsBytes).forEach((groupsToBytes, i, arr) => {
-			const orderedGroups = Object.entries(groupsToBytes);
-			orderedGroups.sort(([ka], [kb]) => {
-				if (ka.match(/^other/i)) return 1;
-				if (kb.match(/^other/i)) return -1;
-				return ka > kb;
-			});
-			orderedGroups.forEach(([label, value]) => {
-				chartLabels.push(label);
-				chartValues.push(value);
-			});
-			// Insert empty bar as spacer between groups
-			if (i === arr.length - 1) return;
-			chartLabels.push('');
-			chartValues.push(0);
-		});
-
-		// Strip out negligible groups (contributing less than n% of total)
-		const totalKg = chartValues.reduce((acc, v) => acc + v, 0);
-
-		const toRemove = {};
-		chartValues.forEach((v, i) => {
-			if ((v / totalKg) < 0.01) toRemove[i] = true;
-		});
-		for (let i = chartLabels.length - 1; i >= 0; i--) {
-			if (!toRemove[i]) continue;
-			chartLabels.splice(i, 1);
-			chartValues.splice(i, 1);
-		};
-		// Cleanup: if a whole group is removed...
-		// (a) the inter-group spacer entry might be left hanging at the end
-		// (b) there might be two adjacent spacers left over
-		for (let i = chartLabels.length - 1; i >= 0; i--) {
-			if (chartValues[i] || chartValues[i+1]) continue;
-			if (chartLabels[i] || chartLabels[i+1]) continue;
-			chartLabels.splice(i, 1);
-			chartValues.splice(i, 1);
-		};
-
-		const nextChartProps = {
-			data: {
-				labels: chartLabels,
-				datasets: [{
-					label: 'Kg CO2',
-					data: chartValues,
-					backgroundColor: dataColours(chartValues),
-				}]
-			},
-			options: {
-				indexAxis: 'y',
-				plugins: { legend: { display: false } },
-				scales: { x: { ticks: { callback: v => `${v} kg` } } },
-			}
-		};
-
-		// Tonnes or kg?
-		if (Math.max(...chartValues) > TONNES_THRESHOLD) {
-			nextChartProps.data.datasets[0].data = chartValues.map(v => v / 1000);
-			nextChartProps.options.scales.x.ticks.callback = v => `${v} tonnes`;
+const DeviceSubcard = ({ tags, data }) => {	
+	let breakdownByOS = getBreakdownBy(data.table, "totalEmissions", "os");
+	let minFraction = 0.05;
+	// compress by OS group
+	// ??Roscoe wrote some smart code to gracefully select the level of grouping. 
+	// After a data-format change -- just went for a simpler option	
+	let breakdownByOSGroup1 = {};
+	const total = sum(Object.values(breakdownByOS));
+	Object.entries(breakdownByOS).forEach(([k, v]) => {
+		let osType = osTypes[k];
+		let group = osType?.group || "Other";
+		if (total*minFraction < v) {
+			group = osType?.name || k;
 		}
+		breakdownByOSGroup1[group] = (breakdownByOSGroup1[group] || 0) + v;
+	});
+	// compress small rows into other
+	let breakdownByOSGroup2 = {};
+	Object.entries(breakdownByOSGroup1).forEach(([k, v]) => {
+		if (total*minFraction > v) {
+			k = "Other";
+		}
+		breakdownByOSGroup2[k] = (breakdownByOSGroup2[k] || 0) + v;
+	});
 
-		setChartProps(nextChartProps);
-	}, [tags, data]);
+	let chartDataList = Object.values(breakdownByOSGroup2);
+	const labels = Object.keys(breakdownByOSGroup2); // ["Windows", "Mac"];
+	
+	// Tonnes or kg?
+	let unit = "kg";
+	if (Math.max(...chartDataList) > TONNES_THRESHOLD) {
+		unit = "tonnes";
+		chartDataList = chartDataList.map(v => v / 1000);
+	}
+	
+	let chartData = {
+		labels,
+		datasets: [{
+			data: chartDataList,
+			label: unit+' CO2',
+			backgroundColor: dataColours(chartDataList),
+		}]
+	};		
 
+	let chartOptions = {
+		indexAxis: 'y',
+		plugins: { legend: { display: false } },
+		scales: { x: { ticks: { callback: v => Math.round(v)+' '+unit } } },
+	};
 
-	if (!chartProps) return <Misc.Loading text="Fetching device data..." />;
-
-	return <NewChartWidget type="bar" data={chartProps.data} options={chartProps.options} />;
+	return <NewChartWidget type="bar" data={chartData} options={chartOptions} />;
 }
 
 
 const BreakdownCard = ({ campaigns, tags, data }) => {
+	if ( ! data) return <Misc.Loading text="Fetching your data..." />;
 	const [mode, setMode] = useState('tech');
 
 	const subcard = (mode === 'tech') ? (

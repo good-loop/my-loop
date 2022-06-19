@@ -30,7 +30,13 @@ ChartJS.register(
 	Legend
 );
 
-
+/**
+ * 
+ * @param {Object} p
+ * @param {Object} p.data { labels:string[], datasets:[] }
+ * @param {Object} p.datalabels See https://www.npmjs.com/package/chartjs-plugin-datalabels
+ * @returns 
+ */
 const NewChartWidget = ({type = 'line', datalabels, className, style, ...props}) => {
 	props.options = props.options || {};
 	props.options.maintainAspectRatio = props.options.maintainAspectRatio || false;

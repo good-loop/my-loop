@@ -1,5 +1,10 @@
 import md5 from 'md5';
-
+import KStatus from '../../../base/data/KStatus';
+import { getDataList } from '../../../base/plumbing/Crud';
+import { assert } from '../../../base/utils/assert';
+import C from '../../../C';
+import PromiseValue from 'promise-value';
+import List from '../../../base/data/List';
 
 /** Turn a list of things with IDs into an object mapping IDs to things */
 export const byId = things => things.reduce((acc, thing) => {
@@ -40,7 +45,8 @@ const tagToCountryBreakdown = (by_adid_country) => {
 };
 
 
-/* What does the output of getCarbon look like? (Unused, illustrative purposes only) */
+// TODO convert the new table format into chart-js friendly stuff
+/* (Unused, illustrative purposes only) */
 const exampleDataSets = {
 	// The name of the requested breakdown
 	time: {
@@ -66,6 +72,49 @@ const exampleDataSets = {
 	}
 }
 
+/**
+ * 
+ * @param {Object[][]} table 
+ * @param {!string} colName
+ * @returns {!number} 
+ */
+export const getSumColumn = (table, colName) => {
+	let ci = table[0].indexOf(colName);
+	assert(ci !== -1, "No such column", colName, table[0]);
+	let total = 0;
+	for(let i=1; i<table.length; i++) {
+		const row = table[i];
+		const n = row[ci];
+		if ( ! n) continue;
+		total += 1.0*n;		
+	}
+	return total;
+};
+
+
+/**
+ * 
+ * @param {Object[][]} table 
+ * @param {!string} colName
+ * @returns {Object} {breakdown-key: sum-for-key} 
+ */
+ export const getBreakdownBy = (table, colNameToSum, colNameToBreakdown) => {
+	let ci = table[0].indexOf(colNameToSum);
+	let bi = table[0].indexOf(colNameToBreakdown);
+	assert(ci !== -1, "No such sum column", colNameToSum, table[0]);
+	assert(bi !== -1, "No such breakdown column", colNameToBreakdown, table[0]);
+	let totalByX = {};
+	for(let i=1; i<table.length; i++) {
+		const row = table[i];
+		const n = row[ci];
+		if ( ! n) continue;
+		const b = row[bi]; // breakdown key
+		let v = totalByX[b] || 0;
+		v += n;		
+		totalByX[b] = v;
+	}
+	return totalByX;
+};
 
 /**
  * Query for green ad tag impressions, then connect IDs to provided tags, calculate data usage & carbon emissions, and output ChartJS-ready data
@@ -79,32 +128,54 @@ const exampleDataSets = {
  * @param {String} start Loose time parsing permitted (eg "24 hours ago") otherwise prefer ISO-8601 (full or partial)
  * @param {String} end Loose time parsing permitted (eg "24 hours ago") otherwise prefer ISO-8601 (full or partial)
  * @param {GreenAdTag[]} tags The Green Ad Tags which relate to the dataset to be retrieved. TODO Should these be retrieved by this code, AFTER the DataLog response?
- * @returns Data in ChartJS-friendly arrays: See exampleDataSets above for format.
+ * @returns {!PromiseValue} {table: [["country","pub","mbl","os","adid","time","count","totalEmissions","baseEmissions","creativeEmissions","supplyPathEmissions"]] }
  */
 export const getCarbon = ({q = '', breakdowns = [], start = '1 month ago', end = 'now', tags, ...rest}) => {
 	// Add ad-ID cross-breakdown to all breakdowns - it's needed to calculate data usage
 	const augmentedBreakdowns = breakdowns.map(b => `${b}/adid`)
 
 	const data = {
-		dataspace: 'green',
-		q: q ? `evt:pixel AND (${q})` : 'evt.pixel',
-		breakdown: [...augmentedBreakdowns, 'adid', 'adid/country'],
-		start, end, ...rest
+		// dataspace: 'green',
+		q, //: q ? `evt:pixel AND (${q})` : 'evt.pixel',
+		// breakdown: [...augmentedBreakdowns, 'adid', 'adid/country'],
+		start, end, 
+		...rest
 	};
-	
-	// // TODO develop this then refactor to use this
-	// DataStore.fetch(['misc', 'greencalc', md5(JSON.stringify(data))], () => {
-	// NB: can call `as` or `portal` -- they run the same GreenCalcServlet
-	// 	ServerIO.load("https://as.good-loop.com/greencalc", {data, swallow: true});
-	// });
 
 	return DataStore.fetch(['misc', 'DataLog', 'green', md5(JSON.stringify(data))], () => {
-		// Chained promise: first get raw impression counts, then convert them to data and CO2 figures in chart-ready datasets
-		return ServerIO.load(ServerIO.GREENCALC_ENDPOINT, {data, swallow: true}).then(({cargo}) => {
-			// const tagsById = byId(tags);
-			// TODO
-			console.warn("TODO");
-			return exampleDataSets;
-		});
+		// table of publisher, impressions, carbon rows
+		return ServerIO.load(ServerIO.GREENCALC_ENDPOINT, {data, swallow: true});
 	}); // /fetch()
+};
+
+/**
+ * 
+ * @param {Object[][]} table 
+ * @returns {?PromiseValue} PV of a List of Campaigns
+ */
+export const getCampaigns = (table) => {
+	if ( ! table) return null;
+	let idSet = {};
+	table.forEach(row => {
+		let adid = row[4];
+		if (adid && adid !== "adid" && adid !== "unset") {
+			idSet[adid] = true;
+		}
+	});
+	let ids = Object.keys(idSet);
+	// ??does PUB_OR_DRAFT work properly for `ids`??
+	let pvTags = getDataList({type:C.TYPES.GreenTag, status:KStatus.PUB_OR_DRAFT, ids});
+	let pvCampaigns = PromiseValue.then(pvTags, tags => {
+		let cidSet = {};
+		List.hits(tags).forEach(tag => {
+			if (tag && tag.campaign) {
+				cidSet[tag.campaign] = true;
+			}
+		});
+		let cids = Object.keys(cidSet);
+		let pvcs = getDataList({type:C.TYPES.Campaign, status:KStatus.PUB_OR_DRAFT, ids:cids});
+		// TODO have PromiseValue.then() unwrap nested PromiseValue
+		return pvcs;
+	});
+	return pvCampaigns;
 };
