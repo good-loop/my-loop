@@ -108,7 +108,6 @@ const GreenMetrics2 = ({}) => {
 	if (pvCampaigns && PromiseValue.isa(pvCampaigns.value)) { // HACK unwrap nested PV
 		pvCampaigns = pvCampaigns.value;
 	}
-	console.warn("pvCampaigns",pvCampaigns);
 
 	if (!pvChartData.resolved) {
 		return <Misc.Loading text="Fetching campaign lifetime data..." />;
@@ -132,15 +131,13 @@ const GreenMetrics2 = ({}) => {
 		</Row>
 		<Row className="card-row">
 			<Col xs="12" sm="4" className="flex-column">
-				TODO CompareCard
-				{/* <CompareCard {...commonProps} /> */}
+				<CompareCard {...commonProps} />
 			</Col>
 			<Col xs="12" sm="4" className="flex-column">
 				<BreakdownCard {...commonProps} data={pvChartData.value} />
 			</Col>
 			<Col xs="12" sm="4" className="flex-column">
-				TODO TODCard
-				{/* <TimeOfDayCard {...commonProps} /> */}
+				<TimeOfDayCard {...commonProps} />
 				<CTACard />
 			</Col>
 		</Row>

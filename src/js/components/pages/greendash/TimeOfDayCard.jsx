@@ -6,48 +6,45 @@ import DataStore from '../../../base/plumbing/DataStore';
 import Misc from '../../../base/components/Misc';
 import NewChartWidget from '../../NewChartWidget';
 import { dataColours, GreenCard, GreenCardAbout, TONNES_THRESHOLD } from './dashutils';
-import { getCarbon } from './carboncalc';
+import { getBreakdownBy, getCarbon } from './carboncalc';
 
 
 const TimeOfDayCard = ({baseFilters, tags}) => {
 	const [chartProps, setChartProps] = useState();
 
 	if (!tags || !tags.length) {
-		return <Misc.Loading text="Fetching your tag data..." />;
+		// return <Misc.Loading text="Fetching your tag data..." />;
 	}
 
 	useEffect(() => {
-		// Different from the base data retrieved in GreenMetrics: time-series interval 1 hour instead of default 1 day
-		getCarbon({...baseFilters, breakdowns: ['time'], interval: '1 hour', tags}).promise.then(value => {
-			// Set up empty buckets for aggregation
-			const hourLabels = [];
-			let hourData = [];
-			for (let i = 0; i < 24; i += 3) {
-				hourLabels.push(`${((i+11)%12)+1} ${(i < 12 ? 'am' : 'pm')}`);
-				hourData.push(0);
-			}
+		getCarbon({...baseFilters, timeofday: true}).promise.then(value => {
+			const labels = [];
+			const data = [];
 
-			// Aggregate impression counts into time-of-day buckets
-			value.time.labels.forEach((timeKey, i) => {
-				const hourKey = new Date(timeKey).getHours(); // hour in local time
-				hourData[Math.floor(hourKey / 3)] += value.time.kgCarbon.total[i]
+			getBreakdownBy(value.table, 'timeOfDay').sort(
+				([ha], [hb]) => ha - hb
+			).forEach(([hour, kg]) => {
+				labels.push(hour);
+				data.push(kg);
 			});
+	
 
 			let label = 'Kg CO2';
 			let tickFn = v => `${v} kg`;
-			const maxCarbon = Math.max(...hourData);
+			
+			const maxCarbon = Math.max(...data);
 			if (maxCarbon > TONNES_THRESHOLD) {
-				hourData = hourData.map(kg => kg / 1000);
+				data.forEach((kg, i) => data[i] = kg / 1000);
 				label = 'Tonnes CO2';
 				tickFn = v => `${v} tonnes`;
 			}
 
 			setChartProps({
 				data: {
-					labels: hourLabels,
+					labels,
 					datasets: [{
 						label,
-						data: hourData,
+						data,
 						backgroundColor: dataColours(hourData),
 					}],
 				},

@@ -48,9 +48,9 @@ const TechSubcard = ({ tags, data, options, minimumPercentLabeled=1 }) => {
 	let media = getSumColumn(data.table, "creativeEmissions");
 	let publisher = getSumColumn(data.table, "baseEmissions");
 	let dsp = getSumColumn(data.table, "supplyPathEmissions");
-	const total = media+dsp+publisher;
+	const total = media + dsp + publisher;
 	const total2 = getSumColumn(data.table, "totalEmissions");
-	console.log("media+dsp+pub",total,"totalEmissions", total2, "delta", total-total2);
+
 	const labels = ['Media', 'Publisher overhead', 'Supply-path overhead'];
 	const chartData = {
 		labels,
@@ -72,14 +72,12 @@ const TechSubcard = ({ tags, data, options, minimumPercentLabeled=1 }) => {
 			tooltip: {
 				callbacks: {
 					label: function(ctx) {
-						//console.log("DATA", ctx);
 						const data = ctx.dataset.data;
 						let currentValue = data[ctx.dataIndex];
 						return ` ${currentValue} kg`;
 					},
 					title: function(ctx) {
 						return ctx[0].label;
-						//return data.labels[tooltipItem[0].index];
 					}
 				}
 			},

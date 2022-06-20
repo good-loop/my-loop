@@ -5,7 +5,7 @@ import Misc from '../../../base/components/Misc';
 import NewChartWidget from '../../NewChartWidget';
 import { dataColours, getPeriodQuarter, GreenCard, GreenCardAbout, ModeButton, printPeriod, TONNES_THRESHOLD } from './dashutils';
 import { isoDate } from '../../../base/utils/miscutils';
-import { getCarbon } from './carboncalc';
+import { getCarbon, getSumColumn } from './carboncalc';
 
 
 const dummyDataCampaign = {
@@ -48,14 +48,16 @@ const QuartersCard = ({tags, baseFilters}) => {
 
 		// Get total carbon for each quarter
 		quarters.forEach((quarter, i) => {
-			getCarbon({ ...baseFilters, breakdowns:[/* TODO REMOVE ME WHEN BASEFILTERS IS UNFUCKED*/], start: isoDate(quarter.start), end: isoDate(quarter.end), tags}).promise.then(value => {
+			getCarbon({ ...baseFilters, start: isoDate(quarter.start), end: isoDate(quarter.end)}).promise.then(value => {
 				setChartProps(prevProps => { // cumulatively insert new values as they arrive
 					const nextProps = _.cloneDeep(prevProps);
 					nextProps.data.labels[i] = printPeriod(quarter, true);
 
 					// Display kg or tonnes?
-					let thisCarbon = value.total.kgCarbon.total[0];
-					nextProps.data.datasets[0].data[i] = thisCarbon; // Default to kg
+					let thisCarbon = getSumColumn(value.table, 'totalEmissions');
+					nextProps.data.datasets[0].data[i] = thisCarbon;
+
+					// Kg or tonnes?
 					if (prevProps.tonnes) {
 						// There's already been at least one data point above the threshold: just scale down the latest one
 						nextProps.data.datasets[0].data[i] /= 1000;

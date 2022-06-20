@@ -18,33 +18,19 @@ const Cloud = ({style}) => (
  * ??Let's rename all co2 variables to be eg "co2OffsetKgs" for clarity
  * 
 */
-const CO2Section = ({co2Offset, co2Emitted}) => {
-	let cloudMessage = null;
-	if (co2Offset !== null && co2Emitted !== null) {
-		cloudMessage = (co2Offset < co2Emitted) ? (
-			<>Offsets<br/>Pending</>
-		) : (
-			<>Carbon<br/>Neutral</>
-		);
-	}
-	
-	return <>
-		<div className="cloud-indicator">
-			<Cloud style={{fill: '#8bc'}} />
-			<h3 className="cloud-message">{cloudMessage}</h3>
-		</div>
-		<h3 className="carbon-offset-total">
-			{co2Offset !== null ? <><Mass kg={co2Offset} /> of carbon offset</> : 'Fetching carbon offset...'}
-		</h3>
-		<h3 className="carbon-emission-total">
-			{co2Emitted !== null ? <><Mass kg={co2Emitted} /> emitted</> : 'Fetching total emissions...'}
-		</h3>
-	</>
-};
+const CO2Section = ({co2Offset, co2Emitted}) => <>
+	<div className="cloud-indicator">
+		<Cloud style={{fill: '#8bc'}} />
+	</div>
+	<h3 className="carbon-offset-total">
+		{co2Offset !== null ? <><Mass kg={co2Offset} /> of carbon offset</> : 'Fetching carbon offset...'}
+	</h3>
+</>;
+
 
 /** Show number of trees planted by the campaigns in focus */
-const TreesSection = ({treesPlanted}) => {
-	if (!treesPlanted) return null;
+const TreesSection = ({treesPlanted, coralPlanted}) => {
+	if (!treesPlanted && !coralPlanted) return null;
 
 	return <>
 		<div>
@@ -52,7 +38,8 @@ const TreesSection = ({treesPlanted}) => {
 			<img className="journey-tree" src="/img/green/tree-light.svg" />
 			<img className="journey-tree" src="/img/green/tree-light.svg" />
 		</div>
-		<h3>{printer.prettyInt(treesPlanted)} trees planted</h3>
+		{treesPlanted && <h3>{printer.prettyInt(treesPlanted)} trees planted</h3>}
+		{coralPlanted && <h3>{printer.prettyInt(coralPlanted)} pieces of coral planted</h3>}
 	</>;
 };
 
@@ -68,9 +55,6 @@ const JourneyCard = ({ campaigns, tags, baseFilters }) => {
 	if (!campaigns || !campaigns.length) {
 		return <Misc.Loading text="Fetching your campaign data..." />;
 	}
-
-	const [totalEmissions, setTotalEmissions] = useState(null);
-
 
 	let offsets = { co2: 0, trees: 0, coral: 0 };
 
@@ -91,18 +75,9 @@ const JourneyCard = ({ campaigns, tags, baseFilters }) => {
 		impactSplashPage += '??'
 	}
 
-	// Get all-time carbon emissions for currently-focused campaigns
-	useEffect(() => {	
-		getCarbon({
-			...baseFilters, start: '2022-01-01T00:00:00.000Z', end: new Date().toISOString()
-		}).promise.then(data => {
-			setTotalEmissions(getSumColumn(data.table, 'totalEmissions'));
-		});
-	}, campaigns.map(c => c.id));
-
 	return <GreenCard title="Your journey so far" className="carbon-journey">
-		<CO2Section co2Offset={offsets.co2} co2Emitted={totalEmissions} />
-		<TreesSection treesPlanted={offsets.trees} />
+		<CO2Section co2Offset={offsets.co2} />
+		<TreesSection treesPlanted={offsets.trees} coralPlanted={offsets.coral} />
 		<A className="btn btn-primary" href={impactSplashPage}><BrandLogo campaigns={campaigns} /> Impact Overview</A>
 		<GreenCardAbout>
 			<p>What carbon offsets do we use?</p>
