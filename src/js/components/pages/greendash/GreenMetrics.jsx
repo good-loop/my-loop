@@ -127,8 +127,7 @@ const GreenMetrics2 = ({}) => {
 		<OverviewWidget period={period} data={pvChartData.value} />
 		<Row className="card-row">
 			<Col xs="12" sm="8" className="flex-column">
-				TODO TimeSeriesCard
-				{/* <TimeSeriesCard {...commonProps} data={pvChartData.value} /> */}
+				<TimeSeriesCard {...commonProps} data={pvChartData.value} />
 			</Col>
 			<Col xs="12" sm="4" className="flex-column">
 				<JourneyCard campaigns={List.hits(pvCampaigns?.value)} {...commonProps} />
