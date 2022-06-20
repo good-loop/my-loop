@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Misc from '../../../base/components/Misc';
 
 import { A } from '../../../base/plumbing/glrouter';
-import { encURI } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
-import { getCarbon } from './carboncalc';
+import { getCarbon, getSumColumn } from './carboncalc';
 import { GreenCard, GreenCardAbout, Mass } from './dashutils';
 
 
@@ -21,7 +20,7 @@ const Cloud = ({style}) => (
 */
 const CO2Section = ({co2Offset, co2Emitted}) => {
 	let cloudMessage = null;
-	if (co2Offset && co2Emitted) {
+	if (co2Offset !== null && co2Emitted !== null) {
 		cloudMessage = (co2Offset < co2Emitted) ? (
 			<>Offsets<br/>Pending</>
 		) : (
@@ -35,10 +34,10 @@ const CO2Section = ({co2Offset, co2Emitted}) => {
 			<h3 className="cloud-message">{cloudMessage}</h3>
 		</div>
 		<h3 className="carbon-offset-total">
-			{co2Offset ? <><Mass kg={co2Offset} /> of carbon offset</> : 'Fetching carbon offset...'}
+			{co2Offset !== null ? <><Mass kg={co2Offset} /> of carbon offset</> : 'Fetching carbon offset...'}
 		</h3>
 		<h3 className="carbon-emission-total">
-			{co2Emitted ? <><Mass kg={co2Emitted} /> emitted</> : 'Fetching total emissions...'}
+			{co2Emitted !== null ? <><Mass kg={co2Emitted} /> emitted</> : 'Fetching total emissions...'}
 		</h3>
 	</>
 };
@@ -65,34 +64,50 @@ const TreesSection = ({treesPlanted}) => {
  * @param {GreenTag[]} props.tags The green ad tag(s) currently in focus
  * @returns 
  */
-const JourneyCard = ({ campaigns, tags }) => {
-	if ( ! campaigns || ! campaigns.length) {
+const JourneyCard = ({ campaigns, tags, baseFilters }) => {
+	if (!campaigns || !campaigns.length) {
 		return <Misc.Loading text="Fetching your campaign data..." />;
 	}
 
-	let offsets = campaigns.reduce((acc, c) => {
-		// live co2 data
-		// offsets
-		if (c.co2) acc.co2 += c.co2;
-		if (c.trees) acc.trees += c.trees;
-		return acc;
-	}, {co2: 0, trees: 0, coral: 0});
+	const [totalEmissions, setTotalEmissions] = useState(null);
 
-	// TODO
+
+	let offsets = { co2: 0, trees: 0, coral: 0 };
+
+	campaigns.forEach(c => {
+		// Live data: extract CO2, trees, coral data from campaigns
+		if (c.co2) offsets.co2 += c.co2;
+		c.offsets?.forEach(o => {
+			if (o.name.match(/^trees?/)) offsets.trees += o.n;
+			if (o.name.match(/^coral/)) offsets.coral += o.n;
+		});
+	});
+
+	// TODO Which impact splash page to link to?
 	let impactSplashPage = '/green?'; 
 	let brandIds = [];
 	let agencyIds = []
-	if (brandIds.length===1) {
+	if (brandIds.length === 1) {
 		impactSplashPage += '??'
 	}
-	// co2Emitted={co2Emitted}
+
+	// Get all-time carbon emissions for currently-focused campaigns
+	useEffect(() => {	
+		getCarbon({
+			...baseFilters, start: '2022-01-01T00:00:00.000Z', end: new Date().toISOString()
+		}).promise.then(data => {
+			setTotalEmissions(getSumColumn(data.table, 'totalEmissions'));
+		});
+	}, campaigns.map(c => c.id));
+
 	return <GreenCard title="Your journey so far" className="carbon-journey">
-		<CO2Section co2Offset={offsets.co2}  />
+		<CO2Section co2Offset={offsets.co2} co2Emitted={totalEmissions} />
 		<TreesSection treesPlanted={offsets.trees} />
 		<A className="btn btn-primary" href={impactSplashPage}><BrandLogo campaigns={campaigns} /> Impact Overview</A>
 		<GreenCardAbout>
 			<p>What carbon offsets do we use?</p>
 			<p>What tree planting projects do we support?</p>
+			<p>Campaigns now have info on their non-CO2-offset projects!</p>
 		</GreenCardAbout>
 	</GreenCard>;
 };

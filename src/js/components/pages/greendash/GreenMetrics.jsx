@@ -103,8 +103,6 @@ const GreenMetrics2 = ({}) => {
 
 	const pvChartData = getCarbon({
 		...baseFilters,
-		// breakdowns: ['time', 'os'],
-		// tags,
 	});
 	let pvCampaigns = getCampaigns(pvChartData.value?.table);
 	if (pvCampaigns && PromiseValue.isa(pvCampaigns.value)) { // HACK unwrap nested PV
@@ -119,9 +117,8 @@ const GreenMetrics2 = ({}) => {
 		return <ErrAlert error={pvChartData.error} color="danger" />;
 	}
 
-	const commonProps = { period, 
-	// brands, campaigns, tags, 
-	baseFilters };
+	const commonProps = { period, baseFilters };
+	// Removed (temp?): brands, campaigns, tags
 
 	return (<>
 		<OverviewWidget period={period} data={pvChartData.value} />
