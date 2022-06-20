@@ -5,6 +5,7 @@ import { space } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import NewChartWidget from '../../NewChartWidget';
 import { GreenCard, printPeriod, printDate, printDateShort, TONNES_THRESHOLD, GreenCardAbout } from './dashutils';
+import { getBreakdownBy } from './carboncalc';
 
 
 const icons = {
@@ -131,6 +132,11 @@ const TimeSeriesCard = ({ period, data }) => {
 	useEffect(() => {
 		if (!data) return;
 
+		// export const getBreakdownBy = (table, colNameToSum, colNameToBreakdown) => {
+
+		const tsdata = getBreakdownBy(data.table, 'totalEmissions', 'time');
+
+		debugger;
 		const maxCO2 = Math.max(...data.time.kgCarbon.total);
 		const avgCO2 = data.total.kgCarbon.total[0] / data.time.labels.length;
 
@@ -210,7 +216,7 @@ const TimeSeriesCard = ({ period, data }) => {
 				<Misc.Loading text="Fetching emissions-over-time data..." />
 			)}
 		</div>
-		<TotalSubcard period={period} data={data} />
+		{/* <TotalSubcard period={period} data={data} /> */}
 		<GreenCardAbout>
 			<p>How do we calculate the time-series carbon emissions?</p>
 		</GreenCardAbout>
