@@ -20,13 +20,15 @@ import {
 	PositivePlaceSection,
 	CurvePageCard,
 	PageCard,
-	TabsForGoodSlideSection2
+	TabsForGoodSlideSection2,
+	CurveTransition
 } from './CommonComponents';
 import BG from '../../base/components/BG';
 import { setFooterClassName } from '../Footer';
 import { T4GHowItWorksButton, T4GSignUpButton } from '../T4GSignUp';
 import { MyDataSignUpButton } from '../mydata/MyDataSignUp';
 import TickerTotal from '../TickerTotal';
+import Page from './AccountPage';
 
 const HomePage = ({spring}) => {
 	//spring the page down if asked to for how it works section
@@ -52,7 +54,9 @@ const HomePage = ({spring}) => {
 			<CharityBanner />
 			<FindOutMoreSection />
 			<SlideCardsSection />
-			<NewsAwards />
+			<NewsAwards nostars><h3 style={{fontWeight:'600'}}>As Featured In</h3></NewsAwards>
+			<CurveTransition hummingBird curveColour='light-pink' />
+			<StoriesSection />
 			<PositivePlaceSection className="blue-gradient"/>
 			<WatchVideoSection />
 			<CurvePageCard color='dark-turquoise' className='' bgClassName='bg-white' bgImg=''>
@@ -147,6 +151,65 @@ const SlideCardsSection = () => {
 			</div>
 		</PageCard>
 	</>)
+}
+
+const StoriesSection = () => {
+	return (
+		<PageCard className='bg-gl-light-pink stories-section'>
+			<h3 style={{textTransform:'unset',fontWeight:'600'}}>The My.Good-Loop Story</h3>
+			<p className='color-gl-muddy-blue mb-0'>Converting the multi-billion dollar online advertsing industry into a force for good - with you.</p>
+			<div className="gridbox gridbox-md-2 gridbox-gap-4 text-center" style={{zIndex:'2'}}>
+				<Card className='border shadow'>
+					<CardImg className='bg-gl-light-pink' variant="top" src="img/ourstory/Good-Loop_UsingAdMoneyForGoodWithBG.png" />
+					<CardBody>
+						<div>
+							<CardTitle className='color-gl-red'>
+								<span className='text-uppercase' style={{fontWeight:'bold'}}>We can make things happen</span> <br/>
+							</CardTitle>
+							<CardText className='color-gl-darker-grey'>
+								Our amazing community has so far supported everything from childhood literacy to coral reef protection and Black Lives Matter.
+							</CardText>
+						</div>
+						<div className="buttons">
+							Discover Our Impact
+						</div>
+					</CardBody>
+				</Card>
+				<Card className='border shadow'>
+					<CardImg className='bg-gl-blue' variant="top" src="img/homepage/amyanddaniel.png" />
+					<CardBody>
+						<div>
+							<CardTitle className='color-gl-red'>
+								<span className='text-uppercase' style={{fontWeight:'bold'}}>How it all began</span> <br/>
+							</CardTitle>
+							<CardText className='color-gl-darker-grey'>
+								My.Good-Loop is brought you by the team at Good-Loop, founded by Amy Williams and Daniel Winterstein.
+							</CardText>
+						</div>
+						<div className="buttons">
+							Our Story
+						</div>
+					</CardBody>
+				</Card>
+			</div>
+
+			<div className="testimonial-blob position-relative d-flex align-items-center justify-content-center mt-5 pb-5">
+				<img style={{maxWidth:'480px',zIndex:'1',margin:'0 -1rem'}} src="img/homepage/testimonial-blob-logo.svg"/>
+				<div className="bubble-content position-absolute" style={{top:'20%',margin:'0 10%',maxWidth:'400px',zIndex:'2'}}>
+					<img className='logo position-absolute' style={{top:'-3rem'}} src="img/homepage/quote-red.svg" alt="quote" /> <br/>
+					<span className='color-gl-red' style={{fontSize:'.9rem'}}>We're delighted to name Good-Loop as one of our partners. By simply watching an advert, users can contribute to the WWF's mission of creating a world where people and wildwife can thrive together.</span> <br/>
+					<div className="name-title color-gl-darker-grey mt-2" style={{fontSize:'.9rem'}}>
+						<span>CHIARA CADEL,</span> <br/>
+						<span>PARTNERSHIPS MANAGER, WWF</span>
+					</div>
+					<div className="text-center">
+						<img style={{maxWidth:'2rem'}} src="img/LandingCharity/wwf_logo.png" alt="wwf" />
+					</div>
+				</div>
+			</div>
+		<img className="w-100 position-absolute" style={{bottom:'0',zIndex:'0',transform:'translate(-50%, 0)',left:'50%',maxWidth:'768px'}} src="img/homepage/world-map.svg" alt="world-map" />
+		</PageCard>
+	)
 }
 
 /**

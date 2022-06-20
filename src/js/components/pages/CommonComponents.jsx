@@ -34,7 +34,8 @@ const PageCard = ({id, className, ref, children}) => {
 
 /**
  * A page card with a curve SVG sitting on top
- * @param {String} color a gl-color for the background and curve - requires a curve svg of matching name in /img/curves/, e.g. light-blue = curve-light-blue.svg
+ * @param {object} p 
+ * @param {string} p.color a gl-color for the background and curve - requires a curve svg of matching name in /img/curves/, e.g. light-blue = curve-light-blue.svg
  * @returns 
  */
 const CurvePageCard = ({color, className, style, bgClassName, bgImg, bgSize, bgPosition, topSpace, children}) => {
@@ -56,6 +57,21 @@ const CurvePageCard = ({color, className, style, bgClassName, bgImg, bgSize, bgP
 		</div>
 	</>;
 };
+
+/**
+ * Transition with curve SVG
+ * @param {object} p 
+ * @param {string} p.color a gl-color for the background and curve - requires a curve svg of matching name in /img/curves/, e.g. light-blue = curve-light-blue.svg
+ * @param {?boolean} p.hummingBird Showing humming bird svg or not
+ * @returns 
+ */
+const CurveTransition = ({curveColour, hummingBird}) => {
+	return (
+		<BG image={'img/curves/curve-'+curveColour+'.svg'} center minHeight='10em'>
+			{hummingBird && <img className='position-absolute' style={{maxWidth:'10rem',transform:'scaleX(-1)',right:'1rem'}} src='img/green/hummingbird.png'/>}
+		</BG>
+	)
+}
 
 const CardImgLeft = ({classname, imgUrl, roundedImg, children}) =>{
 	return(
@@ -387,20 +403,21 @@ export const TabsForGoodSlideSection2 = ({ngo}) => {
 	);
 };
 
-const NewsAwards = ({children}) => {
-	let firstIMG="/img/pub-logos/campaign-logo.png";
-	let firstLink="https://www.campaignlive.co.uk/article/meet-start-up-helping-nestle-nike-unilever-unite-programmatic-purpose/1722847";
-	let secondIMG="/img/pub-logos/marketing-brew-logo.png" ;
-	let secondLink="https://www.morningbrew.com/marketing/stories/2021/11/24/good-loop-is-creating-tools-to-make-ad-tech-more-ethical-and-sustainable"				;
-	let thirdIMG="/img/pub-logos/forbes-logo.jpeg" ;
-	let thirdLink="https://www.forbes.com/sites/afdhelaziz/2020/06/25/goodloop-an-ethical-advertising-platform-that-allows-brands-to-spend-media-dollars-and-do-good-at-the-same-time-launches-in-the-united-states/?sh=22ac280c3987";
+const NewsAwards = ({nostars, children}) => {
+	const firstIMG="/img/pub-logos/campaign-logo.png";
+	const firstLink="https://www.campaignlive.co.uk/article/meet-start-up-helping-nestle-nike-unilever-unite-programmatic-purpose/1722847";
+	const secondIMG="/img/pub-logos/marketing-brew-logo.png" ;
+	const secondLink="https://www.morningbrew.com/marketing/stories/2021/11/24/good-loop-is-creating-tools-to-make-ad-tech-more-ethical-and-sustainable"				;
+	const thirdIMG="/img/pub-logos/forbes-logo.jpeg" ;
+	const thirdLink="https://www.forbes.com/sites/afdhelaziz/2020/06/25/goodloop-an-ethical-advertising-platform-that-allows-brands-to-spend-media-dollars-and-do-good-at-the-same-time-launches-in-the-united-states/?sh=22ac280c3987";
 
+	const StarsDiv = <div className="col align-items-center justify-content-center d-none d-md-flex"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>;
 	return(
 		<PageCard className="py-3">
 			<div className="text-center">
 				{children}
 				<div className="row">
-					<div className="col align-items-center justify-content-center d-none d-md-flex"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>
+					{!nostars && StarsDiv}
 					<div className="col">
 						<LinkOut href={firstLink}><img className='logo logo-xl' src={firstIMG} alt="" /></LinkOut>
 					</div>
@@ -410,7 +427,7 @@ const NewsAwards = ({children}) => {
 					<div className="col">
 						<LinkOut href={thirdLink}><img className='logo logo-xl' src={thirdIMG} alt="" /></LinkOut>
 					</div>
-					<div className="col align-items-center justify-content-center d-none d-md-flex"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>
+					{!nostars && StarsDiv}
 				</div>
 			</div>
 		</PageCard>
@@ -674,5 +691,6 @@ export {
 	CurvePageCard,
 	WhatIsTabsForGood,
 	CardImgLeft,
-	CornerHummingbird
+	CornerHummingbird,
+	CurveTransition
 };
