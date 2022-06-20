@@ -25,6 +25,7 @@ import {
 	PageCard,
 	TabsForGoodSlideSection2
 } from './CommonComponents';
+import BG from '../../base/components/BG';
 import { setFooterClassName } from '../Footer';
 import { T4GHowItWorksButton, T4GSignUpButton } from '../T4GSignUp';
 import { MyDataSignUpButton } from '../mydata/MyDataSignUp';
@@ -73,19 +74,23 @@ const HomePage = ({spring}) => {
 
 const FindOutMoreSection = () => {
 
-	return (<>
+	return (<><BG image='img/homepage/our-mission-bground.svg' center >
 		<PageCard id="upper-cta" >
 			<div className='text-center'>
-				<h2>Together We've Raised</h2>
-				<TickerTotal noPennies={true} />
-				<p>For Global Causes</p>
-				<div className="conversation-bubble">
-					<span>Our Mission</span>
-					<span>Changing The World: Together</span>
-					<span>At My Good-Loop we're harnessing consumer power and advertising billions, donating 50% of ad spend to charity - connecting you with brands to fund the causes you case most about.</span>
-					<a href="#">Our Impact</a>
+				<div className='rasied text-white'>
+					<span>TOGETHER WE'VE RAISED</span> <br/>
+					<TickerTotal noPennies={true} /> <br/>
+					<span>For Global Causes</span>
 				</div>
-	
+				<div className="conversation-bubble position-relative d-flex align-items-center justify-content-center">
+					<img style={{maxWidth:'480px'}} src="img/homepage/our-mission-blob-with-bubbles.svg"/>
+					<div className="bubble-content position-absolute" style={{top:'20%',margin:'0 10%',maxWidth:'400px'}}>
+						<h3 style={{fontWeight:'600',marginBottom:'0'}}>Our Mission</h3>
+						<h5 style={{fontWeight:'unset'}}>Changing The World: Together</h5>
+						<p style={{fontSize:'.9rem',marginTop:'1rem'}}>At My Good-Loop we're harnessing consumer power and advertising billions, <b>donating 50%</b> of ad spend to charity - <b>connecting you with brands to fund the causes you case most about.</b></p>
+						<a href='#' className='text-decoration-none'><span style={{textDecoration:"underline",fontWeight:'600'}}>Our Impact</span> →</a>
+					</div>
+				</div>
 			</div>
 		</PageCard>
 		<PageCard className="tabs-for-goods-slide-card" >
@@ -112,7 +117,7 @@ const FindOutMoreSection = () => {
 					</Card>
 			</div>
 		</PageCard>
-		</>);
+		</BG></>);
 };
 
 /**

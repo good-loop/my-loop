@@ -1,8 +1,8 @@
 // Change to "local", "test" or "" to switch all endpoints together
 const cluster = 
-	//'test';
+	'test';
 	// 'local';
-	''; // if you want production!
+	// ''; // if you want production!
 
 const protocol = (cluster === 'local') ? 'http' : 'https';
 
