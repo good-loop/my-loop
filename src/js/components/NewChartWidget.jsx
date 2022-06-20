@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Line, Pie, Bar } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import Annotation from 'chartjs-plugin-annotation';
 
 import {
 	Chart as ChartJS,
@@ -27,7 +28,8 @@ ChartJS.register(
 	BarElement,
 	Title,
 	Tooltip,
-	Legend
+	Legend,
+	Annotation
 );
 
 /**

@@ -91,13 +91,13 @@ const CO2Impact = ({kg, mode}) => {
 };
 
 
-const TotalSubcard = ({ period, data }) => {
+const TotalSubcard = ({ period, totalCO2 }) => {
 	const [mode, setMode] = useState('base');
 
 	return (
 		<div className="total-subcard d-flex flex-column">
 			<div>{printPeriod(period)}</div>
-			{data ? <CO2Impact kg={data.total.kgCarbon.total} mode={mode} /> : null}
+			{totalCO2 ? <CO2Impact kg={totalCO2} mode={mode} /> : null}
 			<div className="impact-buttons">
 				{Object.entries(co2ImpactSpecs).map(([key, {icon}]) => {
 					const selected = mode === key;
@@ -112,33 +112,14 @@ const TotalSubcard = ({ period, data }) => {
 	);
 };
 
-/** Skip rather than rotating X axis labels */
-const chartOptions = {
-	scales: {
 
-	},
-	plugins: {
-		legend: {
-			position: 'right',
-		}
-	}
-}
-
-
-const TimeSeriesCard = ({ period, data }) => {
-	const [chartProps, setChartProps] = useState();
+const TimeSeriesCard = ({ period, data: rawData }) => {
+	const [chartProps, setChartProps] = useState(); // ChartJS-ready props object
+	const [aggCO2, setAggCO2] = useState(); // avg/total/max CO2
 
 	// Convert impressions + tags to CO2 time series
 	useEffect(() => {
-		if (!data) return;
-
-		// export const getBreakdownBy = (table, colNameToSum, colNameToBreakdown) => {
-
-		const tsdata = getBreakdownBy(data.table, 'totalEmissions', 'time');
-
-		debugger;
-		const maxCO2 = Math.max(...data.time.kgCarbon.total);
-		const avgCO2 = data.total.kgCarbon.total[0] / data.time.labels.length;
+		if (!rawData) return;
 
 		// Omit year in labels if the period doesn't span a year boundary
 		const labelFn = (period.start.getYear() === period.end.getYear()) ? (
@@ -147,23 +128,41 @@ const TimeSeriesCard = ({ period, data }) => {
 			utc => printDate(new Date(utc))
 		);
 
+		const labels = [];
+		const data = [];
+
+		// Sum total emissions for each date across all other factors, sort, and unzip to labels/data arrays
+		Object.entries(getBreakdownBy(rawData.table, 'totalEmissions', 'time')).sort(
+			([ta], [tb]) => new Date(ta).getTime() - new Date(tb).getTime()
+		).forEach(([time, kg]) => {
+			labels.push(labelFn(time));
+			data.push(kg);
+		});
+
+		const totalCO2 = data.reduce((acc, d) => acc + d, 0);
+		const maxCO2 = Math.max(...data);
+		const avgCO2 = totalCO2 / labels.length;
+
 		let label = 'Kg CO2';
-		let timeSeries = data.time.kgCarbon.total;
 
 		// Display tonnes instead of kg? (should this be avg instead of max?)
 		if (maxCO2 >= TONNES_THRESHOLD) {
 			label = 'Tonnes CO2';
-			timeSeries = timeSeries.map(d => d / 1000);
-			avgCO2 /= 1000
+			data.forEach((d, i) => data[i] = d / 1000);
+			avgCO2 /= 1000;
+			maxCO2 /= 1000;
+			totalCO2 /= 1000;
 		}
+
+		setAggCO2({ avg: avgCO2, max: maxCO2, total: totalCO2 });
 
 		// Data format accepted by chart.js
 		let newChartProps = {
 			data: {
-				labels: data.time.labels.map(labelFn),
+				labels,
 				datasets: [{
 					label,
-					data: timeSeries,
+					data,
 					cubicInterpolationMode: 'monotone',
 					borderColor: '#52727a'
 				}],
@@ -198,25 +197,22 @@ const TimeSeriesCard = ({ period, data }) => {
 		};
 
 		setChartProps(newChartProps);
-	}, [data]);
-
-	//const labelInterval = data ? Math.round(data.labels.length / numLabels) : 1;
+	}, [rawData]);
 
 
-
-	// TODO Don't show "Per 1000 impressions" button for one-tag mode
+	// TODO Reinstate "Per 1000 impressions" button
 
 	return <GreenCard title="How much carbon is your digital advertising emitting?" className="carbon-time-series" row>
 		<div className="chart-subcard flex-column">
 			<div>CO<sub>2</sub>e emissions over time</div>
 			{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
-			{ chartProps ? (
+			{chartProps ? (
 				<NewChartWidget data={chartProps.data} options={chartProps.options} />
 			) : (
 				<Misc.Loading text="Fetching emissions-over-time data..." />
 			)}
 		</div>
-		{/* <TotalSubcard period={period} data={data} /> */}
+		<TotalSubcard period={period} totalCO2={aggCO2?.total} />
 		<GreenCardAbout>
 			<p>How do we calculate the time-series carbon emissions?</p>
 		</GreenCardAbout>

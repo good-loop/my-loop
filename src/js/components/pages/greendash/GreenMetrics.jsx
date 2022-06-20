@@ -76,7 +76,7 @@ const GreenMetrics2 = ({}) => {
 	}
 
 	// Default to current quarter, all brands, all campaigns
-	const period = {name:"this month", start:new Date("2022-06-01"), end:new Date("2022-06-30")}; // FIXME initPeriod();
+	const period = {name:"2022-Q1", start:new Date("2022-01-01"), end:new Date("2022-04-01")}; // FIXME initPeriod();
 	const brandId = DataStore.getUrlValue('brand');
 	const campaignId = DataStore.getUrlValue('campaign');
 	const tagId = DataStore.getUrlValue('tag');
@@ -112,16 +112,16 @@ const GreenMetrics2 = ({}) => {
 	}
 	console.warn("pvCampaigns",pvCampaigns);
 
-	if ( ! pvChartData.resolved) {
+	if (!pvChartData.resolved) {
 		return <Misc.Loading text="Fetching campaign lifetime data..." />;
 	}	
-	if ( ! pvChartData.value) {
+	if (!pvChartData.value) {
 		return <ErrAlert error={pvChartData.error} color="danger" />;
 	}
 
 	const commonProps = { period, 
-			// brands, campaigns, tags, 
-			baseFilters };
+	// brands, campaigns, tags, 
+	baseFilters };
 
 	return (<>
 		<OverviewWidget period={period} data={pvChartData.value} />
