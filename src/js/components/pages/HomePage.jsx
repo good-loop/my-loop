@@ -3,12 +3,9 @@ import { Card, CardBody, CardImg, CardText, CardTitle, Col, Container, Row } fro
 // import PV from 'promise-value';
 import { useSpring } from 'react-spring';
 
+import { space } from '../../base/utils/miscutils'
 import DataStore from '../../base/plumbing/DataStore';
-import Roles from '../../base/Roles';
 import LandingSection, { springPageDown } from '../LandingSection';
-import SubscriptionBox from '../cards/SubscriptionBox';
-import { isPortraitMobile, stopEvent } from '../../base/utils/miscutils';
-import CharitySection from '../CharitySection';
 import {
 	TabsForGoodSlideSection,
 	HowTabsForGoodWorks,
@@ -54,6 +51,7 @@ const HomePage = ({spring}) => {
 			<MyLandingSection />
 			<CharityBanner />
 			<FindOutMoreSection />
+			<SlideCardsSection />
 			<NewsAwards />
 			<PositivePlaceSection className="blue-gradient"/>
 			<WatchVideoSection />
@@ -93,32 +91,63 @@ const FindOutMoreSection = () => {
 				</div>
 			</div>
 		</PageCard>
-		<PageCard className="tabs-for-goods-slide-card" >
-			<div className="gridbox gridbox-md-2 gridbox-gap-4">
-					<Card className='border shadow'>
-						<CardImg variant="top" src="/img/homepage/slide-1.png" />
-						<CardBody>
-							<CardTitle><h3 className='gl-dark-blue'>Tabs for Good</h3></CardTitle>
-							<CardText>Turn your web browsing into charity donations. Easy and free.</CardText>
-							<T4GSignUpButton className="w-100"/>
-							<T4GHowItWorksButton className="w-100" />
-						</CardBody>
-					</Card>
-					<Card className='border shadow'>
-						<a id="mydata-cta" />
-						<CardImg className='bg-gl-dark-blue' variant="top" src="/img/mydata/onboarding-2.png" />
-						<CardBody>
-							<CardTitle><h3 className='gl-dark-blue'>My.Data</h3></CardTitle>
-							<CardText>
-								Don't just give it away - support charity with your data
-							</CardText>
-							<MyDataSignUpButton id="mydata-signup-button" className="w-100 mt-3" /> {/* NB: assume the modal is on the page already */}
-						</CardBody>
-					</Card>
-			</div>
-		</PageCard>
 		</BG></>);
 };
+
+/**
+ * CTA Cards for T4G & MyData
+ */
+const SlideCardsSection = () => {
+	const MyDataHowItWorksButton = ({className}) =>
+	<a className={space("text-decoration-none mt-3", className)}  href="/mydata#howitworks">
+		<span style={{textDecoration:"underline"}}>How It Works</span> →
+	</a>;
+
+	return (<>
+		<PageCard className="tabs-for-goods-slide-card" >
+			<h3 className='text-center' style={{fontSize:'1.25rem'}}>Here's How You Can Get Involved</h3>
+			<div className="gridbox gridbox-md-2 gridbox-gap-4">
+				<Card className='border shadow'>
+					<CardImg className='bg-gl-light-pink' variant="top" src="img/homepage/tabs-for-good-card.png" />
+					<CardBody>
+						<div>
+							<CardTitle className='color-gl-red'>
+								<span style={{fontWeight:'bold'}}>TABS FOR GOOD</span> <br/>
+								Support A Charity Of Your Choice For Free
+							</CardTitle>
+							<CardText className='color-gl-darker-grey'>
+								Convert your browsing into donations, simply by opening tabs with our desktop browser extension.
+							</CardText>
+						</div>
+						<div className="buttons">
+							<T4GSignUpButton className="w-100 mb-3"/>
+							<T4GHowItWorksButton className="w-100 color-gl-red" />
+						</div>
+					</CardBody>
+				</Card>
+				<Card className='border shadow'>
+					<a id="mydata-cta" />
+					<CardImg className='bg-gl-blue' variant="top" src="img/homepage/onboarding.png" />
+					<CardBody>
+						<div>
+							<CardTitle className='color-gl-red'>
+								<span style={{fontWeight:'bold'}}>MY.DATA</span> <br/>
+								How Many Cookies Have You Accepted Today?
+							</CardTitle>
+							<CardText className='color-gl-darker-grey'>
+								Don't just give it away - control your data and convert it into charity donations with My Data.
+							</CardText>
+						</div>
+						<div className="buttons">
+							<MyDataSignUpButton id="mydata-signup-button" className="w-100 mb-3" /> {/* NB: assume the modal is on the page already */}
+							<MyDataHowItWorksButton className="w-100 color-gl-red" />
+						</div>
+					</CardBody>
+				</Card>
+			</div>
+		</PageCard>
+	</>)
+}
 
 /**
  * @deprecated Replaced by FindOutMoreSection
