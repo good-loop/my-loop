@@ -175,6 +175,21 @@ const MyLandingSectionOld = ({ngo, title, text, bgImg, shiftLeft, t4g=true, myda
 </>);
 };
 
+const MyDataButton = ({className}) => {
+	const isReg = hasRegisteredForMyData();
+
+
+	const myDataOnClick = isReg ? () => { window.location.href = "/account?tab=profile" } : 
+	e => {stopEvent(e); showMyDataSignUpModal();} ;
+
+	return (<>
+	<a onClick={myDataOnClick} 
+		className={space(className, 'w-100 mb-3 btn btn-primary d-unset')}> 
+			{isReg ? 'My.Data Profile' : 'Sign Up For My.Data'}
+	</a>
+	</>)
+}
+
 const MyLandingSection = ({title, bgImg}) => {
 
 	const mobileWidth = window.innerWidth <= 768;
@@ -696,5 +711,6 @@ export {
 	WhatIsTabsForGood,
 	CardImgLeft,
 	CornerHummingbird,
-	CurveTransition
+	CurveTransition,
+	MyDataButton
 };

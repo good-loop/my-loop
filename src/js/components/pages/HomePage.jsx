@@ -17,7 +17,7 @@ import {
 	GetInvolvedSection,
 	CharityBanner,
 	MyLandingSection,
-	PositivePlaceSection,
+	MyDataButton,
 	CurvePageCard,
 	PageCard,
 	TabsForGoodSlideSection2,
@@ -144,7 +144,7 @@ const SlideCardsSection = () => {
 							</CardText>
 						</div>
 						<div className="buttons">
-							<MyDataSignUpButton id="mydata-signup-button" className="w-100 mb-3" /> {/* NB: assume the modal is on the page already */}
+							<MyDataButton className="w-100" />
 							<MyDataHowItWorksButton className="w-100 color-gl-red" />
 						</div>
 					</CardBody>
