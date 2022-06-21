@@ -77,7 +77,7 @@ const CO2Impact = ({kg, mode}) => {
 		assert(co2ImpactSpecs[mode], `Can't render CO2-equivalent for mode "${mode}" - no conversion factor/description/etc written`);
 		const {factor, desc, icon} = co2ImpactSpecs[mode];
 
-		guts =  <div className="impact-bubble">
+		guts = <div className="impact-bubble">
 			<div className="impact-leader">{printer.prettyInt(kg, true)} {unit} CO<sub>2</sub>e, THAT'S</div>
 			<div className="impact-number">{printer.prettyInt(kg * factor, true)}</div>
 			<div className="impact-desc">{desc}</div>
@@ -97,17 +97,19 @@ const TotalSubcard = ({ period, totalCO2 }) => {
 	return (
 		<div className="total-subcard d-flex flex-column">
 			<div>{printPeriod(period)}</div>
-			{totalCO2 ? <CO2Impact kg={totalCO2} mode={mode} /> : null}
-			<div className="impact-buttons">
-				{Object.entries(co2ImpactSpecs).map(([key, {icon}]) => {
-					const selected = mode === key;
-					const onClick = () => setMode(selected ? 'base' : key);
-					const className = space('impact-button', key, selected && 'selected');
-					return <div className={className} onClick={onClick} key={key}>
-						{icon}
-					</div>
-				})}
-			</div>
+			{totalCO2 >= 0 && <CO2Impact kg={totalCO2} mode={mode} />}
+			{totalCO2 > 0 && (
+				<div className="impact-buttons">
+					{Object.entries(co2ImpactSpecs).map(([key, {icon}]) => {
+						const selected = mode === key;
+						const onClick = () => setMode(selected ? 'base' : key);
+						const className = space('impact-button', key, selected && 'selected');
+						return <div className={className} onClick={onClick} key={key}>
+							{icon}
+						</div>
+					})}
+				</div>
+			)}
 		</div>
 	);
 };
@@ -143,6 +145,14 @@ const TimeSeriesCard = ({ period, data: rawData }) => {
 		const maxCO2 = Math.max(...data);
 		const avgCO2 = totalCO2 / labels.length;
 
+		setAggCO2({ avg: avgCO2, max: maxCO2, total: totalCO2 });
+
+		// No impressions --> no chart
+		if (totalCO2 === 0) {
+			setChartProps({isEmpty: true});
+			return;
+		}
+
 		let label = 'Kg CO2';
 
 		// Display tonnes instead of kg? (should this be avg instead of max?)
@@ -153,8 +163,6 @@ const TimeSeriesCard = ({ period, data: rawData }) => {
 			maxCO2 /= 1000;
 			totalCO2 /= 1000;
 		}
-
-		setAggCO2({ avg: avgCO2, max: maxCO2, total: totalCO2 });
 
 		// Data format accepted by chart.js
 		let newChartProps = {
@@ -199,18 +207,24 @@ const TimeSeriesCard = ({ period, data: rawData }) => {
 		setChartProps(newChartProps);
 	}, [rawData]);
 
+	let chartContent = <Misc.Loading text="Fetching emissions-over-time data..." />;
+	if (chartProps) {
+		chartContent = chartProps.isEmpty ? null : (
+			<NewChartWidget data={chartProps.data} options={chartProps.options} />
+		);
+	}
 
 	// TODO Reinstate "Per 1000 impressions" button
 
 	return <GreenCard title="How much carbon is your digital advertising emitting?" className="carbon-time-series" row>
 		<div className="chart-subcard flex-column">
-			<div>CO<sub>2</sub>e emissions over time</div>
-			{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
-			{chartProps ? (
-				<NewChartWidget data={chartProps.data} options={chartProps.options} />
-			) : (
-				<Misc.Loading text="Fetching emissions-over-time data..." />
+			{chartProps?.isEmpty ? (
+				<div>No CO<sub>2</sub> emissions for this period</div>
+				) : (
+				<div>CO<sub>2</sub>e emissions over time</div>
 			)}
+			{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
+			{chartContent}
 		</div>
 		<TotalSubcard period={period} totalCO2={aggCO2?.total} />
 		<GreenCardAbout>
