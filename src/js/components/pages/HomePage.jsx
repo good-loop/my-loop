@@ -269,7 +269,7 @@ const MovementCard = () => {
 				</div>
 			</PageCard>
 		</BG>
-		<PageCard className='text-center text-white bg-gl-light-blue'>
+		<PageCard className='text-center text-white bg-gl-light-blue pt-0'>
 			<h4 className='m-0' style={{fontWeight:'600'}}>MY.GOOD-LOOP</h4>
 			<p>By Good-Loop</p>
 			<Row>
