@@ -106,16 +106,6 @@ export const periodFromUrl = () => {
 	return null;
 };
 
-/** Extract the time period filter from URL params if present - if not, apply "current quarter" by default */
-export const initPeriod = () => {
-	let period = periodFromUrl();
-	if (!period) {
-		period = getPeriodQuarter();
-		modifyPage(null, {period: period.name});
-	}
-	return period;
-}
-
 
 /** Take a period object and transform it to use as URL params */
 export const periodToParams = ({name, start, end}) => {
@@ -222,15 +212,30 @@ export const GreenCardAbout = ({children, ...rest}) => {
 }
 
 
-/** Utility: take a mass in kg and pretty-print in kg or tonnes if it's large enough  */
-export const Mass = ({kg}) => {
-	const number = kg >= 1000 ? kg / 1000 : kg;
-	const unit = kg >= 1000 ? 'tonnes' : 'kg';
-	return <span className="mass">
-		<span className="number">{printer.prettyInt(number)}</span>
-		<span className="unit">{unit}</span>
-	</span>
+const massGeneric = (kg, makeElement) => {
+	const number = printer.prettyInt(kg >= 1000 ? kg / 1000 : kg, true);
+	const unit = kg < 1000 ? 'kg' : `tonne${kg !== 1 ? 's' : ''}`;
+
+	return makeElement ? (
+		<span className="mass">
+			<span className="number">{number}</span>
+			<span className="unit">{unit}</span>
+		</span>
+	) : (
+		`${number} ${unit}`
+	);
 };
+
+
+/** Utility: take a mass in kg and pretty-print in kg or tonnes if it's large enough (element with semantic classes) */
+export const Mass = ({kg}) => {
+	return massGeneric(kg, true)
+};
+
+/** Utility: take a mass in kg and pretty-print in kg or tonnes if it's large enough (raw string) */
+export const mass = (kg) => {
+	return massGeneric(kg);
+}
 
 
 export const ModeButton = ({ children, name, mode, setMode, size = 'sm', ...rest}) => {

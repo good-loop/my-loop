@@ -77,7 +77,8 @@ const GreenMetrics2 = ({}) => {
 	}
 
 	// Default to current quarter, all brands, all campaigns
-	const period = initPeriod();
+	const period = periodFromUrl();
+	if (!period) return; // Filter widget will set this on first render - allow it to update
 	const brandId = DataStore.getUrlValue('brand');
 	const campaignId = DataStore.getUrlValue('campaign');
 	const tagId = DataStore.getUrlValue('tag');
@@ -112,7 +113,7 @@ const GreenMetrics2 = ({}) => {
 
 	if (!pvChartData.resolved) {
 		return <Misc.Loading text="Fetching campaign lifetime data..." />;
-	}	
+	}
 	if (!pvChartData.value) {
 		return <ErrAlert error={pvChartData.error} color="danger" />;
 	}
