@@ -17,17 +17,19 @@ const TimeOfDayCard = ({baseFilters, tags}) => {
 	}
 
 	useEffect(() => {
-		getCarbon({...baseFilters, timeofday: true}).promise.then(value => {
+		getCarbon({...baseFilters, timeofday: true}).promise.then(res => {
+			if (res.table.length === 1) { // only header row = no data
+				setChartProps({isEmpty: true});
+			}
 			const labels = [];
 			const data = [];
 
-			getBreakdownBy(value.table, 'timeOfDay').sort(
+			Object.entries(getBreakdownBy(res.table, 'totalEmissions', 'timeofday')).sort(
 				([ha], [hb]) => ha - hb
 			).forEach(([hour, kg]) => {
 				labels.push(hour);
 				data.push(kg);
 			});
-	
 
 			let label = 'Kg CO2';
 			let tickFn = v => `${v} kg`;
@@ -45,7 +47,7 @@ const TimeOfDayCard = ({baseFilters, tags}) => {
 					datasets: [{
 						label,
 						data,
-						backgroundColor: dataColours(hourData),
+						backgroundColor: dataColours(data),
 					}],
 				},
 				options: {
@@ -56,14 +58,20 @@ const TimeOfDayCard = ({baseFilters, tags}) => {
 		});
 	}, [baseFilters.q, baseFilters.start, baseFilters.end]);
 
+	let chartContent;
+	if (!chartProps) {
+		chartContent = <Misc.Loading text="Fetching time-of-day data..." />;
+	} else if (chartProps.isEmpty) {
+		chartContent = <div>No CO<sub>2</sub> emissions for this period</div>;
+	} else {
+		chartContent = <>
+			<NewChartWidget type="bar" {...chartProps} />
+			<p className="text-center mb-0"><small>Time of day in your time zone ({Intl.DateTimeFormat().resolvedOptions().timeZone})</small></p>
+		</>;
+	}
 
 	return <GreenCard title="When are your ad carbon emissions highest?" className="carbon-time-of-day">
-		{chartProps ? <>
-			<NewChartWidget type="bar" data={chartProps.data} options={chartProps.options} />
-			<p className="text-center mb-0"><small>Time of day in your time zone ({Intl.DateTimeFormat().resolvedOptions().timeZone})</small></p>
-			</> : (
-			<Misc.Loading text="Fetching time-of-day data..." />
-		)}
+		{chartContent}
 		<GreenCardAbout>
 			<p>How do we break down the TOD of carbon emissions?</p>
 		</GreenCardAbout>
