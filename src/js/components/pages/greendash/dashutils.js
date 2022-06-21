@@ -106,6 +106,16 @@ export const periodFromUrl = () => {
 	return null;
 };
 
+/** Extract the time period filter from URL params if present - if not, apply "current quarter" by default */
+export const initPeriod = () => {
+	let period = periodFromUrl();
+	if (!period) {
+		period = getPeriodQuarter();
+		modifyPage(null, {period: period.name});
+	}
+	return period;
+}
+
 
 /** Take a period object and transform it to use as URL params */
 export const periodToParams = ({name, start, end}) => {
