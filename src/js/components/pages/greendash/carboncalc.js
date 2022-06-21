@@ -154,18 +154,25 @@ export const getCarbon = ({q = '', breakdowns = [], start = '1 month ago', end =
  * @returns {?PromiseValue} PV of a List of Campaigns
  */
 export const getCampaigns = (table) => {
-	if ( ! table) return null;
-	let idSet = {};
-	table.forEach(row => {
+	if (!table) return null;
+
+	const tagIdSet = {};
+	table.forEach((row, i) => {
+		if (i === 0) return;
 		let adid = row[4];
-		if (adid && adid !== "adid" && adid !== "unset") {
-			idSet[adid] = true;
+		if (adid && adid !== 'unset') {
+			tagIdSet[adid] = true;
 		}
 	});
-	let ids = Object.keys(idSet);
+
+	const ids = Object.keys(tagIdSet);
+	if (!ids.length) return null;
+
 	// ??does PUB_OR_DRAFT work properly for `ids`??
-	let pvTags = getDataList({type:C.TYPES.GreenTag, status:KStatus.PUB_OR_DRAFT, ids});
-	let pvCampaigns = PromiseValue.then(pvTags, tags => {
+
+	let pvTags = getDataList({type: C.TYPES.GreenTag, status: KStatus.PUB_OR_DRAFT, ids});
+
+	return PromiseValue.then(pvTags, tags => {
 		let cidSet = {};
 		List.hits(tags).forEach(tag => {
 			if (tag && tag.campaign) {
@@ -173,9 +180,8 @@ export const getCampaigns = (table) => {
 			}
 		});
 		let cids = Object.keys(cidSet);
-		let pvcs = getDataList({type:C.TYPES.Campaign, status:KStatus.PUB_OR_DRAFT, ids:cids});
+		let pvcs = getDataList({type: C.TYPES.Campaign, status: KStatus.PUB_OR_DRAFT, ids: cids});
 		// TODO have PromiseValue.then() unwrap nested PromiseValue
 		return pvcs;
 	});
-	return pvCampaigns;
 };
