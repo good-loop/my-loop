@@ -42,7 +42,7 @@ const HomePage = ({spring}) => {
 		if (Object.keys(urlParams).includes('gl.vert')) {
 			window.location.href = `/campaign/?gl.vert=${urlParams['gl.vert']}`;
 		}
-		setFooterClassName("bg-white");
+		setFooterClassName("bg-gl-light-blue");
 	}, []);
 
 	// <ShareAdCard /> is buggy, so removed for now
@@ -57,19 +57,20 @@ const HomePage = ({spring}) => {
 			<NewsAwards nostars><h3 style={{fontWeight:'600'}}>As Featured In</h3></NewsAwards>
 			<CurveTransition hummingBird curveColour='light-pink' />
 			<StoriesSection />
-			<PositivePlaceSection className="blue-gradient"/>
+			<DiscoverMoreCard />
+			<MovementCard />
+			{/* <PositivePlaceSection className="blue-gradient"/>
 			<WatchVideoSection />
 			<CurvePageCard color='dark-turquoise' className='' bgClassName='bg-white' bgImg=''>
 				<TestimonialSectionTitle />
 			</CurvePageCard>
 			<TestimonialSectionLower />
 			<GetInvolvedSection />
-			{/* <SubscriptionBox className="bg-gl-light-red big-sub-box"/> */}
 			<TriCards titles={["See How Our Ads Work", "Tabs for Good", "Our Story", ]}
 				texts={["Explore more examples of our campaigns", "Raise money for charity every time you open a new tab", "Meet the cofounders and discover the story of Good-Loop"]}
 				images={["img/homepage/good-loop-for-business.png", "img/homepage/slide-1.png", "img/homepage/amyanddaniel.png"]}
 				links={["impactoverview", "tabsforgood", "ourstory"]}
-			/>
+			/> */}
 		</div>
 	</>);
 };
@@ -155,7 +156,7 @@ const SlideCardsSection = () => {
 
 const StoriesSection = () => {
 	return (
-		<PageCard className='bg-gl-light-pink stories-section'>
+		<PageCard className='stories-section pt-0'>
 			<h3 style={{textTransform:'unset',fontWeight:'600'}}>The My.Good-Loop Story</h3>
 			<p className='color-gl-muddy-blue mb-0'>Converting the multi-billion dollar online advertsing industry into a force for good - with you.</p>
 			<div className="gridbox gridbox-md-2 gridbox-gap-4 text-center" style={{zIndex:'2'}}>
@@ -210,6 +211,78 @@ const StoriesSection = () => {
 		<img className="w-100 position-absolute" style={{bottom:'0',zIndex:'0',transform:'translate(-50%, 0)',left:'50%',maxWidth:'768px'}} src="img/homepage/world-map.svg" alt="world-map" />
 		</PageCard>
 	)
+}
+
+const DiscoverMoreCard = () => {
+	const discoverContents = [
+		{img: 'img/placeholder-circle.png',
+		span: 'Download',
+		linkTitle: 'Impact Report',
+		href: 'https://good-loop.com/donations-report'},
+		{img: 'img/placeholder-circle.png',
+		span: 'Explore',
+		linkTitle: 'Our Impact Hub',
+		href: '/impactoverview'},
+		{img: 'img/placeholder-circle.png',
+		span: 'Read',
+		linkTitle: 'Our Blog',
+		href: 'https://good-loop.com/good-news/index'},
+	]
+
+	return(
+		<PageCard>
+			<h3 className='mb-3' style={{fontWeight:'600'}}>Discover More</h3>
+			<Row>
+				{discoverContents.map((content, index) => {
+					return (
+						<Col key={index} xs={4} className="text-center text-nowrap d-flex flex-column justify-content-between align-items-center" >
+							<img className='shadow mx-3' style={{maxWidth:'80px',borderRadius:'50%'}} src={content.img} />
+							<p className='m-0 mt-2 color-gl-light-blue'>{content.span}</p>
+							<a className='color-gl-muddy-blue font-weight-bold' href={content.href}>{content.linkTitle}</a>
+						</Col>
+					)})}
+			</Row>
+		</PageCard>
+	)
+}
+
+const MovementCard = () => {
+	const movementContents = [
+		{img: 'img/homepage/planet-positive.png',
+		span: 'Good For The Planet'},
+		{img: 'img/homepage/responsible-journalism.png',
+		span: 'Supporting Responible Journalism'},
+		{img: 'img/homepage/50-charity.png',
+		span: '50% Of Ad Fees To Charity'},
+	]
+
+	return(<>
+		<BG image='img/homepage/our-movement-bground.svg' center style={{backgroundPosition:'center bottom'}}>
+			<PageCard>
+				<div className="movement-blob position-relative d-flex align-items-center justify-content-center pb-5">
+					<img style={{maxWidth:'480px',zIndex:'1',margin:'0 -1rem'}} src="img/homepage/movement-blob-images.svg"/>
+					<div className="bubble-content position-absolute text-center" style={{top:'18%',margin:'0 10%',maxWidth:'400px',zIndex:'2'}}>
+						<h4 className='color-gl-red'>Join Our Movement</h4>
+						<p className='color-gl-dark-grey'>Start Transforming Your Web Browsing And Data Into <b>Life Saving Vaccines, Meals For Children In Need, Habitats For Endangered Animals,</b> Plus Many More Good Causes.</p>
+						<a className='color-gl-red font-weight-bold' href='#'><span style={{textDecoration:"underline"}}>Get Involved</span> →</a>
+					</div>
+				</div>
+			</PageCard>
+		</BG>
+		<PageCard className='text-center text-white bg-gl-light-blue'>
+			<h4 className='m-0' style={{fontWeight:'600'}}>MY.GOOD-LOOP</h4>
+			<p>By Good-Loop</p>
+			<Row>
+				{movementContents.map((content, index) => {
+					return (
+						<Col key={index} xs={12} md={4} className="text-center text-nowrap d-flex flex-column justify-content-between align-items-center" >
+							<img className='mx-3' style={{maxWidth:'100px',borderRadius:'50%'}} src={content.img} />
+							<p className='m-0 mt-2 font-weight-bold'>{content.span}</p>
+						</Col>
+				)})}
+			</Row>
+		</PageCard>
+	</>)
 }
 
 /**

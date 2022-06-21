@@ -10,7 +10,7 @@ import { space, stopEvent, scrollTo, isPortraitMobile } from '../../base/utils/m
 import CharityLogo from '../CharityLogo';
 import { setFooterClassName } from '../Footer';
 import { T4GSignUpButton } from '../T4GSignUp';
-import { WhatIsTabsForGood, HowTabsForGoodWorks, TabsForGoodSlideSection, CurvePageCard, MyLandingSection, PageCard, PositivePlaceSection, CornerHummingbird } from '../pages/CommonComponents';
+import { WhatIsTabsForGood, HowTabsForGoodWorks, TabsForGoodSlideSection, CurvePageCard, MyLandingSection, PageCard, CornerHummingbird } from '../pages/CommonComponents';
 import { MyDataSignUpButton, MyDataSignUpModal } from './MyDataSignUp';
 import TickerTotal from '../TickerTotal';
 import MyDataBadge from './MyDataBadge';

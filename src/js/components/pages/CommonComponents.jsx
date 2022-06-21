@@ -23,9 +23,9 @@ export const accountMenuItems = [
 	{page: "settings", label: "Settings"}
 ];
 
-const PageCard = ({id, className, ref, children}) => {
+const PageCard = ({id, className, ref, style, children}) => {
 	// Why two containers?? Is the outer one for card-specific css rules to latch onto??
-	return <Container id={id} ref={ref} fluid className={space('page-card', className)}>
+	return <Container id={id} ref={ref} style={style} fluid className={space('page-card', className)}>
 		<Container>
 			{children}
 		</Container>
@@ -67,7 +67,7 @@ const CurvePageCard = ({color, className, style, bgClassName, bgImg, bgSize, bgP
  */
 const CurveTransition = ({curveColour, hummingBird}) => {
 	return (
-		<BG image={'img/curves/curve-'+curveColour+'.svg'} center minHeight='10em'>
+		<BG image={'img/curves/curve-'+curveColour+'.svg'} center minHeight='14em'>
 			{hummingBird && <img className='position-absolute' style={{maxWidth:'10rem',transform:'scaleX(-1)',right:'1rem'}} src='img/green/hummingbird.png'/>}
 		</BG>
 	)
@@ -521,6 +521,10 @@ const Circle = ({className, color="bg-light", width,children}) => {
 };
 
 
+/**
+ * @deprecated in July 2020
+ * Replaced by {@link MovementCard}
+ */
 const PositivePlaceSection = ({className, showCTA}) => {
 	return <PageCard className={space("positive-place-section text-center", className)}>
 		<h1 className='pt-5'>Let's make the internet a more positive place. Together.</h1>

@@ -25,7 +25,7 @@ const pageBGs = {
  */
 const MyLoopFooter = ({page}) => {
 	// Some pages take custom background colours above the curve
-	const bgColour = pageBGs[page] || 'bg-white'
+	const bgColour = pageBGs[page] || null;
 
 	// Allow inner pages to modify className for styling
 	let dsClassName = getFooterClassName();
@@ -35,7 +35,7 @@ const MyLoopFooter = ({page}) => {
 			<path d="m 0.003,-0.001 c 0,0 356.72,665.074 1297.3,296.564 940.58,-368.51 1468.515,280.543 1468.515,280.543 v 221.17 H 0.003 Z" fill="currentColor" />
 		</svg>
 		<Row>
-			<img src="/img/green/hummingbird.png" className='hummingbird'/>
+			<img src="img/homepage/Turtle.png" className='turtle'/>
 			<div className='bg-gl-dark-turquoise w-100 p-5' style={{marginTop:-1}}>
 				<Row>
 					<Col md={6}>
