@@ -12,7 +12,7 @@ import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import { getDataLogData } from '../../../base/plumbing/DataLog';
 import { getDataList } from '../../../base/plumbing/Crud';
 
-import { getPeriodQuarter, GreenCard, periodFromUrl, printPeriod } from './dashutils';
+import { getPeriodQuarter, GreenCard, initPeriod, periodFromUrl, printPeriod } from './dashutils';
 import { getCampaigns, getCarbon, getSumColumn } from './carboncalc';
 
 import GreenDashboardFilters from './GreenDashboardFilters';
@@ -60,6 +60,7 @@ const CTACard = ({}) => {
 	</GreenCard>;
 };
 
+
 const GreenMetrics2 = ({}) => {
 	// Only for logged-in users!
 	if ( ! Login.isLoggedIn()) {
@@ -76,7 +77,7 @@ const GreenMetrics2 = ({}) => {
 	}
 
 	// Default to current quarter, all brands, all campaigns
-	const period = {name:"2022-Q1", start:new Date("2022-01-01"), end:new Date("2022-04-01")}; // FIXME initPeriod();
+	const period = initPeriod();
 	const brandId = DataStore.getUrlValue('brand');
 	const campaignId = DataStore.getUrlValue('campaign');
 	const tagId = DataStore.getUrlValue('tag');
@@ -88,7 +89,7 @@ const GreenMetrics2 = ({}) => {
 	// Get the ID for the object we're filtering for
 	const filterId = {campaign: campaignId, brand: brandId, adid: tagId}[filterMode];
 
-	if ( ! filterMode) {
+	if (!filterMode) {
 		return <Alert color="info">Select a brand, campaign, or tag to see data.</Alert>;
 	} 
 	
