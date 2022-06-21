@@ -57,20 +57,15 @@ const co2ImpactSpecs = {
 
 /** Render the "That's 99,999 kettles/miles/flights" bubble */
 const CO2Impact = ({kg, mode}) => {
-	const unit = kg < 1000 ? 'KG' : 'TONNES';
+	const mass = kg < 1000 ? kg : kg / 1000;
+	const unit = kg < 1000 ? 'kg' : 'tonnes';
+
 	let guts = null;
 
 	if (mode === 'base') {
-		const amount = kg < 1000 ? <div>
-			<span className="number">{printer.prettyInt(kg, true)}</span>
-			<span className="unit">{unit}</span>
-		</div> : <>
-			<div className="number">{printer.prettyInt(kg / 1000, true)}</div>
-			<div className="unit">{unit}</div>
-		</>;
-
 		guts = <div className="big-number">
-			{amount}
+			<div className="number">{printer.prettyInt(mass, true)}</div>
+			<div className="unit">{unit}</div>
 			<div className="desc">CO<sub>2</sub>e EMITTED</div>
 		</div>;
 	} else {
@@ -78,7 +73,7 @@ const CO2Impact = ({kg, mode}) => {
 		const {factor, desc, icon} = co2ImpactSpecs[mode];
 
 		guts = <div className="impact-bubble">
-			<div className="impact-leader">{printer.prettyInt(kg, true)} {unit} CO<sub>2</sub>e, THAT'S</div>
+			<div className="impact-leader">{printer.prettyInt(mass, true)} {unit} CO<sub>2</sub>e, THAT'S</div>
 			<div className="impact-number">{printer.prettyInt(kg * factor, true)}</div>
 			<div className="impact-desc">{desc}</div>
 			<div className="impact-icon" title={`Illustrative icon for "${desc}"`}>{icon}</div>
@@ -141,9 +136,9 @@ const TimeSeriesCard = ({ period, data: rawData }) => {
 			data.push(kg);
 		});
 
-		const totalCO2 = data.reduce((acc, d) => acc + d, 0);
-		const maxCO2 = Math.max(...data);
-		const avgCO2 = totalCO2 / labels.length;
+		let totalCO2 = data.reduce((acc, d) => acc + d, 0);
+		let maxCO2 = Math.max(...data);
+		let avgCO2 = totalCO2 / labels.length;
 
 		setAggCO2({ avg: avgCO2, max: maxCO2, total: totalCO2 });
 
