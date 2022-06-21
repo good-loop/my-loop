@@ -30,8 +30,16 @@ const osTypes = {
 	'blackberry os': { type: 'mobile', group: 'Other Mobile', name: 'BlackBerry' },
 	'firefox os': { type: 'mobile', group: 'Other Mobile', name: 'FireFox' },
 	chromecast: { type: 'smart', group: 'Smart TV', name: 'Chromecast' },
-	tizen: { type: 'smart', group: 'Smart TV', name: 'Tizen' },
+	tizen: { type: 'smart', group: 'Smart TV', name: 'Samsung TV' },
 	webos: { type: 'smart', group: 'Smart TV', name: 'WebOS' },
+	web0s: { type: 'smart', group: 'Smart TV', name: 'WebOS' },
+	roku: { type: 'smart', group: 'Smart TV', name: 'Roku' },
+	googletv: { type: 'smart', group: 'Smart TV', name: 'Google TV' },
+	'atv os x': { type: 'smart', group: 'Smart TV', name: 'Apple TV' },
+	tvos: { type: 'smart', group: 'Smart TV', name: 'Apple TV' },
+	sony: { type: 'smart', group: 'Smart TV', name: 'Sony TV' },
+	hisense: { type: 'smart', group: 'Smart TV', name: 'Hisense TV' },
+	panasonic: { type: 'smart', group: 'Smart TV', name: 'Hisense TV' },
 };
 
 
@@ -118,11 +126,11 @@ const TechSubcard = ({ tags, data, minimumPercentLabeled=1 }) => {
  * desktop vs mobile and different OS
  * @param {Object} p
  */
-const DeviceSubcard = ({ tags, data }) => {
+const DeviceSubcard = ({ tags, data: rawData }) => {
 	const [chartProps, setChartProps] = useState();
 
 	useEffect(() => {
-		const breakdownByOS = getBreakdownBy(data.table, 'totalEmissions', 'os');
+		const breakdownByOS = getBreakdownBy(rawData.table, 'totalEmissions', 'os');
 		const totalCO2 = Object.values(breakdownByOS).reduce((acc, v) => acc + v, 0);
 
 		if (totalCO2 === 0) {
@@ -131,15 +139,16 @@ const DeviceSubcard = ({ tags, data }) => {
 		}
 
 		let minFraction = 0.05;
+
 		// compress by OS group
-		// ??Roscoe wrote some smart code to gracefully select the level of grouping. 
+		// ??Roscoe wrote some smart code to gracefully select the level of grouping.
 		// After a data-format change -- just went for a simpler option
 		let breakdownByOSGroup1 = {};
 		const total = sum(Object.values(breakdownByOS));
 		Object.entries(breakdownByOS).forEach(([k, v]) => {
 			let osType = osTypes[k];
-			let group = osType?.group || "Other";
-			if (total*minFraction < v) {
+			let group = osType?.group || 'Other';
+			if (true || (v / total > minFraction)) {
 				group = osType?.name || k;
 			}
 			breakdownByOSGroup1[group] = (breakdownByOSGroup1[group] || 0) + v;
@@ -147,20 +156,22 @@ const DeviceSubcard = ({ tags, data }) => {
 		// compress small rows into other
 		let breakdownByOSGroup2 = {};
 		Object.entries(breakdownByOSGroup1).forEach(([k, v]) => {
-			if (total*minFraction > v) {
+			if (v / total < minFraction) {
 				k = "Other";
 			}
 			breakdownByOSGroup2[k] = (breakdownByOSGroup2[k] || 0) + v;
 		});
 	
-		let chartDataList = Object.values(breakdownByOSGroup2);
+		let data = Object.values(breakdownByOSGroup2);
 		const labels = Object.keys(breakdownByOSGroup2); // ["Windows", "Mac"];
 		
 		// Tonnes or kg?
 		let unit = 'kg';
-		if (Math.max(...chartDataList) > TONNES_THRESHOLD) {
+		let unitShort = 'kg'
+		if (Math.max(...data) > TONNES_THRESHOLD) {
 			unit = 'tonnes';
-			chartDataList = chartDataList.map(v => v / 1000);
+			unitShort = 't'
+			data = data.map(v => v / 1000);
 		}
 		
 
@@ -168,18 +179,20 @@ const DeviceSubcard = ({ tags, data }) => {
 			data: {
 				labels,
 				datasets: [{
-					data: chartDataList,
-					label: `${unit} CO2`,
-					backgroundColor: dataColours(chartDataList),
+					data: data,
+					backgroundColor: dataColours(data),
 				}]
 			},
 			options: {
 				indexAxis: 'y',
-				plugins: { legend: { display: false } },
-				scales: { x: { ticks: { callback: v => `${Math.round(v)} ${unit}` } } },
+				plugins: {
+					legend: { display: false },
+					tooltip: { callbacks: { label: ctx => `${printer.prettyNumber(ctx.raw)} ${unit} CO2` } },
+				},
+				scales: { x: { ticks: { callback: v => `${Math.round(v)} ${unitShort}` } } },
 			}
 		});
-	}, [data]);
+	}, [rawData]);
 	
 	if (!chartProps) return null;
 	if (chartProps?.isEmpty) return <div>No CO<sub>2</sub> emissions for this period</div>;
