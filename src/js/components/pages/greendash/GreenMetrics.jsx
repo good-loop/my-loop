@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
-
+import PromiseValue from 'promise-value';
 import { Alert, Button, Col, Container, Row } from 'reactstrap';
+
 // import ChartWidget from '../../../base/components/ChartWidget';
 import DataStore from '../../../base/plumbing/DataStore';
 import printer from '../../../base/utils/printer';
-import C from '../../../C';
-import KStatus from '../../../base/data/KStatus';
 import List from '../../../base/data/List';
 import Misc from '../../../base/components/Misc';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
-import { getDataLogData } from '../../../base/plumbing/DataLog';
-import { getDataList } from '../../../base/plumbing/Crud';
+import ErrAlert from '../../../base/components/ErrAlert';
 
-import { getPeriodQuarter, GreenCard, initPeriod, periodFromUrl, printPeriod } from './dashutils';
+import { GreenCard, periodFromUrl, printPeriod } from './dashutils';
 import { getCampaigns, getCarbon, getSumColumn } from './carboncalc';
 
 import GreenDashboardFilters from './GreenDashboardFilters';
@@ -22,9 +20,12 @@ import TimeSeriesCard from './TimeSeriesCard';
 import CompareCard from './CompareCard';
 import TimeOfDayCard from './TimeOfDayCard';
 import { modifyPage } from '../../../base/plumbing/glrouter';
-import ErrAlert from '../../../base/components/ErrAlert';
-import { isNumeric } from '../../../base/utils/miscutils';
-import PromiseValue from 'promise-value';
+import { getDataList } from '../../../base/plumbing/Crud';
+import C from '../../../C';
+import KStatus from '../../../base/data/KStatus';
+import { getId, getName } from '../../../base/data/DataClass';
+
+
 
 const OverviewWidget = ({period, data}) => {
 	// console.log("OverviewWidget data", data);
@@ -148,11 +149,76 @@ const GreenMetrics2 = ({}) => {
 };
 
 
+const SelectAgency = ({agencyIds}) => {
+	const [agencies, setAgencies] = useState(null);
+
+	// Fetch agencies from portal so we can use names
+	useEffect(() => {
+		getDataList({
+			type: C.TYPES.Agency,
+			status: KStatus.PUB_OR_DRAFT,
+			ids: agencyIds
+		}).promise.then(res => {
+			if (!res?.hits) {
+				setAgencies([]);
+				return;
+			}
+			setAgencies(res.hits);
+		});
+	}, agencyIds);
+
+	if (!agencies) return <Misc.Loading text="Fetching your agencies..." />
+
+	return <div className="select-agency">
+		<h3>Select your agency</h3>
+		<p>You have access to multiple agencies. Pick one to see its brands, campaigns, and Green Ad Tags.</p>
+		{agencies.map(agency => (
+			<Button className="mb-2" onClick={() => modifyPage(null, {agency: getId(agency)})} key={getId(agency)}>
+				{getName(agency)}
+			</Button>
+		))}
+	</div>;
+};
+
+
 const GreenMetrics = ({}) => {
+	const [agencyIds, setAgencyIds] = useState();
+	const agencyId = DataStore.getUrlValue('agency');
+
+	// All our filters etc are based user having at most access to one agency
+	// Group M users will have multiple, so start by selecting one.
+	useEffect(() => {
+		Login.getSharedWith().then(res => {
+			if (!res?.cargo) {
+				setAgencyIds([]);
+				return;
+			}
+
+			setAgencyIds(res.cargo.map(share => {
+				const matches = share.item.match(/^Agency:(\w+)$/);
+				if (!matches) return null;
+				return matches[1];
+			}).filter(a => !!a));
+		});
+	}, [Login.getId()])
+
+	let content;
+
+	if (!agencyIds) {
+		content = <Misc.Loading text="Checking your access..." />;
+	}else if (agencyIds.length && !agencyId) {
+		content = <SelectAgency agencyIds={agencyIds} />;
+	} else {
+		content = <>
+			<GreenDashboardFilters />
+			<GreenMetrics2 />
+		</>;
+	};
+
+
 	return <div className="green-subpage green-metrics">
 			<Container fluid>
-				<GreenDashboardFilters />
-				<GreenMetrics2 />
+				{content}
 			</Container>
 		</div>;
 };

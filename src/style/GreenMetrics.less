@@ -11,6 +11,13 @@
 #greendash .green-metrics {
 	font-family: 'Montserrat';
 
+	.select-agency {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+
 	.btn-primary:active:not(.disabled), .btn-primary.active, .btn-primary:focus:not(.disabled) {
 		background-color: @gc-btn-colour-light !important;
 		box-shadow: 0 2px 3px rgba(0, 0, 0, 30%) !important;
@@ -155,15 +162,16 @@
 				}
 		
 				.big-number {
-					//margin-top: 2em;
 					font-weight: 900;
 					.number {
-						// TODO Avoid local font definitions -- or if they're wanted, add a comment for why
 						font-size: 400%;
 						line-height: 1;
 					}
 					.unit { font-size: 150%; }
 					.desc { font-size: 100%; }
+					.number, .unit, .desc {
+						display: block;
+					}
 				}
 		
 				.impact-bubble {

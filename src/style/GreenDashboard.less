@@ -121,6 +121,7 @@
 	z-index: 2;
 	font-family: 'Montserrat';
 	padding: 0; // Override BS navbar default
+	transition: none; // vertical bar = no height transition
 
 	.navbar-nav {
 		width: 100%; // so coloured background on active/hover item extends to edges 
@@ -220,7 +221,7 @@
 
 .green-subpage {
 	flex-grow: 1;
-	height: 100%;
+	min-height: 100vh;
 }
 
 
