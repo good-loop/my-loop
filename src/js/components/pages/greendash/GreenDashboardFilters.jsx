@@ -171,7 +171,8 @@ const GreenDashboardFilters = ({}) => {
 				}).promise.then(cargo => {
 					if (cargo.hits) setAvailableCampaigns(cargo.hits);
 				});
-				let q = nextCampaignIds.length ? SearchQuery.str(SearchQuery.setPropOr(null, "campaign", nextCampaignIds)): null;
+				// NB: no client-side filter for testers
+				let q = isTester()? null : SearchQuery.setPropOr(null, "campaign", nextCampaigns.map(c => c.id));
 				getDataList({
 					type: C.TYPES.GreenTag,
 					status: KStatus.PUBLISHED,

@@ -45,6 +45,7 @@ const osTypes = {
 
 /**
  * 
+<<<<<<< HEAD
  * @param {Object} p
  * @param {*} tags
  * @param {!Object} p.data {table: Object[][] }
@@ -75,6 +76,36 @@ const TechSubcard = ({ tags, data, minimumPercentLabeled=1 }) => {
 					backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
 					data: [media, publisher, dsp],
 				}]
+=======
+ * @param {GreenTag[]} tags
+ * @param {Number[]} data Uses dsp from carboncalc.js
+ * @param {*} options
+ * @param {Number} minimumPercentLabeled the minimum percentage to include a data label for
+ * @returns 
+ */
+const TechSubcard = ({ tags, data, options, minimumPercentLabeled=0 }) => {
+	if (!tags || !data) return <Misc.Loading text="Fetching your tag data..." />;
+	console.log("TechSubcard", "tags", tags, "data", data);
+
+	const labels = ['Media', 'Publisher overhead', 'DSP overhead'];
+	const { media, publisher, dsp } = data.total.kgCarbon;	
+	const chartData = {
+		labels,
+		datasets: [{
+			label: 'Kg CO2',
+			backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
+			data: [media, publisher, dsp],
+		}]
+	};
+	const chartOptions = {
+		layout: {
+			autoPadding: true,
+			padding: 5
+		},
+		plugins: {
+			legend: {
+				position: 'left'
+>>>>>>> master
 			},
 			options: {
 				layout: { autoPadding: true, padding: 5 },

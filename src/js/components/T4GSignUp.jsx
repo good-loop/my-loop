@@ -50,7 +50,10 @@ export const T4GSignUpButton = ({ className, children, dUnset }) => {
 	);
 };
 
-export const T4GHowItWorksButton = ({className}) => <a className={space("btn btn-secondary text-uppercase mt-3", className)} href="/tabsforgood#howitworks">See how Tabs for Good works</a>;
+export const T4GHowItWorksButton = ({className}) =>
+	<a className={space("text-decoration-none mt-3", className)}  href="/tabsforgood#howitworks">
+		<span style={{textDecoration:"underline"}}>How It Works</span> →
+	</a>;
 
 
 export const T4GSignUpLink = ({ className, children, onClick }) => {

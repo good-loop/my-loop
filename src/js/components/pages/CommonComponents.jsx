@@ -23,9 +23,9 @@ export const accountMenuItems = [
 	{page: "settings", label: "Settings"}
 ];
 
-const PageCard = ({id, className, ref, children}) => {
+const PageCard = ({id, className, ref, style, children}) => {
 	// Why two containers?? Is the outer one for card-specific css rules to latch onto??
-	return <Container id={id} ref={ref} fluid className={space('page-card', className)}>
+	return <Container id={id} ref={ref} style={style} fluid className={space('page-card', className)}>
 		<Container>
 			{children}
 		</Container>
@@ -34,7 +34,8 @@ const PageCard = ({id, className, ref, children}) => {
 
 /**
  * A page card with a curve SVG sitting on top
- * @param {String} color a gl-color for the background and curve - requires a curve svg of matching name in /img/curves/, e.g. light-blue = curve-light-blue.svg
+ * @param {object} p 
+ * @param {string} p.color a gl-color for the background and curve - requires a curve svg of matching name in /img/curves/, e.g. light-blue = curve-light-blue.svg
  * @returns 
  */
 const CurvePageCard = ({color, className, style, bgClassName, bgImg, bgSize, bgPosition, topSpace, children}) => {
@@ -56,6 +57,21 @@ const CurvePageCard = ({color, className, style, bgClassName, bgImg, bgSize, bgP
 		</div>
 	</>;
 };
+
+/**
+ * Transition with curve SVG
+ * @param {object} p 
+ * @param {string} p.color a gl-color for the background and curve - requires a curve svg of matching name in /img/curves/, e.g. light-blue = curve-light-blue.svg
+ * @param {?boolean} p.hummingBird Showing humming bird svg or not
+ * @returns 
+ */
+const CurveTransition = ({curveColour, hummingBird}) => {
+	return (
+		<BG image={'img/curves/curve-'+curveColour+'.svg'} center minHeight='14em'>
+			{hummingBird && <img className='position-absolute' style={{maxWidth:'10rem',transform:'scaleX(-1)',right:'1rem'}} src='img/green/hummingbird.png'/>}
+		</BG>
+	)
+}
 
 const CardImgLeft = ({classname, imgUrl, roundedImg, children}) =>{
 	return(
@@ -115,7 +131,13 @@ const MyLandingBackgroundImage = ({bgImg, ngo, children}) => {
 	);
 }
 
-const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft, t4g=true, mydata=true}) => {
+/**
+ * Old landing page before My.Data
+ * @deprecated
+ * @param {*} param0 
+ * @returns 
+ */
+const MyLandingSectionOld = ({ngo, title, text, bgImg, shiftLeft, t4g=true, mydata=true}) => {
 	const name = NGO.displayName(ngo);
 	
 	if ( ! title) {
@@ -153,14 +175,28 @@ const MyLandingSection = ({ngo, title, text, bgImg, shiftLeft, t4g=true, mydata=
 </>);
 };
 
-const MyDuoLandingSection = ({ngo, title, bgImg}) => {
-	const name = NGO.displayName(ngo);
+const MyDataButton = ({className}) => {
+	const isReg = hasRegisteredForMyData();
+
+
+	const myDataOnClick = isReg ? () => { window.location.href = "/account?tab=profile" } : 
+	e => {stopEvent(e); showMyDataSignUpModal();} ;
+
+	return (<>
+	<a onClick={myDataOnClick} 
+		className={space(className, 'w-100 mb-3 btn btn-primary d-unset')}> 
+			{isReg ? 'My.Data Profile' : 'Sign Up For My.Data'}
+	</a>
+	</>)
+}
+
+const MyLandingSection = ({title, bgImg}) => {
 
 	const mobileWidth = window.innerWidth <= 768;
 	const fontSizeCTA = mobileWidth ? '.8rem' : '1rem';
 	
 	if ( ! title) {
-		title = `Turn your web browsing into ${(ngo && "cash for " + name) || "charity donations"}. For free.`;
+		title = `Raise Money For The Causes You Care Most About. For free.`;
 	}
 
 	const scrollToUpperCta = () => document.getElementById("upper-cta").scrollIntoView({behavior: "smooth"});
@@ -175,18 +211,21 @@ const MyDuoLandingSection = ({ngo, title, bgImg}) => {
 		<BG minHeight={mobileWidth ? null : "32vw"} 
 		src={mobileWidth ? 'img/splash-screen/background-mobile.svg' : 'img/splash-screen/svg-bg-lg.svg'}
 		className={mobileWidth ? null : 'd-flex justify-content-center align-items-center'}>
-		<img src='img/splash-screen/foreground-mobile.png' className="d-md-none d-block w-100" />
+		<img src='img/splash-screen/splash-screen-foreground.png' className="d-md-none d-block w-100" />
 		<img src='img/splash-screen/foreground-desktop.png' className="d-none d-md-block w-100 position-absolute" />
-		<div className="splash-content d-flex flex-column align-items-center" style={!mobileWidth ? {margin:'0 34vw'} : null}>
-			{title && <h1 className='text-center bolder text-white mx-3 mt-3'>{title}</h1>}
-			<button className='btn btn-primary btn-lg mt-3 mx-auto mb-5' onClick={scrollToUpperCta}>Discover My.Good-Loop</button>
+		<div className="splash-content d-flex flex-column align-items-center" style={!mobileWidth ? {margin:'0 28vw'} : null}>
+			{title && <h1 className='text-center bolder text-white mx-2 mt-3' style={mobileWidth ? {fontSize:"1.5rem"} : null}>{title}</h1>}
+			<button className='btn btn-primary btn-lg my-3 mx-auto' onClick={scrollToUpperCta}>Find out more</button>
+			<a href='#' className='text-white text-decoration-none mt-2 mb-4'><span style={{textDecoration:"underline"}}>Sign Up For Our Product</span> →</a>
 		</div>
 		</BG>
 	</Container>
-	{window.isDebug && <div className="debug btn btn-secondary position-absolute m-1" onClick={(e) => {stopEvent(e); showMyDataSignUpModal()}}>
-		MyData Debug
-	</div>}
-	<Container fluid className="landing-duo-cta bg-gl-light-pink d-flex justify-content-center py-3 px-1">
+	{/* {window.isDebug && <div className="debug position-absolute" onClick={(e) => {stopEvent(e); showMyDataSignUpModal()}}>
+		*MyData Debug*
+	</div>} */}
+	
+	{/* 17 June 2022 Remove the Duo Cta in new design */}
+	{/* <Container fluid className="landing-duo-cta bg-gl-light-pink d-flex justify-content-center py-3 px-1">
 		<a onClick={myDataOnClick} 
 			className='text-decoration-none mydata-signup-button'> 
 			<div style={{borderRadius:'10px'}} className="mydata-signup-button mydata-splash-cta splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
@@ -194,14 +233,15 @@ const MyDuoLandingSection = ({ngo, title, bgImg}) => {
 				<span className='font-weight-bold p-1 pl-3 mx-auto mydata-signup-button' style={{fontSize:fontSizeCTA,transform:'translate(0, 10%)'}} >{isReg ? 'My.Data Profile' : 'Sign Up For My.Data'}</span>
 			</div>
 		</a>
-		<MyDataSignUpModal /> {/*NB: This Modal should be placed _outside_ of the anchor tags otherwise it can break rendering. Why? I don't know.*/}
+		<MyDataSignUpModal />
 		<C.A href='/tabsforgood' className='text-decoration-none t4g-signup-button'>
 			<div style={{borderRadius:'10px'}} className="t4g-signup-button t4g-splash-cta splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
 				<img src="img/mydata/t4g-cta.png" className='logo'/>
 				<span className='font-weight-bold p-1 pl-3 mx-auto t4g-signup-button' style={{fontSize:fontSizeCTA,transform:'translate(0, 10%)'}}>Get Tabs For Good</span>
 			</div>
 		</C.A>
-	</Container>
+	</Container> */}
+
 	</>);
 }
 
@@ -378,20 +418,21 @@ export const TabsForGoodSlideSection2 = ({ngo}) => {
 	);
 };
 
-const NewsAwards = ({children}) => {
-	let firstIMG="/img/pub-logos/campaign-logo.png";
-	let firstLink="https://www.campaignlive.co.uk/article/meet-start-up-helping-nestle-nike-unilever-unite-programmatic-purpose/1722847";
-	let secondIMG="/img/pub-logos/marketing-brew-logo.png" ;
-	let secondLink="https://www.morningbrew.com/marketing/stories/2021/11/24/good-loop-is-creating-tools-to-make-ad-tech-more-ethical-and-sustainable"				;
-	let thirdIMG="/img/pub-logos/forbes-logo.jpeg" ;
-	let thirdLink="https://www.forbes.com/sites/afdhelaziz/2020/06/25/goodloop-an-ethical-advertising-platform-that-allows-brands-to-spend-media-dollars-and-do-good-at-the-same-time-launches-in-the-united-states/?sh=22ac280c3987";
+const NewsAwards = ({nostars, children}) => {
+	const firstIMG="/img/pub-logos/campaign-logo.png";
+	const firstLink="https://www.campaignlive.co.uk/article/meet-start-up-helping-nestle-nike-unilever-unite-programmatic-purpose/1722847";
+	const secondIMG="/img/pub-logos/marketing-brew-logo.png" ;
+	const secondLink="https://www.morningbrew.com/marketing/stories/2021/11/24/good-loop-is-creating-tools-to-make-ad-tech-more-ethical-and-sustainable"				;
+	const thirdIMG="/img/pub-logos/forbes-logo.jpeg" ;
+	const thirdLink="https://www.forbes.com/sites/afdhelaziz/2020/06/25/goodloop-an-ethical-advertising-platform-that-allows-brands-to-spend-media-dollars-and-do-good-at-the-same-time-launches-in-the-united-states/?sh=22ac280c3987";
 
+	const StarsDiv = <div className="col align-items-center justify-content-center d-none d-md-flex"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>;
 	return(
 		<PageCard className="py-3">
 			<div className="text-center">
 				{children}
 				<div className="row">
-					<div className="col align-items-center justify-content-center d-none d-md-flex"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>
+					{!nostars && StarsDiv}
 					<div className="col">
 						<LinkOut href={firstLink}><img className='logo logo-xl' src={firstIMG} alt="" /></LinkOut>
 					</div>
@@ -401,7 +442,7 @@ const NewsAwards = ({children}) => {
 					<div className="col">
 						<LinkOut href={thirdLink}><img className='logo logo-xl' src={thirdIMG} alt="" /></LinkOut>
 					</div>
-					<div className="col align-items-center justify-content-center d-none d-md-flex"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>
+					{!nostars && StarsDiv}
 				</div>
 			</div>
 		</PageCard>
@@ -495,6 +536,10 @@ const Circle = ({className, color="bg-light", width,children}) => {
 };
 
 
+/**
+ * @deprecated in July 2020
+ * Replaced by {@link MovementCard}
+ */
 const PositivePlaceSection = ({className, showCTA}) => {
 	return <PageCard className={space("positive-place-section text-center", className)}>
 		<h1 className='pt-5'>Let's make the internet a more positive place. Together.</h1>
@@ -661,10 +706,11 @@ export {
 	GetInvolvedSection,
 	CharityBanner,
 	MyLandingSection,	
-	MyDuoLandingSection,
 	PageCard,
 	CurvePageCard,
 	WhatIsTabsForGood,
 	CardImgLeft,
-	CornerHummingbird
+	CornerHummingbird,
+	CurveTransition,
+	MyDataButton
 };

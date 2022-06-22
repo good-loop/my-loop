@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Carousel, CarouselControl, CarouselIndicators, CarouselItem } from 'reactstrap';
 import { Col, Container, Row } from 'reactstrap';
-import { getBrowserVendor, isPortraitMobile, space } from '../../base/utils/miscutils';
-import { PageCard, CardImgLeft, NewsAwards, TriCards, CurvePageCard } from './CommonComponents';
-import {T4GSignUpButton} from '../T4GSignUp';
-import DynImg from '../../base/components/DynImg';
-import BG from '../../base/components/BG';
-import Page from './AccountPage';
+import { space } from '../../base/utils/miscutils';
+import { PageCard } from './CommonComponents';
 
 export const SafariPage = () => {
 

@@ -10,7 +10,7 @@ import { space } from '../../base/utils/miscutils';
 import CharityLogo from '../CharityLogo';
 import { setFooterClassName } from '../Footer';
 import { T4GSignUpButton } from '../T4GSignUp';
-import { WhatIsTabsForGood, HowTabsForGoodWorks, TabsForGoodSlideSection, CurvePageCard, MyLandingSection, PageCard, PositivePlaceSection, CornerHummingbird } from './CommonComponents';
+import { WhatIsTabsForGood, HowTabsForGoodWorks, TabsForGoodSlideSection, CurvePageCard, MyLandingSection, PageCard, CornerHummingbird } from './CommonComponents';
 
 
 // Copywriting https://docs.google.com/document/d/1_mpbdWBeaIEyKHRr-mtC1FHAPEfokcRZTHXgMkYJyVk/edit#heading=h.5r45wnjwbf7j

@@ -6,17 +6,18 @@ import { getDataItem } from '../../base/plumbing/Crud';
 import DataStore from '../../base/plumbing/DataStore';
 import { modifyPage } from '../../base/plumbing/glrouter';
 import C from '../../C';
-import { space, stopEvent, scrollTo } from '../../base/utils/miscutils';
+import { space, stopEvent, scrollTo, isPortraitMobile } from '../../base/utils/miscutils';
 import CharityLogo from '../CharityLogo';
 import { setFooterClassName } from '../Footer';
 import { T4GSignUpButton } from '../T4GSignUp';
-import { WhatIsTabsForGood, HowTabsForGoodWorks, TabsForGoodSlideSection, CurvePageCard, MyLandingSection, PageCard, PositivePlaceSection, CornerHummingbird } from '../pages/CommonComponents';
+import { WhatIsTabsForGood, HowTabsForGoodWorks, TabsForGoodSlideSection, CurvePageCard, MyLandingSection, PageCard, CornerHummingbird } from '../pages/CommonComponents';
 import { MyDataSignUpButton, MyDataSignUpModal } from './MyDataSignUp';
 import TickerTotal from '../TickerTotal';
 import MyDataBadge from './MyDataBadge';
 import BG from '../../base/components/BG';
 import { CollapseableCard } from './MyDataCommonComponents';
 
+const ProductPageContainer = ({className, children, ...props}) => <Container fluid="lg" className={space("product-container", className)} {...props}>{children}</Container>;
 
 const LandingSection = () => {
 
@@ -25,35 +26,26 @@ const LandingSection = () => {
         scrollTo("how-it-works");
     }
 
+    const headerImg = isPortraitMobile() ? "/img/mydata/product-page/onboarding.png" : "/img/mydata/signup-about.png";
+
     return <div className="landing">
         <div className="mydata-topimg">
             <img src="/img/curves/curve-white.svg" className="topimg-curve"/>
-            <img src="/img/mydata/mydata-product-top.png" className="w-100 topimg-graphic"/>
+            <img src={headerImg} className="w-100 topimg-graphic"/>
         </div>
-        <h1>My.Data</h1>
-        <h3>Harness your data to fund your favourite charity. For free</h3>
-        <br/>
-        <p>How many cookies have you accepted today? We give our data away all the time without even thinking about it. What if we could safely use our data to help fund good causes?</p>
-        <br/>
-        <div className="d-flex flex-column justify-content-center align-items-center">
-            <MyDataSignUpButton/>
+        <Container fluid="lg">
+            <h1>My.Data</h1>
+            <h3>Harness your data to fund your favourite charity. For free</h3>
             <br/>
-            <a onClick={scroll}>Find out more</a>
-        </div>
+            <p className="px-md-5 mx-md-5">How many cookies have you accepted today? We give our data away all the time without even thinking about it. What if we could safely use our data to help fund good causes?</p>
+            <br/>
+            <div className="d-flex flex-column justify-content-center align-items-center">
+                <MyDataSignUpButton/>
+                <br/>
+                <a onClick={scroll}>Find out more</a>
+            </div>
+        </Container>
     </div>;
-};
-
-const ControlYourData = () => {
-
-    return <div className="control-your-data bg-gl-lighter-blue">
-        <img src="/img/curves/curve-desat-blue.svg" className="w-100"/>
-        <div className="bg-gl-desat-blue">
-            <br/>
-            <h3>Control your data</h3>
-            <p>You have control over how your data is used and can choose what to make private and what to share</p>
-            <img src="/img/mydata/product-page/phone-mydata.png" className="w-100"/>
-        </div>
-    </div>
 };
 
 const BubblesHeader = ({src, className}) => {
@@ -64,7 +56,7 @@ const BubblesHeader = ({src, className}) => {
 
 const CommunityImpact = () => {
 
-    return <div className="community-impact text-center">
+    return <ProductPageContainer className="community-impact text-center">
 
         <BubblesHeader src="/img/mydata/product-page/photo-bubbles-data.png"/>
 
@@ -81,21 +73,32 @@ const CommunityImpact = () => {
 
         <h4 className="color-gl-red">Funding global causes</h4>
         <h5 className="miniheader">Raised by our ads, tabs for good and My.Data</h5>
-    </div>
+    </ProductPageContainer>
 };
 
 const HowItWorks = () => {
 
     const Section = ({i, title, subtitle, img, imgClassName, children}) => {
 
-        return <BG src={"/img/mydata/product-page/blob-"+i+".svg"} center className="how-it-works-section">
+        return <BG src={"/img/mydata/product-page/blob-"+i+".svg"} center size="contain" repeat="no-repeat"
+            className={space("how-it-works-section", i%2===0?"bg-gl-lighter-blue":"")}
+        >
             <br/>
-            <img src={img} className={space("mb-2", imgClassName)}/>
-            <p className="miniheader mb-0">{title}</p>
-            <h2>{subtitle}</h2>
-            <div className="px-3">
-            {children}
-            </div>
+            <ProductPageContainer>
+                <Row className={i%2===0 ? "flex-md-row-reverse" : ""}>
+                    <Col md={6}>
+                        <img src={img} className={space("mb-2", imgClassName)}/>
+                    </Col>
+                    <Col md={6} className="d-flex flex-column align-items-center justify-content-center">
+                        <p className="miniheader mb-0">{title}</p>
+                        <h2>{subtitle}</h2>
+                        <div className="px-3">
+                            {children}
+                        </div>
+                    </Col>
+                </Row>
+            </ProductPageContainer>
+            <img src={"/img/mydata/product-page/bubble-"+i+".png"} className={space("bubble d-inline-block d-md-none", i%2===0 ? "bubble-left" : "bubble-right")}/>
             {/* Extra whitespace padding at bottom, to make sure BG image stretches enough to cover text */}
             <br/>
             <br/>
@@ -103,75 +106,111 @@ const HowItWorks = () => {
         </BG>;
     };
 
-    return <div id="how-it-works">
+    return <div id="how-it-works" className="mt-md-5">
         <div className="inner">
             <div className="control-your-data-small">
-                <img src="/img/mydata/how-it-works.png" className="w-75"/>
-                <br/>
-                <h4>Control your data</h4>
-                <p className="miniheader">Do good for free</p>
-                <p className="px-2">It feels like our data is everywhere these days but at Good-Loop we believe we should all control our own data. By running ads with global brands, we've also learnt just how valuable consumer data is to advertisers. We've decided to unite these concepts to do good…</p>
-                <img src="/img/homepage/Stars.png" className="star mx-auto"/>
+                <ProductPageContainer>
+                    <img src="/img/mydata/how-it-works.png" className="w-75"/>
+                    <br/>
+                    <h4>Control your data</h4>
+                    <p className="miniheader">Do good for free</p>
+                    <p className="px-2 px-md-5 mx-md-5">It feels like our data is everywhere these days but at Good-Loop we believe we should all control our own data. By running ads with global brands, we've also learnt just how valuable consumer data is to advertisers. We've decided to unite these concepts to do good…</p>
+                    <img src="/img/homepage/Stars.png" className="star mx-auto"/>
+                </ProductPageContainer>
             </div>
 
             <h1>Here's how it works:</h1>
             <br/>
 
             <Section i={1} title="Your data in your hands" subtitle="Sign up securely" img="/img/mydata/padlock-careful.png" imgClassName="w-25">
-                <img src="/img/mydata/product-page/bubble-kids.png" className="bubble bubble-right"/>
                 <p>
                     Pick a charity you want to help and build a secure profile with us, selecting what data you want to provide.
                 </p>
             </Section>
             <br/>
             <Section i={2} title="Turning your data into donations" subtitle="Harness your data" img="/img/mydata/onboarding-3.png" imgClassName="w-75">
-                <img src="/img/mydata/product-page/bubble-chameleon.png" className="bubble bubble-left"/>
                 <p>
                     We channel relevant online adverts based on your info, and 50% of the advert fee goes to your chosen charity.
                 </p>
             </Section>
             <br/>
             <Section i={3} title="Your in control" subtitle="Share to give" img="/img/mydata/profile-created.png" imgClassName="w-50">
-                <img src="/img/mydata/product-page/bubble-ocean.png" className="bubble bubble-right"/>
                 <p>
                     The more data you choose to share, the more valuable it is to advertisers and the more you can raise for your charity!
                 </p>
             </Section>
 
-            <MyDataSignUpButton/>
+            <MyDataSignUpButton className="align-self-center" style={{zIndex:1}}/>
             <br/>
         </div>
     </div>;
 };
 
+const ControlYourData = () => {
+
+    return <div className="control-your-data">
+        <img src="/img/curves/curve-desat-blue.svg" className="w-100"/>
+        <div className="under-curve">
+            <ProductPageContainer>
+                <br/>
+                <Row>
+                    <Col md={6} className="d-flex flex-column justify-content-center align-items-center">
+                        <h3>Control your data</h3>
+                        <p>You have control over how your data is used and can choose what to make private and what to share</p>
+                    </Col>
+                    <Col md={6}>
+                        <img src="/img/mydata/product-page/phone-mydata.png" className="phone-display"/>
+                    </Col>
+                </Row>
+            </ProductPageContainer>
+        </div>
+    </div>
+};
+
 const EarnDataBadge = () => {
 
-    return <div className="earn-data-badge p-3">
-        <h4>Earn your data badge</h4>
-        <p className="miniheader">It's quick and easy to start supporting the charity of your choice with your data!</p>
-        <img src="/img/mydata/product-page/earn-badge.png" className="w-100"/>
-        <br/>
-        <br/>
-        <div className="d-flex flex-row justify-content-center align-items-center">
-            <MyDataSignUpButton/>
+    return <div className="earn-data-badge">
+        <img className="w-100 d-none d-md-inline-block" src="/img/curves/curve-white.svg"/>
+        <div className="bg-white">
+            <ProductPageContainer>
+                <div className="px-md-5 mx-md-5">
+                    <Row className="flex-md-row-reverse">
+                        <Col md={6} className="d-flex flex-column justify-content-center align-items-center">
+                            <h4>Earn your data badge</h4>
+                            <p className="miniheader text-md-center">It's quick and easy to start supporting the charity of your choice with your data!</p>
+                        </Col>
+                        <Col md={6}>
+                            <img src="/img/mydata/product-page/earn-badge.png" className="data-badge d-inline-block d-md-none"/>
+                            <img src="/img/mydata/data-cta.png" className="data-badge d-none d-md-inline-block"/>
+                        </Col>
+                    </Row>
+                    <br/>
+                    <br/>
+                    <div className="d-flex flex-row justify-content-center align-items-center">
+                        <MyDataSignUpButton/>
+                    </div>
+                    <br/>
+                </div>
+            </ProductPageContainer>
         </div>
-        <br/>
-    </div>
+    </div>;
 };
 
 const TransformYourData = () => {
     
     return <div className="transform-your-data">
-        <div className="px-3">
-            <h3 className="text-left">Transforming your data into charity donations</h3>
-            <p className="miniheader mb-0">Your questions answered</p>
+        <div className="d-block d-md-none">
+            <ProductPageContainer className="px-3">
+                <h3 className="text-left">Transforming your data into charity donations</h3>
+                <p className="miniheader mb-0">Your questions answered</p>
+            </ProductPageContainer>
+            <BubblesHeader src="/img/mydata/product-page/photo-bubbles-data-two.png"/>
         </div>
-        <BubblesHeader src="/img/mydata/product-page/photo-bubbles-data-two.png"/>
         <div className="overlap-up">
             <img src="/img/curves/curve-desat-blue.svg" className="w-100"/>
             <div className="faqs bg-gl-desat-blue">
                 <img src="/img/homepage/Stars.png" className="stars star-top"/>
-                <div className="inner px-3">
+                <ProductPageContainer className="inner px-3">
                     
                     <br/>
                     <br/>
@@ -180,7 +219,7 @@ const TransformYourData = () => {
                     <CollapseableCard
                         title="1. What charities can I support with My Data?"
                         TitleTag="h1" className="w-100 faq faq-1"
-                        innerClassName="text-left" arrowPosition="bottom">
+                        innerClassName="text-left px-md-5" arrowPosition="bottom">
                         <br/>
                         <ul>
                             <li>
@@ -202,7 +241,7 @@ const TransformYourData = () => {
                     <CollapseableCard
                         title="2. How does My Data make money for my charity?"
                         TitleTag="h1" className="w-100 faq faq-2"
-                        innerClassName="text-left" arrowPosition="bottom">
+                        innerClassName="text-left px-md-5" arrowPosition="bottom">
                         <br/>
                         <ul>
                             <li>
@@ -217,7 +256,7 @@ const TransformYourData = () => {
                     <CollapseableCard
                         title="3. How do I control my data privacy?"
                         TitleTag="h1" className="w-100 faq faq-3"
-                        innerClassName="text-left" arrowPosition="bottom">
+                        innerClassName="text-left px-md-5" arrowPosition="bottom">
                         <br/>
                         <ul>
                             <li>
@@ -231,9 +270,9 @@ const TransformYourData = () => {
                             </li>
                         </ul>
                     </CollapseableCard>
-                </div>
+                </ProductPageContainer>
                 <br/>
-                <div className="d-flex flex-row justify-content-center align-items-center">
+                <div className="d-flex flex-row justify-content-center align-items-center mt-md-5">
                     <MyDataSignUpButton/>
                 </div>
                 <br/>
@@ -245,11 +284,11 @@ const TransformYourData = () => {
 const MyDataProductPage = () => {
 
 	useEffect(() => {
-		setFooterClassName('bg-gl-pale-orange');
+		setFooterClassName('bg-gl-desat-blue');
 	}, []);
 
 	return (<>
-		<LandingSection/>
+        <LandingSection/>
         <br/>
         <br/>
         <div className="blue-gradient">
@@ -263,7 +302,6 @@ const MyDataProductPage = () => {
         <TransformYourData/>
 
         <MyDataSignUpModal/>
-		{/*<TriCards />*/}
 	</>);
 };
 

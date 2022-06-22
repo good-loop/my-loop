@@ -3,12 +3,9 @@ import { Card, CardBody, CardImg, CardText, CardTitle, Col, Container, Row } fro
 // import PV from 'promise-value';
 import { useSpring } from 'react-spring';
 
+import { space } from '../../base/utils/miscutils'
 import DataStore from '../../base/plumbing/DataStore';
-import Roles from '../../base/Roles';
 import LandingSection, { springPageDown } from '../LandingSection';
-import SubscriptionBox from '../cards/SubscriptionBox';
-import { isPortraitMobile, stopEvent } from '../../base/utils/miscutils';
-import CharitySection from '../CharitySection';
 import {
 	TabsForGoodSlideSection,
 	HowTabsForGoodWorks,
@@ -20,15 +17,18 @@ import {
 	GetInvolvedSection,
 	CharityBanner,
 	MyLandingSection,
-	MyDuoLandingSection,
-	PositivePlaceSection,
+	MyDataButton,
 	CurvePageCard,
 	PageCard,
-	TabsForGoodSlideSection2
+	TabsForGoodSlideSection2,
+	CurveTransition
 } from './CommonComponents';
+import BG from '../../base/components/BG';
 import { setFooterClassName } from '../Footer';
 import { T4GHowItWorksButton, T4GSignUpButton } from '../T4GSignUp';
 import { MyDataSignUpButton } from '../mydata/MyDataSignUp';
+import TickerTotal from '../TickerTotal';
+import Page from './AccountPage';
 
 const HomePage = ({spring}) => {
 	//spring the page down if asked to for how it works section
@@ -42,7 +42,7 @@ const HomePage = ({spring}) => {
 		if (Object.keys(urlParams).includes('gl.vert')) {
 			window.location.href = `/campaign/?gl.vert=${urlParams['gl.vert']}`;
 		}
-		setFooterClassName("bg-white");
+		setFooterClassName("bg-gl-light-blue");
 	}, []);
 
 	// <ShareAdCard /> is buggy, so removed for now
@@ -50,27 +50,246 @@ const HomePage = ({spring}) => {
 	return (<>
 		<div className="HomePage widepage">
 			{/* <MyLandingSection shiftLeft/> */}
-			<MyDuoLandingSection />
+			<MyLandingSection />
 			<CharityBanner />
-			<JoinOurMovement />
-			<NewsAwards />
-			<PositivePlaceSection className="blue-gradient"/>
+			<FindOutMoreSection />
+			<SlideCardsSection />
+			<NewsAwards nostars><h3 style={{fontWeight:'600'}}>As Featured In</h3></NewsAwards>
+			<CurveTransition hummingBird curveColour='light-pink' />
+			<StoriesSection />
+			<DiscoverMoreCard />
+			<MovementCard />
+			{/* <PositivePlaceSection className="blue-gradient"/>
 			<WatchVideoSection />
 			<CurvePageCard color='dark-turquoise' className='' bgClassName='bg-white' bgImg=''>
 				<TestimonialSectionTitle />
 			</CurvePageCard>
 			<TestimonialSectionLower />
 			<GetInvolvedSection />
-			{/* <SubscriptionBox className="bg-gl-light-red big-sub-box"/> */}
 			<TriCards titles={["See How Our Ads Work", "Tabs for Good", "Our Story", ]}
 				texts={["Explore more examples of our campaigns", "Raise money for charity every time you open a new tab", "Meet the cofounders and discover the story of Good-Loop"]}
 				images={["img/homepage/good-loop-for-business.png", "img/homepage/slide-1.png", "img/homepage/amyanddaniel.png"]}
 				links={["impactoverview", "tabsforgood", "ourstory"]}
-			/>
+			/> */}
 		</div>
 	</>);
 };
 
+const FindOutMoreSection = () => {
+
+	return (<><BG image='img/homepage/our-mission-bground.svg' center style={{backgroundPosition:'center top'}} >
+		<PageCard id="upper-cta" >
+			<div className='text-center'>
+				<div className='rasied text-white'>
+					<span>TOGETHER WE'VE RAISED</span> <br/>
+					<TickerTotal noPennies={true} /> <br/>
+					<span>For Global Causes</span>
+				</div>
+				<div className="conversation-bubble position-relative d-flex align-items-center justify-content-center">
+					<img style={{maxWidth:'480px'}} src="img/homepage/our-mission-blob-with-bubbles.svg"/>
+					<div className="bubble-content position-absolute" style={{top:'20%',margin:'0 10%',maxWidth:'400px'}}>
+						<h3 style={{fontWeight:'600',marginBottom:'0'}}>Our Mission</h3>
+						<h5 style={{fontWeight:'unset'}}>Changing The World: Together</h5>
+						<p style={{fontSize:'.9rem',marginTop:'1rem'}}>At My Good-Loop we're harnessing consumer power and advertising billions, <b>donating 50%</b> of ad spend to charity - <b>connecting you with brands to fund the causes you case most about.</b></p>
+						<a href='#' className='text-decoration-none'><span style={{textDecoration:"underline",fontWeight:'600'}}>Our Impact</span> →</a>
+					</div>
+				</div>
+			</div>
+		</PageCard>
+		</BG></>);
+};
+
+/**
+ * CTA Cards for T4G & MyData
+ */
+const SlideCardsSection = () => {
+	const MyDataHowItWorksButton = ({className}) =>
+	<a className={space("text-decoration-none mt-3", className)}  href="/mydata#howitworks">
+		<span style={{textDecoration:"underline"}}>How It Works</span> →
+	</a>;
+
+	return (<>
+		<PageCard className="tabs-for-goods-slide-card" >
+			<h3 className='text-center' style={{fontSize:'1.25rem'}}>Here's How You Can Get Involved</h3>
+			<div className="gridbox gridbox-md-2 gridbox-gap-4">
+				<Card className='border shadow'>
+					<CardImg className='bg-gl-light-pink' variant="top" src="img/homepage/tabs-for-good-card.png" />
+					<CardBody>
+						<div>
+							<CardTitle className='color-gl-red'>
+								<span style={{fontWeight:'bold'}}>TABS FOR GOOD</span> <br/>
+								Support A Charity Of Your Choice For Free
+							</CardTitle>
+							<CardText className='color-gl-darker-grey'>
+								Convert your browsing into donations, simply by opening tabs with our desktop browser extension.
+							</CardText>
+						</div>
+						<div className="buttons">
+							<T4GSignUpButton className="w-100 mb-3"/>
+							<T4GHowItWorksButton className="w-100 color-gl-red" />
+						</div>
+					</CardBody>
+				</Card>
+				<Card className='border shadow'>
+					<a id="mydata-cta" />
+					<CardImg className='bg-gl-blue' variant="top" src="img/homepage/onboarding.png" />
+					<CardBody>
+						<div>
+							<CardTitle className='color-gl-red'>
+								<span style={{fontWeight:'bold'}}>MY.DATA</span> <br/>
+								How Many Cookies Have You Accepted Today?
+							</CardTitle>
+							<CardText className='color-gl-darker-grey'>
+								Don't just give it away - control your data and convert it into charity donations with My Data.
+							</CardText>
+						</div>
+						<div className="buttons">
+							<MyDataButton className="w-100" />
+							<MyDataHowItWorksButton className="w-100 color-gl-red" />
+						</div>
+					</CardBody>
+				</Card>
+			</div>
+		</PageCard>
+	</>)
+}
+
+const StoriesSection = () => {
+	return (
+		<PageCard className='stories-section pt-0'>
+			<h3 style={{textTransform:'unset',fontWeight:'600'}}>The My.Good-Loop Story</h3>
+			<p className='color-gl-muddy-blue mb-0'>Converting the multi-billion dollar online advertsing industry into a force for good - with you.</p>
+			<div className="gridbox gridbox-md-2 gridbox-gap-4 text-center" style={{zIndex:'2'}}>
+				<Card className='border shadow'>
+					<CardImg className='bg-gl-light-pink' variant="top" src="img/ourstory/Good-Loop_UsingAdMoneyForGoodWithBG.png" />
+					<CardBody>
+						<div>
+							<CardTitle className='color-gl-red'>
+								<span className='text-uppercase' style={{fontWeight:'bold'}}>We can make things happen</span> <br/>
+							</CardTitle>
+							<CardText className='color-gl-darker-grey'>
+								Our amazing community has so far supported everything from childhood literacy to coral reef protection and Black Lives Matter.
+							</CardText>
+						</div>
+						<div className="buttons">
+							Discover Our Impact
+						</div>
+					</CardBody>
+				</Card>
+				<Card className='border shadow'>
+					<CardImg className='bg-gl-blue' variant="top" src="img/homepage/amyanddaniel.png" />
+					<CardBody>
+						<div>
+							<CardTitle className='color-gl-red'>
+								<span className='text-uppercase' style={{fontWeight:'bold'}}>How it all began</span> <br/>
+							</CardTitle>
+							<CardText className='color-gl-darker-grey'>
+								My.Good-Loop is brought you by the team at Good-Loop, founded by Amy Williams and Daniel Winterstein.
+							</CardText>
+						</div>
+						<div className="buttons">
+							Our Story
+						</div>
+					</CardBody>
+				</Card>
+			</div>
+
+			<div className="testimonial-blob position-relative d-flex align-items-center justify-content-center mt-5 pb-5">
+				<img style={{maxWidth:'480px',zIndex:'1',margin:'0 -1rem'}} src="img/homepage/testimonial-blob-logo.svg"/>
+				<div className="bubble-content position-absolute" style={{top:'20%',margin:'0 10%',maxWidth:'400px',zIndex:'2'}}>
+					<img className='logo position-absolute' style={{top:'-3rem'}} src="img/homepage/quote-red.svg" alt="quote" /> <br/>
+					<span className='color-gl-red' style={{fontSize:'.9rem'}}>We're delighted to name Good-Loop as one of our partners. By simply watching an advert, users can contribute to the WWF's mission of creating a world where people and wildwife can thrive together.</span> <br/>
+					<div className="name-title color-gl-darker-grey mt-2" style={{fontSize:'.9rem'}}>
+						<span>CHIARA CADEL,</span> <br/>
+						<span>PARTNERSHIPS MANAGER, WWF</span>
+					</div>
+					<div className="text-center">
+						<img style={{maxWidth:'2rem'}} src="img/LandingCharity/wwf_logo.png" alt="wwf" />
+					</div>
+				</div>
+			</div>
+		<img className="w-100 position-absolute" style={{bottom:'0',zIndex:'0',transform:'translate(-50%, 0)',left:'50%',maxWidth:'768px'}} src="img/homepage/world-map.svg" alt="world-map" />
+		</PageCard>
+	)
+}
+
+const DiscoverMoreCard = () => {
+	const discoverContents = [
+		{img: 'img/placeholder-circle.png',
+		span: 'Download',
+		linkTitle: 'Impact Report',
+		href: 'https://good-loop.com/donations-report'},
+		{img: 'img/placeholder-circle.png',
+		span: 'Explore',
+		linkTitle: 'Our Impact Hub',
+		href: '/impactoverview'},
+		{img: 'img/placeholder-circle.png',
+		span: 'Read',
+		linkTitle: 'Our Blog',
+		href: 'https://good-loop.com/good-news/index'},
+	]
+
+	return(
+		<PageCard>
+			<h3 className='mb-3' style={{fontWeight:'600'}}>Discover More</h3>
+			<Row>
+				{discoverContents.map((content, index) => {
+					return (
+						<Col key={index} xs={4} className="text-center text-nowrap d-flex flex-column justify-content-between align-items-center" >
+							<img className='shadow mx-3' style={{maxWidth:'80px',borderRadius:'50%'}} src={content.img} />
+							<p className='m-0 mt-2 color-gl-light-blue'>{content.span}</p>
+							<a className='color-gl-muddy-blue font-weight-bold' href={content.href}>{content.linkTitle}</a>
+						</Col>
+					)})}
+			</Row>
+		</PageCard>
+	)
+}
+
+const MovementCard = () => {
+	const movementContents = [
+		{img: 'img/homepage/planet-positive.png',
+		span: 'Good For The Planet'},
+		{img: 'img/homepage/responsible-journalism.png',
+		span: 'Supporting Responible Journalism'},
+		{img: 'img/homepage/50-charity.png',
+		span: '50% Of Ad Fees To Charity'},
+	]
+
+	return(<>
+		<BG image='img/homepage/our-movement-bground-bg.svg' center style={{backgroundPosition:'center top',zIndex:'-2'}}>
+			<PageCard>
+				<div className="movement-blob position-relative d-flex align-items-center justify-content-center pb-5">
+					<img style={{maxWidth:'480px',zIndex:'1',margin:'0 -1rem'}} src="img/homepage/movement-blob-images.svg"/>
+					<div className="bubble-content position-absolute text-center" style={{top:'18%',margin:'0 10%',maxWidth:'400px',zIndex:'2'}}>
+						<h4 className='color-gl-red'>Join Our Movement</h4>
+						<p className='color-gl-dark-grey'>Start Transforming Your Web Browsing And Data Into <b>Life Saving Vaccines, Meals For Children In Need, Habitats For Endangered Animals,</b> Plus Many More Good Causes.</p>
+						<a className='color-gl-red font-weight-bold' href='#'><span style={{textDecoration:"underline"}}>Get Involved</span> →</a>
+					</div>
+				</div>
+				<img className='position-absolute w-100 join-our-movement-bg-front' src="img/homepage/our-movement-bground-front.svg" />
+			</PageCard>
+		</BG>
+		<PageCard className='text-center text-white bg-gl-light-blue pt-0'>
+			<h4 className='m-0' style={{fontWeight:'600'}}>MY.GOOD-LOOP</h4>
+			<p>By Good-Loop</p>
+			<Row>
+				{movementContents.map((content, index) => {
+					return (
+						<Col key={index} xs={12} md={4} className="text-center text-nowrap d-flex flex-column justify-content-between align-items-center" >
+							<img className='mx-3' style={{maxWidth:'100px',borderRadius:'50%'}} src={content.img} />
+							<p className='m-0 mt-2 font-weight-bold'>{content.span}</p>
+						</Col>
+				)})}
+			</Row>
+		</PageCard>
+	</>)
+}
+
+/**
+ * @deprecated Replaced by FindOutMoreSection
+ * @returns {JSX.Element}
+ */
 const JoinOurMovement = () => <>	
 	<PageCard id="upper-cta" className="tabs-for-goods-slide-card" >
 		<div className="upper-cta white">
