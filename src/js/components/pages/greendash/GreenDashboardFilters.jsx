@@ -171,7 +171,7 @@ const GreenDashboardFilters = ({}) => {
 				}).promise.then(cargo => {
 					if (cargo.hits) setAvailableCampaigns(cargo.hits);
 				});
-				let q = nextCampaigns.length ? SearchQuery.setPropOr(null, "campaign", nextCampaignIds).str() : null;
+				let q = nextCampaignIds.length ? SearchQuery.str(SearchQuery.setPropOr(null, "campaign", nextCampaignIds)): null;
 				getDataList({
 					type: C.TYPES.GreenTag,
 					status: KStatus.PUBLISHED,

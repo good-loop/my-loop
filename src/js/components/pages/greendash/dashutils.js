@@ -180,7 +180,7 @@ export const periodKey = ({start, end, name}) => {
 
 const quarterRegex = /^(\d\d?\d?\d?)-Q(\d)$/;
 const monthRegex = /^(\d\d?\d?\d?)-(\d\d?)$/;
-const yearRegex = /^(\d\d?\d?\d?)/;
+const yearRegex = /^(\d\d?\d?\d?)$/;
 
 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
