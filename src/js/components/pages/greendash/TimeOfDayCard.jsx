@@ -24,21 +24,30 @@ const TimeOfDayCard = ({baseFilters, tags}) => {
 			const labels = [];
 			const data = [];
 
-			Object.entries(getBreakdownBy(res.table, 'totalEmissions', 'timeofday')).sort(
-				([ha], [hb]) => ha - hb
-			).forEach(([hour, kg]) => {
-				labels.push(hour);
-				data.push(kg);
-			});
+			// construct hourly breakdown and normalise to numeric hours
+			const hoursBreakdown = getBreakdownBy(res.table, 'totalEmissions', 'timeofday');
+
+			// group into 3-hour periods and copy to labels/data
+			for (let i = 0; i < 24; i++) {
+				const group = Math.floor(i / 3);
+				if (i === (group * 3)) {
+					labels.push(`${((i + 11) % 12) + 1} ${i < 12 ? 'am' : 'pm'}`);
+					data.push(hoursBreakdown[i]);
+				} else {
+					data[group] += hoursBreakdown[i];
+				}
+			}
 
 			let label = 'Kg CO2';
 			let tickFn = v => `${v} kg`;
+			let tooltipFn = ctx => `${printer.prettyNumber(ctx.raw)} kg CO2`;
 			
 			const maxCarbon = Math.max(...data);
 			if (maxCarbon > TONNES_THRESHOLD) {
 				data.forEach((kg, i) => data[i] = kg / 1000);
 				label = 'Tonnes CO2';
-				tickFn = v => `${v} tonnes`;
+				tickFn = v => `${v} t`;
+				tooltipFn = ctx => `${printer.prettyNumber(ctx.raw)} tonnes CO2`;
 			}
 
 			setChartProps({
@@ -51,7 +60,10 @@ const TimeOfDayCard = ({baseFilters, tags}) => {
 					}],
 				},
 				options: {
-					plugins: { legend: { display: false } },
+					plugins: {
+						legend: { display: false },
+						tooltip: { callbacks: { label: tooltipFn } },
+					},
 					scales: { y: { ticks: { callback: tickFn } } },
 				}
 			});
