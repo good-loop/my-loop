@@ -3,7 +3,6 @@ import React, { Fragment } from 'react';
 import GreenNavBar from './greendash/GreenNavBar';
 import GreenMetrics from './greendash/GreenMetrics';
 import GreenOptimisation from './greendash/GreenOptimisation';
-import GreenImpact from './greendash/GreenImpact';
 import GreenProfile from './greendash/GreenProfile';
 import GreenTable from './greendash/GreenTable';
 
@@ -11,7 +10,6 @@ const subpages = {
 	table: GreenTable, // NOT implemented yet
 	metrics: GreenMetrics, // the main dashboard
 	optimisation: GreenOptimisation,  // NOT implemented yet
-	impact: GreenImpact, // the nice overview
 	profile: GreenProfile,  // NOT implemented yet
 };
 

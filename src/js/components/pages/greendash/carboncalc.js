@@ -5,6 +5,9 @@ import { assert } from '../../../base/utils/assert';
 import C from '../../../C';
 import PromiseValue from 'promise-value';
 import List from '../../../base/data/List';
+import Impact from '../../../base/data/Impact';
+import { encURI } from '../../../base/utils/miscutils';
+import Campaign from '../../../base/data/Campaign';
 
 /** Turn a list of things with IDs into an object mapping IDs to things */
 export const byId = things => things.reduce((acc, thing) => {
@@ -27,23 +30,6 @@ const bucketsToFractions = (buckets) => {
 		return acc;
 	}, {});
 };
-
-/**
- * For each green tag, what proportion of of data was served in which countries?
- * This is needed to calculate average CO2 per GB for each tag, as different countries
- * have different fuel balances etc.
- * @param {*} by_adid_country A breakdown from DataLog
- * @returns eg { jozxYqK: { GB: 0.5, US: 0.5}, KWyjiBo: { DE: 0.115, FR: 0.885 } }
- */
-const tagToCountryBreakdown = (by_adid_country) => {
-	const toReturn = {};
-
-	by_adid_country.buckets.forEach(({key: tagid, by_country}) => {
-		toReturn[tagid] = bucketsToFractions(by_country.buckets);
-	});
-	return toReturn;
-};
-
 
 // TODO convert the new table format into chart-js friendly stuff
 /* (Unused, illustrative purposes only) */
@@ -118,26 +104,16 @@ export const getSumColumn = (table, colName) => {
 
 /**
  * Query for green ad tag impressions, then connect IDs to provided tags, calculate data usage & carbon emissions, and output ChartJS-ready data
- * CAUTION: To avoid a dimensional explosion, we assume that the "fraction of impressions per advert per country" is homogeneous across other breakdowns.
- * This means it's possible to have weird cases where - for instance - an advert which only runs in the UK in the daytime and in Australia at night
- * might produce an inaccurate time-of-day carbon breakdown, as it will be calculated on the assumption that its country distribution is the same at all times.
- * We think this will be lost in measurement noise in "real" data, and our results will still be self-consistent and repeatables, so we accept the potential inaccuracy.
  * @param {Object} options
  * @param {String} options.q Query string - eg "campaign:myCampaign", "adid:jozxYqK OR adid:KWyjiBo"
- * @param {String[]} options.breakdowns Only first-order breakdowns - each will be augmented to eg "time" -> "time/adid" to enable calculations
  * @param {String} start Loose time parsing permitted (eg "24 hours ago") otherwise prefer ISO-8601 (full or partial)
  * @param {String} end Loose time parsing permitted (eg "24 hours ago") otherwise prefer ISO-8601 (full or partial)
- * @param {GreenAdTag[]} tags The Green Ad Tags which relate to the dataset to be retrieved. TODO Should these be retrieved by this code, AFTER the DataLog response?
  * @returns {!PromiseValue} {table: [["country","pub","mbl","os","adid","time","count","totalEmissions","baseEmissions","creativeEmissions","supplyPathEmissions"]] }
  */
-export const getCarbon = ({q = '', breakdowns = [], start = '1 month ago', end = 'now', tags, ...rest}) => {
-	// Add ad-ID cross-breakdown to all breakdowns - it's needed to calculate data usage
-	const augmentedBreakdowns = breakdowns.map(b => `${b}/adid`)
-
+export const getCarbon = ({q = '', start = '1 month ago', end = 'now', ...rest}) => {
 	const data = {
 		// dataspace: 'green',
-		q, //: q ? `evt:pixel AND (${q})` : 'evt.pixel',
-		// breakdown: [...augmentedBreakdowns, 'adid', 'adid/country'],
+		q,
 		start, end, 
 		...rest
 	};
@@ -184,4 +160,26 @@ export const getCampaigns = (table) => {
 		// TODO have PromiseValue.then() unwrap nested PromiseValue
 		return pvcs;
 	});
+};
+
+/**
+ * 
+ * @returns {?Impact} null if loading data
+ */
+export const calculateDynamicOffset = ({campaign, offset}) => {
+	if ( ! Impact.isDynamic(offset)) return offset; // paranoia
+	// check it is per impression
+	if (offset.input) assert(offset.input.substring(0, "impression".length) === "impression", offset);
+	// how many impressions?
+	let impressions = Campaign.viewcount(campaign);
+	console.log("impressions", impressions, campaign);
+	if ( ! impressions) {
+		return null;
+	}
+	let snapshotOffset = new Impact(offset);
+	let n = impressions * offset.rate;
+	snapshotOffset.n = n;
+	delete snapshotOffset.rate;
+	delete snapshotOffset.input;	
+	return snapshotOffset;
 };

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Col, Container, Row } from 'reactstrap';
+import _ from 'lodash';
+import { Badge, Col, Container, Row } from 'reactstrap';
 import Misc from '../../base/components/Misc';
 import { setNavProps } from '../../base/components/NavBar';
 import Campaign from '../../base/data/Campaign';
 import { getId } from '../../base/data/DataClass';
 import KStatus from '../../base/data/KStatus';
+import List from '../../base/data/List';
 import { getDataItem } from '../../base/plumbing/Crud';
 import { getDataLogData } from '../../base/plumbing/DataLog';
 import DataStore, { getPath } from '../../base/plumbing/DataStore';
@@ -12,16 +14,18 @@ import { encURI, space } from '../../base/utils/miscutils';
 import C from '../../C';
 import { Mass } from './greendash/dashutils';
 import GreenMap from './greendash/GreenMap';
-
-
+import Impact from '../../base/data/Impact';
+import { calculateDynamicOffset } from './greendash/carboncalc';
+import { isTester } from '../../base/Roles';
+import LinkOut from '../../base/components/LinkOut';
+import ServerIO from '../../plumbing/ServerIO';
+import PromiseValue from 'promise-value';
 
 
 // TODO Design! and Content!
 // Latest Layout Design: https://miro.com/app/board/o9J_lxO4FyI=/?moveToWidget=3458764516138790976&cot=14
 // Visual Design: https://miro.com/app/board/o9J_lncRn5E=/ (note: some layout changes above)
 // Copy: https://docs.google.com/document/d/1_mpbdWBeaIEyKHRr-mtC1FHAPEfokcRZTHXgMkYJyVk/edit?usp=sharing
-
-
 
 
 
@@ -64,7 +68,29 @@ const GreenLanding = ({ }) => {
 	if ( ! pvCampaign.value) {
 		return <Misc.Loading />
 	}
-	const campaign = pvCampaign.value;
+	const campaign = pvCampaign.value;	
+	let pvAllCampaigns;
+	// Is this a master campaign?
+	if (Campaign.isMaster(campaign)) {
+		pvAllCampaigns = Campaign.pvSubCampaigns({campaign, status});
+	} else {
+		pvAllCampaigns = new PromiseValue(new List([campaign]));
+	}
+	console.log("pvAllCampaigns", pvAllCampaigns.value);
+	if (pvAllCampaigns.value) {
+		// for each campaign:
+		// - collect offsets
+		// - Fixed or dynamic offsets? If dynamic, get impressions
+		// - future TODO did it fund eco charities? include those here
+		const allFixedOffsets = [];
+		List.hits(pvAllCampaigns.value).forEach(campaign => {
+			let offsets = Campaign.offsets(campaign);
+			let fixedOffsets = offsets.map(offset => Impact.isDynamic(offset)? calculateDynamicOffset({campaign, offset}) : offset);
+			allFixedOffsets.push(...fixedOffsets);
+		});				
+		console.log("allFixedOffsets", allFixedOffsets);
+	}
+
 	// TODO only fetch eco charities
 	let dntn4charity = {} || Campaign.dntn4charity(campaign);
 	console.log(dntn4charity);
@@ -104,6 +130,13 @@ const GreenLanding = ({ }) => {
 						with <img className="carbon-neutral-logo" src="/img/green/gl-carbon-neutral.svg" />
 					</div>
 					<a className="btn splash-explore" onClick={scrollToMap}>EXPLORE OUR IMPACT</a>
+					{isTester() && pvAllCampaigns.value && // handy links for GL staff
+						<div>{List.hits(pvAllCampaigns.value).map(campaign => 
+							<LinkOut key={campaign.id} href={ServerIO.PORTAL_ENDPOINT+'/#campaign/'+encURI(campaign.id)}>
+								<Badge className='mr-2'>{campaign.name || campaign.id}</Badge>
+							</LinkOut>
+						)}</div>
+					}
 				</div>
 			</div>
 			<div className="mission py-4">
