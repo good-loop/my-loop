@@ -5,7 +5,7 @@ import _ from 'lodash';
 import DataStore from '../../../base/plumbing/DataStore';
 import Misc from '../../../base/components/Misc';
 import NewChartWidget from '../../NewChartWidget';
-import { dataColours, GreenCard, GreenCardAbout, TONNES_THRESHOLD } from './dashutils';
+import { dataColours, GreenCard, GreenCardAbout, NOEMISSIONS, TONNES_THRESHOLD } from './dashutils';
 import { getBreakdownBy, getCarbon } from './carboncalc';
 
 
@@ -74,7 +74,7 @@ const TimeOfDayCard = ({baseFilters, tags}) => {
 	if (!chartProps) {
 		chartContent = <Misc.Loading text="Fetching time-of-day data..." />;
 	} else if (chartProps.isEmpty) {
-		chartContent = <div>No CO<sub>2</sub> emissions for this period</div>;
+		chartContent = NOEMISSIONS;
 	} else {
 		chartContent = <>
 			<NewChartWidget type="bar" {...chartProps} />

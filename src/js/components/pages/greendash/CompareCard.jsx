@@ -103,6 +103,7 @@ const insertCampaignData = (prevProps, campaign, table) => {
 
 	nextProps.data.labels = labels;
 	nextProps.data.datasets[0].data = data;
+	nextProps.data.datasets[0].backgroundColor = dataColours(data);
 
 	return nextProps;
 };

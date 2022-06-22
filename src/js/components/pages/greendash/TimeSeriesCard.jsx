@@ -4,7 +4,7 @@ import Misc from '../../../base/components/Misc';
 import { space } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import NewChartWidget from '../../NewChartWidget';
-import { GreenCard, printPeriod, printDate, printDateShort, TONNES_THRESHOLD, GreenCardAbout } from './dashutils';
+import { GreenCard, printPeriod, printDate, printDateShort, TONNES_THRESHOLD, GreenCardAbout, Mass, NOEMISSIONS, CO2e } from './dashutils';
 import { getBreakdownBy } from './carboncalc';
 
 
@@ -57,23 +57,19 @@ const co2ImpactSpecs = {
 
 /** Render the "That's 99,999 kettles/miles/flights" bubble */
 const CO2Impact = ({kg, mode}) => {
-	const mass = kg < 1000 ? kg : kg / 1000;
-	const unit = kg < 1000 ? 'kg' : 'tonnes';
-
 	let guts = null;
 
 	if (mode === 'base') {
 		guts = <div className="big-number">
-			<div className="number">{printer.prettyInt(mass, true)}</div>
-			<div className="unit">{unit}</div>
-			<div className="desc">CO<sub>2</sub>e EMITTED</div>
+			<Mass kg={kg} />
+			<div className="desc">{CO2e} emitted</div>
 		</div>;
 	} else {
 		assert(co2ImpactSpecs[mode], `Can't render CO2-equivalent for mode "${mode}" - no conversion factor/description/etc written`);
 		const {factor, desc, icon} = co2ImpactSpecs[mode];
 
 		guts = <div className="impact-bubble">
-			<div className="impact-leader">{printer.prettyInt(mass, true)} {unit} CO<sub>2</sub>e, THAT'S</div>
+			<div className="impact-leader"><Mass kg={kg} /> {CO2e}, that's</div>
 			<div className="impact-number">{printer.prettyInt(kg * factor, true)}</div>
 			<div className="impact-desc">{desc}</div>
 			<div className="impact-icon" title={`Illustrative icon for "${desc}"`}>{icon}</div>
@@ -214,9 +210,9 @@ const TimeSeriesCard = ({ period, data: rawData }) => {
 	return <GreenCard title="How much carbon is your digital advertising emitting?" className="carbon-time-series" row>
 		<div className="chart-subcard flex-column">
 			{chartProps?.isEmpty ? (
-				<div>No CO<sub>2</sub> emissions for this period</div>
+				NOEMISSIONS
 				) : (
-				<div>CO<sub>2</sub>e emissions over time</div>
+				<div>{CO2e} emissions over time</div>
 			)}
 			{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
 			{chartContent}

@@ -6,7 +6,7 @@ import { sum } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import NewChartWidget from '../../NewChartWidget';
 import { getBreakdownBy, getSumColumn } from './carboncalc';
-import { dataColours, GreenCard, GreenCardAbout, ModeButton, TONNES_THRESHOLD } from './dashutils';
+import { CO2e, dataColours, GreenCard, GreenCardAbout, ModeButton, NOEMISSIONS, TONNES_THRESHOLD } from './dashutils';
 
 
 /** Classify OS strings seen in our data  
@@ -109,13 +109,13 @@ const TechSubcard = ({ tags, data, minimumPercentLabeled=1 }) => {
 	}, [data])
 
 	if (!chartProps) return null;
-	if (chartProps?.isEmpty) return <div>No CO<sub>2</sub> emissions for this period</div>;
+	if (chartProps?.isEmpty) return NOEMISSIONS;
 	
 	return <>
-		<p>CO<sub>2</sub>e emissions due to...</p>
+		<p>{CO2e} emissions due to...</p>
 		<NewChartWidget type="pie" {...chartProps} datalabels />
 		<small className="text-center">
-			The Green Ad Tag per-impression overhead is measured,<br />
+			The Green Ad Tag per-impression overhead is measured,
 			but too small to display in this chart.
 		</small>
 	</>;
@@ -195,7 +195,7 @@ const DeviceSubcard = ({ tags, data: rawData }) => {
 	}, [rawData]);
 	
 	if (!chartProps) return null;
-	if (chartProps?.isEmpty) return <div>No CO<sub>2</sub> emissions for this period</div>;
+	if (chartProps?.isEmpty) return NOEMISSIONS;
 	
 	return <NewChartWidget type="bar" {...chartProps} />;
 }

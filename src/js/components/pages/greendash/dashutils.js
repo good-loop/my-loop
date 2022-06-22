@@ -211,9 +211,27 @@ export const GreenCardAbout = ({children, ...rest}) => {
 	</div>;
 }
 
+const roundFormat = new Intl.NumberFormat('en-GB', {maximumFractionDigits: 0});
+const oneDigitFormat = new Intl.NumberFormat('en-GB', {minimumFractionDigits: 1, maximumFractionDigits: 2});
+const twoDigitFormat = new Intl.NumberFormat('en-GB', {minimumFractionDigits: 0, maximumFractionDigits: 1});
+
+/**
+ * printer.prettyNumber is a little short on nuance here - we want to show a degree of precision
+ * 1-digit numbers get up to 2 decimals & at least one, eg 3.4567 -> 3.45, 1.001 -> 1.0
+ * 2-digit numbers get up to 1 decimal, eg 23.456 -> 23.5, 91.04 -> 91
+ * 3-digit numbers get rounded to integer
+ */
+const smartNumber = x => {
+	if (x == 0) return '0';
+	if (!x) return '';
+	if (x > -10 && x < 10) return oneDigitFormat.format(x);
+	else if (x > -100 && x < 100) return twoDigitFormat.format(x);
+	return roundFormat.format(x);
+}
+
 
 const massGeneric = (kg, makeElement) => {
-	const number = printer.prettyInt(kg >= 1000 ? kg / 1000 : kg, true);
+	const number = smartNumber(kg >= 1000 ? kg / 1000 : kg, true);
 	const unit = kg < 1000 ? 'kg' : `tonne${kg !== 1 ? 's' : ''}`;
 
 	return makeElement ? (
@@ -251,7 +269,7 @@ const dfltMaxColour = [192, 33, 48];
 const dfltMinColour = [186, 9, 84];
 
 /**
- * 
+ * Generate pretty on-brand colours for a chart data range
  * @param {!number[]} series 
  * @param {?number[]} maxColour e.g. [255,0,0] bright red
  * @param {?number[]} minColour 
@@ -267,12 +285,15 @@ export const dataColours = (series, maxColour = dfltMaxColour, minColour = dfltM
 	const rangeS = maxColour[1] - minS;
 	const rangeL = maxColour[2] - minL;
 
-	const fart = series.map(val => {
+	return series.map(val => {
 		const quotient = (val - min) / range;
 		return `hsl(${Math.round(minH + (quotient * rangeH))} ${Math.round(minS + (quotient * rangeS))}% ${Math.round(minL + (quotient * rangeL))}%)`
 	});
-	return fart;
 };
 
 /** Minimum kg value where we should switch to displaying tonnes instead */
 export const TONNES_THRESHOLD = 1000;
+
+export const CO2 = <span>CO<sub>2</sub>e</span>;
+export const CO2e = <span className="co2e">CO<sub>2</sub>e</span>;
+export const NOEMISSIONS = <div>No {CO2} emissions for this period</div>;
