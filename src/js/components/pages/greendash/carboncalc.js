@@ -200,8 +200,11 @@ export const calculateDynamicOffset = ({campaign, offset}) => {
 	return snapshotOffset;
 };
 
-
-export const getOffsetsByType = () => {
+/**
+ * 
+ * @returns {Object} {isLoading:boolean, carbon: [], carbonTotal: Number, trees: [], treesTotal:Number, coral: [] }
+ */
+export const getOffsetsByType = ({campaign, status}) => {
 	let pvAllCampaigns;
 	// Is this a master campaign?
 	if (Campaign.isMaster(campaign)) {
@@ -222,6 +225,7 @@ export const getOffsetsByType = () => {
 		});				
 		console.log("allFixedOffsets", allFixedOffsets);
 	}
+	const offsets4type = {};
 	// kgs of CO2
 	let co2 = campaign.co2; // manually set for this campaign?
 	let carbonOffsets;
@@ -232,13 +236,17 @@ export const getOffsetsByType = () => {
 		// HACK use our default, gold-standard
 		carbonOffsets = [new Impact({charity:"gold-standard",rate:1,name:"carbon offset"})];
 	}
-	const carbonCharityIds =uniq(carbonOffsets.map(offset => offset?.charity));
-	// load the charities
-	let carbonCharities = carbonCharityIds.map(cid => getDataItem({type:"NGO", id:cid, status:KStatus.PUBLISHED}).value).filter(x => x);
+	offsets4type.carbon = carbonOffsets;
+	carbonOffsets.carbonTotal = co2;
+
 	// Trees??
 	let treeOffsets = allFixedOffsets.filter(o => o?.name?.substring(0,4)==="tree");	
 	let trees = treeOffsets.reduce((x,offset) => x + offset.n, 0);
-	let treePlantingPartner = "Eden Reforestation projects";	
+	let treePlantingPartner = "Eden Reforestation projects"; // ??	
+	carbonOffsets.trees = treeOffsets;
+	offsets4type.treesTotal = trees;
+
 	let isLoading = ! pvAllCampaigns.resolved || allFixedOffsets.includes(null);
+	offsets4type.isLoading = isLoading;
 	return offsets4type;
 };

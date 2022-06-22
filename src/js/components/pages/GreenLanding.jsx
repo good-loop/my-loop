@@ -15,7 +15,7 @@ import C from '../../C';
 import { Mass } from './greendash/dashutils';
 import GreenMap from './greendash/GreenMap';
 import Impact from '../../base/data/Impact';
-import { calculateDynamicOffset } from './greendash/carboncalc';
+import { calculateDynamicOffset, getOffsetsByType } from './greendash/carboncalc';
 import { isTester } from '../../base/Roles';
 import LinkOut from '../../base/components/LinkOut';
 import ServerIO from '../../plumbing/ServerIO';
@@ -70,7 +70,15 @@ const GreenLanding = ({ }) => {
 		return <Misc.Loading />
 	}	
 	const campaign = pvCampaign.value;	
-	let offsets4type = getOffsetsByType({campaign});
+	let offsets4type = getOffsetsByType({campaign});	
+	let isLoading = offsets4type.isLoading;
+	// load the charities
+	const carbonOffsets = offsets4type.carbon || [];
+	let co2 = offsets4type.carbonTotal;
+	const carbonCharityIds =uniq(carbonOffsets.map(offset => offset?.charity));
+	let carbonCharities = carbonCharityIds.map(cid => getDataItem({type:"NGO", id:cid, status:KStatus.PUBLISHED}).value).filter(x => x);
+
+	let trees = offsets4type.treesTotal;
 
 	// Branding
 	// NB: copy pasta + edits from CampaignPage.jsx
@@ -152,7 +160,7 @@ const GreenLanding = ({ }) => {
 					<Row className="partnership trees no-gutters">
 						<Col className="partner-text p-4" xs="12" sm="6">
 							<h2>PLANTING TREES</h2>
-							<p>Our Green Media products plant trees via {treePlantingPartner} 
+							<p>Our Green Media products plant trees via Eden Reforestation projects 
 								where reforestation has a positive and long-lasting environmental and socio-economic impact.</p>
 						</Col>
 						<Col className="partner-image" xs="12" sm="6">
