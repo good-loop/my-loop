@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Misc from '../../../base/components/Misc';
+import Campaign from '../../../base/data/Campaign';
+import DataStore from '../../../base/plumbing/DataStore';
 
 import { A } from '../../../base/plumbing/glrouter';
+import { encURI } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
-import { getCarbon, getSumColumn } from './carboncalc';
+import { getCarbon, getOffsetsByType, getSumColumn } from './carboncalc';
 import { GreenCard, GreenCardAbout, Mass } from './dashutils';
 
 
@@ -55,32 +58,40 @@ const JourneyCard = ({ campaigns, tags, baseFilters }) => {
 	if (!campaigns || !campaigns.length) {
 		return <Misc.Loading text="Fetching your campaign data..." />;
 	}
-
-	GreenLanding refactor
-	
-	let offsets = { co2: 0, trees: 0, coral: 0 };
-
-	campaigns.forEach(c => {
-		// Live data: extract CO2, trees, coral data from campaigns
-		if (c.co2) offsets.co2 += c.co2;
-		c.offsets?.forEach(o => {
-			if (o.name.match(/^trees?/)) offsets.trees += o.n;
-			if (o.name.match(/^coral/)) offsets.coral += o.n;
-		});
+		
+	let isLoading;
+	const offsetTypes = "carbon trees coral".split(" ");
+	let offsets = {};
+	offsetTypes.forEach(ot => offsets[ot+"Total"] = 0);
+	campaigns.forEach(campaign => {
+		const offsets4type = getOffsetsByType({campaign});
+		offsetTypes.forEach( ot => offsets[ot+"Total"] += (offsets4type[ot+"Total"] || 0) );		
+		if (offsets4type.isLoading) isLoading = true;
 	});
 
-	// TODO Which impact splash page to link to?
-	let impactSplashPage = '/green?'; 
-	let brandIds = ;
-	let agencyIds = []
-	if (brandIds.length === 1) {
-		impactSplashPage += '??'
+	// Which impact splash page to link to?
+	// TODO test for an agency
+	// NB: We don't want to just link to the campaign in the url -- we want to always have a master campaign
+	let impactSplashPage; 	
+	let masterCampaigns = campaigns.filter(Campaign.isMaster);
+	if (masterCampaigns.length===1) {
+		impactSplashPage = "/green/"+encURI(masterCampaigns[0].id);
+	} else {
+		let masters = campaigns.map(Campaign.masterFor).filter(m => m.id);
+		if (masters.length) {
+			// HACK pick the first 
+			let brandOrAgency = masters[0];
+			impactSplashPage = '/green?'+
+				({Agency: "agency", Advertiser: "brand"}[brandOrAgency.type])+"="+encURI(brandOrAgency.id);
+		}
 	}
 
 	return <GreenCard title="Your journey so far" className="carbon-journey">
-		<CO2Section co2Offset={offsets.co2} />
-		<TreesSection treesPlanted={offsets.trees} coralPlanted={offsets.coral} />
-		<A className="btn btn-primary" href={impactSplashPage}><BrandLogo campaigns={campaigns} /> Impact Overview</A>
+		{isLoading? <Misc.Loading /> : <>
+			<CO2Section co2Offset={offsets.carbonTotal} />
+			<TreesSection treesPlanted={offsets.treesTotal} coralPlanted={offsets.coralTotal} />			
+		</>}
+		{impactSplashPage && <A className="btn btn-primary" href={impactSplashPage}><BrandLogo campaigns={campaigns} /> Impact Overview</A>}
 		<GreenCardAbout>
 			<p>What carbon offsets do we use?</p>
 			<p>What tree planting projects do we support?</p>

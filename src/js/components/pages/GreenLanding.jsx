@@ -4,7 +4,7 @@ import { Badge, Col, Container, Row } from 'reactstrap';
 import Misc from '../../base/components/Misc';
 import { setNavProps } from '../../base/components/NavBar';
 import Campaign from '../../base/data/Campaign';
-import { getId } from '../../base/data/DataClass';
+import { getId, getType } from '../../base/data/DataClass';
 import KStatus from '../../base/data/KStatus';
 import List from '../../base/data/List';
 import { getDataItem } from '../../base/plumbing/Crud';
@@ -45,8 +45,8 @@ const GreenLanding = ({ }) => {
 			pvItem = getDataItem({type:C.TYPES.Agency, id:DataStore.getUrlValue('agency'), status, swallow:true});
 		}
 		if (pvItem?.value) {
-			let pvC = Campaign.fetchMasterCampaign(pvItem.value, status);
-			if (pvC.value) cid = pvC.id;
+			cid = pvItem.value.campaign; 
+			assert(cid, "No campaign for "+pvItem.value.id, pvItem);
 		}
 		if ( ! cid) {
 			cid = Campaign.TOTAL_IMPACT; // TODO not whilst loading; oh well
@@ -72,6 +72,7 @@ const GreenLanding = ({ }) => {
 	const campaign = pvCampaign.value;	
 	let offsets4type = getOffsetsByType({campaign});	
 	let isLoading = offsets4type.isLoading;
+	let pvAllCampaigns = offsets4type.pvAllCampaigns;
 	// load the charities
 	const carbonOffsets = offsets4type.carbon || [];
 	let co2 = offsets4type.carbonTotal;
