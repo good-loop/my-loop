@@ -218,8 +218,7 @@ const massGeneric = (kg, makeElement) => {
 
 	return makeElement ? (
 		<span className="mass">
-			<span className="number">{number}</span>
-			<span className="unit">{unit}</span>
+			<span className="number">{number}</span> <span className="unit">{unit}</span>
 		</span>
 	) : (
 		`${number} ${unit}`

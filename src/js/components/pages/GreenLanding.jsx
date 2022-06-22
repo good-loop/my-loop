@@ -10,7 +10,7 @@ import List from '../../base/data/List';
 import { getDataItem } from '../../base/plumbing/Crud';
 import { getDataLogData } from '../../base/plumbing/DataLog';
 import DataStore, { getPath } from '../../base/plumbing/DataStore';
-import { encURI, space } from '../../base/utils/miscutils';
+import { encURI, space, uniq, yessy } from '../../base/utils/miscutils';
 import C from '../../C';
 import { Mass } from './greendash/dashutils';
 import GreenMap from './greendash/GreenMap';
@@ -20,6 +20,7 @@ import { isTester } from '../../base/Roles';
 import LinkOut from '../../base/components/LinkOut';
 import ServerIO from '../../plumbing/ServerIO';
 import PromiseValue from 'promise-value';
+import DataItemBadge from '../../base/components/DataItemBadge';
 
 
 // TODO Design! and Content!
@@ -32,7 +33,7 @@ import PromiseValue from 'promise-value';
 const GreenLanding = ({ }) => {
 	// like CampaignPage, this would prefer to run by a campaign id -- which should be the Brand's master campaign
 	const path = DataStore.getValue("location","path");
-	const status = DataStore.getUrlValue("status") || KStatus.PUBLISHED;
+	const status = DataStore.getUrlValue("status") || DataStore.getUrlValue("gl.status") || KStatus.PUBLISHED;
 	let cid = path[1]; 
 	if ( ! cid) {
 		// fetch the master campaign for ...?
@@ -76,13 +77,12 @@ const GreenLanding = ({ }) => {
 	} else {
 		pvAllCampaigns = new PromiseValue(new List([campaign]));
 	}
-	console.log("pvAllCampaigns", pvAllCampaigns.value);
+	const allFixedOffsets = [];
 	if (pvAllCampaigns.value) {
 		// for each campaign:
 		// - collect offsets
 		// - Fixed or dynamic offsets? If dynamic, get impressions
-		// - future TODO did it fund eco charities? include those here
-		const allFixedOffsets = [];
+		// - future TODO did it fund eco charities? include those here		
 		List.hits(pvAllCampaigns.value).forEach(campaign => {
 			let offsets = Campaign.offsets(campaign);
 			let fixedOffsets = offsets.map(offset => Impact.isDynamic(offset)? calculateDynamicOffset({campaign, offset}) : offset);
@@ -90,12 +90,24 @@ const GreenLanding = ({ }) => {
 		});				
 		console.log("allFixedOffsets", allFixedOffsets);
 	}
-
-	// TODO only fetch eco charities
-	let dntn4charity = {} || Campaign.dntn4charity(campaign);
-	console.log(dntn4charity);
-	let co2 = campaign.co2;
-	let trees = campaign.offsets && campaign.offsets[0] && campaign.offsets[0].n;
+	// kgs of CO2
+	let co2 = campaign.co2; // manually set for this campaign?
+	let carbonOffsets;
+	if ( ! co2) {	// from offsets inc dynamic
+		carbonOffsets = allFixedOffsets.filter(o => Impact.isCarbonOffset(o));
+		co2 = carbonOffsets.reduce((x,offset) => x + offset.n, 0);
+	} else {
+		// HACK use our default, gold-standard
+		carbonOffsets = [new Impact({charity:"gold-standard",rate:1,name:"carbon offset"})];
+	}
+	const carbonCharityIds =uniq(carbonOffsets.map(offset => offset?.charity));
+	// load the charities
+	let carbonCharities = carbonCharityIds.map(cid => getDataItem({type:"NGO", id:cid, status:KStatus.PUBLISHED}).value).filter(x => x);
+	// Trees??
+	let treeOffsets = allFixedOffsets.filter(o => o?.name?.substring(0,4)==="tree");	
+	let trees = treeOffsets.reduce((x,offset) => x + offset.n, 0);
+	let treePlantingPartner = "Eden Reforestation projects";	
+	let isLoading = ! pvAllCampaigns.resolved || allFixedOffsets.includes(null);
 
 	// Branding
 	// NB: copy pasta + edits from CampaignPage.jsx
@@ -124,8 +136,9 @@ const GreenLanding = ({ }) => {
 				<img className="hummingbird" src="/img/green/hummingbird.png" />
 				<div className="splash-circle">
 					<div className="branding">{branding.logo ? <img src={branding.logo} alt="brand logo" /> : name}</div>
-					{co2 && <><div className="big-number tonnes"><Mass kg={co2} /></div> carbon offset</>}
-					{trees && <><div className="big-number trees">{trees}</div> trees</>}
+					{!!co2 && <><div className="big-number tonnes"><Mass kg={co2} /></div> carbon offset</>}
+					{!!trees && <><div className="big-number trees">{trees}</div> trees</>}
+					{isLoading && <Misc.Loading />}
 					<div className="carbon-neutral-container">
 						with <img className="carbon-neutral-logo" src="/img/green/gl-carbon-neutral.svg" />
 					</div>
@@ -166,13 +179,18 @@ const GreenLanding = ({ }) => {
 						</Col>
 						<Col className="partner-text p-4" xs="12" sm="6">
 							<h2>OFFSETTING CARBON</h2>
-							<p>We help brands measure their digital campaign’s carbon costs in real time and see how they can reduce their footprint with our exciting new Green Ad Tag.</p>
+							<p>We help brands measure their digital campaign's carbon costs 
+								and see how they can reduce their footprint with our exciting new Green Ad Tag.</p>
+							{yessy(carbonOffsets) && <div>Offsets provided by: 
+								{carbonCharities.map((ngo,i) => <DataItemBadge className="mr-2" item={ngo} key={getId(ngo)} />)}
+							</div>}
 						</Col>
 					</Row>
 					<Row className="partnership trees no-gutters">
 						<Col className="partner-text p-4" xs="12" sm="6">
 							<h2>PLANTING TREES</h2>
-							<p>Our Green Media products plant trees via Eden Reforestation Projects where reforestation has a positive and long-lasting environmental and socio-economic impact.</p>
+							<p>Our Green Media products plant trees via {treePlantingPartner} 
+								where reforestation has a positive and long-lasting environmental and socio-economic impact.</p>
 						</Col>
 						<Col className="partner-image" xs="12" sm="6">
 							<img src="/img/green/eden-planting-mozambique.jpg" />
