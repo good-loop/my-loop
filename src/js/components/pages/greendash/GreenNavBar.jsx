@@ -20,13 +20,16 @@ const GreenNavBar = ({active}) => {
 	const toggle = () => setIsOpen(!isOpen);
 
 	// HACK: a (master) campaign?
-	const campaignId = DataStore.getUrlValue('campaign');
+	let campaignId = DataStore.getUrlValue('campaign');
 	const brandId = DataStore.getUrlValue('brand');	
 	const agencyId = DataStore.getUrlValue('agency');
 	if ( ! campaignId && (brandId || agencyId)) {
-		let pvThing = brandId? getDataItem({type:C.TYPES.Advertiser, id:brandId, status:KStatus.PUB_OR_DRAFT, swallow:true})
-			: getDataItem({type:C.TYPES.Agency, id:agencyId, status:KStatus.PUB_OR_DRAFT, swallow:true});
-		if (pvThing.value) campaignId = pvThing.value.campaign;
+		const id = brandId || agencyId;
+		const type = brandId? C.TYPES.Advertiser : C.TYPES.Agency;
+		let pvThing = getDataItem({type, id, status:KStatus.PUB_OR_DRAFT, swallow:true});
+		if (pvThing.value) {
+			campaignId = pvThing.value.campaign;
+		}
 	}
 	let pvCampaign = campaignId? getDataItem({type:C.TYPES.Campaign, id:campaignId,status:KStatus.PUB_OR_DRAFT, swallow:true}) : {};
 	let impactUrl = pvCampaign.value? '/green/'+encURI(pvCampaign.value.id) : '/green';

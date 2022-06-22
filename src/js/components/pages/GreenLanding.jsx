@@ -4,22 +4,23 @@ import { Badge, Col, Container, Row } from 'reactstrap';
 import Misc from '../../base/components/Misc';
 import { setNavProps } from '../../base/components/NavBar';
 import Campaign from '../../base/data/Campaign';
-import { getId } from '../../base/data/DataClass';
+import { getId, getType } from '../../base/data/DataClass';
 import KStatus from '../../base/data/KStatus';
 import List from '../../base/data/List';
 import { getDataItem } from '../../base/plumbing/Crud';
 import { getDataLogData } from '../../base/plumbing/DataLog';
 import DataStore, { getPath } from '../../base/plumbing/DataStore';
-import { encURI, space } from '../../base/utils/miscutils';
+import { encURI, space, uniq, yessy } from '../../base/utils/miscutils';
 import C from '../../C';
 import { Mass } from './greendash/dashutils';
 import GreenMap from './greendash/GreenMap';
 import Impact from '../../base/data/Impact';
-import { calculateDynamicOffset } from './greendash/carboncalc';
+import { calculateDynamicOffset, getOffsetsByType } from './greendash/carboncalc';
 import { isTester } from '../../base/Roles';
 import LinkOut from '../../base/components/LinkOut';
 import ServerIO from '../../plumbing/ServerIO';
 import PromiseValue from 'promise-value';
+import DataItemBadge from '../../base/components/DataItemBadge';
 
 
 // TODO Design! and Content!
@@ -32,7 +33,7 @@ import PromiseValue from 'promise-value';
 const GreenLanding = ({ }) => {
 	// like CampaignPage, this would prefer to run by a campaign id -- which should be the Brand's master campaign
 	const path = DataStore.getValue("location","path");
-	const status = DataStore.getUrlValue("status") || KStatus.PUBLISHED;
+	const status = DataStore.getUrlValue("status") || DataStore.getUrlValue("gl.status") || KStatus.PUBLISHED;
 	let cid = path[1]; 
 	if ( ! cid) {
 		// fetch the master campaign for ...?
@@ -44,8 +45,8 @@ const GreenLanding = ({ }) => {
 			pvItem = getDataItem({type:C.TYPES.Agency, id:DataStore.getUrlValue('agency'), status, swallow:true});
 		}
 		if (pvItem?.value) {
-			let pvC = Campaign.fetchMasterCampaign(pvItem.value, status);
-			if (pvC.value) cid = pvC.id;
+			cid = pvItem.value.campaign; 
+			assert(cid, "No campaign for "+pvItem.value.id, pvItem);
 		}
 		if ( ! cid) {
 			cid = Campaign.TOTAL_IMPACT; // TODO not whilst loading; oh well
@@ -67,35 +68,18 @@ const GreenLanding = ({ }) => {
 
 	if ( ! pvCampaign.value) {
 		return <Misc.Loading />
-	}
+	}	
 	const campaign = pvCampaign.value;	
-	let pvAllCampaigns;
-	// Is this a master campaign?
-	if (Campaign.isMaster(campaign)) {
-		pvAllCampaigns = Campaign.pvSubCampaigns({campaign, status});
-	} else {
-		pvAllCampaigns = new PromiseValue(new List([campaign]));
-	}
-	console.log("pvAllCampaigns", pvAllCampaigns.value);
-	if (pvAllCampaigns.value) {
-		// for each campaign:
-		// - collect offsets
-		// - Fixed or dynamic offsets? If dynamic, get impressions
-		// - future TODO did it fund eco charities? include those here
-		const allFixedOffsets = [];
-		List.hits(pvAllCampaigns.value).forEach(campaign => {
-			let offsets = Campaign.offsets(campaign);
-			let fixedOffsets = offsets.map(offset => Impact.isDynamic(offset)? calculateDynamicOffset({campaign, offset}) : offset);
-			allFixedOffsets.push(...fixedOffsets);
-		});				
-		console.log("allFixedOffsets", allFixedOffsets);
-	}
+	let offsets4type = getOffsetsByType({campaign});	
+	let isLoading = offsets4type.isLoading;
+	let pvAllCampaigns = offsets4type.pvAllCampaigns;
+	// load the charities
+	const carbonOffsets = offsets4type.carbon || [];
+	let co2 = offsets4type.carbonTotal;
+	const carbonCharityIds =uniq(carbonOffsets.map(offset => offset?.charity));
+	let carbonCharities = carbonCharityIds.map(cid => getDataItem({type:"NGO", id:cid, status:KStatus.PUBLISHED}).value).filter(x => x);
 
-	// TODO only fetch eco charities
-	let dntn4charity = {} || Campaign.dntn4charity(campaign);
-	console.log(dntn4charity);
-	let co2 = campaign.co2;
-	let trees = campaign.offsets && campaign.offsets[0] && campaign.offsets[0].n;
+	let trees = offsets4type.treesTotal;
 
 	// Branding
 	// NB: copy pasta + edits from CampaignPage.jsx
@@ -124,8 +108,9 @@ const GreenLanding = ({ }) => {
 				<img className="hummingbird" src="/img/green/hummingbird.png" />
 				<div className="splash-circle">
 					<div className="branding">{branding.logo ? <img src={branding.logo} alt="brand logo" /> : name}</div>
-					{co2 && <><div className="big-number tonnes"><Mass kg={co2} /></div> carbon offset</>}
-					{trees && <><div className="big-number trees">{trees}</div> trees</>}
+					{!!co2 && <><div className="big-number tonnes"><Mass kg={co2} /></div> carbon offset</>}
+					{!!trees && <><div className="big-number trees">{trees}</div> trees</>}
+					{isLoading && <Misc.Loading />}
 					<div className="carbon-neutral-container">
 						with <img className="carbon-neutral-logo" src="/img/green/gl-carbon-neutral.svg" />
 					</div>
@@ -166,13 +151,18 @@ const GreenLanding = ({ }) => {
 						</Col>
 						<Col className="partner-text p-4" xs="12" sm="6">
 							<h2>OFFSETTING CARBON</h2>
-							<p>We help brands measure their digital campaign’s carbon costs in real time and see how they can reduce their footprint with our exciting new Green Ad Tag.</p>
+							<p>We help brands measure their digital campaign's carbon costs 
+								and see how they can reduce their footprint with our exciting new Green Ad Tag.</p>
+							{yessy(carbonOffsets) && <div>Offsets provided by: 
+								{carbonCharities.map((ngo,i) => <DataItemBadge className="mr-2" item={ngo} key={getId(ngo)} />)}
+							</div>}
 						</Col>
 					</Row>
 					<Row className="partnership trees no-gutters">
 						<Col className="partner-text p-4" xs="12" sm="6">
 							<h2>PLANTING TREES</h2>
-							<p>Our Green Media products plant trees via Eden Reforestation Projects where reforestation has a positive and long-lasting environmental and socio-economic impact.</p>
+							<p>Our Green Media products plant trees via Eden Reforestation projects 
+								where reforestation has a positive and long-lasting environmental and socio-economic impact.</p>
 						</Col>
 						<Col className="partner-image" xs="12" sm="6">
 							<img src="/img/green/eden-planting-mozambique.jpg" />
