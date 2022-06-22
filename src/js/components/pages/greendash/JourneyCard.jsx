@@ -51,10 +51,9 @@ const TreesSection = ({treesPlanted, coralPlanted}) => {
  * Show the carbon offsets & tree-planting of the current campaign set & compare estimated emissions.
  * @param {Object} props
  * @param {?Campaign[]} props.campaigns The campaign(s) currently in focus
- * @param {GreenTag[]} props.tags The green ad tag(s) currently in focus
  * @returns 
  */
-const JourneyCard = ({ campaigns, tags, baseFilters }) => {
+const JourneyCard = ({ campaigns, period, baseFilters }) => {
 	if (!campaigns || !campaigns.length) {
 		return <Misc.Loading text="Fetching your campaign data..." />;
 	}
@@ -64,7 +63,7 @@ const JourneyCard = ({ campaigns, tags, baseFilters }) => {
 	let offsets = {};
 	offsetTypes.forEach(ot => offsets[ot+"Total"] = 0);
 	campaigns.forEach(campaign => {
-		const offsets4type = getOffsetsByType({campaign});
+		const offsets4type = getOffsetsByType({campaign, period});
 		offsetTypes.forEach( ot => offsets[ot+"Total"] += (offsets4type[ot+"Total"] || 0) );
 		if (offsets4type.isLoading) isLoading = true;
 	});

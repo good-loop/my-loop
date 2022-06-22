@@ -167,14 +167,19 @@ export const getCampaigns = (table) => {
  * 
  * @returns {?Impact} null if loading data
  */
-export const calculateDynamicOffset = ({campaign, offset}) => {
+export const calculateDynamicOffset = ({campaign, offset, period}) => {
 	Campaign.assIsa(campaign);
 	if ( ! Impact.isDynamic(offset)) return offset; // paranoia
 	let n;
 	// HACK: carbon offset?
 	if (Impact.isCarbonOffset(offset)) {
 		let sq = SearchQuery.setProp(null, "campaign", campaign.id);
-		let pvCarbonData = getCarbon({q:sq.query, start:"2022-01-01", end:"now"});
+		if ( ! period) period = periodFromUrl();
+		let pvCarbonData = getCarbon({
+			q:sq.query, 
+			start: period?.start.toISOString() || "2022-01-01", 
+			end: period?.end.toISOString() || "now"
+		});
 		if ( ! pvCarbonData.value) {
 			return null;
 		}
@@ -204,7 +209,7 @@ export const calculateDynamicOffset = ({campaign, offset}) => {
  * 
  * @returns {Object} {isLoading:boolean, carbon: [], carbonTotal: Number, trees: [], treesTotal:Number, coral: [], pvAllCampaigns }
  */
-export const getOffsetsByType = ({campaign, status}) => {
+export const getOffsetsByType = ({campaign, status, period}) => {
 	let pvAllCampaigns;
 	// Is this a master campaign?
 	if (Campaign.isMaster(campaign)) {
@@ -220,7 +225,7 @@ export const getOffsetsByType = ({campaign, status}) => {
 		// - future TODO did it fund eco charities? include those here		
 		List.hits(pvAllCampaigns.value).forEach(campaign => {
 			let offsets = Campaign.offsets(campaign);
-			let fixedOffsets = offsets.map(offset => Impact.isDynamic(offset)? calculateDynamicOffset({campaign, offset}) : offset);
+			let fixedOffsets = offsets.map(offset => Impact.isDynamic(offset)? calculateDynamicOffset({campaign, offset, period}) : offset);
 			allFixedOffsets.push(...fixedOffsets);
 		});				
 		console.log("allFixedOffsets", allFixedOffsets);

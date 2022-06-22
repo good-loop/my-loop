@@ -46,7 +46,9 @@ export const getPeriodYear = (date = new Date()) => {
 };
 
 
-/** Read URL params and extract a period object if one is present */
+/** Read URL params and extract a period object if one is present 
+ * @returns {?Object} {start:Date end:Date}
+*/
 export const periodFromUrl = () => {
 	// User has set a named period (year, quarter, month)
 	const periodName = DataStore.getUrlValue('period')
