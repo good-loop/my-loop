@@ -56,6 +56,8 @@ const JourneyCard = ({ campaigns, tags, baseFilters }) => {
 		return <Misc.Loading text="Fetching your campaign data..." />;
 	}
 
+	GreenLanding refactor
+	
 	let offsets = { co2: 0, trees: 0, coral: 0 };
 
 	campaigns.forEach(c => {
@@ -69,7 +71,7 @@ const JourneyCard = ({ campaigns, tags, baseFilters }) => {
 
 	// TODO Which impact splash page to link to?
 	let impactSplashPage = '/green?'; 
-	let brandIds = [];
+	let brandIds = ;
 	let agencyIds = []
 	if (brandIds.length === 1) {
 		impactSplashPage += '??'

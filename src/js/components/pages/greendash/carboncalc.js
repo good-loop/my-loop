@@ -185,7 +185,7 @@ export const calculateDynamicOffset = ({campaign, offset}) => {
 		// check it is per impression
 		if (offset.input) assert(offset.input.substring(0, "impression".length) === "impression", offset);
 		// how many impressions?
-		let impressions = Campaign.viewcount(campaign);
+		let impressions = Campaign.viewcount({campaign});
 		console.log("impressions", impressions, campaign);
 		if ( ! impressions) {
 			return null;
