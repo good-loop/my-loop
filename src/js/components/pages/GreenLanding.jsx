@@ -68,46 +68,9 @@ const GreenLanding = ({ }) => {
 
 	if ( ! pvCampaign.value) {
 		return <Misc.Loading />
-	}
+	}	
 	const campaign = pvCampaign.value;	
-	let pvAllCampaigns;
-	// Is this a master campaign?
-	if (Campaign.isMaster(campaign)) {
-		pvAllCampaigns = Campaign.pvSubCampaigns({campaign, status});
-	} else {
-		pvAllCampaigns = new PromiseValue(new List([campaign]));
-	}
-	const allFixedOffsets = [];
-	if (pvAllCampaigns.value) {
-		// for each campaign:
-		// - collect offsets
-		// - Fixed or dynamic offsets? If dynamic, get impressions
-		// - future TODO did it fund eco charities? include those here		
-		List.hits(pvAllCampaigns.value).forEach(campaign => {
-			let offsets = Campaign.offsets(campaign);
-			let fixedOffsets = offsets.map(offset => Impact.isDynamic(offset)? calculateDynamicOffset({campaign, offset}) : offset);
-			allFixedOffsets.push(...fixedOffsets);
-		});				
-		console.log("allFixedOffsets", allFixedOffsets);
-	}
-	// kgs of CO2
-	let co2 = campaign.co2; // manually set for this campaign?
-	let carbonOffsets;
-	if ( ! co2) {	// from offsets inc dynamic
-		carbonOffsets = allFixedOffsets.filter(o => Impact.isCarbonOffset(o));
-		co2 = carbonOffsets.reduce((x,offset) => x + offset.n, 0);
-	} else {
-		// HACK use our default, gold-standard
-		carbonOffsets = [new Impact({charity:"gold-standard",rate:1,name:"carbon offset"})];
-	}
-	const carbonCharityIds =uniq(carbonOffsets.map(offset => offset?.charity));
-	// load the charities
-	let carbonCharities = carbonCharityIds.map(cid => getDataItem({type:"NGO", id:cid, status:KStatus.PUBLISHED}).value).filter(x => x);
-	// Trees??
-	let treeOffsets = allFixedOffsets.filter(o => o?.name?.substring(0,4)==="tree");	
-	let trees = treeOffsets.reduce((x,offset) => x + offset.n, 0);
-	let treePlantingPartner = "Eden Reforestation projects";	
-	let isLoading = ! pvAllCampaigns.resolved || allFixedOffsets.includes(null);
+	let offsets4type = getOffsetsByType({campaign});
 
 	// Branding
 	// NB: copy pasta + edits from CampaignPage.jsx
