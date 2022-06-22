@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, DropdownItem, DropdownMenu, DropdownToggle, Form, Input, Row, UncontrolledDropdown } from 'reactstrap';
+import { Button, Col, DropdownItem, DropdownMenu, DropdownToggle, Form, Input, Label, Row, UncontrolledDropdown } from 'reactstrap';
 
 import KStatus from '../../../base/data/KStatus';
 import DataStore from '../../../base/plumbing/DataStore';
@@ -11,7 +11,7 @@ import DateRangeWidget from '../../DateRangeWidget';
 import { modifyPage } from '../../../base/plumbing/glrouter';
 import { isTester } from '../../../base/Roles';
 import SearchQuery from '../../../base/searchquery';
-
+import PropControl from '../../../base/components/PropControl';
 
 
 /** Generate the list of quarter-period shortcuts */
@@ -19,6 +19,7 @@ const QuarterButtons = ({ period, setNamedPeriod }) => {
 	const buttons = [];
 	const dateCursor = new Date();
 	dateCursor.setDate(1); // avoid month-length problems
+	// quarters
 	for (let i = 0; i < 4; i++) {
 		const q = getPeriodQuarter(dateCursor);
 
@@ -39,6 +40,7 @@ const defaultFilterMode = (brand, campaign, tag) => {
 	if (tag && tag !== 'all') return 'tag';
 }
 
+
 /** Are these two period-specs the same - ie do they refer to the same quarter / month / year / custom period? */
 const samePeriod = (periodA, periodB) => {
 	if (periodA.name && periodB.name) return periodA.name === periodB.name;
@@ -46,6 +48,7 @@ const samePeriod = (periodA, periodB) => {
 	if ((periodA.end && periodA.end.getTime()) !== (periodB.end && periodB.end.getTime())) return false;
 	return false;
 }
+
 
 /** Should we show the "Apply New Filters" button - ie have they changed? */
 const filtersChanged = (nextPeriod, nextFilterMode, nextBrand, nextCampaign, nextTag) => {
@@ -62,7 +65,26 @@ const filtersChanged = (nextPeriod, nextFilterMode, nextBrand, nextCampaign, nex
 	return false;
 };
 
-const allFilterParams = ['period', 'start', 'end', 'brand', 'campaign', 'tag']
+
+/** Extract the time period filter from URL params if present - if not, apply "current quarter" by default */
+const initPeriod = () => {
+	let period = periodFromUrl();
+	if (!period) {
+		period = getPeriodQuarter();
+		modifyPage(null, {period: period.name});
+	}
+	return period;
+};
+
+
+const allFilterParams = ['period', 'start', 'end', 'brand', 'campaign', 'tag'];
+
+
+/** The filter-by-entity list can get very long esp for devs/testers - manage its size*/
+const longMenuStyle = {
+	maxHeight: '75vh', // with long lists this gets clipped by the footer
+	overflowY: 'auto', // Add scrollbars as needed
+};
 
 
 /** What time period, brand, and campaign are currently in focus?
@@ -71,13 +93,13 @@ const allFilterParams = ['period', 'start', 'end', 'brand', 'campaign', 'tag']
  * 
  */
 const GreenDashboardFilters = ({}) => {
-	const [period, setPeriod] = useState(periodFromUrl());
+	const [period, setPeriod] = useState(initPeriod());
 	const [brand, setBrand] = useState(() => DataStore.getUrlValue('brand'));
 	const [campaign, setCampaign] = useState(() => DataStore.getUrlValue('campaign'));
 	const [tag, setTag] = useState(() => DataStore.getUrlValue('tag'));
 
 	const [filterMode, setFilterMode] = useState(defaultFilterMode(brand, campaign, tag));
-	const [showCustomRange, setShowCustomRange] = useState(!period.name);
+	const [showCustomRange, setShowCustomRange] = useState(!period?.name);
 
 	// Update this to signal that the new filter values should be applied
 	const [dummy, setDummy] = useState(false);
@@ -121,31 +143,31 @@ const GreenDashboardFilters = ({}) => {
 			const shareList = res.cargo;
 			if (!shareList) return;
 
-			const nextBrands = [];
-			const nextCampaigns = [];
+			const nextBrandIds = [];
+			const nextCampaignIds = [];
 
 			shareList.forEach(share => {
 				const brandMatches = share.item.match(/^Advertiser:(\w+)/);
-				if (brandMatches) nextBrands.push(brandMatches[1]);
+				if (brandMatches) nextBrandIds.push(brandMatches[1]);
 				const campaignMatches = share.item.match(/^Campaign:(\w+)/);
-				if (campaignMatches) nextCampaigns.push(campaignMatches[1]);
+				if (campaignMatches) nextCampaignIds.push(campaignMatches[1]);
 			});
 
 			// Get all the brands, campaigns and tags this user can manage
-			if (nextBrands.length || isTester()) {
-					getDataList({
+			if (nextBrandIds.length || isTester()) {
+				getDataList({
 					type: C.TYPES.Advertiser,
 					status: KStatus.PUBLISHED,
-					ids: nextBrands, // NB: a GL user should be fine with [] here
+					ids: nextBrandIds, // NB: a GL user should be fine with [] here
 				}).promise.then(cargo => {
 					if (cargo.hits) setAvailableBrands(cargo.hits);
 				});
 			}
-			if (nextCampaigns.length || isTester()) {
+			if (nextCampaignIds.length || isTester()) {
 				getDataList({
 					type: C.TYPES.Campaign,
 					status: KStatus.PUBLISHED,
-					ids: nextCampaigns,
+					ids: nextCampaignIds,
 				}).promise.then(cargo => {
 					if (cargo.hits) setAvailableCampaigns(cargo.hits);
 				});
@@ -174,11 +196,26 @@ const GreenDashboardFilters = ({}) => {
 	let filterLabel = 'Filter by:';
 	if (filterMode) filterLabel += ` ${filterMode}`;
 
+	let thisQuarter = getPeriodQuarter(new Date()).name;
+	let dateCursor = new Date();
+	dateCursor.setMonth(dateCursor.getMonth() - 3);
+	let lastQuarter = getPeriodQuarter(dateCursor).name;
+
+	// What will we show in the last filter stage?
+	const filterByEntityOptions = {
+		brand: availableBrands,
+		campaign: availableCampaigns,
+		tag: availableTags
+	}[filterMode];
+	
+
+
 	return (
 		<Row className="greendash-filters my-2">
 			<Col xs="12">
 				{ brand ? <img src="brand.png" alt="Brand Logo" /> : null }
 				<Form inline>
+					{/* ??Seeing layout bugs that can block use -- refactoring to use a PropControl might be best*/}
 					<UncontrolledDropdown className="filter-dropdown">
 						<DropdownToggle className="pl-0" caret>{periodLabel}</DropdownToggle>
 						<DropdownMenu>
@@ -219,8 +256,8 @@ const GreenDashboardFilters = ({}) => {
 
 					{filterMode && <UncontrolledDropdown className="filter-dropdown ml-2">
 						<DropdownToggle caret>{{ campaign, brand, tag }[filterMode] || `Select a ${filterMode}`}</DropdownToggle>
-						<DropdownMenu style={{maxHeight:"75vh" /* with long lists this gets clipped by the footer */, overflowY:"scroll" /* handle long lists with scroll */}} >
-							{{brand: availableBrands, campaign: availableCampaigns, tag: availableTags}[filterMode].map(item => (
+						<DropdownMenu style={longMenuStyle} >
+							{filterByEntityOptions.map(item => (
 								<DropdownItem key={item.id} onClick={() => setCurrentTemp(item.id)}>
 									{{ campaign, brand, tag }[filterMode] === item.id ? <span className="selected-marker" /> : null}
 									{item.name}

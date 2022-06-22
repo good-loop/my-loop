@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Line, Pie, Bar } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import Annotation from 'chartjs-plugin-annotation';
 
 import {
 	Chart as ChartJS,
@@ -27,10 +28,17 @@ ChartJS.register(
 	BarElement,
 	Title,
 	Tooltip,
-	Legend
+	Legend,
+	Annotation
 );
 
-
+/**
+ * 
+ * @param {Object} p
+ * @param {Object} p.data { labels:string[], datasets:[] }
+ * @param {Object} p.datalabels See https://www.npmjs.com/package/chartjs-plugin-datalabels
+ * @returns 
+ */
 const NewChartWidget = ({type = 'line', datalabels, className, style, ...props}) => {
 	props.options = props.options || {};
 	props.options.maintainAspectRatio = props.options.maintainAspectRatio || false;

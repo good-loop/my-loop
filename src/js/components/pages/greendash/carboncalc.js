@@ -1,5 +1,14 @@
 import md5 from 'md5';
-
+import KStatus from '../../../base/data/KStatus';
+import { getDataList } from '../../../base/plumbing/Crud';
+import { assert } from '../../../base/utils/assert';
+import C from '../../../C';
+import PromiseValue from 'promise-value';
+import List from '../../../base/data/List';
+import Impact from '../../../base/data/Impact';
+import { encURI } from '../../../base/utils/miscutils';
+import Campaign from '../../../base/data/Campaign';
+import SearchQuery from '../../../base/searchquery';
 
 /** Turn a list of things with IDs into an object mapping IDs to things */
 export const byId = things => things.reduce((acc, thing) => {
@@ -7,40 +16,9 @@ export const byId = things => things.reduce((acc, thing) => {
 	return acc;
 }, {})
 
-
-/** Kilogrammes of CO2 per gigabyte of data for each country */
-const DATA_TO_CARBON_BY_COUNTRY = {
-	GB: 0.54,
-	AU: 0.54,
-};
-
-/** Temporary fill-in for pre-geoIP data until we can put country overrides on green tags */
-const CAMPAIGN_COUNTRY_SHIMS = {
-	CaptifyNS: 'AU',
-};
-
-const PUBLISHER_OVERHEAD = 100000; // TODO Fill in correct number
-const DSP_OVERHEAD = 100000; // TODO Fill in correct number
-
-
-/** Take DataLog impression buckets where the keys correspond to tags & total up bytes of data transferred */
-const calcBytes = (buckets, tagsById) => {
-	let media = 0;
-	let publisher = 0;
-	let dsp = 0;
-
-	buckets.forEach(({count, key}) => {
-		media += count * tagsById[key].weight;
-		publisher += count * PUBLISHER_OVERHEAD;
-		dsp += count * DSP_OVERHEAD;
-	});
-	return {total: (media + publisher + dsp), media, publisher, dsp};
-};
-
-
 /**
  * Turns a list of buckets into an object containing a proportional breakdown
- * @param {*} buckets e.g. [ { key: 'one', count: 100 }, { key: 'two', count: 300} ]
+ * @param {Object[]} buckets e.g. [ { key: 'one', count: 100 }, { key: 'two', count: 300} ]
  * @return e.g. { one: 0.25, two: 0.75 }
  */
 const bucketsToFractions = (buckets) => {
@@ -54,52 +32,8 @@ const bucketsToFractions = (buckets) => {
 	}, {});
 };
 
-
-/**
- * For each green tag, what proportion of of data was served in which countries?
- * This is needed to calculate average CO2 per GB for each tag, as different countries
- * have different fuel balances etc.
- * @param {*} by_adid_country A breakdown from DataLog
- * @returns eg { jozxYqK: { GB: 0.5, US: 0.5}, KWyjiBo: { DE: 0.115, FR: 0.885 } }
- */
-const tagToCountryBreakdown = (by_adid_country) => {
-	const toReturn = {};
-
-	by_adid_country.buckets.forEach(({key: tagid, by_country}) => {
-		toReturn[tagid] = bucketsToFractions(by_country.buckets);
-	});
-	return toReturn;
-};
-
-
-/**
- * Use the impressions-by-tag distribution and the impressions-by-tag-by-country distribution
- * to calculate the carbon emissions for transferring a quantity of data.
- * @param {*} bytes 
- * @param {*} tagFractions 
- * @param {*} countries 
- * @returns 
- */
-const bytesToCarbon = (bytes, tags, tagFractions, countries) => {
-	// Iterate through all tags...
-	return Object.entries(tagFractions).reduce((acc, [tagId, tFraction]) => {
-		const bytesForThisTag = bytes * tFraction;
-		const countriesForThisTag = countries[tagId];
-		// Divide up the bytes used by this tag into the countries where the tag served
-		// and multiply the portions by the bytes-to-carbon conversion factor for each country
-		return acc + Object.entries(countriesForThisTag).reduce((acc, [country, cFraction]) => {
-			const bytesForTagForCountry = bytesForThisTag * cFraction;
-			let carbonFactor = DATA_TO_CARBON_BY_COUNTRY[country];
-			if (!carbonFactor) {
-				carbonFactor = DATA_TO_CARBON_BY_COUNTRY[CAMPAIGN_COUNTRY_SHIMS[tags[tagId].campaign]];
-			}
-			return acc + ((bytesForTagForCountry * carbonFactor) / 1000000000);
-		}, 0);
-	}, 0);
-};
-
-
-/* What does the output of getCarbon look like? (Unused, illustrative purposes only) */
+// TODO convert the new table format into chart-js friendly stuff
+/* (Unused, illustrative purposes only) */
 const exampleDataSets = {
 	// The name of the requested breakdown
 	time: {
@@ -125,89 +59,197 @@ const exampleDataSets = {
 	}
 }
 
+/**
+ * 
+ * @param {Object[][]} table 
+ * @param {!string} colName
+ * @returns {!number} 
+ */
+export const getSumColumn = (table, colName) => {
+	let ci = table[0].indexOf(colName);
+	assert(ci !== -1, "No such column", colName, table[0]);
+	let total = 0;
+	for(let i=1; i<table.length; i++) {
+		const row = table[i];
+		const n = row[ci];
+		if ( ! n) continue;
+		total += 1.0*n;		
+	}
+	return total;
+};
+
 
 /**
- * Query for green ad tag impressions, then connect IDs to provided tags, calculate data usage & carbon emissions, and output ChartJS-ready data
- * CAUTION: To avoid a dimensional explosion, we assume that the "fraction of impressions per advert per country" is homogeneous across other breakdowns.
- * This means it's possible to have weird cases where - for instance - an advert which only runs in the UK in the daytime and in Australia at night
- * might produce an inaccurate time-of-day carbon breakdown, as it will be calculated on the assumption that its country distribution is the same at all times.
- * We think this will be lost in measurement noise in "real" data, and our results will still be self-consistent and repeatables, so we accept the potential inaccuracy.
+ * 
+ * @param {Object[][]} table 
+ * @param {!string} colName
+ * @returns {Object} {breakdown-key: sum-for-key} 
+ */
+ export const getBreakdownBy = (table, colNameToSum, colNameToBreakdown) => {
+	let ci = table[0].indexOf(colNameToSum);
+	let bi = table[0].indexOf(colNameToBreakdown);
+	assert(ci !== -1, "No such sum column", colNameToSum, table[0]);
+	assert(bi !== -1, "No such breakdown column", colNameToBreakdown, table[0]);
+	let totalByX = {};
+	for(let i=1; i<table.length; i++) {
+		const row = table[i];
+		const n = row[ci];
+		if ( ! n) continue;
+		const b = row[bi]; // breakdown key
+		let v = totalByX[b] || 0;
+		v += n;		
+		totalByX[b] = v;
+	}
+	return totalByX;
+};
+
+/**
+ * Query for green ad tag impressions, then connect IDs to provided tags, calculate data usage & carbon emissions, and output tabular data
  * @param {Object} options
  * @param {String} options.q Query string - eg "campaign:myCampaign", "adid:jozxYqK OR adid:KWyjiBo"
- * @param {String[]} options.breakdowns Only first-order breakdowns - each will be augmented to eg "time" -> "time/adid" to enable calculations
  * @param {String} start Loose time parsing permitted (eg "24 hours ago") otherwise prefer ISO-8601 (full or partial)
  * @param {String} end Loose time parsing permitted (eg "24 hours ago") otherwise prefer ISO-8601 (full or partial)
- * @param {GreenAdTag[]} tags The Green Ad Tags which relate to the dataset to be retrieved. TODO Should these be retrieved by this code, AFTER the DataLog response?
- * @returns Data in ChartJS-friendly arrays: See exampleDataSets above for format.
+ * @returns {!PromiseValue} {table: [["country","pub","mbl","os","adid","time","count","totalEmissions","baseEmissions","creativeEmissions","supplyPathEmissions"]] }
  */
-export const getCarbon = ({q = '', breakdowns = [], start = '1 month ago', end = 'now', tags, ...rest}) => {
-	// Add ad-ID cross-breakdown to all breakdowns - it's needed to calculate data usage
-	const augmentedBreakdowns = breakdowns.map(b => `${b}/adid`)
-
+export const getCarbon = ({q = '', start = '1 month ago', end = 'now', ...rest}) => {
 	const data = {
-		dataspace: 'green',
-		q: q ? `evt:pixel AND (${q})` : 'evt.pixel',
-		breakdown: [...augmentedBreakdowns, 'adid', 'adid/country'],
-		start, end, ...rest
+		// dataspace: 'green',
+		q,
+		start, end, 
+		...rest
 	};
-	
-	// // TODO develop this then refactor to use this
-	// DataStore.fetch(['misc', 'greencalc', md5(JSON.stringify(data))], () => {
-	// NB: can call `as` or `portal` -- they run the same GreenCalcServlet
-	// 	ServerIO.load("https://as.good-loop.com/greencalc", {data, swallow: true});
-	// });
 
 	return DataStore.fetch(['misc', 'DataLog', 'green', md5(JSON.stringify(data))], () => {
-		// Chained promise: first get raw impression counts, then convert them to data and CO2 figures in chart-ready datasets
-		return ServerIO.load(ServerIO.DATALOG_ENDPOINT, {data, swallow: true}).then(({cargo}) => {
-			const tagsById = byId(tags);
-			
-			// What countries did we serve in, proportionally?
-			// TODO Insert a shim for unset countries
-			const countries = tagToCountryBreakdown(cargo.by_adid_country, tagsById);
-			// This will hold the transformed-for-ChartJS breakdowns
-			const datasets = {};
-
-			// Construct a fake breakdown that the code below will process into a "total" dataset
-			cargo.by_total_adid = { buckets: [{ key: 'total', by_adid: { buckets: cargo.by_adid.buckets } }] }
-
-			// For each requested breakdown...
-			Object.keys(cargo).forEach(key => {
-				 // Only process by_xxxx_adid breakdowns!
-				const matches = key.match(/by_(\w+)_adid/)
-				if (!matches) return;
-				const breakdownName = matches[1];
-				const { buckets } = cargo[key]; // These will be the buckets for the outer breakdown - eg by_time_adid for time/adid
-
-				const labels = [];
-				const imps = [];
-				const bytes = {total: [], media: [], publisher: [], dsp: []};
-				const kgCarbon = {total: [], media: [], publisher: [], dsp: []};
-
-				// For each entry in the breakdown, calculate data usage
-				// and carbon emissions and append to the data series
-				buckets.forEach(({key, by_adid}) => {
-					if (breakdownName === 'total') {
-						// debugger;
-					}
-					labels.push(key);
-					// total impressions for this bucket = sum counts of all bottom-level buckets
-					imps.push(by_adid.buckets.reduce((acc, {count}) => acc + count, 0));
-					// calculate the data transfer for impressions in this bucket
-					const thisBytes = calcBytes(by_adid.buckets, tagsById);
-					// append each sub-value of the calculated data transfer to its corresponding array
-					// eg append calcBytes.total to bytes['total'], calcBytes.media to bytes['media'] etc
-					const tagFractions = bucketsToFractions(by_adid.buckets); // fraction of this bucket's impressions corresponding to each tag ID
-					Object.entries(thisBytes).forEach(([key, value]) => {
-						bytes[key].push(value);
-						// calculate carbon for each sub-value and append that too
-						kgCarbon[key].push(bytesToCarbon(value, tagsById, tagFractions, countries));
-					});
-				});
-				datasets[breakdownName] = { labels, imps, bytes, kgCarbon };
-			});
-			
-			return datasets;
-		});
+		// table of publisher, impressions, carbon rows
+		return ServerIO.load(ServerIO.GREENCALC_ENDPOINT, {data, swallow: true});
 	}); // /fetch()
+};
+
+/**
+ * 
+ * @param {Object[][]} table 
+ * @returns {?PromiseValue} PV of a List of Campaigns
+ */
+export const getCampaigns = (table) => {
+	if (!table) return null;
+
+	const tagIdSet = {};
+	table.forEach((row, i) => {
+		if (i === 0) return;
+		let adid = row[4];
+		if (adid && adid !== 'unset') {
+			tagIdSet[adid] = true;
+		}
+	});
+
+	const ids = Object.keys(tagIdSet);
+	if (!ids.length) return null;
+
+	// ??does PUB_OR_DRAFT work properly for `ids`??
+
+	let pvTags = getDataList({type: C.TYPES.GreenTag, status: KStatus.PUB_OR_DRAFT, ids});
+
+	return PromiseValue.then(pvTags, tags => {
+		let cidSet = {};
+		List.hits(tags).forEach(tag => {
+			if (tag && tag.campaign) {
+				cidSet[tag.campaign] = true;
+			}
+		});
+		let cids = Object.keys(cidSet);
+		let pvcs = getDataList({type: C.TYPES.Campaign, status: KStatus.PUB_OR_DRAFT, ids: cids});
+		// TODO have PromiseValue.then() unwrap nested PromiseValue
+		return pvcs;
+	});
+};
+
+/**
+ * 
+ * @returns {?Impact} null if loading data
+ */
+export const calculateDynamicOffset = ({campaign, offset}) => {
+	Campaign.assIsa(campaign);
+	if ( ! Impact.isDynamic(offset)) return offset; // paranoia
+	let n;
+	// HACK: carbon offset?
+	if (Impact.isCarbonOffset(offset)) {
+		let sq = SearchQuery.setProp(null, "campaign", campaign.id);
+		let pvCarbonData = getCarbon({q:sq.query, start:"2022-01-01", end:"now"});
+		if ( ! pvCarbonData.value) {
+			return null;
+		}
+		let table = pvCarbonData.value.table;
+		let totalEmissions = getSumColumn(table, "totalEmissions");
+		n = totalEmissions;
+	} else {
+		// check it is per impression
+		if (offset.input) assert(offset.input.substring(0, "impression".length) === "impression", offset);
+		// how many impressions?
+		let impressions = Campaign.viewcount({campaign});
+		console.log("impressions", impressions, campaign);
+		if ( ! impressions) {
+			return null;
+		}
+		n = impressions * offset.rate;
+	}
+	// copy and set n
+	let snapshotOffset = new Impact(offset);	
+	snapshotOffset.n = n;
+	delete snapshotOffset.rate;
+	delete snapshotOffset.input;	
+	return snapshotOffset;
+};
+
+/**
+ * 
+ * @returns {Object} {isLoading:boolean, carbon: [], carbonTotal: Number, trees: [], treesTotal:Number, coral: [], pvAllCampaigns }
+ */
+export const getOffsetsByType = ({campaign, status}) => {
+	let pvAllCampaigns;
+	// Is this a master campaign?
+	if (Campaign.isMaster(campaign)) {
+		pvAllCampaigns = Campaign.pvSubCampaigns({campaign, status});
+	} else {
+		pvAllCampaigns = new PromiseValue(new List([campaign]));
+	}
+	const allFixedOffsets = [];
+	if (pvAllCampaigns.value) {
+		// for each campaign:
+		// - collect offsets
+		// - Fixed or dynamic offsets? If dynamic, get impressions
+		// - future TODO did it fund eco charities? include those here		
+		List.hits(pvAllCampaigns.value).forEach(campaign => {
+			let offsets = Campaign.offsets(campaign);
+			let fixedOffsets = offsets.map(offset => Impact.isDynamic(offset)? calculateDynamicOffset({campaign, offset}) : offset);
+			allFixedOffsets.push(...fixedOffsets);
+		});				
+		console.log("allFixedOffsets", allFixedOffsets);
+	}
+	const offsets4type = {};
+	// HACK - return this too
+	offsets4type.pvAllCampaigns = pvAllCampaigns;
+	// kgs of CO2
+	let co2 = campaign.co2; // manually set for this campaign?
+	let carbonOffsets;
+	if ( ! co2) {	// from offsets inc dynamic
+		carbonOffsets = allFixedOffsets.filter(o => Impact.isCarbonOffset(o));
+		co2 = carbonOffsets.reduce((x,offset) => x + offset.n, 0);
+	} else {
+		// HACK use our default, gold-standard
+		carbonOffsets = [new Impact({charity:"gold-standard",rate:1,name:"carbon offset"})];
+	}
+	offsets4type.carbon = carbonOffsets;
+	offsets4type.carbonTotal = co2;
+
+	// Trees	
+	offsets4type.trees = allFixedOffsets.filter(o => o?.name?.substring(0,4)==="tree");	
+	offsets4type.treesTotal = offsets4type.trees.reduce((x,offset) => x + offset.n, 0);
+
+	// coral
+	offsets4type.coral = allFixedOffsets.filter(o => o?.name?.substring(0,4)==="coral");	
+	offsets4type.coralTotal = offsets4type.coral.reduce((x,offset) => x + offset.n, 0);
+
+	let isLoading = ! pvAllCampaigns.resolved || allFixedOffsets.includes(null);
+	offsets4type.isLoading = isLoading;
+	return offsets4type;
 };

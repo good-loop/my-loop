@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
-
+import PromiseValue from 'promise-value';
 import { Alert, Button, Col, Container, Row } from 'reactstrap';
+
 // import ChartWidget from '../../../base/components/ChartWidget';
 import DataStore from '../../../base/plumbing/DataStore';
 import printer from '../../../base/utils/printer';
-import C from '../../../C';
-import KStatus from '../../../base/data/KStatus';
+import List from '../../../base/data/List';
 import Misc from '../../../base/components/Misc';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
-import { getDataLogData } from '../../../base/plumbing/DataLog';
-import { getDataList } from '../../../base/plumbing/Crud';
+import ErrAlert from '../../../base/components/ErrAlert';
 
-import { getPeriodQuarter, GreenCard, periodFromUrl, printPeriod } from './dashutils';
-import { getCarbon } from './carboncalc';
+import { GreenCard, periodFromUrl, printPeriod } from './dashutils';
+import { getCampaigns, getCarbon, getSumColumn } from './carboncalc';
 
 import GreenDashboardFilters from './GreenDashboardFilters';
 import BreakdownCard from './BreakdownCard';
@@ -21,14 +20,23 @@ import TimeSeriesCard from './TimeSeriesCard';
 import CompareCard from './CompareCard';
 import TimeOfDayCard from './TimeOfDayCard';
 import { modifyPage } from '../../../base/plumbing/glrouter';
+import { getDataList } from '../../../base/plumbing/Crud';
+import C from '../../../C';
+import KStatus from '../../../base/data/KStatus';
+import { getId, getName } from '../../../base/data/DataClass';
+
 
 
 const OverviewWidget = ({period, data}) => {
+	// console.log("OverviewWidget data", data);
+	let total = getSumColumn(data.table, "count");
 	return (
 		<Row className="greendash-overview mb-2">
 			<Col xs="12">
 				<span className="period mr-4">{printPeriod(period)}</span>
-				<span className="impressions">Impressions served: <span className="impressions-count">{printer.prettyInt(data.total.imps[0])}</span></span>
+				<span className="impressions">Impressions served: 
+					<span className="impressions-count">{printer.prettyInt(total)}</span>
+				</span>
 			</Col>
 		</Row>
 	);
@@ -54,92 +62,10 @@ const CTACard = ({}) => {
 };
 
 
-/** Extract the time period filter from URL params if present - if not, apply "current quarter" by default */
-const initPeriod = () => {
-	let period = periodFromUrl();
-	if (!period) {
-		period = getPeriodQuarter();
-		modifyPage(null, {period: period.name});
-	}
-	return period;
-};
-
-
-/**
- * Get a list of parent objects to each item in a PV which may or may not have resolved
- * @param {*} parentType Type of parent to retrieve - expects to find parent ID under this key in each child
- * @param {*} pvChildren PV which should resolve to the items to get parents of
- * @returns 
- */
-const getParentThings = (parentType, pvChildren) => {
-	if (!pvChildren || !pvChildren.value) return {};
-	const children = pvChildren.value.hits;
-
-	const typeKey = parentType.toLowerCase(); // eg 'Advertiser' to 'advertiser'
-
-	// eg IDs = [child1.advertiser, child2.advertiser] - go through reduce->object->keys to dedupe
-	const ids = Object.keys(children.reduce((acc, child) => {
-		acc[child[typeKey]] = true;
-		return acc;
-	}, {}));
-	return getDataList({ type: parentType, status: KStatus.PUBLISHED, ids});
-};
-
-/**
- * Get a list of child objects to each item in a PV which may or may not have resolved
- * @param {*} childType Type of child to retrieve
- * @param {*} parentType Type of parents - will query for children with parent ID under this key
- * @param {*} pvParents PV which should resolve to the items to get children of
- */
-const getChildThings = (childType, parentType, pvParents) => {
-	if (!pvParents || !pvParents.value) return {};
-	const parents = pvParents.value.hits;
-
-	const typeKey = parentType.toLowerCase(); // eg 'Advertiser' to 'advertiser'
-
-	// eg 'advertiser:J0ZxYQK OR advertiser:kWyJ1Bo'
-	const q = parents.map(thing => `${typeKey}:${thing.id}`).join(' OR ');
-	return getDataList({ type: childType, status: KStatus.PUBLISHED, q});
-}
-
-
-/**
- * Get all Advertiser, Campaign and Tag objects which pertain to the current filters.
- * Only expects one argument to be non-falsy.
- * @param {String?} brandId ID of the Advertiser to filter on
- * @param {String?} campaignId ID of the Campaign to filter on
- * @param {String?} tagId ID of the GreenTag to filter on
- */
-const getGreenDashObjects = (brandId, campaignId, tagId) => {
-	let pvBrands, pvCampaigns, pvTags;
-
-	if (campaignId) {
-		// Get the campaign, the brand it belongs to, and any green tags under it.
-		pvCampaigns = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUBLISHED, ids: [campaignId] });
-		pvTags = getDataList({ type: C.TYPES.GreenTag, status: KStatus.PUBLISHED, q: `campaign:${campaignId}` });
-		pvBrands = getParentThings(C.TYPES.Advertiser, pvCampaigns);
-	} else if (brandId) {
-		// Get the brand, any campaigns under it, and any green tags under those.
-		pvBrands = getDataList({ type: C.TYPES.Advertiser, status: KStatus.PUBLISHED, ids: [brandId] });
-		pvCampaigns = getChildThings(C.TYPES.Campaign, pvBrands);
-		pvTags = getChildThings(C.TYPES.GreenTag, C.TYPES.Campaign, pvCampaigns);
-	} else if (tagId) {
-		// Get the green tag, the campaign it belongs to, and the brand that belongs to.
-		pvTags = getDataList({ type: C.TYPES.GreenTag, status: KStatus.PUBLISHED, ids: [tagId] });
-		pvCampaigns = getParentThings(C.TYPES.Campaign, pvTags);
-		pvBrands = getParentThings(C.TYPES.Advertiser, pvCampaigns);
-	} else {
-		return {};
-	}
-
-	return { pvBrands, pvCampaigns, pvTags };
-}
-
-
-const GreenMetrics = ({}) => {
+const GreenMetrics2 = ({}) => {
 	// Only for logged-in users!
-	if (!Login.isLoggedIn()) {
-		return <div className="green-subpage green-metrics">
+	if ( ! Login.isLoggedIn()) {
+		return <div>
 			<h3 className="text-center">Log in to access the Green Dashboard</h3>
 			<Container>
 				<Row>
@@ -152,106 +78,149 @@ const GreenMetrics = ({}) => {
 	}
 
 	// Default to current quarter, all brands, all campaigns
-	const period = initPeriod();
+	const period = periodFromUrl();
+	if (!period) return; // Filter widget will set this on first render - allow it to update
 	const brandId = DataStore.getUrlValue('brand');
 	const campaignId = DataStore.getUrlValue('campaign');
 	const tagId = DataStore.getUrlValue('tag');
 
-	const { pvBrands, pvCampaigns, pvTags } = getGreenDashObjects(brandId, campaignId, tagId);
-
-	useEffect(() => {
-		// Remove dashboard-specific URL params on unmount (ie navigating away)
-		// TODO Reinstate (currently scrubs state on error)
-		// return () => {
-		// 	DataStore.setUrlValue('period', null);
-		// 	DataStore.setUrlValue('start', null);
-		// 	DataStore.setUrlValue('end', null);
-		// 	DataStore.setUrlValue('campaign', null);
-		// 	DataStore.setUrlValue('brand', null);
-		// 	DataStore.setUrlValue('tag', null);
-		// };
-	}, []);
+	// const { pvBrands, pvCampaigns, pvTags } = getGreenDashObjects(brandId, campaignId, tagId);
 
 	// What are we going to filter on? ("adid" rather than "tag" because that's what we'll search for in DataLog)
 	const filterMode = campaignId ? 'campaign' : brandId ? 'brand' : tagId ? 'adid' : null;
 	// Get the ID for the object we're filtering for
 	const filterId = {campaign: campaignId, brand: brandId, adid: tagId}[filterMode];
 
-	// What are we going to populate the page with?
+	if (!filterMode) {
+		return <Alert color="info">Select a brand, campaign, or tag to see data.</Alert>;
+	} 
+	
+	// Fetch common data for CO2Card and BreakdownCard.
+	// JourneyCard takes all-time data, CompareCard sets its own time periods, TimeOfDayCard overrides time-series interval
+	// ...but give them the basic filter spec so they stay in sync otherwise
+	const baseFilters = {
+		q: `${filterMode}:${filterId}`,
+		start: period.start.toISOString(),
+		end: period.end.toISOString(),
+	};
+
+	const pvChartData = getCarbon({
+		...baseFilters,
+	});
+	let pvCampaigns = getCampaigns(pvChartData.value?.table);
+	if (pvCampaigns && PromiseValue.isa(pvCampaigns.value)) { // HACK unwrap nested PV
+		pvCampaigns = pvCampaigns.value;
+	}
+
+	if (!pvChartData.resolved) {
+		return <Misc.Loading text="Fetching campaign lifetime data..." />;
+	}
+	if (!pvChartData.value) {
+		return <ErrAlert error={pvChartData.error} color="danger" />;
+	}
+
+	const commonProps = { period, baseFilters };
+	// Removed (temp?): brands, campaigns, tags
+
+	return (<>
+		<OverviewWidget period={period} data={pvChartData.value} />
+		<Row className="card-row">
+			<Col xs="12" sm="8" className="flex-column">
+				<TimeSeriesCard {...commonProps} data={pvChartData.value} />
+			</Col>
+			<Col xs="12" sm="4" className="flex-column">
+				<JourneyCard campaigns={List.hits(pvCampaigns?.value)} {...commonProps} />
+			</Col>
+		</Row>
+		<Row className="card-row">
+			<Col xs="12" sm="4" className="flex-column">
+				<CompareCard {...commonProps} />
+			</Col>
+			<Col xs="12" sm="4" className="flex-column">
+				<BreakdownCard {...commonProps} data={pvChartData.value} />
+			</Col>
+			<Col xs="12" sm="4" className="flex-column">
+				<TimeOfDayCard {...commonProps} />
+				<CTACard />
+			</Col>
+		</Row>
+		</>
+	);
+};
+
+
+const SelectAgency = ({agencyIds}) => {
+	const [agencies, setAgencies] = useState(null);
+
+	// Fetch agencies from portal so we can use names
+	useEffect(() => {
+		getDataList({
+			type: C.TYPES.Agency,
+			status: KStatus.PUB_OR_DRAFT,
+			ids: agencyIds
+		}).promise.then(res => {
+			if (!res?.hits) {
+				setAgencies([]);
+				return;
+			}
+			setAgencies(res.hits);
+		});
+	}, agencyIds);
+
+	if (!agencies) return <Misc.Loading text="Fetching your agencies..." />
+
+	return <div className="select-agency">
+		<h3>Select your agency</h3>
+		<p>You have access to multiple agencies. Pick one to see its brands, campaigns, and Green Ad Tags.</p>
+		{agencies.map(agency => (
+			<Button className="mb-2" onClick={() => modifyPage(null, {agency: getId(agency)})} key={getId(agency)}>
+				{getName(agency)}
+			</Button>
+		))}
+	</div>;
+};
+
+
+const GreenMetrics = ({}) => {
+	const [agencyIds, setAgencyIds] = useState();
+	const agencyId = DataStore.getUrlValue('agency');
+
+	// All our filters etc are based user having at most access to one agency
+	// Group M users will have multiple, so start by selecting one.
+	useEffect(() => {
+		Login.getSharedWith().then(res => {
+			if (!res?.cargo) {
+				setAgencyIds([]);
+				return;
+			}
+
+			setAgencyIds(res.cargo.map(share => {
+				const matches = share.item.match(/^Agency:(\w+)$/);
+				if (!matches) return null;
+				return matches[1];
+			}).filter(a => !!a));
+		});
+	}, [Login.getId()])
+
 	let content;
 
-	if (!filterMode) {
-		content = <div><Alert color="info">Select a brand, campaign, or tag to see data.</Alert></div>;
-	} else if (!pvTags.resolved || !pvBrands.resolved || !pvCampaigns.resolved) {
-		content = <Misc.Loading text="Fetching your tag data..." />;
-	} else if (!pvTags.value.hits.length) {
-		content = <div><Alert color="danger">Couldn't find Green Ad Tags for {filterMode}: {filterId}</Alert></div>;
-	} else if (!pvBrands.value.hits.length) {
-		content = <div><Alert color="danger">Couldn't find brand data for {filterMode}: {filterId}</Alert></div>;
-	} else if (!pvCampaigns.value.hits.length) {
-		content = <div><Alert color="danger">Couldn't find campaign data for {filterMode}: {filterId}</Alert></div>;
-	}
-	
-	// No content yet = all objects loaded! Time to fetch data and start calculating carbon.
-	if (!content) {
-		const brands = pvBrands.value.hits;
-		const campaigns = pvCampaigns.value.hits;
-		const tags = pvTags.value.hits;
+	if (!agencyIds) {
+		content = <Misc.Loading text="Checking your access..." />;
+	}else if (agencyIds.length && !agencyId) {
+		content = <SelectAgency agencyIds={agencyIds} />;
+	} else {
+		content = <>
+			<GreenDashboardFilters />
+			<GreenMetrics2 />
+		</>;
+	};
 
-		// Fetch common data for CO2Card and BreakdownCard.
-		// JourneyCard takes all-time data, CompareCard sets its own time periods, TimeOfDayCard overrides time-series interval
-		// ...but give them the basic filter spec so they stay in sync otherwise
-		const baseFilters = {
-			q: `${filterMode}:${filterId}`,
-			start: period.start.toISOString(),
-			end: period.end.toISOString(),
-		};
 
-		const pvChartData = getCarbon({
-			...baseFilters,
-			breakdowns: ['time', 'os'],
-			tags,
-		});
-
-		const commonProps = { period, brands, campaigns, tags, baseFilters };
-	
-		if (pvChartData.resolved) {
-			content = <>
-				<OverviewWidget period={period} data={pvChartData.value} />
-				<Row className="card-row">
-					<Col xs="12" sm="8" className="flex-column">
-						<TimeSeriesCard {...commonProps} data={pvChartData.value} />
-					</Col>
-					<Col xs="12" sm="4" className="flex-column">
-						<JourneyCard {...commonProps} />
-					</Col>
-				</Row>
-				<Row className="card-row">
-					<Col xs="12" sm="4" className="flex-column">
-						<CompareCard {...commonProps} />
-					</Col>
-					<Col xs="12" sm="4" className="flex-column">
-						<BreakdownCard {...commonProps} data={pvChartData.value} />
-					</Col>
-					<Col xs="12" sm="4" className="flex-column">
-						<TimeOfDayCard {...commonProps} />
-						<CTACard />
-					</Col>
-				</Row>
-			</>;
-		} else {
-			content = <Misc.Loading text="Fetching campaign lifetime data..." />;
-		}
-	}
-
-	return (
-		<div className="green-subpage green-metrics">
+	return <div className="green-subpage green-metrics">
 			<Container fluid>
-				<GreenDashboardFilters />
 				{content}
 			</Container>
-		</div>
-	);
+		</div>;
 };
 
 export default GreenMetrics;

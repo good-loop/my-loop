@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Misc from '../../../base/components/Misc';
+import Campaign from '../../../base/data/Campaign';
+import DataStore from '../../../base/plumbing/DataStore';
 
 import { A } from '../../../base/plumbing/glrouter';
 import { encURI } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
-import { getCarbon } from './carboncalc';
+import { getOffsetsByType } from './carboncalc';
 import { GreenCard, GreenCardAbout, Mass } from './dashutils';
 
 
@@ -14,38 +16,24 @@ const Cloud = ({style}) => (
 	</svg>
 );
 
-/** Show mass of CO2 emitted and offset by the campaigns in focus 
+/** Show mass of CO2 emitted and offset by the campaigns in focus
  * 
  * ??Let's rename all co2 variables to be eg "co2OffsetKgs" for clarity
  * 
 */
-const CO2Section = ({co2Offset, co2Emitted}) => {
-	let cloudMessage = null;
-	if (co2Offset && co2Emitted) {
-		cloudMessage = (co2Offset < co2Emitted) ? (
-			<>Offsets<br/>Pending</>
-		) : (
-			<>Carbon<br/>Neutral</>
-		);
-	}
-	
-	return <>
-		<div className="cloud-indicator">
-			<Cloud style={{fill: '#8bc'}} />
-			<h3 className="cloud-message">{cloudMessage}</h3>
-		</div>
-		<h3 className="carbon-offset-total">
-			{co2Offset ? <><Mass kg={co2Offset} /> of carbon offset</> : 'Fetching carbon offset...'}
-		</h3>
-		<h3 className="carbon-emission-total">
-			{co2Emitted ? <><Mass kg={co2Emitted} /> emitted</> : 'Fetching total emissions...'}
-		</h3>
-	</>
-};
+const CO2Section = ({co2Offset, co2Emitted}) => <>
+	<div className="cloud-indicator">
+		<Cloud style={{fill: '#8bc'}} />
+	</div>
+	<h3 className="carbon-offset-total">
+		{co2Offset !== null ? <><Mass kg={co2Offset} /> of carbon offset</> : 'Fetching carbon offset...'}
+	</h3>
+</>;
+
 
 /** Show number of trees planted by the campaigns in focus */
-const TreesSection = ({treesPlanted}) => {
-	if (!treesPlanted) return null;
+const TreesSection = ({treesPlanted, coralPlanted}) => {
+	if (!treesPlanted && !coralPlanted) return null;
 
 	return <>
 		<div>
@@ -53,52 +41,67 @@ const TreesSection = ({treesPlanted}) => {
 			<img className="journey-tree" src="/img/green/tree-light.svg" />
 			<img className="journey-tree" src="/img/green/tree-light.svg" />
 		</div>
-		<h3>{printer.prettyInt(treesPlanted)} trees planted</h3>
+		{treesPlanted && <h3>{printer.prettyInt(treesPlanted)} trees planted</h3>}
+		{coralPlanted && <h3>{printer.prettyInt(coralPlanted)} pieces of coral planted</h3>}
 	</>;
 };
 
 
 /**
- * Show the lifetime carbon offsets & tree-planting of the current campaign set & compare estimated emissions.
+ * Show the carbon offsets & tree-planting of the current campaign set & compare estimated emissions.
  * @param {Object} props
- * @param {Campaign[]} props.campaigns The campaign(s) currently in focus
+ * @param {?Campaign[]} props.campaigns The campaign(s) currently in focus
  * @param {GreenTag[]} props.tags The green ad tag(s) currently in focus
  * @returns 
  */
-const JourneyCard = ({ campaigns, tags }) => {
-	if (!campaigns || !campaigns.length || !tags) {
-		return <Misc.Loading text="Fetching your tag data..." />;
+const JourneyCard = ({ campaigns, tags, baseFilters }) => {
+	if (!campaigns || !campaigns.length) {
+		return <Misc.Loading text="Fetching your campaign data..." />;
 	}
 
-	const [co2Emitted, setCo2Emitted] = useState(0);
-	const [offsets, setOffsets] = useState({co2: 0, trees: 0});
+	let isLoading;
+	const offsetTypes = "carbon trees coral".split(" ");
+	let offsets = {};
+	offsetTypes.forEach(ot => offsets[ot+"Total"] = 0);
+	campaigns.forEach(campaign => {
+		const offsets4type = getOffsetsByType({campaign});
+		offsetTypes.forEach( ot => offsets[ot+"Total"] += (offsets4type[ot+"Total"] || 0) );
+		if (offsets4type.isLoading) isLoading = true;
+	});
 
-	useEffect(() => {
-		// Different from the base data retrieved in GreenMetrics: no time limit (as it compares to all-time carbon offsets)
-		getCarbon({q: campaigns.map(c => `campaign:${c.id}`).join(' OR '), start: '1970-01-01', tags}).promise.then(value => {
-			setCo2Emitted(value.total.kgCarbon.total[0]);
-		});
-
-		// Total carbon offset / trees planted for all campaigns
-		setOffsets(
-			campaigns.reduce((acc, c) => {
-				if (c.co2) acc.co2 += c.co2;
-				if (c.trees) acc.trees += c.trees;
-				return acc;
-			}, {co2: 0, trees: 0})
-		);
-	}, [...campaigns]);
+	// Which impact splash page to link to?
+	// TODO test for an agency
+	// NB: We don't want to just link to the campaign in the url -- we want to always have a master campaign
+	let impactSplashPage;
+	let masterCampaigns = campaigns.filter(Campaign.isMaster);
+	if (masterCampaigns.length===1) {
+		impactSplashPage = "/green/"+encURI(masterCampaigns[0].id);
+	} else {
+		let masters = campaigns.map(Campaign.masterFor).filter(m => m.id);
+		if (masters.length) {
+			// HACK pick the first
+			let brandOrAgency = masters[0];
+			impactSplashPage = '/green?'+
+				({Agency: "agency", Advertiser: "brand"}[brandOrAgency.type])+"="+encURI(brandOrAgency.id);
+		}
+	}
 
 	return <GreenCard title="Your journey so far" className="carbon-journey">
-		<CO2Section co2Offset={offsets.co2} co2Emitted={co2Emitted} />
-		<TreesSection treesPlanted={offsets.trees} />
-		<A className="btn btn-primary" href={`/green/${encURI(campaigns[0].id)}`}>Impact Overview</A>
+		{isLoading? <Misc.Loading /> : <>
+			<CO2Section co2Offset={offsets.carbonTotal} />
+			<TreesSection treesPlanted={offsets.treesTotal} coralPlanted={offsets.coralTotal} />
+		</>}
+		{impactSplashPage && <A className="btn btn-primary" href={impactSplashPage}><BrandLogo campaigns={campaigns} /> Impact Overview</A>}
 		<GreenCardAbout>
-			<p>How do we calculate campaign lifetime carbon emissions?</p>
 			<p>What carbon offsets do we use?</p>
 			<p>What tree planting projects do we support?</p>
+			<p>Campaigns now have info on their non-CO2-offset projects!</p>
 		</GreenCardAbout>
 	</GreenCard>;
+};
+
+const BrandLogo = ({campaigns}) => {
+	return null; // TODO if campaigns all share one brand, then show the logo
 };
 
 export default JourneyCard;

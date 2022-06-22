@@ -1,19 +1,26 @@
 import React, { useState } from 'react';
-import { Col, Container, Row } from 'reactstrap';
+import _ from 'lodash';
+import { Badge, Col, Container, Row } from 'reactstrap';
 import Misc from '../../base/components/Misc';
 import { setNavProps } from '../../base/components/NavBar';
 import Campaign from '../../base/data/Campaign';
-import { getId } from '../../base/data/DataClass';
+import { getId, getType } from '../../base/data/DataClass';
 import KStatus from '../../base/data/KStatus';
+import List from '../../base/data/List';
 import { getDataItem } from '../../base/plumbing/Crud';
 import { getDataLogData } from '../../base/plumbing/DataLog';
 import DataStore, { getPath } from '../../base/plumbing/DataStore';
-import { encURI, space } from '../../base/utils/miscutils';
+import { encURI, space, uniq, yessy } from '../../base/utils/miscutils';
 import C from '../../C';
 import { Mass } from './greendash/dashutils';
 import GreenMap from './greendash/GreenMap';
-
-
+import Impact from '../../base/data/Impact';
+import { calculateDynamicOffset, getOffsetsByType } from './greendash/carboncalc';
+import { isTester } from '../../base/Roles';
+import LinkOut from '../../base/components/LinkOut';
+import ServerIO from '../../plumbing/ServerIO';
+import PromiseValue from 'promise-value';
+import DataItemBadge from '../../base/components/DataItemBadge';
 
 
 // TODO Design! and Content!
@@ -23,14 +30,29 @@ import GreenMap from './greendash/GreenMap';
 
 
 
-
-
 const GreenLanding = ({ }) => {
 	// like CampaignPage, this would prefer to run by a campaign id -- which should be the Brand's master campaign
 	const path = DataStore.getValue("location","path");
-	const cid = path[1] || Campaign.TOTAL_IMPACT;
-	const isTotal = cid===Campaign.TOTAL_IMPACT;
-	const status = DataStore.getUrlValue("status") || KStatus.PUBLISHED;
+	const status = DataStore.getUrlValue("status") || DataStore.getUrlValue("gl.status") || KStatus.PUBLISHED;
+	let cid = path[1]; 
+	if ( ! cid) {
+		// fetch the master campaign for ...?
+		let pvItem = null;
+		let brandId = DataStore.getUrlValue('brand');
+		if (brandId) {			
+			pvItem = getDataItem({type:C.TYPES.Advertiser, id:brandId, status, swallow:true});
+		} else if (DataStore.getUrlValue('agency')) {
+			pvItem = getDataItem({type:C.TYPES.Agency, id:DataStore.getUrlValue('agency'), status, swallow:true});
+		}
+		if (pvItem?.value) {
+			cid = pvItem.value.campaign; 
+			assert(cid, "No campaign for "+pvItem.value.id, pvItem);
+		}
+		if ( ! cid) {
+			cid = Campaign.TOTAL_IMPACT; // TODO not whilst loading; oh well
+		}
+	}	
+	const isTotal = cid===Campaign.TOTAL_IMPACT;	
 	const pvCampaign = getDataItem({type:C.TYPES.Campaign, id:cid, status});
 
 	// Green Ad Tags carry t=pixel d=green campaign=X adid=Y
@@ -46,13 +68,18 @@ const GreenLanding = ({ }) => {
 
 	if ( ! pvCampaign.value) {
 		return <Misc.Loading />
-	}
-	const campaign = pvCampaign.value;
-	// TODO only fetch eco charities
-	let dntn4charity = {} || Campaign.dntn4charity(campaign);
-	console.log(dntn4charity);
-	let co2 = campaign.co2;
-	let trees = campaign.offsets && campaign.offsets[0] && campaign.offsets[0].n;
+	}	
+	const campaign = pvCampaign.value;	
+	let offsets4type = getOffsetsByType({campaign});	
+	let isLoading = offsets4type.isLoading;
+	let pvAllCampaigns = offsets4type.pvAllCampaigns;
+	// load the charities
+	const carbonOffsets = offsets4type.carbon || [];
+	let co2 = offsets4type.carbonTotal;
+	const carbonCharityIds =uniq(carbonOffsets.map(offset => offset?.charity));
+	let carbonCharities = carbonCharityIds.map(cid => getDataItem({type:"NGO", id:cid, status:KStatus.PUBLISHED}).value).filter(x => x);
+
+	let trees = offsets4type.treesTotal;
 
 	// Branding
 	// NB: copy pasta + edits from CampaignPage.jsx
@@ -81,12 +108,20 @@ const GreenLanding = ({ }) => {
 				<img className="hummingbird" src="/img/green/hummingbird.png" />
 				<div className="splash-circle">
 					<div className="branding">{branding.logo ? <img src={branding.logo} alt="brand logo" /> : name}</div>
-					{co2 && <><div className="big-number tonnes"><Mass kg={co2} /></div> carbon offset</>}
-					{trees && <><div className="big-number trees">{trees}</div> trees</>}
+					{!!co2 && <><div className="big-number tonnes"><Mass kg={co2} /></div> carbon offset</>}
+					{!!trees && <><div className="big-number trees">{trees}</div> trees</>}
+					{isLoading && <Misc.Loading />}
 					<div className="carbon-neutral-container">
 						with <img className="carbon-neutral-logo" src="/img/green/gl-carbon-neutral.svg" />
 					</div>
 					<a className="btn splash-explore" onClick={scrollToMap}>EXPLORE OUR IMPACT</a>
+					{isTester() && pvAllCampaigns.value && // handy links for GL staff
+						<div>{List.hits(pvAllCampaigns.value).map(campaign => 
+							<LinkOut key={campaign.id} href={ServerIO.PORTAL_ENDPOINT+'/#campaign/'+encURI(campaign.id)}>
+								<Badge className='mr-2'>{campaign.name || campaign.id}</Badge>
+							</LinkOut>
+						)}</div>
+					}
 				</div>
 			</div>
 			<div className="mission py-4">
@@ -116,13 +151,18 @@ const GreenLanding = ({ }) => {
 						</Col>
 						<Col className="partner-text p-4" xs="12" sm="6">
 							<h2>OFFSETTING CARBON</h2>
-							<p>We help brands measure their digital campaign’s carbon costs in real time and see how they can reduce their footprint with our exciting new Green Ad Tag.</p>
+							<p>We help brands measure their digital campaign's carbon costs 
+								and see how they can reduce their footprint with our exciting new Green Ad Tag.</p>
+							{yessy(carbonOffsets) && <div>Offsets provided by: 
+								{carbonCharities.map((ngo,i) => <DataItemBadge className="mr-2" item={ngo} key={getId(ngo)} />)}
+							</div>}
 						</Col>
 					</Row>
 					<Row className="partnership trees no-gutters">
 						<Col className="partner-text p-4" xs="12" sm="6">
 							<h2>PLANTING TREES</h2>
-							<p>Our Green Media products plant trees via Eden Reforestation Projects where reforestation has a positive and long-lasting environmental and socio-economic impact.</p>
+							<p>Our Green Media products plant trees via Eden Reforestation projects 
+								where reforestation has a positive and long-lasting environmental and socio-economic impact.</p>
 						</Col>
 						<Col className="partner-image" xs="12" sm="6">
 							<img src="/img/green/eden-planting-mozambique.jpg" />

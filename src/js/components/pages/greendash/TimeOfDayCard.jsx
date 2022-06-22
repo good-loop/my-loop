@@ -5,68 +5,85 @@ import _ from 'lodash';
 import DataStore from '../../../base/plumbing/DataStore';
 import Misc from '../../../base/components/Misc';
 import NewChartWidget from '../../NewChartWidget';
-import { dataColours, GreenCard, GreenCardAbout, TONNES_THRESHOLD } from './dashutils';
-import { getCarbon } from './carboncalc';
+import { dataColours, GreenCard, GreenCardAbout, NOEMISSIONS, TONNES_THRESHOLD } from './dashutils';
+import { getBreakdownBy, getCarbon } from './carboncalc';
 
 
 const TimeOfDayCard = ({baseFilters, tags}) => {
 	const [chartProps, setChartProps] = useState();
 
 	if (!tags || !tags.length) {
-		return <Misc.Loading text="Fetching your tag data..." />;
+		// return <Misc.Loading text="Fetching your tag data..." />;
 	}
 
 	useEffect(() => {
-		// Different from the base data retrieved in GreenMetrics: time-series interval 1 hour instead of default 1 day
-		getCarbon({...baseFilters, breakdowns: ['time'], interval: '1 hour', tags}).promise.then(value => {
-			// Set up empty buckets for aggregation
-			const hourLabels = [];
-			let hourData = [];
-			for (let i = 0; i < 24; i += 3) {
-				hourLabels.push(`${((i+11)%12)+1} ${(i < 12 ? 'am' : 'pm')}`);
-				hourData.push(0);
+		getCarbon({...baseFilters, timeofday: true}).promise.then(res => {
+			if (res.table.length === 1) { // only header row = no data
+				setChartProps({isEmpty: true});
 			}
+			const labels = [];
+			const data = [];
 
-			// Aggregate impression counts into time-of-day buckets
-			value.time.labels.forEach((timeKey, i) => {
-				const hourKey = new Date(timeKey).getHours(); // hour in local time
-				hourData[Math.floor(hourKey / 3)] += value.time.kgCarbon.total[i]
-			});
+			// construct hourly breakdown and normalise to numeric hours
+			const hoursBreakdown = getBreakdownBy(res.table, 'totalEmissions', 'timeofday');
+
+			// group into 3-hour periods and copy to labels/data
+			for (let i = 0; i < 24; i++) {
+				const group = Math.floor(i / 3);
+				if (i === (group * 3)) {
+					labels.push(`${((i + 11) % 12) + 1} ${i < 12 ? 'am' : 'pm'}`);
+					data.push(hoursBreakdown[i]);
+				} else {
+					data[group] += hoursBreakdown[i];
+				}
+			}
 
 			let label = 'Kg CO2';
 			let tickFn = v => `${v} kg`;
-			const maxCarbon = Math.max(...hourData);
+			let tooltipFn = ctx => `${printer.prettyNumber(ctx.raw)} kg CO2`;
+			
+			const maxCarbon = Math.max(...data);
 			if (maxCarbon > TONNES_THRESHOLD) {
-				hourData = hourData.map(kg => kg / 1000);
+				data.forEach((kg, i) => data[i] = kg / 1000);
 				label = 'Tonnes CO2';
-				tickFn = v => `${v} tonnes`;
+				tickFn = v => `${v} t`;
+				tooltipFn = ctx => `${printer.prettyNumber(ctx.raw)} tonnes CO2`;
 			}
 
 			setChartProps({
 				data: {
-					labels: hourLabels,
+					labels,
 					datasets: [{
 						label,
-						data: hourData,
-						backgroundColor: dataColours(hourData),
+						data,
+						backgroundColor: dataColours(data),
 					}],
 				},
 				options: {
-					plugins: { legend: { display: false } },
+					plugins: {
+						legend: { display: false },
+						tooltip: { callbacks: { label: tooltipFn } },
+					},
 					scales: { y: { ticks: { callback: tickFn } } },
 				}
 			});
 		});
 	}, [baseFilters.q, baseFilters.start, baseFilters.end]);
 
+	let chartContent;
+	if (!chartProps) {
+		chartContent = <Misc.Loading text="Fetching time-of-day data..." />;
+	} else if (chartProps.isEmpty) {
+		chartContent = NOEMISSIONS;
+	} else {
+		chartContent = <>
+			<NewChartWidget type="bar" {...chartProps} />
+			<p className="text-center mb-0"><small>Time of day in your time zone ({Intl.DateTimeFormat().resolvedOptions().timeZone})</small></p>
+		</>;
+	}
 
 	return <GreenCard title="When are your ad carbon emissions highest?" className="carbon-time-of-day">
-		{chartProps ? <>
-			<NewChartWidget type="bar" data={chartProps.data} options={chartProps.options} />
-			<p className="text-center mb-0"><small>Time of day in your time zone ({Intl.DateTimeFormat().resolvedOptions().timeZone})</small></p>
-			</> : (
-			<Misc.Loading text="Fetching time-of-day data..." />
-		)}
+		{chartContent}
 		<GreenCardAbout>
 			<p>How do we break down the TOD of carbon emissions?</p>
 		</GreenCardAbout>
