@@ -77,7 +77,7 @@ const HomePage = ({spring}) => {
 
 const FindOutMoreSection = () => {
 
-	return (<><BG image='img/homepage/our-mission-bground.svg' center >
+	return (<><BG image='img/homepage/our-mission-bground.svg' center style={{backgroundPosition:'center top'}} >
 		<PageCard id="upper-cta" >
 			<div className='text-center'>
 				<div className='rasied text-white'>
@@ -257,7 +257,7 @@ const MovementCard = () => {
 	]
 
 	return(<>
-		<BG image='img/homepage/our-movement-bground.svg' center style={{backgroundPosition:'center bottom'}}>
+		<BG image='img/homepage/our-movement-bground-bg.svg' center style={{backgroundPosition:'center top',zIndex:'-2'}}>
 			<PageCard>
 				<div className="movement-blob position-relative d-flex align-items-center justify-content-center pb-5">
 					<img style={{maxWidth:'480px',zIndex:'1',margin:'0 -1rem'}} src="img/homepage/movement-blob-images.svg"/>
@@ -267,6 +267,7 @@ const MovementCard = () => {
 						<a className='color-gl-red font-weight-bold' href='#'><span style={{textDecoration:"underline"}}>Get Involved</span> →</a>
 					</div>
 				</div>
+				<img className='position-absolute w-100 join-our-movement-bg-front' src="img/homepage/our-movement-bground-front.svg" />
 			</PageCard>
 		</BG>
 		<PageCard className='text-center text-white bg-gl-light-blue pt-0'>
