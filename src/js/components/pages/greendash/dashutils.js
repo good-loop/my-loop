@@ -278,6 +278,8 @@ const dfltMinColour = [186, 9, 84];
  * @returns 
  */
 export const dataColours = (series, maxColour = dfltMaxColour, minColour = dfltMinColour) => {
+	if (!series.length) return [];
+	if (series.length === 1) return [`hsl(${maxColour[0]} ${maxColour[1]} ${maxColour[2]})`]
 	const max = Math.max(...series);
 	const min = Math.min(...series);
 	const range = max - min;

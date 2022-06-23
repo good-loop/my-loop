@@ -80,69 +80,66 @@ const HowItWorks = () => {
 
     const Section = ({i, title, subtitle, img, imgClassName, children}) => {
 
-        return <BG src={"/img/mydata/product-page/blob-"+i+".svg"} center size="contain" repeat="no-repeat"
-            className={space("how-it-works-section", i%2===0?"bg-gl-lighter-blue":"")}
-        >
-            <br/>
-            <ProductPageContainer>
-                <Row className={i%2===0 ? "flex-md-row-reverse" : ""}>
-                    <Col md={6}>
-                        <img src={img} className={space("mb-2", imgClassName)}/>
-                    </Col>
-                    <Col md={6} className="d-flex flex-column align-items-center justify-content-center">
-                        <p className="miniheader mb-0">{title}</p>
-                        <h2>{subtitle}</h2>
-                        <div className="px-3">
-                            {children}
-                        </div>
-                    </Col>
-                </Row>
-            </ProductPageContainer>
-            <img src={"/img/mydata/product-page/bubble-"+i+".png"} className={space("bubble d-inline-block d-md-none", i%2===0 ? "bubble-left" : "bubble-right")}/>
-            {/* Extra whitespace padding at bottom, to make sure BG image stretches enough to cover text */}
-            <br/>
-            <br/>
-            <br/>
-        </BG>;
+        return <Col md={4}>
+            <BG src={"/img/mydata/product-page/blob-"+i+".svg"} center size="contain" repeat="no-repeat"
+                className="how-it-works-section">
+                <br/>
+                <ProductPageContainer>
+                    <img src={img} className={space("mb-2", imgClassName)}/>
+                    <p className="miniheader mb-0">{title}</p>
+                    <h2>{subtitle}</h2>
+                    <div className="contents">
+                        {children}
+                    </div>
+                </ProductPageContainer>
+                <img src={"/img/mydata/product-page/bubble-"+i+".png"} className={space("bubble d-inline-block d-md-none", i%2===0 ? "bubble-left" : "bubble-right")}/>
+                {/* Extra whitespace padding at bottom, to make sure BG image stretches enough to cover text */}
+                <br/>
+                <br/>
+                <br/>
+            </BG>
+        </Col>;
     };
 
     return <div id="how-it-works" className="mt-md-5">
-        <div className="inner">
-            <div className="control-your-data-small">
-                <ProductPageContainer>
-                    <img src="/img/mydata/how-it-works.png" className="w-75"/>
+        <ProductPageContainer>
+            <div className="inner">
+                <div className="control-your-data-small">
+                        <img src="/img/mydata/how-it-works.png" className="padlocks"/>
+                        <br/>
+                        <h4>Control your data</h4>
+                        <p className="miniheader">Do good for free</p>
+                        <p className="px-2 subtext">It feels like our data is everywhere these days but at Good-Loop we believe we should all control our own data. By running ads with global brands, we've also learnt just how valuable consumer data is to advertisers. We've decided to unite these concepts to do good…</p>
+                        <img src="/img/homepage/Stars.png" className="star mx-auto"/>
+                </div>
+
+                <h1>Here's how it works:</h1>
+                <br/>
+
+                <Row className="px-md-4 py-md-2">
+                    <Section i={1} title="Your data in your hands" subtitle="Sign up securely" img="/img/mydata/padlock-careful.png" imgClassName="w-25">
+                        <p>
+                            Pick a charity you want to help and build a secure profile with us, selecting what data you want to provide.
+                        </p>
+                    </Section>
                     <br/>
-                    <h4>Control your data</h4>
-                    <p className="miniheader">Do good for free</p>
-                    <p className="px-2 px-md-5 mx-md-5">It feels like our data is everywhere these days but at Good-Loop we believe we should all control our own data. By running ads with global brands, we've also learnt just how valuable consumer data is to advertisers. We've decided to unite these concepts to do good…</p>
-                    <img src="/img/homepage/Stars.png" className="star mx-auto"/>
-                </ProductPageContainer>
+                    <Section i={2} title="Turning your data into donations" subtitle="Harness your data" img="/img/mydata/onboarding-3.png" imgClassName="w-75 mt-md-n5">
+                        <p>
+                            We channel relevant online adverts based on your info, and 50% of the advert fee goes to your chosen charity.
+                        </p>
+                    </Section>
+                    <br/>
+                    <Section i={3} title="Your in control" subtitle="Share to give" img="/img/mydata/profile-created.png" imgClassName="w-50">
+                        <p>
+                            The more data you choose to share, the more valuable it is to advertisers and the more you can raise for your charity!
+                        </p>
+                    </Section>
+                </Row>
+
+                <MyDataSignUpButton className="align-self-center" style={{zIndex:1}}/>
+                <br/>
             </div>
-
-            <h1>Here's how it works:</h1>
-            <br/>
-
-            <Section i={1} title="Your data in your hands" subtitle="Sign up securely" img="/img/mydata/padlock-careful.png" imgClassName="w-25">
-                <p>
-                    Pick a charity you want to help and build a secure profile with us, selecting what data you want to provide.
-                </p>
-            </Section>
-            <br/>
-            <Section i={2} title="Turning your data into donations" subtitle="Harness your data" img="/img/mydata/onboarding-3.png" imgClassName="w-75">
-                <p>
-                    We channel relevant online adverts based on your info, and 50% of the advert fee goes to your chosen charity.
-                </p>
-            </Section>
-            <br/>
-            <Section i={3} title="Your in control" subtitle="Share to give" img="/img/mydata/profile-created.png" imgClassName="w-50">
-                <p>
-                    The more data you choose to share, the more valuable it is to advertisers and the more you can raise for your charity!
-                </p>
-            </Section>
-
-            <MyDataSignUpButton className="align-self-center" style={{zIndex:1}}/>
-            <br/>
-        </div>
+        </ProductPageContainer>
     </div>;
 };
 
@@ -153,8 +150,8 @@ const ControlYourData = () => {
         <div className="under-curve">
             <ProductPageContainer>
                 <br/>
-                <Row>
-                    <Col md={6} className="d-flex flex-column justify-content-center align-items-center">
+                <Row className="flex-md-row-reverse">
+                    <Col md={6} className="d-flex flex-column justify-content-center align-items-center align-items-md-start px-md-5 text-md-left">
                         <h3>Control your data</h3>
                         <p>You have control over how your data is used and can choose what to make private and what to share</p>
                     </Col>
@@ -170,42 +167,30 @@ const ControlYourData = () => {
 const EarnDataBadge = () => {
 
     return <div className="earn-data-badge">
-        <img className="w-100 d-none d-md-inline-block" src="/img/curves/curve-white.svg"/>
-        <div className="bg-white">
-            <ProductPageContainer>
-                <div className="px-md-5 mx-md-5">
-                    <Row className="flex-md-row-reverse">
-                        <Col md={6} className="d-flex flex-column justify-content-center align-items-center">
-                            <h4>Earn your data badge</h4>
-                            <p className="miniheader text-md-center">It's quick and easy to start supporting the charity of your choice with your data!</p>
-                        </Col>
-                        <Col md={6}>
-                            <img src="/img/mydata/product-page/earn-badge.png" className="data-badge d-inline-block d-md-none"/>
-                            <img src="/img/mydata/data-cta.png" className="data-badge d-none d-md-inline-block"/>
-                        </Col>
-                    </Row>
-                    <br/>
-                    <br/>
-                    <div className="d-flex flex-row justify-content-center align-items-center">
-                        <MyDataSignUpButton/>
-                    </div>
-                    <br/>
-                </div>
-            </ProductPageContainer>
-        </div>
+        <ProductPageContainer className="px-2">
+            <h4 className="text-md-center align-self-start align-self-md-center">Earn your data badge</h4>
+            <p className="miniheader text-md-center">It's quick and easy to start supporting the charity of your choice with your data!</p>
+            <img src="/img/mydata/product-page/earn-badge.png" className="data-badge"/>
+            <br/>
+            <br/>
+            <div className="d-flex flex-row justify-content-center align-items-center">
+                <MyDataSignUpButton/>
+            </div>
+            <br/>
+        </ProductPageContainer>
     </div>;
 };
 
 const TransformYourData = () => {
     
-    return <div className="transform-your-data">
-        <div className="d-block d-md-none">
-            <ProductPageContainer className="px-3">
-                <h3 className="text-left">Transforming your data into charity donations</h3>
-                <p className="miniheader mb-0">Your questions answered</p>
-            </ProductPageContainer>
-            <BubblesHeader src="/img/mydata/product-page/photo-bubbles-data-two.png"/>
-        </div>
+    return <div className="transform-your-data bg-gl-pale-orange">
+        <br/>
+        <ProductPageContainer className="px-3">
+            <h3 className="text-left text-md-center">Transforming your data into charity donations</h3>
+            <p className="miniheader mb-0 text-md-center">Your questions answered</p>
+        </ProductPageContainer>
+        <BubblesHeader src="/img/mydata/product-page/photo-bubbles-data-two.png" className="d-md-none"/>
+        <img src="/img/mydata/product-page/lg-photo-bubbles-data-two.png" className="bubbles-header-lg d-none d-md-inline-block"/>
         <div className="overlap-up">
             <img src="/img/curves/curve-desat-blue.svg" className="w-100"/>
             <div className="faqs bg-gl-desat-blue">
@@ -298,6 +283,7 @@ const MyDataProductPage = () => {
             <HowItWorks/>
         </div>
         <ControlYourData/>
+        <br/>
         <EarnDataBadge/>
         <TransformYourData/>
 

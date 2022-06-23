@@ -26,11 +26,10 @@ const icons = {
 // According to "how bad are bananas" - a book by Mike Burners Lee
 // ...which is cited in this graphic: https://www.viessmann.co.uk/company/blog/the-carbon-footprint-of-nearly-everything 
 
-// -Boiling a litre of water using an electric kettle: 70g of carbon
-// -Driving a mile in an average car: 710g
-// -A plane journey from London to Hong Kong: 3.4 tonnes (this is 5982 miles, so 0.00056 tonnes per mile, or 568.99g)
+// -Boiling a litre of water using an electric kettle: 70g of carbon (but who boils a litre?? that's ~4 mugs worth)
 
-// Further sources for miles driven in a car: https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator
+// Miles driven in a car: https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator
+gives car-miles-per-ton: 2,482
 // Further sources for a long haul flight: https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2017 
 @returns {mode: {factor:units-per-kg, desc, icon}}
  */
@@ -44,7 +43,8 @@ const co2ImpactSpecs = {
 	kettles: {
 		factor: 0.07, 
 		desc: 'kettles boiled',
-		icon: icons.kettles
+		icon: icons.kettles,
+		src: "https://www.viessmann.co.uk/company/blog/the-carbon-footprint-of-nearly-everything"
 	},
 	driving: {
 		src: "https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator",
