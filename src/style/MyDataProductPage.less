@@ -66,9 +66,7 @@
     }
 
     .blue-gradient {
-        @media @width-mobile {
-            background: linear-gradient(180deg, @gl-white-blue 0%, @gl-lighter-blue 100%);
-        }
+        background: linear-gradient(180deg, @gl-white-blue 0%, @gl-lighter-blue 100%);
     }
 
     .bubble-container {
@@ -125,59 +123,81 @@
         text-align: center;
         background: white;
         border-radius: 10px;
+        position: relative;
     }
 
     #how-it-works {
 
+        padding: 1rem;
         padding-bottom: 50px;
         
-        @media @width-mobile {
-            padding: 1rem;
+        .container-lg {
+            @media @md-min {
+                width: 80%;
+                max-width: 80%;
+            }
         }
 
         .control-your-data-small {
-            @media @md-min {
-                background: @gl-lighter-blue;
-            }
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             position: relative;
-            transform: translateY(-15%);
+            margin-top: -5rem;
+            .padlocks {
+                width: 30%;
+                @media @width-mobile {
+                    width: 75%;
+                }
+            }
             h4, p {
                 text-align: center;
             }
             p.miniheader {
                 text-transform: capitalize;
             }
-            @media @width-mobile {
-                h4 {
-                    color: @gl-red;
-                }
-                p.miniheader {
-                    color: @gl-red;
+            h4 {
+                color: @gl-red;
+            }
+            p.miniheader {
+                color: @gl-red;
+            }
+            p.subtext {
+                @media @md-min {
+                    width: 50%;
                 }
             }
             .star {
                 width: 10%;
-                transform: translateY(50%);
                 @media @md-min {
                     width: 5%;
-                    transform: translateY(150%);
                 }
             }
         }
 
         .how-it-works-section {
             position: relative;
-            @media @md-min {
-                background-image: none !important;
-            }
-            @media @width-mobile {
-                background: none !important;
+            
+            // yes this is a sin but i can't find any other way to fit this text in the background blob images on MDPI/HiDPI laptop screens - vera
+            @media (max-width:1500px) {
+                @media (min-width: 1200px) {
+                    font-size: 0.8rem;
+                    h2 {
+                        font-size: 1.1rem;
+                    }
+                    .contents {
+                        padding: 0 !important;
+                    }
+                }
             }
 
+            .contents {
+                padding: 0 1.2rem;
+                max-width: 350px;
+                margin: auto;
+            }
+            
             .bubble {
                 position: absolute;
                 width: 20%;
@@ -200,10 +220,7 @@
 
     .control-your-data {
         text-align: center;
-        @media @md-min {
-            margin-top: -100px;
-            z-index: 0;
-        }
+        background: @gl-lighter-blue;
         h3, p {
             color: white;
         }
@@ -211,7 +228,7 @@
             font-weight: 600;
         }
         .phone-display {
-            width: 75%;
+            width: 100%;
             @media @width-mobile {
                 width: 100%;
             }
@@ -225,11 +242,14 @@
     }
 
     .earn-data-badge {
-        @media @md-min {
-            background: @gl-desat-blue;
+        .product-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         .data-badge {
-            width: 75%;
+            width: 60%;
             @media @width-mobile {
                 width: 100%;
             }
@@ -237,21 +257,32 @@
     }
 
     .transform-your-data {
+        position: relative;
         .bubble-container {
             margin-top: -50px;
         }
+        .bubbles-header-lg {
+            width: 75%;
+            position: absolute;
+            left: 50%;
+            top: 8%;
+            transform: translateX(-50%);
+        }
         .overlap-up {
-            margin-top: -100px;
+            @media @width-mobile {
+                margin-top: -100px;
+            }
         }
         .faqs {
             padding: 1rem;
             position: relative;
             .star-top {
                 position: absolute;
-                top: -150px;
+                top: -50px;
                 left: 50%;
                 transform: translate(-50%, 0);
                 width: 5%;
+                z-index: 1;
                 @media @width-mobile {
                     top: -5px;
                     width: 10%;

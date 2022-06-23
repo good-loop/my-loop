@@ -209,7 +209,7 @@ const MyLandingSection = ({title, bgImg}) => {
 	return (<>
 	<Container fluid className="home-landing-splash px-0" >
 		<BG minHeight={mobileWidth ? null : "32vw"} 
-		src={mobileWidth ? 'img/splash-screen/background-mobile.svg' : 'img/splash-screen/svg-bg-lg.svg'}
+		src={mobileWidth ? 'img/splash-screen/background-mobile.svg' : 'img/splash-screen/splash-screen-bground-lg.svg'}
 		className={mobileWidth ? null : 'd-flex justify-content-center align-items-center'}>
 		<img src='img/splash-screen/splash-screen-foreground.png' className="d-md-none d-block w-100" />
 		<img src='img/splash-screen/foreground-desktop.png' className="d-none d-md-block w-100 position-absolute" />
@@ -419,31 +419,34 @@ export const TabsForGoodSlideSection2 = ({ngo}) => {
 };
 
 const NewsAwards = ({nostars, children}) => {
-	const firstIMG="/img/pub-logos/campaign-logo.png";
-	const firstLink="https://www.campaignlive.co.uk/article/meet-start-up-helping-nestle-nike-unilever-unite-programmatic-purpose/1722847";
-	const secondIMG="/img/pub-logos/marketing-brew-logo.png" ;
-	const secondLink="https://www.morningbrew.com/marketing/stories/2021/11/24/good-loop-is-creating-tools-to-make-ad-tech-more-ethical-and-sustainable"				;
-	const thirdIMG="/img/pub-logos/forbes-logo.jpeg" ;
-	const thirdLink="https://www.forbes.com/sites/afdhelaziz/2020/06/25/goodloop-an-ethical-advertising-platform-that-allows-brands-to-spend-media-dollars-and-do-good-at-the-same-time-launches-in-the-united-states/?sh=22ac280c3987";
+
+	const imgs = [
+		"/img/pub-logos/forbes-logo.jpeg",
+		"/img/pub-logos/Herald.svg",
+		"/img/pub-logos/thetimes.png",
+		"/img/pub-logos/edinburghnews.png",
+		"/img/pub-logos/The_Scotsman_Logo.png"
+	];
+	const links = [
+		"https://www.forbes.com/sites/adrianswinscoe/2021/12/15/8-customer-experience-related-predictions-for-2022/?sh=53d361281577",
+		"https://www.heraldscotland.com/business_hq/19696906.applaud-cream-scotlands-digital-talent/",
+		"https://www.thetimes.co.uk/article/rising-stars-the-companies-growing-fast-in-scotland-k37hhdfnp",
+		"https://www.edinburghnews.scotsman.com/business/edinburgh-firm-behind-paradigm-shift-ad-model-nets-ps45-million-funding-boost-3584510",
+		"https://www.scotsman.com/news/opinion/columnists/going-global-is-next-step-for-smes-andrew-walker-3703432"
+	];
 
 	const StarsDiv = <div className="col align-items-center justify-content-center d-none d-md-flex"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>;
 	return(
 		<PageCard className="py-3">
 			<div className="text-center">
 				{children}
-				<div className="row">
+				<Row>
 					{!nostars && StarsDiv}
-					<div className="col">
-						<LinkOut href={firstLink}><img className='logo logo-xl' src={firstIMG} alt="" /></LinkOut>
-					</div>
-					<div className="col">
-						<LinkOut href={secondLink}><img className='logo logo-xl' src={secondIMG} alt="" /></LinkOut>
-					</div>
-					<div className="col">
-						<LinkOut href={thirdLink}><img className='logo logo-xl' src={thirdIMG} alt="" /></LinkOut>
-					</div>
+					{imgs.map((v, i) => <Col>
+						<LinkOut href={links[i]}><img className='logo logo-xl' src={v} alt="" /></LinkOut>
+					</Col>)}
 					{!nostars && StarsDiv}
-				</div>
+				</Row>
 			</div>
 		</PageCard>
 	)
@@ -452,15 +455,15 @@ const NewsAwards = ({nostars, children}) => {
 const TestimonialSectionTitle = () => {
 	// TODO fetch donationTotal From C.DONATIONS_TOTAL;
 	return(<>
-	<div className="testimonial-title">
-		<div className="container">
-			<div className="testimonial-upper text-center">
-				<h1>Together we've raised over £4.7 million!</h1>
-				<p className='leader-text' style={{marginBottom:"6rem"}}>We donate to charities worldwide. Spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
-				{/* <a className='btn btn-primary text-uppercase' href="#">Explore our charity impact</a> */}
+		<div className="testimonial-title">
+			<div className="container">
+				<div className="testimonial-upper text-center">
+					<h1>Together we've raised over £4.7 million!</h1>
+					<p className='leader-text' style={{marginBottom:"6rem"}}>We donate to charities worldwide. Spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
+					{/* <a className='btn btn-primary text-uppercase' href="#">Explore our charity impact</a> */}
+				</div>
 			</div>
 		</div>
-	</div>
 	</>
 	)
 };
