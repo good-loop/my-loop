@@ -8,7 +8,8 @@ import LinkOut from './base/components/LinkOut';
 import PropControl from './base/components/PropControl';
 import { Tab, Tabs } from './base/components/Tabs';
 import DataStore from './base/plumbing/DataStore';
-import { encURI, modifyHash } from './base/utils/miscutils';
+import { modifyPage } from './base/plumbing/glrouter';
+import { encURI } from './base/utils/miscutils';
 
 
 // FB img http://graph.facebook.com/67563683055/picture?type=square
@@ -162,7 +163,7 @@ const Card = ({ bg, ax, ay, aw, aimg, aflip, bx, by, bw, bimg, bflip, zIndex, fl
 		</div>
 		<p>
 			This e-card by Good-Loop is raising money for Centrepoint and Trees for the Future. For each card, we make a 10p donation to both charities.
-	Thank you for opening it. You can also send it on if you want using this <a href={modifyHash(['cardeditor'], { to: '', from: to }, true)}>card editor</a>.
+	Thank you for opening it. You can also send it on if you want using this <a href={modifyPage(['cardeditor'], { to: '', from: to }, true)}>card editor</a>.
 	</p>
 	</>);
 };

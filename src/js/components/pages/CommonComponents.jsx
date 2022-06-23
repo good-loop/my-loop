@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { RegisterLink, setLoginVerb, setShowLogin } from '../../base/components/LoginWidget';
 import { Col, Container, Row, Carousel, CarouselControl, CarouselItem, Button } from 'reactstrap';
 import BG from '../../base/components/BG';
-import { getBrowserVendor, isMobile, isPortraitMobile, modifyHash, scrollTo, space, stopEvent } from '../../base/utils/miscutils';
+import { getBrowserVendor, isMobile, isPortraitMobile, scrollTo, space, stopEvent } from '../../base/utils/miscutils';
 import C from '../../C';
 import Icon from '../../base/components/Icon';
 import LinkOut from '../../base/components/LinkOut';
