@@ -77,7 +77,7 @@ const HomePage = ({spring}) => {
 
 const FindOutMoreSection = () => {
 
-	return (<><BG image='img/homepage/our-mission-bground.svg' center style={{backgroundPosition:'center top'}} >
+	return (<><BG image='img/homepage/our-mission-background-lg.svg' style={{backgroundPosition:'center bottom'}} >
 		<PageCard id="upper-cta" >
 			<div className='text-center'>
 				<div className='rasied text-white'>
@@ -132,7 +132,7 @@ const SlideCardsSection = () => {
 				</Card>
 				<Card className='border shadow'>
 					<a id="mydata-cta" />
-					<CardImg className='bg-gl-blue' variant="top" src="img/homepage/onboarding.png" />
+					<CardImg className='bg-gl-lighter-blue' variant="top" src="img/homepage/my-data-product.png" />
 					<CardBody>
 						<div>
 							<CardTitle className='color-gl-red'>
@@ -257,7 +257,7 @@ const MovementCard = () => {
 	]
 
 	return(<>
-		<BG image='img/homepage/our-movement-bground-bg.svg' center style={{backgroundPosition:'center top',zIndex:'-2'}}>
+		<BG image='img/homepage/our-movement-bground-bg.svg' style={{backgroundPosition:'center top',zIndex:'-2'}}>
 			<PageCard>
 				<div className="movement-blob position-relative d-flex align-items-center justify-content-center pb-5">
 					<img style={{maxWidth:'480px',zIndex:'1',margin:'0 -1rem'}} src="img/homepage/movement-blob-images.svg"/>

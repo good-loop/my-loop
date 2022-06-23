@@ -209,7 +209,7 @@ const MyLandingSection = ({title, bgImg}) => {
 	return (<>
 	<Container fluid className="home-landing-splash px-0" >
 		<BG minHeight={mobileWidth ? null : "32vw"} 
-		src={mobileWidth ? 'img/splash-screen/background-mobile.svg' : 'img/splash-screen/svg-bg-lg.svg'}
+		src={mobileWidth ? 'img/splash-screen/background-mobile.svg' : 'img/splash-screen/splash-screen-bground-lg.svg'}
 		className={mobileWidth ? null : 'd-flex justify-content-center align-items-center'}>
 		<img src='img/splash-screen/splash-screen-foreground.png' className="d-md-none d-block w-100" />
 		<img src='img/splash-screen/foreground-desktop.png' className="d-none d-md-block w-100 position-absolute" />
