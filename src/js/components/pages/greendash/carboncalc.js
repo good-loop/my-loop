@@ -9,6 +9,7 @@ import Impact from '../../../base/data/Impact';
 import { encURI } from '../../../base/utils/miscutils';
 import Campaign from '../../../base/data/Campaign';
 import SearchQuery from '../../../base/searchquery';
+import { periodFromUrl } from './dashutils';
 
 /** Turn a list of things with IDs into an object mapping IDs to things */
 export const byId = things => things.reduce((acc, thing) => {
@@ -205,8 +206,10 @@ export const calculateDynamicOffset = ({campaign, offset, period}) => {
 	return snapshotOffset;
 };
 
-/**
- * 
+/** 
+ * @param {Object} p
+ * @param {!Campaign} p.campaign If `campaign` is a master, then this function WILL look up sub-campaigns and include them.
+ * @param {?Object} p.period {start, end}
  * @returns {Object} {isLoading:boolean, carbon: [], carbonTotal: Number, trees: [], treesTotal:Number, coral: [], pvAllCampaigns }
  */
 export const getOffsetsByType = ({campaign, status, period}) => {

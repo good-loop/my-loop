@@ -20,10 +20,12 @@ import TimeSeriesCard from './TimeSeriesCard';
 import CompareCard from './CompareCard';
 import TimeOfDayCard from './TimeOfDayCard';
 import { modifyPage } from '../../../base/plumbing/glrouter';
-import { getDataList } from '../../../base/plumbing/Crud';
+import { getDataItem, getDataList } from '../../../base/plumbing/Crud';
 import C from '../../../C';
 import KStatus from '../../../base/data/KStatus';
 import { getId, getName } from '../../../base/data/DataClass';
+import SearchQuery from '../../../base/searchquery';
+import Campaign from '../../../base/data/Campaign';
 
 
 
@@ -98,8 +100,26 @@ const GreenMetrics2 = ({}) => {
 	// Fetch common data for CO2Card and BreakdownCard.
 	// JourneyCard takes all-time data, CompareCard sets its own time periods, TimeOfDayCard overrides time-series interval
 	// ...but give them the basic filter spec so they stay in sync otherwise
+	let q = `${filterMode}:${filterId}`;
+	// HACK: Is this a master campaign? Do we need to cover sub-campaigns?
+	if (filterMode==="campaign") {
+		const pvCampaign = getDataItem({type:C.TYPES.Campaign, id:campaignId, status:KStatus.PUB_OR_DRAFT});
+		if ( ! pvCampaign.value) {
+			return <Misc.Loading text="Fetching campaign..." />;
+		}
+		const campaign = pvCampaign.value;
+		if (Campaign.isMaster(campaign)) {
+			const pvAllCampaigns = Campaign.pvSubCampaigns({campaign});
+			if ( ! pvAllCampaigns.resolved) {
+				return <Misc.Loading text="Fetching campaigns..." />;
+			}
+			const campaignIds = List.hits(pvAllCampaigns.value).map(c => c.id);
+			q = SearchQuery.setPropOr(null, "campaign", campaignIds).query;
+		}
+	}
+	
 	const baseFilters = {
-		q: `${filterMode}:${filterId}`,
+		q,
 		start: period.start.toISOString(),
 		end: period.end.toISOString(),
 	};
