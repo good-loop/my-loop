@@ -104,7 +104,9 @@ const GreenLanding = ({ }) => {
 	};
 
 	let pvShare = DataStore.fetch(['misc','share', campaign.id], () => Login.checkShare("Campaign:"+campaign.id));
-	console.warn("share", pvShare);
+	let pvShare2 = DataStore.fetch(['misc','share', campaign.id], () => Login.checkShare("Advertiser:"+campaign.vertiser));
+	let isShared = (pvShare.value && pvShare.value.read) || (pvShare2.value && pvShare2.value.read)
+	console.warn("share", pvShare, pvShare2);
 
 	return (
 		<div className="GreenLandingPage widepage">
@@ -119,7 +121,8 @@ const GreenLanding = ({ }) => {
 						with <img className="carbon-neutral-logo" src="/img/green/gl-carbon-neutral.svg" />
 					</div>
 					<a className="btn splash-explore" onClick={scrollToMap}>EXPLORE OUR IMPACT</a>
-					{Login.isLoggedIn() && pvShare.value && <a className="btn splash-explore">📊 REPORT DASHBOARD</a>}
+					{isShared && 
+						<a href={"/greendash/metrics?period=all&campaign="+encURI(campaign.id)} className="btn splash-explore mt-2">📊 REPORT DASHBOARD</a>}
 					{isTester() && pvAllCampaigns.value && // handy links for GL staff
 						<div>{List.hits(pvAllCampaigns.value).map(campaign => 
 							<LinkOut key={campaign.id} href={ServerIO.PORTAL_ENDPOINT+'/#campaign/'+encURI(campaign.id)}>
