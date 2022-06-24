@@ -46,11 +46,33 @@
                 }
             }
         }
-        .container-lg {
+        .landing-contents {
             position: relative;
             @media @md-min {
-                margin-top: -100px;
-                z-index: 2;
+                background: url("/img/mydata/product-page/mydata-background.svg");
+                background-position: center;
+                background-size: 120%;
+                background-repeat: no-repeat;
+                padding: 6rem 2rem;
+            }
+            .padlocks {
+                position: absolute;
+                width: 20%;
+                transform: translateY(-50%);
+            }
+            .padlock-left {
+                left: 0;
+                top: 50%;
+            }
+            .padlock-right {
+                right: 0;
+                top: 30%;
+            }
+            .subtext {
+                @media @md-min {
+                    width: 50%;
+                    margin: auto;
+                }
             }
         }
         p {
@@ -76,6 +98,7 @@
             width: 125%;
             @media @md-min {
                 width: 100%;
+                margin-bottom: 50px;
             }
             top: 50%;
             left: 50%;
@@ -236,7 +259,7 @@
         .under-curve {
             background: @gl-desat-blue;
             @media @md-min {
-                margin-top: -70px;
+                margin-top: -120px;
             }
         }
     }

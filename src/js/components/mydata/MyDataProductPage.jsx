@@ -26,25 +26,32 @@ const LandingSection = () => {
         scrollTo("how-it-works");
     }
 
-    const headerImg = isPortraitMobile() ? "/img/mydata/product-page/onboarding.png" : "/img/mydata/signup-about.png";
-
     return <div className="landing">
-        <div className="mydata-topimg">
+        <div className="mydata-topimg d-md-none">
             <img src="/img/curves/curve-white.svg" className="topimg-curve"/>
-            <img src={headerImg} className="w-100 topimg-graphic"/>
+            <img src="/img/mydata/product-page/onboarding.png" className="w-100 topimg-graphic"/>
         </div>
-        <Container fluid="lg">
-            <h1>My.Data</h1>
-            <h3>Harness your data to fund your favourite charity. For free</h3>
-            <br/>
-            <p className="px-md-5 mx-md-5">How many cookies have you accepted today? We give our data away all the time without even thinking about it. What if we could safely use our data to help fund good causes?</p>
-            <br/>
-            <div className="d-flex flex-column justify-content-center align-items-center">
-                <MyDataSignUpButton/>
+        <div className="landing-contents">
+            <Container fluid="lg">
+                <h1>My.Data</h1>
+                <h3>Harness your data to fund your favourite charity. For free</h3>
                 <br/>
-                <a onClick={scroll}>Find out more</a>
-            </div>
-        </Container>
+                <p className="subtext">How many cookies have you accepted today? We give our data away all the time without even thinking about it. What if we could safely use our data to help fund good causes?</p>
+                <br/>
+                <br/>
+                <div className="d-flex flex-column justify-content-center align-items-center">
+                    <MyDataSignUpButton/>
+                    <br/>
+                    <a onClick={scroll}>Find out more</a>
+                </div>
+                <img src="/img/mydata/product-page/left-coins-padlocks.png" className="padlocks padlock-left d-none d-md-inline-block"/>
+                <img src="/img/mydata/product-page/right-coins-padlocks.png" className="padlocks padlock-right d-none d-md-inline-block"/>
+            </Container>
+        </div>
+        <div className="d-flex flex-row justify-content-center align-items-center">
+            <img src="/img/mydata/product-page/charity-logos-mobile.png" className="w-75 mx-auto d-md-none"/>
+            <img src="/img/mydata/product-page/charity-logos-desktop.png" className="w-75 mx-auto d-none d-md-inline-block"/>
+        </div>
     </div>;
 };
 
@@ -58,7 +65,8 @@ const CommunityImpact = () => {
 
     return <ProductPageContainer className="community-impact text-center">
 
-        <BubblesHeader src="/img/mydata/product-page/photo-bubbles-data.png"/>
+        <BubblesHeader src="/img/mydata/product-page/photo-bubbles-data.png" className="d-md-none"/>
+        <BubblesHeader src="/img/mydata/product-page/lg-photo-bubbles-data.png" className="d-none d-md-inline-block"/>
 
         <br/>
         <h4 className="color-gl-dark-turquoise w-75 mx-auto">Add to our community impact with My.Data</h4>
@@ -149,7 +157,6 @@ const ControlYourData = () => {
         <img src="/img/curves/curve-desat-blue.svg" className="w-100"/>
         <div className="under-curve">
             <ProductPageContainer>
-                <br/>
                 <Row className="flex-md-row-reverse">
                     <Col md={6} className="d-flex flex-column justify-content-center align-items-center align-items-md-start px-md-5 text-md-left">
                         <h3>Control your data</h3>
@@ -178,12 +185,14 @@ const EarnDataBadge = () => {
             </div>
             <br/>
         </ProductPageContainer>
+        <br/>
     </div>;
 };
 
 const TransformYourData = () => {
     
     return <div className="transform-your-data bg-gl-pale-orange">
+        <br/>
         <br/>
         <ProductPageContainer className="px-3">
             <h3 className="text-left text-md-center">Transforming your data into charity donations</h3>
@@ -264,7 +273,25 @@ const TransformYourData = () => {
             </div>
         </div>
     </div>;
-}
+};
+
+const DiscoverMore = () => {
+    
+    return <ProductPageContainer className="discover-more">
+        <h2>Discover more</h2>
+        <Row>
+            <Col md={4}>
+                
+            </Col>
+            <Col md={4}>
+                
+            </Col>
+            <Col md={4}>
+                
+            </Col>
+        </Row>
+    </ProductPageContainer>
+};
 
 const MyDataProductPage = () => {
 
@@ -274,8 +301,6 @@ const MyDataProductPage = () => {
 
 	return (<>
         <LandingSection/>
-        <br/>
-        <br/>
         <div className="blue-gradient">
             <CommunityImpact/>
             <br/>

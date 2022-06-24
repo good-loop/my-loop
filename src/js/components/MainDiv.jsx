@@ -137,6 +137,7 @@ const MainDiv = () => {
 		navbarChildren={() => <><T4GSignUpButton>Get Tabs for Good on Desktop</T4GSignUpButton><T4GSignUpModal /></>}
 		navbarBackgroundColour="white"
 		navbarAccountMenuItems={accountMenuItems}
+		navbarAccountLinkText="My.Data"
 		NavExpandSize="md"
 		// navbarLabels={getNavbarLabels}
 		// We want everything to be full width on this site
