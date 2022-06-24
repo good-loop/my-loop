@@ -214,18 +214,18 @@ const StoriesSection = () => {
 
 const DiscoverMoreCard = () => {
 	const discoverContents = [
-		{img: 'img/placeholder-circle.png',
-		span: 'Download',
-		linkTitle: 'Impact Report',
-		href: 'https://good-loop.com/donations-report'},
-		{img: 'img/placeholder-circle.png',
+		{img: 'img/mydata/product-page/links-t4g.png',
+		span: 'Install',
+		linkTitle: 'Tabs for Good',
+		href: '/tabsforgood'},
+		{img: 'img/mydata/product-page/links-our-impact.png',
 		span: 'Explore',
 		linkTitle: 'Our Impact Hub',
 		href: '/impactoverview'},
-		{img: 'img/placeholder-circle.png',
+		{img: 'img/mydata/product-page/links-our-story.png',
 		span: 'Read',
-		linkTitle: 'Our Blog',
-		href: 'https://good-loop.com/good-news/index'},
+		linkTitle: 'Our Story',
+		href: '/ourstory'},
 	]
 
 	return(
