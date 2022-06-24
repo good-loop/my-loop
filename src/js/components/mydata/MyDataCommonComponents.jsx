@@ -225,7 +225,7 @@ export const isEmail = (email) => {
  export const getThisWeeksAd = () => {
 	// load ad from scheduledcontent
 	// TODO filter by start, end
-	let pvMyAds = getDataList({type:"ScheduledContent", status:KStatus.PUBLISHED, domain:ServerIO.PORTAL_ENDPOINT});		
+	let pvMyAds = getDataList({type:"ScheduledContent", status:KStatus.PUBLISHED, domain:ServerIO.PORTAL_ENDPOINT, swallow:true});		
 	let schedcon = pvMyAds.value && List.first(pvMyAds.value);
 	let adid = schedcon && schedcon.adid;
 

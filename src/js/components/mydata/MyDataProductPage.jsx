@@ -278,25 +278,37 @@ const TransformYourData = () => {
 const DiscoverMore = () => {
     
     return <ProductPageContainer className="discover-more">
-        <h2>Discover more</h2>
+        <br/>
+        <h2 className="w-100 text-md-center">Discover more</h2>
+        <br/>
         <Row>
-            <Col md={4}>
-                
+            <Col xs={4} className="d-flex flex-column align-items-center justify-content-center">
+                <img src="/img/mydata/product-page/links-t4g.png" className="link-circle"/>
+                <br/>
+                <p>Install</p>
+                <C.A href="/tabsforgood">Tabs for Good</C.A>
             </Col>
-            <Col md={4}>
-                
+            <Col xs={4} className="d-flex flex-column align-items-center justify-content-center">
+                <img src="/img/mydata/product-page/links-our-impact.png" className="link-circle"/>
+                <br/>
+                <p>Explore</p>
+                <C.A href="/impactoverview">Our Impact</C.A>
             </Col>
-            <Col md={4}>
-                
+            <Col xs={4} className="d-flex flex-column align-items-center justify-content-center">
+                <img src="/img/mydata/product-page/links-our-story.png" className="link-circle"/>
+                <br/>
+                <p>Read</p>
+                <C.A href="/ourstory">Our Story</C.A>
             </Col>
         </Row>
+        <br/>
     </ProductPageContainer>
 };
 
 const MyDataProductPage = () => {
 
 	useEffect(() => {
-		setFooterClassName('bg-gl-desat-blue');
+		setFooterClassName('bg-gl-white');
 	}, []);
 
 	return (<>
@@ -311,7 +323,7 @@ const MyDataProductPage = () => {
         <br/>
         <EarnDataBadge/>
         <TransformYourData/>
-
+        <DiscoverMore/>
         <MyDataSignUpModal/>
 	</>);
 };
