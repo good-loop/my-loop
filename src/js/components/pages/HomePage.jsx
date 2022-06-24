@@ -7,20 +7,12 @@ import { space } from '../../base/utils/miscutils'
 import DataStore from '../../base/plumbing/DataStore';
 import LandingSection, { springPageDown } from '../LandingSection';
 import {
-	TabsForGoodSlideSection,
-	HowTabsForGoodWorks,
 	NewsAwards,
-	WatchVideoSection,
-	TriCards,
-	TestimonialSectionTitle,
-	TestimonialSectionLower,
-	GetInvolvedSection,
-	CharityBanner,
+	LogoBanner,
 	MyLandingSection,
 	MyDataButton,
 	CurvePageCard,
 	PageCard,
-	TabsForGoodSlideSection2,
 	CurveTransition
 } from './CommonComponents';
 import BG from '../../base/components/BG';
@@ -49,28 +41,16 @@ const HomePage = ({spring}) => {
 
 	return (<>
 		<div className="HomePage widepage">
-			{/* <MyLandingSection shiftLeft/> */}
 			<MyLandingSection />
-			<CharityBanner />
+			<LogoBanner />
 			<FindOutMoreSection />
+			<LogoBanner logoList={['img/LandingBrand/H&M-Logo.png','img/LandingBrand/toms-shoes-logo.png','img/LandingBrand/universal-music-group-logo.png', 'img/LandingBrand/Logo_NIKE.png', 'img/LandingBrand/Unilever-logo.png']} />
 			<SlideCardsSection />
 			<NewsAwards nostars><h3 style={{fontWeight:'600'}}>As Featured In</h3></NewsAwards>
 			<CurveTransition hummingBird curveColour='light-pink' />
 			<StoriesSection />
 			<DiscoverMoreCard />
 			<MovementCard />
-			{/* <PositivePlaceSection className="blue-gradient"/>
-			<WatchVideoSection />
-			<CurvePageCard color='dark-turquoise' className='' bgClassName='bg-white' bgImg=''>
-				<TestimonialSectionTitle />
-			</CurvePageCard>
-			<TestimonialSectionLower />
-			<GetInvolvedSection />
-			<TriCards titles={["See How Our Ads Work", "Tabs for Good", "Our Story", ]}
-				texts={["Explore more examples of our campaigns", "Raise money for charity every time you open a new tab", "Meet the cofounders and discover the story of Good-Loop"]}
-				images={["img/homepage/good-loop-for-business.png", "img/homepage/slide-1.png", "img/homepage/amyanddaniel.png"]}
-				links={["impactoverview", "tabsforgood", "ourstory"]}
-			/> */}
 		</div>
 	</>);
 };

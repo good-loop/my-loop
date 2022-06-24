@@ -251,26 +251,22 @@ const CornerHummingbird = () => {
 	);
 }
 
-const CharityBanner = () => {
-    return <Container className="charity-icons my-5">
-        <Row className="text-center">
-					<Col className='d-none d-md-block'><img src="img/LandingCharity/tommys.png" alt="" /></Col>
-					<Col><img src="img/LandingCharity/refuge.png" alt="" /></Col>
-					<Col><img src="img/LandingCharity/save-the-children.png" alt="" /></Col>
-					<Col><img src="img/LandingCharity/NSPCC.png" alt="" /></Col>
-					<Col className='d-none d-lg-block'><img src="img/LandingCharity/dementiauk.png" alt="" /></Col>
-					<Col className='d-none d-lg-block'><img src="img/LandingCharity/wwf.png" alt="" /></Col>
-					<Col className='d-none d-lg-block'><img src="img/LandingCharity/mssociety.png" alt="" /></Col>
-					<Col className='d-none d-lg-block'><img src="img/LandingCharity/centrepoint.png" alt="" /></Col>
-					<Col className='d-none d-lg-block'><img src="img/LandingCharity/GOSH.png" alt="" /></Col>
-        </Row>
-				<Row className="text-center">
-					<Col className='d-block d-lg-none'><img src="img/LandingCharity/wwf.png" alt="" /></Col>
-					<Col className='d-none d-md-block d-lg-none'><img src="img/LandingCharity/mssociety.png" alt="" /></Col>
-					<Col className='d-block d-lg-none'><img src="img/LandingCharity/centrepoint.png" alt="" /></Col>
-					<Col className='d-block d-lg-none'><img src="img/LandingCharity/GOSH.png" alt="" /></Col>
-        </Row>
-    </Container>;
+const LogoBanner = ({logoList}) => {
+	// Default logo list (Charites)
+	if (!logoList) logoList = ['img/LandingCharity/refuge.png', 'img/LandingCharity/tommys.png', 'img/LandingCharity/save-the-children.png', 'img/LandingCharity/NSPCC.png', 'img/LandingCharity/dementiauk.png', 'img/LandingCharity/wwf.png', 'img/LandingCharity/mssociety.png', 'img/LandingCharity/centrepoint.png', 'img/LandingCharity/GOSH.png'];
+
+	const mobileWidth = window.innerWidth <= 768;
+	if (mobileWidth && logoList.length > 5) logoList = logoList.slice(0,-4);
+
+	return (
+	<Container id="logo-banner-icons" className="my-3 d-flex justify-content-around align-items-center">
+		{logoList.map((logo, i) => {
+			return (
+				<img src={logo} key={i}/>
+				);
+			}
+		)}
+	</Container>);
 };
 
 
@@ -442,7 +438,7 @@ const NewsAwards = ({nostars, children}) => {
 				{children}
 				<Row>
 					{!nostars && StarsDiv}
-					{imgs.map((v, i) => <Col>
+					{imgs.map((v, i) => <Col key={i}>
 						<LinkOut href={links[i]}><img className='logo logo-xl' src={v} alt="" /></LinkOut>
 					</Col>)}
 					{!nostars && StarsDiv}
@@ -707,7 +703,7 @@ export {
 	TestimonialSectionLower,
 	T4GCharityScreenshot,
 	GetInvolvedSection,
-	CharityBanner,
+	LogoBanner,
 	MyLandingSection,	
 	PageCard,
 	CurvePageCard,
