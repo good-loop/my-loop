@@ -23,6 +23,8 @@ export const accountMenuItems = [
 	{page: "settings", label: "Settings"}
 ];
 
+const mobileWidth = window.innerWidth <= 768;
+
 const PageCard = ({id, className, ref, style, children}) => {
 	// Why two containers?? Is the outer one for card-specific css rules to latch onto??
 	return <Container id={id} ref={ref} style={style} fluid className={space('page-card', className)}>
@@ -191,8 +193,6 @@ const MyDataButton = ({className}) => {
 }
 
 const MyLandingSection = ({title, bgImg}) => {
-
-	const mobileWidth = window.innerWidth <= 768;
 	const fontSizeCTA = mobileWidth ? '.8rem' : '1rem';
 	
 	if ( ! title) {
@@ -255,7 +255,6 @@ const LogoBanner = ({logoList}) => {
 	// Default logo list (Charites)
 	if (!logoList) logoList = ['img/LandingCharity/refuge.png', 'img/LandingCharity/tommys.png', 'img/LandingCharity/save-the-children.png', 'img/LandingCharity/NSPCC.png', 'img/LandingCharity/dementiauk.png', 'img/LandingCharity/wwf.png', 'img/LandingCharity/mssociety.png', 'img/LandingCharity/centrepoint.png', 'img/LandingCharity/GOSH.png'];
 
-	const mobileWidth = window.innerWidth <= 768;
 	if (mobileWidth && logoList.length > 5) logoList = logoList.slice(0,-4);
 
 	return (
@@ -691,6 +690,39 @@ const WhatIsTabsForGood	= ({ngo}) => {
 	</>);
 };
 
+const TwinCards = ({twinCardsContent}) => {
+
+	const MyDataHowItWorksButton = ({className}) =>
+	<a className={space("text-decoration-none mt-3", className)}  href="/mydata#howitworks">
+		<span style={{textDecoration:"underline"}}>How It Works</span> →
+	</a>;
+
+	return(
+		<div className="gridbox gridbox-md-2 gridbox-gap-4 text-center" style={{zIndex:'2'}}>
+		{twinCardsContent.map((item, idx) => {
+			return(
+				<Card key={idx} className='border shadow'>
+					<CardImg className={item.imgClass} variant="top" src={item.imgUrl} />
+					<CardBody>
+						<div>
+							<CardTitle className='color-gl-red'>
+								{item.title}
+							</CardTitle>
+							<CardText className='color-gl-darker-grey'>
+								{item.text}
+							</CardText>
+						</div>
+						<div className="buttons">
+							{item.button}
+						</div>
+					</CardBody>
+				</Card>
+			)
+		})}
+		</div>
+	);
+}
+
 
 export {
 	TabsForGoodSlideSection,
@@ -711,5 +743,6 @@ export {
 	CardImgLeft,
 	CornerHummingbird,
 	CurveTransition,
-	MyDataButton
+	MyDataButton,
+	TwinCards
 };

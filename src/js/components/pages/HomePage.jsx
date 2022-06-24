@@ -13,7 +13,8 @@ import {
 	MyDataButton,
 	CurvePageCard,
 	PageCard,
-	CurveTransition
+	CurveTransition,
+	TwinCards,
 } from './CommonComponents';
 import BG from '../../base/components/BG';
 import { setFooterClassName } from '../Footer';
@@ -135,44 +136,27 @@ const SlideCardsSection = () => {
 }
 
 const StoriesSection = () => {
+	const cardOne = {
+		imgUrl: 'img/ourstory/Good-Loop_UsingAdMoneyForGoodWithBG.png',
+		imgClass: 'bg-gl-light-pink',
+		title: <span className='text-uppercase' style={{fontWeight:'bold'}}>We can make things happen?</span>,
+		text: 'Our amazing community has so far supported everything from childhood literacy to coral reef protection and Black Lives Matter.',
+		button: 'Discover Our Impact'
+	}
+
+	const cardTwo = {
+		imgUrl: 'img/homepage/amyanddaniel.png',
+		imgClass: 'bg-gl-blue',
+		title: <span className='text-uppercase' style={{fontWeight:'bold'}}>How it all began</span>,
+		text: 'My.Good-Loop is brought you by the team at Good-Loop, founded by Amy Williams and Daniel Winterstein.',
+		button: 'Our Story'
+	}
+
 	return (
 		<PageCard className='stories-section pt-0'>
 			<h3 style={{textTransform:'unset',fontWeight:'600'}}>The My.Good-Loop Story</h3>
 			<p className='color-gl-muddy-blue mb-0'>Converting the multi-billion dollar online advertsing industry into a force for good - with you.</p>
-			<div className="gridbox gridbox-md-2 gridbox-gap-4 text-center" style={{zIndex:'2'}}>
-				<Card className='border shadow'>
-					<CardImg className='bg-gl-light-pink' variant="top" src="img/ourstory/Good-Loop_UsingAdMoneyForGoodWithBG.png" />
-					<CardBody>
-						<div>
-							<CardTitle className='color-gl-red'>
-								<span className='text-uppercase' style={{fontWeight:'bold'}}>We can make things happen</span> <br/>
-							</CardTitle>
-							<CardText className='color-gl-darker-grey'>
-								Our amazing community has so far supported everything from childhood literacy to coral reef protection and Black Lives Matter.
-							</CardText>
-						</div>
-						<div className="buttons">
-							Discover Our Impact
-						</div>
-					</CardBody>
-				</Card>
-				<Card className='border shadow'>
-					<CardImg className='bg-gl-blue' variant="top" src="img/homepage/amyanddaniel.png" />
-					<CardBody>
-						<div>
-							<CardTitle className='color-gl-red'>
-								<span className='text-uppercase' style={{fontWeight:'bold'}}>How it all began</span> <br/>
-							</CardTitle>
-							<CardText className='color-gl-darker-grey'>
-								My.Good-Loop is brought you by the team at Good-Loop, founded by Amy Williams and Daniel Winterstein.
-							</CardText>
-						</div>
-						<div className="buttons">
-							Our Story
-						</div>
-					</CardBody>
-				</Card>
-			</div>
+			<TwinCards TwinCardsContent={[].concat(cardOne, cardTwo)} />
 
 			<div className="testimonial-blob position-relative d-flex align-items-center justify-content-center mt-5 pb-5">
 				<img style={{maxWidth:'480px',zIndex:'1',margin:'0 -1rem'}} src="img/homepage/testimonial-blob-logo.svg"/>
