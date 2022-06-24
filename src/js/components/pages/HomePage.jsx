@@ -156,7 +156,7 @@ const StoriesSection = () => {
 		<PageCard className='stories-section pt-0'>
 			<h3 style={{textTransform:'unset',fontWeight:'600'}}>The My.Good-Loop Story</h3>
 			<p className='color-gl-muddy-blue mb-0'>Converting the multi-billion dollar online advertsing industry into a force for good - with you.</p>
-			<TwinCards TwinCardsContent={[].concat(cardOne, cardTwo)} />
+			{/* <TwinCards TwinCardsContent={[].concat(cardOne, cardTwo)} /> */}
 
 			<div className="testimonial-blob position-relative d-flex align-items-center justify-content-center mt-5 pb-5">
 				<img style={{maxWidth:'480px',zIndex:'1',margin:'0 -1rem'}} src="img/homepage/testimonial-blob-logo.svg"/>
