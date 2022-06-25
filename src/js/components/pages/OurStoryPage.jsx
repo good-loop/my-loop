@@ -112,7 +112,7 @@ const MyGetInvolvedSection = () =>{
 
 	return(<>
 	<PageCard className={"my-get-involved white text-center bg-gl-desat-blue pb-0"}>
-		<img src="img/icons/Heart_single.png" className='logo' alt="" />
+		<img src="/img/icons/Heart_single.png" className='logo' alt="" />
 		<h1 className='white mb-5'>Get Involved!</h1>
 		<p className='mb-5 leader-text'>Join the My.Good-Loop community today and start raising money for charity. For free.</p>
 		<T4GSignUpButton className="mb-5"/>

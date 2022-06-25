@@ -96,7 +96,7 @@ export const SafariPage = () => {
 		<>
 			<div className="safari-dropdown">
 				<img src="/img/safari-preference/preferences.png" className='w-75' alt="" />
-				<img src="img/safari-preference/dropdown-preferences.png" className='dropdown-preferences' alt="" />
+				<img src="/img/safari-preference/dropdown-preferences.png" className='dropdown-preferences' alt="" />
 			</div>
 			<p>In the Safari app on your Mac, choose Safari Preferences.</p>
 		</>,
@@ -107,28 +107,28 @@ export const SafariPage = () => {
 		<>
 			<div className="safari-dropdown">
 				<img src="/img/safari-preference/safari-final.png" className='w-75' alt="" />
-				<img src="img/safari-preference/new-window.png" className='new-window' alt="" />
+				<img src="/img/safari-preference/new-window.png" className='new-window' alt="" />
 			</div>
 		<p>Make sure your Safari opens with "A new window".</p>
 	</>,
 		<>
 			<div className="safari-dropdown">
 				<img src="/img/safari-preference/safari-final.png" className='w-75' alt="" />
-				<img src="img/safari-preference/homepage.png" className='set-homepage' alt="" />
+				<img src="/img/safari-preference/homepage.png" className='set-homepage' alt="" />
 			</div>
 			<p>Click the “New windows open with” pop-up menu, then choose Homepage.</p>
 		</>,
 		<>
 			<div className="safari-dropdown">
 				<img src="/img/safari-preference/safari-final.png" className='w-75' alt="" />
-				<img src="img/safari-preference/homepage.png" className='set-homepage-2' alt="" />
+				<img src="/img/safari-preference/homepage.png" className='set-homepage-2' alt="" />
 			</div>
 			<p>Click the “New tabs open with” pop-up menu, then choose Homepage.</p>
 		</>,
 		<>
 			<div className="safari-dropdown">
 				<img src="/img/safari-preference/safari-final.png" className='w-75' alt="" />
-				<img src="img/safari-preference/safari-paste.png" className='safari-paste' alt="" />
+				<img src="/img/safari-preference/safari-paste.png" className='safari-paste' alt="" />
 			</div>
 			<p style={{position:"relative",top:"-1rem"}}>In the Homepage field, enter the Tabs For Good address: <br/> <code>https://my.good-loop.com/newtab.html</code> <button onClick={() => {navigator.clipboard.writeText('https://my.good-loop.com/newtab.html')}} 
 					className='btn btn-primary ml-3'>Copy To Clipboard</button></p>

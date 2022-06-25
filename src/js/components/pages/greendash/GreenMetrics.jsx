@@ -26,6 +26,7 @@ import KStatus from '../../../base/data/KStatus';
 import { getId, getName } from '../../../base/data/DataClass';
 import SearchQuery from '../../../base/searchquery';
 import Campaign from '../../../base/data/Campaign';
+import Login from '../../../base/youagain';
 
 
 
@@ -65,20 +66,6 @@ const CTACard = ({}) => {
 
 
 const GreenMetrics2 = ({}) => {
-	// Only for logged-in users!
-	if ( ! Login.isLoggedIn()) {
-		return <div>
-			<h3 className="text-center">Log in to access the Green Dashboard</h3>
-			<Container>
-				<Row>
-					<Col xs="12" sm="6" className="mx-auto">
-						<LoginWidgetEmbed verb="login" />
-					</Col>
-				</Row>
-			</Container>
-		</div>;
-	}
-
 	// Default to current quarter, all brands, all campaigns
 	const period = periodFromUrl();
 	if (!period) return; // Filter widget will set this on first render - allow it to update
@@ -169,6 +156,11 @@ const GreenMetrics2 = ({}) => {
 };
 
 
+/**
+ * 
+ * @param {*} param0 
+ * @returns 
+ */
 const SelectAgency = ({agencyIds}) => {
 	const [agencies, setAgencies] = useState(null);
 
@@ -187,7 +179,7 @@ const SelectAgency = ({agencyIds}) => {
 		});
 	}, agencyIds);
 
-	if (!agencies) return <Misc.Loading text="Fetching your agencies..." />
+	if ( ! agencies) return <Misc.Loading text="Fetching your agencies..." />
 
 	return <div className="select-agency">
 		<h3>Select your agency</h3>
@@ -201,9 +193,10 @@ const SelectAgency = ({agencyIds}) => {
 };
 
 
-const GreenMetrics = ({}) => {
+const GreenMetrics = ({}) => {	
 	const [agencyIds, setAgencyIds] = useState();
-	const agencyId = DataStore.getUrlValue('agency');
+	let agencyId = DataStore.getUrlValue('agency');
+	if ( ! agencyId && agencyIds?.length === 1) agencyId = agencyIds[0];
 
 	// All our filters etc are based user having at most access to one agency
 	// Group M users will have multiple, so start by selecting one.
@@ -213,20 +206,32 @@ const GreenMetrics = ({}) => {
 				setAgencyIds([]);
 				return;
 			}
-
-			setAgencyIds(res.cargo.map(share => {
+			const _agencyIds = res.cargo.map(share => {
 				const matches = share.item.match(/^Agency:(\w+)$/);
 				if (!matches) return null;
 				return matches[1];
-			}).filter(a => !!a));
+			}).filter(a => a);
+			setAgencyIds(_agencyIds);
 		});
 	}, [Login.getId()])
 
 	let content;
 
-	if (!agencyIds) {
+	if ( ! Login.isLoggedIn()) {
+		// Only for logged-in users!
+		content = <div>
+			<h3 className="text-center">Log in to access Green Media</h3>
+			<Container>
+				<Row>
+					<Col xs="12" sm="6" className="mx-auto">
+						<LoginWidgetEmbed verb="login" />
+					</Col>
+				</Row>
+			</Container>
+		</div>;	
+	} else if ( ! agencyIds) {
 		content = <Misc.Loading text="Checking your access..." />;
-	}else if (agencyIds.length && !agencyId) {
+	} else if (agencyIds.length > 1 && ! agencyId) {
 		content = <SelectAgency agencyIds={agencyIds} />;
 	} else {
 		content = <>

@@ -229,14 +229,14 @@ const MyLandingSection = ({title, bgImg}) => {
 		<a onClick={myDataOnClick} 
 			className='text-decoration-none mydata-signup-button'> 
 			<div style={{borderRadius:'10px'}} className="mydata-signup-button mydata-splash-cta splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
-				<img src="img/mydata/data-cta.png" className='logo'/>
+				<img src="/img/mydata/data-cta.png" className='logo'/>
 				<span className='font-weight-bold p-1 pl-3 mx-auto mydata-signup-button' style={{fontSize:fontSizeCTA,transform:'translate(0, 10%)'}} >{isReg ? 'My.Data Profile' : 'Sign Up For My.Data'}</span>
 			</div>
 		</a>
 		<MyDataSignUpModal />
 		<C.A href='/tabsforgood' className='text-decoration-none t4g-signup-button'>
 			<div style={{borderRadius:'10px'}} className="t4g-signup-button t4g-splash-cta splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
-				<img src="img/mydata/t4g-cta.png" className='logo'/>
+				<img src="/img/mydata/t4g-cta.png" className='logo'/>
 				<span className='font-weight-bold p-1 pl-3 mx-auto t4g-signup-button' style={{fontSize:fontSizeCTA,transform:'translate(0, 10%)'}}>Get Tabs For Good</span>
 			</div>
 		</C.A>

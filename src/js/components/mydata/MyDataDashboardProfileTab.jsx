@@ -58,7 +58,7 @@ const HowItWordsGuide = () => {
 	return (<Container>
 		<div className="how-it-works-card">
 			<div className="how-it-works-header text-center" onClick={cardToggle}>
-				<img src="img/mydata/how-it-works.png" className='w-50' />
+				<img src="/img/mydata/how-it-works.png" className='w-50' />
 				<p className='text-white font-weight-bold mb-0 d-flex justify-content-center align-items-end'>
 					HOW IT WORKS <img style={{width:"2rem",height:"2rem"}} src={"img/mydata/arrow-"+(cardCollapse ? "down" : "up")+"-white.svg"} />
 				</p>

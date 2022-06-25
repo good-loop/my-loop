@@ -155,15 +155,15 @@ const DesktopSignUp = ({ charity }) => {
 			</Row>
 		</div>,
 		<div className='slide-item text-center align-items-center'>
-			<img className='w-50 mb-3' src="img/signup/charities.png" alt="" />
+			<img className='w-50 mb-3' src="/img/signup/charities.png" alt="" />
 			<p className='px-3'>When you sign up, you'll get your own personalised portal where you can select the charity you want to support and see your impact grow</p>
 		</div>,
 		<div className='slide-item text-center align-items-center'>
-			<img className='w-50 mb-3' src="img/signup/step-3.png" alt="" />
+			<img className='w-50 mb-3' src="/img/signup/step-3.png" alt="" />
 			<p className='px-3'>Once you're signed up, we'll immeditatly provide you with a link to the Chrome Store where you can add Tabs for Good to your browser </p>
 		</div>,
 		<div className='slide-item text-center align-items-center'>
-			<img className='w-50 mb-3' src="img/signup/browse-good.png" alt="" />
+			<img className='w-50 mb-3' src="/img/signup/browse-good.png" alt="" />
 			<p className='px-3'>Once you've installed Tabs for Good, you can feel confident that your browsing is adding up into a force for good</p>
 		</div>
 	];
@@ -207,7 +207,7 @@ const DesktopSignUp = ({ charity }) => {
 						<div className='slide-item text-center align-items-center'>
 							<p>Successs! You've signed up.</p>
 							<p>Now click on the button to install Tabs for Good.</p>
-							<img id="globe-piggy-step-2" className='w-50' src="img/signup/globe-piggy-bank-crop.png" alt="" />
+							<img id="globe-piggy-step-2" className='w-50' src="/img/signup/globe-piggy-bank-crop.png" alt="" />
 						</div>
 					</div>
 				}
@@ -216,7 +216,7 @@ const DesktopSignUp = ({ charity }) => {
 				{!Login.isLoggedIn() ?
 					<>
 						<div className='d-flex flex-column justify-content-center align-items-center'>
-							<img className="w-50 mb-3" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
+							<img className="w-50 mb-3" src="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
 							<div className="steps-graphic">
 								<Steps step={1} />
 							</div>
@@ -228,7 +228,7 @@ const DesktopSignUp = ({ charity }) => {
 					</>
 					: /* Step 2 */ <div>
 						<div className='d-flex flex-column justify-content-center align-items-center'>
-							<img className="w-50 mb-3" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
+							<img className="w-50 mb-3" src="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
 							<div className="steps-graphic">
 								<Steps step={2} />
 							</div>
@@ -248,7 +248,7 @@ const MobileSendEmail = ({ charity }) => {
 		<Container fluid>
 			<div className='mobile-send-email d-flex flex-column justify-content-between align-items-center'>
 				<img className="hummingbird-mobile logo mt-3" src="/img/green/hummingbird.png" />
-				<img className="w-50 mb-3" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
+				<img className="w-50 mb-3" src="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
 				<div style={{ textTransform: "capitalize" }}>
 					We'll email you a link for desktop so you can start raising money for charity while you browse
 				</div>
@@ -262,7 +262,7 @@ const NotAvailableYet = ({ browser, charity }) => {
 	return (<>
 		<img src="/img/signup/hand-globe-coins.png" className='hand-globe' />
 		<div className='clearfix'>
-			<img className="pull-right w-25 m-3" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="Tabs for Good" />
+			<img className="pull-right w-25 m-3" src="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="Tabs for Good" />
 		</div>
 		<div className='mx-auto w-50 d-flex flex-column align-items-center'>
 			<p class="mt-5">We'll send you an email to let you know when Tabs for Good is available on <span>{toTitleCase(browser)}</span></p>
