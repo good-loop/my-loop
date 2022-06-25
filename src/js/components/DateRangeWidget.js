@@ -163,6 +163,7 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 	// Set period to "Calendar month of X months ago"
 	const setCalendarMonth = (offset) => {
 		const newEnd = new Date();
+		newEnd.setHours(0, 0, 0, 0); // ??
 		newEnd.setMonth(offset + newEnd.getMonth() + 1, 1);
 		const newStart = new Date(newEnd)
 		newStart.setMonth(newStart.getMonth() - 1);

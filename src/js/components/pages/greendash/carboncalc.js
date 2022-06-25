@@ -113,6 +113,7 @@ export const getSumColumn = (table, colName) => {
  * @returns {!PromiseValue} {table: [["country","pub","mbl","os","adid","time","count","totalEmissions","baseEmissions","creativeEmissions","supplyPathEmissions"]] }
  */
 export const getCarbon = ({q = '', start = '1 month ago', end = 'now', ...rest}) => {
+	assert( ! q?.includes("brand:"), q);
 	const data = {
 		// dataspace: 'green',
 		q,

@@ -20,6 +20,7 @@ import C from '../../../C';
 const QuarterButtons = ({ period, setNamedPeriod }) => {
 	const buttons = [];
 	const dateCursor = new Date();
+	dateCursor.setHours(0, 0, 0, 0);
 	dateCursor.setDate(1); // avoid month-length problems
 	// quarters
 	for (let i = 0; i < 4; i++) {
@@ -200,6 +201,7 @@ const GreenDashboardFilters = ({}) => {
 
 	let thisQuarter = getPeriodQuarter(new Date()).name;
 	let dateCursor = new Date();
+	dateCursor.setHours(0, 0, 0, 0);
 	dateCursor.setMonth(dateCursor.getMonth() - 3);
 	let lastQuarter = getPeriodQuarter(dateCursor).name;
 
@@ -259,8 +261,8 @@ const GreenDashboardFilters = ({}) => {
 					{filterMode && <UncontrolledDropdown className="filter-dropdown ml-2">
 						<DropdownToggle caret>{{ campaign, brand, tag }[filterMode] || `Select a ${filterMode}`}</DropdownToggle>
 						<DropdownMenu style={longMenuStyle} >
-							{filterByEntityOptions.map(item => (
-								<DropdownItem key={item.id} onClick={() => setCurrentTemp(item.id)}>
+							{filterByEntityOptions.map((item,i) => (
+								<DropdownItem key={i} onClick={() => setCurrentTemp(item.id)}>
 									{{ campaign, brand, tag }[filterMode] === item.id ? <span className="selected-marker" /> : null}
 									{item.name}
 								</DropdownItem>

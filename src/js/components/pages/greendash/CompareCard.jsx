@@ -46,6 +46,7 @@ const QuartersCard = ({baseFilters}) => {
 	useEffect(() => {
 		// Construct four quarter periods, from the current quarter back
 		const cursorDate = new Date();
+		cursorDate.setHours(0, 0, 0);
 		const quarters = [];
 		for (let i = 0; i < 4; i++) {
 			quarters.unshift(getPeriodQuarter(cursorDate));

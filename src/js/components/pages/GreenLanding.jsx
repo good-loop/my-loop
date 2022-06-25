@@ -71,7 +71,9 @@ const GreenLanding = ({ }) => {
 
 
 const GreenLanding2 = ({cid, status}) => {
-	let period = {start:new Date(2022,1,1), end:new Date()};
+	const end = new Date();
+	end.setHours(end.getHours(), 0, 0, 0); // avoid thrashing with an ever changing date
+	let period = {start:new Date(2022,1,1), end};
 	const pvCampaign = getDataItem({ type: C.TYPES.Campaign, id: cid, status });
 	const isTotal = cid === Campaign.TOTAL_IMPACT;
 

@@ -27,6 +27,7 @@ import { getId, getName } from '../../../base/data/DataClass';
 import SearchQuery from '../../../base/searchquery';
 import Campaign from '../../../base/data/Campaign';
 import Login from '../../../base/youagain';
+import ActionMan from '../../../plumbing/ActionMan';
 
 
 
@@ -87,7 +88,20 @@ const GreenMetrics2 = ({}) => {
 	// Fetch common data for CO2Card and BreakdownCard.
 	// JourneyCard takes all-time data, CompareCard sets its own time periods, TimeOfDayCard overrides time-series interval
 	// ...but give them the basic filter spec so they stay in sync otherwise
+	// Query filter e.g. which brand, campaign, or tag?	
 	let q = `${filterMode}:${filterId}`;
+	// HACK: filterMode=brand is twice wrong: the data uses vertiser, and some tags dont carry brand info :(
+	// So do it by an OR over campaign-ids instead.
+	if (filterMode==="brand") {
+		// get the campaigns
+		let sq = SearchQuery.setProp(null, "vertiser", filterId);
+		const pvAllCampaigns = getDataList({type: C.TYPES.Campaign, status:KStatus.PUBLISHED, q:sq.query}); 
+		if ( ! pvAllCampaigns.resolved) {
+			return <Misc.Loading text="Fetching brand campaigns..." />;
+		}
+		const campaignIds = List.hits(pvAllCampaigns.value).map(c => c.id);
+		q = SearchQuery.setPropOr(null, "campaign", campaignIds).query;
+	}
 	// HACK: Is this a master campaign? Do we need to cover sub-campaigns?
 	if (filterMode==="campaign") {
 		const pvCampaign = getDataItem({type:C.TYPES.Campaign, id:campaignId, status:KStatus.PUB_OR_DRAFT});
