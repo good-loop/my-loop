@@ -60,7 +60,7 @@ const JourneyCard = ({ campaigns, period, baseFilters }) => {
 
 	let isLoading;
 	const offsetTypes = "carbon trees coral".split(" ");
-	let offsets = {};
+	let offsets = {}; // HACK will include carbonTotal etc too
 	offsetTypes.forEach(ot => offsets[ot+"Total"] = 0);
 	campaigns.forEach(campaign => {
 		const offsets4type = getOffsetsByType({campaign, period});

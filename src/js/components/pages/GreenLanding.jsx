@@ -71,6 +71,7 @@ const GreenLanding = ({ }) => {
 
 
 const GreenLanding2 = ({cid, status}) => {
+	let period = {start:new Date(2022,1,1), end:new Date()};
 	const pvCampaign = getDataItem({ type: C.TYPES.Campaign, id: cid, status });
 	const isTotal = cid === Campaign.TOTAL_IMPACT;
 
@@ -88,8 +89,9 @@ const GreenLanding2 = ({cid, status}) => {
 	if (!pvCampaign.value) {
 		return <Misc.Loading />
 	}
-	const campaign = pvCampaign.value;
-	let offsets4type = getOffsetsByType({ campaign });
+	const campaign = pvCampaign.value;	
+
+	let offsets4type = getOffsetsByType({ campaign, status, period});
 	let isLoading = offsets4type.isLoading;
 	let pvAllCampaigns = offsets4type.pvAllCampaigns;
 	// load the charities
