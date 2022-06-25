@@ -104,7 +104,12 @@ const JourneyCard = ({ campaigns, period, baseFilters }) => {
 			let table = pvCarbonData.value.table;
 			let columns = table[0];
 			let data = table.slice(1);
-			downloadCSVLink = <DownloadCSVLink columns={columns} data={data} />;
+			let objdata = data.map(row => {
+				let obj = {};
+				columns.forEach((c, i) => obj[c] = row[i]);
+				return obj;
+			});
+			downloadCSVLink = <DownloadCSVLink columns={columns} data={objdata} />;
 		}
 	}
 
