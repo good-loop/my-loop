@@ -215,13 +215,9 @@ export const calculateDynamicOffset = ({campaign, offset, period}) => {
  */
 export const getOffsetsByType = ({campaign, status, period}) => {
 	console.warn("getOffsetsByType", campaign, status, period);
-	let pvAllCampaigns;
 	// Is this a master campaign?
-	if (Campaign.isMaster(campaign)) {
-		pvAllCampaigns = Campaign.pvSubCampaigns({campaign, status});
-	} else {
-		pvAllCampaigns = new PromiseValue(new List([campaign]));
-	}
+	let pvAllCampaigns = Campaign.pvSubCampaigns({campaign, status});
+	
 	const allFixedOffsets = [];
 	if (pvAllCampaigns.value) {
 		// for each campaign:

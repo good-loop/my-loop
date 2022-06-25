@@ -7,10 +7,12 @@ import DataStore from '../../../base/plumbing/DataStore';
 import { A } from '../../../base/plumbing/glrouter';
 import { encURI } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
-import { getOffsetsByType } from './carboncalc';
+import { getCarbon, getOffsetsByType } from './carboncalc';
 import { GreenCard, GreenCardAbout, Mass } from './dashutils';
 import { getDataItem } from '../../../base/plumbing/Crud';
 import KStatus from '../../../base/data/KStatus';
+import { isTester } from '../../../base/Roles';
+import { DownloadCSVLink } from '../../../base/components/SimpleTable';
 
 
 const Cloud = ({style}) => (
@@ -89,6 +91,22 @@ const JourneyCard = ({ campaigns, period, baseFilters }) => {
 			brandOrAgency = pvBrandOrAgency.value;	
 		}
 	}
+	// HACK a download for us
+	let downloadCSVLink;
+	if (isTester()) {
+		let sq = SearchQuery.setPropOr(null, "campaign", campaigns.map(c => c.id));
+		let pvCarbonData = getCarbon({
+			q:sq.query, 
+			start: period?.start.toISOString() || "2022-01-01", 
+			end: period?.end.toISOString() || "now"
+		});
+		if (pvCarbonData.value) {
+			let table = pvCarbonData.value.table;
+			let columns = table[0];
+			let data = table.slice(1);
+			downloadCSVLink = <DownloadCSVLink columns={columns} data={data} />;
+		}
+	}
 
 	return <GreenCard title="Your journey so far" className="carbon-journey">
 		{isLoading? <Misc.Loading /> : <>
@@ -96,6 +114,7 @@ const JourneyCard = ({ campaigns, period, baseFilters }) => {
 			<TreesSection treesPlanted={offsets.treesTotal} coralPlanted={offsets.coralTotal} />
 		</>}
 		{impactSplashPage && <A className="btn btn-primary" href={impactSplashPage}><Logo item={brandOrAgency} /> Impact Overview</A>}
+		{downloadCSVLink}
 		<GreenCardAbout>
 			<p>What carbon offsets do we use?</p>
 			<p>What tree planting projects do we support?</p>

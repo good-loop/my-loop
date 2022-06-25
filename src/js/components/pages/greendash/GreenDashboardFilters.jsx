@@ -212,12 +212,17 @@ const GreenDashboardFilters = ({}) => {
 		tag: availableTags
 	}[filterMode];
 	
-	let brandItem = brand? getDataItem({type:C.TYPES.Advertiser, id:brand, status:KStatus.PUBLISHED}).value : null;
+	// label and logo
+	let campaignItem = campaign? getDataItem({type:C.TYPES.Campaign, id:campaign, status:KStatus.PUBLISHED}).value : null;
+	let brandItem = brand || (campaignItem && campaignItem.vertiser)? getDataItem({type:C.TYPES.Advertiser, id:brand || campaignItem.vertiser, status:KStatus.PUBLISHED}).value : null;
+	let tagItem = tag? getDataItem({type:C.TYPES.GreenTag, id:tag, status:KStatus.PUB_OR_DRAFT}).value : null;
+	let selectedLabel = {campaign: campaignItem?.name || campaign, brand: brandItem?.name || brand, tag: tagItem?.name || tag}[filterMode];
+	if (! selectedLabel) selectedLabel = `Select a ${filterMode}`;
 
 	return (
 		<Row className="greendash-filters my-2">
 			<Col xs="12">
-				<Logo item={brandItem} />
+				<Logo item={brandItem || campaignItem} />
 				<Form inline>
 					{/* ??Seeing layout bugs that can block use -- refactoring to use a PropControl might be best*/}
 					<UncontrolledDropdown className="filter-dropdown">
@@ -259,7 +264,7 @@ const GreenDashboardFilters = ({}) => {
 					</UncontrolledDropdown>
 
 					{filterMode && <UncontrolledDropdown className="filter-dropdown ml-2">
-						<DropdownToggle caret>{{ campaign, brand, tag }[filterMode] || `Select a ${filterMode}`}</DropdownToggle>
+						<DropdownToggle caret>{selectedLabel}</DropdownToggle>
 						<DropdownMenu style={longMenuStyle} >
 							{filterByEntityOptions.map((item,i) => (
 								<DropdownItem key={i} onClick={() => setCurrentTemp(item.id)}>
