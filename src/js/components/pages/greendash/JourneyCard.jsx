@@ -9,6 +9,8 @@ import { encURI } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import { getOffsetsByType } from './carboncalc';
 import { GreenCard, GreenCardAbout, Mass } from './dashutils';
+import { getDataItem } from '../../../base/plumbing/Crud';
+import KStatus from '../../../base/data/KStatus';
 
 
 const Cloud = ({style}) => (
@@ -80,9 +82,11 @@ const JourneyCard = ({ campaigns, period, baseFilters }) => {
 		let masters = campaigns.map(Campaign.masterFor).filter(m => m.id);
 		if (masters.length) {
 			// HACK pick the first
-			brandOrAgency = masters[0];
+			let spec = Object.assign({status:KStatus.PUBLISHED}, masters[0]);
 			impactSplashPage = '/green?'+
-				({Agency: "agency", Advertiser: "brand"}[brandOrAgency.type])+"="+encURI(brandOrAgency.id);
+				({Agency: "agency", Advertiser: "brand"}[spec.type])+"="+encURI(spec.id);
+			let pvBrandOrAgency = getDataItem(spec);
+			brandOrAgency = pvBrandOrAgency.value;	
 		}
 	}
 

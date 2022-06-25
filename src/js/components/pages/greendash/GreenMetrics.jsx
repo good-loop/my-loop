@@ -28,6 +28,7 @@ import SearchQuery from '../../../base/searchquery';
 import Campaign from '../../../base/data/Campaign';
 import Login from '../../../base/youagain';
 import ActionMan from '../../../plumbing/ActionMan';
+import { yessy } from '../../../base/utils/miscutils';
 
 
 
@@ -100,6 +101,9 @@ const GreenMetrics2 = ({}) => {
 			return <Misc.Loading text="Fetching brand campaigns..." />;
 		}
 		const campaignIds = List.hits(pvAllCampaigns.value).map(c => c.id);
+		if ( ! yessy(campaignIds)) {
+			return <Alert color="info">No campaigns for brand id: {filterId}</Alert>;
+		}
 		q = SearchQuery.setPropOr(null, "campaign", campaignIds).query;
 	}
 	// HACK: Is this a master campaign? Do we need to cover sub-campaigns?
@@ -115,6 +119,9 @@ const GreenMetrics2 = ({}) => {
 				return <Misc.Loading text="Fetching campaigns..." />;
 			}
 			const campaignIds = List.hits(pvAllCampaigns.value).map(c => c.id);
+			if ( ! yessy(campaignIds)) {
+				return <Alert color="info">No campaigns for master campaign id: {filterId}</Alert>;
+			}
 			q = SearchQuery.setPropOr(null, "campaign", campaignIds).query;
 		}
 	}

@@ -32,7 +32,7 @@ const baseOptions = {
 
 const QuartersCard = ({baseFilters}) => {
 	// Set up base chart data object
-	const [chartProps, setChartProps] = useState(() => ({
+	const chartProps = {
 		data: {
 			labels: ['', '', '', ''],
 			datasets: [{
@@ -40,52 +40,50 @@ const QuartersCard = ({baseFilters}) => {
 			}]
 		},
 		options: baseOptions,
-	}));
+	};
 
 
-	useEffect(() => {
-		// Construct four quarter periods, from the current quarter back
-		const cursorDate = new Date();
-		cursorDate.setHours(0, 0, 0);
-		const quarters = [];
-		for (let i = 0; i < 4; i++) {
-			quarters.unshift(getPeriodQuarter(cursorDate));
-			cursorDate.setMonth(cursorDate.getMonth() - 3);
+	// Construct four quarter periods, from the current quarter back
+	const cursorDate = new Date();
+	cursorDate.setHours(0, 0, 0, 0);
+	const quarters = [];
+	for (let i = 0; i < 4; i++) {
+		quarters.unshift(getPeriodQuarter(cursorDate));
+		cursorDate.setMonth(cursorDate.getMonth() - 3);
+	}
+
+	// Get total carbon for each quarter
+	let pvsTable = quarters.map((quarter, i) => getCarbon({ ...baseFilters, start: isoDate(quarter.start), end: isoDate(quarter.end)}));
+	// add it into chartProps
+	pvsTable.forEach((pvTable, i) => {
+		if ( ! pvTable.value) return;
+		let table = pvTable.value.table;
+		if ( ! table || ! table.length) {
+			return;	// no data for this quarter
 		}
+		// insert new values as they arrive		
+		let quarter = quarters[i];
+		chartProps.data.labels[i] = printPeriod(quarter, true);
 
-		// Get total carbon for each quarter
-		quarters.forEach((quarter, i) => {
-			getCarbon({ ...baseFilters, start: isoDate(quarter.start), end: isoDate(quarter.end)}).promise.then(value => {
-				setChartProps(prevProps => { // cumulatively insert new values as they arrive
-					const nextProps = _.cloneDeep(prevProps);
-					nextProps.data.labels[i] = printPeriod(quarter, true);
+		// Display kg or tonnes?
+		let thisCarbon = getSumColumn(table, 'totalEmissions');
+		chartProps.data.datasets[0].data[i] = thisCarbon;
 
-					// Display kg or tonnes?
-					let thisCarbon = getSumColumn(value.table, 'totalEmissions');
-					nextProps.data.datasets[0].data[i] = thisCarbon;
+		// Kg or tonnes?
+		if (chartProps.tonnes) {
+			// There's already been at least one data point above the threshold: just scale down the latest one
+			chartProps.data.datasets[0].data[i] /= 1000;
+		} else if (thisCarbon > TONNES_THRESHOLD) {
+			// This is the first data point above the threshold: Scale down all points & change tick labels from kg to tonnes
+			chartProps.data.datasets[0].data = chartProps.data.datasets[0].data.map(d => d / 1000);
+			chartProps.options.scales.x.ticks.callback = v => `${v} t`;
+			chartProps.options.plugins.tooltip.callbacks.label = ctx => `${printer.prettyNumber(ctx.raw)} tonnes CO2`
+			chartProps.tonnes = true;
+		}
+	});
 
-					// Kg or tonnes?
-					if (prevProps.tonnes) {
-						// There's already been at least one data point above the threshold: just scale down the latest one
-						nextProps.data.datasets[0].data[i] /= 1000;
-					} else if (thisCarbon > TONNES_THRESHOLD) {
-						// This is the first data point above the threshold: Scale down all points & change tick labels from kg to tonnes
-						nextProps.data.datasets[0].data = nextProps.data.datasets[0].data.map(d => d / 1000);
-						nextProps.options.scales.x.ticks.callback = v => `${v} t`;
-						nextProps.options.plugins.tooltip.callbacks.label = ctx => `${printer.prettyNumber(ctx.raw)} tonnes CO2`
-						nextProps.tonnes = true;
-					}
-
-					// Assign bar colours
-					nextProps.data.datasets[0].backgroundColor = dataColours(nextProps.data.datasets[0].data);
-
-					return nextProps;
-				});
-			});
-		});
-	}, []);
-
-	if (!chartProps) return <Misc.Loading text="Fetching data for previous quarters..." />
+	// Assign bar colours
+	chartProps.data.datasets[0].backgroundColor = dataColours(chartProps.data.datasets[0].data);
 
 	return <NewChartWidget type="bar" {...chartProps} />
 };
