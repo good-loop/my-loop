@@ -1,5 +1,6 @@
 import React from 'react';
 import Misc from '../../../base/components/Misc';
+import Logo from '../../../base/components/Logo';
 import Campaign from '../../../base/data/Campaign';
 import DataStore from '../../../base/plumbing/DataStore';
 
@@ -71,7 +72,7 @@ const JourneyCard = ({ campaigns, period, baseFilters }) => {
 	// Which impact splash page to link to?
 	// TODO test for an agency
 	// NB: We don't want to just link to the campaign in the url -- we want to always have a master campaign
-	let impactSplashPage;
+	let impactSplashPage, brandOrAgency;
 	let masterCampaigns = campaigns.filter(Campaign.isMaster);
 	if (masterCampaigns.length===1) {
 		impactSplashPage = "/green/"+encURI(masterCampaigns[0].id);
@@ -79,7 +80,7 @@ const JourneyCard = ({ campaigns, period, baseFilters }) => {
 		let masters = campaigns.map(Campaign.masterFor).filter(m => m.id);
 		if (masters.length) {
 			// HACK pick the first
-			let brandOrAgency = masters[0];
+			brandOrAgency = masters[0];
 			impactSplashPage = '/green?'+
 				({Agency: "agency", Advertiser: "brand"}[brandOrAgency.type])+"="+encURI(brandOrAgency.id);
 		}
@@ -90,17 +91,13 @@ const JourneyCard = ({ campaigns, period, baseFilters }) => {
 			<CO2Section co2Offset={offsets.carbonTotal} />
 			<TreesSection treesPlanted={offsets.treesTotal} coralPlanted={offsets.coralTotal} />
 		</>}
-		{impactSplashPage && <A className="btn btn-primary" href={impactSplashPage}><BrandLogo campaigns={campaigns} /> Impact Overview</A>}
+		{impactSplashPage && <A className="btn btn-primary" href={impactSplashPage}><Logo item={brandOrAgency} /> Impact Overview</A>}
 		<GreenCardAbout>
 			<p>What carbon offsets do we use?</p>
 			<p>What tree planting projects do we support?</p>
 			<p>Campaigns now have info on their non-CO2-offset projects!</p>
 		</GreenCardAbout>
 	</GreenCard>;
-};
-
-const BrandLogo = ({campaigns}) => {
-	return null; // TODO if campaigns all share one brand, then show the logo
 };
 
 export default JourneyCard;

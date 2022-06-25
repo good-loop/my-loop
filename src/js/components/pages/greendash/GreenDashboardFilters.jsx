@@ -4,7 +4,7 @@ import { Button, Col, DropdownItem, DropdownMenu, DropdownToggle, Form, Input, L
 import KStatus from '../../../base/data/KStatus';
 import DataStore from '../../../base/plumbing/DataStore';
 import { nonce } from '../../../base/data/DataClass';
-import { getDataList } from '../../../base/plumbing/Crud';
+import { getDataItem, getDataList } from '../../../base/plumbing/Crud';
 import { getPeriodQuarter, periodFromUrl, periodToParams, printPeriod } from './dashutils';
 
 import DateRangeWidget from '../../DateRangeWidget';
@@ -12,6 +12,8 @@ import { modifyPage } from '../../../base/plumbing/glrouter';
 import { isTester } from '../../../base/Roles';
 import SearchQuery from '../../../base/searchquery';
 import PropControl from '../../../base/components/PropControl';
+import Logo from '../../../base/components/Logo';
+import C from '../../../C';
 
 
 /** Generate the list of quarter-period shortcuts */
@@ -208,12 +210,12 @@ const GreenDashboardFilters = ({}) => {
 		tag: availableTags
 	}[filterMode];
 	
-
+	let brandItem = brand? getDataItem({type:C.TYPES.Advertiser, id:brand, status:KStatus.PUBLISHED}).value : null;
 
 	return (
 		<Row className="greendash-filters my-2">
 			<Col xs="12">
-				{ brand ? <img src="brand.png" alt="Brand Logo" /> : null }
+				<Logo item={brandItem} />
 				<Form inline>
 					{/* ??Seeing layout bugs that can block use -- refactoring to use a PropControl might be best*/}
 					<UncontrolledDropdown className="filter-dropdown">

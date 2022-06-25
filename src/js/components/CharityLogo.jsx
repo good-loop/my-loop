@@ -6,7 +6,7 @@ import C from '../C';
 
 /**
  * Logo (which you can click on)
- * TODO can standardise this with brand logos
+ * TODO can standardise this with brand logos Logo
  * @param {?boolean} link true to make the logo a link
  */
 const CharityLogo = ({charity, className, size, style, nameCap, link=false}) => {
