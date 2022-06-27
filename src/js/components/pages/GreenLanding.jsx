@@ -22,6 +22,7 @@ import ServerIO from '../../plumbing/ServerIO';
 import PromiseValue from 'promise-value';
 import DataItemBadge from '../../base/components/DataItemBadge';
 import Login from '../../base/youagain';
+import printer from '../../base/utils/printer';
 
 
 // TODO Design! and Content!
@@ -136,7 +137,7 @@ const GreenLanding2 = ({cid, status}) => {
 			<div className="splash-circle">
 				<div className="branding">{branding.logo ? <img src={branding.logo} alt="brand logo" /> : name}</div>
 				{!!co2 && <><div className="big-number tonnes"><Mass kg={co2} /></div> carbon offset</>}
-				{!!trees && <><div className="big-number trees">{trees}</div> trees</>}
+				{!!trees && <><div className="big-number trees">{printer.prettyInt(trees)}</div> trees</>}
 				{isLoading && <Misc.Loading />}
 				<div className="carbon-neutral-container">
 					with <img className="carbon-neutral-logo" src="/img/green/gl-carbon-neutral.svg" />
