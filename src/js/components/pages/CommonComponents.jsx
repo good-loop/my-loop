@@ -216,7 +216,7 @@ const MyLandingSection = ({title, bgImg}) => {
 		<div className="splash-content d-flex flex-column align-items-center" style={!mobileWidth ? {margin:'0 28vw'} : null}>
 			{title && <h1 className='text-center bolder text-white mx-2 mt-3' style={mobileWidth ? {fontSize:"1.5rem"} : null}>{title}</h1>}
 			<button className='btn btn-primary btn-lg my-3 mx-auto' onClick={scrollToUpperCta}>Find out more</button>
-			<a href='#' className='text-white text-decoration-none mt-2 mb-4'><span style={{textDecoration:"underline"}}>Sign Up For Our Product</span> →</a>
+			<a href='#' className='text-white text-decoration-none mt-2 mb-4'><span style={{textDecoration:"underline"}}>Discover Our Products</span> →</a>
 		</div>
 		</BG>
 	</Container>
@@ -261,7 +261,7 @@ const LogoBanner = ({logoList}) => {
 	<Container id="logo-banner-icons" className="my-3 d-flex justify-content-around align-items-center">
 		{logoList.map((logo, i) => {
 			return (
-				<img src={logo} key={i}/>
+				<img className={logo.split('/')[logo.split('/').length-1].split('.')[0]} src={logo} key={i}/>
 				);
 			}
 		)}
