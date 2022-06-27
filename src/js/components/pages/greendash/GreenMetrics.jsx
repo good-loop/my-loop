@@ -72,15 +72,17 @@ const GreenMetrics2 = ({}) => {
 	const period = periodFromUrl();
 	if (!period) return; // Filter widget will set this on first render - allow it to update
 	const brandId = DataStore.getUrlValue('brand');
+	const agencyId = DataStore.getUrlValue('agency');
 	const campaignId = DataStore.getUrlValue('campaign');
 	const tagId = DataStore.getUrlValue('tag');
 
 	// const { pvBrands, pvCampaigns, pvTags } = getGreenDashObjects(brandId, campaignId, tagId);
 
 	// What are we going to filter on? ("adid" rather than "tag" because that's what we'll search for in DataLog)
-	const filterMode = campaignId ? 'campaign' : brandId ? 'brand' : tagId ? 'adid' : null;
+	// ??shouldn't brand be vertiser??
+	const filterMode = campaignId ? 'campaign' : brandId ? 'brand' : agencyId? 'agency' : tagId ? 'adid' : null;
 	// Get the ID for the object we're filtering for
-	const filterId = {campaign: campaignId, brand: brandId, adid: tagId}[filterMode];
+	const filterId = {campaign: campaignId, brand: brandId, agency:agencyId, adid: tagId}[filterMode];
 
 	if (!filterMode) {
 		return <Alert color="info">Select a brand, campaign, or tag to see data.</Alert>;
@@ -103,6 +105,19 @@ const GreenMetrics2 = ({}) => {
 		const campaignIds = List.hits(pvAllCampaigns.value).map(c => c.id);
 		if ( ! yessy(campaignIds)) {
 			return <Alert color="info">No campaigns for brand id: {filterId}</Alert>;
+		}
+		q = SearchQuery.setPropOr(null, "campaign", campaignIds).query;
+	}
+	if (filterMode==="agency") { // copy pasta of brand above
+		// get the campaigns
+		let sq = SearchQuery.setProp(null, "agencyId", filterId);
+		const pvAllCampaigns = getDataList({type: C.TYPES.Campaign, status:KStatus.PUBLISHED, q:sq.query}); 
+		if ( ! pvAllCampaigns.resolved) {
+			return <Misc.Loading text="Fetching agency campaigns..." />;
+		}
+		const campaignIds = List.hits(pvAllCampaigns.value).map(c => c.id);
+		if ( ! yessy(campaignIds)) {
+			return <Alert color="info">No campaigns for agency id: {filterId}</Alert>;
 		}
 		q = SearchQuery.setPropOr(null, "campaign", campaignIds).query;
 	}
