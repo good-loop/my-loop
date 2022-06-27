@@ -61,9 +61,9 @@ const FindOutMoreSection = () => {
 	return (<><BG image='img/homepage/our-mission-background-lg.svg' style={{backgroundPosition:'center bottom'}} >
 		<PageCard id="upper-cta" >
 			<div className='text-center'>
-				<div className='rasied text-white'>
+				<div className='rasied text-white' style={{fontFamily:'Montserrat'}}>
 					<span>TOGETHER WE'VE RAISED</span> <br/>
-					<TickerTotal noPennies={true} /> <br/>
+					<TickerTotal noPennies={true} style={{fontWeight:'900'}} /> <br/>
 					<span>For Global Causes</span>
 				</div>
 				<div className="conversation-bubble position-relative d-flex align-items-center justify-content-center">

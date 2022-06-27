@@ -7,15 +7,12 @@ import DataStore from '../../base/plumbing/DataStore';
 import { modifyPage } from '../../base/plumbing/glrouter';
 import C from '../../C';
 import { space, stopEvent, scrollTo, isPortraitMobile } from '../../base/utils/miscutils';
-import CharityLogo from '../CharityLogo';
 import { setFooterClassName } from '../Footer';
-import { T4GSignUpButton } from '../T4GSignUp';
-import { WhatIsTabsForGood, HowTabsForGoodWorks, TabsForGoodSlideSection, CurvePageCard, MyLandingSection, PageCard, CornerHummingbird } from '../pages/CommonComponents';
 import { MyDataSignUpButton, MyDataSignUpModal } from './MyDataSignUp';
 import TickerTotal from '../TickerTotal';
-import MyDataBadge from './MyDataBadge';
 import BG from '../../base/components/BG';
 import { CollapseableCard } from './MyDataCommonComponents';
+import { LogoBanner } from '../pages/CommonComponents';
 
 const ProductPageContainer = ({className, children, ...props}) => <Container fluid="lg" className={space("product-container", className)} {...props}>{children}</Container>;
 
@@ -48,10 +45,7 @@ const LandingSection = () => {
                 <img src="/img/mydata/product-page/right-coins-padlocks.png" className="padlocks padlock-right d-none d-md-inline-block"/>
             </Container>
         </div>
-        <div className="d-flex flex-row justify-content-center align-items-center">
-            <img src="/img/mydata/product-page/charity-logos-mobile.png" className="w-75 mx-auto d-md-none"/>
-            <img src="/img/mydata/product-page/charity-logos-desktop.png" className="w-75 mx-auto d-none d-md-inline-block"/>
-        </div>
+        <LogoBanner />
     </div>;
 };
 

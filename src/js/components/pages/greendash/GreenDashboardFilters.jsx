@@ -211,7 +211,9 @@ const GreenDashboardFilters = ({}) => {
 		campaign: availableCampaigns,
 		tag: availableTags
 	}[filterMode];
-	
+	// alphabetic sort by name so we can find items in a longer list
+	filterByEntityOptions.sort((a,b) => (a.name || a.id || "").localeCompare((b.name || b.id || "")));
+
 	// label and logo
 	let campaignItem = campaign? getDataItem({type:C.TYPES.Campaign, id:campaign, status:KStatus.PUBLISHED}).value : null;
 	let brandItem = brand || (campaignItem && campaignItem.vertiser)? getDataItem({type:C.TYPES.Advertiser, id:brand || campaignItem.vertiser, status:KStatus.PUBLISHED}).value : null;
