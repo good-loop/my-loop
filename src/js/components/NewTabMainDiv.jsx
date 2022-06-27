@@ -411,8 +411,8 @@ const LinksDisplay = ({bookmarksData}) => {
 	const CircleLink = ({bg, url, children, title}) => {
 		if (!url) url = '#';
 		return <Col onClick={() => parent.location.href = url} title={title} className="bookmark-item d-flex flex-column align-items-center">
-			<BG src={bg} className="bookmark-box shadow" />
-			<span className="text-white text-center" style={{userSelect:"none"}}>
+			<BG src={bg} className="bookmark-box shadow mb-1" center style={{backgroundSize:'1.5rem',backgroundRepeat:'no-repeat'}} />
+			<span className="text-white text-center" style={{userSelect:"none",padding:'0 .5rem',paddingTop:'.3rem',borderRadius:'10px',backgroundColor:'rgb(0 0 0 / 10%)'}}>
 				{children}
 			</span>
 		</Col>;
@@ -435,10 +435,12 @@ const LinksDisplay = ({bookmarksData}) => {
 	// To allow sites like mail.google.com get fetch app specific favicons, at the same time advoid 404 favicons
 	const favSubdomainKeywords = ['google'];
 
+	const maxBookmarks = 10; // max number of bookmarks to display
+
 	if (bookmarksData.length >= 1) {
 		console.log("bookmarksData loaded", bookmarksData);
 		return <Row className='bookmark-flexbox'>
-			{bookmarksData.slice(0, 15).map((bookmark, i) => { // Max 15 bookmarks
+			{bookmarksData.slice(0, maxBookmarks).map((bookmark, i) => {
 				if (bookmark.url) { // Catch bookmarks folder that do not have url
 					const url = bookmark.url;
 					let domain = url.match("(?<=:\/\/)(.*?)(?=\/)")[0];
@@ -453,7 +455,7 @@ const LinksDisplay = ({bookmarksData}) => {
 	}
 
 	return <Row className='bookmark-flexbox'>
-		{/* {Array.apply(null, Array(15)).map((v, i) => <CircleLink key={i}>{i}</CircleLink>)} */}
+		{/* {Array.apply(null, Array(10)).map((v, i) => <CircleLink key={i}>{i}</CircleLink>)} */}
 	</Row>
 }
 
