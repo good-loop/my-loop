@@ -12,14 +12,6 @@ import KStatus from '../../../base/data/KStatus';
 import { getId } from '../../../base/data/DataClass';
 
 
-const dummyDataCampaign = {
-	labels: ['Campaign A', 'Campaign B', 'Campaign C', 'Campaign D',],
-	datasets: [{
-		label: 'Kg CO2',
-		data: [67, 59, 68, 70],
-	}],
-};
-
 const baseOptions = {
 	indexAxis: 'y',
 	scales: { x: { ticks: { callback: v => `${v} kg` } } },
@@ -57,13 +49,15 @@ const QuartersCard = ({baseFilters}) => {
 	// add it into chartProps
 	pvsTable.forEach((pvTable, i) => {
 		if ( ! pvTable.value) return;
-		let table = pvTable.value.table;
-		if ( ! table || ! table.length) {
-			return;	// no data for this quarter
-		}
-		// insert new values as they arrive		
+
+		// Set label to show quarter is loaded, even if result is empty
 		let quarter = quarters[i];
 		chartProps.data.labels[i] = printPeriod(quarter, true);
+
+		let table = pvTable.value.table;
+		if ( ! table || ! table.length) {
+			return; // no data for this quarter
+		}
 
 		// Display kg or tonnes?
 		let thisCarbon = getSumColumn(table, 'totalEmissions');
