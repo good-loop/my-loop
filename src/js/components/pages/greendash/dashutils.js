@@ -280,18 +280,19 @@ const dfltMinColour = [186, 9, 84];
 export const dataColours = (series, maxColour = dfltMaxColour, minColour = dfltMinColour) => {
 	if (!series.length) return [];
 	if (series.length === 1) return [`hsl(${maxColour[0]} ${maxColour[1]} ${maxColour[2]})`]
-	const max = Math.max(...series);
-	const min = Math.min(...series);
-	const range = max - min;
+
+	// make sure everything passed to max/min is coercable to a real number
+	const cleanSeries = series.filter(x => isFinite(x));
+	const max = Math.max(...cleanSeries);
+	const min = Math.min(...cleanSeries);
+	const range = max - min || 1; // no x/0 for perfectly uniform datasets!
 
 	const [minH, minS, minL] = minColour;
-	const rangeH = maxColour[0] - minH;
-	const rangeS = maxColour[1] - minS;
-	const rangeL = maxColour[2] - minL;
+	const [dH, dS, dL] = maxColour.map((x, i) => x - minColour[i]);
 
 	return series.map(val => {
 		const quotient = (val - min) / range;
-		return `hsl(${Math.round(minH + (quotient * rangeH))} ${Math.round(minS + (quotient * rangeS))}% ${Math.round(minL + (quotient * rangeL))}%)`
+		return `hsl(${Math.round(minH + (quotient * dH))} ${Math.round(minS + (quotient * dS))}% ${Math.round(minL + (quotient * dL))}%)`
 	});
 };
 
