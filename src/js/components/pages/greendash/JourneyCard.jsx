@@ -56,15 +56,24 @@ const TreesSection = ({treesPlanted, coralPlanted}) => {
  * Show the carbon offsets & tree-planting of the current campaign set & compare estimated emissions.
  * @param {Object} props
  * @param {?Campaign[]} props.campaigns The campaign(s) currently in focus
+ * @param {?Boolean} props.emptyTable Carbon data loaded but empty - show "no data" insead of "loading campaigns"
  * @returns 
  */
-const JourneyCard = ({ campaigns, period, baseFilters }) => {
+const JourneyCard = ({ campaigns, period, emptyTable }) => {
+	if (emptyTable) return (
+		<GreenCard title="Your journey so far" className="carbon-journey">
+			<p>No data available for your current filters.</p>
+		</GreenCard>
+	);
+	
 	if (!campaigns || !campaigns.length) {
 		return <Misc.Loading text="Fetching your campaign data..." />;
 	}
 
 	let isLoading;
 	const offsetTypes = "carbon trees coral".split(" ");
+
+
 	let offsets = {}; // HACK will include carbonTotal etc too
 	offsetTypes.forEach(ot => offsets[ot+"Total"] = 0);
 	campaigns.forEach(campaign => {
