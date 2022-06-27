@@ -87,15 +87,17 @@ const GreenMetrics2 = ({}) => {
 	} 
 	
 	// Fetch common data for CO2Card and BreakdownCard.
-	// JourneyCard takes all-time data, CompareCard sets its own time periods, TimeOfDayCard overrides time-series interval
+	// CompareCard sets its own time periods & TimeOfDayCard sets the timeofday flag, so both need to fetch their own data
 	// ...but give them the basic filter spec so they stay in sync otherwise
-	// Query filter e.g. which brand, campaign, or tag?	
+
+	// Query filter e.g. which brand, campaign, or tag?
 	let q = `${filterMode}:${filterId}`;
+
 	// HACK: filterMode=brand is twice wrong: the data uses vertiser, and some tags dont carry brand info :(
 	// So do it by an OR over campaign-ids instead.
-	if (filterMode==="brand") {
+	if (filterMode === 'brand') {
 		// get the campaigns
-		let sq = SearchQuery.setProp(null, "vertiser", filterId);
+		let sq = SearchQuery.setProp(null, 'vertiser', filterId);
 		const pvAllCampaigns = getDataList({type: C.TYPES.Campaign, status:KStatus.PUBLISHED, q:sq.query}); 
 		if ( ! pvAllCampaigns.resolved) {
 			return <Misc.Loading text="Fetching brand campaigns..." />;
@@ -104,10 +106,11 @@ const GreenMetrics2 = ({}) => {
 		if ( ! yessy(campaignIds)) {
 			return <Alert color="info">No campaigns for brand id: {filterId}</Alert>;
 		}
-		q = SearchQuery.setPropOr(null, "campaign", campaignIds).query;
+		q = SearchQuery.setPropOr(null, 'campaign', campaignIds).query;
 	}
+
 	// HACK: Is this a master campaign? Do we need to cover sub-campaigns?
-	if (filterMode==="campaign") {
+	if (filterMode === 'campaign') {
 		const pvCampaign = getDataItem({type:C.TYPES.Campaign, id:campaignId, status:KStatus.PUB_OR_DRAFT});
 		if ( ! pvCampaign.value) {
 			return <Misc.Loading text="Fetching campaign..." />;
@@ -122,7 +125,7 @@ const GreenMetrics2 = ({}) => {
 			if ( ! yessy(campaignIds)) {
 				return <Alert color="info">No campaigns for master campaign id: {filterId}</Alert>;
 			}
-			q = SearchQuery.setPropOr(null, "campaign", campaignIds).query;
+			q = SearchQuery.setPropOr(null, 'campaign', campaignIds).query;
 		}
 	}
 	
@@ -132,13 +135,13 @@ const GreenMetrics2 = ({}) => {
 		end: period.end.toISOString(),
 	};
 
-	const pvChartData = getCarbon({
-		...baseFilters,
-	});
+	const pvChartData = getCarbon({ ...baseFilters });
+
 	let pvCampaigns = getCampaigns(pvChartData.value?.table);
 	if (pvCampaigns && PromiseValue.isa(pvCampaigns.value)) { // HACK unwrap nested PV
 		pvCampaigns = pvCampaigns.value;
 	}
+	// TODO Fall back to filterMode methods to get campaigns when table is empty
 
 	if (!pvChartData.resolved) {
 		return <Misc.Loading text="Fetching campaign lifetime data..." />;
@@ -150,6 +153,10 @@ const GreenMetrics2 = ({}) => {
 	const commonProps = { period, baseFilters };
 	// Removed (temp?): brands, campaigns, tags
 
+	// HACK: Tell JourneyCard we had an empty table & so couldn't get campaigns (but nothing is "loading")
+	// TODO We CAN get campaigns but it'd take more of a rewrite than we want to do just now.
+	const emptyTable = pvChartData.resolved && (!pvChartData?.value?.table || pvChartData.value.table.length === 1);
+
 	return (<>
 		<OverviewWidget period={period} data={pvChartData.value} />
 		<Row className="card-row">
@@ -157,7 +164,7 @@ const GreenMetrics2 = ({}) => {
 				<TimeSeriesCard {...commonProps} data={pvChartData.value} />
 			</Col>
 			<Col xs="12" sm="4" className="flex-column">
-				<JourneyCard campaigns={List.hits(pvCampaigns?.value)} {...commonProps} />
+				<JourneyCard campaigns={List.hits(pvCampaigns?.value)} {...commonProps} emptyTable={emptyTable} />
 			</Col>
 		</Row>
 		<Row className="card-row">
