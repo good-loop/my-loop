@@ -222,8 +222,8 @@ const GreenDashboardFilters = ({}) => {
 	return (
 		<Row className="greendash-filters my-2">
 			<Col xs="12">
-				<Logo item={brandItem || campaignItem} />
 				<Form inline>
+				<Logo className="mr-2" item={brandItem || campaignItem} />
 					{/* ??Seeing layout bugs that can block use -- refactoring to use a PropControl might be best*/}
 					<UncontrolledDropdown className="filter-dropdown">
 						<DropdownToggle className="pl-0" caret>{periodLabel}</DropdownToggle>
