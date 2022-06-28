@@ -123,10 +123,10 @@ const JourneyCard = ({ campaigns, period, emptyTable }) => {
 	}
 
 	return <GreenCard title="Your journey so far" className="carbon-journey">
-		{isLoading? <Misc.Loading /> : <>
+		{isLoading? <Misc.Loading /> : <div>
 			<CO2Section co2Offset={offsets.carbonTotal} />
 			<TreesSection treesPlanted={offsets.treesTotal} coralPlanted={offsets.coralTotal} />
-		</>}
+		</div>}
 		{impactSplashPage && <A className="btn btn-primary" href={impactSplashPage}><Logo item={brandOrAgency} /> Impact Overview</A>}
 		{downloadCSVLink}
 		<GreenCardAbout>
@@ -134,6 +134,7 @@ const JourneyCard = ({ campaigns, period, emptyTable }) => {
 			<p>What tree planting projects do we support?</p>
 			<p>Campaigns now have info on their non-CO2-offset projects!</p>
 		</GreenCardAbout>
+		{DataStore.getUrlValue("period") !== "all" && <small>The offsets shown are for campaigns that overlap the time period.</small>}
 	</GreenCard>;
 };
 
