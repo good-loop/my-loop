@@ -728,7 +728,7 @@ const TwinCards = ({twinCardsContent}) => {
 		<div className="text-center mt-5" style={{zIndex:'2'}}>
 			<Row style={{height:'30em'}} className='shadow'>
 				<Col md={6} className='p-0 d-none d-md-block'>
-					<BG image={twinCardsContent[0].imgUrl} className={space(twinCardsContent[0].imgClass, "h-100 w-100")} 
+					<BG image={twinCardsContent[0].imgUrl} className={space(twinCardsContent[0].imgClass, "h-100 w-100 rounded")} 
 					style={{backgroundPosition:'center',backgroundSize:'cover',backgroundRepeat:'no-repeat'}} />
 				</Col>
 				<Col md={6} className='p-0'>
@@ -771,7 +771,7 @@ const TwinCards = ({twinCardsContent}) => {
 					</Card>
 				</Col>
 				<Col md={6} className='p-0 d-none d-md-block'>
-					<BG image={twinCardsContent[1].imgUrl} className={space(twinCardsContent[1].imgClass, "h-100 w-100")} 
+					<BG image={twinCardsContent[1].imgUrl} className={space(twinCardsContent[1].imgClass, "h-100 w-100 rounded")} 
 					style={{backgroundPosition:'center',backgroundSize:'cover',backgroundRepeat:'no-repeat'}} />
 				</Col>
 			</Row>
