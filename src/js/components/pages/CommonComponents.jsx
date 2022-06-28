@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { RegisterLink, setLoginVerb, setShowLogin } from '../../base/components/LoginWidget';
-import { Col, Container, Row, Carousel, CarouselControl, CarouselItem, Button } from 'reactstrap';
+import { Col, Container, Row, Button, Card, CardImg, CardTitle, CardBody, CardText } from 'reactstrap';
 import BG from '../../base/components/BG';
 import { getBrowserVendor, isMobile, isPortraitMobile, scrollTo, space, stopEvent } from '../../base/utils/miscutils';
 import C from '../../C';
@@ -690,18 +690,21 @@ const WhatIsTabsForGood	= ({ngo}) => {
 	</>);
 };
 
+const ArrowLink = ({className, link, children}) => {
+	if (!link) link = "#";
+	return (<a className={space("text-decoration-none mt-3", className)}  href={link}>
+		<span style={{textDecoration:"underline"}}>{children}</span> →
+	</a>);
+}
+
 const TwinCards = ({twinCardsContent}) => {
+	assert (twinCardsContent.length === 2, "TwinCards must have 2 cards");
 
-	const MyDataHowItWorksButton = ({className}) =>
-	<a className={space("text-decoration-none mt-3", className)}  href="/mydata#howitworks">
-		<span style={{textDecoration:"underline"}}>How It Works</span> →
-	</a>;
-
-	return(
-		<div className="gridbox gridbox-md-2 gridbox-gap-4 text-center" style={{zIndex:'2'}}>
-		{twinCardsContent.map((item, idx) => {
+	if (mobileWidth) return (
+		<div className="gridbox gridbox-gap-4 text-center" style={{zIndex:'2'}}>
+		{twinCardsContent && twinCardsContent.map((item, idx) => {
 			return(
-				<Card key={idx} className='border shadow'>
+				<Card key={idx} className='shadow'>
 					<CardImg className={item.imgClass} variant="top" src={item.imgUrl} />
 					<CardBody>
 						<div>
@@ -719,6 +722,59 @@ const TwinCards = ({twinCardsContent}) => {
 				</Card>
 			)
 		})}
+		</div>
+	);
+	else return (
+		<div className="text-center mt-5" style={{zIndex:'2'}}>
+			<Row style={{height:'30em'}} className='shadow'>
+				<Col md={6} className='p-0 d-none d-md-block'>
+					<BG image={twinCardsContent[0].imgUrl} className={space(twinCardsContent[0].imgClass, "h-100 w-100 rounded")} 
+					style={{backgroundPosition:'center',backgroundSize:'cover',backgroundRepeat:'no-repeat'}} />
+				</Col>
+				<Col md={6} className='p-0'>
+					<Card className='m-0 w-100 h-100 p-5'>
+						<CardBody className='d-flex justify-content-center'>
+							<div>
+								<CardTitle className='color-gl-red'>
+									{twinCardsContent[0].title}
+								</CardTitle>
+								<CardText className='color-gl-darker-grey'>
+									{twinCardsContent[0].text}
+								</CardText>
+							</div>
+							<div className="buttons mt-3">
+								{twinCardsContent[0].button}
+							</div>
+						</CardBody>
+					</Card>
+				</Col>
+			</Row>
+
+			<img src="img/TabsForGood/sparkle.png" className='logo my-3' />
+
+			<Row style={{height:'30em'}} className='shadow'>
+				<Col md={6} className='p-0'>
+					<Card className='m-0 w-100 h-100 p-5'>
+						<CardBody className='d-flex justify-content-center'>
+							<div>
+								<CardTitle className='color-gl-red'>
+									{twinCardsContent[1].title}
+								</CardTitle>
+								<CardText className='color-gl-darker-grey'>
+									{twinCardsContent[1].text}
+								</CardText>
+							</div>
+							<div className="buttons mt-3">
+								{twinCardsContent[1].button}
+							</div>
+						</CardBody>
+					</Card>
+				</Col>
+				<Col md={6} className='p-0 d-none d-md-block'>
+					<BG image={twinCardsContent[1].imgUrl} className={space(twinCardsContent[1].imgClass, "h-100 w-100 rounded")} 
+					style={{backgroundPosition:'center',backgroundSize:'cover',backgroundRepeat:'no-repeat'}} />
+				</Col>
+			</Row>
 		</div>
 	);
 }
@@ -744,5 +800,6 @@ export {
 	CornerHummingbird,
 	CurveTransition,
 	MyDataButton,
-	TwinCards
+	TwinCards,
+	ArrowLink
 };

@@ -19,6 +19,7 @@ import C from '../C';
 import SubscriptionBox, { SubscriptionForm } from './cards/SubscriptionBox';
 import CharityLogo from './CharityLogo';
 import { setPersonSetting } from './pages/TabsForGoodSettings';
+import { ArrowLink } from './pages/CommonComponents';
 
 // Design: https://miro.com/app/board/o9J_lxO4FyI=/?moveToWidget=3458764517111672164&cot=14
 // Copy: https://docs.google.com/document/d/1_mpbdWBeaIEyKHRr-mtC1FHAPEfokcRZTHXgMkYJyVk/edit?usp=sharing
@@ -51,9 +52,7 @@ export const T4GSignUpButton = ({ className, children, dUnset }) => {
 };
 
 export const T4GHowItWorksButton = ({className}) =>
-	<a className={space("text-decoration-none mt-3", className)}  href="/tabsforgood#howitworks">
-		<span style={{textDecoration:"underline"}}>How It Works</span> →
-	</a>;
+	<ArrowLink className={className} link="/tabsforgood#howitworks" >How it works</ArrowLink>;;
 
 
 export const T4GSignUpLink = ({ className, children, onClick }) => {

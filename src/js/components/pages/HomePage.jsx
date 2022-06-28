@@ -15,6 +15,7 @@ import {
 	PageCard,
 	CurveTransition,
 	TwinCards,
+	ArrowLink,
 } from './CommonComponents';
 import BG from '../../base/components/BG';
 import { setFooterClassName } from '../Footer';
@@ -84,53 +85,28 @@ const FindOutMoreSection = () => {
  * CTA Cards for T4G & MyData
  */
 const SlideCardsSection = () => {
-	const MyDataHowItWorksButton = ({className}) =>
-	<a className={space("text-decoration-none mt-3", className)}  href="/mydata#howitworks">
-		<span style={{textDecoration:"underline"}}>How It Works</span> →
-	</a>;
+
+	const cardOne = {
+		imgUrl: 'img/homepage/tabs-for-good-card.png',
+		imgClass: 'bg-gl-light-pink',
+		title: <><span style={{fontWeight:'bold'}}>TABS FOR GOOD</span> <br/>Support A Charity Of Your Choice For Free</>,
+		text: 'Convert your browsing into donations, simply by opening tabs with our desktop browser extension.',
+		button: <><T4GSignUpButton className="w-100 mb-3"/>	<T4GHowItWorksButton className="w-100 color-gl-red" /></>
+	}
+
+	const cardTwo = {
+		imgUrl: 'img/homepage/my-data-product.png',
+		imgClass: 'bg-gl-lighter-blue',
+		title: <><span style={{fontWeight:'bold'}}>MY.DATA</span> <br/>How Many Cookies Have You Accepted Today?</>,
+		text: 'Convert your browsing into donations, simply by opening tabs with our desktop browser extension..',
+		button: <><MyDataButton className="w-100" /> <ArrowLink className='w-100 color-gl-red' link="/getmydata#howitworks" >How it works</ArrowLink></>
+	}
 
 	return (<>
 		<PageCard className="tabs-for-goods-slide-card" >
 			<h3 className='text-center' style={{fontSize:'1.25rem'}}>Here's How You Can Get Involved</h3>
-			<div className="gridbox gridbox-md-2 gridbox-gap-4">
-				<Card className='border shadow'>
-					<CardImg className='bg-gl-light-pink' variant="top" src="img/homepage/tabs-for-good-card.png" />
-					<CardBody>
-						<div>
-							<CardTitle className='color-gl-red'>
-								<span style={{fontWeight:'bold'}}>TABS FOR GOOD</span> <br/>
-								Support A Charity Of Your Choice For Free
-							</CardTitle>
-							<CardText className='color-gl-darker-grey'>
-								Convert your browsing into donations, simply by opening tabs with our desktop browser extension.
-							</CardText>
-						</div>
-						<div className="buttons">
-							<T4GSignUpButton className="w-100 mb-3"/>
-							<T4GHowItWorksButton className="w-100 color-gl-red" />
-						</div>
-					</CardBody>
-				</Card>
-				<Card className='border shadow'>
-					<a id="mydata-cta" />
-					<CardImg className='bg-gl-lighter-blue' variant="top" src="img/homepage/my-data-product.png" />
-					<CardBody>
-						<div>
-							<CardTitle className='color-gl-red'>
-								<span style={{fontWeight:'bold'}}>MY.DATA</span> <br/>
-								How Many Cookies Have You Accepted Today?
-							</CardTitle>
-							<CardText className='color-gl-darker-grey'>
-								Don't just give it away - control your data and convert it into charity donations with My Data.
-							</CardText>
-						</div>
-						<div className="buttons">
-							<MyDataButton className="w-100" />
-							<MyDataHowItWorksButton className="w-100 color-gl-red" />
-						</div>
-					</CardBody>
-				</Card>
-			</div>
+			<p className='text-center d-none d-md-block color-gl-muddy-blue'>As Well As Our Adverts, We're Creating Some Smart Ways To Help You Do Some Good Every Day, For Free...</p>
+			<TwinCards twinCardsContent={[].concat(cardOne, cardTwo)} />
 		</PageCard>
 	</>)
 }
@@ -141,7 +117,7 @@ const StoriesSection = () => {
 		imgClass: 'bg-gl-light-pink',
 		title: <span className='text-uppercase' style={{fontWeight:'bold'}}>We can make things happen?</span>,
 		text: 'Our amazing community has so far supported everything from childhood literacy to coral reef protection and Black Lives Matter.',
-		button: 'Discover Our Impact'
+		button: <ArrowLink className='w-100 color-gl-red' link="/impactoverview" >Discover Our Impact</ArrowLink>
 	}
 
 	const cardTwo = {
@@ -149,50 +125,15 @@ const StoriesSection = () => {
 		imgClass: 'bg-gl-blue',
 		title: <span className='text-uppercase' style={{fontWeight:'bold'}}>How it all began</span>,
 		text: 'My.Good-Loop is brought you by the team at Good-Loop, founded by Amy Williams and Daniel Winterstein.',
-		button: 'Our Story'
+		button: <ArrowLink className='w-100 color-gl-red' link="/ourstory" >Our Story</ArrowLink>
 	}
 
 	return (
 		<PageCard className='stories-section pt-0'>
 			<h3 style={{textTransform:'unset',fontWeight:'600'}}>The My.Good-Loop Story</h3>
 			<p className='color-gl-muddy-blue mb-0'>Converting the multi-billion dollar online advertsing industry into a force for good - with you.</p>
-			{/* <TwinCards TwinCardsContent={[].concat(cardOne, cardTwo)} /> */}
-			<div className="gridbox gridbox-md-2 gridbox-gap-4 text-center" style={{zIndex:'2'}}>
- 				<Card className='border shadow'>
- 					<CardImg className='bg-gl-light-pink' variant="top" src="img/ourstory/Good-Loop_UsingAdMoneyForGoodWithBG.png" />
- 					<CardBody>
- 						<div>
- 							<CardTitle className='color-gl-red'>
- 								<span className='text-uppercase' style={{fontWeight:'bold'}}>We can make things happen</span> <br/>
- 							</CardTitle>
- 							<CardText className='color-gl-darker-grey'>
- 								Our amazing community has so far supported everything from childhood literacy to coral reef protection and Black Lives Matter.
- 							</CardText>
- 						</div>
- 						<div className="buttons">
- 							Discover Our Impact
- 						</div>
- 					</CardBody>
- 				</Card>
- 				<Card className='border shadow'>
- 					<CardImg className='bg-gl-blue' variant="top" src="img/homepage/amyanddaniel.png" />
- 					<CardBody>
- 						<div>
- 							<CardTitle className='color-gl-red'>
- 								<span className='text-uppercase' style={{fontWeight:'bold'}}>How it all began</span> <br/>
- 							</CardTitle>
- 							<CardText className='color-gl-darker-grey'>
- 								My.Good-Loop is brought you by the team at Good-Loop, founded by Amy Williams and Daniel Winterstein.
- 							</CardText>
- 						</div>
- 						<div className="buttons">
- 							Our Story
- 						</div>
- 					</CardBody>
- 				</Card>
- 			</div>
+			<TwinCards twinCardsContent={[].concat(cardOne, cardTwo)} />
  			
-
 			<div className="testimonial-blob position-relative d-flex align-items-center justify-content-center mt-5 pb-5">
 				<img style={{maxWidth:'480px',zIndex:'1',margin:'0 -1rem'}} src="img/homepage/testimonial-blob-logo.svg"/>
 				<div className="bubble-content position-absolute" style={{top:'20%',margin:'0 10%',maxWidth:'400px',zIndex:'2'}}>
