@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Collapse, Nav, Navbar, NavbarToggler, NavItem } from 'reactstrap';
+import Icon from '../../../base/components/Icon';
+import LinkOut from '../../../base/components/LinkOut';
+import Logo from '../../../base/components/Logo';
 import Campaign from '../../../base/data/Campaign';
 import KStatus from '../../../base/data/KStatus';
 import { getDataItem } from '../../../base/plumbing/Crud';
@@ -68,9 +71,14 @@ const GreenNavBar = ({active}) => {
 				</A>
 			</NavItem> */}
 			<div className="navbar-bottom-decoration">
-				<img className="tree-side" src="/img/green/tree-light.svg" />
-				<img className="tree-centre" src="/img/green/tree-light.svg" />
-				<img className="tree-side" src="/img/green/tree-light.svg" />
+				<center><LinkOut href='https://scope3.com'>
+					<img src='/img/gl-logo/external/scope3-logo.svg' className='w-75' />Powered by Scope3 data
+				</LinkOut></center>
+				<div className='trees'>
+					<img className="tree-side" src="/img/green/tree-light.svg" />
+					<img className="tree-centre" src="/img/green/tree-light.svg" />
+					<img className="tree-side" src="/img/green/tree-light.svg" />
+				</div>
 			</div>
 		</Nav>
 	</Navbar>;
