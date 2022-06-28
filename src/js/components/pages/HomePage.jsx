@@ -105,6 +105,7 @@ const SlideCardsSection = () => {
 	return (<>
 		<PageCard className="tabs-for-goods-slide-card" >
 			<h3 className='text-center' style={{fontSize:'1.25rem'}}>Here's How You Can Get Involved</h3>
+			<p className='text-center d-none d-md-block color-gl-muddy-blue'>As Well As Our Adverts, We're Creating Some Smart Ways To Help You Do Some Good Every Day, For Free...</p>
 			<TwinCards twinCardsContent={[].concat(cardOne, cardTwo)} />
 		</PageCard>
 	</>)
@@ -116,7 +117,7 @@ const StoriesSection = () => {
 		imgClass: 'bg-gl-light-pink',
 		title: <span className='text-uppercase' style={{fontWeight:'bold'}}>We can make things happen?</span>,
 		text: 'Our amazing community has so far supported everything from childhood literacy to coral reef protection and Black Lives Matter.',
-		button: 'Discover Our Impact'
+		button: <ArrowLink className='w-100 color-gl-red' link="/impactoverview" >Discover Our Impact</ArrowLink>
 	}
 
 	const cardTwo = {
@@ -124,7 +125,7 @@ const StoriesSection = () => {
 		imgClass: 'bg-gl-blue',
 		title: <span className='text-uppercase' style={{fontWeight:'bold'}}>How it all began</span>,
 		text: 'My.Good-Loop is brought you by the team at Good-Loop, founded by Amy Williams and Daniel Winterstein.',
-		button: 'Our Story'
+		button: <ArrowLink className='w-100 color-gl-red' link="/ourstory" >Our Story</ArrowLink>
 	}
 
 	return (
