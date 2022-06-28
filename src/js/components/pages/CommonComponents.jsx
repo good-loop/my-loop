@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { RegisterLink, setLoginVerb, setShowLogin } from '../../base/components/LoginWidget';
-import { Col, Container, Row, Carousel, CarouselControl, CarouselItem, Button } from 'reactstrap';
+import { Col, Container, Row, Button, Card, CardImg, CardTitle, CardBody, CardText } from 'reactstrap';
 import BG from '../../base/components/BG';
 import { getBrowserVendor, isMobile, isPortraitMobile, scrollTo, space, stopEvent } from '../../base/utils/miscutils';
 import C from '../../C';
@@ -690,16 +690,17 @@ const WhatIsTabsForGood	= ({ngo}) => {
 	</>);
 };
 
+const ArrowLink = ({className, link, children}) => {
+	if (!link) link = "#";
+	return (<a className={space("text-decoration-none mt-3", className)}  href={link}>
+		<span style={{textDecoration:"underline"}}>{children}</span> →
+	</a>);
+}
+
 const TwinCards = ({twinCardsContent}) => {
-
-	const MyDataHowItWorksButton = ({className}) =>
-	<a className={space("text-decoration-none mt-3", className)}  href="/mydata#howitworks">
-		<span style={{textDecoration:"underline"}}>How It Works</span> →
-	</a>;
-
 	return(
 		<div className="gridbox gridbox-md-2 gridbox-gap-4 text-center" style={{zIndex:'2'}}>
-		{twinCardsContent.map((item, idx) => {
+		{twinCardsContent && twinCardsContent.map((item, idx) => {
 			return(
 				<Card key={idx} className='border shadow'>
 					<CardImg className={item.imgClass} variant="top" src={item.imgUrl} />
@@ -744,5 +745,6 @@ export {
 	CornerHummingbird,
 	CurveTransition,
 	MyDataButton,
-	TwinCards
+	TwinCards,
+	ArrowLink
 };
