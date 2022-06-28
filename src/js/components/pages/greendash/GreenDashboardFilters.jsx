@@ -37,9 +37,10 @@ const QuarterButtons = ({ period, setNamedPeriod }) => {
 };
 
 
-const defaultFilterMode = (brand, campaign, tag) => {
-	if (brand && brand !== 'all') return 'brand';
+const defaultFilterMode = ({brand, agency, campaign, tag}) => {
+	if (brand && brand !== 'all') return 'brand';	
 	if (campaign && campaign !== 'all') return 'campaign';
+	if (agency && agency !== 'all') return 'agency';
 	if (tag && tag !== 'all') return 'tag';
 }
 
@@ -54,16 +55,18 @@ const samePeriod = (periodA, periodB) => {
 
 
 /** Should we show the "Apply New Filters" button - ie have they changed? */
-const filtersChanged = (nextPeriod, nextFilterMode, nextBrand, nextCampaign, nextTag) => {
+const filtersChanged = ({nextPeriod, nextFilterMode, nextBrand, nextAgency, nextCampaign, nextTag}) => {
 	const currentPeriod = periodFromUrl();
 	if (!samePeriod(currentPeriod, nextPeriod)) return true;
 	const currentBrand = DataStore.getUrlValue('brand');
 	if (currentBrand !== nextBrand) return true;
+	const currentAgency = DataStore.getUrlValue('agency');
+	if (currentAgency !== nextAgency) return true;
 	const currentCampaign = DataStore.getUrlValue('campaign');
 	if (currentCampaign !== nextCampaign) return true;
 	const currentTag = DataStore.getUrlValue('tag');
 	if (currentTag !== nextTag) return true;
-	const currentFilterMode = defaultFilterMode(currentBrand, currentCampaign, currentTag);
+	const currentFilterMode = defaultFilterMode({brand:currentBrand, agency:currentAgency, campaign:currentCampaign, tag:currentTag});
 	if (currentFilterMode !== nextFilterMode) return true;
 	return false;
 };
@@ -94,14 +97,17 @@ const longMenuStyle = {
  * 
  * This is set/stored in the url (so links can be shared)
  * 
+ * Refactor to use PropControlDataItem??
+ * 
  */
 const GreenDashboardFilters = ({}) => {
 	const [period, setPeriod] = useState(initPeriod());
 	const [brand, setBrand] = useState(() => DataStore.getUrlValue('brand'));
+	const [agency, setAgency] = useState(() => DataStore.getUrlValue('agency'));
 	const [campaign, setCampaign] = useState(() => DataStore.getUrlValue('campaign'));
 	const [tag, setTag] = useState(() => DataStore.getUrlValue('tag'));
 
-	const [filterMode, setFilterMode] = useState(defaultFilterMode(brand, campaign, tag));
+	const [filterMode, setFilterMode] = useState(defaultFilterMode({brand, agency, campaign, tag}));
 	const [showCustomRange, setShowCustomRange] = useState(!period?.name);
 
 	// Update this to signal that the new filter values should be applied
@@ -117,7 +123,7 @@ const GreenDashboardFilters = ({}) => {
 
 		// ...and re-add the ones we want.
 		modifyPage(null, {
-			[filterMode]: { brand, campaign, tag }[filterMode],
+			[filterMode]: { brand, agency, campaign, tag }[filterMode],
 			...periodToParams(period),
 		}, false, true);
 	}, [dummy])
@@ -125,6 +131,7 @@ const GreenDashboardFilters = ({}) => {
 	// Update whichever ID we're currently filtering by
 	const setCurrentTemp = {
 		brand: setBrand,
+		agency: setAgency,
 		campaign: setCampaign,
 		tag: setTag,
 	}[filterMode];
@@ -135,6 +142,7 @@ const GreenDashboardFilters = ({}) => {
 	};
 
 	const [availableBrands, setAvailableBrands] = useState([]);
+	const [availableAgencys, setAvailableAgencys] = useState([]); // NB: Agencys (sic) for easier find on "Agency"
 	const [availableCampaigns, setAvailableCampaigns] = useState([]);
 	const [availableTags, setAvailableTags] = useState([]);
 
@@ -147,11 +155,14 @@ const GreenDashboardFilters = ({}) => {
 			if (!shareList) return;
 
 			const nextBrandIds = [];
+			const nextAgencyIds = [];
 			const nextCampaignIds = [];
 
 			shareList.forEach(share => {
 				const brandMatches = share.item.match(/^Advertiser:(\w+)/);
 				if (brandMatches) nextBrandIds.push(brandMatches[1]);
+				const agencyMatches = share.item.match(/^Agency:(\w+)/);
+				if (agencyMatches) nextAgencyIds.push(agencyMatches[1]);
 				const campaignMatches = share.item.match(/^Campaign:(\w+)/);
 				if (campaignMatches) nextCampaignIds.push(campaignMatches[1]);
 			});
@@ -164,6 +175,15 @@ const GreenDashboardFilters = ({}) => {
 					ids: nextBrandIds, // NB: a GL user should be fine with [] here
 				}).promise.then(cargo => {
 					if (cargo.hits) setAvailableBrands(cargo.hits);
+				});
+			}
+			if (nextAgencyIds.length || isTester()) {
+				getDataList({
+					type: C.TYPES.Agency,
+					status: KStatus.PUBLISHED,
+					ids: isTester()? [] : nextAgencyIds, // NB: a GL user should be fine with [] here
+				}).promise.then(cargo => {
+					if (cargo.hits) setAvailableAgencys(cargo.hits);
 				});
 			}
 			if (nextCampaignIds.length || isTester()) {
@@ -208,17 +228,25 @@ const GreenDashboardFilters = ({}) => {
 	// What will we show in the last filter stage?
 	const filterByEntityOptions = {
 		brand: availableBrands,
+		agency: availableAgencys,
 		campaign: availableCampaigns,
 		tag: availableTags
 	}[filterMode];
 	// alphabetic sort by name so we can find items in a longer list
-	filterByEntityOptions.sort((a,b) => (a.name || a.id || "").localeCompare((b.name || b.id || "")));
+	if (filterByEntityOptions) {
+		filterByEntityOptions.sort((a,b) => (a.name || a.id || "").localeCompare((b.name || b.id || "")));
+	}
 
 	// label and logo
 	let campaignItem = campaign? getDataItem({type:C.TYPES.Campaign, id:campaign, status:KStatus.PUBLISHED}).value : null;
 	let brandItem = brand || (campaignItem && campaignItem.vertiser)? getDataItem({type:C.TYPES.Advertiser, id:brand || campaignItem.vertiser, status:KStatus.PUBLISHED}).value : null;
+	let agencyItem = agency || (campaignItem && campaignItem.agencyId)? getDataItem({type:C.TYPES.Agency, id:agency || campaignItem.agencyId, status:KStatus.PUBLISHED}).value : null;
 	let tagItem = tag? getDataItem({type:C.TYPES.GreenTag, id:tag, status:KStatus.PUB_OR_DRAFT}).value : null;
-	let selectedLabel = {campaign: campaignItem?.name || campaign, brand: brandItem?.name || brand, tag: tagItem?.name || tag}[filterMode];
+	let selectedLabel = {
+		campaign: campaignItem?.name || campaign, 
+		brand: brandItem?.name || brand, 
+		agency: agencyItem?.name || agency,
+		tag: tagItem?.name || tag}[filterMode];
 	if (! selectedLabel) selectedLabel = `Select a ${filterMode}`;
 
 	return (
@@ -254,6 +282,10 @@ const GreenDashboardFilters = ({}) => {
 								{filterMode === 'brand' ? <span className="selected-marker" /> : null}
 								Brand
 							</DropdownItem>
+							{(isTester() || filterMode === 'agency') && <DropdownItem onClick={() => setFilterMode('agency')}>
+								{filterMode === 'agency' ? <span className="selected-marker" /> : null}
+								Agency
+							</DropdownItem>}
 							<DropdownItem onClick={() => setFilterMode('campaign')}>
 								{filterMode === 'campaign' ? <span className="selected-marker" /> : null}
 								Campaign
@@ -270,14 +302,14 @@ const GreenDashboardFilters = ({}) => {
 						<DropdownMenu style={longMenuStyle} >
 							{filterByEntityOptions.map((item,i) => (
 								<DropdownItem key={i} onClick={() => setCurrentTemp(item.id)}>
-									{{ campaign, brand, tag }[filterMode] === item.id ? <span className="selected-marker" /> : null}
+									{{ campaign, brand, agency, tag }[filterMode] === item.id ? <span className="selected-marker" /> : null}
 									{item.name}
 								</DropdownItem>
 							))}
 						</DropdownMenu>
 					</UncontrolledDropdown>}
 
-					{filtersChanged(period, filterMode, brand, campaign, tag) ? (
+					{filtersChanged({nextPeriod:period, nextFilterMode:filterMode, nextBrand:brand, nextAgency:agency, nextCampaign:campaign, nextTag:tag}) ? (
 						<Button color="primary" className="ml-2" onClick={doCommit} size="sm">Apply new filters</Button>
 					) : null}
 				</Form>

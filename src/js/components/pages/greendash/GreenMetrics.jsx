@@ -241,7 +241,7 @@ const GreenMetrics = ({}) => {
 	let agencyId = DataStore.getUrlValue('agency');
 	if ( ! agencyId && agencyIds?.length === 1) agencyId = agencyIds[0];
 
-	// All our filters etc are based user having at most access to one agency
+	// All our filters etc are based user having at most access to one agency ??how so?
 	// Group M users will have multiple, so start by selecting one.
 	useEffect(() => {
 		Login.getSharedWith().then(res => {
@@ -274,8 +274,8 @@ const GreenMetrics = ({}) => {
 		</div>;	
 	} else if ( ! agencyIds) {
 		content = <Misc.Loading text="Checking your access..." />;
-	} else if (agencyIds.length > 1 && ! agencyId) {
-		content = <SelectAgency agencyIds={agencyIds} />;
+	// } else if (agencyIds.length > 1 && ! agencyId) { // is this needed??
+	// 	content = <SelectAgency agencyIds={agencyIds} />;
 	} else {
 		content = <>
 			<GreenDashboardFilters />
