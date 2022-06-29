@@ -190,7 +190,7 @@ const MyDataButton = ({className}) => {
 	</>)
 }
 
-const MyLandingSection = ({title, bgImg}) => {
+const MyLandingSection = ({title, bgImg, noProducts}) => {
 	const fontSizeCTA = isMobile() ? '.8rem' : '1rem';
 	
 	if ( ! title) {
@@ -214,7 +214,7 @@ const MyLandingSection = ({title, bgImg}) => {
 		<div className="splash-content d-flex flex-column align-items-center" style={!isMobile() ? {margin:'0 28vw'} : null}>
 			{title && <h1 className='text-center bolder text-white mx-2 mt-3' style={isMobile() ? {fontSize:"1.5rem"} : null}>{title}</h1>}
 			<button className='btn btn-primary btn-lg my-3 mx-auto' onClick={scrollToUpperCta}>Find out more</button>
-			<a href='#' className='text-white text-decoration-none mt-2 mb-4'><span style={{textDecoration:"underline"}}>Discover Our Products</span> →</a>
+			{!noProducts && <a href='#' className='text-white text-decoration-none mt-2 mb-4'><span style={{textDecoration:"underline"}}>Discover Our Products</span> →</a>}
 		</div>
 		</BG>
 	</Container>
@@ -670,7 +670,7 @@ const TriCards = ({className, titles, texts, images, links=["#", "#", "#"] }) =>
 
 const WhatIsTabsForGood	= ({ngo}) => {
 	return (<>
-		<PageCard className="how-tabs-for-good-works text-center">
+		<PageCard className="how-tabs-for-good-works text-center" id="upper-cta">
 			<h1 className='mb-4'>What is Tabs for Good?</h1>
 			<p className=''><b>Tabs for Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</b></p>
 			<Row className="py-5 d-none d-md-flex">
