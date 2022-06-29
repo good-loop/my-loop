@@ -3,7 +3,7 @@ import { Card, CardBody, CardImg, CardText, CardTitle, Col, Container, Row } fro
 // import PV from 'promise-value';
 import { useSpring } from 'react-spring';
 
-import { space } from '../../base/utils/miscutils'
+import { isMobile, space } from '../../base/utils/miscutils'
 import DataStore from '../../base/plumbing/DataStore';
 import LandingSection, { springPageDown } from '../LandingSection';
 import {
@@ -68,11 +68,12 @@ const FindOutMoreSection = () => {
 					<span>For Global Causes</span>
 				</div>
 				<div className="conversation-bubble position-relative d-flex align-items-center justify-content-center">
-					<img style={{maxWidth:'480px'}} src="img/homepage/our-mission-blob-with-bubbles.svg"/>
-					<div className="bubble-content position-absolute" style={{top:'20%',margin:'0 10%',maxWidth:'400px'}}>
+					<img className='w-100' style={{maxWidth:'480px'}} src="img/homepage/our-mission-blob.svg"/>
+					<img className='position-absolute' style={{width:(isMobile() ? '1024px' : '1400px'),top:(isMobile() ? '-10em' : '-13em')}} src="img/homepage/our-mission-images-lg.png" />
+					<div className="bubble-content position-absolute" style={{top:(isMobile() ? '12%' : '20%'),margin:'0 10%',maxWidth:'400px'}}>
 						<h3 style={{fontWeight:'600',marginBottom:'0'}}>Our Mission</h3>
 						<h5 style={{fontWeight:'unset'}}>Changing The World: Together</h5>
-						<p style={{fontSize:'.9rem',marginTop:'1rem'}}>At My Good-Loop we're harnessing consumer power and advertising billions, <b>donating 50%</b> of ad spend to charity - <b>connecting you with brands to fund the causes you case most about.</b></p>
+						<p style={{fontSize:'.9rem',marginTop:'1rem'}}>At My Good-Loop we're harnessing consumer power and advertising billions, <b>donating 50%</b> of ad spend to charity - <b>connecting you with brands to fund the causes you care most about.</b></p>
 						<a href='#' className='text-decoration-none'><span style={{textDecoration:"underline",fontWeight:'600'}}>Our Impact</span> →</a>
 					</div>
 				</div>
@@ -98,7 +99,7 @@ const SlideCardsSection = () => {
 		imgUrl: 'img/homepage/my-data-product.png',
 		imgClass: 'bg-gl-lighter-blue',
 		title: <><span style={{fontWeight:'bold'}}>MY.DATA</span> <br/>How Many Cookies Have You Accepted Today?</>,
-		text: 'Convert your browsing into donations, simply by opening tabs with our desktop browser extension..',
+		text: 'Convert your browsing into donations, simply by opening tabs with our desktop browser extension.',
 		button: <><MyDataButton className="w-100" /> <ArrowLink className='w-100 color-gl-red' link="/getmydata#howitworks" >How it works</ArrowLink></>
 	}
 
@@ -115,7 +116,7 @@ const StoriesSection = () => {
 	const cardOne = {
 		imgUrl: 'img/ourstory/Good-Loop_UsingAdMoneyForGoodWithBG.png',
 		imgClass: 'bg-gl-light-pink',
-		title: <span className='text-uppercase' style={{fontWeight:'bold'}}>We can make things happen?</span>,
+		title: <span className='text-uppercase' style={{fontWeight:'bold'}}>We can make things happen</span>,
 		text: 'Our amazing community has so far supported everything from childhood literacy to coral reef protection and Black Lives Matter.',
 		button: <ArrowLink className='w-100 color-gl-red' link="/impactoverview" >Discover Our Impact</ArrowLink>
 	}
@@ -128,26 +129,72 @@ const StoriesSection = () => {
 		button: <ArrowLink className='w-100 color-gl-red' link="/ourstory" >Our Story</ArrowLink>
 	}
 
+	const testimonialOne = {
+		onMobileClass: 'd-flex',
+		quoteImg: 'img/homepage/quote-red.svg',
+		quoteClass: 'color-gl-red',
+		quoteBg: 'img/homepage/testimonial-blob.svg',
+		quote: "We're delighted to name Good-Loop as one of our partners. By simply watching an advert, users can contribute to the WWF's mission of creating a world where people and wildwife can thrive together.",
+		name: 'CHIARA CADEL',
+		title: 'PARTNERSHIPS MANAGER, WWF',
+		logo: 'img/LandingCharity/wwf_logo.png',
+		bobLogo: 'img/homepage/bubble-leopard.png',
+	}
+
+	const testimonialTwo = {
+		onMobileClass: 'd-none d-xl-flex',
+		quoteImg: 'img/homepage/quote-blue.svg',
+		quoteClass: 'color-gl-muddy-blue',
+		quoteBg: 'img/homepage/testimonial-blob-mid.svg',
+		quote: <><b>Thanks to (Good-Loop) and their viewers, over £20,000 has been rasied for our organisation.</b> <br/><br/> Funds such as these help us to stand up for bees and other insects, work with farmers, organisations and landowners to manage their land in wildlife-friendly ways, and support our work to secure better protection for our precious marine mammals.</>,
+		name: 'LAENNE MANCHESTER',
+		title: 'DIGITAL MARKETING MANAGER, THE WILDLIFE TRUSTS',
+		logo: 'img/homepage/TWT_LOGO.png',
+		bobLogo: 'img/homepage/bubble-wildlife.png',
+	}
+
+	const testimonialThree = {
+		onMobileClass: 'd-none d-xl-flex',
+		quoteImg: 'img/homepage/quote-red.svg',
+		quoteClass: 'color-gl-red',
+		quoteBg: 'img/homepage/testimonial-blob-long.svg',
+		quote: <><b>We are delighted to be working with Good-Loop and their partnering brands. Good-Loop are incredibly proactive and deliver excellent levels of stewardship. </b> <br/><br/> Donation values have recently doubled and they continue to support children throughout the globe by partnering with Save the Children. Over £45,000 has been rasied in the short period our partnership has been established. Sincere thanks for your ongoing support.</>,
+		name: 'BECCA MCNAIR',
+		title: 'COMMUNITY FUNDRASING AND ENGAGEMENT MANAGER, SAVE THE CHILDREN UK',
+		logo: 'img/LandingCharity/save-the-children.png',
+		bobLogo: 'img/homepage/bubble-kids.png',
+	}
+
 	return (
 		<PageCard className='stories-section pt-0'>
 			<h3 style={{textTransform:'unset',fontWeight:'600'}}>The My.Good-Loop Story</h3>
 			<p className='color-gl-muddy-blue mb-0'>Converting the multi-billion dollar online advertsing industry into a force for good - with you.</p>
 			<TwinCards twinCardsContent={[].concat(cardOne, cardTwo)} />
- 			
-			<div className="testimonial-blob position-relative d-flex align-items-center justify-content-center mt-5 pb-5">
-				<img style={{maxWidth:'480px',zIndex:'1',margin:'0 -1rem'}} src="img/homepage/testimonial-blob-logo.svg"/>
-				<div className="bubble-content position-absolute" style={{top:'20%',margin:'0 10%',maxWidth:'400px',zIndex:'2'}}>
-					<img className='logo position-absolute' style={{top:'-3rem'}} src="img/homepage/quote-red.svg" alt="quote" /> <br/>
-					<span className='color-gl-red' style={{fontSize:'.9rem'}}>We're delighted to name Good-Loop as one of our partners. By simply watching an advert, users can contribute to the WWF's mission of creating a world where people and wildwife can thrive together.</span> <br/>
-					<div className="name-title color-gl-darker-grey mt-2" style={{fontSize:'.9rem'}}>
-						<span>CHIARA CADEL,</span> <br/>
-						<span>PARTNERSHIPS MANAGER, WWF</span>
+
+			<div className='testimonials-section'>
+				{[].concat(testimonialOne, testimonialTwo, testimonialThree).map((testimonial, index) => {
+					let bubbleTop = '20%'
+					if (testimonial.quoteBg && testimonial.quoteBg !== 'img/homepage/testimonial-blob.svg') bubbleTop = '12%';
+					return (
+					<div className={space(testimonial.onMobileClass, 'testimonial-blob align-items-center justify-content-center mt-5 pb-5')} key={index} >
+						<img style={{width:'480px',zIndex:'1',margin:'0 -1rem'}} src={testimonial.quoteBg} />
+						<img className='bubble-image position-absolute' style={{zIndex:'1',maxHeight:'7rem',right:0,bottom:'1rem'}} src={testimonial.bobLogo} />
+						<div className="bubble-content position-absolute" style={{top:bubbleTop,margin:'0 10%',maxWidth:'380px',zIndex:'2'}}>
+							<img className='logo position-absolute' style={{top:'-3rem'}} src={testimonial.quoteImg} alt="quote" /> <br/>
+							<span className={testimonial.quoteClass} style={{fontSize:'.9rem'}}>{testimonial.quote}</span> <br/>
+							<div className="name-title color-gl-darker-grey mt-2" style={{fontSize:'.9rem'}}>
+								<span>{testimonial.name},</span> <br/>
+								<span>{testimonial.title}</span>
+							</div>
+							<div className="text-center">
+								<img style={{maxHeight:'2rem'}} src={testimonial.logo} alt="wwf" />
+							</div>
+						</div>
 					</div>
-					<div className="text-center">
-						<img style={{maxWidth:'2rem'}} src="img/LandingCharity/wwf_logo.png" alt="wwf" />
-					</div>
-				</div>
+					)
+				})}
 			</div>
+
 		<img className="w-100 position-absolute" style={{bottom:'0',zIndex:'0',transform:'translate(-50%, 0)',left:'50%',maxWidth:'768px'}} src="img/homepage/world-map.svg" alt="world-map" />
 		</PageCard>
 	)
@@ -191,23 +238,23 @@ const MovementCard = () => {
 		{img: 'img/homepage/planet-positive.png',
 		span: 'Good For The Planet'},
 		{img: 'img/homepage/responsible-journalism.png',
-		span: 'Supporting Responible Journalism'},
+		span: 'Supporting Responsible Journalism'},
 		{img: 'img/homepage/50-charity.png',
 		span: '50% Of Ad Fees To Charity'},
 	]
 
 	return(<>
-		<BG image='img/homepage/our-movement-bground-bg.svg' style={{backgroundPosition:'center top',zIndex:'-2'}}>
+		<BG image='img/homepage/our-movement-background-lg.svg' style={{backgroundPosition:'center top'}}>
 			<PageCard>
 				<div className="movement-blob position-relative d-flex align-items-center justify-content-center pb-5">
 					<img style={{maxWidth:'480px',zIndex:'1',margin:'0 -1rem'}} src="img/homepage/movement-blob-images.svg"/>
 					<div className="bubble-content position-absolute text-center" style={{top:'18%',margin:'0 10%',maxWidth:'400px',zIndex:'2'}}>
 						<h4 className='color-gl-red'>Join Our Movement</h4>
 						<p className='color-gl-dark-grey'>Start Transforming Your Web Browsing And Data Into <b>Life Saving Vaccines, Meals For Children In Need, Habitats For Endangered Animals,</b> Plus Many More Good Causes.</p>
-						<a className='color-gl-red font-weight-bold' href='#'><span style={{textDecoration:"underline"}}>Get Involved</span> →</a>
+						<ArrowLink className='color-gl-red font-weight-bold' href='/tabsforgood'>Get Involved</ArrowLink>
 					</div>
 				</div>
-				<img className='position-absolute w-100 join-our-movement-bg-front' src="img/homepage/our-movement-bground-front.svg" />
+				<img className='position-absolute w-100 join-our-movement-bg-front' src="img/homepage/our-movement-front-curve.svg" />
 			</PageCard>
 		</BG>
 		<PageCard className='text-center text-white bg-gl-light-blue pt-0'>
