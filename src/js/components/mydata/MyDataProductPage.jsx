@@ -157,7 +157,7 @@ const ControlYourData = () => {
                         <p>You have control over how your data is used and can choose what to make private and what to share</p>
                     </Col>
                     <Col md={6}>
-                        <img src="/img/mydata/product-page/phone-mydata.png" className="phone-display"/>
+                        <img src="/img/mydata/product-page/phone-mydata-lg.png" className="phone-display"/>
                     </Col>
                 </Row>
             </ProductPageContainer>
@@ -202,9 +202,10 @@ const TransformYourData = () => {
                     
                     <br/>
                     <br/>
-                    <p className="miniheader">FAQS</p>
+                    <p className="miniheader"><b>FAQS</b></p>
                     
                     <CollapseableCard
+                        upArrow
                         title="1. What charities can I support with My Data?"
                         TitleTag="h1" className="w-100 faq faq-1"
                         innerClassName="text-left px-md-5" arrowPosition="bottom">
@@ -222,11 +223,12 @@ const TransformYourData = () => {
                         </ul>
 
                         <div className="d-flex flex-row justify-content-center align-items-center">
-                            <a className="text-center" href="https://app.sogive.org" target="_blank">View our charity database →</a>
+                            <C.A className="text-center" href="/charities" target="_blank">View our charity database →</C.A>
                         </div>
                     </CollapseableCard>
 
                     <CollapseableCard
+                        upArrow
                         title="2. How does My Data make money for my charity?"
                         TitleTag="h1" className="w-100 faq faq-2"
                         innerClassName="text-left px-md-5" arrowPosition="bottom">
@@ -242,6 +244,7 @@ const TransformYourData = () => {
                     </CollapseableCard>
 
                     <CollapseableCard
+                        upArrow
                         title="3. How do I control my data privacy?"
                         TitleTag="h1" className="w-100 faq faq-3"
                         innerClassName="text-left px-md-5" arrowPosition="bottom">
