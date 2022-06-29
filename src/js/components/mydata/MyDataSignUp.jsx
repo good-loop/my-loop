@@ -36,13 +36,13 @@ export const showMyDataSignUpModal = (s=true) => {
 	const content = gotmydata ?  "Go to My.Data" : "Sign Up for My.Data";
 
 	return (
-		<C.A className={`${space("btn btn-primary", className)} mydata-signup-button`} href={gotmydata ? "/account" : window.location} style={style}
+		<a className={`${space("btn btn-primary", className)} mydata-signup-button`} href={gotmydata ? "/account" : window.location} style={style}
 			onClick={!gotmydata && (e => {
 				stopEvent(e);
 				showMyDataSignUpModal();
 			})} >
 			{children || content}
-		</C.A>
+		</a>
 	);
 }
 
