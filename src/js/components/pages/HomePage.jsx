@@ -73,7 +73,7 @@ const FindOutMoreSection = () => {
 					<div className="bubble-content position-absolute" style={{top:(isMobile() ? '12%' : '20%'),margin:'0 10%',maxWidth:'400px'}}>
 						<h3 style={{fontWeight:'600',marginBottom:'0'}}>Our Mission</h3>
 						<h5 style={{fontWeight:'unset'}}>Changing The World: Together</h5>
-						<p style={{fontSize:'.9rem',marginTop:'1rem'}}>At My Good-Loop we're harnessing consumer power and advertising billions, <b>donating 50%</b> of ad spend to charity - <b>connecting you with brands to fund the causes you case most about.</b></p>
+						<p style={{fontSize:'.9rem',marginTop:'1rem'}}>At My Good-Loop we're harnessing consumer power and advertising billions, <b>donating 50%</b> of ad spend to charity - <b>connecting you with brands to fund the causes you care most about.</b></p>
 						<a href='#' className='text-decoration-none'><span style={{textDecoration:"underline",fontWeight:'600'}}>Our Impact</span> →</a>
 					</div>
 				</div>
@@ -99,7 +99,7 @@ const SlideCardsSection = () => {
 		imgUrl: 'img/homepage/my-data-product.png',
 		imgClass: 'bg-gl-lighter-blue',
 		title: <><span style={{fontWeight:'bold'}}>MY.DATA</span> <br/>How Many Cookies Have You Accepted Today?</>,
-		text: 'Convert your browsing into donations, simply by opening tabs with our desktop browser extension..',
+		text: 'Convert your browsing into donations, simply by opening tabs with our desktop browser extension.',
 		button: <><MyDataButton className="w-100" /> <ArrowLink className='w-100 color-gl-red' link="/getmydata#howitworks" >How it works</ArrowLink></>
 	}
 
@@ -116,7 +116,7 @@ const StoriesSection = () => {
 	const cardOne = {
 		imgUrl: 'img/ourstory/Good-Loop_UsingAdMoneyForGoodWithBG.png',
 		imgClass: 'bg-gl-light-pink',
-		title: <span className='text-uppercase' style={{fontWeight:'bold'}}>We can make things happen?</span>,
+		title: <span className='text-uppercase' style={{fontWeight:'bold'}}>We can make things happen</span>,
 		text: 'Our amazing community has so far supported everything from childhood literacy to coral reef protection and Black Lives Matter.',
 		button: <ArrowLink className='w-100 color-gl-red' link="/impactoverview" >Discover Our Impact</ArrowLink>
 	}
@@ -192,7 +192,7 @@ const MovementCard = () => {
 		{img: 'img/homepage/planet-positive.png',
 		span: 'Good For The Planet'},
 		{img: 'img/homepage/responsible-journalism.png',
-		span: 'Supporting Responible Journalism'},
+		span: 'Supporting Responsible Journalism'},
 		{img: 'img/homepage/50-charity.png',
 		span: '50% Of Ad Fees To Charity'},
 	]
