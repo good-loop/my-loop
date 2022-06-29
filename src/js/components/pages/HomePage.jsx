@@ -137,29 +137,32 @@ const StoriesSection = () => {
 		quote: "We're delighted to name Good-Loop as one of our partners. By simply watching an advert, users can contribute to the WWF's mission of creating a world where people and wildwife can thrive together.",
 		name: 'CHIARA CADEL',
 		title: 'PARTNERSHIPS MANAGER, WWF',
-		logo: 'img/LandingCharity/wwf_logo.png'
+		logo: 'img/LandingCharity/wwf_logo.png',
+		bobLogo: 'img/homepage/bubble-leopard.png',
 	}
 
 	const testimonialTwo = {
-		onMobileClass: 'd-none d-lg-flex',
+		onMobileClass: 'd-none d-xl-flex',
 		quoteImg: 'img/homepage/quote-blue.svg',
 		quoteClass: 'color-gl-muddy-blue',
 		quoteBg: 'img/homepage/testimonial-blob-mid.svg',
 		quote: <><b>Thanks to (Good-Loop) and their viewers, over £20,000 has been rasied for our organisation.</b> <br/><br/> Funds such as these help us to stand up for bees and other insects, work with farmers, organisations and landowners to manage their land in wildlife-friendly ways, and support our work to secure better protection for our precious marine mammals.</>,
 		name: 'LAENNE MANCHESTER',
 		title: 'DIGITAL MARKETING MANAGER, THE WILDLIFE TRUSTS',
-		logo: 'img/homepage/TWT_LOGO.png'
+		logo: 'img/homepage/TWT_LOGO.png',
+		bobLogo: 'img/homepage/bubble-wildlife.png',
 	}
 
 	const testimonialThree = {
-		onMobileClass: 'd-none d-lg-flex',
+		onMobileClass: 'd-none d-xl-flex',
 		quoteImg: 'img/homepage/quote-red.svg',
 		quoteClass: 'color-gl-red',
 		quoteBg: 'img/homepage/testimonial-blob-long.svg',
 		quote: <><b>We are delighted to be working with Good-Loop and their partnering brands. Good-Loop are incredibly proactive and deliver excellent levels of stewardship. </b> <br/><br/> Donation values have recently doubled and they continue to support children throughout the globe by partnering with Save the Children. Over £45,000 has been rasied in the short period our partnership has been established. Sincere thanks for your ongoing support.</>,
 		name: 'BECCA MCNAIR',
 		title: 'COMMUNITY FUNDRASING AND ENGAGEMENT MANAGER, SAVE THE CHILDREN UK',
-		logo: 'img/LandingCharity/save-the-children.png'
+		logo: 'img/LandingCharity/save-the-children.png',
+		bobLogo: 'img/homepage/bubble-kids.png',
 	}
 
 	return (
@@ -174,7 +177,8 @@ const StoriesSection = () => {
 					if (testimonial.quoteBg && testimonial.quoteBg !== 'img/homepage/testimonial-blob.svg') bubbleTop = '12%';
 					return (
 					<div className={space(testimonial.onMobileClass, 'testimonial-blob align-items-center justify-content-center mt-5 pb-5')} key={index} >
-						<img className='' style={{width:'480px',zIndex:'1',margin:'0 -1rem'}} src={testimonial.quoteBg} />
+						<img style={{width:'480px',zIndex:'1',margin:'0 -1rem'}} src={testimonial.quoteBg} />
+						<img className='bubble-image position-absolute' style={{zIndex:'1',maxHeight:'7rem',right:0,bottom:'1rem'}} src={testimonial.bobLogo} />
 						<div className="bubble-content position-absolute" style={{top:bubbleTop,margin:'0 10%',maxWidth:'380px',zIndex:'2'}}>
 							<img className='logo position-absolute' style={{top:'-3rem'}} src={testimonial.quoteImg} alt="quote" /> <br/>
 							<span className={testimonial.quoteClass} style={{fontSize:'.9rem'}}>{testimonial.quote}</span> <br/>
@@ -240,17 +244,17 @@ const MovementCard = () => {
 	]
 
 	return(<>
-		<BG image='img/homepage/our-movement-bground-bg.svg' style={{backgroundPosition:'center top',zIndex:'-2'}}>
+		<BG image='img/homepage/our-movement-background-lg.svg' style={{backgroundPosition:'center top'}}>
 			<PageCard>
 				<div className="movement-blob position-relative d-flex align-items-center justify-content-center pb-5">
 					<img style={{maxWidth:'480px',zIndex:'1',margin:'0 -1rem'}} src="img/homepage/movement-blob-images.svg"/>
 					<div className="bubble-content position-absolute text-center" style={{top:'18%',margin:'0 10%',maxWidth:'400px',zIndex:'2'}}>
 						<h4 className='color-gl-red'>Join Our Movement</h4>
 						<p className='color-gl-dark-grey'>Start Transforming Your Web Browsing And Data Into <b>Life Saving Vaccines, Meals For Children In Need, Habitats For Endangered Animals,</b> Plus Many More Good Causes.</p>
-						<a className='color-gl-red font-weight-bold' href='#'><span style={{textDecoration:"underline"}}>Get Involved</span> →</a>
+						<ArrowLink className='color-gl-red font-weight-bold' href='/tabsforgood'>Get Involved</ArrowLink>
 					</div>
 				</div>
-				<img className='position-absolute w-100 join-our-movement-bg-front' src="img/homepage/our-movement-bground-front.svg" />
+				<img className='position-absolute w-100 join-our-movement-bg-front' src="img/homepage/our-movement-front-curve.svg" />
 			</PageCard>
 		</BG>
 		<PageCard className='text-center text-white bg-gl-light-blue pt-0'>
