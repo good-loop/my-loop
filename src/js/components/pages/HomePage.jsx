@@ -3,7 +3,7 @@ import { Card, CardBody, CardImg, CardText, CardTitle, Col, Container, Row } fro
 // import PV from 'promise-value';
 import { useSpring } from 'react-spring';
 
-import { space } from '../../base/utils/miscutils'
+import { isMobile, space } from '../../base/utils/miscutils'
 import DataStore from '../../base/plumbing/DataStore';
 import LandingSection, { springPageDown } from '../LandingSection';
 import {
@@ -68,8 +68,9 @@ const FindOutMoreSection = () => {
 					<span>For Global Causes</span>
 				</div>
 				<div className="conversation-bubble position-relative d-flex align-items-center justify-content-center">
-					<img style={{maxWidth:'480px'}} src="img/homepage/our-mission-blob-with-bubbles.svg"/>
-					<div className="bubble-content position-absolute" style={{top:'20%',margin:'0 10%',maxWidth:'400px'}}>
+					<img className='w-100' style={{maxWidth:'480px'}} src="img/homepage/our-mission-blob.svg"/>
+					<img className='position-absolute' style={{width:(isMobile() ? '1024px' : '1400px'),top:(isMobile() ? '-10em' : '-13em')}} src="img/homepage/our-mission-images-lg.png" />
+					<div className="bubble-content position-absolute" style={{top:(isMobile() ? '12%' : '20%'),margin:'0 10%',maxWidth:'400px'}}>
 						<h3 style={{fontWeight:'600',marginBottom:'0'}}>Our Mission</h3>
 						<h5 style={{fontWeight:'unset'}}>Changing The World: Together</h5>
 						<p style={{fontSize:'.9rem',marginTop:'1rem'}}>At My Good-Loop we're harnessing consumer power and advertising billions, <b>donating 50%</b> of ad spend to charity - <b>connecting you with brands to fund the causes you case most about.</b></p>
