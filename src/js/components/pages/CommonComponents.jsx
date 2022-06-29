@@ -445,6 +445,11 @@ const NewsAwards = ({nostars, children}) => {
 	)
 };
 
+
+/**
+ * @deprecated not in use anymore June 2022
+ * @returns {JSX.Element}
+ */
 const TestimonialSectionTitle = () => {
 	// TODO fetch donationTotal From C.DONATIONS_TOTAL;
 	return(<>
@@ -461,6 +466,10 @@ const TestimonialSectionTitle = () => {
 	)
 };
 
+/**
+ * @deprecated not in use anymore June 2022
+ * @returns {JSX.Element}
+ */
 const TestimonialSectionLower = () => {
 	return(<>
 		<div className="testimonial-lower">

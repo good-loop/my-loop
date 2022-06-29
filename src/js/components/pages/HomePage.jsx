@@ -129,26 +129,68 @@ const StoriesSection = () => {
 		button: <ArrowLink className='w-100 color-gl-red' link="/ourstory" >Our Story</ArrowLink>
 	}
 
+	const testimonialOne = {
+		onMobileClass: 'd-flex',
+		quoteImg: 'img/homepage/quote-red.svg',
+		quoteClass: 'color-gl-red',
+		quoteBg: 'img/homepage/testimonial-blob.svg',
+		quote: "We're delighted to name Good-Loop as one of our partners. By simply watching an advert, users can contribute to the WWF's mission of creating a world where people and wildwife can thrive together.",
+		name: 'CHIARA CADEL',
+		title: 'PARTNERSHIPS MANAGER, WWF',
+		logo: 'img/LandingCharity/wwf_logo.png'
+	}
+
+	const testimonialTwo = {
+		onMobileClass: 'd-none d-lg-flex',
+		quoteImg: 'img/homepage/quote-blue.svg',
+		quoteClass: 'color-gl-muddy-blue',
+		quoteBg: 'img/homepage/testimonial-blob-mid.svg',
+		quote: <><b>Thanks to (Good-Loop) and their viewers, over £20,000 has been rasied for our organisation.</b> <br/><br/> Funds such as these help us to stand up for bees and other insects, work with farmers, organisations and landowners to manage their land in wildlife-friendly ways, and support our work to secure better protection for our precious marine mammals.</>,
+		name: 'LAENNE MANCHESTER',
+		title: 'DIGITAL MARKETING MANAGER, THE WILDLIFE TRUSTS',
+		logo: 'img/homepage/TWT_LOGO.png'
+	}
+
+	const testimonialThree = {
+		onMobileClass: 'd-none d-lg-flex',
+		quoteImg: 'img/homepage/quote-red.svg',
+		quoteClass: 'color-gl-red',
+		quoteBg: 'img/homepage/testimonial-blob-long.svg',
+		quote: <><b>We are delighted to be working with Good-Loop and their partnering brands. Good-Loop are incredibly proactive and deliver excellent levels of stewardship. </b> <br/><br/> Donation values have recently doubled and they continue to support children throughout the globe by partnering with Save the Children. Over £45,000 has been rasied in the short period our partnership has been established. Sincere thanks for your ongoing support.</>,
+		name: 'BECCA MCNAIR',
+		title: 'COMMUNITY FUNDRASING AND ENGAGEMENT MANAGER, SAVE THE CHILDREN UK',
+		logo: 'img/LandingCharity/save-the-children.png'
+	}
+
 	return (
 		<PageCard className='stories-section pt-0'>
 			<h3 style={{textTransform:'unset',fontWeight:'600'}}>The My.Good-Loop Story</h3>
 			<p className='color-gl-muddy-blue mb-0'>Converting the multi-billion dollar online advertsing industry into a force for good - with you.</p>
 			<TwinCards twinCardsContent={[].concat(cardOne, cardTwo)} />
- 			
-			<div className="testimonial-blob position-relative d-flex align-items-center justify-content-center mt-5 pb-5">
-				<img style={{maxWidth:'480px',zIndex:'1',margin:'0 -1rem'}} src="img/homepage/testimonial-blob-logo.svg"/>
-				<div className="bubble-content position-absolute" style={{top:'20%',margin:'0 10%',maxWidth:'400px',zIndex:'2'}}>
-					<img className='logo position-absolute' style={{top:'-3rem'}} src="img/homepage/quote-red.svg" alt="quote" /> <br/>
-					<span className='color-gl-red' style={{fontSize:'.9rem'}}>We're delighted to name Good-Loop as one of our partners. By simply watching an advert, users can contribute to the WWF's mission of creating a world where people and wildwife can thrive together.</span> <br/>
-					<div className="name-title color-gl-darker-grey mt-2" style={{fontSize:'.9rem'}}>
-						<span>CHIARA CADEL,</span> <br/>
-						<span>PARTNERSHIPS MANAGER, WWF</span>
+
+			<div className='testimonials-section'>
+				{[].concat(testimonialOne, testimonialTwo, testimonialThree).map((testimonial, index) => {
+					let bubbleTop = '20%'
+					if (testimonial.quoteBg && testimonial.quoteBg !== 'img/homepage/testimonial-blob.svg') bubbleTop = '12%';
+					return (
+					<div className={space(testimonial.onMobileClass, 'testimonial-blob align-items-center justify-content-center mt-5 pb-5')} key={index} >
+						<img className='' style={{width:'480px',zIndex:'1',margin:'0 -1rem'}} src={testimonial.quoteBg} />
+						<div className="bubble-content position-absolute" style={{top:bubbleTop,margin:'0 10%',maxWidth:'380px',zIndex:'2'}}>
+							<img className='logo position-absolute' style={{top:'-3rem'}} src={testimonial.quoteImg} alt="quote" /> <br/>
+							<span className={testimonial.quoteClass} style={{fontSize:'.9rem'}}>{testimonial.quote}</span> <br/>
+							<div className="name-title color-gl-darker-grey mt-2" style={{fontSize:'.9rem'}}>
+								<span>{testimonial.name},</span> <br/>
+								<span>{testimonial.title}</span>
+							</div>
+							<div className="text-center">
+								<img style={{maxHeight:'2rem'}} src={testimonial.logo} alt="wwf" />
+							</div>
+						</div>
 					</div>
-					<div className="text-center">
-						<img style={{maxWidth:'2rem'}} src="img/LandingCharity/wwf_logo.png" alt="wwf" />
-					</div>
-				</div>
+					)
+				})}
 			</div>
+
 		<img className="w-100 position-absolute" style={{bottom:'0',zIndex:'0',transform:'translate(-50%, 0)',left:'50%',maxWidth:'768px'}} src="img/homepage/world-map.svg" alt="world-map" />
 		</PageCard>
 	)
