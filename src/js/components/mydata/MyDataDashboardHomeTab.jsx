@@ -95,13 +95,13 @@ const ThisWeeksAdCard = () => {
 
 	const WatchedAd = ({className, style, children}) => {
 		
-		return <div className={space("watch-ad-done", className)} style={style}>
+		return (<div className={space("watch-ad-done", className)} style={style}>
 			<div className="watched-text">
 				<img src="/img/mydata/tick-white.svg" className="tick"/>
 				<h4>{children}</h4>
 			</div>
 			<img src="/img/mydata/fireworks.png" className="fireworks"/>
-		</div>;
+		</div>);
 	}
 
 	return (<MyDataCard
