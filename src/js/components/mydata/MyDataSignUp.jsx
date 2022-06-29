@@ -17,6 +17,7 @@ import LinkOut from '../../base/components/LinkOut';
 import { modifyPage } from '../../base/plumbing/glrouter';
 import Person, { getProfile } from '../../base/data/Person';
 import Misc from '../../base/components/Misc';
+import { hasRegisteredForMyData } from './MyDataCommonComponents';
 
 const WIDGET_PATH = ['widget', 'MyDataSignUp'];
 const SHOW_PATH = [...WIDGET_PATH, 'show'];
@@ -29,15 +30,21 @@ export const showMyDataSignUpModal = (s=true) => {
 /**
  * A button to start the MyData sign-up flow.
  */
- export const MyDataSignUpButton = ({className,children,style}) => {		
+ export const MyDataSignUpButton = ({className,children,style}) => {
+	
+	const gotmydata = hasRegisteredForMyData();
+	const content = gotmydata ?  "Go to My.Data" : "Sign Up for My.Data";
+
 	return (
-		<a className={`${space("btn btn-primary", className)} mydata-signup-button`} href={window.location} style={style}
+		<C.A className={`${space("btn btn-primary", className)} mydata-signup-button`} href={gotmydata ? "/account" : window.location} style={style}
 			onClick={e => {
-				stopEvent(e);
-				showMyDataSignUpModal();
+				if (!gotmydata) {
+					stopEvent(e);
+					showMyDataSignUpModal();
+				}
 			}} >
-			{children || "Sign Up for My.Data"}
-		</a>
+			{children || content}
+		</C.A>
 	);
 }
 
