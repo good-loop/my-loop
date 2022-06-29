@@ -163,6 +163,7 @@ const StoriesSection = () => {
 		title: 'COMMUNITY FUNDRASING AND ENGAGEMENT MANAGER, SAVE THE CHILDREN UK',
 		logo: 'img/LandingCharity/save-the-children.png',
 		bobLogo: 'img/homepage/bubble-kids.png',
+		spanFontSize: '.8rem',
 	}
 
 	return (
@@ -175,13 +176,14 @@ const StoriesSection = () => {
 				{[].concat(testimonialOne, testimonialTwo, testimonialThree).map((testimonial, index) => {
 					let bubbleTop = '20%'
 					if (testimonial.quoteBg && testimonial.quoteBg !== 'img/homepage/testimonial-blob.svg') bubbleTop = '12%';
+					if (!testimonial.spanFontSize) testimonial.spanFontSize = '.9rem'
 					return (
 					<div className={space(testimonial.onMobileClass, 'testimonial-blob align-items-center justify-content-center mt-5 pb-5')} key={index} >
 						<img style={{width:'480px',zIndex:'1',margin:'0 -1rem'}} src={testimonial.quoteBg} />
 						<img className='bubble-image position-absolute' style={{zIndex:'1',maxHeight:'7rem',right:0,bottom:'1rem'}} src={testimonial.bobLogo} />
 						<div className="bubble-content position-absolute" style={{top:bubbleTop,margin:'0 10%',maxWidth:'380px',zIndex:'2'}}>
 							<img className='logo position-absolute' style={{top:'-3rem'}} src={testimonial.quoteImg} alt="quote" /> <br/>
-							<span className={testimonial.quoteClass} style={{fontSize:'.9rem'}}>{testimonial.quote}</span> <br/>
+							<span className={testimonial.quoteClass} style={{fontSize:testimonial.spanFontSize}}>{testimonial.quote}</span> <br/>
 							<div className="name-title color-gl-darker-grey mt-2" style={{fontSize:'.9rem'}}>
 								<span>{testimonial.name},</span> <br/>
 								<span>{testimonial.title}</span>
