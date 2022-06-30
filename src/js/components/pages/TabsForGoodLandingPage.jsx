@@ -67,7 +67,6 @@ const TabsForGoodLandingPage = () => {
 	return (<>
 		<MyLandingSection shiftLeft title={<>Tabs for Good<br/>The browser plugin that lets you do good just by opening a new tab</>} 
 			text=" " bgImg="/img/TabsForGood/photo-by-larm-rmah-unsplash.jpg" mydata={false} noProducts />
-		<CornerHummingbird/>
 		<WhatIsTabsForGood/>
 		<HowTabsForGoodWorks className="bg-gl-pale-orange" shortTitle />
 		<TabsForGoodSlideSection img="/img/homepage/charities.png" showLowerCTA bgClassName="bg-gl-light-blue" />
