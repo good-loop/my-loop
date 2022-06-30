@@ -168,8 +168,8 @@ const StoriesSection = () => {
 
 	return (
 		<PageCard className='stories-section pt-0'>
-			<h3 style={{textTransform:'unset',fontWeight:'600'}}>The My.Good-Loop Story</h3>
-			<p className='color-gl-muddy-blue mb-0'>Converting the multi-billion dollar online advertsing industry into a force for good - with you.</p>
+			<h3 className='text-md-center' style={{textTransform:'unset',fontWeight:'600'}}>The My.Good-Loop Story</h3>
+			<p className='color-gl-muddy-blue mb-0 text-md-center'>Converting the multi-billion dollar online advertsing industry into a force for good - with you.</p>
 			<TwinCards twinCardsContent={[].concat(cardOne, cardTwo)} />
 
 			<div className='testimonials-section'>
@@ -220,7 +220,7 @@ const DiscoverMoreCard = () => {
 
 	return(
 		<PageCard>
-			<h3 className='mb-3' style={{fontWeight:'600'}}>Discover More</h3>
+			<h3 className='mb-3 text-md-center' style={{fontWeight:'600'}}>Discover More</h3>
 			<Row>
 				{discoverContents.map((content, index) => {
 					return (

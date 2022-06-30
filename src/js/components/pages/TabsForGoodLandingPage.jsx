@@ -69,7 +69,7 @@ const TabsForGoodLandingPage = () => {
 			text=" " bgImg="/img/TabsForGood/photo-by-larm-rmah-unsplash.jpg" mydata={false} noProducts />
 		<WhatIsTabsForGood/>
 		<HowTabsForGoodWorks className="bg-gl-pale-orange" shortTitle />
-		<TabsForGoodSlideSection img="/img/homepage/charities.png" showLowerCTA bgClassName="bg-gl-light-blue" />
+		<TabsForGoodSlideSection img="/img/homepage/charities.png" showLowerCTA />
 		<WellMakeItHappenSection/>
 		<PositivePlace123Section className="bg-gl-pale-orange" showCTA />
 		{/*<TriCards />*/}
