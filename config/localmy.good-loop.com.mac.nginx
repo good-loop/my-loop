@@ -1,0 +1,54 @@
+# copy this to nginx sites-available, also modify etc/hosts
+# slightly different on mac
+
+map $sent_http_content_type $expires {
+    default                         off;
+    text/html                       epoch;
+    text/css                        epoch;
+    application/javascript          epoch;
+    ~image/                         epoch;
+}
+
+server {
+	listen   80; ## listen for ipv4; this line is default and implied
+	listen [::]:80;
+	
+	server_name localmy.good-loop.com;
+	rewrite ^ https://$server_name$request_uri? permanent;
+}
+
+server {
+	listen 443 ssl http2;
+	listen [::]:443 ssl http2;
+
+	server_name localmy.good-loop.com;
+
+	ssl_certificate /Users/username/winterwell/ssl-certs/wildcard.good-loop.com/fullchain1.pem;
+	ssl_certificate_key /Users/username/winterwell/ssl-certs/wildcard.good-loop.com/privkey1.pem;
+	ssl_protocols TLSv1.2 TLSv1.3;
+	ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
+	ssl_prefer_server_ciphers off;
+	ssl_dhparam /Users/username/winterwell/config/etc/ssl/dhparams.pem;
+
+	large_client_header_buffers 4 32k;
+
+	add_header X-Frame-Options SAMEORIGIN always;
+
+	root /Users/username/winterwell/my-loop/web;
+	index index.html;
+
+	expires $expires;
+
+	location / {
+		try_files $uri $uri.html @backend;
+		add_header 'Access-Control-Allow-Origin' "$http_origin";
+		add_header 'Access-Control-Allow-Credentials' 'true';
+		add_header 'Cache-Control' 'no-cache';
+	}
+	location @backend {
+		proxy_pass              http://localhost:8733;
+		proxy_set_header        X-Real-IP $remote_addr;
+		proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header        Host $http_host;
+	}
+}
