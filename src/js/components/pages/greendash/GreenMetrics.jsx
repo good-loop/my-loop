@@ -33,7 +33,10 @@ import { yessy } from '../../../base/utils/miscutils';
 
 
 const OverviewWidget = ({period, data}) => {
-	// console.log("OverviewWidget data", data);
+	if ( ! data.table || ! data.table.length) {
+		console.erorr("OverviewWidget - No data.table", data);
+		return null; 
+	}
 	let total = getSumColumn(data.table, "count");
 	return (
 		<Row className="greendash-overview mb-2">
