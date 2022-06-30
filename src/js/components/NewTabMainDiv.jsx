@@ -314,7 +314,7 @@ const NormalTabCenter = () => {
 	return <>
 		{true && //! loadingCharity && ! charityID &&
 		// Show the total raised across all charities, if the user hasn't selected one.
-		<><h5 className="text-center together-we-ve-rasied">
+		<><h5 className="text-center together-we-ve-raised">
 			Together we've raised&nbsp;
 			<TutorialComponent page={2} className="d-inline-block">
 				<TickerTotal />

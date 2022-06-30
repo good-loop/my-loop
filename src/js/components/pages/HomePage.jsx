@@ -62,7 +62,7 @@ const FindOutMoreSection = () => {
 	return (<><BG image='img/homepage/our-mission-background-lg.svg' style={{backgroundPosition:'center bottom'}} >
 		<PageCard id="upper-cta" >
 			<div className='text-center'>
-				<div className='rasied text-white' style={{fontFamily:'Montserrat'}}>
+				<div className='raised text-white' style={{fontFamily:'Montserrat'}}>
 					<span>TOGETHER WE'VE RAISED</span> <br/>
 					<TickerTotal noPennies={true} style={{fontWeight:'900'}} /> <br/>
 					<span>For Global Causes</span>
@@ -146,7 +146,7 @@ const StoriesSection = () => {
 		quoteImg: 'img/homepage/quote-blue.svg',
 		quoteClass: 'color-gl-muddy-blue',
 		quoteBg: 'img/homepage/testimonial-blob-mid.svg',
-		quote: <><b>Thanks to (Good-Loop) and their viewers, over £20,000 has been rasied for our organisation.</b> <br/><br/> Funds such as these help us to stand up for bees and other insects, work with farmers, organisations and landowners to manage their land in wildlife-friendly ways, and support our work to secure better protection for our precious marine mammals.</>,
+		quote: <><b>Thanks to (Good-Loop) and their viewers, over £20,000 has been raised for our organisation.</b> <br/><br/> Funds such as these help us to stand up for bees and other insects, work with farmers, organisations and landowners to manage their land in wildlife-friendly ways, and support our work to secure better protection for our precious marine mammals.</>,
 		name: 'LAENNE MANCHESTER',
 		title: 'DIGITAL MARKETING MANAGER, THE WILDLIFE TRUSTS',
 		logo: 'img/homepage/TWT_LOGO.png',
@@ -158,7 +158,7 @@ const StoriesSection = () => {
 		quoteImg: 'img/homepage/quote-red.svg',
 		quoteClass: 'color-gl-red',
 		quoteBg: 'img/homepage/testimonial-blob-long.svg',
-		quote: <><b>We are delighted to be working with Good-Loop and their partnering brands. Good-Loop are incredibly proactive and deliver excellent levels of stewardship. </b> <br/><br/> Donation values have recently doubled and they continue to support children throughout the globe by partnering with Save the Children. Over £45,000 has been rasied in the short period our partnership has been established. Sincere thanks for your ongoing support.</>,
+		quote: <><b>We are delighted to be working with Good-Loop and their partnering brands. Good-Loop are incredibly proactive and deliver excellent levels of stewardship. </b> <br/><br/> Donation values have recently doubled and they continue to support children throughout the globe by partnering with Save the Children. Over £45,000 has been raised in the short period our partnership has been established. Sincere thanks for your ongoing support.</>,
 		name: 'BECCA MCNAIR',
 		title: 'COMMUNITY FUNDRASING AND ENGAGEMENT MANAGER, SAVE THE CHILDREN UK',
 		logo: 'img/LandingCharity/save-the-children.png',
