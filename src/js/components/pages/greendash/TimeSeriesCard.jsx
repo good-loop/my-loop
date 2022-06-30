@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Col as div, Container, Row } from 'reactstrap';
 import Misc from '../../../base/components/Misc';
-import { space } from '../../../base/utils/miscutils';
+import { space, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import NewChartWidget from '../../NewChartWidget';
 import { GreenCard, printPeriod, printDate, printDateShort, TONNES_THRESHOLD, GreenCardAbout, Mass, NOEMISSIONS, CO2e } from './dashutils';
@@ -109,7 +109,7 @@ const TimeSeriesCard = ({ period, data: rawData }) => {
 
 	// Convert impressions + tags to CO2 time series
 	useEffect(() => {
-		if (!rawData) return;
+		if (!rawData || ! yessy(rawData.table)) return;
 
 		// Omit year in labels if the period doesn't span a year boundary
 		const labelFn = (period.start.getYear() === period.end.getYear()) ? (

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import Icon from '../../../base/components/Icon';
 import Misc from '../../../base/components/Misc';
-import { sum } from '../../../base/utils/miscutils';
+import { sum, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import NewChartWidget from '../../NewChartWidget';
 import { getBreakdownBy, getSumColumn } from './carboncalc';
@@ -51,8 +51,12 @@ const osTypes = {
  * @param {Number} minimumPercentLabeled the minimum percentage to include a data label for
  * @returns 
  */
-const TechSubcard = ({ tags, data, minimumPercentLabeled=1 }) => {
+const TechSubcard = ({ tags, data, minimumPercentLabeled=1 }) => {	
 	const [chartProps, setChartProps] = useState();
+
+	if ( ! data || ! yessy(data.table)) {
+		return <p>No data</p>;
+	}
 
 	useEffect(() => {
 		// totalEmissions","baseEmissions","creativeEmissions","supplyPathEmissions

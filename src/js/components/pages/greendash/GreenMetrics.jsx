@@ -33,17 +33,20 @@ import { yessy } from '../../../base/utils/miscutils';
 
 
 const OverviewWidget = ({period, data}) => {
+	let imps;
 	if ( ! data.table || ! data.table.length) {
-		console.erorr("OverviewWidget - No data.table", data);
-		return null; 
+		console.warn("OverviewWidget - No data.table", data);
+		imps = "No data";
+	} else {
+		const total = getSumColumn(data.table, "count");
+		imps = printer.prettyInt(total);
 	}
-	let total = getSumColumn(data.table, "count");
 	return (
 		<Row className="greendash-overview mb-2">
 			<Col xs="12">
 				<span className="period mr-4">{printPeriod(period)}</span>
 				<span className="impressions">Impressions served: 
-					<span className="impressions-count">{printer.prettyInt(total)}</span>
+					<span className="impressions-count">{imps}</span>
 				</span>
 			</Col>
 		</Row>
