@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Col, Container, Row } from 'reactstrap';
 import Misc from '../../base/components/Misc';
 import KStatus from '../../base/data/KStatus';
-import { getDataItem } from '../../base/plumbing/Crud';
+import { getDataItem, setWindowTitle } from '../../base/plumbing/Crud';
 import DataStore from '../../base/plumbing/DataStore';
 import { modifyPage } from '../../base/plumbing/glrouter';
 import C from '../../C';
@@ -304,6 +304,8 @@ const MyDataProductPage = () => {
 	useEffect(() => {
 		setFooterClassName('bg-gl-white');
 	}, []);
+
+    setWindowTitle("Good-Loop: My.Data");
 
 	return (<>
         <LandingSection/>
