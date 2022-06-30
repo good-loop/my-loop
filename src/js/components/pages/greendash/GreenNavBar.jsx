@@ -7,7 +7,7 @@ import Campaign from '../../../base/data/Campaign';
 import KStatus from '../../../base/data/KStatus';
 import { getDataItem } from '../../../base/plumbing/Crud';
 
-import { encURI, space } from '../../../base/utils/miscutils';
+import { encURI, isMobile, space } from '../../../base/utils/miscutils';
 import C from '../../../C';
 import ServerIO from '../../../plumbing/ServerIO';
 const A = C.A;
@@ -19,6 +19,10 @@ const A = C.A;
  * @returns 
  */
 const GreenNavBar = ({active}) => {
+	if (isMobile()) {
+		console.warn("TODO GreenNavBar layout on mobile");
+		return null;
+	}
 	const [isOpen, setIsOpen] = useState(false)
 	const toggle = () => setIsOpen(!isOpen);
 
