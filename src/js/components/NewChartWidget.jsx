@@ -33,13 +33,16 @@ ChartJS.register(
 );
 
 /**
+ * ?? How do we set the size of the chart??
  * 
  * @param {Object} p
+ * @param {?number} p.width Set to null to inherit See https://github.com/reactchartjs/react-chartjs-2/issues/362
+ * @param {?number} p.height Set to null to inherit
  * @param {Object} p.data { labels:string[], datasets:[] }
  * @param {Object} p.datalabels See https://www.npmjs.com/package/chartjs-plugin-datalabels
  * @returns 
  */
-const NewChartWidget = ({type = 'line', datalabels, className, style, ...props}) => {
+const NewChartWidget = ({type = 'line', datalabels, className, style, width, height, ...props}) => {
 	props.options = props.options || {};
 	props.options.maintainAspectRatio = props.options.maintainAspectRatio || false;
 	if (datalabels) {
@@ -50,9 +53,9 @@ const NewChartWidget = ({type = 'line', datalabels, className, style, ...props})
 
 	return <div className={space("chart-canvas-container position-relative", className)} style={style}>
 		{{
-			line: <Line {...props} />,
-			pie: <Pie {...props} />,
-			bar: <Bar {...props} />,
+			line: <Line width={width} height={height} {...props} />,
+			pie: <Pie width={width} height={height} {...props} />,
+			bar: <Bar width={width} height={height} {...props} />,
 		}[type]}
 	</div>;
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col as div, Container, Row } from 'reactstrap';
+import { Col, Container, Row } from 'reactstrap';
 import Misc from '../../../base/components/Misc';
 import { space, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
@@ -198,23 +198,29 @@ const TimeSeriesCard = ({ period, data: rawData }) => {
 	let chartContent = <Misc.Loading text="Fetching emissions-over-time data..." />;
 	if (chartProps) {
 		chartContent = chartProps.isEmpty ? null : (
-			<NewChartWidget data={chartProps.data} options={chartProps.options} />
+			<NewChartWidget data={chartProps.data} options={chartProps.options} height={null} width={null} />
 		);
 	}
 
 	// TODO Reinstate "Per 1000 impressions" button
 
 	return <GreenCard title="How much carbon is your digital advertising emitting?" className="carbon-time-series" row>
-		<div className="chart-subcard flex-column">
-			{chartProps?.isEmpty ? (
-				NOEMISSIONS
-			) : (
-				<div>{CO2e} emissions over time</div>
-			)}
-			{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
-			{chartContent}
-		</div>
-		<TotalSubcard period={period} totalCO2={aggCO2?.total} />
+		<Row className='w-100'>
+			<Col md={8} >
+				{/* <div className="chart-subcard flex-column"> */}
+					{chartProps?.isEmpty ? (
+						NOEMISSIONS
+					) : (
+						<div>{CO2e} emissions over time</div>
+					)}
+					{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
+					{chartContent}
+				{/* </div> */}
+			</Col>
+			<Col md={4}>
+				<TotalSubcard period={period} totalCO2={aggCO2?.total} />
+			</Col>
+		</Row>
 		<GreenCardAbout>
 			<p>How do we calculate the time-series carbon emissions?</p>
 		</GreenCardAbout>
