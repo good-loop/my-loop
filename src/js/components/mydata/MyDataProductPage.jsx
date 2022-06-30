@@ -202,7 +202,7 @@ const TransformYourData = () => {
                     
                     <br/>
                     <br/>
-                    <p className="miniheader pt-4"><b>FAQS</b></p>
+                    <p className="miniheader pt-5"><b>FAQS</b></p>
                     
                     <CollapseableCard
                         title="1. What charities can I support with My Data?"
