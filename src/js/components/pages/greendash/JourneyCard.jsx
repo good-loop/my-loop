@@ -46,8 +46,8 @@ const TreesSection = ({treesPlanted, coralPlanted}) => {
 			<img className="journey-tree" src="/img/green/tree-light.svg" />
 			<img className="journey-tree" src="/img/green/tree-light.svg" />
 		</div>
-		{treesPlanted && <h3>{printer.prettyInt(treesPlanted)} trees planted</h3>}
-		{coralPlanted && <h3>{printer.prettyInt(coralPlanted)} pieces of coral planted</h3>}
+		{treesPlanted? <h3>{printer.prettyInt(treesPlanted)} trees planted</h3> : null /* NB: avoid "0" */}
+		{coralPlanted? <h3>{printer.prettyInt(coralPlanted)} pieces of coral planted</h3> : null}
 	</>;
 };
 
@@ -95,8 +95,10 @@ const JourneyCard = ({ campaigns, period, emptyTable }) => {
 		const agencyId = DataStore.getUrlValue("agency");
 		if (brandId) {
 			impactSplashPage = '/green?brand='+encURI(brandId);
+			brandOrAgency = getDataItem({type:C.TYPES.Advertiser,id:brandId, status:KStatus.PUBLISHED}).value;	
 		} else if (agencyId) {
 			impactSplashPage = '/green?agency='+encURI(agencyId);
+			brandOrAgency = getDataItem({type:C.TYPES.Agency,id:agencyId, status:KStatus.PUBLISHED}).value;	
 		} else {
 			// 1st master campaign (if there is one)			
 			let masters = campaigns.map(Campaign.masterFor).filter(m => m.id);
