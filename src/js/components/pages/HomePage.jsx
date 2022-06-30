@@ -20,7 +20,7 @@ import {
 import BG from '../../base/components/BG';
 import { setFooterClassName } from '../Footer';
 import { T4GHowItWorksButton, T4GSignUpButton } from '../T4GSignUp';
-import { MyDataSignUpButton } from '../mydata/MyDataSignUp';
+import { MyDataSignUpButton, MyDataSignUpModal } from '../mydata/MyDataSignUp';
 import TickerTotal from '../TickerTotal';
 import Page from './AccountPage';
 
@@ -91,7 +91,7 @@ const SlideCardsSection = () => {
 		imgUrl: 'img/homepage/tabs-for-good-card.png',
 		imgClass: 'bg-gl-light-pink',
 		title: <><span style={{fontWeight:'bold'}}>TABS FOR GOOD</span> <br/>Support A Charity Of Your Choice For Free</>,
-		text: 'Convert your browsing into donations, simply by opening tabs with our desktop browser extension.',
+		text: 'Convert your browsing into donations, simply by opening tabs with our desktop browser extension',
 		button: <><T4GSignUpButton className="w-100 mb-3"/>	<T4GHowItWorksButton className="w-100 color-gl-red" /></>
 	}
 
@@ -99,8 +99,8 @@ const SlideCardsSection = () => {
 		imgUrl: 'img/homepage/my-data-product.png',
 		imgClass: 'bg-gl-lighter-blue',
 		title: <><span style={{fontWeight:'bold'}}>MY.DATA</span> <br/>How Many Cookies Have You Accepted Today?</>,
-		text: 'Convert your browsing into donations, simply by opening tabs with our desktop browser extension.',
-		button: <><MyDataButton className="w-100" /> <ArrowLink className='w-100 color-gl-red' link="/getmydata#howitworks" >How it works</ArrowLink></>
+		text: "Don't just give your data away - control your data and convert it into charity donations with My.Data",
+		button: <><MyDataSignUpModal /><MyDataButton className="w-100" /> <ArrowLink className='w-100 color-gl-red' link="/getmydata#howitworks" >How it works</ArrowLink></>
 	}
 
 	return (<>
