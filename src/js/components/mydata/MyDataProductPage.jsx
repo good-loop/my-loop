@@ -39,7 +39,7 @@ const LandingSection = () => {
                 <div className="d-flex flex-column justify-content-center align-items-center">
                     <MyDataSignUpButton/>
                     <br/>
-                    <a onClick={scroll}>Find out more</a>
+                    <a onClick={scroll} className="mt-3">Find out more</a>
                 </div>
                 <img src="/img/mydata/product-page/left-coins-padlocks.png" className="padlocks padlock-left d-none d-md-inline-block"/>
                 <img src="/img/mydata/product-page/right-coins-padlocks.png" className="padlocks padlock-right d-none d-md-inline-block"/>
@@ -138,7 +138,7 @@ const HowItWorks = () => {
                     </Section>
                 </Row>
 
-                <MyDataSignUpButton className="align-self-center" style={{zIndex:1}}/>
+                <MyDataSignUpButton className="align-self-center mb-3" style={{zIndex:1}}/>
                 <br/>
             </div>
         </ProductPageContainer>
@@ -202,7 +202,7 @@ const TransformYourData = () => {
                     
                     <br/>
                     <br/>
-                    <p className="miniheader"><b>FAQS</b></p>
+                    <p className="miniheader pt-4"><b>FAQS</b></p>
                     
                     <CollapseableCard
                         upArrow
