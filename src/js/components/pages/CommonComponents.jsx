@@ -213,7 +213,7 @@ const MyLandingSection = ({title, bgImg, noProducts}) => {
 		<img src='img/splash-screen/foreground-desktop.png' className="d-none d-md-block w-100 position-absolute" />
 		<div className="splash-content d-flex flex-column align-items-center" style={!isMobile() ? {margin:'0 28vw'} : null}>
 			{title && <h1 className='text-center bolder text-white mx-2 mt-3' style={{fontSize:"1.5rem"}}>{title}</h1>}
-			<button className='btn btn-primary btn-lg my-3 mx-auto' onClick={scrollToUpperCta} style={{fontSize:'1rem'}} >Find out more</button>
+			<button className='btn btn-primary btn-lg my-3 mx-auto' onClick={scrollToUpperCta} style={{fontSize:'.9rem'}} >Find out more</button>
 			{!noProducts && <a href='/tabsforgood' className='text-white text-decoration-none mt-2 mb-4'><span style={{textDecoration:"underline"}}>Discover Our Products</span> →</a>}
 		</div>
 		</BG>
