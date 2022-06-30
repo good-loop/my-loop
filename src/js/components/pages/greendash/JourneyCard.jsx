@@ -90,14 +90,24 @@ const JourneyCard = ({ campaigns, period, emptyTable }) => {
 	if (masterCampaigns.length===1) {
 		impactSplashPage = "/green/"+encURI(masterCampaigns[0].id);
 	} else {
-		let masters = campaigns.map(Campaign.masterFor).filter(m => m.id);
-		if (masters.length) {
-			// HACK pick the first
-			let spec = Object.assign({status:KStatus.PUBLISHED}, masters[0]);
-			impactSplashPage = '/green?'+
-				({Agency: "agency", Advertiser: "brand"}[spec.type])+"="+encURI(spec.id);
-			let pvBrandOrAgency = getDataItem(spec);
-			brandOrAgency = pvBrandOrAgency.value;	
+		// in the url??
+		const brandId = DataStore.getUrlValue("brand");
+		const agencyId = DataStore.getUrlValue("agency");
+		if (brandId) {
+			impactSplashPage = '/green?brand='+encURI(brandId);
+		} else if (agencyId) {
+			impactSplashPage = '/green?agency='+encURI(agencyId);
+		} else {
+			// 1st master campaign (if there is one)			
+			let masters = campaigns.map(Campaign.masterFor).filter(m => m.id);
+			if (masters.length) {
+				// HACK pick the first
+				let spec = Object.assign({status:KStatus.PUBLISHED}, masters[0]);
+				impactSplashPage = '/green?'+
+					({Agency: "agency", Advertiser: "brand"}[spec.type])+"="+encURI(spec.id);
+				let pvBrandOrAgency = getDataItem(spec);
+				brandOrAgency = pvBrandOrAgency.value;	
+			}
 		}
 	}
 	// HACK a download for us
