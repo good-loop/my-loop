@@ -205,7 +205,6 @@ const TransformYourData = () => {
                     <p className="miniheader pt-4"><b>FAQS</b></p>
                     
                     <CollapseableCard
-                        upArrow
                         title="1. What charities can I support with My Data?"
                         TitleTag="h1" className="w-100 faq faq-1"
                         innerClassName="text-left px-md-5" arrowPosition="bottom">
@@ -228,7 +227,6 @@ const TransformYourData = () => {
                     </CollapseableCard>
 
                     <CollapseableCard
-                        upArrow
                         title="2. How does My Data make money for my charity?"
                         TitleTag="h1" className="w-100 faq faq-2"
                         innerClassName="text-left px-md-5" arrowPosition="bottom">
@@ -244,7 +242,6 @@ const TransformYourData = () => {
                     </CollapseableCard>
 
                     <CollapseableCard
-                        upArrow
                         title="3. How do I control my data privacy?"
                         TitleTag="h1" className="w-100 faq faq-3"
                         innerClassName="text-left px-md-5" arrowPosition="bottom">
