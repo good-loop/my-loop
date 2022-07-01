@@ -54,10 +54,6 @@ const osTypes = {
 const TechSubcard = ({ data: osTable, minimumPercentLabeled=1 }) => {
 	const [chartProps, setChartProps] = useState();
 
-	if (! yessy(osTable)) {
-		return <p>No data</p>;
-	}
-
 	useEffect(() => {
 		// totalEmissions","baseEmissions","creativeEmissions","supplyPathEmissions
 		let media = getSumColumn(osTable, "creativeEmissions");
@@ -214,6 +210,10 @@ const BreakdownCard = ({ data }) => {
 	) : (
 		<DeviceSubcard data={data} />
 	);
+
+	if ( ! yessy(data)) {
+		subcard = <p>No data</p>;
+	}
 
 	return <GreenCard title="What is the breakdown of your emissions?" className="carbon-breakdown">
 		<div className="d-flex justify-content-around mb-2">
