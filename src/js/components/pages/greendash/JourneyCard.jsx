@@ -26,7 +26,7 @@ const Cloud = ({style}) => (
  * ??Let's rename all co2 variables to be eg "co2OffsetKgs" for clarity
  * 
 */
-const CO2Section = ({co2Offset, co2Emitted}) => <>
+const CO2Section = ({co2Offset}) => <>
 	<div className="cloud-indicator">
 		<Cloud style={{fill: '#8bc'}} />
 	</div>
@@ -97,17 +97,17 @@ const JourneyCard = ({ campaigns, period, emptyTable }) => {
 			impactSplashPage = '/green?'+
 				({Agency: "agency", Advertiser: "brand"}[spec.type])+"="+encURI(spec.id);
 			let pvBrandOrAgency = getDataItem(spec);
-			brandOrAgency = pvBrandOrAgency.value;	
+			brandOrAgency = pvBrandOrAgency.value;
 		}
 	}
 	// HACK a download for us
 	let downloadCSVLink;
 	if (isTester()) {
-		let sq = SearchQuery.setPropOr(null, "campaign", campaigns.map(c => c.id));
+		let sq = SearchQuery.setPropOr(null, 'campaign', campaigns.map(c => c.id));
 		let pvCarbonData = getCarbon({
-			q:sq.query, 
-			start: period?.start.toISOString() || "2022-01-01", 
-			end: period?.end.toISOString() || "now"
+			q: sq.query,
+			start: period?.start.toISOString() || '2022-01-01',
+			end: period?.end.toISOString() || 'now'
 		});
 		if (pvCarbonData.value) {
 			let table = pvCarbonData.value.table;

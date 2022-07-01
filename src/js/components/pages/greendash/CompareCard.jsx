@@ -45,7 +45,12 @@ const QuartersCard = ({baseFilters}) => {
 	}
 
 	// Get total carbon for each quarter
-	let pvsTable = quarters.map((quarter, i) => getCarbon({ ...baseFilters, start: isoDate(quarter.start), end: isoDate(quarter.end)}));
+	let pvsTable = quarters.map((quarter, i) => getCarbon({
+		...baseFilters,
+		start: isoDate(quarter.start),
+		end: isoDate(quarter.end),
+		breakdown: 'total',
+	}));
 	// add it into chartProps
 	pvsTable.forEach((pvTable, i) => {
 		if ( ! pvTable.value) return;
@@ -54,7 +59,7 @@ const QuartersCard = ({baseFilters}) => {
 		let quarter = quarters[i];
 		chartProps.data.labels[i] = printPeriod(quarter, true);
 
-		let table = pvTable.value.table;
+		let table = pvTable.value.tables.total;
 		if ( ! table || ! table.length) {
 			return; // no data for this quarter
 		}
@@ -118,8 +123,12 @@ const CampaignCard = ({baseFilters, campaignIds}) => {
 			ids: campaignIds
 		}).promise.then(({hits: campaigns}) => {
 			campaigns.forEach(campaign => {
-				getCarbon({...baseFilters, q: `campaign:${getId(campaign)}`, nocache: true}).promise.then(res => {
-					setChartProps(prev => insertCampaignData(prev, campaign, res.table));
+				getCarbon({...baseFilters,
+					q: `campaign:${getId(campaign)}`,
+					breakdown: 'total',
+					nocache: true
+				}).promise.then(res => {
+					setChartProps(prev => insertCampaignData(prev, campaign, res.tables.total));
 				});
 			})
 		});

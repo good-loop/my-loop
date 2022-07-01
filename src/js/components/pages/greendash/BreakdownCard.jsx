@@ -51,14 +51,14 @@ const osTypes = {
  * @param {Number} minimumPercentLabeled the minimum percentage to include a data label for
  * @returns 
  */
-const TechSubcard = ({ tags, data, minimumPercentLabeled=1 }) => {
+const TechSubcard = ({ data: osTable, minimumPercentLabeled=1 }) => {
 	const [chartProps, setChartProps] = useState();
 
 	useEffect(() => {
 		// totalEmissions","baseEmissions","creativeEmissions","supplyPathEmissions
-		let media = getSumColumn(data.table, "creativeEmissions");
-		let publisher = getSumColumn(data.table, "baseEmissions");
-		let dsp = getSumColumn(data.table, "supplyPathEmissions");
+		let media = getSumColumn(osTable, "creativeEmissions");
+		let publisher = getSumColumn(osTable, "baseEmissions");
+		let dsp = getSumColumn(osTable, "supplyPathEmissions");
 
 		const totalCO2 = media + dsp + publisher;
 
@@ -106,7 +106,7 @@ const TechSubcard = ({ tags, data, minimumPercentLabeled=1 }) => {
 				}
 			}
 		})
-	}, [data])
+	}, [osTable])
 
 	if (!chartProps) return null;
 	if (chartProps?.isEmpty) return NOEMISSIONS;
@@ -126,11 +126,11 @@ const TechSubcard = ({ tags, data, minimumPercentLabeled=1 }) => {
  * desktop vs mobile and different OS
  * @param {Object} p
  */
-const DeviceSubcard = ({ tags, data: rawData }) => {
+const DeviceSubcard = ({ data: osTable }) => {
 	const [chartProps, setChartProps] = useState();
 
 	useEffect(() => {
-		const breakdownByOS = getBreakdownBy(rawData.table, 'totalEmissions', 'os');
+		const breakdownByOS = getBreakdownBy(osTable, 'totalEmissions', 'os');
 		const totalCO2 = Object.values(breakdownByOS).reduce((acc, v) => acc + v, 0);
 
 		if (totalCO2 === 0) {
@@ -192,7 +192,7 @@ const DeviceSubcard = ({ tags, data: rawData }) => {
 				scales: { x: { ticks: { callback: v => `${Math.round(v)} ${unitShort}` } } },
 			}
 		});
-	}, [rawData]);
+	}, [osTable]);
 	
 	if (!chartProps) return null;
 	if (chartProps?.isEmpty) return NOEMISSIONS;
@@ -201,14 +201,14 @@ const DeviceSubcard = ({ tags, data: rawData }) => {
 }
 
 
-const BreakdownCard = ({ campaigns, tags, data }) => {
+const BreakdownCard = ({ data }) => {
 	if ( ! data) return <Misc.Loading text="Fetching your data..." />;
 	const [mode, setMode] = useState('tech');
 
 	const subcard = (mode === 'tech') ? (
-		<TechSubcard tags={tags} data={data} minimumPercentLabeled={10} />
+		<TechSubcard data={data} minimumPercentLabeled={10} />
 	) : (
-		<DeviceSubcard tags={tags} data={data} />
+		<DeviceSubcard data={data} />
 	);
 
 	return <GreenCard title="What is the breakdown of your emissions?" className="carbon-breakdown">

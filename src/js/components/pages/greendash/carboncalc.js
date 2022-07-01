@@ -117,7 +117,7 @@ export const getCarbon = ({q = '', start = '1 month ago', end = 'now', ...rest})
 	const data = {
 		// dataspace: 'green',
 		q,
-		start, end, 
+		start, end,
 		...rest
 	};
 
@@ -136,9 +136,10 @@ export const getCampaigns = (table) => {
 	if (!table) return null;
 
 	const tagIdSet = {};
+	const adIdCol = table[0].indexOf('adid');
 	table.forEach((row, i) => {
 		if (i === 0) return;
-		let adid = row[4];
+		let adid = row[adIdCol];
 		if (adid && adid !== 'unset') {
 			tagIdSet[adid] = true;
 		}
@@ -175,17 +176,18 @@ export const calculateDynamicOffset = ({campaign, offset, period}) => {
 	let n;
 	// HACK: carbon offset?
 	if (Impact.isCarbonOffset(offset)) {
-		let sq = SearchQuery.setProp(null, "campaign", campaign.id);
+		let sq = SearchQuery.setProp(null, 'campaign', campaign.id);
 		if ( ! period) period = periodFromUrl();
 		let pvCarbonData = getCarbon({
-			q:sq.query, 
-			start: period?.start.toISOString() || "2022-01-01", 
-			end: period?.end.toISOString() || "now"
+			q: sq.query,
+			start: period?.start.toISOString() || '2022-01-01',
+			end: period?.end.toISOString() || 'now',
+			breakdown: ['total']
 		});
 		if ( ! pvCarbonData.value) {
 			return null;
 		}
-		let table = pvCarbonData.value.table;
+		let table = pvCarbonData.value.tables.total;
 		let totalEmissions = getSumColumn(table, "totalEmissions");
 		n = totalEmissions;
 	} else {
@@ -228,7 +230,7 @@ export const getOffsetsByType = ({campaign, status, period}) => {
 			let offsets = Campaign.offsets(campaign);
 			let fixedOffsets = offsets.map(offset => Impact.isDynamic(offset)? calculateDynamicOffset({campaign, offset, period}) : offset);
 			allFixedOffsets.push(...fixedOffsets);
-		});				
+		});
 		console.log("allFixedOffsets", allFixedOffsets);
 	}
 	const offsets4type = {};

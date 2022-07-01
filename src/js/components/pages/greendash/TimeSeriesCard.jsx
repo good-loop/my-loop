@@ -103,13 +103,13 @@ const TotalSubcard = ({ period, totalCO2 }) => {
 };
 
 
-const TimeSeriesCard = ({ period, data: rawData }) => {
+const TimeSeriesCard = ({ period, data: timeTable }) => {
 	const [chartProps, setChartProps] = useState(); // ChartJS-ready props object
 	const [aggCO2, setAggCO2] = useState(); // avg/total/max CO2
 
 	// Convert impressions + tags to CO2 time series
 	useEffect(() => {
-		if (!rawData) return;
+		if (!timeTable) return;
 
 		// Omit year in labels if the period doesn't span a year boundary
 		const labelFn = (period.start.getYear() === period.end.getYear()) ? (
@@ -122,7 +122,7 @@ const TimeSeriesCard = ({ period, data: rawData }) => {
 		const data = [];
 
 		// Sum total emissions for each date across all other factors, sort, and unzip to labels/data arrays
-		Object.entries(getBreakdownBy(rawData.table, 'totalEmissions', 'time')).sort(
+		Object.entries(getBreakdownBy(timeTable, 'totalEmissions', 'time')).sort(
 			([ta], [tb]) => new Date(ta).getTime() - new Date(tb).getTime()
 		).forEach(([time, kg]) => {
 			labels.push(labelFn(time));
@@ -193,7 +193,7 @@ const TimeSeriesCard = ({ period, data: rawData }) => {
 		};
 
 		setChartProps(newChartProps);
-	}, [rawData]);
+	}, [timeTable]);
 
 	let chartContent = <Misc.Loading text="Fetching emissions-over-time data..." />;
 	if (chartProps) {
