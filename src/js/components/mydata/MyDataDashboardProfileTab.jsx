@@ -235,7 +235,7 @@ const DataProfile = () => {
 		<CollapseSettings title="Demographic Details" headerIMG="img/mydata/profile-demographic.png" >
 			<SettingItem description="Approximate age" itemKey="age-approx" type="select"
 				options={["Under 13", "Under 18", "18 to 24", "25 to 34", "35 to 44", "45 to 54", "55 to 64", "65 and older"]} />
-			<SettingItem description="Your gender" itemKey="gender" type="gender" />
+			<SettingItem description="Your pronouns" itemKey="pronouns" type="pronoun" />
 			<SettingItem description="Your country" itemKey="country" type="country" />
 			<SettingItem description="Your city or region" itemKey="location-region" />
 		</CollapseSettings>
