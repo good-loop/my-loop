@@ -205,7 +205,7 @@ const BreakdownCard = ({ data }) => {
 	if ( ! data) return <Misc.Loading text="Fetching your data..." />;
 	const [mode, setMode] = useState('tech');
 
-	const subcard = (mode === 'tech') ? (
+	let subcard = (mode === 'tech') ? (
 		<TechSubcard data={data} minimumPercentLabeled={10} />
 	) : (
 		<DeviceSubcard data={data} />
