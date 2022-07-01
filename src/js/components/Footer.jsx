@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
+import DynImg from '../base/components/DynImg';
 import PropControl from '../base/components/PropControl';
 import { space, equals, isPortraitMobile } from '../base/utils/miscutils';
 import C from '../C';
@@ -35,7 +36,7 @@ const MyLoopFooter = ({page}) => {
 			<path d="m 0.003,-0.001 c 0,0 356.72,665.074 1297.3,296.564 940.58,-368.51 1468.515,280.543 1468.515,280.543 v 221.17 H 0.003 Z" fill="currentColor" />
 		</svg>
 		<Row>
-			<img src="/img/homepage/Turtle.png" className='turtle'/>
+			<DynImg src="/img/homepage/Turtle.png" className='turtle'/>
 			<div className='bg-gl-dark-turquoise w-100 p-5' style={{marginTop:-1}}>
 				<Row>
 					<Col md={6}>
