@@ -133,7 +133,7 @@ export const getCarbon = ({q = '', start = '1 month ago', end = 'now', ...rest})
  * @returns {?PromiseValue} PV of a List of Campaigns
  */
 export const getCampaigns = (table) => {
-	if (!table) return null;
+	if (!table || ! table.length) return null;
 
 	const tagIdSet = {};
 	const adIdCol = table[0].indexOf('adid');
