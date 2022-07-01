@@ -129,7 +129,7 @@ const MainDiv = () => {
 				'tabsforgood':[],
 				'getmydata':[],
 				//"home#mydata-cta": [],
-				"blog":Roles.isTester()
+				//"blog":Roles.isTester()
 			};
 		}}
 		navbarLabels={navPageLabels}
