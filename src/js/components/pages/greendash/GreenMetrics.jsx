@@ -158,7 +158,7 @@ const GreenMetrics2 = ({}) => {
 
 	const pvChartData = getCarbon({ ...baseFilters, breakdown: ['adid', 'time', 'os', 'total'] });
 
-	let pvCampaigns = getCampaigns(pvChartData.value?.tables.adid);
+	let pvCampaigns = getCampaigns(pvChartData.value?.tables?.adid);
 	if (pvCampaigns && PromiseValue.isa(pvCampaigns.value)) { // HACK unwrap nested PV
 		pvCampaigns = pvCampaigns.value;
 	}
@@ -176,13 +176,13 @@ const GreenMetrics2 = ({}) => {
 
 	// HACK: Tell JourneyCard we had an empty table & so couldn't get campaigns (but nothing is "loading")
 	// TODO We CAN get campaigns but it'd take more of a rewrite than we want to do just now.
-	const emptyTable = pvChartData.resolved && (!pvChartData?.value?.tables.total || pvChartData.value.tables.total.length === 1);
+	const emptyTable = pvChartData.resolved && (!pvChartData?.value?.tables?.total || pvChartData.value.tables.total.length === 1);
 
 	return (<>
-		<OverviewWidget period={period} data={pvChartData.value?.tables.total} />
+		<OverviewWidget period={period} data={pvChartData.value?.tables?.total} />
 		<Row className="card-row">
 			<Col xs="12" sm="8" className="flex-column">
-				<TimeSeriesCard {...commonProps} data={pvChartData.value?.tables.time} />
+				<TimeSeriesCard {...commonProps} data={pvChartData.value?.tables?.time} />
 			</Col>
 			<Col xs="12" sm="4" className="flex-column">
 				<JourneyCard campaigns={List.hits(pvCampaigns?.value)} {...commonProps} emptyTable={emptyTable} />
@@ -193,7 +193,7 @@ const GreenMetrics2 = ({}) => {
 				<CompareCard {...commonProps} />
 			</Col>
 			<Col xs="12" sm="4" className="flex-column">
-				<BreakdownCard {...commonProps} data={pvChartData.value?.tables.os} />
+				<BreakdownCard {...commonProps} data={pvChartData.value?.tables?.os} />
 			</Col>
 			<Col xs="12" sm="4" className="flex-column">
 				<TimeOfDayCard {...commonProps} />
