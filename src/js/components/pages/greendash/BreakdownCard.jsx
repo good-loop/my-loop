@@ -54,10 +54,6 @@ const osTypes = {
 const TechSubcard = ({ data: osTable, minimumPercentLabeled=1 }) => {
 	const [chartProps, setChartProps] = useState();
 
-	if (! yessy(osTable)) {
-		return <p>No data</p>;
-	}
-
 	useEffect(() => {
 		// totalEmissions","baseEmissions","creativeEmissions","supplyPathEmissions
 		let media = getSumColumn(osTable, "creativeEmissions");
@@ -114,6 +110,10 @@ const TechSubcard = ({ data: osTable, minimumPercentLabeled=1 }) => {
 
 	if (!chartProps) return null;
 	if (chartProps?.isEmpty) return NOEMISSIONS;
+
+	if (! yessy(osTable)) {
+		return <p>No data</p>;
+	}
 	
 	return <>
 		<p>{CO2e} emissions due to...</p>
