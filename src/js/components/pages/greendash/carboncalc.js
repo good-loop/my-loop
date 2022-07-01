@@ -87,7 +87,7 @@ export const getSumColumn = (table, colName) => {
  * @returns {Object} {breakdown-key: sum-for-key} 
  */
  export const getBreakdownBy = (table, colNameToSum, colNameToBreakdown) => {
-	if ( ! table.length) {
+	if ( ! table?.length) {
 		return {}; // no data
 	}
 	let ci = table[0].indexOf(colNameToSum);
