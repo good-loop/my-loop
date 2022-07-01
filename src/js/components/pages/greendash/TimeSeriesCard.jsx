@@ -103,7 +103,7 @@ const TotalSubcard = ({ period, totalCO2 }) => {
 };
 
 
-const TimeSeriesCard = ({ period, data: timeTable }) => {
+const TimeSeriesCard = ({ period, data: timeTable, noData }) => {
 	const [chartProps, setChartProps] = useState(); // ChartJS-ready props object
 	const [aggCO2, setAggCO2] = useState(); // avg/total/max CO2
 
@@ -200,6 +200,8 @@ const TimeSeriesCard = ({ period, data: timeTable }) => {
 		chartContent = chartProps.isEmpty ? null : (
 			<NewChartWidget data={chartProps.data} options={chartProps.options} height={null} width={null} />
 		);
+	} else if (noData) {
+		chartContent = <p>No data for this period</p>;
 	}
 
 	// TODO Reinstate "Per 1000 impressions" button

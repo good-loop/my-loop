@@ -40,7 +40,7 @@ const BlogContentChild = ({object: blogPost}) => {
         <h1>{blogPost.title}</h1>
         <p className='leader-text mt-3 text-center'>{blogPost.subtitle}</p>
         <div className="d-flex flex-row justify-content-center align-items-center mt-3">
-            <SignatureSVG name={blogPost.author} title={blogPost.authorTitle} href={blogPost.authorPic} className="signatureSVG" hideLogo/>
+            <SignatureSVG name={blogPost.author} title={blogPost.authorTitle} pronouns={blogPost.authorPronouns} href={blogPost.authorPic} className="signatureSVG" hideLogo/>
         </div>
         <PageCard className="pt-4">
             <p className="color-gl-dark-grey">

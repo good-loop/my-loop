@@ -162,6 +162,7 @@ const GreenMetrics2 = ({}) => {
 	if (pvCampaigns && PromiseValue.isa(pvCampaigns.value)) { // HACK unwrap nested PV
 		pvCampaigns = pvCampaigns.value;
 	}
+	let noData = pvChartData.value && ! pvChartData.value.tables?.adid?.length;
 	// TODO Fall back to filterMode methods to get campaigns when table is empty
 
 	if (!pvChartData.resolved) {
@@ -176,16 +177,17 @@ const GreenMetrics2 = ({}) => {
 
 	// HACK: Tell JourneyCard we had an empty table & so couldn't get campaigns (but nothing is "loading")
 	// TODO We CAN get campaigns but it'd take more of a rewrite than we want to do just now.
+	// not working?? How does this compare to noData
 	const emptyTable = pvChartData.resolved && (!pvChartData?.value?.tables?.total || pvChartData.value.tables.total.length === 1);
 
 	return (<>
 		<OverviewWidget period={period} data={pvChartData.value?.tables?.total} />
 		<Row className="card-row">
 			<Col xs="12" sm="8" className="flex-column">
-				<TimeSeriesCard {...commonProps} data={pvChartData.value?.tables?.time} />
+				<TimeSeriesCard {...commonProps} data={pvChartData.value?.tables?.time} noData={noData} />
 			</Col>
 			<Col xs="12" sm="4" className="flex-column">
-				<JourneyCard campaigns={List.hits(pvCampaigns?.value)} {...commonProps} emptyTable={emptyTable} />
+				<JourneyCard campaigns={List.hits(pvCampaigns?.value)} {...commonProps} emptyTable={emptyTable || noData} />
 			</Col>
 		</Row>
 		<Row className="card-row">
