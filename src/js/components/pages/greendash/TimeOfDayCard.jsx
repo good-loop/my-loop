@@ -17,8 +17,8 @@ const TimeOfDayCard = ({baseFilters, tags}) => {
 	}
 
 	useEffect(() => {
-		getCarbon({...baseFilters, timeofday: true}).promise.then(res => {
-			if (res.table.length === 1 || ! res.table.length) { // only header row = no data
+		getCarbon({...baseFilters, timeofday: true, breakdown: 'timeofday'}).promise.then(res => {
+			if (res.tables.timeofday.length === 1 || ! res.tables.timeofday.length) { // only header row = no data
 				setChartProps({isEmpty: true});
 				return;
 			}
@@ -26,7 +26,7 @@ const TimeOfDayCard = ({baseFilters, tags}) => {
 			const data = [];
 
 			// construct hourly breakdown and normalise to numeric hours
-			const hoursBreakdown = getBreakdownBy(res.table, 'totalEmissions', 'timeofday');
+			const hoursBreakdown = getBreakdownBy(res.tables.timeofday, 'totalEmissions', 'timeofday');
 
 			// group into 3-hour periods and copy to labels/data
 			for (let i = 0; i < 24; i++) {
