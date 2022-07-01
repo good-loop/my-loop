@@ -209,11 +209,15 @@ const BreakdownCard = ({ data }) => {
 	if ( ! data) return <Misc.Loading text="Fetching your data..." />;
 	const [mode, setMode] = useState('tech');
 
-	const subcard = (mode === 'tech') ? (
+	let subcard = (mode === 'tech') ? (
 		<TechSubcard data={data} minimumPercentLabeled={10} />
 	) : (
 		<DeviceSubcard data={data} />
 	);
+
+	if ( ! yessy(data)) {
+		subcard = <p>No data</p>;
+	}
 
 	return <GreenCard title="What is the breakdown of your emissions?" className="carbon-breakdown">
 		<div className="d-flex justify-content-around mb-2">
