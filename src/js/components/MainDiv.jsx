@@ -113,7 +113,7 @@ const MainDiv = () => {
 		impactoverview: 'Impact Hub',
 		green: 'Green Media',
 		tabsforgood: C.T4G,
-		blog: "Blog",
+		//blog: "Blog",
 		getmydata: "My.Data"
 		//"home#mydata-cta": "My.Data" // HACK until we get a landing page
 	};
