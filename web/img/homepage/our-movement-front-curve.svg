@@ -1,1 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2000" height="1000" viewBox="0 0 2000 1000"><defs><clipPath id="clip-our-movement-front-curve"><rect width="2000" height="1000"></rect></clipPath></defs><g id="our-movement-front-curve" clip-path="url(#clip-our-movement-front-curve)"><path id="Path_2226" d="M13542.33,1403.805s238.208,469.537,1102.8,154.094,1059.565,101.64,1059.565,101.64v389.679H13559.834Z" transform="translate(-13629.662 -839.25)" fill="#5aa6c0" opacity="0.995"></path></g></svg>
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 500 2000 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <clipPath id="clip-our-movement-front-curve">
+      <rect width="2000" height="1000"/>
+    </clipPath>
+  </defs>
+  <g id="our-movement-front-curve" clip-path="url(#clip-our-movement-front-curve)">
+    <path id="Path_2226" d="M13542.33,1403.805s238.208,469.537,1102.8,154.094,1059.565,101.64,1059.565,101.64v389.679H13559.834Z" transform="translate(-13629.662 -839.25)" fill="#5aa6c0" opacity="1"/>
+  </g>
+</svg>
