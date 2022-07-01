@@ -32,15 +32,21 @@ import { yessy } from '../../../base/utils/miscutils';
 
 
 
-const OverviewWidget = ({period, data}) => {
-	// console.log("OverviewWidget data", data);
-	let total = getSumColumn(data, "count");
+const OverviewWidget = ({period, totalTable}) => {
+	let imps;
+	if ( ! totalTable || ! totalTable.length) {
+		console.warn("OverviewWidget - No totalTable", totalTable);
+		imps = "No data";
+	} else {
+		const total = getSumColumn(totalTable, "count");
+		imps = printer.prettyInt(total);
+	}
 	return (
 		<Row className="greendash-overview mb-2">
 			<Col xs="12">
 				<span className="period mr-4">{printPeriod(period)}</span>
 				<span className="impressions">Impressions served: 
-					<span className="impressions-count">{printer.prettyInt(total)}</span>
+					<span className="impressions-count">{imps}</span>
 				</span>
 			</Col>
 		</Row>

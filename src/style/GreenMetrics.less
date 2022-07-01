@@ -139,16 +139,17 @@
 		.card-body {
 			padding-right: 0; // Let the right subcard sit flush with the card edge
 		}
-		.chart-subcard {
-			flex-grow: 1;
-		}
+		// .chart-subcard {
+		// 	flex-grow: 1; // why??
+		// }
 		.total-subcard {
 			color: white;
 			background-color: @greenmedia-darkcyan;
 			margin: -@gc-padding 0;
 			padding: @gc-padding;
-			border-radius: @gc-border-radius;
-			width: 15em;
+			border-radius: @gc-border-radius;			
+			width: calc(100% + @gc-padding + 15px); // 15px = column gutter, @gc-padding = 1rem = card padding
+			height: calc(100% + @gc-padding + @gc-padding); // 2rem = 2 * @gc-padding = card padding
 			text-align: center;
 			
 			.impact-container {

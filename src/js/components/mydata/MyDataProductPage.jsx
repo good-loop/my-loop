@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Col, Container, Row } from 'reactstrap';
 import Misc from '../../base/components/Misc';
 import KStatus from '../../base/data/KStatus';
-import { getDataItem } from '../../base/plumbing/Crud';
+import { getDataItem, setWindowTitle } from '../../base/plumbing/Crud';
 import DataStore from '../../base/plumbing/DataStore';
 import { modifyPage } from '../../base/plumbing/glrouter';
 import C from '../../C';
@@ -39,7 +39,7 @@ const LandingSection = () => {
                 <div className="d-flex flex-column justify-content-center align-items-center">
                     <MyDataSignUpButton/>
                     <br/>
-                    <a onClick={scroll}>Find out more</a>
+                    <a onClick={scroll} className="mt-3">Find out more</a>
                 </div>
                 <img src="/img/mydata/product-page/left-coins-padlocks.png" className="padlocks padlock-left d-none d-md-inline-block"/>
                 <img src="/img/mydata/product-page/right-coins-padlocks.png" className="padlocks padlock-right d-none d-md-inline-block"/>
@@ -138,7 +138,7 @@ const HowItWorks = () => {
                     </Section>
                 </Row>
 
-                <MyDataSignUpButton className="align-self-center" style={{zIndex:1}}/>
+                <MyDataSignUpButton className="align-self-center mb-3" style={{zIndex:1}}/>
                 <br/>
             </div>
         </ProductPageContainer>
@@ -157,7 +157,7 @@ const ControlYourData = () => {
                         <p>You have control over how your data is used and can choose what to make private and what to share</p>
                     </Col>
                     <Col md={6}>
-                        <img src="/img/mydata/product-page/phone-mydata.png" className="phone-display"/>
+                        <img src="/img/mydata/product-page/phone-mydata-lg.png" className="phone-display"/>
                     </Col>
                 </Row>
             </ProductPageContainer>
@@ -202,7 +202,7 @@ const TransformYourData = () => {
                     
                     <br/>
                     <br/>
-                    <p className="miniheader">FAQS</p>
+                    <p className="miniheader pt-5"><b>FAQS</b></p>
                     
                     <CollapseableCard
                         title="1. What charities can I support with My Data?"
@@ -222,7 +222,7 @@ const TransformYourData = () => {
                         </ul>
 
                         <div className="d-flex flex-row justify-content-center align-items-center">
-                            <a className="text-center" href="https://app.sogive.org" target="_blank">View our charity database →</a>
+                            <C.A className="text-center" href="/charities" target="_blank">View our charity database →</C.A>
                         </div>
                     </CollapseableCard>
 
@@ -304,6 +304,8 @@ const MyDataProductPage = () => {
 	useEffect(() => {
 		setFooterClassName('bg-gl-white');
 	}, []);
+
+    setWindowTitle("Good-Loop: My.Data");
 
 	return (<>
         <LandingSection/>

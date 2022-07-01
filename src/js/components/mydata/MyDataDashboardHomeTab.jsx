@@ -20,7 +20,7 @@ import Misc from '../../base/components/Misc';
 import { CompleteDataCTA, getDataProgress } from './MyDataDashboardPage';
 import { setFooterClassName } from '../Footer';
 import Person, { getProfile } from '../../base/data/Person';
-import { MyDataSignUpButton, MyDataSignUpModal } from './MyDataSignUp';
+import { MyDataSignUpButton, MyDataSignUpModal, showMyDataSignUpModal } from './MyDataSignUp';
 import { modifyPage } from '../../base/plumbing/glrouter';
 
 
@@ -95,13 +95,13 @@ const ThisWeeksAdCard = () => {
 
 	const WatchedAd = ({className, style, children}) => {
 		
-		return <div className={space("watch-ad-done", className)} style={style}>
+		return (<div className={space("watch-ad-done", className)} style={style}>
 			<div className="watched-text">
 				<img src="/img/mydata/tick-white.svg" className="tick"/>
 				<h4>{children}</h4>
 			</div>
 			<img src="/img/mydata/fireworks.png" className="fireworks"/>
-		</div>;
+		</div>);
 	}
 
 	return (<MyDataCard
@@ -246,7 +246,7 @@ const MyDataDashboardHomeTab = () => {
 				  
 				  {/* onClick doesn't seem to work with C.A */}
 				  {!hasMyData 
-				  	? <a onClick={scrollToMyDataSignup} style={{textDecoration: "underline"}}>Find out more</a>
+				  	? <a onClick={showMyDataSignUpModal} style={{textDecoration: "underline"}}>Find out more</a>
 					: <C.A href={"/account?tab=profile"} style={{textDecoration: "underline"}}>Complete your profile</C.A>
 			      }
 				</>} 

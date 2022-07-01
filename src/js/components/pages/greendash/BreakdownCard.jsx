@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import Icon from '../../../base/components/Icon';
 import Misc from '../../../base/components/Misc';
-import { sum } from '../../../base/utils/miscutils';
+import { sum, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import NewChartWidget from '../../NewChartWidget';
 import { getBreakdownBy, getSumColumn } from './carboncalc';
@@ -53,6 +53,10 @@ const osTypes = {
  */
 const TechSubcard = ({ data: osTable, minimumPercentLabeled=1 }) => {
 	const [chartProps, setChartProps] = useState();
+
+	if (! yessy(osTable)) {
+		return <p>No data</p>;
+	}
 
 	useEffect(() => {
 		// totalEmissions","baseEmissions","creativeEmissions","supplyPathEmissions

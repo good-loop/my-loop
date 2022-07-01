@@ -46,8 +46,8 @@ const TreesSection = ({treesPlanted, coralPlanted}) => {
 			<img className="journey-tree" src="/img/green/tree-light.svg" />
 			<img className="journey-tree" src="/img/green/tree-light.svg" />
 		</div>
-		{treesPlanted && <h3>{printer.prettyInt(treesPlanted)} trees planted</h3>}
-		{coralPlanted && <h3>{printer.prettyInt(coralPlanted)} pieces of coral planted</h3>}
+		{treesPlanted? <h3>{printer.prettyInt(treesPlanted)} trees planted</h3> : null /* NB: avoid "0" */}
+		{coralPlanted? <h3>{printer.prettyInt(coralPlanted)} pieces of coral planted</h3> : null}
 	</>;
 };
 
@@ -90,14 +90,26 @@ const JourneyCard = ({ campaigns, period, emptyTable }) => {
 	if (masterCampaigns.length===1) {
 		impactSplashPage = "/green/"+encURI(masterCampaigns[0].id);
 	} else {
-		let masters = campaigns.map(Campaign.masterFor).filter(m => m.id);
-		if (masters.length) {
-			// HACK pick the first
-			let spec = Object.assign({status:KStatus.PUBLISHED}, masters[0]);
-			impactSplashPage = '/green?'+
-				({Agency: "agency", Advertiser: "brand"}[spec.type])+"="+encURI(spec.id);
-			let pvBrandOrAgency = getDataItem(spec);
-			brandOrAgency = pvBrandOrAgency.value;
+		// in the url??
+		const brandId = DataStore.getUrlValue("brand");
+		const agencyId = DataStore.getUrlValue("agency");
+		if (brandId) {
+			impactSplashPage = '/green?brand='+encURI(brandId);
+			brandOrAgency = getDataItem({type:C.TYPES.Advertiser,id:brandId, status:KStatus.PUBLISHED}).value;	
+		} else if (agencyId) {
+			impactSplashPage = '/green?agency='+encURI(agencyId);
+			brandOrAgency = getDataItem({type:C.TYPES.Agency,id:agencyId, status:KStatus.PUBLISHED}).value;	
+		} else {
+			// 1st master campaign (if there is one)			
+			let masters = campaigns.map(Campaign.masterFor).filter(m => m.id);
+			if (masters.length) {
+				// HACK pick the first
+				let spec = Object.assign({status:KStatus.PUBLISHED}, masters[0]);
+				impactSplashPage = '/green?'+
+					({Agency: "agency", Advertiser: "brand"}[spec.type])+"="+encURI(spec.id);
+				let pvBrandOrAgency = getDataItem(spec);
+				brandOrAgency = pvBrandOrAgency.value;	
+			}
 		}
 	}
 	// HACK a download for us

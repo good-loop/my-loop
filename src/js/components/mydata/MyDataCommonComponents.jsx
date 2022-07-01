@@ -172,16 +172,21 @@ export const SkipNextBtn = ({skip}) => {
  * @param {String|Component} TitleTag the tag to render the title with, "h5" by default
  * @param {?Boolean} whiteArrows use the white arrows image
  * @param {?String} arrowPosition the position of the arrows relative to the title: right, left, top, bottom. right by default.
+ * @param {?Boolean} upArrow should arrows be up or down when closed?
  * @param {*} children
  * @returns 
  */
-export const CollapseableCard = ({ title, defaultCollapse, headerIMG, className, innerClassName, TitleTag="h5", whiteArrows, arrowPosition="right", children }) => {
+export const CollapseableCard = ({ title, defaultCollapse, headerIMG, className, innerClassName, TitleTag="h5", whiteArrows, arrowPosition="right", upArrow, children }) => {
 	if (!defaultCollapse) defaultCollapse = false;
 	const [open, setOpen] = useState(defaultCollapse);
 	const toggle = () => setOpen(!open);
 
+    const arrowOpen = upArrow ? "down" : "up";
+    const arrowClosed = upArrow ? "up" : "down";
+    const arrowState = open ? arrowOpen : arrowClosed;
+
     const Arrow = () => <span className='text-muted' style={{ fontSize: '1.5rem' }}>
-        <img style={{width:"2rem",height:"2rem"}} src={"img/mydata/arrow-"+(open ? "down" : "up")+(whiteArrows ? "-white" : "")+".svg"} />
+        <img style={{width:"2rem",height:"2rem"}} src={"img/mydata/arrow-"+arrowState+(whiteArrows ? "-white" : "")+".svg"} />
     </span>;
 
     let flexDirection = "row";

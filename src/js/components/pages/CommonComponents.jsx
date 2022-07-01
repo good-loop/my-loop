@@ -23,8 +23,6 @@ export const accountMenuItems = [
 	{page: "settings", label: "Settings"}
 ];
 
-const mobileWidth = window.innerWidth <= 768;
-
 const PageCard = ({id, className, ref, style, children}) => {
 	// Why two containers?? Is the outer one for card-specific css rules to latch onto??
 	return <Container id={id} ref={ref} style={style} fluid className={space('page-card', className)}>
@@ -192,8 +190,8 @@ const MyDataButton = ({className}) => {
 	</>)
 }
 
-const MyLandingSection = ({title, bgImg}) => {
-	const fontSizeCTA = mobileWidth ? '.8rem' : '1rem';
+const MyLandingSection = ({title, bgImg, noProducts}) => {
+	const fontSizeCTA = isMobile() ? '.8rem' : '1rem';
 	
 	if ( ! title) {
 		title = `Raise Money For The Causes You Care Most About. For free.`;
@@ -208,15 +206,15 @@ const MyLandingSection = ({title, bgImg}) => {
 
 	return (<>
 	<Container fluid className="home-landing-splash px-0" >
-		<BG minHeight={mobileWidth ? null : "32vw"} 
-		src={mobileWidth ? 'img/splash-screen/background-mobile.svg' : 'img/splash-screen/splash-screen-bground-lg.svg'}
-		className={mobileWidth ? null : 'd-flex justify-content-center align-items-center'}>
+		<BG minHeight={isMobile() ? null : "32vw"} 
+		src={isMobile() ? 'img/splash-screen/background-mobile.svg' : 'img/splash-screen/splash-screen-bground-lg.svg'}
+		className={isMobile() ? null : 'd-flex justify-content-center align-items-center'}>
 		<img src='img/splash-screen/splash-screen-foreground.png' className="d-md-none d-block w-100" />
 		<img src='img/splash-screen/foreground-desktop.png' className="d-none d-md-block w-100 position-absolute" />
-		<div className="splash-content d-flex flex-column align-items-center" style={!mobileWidth ? {margin:'0 28vw'} : null}>
-			{title && <h1 className='text-center bolder text-white mx-2 mt-3' style={mobileWidth ? {fontSize:"1.5rem"} : null}>{title}</h1>}
-			<button className='btn btn-primary btn-lg my-3 mx-auto' onClick={scrollToUpperCta}>Find out more</button>
-			<a href='#' className='text-white text-decoration-none mt-2 mb-4'><span style={{textDecoration:"underline"}}>Discover Our Products</span> →</a>
+		<div className="splash-content d-flex flex-column align-items-center" style={!isMobile() ? {margin:'0 28vw'} : null}>
+			{title && <h1 className='text-center bolder text-white mx-2 mt-3' style={{fontSize:"1.5rem"}}>{title}</h1>}
+			<button className='btn btn-primary btn-lg my-3 mx-auto' onClick={scrollToUpperCta} style={{fontSize:'.9rem'}} >Find out more</button>
+			{!noProducts && <a href='/tabsforgood' className='text-white text-decoration-none mt-2 mb-4'><span style={{textDecoration:"underline"}}>Discover Our Products</span> →</a>}
 		</div>
 		</BG>
 	</Container>
@@ -255,7 +253,7 @@ const LogoBanner = ({logoList}) => {
 	// Default logo list (Charites)
 	if (!logoList) logoList = ['img/LandingCharity/refuge.png', 'img/LandingCharity/tommys.png', 'img/LandingCharity/save-the-children.png', 'img/LandingCharity/NSPCC.png', 'img/LandingCharity/dementiauk.png', 'img/LandingCharity/wwf.png', 'img/LandingCharity/mssociety.png', 'img/LandingCharity/centrepoint.png', 'img/LandingCharity/GOSH.png'];
 
-	if (mobileWidth && logoList.length > 5) logoList = logoList.slice(0,-4);
+	if (isMobile() && logoList.length > 5) logoList = logoList.slice(0,-4);
 
 	return (
 	<Container id="logo-banner-icons" className="my-3 d-flex justify-content-around align-items-center">
@@ -447,6 +445,11 @@ const NewsAwards = ({nostars, children}) => {
 	)
 };
 
+
+/**
+ * @deprecated not in use anymore June 2022
+ * @returns {JSX.Element}
+ */
 const TestimonialSectionTitle = () => {
 	// TODO fetch donationTotal From C.DONATIONS_TOTAL;
 	return(<>
@@ -463,6 +466,10 @@ const TestimonialSectionTitle = () => {
 	)
 };
 
+/**
+ * @deprecated not in use anymore June 2022
+ * @returns {JSX.Element}
+ */
 const TestimonialSectionLower = () => {
 	return(<>
 		<div className="testimonial-lower">
@@ -663,7 +670,7 @@ const TriCards = ({className, titles, texts, images, links=["#", "#", "#"] }) =>
 
 const WhatIsTabsForGood	= ({ngo}) => {
 	return (<>
-		<PageCard className="how-tabs-for-good-works text-center">
+		<PageCard className="how-tabs-for-good-works text-center" id="upper-cta">
 			<h1 className='mb-4'>What is Tabs for Good?</h1>
 			<p className=''><b>Tabs for Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</b></p>
 			<Row className="py-5 d-none d-md-flex">
@@ -700,7 +707,7 @@ const ArrowLink = ({className, link, children}) => {
 const TwinCards = ({twinCardsContent}) => {
 	assert (twinCardsContent.length === 2, "TwinCards must have 2 cards");
 
-	if (mobileWidth) return (
+	if (isMobile()) return (
 		<div className="gridbox gridbox-gap-4 text-center" style={{zIndex:'2'}}>
 		{twinCardsContent && twinCardsContent.map((item, idx) => {
 			return(

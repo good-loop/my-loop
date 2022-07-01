@@ -18,8 +18,9 @@ const TimeOfDayCard = ({baseFilters, tags}) => {
 
 	useEffect(() => {
 		getCarbon({...baseFilters, timeofday: true, breakdown: 'timeofday'}).promise.then(res => {
-			if (res.tables.timeofday.length === 1) { // only header row = no data
+			if (res.tables.timeofday.length === 1 || ! res.tables.timeofday.length) { // only header row = no data
 				setChartProps({isEmpty: true});
+				return;
 			}
 			const labels = [];
 			const data = [];
