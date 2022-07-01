@@ -67,8 +67,8 @@ const CurvePageCard = ({color, className, style, bgClassName, bgImg, bgSize, bgP
  */
 const CurveTransition = ({curveColour, hummingBird}) => {
 	return (
-		<BG image={'img/curves/curve-'+curveColour+'.svg'} center minHeight='14em'>
-			{hummingBird && <img className='position-absolute' style={{maxWidth:'10rem',transform:'scaleX(-1)',right:'1rem'}} src='img/green/hummingbird.png'/>}
+		<BG image={'/img/curves/curve-'+curveColour+'.svg'} center minHeight='14em'>
+			{hummingBird && <img className='position-absolute' style={{maxWidth:'10rem',transform:'scaleX(-1)',right:'1rem'}} src='/img/green/hummingbird.png'/>}
 		</BG>
 	)
 }
@@ -207,10 +207,10 @@ const MyLandingSection = ({title, bgImg, noProducts}) => {
 	return (<>
 	<Container fluid className="home-landing-splash px-0" >
 		<BG minHeight={isMobile() ? null : "32vw"} 
-		src={isMobile() ? 'img/splash-screen/background-mobile.svg' : 'img/splash-screen/splash-screen-bground-lg.svg'}
+		src={isMobile() ? '/img/splash-screen/background-mobile.svg' : '/img/splash-screen/splash-screen-bground-lg.svg'}
 		className={isMobile() ? null : 'd-flex justify-content-center align-items-center'}>
-		<img src='img/splash-screen/splash-screen-foreground.png' className="d-md-none d-block w-100" />
-		<img src='img/splash-screen/foreground-desktop.png' className="d-none d-md-block w-100 position-absolute" />
+		<img src='/img/splash-screen/splash-screen-foreground.png' className="d-md-none d-block w-100" />
+		<img src='/img/splash-screen/foreground-desktop.png' className="d-none d-md-block w-100 position-absolute" />
 		<div className="splash-content d-flex flex-column align-items-center" style={!isMobile() ? {margin:'0 28vw'} : null}>
 			{title && <h1 className='text-center bolder text-white mx-2 mt-3' style={{fontSize:"1.5rem"}}>{title}</h1>}
 			<button className='btn btn-primary btn-lg my-3 mx-auto' onClick={scrollToUpperCta} style={{fontSize:'.9rem'}} >Find out more</button>
@@ -251,7 +251,7 @@ const CornerHummingbird = () => {
 
 const LogoBanner = ({logoList}) => {
 	// Default logo list (Charites)
-	if (!logoList) logoList = ['img/LandingCharity/refuge.png', 'img/LandingCharity/tommys.png', 'img/LandingCharity/save-the-children.png', 'img/LandingCharity/NSPCC.png', 'img/LandingCharity/dementiauk.png', 'img/LandingCharity/wwf.png', 'img/LandingCharity/mssociety.png', 'img/LandingCharity/centrepoint.png', 'img/LandingCharity/GOSH.png'];
+	if (!logoList) logoList = ['/img/LandingCharity/refuge.png', '/img/LandingCharity/tommys.png', '/img/LandingCharity/save-the-children.png', '/img/LandingCharity/NSPCC.png', '/img/LandingCharity/dementiauk.png', '/img/LandingCharity/wwf.png', '/img/LandingCharity/mssociety.png', '/img/LandingCharity/centrepoint.png', '/img/LandingCharity/GOSH.png'];
 
 	if (isMobile() && logoList.length > 5) logoList = logoList.slice(0,-4);
 
