@@ -26,8 +26,8 @@ ServerIO.NO_API_AT_THIS_HOST = true;
 // Usually use the live adserver, since our showcase ad selection is hard-coded to live ads.
 ServerIO.AS_ENDPOINT = 'https://as.good-loop.com';
 ServerIO.PORTAL_ENDPOINT = 
-	// 'https://portal.good-loop.com';
-	'https://localportal.good-loop.com';
+	'https://portal.good-loop.com';
+	// 'https://localportal.good-loop.com';
 
 ServerIO.MEDIA_ENDPOINT = 'https://uploads.good-loop.com';
 
