@@ -87,6 +87,9 @@ export const getSumColumn = (table, colName) => {
  * @returns {Object} {breakdown-key: sum-for-key} 
  */
  export const getBreakdownBy = (table, colNameToSum, colNameToBreakdown) => {
+	if ( ! table.length) {
+		return {}; // no data
+	}
 	let ci = table[0].indexOf(colNameToSum);
 	let bi = table[0].indexOf(colNameToBreakdown);
 	assert(ci !== -1, "No such sum column", colNameToSum, table[0]);
