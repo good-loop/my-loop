@@ -67,6 +67,10 @@ const exampleDataSets = {
  * @returns {!number} 
  */
 export const getSumColumn = (table, colName) => {
+	if ( ! table?.length) {
+		console.warn("getSumColumn - no data", table, colName);
+		return 0; // no data
+	}
 	let ci = table[0].indexOf(colName);
 	assert(ci !== -1, "No such column", colName, table[0]);
 	let total = 0;
