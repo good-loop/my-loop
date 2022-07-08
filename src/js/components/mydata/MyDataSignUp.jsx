@@ -37,10 +37,10 @@ export const showMyDataSignUpModal = (s=true) => {
 
 	return (
 		<a className={`${space("btn btn-primary", className)} mydata-signup-button`} href={gotmydata ? "/account" : window.location} style={style}
-			onClick={!gotmydata && (e => {
+			onClick={!gotmydata ? (e => {
 				stopEvent(e);
 				showMyDataSignUpModal();
-			})} >
+			}) : null} >
 			{children || content}
 		</a>
 	);
