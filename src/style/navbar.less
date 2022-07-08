@@ -8,13 +8,57 @@
 		font-size: 16px;
 	}
 
-	.collapse-fullheight {
-		height: 100vh;
+	.collapse-excessheight {
+		@media @width-mobile {
+			// Height must be in absolute pixels for animation to run
+			// Make sure absolute height is above screen height
+			height: 1000px !important;
+			@media (min-height: 1000px) {
+				height: 1500px !important;
+			}
+			@media (min-height: 1500px) {
+				height: 2000px !important;
+			}
+			@media (min-height: 2000px) {
+				height: 2500px !important;
+			}
+			@media (min-height: 2500px) {
+				height: 3000px !important;
+			}
+			@media (min-height: 3000px) {
+				height: 3500px !important;
+			}
+		}
 	}
 
-	.collapse-excessheight {
-		height: 1100px !important;
+	.collapse-fullheight {
+		@media @width-mobile {
+			// navbar height is 60px
+			height: calc(100vh - 60px);
+		}
 	}
+
+	.collapse.show,.collapsing {
+		display: flex;
+		flex-direction: row;
+		justify-content: start;
+		align-items: flex-start;
+		@media @width-mobile {
+			flex-direction: column;
+			justify-content: center;
+		}
+	}
+
+	/*
+	.collapse.show {
+		@media @width-mobile {
+			position: fixed;
+			top: 60px;
+			left: 0;
+			width: 100%;
+			background-color: white;
+		}
+	}*/
 
 	&.scrolled {
 		background: @gl-light-red;
