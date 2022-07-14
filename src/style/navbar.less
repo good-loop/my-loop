@@ -15,8 +15,11 @@
 			height: calc(100vh - 60px);
 			display: flex;
 			flex-direction: column;
+			padding-left: 2rem;
 		}
 		
+		// Need absolute values for height to show opening animation on mobile
+		// Inner navbar is set to screen height, outer container opens to absolute value a little bit taller than actual screen
 		.collapse-excessheight {
 			@media @width-mobile {
 				// Height must be in absolute pixels for animation to run
@@ -47,7 +50,7 @@
 			}
 		}
 
-		.collapse.show,.collapsing {
+		.navbar-collapse.show,.collapsing {
 			display: flex;
 			flex-direction: row;
 			justify-content: start;
@@ -56,6 +59,10 @@
 				flex-direction: column;
 				justify-content: center;
 			}
+		}
+
+		h5 {
+			color: @gl-dark-turquoise;
 		}
 
 		/*
@@ -68,6 +75,23 @@
 				background-color: white;
 			}
 		}*/
+
+		// Hard coded hacks for making collapse dropdowns expand to correct height - expand as needed
+		.nav-collapse-height-1 {
+			height: 1.2rem !important;
+		}
+		.nav-collapse-height-2 {
+			height: 2.4rem !important;
+		}
+		.nav-collapse-height-3 {
+			height: 3.6rem !important;
+		}
+		.nav-collapse-height-4 {
+			height: 4.8rem !important;
+		}
+		.nav-collapse-height-5 {
+			height: 6rem !important;
+		}
 
 	}
 
@@ -108,17 +132,23 @@
 	}
 
 	.dropdown-menu {
-		box-shadow: 0px 3px 2px rgba(0,0,0,0.5);
+		@media @md-min {
+			box-shadow: 0px 3px 2px rgba(0,0,0,0.5);
+		}
 		margin: 0;
 		border: none;
 		border-radius: 0;
 		padding: 0;
 
 		&.show {
-			max-width: 100%;
+			//max-width: 100%;
 			overflow: hidden;
 		}
 	}
+
+	/*.collapsing:not(.navbar-collapse),.collapse.show:not(.navbar-collapse) {
+
+	}*/
 
 	.dropdown-item {
 		text-decoration: none;
