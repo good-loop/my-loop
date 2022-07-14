@@ -19,34 +19,37 @@ import JourneyCard from './JourneyCard';
 import TimeSeriesCard from './TimeSeriesCard';
 import CompareCard from './CompareCard';
 import TimeOfDayCard from './TimeOfDayCard';
-import { modifyPage } from '../../../base/plumbing/glrouter';
+
 import { getDataItem, getDataList } from '../../../base/plumbing/Crud';
 import C from '../../../C';
+
 import KStatus from '../../../base/data/KStatus';
-import { getId, getName } from '../../../base/data/DataClass';
 import SearchQuery from '../../../base/searchquery';
 import Campaign from '../../../base/data/Campaign';
 import Login from '../../../base/youagain';
-import ActionMan from '../../../plumbing/ActionMan';
+
 import { yessy } from '../../../base/utils/miscutils';
 
 
 
-const OverviewWidget = ({period, totalTable}) => {
+const OverviewWidget = ({period, data}) => {
 	let imps;
-	if ( ! totalTable || ! totalTable.length) {
-		console.warn("OverviewWidget - No totalTable", totalTable);
-		imps = "No data";
-	} else {
-		const total = getSumColumn(totalTable, "count");
+	if (data?.length > 1) {
+		const total = getSumColumn(data, 'count');
 		imps = printer.prettyInt(total);
+	} else if (!data) {
+		imps = 'Fetching data...';
+	} else {
+		console.warn('OverviewWidget - Empty total-impressions table', data);
+		imps = 'No data';
 	}
+
 	return (
 		<Row className="greendash-overview mb-2">
 			<Col xs="12">
 				<span className="period mr-4">{printPeriod(period)}</span>
-				<span className="impressions">Impressions served: 
-					<span className="impressions-count">{imps}</span>
+				<span className="impressions">
+					Impressions served: <span className="impressions-count">{imps}</span>
 				</span>
 			</Col>
 		</Row>
@@ -207,43 +210,6 @@ const GreenMetrics2 = ({}) => {
 };
 
 
-/**
- * 
- * @param {*} param0 
- * @returns 
- */
-const SelectAgency = ({agencyIds}) => {
-	const [agencies, setAgencies] = useState(null);
-
-	// Fetch agencies from portal so we can use names
-	useEffect(() => {
-		getDataList({
-			type: C.TYPES.Agency,
-			status: KStatus.PUB_OR_DRAFT,
-			ids: agencyIds
-		}).promise.then(res => {
-			if (!res?.hits) {
-				setAgencies([]);
-				return;
-			}
-			setAgencies(res.hits);
-		});
-	}, agencyIds);
-
-	if ( ! agencies) return <Misc.Loading text="Fetching your agencies..." />
-
-	return <div className="select-agency">
-		<h3>Select your agency</h3>
-		<p>You have access to multiple agencies. Pick one to see its brands, campaigns, and Green Ad Tags.</p>
-		{agencies.map(agency => (
-			<Button className="mb-2" onClick={() => modifyPage(null, {agency: getId(agency)})} key={getId(agency)}>
-				{getName(agency)}
-			</Button>
-		))}
-	</div>;
-};
-
-
 const GreenMetrics = ({}) => {	
 	const [agencyIds, setAgencyIds] = useState();
 	let agencyId = DataStore.getUrlValue('agency');
@@ -279,11 +245,9 @@ const GreenMetrics = ({}) => {
 					</Col>
 				</Row>
 			</Container>
-		</div>;	
+		</div>;
 	} else if ( ! agencyIds) {
 		content = <Misc.Loading text="Checking your access..." />;
-	// } else if (agencyIds.length > 1 && ! agencyId) { // is this needed??
-	// 	content = <SelectAgency agencyIds={agencyIds} />;
 	} else {
 		content = <>
 			<GreenDashboardFilters />
