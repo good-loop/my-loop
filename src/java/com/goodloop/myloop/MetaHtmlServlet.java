@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
+import com.goodloop.data.Advertiser;
+import com.goodloop.data.Agency;
 import com.goodloop.data.Campaign;
 import com.goodloop.data.NGO;
 import com.goodloop.jerbil.BuildJerbilPage;
@@ -55,7 +57,7 @@ public class MetaHtmlServlet implements IServlet {
 	
 		private Map getPageSettings(WebRequest state) {
 			String bit0 = state.getSlugBits(0);
-			if ("impact".equals(bit0)) {
+			if ("campaign".equals(bit0)) {
 				return getPageSettings2_impact(state);
 			}
 			if ("charity".equals(bit0)) {
@@ -108,14 +110,62 @@ public class MetaHtmlServlet implements IServlet {
 	private Map getPageSettings2_impact(WebRequest state) {
 		// do we have a campaign?
 		String cid = state.getSlugBits(1);
-		if (cid != null) {
-//			CrudClient<Campaign> cc = new CrudClient<Campaign>(Campaign.class, "https://portal.good-loop.com/campaign");
-//			Campaign campaign = cc.get(cid).java(); TODO
+		String vertiserId = state.get("gl.vertiser");
+		String agencyId = state.get("gl.agency");
+		Campaign campaign = null;
+		Advertiser vertiser = null;
+		Agency agency = null;
+		String companyName = null;
+		
+		// Try and find campaign by vertiser
+		if (cid == null && vertiserId != null) {
+			CrudClient<Advertiser> cc = new CrudClient<Advertiser>(Advertiser.class, "https://portal.good-loop.com/vertiser");
+			vertiser = cc.get(vertiserId).java();
+			if (vertiser != null) {
+				cid = vertiser.campaign;
+				companyName = vertiser.name;
+			}
 		}
+		// Try and find campaign by agency
+		if (cid == null && agencyId != null) {
+			CrudClient<Agency> cc = new CrudClient<Agency>(Agency.class, "https://portal.good-loop.com/agency");
+			agency = cc.get(agencyId).java();
+			if (agency != null) {
+				cid = agency.campaign;
+				companyName = agency.name;
+			}
+		}
+		if (cid != null) {
+			CrudClient<Campaign> cc = new CrudClient<Campaign>(Campaign.class, "https://portal.good-loop.com/campaign");
+			campaign = cc.get(cid).java();
+			// If we haven't got a company name yet, try and use the campaign's vertiser object.
+			if (companyName == null) {
+				CrudClient<Advertiser> cc2 = new CrudClient<Advertiser>(Advertiser.class, "https://portal.good-loop.com/vertiser");
+				try {
+					vertiser = cc2.get(campaign.vertiser).java();
+					if (vertiser != null) {
+						companyName = vertiser.name;
+						System.out.println("VERTISER: " + campaign.vertiser + " NAME: " + vertiser.name);
+					}
+				} catch (Exception e) {
+					// do nothing
+				}
+			}
+		}
+		
+		String description = null;
+		if (companyName != null) {
+			description = "See the impact " + companyName + " has had with Good-Loop ethical advertising!";
+		} else {
+			description = "See the amazing impact made with Good-Loop ethical advertising!";
+		}
+		description = WebUtils2.htmlEncode(description);
+		
 		Map vars = new HashMap();		
 		vars.put("title", state.getRequestPath()+" Campaign: "+cid);
-		vars.put("image", "");
-		vars.put("contents", "");
+		vars.put("image", campaign.bg);
+		vars.put("description", description);
+		vars.put("type", "summary");
 		return vars;
 	}
 
@@ -124,6 +174,13 @@ public class MetaHtmlServlet implements IServlet {
 	public void process(WebRequest state) throws Exception {					
 		String slug = state.getSlug();
 		if (slug==null) slug="null"; // so we can cache it anyway
+		
+		// For impact hub, we want different caches per vertiser/agency
+		String vertiserId = state.get("gl.vertiser");
+		String agencyId = state.get("gl.agency");
+		if (vertiserId != null) slug += "_vertiser:" + vertiserId;
+		if (agencyId != null) slug += "_agency:" + agencyId;
+		
 		String html = html4slug.get(slug);
 		if (html==null || state.debug) {
 			JerbilConfig jc = new JerbilConfig();
