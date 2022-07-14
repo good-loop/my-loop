@@ -112,27 +112,52 @@ public class MetaHtmlServlet implements IServlet {
 		String cid = state.getSlugBits(1);
 		String vertiserId = state.get("gl.vertiser");
 		String agencyId = state.get("gl.agency");
+		Campaign campaign = null;
+		Advertiser vertiser = null;
+		Agency agency = null;
+		String companyName = null;
 		
+		// Try and find campaign by vertiser
 		if (cid == null && vertiserId != null) {
 			CrudClient<Advertiser> cc = new CrudClient<Advertiser>(Advertiser.class, "https://portal.good-loop.com/vertiser");
-			Advertiser vertiser = cc.get(vertiserId).java();
-			if (vertiser != null) cid = vertiser.campaign;
+			vertiser = cc.get(vertiserId).java();
+			if (vertiser != null) {
+				cid = vertiser.campaign;
+				companyName = vertiser.name;
+			}
 		}
-		
+		// Try and find campaign by agency
 		if (cid == null && agencyId != null) {
 			CrudClient<Agency> cc = new CrudClient<Agency>(Agency.class, "https://portal.good-loop.com/agency");
-			Agency agency = cc.get(agencyId).java();
-			if (agency != null) cid = agency.campaign;
+			agency = cc.get(agencyId).java();
+			if (agency != null) {
+				cid = agency.campaign;
+				companyName = agency.name;
+			}
 		}
-		
 		if (cid != null) {
 			CrudClient<Campaign> cc = new CrudClient<Campaign>(Campaign.class, "https://portal.good-loop.com/campaign");
-			Campaign campaign = cc.get(cid).java();
+			campaign = cc.get(cid).java();
+			// If we haven't got a company name yet, try and use the campaign's vertiser object.
+			if (companyName == null) {
+				CrudClient<Advertiser> cc2 = new CrudClient<Advertiser>(Advertiser.class, "https://portal.good-loop.com/vertiser");
+				try {
+					vertiser = cc2.get(campaign.vertiser).java();
+					if (vertiser != null) {
+						companyName = vertiser.name;
+						System.out.println("VERTISER: " + campaign.vertiser + " NAME: " + vertiser.name);
+					}
+				} catch (Exception e) {
+					// do nothing
+				}
+			}
 		}
+		
 		Map vars = new HashMap();		
 		vars.put("title", state.getRequestPath()+" Campaign: "+cid);
-		vars.put("image", "");
-		vars.put("contents", "");
+		vars.put("image", campaign.bg);
+		vars.put("description", "See the impact " + companyName + " has had with Good-Loop ethical advertising");
+		vars.put("type", "summary");
 		return vars;
 	}
 
