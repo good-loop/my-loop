@@ -45,6 +45,7 @@ import SafariPage from './pages/SafariPage';
 import { DropdownItem } from 'reactstrap';
 import { accountMenuItems } from './pages/CommonComponents';
 import MyDataProductPage from './mydata/MyDataProductPage';
+import GetInvolvedPage from './pages/GetInvolvedPage';
 
 // DataStore
 C.setupDataStore();
@@ -89,7 +90,8 @@ const PAGES = {
 	forbusiness: ForBusinessPage,
 	forcharity: ForCharityPage,
 	safari: SafariPage,
-	getmydata: MyDataProductPage
+	getmydata: MyDataProductPage,
+	getinvolved: GetInvolvedPage,
 };
 // ?? switch to router??
 // const ROUTES = {
