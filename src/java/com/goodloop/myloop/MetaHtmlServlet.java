@@ -153,10 +153,18 @@ public class MetaHtmlServlet implements IServlet {
 			}
 		}
 		
+		String description = null;
+		if (companyName != null) {
+			description = "See the impact " + companyName + " has had with Good-Loop ethical advertising!";
+		} else {
+			description = "See the amazing impact made with Good-Loop ethical advertising!";
+		}
+		description = WebUtils2.htmlEncode(description);
+		
 		Map vars = new HashMap();		
 		vars.put("title", state.getRequestPath()+" Campaign: "+cid);
 		vars.put("image", campaign.bg);
-		vars.put("description", "See the impact " + companyName + " has had with Good-Loop ethical advertising");
+		vars.put("description", description);
 		vars.put("type", "summary");
 		return vars;
 	}
@@ -166,6 +174,13 @@ public class MetaHtmlServlet implements IServlet {
 	public void process(WebRequest state) throws Exception {					
 		String slug = state.getSlug();
 		if (slug==null) slug="null"; // so we can cache it anyway
+		
+		// For impact hub, we want different caches per vertiser/agency
+		String vertiserId = state.get("gl.vertiser");
+		String agencyId = state.get("gl.agency");
+		if (vertiserId != null) slug += "_vertiser:" + vertiserId;
+		if (agencyId != null) slug += "_agency:" + agencyId;
+		
 		String html = html4slug.get(slug);
 		if (html==null || state.debug) {
 			JerbilConfig jc = new JerbilConfig();
