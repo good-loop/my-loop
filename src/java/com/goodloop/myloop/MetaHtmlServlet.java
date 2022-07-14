@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
+import com.goodloop.data.Advertiser;
+import com.goodloop.data.Agency;
 import com.goodloop.data.Campaign;
 import com.goodloop.data.NGO;
 import com.goodloop.jerbil.BuildJerbilPage;
@@ -55,7 +57,7 @@ public class MetaHtmlServlet implements IServlet {
 	
 		private Map getPageSettings(WebRequest state) {
 			String bit0 = state.getSlugBits(0);
-			if ("impact".equals(bit0)) {
+			if ("campaign".equals(bit0)) {
 				return getPageSettings2_impact(state);
 			}
 			if ("charity".equals(bit0)) {
@@ -108,6 +110,21 @@ public class MetaHtmlServlet implements IServlet {
 	private Map getPageSettings2_impact(WebRequest state) {
 		// do we have a campaign?
 		String cid = state.getSlugBits(1);
+		String vertiserId = state.get("gl.vertiser");
+		String agencyId = state.get("gl.agency");
+		
+		if (cid == null && vertiserId != null) {
+			CrudClient<Advertiser> cc = new CrudClient<Advertiser>(Advertiser.class, "https://portal.good-loop.com/vertiser");
+			Advertiser vertiser = cc.get(vertiserId).java();
+			if (vertiser != null) cid = vertiser.campaign;
+		}
+		
+		if (cid == null && agencyId != null) {
+			CrudClient<Agency> cc = new CrudClient<Agency>(Agency.class, "https://portal.good-loop.com/agency");
+			Agency agency = cc.get(agencyId).java();
+			if (agency != null) cid = agency.campaign;
+		}
+		
 		if (cid != null) {
 			CrudClient<Campaign> cc = new CrudClient<Campaign>(Campaign.class, "https://portal.good-loop.com/campaign");
 			Campaign campaign = cc.get(cid).java();
