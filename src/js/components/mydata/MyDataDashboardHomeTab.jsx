@@ -273,7 +273,7 @@ const MyDataDashboardHomeTab = () => {
 			<ThisWeeksAdCard />
 			<br />
 			{ <div id="mydata-dashboard-signup" style={hasMyData ? {display: "none"} : {}}><SignUpForMyDataCard/></div>}
-			<MyDataSignUpModal />;
+			<MyDataSignUpModal />
 			<br/>
 			<GetT4GCard ngo={ngo}/>
 			<br/>

@@ -67,6 +67,10 @@ const exampleDataSets = {
  * @returns {!number} 
  */
 export const getSumColumn = (table, colName) => {
+	if ( ! table?.length) {
+		console.warn("getSumColumn - no data", table, colName);
+		return 0; // no data
+	}
 	let ci = table[0].indexOf(colName);
 	assert(ci !== -1, "No such column", colName, table[0]);
 	let total = 0;
@@ -87,6 +91,9 @@ export const getSumColumn = (table, colName) => {
  * @returns {Object} {breakdown-key: sum-for-key} 
  */
  export const getBreakdownBy = (table, colNameToSum, colNameToBreakdown) => {
+	if ( ! table?.length) {
+		return {}; // no data
+	}
 	let ci = table[0].indexOf(colNameToSum);
 	let bi = table[0].indexOf(colNameToBreakdown);
 	assert(ci !== -1, "No such sum column", colNameToSum, table[0]);

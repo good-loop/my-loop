@@ -37,7 +37,7 @@ const HelpCharityTogetherCard = ({ngo}) => {
 		<h1>Let's help {name}<br/>do even more good.<br/>Together.</h1>
 		<Row className='mt-5 pt-5'>
 			<Col md={6} className='py-5'>
-				<NGOImage ngo={ngo} className="w-100" imgIdx={1}/>
+				<NGOImage hardFallback ngo={ngo} className="w-100" imgIdx={1}/>
 			</Col>
 			<Col md={6} className='p-5 d-flex flex-column justify-content-between'>
 				<div>
@@ -51,7 +51,7 @@ const HelpCharityTogetherCard = ({ngo}) => {
 		{ngo.extendedDescription && 
 			<Row className='mt-5 pt-5'>
 				<Col className="py-5 d-md-none" md={6}>
-					<NGOImage ngo={ngo} className="w-100" imgIdx={2}/>
+					<NGOImage hardFallback ngo={ngo} className="w-100" imgIdx={2}/>
 				</Col>
 				<Col md={6} className='p-5 d-flex flex-column justify-content-between'>
 					<div>
@@ -61,7 +61,7 @@ const HelpCharityTogetherCard = ({ngo}) => {
 					<T4GSignUpButton className="w-100"/>
 				</Col>
 				<Col className="py-5 d-none d-md-block" md={6}>
-					<NGOImage ngo={ngo} className="w-100" imgIdx={2}/>
+					<NGOImage hardFallback ngo={ngo} className="w-100" imgIdx={2}/>
 				</Col>
 			</Row>
 		}
