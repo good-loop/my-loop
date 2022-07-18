@@ -74,12 +74,12 @@ const GreenNavBar = ({active}) => {
 					<div className="green-nav-icon profile-icon" /> Profile
 				</A>
 			</NavItem> */}
-			<div className="navbar-bottom-decoration">
-				{/* TODO Add back in after demo
-				<center><LinkOut href='https://scope3.com'>
-					<img src='/img/gl-logo/external/scope3-logo.svg' className='w-75' />Powered by Scope3 data
-				</LinkOut></center>*/}
-				<div className='trees'>
+			<div className="navbar-bottom-decoration flex-column align-items-center w-100">
+				<LinkOut href="https://scope3.com" className="text-center mb-2">
+						<img src="/img/gl-logo/external/scope3-logo.wb.svg" className="d-block mb-1" />
+						Enhanced by Scope3 data
+				</LinkOut>
+				<div className="trees">
 					<img className="tree-side" src="/img/green/tree-light.svg" />
 					<img className="tree-centre" src="/img/green/tree-light.svg" />
 					<img className="tree-side" src="/img/green/tree-light.svg" />
