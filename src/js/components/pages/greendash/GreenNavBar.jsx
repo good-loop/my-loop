@@ -76,7 +76,7 @@ const GreenNavBar = ({active}) => {
 			</NavItem> */}
 			<div className="navbar-bottom-decoration flex-column align-items-center w-100">
 				<LinkOut href="https://scope3.com" className="text-center mb-2">
-						<img src="/img/gl-logo/external/scope3-logo.wb.svg" className="d-block mb-1" />
+						<img src="/img/gl-logo/external/scope3-logo.wb.svg" className="mb-1" />
 						Enhanced by Scope3 data
 				</LinkOut>
 				<div className="trees">
