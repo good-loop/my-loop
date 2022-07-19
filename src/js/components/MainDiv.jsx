@@ -46,6 +46,7 @@ import { DropdownItem } from 'reactstrap';
 import { accountMenuItems } from './pages/CommonComponents';
 import MyDataProductPage from './mydata/MyDataProductPage';
 import GetInvolvedPage from './pages/GetInvolvedPage';
+import OurImpactPage from './pages/OurImpactPage';
 
 // DataStore
 C.setupDataStore();
@@ -92,6 +93,7 @@ const PAGES = {
 	safari: SafariPage,
 	getmydata: MyDataProductPage,
 	getinvolved: GetInvolvedPage,
+	ourimpact: OurImpactPage,
 };
 // ?? switch to router??
 // const ROUTES = {
