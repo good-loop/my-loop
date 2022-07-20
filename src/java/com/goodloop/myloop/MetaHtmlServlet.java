@@ -52,6 +52,8 @@ public class MetaHtmlServlet implements IServlet {
 		aMap.put("impactoverview", "Impact Hub");
 		aMap.put("green", "Green Media");
 		aMap.put("tabsforgood", "Sign Up for Tabs for Good");
+		aMap.put("ourimpact", "Our Impact");
+		aMap.put("getinvolved", "Get Involved");
 		pageTitles = Collections.unmodifiableMap(aMap);
 	}
 	

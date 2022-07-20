@@ -243,7 +243,7 @@ export const DiscoverMoreCard = ({ title = "Discover More", subtitle, discoverCo
 	)
 }
 
-const MovementCard = () => {
+export const MovementCard = () => {
 	const movementContents = [
 		{
 			img: 'img/homepage/planet-positive.png',

@@ -19,6 +19,7 @@ const getFooterClassName = () => DataStore.getValue(['widget','Footer', 'classNa
 const pageBGs = {
 	// 'ourstory': 'bg-gl-light-pink',
 	'green': 'bg-greenmedia-darkcyan',
+	'ourimpact': 'bg-gl-light-blue',
 };
 
 /**
