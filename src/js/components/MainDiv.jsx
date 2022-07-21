@@ -128,6 +128,7 @@ const MainDiv = () => {
 		navbarPages={() => {
 			return {
 				// "dashboard":Login.isLoggedIn(), ??
+				"home":[],
 				"ourstory":[],
 				"our-impact": ['charities', 'impactoverview', Roles.isTester() && 'green'],
 				'tabsforgood':[],
@@ -138,7 +139,7 @@ const MainDiv = () => {
 		}}
 		navbarLabels={navPageLabels}
 		navbarDarkTheme={false}
-		navbarChildren={() => <><T4GSignUpButton>Get Tabs for Good on Desktop</T4GSignUpButton><T4GSignUpModal /></>}
+		navbarChildren={() => <><T4GSignUpButton className="d-none d-md-inline-block"/><T4GSignUpModal /></>}
 		navbarBackgroundColour="white"
 		navbarAccountMenuItems={accountMenuItems}
 		navbarAccountLinkText="My.Data"
