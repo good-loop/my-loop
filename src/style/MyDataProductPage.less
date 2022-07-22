@@ -1,4 +1,16 @@
 #getmydata {
+    .blue-gradient {
+        background: linear-gradient(180deg, @gl-white-blue 0%, @gl-lighter-blue 100%);
+    }
+}
+
+#gettabsforgood {
+    .blue-gradient {
+        background: @gl-pale-orange;
+    }
+}
+
+#getmydata,#gettabsforgood {
 
     h1 {
         font-size: 1.3rem;
@@ -88,10 +100,6 @@
             color: @gl-red;
             font-weight: 600;
         }
-    }
-
-    .blue-gradient {
-        background: linear-gradient(180deg, @gl-white-blue 0%, @gl-lighter-blue 100%);
     }
 
     .bubble-container {
@@ -246,9 +254,18 @@
 
     .control-your-data {
         text-align: center;
-        background: @gl-lighter-blue;
-        h3, p {
-            color: white;
+        //background: @gl-lighter-blue;
+        .blob {
+            position: relative;
+            p {
+                color: @gl-dark-turquoise;
+            }
+            .blob-quote {
+                position: absolute;
+                width: 15%;
+                top: 15%;
+                left: 10%;
+            }
         }
         h3 {
             font-weight: 600;
@@ -259,8 +276,11 @@
                 width: 75%;
             }
         }
+        .laptop-display {
+            width: 100%;
+        }
         .under-curve {
-            background: @gl-desat-blue;
+            //background: @gl-desat-blue;
             // @media @md-min {
             //     margin-top: -120px;
             // }

@@ -47,6 +47,7 @@ import { accountMenuItems } from './pages/CommonComponents';
 import MyDataProductPage from './mydata/MyDataProductPage';
 import GetInvolvedPage from './pages/GetInvolvedPage';
 import OurImpactPage from './pages/OurImpactPage';
+import TabsForGoodProductPage from './pages/TabsForGoodProductPage';
 
 // DataStore
 C.setupDataStore();
@@ -92,6 +93,7 @@ const PAGES = {
 	forcharity: ForCharityPage,
 	safari: SafariPage,
 	getmydata: MyDataProductPage,
+	gettabsforgood: TabsForGoodProductPage,
 	getinvolved: GetInvolvedPage,
 	ourimpact: OurImpactPage,
 };
@@ -118,7 +120,8 @@ const MainDiv = () => {
 		green: 'Green Media',
 		tabsforgood: C.T4G,
 		//blog: "Blog",
-		getmydata: "My.Data"
+		getmydata: "My.Data",
+		gettabsforgood: "Tabs for Good"
 		//"home#mydata-cta": "My.Data" // HACK until we get a landing page
 	};
 
@@ -131,7 +134,7 @@ const MainDiv = () => {
 				"home":[],
 				"ourstory":[],
 				"our-impact": ['charities', 'impactoverview', Roles.isTester() && 'green'],
-				'tabsforgood':[],
+				'gettabsforgood':[],
 				'getmydata':[],
 				//"home#mydata-cta": [],
 				//"blog":Roles.isTester()

@@ -42,7 +42,7 @@ const showT4GSignUpModal = (s = true) => {
 export const T4GSignUpButton = ({ className, children, dUnset }) => {
 	if (Login.isLoggedIn()) {
 		if (isMobile()) {
-			return <T4GSignUpLink className={space("T4GSignUpButton btn btn-primary", className)}>{children || "Email me a desktop link"}</T4GSignUpLink>;
+			return <T4GSignUpLink className={space("T4GSignUpButton btn btn-primary", className)}>{children || "Get Tabs for Good"}</T4GSignUpLink>;
 		}
 		return <T4GPluginButton className={className} dUnset />
 	}

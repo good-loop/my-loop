@@ -147,13 +147,13 @@ const HowItWorks = () => {
 
 const ControlYourData = () => {
 
-    return <div className="control-your-data">
+    return <div className="control-your-data bg-gl-lighter-blue">
         <img src="/img/curves/curve-desat-blue.svg" className="w-100"/>
-        <div className="under-curve">
+        <div className="under-curve bg-gl-desat-blue color-gl-white">
             <ProductPageContainer>
                 <Row className="flex-md-row-reverse">
                     <Col md={6} className="d-flex flex-column justify-content-center align-items-center align-items-md-start px-md-5 text-md-left">
-                        <h3>Control your data</h3>
+                        <h3 className="color-gl-white">Control your data</h3>
                         <p>You have control over how your data is used and can choose what to make private and what to share</p>
                     </Col>
                     <Col md={6}>

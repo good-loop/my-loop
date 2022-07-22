@@ -249,14 +249,14 @@ const CornerHummingbird = () => {
 	);
 }
 
-const LogoBanner = ({logoList}) => {
+const LogoBanner = ({logoList, className}) => {
 	// Default logo list (Charites)
 	if (!logoList) logoList = ['/img/LandingCharity/refuge.png', '/img/LandingCharity/tommys.png', '/img/LandingCharity/save-the-children.png', '/img/LandingCharity/NSPCC.png', '/img/LandingCharity/dementiauk.png', '/img/LandingCharity/wwf.png', '/img/LandingCharity/mssociety.png', '/img/LandingCharity/centrepoint.png', '/img/LandingCharity/GOSH.png'];
 
 	if (isMobile() && logoList.length > 5) logoList = logoList.slice(0,-4);
 
 	return (
-	<Container id="logo-banner-icons" className="my-3 d-flex justify-content-around align-items-center">
+	<Container id="logo-banner-icons" className={space("py-3 d-flex justify-content-around align-items-center", className)}>
 		{logoList.map((logo, i) => {
 			return (
 				<img className={logo.split('/')[logo.split('/').length-1].split('.')[0]} src={logo} key={i}/>
