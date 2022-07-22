@@ -10,7 +10,7 @@ import C from '../C';
 import Crud from '../base/plumbing/Crud'; // Crud is loaded here to init (but not used here)
 
 // Templates
-import {setShowLogin} from '../base/components/LoginWidget';
+import { setShowLogin } from '../base/components/LoginWidget';
 
 // Pages
 import MyCharitiesPage from './pages/MyCharitiesPage';
@@ -18,14 +18,14 @@ import MyAdCampaignsPage from './pages/MyAdCampaignsPage';
 import CampaignPage from './campaignpage/CampaignPage';
 import E404Page from '../base/components/E404Page';
 import AccountPage from './pages/AccountPage';
-import Footer from './Footer';
+import Footer, { MyLoopFooterSummer2022 } from './Footer';
 import MyGLAboutPage from './MyGLAboutPage';
 import SubscriptionBox from './cards/SubscriptionBox';
 import { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
 import ServerIO from '../plumbing/ServerIO';
 import AllowlistUs from './pages/AllowlistUs';
 import MainDivBase from '../base/components/MainDivBase';
-import {A, initRouter, modifyPage} from '../base/plumbing/glrouter';
+import { A, initRouter, modifyPage } from '../base/plumbing/glrouter';
 import HomePage from './pages/HomePage';
 // import RedesignPage from './pages/RedesignPage';
 import GreenDashboard from './pages/GreenDashboard';
@@ -57,10 +57,10 @@ ServerIO.USE_PROFILER = true;
 /**
  * Subscribe box as a single page??
  */
-const SubscribePage = ({}) => {
+const SubscribePage = ({ }) => {
 	return (<>
 		<div className="Subscribe widepage">
-			<SubscriptionBox title="Subscribe to our monthly newsletter" className="bg-gl-light-red big-sub-box"/>
+			<SubscriptionBox title="Subscribe to our monthly newsletter" className="bg-gl-light-red big-sub-box" />
 		</div>
 	</>);
 }
@@ -102,7 +102,7 @@ const PAGES = {
 // };
 
 addFunderCredit("Scottish Enterprise");
-addDataCredit({name:"The charity impact database", url:"https://sogive.org", author:"SoGive"});
+addDataCredit({ name: "The charity impact database", url: "https://sogive.org", author: "SoGive" });
 
 
 Login.app = C.app.id;
@@ -111,7 +111,7 @@ Login.dataspace = C.app.dataspace;
 const MainDiv = () => {
 
 	const navPageLabels = {
-		ourstory:"Our Story",
+		ourstory: "Our Story",
 		"our-impact": "Our Impact",
 		charities: 'Charity Impact',
 		impactoverview: 'Impact Hub',
@@ -128,18 +128,18 @@ const MainDiv = () => {
 		navbarPages={() => {
 			return {
 				// "dashboard":Login.isLoggedIn(), ??
-				"home":[],
-				"ourstory":[],
+				"home": [],
+				"ourstory": [],
 				"our-impact": ['charities', 'impactoverview', Roles.isTester() && 'green'],
-				'tabsforgood':[],
-				'getmydata':[],
+				'tabsforgood': [],
+				'getmydata': [],
 				//"home#mydata-cta": [],
 				//"blog":Roles.isTester()
 			};
 		}}
 		navbarLabels={navPageLabels}
 		navbarDarkTheme={false}
-		navbarChildren={() => <><T4GSignUpButton className="d-none d-md-inline-block"/><T4GSignUpModal /></>}
+		navbarChildren={() => <><T4GSignUpButton className="d-none d-md-inline-block" /><T4GSignUpModal /></>}
 		navbarBackgroundColour="white"
 		navbarAccountMenuItems={accountMenuItems}
 		navbarAccountLinkText="My.Data"
@@ -148,7 +148,7 @@ const MainDiv = () => {
 		// We want everything to be full width on this site
 		fullWidthPages={Object.keys(PAGES)}
 		//undecoratedPages={["blogcontent"]}
-		Footer={Footer}
+		Footer={MyLoopFooterSummer2022}
 		canRegister
 		noLoginTitle
 		loginLogo="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png"
