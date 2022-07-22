@@ -328,7 +328,7 @@ const PickACharity = () => {
 
 const CharityPartner = () => {
 
-    return <ProductPageContainer className="charity-partner bg-gl-desat-blue"
+    return <ProductPageContainer className="charity-partner bg-gl-desat-blue"></ProductPageContainer>
 }
 
 const DiscoverMore = () => {
