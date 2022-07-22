@@ -193,5 +193,5 @@ const MyLoopFooterSummer2022 = ({ page }) => {
 	</Container>;
 }
 
-export default MyLoopFooter;
-export { setFooterClassName, MyLoopFooterSummer2022 };
+export default MyLoopFooterSummer2022;
+export { setFooterClassName };

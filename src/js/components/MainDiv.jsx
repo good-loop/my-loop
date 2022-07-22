@@ -18,7 +18,7 @@ import MyAdCampaignsPage from './pages/MyAdCampaignsPage';
 import CampaignPage from './campaignpage/CampaignPage';
 import E404Page from '../base/components/E404Page';
 import AccountPage from './pages/AccountPage';
-import Footer, { MyLoopFooterSummer2022 } from './Footer';
+import Footer from './Footer';
 import MyGLAboutPage from './MyGLAboutPage';
 import SubscriptionBox from './cards/SubscriptionBox';
 import { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
@@ -148,7 +148,7 @@ const MainDiv = () => {
 		// We want everything to be full width on this site
 		fullWidthPages={Object.keys(PAGES)}
 		//undecoratedPages={["blogcontent"]}
-		Footer={MyLoopFooterSummer2022}
+		Footer={Footer}
 		canRegister
 		noLoginTitle
 		loginLogo="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png"
