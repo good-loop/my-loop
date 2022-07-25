@@ -214,7 +214,7 @@ const OurAdsSection = () => {
   </>)
 }
 
-const CharityPartner = () => {
+export const CharityPartner = () => {
 
   return (<div className="position-relative">
     <img src="img/mydata/fireworks-single.png" className="logo position-absolute" style={{ top: '-1em', left: '50%', transform: 'translate(-50%, 0)' }} />

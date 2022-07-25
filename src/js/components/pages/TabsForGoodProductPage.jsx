@@ -14,6 +14,7 @@ import BG from '../../base/components/BG';
 import { CollapseableCard } from '../mydata/MyDataCommonComponents';
 import { LogoBanner } from './CommonComponents';
 import { T4GSignUpButton, T4GSignUpLink } from '../T4GSignUp';
+import { CharityPartner } from './GetInvolvedPage';
 
 const ProductPageContainer = ({ className, children, ...props }) => <Container fluid="lg" className={space("product-container", className)} {...props}>{children}</Container>;
 
@@ -166,7 +167,7 @@ const ControlYourData = () => {
   return <div className="control-your-data bg-gl-pale-orange">
     <img src="/img/curves/curve-lighter-blue.svg" className="w-100" />
     <div className="under-curve bg-gl-lighter-blue color-gl-dark-turquoise">
-      <ProductPageContainer>
+      <ProductPageContainer className='position-relative'>
         <Row className="flex-md-row-reverse">
           <Col md={6} className="d-flex flex-column justify-content-center align-items-center align-items-md-start px-md-5 text-md-left">
             <h3 className="text-uppercase">It couldn't be easier to get started</h3>
@@ -197,6 +198,7 @@ const ControlYourData = () => {
         <T4GSignUpButton />
         <br />
         <br />
+        <img src="img/homepage/world-map.svg" className='position-absolute w-100' style={{ bottom:0, left:0, pointerEvents: 'none' }} />
       </ProductPageContainer>
     </div>
   </div>
@@ -348,11 +350,6 @@ const PickACharity = () => {
   </ProductPageContainer>;
 }
 
-const CharityPartner = () => {
-
-  return <ProductPageContainer className="charity-partner bg-gl-desat-blue"></ProductPageContainer>
-}
-
 const DiscoverMore = () => {
 
   return <ProductPageContainer className="discover-more">
@@ -404,6 +401,7 @@ const TabsForGoodProductPage = () => {
     <br />
     <TransformYourData />
     <PickACharity />
+    <CharityPartner />
     <DiscoverMore />
     <MyDataSignUpModal />
   </>);
