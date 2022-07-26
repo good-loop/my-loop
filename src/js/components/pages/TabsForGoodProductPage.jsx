@@ -32,23 +32,15 @@ const LandingSection = () => {
       <Container fluid="lg">
         <Row>
           <Col className='d-none d-md-flex justify-content-center align-items-center' xs={12} md={6}>
-           <img src="/img/mydata/product-page/tabs.png" className="w-100" />
+            <img src="/img/mydata/product-page/tabs.png" className="w-100" />
           </Col>
           <Col xs={12} md={6} >
-            <div className='d-block d-md-none'>
+            <div className='d-flex d-md-none flex-column'>
               <h1>Tabs for Good</h1>
-              <h3>The desktop browser plugin that lets you do good, for free</h3>
-              <br />
+              <h3 className='my-3'>The desktop browser plugin that lets you do good, for free</h3>
               <p>Turn your desktop browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</p>
-              <br />
-              <br />
-              <div className="d-flex flex-column justify-content-center align-items-center">
-                <T4GSignUpButton />
-                <br />
-                <a onClick={scroll} className="mt-3">Find out more</a>
-              </div>
-              {/* <img src="/img/mydata/product-page/left-coins-padlocks.png" className="padlocks padlock-left d-none d-md-inline-block" />
-              <img src="/img/mydata/product-page/right-coins-padlocks.png" className="padlocks padlock-right d-none d-md-inline-block" /> */}
+              <T4GSignUpButton />
+              <a onClick={scroll} className="mt-3 mx-auto">Find out more</a>
             </div>
             <div className='d-none d-md-flex flex-column justify-content-center align-items-start'>
               <h1>Tabs for Good</h1>
@@ -118,6 +110,30 @@ const HowItWorks = () => {
     </Col>;
   };
 
+  const Sections = [
+    {
+      i: 1,
+      title: "Sign up today",
+      subtitle: "Open a new tab",
+      img: "img/mydata/padlock-careful.png",
+      content: "We display a small unintrusive banner advert at the bottom of your page while you're busy browsing away."
+    },
+    {
+      i: 2,
+      title: "50% to your charity",
+      subtitle: "Unlock a donation",
+      img: "img/mydata/onboarding-3.png",
+      content: "As a thank you for letting the advert appear on your page, you make a free donation to charity, funded by us. 50% of the advert money to be precise."
+    },
+    {
+      i: 3,
+      title: "Do good easily, for free",
+      subtitle: "That's It",
+      img: "img/mydata/profile-created.png",
+      content: "You don't even have to click on the advert to make the donation happen. It really is that simple."
+    },
+  ]
+
   return <div id="how-it-works" className="mt-md-5">
     <ProductPageContainer>
       <div className="inner">
@@ -132,7 +148,23 @@ const HowItWorks = () => {
         <h1>Here's how it works:</h1>
         <br />
 
-        <Row className="px-md-4 py-md-2">
+        <Row className='mx-1 d-flex justify-content-center mt-3 mb-5'>
+          {Sections.map(({ i, title, subtitle, img, content }) => {
+            return <Col key={i} xs={12} lg={4} className="position-relative" style={{maxWidth:'400px'}} >
+              <div className="position-absolute d-flex flex-column justify-content-center align-items-center"
+                style={{ zIndex: 1, width: '75%', left: '50%', transform: 'translate(-50%,0)' }}>
+                <img src={img} style={{height:'80px'}} />
+                <span className="miniheader">{title}</span>
+                <h2 style={{ fontSize: '1.25rem' }}>{subtitle}</h2>
+                <span className='mt-1'>{content}</span>
+              </div>
+              <img src={"img/mydata/product-page/blob-" + i + ".svg"} alt="blob" className='position-relative user-select-none' 
+              style={{ left: 0, top: 0, zIndex: 0, width:'370px', transform: 'translate(-50%,0)', left:'50%' }} />
+            </Col>
+          })}
+        </Row>
+
+        {/* <Row className="px-md-4 py-md-2">
           <Section i={1} title="Sign up today" subtitle="Open a new tab" img="/img/mydata/padlock-careful.png" imgClassName="w-25">
             <p>
               We display a small unintrusive banner advert at the bottom of your page while you're busy browsing away.
@@ -150,12 +182,12 @@ const HowItWorks = () => {
               You don't even have to click on the advert to make the donation happen. It really is that simple.
             </p>
           </Section>
-        </Row>
+        </Row> */}
 
         <T4GSignUpButton className="align-self-center mb-3" style={{ zIndex: 1 }} />
         <br />
         <h4 className="text-uppercase">Available on</h4>
-        <img src="/img/mydata/product-page/logos-browsers.png" className="w-100 mx-auto" style={{maxWidth:'358px'}} />
+        <img src="/img/mydata/product-page/logos-browsers.png" className="w-100 mx-auto" style={{ maxWidth: '358px' }} />
         <br />
       </div>
     </ProductPageContainer>
@@ -182,14 +214,14 @@ const ControlYourData = () => {
           <br />
           <br />
           <br />
-          <p className='mx-auto position-relative' style={{ fontSize: "0.9rem" , maxWidth:'420px'}}>
-            <img src="/img/homepage/quote-blue.svg" className="position-absolute" style={{maxWidth:'3rem', top:'-4em'}} />
+          <p className='mx-auto position-relative' style={{ fontSize: "0.9rem", maxWidth: '420px' }}>
+            <img src="/img/homepage/quote-blue.svg" className="position-absolute" style={{ maxWidth: '3rem', top: '-4em' }} />
             The potential impact of consumers downloading the Tabs for Good is significant. Based on the average number of browser tabs consumers open every week,
             <b> if just 1% of internet users in the UK and US downloaded the browser extension, it would generate £30m and $200m (£146.9m) a year </b>
             in donations to good causes in the UK and US respectively.
           </p>
           <div className="d-flex flex-row justify-content-center align-items-center">
-            <img src="/img/mydata/product-page/logo-exchangewire.png" className="w-50" style={{maxWidth:'260px'}} />
+            <img src="/img/mydata/product-page/logo-exchangewire.png" className="w-50" style={{ maxWidth: '260px' }} />
           </div>
           <br />
           <br />
@@ -198,7 +230,7 @@ const ControlYourData = () => {
         <T4GSignUpButton />
         <br />
         <br />
-        <img src="img/homepage/world-map.svg" className='position-absolute w-100' style={{ bottom:0, left:0, pointerEvents: 'none' }} />
+        <img src="img/homepage/world-map.svg" className='position-absolute w-100' style={{ bottom: 0, left: 0, pointerEvents: 'none' }} />
       </ProductPageContainer>
     </div>
   </div>
@@ -321,7 +353,7 @@ const TransformYourData = () => {
         <br />
         <div className="text-center my-3">
           <h4 className="text-uppercase">Available on</h4>
-          <img src="/img/mydata/product-page/logos-browsers.png" className="w-100 mx-auto" style={{maxWidth:'358px'}} />
+          <img src="/img/mydata/product-page/logos-browsers.png" className="w-100 mx-auto" style={{ maxWidth: '358px' }} />
         </div>
       </div>
     </div>
