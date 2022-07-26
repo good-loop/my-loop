@@ -87,29 +87,6 @@ const CommunityImpact = () => {
 
 const HowItWorks = () => {
 
-  const Section = ({ i, title, subtitle, img, imgClassName, children }) => {
-
-    return <Col md={4}>
-      <BG src={"/img/mydata/product-page/blob-" + i + ".svg"} center size="contain" repeat="no-repeat"
-        className="how-it-works-section">
-        <br />
-        <ProductPageContainer>
-          <img src={img} className={space("mb-2", imgClassName)} />
-          <p className="miniheader mb-0">{title}</p>
-          <h2>{subtitle}</h2>
-          <div className="contents">
-            {children}
-          </div>
-        </ProductPageContainer>
-        <img src={"/img/mydata/product-page/bubble-2-" + i + ".png"} className={space("bubble d-inline-block d-md-none", i % 2 === 0 ? "bubble-left" : "bubble-right")} />
-        {/* Extra whitespace padding at bottom, to make sure BG image stretches enough to cover text */}
-        <br />
-        <br />
-        <br />
-      </BG>
-    </Col>;
-  };
-
   const Sections = [
     {
       i: 1,
@@ -163,26 +140,6 @@ const HowItWorks = () => {
             </Col>
           })}
         </Row>
-
-        {/* <Row className="px-md-4 py-md-2">
-          <Section i={1} title="Sign up today" subtitle="Open a new tab" img="/img/mydata/padlock-careful.png" imgClassName="w-25">
-            <p>
-              We display a small unintrusive banner advert at the bottom of your page while you're busy browsing away.
-            </p>
-          </Section>
-          <br />
-          <Section i={2} title="50% to your charity" subtitle="Unlock a donation" img="/img/mydata/onboarding-3.png" imgClassName="w-75 mt-md-n5">
-            <p>
-              As a thank you for letting the advert appear on your page, you make a free donation to charity, funded by us. 50% of the advert money to be precise.
-            </p>
-          </Section>
-          <br />
-          <Section i={3} title="Do good easily, for free" subtitle="That's it" img="/img/mydata/profile-created.png" imgClassName="w-50">
-            <p>
-              You don't even have to click on the advert to make the donation happen. It really is that simple.
-            </p>
-          </Section>
-        </Row> */}
 
         <T4GSignUpButton className="align-self-center mb-3" style={{ zIndex: 1 }} />
         <br />
