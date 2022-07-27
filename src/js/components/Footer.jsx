@@ -136,8 +136,8 @@ const MyLoopFooterSummer2022 = ({ page }) => {
 			<div className="position-absolute" style={{ maxWidth: '360px', top: '5em' }}>
 				<p className='color-gl-muddy-blue mt-5'>In Partnership With</p>
 				<img style={{ width: '140px' }} src="img/footer/Eden.org_RGB.png" />
-				<p className='font-weight-bold color-gl-red'>Subscrible To Get A Tree Planted On Your Behalf And Receive Even More Good News!</p>
-				<SubscriptionForm className='w-100' thankYouTextcolour="white" showTrees />
+				<p className='font-weight-bold color-gl-red'>Subscribe To Get A Tree Planted On Your Behalf And Receive Even More Good News!</p>
+				<SubscriptionForm className='w-100' buttonText="Subscribe" thankYouTextcolour="text-muted" showTrees buttomColor="primary" />
 			</div>
 			<img className='position-absolute' style={{ width: '120%', maxWidth: '500px', pointerEvents: 'none' }} src="img/footer/cloud-overlay.png" />
 

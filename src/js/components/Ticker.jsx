@@ -84,7 +84,7 @@ const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty
 	return (
 		<span className="Ticker position-relative d-inline-flex flex-row justify-content-center align-items-center"
 			style={{padding: "0 " + (centerText ? "0.1rem" : "0")}}>
-			{dispArr.map((digit, i) => <span key={i} style={{width: (digit===','||digit==='.'? '0.3' : '0.6')+'em'}}>{digit}</span>)}
+			{dispArr.map((digit, i) => <span key={i} style={{width: (digit===','||digit==='.'? '0.3' : '0.6')+'em', marginRight:'.05em'}}>{digit}</span>)}
 		</span>
 	);
 };

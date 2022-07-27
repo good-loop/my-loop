@@ -25,7 +25,8 @@ const SubscriptionBox = ({ title = "Support the causes you care about, and see t
 };
 
 
-export const SubscriptionForm = ({ label = "", product, purpose = PURPOSES.email_mailing_list, browser, buttonText = "Sign me up", textCenter, thankYouTextcolour = "black" , showTrees}) => {
+export const SubscriptionForm = ({ label = "", product, purpose = PURPOSES.email_mailing_list, browser, buttonText = "Sign me up",
+ textCenter, thankYouTextcolour = "black" , showTrees, buttomColor="secondary"}) => {
 	// NB: suppose we have a subscribe-to-mailing-list and a preregister form on the same page? Keep the data separate.
 	// OTOH two subscribe-to-mailing-list forms are treated as overlapping
 	// ??
@@ -58,10 +59,10 @@ export const SubscriptionForm = ({ label = "", product, purpose = PURPOSES.email
 	const hasSubmittedEmail = DataStore.getValue(ctaFormPath.concat("hasSubmittedEmail")) === true;
 	if (hasSubmittedEmail) {
 		return (
-			<p className={thankYouTextcolour}>
+			<div className={thankYouTextcolour}>
 				<h4>Thank you!</h4>
 				<p>We'll email you shortly :)</p>
-			</p>
+			</div>
 		)
 	}
 
@@ -82,7 +83,7 @@ export const SubscriptionForm = ({ label = "", product, purpose = PURPOSES.email
 		{purpose !== PURPOSES.email_mailing_list
 			&& <PropControl className="text-left" type="checkbox" path={ctaFormPath} label="Subscribe to our good news mailing list and get feel-good news delivered to your inbox :)" prop="purpose2" value={PURPOSES.email_mailing_list} />
 		}
-		<Button onClick={doEmailSignUp} color="secondary" disabled={!formData.email || hasSubmittedEmail} className="flex-grow-0 email-submit mt-3">
+		<Button onClick={doEmailSignUp} color={buttomColor} disabled={!formData.email || hasSubmittedEmail} className="flex-grow-0 email-submit mt-3">
 			{buttonText}
 		</Button>
 	</Form>);

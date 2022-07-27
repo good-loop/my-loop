@@ -118,7 +118,7 @@ const StoriesSection = () => {
 		imgClass: 'bg-gl-light-pink',
 		title: <span className='text-uppercase' style={{ fontWeight: 'bold' }}>We can make things happen</span>,
 		text: 'Our amazing community has so far supported everything from childhood literacy to coral reef protection and Black Lives Matter.',
-		button: <ArrowLink className='w-100 color-gl-red' link="/impactoverview" >Discover Our Impact</ArrowLink>
+		button: <ArrowLink className='w-100 color-gl-red' link="/ourimpact" >Discover Our Impact</ArrowLink>
 	}
 
 	const cardTwo = {
@@ -169,7 +169,7 @@ const StoriesSection = () => {
 	return (
 		<PageCard className='stories-section pt-0'>
 			<h3 className='text-md-center' style={{ textTransform: 'unset', fontWeight: '600' }}>The My.Good-Loop Story</h3>
-			<p className='color-gl-muddy-blue mb-0 text-md-center'>Converting the multi-billion dollar online advertsing industry into a force for good - with you.</p>
+			<p className='color-gl-muddy-blue mb-0 text-md-center'>Converting the multi-billion dollar online advertising industry into a force for good - with you.</p>
 			<TwinCards twinCardsContent={[].concat(cardOne, cardTwo)} />
 
 			<div className='testimonials-section'>
