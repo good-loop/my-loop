@@ -30,11 +30,11 @@ const OurImpactSplash = () => {
 				</div>
 				<h5 className="color-gl-red">Raised And Counting</h5>
 			</Container>
-			<div className="position-relative bg-white rounded shadow text-center p-3 mb-5 mx-auto" style={{ maxWidth: '768px', marginTop:'80px' }} >
-				<img src="img/ourimpact/ad-break-header.png" className="position-absolute" style={{width:'200px',left:'50%',top:0,transform:'translate(-50%,-60%)'}} />
-				<p className="text-muted mt-5">By watching our ads, browsing with Tabs for Good, and signing up for My.Data, youve:</p>
+			<div className="position-relative bg-white rounded shadow text-center p-3 pb-5 mb-5 mx-auto" style={{ maxWidth: '768px', marginTop: '80px' }} >
+				<img src="img/ourimpact/ad-break-header.png" className="position-absolute" style={{ width: '200px', left: '50%', top: 0, transform: 'translate(-50%,-60%)' }} />
+				<p className="text-muted mt-5">By watching our ads, browsing with Tabs for Good, and signing up for My.Data, you've:</p>
 
-				<p className="color-gl-muddy-blue">Helped Plant<br /><span className="font-weight-bold">Over 1 Million Trees</span></p>
+				<p className="color-gl-muddy-blue">Helped Plant<br /><h5 className="font-weight-bold" style={{ fontSize: '1.25rem' }}>Over 1 Million Trees</h5></p>
 				<p className="color-gl-muddy-blue">Together with</p>
 				<div className="brands d-flex justify-content-between mx-auto">
 					<img src="img/LandingBrand/H&M-Logo.png" />
@@ -48,14 +48,14 @@ const OurImpactSplash = () => {
 				</div>
 				<hr />
 
-				<p className="color-gl-red">Helped Provide<br /><span className="font-weight-bold">1-2-1 Coaching For 122 Young Women</span></p>
+				<p className="color-gl-red">Helped Provide<br /><h5 className="font-weight-bold" style={{ fontSize: '1.25rem' }}>1-2-1 Coaching For 122 Young Women</h5></p>
 				<p className="color-gl-red">Together with</p>
 				<div className="brands d-flex justify-content-center mx-auto">
 					<img className="larger" src="img/ourimpact/logos-yet.png" />
 				</div>
 				<hr />
 
-				<p className="color-gl-red">Helped Remove<br /><span className="font-weight-bold">21,792 Kg Of River Trash</span></p>
+				<p className="color-gl-red">Helped Remove<br /><h5 className="font-weight-bold" style={{ fontSize: '1.25rem' }}>21,792 Kg Of River Trash</h5></p>
 				<p className="color-gl-red">Together with</p>
 				<div className="brands d-flex justify-content-center mx-auto">
 					<img className="larger" src="img/ourimpact/logos-rivercleanup.png" />
@@ -127,7 +127,7 @@ const ImpactMovementSection = () => {
 
 	return (
 		<div className='movement position-relative overflow-hidden'>
-			<img className="position-absolute" style={{width:'125%',bottom:0,transform:'translate(-12%,12%)'}} src="img/green/world-map.svg" />
+			<img className="position-absolute" style={{ width: '125%', bottom: 0, transform: 'translate(-12%,12%)' }} src="img/green/world-map.svg" />
 			<PageCard>
 				<div className="movement-blob position-relative d-flex align-items-center justify-content-center pb-5">
 					<img style={{ maxWidth: '480px', zIndex: '1', margin: '0 -1rem' }} src="img/homepage/movement-blob-images.svg" />
@@ -148,7 +148,7 @@ const CharitiesDonationSection = () => {
 		<h2>105</h2>
 		<h4>CHARITIES DONATED TO IN 2021</h4>
 		<h5>All Thanks To Our Amazing Community</h5>
-		<img className="w-100 my-4" style={{maxWidth:'768px'}} src="img/ourimpact/top-charities-2021.png" />
+		<img className="w-100 my-4" style={{ maxWidth: '768px' }} src="img/ourimpact/top-charities-2021.png" />
 		<p>Top charities donated to in 2021; size of the circle is correlated to the amount donated.</p>
 	</PageCard>)
 }
