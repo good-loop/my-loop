@@ -116,7 +116,7 @@ const MainDiv = () => {
 		ourstory: "Our Story",
 		'our-impact': "Our Impact",
 		ourimpact: "Impact Overview",
-		charities: 'Charity Partners',
+		charities: 'Charities Partners',
 		impactoverview: 'Our Ad Campaigns',
 		green: 'Green Media',
 		tabsforgood: C.T4G,
