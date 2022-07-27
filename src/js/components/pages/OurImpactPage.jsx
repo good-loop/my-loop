@@ -30,8 +30,9 @@ const OurImpactSplash = () => {
 				</div>
 				<h5 className="color-gl-red">Raised And Counting</h5>
 			</Container>
-			<div className="bg-white rounded shadow text-center p-3 my-5 mx-auto" style={{ maxWidth: '768px' }} >
-				<p className="text-muted">By watching our ads, browsing with Tabs for Good, and signing up for My.Data, youve:</p>
+			<div className="position-relative bg-white rounded shadow text-center p-3 mb-5 mx-auto" style={{ maxWidth: '768px', marginTop:'80px' }} >
+				<img src="img/ourimpact/ad-break-header.png" className="position-absolute" style={{width:'200px',left:'50%',top:0,transform:'translate(-50%,-60%)'}} />
+				<p className="text-muted mt-5">By watching our ads, browsing with Tabs for Good, and signing up for My.Data, youve:</p>
 
 				<p className="color-gl-muddy-blue">Helped Plant<br /><span className="font-weight-bold">Over 1 Million Trees</span></p>
 				<p className="color-gl-muddy-blue">Together with</p>
@@ -40,7 +41,10 @@ const OurImpactSplash = () => {
 					<img src="img/LandingBrand/toms-shoes-logo.png" />
 					<img src="img/LandingBrand/universal-music-group-logo.png" />
 					<img src="img/ourimpact/huggies-brand-logo-vector.png" />
-					<img src="img/LandingBrand/H&M-Logo.png" />
+					<img src="img/vertiser-logos/linda-mac-logo.png" />
+				</div>
+				<div className="brands d-flex justify-content-center mx-auto my-3">
+					<img src="img/ourimpact/eden-logo.png" />
 				</div>
 				<hr />
 
