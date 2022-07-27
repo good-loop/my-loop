@@ -114,14 +114,17 @@ const MainDiv = () => {
 
 	const navPageLabels = {
 		ourstory: "Our Story",
-		"our-impact": "Our Impact",
-		charities: 'Charity Impact',
-		impactoverview: 'Impact Hub',
+		'our-impact': "Our Impact",
+		ourimpact: "Impact Overview",
+		charities: 'Charity Partners',
+		impactoverview: 'Our Ad Campaigns',
 		green: 'Green Media',
 		tabsforgood: C.T4G,
 		//blog: "Blog",
+		'get-involved': "Get Involved",
+		getinvolved: "Our Products",
+		gettabsforgood: "Tabs for Good",
 		getmydata: "My.Data",
-		gettabsforgood: "Tabs for Good"
 		//"home#mydata-cta": "My.Data" // HACK until we get a landing page
 	};
 
@@ -132,10 +135,9 @@ const MainDiv = () => {
 			return {
 				// "dashboard":Login.isLoggedIn(), ??
 				"home": [],
+				"our-impact": ['ourimpact', 'impactoverview', 'charities', Roles.isTester() && 'green'],
 				"ourstory": [],
-				"our-impact": ['charities', 'impactoverview', Roles.isTester() && 'green'],
-				'gettabsforgood':[],
-				'getmydata':[],
+				'get-involved':['getinvolved', 'gettabsforgood', 'getmydata'],
 				//"home#mydata-cta": [],
 				//"blog":Roles.isTester()
 			};
