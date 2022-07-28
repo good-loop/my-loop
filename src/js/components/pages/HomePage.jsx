@@ -69,12 +69,12 @@ const FindOutMoreSection = () => {
 				</div>
 				<div className="conversation-bubble position-relative d-flex align-items-center justify-content-center">
 					<img className='w-100' style={{ maxWidth: '480px' }} src="img/homepage/our-mission-blob.svg" />
-					<img className='position-absolute' style={{ width: (isMobile() ? '1024px' : '1400px'), top: (isMobile() ? '-10em' : '-13em') }} src="img/homepage/our-mission-images-lg.png" />
+					<img className='position-absolute' style={{ width: (isMobile() ? '1024px' : '1400px'), top: (isMobile() ? '-10em' : '-13em'), left: (isMobile() ? '-18em' : '') }} src="img/homepage/our-mission-images-lg.png" />
 					<div className="bubble-content position-absolute" style={{ top: (isMobile() ? '12%' : '20%'), margin: '0 10%', maxWidth: '400px' }}>
 						<h3 style={{ fontWeight: '600', marginBottom: '0' }}>Our Mission</h3>
 						<h5 style={{ fontWeight: 'unset' }}>Changing The World: Together</h5>
 						<p style={{ fontSize: '.9rem', marginTop: '1rem' }}>At My Good-Loop we're harnessing consumer power and advertising billions, <b>donating 50%</b> of ad spend to charity - <b>connecting you with brands to fund the causes you care most about.</b></p>
-						<a href='/impactoverview' className='text-decoration-none'><span style={{ textDecoration: "underline", fontWeight: '600' }}>Our Impact</span> →</a>
+						<a href='/ourimpact' className='text-decoration-none'><span style={{ textDecoration: "underline", fontWeight: '600' }}>Our Impact</span> →</a>
 					</div>
 				</div>
 			</div>

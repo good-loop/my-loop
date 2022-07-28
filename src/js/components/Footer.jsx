@@ -143,22 +143,22 @@ const MyLoopFooterSummer2022 = ({ page }) => {
 
 			<Row className="social-icons mx-auto">
 				<Col xs={3}>
-					<C.A href="https://twitter.com/goodloophq">
+					<C.A href="https://twitter.com/goodloophq" target="_blank">
 						<img src="/img/footer/twitter_icon.200w.png" className="w-100" />
 					</C.A>
 				</Col>
 				<Col xs={3}>
-					<C.A href="https://www.facebook.com/the.good.loop/">
+					<C.A href="https://www.facebook.com/the.good.loop/" target="_blank">
 						<img src="/img/footer/facebook_icon.200w.png" className="w-100" />
 					</C.A>
 				</Col>
 				<Col xs={3}>
-					<C.A href="https://www.instagram.com/goodloophq/">
+					<C.A href="https://www.instagram.com/goodloophq/" target="_blank">
 						<img src="/img/footer/insta_icon.200w.png" className="w-100" />
 					</C.A>
 				</Col>
 				<Col xs={3}>
-					<C.A href="https://www.linkedin.com/company/good.loop?trk=biz-companies-cym">
+					<C.A href="https://www.linkedin.com/company/good.loop?trk=biz-companies-cym" target="_blank">
 						<img src="/img/footer/linkedin_icon.200w.png" className="w-100" />
 					</C.A>
 				</Col>
