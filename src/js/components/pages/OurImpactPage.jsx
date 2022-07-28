@@ -128,7 +128,7 @@ const GlobalImpactSection = () => {
 					<img className="w-100" src="img/ourimpact/impact-focus.png" />
 				</Col>
 				<Col xs={12} md={6}>
-					<h5 className="color-gl-red text-uppercase">Tenneh, Sierra Leono</h5>
+					<h5 className="color-gl-red text-uppercase">Tenneh, Sierra Leone</h5>
 					<p className="color-gl-red text-capitalize">In a remote village by a river in Sierra Leone, 13-years-old Tenneh is determinded to get to school.</p>
 					<p>Her goal is to become a nurse and help her parents, and she's on her way to achieving that thanks to her hard work and supportive teacher.</p>
 					<p className="text-center"><img className="logo" src="img/ourimpact/girl-school.png" /></p>
@@ -169,7 +169,7 @@ const ImpactMovementSection = () => {
 					<div className="bubble-content position-absolute text-center" style={{ top: '18%', margin: '0 10%', maxWidth: '400px', zIndex: '2' }}>
 						<h4 className='color-gl-red'>Join Our Movement</h4>
 						<p className='color-gl-dark-grey' style={isMobile() ? { fontSize: '.9rem' } : {}} >Start Transforming Your Web Browsing And Data Into <b>Life Saving Vaccines, Meals For Children In Need, Habitats For Endangered Animals,</b> Plus Many More Good Causes.</p>
-						<ArrowLink className='color-gl-red font-weight-bold' link='/tabsforgood'>Get Involved</ArrowLink>
+						<ArrowLink className='color-gl-red font-weight-bold' link='/getinvolved'>Get Involved</ArrowLink>
 					</div>
 				</div>
 				<img className='position-absolute w-100 join-our-movement-bg-front' src="img/homepage/our-movement-front-curve.svg" />
