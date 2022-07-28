@@ -15,7 +15,7 @@ import { getId, getType } from '../../base/data/DataClass';
 import KStatus from '../../base/data/KStatus';
 import List from '../../base/data/List';
 import Money from '../../base/data/Money';
-import { getDataItem } from '../../base/plumbing/Crud';
+import { getDataItem, setWindowTitle } from '../../base/plumbing/Crud';
 import { getDataLogData, pivotDataLogData } from '../../base/plumbing/DataLog';
 import DataStore from '../../base/plumbing/DataStore';
 import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
@@ -303,6 +303,13 @@ const CampaignPage = () => {
 		image: campaign.bg || "https://my.good-loop.com/img/redcurve.svg",
 		description: nvertiserNameNoTrail ? "See " + nvertiserNameNoTrail + "'s impact from Good-Loop ethical advertising" : "See our impact from Good-Loop ethical advertising"
 	};
+
+	let windowTitle = !campaign && "Impact Hub";
+	if (!windowTitle) {
+		if (campaign.master) windowTitle = "Advertiser: " + nvertiserName;
+		else windowTitle = "Campaign: " + campaign.name;
+	}
+	setWindowTitle(windowTitle);
 
 	return <>
 		<StyleBlock>{campaign && campaign.customCss}</StyleBlock>
