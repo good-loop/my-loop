@@ -99,7 +99,7 @@ const HowItWorks = () => {
   ]
 
   return <div id="how-it-works" className="mt-md-5">
-    <ProductPageContainer>
+    <ProductPageContainer className='position-relative'>
       <div className="inner">
         <div className="control-your-data-small">
           <img src="/img/mydata/how-it-works.png" className="padlocks" />
@@ -110,8 +110,7 @@ const HowItWorks = () => {
           <img src="/img/homepage/Stars.png" className="star mx-auto" />
         </div>
 
-        <h1>Here's how it works:</h1>
-        <br />
+        <h1 className='mb-3'>Here's how it works:</h1>
 
         <Row className='mx-1 d-flex justify-content-center mt-3 mb-5'>
           {Sections.map(({ i, title, subtitle, img, content }) => {
@@ -129,10 +128,11 @@ const HowItWorks = () => {
           })}
         </Row>
 
-
-        <MyDataSignUpButton className="align-self-center mb-3" style={{ zIndex: 1 }} />
-        <br />
+        <MyDataSignUpButton className="align-self-center mb-5" style={{ zIndex: 1 }} />
       </div>
+      <img className='position-absolute' style={{width:'200px', left:'-8em', top:'20em'}} src="/img/mydata/bubble-chameleon.png" />
+      <img className='position-absolute' style={{width:'200px', right:'-8em', top:'-5em'}} src="/img/mydata/bubble-kids.png" />
+      <img className='position-absolute' style={{width:'200px', right:'-8em', bottom:'4em'}} src="/img/mydata/bubble-ocean.png" />
     </ProductPageContainer>
   </div>;
 };
@@ -240,7 +240,7 @@ const TransformYourData = () => {
             <br />
             <ul>
               <li>
-                <b>You are always in control here and can select your desired level of privacy for each piece of data you share with us. You can explore your profile any time, and asjust which bits of your info can and cannot be used.</b>
+                <b>You are always in control here and can select your desired level of privacy for each piece of data you share with us. You can explore your profile any time, and adjust which bits of your info can and cannot be used.</b>
               </li>
               <li>
                 By default, we will not share or sell your data. We will use it carefully to help route relevant adverts your way - turning the extra payments from advertisers into charity funding.
