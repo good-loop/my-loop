@@ -62,7 +62,12 @@ const OurImpactSplash = () => {
 				</div>
 				<br /><br />
 
-				<ArrowLink className='color-gl-muddy-blue'>Learn More In Our Impact Hub</ArrowLink>
+				<ArrowLink className='color-gl-muddy-blue' link="/impactoverview">Learn More In Our Ad Campaigns</ArrowLink>
+
+				<img className="position-absolute" style={{width:'200px', transform:'translate(-50%, -50%)', left:'-2em', top:'60%'}} src="img/ourimpact/bubble-ywt.png" />
+				<img className="position-absolute" style={{width:'200px', transform:'translate(-50%, -50%)', right:'-14em', bottom:'-20%'}} src="img/ourimpact/bubble-rivercleanup.png" />
+				<img className="position-absolute" style={{width:'200px', transform:'translate(-50%, -50%)', right:'-14em', top:'20%'}} src="img/ourimpact/bubble-eden.png" />
+
 			</div>
 
 			<div className="cta text-center color-gl-red">
@@ -86,7 +91,7 @@ const GlobalImpactSection = () => {
 		<CurvePageCard color="white" bgClassName="bg-gl-lighter-blue" >
 			<div className="color-gl-muddy-blue text-center">
 				<h4>Our Impact In Focus</h4>
-				<p>Together we're helping make a tangible difference in people's lives.</p>
+				<p className="mt-3 mb-5">Together we're helping make a tangible difference in people's lives.</p>
 			</div>
 			<Row>
 				<Col xs={12} md={6} className='d-flex justify-content-center align-items-center'>
@@ -106,12 +111,12 @@ const GlobalImpactSection = () => {
 				<img src='img/homepage/quote-red.svg' className="logo position-relative" style={{ left: '-1em' }} />
 				<div className="position-relative" style={{ fontSize: '.9rem' }}>
 					<p className="color-gl-red font-weight-bold">
-						We are delighted to be working with Good-Loop and their partnering brands. Good-Loop are incredibly proactive and deliver exellent levels of stewardship.
+						We are delighted to be working with Good-Loop and their partnering brands. Good-Loop are incredibly proactive and deliver excellent levels of stewardship.
 					</p>
 					<p className="color-gl-red ">
-						Donation values have recently doubled and they continue to support children throughout the goble by partnering with Save The Children. Over £45,000 has been raised in the short period our partnership has been established. Sincere thanks for your onging support.
+						Donation values have recently doubled and they continue to support children throughout the globe by partnering with Save The Children. Over £45,000 has been raised in the short period our partnership has been established. Sincere thanks for your onging support.
 					</p>
-					<p className="text-left">BECCA MCNAIR <br /> COMMUNITY FUNDRAISING AND ENGAGEMENT MANAGER, <br /> SAVE THE CHILDREN UK</p>
+					<p className="text-left" style={{fontSize:'.85rem'}}>BECCA MCNAIR <br /> COMMUNITY FUNDRAISING AND ENGAGEMENT MANAGER, <br /> SAVE THE CHILDREN UK</p>
 				</div>
 				<div className="text-center"><img src='img/LandingCharity/save-the-children.png' className="w-25" /></div>
 				<br />
