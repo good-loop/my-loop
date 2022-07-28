@@ -16,4 +16,44 @@
 	.movement {
 		background: linear-gradient(180deg, @gl-light-pink, @gl-lighter-blue);
 	}
+
+	.global-impact-bubbles{
+		:nth-child(2) {
+			left: 0;
+		}
+		:nth-child(3) {
+			left: 20%;
+			top: 200px;
+		}
+		:nth-child(4) {
+			right: 20%;
+			top: 200px;
+		}
+		:nth-child(5) {
+			right: 0;
+		}
+
+		@media @width-mobile {
+			height: 1200px;
+
+			:nth-child(2) {
+				top: 200px;
+				left: 0;
+			}
+			:nth-child(3) {
+				top: 400px;
+				right: 0;
+				left: unset;
+			}
+			:nth-child(4) {
+				top: 600px;
+				left: 0;
+			}
+			:nth-child(5) {
+				top: 800px;
+				right: 0;
+			}
+		}
+	}
 }
+

@@ -36,7 +36,8 @@ const OurImpactSplash = () => {
 
 				<p className="color-gl-muddy-blue">Helped Plant<br /><h5 className="font-weight-bold" style={{ fontSize: '1.25rem' }}>Over 1 Million Trees</h5></p>
 				<p className="color-gl-muddy-blue">Together with</p>
-				<div className="brands d-flex justify-content-between mx-auto">
+				<img className="mx-auto w-100" style={{ maxWidth: '460px' }} src="img/ourimpact/logos-trees.png" />
+				{/* <div className="brands d-flex justify-content-between mx-auto">
 					<img src="img/LandingBrand/H&M-Logo.png" />
 					<img src="img/LandingBrand/toms-shoes-logo.png" />
 					<img src="img/LandingBrand/universal-music-group-logo.png" />
@@ -45,7 +46,7 @@ const OurImpactSplash = () => {
 				</div>
 				<div className="brands d-flex justify-content-center mx-auto my-3">
 					<img src="img/ourimpact/eden-logo.png" />
-				</div>
+				</div> */}
 				<hr />
 
 				<p className="color-gl-red">Helped Provide<br /><h5 className="font-weight-bold" style={{ fontSize: '1.25rem' }}>1-2-1 Coaching For 122 Young Women</h5></p>
@@ -64,9 +65,9 @@ const OurImpactSplash = () => {
 
 				<ArrowLink className='color-gl-muddy-blue' link="/impactoverview">Learn More In Our Ad Campaigns</ArrowLink>
 
-				<img className="position-absolute" style={{width:'200px', transform:'translate(-50%, -50%)', left:'-2em', top:'60%'}} src="img/ourimpact/bubble-ywt.png" />
-				<img className="position-absolute" style={{width:'200px', transform:'translate(-50%, -50%)', right:'-14em', bottom:'-20%'}} src="img/ourimpact/bubble-rivercleanup.png" />
-				<img className="position-absolute" style={{width:'200px', transform:'translate(-50%, -50%)', right:'-14em', top:'20%'}} src="img/ourimpact/bubble-eden.png" />
+				<img className="position-absolute" style={{ width: '200px', transform: 'translate(-50%, -50%)', left: '-2em', top: '60%' }} src="img/ourimpact/bubble-ywt.png" />
+				<img className="position-absolute" style={{ width: '200px', transform: 'translate(-50%, -50%)', right: '-14em', bottom: '-20%' }} src="img/ourimpact/bubble-rivercleanup.png" />
+				<img className="position-absolute" style={{ width: '200px', transform: 'translate(-50%, -50%)', right: '-14em', top: '20%' }} src="img/ourimpact/bubble-eden.png" />
 
 			</div>
 
@@ -80,13 +81,42 @@ const OurImpactSplash = () => {
 }
 
 const GlobalImpactSection = () => {
+	const impactBubbles = [
+		{
+			img: 'img/ourimpact/projects-sierra-leone.png',
+			text: "Supporting children's education, Sierra Leone"
+		},
+		{
+			img: 'img/ourimpact/projects-uk.png',
+			text: "Helping people take the first steps out of homelessness, UK"
+		},
+		{
+			img: 'img/ourimpact/projects-burundi.png',
+			text: "Increasing the natural habitats of wild chimpanzees, Burundi"
+		},
+		{
+			img: 'img/ourimpact/projects-madagascar.png',
+			text: "Mangrove Forest Restoration, Madagascar"
+		},
+	]
+
 	return (<>
 		<CurvePageCard className="global-impact" color="white" bgClassName="bg-gl-lighter-blue" >
 			<div className="color-gl-muddy-blue text-center">
 				<h4>Our Global Impact</h4>
-				<p>We donate to charities worldwide. Spreading thaat money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
+				<p>We donate to hundreds of charities and projects worldwide. Spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
 			</div>
-			<p>TODO Images for this section TBC</p>
+			<div className="global-impact-bubbles position-relative d-flex flex-column justify-content-start align-items-center" style={{ marginBottom: '-10em' }}>
+				<img className="w-75" style={{ maxWidth: '400px' }} src="img/ourimpact/projects-globe.svg" />
+				{impactBubbles.map((bubble, i) => {
+					return (
+						<div key={i} className="d-flex flex-column text-center position-absolute" style={{ maxWidth: '180px'}}>
+							<img className="w-100" src={bubble.img} />
+							<span className="text-muted mt-1 font-weight-bold" style={{fontSize:'.85rem'}}>{bubble.text}</span>
+						</div>
+					)
+				})}
+			</div>
 		</CurvePageCard>
 		<CurvePageCard color="white" bgClassName="bg-gl-lighter-blue" >
 			<div className="color-gl-muddy-blue text-center">
@@ -116,7 +146,7 @@ const GlobalImpactSection = () => {
 					<p className="color-gl-red ">
 						Donation values have recently doubled and they continue to support children throughout the globe by partnering with Save The Children. Over £45,000 has been raised in the short period our partnership has been established. Sincere thanks for your onging support.
 					</p>
-					<p className="text-left" style={{fontSize:'.85rem'}}>BECCA MCNAIR <br /> COMMUNITY FUNDRAISING AND ENGAGEMENT MANAGER, <br /> SAVE THE CHILDREN UK</p>
+					<p className="text-left" style={{ fontSize: '.85rem' }}>BECCA MCNAIR <br /> COMMUNITY FUNDRAISING AND ENGAGEMENT MANAGER, <br /> SAVE THE CHILDREN UK</p>
 				</div>
 				<div className="text-center"><img src='img/LandingCharity/save-the-children.png' className="w-25" /></div>
 				<br />
