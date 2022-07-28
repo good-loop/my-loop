@@ -78,7 +78,7 @@ export const SubscriptionForm = ({ label = "", product, purpose = PURPOSES.email
 				path={ctaFormPath}
 				placeholder="yourname@youremail.com"
 			/>
-			{showTrees && <img className='position-absolute' src='img/getinvolved/trees-icon.svg' style={{ top: '.5em', right: '2em' }} />}
+			{showTrees && <img className='position-absolute' src='/img/getinvolved/trees-icon.svg' style={{ top: '.5em', right: '2em' }} />}
 		</FormGroup>
 		{purpose !== PURPOSES.email_mailing_list
 			&& <PropControl className="text-left" type="checkbox" path={ctaFormPath} label="Subscribe to our good news mailing list and get feel-good news delivered to your inbox :)" prop="purpose2" value={PURPOSES.email_mailing_list} />
