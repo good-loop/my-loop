@@ -185,7 +185,7 @@ const OurAdsSection = () => {
         </Col>
         <Col xs={12} md={6} className='text-capitalize d-flex flex-column justify-content-center'>
           <h3 style={{ fontWeight: 600 }}>Look Our For Our Ads</h3>
-          <p className="color-gl-dark-blue">If you see one of our shiny Good-Loop ads online, remember to engage with it to unlock your chairty donations - It's how we raise most money for charity, all thanks to brands and you!</p>
+          <p className="color-gl-dark-blue">If you see one of our shiny Good-Loop ads online, remember to engage with it to unlock your charity donations - It's how we raise most money for charity, all thanks to brands and you!</p>
           <ArrowLink to="#" className='color-gl-red font-weight-bold'>
             View our ad case studies
           </ArrowLink>
