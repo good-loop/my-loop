@@ -411,7 +411,7 @@ export const TabsForGoodSlideSection2 = ({ngo}) => {
 	);
 };
 
-const NewsAwards = ({nostars, children}) => {
+const NewsAwards = ({nostars, className, children}) => {
 
 	const imgs = [
 		"/img/pub-logos/forbes-logo.jpeg",
@@ -430,13 +430,13 @@ const NewsAwards = ({nostars, children}) => {
 
 	const StarsDiv = <div className="col align-items-center justify-content-center d-none d-md-flex"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>;
 	return(
-		<PageCard className="py-3">
+		<PageCard className={space("py-3", className)}>
 			<div className="text-center">
 				{children}
 				<Row>
 					{!nostars && StarsDiv}
-					{imgs.map((v, i) => <Col key={i}>
-						<LinkOut href={links[i]}><img className='logo logo-xl' src={v} alt="" /></LinkOut>
+					{imgs.map((v, i) => <Col key={i} style={{height:'100px'}} >
+						<LinkOut href={links[i]}><img className='logo logo-xl' src={v} style={{maxHeight:'60px'}} /></LinkOut>
 					</Col>)}
 					{!nostars && StarsDiv}
 				</Row>

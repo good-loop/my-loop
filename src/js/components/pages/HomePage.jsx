@@ -214,7 +214,7 @@ export const DiscoverMoreCard = ({ title = "Discover More", subtitle, discoverCo
 			img: 'img/mydata/product-page/links-our-impact.png',
 			span: 'Explore',
 			linkTitle: 'Our Impact Hub',
-			href: '/impactoverview'
+			href: '/ourimpact'
 		},
 		{
 			img: 'img/mydata/product-page/links-our-story.png',
