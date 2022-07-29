@@ -220,7 +220,7 @@ const TransformYourData = () => {
             <br />
             <ul>
               <li>
-                <b>Tabs for Good s a browser plugin that
+                <b>Tabs for Good is a browser plugin that
                   transforms your internet browsing
                   into donations for a charity of your
                   choice</b>
