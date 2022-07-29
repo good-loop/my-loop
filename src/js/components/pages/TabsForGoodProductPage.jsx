@@ -15,6 +15,7 @@ import { CollapseableCard } from '../mydata/MyDataCommonComponents';
 import { LogoBanner } from './CommonComponents';
 import { T4GSignUpButton, T4GSignUpLink } from '../T4GSignUp';
 import { CharityPartner } from './GetInvolvedPage';
+import { isMobile } from '../../base/utils/miscutils';
 
 const ProductPageContainer = ({ className, children, ...props }) => <Container fluid="lg" className={space("product-container", className)} {...props}>{children}</Container>;
 
@@ -93,7 +94,7 @@ const HowItWorks = () => {
       title: "Sign up today",
       subtitle: "Open a new tab",
       img: "img/mydata/padlock-careful.png",
-      content: "We display a small unintrusive banner advert at the bottom of your page while you're busy browsing away."
+      content: "We display a small unobtrusive banner advert at the bottom of your page while you're busy browsing away."
     },
     {
       i: 2,
@@ -111,7 +112,9 @@ const HowItWorks = () => {
     },
   ]
 
-  return <div id="how-it-works" className="mt-md-5">
+  const bubbleMargin = isMobile() ? "-4em" : "5em";
+
+  return <div id="how-it-works" className="mt-md-5 position-relative">
     <ProductPageContainer>
       <div className="inner">
         <div className="control-your-data-small">
@@ -126,8 +129,8 @@ const HowItWorks = () => {
         <br />
 
         <Row className='mx-1 d-flex justify-content-center mt-3 mb-5'>
-          {Sections.map(({ i, title, subtitle, img, content }) => {
-            return <Col key={i} xs={12} lg={4} className="position-relative" style={{maxWidth:'400px'}} >
+          {Sections.map(({ i, title, subtitle, img, content }, index) => {
+            return <Col key={index} xs={12} lg={4} className="position-relative" style={{maxWidth:'400px'}} >
               <div className="position-absolute d-flex flex-column justify-content-center align-items-center"
                 style={{ zIndex: 1, width: '75%', left: '50%', transform: 'translate(-50%,0)' }}>
                 <img src={img} style={{height:'80px'}} />
@@ -148,6 +151,9 @@ const HowItWorks = () => {
         <br />
       </div>
     </ProductPageContainer>
+    <img className='position-absolute' style={{width:'180px', right:bubbleMargin, top:'15em'}} src="img/TabsForGood/bubble-woman.png" />
+    <img className='position-absolute' style={{width:'180px', left:bubbleMargin, top:'32em'}} src="img/TabsForGood/bubble-turtle.png" />
+    <img className='position-absolute' style={{width:'180px', right:bubbleMargin, bottom:'34em'}} src="img/TabsForGood/bubble-kids-two.png" />
   </div>;
 };
 
@@ -199,7 +205,7 @@ const TransformYourData = () => {
     <br />
     <br />
     <ProductPageContainer className="px-3">
-      <h3 className="text-left text-md-center">Transforming your data into charity donations</h3>
+      <h3 className="text-left text-md-center">Transform your web browsing into charity donations</h3>
       <p className="miniheader mb-0 text-md-center">Your questions answered</p>
     </ProductPageContainer>
     <BubblesHeader src="/img/mydata/product-page/photo-bubbles-t4g-two.png" className="d-md-none" />
@@ -290,7 +296,7 @@ const TransformYourData = () => {
               <li>
                 We've introduced Tabs for Good as an
                 easy way for you to do good every day
-                for free - it part of our product family
+                for free - it's part of our product family
                 and adds to our total community
                 impact. We make most of our revenue
                 and raise most charity donations via

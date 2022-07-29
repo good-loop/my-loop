@@ -93,7 +93,7 @@ const PAGES = {
 	forcharity: ForCharityPage,
 	safari: SafariPage,
 	getmydata: MyDataProductPage,
-	gettabsforgood: TabsForGoodProductPage,
+	tabsforgood: TabsForGoodProductPage,
 	getinvolved: GetInvolvedPage,
 	ourimpact: OurImpactPage,
 };
@@ -119,11 +119,11 @@ const MainDiv = () => {
 		charities: 'Charities Partners',
 		impactoverview: 'Our Ad Campaigns',
 		green: 'Green Media',
-		tabsforgood: C.T4G,
+		oldtabsforgood: C.T4G,
 		//blog: "Blog",
 		'get-involved': "Get Involved",
 		getinvolved: "Our Products",
-		gettabsforgood: "Tabs for Good",
+		tabsforgood: "Tabs for Good",
 		getmydata: "My.Data",
 		//"home#mydata-cta": "My.Data" // HACK until we get a landing page
 	};
@@ -137,7 +137,7 @@ const MainDiv = () => {
 				"home": [],
 				"our-impact": ['ourimpact', 'impactoverview', 'charities', Roles.isTester() && 'green'],
 				"ourstory": [],
-				'get-involved':['getinvolved', 'gettabsforgood', 'getmydata'],
+				'get-involved':['getinvolved', 'tabsforgood', 'getmydata'],
 				//"home#mydata-cta": [],
 				//"blog":Roles.isTester()
 			};

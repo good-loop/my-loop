@@ -63,7 +63,7 @@ export const T4GSignUpLink = ({ className, children, onClick }) => {
 				showT4GSignUpModal();
 				if (onClick) onClick();
 			}} >
-			{children || "Sign Up for " + C.T4G}
+			{children || "Get " + C.T4G}
 		</a>
 	);
 };
