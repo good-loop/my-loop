@@ -135,8 +135,8 @@ const RaiseMoneySection = () => {
       <img className="position-absolute w-100" style={{ bottom: 0 }} src="img/getinvolved/front-wave-lg.svg" alt="" />
       <Container className="text-center position-relative">
         <div className="position-relative" style={{ zIndex: 1, maxWidth: '350px', left: '50%', transform: 'translate(-50%, 30%)' }}>
-          <h3 className="color-gl-red" style={{ margin: '.8em', fontWeight: '600', fontSize: '1.25rem' }} >How Do I Raise Money For My Charity For Free?</h3>
-          <p>Bitesize bit of summary information on how money is raised - Advertisers value your attention, in return they donate...</p>
+          <h3 className="color-gl-red" style={{ margin: '.8em', fontWeight: '600', fontSize: '1.25rem' }} >Do Good For Free</h3>
+          <p>At My Good-Loop we're harnessing consumer power and advertising billions, donating 50% of ad spend to charity - connecting you with brands to fund the causes you care most about.</p>
         </div>
         <img src="img/getinvolved/raise-money-blob.svg" className="w-100 position-absolute"
           style={{ maxWidth: '512px', left: '50%', top: 0, transform: 'translate(-50%, 0)' }} alt="blob" />
@@ -259,7 +259,7 @@ const GetInvolvedPage = () => {
             img: 'img/mydata/product-page/links-our-story.png',
             span: 'Explore',
             linkTitle: 'Our Impact',
-            href: '/impactoverview'
+            href: '/ourimpact'
           },
         ]} />
     </>

@@ -355,14 +355,14 @@ const DiscoverMore = () => {
       <Col xs={4} className="d-flex flex-column align-items-center justify-content-center">
         <img src="/img/mydata/product-page/links-t4g.png" className="link-circle" />
         <br />
-        <p>Install</p>
-        <C.A href="/tabsforgood">Tabs for Good</C.A>
+        <p>Explore</p>
+        <C.A href="/getinvolved">Get Involved</C.A>
       </Col>
       <Col xs={4} className="d-flex flex-column align-items-center justify-content-center">
         <img src="/img/mydata/product-page/links-our-impact.png" className="link-circle" />
         <br />
         <p>Explore</p>
-        <C.A href="/impactoverview">Our Impact</C.A>
+        <C.A href="/ourimpact">Our Impact</C.A>
       </Col>
       <Col xs={4} className="d-flex flex-column align-items-center justify-content-center">
         <img src="/img/mydata/product-page/links-our-story.png" className="link-circle" />
