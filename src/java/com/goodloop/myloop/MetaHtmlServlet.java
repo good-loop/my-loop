@@ -164,9 +164,9 @@ public class MetaHtmlServlet implements IServlet {
 		description = WebUtils2.htmlEncode(description);
 		
 		Map vars = new HashMap();		
-		vars.put("title", state.getRequestPath()+" Campaign: "+cid);
-		vars.put("image", campaign.bg);
-		vars.put("description", description);
+		if (cid != null) vars.put("title", state.getRequestPath()+" Campaign: "+cid);
+		if (campaign != null) vars.put("image", campaign.bg);
+		if (description != null) vars.put("description", description);
 		vars.put("type", "summary");
 		return vars;
 	}
