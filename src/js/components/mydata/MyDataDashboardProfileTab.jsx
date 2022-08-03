@@ -163,6 +163,7 @@ const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
 	const privacyLabels = ["Careful Use", "Private","Shared"]; // NB: see Consents.java 
 	let privacyLevel = Claim.consent(pvClaim.value) || "careful"; // default to careful, set first label as careful to match
 	if (privacyLevel===DEFAULT_CONSENT || privacyLevel==="controller") privacyLevel = "careful";
+    const privacyImg = privacyOptions.includes(privacyLevel) ? privacyLevel : "careful";
 	const privacyLabel = privacyLabels[privacyOptions.indexOf(privacyLevel)] || "Other";
 
 	// HACK adjust some of the display for niceness
@@ -198,7 +199,7 @@ const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
 			{displayValue}
 			<div className="d-flex justify-content-between align-items-center">
 				<span className='text-muted' style={{ fontSize: '.8rem' }}>{privacyLabel}</span>
-				<img style={{ height: '1.5rem', transform: 'translate(0, -.5rem)' }} src={"/img/mydata/padlock-"+privacyLevel+ ".png"} alt="padlock logo" />
+				<img style={{ height: '1.5rem', transform: 'translate(0, -.5rem)' }} src={"/img/mydata/padlock-"+privacyImg+ ".png"} alt="padlock logo" />
 			</div>
 		</>}
 		{editMode && <>
