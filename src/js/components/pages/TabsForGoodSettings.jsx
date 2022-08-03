@@ -174,7 +174,7 @@ const Search = ({ onSubmit, placeholder, icon, className }) => {
  */
 const getTabsOpened = () => {
 	// start:0 = all time (otherwise defaults to 1 month)
-	return getTabsOpened2({start:0, user:Login.getId()});
+	return getTabsOpened2({start: 0, user:Login.getId()});
 };
 
 /**
@@ -191,7 +191,8 @@ const getTabsOpened = () => {
 		q,
 		name: 'tabopens',
 		dataspace: 'gl',
-		start: '2020-11-01T00:00:00Z', // Tabs for good data start on 2020-11-12
+		start,
+		// start: '2020-11-01T00:00:00Z', // Tabs for good data start on 2020-11-12
 	}; // ??future, end, breakdowns: [byHostOrAd]};
 	let pvData = getDataLogData(trkreq);
 	let pvAllCount = PromiseValue.then(pvData, res => {
