@@ -191,8 +191,7 @@ const getTabsOpened = () => {
 		q,
 		name: 'tabopens',
 		dataspace: 'gl',
-		start,
-		// start: '2020-11-01T00:00:00Z', // Tabs for good data start on 2020-11-12
+		start
 	}; // ??future, end, breakdowns: [byHostOrAd]};
 	let pvData = getDataLogData(trkreq);
 	let pvAllCount = PromiseValue.then(pvData, res => {
