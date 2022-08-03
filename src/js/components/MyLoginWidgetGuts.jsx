@@ -24,6 +24,7 @@ export const MyLoginWidgetGuts = ({services, verb, onLogin, onRegister, canRegis
 							onRegister={onRegister}
 							canRegister={canRegister}
 							className="myloop-email-login"
+							disableLoginVerb
 						/>
 					</Col>
 					{/* Removed for now - no design for social services

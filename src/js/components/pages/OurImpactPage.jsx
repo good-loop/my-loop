@@ -34,7 +34,7 @@ const OurImpactSplash = () => {
 				<img src="img/ourimpact/ad-break-header.png" className="position-absolute" style={{ width: '200px', left: '50%', top: 0, transform: 'translate(-50%,-60%)' }} />
 				<p className="text-muted mt-5">By watching our ads, browsing with Tabs for Good, and signing up for My.Data, you've:</p>
 
-				<p className="color-gl-muddy-blue">Helped Plant<br /><h5 className="font-weight-bold" style={{ fontSize: '1.25rem' }}>Over 1 Million Trees</h5></p>
+				<p className="color-gl-muddy-blue">Helped Plant<br /><span className="font-weight-bold" style={{ fontSize: '1.25rem' }}>Over 1 Million Trees</span></p>
 				<p className="color-gl-muddy-blue">Together with</p>
 				<img className="mx-auto w-100" style={{ maxWidth: '460px' }} src="img/ourimpact/logos-trees.png" />
 				{/* <div className="brands d-flex justify-content-between mx-auto">
@@ -49,14 +49,14 @@ const OurImpactSplash = () => {
 				</div> */}
 				<hr />
 
-				<p className="color-gl-red">Helped Provide<br /><h5 className="font-weight-bold" style={{ fontSize: '1.25rem' }}>1-2-1 Coaching For 122 Young Women</h5></p>
+				<p className="color-gl-red">Helped Provide<br /><span className="font-weight-bold" style={{ fontSize: '1.25rem' }}>1-2-1 Coaching For 122 Young Women</span></p>
 				<p className="color-gl-red">Together with</p>
 				<div className="brands d-flex justify-content-center mx-auto">
 					<img className="larger" src="img/ourimpact/logos-yet.png" />
 				</div>
 				<hr />
 
-				<p className="color-gl-red">Helped Remove<br /><h5 className="font-weight-bold" style={{ fontSize: '1.25rem' }}>21,792 Kg Of River Trash</h5></p>
+				<p className="color-gl-red">Helped Remove<br /><span className="font-weight-bold" style={{ fontSize: '1.25rem' }}>21,792 Kg Of River Trash</span></p>
 				<p className="color-gl-red">Together with</p>
 				<div className="brands d-flex justify-content-center mx-auto">
 					<img className="larger" src="img/ourimpact/logos-rivercleanup.png" />
