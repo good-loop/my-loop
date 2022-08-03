@@ -174,7 +174,7 @@ const Search = ({ onSubmit, placeholder, icon, className }) => {
  */
 const getTabsOpened = () => {
 	// start:0 = all time (otherwise defaults to 1 month)
-	return getTabsOpened2({start:0, user:Login.getId()});
+	return getTabsOpened2({start: 0, user:Login.getId()});
 };
 
 /**
@@ -189,7 +189,7 @@ const getTabsOpened = () => {
 		);
 	const trkreq = {
 		q,
-		name: "tabopens",
+		name: 'tabopens',
 		dataspace: 'gl',
 		start
 	}; // ??future, end, breakdowns: [byHostOrAd]};
