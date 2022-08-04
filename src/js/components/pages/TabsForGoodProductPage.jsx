@@ -147,8 +147,7 @@ const HowItWorks = () => {
         <T4GSignUpButton className="align-self-center mb-3" style={{ zIndex: 1 }} />
         <br />
         <h4 className="text-uppercase">Available on</h4>
-        <img src="/img/mydata/product-page/logos-browsers.png" className="w-100 mx-auto" style={{ maxWidth: '358px' }} />
-        <br />
+        <img src="/img/mydata/product-page/logos-browsers.png" className="w-100 mx-auto mb-5" style={{ maxWidth: '358px' }} />
       </div>
     </ProductPageContainer>
     <img className='position-absolute' style={{width:'180px', right:bubbleMargin, top:'15em'}} src="img/TabsForGood/bubble-woman.png" />

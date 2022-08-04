@@ -188,7 +188,7 @@ const GreenLanding2 = ({cid, status}) => {
 						</div>}
 					</Col>
 				</Row>
-				<Row className="partnership trees no-gutters">
+				<Row className="partnership no-gutters">
 					<Col className="partner-text p-4" xs="12" sm="6">
 						<h2>PLANTING TREES</h2>
 						<p>Our Green Media products plant trees via Eden Reforestation projects

@@ -116,7 +116,7 @@ const MainDiv = () => {
 		ourstory: "Our Story",
 		'our-impact': "Our Impact",
 		ourimpact: "Impact Overview",
-		charities: 'Charities Partners',
+		charities: 'Charity Partners',
 		impactoverview: 'Our Ad Campaigns',
 		green: 'Green Media',
 		oldtabsforgood: C.T4G,
@@ -148,6 +148,7 @@ const MainDiv = () => {
 		navbarBackgroundColour="white"
 		navbarAccountMenuItems={accountMenuItems}
 		navbarAccountLinkText="My.Data"
+        navbarLogoClass="myloop-nav-logo"
 		NavExpandSize="md"
 		// navbarLabels={getNavbarLabels}
 		// We want everything to be full width on this site
