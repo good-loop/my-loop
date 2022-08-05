@@ -156,15 +156,20 @@ public class MetaHtmlServlet implements IServlet {
 		}
 		
 		String description = null;
+		String title = null;
 		if (companyName != null) {
 			description = "See the impact " + companyName + " has had with Good-Loop ethical advertising!";
+			title = "Good-Loop Impact: " + companyName;
 		} else {
 			description = "See the amazing impact made with Good-Loop ethical advertising!";
+			title = "Good-Loop Impact: Ads for Good";
 		}
 		description = WebUtils2.htmlEncode(description);
+		title = WebUtils2.htmlEncode(title);
 		
 		Map vars = new HashMap();		
-		if (cid != null) vars.put("title", state.getRequestPath()+" Campaign: "+cid);
+		
+		if (title != null) vars.put("title", title);
 		if (campaign != null) vars.put("image", campaign.bg);
 		if (description != null) vars.put("description", description);
 		vars.put("type", "summary");
