@@ -1,5 +1,7 @@
 import React from 'react';
-
+/**
+ * @deprecated in August 2022 
+ */
 const CharitySection = ({}) => {
     return (
     <div className="charity-section bg-white px-5">

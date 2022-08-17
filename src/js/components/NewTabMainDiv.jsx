@@ -264,7 +264,9 @@ const UserControls = ({cid}) => {
 	</>;
 };
 
-
+/**
+ * @deprecated in August 2022
+ */
 const TabsOpenedCounter = () => {
 	let pvTabsOpened = getTabsOpened();
 	if (pvTabsOpened && pvTabsOpened.value) {

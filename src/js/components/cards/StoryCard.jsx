@@ -1,7 +1,7 @@
 import React from 'react';
 
+/** @deprecated in August 2022 */
 const StoryCard = () => {
-
 	return (
 		<div className="story-card-container" style={{width:'20%'}}>
 			<img src="https://via.placeholder.com/350x250" alt="placeholder image"/>

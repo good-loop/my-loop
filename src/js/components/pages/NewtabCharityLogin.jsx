@@ -19,11 +19,17 @@ import { doRegisterEmail } from '../../base/data/Person';
 const LOGIN_PATH = ['widget', 'tabLogin', 'login'];
 const LOGIN_VERB_PATH = [...LOGIN_PATH, 'verb'];
 
+/**
+ * @deprecated in August 2022
+ */
 const switchToVerb = (e, verb) => {
 	if (e) stopEvent(e);
 	DataStore.setValue(LOGIN_VERB_PATH, verb);
 };
 
+/**
+ * @deprecated in August 2022
+ */
 const NewtabCharityLogin = () => {
 	// set the app to t4g, so we get the right welcome email
 	Login.app = "t4g.good-loop.com";

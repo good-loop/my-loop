@@ -5,7 +5,9 @@
 
 import React from 'react';
 
-/** The Good-Loop "g-l" logo glyph. Broken out here because it's used multiple times */
+/** The Good-Loop "g-l" logo glyph. Broken out here because it's used multiple times 
+ * @deprecated in August 2022
+*/
 const glGlyphPath = (
 	<path d="M80.686 15.76c-.435 13.064-6.851 21.44-14.02 29.38a49.644 49.644 0 0 1-2.215-8.047h.004c5.031-5.978 9.055-12.896 9.104-20.954.02-3.288-.62-9.161-4.538-9.227-4.909-.082-8.382 8.937-8.824 15.671-1.316 20.018 6.5 37.154 11.756 37.082 2.397-.032 3.143-3.114 3.502-5.871.2-1.541 2.26-2.971 4.191-2.295 1.931.676 2.588 2.41 2.36 4.09-.73 5.372-5.187 11.68-11.242 10.872C59.02 64.255 54.712 44.873 53.61 34.949 51.368 14.763 57.517-.995 70.696 1.457c6.628 1.233 10.254 6.365 9.99 14.302zM34.348 28.384c6.665.404 10.015 3.858 12.198 6.541 2.325 2.858 1.945 4.93.24 6-1.705 1.07-3.573.18-4.913-.992-5.841-5.11-9.975-5.647-14.447-.728-4.135 4.547-2.58 12.555 1.342 17.063 3.55 4.08 8.354 6.712 12.064 9.465 4.935 3.662 10.374 9.682 10.051 18.722-.38 10.658-6.734 15.942-14.689 15.355-6.93-.512-12.375-4.402-12.934-12.273-.381-5.382 1.675-11.615 7.377-17.08 1.945 1.273 3.683 2.62 5.134 4.292-2.453 2.491-5.484 6.084-5.576 10.162-.053 2.334.208 8.143 5.907 8.72 3.786.384 8.256-4.359 7.976-9.58-.312-5.836-2.388-9.65-8.237-13.965-8.426-6.218-17.084-9.51-17.307-23.708-.198-12.618 9.998-18.346 15.814-17.994zm18.24 21.518c.775 2.316 1.762 4.727 2.805 6.768a191.742 191.742 0 0 0-8.35 8.799c-1.805-1.566-3.544-2.79-5.424-4.074 3.51-4.033 7.485-8.036 10.969-11.493z" />
 );
@@ -18,6 +20,7 @@ const glGlyphPath = (
  * Why all this weirdness? Because when you have any two shapes overlapping in an SVG, and they're cut off at the same edge, there's
  * a 99% chance the rear element will peek out for an antialiased half-pixel somewhere and look AWFUL.
  * This way, the shapes interlock and never share edges.
+  *@deprecated in August 2022
  */
 const GlLogoGenericSvg = ({outline, colour1 = '#770f00', colour2 = '#af2009', colourBg = '#fff'}) => (
 	<svg xmlns="http://www.w3.org/2000/svg" className="gl-logo-svg" viewBox="0 0 100 100">
@@ -33,10 +36,14 @@ const GlLogoGenericSvg = ({outline, colour1 = '#770f00', colour2 = '#af2009', co
 	</svg>
 );
 
+/** @deprecated in August 2022*/ 
 const glLogoDefaultSvg = <GlLogoGenericSvg />;
+/** @deprecated in August 2022*/ 
 const glLogoOutlineSvg = <GlLogoGenericSvg outline />;
 
-
+/**
+ * @deprecated in August 2022
+ */
 const splitColouredCircleSVG = (
 	<svg className="split-coloured-circle-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
 		<path d="M0 0c1.271 11.668 4.088 23.222 8.302 33.791 6.84 17.156 16.73 31.603 29.621 43.272 1.39 1.257 2.573 2.287 2.632 2.287.285.003 8.932-5.374 10.964-6.818 14.64-10.406 24.271-22.724 31.288-40.014 2.465-6.074 3.78-10.017 7.82-23.46A600.105 600.105 0 0 1 93.418 0z" fill="#a41b00"/>
