@@ -20,7 +20,8 @@ const doNotTrack = () => {
 	}
 };
 
-/** @deprecated in August 2022*/ 
+/** @deprecated in August 2022
+ *  TODO: remove if applicable - unused elsewhere in project*/ 
 const DonationCard = ({xids}) => {
 	if ( ! Login.isLoggedIn()) {
 		return <Misc.LoginToSee />;
