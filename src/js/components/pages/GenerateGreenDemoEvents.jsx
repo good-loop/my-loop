@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from 'react';
-
 import NewChartWidget from '../NewChartWidget';
 import Login from '../../base/youagain';
 import Roles from '../../base/Roles';
@@ -9,6 +8,16 @@ import C from '../../C';
 import KStatus from '../../base/data/KStatus';
 import PropControl from '../../base/components/PropControl';
 import ActionMan from '../../plumbing/ActionMan';
+import ServerIO from '../../plumbing/ServerIO';
+import CRUD, { saveAs } from '../../base/plumbing/Crud';
+import { lg } from '../../base/plumbing/log';
+import PromiseValue from 'promise-value';
+
+/**
+ * This code is for a one-off creation of demo data.
+ * It will be used then mothballed.
+ * 
+ */
 
 
 /**
@@ -206,7 +215,7 @@ const generateData = (startDate, endDate, totalImps, campaign, adid, vertiser) =
 	
 	// Generate a set of impression blocks for each point in time that covers various locations, domains, devices
 	data.forEach((val) => {
-		const impsPerCountry = Math.round(val * totalImps / 2);
+		const impsPerCountry = Math.round(val * totalImps / 2) || 1; // NB: || 1 is a hack to avoid zero events
 		let thisPointCount = 0;
 
 		// keep event counts low - we don't have to hit every state/county for every data point
@@ -220,7 +229,7 @@ const generateData = (startDate, endDate, totalImps, campaign, adid, vertiser) =
 			// Pick a UK location and generate an event block
 			let locnIndex = Math.floor(Math.random() * demoLocnsUK.length);
 			let locn = demoLocnsUK[locnIndex];
-			let count = Math.round(impsPerCountry * countyProbs[locnIndex] * ukMultiplier);
+			let count = Math.round(impsPerCountry * countyProbs[locnIndex] * ukMultiplier) || 1; // hack to avoid zero events
 			thisPointCount += count;
 			// Restrict number of separate events by allocating one combination of domain/OS/browser to each location
 			// We don't slice the data in any way that should make this visible
@@ -269,27 +278,39 @@ const generateData = (startDate, endDate, totalImps, campaign, adid, vertiser) =
 };
 
 
-/** Fill out the datalog event for publishing via JournalServlet */
+/** Fill out the datalog event for publishing via JournalServlet 
+ * 
+ * @returns {PromiseValue} see lg()
+*/
 const commitEvent = evt => {
-	let je = {
-		makeEvent: true,
-		makeBid: false,
-		modifyBudget: false,
-		e: {
-			dataspace: 'green',
-			tag: 'pixel',
-			...evt, // All the stuff that varies between events: time, count, adid, browser, domain, etc...
-		}
+	let e = {
+		dataspace: 'green',
+		tag: 'pixel',
+		cause: 'demo', // put in a marker to make thesse easy to find (and if needed, delete) in ES
+		...evt, // All the stuff that varies between events: time, count, adid, browser, domain, etc...
 	};
-	/* TODO SEND TO JOURNALSERVLET AND RETURN PV - I can't test this locally because I can't build/run AdServer - RM */
+	// Use journal? No -- it's intended for a smaller number of manual corrections
+	// let je = {
+	// 	makeEvent: true,
+	// 	makeBid: false,
+	// 	modifyBudget: false,
+	// 	e 
+	// };
+	// ServerIO.DATALOG_ENDPOINT = "https://locallg.good-loop.com/data"; // FIXME for testing
+	const p = lg('pixel', e);
+	return new PromiseValue(p);
 }
 
 
-/** Take the generated events and send them to JournalServlet for insertion in DataLog */
+/** Take the generated events and send them to JournalServlet for insertion in DataLog 
+ * @param {!Object[]} evts
+ * @param {!Function} setGeneratedData
+*/
 const commitEvents = (evts, setGeneratedData) => {
+	assert(evts.length);
 	if (!confirm(`Are you sure you want to commit ${evts.length} entries to DataLog?`)) return;
-	alert('This code is "safe" by default: remove the return statement below here to enable actually committing.');
-	return;
+	// alert('This code is "safe" by default: remove the return statement below here to enable actually committing.');
+	// return;
 
 	// Limit number of concurrent requests to JournalServlet
 	const slots = 3;
@@ -323,7 +344,9 @@ const commitEvents = (evts, setGeneratedData) => {
 	}, 100);
 };
 
-
+/**
+ * @deprecated This is to create a demo. Once we have one, we can mothball this code (and remove it from the public web-app)
+ */
 const GenerateGreenDemoEvents = ({}) => {
 	if (false && (!Login.isLoggedIn() || !Roles.isDev())) {
 		return 'Only for devs';
@@ -412,8 +435,8 @@ const GenerateGreenDemoEvents = ({}) => {
 		<Row>
 			<Col xs="12">
 				<PropControl type="number" path={path} prop="evtCount" dflt={100000} label="Event Count" />
-				<PropControl path={path} prop="start" dflt="2022-01-01" label="Start Date" />
-				<PropControl path={path} prop="end" dflt="2022-01-14" label="End Date" />
+				<PropControl path={path} prop="start" type="date" dflt="2022-01-01" label="Start Date" />
+				<PropControl path={path} prop="end" type="date" dflt="2022-01-14" label="End Date" />
 				<PropControl type="DataItem" itemType={C.TYPES.GreenTag} path={path} prop="tagid" label="Green Tag" />
 			</Col>
 		</Row>
