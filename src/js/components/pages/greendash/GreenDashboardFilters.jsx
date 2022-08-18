@@ -248,10 +248,7 @@ const GreenDashboardFilters = ({}) => {
 		agency: agencyItem?.name || agency,
 		tag: tagItem?.name || tag}[filterMode];
 	if (! selectedLabel) {
-		selectedLabel = `Select a ${filterMode}`;
-		if (filterMode.match('^[aieouAIEOU].*')) { // Catch gramar
-			selectedLabel = `Select an ${filterMode}`;
-		}
+		selectedLabel = filterMode.match('^[aieouAIEOU].*') ? `Select an ${filterMode}` : `Select a ${filterMode}`; // Catch grammatical errors
 	}
 
 	return (
