@@ -19,7 +19,9 @@ const bgLogos = [
 	'/img/woodland-trust-logo.jpg',
 	'/img/wwf-logo.jpg'
 ];
-
+/**
+ * @deprecated in August 2022 
+ */
 const BackgroundFader = (): JSX.Element[] => {
 	const [index, setIndex] = useState(0);
 

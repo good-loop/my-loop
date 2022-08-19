@@ -6,7 +6,7 @@ import C from '../../C';
 import Person from '../../base/data/Person';
 import DataStore from '../../base/plumbing/DataStore';
 
-
+/** @deprecated in August 2022 */
 const LinkedProfilesCard = ({xids}) => {
 	if ( ! xids) return null;
 	let trackers = xids.filter(xid => XId.service(xid) === 'trk');
@@ -55,11 +55,12 @@ const LinkedProfilesCard = ({xids}) => {
 };
 
 /**
- * 
+ * @deprecated in August 2022
  * @param {{
  * 	peeps: Person[]
  * }}
  */
+
 const ListLinks = ({peeps}) => {
 	if ( ! peeps.length) return ' no links found ';
 	return peeps.map(peep => <>

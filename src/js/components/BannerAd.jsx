@@ -3,6 +3,9 @@ import React, { useRef } from 'react';
 import DataStore from '../base/plumbing/DataStore';
 import { addScript } from '../base/utils/miscutils';
 
+/**
+ * @deprecated in August 2022 
+ */
 const BannerAd = () => {
 	//<!-- BEGIN JS TAG - banner placement for newtab (desktop) < - DO NOT MODIFY -->
 	// https://console.appnexus.com/placement?id=1610003

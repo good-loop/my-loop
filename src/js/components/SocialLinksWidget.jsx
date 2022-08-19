@@ -6,8 +6,9 @@ import { IntentLink, FacebookLogo, TwitterLogo, InstagramLogo } from './MyGLSoci
 import Money from '../base/data/Money';
 
 /** What should appear in Tweet/Facebook link/LinkedIn article
-// Contains fallbacks for where donation amount, charities or advertiser name is not specified
-@returns {String} e.g. TOMS helped raise £££ for Crisis
+ *   Contains fallbacks for where donation amount, charities or advertiser name is not specified#
+ *   @deprecated in August 2022
+ *   @returns {String} e.g. TOMS helped raise £££ for Crisis
  */
 const shareTextFn = ({donationValue, charities, adName="We"}) => {
 	const amount = new Money({currency: 'GBP', value: donationValue});
@@ -35,6 +36,9 @@ const shareTextFn = ({donationValue, charities, adName="We"}) => {
 	return `${adName} helped to raise ${currencySymbol}${amountText} for ${charityText}`;
 };
 
+/**
+ * @deprecated in August 2022
+ */
 const SocialMediaShareWidget = ({donationValue, charities, adName, url=window.location.href}) => {
 	const shareText = shareTextFn({donationValue, charities, adName});
 
@@ -63,6 +67,7 @@ const SocialMediaShareWidget = ({donationValue, charities, adName, url=window.lo
 };
 
 /**
+ * @deprecated in August 2022
  * @param type {!String} vertiser|goodloop
  * @param branding {Branding}
  */

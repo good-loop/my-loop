@@ -5,6 +5,7 @@ import Misc from "../../base/components/Misc";
 import publishers from '../../data/PublisherList';
 
 /**
+ * @deprecated in August 2022
  * Which publishers showed an advert? List the high profile ones.
  */
 const PublishersCard = ({pvViewData}) => {
@@ -35,6 +36,7 @@ const PublishersCard = ({pvViewData}) => {
 		</div>);
 };
 
+/** @deprecated in August 2022 */
 const PubSign = ({pub}) => (
 	<div key={pub.name} className="pb-5 pub-div d-inline-block" style={{width: '33%'}}>
 		<img src={pub.branding.logo} alt={pub.name} />

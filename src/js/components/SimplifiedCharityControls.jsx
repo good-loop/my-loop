@@ -17,6 +17,10 @@ const COOPLABELS = {
 	MUST_USE_SOME_OF_MINE: "must use one of my charities"
 };
 
+/**
+ * 
+ * @deprecated in August 2022
+ */
 const SimplifiedCharityControls = ({entity, path, ...other}) => {
 	let charities = DataStore.getValue(path);
 	let type = getType(entity);

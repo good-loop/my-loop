@@ -4,6 +4,7 @@ import React from 'react';
 import ServerIO from '../plumbing/ServerIO';
 
 /**
+  * @deprecated in August 2022
  * Fill the top-left corner
  */
 const TopLeftCornerSwerve = ({children}) => {
@@ -12,6 +13,7 @@ const TopLeftCornerSwerve = ({children}) => {
 };
 
 /**
+ * @deprecated in August 2022
  * Top bulges with a lean to the right, Flat bottom
  */
 const TopRightBulge = ({children, background}) => {

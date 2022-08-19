@@ -85,7 +85,9 @@ const CardImgLeft = ({classname, imgUrl, roundedImg, children}) =>{
 	</Row>
 	)
 }
-
+/**
+ * @deprecated in August 2022
+ */
 const MyLandingBackgroundImage = ({bgImg, ngo, children}) => {
 
 	if (isPortraitMobile()) return bgImg || ngo ? (
@@ -568,7 +570,9 @@ const PositivePlaceSection = ({className, showCTA}) => {
 		{showCTA && <T4GSignUpButton className="mt-5" />}
 	</PageCard>
 }
-
+/**
+ * @deprecated in August 2022
+ */
 const WatchVideoSection = () => {
 	let videoLink = isMobile() ? "img/homepage/t4gpromovid_480p.m4v" : "img/homepage/t4gpromovid_720p.m4v";
 
@@ -791,7 +795,7 @@ export {
 	TabsForGoodSlideSection,
 	HowTabsForGoodWorks,
 	NewsAwards,
-	WatchVideoSection,
+	WatchVideoSection,		
 	PositivePlaceSection,
 	TriCards,
 	TestimonialSectionTitle,
