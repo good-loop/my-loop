@@ -6,6 +6,8 @@ import publishers from '../../data/PublisherList';
 
 /**
  * @deprecated in August 2022
+ * TODO: remove if applicable - unused elsewhere & presume it's purpose has passed
+ *	 	 written over two years ago & only update since was a tidy up
  * Which publishers showed an advert? List the high profile ones.
  */
 const PublishersCard = ({pvViewData}) => {
@@ -36,7 +38,9 @@ const PublishersCard = ({pvViewData}) => {
 		</div>);
 };
 
-/** @deprecated in August 2022 */
+/** @deprecated in August 2022 
+ *  TODO: remove if you remove PublishersCard - only used there
+*/
 const PubSign = ({pub}) => (
 	<div key={pub.name} className="pb-5 pub-div d-inline-block" style={{width: '33%'}}>
 		<img src={pub.branding.logo} alt={pub.name} />

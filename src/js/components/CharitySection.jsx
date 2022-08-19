@@ -1,6 +1,9 @@
 import React from 'react';
 /**
  * @deprecated in August 2022 
+ *  TODO: Remove if applicable
+ *  Has been recently updated by Dan (June 2022) & will check if it's still in use
+ *  though right now is unused anywhere & marked for depreaction
  */
 const CharitySection = ({}) => {
     return (

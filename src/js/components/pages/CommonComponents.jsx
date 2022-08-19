@@ -87,7 +87,8 @@ const CardImgLeft = ({classname, imgUrl, roundedImg, children}) =>{
 }
 /**
  * @deprecated in August 2022
- */
+ * TODO: remove if applicable - unused elsewhere in project
+ * Was updated by Vera a handful of months ago (March 2022), so will check with Vera to make sure it's good to go*/ 
 const MyLandingBackgroundImage = ({bgImg, ngo, children}) => {
 
 	if (isPortraitMobile()) return bgImg || ngo ? (
@@ -572,6 +573,7 @@ const PositivePlaceSection = ({className, showCTA}) => {
 }
 /**
  * @deprecated in August 2022
+ * TODO: remove if applicable - was last updated handful of months ago (April 2022) by Dan so will check it's safe to go
  */
 const WatchVideoSection = () => {
 	let videoLink = isMobile() ? "img/homepage/t4gpromovid_480p.m4v" : "img/homepage/t4gpromovid_720p.m4v";

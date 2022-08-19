@@ -1,7 +1,8 @@
 import React from 'react';
 import RecentCampaignsCard from './RecentCampaignsCard';
 
-/** @deprecated in August 2022 */
+/** @deprecated in August 2022
+ *  TODO: remove if applicable - unused elsewhere in project*/ 
 const OnboardingCardMini = () => (
 	<>
 		<div className="flex-row flex-centre p-3">

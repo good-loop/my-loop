@@ -247,7 +247,14 @@ const GreenDashboardFilters = ({}) => {
 		brand: brandItem?.name || brand, 
 		agency: agencyItem?.name || agency,
 		tag: tagItem?.name || tag}[filterMode];
-	if (! selectedLabel) selectedLabel = `Select a ${filterMode}`;
+	if (!selectedLabel) {
+		if (filterMode === "agency") {
+			selectedLabel = `Select an ${filterMode}`
+		}
+		else {
+			selectedLabel = `Select a ${filterMode}`;
+		}
+	}
 
 	return (
 		<Row className="greendash-filters my-2">
