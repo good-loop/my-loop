@@ -4,7 +4,7 @@ import Icon from '../../../base/components/Icon';
 import Misc from '../../../base/components/Misc';
 import { sum, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
-import NewChartWidget from '../../NewChartWidget';
+import NewChartWidget from '../../../base/components/NewChartWidget';
 import { getBreakdownBy, getSumColumn } from './carboncalc';
 import { CO2e, dataColours, GreenCard, GreenCardAbout, ModeButton, NOEMISSIONS, TONNES_THRESHOLD } from './dashutils';
 

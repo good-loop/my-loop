@@ -3,7 +3,7 @@ import { Col, Container, Row } from 'reactstrap';
 import Misc from '../../../base/components/Misc';
 import { space, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
-import NewChartWidget from '../../NewChartWidget';
+import NewChartWidget from '../../../base/components/NewChartWidget';
 import { GreenCard, printPeriod, printDate, printDateShort, TONNES_THRESHOLD, GreenCardAbout, Mass, NOEMISSIONS, CO2e } from './dashutils';
 import { getBreakdownBy } from './carboncalc';
 
