@@ -48,8 +48,8 @@ const co2ImpactSpecs = {
 	},
 	driving: {
 		src: "https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator",
-		factor: 2.482,
-		desc: 'miles by car',
+		factor: 3.994,
+		desc: 'km by car',
 		icon: icons.driving
 	}
 };
