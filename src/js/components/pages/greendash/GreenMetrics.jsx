@@ -29,6 +29,7 @@ import Campaign from '../../../base/data/Campaign';
 import Login from '../../../base/youagain';
 
 import { yessy } from '../../../base/utils/miscutils';
+import MapCard from './MapCard';
 
 
 
@@ -201,8 +202,12 @@ const GreenMetrics2 = ({}) => {
 				<BreakdownCard {...commonProps} data={pvChartData.value?.tables?.os} />
 			</Col>
 			<Col xs="12" sm="4" className="flex-column">
-				<TimeOfDayCard {...commonProps} />
-				<CTACard />
+				{true ? (
+					<MapCard {...commonProps} />
+				) : <>
+					<TimeOfDayCard {...commonProps} />
+					<CTACard />
+				</>}
 			</Col>
 		</Row>
 		</>
