@@ -20,7 +20,9 @@ const bgLogos = [
 	'/img/wwf-logo.jpg'
 ];
 /**
- * @deprecated in August 2022 
+ * @deprecated in August 2022
+ *  TODO: Remove if applicable, currently can't find anywhere where it's being used
+ *  	- it is imported into landingSection, though never actually used
  */
 const BackgroundFader = (): JSX.Element[] => {
 	const [index, setIndex] = useState(0);

@@ -5,7 +5,7 @@ import ServerIO from '../plumbing/ServerIO';
 
 /**
   * @deprecated in August 2022
- * Fill the top-left corner
+ *  TODO: remove if applicable - unused elsewhere
  */
 const TopLeftCornerSwerve = ({children}) => {
 	// TODO document
@@ -14,6 +14,8 @@ const TopLeftCornerSwerve = ({children}) => {
 
 /**
  * @deprecated in August 2022
+ * TODO: remove if applicable - Unused elsewhere but Vera updated this recently (May 2022)
+ * 		 - will check with her to make sure it's good to deprecate. 
  * Top bulges with a lean to the right, Flat bottom
  */
 const TopRightBulge = ({children, background}) => {

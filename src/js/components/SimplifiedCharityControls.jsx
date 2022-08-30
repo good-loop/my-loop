@@ -20,6 +20,7 @@ const COOPLABELS = {
 /**
  * 
  * @deprecated in August 2022
+ * TODO : remove if applicable - unused elsewhere & not updated for almost a year
  */
 const SimplifiedCharityControls = ({entity, path, ...other}) => {
 	let charities = DataStore.getValue(path);

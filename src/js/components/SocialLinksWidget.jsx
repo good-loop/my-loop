@@ -8,6 +8,8 @@ import Money from '../base/data/Money';
 /** What should appear in Tweet/Facebook link/LinkedIn article
  *   Contains fallbacks for where donation amount, charities or advertiser name is not specified#
  *   @deprecated in August 2022
+ * 	 TODO : remove if applicaple, not used elsewhere & not updated in over a year
+ * 
  *   @returns {String} e.g. TOMS helped raise £££ for Crisis
  */
 const shareTextFn = ({donationValue, charities, adName="We"}) => {
@@ -38,6 +40,7 @@ const shareTextFn = ({donationValue, charities, adName="We"}) => {
 
 /**
  * @deprecated in August 2022
+ * TODO : remove if applicaple, not used elsewhere & not updated in over a year
  */
 const SocialMediaShareWidget = ({donationValue, charities, adName, url=window.location.href}) => {
 	const shareText = shareTextFn({donationValue, charities, adName});
@@ -68,6 +71,7 @@ const SocialMediaShareWidget = ({donationValue, charities, adName, url=window.lo
 
 /**
  * @deprecated in August 2022
+ * TODO : remove if applicaple, not used elsewhere & not updated in over a year
  * @param type {!String} vertiser|goodloop
  * @param branding {Branding}
  */
