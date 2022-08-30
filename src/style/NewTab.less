@@ -33,8 +33,11 @@
 }
 .tab-search-form {
     background: white;
-    // border: 1px solid gray;
+    border: 1px solid gray;
     border-radius: 100px;
+    &.no-border {
+        border: none;
+    }
     .search input {
         margin: unset;
         width: 100%;
@@ -326,8 +329,8 @@
     .bookmark-item {
         cursor: pointer;
         .bookmark-box {
-            height: 3em;
-            width: 3em;
+            height: 2.5em;
+            width: 2.5em;
             border-radius: 50%;
             background-color: white;
             margin: .5em;
