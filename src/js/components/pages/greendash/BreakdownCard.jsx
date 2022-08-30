@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import Icon from '../../../base/components/Icon';
 import Misc from '../../../base/components/Misc';
-import { sum, yessy } from '../../../base/utils/miscutils';
+import { ellipsize, sum, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import NewChartWidget from '../../../base/components/NewChartWidget';
 import { getBreakdownBy, getSumColumn, getTags } from './carboncalc';
@@ -233,7 +233,10 @@ const DeviceSubcard = ({ data: osTable }) => {
 	// {adid, count, totalEmissions, baseEmissions, 'creativeEmissions', 'supplyPathEmissions'}
 	let columns = [
 		// new Column({Header:"Campaign"}),
-		new Column({Header:"Tag", accessor: row => tag4id[row[0]]?.name || row[0]}),
+		new Column({Header:"Tag", accessor: row => tag4id[row[0]]?.name || row[0],
+			// handle potentially long tag names
+			Cell: (value, column, item) => <span title={value}>{ellipsize(value, 40)}</span>
+		}),
 		// new Column({Header:"Tag ID", accessor:row => row[0]}),
 		new Column({Header:"Impressions", accessor:row => row[1]}),
 		new Column({Header:"Emissions (kg)", accessor:row => row[2]}),		
