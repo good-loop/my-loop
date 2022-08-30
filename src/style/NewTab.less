@@ -21,6 +21,7 @@
 
 .tab-center-logo {
     height: 75%;
+    max-height: 60%;
 }
 
 .tab-search {
@@ -32,7 +33,7 @@
 }
 .tab-search-form {
     background: white;
-    border: 1px solid gray;
+    // border: 1px solid gray;
     border-radius: 100px;
     .search input {
         margin: unset;
@@ -93,11 +94,12 @@
 .user-controls {
     .myloop-link {
         font-weight: bold;
+        font-size: 14px;
         text-decoration: none;
         color: white;
         .heart-white-circle {
-            width: 1.3rem;
-            height: 1.3rem;
+            width: auto;
+            height: 3rem;
         }
     }
 }
@@ -289,11 +291,12 @@
 .NewTabCharityCard {
     color: black;
     background-color: white;
+    opacity: 0.8;
     //padding: 1rem;
     border-top-right-radius: 1000px;
     border-bottom-right-radius: 1000px;
     padding: 0.5rem;
-    padding-right: 75px;
+    padding-right: 55px;
     padding-left: 50px;
     position: absolute;
     left: 0;
@@ -310,7 +313,8 @@
     top: 1em;
     font-size: 1rem;
     color: black !important;
-    background-color: rgb(233, 223, 223);
+    background-color: white;
+    opacity: 0.8;
     border-radius: 5em;
     padding: 0.3rem 3rem;
 }
@@ -322,12 +326,12 @@
     .bookmark-item {
         cursor: pointer;
         .bookmark-box {
-            height: 2.4em;
-            width: 2.4em;
+            height: 3em;
+            width: 3em;
             border-radius: 50%;
             background-color: white;
             margin: .5em;
-            border: 1px solid rgba(0,0,0,0.5);
+            // border: 1px solid rgba(0,0,0,0.5);
         }
         span {
             font-size: .8rem;
