@@ -234,8 +234,8 @@ const DeviceSubcard = ({ data: osTable }) => {
 	let columns = [
 		// new Column({Header:"Campaign"}),
 		new Column({Header:"Tag", accessor: row => tag4id[row[0]]?.name || row[0],
-			// handle potentially long tag names?? css word-break seems to be better - this leads to the table sizing too big??
-			// Cell: (value, column, item) => <span title={value}>{ellipsize(value, 40)}</span>
+			// handle potentially long tag names
+			Cell: (value, column, item) => <span title={value}>{ellipsize(value, 60)}</span>
 		}),
 		// new Column({Header:"Tag ID", accessor:row => row[0]}),
 		new Column({Header:"Impressions", accessor:row => row[1]}),
@@ -244,7 +244,7 @@ const DeviceSubcard = ({ data: osTable }) => {
 	const rows = data.slice(1); // the 1st row is the header names, so drop it
 	return <>
 		<p className='small'>Breakdown by the Green Ad Tags. You can track any aspect of media buying by generating different tags then using them in your buying.</p>
-		<SimpleTable data={rows} columns={columns} hasCsv />
+		<SimpleTable data={rows} columns={columns} hasCsv rowsPerPage={6} />
 	</>;
 }
 
