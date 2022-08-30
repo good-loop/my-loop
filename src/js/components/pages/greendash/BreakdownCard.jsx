@@ -234,8 +234,8 @@ const DeviceSubcard = ({ data: osTable }) => {
 	let columns = [
 		// new Column({Header:"Campaign"}),
 		new Column({Header:"Tag", accessor: row => tag4id[row[0]]?.name || row[0],
-			// handle potentially long tag names
-			Cell: (value, column, item) => <span title={value}>{ellipsize(value, 40)}</span>
+			// handle potentially long tag names?? css word-break seems to be better - this leads to the table sizing too big??
+			// Cell: (value, column, item) => <span title={value}>{ellipsize(value, 40)}</span>
 		}),
 		// new Column({Header:"Tag ID", accessor:row => row[0]}),
 		new Column({Header:"Impressions", accessor:row => row[1]}),
