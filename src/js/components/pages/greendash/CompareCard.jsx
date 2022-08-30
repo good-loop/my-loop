@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 
 import Misc from '../../../base/components/Misc';
-import NewChartWidget from '../../NewChartWidget';
+import NewChartWidget from '../../../base/components/NewChartWidget';
 import { dataColours, getPeriodQuarter, GreenCard, GreenCardAbout, ModeButton, printPeriod, TONNES_THRESHOLD } from './dashutils';
 import { isoDate } from '../../../base/utils/miscutils';
 import { getCarbon, getSumColumn } from './carboncalc';
