@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import NewChartWidget from '../NewChartWidget';
+import NewChartWidget from '../../base/components/NewChartWidget';
 import Login from '../../base/youagain';
 import Roles from '../../base/Roles';
 import { demoDeviceCombos, demoDomains, demoLocnsUK, demoLocnsUS } from '../../utils/generateDemoConstants';
