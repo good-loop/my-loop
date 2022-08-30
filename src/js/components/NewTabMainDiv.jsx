@@ -256,10 +256,24 @@ const WebtopPage = () => {
             <Col
               sm={6}
               md={4}
-              className='h-100 flex-column justify-content-center align-items-center unset-margins'
+              className='h-100 flex-column justify-content-center align-items-center unset-margins mt-2'
             >
-              <NormalTabCenter />
-              <LinksDisplay bookmarksData={bookmarksData} />
+              {true && ( //! loadingCharity && ! charityID &&
+                // Show the total raised across all charities, if the user hasn't selected one.
+                <>
+                  <h5
+                    className='text-center together-we-ve-raised'
+                    style={{ fontSize: '.8rem' }}
+                  >
+                    Together we've raised&nbsp;
+                    <TutorialComponent page={2} className='d-inline-block'>
+                      <TickerTotal />
+                    </TutorialComponent>
+                  </h5>
+                </>
+              )}
+              <NormalTabCenter style={{transform:'translate(0,-30%)'}} />
+              <LinksDisplay bookmarksData={bookmarksData} style={{transform:'translate(0,-30%)'}} />
             </Col>
           </Row>
         </Container>
@@ -440,29 +454,14 @@ const ENGINES = {
  * @param {Object} p
  * @returns
  */
-const NormalTabCenter = () => {
+const NormalTabCenter = ({style}) => {
   let pvSE = getPVClaim({ xid: Login.getId(), key: 'searchEngine' });
   let searchEngine = Claim.value(pvSE) || 'google';
   const engineData = ENGINES[searchEngine];
 
   return (
     <>
-      {true && ( //! loadingCharity && ! charityID &&
-        // Show the total raised across all charities, if the user hasn't selected one.
-        <>
-          <h5
-            className='text-center together-we-ve-raised'
-            style={{ fontSize: '.8rem' }}
-          >
-            Together we've raised&nbsp;
-            <TutorialComponent page={2} className='d-inline-block'>
-              <TickerTotal />
-            </TutorialComponent>
-          </h5>
-        </>
-      )}
-
-      <div className='flex-column unset-margins align-items-center mb-3 tab-center'>
+      <div className='flex-column unset-margins align-items-center tab-center mb-1' style={style}>
         <TutorialComponent page={5} className='py-3'>
           <a href='https://my.good-loop.com'>
             <img
@@ -472,7 +471,7 @@ const NormalTabCenter = () => {
             />
           </a>
         </TutorialComponent>
-        <div className='w-100 pb-3'>
+        <div className='w-100'>
           <div className='tab-search-container mx-auto'>
             <Search
               onSubmit={(e) => doSearch(e, searchEngine)}
@@ -587,7 +586,7 @@ const NewTabCharityCard = ({ cid, loading }) => {
   );
 };
 
-const LinksDisplay = ({ bookmarksData }) => {
+const LinksDisplay = ({ bookmarksData, style }) => {
   const CircleLink = ({ bg, url, children, title }) => {
     if (!url) url = '#';
     return (
@@ -631,7 +630,7 @@ const LinksDisplay = ({ bookmarksData }) => {
   if (bookmarksData.length >= 1) {
     // console.log("bookmarksData loaded", bookmarksData);
     return (
-      <Row className='bookmark-flexbox'>
+      <Row className='bookmark-flexbox' style={style}>
         {bookmarksData.slice(0, maxBookmarks).map((bookmark, i) => {
           if (bookmark.url) {
             // Catch bookmarks folder that do not have url
