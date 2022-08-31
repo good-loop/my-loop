@@ -12,6 +12,7 @@ import ServerIO from '../../plumbing/ServerIO';
 import CRUD, { saveAs } from '../../base/plumbing/Crud';
 import { lg } from '../../base/plumbing/log';
 import PromiseValue from 'promise-value';
+import { nonce } from '../../base/data/DataClass';
 
 /**
  * This code is for a one-off creation of demo data.
@@ -288,6 +289,7 @@ const commitEvent = evt => {
 		tag: 'pixel',
 		cause: 'demo', // put in a marker to make thesse easy to find (and if needed, delete) in ES
 		...evt, // All the stuff that varies between events: time, count, adid, browser, domain, etc...
+		nonce: nonce(),
 	};
 	// Use journal? No -- it's intended for a smaller number of manual corrections
 	// let je = {
