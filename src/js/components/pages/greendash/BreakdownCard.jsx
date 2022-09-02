@@ -9,6 +9,7 @@ import { getBreakdownBy, getSumColumn, getTags } from './carboncalc';
 import { CO2e, dataColours, GreenCard, GreenCardAbout, ModeButton, NOEMISSIONS, TONNES_THRESHOLD } from './dashutils';
 import SimpleTable, { Column } from '../../../base/components/SimpleTable';
 import List from '../../../base/data/List';
+import { ButtonGroup } from 'reactstrap';
 
 
 /** Classify OS strings seen in our data  
@@ -271,11 +272,11 @@ const BreakdownCard = ({ tables }) => {
 	};
 
 	return <GreenCard title="What is the breakdown of your emissions?" className="carbon-breakdown">
-		<div className="d-flex justify-content-around mb-2">
+		<ButtonGroup className="mb-2">
 			<ModeButton name="tech" mode={mode} setMode={setMode}>Ad Tech</ModeButton>
 			<ModeButton name="device" mode={mode} setMode={setMode}>Device Type</ModeButton>
 			<ModeButton name="tag" mode={mode} setMode={setMode}>Tag</ModeButton>
-		</div>
+		</ButtonGroup>
 		{subcard}
 		<GreenCardAbout>
 			<p>Where do we get numbers for each slice from?</p>

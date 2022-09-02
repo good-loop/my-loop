@@ -147,9 +147,9 @@
 			background-color: @greenmedia-darkcyan;
 			margin: -@gc-padding 0;
 			padding: @gc-padding;
-			border-radius: @gc-border-radius;			
-			width: calc(100% + @gc-padding + 15px); // 15px = column gutter, @gc-padding = 1rem = card padding
-			height: calc(100% + @gc-padding + @gc-padding); // 2rem = 2 * @gc-padding = card padding
+			border-radius: @gc-border-radius;
+			width: calc(100% + @gc-padding + 15px + 2px); // @gc-padding = card padding, 15px = column gutter, 2px = rounding error I GUESS
+			height: calc(100% + @gc-padding + @gc-padding + 1px); // 2 * @gc-padding = card padding, 1px rounding error
 			text-align: center;
 			
 			.impact-container {
@@ -169,8 +169,8 @@
 						line-height: 1;
 					}
 					.unit { font-size: 150%; }
-					.desc { font-size: 100%; }
-					.number, .unit, .desc {
+					.desc {
+						font-size: 100%;
 						display: block;
 					}
 				}

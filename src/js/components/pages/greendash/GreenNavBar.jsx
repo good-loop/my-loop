@@ -48,7 +48,7 @@ const GreenNavBar = ({active}) => {
 		<Nav navbar vertical>
 			<img className="logo" src="/img/logo-green-dashboard.svg" />
 			<LinkOut href="https://scope3.com" className="boosted text-center">
-				BOOSTED BY <img src="/img/gl-logo/external/scope3-logo.wb.svg" className="scope3-logo" />
+				BOOSTED BY <img src="/img/gl-logo/external/scope3-logo.wb.svg" className="scope3-logo ml-1" />
 			</LinkOut>
 			<NavItem>
 				<A className={active === 'metrics' ? 'active' : ''} href={window.location}>

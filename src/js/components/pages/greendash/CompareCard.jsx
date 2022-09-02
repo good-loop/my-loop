@@ -10,6 +10,7 @@ import { getDataList } from '../../../base/plumbing/Crud';
 import C from '../../../C';
 import KStatus from '../../../base/data/KStatus';
 import { getId } from '../../../base/data/DataClass';
+import { ButtonGroup } from 'reactstrap';
 
 
 const baseOptions = {
@@ -166,12 +167,14 @@ const CompareCard = (props) => {
 
 	return <GreenCard title="How do your ad emissions compare?" className="carbon-compare">
 		<div className="d-flex justify-content-around mb-2">
-			<ModeButton name="quarter" mode={mode} setMode={setMode}>
-				Quarter
-			</ModeButton>
-			<ModeButton name="campaign" mode={mode} setMode={setMode} disabled={campaignIds.length <= 1}>
-				Campaign
-			</ModeButton>
+			<ButtonGroup>
+				<ModeButton name="quarter" mode={mode} setMode={setMode}>
+					Quarter
+				</ModeButton>
+				<ModeButton name="campaign" mode={mode} setMode={setMode} disabled={campaignIds.length <= 1}>
+					Campaign
+				</ModeButton>
+			</ButtonGroup>
 		</div>
 		{subcard}
 		<GreenCardAbout>

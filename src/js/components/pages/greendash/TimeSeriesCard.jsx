@@ -45,11 +45,13 @@ const co2ImpactSpecs = {
 		icon: icons.flights,
 	},
 	kettles: {
-		factor: 0.07,
+		factor: 1 / 0.07,
 		desc: 'kettles boiled',
 		icon: icons.kettles,
 		srcDesc: "This will vary based on your electricity supply",
 		src: "https://www.viessmann.co.uk/company/blog/the-carbon-footprint-of-nearly-everything"
+		// SVG on that page is present but invisible: see
+		// https://cdn0.scrvt.com/2828ebc457efab95be01dd36047e3b52/b2db73e96a8769dd/23a51a974007/The-Carbon-Footprint.svg
 	},
 	driving: {
 		src: "https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator",
@@ -100,7 +102,7 @@ const TotalSubcard = ({ period, totalCO2 }) => {
 	const [mode, setMode] = useState('base');
 
 	return (
-		<div className="total-subcard d-flex flex-column">
+		<div className="total-subcard flex-column justify-content-between">
 			<div>
 				{printPeriod(period)}
 				{/* the popup doesnt work well with a link {mode!=="base" && <InfoPop>{co2ImpactSpecs[mode].desc} <LinkOut href={co2ImpactSpecs[mode].src} fetchTitle /></InfoPop>} */}
@@ -229,7 +231,7 @@ const TimeSeriesCard = ({ period, data: timeTable, noData }) => {
 
 	return <GreenCard title="How much carbon is your digital advertising emitting?" className="carbon-time-series" row>
 		<Row className='w-100'>
-			<Col md={8} >
+			<Col md={8} className="flex-column">
 				{/* <div className="chart-subcard flex-column"> */}
 					{chartProps?.isEmpty ? (
 						NOEMISSIONS
