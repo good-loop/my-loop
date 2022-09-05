@@ -241,7 +241,7 @@ const DeviceSubcard = ({ data: osTable }) => {
 	return <>
 		<p className="small">
 			Emissions breakdown by Green Ad Tags.<br/>
-			You can track any aspect of media buying by generating different, tags then using them in your buying.
+			You can track any aspect of media buying by generating different tags, then using them in your buying.
 		</p>
 		<SimpleTable data={rows} columns={columns} hasCsv rowsPerPage={6} className="tag-table" />
 	</>;
