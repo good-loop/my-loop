@@ -55,9 +55,7 @@ const osTypes = {
  * @returns 
  */
 const TechSubcard = ({ data: osTable, minimumPercentLabeled=1 }) => {
-	if ( ! yessy(osTable)) {
-		return <p>No data</p>;
-	}
+	if (!yessy(osTable)) return <p>No data</p>;
 
 	const [chartProps, setChartProps] = useState();
 
@@ -76,7 +74,8 @@ const TechSubcard = ({ data: osTable, minimumPercentLabeled=1 }) => {
 
 		setChartProps({
 			data: {
-				labels: ['Media', 'Publisher overhead', 'Supply-path overhead'],
+				// labels: ['Media', 'Publisher overhead', 'Supply-path overhead'],
+				labels: ['Media', 'Publisher', 'Supply path'],
 				datasets: [{
 					label: 'Kg CO2',
 					backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
@@ -86,7 +85,10 @@ const TechSubcard = ({ data: osTable, minimumPercentLabeled=1 }) => {
 			options: {
 				layout: { autoPadding: true, padding: 5 },
 				plugins: {
-					legend: { position: 'left' },
+					legend: {
+						position: ctx => (ctx.chart.width < 250 ? 'left' : 'top'),
+						labels: { boxWidth: 20 },
+					},
 					tooltip: {
 						callbacks: {
 							label: ctx => ` ${printer.prettyNumber(ctx.dataset.data[ctx.dataIndex])} kg`,
@@ -96,16 +98,18 @@ const TechSubcard = ({ data: osTable, minimumPercentLabeled=1 }) => {
 					datalabels: {
 						labels: {
 							value: {
-								anchor: "center",
+								anchor: 'center',
 								color: '#fff',
-								font: {
-									family: "Montserrat",
-									weight: "bolder",
-									size: "20px"
-								},
+								textStrokeColor: '#666',
+								textStrokeWidth: 2,
+								font: ctx => ({
+									family: 'Montserrat',
+									weight: 'bold',
+									size: Math.round(ctx.chart.width / 15)
+								}),
 								formatter: (value = 0, ctx) => {
-									let percentage = Math.round(value * 100 / totalCO2);
-									return percentage >= minimumPercentLabeled ? `${percentage}%` : '';
+									const percentage = Math.round(value * 100 / totalCO2);
+									return (percentage >= minimumPercentLabeled) ? `${percentage}%` : '';
 								},
 							}
 						}
@@ -117,10 +121,6 @@ const TechSubcard = ({ data: osTable, minimumPercentLabeled=1 }) => {
 
 	if (!chartProps) return null;
 	if (chartProps?.isEmpty) return NOEMISSIONS;
-
-	if (! yessy(osTable)) {
-		return <p>No data</p>;
-	}
 	
 	return <>
 		<p>{CO2e} emissions due to...</p>
@@ -138,9 +138,7 @@ const TechSubcard = ({ data: osTable, minimumPercentLabeled=1 }) => {
  * @param {Object} p
  */
 const DeviceSubcard = ({ data: osTable }) => {
-	if ( ! yessy(osTable)) {
-		return <p>No data</p>;
-	}
+	if (!yessy(osTable)) return <p>No data</p>;
 
 	const [chartProps, setChartProps] = useState();
 
@@ -216,15 +214,12 @@ const DeviceSubcard = ({ data: osTable }) => {
 }
 
 
-
-
-
 /**
- * desktop vs mobile and different OS
+ * Table of impressions and carbon per tag
  * @param {Object} p
  * @param {Object[]} p.data adid table
  */
- const TagSubcard = ({data}) => {	
+ const TagSubcard = ({data}) => {
 	// map GreenTag id to a display-name
 	const pvTags = getTags(data);
 	const tags = List.hits(pvTags.value) || [];
@@ -234,20 +229,24 @@ const DeviceSubcard = ({ data: osTable }) => {
 	// {adid, count, totalEmissions, baseEmissions, 'creativeEmissions', 'supplyPathEmissions'}
 	let columns = [
 		// new Column({Header:"Campaign"}),
-		new Column({Header:"Tag", accessor: row => tag4id[row[0]]?.name || row[0],
-			// handle potentially long tag names
-			Cell: (value, column, item) => <span title={value}>{ellipsize(value, 60)}</span>
+		new Column({Header: 'Tag', accessor: row => tag4id[row[0]]?.name || row[0],
+			Cell: value => <span title={value}>{value}</span>, // show tooltip in case of truncated tag names
 		}),
 		// new Column({Header:"Tag ID", accessor:row => row[0]}),
-		new Column({Header:"Impressions", accessor:row => row[1]}),
-		new Column({Header:"Emissions (kg)", accessor:row => row[2]}),		
+		new Column({Header: 'Impressions', accessor:row => row[1]}),
+		new Column({Header: 'CO2e (kg)', accessor:row => row[2]}),
 	];
 	const rows = data.slice(1); // the 1st row is the header names, so drop it
+
 	return <>
-		<p className='small'>Breakdown by the Green Ad Tags. You can track any aspect of media buying by generating different tags then using them in your buying.</p>
-		<SimpleTable data={rows} columns={columns} hasCsv rowsPerPage={6} />
+		<p className="small">
+			Emissions breakdown by Green Ad Tags.<br/>
+			You can track any aspect of media buying by generating different, tags then using them in your buying.
+		</p>
+		<SimpleTable data={rows} columns={columns} hasCsv rowsPerPage={6} className="tag-table" />
 	</>;
-}
+};
+
 
 /**
  * 
@@ -255,7 +254,7 @@ const DeviceSubcard = ({ data: osTable }) => {
  * @param {Object} p.tables pvChartData.value.tables Which are split by breakdown: os, adid, 
  */
 const BreakdownCard = ({ tables }) => {
-	if ( ! tables) return <Misc.Loading text="Fetching your data..." />;
+	if (!tables) return <Misc.Loading text="Fetching your data..." />;
 	const [mode, setMode] = useState('tech');
 
 	let subcard;

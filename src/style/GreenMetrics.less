@@ -157,6 +157,7 @@
 				flex-direction: column;
 				justify-content: center;
 				align-items: center;
+				flex-grow: 1;
 
 				.big-number, .impact-bubble {
 					padding: 0.5em;
@@ -180,6 +181,7 @@
 					background-color: white;
 					border-radius: @gc-border-radius;
 					
+					margin-top: 0.5em;
 					margin-bottom: 1.5em;
 					width: 100%;
 					flex-grow: 1;
@@ -220,13 +222,12 @@
 						filter: grayscale();
 						&:before {
 							content: '';
-							background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath style='fill:%23fff;stroke:none' d='M 0,0 50,50 100,0 Z'/%3E%3C/svg%3E");
+							background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath style='fill:%23fff' d='M 0,0 50,50 100,0 Z'/%3E%3C/svg%3E");
 							display: block;
 							position: absolute;
 							height: 2em;
 							width: 2em;
-							// 0.2em to adjust position for parent border width
-							left: -0.2em;
+							left: 0;
 							top: -1.7em;
 						}
 					}
@@ -277,6 +278,46 @@
 		margin: 0.5em;
 	}
 } // /.carbon-journey
+
+
+// The "Breakdown of your emissions" card
+.carbon-breakdown {
+	// TODO Use more specific selector when SimpleTable refactor is in master & tables respect className prop
+	// .tag-table {
+	.SimpleTable {
+		font-size: 0.8rem; // compact tag breakdown table
+		table {
+			table-layout: fixed; // enable fixing width
+			width: 100%;
+			td, th { padding: 0.25rem; } // compact layout
+			th { font-weight: 600; } // less super-bold header
+		}
+		// Long tag names shouldn't break layout
+		tbody td:first-child span {
+			display: inline-block;
+			width: 100%;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+		// Condense non-name cols to header width
+		th {
+			cursor: pointer; // remove after SimpleTable refactor, will be default
+			&:not(:first-child) {
+				white-space: nowrap;
+				width: min-content; 
+			}
+		}
+		// remove after SimpleTable refactor, will be explicitly button
+		a[download] {
+			text-decoration: none;
+			border: 1px solid #aaa;
+			border-radius: 10em;
+			padding: 0.5em 1em;
+		}
+	}
+} // /.carbon-breakdown
+
 
 .carbon-cta {
 	flex-grow: 0 !important; // Let the time-of-day card above expand

@@ -77,7 +77,7 @@ const CO2Impact = ({ kg, mode }) => {
 
 	return <div className="impact-container" title={"Source: " + src}>
 		<div className="impact-bubble">
-			<div className="impact-leader"><Mass kg={kg} /> {CO2e}, that's</div>
+			<div className="impact-leader"><Mass kg={kg} /> {CO2e}: that's</div>
 			<div className="impact-number">{printer.prettyInt(kg * factor, true)}</div>
 			<div className="impact-desc">{desc}</div>
 			<div className="impact-icon" title={`Illustrative icon for "${desc}"`}>{icon}</div>			
