@@ -132,24 +132,15 @@
 
 	/* The hero "emissions over time + driving / flights / kettles equivalent" chart*/
 	.carbon-time-series {
-		// Container manages the 
-		.container {
-			flex-grow: 1;
+		canvas {
+			max-width: 100%; // Chart container shrinks width when impact subcard grows, this makes the canvas inside follow
 		}
-		.card-body {
-			padding-right: 0; // Let the right subcard sit flush with the card edge
-		}
-		// .chart-subcard {
-		// 	flex-grow: 1; // why??
-		// }
 		.total-subcard {
 			color: white;
 			background-color: @greenmedia-darkcyan;
-			margin: -@gc-padding 0;
+			margin: -@gc-padding calc(-@gc-padding - 1px) calc(-@gc-padding - 1px) 0; // overlap card padding
 			padding: @gc-padding;
 			border-radius: @gc-border-radius;
-			width: calc(100% + @gc-padding + 15px + 2px); // @gc-padding = card padding, 15px = column gutter, 2px = rounding error I GUESS
-			height: calc(100% + @gc-padding + @gc-padding + 1px); // 2 * @gc-padding = card padding, 1px rounding error
 			text-align: center;
 			
 			.impact-container {
@@ -185,6 +176,10 @@
 					margin-bottom: 1.5em;
 					width: 100%;
 					flex-grow: 1;
+
+					> * {
+						white-space: nowrap;
+					}
 
 					.impact-leader {
 						font-size: 100%;

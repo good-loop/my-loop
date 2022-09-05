@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Container, Row, Tooltip } from 'reactstrap';
+import { Col as div, Container, Row, Tooltip } from 'reactstrap';
 import Misc from '../../../base/components/Misc';
 import { space, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
@@ -230,8 +230,8 @@ const TimeSeriesCard = ({ period, data: timeTable, noData }) => {
 	// TODO Reinstate "Per 1000 impressions" button
 
 	return <GreenCard title="How much carbon is your digital advertising emitting?" className="carbon-time-series" row>
-		<Row className='w-100'>
-			<Col md={8} className="flex-column">
+		<div className="flex-row w-100">
+			<div className="flex-column flex-grow-1">
 				{/* <div className="chart-subcard flex-column"> */}
 					{chartProps?.isEmpty ? (
 						NOEMISSIONS
@@ -241,11 +241,9 @@ const TimeSeriesCard = ({ period, data: timeTable, noData }) => {
 					{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
 					{chartContent}
 				{/* </div> */}
-			</Col>
-			<Col md={4}>
-				<TotalSubcard period={period} totalCO2={aggCO2?.total} />
-			</Col>
-		</Row>
+			</div>
+			<TotalSubcard period={period} totalCO2={aggCO2?.total} />
+		</div>
 		<GreenCardAbout>
 			<p>How do we calculate the time-series carbon emissions?</p>
 		</GreenCardAbout>
