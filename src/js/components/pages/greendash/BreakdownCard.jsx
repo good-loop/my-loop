@@ -98,16 +98,15 @@ const TechSubcard = ({ data: osTable, minimumPercentLabeled=1 }) => {
 					datalabels: {
 						labels: {
 							value: {
-								anchor: 'center',
 								color: '#fff',
 								textStrokeColor: '#666',
 								textStrokeWidth: 2,
 								font: ctx => ({
 									family: 'Montserrat',
 									weight: 'bold',
-									size: Math.round(ctx.chart.width / 15)
+									size: Math.round(Math.min(ctx.chart.chartArea.width, ctx.chart.chartArea.height) / 7)
 								}),
-								formatter: (value = 0, ctx) => {
+								formatter: (value = 0) => {
 									const percentage = Math.round(value * 100 / totalCO2);
 									return (percentage >= minimumPercentLabeled) ? `${percentage}%` : '';
 								},
