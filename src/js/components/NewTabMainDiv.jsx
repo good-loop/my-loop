@@ -249,7 +249,7 @@ const WebtopPage = () => {
         <Container
           fluid
           className='flex-column justify-content-end align-items-center position-absolute unset-margins'
-          style={{ top: 0, left: 0, width: '100vw', height: '100vh' }}
+          style={{ top: 0, left: 0, width: '100vw', height: '99vh' }}
         >
           <Row className='h-100 w-100' noGutters>
             <Col sm={3} md={4} />
