@@ -348,6 +348,7 @@ const UserControls = ({ cid }) => {
   }, [popupDiv]);
 
   const handleClickOutside = (e) => {
+    if (!mydataRef.current) return;
     if (mydataRef.current.contains(e.target)) {
       return; // inside click
     }
