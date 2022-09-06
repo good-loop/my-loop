@@ -389,6 +389,11 @@ const UserControls = ({ cid }) => {
     </div>
   );
 
+  const T4GLogoutLink = () => <a href={'#'} className={"LogoutLink"} 
+  onClick={() => top.location.href = ServerIO.MYLOOP_ENDPOINT + '/logout'}>
+    Logout
+  </a>;
+
   return (
     <>
       {showMyloopLink && myloopLink}
@@ -397,6 +402,7 @@ const UserControls = ({ cid }) => {
         accountMenuItems={accountMenuItems}
         linkType='a'
         small
+        logoutLink= {<T4GLogoutLink/>}
         customLogin={() => (
           <NewtabLoginLink className='login-menu btn btn-transparent fill'>
             Register / Log in

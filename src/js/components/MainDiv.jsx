@@ -50,6 +50,7 @@ import OurImpactPage from './pages/OurImpactPage';
 import TabsForGoodProductPage from './pages/TabsForGoodProductPage';
 
 import GenerateGreenDemoEvents from './pages/GenerateGreenDemoEvents';
+import LogoutPage from './pages/LogoutPage';
 
 // DataStore
 C.setupDataStore();
@@ -99,6 +100,7 @@ const PAGES = {
 	getinvolved: GetInvolvedPage,
 	ourimpact: OurImpactPage,
 	ggde: GenerateGreenDemoEvents,
+	logout: LogoutPage, // Logout Page for T4G
 };
 
 // ?? switch to router??
