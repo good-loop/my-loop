@@ -15,3 +15,4 @@ config/version.properties
 web/green/index.html
 web/*.html
 web/charity
+.DS_Store

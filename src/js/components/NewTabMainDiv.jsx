@@ -249,7 +249,7 @@ const WebtopPage = () => {
         <Container
           fluid
           className='flex-column justify-content-end align-items-center position-absolute unset-margins'
-          style={{ top: 0, left: 0, width: '100vw', height: '100vh' }}
+          style={{ top: 0, left: 0, width: '100vw', height: '99vh' }}
         >
           <Row className='h-100 w-100' noGutters>
             <Col sm={3} md={4} />
@@ -348,6 +348,7 @@ const UserControls = ({ cid }) => {
   }, [popupDiv]);
 
   const handleClickOutside = (e) => {
+    if (!mydataRef.current) return;
     if (mydataRef.current.contains(e.target)) {
       return; // inside click
     }
@@ -388,6 +389,11 @@ const UserControls = ({ cid }) => {
     </div>
   );
 
+  const T4GLogoutLink = () => <a href={'#'} className={"LogoutLink"} 
+  onClick={() => top.location.href = ServerIO.MYLOOP_ENDPOINT + '/logout'}>
+    Logout
+  </a>;
+
   return (
     <>
       {showMyloopLink && myloopLink}
@@ -396,6 +402,7 @@ const UserControls = ({ cid }) => {
         accountMenuItems={accountMenuItems}
         linkType='a'
         small
+        logoutLink= {<T4GLogoutLink/>}
         customLogin={() => (
           <NewtabLoginLink className='login-menu btn btn-transparent fill'>
             Register / Log in
