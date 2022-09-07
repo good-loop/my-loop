@@ -171,6 +171,7 @@ const generateData = (startDate, endDate, totalImps, adid, campaign, vertiser) =
 	// Interpolate shaping curve to data points 4 hours apart (so time-of-day chart looks OK)
 	const data = [];
 	const labels = [];
+	const timestamps = [];
 	
 	const interpolant = createInterpolant(lowFreqXs, lowFreqYs);
 	cursor = new Date(startDate);
@@ -181,6 +182,7 @@ const generateData = (startDate, endDate, totalImps, adid, campaign, vertiser) =
 		let val = interpolant(hour);
 
 		labels.push(cursor.toDateString());
+		timestamps.push(cursor.getTime());
 		// Add random perturbation, and taper at start/end to avoid sharp cutoff
 		data.push((Math.random() * 0.1) + val * ramp(cursor, startDate, endDate));
 		cursor.setHours(cursor.getHours() + 4);
@@ -215,7 +217,8 @@ const generateData = (startDate, endDate, totalImps, adid, campaign, vertiser) =
 	let locns = {};
 	
 	// Generate a set of impression blocks for each point in time that covers various locations, domains, devices
-	data.forEach((val) => {
+	data.forEach((val, i) => {
+		const time = timestamps[i];
 		const impsPerCountry = Math.round(val * totalImps / 2) || 1; // NB: || 1 is a hack to avoid zero events
 		let thisPointCount = 0;
 
@@ -237,7 +240,7 @@ const generateData = (startDate, endDate, totalImps, adid, campaign, vertiser) =
 			let domain = weightedPick(demoDomains, domainProbs);
 			let {os, browser} = weightedPick(demoDeviceCombos, deviceProbs);
 			// possibly this works out to a 0-count event - skip if so.
-			if (count) evts.push({ count, domain, campaign, adid, vertiser, os, browser, ...locn });
+			if (count) evts.push({ time, count, domain, campaign, adid, vertiser, os, browser, ...locn });
 			// Add count to all breakdowns
 			if (!domains[domain]) domains[domain] = 0;
 			domains[domain] += count;
@@ -255,7 +258,7 @@ const generateData = (startDate, endDate, totalImps, adid, campaign, vertiser) =
 			thisPointCount += count;
 			domain = weightedPick(demoDomains, domainProbs);
 			({os, browser} = weightedPick(demoDeviceCombos, deviceProbs));
-			if (count) evts.push({ count, domain, campaign, adid, vertiser, os, browser, ...locn });
+			if (count) evts.push({ time, count, domain, campaign, adid, vertiser, os, browser, ...locn });
 			if (!domains[domain]) domains[domain] = 0;
 			domains[domain] += count;
 			if (!browsers[browser]) browsers[browser] = 0;
@@ -344,7 +347,7 @@ const commitEvents = (evts, setGeneratedData) => {
 			openConns--; // Release the slot
 		});
 		setGeneratedData(prev => ({...prev, inProgress: true, processedCount: (evts.length - todoEvts.length), failedCount: failedEvts.length}))
-	}, 100);
+	}, 10);
 };
 
 /**
@@ -437,8 +440,8 @@ const GenerateGreenDemoEvents = ({}) => {
 		</Row>
 		<Row>
 			<Col xs="12">
-				<PropControl type="number" path={path} prop="evtCount" dflt={10} label="Event Count" />
-				<PropControl path={path} prop="start" type="date" dflt="2022-09-10" label="Start Date" />
+				<PropControl type="number" path={path} prop="evtCount" dflt={100000} label="Event Count" />
+				<PropControl path={path} prop="start" type="date" dflt="2022-09-01" label="Start Date" />
 				<PropControl path={path} prop="end" type="date" dflt="2022-10-31" label="End Date" />
 				<PropControl type="DataItem" itemType={C.TYPES.GreenTag} path={path} prop="tagid" label="Green Tag" />
 			</Col>
