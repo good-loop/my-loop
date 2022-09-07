@@ -151,7 +151,7 @@ const objToChart = (obj, label) => {
 
 
 /** Generate a real-looking set of DataLog events for the given period. */
-const generateData = (startDate, endDate, totalImps, campaign, adid, vertiser) => {
+const generateData = (startDate, endDate, totalImps, adid, campaign, vertiser) => {
 	let cursor = new Date(startDate);
 	cursor.setHours(0, 0, 0, 0);
 	const endStop = new Date(endDate);
@@ -323,11 +323,12 @@ const commitEvents = (evts, setGeneratedData) => {
 	const failedEvts = [];
 	
 	// Check for free slots every 100ms and try to publish another event
-	window.setInterval(() => {
+	const commitInterval = window.setInterval(() => {
 		if (openConns >= slots) return;
 		if (todoEvts.length === 0) {
 			// We're done - if any events failed to commit, put them back in the queue for a manual retry.
 			setGeneratedData(prev => ({...prev, evts: failedEvts, inProgress: false, done: true}));
+			window.clearInterval(commitInterval);
 		}
 		openConns++; // Claim a slot
 		const evt = todoEvts.pop();
@@ -336,13 +337,13 @@ const commitEvents = (evts, setGeneratedData) => {
 		.then(() => {
 			doneEvts.push(evt);
 		})
-		.catch(() => {
+		.fail(() => { // not catch! jquery ajax yields a deferred, not a promise!
 			failedEvts.push(evt);
 		})
-		.finally(() => {
+		.always(() => { // not finally! see above!
 			openConns--; // Release the slot
 		});
-		setGeneratedData(prev => ({...prev, inProgress: true, evtsProcessed: (doneEvts.length + failedEvts.length)}))
+		setGeneratedData(prev => ({...prev, inProgress: true, processedCount: (evts.length - todoEvts.length), failedCount: failedEvts.length}))
 	}, 100);
 };
 
@@ -354,7 +355,7 @@ const GenerateGreenDemoEvents = ({}) => {
 		return 'Only for devs';
 	}
 	
-	const [{evts, imps, browsers, oss, domains, locns, done, inProgress, evtsProcessed}, setGeneratedData] = useState({});
+	const [{evts, imps, browsers, oss, domains, locns, done, inProgress, processedCount, failedCount}, setGeneratedData] = useState({});
 	const [campaignId, setCampaignId] = useState();
 	const [vertiserId, setVertiserId] = useState();
 
@@ -402,11 +403,11 @@ const GenerateGreenDemoEvents = ({}) => {
 	if (evts) {
 		let statusLine;
 		if (done) {
-			statusLine = <p>Processed {evts.evtsProcessed} DataLog event objects - {evts.failedEvts.length} failed, click "Commit" again to redo.</p>;
+			statusLine = <p>Processed {processedCount} DataLog event objects - {failedCount} failed, click "Commit" again to retry failed events.</p>;
 		} else if (inProgress) {
-			statusLine = <p>Currently committing event blocks to DataLog... {evts.evtsProcessed}/{evts.length} done.</p>
+			statusLine = <p>Currently committing event blocks to DataLog... {processedCount}/{evts.length} done.</p>
 		} else {
-			statusLine = <p>Generated {evts.length} DataLog event objects, containing {evts.reduce((acc, evt) => acc + evt.count, 0)} synthetic impressions.</p>;
+			statusLine = <p>Drafted {evts.length} DataLog event objects, containing {evts.reduce((acc, evt) => acc + evt.count, 0)} synthetic impressions.</p>;
 		}
 		preview = <>
 			{statusLine}
@@ -436,9 +437,9 @@ const GenerateGreenDemoEvents = ({}) => {
 		</Row>
 		<Row>
 			<Col xs="12">
-				<PropControl type="number" path={path} prop="evtCount" dflt={100000} label="Event Count" />
-				<PropControl path={path} prop="start" type="date" dflt="2022-01-01" label="Start Date" />
-				<PropControl path={path} prop="end" type="date" dflt="2022-01-14" label="End Date" />
+				<PropControl type="number" path={path} prop="evtCount" dflt={10} label="Event Count" />
+				<PropControl path={path} prop="start" type="date" dflt="2022-09-10" label="Start Date" />
+				<PropControl path={path} prop="end" type="date" dflt="2022-10-31" label="End Date" />
 				<PropControl type="DataItem" itemType={C.TYPES.GreenTag} path={path} prop="tagid" label="Green Tag" />
 			</Col>
 		</Row>
