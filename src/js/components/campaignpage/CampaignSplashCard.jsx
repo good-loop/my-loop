@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useState} from 'react';
+import { Modal, ModalHeader, ModalBody, Row, Col, Container } from 'reactstrap';
 import Counter from '../../base/components/Counter';
 import WhiteCircle from './WhiteCircle';
 import printer from '../../base/utils/printer';
@@ -11,6 +12,8 @@ import LinkOut from '../../base/components/LinkOut';
 import ServerIO from '../../plumbing/ServerIO';
 import Campaign from '../../base/data/Campaign';
 import DynImg from '../../base/components/DynImg';
+import ModalCTA from '../campaignpage/CampaignModalTFG';
+import { T4GSignUpButton, T4GSignUpModal, T4GPluginButton } from '../T4GSignUp';
 import C from '../../C';
 
 /**
@@ -18,10 +21,10 @@ import C from '../../C';
  * @param ?? campaignPage
  * 
  */
-const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, totalViewCount, charities, status }) => {
-
+const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, totalViewCount, charities, status, nvertiserName, setCtaModalOpen }) => {
+	
 	let ongoing = Campaign.isOngoing(campaignPage);
-	console.log("SPLASH CARD TOTAL VIEW COUNT", totalViewCount);
+
 	let numPeople = printer.prettyNumber(Math.round(totalViewCount), 10);
 	if (numPeople === "0") numPeople = false;
 
@@ -54,7 +57,6 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 			</div>
 		</div>;
 	}
-
 	return (<>
 		<div className="impact-hub-splash position-relative">
 			<DynImg src={campaignPage.bg ? campaignPage.bg : "/img/lightcurve.svg"} className={space("w-100", campaignPage.bg ? "splash-img" : "splash-curve")} alt="splash" />
@@ -74,24 +76,25 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 					<div className="flex-column flex-center pt-5 splash-text">
 						{splashText}
 						{campaignPage.id && <DevLink href={ServerIO.PORTAL_ENDPOINT + '/#campaign/' + escape(campaignPage.id)} target="_portal">Campaign Editor (using {campaignPage.id})</DevLink>}
+						<button className="cta-modal-btn btn btn-secondary text-uppercase" onClick={e => setCtaModalOpen(true)}>
+							want to raise even more?
+						</button>
 					</div>
 				</div>
 			</div>
 			<div className="splash-buttons">
 				{pdf && <C.A className="btn btn-primary mr-md-3" href={pdf} target="_blank">Download in pdf</C.A>}
-				<ShareButton meta={shareMeta} className="btn-transparent fill" url={window.location.href}>Share</ShareButton>
 			</div>
 			<DraftBanner status={status} />
 			<div className="splash-cta d-flex flex-column">
-				<button className="btn btn-secondary text-uppercase" onClick={e => scrollTo("our-impact")}>
-					See what we've achieved
-				</button>
+
 				{/* <a className='text-uppercase mt-3 join' href="/tabsforgood">Join the good-loop movement</a> */}
 			</div>
 		</div>
 		<WiderImpactQuote campaign={campaignPage} />
 	</>);
 };
+
 
 const WiderImpactQuote = ({ campaign }) => {
 	// e.g. "As part of our [CSR strategy](https://www.google.com/?q=hello) we decided to run some of our ad campaigns with Good-Loop. They provide a framewrork where 50% of the cost of our ads goes to charities chosen by the ad viewers.";

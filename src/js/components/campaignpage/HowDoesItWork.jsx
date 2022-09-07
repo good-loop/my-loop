@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 
-const HowDoesItWork = ({ nvertiserName, charities, ongoing }) => {
+const HowDoesItWork = ({ nvertiserName, charities, ongoing, setCtaModalOpen }) => {
 	// possessive form - names with terminal S just take an apostrophe, all others get "'s"
 	// EG Sharp's (brewery) ==> "Sharp's' video... " vs Sharp (electronics manufacturer) ==> "Sharp's video"
 	const nvertiserNamePoss = nvertiserName ? (
@@ -18,6 +18,8 @@ const HowDoesItWork = ({ nvertiserName, charities, ongoing }) => {
 			charityName = charityName.replace("The ", "the ");
 		}
 	}
+
+	console.log("uuuuuuh", setCtaModalOpen)
 
 	return (
 		<div className="bg-gl-light-pink py-5">
@@ -42,6 +44,9 @@ const HowDoesItWork = ({ nvertiserName, charities, ongoing }) => {
 						)}
 					</div>
 				</div>
+				<button className="cta-modal-btn btn btn-primary text-uppercase" onClick={e => setCtaModalOpen(true)}>
+					want to raise even more?
+				</button>	
 			</div>
 			{/* <div className="flex-row justify-content-center align-items-center">
 				<C.A className="btn btn-primary" href="/howitworks">Learn more</C.A>

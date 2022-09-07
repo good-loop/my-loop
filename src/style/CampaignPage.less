@@ -1,6 +1,3 @@
-
-
-
 // TODO try to refactor this to use less css rules, and more vanilla Bootstrap
 
 
@@ -21,11 +18,248 @@ body {
 }
 
 .mobileframe-shadow {
-	filter: drop-shadow(-10px 10px 10px rgba(0,0,0,0.5));
+	filter: drop-shadow(-10px 10px 10px rgba(0, 0, 0, 0.5));
 }
+
+//////////   CTA Modal   /////////
+
+
+.modal-content {
+	background-color: rgba(0, 0, 0, 0.0);
+	border: none;
+
+	.modal-body {
+		height: 90vh;
+		border-radius: 50px;
+		color: whitesmoke;
+
+		background-image: url("/img/our-mission-background-lg.svg");
+		background-size: cover;
+		background-position: top right;
+
+
+		.modal-container {
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			width: 100%;
+			overflow: visible;
+
+			.modalHeader {
+				position: relative;
+
+				.modal-close-button {
+					opacity: 0.75;
+					width: 30%;
+					background-color: transparent;
+					border: none;
+					padding: 0;
+					margin-left: calc(100% - 140px);
+
+					.modal-close-text {
+						text-align: left;
+						font-size: 1.2rem;
+						margin-bottom: 0;
+						color: white;
+						text-shadow: none;
+						font-weight: normal;
+					}
+				}
+			}
+
+			.modal-content-col {
+				position: relative;
+				width: 40%;
+				left: 30%;
+
+				@media (max-width: 768px) {
+					width: 90%;
+					left: 5%;
+
+					.modal-middle-circle {
+						width: 80% !important;
+						margin-bottom: 20px;
+					}
+				}
+
+				.modal-brand-logo {
+					padding-bottom: 10px;
+					left: 42.5% // logo to middle of div (50% - width)
+				}
+
+				.modal-text-intro {
+					font-weight: bold;
+					font-size: 1rem;
+				}
+			}
+
+			.modal-gl-logo-circle {
+				position: absolute;
+				left: 5%;
+				top: 24%;
+				z-index: 1;
+
+				@media (max-width: 767px) {
+					left: 3%;
+				}
+
+				img {
+					max-height: unset;
+					height: 125%;
+					max-width: unset !important;
+					max-height: unset !important;
+				}
+			}
+
+			.modal-middle-circle {
+				background-color: transparent;
+				overflow: visible;
+				background-image: url('/img/About-t4g-blob.svg');
+				background-size: cover;
+				background-position: top right;
+				box-shadow: none;
+				margin-left: auto;
+				margin-right: auto;
+				margin-bottom: 80px;
+				position: relative;
+				top: 0%;
+				min-width: 290px;
+				max-width: 400px;
+
+				@media (max-width: 768px) {
+					font-size: 14px !important;
+
+					p {
+						margin-bottom: 10% !important;
+					}
+
+					margin-bottom: 15%;
+				}
+
+				p {
+					margin: 0;
+					width: 100%;
+					letter-spacing: 1px;
+					height: 100%;
+					color: black;
+					z-index: 2;
+				}
+
+				.red-text {
+					font-weight: bold;
+					color: @gl-red;
+				}
+			}
+
+			.modal-overlay {
+				pointer-events: none;
+				display: block;
+				flex: none;
+
+			}
+
+			.modal-overlay-lg {
+				@media (max-width: 767px) {
+					visibility: hidden;
+				}
+
+				display: block;
+				flex:none;
+				padding-left: 14%;
+				min-width: 710px;
+				max-width: unset !important;
+				max-height: unset !important;
+				width: 490%;
+				bottom: -36%;
+			}
+
+			.modal-overlay-sm {
+				@media (min-width: 768px) {
+					visibility: hidden;
+				}
+
+				display: block;
+				flex:none;
+				min-width: unset;
+				max-width: unset !important;
+				max-height: unset !important;
+				width: 180%;
+				top: 80%;
+			}
+
+			.modal-cta-howItWorks {
+				font-size: 0.9rem !important;
+				color: @gl-red  !important;
+				text-decoration: none;
+			}
+
+			.modal-cta-howItWorks:hover {
+				color: @gl-orange  !important;
+			}
+		}
+	}
+}
+
+
+.cta-modal-btn {
+	.btn-primary {
+		width: 100%;
+	}
+	
+
+	.btn-seconday {
+		// desktop
+		width: 60%;
+		margin-left: 20% !important;
+		margin-top: 70px !important;
+
+		// phones
+		@media (max-width: 767px) {
+			width: 100%;
+			margin-left: -25% !important;
+			margin-top: 50px !important;
+		}
+	}
+}
+
+.modal-CTA-T4G {
+	margin-top: 5vh;
+	width: 90vw;
+	max-width: 90vw;
+	min-width: 90vw;
+
+	/*remove background of modal */
+	.col-lg-4 {
+		padding: 0 !important;
+	}
+
+	.modal-content,
+	.modal-overlay {
+		position: absolute;
+		//top: 0;
+		//left: 0
+	}
+
+	.modal-content {
+		z-index: 10;
+		text-align: center;
+	}
+
+	/* On large screens */
+	@media (min-width: 768px) {
+		width: 70vw;
+		max-width: 70vw;
+		min-width: 70vw;
+	}
+}
+
+
 
 // TODO document more, and refactor into modular widgets where possible
 .CampaignPage {
+
+
+	
 	background-color: #fff !important;
 
 	.stub-divider {
@@ -44,6 +278,7 @@ body {
 		position: relative;
 		height: @fullHeight;
 		background-color: #f55d58;
+
 		@media @ipad-max {
 			background-color: #ffffff;
 		}
@@ -74,6 +309,7 @@ body {
 			height: 100%;
 			width: 100%;
 			background-color: rgba(0, 0, 0, 0.1);
+
 			@media @ipad-max {
 				// why??
 				background-color: rgba(0, 0, 0, 0.2);
@@ -82,15 +318,16 @@ body {
 
 		.splash-card {
 			position: absolute;
-			top: 50%;
+			top: 30%;
 			width: 100%;
 			right: 0;
-			transform: translateY(-50%);
 			z-index: 3;
 			display: flex;
 			flex-direction: column;
 			align-items: flex-end;
+
 			@media @width-mobile {
+				top: 0%;
 				align-items: center;
 				//justify-content-center instead of start to avoid new thic navbar
 				justify-content: center;
@@ -101,10 +338,13 @@ body {
 		.splash-content {
 			width: 40%;
 			height: 100%;
+
+
 			@media @ipad-max {
 				height: 75%;
 				padding-top: 70px; // avoid navbar
 				width: 100%;
+
 				@media @width-mobile {
 					display: flex; // Is it possible to use flex or BS to write something simpler that just works across devices??
 					flex-direction: column;
@@ -119,9 +359,10 @@ body {
 				text-shadow: 0 2px 3px black;
 			}
 		}
-		
+
 		.hero {
 			min-height: 40vh;
+
 			.hero-circles {
 				flex-grow: 1;
 				display: flex;
@@ -130,72 +371,93 @@ body {
 				justify-content: space-between;
 				width: 68.75%; // ??
 				margin: auto;
+
 				@media @width-mobile {
 					width: 100%;
 					flex-direction: column;
 				}
+
 				.plus {
 					width: 30px;
+
 					@media @width-mobile {
 						width: 20px;
 					}
 				}
 			}
-			.WhiteCircle{
+
+			.WhiteCircle {
 				width: 40%;
+
 				.sub-header {
 					font-size: 1.4rem;
 					color: @gl-orange;
 					font-weight: 700;
-                    @media @ipad-max {
+
+					@media @ipad-max {
 						font-size: 1.3rem;
 					}
+
 					@media @width-mobile {
 						font-size: 1rem;
 					}
-                    @media (min-width: 2100px) {
-                        font-size:2rem;
-                    }
+
+					@media (min-width: 2100px) {
+						font-size: 2rem;
+					}
+
 					.num {
 						font-size: 1.2rem;
+
 						@media @width-mobile {
 							font-size: 1rem;
 						}
-                        // @media @ipad-max { // Remove this to fix display in small mobile screen
-                        //     font-size: 1.5rem;
-                        // }
-                        @media (min-width: 2100px) {
-                            font-size:2rem;
-                        }
+
+						// @media @ipad-max { // Remove this to fix display in small mobile screen
+						//     font-size: 1.5rem;
+						// }
+						@media (min-width: 2100px) {
+							font-size: 2rem;
+						}
 					}
 				}
 			}
+
 			.header {
 				font-weight: 600;
 				font-size: 2.35rem;
+
 				@media @width-mobile {
 					font-size: 1.7rem;
+
 					@media (max-height: 568px) {
 						font-size: 1.5rem;
 					}
 				}
+
 				a {
 					color: white !important;
+
 					&:hover {
-						color: @gl-pink !important;
+						color: @gl-pink  !important;
 					}
+
 					span {
 						text-decoration: underline;
 					}
 				}
 			}
+
 			.subtext {
 				font-size: 1.5rem;
+
 				@media @width-mobile {
 					font-size: 1rem;
 				}
 			}
-		} // ./hero
+		}
+
+		// ./hero
 
 		.splash-buttons {
 			position: absolute;
@@ -205,6 +467,7 @@ body {
 			display: flex;
 			flex-direction: row;
 			align-items: center;
+
 			@media @width-mobile {
 				justify-content: center;
 				left: 0px;
@@ -220,31 +483,43 @@ body {
 			top: 80%;
 			z-index: 99;
 			width: 20rem;
+
 			.join {
 				color: white;
 			}
+
 			@media @width-mobile {
-				position:relative;
+				position: relative;
 				transform: unset;
 				left: unset;
 				top: unset;
 				width: 100%;
 				margin-top: 1rem;
+
 				.join {
 					color: black;
 				}
 			}
 		}
-	} // ./impact-hub-splash
+	}
 
-	h1,h2 {
+	// ./impact-hub-splash
+
+	h1,
+	h2 {
 		color: @gl-red;
 	}
 
-	h1,h2,h3,h4,h5 {
+	h1,
+	h2,
+	h3,
+	h4,
+	h5 {
 		//font-weight: 600;
 		text-transform: uppercase;
 	}
+
+
 
 	////////// Charity Cards /////////
 	.charity-card {
@@ -256,7 +531,9 @@ body {
 				text-decoration: none;
 			}
 		}
-	} // ./charity-card
+	}
+
+	// ./charity-card
 
 	.blockquote {
 		font-size: 0.8rem;
@@ -270,12 +547,14 @@ body {
 		left: 49.6%;
 		transform: translate(-50%, -50%);
 		background-color: white;
+
 		@media @width-mobile {
 			width: 100%;
 			top: 0;
 			left: 0;
 			transform: unset;
 		}
+
 		.goodLoopContainer {
 			height: 100%;
 			margin: auto;
@@ -290,6 +569,7 @@ body {
 		top: 17.9%;
 		left: 49.75%;
 		transform: translate(-50%, -50%);
+
 		// background-color: white;
 		@media @width-mobile {
 			height: 100%;
@@ -297,6 +577,7 @@ body {
 			left: 0;
 			transform: unset;
 		}
+
 		.goodLoopContainer {
 			height: 100%;
 			margin: auto;
@@ -317,12 +598,14 @@ body {
 		width: 71.6%;
 		height: 74.6%;
 		overflow: hidden;
+
 		@media (max-width:768px) {
 			top: 10.2%;
 			left: 9.8%;
 			width: 79.3%;
 			height: 71.8%;
 		}
+
 		.tablet-bg {
 			position: absolute;
 			top: 0;
@@ -344,6 +627,7 @@ body {
 	.ad-card {
 		position: relative;
 		z-index: 99;
+
 		@media (max-width:768px) {
 			//margin-left: -30px;
 			//margin-right: -30px;
@@ -352,14 +636,17 @@ body {
 
 	.pointer-wrapper {
 		cursor: pointer;
+
 		.ad-prev {
 			pointer-events: none;
 			overflow: hidden;
 			border: 5px solid transparent;
 			transition: 0.2s;
 		}
+
 		&.selected {
 			cursor: default;
+
 			.ad-prev {
 				border-radius: 5px;
 				border: 5px solid red;
@@ -371,6 +658,7 @@ body {
 	.charity-quote {
 		background-color: white;
 		box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+
 		.charity-quote-img {
 			img {
 				width: 100%;
@@ -378,70 +666,85 @@ body {
 				object-fit: cover;
 			}
 		}
+
 		.charity-quote-content {
 			padding: 40px;
 			padding-bottom: 0;
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
+
 			.charity-quote-text {
 				display: flex;
 				flex-direction: column;
 				align-items: flex-start;
 				text-align: left;
 			}
+
 			.charity-quote-logo {
 				display: flex;
 				align-items: flex-start;
 				justify-content: flex-end;
+
 				img {
 					max-height: 150px;
 					max-width: 150px;
 				}
+
 				@media @width-mobile {
 					margin-bottom: 20px;
 					justify-content: center;
 				}
 			}
-        }
-        .testimonial-video {
-            border-radius: 20px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            .testimonial-play-btn {
-                pointer-events: none;
-                &.playing {
-                    opacity: 0;
-                    transform: translate(-50%, -50%) scale(2);
-                    transition: 0.2s;
-                }
-                &.paused {
-                    opacity: 1;
-                    transform: translate(-50%, -50%) scale(1);
-                    transition: 0.2s;
-                }
-            }
-            .duration-bar {
-                height: 10px;
-                transition: height 0.2s;
-            }
-            &:hover {
-                .duration-bar {
-                    height: 15px;
-                    transition: height 0.2s;
-                }
-            }
-        }
+		}
+
+		.testimonial-video {
+			border-radius: 20px;
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+			overflow: hidden;
+
+			.testimonial-play-btn {
+				pointer-events: none;
+
+				&.playing {
+					opacity: 0;
+					transform: translate(-50%, -50%) scale(2);
+					transition: 0.2s;
+				}
+
+				&.paused {
+					opacity: 1;
+					transform: translate(-50%, -50%) scale(1);
+					transition: 0.2s;
+				}
+			}
+
+			.duration-bar {
+				height: 10px;
+				transition: height 0.2s;
+			}
+
+			&:hover {
+				.duration-bar {
+					height: 15px;
+					transition: height 0.2s;
+				}
+			}
+		}
 	}
+
 	.charity-quote.no-img {
 		justify-content: center;
 		padding: 50px 0;
+
 		.charity-quote-logo {
 			justify-content: center;
 			margin-bottom: 50px;
 		}
+
 		.charity-quote-content {
 			width: 50%;
+
 			@media @width-mobile {
 				width: 100%;
 			}
@@ -461,10 +764,12 @@ body {
 	.carousel-indicators {
 		li {
 			background-color: @gl-light-red;
+
 			&.active {
 				background-color: @gl-red;
 			}
 		}
+
 		z-index: 1001;
 		bottom: -50px;
 	}
@@ -481,6 +786,7 @@ body {
 		.carousel-control-next {
 			right: -120px;
 		}
+
 		.carousel-control-prev {
 			left: -120px;
 		}
@@ -490,48 +796,55 @@ body {
 		z-index: 1000;
 	}
 
-    .smallprint {
-        line-height: 1.2;
-    }
+	.smallprint {
+		line-height: 1.2;
+	}
 
-    .ad-filters {
-        .select {
-            margin: 0px 20px;
-        }
-        .ad-filter-btn {
-            cursor: pointer;
+	.ad-filters {
+		.select {
+			margin: 0px 20px;
+		}
+
+		.ad-filter-btn {
+			cursor: pointer;
 			border: 1px solid @gl-light-red;
-            border-radius: 5px;
-            margin: 10px;
-            padding: 10px 20px;
+			border-radius: 5px;
+			margin: 10px;
+			padding: 10px 20px;
 			max-width: 250px;
-        }
-        .ad-filter-btn.selected {
-            border-bottom: 5px solid @gl-light-red;
+		}
+
+		.ad-filter-btn.selected {
+			border-bottom: 5px solid @gl-light-red;
 			box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-        }
+		}
+
 		.ad-filter {
 			transition: 0.3s;
 			overflow: hidden;
+
 			h5 {
-				color:@gl-light-red;
+				color: @gl-light-red;
 				font-size: 100%;
 				transition: 0.3s;
 			}
 		}
+
 		.ad-filter.collapsed {
 			height: 30px;
 			transition: 0.3s;
+
 			h5 {
 				font-size: 80%;
 				transition: 0.3s;
 			}
 		}
+
 		.ad-filter-list {
 			overflow-x: auto;
 			overflow-y: hidden;
 		}
-    }
+	}
 
 	.wider-impact-quote {
 		background: #5BA6BD;
@@ -540,6 +853,7 @@ body {
 		font-size: 1.5rem;
 		font-family: "Montserrat", sans-serif;
 		color: white;
+
 		a {
 			color: white;
 		}
@@ -547,22 +861,22 @@ body {
 
 	.draft-banner {
 		top: 300px;
-		left:-300px;
-		width:100%;
-		transform:rotate(-45deg);
-		z-index:5;
+		left: -300px;
+		width: 100%;
+		transform: rotate(-45deg);
+		z-index: 5;
 		background: url('/img/draft.png');
 		background-position: center;
-		background-repeat:repeat-x;
+		background-repeat: repeat-x;
 		background-size: contain;
 		height: 50px;
 
 		img {
 			height: 100px;
 			position: absolute;
-			top:50%;
-			left:50%;
-			transform:translate(-50%, -50%);
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
 		}
 
 		button {
