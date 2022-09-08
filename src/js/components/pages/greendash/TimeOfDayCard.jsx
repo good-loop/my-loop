@@ -33,10 +33,9 @@ const TimeOfDayCard = ({baseFilters, tags}) => {
 				const group = Math.floor(i / 3);
 				if (i === (group * 3)) {
 					labels.push(`${((i + 11) % 12) + 1} ${i < 12 ? 'am' : 'pm'}`);
-					data.push(hoursBreakdown[i]);
-				} else {
-					data[group] += hoursBreakdown[i];
+					data.push(0);
 				}
+				data[group] += hoursBreakdown[i] || 0;
 			}
 
 			let label = 'Kg CO2';
