@@ -149,7 +149,7 @@ const fetchIHubData2_wrapAsList = pvTopItem => {
 	));
 };
 
-const JustTheBeginning = () => {
+const JustTheBeginning = ({ setCtaModalOpen }) => {
 	return <div className='w-100 bg-gl-pale-orange' >
 		<PageCard className="bg-gl-desat-blue">
 			<h1 style={{color:"white",fontWeight:'bold'}}>This is just the beginning.</h1>
@@ -361,7 +361,7 @@ const CampaignPage = () => {
 						<img src="/img/Graphic_metro.1920w.png" className="w-100" alt="publishers" />
 					)}
 				</div>
-				<JustTheBeginning />
+				<JustTheBeginning setCtaModalOpen={setCtaModalOpen}/>
 				<SmallPrintInfo ads={ads} charities={charities} campaign={campaign} pvTopItem={pvTopItem} />
 			</div>
 		</div>

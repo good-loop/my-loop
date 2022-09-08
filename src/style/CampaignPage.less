@@ -201,26 +201,6 @@ body {
 }
 
 
-.cta-modal-btn {
-	.btn-primary {
-		width: 100%;
-	}
-	
-
-	.btn-seconday {
-		// desktop
-		width: 60%;
-		margin-left: 20% !important;
-		margin-top: 70px !important;
-
-		// phones
-		@media (max-width: 767px) {
-			width: 100%;
-			margin-left: -25% !important;
-			margin-top: 50px !important;
-		}
-	}
-}
 
 .modal-CTA-T4G {
 	margin-top: 5vh;
@@ -253,6 +233,29 @@ body {
 	}
 }
 
+.cta-modal-btn.btn-secondary {
+	position: relative;
+	font-size: 1rem;
+
+		// desktop
+		width: unset;
+		margin-top: 10% !important;
+
+		// tablet
+		@media (min-width:768px) and (max-width:1080px) {
+			width:50%;
+			margin-left: 25% !important;
+		}
+
+		// phones
+		@media (max-width: 767px) {
+			width: 100%;
+			margin-left: -25% !important;
+			margin-top: 50px !important;
+		}
+	}
+
+	
 
 
 // TODO document more, and refactor into modular widgets where possible
@@ -332,6 +335,11 @@ body {
 				//justify-content-center instead of start to avoid new thic navbar
 				justify-content: center;
 				height: 100%;
+			}
+
+			/* tablet width */
+			@media (min-width:768px) and (max-width:1080px) {
+				top: 0%
 			}
 		}
 
