@@ -60,7 +60,7 @@
 		}
 
 		// Default chart behaviour: Fill as much of the card's natural height as possible
-		.chart-canvas-container {
+		.NewChartWidget {
 			flex-grow: 1;
 		}
 
@@ -103,7 +103,7 @@
 	.greendash-filters {
 		width: 100%;
 		display: flex;
-	
+
 		.filter-dropdown .btn.dropdown-toggle {
 			border: none !important;
 			box-shadow: none !important;
@@ -111,7 +111,7 @@
 			color: black !important;
 			padding: 0.4rem;
 		}
-	
+
 		// The tick next to the currently selected item
 		.selected-marker {
 			position: absolute;
@@ -142,7 +142,7 @@
 			padding: @gc-padding;
 			border-radius: @gc-border-radius;
 			text-align: center;
-			
+
 			.impact-container {
 				display: flex;
 				flex-direction: column;
@@ -213,7 +213,7 @@
 					border: 0.2em solid white;
 					background-image: url("/img/green/dashboard/impact-button.svg");
 					padding: 0.25em;
-					&.selected {	
+					&.selected {
 						filter: grayscale();
 						&:before {
 							content: '';
@@ -232,7 +232,7 @@
 	} // /.carbon-time-series
 
 	.carbon-time-of-day {
-		.chart-canvas-container {
+		.NewChartWidget {
 			height: 6em;
 		}
 	}
@@ -300,7 +300,7 @@
 			cursor: pointer; // remove after SimpleTable refactor, will be default
 			&:not(:first-child) {
 				white-space: nowrap;
-				width: min-content; 
+				width: min-content;
 			}
 		}
 		// remove after SimpleTable refactor, will be explicitly button
