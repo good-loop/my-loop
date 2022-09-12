@@ -265,7 +265,7 @@ export const DiscoverMoreCard = ({ title = "Discover More", subtitle, discoverCo
 			<Row>
 				{discoverContents.map((content, index) => {
 					return (
-						<Col key={index} xs={4} className="text-center text-nowrap d-flex flex-column justify-content-between align-items-center" >
+						<Col key={index} xs={6} className="text-center text-nowrap d-flex flex-column justify-content-between align-items-center" >
 							<img className='shadow mx-3' style={{ maxWidth: '80px', borderRadius: '50%' }} src={content.img} />
 							<p className='m-0 mt-2 color-gl-light-blue'>{content.span}</p>
 							<a className='color-gl-muddy-blue font-weight-bold' href={content.href}>{content.linkTitle}</a>

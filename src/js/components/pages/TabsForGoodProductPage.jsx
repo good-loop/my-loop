@@ -82,7 +82,7 @@ const CommunityImpact = () => {
     </div>
 
     <h4 className="color-gl-red">Funding global causes</h4>
-    <h5 className="miniheader">Raised by our ads, Tabs for Good and My.Data</h5>
+    <h5 className="miniheader">Raised by our ads and Tabs for Good</h5>
   </ProductPageContainer>
 };
 
