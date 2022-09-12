@@ -691,7 +691,7 @@ const ConnectionStatusPopup = () => {
   const pvHasAdBlock = detectAdBlock();
   const hasAdBlock = pvHasAdBlock.value;
   const isOffline = !navigator.onLine; // pvHasAdBlock.error;
-  const determining =
+  const determining = // determining what? This pop up seems to be on only when it is clearly online
     !(pvHasAdBlock.resolved || pvHasAdBlock.error) && timedout;
   const showPopup = (hasAdBlock || isOffline || determining) && popup;
 
@@ -731,12 +731,12 @@ const ConnectionStatusPopup = () => {
           </small>
         </>
       )}
-      {determining && (
+      {/* {determining && (
         <>
           <h3 className='text-dark'>We're having trouble connecting</h3>
           <p>One moment...</p>
         </>
-      )}
+      )} */}
       <b
         style={{ position: 'absolute', top: 10, right: 20, cursor: 'pointer' }}
         onClick={() => setPopup(false)}
