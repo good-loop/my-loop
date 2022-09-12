@@ -112,11 +112,13 @@
 
 // The left navbar for the green dashboard
 #green-navbar {
+	font-size: 14px;
 	position: fixed;
 	left: 0;
 	top: 0;
 	width: @nav-width;
 	height: 100vh;
+	max-height: unset; // override BS navbar height limit
 	background-color: @greenmedia-darkcyan;
 	z-index: 2;
 	font-family: 'Montserrat';
@@ -129,7 +131,22 @@
 
 	.logo {
 		width: 100%;
-		margin: 3em auto;
+		height: 6em;
+		margin-top: 3rem;
+	}
+	.boosted {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		text-decoration: none;
+		color: white;
+		font-weight: 600;
+		font-size: 0.75rem;
+		margin-bottom: 3rem;
+		.scope3-logo {
+			width: 7em;
+		}
+
 	}
 
 	.nav-item {
@@ -147,6 +164,8 @@
 			align-items: center;
 			text-transform: uppercase;
 			padding: 0.5em 0 0.5em 3em;
+			font-weight: 600;
+			letter-spacing: 0.04em;
 		}
 	}
 

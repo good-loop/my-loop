@@ -199,7 +199,7 @@ const GreenMetrics2 = ({}) => {
 				<CompareCard {...commonProps} />
 			</Col>
 			<Col xs="12" sm="4" className="flex-column">
-				<BreakdownCard {...commonProps} data={pvChartData.value?.tables?.os} />
+				<BreakdownCard {...commonProps} tables={pvChartData.value?.tables} />
 			</Col>
 			<Col xs="12" sm="4" className="flex-column">
 				{true ? (

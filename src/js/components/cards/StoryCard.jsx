@@ -1,6 +1,7 @@
 import React from 'react';
 
-/** @deprecated in August 2022 */
+/** @deprecated in August 2022
+ *  TODO: remove if applicable - unused elsewhere in project*/ 
 const StoryCard = () => {
 	return (
 		<div className="story-card-container" style={{width:'20%'}}>

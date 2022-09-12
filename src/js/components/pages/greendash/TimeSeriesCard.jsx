@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Container, Row } from 'reactstrap';
+import { Col as div, Container, Row, Tooltip } from 'reactstrap';
 import Misc from '../../../base/components/Misc';
 import { space, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
-import NewChartWidget from '../../NewChartWidget';
+import NewChartWidget from '../../../base/components/NewChartWidget';
 import { GreenCard, printPeriod, printDate, printDateShort, TONNES_THRESHOLD, GreenCardAbout, Mass, NOEMISSIONS, CO2e } from './dashutils';
 import { getBreakdownBy } from './carboncalc';
+import Icon from '../../../base/components/Icon';
+import { nonce } from '../../../base/data/DataClass';
+import LinkOut from '../../../base/components/LinkOut';
 
 
 const icons = {
@@ -36,15 +39,19 @@ gives car-miles-per-ton: 2,482
 const co2ImpactSpecs = {
 	flights: {
 		src: "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2017",
+		srcDesc: "Flights from London to New York (including radiative forcing)",
 		factor: 1 / (0.19745 * 5585), // CO2 per km (including radiative forcing) * London <> New York
 		desc: 'long haul flights', //flights from London to New York
 		icon: icons.flights,
 	},
 	kettles: {
-		factor: 0.07,
+		factor: 1 / 0.07,
 		desc: 'kettles boiled',
 		icon: icons.kettles,
+		srcDesc: "This will vary based on your electricity supply",
 		src: "https://www.viessmann.co.uk/company/blog/the-carbon-footprint-of-nearly-everything"
+		// SVG on that page is present but invisible: see
+		// https://cdn0.scrvt.com/2828ebc457efab95be01dd36047e3b52/b2db73e96a8769dd/23a51a974007/The-Carbon-Footprint.svg
 	},
 	driving: {
 		src: "https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator",
@@ -66,33 +73,49 @@ const CO2Impact = ({ kg, mode }) => {
 		</div>;
 	}
 	assert(co2ImpactSpecs[mode], `Can't render CO2-equivalent for mode "${mode}" - no conversion factor/description/etc written`);
-	const { factor, desc, icon, src } = co2ImpactSpecs[mode];
+	const { factor, desc, icon, src, srcDesc } = co2ImpactSpecs[mode];
 
 	return <div className="impact-container" title={"Source: " + src}>
 		<div className="impact-bubble">
-			<div className="impact-leader"><Mass kg={kg} /> {CO2e}, that's</div>
+			<div className="impact-leader"><Mass kg={kg} /> {CO2e}: that's</div>
 			<div className="impact-number">{printer.prettyInt(kg * factor, true)}</div>
 			<div className="impact-desc">{desc}</div>
-			<div className="impact-icon" title={`Illustrative icon for "${desc}"`}>{icon}</div>
+			<div className="impact-icon" title={`Illustrative icon for "${desc}"`}>{icon}</div>			
 		</div>
 	</div>
 };
 
+/**
+ * Status: not used! An (i) which you can hover / click on for info. 
+ */
+const InfoPop = ({children}) => {
+	const [id] = useState(nonce());
+	const [isOpen, setIsOpen] = useState();
+	const toggle = () => setIsOpen( ! isOpen);
+	return <>
+		<span id={id}><Icon name="info" /></span>
+		<Tooltip target={id} isOpen={isOpen} toggle={toggle}>{children}</Tooltip>
+	</>;
+}
 
 const TotalSubcard = ({ period, totalCO2 }) => {
 	const [mode, setMode] = useState('base');
 
 	return (
-		<div className="total-subcard d-flex flex-column">
-			<div>{printPeriod(period)}</div>
+		<div className="total-subcard flex-column justify-content-between">
+			<div>
+				{printPeriod(period)}
+				{/* the popup doesnt work well with a link {mode!=="base" && <InfoPop>{co2ImpactSpecs[mode].desc} <LinkOut href={co2ImpactSpecs[mode].src} fetchTitle /></InfoPop>} */}
+			</div>
 			{totalCO2 >= 0 && <CO2Impact kg={totalCO2} mode={mode} />}
 			{totalCO2 > 0 && (
 				<div className="impact-buttons">
-					{Object.entries(co2ImpactSpecs).map(([key, { icon }]) => {
+					{Object.entries(co2ImpactSpecs).map(([key, { icon, src, srcDesc }]) => {
 						const selected = mode === key;
 						const onClick = () => setMode(selected ? 'base' : key);
 						const className = space('impact-button', key, selected && 'selected');
-						return <div className={className} onClick={onClick} key={key}>
+						const title = [srcDesc, src && "Reference: "+src].filter(x => x).join("\r\n");
+						return <div className={className} onClick={onClick} key={key} title={title} >
 							{icon}
 						</div>
 					})}
@@ -207,8 +230,8 @@ const TimeSeriesCard = ({ period, data: timeTable, noData }) => {
 	// TODO Reinstate "Per 1000 impressions" button
 
 	return <GreenCard title="How much carbon is your digital advertising emitting?" className="carbon-time-series" row>
-		<Row className='w-100'>
-			<Col md={8} >
+		<div className="flex-row w-100">
+			<div className="flex-column flex-grow-1">
 				{/* <div className="chart-subcard flex-column"> */}
 					{chartProps?.isEmpty ? (
 						NOEMISSIONS
@@ -218,11 +241,9 @@ const TimeSeriesCard = ({ period, data: timeTable, noData }) => {
 					{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
 					{chartContent}
 				{/* </div> */}
-			</Col>
-			<Col md={4}>
-				<TotalSubcard period={period} totalCO2={aggCO2?.total} />
-			</Col>
-		</Row>
+			</div>
+			<TotalSubcard period={period} totalCO2={aggCO2?.total} />
+		</div>
 		<GreenCardAbout>
 			<p>How do we calculate the time-series carbon emissions?</p>
 		</GreenCardAbout>

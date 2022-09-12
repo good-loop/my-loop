@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import NewChartWidget from '../NewChartWidget';
+import NewChartWidget from '../../base/components/NewChartWidget';
 import Login from '../../base/youagain';
 import Roles from '../../base/Roles';
 import { demoDeviceCombos, demoDomains, demoLocnsUK, demoLocnsUS } from '../../utils/generateDemoConstants';
@@ -12,6 +12,7 @@ import ServerIO from '../../plumbing/ServerIO';
 import CRUD, { saveAs } from '../../base/plumbing/Crud';
 import { lg } from '../../base/plumbing/log';
 import PromiseValue from 'promise-value';
+import { nonce } from '../../base/data/DataClass';
 
 /**
  * This code is for a one-off creation of demo data.
@@ -150,7 +151,7 @@ const objToChart = (obj, label) => {
 
 
 /** Generate a real-looking set of DataLog events for the given period. */
-const generateData = (startDate, endDate, totalImps, campaign, adid, vertiser) => {
+const generateData = (startDate, endDate, totalImps, adid, campaign, vertiser) => {
 	let cursor = new Date(startDate);
 	cursor.setHours(0, 0, 0, 0);
 	const endStop = new Date(endDate);
@@ -170,6 +171,7 @@ const generateData = (startDate, endDate, totalImps, campaign, adid, vertiser) =
 	// Interpolate shaping curve to data points 4 hours apart (so time-of-day chart looks OK)
 	const data = [];
 	const labels = [];
+	const timestamps = [];
 	
 	const interpolant = createInterpolant(lowFreqXs, lowFreqYs);
 	cursor = new Date(startDate);
@@ -180,6 +182,7 @@ const generateData = (startDate, endDate, totalImps, campaign, adid, vertiser) =
 		let val = interpolant(hour);
 
 		labels.push(cursor.toDateString());
+		timestamps.push(cursor.getTime());
 		// Add random perturbation, and taper at start/end to avoid sharp cutoff
 		data.push((Math.random() * 0.1) + val * ramp(cursor, startDate, endDate));
 		cursor.setHours(cursor.getHours() + 4);
@@ -214,7 +217,8 @@ const generateData = (startDate, endDate, totalImps, campaign, adid, vertiser) =
 	let locns = {};
 	
 	// Generate a set of impression blocks for each point in time that covers various locations, domains, devices
-	data.forEach((val) => {
+	data.forEach((val, i) => {
+		const time = timestamps[i];
 		const impsPerCountry = Math.round(val * totalImps / 2) || 1; // NB: || 1 is a hack to avoid zero events
 		let thisPointCount = 0;
 
@@ -236,7 +240,7 @@ const generateData = (startDate, endDate, totalImps, campaign, adid, vertiser) =
 			let domain = weightedPick(demoDomains, domainProbs);
 			let {os, browser} = weightedPick(demoDeviceCombos, deviceProbs);
 			// possibly this works out to a 0-count event - skip if so.
-			if (count) evts.push({ count, domain, campaign, adid, vertiser, os, browser, ...locn });
+			if (count) evts.push({ time, count, domain, campaign, adid, vertiser, os, browser, ...locn });
 			// Add count to all breakdowns
 			if (!domains[domain]) domains[domain] = 0;
 			domains[domain] += count;
@@ -254,7 +258,7 @@ const generateData = (startDate, endDate, totalImps, campaign, adid, vertiser) =
 			thisPointCount += count;
 			domain = weightedPick(demoDomains, domainProbs);
 			({os, browser} = weightedPick(demoDeviceCombos, deviceProbs));
-			if (count) evts.push({ count, domain, campaign, adid, vertiser, os, browser, ...locn });
+			if (count) evts.push({ time, count, domain, campaign, adid, vertiser, os, browser, ...locn });
 			if (!domains[domain]) domains[domain] = 0;
 			domains[domain] += count;
 			if (!browsers[browser]) browsers[browser] = 0;
@@ -288,6 +292,7 @@ const commitEvent = evt => {
 		tag: 'pixel',
 		cause: 'demo', // put in a marker to make thesse easy to find (and if needed, delete) in ES
 		...evt, // All the stuff that varies between events: time, count, adid, browser, domain, etc...
+		nonce: nonce(),
 	};
 	// Use journal? No -- it's intended for a smaller number of manual corrections
 	// let je = {
@@ -321,11 +326,12 @@ const commitEvents = (evts, setGeneratedData) => {
 	const failedEvts = [];
 	
 	// Check for free slots every 100ms and try to publish another event
-	window.setInterval(() => {
+	const commitInterval = window.setInterval(() => {
 		if (openConns >= slots) return;
 		if (todoEvts.length === 0) {
 			// We're done - if any events failed to commit, put them back in the queue for a manual retry.
 			setGeneratedData(prev => ({...prev, evts: failedEvts, inProgress: false, done: true}));
+			window.clearInterval(commitInterval);
 		}
 		openConns++; // Claim a slot
 		const evt = todoEvts.pop();
@@ -334,14 +340,14 @@ const commitEvents = (evts, setGeneratedData) => {
 		.then(() => {
 			doneEvts.push(evt);
 		})
-		.catch(() => {
+		.fail(() => { // not catch! jquery ajax yields a deferred, not a promise!
 			failedEvts.push(evt);
 		})
-		.finally(() => {
+		.always(() => { // not finally! see above!
 			openConns--; // Release the slot
 		});
-		setGeneratedData(prev => ({...prev, inProgress: true, evtsProcessed: (doneEvts.length + failedEvts.length)}))
-	}, 100);
+		setGeneratedData(prev => ({...prev, inProgress: true, processedCount: (evts.length - todoEvts.length), failedCount: failedEvts.length}))
+	}, 10);
 };
 
 /**
@@ -352,7 +358,7 @@ const GenerateGreenDemoEvents = ({}) => {
 		return 'Only for devs';
 	}
 	
-	const [{evts, imps, browsers, oss, domains, locns, done, inProgress, evtsProcessed}, setGeneratedData] = useState({});
+	const [{evts, imps, browsers, oss, domains, locns, done, inProgress, processedCount, failedCount}, setGeneratedData] = useState({});
 	const [campaignId, setCampaignId] = useState();
 	const [vertiserId, setVertiserId] = useState();
 
@@ -400,11 +406,11 @@ const GenerateGreenDemoEvents = ({}) => {
 	if (evts) {
 		let statusLine;
 		if (done) {
-			statusLine = <p>Processed {evts.evtsProcessed} DataLog event objects - {evts.failedEvts.length} failed, click "Commit" again to redo.</p>;
+			statusLine = <p>Processed {processedCount} DataLog event objects - {failedCount} failed, click "Commit" again to retry failed events.</p>;
 		} else if (inProgress) {
-			statusLine = <p>Currently committing event blocks to DataLog... {evts.evtsProcessed}/{evts.length} done.</p>
+			statusLine = <p>Currently committing event blocks to DataLog... {processedCount}/{evts.length} done.</p>
 		} else {
-			statusLine = <p>Generated {evts.length} DataLog event objects, containing {evts.reduce((acc, evt) => acc + evt.count, 0)} synthetic impressions.</p>;
+			statusLine = <p>Drafted {evts.length} DataLog event objects, containing {evts.reduce((acc, evt) => acc + evt.count, 0)} synthetic impressions.</p>;
 		}
 		preview = <>
 			{statusLine}
@@ -435,8 +441,8 @@ const GenerateGreenDemoEvents = ({}) => {
 		<Row>
 			<Col xs="12">
 				<PropControl type="number" path={path} prop="evtCount" dflt={100000} label="Event Count" />
-				<PropControl path={path} prop="start" type="date" dflt="2022-01-01" label="Start Date" />
-				<PropControl path={path} prop="end" type="date" dflt="2022-01-14" label="End Date" />
+				<PropControl path={path} prop="start" type="date" dflt="2022-09-01" label="Start Date" />
+				<PropControl path={path} prop="end" type="date" dflt="2022-10-31" label="End Date" />
 				<PropControl type="DataItem" itemType={C.TYPES.GreenTag} path={path} prop="tagid" label="Green Tag" />
 			</Col>
 		</Row>

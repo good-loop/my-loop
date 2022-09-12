@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react';
 
 import Icon from '../../../base/components/Icon';
 import Misc from '../../../base/components/Misc';
-import { sum, yessy } from '../../../base/utils/miscutils';
+import { ellipsize, sum, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
-import NewChartWidget from '../../NewChartWidget';
-import { getBreakdownBy, getSumColumn } from './carboncalc';
+import NewChartWidget from '../../../base/components/NewChartWidget';
+import { getBreakdownBy, getSumColumn, getTags } from './carboncalc';
 import { CO2e, dataColours, GreenCard, GreenCardAbout, ModeButton, NOEMISSIONS, TONNES_THRESHOLD } from './dashutils';
+import SimpleTable, { Column } from '../../../base/components/SimpleTable';
+import List from '../../../base/data/List';
+import { ButtonGroup } from 'reactstrap';
 
 
 /** Classify OS strings seen in our data  
@@ -52,6 +55,8 @@ const osTypes = {
  * @returns 
  */
 const TechSubcard = ({ data: osTable, minimumPercentLabeled=1 }) => {
+	if (!yessy(osTable)) return <p>No data</p>;
+
 	const [chartProps, setChartProps] = useState();
 
 	useEffect(() => {
@@ -69,7 +74,8 @@ const TechSubcard = ({ data: osTable, minimumPercentLabeled=1 }) => {
 
 		setChartProps({
 			data: {
-				labels: ['Media', 'Publisher overhead', 'Supply-path overhead'],
+				// labels: ['Media', 'Publisher overhead', 'Supply-path overhead'],
+				labels: ['Media', 'Publisher', 'Supply path'],
 				datasets: [{
 					label: 'Kg CO2',
 					backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
@@ -79,7 +85,10 @@ const TechSubcard = ({ data: osTable, minimumPercentLabeled=1 }) => {
 			options: {
 				layout: { autoPadding: true, padding: 5 },
 				plugins: {
-					legend: { position: 'left' },
+					legend: {
+						position: ctx => (ctx.chart.width < 250 ? 'left' : 'top'),
+						labels: { boxWidth: 20 },
+					},
 					tooltip: {
 						callbacks: {
 							label: ctx => ` ${printer.prettyNumber(ctx.dataset.data[ctx.dataIndex])} kg`,
@@ -89,16 +98,17 @@ const TechSubcard = ({ data: osTable, minimumPercentLabeled=1 }) => {
 					datalabels: {
 						labels: {
 							value: {
-								anchor: "center",
 								color: '#fff',
-								font: {
-									family: "Montserrat",
-									weight: "bolder",
-									size: "20px"
-								},
-								formatter: (value = 0, ctx) => {
-									let percentage = Math.round(value * 100 / totalCO2);
-									return percentage >= minimumPercentLabeled ? `${percentage}%` : '';
+								textStrokeColor: '#666',
+								textStrokeWidth: 2,
+								font: ctx => ({
+									family: 'Montserrat',
+									weight: 'bold',
+									size: Math.round(Math.min(ctx.chart.chartArea.width, ctx.chart.chartArea.height) / 7)
+								}),
+								formatter: (value = 0) => {
+									const percentage = Math.round(value * 100 / totalCO2);
+									return (percentage >= minimumPercentLabeled) ? `${percentage}%` : '';
 								},
 							}
 						}
@@ -110,10 +120,6 @@ const TechSubcard = ({ data: osTable, minimumPercentLabeled=1 }) => {
 
 	if (!chartProps) return null;
 	if (chartProps?.isEmpty) return NOEMISSIONS;
-
-	if (! yessy(osTable)) {
-		return <p>No data</p>;
-	}
 	
 	return <>
 		<p>{CO2e} emissions due to...</p>
@@ -131,6 +137,8 @@ const TechSubcard = ({ data: osTable, minimumPercentLabeled=1 }) => {
  * @param {Object} p
  */
 const DeviceSubcard = ({ data: osTable }) => {
+	if (!yessy(osTable)) return <p>No data</p>;
+
 	const [chartProps, setChartProps] = useState();
 
 	useEffect(() => {
@@ -205,25 +213,68 @@ const DeviceSubcard = ({ data: osTable }) => {
 }
 
 
-const BreakdownCard = ({ data }) => {
-	if ( ! data) return <Misc.Loading text="Fetching your data..." />;
+/**
+ * Table of impressions and carbon per tag
+ * @param {Object} p
+ * @param {Object[]} p.data adid table
+ */
+ const TagSubcard = ({data}) => {
+	// map GreenTag id to a display-name
+	const pvTags = getTags(data);
+	const tags = List.hits(pvTags.value) || [];
+	const tag4id = {};
+	tags.map(tag => tag4id[tag.id] = tag);
+
+	// {adid, count, totalEmissions, baseEmissions, 'creativeEmissions', 'supplyPathEmissions'}
+	let columns = [
+		// new Column({Header:"Campaign"}),
+		new Column({Header: 'Tag', accessor: row => tag4id[row[0]]?.name || row[0],
+			Cell: value => <span title={value}>{value}</span>, // show tooltip in case of truncated tag names
+		}),
+		// new Column({Header:"Tag ID", accessor:row => row[0]}),
+		new Column({Header: 'Impressions', accessor:row => row[1]}),
+		new Column({Header: 'CO2e (kg)', accessor:row => row[2]}),
+	];
+	const rows = data.slice(1); // the 1st row is the header names, so drop it
+
+	return <>
+		<p className="small">
+			Emissions breakdown by Green Ad Tags.<br/>
+			You can track any aspect of media buying by generating different tags, then using them in your buying.
+		</p>
+		<SimpleTable data={rows} columns={columns} hasCsv rowsPerPage={6} className="tag-table" />
+	</>;
+};
+
+
+/**
+ * 
+ * @param {Object} p
+ * @param {Object} p.tables pvChartData.value.tables Which are split by breakdown: os, adid, 
+ */
+const BreakdownCard = ({ tables }) => {
+	if (!tables) return <Misc.Loading text="Fetching your data..." />;
 	const [mode, setMode] = useState('tech');
 
-	let subcard = (mode === 'tech') ? (
-		<TechSubcard data={data} minimumPercentLabeled={10} />
-	) : (
-		<DeviceSubcard data={data} />
-	);
-
-	if ( ! yessy(data)) {
-		subcard = <p>No data</p>;
-	}
+	let subcard;
+	switch(mode) {
+		case 'tech':
+			subcard = <TechSubcard data={tables?.os} minimumPercentLabeled={10} />;
+			break;
+		case 'device':
+			subcard = <DeviceSubcard data={tables?.os} />;
+			break;
+		case 'tag':
+			subcard = <TagSubcard data={tables?.adid} />;
+			break;
+	};
 
 	return <GreenCard title="What is the breakdown of your emissions?" className="carbon-breakdown">
-		<div className="d-flex justify-content-around mb-2">
+		<ButtonGroup className="mb-2">
 			<ModeButton name="tech" mode={mode} setMode={setMode}>Ad Tech</ModeButton>
 			<ModeButton name="device" mode={mode} setMode={setMode}>Device Type</ModeButton>
-		</div>
+			<ModeButton name="tag" mode={mode} setMode={setMode}>Tag</ModeButton>
+		</ButtonGroup>
 		{subcard}
 		<GreenCardAbout>
 			<p>Where do we get numbers for each slice from?</p>

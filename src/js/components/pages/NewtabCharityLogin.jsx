@@ -21,6 +21,7 @@ const LOGIN_VERB_PATH = [...LOGIN_PATH, 'verb'];
 
 /**
  * @deprecated in August 2022
+ * TODO: remove if applicable - unused within project though there is an identical function elsewhere (NewTabLoginWidget.jsx)
  */
 const switchToVerb = (e, verb) => {
 	if (e) stopEvent(e);
@@ -29,6 +30,7 @@ const switchToVerb = (e, verb) => {
 
 /**
  * @deprecated in August 2022
+ * TODO: remove if applicable - I think it's been replaced by src/js/components/NewTabLoginWidgit.jsx 
  */
 const NewtabCharityLogin = () => {
 	// set the app to t4g, so we get the right welcome email

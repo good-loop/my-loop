@@ -5,6 +5,7 @@ import { addScript } from '../base/utils/miscutils';
 
 /**
  * @deprecated in August 2022 
+ * TODO: Remove if applicable, currently can't find anywhere where it's being used
  */
 const BannerAd = () => {
 	//<!-- BEGIN JS TAG - banner placement for newtab (desktop) < - DO NOT MODIFY -->

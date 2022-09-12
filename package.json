@@ -80,6 +80,7 @@
     "less-loader": "^10.2.0",
     "mini-css-extract-plugin": "^2.4.5",
     "node-fetch": "^2.6.6",
+    "prismjs": "^1.29.0",
     "puppeteer": "^2.0.0",
     "shelljs": "^0.8.4",
     "typescript": "^3.9.7",
@@ -95,3 +96,4 @@
     "testTimeout": 10000
   }
 }
+

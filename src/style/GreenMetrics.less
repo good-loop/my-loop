@@ -60,11 +60,11 @@
 		}
 
 		// Default chart behaviour: Fill as much of the card's natural height as possible
-		.chart-canvas-container {
+		.NewChartWidget {
 			flex-grow: 1;
 		}
 
-		/* The (?) button that shows an explanation of the card's data */
+		/* NOT USED The (?) button that shows an explanation of the card's data */
 		.card-about {
 			z-index: 1;
 			.about-button, .about-body {
@@ -103,7 +103,7 @@
 	.greendash-filters {
 		width: 100%;
 		display: flex;
-	
+
 		.filter-dropdown .btn.dropdown-toggle {
 			border: none !important;
 			box-shadow: none !important;
@@ -111,7 +111,7 @@
 			color: black !important;
 			padding: 0.4rem;
 		}
-	
+
 		// The tick next to the currently selected item
 		.selected-marker {
 			position: absolute;
@@ -132,31 +132,23 @@
 
 	/* The hero "emissions over time + driving / flights / kettles equivalent" chart*/
 	.carbon-time-series {
-		// Container manages the 
-		.container {
-			flex-grow: 1;
+		canvas {
+			max-width: 100%; // Chart container shrinks width when impact subcard grows, this makes the canvas inside follow
 		}
-		.card-body {
-			padding-right: 0; // Let the right subcard sit flush with the card edge
-		}
-		// .chart-subcard {
-		// 	flex-grow: 1; // why??
-		// }
 		.total-subcard {
 			color: white;
 			background-color: @greenmedia-darkcyan;
-			margin: -@gc-padding 0;
+			margin: -@gc-padding calc(-@gc-padding - 1px) calc(-@gc-padding - 1px) 0; // overlap card padding
 			padding: @gc-padding;
-			border-radius: @gc-border-radius;			
-			width: calc(100% + @gc-padding + 15px); // 15px = column gutter, @gc-padding = 1rem = card padding
-			height: calc(100% + @gc-padding + @gc-padding); // 2rem = 2 * @gc-padding = card padding
+			border-radius: @gc-border-radius;
 			text-align: center;
-			
+
 			.impact-container {
 				display: flex;
 				flex-direction: column;
 				justify-content: center;
 				align-items: center;
+				flex-grow: 1;
 
 				.big-number, .impact-bubble {
 					padding: 0.5em;
@@ -169,8 +161,8 @@
 						line-height: 1;
 					}
 					.unit { font-size: 150%; }
-					.desc { font-size: 100%; }
-					.number, .unit, .desc {
+					.desc {
+						font-size: 100%;
 						display: block;
 					}
 				}
@@ -180,9 +172,14 @@
 					background-color: white;
 					border-radius: @gc-border-radius;
 					
+					margin-top: 0.5em;
 					margin-bottom: 1.5em;
 					width: 100%;
 					flex-grow: 1;
+
+					> * {
+						white-space: nowrap;
+					}
 
 					.impact-leader {
 						font-size: 100%;
@@ -201,7 +198,7 @@
 					}
 				}
 
-			}
+			} // ./impact-container
 	
 			.impact-buttons {
 				display: flex;
@@ -216,17 +213,16 @@
 					border: 0.2em solid white;
 					background-image: url("/img/green/dashboard/impact-button.svg");
 					padding: 0.25em;
-					&.selected {	
+					&.selected {
 						filter: grayscale();
 						&:before {
 							content: '';
-							background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath style='fill:%23fff;stroke:none' d='M 0,0 50,50 100,0 Z'/%3E%3C/svg%3E");
+							background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath style='fill:%23fff' d='M 0,0 50,50 100,0 Z'/%3E%3C/svg%3E");
 							display: block;
 							position: absolute;
 							height: 2em;
 							width: 2em;
-							// 0.2em to adjust position for parent border width
-							left: -0.2em;
+							left: 0;
 							top: -1.7em;
 						}
 					}
@@ -236,7 +232,7 @@
 	} // /.carbon-time-series
 
 	.carbon-time-of-day {
-		.chart-canvas-container {
+		.NewChartWidget {
 			height: 6em;
 		}
 	}
@@ -277,6 +273,46 @@
 		margin: 0.5em;
 	}
 } // /.carbon-journey
+
+
+// The "Breakdown of your emissions" card
+.carbon-breakdown {
+	// TODO Use more specific selector when SimpleTable refactor is in master & tables respect className prop
+	// .tag-table {
+	.SimpleTable {
+		font-size: 0.8rem; // compact tag breakdown table
+		table {
+			table-layout: fixed; // enable fixing width
+			width: 100%;
+			td, th { padding: 0.25rem; } // compact layout
+			th { font-weight: 600; } // less super-bold header
+		}
+		// Long tag names shouldn't break layout
+		tbody td:first-child span {
+			display: inline-block;
+			width: 100%;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+		// Condense non-name cols to header width
+		th {
+			cursor: pointer; // remove after SimpleTable refactor, will be default
+			&:not(:first-child) {
+				white-space: nowrap;
+				width: min-content;
+			}
+		}
+		// remove after SimpleTable refactor, will be explicitly button
+		a[download] {
+			text-decoration: none;
+			border: 1px solid #aaa;
+			border-radius: 10em;
+			padding: 0.5em 1em;
+		}
+	}
+} // /.carbon-breakdown
+
 
 .carbon-cta {
 	flex-grow: 0 !important; // Let the time-of-day card above expand

@@ -2,6 +2,7 @@ import React from 'react';
 
 /**
  * @deprecated in August 2022
+ * TODO: remove if applicable, last updated in 10-2020
  */
 const NewTabOptions = () => {
 	return (<>

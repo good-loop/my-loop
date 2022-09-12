@@ -112,6 +112,7 @@ export const getSumColumn = (table, colName) => {
 };
 
 /**
+ * TODO Doc: what determines whether you fetch the all data table or a reduced set of tables?? breakdown??
  * Query for green ad tag impressions, then connect IDs to provided tags, calculate data usage & carbon emissions, and output tabular data
  * @param {Object} options
  * @param {String} options.q Query string - eg "campaign:myCampaign", "adid:jozxYqK OR adid:KWyjiBo"
@@ -119,12 +120,13 @@ export const getSumColumn = (table, colName) => {
  * @param {String} end Loose time parsing permitted (eg "24 hours ago") otherwise prefer ISO-8601 (full or partial)
  * @returns {!PromiseValue} {table: [["country","pub","mbl","os","adid","time","count","totalEmissions","baseEmissions","creativeEmissions","supplyPathEmissions"]] }
  */
-export const getCarbon = ({q = '', start = '1 month ago', end = 'now', ...rest}) => {
+export const getCarbon = ({q = '', start = '1 month ago', end = 'now', breakdown, ...rest}) => {
 	assert( ! q?.includes("brand:"), q);
 	const data = {
 		// dataspace: 'green',
 		q,
 		start, end,
+		breakdown,
 		...rest
 	};
 
@@ -140,24 +142,10 @@ export const getCarbon = ({q = '', start = '1 month ago', end = 'now', ...rest})
  * @returns {?PromiseValue} PV of a List of Campaigns
  */
 export const getCampaigns = (table) => {
-	if (!table || ! table.length) return null;
-
-	const tagIdSet = {};
-	const adIdCol = table[0].indexOf('adid');
-	table.forEach((row, i) => {
-		if (i === 0) return;
-		let adid = row[adIdCol];
-		if (adid && adid !== 'unset') {
-			tagIdSet[adid] = true;
-		}
-	});
-
-	const ids = Object.keys(tagIdSet);
-	if (!ids.length) return null;
-
-	// ??does PUB_OR_DRAFT work properly for `ids`??
-
-	let pvTags = getDataList({type: C.TYPES.GreenTag, status: KStatus.PUB_OR_DRAFT, ids});
+	let pvTags = getTags(table);
+	if ( ! pvTags) {
+		return null;
+	}
 
 	return PromiseValue.then(pvTags, tags => {
 		let cidSet = {};
@@ -172,6 +160,39 @@ export const getCampaigns = (table) => {
 		return pvcs;
 	});
 };
+
+
+
+/**
+ * Get the GreenTags referenced by the table
+ * @param {?Object[][]} table 
+ * @returns {?PromiseValue} PV of a List of GreenTags
+ */
+ export const getTags = (table) => {
+	if ( ! table || ! table.length) {
+		return null;
+	}
+
+	const tagIdSet = {};
+	const adIdCol = table[0].indexOf('adid');
+	table.forEach((row, i) => {
+		if (i === 0) return;
+		let adid = row[adIdCol];
+		if (adid && adid !== 'unset') {
+			tagIdSet[adid] = true;
+		}
+	});
+
+	const ids = Object.keys(tagIdSet);
+	if ( ! ids.length) return null;
+
+	// ??does PUB_OR_DRAFT work properly for `ids`??
+
+	let pvTags = getDataList({type: C.TYPES.GreenTag, status: KStatus.PUB_OR_DRAFT, ids});
+
+	return pvTags;
+};
+
 
 /**
  * 

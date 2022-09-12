@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 
 import Misc from '../../../base/components/Misc';
-import NewChartWidget from '../../NewChartWidget';
+import NewChartWidget from '../../../base/components/NewChartWidget';
 import { dataColours, getPeriodQuarter, GreenCard, GreenCardAbout, ModeButton, printPeriod, TONNES_THRESHOLD } from './dashutils';
 import { isoDate } from '../../../base/utils/miscutils';
 import { getCarbon, getSumColumn } from './carboncalc';
@@ -10,6 +10,7 @@ import { getDataList } from '../../../base/plumbing/Crud';
 import C from '../../../C';
 import KStatus from '../../../base/data/KStatus';
 import { getId } from '../../../base/data/DataClass';
+import { ButtonGroup } from 'reactstrap';
 
 
 const baseOptions = {
@@ -166,12 +167,14 @@ const CompareCard = (props) => {
 
 	return <GreenCard title="How do your ad emissions compare?" className="carbon-compare">
 		<div className="d-flex justify-content-around mb-2">
-			<ModeButton name="quarter" mode={mode} setMode={setMode}>
-				Quarter
-			</ModeButton>
-			<ModeButton name="campaign" mode={mode} setMode={setMode} disabled={campaignIds.length <= 1}>
-				Campaign
-			</ModeButton>
+			<ButtonGroup>
+				<ModeButton name="quarter" mode={mode} setMode={setMode}>
+					Quarter
+				</ModeButton>
+				<ModeButton name="campaign" mode={mode} setMode={setMode} disabled={campaignIds.length <= 1}>
+					Campaign
+				</ModeButton>
+			</ButtonGroup>
 		</div>
 		{subcard}
 		<GreenCardAbout>

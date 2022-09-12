@@ -2,7 +2,8 @@ import React from 'react';
 import { space } from '../base/utils/miscutils';
 
 /**
- * @deprecated in August 2022 
+ * @deprecated in August 2022
+ * TODO: remove if applicable - Last updated June 2021 & seemingly deprecated by changing designs 
 FIXME this doesnt get printed 'cos Bootstrap sets background to off for printing.
 Either (a) stronger css to get it printed, or (b) use and <img> instead */
 const BaseLogo = ({alt, className, style, url, children, ...rest}) => (
@@ -13,11 +14,13 @@ const BaseLogo = ({alt, className, style, url, children, ...rest}) => (
 
 /**
  * @deprecated in August 2022 
+ * TODO: remove if applicable - Last updated June 2021 & seemingly deprecated by changing designs 
 Basically just the adunit's charity logo */
 const RoundLogo = ({className, ...rest}) => <BaseLogo {...rest} className={'round-logo' + (className ? ' ' + className : '')} />;
 
 /**
  * @deprecated in August 2022 
+ * TODO: remove if applicable - Last updated June 2021 & seemingly deprecated by changing designs
  * Uses "% margins are relative to element width" trick to force square aspect - see main.less
  * Occupies 1/3 screen-width by default.
  */
@@ -52,6 +55,7 @@ const optimise = url => {
 // TODO Instead of a jsx widget, have a function url -> optimised url.
 /** Grabs either standard or mobile-optimised image depending on context
  * @deprecated in August 2022 
+ * TODO: remove if applicable - Last updated June 2021 & seemingly deprecated by changing designs
  * @render (21/03/19) made this render props to deal with unusual way that bg image is handled
  * Just providing a thin wrapper to an img element might be easier going forward
  * @param href https://testmedia.good-loop.com/uploads/standard/cat.jpg
