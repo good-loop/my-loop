@@ -95,12 +95,15 @@ const SlideCardsSection = () => {
 		button: <><T4GSignUpButton className="w-100 mb-3" />	<T4GHowItWorksButton className="w-100 color-gl-red" /></>
 	}
 
-	let Testo = ({ cardStuff }) => (
+	// To quickly remove all references of My.Data, a TwinCards component had to be removed.
+	// Due to unfamilairity with all of our components, going into TwinCards & taking out what's returned for one of the cards -
+	// - seemed like the fastest approach that wouldn't have adverse affects.
+	let oneCard = ({ cardData }) => (
 		<>
 			<div className="text-center mt-5" style={{ zIndex: '2' }}>
 				<Row style={{ height: '30em' }} className='shadow'>
 					<Col md={6} className='p-0 d-none d-md-block'>
-						<BG image={cardStuff.imgUrl} className={space(cardStuff.imgClass, "h-100 w-100 rounded")}
+						<BG image={cardData.imgUrl} className={space(cardData.imgClass, "h-100 w-100 rounded")}
 							style={{ backgroundPosition: 'center', backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }} />
 					</Col>
 					<Col md={6} className='p-0'>
@@ -108,14 +111,14 @@ const SlideCardsSection = () => {
 							<CardBody className='d-flex justify-content-center'>
 								<div>
 									<CardTitle className='color-gl-red'>
-										{cardStuff.title}
+										{cardData.title}
 									</CardTitle>
 									<CardText className='color-gl-darker-grey'>
-										{cardStuff.text}
+										{cardData.text}
 									</CardText>
 								</div>
 								<div className="buttons mt-3">
-									{cardStuff.button}
+									{cardData.button}
 								</div>
 							</CardBody>
 						</Card>
@@ -138,7 +141,7 @@ const SlideCardsSection = () => {
 			<h3 className='text-center' style={{ fontSize: '1.25rem' }}>Here's How You Can Get Involved</h3>
 			<p className='text-center d-none d-md-block color-gl-muddy-blue'>As Well As Our Adverts, We're Creating Some Smart Ways To Help You Do Some Good Every Day, For Free...</p>
 			{/*<TwinCards twinCardsContent={[].concat(cardOne, cardTwo)} /> */}
-			<Testo cardStuff={cardOne} />
+			<oneCard cardStuff={cardOne} />
 		</PageCard>
 	</>)
 }
