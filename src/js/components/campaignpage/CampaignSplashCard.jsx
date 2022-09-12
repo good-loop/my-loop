@@ -29,19 +29,20 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 	if (numPeople === "0") numPeople = false;
 
 	let charityName = 'charity';
+	
+	/* REMOVE THIS SHIT LATER */
 	if (charities && charities.length === 1 && charities[0]) charityName = charities[0].displayName || charities[0].name;
+	let [x, setX] = useState(undefined)
+	if(!x) {donationValue.value = 1340236.12; setX(donationValue);}
+	/* REMOVE THIS SHIT LATER */
 
 	const donationDisplay = <b>{donationValue ? <Counter amount={donationValue} minimumFractionDigits={2} preserveSize /> : "money"}</b>;
-
 	let splashText = <>
-		<div className="header text-white">
-			<span>
-				{ongoing ? "Raising " : "Raised "}
-				{donationDisplay} for
-				{' '}{charityName}
-			</span>
+		<div className="text-uppercase text-white">
+			Thank you for watching {nvertiserName}'s advert and donating!
 		</div>
-		<p className="text-white subtext">by using purpose led online ads</p>
+		<p className="text-white header splash-counter">{<Counter amount={x} minimumFractionDigits={2} preserveSize /> }</p>
+		<p className='text-white'>Raised for charity by using purpose lead online ads with Good-Loop</p>
 	</>;
 	// Change the splashText to show wider impact?
 	if (campaignPage.showWiderImpact && campaignPage.widerAnnualDntn) {
@@ -61,24 +62,28 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 		<div className="impact-hub-splash position-relative">
 			<DynImg src={campaignPage.bg ? campaignPage.bg : "/img/lightcurve.svg"} className={space("w-100", campaignPage.bg ? "splash-img" : "splash-curve")} alt="splash" />
 			<div className="dark-overlay" />
+			<img src="/img/redcurve.svg" className="w-100 splash-curve curve-border" alt="dark border to curve" />
 			<img src="/img/redcurve.svg" className="w-100 splash-curve" alt="curve" />
 			<div className="hero splash-card px-5">
 				<div className="splash-content">
 					<div className="hero-circles">
-						<WhiteCircle>
+						<WhiteCircle width="25%" className="left-hero-circle">
 							{branding.logo ? <img src={branding.logo} alt="brand logo" /> : JSON.stringify(branding)}
 						</WhiteCircle>
 						<img src="/img/plus.png" className="plus" alt="+" />
-						<WhiteCircle>
-							<div className="sub-header">{numPeople ? <><span className="num">{numPeople}</span> people</> : "The Community"}</div>
+						<WhiteCircle  width="25%" className="right-hero-circle">
+							<div className="sub-header" style={{fontSize:"1rem"}}>{numPeople ? <><span className="num" style={{fontSize:"1rem"}}>{numPeople}</span> people</> : "The Community"}</div>
 						</WhiteCircle>
 					</div>
 					<div className="flex-column flex-center pt-5 splash-text">
+						<img src="/img/curves/mobile-curve-white.svg" className="w-100 splash-top-curve" alt="white bottom border" />
+						<div className='splash-text-content'>
 						{splashText}
 						{campaignPage.id && <DevLink href={ServerIO.PORTAL_ENDPOINT + '/#campaign/' + escape(campaignPage.id)} target="_portal">Campaign Editor (using {campaignPage.id})</DevLink>}
 						<button className="cta-modal-btn btn btn-secondary text-uppercase" onClick={e => setCtaModalOpen(true)}>
 							want to raise even more?
 						</button>
+						</div>
 					</div>
 				</div>
 			</div>

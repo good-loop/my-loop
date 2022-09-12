@@ -320,7 +320,7 @@ const CampaignPage = () => {
 	return <>
 		<StyleBlock>{campaign && campaign.customCss}</StyleBlock>
 		<StyleBlock>{branding.customCss}</StyleBlock>
-		<ModalCTA modalOpen={ctaModalOpen} setModalOpen={setCtaModalOpen} branding={branding} nvertiserName={nvertiserName}/>
+		<ModalCTA modalOpen={ctaModalOpen} setModalOpen={setCtaModalOpen} branding={branding} nvertiserName={nvertiserName} />
 
 		<div className="widepage CampaignPage gl-btns">
 			
