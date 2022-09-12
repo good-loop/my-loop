@@ -95,7 +95,7 @@ const PAGES = {
 	forbusiness: ForBusinessPage,
 	forcharity: ForCharityPage,
 	safari: SafariPage,
-	getmydata: MyDataProductPage,
+	//getmydata: MyDataProductPage,
 	tabsforgood: TabsForGoodProductPage,
 	getinvolved: GetInvolvedPage,
 	ourimpact: OurImpactPage,
@@ -130,7 +130,7 @@ const MainDiv = () => {
 		'get-involved': "Get Involved",
 		getinvolved: "Our Products",
 		tabsforgood: "Tabs for Good",
-		getmydata: "My.Data",
+		//getmydata: "My.Data",
 		//"home#mydata-cta": "My.Data" // HACK until we get a landing page
 	};
 
@@ -143,7 +143,7 @@ const MainDiv = () => {
 				"home": [],
 				"our-impact": ['ourimpact', 'impactoverview', 'charities', Roles.isTester() && 'green'],
 				"ourstory": [],
-				'get-involved':['getinvolved', 'tabsforgood', 'getmydata'],
+				'get-involved':['getinvolved', 'tabsforgood', /*'getmydata'*/],
 				//"home#mydata-cta": [],
 				//"blog":Roles.isTester()
 			};
@@ -153,7 +153,7 @@ const MainDiv = () => {
 		navbarChildren={() => <><T4GSignUpButton className="d-none d-md-inline-block" /><T4GSignUpModal /></>}
 		navbarBackgroundColour="white"
 		navbarAccountMenuItems={accountMenuItems}
-		navbarAccountLinkText="My.Data"
+		//navbarAccountLinkText="My.Data"
         navbarLogoClass="myloop-nav-logo"
 		NavExpandSize="md"
 		// navbarLabels={getNavbarLabels}

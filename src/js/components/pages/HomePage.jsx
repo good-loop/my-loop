@@ -95,19 +95,50 @@ const SlideCardsSection = () => {
 		button: <><T4GSignUpButton className="w-100 mb-3" />	<T4GHowItWorksButton className="w-100 color-gl-red" /></>
 	}
 
-	const cardTwo = {
+	let Testo = ({ cardStuff }) => (
+		<>
+			<div className="text-center mt-5" style={{ zIndex: '2' }}>
+				<Row style={{ height: '30em' }} className='shadow'>
+					<Col md={6} className='p-0 d-none d-md-block'>
+						<BG image={cardStuff.imgUrl} className={space(cardStuff.imgClass, "h-100 w-100 rounded")}
+							style={{ backgroundPosition: 'center', backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }} />
+					</Col>
+					<Col md={6} className='p-0'>
+						<Card className='m-0 w-100 h-100 p-5'>
+							<CardBody className='d-flex justify-content-center'>
+								<div>
+									<CardTitle className='color-gl-red'>
+										{cardStuff.title}
+									</CardTitle>
+									<CardText className='color-gl-darker-grey'>
+										{cardStuff.text}
+									</CardText>
+								</div>
+								<div className="buttons mt-3">
+									{cardStuff.button}
+								</div>
+							</CardBody>
+						</Card>
+					</Col>
+				</Row>
+			</div>
+			<img src="img/TabsForGood/sparkle.png" className='logo my-3' />
+		</>)
+
+	/*const cardTwo = {
 		imgUrl: 'img/homepage/my-data-product.png',
 		imgClass: 'bg-gl-lighter-blue',
 		title: <><span style={{ fontWeight: 'bold' }}>MY.DATA</span> <br />How Many Cookies Have You Accepted Today?</>,
 		text: "Don't just give your data away - control your data and convert it into charity donations with My.Data",
 		button: <><MyDataSignUpModal /><MyDataButton className="w-100" /> <ArrowLink className='w-100 color-gl-red' link="/getmydata#howitworks" >How it works</ArrowLink></>
-	}
+	}*/
 
 	return (<>
 		<PageCard className="tabs-for-goods-slide-card" >
 			<h3 className='text-center' style={{ fontSize: '1.25rem' }}>Here's How You Can Get Involved</h3>
 			<p className='text-center d-none d-md-block color-gl-muddy-blue'>As Well As Our Adverts, We're Creating Some Smart Ways To Help You Do Some Good Every Day, For Free...</p>
-			<TwinCards twinCardsContent={[].concat(cardOne, cardTwo)} />
+			{/*<TwinCards twinCardsContent={[].concat(cardOne, cardTwo)} /> */}
+			<Testo cardStuff={cardOne} />
 		</PageCard>
 	</>)
 }
@@ -259,7 +290,7 @@ export const MovementCard = () => {
 		},
 	]
 
-	return (<>
+	return (<>svg
 		<BG image='img/homepage/our-movement-background-lg.svg' style={{ backgroundPosition: 'center top' }}>
 			<PageCard>
 				<div className="movement-blob position-relative d-flex align-items-center justify-content-center pb-5">

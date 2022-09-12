@@ -88,7 +88,7 @@ const ProductsCard = () => {
 
   return (
     <div className="products">
-      {[].concat(tabsForGood, myData).map((product, i) => {
+      {[].concat(tabsForGood, /*myData*/).map((product, i) => {
         const desktopTitleCard = (
           <Col
             className="d-none d-md-flex flex-column text-center justify-content-center align-items-center p-5"
@@ -249,12 +249,12 @@ const GetInvolvedPage = () => {
             linkTitle: 'Tabs for Good',
             href: '/tabsforgood'
           },
-          {
+          /*{
             img: 'img/mydata/product-page/links-our-impact.png',
             span: 'Sign Up',
             linkTitle: 'My.Data',
             href: '/getmydata'
-          },
+          },*/
           {
             img: 'img/mydata/product-page/links-our-story.png',
             span: 'Explore',

@@ -158,6 +158,9 @@ const MyDataDashboardPage = () => {
 			</ProfileDotRow>
 		</Container>
 		<br/>
+		{/*
+		Deprecated as of 12/09/2022 - pause of my-data means these are irrelevant
+		
 		<Container id='badges' className='d-flex justify-content-between'>
 			<MyDataBadge badgeName="Data" progress={getDataProgress()} backgroundImage="img/mydata/data-badge.png" 
 				// notification={1}  multi-level?? not in this release
@@ -167,6 +170,7 @@ const MyDataDashboardPage = () => {
 			<MyDataBadge badgeName="Ads" progress={+hasWatchedThisWeeksAd()} backgroundImage="img/mydata/ads-badge.png" 
 				toggle={() => toggleShowBadgeInfo("ads")} />
 		</Container>
+		
 		<Collapse isOpen={showBadgeInfo==="data"}>
 			<div className="speech-bubble bubble-left">
 				<p>The Data-Hero badge: Add to your data profile to earn more and collect this badge.</p>
@@ -179,14 +183,18 @@ const MyDataDashboardPage = () => {
 		</Collapse>
 		<Collapse isOpen={showBadgeInfo==="ads"}>
 			<div className="speech-bubble bubble-right">
-				{/* TODO a link that opens the MyDataDashboardHomeTab and scrolls you to the watch-an-ad card. Or otherwise takes you to that card */}
+				{//TODO a link that opens the MyDataDashboardHomeTab and scrolls you to the watch-an-ad card. Or otherwise takes you to that card }				
 				<p>The Ad-Audience badge: Tune in weekly to watch Ads-for-Good to raise donations and collect this badge.</p>
 			</div>
 		</Collapse>
 		<Container>
 			<p style={{fontSize:".9rem"}}>Collect Badges for your activity. Dip into these things when it suits you - ignore them when you're busy.</p>
 		</Container>
+		*/}
 
+
+		<MyDataDashboardHomeTab />
+		{/*
 		<Tabs activeTabId={activeTabId} setActiveTabId={tabId => modifyPage(null, {tab:tabId})} >
 			<Tab tabId='dashboard' title={<><img src='img/mydata/home-tab.png' style={{height:'1.5rem',marginRight:'.5em'}} />HOME</>}>
 				<MyDataDashboardHomeTab />
@@ -202,6 +210,7 @@ const MyDataDashboardPage = () => {
 				<MyDataDashboardProfileTab />
 			</Tab>
 		</Tabs>
+		*/}
 	</div>
 }
 
