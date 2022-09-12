@@ -98,7 +98,7 @@ const SlideCardsSection = () => {
 	// To quickly remove all references of My.Data, a TwinCards component had to be removed.
 	// Due to unfamilairity with all of our components, going into TwinCards & taking out what's returned for one of the cards -
 	// - seemed like the fastest approach that wouldn't have adverse affects.
-	let oneCard = ({ cardData }) => (
+	let OneCard = ({ cardData }) => (
 		<>
 			<div className="text-center mt-5" style={{ zIndex: '2' }}>
 				<Row style={{ height: '30em' }} className='shadow'>
@@ -141,7 +141,7 @@ const SlideCardsSection = () => {
 			<h3 className='text-center' style={{ fontSize: '1.25rem' }}>Here's How You Can Get Involved</h3>
 			<p className='text-center d-none d-md-block color-gl-muddy-blue'>As Well As Our Adverts, We're Creating Some Smart Ways To Help You Do Some Good Every Day, For Free...</p>
 			{/*<TwinCards twinCardsContent={[].concat(cardOne, cardTwo)} /> */}
-			<oneCard cardStuff={cardOne} />
+			<OneCard cardData={cardOne} />
 		</PageCard>
 	</>)
 }
