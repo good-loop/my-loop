@@ -224,6 +224,13 @@ const DownloadButton = ({className}) => {
 					document.querySelectorAll('.widget-export').forEach(node => {
 						node.style.display = 'none';
 					});
+
+					// Larger headings
+					Object.assign(document.querySelector('.gc-title').style,{
+						fontSize:'1.25rem',
+						textAlign: 'center',
+						fontWeight: 'bold',
+					});
 				},
 				scale: 1.25
 			}).then(canvas => {
