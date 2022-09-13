@@ -74,7 +74,7 @@ const OurImpactSplash = () => {
 			<div className="cta text-center color-gl-red">
 				<h5>WANT TO JOIN US?</h5>
 				<p>Do Good Easily, For Free</p>
-				<a href="/getinvolved" className="btn btn-primary">VIEW OUR PRODUCTS</a>
+				<a href="/tabsforgood" className="btn btn-primary">VIEW OUR PRODUCTS</a>
 			</div>
 		</div>
 	</>)
@@ -169,7 +169,7 @@ const ImpactMovementSection = () => {
 					<div className="bubble-content position-absolute text-center" style={{ top: '18%', margin: '0 10%', maxWidth: '400px', zIndex: '2' }}>
 						<h4 className='color-gl-red'>Join Our Movement</h4>
 						<p className='color-gl-dark-grey' style={isMobile() ? { fontSize: '.9rem' } : {}} >Start Transforming Your Web Browsing And Data Into <b>Life Saving Vaccines, Meals For Children In Need, Habitats For Endangered Animals,</b> Plus Many More Good Causes.</p>
-						<ArrowLink className='color-gl-red font-weight-bold' link='/getinvolved'>Get Involved</ArrowLink>
+						<ArrowLink className='color-gl-red font-weight-bold' link='/tabsforgood'>Get Involved</ArrowLink>
 					</div>
 				</div>
 				<img className='position-absolute w-100 join-our-movement-bg-front' src="img/homepage/our-movement-front-curve.svg" />

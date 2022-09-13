@@ -95,19 +95,53 @@ const SlideCardsSection = () => {
 		button: <><T4GSignUpButton className="w-100 mb-3" />	<T4GHowItWorksButton className="w-100 color-gl-red" /></>
 	}
 
-	const cardTwo = {
+	// To quickly remove all references of My.Data, a TwinCards component had to be removed.
+	// Due to unfamilairity with all of our components, going into TwinCards & taking out what's returned for one of the cards -
+	// - seemed like the fastest approach that wouldn't have adverse affects.
+	let OneCard = ({ cardData }) => (
+		<>
+			<div className="text-center mt-5" style={{ zIndex: '2' }}>
+				<Row style={{ height: '30em' }} className='shadow'>
+					<Col md={6} className='p-0 d-none d-md-block'>
+						<BG image={cardData.imgUrl} className={space(cardData.imgClass, "h-100 w-100 rounded")}
+							style={{ backgroundPosition: 'center', backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }} />
+					</Col>
+					<Col md={6} className='p-0'>
+						<Card className='m-0 w-100 h-100 p-5'>
+							<CardBody className='d-flex justify-content-center'>
+								<div>
+									<CardTitle className='color-gl-red'>
+										{cardData.title}
+									</CardTitle>
+									<CardText className='color-gl-darker-grey'>
+										{cardData.text}
+									</CardText>
+								</div>
+								<div className="buttons mt-3">
+									{cardData.button}
+								</div>
+							</CardBody>
+						</Card>
+					</Col>
+				</Row>
+			</div>
+			<img src="img/TabsForGood/sparkle.png" className='logo my-3' />
+		</>)
+
+	/*const cardTwo = {
 		imgUrl: 'img/homepage/my-data-product.png',
 		imgClass: 'bg-gl-lighter-blue',
 		title: <><span style={{ fontWeight: 'bold' }}>MY.DATA</span> <br />How Many Cookies Have You Accepted Today?</>,
 		text: "Don't just give your data away - control your data and convert it into charity donations with My.Data",
 		button: <><MyDataSignUpModal /><MyDataButton className="w-100" /> <ArrowLink className='w-100 color-gl-red' link="/getmydata#howitworks" >How it works</ArrowLink></>
-	}
+	}*/
 
 	return (<>
 		<PageCard className="tabs-for-goods-slide-card" >
 			<h3 className='text-center' style={{ fontSize: '1.25rem' }}>Here's How You Can Get Involved</h3>
 			<p className='text-center d-none d-md-block color-gl-muddy-blue'>As Well As Our Adverts, We're Creating Some Smart Ways To Help You Do Some Good Every Day, For Free...</p>
-			<TwinCards twinCardsContent={[].concat(cardOne, cardTwo)} />
+			{/*<TwinCards twinCardsContent={[].concat(cardOne, cardTwo)} /> */}
+			<OneCard cardData={cardOne} />
 		</PageCard>
 	</>)
 }
@@ -231,7 +265,7 @@ export const DiscoverMoreCard = ({ title = "Discover More", subtitle, discoverCo
 			<Row>
 				{discoverContents.map((content, index) => {
 					return (
-						<Col key={index} xs={4} className="text-center text-nowrap d-flex flex-column justify-content-between align-items-center" >
+						<Col key={index} xs={6} className="text-center text-nowrap d-flex flex-column justify-content-between align-items-center" >
 							<img className='shadow mx-3' style={{ maxWidth: '80px', borderRadius: '50%' }} src={content.img} />
 							<p className='m-0 mt-2 color-gl-light-blue'>{content.span}</p>
 							<a className='color-gl-muddy-blue font-weight-bold' href={content.href}>{content.linkTitle}</a>
@@ -259,7 +293,7 @@ export const MovementCard = () => {
 		},
 	]
 
-	return (<>
+	return (<>svg
 		<BG image='img/homepage/our-movement-background-lg.svg' style={{ backgroundPosition: 'center top' }}>
 			<PageCard>
 				<div className="movement-blob position-relative d-flex align-items-center justify-content-center pb-5">
@@ -267,7 +301,7 @@ export const MovementCard = () => {
 					<div className="bubble-content position-absolute text-center" style={{ top: '18%', margin: '0 10%', maxWidth: '400px', zIndex: '2' }}>
 						<h4 className='color-gl-red'>Join Our Movement</h4>
 						<p className='color-gl-dark-grey' style={isMobile() ? { fontSize: '.9rem' } : {}} >Start Transforming Your Web Browsing And Data Into <b>Life Saving Vaccines, Meals For Children In Need, Habitats For Endangered Animals,</b> Plus Many More Good Causes.</p>
-						<ArrowLink className='color-gl-red font-weight-bold' link='/getinvolved'>Get Involved</ArrowLink>
+						<ArrowLink className='color-gl-red font-weight-bold' link='/tabsforgood'>Get Involved</ArrowLink>
 					</div>
 				</div>
 				<img className='position-absolute w-100 join-our-movement-bg-front' src="img/homepage/our-movement-front-curve.svg" />

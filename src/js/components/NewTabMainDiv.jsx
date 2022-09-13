@@ -796,7 +796,7 @@ const tutorialPages = [
     <h2>Your account</h2>
     <p>
       Change your <b>charity</b> and <b>search engine</b> here, under Tabs for
-      Good. You can also see your account details, and explore My.Data!
+      Good. You can also see your account details.
     </p>
   </>,
   <>
