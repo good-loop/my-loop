@@ -127,8 +127,8 @@ const MainDiv = () => {
 		green: 'Green Media',
 		oldtabsforgood: C.T4G,
 		//blog: "Blog",
-		'get-involved': "Get Involved",
-		getinvolved: "Our Products",
+		//'get-involved': "Get Involved",
+		//getinvolved: "Our Products",
 		tabsforgood: "Tabs for Good",
 		//getmydata: "My.Data",
 		//"home#mydata-cta": "My.Data" // HACK until we get a landing page
@@ -143,7 +143,8 @@ const MainDiv = () => {
 				"home": [],
 				"our-impact": ['ourimpact', 'impactoverview', 'charities', Roles.isTester() && 'green'],
 				"ourstory": [],
-				'get-involved':['getinvolved', 'tabsforgood', /*'getmydata'*/],
+				'tabsforgood' : [],
+				//'get-involved':['getinvolved', 'tabsforgood', 'getmydata'],
 				//"home#mydata-cta": [],
 				//"blog":Roles.isTester()
 			};
