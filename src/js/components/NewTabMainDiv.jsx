@@ -37,19 +37,21 @@ import {
   getPVSelectedCharityId,
   getTabsOpened,
   getTabsOpened2,
+  retrurnProfile,
   Search,
 } from './pages/TabsForGoodSettings';
 import TickerTotal from './TickerTotal';
-import Person, { getProfile, getPVClaim } from '../base/data/Person';
+import Person, { getProfile, getPVClaim, getClaimValue } from '../base/data/Person';
 import Misc from '../base/components/Misc';
 import Money from '../base/data/Money';
 import NGO from '../base/data/NGO';
 import Roles, { isTester } from '../base/Roles';
 import Claim from '../base/data/Claim';
 import { accountMenuItems } from './pages/CommonComponents';
-import { getCharityObject } from '../base/components/PropControls/UserClaimControl';
+import { getCharityObject, getPersonSetting } from '../base/components/PropControls/UserClaimControl';
 import NGOImage from '../base/components/NGOImage';
-import { hasRegisteredForMyData } from './mydata/MyDataCommonComponents';
+import { hasRegisteredForMyData, ProfileCreationSteps } from './mydata/MyDataCommonComponents';
+import {getThemeBackground} from './NewTabThemes'
 
 // DataStore
 C.setupDataStore();
@@ -135,15 +137,28 @@ const WebtopPage = () => {
   const loadingCharity = !pvCharityID || !pvCharityID.resolved;
   let [showPopup, setShowPopup] = useState(false);
   let [customBG, setCustomBG] = useState(null);
+  let [customLogo, setCustomLogo] = useState('/img/newtab/logo/white.jpg');
+  let person = undefined
 
   // Yeh - a tab is opened -- let's log that (once only)
   if (!logOnceFlag && Login.isLoggedIn()) {
     let pvPerson = getProfile();
-    pvPerson.promise.then((person) => {
+    pvPerson.promise.then((person) => {   // This is the problem, how do we get 'person' before this?
       // Hurrah - T4G is definitely installed
       if (!person) console.warn('no person?!');
       else Person.setHasApp(person, Login.app);
+      
+      // we have a person! What backgrounds do we give them...
+      //console.log("-------------------")
+      let curTheme = getClaimValue({ person, key: "theme" });
+      let curCharity = getClaimValue({ person, key: "charity" });
+      let {background, logo} = getThemeBackground(curTheme, curCharity)
+      console.log("setting backgrounds")
+      setCustomBG(background)
+      setCustomLogo(logo)
+
     });
+    console.log("after pv", person)
     // NB: include a nonce, as otherwise identical events (you open a few tabs) within a 15 minute time bucket get treated as 1
     lg('tabopen', { nonce: nonce(6) });
     // Wait 1.5 seconds before logging ad view - 1 second for ad view profit + .5 to load
@@ -207,7 +222,7 @@ const WebtopPage = () => {
   useEffect(() => {
     let bgImgs = 9;
     setCustomBG(
-      '/img/newtab/gl-bg' + (Math.round(Math.random() * bgImgs) + 1) + '.jpg'
+      '/img/newtab/default/gl-bg' + (Math.round(Math.random() * bgImgs) + 1) + '.jpg'
     );
     bookmarkRequest();
 
@@ -272,7 +287,7 @@ const WebtopPage = () => {
                   </h5>
                 </>
               )}
-              <NormalTabCenter style={{transform:'translate(0,-30%)'}} />
+              <NormalTabCenter style={{transform:'translate(0,-30%)'}} customLogo={customLogo} />
               <LinksDisplay bookmarksData={bookmarksData} style={{transform:'translate(0,-30%)'}} />
             </Col>
           </Row>
@@ -461,7 +476,7 @@ const ENGINES = {
  * @param {Object} p
  * @returns
  */
-const NormalTabCenter = ({style}) => {
+const NormalTabCenter = ({style, customLogo}) => {
   let pvSE = getPVClaim({ xid: Login.getId(), key: 'searchEngine' });
   let searchEngine = Claim.value(pvSE) || 'google';
   const engineData = ENGINES[searchEngine];
@@ -473,7 +488,7 @@ const NormalTabCenter = ({style}) => {
           <a href='https://my.good-loop.com'>
             <img
               className='tab-center-logo'
-              src='https://my.good-loop.com/img/TabsForGood/TabsForGood_logo.png'
+              src={customLogo}
               alt='logo'
             />
           </a>

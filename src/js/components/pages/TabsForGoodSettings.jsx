@@ -18,6 +18,7 @@ import C from '../../C';
 import LinkOut from '../../base/components/LinkOut';
 import NGO from '../../base/data/NGO';
 import List from '../../base/data/List';
+import { getCharityObject } from '../../base/components/PropControls/UserClaimControl';
 
 
 const TabsForGoodSettings = () => {
@@ -31,8 +32,42 @@ const TabsForGoodSettings = () => {
 		<h1>Pick your charity</h1>
 		<br />
 		<CharityPicker />
+		<br />
+		<h1>Pick your theme</h1>
+		<ThemePicker />
+
 	</>;
 };
+
+
+const retrurnProfile = () => {
+	return getProfile();
+}
+
+const ThemePicker = () => {
+	const person = getProfile().value;										// get person
+	if(!person) return <Misc.Loading />;							
+
+	let curTheme = getClaimValue({ person, key: "theme" });
+	if(!curTheme) setPersonSetting("theme", '.default')
+
+	const onClick = (value) => {
+		console.log("newEngine", value);
+		setPersonSetting("theme", value);
+	};
+
+	return (
+		<div>
+			<button className='btn btn-primary col-4' onClick={e => onClick('.dark')}>dark</button>
+			<button className='btn btn-primary col-4' onClick={e => onClick('.light')}>light</button>
+			<button className='btn btn-primary col-4' onClick={e => onClick('.nature')}>nature</button>
+			<button className='btn btn-primary col-4' onClick={e => onClick('.charity')}>charity</button>
+			<button className='btn btn-primary col-4' onClick={e => onClick('.default')}>default</button>
+			<p>{curTheme}</p>
+		</div>
+	)
+}
+
 
 const SearchEnginePicker = () => {
 	const person = getProfile().value;
@@ -61,6 +96,7 @@ const CharityPicker = () => {
 	let selId = getClaimValue({ person, key: "charity" });
 
 	const pvSelectedCharity = selId && getDataItem({ type: C.TYPES.NGO, id: selId, status: KStatus.Published, swallow: true });
+	console.log(pvSelectedCharity)
 	let q = DataStore.getValue('widget', 'search', 'q');
 
 	const DEFAULT_LIST = "against-malaria-foundation oxfam helen-keller-international clean-air-task-force strong-minds give-directly pratham wwf-uk cancer-research-uk";
@@ -238,6 +274,13 @@ const getPVSelectedCharityId = (xid) => {
 	return pvv;
 };
 
+
+const getPVSelectedTheme = (xid) => {
+	let pvClaim = getClaimValue({xid, key:"theme"});
+	if ( ! pvClaim) return null;
+	return pvClaim; 
+}
+
 /**
  * Set and save
  * @param {*} key 
@@ -277,5 +320,5 @@ const StatCard = ({ md, lg, xs, number, label, className, padding, children }) =
 	</Col>;
 };
 
-export { getTabsOpened, Search, getPVSelectedCharityId, setPersonSetting };
+export { getTabsOpened, Search, getPVSelectedCharityId, setPersonSetting, getPVSelectedTheme, retrurnProfile };
 export default TabsForGoodSettings;
