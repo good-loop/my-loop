@@ -226,10 +226,12 @@ const DownloadButton = ({className}) => {
 					});
 
 					// Larger headings
-					Object.assign(document.querySelector('.gc-title').style,{
-						fontSize:'1.25rem',
-						textAlign: 'center',
-						fontWeight: 'bold',
+					document.querySelectorAll('.gc-title').forEach(node => {
+						Object.assign(node.style, {
+							fontSize:'1.25rem',
+							textAlign: 'center',
+							fontWeight: 'bold',
+						});
 					});
 				},
 				scale: 1.25
