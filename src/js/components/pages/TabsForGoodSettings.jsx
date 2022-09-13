@@ -48,12 +48,18 @@ const ThemePicker = () => {
 	const person = getProfile().value;										// get person
 	if(!person) return <Misc.Loading />;							
 
-	let curTheme = getClaimValue({ person, key: "theme" });
-	if(!curTheme) setPersonSetting("theme", '.default')
+	let curTheme = getClaimValue({ person, key: "theme" });					// has user got a theme set?
+	if(!curTheme) {				
+		setPersonSetting("theme", '.default')								// if not, default
+		window.localStorage.setItem("theme", '.default')
+	}
+
+	let curChar = getClaimValue({person, key: "charity"})					// get users chosen charity
+	if(!curChar) curChar = '.default'										
 
 	const onClick = (value) => {
-		console.log("newEngine", value);
-		setPersonSetting("theme", value);
+		window.localStorage.setItem("theme", value)							// save theme selection locally
+		setPersonSetting("theme", value);									// save theme selection onto account
 	};
 
 	return (
@@ -61,7 +67,7 @@ const ThemePicker = () => {
 			<button className='btn btn-primary col-4' onClick={e => onClick('.dark')}>dark</button>
 			<button className='btn btn-primary col-4' onClick={e => onClick('.light')}>light</button>
 			<button className='btn btn-primary col-4' onClick={e => onClick('.nature')}>nature</button>
-			<button className='btn btn-primary col-4' onClick={e => onClick('.charity')}>charity</button>
+			<button className='btn btn-primary col-4' onClick={e => onClick(curChar)}>charity</button>
 			<button className='btn btn-primary col-4' onClick={e => onClick('.default')}>default</button>
 			<p>{curTheme}</p>
 		</div>
@@ -154,6 +160,19 @@ const CharitySelectBox = ({ item, className }) => {
 	let selected = getId(item) === selId;
 	// NB: to deselect, pick a different charity (I think that's intuitive enough)
 
+	const onClick = (item) => {
+		setPersonSetting("charity", getId(item));
+
+		// if user has a charity as a theme & change their charity, it should update the theme
+		let baseThemes = ['.dark', '.light', '.default', '.nature']	// TODO: this should be a list somewhere we import here
+		let themeSetting = getClaimValue(({ person, key: "theme" }))
+		if(baseThemes.every(theme => theme !== themeSetting)){	// if user has not chosen a non-charity theme (theme is a charity or unset)
+			console.log("WHAT THE    FUCK???", baseThemes, themeSetting)
+			setPersonSetting("theme", getId(item));				// apply charity theme 
+			window.localStorage.setItem('theme', getId(item))
+		}
+	}
+
 	return <div className={space("m-md-2", className)}>
 		<div
 			className={space("charity-select-box flex-column justify-content-between align-items-center unset-margins p-md-3 w-100 position-relative")}
@@ -161,7 +180,7 @@ const CharitySelectBox = ({ item, className }) => {
 			{item.logo ? <img className="logo-xl mt-4 mb-2" src={item.logo} alt={item.name || item.id} /> : <span>{item.name || item.id}</span>}
 			<p>{item.summaryDescription}</p>
 			{selected ? <span className="text-success thin"><Icon name="tick" /> Selected</span>
-				: <button onClick={() => setPersonSetting("charity", getId(item))} className="btn btn-outline-primary thin">Select</button>
+				: <button onClick={() => {onClick(item);}} className="btn btn-outline-primary thin">Select</button>
 			}
 			{item.url && <LinkOut className="position-absolute" style={{ top: 10, right: 10 }} href={item.url} aria-label={"Read more about " + (item.name || item.id)}>About</LinkOut>}
 		</div>

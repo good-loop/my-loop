@@ -71,9 +71,7 @@ let logOnceFlag;
  */
 let verifiedLoginOnceFlag;
 
-export const getThemeBackground = (theme, charity) => {
-  console.log(charity, "-------------");
-
+export const getThemeBackground = (theme) => {
   switch(theme) {
     // user has chosen one of our custom themes
     case '.dark':
@@ -84,15 +82,9 @@ export const getThemeBackground = (theme, charity) => {
               logo: '/img/newtab/logo/black.png'}
 
     // user has chosen to view charity specific theme - check if charity has one
-    case '.charity':
-      switch (charity) {
-        case('dogs-trust') :
-          return {background: '/img/newtab/charity/dogstrust/background1.jpg', 
-                  logo: '/img/newtab/logo/black.png'}
-        default:
-          return {background:'/img/newtab/default/gl-bg' + (Math.round(Math.random() * 10) + 1) + '.jpg',
-                  logo: '/img/newtab/logo/white.png'};
-      }
+    case('dogs-trust') :
+      return {background: '/img/newtab/charity/dogstrust/background1.jpg', 
+              logo: '/img/newtab/logo/black.png'}
 
     // user has chosen default or no themes
     default:

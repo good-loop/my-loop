@@ -39,6 +39,7 @@ import {
   getTabsOpened2,
   retrurnProfile,
   Search,
+  setPersonSetting,
 } from './pages/TabsForGoodSettings';
 import TickerTotal from './TickerTotal';
 import Person, { getProfile, getPVClaim, getClaimValue } from '../base/data/Person';
@@ -148,14 +149,25 @@ const WebtopPage = () => {
       if (!person) console.warn('no person?!');
       else Person.setHasApp(person, Login.app);
       
-      // we have a person! What backgrounds do we give them...
-      //console.log("-------------------")
+      // we have a person!
+      // If they don't have a background set, set to default
       let curTheme = getClaimValue({ person, key: "theme" });
-      let curCharity = getClaimValue({ person, key: "charity" });
-      let {background, logo} = getThemeBackground(curTheme, curCharity)
-      console.log("setting backgrounds")
-      setCustomBG(background)
-      setCustomLogo(logo)
+      let curLocTheme = window.localStorage.getItem("theme");
+
+      if (!curTheme) setPersonSetting('theme','.default');                // if not chosen, default
+      if (!curLocTheme) window.localStorage.setItem("theme", curTheme);    // if theme not stored, store theme
+      
+      // if local theme doesn't match account theme, update local & change background
+      if(curLocTheme !== curTheme) { 
+        window.localStorage.setItem("theme", curTheme);
+        let {background, logo} = getThemeBackground(curTheme)
+        setCustomBG(background)
+        setCustomLogo(logo)
+      }
+
+
+      // If they don't have a layout set, set to default
+      // VERA DO YOUR STUFF HERE
 
     });
     console.log("after pv", person)
@@ -220,10 +232,22 @@ const WebtopPage = () => {
   };
 
   useEffect(() => {
+
+    let locTheme = window.localStorage.getItem("theme")                     // get chosen theme
+    if (!locTheme) window.localStorage.setItem("theme", ".default")
+
+    let {background, logo} = getThemeBackground(locTheme)
+
+    console.log("setting backgrounds")
+    setCustomBG(background)
+    setCustomLogo(logo)
+
+    /*
     let bgImgs = 9;
     setCustomBG(
       '/img/newtab/default/gl-bg' + (Math.round(Math.random() * bgImgs) + 1) + '.jpg'
     );
+    */
     bookmarkRequest();
 
     window.addEventListener('message', (event) => handleMessage(event));
