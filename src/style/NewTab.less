@@ -68,13 +68,14 @@
 
 .tutorial-highlight {
     // Border + shadow = glow
-    border: 6px solid @gl-light-red;
-    box-shadow: 0 0 10px @gl-light-red;
+    border: 6px solid red;
+    box-shadow: 0 0 10px red;
+    margin: -6px;
 }
 
 .tutorial-component.highlight {
-    border: 6px solid @gl-light-red;
-    box-shadow: 0 0 10px @gl-light-red;
+    border: 6px solid red;
+    box-shadow: 0 0 10px red;
     z-index: 1000;
     margin: -6px;
     & * {
@@ -296,12 +297,11 @@
     background-color: white;
     opacity: 0.8;
     //padding: 1rem;
-    border-top-right-radius: 1000px;
-    border-bottom-right-radius: 1000px;
+    border-radius: 50%;
     padding: 0.5rem;
     padding-right: 55px;
     padding-left: 50px;
-    position: absolute;
+    position: absolute !important;
     left: 0;
     top: 1em;
     z-index: 999;
@@ -311,11 +311,14 @@
     }
 }
 
-.together-we-ve-raised {
-    position: absolute;
+.t4g-total {
+    position: absolute !important;
     top: 1em;
-    font-size: 1rem;
-    color: black !important;
+    .together-we-ve-raised {
+        font-size: 1rem;
+        color: black !important;
+        margin: 0;
+    }
     background-color: white;
     opacity: 0.8;
     border-radius: 5em;
