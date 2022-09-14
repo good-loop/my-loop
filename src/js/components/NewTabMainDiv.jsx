@@ -14,6 +14,7 @@ import {
   stopEvent,
   getBrowserVendor,
   ellipsize,
+  space,
 } from '../base/utils/miscutils';
 import Login from '../base/youagain';
 import C from '../C';
@@ -53,6 +54,7 @@ import { getCharityObject, getPersonSetting } from '../base/components/PropContr
 import NGOImage from '../base/components/NGOImage';
 import { hasRegisteredForMyData, ProfileCreationSteps } from './mydata/MyDataCommonComponents';
 import {getThemeBackground} from './NewTabThemes'
+import {getT4GLayout} from './NewTabLayouts';
 
 // DataStore
 C.setupDataStore();
@@ -256,8 +258,10 @@ const WebtopPage = () => {
     };
   }, []);
 
+  let layout = getT4GLayout();
+
   return (
-    <>
+    <div className={space('t4g', 'layout-' + layout)}>
       {!Roles.isDev() && <style>{'.MessageBar .alert {display: none;}'}</style>}
       {/* NB: Rendering background image here can avoid a flash of white before the BG get loaded */}
       <NGOImage
@@ -300,15 +304,15 @@ const WebtopPage = () => {
               {true && ( //! loadingCharity && ! charityID &&
                 // Show the total raised across all charities, if the user hasn't selected one.
                 <>
-                  <h5
-                    className='text-center together-we-ve-raised'
-                    style={{ fontSize: '.8rem' }}
-                  >
-                    Together we've raised&nbsp;
-                    <TutorialComponent page={2} className='d-inline-block'>
-                      <TickerTotal />
-                    </TutorialComponent>
-                  </h5>
+                    <TutorialComponent page={2} className='t4g-total'>
+                        <h5
+                            className='text-center together-we-ve-raised'
+                            style={{ fontSize: '.8rem' }}
+                        >
+                            Together we've raised&nbsp;
+                            <TickerTotal />
+                        </h5>
+                  </TutorialComponent>
                 </>
               )}
               <NormalTabCenter style={{transform:'translate(0,-30%)'}} customLogo={customLogo} />
@@ -335,7 +339,7 @@ const WebtopPage = () => {
         }}
       />
       <ConnectionStatusPopup />
-    </>
+    </div>
   );
 }; // ./WebTopPage
 
@@ -442,6 +446,7 @@ const UserControls = ({ cid }) => {
         linkType='a'
         small
         logoutLink= {<T4GLogoutLink/>}
+        customImg={"/img/logo/my-loop-logo-round.svg"}
         customLogin={() => (
           <NewtabLoginLink className='login-menu btn btn-transparent fill'>
             Register / Log in
@@ -508,7 +513,7 @@ const NormalTabCenter = ({style, customLogo}) => {
   return (
     <>
       <div className='flex-column unset-margins align-items-center tab-center mb-1' style={style}>
-        <TutorialComponent page={5} className='py-3'>
+        <TutorialComponent page={5} className='py-3 t4g-logo'>
           <a href='https://my.good-loop.com'>
             <img
               className='tab-center-logo'
@@ -611,24 +616,18 @@ const NewTabCharityCard = ({ cid, loading }) => {
     ServerIO.MYLOOP_ENDPOINT + '/account?tab=tabsForGood';
 
   return (
-    <div className='text-center NewTabCharityCard'>
-      <h5 className='text-dark' style={{ fontSize: '.8rem' }}>
-        I'm Supporting
-      </h5>
-      {/*<div onClick={() => top.location.href = charityLink}> */}
-      <a href={charityLink} target='_blank' rel='noopener noreferrer'>
-        <TutorialComponent page={1}>
-          {/* <WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}> */}
-          {charity && <CharityLogo charity={charity} />}
-          {!charity && loading && <p className='my-auto'>Loading...</p>}
-          {!charity && !loading && <p className='my-auto'>Select a charity</p>}
-          {/* </WhiteCircle> */}
-        </TutorialComponent>
-      </a>
-      {/* {totalMoney && charity && 
-			<p>Together we've raised<br/><b><Misc.Money amount={totalMoney} /></b><br/>
-			for {NGO.displayName(charity)}</p>} */}
-    </div>
+    <TutorialComponent page={1} className="NewTabCharityCard">
+        <div className='text-center'>
+        {/*<div onClick={() => top.location.href = charityLink}> */}
+        <a href={charityLink} target='_blank' rel='noopener noreferrer'>
+            {/* <WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}> */}
+            {charity && <CharityLogo charity={charity} />}
+            {!charity && loading && <p className='my-auto'>Loading...</p>}
+            {!charity && !loading && <p className='my-auto'>Select a charity</p>}
+            {/* </WhiteCircle> */}
+        </a>
+        </div>
+    </TutorialComponent>
   );
 };
 
