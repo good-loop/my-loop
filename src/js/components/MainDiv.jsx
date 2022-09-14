@@ -47,6 +47,7 @@ import { accountMenuItems } from './pages/CommonComponents';
 import MyDataProductPage from './mydata/MyDataProductPage';
 import GetInvolvedPage from './pages/GetInvolvedPage';
 import OurImpactPage from './pages/OurImpactPage';
+import WelcomePage from './pages/Welcome'
 import TabsForGoodProductPage from './pages/TabsForGoodProductPage';
 
 import GenerateGreenDemoEvents from './pages/GenerateGreenDemoEvents';
@@ -99,6 +100,7 @@ const PAGES = {
 	tabsforgood: TabsForGoodProductPage,
 	getinvolved: GetInvolvedPage,
 	ourimpact: OurImpactPage,
+	welcome: WelcomePage,
 	ggde: GenerateGreenDemoEvents,
 	logout: LogoutPage, // Logout Page for T4G
 };
@@ -160,7 +162,7 @@ const MainDiv = () => {
 		// navbarLabels={getNavbarLabels}
 		// We want everything to be full width on this site
 		fullWidthPages={Object.keys(PAGES)}
-		//undecoratedPages={["blogcontent"]}
+		undecoratedPages={["welcome"]}
 		Footer={Footer}
 		canRegister
 		noLoginTitle
