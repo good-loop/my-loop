@@ -117,13 +117,13 @@ const MyGetInvolvedSection = () =>{
 		<p className='mb-5 leader-text'>Join the My.Good-Loop community today and start raising money for charity. For free.</p>
 		<T4GSignUpButton className="mb-5"/>
 	</PageCard>
-	<img className='w-100 d-none d-md-block' src="img/curves/curve-desat-blue-bottom.svg" alt="" />
-	<PageCard className="text-center register-card">
+	{/* <img className='w-100 d-none d-md-block' src="img/curves/curve-desat-blue-bottom.svg" alt="" /> */}
+	{/* <PageCard className="text-center register-card">
 		<p className='leader-text'>We're developing exciting new products that will help us all make the internet a more positive place. Register below to get exlusive access to future product launches and join the Good-Loop movement.</p>
 		<SubscriptionForm textCenter purpose="preregister" buttonText="REGISTER" />
 		
 		<img src="/img/signup/hand-globe-coins.png" className='hand-globe-coins d-none d-md-block' />
-	</PageCard>
+	</PageCard> */}
 	</>) 
 }
 
@@ -138,11 +138,11 @@ export const OurStoryPage = () => {
 		<CaringCommunitySection />
 		{/* TODO <NewsAwards firstIMG="Awards1" secondIMG="Awards2" thirdIMG="Awards3" /> */}
 		<MyGetInvolvedSection classname="" />
-		<TriCards className="TODO bg-gl-light-pink" 
+		{/* <TriCards className="TODO bg-gl-light-pink" 
 			titles={["Check out our podcast", "Good-Loop for business", "Good-Loop for charities"]}
 			texts={["Discover... a sentence about this page/article", "Discover... a sentence about this page/article", "Discover... a sentence about this page/article"]}
 			images={["img/ourstory/podcast-mic.png", "img/homepage/good-loop-for-business.png", "img/ourstory/part-of-earth.png"]}
-		/>
+		/> */}
 	</div>
 	</>)
 }

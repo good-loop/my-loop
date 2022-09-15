@@ -341,7 +341,9 @@
     left: 1rem;
     top: 1rem;
     z-index: 999;
-    max-width: 25%;
+    // max width & height to prevent it from being too large in smaller laptops (e.g. 800p)
+    max-width: 10vw;
+    max-height: 10vw;
     h5 {
         font-size: 1rem;
     }
