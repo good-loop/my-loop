@@ -651,7 +651,7 @@ const ConnectionStatusPopup = () => {
   const isOffline = !navigator.onLine; // pvHasAdBlock.error;
   const determining = // determining what? This pop up seems to be on only when it is clearly online
     !(pvHasAdBlock.resolved || pvHasAdBlock.error) && timedout;
-  const showPopup = (hasAdBlock || isOffline || determining) && popup;
+  const showPopup = (hasAdBlock || isOffline) && popup;
 
   return showPopup ? (
     <div
