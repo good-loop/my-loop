@@ -106,7 +106,7 @@ const getT4GThemeBackground = (theme) => {
 
     let t = theme;
 
-    if (t.startsWith(".charity")) {
+    if (t && t.startsWith(".charity")) {
         // Format for charity themes is ".charity <charity-id>" - prompts us to look for the charity, but gives us an ID to use locally to avoid load times
 
         const person = getProfile().value;										// get person
