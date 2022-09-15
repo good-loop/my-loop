@@ -10,7 +10,7 @@ const WelcomePage = () => {
 				<WhiteCircle width={"7.5%"} className="gl-logo-circle">
 					<img className='gl-logo' src='/img/TabsForGood/WelcomePage/my_good-loop_Colour_RoundLogo.svg' alt='good-loop logo' />
 				</WhiteCircle>
-				<WhiteCircle width={"60%"} className="middle-circle">
+				<WhiteCircle width={"45%"} className="middle-circle">
 					<p className='color-gl-red red-text' style={{ color: "@gl-red" }}>Welcome! Open A New Tab To Get Started</p>
 					<p className='extra-text'>When you open a new tab, Google will ask if you want to keep the extension - be sure to select 'Keep It'</p>
 					<img className='keep-it' alt='reminder to press keep it in google' src='/img/TabsForGood/WelcomePage/keep-it-screenshot.png'></img>

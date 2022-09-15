@@ -1,6 +1,6 @@
 @import "../js/base/style/fonts.less";
 
-.t4g-welcome-page {
+.t4g-welcome-page{
 
     height: 100vh;
     background-image: url("/img/TabsForGood/WelcomePage/our-mission-background-lg.svg");
@@ -19,8 +19,9 @@
 
     .gl-logo-circle {
         position: absolute !important;
-        left: 32.5%;
-        top: 12.5%;
+        left: 50%;
+        top: 50%;
+		transform: translate(-325%, -200%);
         width: 100%;
         z-index: 2;
 
@@ -36,8 +37,12 @@
     .middle-circle {
 
         position: absolute;
-        left: 20%;
-        top: 20%;
+
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+
+		min-width: 650px;
         box-shadow: none !important;
         background-color: transparent !important;
         background-size: cover !important;
