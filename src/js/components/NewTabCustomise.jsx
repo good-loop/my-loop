@@ -1,7 +1,7 @@
 /* global navigator */
 import React, { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Modal, ModalHeader, ModalBody, Button } from 'reactstrap';
-import { T4GLayoutSelector, T4GThemePicker } from './NewTabLayouts';
+import { T4GLayoutPicker, T4GLayoutSelector, T4GThemePicker } from './NewTabLayouts';
 import { TutorialComponent } from './NewtabTutorialCard';
 
 
@@ -15,7 +15,7 @@ export const NewTabCustomise = ({ modalOpen, setModalOpen }) => {
                         <T4GThemePicker />
                         <br />
                         <h1> Select a layout </h1>
-                        <T4GLayoutSelector />
+                        <T4GLayoutPicker />
                         <br />
                     </Container>
                 </ModalBody>

@@ -4,21 +4,6 @@ import Misc from '../base/components/Misc';
 import UserClaimControl, { setPersonSetting } from '../base/components/PropControls/UserClaimControl';
 import { getClaimValue, getProfile } from '../base/data/Person';
 
-const T4GLayoutSelector = ({...props}) => {
-
-    // remove props that we control
-    delete props.prop;
-    delete props.type;
-    delete props.options;
-    delete props.labels;
-
-    const onChange = (val) => {
-        window.localStorage.setItem("t4g-layout", val);
-    }
-
-    return <UserClaimControl type="select" options={["min", "normal", "full"]} dflt="normal" labels={["Minimalist", "Normal", "Full Display"]} prop="t4g-layout" onChange={onChange} {...props}/>
-};
-
 const THEMES = {
     ".dark": {
         background: '/img/newtab/solid/dark.jpg',
@@ -34,6 +19,49 @@ const THEMES = {
         background: '/img/newtab/charity/dogstrust/background1.jpg',
         logo: '/img/newtab/logo/black.png'
     },
+};
+
+// Excessive, but laid out like this in case we want to add extra info in future
+const LAYOUTS = {
+    min: {
+        label: "Minimalist"
+    },
+    normal: {
+        label: "Normal"
+    },
+    full: {
+        label: "Full Display"
+    }
+};
+
+const T4GLayoutPicker = () => {
+	const person = getProfile().value;										// get person
+	if(!person) return <Misc.Loading />;							
+
+	let curLayout = getClaimValue({ person, key: "t4g-layout" });					// has user got a theme set?
+	if(!curLayout) {				
+		setPersonSetting({key:"t4g-layout", value:'full'})								// if not, default
+		window.localStorage.setItem("t4g-layout", 'full')
+	}							
+
+	const onClick = (value) => {
+		window.localStorage.setItem("t4g-layout", value)							// save theme selection locally
+		setPersonSetting({key:"t4g-layout", value});									// save theme selection onto account
+	};
+
+    const SelectButton = ({layout, label}) => {
+        return <Col md={4} className='p-1'>
+            <Button color={curLayout === layout ? "primary" : "secondary"} className='w-100' onClick={e => onClick(layout)}>{label || LAYOUTS[layout].label}</Button>
+        </Col>;
+    }
+
+	return (
+		<Row>
+            {Object.keys(LAYOUTS).map(layout => {
+                return <SelectButton layout={layout}/>;
+            })}
+		</Row>
+	)
 };
 
 const T4GThemePicker = () => {
@@ -137,4 +165,4 @@ const getT4GTheme = () => {
 }
 
 
-export {T4GLayoutSelector, getT4GLayout, getT4GTheme, getT4GThemeBackground, T4GThemePicker};
+export {getT4GLayout, getT4GTheme, getT4GThemeBackground, T4GThemePicker, T4GLayoutPicker};
