@@ -21,7 +21,7 @@ const WelcomePage = () => {
 	return (<>
 		<Container className='container'>
 			<div className='content-col' style={{ alignContent: 'center' }}>
-				<WhiteCircle width={"8%"} className="gl-logo-circle">
+				<WhiteCircle width={"7.5%"} className="gl-logo-circle">
 					<img className='gl-logo' src='/img/TabsForGood/WelcomePage/my_good-loop_Colour_RoundLogo.svg' alt='good-loop logo' />
 				</WhiteCircle>
 				<WhiteCircle width={"60%"} className="middle-circle">
