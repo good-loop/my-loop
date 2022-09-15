@@ -15,7 +15,7 @@ import Roles from '../../base/Roles';
 import { A } from '../../base/plumbing/glrouter';
 import NGOImage from '../../base/components/NGOImage';
 import NGO from '../../base/data/NGO';
-import { MyDataSignUpButton, MyDataSignUpModal, showMyDataSignUpModal}  from '../mydata/MyDataSignUp';
+import { MyDataSignUpButton, MyDataSignUpModal, showMyDataSignUpModal }  from '../mydata/MyDataSignUp';
 import { hasRegisteredForMyData } from '../mydata/MyDataCommonComponents';
 
 export const accountMenuItems = [
