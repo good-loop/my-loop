@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Button, Row, Col } from 'reactstrap';
 import Misc from '../base/components/Misc';
 import UserClaimControl, { setPersonSetting } from '../base/components/PropControls/UserClaimControl';
 import { getClaimValue, getProfile } from '../base/data/Person';
@@ -16,6 +17,23 @@ const T4GLayoutSelector = ({...props}) => {
     }
 
     return <UserClaimControl type="select" options={["min", "normal", "full"]} dflt="normal" labels={["Minimalist", "Normal", "Full Display"]} prop="t4g-layout" onChange={onChange} {...props}/>
+};
+
+const THEMES = {
+    ".dark": {
+        background: '/img/newtab/solid/dark.jpg',
+        logo: '/img/newtab/logo/white.png',
+        label: "Dark"
+    },
+    ".light": {
+        background: '/img/newtab/solid/light.jpg',
+        logo: '/img/newtab/logo/black.png',
+        label: "Light"
+    },
+    "dogs-trust": {
+        background: '/img/newtab/charity/dogstrust/background1.jpg',
+        logo: '/img/newtab/logo/black.png'
+    },
 };
 
 const T4GThemePicker = () => {
@@ -36,14 +54,21 @@ const T4GThemePicker = () => {
 		setPersonSetting({key:"t4g-theme", value});									// save theme selection onto account
 	};
 
+    const SelectButton = ({theme, label}) => {
+        return <Col md={4} className='p-1'>
+            <Button color={curTheme === theme ? "primary" : "secondary"} className='w-100' onClick={e => onClick(theme)}>{label || THEMES[theme].label}</Button>
+        </Col>;
+    }
+
 	return (
-		<div>
-			<button className='btn btn-primary col-4' onClick={e => onClick('.dark')}>dark</button>
-			<button className='btn btn-primary col-4' onClick={e => onClick('.light')}>light</button>
-			<button className='btn btn-primary col-4' onClick={e => onClick('.nature')}>nature</button>
-			<button className='btn btn-primary col-4' onClick={e => onClick(curChar)}>charity</button>
-			<button className='btn btn-primary col-4' onClick={e => onClick('.default')}>default</button>
-		</div>
+		<Row>
+            <SelectButton theme=".default" label="Default"/>
+            {Object.keys(THEMES).map(theme => {
+                if (!theme.startsWith('.')) return null;
+                return <SelectButton theme={theme}/>;
+            })}
+            {Object.keys(THEMES).includes(curChar) && <SelectButton theme={".charity " + curChar} label="Charity"/>}
+		</Row>
 	)
 };
 
@@ -51,30 +76,27 @@ const getT4GThemeBackground = (theme) => {
 
     const [rand, setRand] = useState(Math.round(Math.random() * 9) + 1);
 
-    const theme4Theme = {
-        ".dark": {
-            background: '/img/newtab/solid/dark.jpg',
-            logo: '/img/newtab/logo/white.png'
-        },
-        ".light": {
-            background: '/img/newtab/solid/light.jpg',
-            logo: '/img/newtab/logo/black.png'
-        },
-        "dogs-trust": {
-            background: '/img/newtab/charity/dogstrust/background1.jpg',
-            logo: '/img/newtab/logo/black.png'
-        },
-        ".default": {
-            background: '/img/newtab/default/gl-bg' + rand + '.jpg',
-            logo: '/img/newtab/logo/white.png'
-        }
+    let t = theme;
+
+    if (t.startsWith(".charity")) {
+        // Format for charity themes is ".charity <charity-id>" - prompts us to look for the charity, but gives us an ID to use locally to avoid load times
+
+        const person = getProfile().value;										// get person
+        if(!person) t = t.replace(".charity ", "");						
+        else {
+            t = getClaimValue({person, key: "charity"}) || ".default"					// get users chosen charity
+        }	
     }
 
-    let themeObj = theme4Theme[theme];
-    if (!themeObj) themeObj = {
-        background: '/img/newtab/default/gl-bg' + rand + '.jpg',
-        logo: '/img/newtab/logo/white.png'
-    };
+    let themeObj = THEMES[t];
+    if (!themeObj) {
+        themeObj = {
+            background: '/img/newtab/default/gl-bg' + rand + '.jpg',
+            logo: '/img/newtab/logo/white.png'
+        };
+        // Make sure to save the default - we dont want to cause flickers on every load
+        window.localStorage.setItem("t4g-theme", ".default");
+    }
 
     return themeObj;
 
