@@ -114,7 +114,6 @@ const WebtopPage = () => {
       window.localStorage.setItem('t4gOpenedB4', true);
       openTutorial();
     }
-    openTutorial();
   };
 
   if (!verifiedLoginOnceFlag) {
