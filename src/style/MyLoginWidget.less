@@ -24,7 +24,7 @@
 		overflow-y: auto;
 		overflow-x: hidden; // The above line triggers an horizontal overflow in some cases, this disables that effect.
 
-		border-radius: 0;
+		border-radius: 20px;
 		border: none;
 
 		background-color: white; // Needed to get rid of white border around top edges
@@ -125,13 +125,51 @@
 				}
 			}
 
+            h1 {
+                font-weight: 600;
+                font-size: 1.5rem;
+                color: @gl-light-red;
+            }
+
 			.sign-up-left {
 				min-height: 30em;
+                background: linear-gradient(180deg, @gl-light-blue 0%, white 100%);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                
+                .welcome-text {
+                    width: 80%;
+                    height: 100%;
+                    text-align: center;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 3rem;
+                }
+
+                .bubbles-overlay {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 75%;
+                }
 			}
 
 			.sign-up-right {
 				background-color: white;
 				min-height: 30em;
+                
+                .action-btns .form-group {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                }
 
 				.steps-graphic {
 					position: relative;
@@ -146,7 +184,7 @@
 						left: 2rem;
 						top: 1rem;
 						width: 10rem;
-						border-bottom: 2px solid black;
+						border-bottom: 2px solid @gl-dark-grey;
 					}
 
 					.circle {
@@ -155,9 +193,9 @@
 						background-color: white;
 						border-radius: 50%;
 						display: inline-block;
-						border: 1px solid black;
-						&.circle-active {
-							background-color: @gl-light-pink;
+						border: 2px solid @gl-dark-grey;
+						&.circle-active,&.circle-done {
+							background-color: @gl-light-blue;
 						}
 					}
 
@@ -165,7 +203,7 @@
 						margin: 0;
 						position: absolute;
 						transform: translate(-50%, 0);
-						top: 2rem;
+						top: 2.5rem;
 					}
 
 					#circle-step-1 {
@@ -173,7 +211,7 @@
 					}
 
 					#circle-step-2 {
-						right: -9rem;
+						right: -5rem;
 					}
 				}
 			}
@@ -201,7 +239,7 @@
 
 		.close { // pushes close button to the corner so it doesn't interfer with title
 			position: absolute;
-			left: .2em;
+			right: .2em;
 			top: .2em;
 			text-shadow: none; // default has white shadow to "pop it out"
 			z-index: 999;
