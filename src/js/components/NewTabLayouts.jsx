@@ -43,7 +43,6 @@ const T4GThemePicker = () => {
 			<button className='btn btn-primary col-4' onClick={e => onClick('.nature')}>nature</button>
 			<button className='btn btn-primary col-4' onClick={e => onClick(curChar)}>charity</button>
 			<button className='btn btn-primary col-4' onClick={e => onClick('.default')}>default</button>
-			<p>{curTheme}</p>
 		</div>
 	)
 };
