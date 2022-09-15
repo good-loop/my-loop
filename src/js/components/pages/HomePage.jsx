@@ -265,7 +265,7 @@ export const DiscoverMoreCard = ({ title = "Discover More", subtitle, discoverCo
 			<Row>
 				{discoverContents.map((content, index) => {
 					return (
-						<Col key={index} xs={6} className="text-center text-nowrap d-flex flex-column justify-content-between align-items-center" >
+						<Col key={index} xs={4} className="text-center text-nowrap d-flex flex-column justify-content-between align-items-center" >
 							<img className='shadow mx-3' style={{ maxWidth: '80px', borderRadius: '50%' }} src={content.img} />
 							<p className='m-0 mt-2 color-gl-light-blue'>{content.span}</p>
 							<a className='color-gl-muddy-blue font-weight-bold' href={content.href}>{content.linkTitle}</a>
@@ -293,7 +293,7 @@ export const MovementCard = () => {
 		},
 	]
 
-	return (<>svg
+	return (<>
 		<BG image='img/homepage/our-movement-background-lg.svg' style={{ backgroundPosition: 'center top' }}>
 			<PageCard>
 				<div className="movement-blob position-relative d-flex align-items-center justify-content-center pb-5">
