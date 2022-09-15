@@ -368,7 +368,7 @@ const UserControls = ({ cid }) => {
         accountMenuItems={accountMenuItems}
         linkType='a'
         small
-        logoutLink= {<T4GLogoutLink/>}
+        // logoutLink= {<T4GLogoutLink/>}
         customImg={"/img/logo/my-loop-logo-round.svg"}
         customLogin={() => (
           <NewtabLoginLink className='login-menu btn btn-transparent fill'>
