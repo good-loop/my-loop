@@ -31,8 +31,9 @@ import { assert } from '../../base/utils/assert';
  * @param {Advertiser[]} p.vertisers associated advertisers of all ads
  * @param {Advert[]} p.canonicalAds All ads, unfiltered by the filtering query parameter
  */
-const AdvertsCatalogue = ({ campaign, ads, donationTotal, nvertiserName, totalViewCount, vertisers, canonicalAds }) => {
+const AdvertsCatalogue = ({ campaign, ads, donationTotal, nvertiserName, totalViewCount, vertisers, canonicalAds, setCtaModalOpen }) => {
 	assert(canonicalAds);
+	let testooo = setCtaModalOpen;
 	let ongoing = Campaign.isOngoing(campaign);
 
 	// filter out any hidden ads
@@ -119,6 +120,9 @@ const AdvertsCatalogue = ({ campaign, ads, donationTotal, nvertiserName, totalVi
 			<br />
 			<AdvertFilters campaign={campaign} vertisers={vertisers} ads={showAds} canonicalAds={canonicalAds} />
 			<AdPreviewCarousel ads={showAds} setSelected={goToIndex} selectedIndex={activeIndex} />
+			<button className="cta-modal-btn btn btn-primary text-uppercase" style={{marginTop:"50px"}}onClick={e => {console.log(testooo); setCtaModalOpen(true)}}>
+				want to raise even more?
+			</button>
 		</Container>
 	</>);
 };

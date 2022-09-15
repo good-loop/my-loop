@@ -51,7 +51,7 @@ challenges facing our planet."`,
  * @param {{string:Money}} donation4charity - charity ID to donation amount
  * @param {!Campaign} campaign
  */
-const CharitiesSection = ({ charities, donation4charity, campaign }) => {
+const CharitiesSection = ({ charities, donation4charity, campaign, setCtaModalOpen }) => {
 	// The portal control data
 	let hideImpact = campaign.hideImpact || {};
 	// Filter nulls (paranoia)
@@ -77,7 +77,11 @@ const CharitiesSection = ({ charities, donation4charity, campaign }) => {
 						campaign={campaign}
 					/>
 				)}
+			<button className="cta-modal-btn btn btn-primary text-uppercase" onClick={e => setCtaModalOpen(true)}>
+				want to raise even more?
+			</button>
 			</Container>
+
 		</div>
 	);
 };

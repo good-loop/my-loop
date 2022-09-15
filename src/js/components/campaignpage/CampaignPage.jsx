@@ -3,7 +3,7 @@
  */
 import _ from 'lodash';
 import PromiseValue from 'promise-value';
-import React from 'react';
+import React, {useState} from 'react';
 import { Col, Container, Row, Alert } from 'reactstrap';
 import ErrAlert from '../../base/components/ErrAlert';
 import { Cite } from '../../base/components/LinkOut';
@@ -35,7 +35,7 @@ import NGO from '../../base/data/NGO';
 import { setNavContext, setNavProps } from '../../base/components/NavBar';
 import Messaging, { notifyUser } from '../../base/plumbing/Messaging';
 import { PageCard, TriCards } from '../pages/CommonComponents';
-
+import ModalCTA from './CampaignModalTFG';
 
 /**
  * @returns fetches for all the data: `{pvTopCampaign, pvAgencies, pvAds, pvAdvertisers}`
@@ -149,7 +149,7 @@ const fetchIHubData2_wrapAsList = pvTopItem => {
 	));
 };
 
-const JustTheBeginning = () => {
+const JustTheBeginning = ({ setCtaModalOpen }) => {
 	return <div className='w-100 bg-gl-pale-orange' >
 		<PageCard className="bg-gl-desat-blue">
 			<h1 style={{color:"white",fontWeight:'bold'}}>This is just the beginning.</h1>
@@ -161,6 +161,9 @@ const JustTheBeginning = () => {
 				images={['../img/homepage/slide-1.png', '../img/homepage/UsingAdMoneyForGood.png', '../img/homepage/amyanddaniel.png']}
 				links={['../tabsforgood', '../impactoverview', '../ourstory']}
 			/>
+			<button className="cta-modal-btn btn btn-primary text-uppercase" onClick={e => setCtaModalOpen(true)}>
+				want to raise even more?
+			</button>
 		</PageCard>
 	</div>
 }
@@ -171,6 +174,9 @@ const JustTheBeginning = () => {
  * Split: branding - a vertiser ID, vs ad-params
  */
 const CampaignPage = () => {
+	let [ctaModalOpen, setCtaModalOpen] = useState(false)
+
+
 	let {
 		via,
 		landing,
@@ -314,14 +320,20 @@ const CampaignPage = () => {
 	return <>
 		<StyleBlock>{campaign && campaign.customCss}</StyleBlock>
 		<StyleBlock>{branding.customCss}</StyleBlock>
+		<ModalCTA modalOpen={ctaModalOpen} setModalOpen={setCtaModalOpen} branding={branding} nvertiserName={nvertiserName}/>
+
 		<div className="widepage CampaignPage gl-btns">
 			
 			<div className="text-center">
 				
 				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaign}
 					donationValue={donationTotal} charities={charities}
-					totalViewCount={totalViewCount} landing={isLanding} status={status}/>
-				<HowDoesItWork nvertiserName={nvertiserName} charities={charities} ongoing={campaign.ongoing}/>
+					totalViewCount={totalViewCount} landing={isLanding} status={status} nvertiserName={nvertiserName}
+					ctaModalOpen={ctaModalOpen} setCtaModalOpen={setCtaModalOpen}
+					/>
+				<HowDoesItWork nvertiserName={nvertiserName} charities={charities} ongoing={campaign.ongoing} 
+					setCtaModalOpen={setCtaModalOpen}
+					/>
 
 				{isLanding ? null : (
 					<AdvertsCatalogue
@@ -332,10 +344,11 @@ const CampaignPage = () => {
 						totalViewCount={totalViewCount}
 						vertisers={pvAdvertisers.value && List.hits(pvAdvertisers.value)}
 						canonicalAds={ads} // maybe wrong should be all ads
+						setCtaModalOpen={setCtaModalOpen}
 					/>
 				)}
 
-				<CharitiesSection charities={charities} donation4charity={donation4charity} campaign={campaign}/>
+				<CharitiesSection charities={charities} donation4charity={donation4charity} campaign={campaign} setCtaModalOpen={setCtaModalOpen}/>
 
 				<div className="bg-white">
 					<Container>
@@ -348,7 +361,7 @@ const CampaignPage = () => {
 						<img src="/img/Graphic_metro.1920w.png" className="w-100" alt="publishers" />
 					)}
 				</div>
-				<JustTheBeginning />
+				<JustTheBeginning setCtaModalOpen={setCtaModalOpen}/>
 				<SmallPrintInfo ads={ads} charities={charities} campaign={campaign} pvTopItem={pvTopItem} />
 			</div>
 		</div>
