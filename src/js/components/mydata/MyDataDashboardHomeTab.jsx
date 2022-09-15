@@ -141,7 +141,7 @@ const GetT4GCard = ({ ngo }) => {
 		if (!window.isSecureContext) {
 			console.warn("Not in an HTTPS connection, so cannot copy to clipboard! Will work on HTTPS");
 		} else {
-			window.navigator.clipboard.writeText("https://my.good-loop.com/charity/" + getId(ngo));
+			window.navigator.clipboard.writeText('https://my.good-loop.com/tabsforgood');
 		}
 		setCopiedLink(true);
 	}
@@ -166,7 +166,7 @@ const GetT4GCard = ({ ngo }) => {
 						: "Add Tabs for Good to your desktop browser to raise money for " + NGO.displayName(ngo) + " while you surf the web"}
 				</p>
 				{hasT4G ? <a onClick={copyLink} className="share-link">{copiedLink ? "LINK COPIED!" : "SHARE TABS FOR GOOD"}</a>
-					: <C.A href={ngo ? "/charity/" + getId(ngo) : "/tabsforgood"}><Button color="primary">Find out more</Button></C.A>}
+					: <C.A href={'https://my.good-loop.com/tabsforgood'}><Button color="primary">Find out more</Button></C.A>}
 			</Col>
 		</Row>
 	</MyDataCard>;
