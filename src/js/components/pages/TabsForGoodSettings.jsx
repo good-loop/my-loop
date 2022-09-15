@@ -19,7 +19,7 @@ import LinkOut from '../../base/components/LinkOut';
 import NGO from '../../base/data/NGO';
 import List from '../../base/data/List';
 import { getCharityObject } from '../../base/components/PropControls/UserClaimControl';
-import { T4GLayoutSelector, T4GThemePicker } from '../NewTabLayouts';
+import { T4GLayoutPicker, T4GLayoutSelector, T4GThemePicker } from '../NewTabLayouts';
 
 
 const TabsForGoodSettings = () => {
@@ -38,7 +38,7 @@ const TabsForGoodSettings = () => {
         <h3>Theme</h3>
 		<T4GThemePicker />
         <h3>Layout</h3>
-        <T4GLayoutSelector/>
+        <T4GLayoutPicker/>
 	</>;
 };
 
