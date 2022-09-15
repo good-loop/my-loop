@@ -1,0 +1,38 @@
+.hide () {
+    display: none;
+    &.highlight {
+        display: inherit;
+    }
+}
+
+#newtab {
+
+    .layout-min {
+        .NewTabCharityCard {
+            .hide();
+        }
+        .t4g-total {
+            .hide();
+        }
+        .t4g-logo {
+            .hide();
+        }
+        .bookmark-flexbox {
+            .hide();
+        }
+    }
+
+    .layout-normal {
+        .t4g-total {
+            .hide();
+        }
+        .bookmark-flexbox {
+            .hide();
+        }
+    }
+
+    .layout-full {
+
+    }
+
+}

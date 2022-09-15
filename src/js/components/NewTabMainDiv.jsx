@@ -14,6 +14,7 @@ import {
   stopEvent,
   getBrowserVendor,
   ellipsize,
+  space,
 } from '../base/utils/miscutils';
 import Login from '../base/youagain';
 import C from '../C';
@@ -37,20 +38,24 @@ import {
   getPVSelectedCharityId,
   getTabsOpened,
   getTabsOpened2,
+  retrurnProfile,
   Search,
+  setPersonSetting,
 } from './pages/TabsForGoodSettings';
 import TickerTotal from './TickerTotal';
-import Person, { getProfile, getPVClaim } from '../base/data/Person';
+import Person, { getProfile, getPVClaim, getClaimValue } from '../base/data/Person';
 import Misc from '../base/components/Misc';
 import Money from '../base/data/Money';
 import NGO from '../base/data/NGO';
 import Roles, { isTester } from '../base/Roles';
 import Claim from '../base/data/Claim';
 import { accountMenuItems } from './pages/CommonComponents';
-import { getCharityObject } from '../base/components/PropControls/UserClaimControl';
+import { getCharityObject, getPersonSetting } from '../base/components/PropControls/UserClaimControl';
 import NGOImage from '../base/components/NGOImage';
-import { hasRegisteredForMyData } from './mydata/MyDataCommonComponents';
-
+import { hasRegisteredForMyData, ProfileCreationSteps } from './mydata/MyDataCommonComponents';
+import {getThemeBackground} from './NewTabThemes'
+import {getT4GLayout, getT4GTheme, getT4GThemeBackground} from './NewTabLayouts';
+import {NewTabCustomise} from './NewTabCustomise'
 // DataStore
 C.setupDataStore();
 
@@ -70,60 +75,6 @@ let logOnceFlag;
  */
 let verifiedLoginOnceFlag;
 
-const LoremIpsum = () => {
-  return (
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet
-      ornare neque. Cras egestas pretium risus, ac maximus justo tempus ac.
-      Etiam vitae aliquam nulla, ut lobortis nibh. Ut et massa sit amet nulla
-      eleifend bibendum. Proin elementum maximus lorem, ut tempor ante pharetra
-      id. Integer et sem eget turpis fermentum consequat. Pellentesque vulputate
-      laoreet metus. Donec hendrerit risus mauris, non ultrices ex venenatis
-      non. Donec congue sem vitae diam molestie ornare. Pellentesque sit amet
-      efficitur risus, ornare dictum magna. Donec a purus eu erat luctus dapibus
-      eu et metus. Etiam at pulvinar ex. In convallis tempor consequat. Nam enim
-      leo, maximus id lacus sed, varius cursus sapien. Praesent at mi sit amet
-      augue sollicitudin ultrices. Nam tincidunt metus sit amet massa dapibus
-      maximus. Morbi id mollis diam. Maecenas odio lectus, vehicula a massa a,
-      mollis finibus sem. Sed ante nibh, molestie vitae urna eget, congue
-      tincidunt lorem. Etiam et sollicitudin leo. Phasellus luctus interdum leo
-      et consequat. Etiam ornare, arcu eu rhoncus venenatis, nisl ipsum laoreet
-      dui, nec ultrices augue purus id felis. Duis feugiat erat diam, quis
-      placerat ipsum ultrices quis. Morbi diam urna, interdum aliquam placerat
-      non, elementum a urna. Vivamus consequat lacus nunc, nec elementum felis
-      lobortis sit amet. Praesent arcu tellus, vulputate sit amet felis nec,
-      convallis porta mi. Cras eu dolor nisi. Ut convallis vulputate sapien sit
-      amet lacinia. Pellentesque quam metus, cursus vitae leo non, congue rutrum
-      erat. Mauris non pretium odio. Curabitur dapibus pretium massa, vel
-      vulputate mauris mollis ac. Proin et ipsum dignissim nunc mollis eleifend.
-      Curabitur varius ipsum sed odio pulvinar, non suscipit augue tincidunt.
-      Nulla quis diam quis ante elementum semper. In at libero diam. Mauris
-      semper hendrerit sem at vehicula. Praesent blandit sapien sem, eu luctus
-      ligula facilisis eu. Sed posuere erat ultrices nisl feugiat, eget pulvinar
-      felis convallis. Nunc sollicitudin arcu tellus, a lacinia ligula dictum
-      non. Morbi sed lacus ante. Duis sed tortor sollicitudin, fermentum urna
-      nec, cursus mi. In euismod in sem sit amet feugiat. Quisque tincidunt nisl
-      vitae mauris facilisis, eget tristique tortor dignissim. Phasellus
-      feugiat, nulla sed ultricies pulvinar, justo urna mattis felis, nec
-      maximus nisi elit ut ex. In iaculis neque a tortor dignissim cursus. Ut
-      tristique nisi et ligula mollis, non tristique nulla pretium. Sed
-      elementum pulvinar nisl, at posuere magna maximus non. Pellentesque odio
-      turpis, luctus vel sollicitudin sit amet, placerat consequat odio. Fusce
-      pretium elit metus, sit amet scelerisque turpis fermentum in. Phasellus
-      mattis, quam consequat mollis auctor, dolor eros aliquam orci, sit amet
-      interdum augue tortor ut ipsum. Curabitur bibendum pharetra eros. Donec
-      nec euismod massa, ut pulvinar ex. Sed a urna vel odio volutpat rutrum
-      semper in urna. Aenean feugiat dui at scelerisque convallis. Donec
-      consequat ac velit ac feugiat. Ut in libero enim. Integer et est odio. Sed
-      in ex felis. Proin id tempor mauris. Nulla eu purus ut metus imperdiet
-      interdum. In vitae enim et nunc faucibus cursus non vel dolor. Donec vitae
-      neque finibus, tincidunt purus eu, iaculis mauris. Nam id pharetra odio.
-      Nullam eget pharetra ex. Aliquam efficitur sapien turpis, sit amet sodales
-      justo feugiat nec. Curabitur in nibh nisl.
-    </p>
-  );
-};
-
 /**
  * The main Tabs for Good page
  *
@@ -134,16 +85,18 @@ const WebtopPage = () => {
   const charityID = pvCharityID && (pvCharityID.value || pvCharityID.interim);
   const loadingCharity = !pvCharityID || !pvCharityID.resolved;
   let [showPopup, setShowPopup] = useState(false);
-  let [customBG, setCustomBG] = useState(null);
+  let person = undefined;
 
   // Yeh - a tab is opened -- let's log that (once only)
   if (!logOnceFlag && Login.isLoggedIn()) {
     let pvPerson = getProfile();
-    pvPerson.promise.then((person) => {
+    pvPerson.promise.then((person) => {   // This is the problem, how do we get 'person' before this?
       // Hurrah - T4G is definitely installed
       if (!person) console.warn('no person?!');
       else Person.setHasApp(person, Login.app);
+
     });
+    console.log("after pv", person)
     // NB: include a nonce, as otherwise identical events (you open a few tabs) within a 15 minute time bucket get treated as 1
     lg('tabopen', { nonce: nonce(6) });
     // Wait 1.5 seconds before logging ad view - 1 second for ad view profit + .5 to load
@@ -205,10 +158,6 @@ const WebtopPage = () => {
   };
 
   useEffect(() => {
-    let bgImgs = 9;
-    setCustomBG(
-      '/img/newtab/gl-bg' + (Math.round(Math.random() * bgImgs) + 1) + '.jpg'
-    );
     bookmarkRequest();
 
     window.addEventListener('message', (event) => handleMessage(event));
@@ -217,8 +166,20 @@ const WebtopPage = () => {
     };
   }, []);
 
+  let layout = getT4GLayout();
+  let curTheme = getT4GTheme();
+  let [customiseModalOpen, setCustomiseModalOpen] = useState(false)
+  let {background, logo} = getT4GThemeBackground(curTheme);
+  let customBG = background;
+  let customLogo = logo;
+
+  console.log("THEME??", curTheme);
+  console.log("LAYOUT??", layout);
+  console.log("CUSTOM BG?", customBG);
+  console.log("CUSTOM LOGO?", customLogo);
+
   return (
-    <>
+    <div className={space('t4g', 'layout-' + layout)}>
       {!Roles.isDev() && <style>{'.MessageBar .alert {display: none;}'}</style>}
       {/* NB: Rendering background image here can avoid a flash of white before the BG get loaded */}
       <NGOImage
@@ -230,6 +191,7 @@ const WebtopPage = () => {
         opacity={0.9}
         bottom={0}
         style={{ backgroundPosition: 'center' }}
+        alwaysDisplayChildren
       >
         <NewTabCharityCard cid={charityID} loading={loadingCharity} />
         <TutorialHighlighter
@@ -261,18 +223,18 @@ const WebtopPage = () => {
               {true && ( //! loadingCharity && ! charityID &&
                 // Show the total raised across all charities, if the user hasn't selected one.
                 <>
-                  <h5
-                    className='text-center together-we-ve-raised'
-                    style={{ fontSize: '.8rem' }}
-                  >
-                    Together we've raised&nbsp;
-                    <TutorialComponent page={2} className='d-inline-block'>
-                      <TickerTotal />
-                    </TutorialComponent>
-                  </h5>
+                    <TutorialComponent page={2} className='t4g-total'>
+                        <h5
+                            className='text-center together-we-ve-raised'
+                            style={{ fontSize: '.8rem' }}
+                        >
+                            Together we've raised&nbsp;
+                            <TickerTotal />
+                        </h5>
+                  </TutorialComponent>
                 </>
               )}
-              <NormalTabCenter style={{transform:'translate(0,-30%)'}} />
+              <NormalTabCenter style={{transform:'translate(0,-30%)'}} customLogo={customLogo} />
               <LinksDisplay bookmarksData={bookmarksData} style={{transform:'translate(0,-30%)'}} />
             </Col>
           </Row>
@@ -296,7 +258,8 @@ const WebtopPage = () => {
         }}
       />
       <ConnectionStatusPopup />
-    </>
+      <NewTabCustomise modalOpen={customiseModalOpen} setModalOpen={setCustomiseModalOpen} />
+    </div>
   );
 }; // ./WebTopPage
 
@@ -403,6 +366,7 @@ const UserControls = ({ cid }) => {
         linkType='a'
         small
         logoutLink= {<T4GLogoutLink/>}
+        customImg={"/img/logo/my-loop-logo-round.svg"}
         customLogin={() => (
           <NewtabLoginLink className='login-menu btn btn-transparent fill'>
             Register / Log in
@@ -461,7 +425,7 @@ const ENGINES = {
  * @param {Object} p
  * @returns
  */
-const NormalTabCenter = ({style}) => {
+const NormalTabCenter = ({style, customLogo}) => {
   let pvSE = getPVClaim({ xid: Login.getId(), key: 'searchEngine' });
   let searchEngine = Claim.value(pvSE) || 'google';
   const engineData = ENGINES[searchEngine];
@@ -469,11 +433,11 @@ const NormalTabCenter = ({style}) => {
   return (
     <>
       <div className='flex-column unset-margins align-items-center tab-center mb-1' style={style}>
-        <TutorialComponent page={5} className='py-3'>
+        <TutorialComponent page={5} className='py-3 t4g-logo'>
           <a href='https://my.good-loop.com'>
             <img
               className='tab-center-logo'
-              src='https://my.good-loop.com/img/TabsForGood/TabsForGood_logo.png'
+              src={customLogo}
               alt='logo'
             />
           </a>
@@ -572,24 +536,18 @@ const NewTabCharityCard = ({ cid, loading }) => {
     ServerIO.MYLOOP_ENDPOINT + '/account?tab=tabsForGood';
 
   return (
-    <div className='text-center NewTabCharityCard'>
-      <h5 className='text-dark' style={{ fontSize: '.8rem' }}>
-        I'm Supporting
-      </h5>
-      {/*<div onClick={() => top.location.href = charityLink}> */}
-      <a href={charityLink} target='_blank' rel='noopener noreferrer'>
-        <TutorialComponent page={1}>
-          {/* <WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}> */}
-          {charity && <CharityLogo charity={charity} />}
-          {!charity && loading && <p className='my-auto'>Loading...</p>}
-          {!charity && !loading && <p className='my-auto'>Select a charity</p>}
-          {/* </WhiteCircle> */}
-        </TutorialComponent>
-      </a>
-      {/* {totalMoney && charity && 
-			<p>Together we've raised<br/><b><Misc.Money amount={totalMoney} /></b><br/>
-			for {NGO.displayName(charity)}</p>} */}
-    </div>
+    <TutorialComponent page={1} className="NewTabCharityCard">
+        <div className='text-center'>
+        {/*<div onClick={() => top.location.href = charityLink}> */}
+        <a href={charityLink} target='_blank' rel='noopener noreferrer' className='charity-cta'>
+            {/* <WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}> */}
+            {charity && <CharityLogo charity={charity} />}
+            {!charity && loading && <p className='my-auto'>Loading...</p>}
+            {!charity && !loading && <p className='my-auto'>Select a charity</p>}
+            {/* </WhiteCircle> */}
+        </a>
+        </div>
+    </TutorialComponent>
   );
 };
 
@@ -806,6 +764,12 @@ const tutorialPages = [
       My-Loop.
     </p>
   </>,
+  <>
+    <h2>Customize your page</h2>
+    <p>
+        Make your Tabs For Good page yours! Change themes and layouts in here.
+    </p>
+</>,
 ];
 
 export default NewTabMainDiv;

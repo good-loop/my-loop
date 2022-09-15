@@ -17,7 +17,7 @@ const CharityLogo = ({charity, className, size, style, nameCap, link=false}) => 
 	if (imgType) {
 		imgType = imgType[1];
 		if (imgType.toLowerCase() === "svg") {
-			svgClasses = "w-100"; // width 100?? won't that make it giant in the wrong setting??
+			svgClasses = "w-100"; // width 100?? won't that make it giant in the wrong setting?? - no - because it's wrapped in a link element.
 		}
 	}
 	// 'logo' class forces the logos to be too small for the circle - so leaving it out

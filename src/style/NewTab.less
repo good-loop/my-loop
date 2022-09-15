@@ -1,5 +1,40 @@
 
 
+.t4g-customizer {
+    width: 50px;
+    position: absolute !important;
+    bottom: 92px;
+    right: 0;
+    z-index: 999;
+    margin:1%;
+}
+
+.t4g-customise-button {
+    margin: 0;
+    padding: 0;
+    border: none !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    @media (max-width:1475px){ // avoid covering ads
+        bottom: 0;
+    }
+    width: 100%;
+}
+
+
+.customise-btn-img {
+    width: 100%;
+
+}
+
+
+.customise-modal {
+    height: 80vh;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+
 .tab-search-container {
     width: 100%;
     @media @width-mobile {
@@ -68,15 +103,15 @@
 
 .tutorial-highlight {
     // Border + shadow = glow
-    border: 6px solid @gl-light-red;
-    box-shadow: 0 0 10px @gl-light-red;
+    box-shadow: 0 0 10px red;
+    margin: -6px;
 }
 
 .tutorial-component.highlight {
-    border: 6px solid @gl-light-red;
-    box-shadow: 0 0 10px @gl-light-red;
+    border: 6px solid red;
+    box-shadow: 0 0 10px red;
     z-index: 1000;
-    margin: -6px;
+    //margin: -6px;
     & * {
         z-index: 1000;
     }
@@ -296,26 +331,34 @@
     background-color: white;
     opacity: 0.8;
     //padding: 1rem;
-    border-top-right-radius: 1000px;
-    border-bottom-right-radius: 1000px;
-    padding: 0.5rem;
-    padding-right: 55px;
-    padding-left: 50px;
-    position: absolute;
-    left: 0;
-    top: 1em;
+    border-radius: 50%;
+    width: 10rem;
+    height: 10rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute !important;
+    left: 1rem;
+    top: 1rem;
     z-index: 999;
     max-width: 25%;
     h5 {
         font-size: 1rem;
     }
+    .logo {
+        width: 70%;
+        height: 70%;
+    }
 }
 
-.together-we-ve-raised {
-    position: absolute;
+.t4g-total {
+    position: absolute !important;
     top: 1em;
-    font-size: 1rem;
-    color: black !important;
+    .together-we-ve-raised {
+        font-size: 1rem;
+        color: black !important;
+        margin: 0;
+    }
     background-color: white;
     opacity: 0.8;
     border-radius: 5em;

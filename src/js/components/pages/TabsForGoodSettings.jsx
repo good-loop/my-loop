@@ -18,6 +18,8 @@ import C from '../../C';
 import LinkOut from '../../base/components/LinkOut';
 import NGO from '../../base/data/NGO';
 import List from '../../base/data/List';
+import { getCharityObject } from '../../base/components/PropControls/UserClaimControl';
+import { T4GLayoutSelector, T4GThemePicker } from '../NewTabLayouts';
 
 
 const TabsForGoodSettings = () => {
@@ -31,8 +33,20 @@ const TabsForGoodSettings = () => {
 		<h1>Pick your charity</h1>
 		<br />
 		<CharityPicker />
+		<br />
+		<h1>Customization</h1>
+        <h3>Theme</h3>
+		<T4GThemePicker />
+        <h3>Layout</h3>
+        <T4GLayoutSelector/>
 	</>;
 };
+
+
+const retrurnProfile = () => {
+	return getProfile();
+}
+
 
 const SearchEnginePicker = () => {
 	const person = getProfile().value;
@@ -61,6 +75,7 @@ const CharityPicker = () => {
 	let selId = getClaimValue({ person, key: "charity" });
 
 	const pvSelectedCharity = selId && getDataItem({ type: C.TYPES.NGO, id: selId, status: KStatus.Published, swallow: true });
+	console.log(pvSelectedCharity)
 	let q = DataStore.getValue('widget', 'search', 'q');
 
 	const DEFAULT_LIST = "against-malaria-foundation oxfam helen-keller-international clean-air-task-force strong-minds give-directly pratham wwf-uk cancer-research-uk";
@@ -118,6 +133,19 @@ const CharitySelectBox = ({ item, className }) => {
 	let selected = getId(item) === selId;
 	// NB: to deselect, pick a different charity (I think that's intuitive enough)
 
+	const onClick = (item) => {
+		setPersonSetting("charity", getId(item));
+
+		// if user has a charity as a theme & change their charity, it should update the theme
+		let baseThemes = ['.dark', '.light', '.default', '.nature']	// TODO: this should be a list somewhere we import here
+		let themeSetting = getClaimValue(({ person, key: "theme" }))
+		if(baseThemes.every(theme => theme !== themeSetting)){	// if user has not chosen a non-charity theme (theme is a charity or unset)
+			console.log("WHAT THE    FUCK???", baseThemes, themeSetting)
+			setPersonSetting("theme", getId(item));				// apply charity theme 
+			window.localStorage.setItem('theme', getId(item))
+		}
+	}
+
 	return <div className={space("m-md-2", className)}>
 		<div
 			className={space("charity-select-box flex-column justify-content-between align-items-center unset-margins p-md-3 w-100 position-relative")}
@@ -125,7 +153,7 @@ const CharitySelectBox = ({ item, className }) => {
 			{item.logo ? <img className="logo-xl mt-4 mb-2" src={item.logo} alt={item.name || item.id} /> : <span>{item.name || item.id}</span>}
 			<p>{item.summaryDescription}</p>
 			{selected ? <span className="text-success thin"><Icon name="tick" /> Selected</span>
-				: <button onClick={() => setPersonSetting("charity", getId(item))} className="btn btn-outline-primary thin">Select</button>
+				: <button onClick={() => {onClick(item);}} className="btn btn-outline-primary thin">Select</button>
 			}
 			{item.url && <LinkOut className="position-absolute" style={{ top: 10, right: 10 }} href={item.url} aria-label={"Read more about " + (item.name || item.id)}>About</LinkOut>}
 		</div>
@@ -238,6 +266,13 @@ const getPVSelectedCharityId = (xid) => {
 	return pvv;
 };
 
+
+const getPVSelectedTheme = (xid) => {
+	let pvClaim = getClaimValue({xid, key:"theme"});
+	if ( ! pvClaim) return null;
+	return pvClaim; 
+}
+
 /**
  * Set and save
  * @param {*} key 
@@ -277,5 +312,5 @@ const StatCard = ({ md, lg, xs, number, label, className, padding, children }) =
 	</Col>;
 };
 
-export { getTabsOpened, Search, getPVSelectedCharityId, setPersonSetting };
+export { getTabsOpened, Search, getPVSelectedCharityId, setPersonSetting, getPVSelectedTheme, retrurnProfile };
 export default TabsForGoodSettings;
