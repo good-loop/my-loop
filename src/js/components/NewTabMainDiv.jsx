@@ -284,24 +284,24 @@ const NewTabMainDiv = () => {
  * @returns
  */
 const UserControls = ({ cid }) => {
-  const showMyloopLink = !Login.isLoggedIn() || !hasRegisteredForMyData();
+  // const showMyloopLink = !Login.isLoggedIn() || !hasRegisteredForMyData();
   const charity = cid ? fetchCharity(cid) : null;
   const [showPopup, setShowPopup] = useState(false);
   const mydataRef = useRef();
 
   const mydataLink = ServerIO.MYLOOP_ENDPOINT + '/account?scrollMyData=true';
 
-  useEffect(() => {
-    const myDataElement = document.getElementById('myloop-link');
-    if (myDataElement && myDataElement.getAttribute('listener') !== 'true') {
-      myDataElement.addEventListener('mouseover', () => setShowPopup(true));
-    }
-    return () => {
-      if (myDataElement) {
-        myDataElement.addEventListener('mouseover', () => setShowPopup(true));
-      }
-    };
-  }, [myloopLink]);
+  // useEffect(() => {
+  //   const myDataElement = document.getElementById('myloop-link');
+  //   if (myDataElement && myDataElement.getAttribute('listener') !== 'true') {
+  //     myDataElement.addEventListener('mouseover', () => setShowPopup(true));
+  //   }
+  //   return () => {
+  //     if (myDataElement) {
+  //       myDataElement.addEventListener('mouseover', () => setShowPopup(true));
+  //     }
+  //   };
+  // }, [myloopLink]);
 
   // useEffect(() => {
   //   document.addEventListener('mousedown', handleClickOutside);
@@ -318,23 +318,23 @@ const UserControls = ({ cid }) => {
     setShowPopup(false); // outside click
   };
 
-  const myloopLink = (
-    <>
-      <div
-        onClick={() => (top.location.href = mydataLink)}
-        className='myloop-link'
-        id='myloop-link'
-        style={{ cursor: 'pointer' }}
-      >
-        My.Good-Loop &nbsp;
-        <img
-          src='/img/mydata/my_good-loop_RoundLogo.300w.png'
-          className='heart-white-circle'
-        />
-      </div>
-      &nbsp;&nbsp;&nbsp;
-    </>
-  );
+  // const myloopLink = (
+  //   <>
+  //     <div
+  //       onClick={() => (top.location.href = mydataLink)}
+  //       className='myloop-link'
+  //       id='myloop-link'
+  //       style={{ cursor: 'pointer' }}
+  //     >
+  //       My.Good-Loop &nbsp;
+  //       <img
+  //         src='/img/mydata/my_good-loop_RoundLogo.300w.png'
+  //         className='heart-white-circle'
+  //       />
+  //     </div>
+  //     &nbsp;&nbsp;&nbsp;
+  //   </>
+  // );
 
   // const popupDiv = (
   //   <div
@@ -359,7 +359,7 @@ const UserControls = ({ cid }) => {
 
   return (
     <>
-      {showMyloopLink && myloopLink}
+      {/* {showMyloopLink && myloopLink} */}
       {/* {showPopup && popupDiv} */}
       <AccountMenu
         accountMenuItems={accountMenuItems}
