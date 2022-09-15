@@ -1,24 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Container, Button } from 'reactstrap';
 import WhiteCircle from '../campaignpage/WhiteCircle';
-import { addImageCredit } from '../../base/components/AboutPage';
-import Editor3ColLayout, { LeftSidebar, MainPane } from '../../base/components/Editor3ColLayout';
-import { LoginLink } from '../../base/components/LoginWidget';
-import Person, { getAllXIds, getEmail, getProfile, hasConsent, PURPOSES } from '../../base/data/Person';
-import DataStore from '../../base/plumbing/DataStore';
-import { lg } from '../../base/plumbing/log';
-import { getScreenSize, isMobile, space } from '../../base/utils/miscutils';
-import Login from '../../base/youagain';
-import SubscriptionBox from '../cards/SubscriptionBox';
-import ShareButton from '../ShareButton';
-import AccountSettings from './AccountSettings';
-import TabsForGoodSettings from './TabsForGoodSettings';
-import C from '../../C';
-import MyDataDashboard from '../mydata/MyDataDashboardPage';
 
 
 const WelcomePage = () => {
-	return (<>
+	return (<div className='t4g-welcome-page'>
 		<Container className='container'>
 			<div className='content-col' style={{ alignContent: 'center' }}>
 				<WhiteCircle width={"7.5%"} className="gl-logo-circle">
@@ -32,7 +18,7 @@ const WelcomePage = () => {
 				<img className='overlay' src='/img/TabsForGood/WelcomePage/overlay-desktop.png' alt="showcase photos"></img>
 			</div>
 		</Container>
-	</>);
+	</div>);
 };
 
 export default WelcomePage;
