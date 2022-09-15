@@ -23,213 +23,239 @@ body {
 
 //////////   CTA Modal   /////////
 
+:not(.T4G-modal) {
+	
+	
+	.modal-content {
+		color: #830000;
+		background-color: rgba(0, 0, 0, 0.0);
+		border: none;
+		
+		
+		.modal-body.cta-modal-body {
+			height: 90vh;
+			border-radius: 50px;
+			color: whitesmoke;
 
-.modal-content {
-	background-color: rgba(0, 0, 0, 0.0);
-	border: none;
-
-	.modal-body {
-		height: 90vh;
-		border-radius: 50px;
-		color: whitesmoke;
-
-		background-image: url("/img/our-mission-background-lg.svg");
-		background-size: cover;
-		background-position: top right;
+			background-image: url("/img/our-mission-background-lg.svg");
+			background-size: cover;
+			background-position: top right;
 
 
-		.modal-container {
-			height: 100%;
-			display: flex;
-			justify-content: center;
-			width: 100%;
-			overflow: visible;
-
-			.modalHeader {
-				position: relative;
-
-				.modal-close-button {
-					opacity: 0.75;
-					width: 30%;
-					background-color: transparent;
-					border: none;
-					padding: 0;
-					margin-left: calc(100% - 140px);
-
-					.modal-close-text {
-						text-align: left;
-						font-size: 1.2rem;
-						margin-bottom: 0;
-						color: white;
-						text-shadow: none;
-						font-weight: normal;
-					}
-				}
-			}
-
-			.modal-content-col {
-				position: relative;
-				width: 40%;
-				left: 30%;
-
-				@media (max-width: 768px) {
-					width: 90%;
-					left: 5%;
-
-					.modal-middle-circle {
-						width: 80% !important;
-						margin-bottom: 20px;
-					}
-				}
-
-				.modal-brand-logo {
-					padding-bottom: 10px;
-					left: 42.5% // logo to middle of div (50% - width)
-				}
-
-				.modal-text-intro {
-					font-weight: bold;
-					font-size: 1rem;
-				}
-			}
-
-			.modal-gl-logo-circle {
-				position: absolute;
-				left: 5%;
-				top: 24%;
-				z-index: 1;
-
-				@media (max-width: 767px) {
-					left: 3%;
-				}
-
-				img {
-					max-height: unset;
-					height: 125%;
-					max-width: unset !important;
-					max-height: unset !important;
-				}
-			}
-
-			.modal-middle-circle {
-				background-color: transparent;
+			.modal-container {
+				height: 100%;
+				display: flex;
+				justify-content: center;
+				width: 100%;
 				overflow: visible;
-				background-image: url('/img/About-t4g-blob.svg');
-				background-size: cover;
-				background-position: top right;
-				box-shadow: none;
-				margin-left: auto;
-				margin-right: auto;
-				margin-bottom: 80px;
-				position: relative;
-				top: 0%;
-				min-width: 290px;
-				max-width: 400px;
 
-				@media (max-width: 768px) {
-					font-size: 14px !important;
+				.modalHeader {
+					position: relative;
+
+					.modal-close-button {
+						opacity: 0.75;
+						width: 30%;
+						background-color: transparent;
+						border: none;
+						padding: 0;
+						margin-left: calc(100% - 140px);
+
+						.modal-close-text {
+							text-align: left;
+							font-size: 1.2rem;
+							margin-bottom: 0;
+							color: white;
+							text-shadow: none;
+							font-weight: normal;
+						}
+					}
+				}
+
+				.modal-content-col {
+					position: relative;
+					width: 40%;
+					left: 30%;
+
+					@media (max-width: 768px) {
+						width: 90%;
+						left: 5%;
+
+						.modal-middle-circle {
+							width: 80% !important;
+							margin-bottom: 20px;
+						}
+					}
+
+					.modal-brand-logo {
+						padding-bottom: 10px;
+						left: 42.5% // logo to middle of div (50% - width)
+					}
+
+					.modal-text-intro {
+						color: white !important;
+						font-weight: bold;
+						font-size: 1rem;
+					}
+				}
+
+				.modal-gl-logo-circle {
+					position: absolute;
+					left: 5%;
+					top: 24%;
+					z-index: 1;
+
+					@media (max-width: 767px) {
+						left: 3%;
+					}
+
+					img {
+						max-height: unset;
+						height: 125%;
+						max-width: unset !important;
+						max-height: unset !important;
+					}
+				}
+
+				.modal-middle-circle {
+					background-color: transparent;
+					overflow: visible;
+					background-image: url('/img/About-t4g-blob.svg');
+					background-size: cover;
+					background-position: top right;
+					box-shadow: none;
+					margin-left: auto;
+					margin-right: auto;
+					margin-bottom: 80px;
+					position: relative;
+					top: 0%;
+					min-width: 290px;
+					max-width: 400px;
+
+					@media (max-width: 768px) {
+						font-size: 14px !important;
+
+						p {
+							margin-bottom: 10% !important;
+						}
+
+						margin-bottom: 15%;
+					}
 
 					p {
-						margin-bottom: 10% !important;
+						margin: 0;
+						width: 100%;
+						letter-spacing: 1px;
+						height: 100%;
+						color: black;
+						z-index: 2;
 					}
 
-					margin-bottom: 15%;
+					.red-text {
+						font-weight: bold;
+						color: @gl-red;
+					}
 				}
 
-				p {
-					margin: 0;
-					width: 100%;
-					letter-spacing: 1px;
-					height: 100%;
-					color: black;
-					z-index: 2;
+				.modal-overlay {
+					pointer-events: none;
+					display: block;
+					flex: none;
+
 				}
 
-				.red-text {
-					font-weight: bold;
-					color: @gl-red;
-				}
-			}
+				.modal-overlay-lg {
+					@media (max-width: 767px) {
+						visibility: hidden;
+					}
 
-			.modal-overlay {
-				pointer-events: none;
-				display: block;
-				flex: none;
-
-			}
-
-			.modal-overlay-lg {
-				@media (max-width: 767px) {
-					visibility: hidden;
+					display: block;
+					flex:none;
+					padding-left: 14%;
+					min-width: 710px;
+					max-width: unset !important;
+					max-height: unset !important;
+					width: 490%;
+					bottom: -36%;
 				}
 
-				display: block;
-				flex:none;
-				padding-left: 14%;
-				min-width: 710px;
-				max-width: unset !important;
-				max-height: unset !important;
-				width: 490%;
-				bottom: -36%;
-			}
+				.modal-overlay-sm {
+					@media (min-width: 768px) {
+						visibility: hidden;
+					}
 
-			.modal-overlay-sm {
-				@media (min-width: 768px) {
-					visibility: hidden;
+					display: block;
+					flex:none;
+					min-width: unset;
+					max-width: unset !important;
+					max-height: unset !important;
+					width: 180%;
+					top: 80%;
 				}
 
-				display: block;
-				flex:none;
-				min-width: unset;
-				max-width: unset !important;
-				max-height: unset !important;
-				width: 180%;
-				top: 80%;
-			}
+				.modal-cta-howItWorks {
+					font-size: 0.9rem !important;
+					color: @gl-red  !important;
+					text-decoration: none;
+				}
 
-			.modal-cta-howItWorks {
-				font-size: 0.9rem !important;
-				color: @gl-red  !important;
-				text-decoration: none;
-			}
-
-			.modal-cta-howItWorks:hover {
-				color: @gl-orange  !important;
+				.modal-cta-howItWorks:hover {
+					color: @gl-orange  !important;
+				}
 			}
 		}
 	}
-}
 
+	.modal-CTA-T4G {
+		margin-top: 5vh;
+		width: 90vw;
+		max-width: 90vw;
+		min-width: 90vw;
 
+		/*remove background of modal */
+		.col-lg-4 {
+			padding: 0 !important;
+		}
 
-.modal-CTA-T4G {
-	margin-top: 5vh;
-	width: 90vw;
-	max-width: 90vw;
-	min-width: 90vw;
+		.modal-content,
+		.modal-overlay {
+			position: absolute;
+			//top: 0;
+			//left: 0
+		}
 
-	/*remove background of modal */
-	.col-lg-4 {
-		padding: 0 !important;
+		.modal-content {
+			z-index: 10;
+			text-align: center;
+		}
+
+		/* On large screens */
+		@media (min-width: 768px) {
+			width: 70vw;
+			max-width: 70vw;
+			min-width: 70vw;
+		}
 	}
 
-	.modal-content,
-	.modal-overlay {
-		position: absolute;
-		//top: 0;
-		//left: 0
-	}
+	.cta-modal-btn.btn-secondary {
+		position: relative;
+		font-size: 1rem;
 
-	.modal-content {
-		z-index: 10;
-		text-align: center;
-	}
+			// desktop
+			width: unset;
+			margin-top: 10% !important;
 
-	/* On large screens */
-	@media (min-width: 768px) {
-		width: 70vw;
-		max-width: 70vw;
-		min-width: 70vw;
+			// tablet
+			@media (min-width:768px) and (max-width:1080px) {
+				width:50%;
+				margin-left: 0% !important;
+			}
+
+			// phones
+			@media (max-width: 767px) {
+				width: 75%;
+				margin-left: -0% !important;
+				margin-top: 50px !important;
+			}
 	}
 }
 

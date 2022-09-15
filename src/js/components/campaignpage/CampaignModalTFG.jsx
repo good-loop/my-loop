@@ -19,7 +19,7 @@ import C from '../../C';
 const ModalCTA = ({modalOpen, setModalOpen, branding, nvertiserName}) => {
 	return (			
 		<Modal className="modal-CTA-T4G" isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)} fade={true} size="lg" returnFocusAfterClose={false}>
-			<ModalBody className="modal-body">
+			<ModalBody className="cta-modal-body">
 					<Container className='modal-container'>
 						<div className='modal-content'>
 							<Row className='modalHeader'><button type="button" class="modal-close-button btn-lg" aria-label="Close" onClick={e => setModalOpen(false)}>
@@ -43,7 +43,7 @@ const ModalCTA = ({modalOpen, setModalOpen, branding, nvertiserName}) => {
 									<img className='modal-overlay-sm modal-overlay' src='/img/overlay-mobile.png' alt="showcase photos"></img>
 									<img className='modal-overlay-lg modal-overlay' src='/img/overlay-desktop.png' alt="showcase photos"></img>
 								</WhiteCircle>
-								<T4GSignUpButton />
+								<T4GSignUpButton className='modal-tfg-signup-btn'/>
 								<p><a className='modal-cta-howItWorks' href="/tabsforgood"><span style={{textDecoration:"underline"}}>How it works</span>&ensp;➞</a></p>
 								</div>
 							</Row>
