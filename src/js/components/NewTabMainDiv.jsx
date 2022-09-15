@@ -55,7 +55,7 @@ import NGOImage from '../base/components/NGOImage';
 import { hasRegisteredForMyData, ProfileCreationSteps } from './mydata/MyDataCommonComponents';
 import {getThemeBackground} from './NewTabThemes'
 import {getT4GLayout, getT4GTheme, getT4GThemeBackground} from './NewTabLayouts';
-
+import {NewTabCustomise} from './NewTabCustomise'
 // DataStore
 C.setupDataStore();
 
@@ -168,6 +168,7 @@ const WebtopPage = () => {
 
   let layout = getT4GLayout();
   let curTheme = getT4GTheme();
+  let [customiseModalOpen, setCustomiseModalOpen] = useState(false)
   let {background, logo} = getT4GThemeBackground(curTheme);
   let customBG = background;
   let customLogo = logo;
@@ -257,6 +258,7 @@ const WebtopPage = () => {
         }}
       />
       <ConnectionStatusPopup />
+      <NewTabCustomise modalOpen={customiseModalOpen} setModalOpen={setCustomiseModalOpen} />
     </div>
   );
 }; // ./WebTopPage

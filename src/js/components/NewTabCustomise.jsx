@@ -1,6 +1,6 @@
 /* global navigator */
 import React, { useState, useEffect, useRef } from 'react';
-import { Container, Row, Col } from 'reactstrap';
+import { Container, Row, Col, Modal, ModalHeader, ModalBody, Button } from 'reactstrap';
 import BG from '../base/components/BG';
 import MainDivBase from '../base/components/MainDivBase';
 import { nonce } from '../base/data/DataClass';
@@ -47,12 +47,13 @@ import Misc from '../base/components/Misc';
 import Money from '../base/data/Money';
 import NGO from '../base/data/NGO';
 import Roles, { isTester } from '../base/Roles';
-import Claim from '../base/data/Claim';NewTabMainDiv copy
+import Claim from '../base/data/Claim';
 import { accountMenuItems } from './pages/CommonComponents';
 import { getCharityObject, getPersonSetting } from '../base/components/PropControls/UserClaimControl';
 import NGOImage from '../base/components/NGOImage';
 import { hasRegisteredForMyData, ProfileCreationSteps } from './mydata/MyDataCommonComponents';
 import {getThemeBackground} from './NewTabThemes'
+import { T4GLayoutSelector, T4GThemePicker } from './NewTabLayouts';
 
 // DataStore
 C.setupDataStore();
@@ -63,23 +64,25 @@ ServerIO.USE_PROFILER = true;
 
 Login.dataspace = C.app.dataspace;
 
-/**
- * NB: useEffect was triggering twice (perhaps cos of the login dance)
- */
-let logOnceFlag;
-
-/**
- * Same for trying to verify user once ^^
- */
-let verifiedLoginOnceFlag;
 
 
-const customiseModal = ({ modalOpen, setModalOpen }) => {
+export const NewTabCustomise = ({ modalOpen, setModalOpen }) => {
+  return (
+  <>
   <Modal className='customise-modal' isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)} fade={true} size="lg">
     <ModalBody className="customise-modal-body">
       <Container>
-
+        <h1> Select a Theme </h1>
+        <T4GThemePicker />
+        <br />
+        <h1> Select a layout </h1>
+        <T4GLayoutSelector />
+        <br />
       </Container>
     </ModalBody>
   </Modal>
+
+  <Button className='t4g-customise-button' onClick={(e) => {setModalOpen(true);console.log("yeehaw")}}><img class='customise-btn-img'src='../img/icons/edit-icon.svg'/></Button>
+  </>
+  )
 }
