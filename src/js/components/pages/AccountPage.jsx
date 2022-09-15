@@ -14,6 +14,7 @@ import AccountSettings from './AccountSettings';
 import TabsForGoodSettings from './TabsForGoodSettings';
 import C from '../../C';
 import MyDataDashboard from '../mydata/MyDataDashboardPage';
+import ServerIO from '../../plumbing/ServerIO';
 
 
 const Page = () => {
@@ -98,7 +99,7 @@ export const MoreToDo = ({ xids }) => {
 					title="My-Loop"
 					image="/img/GoodLoopLogos_Good-Loop_AltLogo_Colour.png"
 					description="Using ads for good"
-					url="https://my.good-loop.com" // TODO add via=user so we can track and attribute visits
+					url={ServerIO.MYLOOP_ENDPOINT} // TODO add via=user so we can track and attribute visits
 					onShare={e => {
 						console.error("TODO log onShare - which channel", e);
 						lg("shareclick", { user: Login.getId() });

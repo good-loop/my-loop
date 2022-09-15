@@ -434,7 +434,7 @@ const NormalTabCenter = ({style, customLogo}) => {
     <>
       <div className='flex-column unset-margins align-items-center tab-center mb-1' style={style}>
         <TutorialComponent page={5} className='py-3 t4g-logo'>
-          <a href='https://my.good-loop.com'>
+          <a href={MYLOOP_ENDPOINT}>
             <img
               className='tab-center-logo'
               src={customLogo}
