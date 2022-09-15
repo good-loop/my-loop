@@ -1,0 +1,70 @@
+@import "../js/base/style/fonts.less";
+
+body {
+	height: 100vh;
+	background-image : url("/img/TabsForGood/WelcomePage/our-mission-background-lg.svg");
+	background-size: cover;
+	background-position: bottom right;
+}
+
+.container {
+	height: 100%;
+	display: flex;
+	justify-content: center;
+}
+
+.content-col {
+	width: 100%;
+}
+
+.gl-logo-circle {
+	position: absolute !important;
+	left: 32.5%;
+	top: 12.5%;
+	width: 100%;
+	z-index: 2;
+	.gl-logo {
+		width:150%;
+		max-width: unset !important;
+		max-height: unset !important;
+	}
+}
+
+
+
+.middle-circle { 
+	
+	position: absolute;
+	left: 20%;
+	top: 20%;
+	box-shadow: none !important;
+	background-color: transparent !important;
+	background-size: cover !important;
+	background-image : url("/img/TabsForGood/WelcomePage/About-t4g-blob.svg") !important;
+	text-align: center;
+	letter-spacing: 1px;
+
+	.content {
+		.red-text {
+			font-size: 250%;
+			font-weight: bold;
+		}
+	
+		.extra-text {
+			font-size: 150%;
+		}
+		
+		.keep-it{
+			border-radius: 10%;
+		}
+	}
+
+
+}
+
+.overlay {
+	position: absolute;
+	width: 80%;
+	bottom: 10%;
+	left: 10%;
+}
