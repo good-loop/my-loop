@@ -32,7 +32,7 @@ ServerIO.PORTAL_ENDPOINT =
 ServerIO.MEDIA_ENDPOINT = 'https://uploads.good-loop.com';
 
 // Useful where relative links can not be used (eg inline-CSS 'url' image links, in the plugin)
-ServerIO.MYLOOP_ENDPOINT = 'my.good-loop.com'; // default to production, replace with your own config.js
+ServerIO.MYLOOP_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}my.good-loop.com`;
 
 // HACK localportal but production GreenTags
 // NB: can call `as` or `portal` -- they run the same GreenCalcServlet 
