@@ -167,7 +167,7 @@ const MainDiv = () => {
 		loginLogo="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png"
 		loginSubtitle="Sign in to see how your web browsing has transformed into charity donations"
 		noSocials
-		loginChildren={() => <div className='text-center'><T4GPluginButton onClick={() => setShowLogin(false)}>Not got an account? Sign up and get Tabs for Good</T4GPluginButton></div>}
+		loginChildren={() => <div className='text-center'><T4GSignUpButton>Not got an account? Sign up and get Tabs for Good</T4GSignUpButton></div>}
 		LoginGuts={MyLoginWidgetGuts}
 	></MainDivBase>);
 };
