@@ -6,7 +6,10 @@ import Login from '../../base/youagain';
  */
 const LogoutPage = () => {
 	useEffect(() => {
-		if (Login.isLoggedIn()) Login.logout();
+		console.log(Login.isLoggedIn())
+		if (Login.isLoggedIn()) {
+			Login.logout()
+		};
 		window.location.href = "/home";
 		}, []);
 

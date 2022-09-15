@@ -353,7 +353,10 @@ const UserControls = ({ cid }) => {
   // );
 
   const T4GLogoutLink = () => <a href={'#'} className={"LogoutLink"} 
-  onClick={() => top.location.href = ServerIO.MYLOOP_ENDPOINT + '/logout'}>
+  onClick={() => {
+    console.log("logging out...")
+    top.location.href = ServerIO.MYLOOP_ENDPOINT + '/logout';
+  }}>
     Logout
   </a>;
 
