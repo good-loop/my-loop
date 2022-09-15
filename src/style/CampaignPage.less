@@ -24,240 +24,236 @@ body {
 //////////   CTA Modal   /////////
 
 
-:not(.T4G-modal) {
-	
-	
-	.modal-content {
-		color: #830000;
-		background-color: rgba(0, 0, 0, 0.0);
-		border: none;
-		
-		
-		.modal-body.cta-modal-body {
-			height: 90vh;
-			border-radius: 50px;
-			color: whitesmoke;
+.modal-content {
+	background-color: rgba(0, 0, 0, 0.0);
+	border: none;
 
-			background-image: url("/img/our-mission-background-lg.svg");
-			background-size: cover;
-			background-position: top right;
+	.modal-body {
+		height: 90vh;
+		border-radius: 50px;
+		color: whitesmoke;
+
+		background-image: url("/img/our-mission-background-lg.svg");
+		background-size: cover;
+		background-position: top right;
 
 
-			.modal-container {
-				height: 100%;
-				display: flex;
-				justify-content: center;
-				width: 100%;
-				overflow: visible;
+		.modal-container {
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			width: 100%;
+			overflow: visible;
 
-				.modalHeader {
-					position: relative;
+			.modalHeader {
+				position: relative;
 
-					.modal-close-button {
-						opacity: 0.75;
-						width: 30%;
-						background-color: transparent;
-						border: none;
-						padding: 0;
-						margin-left: calc(100% - 140px);
-
-						.modal-close-text {
-							text-align: left;
-							font-size: 1.2rem;
-							margin-bottom: 0;
-							color: white;
-							text-shadow: none;
-							font-weight: normal;
-						}
-					}
-				}
-
-				.modal-content-col {
-					position: relative;
-					width: 40%;
-					left: 30%;
-
-					@media (max-width: 768px) {
-						width: 90%;
-						left: 5%;
-
-						.modal-middle-circle {
-							width: 80% !important;
-							margin-bottom: 20px;
-						}
-					}
-
-					.modal-brand-logo {
-						padding-bottom: 10px;
-						left: 42.5% // logo to middle of div (50% - width)
-					}
-
-					.modal-text-intro {
-						font-weight: bold;
-						font-size: 1rem;
-					}
-				}
-
-				.modal-gl-logo-circle {
-					position: absolute;
-					left: 5%;
-					top: 24%;
-					z-index: 1;
-
-					@media (max-width: 767px) {
-						left: 3%;
-					}
-
-					img {
-						max-height: unset;
-						height: 125%;
-						max-width: unset !important;
-						max-height: unset !important;
-					}
-				}
-
-				.modal-middle-circle {
+				.modal-close-button {
+					opacity: 0.75;
+					width: 30%;
 					background-color: transparent;
-					overflow: visible;
-					background-image: url('/img/About-t4g-blob.svg');
-					background-size: cover;
-					background-position: top right;
-					box-shadow: none;
-					margin-left: auto;
-					margin-right: auto;
-					margin-bottom: 80px;
-					position: relative;
-					top: 0%;
-					min-width: 290px;
-					max-width: 400px;
+					border: none;
+					padding: 0;
+					margin-left: calc(100% - 140px);
 
-					@media (max-width: 768px) {
-						font-size: 14px !important;
-
-						p {
-							margin-bottom: 10% !important;
-						}
-
-						margin-bottom: 15%;
+					.modal-close-text {
+						text-align: left;
+						font-size: 1.2rem;
+						margin-bottom: 0;
+						color: white;
+						text-shadow: none;
+						font-weight: normal;
 					}
+				}
+			}
+
+			.modal-content-col {
+				position: relative;
+				width: 40%;
+				left: 30%;
+
+				@media (max-width: 768px) {
+					width: 90%;
+					left: 5%;
+
+					.modal-middle-circle {
+						width: 80% !important;
+						margin-bottom: 20px;
+					}
+				}
+
+				.modal-brand-logo {
+					padding-bottom: 10px;
+					left: 42.5% // logo to middle of div (50% - width)
+				}
+
+				.modal-text-intro {
+					font-weight: bold;
+					font-size: 1rem;
+				}
+			}
+
+			.modal-gl-logo-circle {
+				position: absolute;
+				left: 5%;
+				top: 24%;
+				z-index: 1;
+
+				@media (max-width: 767px) {
+					left: 3%;
+				}
+
+				img {
+					max-height: unset;
+					height: 125%;
+					max-width: unset !important;
+					max-height: unset !important;
+				}
+			}
+
+			.modal-middle-circle {
+				background-color: transparent;
+				overflow: visible;
+				background-image: url('/img/About-t4g-blob.svg');
+				background-size: cover;
+				background-position: top right;
+				box-shadow: none;
+				margin-left: auto;
+				margin-right: auto;
+				margin-bottom: 80px;
+				position: relative;
+				top: 0%;
+				min-width: 290px;
+				max-width: 400px;
+
+				@media (max-width: 768px) {
+					font-size: 14px !important;
 
 					p {
-						margin: 0;
-						width: 100%;
-						letter-spacing: 1px;
-						height: 100%;
-						color: black;
-						z-index: 2;
+						margin-bottom: 10% !important;
 					}
 
-					.red-text {
-						font-weight: bold;
-						color: @gl-red;
-					}
+					margin-bottom: 15%;
 				}
 
-				.modal-overlay {
-					pointer-events: none;
-					display: block;
-					flex: none;
-
+				p {
+					margin: 0;
+					width: 100%;
+					letter-spacing: 1px;
+					height: 100%;
+					color: black;
+					z-index: 2;
 				}
 
-				.modal-overlay-lg {
-					@media (max-width: 767px) {
-						visibility: hidden;
-					}
-
-					display: block;
-					flex:none;
-					padding-left: 14%;
-					min-width: 710px;
-					max-width: unset !important;
-					max-height: unset !important;
-					width: 490%;
-					bottom: -36%;
-				}
-
-				.modal-overlay-sm {
-					@media (min-width: 768px) {
-						visibility: hidden;
-					}
-
-					display: block;
-					flex:none;
-					min-width: unset;
-					max-width: unset !important;
-					max-height: unset !important;
-					width: 180%;
-					top: 80%;
-				}
-
-				.modal-cta-howItWorks {
-					font-size: 0.9rem !important;
-					color: @gl-red  !important;
-					text-decoration: none;
-				}
-
-				.modal-cta-howItWorks:hover {
-					color: @gl-orange  !important;
+				.red-text {
+					font-weight: bold;
+					color: @gl-red;
 				}
 			}
-		}
-	}
 
-	.modal-CTA-T4G {
-		margin-top: 5vh;
-		width: 90vw;
-		max-width: 90vw;
-		min-width: 90vw;
+			.modal-overlay {
+				pointer-events: none;
+				display: block;
+				flex: none;
 
-		/*remove background of modal */
-		.col-lg-4 {
-			padding: 0 !important;
-		}
-
-		.modal-content,
-		.modal-overlay {
-			position: absolute;
-			//top: 0;
-			//left: 0
-		}
-
-		.modal-content {
-			z-index: 10;
-			text-align: center;
-		}
-
-		/* On large screens */
-		@media (min-width: 768px) {
-			width: 70vw;
-			max-width: 70vw;
-			min-width: 70vw;
-		}
-	}
-
-	.cta-modal-btn.btn-secondary {
-		position: relative;
-		font-size: 1rem;
-
-			// desktop
-			width: unset;
-			margin-top: 10% !important;
-
-			// tablet
-			@media (min-width:768px) and (max-width:1080px) {
-				width:50%;
-				margin-left: 0% !important;
 			}
 
-			// phones
-			@media (max-width: 767px) {
-				width: 75%;
-				margin-left: -0% !important;
-				margin-top: 50px !important;
+			.modal-overlay-lg {
+				@media (max-width: 767px) {
+					visibility: hidden;
+				}
+
+				display: block;
+				flex:none;
+				padding-left: 14%;
+				min-width: 710px;
+				max-width: unset !important;
+				max-height: unset !important;
+				width: 490%;
+				bottom: -36%;
 			}
+
+			.modal-overlay-sm {
+				@media (min-width: 768px) {
+					visibility: hidden;
+				}
+
+				display: block;
+				flex:none;
+				min-width: unset;
+				max-width: unset !important;
+				max-height: unset !important;
+				width: 180%;
+				top: 80%;
+			}
+
+			.modal-cta-howItWorks {
+				font-size: 0.9rem !important;
+				color: @gl-red  !important;
+				text-decoration: none;
+			}
+
+			.modal-cta-howItWorks:hover {
+				color: @gl-orange  !important;
+			}
+		}
 	}
 }
+
+
+
+.modal-CTA-T4G {
+	margin-top: 5vh;
+	width: 90vw;
+	max-width: 90vw;
+	min-width: 90vw;
+
+	/*remove background of modal */
+	.col-lg-4 {
+		padding: 0 !important;
+	}
+
+	.modal-content,
+	.modal-overlay {
+		position: absolute;
+		//top: 0;
+		//left: 0
+	}
+
+	.modal-content {
+		z-index: 10;
+		text-align: center;
+	}
+
+	/* On large screens */
+	@media (min-width: 768px) {
+		width: 70vw;
+		max-width: 70vw;
+		min-width: 70vw;
+	}
+}
+
+.cta-modal-btn.btn-secondary {
+	position: relative;
+	font-size: 1rem;
+
+		// desktop
+		width: unset;
+		margin-top: 10% !important;
+
+		// tablet
+		@media (min-width:768px) and (max-width:1080px) {
+			width:50%;
+			margin-left: 25% !important;
+		}
+
+		// phones
+		@media (max-width: 767px) {
+			width: 100%;
+			margin-left: -25% !important;
+			margin-top: 50px !important;
+		}
+	}
 
 	
 
@@ -282,7 +278,6 @@ body {
 	}
 
 	.impact-hub-splash {
-		overflow: hidden;
 		position: relative;
 		height: @fullHeight;
 		background-color: #f55d58;
@@ -298,36 +293,15 @@ body {
 		.splash-curve {
 			position: absolute;
 			top: 0;
-			left: -40%;
-			height: 130%;
-			width: 150% !important;
+			left: 0;
+			height: 100%;
+			width: 100%;
 			z-index: 2;
-		}
-
-		.splash-curve.curve-border {
-			filter: brightness(0.5);
-			left: -40%;
-			width: 148% !important;
 		}
 
 		.splash-img {
 			height: 100%;
 			object-fit: cover;
-		}
-
-		.splash-top-curve {
-			position: absolute;
-			z-index: 1;
-			width: 100% !important;
-			height: 100%;
-			bottom: 35%;
-			z-index: -1;
-			margin-bottom: 5%;
-
-			visibility: hidden;
-			@media @width-mobile {
-				visibility: visible;
-			}
 		}
 
 		.dark-overlay {
@@ -372,56 +346,25 @@ body {
 		.splash-content {
 			width: 40%;
 			height: 100%;
-			splash-counter {
-				font-size: 3rem;
-				text-shadow: none;
-			}
 
-			@media @width-mobile {
-				display: flex; // Is it possible to use flex or BS to write something simpler that just works across devices??
-				flex-direction: column;
-				align-items: center;
-				justify-content: space-between;
-				background-color: transparent;
-
-				.splash-text {
-					width: 101vw;
-					position: relative;
-					left: -20%;					
-					height: 60%;
-					bottom: -40%;
-
-					.splash-text-content {
-						background-color: white;
-						height: 100%;
-					}
-	
-				}
-
-
-			}
 
 			@media @ipad-max {
 				height: 75%;
 				padding-top: 70px; // avoid navbar
 				width: 100%;
+
+				@media @width-mobile {
+					display: flex; // Is it possible to use flex or BS to write something simpler that just works across devices??
+					flex-direction: column;
+					align-items: center;
+					justify-content: space-between;
+				}
 			}
 		}
 
 		.splash-text {
 			@media @ipad-max {
 				text-shadow: 0 2px 3px black;
-			}
-
-			img { 
-				margin-bottom: -4%; // annoying gap between divs, just merge them over each other
-			}
-
-			background-color: transparent;
-			splash-text-content {
-				@media @width-mobile {
-					background-color: white;
-				}
 			}
 		}
 
@@ -435,26 +378,7 @@ body {
 				align-items: center;
 				justify-content: space-between;
 				width: 68.75%; // ??
-				@media @width-mobile {
-					position: absolute;
-					left:20%;
-					top:-15%;
-				}
 				margin: auto;
-
-				.left-hero-circle {
-					margin-left: 10%;
-					@media @width-mobile { 
-						margin-left: unset;
-					}
-				}
-
-				.right-hero-circle {
-					margin-right: 10%;
-					@media @width-mobile { 
-						margin-right: unset;
-					}
-				}
 
 				@media @width-mobile {
 					width: 100%;
