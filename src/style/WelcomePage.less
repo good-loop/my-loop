@@ -1,70 +1,77 @@
 @import "../js/base/style/fonts.less";
 
-body {
+.welcome-page {
 	height: 100vh;
-	background-image : url("/img/TabsForGood/WelcomePage/our-mission-background-lg.svg");
+	background-image: url("/img/TabsForGood/WelcomePage/our-mission-background-lg.svg");
 	background-size: cover;
 	background-position: bottom right;
-}
 
-.container {
-	height: 100%;
-	display: flex;
-	justify-content: center;
-}
-
-.content-col {
-	width: 100%;
-}
-
-.gl-logo-circle {
-	position: absolute !important;
-	left: 32.5%;
-	top: 12.5%;
-	width: 100%;
-	z-index: 2;
-	.gl-logo {
-		width:150%;
-		max-width: unset !important;
-		max-height: unset !important;
+	.container {
+		height: 50%;
+		display: flex;
+		justify-content: center;
 	}
-}
 
+	.content-col {
+		width: 100%;
+		height: 100vh;
+	}
 
+	.gl-logo-circle {
+		position: absolute !important;
+		left: -20%;
+		top: -15%;
+		width: 100%;
+		z-index: 2;
 
-.middle-circle { 
-	
-	position: absolute;
-	left: 20%;
-	top: 20%;
-	box-shadow: none !important;
-	background-color: transparent !important;
-	background-size: cover !important;
-	background-image : url("/img/TabsForGood/WelcomePage/About-t4g-blob.svg") !important;
-	text-align: center;
-	letter-spacing: 1px;
-
-	.content {
-		.red-text {
-			font-size: 250%;
-			font-weight: bold;
-		}
-	
-		.extra-text {
-			font-size: 150%;
-		}
-		
-		.keep-it{
-			border-radius: 10%;
+		.gl-logo {
+			width: 150%;
+			max-width: unset !important;
+			max-height: unset !important;
 		}
 	}
 
 
-}
 
-.overlay {
-	position: absolute;
-	width: 80%;
-	bottom: 10%;
-	left: 10%;
+	.middle-circle {
+
+		position: absolute;
+		left: 30%;
+		max-width: 90vh;
+		top: 50%;
+		transform: translateY(-50%); 
+		box-shadow: none !important;
+		background-color: transparent !important;
+		background-size: cover !important;
+		background-image: url("/img/TabsForGood/WelcomePage/About-t4g-blob.svg") !important;
+		text-align: center;
+		letter-spacing: 1px;
+		overflow: visible;
+
+		.content {
+			.red-text {
+				margin-bottom: 5px;
+				font-size: 2.4rem;
+				font-weight: bold;
+			}
+
+			.extra-text {
+				margin-bottom: 2px;
+				font-size: 1.4rem;
+			}
+
+			.keep-it {
+				border-radius: 10%;
+			}
+		}
+
+
+	}
+
+	.overlay {
+		position: absolute;
+		width: 80%;
+		bottom: 10%;
+		left: 10%;
+	}
 }
