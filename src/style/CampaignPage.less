@@ -25,6 +25,34 @@
 
 .modal-CTA-T4G {
 	
+    margin-top: 5vh;
+		width: 90vw;
+		max-width: 90vw;
+		min-width: 90vw;
+
+		/*remove background of modal */
+		.col-lg-4 {
+			padding: 0 !important;
+		}
+
+		.modal-content,
+		.modal-overlay {
+			position: absolute;
+			//top: 0;
+			//left: 0
+		}
+
+		.modal-content {
+			z-index: 10;
+			text-align: center;
+		}
+
+		/* On large screens */
+		@media (min-width: 768px) {
+			width: 70vw;
+			max-width: 70vw;
+			min-width: 70vw;
+		}
 	
 	.modal-content {
 		color: #830000;
@@ -202,37 +230,6 @@
 					color: @gl-orange  !important;
 				}
 			}
-		}
-	}
-
-	.modal-CTA-T4G {
-		margin-top: 5vh;
-		width: 90vw;
-		max-width: 90vw;
-		min-width: 90vw;
-
-		/*remove background of modal */
-		.col-lg-4 {
-			padding: 0 !important;
-		}
-
-		.modal-content,
-		.modal-overlay {
-			position: absolute;
-			//top: 0;
-			//left: 0
-		}
-
-		.modal-content {
-			z-index: 10;
-			text-align: center;
-		}
-
-		/* On large screens */
-		@media (min-width: 768px) {
-			width: 70vw;
-			max-width: 70vw;
-			min-width: 70vw;
 		}
 	}
 
