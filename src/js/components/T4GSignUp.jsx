@@ -45,7 +45,7 @@ export const T4GSignUpButton = ({ className, children, dUnset }) => {
 		if (isMobile()) {
 			return <T4GSignUpLink className={space("T4GSignUpButton btn btn-primary", className)}>{children || "Get Tabs for Good"}</T4GSignUpLink>;
 		}
-		//return <T4GPluginButton className={className} dUnset />
+		return <T4GPluginButton className={className} dUnset />
 	}
 	return (
 		<T4GSignUpLink className={space("T4GSignUpButton btn btn-primary", className)} />
