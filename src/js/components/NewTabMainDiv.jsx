@@ -114,6 +114,7 @@ const WebtopPage = () => {
       window.localStorage.setItem('t4gOpenedB4', true);
       openTutorial();
     }
+    openTutorial();
   };
 
   if (!verifiedLoginOnceFlag) {
@@ -764,6 +765,12 @@ const tutorialPages = [
       My-Loop.
     </p>
   </>,
+  <>
+    <h2>Customize your page</h2>
+    <p>
+        Make your Tabs For Good page yours! Change themes and layouts in here.
+    </p>
+</>,
 ];
 
 export default NewTabMainDiv;

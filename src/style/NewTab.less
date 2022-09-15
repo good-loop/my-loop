@@ -1,21 +1,24 @@
 
 
-.t4g-customise-button {
-    margin: 0;
-    padding: 0;
+.t4g-customizer {
     width: 50px;
-    position: absolute;
+    position: absolute !important;
     bottom: 92px;
     right: 0;
     z-index: 999;
+    margin:1%;
+}
+
+.t4g-customise-button {
+    margin: 0;
+    padding: 0;
     border: none !important;
     background-color: transparent !important;
     box-shadow: none !important;
-    margin:1%;
     @media (max-width:1475px){ // avoid covering ads
         bottom: 0;
     }
-
+    width: 100%;
 }
 
 
@@ -100,7 +103,6 @@
 
 .tutorial-highlight {
     // Border + shadow = glow
-    border: 6px solid red;
     box-shadow: 0 0 10px red;
     margin: -6px;
 }
@@ -109,7 +111,7 @@
     border: 6px solid red;
     box-shadow: 0 0 10px red;
     z-index: 1000;
-    margin: -6px;
+    //margin: -6px;
     & * {
         z-index: 1000;
     }
