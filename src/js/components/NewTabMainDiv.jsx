@@ -75,60 +75,6 @@ let logOnceFlag;
  */
 let verifiedLoginOnceFlag;
 
-const LoremIpsum = () => {
-  return (
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet
-      ornare neque. Cras egestas pretium risus, ac maximus justo tempus ac.
-      Etiam vitae aliquam nulla, ut lobortis nibh. Ut et massa sit amet nulla
-      eleifend bibendum. Proin elementum maximus lorem, ut tempor ante pharetra
-      id. Integer et sem eget turpis fermentum consequat. Pellentesque vulputate
-      laoreet metus. Donec hendrerit risus mauris, non ultrices ex venenatis
-      non. Donec congue sem vitae diam molestie ornare. Pellentesque sit amet
-      efficitur risus, ornare dictum magna. Donec a purus eu erat luctus dapibus
-      eu et metus. Etiam at pulvinar ex. In convallis tempor consequat. Nam enim
-      leo, maximus id lacus sed, varius cursus sapien. Praesent at mi sit amet
-      augue sollicitudin ultrices. Nam tincidunt metus sit amet massa dapibus
-      maximus. Morbi id mollis diam. Maecenas odio lectus, vehicula a massa a,
-      mollis finibus sem. Sed ante nibh, molestie vitae urna eget, congue
-      tincidunt lorem. Etiam et sollicitudin leo. Phasellus luctus interdum leo
-      et consequat. Etiam ornare, arcu eu rhoncus venenatis, nisl ipsum laoreet
-      dui, nec ultrices augue purus id felis. Duis feugiat erat diam, quis
-      placerat ipsum ultrices quis. Morbi diam urna, interdum aliquam placerat
-      non, elementum a urna. Vivamus consequat lacus nunc, nec elementum felis
-      lobortis sit amet. Praesent arcu tellus, vulputate sit amet felis nec,
-      convallis porta mi. Cras eu dolor nisi. Ut convallis vulputate sapien sit
-      amet lacinia. Pellentesque quam metus, cursus vitae leo non, congue rutrum
-      erat. Mauris non pretium odio. Curabitur dapibus pretium massa, vel
-      vulputate mauris mollis ac. Proin et ipsum dignissim nunc mollis eleifend.
-      Curabitur varius ipsum sed odio pulvinar, non suscipit augue tincidunt.
-      Nulla quis diam quis ante elementum semper. In at libero diam. Mauris
-      semper hendrerit sem at vehicula. Praesent blandit sapien sem, eu luctus
-      ligula facilisis eu. Sed posuere erat ultrices nisl feugiat, eget pulvinar
-      felis convallis. Nunc sollicitudin arcu tellus, a lacinia ligula dictum
-      non. Morbi sed lacus ante. Duis sed tortor sollicitudin, fermentum urna
-      nec, cursus mi. In euismod in sem sit amet feugiat. Quisque tincidunt nisl
-      vitae mauris facilisis, eget tristique tortor dignissim. Phasellus
-      feugiat, nulla sed ultricies pulvinar, justo urna mattis felis, nec
-      maximus nisi elit ut ex. In iaculis neque a tortor dignissim cursus. Ut
-      tristique nisi et ligula mollis, non tristique nulla pretium. Sed
-      elementum pulvinar nisl, at posuere magna maximus non. Pellentesque odio
-      turpis, luctus vel sollicitudin sit amet, placerat consequat odio. Fusce
-      pretium elit metus, sit amet scelerisque turpis fermentum in. Phasellus
-      mattis, quam consequat mollis auctor, dolor eros aliquam orci, sit amet
-      interdum augue tortor ut ipsum. Curabitur bibendum pharetra eros. Donec
-      nec euismod massa, ut pulvinar ex. Sed a urna vel odio volutpat rutrum
-      semper in urna. Aenean feugiat dui at scelerisque convallis. Donec
-      consequat ac velit ac feugiat. Ut in libero enim. Integer et est odio. Sed
-      in ex felis. Proin id tempor mauris. Nulla eu purus ut metus imperdiet
-      interdum. In vitae enim et nunc faucibus cursus non vel dolor. Donec vitae
-      neque finibus, tincidunt purus eu, iaculis mauris. Nam id pharetra odio.
-      Nullam eget pharetra ex. Aliquam efficitur sapien turpis, sit amet sodales
-      justo feugiat nec. Curabitur in nibh nisl.
-    </p>
-  );
-};
-
 /**
  * The main Tabs for Good page
  *
@@ -619,7 +565,7 @@ const NewTabCharityCard = ({ cid, loading }) => {
     <TutorialComponent page={1} className="NewTabCharityCard">
         <div className='text-center'>
         {/*<div onClick={() => top.location.href = charityLink}> */}
-        <a href={charityLink} target='_blank' rel='noopener noreferrer'>
+        <a href={charityLink} target='_blank' rel='noopener noreferrer' className='charity-cta'>
             {/* <WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}> */}
             {charity && <CharityLogo charity={charity} />}
             {!charity && loading && <p className='my-auto'>Loading...</p>}
