@@ -54,7 +54,7 @@ import { getCharityObject, getPersonSetting } from '../base/components/PropContr
 import NGOImage from '../base/components/NGOImage';
 import { hasRegisteredForMyData, ProfileCreationSteps } from './mydata/MyDataCommonComponents';
 import {getThemeBackground} from './NewTabThemes'
-import {getT4GLayout} from './NewTabLayouts';
+import {getT4GLayout, getT4GTheme, getT4GThemeBackground} from './NewTabLayouts';
 
 // DataStore
 C.setupDataStore();
@@ -85,9 +85,7 @@ const WebtopPage = () => {
   const charityID = pvCharityID && (pvCharityID.value || pvCharityID.interim);
   const loadingCharity = !pvCharityID || !pvCharityID.resolved;
   let [showPopup, setShowPopup] = useState(false);
-  let [customBG, setCustomBG] = useState(null);
-  let [customLogo, setCustomLogo] = useState('/img/newtab/logo/white.jpg');
-  let person = undefined
+  let person = undefined;
 
   // Yeh - a tab is opened -- let's log that (once only)
   if (!logOnceFlag && Login.isLoggedIn()) {
@@ -96,26 +94,6 @@ const WebtopPage = () => {
       // Hurrah - T4G is definitely installed
       if (!person) console.warn('no person?!');
       else Person.setHasApp(person, Login.app);
-      
-      // we have a person!
-      // If they don't have a background set, set to default
-      let curTheme = getClaimValue({ person, key: "theme" });
-      let curLocTheme = window.localStorage.getItem("theme");
-
-      if (!curTheme) setPersonSetting('theme','.default');                // if not chosen, default
-      if (!curLocTheme) window.localStorage.setItem("theme", curTheme);    // if theme not stored, store theme
-      
-      // if local theme doesn't match account theme, update local & change background
-      if(curLocTheme !== curTheme) { 
-        window.localStorage.setItem("theme", curTheme);
-        let {background, logo} = getThemeBackground(curTheme)
-        setCustomBG(background)
-        setCustomLogo(logo)
-      }
-
-
-      // If they don't have a layout set, set to default
-      // VERA DO YOUR STUFF HERE
 
     });
     console.log("after pv", person)
@@ -180,22 +158,6 @@ const WebtopPage = () => {
   };
 
   useEffect(() => {
-
-    let locTheme = window.localStorage.getItem("theme")                     // get chosen theme
-    if (!locTheme) window.localStorage.setItem("theme", ".default")
-
-    let {background, logo} = getThemeBackground(locTheme)
-
-    console.log("setting backgrounds")
-    setCustomBG(background)
-    setCustomLogo(logo)
-
-    /*
-    let bgImgs = 9;
-    setCustomBG(
-      '/img/newtab/default/gl-bg' + (Math.round(Math.random() * bgImgs) + 1) + '.jpg'
-    );
-    */
     bookmarkRequest();
 
     window.addEventListener('message', (event) => handleMessage(event));
@@ -205,6 +167,15 @@ const WebtopPage = () => {
   }, []);
 
   let layout = getT4GLayout();
+  let curTheme = getT4GTheme();
+  let {background, logo} = getT4GThemeBackground(curTheme);
+  let customBG = background;
+  let customLogo = logo;
+
+  console.log("THEME??", curTheme);
+  console.log("LAYOUT??", layout);
+  console.log("CUSTOM BG?", customBG);
+  console.log("CUSTOM LOGO?", customLogo);
 
   return (
     <div className={space('t4g', 'layout-' + layout)}>
@@ -219,6 +190,7 @@ const WebtopPage = () => {
         opacity={0.9}
         bottom={0}
         style={{ backgroundPosition: 'center' }}
+        alwaysDisplayChildren
       >
         <NewTabCharityCard cid={charityID} loading={loadingCharity} />
         <TutorialHighlighter

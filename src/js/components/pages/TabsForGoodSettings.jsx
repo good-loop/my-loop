@@ -19,7 +19,7 @@ import LinkOut from '../../base/components/LinkOut';
 import NGO from '../../base/data/NGO';
 import List from '../../base/data/List';
 import { getCharityObject } from '../../base/components/PropControls/UserClaimControl';
-import { T4GLayoutSelector } from '../NewTabLayouts';
+import { T4GLayoutSelector, T4GThemePicker } from '../NewTabLayouts';
 
 
 const TabsForGoodSettings = () => {
@@ -36,7 +36,7 @@ const TabsForGoodSettings = () => {
 		<br />
 		<h1>Customization</h1>
         <h3>Theme</h3>
-		<ThemePicker />
+		<T4GThemePicker />
         <h3>Layout</h3>
         <T4GLayoutSelector/>
 	</>;
@@ -45,36 +45,6 @@ const TabsForGoodSettings = () => {
 
 const retrurnProfile = () => {
 	return getProfile();
-}
-
-const ThemePicker = () => {
-	const person = getProfile().value;										// get person
-	if(!person) return <Misc.Loading />;							
-
-	let curTheme = getClaimValue({ person, key: "theme" });					// has user got a theme set?
-	if(!curTheme) {				
-		setPersonSetting("theme", '.default')								// if not, default
-		window.localStorage.setItem("theme", '.default')
-	}
-
-	let curChar = getClaimValue({person, key: "charity"})					// get users chosen charity
-	if(!curChar) curChar = '.default'										
-
-	const onClick = (value) => {
-		window.localStorage.setItem("theme", value)							// save theme selection locally
-		setPersonSetting("theme", value);									// save theme selection onto account
-	};
-
-	return (
-		<div>
-			<button className='btn btn-primary col-4' onClick={e => onClick('.dark')}>dark</button>
-			<button className='btn btn-primary col-4' onClick={e => onClick('.light')}>light</button>
-			<button className='btn btn-primary col-4' onClick={e => onClick('.nature')}>nature</button>
-			<button className='btn btn-primary col-4' onClick={e => onClick(curChar)}>charity</button>
-			<button className='btn btn-primary col-4' onClick={e => onClick('.default')}>default</button>
-			<p>{curTheme}</p>
-		</div>
-	)
 }
 
 
