@@ -303,12 +303,12 @@ const UserControls = ({ cid }) => {
     };
   }, [myloopLink]);
 
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [popupDiv]);
+  // useEffect(() => {
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   };
+  // }, [popupDiv]);
 
   const handleClickOutside = (e) => {
     if (!mydataRef.current) return;
@@ -336,21 +336,21 @@ const UserControls = ({ cid }) => {
     </>
   );
 
-  const popupDiv = (
-    <div
-      ref={mydataRef}
-      className='mydata-t4g-popup bg-white shadow p-3 position-absolute
-			d-flex flex-column justify-content-center align-items-center text-center'
-      onClick={() => (top.location.href = mydataLink)}
-    >
-      <img src='/img/mydata/data-badge.png' className='logo' />
-      <span className='my-3' style={{ fontSize: '.9rem' }}>
-        Visit My.Good-Loop to earn your data badge and raise even more donations
-        for {charity ? charity.displayName : 'charities'}!
-      </span>
-      {charity && <CharityLogo charity={charity} />}
-    </div>
-  );
+  // const popupDiv = (
+  //   <div
+  //     ref={mydataRef}
+  //     className='mydata-t4g-popup bg-white shadow p-3 position-absolute
+	// 		d-flex flex-column justify-content-center align-items-center text-center'
+  //     onClick={() => (top.location.href = mydataLink)}
+  //   >
+  //     <img src='/img/mydata/data-badge.png' className='logo' />
+  //     <span className='my-3' style={{ fontSize: '.9rem' }}>
+  //       Visit My.Good-Loop to earn your data badge and raise even more donations
+  //       for {charity ? charity.displayName : 'charities'}!
+  //     </span>
+  //     {charity && <CharityLogo charity={charity} />}
+  //   </div>
+  // );
 
   const T4GLogoutLink = () => <a href={'#'} className={"LogoutLink"} 
   onClick={() => top.location.href = ServerIO.MYLOOP_ENDPOINT + '/logout'}>
@@ -360,7 +360,7 @@ const UserControls = ({ cid }) => {
   return (
     <>
       {showMyloopLink && myloopLink}
-      {showPopup && popupDiv}
+      {/* {showPopup && popupDiv} */}
       <AccountMenu
         accountMenuItems={accountMenuItems}
         linkType='a'
@@ -651,7 +651,7 @@ const ConnectionStatusPopup = () => {
   const isOffline = !navigator.onLine; // pvHasAdBlock.error;
   const determining = // determining what? This pop up seems to be on only when it is clearly online
     !(pvHasAdBlock.resolved || pvHasAdBlock.error) && timedout;
-  const showPopup = (hasAdBlock || isOffline || determining) && popup;
+  const showPopup = (hasAdBlock || isOffline) && popup;
 
   return showPopup ? (
     <div
