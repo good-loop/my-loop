@@ -57,8 +57,8 @@ const T4GLayoutPicker = () => {
 
 	return (
 		<Row>
-            {Object.keys(LAYOUTS).map(layout => {
-                return <SelectButton layout={layout}/>;
+            {Object.keys(LAYOUTS).map((layout, i) => {
+                return <SelectButton key={i} layout={layout}/>;
             })}
 		</Row>
 	)
@@ -91,9 +91,9 @@ const T4GThemePicker = () => {
 	return (
 		<Row>
             <SelectButton theme=".default" label="Default"/>
-            {Object.keys(THEMES).map(theme => {
+            {Object.keys(THEMES).map((theme, i) => {
                 if (!theme.startsWith('.')) return null;
-                return <SelectButton theme={theme}/>;
+                return <SelectButton key={i} theme={theme}/>;
             })}
             {Object.keys(THEMES).includes(curChar) && <SelectButton theme={".charity " + curChar} label="Charity"/>}
 		</Row>

@@ -21,7 +21,7 @@ export const NewTabCustomise = ({ modalOpen, setModalOpen }) => {
                 </ModalBody>
             </Modal>
             <TutorialComponent page={6} className='t4g-customizer'>
-                <Button className='t4g-customise-button' onClick={(e) => setModalOpen(true)}><img class='customise-btn-img' src='../img/icons/edit-icon.svg' /></Button>
+                <Button className='t4g-customise-button' onClick={(e) => setModalOpen(true)}><img className='customise-btn-img' src='../img/icons/edit-icon.svg' /></Button>
             </TutorialComponent>
         </>
     )
