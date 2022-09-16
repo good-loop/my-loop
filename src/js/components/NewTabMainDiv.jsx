@@ -166,12 +166,12 @@ const WebtopPage = () => {
     };
   }, []);
 
-  let layout = getT4GLayout();
-  let curTheme = getT4GTheme();
-  let [customiseModalOpen, setCustomiseModalOpen] = useState(false)
-  let {background, logo} = getT4GThemeBackground(curTheme);
-  let customBG = background;
-  let customLogo = logo;
+  const [customiseModalOpen, setCustomiseModalOpen] = useState(false)
+  const layout = getT4GLayout();
+  const curTheme = getT4GTheme();
+  const {background, logo} = getT4GThemeBackground(curTheme);
+  const customBG = background;
+  const customLogo = logo;
 
   console.log("THEME??", curTheme);
   console.log("LAYOUT??", layout);
