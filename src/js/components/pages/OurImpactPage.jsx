@@ -32,7 +32,7 @@ const OurImpactSplash = () => {
 			</Container>
 			<div className="position-relative bg-white rounded shadow text-center p-3 pb-5 mb-5 mx-auto" style={{ maxWidth: '768px', marginTop: '80px' }} >
 				<img src="img/ourimpact/ad-break-header.png" className="position-absolute" style={{ width: '200px', left: '50%', top: 0, transform: 'translate(-50%,-60%)' }} />
-				<p className="text-muted mt-5">By watching our ads, browsing with Tabs for Good, and signing up for My.Data, you've:</p>
+				<p className="text-muted mt-5">By watching our ads and browsing with Tabs for Good, you've:</p>
 
 				<p className="color-gl-muddy-blue">Helped Plant<br /><span className="font-weight-bold" style={{ fontSize: '1.25rem' }}>Over 1 Million Trees</span></p>
 				<p className="color-gl-muddy-blue">Together with</p>
@@ -104,7 +104,7 @@ const GlobalImpactSection = () => {
 		<CurvePageCard className="global-impact" color="white" bgClassName="bg-gl-lighter-blue" >
 			<div className="color-gl-muddy-blue text-center">
 				<h4>Our Global Impact</h4>
-				<p>We donate to hundreds of charities and projects worldwide. Spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
+				<p>We donate to hundreds of charities and projects worldwide, spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
 			</div>
 			<div className="global-impact-bubbles position-relative d-flex flex-column justify-content-start align-items-center" style={{ marginBottom: '-10em' }}>
 				<img className="w-75" style={{ maxWidth: '400px' }} src="img/ourimpact/projects-globe.svg" />
@@ -129,10 +129,10 @@ const GlobalImpactSection = () => {
 				</Col>
 				<Col xs={12} md={6}>
 					<h5 className="color-gl-red text-uppercase">Tenneh, Sierra Leone</h5>
-					<p className="color-gl-red text-capitalize">In a remote village by a river in Sierra Leone, 13-years-old Tenneh is determinded to get to school.</p>
+					<p className="color-gl-red text-capitalize">In a remote village by a river in Sierra Leone, 13-years-old Tenneh is determined to get to school.</p>
 					<p>Her goal is to become a nurse and help her parents, and she's on her way to achieving that thanks to her hard work and supportive teacher.</p>
 					<p className="text-center"><img className="logo" src="img/ourimpact/girl-school.png" /></p>
-					<p className="text-capitalize">Our community is fundign charities like Save The Children - Who are supporting schools in Sierra Leone so children can continue to learn and play. They provide books, uniforms and desks. And their teacher traning programme makes sure that girls like Tenneh can stay in school and reach their potential.</p>
+					<p className="text-capitalize">Our community is funding charities like Save The Children - Who are supporting schools in Sierra Leone so children can continue to learn and play. They provide books, uniforms and desks. And their teacher training programme makes sure that girls like Tenneh can stay in school and reach their potential.</p>
 				</Col>
 			</Row>
 		</CurvePageCard>

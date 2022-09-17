@@ -178,7 +178,7 @@ const ControlYourData = () => {
           <br />
           <p className='mx-auto position-relative' style={{ fontSize: "0.9rem", maxWidth: '420px' }}>
             <img src="/img/homepage/quote-blue.svg" className="position-absolute" style={{ maxWidth: '3rem', top: '-4em' }} />
-            The potential impact of consumers downloading the Tabs for Good is significant. Based on the average number of browser tabs consumers open every week,
+            The potential impact of consumers downloading Tabs for Good is significant. Based on the average number of browser tabs consumers open every week,
             <b> if just 1% of internet users in the UK and US downloaded the browser extension, it would generate £30m and $200m (£146.9m) a year </b>
             in donations to good causes in the UK and US respectively.
           </p>
@@ -238,7 +238,7 @@ const TransformYourData = () => {
               </li>
               <li>
                 To start using Tabs for Good, tap the <T4GSignUpLink>'Get Tabs for Good'</T4GSignUpLink> button - you'll be
-                quided through a simple set-up process
+                guided through a simple set-up process
                 that adds Tabs for Good to your
                 browser and lets you select what
                 charity you want to support.
