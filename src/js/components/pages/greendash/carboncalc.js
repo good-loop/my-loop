@@ -11,11 +11,13 @@ import Campaign from '../../../base/data/Campaign';
 import SearchQuery from '../../../base/searchquery';
 import { periodFromUrl } from './dashutils';
 
+
 /** Turn a list of things with IDs into an object mapping IDs to things */
 export const byId = things => things.reduce((acc, thing) => {
 	acc[thing.id] = thing;
 	return acc;
 }, {})
+
 
 /**
  * Turns a list of buckets into an object containing a proportional breakdown
@@ -32,6 +34,7 @@ const bucketsToFractions = (buckets) => {
 		return acc;
 	}, {});
 };
+
 
 // TODO convert the new table format into chart-js friendly stuff
 /* (Unused, illustrative purposes only) */
@@ -60,25 +63,26 @@ const exampleDataSets = {
 	}
 }
 
+
 /**
  * 
- * @param {Object[][]} table 
+ * @param {Object[][]} table
  * @param {!string} colName
- * @returns {!number} 
+ * @returns {!number}
  */
 export const getSumColumn = (table, colName) => {
-	if ( ! table?.length) {
+	if (!table?.length) {
 		console.warn("getSumColumn - no data", table, colName);
 		return 0; // no data
 	}
 	let ci = table[0].indexOf(colName);
 	assert(ci !== -1, "No such column", colName, table[0]);
 	let total = 0;
-	for(let i=1; i<table.length; i++) {
+	for(let i = 1; i < table.length; i++) {
 		const row = table[i];
 		const n = row[ci];
-		if ( ! n) continue;
-		total += 1.0*n;		
+		if (!n) continue;
+		total += 1.0 * n;
 	}
 	return total;
 };
@@ -88,28 +92,29 @@ export const getSumColumn = (table, colName) => {
  * 
  * @param {Object[][]} table 
  * @param {!string} colName
- * @returns {Object} {breakdown-key: sum-for-key} 
+ * @returns {Object} {breakdown-key: sum-for-key}
  */
  export const getBreakdownBy = (table, colNameToSum, colNameToBreakdown) => {
-	if ( ! table?.length) {
+	if (!table?.length) {
 		return {}; // no data
 	}
 	let ci = table[0].indexOf(colNameToSum);
 	let bi = table[0].indexOf(colNameToBreakdown);
-	assert(ci !== -1, "No such sum column", colNameToSum, table[0]);
-	assert(bi !== -1, "No such breakdown column", colNameToBreakdown, table[0]);
+	assert(ci !== -1, 'No such sum column', colNameToSum, table[0]);
+	assert(bi !== -1, 'No such breakdown column', colNameToBreakdown, table[0]);
 	let totalByX = {};
-	for(let i=1; i<table.length; i++) {
+	for(let i = 1; i < table.length; i++) {
 		const row = table[i];
 		const n = row[ci];
-		if ( ! n) continue;
+		if (!n) continue;
 		const b = row[bi]; // breakdown key
 		let v = totalByX[b] || 0;
-		v += n;		
+		v += n;
 		totalByX[b] = v;
 	}
 	return totalByX;
 };
+
 
 /**
  * TODO Doc: what determines whether you fetch the all data table or a reduced set of tables?? breakdown??
@@ -121,7 +126,7 @@ export const getSumColumn = (table, colName) => {
  * @returns {!PromiseValue} {table: [["country","pub","mbl","os","adid","time","count","totalEmissions","baseEmissions","creativeEmissions","supplyPathEmissions"]] }
  */
 export const getCarbon = ({q = '', start = '1 month ago', end = 'now', breakdown, ...rest}) => {
-	assert( ! q?.includes("brand:"), q);
+	assert(!q?.includes('brand:'), q);
 	const data = {
 		// dataspace: 'green',
 		q,
@@ -135,6 +140,7 @@ export const getCarbon = ({q = '', start = '1 month ago', end = 'now', breakdown
 		return ServerIO.load(ServerIO.GREENCALC_ENDPOINT, {data, swallow: true});
 	}); // /fetch()
 };
+
 
 /**
  * 
