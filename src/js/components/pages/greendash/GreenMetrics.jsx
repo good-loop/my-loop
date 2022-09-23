@@ -202,9 +202,10 @@ const GreenMetrics2 = ({}) => {
 				<BreakdownCard {...commonProps} tables={pvChartData.value?.tables} />
 			</Col>
 			<Col xs="12" sm="4" className="flex-column">
-				{true ? (
+				{true ? <>
+					<TimeOfDayCard {...commonProps} />
 					<MapCard {...commonProps} />
-				) : <>
+				</> : <>
 					<TimeOfDayCard {...commonProps} />
 					<CTACard />
 				</>}

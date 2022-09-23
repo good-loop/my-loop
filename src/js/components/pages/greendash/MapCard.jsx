@@ -1,278 +1,25 @@
 import React, { Fragment, useEffect, useState } from 'react';
+import { Button } from 'reactstrap';
 import { id } from '../../../../../GLAppManifest';
 import StyleBlock from '../../../base/components/StyleBlock';
 import { getCarbon } from './carboncalc';
 import { dataColours, GreenCard } from './dashutils';
 
 
-const globalRegions = {
-	'northern africa': {
-		DZ: 'Algeria',
-		IC: 'The Canary Islands',
-		EG: 'Egypt',
-		LY: 'Libya',
-		MA: 'Morocco',
-		SS: 'South Sudan',
-		TN: 'Tunisia',
-		EH: 'Western Sahara'
-	},
-	'eastern africa': {
-		BI: 'Burundi',
-		KM: 'Comoros',
-		DJ: 'Djibouti',
-		ER: 'Eritrea',
-		ET: 'Ethiopia',
-		KE: 'Kenya',
-		MG: 'Madagascar',
-		MW: 'Malawi',
-		MU: 'Mauritius',
-		YT: 'Mayotte',
-		MZ: 'Mozambique',
-		RE: 'Réunion',
-		RW: 'Rwanda',
-		SC: 'Seychelles',
-		SO: 'Somalia',
-		TZ: 'Tanzania',
-		UG: 'Uganda',
-		ZM: 'Zambia',
-		ZW: 'Zimbabwe'
-	},
-	'southern africa': {
-		BW: 'Botswana',
-		LS: 'Lesotho',
-		NA: 'Namibia',
-		ZA: 'South Africa',
-		SZ: 'Eswatini'
-	},
-	'central africa': {
-		AO: 'Angola',
-		CM: 'Cameroon',
-		CF: 'Central African Republic',
-		TD: 'Chad',
-		CG: 'Congo',
-		CD: 'Congo, Democratic Republic of the',
-		GQ: 'Equatorial Guinea',
-		GA: 'Gabon',
-		ST: 'Sao Tome and Principe'
-	},
-	'western africa': {
-		BJ: 'Benin',
-		BF: 'Burkina Faso',
-		CV: 'Cabo Verde',
-		CI: 'Côte d\'Ivoire',
-		GM: 'Gambia',
-		GH: 'Ghana',
-		GN: 'Guinea',
-		GW: 'Guinea-Bissau',
-		LR: 'Liberia',
-		ML: 'Mali',
-		MR: 'Mauritania',
-		NE: 'Niger',
-		NG: 'Nigeria',
-		SH: 'Saint Helena, Ascension and Tristan da Cunha',
-		SN: 'Senegal',
-		SL: 'Sierra Leone',
-		TG: 'Togo'
-	},
-	'asia': {
-		AF: 'Afghanistan',
-		AM: 'Armenia',
-		AZ: 'Azerbaijan',
-		BD: 'Bangladesh',
-		BT: 'Bhutan',
-		BN: 'Brunei Darussalam',
-		KH: 'Cambodia',
-		CN: 'China',
-		GE: 'Georgia',
-		HK: 'Hong Kong',
-		IN: 'India',
-		ID: 'Indonesia',
-		JP: 'Japan',
-		KZ: 'Kazakhstan',
-		KP: 'Korea (Democratic People\'s Republic of)',
-		KR: 'Korea, Republic of',
-		KG: 'Kyrgyzstan',
-		LA: 'Lao People\'s Democratic Republic',
-		MO: 'Macao',
-		MY: 'Malaysia',
-		MV: 'Maldives',
-		MN: 'Mongolia',
-		MM: 'Myanmar',
-		NP: 'Nepal',
-		PK: 'Pakistan',
-		PH: 'Philippines',
-		SG: 'Singapore',
-		LK: 'Sri Lanka',
-		TW: 'Taiwan',
-		TJ: 'Tajikistan',
-		TH: 'Thailand',
-		TL: 'Timor-Leste',
-		TM: 'Turkmenistan',
-		UZ: 'Uzbekistan',
-		VN: 'Viet Nam'
-	},
-	'europe': {
-		AL: 'Albania',
-		AD: 'Andorra',
-		AT: 'Austria',
-		BY: 'Belarus',
-		BE: 'Belgium',
-		BA: 'Bosnia and Herzegovina',
-		BG: 'Bulgaria',
-		HR: 'Croatia',
-		CY: 'Cyprus',
-		DK: 'Denmark',
-		EE: 'Estonia',
-		FO: 'Faroe Islands',
-		FI: 'Finland',
-		FR: 'France',
-		DE: 'Germany',
-		GI: 'Gibraltar',
-		GR: 'Greece',
-		GG: 'Guernsey',
-		HU: 'Hungary',
-		IS: 'Iceland',
-		IE: 'Ireland',
-		IT: 'Italy',
-		JE: 'Jersey',
-		XK: 'Kosovo',
-		LV: 'Latvia',
-		LI: 'Liechtenstein',
-		LT: 'Lithuania',
-		LU: 'Luxembourg',
-		MK: 'North Macedonia',
-		MT: 'Malta',
-		MD: 'Moldova, Republic of',
-		MC: 'Monaco',
-		ME: 'Montenegro',
-		NL: 'Netherlands',
-		NO: 'Norway',
-		PL: 'Poland',
-		PT: 'Portugal',
-		RO: 'Romania',
-		RU: 'Russian Federation',
-		SM: 'San Marino',
-		RS: 'Serbia',
-		SI: 'Slovenia',
-		SK: 'Slovakia',
-		ES: 'Spain',
-		SJ: 'Svalbard and Jan Mayen',
-		SE: 'Sweden',
-		CH: 'Switzerland',
-		CZ: 'Czechia',
-		IM: 'Isle of Man',
-		TR: 'Turkey',
-		UA: 'Ukraine',
-		GB: 'United Kingdom',
-		VA: 'Vatican City'
-	},
-	'central america': {
-		BZ: 'Belize',
-		CR: 'Costa Rica',
-		SV: 'El Salvador',
-		GT: 'Guatemala',
-		HN: 'Honduras',
-		MX: 'Mexico',
-		NI: 'Nicaragua',
-		PA: 'Panama'
-},
-	'south america': {
-		AR: 'Argentina',
-		BO: 'Bolivia',
-		BR: 'Brazil',
-		CL: 'Chile',
-		CO: 'Colombia',
-		EC: 'Ecuador',
-		FK: 'Falkland Islands',
-		GF: 'French Guiana',
-		GY: 'Guyana',
-		PY: 'Paraguay',
-		PE: 'Peru',
-		SR: 'Suriname',
-		UY: 'Uruguay',
-		VE: 'Venezuela'
-	},
-	'middle east': {
-		BH: 'Bahrain',
-		IQ: 'Iraq',
-		IR: 'Iran',
-		IL: 'Israel',
-		JO: 'Jordan',
-		KW: 'Kuwait',
-		LB: 'Lebanon',
-		OM: 'Oman',
-		PS: 'Palestine',
-		QA: 'Qatar',
-		SA: 'Saudi Arabia',
-		SY: 'Syria',
-		AE: 'The United Arab Emirates',
-		YE: 'Yemen',
-	},
-	'oceania': {
-		AU: 'Australia',
-		FJ: 'Fiji',
-		PF: 'French Polynesia',
-		GU: 'Guam',
-		KI: 'Kiribati',
-		MH: 'Marshall Islands',
-		FM: 'Micronesia (Federated States of)',
-		NC: 'New Caledonia',
-		NZ: 'New Zealand',
-		PG: 'Papua New Guinea',
-		WS: 'Samoa',
-		AS: 'American Samoa',
-		SB: 'Solomon Islands',
-		VU: 'Vanuatu'
-	},
-	'north america': {
-		US: 'The United States',
-		CA: 'Canada',
-		GL: 'Greenland',
-		PM: 'Saint Pierre and Miquelon',
-		BM: 'Bermuda'
-	},
-	'the caribbean': {
-		AI: 'Anguilla',
-		AG: 'Antigua and Barbuda',
-		BS: 'Bahamas',
-		BB: 'Barbados',
-		KY: 'Cayman Islands',
-		CU: 'Cuba',
-		DM: 'Dominica',
-		DO: 'Dominican Republic',
-		GD: 'Grenada',
-		GP: 'Guadeloupe',
-		HT: 'Haiti',
-		JM: 'Jamaica',
-		MQ: 'Martinique',
-		PR: 'Puerto Rico',
-		BL: 'St Barthelemy',
-		KN: 'St Kitts and Nevis',
-		LC: 'St Lucia',
-		SX: 'St Maarten',
-		MF: 'St Martin',
-		VC: 'St Vincent and the Grenadines',
-		TT: 'Trinidad and Tobago',
-		TC: 'Turks and Caicos Islands',
-		VG: 'Virgin Islands, UK',
-		VI: 'Virgin Islands, US',
-	}
-};
-
 // When querying each country, what sub-location type should we breakdown on?
-// Modularise by making this part of the map JSON?
-const subLocationForCountry = {
+const subLocationForCountry = (country) => ({
 	UK: 'locn_sub2', // Counties
-	US: 'locn_sub1', // States
-	AU: 'locn_sub1', // States
-	CA: 'locn_sub1', // States
-};
+	// We default to locn_sub1, so we can omit these - keep as comments for reference.
+	// US: 'locn_sub1', // States
+	// AU: 'locn_sub1', // States
+	// CA: 'locn_sub1', // States
+}[country] || 'locn_sub1');
 
 
-const SVGMap = ({ mapDefs, data, setFocusCountry }) => {
+const SVGMap = ({ mapDefs, data, setFocusCountry, svgRef }) => {
 	if (!mapDefs) return null;
 
-	return <svg id="geo-heat-map" style={{stroke: 'none'}} version="1.1" {...mapDefs.svgAttributes} xmlns="http://www.w3.org/2000/svg">
+	return <svg id="geo-heat-map" style={{stroke: 'none'}} version="1.1" {...mapDefs.svgAttributes} xmlns="http://www.w3.org/2000/svg" ref={svgRef} >
 		{Object.entries(mapDefs.regions).map(([id, props]) => {
 			let { carbon = 0, colour } = (data[id] || {});
 			if (!carbon.toFixed) debugger;
@@ -290,28 +37,10 @@ const SVGMap = ({ mapDefs, data, setFocusCountry }) => {
 
 
 const MapCard = ({ baseFilters }) => {
-	const [mapData, setMapData] = useState({});
-	const [focusCountry, setFocusCountry] = useState();
-	// const [focusCountry, setFocusCountry] = useState();
+	const [mapData, setMapData] = useState({}); // Object mapping region ID to imps + carbon
+	const [focusCountry, setFocusCountry] = useState(); // ID of currently focused country
 	const [mapDefs, setMapDefs] = useState();
-
-	// Augment base filters with extra query/breakdown params as necessary
-	const filters = {
-		...baseFilters,
-		breakdown: ['country'],
-	};
-	// Are we looking at one country, or the whole world map?
-	if (focusCountry) {
-		// Restrict results to this country, so we can breakdown on sub-location
-		filters.q = SearchQuery.setPropOr(new SearchQuery(filters.q), 'country', [focusCountry]).query;
-		filters.focusCountry = focusCountry;
-		// Which sub-location type do we want? (Default to first-level)
-		const subLocationField = subLocationForCountry[focusCountry] || 'locn_sub1';
-		filters.breakdown = [subLocationField];
-		filters.subLocationField = subLocationField;
-	};
-
-	const pvChartData = getCarbon(filters);
+	const [svgEl, setSvgEl] = useState();
 
 	// Fetch the JSON with the map data for the current focus country
 	useEffect(() => {
@@ -320,18 +49,28 @@ const MapCard = ({ baseFilters }) => {
 			.then(json => setMapDefs(json));
 	}, [focusCountry]);
 
+	// Which location or sub-location type do we want? Country, sub-1, sub-2?
+	const locationField = focusCountry ? subLocationForCountry(focusCountry) : 'country'
+
+	// Augment base filters with extra query/breakdown params as necessary
+	const filters = { ...baseFilters, breakdown: [locationField] };
+
+	// Are we looking at one country, or the whole world map?
+	if (focusCountry) {
+		// Restrict results to this country, so we can breakdown on sub-location.
+		filters.q = SearchQuery.setPropOr(new SearchQuery(filters.q), 'country', [focusCountry]).query;
+		filters.focusCountry = focusCountry;
+		filters.subLocationField = locationField;
+	};
+
+	const pvChartData = getCarbon(filters);
+
 	useEffect(() => {
 		if (!pvChartData.value) return;
 		if (!mapDefs) return;
 
 		// Country or sub-location breakdown?
-		let locnTable;
-		if (!focusCountry) {
-			locnTable = pvChartData.value.tables.country.slice(1);
-		} else {
-			const subLocationField = subLocationForCountry[focusCountry] || 'locn_sub1';
-			locnTable = pvChartData.value.tables[subLocationField].slice(1);
-		}
+		const locnTable = pvChartData.value.tables[locationField].slice(1);
 
 		// Aggregate together "not shown on this map" rows in the table
 		let processedRows = locnTable.map(row => {
@@ -348,7 +87,7 @@ const MapCard = ({ baseFilters }) => {
 			}
 			return row;
 		}).reduce((acc, row) => {
-			// transform to object and combine rows with same first column
+			// transform to object and combine rows which have same location ID
 			const prevRow = acc[row[0]];
 			if (!prevRow) {
 				acc[row[0]] = row;
@@ -371,13 +110,23 @@ const MapCard = ({ baseFilters }) => {
 		}, {}));
 	}, [pvChartData.value]);
 
-	if (mapData) console.warn('********************** MAPDATA', mapData);
+	// if (mapData) console.warn('********************** MAPDATA', mapData);
 	
 	return (
-		<GreenCard title="Here is a map" className="carbon-map flex-column">
-			<SVGMap setFocusCountry={setFocusCountry} mapDefs={mapDefs} data={mapData} />
+		<GreenCard title="Where are your emissions produced?" className="carbon-map flex-column">
+			{focusCountry && <p>
+				Current focus: <strong>{mapDefs.name}</strong>
+				<span className="pull-right">
+					<a href="#" onClick={() => setFocusCountry()}>World Map</a>
+				</span>
+			</p>}
+			<SVGMap setFocusCountry={setFocusCountry} mapDefs={mapDefs} data={mapData} svgRef={setSvgEl} />
+			<a className="text-center" download="green-map.svg" href={`data:image/svg+xml,${encodeURIComponent(svgEl?.outerHTML)}`}>
+				Download
+			</a>
 		</GreenCard>
 	);
 };
+
 
 export default MapCard;
