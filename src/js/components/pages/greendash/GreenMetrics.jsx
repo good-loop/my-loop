@@ -58,7 +58,7 @@ const OverviewWidget = ({period, data}) => {
 
 
 const CTACard = ({}) => {
-	return <GreenCard className="carbon-cta flex-column">
+	return <GreenCard className="carbon-cta flex-column" downloadable={false}>
 		<div className="cta-card-decoration">
 			<img className="tree-side" src="/img/green/tree-light.svg" />
 			<img className="tree-centre" src="/img/green/tree-light.svg" />

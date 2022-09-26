@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Card } from 'reactstrap';
+import html2canvas from 'html2canvas';
 
 import DataStore from "../../../base/plumbing/DataStore";
 import { isoDate, space } from '../../../base/utils/miscutils';
@@ -187,10 +188,91 @@ const yearRegex = /^(\d\d?\d?\d?)$/;
 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 
+const saveAs = (uri, filename) => {
+    var link = document.createElement('a');
+
+    if (typeof link.download === 'string') {
+        link.href = uri;
+        link.download = filename;
+
+        // Firefox requires the link to be in the body
+        document.body.appendChild(link);
+
+        link.click();
+
+        // Remove the link when done
+        document.body.removeChild(link);
+    } else {
+        window.open(uri);
+    }
+}
+
+const DownloadButton = ({className}) => {
+	return (
+		<a className="gc-title widget-export" onClick={e => {
+			e.preventDefault();
+			html2canvas(document.querySelector(`.${className}`), {
+				// TODO
+				// html2canvas doesn't work well with elements which have a `box-shadow` property.
+				// I tried to remove that property by looping through all child nodes in the DOM,
+				// and running node.style.removeProperty('box-shadow') - but that didn't work.
+				// 
+				// Instead, for whatever reason, setting the scale to 1.25 makes things render properly.
+				// Albeit, the text is a tiny bit blurry.
+				onclone: document => {
+					// The greenCard widget we're tacking a screenshot of.
+					// This is in the cloned document, so modifying it won't affect what the user sees.
+					const greenCard = document.querySelector(`.${className}`);
+
+					// Hide the download button in the exported image
+					document.querySelectorAll('.widget-export').forEach(node => {
+						node.style.display = 'none';
+					});
+
+					// Hide download CSV button on 'your journey so far' card
+					Object.assign(greenCard.querySelector('a[download="table.csv"]').style, {
+						display: 'none'
+					});
+
+					// Hide impact overview button on 'your journey so far card'
+					greenCard.querySelectorAll('a').forEach(node => {
+						if (node.textContent.includes('Impact Overview')) {
+							Object.assign(node.style, {
+								display: 'none'
+							});
+						}
+					});
+
+					// Larger headings
+					document.querySelectorAll('.gc-title').forEach(node => {
+						Object.assign(node.style, {
+							fontSize:'1.25rem',
+							textAlign: 'center',
+							fontWeight: 'bold',
+							marginBottom: '8px'
+						});
+					});
+
+					// Card padding
+					Object.assign(greenCard.style, {
+						padding: '20px'
+					});
+				},
+				scale: 1.25,
+			}).then(canvas => {
+				saveAs(canvas.toDataURL(), `${className}.png`);
+			});
+		}}>&#128229; Download</a>
+	);
+}
+
 /** Boilerplate styling for a subsection of the green dashboard */
-export const GreenCard = ({ title, children, className, row, ...rest}) => {
+export const GreenCard = ({ title, children, className, row, downloadable=true, ...rest}) => {
 	return <div className={space('green-card my-2 flex-column', className)} {...rest}>
 		{title ? <h6 className="gc-title">{title}</h6> : null}
+		
+		{downloadable ? <DownloadButton className={className} /> : null}
+
 		<Card body className={space('gc-body', row ? 'flex-row' : 'flex-column')}>{children}</Card>
 	</div>
 };
