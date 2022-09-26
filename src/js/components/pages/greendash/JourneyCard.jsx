@@ -61,7 +61,7 @@ const TreesSection = ({treesPlanted, coralPlanted}) => {
  */
 const JourneyCard = ({ campaigns, period, emptyTable }) => {
 	if (emptyTable) return (
-		<GreenCard title="Your journey so far" className="carbon-journey">
+		<GreenCard title="Your journey so far" className="carbon-journey" downloadable={false}>
 			<p>No data available for your current filters.</p>
 		</GreenCard>
 	);

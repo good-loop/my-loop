@@ -113,7 +113,7 @@ const MapCard = ({ baseFilters }) => {
 	// if (mapData) console.warn('********************** MAPDATA', mapData);
 	
 	return (
-		<GreenCard title="Where are your emissions produced?" className="carbon-map flex-column">
+		<GreenCard title="Where are your emissions produced?" className="carbon-map flex-column" downloadable={false}>
 			{focusCountry && <p>
 				Current focus: <strong>{mapDefs.name}</strong>
 				<span className="pull-right">

@@ -229,20 +229,6 @@ const DownloadButton = ({className}) => {
 						node.style.display = 'none';
 					});
 
-					// Hide download CSV button on 'your journey so far' card
-					Object.assign(greenCard.querySelector('a[download="table.csv"]').style, {
-						display: 'none'
-					});
-
-					// Hide impact overview button on 'your journey so far card'
-					greenCard.querySelectorAll('a').forEach(node => {
-						if (node.textContent.includes('Impact Overview')) {
-							Object.assign(node.style, {
-								display: 'none'
-							});
-						}
-					});
-
 					// Larger headings
 					document.querySelectorAll('.gc-title').forEach(node => {
 						Object.assign(node.style, {
@@ -254,9 +240,7 @@ const DownloadButton = ({className}) => {
 					});
 
 					// Card padding
-					Object.assign(greenCard.style, {
-						padding: '20px'
-					});
+					greenCard.style.padding = '20px';
 				},
 				scale: 1.25,
 			}).then(canvas => {
