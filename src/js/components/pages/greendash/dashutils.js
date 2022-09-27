@@ -208,46 +208,50 @@ const saveAs = (uri, filename) => {
 }
 
 const DownloadButton = ({className}) => {
-	return (
-		<a className="gc-title widget-export" onClick={e => {
-			e.preventDefault();
-			html2canvas(document.querySelector(`.${className}`), {
-				// TODO
-				// html2canvas doesn't work well with elements which have a `box-shadow` property.
-				// I tried to remove that property by looping through all child nodes in the DOM,
-				// and running node.style.removeProperty('box-shadow') - but that didn't work.
-				// 
-				// Instead, for whatever reason, setting the scale to 1.25 makes things render properly.
-				// Albeit, the text is a tiny bit blurry.
-				onclone: document => {
-					// The greenCard widget we're tacking a screenshot of.
-					// This is in the cloned document, so modifying it won't affect what the user sees.
-					const greenCard = document.querySelector(`.${className}`);
+	return null;
+	//
+	// TODO: The bar chart widgets don't render nicely - they get clipped by the card a little bit.
+	//
+	// return (
+	// 	<a className="gc-title widget-export" onClick={e => {
+	// 		e.preventDefault();
+	// 		html2canvas(document.querySelector(`.${className}`), {
+	// 			// TODO
+	// 			// html2canvas doesn't work well with elements which have a `box-shadow` property.
+	// 			// I tried to remove that property by looping through all child nodes in the DOM,
+	// 			// and running node.style.removeProperty('box-shadow') - but that didn't work.
+	// 			// 
+	// 			// Instead, for whatever reason, setting the scale to 1.25 makes things render properly.
+	// 			// Albeit, the text is a tiny bit blurry.
+	// 			onclone: document => {
+	// 				// The greenCard widget we're tacking a screenshot of.
+	// 				// This is in the cloned document, so modifying it won't affect what the user sees.
+	// 				const greenCard = document.querySelector(`.${className}`);
 
-					// Hide the download button in the exported image
-					document.querySelectorAll('.widget-export').forEach(node => {
-						node.style.display = 'none';
-					});
+	// 				// Hide the download button in the exported image
+	// 				document.querySelectorAll('.widget-export').forEach(node => {
+	// 					node.style.display = 'none';
+	// 				});
 
-					// Larger headings
-					document.querySelectorAll('.gc-title').forEach(node => {
-						Object.assign(node.style, {
-							fontSize:'1.25rem',
-							textAlign: 'center',
-							fontWeight: 'bold',
-							marginBottom: '8px'
-						});
-					});
+	// 				// Larger headings
+	// 				document.querySelectorAll('.gc-title').forEach(node => {
+	// 					Object.assign(node.style, {
+	// 						fontSize:'1.25rem',
+	// 						textAlign: 'center',
+	// 						fontWeight: 'bold',
+	// 						marginBottom: '8px'
+	// 					});
+	// 				});
 
-					// Card padding
-					greenCard.style.padding = '20px';
-				},
-				scale: 1.25,
-			}).then(canvas => {
-				saveAs(canvas.toDataURL(), `${className}.png`);
-			});
-		}}>&#128229; Download</a>
-	);
+	// 				// Card padding
+	// 				greenCard.style.padding = '20px';
+	// 			},
+	// 			scale: 1.25,
+	// 		}).then(canvas => {
+	// 			saveAs(canvas.toDataURL(), `${className}.png`);
+	// 		});
+	// 	}}>&#128229; Download</a>
+	// );
 }
 
 /** Boilerplate styling for a subsection of the green dashboard */
