@@ -187,9 +187,11 @@ const MapCard = ({ baseFilters }) => {
 			<SVGMap setFocusRegion={isWorld && setFocusRegion} mapDefs={mapDefs} data={mapData} svgRef={setSvgEl} loading={!mapData} />
 			<div className="mt-2 text-center">
 				<strong>{mapDefs?.name}</strong>
-				{!isWorld && mapDefsReady && <span className="pull-right">
-					<a href="#" onClick={(e) => { stopEvent(e); setFocusRegion('world');}}>Back</a>
-				</span>}
+				<span className="pull-right">
+					{isWorld ? 'Click a country to focus' : (
+						mapDefsReady && <a href="#" onClick={(e) => { stopEvent(e); setFocusRegion('world');}}>Back</a>
+					)}
+				</span>
 			</div>
 			<div className="mt-2 text-center">
 				{error ? <small>{error}</small> : <>
