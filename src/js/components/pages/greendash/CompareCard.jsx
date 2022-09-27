@@ -69,8 +69,8 @@ const QuartersCard = ({baseFilters}) => {
 		let thisCarbon = getSumColumn(table, 'totalEmissions');
 		chartProps.data.datasets[0].data[i] = thisCarbon;
 
-		// Kg or tonnes?
-		if (chartProps.tonnes) {
+		// Kg or tonnes? (using data-attr notation so we can dump all props into the chart without React complaining)
+		if (chartProps['data-tonnes']) {
 			// There's already been at least one data point above the threshold: just scale down the latest one
 			chartProps.data.datasets[0].data[i] /= 1000;
 		} else if (thisCarbon > TONNES_THRESHOLD) {
@@ -78,7 +78,7 @@ const QuartersCard = ({baseFilters}) => {
 			chartProps.data.datasets[0].data = chartProps.data.datasets[0].data.map(d => d / 1000);
 			chartProps.options.scales.x.ticks.callback = v => `${v} t`;
 			chartProps.options.plugins.tooltip.callbacks.label = ctx => `${printer.prettyNumber(ctx.raw)} tonnes CO2`
-			chartProps.tonnes = true;
+			chartProps['data-tonnes'] = true;
 		}
 	});
 
