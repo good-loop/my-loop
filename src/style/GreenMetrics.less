@@ -10,6 +10,15 @@
 
 #greendash .green-metrics {
 	font-family: 'Montserrat';
+	
+	 // Override defaults for loading spinner
+	.loader-box {
+		padding: unset;
+		.spinner-box {
+			width: 75px;
+			height: 75px;
+		}
+	}
 
 	.select-agency {
 		display: flex;
@@ -312,6 +321,21 @@
 		}
 	}
 } // /.carbon-breakdown
+
+
+// The map card
+.carbon-map {
+	.map-container {
+		position: relative; // position ref for loader overlay
+	}
+	.map-svg {
+		flex-grow: 1;
+	}
+	.loader-box {
+		position: absolute;
+		inset: 0;
+	}
+}
 
 
 .carbon-cta {

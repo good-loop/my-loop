@@ -1,7 +1,10 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Button } from 'reactstrap';
 import { id } from '../../../../../GLAppManifest';
+import { DownloadCSVLink } from '../../../base/components/SimpleTable';
 import StyleBlock from '../../../base/components/StyleBlock';
+import { stopEvent } from '../../../base/utils/miscutils';
+import Misc from '../../../MiscOverrides';
 import { getCarbon } from './carboncalc';
 import { dataColours, GreenCard } from './dashutils';
 
@@ -16,58 +19,125 @@ const subLocationForCountry = (country) => ({
 }[country] || 'locn_sub1');
 
 
-const SVGMap = ({ mapDefs, data, setFocusCountry, svgRef }) => {
-	if (!mapDefs) return null;
+/** Map regions not in the dataset (because there are no events for them)
+ * should be the same colour as regions with value 0*/
+const zeroFill = dataColours([0, 1])[0];
 
-	return <svg id="geo-heat-map" style={{stroke: 'none'}} version="1.1" {...mapDefs.svgAttributes} xmlns="http://www.w3.org/2000/svg" ref={svgRef} >
-		{Object.entries(mapDefs.regions).map(([id, props]) => {
-			let { carbon = 0, colour } = (data[id] || {});
-			if (!carbon.toFixed) debugger;
-			let unit = 'kg';
-			if (carbon >= 1000) {
-				carbon /= 1000;
-				unit = 't';
-			}
-			return <path key={id} fill={colour} onClick={() => setFocusCountry(id)} {...props}>
-				<title>{props.name}: {carbon.toFixed(2)} {unit} CO2e</title>
-			</path>
-		})}
-	</svg>;
+
+const MapDownloadCSV = ({ data, mapDefs }) => {
+	if (!data || !mapDefs) return 'CSV';
+
+	const cols = [
+		new Column({Header: 'Region', accessor: 'name'}),
+		new Column({Header: 'Region ISO code', accessor: 'id'}),
+		new Column({Header: 'Impressions', accessor: 'impressions'}),
+		new Column({Header: 'CO2e (Kg)', accessor: 'carbon'}),
+	];
+
+	const tableData = Object.entries(data).map(([id, {impressions, carbon}]) => {
+		return { name: mapDefs.regions[id]?.name || 'unknown', id, impressions, carbon };
+	}).sort((a, b) => (a.name || '').localeCompare(b.name));
+
+	return <DownloadCSVLink columns={cols} data={tableData}>CSV</DownloadCSVLink>;
+};
+
+
+const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef }) => {
+	if (!mapDefs) return null;
+	const loading = data === 'loading';
+
+	return <div className="map-container">
+		<svg className="map-svg" style={{stroke: 'none'}} version="1.1" {...mapDefs.svgAttributes} xmlns="http://www.w3.org/2000/svg" ref={svgRef} >
+			{Object.entries(mapDefs.regions).map(([id, props]) => {
+				let { carbon = 0, colour = zeroFill } = (data?.[id] || {});
+				let unit = 'kg';
+				if (carbon >= 1000) {
+					carbon /= 1000;
+					unit = 't';
+				}
+
+				// don't modify base map with applied fill/stroke!
+				props = { ...props, fill: colour }; 
+
+				// Don't paint misleading colours on a map we don't have data for
+				if (loading) {
+					props.fill = 'none';
+					props.stroke = '#bbb';
+					props.strokeWidth = '1px';
+				}
+
+				// Countries are clickable, sublocations aren't
+				if (setFocusRegion) {
+					props.style = {cursor: 'pointer'};
+					props.onClick = () => setFocusRegion(id);
+				}
+
+				const title = loading ? null : <title>{props.name}: {carbon.toFixed(2)} {unit} CO2e</title>;
+
+				return <path key={id} {...props}>{title}</path>;
+			})}
+		</svg>
+		{loading && <Misc.Loading text={`Fetching carbon data for ${mapDefs.name}`} />}
+	</div>;
 };
 
 
 const MapCard = ({ baseFilters }) => {
-	const [mapData, setMapData] = useState({}); // Object mapping region ID to imps + carbon
-	const [focusCountry, setFocusCountry] = useState(); // ID of currently focused country
-	const [mapDefs, setMapDefs] = useState();
-	const [svgEl, setSvgEl] = useState();
+	const [mapData, setMapData] = useState('loading'); // Object mapping region ID to imps + carbon
+	const [focusRegion, setFocusRegion] = useState('world'); // ID of currently focused country
+	const [mapDefs, setMapDefs] = useState(); // JSON object with map paths and meta
+	const [svgEl, setSvgEl] = useState(); // ref to the map SVG to create download button
+	const [error, setError] = useState(); // Problems loading map?
+
+	const isWorld = (focusRegion === 'world');
+	const mapDefsReady = mapDefs && (mapDefs.id === focusRegion);
 
 	// Fetch the JSON with the map data for the current focus country
 	useEffect(() => {
-		fetch(`/js-data/mapdefs-${focusCountry || 'world'}.json`)
-			.then(res => res.json())
-			.then(json => setMapDefs(json));
-	}, [focusCountry]);
+		// No mapdefs for this country? Return to world map and tell user
+		const onError = () => {
+			setFocusRegion('world');
+			setError(`No detailed map available for country code "${focusRegion}"`);
+		};
+
+		fetch(`/js-data/mapdefs-${focusRegion}.json`)
+			.then(res => {
+				if (!res.ok) {
+					onError();
+					return;
+				}
+				res.json().then(json => {
+					setMapDefs(json);
+					// clear error on successfully loading a country map
+					if (!isWorld) setError(null);
+				}).catch(onError);
+			})
+	}, [focusRegion]);
 
 	// Which location or sub-location type do we want? Country, sub-1, sub-2?
-	const locationField = focusCountry ? subLocationForCountry(focusCountry) : 'country'
+	const locationField = isWorld ? 'country' : subLocationForCountry(focusRegion);
 
 	// Augment base filters with extra query/breakdown params as necessary
 	const filters = { ...baseFilters, breakdown: [locationField] };
 
 	// Are we looking at one country, or the whole world map?
-	if (focusCountry) {
+	if (!isWorld) {
 		// Restrict results to this country, so we can breakdown on sub-location.
-		filters.q = SearchQuery.setPropOr(new SearchQuery(filters.q), 'country', [focusCountry]).query;
-		filters.focusCountry = focusCountry;
+		filters.q = SearchQuery.setPropOr(new SearchQuery(filters.q), 'country', [focusRegion]).query;
+		filters.focusCountry = focusRegion;
 		filters.subLocationField = locationField;
 	};
 
 	const pvChartData = getCarbon(filters);
 
 	useEffect(() => {
-		if (!pvChartData.value) return;
-		if (!mapDefs) return;
+		// Don't process data we don't have
+		if (!pvChartData.value) {
+			setMapData('loading');
+			return;
+		};
+		// Don't process data using metadata for wrong map
+		if (!mapDefs || !mapDefsReady) return;
 
 		// Country or sub-location breakdown?
 		const locnTable = pvChartData.value.tables[locationField].slice(1);
@@ -81,7 +151,7 @@ const MapCard = ({ baseFilters }) => {
 			// Rename locations with no corresponding map entry to OTHER
 			if (!mapDefs.regions[key]) {
 				// convert old non-namespaced sublocations e.g. 'CA' => 'US-CA'
-				let fixedKey = `${focusCountry}-${key}`;
+				let fixedKey = `${focusRegion}-${key}`;
 				if (!mapDefs.regions[fixedKey]) fixedKey = ''
 				return [fixedKey, ...row.slice(1)];
 			}
@@ -105,25 +175,29 @@ const MapCard = ({ baseFilters }) => {
 		const colours = dataColours(processedRows.map(row => row[2]));
 		// zip colours, states, carbon together for the map
 		setMapData(processedRows.reduce((acc, row, i) => {
-			acc[row[0]] = { colour: colours[i], carbon: row[2] };
+			acc[row[0]] = { colour: colours[i], impressions: row[1], carbon: row[2] };
 			return acc;
 		}, {}));
-	}, [pvChartData.value]);
+	}, [JSON.stringify(filters), pvChartData.value, mapDefs]);
 
-	// if (mapData) console.warn('********************** MAPDATA', mapData);
-	
+
+
 	return (
 		<GreenCard title="Where are your emissions produced?" className="carbon-map flex-column" downloadable={false}>
-			{focusCountry && <p>
-				Current focus: <strong>{mapDefs.name}</strong>
-				<span className="pull-right">
-					<a href="#" onClick={() => setFocusCountry()}>World Map</a>
-				</span>
-			</p>}
-			<SVGMap setFocusCountry={setFocusCountry} mapDefs={mapDefs} data={mapData} svgRef={setSvgEl} />
-			<a className="text-center" download="green-map.svg" href={`data:image/svg+xml,${encodeURIComponent(svgEl?.outerHTML)}`}>
-				Download
-			</a>
+			<SVGMap setFocusRegion={isWorld && setFocusRegion} mapDefs={mapDefs} data={mapData} svgRef={setSvgEl} loading={!mapData} />
+			<div className="mt-2 text-center">
+				<strong>{mapDefs?.name}</strong>
+				{!isWorld && mapDefsReady && <span className="pull-right">
+					<a href="#" onClick={(e) => { stopEvent(e); setFocusRegion('world');}}>Back</a>
+				</span>}
+			</div>
+			<div className="mt-2 text-center">
+				{error ? <small>{error}</small> : <>
+					Download{' '}
+					<a download="green-map.svg" href={`data:image/svg+xml,${encodeURIComponent(svgEl?.outerHTML)}`}>map</a>{' / '}
+					<MapDownloadCSV data={mapData} mapDefs={mapDefs} />
+				</>}
+			</div>
 		</GreenCard>
 	);
 };

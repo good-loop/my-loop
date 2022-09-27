@@ -1,5 +1,6 @@
 {
-	"name": "Whole world",
+	"id": "world",
+	"name": "World",
 	"svgAttributes": {
 		"viewBox": "225 0 1725 857"
 	},
