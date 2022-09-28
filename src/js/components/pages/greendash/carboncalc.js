@@ -175,7 +175,7 @@ export const getCampaigns = (table) => {
  * @returns {?PromiseValue} PV of a List of GreenTags
  */
  export const getTags = (table) => {
-	if ( ! table || ! table.length) {
+	if (!table || !table.length) {
 		return null;
 	}
 
@@ -184,6 +184,8 @@ export const getCampaigns = (table) => {
 	table.forEach((row, i) => {
 		if (i === 0) return;
 		let adid = row[adIdCol];
+		// HACK CaptifyOldMout data is polluted with impressions for adids like `ODCTC5Tu"style="position:absolute;` due to mangled pixels
+		adid = adid.match(/[^"]+/); // Fairly safe to assume " won't be found in a normal adid
 		if (adid && adid !== 'unset') {
 			tagIdSet[adid] = true;
 		}
