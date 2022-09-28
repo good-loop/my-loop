@@ -19,8 +19,6 @@ const HowDoesItWork = ({ nvertiserName, charities, ongoing, setCtaModalOpen }) =
 		}
 	}
 
-	console.log("uuuuuuh", setCtaModalOpen)
-
 	return (
 		<div className="bg-gl-light-pink py-5">
 			<div className="container py-5">

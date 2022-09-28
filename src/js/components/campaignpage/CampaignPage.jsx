@@ -278,8 +278,7 @@ const CampaignPage = () => {
 			...ad
 		};
 	});
-
-	console.log("CAMPAIGN BY NAME: ", campaignByName);
+    
 	// Get ad viewing data
 	let sqe = new SearchQuery("evt:minview");
 	let sqads = ads.length && SearchQuery.setPropOr(null, "vert", ads.map(ad => ad.id));

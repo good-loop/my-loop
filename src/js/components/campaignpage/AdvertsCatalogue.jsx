@@ -43,7 +43,6 @@ const AdvertsCatalogue = ({ campaign, ads, donationTotal, nvertiserName, totalVi
 		showAds = ads.filter(ad => ! ad._hidden);
 	}
 
-	console.log("Ads for catalogue: ", ads, "showing",showAds);
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [animating, setAnimating] = useState(false);
 
@@ -243,6 +242,7 @@ const AdvertCard = ({ ad, active }) => {
 		extraParams.delivery = "app";
 		extraParams.after = "vanish";
 	}
+    console.log("Extra Params", extraParams);
 	return (
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
 			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{ position: "absolute", zIndex: 999 }}>Advert Editor ({ad.id})</DevLink>
