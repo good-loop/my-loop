@@ -556,7 +556,7 @@ const NewTabCharityCard = ({ cid, loading }) => {
 };
 
 const LinksDisplay = ({ bookmarksData, style }) => {
-  const CircleLink = ({ bg, url, children, title }) => {
+  const CircleLink = ({ domain, url, children, title }) => {
     if (!url) url = '#';
     return (
       <Col
@@ -565,7 +565,7 @@ const LinksDisplay = ({ bookmarksData, style }) => {
         className='bookmark-item d-flex flex-column align-items-center'
       >
         <BG
-          src={bg}
+          src={`https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${domain}&size=256`}
           className='bookmark-box shadow mb-1'
           center
           style={{ backgroundSize: '1.5rem', backgroundRepeat: 'no-repeat' }}
@@ -575,20 +575,6 @@ const LinksDisplay = ({ bookmarksData, style }) => {
 			</span> */}
       </Col>
     );
-  };
-
-  // Check width of the image from url
-  const checkWidth = (url, callback) => {
-    let img = new Image();
-    img.src = url;
-    img.onload = () => {
-      callback(img.width);
-    };
-  };
-
-  const getFavIcon = (domain) => {
-    let favIcon = `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${domain}&size=256`;
-    return favIcon;
   };
 
   // To allow sites like mail.google.com get fetch app specific favicons, at the same time advoid 404 favicons
@@ -617,7 +603,7 @@ const LinksDisplay = ({ bookmarksData, style }) => {
                 key={i}
                 url={url}
                 title={bookmark.title}
-                bg={getFavIcon(domain)}
+                domain={domain}
               >
                 {/* {title} */}
               </CircleLink>
