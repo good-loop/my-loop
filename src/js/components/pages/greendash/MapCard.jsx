@@ -1,12 +1,28 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Button } from 'reactstrap';
+import { Button, Modal, ModalBody } from 'reactstrap';
 import { id } from '../../../../../GLAppManifest';
 import { DownloadCSVLink } from '../../../base/components/SimpleTable';
 import StyleBlock from '../../../base/components/StyleBlock';
-import { stopEvent } from '../../../base/utils/miscutils';
+import { space, stopEvent } from '../../../base/utils/miscutils';
 import Misc from '../../../MiscOverrides';
 import { getCarbon } from './carboncalc';
 import { dataColours, GreenCard } from './dashutils';
+
+
+/**
+ * To extract path bounding box centres from an onscreen SVG (in SVG coords)...
+Array.from(document.querySelectorAll('.map-svg path')).reduce((acc, path) => {
+	const bbox = path.getBBox();
+	acc[path.getAttribute('data-id')] = {
+		cx: bbox.x + (bbox.width / 2),
+		cy: bbox.y + (bbox.height / 2)
+	};
+	return acc;
+}, {});
+ * Q: Why do this preprocessing instead of extracting dynamically?
+ * A: Countries are weird shapes - storing predefined text centres lets us fine-tune against
+ * e.g. Alaska and Hawaii putting the centre of the U.S. in the northern Pacific.
+ */
 
 
 // When querying each country, what sub-location type should we breakdown on?
@@ -42,40 +58,80 @@ const MapDownloadCSV = ({ data, mapDefs }) => {
 };
 
 
-const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef }) => {
+const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels }) => {
+	const [pathCentres, setPathCentres] = useState({}); // Estimate region centres from bounding boxes to place text labels
+
 	if (!mapDefs) return null;
 	const loading = data === 'loading';
 
-	return <div className="map-container">
-		<svg className="map-svg" style={{stroke: 'none'}} version="1.1" {...mapDefs.svgAttributes} xmlns="http://www.w3.org/2000/svg" ref={svgRef} >
-			{Object.entries(mapDefs.regions).map(([id, props]) => {
-				let { carbon = 0, colour = zeroFill } = (data?.[id] || {});
-				let unit = 'kg';
-				if (carbon >= 1000) {
-					carbon /= 1000;
-					unit = 't';
-				}
+	let regions = [];
+	let labels = [];
 
-				// don't modify base map with applied fill/stroke!
-				props = { ...props, fill: colour }; 
+	Object.entries(mapDefs.regions).forEach(([id, props]) => {
+		let { carbon = 0, colour = zeroFill } = (data?.[id] || {});
+		let unit = 'kg';
+		if (carbon >= 1000) {
+			carbon /= 1000;
+			unit = 't';
+		}
 
-				// Don't paint misleading colours on a map we don't have data for
-				if (loading) {
-					props.fill = 'none';
-					props.stroke = '#bbb';
-					props.strokeWidth = '1px';
-				}
+		// Don't modify base map with applied fill/stroke!
+		props = { ...props, fill: colour, stroke: '#fff', strokeWidth: mapDefs.svgAttributes.fontSize / 10};
 
-				// Countries are clickable, sublocations aren't
-				if (setFocusRegion) {
-					props.style = {cursor: 'pointer'};
-					props.onClick = () => setFocusRegion(id);
-				}
+		// Don't paint misleading colours on a map we don't have data for
+		if (loading) {
+			props.fill = 'none';
+			props.stroke = '#bbb';
+		}
 
-				const title = loading ? null : <title>{props.name}: {carbon.toFixed(2)} {unit} CO2e</title>;
+		// Countries are clickable, sublocations aren't.
+		if (setFocusRegion) {
+			props.style = {cursor: 'pointer'};
+			props.onClick = () => setFocusRegion(id);
+		}
 
-				return <path key={id} {...props}>{title}</path>;
-			})}
+		const pathId = `${mapDefs.id}-${id}`;
+
+		// Find the centre of the region's bounding box to position a text label on the bigger map
+		const pathRef = showLabels ? (path) => {
+			if (!path) return;
+			
+			setPathCentres(prev => {
+				if (prev[pathId]) return prev;
+				const bbox = path.getBBox();
+
+				return {
+					...prev,
+					[pathId]: { cx: bbox.x + (bbox.width / 2), cy: bbox.y + (bbox.height / 2) }
+				};
+			});
+		} : null;
+
+		// Tooltip on hover
+		const title = loading ? null : <title>{props.name}: {carbon.toFixed(2)} {unit} CO2e</title>;
+
+		regions.push(<path key={`path-${id}`} data-id={id} {...props} ref={pathRef}>{title}</path>);
+
+		// Skip labels for regions with less than 100g carbon output. Harsh, I know
+		if (showLabels && carbon > 0.1 && pathCentres[pathId]) {
+			let {cx, cy} = {...pathCentres[pathId], ...props};
+			const transY = mapDefs.svgAttributes.fontSize / 2;
+			
+			labels.push(<g key={`label-${id}`}>
+				<text className="map-label-name" x={cx} y={cy} textAnchor="middle" transform={`translate(0 ${-transY})`} fontWeight="600">
+					{props.name}
+				</text>
+				<text className="map-label-carbon" x={cx} y={cy} textAnchor="middle" transform={`translate(0 ${transY})`}>
+					{carbon.toFixed(2)} {unit}
+				</text>
+			</g>);
+		}
+	});
+
+	return <div className="map-container text-center">
+		<svg className="map-svg" version="1.1" {...mapDefs.svgAttributes} xmlns="http://www.w3.org/2000/svg" ref={svgRef}>
+			{regions}
+			{labels}
 		</svg>
 		{loading && <Misc.Loading text={`Fetching carbon data for ${mapDefs.name}`} />}
 	</div>;
@@ -88,6 +144,7 @@ const MapCard = ({ baseFilters }) => {
 	const [mapDefs, setMapDefs] = useState(); // JSON object with map paths and meta
 	const [svgEl, setSvgEl] = useState(); // ref to the map SVG to create download button
 	const [error, setError] = useState(); // Problems loading map?
+	const [popOut, setPopOut] = useState(false); // Pop out card for larger map?
 
 	const isWorld = (focusRegion === 'world');
 	const mapDefsReady = mapDefs && (mapDefs.id === focusRegion);
@@ -180,26 +237,35 @@ const MapCard = ({ baseFilters }) => {
 		}, {}));
 	}, [JSON.stringify(filters), pvChartData.value, mapDefs]);
 
+	const cardContents = <>
+		<div className="mb-2 text-center">
+			<strong>{mapDefs?.name}</strong>
+		</div>
+		<SVGMap setFocusRegion={isWorld && setFocusRegion} mapDefs={mapDefs} data={mapData} svgRef={setSvgEl} loading={!mapData} showLabels={popOut} />
+		<div className="mt-2 map-controls">
+			<span className="pull-left">
+				{error ? <small>{error}</small> : <>
+					Download{' '}
+					<a download={`green-map-${focusRegion}.svg`} href={`data:image/svg+xml,${encodeURIComponent(svgEl?.outerHTML)}`}>map</a>{' / '}
+					<MapDownloadCSV data={mapData} mapDefs={mapDefs} />
+				</>}
+			</span>
+			<span className="pull-right">
+				{isWorld ? 'Click to focus' : (
+					mapDefsReady && <a href="#" onClick={(e) => { stopEvent(e); setFocusRegion('world');}}>Back</a>
+				)}
+			</span>
+		</div>
+	</>;
 
 
 	return (
 		<GreenCard title="Where are your emissions produced?" className="carbon-map flex-column" downloadable={false}>
-			<SVGMap setFocusRegion={isWorld && setFocusRegion} mapDefs={mapDefs} data={mapData} svgRef={setSvgEl} loading={!mapData} />
-			<div className="mt-2 text-center">
-				<strong>{mapDefs?.name}</strong>
-				<span className="pull-right">
-					{isWorld ? 'Click a country to focus' : (
-						mapDefsReady && <a href="#" onClick={(e) => { stopEvent(e); setFocusRegion('world');}}>Back</a>
-					)}
-				</span>
-			</div>
-			<div className="mt-2 text-center">
-				{error ? <small>{error}</small> : <>
-					Download{' '}
-					<a download="green-map.svg" href={`data:image/svg+xml,${encodeURIComponent(svgEl?.outerHTML)}`}>map</a>{' / '}
-					<MapDownloadCSV data={mapData} mapDefs={mapDefs} />
-				</>}
-			</div>
+			<div role="button" className="pop-out-button" onClick={() => setPopOut(true)}>⇱</div>
+			{!popOut && cardContents}
+			<Modal className="carbon-map" isOpen={popOut} toggle={() => setPopOut(!popOut)} size="xl" >
+				<ModalBody>{popOut && cardContents}</ModalBody>
+			</Modal>
 		</GreenCard>
 	);
 };

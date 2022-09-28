@@ -327,13 +327,41 @@
 .carbon-map {
 	.map-container {
 		position: relative; // position ref for loader overlay
-	}
-	.map-svg {
 		flex-grow: 1;
 	}
+
 	.loader-box {
 		position: absolute;
 		inset: 0;
+	}
+
+	.pop-out-button {
+		font-size: 150%;
+		cursor: pointer;
+		position: absolute;
+		top: 0;
+		left: 0;
+		line-height: 1;
+		padding: 0.2em 0.25em;
+		box-shadow: -0.05em -0.05em 0.1em 0 rgb(0 0 0 / 0.15) inset;
+		border-bottom-right-radius: @gc-border-radius;
+	}
+
+	.map-svg {
+		max-height: 8rem;
+	}
+
+	// bigger text and taller map in modal
+	&.modal-dialog {
+		font-size: 150%;
+		.map-svg {
+			max-height: 80vh;
+		}
+		// pull controls to centre
+		.map-controls {
+			max-width: 50%;
+			margin: auto;
+		}
 	}
 }
 
