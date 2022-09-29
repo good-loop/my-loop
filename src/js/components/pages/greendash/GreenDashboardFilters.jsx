@@ -181,7 +181,7 @@ const GreenDashboardFilters = ({}) => {
 				getDataList({
 					type: C.TYPES.Agency,
 					status: KStatus.PUBLISHED,
-					ids: isTester()? [] : nextAgencyIds, // NB: a GL user should be fine with [] here
+					ids: nextAgencyIds, // NB: a GL user should be fine with [] here
 				}).promise.then(cargo => {
 					if (cargo.hits) setAvailableAgencys(cargo.hits);
 				});
@@ -284,10 +284,10 @@ const GreenDashboardFilters = ({}) => {
 								{filterMode === 'brand' ? <span className="selected-marker" /> : null}
 								Brand
 							</DropdownItem>
-							{(isTester() || filterMode === 'agency') && <DropdownItem onClick={() => setFilterMode('agency')}>
+							<DropdownItem onClick={() => setFilterMode('agency')}>
 								{filterMode === 'agency' ? <span className="selected-marker" /> : null}
 								Agency
-							</DropdownItem>}
+							</DropdownItem>
 							<DropdownItem onClick={() => setFilterMode('campaign')}>
 								{filterMode === 'campaign' ? <span className="selected-marker" /> : null}
 								Campaign
