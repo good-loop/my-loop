@@ -260,7 +260,7 @@ const AdvertCard = ({ ad, active }) => {
 			<div className="position-relative ad-card">
 				<IPhoneMockup size={size} />
 				<div className={"position-absolute theunit-" + size} >
-					{hasShown ? (
+					{hasShown ? ( // make sure it only loads when it is active
 						<GoodLoopUnit vertId={ad.id} size={size} extraParams={extraParams} style={{zIndex:2}}/>
 					) : (
 						<div style={{ background: "black", width: "100%", height: "100%" }}></div>
