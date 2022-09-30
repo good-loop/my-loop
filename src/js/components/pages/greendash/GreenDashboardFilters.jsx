@@ -272,7 +272,9 @@ const GreenDashboardFilters = ({}) => {
 							{showCustomRange ? <>
 								<DropdownItem divider />
 								<DateRangeWidget dflt={period} onChange={setPeriod} />
-								<DropdownItem className="btn btn-primary pull-right d-inline-block w-unset" onClick={doCommit}>Apply custom timeframe</DropdownItem>
+								<DropdownItem tag="div">
+									<Button color="primary" onClick={doCommit}>Apply custom timeframe</Button>
+								</DropdownItem>
 							</> : null}
 						</DropdownMenu>
 					</UncontrolledDropdown>

@@ -390,3 +390,16 @@
 		z-index: 1; // place in front of the tree decoration
 	}
 }
+
+
+// Mobile: Vertically stack the chart & total subcards of the time-series card
+@media (max-width: 767px) {
+	.carbon-time-series .card-body {
+		flex-direction: column !important;
+	}
+	// fix the "overlap card padding" for column orientation
+	.total-subcard {
+		margin: calc(-1rem - 1px) !important;
+		margin-top: 0 !important;
+	}
+}

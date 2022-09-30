@@ -22,7 +22,8 @@ const GreenDashboard = ({}) => {
 
 	return <>
 		{/* Override rem for "normal" usage: consider a 14" 1920x1080 laptop with default 125% or 150% DPI scaling */}
-		<StyleBlock>{`html, body { font-size: 14px; }`}</StyleBlock>
+		{/* ...But don't let text become too tiny on mobile */}
+		<StyleBlock>{`html, body { font-size: 14px; } @media (max-width: 767px) { html, body { font-size: 18px; } }`}</StyleBlock>
 		{Login.isLoggedIn() && <GreenNavBar active={subpage} />}
 		<Subpage />
 	</>;
