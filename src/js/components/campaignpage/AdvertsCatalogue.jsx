@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	Button,
 	Carousel,
@@ -235,29 +235,40 @@ const AdvertCard = ({ ad, active }) => {
 	const social = ad.format === "social";
 	let size = 'landscape';
 	const [hasShown, setHasShown] = useState(false);
-	if (active && !hasShown) setHasShown(true);
 	const extraParams = {};
 	if (social) {
 		size = "portrait";
 		extraParams.delivery = "app";
 		extraParams.after = "vanish";
 	}
-    console.log("Extra Params", extraParams);
+	console.log("Extra Params", extraParams);
+
+	useEffect(() => { // activate ad unit once
+		if (active && !hasShown) setHasShown(true);
+	}, [active]);
+
+	const reloadAdUnit = () => {
+		setHasShown(false);
+		setTimeout(() => {
+			setHasShown(true);
+		}, 100);
+	}
+
 	return (
 		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
 			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{ position: "absolute", zIndex: 999 }}>Advert Editor ({ad.id})</DevLink>
 			<div className="position-relative ad-card">
 				<IPhoneMockup size={size} />
 				<div className={"position-absolute theunit-" + size} >
-					<div className="d-flex flex-row justify-content-center align-items-center position-absolute" style={{top:0, left:0, width:"100%", height:"100%", zIndex:1}}>
-						<Button color="primary">Watch again</Button>
-					</div>
 					{hasShown ? (
 						<GoodLoopUnit vertId={ad.id} size={size} extraParams={extraParams} style={{zIndex:2}}/>
 					) : (
 						<div style={{ background: "black", width: "100%", height: "100%" }}></div>
 					)}
 				</div>
+				<Button className='position-absolute' style={{bottom:0, left:"50%", transform:"translate(-50%,0)"}} color="primary" onClick={reloadAdUnit}>
+					Reload the ad
+				</Button>
 			</div>
 			{/*<span className="position-absolute" style={{ left: "50%", top: "50%", transform: "translate(-50%, -50%)", zIndex: 0 }}>If you're seeing this, you likely have ad-blocker enabled. Please disable ad-blocker to see the demo!</span>*/}
 		</div>
