@@ -102,7 +102,7 @@ const T4GThemePicker = () => {
 
 const getT4GThemeBackground = (theme) => {
 
-    const [rand, setRand] = useState(Math.round(Math.random() * 9) + 1);
+    const [rand, setRand] = useState(Math.round(Math.random() * 10) + 1);
 
     let t = theme;
 
