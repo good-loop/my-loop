@@ -319,15 +319,37 @@ body {
 		.splash-curve {
 			position: absolute;
 			top: 0;
-			left: 0;
-			height: 100%;
-			width: 100%;
+			left: -40%;
+			height: 130%;
+			width: 150% !important;
 			z-index: 2;
+		}
+
+
+		.splash-curve.curve-border {
+			filter: brightness(0.5);
+			left: -40%;
+			width: 148% !important;
 		}
 
 		.splash-img {
 			height: 100%;
 			object-fit: cover;
+		}
+
+		.splash-top-curve {
+			position: absolute;
+			z-index: 1;
+			width: 100% !important;
+			height: 100%;
+			bottom: 35%;
+			z-index: -1;
+			margin-bottom: 5%;
+
+			visibility: hidden;
+			@media @width-mobile {
+				visibility: visible;
+			}
 		}
 
 		.dark-overlay {
@@ -372,25 +394,57 @@ body {
 		.splash-content {
 			width: 40%;
 			height: 100%;
+			splash-counter {
+				font-size: 3rem;
+				text-shadow: none;
+			}
 
+			@media @width-mobile {
+				display: flex; // Is it possible to use flex or BS to write something simpler that just works across devices??
+				flex-direction: column;
+				align-items: center;
+				justify-content: space-between;
+				background-color: transparent;
+
+				.splash-text {
+					width: 101vw;
+					position: relative;
+					left: -20%;					
+					height: 60%;
+					bottom: -40%;
+
+					.splash-text-content {
+						background-color: white;
+						height: 100%;
+					}
+
+				}
+
+
+			}
 
 			@media @ipad-max {
 				height: 75%;
 				padding-top: 70px; // avoid navbar
 				width: 100%;
-
-				@media @width-mobile {
-					display: flex; // Is it possible to use flex or BS to write something simpler that just works across devices??
-					flex-direction: column;
-					align-items: center;
-					justify-content: space-between;
-				}
 			}
 		}
 
 		.splash-text {
 			@media @ipad-max {
 				text-shadow: 0 2px 3px black;
+			}
+		}
+
+
+		img { 
+			margin-bottom: -4%; // annoying gap between divs, just merge them over each other
+		}
+
+		background-color: transparent;
+		splash-text-content {
+			@media @width-mobile {
+				background-color: white;
 			}
 		}
 
