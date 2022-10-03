@@ -376,6 +376,7 @@ const UserControls = ({ cid }) => {
             Register / Log in
           </NewtabLoginLink>
         )}
+        logoutLink={<T4GLogoutLink/>}
       />
     </>
   );
