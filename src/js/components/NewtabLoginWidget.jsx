@@ -35,7 +35,7 @@ const switchToVerb = (e, verb) => {
 const NewtabLoginWidget = ({onLogin, onRegister}) => {
 
 	const open = DataStore.getValue(LOGIN_OPEN_PATH);
-	if ( ! open) return null;
+	//if ( ! open) return null; TODO UNDO
 
 	let verb = DataStore.getValue(LOGIN_VERB_PATH);
 	// Default to register
@@ -161,7 +161,9 @@ const EmailReset = ({person}) => {
 			} else {
 				DataStore.update({}); // The error will be in state, provoke a redraw to display it
 			}
-		});
+		}).catch(err => {
+            DataStore.update({});
+        });
 	};
 
 	return (
