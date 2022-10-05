@@ -255,7 +255,31 @@
 	min-height: 100vh;
 }
 
+@card-padding: 1.25rem; // bootstrap default
 
+#green-login-card {
+	overflow: hidden;
+	border-radius: 1rem;
+	box-shadow: 0 0.25em 0.5em rgba(0, 0, 0, 0.3);
+	.decoration {
+		background-image: url("/img/green/login-background.svg");
+		background-size: cover;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin: -@card-padding 0 -@card-padding -@card-padding;
+		.stamp {
+			width: 66.66%;
+		}
+	}
+	.form {
+		position: relative;
+		padding: 2em 10%;
+		.gl-logo {
+			width: 100%;
+		}
+	}
+}
 
 
 .GreenLandingPage {
