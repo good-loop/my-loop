@@ -46,10 +46,11 @@
 		display: flex;
 		flex-direction: row;
 		max-width: 100vw;
+		justify-content: space-around;
 		.shift-focus {
 			position: absolute;
 			top: 0;
-			&.previous {
+			&.prev {
 				left: 0;
 			}
 			&.next {
@@ -98,6 +99,11 @@
 @media (max-width: 767px) {
 	.select-date-range {
 		flex-direction: column;
+
+		.month:not(.this-month) {
+			display: none;
+		}
+
 		.presets-container {
 			flex-direction: row;
 			flex-wrap: wrap;
@@ -222,6 +228,7 @@
 }
 
 @media (max-width: 767px) {
+	@navbar-mobile-width: 66vw;
 	// HACK no navbar -- effectively set @nav-width to 0
 	#mainDiv.page-greendash .my-loop-footer {
 		padding-left: 0;
@@ -232,30 +239,39 @@
 	#mainDiv.page-greendash .navbar-toggler {
 		margin: 0.5rem;
 		background-color: @greenmedia-darkcyan;
+		position: fixed;
+		top: 0;
+		left: 0;
 		&:focus {
 			outline: none;
 		}
 	}
+	// navbar toggle should be visible when navbar is off screen
 	#green-navbar {
 		overflow: visible;
 	}
+	// pop in navbar from left
 	#green-navbar {
-		width: 0;
+		width: @navbar-mobile-width;
+		box-shadow: 0 0 5px 2px rgb(0 0 0 / 50%);
 	}
-	#green-navbar.mobile-open {
-		width: @nav-width;
+	#green-navbar:not(.mobile-open) {
+		left: calc(-@navbar-mobile-width - 5px);
 	}
-	.greendash-filters, .greendash-overview {
-		margin-left: 3rem
+	// push logo + filter dropdowns to right to make room for nav toggle
+	.greendash-filters form:before {
+		content: '';
+		width: 3.5rem;
+		display: inline-block;
 	}
 }
+
 
 .green-subpage {
 	flex-grow: 1;
 	min-height: 100vh;
+	max-width: 100vw;
 }
-
-
 
 
 .GreenLandingPage {

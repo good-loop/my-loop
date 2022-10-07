@@ -230,20 +230,16 @@ const TimeSeriesCard = ({ period, data: timeTable, noData }) => {
 	// TODO Reinstate "Per 1000 impressions" button
 
 	return <GreenCard title="How much carbon is your digital advertising emitting?" className="carbon-time-series" row>
-		<div className="flex-row w-100">
-			<div className="flex-column flex-grow-1">
-				{/* <div className="chart-subcard flex-column"> */}
-					{chartProps?.isEmpty ? (
-						NOEMISSIONS
-					) : (
-						<div>{CO2e} emissions over time</div>
-					)}
-					{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
-					{chartContent}
-				{/* </div> */}
-			</div>
-			<TotalSubcard period={period} totalCO2={aggCO2?.total} />
+		<div className="chart-subcard flex-column">
+			{chartProps?.isEmpty ? (
+				NOEMISSIONS
+			) : (
+				<div>{CO2e} emissions over time</div>
+			)}
+			{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
+			{chartContent}
 		</div>
+		<TotalSubcard period={period} totalCO2={aggCO2?.total} />
 		<GreenCardAbout>
 			<p>How do we calculate the time-series carbon emissions?</p>
 		</GreenCardAbout>
