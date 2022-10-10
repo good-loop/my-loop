@@ -34,9 +34,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 	const donationDisplay = <b>{donationValue ? <Counter amount={donationValue} minimumFractionDigits={2} preserveSize /> : "money"}</b>;
 
 	let splashText = <>
-		<div className="text-uppercase text-white splash-thanks">
-			Thank you for watching {nvertiserName}'s advert and donating!
-		</div>
+		<h3 className='text-uppercase splash-thanks'>Thank you for watching {nvertiserName}'s advert and donating!</h3>
 		<p className="text-white raised splash-counter">{donationDisplay}</p>
 		<p className='text-white splash-gl'>{ongoing ? "Raising" : "Raised"} for charity by using purpose lead online ads with Good-Loop</p>
 	</>;

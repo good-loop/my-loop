@@ -307,14 +307,13 @@ body {
 		@media (max-height: 680px) {
 			height: 105vh; // short screens hid cta button
 		}
+
 		.splash-thanks {
-			text-shadow: none;
-			letter-spacing: 1px;
-			font-size: 1.3rem;
-			font-weight: 700;
+			// override h3 styling
+			text-shadow: none !important;
+			color: white !important;
 			@media @width-mobile {
 				color: @gl-red !important;
-				font-size: 1rem;
 			}
 		}	
 
@@ -327,6 +326,7 @@ body {
 		}
 
 		.splash-counter {
+			// no preset font style fits - counter needed a bigger & bolder font
 			font-family: 'Montserrat', sans-serif;
 			font-weight: 700;
 			font-size: 4rem;
@@ -365,10 +365,10 @@ body {
 		.splash-curve.curve-border {
 			filter: brightness(0.5);
 			left: -40%;
-			width: 148% !important;
+			width: 148% !important;	// make it slightly smaller than .splash-curve, giving us the border 
 			@media @width-mobile {
-				height: 70%;
-				width: 200% !important;
+				height: 70%; 
+				width: 200% !important;	// on mobile the above method made the border too thin, instead move the curve out to give us the border
 				left: -62%;
 				top: -20%;
 			}
@@ -378,16 +378,14 @@ body {
 			height: 100%;
 			object-fit: cover;
 			@media @width-mobile {
-				height: 70%;
+				height: 70%;	// stops the image being squashed behind the curve on mobile
 			}
 
 		}
 
-
-
-		.splash-top-curve {
+		.splash-top-curve {	// white curve above splash-text
 			position: absolute;
-			width: 100%% !important;
+			width: 100% !important;
 			height: unset;
 			bottom: 20px;
 			z-index: -1;
@@ -448,10 +446,6 @@ body {
 		.splash-content {	// container for all splash content
 			width: 40%;
 			height: 100%;
-			splash-counter {
-				font-size: 3rem;
-				text-shadow: none;
-			}
 
 			@media @width-mobile {
 				display: flex; // Is it possible to use flex or BS to write something simpler that just works across devices??
@@ -461,9 +455,9 @@ body {
 				background-color: transparent;
 
 				.splash-text { 
-					width: 101vw;
+					width: 101vw; // 100vw left a *tiny* gap - just make it stretch slightly over the screens edge
 					position: relative;
-					left: -20%;					
+					left: -20%;
 					height: 60%;
 					top:  135%;
 
@@ -474,12 +468,8 @@ body {
 						height: 100vh;
 						width: 100%;
 						position: absolute;
-
 					}
-
 				}
-
-
 			}
 
 			@media @ipad-max {
@@ -531,11 +521,11 @@ body {
 					top: -5%;
 				}
 
-				.plus {
+				.plus { // plus symbol between the two 'hero-circles'
 					width: 30px;
 					@media @width-mobile {
 						width: 20px;
-						margin: 5px 0px 5px 0px;
+						margin: 5px 0px;
 					}
 				}
 			}
