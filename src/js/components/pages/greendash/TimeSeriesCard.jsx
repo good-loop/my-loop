@@ -230,7 +230,7 @@ const TimeSeriesCard = ({ period, data: timeTable, noData }) => {
 	// TODO Reinstate "Per 1000 impressions" button
 
 	return <GreenCard title="How much carbon is your digital advertising emitting?" className="carbon-time-series" row>
-		<div className="chart-subcard flex-column">
+		<div className="chart-subcard flex-column w-100">
 			{chartProps?.isEmpty ? (
 				NOEMISSIONS
 			) : (
