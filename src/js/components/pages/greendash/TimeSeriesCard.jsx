@@ -167,12 +167,14 @@ const TimeSeriesCard = ({ period, data: timeTable, noData }) => {
 		let label = 'Kg CO2';
 
 		// Display tonnes instead of kg? (should this be avg instead of max?)
+		let ticksShowTonnes = false // Ticks on scales can't check if maxCO2 >= 1000 after we change the value
 		if (maxCO2 >= TONNES_THRESHOLD) {
 			label = 'Tonnes CO2';
 			data.forEach((d, i) => data[i] = d / 1000);
 			avgCO2 /= 1000;
 			maxCO2 /= 1000;
 			totalCO2 /= 1000;
+			ticksShowTonnes = true;
 		}
 
 		// Data format accepted by chart.js
@@ -192,7 +194,7 @@ const TimeSeriesCard = ({ period, data: timeTable, noData }) => {
 						ticks: { maxRotation: 0, minRotation: 0 } // Don't angle date labels - skip some if space is tight
 					},
 					y: {
-						ticks: { callback: (maxCO2 >= TONNES_THRESHOLD ? v => `${v} t` : v => `${v} kg`) }, // Show appropriate unit
+						ticks: { callback: (ticksShowTonnes ? v => `${v} t` : v => `${v} kg`) }, // Show appropriate unit
 					},
 				},
 				plugins: {
