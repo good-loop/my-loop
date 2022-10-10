@@ -38,7 +38,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 			Thank you for watching {nvertiserName}'s advert and donating!
 		</div>
 		<p className="text-white raised splash-counter">{donationDisplay}</p>
-		<p className='text-white splash-gl'>Raised for charity by using purpose lead online ads with Good-Loop</p>
+		<p className='text-white splash-gl'>{ongoing ? "Raising" : "Raised"} for charity by using purpose lead online ads with Good-Loop</p>
 	</>;
 	// Change the splashText to show wider impact?
 	if (campaignPage.showWiderImpact && campaignPage.widerAnnualDntn) {
