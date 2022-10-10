@@ -304,16 +304,46 @@ body {
 	}
 
 	.impact-hub-splash {
+		@media (max-height: 680px) {
+			height: 105vh; // short screens hid cta button
+		}
+		.splash-thanks {
+			text-shadow: none;
+			letter-spacing: 1px;
+			font-size: 1.3rem;
+			font-weight: 700;
+			@media @width-mobile {
+				color: @gl-red !important;
+				font-size: 1rem;
+			}
+		}	
+
+		.splash-gl {
+			text-shadow: none;
+			@media @width-mobile {
+				padding: 0px 5px;
+				color: black !important;
+			}
+		}
+
+		.splash-counter {
+			font-family: 'Montserrat', sans-serif;
+			font-weight: 700;
+			font-size: 4rem;
+			text-shadow: none;
+			@media @width-mobile {
+				font-size: 3rem;
+				color: @gl-red !important;
+			}
+		}
+
 		position: relative;
 		height: @fullHeight;
 		background-color: #f55d58;
+		overflow: hidden;
 
 		@media @ipad-max {
 			background-color: #ffffff;
-		}
-
-		@media @width-mobile {
-			margin-bottom: 3rem;
 		}
 
 		.splash-curve {
@@ -323,28 +353,44 @@ body {
 			height: 130%;
 			width: 150% !important;
 			z-index: 2;
-		}
+			@media @width-mobile {
+				height: 70%;
+				width: 200% !important;
+				left: -60%;
+				top: -20%;
 
+			}
+		}
 
 		.splash-curve.curve-border {
 			filter: brightness(0.5);
 			left: -40%;
 			width: 148% !important;
+			@media @width-mobile {
+				height: 70%;
+				width: 200% !important;
+				left: -62%;
+				top: -20%;
+			}
 		}
 
 		.splash-img {
 			height: 100%;
 			object-fit: cover;
+			@media @width-mobile {
+				height: 70%;
+			}
+
 		}
+
+
 
 		.splash-top-curve {
 			position: absolute;
-			z-index: 1;
-			width: 100% !important;
-			height: 100%;
-			bottom: 35%;
+			width: 100%% !important;
+			height: unset;
+			bottom: 20px;
 			z-index: -1;
-			margin-bottom: 5%;
 
 			visibility: hidden;
 			@media @width-mobile {
@@ -369,13 +415,21 @@ body {
 
 		.splash-card {
 			position: absolute;
-			top: 30%;
+			top: 20%;
 			width: 100%;
 			right: 0;
 			z-index: 3;
 			display: flex;
 			flex-direction: column;
 			align-items: flex-end;
+
+			.cta-splash-button {
+				@media @width-mobile {
+					background-color: @gl-red !important;
+					color: white !important;
+					width: 90%;
+				}
+			}
 
 			@media @width-mobile {
 				top: 0%;
@@ -391,7 +445,7 @@ body {
 			}
 		}
 
-		.splash-content {
+		.splash-content {	// container for all splash content
 			width: 40%;
 			height: 100%;
 			splash-counter {
@@ -406,16 +460,21 @@ body {
 				justify-content: space-between;
 				background-color: transparent;
 
-				.splash-text {
+				.splash-text { 
 					width: 101vw;
 					position: relative;
 					left: -20%;					
 					height: 60%;
-					bottom: -40%;
+					top:  135%;
 
-					.splash-text-content {
+					.splash-text-content {	// container for splash thanks, counter & cta
+						padding-left: 2.5%;
+						padding-right: 2.5%;
 						background-color: white;
-						height: 100%;
+						height: 100vh;
+						width: 100%;
+						position: absolute;
+
 					}
 
 				}
@@ -450,8 +509,11 @@ body {
 
 		.hero {
 			min-height: 40vh;
+			height: auto;
+
 
 			.hero-circles {
+				height: auto;
 				flex-grow: 1;
 				display: flex;
 				flex-direction: row;
@@ -462,14 +524,18 @@ body {
 
 				@media @width-mobile {
 					width: 100%;
+					max-width: 350px; // stops circles being pushed behind text
 					flex-direction: column;
+					position: absolute;
+					left: 20%;
+					top: -5%;
 				}
 
 				.plus {
 					width: 30px;
-
 					@media @width-mobile {
 						width: 20px;
+						margin: 5px 0px 5px 0px;
 					}
 				}
 			}

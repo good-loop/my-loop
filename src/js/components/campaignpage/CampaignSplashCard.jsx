@@ -33,12 +33,15 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 
 	const donationDisplay = <b>{donationValue ? <Counter amount={donationValue} minimumFractionDigits={2} preserveSize /> : "money"}</b>;
 
+	let [x, setX] = useState(undefined)
+	if(!x) {donationValue.value = 1340236.12; setX(donationValue);}
+
 	let splashText = <>
-		<div className="text-uppercase text-white">
+		<div className="text-uppercase text-white splash-thanks">
 			Thank you for watching {nvertiserName}'s advert and donating!
 		</div>
-		<p className="text-white header splash-counter">{<Counter amount={x} minimumFractionDigits={2} preserveSize /> }</p>
-		<p className='text-white'>Raised for charity by using purpose lead online ads with Good-Loop</p>
+		<p className="text-white raised splash-counter">{<Counter amount={x} minimumFractionDigits={2} preserveSize /> }</p>
+		<p className='text-white splash-gl'>Raised for charity by using purpose lead online ads with Good-Loop</p>
 	</>;
 	// Change the splashText to show wider impact?
 	if (campaignPage.showWiderImpact && campaignPage.widerAnnualDntn) {
@@ -73,10 +76,10 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 					</div>
 					<div className="flex-column flex-center pt-5 splash-text">
 					<img src="/img/curves/mobile-curve-white.svg" className="w-100 splash-top-curve" alt="white bottom border" />
-						<div className='splash-text-content'>
+						<div className='splash-text-content' style={{color: "@gl-red"}}>
 							{splashText}
 							{campaignPage.id && <DevLink href={ServerIO.PORTAL_ENDPOINT + '/#campaign/' + escape(campaignPage.id)} target="_portal">Campaign Editor (using {campaignPage.id})</DevLink>}
-							<button className="cta-modal-btn btn btn-secondary text-uppercase" onClick={e => setCtaModalOpen(true)}>
+							<button className="cta-splash-button cta-modal-btn btn btn-secondary text-uppercase" onClick={e => setCtaModalOpen(true)}>
 								want to raise even more?
 							</button>
 						</div>
