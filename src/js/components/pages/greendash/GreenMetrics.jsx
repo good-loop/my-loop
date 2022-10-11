@@ -12,6 +12,7 @@ import ErrAlert from '../../../base/components/ErrAlert';
 
 import { GreenCard, periodFromUrl, printPeriod } from './dashutils';
 import { getCampaigns, getCarbon, getSumColumn } from './carboncalc';
+import { getEmissionsCarbon } from './emissionsCalc';
 
 import GreenDashboardFilters from './GreenDashboardFilters';
 import BreakdownCard from './BreakdownCard';
@@ -161,6 +162,9 @@ const GreenMetrics2 = ({}) => {
 	};
 
 	const pvChartData = getCarbon({ ...baseFilters, breakdown: ['adid', 'time', 'os', 'total'] });
+	const pvChartDataEmissions = getEmissionsCarbon({ ...baseFilters, breakdown: ['adid', 'time', 'os', 'total'] });
+
+	console.log(pvChartData, pvChartDataEmissions);
 
 	let pvCampaigns = getCampaigns(pvChartData.value?.tables?.adid);
 	if (pvCampaigns && PromiseValue.isa(pvCampaigns.value)) { // HACK unwrap nested PV

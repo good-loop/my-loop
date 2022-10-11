@@ -1,6 +1,6 @@
 // Change to "local", "test" or "" to switch all endpoints together
 const cluster = 
-	'production';
+	'';
 	// 'local';
 	// ''; // if you want production!
 
