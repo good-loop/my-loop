@@ -55,18 +55,17 @@ export const getCarbonEmissions = ({ q = '', start = '1 month ago', end = 'now',
  * @param {!string} colName
  * @returns {Object} {breakdown-key: sum-for-key}
  */
- export const getBreakdownByEmissions = (table, colNameToSum, colNameToBreakdown) => {
-	if (!table?.length) {
+ export const getBreakdownByEmissions = (buckets, keyNameToSum, keyNameToBreakdown) => {
+	if (!buckets?.length) {
 		return {}; // no data
 	}
-	let ci = table[0].indexOf(colNameToSum);
-	let bi = table[0].indexOf(colNameToBreakdown);
-	assert(ci !== -1, 'No such sum column', colNameToSum, table[0]);
-	assert(bi !== -1, 'No such breakdown column', colNameToBreakdown, table[0]);
+
+	const bi = keyNameToBreakdown === 'time' ? 'key_as_string' : 'key';
+
 	let totalByX = {};
-	for(let i = 1; i < table.length; i++) {
-		const row = table[i];
-		const n = row[ci];
+	for(let i = 0; i < buckets.length; i++) {
+		const row = buckets[i];
+		const n = row[keyNameToSum];
 		if (!n) continue;
 		const b = row[bi]; // breakdown key
 		let v = totalByX[b] || 0;

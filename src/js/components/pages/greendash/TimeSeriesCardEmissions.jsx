@@ -5,10 +5,10 @@ import { space, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import NewChartWidget from '../../../base/components/NewChartWidget';
 import { GreenCard, printPeriod, printDate, printDateShort, TONNES_THRESHOLD, GreenCardAbout, Mass, NOEMISSIONS, CO2e } from './dashutils';
-import { getBreakdownBy } from './carboncalc';
 import Icon from '../../../base/components/Icon';
 import { nonce } from '../../../base/data/DataClass';
 import LinkOut from '../../../base/components/LinkOut';
+import { getBreakdownByEmissions } from './emissionsCalc';
 
 
 const icons = {
@@ -145,7 +145,7 @@ const TimeSeriesCardEmissions = ({ period, data: timeTable, noData }) => {
 		const data = [];
 
 		// Sum total emissions for each date across all other factors, sort, and unzip to labels/data arrays
-		Object.entries(getBreakdownBy(timeTable, 'totalEmissions', 'time')).sort(
+		Object.entries(getBreakdownByEmissions(timeTable, 'co2', 'time')).sort(
 			([ta], [tb]) => new Date(ta).getTime() - new Date(tb).getTime()
 		).forEach(([time, kg]) => {
 			labels.push(labelFn(time));
@@ -232,7 +232,7 @@ const TimeSeriesCardEmissions = ({ period, data: timeTable, noData }) => {
 	// TODO Reinstate "Per 1000 impressions" button
 
 	return <GreenCard title="How much carbon is your digital advertising emitting?" className="carbon-time-series" row>
-		<div className="chart-subcard flex-column">
+		<div className="chart-subcard flex-column w-100">
 			{chartProps?.isEmpty ? (
 				NOEMISSIONS
 			) : (
