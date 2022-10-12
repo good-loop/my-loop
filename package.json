@@ -74,7 +74,7 @@
     "eslint-plugin-react": "^7.27.1",
     "eslint-plugin-react-hooks": "^4.3.0",
     "intl": "^1.2.5",
-    "jest": "^27.0.4",
+    "jest": "^27.5.1",
     "jest-environment-puppeteer": "^5.0.4",
     "jest-puppeteer": "^5.0.4",
     "less": "^4.1.2",
@@ -88,12 +88,5 @@
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1",
     "yargs": "^17.0.1"
-  },
-  "jest": {
-    "preset": "jest-puppeteer",
-    "globals": {
-      "window": {}
-    },
-    "testTimeout": 10000
   }
 }
