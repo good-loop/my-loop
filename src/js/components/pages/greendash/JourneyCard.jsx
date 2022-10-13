@@ -112,6 +112,14 @@ const JourneyCard = ({ campaigns, period, emptyTable }) => {
 			}
 		}
 	}
+
+	// HACK no trees for these agency
+	let noTrees = false;
+	const NOTREESAGENCY = ['IGX8mWqY', 'R4rdg7cZ'];
+	campaigns.forEach(campaign => {
+		if (NOTREESAGENCY.includes(campaign.agencyId)) noTrees = true;
+	})
+
 	// HACK a download for us
 	let downloadCSVLink;
 	if (isTester()) {
@@ -137,7 +145,7 @@ const JourneyCard = ({ campaigns, period, emptyTable }) => {
 	return <GreenCard title="Your journey so far" className="carbon-journey">
 		{isLoading? <Misc.Loading /> : <div>
 			<CO2Section co2Offset={offsets.carbonTotal} />
-			<TreesSection treesPlanted={offsets.treesTotal} coralPlanted={offsets.coralTotal} />
+			{!noTrees && <TreesSection treesPlanted={offsets.treesTotal} coralPlanted={offsets.coralTotal} />}
 		</div>}
 		{impactSplashPage && <A className="btn btn-primary" href={impactSplashPage}><Logo item={brandOrAgency} /> Impact Overview</A>}
 		{downloadCSVLink}
