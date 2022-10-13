@@ -12,7 +12,7 @@ import ErrAlert from '../../../base/components/ErrAlert';
 
 import { GreenCard, periodFromUrl, printPeriod } from './dashutils';
 import { getCampaigns, getCarbon, getSumColumn } from './carboncalc';
-import { getCarbonEmissions, getSumColumnEmissions } from './emissionsCalc';
+import { getCampaignsEmissions, getCarbonEmissions, getSumColumnEmissions } from './emissionsCalc';
 
 import GreenDashboardFilters from './GreenDashboardFilters';
 import BreakdownCard from './BreakdownCard';
@@ -40,7 +40,6 @@ const OverviewWidget = ({ period, data }) => {
   let imps;
   if (data?.length > 1) {
     const total = getSumColumn(data, 'count');
-		const totalEmissions = getSumColumnEmissions(data, 'count');
     imps = printer.prettyInt(total);
   } else if (!data) {
     imps = 'Fetching data...';
@@ -201,9 +200,14 @@ const GreenMetrics2 = ({}) => {
   console.log(pvChartData, pvChartDataEmissions);
 
   let pvCampaigns = getCampaigns(pvChartData.value?.tables?.adid);
+  let pvCampaignsEmissions = getCampaignsEmissions(pvChartDataEmissions.value?.by_adid.buckets);
   if (pvCampaigns && PromiseValue.isa(pvCampaigns.value)) {
     // HACK unwrap nested PV
     pvCampaigns = pvCampaigns.value;
+  }
+  if (pvCampaignsEmissions && PromiseValue.isa(pvCampaignsEmissions.value)) {
+    // HACK unwrap nested PV
+    pvCampaignsEmissions = pvCampaignsEmissions.value;
   }
   let noData = pvChartData.value && !pvChartData.value.tables?.adid?.length;
 	let noDataEmissions = pvChartDataEmissions.value && !pvChartDataEmissions.value.allCount;
@@ -224,6 +228,8 @@ const GreenMetrics2 = ({}) => {
   // not working?? How does this compare to noData
   const emptyTable =
     pvChartData.resolved && (!pvChartData?.value?.tables?.total || pvChartData.value.tables.total.length === 1);
+  const emptyTableEmissions =
+    pvChartDataEmissions.resolved && (!pvChartDataEmissions?.value?.allCount || pvChartDataEmissions.value.by_total.buckets.length === 0);
 
   const [emissionsData, SetEmissionsData] = useState(false);
 
@@ -237,7 +243,7 @@ const GreenMetrics2 = ({}) => {
           <TimeSeriesCardEmissions {...commonProps} data={pvChartDataEmissions.value?.by_time.buckets} noData={noDataEmissions} />
         </Col>
         <Col xs='12' sm='4' className='flex-column'>
-          <JourneyCard campaigns={List.hits(pvCampaigns?.value)} {...commonProps} emptyTable={emptyTable || noData} />
+          WIP
         </Col>
       </Row>
       <Row className='card-row'>

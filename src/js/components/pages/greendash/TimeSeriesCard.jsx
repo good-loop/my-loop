@@ -125,7 +125,9 @@ const TotalSubcard = ({ period, totalCO2 }) => {
 	);
 };
 
-
+/**
+ * @deprecated
+ */
 const TimeSeriesCard = ({ period, data: timeTable, noData }) => {
 	const [chartProps, setChartProps] = useState(); // ChartJS-ready props object
 	const [aggCO2, setAggCO2] = useState(); // avg/total/max CO2
