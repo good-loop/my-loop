@@ -20,6 +20,7 @@ import JourneyCard from './JourneyCard';
 import TimeSeriesCard from './TimeSeriesCard';
 import TimeSeriesCardEmissions from './TimeSeriesCardEmissions';
 import CompareCard from './CompareCard';
+import CompareCardEmissions from './CompareCardEmissions';
 import TimeOfDayCard from './TimeOfDayCard';
 
 import { getDataItem, getDataList } from '../../../base/plumbing/Crud';
@@ -197,7 +198,7 @@ const GreenMetrics2 = ({}) => {
     ],
   });
 
-  console.log(pvChartData, pvChartDataEmissions);
+  // console.log(pvChartData, pvChartDataEmissions);
 
   let pvCampaigns = getCampaigns(pvChartData.value?.tables?.adid);
   let pvCampaignsEmissions = getCampaignsEmissions(pvChartDataEmissions.value?.by_adid.buckets);
@@ -248,7 +249,7 @@ const GreenMetrics2 = ({}) => {
       </Row>
       <Row className='card-row'>
         <Col xs='12' sm='4' className='flex-column'>
-          <CompareCard {...commonProps} />
+          <CompareCardEmissions {...commonProps} />
         </Col>
         <Col xs='12' sm='4' className='flex-column'>
           <BreakdownCard {...commonProps} tables={pvChartData.value?.tables} />
