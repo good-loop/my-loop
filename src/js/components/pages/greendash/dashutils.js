@@ -186,34 +186,6 @@ const yearRegex = /^(\d\d?\d?\d?)$/;
 
 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-
-const DownloadButton = ({className}) => {
-	return null;
-	//
-	// TODO: The bar chart widgets don't render nicely - they get clipped by the card a little bit.
-	//
-	// return (
-	// 	<a className="gc-title widget-export" onClick={e => {
-	// 		e.preventDefault();
-	// 		html2canvas(document.querySelector(`.${className}`), {
-	// 			// TODO
-	// 			// html2canvas doesn't work well with elements which have a `box-shadow` property.
-	// 			// I tried to remove that property by looping through all child nodes in the DOM,
-	// 			// and running node.style.removeProperty('box-shadow') - but that didn't work.
-	// 			// 
-	// 			// Instead, for whatever reason, setting the scale to 1.25 makes things render properly.
-	// 			// Albeit, the text is a tiny bit blurry.
-	// 			onclone: document => {
-
-	// 			},
-	// 			scale: 1.25,
-	// 		}).then(canvas => {
-	// 			saveAs(canvas.toDataURL(), `${className}.png`);
-	// 		});
-	// 	}}>&#128229; Download</a>
-	// );
-}
-
 /** Boilerplate styling for a subsection of the green dashboard */
 export const GreenCard = ({ title, children, className, row, downloadable=true, ...rest}) => {
 	return <div className={space('green-card my-2 flex-column', className)} {...rest}>
@@ -236,8 +208,8 @@ export const GreenCard = ({ title, children, className, row, downloadable=true, 
 					
 					// Greencard padding
 					let greenCard = document.querySelector(`.${className}`);
-					greenCard.style.padding = '20px';
-
+					greenCard.querySelector('.gc-body').style.border = "none";
+					
 					// Journey so far card - hide impact button, CSV link
 					greenCard.querySelectorAll('a').forEach(node => {
 						console.log(node.innerText);
