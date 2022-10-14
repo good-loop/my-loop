@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Card } from 'reactstrap';
-import html2canvas from 'html2canvas';
-
 import DataStore from "../../../base/plumbing/DataStore";
 import { isoDate, space } from '../../../base/utils/miscutils';
+import { PNGDownloadButton } from '../../../base/components/PNGDownloadButton';
 
 
 /**
@@ -188,25 +187,6 @@ const yearRegex = /^(\d\d?\d?\d?)$/;
 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 
-const saveAs = (uri, filename) => {
-    var link = document.createElement('a');
-
-    if (typeof link.download === 'string') {
-        link.href = uri;
-        link.download = filename;
-
-        // Firefox requires the link to be in the body
-        document.body.appendChild(link);
-
-        link.click();
-
-        // Remove the link when done
-        document.body.removeChild(link);
-    } else {
-        window.open(uri);
-    }
-}
-
 const DownloadButton = ({className}) => {
 	return null;
 	//
@@ -224,27 +204,7 @@ const DownloadButton = ({className}) => {
 	// 			// Instead, for whatever reason, setting the scale to 1.25 makes things render properly.
 	// 			// Albeit, the text is a tiny bit blurry.
 	// 			onclone: document => {
-	// 				// The greenCard widget we're tacking a screenshot of.
-	// 				// This is in the cloned document, so modifying it won't affect what the user sees.
-	// 				const greenCard = document.querySelector(`.${className}`);
 
-	// 				// Hide the download button in the exported image
-	// 				document.querySelectorAll('.widget-export').forEach(node => {
-	// 					node.style.display = 'none';
-	// 				});
-
-	// 				// Larger headings
-	// 				document.querySelectorAll('.gc-title').forEach(node => {
-	// 					Object.assign(node.style, {
-	// 						fontSize:'1.25rem',
-	// 						textAlign: 'center',
-	// 						fontWeight: 'bold',
-	// 						marginBottom: '8px'
-	// 					});
-	// 				});
-
-	// 				// Card padding
-	// 				greenCard.style.padding = '20px';
 	// 			},
 	// 			scale: 1.25,
 	// 		}).then(canvas => {
@@ -259,7 +219,34 @@ export const GreenCard = ({ title, children, className, row, downloadable=true, 
 	return <div className={space('green-card my-2 flex-column', className)} {...rest}>
 		{title ? <h6 className="gc-title">{title}</h6> : null}
 		
-		{downloadable ? <DownloadButton className={className} /> : null}
+		{downloadable ? <PNGDownloadButton 
+				querySelector={`.${className}`}
+				fileName={title}
+				opts={{scale: 1.25}}
+				onCloneFn={(document) => {
+					// Larger card headings
+					document.querySelectorAll('.gc-title').forEach(node => {
+						Object.assign(node.style, {
+							fontSize:'1.25rem',
+							textAlign: 'center',
+							fontWeight: 'bold',
+							marginBottom: '8px'
+						});
+					});
+					
+					// Greencard padding
+					let greenCard = document.querySelector(`.${className}`);
+					greenCard.style.padding = '20px';
+
+					// Journey so far card - hide impact button, CSV link
+					greenCard.querySelectorAll('a').forEach(node => {
+						console.log(node.innerText);
+						if (node.innerText.includes('IMPACT OVERVIEW') || node.innerText.includes('Download .csv')) {
+							node.style.display = 'none';
+						}
+					})
+				}}
+			/> : null}
 
 		<Card body className={space('gc-body', row ? 'flex-row' : 'flex-column')}>{children}</Card>
 	</div>
