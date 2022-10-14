@@ -100,9 +100,13 @@ const T4GThemePicker = () => {
 	)
 };
 
+/**
+@param {?string} theme name e.g. ".light"
+@returns {!Object} a theme {background, logo, label}
+*/
 const getT4GThemeBackground = (theme) => {
 
-    const [rand, setRand] = useState(Math.round(Math.random() * 9) + 1);
+    const [rand, setRand] = useState(Math.round(Math.random() * 10) + 1); // NB: hard-coded to match the set of gl-bg1.jpg to gl-bg10jpg images
 
     let t = theme;
 
