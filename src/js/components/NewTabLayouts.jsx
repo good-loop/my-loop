@@ -1,23 +1,27 @@
 import React, { useState } from 'react';
 import { Button, Row, Col } from 'reactstrap';
 import Misc from '../base/components/Misc';
-import UserClaimControl, { setPersonSetting } from '../base/components/PropControls/UserClaimControl';
+import UserClaimControl, { getCharityObject, setPersonSetting } from '../base/components/PropControls/UserClaimControl';
 import { getClaimValue, getProfile } from '../base/data/Person';
+import T4GTheme from '../base/data/T4GTheme';
+import { mapNew } from '../base/utils/miscutils';
 
 const THEMES = {
+    // define default outside function - otherwise it will be recreated each update, causing rerenders
+    ".default": {
+        backdropImages: mapNew(9, i => '/img/newtab/default/gl-bg' + (i+1) + '.jpg'),
+        t4gLogo: '/img/newtab/logo/white.png',
+        label: "Default"
+    },
     ".dark": {
-        background: '/img/newtab/solid/dark.jpg',
-        logo: '/img/newtab/logo/white.png',
+        backgroundColor:"#000",
+        t4gLogo: '/img/newtab/logo/white.png',
         label: "Dark"
     },
     ".light": {
-        background: '/img/newtab/solid/light.jpg',
-        logo: '/img/newtab/logo/black.png',
+        backgroundColor:"#fefaef",
+        t4gLogo: '/img/newtab/logo/black.png',
         label: "Light"
-    },
-    "dogs-trust": {
-        background: '/img/newtab/charity/dogstrust/background1.jpg',
-        logo: '/img/newtab/logo/black.png'
     },
 };
 
@@ -90,21 +94,19 @@ const T4GThemePicker = () => {
 
 	return (
 		<Row>
-            <SelectButton theme=".default" label="Default"/>
             {Object.keys(THEMES).map((theme, i) => {
                 if (!theme.startsWith('.')) return null;
                 return <SelectButton key={i} theme={theme}/>;
             })}
-            {Object.keys(THEMES).includes(curChar) && <SelectButton theme={".charity " + curChar} label="Charity"/>}
+            {(true || Object.keys(THEMES).includes(curChar)) && <SelectButton theme={".charity " + curChar} label="Charity"/>}
 		</Row>
 	)
 };
 
-const getT4GThemeBackground = (theme) => {
-
-    const [rand, setRand] = useState(Math.round(Math.random() * 9) + 1);
+const getT4GThemeData = (theme) => {
 
     let t = theme;
+    let themeObj = THEMES[t];
 
     if (t && t.startsWith(".charity")) {
         // Format for charity themes is ".charity <charity-id>" - prompts us to look for the charity, but gives us an ID to use locally to avoid load times
@@ -112,16 +114,31 @@ const getT4GThemeBackground = (theme) => {
         const person = getProfile().value;										// get person
         if(!person) t = t.replace(".charity ", "");						
         else {
-            t = getClaimValue({person, key: "charity"}) || ".default"					// get users chosen charity
-        }	
+            t = getClaimValue({person, key: "charity"}) || ".default"					// get users chosen charitys
+        }
+        if (t) {
+            let pvNgo = getCharityObject();
+            let ngo = null;
+            if (pvNgo) ngo = pvNgo.value || pvNgo.interim;
+            if (ngo) {
+                themeObj = ngo.t4gTheme;
+            } else {
+                // cant fetch it in time? use a locally stored copy of the object
+                let themeJSON = window.localStorage.getItem("t4g-theme-obj");
+                try {
+                    themeObj = JSON.parse(themeJSON);
+                } catch (e) {
+                    // do nothing - give up
+                }
+            }
+        }
     }
 
-    let themeObj = THEMES[t];
-    if (!themeObj) {
-        themeObj = {
-            background: '/img/newtab/default/gl-bg' + rand + '.jpg',
-            logo: '/img/newtab/logo/white.png'
-        };
+    if (themeObj && T4GTheme.valid(themeObj)) {
+        // make sure to store a local copy
+        window.localStorage.setItem("t4g-theme-obj", JSON.stringify(themeObj));
+    } else {
+        themeObj = THEMES[".default"]
         // Make sure to save the default - we dont want to cause flickers on every load
         window.localStorage.setItem("t4g-theme", ".default");
     }
@@ -165,4 +182,4 @@ const getT4GTheme = () => {
 }
 
 
-export {getT4GLayout, getT4GTheme, getT4GThemeBackground, T4GThemePicker, T4GLayoutPicker};
+export {getT4GLayout, getT4GTheme, getT4GThemeData, T4GThemePicker, T4GLayoutPicker};
