@@ -35,7 +35,7 @@ const switchToVerb = (e, verb) => {
 const NewtabLoginWidget = ({onLogin, onRegister}) => {
 
 	const open = DataStore.getValue(LOGIN_OPEN_PATH);
-	//if ( ! open) return null; TODO UNDO
+	if ( ! open) return null;
 
 	let verb = DataStore.getValue(LOGIN_VERB_PATH);
 	// Default to register
