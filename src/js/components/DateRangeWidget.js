@@ -39,7 +39,7 @@ const Day = ({date, className, onClick, ...rest}) => {
 	</td>;
 }
 
-const Month = ({year, month, start, end, setPeriod}) => {
+const Month = ({year, month, start, end, setPeriod, className}) => {
 	const refDate = new Date(year, month, 1);
 
 	let currentRow = [];
@@ -95,7 +95,7 @@ const Month = ({year, month, start, end, setPeriod}) => {
 		setPeriod(null, monthStart, monthEnd);
 	};
 
-	return <div className="month">
+	return <div className={space('month', className)}>
 		<a onClick={clickMonth}>
 			<div className="month-name">{months[month]} {year}</div>
 		</a>
@@ -141,6 +141,7 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 		setName(name);
 		setStart(start);
 		setEnd(end);
+		if (start) setFocusDate(start);
 	};
 
 	// Send changes back to invoking component

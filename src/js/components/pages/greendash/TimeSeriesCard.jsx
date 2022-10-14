@@ -167,12 +167,14 @@ const TimeSeriesCard = ({ period, data: timeTable, noData }) => {
 		let label = 'Kg CO2';
 
 		// Display tonnes instead of kg? (should this be avg instead of max?)
+		let ticksShowTonnes = false // Ticks on scales can't check if maxCO2 >= 1000 after we change the value
 		if (maxCO2 >= TONNES_THRESHOLD) {
 			label = 'Tonnes CO2';
 			data.forEach((d, i) => data[i] = d / 1000);
 			avgCO2 /= 1000;
 			maxCO2 /= 1000;
 			totalCO2 /= 1000;
+			ticksShowTonnes = true;
 		}
 
 		// Data format accepted by chart.js
@@ -192,7 +194,7 @@ const TimeSeriesCard = ({ period, data: timeTable, noData }) => {
 						ticks: { maxRotation: 0, minRotation: 0 } // Don't angle date labels - skip some if space is tight
 					},
 					y: {
-						ticks: { callback: (maxCO2 >= TONNES_THRESHOLD ? v => `${v} t` : v => `${v} kg`) }, // Show appropriate unit
+						ticks: { callback: (ticksShowTonnes ? v => `${v} t` : v => `${v} kg`) }, // Show appropriate unit
 					},
 				},
 				plugins: {
@@ -230,20 +232,16 @@ const TimeSeriesCard = ({ period, data: timeTable, noData }) => {
 	// TODO Reinstate "Per 1000 impressions" button
 
 	return <GreenCard title="How much carbon is your digital advertising emitting?" className="carbon-time-series" row>
-		<div className="flex-row w-100">
-			<div className="flex-column flex-grow-1">
-				{/* <div className="chart-subcard flex-column"> */}
-					{chartProps?.isEmpty ? (
-						NOEMISSIONS
-					) : (
-						<div>{CO2e} emissions over time</div>
-					)}
-					{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
-					{chartContent}
-				{/* </div> */}
-			</div>
-			<TotalSubcard period={period} totalCO2={aggCO2?.total} />
+		<div className="chart-subcard flex-column w-100">
+			{chartProps?.isEmpty ? (
+				NOEMISSIONS
+			) : (
+				<div>{CO2e} emissions over time</div>
+			)}
+			{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
+			{chartContent}
 		</div>
+		<TotalSubcard period={period} totalCO2={aggCO2?.total} />
 		<GreenCardAbout>
 			<p>How do we calculate the time-series carbon emissions?</p>
 		</GreenCardAbout>

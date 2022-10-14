@@ -19,10 +19,6 @@ const A = C.A;
  * @returns 
  */
 const GreenNavBar = ({active}) => {
-	if (isMobile()) {
-		console.warn("TODO GreenNavBar layout on mobile");
-		return null;
-	}
 	const [isOpen, setIsOpen] = useState(false)
 	const toggle = () => setIsOpen(!isOpen);
 
