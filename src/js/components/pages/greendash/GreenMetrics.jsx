@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PromiseValue from 'promise-value';
-import { Alert, Button, Col, Container, Row } from 'reactstrap';
+import { Alert, Button, Col, Container, Row, Card } from 'reactstrap';
 
 // import ChartWidget from '../../../base/components/ChartWidget';
 import DataStore from '../../../base/plumbing/DataStore';
@@ -242,16 +242,23 @@ const GreenMetrics = ({}) => {
 
 	if ( ! Login.isLoggedIn()) {
 		// Only for logged-in users!
-		content = <div>
-			<h3 className="text-center">Log in to access Green Media</h3>
-			<Container>
-				<Row>
-					<Col xs="12" sm="6" className="mx-auto">
-						<LoginWidgetEmbed verb="login" />
-					</Col>
-				</Row>
-			</Container>
-		</div>;
+		content = <Card body id="green-login-card" className="m-4">
+            <Container>
+                <Row>
+                    <Col className="decoration flex-center" xs="12" sm="4">
+                        <img className="stamp" src="/img/green/gl-carbon-neutral.svg" />
+                    </Col>
+                    <Col className="form" xs="12" sm="8">
+                        <img className="gl-logo my-4" src="/img/gl-logo/rectangle/logo-name.svg" />
+                        <p className="text-center my-4">
+                            Understand the carbon footprint of your advertising and<br />
+                            discover your offsetting and climate-positive successes
+                        </p>
+                        <LoginWidgetEmbed verb="login" canRegister={false}/>
+                    </Col>
+                </Row>
+            </Container>
+        </Card>;
 	} else if ( ! agencyIds) {
 		content = <Misc.Loading text="Checking your access..." />;
 	} else {

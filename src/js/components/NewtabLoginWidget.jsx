@@ -161,7 +161,9 @@ const EmailReset = ({person}) => {
 			} else {
 				DataStore.update({}); // The error will be in state, provoke a redraw to display it
 			}
-		});
+		}).catch(err => {
+            DataStore.update({});
+        });
 	};
 
 	return (
