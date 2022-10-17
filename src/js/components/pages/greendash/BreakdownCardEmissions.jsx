@@ -10,7 +10,7 @@ import { CO2e, dataColours, GreenCard, GreenCardAbout, ModeButton, NOEMISSIONS, 
 import SimpleTable, { Column } from '../../../base/components/SimpleTable';
 import List from '../../../base/data/List';
 import { ButtonGroup } from 'reactstrap';
-import { getSumColumnEmissions } from './emissionscalc';
+import { getBreakdownByEmissions, getSumColumnEmissions, getTagsEmissions } from './emissionscalc';
 
 
 /** Classify OS strings seen in our data  
@@ -62,12 +62,12 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled=1 }) => {
 
 	useEffect(() => {
 		// "co2","co2base","co2creative","co2supplypath"
-		let totalCO2 = getSumColumnEmissions(osBuckets, "co2");
+		// let totalCO2 = getSumColumnEmissions(osBuckets, "co2");
 		let media = getSumColumnEmissions(osBuckets, "co2creative");
 		let publisher = getSumColumnEmissions(osBuckets, "co2base");
 		let dsp = getSumColumnEmissions(osBuckets, "co2supplypath");
 
-		// const totalCO2 = media + dsp + publisher;
+		const totalCO2 = media + dsp + publisher;
 
 		if (totalCO2 === 0) {
 			setChartProps({isEmpty: true});
@@ -144,7 +144,7 @@ const DeviceSubcard = ({ data: osTable }) => {
 	const [chartProps, setChartProps] = useState();
 
 	useEffect(() => {
-		const breakdownByOS = getBreakdownBy(osTable, 'co2', 'os');
+		const breakdownByOS = getBreakdownByEmissions(osTable, 'co2', 'os');
 		const totalCO2 = Object.values(breakdownByOS).reduce((acc, v) => acc + v, 0);
 
 		if (totalCO2 === 0) {
@@ -222,29 +222,31 @@ const DeviceSubcard = ({ data: osTable }) => {
  */
  const TagSubcard = ({data}) => {
 	// map GreenTag id to a display-name
-	const pvTags = getTags(data);
+	const pvTags = getTagsEmissions(data);
 	const tags = List.hits(pvTags.value) || [];
 	const tag4id = {};
 	tags.map(tag => tag4id[tag.id] = tag);
 
+	console.log("tag4id", tag4id, data)
+
 	// {adid, count, totalEmissions, baseEmissions, 'creativeEmissions', 'supplyPathEmissions'}
 	let columns = [
 		// new Column({Header:"Campaign"}),
-		new Column({Header: 'Tag', accessor: row => tag4id[row[0]]?.name || row[0],
+		new Column({Header: 'Tag', accessor: row => tag4id[row.key]?.name,
 			Cell: value => <span title={value}>{value}</span>, // show tooltip in case of truncated tag names
 		}),
 		// new Column({Header:"Tag ID", accessor:row => row[0]}),
-		new Column({Header: 'Impressions', accessor:row => row[1]}),
-		new Column({Header: 'CO2e (kg)', accessor:row => row[2]}),
+		new Column({Header: 'Impressions', accessor:row => row.count}),
+		new Column({Header: 'CO2e (kg)', accessor:row => row.co2}),
 	];
-	const rows = data.slice(1); // the 1st row is the header names, so drop it
+	// const rows = data.slice(1); // the 1st row is the header names, so drop it
 
 	return <>
 		<p className="small">
 			Emissions breakdown by Green Ad Tags.<br/>
 			You can track any aspect of media buying by generating different tags, then using them in your buying.
 		</p>
-		<SimpleTable data={rows} columns={columns} hasCsv rowsPerPage={6} className="tag-table" />
+		<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className="tag-table" />
 	</>;
 };
 
