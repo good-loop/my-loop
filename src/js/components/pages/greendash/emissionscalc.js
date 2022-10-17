@@ -154,13 +154,13 @@ export const getCarbonEmissions = ({ q = '', start = '1 month ago', end = 'now',
 			q: sq.query,
 			start: period?.start.toISOString() || '2022-01-01',
 			end: period?.end.toISOString() || 'now',
-			breakdown: ['total']
+			breakdown: ['total{"emissions":"sum"}']
 		});
 		if ( ! pvCarbonData.value) {
 			return null;
 		}
-		let table = pvCarbonData.value.tables.total;
-		let totalEmissions = getSumColumnEmissions(table, "totalEmissions");
+		let buckets = pvCarbonData.value.by_total.buckets;
+		let totalEmissions = getSumColumnEmissions(buckets, "co2");
 		n = totalEmissions;
 	} else {
 		// check it is per impression
@@ -188,7 +188,7 @@ export const getCarbonEmissions = ({ q = '', start = '1 month ago', end = 'now',
  * @param {?Object} p.period {start, end}
  * @returns {Object} {isLoading:boolean, carbon: [], carbonTotal: Number, trees: [], treesTotal:Number, coral: [], pvAllCampaigns }
  */
- export const getOffsetsByTypeEmssions = ({campaign, status, period}) => {
+ export const getOffsetsByTypeEmissions = ({campaign, status, period}) => {
 	console.warn("getOffsetsByType", campaign, status, period);
 	// Is this a master campaign?
 	let pvAllCampaigns = Campaign.pvSubCampaigns({campaign, status});

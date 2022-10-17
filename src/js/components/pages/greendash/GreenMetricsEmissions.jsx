@@ -202,7 +202,7 @@ const GreenMetrics2 = ({}) => {
           <TimeSeriesCardEmissions {...commonProps} data={pvChartData.value?.by_time.buckets} noData={noData} />
         </Col>
         <Col xs='12' sm='4' className='flex-column'>
-          <JourneyCardEmissions campaigns={List.hits(pvCampaigns?.value)} {...commonProps} emptyTable={emptyTable || noData} />
+          <JourneyCardEmissions campaigns={List.hits(pvCampaigns?.value)} dataBytime={pvChartData.value?.by_time.buckets} {...commonProps} emptyTable={emptyTable || noData} />
         </Col>
       </Row>
       <Row className='card-row'>
