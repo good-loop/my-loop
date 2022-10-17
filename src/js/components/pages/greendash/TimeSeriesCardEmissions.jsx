@@ -5,7 +5,8 @@ import { space, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import NewChartWidget from '../../../base/components/NewChartWidget';
 import { GreenCard, printPeriod, printDate, printDateShort, TONNES_THRESHOLD, GreenCardAbout, Mass, NOEMISSIONS, CO2e } from './dashutils';
-import { getBreakdownBy } from './carboncalc';
+// import { getBreakdownBy } from './carboncalc';
+import { getBreakdownByEmissions } from './emissionscalc';
 import Icon from '../../../base/components/Icon';
 import { nonce } from '../../../base/data/DataClass';
 import LinkOut from '../../../base/components/LinkOut';
@@ -126,7 +127,7 @@ const TotalSubcard = ({ period, totalCO2 }) => {
 };
 
 
-const TimeSeriesCard = ({ period, data: timeTable, noData }) => {
+const TimeSeriesCardEmissions = ({ period, data: timeTable, noData }) => {
 	const [chartProps, setChartProps] = useState(); // ChartJS-ready props object
 	const [aggCO2, setAggCO2] = useState(); // avg/total/max CO2
 
@@ -145,7 +146,7 @@ const TimeSeriesCard = ({ period, data: timeTable, noData }) => {
 		const data = [];
 
 		// Sum total emissions for each date across all other factors, sort, and unzip to labels/data arrays
-		Object.entries(getBreakdownBy(timeTable, 'totalEmissions', 'time')).sort(
+		Object.entries(getBreakdownByEmissions(timeTable, 'co2', 'time')).sort(
 			([ta], [tb]) => new Date(ta).getTime() - new Date(tb).getTime()
 		).forEach(([time, kg]) => {
 			labels.push(labelFn(time));
@@ -248,4 +249,4 @@ const TimeSeriesCard = ({ period, data: timeTable, noData }) => {
 	</GreenCard>;
 };
 
-export default TimeSeriesCard;
+export default TimeSeriesCardEmissions;

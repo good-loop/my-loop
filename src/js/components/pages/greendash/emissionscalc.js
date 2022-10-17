@@ -137,3 +137,100 @@ export const getCarbonEmissions = ({ q = '', start = '1 month ago', end = 'now',
 		return pvcs;
 	});
 };
+
+/**
+ * 
+ * @returns {?Impact} null if loading data
+ */
+ export const calculateDynamicOffsetEmissions = ({campaign, offset, period}) => {
+	Campaign.assIsa(campaign);
+	if ( ! Impact.isDynamic(offset)) return offset; // paranoia
+	let n;
+	// HACK: carbon offset?
+	if (Impact.isCarbonOffset(offset)) {
+		let sq = SearchQuery.setProp(null, 'campaign', campaign.id);
+		if ( ! period) period = periodFromUrl();
+		let pvCarbonData = getCarbonEmissions({
+			q: sq.query,
+			start: period?.start.toISOString() || '2022-01-01',
+			end: period?.end.toISOString() || 'now',
+			breakdown: ['total']
+		});
+		if ( ! pvCarbonData.value) {
+			return null;
+		}
+		let table = pvCarbonData.value.tables.total;
+		let totalEmissions = getSumColumnEmissions(table, "totalEmissions");
+		n = totalEmissions;
+	} else {
+		// check it is per impression
+		if (offset.input) assert(offset.input.substring(0, "impression".length) === "impression", offset);
+		// how many impressions?
+		let impressions = Campaign.viewcount({campaign});
+		console.log("impressions", impressions, campaign);
+		if ( ! impressions) {
+			return null;
+		}
+		n = impressions * offset.rate;
+	}
+	// copy and set n
+	let snapshotOffset = new Impact(offset);	
+	snapshotOffset.n = n;
+	delete snapshotOffset.rate;
+	delete snapshotOffset.input;	
+	return snapshotOffset;
+};
+
+
+/** 
+ * @param {Object} p
+ * @param {!Campaign} p.campaign If `campaign` is a master, then this function WILL look up sub-campaigns and include them.
+ * @param {?Object} p.period {start, end}
+ * @returns {Object} {isLoading:boolean, carbon: [], carbonTotal: Number, trees: [], treesTotal:Number, coral: [], pvAllCampaigns }
+ */
+ export const getOffsetsByTypeEmssions = ({campaign, status, period}) => {
+	console.warn("getOffsetsByType", campaign, status, period);
+	// Is this a master campaign?
+	let pvAllCampaigns = Campaign.pvSubCampaigns({campaign, status});
+	
+	const allFixedOffsets = [];
+	if (pvAllCampaigns.value) {
+		// for each campaign:
+		// - collect offsets
+		// - Fixed or dynamic offsets? If dynamic, get impressions
+		// - future TODO did it fund eco charities? include those here		
+		List.hits(pvAllCampaigns.value).forEach(campaign => {
+			let offsets = Campaign.offsets(campaign);
+			let fixedOffsets = offsets.map(offset => Impact.isDynamic(offset)? calculateDynamicOffsetEmissions({campaign, offset, period}) : offset);
+			allFixedOffsets.push(...fixedOffsets);
+		});
+		console.log("allFixedOffsets", allFixedOffsets);
+	}
+	const offsets4type = {};
+	// HACK - return this too
+	offsets4type.pvAllCampaigns = pvAllCampaigns;
+	// kgs of CO2
+	let co2 = campaign.co2; // manually set for this campaign?
+	let carbonOffsets;
+	if ( ! co2) {	// from offsets inc dynamic
+		carbonOffsets = allFixedOffsets.filter(o => Impact.isCarbonOffset(o));
+		co2 = carbonOffsets.reduce((x,offset) => x + offset.n, 0);
+	} else {
+		// HACK use our default, gold-standard
+		carbonOffsets = [new Impact({charity:"gold-standard",rate:1,name:"carbon offset"})];
+	}
+	offsets4type.carbon = carbonOffsets;
+	offsets4type.carbonTotal = co2;
+
+	// Trees	
+	offsets4type.trees = allFixedOffsets.filter(o => o?.name?.substring(0,4)==="tree");	
+	offsets4type.treesTotal = offsets4type.trees.reduce((x,offset) => x + offset.n, 0);
+
+	// coral
+	offsets4type.coral = allFixedOffsets.filter(o => o?.name?.substring(0,4)==="coral");	
+	offsets4type.coralTotal = offsets4type.coral.reduce((x,offset) => x + offset.n, 0);
+
+	let isLoading = ! pvAllCampaigns.resolved || allFixedOffsets.includes(null);
+	offsets4type.isLoading = isLoading;
+	return offsets4type;
+};
