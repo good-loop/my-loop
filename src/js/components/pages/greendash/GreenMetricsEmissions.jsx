@@ -33,6 +33,8 @@ import { yessy } from '../../../base/utils/miscutils';
 import MapCard from './MapCard';
 import TimeSeriesCardEmissions from './TimeSeriesCardEmissions';
 import JourneyCardEmissions from './JourneyCardEmissions';
+import CompareCardEmissions from './CompareCardEmissions';
+import BreakdownCardEmissions from './BreakdownCardEmissions';
 
 const OverviewWidget = ({ period, data }) => {
   let imps;
@@ -202,25 +204,30 @@ const GreenMetrics2 = ({}) => {
           <TimeSeriesCardEmissions {...commonProps} data={pvChartData.value?.by_time.buckets} noData={noData} />
         </Col>
         <Col xs='12' sm='4' className='flex-column'>
-          <JourneyCardEmissions campaigns={List.hits(pvCampaigns?.value)} dataBytime={pvChartData.value?.by_time.buckets} {...commonProps} emptyTable={emptyTable || noData} />
+          <JourneyCardEmissions
+            campaigns={List.hits(pvCampaigns?.value)}
+            dataBytime={pvChartData.value?.by_time.buckets}
+            {...commonProps}
+            emptyTable={emptyTable || noData}
+          />
         </Col>
       </Row>
       <Row className='card-row'>
+        <Col xs='12' sm='4' className='flex-column'>
+          <CompareCardEmissions {...commonProps} />
+        </Col>
+        <Col xs='12' sm='4' className='flex-column'>
+          <BreakdownCardEmissions {...commonProps} dataValue={pvChartData?.value} />
+        </Col>
         {/* <Col xs="12" sm="4" className="flex-column">
-				<CompareCard {...commonProps} />
-			</Col>
-			<Col xs="12" sm="4" className="flex-column">
-				<BreakdownCard {...commonProps} tables={pvChartData.value?.tables} />
-			</Col>
-			<Col xs="12" sm="4" className="flex-column">
-				{true ? <>
-					<TimeOfDayCard {...commonProps} />
-					<MapCard {...commonProps} />
-				</> : <>
-					<TimeOfDayCard {...commonProps} />
-					<CTACard />
-				</>}
-			</Col> */}
+          {true ? <>
+            <TimeOfDayCard {...commonProps} />
+            <MapCard {...commonProps} />
+          </> : <>
+            <TimeOfDayCard {...commonProps} />
+            <CTACard />
+          </>}
+			  </Col> */}
       </Row>
     </>
   );
