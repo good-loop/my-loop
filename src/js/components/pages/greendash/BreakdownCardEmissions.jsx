@@ -227,8 +227,6 @@ const DeviceSubcard = ({ data: osTable }) => {
 	const tag4id = {};
 	tags.map(tag => tag4id[tag.id] = tag);
 
-	console.log("tag4id", tag4id, data)
-
 	// {adid, count, totalEmissions, baseEmissions, 'creativeEmissions', 'supplyPathEmissions'}
 	let columns = [
 		// new Column({Header:"Campaign"}),
