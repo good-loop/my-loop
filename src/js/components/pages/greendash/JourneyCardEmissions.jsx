@@ -8,7 +8,6 @@ import { A } from '../../../base/plumbing/glrouter';
 import { encURI } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import { getCarbon, getOffsetsByType } from './carboncalc';
-import { getCarbonEmissions, getOffsetsByTypeEmissions } from './emissionscalc';
 import { GreenCard, GreenCardAbout, Mass } from './dashutils';
 import { getDataItem } from '../../../base/plumbing/Crud';
 import KStatus from '../../../base/data/KStatus';
@@ -70,7 +69,7 @@ const TreesSection = ({ treesPlanted, coralPlanted }) => {
  * @param {?Boolean} props.emptyTable Carbon data loaded but empty - show "no data" insead of "loading campaigns"
  * @returns
  */
-const JourneyCardEmissions = ({ campaigns, dataBytime, period, emptyTable }) => {
+const JourneyCardEmissions = ({ campaigns, period, emptyTable }) => {
   if (emptyTable)
     return (
       <GreenCard title='Your journey so far' className='carbon-journey' downloadable={false}>
@@ -85,10 +84,12 @@ const JourneyCardEmissions = ({ campaigns, dataBytime, period, emptyTable }) => 
   let isLoading;
   const offsetTypes = 'carbon trees coral'.split(' ');
 
+  console.log('JourneyCard campaigns', campaigns);
+
   let offsets = {}; // HACK will include carbonTotal etc too
   offsetTypes.forEach((ot) => (offsets[ot + 'Total'] = 0));
   campaigns.forEach((campaign) => {
-    const offsets4type = getOffsetsByTypeEmissions({ campaign, period });
+    const offsets4type = getOffsetsByType({ campaign, period });
     offsetTypes.forEach((ot) => (offsets[ot + 'Total'] += offsets4type[ot + 'Total'] || 0));
     if (offsets4type.isLoading) isLoading = true;
   });
@@ -133,12 +134,27 @@ const JourneyCardEmissions = ({ campaigns, dataBytime, period, emptyTable }) => 
   });
 
   // HACK a download for us
-	// This is not the same as the one using carboncal
   let downloadCSVLink;
-  if (isTester() && dataBytime) {
-    if (dataBytime.length > 0) {
-      let columns = Object.keys(dataBytime[0]);
-      let objdata = dataBytime;
+  if (isTester()) {
+    let sq = SearchQuery.setPropOr(
+      null,
+      'campaign',
+      campaigns.map((c) => c.id)
+    );
+    let pvCarbonData = getCarbon({
+      q: sq.query,
+      start: period?.start.toISOString() || '2022-01-01',
+      end: period?.end.toISOString() || 'now',
+    });
+    if (pvCarbonData.value) {
+      let table = pvCarbonData.value.table;
+      let columns = table[0];
+      let data = table.slice(1);
+      let objdata = data.map((row) => {
+        let obj = {};
+        columns.forEach((c, i) => (obj[c] = row[i]));
+        return obj;
+      });
       downloadCSVLink = <DownloadCSVLink columns={columns} data={objdata} />;
     }
   }
