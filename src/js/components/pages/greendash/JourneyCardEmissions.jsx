@@ -70,7 +70,7 @@ const TreesSection = ({ treesPlanted, coralPlanted }) => {
  * @param {?Boolean} props.emptyTable Carbon data loaded but empty - show "no data" insead of "loading campaigns"
  * @returns
  */
-const JourneyCardEmissions = ({ campaigns, dataByTime, period, emptyTable }) => {
+const JourneyCardEmissions = ({ campaigns, dataBytime, period, emptyTable }) => {
   if (emptyTable)
     return (
       <GreenCard title='Your journey so far' className='carbon-journey' downloadable={false}>
@@ -92,6 +92,8 @@ const JourneyCardEmissions = ({ campaigns, dataByTime, period, emptyTable }) => 
     offsetTypes.forEach((ot) => (offsets[ot + 'Total'] += offsets4type[ot + 'Total'] || 0));
     if (offsets4type.isLoading) isLoading = true;
   });
+
+	console.log('JourneyCard offsets', offsets);
 
   // Which impact splash page to link to?
   // TODO test for an agency
@@ -133,10 +135,10 @@ const JourneyCardEmissions = ({ campaigns, dataByTime, period, emptyTable }) => 
   // HACK a download for us
 	// This is not the same as the one using carboncal
   let downloadCSVLink;
-  if (isTester() && dataByTime) {
-    if (dataByTime.length > 0) {
-      let columns = Object.keys(dataByTime[0]);
-      let objdata = dataByTime;
+  if (isTester() && dataBytime) {
+    if (dataBytime.length > 0) {
+      let columns = Object.keys(dataBytime[0]);
+      let objdata = dataBytime;
       downloadCSVLink = <DownloadCSVLink columns={columns} data={objdata} />;
     }
   }
