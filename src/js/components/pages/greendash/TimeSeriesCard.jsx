@@ -9,7 +9,6 @@ import { getBreakdownBy } from './carboncalc';
 import Icon from '../../../base/components/Icon';
 import { nonce } from '../../../base/data/DataClass';
 import LinkOut from '../../../base/components/LinkOut';
-import { getBreakdownByEmissions } from './emissionscalc';
 
 
 const icons = {
@@ -146,7 +145,7 @@ const TimeSeriesCard = ({ period, data: timeTable, noData }) => {
 		const data = [];
 
 		// Sum total emissions for each date across all other factors, sort, and unzip to labels/data arrays
-		Object.entries(getBreakdownByEmissions(timeTable, 'co2', 'time')).sort(
+		Object.entries(getBreakdownBy(timeTable, 'totalEmissions', 'time')).sort(
 			([ta], [tb]) => new Date(ta).getTime() - new Date(tb).getTime()
 		).forEach(([time, kg]) => {
 			labels.push(labelFn(time));

@@ -15,11 +15,12 @@ import { GreenCard, periodFromUrl, printPeriod } from './dashutils';
 import { getCampaignsEmissions, getCarbonEmissions, getSumColumnEmissions } from './emissionscalc';
 
 import GreenDashboardFilters from './GreenDashboardFilters';
-import BreakdownCard from './BreakdownCard';
-import JourneyCard from './JourneyCard';
-import TimeSeriesCard from './TimeSeriesCard';
-import CompareCard from './CompareCard';
-import TimeOfDayCard from './TimeOfDayCard';
+import TimeSeriesCardEmissions from './TimeSeriesCardEmissions';
+import JourneyCardEmissions from './JourneyCardEmissions';
+import CompareCardEmissions from './CompareCardEmissions';
+import BreakdownCardEmissions from './BreakdownCardEmissions';
+import TimeOfDayCardEmissions from './TimeOfDayCardEmissions';
+import MapCardEmissions from './MapCardEmissions';
 
 import { getDataItem, getDataList } from '../../../base/plumbing/Crud';
 import C from '../../../C';
@@ -30,13 +31,6 @@ import Campaign from '../../../base/data/Campaign';
 import Login from '../../../base/youagain';
 
 import { yessy } from '../../../base/utils/miscutils';
-import MapCard from './MapCard';
-import TimeSeriesCardEmissions from './TimeSeriesCardEmissions';
-import JourneyCardEmissions from './JourneyCardEmissions';
-import CompareCardEmissions from './CompareCardEmissions';
-import BreakdownCardEmissions from './BreakdownCardEmissions';
-import TimeOfDayCardEmissions from './TimeOfDayCardEmissions';
-import MapCardEmissions from './MapCardEmissions';
 
 const OverviewWidget = ({ period, data }) => {
   let imps;
