@@ -6,10 +6,12 @@ import GreenOptimisation from './greendash/GreenOptimisation';
 import GreenProfile from './greendash/GreenProfile';
 import GreenTable from './greendash/GreenTable';
 import StyleBlock from '../../base/components/StyleBlock';
+import GreenMetricsEmissions from './greendash/GreenMetricsEmissions';
 
 const subpages = {
 	table: GreenTable, // NOT implemented yet
 	metrics: GreenMetrics, // the main dashboard
+	metricsemissions: GreenMetricsEmissions, // the new main dashboard
 	optimisation: GreenOptimisation,  // NOT implemented yet
 	profile: GreenProfile,  // NOT implemented yet
 };
