@@ -88,7 +88,7 @@ export const getBreakdownByEmissions = (buckets, keyNameToSum, keyNameToBreakdow
  * @param {?Object[][]} buckets
  * @returns {?PromiseValue} PV of a List of GreenTags
  */
-export const getTagsEmissions = (buckets) => {
+export const getTags = (buckets) => {
   if (!buckets || !buckets.length) {
     return null;
   }
@@ -120,7 +120,7 @@ export const getTagsEmissions = (buckets) => {
  * @returns {?PromiseValue} PV of a List of Campaigns
  */
 export const getCampaignsEmissions = (buckets) => {
-  let pvTags = getTagsEmissions(buckets);
+  let pvTags = getTags(buckets);
   if (!pvTags) {
     return null;
   }
