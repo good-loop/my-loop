@@ -11,7 +11,7 @@ import GreenMetricsEmissions from './greendash/GreenMetricsEmissions';
 const subpages = {
 	table: GreenTable, // NOT implemented yet
 	metrics: GreenMetrics, // the main dashboard
-	metricsemissions: GreenMetricsEmissions, // the new main dashboard
+	emissions: GreenMetricsEmissions, // the new main dashboard
 	optimisation: GreenOptimisation,  // NOT implemented yet
 	profile: GreenProfile,  // NOT implemented yet
 };
