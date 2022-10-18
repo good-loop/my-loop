@@ -35,7 +35,6 @@ import TimeSeriesCardEmissions from './TimeSeriesCardEmissions';
 import JourneyCardEmissions from './JourneyCardEmissions';
 import CompareCardEmissions from './CompareCardEmissions';
 import BreakdownCardEmissions from './BreakdownCardEmissions';
-import TimeOfDayCardEmissions from './TimeOfDayCardEmissions';
 
 const OverviewWidget = ({ period, data }) => {
   let imps;
@@ -220,15 +219,15 @@ const GreenMetrics2 = ({}) => {
         <Col xs='12' sm='4' className='flex-column'>
           <BreakdownCardEmissions {...commonProps} dataValue={pvChartData?.value} />
         </Col>
-        <Col xs="12" sm="4" className="flex-column">
+        {/* <Col xs="12" sm="4" className="flex-column">
           {true ? <>
-            <TimeOfDayCardEmissions {...commonProps} />
-            {/* <MapCard {...commonProps} /> */}
+            <TimeOfDayCard {...commonProps} />
+            <MapCard {...commonProps} />
           </> : <>
-            <TimeOfDayCardEmissions {...commonProps} />
+            <TimeOfDayCard {...commonProps} />
             <CTACard />
           </>}
-			  </Col>
+			  </Col> */}
       </Row>
     </>
   );
