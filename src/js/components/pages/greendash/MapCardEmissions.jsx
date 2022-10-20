@@ -216,8 +216,6 @@ const MapCardEmissions = ({ baseFilters }) => {
 		// Country or sub-location breakdown?
 		const locnBuckets = pvChartData.value['by_' + locationField].buckets;
 
-		console.log('debug- locnBuckets', locnBuckets);
-
 		// Rename locations with no corresponding map entry to OTHER
 		// convert old non-namespaced sublocations e.g. 'CA' => 'US-CA'
 		// combine data with same key to cleanedLocnBuckets
@@ -242,8 +240,6 @@ const MapCardEmissions = ({ baseFilters }) => {
 				return acc;
 			}, {})
 		);
-
-		console.log('debug- cleanedLocnBuckets', cleanedLocnBuckets);
 
 		// assign colours
 		const colours = dataColours(cleanedLocnBuckets.map((row) => row.co2));
