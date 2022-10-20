@@ -216,28 +216,40 @@ const MapCardEmissions = ({ baseFilters }) => {
 		// Country or sub-location breakdown?
 		const locnBuckets = pvChartData.value['by_' + locationField].buckets;
 
-		// Oct 2022: Weird bug, pvChartData will return incorrect extra data in the buckets (e.g. AU-QLD)
-		Object.values(locnBuckets).forEach((val, index) => {
-			if (mapDefs.id !== 'world' && val.key.startsWith(mapDefs.id)) {
-				delete locnBuckets[index];
-			}
-		})
+		console.log('debug- locnBuckets', locnBuckets);
 
 		// Rename locations with no corresponding map entry to OTHER
 		// convert old non-namespaced sublocations e.g. 'CA' => 'US-CA'
-		Object.values(locnBuckets).forEach((val) => {
-			if (mapDefs.id !== 'world' && !mapDefs.regions[val.key]) {
-				val.key = `${focusRegion}-${val.key}`;
-			}
-		});
+		// combine data with same key to cleanedLocnBuckets
+		const cleanedLocnBuckets = Object.values(
+			locnBuckets.reduce((acc, val) => {
+				if (mapDefs.id !== 'world' && !mapDefs.regions[val.key]) {
+					val.key = `${focusRegion}-${val.key}`;
+				}
 
-		console.log('debug- locnBuckets after', locnBuckets);
+				acc[val.key] = acc[val.key]
+					? {
+							key: val.key,
+							count: acc[val.key].count + val.count,
+							doc_count: acc[val.key].doc_count + val.doc_count,
+							co2: acc[val.key].co2 + val.co2,
+							co2base: acc[val.key].co2base + val.co2base,
+							co2creative: acc[val.key].co2creative + val.co2creative,
+							co2supplypath: acc[val.key].co2supplypath + val.co2supplypath,
+					  }
+					: val;
+
+				return acc;
+			}, {})
+		);
+
+		console.log('debug- cleanedLocnBuckets', cleanedLocnBuckets);
 
 		// assign colours
-		const colours = dataColours(locnBuckets.map((row) => row.co2));
+		const colours = dataColours(cleanedLocnBuckets.map((row) => row.co2));
 		// zip colours, states, carbon together for the map
 		setMapData(
-			locnBuckets.reduce((acc, row, i) => {
+			cleanedLocnBuckets.reduce((acc, row, i) => {
 				acc[row.key] = { colour: colours[i], impressions: row.count, carbon: row.co2 };
 				return acc;
 			}, {})
