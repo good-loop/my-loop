@@ -221,23 +221,21 @@ const MapCardEmissions = ({ baseFilters }) => {
 		// combine data with same key to cleanedLocnBuckets
 		const cleanedLocnBuckets = Object.values(
 			locnBuckets.reduce((acc, val) => {
-				if (mapDefs.id !== 'world' && !mapDefs.regions[val.key]) {
-					val.key = `${focusRegion}-${val.key}`;
-				}
+				const k = (mapDefs.id !== 'world' && !mapDefs.regions[val.key]) ? `${focusRegion}-${val.key}` : val.key;
 
-				acc[val.key] = acc[val.key]
+				acc[k] = acc[k]
 					? {
-							key: val.key,
-							count: acc[val.key].count + val.count,
-							doc_count: acc[val.key].doc_count + val.doc_count,
-							co2: acc[val.key].co2 + val.co2,
-							co2base: acc[val.key].co2base + val.co2base,
-							co2creative: acc[val.key].co2creative + val.co2creative,
-							co2supplypath: acc[val.key].co2supplypath + val.co2supplypath,
+							key: k,
+							count: acc[k].count + val.count,
+							doc_count: acc[k].doc_count + val.doc_count,
+							co2: acc[k].co2 + val.co2,
+							co2base: acc[k].co2base + val.co2base,
+							co2creative: acc[k].co2creative + val.co2creative,
+							co2supplypath: acc[k].co2supplypath + val.co2supplypath,
 					  }
 					: val;
 
-				return acc;
+				return {...acc};
 			}, {})
 		);
 
@@ -251,8 +249,6 @@ const MapCardEmissions = ({ baseFilters }) => {
 			}, {})
 		);
 	}, [JSON.stringify(filters), pvChartData.value, mapDefs]);
-
-	console.log('debug- mapData', mapData);
 
 	const cardContents = (
 		<>
