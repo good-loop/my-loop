@@ -164,6 +164,7 @@ const GreenMetrics2 = ({}) => {
       'adid{"emissions":"sum"}',
       'time{"emissions":"sum"}',
       'os{"emissions":"sum"}',
+      'domain{"emissions":"sum"}',
       'total{"emissions":"sum"}',
     ],
   });

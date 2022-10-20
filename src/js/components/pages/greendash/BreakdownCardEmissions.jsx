@@ -215,29 +215,28 @@ const DeviceSubcard = ({ data: osTable }) => {
 }
 
 
+/** A table cell with a title/tooltip for cases where the value is likely to display truncated */
+const CellWithTitle = (value) => <span title="value">{value}</span>;
+
 /**
  * Table of impressions and carbon per tag
  * @param {Object} p
  * @param {Object[]} p.data adid table
  */
- const TagSubcard = ({data}) => {
+const TagSubcard = ({data}) => {
 	// map GreenTag id to a display-name
 	const pvTags = getTagsEmissions(data);
 	const tags = List.hits(pvTags.value) || [];
 	const tag4id = {};
-	tags.map(tag => tag4id[tag.id] = tag);
+	tags.forEach(tag => tag4id[tag.id] = tag);
 
 	// {adid, count, totalEmissions, baseEmissions, 'creativeEmissions', 'supplyPathEmissions'}
 	let columns = [
 		// new Column({Header:"Campaign"}),
-		new Column({Header: 'Tag', accessor: row => tag4id[row.key]?.name,
-			Cell: value => <span title={value}>{value}</span>, // show tooltip in case of truncated tag names
-		}),
-		// new Column({Header:"Tag ID", accessor:row => row[0]}),
-		new Column({Header: 'Impressions', accessor:row => row.count}),
-		new Column({Header: 'CO2e (kg)', accessor:row => row.co2}),
+		new Column({Header: 'Tag', accessor: row => tag4id[row.key]?.name, Cell: CellWithTitle }),
+		new Column({Header: 'Impressions', accessor: row => row.count}),
+		new Column({Header: 'CO2e (kg)', accessor: row => row.co2}),
 	];
-	// const rows = data.slice(1); // the 1st row is the header names, so drop it
 
 	return <>
 		<p className="small">
@@ -245,6 +244,22 @@ const DeviceSubcard = ({ data: osTable }) => {
 			You can track any aspect of media buying by generating different tags, then using them in your buying.
 		</p>
 		<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className="tag-table" />
+	</>;
+};
+
+
+const PubSubcard = ({data}) => {
+	let columns = [
+		new Column({ Header: 'Domain', accessor: row => row.key, Cell: CellWithTitle }),
+		new Column({ Header: 'Impressions', accessor: row => row.count }),
+		new Column({ Header: 'CO2e (kg)', accessor: row => row.co2 }),
+	];
+
+	return <>
+		<p className="small">
+			Emissions breakdown by publisher/domain.<br/>
+		</p>
+		<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className="domain-table" />
 	</>;
 };
 
@@ -269,6 +284,8 @@ const BreakdownCardEmissions = ({ dataValue }) => {
 		case 'tag':
 			subcard = <TagSubcard data={dataValue.by_adid?.buckets} />;
 			break;
+		case 'domain':
+			subcard = <PubSubcard data={dataValue.by_domain?.buckets} />;
 	};
 
 	return <GreenCard title="What is the breakdown of your emissions?" className="carbon-breakdown">
@@ -276,6 +293,7 @@ const BreakdownCardEmissions = ({ dataValue }) => {
 			<ModeButton name="tech" mode={mode} setMode={setMode}>Ad Tech</ModeButton>
 			<ModeButton name="device" mode={mode} setMode={setMode}>Device Type</ModeButton>
 			<ModeButton name="tag" mode={mode} setMode={setMode}>Tag</ModeButton>
+			<ModeButton name="domain" mode={mode} setMode={setMode}>Domain</ModeButton>
 		</ButtonGroup>
 		{subcard}
 		<GreenCardAbout>
