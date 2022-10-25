@@ -54,7 +54,7 @@ import { getCharityObject, getPersonSetting } from '../base/components/PropContr
 import NGOImage from '../base/components/NGOImage';
 import { hasRegisteredForMyData, ProfileCreationSteps } from './mydata/MyDataCommonComponents';
 import {getThemeBackground} from './NewTabThemes'
-import {getT4GLayout, getT4GTheme, getT4GThemeBackground} from './NewTabLayouts';
+import {getT4GLayout, getT4GTheme, getT4GThemeData} from './NewTabLayouts';
 import {NewTabCustomise} from './NewTabCustomise'
 // DataStore
 C.setupDataStore();
@@ -170,28 +170,37 @@ const WebtopPage = () => {
 
   const layout = getT4GLayout();
   const curTheme = getT4GTheme();
-  const {background, logo} = getT4GThemeBackground(curTheme);
-  const customBG = background;
-  const customLogo = logo;
+  const {backdropImages, t4gLogo, backgroundColor} = getT4GThemeData(curTheme);
+
+  const [rand, setRand] = useState(Math.round(Math.random() * 9) + 1); // use state to prevent new random numbers each update
+  // update rand if the image list changes
+  useEffect(() => {
+    if (backdropImages && backdropImages.length)
+        setRand(Math.floor(Math.random()*backdropImages.length))
+    else
+        setRand(Math.round(Math.random() * 9) + 1);
+  }, [backdropImages]);
+
+  const customBG = backdropImages && rand < backdropImages.length ? backdropImages[rand].contentUrl || backdropImages[rand] : null;
 
   // console.log("THEME??", curTheme);
   // console.log("LAYOUT??", layout);
   // console.log("CUSTOM BG?", customBG);
   // console.log("CUSTOM LOGO?", customLogo);
 
+  console.log("BACKDROP IMAGES", backdropImages);
+
   return (
     <div className={space('t4g', 'layout-' + layout)}>
       {!Roles.isDev() && <style>{'.MessageBar .alert {display: none;}'}</style>}
       {/* NB: Rendering background image here can avoid a flash of white before the BG get loaded */}
-      <NGOImage
+      <BG
         bg
-        ngo={ngo}
-        backdrop
         src={customBG}
         fullscreen
-        opacity={0.9}
+        opacity={1}
         bottom={0}
-        style={{ backgroundPosition: 'center' }}
+        style={{ backgroundPosition: 'center', backgroundColor: backdropImages && backdropImages.length ? null : backgroundColor}}
         alwaysDisplayChildren
       >
         <NewTabCharityCard cid={charityID} loading={loadingCharity} />
@@ -235,13 +244,13 @@ const WebtopPage = () => {
                   </TutorialComponent>
                 </>
               )}
-              <NormalTabCenter style={{transform:'translate(0,-30%)'}} customLogo={customLogo} />
+              <NormalTabCenter style={{transform:'translate(0,-30%)'}} customLogo={t4gLogo} />
               <LinksDisplay bookmarksData={bookmarksData} style={{transform:'translate(0,-30%)'}} />
             </Col>
           </Row>
         </Container>
         {/* Tutorial highlight to cover adverts */}
-      </NGOImage>
+      </BG>
       <TutorialComponent
         page={3}
         className='position-absolute'
