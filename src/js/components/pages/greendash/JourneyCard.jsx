@@ -122,7 +122,7 @@ const JourneyCard = ({ campaigns, period, emptyTable }) => {
 		'PWn8izf2', // EssenceMediacom AU
 		'y0KJAlkl', // Essence AU
 		'VnHx5hVb', // Xaxis AU
-		// 'rbLXt95t'  // Mediacom - does this cover Mediacom AU too?
+		'rbLXt95t'  
 	];
 	campaigns.forEach(campaign => {
 		if (NOTREESAGENCY.includes(campaign.agencyId)) noTrees = true;
