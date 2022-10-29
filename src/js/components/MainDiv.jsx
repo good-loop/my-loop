@@ -1,55 +1,45 @@
 /* global navigator */
-import React, { Component } from 'react';
+import React from 'react';
 import Login from '../base/youagain';
-import { assert, assMatch } from '../base/utils/assert';
 
 // Plumbing
-import DataStore from '../base/plumbing/DataStore';
 import Roles from '../base/Roles';
 import C from '../C';
-import Crud from '../base/plumbing/Crud'; // Crud is loaded here to init (but not used here)
-import Misc from '../MiscOverrides';
 
 // Templates
-import { setShowLogin } from '../base/components/LoginWidget';
 
 // Pages
-import MyCharitiesPage from './pages/MyCharitiesPage';
-import MyAdCampaignsPage from './pages/MyAdCampaignsPage';
+import { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
+import MainDivBase from '../base/components/MainDivBase';
+import ServerIO from '../plumbing/ServerIO';
 import CampaignPage from './campaignpage/CampaignPage';
-import E404Page from '../base/components/E404Page';
-import AccountPage from './pages/AccountPage';
+import SubscriptionBox from './cards/SubscriptionBox';
 import Footer from './Footer';
 import MyGLAboutPage from './MyGLAboutPage';
-import SubscriptionBox from './cards/SubscriptionBox';
-import { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
-import ServerIO from '../plumbing/ServerIO';
+import AccountPage from './pages/AccountPage';
 import AllowlistUs from './pages/AllowlistUs';
-import MainDivBase from '../base/components/MainDivBase';
-import { A, initRouter, modifyPage } from '../base/plumbing/glrouter';
 import HomePage from './pages/HomePage';
+import MyAdCampaignsPage from './pages/MyAdCampaignsPage';
+import MyCharitiesPage from './pages/MyCharitiesPage';
 // import RedesignPage from './pages/RedesignPage';
+import BlogPage from './pages/BlogPage';
+import CharityLandingPage from './pages/CharityLandingPage';
 import GreenDashboard from './pages/GreenDashboard';
 import GreenLanding from './pages/GreenLanding';
-import TabsForGoodLandingPage from './pages/TabsForGoodLandingPage';
-import CharityLandingPage from './pages/CharityLandingPage';
 import ProductsOverviewPage from './pages/ProductsOverviewPage';
-import BlogPage from './pages/BlogPage';
+import TabsForGoodLandingPage from './pages/TabsForGoodLandingPage';
 // import ImpactOverviewPage from './pages/ImpactOverviewPage';
-import OurStoryPage from './pages/OurStoryPage';
+import { MyLoginWidgetGuts } from './MyLoginWidgetGuts';
+import { accountMenuItems } from './pages/CommonComponents';
 import ForBusinessPage from './pages/ForBusinessPage';
 import ForCharityPage from './pages/ForCharityPage';
-import { T4GSignUpButton, T4GSignUpModal, T4GPluginButton } from './T4GSignUp';
-import { MyLoginWidgetGuts } from './MyLoginWidgetGuts';
-import BlogContent from './pages/BlogContent';
-import SafariPage from './pages/SafariPage';
-import { DropdownItem } from 'reactstrap';
-import { accountMenuItems } from './pages/CommonComponents';
-import MyDataProductPage from './mydata/MyDataProductPage';
 import GetInvolvedPage from './pages/GetInvolvedPage';
 import OurImpactPage from './pages/OurImpactPage';
-import WelcomePage from './pages/Welcome'
+import OurStoryPage from './pages/OurStoryPage';
+import SafariPage from './pages/SafariPage';
 import TabsForGoodProductPage from './pages/TabsForGoodProductPage';
+import WelcomePage from './pages/Welcome';
+import { T4GSignUpButton, T4GSignUpModal } from './T4GSignUp';
 
 import GenerateGreenDemoEvents from './pages/GenerateGreenDemoEvents';
 import LogoutPage from './pages/LogoutPage';

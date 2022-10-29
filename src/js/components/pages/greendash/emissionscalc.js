@@ -1,14 +1,13 @@
 import md5 from 'md5';
+import PromiseValue from 'promise-value';
+import Campaign from '../../../base/data/Campaign';
+import Impact from '../../../base/data/Impact';
 import KStatus from '../../../base/data/KStatus';
+import List from '../../../base/data/List';
 import { getDataList } from '../../../base/plumbing/Crud';
+import SearchQuery from '../../../base/searchquery';
 import { assert } from '../../../base/utils/assert';
 import C from '../../../C';
-import PromiseValue from 'promise-value';
-import List from '../../../base/data/List';
-import Impact from '../../../base/data/Impact';
-import { encURI } from '../../../base/utils/miscutils';
-import Campaign from '../../../base/data/Campaign';
-import SearchQuery from '../../../base/searchquery';
 import { periodFromUrl } from './dashutils';
 
 /**

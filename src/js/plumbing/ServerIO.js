@@ -40,7 +40,7 @@ ServerIO.MYLOOP_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}my.good-loop.com`;
 ServerIO.GREENCALC_ENDPOINT = 
 	// ServerIO.AS_ENDPOINT+"/greencalc";
 	// ServerIO.PORTAL_ENDPOINT+"/greencalc?server=production";
-ServerIO.PORTAL_ENDPOINT+"/greencalc";
+	ServerIO.PORTAL_ENDPOINT+"/greencalc";
 
 // NB: We are rarely editing profiler code, so we mostly want to just use the live one
 ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com';

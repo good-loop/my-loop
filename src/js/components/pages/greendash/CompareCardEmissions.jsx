@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
+import React, { useEffect, useState } from 'react';
 
-import Misc from '../../../base/components/Misc';
-import NewChartWidget from '../../../base/components/NewChartWidget';
-import { dataColours, getPeriodQuarter, GreenCard, GreenCardAbout, ModeButton, printPeriod, TONNES_THRESHOLD } from './dashutils';
-import { isoDate } from '../../../base/utils/miscutils';
-import { getCarbon, getSumColumn } from './carboncalc';
-import { getDataList } from '../../../base/plumbing/Crud';
-import C from '../../../C';
-import KStatus from '../../../base/data/KStatus';
-import { getId } from '../../../base/data/DataClass';
 import { ButtonGroup } from 'reactstrap';
+import NewChartWidget from '../../../base/components/NewChartWidget';
+import { getId } from '../../../base/data/DataClass';
+import KStatus from '../../../base/data/KStatus';
+import { getDataList } from '../../../base/plumbing/Crud';
+import { isoDate } from '../../../base/utils/miscutils';
+import C from '../../../C';
+import { dataColours, getPeriodQuarter, GreenCard, GreenCardAbout, ModeButton, printPeriod, TONNES_THRESHOLD } from './dashutils';
 import { getCarbonEmissions, getSumColumnEmissions } from './emissionscalc';
 
 
