@@ -243,7 +243,7 @@ const TagSubcard = ({data}) => {
 			Emissions breakdown by Green Ad Tags.<br/>
 			You can track any aspect of media buying by generating different tags, then using them in your buying.
 		</p>
-		<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className="tag-table" />
+		<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className="tag-table" tableName="carbon-by-tag" />
 	</>;
 };
 
@@ -259,7 +259,7 @@ const PubSubcard = ({data}) => {
 		<p className="small">
 			Emissions breakdown by publisher/domain.<br/>
 		</p>
-		<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className="domain-table" />
+		<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className="domain-table" tableName="carbon-by-publishers" />
 	</>;
 };
 

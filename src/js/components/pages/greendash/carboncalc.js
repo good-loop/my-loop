@@ -115,30 +115,30 @@ export const getSumColumn = (table, colName) => {
 };
 
 
-/**
- * TODO Doc: what determines whether you fetch the all data table or a reduced set of tables?? breakdown??
- * Query for green ad tag impressions, then connect IDs to provided tags, calculate data usage & carbon emissions, and output tabular data
- * @param {Object} options
- * @param {String} options.q Query string - eg "campaign:myCampaign", "adid:jozxYqK OR adid:KWyjiBo"
- * @param {String} start Loose time parsing permitted (eg "24 hours ago") otherwise prefer ISO-8601 (full or partial)
- * @param {String} end Loose time parsing permitted (eg "24 hours ago") otherwise prefer ISO-8601 (full or partial)
- * @returns {!PromiseValue} {table: [["country","pub","mbl","os","adid","time","count","totalEmissions","baseEmissions","creativeEmissions","supplyPathEmissions"]] }
- */
-export const getCarbon = ({q = '', start = '1 month ago', end = 'now', breakdown, ...rest}) => {
-	assert(!q?.includes('brand:'), q);
-	const data = {
-		// dataspace: 'green',
-		q,
-		start, end,
-		breakdown,
-		...rest
-	};
+// /**
+//  * TODO Doc: what determines whether you fetch the all data table or a reduced set of tables?? breakdown??
+//  * Query for green ad tag impressions, then connect IDs to provided tags, calculate data usage & carbon emissions, and output tabular data
+//  * @param {Object} options
+//  * @param {String} options.q Query string - eg "campaign:myCampaign", "adid:jozxYqK OR adid:KWyjiBo"
+//  * @param {String} start Loose time parsing permitted (eg "24 hours ago") otherwise prefer ISO-8601 (full or partial)
+//  * @param {String} end Loose time parsing permitted (eg "24 hours ago") otherwise prefer ISO-8601 (full or partial)
+//  * @returns {!PromiseValue} {table: [["country","pub","mbl","os","adid","time","count","totalEmissions","baseEmissions","creativeEmissions","supplyPathEmissions"]] }
+//  */
+// export const getCarbon = ({q = '', start = '1 month ago', end = 'now', breakdown, ...rest}) => {
+// 	assert(!q?.includes('brand:'), q);
+// 	const data = {
+// 		// dataspace: 'green',
+// 		q,
+// 		start, end,
+// 		breakdown,
+// 		...rest
+// 	};
 
-	return DataStore.fetch(['misc', 'DataLog', 'green', md5(JSON.stringify(data))], () => {
-		// table of publisher, impressions, carbon rows
-		return ServerIO.load(ServerIO.GREENCALC_ENDPOINT, {data, swallow: true});
-	}); // /fetch()
-};
+// 	return DataStore.fetch(['misc', 'DataLog', 'green', md5(JSON.stringify(data))], () => {
+// 		// table of publisher, impressions, carbon rows
+// 		return ServerIO.load(ServerIO.GREENCALC_ENDPOINT, {data, swallow: true});
+// 	}); // /fetch()
+// };
 
 
 /**
@@ -201,50 +201,51 @@ export const getCampaigns = (table) => {
 };
 
 
-/**
- * 
- * @returns {?Impact} null if loading data
- */
-export const calculateDynamicOffset = ({campaign, offset, period}) => {
-	Campaign.assIsa(campaign);
-	if ( ! Impact.isDynamic(offset)) return offset; // paranoia
-	let n;
-	// HACK: carbon offset?
-	if (Impact.isCarbonOffset(offset)) {
-		let sq = SearchQuery.setProp(null, 'campaign', campaign.id);
-		if ( ! period) period = periodFromUrl();
-		let pvCarbonData = getCarbon({
-			q: sq.query,
-			start: period?.start.toISOString() || '2022-01-01',
-			end: period?.end.toISOString() || 'now',
-			breakdown: ['total']
-		});
-		if ( ! pvCarbonData.value) {
-			return null;
-		}
-		let table = pvCarbonData.value.tables.total;
-		let totalEmissions = getSumColumn(table, "totalEmissions");
-		n = totalEmissions;
-	} else {
-		// check it is per impression
-		if (offset.input) assert(offset.input.substring(0, "impression".length) === "impression", offset);
-		// how many impressions?
-		let impressions = Campaign.viewcount({campaign});
-		console.log("impressions", impressions, campaign);
-		if ( ! impressions) {
-			return null;
-		}
-		n = impressions * offset.rate;
-	}
-	// copy and set n
-	let snapshotOffset = new Impact(offset);	
-	snapshotOffset.n = n;
-	delete snapshotOffset.rate;
-	delete snapshotOffset.input;	
-	return snapshotOffset;
-};
+// /**
+//  * 
+//  * @returns {?Impact} null if loading data
+//  */
+// export const calculateDynamicOffset = ({campaign, offset, period}) => {
+// 	Campaign.assIsa(campaign);
+// 	if ( ! Impact.isDynamic(offset)) return offset; // paranoia
+// 	let n;
+// 	// HACK: carbon offset?
+// 	if (Impact.isCarbonOffset(offset)) {
+// 		let sq = SearchQuery.setProp(null, 'campaign', campaign.id);
+// 		if ( ! period) period = periodFromUrl();
+// 		let pvCarbonData = getCarbon({
+// 			q: sq.query,
+// 			start: period?.start.toISOString() || '2022-01-01',
+// 			end: period?.end.toISOString() || 'now',
+// 			breakdown: ['total']
+// 		});
+// 		if ( ! pvCarbonData.value) {
+// 			return null;
+// 		}
+// 		let table = pvCarbonData.value.tables.total;
+// 		let totalEmissions = getSumColumn(table, "totalEmissions");
+// 		n = totalEmissions;
+// 	} else {
+// 		// check it is per impression
+// 		if (offset.input) assert(offset.input.substring(0, "impression".length) === "impression", offset);
+// 		// how many impressions?
+// 		let impressions = Campaign.viewcount({campaign});
+// 		console.log("impressions", impressions, campaign);
+// 		if ( ! impressions) {
+// 			return null;
+// 		}
+// 		n = impressions * offset.rate;
+// 	}
+// 	// copy and set n
+// 	let snapshotOffset = new Impact(offset);	
+// 	snapshotOffset.n = n;
+// 	delete snapshotOffset.rate;
+// 	delete snapshotOffset.input;	
+// 	return snapshotOffset;
+// };
 
 /** 
+ * Queries Portal Campaigns
  * @param {Object} p
  * @param {!Campaign} p.campaign If `campaign` is a master, then this function WILL look up sub-campaigns and include them.
  * @param {?Object} p.period {start, end}
