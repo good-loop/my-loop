@@ -245,6 +245,7 @@ export const calculateDynamicOffset = ({campaign, offset, period}) => {
 };
 
 /** 
+ * Queries Portal Campaigns
  * @param {Object} p
  * @param {!Campaign} p.campaign If `campaign` is a master, then this function WILL look up sub-campaigns and include them.
  * @param {?Object} p.period {start, end}
