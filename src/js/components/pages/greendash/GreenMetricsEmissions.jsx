@@ -11,7 +11,6 @@ import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import ErrAlert from '../../../base/components/ErrAlert';
 
 import { GreenCard, periodFromUrl, printPeriod } from './dashutils';
-// import { getCampaigns, getCarbon, getSumColumn } from './carboncalc';
 import { getCampaignsEmissions, getCarbonEmissions, getSumColumnEmissions } from './emissionscalc';
 
 import GreenDashboardFilters from './GreenDashboardFilters';

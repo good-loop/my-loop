@@ -7,7 +7,6 @@ import DataStore from '../../../base/plumbing/DataStore';
 import { A } from '../../../base/plumbing/glrouter';
 import { encURI } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
-import { getCarbon, getOffsetsByType } from './carboncalc';
 import { getCarbonEmissions, getOffsetsByTypeEmissions } from './emissionscalc';
 import { GreenCard, GreenCardAbout, Mass } from './dashutils';
 import { getDataItem } from '../../../base/plumbing/Crud';

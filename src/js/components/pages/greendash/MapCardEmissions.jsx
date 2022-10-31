@@ -5,7 +5,6 @@ import { DownloadCSVLink } from '../../../base/components/SimpleTable';
 import StyleBlock from '../../../base/components/StyleBlock';
 import { space, stopEvent } from '../../../base/utils/miscutils';
 import Misc from '../../../MiscOverrides';
-import { getCarbon } from './carboncalc';
 import { dataColours, GreenCard } from './dashutils';
 import { getCarbonEmissions } from './emissionscalc';
 

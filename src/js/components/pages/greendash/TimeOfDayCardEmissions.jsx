@@ -6,7 +6,6 @@ import DataStore from '../../../base/plumbing/DataStore';
 import Misc from '../../../base/components/Misc';
 import NewChartWidget from '../../../base/components/NewChartWidget';
 import { dataColours, GreenCard, GreenCardAbout, NOEMISSIONS, TONNES_THRESHOLD } from './dashutils';
-import { getBreakdownBy, getCarbon } from './carboncalc';
 import { getBreakdownByEmissions, getCarbonEmissions } from './emissionscalc';
 
 const TimeOfDayCardEmissions = ({ baseFilters, tags }) => {
