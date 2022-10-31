@@ -31,6 +31,7 @@ import Campaign from '../../../base/data/Campaign';
 import Login from '../../../base/youagain';
 
 import { yessy } from '../../../base/utils/miscutils';
+import PropControl from '../../../base/components/PropControl';
 
 const OverviewWidget = ({ period, data }) => {
   let imps;
@@ -184,18 +185,24 @@ const GreenMetrics2 = ({}) => {
     return <ErrAlert error={pvChartData.error} color='danger' />;
   }
 
-  const commonProps = { period, baseFilters };
+  const emissionsMode = DataStore.getValue('widget', 'greendash', 'emissionsMode');
+
+  const commonProps = { period, baseFilters, per1000: emissionsMode === 'per1000' };
   // Removed (temp?): brands, campaigns, tags
 
   // HACK: Tell JourneyCard we had an empty table & so couldn't get campaigns (but nothing is "loading")
   // TODO We CAN get campaigns but it'd take more of a rewrite than we want to do just now.
   // not working?? How does this compare to noData
-  const emptyTable =
-    pvChartData.resolved && (!pvChartData?.value?.allCount || pvChartData.value.by_total.buckets.length === 0);
+  const emptyTable = pvChartData.resolved && (!pvChartData?.value?.allCount || pvChartData.value.by_total.buckets.length === 0);
 
   return (
     <>
       <OverviewWidget period={period} data={pvChartData.value?.by_total.buckets} />
+      <PropControl inline
+        type="toggle" path={['widget', 'greendash']} prop="emissionsMode" dflt="total" label="Show emissions:"
+        left={{label: 'Total', value: 'total', colour: 'primary'}}
+        right={{label: 'Per 1000 impressions', value: 'per1000', colour: 'primary'}}
+      />
       <Row className='card-row'>
         <Col xs='12' sm='8' className='flex-column'>
           <TimeSeriesCardEmissions {...commonProps} data={pvChartData.value?.by_time.buckets} noData={noData} />

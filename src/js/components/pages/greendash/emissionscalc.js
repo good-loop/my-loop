@@ -236,3 +236,28 @@ export const getOffsetsByTypeEmissions = ({ campaign, status, period }) => {
   offsets4type.isLoading = isLoading;
   return offsets4type;
 };
+
+/**
+ * @param {Object} buckets A DataLog breakdown of carbon emissions
+ * @param {Number} perN e.g. 1000 for "carbon per 1000 impressions"
+ * @returns The same breakdown, but with every "co2*" value in each bucket divided by (bucketcount / perN)
+ */
+export const emissionsPerImpressions = (buckets, perN = 1000) => (
+  buckets.map(bkt => {
+    const newBkt = {...bkt}; // Start with a copy
+    // Is this a cross-breakdown?
+    if (!'count' in bkt) {
+      const xbdKey = Object.keys(bkt).find(k => k.match(/^by_/))
+      if (!xbdKey) return; // No count - but also no by_x sub-breakdown? Strange.
+      // Recurse in to process the next breakdown level.
+      newBkt[xbdKey] = emissionsPerImpressions(bkt[xbdKey], perN);
+      return;
+    }
+    // Not a cross-breakdown - just process the carbon values.
+    Object.entries(bkt).forEach(([k, v]) => {
+      // Carbon entries => carbon per N impressions; others unchanged
+      newBkt[k] = (k.match(/^co2/)) ? v / (bkt.count / perN) : v;
+    });
+    return newBkt;
+  })
+);
