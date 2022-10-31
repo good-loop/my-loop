@@ -98,8 +98,9 @@ const InfoPop = ({children}) => {
 	</>;
 }
 
-const TotalSubcard = ({ period, totalCO2 }) => {
+const TotalSubcard = ({ period, aggCO2, per1000 }) => {
 	const [mode, setMode] = useState('base');
+	const totalCO2 = aggCO2?.total || 0;
 
 	return (
 		<div className="total-subcard flex-column justify-content-between">
@@ -126,7 +127,7 @@ const TotalSubcard = ({ period, totalCO2 }) => {
 };
 
 
-const TimeSeriesCardEmissions = ({ period, data: timeTable, noData }) => {
+const TimeSeriesCardEmissions = ({ period, data: timeTable, per1000, noData }) => {
 	const [chartProps, setChartProps] = useState(); // ChartJS-ready props object
 	const [aggCO2, setAggCO2] = useState(); // avg/total/max CO2
 
@@ -143,6 +144,9 @@ const TimeSeriesCardEmissions = ({ period, data: timeTable, noData }) => {
 
 		const labels = [];
 		const data = [];
+
+		// Is the "show normalised emissions vs impressions" toggle set?
+		if (per1000) timeTable = emissionsPerImpressions(timeTable);
 
 		// Sum total emissions for each date across all other factors, sort, and unzip to labels/data arrays
 		Object.entries(getBreakdownByEmissions(timeTable, 'co2', 'time')).sort(
@@ -218,7 +222,7 @@ const TimeSeriesCardEmissions = ({ period, data: timeTable, noData }) => {
 		};
 
 		setChartProps(newChartProps);
-	}, [timeTable]);
+	}, [timeTable, per1000]);
 
 	let chartContent = <Misc.Loading text="Fetching emissions-over-time data..." />;
 	if (chartProps) {
@@ -229,19 +233,18 @@ const TimeSeriesCardEmissions = ({ period, data: timeTable, noData }) => {
 		chartContent = <p>No data for this period</p>;
 	}
 
-	// TODO Reinstate "Per 1000 impressions" button
 
 	return <GreenCard title="How much carbon is your digital advertising emitting?" className="carbon-time-series" row>
 		<div className="chart-subcard flex-column w-100">
 			{chartProps?.isEmpty ? (
 				NOEMISSIONS
 			) : (
-				<div>{CO2e} emissions over time</div>
+				<div>{CO2e} emissions {per1000 ? 'per 1000 impressions': 'over time'}</div>
 			)}
 			{/* <div><Button>Per 1000 impressions</Button> <Button>Total emissions</Button></div> TODO reinstate when ready */}
 			{chartContent}
 		</div>
-		<TotalSubcard period={period} totalCO2={aggCO2?.total} />
+		<TotalSubcard period={period} aggCO2={aggCO2} per1000={per1000} />
 		<GreenCardAbout>
 			<p>How do we calculate the time-series carbon emissions?</p>
 		</GreenCardAbout>
