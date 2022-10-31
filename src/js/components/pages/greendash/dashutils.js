@@ -186,40 +186,38 @@ const yearRegex = /^(\d\d?\d?\d?)$/;
 
 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
+
+/** Styling overrides applied to cards when doing PNG capture */
+const screenshotStyle = {
+	fontSize: '1.25rem',
+	textAlign: 'center',
+	fontWeight: 'bold',
+	marginBottom: '8px'
+};
+
+
 /** Boilerplate styling for a subsection of the green dashboard */
-export const GreenCard = ({ title, children, className, row, downloadable=true, ...rest}) => {
+export const GreenCard = ({ title, children, className, row, downloadable = true, ...rest}) => {
+	const downloadButton = downloadable && (
+		<PNGDownloadButton
+			querySelector={`.${className}`}
+			fileName={title}
+			title="Click to download this card as a .PNG"
+			opts={{scale: 1.25}}
+			onCloneFn={(document) => {
+				// Larger card headings
+				document.querySelectorAll('.gc-title').forEach(node => {
+					Object.assign(node.style, screenshotStyle);
+				});
+				// Greencard padding
+				document.querySelector('.gc-body').style.border = 'none';
+			}}
+		/>
+	);
+
 	return <div className={space('green-card my-2 flex-column', className)} {...rest}>
 		{title ? <h6 className="gc-title">{title}</h6> : null}
-		
-		{downloadable ? <PNGDownloadButton 
-				querySelector={`.${className}`}
-				fileName={title}
-				opts={{scale: 1.25}}
-				onCloneFn={(document) => {
-					// Larger card headings
-					document.querySelectorAll('.gc-title').forEach(node => {
-						Object.assign(node.style, {
-							fontSize:'1.25rem',
-							textAlign: 'center',
-							fontWeight: 'bold',
-							marginBottom: '8px'
-						});
-					});
-					
-					// Greencard padding
-					let greenCard = document.querySelector(`.${className}`);
-					greenCard.querySelector('.gc-body').style.border = "none";
-					
-					// Journey so far card - hide impact button, CSV link
-					greenCard.querySelectorAll('a').forEach(node => {
-						console.log(node.innerText);
-						if (node.innerText.includes('IMPACT OVERVIEW') || node.innerText.includes('Download .csv')) {
-							node.style.display = 'none';
-						}
-					})
-				}}
-			/> : null}
-
+		{downloadButton}
 		<Card body className={space('gc-body', row ? 'flex-row' : 'flex-column')}>{children}</Card>
 	</div>
 };
