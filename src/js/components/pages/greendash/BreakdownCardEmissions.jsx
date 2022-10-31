@@ -55,7 +55,7 @@ const osTypes = {
  * @returns 
  */
 const TechSubcard = ({ data: osBuckets, minimumPercentLabeled=1 }) => {
-	if (!yessy(osBuckets)) return <p>No data</p>;
+	if (!yessy(osBuckets)) return NOEMISSIONS;
 
 	const [chartProps, setChartProps] = useState();
 
@@ -138,7 +138,7 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled=1 }) => {
  * @param {Object} p
  */
 const DeviceSubcard = ({ data: osTable }) => {
-	if (!yessy(osTable)) return <p>No data</p>;
+	if (!yessy(osTable)) return NOEMISSIONS;
 
 	const [chartProps, setChartProps] = useState();
 
@@ -223,6 +223,7 @@ const CellWithTitle = (value) => <span title="value">{value}</span>;
  * @param {Object[]} p.data adid table
  */
 const TagSubcard = ({data}) => {
+	if (!yessy(data)) return NOEMISSIONS;
 	// map GreenTag id to a display-name
 	const pvTags = getTagsEmissions(data);
 	const tags = List.hits(pvTags.value) || [];
@@ -248,6 +249,8 @@ const TagSubcard = ({data}) => {
 
 
 const PubSubcard = ({data}) => {
+	if (!yessy(data)) return NOEMISSIONS;
+
 	let columns = [
 		new Column({ Header: 'Domain', accessor: row => row.key, Cell: CellWithTitle }),
 		new Column({ Header: 'Impressions', accessor: row => row.count }),
