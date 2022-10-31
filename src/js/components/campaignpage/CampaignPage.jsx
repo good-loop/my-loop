@@ -158,8 +158,8 @@ const JustTheBeginning = ({ setCtaModalOpen }) => {
 			<TriCards className="pt-0"
 				titles={["Tabs for Good", "Ad Campaigns", "Our Story"]}
 				texts={['Raise money for charity every time you open a new tab', 'Explore more examples of our campaigns', 'Meet the cofounders and discover the story of Good-Loop']}
-				images={['../img/homepage/slide-1.png', '../img/homepage/UsingAdMoneyForGood.png', '../img/homepage/amyanddaniel.png']}
-				links={['../tabsforgood', '../impactoverview', '../ourstory']}
+				images={['/img/homepage/slide-1.png', '/img/homepage/UsingAdMoneyForGood.png', '/img/homepage/amyanddaniel.png']}
+				links={['/tabsforgood', '/impactoverview', '/ourstory']}
 			/>
 			<button className="cta-modal-btn btn btn-primary text-uppercase" onClick={e => setCtaModalOpen(true)}>
 				want to raise even more?
