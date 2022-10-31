@@ -184,7 +184,7 @@ const GreenMetrics2 = ({}) => {
     return <ErrAlert error={pvChartData.error} color='danger' />;
   }
 
-  const emissionsMode = DataStore.getValue('widget', 'greendash', 'emissionsMode');
+  const emissionsMode = DataStore.getUrlValue('emode');
 
   const commonProps = { period, baseFilters, per1000: emissionsMode === 'per1000' };
   // Removed (temp?): brands, campaigns, tags
@@ -198,7 +198,7 @@ const GreenMetrics2 = ({}) => {
     <>
       <OverviewWidget period={period} data={pvChartData.value?.by_total.buckets} />
       <PropControl inline
-        type="toggle" path={['widget', 'greendash']} prop="emissionsMode" dflt="total" label="Show emissions:"
+        type="toggle" prop="emode" dflt="total" label="Show emissions:"
         left={{label: 'Total', value: 'total', colour: 'primary'}}
         right={{label: 'Per 1000 impressions', value: 'per1000', colour: 'primary'}}
       />
