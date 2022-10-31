@@ -5,7 +5,6 @@ import Misc from '../../../base/components/Misc';
 import { ellipsize, sum, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import NewChartWidget from '../../../base/components/NewChartWidget';
-import { getBreakdownBy, getSumColumn, getTags } from './carboncalc';
 import { CO2e, dataColours, GreenCard, GreenCardAbout, ModeButton, NOEMISSIONS, TONNES_THRESHOLD } from './dashutils';
 import SimpleTable, { Column } from '../../../base/components/SimpleTable';
 import List from '../../../base/data/List';

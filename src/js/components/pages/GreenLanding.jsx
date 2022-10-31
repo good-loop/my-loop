@@ -15,7 +15,6 @@ import C from '../../C';
 import { Mass } from './greendash/dashutils';
 import GreenMap from './greendash/GreenMap';
 import Impact from '../../base/data/Impact';
-import { calculateDynamicOffset, getOffsetsByType } from './greendash/carboncalc';
 import { isTester } from '../../base/Roles';
 import LinkOut from '../../base/components/LinkOut';
 import ServerIO from '../../plumbing/ServerIO';
@@ -23,6 +22,7 @@ import PromiseValue from 'promise-value';
 import DataItemBadge from '../../base/components/DataItemBadge';
 import Login from '../../base/youagain';
 import printer from '../../base/utils/printer';
+import { getOffsetsByTypeEmissions } from './greendash/emissionscalc';
 
 
 // TODO Design! and Content!
@@ -94,7 +94,7 @@ const GreenLanding2 = ({cid, status}) => {
 	}
 	const campaign = pvCampaign.value;	
 
-	let offsets4type = getOffsetsByType({ campaign, status, period});
+	let offsets4type = getOffsetsByTypeEmissions({ campaign, status, period});
 	let isLoading = offsets4type.isLoading;
 	let pvAllCampaigns = offsets4type.pvAllCampaigns;
 	// load the charities

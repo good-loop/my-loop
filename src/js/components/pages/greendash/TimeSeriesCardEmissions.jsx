@@ -5,7 +5,6 @@ import { space, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import NewChartWidget from '../../../base/components/NewChartWidget';
 import { GreenCard, printPeriod, printDate, printDateShort, TONNES_THRESHOLD, GreenCardAbout, Mass, NOEMISSIONS, CO2e } from './dashutils';
-// import { getBreakdownBy } from './carboncalc';
 import { getBreakdownByEmissions } from './emissionscalc';
 import Icon from '../../../base/components/Icon';
 import { nonce } from '../../../base/data/DataClass';
