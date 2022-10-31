@@ -136,7 +136,7 @@ const JourneyCardEmissions = ({ campaigns, dataByTime, period, emptyTable }) => 
     if (dataByTime.length > 0) {
       let columns = Object.keys(dataByTime[0]);
       let objdata = dataByTime;
-      downloadCSVLink = <DownloadCSVLink columns={columns} data={objdata} />;
+      downloadCSVLink = <span className="screenshot-hide"><DownloadCSVLink columns={columns} data={objdata} /></span>;
     }
   }
 
@@ -151,7 +151,7 @@ const JourneyCardEmissions = ({ campaigns, dataByTime, period, emptyTable }) => 
         </div>
       )}
       {impactSplashPage && (
-        <A className='btn btn-primary' href={impactSplashPage}>
+        <A className='btn btn-primary screenshot-hide' href={impactSplashPage}>
           <Logo item={brandOrAgency} /> Impact Overview
         </A>
       )}
