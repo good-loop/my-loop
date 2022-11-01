@@ -167,7 +167,7 @@ export const calculateDynamicOffsetEmissions = ({ campaign, offset, period }) =>
     if (offset.input) assert(offset.input.substring(0, 'impression'.length) === 'impression', offset);
     // how many impressions?
     let impressions = Campaign.viewcount({ campaign });
-    console.log('impressions', impressions, campaign);
+    // console.log('impressions', impressions, campaign);
     if (!impressions) {
       return null;
     }
@@ -188,7 +188,7 @@ export const calculateDynamicOffsetEmissions = ({ campaign, offset, period }) =>
  * @returns {Object} {isLoading:boolean, carbon: [], carbonTotal: Number, trees: [], treesTotal:Number, coral: [], pvAllCampaigns }
  */
 export const getOffsetsByTypeEmissions = ({ campaign, status, period }) => {
-  console.warn('getOffsetsByType', campaign, status, period);
+  // console.warn('getOffsetsByType', campaign, status, period);
   // Is this a master campaign?
   let pvAllCampaigns = Campaign.pvSubCampaigns({ campaign, status });
 
@@ -205,7 +205,7 @@ export const getOffsetsByTypeEmissions = ({ campaign, status, period }) => {
       );
       allFixedOffsets.push(...fixedOffsets);
     });
-    console.log('allFixedOffsets', allFixedOffsets);
+    // console.log('allFixedOffsets', allFixedOffsets);
   }
   const offsets4type = {};
   // HACK - return this too
@@ -238,7 +238,7 @@ export const getOffsetsByTypeEmissions = ({ campaign, status, period }) => {
 };
 
 /**
- * @param {Object} buckets A DataLog breakdown of carbon emissions
+ * @param {Object[]} buckets A DataLog breakdown of carbon emissions. e.g. [{key, co2, count}]
  * @param {Number} perN e.g. 1000 for "carbon per 1000 impressions"
  * @returns The same breakdown, but with every "co2*" value in each bucket divided by (bucketcount / perN)
  */
