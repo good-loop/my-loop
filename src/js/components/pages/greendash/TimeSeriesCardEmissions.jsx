@@ -103,10 +103,10 @@ const InfoPop = ({children}) => {
 }
 
 const TotalSubcard = ({ period, aggCO2, per1000 }) => {
-	const [mode, setMode] = useState('base');
-	// Per-1000 mode: "total" would be sum of daily carbon-per-mille values, which makes
+	let [mode, setMode] = useState('base');
+	if (isPer1000()) mode = 'base'; // Override - never show impact equivalents in per-1000 mode
+	// Per-1000 mode: "total" would be sum of daily carbon-per-mille values, which makes no sense
 	const totalCO2 = aggCO2?.[isPer1000() ? 'avg' : 'total'] || 0;
-	console.warn('aggCO2', aggCO2);
 
 	// "That's X long-haul flights" doesn't really make sense in per-1000 mode
 	const showImpacts = (totalCO2 > 0 && !isPer1000());
