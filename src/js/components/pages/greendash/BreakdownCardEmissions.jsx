@@ -9,7 +9,8 @@ import { CO2e, dataColours, GreenCard, GreenCardAbout, ModeButton, NOEMISSIONS, 
 import SimpleTable, { Column } from '../../../base/components/SimpleTable';
 import List from '../../../base/data/List';
 import { ButtonGroup } from 'reactstrap';
-import { getBreakdownByEmissions, getSumColumnEmissions, getTagsEmissions } from './emissionscalc';
+import { emissionsPerImpressions, getBreakdownByEmissions, getSumColumnEmissions, getTagsEmissions } from './emissionscalc';
+import { isPer1000 } from './GreenMetricsEmissions';
 
 
 /** Classify OS strings seen in our data  
@@ -140,6 +141,9 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled=1 }) => {
 const DeviceSubcard = ({ data: osTable }) => {
 	if (!yessy(osTable)) return NOEMISSIONS;
 
+	console.log("DeviceSubcard", osTable);
+	const per1000 = isPer1000();
+
 	const [chartProps, setChartProps] = useState();
 
 	useEffect(() => {
@@ -192,7 +196,7 @@ const DeviceSubcard = ({ data: osTable }) => {
 			data: {
 				labels,
 				datasets: [{
-					data: data,
+					data,
 					backgroundColor: dataColours(data),
 				}]
 			},
@@ -211,7 +215,7 @@ const DeviceSubcard = ({ data: osTable }) => {
 	if (chartProps?.isEmpty) return NOEMISSIONS;
 	
 	return <NewChartWidget type="bar" {...chartProps} />;
-}
+}; // ./DeviceSubCard
 
 
 /** A table cell with a title/tooltip for cases where the value is likely to display truncated */
@@ -275,19 +279,26 @@ const BreakdownCardEmissions = ({ dataValue }) => {
 	if (!dataValue) return <Misc.Loading text="Fetching your data..." />;
 	const [mode, setMode] = useState('tech');
 
+	// per1000?
+	const datakey = {tech:'by_total', device:'by_os', tag:'by_adid', domain:'by_domain'}[mode];
+	let data = dataValue[datakey]?.buckets;	
+	if (isPer1000()) {
+		data = emissionsPerImpressions(data);
+	}
+
 	let subcard;
 	switch(mode) {
 		case 'tech':
-			subcard = <TechSubcard data={dataValue.by_total?.buckets} minimumPercentLabeled={10} />;
+			subcard = <TechSubcard data={data} minimumPercentLabeled={10} />;
 			break;
 		case 'device':
-			subcard = <DeviceSubcard data={dataValue.by_os?.buckets} />;
+			subcard = <DeviceSubcard data={data} />;
 			break;
 		case 'tag':
-			subcard = <TagSubcard data={dataValue.by_adid?.buckets} />;
+			subcard = <TagSubcard data={data} />;
 			break;
 		case 'domain':
-			subcard = <PubSubcard data={dataValue.by_domain?.buckets} />;
+			subcard = <PubSubcard data={data} />;
 	};
 
 	return <GreenCard title="What is the breakdown of your emissions?" className="carbon-breakdown">

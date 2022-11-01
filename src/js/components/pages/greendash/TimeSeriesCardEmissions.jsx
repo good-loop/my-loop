@@ -146,7 +146,10 @@ const TimeSeriesCardEmissions = ({ period, data: timeTable, per1000, noData }) =
 		const data = [];
 
 		// Is the "show normalised emissions vs impressions" toggle set?
-		if (per1000) timeTable = emissionsPerImpressions(timeTable);
+		if (per1000) {
+			timeTable = emissionsPerImpressions(timeTable);
+			console.log("emissionsPerImpressions timeTable", timeTable);
+		}
 
 		// Sum total emissions for each date across all other factors, sort, and unzip to labels/data arrays
 		Object.entries(getBreakdownByEmissions(timeTable, 'co2', 'time')).sort(

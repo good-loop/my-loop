@@ -32,6 +32,13 @@ import Login from '../../../base/youagain';
 import { yessy } from '../../../base/utils/miscutils';
 import PropControl from '../../../base/components/PropControl';
 
+
+export const isPer1000 = () => {
+  const emissionsMode = DataStore.getUrlValue('emode');
+  return emissionsMode === 'per1000';
+};
+
+
 const OverviewWidget = ({ period, data }) => {
   let imps;
   if (data?.length > 0) {
@@ -184,9 +191,7 @@ const GreenMetrics2 = ({}) => {
     return <ErrAlert error={pvChartData.error} color='danger' />;
   }
 
-  const emissionsMode = DataStore.getUrlValue('emode');
-
-  const commonProps = { period, baseFilters, per1000: emissionsMode === 'per1000' };
+  const commonProps = { period, baseFilters, per1000: isPer1000() };
   // Removed (temp?): brands, campaigns, tags
 
   // HACK: Tell JourneyCard we had an empty table & so couldn't get campaigns (but nothing is "loading")
