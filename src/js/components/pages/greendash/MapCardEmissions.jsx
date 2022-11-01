@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Modal, ModalBody } from 'reactstrap';
+import { Button, Modal, ModalBody } from 'reactstrap';
 import { DownloadCSVLink } from '../../../base/components/SimpleTable';
-import { stopEvent } from '../../../base/utils/miscutils';
+import { space, stopEvent } from '../../../base/utils/miscutils';
 import Misc from '../../../MiscOverrides';
 import { dataColours, GreenCard } from './dashutils';
 import { emissionsPerImpressions, getCarbonEmissions } from './emissionscalc';
@@ -254,6 +254,16 @@ const MapCardEmissions = ({ baseFilters }) => {
 		);
 	}, [JSON.stringify(filters), pvChartData.value, mapDefs]);
 
+	// Bottom-right - prompt user to click a country, or provide a route back to the world map.
+	let focusPrompt = 'Click to focus';
+	if (!isWorld && mapDefsReady) {
+		const returnToWorld = (e) => {
+			stopEvent(e);
+			setFocusRegion('world');
+		};
+		focusPrompt = <Button color="secondary" size="sm" onClick={returnToWorld}>Back</Button>;
+	}
+
 	const cardContents = <>
 		<div className='mb-2 text-center'>
 			<strong>{mapDefs?.name}</strong>
@@ -275,25 +285,16 @@ const MapCardEmissions = ({ baseFilters }) => {
 				)}
 			</span>
 			<span className='pull-right'>
-				{isWorld
-					? 'Click to focus'
-					: mapDefsReady && (
-							<a
-								href='#'
-								onClick={(e) => {
-									stopEvent(e);
-									setFocusRegion('world');
-								}}
-							>
-								Back
-							</a>
-						)}
+				{focusPrompt}
 			</span>
 		</div>
 	</>;
 
+	// Per-1000 mode: No TOD card above, so the map can have more vertical space.
+	const className = space('carbon-map flex-column', isPer1000() && 'taller-map');
+
 	return (
-		<GreenCard title='Where are your emissions produced?' className='carbon-map flex-column' downloadable={false}>
+		<GreenCard title='Where are your emissions produced?' className={className} downloadable={false}>
 			<div role='button' className='pop-out-button' onClick={() => setPopOut(true)} title="Click for larger map">
 				⇱
 			</div>

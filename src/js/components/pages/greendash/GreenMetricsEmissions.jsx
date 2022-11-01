@@ -228,14 +228,9 @@ const GreenMetrics2 = ({}) => {
           <BreakdownCardEmissions {...commonProps} dataValue={pvChartData?.value} />
         </Col>
         <Col xs="12" sm="4" className="flex-column">
-          {true ? <>
-            <TimeOfDayCardEmissions {...commonProps} />
+            {!isPer1000() && <TimeOfDayCardEmissions {...commonProps} />}
             <MapCardEmissions {...commonProps} />
-          </> : <>
-            <TimeOfDayCardEmissions {...commonProps} />
-            <CTACard />
-          </>}
-			  </Col>
+          </Col>
       </Row>
     </>
   );
