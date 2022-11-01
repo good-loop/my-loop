@@ -237,6 +237,7 @@ export const getOffsetsByTypeEmissions = ({ campaign, status, period }) => {
   return offsets4type;
 };
 
+
 /**
  * @param {Object[]} buckets A DataLog breakdown of carbon emissions. e.g. [{key, co2, count}]
  * @param {Number} perN e.g. 1000 for "carbon per 1000 impressions"
