@@ -6,17 +6,26 @@ import DataStore from '../../../base/plumbing/DataStore';
 import Misc from '../../../base/components/Misc';
 import NewChartWidget from '../../../base/components/NewChartWidget';
 import { dataColours, GreenCard, GreenCardAbout, NOEMISSIONS, TONNES_THRESHOLD } from './dashutils';
-import { getBreakdownByEmissions, getCarbonEmissions } from './emissionscalc';
+import { emissionsPerImpressions, getBreakdownByEmissions, getCarbonEmissions } from './emissionscalc';
+import { isPer1000 } from './GreenMetricsEmissions';
 
-const TimeOfDayCardEmissions = ({ baseFilters, tags }) => {
+const TimeOfDayCardEmissions = (props) => {
+  return <GreenCard title='When are your ad carbon emissions highest?' className='carbon-time-of-day'>
+    <TimeOfDayCardEmissions2 {...props} />
+  </GreenCard>;
+};
+
+
+const TimeOfDayCardEmissions2 = ({ baseFilters, tags }) => {
   const [chartProps, setChartProps] = useState();
+  const [pvCarbon, setPVCarbon] = useState();
 
   if (!tags || !tags.length) {
     // return <Misc.Loading text="Fetching your tag data..." />;
   }
-
   useEffect(() => {
-    getCarbonEmissions({ ...baseFilters, timeofday: true, breakdown: 'timeofday{"co2":"sum"}' }).promise.then((res) => {
+    const pvCarbon = getCarbonEmissions({ ...baseFilters, timeofday: true, breakdown: 'timeofday{"co2":"sum"}' });
+    pvCarbon.promise.then((res) => {
       if (!res.by_timeofday.buckets.length) {
         setChartProps({ isEmpty: true });
         return;
@@ -24,8 +33,13 @@ const TimeOfDayCardEmissions = ({ baseFilters, tags }) => {
       const labels = [];
       const data = [];
 
+      let buckets = res.by_timeofday.buckets;
+      if (isPer1000()) {
+        buckets = emissionsPerImpressions(buckets);
+      }
+
       // construct hourly breakdown and normalise to numeric hours
-      const hoursBreakdown = getBreakdownByEmissions(res.by_timeofday.buckets, 'co2', 'timeofday');
+      const hoursBreakdown = getBreakdownByEmissions(buckets, 'co2', 'timeofday');
 
       // group into 3-hour periods and copy to labels/data
       for (let i = 0; i < 24; i++) {
@@ -69,32 +83,21 @@ const TimeOfDayCardEmissions = ({ baseFilters, tags }) => {
         },
       });
     });
-  }, [baseFilters.q, baseFilters.start, baseFilters.end]);
+  }, [baseFilters.q, baseFilters.start, baseFilters.end, isPer1000()]);
 
-  let chartContent;
-  if (!chartProps) {
-    chartContent = <Misc.Loading text='Fetching time-of-day data...' />;
-  } else if (chartProps.isEmpty) {
-    chartContent = NOEMISSIONS;
-  } else {
-    chartContent = (
-      <>
-        <NewChartWidget type='bar' {...chartProps} />
-        <p className='text-center mb-0'>
-          <small>Time of day in your time zone ({Intl.DateTimeFormat().resolvedOptions().timeZone})</small>
-        </p>
-      </>
-    );
+  if ( ! chartProps) {
+    return <Misc.Loading text='Fetching time-of-day data...' />;
   }
-
-  return (
-    <GreenCard title='When are your ad carbon emissions highest?' className='carbon-time-of-day'>
-      {chartContent}
-      <GreenCardAbout>
-        <p>How do we break down the TOD of carbon emissions?</p>
-      </GreenCardAbout>
-    </GreenCard>
-  );
+  if (chartProps.isEmpty) {
+    return NOEMISSIONS;
+  }
+  return (<>
+      <NewChartWidget type='bar' {...chartProps} />
+      <p className='text-center mb-0'>
+        <small>Time of day in your time zone ({Intl.DateTimeFormat().resolvedOptions().timeZone})</small>
+      </p>
+    </>
+  );  
 };
 
 export default TimeOfDayCardEmissions;
