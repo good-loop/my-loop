@@ -9,7 +9,8 @@ import { getDataList } from '../../../base/plumbing/Crud';
 import { isoDate } from '../../../base/utils/miscutils';
 import C from '../../../C';
 import { dataColours, getPeriodQuarter, GreenCard, GreenCardAbout, ModeButton, printPeriod, TONNES_THRESHOLD } from './dashutils';
-import { getCarbonEmissions, getSumColumnEmissions } from './emissionscalc';
+import { emissionsPerImpressions, getCarbonEmissions, getSumColumnEmissions } from './emissionscalc';
+import { isPer1000 } from './GreenMetricsEmissions';
 
 
 const baseOptions = {
@@ -53,16 +54,19 @@ const QuartersCard = ({baseFilters}) => {
 	}));
 	// add it into chartProps
 	pvsBuckets.forEach((pvBuckets, i) => {
-		if ( ! pvBuckets.value) return;
+		if (!pvBuckets.value) return;
 
 		// Set label to show quarter is loaded, even if result is empty
 		let quarter = quarters[i];
 		chartProps.data.labels[i] = printPeriod(quarter, true);
 
 		let buckets = pvBuckets.value.by_total.buckets;
-		if ( ! buckets || ! buckets.length) {
+		if (!buckets || !buckets.length) {
 			return; // no data for this quarter
 		}
+
+		// Are we in carbon-per-mille mode?
+		if (isPer1000()) buckets = emissionsPerImpressions(buckets);
 
 		// Display kg or tonnes?
 		let thisCarbon = getSumColumnEmissions(buckets, 'co2');
@@ -128,7 +132,10 @@ const CampaignCard = ({baseFilters, campaignIds}) => {
 					breakdown: 'total{"emissions":"sum"}',
 					nocache: true
 				}).promise.then(res => {
-					setChartProps(prev => insertCampaignData(prev, campaign, res.by_total.buckets));
+					let buckets = res.by_total.buckets;
+					// Are we in carbon-per-mille mode?
+					if (isPer1000()) buckets = emissionsPerImpressions(buckets);
+					setChartProps(prev => insertCampaignData(prev, campaign, buckets));
 				});
 			})
 		});

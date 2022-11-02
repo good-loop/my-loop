@@ -335,6 +335,9 @@
 		position: relative; // position ref for loader overlay
 		flex-grow: 1;
 	}
+	.map-controls {
+		line-height: 2; // better vertical centring between download prompt and back button
+	}
 
 	.loader-box {
 		position: absolute;
@@ -355,6 +358,11 @@
 
 	.map-svg {
 		max-height: 8rem;
+	}
+	&.taller-map {
+		.map-svg {
+			max-height: 14rem; // No TOD card above = more vertical space for map
+		}
 	}
 
 	// bigger text and taller map in modal
