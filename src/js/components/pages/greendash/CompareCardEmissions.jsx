@@ -75,7 +75,6 @@ const QuartersCard = ({baseFilters, dataValue}) => {
 			buckets = emissionsPerImpressions(buckets);
 		}
 
-
 		// Display kg or tonnes?
 		let thisCarbon = getSumColumnEmissions(buckets, 'co2');
 		chartProps.data.datasets[0].data[i] = thisCarbon;
