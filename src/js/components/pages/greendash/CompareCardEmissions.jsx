@@ -96,6 +96,13 @@ const QuartersCard = ({baseFilters, dataValue}) => {
 		}
 	});
 
+	// Set Steps if data is too small
+	let maxVal = 0;
+	chartProps.data.datasets[0].data.forEach(val => {if (val > maxVal) maxVal = val})
+	if (maxVal < 1) {
+		chartProps.options.scales.x.ticks.stepSize = 0.1;
+	}
+
 	// Assign bar colours
 	chartProps.data.datasets[0].backgroundColor = dataColours(chartProps.data.datasets[0].data);
 
