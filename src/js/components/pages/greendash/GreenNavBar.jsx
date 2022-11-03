@@ -43,9 +43,9 @@ const GreenNavBar = ({active}) => {
 		<NavbarToggler onClick={toggle} />
 		<Nav navbar vertical>
 			<img className="logo" src="/img/logo-green-dashboard.svg" />
-			<LinkOut href="https://scope3.com" className="boosted text-center">
+			<a className="boosted text-center">
 				BOOSTED BY <img src="/img/gl-logo/external/scope3-logo.wb.svg" className="scope3-logo ml-1" />
-			</LinkOut>
+			</a>
 			<NavItem>
 				<A className={active === 'metrics' ? 'active' : ''} href={window.location}>
 					<div className="green-nav-icon metrics-icon" /> Metrics
