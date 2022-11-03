@@ -9,7 +9,7 @@ import { CO2e, dataColours, GreenCard, GreenCardAbout, ModeButton, NOEMISSIONS, 
 import SimpleTable, { Column } from '../../../base/components/SimpleTable';
 import List from '../../../base/data/List';
 import { ButtonGroup } from 'reactstrap';
-import { emissionsPerImpressions, getBreakdownByEmissions, getSumColumnEmissions, getTagsEmissions } from './emissionscalc';
+import { emissionsPerImpressions, getBreakdownByEmissions, getCompressedBreakdown, getSumColumnEmissions, getTagsEmissions } from './emissionscalc';
 import { isPer1000 } from './GreenMetricsEmissions';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import CSS from '../../../../style/greendash-breakdown-card.less';
@@ -143,11 +143,12 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled=1 }) => {
 const DeviceSubcard = ({ data: osTable }) => {
 	if (!yessy(osTable)) return NOEMISSIONS;
 
-	console.log("DeviceSubcard", osTable);
+	// console.log("DeviceSubcard", osTable);
 
 	const [chartProps, setChartProps] = useState();
 
 	useEffect(() => {
+		// TODO refactor to share code with CompareCardEmissions.jsx
 		const breakdownByOS = getBreakdownByEmissions(osTable, 'co2', 'os');
 		const totalCO2 = Object.values(breakdownByOS).reduce((acc, v) => acc + v, 0);
 
@@ -156,32 +157,10 @@ const DeviceSubcard = ({ data: osTable }) => {
 			return;
 		}
 
-		let minFraction = 0.05;
-
 		// compress by OS group
-		// ??Roscoe wrote some smart code to gracefully select the level of grouping.
-		// After a data-format change -- just went for a simpler option
-		let breakdownByOSGroup1 = {};
-		const total = sum(Object.values(breakdownByOS));
-		Object.entries(breakdownByOS).forEach(([k, v]) => {
-			let osType = osTypes[k];
-			let group = osType?.group || 'Other';
-			if (true || (v / total > minFraction)) {
-				group = osType?.name || k;
-			}
-			breakdownByOSGroup1[group] = (breakdownByOSGroup1[group] || 0) + v;
-		});
-		// compress small rows into other
-		let breakdownByOSGroup2 = {};
-		Object.entries(breakdownByOSGroup1).forEach(([k, v]) => {
-			if (v / total < minFraction) {
-				k = "Other";
-			}
-			breakdownByOSGroup2[k] = (breakdownByOSGroup2[k] || 0) + v;
-		});
-	
-		let data = Object.values(breakdownByOSGroup2);
-		const labels = Object.keys(breakdownByOSGroup2); // ["Windows", "Mac"];
+		let breakdownByOS2 = getCompressedBreakdown({breakdownByX:breakdownByOS, osTypes});	
+		let data = Object.values(breakdownByOS2);
+		const labels = Object.keys(breakdownByOS2); // ["Windows", "Mac"];
 		
 		// Tonnes or kg?
 		let unit = 'kg';
@@ -190,8 +169,7 @@ const DeviceSubcard = ({ data: osTable }) => {
 			unit = 'tonnes';
 			unitShort = 't'
 			data = data.map(v => v / 1000);
-		}
-		
+		}		
 
 		setChartProps({
 			data: {
@@ -284,7 +262,9 @@ const BreakdownCardEmissions = ({ dataValue }) => {
 	const datakey = {tech: 'by_total', device: 'by_os', tag: 'by_adid', domain: 'by_domain'}[mode];
 	let data = dataValue[datakey]?.buckets;
 	// Are we in carbon-per-mille mode?
-	if (isPer1000()) data = emissionsPerImpressions(data);
+	if (isPer1000()) {
+		data = emissionsPerImpressions(data);
+	}
 
 	let subcard;
 	switch(mode) {
@@ -304,7 +284,7 @@ const BreakdownCardEmissions = ({ dataValue }) => {
 	return <GreenCard title="What is the breakdown of your emissions?" className="carbon-breakdown">
 		<ButtonGroup className="mb-2 subcard-switch">
 			<ModeButton name="tech" mode={mode} setMode={setMode}>Ad Tech</ModeButton>
-			<ModeButton name="device" mode={mode} setMode={setMode}>Device Type</ModeButton>
+			{/* <ModeButton name="device" mode={mode} setMode={setMode}>Device Type</ModeButton> */}
 			<ModeButton name="tag" mode={mode} setMode={setMode}>Tag</ModeButton>
 			<ModeButton name="domain" mode={mode} setMode={setMode}>Domain</ModeButton>
 		</ButtonGroup>

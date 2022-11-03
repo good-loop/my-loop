@@ -37,10 +37,10 @@ ServerIO.MYLOOP_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}my.good-loop.com`;
 // HACK localportal but production GreenTags
 // NB: can call `as` or `portal` -- they run the same GreenCalcServlet 
 // `as` is best for production because: backed by a cluster
-ServerIO.GREENCALC_ENDPOINT = 
-	// ServerIO.AS_ENDPOINT+"/greencalc";
-	// ServerIO.PORTAL_ENDPOINT+"/greencalc?server=production";
-	ServerIO.PORTAL_ENDPOINT+"/greencalc";
+// ServerIO.GREENCALC_ENDPOINT = 
+// 	// ServerIO.AS_ENDPOINT+"/greencalc";
+// 	// ServerIO.PORTAL_ENDPOINT+"/greencalc?server=production";
+// 	ServerIO.PORTAL_ENDPOINT+"/greencalc";
 
 // NB: We are rarely editing profiler code, so we mostly want to just use the live one
 ServerIO.PROFILER_ENDPOINT = 'https://profiler.good-loop.com';
