@@ -306,7 +306,7 @@ const dfltMinColour = [186, 9, 84];
  */
 export const dataColours = (series, maxColour = dfltMaxColour, minColour = dfltMinColour) => {
 	if (!series.length) return [];
-	if (series.length === 1) return [`hsl(${maxColour[0]} ${maxColour[1]} ${maxColour[2]})`]
+	// if (series.length === 1) return [`hsl(${maxColour[0]} ${maxColour[1]} ${maxColour[2]})`]
 
 	// make sure everything passed to max/min is coercable to a real number
 	const cleanSeries = series.filter(x => isFinite(x));

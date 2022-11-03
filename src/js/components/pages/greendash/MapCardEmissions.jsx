@@ -6,7 +6,8 @@ import StyleBlock from '../../../base/components/StyleBlock';
 import { space, stopEvent } from '../../../base/utils/miscutils';
 import Misc from '../../../MiscOverrides';
 import { dataColours, GreenCard } from './dashutils';
-import { getCarbonEmissions } from './emissionscalc';
+import { emissionsPerImpressions, getCarbonEmissions } from './emissionscalc';
+import { isPer1000 } from './GreenMetricsEmissions';
 
 /**
  * To extract path bounding box centres from an onscreen SVG (in SVG coords)...
@@ -60,7 +61,7 @@ const MapDownloadCSV = ({ data, mapDefs }) => {
 	);
 };
 
-const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels }) => {
+const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) => {
 	const [pathCentres, setPathCentres] = useState({}); // Estimate region centres from bounding boxes to place text labels
 
 	if (!mapDefs) return null;
@@ -75,6 +76,9 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels }) => {
 		if (carbon >= 1000) {
 			carbon /= 1000;
 			unit = 't';
+		}
+		if (per1000) {
+			unit += '/1000';
 		}
 
 		// Don't modify base map with applied fill/stroke!
@@ -152,7 +156,7 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels }) => {
 	);
 };
 
-const MapCardEmissions = ({ baseFilters }) => {
+const MapCardEmissions = ({ baseFilters, per1000 }) => {
 	const [mapData, setMapData] = useState('loading'); // Object mapping region ID to imps + carbon
 	const [focusRegion, setFocusRegion] = useState('world'); // ID of currently focused country
 	const [mapDefs, setMapDefs] = useState(); // JSON object with map paths and meta
@@ -218,7 +222,7 @@ const MapCardEmissions = ({ baseFilters }) => {
 		// Rename locations with no corresponding map entry to OTHER
 		// convert old non-namespaced sublocations e.g. 'CA' => 'US-CA'
 		// combine data with same key to cleanedLocnBuckets
-		const cleanedLocnBuckets = Object.values(
+		let cleanedLocnBuckets = Object.values(
 			locnBuckets.reduce((acc, val) => {
 				const k = (mapDefs.id !== 'world' && !mapDefs.regions[val.key]) ? `${focusRegion}-${val.key}` : val.key;
 
@@ -237,6 +241,11 @@ const MapCardEmissions = ({ baseFilters }) => {
 				return {...acc};
 			}, {})
 		);
+		// per1000?
+		if (per1000) {
+			let cpmBuckets = emissionsPerImpressions(cleanedLocnBuckets);
+			cleanedLocnBuckets = cpmBuckets;
+		}
 
 		// assign colours
 		const colours = dataColours(cleanedLocnBuckets.map((row) => row.co2));
@@ -247,14 +256,16 @@ const MapCardEmissions = ({ baseFilters }) => {
 				return acc;
 			}, {})
 		);
-	}, [JSON.stringify(filters), pvChartData.value, mapDefs]);
+	}, [JSON.stringify(filters), pvChartData.value, mapDefs, per1000]);
 
 	const cardContents = (
 		<>
 			<div className='mb-2 text-center'>
 				<strong>{mapDefs?.name}</strong>
 			</div>
-			<SVGMap setFocusRegion={isWorld && setFocusRegion} mapDefs={mapDefs} data={mapData} svgRef={setSvgEl} loading={!mapData} showLabels={popOut} />
+			<SVGMap setFocusRegion={isWorld && setFocusRegion} mapDefs={mapDefs} data={mapData} svgRef={setSvgEl} 
+				loading={!mapData} showLabels={popOut} per1000={per1000} 
+			/>
 			<div className='mt-2 map-controls'>
 				<span className='pull-left'>
 					{error ? (

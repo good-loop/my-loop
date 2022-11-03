@@ -7,6 +7,7 @@ import List from '../../../base/data/List';
 import { getDataList } from '../../../base/plumbing/Crud';
 import SearchQuery from '../../../base/searchquery';
 import { assert } from '../../../base/utils/assert';
+import { sum } from '../../../base/utils/miscutils';
 import C from '../../../C';
 import { periodFromUrl } from './dashutils';
 
@@ -17,7 +18,7 @@ import { periodFromUrl } from './dashutils';
  * @param {string} p.start
  * @param {string} p.end
  * @param {string[]} p.breakdown
- * @returns {}
+ * @returns {} ??doc??
  */
 export const getCarbonEmissions = ({ q = '', start = '1 month ago', end = 'now', breakdown, ...rest }) => {
   // assert(!q?.includes('brand:'), q);
@@ -55,6 +56,33 @@ export const getSumColumnEmissions = (buckets, keyName) => {
     total += 1.0 * n;
   }
   return total;
+};
+
+
+/**
+ * Merge same-key rows and compress small rows into "Other"
+ * @param {Object} p
+ * @param {Object} p.breakdownByX {key: number}
+ * @param {?number} p.minFraction
+ * @returns {Object} {key: number}
+ */
+export const getCompressedBreakdown = ({breakdownByX, minFraction=0.05, osTypes}) => {
+  let breakdownByOSGroup1 = {};
+  const total = sum(Object.values(breakdownByX));
+  Object.entries(breakdownByX).forEach(([k, v]) => {
+    let osType = osTypes && osTypes[k];
+    let group = osType?.name || k;			
+    breakdownByOSGroup1[group] = (breakdownByOSGroup1[group] || 0) + v;
+  });
+  // compress small rows into other
+  let breakdownByOSGroup2 = {};
+  Object.entries(breakdownByOSGroup1).forEach(([k, v]) => {
+    if (v / total < minFraction) {
+      k = "Other";
+    }
+    breakdownByOSGroup2[k] = (breakdownByOSGroup2[k] || 0) + v;
+  });
+  return breakdownByOSGroup2;
 };
 
 /**

@@ -173,7 +173,9 @@ const GreenMetrics2 = ({}) => {
       'os{"emissions":"sum"}',
       'domain{"emissions":"sum"}',
       'total{"emissions":"sum"}',
+      // 'campaign{"emissions":"sum"}', do campaign breakdowns later with more security logic
     ],
+    name:"lotsa-chartdata"
   });
 
   let pvCampaigns = getCampaignsEmissions(pvChartData.value?.by_adid.buckets);
@@ -222,19 +224,15 @@ const GreenMetrics2 = ({}) => {
       </Row>
       <Row className='card-row'>
         <Col xs='12' sm='4' className='flex-column'>
-          <CompareCardEmissions {...commonProps} />
+          <CompareCardEmissions {...commonProps} dataValue={pvChartData?.value} />
         </Col>
         <Col xs='12' sm='4' className='flex-column'>
           <BreakdownCardEmissions {...commonProps} dataValue={pvChartData?.value} />
         </Col>
         <Col xs="12" sm="4" className="flex-column">
-          {true ? <>
-            <TimeOfDayCardEmissions {...commonProps} />
-            <MapCardEmissions {...commonProps} />
-          </> : <>
-            <TimeOfDayCardEmissions {...commonProps} />
-            <CTACard />
-          </>}
+          {/* <TimeOfDayCardEmissions {...commonProps} /> nov 22: scope3's api under-delivers - need to overlay our own grid data to get this */}
+          <MapCardEmissions {...commonProps} />
+          {/* <CTACard /> "interested to know more" */}
 			  </Col>
       </Row>
     </>
