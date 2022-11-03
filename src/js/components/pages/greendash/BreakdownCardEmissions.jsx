@@ -11,6 +11,8 @@ import List from '../../../base/data/List';
 import { ButtonGroup } from 'reactstrap';
 import { emissionsPerImpressions, getBreakdownByEmissions, getCompressedBreakdown, getSumColumnEmissions, getTagsEmissions } from './emissionscalc';
 import { isPer1000 } from './GreenMetricsEmissions';
+// Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
+import CSS from '../../../../style/greendash-breakdown-card.less';
 
 
 /** Classify OS strings seen in our data  
@@ -142,7 +144,6 @@ const DeviceSubcard = ({ data: osTable }) => {
 	if (!yessy(osTable)) return NOEMISSIONS;
 
 	// console.log("DeviceSubcard", osTable);
-	const per1000 = isPer1000();
 
 	const [chartProps, setChartProps] = useState();
 
@@ -257,9 +258,10 @@ const BreakdownCardEmissions = ({ dataValue }) => {
 	if (!dataValue) return <Misc.Loading text="Fetching your data..." />;
 	const [mode, setMode] = useState('tech');
 
-	// per1000?
-	const datakey = {tech:'by_total', device:'by_os', tag:'by_adid', domain:'by_domain'}[mode];
-	let data = dataValue[datakey]?.buckets;	
+	
+	const datakey = {tech: 'by_total', device: 'by_os', tag: 'by_adid', domain: 'by_domain'}[mode];
+	let data = dataValue[datakey]?.buckets;
+	// Are we in carbon-per-mille mode?
 	if (isPer1000()) {
 		data = emissionsPerImpressions(data);
 	}
@@ -280,7 +282,7 @@ const BreakdownCardEmissions = ({ dataValue }) => {
 	};
 
 	return <GreenCard title="What is the breakdown of your emissions?" className="carbon-breakdown">
-		<ButtonGroup className="mb-2">
+		<ButtonGroup className="mb-2 subcard-switch">
 			<ModeButton name="tech" mode={mode} setMode={setMode}>Ad Tech</ModeButton>
 			<ModeButton name="device" mode={mode} setMode={setMode}>Device Type</ModeButton>
 			<ModeButton name="tag" mode={mode} setMode={setMode}>Tag</ModeButton>

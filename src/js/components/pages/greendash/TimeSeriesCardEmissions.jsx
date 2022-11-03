@@ -9,6 +9,7 @@ import { emissionsPerImpressions, getBreakdownByEmissions } from './emissionscal
 import Icon from '../../../base/components/Icon';
 import { nonce } from '../../../base/data/DataClass';
 import LinkOut from '../../../base/components/LinkOut';
+import { isPer1000 } from './GreenMetricsEmissions';
 
 
 const icons = {
@@ -64,14 +65,17 @@ const co2ImpactSpecs = {
 
 /** Render the "That's 99,999 kettles/miles/flights" bubble */
 const CO2Impact = ({ kg, mode }) => {
-	if (mode === 'base') {
-		return <div className="impact-container">
+	if (mode === 'base') return (
+		<div className="impact-container">
 			<div className="big-number">
 				<Mass kg={kg} />
-				<div className="desc">{CO2e} emitted</div>
+				<div className="desc">
+					{CO2e}{' '}{isPer1000() ? 'per 1000 impressions' : 'emitted'}
+				</div>
 			</div>
-		</div>;
-	}
+		</div>
+	);
+
 	assert(co2ImpactSpecs[mode], `Can't render CO2-equivalent for mode "${mode}" - no conversion factor/description/etc written`);
 	const { factor, desc, icon, src, srcDesc } = co2ImpactSpecs[mode];
 
@@ -99,8 +103,13 @@ const InfoPop = ({children}) => {
 }
 
 const TotalSubcard = ({ period, aggCO2, per1000 }) => {
-	const [mode, setMode] = useState('base');
-	const totalCO2 = aggCO2?.total || 0;
+	let [mode, setMode] = useState('base');
+	if (isPer1000()) mode = 'base'; // Override - never show impact equivalents in per-1000 mode
+	// Per-1000 mode: "total" would be sum of daily carbon-per-mille values, which makes no sense
+	const totalCO2 = aggCO2?.[isPer1000() ? 'avg' : 'total'] || 0;
+
+	// "That's X long-haul flights" doesn't really make sense in per-1000 mode
+	const showImpacts = (totalCO2 > 0 && !isPer1000());
 
 	return (
 		<div className="total-subcard flex-column justify-content-between">
@@ -109,7 +118,7 @@ const TotalSubcard = ({ period, aggCO2, per1000 }) => {
 				{/* the popup doesnt work well with a link {mode!=="base" && <InfoPop>{co2ImpactSpecs[mode].desc} <LinkOut href={co2ImpactSpecs[mode].src} fetchTitle /></InfoPop>} */}
 			</div>
 			{totalCO2 >= 0 && <CO2Impact kg={totalCO2} mode={mode} />}
-			{totalCO2 > 0 && (
+			{showImpacts && (
 				<div className="impact-buttons">
 					{Object.entries(co2ImpactSpecs).map(([key, { icon, src, srcDesc }]) => {
 						const selected = mode === key;

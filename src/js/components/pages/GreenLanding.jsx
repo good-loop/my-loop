@@ -169,7 +169,7 @@ const GreenLanding2 = ({cid, status}) => {
 			<Container>
 				<Row className="logos py-4">
 					<Col xs="12" sm="6">
-						<img className="logo ecologi-logo" src="/img/green/ecologi-logo.svg" />
+						<img className="logo ecologi-logo" src="/img/green/gold-standard-logo.png" />
 					</Col>
 					<Col xs="12" sm="6">
 						<img className="logo eden-logo" src="/img/green/eden-projects-logo.svg" />

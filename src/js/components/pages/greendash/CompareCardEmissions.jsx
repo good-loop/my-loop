@@ -12,6 +12,7 @@ import { isoDate } from '../../../base/utils/miscutils';
 import C from '../../../C';
 import { dataColours, getPeriodQuarter, GreenCard, GreenCardAbout, ModeButton, printPeriod, TONNES_THRESHOLD } from './dashutils';
 import { emissionsPerImpressions, getCarbonEmissions, getCompressedBreakdown, getSumColumnEmissions } from './emissionscalc';
+
 import { isPer1000 } from './GreenMetricsEmissions';
 
 
@@ -61,19 +62,22 @@ const QuartersCard = ({baseFilters, dataValue}) => {
 	}));
 	// add it into chartProps
 	pvsBuckets.forEach((pvBuckets, i) => {
-		if ( ! pvBuckets.value) return;
+		if (!pvBuckets.value) return;
 
 		// Set label to show quarter is loaded, even if result is empty
 		let quarter = quarters[i];
 		chartProps.data.labels[i] = printPeriod(quarter, true);
 
 		let buckets = pvBuckets.value.by_total.buckets;
-		if ( ! buckets || ! buckets.length) {
+		if (!buckets || !buckets.length) {
 			return; // no data for this quarter
 		}
 		if (isPer1000()) {
 			buckets = emissionsPerImpressions(buckets);
 		}
+
+		// Are we in carbon-per-mille mode?
+		if (isPer1000()) buckets = emissionsPerImpressions(buckets);
 
 		// Display kg or tonnes?
 		let thisCarbon = getSumColumnEmissions(buckets, 'co2');
@@ -97,7 +101,6 @@ const QuartersCard = ({baseFilters, dataValue}) => {
 
 	return <NewChartWidget type="bar" {...chartProps} />
 };
-
 
 
 const CampaignCard = ({baseFilters}) => {
