@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Col as div, Container, Row, Tooltip } from 'reactstrap';
 import Misc from '../../../base/components/Misc';
 import { space, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import NewChartWidget from '../../../base/components/NewChartWidget';
 import { GreenCard, printPeriod, printDate, printDateShort, TONNES_THRESHOLD, GreenCardAbout, Mass, NOEMISSIONS, CO2e } from './dashutils';
-import { emissionsPerImpressions, getBreakdownByEmissions } from './emissionscalc';
+import { emissionsPerImpressions, getBreakdownByEmissions, getCarbonEmissions } from './emissionscalc';
 import Icon from '../../../base/components/Icon';
 import { nonce } from '../../../base/data/DataClass';
 import LinkOut from '../../../base/components/LinkOut';
@@ -135,10 +135,56 @@ const TotalSubcard = ({ period, aggCO2, per1000 }) => {
 	);
 };
 
-
-const TimeSeriesCardEmissions = ({ period, data: timeTable, per1000, noData }) => {
+/**
+ * Update Nov 2022: TimeSeriesCard to fetch its own data. 
+ * @param {Object} param0 
+ * @returns 
+ */
+const TimeSeriesCardEmissions = ({ period, per1000, noData, baseFilters }) => {
 	const [chartProps, setChartProps] = useState(); // ChartJS-ready props object
 	const [aggCO2, setAggCO2] = useState(); // avg/total/max CO2
+	
+	// Breakdown by real date (01:00 to 00:00 next day)
+	const pvTimeTable = getCarbonEmissions({...baseFilters,	breakdown:'time' });
+	let dataTable = pvTimeTable.value?.by_time.buckets;
+
+	const adjustedTimeTable = useMemo(() => {
+		if (!dataTable) return
+		const datesToFetch = dataTable.map(val => {
+			const dt = new Date(val.key_as_string);
+			const start = new Date(dt.getTime() + 3600000).toISOString() // Add one hour
+			const end = new Date(dt.getTime() + 3600000 * 24).toISOString() // Add one day
+			return {'key_as_string':val.key_as_string, 'start': start, 'end': end}
+		})
+		let adjustedTimeTable = new Array();
+		for (const date of datesToFetch) {
+			const pvDateTable = getCarbonEmissions({
+				q: baseFilters.q,	
+				start: date.start,
+				end: date.end,
+				breakdown:'total{"co2":"sum"}'
+			});
+
+			/**
+			 * @param {*} pv
+			 * @param {Function} callback 
+			 */
+			const pvAwaitHack = (pv, callback) => {
+				if (!pv.resolved) setTimeout(() => pvAwaitHack(pv, callback), 50);
+				else callback();
+			}
+
+			pvAwaitHack(pvDateTable, () => {
+				const count = pvDateTable.value.allCount;
+				const row = pvDateTable.value.by_total.buckets[0];
+				const result = {'key_as_string': date.key_as_string, 'count':count, ...row}
+				adjustedTimeTable.push(result);
+			})
+		}
+		return adjustedTimeTable;
+	}, [dataTable])
+
+	let timeTable = adjustedTimeTable?.length > 0 ? adjustedTimeTable : undefined;
 
 	// Convert impressions + tags to CO2 time series
 	useEffect(() => {
@@ -171,7 +217,7 @@ const TimeSeriesCardEmissions = ({ period, data: timeTable, per1000, noData }) =
 		let totalCO2 = data.reduce((acc, d) => acc + d, 0);
 		let maxCO2 = Math.max(...data);
 		let avgCO2 = totalCO2 / labels.length;
-
+		
 		setAggCO2({ avg: avgCO2, max: maxCO2, total: totalCO2 });
 
 		// No impressions --> no chart

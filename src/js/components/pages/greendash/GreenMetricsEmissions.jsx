@@ -165,6 +165,9 @@ const GreenMetrics2 = ({}) => {
     end: period.end.toISOString(),
   };
 
+  /**
+   * TODO This initial load is too large, better split and let each card load their own data
+   */
   const pvChartData = getCarbonEmissions({
     ...baseFilters,
     breakdown: [
@@ -209,7 +212,7 @@ const GreenMetrics2 = ({}) => {
       />
       <Row className='card-row'>
         <Col xs='12' sm='8' className='flex-column'>
-          <TimeSeriesCardEmissions {...commonProps} data={pvChartData.value?.by_time.buckets} noData={noData} />
+          <TimeSeriesCardEmissions {...commonProps} noData={noData} />
         </Col>
         <Col xs='12' sm='4' className='flex-column'>
           <JourneyCardEmissions
