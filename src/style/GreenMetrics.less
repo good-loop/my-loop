@@ -356,14 +356,16 @@
 		border-bottom-right-radius: @gc-border-radius;
 	}
 
+	// Nov 2022: TOD Card disabled, no need to set max-height for now
 	.map-svg {
+		// max-height: 8rem;
 		height: 100%;
 		width: 100%;
 	}
 	&.taller-map {
-		.map-svg {
-			max-height: 14rem; // No TOD card above = more vertical space for map
-		}
+		// .map-svg {
+		// 	max-height: 14rem; // No TOD card above = more vertical space for map
+		// }
 	}
 
 	// bigger text and taller map in modal
