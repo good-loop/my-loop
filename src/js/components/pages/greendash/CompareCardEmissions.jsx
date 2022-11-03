@@ -6,24 +6,32 @@ import NewChartWidget from '../../../base/components/NewChartWidget';
 import { getId } from '../../../base/data/DataClass';
 import KStatus from '../../../base/data/KStatus';
 import { getDataList } from '../../../base/plumbing/Crud';
+import DataStore from '../../../base/plumbing/DataStore';
+import SearchQuery from '../../../base/searchquery';
 import { isoDate } from '../../../base/utils/miscutils';
 import C from '../../../C';
 import { dataColours, getPeriodQuarter, GreenCard, GreenCardAbout, ModeButton, printPeriod, TONNES_THRESHOLD } from './dashutils';
-import { emissionsPerImpressions, getCarbonEmissions, getSumColumnEmissions } from './emissionscalc';
+import { emissionsPerImpressions, getCarbonEmissions, getCompressedBreakdown, getSumColumnEmissions } from './emissionscalc';
+
 import { isPer1000 } from './GreenMetricsEmissions';
 
 
-const baseOptions = {
+/**
+ * 
+ * @param {?String} unit kg|tons
+ * @returns 
+ */
+const baseOptions = (unit='kg') => ({
 	indexAxis: 'y',
-	scales: { x: { ticks: { callback: v => `${v} kg` } } },
+	scales: { x: { ticks: { callback: v => v+' '+unit } } },
 	plugins: {
 		legend: { display: false },
-		tooltip: { callbacks: { label: ctx => `${printer.prettyNumber(ctx.raw)} kg CO2` } },
+		tooltip: { callbacks: { label: ctx => `${printer.prettyNumber(ctx.raw)} ${unit} CO2` } },
 	},
-};
+});
 
 
-const QuartersCard = ({baseFilters}) => {
+const QuartersCard = ({baseFilters, dataValue}) => {
 	// Set up base chart data object
 	const chartProps = {
 		data: {
@@ -32,10 +40,10 @@ const QuartersCard = ({baseFilters}) => {
 				data: [0, 0, 0, 0],
 			}]
 		},
-		options: baseOptions,
+		options: baseOptions(),
 	};
 
-
+	// TODO Can we use dataValue to avoid fetching again??
 	// Construct four quarter periods, from the current quarter back
 	const cursorDate = new Date();
 	cursorDate.setHours(0, 0, 0, 0);
@@ -63,6 +71,9 @@ const QuartersCard = ({baseFilters}) => {
 		let buckets = pvBuckets.value.by_total.buckets;
 		if (!buckets || !buckets.length) {
 			return; // no data for this quarter
+		}
+		if (isPer1000()) {
+			buckets = emissionsPerImpressions(buckets);
 		}
 
 		// Are we in carbon-per-mille mode?
@@ -92,83 +103,56 @@ const QuartersCard = ({baseFilters}) => {
 };
 
 
-/** Transform a GreenCalcServlet data table pertaining to a campaign & insert it in the chart data object */
-const insertCampaignData = (prevProps, campaign, buckets) => {
-	const nextProps = _.cloneDeep(prevProps);
-	const labels = [...nextProps.data.labels];
-	const data = [...nextProps.data.datasets[0].data];
+const CampaignCard = ({baseFilters}) => {
+	const pvChartData = getCarbonEmissions({
+		...baseFilters,
+		breakdown: [
+			'campaign{"emissions":"sum"}',
+		],
+		name:"campaign-chartdata"
+	});
+	let dataValue = pvChartData.value;
 
-	// Insert new values in sorted position, order alphabetically by campaign name
-	const insertIndex = labels.length ? labels.findIndex(label => label > campaign.name) : 0;
-	labels.splice(insertIndex, 0, campaign.name);
-	data.splice(insertIndex, 0, getSumColumnEmissions(buckets, 'co2'));
+	let vbyx = {};	
+	if (dataValue) {				
+		let buckets = dataValue.by_campaign.buckets;
+		if (isPer1000()) {
+			buckets = emissionsPerImpressions(buckets);
+		}
 
-	nextProps.data.labels = labels;
-	nextProps.data.datasets[0].data = data;
-	nextProps.data.datasets[0].backgroundColor = dataColours(data);
+		let breakdownByX = {};
+		buckets.forEach(row => breakdownByX[row.key] = row.co2);
+		vbyx = getCompressedBreakdown({breakdownByX});	
+	}
+	
+	let bucketValues = Object.values(vbyx);
+	const labels = Object.keys(vbyx);
 
-	return nextProps;
-};
-
-
-const CampaignCard = ({baseFilters, campaignIds}) => {
-	const [chartProps, setChartProps] = useState(() => ({
+	const chartProps = {
 		data: {
-			labels: [],
-			datasets: [{ data: [] }]
+			labels,
+			datasets: [{ data:bucketValues }]
 		},
-		options: baseOptions,
-	}));
+		options: baseOptions(),
+	};
 
-	useEffect(() => {
-		getDataList({
-			type: C.TYPES.Campaign,
-			status: KStatus.PUB_OR_DRAFT,
-			ids: campaignIds
-		}).promise.then(({hits: campaigns}) => {
-			campaigns.forEach(campaign => {
-				getCarbonEmissions({...baseFilters,
-					q: `campaign:${getId(campaign)}`,
-					breakdown: 'total{"emissions":"sum"}',
-					nocache: true
-				}).promise.then(res => {
-					let buckets = res.by_total.buckets;
-					// Are we in carbon-per-mille mode?
-					if (isPer1000()) buckets = emissionsPerImpressions(buckets);
-					setChartProps(prev => insertCampaignData(prev, campaign, buckets));
-				});
-			})
-		});
-	}, [campaignIds]);
-
-	// if (chartProps.data.labels.length < campaignIds.length) return
+	// Assign bar colours
+	let colors = dataColours(chartProps.data.datasets[0].data);
+	chartProps.data.datasets[0].backgroundColor = colors;
 
 	return <NewChartWidget type="bar" {...chartProps} />
 };
 
 
-const CompareCardEmissions = (props) => {
+const CompareCardEmissions = ({dataValue, ...props}) => {
 	const [mode, setMode] = useState('quarter');
-	const [campaignIds, setCampaignIds] = useState([]);
-
-	// Get available (shared-with-user) campaigns to decide whether compare-campaigns mode is available
-	useEffect(() => {
-		Login.getSharedWith().then(({cargo: shareList}) => {
-			if (!shareList) return;
-
-			const nextCampaignIds = [];
-			shareList.forEach(share => {
-				const matches = share.item.match(/^Campaign:(\w+)/);
-				if (matches) nextCampaignIds.push(matches[1]);
-			});
-			setCampaignIds(nextCampaignIds);
-		});
-	}, [Login.getId()])
+	// TODO don't offer campaign biew if we're focuding on one campaign
+	const campaignModeDisabled = !! DataStore.getUrlValue("campaign");
 
 	const subcard = (mode === 'quarter') ? (
-		<QuartersCard {...props} />
+		<QuartersCard dataValue={dataValue} {...props} />
 	) : (
-		<CampaignCard {...props} campaignIds={campaignIds} />
+		<CampaignCard {...props} />
 	);
 
 	return <GreenCard title="How do your ad emissions compare?" className="carbon-compare">
@@ -177,7 +161,7 @@ const CompareCardEmissions = (props) => {
 				<ModeButton name="quarter" mode={mode} setMode={setMode}>
 					Quarter
 				</ModeButton>
-				<ModeButton name="campaign" mode={mode} setMode={setMode} disabled={campaignIds.length <= 1}>
+				<ModeButton name="campaign" mode={mode} setMode={setMode} disabled={campaignModeDisabled} >
 					Campaign
 				</ModeButton>
 			</ButtonGroup>
