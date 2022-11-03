@@ -210,7 +210,7 @@ const TimeSeriesCardEmissions = ({ period, data: timeTable, per1000, noData }) =
 						ticks: { maxRotation: 0, minRotation: 0 } // Don't angle date labels - skip some if space is tight
 					},
 					y: {
-						ticks: { callback: (ticksShowTonnes ? v => `${v} t` : v => `${v} kg`) }, // Show appropriate unit
+						ticks: { callback: (ticksShowTonnes ? v => `${v} t` : v => `${v} kg`), precision: 2 }, // Show appropriate unit
 					},
 				},
 				plugins: {

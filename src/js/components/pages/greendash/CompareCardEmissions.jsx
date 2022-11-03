@@ -23,7 +23,7 @@ import { isPer1000 } from './GreenMetricsEmissions';
  */
 const baseOptions = (unit='kg') => ({
 	indexAxis: 'y',
-	scales: { x: { ticks: { callback: v => v+' '+unit } } },
+	scales: { x: { ticks: { callback: v => v+' '+unit, precision: 2 } } },
 	plugins: {
 		legend: { display: false },
 		tooltip: { callbacks: { label: ctx => `${printer.prettyNumber(ctx.raw)} ${unit} CO2` } },
@@ -99,8 +99,8 @@ const QuartersCard = ({baseFilters, dataValue}) => {
 	// Set Steps if data is too small
 	let maxVal = 0;
 	chartProps.data.datasets[0].data.forEach(val => {if (val > maxVal) maxVal = val})
-	if (maxVal < 1) {
-		chartProps.options.scales.x.ticks.stepSize = 0.1;
+	if (maxVal < 0.01) {
+		chartProps.options.scales.x.ticks.precision = 4;
 	}
 
 	// Assign bar colours
