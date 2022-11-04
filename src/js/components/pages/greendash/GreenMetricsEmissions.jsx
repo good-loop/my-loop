@@ -29,7 +29,7 @@ import SearchQuery from '../../../base/searchquery';
 import Campaign from '../../../base/data/Campaign';
 import Login from '../../../base/youagain';
 
-import { yessy } from '../../../base/utils/miscutils';
+import { isDebug, yessy } from '../../../base/utils/miscutils';
 import PropControl from '../../../base/components/PropControl';
 
 
@@ -204,11 +204,11 @@ const GreenMetrics2 = ({}) => {
   return (
     <>
       <OverviewWidget period={period} data={pvChartData.value?.by_total.buckets} />
-      <PropControl inline
+      {isDebug() && <PropControl inline
         type="toggle" prop="emode" dflt="total" label="Show emissions:"
         left={{label: 'Total', value: 'total', colour: 'primary'}}
         right={{label: 'Per 1000 impressions', value: 'per1000', colour: 'primary'}}
-      />
+      />}
       <Row className='card-row'>
         <Col xs='12' sm='8' className='flex-column'>
           <TimeSeriesCardEmissions {...commonProps} data={pvChartData.value?.by_time.buckets} noData={noData} />
@@ -230,7 +230,7 @@ const GreenMetrics2 = ({}) => {
           <BreakdownCardEmissions {...commonProps} dataValue={pvChartData?.value} />
         </Col>
         <Col xs="12" sm="4" className="flex-column">
-          {/* <TimeOfDayCardEmissions {...commonProps} /> nov 22: scope3's api under-delivers - need to overlay our own grid data to get this */}
+          <TimeOfDayCardEmissions {...commonProps} />
           <MapCardEmissions {...commonProps} />
           {/* <CTACard /> "interested to know more" */}
 			  </Col>
