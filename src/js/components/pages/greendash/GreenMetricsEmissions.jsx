@@ -204,7 +204,7 @@ const GreenMetrics2 = ({}) => {
   return (
     <>
       <OverviewWidget period={period} data={pvChartData.value?.by_total.buckets} />
-      {isDebug() && <PropControl inline
+      {false && <PropControl inline
         type="toggle" prop="emode" dflt="total" label="Show emissions:"
         left={{label: 'Total', value: 'total', colour: 'primary'}}
         right={{label: 'Per 1000 impressions', value: 'per1000', colour: 'primary'}}

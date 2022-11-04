@@ -284,7 +284,7 @@ const BreakdownCardEmissions = ({ dataValue }) => {
 	return <GreenCard title="What is the breakdown of your emissions?" className="carbon-breakdown">
 		<ButtonGroup className="mb-2 subcard-switch">
 			<ModeButton name="tech" mode={mode} setMode={setMode}>Ad Tech</ModeButton>
-			{/* <ModeButton name="device" mode={mode} setMode={setMode}>Device Type</ModeButton> */}
+			<ModeButton name="device" mode={mode} setMode={setMode}>Device Type</ModeButton>
 			<ModeButton name="tag" mode={mode} setMode={setMode}>Tag</ModeButton>
 			<ModeButton name="domain" mode={mode} setMode={setMode}>Domain</ModeButton>
 		</ButtonGroup>
