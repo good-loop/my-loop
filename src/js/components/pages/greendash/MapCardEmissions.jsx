@@ -222,7 +222,7 @@ const MapCardEmissions = ({ baseFilters, per1000 }) => {
 
 		// Country or sub-location breakdown?
 		let locnBuckets = pvChartData.value['by_' + locationField].buckets;
-		// Are we in carbon-per-mille mode?
+		
 		if (isPer1000()) {
 			locnBuckets = emissionsPerImpressions(locnBuckets);
 		}
@@ -246,10 +246,9 @@ const MapCardEmissions = ({ baseFilters, per1000 }) => {
 				return {...acc};
 			}, {})
 		);
-		// per1000?
+		// Are we in carbon-per-mille mode?
 		if (per1000) {
-			let cpmBuckets = emissionsPerImpressions(cleanedLocnBuckets);
-			cleanedLocnBuckets = cpmBuckets;
+			cleanedLocnBuckets = emissionsPerImpressions(cleanedLocnBuckets);
 		}
 
 		// assign colours
