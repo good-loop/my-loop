@@ -240,6 +240,9 @@ const PubSubcard = ({data}) => {
 		new Column({ Header: 'CO2e (kg)', accessor: row => row.co2 }),
 	];
 
+	// skip unset
+	data = data.filter(row => row.key !== "unset");
+
 	return <>
 		<p className="small">
 			Emissions breakdown by publisher/domain.<br/>
