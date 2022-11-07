@@ -72,10 +72,6 @@ const QuartersCard = ({baseFilters, dataValue}) => {
 		if (!buckets || !buckets.length) {
 			return; // no data for this quarter
 		}
-		if (isPer1000()) {
-			buckets = emissionsPerImpressions(buckets);
-		}
-
 		// Are we in carbon-per-mille mode?
 		if (isPer1000()) buckets = emissionsPerImpressions(buckets);
 
@@ -121,7 +117,7 @@ const CampaignCard = ({baseFilters}) => {
 	let dataValue = pvChartData.value;
 
 	let vbyx = {};	
-	if (dataValue) {				
+	if (dataValue) {
 		let buckets = dataValue.by_campaign.buckets;
 		if (isPer1000()) {
 			buckets = emissionsPerImpressions(buckets);
