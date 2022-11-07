@@ -222,10 +222,6 @@ const MapCardEmissions = ({ baseFilters, per1000 }) => {
 
 		// Country or sub-location breakdown?
 		let locnBuckets = pvChartData.value['by_' + locationField].buckets;
-		
-		if (isPer1000()) {
-			locnBuckets = emissionsPerImpressions(locnBuckets);
-		}
 
 		// Rename locations with no corresponding map entry to OTHER
 		// convert old non-namespaced sublocations e.g. 'CA' => 'US-CA'
