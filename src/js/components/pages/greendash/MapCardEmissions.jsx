@@ -6,6 +6,8 @@ import Misc from '../../../MiscOverrides';
 import { dataColours, GreenCard } from './dashutils';
 import { emissionsPerImpressions, getCarbonEmissions } from './emissionscalc';
 import { isPer1000 } from './GreenMetricsEmissions';
+// Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
+import CSS from '../../../../style/green-map-card.less';
 
 /**
  * To extract path bounding box centres from an onscreen SVG (in SVG coords)...
@@ -37,30 +39,6 @@ const subLocationForCountry = (country) =>
 const zeroFill = dataColours([0, 1])[0];
 
 
-const MapDownloadCSV = ({ data, mapDefs }) => {
-	if (!data || !mapDefs) return 'CSV';
-
-	const cols = [
-		new Column({ Header: 'Region', accessor: 'name' }),
-		new Column({ Header: 'Region ISO code', accessor: 'id' }),
-		new Column({ Header: 'Impressions', accessor: 'impressions' }),
-		new Column({ Header: 'CO2e (Kg)', accessor: 'carbon' }),
-	];
-
-	const tableData = Object.entries(data)
-		.map(([id, { impressions, carbon }]) => {
-			return { name: mapDefs.regions[id]?.name || 'unknown', id, impressions, carbon };
-		})
-		.sort((a, b) => (a.name || '').localeCompare(b.name));
-
-	return (
-		<DownloadCSVLink columns={cols} data={tableData}>
-			CSV
-		</DownloadCSVLink>
-	);
-};
-
-
 /**
  * For positioning labels on an SVG map.
  * @param {Path} path An SVG <path> element.
@@ -69,6 +47,54 @@ const MapDownloadCSV = ({ data, mapDefs }) => {
 const bbCentre = (path) => {
 	const bbox = path.getBBox();
 	return ({ cx: bbox.x + bbox.width / 2, cy: bbox.y + bbox.height / 2 })
+};
+
+
+/** OS-independent download (downward arrow in in-tray) icon */
+const downloadIcon = <svg viewBox="0 0 100 100" className="icon download-icon">
+	<path d="m5 70v25h90v-25h-5v20h-80v-20z"/>
+	<path d="m45 10v50h-10l15 15 15-15h-10v-50h-10z"/>
+</svg>;
+
+
+/**
+ * Provide CSV and SVG download links for the data shown on the map.
+ */
+const MapDownloader = ({data, svgEl, mapDefs, focusRegion}) => {
+	if (!data || !svgEl || !mapDefs) return null;
+
+	const cols = [
+		new Column({ Header: 'Region', accessor: 'name' }),
+		new Column({ Header: 'Region ISO code', accessor: 'id' }),
+		new Column({ Header: 'Impressions', accessor: 'impressions' }),
+		new Column({ Header: 'CO2e (Kg)', accessor: 'carbon' }),
+	];
+
+	// The table to download as .CSV
+	const tableData = Object.entries(data)
+	.map(([id, { impressions, carbon }]) => {
+		return { name: mapDefs.regions[id]?.name || 'unknown', id, impressions, carbon };
+	})
+	.sort((a, b) => (a.name || '').localeCompare(b.name));
+
+	// Rather than try to induce React to regenerate the link when the SVG contents change,
+	// let's just lazy-read the SVG on click, so the download is definitely up-to-date.
+	const downloadSvg = (e) => {
+		stopEvent(e);
+		const link = document.createElement('a');
+		link.href = `data:image/svg+xml,${encodeURIComponent(svgEl?.outerHTML)}`;
+		link.download = `green-map-${focusRegion}.svg`;
+		link.style = { display: 'none' };
+		document.body.appendChild(link); // This trick doesn't work in Firefox unless it's in the DOM
+		link.click();
+		document.body.removeChild(link);
+	};
+
+	return <div className="map-downloader">
+		{downloadIcon}{' '}
+		<a onClick={downloadSvg} href="#">Map</a>{' / '}
+		<DownloadCSVLink columns={cols} data={tableData}>.CSV</DownloadCSVLink>
+	</div>
 };
 
 
@@ -81,16 +107,19 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 	let regions = [];
 	let labels = [];
 
+	// Do we display kg or tonnes?
+	let unit = 'kg';
+	let divisor = 1;
+	if (Math.max(Object.values(data).map(v => v.carbon)) >= 1000) {
+		unit = 't';
+		divisor = 1000;
+	}
+	// Add suffix for carbon-per-mille?
+	if (per1000) unit += '/1000';
+
 	Object.entries(mapDefs.regions).forEach(([id, props]) => {
 		let { carbon = 0, colour = zeroFill } = data?.[id] || {};
-		let unit = 'kg';
-		if (carbon >= 1000) {
-			carbon /= 1000;
-			unit = 't';
-		}
-		if (per1000) {
-			unit += '/1000';
-		}
+		carbon /= divisor; // If we're displaying tonnes, convert from kg
 
 		// Don't modify base map with applied fill/stroke!
 		props = { ...props, fill: colour, stroke: '#fff', strokeWidth: mapDefs.svgAttributes.fontSize / 10 };
@@ -244,7 +273,7 @@ const MapCardEmissions = ({ baseFilters, per1000 }) => {
 		);
 		// Are we in carbon-per-mille mode?
 		if (per1000) {
-			cleanedLocnBuckets = emissionsPerImpressions(cleanedLocnBuckets);
+			cleanedLocnBuckets = emissionsPerImpressions(cleanedLocnBuckets)
 		}
 
 		// assign colours
@@ -268,24 +297,20 @@ const MapCardEmissions = ({ baseFilters, per1000 }) => {
 		focusPrompt = <Button color="secondary" size="sm" onClick={returnToWorld}>Back</Button>;
 	}
 
+	// Receive reference to the SVG to pass down to the downloader
+	const svgRef = (element) => element && setSvgEl(element);
+
 	const cardContents = <>
 		<div className='mb-2 text-center'>
 			<strong>{mapDefs?.name}</strong>
 		</div>
-		<SVGMap setFocusRegion={isWorld && setFocusRegion} mapDefs={mapDefs} data={mapData} svgRef={setSvgEl} loading={!mapData} showLabels={popOut} />
+		<SVGMap setFocusRegion={isWorld && setFocusRegion} mapDefs={mapDefs} data={mapData} loading={!mapData} showLabels={popOut} svgRef={svgRef} per1000={per1000} />
 		<div className='mt-2 map-controls'>
 			<span className='pull-left'>
 				{error ? (
 					<small>{error}</small>
 				) : (
-					<>
-						Download{' '}
-						<a download={`green-map-${focusRegion}.svg`} href={`data:image/svg+xml,${encodeURIComponent(svgEl?.outerHTML)}`}>
-							map
-						</a>
-						{' / '}
-						<MapDownloadCSV data={mapData} mapDefs={mapDefs} />
-					</>
+					<MapDownloader data={mapData} {...{svgEl, mapDefs, focusRegion}} />
 				)}
 			</span>
 			<span className='pull-right'>
