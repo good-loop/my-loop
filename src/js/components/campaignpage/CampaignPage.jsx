@@ -347,7 +347,10 @@ const CampaignPage = () => {
 					/>
 				)}
 
-				<CharitiesSection charities={charities} donation4charity={donation4charity} campaign={campaign} setCtaModalOpen={setCtaModalOpen}/>
+				{charities.length !== 0 && 
+					<CharitiesSection charities={charities} donation4charity={donation4charity} campaign={campaign} setCtaModalOpen={setCtaModalOpen}/>
+				}
+
 
 				<div className="bg-white">
 					<Container>
