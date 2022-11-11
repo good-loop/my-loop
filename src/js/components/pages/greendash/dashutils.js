@@ -90,16 +90,19 @@ export const periodFromUrl = () => {
 	if (start || end) {
 		const period = {};
 		if (start) {
-			const [, yyyy, mm, dd] = start.match(/(\d+)-(\d+)-(\d+)/);
-			period.start = new Date(yyyy, mm, dd);
-			period.start.setMonth(period.start.getMonth() - 1); // correct for Date taking zero-index months
+			let [, yyyy, mm, dd] = start.match(/(\d+)-(\d+)-(\d+)/);
+			mm = Number.parseInt(mm);
+			period.start = new Date(yyyy, mm - 1, dd);// correct for Date taking zero-index months
+			console.log('period.start before correction', period.start)
 		}
 		if (end) {
-			const [, yyyy, mm, dd] = end.match(/(\d+)-(\d+)-(\d+)/);
-			period.end = new Date(yyyy, mm, dd);
-			period.end.setMonth(period.end.getMonth() - 1); // correct for Date taking zero-index months
+			let [, yyyy, mm, dd] = end.match(/(\d+)-(\d+)-(\d+)/);
+			mm = Number.parseInt(mm);
+			period.end = new Date(yyyy, mm - 1, dd); // correct for Date taking zero-index months
+			console.log('period.end before correction', period.end)
 			// Intuitive form "Period ending 2022-03-31" --> machine form "Period ending 2022-04-01T00:00:00"
 			period.end.setDate(period.end.getDate() + 1);
+			console.log('period.end after correction', period.end)
 		}
 		return period;
 	}
