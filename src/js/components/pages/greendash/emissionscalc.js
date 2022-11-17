@@ -275,7 +275,7 @@ export const emissionsPerImpressions = (buckets, perN = 1000) => (
   buckets.map(bkt => {
     const newBkt = {...bkt}; // Start with a copy
     // Is this a cross-breakdown?
-    if (!'count' in bkt) {
+    if (!('count' in bkt)) {
       const xbdKey = Object.keys(bkt).find(k => k.match(/^by_/))
       if (!xbdKey) return; // No count - but also no by_x sub-breakdown? Strange.
       // Recurse in to process the next breakdown level.
