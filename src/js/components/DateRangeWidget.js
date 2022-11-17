@@ -44,23 +44,28 @@ const after = (d1, d2) => {
 	return d1.getTime() < d2.getTime();
 }
 
+const tomorrow = (date) => {
+	return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+}
+
 /** 00:00:00.000 on the same day as the given Date. */
 const dayStart = (date = new Date()) => {
 	return new Date(dayStart.getFullYear(), dayStart.getMonth(), dayStart.getDate());
 };
 
 
-const Day = ({date, className, onClick, ...rest}) => {
+const Day = ({date, className, onClick, onHover, ...rest}) => {
 	if (!date) return <td className="day"></td>; // placeholder
+	const isCont = date==="cont";
 
-	return <td className={space('day', className)}>
-		<a onClick={() => onClick && onClick(date)} {...rest}>
-			{date==="cont" ? "..." : date.getDate()}
+	return <td className={space('day', isCont && "cont", className)}>
+		<a onClick={() => onClick && !isCont && onClick(date)} onMouseOver={onHover && onHover(date)} {...rest}>
+			{isCont ? "..." : date.getDate()}
 		</a>
 	</td>;
 }
 
-const Month = ({year, month, start, end, setPeriod, className}) => {
+const Month = ({year, month, start, end, hoverStart, hoverEnd, onDayClick, onDayHover, className}) => {
 	const refDate = new Date(year, month, 1);
 
 	let currentRow = [];
@@ -86,27 +91,13 @@ const Month = ({year, month, start, end, setPeriod, className}) => {
 	// What happens when a day on the calendar is clicked?
 	const clickDay = (date) => {
 		if (!date) return;
-		const dayAfter = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
-		// First click will set a range of 1 day encompassing the day clicked.
-		// Clicks before the start date will move the start date.
-		if (!start || date.getTime() < start.getTime()) {
-			const newStart = date;
-			const newEnd = end || dayAfter;
-			setPeriod(null, newStart, newEnd);
-			return;
-		}
-		// Clicks after end date will move the end date.
-		// for execution to reach this point, start must exist & be before clicked date
-		if (!end || date.getTime() > end.getTime()) {
-			setPeriod(null, start, dayAfter);
-			return;
-		}
-		// Clicks within range move whichever of start/end is closer to the clicked date.
-		if (Math.abs(start.getTime() - date.getTime()) < Math.abs(end.getTime() - date.getTime())) {
-			setPeriod(null, date, end);
-		} else {
-			setPeriod(null, start, dayAfter);
-		}
+		onDayClick && onDayClick(date);
+	};
+
+	// What happens when a day on the calendar is clicked?
+	const hoverDay = (date) => {
+		if (!date) return;
+		onDayHover && onDayHover(date);
 	};
 
 	const clickMonth = () => {
@@ -116,11 +107,12 @@ const Month = ({year, month, start, end, setPeriod, className}) => {
 		setPeriod(null, monthStart, monthEnd);
 	};
 
-	console.log(start, end);
+	// end is exclusive - ie a [start, end) range - so is set to midnight 00:00 on the next day
+	const dayBeforeEnd = end ? new Date(end.getFullYear(), end.getMonth(), end.getDate() - 1) : new Date(2999, 10);
 
-	return <div className={space('month', className)}>
-		<a onClick={clickMonth}>
-			<div className="month-name">{months[month]} {year}</div>
+	return <div className={space('month text-center', className)}>
+		<a onClick={clickMonth} className="month-name">
+			{months[month]} {year}
 		</a>
 		<table>
 			<thead>
@@ -134,16 +126,16 @@ const Month = ({year, month, start, end, setPeriod, className}) => {
 					<tr key={i}>
 						{row.map((date, i) => {
 							let selClass = between(start, end, date) ? 'selected' : '';
+							if (between(hoverStart, hoverEnd, date)) selClass += ' hovered';
 							if (selClass) {
 								if (sameDate(date, start)) selClass += ' sel-start';
-								// end is exclusive - ie a [start, end) range - so is set to midnight 00:00 on the next day
-								const dayBeforeEnd = new Date(end.getFullYear(), end.getMonth(), end.getDate() - 1);
 								if (sameDate(date, dayBeforeEnd)) selClass += ' sel-end';
 							}
-							return <Day date={date} className={selClass} key={i} onClick={clickDay} />;
+							if (after(date, new Date())) selClass += ' future';
+							return <Day date={date} className={selClass} key={date + ' ' + i} onClick={clickDay} onHover={hoverDay}/>;
 						})}
-						{i === rows.length - 1 && after(end, row[row.length - 1]) ?
-							<Day date={"cont"} className="selected"/>
+						{i === rows.length - 1 && between(start, end, row[row.length - 1]) && after(dayBeforeEnd, row[row.length - 1]) ?
+							<Day date={"cont"} className={"selected " + (after(row[row.length-1], new Date()) ? "future" : "") }/>
 						 : null}
 					</tr>
 				)})}
@@ -163,11 +155,18 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 	const [name, setName] = useState(dflt.name); // Named time periods, eg "2021-Q1", "yesterday"
 	const [start, setStart] = useState(dflt.start);
 	const [end, setEnd] = useState(dflt.end);
+	const [selDate, setSelDate] = useState(null); // For two-click period selection
+	const [hoverStart, setHoverStart] = useState(null); // For highlighting potential period
+	const [hoverEnd, setHoverEnd] = useState(null);
 
 	useEffect(() => {
 		setPeriod(dflt.name, dflt.start, dflt.end);
-		console.log("DEFAULT PERIOD:::", dflt);
 	}, [dflt]);
+
+	// initial focus
+	useEffect(() => {
+		focusPeriod(dflt.start, dflt.end);
+	}, []);
 
 	const setPeriod = (name, start, end) => {
 		setName(name);
@@ -175,14 +174,14 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 			const periodObj = periodFromName(name);
 			if (periodObj) {
 				setStart(periodObj.start);
-				setEnd(periodObj.end);
-				focusPeriod(periodObj.start, periodObj.end);
+				setEnd(periodObj.end);!sameDate(start, dflt.start) 
+				//focusPeriod(periodObj.start, periodObj.end);
 				return;
 			}
 		}
 		setStart(start);
 		setEnd(end);
-		focusPeriod(start, end);
+		//focusPeriod(start, end);
 	};
 
 	const focusPeriod = (start, end) => {
@@ -194,7 +193,8 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 	
 	// Send changes back to invoking component
 	useEffect(() => {
-		if (start && end && onChange) onChange({start, end, name});
+		if (start && end && onChange)
+			onChange({start, end, name});
 	}, [start, end, name])
 
 	// The month the 3-month calendar view is focused on (try to put current period in view by default)
@@ -202,7 +202,8 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 
 	// Set period to "X days ago" --> "last midnight (ie 00:00:00 today)"
 	const setDaysBack = (offset) => {
-		const newEnd = new Date();
+		// tommorow (end is non-inclusive)
+		const newEnd = tomorrow(new Date());
 		newEnd.setHours(0, 0, 0, 0);
 		const newStart = new Date(newEnd);
 		if (offset) newStart.setDate(newStart.getDate() + offset);
@@ -218,6 +219,33 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 		newStart.setMonth(newStart.getMonth() - 1);
 		setPeriod(null, newStart, newEnd);
 	};
+
+	const selectDate = (date) => {
+		if (!selDate) {
+			setSelDate(date);
+			setHoverStart(date);
+			setHoverEnd(date);
+		} else {
+			const selDateFirst = before(selDate, date);
+			const d1 = selDateFirst ? selDate : date;
+			const d2 = selDateFirst ? tomorrow(date) : tomorrow(selDate);
+			setPeriod(null, d1, d2);
+			setSelDate(null);
+		}
+	};
+
+	const hoverDate = (date) => {
+		if (!selDate) return;
+		else if (sameDate(hoverStart, date) || sameDate(hoverEnd, date)) return;
+		else {
+			console.log("HOVER??", hoverStart, hoverEnd);
+			const selDateFirst = before(selDate, date);
+			const d1 = selDateFirst ? selDate : date;
+			const d2 = selDateFirst ? tomorrow(date) : tomorrow(selDate);
+			setHoverStart(d1);
+			setHoverEnd(d2);
+		}
+	}
 
 	// Quick buttons for common ranges (names currently unused)
 	const setYesterday = () => setDaysBack(-1, 'yesterday');
@@ -236,9 +264,9 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 		<div className="months-container">
 			<a className="shift-focus prev" onClick={() => setFocusDate(prevMonth)}>◀</a>
 			<a className="shift-focus next" onClick={() => setFocusDate(nextMonth)}>▶</a>
-			<Month className="prev-month" year={prevMonth.getFullYear()} month={prevMonth.getMonth()} start={start} end={end} {...monthProps} />
-			<Month className="this-month" year={focusDate.getFullYear()} month={focusDate.getMonth()} start={start} end={end} {...monthProps} />
-			<Month className="next-month" year={nextMonth.getFullYear()} month={nextMonth.getMonth()} start={start} end={end} {...monthProps} />
+			<Month className="prev-month" year={prevMonth.getFullYear()} month={prevMonth.getMonth()} start={start} end={end} hoverStart={hoverStart} hoverEnd={hoverEnd} onDayClick={selectDate} onDayHover={hoverDate} {...monthProps} />
+			<Month className="this-month" year={focusDate.getFullYear()} month={focusDate.getMonth()} start={start} end={end} hoverStart={hoverStart} hoverEnd={hoverEnd} onDayClick={selectDate} onDayHover={hoverDate} {...monthProps} />
+			<Month className="next-month" year={nextMonth.getFullYear()} month={nextMonth.getMonth()} start={start} end={end} hoverStart={hoverStart} hoverEnd={hoverEnd} onDayClick={selectDate} onDayHover={hoverDate} {...monthProps} />
 		</div>
 		<div className="presets-container">
 			<Button className="preset" size="sm" onClick={setYesterday}>Yesterday</Button>
@@ -246,6 +274,7 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 			<Button className="preset" size="sm" onClick={setLast30Days}>Last 30 days</Button>
 			<Button className="preset" size="sm" onClick={setThisMonth}>This month</Button>
 			<Button className="preset" size="sm" onClick={setLastMonth}>Last month</Button>
+			<Button className="preset" size="sm" color="primary" onClick={() => focusPeriod(start, end)}>Recenter</Button>
 		</div>
 	</div>
 };

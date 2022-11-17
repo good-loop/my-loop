@@ -73,6 +73,16 @@
 		&:not(:first-child) {
 			margin-left: 0.5rem;
 		}
+		.month-name {
+			padding: 0.1rem 0.3rem;
+			border-radius: 0.2rem;
+			&:hover {
+				background-color: @greenmedia-darkcyan;
+				color: white;
+				font-weight: bold;
+			}
+		}
+		
 		.day-names {
 			th { font-weight: normal; } // override browser-standard bold weight
 		}
@@ -92,6 +102,21 @@
 			&.sel-end {
 				border-top-right-radius: 0.25em;
 				border-bottom-right-radius: 0.25em;
+			}
+			&.cont a {
+				cursor: default;
+			}
+			&.future {
+				background-color: @gl-light-grey;
+				color: @gl-dark-grey;
+				&.selected {
+					background-color: @green-highlight;
+					color: white;
+				}
+			}
+			&.hovered {
+				background-color: @greenmedia-green !important;
+				color: white !important;
 			}
 		}
 	}
