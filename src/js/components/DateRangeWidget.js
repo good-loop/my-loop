@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'reactstrap';
 import { space } from '../base/utils/miscutils';
+import { periodFromName } from './pages/greendash/dashutils';
 
 
 
@@ -23,6 +24,26 @@ const between = (d1, d2, test) => {
 	);
 };
 
+/**
+ * is d1 a date after d2?
+ * @param {Date} d1 
+ * @param {Date} d2 
+ */
+const after = (d1, d2) => {
+	if (!d1 || !d2) return false;
+	return d1.getTime() > d2.getTime();
+}
+
+/**
+ * is d1 a date before d2?
+ * @param {Date} d1 
+ * @param {Date} d2 
+ */
+ const before = (d1, d2) => {
+	if (!d1 || !d2) return false;
+	return d1.getTime() < d2.getTime();
+}
+
 /** 00:00:00.000 on the same day as the given Date. */
 const dayStart = (date = new Date()) => {
 	return new Date(dayStart.getFullYear(), dayStart.getMonth(), dayStart.getDate());
@@ -33,8 +54,8 @@ const Day = ({date, className, onClick, ...rest}) => {
 	if (!date) return <td className="day"></td>; // placeholder
 
 	return <td className={space('day', className)}>
-		<a onClick={() => onClick(date)} {...rest}>
-			{date.getDate()}
+		<a onClick={() => onClick && onClick(date)} {...rest}>
+			{date==="cont" ? "..." : date.getDate()}
 		</a>
 	</td>;
 }
@@ -95,6 +116,8 @@ const Month = ({year, month, start, end, setPeriod, className}) => {
 		setPeriod(null, monthStart, monthEnd);
 	};
 
+	console.log(start, end);
+
 	return <div className={space('month', className)}>
 		<a onClick={clickMonth}>
 			<div className="month-name">{months[month]} {year}</div>
@@ -106,7 +129,8 @@ const Month = ({year, month, start, end, setPeriod, className}) => {
 				</tr>
 			</thead>
 			<tbody>
-				{rows.map((row, i) => (
+				{rows.map((row, i) => {
+				return (
 					<tr key={i}>
 						{row.map((date, i) => {
 							let selClass = between(start, end, date) ? 'selected' : '';
@@ -118,8 +142,11 @@ const Month = ({year, month, start, end, setPeriod, className}) => {
 							}
 							return <Day date={date} className={selClass} key={i} onClick={clickDay} />;
 						})}
+						{i === rows.length - 1 && after(end, row[row.length - 1]) ?
+							<Day date={"cont"} className="selected"/>
+						 : null}
 					</tr>
-				))}
+				)})}
 			</tbody>
 		</table>
 	</div>;
@@ -137,13 +164,34 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 	const [start, setStart] = useState(dflt.start);
 	const [end, setEnd] = useState(dflt.end);
 
+	useEffect(() => {
+		setPeriod(dflt.name, dflt.start, dflt.end);
+		console.log("DEFAULT PERIOD:::", dflt);
+	}, [dflt]);
+
 	const setPeriod = (name, start, end) => {
 		setName(name);
+		if (!start && !end) {
+			const periodObj = periodFromName(name);
+			if (periodObj) {
+				setStart(periodObj.start);
+				setEnd(periodObj.end);
+				focusPeriod(periodObj.start, periodObj.end);
+				return;
+			}
+		}
 		setStart(start);
 		setEnd(end);
-		if (start) setFocusDate(start);
+		focusPeriod(start, end);
 	};
 
+	const focusPeriod = (start, end) => {
+		if (start && end) {
+			const middleDate = new Date((start.getTime() + end.getTime()) / 2);
+			setFocusDate(middleDate);
+		} else if (start) setFocusDate(start);
+	}
+	
 	// Send changes back to invoking component
 	useEffect(() => {
 		if (start && end && onChange) onChange({start, end, name});
