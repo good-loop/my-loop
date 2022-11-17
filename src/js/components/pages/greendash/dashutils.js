@@ -115,7 +115,27 @@ export const periodFromName = (periodName) => {
 		}
 	}
 
-	// No name match
+	// Custom period with start/end values
+	const start = DataStore.getUrlValue('start');
+	const end = DataStore.getUrlValue('end');
+	if (start || end) {
+		const period = {};
+		if (start) {
+			let [, yyyy, mm, dd] = start.match(/(\d+)-(\d+)-(\d+)/);
+			mm = Number.parseInt(mm);
+			period.start = new Date(yyyy, mm - 1, dd);// correct for Date taking zero-index months
+		}
+		if (end) {
+			let [, yyyy, mm, dd] = end.match(/(\d+)-(\d+)-(\d+)/);
+			mm = Number.parseInt(mm);
+			period.end = new Date(yyyy, mm - 1, dd); // correct for Date taking zero-index months
+			// Intuitive form "Period ending 2022-03-31" --> machine form "Period ending 2022-04-01T00:00:00"
+			period.end.setDate(period.end.getDate() + 1);
+		}
+		return period;
+	}
+
+	// Nothing set in URL
 	return null;
 };
 
