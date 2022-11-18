@@ -78,7 +78,7 @@ const JourneyCardEmissions = ({ campaigns, dataByTime, period, emptyTable }) => 
     );
 
   if (!campaigns || !campaigns.length) {
-    return <Misc.Loading text='Fetching your campaign data...' />;
+    return <GreenCard title='Your journey so far' className='carbon-journey'><Misc.Loading text='Fetching your campaign data...' /></GreenCard>;
   }
 
   let isLoading;
