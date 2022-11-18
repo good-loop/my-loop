@@ -165,14 +165,37 @@ const GreenMetrics2 = ({}) => {
     end: period.end.toISOString(),
   };
 
+  /**
+   * Inital load of total
+   */
+  const pvChartTotal = getCarbonEmissions({...baseFilters, breakdown: ['total{"count":"sum"}']})
+
+  let noData = pvChartTotal.value && !pvChartTotal.value.allCount;
+  // TODO Fall back to filterMode methods to get campaigns when table is empty
+  
+  if (!pvChartTotal.resolved) {
+    return <Misc.Loading text='Fetching campaign lifetime data...' />;
+  }
+  if (!pvChartTotal.value) {
+    return <ErrAlert error={pvChartData.error} color='danger' />;
+  }
+  
+  // HACK: Tell JourneyCard we had an empty table & so couldn't get campaigns (but nothing is "loading")
+  // TODO We CAN get campaigns but it'd take more of a rewrite than we want to do just now.
+  // not working?? How does this compare to noData
+  const emptyTable = pvChartTotal.resolved && (!pvChartTotal?.value?.allCount || pvChartTotal.value.by_total.buckets.length === 0);
+  
+  const commonProps = { period, baseFilters, per1000: isPer1000() };
+  // Removed (temp?): brands, campaigns, tags
+  
   const pvChartData = getCarbonEmissions({
     ...baseFilters,
     breakdown: [
-      'adid{"emissions":"sum"}',
-      'time{"emissions":"sum"}',
-      'os{"emissions":"sum"}',
-      'domain{"emissions":"sum"}',
-      'total{"emissions":"sum"}',
+      // 'total',
+      'time{"co2":"sum"}',
+      'adid{"count":"sum"}',
+      // 'os{"emissions":"sum"}',
+      // 'domain{"emissions":"sum"}',
       // 'campaign{"emissions":"sum"}', do campaign breakdowns later with more security logic
     ],
     name:"lotsa-chartdata"
@@ -183,27 +206,10 @@ const GreenMetrics2 = ({}) => {
     // HACK unwrap nested PV
     pvCampaigns = pvCampaigns.value;
   }
-  let noData = pvChartData.value && !pvChartData.value.allCount;
-  // TODO Fall back to filterMode methods to get campaigns when table is empty
-
-  if (!pvChartData.resolved) {
-    return <Misc.Loading text='Fetching campaign lifetime data...' />;
-  }
-  if (!pvChartData.value) {
-    return <ErrAlert error={pvChartData.error} color='danger' />;
-  }
-
-  const commonProps = { period, baseFilters, per1000: isPer1000() };
-  // Removed (temp?): brands, campaigns, tags
-
-  // HACK: Tell JourneyCard we had an empty table & so couldn't get campaigns (but nothing is "loading")
-  // TODO We CAN get campaigns but it'd take more of a rewrite than we want to do just now.
-  // not working?? How does this compare to noData
-  const emptyTable = pvChartData.resolved && (!pvChartData?.value?.allCount || pvChartData.value.by_total.buckets.length === 0);
 
   return (
     <>
-      <OverviewWidget period={period} data={pvChartData.value?.by_total.buckets} />
+      <OverviewWidget period={period} data={pvChartTotal.value?.by_total.buckets} />
       {false && <PropControl inline
         type="toggle" prop="emode" dflt="total" label="Show emissions:"
         left={{label: 'Total', value: 'total', colour: 'primary'}}
@@ -224,10 +230,10 @@ const GreenMetrics2 = ({}) => {
       </Row>
       <Row className='card-row'>
         <Col xs='12' sm='4' className='flex-column'>
-          <CompareCardEmissions {...commonProps} dataValue={pvChartData?.value} />
+          <CompareCardEmissions {...commonProps} />
         </Col>
         <Col xs='12' sm='4' className='flex-column'>
-          <BreakdownCardEmissions {...commonProps} dataValue={pvChartData?.value} />
+          <BreakdownCardEmissions {...commonProps} />
         </Col>
         <Col xs="12" sm="4" className="flex-column">
           <TimeOfDayCardEmissions {...commonProps} />

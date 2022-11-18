@@ -31,7 +31,7 @@ const baseOptions = (unit='kg') => ({
 });
 
 
-const QuartersCard = ({baseFilters, dataValue}) => {
+const QuartersCard = ({baseFilters}) => {
 	// Set up base chart data object
 	const chartProps = {
 		data: {
@@ -58,7 +58,7 @@ const QuartersCard = ({baseFilters, dataValue}) => {
 		...baseFilters,
 		start: isoDate(quarter.start),
 		end: isoDate(quarter.end),
-		breakdown: 'total{"emissions":"sum"}',
+		breakdown: 'total{"co2":"sum"}',
 	}));
 	// add it into chartProps
 	pvsBuckets.forEach((pvBuckets, i) => {
@@ -110,7 +110,7 @@ const CampaignCard = ({baseFilters}) => {
 	const pvChartData = getCarbonEmissions({
 		...baseFilters,
 		breakdown: [
-			'campaign{"emissions":"sum"}',
+			'campaign{"co2":"sum"}',
 		],
 		name:"campaign-chartdata"
 	});
@@ -147,13 +147,13 @@ const CampaignCard = ({baseFilters}) => {
 };
 
 
-const CompareCardEmissions = ({dataValue, ...props}) => {
+const CompareCardEmissions = ({...props}) => {
 	const [mode, setMode] = useState('quarter');
 	// TODO don't offer campaign biew if we're focuding on one campaign
 	const campaignModeDisabled = !! DataStore.getUrlValue("campaign");
 
 	const subcard = (mode === 'quarter') ? (
-		<QuartersCard dataValue={dataValue} {...props} />
+		<QuartersCard {...props} />
 	) : (
 		<CampaignCard {...props} />
 	);
