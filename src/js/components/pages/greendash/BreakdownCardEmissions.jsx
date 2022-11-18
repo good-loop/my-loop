@@ -9,7 +9,7 @@ import { CO2e, dataColours, GreenCard, GreenCardAbout, ModeButton, NOEMISSIONS, 
 import SimpleTable, { Column } from '../../../base/components/SimpleTable';
 import List from '../../../base/data/List';
 import { ButtonGroup } from 'reactstrap';
-import { emissionsPerImpressions, getBreakdownByEmissions, getCompressedBreakdown, getSumColumnEmissions, getTagsEmissions } from './emissionscalc';
+import { emissionsPerImpressions, getBreakdownByEmissions, getCompressedBreakdown, getSumColumnEmissions, getTagsEmissions, getCarbonEmissions } from './emissionscalc';
 import { isPer1000 } from './GreenMetricsEmissions';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import CSS from '../../../../style/greendash-breakdown-card.less';
@@ -257,7 +257,26 @@ const PubSubcard = ({data}) => {
  * @param {Object} p
  * @param {Object} p.dataValue pvChartData.value Which are split by breakdown: os, adid, 
  */
-const BreakdownCardEmissions = ({ dataValue }) => {
+const BreakdownCardEmissions = ({baseFilters}) => {
+	let dataValue;
+
+	/**
+	 * Easy way: fetching everything here
+	 * This is stil a big load, could take over 16 seconds
+	 * TODO: 1. adid & domain only need count + co2, no need for the whole emissions bucket
+	 * TODO: 2. lazyload it, only load when user get to the page
+	 */
+	const pvDataValue = getCarbonEmissions({...baseFilters, 
+		breakdown: [
+			'total{"emissions":"sum"}', 
+			'os{"co2":"sum"}',
+			'adid{"emissions":"sum"}',
+			'domain{"emissions":"sum"}'
+		]
+	})
+
+	if (pvDataValue.resolved && pvDataValue.value) dataValue = pvDataValue.value;
+
 	if (!dataValue) return <Misc.Loading text="Fetching your data..." />;
 	const [mode, setMode] = useState('tech');
 
