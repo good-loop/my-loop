@@ -58,14 +58,15 @@ const Day = ({date, className, onClick, onHover, ...rest}) => {
 	if (!date) return <td className="day"></td>; // placeholder
 	const isCont = date==="cont";
 
-	return <td className={space('day', isCont && "cont", className)}>
-		<a onClick={() => onClick && !isCont && onClick(date)} onMouseOver={onHover && onHover(date)} {...rest}>
-			{isCont ? "..." : date.getDate()}
-		</a>
+	return <td className={space('day', isCont && "cont", className)}
+				onClick={() => onClick && !isCont && onClick(date)}
+				onMouseOver={() => onHover && onHover(date)}
+				{...rest}>
+		{isCont ? "..." : date.getDate()}
 	</td>;
 }
 
-const Month = ({year, month, start, end, hoverStart, hoverEnd, onDayClick, onDayHover, className}) => {
+const Month = ({year, month, start, end, setPeriod, hoverStart, hoverEnd, onDayClick, onDayHover, className}) => {
 	const refDate = new Date(year, month, 1);
 
 	let currentRow = [];
@@ -231,14 +232,14 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 			const d2 = selDateFirst ? tomorrow(date) : tomorrow(selDate);
 			setPeriod(null, d1, d2);
 			setSelDate(null);
+			setHoverStart(null);
+			setHoverEnd(null);
 		}
 	};
 
 	const hoverDate = (date) => {
 		if (!selDate) return;
-		else if (sameDate(hoverStart, date) || sameDate(hoverEnd, date)) return;
 		else {
-			console.log("HOVER??", hoverStart, hoverEnd);
 			const selDateFirst = before(selDate, date);
 			const d1 = selDateFirst ? selDate : date;
 			const d2 = selDateFirst ? tomorrow(date) : tomorrow(selDate);
@@ -264,9 +265,9 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 		<div className="months-container">
 			<a className="shift-focus prev" onClick={() => setFocusDate(prevMonth)}>◀</a>
 			<a className="shift-focus next" onClick={() => setFocusDate(nextMonth)}>▶</a>
-			<Month className="prev-month" year={prevMonth.getFullYear()} month={prevMonth.getMonth()} start={start} end={end} hoverStart={hoverStart} hoverEnd={hoverEnd} onDayClick={selectDate} onDayHover={hoverDate} {...monthProps} />
-			<Month className="this-month" year={focusDate.getFullYear()} month={focusDate.getMonth()} start={start} end={end} hoverStart={hoverStart} hoverEnd={hoverEnd} onDayClick={selectDate} onDayHover={hoverDate} {...monthProps} />
-			<Month className="next-month" year={nextMonth.getFullYear()} month={nextMonth.getMonth()} start={start} end={end} hoverStart={hoverStart} hoverEnd={hoverEnd} onDayClick={selectDate} onDayHover={hoverDate} {...monthProps} />
+			<Month className="prev-month" year={prevMonth.getFullYear()} month={prevMonth.getMonth()} setPeriod={setPeriod} start={start} end={end} hoverStart={hoverStart} hoverEnd={hoverEnd} onDayClick={selectDate} onDayHover={hoverDate} {...monthProps} />
+			<Month className="this-month" year={focusDate.getFullYear()} month={focusDate.getMonth()} setPeriod={setPeriod} start={start} end={end} hoverStart={hoverStart} hoverEnd={hoverEnd} onDayClick={selectDate} onDayHover={hoverDate} {...monthProps} />
+			<Month className="next-month" year={nextMonth.getFullYear()} month={nextMonth.getMonth()} setPeriod={setPeriod} start={start} end={end} hoverStart={hoverStart} hoverEnd={hoverEnd} onDayClick={selectDate} onDayHover={hoverDate} {...monthProps} />
 		</div>
 		<div className="presets-container">
 			<Button className="preset" size="sm" onClick={setYesterday}>Yesterday</Button>
