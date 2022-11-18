@@ -9,16 +9,22 @@ import { CO2e, dataColours, GreenCard, GreenCardAbout, ModeButton, NOEMISSIONS, 
 import SimpleTable, { Column } from '../../../base/components/SimpleTable';
 import List from '../../../base/data/List';
 import { ButtonGroup } from 'reactstrap';
-import { emissionsPerImpressions, getBreakdownByEmissions, getCompressedBreakdown, getSumColumnEmissions, getTagsEmissions, getCarbonEmissions } from './emissionscalc';
+import {
+	emissionsPerImpressions,
+	getBreakdownByEmissions,
+	getCompressedBreakdown,
+	getSumColumnEmissions,
+	getTagsEmissions,
+	getCarbonEmissions,
+} from './emissionscalc';
 import { isPer1000 } from './GreenMetricsEmissions';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import CSS from '../../../../style/greendash-breakdown-card.less';
 
-
-/** Classify OS strings seen in our data  
- * 
+/** Classify OS strings seen in our data
+ *
  * {raw-value: {type:desktop|mobile, group, name} }
-*/
+ */
 const osTypes = {
 	windows: { type: 'desktop', group: 'Windows', name: 'Windows' },
 	'mac os x': { type: 'desktop', group: 'Mac OS X', name: 'Mac OS X' },
@@ -48,16 +54,15 @@ const osTypes = {
 	panasonic: { type: 'smart', group: 'Smart TV', name: 'Hisense TV' },
 };
 
-
 /**
- * 
+ *
  * @param {Object} p
  * @param {*} tags
  * @param {!Object} p.data {table: Object[][] }
  * @param {Number} minimumPercentLabeled the minimum percentage to include a data label for
- * @returns 
+ * @returns
  */
-const TechSubcard = ({ data: osBuckets, minimumPercentLabeled=1 }) => {
+const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1 }) => {
 	if (!yessy(osBuckets)) return NOEMISSIONS;
 
 	const [chartProps, setChartProps] = useState();
@@ -65,14 +70,14 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled=1 }) => {
 	useEffect(() => {
 		// "co2","co2base","co2creative","co2supplypath"
 		// let totalCO2 = getSumColumnEmissions(osBuckets, "co2");
-		let media = getSumColumnEmissions(osBuckets, "co2creative");
-		let publisher = getSumColumnEmissions(osBuckets, "co2base");
-		let dsp = getSumColumnEmissions(osBuckets, "co2supplypath");
+		let media = getSumColumnEmissions(osBuckets, 'co2creative');
+		let publisher = getSumColumnEmissions(osBuckets, 'co2base');
+		let dsp = getSumColumnEmissions(osBuckets, 'co2supplypath');
 
 		const totalCO2 = media + dsp + publisher;
 
 		if (totalCO2 === 0) {
-			setChartProps({isEmpty: true});
+			setChartProps({ isEmpty: true });
 			return;
 		}
 
@@ -80,24 +85,26 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled=1 }) => {
 			data: {
 				// labels: ['Media', 'Publisher overhead', 'Supply-path overhead'],
 				labels: ['Media', 'Publisher', 'Supply path'],
-				datasets: [{
-					label: 'Kg CO2',
-					backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
-					data: [media, publisher, dsp],
-				}]
+				datasets: [
+					{
+						label: 'Kg CO2',
+						backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
+						data: [media, publisher, dsp],
+					},
+				],
 			},
 			options: {
 				layout: { autoPadding: true, padding: 5 },
 				plugins: {
 					legend: {
-						position: ctx => (ctx.chart.width < 250 ? 'left' : 'top'),
+						position: (ctx) => (ctx.chart.width < 250 ? 'left' : 'top'),
 						labels: { boxWidth: 20 },
 					},
 					tooltip: {
 						callbacks: {
-							label: ctx => ` ${printer.prettyNumber(ctx.dataset.data[ctx.dataIndex])} kg`,
-							title: ctx => ctx[0].label,
-						}
+							label: (ctx) => ` ${printer.prettyNumber(ctx.dataset.data[ctx.dataIndex])} kg`,
+							title: (ctx) => ctx[0].label,
+						},
 					},
 					datalabels: {
 						labels: {
@@ -105,36 +112,34 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled=1 }) => {
 								color: '#fff',
 								textStrokeColor: '#666',
 								textStrokeWidth: 2,
-								font: ctx => ({
+								font: (ctx) => ({
 									family: 'Montserrat',
 									weight: 'bold',
-									size: Math.round(Math.min(ctx.chart.chartArea.width, ctx.chart.chartArea.height) / 7)
+									size: Math.round(Math.min(ctx.chart.chartArea.width, ctx.chart.chartArea.height) / 7),
 								}),
 								formatter: (value = 0) => {
-									const percentage = Math.round(value * 100 / totalCO2);
-									return (percentage >= minimumPercentLabeled) ? `${percentage}%` : '';
+									const percentage = Math.round((value * 100) / totalCO2);
+									return percentage >= minimumPercentLabeled ? `${percentage}%` : '';
 								},
-							}
-						}
-					}
-				}
-			}
-		})
-	}, [osBuckets])
+							},
+						},
+					},
+				},
+			},
+		});
+	}, [osBuckets]);
 
 	if (!chartProps) return null;
 	if (chartProps?.isEmpty) return NOEMISSIONS;
-	
-	return <>
-		<p>{CO2e} emissions due to...</p>
-		<NewChartWidget type="pie" {...chartProps} datalabels />
-		<small className="text-center">
-			The Green Ad Tag per-impression overhead is measured,
-			but too small to display in this chart.
-		</small>
-	</>;
-};
 
+	return (
+		<>
+			<p>{CO2e} emissions due to...</p>
+			<NewChartWidget type='pie' {...chartProps} datalabels />
+			<small className='text-center'>The Green Ad Tag per-impression overhead is measured, but too small to display in this chart.</small>
+		</>
+	);
+};
 
 /**
  * desktop vs mobile and different OS
@@ -153,111 +158,116 @@ const DeviceSubcard = ({ data: osTable }) => {
 		const totalCO2 = Object.values(breakdownByOS).reduce((acc, v) => acc + v, 0);
 
 		if (totalCO2 === 0) {
-			setChartProps({isEmpty: true});
+			setChartProps({ isEmpty: true });
 			return;
 		}
 
 		// compress by OS group
-		let breakdownByOS2 = getCompressedBreakdown({breakdownByX:breakdownByOS, osTypes});	
+		let breakdownByOS2 = getCompressedBreakdown({ breakdownByX: breakdownByOS, osTypes });
 		let data = Object.values(breakdownByOS2);
 		const labels = Object.keys(breakdownByOS2); // ["Windows", "Mac"];
-		
+
 		// Tonnes or kg?
 		let unit = 'kg';
-		let unitShort = 'kg'
+		let unitShort = 'kg';
 		if (Math.max(...data) > TONNES_THRESHOLD) {
 			unit = 'tonnes';
-			unitShort = 't'
-			data = data.map(v => v / 1000);
-		}		
+			unitShort = 't';
+			data = data.map((v) => v / 1000);
+		}
 
 		setChartProps({
 			data: {
 				labels,
-				datasets: [{
-					data,
-					backgroundColor: dataColours(data),
-				}]
+				datasets: [
+					{
+						data,
+						backgroundColor: dataColours(data),
+					},
+				],
 			},
 			options: {
 				indexAxis: 'y',
 				plugins: {
 					legend: { display: false },
-					tooltip: { callbacks: { label: ctx => `${printer.prettyNumber(ctx.raw)} ${unit} CO2` } },
+					tooltip: { callbacks: { label: (ctx) => `${printer.prettyNumber(ctx.raw)} ${unit} CO2` } },
 				},
-				scales: { x: { ticks: { callback: v => `${Math.round(v)} ${unitShort}` } } },
-			}
+				scales: { x: { ticks: { callback: (v) => `${Math.round(v)} ${unitShort}` } } },
+			},
 		});
 	}, [osTable]);
-	
+
 	if (!chartProps) return null;
 	if (chartProps?.isEmpty) return NOEMISSIONS;
-	
-	return <NewChartWidget type="bar" {...chartProps} />;
+
+	return <NewChartWidget type='bar' {...chartProps} />;
 }; // ./DeviceSubCard
 
-
 /** A table cell with a title/tooltip for cases where the value is likely to display truncated */
-const CellWithTitle = (value) => <span title="value">{value}</span>;
+const CellWithTitle = (value) => <span title='value'>{value}</span>;
 
 /**
  * Table of impressions and carbon per tag
  * @param {Object} p
  * @param {Object[]} p.data adid table
  */
-const TagSubcard = ({data}) => {
+const TagSubcard = ({ data }) => {
 	if (!yessy(data)) return NOEMISSIONS;
 	// map GreenTag id to a display-name
 	const pvTags = getTagsEmissions(data);
 	const tags = List.hits(pvTags.value) || [];
 	const tag4id = {};
-	tags.forEach(tag => tag4id[tag.id] = tag);
+	tags.forEach((tag) => (tag4id[tag.id] = tag));
 
 	// {adid, count, totalEmissions, baseEmissions, 'creativeEmissions', 'supplyPathEmissions'}
 	let columns = [
 		// new Column({Header:"Campaign"}),
-		new Column({Header: 'Tag', accessor: row => tag4id[row.key]?.name, Cell: CellWithTitle }),
-		new Column({Header: 'Impressions', accessor: row => row.count}),
-		new Column({Header: 'CO2e (kg)', accessor: row => row.co2}),
+		new Column({ Header: 'Tag', accessor: (row) => tag4id[row.key]?.name, Cell: CellWithTitle }),
+		new Column({ Header: 'Impressions', accessor: (row) => row.count }),
+		new Column({ Header: 'CO2e (kg)', accessor: (row) => row.co2 }),
 	];
 
-	return <>
-		<p className="small">
-			Emissions breakdown by Green Ad Tags.<br/>
-			You can track any aspect of media buying by generating different tags, then using them in your buying.
-		</p>
-		<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className="tag-table" tableName="carbon-by-tag" />
-	</>;
+	return (
+		<>
+			<p className='small'>
+				Emissions breakdown by Green Ad Tags.
+				<br />
+				You can track any aspect of media buying by generating different tags, then using them in your buying.
+			</p>
+			<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className='tag-table' tableName='carbon-by-tag' />
+		</>
+	);
 };
 
-
-const PubSubcard = ({data}) => {
+const PubSubcard = ({ data }) => {
 	if (!yessy(data)) return NOEMISSIONS;
 
 	let columns = [
-		new Column({ Header: 'Domain', accessor: row => row.key, Cell: CellWithTitle }),
-		new Column({ Header: 'Impressions', accessor: row => row.count }),
-		new Column({ Header: 'CO2e (kg)', accessor: row => row.co2 }),
+		new Column({ Header: 'Domain', accessor: (row) => row.key, Cell: CellWithTitle }),
+		new Column({ Header: 'Impressions', accessor: (row) => row.count }),
+		new Column({ Header: 'CO2e (kg)', accessor: (row) => row.co2 }),
 	];
 
 	// skip unset
-	data = data.filter(row => row.key !== "unset");
+	data = data.filter((row) => row.key !== 'unset');
 
-	return <>
-		<p className="small">
-			Emissions breakdown by publisher/domain.<br/>
-		</p>
-		<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className="domain-table" tableName="carbon-by-publishers" />
-	</>;
+	return (
+		<>
+			<p className='small'>
+				Emissions breakdown by publisher/domain.
+				<br />
+			</p>
+			<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className='domain-table' tableName='carbon-by-publishers' />
+		</>
+	);
 };
 
-
 /**
- * 
+ *
  * @param {Object} p
- * @param {Object} p.dataValue pvChartData.value Which are split by breakdown: os, adid, 
+ * @param {Object} p.dataValue pvChartData.value Which are split by breakdown: os, adid,
  */
-const BreakdownCardEmissions = ({baseFilters}) => {
+const BreakdownCardEmissions = ({ baseFilters }) => {
 	let dataValue;
 
 	/**
@@ -266,22 +276,28 @@ const BreakdownCardEmissions = ({baseFilters}) => {
 	 * TODO: 1. adid & domain only need count + co2, no need for the whole emissions bucket
 	 * TODO: 2. lazyload it, only load when user get to the page
 	 */
-	const pvDataValue = getCarbonEmissions({...baseFilters, 
-		breakdown: [
-			'total{"emissions":"sum"}', 
-			'os{"co2":"sum"}',
-			'adid{"emissions":"sum"}',
-			'domain{"emissions":"sum"}'
-		]
-	})
+	const pvDataValue = getCarbonEmissions({
+		...baseFilters,
+		breakdown: ['total{"emissions":"sum"}', 'os{"co2":"sum"}', 'adid{"emissions":"sum"}', 'domain{"emissions":"sum"}'],
+	});
 
 	if (pvDataValue.resolved && pvDataValue.value) dataValue = pvDataValue.value;
 
-	if (!dataValue) return <Misc.Loading text="Fetching your data..." />;
+	if (!dataValue)
+		return (
+			<GreenCard title='What is the breakdown of your emissions?' className='carbon-breakdown'>
+				<ButtonGroup className='mb-2 subcard-switch'>
+					<ModeButton name='tech'>Ad Tech</ModeButton>
+					<ModeButton name='device'>Device Type</ModeButton>
+					<ModeButton name='tag'>Tag</ModeButton>
+					<ModeButton name='domain'>Domain</ModeButton>
+				</ButtonGroup>
+				<Misc.Loading text='Fetching your data...' />
+			</GreenCard>
+		);
 	const [mode, setMode] = useState('tech');
 
-	
-	const datakey = {tech: 'by_total', device: 'by_os', tag: 'by_adid', domain: 'by_domain'}[mode];
+	const datakey = { tech: 'by_total', device: 'by_os', tag: 'by_adid', domain: 'by_domain' }[mode];
 	let data = dataValue[datakey]?.buckets;
 	// Are we in carbon-per-mille mode?
 	if (isPer1000()) {
@@ -289,7 +305,7 @@ const BreakdownCardEmissions = ({baseFilters}) => {
 	}
 
 	let subcard;
-	switch(mode) {
+	switch (mode) {
 		case 'tech':
 			subcard = <TechSubcard data={data} minimumPercentLabeled={10} />;
 			break;
@@ -301,22 +317,31 @@ const BreakdownCardEmissions = ({baseFilters}) => {
 			break;
 		case 'domain':
 			subcard = <PubSubcard data={data} />;
-	};
+	}
 
-	return <GreenCard title="What is the breakdown of your emissions?" className="carbon-breakdown">
-		<ButtonGroup className="mb-2 subcard-switch">
-			<ModeButton name="tech" mode={mode} setMode={setMode}>Ad Tech</ModeButton>
-			<ModeButton name="device" mode={mode} setMode={setMode}>Device Type</ModeButton>
-			<ModeButton name="tag" mode={mode} setMode={setMode}>Tag</ModeButton>
-			<ModeButton name="domain" mode={mode} setMode={setMode}>Domain</ModeButton>
-		</ButtonGroup>
-		{subcard}
-		<GreenCardAbout>
-			<p>Where do we get numbers for each slice from?</p>
-			<p>How do we determine OS/device breakdowns?</p>
-		</GreenCardAbout>
-	</GreenCard>;
+	return (
+		<GreenCard title='What is the breakdown of your emissions?' className='carbon-breakdown'>
+			<ButtonGroup className='mb-2 subcard-switch'>
+				<ModeButton name='tech' mode={mode} setMode={setMode}>
+					Ad Tech
+				</ModeButton>
+				<ModeButton name='device' mode={mode} setMode={setMode}>
+					Device Type
+				</ModeButton>
+				<ModeButton name='tag' mode={mode} setMode={setMode}>
+					Tag
+				</ModeButton>
+				<ModeButton name='domain' mode={mode} setMode={setMode}>
+					Domain
+				</ModeButton>
+			</ButtonGroup>
+			{subcard}
+			<GreenCardAbout>
+				<p>Where do we get numbers for each slice from?</p>
+				<p>How do we determine OS/device breakdowns?</p>
+			</GreenCardAbout>
+		</GreenCard>
+	);
 };
-
 
 export default BreakdownCardEmissions;
