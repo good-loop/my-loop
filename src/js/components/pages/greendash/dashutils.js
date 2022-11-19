@@ -52,6 +52,37 @@ export const getPeriodYear = (date = new Date()) => {
 export const periodFromUrl = () => {
 	// User has set a named period (year, quarter, month)
 	const periodName = DataStore.getUrlValue('period')
+	const periodObjFromName = periodFromName(periodName);
+	if (periodObjFromName) return periodObjFromName;
+
+	// Custom period with start/end values
+	const start = DataStore.getUrlValue('start');
+	const end = DataStore.getUrlValue('end');
+	if (start || end) {
+		const period = {};
+		if (start) {
+			const [, yyyy, mm, dd] = start.match(/(\d+)-(\d+)-(\d+)/);
+			period.start = new Date(yyyy, mm, dd);
+			period.start.setMonth(period.start.getMonth() - 1); // correct for Date taking zero-index months
+		}
+		if (end) {
+			const [, yyyy, mm, dd] = end.match(/(\d+)-(\d+)-(\d+)/);
+			period.end = new Date(yyyy, mm, dd);
+			period.end.setMonth(period.end.getMonth() - 1); // correct for Date taking zero-index months
+			// Intuitive form "Period ending 2022-03-31" --> machine form "Period ending 2022-04-01T00:00:00"
+			period.end.setDate(period.end.getDate() + 1);
+		}
+		return period;
+	}
+
+	// Nothing set in URL
+	return null;
+};
+
+/** Convert a name to a period object
+ * @returns {?Object} {start:Date end:Date}
+*/
+export const periodFromName = (periodName) => {
 	if (periodName) {
 		if (periodName === 'all') {
 			return {

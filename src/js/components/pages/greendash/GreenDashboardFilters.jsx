@@ -5,7 +5,7 @@ import KStatus from '../../../base/data/KStatus';
 import DataStore from '../../../base/plumbing/DataStore';
 import { nonce } from '../../../base/data/DataClass';
 import { getDataItem, getDataList } from '../../../base/plumbing/Crud';
-import { getPeriodQuarter, periodFromUrl, periodToParams, printPeriod } from './dashutils';
+import { getPeriodQuarter, getPeriodMonth, periodFromUrl, periodToParams, printPeriod } from './dashutils';
 
 import DateRangeWidget from '../../DateRangeWidget';
 import { modifyPage } from '../../../base/plumbing/glrouter';
@@ -109,6 +109,16 @@ const GreenDashboardFilters = ({}) => {
 
 	const [filterMode, setFilterMode] = useState(defaultFilterMode({brand, agency, campaign, tag}));
 	const [showCustomRange, setShowCustomRange] = useState(!period?.name);
+
+	const displayCustomRange = () => {
+		// Don't display the All Time 1970-2999 range
+		if (period.name === "all") {
+			let periodObj = getPeriodMonth();
+			periodObj.name = null;
+			setPeriod(periodObj);
+		}
+		setShowCustomRange(true);
+	}
 
 	// Update this to signal that the new filter values should be applied
 	const [dummy, setDummy] = useState(false);
@@ -265,7 +275,7 @@ const GreenDashboardFilters = ({}) => {
 								All Time
 								{period.name === 'all' ? <span className="selected-marker" /> : null}
 							</DropdownItem>
-							<DropdownItem toggle={false} onClick={() => setShowCustomRange(true)}>
+							<DropdownItem toggle={false} onClick={() => displayCustomRange()}>
 								Custom
 								{(!period.name && (period.start || period.end)) ? <span className="selected-marker" /> : null}
 							</DropdownItem>
