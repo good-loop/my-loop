@@ -1,21 +1,10 @@
 
 import React, { useEffect } from 'react';
-import { Col, Container, Row } from 'reactstrap';
-import Misc from '../../base/components/Misc';
 import KStatus from '../../base/data/KStatus';
 import { getDataItem, getDataList, setWindowTitle } from '../../base/plumbing/Crud';
 import C from '../../C';
-import CharityLogo from '../CharityLogo';
-import BG from '../../base/components/BG';
-import { CurvePageCard, PageCard } from './CommonComponents';
-import BlogContent from './BlogContent';
 import DataStore from '../../base/plumbing/DataStore';
-import ActionMan from '../../base/plumbing/ActionManBase';
 import SearchQuery from '../../base/searchquery';
-import List from '../../base/data/List';
-import { setFooterClassName } from '../Footer';
-import { formatDate } from './BlogContent';
-import BlogPost from '../../base/data/BlogPost';
 
 export class ImpactFilters {
     brand;
@@ -41,7 +30,7 @@ const ImpactOverviewPage = () => {
 
     // fetch impacts
     let sq = SearchQuery.setProp(null, "vertiser", filters.brand2 || filters.brand);
-    let pvImpactList = getDataList({type:C.TYPES.ImpactDebit, status, q:sq.query, start, end});
+    let pvImpactList = getDataList({type:C.TYPES.ImpactDebit, status, q:sq.query, start:filters.start, end:filters.end});
     console.log("pvImpactList", pvImpactList, "sq", sq.query);
     return <>
     TODO
