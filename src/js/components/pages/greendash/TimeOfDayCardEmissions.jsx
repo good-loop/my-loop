@@ -10,94 +10,94 @@ import { emissionsPerImpressions, getBreakdownByEmissions, getCarbonEmissions } 
 import { isPer1000 } from './GreenMetricsEmissions';
 
 const TimeOfDayCardEmissions = (props) => {
-  return <GreenCard title='When are your ad carbon emissions highest?' className='carbon-time-of-day'>
-    <TimeOfDayCardEmissions2 {...props} />
-  </GreenCard>;
+	return <GreenCard title='When are your ad carbon emissions highest?' className='carbon-time-of-day'>
+		<TimeOfDayCardEmissions2 {...props} />
+	</GreenCard>;
 };
 
 
 const TimeOfDayCardEmissions2 = ({ baseFilters, tags }) => {
-  const [chartProps, setChartProps] = useState();
-  const [pvCarbon, setPVCarbon] = useState();
+	const [chartProps, setChartProps] = useState();
+	const [pvCarbon, setPVCarbon] = useState();
 
-  if (!tags || !tags.length) {
-    // return <Misc.Loading text="Fetching your tag data..." />;
-  }
-  useEffect(() => {
-    const pvCarbon = getCarbonEmissions({ ...baseFilters, timeofday: true, breakdown: 'timeofday{"co2":"sum"}' });
-    pvCarbon.promise.then((res) => {
-      if (!res.by_timeofday.buckets.length) {
-        setChartProps({ isEmpty: true });
-        return;
-      }
-      const labels = [];
-      const data = [];
+	if (!tags || !tags.length) {
+		// return <Misc.Loading text="Fetching your tag data..." />;
+	}
+	useEffect(() => {
+		const pvCarbon = getCarbonEmissions({ ...baseFilters, timeofday: true, breakdown: 'timeofday{"co2":"sum"}' });
+		pvCarbon.promise.then((res) => {
+			if (!res.by_timeofday.buckets.length) {
+				setChartProps({ isEmpty: true });
+				return;
+			}
+			const labels = [];
+			const data = [];
 
-      let buckets = res.by_timeofday.buckets;
-      if (isPer1000()) {
-        buckets = emissionsPerImpressions(buckets);
-      }
+			let buckets = res.by_timeofday.buckets;
+			if (isPer1000()) {
+				buckets = emissionsPerImpressions(buckets);
+			}
 
-      // construct hourly breakdown and normalise to numeric hours
-      const hoursBreakdown = getBreakdownByEmissions(buckets, 'co2', 'timeofday');
+			// construct hourly breakdown and normalise to numeric hours
+			const hoursBreakdown = getBreakdownByEmissions(buckets, 'co2', 'timeofday');
 
-      // group into 3-hour periods and copy to labels/data
-      for (let i = 0; i < 24; i++) {
-        const group = Math.floor(i / 3);
-        if (i === group * 3) {
-          labels.push(`${((i + 11) % 12) + 1} ${i < 12 ? 'am' : 'pm'}`);
-          data.push(0);
-        }
-        data[group] += hoursBreakdown[i] || 0;
-      }
+			// group into 3-hour periods and copy to labels/data
+			for (let i = 0; i < 24; i++) {
+				const group = Math.floor(i / 3);
+				if (i === group * 3) {
+					labels.push(`${((i + 11) % 12) + 1} ${i < 12 ? 'am' : 'pm'}`);
+					data.push(0);
+				}
+				data[group] += hoursBreakdown[i] || 0;
+			}
 
-      let label = 'Kg CO2';
-      let tickFn = (v) => `${v} kg`;
-      let tooltipFn = (ctx) => `${printer.prettyNumber(ctx.raw)} kg CO2`;
+			let label = 'Kg CO2';
+			let tickFn = (v) => `${v} kg`;
+			let tooltipFn = (ctx) => `${printer.prettyNumber(ctx.raw)} kg CO2`;
 
-      const maxCarbon = Math.max(...data);
-      if (maxCarbon > TONNES_THRESHOLD) {
-        data.forEach((kg, i) => (data[i] = kg / 1000));
-        label = 'Tonnes CO2';
-        tickFn = (v) => `${v} t`;
-        tooltipFn = (ctx) => `${printer.prettyNumber(ctx.raw)} tonnes CO2`;
-      }
+			const maxCarbon = Math.max(...data);
+			if (maxCarbon > TONNES_THRESHOLD) {
+				data.forEach((kg, i) => (data[i] = kg / 1000));
+				label = 'Tonnes CO2';
+				tickFn = (v) => `${v} t`;
+				tooltipFn = (ctx) => `${printer.prettyNumber(ctx.raw)} tonnes CO2`;
+			}
 
-      setChartProps({
-        data: {
-          labels,
-          datasets: [
-            {
-              label,
-              data,
-              backgroundColor: dataColours(data),
-            },
-          ],
-        },
-        options: {
-          plugins: {
-            legend: { display: false },
-            tooltip: { callbacks: { label: tooltipFn } },
-          },
-          scales: { y: { ticks: { callback: tickFn } } },
-        },
-      });
-    });
-  }, [baseFilters.q, baseFilters.start, baseFilters.end, isPer1000()]);
+			setChartProps({
+				data: {
+					labels,
+					datasets: [
+						{
+							label,
+							data,
+							backgroundColor: dataColours(data),
+						},
+					],
+				},
+				options: {
+					plugins: {
+						legend: { display: false },
+						tooltip: { callbacks: { label: tooltipFn } },
+					},
+					scales: { y: { ticks: { callback: tickFn } } },
+				},
+			});
+		});
+	}, [baseFilters.q, baseFilters.start, baseFilters.end, isPer1000()]);
 
-  if ( ! chartProps) {
-    return <Misc.Loading text='Fetching time-of-day data...' />;
-  }
-  if (chartProps.isEmpty) {
-    return NOEMISSIONS;
-  }
-  return (<>
-      <NewChartWidget type='bar' {...chartProps} />
-      <p className='text-center mb-0'>
-        <small>Time of day in your time zone ({Intl.DateTimeFormat().resolvedOptions().timeZone})</small>
-      </p>
-    </>
-  );  
+	if ( ! chartProps) {
+		return <Misc.Loading text='Fetching time-of-day data...' />;
+	}
+	if (chartProps.isEmpty) {
+		return NOEMISSIONS;
+	}
+	return (<>
+			<NewChartWidget type='bar' {...chartProps} />
+			<p className='text-center mb-0'>
+				<small>Time of day in your time zone ({Intl.DateTimeFormat().resolvedOptions().timeZone})</small>
+			</p>
+		</>
+	);	
 };
 
 export default TimeOfDayCardEmissions;
