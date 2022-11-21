@@ -271,33 +271,24 @@ const BreakdownCardEmissions = ({ baseFilters }) => {
 	// Breakdown the first page to make it load faster
 	let techValue
 	let dataValue;
-
-	/**
-	 * TODO: adid & domain only need count + co2, no need for the whole emissions bucket
-	 */
 	const pvTechValue = getCarbonEmissions({
 		...baseFilters,
 		breakdown: ['total{"emissions":"sum"}'],
 	});
-
+	
 	if (pvTechValue.resolved && pvTechValue.value) techValue = pvTechValue.value;
-
+	
 	const pvDataValue = getCarbonEmissions({
 		...baseFilters,
 		breakdown: ['os{"co2":"sum"}', 'adid{"emissions":"sum"}', 'domain{"emissions":"sum"}'],
+		// breakdown: ['os{"co2":"sum"}', 'adid{"countco2":"sum"}', 'domain{"countco2":"sum"}'], // TODO Wait for new shortcut in backend
 	});
 
 	if (pvDataValue.resolved && pvDataValue.value) dataValue = pvDataValue.value;
 
-	if (!techValue && !dataValue) {
+	if (!techValue) {
 		return (
 			<GreenCard title='What is the breakdown of your emissions?' className='carbon-breakdown'>
-				<ButtonGroup className='mb-2 subcard-switch'>
-					<Button size='sm' color='secondary' name='tech'>Ad Tech</Button>
-					<Button size='sm' color='secondary' name='device'>Device Type</Button>
-					<Button size='sm' color='secondary' name='tag'>Tag</Button>
-					<Button size='sm' color='secondary' name='domain'>Domain</Button>
-				</ButtonGroup>
 				<Misc.Loading text='Fetching your data...' />
 			</GreenCard>
 		);
@@ -305,34 +296,13 @@ const BreakdownCardEmissions = ({ baseFilters }) => {
 
 	const [mode, setMode] = useState('tech');
 	
-	let techData;
-	if (techValue && !dataValue) {
-		techData = techValue['by_total']?.buckets;
-			// Are we in carbon-per-mille mode?
-		if (isPer1000()) {
-			data = emissionsPerImpressions(data);
-		}
-
-		return (
-			<GreenCard title='What is the breakdown of your emissions?' className='carbon-breakdown'>
-				<ButtonGroup className='mb-2 subcard-switch'>
-					<ModeButton mode={mode} setMode={setMode} name='tech'>Ad Tech</ModeButton>
-					<ModeButton mode={mode} setMode={setMode} name='device'>Device Type</ModeButton>
-					<ModeButton mode={mode} setMode={setMode} name='tag'>Tag</ModeButton>
-					<ModeButton mode={mode} setMode={setMode} name='domain'>Domain</ModeButton>
-				</ButtonGroup>
-				{mode === 'tech' ? <TechSubcard data={techData} minimumPercentLabeled={10} /> : <Misc.Loading text='Fetching your data...' />}
-			</GreenCard>
-		)
-
-	}
-
 	const datakey = { device: 'by_os', tag: 'by_adid', domain: 'by_domain' }[mode];
-	let data = dataValue[datakey]?.buckets;
-	techData = techValue['by_total']?.buckets;
+	let techData = techValue['by_total']?.buckets;;
+	let data = dataValue && dataValue[datakey]?.buckets;
 	// Are we in carbon-per-mille mode?
 	if (isPer1000()) {
 		data = emissionsPerImpressions(data);
+		techData = emissionsPerImpressions(techData);
 	}
 
 	let subcard;
@@ -341,13 +311,13 @@ const BreakdownCardEmissions = ({ baseFilters }) => {
 			subcard = <TechSubcard data={techData} minimumPercentLabeled={10} />;
 			break;
 		case 'device':
-			subcard = <DeviceSubcard data={data} />;
+			subcard = dataValue ? <DeviceSubcard data={data} /> : <Misc.Loading text='Fetching your data...' />;
 			break;
 		case 'tag':
-			subcard = <TagSubcard data={data} />;
+			subcard = dataValue ? <TagSubcard data={data} /> : <Misc.Loading text='Fetching your data...' />;
 			break;
 		case 'domain':
-			subcard = <PubSubcard data={data} />;
+			subcard = dataValue ? <PubSubcard data={data} /> : <Misc.Loading text='Fetching your data...' />;
 	}
 
 	return (
