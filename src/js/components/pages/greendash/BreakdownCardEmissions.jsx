@@ -8,7 +8,7 @@ import NewChartWidget from '../../../base/components/NewChartWidget';
 import { CO2e, dataColours, GreenCard, GreenCardAbout, ModeButton, NOEMISSIONS, TONNES_THRESHOLD } from './dashutils';
 import SimpleTable, { Column } from '../../../base/components/SimpleTable';
 import List from '../../../base/data/List';
-import { ButtonGroup } from 'reactstrap';
+import { ButtonGroup, Button } from 'reactstrap';
 import {
 	emissionsPerImpressions,
 	getBreakdownByEmissions,
@@ -268,14 +268,20 @@ const PubSubcard = ({ data }) => {
  * @param {Object} p.dataValue pvChartData.value Which are split by breakdown: os, adid,
  */
 const BreakdownCardEmissions = ({ baseFilters }) => {
+	// Breakdown the first page to make it load faster
+	let techValue
 	let dataValue;
 
 	/**
-	 * Easy way: fetching everything here
-	 * This is stil a big load, could take over 16 seconds
-	 * TODO: 1. adid & domain only need count + co2, no need for the whole emissions bucket
-	 * TODO: 2. lazyload it, only load when user get to the page
+	 * TODO: adid & domain only need count + co2, no need for the whole emissions bucket
 	 */
+	const pvTechValue = getCarbonEmissions({
+		...baseFilters,
+		breakdown: ['total{"emissions":"sum"}'],
+	});
+
+	if (pvTechValue.resolved && pvTechValue.value) techValue = pvTechValue.value;
+
 	const pvDataValue = getCarbonEmissions({
 		...baseFilters,
 		breakdown: ['total{"emissions":"sum"}', 'os{"co2":"sum"}', 'adid{"emissions":"sum"}', 'domain{"emissions":"sum"}'],
@@ -283,19 +289,42 @@ const BreakdownCardEmissions = ({ baseFilters }) => {
 
 	if (pvDataValue.resolved && pvDataValue.value) dataValue = pvDataValue.value;
 
-	if (!dataValue)
+	if (!techValue && !dataValue) {
 		return (
 			<GreenCard title='What is the breakdown of your emissions?' className='carbon-breakdown'>
 				<ButtonGroup className='mb-2 subcard-switch'>
-					<ModeButton name='tech'>Ad Tech</ModeButton>
-					<ModeButton name='device'>Device Type</ModeButton>
-					<ModeButton name='tag'>Tag</ModeButton>
-					<ModeButton name='domain'>Domain</ModeButton>
+					<Button size='sm' color='secondary' name='tech'>Ad Tech</Button>
+					<Button size='sm' color='secondary' name='device'>Device Type</Button>
+					<Button size='sm' color='secondary' name='tag'>Tag</Button>
+					<Button size='sm' color='secondary' name='domain'>Domain</Button>
 				</ButtonGroup>
 				<Misc.Loading text='Fetching your data...' />
 			</GreenCard>
 		);
+	}
+
 	const [mode, setMode] = useState('tech');
+	
+	if (techValue && !dataValue) {
+		const data = techValue['by_total']?.buckets;
+			// Are we in carbon-per-mille mode?
+		if (isPer1000()) {
+			data = emissionsPerImpressions(data);
+		}
+
+		return (
+			<GreenCard title='What is the breakdown of your emissions?' className='carbon-breakdown'>
+				<ButtonGroup className='mb-2 subcard-switch'>
+					<ModeButton mode={mode} setMode={setMode} name='tech'>Ad Tech</ModeButton>
+					<ModeButton mode={mode} setMode={setMode} name='device'>Device Type</ModeButton>
+					<ModeButton mode={mode} setMode={setMode} name='tag'>Tag</ModeButton>
+					<ModeButton mode={mode} setMode={setMode} name='domain'>Domain</ModeButton>
+				</ButtonGroup>
+				{mode === 'tech' ? <TechSubcard data={data} minimumPercentLabeled={10} /> : <Misc.Loading text='Fetching your data...' />}
+			</GreenCard>
+		)
+
+	}
 
 	const datakey = { tech: 'by_total', device: 'by_os', tag: 'by_adid', domain: 'by_domain' }[mode];
 	let data = dataValue[datakey]?.buckets;
