@@ -284,7 +284,7 @@ const BreakdownCardEmissions = ({ baseFilters }) => {
 
 	const pvDataValue = getCarbonEmissions({
 		...baseFilters,
-		breakdown: ['total{"emissions":"sum"}', 'os{"co2":"sum"}', 'adid{"emissions":"sum"}', 'domain{"emissions":"sum"}'],
+		breakdown: ['os{"co2":"sum"}', 'adid{"emissions":"sum"}', 'domain{"emissions":"sum"}'],
 	});
 
 	if (pvDataValue.resolved && pvDataValue.value) dataValue = pvDataValue.value;
@@ -305,8 +305,9 @@ const BreakdownCardEmissions = ({ baseFilters }) => {
 
 	const [mode, setMode] = useState('tech');
 	
+	let techData;
 	if (techValue && !dataValue) {
-		const data = techValue['by_total']?.buckets;
+		techData = techValue['by_total']?.buckets;
 			// Are we in carbon-per-mille mode?
 		if (isPer1000()) {
 			data = emissionsPerImpressions(data);
@@ -320,14 +321,15 @@ const BreakdownCardEmissions = ({ baseFilters }) => {
 					<ModeButton mode={mode} setMode={setMode} name='tag'>Tag</ModeButton>
 					<ModeButton mode={mode} setMode={setMode} name='domain'>Domain</ModeButton>
 				</ButtonGroup>
-				{mode === 'tech' ? <TechSubcard data={data} minimumPercentLabeled={10} /> : <Misc.Loading text='Fetching your data...' />}
+				{mode === 'tech' ? <TechSubcard data={techData} minimumPercentLabeled={10} /> : <Misc.Loading text='Fetching your data...' />}
 			</GreenCard>
 		)
 
 	}
 
-	const datakey = { tech: 'by_total', device: 'by_os', tag: 'by_adid', domain: 'by_domain' }[mode];
+	const datakey = { device: 'by_os', tag: 'by_adid', domain: 'by_domain' }[mode];
 	let data = dataValue[datakey]?.buckets;
+	techData = techValue['by_total']?.buckets;
 	// Are we in carbon-per-mille mode?
 	if (isPer1000()) {
 		data = emissionsPerImpressions(data);
@@ -336,7 +338,7 @@ const BreakdownCardEmissions = ({ baseFilters }) => {
 	let subcard;
 	switch (mode) {
 		case 'tech':
-			subcard = <TechSubcard data={data} minimumPercentLabeled={10} />;
+			subcard = <TechSubcard data={techData} minimumPercentLabeled={10} />;
 			break;
 		case 'device':
 			subcard = <DeviceSubcard data={data} />;
