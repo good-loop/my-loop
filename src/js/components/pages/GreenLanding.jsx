@@ -18,7 +18,6 @@ import Impact from '../../base/data/Impact';
 import { isTester } from '../../base/Roles';
 import LinkOut from '../../base/components/LinkOut';
 import ServerIO from '../../plumbing/ServerIO';
-import PromiseValue from 'promise-value';
 import DataItemBadge from '../../base/components/DataItemBadge';
 import Login from '../../base/youagain';
 import printer from '../../base/utils/printer';

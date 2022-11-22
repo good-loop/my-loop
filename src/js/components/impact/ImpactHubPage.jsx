@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import KStatus from '../../base/data/KStatus';
 import List from '../../base/data/List';
 import I18N from '../../base/i18n';
-import PromiseValue from 'promise-value';
+import PromiseValue from '../../base/promise-value';
 import { getDataItem, getDataList, setWindowTitle } from '../../base/plumbing/Crud';
 import C from '../../C';
 import DataStore from '../../base/plumbing/DataStore';
@@ -24,6 +24,8 @@ export class ImpactFilters {
     brand;
     brand2;
     campaign;
+    /** charity ID */
+    cid;
     impactdebit;
     start;
     end;
@@ -68,26 +70,26 @@ const ImpactHubPage = () => {
 
 const getImpactDebits = ({filters}) => {
     let pvImpactDebits = getDataList({type:C.TYPES.ImpactDebit, ...filters});
-    console.log("pvImpactDebits", pvImpactDebits);
+    // console.log("pvImpactDebits", pvImpactDebits);
     return pvImpactDebits;
 };
 
 const getCampaigns = ({filters}) => {
     let pvCampaigns = getDataList({type:C.TYPES.Campaign, ...filters});
-    console.log("pvCampaigns", pvCampaigns);
+    // console.log("pvCampaigns", pvCampaigns);
     return pvCampaigns;
 };
 
 const getCharities = ({filters}) => {
+    // get the ImpactDebits
     let pvItems0 = getImpactDebits({filters});
+    // ...then get the charities
     let pvCharities = PromiseValue.then(pvItems0, item0s => {
-        console.log("ooh item0s",item0s);
         let cids = List.hits(item0s).map(i0 => i0.impact?.charity);
-        console.log("ooh cids",cids);
         const pv2 = getDataList({type:"NGO", status:filters.status, ids:cids});
         return pv2;
     });
-    console.group("pvCharities", pvCharities);
+    // console.group("pvCharities", pvCharities);
     return pvCharities;
 }
 

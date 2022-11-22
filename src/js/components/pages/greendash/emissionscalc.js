@@ -1,5 +1,5 @@
 import md5 from 'md5';
-import PromiseValue from 'promise-value';
+import PromiseValue from '../../../base/promise-value';
 import Campaign from '../../../base/data/Campaign';
 import Impact from '../../../base/data/Impact';
 import KStatus from '../../../base/data/KStatus';

@@ -2,7 +2,7 @@
  * 
  */
 import _ from 'lodash';
-import PromiseValue from 'promise-value';
+import PromiseValue from '../../base/promise-value';
 import React, {useState} from 'react';
 import { Col, Container, Row, Alert } from 'reactstrap';
 import ErrAlert from '../../base/components/ErrAlert';

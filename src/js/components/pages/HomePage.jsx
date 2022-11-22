@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardBody, CardImg, CardText, CardTitle, Col, Container, Row } from 'reactstrap';
-// import PV from 'promise-value';
 import { useSpring } from 'react-spring';
 
 import { isMobile, space } from '../../base/utils/miscutils'
