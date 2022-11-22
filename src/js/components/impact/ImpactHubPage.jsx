@@ -9,15 +9,16 @@ import C from '../../C';
 import DataStore from '../../base/plumbing/DataStore';
 import SearchQuery from '../../base/searchquery';
 import PropControlDataItem from '../../base/components/PropControlDataItem';
-import { Container } from 'reactstrap';
+import { Col, Container, InputGroup, Row } from 'reactstrap';
 import PropControl from '../../base/components/PropControl';
 import { Card } from '../../base/components/CardAccordion';
 import BG from '../../base/components/BG';
 import Misc from '../../MiscOverrides';
-import { getLogo, uniq } from '../../base/utils/miscutils';
+import { getLogo, space, uniq } from '../../base/utils/miscutils';
 import Branding from '../../base/data/Branding';
 import Impact from '../../base/data/Impact';
 import Money from '../../base/data/Money';
+import { OTHER_CONSENT } from '../../base/data/Claim';
 
 
 export class ImpactFilters {
@@ -52,17 +53,21 @@ const ImpactHubPage = () => {
     sq = SearchQuery.setProp(sq, "campaign", filters.campaign);
     filters.q = sq.query;
 
-    return <>
-        <FilterBar />
-        {brand && <h2>{brand.name}</h2>}
-        <Card><HeadlineDonationCard brand={brand} filters={filters} /></Card>
-    
-        <Card><CampaignCountCard filters={filters} /></Card>
-        <Card><CharityCountCard filters={filters} /></Card>
-        <Card><ViewCountCard filters={filters} /></Card>
+    return <Container>
+        <FilterBar filters={filters} />
+        <Row>
+            <Col>
+                <Card style={{background:"#3488AB"}}><HeadlineDonationCard brand={brand} filters={filters} /></Card>
+            </Col>
+            <Col>
+                <Card><CampaignCountCard filters={filters} /></Card>
 
-        <Card><LogoWallCard brand={brand} filters={filters} /></Card>
-    </>;
+                <Card><CharityCountCard filters={filters} /></Card>
+            </Col>
+        </Row>
+        {/* <Card><ViewCountCard filters={filters} /></Card>
+        <Card><LogoWallCard brand={brand} filters={filters} /></Card> */}
+    </Container>;
 };
 
 
@@ -103,7 +108,7 @@ const CampaignCountCard = ({filters}) => {
     if ( ! pvItems.value) return <Nope />;
     let n = List.total(pvItems.value);
     return <>
-        {I18N.tr(n+" Campaign(s)")}
+        <h3>{I18N.tr(n+" Campaign(s)")}</h3>
         {n < 10 && <div>{List.hits(pvItems.value).map(item => item.name)}</div>}
     </>;
 }
@@ -113,7 +118,7 @@ const CharityCountCard = ({filters}) => {
     if ( ! pvItems.value) return <Nope />;
     let n = List.total(pvItems.value);
     return <>
-        {I18N.tr(n+" Charities (singular: Charity)")}
+        <h3>{I18N.tr(n+" Charities (singular: Charity)")}</h3>
         {n < 10 && <div>{List.hits(pvItems.value).map(item => item.name)}</div>}
     </>;
 }
@@ -138,20 +143,36 @@ const HeadlineDonationCard = ({brand, filters}) => {
     let moneys = pvImpactDebits.value && List.hits(pvImpactDebits.value).map(item => Impact.amount(item.impact)).filter(x => x);
     let totalMoney = moneys && Money.total(moneys, "GBP");
 
-    return (<><BG image={image} />
-        <img className='logo logo-xl' src={logo} />
-        {totalMoney && <Misc.Money amount={totalMoney} />} Donated
-    </>);
+    return (<BG style={{height:'30vh',width:'30vh',margin:"auto"}} image={image} color='#3488AB' >
+            <Circle color="white" width="100%" height="100%">                
+                <img className='logo logo-xl' src={logo} />
+                <h2>{totalMoney && <Misc.Money amount={totalMoney} />} Donated</h2>
+            </Circle>
+        </BG>);
+};
+
+/**
+ * Put the childrem in a circle.
+ * Do we have something like this already??
+ */
+const Circle = ({color="white",border="2px solid black",children,width,height,style,className}) => {
+    let style2 = Object.assign({width,height,border,borderRadius:"50%",display:"flex", alignItems:"center",justifyContent:"center"}, style);
+    return <div style={style2} className={space(color && "bg-"+color, className)}>{children}</div>;
 };
 
 /**
  * Filter display / controls at the top of the page
  */
-const FilterBar = () => {
-    const childBrands = false; // TODO
+const FilterBar = ({filters}) => {    
+    let pvChildBrands, childBrands;
+    if (filters.brand) {
+        let q = SearchQuery.setProp(null, "parentId", filters.brand).query;
+        pvChildBrands = getDataList({type:"Advertiser", status:filters.status, q, swallow:true});
+        childBrands = List.hits(pvChildBrands?.value);
+    }    
     return <div id='filterBar'>
-        <PropControl type="DataItem" itemType={C.TYPES.Advertiser} prop="brand" label />
-        {childBrands && <PropControl type="DataItem" itemType={C.TYPES.Advertiser} prop="brand2" label="Brands" />}
+        <PropControl type="DataItem" itemType={C.TYPES.Advertiser} prop="brand" label showId={false} />
+        {childBrands && childBrands.length? <PropControl type="DataItem" itemType={C.TYPES.Advertiser} prop="brand2" label="Brand" list={childBrands} /> : null}
     </div>;
 }
 
