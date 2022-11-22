@@ -43,7 +43,7 @@ import { T4GSignUpButton, T4GSignUpModal } from './T4GSignUp';
 
 import GenerateGreenDemoEvents from './pages/GenerateGreenDemoEvents';
 import LogoutPage from './pages/LogoutPage';
-import ImpactOverviewPage from './impact/ImpactOverviewPage';
+import ImpactHubPage from './impact/ImpactHubPage';
 
 // DataStore
 C.setupDataStore();
@@ -86,7 +86,7 @@ const PAGES = {
 	greendash: GreenDashboard,
 	green: GreenLanding,
 	home: HomePage,
-	ihub: ImpactOverviewPage,
+	ihub: ImpactHubPage,
 	ourstory: OurStoryPage,
 	safari: SafariPage,
 	//getmydata: MyDataProductPage,
