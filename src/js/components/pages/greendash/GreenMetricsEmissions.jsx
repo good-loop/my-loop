@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import PromiseValue from 'promise-value';
+import PromiseValue from '../../../base/promise-value';
 import { Alert, Button, Col, Container, Row, Card } from 'reactstrap';
 
 // import ChartWidget from '../../../base/components/ChartWidget';
