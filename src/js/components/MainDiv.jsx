@@ -43,6 +43,8 @@ import { T4GSignUpButton, T4GSignUpModal } from './T4GSignUp';
 
 import GenerateGreenDemoEvents from './pages/GenerateGreenDemoEvents';
 import LogoutPage from './pages/LogoutPage';
+import ImpactHubPage from './impact/ImpactHubPage';
+import ImpactPage from './impact/ImpactPage';
 
 // DataStore
 C.setupDataStore();
@@ -69,6 +71,9 @@ const PAGES = {
 	campaign: CampaignPage,
 	impact: CampaignPage,
 	impactoverview: MyAdCampaignsPage,
+	// TODO newer impact designs
+	ihub: ImpactHubPage,
+	ipage: ImpactPage,
 	// test: TestPage,
 	account: AccountPage,
 	charities: MyCharitiesPage,
@@ -80,12 +85,12 @@ const PAGES = {
 	tabsforgood: TabsForGoodLandingPage,
 	allowlist: AllowlistUs,
 
-	home: HomePage,
-	greendash: GreenDashboard,
-	green: GreenLanding,
-	ourstory: OurStoryPage,
 	forbusiness: ForBusinessPage,
 	forcharity: ForCharityPage,
+	greendash: GreenDashboard,
+	green: GreenLanding,
+	home: HomePage,	
+	ourstory: OurStoryPage,
 	safari: SafariPage,
 	//getmydata: MyDataProductPage,
 	tabsforgood: TabsForGoodProductPage,

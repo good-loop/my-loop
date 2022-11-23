@@ -10,7 +10,7 @@ import { assert, assMatch } from '../../base/utils/assert';
 import { space } from '../../base/utils/miscutils';
 import Login from '../../base/youagain';
 import Icon from '../../base/components/Icon';
-import PromiseValue from 'promise-value';
+import PromiseValue from '../../base/promise-value';
 import Misc from '../../base/components/Misc';
 import KStatus from '../../base/data/KStatus';
 import { getDataLogData } from '../../base/plumbing/DataLog';

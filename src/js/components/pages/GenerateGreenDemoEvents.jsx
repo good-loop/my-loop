@@ -11,7 +11,7 @@ import ActionMan from '../../plumbing/ActionMan';
 import ServerIO from '../../plumbing/ServerIO';
 import CRUD, { saveAs } from '../../base/plumbing/Crud';
 import { lg } from '../../base/plumbing/log';
-import PromiseValue from 'promise-value';
+import PromiseValue from '../../base/promise-value';
 import { nonce } from '../../base/data/DataClass';
 
 /**
