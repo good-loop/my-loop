@@ -9,16 +9,19 @@ import C from '../../C';
 import DataStore from '../../base/plumbing/DataStore';
 import SearchQuery from '../../base/searchquery';
 import PropControlDataItem from '../../base/components/PropControlDataItem';
-import { Col, Container, InputGroup, Row } from 'reactstrap';
+import { Button, Col, Container, InputGroup, Row } from 'reactstrap';
 import PropControl from '../../base/components/PropControl';
+import Circle from '../../base/components/Circle';
 import { Card } from '../../base/components/CardAccordion';
 import BG from '../../base/components/BG';
 import Misc from '../../MiscOverrides';
-import { getLogo, space, uniq } from '../../base/utils/miscutils';
+import { getLogo, space, stopEvent, uniq } from '../../base/utils/miscutils';
 import Branding from '../../base/data/Branding';
 import Impact from '../../base/data/Impact';
 import Money from '../../base/data/Money';
 import { OTHER_CONSENT } from '../../base/data/Claim';
+import { modifyPage } from '../../base/plumbing/glrouter';
+import { getId, getType } from '../../base/data/DataClass';
 
 
 export class ImpactFilters {
@@ -26,7 +29,7 @@ export class ImpactFilters {
     brand2;
     campaign;
     /** charity ID */
-    cid;
+    ngo;
     impactdebit;
     start;
     end;
@@ -41,9 +44,9 @@ const ImpactHubPage = () => {
     let status = filters.status;
 
     // fetch items
-    let pvBrand = filters.brand? getDataItem({type:C.TYPES.Advertiser, id:filters.brand, status}) : {};
-    let pvBrand2 = filters.brand2? getDataItem({type:C.TYPES.Advertiser, id:filters.brand2, status}) : {};
-    let pvCampaign = filters.campaign? getDataItem({type:C.TYPES.Campaign, id:filters.campaign, status}) : {};
+    let pvBrand = filters.brand? getDataItem({type:C.TYPES.Advertiser, id:filters.brand, status, swallow:true}) : {};
+    let pvBrand2 = filters.brand2? getDataItem({type:C.TYPES.Advertiser, id:filters.brand2, status, swallow:true}) : {};
+    let pvCampaign = filters.campaign? getDataItem({type:C.TYPES.Campaign, id:filters.campaign, status, swallow:true}) : {};
     let brandId = filters.brand2 || filters.brand;
     let brand1 = pvBrand.value;
     let brand2 = pvBrand2.value;
@@ -73,14 +76,14 @@ const ImpactHubPage = () => {
 
 /* ------- Data Functions --------- */
 
-const getImpactDebits = ({filters}) => {
-    let pvImpactDebits = getDataList({type:C.TYPES.ImpactDebit, ...filters});
+export const getImpactDebits = ({filters}) => {
+    let pvImpactDebits = getDataList({type:C.TYPES.ImpactDebit, ...filters, swallow:true});
     // console.log("pvImpactDebits", pvImpactDebits);
     return pvImpactDebits;
 };
 
 const getCampaigns = ({filters}) => {
-    let pvCampaigns = getDataList({type:C.TYPES.Campaign, ...filters});
+    let pvCampaigns = getDataList({type:C.TYPES.Campaign, ...filters, swallow:true});
     // console.log("pvCampaigns", pvCampaigns);
     return pvCampaigns;
 };
@@ -91,7 +94,7 @@ const getCharities = ({filters}) => {
     // ...then get the charities
     let pvCharities = PromiseValue.then(pvItems0, item0s => {
         let cids = List.hits(item0s).map(i0 => i0.impact?.charity);
-        const pv2 = getDataList({type:"NGO", status:filters.status, ids:cids});
+        const pv2 = getDataList({type:"NGO", status:filters.status, ids:cids, swallow:true});
         return pv2;
     });
     // console.group("pvCharities", pvCharities);
@@ -119,9 +122,19 @@ const CharityCountCard = ({filters}) => {
     let n = List.total(pvItems.value);
     return <>
         <h3>{I18N.tr(n+" Charities (singular: Charity)")}</h3>
-        {n < 10 && <div>{List.hits(pvItems.value).map(item => item.name)}</div>}
+        {n < 30 && <div className='gridbox gridbox-sm-2'>{List.hits(pvItems.value).map(item => <ItemButton item={item} />)}</div>}
     </>;
 }
+
+const ItemButton = ({item}) => {
+    let key = getType(item).toLowerCase(); // e.g. advertiser or ngo
+    let value = getId(item);
+    let logo = getLogo(item);
+    return <Button className='btn-tile m-2' color='outline-dark'
+        onClick={e => stopEvent(e) && modifyPage(["ipage"],{[key]:value})} >
+        {logo && <img src={logo} className={space('rounded logo logo-lg')} />}<p>{item.name}</p>
+    </Button>;
+};
 
 const ViewCountCard = ({filters}) => {
     return "?? Views";
@@ -131,39 +144,30 @@ const LogoWallCard = ({filters}) => {
     return "?? logos";
 }
 
-const HeadlineDonationCard = ({brand, filters}) => {
+export const HeadlineDonationCard = ({brand, filters}) => {
     if ( ! brand) {
         return <Misc.Loading />
     }
     let logo = getLogo(brand);
     let branding = Branding.get(brand);
-    let image = branding.backgroundImage || "/img/ihub/world-hand.png";
+    let image = branding?.backgroundImage || "/img/ihub/world-hand.png";
 
     let pvImpactDebits = getImpactDebits({filters});    
     let moneys = pvImpactDebits.value && List.hits(pvImpactDebits.value).map(item => Impact.amount(item.impact)).filter(x => x);
     let totalMoney = moneys && Money.total(moneys, "GBP");
 
     return (<BG style={{height:'30vh',width:'30vh',margin:"auto"}} image={image} color='#3488AB' >
-            <Circle color="white" width="100%" height="100%">                
-                <img className='logo logo-xl' src={logo} />
-                <h2>{totalMoney && <Misc.Money amount={totalMoney} />} Donated</h2>
+            <Circle color="white" width="100%" height="100%" center>                
+                <img className='logo logo-xl center m-auto' src={logo} />
+                <h2 style={{textAlign:"center"}}>{totalMoney && <Misc.Money amount={totalMoney} />} Donated</h2>
             </Circle>
         </BG>);
 };
 
 /**
- * Put the childrem in a circle.
- * Do we have something like this already??
- */
-const Circle = ({color="white",border="2px solid black",children,width,height,style,className}) => {
-    let style2 = Object.assign({width,height,border,borderRadius:"50%",display:"flex", alignItems:"center",justifyContent:"center"}, style);
-    return <div style={style2} className={space(color && "bg-"+color, className)}>{children}</div>;
-};
-
-/**
  * Filter display / controls at the top of the page
  */
-const FilterBar = ({filters}) => {    
+export const FilterBar = ({filters}) => {    
     let pvChildBrands, childBrands;
     if (filters.brand) {
         let q = SearchQuery.setProp(null, "parentId", filters.brand).query;

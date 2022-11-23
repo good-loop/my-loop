@@ -2,6 +2,7 @@ import React from 'react';
 import { space } from '../../base/utils/miscutils';
 
 /**
+ * @deprecated - Prefer Circle
  * ?? doc how sizing works
  * @param {*} param0
  */

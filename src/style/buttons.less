@@ -1,16 +1,15 @@
 
-// TODO doc what this changes from BS standard, and from GL Portal buttons
+// TODO doc what this changes from BS standard
 // Button LESS
 
 .btn {
 	border-radius: 100px;
 	vertical-align: middle;
 	padding: .4rem 2rem;
-	box-shadow: 0px 2px 3px rgba(0,0,0,0.3);
+	box-shadow: 0px 2px 3px rgba(0,0,0,0.3);	
+	.header-font();
 	font-weight: 600;
-	font-family: 'Montserrat'; // use the header font
 	font-size: 0.9rem;
-	text-transform: uppercase;
 	cursor: pointer;
 	p {
 		margin: 0 !important;
@@ -22,6 +21,11 @@
 			padding: 10px 20px;
 		}
 	}
+}
+/** Modify btn to be less rounded, and sub-header text */
+.btn-tile {
+	border-radius: 10px;
+	text-transform: capitalize;
 }
 
 .btn-lg {
