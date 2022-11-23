@@ -144,13 +144,23 @@ const LogoWallCard = ({filters}) => {
     return "?? logos";
 }
 
-export const HeadlineDonationCard = ({brand, filters}) => {
+export const HeadlineDonationCard = ({brand, impactdebit, charity, filters}) => {
     if ( ! brand) {
         return <Misc.Loading />
     }
     let logo = getLogo(brand);
+    if ( ! logo) {
+        logo = getLogo(impactdebit);        
+    }
+    if ( ! logo && charity) {
+        logo = getLogo(charity);
+        if ( ! logo) {
+            let images = NGO.images(charity);
+            logo = images[0];
+        }
+    }
     let branding = Branding.get(brand);
-    let image = branding?.backgroundImage || "/img/ihub/world-hand.png";
+    let image = branding?.backgroundImage || impactdebit?.impact?.img || "/img/ihub/world-hand.png";
 
     let pvImpactDebits = getImpactDebits({filters});    
     let moneys = pvImpactDebits.value && List.hits(pvImpactDebits.value).map(item => Impact.amount(item.impact)).filter(x => x);
@@ -158,7 +168,7 @@ export const HeadlineDonationCard = ({brand, filters}) => {
 
     return (<BG style={{height:'30vh',width:'30vh',margin:"auto"}} image={image} color='#3488AB' >
             <Circle color="white" width="100%" height="100%" center>                
-                <img className='logo logo-xl center m-auto' src={logo} />
+                {logo? <img className='logo logo-xl center m-auto' src={logo} /> : <h3>{brand?.name}</h3>}
                 <h2 style={{textAlign:"center"}}>{totalMoney && <Misc.Money amount={totalMoney} />} Donated</h2>
             </Circle>
         </BG>);
