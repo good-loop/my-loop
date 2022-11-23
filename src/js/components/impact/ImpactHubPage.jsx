@@ -22,6 +22,7 @@ import Money from '../../base/data/Money';
 import { OTHER_CONSENT } from '../../base/data/Claim';
 import { modifyPage } from '../../base/plumbing/glrouter';
 import { getId, getType } from '../../base/data/DataClass';
+import DynImg from '../../base/components/DynImg';
 
 
 export class ImpactFilters {
@@ -61,6 +62,7 @@ const ImpactHubPage = () => {
         <Row>
             <Col>
                 <Card style={{background:"#3488AB"}}><HeadlineDonationCard brand={brand} filters={filters} /></Card>
+                <Card style={{}}><PhotoWall brand={brand} filters={filters} /></Card>
             </Col>
             <Col>
                 <Card><CampaignCountCard filters={filters} /></Card>
@@ -122,7 +124,7 @@ const CharityCountCard = ({filters}) => {
     let n = List.total(pvItems.value);
     return <>
         <h3>{I18N.tr(n+" Charities (singular: Charity)")}</h3>
-        {n < 30 && <div className='gridbox gridbox-sm-2'>{List.hits(pvItems.value).map(item => <ItemButton item={item} />)}</div>}
+        {n < 30 && <div className='gridbox gridbox-sm-2'>{List.hits(pvItems.value).map(item => <ItemButton key={item.id} item={item} />)}</div>}
     </>;
 }
 
@@ -189,6 +191,15 @@ export const FilterBar = ({filters}) => {
         {childBrands && childBrands.length? <PropControl type="DataItem" itemType={C.TYPES.Advertiser} prop="brand2" label="Brand" list={childBrands} /> : null}
     </div>;
 }
+
+const PhotoWall = ({filters}) => {
+    let pvImpactDebits = getImpactDebits({filters});    
+    if ( ! pvImpactDebits.resolved) return <Misc.Loading />
+    let impactdebits = List.hits(pvImpactDebits.value);
+    let images = impactdebits.map(i => i.impact?.img).filter(x => x);
+    images = images.slice(0,3);
+    return images.map(img => <DynImg key={img.contentUrl || img} image={img} className="w-100" />);
+};
 
 const Nope = () => <>-</>;
 
