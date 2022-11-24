@@ -156,8 +156,8 @@ const GreenLanding2 = ({cid, status}) => {
 		<div className="mission py-4">
 			<Container>
 				<h2 className="mb-4">HELPING BRANDS GO GREEN WITH GOOD-LOOP</h2>
-				<p className="leader-text mb-4">The internet has a larger carbon footprint than the entire airline industry, and digital media is fuelling this. But we’re here to help.</p>
-				<p className="leader-text">Thanks to our green media products that help measure, offset and improve the carbon footprint of digital advertising, we’re helping the industry make changes to become carbon negative.</p>
+				<p className="leader-text mb-4">The internet has a larger carbon footprint than the entire airline industry, and digital creatives are fuelling this. But we’re here to help.</p>
+				<p className="leader-text">Thanks to our green creative products that help measure, offset and improve the carbon footprint of digital advertising, we’re helping the industry make changes to become carbon negative.</p>
 			</Container>
 		</div>
 
@@ -190,7 +190,7 @@ const GreenLanding2 = ({cid, status}) => {
 				<Row className="partnership no-gutters">
 					<Col className="partner-text p-4" xs="12" sm="6">
 						<h2>PLANTING TREES</h2>
-						<p>Our Green Media products plant trees via Eden Reforestation projects
+						<p>Our Green Creative products plant trees via Eden Reforestation projects
 							where reforestation has a positive and long-lasting environmental and socio-economic impact.</p>
 					</Col>
 					<Col className="partner-image" xs="12" sm="6">

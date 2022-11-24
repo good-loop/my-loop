@@ -84,7 +84,7 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1 }) => {
 		setChartProps({
 			data: {
 				// labels: ['Media', 'Publisher overhead', 'Supply-path overhead'],
-				labels: ['Media', 'Publisher', 'Supply path'],
+				labels: ['Creative', 'Publisher', 'Supply path'],
 				datasets: [
 					{
 						label: 'Kg CO2',
