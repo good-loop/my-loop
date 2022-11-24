@@ -15,10 +15,13 @@ import com.goodloop.jerbil.BuildJerbilPage;
 import com.goodloop.jerbil.JerbilConfig;
 import com.google.common.cache.CacheBuilder;
 import com.winterwell.utils.Dep;
+import com.winterwell.utils.Utils;
+import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.WebUtils;
 import com.winterwell.utils.web.WebUtils2;
+import com.winterwell.web.WebEx;
 import com.winterwell.web.app.CrudClient;
 import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.WebRequest;
@@ -57,9 +60,13 @@ public class MetaHtmlServlet implements IServlet {
 		pageTitles = Collections.unmodifiableMap(aMap);
 	}
 
+	private String vertiserId;
+
+	private String agencyId;
+
 	private Map getPageSettings(WebRequest state) {
 		String bit0 = state.getSlugBits(0);
-		if ("campaign".equals(bit0)) {
+		if ("campaign".equals(bit0) || "ihub".equals(bit0)) {
 			return getPageSettings2_impact(state);
 		}
 		if ("charity".equals(bit0)) {
@@ -114,8 +121,6 @@ public class MetaHtmlServlet implements IServlet {
 	private Map getPageSettings2_impact(WebRequest state) {
 		// do we have a campaign?
 		String cid = state.getSlugBits(1);
-		String vertiserId = state.get("gl.vertiser");
-		String agencyId = state.get("gl.agency");
 		Campaign campaign = null;
 		Advertiser vertiser = null;
 		Agency agency = null;
@@ -191,8 +196,8 @@ public class MetaHtmlServlet implements IServlet {
 			slug = "null"; // so we can cache it anyway
 
 		// For impact hub, we want different caches per vertiser/agency
-		String vertiserId = state.get("gl.vertiser");
-		String agencyId = state.get("gl.agency");
+		vertiserId = Utils.or(state.get("gl.vertiser"), state.get("brand"));
+		agencyId = Utils.or(state.get("gl.agency"), state.get("agency"));
 		if (vertiserId != null)
 			slug += "_vertiser:" + vertiserId;
 		if (agencyId != null)
@@ -216,14 +221,19 @@ public class MetaHtmlServlet implements IServlet {
 			BuildJerbilPage bjp = new BuildJerbilPage(src, "", template, out);
 
 			// TODO fill in the SEO and social stuff from file or API
-			Map vars = getPageSettings(state);
+			try {
+				Map vars = getPageSettings(state);
+				// Jerbil it!
+				String pageHtml = bjp.run2_render(false, srcText, templateHtml, vars);
 
-			// Jerbil it!
-			String pageHtml = bjp.run2_render(false, srcText, templateHtml, vars);
-
-			// cache it
-			html = pageHtml;
-			html4slug.put(slug, html);
+				// cache it
+				html = pageHtml;
+				html4slug.put(slug, html);
+			} catch (WebEx.E40X e) {
+				// swallow it, more or less. Probably a 404
+				Log.w("MetaHtml", e+" from "+state);
+				html = templateHtml;
+			}
 		}
 		// send it back
 		WebUtils2.sendHtml(html, state.getResponse());

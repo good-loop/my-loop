@@ -78,6 +78,12 @@ const ImpactHubPage = () => {
 
 /* ------- Data Functions --------- */
 
+/**
+ * TODO this relies on Portal making ImpactDebit objects. Which it doesn't yet.
+ * See CampaignServlet
+ * @param {Object} p
+ * @returns {PromiseValue} List hits:ImpactDebit[]
+ */
 export const getImpactDebits = ({filters}) => {
     let pvImpactDebits = getDataList({type:C.TYPES.ImpactDebit, ...filters, swallow:true});
     // console.log("pvImpactDebits", pvImpactDebits);
@@ -95,7 +101,10 @@ const getCharities = ({filters}) => {
     let pvItems0 = getImpactDebits({filters});
     // ...then get the charities
     let pvCharities = PromiseValue.then(pvItems0, item0s => {
-        let cids = List.hits(item0s).map(i0 => i0.impact?.charity);
+        let cids = List.hits(item0s).map(i0 => i0.impact?.charity).filter(x => x);
+        if ( ! cids.length) {
+            return new List();
+        }
         const pv2 = getDataList({type:"NGO", status:filters.status, ids:cids, swallow:true});
         return pv2;
     });
