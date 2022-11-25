@@ -122,13 +122,6 @@ const JourneyCardEmissions = ({ campaigns, dataByTime, period, emptyTable }) => 
 		}
 	}
 
-	// HACK no trees for these agency
-	let noTrees = false;
-	const NOTREESAGENCY = ['IGX8mWqY', 'R4rdg7cZ'];
-	campaigns.forEach((campaign) => {
-		if (NOTREESAGENCY.includes(campaign.agencyId)) noTrees = true;
-	});
-
 	// HACK a download for us
 	// This is not the same as the one using carboncal
 	let downloadCSVLink;
@@ -147,7 +140,7 @@ const JourneyCardEmissions = ({ campaigns, dataByTime, period, emptyTable }) => 
 			) : (
 				<div>
 					<CO2Section co2Offset={offsets.carbonTotal} />
-					{!noTrees && <TreesSection treesPlanted={offsets.treesTotal} coralPlanted={offsets.coralTotal} />}
+					<TreesSection treesPlanted={offsets.treesTotal} coralPlanted={offsets.coralTotal} />
 				</div>
 			)}
 			{impactSplashPage && (
