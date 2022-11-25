@@ -85,6 +85,7 @@ export const getCompressedBreakdown = ({breakdownByX, minFraction=0.05, osTypes}
   return breakdownByOSGroup2;
 };
 
+
 /**
  *
  * @param {Object[][]} buckets
@@ -271,22 +272,22 @@ export const getOffsetsByTypeEmissions = ({ campaign, status, period }) => {
  * @param {Number} perN e.g. 1000 for "carbon per 1000 impressions"
  * @returns The same breakdown, but with every "co2*" value in each bucket divided by (bucketcount / perN)
  */
-export const emissionsPerImpressions = (buckets, perN = 1000) => (
+ export const emissionsPerImpressions = (buckets, perN = 1000) => (
   buckets.map(bkt => {
     const newBkt = {...bkt}; // Start with a copy
-    // Is this a cross-breakdown?
-    if (!('count' in bkt)) {
-      const xbdKey = Object.keys(bkt).find(k => k.match(/^by_/))
-      if (!xbdKey) return; // No count - but also no by_x sub-breakdown? Strange.
+
+    if ('count' in bkt) { // Simple breakdown
+      Object.entries(bkt).forEach(([k, v]) => {
+        // Carbon entries => carbon per N impressions; others unchanged
+        newBkt[k] = (k.match(/^co2/)) ? v / (bkt.count / perN) : v;
+      });
+    } else { // Cross-breakdown (probably)
+      const xbdKey = Object.keys(bkt).find(k => k.match(/^by_/));
       // Recurse in to process the next breakdown level.
-      newBkt[xbdKey] = emissionsPerImpressions(bkt[xbdKey], perN);
-      return;
+      if (xbdKey) newBkt[xbdKey] = emissionsPerImpressions(bkt[xbdKey], perN);
+      // if (!xbdKey) -- No count - but also no by_x sub-breakdown? Strange, but we can skip it.
     }
-    // Not a cross-breakdown - just process the carbon values.
-    Object.entries(bkt).forEach(([k, v]) => {
-      // Carbon entries => carbon per N impressions; others unchanged
-      newBkt[k] = (k.match(/^co2/)) ? v / (bkt.count / perN) : v;
-    });
+
     return newBkt;
   })
 );
