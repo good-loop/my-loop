@@ -16,7 +16,7 @@ import Money from '../base/data/Money';
  * @param {Number} value Initial value to display
  * @param {String} currencySymbol
  * @param {Money} amount - Convenient way to set value + currencySymbol
- * @param {Number} rate -
+ * @param {Number} rate - amount added per tickTime
  * @param {Number} tickTime - time between ticks in milliseconds
  * @param {Boolean} preservePennies Preserves 2 digits on the pennies count. This overrides sigFigs. True by default for money.
  * @param {Boolean} centerText Centers the text when counting up in the animation.
