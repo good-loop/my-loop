@@ -11,6 +11,7 @@ import { sum } from '../../../base/utils/miscutils';
 import C from '../../../C';
 import { periodFromUrl } from './dashutils';
 
+
 /**
  *
  * @param {Object} p
@@ -36,6 +37,7 @@ export const getCarbonEmissions = ({ q = '', start = '1 month ago', end = 'now',
     return ServerIO.load(ServerIO.DATALOG_ENDPOINT, { data, swallow: true });
   }); // /fetch()
 };
+
 
 /**
  *
@@ -111,6 +113,7 @@ export const getBreakdownByEmissions = (buckets, keyNameToSum, keyNameToBreakdow
   return totalByX;
 };
 
+
 /**
  * Get the GreenTags referenced by the buckets
  * @param {?Object[][]} buckets
@@ -142,6 +145,7 @@ export const getTagsEmissions = (buckets) => {
   return pvTags;
 };
 
+
 /**
  *
  * @param {Object[][]} buckets
@@ -167,40 +171,35 @@ export const getCampaignsEmissions = (buckets) => {
   });
 };
 
+
 /**
  *
  * @returns {?Impact} null if loading data
  */
-export const calculateDynamicOffsetEmissions = ({ campaign, offset, period }) => {
+ export const calculateDynamicOffsetEmissions = ({ campaign, offset, period }) => {
   Campaign.assIsa(campaign);
   if (!Impact.isDynamic(offset)) return offset; // paranoia
+
+  // We either want carbon emissions or impressions count for this campaign/period - this gets both
+  if (!period) period = periodFromUrl();
+  let pvCarbonData = getCarbonEmissions({
+    q: SearchQuery.setProp(null, 'campaign', campaign.id).query,
+    start: period?.start.toISOString() || '2022-01-01',
+    end: period?.end.toISOString() || 'now',
+    breakdown: ['total{"emissions":"sum"}'],
+  });
+
+  if (!pvCarbonData.value) return null;
+
   let n;
   // HACK: carbon offset?
   if (Impact.isCarbonOffset(offset)) {
-    let sq = SearchQuery.setProp(null, 'campaign', campaign.id);
-    if (!period) period = periodFromUrl();
-    let pvCarbonData = getCarbonEmissions({
-      q: sq.query,
-      start: period?.start.toISOString() || '2022-01-01',
-      end: period?.end.toISOString() || 'now',
-      breakdown: ['total{"emissions":"sum"}'],
-    });
-    if (!pvCarbonData.value) {
-      return null;
-    }
-    let buckets = pvCarbonData.value.by_total.buckets;
-    let totalEmissions = getSumColumnEmissions(buckets, 'co2');
-    n = totalEmissions;
+    n = getSumColumnEmissions(pvCarbonData.value.by_total.buckets, 'co2');
   } else {
     // check it is per impression
     if (offset.input) assert(offset.input.substring(0, 'impression'.length) === 'impression', offset);
-    // how many impressions?
-    let impressions = Campaign.viewcount({ campaign });
-    // console.log('impressions', impressions, campaign);
-    if (!impressions) {
-      return null;
-    }
-    n = impressions * offset.rate;
+    // Impression count * output-per-impression
+    n = pvCarbonData.value.allCount * offset.rate;
   }
   // copy and set n
   let snapshotOffset = new Impact(offset);
@@ -209,6 +208,7 @@ export const calculateDynamicOffsetEmissions = ({ campaign, offset, period }) =>
   delete snapshotOffset.input;
   return snapshotOffset;
 };
+
 
 /**
  * @param {Object} p
