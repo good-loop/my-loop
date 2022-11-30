@@ -2,9 +2,9 @@
 
 // Change to "local", "test" or "" to switch all endpoints together
 const cluster = 
-	//'test';
+	'test';
 	// 'local';
-	''; // if you want production!
+	//''; // if you want production!
 
 const protocol = (cluster === 'local') ? 'http' : 'https';
 
@@ -19,6 +19,7 @@ module.exports = {
 		ANIM_ENDPOINT: `${protocol}://${cluster}portal.good-loop.com/_anim`,
 		CHAT_ENDPOINT: `${protocol}://${cluster}chat.good-loop.com/reply`,
 		PROFILER_ENDPOINT: `${protocol}://${cluster}profiler.good-loop.com`,
+        MYLOOP_ENDPOINT = `${C.HTTPS}://${C.SERVER_TYPE}my.good-loop.com`;
 		// DATALOG_DATASPACE: 'gl',
 		ENDPOINT_NGO: 'https://test.sogive.org/charity',
 		// JUICE_ENDPOINT: 'https://localjuice.good-loop.com',
