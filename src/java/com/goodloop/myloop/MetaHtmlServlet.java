@@ -174,7 +174,6 @@ public class MetaHtmlServlet implements IServlet {
 					vars.put("image", ngo.getPhoto());
 			} catch (Exception e) {
 				Log.d("My-Loop", "Error loading charity " + e);
-				vars.put("title", "Good-Loop");
 			}
 		}
 		return vars;
@@ -234,15 +233,13 @@ public class MetaHtmlServlet implements IServlet {
 			description = "See the amazing impact made with Good-Loop ethical advertising!";
 			title = "Good-Loop Impact: Ads for Good";
 		}
-		description = WebUtils2.htmlEncode(description);
-		title = WebUtils2.htmlEncode(title);
 
 		if (title != null)
-			vars.put("title", title);
+			vars.put("title", WebUtils2.htmlEncode(title));
 		if (campaign != null)
 			vars.put("image", campaign.bg);
 		if (description != null)
-			vars.put("description", description);
+			vars.put("description", WebUtils2.htmlEncode(description));
 		vars.put("type", "summary");
 		return vars;
 	}
@@ -284,8 +281,9 @@ public class MetaHtmlServlet implements IServlet {
 
 			// TODO fill in the SEO and social stuff from file or API
 			Map vars = new HashMap();
-			// Always replace "$contents" placeholder in HTML
+			// Always replace $contents and $title placeholder in HTML
 			vars.put("contents", "");
+			vars.put("title", "Good-Loop");
 
 			try {
 				getPageSettings(state, vars);
