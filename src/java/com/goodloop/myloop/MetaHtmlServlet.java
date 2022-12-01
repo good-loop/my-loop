@@ -19,11 +19,13 @@ import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.Log;
+import com.winterwell.utils.time.Time;
 import com.winterwell.utils.web.WebUtils;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
 import com.winterwell.web.app.CrudClient;
 import com.winterwell.web.app.IServlet;
+import com.winterwell.web.app.ManifestServlet;
 import com.winterwell.web.app.WebRequest;
 
 /**
@@ -64,6 +66,8 @@ public class MetaHtmlServlet implements IServlet {
 
 	private String agencyId;
 
+	private String cachebuster;
+
 	private Map getPageSettings(WebRequest state) {
 		String bit0 = state.getSlugBits(0);
 		if ("campaign".equals(bit0) || "ihub".equals(bit0)) {
@@ -91,9 +95,22 @@ public class MetaHtmlServlet implements IServlet {
 				+ " alt='loading'/></div>");
 
 		// custom meta/SEO info?
-		// BlogPost??
-
+		// BlogPost??		
 		return vars;
+	}
+
+	private String cachebuster() {
+		if (cachebuster!=null) return cachebuster;
+		try {
+			Map<String, Object> m = ManifestServlet.getVersionProps();
+			Time vert = (Time) m.get("lastCommit.time");
+			cachebuster = WebUtils.urlEncode(Utils.or(vert.toISOString(), "none"));
+			return cachebuster;
+		} catch(Throwable ex) { // paranoia
+			Log.e("MetaHtmlServlet", ex);
+			cachebuster = "none";
+			return cachebuster;
+		}
 	}
 
 	private Map getPageSettings2_charity(WebRequest state) {
@@ -205,6 +222,7 @@ public class MetaHtmlServlet implements IServlet {
 
 		String html = html4slug.get(slug);
 		if (html == null || state.debug) {
+			// not cached - so make it
 			JerbilConfig jc = new JerbilConfig();
 			jc.useJS = false;
 			Dep.set(JerbilConfig.class, jc);
@@ -223,6 +241,8 @@ public class MetaHtmlServlet implements IServlet {
 			// TODO fill in the SEO and social stuff from file or API
 			try {
 				Map vars = getPageSettings(state);
+				// cachebuster		
+				vars.put("cachebuster", cachebuster());
 				// Jerbil it!
 				String pageHtml = bjp.run2_render(false, srcText, templateHtml, vars);
 

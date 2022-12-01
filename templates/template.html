@@ -33,14 +33,15 @@
 			window.isDebug = window.location.hostname.match(/^local/) || window.location.hostname.match(/^test/);
 			
 			// Has the user specified debug/production build with a URL param?
-			var debugParam = window.location.search.match(/debug=(\w+)/i);
+			const debugParam = window.location.search.match(/debug=(\w+)/i);
 			if (debugParam && debugParam[1]) {
 				// Require an exact match to change from default
 				if (debugParam[1] === 'false') isDebug = false;
 				else if (debugParam[1] === 'true') isDebug = true;
 			}
 			
-			var filename = isDebug ? 'bundle-debug.js' : 'bundle.js';
+			let filename = isDebug ? 'bundle-debug.js' : 'bundle.js';
+			filename += "?ord=$cachebuster"; // see MetaHtmlServlet NB: ord is arbitrary but its the parameter name suggested by DoubleClick
 			document.write('<script src="/build/js/' + filename + '"/><\/script>');
 		</script>
 
