@@ -28,11 +28,6 @@ const ModalCTA = ({ modalOpen, setModalOpen, branding, nvertiserName }) => {
                         </Row>
                         <Row>
                             <div className='modal-content-col' style={{ alignContent: 'center' }}>
-                                <div className="modal-brand-logo">
-                                    <WhiteCircle width="15%" style={{ left: "42.5%" }}>
-                                        {branding.logo ? <img src={branding.logo} alt="brand logo" /> : JSON.stringify(branding)}
-                                    </WhiteCircle>
-                                </div>
                                 <p className="modal-text-intro subtext">{nvertiserName + " worked with Good-Loop to turn their advert into a force for good - with your help"}</p>
                                 <WhiteCircle width={"20%"} className="modal-gl-logo-circle">
                                     <img className='modal-gl-logo' src='/img/my_good-loop_Colour_RoundLogo.svg' alt='good-loop logo' />
