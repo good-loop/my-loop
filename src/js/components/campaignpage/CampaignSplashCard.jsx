@@ -74,7 +74,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 						<div className='splash-text-content' style={{color: "@gl-red"}}>
 							{splashText}
 							{campaignPage.id && <DevLink href={ServerIO.PORTAL_ENDPOINT + '/#campaign/' + escape(campaignPage.id)} target="_portal">Campaign Editor (using {campaignPage.id})</DevLink>}
-							<button className="cta-splash-button cta-modal-btn btn btn-secondary text-uppercase" onClick={e => setCtaModalOpen(true)}>
+							<button className="cta-splash-button btn btn-secondary text-uppercase" onClick={e => setCtaModalOpen(true)}>
 								want to raise even more?
 							</button>
 						</div>
