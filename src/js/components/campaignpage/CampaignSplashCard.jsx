@@ -54,23 +54,25 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 	}
 	return (<>
 		<div className="impact-hub-splash position-relative">
-			<DynImg src={campaignPage.bg ? campaignPage.bg : "/img/lightcurve.svg"} className={space("w-100", campaignPage.bg ? "splash-img" : "splash-curve")} alt="splash" />
-			<div className="dark-overlay" />
-			<img src="/img/redcurve.svg" className="w-100 splash-curve curve-border" alt="dark border to curve" />
-			<img src="/img/redcurve.svg" className="w-100 splash-curve" alt="curve" />
+			<div className="splash-decoration">
+				<DynImg src={campaignPage.bg ? campaignPage.bg : "/img/lightcurve.svg"} className={space("w-100", campaignPage.bg ? "splash-img" : "splash-curve")} alt="splash" />
+				<div className="dark-overlay" />
+				<img src="/img/redcurve.svg" className="splash-curve curve-border" alt="dark border to curve" />
+				<img src="/img/redcurve.svg" className="splash-curve" alt="curve" />
+			</div>
 			<div className="hero splash-card px-5">
 				<div className="splash-content">
 					<div className="hero-circles">
 						<WhiteCircle className="left-hero-circle">
 							{branding.logo ? <img src={branding.logo} alt="brand logo" /> : JSON.stringify(branding)}
 						</WhiteCircle>
-						<img src="/img/plus.png" className="plus" alt="+" />
+						<img src="/img/plus.svg" className="plus" alt="+" />
 						<WhiteCircle className="right-hero-circle">
 							<div className="sub-header">{numPeople ? <><span className="num">{numPeople}</span> people</> : "The Community"}</div>
 						</WhiteCircle>
 					</div>
-					<div className="flex-column flex-center pt-5 splash-text">
-					<img src="/img/curves/mobile-curve-white.svg" className="w-100 splash-top-curve" alt="white bottom border" />
+					<div className="splash-text mt-5 flex-column flex-center">
+					<img src="/img/curves/mobile-curve-white.svg" className="splash-text-top-curve" alt="white bottom border" />
 						<div className='splash-text-content' style={{color: "@gl-red"}}>
 							{splashText}
 							{campaignPage.id && <DevLink href={ServerIO.PORTAL_ENDPOINT + '/#campaign/' + escape(campaignPage.id)} target="_portal">Campaign Editor (using {campaignPage.id})</DevLink>}

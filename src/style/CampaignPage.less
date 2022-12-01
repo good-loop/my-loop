@@ -24,8 +24,7 @@
 //////////   CTA Modal   /////////
 
 .modal-CTA-T4G {
-	
-    margin-top: 5vh;
+		margin-top: 5vh;
 		width: 90vw;
 		max-width: 90vw;
 		min-width: 90vw;
@@ -53,13 +52,13 @@
 			max-width: 70vw;
 			min-width: 70vw;
 		}
-	
+
 	.modal-content {
 		color: #830000;
 		background-color: rgba(0, 0, 0, 0.0);
 		border: none;
-		
-		
+
+
 		.modal-body.cta-modal-body {
 			height: 90vh;
 			border-radius: 50px;
@@ -232,60 +231,11 @@
 			}
 		}
 	}
-
-	.cta-modal-btn.btn-secondary {
-		position: relative;
-		font-size: 1rem;
-
-			// desktop
-			width: unset;
-			margin-top: 10% !important;
-
-			// tablet
-			@media (min-width:768px) and (max-width:1080px) {
-				width:50%;
-				margin-left: 0% !important;
-			}
-
-			// phones
-			@media (max-width: 767px) {
-				width: 75%;
-				margin-left: -0% !important;
-				margin-top: 50px !important;
-			}
-	}
 }
-
-.cta-modal-btn.btn-secondary {
-	position: relative;
-	font-size: 1rem;
-
-		// desktop
-		width: unset;
-		margin-top: 10% !important;
-
-		// tablet
-		@media (min-width:768px) and (max-width:1080px) {
-			width:50%;
-			margin-left: 25% !important;
-		}
-
-		// phones
-		@media (max-width: 767px) {
-			width: 100%;
-			margin-left: -25% !important;
-			margin-top: 50px !important;
-		}
-	}
-
-	
 
 
 // TODO document more, and refactor into modular widgets where possible
 .CampaignPage {
-
-
-	
 	background-color: #fff !important;
 
 	.stub-divider {
@@ -296,15 +246,86 @@
 		background-color: @gl-light-red;
 	}
 
-	.flex-column>* {
+	.flex-column > * {
 		margin: unset;
 	}
 
 	.impact-hub-splash {
+		position: relative;
+		height: @fullHeight;
+		background-color: transparent;
+		overflow: hidden;
+
+		@media @ipad-max {
+			background-color: #ffffff;
+		}
+
 		@media (max-height: 680px) {
 			height: 105vh; // short screens hid cta button
 		}
 
+		// Contains and sizes the hero image & red curve
+		.splash-decoration {
+			position: absolute; // Out of flow so content can overlap it
+			height: 100%;
+			width: 100vw;
+			z-index: 0; // Keep behind content
+			@media @width-mobile {
+				height: 50%;
+			}
+		}
+
+		// The hero image in the top section
+		.splash-img {
+			height: 100%;
+			object-fit: cover;
+		}
+
+		// The red curved background section
+		.splash-curve {
+			position: absolute;
+			top: 0;
+			left: -40%;
+			height: 130%;
+			width: 150%;
+			z-index: 2;
+			@media @width-mobile {
+				top: unset;
+				bottom: 0;
+				width: 200%;
+				left: -60%;
+			}
+
+			// Darker red edge to curve
+			&.curve-border {
+				filter: brightness(0.5);
+				transform: translateX(-1rem);
+				@media @width-mobile {
+					transform: translateX(-0.6rem);
+				}
+			}
+		}
+
+		// Mobile version: white curve above splash-text
+		.splash-text-top-curve {
+			position: absolute;
+			// Fix aspect to cut off the bottom of the curve
+			width: 100vw;
+			height: 15vw;
+			object-fit: cover;
+			object-position: top;
+			// Place above splash content box
+			bottom: 100%;
+			z-index: -1;
+			// Mobile only
+			display: none;
+			@media @width-mobile {
+				display: block;
+			}
+		}
+		
+
+		// "Thank you for watching X and donating!"
 		.splash-thanks {
 			// override h3 styling
 			text-shadow: none !important;
@@ -312,16 +333,9 @@
 			@media @width-mobile {
 				color: @gl-red !important;
 			}
-		}	
-
-		.splash-gl {
-			text-shadow: none;
-			@media @width-mobile {
-				padding: 0px 5px;
-				color: black !important;
-			}
 		}
 
+		// The donation counter
 		.splash-counter {
 			// no preset font style fits - counter needed a bigger & bolder font
 			font-family: 'Montserrat', sans-serif;
@@ -334,62 +348,12 @@
 			}
 		}
 
-		position: relative;
-		height: @fullHeight;
-		background-color: #f55d58;
-		overflow: hidden;
-
-		@media @ipad-max {
-			background-color: #ffffff;
-		}
-
-		.splash-curve {
-			position: absolute;
-			top: 0;
-			left: -40%;
-			height: 130%;
-			width: 150% !important;
-			z-index: 2;
+		// "...raised for charity etc" text below donation counter
+		.splash-gl {
+			text-shadow: none;
 			@media @width-mobile {
-				height: 70%;
-				width: 200% !important;
-				left: -60%;
-				top: -20%;
-
-			}
-		}
-
-		.splash-curve.curve-border {
-			filter: brightness(0.5);
-			left: -40%;
-			width: 148% !important;	// make it slightly smaller than .splash-curve, giving us the border 
-			@media @width-mobile {
-				height: 70%; 
-				width: 200% !important;	// on mobile the above method made the border too thin, instead move the curve out to give us the border
-				left: -62%;
-				top: -20%;
-			}
-		}
-
-		.splash-img {
-			height: 100%;
-			object-fit: cover;
-			@media @width-mobile {
-				height: 70%;	// stops the image being squashed behind the curve on mobile
-			}
-
-		}
-
-		.splash-top-curve {	// white curve above splash-text
-			position: absolute;
-			width: 100% !important;
-			height: unset;
-			bottom: 20px;
-			z-index: -1;
-
-			visibility: hidden;
-			@media @width-mobile {
-				visibility: visible;
+				padding: 0px 5px;
+				color: black !important;
 			}
 		}
 
@@ -409,14 +373,21 @@
 		}
 
 		.splash-card {
-			position: absolute;
-			top: 20%;
+			position: relative;
+			height: 100%;
 			width: 100%;
+			top: 0;
 			right: 0;
 			z-index: 3;
 			display: flex;
 			flex-direction: column;
 			align-items: flex-end;
+
+			@media @width-mobile {
+				top: 0;
+				display: block;
+				padding: 0 !important; // override px-5 class
+			}
 
 			.cta-splash-button {
 				font-size: 1rem;
@@ -429,52 +400,26 @@
 				}
 			}
 
-			@media @width-mobile {
-				top: 0%;
-				align-items: center;
-				//justify-content-center instead of start to avoid new thic navbar
-				justify-content: center;
-				height: 100%;
-			}
-
 			/* tablet width */
 			@media (min-width:768px) and (max-width:1080px) {
 				top: 0%
 			}
 		}
 
-		.splash-content {	// container for all splash content
+		.splash-content { // Contains circles, "Thank you!", donation total, CTA button
+			// Desktop: occupy full height, right side, and push circles + text block to vertical centre
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
 			width: 40%;
 			height: 100%;
 
+			// Mobile - normal flow layout, sub-elements can flex
 			@media @width-mobile {
-				display: flex; // Is it possible to use flex or BS to write something simpler that just works across devices??
-				flex-direction: column;
-				align-items: center;
-				justify-content: space-between;
-				background-color: transparent;
-
-				.splash-text { 
-					width: 101vw; // 100vw left a *tiny* gap - just make it stretch slightly over the screens edge
-					position: relative;
-					left: -20%;
-					height: 60%;
-					top:  135%;
-
-					.splash-text-content {	// container for splash thanks, counter & cta
-						padding-left: 2.5%;
-						padding-right: 2.5%;
-						background-color: white;
-						height: 100vh;
-						width: 100%;
-						position: absolute;
-					}
-				}
+				display: block;
 			}
 
 			@media @ipad-max {
-				height: 75%;
-				padding-top: 70px; // avoid navbar
 				width: 100%;
 			}
 		}
@@ -483,55 +428,43 @@
 			@media @ipad-max {
 				text-shadow: 0 2px 3px black;
 			}
-		}
 
-
-		img { 
-			margin-bottom: -4%; // annoying gap between divs, just merge them over each other
-		}
-
-		background-color: transparent;
-		splash-text-content {
 			@media @width-mobile {
-				background-color: white;
+				width: 100vw;
+				position: relative;
+
+				.splash-text-content { // container for splash thanks, counter & cta
+					padding: 2em 2.5%;
+					background-color: white;
+				}
 			}
 		}
 
 		.hero {
-			min-height: 40vh;
-			height: auto;
-
-
 			.hero-circles {
-				height: auto;
-				flex-grow: 1;
 				display: flex;
-				flex-direction: row;
+				justify-content: center;
 				align-items: center;
-				justify-content: space-between;
-				width: 68.75%; // ??
-				margin: auto;
-
+				margin: 0 auto;
+				// mobile: stack vertically
 				@media @width-mobile {
-					width: 100%;
-					max-width: 350px; // stops circles being pushed behind text
+					padding: 1rem 0;
+					margin-left: 50%;
 					flex-direction: column;
-					position: absolute;
-					left: 20%;
-					top: -5%;
 				}
 
 				.plus { // plus symbol between the two 'hero-circles'
-					width: 30px;
+					width: 2rem;
+					margin: 1rem;
 					@media @width-mobile {
-						width: 20px;
-						margin: 5px 0px;
+						width: 1.5rem;
+						margin: 0.5rem;
 					}
 				}
 			}
 
 			.WhiteCircle {
-				width: 40%;
+				width: 8rem;
 
 				.sub-header {
 					font-size: 1.4rem;
@@ -557,9 +490,6 @@
 							font-size: 1rem;
 						}
 
-						// @media @ipad-max { // Remove this to fix display in small mobile screen
-						//     font-size: 1.5rem;
-						// }
 						@media (min-width: 2100px) {
 							font-size: 2rem;
 						}
