@@ -40,7 +40,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 	</>;
 	// Change the splashText to show wider impact?
 	if (campaignPage.showWiderImpact && campaignPage.widerAnnualDntn) {
-		splashText = <div className="header text-white text-right">
+		splashText = <div className="header text-white">
 			<div>
 				We donate <LinkOut href={campaignPage.widerUrl}>
 					<b><Counter sigFigs={4} amount={campaignPage.widerAnnualDntn} minimumFractionDigits={2} preserveSize /></b> a year
