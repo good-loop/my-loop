@@ -1,6 +1,8 @@
 package com.goodloop.myloop;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +16,7 @@ import com.goodloop.data.NGO;
 import com.goodloop.jerbil.BuildJerbilPage;
 import com.goodloop.jerbil.JerbilConfig;
 import com.google.common.cache.CacheBuilder;
+import com.winterwell.data.AThing;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
@@ -64,15 +67,52 @@ public class MetaHtmlServlet implements IServlet {
 
 	private String agencyId;
 
-	private Map getPageSettings(WebRequest state) {
+	/**
+	 * Get a CrudClient to fetch items from local, test, or production portal
+	 * - according to the current server, and any ?server=x override param.
+	 * @param _class
+	 * @param state
+	 * @return
+	 */
+	private CrudClient getPortalClient(Class<? extends AThing> _class, WebRequest state) {
+		String type = _class.getSimpleName().toLowerCase();
+		type = type.replaceFirst("^advert", "vert"); // vertiser/vert servlets
+
+		String newPrefix = state.get("server");
+		String reqUrl = state.getRequestUrl();
+		String protocol = "https";
+		String prefix = "";
+		// Current server type?
+		try {
+			URL urlParsed = new URL(reqUrl);
+			protocol = urlParsed.getProtocol();
+			String host = urlParsed.getHost();
+			if (host.startsWith("local")) {
+				prefix = "local";
+			} else if (host.startsWith("test")) {
+				prefix = "test";
+			}
+		} catch (MalformedURLException e) {}
+
+		// Override?
+		if (!Utils.isBlank(newPrefix)) {
+			// "prod/production" evaluates to no prefix
+			prefix = (newPrefix.matches("prod(uction)?")) ? "" : newPrefix;
+		}
+
+		// Construct endpoint URL and build client
+		String endpoint = protocol + "://" + prefix + "portal.good-loop.com/" + _class.getSimpleName().toLowerCase();
+		return new CrudClient(_class, endpoint);
+	}
+
+	private Map getPageSettings(WebRequest state, Map vars) {
 		String bit0 = state.getSlugBits(0);
 		if ("campaign".equals(bit0) || "ihub".equals(bit0)) {
-			return getPageSettings2_impact(state);
+			return getPageSettings2_impact(state, vars);
 		}
 		if ("charity".equals(bit0)) {
-			return getPageSettings2_charity(state);
+			return getPageSettings2_charity(state, vars);
 		}
-		Map vars = new HashMap();
 
 		// TODO Better Title
 		String subtitle = state.getRequestPath().replace("/", "");
@@ -96,8 +136,7 @@ public class MetaHtmlServlet implements IServlet {
 		return vars;
 	}
 
-	private Map getPageSettings2_charity(WebRequest state) {
-		Map vars = new HashMap();
+	private Map getPageSettings2_charity(WebRequest state, Map vars) {
 		vars.put("title", state.getRequestPath());
 		vars.put("image", "https://good-loop.com/img/logo/good-loop-logo-text.png");
 		vars.put("contents", "");
@@ -118,7 +157,7 @@ public class MetaHtmlServlet implements IServlet {
 		return vars;
 	}
 
-	private Map getPageSettings2_impact(WebRequest state) {
+	private Map getPageSettings2_impact(WebRequest state, Map vars) {
 		// do we have a campaign?
 		String cid = state.getSlugBits(1);
 		Campaign campaign = null;
@@ -128,8 +167,7 @@ public class MetaHtmlServlet implements IServlet {
 
 		// Try and find campaign by vertiser
 		if (cid == null && vertiserId != null) {
-			CrudClient<Advertiser> cc = new CrudClient<Advertiser>(Advertiser.class,
-					"https://portal.good-loop.com/vertiser");
+			CrudClient<Advertiser> cc = getPortalClient(Advertiser.class, state);
 			vertiser = cc.get(vertiserId).java();
 			if (vertiser != null) {
 				cid = vertiser.campaign;
@@ -138,7 +176,7 @@ public class MetaHtmlServlet implements IServlet {
 		}
 		// Try and find campaign by agency
 		if (cid == null && agencyId != null) {
-			CrudClient<Agency> cc = new CrudClient<Agency>(Agency.class, "https://portal.good-loop.com/agency");
+			CrudClient<Agency> cc = getPortalClient(Agency.class, state);
 			agency = cc.get(agencyId).java();
 			if (agency != null) {
 				cid = agency.campaign;
@@ -146,13 +184,12 @@ public class MetaHtmlServlet implements IServlet {
 			}
 		}
 		if (cid != null) {
-			CrudClient<Campaign> cc = new CrudClient<Campaign>(Campaign.class, "https://portal.good-loop.com/campaign");
+			CrudClient<Campaign> cc = getPortalClient(Campaign.class, state);
 			campaign = cc.get(cid).java();
 			// If we haven't got a company name yet, try and use the campaign's vertiser
 			// object.
 			if (companyName == null) {
-				CrudClient<Advertiser> cc2 = new CrudClient<Advertiser>(Advertiser.class,
-						"https://portal.good-loop.com/vertiser");
+				CrudClient<Advertiser> cc2 = getPortalClient(Advertiser.class, state);
 				try {
 					vertiser = cc2.get(campaign.vertiser).java();
 					if (vertiser != null) {
@@ -177,8 +214,6 @@ public class MetaHtmlServlet implements IServlet {
 		description = WebUtils2.htmlEncode(description);
 		title = WebUtils2.htmlEncode(title);
 
-		Map vars = new HashMap();
-
 		if (title != null)
 			vars.put("title", title);
 		if (campaign != null)
@@ -202,6 +237,9 @@ public class MetaHtmlServlet implements IServlet {
 			slug += "_vertiser:" + vertiserId;
 		if (agencyId != null)
 			slug += "_agency:" + agencyId;
+		String serverType = state.get("server");
+		if (serverType != null)
+			slug += "_server:" + serverType;
 
 		String html = html4slug.get(slug);
 		if (html == null || state.debug) {
@@ -221,18 +259,21 @@ public class MetaHtmlServlet implements IServlet {
 			BuildJerbilPage bjp = new BuildJerbilPage(src, "", template, out);
 
 			// TODO fill in the SEO and social stuff from file or API
-			try {
-				Map vars = getPageSettings(state);
-				// Jerbil it!
-				String pageHtml = bjp.run2_render(false, srcText, templateHtml, vars);
+			Map vars = new HashMap();
+			// Always replace "$contents" placeholder in HTML
+			vars.put("contents", "");
 
-				// cache it
-				html = pageHtml;
-				html4slug.put(slug, html);
+			try {
+				getPageSettings(state, vars);
 			} catch (WebEx.E40X e) {
 				// swallow it, more or less. Probably a 404
 				Log.w("MetaHtml", e+" from "+state);
-				html = templateHtml;
+			} finally {
+				// Jerbil it!
+				String pageHtml = bjp.run2_render(false, srcText, templateHtml, vars);
+				// cache it
+				html = pageHtml;
+				html4slug.put(slug, html);
 			}
 		}
 		// send it back
