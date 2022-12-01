@@ -22,11 +22,13 @@ import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.Log;
+import com.winterwell.utils.time.Time;
 import com.winterwell.utils.web.WebUtils;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
 import com.winterwell.web.app.CrudClient;
 import com.winterwell.web.app.IServlet;
+import com.winterwell.web.app.ManifestServlet;
 import com.winterwell.web.app.WebRequest;
 
 /**
@@ -66,6 +68,8 @@ public class MetaHtmlServlet implements IServlet {
 	private String vertiserId;
 
 	private String agencyId;
+
+	private String cachebuster;
 
 	/**
 	 * Get a CrudClient to fetch items from local, test, or production portal
@@ -131,11 +135,30 @@ public class MetaHtmlServlet implements IServlet {
 				+ " alt='loading'/></div>");
 
 		// custom meta/SEO info?
-		// BlogPost??
-
+		// BlogPost??		
 		return vars;
 	}
 
+	private String cachebuster() {
+		if (cachebuster!=null) return cachebuster;
+		try {
+			Map<String, Object> m = ManifestServlet.getVersionProps();
+			Time vert = (Time) m.get("lastCommit.time");
+			cachebuster = WebUtils.urlEncode(Utils.or(vert.toISOString(), "none"));
+			return cachebuster;
+		} catch(Throwable ex) { // paranoia
+			Log.e("MetaHtmlServlet", ex);
+			cachebuster = "none";
+			return cachebuster;
+		}
+	}
+
+	/**
+	 * 
+	 * @param state
+	 * @param vars
+	 * @return vars (same object as input)
+	 */
 	private Map getPageSettings2_charity(WebRequest state, Map vars) {
 		vars.put("title", state.getRequestPath());
 		vars.put("image", "https://good-loop.com/img/logo/good-loop-logo-text.png");
@@ -243,6 +266,7 @@ public class MetaHtmlServlet implements IServlet {
 
 		String html = html4slug.get(slug);
 		if (html == null || state.debug) {
+			// not cached - so make it
 			JerbilConfig jc = new JerbilConfig();
 			jc.useJS = false;
 			Dep.set(JerbilConfig.class, jc);
@@ -265,6 +289,8 @@ public class MetaHtmlServlet implements IServlet {
 
 			try {
 				getPageSettings(state, vars);
+				// cachebuster		
+				vars.put("cachebuster", cachebuster());
 			} catch (WebEx.E40X e) {
 				// swallow it, more or less. Probably a 404
 				Log.w("MetaHtml", e+" from "+state);
