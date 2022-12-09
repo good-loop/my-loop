@@ -47,7 +47,7 @@ const CurvePageCard = ({color, className, style, bgClassName, bgImg, bgSize, bgP
 			{/*
 			BG approach was causing weird clipping behaviour with the SVG - reverted to a safer option for now
 			<BG src={"/img/curves/curve-"+color+".svg"} className="w-100 curves"/>*/}
-			<img src={"/img/curves/curve-"+color+".svg"} className='w-100' style={{paddingTop:topSpace}}/>
+			<img src={"/img/curves/curve-"+color+".svg"} className="w-100" style={{paddingTop:topSpace}}/>
 		</TopComponent>
 		{/* Not using PageCard here */}
 		<div className={space("bg-gl-"+color, className, "pb-3 w-100")}>
@@ -67,8 +67,8 @@ const CurvePageCard = ({color, className, style, bgClassName, bgImg, bgSize, bgP
  */
 const CurveTransition = ({curveColour, hummingBird}) => {
 	return (
-		<BG image={'/img/curves/curve-'+curveColour+'.svg'} center minHeight='14em'>
-			{hummingBird && <img className='position-absolute' style={{maxWidth:'10rem',transform:'scaleX(-1)',right:'1rem'}} src='/img/green/hummingbird.png'/>}
+		<BG image={'/img/curves/curve-'+curveColour+'.svg'} center minHeight="14em">
+			{hummingBird && <img className="position-absolute" style={{maxWidth:'10rem',transform:'scaleX(-1)',right:'1rem'}} src="/img/green/hummingbird.png"/>}
 		</BG>
 	)
 }
@@ -76,10 +76,10 @@ const CurveTransition = ({curveColour, hummingBird}) => {
 const CardImgLeft = ({classname, imgUrl, roundedImg, children}) =>{
 	return(
 	<Row className={space('mt-5 rounded overflow-hidden', classname)}>
-		<Col className='p-0' md={6}>
+		<Col className="p-0" md={6}>
 			<BG className={space("w-100", roundedImg ? "round-img" : "")} src={imgUrl} alt="" center ratio={100}/>
 		</Col>
-		<Col md={6} className='text-left d-flex flex-column justify-content-around p-5'>
+		<Col md={6} className="text-left d-flex flex-column justify-content-around p-5">
 			{children}
 		</Col>
 	</Row>
@@ -92,16 +92,16 @@ const CardImgLeft = ({classname, imgUrl, roundedImg, children}) =>{
 const MyLandingBackgroundImage = ({bgImg, ngo, children}) => {
 
 	if (isPortraitMobile()) return bgImg || ngo ? (
-		<div className='mobile-landing-curve'>
+		<div className="mobile-landing-curve">
 			<NGOImage bg header ngo={ngo} src={bgImg} className="mobile-curve-container">
-				<img src="/img/curves/mobile-curve-white.svg" className='mobile-curve'/>
+				<img src="/img/curves/mobile-curve-white.svg" className="mobile-curve"/>
 			</NGOImage>
-			<div className='bg-white mobile-curve-fill'>
+			<div className="bg-white mobile-curve-fill">
 				{children}
 			</div>
 		</div>
 	) : (
-		<div className='mobile-landing-curve'>
+		<div className="mobile-landing-curve">
 			<BG src="/img/LandingBackground/svg-mobile/mobile-splash-background-0.svg" className="mobile-curve-container">
 				<BG src="/img/LandingBackground/svg-mobile/Mobile-splash-background-1.png">
 					<BG src="/img/LandingBackground/svg-mobile/mobile-splash-background-2.svg">
@@ -109,7 +109,7 @@ const MyLandingBackgroundImage = ({bgImg, ngo, children}) => {
 					</BG>
 				</BG>
 			</BG>
-			<div className='bg-white mobile-curve-fill'>
+			<div className="bg-white mobile-curve-fill">
 				{children}
 			</div>
 		</div>
@@ -157,8 +157,8 @@ const MyLandingSectionOld = ({ngo, title, text, bgImg, shiftLeft, t4g=true, myda
 						{!shiftLeft && <Col md={1} sm={0} /* left padding, but not on mobile */></Col>}
 						<Col md={5} className="landing-left">
 								<div className="title"> 
-									<h1 className='text-left bolder'>{title}</h1>
-									<p className='leader-text nomargin'>{text}</p>
+									<h1 className="text-left bolder">{title}</h1>
+									<p className="leader-text nomargin">{text}</p>
 								</div>
 								{t4g && <div className={multiProduct && 'product'}>
 									{multiProduct && <h4>Tabs for Good</h4>}
@@ -171,7 +171,7 @@ const MyLandingSectionOld = ({ngo, title, text, bgImg, shiftLeft, t4g=true, myda
 									<MyDataSignUpModal />
 								</div>}
 						</Col>
-						{shiftLeft && <Col md={6} className='d-none d-xl-block' style={{zIndex:'-99'}}></Col>}
+						{shiftLeft && <Col md={6} className="d-none d-xl-block" style={{zIndex:'-99'}}></Col>}
 				</Row>
 			</Container>
 		</MyLandingBackgroundImage>
@@ -212,12 +212,12 @@ const MyLandingSection = ({title, bgImg, noProducts}) => {
 		<BG minHeight={isMobile() ? null : "32vw"} 
 		src={isMobile() ? '/img/splash-screen/background-mobile.svg' : '/img/splash-screen/splash-screen-bground-lg.svg'}
 		className={isMobile() ? null : 'd-flex justify-content-center align-items-center'}>
-		<img src='/img/splash-screen/splash-screen-foreground.png' className="d-md-none d-block w-100" />
-		<img src='/img/splash-screen/foreground-desktop.png' className="d-none d-md-block w-100 position-absolute" />
+		<img src="/img/splash-screen/splash-screen-foreground.png" className="d-md-none d-block w-100" />
+		<img src="/img/splash-screen/foreground-desktop.png" className="d-none d-md-block w-100 position-absolute" />
 		<div className="splash-content d-flex flex-column align-items-center" style={!isMobile() ? {margin:'0 28vw'} : null}>
-			{title && <h1 className='text-center bolder text-white mx-2 mt-3' style={{fontSize:"1.5rem"}}>{title}</h1>}
-			<button className='btn btn-primary btn-lg my-3 mx-auto' onClick={scrollToUpperCta} style={{fontSize:'.9rem'}} >Find out more</button>
-			{!noProducts && <a href='/tabsforgood' className='text-white text-decoration-none mt-2 mb-4'><span style={{textDecoration:"underline"}}>Discover Our Products</span> →</a>}
+			{title && <h1 className="text-center bolder text-white mx-2 mt-3" style={{fontSize:"1.5rem"}}>{title}</h1>}
+			<button className="btn btn-primary btn-lg my-3 mx-auto" onClick={scrollToUpperCta} style={{fontSize:'.9rem'}} >Find out more</button>
+			{!noProducts && <a href="/tabsforgood" className="text-white text-decoration-none mt-2 mb-4"><span style={{textDecoration:"underline"}}>Discover Our Products</span> →</a>}
 		</div>
 		</BG>
 	</Container>
@@ -228,17 +228,17 @@ const MyLandingSection = ({title, bgImg, noProducts}) => {
 	{/* 17 June 2022 Remove the Duo Cta in new design */}
 	{/* <Container fluid className="landing-duo-cta bg-gl-light-pink d-flex justify-content-center py-3 px-1">
 		<a onClick={myDataOnClick} 
-			className='text-decoration-none mydata-signup-button'> 
+			className="text-decoration-none mydata-signup-button"> 
 			<div style={{borderRadius:'10px'}} className="mydata-signup-button mydata-splash-cta splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
-				<img src="/img/mydata/data-cta.png" className='logo'/>
-				<span className='font-weight-bold p-1 pl-3 mx-auto mydata-signup-button' style={{fontSize:fontSizeCTA,transform:'translate(0, 10%)'}} >{isReg ? 'My.Data Profile' : 'Sign Up For My.Data'}</span>
+				<img src="/img/mydata/data-cta.png" className="logo"/>
+				<span className="font-weight-bold p-1 pl-3 mx-auto mydata-signup-button" style={{fontSize:fontSizeCTA,transform:'translate(0, 10%)'}} >{isReg ? 'My.Data Profile' : 'Sign Up For My.Data'}</span>
 			</div>
 		</a>
 		<MyDataSignUpModal />
-		<C.A href='/tabsforgood' className='text-decoration-none t4g-signup-button'>
+		<C.A href="/tabsforgood" className="text-decoration-none t4g-signup-button">
 			<div style={{borderRadius:'10px'}} className="t4g-signup-button t4g-splash-cta splash-cta bg-white shadow d-flex justify-content-between align-items-center mx-1 p-2">
-				<img src="/img/mydata/t4g-cta.png" className='logo'/>
-				<span className='font-weight-bold p-1 pl-3 mx-auto t4g-signup-button' style={{fontSize:fontSizeCTA,transform:'translate(0, 10%)'}}>Get Tabs For Good</span>
+				<img src="/img/mydata/t4g-cta.png" className="logo"/>
+				<span className="font-weight-bold p-1 pl-3 mx-auto t4g-signup-button" style={{fontSize:fontSizeCTA,transform:'translate(0, 10%)'}}>Get Tabs For Good</span>
 			</div>
 		</C.A>
 	</Container> */}
@@ -275,21 +275,21 @@ const HowTabsForGoodWorks = ({className, shortTitle}) => {
 		<PageCard id="howitworks" className={space("how-tabs-for-good-works text-center", className)}>
 			<h1>{shortTitle ? "Here's how it works" : "How Tabs for Good Works"}</h1>
 			<Row className="pt-5">
-				<Col md={4} className='pt-2 pt-md-0 how-it-works-points'>
-					<img className='w-50' src="/img/icons/laptop.png" alt="" />
-					<h3 className='pt-4'>Open a tab</h3>
-					<p className='pt-3 px-2'>When you open a new tab, we display a small unobtrusive banner ad at the bottom of your page while you're busy browsing away. </p>
+				<Col md={4} className="pt-2 pt-md-0 how-it-works-points">
+					<img className="w-50" src="/img/icons/laptop.png" alt="" />
+					<h3 className="pt-4">Open a tab</h3>
+					<p className="pt-3 px-2">When you open a new tab, we display a small unobtrusive banner ad at the bottom of your page while you're busy browsing away. </p>
 				</Col>
-				<Col md={4} className='pt-2 pt-md-0 how-it-works-points'>
-					<img className='w-50' src="/img/icons/coin.png" alt="" />
-					<h3 className='pt-4'>Unlock a donation</h3>
-					<p className='pt-3 px-2'>As a thank you for letting the ad appear on your page, 
+				<Col md={4} className="pt-2 pt-md-0 how-it-works-points">
+					<img className="w-50" src="/img/icons/coin.png" alt="" />
+					<h3 className="pt-4">Unlock a donation</h3>
+					<p className="pt-3 px-2">As a thank you for letting the ad appear on your page, 
 						you make a free donation to charity, funded by us. 50% of the ad money to be precise. </p>
 				</Col>
-				<Col md={4} className='pt-2 pt-md-0 how-it-works-points'>
-					<img className='w-50' src="/img/icons/tick.png" alt="" />
-					<h3 className='pt-4'>That's it!</h3>
-					<p className='pt-3 px-2'>We don't track your online activity and you don't even have to click on the ad to make the donation happen. It really is that simple. </p>
+				<Col md={4} className="pt-2 pt-md-0 how-it-works-points">
+					<img className="w-50" src="/img/icons/tick.png" alt="" />
+					<h3 className="pt-4">That's it!</h3>
+					<p className="pt-3 px-2">We don't track your online activity and you don't even have to click on the ad to make the donation happen. It really is that simple. </p>
 				</Col>
 			</Row>
 		</PageCard>
@@ -320,10 +320,10 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 	return (<>
 		<PageCard className={space("tabs-for-goods-slide-card", bgClassName)}>
 			{showUpperCTA && <div className="upper-cta white">
-				<h1 className='mb-5 white'>Sign Up Today!</h1>
-				<p className='leader-text text-center'>Start transforming your web browsing into life saving vaccines, meals for children in need, preserving habitats for endangered animals, plus many more good causes.</p>
-				<img src="/img/homepage/bird-cloud.png" className='hummingbird'/>
-				<img src="/img/signup/hand-globe-coins.png" className='hand-globe'/>
+				<h1 className="mb-5 white">Sign Up Today!</h1>
+				<p className="leader-text text-center">Start transforming your web browsing into life saving vaccines, meals for children in need, preserving habitats for endangered animals, plus many more good causes.</p>
+				<img src="/img/homepage/bird-cloud.png" className="hummingbird"/>
+				<img src="/img/signup/hand-globe-coins.png" className="hand-globe"/>
 				<div className="mt-5">
 					<T4GSignUpButton className="w-50 d-block mx-auto"/>
 
@@ -337,29 +337,29 @@ const TabsForGoodSlideSection = ({ngo, img, showUpperCTA, showLowerCTA, bgClassN
 
 		{showLowerCTA && <>
 			<CurvePageCard color="desat-blue" bgClassName={bgClassName}>
-				<h1 className='white'>Start using Tabs for Good today and together we'll...</h1>
+				<h1 className="white">Start using Tabs for Good today and together we'll...</h1>
 				<Row className="mt-5">
-					<Col md={4} className='pt-2 pt-md-0'> 
+					<Col md={4} className="pt-2 pt-md-0"> 
 						<div className="tricard-inner">
-							{/* <img className='w-100' src={(ngo && ngo.logo) || "img/TabsForGood/fifty-card.png"} alt="" /> */}
-							<img className='w-100' src={(ngo ? "../img/TabsForGood/fifty-card.png" : "img/TabsForGood/fifty-card.png")} alt="" />
-							<div className='p-3'>
+							{/* <img className="w-100" src={(ngo && ngo.logo) || "img/TabsForGood/fifty-card.png"} alt="" /> */}
+							<img className="w-100" src={(ngo ? "../img/TabsForGood/fifty-card.png" : "img/TabsForGood/fifty-card.png")} alt="" />
+							<div className="p-3">
 								<h3>Donate 50% of online ad fees to {ngo ? name : "good causes"}</h3>
 							</div>
 						</div>
 					</Col>
-					<Col md={4} className='pt-2 pt-md-0'>
+					<Col md={4} className="pt-2 pt-md-0">
 						<div className="tricard-inner">
-							<img className='w-100 bg-gl-light-pink' src={(ngo ? "../img/TabsForGood/world-card.png" : "img/TabsForGood/world-card.png")} alt="" />
-							<div className='p-3'>
+							<img className="w-100 bg-gl-light-pink" src={(ngo ? "../img/TabsForGood/world-card.png" : "img/TabsForGood/world-card.png")} alt="" />
+							<div className="p-3">
 								<h3>{ngo ? "Let's help "+name+" do even more good. Together." : "Give that money to a charity of your choice"}</h3>
 							</div>
 						</div>
 					</Col>
-					<Col md={4} className='pt-2 pt-md-0'>
+					<Col md={4} className="pt-2 pt-md-0">
 						<div className="tricard-inner">
-							<img className='w-100' src="../img/TabsForGood/girl-card.png" alt="" />
-							<div className='p-3'>
+							<img className="w-100" src="../img/TabsForGood/girl-card.png" alt="" />
+							<div className="p-3">
 								<h3>Do good without taking up any time or effort</h3>
 							</div>
 						</div>
@@ -400,9 +400,9 @@ export const TabsForGoodSlideSection2 = ({ngo}) => {
 					{images[i]}
 				</Col>
 				<Col md={6} className="slide-right p-5">
-					<div key={i} className='d-flex flex-column justify-content-between h-100 p-3'>
+					<div key={i} className="d-flex flex-column justify-content-between h-100 p-3">
 						<h3>{titles[i]}</h3>
-						<div className='slide-content'>
+						<div className="slide-content">
 							{content}
 						</div>
 						<T4GSignUpButton className="t4gcta"/>
@@ -431,7 +431,7 @@ const NewsAwards = ({nostars, className, children}) => {
 		"https://www.scotsman.com/news/opinion/columnists/going-global-is-next-step-for-smes-andrew-walker-3703432"
 	];
 
-	const StarsDiv = <div className="col align-items-center justify-content-center d-none d-md-flex"><img className='logo' src="/img/homepage/Stars.png" alt="" /></div>;
+	const StarsDiv = <div className="col align-items-center justify-content-center d-none d-md-flex"><img className="logo" src="/img/homepage/Stars.png" alt="" /></div>;
 	return(
 		<PageCard className={space("py-3", className)}>
 			<div className="text-center">
@@ -439,7 +439,7 @@ const NewsAwards = ({nostars, className, children}) => {
 				<Row>
 					{!nostars && StarsDiv}
 					{imgs.map((v, i) => <Col key={i} style={{height:'100px'}} >
-						<LinkOut href={links[i]}><img className='logo logo-xl' src={v} style={{maxHeight:'60px'}} /></LinkOut>
+						<LinkOut href={links[i]}><img className="logo logo-xl" src={v} style={{maxHeight:'60px'}} /></LinkOut>
 					</Col>)}
 					{!nostars && StarsDiv}
 				</Row>
@@ -460,8 +460,8 @@ const TestimonialSectionTitle = () => {
 			<div className="container">
 				<div className="testimonial-upper text-center">
 					<h1>Together we've raised over £4.7 million!</h1>
-					<p className='leader-text' style={{marginBottom:"6rem"}}>We donate to charities worldwide. Spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
-					{/* <a className='btn btn-primary text-uppercase' href="#">Explore our charity impact</a> */}
+					<p className="leader-text" style={{marginBottom:"6rem"}}>We donate to charities worldwide. Spreading that money far and wide to those who need it the most. All thanks to our fantastic Good-Loop community.</p>
+					{/* <a className="btn btn-primary text-uppercase" href="#">Explore our charity impact</a> */}
 				</div>
 			</div>
 		</div>
@@ -481,15 +481,15 @@ const TestimonialSectionLower = () => {
 				<div className="testimonial-card my-0 mb-md-5">
 					<div className="row">
 						<div className="col-md-6 p-0">
-							<img className='w-100 h-100' src="/img/homepage/photo-by-priscilla-du-preez-unsplash.jpg" alt="" />
+							<img className="w-100 h-100" src="/img/homepage/photo-by-priscilla-du-preez-unsplash.jpg" alt="" />
 						</div>
 						<div className="col-md-6 testimonial-right">
 								<Circle className="mx-auto" width="8em"><img className="logo logo-xl" src="/img/charity-logos/centrepoint.png" alt="Centrepoint" /></Circle>
-								<img src="/img/homepage/quote.svg" className='quote-img'/>
-								<h3 className='sm mt-5'>Supporting centrepoint</h3>
+								<img src="/img/homepage/quote.svg" className="quote-img"/>
+								<h3 className="sm mt-5">Supporting centrepoint</h3>
 								<p>"The amazing income generated by GoodLoop will support a wider selection of teams and projects - unrestricted funds are really useful and enable Centrepoint to be dynamic with the way we support young people."</p>
 								<p><i>Lucy Coleman, Senior Corporate Development Manager, Centrepoint (2020)</i></p>
-								<p className='TODO read-more'>READ MORE ABOUT OUR <a href="#">CHARITY IMPACT</a></p>
+								<p className="TODO read-more">READ MORE ABOUT OUR <a href="#">CHARITY IMPACT</a></p>
 						</div>
 					</div>
 				</div>
@@ -497,29 +497,29 @@ const TestimonialSectionLower = () => {
 					<div className="row pt-5">
 						<div className="col-md-4 testimonial-points row">	
 							<div className="col">
-								<Circle className="mx-auto" width='4em'>
-									<img className='logo' src="/img/charity-logos/we-forest.jpeg" alt="We Forest logo" />
+								<Circle className="mx-auto" width="4em">
+									<img className="logo" src="/img/charity-logos/we-forest.jpeg" alt="We Forest logo" />
 								</Circle>
-								<h3 className='pt-md-4 pt-3'>721.3 Hectares</h3>
-								<p className='nomargin'>of forest restored<br/>(that's 1,000+ football pitches!)</p>
+								<h3 className="pt-md-4 pt-3">721.3 Hectares</h3>
+								<p className="nomargin">of forest restored<br/>(that's 1,000+ football pitches!)</p>
 							</div>
 						</div>
 						<div className="col-md-4 testimonial-points">
 							<div className="col">
-								<Circle className="mx-auto" width='4em'>
-									<img className='logo' src="/img/charity-logos/no-kid-hungry.png" alt="No Kid Hungry logo" />
+								<Circle className="mx-auto" width="4em">
+									<img className="logo" src="/img/charity-logos/no-kid-hungry.png" alt="No Kid Hungry logo" />
 								</Circle>
-								<h3 className='pt-md-4 pt-3'>183,318 Meals</h3>
-								<p className='nomargin'>provided for children</p>
+								<h3 className="pt-md-4 pt-3">183,318 Meals</h3>
+								<p className="nomargin">provided for children</p>
 							</div>
 						</div>
 						<div className="col-md-4 row testimonial-points">
 							<div className="col">
-								<Circle className="mx-auto" width='4em'>
-									<img className='logo' src="/img/charity-logos/mind.png" alt="Mind logo" />
+								<Circle className="mx-auto" width="4em">
+									<img className="logo" src="/img/charity-logos/mind.png" alt="Mind logo" />
 								</Circle>
-								<h3 className='pt-md-4 pt-3'>500+ Helpline Calls</h3>
-								<p className='nomargin'>and 195 hours of online peer-to-peer support</p>
+								<h3 className="pt-md-4 pt-3">500+ Helpline Calls</h3>
+								<p className="nomargin">and 195 hours of online peer-to-peer support</p>
 							</div>
 						</div>
 					</div>
@@ -527,7 +527,7 @@ const TestimonialSectionLower = () => {
 			</div>
 		</div>
 		<div className="bg-gl-light-pink">
-			<img src="/img/curves/curve-desat-blue-round-bottom.svg" className='w-100' alt="" />
+			<img src="/img/curves/curve-desat-blue-round-bottom.svg" className="w-100" alt="" />
 		</div>
 	</>)
 };
@@ -550,21 +550,21 @@ const Circle = ({className, color="bg-light", width,children}) => {
  */
 const PositivePlaceSection = ({className, showCTA}) => {
 	return <PageCard className={space("positive-place-section text-center", className)}>
-		<h1 className='pt-5'>Let's make the internet a more positive place. Together.</h1>
+		<h1 className="pt-5">Let's make the internet a more positive place. Together.</h1>
 		<Row className="pt-5 d-flex justify-content-around">
 			<Col md={3} className="video-points">
-				<img className='w-50' src="img/icons/fifty-percent.png" alt="" />
-				<h3 className='pt-4'>Supporting charity</h3>
+				<img className="w-50" src="img/icons/fifty-percent.png" alt="" />
+				<h3 className="pt-4">Supporting charity</h3>
 				<p className="white">50% of online ad fees donated to charity</p>
 			</Col>
 			<Col md={3} className="video-points">
-				<img className='w-50' src="img/icons/world-hand.png" alt="" />
-				<h3 className='pt-4'>Planet positive</h3>
+				<img className="w-50" src="img/icons/world-hand.png" alt="" />
+				<h3 className="pt-4">Planet positive</h3>
 				<p className="white">Helping brands offset their digital carbon footprint</p>
 			</Col>
 			<Col md={3} className="video-points">
-				<img className='w-50' src="img/icons/padlock.png" alt="" />
-				<h3 className='pt-4'>Privacy friendly</h3>
+				<img className="w-50" src="img/icons/padlock.png" alt="" />
+				<h3 className="pt-4">Privacy friendly</h3>
 				<p className="white">Keeping your online privacy safe no matter what</p>
 			</Col>
 		</Row>
@@ -589,20 +589,20 @@ const WatchVideoSection = () => {
 	return(<>
 	<PageCard className="watch-video-section">
 		<div className="text-center">
-			<h1 className='pt-5'>Watch To See How We're Creating A Movement</h1>
+			<h1 className="pt-5">Watch To See How We're Creating A Movement</h1>
 			<div className="promovid">
 				<img className={space(preview, 'w-100')} src="img/homepage/video_preview.png" alt="video preview" onClick={playVideo}/>
-				<video ref={vidRef} className='w-100' preload="auto" controls>
+				<video ref={vidRef} className="w-100" preload="auto" controls>
 					<source src={videoLink} type="video/mp4" />
 				</video>
 			</div>
-			<img src="/img/green/hummingbird.png" className='hummingbird d-none d-md-block'/>
-			<img src="/img/signup/hand-globe-coins.png" className='hand-globe-coins d-none d-md-block' />
+			<img src="/img/green/hummingbird.png" className="hummingbird d-none d-md-block"/>
+			<img src="/img/signup/hand-globe-coins.png" className="hand-globe-coins d-none d-md-block" />
 			<div className="m-5">
-				<p className='leader-text'>We're working with fantastic brands that want to join us in making the internet a more positive place. <br/><br/>
+				<p className="leader-text">We're working with fantastic brands that want to join us in making the internet a more positive place. <br/><br/>
 				The way we're doing it couldn't be simpler. We just need the final piece of the puzzle to make it happen - you. Sign up and join the Good-Loop movement today. </p>
 				<T4GSignUpButton className="mx-5 mt-5" dUnset />
-				{/* <p className='our-story black m-5 pb-5'>Want to learn more? Check out <a href="#">OUR STORY</a></p> */}
+				{/* <p className="our-story black m-5 pb-5">Want to learn more? Check out <a href="#">OUR STORY</a></p> */}
 			</div>
 			
 		</div>
@@ -614,24 +614,24 @@ const WatchVideoSection = () => {
 const GetInvolvedSection = () => {
 	return(
 		<PageCard className="get-involved-section text-center bg-gl-light-pink">
-			<img src="/img/green/hummingbird.png" className='hummingbird'/>
-			<div className='get-involved-text'>
+			<img src="/img/green/hummingbird.png" className="hummingbird"/>
+			<div className="get-involved-text">
 				<h1>This is just the beginning. sign up and join our movement.</h1>
-				<p className='leader-text mt-5'>We’re developing exciting new products that will help us all make the internet a more positive place. Register below to get exclusive access to future product launches and more ways to raise money for charity while you browse.</p>
-				<SubscriptionForm purpose='preregister' buttonText="Register for Updates" />
+				<p className="leader-text mt-5">We’re developing exciting new products that will help us all make the internet a more positive place. Register below to get exclusive access to future product launches and more ways to raise money for charity while you browse.</p>
+				<SubscriptionForm purpose="preregister" buttonText="Register for Updates" />
 			</div>
 			<div className="row pt-5">
 				<div className="col-md-4 get-involved-points">
-					<img className='w-25' src="/img/homepage/globe.png" alt="" />
-					<h3 className='pt-md-4 mb-0 ml-1 sm'>Donate to charity. For free. </h3>
+					<img className="w-25" src="/img/homepage/globe.png" alt="" />
+					<h3 className="pt-md-4 mb-0 ml-1 sm">Donate to charity. For free. </h3>
 				</div>
 				<div className="col-md-4 get-involved-points">
-					<img className='w-25' src="/img/homepage/heart.png" alt="" />
-					<h3 className='pt-md-4 mb-0 ml-1 sm'>Make the world a better place</h3>
+					<img className="w-25" src="/img/homepage/heart.png" alt="" />
+					<h3 className="pt-md-4 mb-0 ml-1 sm">Make the world a better place</h3>
 				</div>
 				<div className="col-md-4 get-involved-points">
-					<img className='w-25' src="/img/homepage/world.png" alt="" />
-					<h3 className='pt-md-4 mb-0 ml-1 sm'>Just by browsing the internet</h3>
+					<img className="w-25" src="/img/homepage/world.png" alt="" />
+					<h3 className="pt-md-4 mb-0 ml-1 sm">Just by browsing the internet</h3>
 				</div>
 			</div>
 		</PageCard>
@@ -642,28 +642,28 @@ const TriCards = ({className, titles, texts, images, links=["#", "#", "#"] }) =>
 	return(
 		<PageCard className={space("tri-card", className)}>
 			<Row className="mt-5">
-				<Col md={4} className='pt-2 pt-md-0'> 
+				<Col md={4} className="pt-2 pt-md-0"> 
 					<div className="tricard-inner">
-						<img className='w-100' src={images[0]} alt="" />
-						<div className='tricard-text p-3'>
+						<img className="w-100" src={images[0]} alt="" />
+						<div className="tricard-text p-3">
 							<h3>{titles[0]}</h3>
 							<span>{texts[0]} </span><C.A href={links[0]}>Read More</C.A>
 						</div>
 					</div>
 				</Col>
-				<Col md={4} className='pt-2 pt-md-0'>
+				<Col md={4} className="pt-2 pt-md-0">
 					<div className="tricard-inner">
-						<img className='w-100' src={images[1]} alt="" />
-						<div className='tricard-text p-3'>
+						<img className="w-100" src={images[1]} alt="" />
+						<div className="tricard-text p-3">
 							<h3>{titles[1]}</h3>
 							<span>{texts[1]} </span><C.A href={links[1]}>Read More</C.A>
 						</div>
 					</div>
 				</Col>
-				<Col md={4} className='pt-2 pt-md-0'>
+				<Col md={4} className="pt-2 pt-md-0">
 					<div className="tricard-inner">
-						<img className='w-100' src={images[2]} alt="" />
-						<div className='tricard-text p-3'>
+						<img className="w-100" src={images[2]} alt="" />
+						<div className="tricard-text p-3">
 							<h3>{titles[2]}</h3>
 							<span>{texts[2]} </span><C.A href={links[2]}>Read More</C.A>
 						</div>
@@ -677,7 +677,7 @@ const TriCards = ({className, titles, texts, images, links=["#", "#", "#"] }) =>
 const WhatIsTabsForGood	= ({ngo}) => {
 	return (<>
 		<PageCard className="how-tabs-for-good-works text-center" id="upper-cta">
-			<h1 className='mb-4'>What is Tabs for Good?</h1>
+			<h1 className="mb-4">What is Tabs for Good?</h1>
 			<p className=''><b>Tabs for Good is your browser plugin that transforms web browsing into charity donations for free. Helping turn your browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</b></p>
 			<Row className="py-5 d-none d-md-flex">
 				<Col md={4}>
@@ -717,14 +717,14 @@ const TwinCards = ({twinCardsContent}) => {
 		<div className="gridbox gridbox-gap-4 text-center" style={{zIndex:'2'}}>
 		{twinCardsContent && twinCardsContent.map((item, idx) => {
 			return(
-				<Card key={idx} className='shadow'>
+				<Card key={idx} className="shadow">
 					<CardImg className={item.imgClass} variant="top" src={item.imgUrl} />
 					<CardBody>
 						<div>
-							<CardTitle className='color-gl-red'>
+							<CardTitle className="color-gl-red">
 								{item.title}
 							</CardTitle>
-							<CardText className='color-gl-darker-grey'>
+							<CardText className="color-gl-darker-grey">
 								{item.text}
 							</CardText>
 						</div>
@@ -739,19 +739,19 @@ const TwinCards = ({twinCardsContent}) => {
 	);
 	else return (
 		<div className="text-center mt-5" style={{zIndex:'2'}}>
-			<Row style={{height:'30em'}} className='shadow'>
-				<Col md={6} className='p-0 d-none d-md-block'>
+			<Row style={{height:'30em'}} className="shadow">
+				<Col md={6} className="p-0 d-none d-md-block">
 					<BG image={twinCardsContent[0].imgUrl} className={space(twinCardsContent[0].imgClass, "h-100 w-100 rounded")} 
 					style={{backgroundPosition:'center',backgroundSize:'cover',backgroundRepeat:'no-repeat'}} />
 				</Col>
-				<Col md={6} className='p-0'>
-					<Card className='m-0 w-100 h-100 p-5'>
-						<CardBody className='d-flex justify-content-center'>
+				<Col md={6} className="p-0">
+					<Card className="m-0 w-100 h-100 p-5">
+						<CardBody className="d-flex justify-content-center">
 							<div>
-								<CardTitle className='color-gl-red'>
+								<CardTitle className="color-gl-red">
 									{twinCardsContent[0].title}
 								</CardTitle>
-								<CardText className='color-gl-darker-grey'>
+								<CardText className="color-gl-darker-grey">
 									{twinCardsContent[0].text}
 								</CardText>
 							</div>
@@ -763,17 +763,17 @@ const TwinCards = ({twinCardsContent}) => {
 				</Col>
 			</Row>
 
-			<img src="img/TabsForGood/sparkle.png" className='logo my-3' />
+			<img src="img/TabsForGood/sparkle.png" className="logo my-3" />
 
-			<Row style={{height:'30em'}} className='shadow'>
-				<Col md={6} className='p-0'>
-					<Card className='m-0 w-100 h-100 p-5'>
-						<CardBody className='d-flex justify-content-center'>
+			<Row style={{height:'30em'}} className="shadow">
+				<Col md={6} className="p-0">
+					<Card className="m-0 w-100 h-100 p-5">
+						<CardBody className="d-flex justify-content-center">
 							<div>
-								<CardTitle className='color-gl-red'>
+								<CardTitle className="color-gl-red">
 									{twinCardsContent[1].title}
 								</CardTitle>
-								<CardText className='color-gl-darker-grey'>
+								<CardText className="color-gl-darker-grey">
 									{twinCardsContent[1].text}
 								</CardText>
 							</div>
@@ -783,7 +783,7 @@ const TwinCards = ({twinCardsContent}) => {
 						</CardBody>
 					</Card>
 				</Col>
-				<Col md={6} className='p-0 d-none d-md-block'>
+				<Col md={6} className="p-0 d-none d-md-block">
 					<BG image={twinCardsContent[1].imgUrl} className={space(twinCardsContent[1].imgClass, "h-100 w-100 rounded")} 
 					style={{backgroundPosition:'center',backgroundSize:'cover',backgroundRepeat:'no-repeat'}} />
 				</Col>

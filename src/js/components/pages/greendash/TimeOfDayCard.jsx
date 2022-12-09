@@ -10,7 +10,7 @@ import { emissionsPerImpressions, getBreakdownBy, getCarbon } from './emissionsc
 import { isPer1000 } from './GreenMetrics';
 
 const TimeOfDayCard = (props) => {
-	return <GreenCard title='When are your ad carbon emissions highest?' className='carbon-time-of-day'>
+	return <GreenCard title="When are your ad carbon emissions highest?" className="carbon-time-of-day">
 		<TimeOfDayCard2 {...props} />
 	</GreenCard>;
 };
@@ -86,14 +86,14 @@ const TimeOfDayCard2 = ({ baseFilters, tags }) => {
 	}, [baseFilters.q, baseFilters.start, baseFilters.end, isPer1000()]);
 
 	if ( ! chartProps) {
-		return <Misc.Loading text='Fetching time-of-day data...' />;
+		return <Misc.Loading text="Fetching time-of-day data..." />;
 	}
 	if (chartProps.isEmpty) {
 		return NOEMISSIONS;
 	}
 	return (<>
-			<NewChartWidget type='bar' {...chartProps} />
-			<p className='text-center mb-0'>
+			<NewChartWidget type="bar" {...chartProps} />
+			<p className="text-center mb-0">
 				<small>Time of day in your time zone ({Intl.DateTimeFormat().resolvedOptions().timeZone})</small>
 			</p>
 		</>

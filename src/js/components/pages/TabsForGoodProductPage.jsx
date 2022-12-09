@@ -33,21 +33,21 @@ const LandingSection = () => {
 		<div className="landing-contents bg-gl-white">
 			<Container fluid="lg">
 				<Row>
-					<Col className='d-none d-md-flex justify-content-center align-items-center' xs={12} md={6}>
+					<Col className="d-none d-md-flex justify-content-center align-items-center" xs={12} md={6}>
 						<img src="/img/mydata/product-page/tabs.png" className="w-100" />
 					</Col>
 					<Col xs={12} md={6} >
-						<div className='d-flex d-md-none flex-column'>
+						<div className="d-flex d-md-none flex-column">
 							<h1>Tabs for Good</h1>
-							<h3 className='my-3'>The desktop browser plugin that lets you do good, for free</h3>
+							<h3 className="my-3">The desktop browser plugin that lets you do good, for free</h3>
 							<p>Turn your desktop browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</p>
 							<T4GSignUpButton />
 							<a onClick={scroll} className="mt-3 mx-auto">Find out more</a>
 						</div>
-						<div className='d-none d-md-flex flex-column justify-content-center align-items-start'>
+						<div className="d-none d-md-flex flex-column justify-content-center align-items-start">
 							<h1>Tabs for Good</h1>
-							<h3 className='text-left my-3'>The desktop browser plugin that lets you do good, for free</h3>
-							<p className='px-0 text-left mb-3'>Turn your desktop browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</p>
+							<h3 className="text-left my-3">The desktop browser plugin that lets you do good, for free</h3>
+							<p className="px-0 text-left mb-3">Turn your desktop browsing into life saving vaccines, meals for children in need, preservation of habitats for endangered animals, plus many more good causes.</p>
 							<T4GSignUpButton />
 							<a onClick={scroll} className="mt-4">Find out more</a>
 						</div>
@@ -130,7 +130,7 @@ const HowItWorks = () => {
 				<h1>Here's how it works:</h1>
 				<br />
 
-				<Row className='mx-1 d-flex justify-content-center mt-3 mb-5'>
+				<Row className="mx-1 d-flex justify-content-center mt-3 mb-5">
 					{Sections.map(({ i, title, subtitle, img, content }, index) => {
 						return <Col key={index} xs={12} lg={4} className="position-relative" style={{maxWidth:'400px'}} >
 							<div className="position-absolute d-flex flex-column justify-content-center align-items-center"
@@ -138,9 +138,9 @@ const HowItWorks = () => {
 								<img src={img} style={{height:'80px'}} />
 								<span className="miniheader">{title}</span>
 								<h2 style={{ fontSize: '1.25rem' }}>{subtitle}</h2>
-								<span className='mt-1'>{content}</span>
+								<span className="mt-1">{content}</span>
 							</div>
-							<img src={"img/mydata/product-page/blob-" + i + ".svg"} alt="blob" className='position-relative user-select-none' 
+							<img src={"img/mydata/product-page/blob-" + i + ".svg"} alt="blob" className="position-relative user-select-none" 
 							style={{ left: 0, top: 0, zIndex: 0, width:'370px', transform: 'translate(-50%,0)', left:'50%' }} />
 						</Col>
 					})}
@@ -152,9 +152,9 @@ const HowItWorks = () => {
 				<img src="/img/mydata/product-page/logos-browsers.png" className="w-100 mx-auto mb-5" style={{ maxWidth: '358px' }} />
 			</div>
 		</ProductPageContainer>
-		<img className='position-absolute' style={{width:'180px', right:bubbleMargin, top:'15em'}} src="img/TabsForGood/bubble-woman.png" />
-		<img className='position-absolute' style={{width:'180px', left:bubbleMargin, top:'32em'}} src="img/TabsForGood/bubble-turtle.png" />
-		<img className='position-absolute' style={{width:'180px', right:bubbleMargin, bottom:'34em'}} src="img/TabsForGood/bubble-kids-two.png" />
+		<img className="position-absolute" style={{width:'180px', right:bubbleMargin, top:'15em'}} src="img/TabsForGood/bubble-woman.png" />
+		<img className="position-absolute" style={{width:'180px', left:bubbleMargin, top:'32em'}} src="img/TabsForGood/bubble-turtle.png" />
+		<img className="position-absolute" style={{width:'180px', right:bubbleMargin, bottom:'34em'}} src="img/TabsForGood/bubble-kids-two.png" />
 	</div>;
 };
 
@@ -163,7 +163,7 @@ const ControlYourData = () => {
 	return <div className="control-your-data bg-gl-pale-orange">
 		<img src="/img/curves/curve-lighter-blue.svg" className="w-100" />
 		<div className="under-curve bg-gl-lighter-blue color-gl-dark-turquoise">
-			<ProductPageContainer className='position-relative'>
+			<ProductPageContainer className="position-relative">
 				<Row className="flex-md-row-reverse">
 					<Col md={6} className="d-flex flex-column justify-content-center align-items-center align-items-md-start px-md-5 text-md-left">
 						<h3 className="text-uppercase">It couldn't be easier to get started</h3>
@@ -178,7 +178,7 @@ const ControlYourData = () => {
 					<br />
 					<br />
 					<br />
-					<p className='mx-auto position-relative' style={{ fontSize: "0.9rem", maxWidth: '420px' }}>
+					<p className="mx-auto position-relative" style={{ fontSize: "0.9rem", maxWidth: '420px' }}>
 						<img src="/img/homepage/quote-blue.svg" className="position-absolute" style={{ maxWidth: '3rem', top: '-4em' }} />
 						The potential impact of consumers downloading Tabs for Good is significant. Based on the average number of browser tabs consumers open every week,
 						<b> if just 1% of internet users in the UK and US downloaded the browser extension, it would generate £30m and $200m (£146.9m) a year </b>
@@ -194,7 +194,7 @@ const ControlYourData = () => {
 				<T4GSignUpButton />
 				<br />
 				<br />
-				<img src="img/homepage/world-map.svg" className='position-absolute w-100' style={{ bottom: 0, left: 0, pointerEvents: 'none' }} />
+				<img src="img/homepage/world-map.svg" className="position-absolute w-100" style={{ bottom: 0, left: 0, pointerEvents: 'none' }} />
 			</ProductPageContainer>
 		</div>
 	</div>
@@ -328,10 +328,10 @@ const TransformYourData = () => {
 const PickACharity = () => {
 	return <ProductPageContainer className="pick-a-charity">
 		<Row>
-			<Col xs={12} md={6} className='d-flex justify-content-center align-items-center'>
+			<Col xs={12} md={6} className="d-flex justify-content-center align-items-center">
 				<img src="/img/mydata/product-page/charity-cloud.png" className="w-100 my-5" />
 			</Col>
-			<Col xs={12} md={6} className='d-flex flex-column justify-content-center align-items-start'>
+			<Col xs={12} md={6} className="d-flex flex-column justify-content-center align-items-start">
 				<h3 className="text-left px-3">You pick the charity you want to support. We'll make it happen.</h3>
 				<p className="px-3 my-3 color-gl-dark-turquoise">
 					Clean the oceans from plastic, feed children in

@@ -25,10 +25,10 @@ const OurStorySplash = () => {
 			className="text-center pt-0"
 		>
 			<h1>Our Story</h1>
-			<p className='leader-text'>At Good-Loop, we're on a mission to make the internet a more positive place and to make online advertising a more positive force in the world.</p>
+			<p className="leader-text">At Good-Loop, we're on a mission to make the internet a more positive place and to make online advertising a more positive force in the world.</p>
 		</CurvePageCard>
 		<PageCard className="text-center pt-0">
-			<CardImgLeft imgUrl='img/homepage/amyanddaniel.png' roundedImg>
+			<CardImgLeft imgUrl="img/homepage/amyanddaniel.png" roundedImg>
 				<h3>How it all began</h3>
 				<p>In 2016 our co-founder, Amy Williams put a question out to the advertising world - can we redesign online advertising to make annoying internet ads a force for good in the world?</p>
 				<p>It was an ambitious question. But it turned out Daniel Winterstein had been asking himself the very same thing. Amy and Dan met up, shared stories, put ideas on the table, and in October 2016 their dream became a reality - Good-Loop was born. With one sole misson...</p>
@@ -42,10 +42,10 @@ const OurMissionSection = ({className}) => {
 		<PageCard className={space("text-center bg-gl-light-pink", className)}>
 			<div>
 				<h1>Let's make the internet a more positive place</h1>
-				<p className='leader-text mt-4'>At Good-Loop, we work with fantastic brands that want to make advertising good for everyone. The way we do it couldn't be simpler. We just need the final piece of the puzzle to make it happen - you.</p>
+				<p className="leader-text mt-4">At Good-Loop, we work with fantastic brands that want to make advertising good for everyone. The way we do it couldn't be simpler. We just need the final piece of the puzzle to make it happen - you.</p>
 			</div>
 			<br/>
-			<CardImgLeft imgUrl='/img/ourstory/Good-Loop_UsingAdMoneyForGoodWithBG.png' classname='bg-white border mt-5' roundedImg>
+			<CardImgLeft imgUrl="/img/ourstory/Good-Loop_UsingAdMoneyForGoodWithBG.png" className="bg-white border mt-5" roundedImg>
 				<h3>Here's how it works</h3>
 				<p>With My.Good-Loop, every time you see, watch or engage with a brand’s ad through our platforms, we’ll donate 50% of the ad fee to charity.</p>
 				<p>Since 2016, people like you have helped us raise millions of pounds for 100s of incredible causes all over the world. Just from seeing an ad. So what do you say? Fancy joining the Good-Loop community and helping us raise even more?</p>
@@ -60,48 +60,48 @@ const CaringCommunitySection = ({className}) => {
 		<PageCard className={space("text-center bg-gl-light-pink", className)}>
 			<div>
 				<h1>We're one big caring community</h1>
-				<p className='leader-text mt-5'>Today we're a fast-growing community of passionate, kind and caring people united by one ambition - to use online tech to make the world a better place.</p>
+				<p className="leader-text mt-5">Today we're a fast-growing community of passionate, kind and caring people united by one ambition - to use online tech to make the world a better place.</p>
 			</div>
-			<Row className='mt-5'>
+			<Row className="mt-5">
 				<Col md={4}>
-					<DynImg className='w-100 h-100 rounded' src="/img/ourstory/oxford-2.jpg" alt="" style={{objectFit:'cover'}}/>
+					<DynImg className="w-100 h-100 rounded" src="/img/ourstory/oxford-2.jpg" alt="" style={{objectFit:'cover'}}/>
 				</Col>
 				<Col md={4}>
-					<DynImg className='w-100 h-100 rounded' src="/img/ourstory/edinburgh-team.jpg" alt="" style={{objectFit:'cover'}}/>
+					<DynImg className="w-100 h-100 rounded" src="/img/ourstory/edinburgh-team.jpg" alt="" style={{objectFit:'cover'}}/>
 				</Col>
 				<Col md={4}>
-					<DynImg className='w-100 h-100 rounded' src="/img/ourstory/oxford-1.jpg" alt="" style={{objectFit:'cover'}}/>
+					<DynImg className="w-100 h-100 rounded" src="/img/ourstory/oxford-1.jpg" alt="" style={{objectFit:'cover'}}/>
 				</Col>
 			</Row>
 			</PageCard>
 			<PageCard className={space("text-center bg-gl-light-pink pt-0 shared-values", className)}>
 				<h1>We're driven by shared values</h1>
 				<Row className="pt-5">
-					<Col md={4} className='mt-md-0 mt-4' >
-						<img className='w-25' src="/img/icons/fifty-percent.png" alt="" />
-						<h4 className='pt-4'>Give 50% of Ad money to charity </h4>
+					<Col md={4} className="mt-md-0 mt-4" >
+						<img className="w-25" src="/img/icons/fifty-percent.png" alt="" />
+						<h4 className="pt-4">Give 50% of Ad money to charity </h4>
 					</Col>
-					<Col md={4} className='mt-md-0 mt-4' >
-						<img className='w-25' src="/img/icons/padlock.png" alt="" />
-						<h4 className='pt-4'>Protect online privacy</h4>
+					<Col md={4} className="mt-md-0 mt-4" >
+						<img className="w-25" src="/img/icons/padlock.png" alt="" />
+						<h4 className="pt-4">Protect online privacy</h4>
 					</Col>
-					<Col md={4} className='mt-md-0 mt-4' >
-						<img className='w-25' src="/img/icons/planet.png" alt="" />
-						<h4 className='pt-4'>Do good for the planet</h4>
+					<Col md={4} className="mt-md-0 mt-4" >
+						<img className="w-25" src="/img/icons/planet.png" alt="" />
+						<h4 className="pt-4">Do good for the planet</h4>
 					</Col>
 				</Row>
 				<Row className="pt-5">
 					<Col md={4} >
-						<img className='w-25' src="/img/icons/handshake.png" alt="" />
-						<h4 className='pt-4'>Be honest and transparent</h4>
+						<img className="w-25" src="/img/icons/handshake.png" alt="" />
+						<h4 className="pt-4">Be honest and transparent</h4>
 					</Col>
-					<Col md={4} className='mt-md-0 mt-4' >
-						<img className='w-25' src="/img/icons/world-hand.png" alt="" />
-						<h4 className='pt-4'>Be ethical</h4>
+					<Col md={4} className="mt-md-0 mt-4" >
+						<img className="w-25" src="/img/icons/world-hand.png" alt="" />
+						<h4 className="pt-4">Be ethical</h4>
 					</Col>
-					<Col md={4} className='mt-md-0 mt-4' >
-						<img className='w-25' src="/img/icons/heart.png" alt="" />
-						<h4 className='pt-4'>Be decent humans</h4>
+					<Col md={4} className="mt-md-0 mt-4" >
+						<img className="w-25" src="/img/icons/heart.png" alt="" />
+						<h4 className="pt-4">Be decent humans</h4>
 					</Col>
 				</Row>
 			</PageCard>		
@@ -112,17 +112,17 @@ const MyGetInvolvedSection = () =>{
 
 	return(<>
 	<PageCard className={"my-get-involved white text-center bg-gl-desat-blue pb-0"}>
-		<img src="/img/icons/Heart_single.png" className='logo' alt="" />
-		<h1 className='white mb-5'>Get Involved!</h1>
-		<p className='mb-5 leader-text'>Join the My.Good-Loop community today and start raising money for charity. For free.</p>
+		<img src="/img/icons/Heart_single.png" className="logo" alt="" />
+		<h1 className="white mb-5">Get Involved!</h1>
+		<p className="mb-5 leader-text">Join the My.Good-Loop community today and start raising money for charity. For free.</p>
 		<T4GSignUpButton className="mb-5"/>
 	</PageCard>
-	{/* <img className='w-100 d-none d-md-block' src="img/curves/curve-desat-blue-bottom.svg" alt="" /> */}
+	{/* <img className="w-100 d-none d-md-block" src="img/curves/curve-desat-blue-bottom.svg" alt="" /> */}
 	{/* <PageCard className="text-center register-card">
-		<p className='leader-text'>We're developing exciting new products that will help us all make the internet a more positive place. Register below to get exlusive access to future product launches and join the Good-Loop movement.</p>
+		<p className="leader-text">We're developing exciting new products that will help us all make the internet a more positive place. Register below to get exlusive access to future product launches and join the Good-Loop movement.</p>
 		<SubscriptionForm textCenter purpose="preregister" buttonText="REGISTER" />
 		
-		<img src="/img/signup/hand-globe-coins.png" className='hand-globe-coins d-none d-md-block' />
+		<img src="/img/signup/hand-globe-coins.png" className="hand-globe-coins d-none d-md-block" />
 	</PageCard> */}
 	</>) 
 }
@@ -133,7 +133,7 @@ export const OurStoryPage = () => {
 		<OurStorySplash />
 		<OurMissionSection />
 		<NewsAwards>
-			<h1 className='mb-3'>We've been featured by</h1>
+			<h1 className="mb-3">We've been featured by</h1>
 		</NewsAwards>
 		<CaringCommunitySection />
 		{/* TODO <NewsAwards firstIMG="Awards1" secondIMG="Awards2" thirdIMG="Awards3" /> */}

@@ -15,12 +15,12 @@ const OurImpactSplash = () => {
 	}
 
 	return (<>
-		<BG className='position-relative' image='img/ourimpact/ourimpact-header-background.svg'>
-			<img className="d-none d-md-block" style={{ width: '80em' }} src='img/ourimpact/ourimpact-header-overlay.png' />
+		<BG className="position-relative" image="img/ourimpact/ourimpact-header-background.svg">
+			<img className="d-none d-md-block" style={{ width: '80em' }} src="img/ourimpact/ourimpact-header-overlay.png" />
 			<img className="d-md-none w-100 position-relative" src="img/ourimpact/impact-image.png" style={{ zIndex: 1 }} />
-			<img className='position-absolute w-100' src="img/curves/curve-white.svg" style={{ bottom: 0, left: 0 }} />
+			<img className="position-absolute w-100" src="img/curves/curve-white.svg" style={{ bottom: 0, left: 0 }} />
 		</BG>
-		<div className='splash-section'>
+		<div className="splash-section">
 			<Container className="text-center">
 				<h1 className="m-0" style={{ fontSize: '2rem' }}>Our Impact</h1>
 				<div className="color-gl-muddy-blue position-relative" style={tickerStyle}>
@@ -63,7 +63,7 @@ const OurImpactSplash = () => {
 				</div>
 				<br /><br />
 
-				<ArrowLink className='color-gl-muddy-blue' link="/impactoverview">Learn More In Our Ad Campaigns</ArrowLink>
+				<ArrowLink className="color-gl-muddy-blue" link="/impactoverview">Learn More In Our Ad Campaigns</ArrowLink>
 
 				<img className="position-absolute" style={{ width: '200px', transform: 'translate(-50%, -50%)', left: '-2em', top: '60%' }} src="img/ourimpact/bubble-ywt.png" />
 				<img className="position-absolute" style={{ width: '200px', transform: 'translate(-50%, -50%)', right: '-14em', bottom: '-20%' }} src="img/ourimpact/bubble-rivercleanup.png" />
@@ -124,7 +124,7 @@ const GlobalImpactSection = () => {
 				<p className="mt-3 mb-5">Together we're helping make a tangible difference in people's lives.</p>
 			</div>
 			<Row>
-				<Col xs={12} md={6} className='d-flex justify-content-center align-items-center'>
+				<Col xs={12} md={6} className="d-flex justify-content-center align-items-center">
 					<img className="w-100" src="img/ourimpact/impact-focus.png" />
 				</Col>
 				<Col xs={12} md={6}>
@@ -136,9 +136,9 @@ const GlobalImpactSection = () => {
 				</Col>
 			</Row>
 		</CurvePageCard>
-		<CurvePageCard color="lighter-blue" bgClassName="white" className='position-relative pb-5' >
+		<CurvePageCard color="lighter-blue" bgClassName="white" className="position-relative pb-5" >
 			<div className="position-relative" style={{ zIndex: 1, maxWidth: '370px', left: '50%', transform: 'translate(-50%, 7%)' }}>
-				<img src='img/homepage/quote-red.svg' className="logo position-relative" style={{ left: '-1em' }} />
+				<img src="img/homepage/quote-red.svg" className="logo position-relative" style={{ left: '-1em' }} />
 				<div className="position-relative" style={{ fontSize: '.9rem' }}>
 					<p className="color-gl-red font-weight-bold">
 						We are delighted to be working with Good-Loop and their partnering brands. Good-Loop are incredibly proactive and deliver excellent levels of stewardship.
@@ -148,7 +148,7 @@ const GlobalImpactSection = () => {
 					</p>
 					<p className="text-left" style={{ fontSize: '.85rem' }}>BECCA MCNAIR <br /> COMMUNITY FUNDRAISING AND ENGAGEMENT MANAGER, <br /> SAVE THE CHILDREN UK</p>
 				</div>
-				<div className="text-center"><img src='img/LandingCharity/save-the-children.png' className="w-25" /></div>
+				<div className="text-center"><img src="img/LandingCharity/save-the-children.png" className="w-25" /></div>
 				<br />
 				<img src="img/ourimpact/bubble-kids.png" className="position-absolute w-50" style={{ bottom: '-1em', right: '-3em' }} />
 			</div>
@@ -161,25 +161,25 @@ const GlobalImpactSection = () => {
 const ImpactMovementSection = () => {
 
 	return (
-		<div className='movement position-relative overflow-hidden'>
+		<div className="movement position-relative overflow-hidden">
 			<img className="position-absolute" style={{ width: '125%', bottom: 0, transform: 'translate(-12%,12%)' }} src="img/green/world-map.svg" />
 			<PageCard>
 				<div className="movement-blob position-relative d-flex align-items-center justify-content-center pb-5">
 					<img style={{ maxWidth: '480px', zIndex: '1', margin: '0 -1rem' }} src="img/homepage/movement-blob-images.svg" />
 					<div className="bubble-content position-absolute text-center" style={{ top: '18%', margin: '0 10%', maxWidth: '400px', zIndex: '2' }}>
-						<h4 className='color-gl-red'>Join Our Movement</h4>
-						<p className='color-gl-dark-grey' style={isMobile() ? { fontSize: '.9rem' } : {}} >Start Transforming Your Web Browsing And Data Into <b>Life Saving Vaccines, Meals For Children In Need, Habitats For Endangered Animals,</b> Plus Many More Good Causes.</p>
-						<ArrowLink className='color-gl-red font-weight-bold' link='/tabsforgood'>Get Involved</ArrowLink>
+						<h4 className="color-gl-red">Join Our Movement</h4>
+						<p className="color-gl-dark-grey" style={isMobile() ? { fontSize: '.9rem' } : {}} >Start Transforming Your Web Browsing And Data Into <b>Life Saving Vaccines, Meals For Children In Need, Habitats For Endangered Animals,</b> Plus Many More Good Causes.</p>
+						<ArrowLink className="color-gl-red font-weight-bold" link="/tabsforgood">Get Involved</ArrowLink>
 					</div>
 				</div>
-				<img className='position-absolute w-100 join-our-movement-bg-front' src="img/homepage/our-movement-front-curve.svg" />
+				<img className="position-absolute w-100 join-our-movement-bg-front" src="img/homepage/our-movement-front-curve.svg" />
 			</PageCard>
 		</div>
 	);
 }
 
 const CharitiesDonationSection = () => {
-	return (<PageCard className='pt-0 pb-1 text-white text-center bg-gl-light-blue'>
+	return (<PageCard className="pt-0 pb-1 text-white text-center bg-gl-light-blue">
 		<h2>105</h2>
 		<h4>CHARITIES DONATED TO IN 2021</h4>
 		<h5>All Thanks To Our Amazing Community</h5>

@@ -11,11 +11,11 @@ export const MyLoginWidgetGuts = ({services, verb, onLogin, onRegister, canRegis
 	// let rowClass = isMobile == true ? "w-100" : 'w-50'
 	return (
 		<div className="login-guts container-fluid position-relative">
-			<div className='d-flex flex-column justify-content-center align-items-center p-5'>
-				<img src="/img/green/hummingbird.png" className='hummingbird login'/>
-				<img src="/img/signup/hand-globe-coins.png" className='hand-globe d-none d-md-block'/>
-				<img src="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" className='login-logo'/>
-				<p className='leader-text black login-subtitle my-4'>Sign in to see how your web browsing has transformed into charity donations</p>
+			<div className="d-flex flex-column justify-content-center align-items-center p-5">
+				<img src="/img/green/hummingbird.png" className="hummingbird login"/>
+				<img src="/img/signup/hand-globe-coins.png" className="hand-globe d-none d-md-block"/>
+				<img src="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" className="login-logo"/>
+				<p className="leader-text black login-subtitle my-4">Sign in to see how your web browsing has transformed into charity donations</p>
 				<Row className="login-row">
 					<Col className="login-email pb-2">
 						<EmailSignin

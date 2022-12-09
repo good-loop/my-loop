@@ -38,8 +38,8 @@ const MyLoopFooter = ({ page }) => {
 			<path d="m 0.003,-0.001 c 0,0 356.72,665.074 1297.3,296.564 940.58,-368.51 1468.515,280.543 1468.515,280.543 v 221.17 H 0.003 Z" fill="currentColor" />
 		</svg>
 		<Row>
-			<DynImg src="/img/homepage/Turtle.png" className='turtle' />
-			<div className='bg-gl-dark-turquoise w-100 p-5' style={{ marginTop: -1 }}>
+			<DynImg src="/img/homepage/Turtle.png" className="turtle" />
+			<div className="bg-gl-dark-turquoise w-100 p-5" style={{ marginTop: -1 }}>
 				<Row>
 					<Col md={6}>
 						<SubscriptionForm label={"Sign up to our Newsletter for some Good News :)"} thankYouTextcolour="white" />
@@ -79,7 +79,7 @@ const MyLoopFooter = ({ page }) => {
 						</C.A>
 					</Col>
 				</Row>
-				<Row className='mt-5 footer-links text-center small mx-auto'>
+				<Row className="mt-5 footer-links text-center small mx-auto">
 					<Col>
 						<C.A href="https://doc.good-loop.com/policy/privacy-policy.html">
 							<p>Privacy policy</p>
@@ -133,14 +133,14 @@ const MyLoopFooterSummer2022 = ({ page }) => {
 		<div className="bg-gl-dark-turquoise text-white text-center position-relative d-flex flex-column align-items-center">
 			<h5>LET'S KEEP IN TOUCH!</h5>
 			<h5>Join The Ads For Good Movement</h5>
-			<img className='position-relative' style={{ width: '120%', maxWidth: '500px' }} src="/img/footer/newsletter-background.svg" />
+			<img className="position-relative" style={{ width: '120%', maxWidth: '500px' }} src="/img/footer/newsletter-background.svg" />
 			<div className="position-absolute" style={{ maxWidth: '360px', top: '5em' }}>
-				<p className='color-gl-muddy-blue mt-5'>In Partnership With</p>
+				<p className="color-gl-muddy-blue mt-5">In Partnership With</p>
 				<img style={{ width: '140px' }} src="/img/footer/Eden.org_RGB.png" />
-				<p className='font-weight-bold color-gl-red'>Subscribe To Get A Tree Planted On Your Behalf And Receive Even More Good News!</p>
-				<SubscriptionForm className='w-100' buttonText="Subscribe" thankYouTextcolour="text-muted" showTrees buttomColor="primary" />
+				<p className="font-weight-bold color-gl-red">Subscribe To Get A Tree Planted On Your Behalf And Receive Even More Good News!</p>
+				<SubscriptionForm className="w-100" buttonText="Subscribe" thankYouTextcolour="text-muted" showTrees buttomColor="primary" />
 			</div>
-			<img className='position-absolute' style={{ width: '120%', maxWidth: '500px', pointerEvents: 'none' }} src="/img/footer/cloud-overlay.png" />
+			<img className="position-absolute" style={{ width: '120%', maxWidth: '500px', pointerEvents: 'none' }} src="/img/footer/cloud-overlay.png" />
 
 			<Row className="social-icons mx-auto">
 				<Col xs={3}>
@@ -167,7 +167,7 @@ const MyLoopFooterSummer2022 = ({ page }) => {
 
 		</div>
 
-		<div className='bg-gl-dark-turquoise px-3 pt-5 footer-links text-center small d-flex justify-content-between'>
+		<div className="bg-gl-dark-turquoise px-3 pt-5 footer-links text-center small d-flex justify-content-between">
 			<C.A href="https://doc.good-loop.com/policy/privacy-policy.html">
 				<p>Privacy policy</p>
 			</C.A>

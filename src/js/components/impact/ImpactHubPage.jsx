@@ -171,7 +171,7 @@ const CharityCountCard = ({ filters }) => {
 	let n = List.total(pvItems.value);
 	return <>
 		<h3>{I18N.tr(n + " Charities (singular: Charity)")}</h3>
-		{n < 20 && <div className='gridbox gridbox-sm-2'>{List.hits(pvItems.value).map(item => <ItemButton key={item.id} item={item} />)}</div>}
+		{n < 20 && <div className="gridbox gridbox-sm-2">{List.hits(pvItems.value).map(item => <ItemButton key={item.id} item={item} />)}</div>}
 	</>;
 }
 
@@ -180,7 +180,7 @@ const ItemButton = ({ item }) => {
 	let value = getId(item);
 	let logo = getLogo(item);
 	// NB: tried putting dev-only PortalLinks here but it was fugly
-	return <Button className='btn-tile m-2' color='outline-dark'
+	return <Button className="btn-tile m-2" color="outline-dark"
 		onClick={e => stopEvent(e) && modifyPage(["ipage"], { [key]: value })} >
 		{logo && <img src={logo} className={space('rounded logo logo-lg')} />}<p>{item.name}</p>
 	</Button>;
@@ -216,9 +216,9 @@ export const HeadlineDonationCard = ({ brand, impactdebit, charity, filters }) =
 	let moneys = pvImpactDebits.value && List.hits(pvImpactDebits.value).map(item => Impact.amount(item.impact)).filter(x => x);
 	let totalMoney = moneys && Money.total(moneys, "GBP");
 
-	return (<BG style={{ height: '30vh', width: '30vh', margin: "auto" }} image={image} color='#3488AB' >
+	return (<BG style={{ height: '30vh', width: '30vh', margin: "auto" }} image={image} color="#3488AB" >
 		<Circle color="white" width="100%" height="100%" center>
-			{logo ? <img className='logo logo-xl center m-auto' src={logo} /> : <h3>{brand?.name}</h3>}
+			{logo ? <img className="logo logo-xl center m-auto" src={logo} /> : <h3>{brand?.name}</h3>}
 			<h2 style={{ textAlign: "center" }}>{totalMoney && <Misc.Money amount={totalMoney} />} Donated</h2>
 			<PortalLink item={brand} size="small" devOnly />
 		</Circle>
@@ -235,7 +235,7 @@ export const FilterBar = ({ filters }) => {
 		pvChildBrands = getDataList({ type: "Advertiser", status: filters.status, q, swallow: true });
 		childBrands = List.hits(pvChildBrands?.value);
 	}
-	return <div id='filterBar'>
+	return <div id="filterBar">
 		<PropControl type="DataItem" itemType={C.TYPES.Advertiser} prop="brand" label showId={false} />
 		{childBrands && childBrands.length ? <PropControl type="DataItem" itemType={C.TYPES.Advertiser} prop="brand2" label="Brand" list={childBrands} /> : null}
 	</div>;

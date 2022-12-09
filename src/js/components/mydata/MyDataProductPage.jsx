@@ -29,11 +29,11 @@ const LandingSection = () => {
 			<img src="/img/mydata/product-page/onboarding.png" className="w-100 topimg-graphic" />
 		</div>
 		<div className="landing-contents">
-			<Container fluid="lg" className='d-flex flex-column align-items-center'>
+			<Container fluid="lg" className="d-flex flex-column align-items-center">
 				<h1>My.Data</h1>
-				<h3 className='my-3'>Harness your data to fund your favourite charity. For free</h3>
+				<h3 className="my-3">Harness your data to fund your favourite charity. For free</h3>
 				<p className="subtext w-75">How many cookies have you accepted today? We give our data away all the time without even thinking about it. What if we could safely use our data to help fund good causes?</p>
-				<MyDataSignUpButton className='my-3' />
+				<MyDataSignUpButton className="my-3" />
 				<a onClick={scroll} className="mb-3">Find out more</a>
 				<img src="/img/mydata/product-page/left-coins-padlocks.png" className="padlocks padlock-left d-none d-md-inline-block" />
 				<img src="/img/mydata/product-page/right-coins-padlocks.png" className="padlocks padlock-right d-none d-md-inline-block" />
@@ -99,7 +99,7 @@ const HowItWorks = () => {
 	]
 
 	return <div id="how-it-works" className="mt-md-5">
-		<ProductPageContainer className='position-relative'>
+		<ProductPageContainer className="position-relative">
 			<div className="inner">
 				<div className="control-your-data-small">
 					<img src="/img/mydata/how-it-works.png" className="padlocks" />
@@ -110,9 +110,9 @@ const HowItWorks = () => {
 					<img src="/img/homepage/Stars.png" className="star mx-auto" />
 				</div>
 
-				<h1 className='mb-3'>Here's how it works:</h1>
+				<h1 className="mb-3">Here's how it works:</h1>
 
-				<Row className='mx-1 d-flex justify-content-center mt-3 mb-5'>
+				<Row className="mx-1 d-flex justify-content-center mt-3 mb-5">
 					{Sections.map(({ i, title, subtitle, img, content }) => {
 						return <Col key={i} xs={12} lg={4} className="position-relative" style={{ maxWidth: '400px' }} >
 							<div className="position-absolute d-flex flex-column justify-content-center align-items-center"
@@ -120,9 +120,9 @@ const HowItWorks = () => {
 								<img src={img} style={{ height: '80px' }} />
 								<span className="miniheader">{title}</span>
 								<h2 style={{ fontSize: '1.25rem' }}>{subtitle}</h2>
-								<span className='mt-1'>{content}</span>
+								<span className="mt-1">{content}</span>
 							</div>
-							<img src={"img/mydata/product-page/blob-" + i + ".svg"} alt="blob" className='position-relative user-select-none'
+							<img src={"img/mydata/product-page/blob-" + i + ".svg"} alt="blob" className="position-relative user-select-none"
 								style={{ left: 0, top: 0, zIndex: 0, width: '370px', transform: 'translate(-50%,0)', left: '50%' }} />
 						</Col>
 					})}
@@ -130,9 +130,9 @@ const HowItWorks = () => {
 
 				<MyDataSignUpButton className="align-self-center mb-5" style={{ zIndex: 1 }} />
 			</div>
-			<img className='position-absolute' style={{width:'200px', left:'-8em', top:'20em'}} src="/img/mydata/bubble-chameleon.png" />
-			<img className='position-absolute' style={{width:'200px', right:'-8em', top:'-5em'}} src="/img/mydata/bubble-kids.png" />
-			<img className='position-absolute' style={{width:'200px', right:'-8em', bottom:'4em'}} src="/img/mydata/bubble-ocean.png" />
+			<img className="position-absolute" style={{width:'200px', left:'-8em', top:'20em'}} src="/img/mydata/bubble-chameleon.png" />
+			<img className="position-absolute" style={{width:'200px', right:'-8em', top:'-5em'}} src="/img/mydata/bubble-kids.png" />
+			<img className="position-absolute" style={{width:'200px', right:'-8em', bottom:'4em'}} src="/img/mydata/bubble-ocean.png" />
 		</ProductPageContainer>
 	</div>;
 };

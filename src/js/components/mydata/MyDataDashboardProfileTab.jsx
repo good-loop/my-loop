@@ -58,13 +58,13 @@ const HowItWordsGuide = () => {
 	return (<Container>
 		<div className="how-it-works-card">
 			<div className="how-it-works-header text-center" onClick={cardToggle}>
-				<img src="/img/mydata/how-it-works.png" className='w-50' />
-				<p className='text-white font-weight-bold mb-0 d-flex justify-content-center align-items-end'>
+				<img src="/img/mydata/how-it-works.png" className="w-50" />
+				<p className="text-white font-weight-bold mb-0 d-flex justify-content-center align-items-end">
 					HOW IT WORKS <img style={{width:"2rem",height:"2rem"}} src={"img/mydata/arrow-"+(cardCollapse ? "down" : "up")+"-white.svg"} />
 				</p>
 			</div>
 			<Collapse isOpen={cardCollapse} className="how-it-works-overview text-center">
-				<h1 className='pt-3'>You're in Control</h1>
+				<h1 className="pt-3">You're in Control</h1>
 				<p>All of your data is in your hands, so you control how we use it.</p>
 				<PrivacyCard iconIMG="img/mydata/padlock-careful.png" title="Careful Use"
 					content="To put it simply, we won’t share your data and your identity will be kept private. Instead, we’ll show you advertising campaigns based on your interests on My-Good-Loop and via our online partners. By letting us show you these ads, you will raise money for your chosen charity." />
@@ -82,13 +82,13 @@ const SupportingCard = () => {
 	let ngo = null;
 	if (pvNgo) ngo = pvNgo.value || pvNgo.interim;
 
-	return (<Container className='text-center'>
+	return (<Container className="text-center">
 		<hr/>
 		<h1>Your Profile</h1>
 
 		{ngo ? <>
 			<p style={{color:'#3F7991',fontWeight:'bold'}}>Your Data is Supporting</p>
-			{ngo && <CharityLogo className='mb-3' charity={ngo} />}
+			{ngo && <CharityLogo className="mb-3" charity={ngo} />}
 			<DataSharedProgressBar />
 		</> : <>
 			<CompleteDataCTA ngo={ngo} link={<C.A href="/account?tab=tabsForGood"><p className="leader-text m-0">Get started by selecting the charity you'd like to support</p></C.A>} />
@@ -101,9 +101,9 @@ const SupportingCard = () => {
 const DataSharedProgressBar = () => {
 	const sharedPercentage = getDataProgress();
 
-	return (<div className='data-shared-progress-section'>
+	return (<div className="data-shared-progress-section">
 		<Progress className="data-shared-progress" value={100*sharedPercentage} title="How complete is your profile? Fill in and use more data to achieve more." />
-		{sharedPercentage > 0 && <img src='img/icons/Heart_single.png' className='progress-heart' style={{left:`${100*sharedPercentage}%`, minHeight: "120%"}}/>}
+		{sharedPercentage > 0 && <img src="img/icons/Heart_single.png" className="progress-heart" style={{left:`${100*sharedPercentage}%`, minHeight: "120%"}}/>}
 		</div>
 	)
 }
@@ -148,7 +148,7 @@ const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
 	if (itemKey == 'email') { // Not allow user to change email
 		itemValue = getEmail();
 		emailPropControl = <>{itemValue && <FormGroup style={{ position: 'relative' }}>
-			<input type="text" name='email' className='form-control' value={itemValue || ''} readOnly />
+			<input type="text" name="email" className="form-control" value={itemValue || ''} readOnly />
 			<Help style={{ position: 'absolute', right: '.6rem', top: '.6rem' }}>Email is set from your login. Let us know if you need to change it by contacting support@good-loop.com.</Help>
 		</FormGroup>}</>
 	}
@@ -190,12 +190,12 @@ const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
 		<hr />
 		<div className="d-flex justify-content-between">
 			<span style={{ fontSize: '.8rem', textTransform: 'uppercase' }}>{description}</span>
-			<a onClick={editModeToggle}><span style={{ fontSize: '.8rem' }} className='pb-3 pl-3'>{editMode ? 'DONE' : 'EDIT'}</span></a>
+			<a onClick={editModeToggle}><span style={{ fontSize: '.8rem' }} className="pb-3 pl-3">{editMode ? 'DONE' : 'EDIT'}</span></a>
 		</div>
 		{!editMode && <>
 			{displayValue}
 			<div className="d-flex justify-content-between align-items-center">
-				<span className='text-muted' style={{ fontSize: '.8rem' }}>{privacyLabel}</span>
+				<span className="text-muted" style={{ fontSize: '.8rem' }}>{privacyLabel}</span>
 				<img style={{ height: '1.5rem', transform: 'translate(0, -.5rem)' }} src={"/img/mydata/padlock-"+privacyImg+ ".png"} alt="padlock logo" />
 			</div>
 		</>}

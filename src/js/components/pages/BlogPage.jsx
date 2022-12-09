@@ -63,7 +63,7 @@ const BlogPage = () => {
 		const blogPosts = pvBlogPosts.value && List.hits(pvBlogPosts.value);
 		guts = <>
 			<h1>Our Blog</h1>
-			<p className='leader-text mt-3 text-center'>Grab a cuppa and have a read through our feel-good news, views and opinions</p>
+			<p className="leader-text mt-3 text-center">Grab a cuppa and have a read through our feel-good news, views and opinions</p>
 			<PageCard>
 				<Row className="blog-card-row">
 					{blogPosts && blogPosts.map(blogPost =>

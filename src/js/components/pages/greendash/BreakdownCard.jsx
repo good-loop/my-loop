@@ -127,8 +127,8 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1 }) => {
 	return (
 		<>
 			<p>{CO2e} emissions due to...</p>
-			<NewChartWidget type='pie' {...chartProps} datalabels />
-			<small className='text-center'>The Green Ad Tag per-impression overhead is measured, but too small to display in this chart.</small>
+			<NewChartWidget type="pie" {...chartProps} datalabels />
+			<small className="text-center">The Green Ad Tag per-impression overhead is measured, but too small to display in this chart.</small>
 		</>
 	);
 };
@@ -192,11 +192,11 @@ const DeviceSubcard = ({ data: osTable }) => {
 	if (!chartProps) return null;
 	if (chartProps?.isEmpty) return NOEMISSIONS;
 
-	return <NewChartWidget type='bar' {...chartProps} />;
+	return <NewChartWidget type="bar" {...chartProps} />;
 }; // ./DeviceSubCard
 
 /** A table cell with a title/tooltip for cases where the value is likely to display truncated */
-const CellWithTitle = (value) => <span title='value'>{value}</span>;
+const CellWithTitle = (value) => <span title="value">{value}</span>;
 
 /**
  * Table of impressions and carbon per tag
@@ -221,12 +221,12 @@ const TagSubcard = ({ data }) => {
 
 	return (
 		<>
-			<p className='small'>
+			<p className="small">
 				Emissions breakdown by Green Ad Tags.
 				<br />
 				You can track any aspect of media buying by generating different tags, then using them in your buying.
 			</p>
-			<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className='tag-table' tableName='carbon-by-tag' />
+			<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className="tag-table" tableName="carbon-by-tag" />
 		</>
 	);
 };
@@ -245,11 +245,11 @@ const PubSubcard = ({ data }) => {
 
 	return (
 		<>
-			<p className='small'>
+			<p className="small">
 				Emissions breakdown by publisher/domain.
 				<br />
 			</p>
-			<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className='domain-table' tableName='carbon-by-publishers' />
+			<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className="domain-table" tableName="carbon-by-publishers" />
 		</>
 	);
 };
@@ -280,8 +280,8 @@ const BreakdownCard = ({ baseFilters }) => {
 
 	if (!techValue) {
 		return (
-			<GreenCard title='What is the breakdown of your emissions?' className='carbon-breakdown'>
-				<Misc.Loading text='Fetching your data...' />
+			<GreenCard title="What is the breakdown of your emissions?" className="carbon-breakdown">
+				<Misc.Loading text="Fetching your data..." />
 			</GreenCard>
 		);
 	}
@@ -303,28 +303,28 @@ const BreakdownCard = ({ baseFilters }) => {
 			subcard = <TechSubcard data={techData} minimumPercentLabeled={10} />;
 			break;
 		case 'device':
-			subcard = dataValue ? <DeviceSubcard data={data} /> : <Misc.Loading text='Fetching your data...' />;
+			subcard = dataValue ? <DeviceSubcard data={data} /> : <Misc.Loading text="Fetching your data..." />;
 			break;
 		case 'tag':
-			subcard = dataValue ? <TagSubcard data={data} /> : <Misc.Loading text='Fetching your data...' />;
+			subcard = dataValue ? <TagSubcard data={data} /> : <Misc.Loading text="Fetching your data..." />;
 			break;
 		case 'domain':
-			subcard = dataValue ? <PubSubcard data={data} /> : <Misc.Loading text='Fetching your data...' />;
+			subcard = dataValue ? <PubSubcard data={data} /> : <Misc.Loading text="Fetching your data..." />;
 	}
 
 	return (
-		<GreenCard title='What is the breakdown of your emissions?' className='carbon-breakdown'>
-			<ButtonGroup className='mb-2 subcard-switch'>
-				<ModeButton name='tech' mode={mode} setMode={setMode}>
+		<GreenCard title="What is the breakdown of your emissions?" className="carbon-breakdown">
+			<ButtonGroup className="mb-2 subcard-switch">
+				<ModeButton name="tech" mode={mode} setMode={setMode}>
 					Ad Tech
 				</ModeButton>
-				<ModeButton name='device' mode={mode} setMode={setMode}>
+				<ModeButton name="device" mode={mode} setMode={setMode}>
 					Device Type
 				</ModeButton>
-				<ModeButton name='tag' mode={mode} setMode={setMode}>
+				<ModeButton name="tag" mode={mode} setMode={setMode}>
 					Tag
 				</ModeButton>
-				<ModeButton name='domain' mode={mode} setMode={setMode}>
+				<ModeButton name="domain" mode={mode} setMode={setMode}>
 					Domain
 				</ModeButton>
 			</ButtonGroup>

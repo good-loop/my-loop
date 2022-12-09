@@ -140,12 +140,12 @@ const RaiseMoneySection = () => {
 			<img src="img/getinvolved/GirlUsingDevice.png" className="position-absolute" style={{ width: '200px', left: '50%', bottom: '2em' }} />
 			<img src="img/getinvolved/bubble-raise-money.png" className="position-absolute" style={{ width: '10em', right: '55%', top: '-3em' }} />
 		</div>
-		<PageCard className='bg-gl-light-pink'>
+		<PageCard className="bg-gl-light-pink">
 			<div className="text-center position-relative" style={{ maxWidth: '500px', left: '50%', transform: 'translate(-50%, 0)' }}>
 				<h5 className="text-uppercase color-gl-red">Let's keep in touch!</h5>
 				<p className="text-capitalize color-gl-red mb-4">Join the ads for good movement</p>
 				<p className="text-capitalize color-gl-dark-blue">Sign up to our newsletter (And plant a tree!)</p>
-				<SubscriptionForm buttonText='SUBSCRIBE' buttomColor="primary" showTrees />
+				<SubscriptionForm buttonText="SUBSCRIBE" buttomColor="primary" showTrees />
 			</div>
 			<div className="text-center position-relative d-flex flex-column justify-content-center mt-5" style={{ maxWidth: '768px', left: '50%', transform: 'translate(-50%, 0)' }}>
 				<p className="color-gl-dark-blue">Follow Us @Goodloophq</p>
@@ -163,7 +163,7 @@ const RaiseMoneySection = () => {
 						<img src="img/getinvolved/linkedin-round.png" className="w-75" />
 					</C.A>
 				</div>
-				<img className='position-absolute w-100' src="img/getinvolved/hands-pointing.png" style={{ bottom: '.5em', pointerEvents: 'none' }} />
+				<img className="position-absolute w-100" src="img/getinvolved/hands-pointing.png" style={{ bottom: '.5em', pointerEvents: 'none' }} />
 			</div>
 		</PageCard>
 	</>);
@@ -172,24 +172,24 @@ const RaiseMoneySection = () => {
 
 const OurAdsSection = () => {
 	return (<>
-		<PageCard className='our-ads-section'>
+		<PageCard className="our-ads-section">
 			<Row>
-				<Col xs={12} md={6} className='p-3 position-relative'>
-					<GoodLoopUnit className='rounded' style={{ border: '8px solid #286984' }} vertId='ko3s6fUOdq' size="landscape" useScreenshot="landscape" />
+				<Col xs={12} md={6} className="p-3 position-relative">
+					<GoodLoopUnit className="rounded" style={{ border: '8px solid #286984' }} vertId="ko3s6fUOdq" size="landscape" useScreenshot="landscape" />
 					<img src="img/mydata/fireworks-single.png" className="logo position-absolute" style={{ top: '-1em', right: '3em' }} />
 					<img src="img/mydata/fireworks-single.png" className="logo position-absolute" style={{ bottom: '-1em', left: '3em' }} />
 				</Col>
-				<Col xs={12} md={6} className='text-capitalize d-flex flex-column justify-content-center'>
+				<Col xs={12} md={6} className="text-capitalize d-flex flex-column justify-content-center">
 					<h3 style={{ fontWeight: 600 }}>Look Out For Our Ads</h3>
 					<p className="color-gl-dark-blue">If you see one of our shiny Good-Loop ads online, remember to engage with it to unlock your charity donations - It's how we raise most money for charity, all thanks to brands and you!</p>
-					<ArrowLink link="/impactoverview" className='color-gl-red font-weight-bold'>
+					<ArrowLink link="/impactoverview" className="color-gl-red font-weight-bold">
 						View our ad case studies
 					</ArrowLink>
 				</Col>
 			</Row>
 			<Container className="text-center position-relative mt-5" style={{ minHeight: '32em' }}>
 				<div className="position-relative" style={{ zIndex: 1, maxWidth: '350px', left: '50%', transform: 'translate(-50%, 10%)' }}>
-					<img src='img/homepage/quote-blue.svg' className="logo position-relative" style={{ left: '-10em' }} />
+					<img src="img/homepage/quote-blue.svg" className="logo position-relative" style={{ left: '-10em' }} />
 					<div style={{ fontSize: '.9rem' }}>
 						<p className="color-gl-dark-blue font-weight-bold">
 							Thanks to (Good-Loop) and their viewers, over £20,000 has been raised for our organisation
@@ -199,7 +199,7 @@ const OurAdsSection = () => {
 						</p>
 						<p className="text-left" style={{ fontSize: '.8rem' }}>LAENNE MANCHESTER <br /> DIGITAL MARKETING MANAGER, THE WILDLIFE TRUSTS</p>
 					</div>
-					<img src='img/homepage/TWT_LOGO.png' className="w-25" />
+					<img src="img/homepage/TWT_LOGO.png" className="w-25" />
 					<br />
 					<img src="img/homepage/bubble-wildlife.png" className="position-absolute w-50" style={{ right: '-3em' }} />
 				</div>
@@ -214,7 +214,7 @@ const OurAdsSection = () => {
 export const CharityPartner = () => {
 	return (<div className="position-relative">
 		<img src="img/mydata/fireworks-single.png" className="logo position-absolute" style={{ top: '-1em', left: '50%', transform: 'translate(-50%, 0)' }} />
-		<PageCard className='bg-gl-light-blue text-white text-center'>
+		<PageCard className="bg-gl-light-blue text-white text-center">
 			<h5>Interested In Becoming A Charity Partner?</h5>
 			<p>Get In Touch To Discover How Your Organisation Can Benefit From Our Products</p>
 			<button className="btn btn-secondary mb-5 position-relative" style={{ zIndex: 1 }}

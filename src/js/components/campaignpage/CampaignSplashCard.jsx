@@ -34,9 +34,9 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 	const donationDisplay = <b>{donationValue ? <Counter amount={donationValue} minimumFractionDigits={2} preserveSize /> : "money"}</b>;
 
 	let splashText = <>
-		<h3 className='text-uppercase splash-thanks'>Thank you for watching {nvertiserName}'s advert and donating!</h3>
+		<h3 className="text-uppercase splash-thanks">Thank you for watching {nvertiserName}'s advert and donating!</h3>
 		<p className="text-white raised splash-counter">{donationDisplay}</p>
-		<p className='text-white splash-gl'>{ongoing ? "Raising" : "Raised"} for charity by using purpose lead online ads with Good-Loop</p>
+		<p className="text-white splash-gl">{ongoing ? "Raising" : "Raised"} for charity by using purpose lead online ads with Good-Loop</p>
 	</>;
 	// Change the splashText to show wider impact?
 	if (campaignPage.showWiderImpact && campaignPage.widerAnnualDntn) {
@@ -73,7 +73,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 					</div>
 					<div className="splash-text mt-5 flex-column flex-center">
 					<img src="/img/curves/mobile-curve-white.svg" className="splash-text-top-curve" alt="white bottom border" />
-						<div className='splash-text-content' style={{color: "@gl-red"}}>
+						<div className="splash-text-content" style={{color: "@gl-red"}}>
 							{splashText}
 							{campaignPage.id && <DevLink href={ServerIO.PORTAL_ENDPOINT + '/#campaign/' + escape(campaignPage.id)} target="_portal">Campaign Editor (using {campaignPage.id})</DevLink>}
 							<button className="cta-splash-button btn btn-secondary text-uppercase" onClick={e => setCtaModalOpen(true)}>
@@ -89,7 +89,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 			<DraftBanner status={status} />
 			<div className="splash-cta d-flex flex-column">
 
-				{/* <a className='text-uppercase mt-3 join' href="/tabsforgood">Join the good-loop movement</a> */}
+				{/* <a className="text-uppercase mt-3 join" href="/tabsforgood">Join the good-loop movement</a> */}
 			</div>
 		</div>
 		<WiderImpactQuote campaign={campaignPage} />

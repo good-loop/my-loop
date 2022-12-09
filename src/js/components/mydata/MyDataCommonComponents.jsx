@@ -151,12 +151,12 @@ export const ProfileDot = ({className, imgUrl, children}) => {
 
 export const SkipNextBtn = ({skip}) => {
 	return (
-		<Row className='my-3'>
+		<Row className="my-3">
 			<Col xs={6}>
 			</Col>
 			<Col xs={6} className="d-flex align-items-center justify-content-around p-0">
-				{skip && <a className='skip-btn' style={{textDecoration:'underline'}} onClick={nextSignupPage}>Skip</a>}
-				<a className='btn btn-primary next-btn' onClick={nextSignupPage}>Next</a>
+				{skip && <a className="skip-btn" style={{textDecoration:'underline'}} onClick={nextSignupPage}>Skip</a>}
+				<a className="btn btn-primary next-btn" onClick={nextSignupPage}>Next</a>
 			</Col>
 		</Row>
 	)
@@ -185,7 +185,7 @@ export const CollapseableCard = ({ title, defaultCollapse, headerIMG, className,
 	const arrowClosed = upArrow ? "up" : "down";
 	const arrowState = open ? arrowOpen : arrowClosed;
 
-	const Arrow = () => <span className='text-muted' style={{ fontSize: '1.5rem' }}>
+	const Arrow = () => <span className="text-muted" style={{ fontSize: '1.5rem' }}>
 		<img style={{width:"2rem",height:"2rem"}} src={"img/mydata/arrow-"+arrowState+(whiteArrows ? "-white" : "")+".svg"} />
 	</span>;
 
@@ -202,7 +202,7 @@ export const CollapseableCard = ({ title, defaultCollapse, headerIMG, className,
 			innerClassName={innerClassName}
 		>
 			<a onClick={toggle}> <div className={space("d-flex justify-content-between align-items-center", flexDirection)}>
-				<TitleTag className='m-0'>{title}</TitleTag>
+				<TitleTag className="m-0">{title}</TitleTag>
 				<Arrow/>
 			</div></a>
 			<Collapse isOpen={open}>

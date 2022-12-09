@@ -21,7 +21,7 @@ import { isPer1000 } from './GreenMetrics';
  * @param {?String} unit kg|tons
  * @returns 
  */
-const baseOptions = (unit='kg') => ({
+const baseOptions = (unit = 'kg') => ({
 	indexAxis: 'y',
 	scales: { x: { ticks: { callback: v => v+' '+unit, precision: 2 } } },
 	plugins: {

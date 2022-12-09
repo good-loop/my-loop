@@ -206,13 +206,13 @@ const WebtopPage = () => {
 				<NewTabCharityCard cid={charityID} loading={loadingCharity} />
 				<TutorialHighlighter
 					page={[4, 5]}
-					className='position-fixed p-3'
+					className="position-fixed p-3"
 					style={{ top: 0, left: 0, width: '100vw', zIndex: 1 }}
 				>
-					<div className='d-flex justify-content-end'>
+					<div className="d-flex justify-content-end">
 						<TutorialComponent
 							page={4}
-							className='user-controls flex-row align-items-center'
+							className="user-controls flex-row align-items-center"
 						>
 							<UserControls cid={charityID} />
 						</TutorialComponent>
@@ -220,22 +220,22 @@ const WebtopPage = () => {
 				</TutorialHighlighter>
 				<Container
 					fluid
-					className='flex-column justify-content-end align-items-center position-absolute unset-margins'
+					className="flex-column justify-content-end align-items-center position-absolute unset-margins"
 					style={{ top: 0, left: 0, width: '100vw', height: '99vh' }}
 				>
-					<Row className='h-100 w-100' noGutters>
+					<Row className="h-100 w-100" noGutters>
 						<Col sm={3} md={4} />
 						<Col
 							sm={6}
 							md={4}
-							className='h-100 flex-column justify-content-center align-items-center unset-margins mt-2'
+							className="h-100 flex-column justify-content-center align-items-center unset-margins mt-2"
 						>
 							{true && ( //! loadingCharity && ! charityID &&
 								// Show the total raised across all charities, if the user hasn't selected one.
 								<>
-										<TutorialComponent page={2} className='t4g-total'>
+										<TutorialComponent page={2} className="t4g-total">
 												<h5
-														className='text-center together-we-ve-raised'
+														className="text-center together-we-ve-raised"
 														style={{ fontSize: '.8rem' }}
 												>
 														Together we've raised&nbsp;
@@ -253,7 +253,7 @@ const WebtopPage = () => {
 			</BG>
 			<TutorialComponent
 				page={3}
-				className='position-absolute'
+				className="position-absolute"
 				style={{ bottom: 0, left: 0, right: 0, height: 110, width: '100vw' }}
 			/>
 			<NewtabTutorialCard
@@ -280,9 +280,9 @@ const NewTabMainDiv = () => {
 	return (
 		<MainDivBase
 			pageForPath={PAGES}
-			defaultPage='newtab'
+			defaultPage="newtab"
 			navbar={false}
-			className='newtab'
+			className="newtab"
 		/>
 	);
 };
@@ -332,14 +332,14 @@ const UserControls = ({ cid }) => {
 	// 	<>
 	// 		<div
 	// 			onClick={() => (top.location.href = mydataLink)}
-	// 			className='myloop-link'
-	// 			id='myloop-link'
+	// 			className="myloop-link"
+	// 			id="myloop-link"
 	// 			style={{ cursor: 'pointer' }}
 	// 		>
 	// 			My.Good-Loop &nbsp;
 	// 			<img
-	// 				src='/img/mydata/my_good-loop_RoundLogo.300w.png'
-	// 				className='heart-white-circle'
+	// 				src="/img/mydata/my_good-loop_RoundLogo.300w.png"
+	// 				className="heart-white-circle"
 	// 			/>
 	// 		</div>
 	// 		&nbsp;&nbsp;&nbsp;
@@ -353,8 +353,8 @@ const UserControls = ({ cid }) => {
 	// 		d-flex flex-column justify-content-center align-items-center text-center'
 	// 		onClick={() => (top.location.href = mydataLink)}
 	// 	>
-	// 		<img src='/img/mydata/data-badge.png' className='logo' />
-	// 		<span className='my-3' style={{ fontSize: '.9rem' }}>
+	// 		<img src="/img/mydata/data-badge.png" className="logo" />
+	// 		<span className="my-3" style={{ fontSize: '.9rem' }}>
 	// 			Visit My.Good-Loop to earn your data badge and raise even more donations
 	// 			for {charity ? charity.displayName : 'charities'}!
 	// 		</span>
@@ -376,12 +376,12 @@ const UserControls = ({ cid }) => {
 			{/* {showPopup && popupDiv} */}
 			<AccountMenu
 				accountMenuItems={accountMenuItems}
-				linkType='a'
+				linkType="a"
 				small
 				// logoutLink= {<T4GLogoutLink/>}
 				customImg={"/img/logo/my-loop-logo-round.svg"}
 				customLogin={() => (
-					<NewtabLoginLink className='login-menu btn btn-transparent fill'>
+					<NewtabLoginLink className="login-menu btn btn-transparent fill">
 						Register / Log in
 					</NewtabLoginLink>
 				)}
@@ -399,7 +399,7 @@ const TabsOpenedCounter = () => {
 	let pvTabsOpened = getTabsOpened();
 	if (pvTabsOpened && pvTabsOpened.value) {
 		return (
-			<span className='pr-3 text-white font-weight-bold'>
+			<span className="pr-3 text-white font-weight-bold">
 				{pvTabsOpened.value} tabs opened
 			</span>
 		);
@@ -446,29 +446,29 @@ const NormalTabCenter = ({style, customLogo}) => {
 
 	return (
 		<>
-			<div className='flex-column unset-margins align-items-center tab-center mb-1' style={style}>
-				<TutorialComponent page={5} className='py-3 t4g-logo'>
+			<div className="flex-column unset-margins align-items-center tab-center mb-1" style={style}>
+				<TutorialComponent page={5} className="py-3 t4g-logo">
 					<a href={ServerIO.MYLOOP_ENDPOINT}>
 						<img
-							className='tab-center-logo'
+							className="tab-center-logo"
 							src={customLogo}
-							alt='logo'
+							alt="logo"
 						/>
 					</a>
 				</TutorialComponent>
-				<div className='w-100'>
-					<div className='tab-search-container mx-auto'>
+				<div className="w-100">
+					<div className="tab-search-container mx-auto">
 						<Search
 							onSubmit={(e) => doSearch(e, searchEngine)}
 							placeholder={'Search with ' + engineData.title}
 							icon={
 								<C.A
-									href='/?tab=tabsForGood'
-									title='click here to change the search engine'
+									href="/?tab=tabsForGood"
+									title="click here to change the search engine"
 								>
 									<img
 										src={engineData.logo}
-										alt='search icon'
+										alt="search icon"
 										style={{
 											width: engineData.size.width,
 											height: engineData.size.height,
@@ -551,13 +551,13 @@ const NewTabCharityCard = ({ cid, loading }) => {
 
 	return (
 		<TutorialComponent page={1} className="NewTabCharityCard">
-				<div className='text-center'>
+				<div className="text-center">
 				{/*<div onClick={() => top.location.href = charityLink}> */}
-				<a href={charityLink} target='_blank' rel='noopener noreferrer' className='charity-cta'>
+				<a href={charityLink} target="_blank" rel="noopener noreferrer" className="charity-cta">
 						{/* <WhiteCircle className="mx-auto m-3 tab-charity color-gl-light-red font-weight-bold text-center" circleCrop={charity ? charity.circleCrop : null}> */}
 						{charity && <CharityLogo charity={charity} />}
-						{!charity && loading && <p className='my-auto'>Loading...</p>}
-						{!charity && !loading && <p className='my-auto'>Select a charity</p>}
+						{!charity && loading && <p className="my-auto">Loading...</p>}
+						{!charity && !loading && <p className="my-auto">Select a charity</p>}
 						{/* </WhiteCircle> */}
 				</a>
 				</div>
@@ -572,11 +572,11 @@ const LinksDisplay = ({ bookmarksData, style }) => {
 			<Col
 				onClick={() => (parent.location.href = url)}
 				title={title}
-				className='bookmark-item d-flex flex-column align-items-center'
+				className="bookmark-item d-flex flex-column align-items-center"
 			>
 				<BG
 					src={`https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${domain}&size=256`}
-					className='bookmark-box shadow mb-1'
+					className="bookmark-box shadow mb-1"
 					center
 					style={{ backgroundSize: '1.5rem', backgroundRepeat: 'no-repeat' }}
 				/>
@@ -595,7 +595,7 @@ const LinksDisplay = ({ bookmarksData, style }) => {
 	if (bookmarksData.length >= 1) {
 		// console.log("bookmarksData loaded", bookmarksData);
 		return (
-			<Row className='bookmark-flexbox' style={style}>
+			<Row className="bookmark-flexbox" style={style}>
 				{bookmarksData.slice(0, maxBookmarks).map((bookmark, i) => {
 					if (bookmark.url) {
 						// Catch bookmarks folder that do not have url
@@ -625,14 +625,14 @@ const LinksDisplay = ({ bookmarksData, style }) => {
 	}
 
 	return (
-		<Row className='bookmark-flexbox'>
+		<Row className="bookmark-flexbox">
 			{/* {Array.apply(null, Array(10)).map((v, i) => <CircleLink key={i}>{i}</CircleLink>)} */}
 		</Row>
 	);
 };
 
 const CharityCustomContent = ({ content, className }) => {
-	return <div className='charity-custom-content'>{content}</div>;
+	return <div className="charity-custom-content">{content}</div>;
 };
 
 // Checks for internet connection and any adblock interference
@@ -664,14 +664,14 @@ const ConnectionStatusPopup = () => {
 				width: 500,
 				zIndex: 99999,
 			}}
-			className='shadow position-absolute text-center p-3 pt-4'
+			className="shadow position-absolute text-center p-3 pt-4"
 		>
 			{hasAdBlock && !isOffline && !determining && (
 				<>
-					<h3 className='text-dark'>It looks like you have AdBlock enabled</h3>
+					<h3 className="text-dark">It looks like you have AdBlock enabled</h3>
 					<p>
 						We can't raise money for charity without displaying ads. Please{' '}
-						<a href='https://my.good-loop.com/allowlist'>
+						<a href="https://my.good-loop.com/allowlist">
 							disable your adblocker
 						</a>{' '}
 						so Tabs for Good can work!
@@ -680,7 +680,7 @@ const ConnectionStatusPopup = () => {
 			)}
 			{isOffline && !determining && (
 				<>
-					<h3 className='text-dark'>We can't find the internet :(</h3>
+					<h3 className="text-dark">We can't find the internet :(</h3>
 					<p>
 						We couldn't load your Tabs for Good page. Check your connection.
 					</p>
@@ -691,14 +691,14 @@ const ConnectionStatusPopup = () => {
 			)}
 			{/* {determining && (
 				<>
-					<h3 className='text-dark'>We're having trouble connecting</h3>
+					<h3 className="text-dark">We're having trouble connecting</h3>
 					<p>One moment...</p>
 				</>
 			)} */}
 			<b
 				style={{ position: 'absolute', top: 10, right: 20, cursor: 'pointer' }}
 				onClick={() => setPopup(false)}
-				role='button'
+				role="button"
 			>
 				X
 			</b>

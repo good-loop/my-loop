@@ -8,7 +8,7 @@ import { TutorialComponent } from './NewtabTutorialCard';
 export const NewTabCustomise = ({ modalOpen, setModalOpen }) => {
 	return (
 		<>
-			<Modal className='customise-modal' isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)} fade={true} size="lg">
+			<Modal className="customise-modal" isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)} fade={true} size="lg">
 				<ModalBody className="customise-modal-body">
 					<Container>
 						<h1> Select a Theme </h1>
@@ -20,8 +20,8 @@ export const NewTabCustomise = ({ modalOpen, setModalOpen }) => {
 					</Container>
 				</ModalBody>
 			</Modal>
-			<TutorialComponent page={6} className='t4g-customizer'>
-				<Button className='t4g-customise-button' onClick={(e) => setModalOpen(true)}><img className='customise-btn-img' src='../img/icons/edit-icon.svg' /></Button>
+			<TutorialComponent page={6} className="t4g-customizer">
+				<Button className="t4g-customise-button" onClick={(e) => setModalOpen(true)}><img className="customise-btn-img" src="../img/icons/edit-icon.svg" /></Button>
 			</TutorialComponent>
 		</>
 	)

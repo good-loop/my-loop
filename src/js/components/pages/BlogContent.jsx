@@ -38,23 +38,23 @@ const BlogContentChild = ({ object: blogPost }) => {
 	return (
 		<>
 			<h1>{blogPost.title}</h1>
-			<p className='leader-text mt-3 text-center'>{blogPost.subtitle}</p>
-			<div className='d-flex flex-row justify-content-center align-items-center mt-3'>
+			<p className="leader-text mt-3 text-center">{blogPost.subtitle}</p>
+			<div className="d-flex flex-row justify-content-center align-items-center mt-3">
 				<SignatureSVG
 					name={blogPost.author}
 					title={blogPost.authorTitle}
 					pronouns={blogPost.authorPronouns}
 					href={blogPost.authorPic}
-					className='signatureSVG'
+					className="signatureSVG"
 					hideLogo
 				/>
 			</div>
-			<PageCard className='pt-4'>
-				<p className='color-gl-dark-grey'>
+			<PageCard className="pt-4">
+				<p className="color-gl-dark-grey">
 					{formatDate(blogPost.created)}&nbsp;&nbsp;&nbsp;&nbsp;{BlogPost.readTime(blogPost)} min Read
 				</p>
 				<hr />
-				<div className='blog-content mt-5'>
+				<div className="blog-content mt-5">
 					<style>{blogPost.customCSS}</style>
 					<MDText source={blogPost.content} linkOut />
 				</div>

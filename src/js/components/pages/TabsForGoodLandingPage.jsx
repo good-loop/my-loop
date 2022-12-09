@@ -26,7 +26,7 @@ const WellMakeItHappenSection = () => {
 				<T4GSignUpButton className="mt-5 w-100"/>
 			</div>
 		</PageCard>
-		<div className='make-it-happen-charities mb-5'>
+		<div className="make-it-happen-charities mb-5">
 			<img src="/img/TabsForGood/charities2.png"/>
 		</div>
 	</>
@@ -34,19 +34,19 @@ const WellMakeItHappenSection = () => {
 
 const PositivePlace123Section = ({className, showCTA}) => {
 	return <PageCard className={space("positive-place-section text-center", className)}>
-		<h1 className='pt-5'>Let's make the internet a more positive place. Together.</h1>
+		<h1 className="pt-5">Let's make the internet a more positive place. Together.</h1>
 		<Row className="pt-5 d-flex justify-content-around">
 			<Col md={3} className="video-points">
-				<img className='w-50' src="img/icons/one.png" alt="" />
-				<h3 className='pt-4 sm'>Sign up for Tabs for Good</h3>
+				<img className="w-50" src="img/icons/one.png" alt="" />
+				<h3 className="pt-4 sm">Sign up for Tabs for Good</h3>
 			</Col>
 			<Col md={3} className="video-points">
-				<img className='w-50' src="img/icons/two.png" alt="" />
-				<h3 className='pt-4 sm'>Pick the charity you want to support</h3>
+				<img className="w-50" src="img/icons/two.png" alt="" />
+				<h3 className="pt-4 sm">Pick the charity you want to support</h3>
 			</Col>
 			<Col md={3} className="video-points">
-				<img className='w-50' src="img/icons/three.png" alt="" />
-				<h3 className='pt-4 sm'>Start browsing and raise money for charity. For free.</h3>
+				<img className="w-50" src="img/icons/three.png" alt="" />
+				<h3 className="pt-4 sm">Start browsing and raise money for charity. For free.</h3>
 			</Col>
 		</Row>
 		{showCTA && <T4GSignUpButton className="mt-5" />}

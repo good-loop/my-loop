@@ -66,7 +66,7 @@ export const MyDataSignUpModal = () => {
 			size="lg"
 		>
 			<ModalBody>
-				<CloseButton className='mydata-signup-close' size='lg' onClick={() => showMyDataSignUpModal(false)}/>
+				<CloseButton className="mydata-signup-close" size="lg" onClick={() => showMyDataSignUpModal(false)}/>
 				<MyDataSignUp />
 			</ModalBody>
 		</Modal>
@@ -92,11 +92,11 @@ const SignUpForm = () => {
 	}
 	
 	// const SignedInDiv = () => {
-	// 	return <div className='text-center'>
+	// 	return <div className="text-center">
 	// 		<hr/>
 	// 		<p>You are already logged in as {user.name || user.xid}.</p>
 	// 		<p>Click to sign up for My.Data under your Account</p>
-	// 		<a className='btn btn-primary' onClick={nextSignupPage} >Continue</a>
+	// 		<a className="btn btn-primary" onClick={nextSignupPage} >Continue</a>
 	// 		</div>
 	// }
 

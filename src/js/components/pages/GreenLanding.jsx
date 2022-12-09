@@ -147,7 +147,7 @@ const GreenLanding2 = ({cid, status}) => {
 				{isTester() && pvAllCampaigns.value && // handy links for GL staff
 					<div>{List.hits(pvAllCampaigns.value).map(campaign =>
 						<LinkOut key={campaign.id} href={ServerIO.PORTAL_ENDPOINT + '/#campaign/' + encURI(campaign.id)}>
-							<Badge className='mr-2'>{campaign.name || campaign.id}</Badge>
+							<Badge className="mr-2">{campaign.name || campaign.id}</Badge>
 						</LinkOut>
 					)}</div>
 				}

@@ -54,8 +54,8 @@ const T4GLayoutPicker = () => {
 	};
 
 	const SelectButton = ({layout, label}) => {
-		return <Col md={4} className='p-1'>
-			<Button color={curLayout === layout ? "primary" : "secondary"} className='w-100' onClick={e => onClick(layout)}>{label || LAYOUTS[layout].label}</Button>
+		return <Col md={4} className="p-1">
+			<Button color={curLayout === layout ? "primary" : "secondary"} className="w-100" onClick={e => onClick(layout)}>{label || LAYOUTS[layout].label}</Button>
 		</Col>;
 	}
 
@@ -87,8 +87,8 @@ const T4GThemePicker = () => {
 	};
 
 	const SelectButton = ({theme, label}) => {
-		return <Col md={4} className='p-1'>
-			<Button color={curTheme === theme ? "primary" : "secondary"} className='w-100' onClick={e => onClick(theme)}>{label || THEMES[theme].label}</Button>
+		return <Col md={4} className="p-1">
+			<Button color={curTheme === theme ? "primary" : "secondary"} className="w-100" onClick={e => onClick(theme)}>{label || THEMES[theme].label}</Button>
 		</Col>;
 	}
 

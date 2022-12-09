@@ -17,7 +17,7 @@ const SubscriptionBox = ({ title = "Support the causes you care about, and see t
 	return (<div id="subscription-box" className={space("flex-column align-items-center justify-content-center subscription-box", className)}>
 		<Container className="text-center">
 			{title && <><h1>{title}</h1>
-				<p className='mb-4'>A short monthly email with easy ways to support your charity, updates on our impact as a community, and other news from Good-Loop.</p>
+				<p className="mb-4">A short monthly email with easy ways to support your charity, updates on our impact as a community, and other news from Good-Loop.</p>
 			</>}
 		</Container>
 		<SubscriptionForm />
@@ -69,7 +69,7 @@ export const SubscriptionForm = ({ label = "", product, purpose = PURPOSES.email
 	const formClass = textCenter ? "text-center mx-auto" : "";
 
 	return (<Form className={formClass} onSubmit={doEmailSignUp}>
-		<p className='white'><b>{label}</b></p>
+		<p className="white"><b>{label}</b></p>
 		<input type="hidden" name="purpose" value={purpose} />
 		<FormGroup className="mb-2 mb-sm-0 outer-form-group flex-grow-1 m-0 pr-md-3 text-left mx-auto position-relative">
 			<PropControl
@@ -78,7 +78,7 @@ export const SubscriptionForm = ({ label = "", product, purpose = PURPOSES.email
 				path={ctaFormPath}
 				placeholder="yourname@youremail.com"
 			/>
-			{showTrees && <img className='position-absolute' src='/img/getinvolved/trees-icon.svg' style={{ top: '.5em', right: '2em' }} />}
+			{showTrees && <img className="position-absolute" src="/img/getinvolved/trees-icon.svg" style={{ top: '.5em', right: '2em' }} />}
 		</FormGroup>
 		{purpose !== PURPOSES.email_mailing_list
 			&& <PropControl className="text-left" type="checkbox" path={ctaFormPath} label="Subscribe to our good news mailing list and get feel-good news delivered to your inbox :)" prop="purpose2" value={PURPOSES.email_mailing_list} />

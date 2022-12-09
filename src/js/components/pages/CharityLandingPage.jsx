@@ -24,7 +24,7 @@ const CharityT4GLogos = ({ngo, className, style, autosize}) => {
 			<Col xs={6}>
 				<CharityLogo charity={ngo} className="charity-banner-logo" />
 			</Col>
-			<Col xs={6} className='d-flex flex-column justify-content-center'>
+			<Col xs={6} className="d-flex flex-column justify-content-center">
 				<img src="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" className="charity-banner-logo" />
 			</Col>
 		</Row>
@@ -35,11 +35,11 @@ const HelpCharityTogetherCard = ({ngo}) => {
 	const name = NGO.displayName(ngo);
 	return <PageCard>
 		<h1>Let's help {name}<br/>do even more good.<br/>Together.</h1>
-		<Row className='mt-5 pt-5'>
-			<Col md={6} className='py-5'>
+		<Row className="mt-5 pt-5">
+			<Col md={6} className="py-5">
 				<NGOImage hardFallback ngo={ngo} className="w-100" imgIdx={1}/>
 			</Col>
-			<Col md={6} className='p-5 d-flex flex-column justify-content-between'>
+			<Col md={6} className="p-5 d-flex flex-column justify-content-between">
 				<div>
 					<h3>What {name} is doing</h3>
 					<NGODescription ngo={ngo}/>
@@ -49,11 +49,11 @@ const HelpCharityTogetherCard = ({ngo}) => {
 		</Row>
 
 		{ngo.extendedDescription && 
-			<Row className='mt-5 pt-5'>
+			<Row className="mt-5 pt-5">
 				<Col className="py-5 d-md-none" md={6}>
 					<NGOImage hardFallback ngo={ngo} className="w-100" imgIdx={2}/>
 				</Col>
-				<Col md={6} className='p-5 d-flex flex-column justify-content-between'>
+				<Col md={6} className="p-5 d-flex flex-column justify-content-between">
 					<div>
 						<h3>Together we'll do more</h3>
 						<NGODescription ngo={ngo} extended/>
@@ -66,11 +66,11 @@ const HelpCharityTogetherCard = ({ngo}) => {
 			</Row>
 		}
 		{/*
-		<Row className='mb-4 mt-5 pt-5'>
+		<Row className="mb-4 mt-5 pt-5">
 			{isPortraitMobile() ? secondSection.reverse() : secondSection}
 		</Row>
 		*/}
-		<div className='d-flex justify-content-center mt-5 pt-5'>
+		<div className="d-flex justify-content-center mt-5 pt-5">
 			<CharityT4GLogos ngo={ngo} autosize/>
 		</div>
 	</PageCard>;
@@ -88,7 +88,7 @@ const SignUpSection = ({ngo}) => {
 			{isPortraitMobile() ? <>
 				<Row className="pt-5">
 					<Col xs={6}>
-						<img className='w-50' src={iconImg[0]} alt="" />
+						<img className="w-50" src={iconImg[0]} alt="" />
 					</Col>
 					<Col xs={6}>
 						<p><b>{iconText[0]}</b></p>
@@ -96,7 +96,7 @@ const SignUpSection = ({ngo}) => {
 				</Row>
 				<Row className="pt-5">
 					<Col xs={6}>
-						<img className='w-50' src={iconImg[1]} alt="" />
+						<img className="w-50" src={iconImg[1]} alt="" />
 					</Col>
 					<Col xs={6}>
 						<p><b>{iconText[1]}</b></p>
@@ -104,7 +104,7 @@ const SignUpSection = ({ngo}) => {
 				</Row>
 				<Row className="pt-5">
 					<Col xs={6}>
-						<img className='w-50' src={iconImg[2]} alt="" />
+						<img className="w-50" src={iconImg[2]} alt="" />
 					</Col>
 					<Col xs={6}>
 						<p><b>{iconText[2]}</b></p>
@@ -114,16 +114,16 @@ const SignUpSection = ({ngo}) => {
 			</> :
 				<Row className="pt-5">
 					<Col md={4}>
-						<img className='w-50' src={iconImg[0]} alt="" />
-						<h3 className='pt-4'>{iconText[0]}</h3>
+						<img className="w-50" src={iconImg[0]} alt="" />
+						<h3 className="pt-4">{iconText[0]}</h3>
 					</Col>
 					<Col md={4}>
-						<img className='w-50' src={iconImg[1]} alt="" />
-						<h3 className='pt-4'>{iconText[1]}</h3>
+						<img className="w-50" src={iconImg[1]} alt="" />
+						<h3 className="pt-4">{iconText[1]}</h3>
 					</Col>
 					<Col md={4}>
-						<img className='w-50' src={iconImg[2]} alt="" />
-						<h3 className='pt-4'>{iconText[2]}</h3>
+						<img className="w-50" src={iconImg[2]} alt="" />
+						<h3 className="pt-4">{iconText[2]}</h3>
 					</Col>
 				</Row>
 			}
@@ -148,12 +148,12 @@ const CharityLandingPageContent = ({object: ngo}) => {
 		<CornerHummingbird/>
 		{isPortraitMobile() ? <>
 			<CharityT4GLogos ngo={ngo}/>
-			<div className='d-flex flex-row justify-content-center align-items-center mt-2'>
+			<div className="d-flex flex-row justify-content-center align-items-center mt-2">
 				<ShareButton meta={shareMeta} className="btn-transparent fill" url={window.location.href}>Share</ShareButton>
 			</div>
 		</>:
 			<Row>
-				<Col md={8} className='d-none d-md-block'>
+				<Col md={8} className="d-none d-md-block">
 					<ShareButton meta={shareMeta} className="ml-5" url={window.location.href} menuOnly>Share</ShareButton>
 				</Col>
 			</Row>

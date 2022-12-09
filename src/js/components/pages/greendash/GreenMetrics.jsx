@@ -52,11 +52,11 @@ const OverviewWidget = ({ period, data }) => {
 	}
 
 	return (
-		<Row className='greendash-overview mb-2'>
-			<Col xs='12'>
-				<span className='period mr-4'>{printPeriod(period)}</span>
-				<span className='impressions'>
-					Impressions served: <span className='impressions-count'>{imps}</span>
+		<Row className="greendash-overview mb-2">
+			<Col xs="12">
+				<span className="period mr-4">{printPeriod(period)}</span>
+				<span className="impressions">
+					Impressions served: <span className="impressions-count">{imps}</span>
 				</span>
 			</Col>
 		</Row>
@@ -65,15 +65,15 @@ const OverviewWidget = ({ period, data }) => {
 
 const CTACard = ({}) => {
 	return (
-		<GreenCard className='carbon-cta flex-column' downloadable={false}>
-			<div className='cta-card-decoration'>
-				<img className='tree-side' src='/img/green/tree-light.svg' />
-				<img className='tree-centre' src='/img/green/tree-light.svg' />
-				<img className='tree-side' src='/img/green/tree-light.svg' />
+		<GreenCard className="carbon-cta flex-column" downloadable={false}>
+			<div className="cta-card-decoration">
+				<img className="tree-side" src="/img/green/tree-light.svg" />
+				<img className="tree-centre" src="/img/green/tree-light.svg" />
+				<img className="tree-side" src="/img/green/tree-light.svg" />
 			</div>
-			<p className='mb-2'>Interested to know more about climate positive advertising?</p>
-			<a className='get-in-touch pull-right text-right' href='https://www.good-loop.com/contact' target='_blank'>
-				<Button color='primary' size='md'>
+			<p className="mb-2">Interested to know more about climate positive advertising?</p>
+			<a className="get-in-touch pull-right text-right" href="https://www.good-loop.com/contact" target="_blank">
+				<Button color="primary" size="md">
 					Get In Touch
 				</Button>
 			</a>
@@ -99,7 +99,7 @@ const GreenMetrics2 = ({}) => {
 	const filterId = { campaign: campaignId, brand: brandId, agency: agencyId, adid: tagId }[filterMode];
 
 	if (!filterMode) {
-		return <Alert color='info'>Select a brand, campaign, or tag to see data.</Alert>;
+		return <Alert color="info">Select a brand, campaign, or tag to see data.</Alert>;
 	}
 
 	// Fetch common data for CO2Card and BreakdownCard.
@@ -116,11 +116,11 @@ const GreenMetrics2 = ({}) => {
 		let sq = SearchQuery.setProp(null, 'vertiser', filterId);
 		const pvAllCampaigns = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUBLISHED, q: sq.query });
 		if (!pvAllCampaigns.resolved) {
-			return <Misc.Loading text='Fetching brand campaigns...' />;
+			return <Misc.Loading text="Fetching brand campaigns..." />;
 		}
 		const campaignIds = List.hits(pvAllCampaigns.value).map((c) => c.id);
 		if (!yessy(campaignIds)) {
-			return <Alert color='info'>No campaigns for brand id: {filterId}</Alert>;
+			return <Alert color="info">No campaigns for brand id: {filterId}</Alert>;
 		}
 		q = SearchQuery.setPropOr(null, 'campaign', campaignIds).query;
 	}
@@ -130,11 +130,11 @@ const GreenMetrics2 = ({}) => {
 		let sq = SearchQuery.setProp(null, 'agencyId', filterId);
 		const pvAllCampaigns = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUBLISHED, q: sq.query });
 		if (!pvAllCampaigns.resolved) {
-			return <Misc.Loading text='Fetching agency campaigns...' />;
+			return <Misc.Loading text="Fetching agency campaigns..." />;
 		}
 		const campaignIds = List.hits(pvAllCampaigns.value).map((c) => c.id);
 		if (!yessy(campaignIds)) {
-			return <Alert color='info'>No campaigns for agency id: {filterId}</Alert>;
+			return <Alert color="info">No campaigns for agency id: {filterId}</Alert>;
 		}
 		q = SearchQuery.setPropOr(null, 'campaign', campaignIds).query;
 	}
@@ -143,17 +143,17 @@ const GreenMetrics2 = ({}) => {
 	if (filterMode === 'campaign') {
 		const pvCampaign = getDataItem({ type: C.TYPES.Campaign, id: campaignId, status: KStatus.PUB_OR_DRAFT });
 		if (!pvCampaign.value) {
-			return <Misc.Loading text='Fetching campaign...' />;
+			return <Misc.Loading text="Fetching campaign..." />;
 		}
 		const campaign = pvCampaign.value;
 		if (Campaign.isMaster(campaign)) {
 			const pvAllCampaigns = Campaign.pvSubCampaigns({ campaign });
 			if (!pvAllCampaigns.resolved) {
-				return <Misc.Loading text='Fetching campaigns...' />;
+				return <Misc.Loading text="Fetching campaigns..." />;
 			}
 			const campaignIds = List.hits(pvAllCampaigns.value).map((c) => c.id);
 			if (!yessy(campaignIds)) {
-				return <Alert color='info'>No campaigns for master campaign id: {filterId}</Alert>;
+				return <Alert color="info">No campaigns for master campaign id: {filterId}</Alert>;
 			}
 			q = SearchQuery.setPropOr(null, 'campaign', campaignIds).query;
 		}
@@ -174,10 +174,10 @@ const GreenMetrics2 = ({}) => {
 	// TODO Fall back to filterMode methods to get campaigns when table is empty
 	
 	if (!pvChartTotal.resolved) {
-		return <Misc.Loading text='Fetching campaign lifetime data...' />;
+		return <Misc.Loading text="Fetching campaign lifetime data..." />;
 	}
 	if (!pvChartTotal.value) {
-		return <ErrAlert error={pvChartData.error} color='danger' />;
+		return <ErrAlert error={pvChartData.error} color="danger" />;
 	}
 	
 	// HACK: Tell JourneyCard we had an empty table & so couldn't get campaigns (but nothing is "loading")
@@ -215,11 +215,11 @@ const GreenMetrics2 = ({}) => {
 				left={{label: 'Total', value: 'total', colour: 'primary'}}
 				right={{label: 'Per 1000 impressions', value: 'per1000', colour: 'primary'}}
 			/>}
-			<Row className='card-row'>
-				<Col xs='12' sm='8' className='flex-column'>
+			<Row className="card-row">
+				<Col xs="12" sm="8" className="flex-column">
 					<TimeSeriesCard {...commonProps} data={pvChartData.value?.by_time.buckets} noData={noData} />
 				</Col>
-				<Col xs='12' sm='4' className='flex-column'>
+				<Col xs="12" sm="4" className="flex-column">
 					<JourneyCard
 						campaigns={List.hits(pvCampaigns?.value)}
 						dataBytime={pvChartData.value?.by_time.buckets}
@@ -228,11 +228,11 @@ const GreenMetrics2 = ({}) => {
 					/>
 				</Col>
 			</Row>
-			<Row className='card-row'>
-				<Col xs='12' sm='4' className='flex-column'>
+			<Row className="card-row">
+				<Col xs="12" sm="4" className="flex-column">
 					<CompareCard {...commonProps} />
 				</Col>
-				<Col xs='12' sm='4' className='flex-column'>
+				<Col xs="12" sm="4" className="flex-column">
 					<BreakdownCard {...commonProps} />
 				</Col>
 				<Col xs="12" sm="4" className="flex-column">
@@ -274,27 +274,27 @@ const GreenMetrics = ({}) => {
 	if (!Login.isLoggedIn()) {
 		// Only for logged-in users!
 		content = (
-			<Card body id='green-login-card' className='m-4'>
+			<Card body id="green-login-card" className="m-4">
 				<Container>
 					<Row>
-						<Col className='decoration flex-center' xs='12' sm='4'>
-							<img className='stamp' src='/img/green/gl-carbon-neutral.svg' />
+						<Col className="decoration flex-center" xs="12" sm="4">
+							<img className="stamp" src="/img/green/gl-carbon-neutral.svg" />
 						</Col>
-						<Col className='form' xs='12' sm='8'>
-							<img className='gl-logo my-4' src='/img/gl-logo/rectangle/logo-name.svg' />
-							<p className='text-center my-4'>
+						<Col className="form" xs="12" sm="8">
+							<img className="gl-logo my-4" src="/img/gl-logo/rectangle/logo-name.svg" />
+							<p className="text-center my-4">
 								Understand the carbon footprint of your advertising and
 								<br />
 								discover your offsetting and climate-positive successes
 							</p>
-							<LoginWidgetEmbed verb='login' canRegister={false} />
+							<LoginWidgetEmbed verb="login" canRegister={false} />
 						</Col>
 					</Row>
 				</Container>
 			</Card>
 		);
 	} else if (!agencyIds) {
-		content = <Misc.Loading text='Checking your access...' />;
+		content = <Misc.Loading text="Checking your access..." />;
 	} else {
 		content = (
 			<>
@@ -305,7 +305,7 @@ const GreenMetrics = ({}) => {
 	}
 
 	return (
-		<div className='green-subpage green-metrics'>
+		<div className="green-subpage green-metrics">
 			<Container fluid>{content}</Container>
 		</div>
 	);
