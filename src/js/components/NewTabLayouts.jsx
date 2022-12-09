@@ -40,7 +40,7 @@ const LAYOUTS = {
 
 const T4GLayoutPicker = () => {
 	const person = getProfile().value; // get person
-	if(!person) return <Misc.Loading />; 
+	if (!person) return <Misc.Loading />;
 
 	let curLayout = getClaimValue({ person, key: "t4g-layout" }); // has user got a theme set?
 	if (!curLayout) { 
@@ -70,16 +70,16 @@ const T4GLayoutPicker = () => {
 
 const T4GThemePicker = () => {
 	const person = getProfile().value; // get person
-	if(!person) return <Misc.Loading />; 
+	if (!person) return <Misc.Loading />;
 
 	let curTheme = getClaimValue({ person, key: "t4g-theme" }); // has user got a theme set?
-	if(!curTheme) { 
-		setPersonSetting({key:"t4g-theme", value:'.default'}) // if not, default
-		window.localStorage.setItem("t4g-theme", '.default')
+	if (!curTheme) {
+		setPersonSetting({key:"t4g-theme", value:'.default'}); // if not, default
+		window.localStorage.setItem("t4g-theme", '.default');
 	}
 
 	let curChar = getClaimValue({person, key: "charity"}) // get users chosen charity
-	if(!curChar) curChar = '.default' 
+	if (!curChar) curChar = '.default';
 
 	const onClick = (value) => {
 		window.localStorage.setItem("t4g-theme", value) // save theme selection locally
@@ -100,7 +100,7 @@ const T4GThemePicker = () => {
 			})}
 			{(true || Object.keys(THEMES).includes(curChar)) && <SelectButton theme={".charity " + curChar} label="Charity"/>}
 		</Row>
-	)
+	);
 };
 
 const getT4GThemeData = (theme) => {
@@ -112,7 +112,7 @@ const getT4GThemeData = (theme) => {
 		// Format for charity themes is ".charity <charity-id>" - prompts us to look for the charity, but gives us an ID to use locally to avoid load times
 
 		const person = getProfile().value; // get person
-		if(!person) t = t.replace(".charity ", ""); 
+		if (!person) t = t.replace(".charity ", "");
 		else {
 			t = getClaimValue({person, key: "charity"}) || ".default" // get users chosen charitys
 		}
