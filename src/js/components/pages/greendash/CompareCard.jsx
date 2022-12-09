@@ -147,7 +147,7 @@ const CampaignCard = ({baseFilters}) => {
 };
 
 
-const CompareCardEmissions = ({...props}) => {
+const CompareCard = ({...props}) => {
 	const [mode, setMode] = useState('quarter');
 	// TODO don't offer campaign biew if we're focuding on one campaign
 	const campaignModeDisabled = !! DataStore.getUrlValue("campaign");
@@ -176,4 +176,4 @@ const CompareCardEmissions = ({...props}) => {
 	</GreenCard>;
 };
 
-export default CompareCardEmissions;
+export default CompareCard;

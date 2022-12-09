@@ -69,7 +69,7 @@ const TreesSection = ({ treesPlanted, coralPlanted }) => {
  * @param {?Boolean} props.emptyTable Carbon data loaded but empty - show "no data" insead of "loading campaigns"
  * @returns
  */
-const JourneyCardEmissions = ({ campaigns, dataByTime, period, emptyTable }) => {
+const JourneyCard = ({ campaigns, dataByTime, period, emptyTable }) => {
 	if (emptyTable)
 		return (
 			<GreenCard title='Your journey so far' className='carbon-journey' downloadable={false}>
@@ -161,4 +161,4 @@ const JourneyCardEmissions = ({ campaigns, dataByTime, period, emptyTable }) => 
 	);
 };
 
-export default JourneyCardEmissions;
+export default JourneyCard;

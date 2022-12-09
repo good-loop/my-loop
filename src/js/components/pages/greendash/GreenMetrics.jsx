@@ -245,7 +245,7 @@ const GreenMetrics2 = ({}) => {
 	);
 };
 
-const GreenMetricsEmissions = ({}) => {
+const GreenMetrics = ({}) => {
 	const [agencyIds, setAgencyIds] = useState();
 	let agencyId = DataStore.getUrlValue('agency');
 	if (!agencyId && agencyIds?.length === 1) agencyId = agencyIds[0];
@@ -311,4 +311,4 @@ const GreenMetricsEmissions = ({}) => {
 	);
 };
 
-export default GreenMetricsEmissions;
+export default GreenMetrics;
