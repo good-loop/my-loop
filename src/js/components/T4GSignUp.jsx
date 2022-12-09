@@ -157,10 +157,10 @@ const DesktopSignUp = ({ charity }) => {
 		<Row>
 			<Col className='sign-up-left px-0'>
 				<BG className='welcome-text' src="/img/TabsForGood/About-t4g-blob.svg" size="contain" repeat="no-repeat" center>
-                    <h1>Welcome to Tabs For Good!</h1>
-                    <p>Create your account to start raising money for your favourite charity while you browse</p>
-                </BG>
-                <img src="/img/TabsForGood/signup-overlay.png" className='bubbles-overlay'/>
+					<h1>Welcome to Tabs For Good!</h1>
+					<p>Create your account to start raising money for your favourite charity while you browse</p>
+				</BG>
+				<img src="/img/TabsForGood/signup-overlay.png" className='bubbles-overlay'/>
 			</Col>
 			<Col className='sign-up-right m-0 py-5 d-flex flex-column justify-content-between align-items-center h-100'>
 				{!Login.isLoggedIn() ?
@@ -184,9 +184,9 @@ const DesktopSignUp = ({ charity }) => {
 							</div>
 						</div>
 						<div className="text-center px-5">
-                            <h1>Success!</h1>
-                            <p>You've signed up! Now click the button to install Tabs For Good</p>
-                            <br/>
+							<h1>Success!</h1>
+							<p>You've signed up! Now click the button to install Tabs For Good</p>
+							<br/>
 							<T4GPluginButton />
 						</div>
 					</div>

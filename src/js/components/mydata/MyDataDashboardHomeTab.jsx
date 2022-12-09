@@ -190,7 +190,7 @@ const SignUpForMyDataCard = () => {
 				<p className="text-center">
 					Sign up for My-Data today
 					<br />
-					Share your online data with us  and we’ll transform it into money for good causes.
+					Share your online data with us and we’ll transform it into money for good causes.
 				</p>
 				<MyDataSignUpButton />
 			</Col>
@@ -238,24 +238,22 @@ const MyDataDashboardHomeTab = () => {
 
 	return (<>
 		{/*<LatestNewsCard />*/}
-
 		{/*		deprecated in 12/09/2022 due to my-data pause
-		<br/> 
-		 { (!hasMyData || !dataCompleteIsh) &&
-			<CompleteDataCTA ngo={ngo} 
-			link={<>
-				  <p className="text-black m-0">Complete your data profile to raise even more for {ngo && NGO.displayName(ngo) || "charity"}!</p>
-				  <br/>
-				  
-				  {//onClick doesn't seem to work with C.A}
-				  {!hasMyData 
-				  	? <a onClick={showMyDataSignUpModal} style={{textDecoration: "underline"}}>Find out more</a>
-					: <C.A href={"/account?tab=profile"} style={{textDecoration: "underline"}}>Complete your profile</C.A>
-			      }
+		<br/>
+		{(!hasMyData || !dataCompleteIsh) &&
+			<CompleteDataCTA ngo={ngo}
+				link={<>
+					<p className="text-black m-0">Complete your data profile to raise even more for {ngo && NGO.displayName(ngo) || "charity"}!</p>
+					<br/>
+					{//onClick doesn't seem to work with C.A}
+					{!hasMyData ? (
+						<a onClick={showMyDataSignUpModal} style={{textDecoration: "underline"}}>Find out more</a>
+					) : (
+						<C.A href={"/account?tab=profile"} style={{textDecoration: "underline"}}>Complete your profile</C.A>
+					)}
 				</>} 
 			/>
-		*/
-		}
+		*/}
 		<br />
 		<hr />
 		<div className="bg-gl-lighter-blue-gradient dashboard-bg">

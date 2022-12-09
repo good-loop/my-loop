@@ -86,17 +86,14 @@ const SupportingCard = () => {
 		<hr/>
 		<h1>Your Profile</h1>
 
-		{ngo 
-			? <>
-				<p style={{color:'#3F7991',fontWeight:'bold'}}>Your Data is Supporting</p>
-				{ngo && <CharityLogo className='mb-3' charity={ngo} />}
-				<DataSharedProgressBar />
-			  </>
-			: <>
-				<CompleteDataCTA ngo={ngo} link={<C.A href="/account?tab=tabsForGood"><p className="leader-text m-0">Get started by selecting the charity you'd like to support</p></C.A>} />
-			  </>		
-		}	
-		
+		{ngo ? <>
+			<p style={{color:'#3F7991',fontWeight:'bold'}}>Your Data is Supporting</p>
+			{ngo && <CharityLogo className='mb-3' charity={ngo} />}
+			<DataSharedProgressBar />
+		</> : <>
+			<CompleteDataCTA ngo={ngo} link={<C.A href="/account?tab=tabsForGood"><p className="leader-text m-0">Get started by selecting the charity you'd like to support</p></C.A>} />
+		</>}
+
 		<hr/>
 	</Container>)
 }
@@ -163,7 +160,7 @@ const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
 	const privacyLabels = ["Careful Use", "Private","Shared"]; // NB: see Consents.java 
 	let privacyLevel = Claim.consent(pvClaim.value) || "careful"; // default to careful, set first label as careful to match
 	if (privacyLevel===DEFAULT_CONSENT || privacyLevel==="controller") privacyLevel = "careful";
-    const privacyImg = privacyOptions.includes(privacyLevel) ? privacyLevel : "careful";
+	const privacyImg = privacyOptions.includes(privacyLevel) ? privacyLevel : "careful";
 	const privacyLabel = privacyLabels[privacyOptions.indexOf(privacyLevel)] || "Other";
 
 	// HACK adjust some of the display for niceness

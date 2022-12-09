@@ -153,7 +153,7 @@ const MainDiv = () => {
 		navbarBackgroundColour="white"
 		navbarAccountMenuItems={accountMenuItems}
 		//navbarAccountLinkText="My.Data"
-        navbarLogoClass="myloop-nav-logo"
+		navbarLogoClass="myloop-nav-logo"
 		NavExpandSize="md"
 		// navbarLabels={getNavbarLabels}
 		// We want everything to be full width on this site
