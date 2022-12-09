@@ -11,15 +11,15 @@ import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import ErrAlert from '../../../base/components/ErrAlert';
 
 import { GreenCard, periodFromUrl, printPeriod } from './dashutils';
-import { getCampaignsEmissions, getCarbonEmissions, getSumColumnEmissions } from './emissionscalc';
+import { getCampaigns, getCarbon, getSumColumn } from './emissionscalc';
 
 import GreenDashboardFilters from './GreenDashboardFilters';
-import TimeSeriesCardEmissions from './TimeSeriesCardEmissions';
-import JourneyCardEmissions from './JourneyCardEmissions';
-import CompareCardEmissions from './CompareCardEmissions';
-import BreakdownCardEmissions from './BreakdownCardEmissions';
-import TimeOfDayCardEmissions from './TimeOfDayCardEmissions';
-import MapCardEmissions from './MapCardEmissions';
+import TimeSeriesCard from './TimeSeriesCard';
+import JourneyCard from './JourneyCard';
+import CompareCard from './CompareCard';
+import BreakdownCard from './BreakdownCard';
+import TimeOfDayCard from './TimeOfDayCard';
+import MapCard from './MapCard';
 
 import { getDataItem, getDataList } from '../../../base/plumbing/Crud';
 import C from '../../../C';
@@ -42,7 +42,7 @@ export const isPer1000 = () => {
 const OverviewWidget = ({ period, data }) => {
 	let imps;
 	if (data?.length > 0) {
-		const total = getSumColumnEmissions(data, 'count');
+		const total = getSumColumn(data, 'count');
 		imps = printer.prettyInt(total);
 	} else if (!data) {
 		imps = 'Fetching data...';
@@ -168,7 +168,7 @@ const GreenMetrics2 = ({}) => {
 	/**
 	 * Inital load of total
 	 */
-	const pvChartTotal = getCarbonEmissions({...baseFilters, breakdown: ['total{"count":"sum"}']})
+	const pvChartTotal = getCarbon({...baseFilters, breakdown: ['total{"count":"sum"}']})
 
 	let noData = pvChartTotal.value && !pvChartTotal.value.allCount;
 	// TODO Fall back to filterMode methods to get campaigns when table is empty
@@ -188,7 +188,7 @@ const GreenMetrics2 = ({}) => {
 	const commonProps = { period, baseFilters, per1000: isPer1000() };
 	// Removed (temp?): brands, campaigns, tags
 	
-	const pvChartData = getCarbonEmissions({
+	const pvChartData = getCarbon({
 		...baseFilters,
 		breakdown: [
 			// 'total',
@@ -201,7 +201,7 @@ const GreenMetrics2 = ({}) => {
 		name:"lotsa-chartdata"
 	});
 
-	let pvCampaigns = getCampaignsEmissions(pvChartData.value?.by_adid.buckets);
+	let pvCampaigns = getCampaigns(pvChartData.value?.by_adid.buckets);
 	if (pvCampaigns && PromiseValue.isa(pvCampaigns.value)) {
 		// HACK unwrap nested PV
 		pvCampaigns = pvCampaigns.value;
@@ -217,10 +217,10 @@ const GreenMetrics2 = ({}) => {
 			/>}
 			<Row className='card-row'>
 				<Col xs='12' sm='8' className='flex-column'>
-					<TimeSeriesCardEmissions {...commonProps} data={pvChartData.value?.by_time.buckets} noData={noData} />
+					<TimeSeriesCard {...commonProps} data={pvChartData.value?.by_time.buckets} noData={noData} />
 				</Col>
 				<Col xs='12' sm='4' className='flex-column'>
-					<JourneyCardEmissions
+					<JourneyCard
 						campaigns={List.hits(pvCampaigns?.value)}
 						dataBytime={pvChartData.value?.by_time.buckets}
 						{...commonProps}
@@ -230,14 +230,14 @@ const GreenMetrics2 = ({}) => {
 			</Row>
 			<Row className='card-row'>
 				<Col xs='12' sm='4' className='flex-column'>
-					<CompareCardEmissions {...commonProps} />
+					<CompareCard {...commonProps} />
 				</Col>
 				<Col xs='12' sm='4' className='flex-column'>
-					<BreakdownCardEmissions {...commonProps} />
+					<BreakdownCard {...commonProps} />
 				</Col>
 				<Col xs="12" sm="4" className="flex-column">
-					<TimeOfDayCardEmissions {...commonProps} />
-					<MapCardEmissions {...commonProps} />
+					<TimeOfDayCard {...commonProps} />
+					<MapCard {...commonProps} />
 					{/* <CTACard /> "interested to know more" */}
 				</Col>
 			</Row>

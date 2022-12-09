@@ -7,7 +7,7 @@ import DataStore from '../../../base/plumbing/DataStore';
 import { A } from '../../../base/plumbing/glrouter';
 import { encURI } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
-import { getOffsetsByTypeEmissions } from './emissionscalc';
+import { getOffsetsByType } from './emissionscalc';
 import { GreenCard, GreenCardAbout, Mass } from './dashutils';
 import { getDataItem } from '../../../base/plumbing/Crud';
 import KStatus from '../../../base/data/KStatus';
@@ -87,7 +87,7 @@ const JourneyCardEmissions = ({ campaigns, dataByTime, period, emptyTable }) => 
 	let offsets = {}; // HACK will include carbonTotal etc too
 	offsetTypes.forEach((ot) => (offsets[ot + 'Total'] = 0));
 	campaigns.forEach((campaign) => {
-		const offsets4type = getOffsetsByTypeEmissions({ campaign, period });
+		const offsets4type = getOffsetsByType({ campaign, period });
 		offsetTypes.forEach((ot) => (offsets[ot + 'Total'] += offsets4type[ot + 'Total'] || 0));
 		if (offsets4type.isLoading) isLoading = true;
 	});

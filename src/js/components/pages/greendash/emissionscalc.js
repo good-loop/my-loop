@@ -21,7 +21,7 @@ import { periodFromUrl } from './dashutils';
  * @param {string[]} p.breakdown
  * @returns {} ??doc??
  */
-export const getCarbonEmissions = ({ q = '', start = '1 month ago', end = 'now', breakdown, ...rest }) => {
+export const getCarbon = ({ q = '', start = '1 month ago', end = 'now', breakdown, ...rest }) => {
   // assert(!q?.includes('brand:'), q);
   const data = {
     dataspace: 'emissions',
@@ -45,7 +45,7 @@ export const getCarbonEmissions = ({ q = '', start = '1 month ago', end = 'now',
  * @param {!string} keyName
  * @returns {!number}
  */
-export const getSumColumnEmissions = (buckets, keyName) => {
+export const getSumColumn = (buckets, keyName) => {
   if (!buckets?.length) {
     console.warn('getSumColumn - no data', buckets, keyName);
     return 0; // no data
@@ -93,7 +93,7 @@ export const getCompressedBreakdown = ({breakdownByX, minFraction=0.05, osTypes}
  * @param {Object[][]} buckets
  * @returns {Object} {breakdown-key: sum-for-key}
  */
-export const getBreakdownByEmissions = (buckets, keyNameToSum, keyNameToBreakdown) => {
+export const getBreakdownBy = (buckets, keyNameToSum, keyNameToBreakdown) => {
   if (!buckets?.length) {
     return {}; // no data
   }
@@ -119,7 +119,7 @@ export const getBreakdownByEmissions = (buckets, keyNameToSum, keyNameToBreakdow
  * @param {?Object[][]} buckets
  * @returns {?PromiseValue} PV of a List of GreenTags
  */
-export const getTagsEmissions = (buckets) => {
+export const getTags = (buckets) => {
   if (!buckets || !buckets.length) {
     return null;
   }
@@ -151,8 +151,8 @@ export const getTagsEmissions = (buckets) => {
  * @param {Object[][]} buckets
  * @returns {?PromiseValue} PV of a List of Campaigns
  */
-export const getCampaignsEmissions = (buckets) => {
-  let pvTags = getTagsEmissions(buckets);
+export const getCampaigns = (buckets) => {
+  let pvTags = getTags(buckets);
   if (!pvTags) {
     return null;
   }
@@ -176,13 +176,13 @@ export const getCampaignsEmissions = (buckets) => {
  *
  * @returns {?Impact} null if loading data
  */
- export const calculateDynamicOffsetEmissions = ({ campaign, offset, period }) => {
+ export const calculateDynamicOffset = ({ campaign, offset, period }) => {
   Campaign.assIsa(campaign);
   if (!Impact.isDynamic(offset)) return offset; // paranoia
 
   // We either want carbon emissions or impressions count for this campaign/period - this gets both
   if (!period) period = periodFromUrl();
-  let pvCarbonData = getCarbonEmissions({
+  let pvCarbonData = getCarbon({
     q: SearchQuery.setProp(null, 'campaign', campaign.id).query,
     start: period?.start.toISOString() || '2022-01-01',
     end: period?.end.toISOString() || 'now',
@@ -194,7 +194,7 @@ export const getCampaignsEmissions = (buckets) => {
   let n;
   // HACK: carbon offset?
   if (Impact.isCarbonOffset(offset)) {
-    n = getSumColumnEmissions(pvCarbonData.value.by_total.buckets, 'co2');
+    n = getSumColumn(pvCarbonData.value.by_total.buckets, 'co2');
   } else {
     // check it is per impression
     if (offset.input) assert(offset.input.substring(0, 'impression'.length) === 'impression', offset);
@@ -216,7 +216,7 @@ export const getCampaignsEmissions = (buckets) => {
  * @param {?Object} p.period {start, end}
  * @returns {Object} {isLoading:boolean, carbon: [], carbonTotal: Number, trees: [], treesTotal:Number, coral: [], pvAllCampaigns }
  */
-export const getOffsetsByTypeEmissions = ({ campaign, status, period }) => {
+export const getOffsetsByType = ({ campaign, status, period }) => {
   // console.warn('getOffsetsByType', campaign, status, period);
   // Is this a master campaign?
   let pvAllCampaigns = Campaign.pvSubCampaigns({ campaign, status });
@@ -230,7 +230,7 @@ export const getOffsetsByTypeEmissions = ({ campaign, status, period }) => {
     List.hits(pvAllCampaigns.value).forEach((campaign) => {
       let offsets = Campaign.offsets(campaign);
       let fixedOffsets = offsets.map((offset) =>
-        Impact.isDynamic(offset) ? calculateDynamicOffsetEmissions({ campaign, offset, period }) : offset
+        Impact.isDynamic(offset) ? calculateDynamicOffset({ campaign, offset, period }) : offset
       );
       allFixedOffsets.push(...fixedOffsets);
     });
@@ -272,7 +272,7 @@ export const getOffsetsByTypeEmissions = ({ campaign, status, period }) => {
  * @param {Number} perN e.g. 1000 for "carbon per 1000 impressions"
  * @returns The same breakdown, but with every "co2*" value in each bucket divided by (bucketcount / perN)
  */
- export const emissionsPerImpressions = (buckets, perN = 1000) => (
+export const emissionsPerImpressions = (buckets, perN = 1000) => (
   buckets.map(bkt => {
     const newBkt = {...bkt}; // Start with a copy
 

@@ -21,7 +21,7 @@ import ServerIO from '../../plumbing/ServerIO';
 import DataItemBadge from '../../base/components/DataItemBadge';
 import Login from '../../base/youagain';
 import printer from '../../base/utils/printer';
-import { getOffsetsByTypeEmissions } from './greendash/emissionscalc';
+import { getOffsetsByType } from './greendash/emissionscalc';
 
 
 // TODO Design! and Content!
@@ -93,7 +93,7 @@ const GreenLanding2 = ({cid, status}) => {
 	}
 	const campaign = pvCampaign.value;	
 
-	let offsets4type = getOffsetsByTypeEmissions({ campaign, status, period});
+	let offsets4type = getOffsetsByType({ campaign, status, period});
 	let isLoading = offsets4type.isLoading;
 	let pvAllCampaigns = offsets4type.pvAllCampaigns;
 	// load the charities

@@ -6,17 +6,17 @@ import DataStore from '../../../base/plumbing/DataStore';
 import Misc from '../../../base/components/Misc';
 import NewChartWidget from '../../../base/components/NewChartWidget';
 import { dataColours, GreenCard, GreenCardAbout, NOEMISSIONS, TONNES_THRESHOLD } from './dashutils';
-import { emissionsPerImpressions, getBreakdownByEmissions, getCarbonEmissions } from './emissionscalc';
-import { isPer1000 } from './GreenMetricsEmissions';
+import { emissionsPerImpressions, getBreakdownBy, getCarbon } from './emissionscalc';
+import { isPer1000 } from './GreenMetrics';
 
-const TimeOfDayCardEmissions = (props) => {
+const TimeOfDayCard = (props) => {
 	return <GreenCard title='When are your ad carbon emissions highest?' className='carbon-time-of-day'>
-		<TimeOfDayCardEmissions2 {...props} />
+		<TimeOfDayCard2 {...props} />
 	</GreenCard>;
 };
 
 
-const TimeOfDayCardEmissions2 = ({ baseFilters, tags }) => {
+const TimeOfDayCard2 = ({ baseFilters, tags }) => {
 	const [chartProps, setChartProps] = useState();
 	const [pvCarbon, setPVCarbon] = useState();
 
@@ -24,7 +24,7 @@ const TimeOfDayCardEmissions2 = ({ baseFilters, tags }) => {
 		// return <Misc.Loading text="Fetching your tag data..." />;
 	}
 	useEffect(() => {
-		const pvCarbon = getCarbonEmissions({ ...baseFilters, timeofday: true, breakdown: 'timeofday{"co2":"sum"}' });
+		const pvCarbon = getCarbon({ ...baseFilters, timeofday: true, breakdown: 'timeofday{"co2":"sum"}' });
 		pvCarbon.promise.then((res) => {
 			if (!res.by_timeofday.buckets.length) {
 				setChartProps({ isEmpty: true });
@@ -39,7 +39,7 @@ const TimeOfDayCardEmissions2 = ({ baseFilters, tags }) => {
 			}
 
 			// construct hourly breakdown and normalise to numeric hours
-			const hoursBreakdown = getBreakdownByEmissions(buckets, 'co2', 'timeofday');
+			const hoursBreakdown = getBreakdownBy(buckets, 'co2', 'timeofday');
 
 			// group into 3-hour periods and copy to labels/data
 			for (let i = 0; i < 24; i++) {
@@ -100,4 +100,4 @@ const TimeOfDayCardEmissions2 = ({ baseFilters, tags }) => {
 	);	
 };
 
-export default TimeOfDayCardEmissions;
+export default TimeOfDayCard;

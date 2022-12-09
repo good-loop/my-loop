@@ -4,8 +4,8 @@ import { DownloadCSVLink } from '../../../base/components/SimpleTable';
 import { space, stopEvent } from '../../../base/utils/miscutils';
 import Misc from '../../../MiscOverrides';
 import { dataColours, GreenCard } from './dashutils';
-import { emissionsPerImpressions, getCarbonEmissions } from './emissionscalc';
-import { isPer1000 } from './GreenMetricsEmissions';
+import { emissionsPerImpressions, getCarbon } from './emissionscalc';
+import { isPer1000 } from './GreenMetrics';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import CSS from '../../../../style/green-map-card.less';
 
@@ -189,7 +189,7 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 	);
 };
 
-const MapCardEmissions = ({ baseFilters, per1000 }) => {
+const MapCard = ({ baseFilters, per1000 }) => {
 	const [mapData, setMapData] = useState('loading'); // Object mapping region ID to imps + carbon
 	const [focusRegion, setFocusRegion] = useState('world'); // ID of currently focused country
 	const [mapDefs, setMapDefs] = useState(); // JSON object with map paths and meta
@@ -238,7 +238,7 @@ const MapCardEmissions = ({ baseFilters, per1000 }) => {
 		filters.subLocationField = locationField;
 	}
 
-	const pvChartData = getCarbonEmissions(filters);
+	const pvChartData = getCarbon(filters);
 
 	useEffect(() => {
 		// Don't process data we don't have
@@ -335,4 +335,4 @@ const MapCardEmissions = ({ baseFilters, per1000 }) => {
 	);
 };
 
-export default MapCardEmissions;
+export default MapCard;
