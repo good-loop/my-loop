@@ -280,7 +280,7 @@ const BreakdownCardEmissions = ({ baseFilters }) => {
 	
 	const pvDataValue = getCarbonEmissions({
 		...baseFilters,
-		breakdown: ['os{"co2":"sum"}', 'adid{"emissions":"sum"}', 'domain{"emissions":"sum"}'],
+		breakdown: ['os{"co2":"sum"}', 'adid{"emissions":"sum"}', 'domain{"emissions":"sum"}', 'format{"emissions":"sum"}'],
 		// breakdown: ['os{"co2":"sum"}', 'adid{"countco2":"sum"}', 'domain{"countco2":"sum"}'], // TODO Wait for new shortcut in backend
 	});
 
@@ -296,8 +296,8 @@ const BreakdownCardEmissions = ({ baseFilters }) => {
 
 	const [mode, setMode] = useState('tech');
 	
-	const datakey = { device: 'by_os', tag: 'by_adid', domain: 'by_domain' }[mode];
-	let techData = techValue['by_total']?.buckets;;
+	const datakey = { device: 'by_os', tag: 'by_adid', domain: 'by_domain', format: "by_adid" }[mode];
+	let techData = techValue['by_total']?.buckets;
 	let data = dataValue && dataValue[datakey]?.buckets;
 	// Are we in carbon-per-mille mode?
 	if (isPer1000()) {
@@ -318,6 +318,9 @@ const BreakdownCardEmissions = ({ baseFilters }) => {
 			break;
 		case 'domain':
 			subcard = dataValue ? <PubSubcard data={data} /> : <Misc.Loading text='Fetching your data...' />;
+			break;
+		case 'format':
+			subcard = dataValue ? <FormatSubcard data={data} minimumPercentLabeled={10} /> : <Misc.Loading text='Fetching your data...' />;
 	}
 
 	return (
@@ -335,6 +338,9 @@ const BreakdownCardEmissions = ({ baseFilters }) => {
 				<ModeButton name='domain' mode={mode} setMode={setMode}>
 					Domain
 				</ModeButton>
+				<ModeButton name='format' mode={mode} setMode={setMode}>
+					Format
+				</ModeButton>
 			</ButtonGroup>
 			{subcard}
 			<GreenCardAbout>
@@ -344,5 +350,117 @@ const BreakdownCardEmissions = ({ baseFilters }) => {
 		</GreenCard>
 	);
 };
+
+const FormatSubcard = ({ data, minimumPercentLabeled = 1}) => {
+
+	if (!yessy(data)) return NOEMISSIONS;
+
+	const [chartProps, setChartProps] = useState();
+	useEffect(() => {
+		const pvTags = getTagsEmissions(data);
+		const tags = List.hits(pvTags.value) || [];
+			
+		// map tagIDs to formats
+		var tagFormats = tags.reduce((acc, cur) => {
+			acc[cur.id] = cur.format;
+			return acc;
+			},
+			{}
+		)
+		
+		// map tagIDs to co2
+		var tagEm = data.reduce((acc, cur) => {
+			acc[cur.key] = cur.co2;
+			return acc
+		},
+		{}
+		)
+
+		// group tagIDs by format & sum their co2
+		var formatEm = Object.keys(tagFormats).reduce((mapping, id) => {
+			var format = tagFormats[id]
+			if(mapping.hasOwnProperty(format)){
+				mapping[format] += tagEm[id]
+			} else {
+				mapping[format] = tagEm[id]
+			}
+			return mapping
+		},
+		{}
+		)
+		
+		// transform above mapping into usable data for chart
+		data = Object.values(formatEm)
+		const formatLabels = Object.keys(formatEm)
+
+		// begin defining chart
+		let unit = 'kg';
+		let unitShort = 'kg';
+		let totalCO2 = sum(data)
+
+		if (Math.max(...data) > TONNES_THRESHOLD) {
+			unit = 'tonnes';
+			unitShort = 't';
+			data = data.map((v) => v / 1000);
+			totalCO2 /= 1000
+		}
+
+		setChartProps({
+			data: {
+				labels:  formatLabels,
+				datasets: [
+					{
+						label: 'Kg CO2',
+						backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
+						data: data,
+					},
+				],
+			},
+			options: {
+				layout: { autoPadding: true, padding: 5 },
+				plugins: {
+					legend: {
+						position: (ctx) => (ctx.chart.width < 250 ? 'left' : 'top'),
+						labels: { boxWidth: 20 },
+					},
+					tooltip: {
+						callbacks: {
+							label: (ctx) => ` ${printer.prettyNumber(ctx.dataset.data[ctx.dataIndex])} kg`,
+							title: (ctx) => ctx[0].label,
+						},
+					},
+					datalabels: {
+						labels: {
+							value: {
+								color: '#fff',
+								textStrokeColor: '#666',
+								textStrokeWidth: 2,
+								font: (ctx) => ({
+									family: 'Montserrat',
+									weight: 'bold',
+									size: Math.round(Math.min(ctx.chart.chartArea.width, ctx.chart.chartArea.height) / 7),
+								}),
+								formatter: (value = 1) => {
+									const percentage = Math.round((value * 100) / totalCO2);
+									return percentage >= minimumPercentLabeled ? `${percentage}%` : '';
+								},
+							},
+						},
+					},
+				},
+			},
+		});
+	}, []);
+
+	if (!chartProps) return null;
+	if (chartProps?.isEmpty) return NOEMISSIONS;
+
+	return (
+		<>
+			<p>{CO2e} emissions due to...</p>
+			<NewChartWidget type='pie' {...chartProps} datalabels />
+		</>
+	)
+}
 
 export default BreakdownCardEmissions;
