@@ -151,6 +151,8 @@ const mergeHits = (hits, setFilterItems) => setFilterItems(prevItems => {
 
 
 /**
+ * ??Does this duplicate server-side work done by CrudServlet.doList2_securityFilter2_filterByShares()?
+ * 
  * Fetch all items of [type] which are implicitly shared with the user under items of [shareType]
  * (for instance - if a campaign is explicitly shared, the user should see all campaigns under it)
  */
@@ -165,7 +167,10 @@ const getMergeImplicitShares = async ({shareType, type, setFilterItems}) => {
 };
 
 
-/** Fetch all items of a type that are explicitly (eg "Campaign: J0zxYqk") shared with a user */
+/** 
+ * ??Does this duplicate server-side work done by CrudServlet.doList2_securityFilter2_filterByShares()?
+ * 
+ * Fetch all items of a type that are explicitly (eg "Campaign: J0zxYqk") shared with a user */
 const getMergeDirectShares = async ({ type, setFilterItems }) => {
 	const ids = await sharesOfType(type);
 	if (!ids || !ids.length) return; // Don't make an unbounded list request!
