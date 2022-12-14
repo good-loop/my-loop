@@ -198,7 +198,7 @@ const GreenMetrics2 = ({}) => {
 			// 'domain{"emissions":"sum"}',
 			// 'campaign{"emissions":"sum"}', do campaign breakdowns later with more security logic
 		],
-		name:"lotsa-chartdata"
+		name: 'lotsa-chartdata'
 	});
 
 	let pvCampaigns = getCampaigns(pvChartData.value?.by_adid.buckets);
@@ -222,7 +222,7 @@ const GreenMetrics2 = ({}) => {
 				<Col xs="12" sm="4" className="flex-column">
 					<JourneyCard
 						campaigns={List.hits(pvCampaigns?.value)}
-						dataBytime={pvChartData.value?.by_time.buckets}
+						dataByTime={pvChartData.value?.by_time.buckets}
 						{...commonProps}
 						emptyTable={emptyTable || noData}
 					/>
