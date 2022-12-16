@@ -19,7 +19,8 @@ import {
 } from './emissionscalc';
 import { isPer1000 } from './GreenMetricsEmissions';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
-import CSS from '../../../../style/greendash-breakdown-card.less';
+import '../../../../style/greendash-breakdown-card.less';
+
 
 /** Classify OS strings seen in our data
  *
@@ -54,6 +55,109 @@ const osTypes = {
 	panasonic: { type: 'smart', group: 'Smart TV', name: 'Hisense TV' },
 };
 
+
+
+const pieOptions = (totalCO2, minimumPercentLabeled) => ({
+	layout: { autoPadding: true, padding: 5 },
+	plugins: {
+		legend: {
+			position: (ctx) => (ctx.chart.width < 250 ? 'left' : 'top'),
+			labels: { boxWidth: 20 },
+		},
+		tooltip: {
+			callbacks: {
+				label: (ctx) => ` ${printer.prettyNumber(ctx.dataset.data[ctx.dataIndex])} kg`,
+				title: (ctx) => ctx[0].label,
+			},
+		},
+		datalabels: {
+			labels: {
+				value: {
+					color: '#fff',
+					textStrokeColor: '#666',
+					textStrokeWidth: 2,
+					font: (ctx) => ({
+						family: 'Montserrat',
+						weight: 'bold',
+						size: Math.round(Math.min(ctx.chart.chartArea.width, ctx.chart.chartArea.height) / 7),
+					}),
+					formatter: (value = 0) => {
+						const percentage = Math.round((value * 100) / totalCO2);
+						return percentage >= minimumPercentLabeled ? `${percentage}%` : '';
+					},
+				},
+			},
+		},
+	},
+});
+
+
+const FormatSubcard = ({ data, minimumPercentLabeled = 1}) => {
+	if (!yessy(data)) return NOEMISSIONS;
+
+	const [chartProps, setChartProps] = useState();
+	useEffect(() => {
+		const pvTags = getTagsEmissions(data);
+		const tags = List.hits(pvTags.value) || [];
+
+		// map tagIDs to formats
+		const tagFormats = tags.reduce((acc, tag) => {
+			acc[tag.id] = tag.format;
+			return acc;
+		}, {});
+
+		// map tagIDs to co2
+		const tagEm = data.reduce((acc, row) => {
+			acc[row.key] = row.co2;
+			return acc
+		}, {});
+
+		// group tagIDs by format & sum their co2
+		const formatToCarbon = Object.keys(tagFormats).reduce((mapping, id) => {
+			const format = tagFormats[id] || 'Unset';
+			if (mapping.hasOwnProperty(format)) {
+				mapping[format] += tagEm[id];
+			} else {
+				mapping[format] = tagEm[id];
+			}
+			return mapping;
+		}, {});
+
+		// begin defining chart
+		let unit = 'kg';
+		let unitShort = 'kg';
+		let totalCO2 = data.reduce((acc, row) => acc + row.co2, 0);
+
+		if (Math.max(...data) > TONNES_THRESHOLD) {
+			unit = 'tonnes';
+			unitShort = 't';
+			data = data.map((v) => v / 1000);
+			totalCO2 /= 1000;
+		}
+
+		setChartProps({
+			data: {
+				labels: Object.keys(formatToCarbon),
+				datasets: [{
+					label: 'Kg CO2',
+					backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
+					data: Object.values(formatToCarbon),
+				}],
+			},
+			options: pieOptions(totalCO2, minimumPercentLabeled),
+		});
+	}, []);
+
+	if (!chartProps) return null;
+	if (chartProps?.isEmpty) return NOEMISSIONS;
+
+	return <>
+		<p>{CO2e} emissions by advert format:</p>
+		<NewChartWidget type="pie" {...chartProps} datalabels />
+	</>;
+};
+
+
 /**
  *
  * @param {Object} p
@@ -68,8 +172,6 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1 }) => {
 	const [chartProps, setChartProps] = useState();
 
 	useEffect(() => {
-		// "co2","co2base","co2creative","co2supplypath"
-		// let totalCO2 = getSumColumnEmissions(osBuckets, "co2");
 		let media = getSumColumnEmissions(osBuckets, 'co2creative');
 		let publisher = getSumColumnEmissions(osBuckets, 'co2base');
 		let dsp = getSumColumnEmissions(osBuckets, 'co2supplypath');
@@ -83,63 +185,27 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1 }) => {
 
 		setChartProps({
 			data: {
-				// labels: ['Media', 'Publisher overhead', 'Supply-path overhead'],
 				labels: ['Creative', 'Publisher', 'Supply path'],
-				datasets: [
-					{
-						label: 'Kg CO2',
-						backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
-						data: [media, publisher, dsp],
-					},
-				],
+				datasets: [{
+					label: 'Kg CO2',
+					backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
+					data: [media, publisher, dsp],
+				}],
 			},
-			options: {
-				layout: { autoPadding: true, padding: 5 },
-				plugins: {
-					legend: {
-						position: (ctx) => (ctx.chart.width < 250 ? 'left' : 'top'),
-						labels: { boxWidth: 20 },
-					},
-					tooltip: {
-						callbacks: {
-							label: (ctx) => ` ${printer.prettyNumber(ctx.dataset.data[ctx.dataIndex])} kg`,
-							title: (ctx) => ctx[0].label,
-						},
-					},
-					datalabels: {
-						labels: {
-							value: {
-								color: '#fff',
-								textStrokeColor: '#666',
-								textStrokeWidth: 2,
-								font: (ctx) => ({
-									family: 'Montserrat',
-									weight: 'bold',
-									size: Math.round(Math.min(ctx.chart.chartArea.width, ctx.chart.chartArea.height) / 7),
-								}),
-								formatter: (value = 0) => {
-									const percentage = Math.round((value * 100) / totalCO2);
-									return percentage >= minimumPercentLabeled ? `${percentage}%` : '';
-								},
-							},
-						},
-					},
-				},
-			},
+			options: pieOptions(totalCO2, minimumPercentLabeled),
 		});
 	}, [osBuckets]);
 
 	if (!chartProps) return null;
 	if (chartProps?.isEmpty) return NOEMISSIONS;
 
-	return (
-		<>
-			<p>{CO2e} emissions due to...</p>
-			<NewChartWidget type='pie' {...chartProps} datalabels />
-			<small className='text-center'>The Green Ad Tag per-impression overhead is measured, but too small to display in this chart.</small>
-		</>
-	);
+	return <>
+		<p>{CO2e} emissions due to...</p>
+		<NewChartWidget type="pie" {...chartProps} datalabels />
+		<small className="text-center">The Green Ad Tag per-impression overhead is measured, but too small to display in this chart.</small>
+	</>;
 };
+
 
 /**
  * desktop vs mobile and different OS
@@ -147,8 +213,6 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1 }) => {
  */
 const DeviceSubcard = ({ data: osTable }) => {
 	if (!yessy(osTable)) return NOEMISSIONS;
-
-	// console.log("DeviceSubcard", osTable);
 
 	const [chartProps, setChartProps] = useState();
 
@@ -163,7 +227,7 @@ const DeviceSubcard = ({ data: osTable }) => {
 		}
 
 		// compress by OS group
-		let breakdownByOS2 = getCompressedBreakdown({ breakdownByX: breakdownByOS, osTypes });
+		const breakdownByOS2 = getCompressedBreakdown({ breakdownByX: breakdownByOS, osTypes });
 		let data = Object.values(breakdownByOS2);
 		const labels = Object.keys(breakdownByOS2); // ["Windows", "Mac"];
 
@@ -200,11 +264,13 @@ const DeviceSubcard = ({ data: osTable }) => {
 	if (!chartProps) return null;
 	if (chartProps?.isEmpty) return NOEMISSIONS;
 
-	return <NewChartWidget type='bar' {...chartProps} />;
+	return <NewChartWidget type="bar" {...chartProps} />;
 }; // ./DeviceSubCard
 
+
 /** A table cell with a title/tooltip for cases where the value is likely to display truncated */
-const CellWithTitle = (value) => <span title='value'>{value}</span>;
+const CellWithTitle = (value) => <span title="value">{value}</span>;
+
 
 /**
  * Table of impressions and carbon per tag
@@ -227,17 +293,16 @@ const TagSubcard = ({ data }) => {
 		new Column({ Header: 'CO2e (kg)', accessor: (row) => row.co2 }),
 	];
 
-	return (
-		<>
-			<p className='small'>
-				Emissions breakdown by Green Ad Tags.
-				<br />
-				You can track any aspect of media buying by generating different tags, then using them in your buying.
-			</p>
-			<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className='tag-table' tableName='carbon-by-tag' />
-		</>
-	);
+	return <>
+		<p className="small">
+			Emissions breakdown by Green Ad Tags.
+			<br />
+			You can track any aspect of media buying by generating different tags, then using them in your buying.
+		</p>
+		<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className="tag-table" tableName="carbon-by-tag" />
+	</>;
 };
+
 
 const PubSubcard = ({ data }) => {
 	if (!yessy(data)) return NOEMISSIONS;
@@ -251,16 +316,15 @@ const PubSubcard = ({ data }) => {
 	// skip unset
 	data = data.filter((row) => row.key !== 'unset');
 
-	return (
-		<>
-			<p className='small'>
-				Emissions breakdown by publisher/domain.
-				<br />
-			</p>
-			<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className='domain-table' tableName='carbon-by-publishers' />
-		</>
-	);
+	return <>
+		<p className="small">
+			Emissions breakdown by publisher/domain.
+			<br />
+		</p>
+		<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className="domain-table" tableName="carbon-by-publishers" />
+	</>;
 };
+
 
 /**
  *
@@ -268,37 +332,32 @@ const PubSubcard = ({ data }) => {
  * @param {Object} p.dataValue pvChartData.value Which are split by breakdown: os, adid,
  */
 const BreakdownCardEmissions = ({ baseFilters }) => {
-	// Breakdown the first page to make it load faster
-	let techValue
-	let dataValue;
-	const pvTechValue = getCarbonEmissions({
+	// Faster initial loading - fetch the default tech breakdown
+	const techValue = getCarbonEmissions({
 		...baseFilters,
 		breakdown: ['total{"emissions":"sum"}'],
-	});
+	})?.value;
 	
-	if (pvTechValue.resolved && pvTechValue.value) techValue = pvTechValue.value;
-	
-	const pvDataValue = getCarbonEmissions({
+	const dataValue = getCarbonEmissions({
 		...baseFilters,
-		breakdown: ['os{"co2":"sum"}', 'adid{"emissions":"sum"}', 'domain{"emissions":"sum"}', 'format{"emissions":"sum"}'],
+		breakdown: ['os{"co2":"sum"}', 'adid{"co2":"sum"}', 'domain{"co2":"sum"}', 'format{"co2":"sum"}'],
 		// breakdown: ['os{"co2":"sum"}', 'adid{"countco2":"sum"}', 'domain{"countco2":"sum"}'], // TODO Wait for new shortcut in backend
-	});
+	})?.value;
 
-	if (pvDataValue.resolved && pvDataValue.value) dataValue = pvDataValue.value;
+	const loading = <Misc.Loading text="Fetching your data..." />;
 
-	if (!techValue) {
-		return (
-			<GreenCard title='What is the breakdown of your emissions?' className='carbon-breakdown'>
-				<Misc.Loading text='Fetching your data...' />
-			</GreenCard>
-		);
-	}
+	if (!techValue) return (
+		<GreenCard title="What is the breakdown of your emissions?" className="carbon-breakdown">
+			{loading}
+		</GreenCard>
+	);
 
 	const [mode, setMode] = useState('tech');
-	
-	const datakey = { device: 'by_os', tag: 'by_adid', domain: 'by_domain', format: "by_adid" }[mode];
-	let techData = techValue['by_total']?.buckets;
+
+	const datakey = { device: 'by_os', tag: 'by_adid', domain: 'by_domain', format: 'by_adid' }[mode];
+	let techData = techValue.by_total?.buckets;
 	let data = dataValue && dataValue[datakey]?.buckets;
+
 	// Are we in carbon-per-mille mode?
 	if (isPer1000()) {
 		data = emissionsPerImpressions(data);
@@ -311,34 +370,34 @@ const BreakdownCardEmissions = ({ baseFilters }) => {
 			subcard = <TechSubcard data={techData} minimumPercentLabeled={10} />;
 			break;
 		case 'device':
-			subcard = dataValue ? <DeviceSubcard data={data} /> : <Misc.Loading text='Fetching your data...' />;
+			subcard = dataValue ? <DeviceSubcard data={data} /> : loading;
 			break;
 		case 'tag':
-			subcard = dataValue ? <TagSubcard data={data} /> : <Misc.Loading text='Fetching your data...' />;
+			subcard = dataValue ? <TagSubcard data={data} /> : loading;
 			break;
 		case 'domain':
-			subcard = dataValue ? <PubSubcard data={data} /> : <Misc.Loading text='Fetching your data...' />;
+			subcard = dataValue ? <PubSubcard data={data} /> : loading;
 			break;
 		case 'format':
-			subcard = dataValue ? <FormatSubcard data={data} minimumPercentLabeled={10} /> : <Misc.Loading text='Fetching your data...' />;
+			subcard = dataValue ? <FormatSubcard data={data} minimumPercentLabeled={10} /> : loading;
 	}
 
 	return (
-		<GreenCard title='What is the breakdown of your emissions?' className='carbon-breakdown'>
-			<ButtonGroup className='mb-2 subcard-switch'>
-				<ModeButton name='tech' mode={mode} setMode={setMode}>
+		<GreenCard title="What is the breakdown of your emissions?" className="carbon-breakdown">
+			<ButtonGroup className="mb-2 subcard-switch">
+				<ModeButton name="tech" mode={mode} setMode={setMode}>
 					Ad Tech
 				</ModeButton>
-				<ModeButton name='device' mode={mode} setMode={setMode}>
+				<ModeButton name="device" mode={mode} setMode={setMode}>
 					Device Type
 				</ModeButton>
-				<ModeButton name='tag' mode={mode} setMode={setMode}>
+				<ModeButton name="tag" mode={mode} setMode={setMode}>
 					Tag
 				</ModeButton>
-				<ModeButton name='domain' mode={mode} setMode={setMode}>
+				<ModeButton name="domain" mode={mode} setMode={setMode}>
 					Domain
 				</ModeButton>
-				<ModeButton name='format' mode={mode} setMode={setMode}>
+				<ModeButton name="format" mode={mode} setMode={setMode}>
 					Format
 				</ModeButton>
 			</ButtonGroup>
@@ -351,116 +410,5 @@ const BreakdownCardEmissions = ({ baseFilters }) => {
 	);
 };
 
-const FormatSubcard = ({ data, minimumPercentLabeled = 1}) => {
-
-	if (!yessy(data)) return NOEMISSIONS;
-
-	const [chartProps, setChartProps] = useState();
-	useEffect(() => {
-		const pvTags = getTagsEmissions(data);
-		const tags = List.hits(pvTags.value) || [];
-			
-		// map tagIDs to formats
-		var tagFormats = tags.reduce((acc, cur) => {
-			acc[cur.id] = cur.format;
-			return acc;
-			},
-			{}
-		)
-		
-		// map tagIDs to co2
-		var tagEm = data.reduce((acc, cur) => {
-			acc[cur.key] = cur.co2;
-			return acc
-		},
-		{}
-		)
-
-		// group tagIDs by format & sum their co2
-		var formatEm = Object.keys(tagFormats).reduce((mapping, id) => {
-			var format = tagFormats[id]
-			if(mapping.hasOwnProperty(format)){
-				mapping[format] += tagEm[id]
-			} else {
-				mapping[format] = tagEm[id]
-			}
-			return mapping
-		},
-		{}
-		)
-		
-		// transform above mapping into usable data for chart
-		data = Object.values(formatEm)
-		const formatLabels = Object.keys(formatEm)
-
-		// begin defining chart
-		let unit = 'kg';
-		let unitShort = 'kg';
-		let totalCO2 = sum(data)
-
-		if (Math.max(...data) > TONNES_THRESHOLD) {
-			unit = 'tonnes';
-			unitShort = 't';
-			data = data.map((v) => v / 1000);
-			totalCO2 /= 1000
-		}
-
-		setChartProps({
-			data: {
-				labels:  formatLabels,
-				datasets: [
-					{
-						label: 'Kg CO2',
-						backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
-						data: data,
-					},
-				],
-			},
-			options: {
-				layout: { autoPadding: true, padding: 5 },
-				plugins: {
-					legend: {
-						position: (ctx) => (ctx.chart.width < 250 ? 'left' : 'top'),
-						labels: { boxWidth: 20 },
-					},
-					tooltip: {
-						callbacks: {
-							label: (ctx) => ` ${printer.prettyNumber(ctx.dataset.data[ctx.dataIndex])} kg`,
-							title: (ctx) => ctx[0].label,
-						},
-					},
-					datalabels: {
-						labels: {
-							value: {
-								color: '#fff',
-								textStrokeColor: '#666',
-								textStrokeWidth: 2,
-								font: (ctx) => ({
-									family: 'Montserrat',
-									weight: 'bold',
-									size: Math.round(Math.min(ctx.chart.chartArea.width, ctx.chart.chartArea.height) / 7),
-								}),
-								formatter: (value = 1) => {
-									const percentage = Math.round((value * 100) / totalCO2);
-									return percentage >= minimumPercentLabeled ? `${percentage}%` : '';
-								},
-							},
-						},
-					},
-				},
-			},
-		});
-	}, []);
-
-	if (!chartProps) return null;
-	if (chartProps?.isEmpty) return NOEMISSIONS;
-
-	return (
-		<>
-			<p>{CO2e} emissions due to...</p>
-			<NewChartWidget type='pie' {...chartProps} datalabels />
-		</>
-	)
-}
 
 export default BreakdownCardEmissions;
