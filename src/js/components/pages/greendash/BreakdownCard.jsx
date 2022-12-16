@@ -8,7 +8,7 @@ import { CO2e, dataColours, GreenCard, GreenCardAbout, ModeButton, NOEMISSIONS, 
 import SimpleTable, { Column } from '../../../base/components/SimpleTable';
 import List from '../../../base/data/List';
 import { ButtonGroup } from 'reactstrap';
-import { emissionsPerImpressions, getBreakdownBy, getCompressedBreakdown, getSumColumn, getTags, getCarbon, } from './emissionscalc';
+import { emissionsPerImpressions, getBreakdownBy, getCompressedBreakdown, getSumColumn, getTags, getCarbon } from './emissionscalc';
 import { isPer1000 } from './GreenMetrics';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import '../../../../style/greendash-breakdown-card.less';
@@ -89,7 +89,7 @@ const FormatSubcard = ({ data, minimumPercentLabeled = 1}) => {
 
 	const [chartProps, setChartProps] = useState();
 	useEffect(() => {
-		const pvTags = getTagsEmissions(data);
+		const pvTags = getTags(data);
 		const tags = List.hits(pvTags.value) || [];
 
 		// map tagIDs to formats
@@ -325,12 +325,12 @@ const PubSubcard = ({ data }) => {
  */
 const BreakdownCard = ({ baseFilters }) => {
 	// Faster initial loading - fetch the default tech breakdown
-	const techValue = getCarbonEmissions({
+	const techValue = getCarbon({
 		...baseFilters,
 		breakdown: ['total{"emissions":"sum"}'],
 	})?.value;
 	
-	const dataValue = getCarbonEmissions({
+	const dataValue = getCarbon({
 		...baseFilters,
 		breakdown: ['os{"co2":"sum"}', 'adid{"co2":"sum"}', 'domain{"co2":"sum"}', 'format{"co2":"sum"}'],
 		// breakdown: ['os{"co2":"sum"}', 'adid{"countco2":"sum"}', 'domain{"countco2":"sum"}'], // TODO Wait for new shortcut in backend
