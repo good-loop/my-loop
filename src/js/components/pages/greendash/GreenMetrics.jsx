@@ -269,11 +269,9 @@ const GreenMetrics = ({}) => {
 		});
 	}, [Login.getId()]);
 
-	let content;
-
-	if (!Login.isLoggedIn()) {
-		// Only for logged-in users!
-		content = (
+	// Only for logged-in users!
+	if (!Login.isLoggedIn()) return (
+		<Container>
 			<Card body id="green-login-card" className="m-4">
 				<Container>
 					<Row>
@@ -292,21 +290,17 @@ const GreenMetrics = ({}) => {
 					</Row>
 				</Container>
 			</Card>
-		);
-	} else if (!agencyIds) {
-		content = <Misc.Loading text="Checking your access..." />;
-	} else {
-		content = (
-			<>
-				<GreenDashboardFilters />
-				<GreenMetrics2 />
-			</>
-		);
-	}
+		</Container>
+	);
 
 	return (
 		<div className="green-subpage green-metrics">
-			<Container fluid>{content}</Container>
+			<Container fluid>
+				{agencyIds ? <>
+					<GreenDashboardFilters />
+					<GreenMetrics2 />
+				</> : <Misc.Loading text="Checking your access..." />}
+			</Container>
 		</div>
 	);
 };
