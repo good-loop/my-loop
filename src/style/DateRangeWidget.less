@@ -1,0 +1,118 @@
+@import '../js/base/style/colours.less';
+
+@select-radius: 0.5em;
+
+
+// The date range selector widget (TODO Pull this out as a PropControl?)
+.select-date-range {
+	display: flex;
+	flex-direction: row;
+	text-transform: none;
+	margin: 0.5rem 1rem;
+
+	.months-container {
+		position: relative; // position reference for next/prev month buttons
+		display: flex;
+		flex-direction: row;
+		max-width: 100vw;
+		justify-content: space-around;
+		.shift-focus {
+			position: absolute;
+			top: 0;
+			&.prev {
+				left: 0;
+			}
+			&.next {
+				right: 0;
+			}
+		}
+	}
+	.presets-container {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		margin-left: 0.5rem;
+		.preset {
+			white-space: nowrap; // take necessary width
+		}
+	}
+
+	.month {
+		text-align: center;
+		&:not(:first-child) {
+			margin-left: 0.5rem;
+		}
+		.month-name {
+			padding: 0.1rem 0.3rem;
+			border-radius: @select-radius;
+			&:hover {
+				background-color: @greenmedia-darkcyan;
+				color: white;
+			}
+		}
+		
+		.day-names {
+			th { font-weight: normal; } // override browser-standard bold weight
+		}
+		.day {
+			line-height: 1;
+			padding: 0.3em 0.25em;
+			text-align: center;
+			&.selected {
+				background-color: @greenmedia-darkcyan;
+				color: white;
+			}
+			&.sel-start {
+				border-top-left-radius: @select-radius;
+				border-bottom-left-radius: @select-radius;
+			}
+			&.sel-end {
+				border-top-right-radius: @select-radius;
+				border-bottom-right-radius: @select-radius;
+			}
+			&:hover {
+				cursor: pointer;
+				&.cont {
+					cursor: default;
+				}
+			}
+			&.future {
+				background-color: @gl-light-grey;
+				&.selected {
+					background-color: @green-highlight;
+					color: white;
+				}
+			}
+			&.hovered {
+				background-color: @greenmedia-green !important;
+				color: white !important;
+			}
+			&.cont-prev {
+				clip-path: polygon(0% -2%, 20% 50%, 0% 102%, 102% 102%, 102% -2%);
+			}
+			&.cont-next {
+				clip-path: polygon(-2% -2%, -2% 102%, 80% 102%, 100% 50%, 80% -2%);
+			}
+		}
+	}
+}
+
+@media (max-width: 767px) {
+	.select-date-range {
+		flex-direction: column;
+
+		.month:not(.this-month) {
+			display: none;
+		}
+
+		.presets-container {
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: space-around;
+			.preset {
+				width: 15em;
+				margin-bottom: 0.5em;
+			}
+		}
+	}
+}
