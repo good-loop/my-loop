@@ -27,54 +27,55 @@ import { getProfile } from '../../base/data/Person';
  * @returns 
  */
 export const MyDataCard = ({img, info, className, innerClassName, children}) => {
-    //assMatch(img, "String|Function");
-    let imgComponent = _.isString(img) && <BG src={img} className="w-100" ratio={30} center/>;
-    if (!imgComponent) imgComponent = img; // && _.isFunction(img)) ImgComponent = img; 
+	//assMatch(img, "String|Function");
+	let imgComponent = _.isString(img) && <BG src={img} className="w-100" ratio={30} center/>;
+	if (!imgComponent) imgComponent = img; // && _.isFunction(img)) ImgComponent = img; 
 
-    return <div className={space("mydata-card", className)}>
-        {imgComponent}
-        {info && <Help className="more-info-btn" icon="?" children={info} />}
-        <div className={space("card-content", innerClassName)}>
-            {children}
-        </div>
-    </div>
+	return <div className={space("mydata-card", className)}>
+		{imgComponent}
+		{info && <Help className="more-info-btn" icon="?" children={info} />}
+		<div className={space("card-content", innerClassName)}>
+			{children}
+		</div>
+	</div>
 };
 
 
 export const CharitySelectCard = ({cid, item}) => {
-    let ngo = item;
+	let ngo = item;
 
-    if (!ngo) {
-        let pvCharity = getDataItem({ type: 'NGO', id: cid });
-        if (!pvCharity.resolved) {
-            return null;
-        }
-        ngo = pvCharity.value;
-    }
+	if (!ngo) {
+		let pvCharity = getDataItem({ type: 'NGO', id: cid });
+		if (!pvCharity.resolved) {
+			return null;
+		}
+		ngo = pvCharity.value;
+	}
 
-    assert(getId(ngo), ngo);
+	assert(getId(ngo), ngo);
 
-    if (!cid) cid = getId(ngo);
+	if (!cid) cid = getId(ngo);
 
-    const onClick = () => {
-        assert(Login.isLoggedIn());
-        const pvPerson = getProfile();
-        Person.setHasApp(pvPerson.value || pvPerson.interim, "my.data");
-        nextSignupPage(); // Not calling next page in the fallback of setPersonSetting to advoid unneccessary loading time
-        setPersonSetting({key: "charity", value: cid});
-    }
+	const onClick = () => {
+		assert(Login.isLoggedIn());
+		const pvPerson = getProfile();
+		Person.setHasApp(pvPerson.value || pvPerson.interim, "my.data");
+		nextSignupPage(); // Not calling next page in the fallback of setPersonSetting to advoid unneccessary loading time
+		setPersonSetting({key: "charity", value: cid});
+	}
 
-    return <MyDataCard className="mydata-card charity-card"
-                img={<NGOImage bg header ratio={30} center className="w-100" ngo={ngo} src="/img/mydata/charity-default.png" />}
-                info={<NGODescription extended ngo={ngo}/>}
-            >
-        <CharityLogo charity={ngo}/>
-        <NGODescription summarize ngo={ngo} />
-        <div className="button-container">
-            <Button color="primary" onClick={onClick}>Select</Button>
-        </div>
-    </MyDataCard>
-
+	return (
+		<MyDataCard className="mydata-card charity-card"
+			img={<NGOImage bg header ratio={30} center className="w-100" ngo={ngo} src="/img/mydata/charity-default.png" />}
+			info={<NGODescription extended ngo={ngo}/>}
+		>
+			<CharityLogo charity={ngo}/>
+			<NGODescription summarize ngo={ngo} />
+			<div className="button-container">
+				<Button color="primary" onClick={onClick}>Select</Button>
+			</div>
+		</MyDataCard>
+	);
 };
 
 /**
@@ -84,27 +85,26 @@ export const CharitySelectCard = ({cid, item}) => {
  * @returns 
  */
 export const Steps = ({step, steps}) => {
+	assert(steps);
 
-    assert(steps);
+	const StepCircle = ({idx, active}) => <>
+		<div className={space("step-circle", active==idx && "step-circle-active", active > idx && "step-circle-completed")}/>
+		{idx != steps.length - 1 && <div className={space("step-circle-connector", active > idx && "step-circle-connector-completed")} />}
+	</>;
 
-    const StepCircle = ({idx, active}) => <>
-        <div className={space("step-circle", active==idx && "step-circle-active", active > idx && "step-circle-completed")}/>
-        {idx != steps.length - 1 && <div className={space("step-circle-connector", active > idx && "step-circle-connector-completed")} />}
-    </>;
+	const StepLabel = ({idx, active}) => <>
+		<span className={space("step-label", active==idx && "step-label-active")}>{steps[idx]}</span>
+		{idx != steps.length - 1 && <div className="step-label-spacer"/>}
+	</>;
 
-    const StepLabel = ({idx, active}) => <>
-        <span className={space("step-label", active==idx && "step-label-active")}>{steps[idx]}</span>
-        {idx != steps.length - 1 && <div className="step-label-spacer"/>}
-    </>;
-
-    return (<div className="steps-graphic">
-        <div className="step-circles d-flex flex-row justify-content-between align-items-center">
-            {steps.map((e, i) => <StepCircle idx={i} active={step} key={i}/>)}
-        </div>
-        <div className="step-labels d-flex flex-row justify-content-between align-items-start">
-            {steps.map((e, i) => <StepLabel idx={i} active={step} key={i}/>)}
-        </div>
-    </div>)
+	return (<div className="steps-graphic">
+		<div className="step-circles d-flex flex-row justify-content-between align-items-center">
+			{steps.map((e, i) => <StepCircle idx={i} active={step} key={i}/>)}
+		</div>
+		<div className="step-labels d-flex flex-row justify-content-between align-items-start">
+			{steps.map((e, i) => <StepLabel idx={i} active={step} key={i}/>)}
+		</div>
+	</div>);
 };
 
 /**
@@ -113,53 +113,53 @@ export const Steps = ({step, steps}) => {
  * @returns 
  */
 export const ProfileCreationSteps = ({step}) => {
-    const pvNgo = getCharityObject();
-    let ngo = null;
-    if (pvNgo) ngo = pvNgo.value || pvNgo.interim;
+	const pvNgo = getCharityObject();
+	let ngo = null;
+	if (pvNgo) ngo = pvNgo.value || pvNgo.interim;
 
-    const steps = [
-        <>
-            <span>You selected</span>
-            {ngo && <CharityLogo charity={ngo} className="charity-logo-sm" nameCap={10}/>}
-        </>,
-        "Build your profile",
-        <>
-            <span>Ready to help</span>
-            {ngo && <CharityLogo charity={ngo} className="charity-logo-sm" nameCap={10}/>}
-        </>
-    ];
+	const steps = [
+		<>
+			<span>You selected</span>
+			{ngo && <CharityLogo charity={ngo} className="charity-logo-sm" nameCap={10}/>}
+		</>,
+		"Build your profile",
+		<>
+			<span>Ready to help</span>
+			{ngo && <CharityLogo charity={ngo} className="charity-logo-sm" nameCap={10}/>}
+		</>
+	];
 
-    return <Steps step={step} steps={steps}/>;
+	return <Steps step={step} steps={steps}/>;
 };
 
 export const ProfileDotRow = ({className, children}) => {
-    return <Row className={space(className, "align-items-stretch profile-dot-row")}>
-        {children}
-    </Row>
+	return <Row className={space(className, "align-items-stretch profile-dot-row")}>
+		{children}
+	</Row>
 };
 
 export const ProfileDot = ({className, imgUrl, children}) => {
-    if (!imgUrl) imgUrl = "/img/mydata/supporting.png"
-    const dotSize = '2rem';
-    return (
-        <Col md={4} className={space(className, 'd-flex align-items-center mb-3 mb-md-0')}>
-            <img src={imgUrl} className="mr-2" style={{width:dotSize}}/>
-            {children}
-        </Col>
-    )
+	if (!imgUrl) imgUrl = "/img/mydata/supporting.png"
+	const dotSize = '2rem';
+	return (
+		<Col md={4} className={space(className, 'd-flex align-items-center mb-3 mb-md-0')}>
+			<img src={imgUrl} className="mr-2" style={{width:dotSize}}/>
+			{children}
+		</Col>
+	)
 };
 
 export const SkipNextBtn = ({skip}) => {
-    return (
-        <Row className='my-3'>
-            <Col xs={6}>
-            </Col>
-            <Col xs={6} className="d-flex align-items-center justify-content-around p-0">
-                {skip && <a className='skip-btn' style={{textDecoration:'underline'}} onClick={nextSignupPage}>Skip</a>}
-                <a className='btn btn-primary next-btn' onClick={nextSignupPage}>Next</a>
-            </Col>
-        </Row>
-    )
+	return (
+		<Row className="my-3">
+			<Col xs={6}>
+			</Col>
+			<Col xs={6} className="d-flex align-items-center justify-content-around p-0">
+				{skip && <a className="skip-btn" style={{textDecoration:'underline'}} onClick={nextSignupPage}>Skip</a>}
+				<a className="btn btn-primary next-btn" onClick={nextSignupPage}>Next</a>
+			</Col>
+		</Row>
+	)
 }
 
 /**
@@ -181,28 +181,28 @@ export const CollapseableCard = ({ title, defaultCollapse, headerIMG, className,
 	const [open, setOpen] = useState(defaultCollapse);
 	const toggle = () => setOpen(!open);
 
-    const arrowOpen = upArrow ? "down" : "up";
-    const arrowClosed = upArrow ? "up" : "down";
-    const arrowState = open ? arrowOpen : arrowClosed;
+	const arrowOpen = upArrow ? "down" : "up";
+	const arrowClosed = upArrow ? "up" : "down";
+	const arrowState = open ? arrowOpen : arrowClosed;
 
-    const Arrow = () => <span className='text-muted' style={{ fontSize: '1.5rem' }}>
-        <img style={{width:"2rem",height:"2rem"}} src={"img/mydata/arrow-"+arrowState+(whiteArrows ? "-white" : "")+".svg"} />
-    </span>;
+	const Arrow = () => <span className="text-muted" style={{ fontSize: '1.5rem' }}>
+		<img style={{width:"2rem",height:"2rem"}} src={"img/mydata/arrow-"+arrowState+(whiteArrows ? "-white" : "")+".svg"} />
+	</span>;
 
-    let flexDirection = "row";
-    if (arrowPosition === "left") flexDirection = "row-reverse";
-    else if (arrowPosition === "bottom") flexDirection = "column";
-    else if (arrowPosition === "top") flexDirection = "column-reverse";
-    flexDirection = "flex-" + flexDirection;
-    
+	let flexDirection = "row";
+	if (arrowPosition === "left") flexDirection = "row-reverse";
+	else if (arrowPosition === "bottom") flexDirection = "column";
+	else if (arrowPosition === "top") flexDirection = "column-reverse";
+	flexDirection = "flex-" + flexDirection;
+	
 	return (
 		<MyDataCard
 			className={space("my-3 collapseable-card", className)}
 			img={headerIMG}
-            innerClassName={innerClassName}
+			innerClassName={innerClassName}
 		>
 			<a onClick={toggle}> <div className={space("d-flex justify-content-between align-items-center", flexDirection)}>
-				<TitleTag className='m-0'>{title}</TitleTag>
+				<TitleTag className="m-0">{title}</TitleTag>
 				<Arrow/>
 			</div></a>
 			<Collapse isOpen={open}>
@@ -217,8 +217,8 @@ export const CollapseableCard = ({ title, defaultCollapse, headerIMG, className,
  * @returns {Boolean} true if it is an email address
  */
 export const isEmail = (email) => {
-    const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return regex.test(String(email).toLowerCase());
+	const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	return regex.test(String(email).toLowerCase());
 }
 
 
@@ -234,17 +234,17 @@ export const isEmail = (email) => {
 	let schedcon = pvMyAds.value && List.first(pvMyAds.value);
 	let adid = schedcon && schedcon.adid;
 
-    if (!adid) return null;
+	if (!adid) return null;
 
-    // Check ad exists as published
-    let pvAd = getDataItem({type: "Advert", status: KStatus.PUBLISHED, swallow:true, id:adid});
-    return pvAd;
+	// Check ad exists as published
+	let pvAd = getDataItem({type: "Advert", status: KStatus.PUBLISHED, swallow:true, id:adid});
+	return pvAd;
 
-    // if ( TODO ! adid) {
+	// if ( TODO ! adid) {
 	// 	return <p>No ad available.</p>
 	// }
 	// query datalog for evt:minview vert:adid BUT need the adunit here to log your user id!
-    //return adid;
+	//return adid;
 }
 
 /**
@@ -254,13 +254,13 @@ export const isEmail = (email) => {
  * @returns {Boolean}
  */
 export const hasWatchedThisWeeksAd = (adid) => {
-    if (!adid) {
-        const pvAd = getThisWeeksAd();
-        adid = pvAd && pvAd.resolved && pvAd.value && pvAd.value.id;
-    }
-    //const adid = id || getThisWeeksAd();
-    //console.log("AD ID????", adid);
-    if (!adid) return true;
+	if (!adid) {
+		const pvAd = getThisWeeksAd();
+		adid = pvAd && pvAd.resolved && pvAd.value && pvAd.value.id;
+	}
+	//const adid = id || getThisWeeksAd();
+	//console.log("AD ID????", adid);
+	if (!adid) return true;
 
 	let sq = new SearchQuery("evt:minview");
 	sq = SearchQuery.setProp(sq, "vert", adid);
@@ -268,16 +268,16 @@ export const hasWatchedThisWeeksAd = (adid) => {
 	let q = sq.query;
 	const pvData = getDataLogData({dataspace:"gl",q, start:"3 months ago",end:"now",name:"watched-this-weeks",});
 	
-    return !!(pvData.value && pvData.value.allCount);
+	return !!(pvData.value && pvData.value.allCount);
 }
 
 
 export const hasRegisteredForMyData = () => {
-    const xid = Login.getId();
-    if (!xid) return false; // escape if not logged in
+	const xid = Login.getId();
+	if (!xid) return false; // escape if not logged in
 	const pvPerson = getProfile();
 	const hasMyData = Person.hasApp(pvPerson.value || pvPerson.interim, "my.data");
-    // console.log("HAS MY DATA??", hasMyData);
+	// console.log("HAS MY DATA??", hasMyData);
 
 	return hasMyData;
 };

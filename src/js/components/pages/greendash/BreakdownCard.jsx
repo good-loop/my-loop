@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from 'react';
 
-import Icon from '../../../base/components/Icon';
 import Misc from '../../../base/components/Misc';
-import { ellipsize, sum, yessy } from '../../../base/utils/miscutils';
+import { yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import NewChartWidget from '../../../base/components/NewChartWidget';
 import { CO2e, dataColours, GreenCard, GreenCardAbout, ModeButton, NOEMISSIONS, TONNES_THRESHOLD } from './dashutils';
 import SimpleTable, { Column } from '../../../base/components/SimpleTable';
 import List from '../../../base/data/List';
-import { ButtonGroup, Button } from 'reactstrap';
-import {
-	emissionsPerImpressions,
-	getBreakdownByEmissions,
-	getCompressedBreakdown,
-	getSumColumnEmissions,
-	getTagsEmissions,
-	getCarbonEmissions,
-} from './emissionscalc';
-import { isPer1000 } from './GreenMetricsEmissions';
+import { ButtonGroup } from 'reactstrap';
+import { emissionsPerImpressions, getBreakdownBy, getCompressedBreakdown, getSumColumn, getTags, getCarbon, } from './emissionscalc';
+import { isPer1000 } from './GreenMetrics';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import '../../../../style/greendash-breakdown-card.less';
 
@@ -172,9 +164,9 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1 }) => {
 	const [chartProps, setChartProps] = useState();
 
 	useEffect(() => {
-		let media = getSumColumnEmissions(osBuckets, 'co2creative');
-		let publisher = getSumColumnEmissions(osBuckets, 'co2base');
-		let dsp = getSumColumnEmissions(osBuckets, 'co2supplypath');
+		let media = getSumColumn(osBuckets, 'co2creative');
+		let publisher = getSumColumn(osBuckets, 'co2base');
+		let dsp = getSumColumn(osBuckets, 'co2supplypath');
 
 		const totalCO2 = media + dsp + publisher;
 
@@ -218,7 +210,7 @@ const DeviceSubcard = ({ data: osTable }) => {
 
 	useEffect(() => {
 		// TODO refactor to share code with CompareCardEmissions.jsx
-		const breakdownByOS = getBreakdownByEmissions(osTable, 'co2', 'os');
+		const breakdownByOS = getBreakdownBy(osTable, 'co2', 'os');
 		const totalCO2 = Object.values(breakdownByOS).reduce((acc, v) => acc + v, 0);
 
 		if (totalCO2 === 0) {
@@ -280,7 +272,7 @@ const CellWithTitle = (value) => <span title="value">{value}</span>;
 const TagSubcard = ({ data }) => {
 	if (!yessy(data)) return NOEMISSIONS;
 	// map GreenTag id to a display-name
-	const pvTags = getTagsEmissions(data);
+	const pvTags = getTags(data);
 	const tags = List.hits(pvTags.value) || [];
 	const tag4id = {};
 	tags.forEach((tag) => (tag4id[tag.id] = tag));
@@ -331,7 +323,7 @@ const PubSubcard = ({ data }) => {
  * @param {Object} p
  * @param {Object} p.dataValue pvChartData.value Which are split by breakdown: os, adid,
  */
-const BreakdownCardEmissions = ({ baseFilters }) => {
+const BreakdownCard = ({ baseFilters }) => {
 	// Faster initial loading - fetch the default tech breakdown
 	const techValue = getCarbonEmissions({
 		...baseFilters,
@@ -410,5 +402,4 @@ const BreakdownCardEmissions = ({ baseFilters }) => {
 	);
 };
 
-
-export default BreakdownCardEmissions;
+export default BreakdownCard;

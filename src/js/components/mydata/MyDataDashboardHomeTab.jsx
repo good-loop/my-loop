@@ -33,12 +33,12 @@ const LatestNewsCard = () => {
 
 	return (<>
 	<h1>Latest News</h1>
-	<Container className='latest-news-card border border-dark rounded'>
+	<Container className="latest-news-card border border-dark rounded">
 		<Row id="latest-news-title-tab">
 		</Row>
 		<Row id="latest-news-content">
 			<Col xs={4}>
-			<img src="/img/placeholder-circle.png" className='w-100' alt="" />
+			<img src="/img/placeholder-circle.png" className="w-100" alt="" />
 			</Col>
 			<Col xs={8}>
 				<p>Complete Your Profile To Unlock More Donations for {ngo && ngo.name}.</p>
@@ -51,14 +51,14 @@ const LatestNewsCard = () => {
 const AchievementCard = () => {
 	return (<>
 		<h1 className="mt-4">Our Community Impact</h1>
-		<Container className='dashboard-card achievements'>
-			<Container className='together-we-raised'>
+		<Container className="dashboard-card achievements">
+			<Container className="together-we-raised">
 				<h3>Together we've raised</h3>
 				<h1>&lt;&nbsp;<TickerTotal />&nbsp;&gt;</h1>
 				<h3>For global causes</h3>
 
 				<Container className="d-flex flex-row justify-content-center">
-					<img src="/img/mydata/world-impact.png" className='img-lg' />
+					<img src="/img/mydata/world-impact.png" className="img-lg" />
 				</Container>
 
 				<Container className="my-2 py-2 text-white">
@@ -190,7 +190,7 @@ const SignUpForMyDataCard = () => {
 				<p className="text-center">
 					Sign up for My-Data today
 					<br />
-					Share your online data with us  and we’ll transform it into money for good causes.
+					Share your online data with us and we’ll transform it into money for good causes.
 				</p>
 				<MyDataSignUpButton />
 			</Col>
@@ -238,24 +238,22 @@ const MyDataDashboardHomeTab = () => {
 
 	return (<>
 		{/*<LatestNewsCard />*/}
-
 		{/*		deprecated in 12/09/2022 due to my-data pause
-		<br/> 
-		 { (!hasMyData || !dataCompleteIsh) &&
-			<CompleteDataCTA ngo={ngo} 
-			link={<>
-				  <p className="text-black m-0">Complete your data profile to raise even more for {ngo && NGO.displayName(ngo) || "charity"}!</p>
-				  <br/>
-				  
-				  {//onClick doesn't seem to work with C.A}
-				  {!hasMyData 
-				  	? <a onClick={showMyDataSignUpModal} style={{textDecoration: "underline"}}>Find out more</a>
-					: <C.A href={"/account?tab=profile"} style={{textDecoration: "underline"}}>Complete your profile</C.A>
-			      }
+		<br/>
+		{(!hasMyData || !dataCompleteIsh) &&
+			<CompleteDataCTA ngo={ngo}
+				link={<>
+					<p className="text-black m-0">Complete your data profile to raise even more for {ngo && NGO.displayName(ngo) || "charity"}!</p>
+					<br/>
+					{//onClick doesn't seem to work with C.A}
+					{!hasMyData ? (
+						<a onClick={showMyDataSignUpModal} style={{textDecoration: "underline"}}>Find out more</a>
+					) : (
+						<C.A href={"/account?tab=profile"} style={{textDecoration: "underline"}}>Complete your profile</C.A>
+					)}
 				</>} 
 			/>
-		*/
-		}
+		*/}
 		<br />
 		<hr />
 		<div className="bg-gl-lighter-blue-gradient dashboard-bg">
@@ -310,7 +308,7 @@ const FeedbackCard = () => {
 			<Col className="d-flex flex-column align-items-center justify-content-center">
 				<Form onSubmit={sendFeedback} className=" w-100 d-flex flex-column align-items-center justify-content-center">
 					<PropControl label="Your Message" className="w-100 d-flex flex-column align-items-center justify-content-center" disabled={sent} type="textarea" rows={5} prop="message" path={["widget", "feedback"]} />
-					<Button disabled={sent} color="primary" className='mx-auto mt-2 w-50' onClick={sendFeedback}>Send</Button>
+					<Button disabled={sent} color="primary" className="mx-auto mt-2 w-50" onClick={sendFeedback}>Send</Button>
 				</Form>
 				{sent && <Alert color="success">Thank you - Your message has been sent.</Alert>}
 			</Col>

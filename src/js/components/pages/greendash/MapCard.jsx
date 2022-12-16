@@ -4,8 +4,8 @@ import { DownloadCSVLink } from '../../../base/components/SimpleTable';
 import { space, stopEvent } from '../../../base/utils/miscutils';
 import Misc from '../../../MiscOverrides';
 import { dataColours, GreenCard } from './dashutils';
-import { emissionsPerImpressions, getCarbonEmissions } from './emissionscalc';
-import { isPer1000 } from './GreenMetricsEmissions';
+import { emissionsPerImpressions, getCarbon } from './emissionscalc';
+import { isPer1000 } from './GreenMetrics';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import CSS from '../../../../style/green-map-card.less';
 
@@ -167,10 +167,10 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 
 			labels.push(
 				<g key={`label-${id}`}>
-					<text className='map-label-name' x={cx} y={cy} textAnchor='middle' transform={`translate(0 ${-transY})`} fontWeight='600'>
+					<text className="map-label-name" x={cx} y={cy} textAnchor="middle" transform={`translate(0 ${-transY})`} fontWeight="600">
 						{props.name}
 					</text>
-					<text className='map-label-carbon' x={cx} y={cy} textAnchor='middle' transform={`translate(0 ${transY})`}>
+					<text className="map-label-carbon" x={cx} y={cy} textAnchor="middle" transform={`translate(0 ${transY})`}>
 						{carbon.toFixed(2)} {unit}
 					</text>
 				</g>
@@ -179,8 +179,8 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 	});
 
 	return (
-		<div className='map-container text-center'>
-			<svg className='map-svg' version='1.1' {...mapDefs.svgAttributes} xmlns='http://www.w3.org/2000/svg' ref={svgRef}>
+		<div className="map-container text-center">
+			<svg className="map-svg" version="1.1" {...mapDefs.svgAttributes} xmlns="http://www.w3.org/2000/svg" ref={svgRef}>
 				{regions}
 				{labels}
 			</svg>
@@ -189,7 +189,7 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 	);
 };
 
-const MapCardEmissions = ({ baseFilters, per1000 }) => {
+const MapCard = ({ baseFilters, per1000 }) => {
 	const [mapData, setMapData] = useState('loading'); // Object mapping region ID to imps + carbon
 	const [focusRegion, setFocusRegion] = useState('world'); // ID of currently focused country
 	const [mapDefs, setMapDefs] = useState(); // JSON object with map paths and meta
@@ -238,7 +238,7 @@ const MapCardEmissions = ({ baseFilters, per1000 }) => {
 		filters.subLocationField = locationField;
 	}
 
-	const pvChartData = getCarbonEmissions(filters);
+	const pvChartData = getCarbon(filters);
 
 	useEffect(() => {
 		// Don't process data we don't have
@@ -301,19 +301,19 @@ const MapCardEmissions = ({ baseFilters, per1000 }) => {
 	const svgRef = (element) => element && setSvgEl(element);
 
 	const cardContents = <>
-		<div className='mb-2 text-center'>
+		<div className="mb-2 text-center">
 			<strong>{mapDefs?.name}</strong>
 		</div>
 		<SVGMap setFocusRegion={isWorld && setFocusRegion} mapDefs={mapDefs} data={mapData} loading={!mapData} showLabels={popOut} svgRef={svgRef} per1000={per1000} />
-		<div className='mt-2 map-controls'>
-			<span className='pull-left'>
+		<div className="mt-2 map-controls">
+			<span className="pull-left">
 				{error ? (
 					<small>{error}</small>
 				) : (
 					<MapDownloader data={mapData} {...{svgEl, mapDefs, focusRegion}} />
 				)}
 			</span>
-			<span className='pull-right'>
+			<span className="pull-right">
 				{focusPrompt}
 			</span>
 		</div>
@@ -323,16 +323,16 @@ const MapCardEmissions = ({ baseFilters, per1000 }) => {
 	const className = space('carbon-map flex-column', isPer1000() && 'taller-map');
 
 	return (
-		<GreenCard title='Where are your emissions produced?' className={className} downloadable={false}>
-			<div role='button' className='pop-out-button' onClick={() => setPopOut(true)} title="Click for larger map">
+		<GreenCard title="Where are your emissions produced?" className={className} downloadable={false}>
+			<div role="button" className="pop-out-button" onClick={() => setPopOut(true)} title="Click for larger map">
 				⇱
 			</div>
 			{!popOut && cardContents}
-			<Modal className='carbon-map' isOpen={popOut} toggle={() => setPopOut(!popOut)} size='xl'>
+			<Modal className="carbon-map" isOpen={popOut} toggle={() => setPopOut(!popOut)} size="xl">
 				<ModalBody>{popOut && cardContents}</ModalBody>
 			</Modal>
 		</GreenCard>
 	);
 };
 
-export default MapCardEmissions;
+export default MapCard;

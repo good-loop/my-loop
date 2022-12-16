@@ -71,13 +71,13 @@ export const T4GSignUpLink = ({ className, children, onClick }) => {
 
 export const T4GPluginButton = ({ className, label, dUnset }) => {
 	const browser = getBrowserVendor();
-	if (!label) label = <span className='ml-1'>{browser} Store</span>;
+	if (!label) label = <span className="ml-1">{browser} Store</span>;
 	let href = {
 		CHROME: "https://chrome.google.com/webstore/detail/good-loop-tabs-for-good/baifmdlpgkohekdoilaphabcbpnacgcm?hl=en&authuser=1",
 		EDGE: "https://microsoftedge.microsoft.com/addons/detail/goodloop-tabs-for-good/affgfbmpcboljigkpdeamhieippkglkn"
 	}[browser];
 	if (browser == 'SAFARI') {
-		label = <span className='ml-1'>Set Homepage for {browser}</span>;
+		label = <span className="ml-1">Set Homepage for {browser}</span>;
 		href = 'safari'
 		return <C.A className={space(className, "btn btn-primary", (dUnset ? "d-unset" : "d-flex-block justify-content-center align-items-center"))} href={href}><Icon name={browser.toLowerCase()} /> {label}</C.A>
 	}
@@ -115,8 +115,8 @@ export const T4GSignUpModal = () => {
 			toggle={() => showT4GSignUpModal(!show)}
 			size="lg"
 		>
-			<ModalBody className='pt-0'>
-				<CloseButton size='lg' onClick={() => showT4GSignUpModal(false)} />
+			<ModalBody className="pt-0">
+				<CloseButton size="lg" onClick={() => showT4GSignUpModal(false)} />
 
 				{charity && <CharityLogo charity={charity} />}
 				{isMobile() ? <MobileSendEmail charity={charity} />
@@ -155,38 +155,38 @@ const DesktopSignUp = ({ charity }) => {
 
 	return <Container fluid>
 		<Row>
-			<Col className='sign-up-left px-0'>
-				<BG className='welcome-text' src="/img/TabsForGood/About-t4g-blob.svg" size="contain" repeat="no-repeat" center>
-                    <h1>Welcome to Tabs For Good!</h1>
-                    <p>Create your account to start raising money for your favourite charity while you browse</p>
-                </BG>
-                <img src="/img/TabsForGood/signup-overlay.png" className='bubbles-overlay'/>
+			<Col className="sign-up-left px-0">
+				<BG className="welcome-text" src="/img/TabsForGood/About-t4g-blob.svg" size="contain" repeat="no-repeat" center>
+					<h1>Welcome to Tabs For Good!</h1>
+					<p>Create your account to start raising money for your favourite charity while you browse</p>
+				</BG>
+				<img src="/img/TabsForGood/signup-overlay.png" className="bubbles-overlay"/>
 			</Col>
-			<Col className='sign-up-right m-0 py-5 d-flex flex-column justify-content-between align-items-center h-100'>
+			<Col className="sign-up-right m-0 py-5 d-flex flex-column justify-content-between align-items-center h-100">
 				{!Login.isLoggedIn() ?
 					<>
-						<div className='d-flex flex-column justify-content-center align-items-center'>
+						<div className="d-flex flex-column justify-content-center align-items-center">
 							<img className="w-50 mb-3" src="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
 							<div className="steps-graphic">
 								<Steps step={1} />
 							</div>
 						</div>
 						<div className="w-100">
-							<LoginWidgetEmbed verb='register' product="T4G" onLogin={onRegister} onRegister={onRegister} />
+							<LoginWidgetEmbed verb="register" product="T4G" onLogin={onRegister} onRegister={onRegister} />
 							{charity && <div>This will set your charity to {NGO.displayName(charity)}. You can change settings at anytime.</div>}
 						</div>
 					</>
 					: /* Step 2 */ <div>
-						<div className='d-flex flex-column justify-content-center align-items-center'>
+						<div className="d-flex flex-column justify-content-center align-items-center">
 							<img className="w-50 mb-3" src="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
 							<div className="steps-graphic">
 								<Steps step={2} />
 							</div>
 						</div>
 						<div className="text-center px-5">
-                            <h1>Success!</h1>
-                            <p>You've signed up! Now click the button to install Tabs For Good</p>
-                            <br/>
+							<h1>Success!</h1>
+							<p>You've signed up! Now click the button to install Tabs For Good</p>
+							<br/>
 							<T4GPluginButton />
 						</div>
 					</div>
@@ -199,7 +199,7 @@ const DesktopSignUp = ({ charity }) => {
 const MobileSendEmail = ({ charity }) => {
 	return (
 		<Container fluid>
-			<div className='mobile-send-email d-flex flex-column justify-content-between align-items-center'>
+			<div className="mobile-send-email d-flex flex-column justify-content-between align-items-center">
 				<img className="hummingbird-mobile logo mt-3" src="/img/green/hummingbird.png" />
 				<img className="w-50 mb-3" src="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
 				<div style={{ textTransform: "capitalize" }}>
@@ -213,11 +213,11 @@ const MobileSendEmail = ({ charity }) => {
 
 const NotAvailableYet = ({ browser, charity }) => {
 	return (<>
-		<img src="/img/signup/hand-globe-coins.png" className='hand-globe' />
-		<div className='clearfix'>
+		<img src="/img/signup/hand-globe-coins.png" className="hand-globe" />
+		<div className="clearfix">
 			<img className="pull-right w-25 m-3" src="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="Tabs for Good" />
 		</div>
-		<div className='mx-auto w-50 d-flex flex-column align-items-center'>
+		<div className="mx-auto w-50 d-flex flex-column align-items-center">
 			<p class="mt-5">We'll send you an email to let you know when Tabs for Good is available on <span>{toTitleCase(browser)}</span></p>
 			<SubscriptionForm purpose="preregister"
 				product="T4G"

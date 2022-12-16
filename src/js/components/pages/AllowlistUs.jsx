@@ -66,7 +66,7 @@ const AllowlistUs = () => {
 				<br/> <br/>
 			</div>
 			<h1>Your adblocker is off - thank you!</h1>
-			<div className='text-center'>
+			<div className="text-center">
 				<C.A href="/newtab.html"><h3>Return to Tabs for Good</h3></C.A>
 			</div>
 		</div>

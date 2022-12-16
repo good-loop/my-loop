@@ -142,8 +142,8 @@ const MyDataDashboardPage = () => {
 
 	let activeTabId = hasMyData && DataStore.getUrlValue("tab") || "dashboard"; 
 
-	return <div className='my-data'>
-		<Container id='profile'>
+	return <div className="my-data">
+		<Container id="profile">
 			{name && <h4>{name}</h4>}
 			{locationCountry && <h5>{locationCountry}</h5>}
 			<br/>
@@ -161,7 +161,7 @@ const MyDataDashboardPage = () => {
 		{/*
 		Deprecated as of 12/09/2022 - pause of my-data means these are irrelevant
 		
-		<Container id='badges' className='d-flex justify-content-between'>
+		<Container id="badges" className="d-flex justify-content-between">
 			<MyDataBadge badgeName="Data" progress={getDataProgress()} backgroundImage="img/mydata/data-badge.png" 
 				// notification={1}  multi-level?? not in this release
 				toggle={() => toggleShowBadgeInfo("data")} />
@@ -178,7 +178,7 @@ const MyDataDashboardPage = () => {
 		</Collapse>
 		<Collapse isOpen={showBadgeInfo==="tabs"}>
 			<div className="speech-bubble bubble-mid">
-				<p>The Tab-Star badge: <C.A href='/tabsforgood'>Install {C.T4G}</C.A> then just open those tabs to raise donations and collect this badge.</p>				
+				<p>The Tab-Star badge: <C.A href="/tabsforgood">Install {C.T4G}</C.A> then just open those tabs to raise donations and collect this badge.</p>				
 			</div>
 		</Collapse>
 		<Collapse isOpen={showBadgeInfo==="ads"}>
@@ -196,12 +196,12 @@ const MyDataDashboardPage = () => {
 		<MyDataDashboardHomeTab />
 		{/*
 		<Tabs activeTabId={activeTabId} setActiveTabId={tabId => modifyPage(null, {tab:tabId})} >
-			<Tab tabId='dashboard' title={<><img src='img/mydata/home-tab.png' style={{height:'1.5rem',marginRight:'.5em'}} />HOME</>}>
+			<Tab tabId="dashboard" title={<><img src="img/mydata/home-tab.png" style={{height:'1.5rem',marginRight:'.5em'}} />HOME</>}>
 				<MyDataDashboardHomeTab />
 			</Tab>
-			<Tab tabId='profile'
+			<Tab tabId="profile"
 				title={<>
-					<img src='img/mydata/data-tab.png' style={{height:'1.5rem',marginRight:'.5em'}}/>
+					<img src="img/mydata/data-tab.png" style={{height:'1.5rem',marginRight:'.5em'}}/>
 					{hasMyData ? "DATA PROFILE" : "SIGN UP FOR MY.DATA"}
 				</>}
 				disabled={!hasMyData}

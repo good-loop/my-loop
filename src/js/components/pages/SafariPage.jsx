@@ -67,7 +67,7 @@ export const SafariPage = () => {
 			interval={false}
 		>
 			{nextButton && <>
-			<a className='btn btn-secondary btn-next-carousel' onClick={next} >{index != children.length -1 ? 'Next Step' : 'Start Again'}</a>
+			<a className="btn btn-secondary btn-next-carousel" onClick={next} >{index != children.length -1 ? 'Next Step' : 'Start Again'}</a>
 			<div className="steps-graphic d-none d-md-block">
 				<Steps step={index}/> 
 			</div></>}
@@ -95,52 +95,52 @@ export const SafariPage = () => {
 	const SlideItems = [
 		<>
 			<div className="safari-dropdown">
-				<img src="/img/safari-preference/preferences.png" className='w-75' alt="" />
-				<img src="/img/safari-preference/dropdown-preferences.png" className='dropdown-preferences' alt="" />
+				<img src="/img/safari-preference/preferences.png" className="w-75" alt="" />
+				<img src="/img/safari-preference/dropdown-preferences.png" className="dropdown-preferences" alt="" />
 			</div>
 			<p>In the Safari app on your Mac, choose Safari Preferences.</p>
 		</>,
 		<>
-			<img src="/img/safari-preference/safari-final.png" className='w-75' alt="" />
+			<img src="/img/safari-preference/safari-final.png" className="w-75" alt="" />
 			<p>Click General tab (first tab) in your Safari Preferences.</p>
 		</>,
 		<>
 			<div className="safari-dropdown">
-				<img src="/img/safari-preference/safari-final.png" className='w-75' alt="" />
-				<img src="/img/safari-preference/new-window.png" className='new-window' alt="" />
+				<img src="/img/safari-preference/safari-final.png" className="w-75" alt="" />
+				<img src="/img/safari-preference/new-window.png" className="new-window" alt="" />
 			</div>
 		<p>Make sure your Safari opens with "A new window".</p>
 	</>,
 		<>
 			<div className="safari-dropdown">
-				<img src="/img/safari-preference/safari-final.png" className='w-75' alt="" />
-				<img src="/img/safari-preference/homepage.png" className='set-homepage' alt="" />
+				<img src="/img/safari-preference/safari-final.png" className="w-75" alt="" />
+				<img src="/img/safari-preference/homepage.png" className="set-homepage" alt="" />
 			</div>
 			<p>Click the “New windows open with” pop-up menu, then choose Homepage.</p>
 		</>,
 		<>
 			<div className="safari-dropdown">
-				<img src="/img/safari-preference/safari-final.png" className='w-75' alt="" />
-				<img src="/img/safari-preference/homepage.png" className='set-homepage-2' alt="" />
+				<img src="/img/safari-preference/safari-final.png" className="w-75" alt="" />
+				<img src="/img/safari-preference/homepage.png" className="set-homepage-2" alt="" />
 			</div>
 			<p>Click the “New tabs open with” pop-up menu, then choose Homepage.</p>
 		</>,
 		<>
 			<div className="safari-dropdown">
-				<img src="/img/safari-preference/safari-final.png" className='w-75' alt="" />
-				<img src="/img/safari-preference/safari-paste.png" className='safari-paste' alt="" />
+				<img src="/img/safari-preference/safari-final.png" className="w-75" alt="" />
+				<img src="/img/safari-preference/safari-paste.png" className="safari-paste" alt="" />
 			</div>
 			<p style={{position:"relative",top:"-1rem"}}>In the Homepage field, enter the Tabs For Good address: <br/> <code>https://my.good-loop.com/newtab.html</code> <button onClick={() => {navigator.clipboard.writeText('https://my.good-loop.com/newtab.html')}} 
-					className='btn btn-primary ml-3'>Copy To Clipboard</button></p>
+					className="btn btn-primary ml-3">Copy To Clipboard</button></p>
 		</>,
 		<>
-			<img src="/img/safari-preference/safari-final.png" className='w-75' alt="" />
+			<img src="/img/safari-preference/safari-final.png" className="w-75" alt="" />
 			<p>Now, all that's left to do is to open a new tab, and you're ready to start raising money for the causes you care most about - just by browsing the internet.</p>
 		</>
 	];
 
 	const slides = SlideItems.map((content, i) => (
-		<div key={i} className='mt-1 mx-5 mb-5 text-center safari-slideshow'>
+		<div key={i} className="mt-1 mx-5 mb-5 text-center safari-slideshow">
 			{content}
 		</div>
 	));

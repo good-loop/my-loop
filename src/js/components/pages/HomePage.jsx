@@ -48,7 +48,7 @@ const HomePage = ({ spring }) => {
 			<LogoBanner logoList={['img/LandingBrand/H&M-Logo.png', 'img/LandingBrand/toms-shoes-logo.png', 'img/LandingBrand/universal-music-group-logo.png', 'img/LandingBrand/Logo_NIKE.png', 'img/LandingBrand/Unilever-logo.png']} />
 			<SlideCardsSection />
 			<NewsAwards nostars><h3 style={{ fontWeight: '600' }}>As Featured In</h3></NewsAwards>
-			<CurveTransition hummingBird curveColour='light-pink' />
+			<CurveTransition hummingBird curveColour="light-pink" />
 			<StoriesSection />
 			<DiscoverMoreCard />
 			<MovementCard />
@@ -58,22 +58,22 @@ const HomePage = ({ spring }) => {
 
 const FindOutMoreSection = () => {
 
-	return (<><BG image='img/homepage/our-mission-background-lg.svg' style={{ backgroundPosition: 'center bottom' }} >
+	return (<><BG image="img/homepage/our-mission-background-lg.svg" style={{ backgroundPosition: 'center bottom' }} >
 		<PageCard id="upper-cta" >
-			<div className='text-center'>
-				<div className='raised text-white' style={{ fontFamily: 'Montserrat' }}>
+			<div className="text-center">
+				<div className="raised text-white" style={{ fontFamily: 'Montserrat' }}>
 					<span>TOGETHER WE'VE RAISED</span> <br />
 					<TickerTotal noPennies={true} style={{ fontWeight: '900' }} /> <br />
 					<span>For Global Causes</span>
 				</div>
 				<div className="conversation-bubble position-relative d-flex align-items-center justify-content-center">
-					<img className='w-100' style={{ maxWidth: '480px' }} src="img/homepage/our-mission-blob.svg" />
-					<img className='position-absolute' style={{ width: (isMobile() ? '1024px' : '1400px'), top: (isMobile() ? '-10em' : '-13em'), left: (isMobile() ? '-18em' : '') }} src="img/homepage/our-mission-images-lg.png" />
+					<img className="w-100" style={{ maxWidth: '480px' }} src="img/homepage/our-mission-blob.svg" />
+					<img className="position-absolute" style={{ width: (isMobile() ? '1024px' : '1400px'), top: (isMobile() ? '-10em' : '-13em'), left: (isMobile() ? '-18em' : '') }} src="img/homepage/our-mission-images-lg.png" />
 					<div className="bubble-content position-absolute" style={{ top: (isMobile() ? '12%' : '20%'), margin: '0 10%', maxWidth: '400px' }}>
 						<h3 style={{ fontWeight: '600', marginBottom: '0' }}>Our Mission</h3>
 						<h5 style={{ fontWeight: 'unset' }}>Changing The World: Together</h5>
 						<p style={{ fontSize: '.9rem', marginTop: '1rem' }}>At My Good-Loop we're harnessing consumer power and advertising billions, <b>donating 50%</b> of ad spend to charity - <b>connecting you with brands to fund the causes you care most about.</b></p>
-						<a href='/ourimpact' className='text-decoration-none'><span style={{ textDecoration: "underline", fontWeight: '600' }}>Our Impact</span> →</a>
+						<a href="/ourimpact" className="text-decoration-none"><span style={{ textDecoration: "underline", fontWeight: '600' }}>Our Impact</span> →</a>
 					</div>
 				</div>
 			</div>
@@ -100,19 +100,19 @@ const SlideCardsSection = () => {
 	let OneCard = ({ cardData }) => (
 		<>
 			<div className="text-center mt-5" style={{ zIndex: '2' }}>
-				<Row style={{ height: '30em' }} className='shadow'>
-					<Col md={6} className='p-0 d-none d-md-block'>
+				<Row style={{ height: '30em' }} className="shadow">
+					<Col md={6} className="p-0 d-none d-md-block">
 						<BG image={cardData.imgUrl} className={space(cardData.imgClass, "h-100 w-100 rounded")}
 							style={{ backgroundPosition: 'center', backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }} />
 					</Col>
-					<Col md={6} className='p-0'>
-						<Card className='m-0 w-100 h-100 p-5'>
-							<CardBody className='d-flex justify-content-center'>
+					<Col md={6} className="p-0">
+						<Card className="m-0 w-100 h-100 p-5">
+							<CardBody className="d-flex justify-content-center">
 								<div>
-									<CardTitle className='color-gl-red'>
+									<CardTitle className="color-gl-red">
 										{cardData.title}
 									</CardTitle>
-									<CardText className='color-gl-darker-grey'>
+									<CardText className="color-gl-darker-grey">
 										{cardData.text}
 									</CardText>
 								</div>
@@ -124,7 +124,7 @@ const SlideCardsSection = () => {
 					</Col>
 				</Row>
 			</div>
-			<img src="img/TabsForGood/sparkle.png" className='logo my-3' />
+			<img src="img/TabsForGood/sparkle.png" className="logo my-3" />
 		</>)
 
 	/*const cardTwo = {
@@ -132,13 +132,13 @@ const SlideCardsSection = () => {
 		imgClass: 'bg-gl-lighter-blue',
 		title: <><span style={{ fontWeight: 'bold' }}>MY.DATA</span> <br />How Many Cookies Have You Accepted Today?</>,
 		text: "Don't just give your data away - control your data and convert it into charity donations with My.Data",
-		button: <><MyDataSignUpModal /><MyDataButton className="w-100" /> <ArrowLink className='w-100 color-gl-red' link="/getmydata#howitworks" >How it works</ArrowLink></>
+		button: <><MyDataSignUpModal /><MyDataButton className="w-100" /> <ArrowLink className="w-100 color-gl-red" link="/getmydata#howitworks" >How it works</ArrowLink></>
 	}*/
 
 	return (<>
 		<PageCard className="tabs-for-goods-slide-card" >
-			<h3 className='text-center' style={{ fontSize: '1.25rem' }}>Here's How You Can Get Involved</h3>
-			<p className='text-center d-none d-md-block color-gl-muddy-blue'>As Well As Our Adverts, We're Creating Some Smart Ways To Help You Do Some Good Every Day, For Free...</p>
+			<h3 className="text-center" style={{ fontSize: '1.25rem' }}>Here's How You Can Get Involved</h3>
+			<p className="text-center d-none d-md-block color-gl-muddy-blue">As Well As Our Adverts, We're Creating Some Smart Ways To Help You Do Some Good Every Day, For Free...</p>
 			{/*<TwinCards twinCardsContent={[].concat(cardOne, cardTwo)} /> */}
 			<OneCard cardData={cardOne} />
 		</PageCard>
@@ -149,17 +149,17 @@ const StoriesSection = () => {
 	const cardOne = {
 		imgUrl: 'img/ourstory/Good-Loop_UsingAdMoneyForGoodWithBG.png',
 		imgClass: 'bg-gl-light-pink',
-		title: <span className='text-uppercase' style={{ fontWeight: 'bold' }}>We can make things happen</span>,
+		title: <span className="text-uppercase" style={{ fontWeight: 'bold' }}>We can make things happen</span>,
 		text: 'Our amazing community has so far supported everything from childhood literacy to coral reef protection and Black Lives Matter.',
-		button: <ArrowLink className='w-100 color-gl-red' link="/ourimpact" >Discover Our Impact</ArrowLink>
+		button: <ArrowLink className="w-100 color-gl-red" link="/ourimpact" >Discover Our Impact</ArrowLink>
 	}
 
 	const cardTwo = {
 		imgUrl: 'img/homepage/amyanddaniel.png',
 		imgClass: 'bg-gl-blue',
-		title: <span className='text-uppercase' style={{ fontWeight: 'bold' }}>How it all began</span>,
+		title: <span className="text-uppercase" style={{ fontWeight: 'bold' }}>How it all began</span>,
 		text: 'My.Good-Loop is brought you by the team at Good-Loop, founded by Amy Williams and Daniel Winterstein.',
-		button: <ArrowLink className='w-100 color-gl-red' link="/ourstory" >Our Story</ArrowLink>
+		button: <ArrowLink className="w-100 color-gl-red" link="/ourstory" >Our Story</ArrowLink>
 	}
 
 	const testimonialOne = {
@@ -200,12 +200,12 @@ const StoriesSection = () => {
 	}
 
 	return (
-		<PageCard className='stories-section pt-0'>
-			<h3 className='text-md-center' style={{ textTransform: 'unset', fontWeight: '600' }}>The My.Good-Loop Story</h3>
-			<p className='color-gl-muddy-blue mb-0 text-md-center'>Converting the multi-billion dollar online advertising industry into a force for good - with you.</p>
+		<PageCard className="stories-section pt-0">
+			<h3 className="text-md-center" style={{ textTransform: 'unset', fontWeight: '600' }}>The My.Good-Loop Story</h3>
+			<p className="color-gl-muddy-blue mb-0 text-md-center">Converting the multi-billion dollar online advertising industry into a force for good - with you.</p>
 			<TwinCards twinCardsContent={[].concat(cardOne, cardTwo)} />
 
-			<div className='testimonials-section'>
+			<div className="testimonials-section">
 				{[].concat(testimonialOne, testimonialTwo, testimonialThree).map((testimonial, index) => {
 					let bubbleTop = '20%'
 					if (testimonial.quoteBg && testimonial.quoteBg !== 'img/homepage/testimonial-blob.svg') bubbleTop = '12%';
@@ -213,9 +213,9 @@ const StoriesSection = () => {
 					return (
 						<div className={space(testimonial.onMobileClass, 'testimonial-blob align-items-center justify-content-center mt-5 pb-5')} key={index} >
 							<img style={{ width: '480px', zIndex: '1', margin: '0 -1rem' }} src={testimonial.quoteBg} />
-							<img className='bubble-image position-absolute' style={{ zIndex: '1', maxHeight: '7rem', right: 0, bottom: '1rem' }} src={testimonial.bobLogo} />
+							<img className="bubble-image position-absolute" style={{ zIndex: '1', maxHeight: '7rem', right: 0, bottom: '1rem' }} src={testimonial.bobLogo} />
 							<div className="bubble-content position-absolute" style={{ top: bubbleTop, margin: '0 10%', maxWidth: '380px', zIndex: '2' }}>
-								<img className='logo position-absolute' style={{ top: '-3rem' }} src={testimonial.quoteImg} alt="quote" /> <br />
+								<img className="logo position-absolute" style={{ top: '-3rem' }} src={testimonial.quoteImg} alt="quote" /> <br />
 								<span className={testimonial.quoteClass} style={{ fontSize: testimonial.spanFontSize }}>{testimonial.quote}</span> <br />
 								<div className="name-title color-gl-darker-grey mt-2" style={{ fontSize: '.9rem' }}>
 									<span>{testimonial.name},</span> <br />
@@ -259,15 +259,15 @@ export const DiscoverMoreCard = ({ title = "Discover More", subtitle, discoverCo
 
 	return (
 		<PageCard>
-			<h3 className='mb-3 text-md-center' style={{ fontWeight: '600' }}>{title}</h3>
-			<p className='text-md-center color-gl-desat-blue'>{subtitle}</p>
+			<h3 className="mb-3 text-md-center" style={{ fontWeight: '600' }}>{title}</h3>
+			<p className="text-md-center color-gl-desat-blue">{subtitle}</p>
 			<Row>
 				{discoverContents.map((content, index) => {
 					return (
 						<Col key={index} xs={4} className="text-center text-nowrap d-flex flex-column justify-content-between align-items-center" >
-							<img className='shadow mx-3' style={{ maxWidth: '80px', borderRadius: '50%' }} src={content.img} />
-							<p className='m-0 mt-2 color-gl-light-blue'>{content.span}</p>
-							<a className='color-gl-muddy-blue font-weight-bold' href={content.href}>{content.linkTitle}</a>
+							<img className="shadow mx-3" style={{ maxWidth: '80px', borderRadius: '50%' }} src={content.img} />
+							<p className="m-0 mt-2 color-gl-light-blue">{content.span}</p>
+							<a className="color-gl-muddy-blue font-weight-bold" href={content.href}>{content.linkTitle}</a>
 						</Col>
 					)
 				})}
@@ -293,28 +293,28 @@ export const MovementCard = () => {
 	]
 
 	return (<>
-		<BG image='img/homepage/our-movement-background-lg.svg' style={{ backgroundPosition: 'center top' }}>
+		<BG image="img/homepage/our-movement-background-lg.svg" style={{ backgroundPosition: 'center top' }}>
 			<PageCard>
 				<div className="movement-blob position-relative d-flex align-items-center justify-content-center pb-5">
 					<img style={{ maxWidth: '480px', zIndex: '1', margin: '0 -1rem' }} src="img/homepage/movement-blob-images.svg" />
 					<div className="bubble-content position-absolute text-center" style={{ top: '18%', margin: '0 10%', maxWidth: '400px', zIndex: '2' }}>
-						<h4 className='color-gl-red'>Join Our Movement</h4>
-						<p className='color-gl-dark-grey' style={isMobile() ? { fontSize: '.9rem' } : {}} >Start Transforming Your Web Browsing And Data Into <b>Life Saving Vaccines, Meals For Children In Need, Habitats For Endangered Animals,</b> Plus Many More Good Causes.</p>
-						<ArrowLink className='color-gl-red font-weight-bold' link='/tabsforgood'>Get Involved</ArrowLink>
+						<h4 className="color-gl-red">Join Our Movement</h4>
+						<p className="color-gl-dark-grey" style={isMobile() ? { fontSize: '.9rem' } : {}} >Start Transforming Your Web Browsing And Data Into <b>Life Saving Vaccines, Meals For Children In Need, Habitats For Endangered Animals,</b> Plus Many More Good Causes.</p>
+						<ArrowLink className="color-gl-red font-weight-bold" link="/tabsforgood">Get Involved</ArrowLink>
 					</div>
 				</div>
-				<img className='position-absolute w-100 join-our-movement-bg-front' src="img/homepage/our-movement-front-curve.svg" />
+				<img className="position-absolute w-100 join-our-movement-bg-front" src="img/homepage/our-movement-front-curve.svg" />
 			</PageCard>
 		</BG>
-		<PageCard className='text-center text-white bg-gl-light-blue pt-0'>
-			<h4 className='m-0' style={{ fontWeight: '600' }}>MY.GOOD-LOOP</h4>
+		<PageCard className="text-center text-white bg-gl-light-blue pt-0">
+			<h4 className="m-0" style={{ fontWeight: '600' }}>MY.GOOD-LOOP</h4>
 			<p>By Good-Loop</p>
 			<Row>
 				{movementContents.map((content, index) => {
 					return (
 						<Col key={index} xs={12} md={4} className="text-center text-nowrap d-flex flex-column justify-content-between align-items-center" >
-							<img className='mx-3' style={{ maxWidth: '100px', borderRadius: '50%' }} src={content.img} />
-							<p className='m-0 mt-2 font-weight-bold'>{content.span}</p>
+							<img className="mx-3" style={{ maxWidth: '100px', borderRadius: '50%' }} src={content.img} />
+							<p className="m-0 mt-2 font-weight-bold">{content.span}</p>
 						</Col>
 					)
 				})}
@@ -330,16 +330,16 @@ export const MovementCard = () => {
 const JoinOurMovement = () => <>
 	<PageCard id="upper-cta" className="tabs-for-goods-slide-card" >
 		<div className="upper-cta white">
-			<h1 className='mb-4 white'>Join Our Movement!</h1>
-			<p className='leader-text text-center'>Start transforming your web browsing into life saving vaccines, meals for children in need, habitats for endangered animals, plus many more good causes.</p>
-			<img src="/img/homepage/bird-cloud.png" className='top-right' />
-			<img src="/img/signup/hand-globe-coins.png" className='top-left' />
+			<h1 className="mb-4 white">Join Our Movement!</h1>
+			<p className="leader-text text-center">Start transforming your web browsing into life saving vaccines, meals for children in need, habitats for endangered animals, plus many more good causes.</p>
+			<img src="/img/homepage/bird-cloud.png" className="top-right" />
+			<img src="/img/signup/hand-globe-coins.png" className="top-left" />
 		</div>
 		<div className="gridbox gridbox-md-2 gridbox-gap-4">
 			<Card>
 				<CardImg variant="top" src="/img/homepage/slide-1.png" />
 				<CardBody>
-					<CardTitle><h3 className='gl-dark-blue'>Tabs for Good</h3></CardTitle>
+					<CardTitle><h3 className="gl-dark-blue">Tabs for Good</h3></CardTitle>
 					<CardText>Turn your web browsing into charity donations. Easy and free.</CardText>
 					<T4GSignUpButton className="w-100" />
 					<T4GHowItWorksButton className="w-100" />
@@ -347,9 +347,9 @@ const JoinOurMovement = () => <>
 			</Card>
 			<Card>
 				<a id="mydata-cta" />
-				<CardImg className='bg-gl-dark-blue' variant="top" src="/img/mydata/onboarding-2.png" />
+				<CardImg className="bg-gl-dark-blue" variant="top" src="/img/mydata/onboarding-2.png" />
 				<CardBody>
-					<CardTitle><h3 className='gl-dark-blue'>My.Data</h3></CardTitle>
+					<CardTitle><h3 className="gl-dark-blue">My.Data</h3></CardTitle>
 					<CardText>
 						Don't just give it away - support charity with your data
 					</CardText>

@@ -44,7 +44,6 @@ const BlogCard = ({slug, title, subtitle, thumbnail, date, readTime, status}) =>
 };
 
 const BlogPage = () => {
-
 	useEffect(() => {
 		setFooterClassName("bg-white");
 	}, []);
@@ -64,7 +63,7 @@ const BlogPage = () => {
 		const blogPosts = pvBlogPosts.value && List.hits(pvBlogPosts.value);
 		guts = <>
 			<h1>Our Blog</h1>
-			<p className='leader-text mt-3 text-center'>Grab a cuppa and have a read through our feel-good news, views and opinions</p>
+			<p className="leader-text mt-3 text-center">Grab a cuppa and have a read through our feel-good news, views and opinions</p>
 			<PageCard>
 				<Row className="blog-card-row">
 					{blogPosts && blogPosts.map(blogPost =>
@@ -114,8 +113,7 @@ const BlogPage = () => {
 				bgClassName="bg-gl-desat-blue"
 				topSpace={150}
 				className="text-center pt-0"
-			>
-			</CurvePageCard>
+			/>
 		}
 		<div className="blog-cards">
 			{guts}
@@ -131,13 +129,13 @@ const BlogPage = () => {
  */
 const fetchBlogPosts = ({query, status=KStatus.PUBLISHED}) => {
 	if (!query) query = "";
-    // Campaigns with set agencies
-    let sq = new SearchQuery(query);
-    //let pvCampaigns = ActionMan.list({type: C.TYPES.Campaign, status, q});
-    // Campaigns with advertisers belonging to agency
-    let pvBlogPosts = ActionMan.list({type: C.TYPES.BlogPost, status, q:sq.query});
+	// Campaigns with set agencies
+	let sq = new SearchQuery(query);
+	//let pvCampaigns = ActionMan.list({type: C.TYPES.Campaign, status, q});
+	// Campaigns with advertisers belonging to agency
+	let pvBlogPosts = ActionMan.list({type: C.TYPES.BlogPost, status, q:sq.query});
 
-    return pvBlogPosts;
+	return pvBlogPosts;
 }
 
 /**
@@ -149,14 +147,14 @@ const fetchBlogPosts = ({query, status=KStatus.PUBLISHED}) => {
  const fetchBlogPostsBySlug = ({slug, query, status=KStatus.PUBLISHED}) => {
 	if (!slug) return {value:{hits:[]}};
 	if (!query) query = "";
-    // Campaigns with set agencies
-    let sq = new SearchQuery(query);
+	// Campaigns with set agencies
+	let sq = new SearchQuery(query);
 	sq = SearchQuery.setProp(sq, "slug", slug);
-    //let pvCampaigns = ActionMan.list({type: C.TYPES.Campaign, status, q});
-    // Campaigns with advertisers belonging to agency
-    let pvBlogPosts = ActionMan.list({type: C.TYPES.BlogPost, status, q:sq.query});
+	//let pvCampaigns = ActionMan.list({type: C.TYPES.Campaign, status, q});
+	// Campaigns with advertisers belonging to agency
+	let pvBlogPosts = ActionMan.list({type: C.TYPES.BlogPost, status, q:sq.query});
 
-    return pvBlogPosts;
+	return pvBlogPosts;
 }
 
 export default BlogPage;

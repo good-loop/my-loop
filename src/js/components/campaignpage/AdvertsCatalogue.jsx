@@ -266,7 +266,7 @@ const AdvertCard = ({ ad, active }) => {
 						<div style={{ background: "black", width: "100%", height: "100%" }}></div>
 					)}
 				</div>
-				<Button className='position-absolute' style={{bottom:0, left:"50%", transform:"translate(-50%,0)"}} color="primary" onClick={reloadAdUnit}>
+				<Button className="position-absolute" style={{bottom:0, left:"50%", transform:"translate(-50%,0)"}} color="primary" onClick={reloadAdUnit}>
 					Reload the ad
 				</Button>
 			</div>

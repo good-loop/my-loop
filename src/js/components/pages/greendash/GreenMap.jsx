@@ -120,11 +120,11 @@ const ProjectSlides = ({project}) => {
 						</CarouselItem>
 					))}
 					<CarouselControl direction="prev" directionText="Previous" onClickHandler={prev} />
-      		<CarouselControl direction="next" directionText="Next" onClickHandler={next} />
+					<CarouselControl direction="next" directionText="Next" onClickHandler={next} />
 				</Carousel>
 			</ModalBody>
 		</Modal>
-	</>
+	</>;
 };
 
 

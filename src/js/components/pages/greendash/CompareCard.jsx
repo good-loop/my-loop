@@ -11,9 +11,9 @@ import SearchQuery from '../../../base/searchquery';
 import { isoDate } from '../../../base/utils/miscutils';
 import C from '../../../C';
 import { dataColours, getPeriodQuarter, GreenCard, GreenCardAbout, ModeButton, printPeriod, TONNES_THRESHOLD } from './dashutils';
-import { emissionsPerImpressions, getCarbonEmissions, getCompressedBreakdown, getSumColumnEmissions } from './emissionscalc';
+import { emissionsPerImpressions, getCarbon, getCompressedBreakdown, getSumColumn } from './emissionscalc';
 
-import { isPer1000 } from './GreenMetricsEmissions';
+import { isPer1000 } from './GreenMetrics';
 
 
 /**
@@ -21,7 +21,7 @@ import { isPer1000 } from './GreenMetricsEmissions';
  * @param {?String} unit kg|tons
  * @returns 
  */
-const baseOptions = (unit='kg') => ({
+const baseOptions = (unit = 'kg') => ({
 	indexAxis: 'y',
 	scales: { x: { ticks: { callback: v => v+' '+unit, precision: 2 } } },
 	plugins: {
@@ -54,7 +54,7 @@ const QuartersCard = ({baseFilters}) => {
 	}
 
 	// Get total carbon for each quarter
-	let pvsBuckets = quarters.map((quarter, i) => getCarbonEmissions({
+	let pvsBuckets = quarters.map((quarter, i) => getCarbon({
 		...baseFilters,
 		start: isoDate(quarter.start),
 		end: isoDate(quarter.end),
@@ -76,7 +76,7 @@ const QuartersCard = ({baseFilters}) => {
 		if (isPer1000()) buckets = emissionsPerImpressions(buckets);
 
 		// Display kg or tonnes?
-		let thisCarbon = getSumColumnEmissions(buckets, 'co2');
+		let thisCarbon = getSumColumn(buckets, 'co2');
 		chartProps.data.datasets[0].data[i] = thisCarbon;
 
 		// Kg or tonnes? (using data-attr notation so we can dump all props into the chart without React complaining)
@@ -107,7 +107,7 @@ const QuartersCard = ({baseFilters}) => {
 
 
 const CampaignCard = ({baseFilters}) => {
-	const pvChartData = getCarbonEmissions({
+	const pvChartData = getCarbon({
 		...baseFilters,
 		breakdown: [
 			'campaign{"co2":"sum"}',
@@ -116,7 +116,7 @@ const CampaignCard = ({baseFilters}) => {
 	});
 	let dataValue = pvChartData.value;
 
-	let vbyx = {};	
+	let vbyx = {};
 	if (dataValue) {
 		let buckets = dataValue.by_campaign.buckets;
 		if (isPer1000()) {
@@ -147,7 +147,7 @@ const CampaignCard = ({baseFilters}) => {
 };
 
 
-const CompareCardEmissions = ({...props}) => {
+const CompareCard = ({...props}) => {
 	const [mode, setMode] = useState('quarter');
 	// TODO don't offer campaign biew if we're focuding on one campaign
 	const campaignModeDisabled = !! DataStore.getUrlValue("campaign");
@@ -176,4 +176,4 @@ const CompareCardEmissions = ({...props}) => {
 	</GreenCard>;
 };
 
-export default CompareCardEmissions;
+export default CompareCard;

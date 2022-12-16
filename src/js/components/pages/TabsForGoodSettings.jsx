@@ -35,10 +35,10 @@ const TabsForGoodSettings = () => {
 		<CharityPicker />
 		<br />
 		<h1>Customization</h1>
-        <h3>Theme</h3>
+		<h3>Theme</h3>
 		<T4GThemePicker />
-        <h3>Layout</h3>
-        <T4GLayoutPicker/>
+		<h3>Layout</h3>
+		<T4GLayoutPicker/>
 	</>;
 };
 

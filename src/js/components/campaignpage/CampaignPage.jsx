@@ -150,11 +150,11 @@ const fetchIHubData2_wrapAsList = pvTopItem => {
 };
 
 const JustTheBeginning = ({ setCtaModalOpen }) => {
-	return <div className='w-100 bg-gl-pale-orange' >
+	return <div className="w-100 bg-gl-pale-orange" >
 		<PageCard className="bg-gl-desat-blue">
 			<h1 style={{color:"white",fontWeight:'bold'}}>This is just the beginning.</h1>
 			<br/>
-			<p className='white text-center'><b>See what else we're doing and join the Good-Loop movement.</b></p>
+			<p className="white text-center"><b>See what else we're doing and join the Good-Loop movement.</b></p>
 			<TriCards className="pt-0"
 				titles={["Tabs for Good", "Ad Campaigns", "Our Story"]}
 				texts={['Raise money for charity every time you open a new tab', 'Explore more examples of our campaigns', 'Meet the cofounders and discover the story of Good-Loop']}

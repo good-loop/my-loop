@@ -24,8 +24,8 @@ import { nonce } from '../../base/data/DataClass';
 /**
  * Direct copy-paste from Wikipedia: https://en.wikipedia.org/wiki/Monotone_cubic_interpolation
  * Used here to generate a nice-looking low frequency variation for the random data set
-   Monotone cubic spline interpolation
-   Usage example:
+	Monotone cubic spline interpolation
+	Usage example:
 	var f = createInterpolant([0, 1, 2, 3, 4], [0, 1, 4, 9, 16]);
 	var message = '';
 	for (var x = 0; x <= 4; x += 0.5) {
