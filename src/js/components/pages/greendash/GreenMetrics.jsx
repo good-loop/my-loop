@@ -222,7 +222,6 @@ const GreenMetrics2 = ({}) => {
 				<Col xs="12" sm="4" className="flex-column">
 					<JourneyCard
 						campaigns={List.hits(pvCampaigns?.value)}
-						dataByTime={pvChartData.value?.by_time.buckets}
 						{...commonProps}
 						emptyTable={emptyTable || noData}
 					/>

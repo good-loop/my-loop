@@ -1,18 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+
+import { isEqual } from 'lodash';
+
 import Misc from '../../../base/components/Misc';
 import Logo from '../../../base/components/Logo';
 import Campaign from '../../../base/data/Campaign';
 import DataStore from '../../../base/plumbing/DataStore';
+import { pivotDataLogToRows } from '../../../base/plumbing/DataLog';
 
 import { A } from '../../../base/plumbing/glrouter';
 import { encURI } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
-import { getOffsetsByType } from './emissionscalc';
+import { getCarbon, getOffsetsByType } from './emissionscalc';
 import { GreenCard, GreenCardAbout, Mass } from './dashutils';
 import { getDataItem } from '../../../base/plumbing/Crud';
 import KStatus from '../../../base/data/KStatus';
 import { isTester } from '../../../base/Roles';
 import { DownloadCSVLink } from '../../../base/components/SimpleTable';
+import { Button } from 'reactstrap';
 
 const Cloud = ({ style }) => (
 	<svg viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg" className="cloud-graphic">
@@ -62,6 +67,58 @@ const TreesSection = ({ treesPlanted, coralPlanted }) => {
 	);
 };
 
+
+const csvBreakdown = 'country/pub/mbl/os/adid/time{"emissions":"sum"}';
+const csvCols = [
+	{Header: 'Country', accessor: 'country'},
+	{Header: 'Domain', accessor: 'pub'},
+	{Header: 'Mobile?', accessor: 'mbl'},
+	{Header: 'OS', accessor: 'os'},
+	{Header: 'Tag ID', accessor: 'adid'},
+	{Header: 'Time', accessor: row => new Date(row.time).toISOString()},
+	{Header: 'Impressions', accessor: 'count', format: a => a?.toFixed(0)}, // Override number-formatting behaviour - no
+	{Header: 'CO2 Total', accessor: 'co2', format: a => a?.toFixed(3)}, // Limit precision to grammes
+	{Header: 'CO2 (Publisher)', accessor: 'co2base', format: a => a?.toFixed(3)},
+	{Header: 'CO2 (Creative)', accessor: 'co2creative', format: a => a?.toFixed(3)},
+	{Header: 'CO2 (Supply Path)', accessor: 'co2supplypath', format: a => a?.toFixed(3)}
+];
+
+/**
+ * A large admin-only cross-breakdown CSV download for the current view - same time period & item filters.
+ */
+const CSVExport = ({baseFilters}) => {
+	if (!isTester()) return;
+	const [csvSpec, setCsvSpec] = useState(null); // Spec of the last generated CSV export
+	const [tableData, setTableData] = useState(null); // Table data for CSV export
+
+	useEffect(() => {
+		if (!csvSpec) return; // No CSV requested - nothing to do.
+
+		// Dashboard view has changed since last click on the "Generate CSV" button?
+		// Invalidate the CSV & bring back the "Generate" button.
+		if (!isEqual(csvSpec, baseFilters)) {
+			setTableData(null);
+			setCsvSpec(null);
+			return;
+		}
+
+		// New CSV spec - get table data for it & prepare CSV download.
+		getCarbon({...baseFilters, breakdown: [csvBreakdown]}).promise.then(res => {
+			setTableData(pivotDataLogToRows(res, csvBreakdown));
+		});
+	}, [baseFilters, csvSpec]);
+
+	// When "Generate" button clicked - register request to generate a CSV for current filter spec
+	const getTable = () => setCsvSpec({...baseFilters});
+
+	// No CSV requested - show "Generate" button
+	if (!csvSpec) return <Button className="mt-1" size="xs" color="default" onClick={getTable}>Generate CSV export</Button>;
+	// CSV requested but not available - show loading spinner
+	if (!tableData) return <Misc.Loading text="Fetching CSV export data..." />;
+	// CSV ready - show download link
+	return <span className="screenshot-hide"><DownloadCSVLink columns={csvCols} data={tableData} /></span>
+};
+
 /**
  * Show the carbon offsets & tree-planting of the current campaign set & compare estimated emissions.
  * @param {Object} props
@@ -69,17 +126,18 @@ const TreesSection = ({ treesPlanted, coralPlanted }) => {
  * @param {?Boolean} props.emptyTable Carbon data loaded but empty - show "no data" insead of "loading campaigns"
  * @returns
  */
-const JourneyCard = ({ campaigns, dataByTime, period, emptyTable }) => {
-	if (emptyTable)
-		return (
-			<GreenCard title="Your journey so far" className="carbon-journey" downloadable={false}>
-				<p>No data available for your current filters.</p>
-			</GreenCard>
-		);
+const JourneyCard = ({ campaigns, baseFilters, period, emptyTable }) => {
+	if (emptyTable) return (
+		<GreenCard title="Your journey so far" className="carbon-journey" downloadable={false}>
+			<p>No data available for your current filters.</p>
+		</GreenCard>
+	);
 
-	if (!campaigns || !campaigns.length) {
-		return <GreenCard title="Your journey so far" className="carbon-journey"><Misc.Loading text="Fetching your campaign data..." /></GreenCard>;
-	}
+	if (!campaigns?.length) return (
+		<GreenCard title="Your journey so far" className="carbon-journey" downloadable={false}>
+			<Misc.Loading text="Fetching your campaign data..." />
+		</GreenCard>
+	);
 
 	let isLoading;
 	const offsetTypes = 'carbon trees coral'.split(' ');
@@ -122,17 +180,6 @@ const JourneyCard = ({ campaigns, dataByTime, period, emptyTable }) => {
 		}
 	}
 
-	// HACK a download for us
-	// This is not the same as the one using carboncal
-	let downloadCSVLink;
-	if (isTester() && dataByTime) {
-		if (dataByTime.length > 0) {
-			let columns = Object.keys(dataByTime[0]);
-			let objdata = dataByTime;
-			downloadCSVLink = <span className="screenshot-hide"><DownloadCSVLink columns={columns} data={objdata} /></span>;
-		}
-	}
-
 	return (
 		<GreenCard title="Your journey so far" className="carbon-journey">
 			{isLoading ? (
@@ -148,7 +195,7 @@ const JourneyCard = ({ campaigns, dataByTime, period, emptyTable }) => {
 					<Logo item={brandOrAgency} /> Impact Overview
 				</A>
 			)}
-			{downloadCSVLink}
+			<CSVExport baseFilters={baseFilters} />
 			<GreenCardAbout>
 				<p>What carbon offsets do we use?</p>
 				<p>What tree planting projects do we support?</p>
