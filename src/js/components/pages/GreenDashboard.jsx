@@ -27,7 +27,6 @@ const GreenDashboard = ({}) => {
 		{/* ...But don't let text become too tiny on mobile */}
 		<StyleBlock>{`html, body { font-size: 14px; } @media (max-width: 767px) { html, body { font-size: 18px; } }`}</StyleBlock>
 		<AccountMenu></AccountMenu>
-		<ShareWidget hasButton name={"Foo name"} shareId={"foo-share-id"} />
 		{Login.isLoggedIn() && <GreenNavBar active={subpage} />}
 		<Subpage />
 	</>;
