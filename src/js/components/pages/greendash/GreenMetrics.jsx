@@ -177,7 +177,7 @@ const GreenMetrics2 = ({}) => {
 		return <Misc.Loading text="Fetching campaign lifetime data..." />;
 	}
 	if (!pvChartTotal.value) {
-		return <ErrAlert error={pvChartData.error} color="danger" />;
+		return <ErrAlert error={pvChartTotal.error} color="danger" />;
 	}
 	
 	// HACK: Tell JourneyCard we had an empty table & so couldn't get campaigns (but nothing is "loading")

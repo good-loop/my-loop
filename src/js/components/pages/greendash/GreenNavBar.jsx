@@ -12,7 +12,9 @@ import C from '../../../C';
 import ServerIO from '../../../plumbing/ServerIO';
 const A = C.A;
 
+
 /**
+ * Left hand nav bar
  * 
  * @param {Object} p
  * @param {?string} p.active
