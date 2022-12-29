@@ -32,6 +32,7 @@ import Login from '../../../base/youagain';
 import { isDebug, toTitleCase, yessy } from '../../../base/utils/miscutils';
 import PropControl from '../../../base/components/PropControl';
 import ShareWidget, { shareThingId } from '../../../base/components/ShareWidget';
+import Roles from '../../../base/Roles';
 
 
 export const isPer1000 = () => {
@@ -317,6 +318,9 @@ const GreenMetrics = ({}) => {
 };
 
 const ShareDash = () => {
+	if ( ! Roles.isDev()) {
+		return null; // dev only for now TODO for all
+	}
 	let {filterMode, filterId} = getFilterModeId();
 	if ( ! filterMode || ! filterId) {
 		return null;
@@ -325,7 +329,7 @@ const ShareDash = () => {
 	let shareId = shareThingId(type, filterId);
 	let pvItem = getDataItem({type, id:filterId, status:KStatus.PUBLISHED});
 	let shareName = filterMode+" "+((pvItem.value && pvItem.value.name) || filterId);
-	return <ShareWidget hasButton name={"Dashboard for "+shareName} shareId={shareId} hasLink />;
+	return <ShareWidget className="dev-link" hasButton name={"Dashboard for "+shareName} shareId={shareId} hasLink />;
 }
 
 export default GreenMetrics;
