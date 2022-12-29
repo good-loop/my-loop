@@ -43,8 +43,8 @@
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.0",
-    "@babel/eslint-parser": "^7.5.4",
+    "@babel/core": "^7.20.7",
+    "@babel/eslint-parser": "^7.19.1",
     "@babel/plugin-proposal-class-properties": "^7.16.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.16.0",
     "@babel/plugin-transform-react-jsx": "^7.16.0",

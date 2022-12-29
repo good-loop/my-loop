@@ -29,8 +29,9 @@ import SearchQuery from '../../../base/searchquery';
 import Campaign from '../../../base/data/Campaign';
 import Login from '../../../base/youagain';
 
-import { isDebug, yessy } from '../../../base/utils/miscutils';
+import { isDebug, toTitleCase, yessy } from '../../../base/utils/miscutils';
 import PropControl from '../../../base/components/PropControl';
+import ShareWidget, { shareThingId } from '../../../base/components/ShareWidget';
 
 
 export const isPer1000 = () => {
@@ -81,22 +82,31 @@ const CTACard = ({}) => {
 	);
 };
 
-const GreenMetrics2 = ({}) => {
-	// Default to current quarter, all brands, all campaigns
-	const period = periodFromUrl();
-	if (!period) return; // Filter widget will set this on first render - allow it to update
+/**
+ * 
+ * @returns {{filterMode:filterMode, filterId:string}}
+ */
+const getFilterModeId = () => {
 	const brandId = DataStore.getUrlValue('brand');
 	const agencyId = DataStore.getUrlValue('agency');
 	const campaignId = DataStore.getUrlValue('campaign');
 	const tagId = DataStore.getUrlValue('tag');
-
-	// const { pvBrands, pvCampaigns, pvTags } = getGreenDashObjects(brandId, campaignId, tagId);
 
 	// What are we going to filter on? ("adid" rather than "tag" because that's what we'll search for in DataLog)
 	// ??shouldn't brand be vertiser??
 	const filterMode = campaignId ? 'campaign' : brandId ? 'brand' : agencyId ? 'agency' : tagId ? 'adid' : null;
 	// Get the ID for the object we're filtering for
 	const filterId = { campaign: campaignId, brand: brandId, agency: agencyId, adid: tagId }[filterMode];
+	return {filterMode, filterId};
+};
+
+
+const GreenMetrics2 = ({}) => {
+	// Default to current quarter, all brands, all campaigns
+	const period = periodFromUrl();
+	if (!period) return; // Filter widget will set this on first render - allow it to update
+
+	let {filterMode, filterId} = getFilterModeId();
 
 	if (!filterMode) {
 		return <Alert color="info">Select a brand, campaign, or tag to see data.</Alert>;
@@ -141,7 +151,7 @@ const GreenMetrics2 = ({}) => {
 
 	// HACK: Is this a master campaign? Do we need to cover sub-campaigns?
 	if (filterMode === 'campaign') {
-		const pvCampaign = getDataItem({ type: C.TYPES.Campaign, id: campaignId, status: KStatus.PUB_OR_DRAFT });
+		const pvCampaign = getDataItem({ type: C.TYPES.Campaign, id: filterId, status: KStatus.PUB_OR_DRAFT });
 		if (!pvCampaign.value) {
 			return <Misc.Loading text="Fetching campaign..." />;
 		}
@@ -177,7 +187,7 @@ const GreenMetrics2 = ({}) => {
 		return <Misc.Loading text="Fetching campaign lifetime data..." />;
 	}
 	if (!pvChartTotal.value) {
-		return <ErrAlert error={pvChartData.error} color="danger" />;
+		return <ErrAlert error={pvChartTotal.error} color="danger" />;
 	}
 	
 	// HACK: Tell JourneyCard we had an empty table & so couldn't get campaigns (but nothing is "loading")
@@ -294,15 +304,28 @@ const GreenMetrics = ({}) => {
 	);
 
 	return (
-		<div className="green-subpage green-metrics">
+		<div className="green-subpage green-metrics">			
 			<Container fluid>
 				{agencyIds ? <>
 					<GreenDashboardFilters />
+					<ShareDash />
 					<GreenMetrics2 />
 				</> : <Misc.Loading text="Checking your access..." />}
 			</Container>
 		</div>
 	);
 };
+
+const ShareDash = () => {
+	let {filterMode, filterId} = getFilterModeId();
+	if ( ! filterMode || ! filterId) {
+		return null;
+	}
+	let type = {brand:"Advertiser",adid:"GreenTag"}[filterMode] || toTitleCase(filterMode);
+	let shareId = shareThingId(type, filterId);
+	let pvItem = getDataItem({type, id:filterId, status:KStatus.PUBLISHED});
+	let shareName = filterMode+" "+((pvItem.value && pvItem.value.name) || filterId);
+	return <ShareWidget hasButton name={"Dashboard for "+shareName} shareId={shareId} hasLink />;
+}
 
 export default GreenMetrics;
