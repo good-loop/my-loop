@@ -28,6 +28,7 @@ import Roles from '../../base/Roles';
 import ServerIO from '../../plumbing/ServerIO';
 import Campaign from '../../base/data/Campaign';
 import { setNavProps } from '../../base/components/NavBar';
+import Editor3ColLayout, { LeftSidebar } from '../../base/components/Editor3ColLayout';
 
 
 export class ImpactFilters {
@@ -57,22 +58,35 @@ const ImpactOverviewPage = () => {
 	let windowTitle = space("Impact Hub", focusItem && "for "+focusItem.name);
 	setWindowTitle(windowTitle);
 
-	return <Container>
-		<FilterBar filters={filters} />
-		<Row>
-			<Col>
-				<Card style={{ background: "#3488AB" }}><HeadlineDonationCard brand={focusItem} filters={filters} /></Card>
-				<Card style={{}}><PhotoWall filters={filters} /></Card>
-			</Col>
-			<Col>
-				<Card><CampaignCountCard filters={filters} /></Card>
+	return <Editor3ColLayout>
+		<LeftSidebar>
+			<div>
+				<C.A href={modifyPage(["ihub"], null, true)}>Overview</C.A>
+			</div>
+			<div>
+			<C.A href={modifyPage(["istory"], null, true)}>Story</C.A>
+			</div>
+			<div>
+			<C.A href={modifyPage(["istat"], null, true)}>Stats</C.A>
+			</div>
+		</LeftSidebar>
+		<div>
+			<FilterBar filters={filters} />
+			<Row>
+				<Col>
+					<Card style={{ background: "#3488AB" }}><HeadlineDonationCard brand={focusItem} filters={filters} /></Card>
+					<Card style={{}}><PhotoWall filters={filters} /></Card>
+				</Col>
+				<Col>
+					<Card><CampaignCountCard filters={filters} /></Card>
 
-				<Card><CharityCountCard filters={filters} /></Card>
-			</Col>
-		</Row>
-		{/* <Card><ViewCountCard filters={filters} /></Card>
-		<Card><LogoWallCard brand={brand} filters={filters} /></Card> */}
-	</Container>;
+					<Card><CharityCountCard filters={filters} /></Card>
+				</Col>
+			</Row>
+			{/* <Card><ViewCountCard filters={filters} /></Card>
+			<Card><LogoWallCard brand={brand} filters={filters} /></Card> */}
+		</div>
+	</Editor3ColLayout>;
 };
 
 
@@ -170,9 +184,15 @@ const CharityCountCard = ({ filters }) => {
 	let pvItems = getCharities({ filters });
 	if (!pvItems.value) return <Nope />;
 	let n = List.total(pvItems.value);
+
+	// help debug bad data
+	let pvImpactDebits = getImpactDebits({ filters });
+
 	return <>
 		<h3>{I18N.tr(n + " Charities (singular: Charity)")}</h3>
 		{n < 20 && <div className="gridbox gridbox-sm-2">{List.hits(pvItems.value).map(item => <ItemButton key={item.id} item={item} />)}</div>}
+		{Roles.isDev() && List.hits(pvImpactDebits.value).map(imp => 
+			<PortalLink key={imp.id} item={imp} size="small" title={imp.name} />)}
 	</>;
 }
 
@@ -230,7 +250,6 @@ export const HeadlineDonationCard = ({ brand, impactdebit, charity, filters }) =
  * Filter display / controls at the top of the page
  */
 export const FilterBar = ({ filters }) => {
-	let [type, setType] = useState(C.TYPES.Advertiser);
 	// child brands?
 	let pvChildBrands, childBrands;
 	if (filters.brand) {
@@ -240,9 +259,9 @@ export const FilterBar = ({ filters }) => {
 	}
 
 	return <div id="filterBar">
-		<PropControl type="select" value={type} set={setType} options={["Advertiser", "Agency", "Campaign"]} labels={["Brand", "Agency", "Campaign"]} />
-		<PropControl type="DataItem" itemType={type} prop={type===C.TYPES.Advertiser? "brand":"agency"} label showId={false} />
-		{childBrands?.length && <PropControl type="DataItem" itemType={C.TYPES.Advertiser} prop="brand2" label="Brand" list={childBrands} />}
+		<PropControl type="DataItem" itemType="Agency" prop="agency" label showId={false} />
+		<PropControl type="DataItem" itemType="Advertiser" prop="brand" label showId={false} />
+		{ !! childBrands?.length && <PropControl type="DataItem" itemType={C.TYPES.Advertiser} prop="brand2" label="Brand" list={childBrands} />}
 	</div>;
 }
 
