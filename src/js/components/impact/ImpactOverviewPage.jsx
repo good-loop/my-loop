@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import KStatus from '../../base/data/KStatus';
 import List from '../../base/data/List';
 import I18N from '../../base/i18n';
@@ -230,16 +230,19 @@ export const HeadlineDonationCard = ({ brand, impactdebit, charity, filters }) =
  * Filter display / controls at the top of the page
  */
 export const FilterBar = ({ filters }) => {
+	let [type, setType] = useState(C.TYPES.Advertiser);
+	// child brands?
 	let pvChildBrands, childBrands;
 	if (filters.brand) {
 		let q = SearchQuery.setProp(null, "parentId", filters.brand).query;
 		pvChildBrands = getDataList({ type: "Advertiser", status: filters.status, q, swallow: true });
 		childBrands = List.hits(pvChildBrands?.value);
 	}
-	return <div id="filterBar" style={{border:"solid 1px black"}}>
-		<PropControl type="DataItem" itemType={C.TYPES.Agency} prop="agency" label showId={false} />
-		<PropControl type="DataItem" itemType={C.TYPES.Advertiser} prop="brand" label showId={false} />
-		{childBrands && childBrands.length ? <PropControl type="DataItem" itemType={C.TYPES.Advertiser} prop="brand2" label="Brand" list={childBrands} /> : null}
+
+	return <div id="filterBar">
+		<PropControl type="select" value={type} set={setType} options={["Advertiser", "Agency", "Campaign"]} labels={["Brand", "Agency", "Campaign"]} />
+		<PropControl type="DataItem" itemType={type} prop={type===C.TYPES.Advertiser? "brand":"agency"} label showId={false} />
+		{childBrands?.length && <PropControl type="DataItem" itemType={C.TYPES.Advertiser} prop="brand2" label="Brand" list={childBrands} />}
 	</div>;
 }
 
