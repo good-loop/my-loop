@@ -28,7 +28,7 @@ import DynImg from '../../base/components/DynImg';
 import { setNavProps } from '../../base/components/NavBar';
 
 
-const ImpactPage = () => {
+const ImpactStoryPage = () => {
 	/** @type {ImpactFilters} */
 	let filters = DataStore.getValue('location','params');
 	let status = filters.status;
@@ -101,4 +101,4 @@ const StoryCard = ({charity, filters, impactdebit}) => {
 	</>;
 };
 
-export default ImpactPage;
+export default ImpactStoryPage;

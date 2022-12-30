@@ -45,7 +45,7 @@ export class ImpactFilters {
 	q;
 }
 
-const ImpactHubPage = () => {
+const ImpactOverviewPage = () => {
 	/** @type {ImpactFilters} */
 	let filters = DataStore.getValue('location', 'params');
 
@@ -181,7 +181,7 @@ const ItemButton = ({ item }) => {
 	let logo = getLogo(item);
 	// NB: tried putting dev-only PortalLinks here but it was fugly
 	return <Button className="btn-tile m-2" color="outline-dark"
-		onClick={e => stopEvent(e) && modifyPage(["ipage"], { [key]: value })} >
+		onClick={e => stopEvent(e) && modifyPage(["istory"], { [key]: value })} >
 		{logo && <img src={logo} className={space('rounded logo logo-lg')} />}<p>{item.name}</p>
 	</Button>;
 };
@@ -252,4 +252,4 @@ const PhotoWall = ({ filters }) => {
 
 const Nope = () => <>-</>;
 
-export default ImpactHubPage;
+export default ImpactOverviewPage;
