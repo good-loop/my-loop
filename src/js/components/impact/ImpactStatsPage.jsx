@@ -19,7 +19,7 @@ import Branding from '../../base/data/Branding';
 import Impact from '../../base/data/Impact';
 import Money from '../../base/data/Money';
 import { OTHER_CONSENT } from '../../base/data/Claim';
-import { fetchImpactItems, FilterBar, getImpactDebits, HeadlineDonationCard, ImpactFilters } from './ImpactHubPage';
+import { fetchImpactItems, FilterBar, getImpactDebits, HeadlineDonationCard, ImpactFilters } from './ImpactOverviewPage';
 import NGO from '../../base/data/NGO';
 import LinkOut from '../../base/components/LinkOut';
 import ServerIO from '../../plumbing/ServerIO';

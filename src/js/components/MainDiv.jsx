@@ -160,7 +160,7 @@ const MainDiv = () => {
 		// navbarLabels={getNavbarLabels}
 		// We want everything to be full width on this site
 		fullWidthPages={Object.keys(PAGES)}
-		undecoratedPages={["welcome", "greendash"]}
+		undecoratedPages={["welcome", "greendash", "ihub", "istats"]}
 		Footer={Footer}
 		canRegister
 		noLoginTitle

@@ -53,6 +53,7 @@ const ImpactOverviewPage = () => {
 	let {focusItem, brand1, brand2, agency, charity, campaign} = fetchImpactItems(filters);
 
 	setNavProps(focusItem);
+
 	let windowTitle = space("Impact Hub", focusItem && "for "+focusItem.name);
 	setWindowTitle(windowTitle);
 
@@ -235,7 +236,8 @@ export const FilterBar = ({ filters }) => {
 		pvChildBrands = getDataList({ type: "Advertiser", status: filters.status, q, swallow: true });
 		childBrands = List.hits(pvChildBrands?.value);
 	}
-	return <div id="filterBar">
+	return <div id="filterBar" style={{border:"solid 1px black"}}>
+		<PropControl type="DataItem" itemType={C.TYPES.Agency} prop="agency" label showId={false} />
 		<PropControl type="DataItem" itemType={C.TYPES.Advertiser} prop="brand" label showId={false} />
 		{childBrands && childBrands.length ? <PropControl type="DataItem" itemType={C.TYPES.Advertiser} prop="brand2" label="Brand" list={childBrands} /> : null}
 	</div>;
