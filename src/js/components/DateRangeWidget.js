@@ -3,7 +3,7 @@ import { Button } from 'reactstrap';
 import { space } from '../base/utils/miscutils';
 import { periodFromName } from './pages/greendash/dashutils';
 
-
+import '../../style/DateRangeWidget.less';
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -72,14 +72,14 @@ const Month = ({year, month, start, end, setPeriod, hoverStart, hoverEnd, onDayC
 	let currentRow = [];
 	const rows = [currentRow];
 
-	// pad start
+	// Pad start of month
 	let dayCursor = 1;
 	while (dayCursor != refDate.getDay()) {
 		currentRow.push(null);
 		dayCursor = (dayCursor + 1) % 7;
 	}
 
-	// fill in days
+	// Fill in days
 	while (refDate.getMonth() === month) {
 		if (currentRow.length === 7) {
 			currentRow = [];
@@ -90,17 +90,12 @@ const Month = ({year, month, start, end, setPeriod, hoverStart, hoverEnd, onDayC
 	}
 
 	// What happens when a day on the calendar is clicked?
-	const clickDay = (date) => {
-		if (!date) return;
-		onDayClick && onDayClick(date);
-	};
+	const clickDay = onDayClick ? (date => date && onDayClick(date)) : null;
 
-	// What happens when a day on the calendar is clicked?
-	const hoverDay = (date) => {
-		if (!date) return;
-		onDayHover && onDayHover(date);
-	};
+	// What happens when a day is hovered?
+	const hoverDay = onDayHover ? (date => date && onDayHover(date)) : null;
 
+	// Select a full month by clicking the name
 	const clickMonth = () => {
 		const monthStart = new Date(year, month, 1);
 		const monthEnd = new Date(monthStart);
@@ -110,6 +105,10 @@ const Month = ({year, month, start, end, setPeriod, hoverStart, hoverEnd, onDayC
 
 	// end is exclusive - ie a [start, end) range - so is set to midnight 00:00 on the next day
 	const dayBeforeEnd = end ? new Date(end.getFullYear(), end.getMonth(), end.getDate() - 1) : new Date(2999, 10);
+
+	// Convenient reference points
+	const lastOfMonth = new Date(year, month + 1, 0); // 0th of next month = last day of this
+	const now = new Date();
 
 	return <div className={space('month text-center', className)}>
 		<a onClick={clickMonth} className="month-name">
@@ -122,28 +121,31 @@ const Month = ({year, month, start, end, setPeriod, hoverStart, hoverEnd, onDayC
 				</tr>
 			</thead>
 			<tbody>
-				{rows.map((row, i) => {
-				return (
-					<tr key={i}>
-						{row.map((date, i) => {
-							let selClass = between(start, end, date) ? 'selected' : '';
-							if (between(hoverStart, hoverEnd, date)) selClass += ' hovered';
-							if (selClass) {
-								if (sameDate(date, start)) selClass += ' sel-start';
-								if (sameDate(date, dayBeforeEnd)) selClass += ' sel-end';
-							}
-							if (after(date, new Date())) selClass += ' future';
-							return <Day date={date} className={selClass} key={date + ' ' + i} onClick={clickDay} onHover={hoverDay}/>;
-						})}
-						{i === rows.length - 1 && between(start, end, row[row.length - 1]) && after(dayBeforeEnd, row[row.length - 1]) ?
-							<Day date={"cont"} className={"selected " + (after(row[row.length-1], new Date()) ? "future" : "") }/>
-						 : null}
-					</tr>
-				)})}
+				{rows.map((row, i) => <tr key={i}>
+					{row.map((date, j) => {
+						// Mark selected region, future dates, selection-in-progress, and selections continuing over month borders
+						let classes = [];
+						const selected = between(start, end, date);
+						const firstSel = sameDate(date, start);
+						const lastSel = sameDate(date, dayBeforeEnd);
+						if (selected) classes.push('selected');
+						if (firstSel) classes.push('sel-start');
+						if (lastSel) classes.push('sel-end');
+						if (selected && !firstSel && !lastSel) {
+							if (date.getDate() === 1) classes.push('cont-prev');
+							if (sameDate(date, lastOfMonth)) classes.push('cont-next');
+						}
+						if (between(hoverStart, hoverEnd, date)) classes.push('hovered');
+						if (after(date, now)) classes.push('future');
+
+						return <Day date={date} className={space(classes)} key={`${date}-${j}`} onClick={clickDay} onHover={hoverDay} />;
+					})}
+				</tr>)}
 			</tbody>
 		</table>
 	</div>;
 };
+
 
 /**
  * 
@@ -176,13 +178,11 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 			if (periodObj) {
 				setStart(periodObj.start);
 				setEnd(periodObj.end);!sameDate(start, dflt.start) 
-				//focusPeriod(periodObj.start, periodObj.end);
 				return;
 			}
 		}
 		setStart(start);
 		setEnd(end);
-		//focusPeriod(start, end);
 	};
 
 	const focusPeriod = (start, end) => {

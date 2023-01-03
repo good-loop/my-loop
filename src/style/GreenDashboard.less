@@ -1,10 +1,5 @@
 @import 'GreenMetrics.less';
 
-// have a MyGL colours file which collects these??
-@green-highlight: #698983;
-@blue-highlight: #69a4b9;
-@sea-blue: #76a1b7;
-
 // The navigation column width
 @nav-width: 15rem;
 
@@ -33,114 +28,6 @@
 	}
 }
 
-
-// The date range selector widget (TODO Pull this out as a PropControl?)
-.select-date-range {
-	display: flex;
-	flex-direction: row;
-	text-transform: none;
-	margin: 0.5rem 1rem;
-
-	.months-container {
-		position: relative; // position reference for next/prev month buttons
-		display: flex;
-		flex-direction: row;
-		max-width: 100vw;
-		justify-content: space-around;
-		.shift-focus {
-			position: absolute;
-			top: 0;
-			&.prev {
-				left: 0;
-			}
-			&.next {
-				right: 0;
-			}
-		}
-	}
-	.presets-container {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		margin-left: 0.5rem;
-		.preset {
-			white-space: nowrap; // take necessary width
-		}
-	}
-
-	.month {
-		text-align: center;
-		&:not(:first-child) {
-			margin-left: 0.5rem;
-		}
-		.month-name {
-			padding: 0.1rem 0.3rem;
-			border-radius: 0.2rem;
-			&:hover {
-				background-color: @greenmedia-darkcyan;
-				color: white;
-			}
-		}
-		
-		.day-names {
-			th { font-weight: normal; } // override browser-standard bold weight
-		}
-		.day {
-			line-height: 1;
-			padding: 0.3em 0.25em;
-			text-align: center;
-			&.selected {
-				background-color: @greenmedia-darkcyan;
-				color: white;
-			}
-			&.sel-start {
-				border-top-left-radius: 0.25em;
-				border-bottom-left-radius: 0.25em;
-			}
-			&.sel-end {
-				border-top-right-radius: 0.25em;
-				border-bottom-right-radius: 0.25em;
-			}
-			&:hover {
-				cursor: pointer;
-				&.cont {
-					cursor: default;
-				}
-			}
-			&.future {
-				background-color: @gl-light-grey;
-				color: @gl-dark-grey;
-				&.selected {
-					background-color: @green-highlight;
-					color: white;
-				}
-			}
-			&.hovered {
-				background-color: @greenmedia-green !important;
-				color: white !important;
-			}
-		}
-	}
-}
-@media (max-width: 767px) {
-	.select-date-range {
-		flex-direction: column;
-
-		.month:not(.this-month) {
-			display: none;
-		}
-
-		.presets-container {
-			flex-direction: row;
-			flex-wrap: wrap;
-			justify-content: space-around;
-			.preset {
-				width: 15em;
-				margin-bottom: 0.5em;
-			}
-		}
-	}
-}
 
 // The left navbar for the green dashboard
 #green-navbar {
