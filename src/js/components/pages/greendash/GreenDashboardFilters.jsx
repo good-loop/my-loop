@@ -265,7 +265,7 @@ const GreenDashboardFilters = ({}) => {
 
 	// Populate the filter-by-item dropdown based on user shares & access level
 	useEffect(() => {
-		getFilterItems({filterMode, setFilterItems});
+		if (filterMode) getFilterItems({filterMode, setFilterItems});
 	}, [Login.getId(), filterMode]);
 
 	// TODO "Normal" access control:
