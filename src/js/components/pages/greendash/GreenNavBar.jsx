@@ -14,7 +14,7 @@ const A = C.A;
 
 
 /**
- * Left hand nav bar
+ * Left hand nav bar + top-right account menu
  * 
  * @param {Object} p
  * @param {?string} p.active
@@ -41,7 +41,9 @@ const GreenNavBar = ({active}) => {
 
 	// We don't use the standard <Collapse> pattern here because that doesn't support an always-horizontal navbar
 
-	return <Navbar dark expand="md" id="green-navbar" className={space('flex-column', 'justify-content-start', isOpen && 'mobile-open')}>
+	return (<>
+		{Roles.isDev() && <AccountMenu />}
+	<Navbar dark expand="md" id="green-navbar" className={space('flex-column', 'justify-content-start', isOpen && 'mobile-open')}>
 		<NavbarToggler onClick={toggle} />
 		<Nav navbar vertical>
 			<img className="logo" src="/img/logo-green-dashboard.svg" />
@@ -83,7 +85,7 @@ const GreenNavBar = ({active}) => {
 				</div>
 			</div>
 		</Nav>
-	</Navbar>;
+	</Navbar></>);
 };
 
 export default GreenNavBar;
