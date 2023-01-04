@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Collapse, Nav, Navbar, NavbarToggler, NavItem } from 'reactstrap';
+import AccountMenu from '../../../base/components/AccountMenu';
 import Icon from '../../../base/components/Icon';
 import LinkOut from '../../../base/components/LinkOut';
 import Logo from '../../../base/components/Logo';
 import Campaign from '../../../base/data/Campaign';
 import KStatus from '../../../base/data/KStatus';
 import { getDataItem } from '../../../base/plumbing/Crud';
+import Roles from '../../../base/Roles';
 
 import { encURI, isMobile, space } from '../../../base/utils/miscutils';
 import C from '../../../C';
