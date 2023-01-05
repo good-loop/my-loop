@@ -1,3 +1,4 @@
+
 // The tech/device/tag/pub subcard switcher may overflow - tighten its padding to make room.
 .green-metrics {
 	.green-card.carbon-breakdown {
@@ -7,4 +8,16 @@
 			}
 		}
 	}
+}
+// Smaller laptops need even tighter padding to avoid overflow on the breakdown card
+@media (max-width: 1280px) {
+	.green-metrics {
+		.green-card.carbon-breakdown {
+			.subcard-switch {
+				.btn {
+					padding: 0.25rem 0.25rem;
+				}
+			}
+		}
+	}		
 }
