@@ -19,10 +19,14 @@
     }
 
     .brand-logo {
+        height: 50px;
+        object-fit: contain;
         @media @md-min {
             position: relative;
             top: 2px;
-            max-height: 50px;
+        }
+        @media @width-mobile {
+          max-width: 85px;
         }
     }
 
