@@ -25,7 +25,7 @@ const CharityT4GLogos = ({ngo, className, style, autosize}) => {
 				<CharityLogo charity={ngo} className="charity-banner-logo" />
 			</Col>
 			<Col xs={6} className="d-flex flex-column justify-content-center">
-				<img src="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" className="charity-banner-logo" />
+				<img src="/img/gl-logo/TabsForGood/TabsForGoodLogo.svg" className="charity-banner-logo" />
 			</Col>
 		</Row>
 	</Container>;
