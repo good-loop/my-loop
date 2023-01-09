@@ -166,7 +166,7 @@ const DesktopSignUp = ({ charity }) => {
 				{!Login.isLoggedIn() ?
 					<>
 						<div className="d-flex flex-column justify-content-center align-items-center">
-							<img className="w-50 mb-3" src="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
+							<img className="w-50 mb-3" src="/img/gl-logo/TabsForGood/TabsForGoodLogo.svg" alt="" />
 							<div className="steps-graphic">
 								<Steps step={1} />
 							</div>
@@ -178,7 +178,7 @@ const DesktopSignUp = ({ charity }) => {
 					</>
 					: /* Step 2 */ <div>
 						<div className="d-flex flex-column justify-content-center align-items-center">
-							<img className="w-50 mb-3" src="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
+							<img className="w-50 mb-3" src="/img/gl-logo/TabsForGood/TabsForGoodLogo.svg" alt="" />
 							<div className="steps-graphic">
 								<Steps step={2} />
 							</div>
@@ -201,7 +201,7 @@ const MobileSendEmail = ({ charity }) => {
 		<Container fluid>
 			<div className="mobile-send-email d-flex flex-column justify-content-between align-items-center">
 				<img className="hummingbird-mobile logo mt-3" src="/img/green/hummingbird.png" />
-				<img className="w-50 mb-3" src="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" />
+				<img className="w-50 mb-3" src="/img/gl-logo/TabsForGood/TabsForGoodLogo.svg" alt="" />
 				<div style={{ textTransform: "capitalize" }}>
 					We'll email you a link for desktop so you can start raising money for charity while you browse
 				</div>
@@ -215,7 +215,7 @@ const NotAvailableYet = ({ browser, charity }) => {
 	return (<>
 		<img src="/img/signup/hand-globe-coins.png" className="hand-globe" />
 		<div className="clearfix">
-			<img className="pull-right w-25 m-3" src="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="Tabs for Good" />
+			<img className="pull-right w-25 m-3" src="/img/gl-logo/TabsForGood/TabsForGoodLogo.svg" alt="Tabs for Good" />
 		</div>
 		<div className="mx-auto w-50 d-flex flex-column align-items-center">
 			<p class="mt-5">We'll send you an email to let you know when Tabs for Good is available on <span>{toTitleCase(browser)}</span></p>

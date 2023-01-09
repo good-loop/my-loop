@@ -147,7 +147,7 @@ export const SafariPage = () => {
 
 	return (<>
 	<PageCard className="SafariPage widepage text-center pt-0">
-		{/* <img className="w-50 mb-1" src="img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" alt="" /> */}
+		{/* <img className="w-50 mb-1" src="img/gl-logo/TabsForGood/TabsForGoodLogo.svg" alt="" /> */}
 		<h1>Using Tabs For Good in Safari on Mac</h1>
 		<SafariCarousel className="mt-5 rounded" nextButton>
 			{slides}

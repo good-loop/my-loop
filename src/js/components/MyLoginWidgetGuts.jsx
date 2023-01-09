@@ -14,7 +14,7 @@ export const MyLoginWidgetGuts = ({services, verb, onLogin, onRegister, canRegis
 			<div className="d-flex flex-column justify-content-center align-items-center p-5">
 				<img src="/img/green/hummingbird.png" className="hummingbird login"/>
 				<img src="/img/signup/hand-globe-coins.png" className="hand-globe d-none d-md-block"/>
-				<img src="/img/gl-logo/TabsForGood/TabsForGood_Logo-01.png" className="login-logo"/>
+				<img src="/img/gl-logo/TabsForGood/TabsForGoodLogo.svg" className="login-logo"/>
 				<p className="leader-text black login-subtitle my-4">Sign in to see how your web browsing has transformed into charity donations</p>
 				<Row className="login-row">
 					<Col className="login-email pb-2">
