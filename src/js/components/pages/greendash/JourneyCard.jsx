@@ -99,7 +99,7 @@ const CSVExport = ({baseFilters}) => {
 		if (!isEqual(csvSpec, baseFilters)) {
 			setTableData(null);
 			setCsvSpec(null);
-			return;
+			return null;
 		}
 
 		// New CSV spec - get table data for it & prepare CSV download.
