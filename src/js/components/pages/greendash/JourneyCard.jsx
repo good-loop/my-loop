@@ -87,7 +87,7 @@ const csvCols = [
  * A large admin-only cross-breakdown CSV download for the current view - same time period & item filters.
  */
 const CSVExport = ({baseFilters}) => {
-	if (!isTester()) return;
+	if (!isTester()) return null;
 	const [csvSpec, setCsvSpec] = useState(null); // Spec of the last generated CSV export
 	const [tableData, setTableData] = useState(null); // Table data for CSV export
 
