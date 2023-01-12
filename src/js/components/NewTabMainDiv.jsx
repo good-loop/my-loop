@@ -380,11 +380,11 @@ const UserControls = ({ cid }) => {
 				small
 				// logoutLink= {<T4GLogoutLink/>}
 				customImg={"/img/logo/my-loop-logo-round.svg"}
-				customLogin={() => (
+				customLogin={
 					<NewtabLoginLink className="login-menu btn btn-transparent fill">
 						Register / Log in
 					</NewtabLoginLink>
-				)}
+				}
 				logoutLink={<T4GLogoutLink/>}
 			/>
 		</>

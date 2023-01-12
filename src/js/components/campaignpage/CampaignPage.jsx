@@ -504,11 +504,5 @@ const Page404 = () => <div className="widepage CampaignPage gl-btns">
 </div>;
 
 
-const isAll = () => {
-	const slug = DataStore.getValue('location', 'path', 1);
-	return slug === 'all';
-};
-
-
 export default CampaignPage;
 export { hackCorrectedDonations };
