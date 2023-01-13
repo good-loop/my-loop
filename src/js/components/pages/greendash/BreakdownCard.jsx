@@ -296,6 +296,12 @@ const TagSubcard = ({ data }) => {
 };
 
 
+/**
+ * 
+ * @param {Object} p
+ * @param {??} p.data
+ * @returns 
+ */
 const PubSubcard = ({ data }) => {
 	if (!yessy(data)) return NOEMISSIONS;
 
@@ -329,11 +335,11 @@ const BreakdownCard = ({ baseFilters }) => {
 		...baseFilters,
 		breakdown: ['total{"emissions":"sum"}'],
 	})?.value;
-	
+
+	// NB: breakdown: "emissions":"sum" is a hack that the backend turns into count(aka impressions) + co2 + co2-bits
 	const dataValue = getCarbon({
 		...baseFilters,
-		breakdown: ['os{"co2":"sum"}', 'adid{"co2":"sum"}', 'domain{"co2":"sum"}', 'format{"co2":"sum"}'],
-		// breakdown: ['os{"co2":"sum"}', 'adid{"countco2":"sum"}', 'domain{"countco2":"sum"}'], // TODO Wait for new shortcut in backend
+		breakdown: ['os{"emissions":"sum"}', 'adid{"emissions":"sum"}', 'domain{"emissions":"sum"}', 'format{"emissions":"sum"}'],
 	})?.value;
 
 	const loading = <Misc.Loading text="Fetching your data..." />;
