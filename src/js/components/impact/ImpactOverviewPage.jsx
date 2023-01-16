@@ -69,10 +69,10 @@ const ImpactOverviewPage = () => {
 								<p>18 CHARITIES</p>
 							</GLCard>
 						</GLHorizontal>
-						<GLCard>
+						<GLCard basis={10}>
 							<h2>16 CAMPAIGNS</h2>
 						</GLCard>
-						<GLCard>
+						<GLCard basis={10}>
 							<h2>6.5M VIEWS | 5 COUNTRIES</h2>
 						</GLCard>
 						<GLCard>
@@ -93,7 +93,7 @@ const ImpactOverviewPage = () => {
 					<GLCard>
 						<h2>Watch to donate</h2>
 					</GLCard>
-					<GLCard>
+					<GLCard basis={70}>
 						<h2>This ad does good</h2>
 					</GLCard>
 				</GLHorizontal>

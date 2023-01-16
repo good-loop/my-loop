@@ -4,14 +4,24 @@ import { space } from '../../base/utils/miscutils';
 import { assert } from '../../base/utils/assert';
 
 export const GLHorizontal = ({className, style, children}) => {
+
+    /*let uneatenSpace = 100;
+    let notSpecifiedChildCount = 0;
+    children.forEach(child => {
+        if (child.props.basis) uneatenSpace -= child.props.basis;
+        else notSpecifiedChildCount++;
+    });
+
+    const autoSpacedSize = uneatenSpace / notSpecifiedChildCount;*/
+
 	return <Row noGutters className={space("glhorizontal", className)} style={style}>
-		{children.map((child, i) => <Col key={i}>{child}</Col>)}
+		{children.map((child, i) => <Col key={i} style={{flexBasis:child.props.basis + "%", flexGrow:child.props.basis ? 0 : 1}}>{child}</Col>)}
 	</Row>
 }
 
 export const GLVertical = ({className, children, ...props}) => {
 	return <div className={space("glvertical", className)} {...props}>
-		{children}
+		{children.map((child, i) => <div key={i} style={{flexBasis:child.props.basis + "%", flexGrow:child.props.basis ? 0 : 1}}>{child}</div>)}
 	</div>;
 }
 
