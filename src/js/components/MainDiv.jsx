@@ -73,7 +73,7 @@ const PAGES = {
 	impact: CampaignPage,
 	impactoverview: MyAdCampaignsPage,
 	// TODO newer impact designs
-	ihub: ImpactOverviewPage,
+	iview: ImpactOverviewPage,
 	istat: ImpactStatsPage,
 	istory: ImpactStoryPage,
 	// test: TestPage,
@@ -160,7 +160,7 @@ const MainDiv = () => {
 		// navbarLabels={getNavbarLabels}
 		// We want everything to be full width on this site
 		fullWidthPages={Object.keys(PAGES)}
-		undecoratedPages={["welcome", "greendash", "ihub", "istats"]}
+		undecoratedPages={["welcome", "greendash", "iview", "istats"]}
 		Footer={Footer}
 		canRegister
 		noLoginTitle

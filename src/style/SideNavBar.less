@@ -1,0 +1,95 @@
+// The left navbar for the green dashboard
+#green-navbar {
+	font-size: 14px;
+	//position: fixed;
+	left: 0;
+	top: 0;
+	width: @nav-width;
+	height: 100vh;
+	max-height: unset; // override BS navbar height limit
+	background-color: @greenmedia-darkcyan;
+	z-index: 2;
+	font-family: 'Montserrat';
+	padding: 0; // Override BS navbar default
+	transition: none; // vertical bar = no height transition
+
+	.navbar-nav {
+		width: 100%; // so coloured background on active/hover item extends to edges 
+	}
+
+	.logo {
+		width: 100%;
+		height: 6em;
+		margin-top: 3rem;
+	}
+	.boosted {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		text-decoration: none;
+		color: white;
+		font-weight: 600;
+		font-size: 0.75rem;
+		margin-bottom: 3rem;
+		.scope3-logo {
+			width: 7em;
+		}
+
+	}
+
+	.nav-item {
+		transition: background-color 0.2s linear;
+		&.active {
+			background-color: @green-highlight;
+		}
+		&:hover {
+			background-color: lighten(@greenmedia-darkcyan, 5%);
+		}
+		a {
+			color: white;
+			text-decoration: none;
+			display: flex;
+			align-items: center;
+			text-transform: uppercase;
+			padding: 0.5em 0 0.5em 3em;
+			font-weight: 600;
+			letter-spacing: 0.04em;
+		}
+	}
+
+	.green-nav-icon {
+		position: relative;
+		display: inline-block;
+		width: 3em;
+		height: 3em;
+		border-radius: 50%;
+		background-color: white;
+		margin-right: 1em;
+		&.metrics-icon {
+			background-image: url("/img/green/dashboard/metrics-button.svg");
+		}
+		&.tags-icon {
+			background-image: url("/img/green/dashboard/tags-button.svg");
+		}
+		&.optimisation-icon {
+			background-image: url("/img/green/dashboard/optim-button.svg");
+		}
+		&.impact-icon {
+			background-image: url("/img/green/dashboard/impact-button.svg");
+		}
+		&.profile-icon {
+			background-image: url("/img/green/dashboard/profile-button.svg");
+		}
+	}
+
+	.navbar-bottom-decoration {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		
+		a {
+			text-decoration: none;
+			color: white;
+		}
+	}
+}
