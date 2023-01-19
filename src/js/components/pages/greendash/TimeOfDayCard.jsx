@@ -24,16 +24,16 @@ const TimeOfDayCard2 = ({ baseFilters, tags }) => {
 		// return <Misc.Loading text="Fetching your tag data..." />;
 	}
 	useEffect(() => {
-		const pvCarbon = getCarbon({ ...baseFilters, timeofday: true, breakdown: 'timeofday{"co2":"sum"}' });
+		const pvCarbon = getCarbon({ ...baseFilters, timeofday: true, breakdown: 'timeofday{"co2":"sum"}', prob: '88' });
 		pvCarbon.promise.then((res) => {
-			if (!res.by_timeofday.buckets.length) {
+			if (!res.sampling.by_timeofday.buckets.length) {
 				setChartProps({ isEmpty: true });
 				return;
 			}
 			const labels = [];
 			const data = [];
 
-			let buckets = res.by_timeofday.buckets;
+			let buckets = res.sampling.by_timeofday.buckets;
 			if (isPer1000()) {
 				buckets = emissionsPerImpressions(buckets);
 			}

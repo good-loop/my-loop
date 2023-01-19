@@ -179,9 +179,9 @@ const GreenMetrics2 = ({}) => {
 	/**
 	 * Inital load of total
 	 */
-	const pvChartTotal = getCarbon({...baseFilters, breakdown: ['total{"count":"sum"}']})
+	const pvChartTotal = getCarbon({...baseFilters, breakdown: ['total{"count":"sum"}'], prob: "88"})
 
-	let noData = pvChartTotal.value && !pvChartTotal.value.allCount;
+	let noData = pvChartTotal.value && !pvChartTotal.value.sampling?.allCount;
 	// TODO Fall back to filterMode methods to get campaigns when table is empty
 	
 	if (!pvChartTotal.resolved) {
@@ -194,7 +194,7 @@ const GreenMetrics2 = ({}) => {
 	// HACK: Tell JourneyCard we had an empty table & so couldn't get campaigns (but nothing is "loading")
 	// TODO We CAN get campaigns but it'd take more of a rewrite than we want to do just now.
 	// not working?? How does this compare to noData
-	const emptyTable = pvChartTotal.resolved && (!pvChartTotal?.value?.allCount || pvChartTotal.value.by_total.buckets.length === 0);
+	const emptyTable = pvChartTotal.resolved && (!pvChartTotal?.value?.sampling?.allCount || pvChartTotal.value.sampling.by_total.buckets.length === 0);
 	
 	const commonProps = { period, baseFilters, per1000: isPer1000() };
 	// Removed (temp?): brands, campaigns, tags
@@ -209,10 +209,11 @@ const GreenMetrics2 = ({}) => {
 			// 'domain{"emissions":"sum"}',
 			// 'campaign{"emissions":"sum"}', do campaign breakdowns later with more security logic
 		],
-		name: 'lotsa-chartdata'
+		name: 'lotsa-chartdata',
+		prob: '88'
 	});
 
-	let pvCampaigns = getCampaigns(pvChartData.value?.by_adid.buckets);
+	let pvCampaigns = getCampaigns(pvChartData.value?.sampling?.by_adid.buckets);
 	if (pvCampaigns && PromiseValue.isa(pvCampaigns.value)) {
 		// HACK unwrap nested PV
 		pvCampaigns = pvCampaigns.value;
@@ -220,7 +221,7 @@ const GreenMetrics2 = ({}) => {
 
 	return (
 		<>
-			<OverviewWidget period={period} data={pvChartTotal.value?.by_total.buckets} />
+			<OverviewWidget period={period} data={pvChartTotal.value?.sampling?.by_total.buckets} />
 			{false && <PropControl inline
 				type="toggle" prop="emode" dflt="total" label="Show emissions:"
 				left={{label: 'Total', value: 'total', colour: 'primary'}}
@@ -228,7 +229,7 @@ const GreenMetrics2 = ({}) => {
 			/>}
 			<Row className="card-row">
 				<Col xs="12" sm="8" className="flex-column">
-					<TimeSeriesCard {...commonProps} data={pvChartData.value?.by_time.buckets} noData={noData} />
+					<TimeSeriesCard {...commonProps} data={pvChartData.value?.sampling?.by_time.buckets} noData={noData} />
 				</Col>
 				<Col xs="12" sm="4" className="flex-column">
 					<JourneyCard

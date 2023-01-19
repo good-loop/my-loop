@@ -59,6 +59,7 @@ const QuartersCard = ({baseFilters}) => {
 		start: isoDate(quarter.start),
 		end: isoDate(quarter.end),
 		breakdown: 'total{"co2":"sum"}',
+		prob: '88',
 	}));
 	// add it into chartProps
 	pvsBuckets.forEach((pvBuckets, i) => {
@@ -68,7 +69,7 @@ const QuartersCard = ({baseFilters}) => {
 		let quarter = quarters[i];
 		chartProps.data.labels[i] = printPeriod(quarter, true);
 
-		let buckets = pvBuckets.value.by_total.buckets;
+		let buckets = pvBuckets.value.sampling.by_total.buckets;
 		if (!buckets || !buckets.length) {
 			return; // no data for this quarter
 		}
@@ -112,9 +113,10 @@ const CampaignCard = ({baseFilters}) => {
 		breakdown: [
 			'campaign{"co2":"sum"}',
 		],
-		name:"campaign-chartdata"
+		name:"campaign-chartdata",
+		prob: '88',
 	});
-	let dataValue = pvChartData.value;
+	let dataValue = pvChartData.value.sampling;
 
 	let vbyx = {};
 	if (dataValue) {

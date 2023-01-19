@@ -334,13 +334,15 @@ const BreakdownCard = ({ baseFilters }) => {
 	const techValue = getCarbon({
 		...baseFilters,
 		breakdown: ['total{"emissions":"sum"}'],
-	})?.value;
+		prob: '88',
+	})?.value?.sampling;
 
 	// NB: breakdown: "emissions":"sum" is a hack that the backend turns into count(aka impressions) + co2 + co2-bits
 	const dataValue = getCarbon({
 		...baseFilters,
 		breakdown: ['os{"emissions":"sum"}', 'adid{"emissions":"sum"}', 'domain{"emissions":"sum"}', 'format{"emissions":"sum"}'],
-	})?.value;
+		prob: '88',
+	})?.value?.sampling;
 
 	const loading = <Misc.Loading text="Fetching your data..." />;
 
