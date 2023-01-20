@@ -189,7 +189,7 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 	);
 };
 
-const MapCard = ({ baseFilters, per1000 }) => {
+const MapCard = ({ baseFilters, per1000, probNum }) => {
 	const [mapData, setMapData] = useState('loading'); // Object mapping region ID to imps + carbon
 	const [focusRegion, setFocusRegion] = useState('world'); // ID of currently focused country
 	const [mapDefs, setMapDefs] = useState(); // JSON object with map paths and meta
@@ -228,7 +228,7 @@ const MapCard = ({ baseFilters, per1000 }) => {
 	const locationField = isWorld ? 'country' : subLocationForCountry(focusRegion);
 
 	// Augment base filters with extra query/breakdown params as necessary
-	const filters = { ...baseFilters, breakdown: [locationField + '{"emissions":"sum"}'], prob: '88'};
+	const filters = { ...baseFilters, breakdown: [locationField + '{"emissions":"sum"}'], prob: probNum ? probNum.toString() : null};
 
 	// Are we looking at one country, or the whole world map?
 	if (!isWorld) {
@@ -250,7 +250,7 @@ const MapCard = ({ baseFilters, per1000 }) => {
 		if (!mapDefs || !mapDefsReady) return;
 
 		// Country or sub-location breakdown?
-		let locnBuckets = pvChartData.value.sampling['by_' + locationField].buckets;
+		let locnBuckets = probNum ? pvChartData.value.sampling['by_' + locationField].buckets : pvChartData.value['by_' + locationField].buckets;
 
 		// Rename locations with no corresponding map entry to OTHER
 		// convert old non-namespaced sublocations e.g. 'CA' => 'US-CA'

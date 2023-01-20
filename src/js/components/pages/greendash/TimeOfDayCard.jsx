@@ -16,7 +16,7 @@ const TimeOfDayCard = (props) => {
 };
 
 
-const TimeOfDayCard2 = ({ baseFilters, tags }) => {
+const TimeOfDayCard2 = ({ baseFilters, tags, prob }) => {
 	const [chartProps, setChartProps] = useState();
 	const [pvCarbon, setPVCarbon] = useState();
 

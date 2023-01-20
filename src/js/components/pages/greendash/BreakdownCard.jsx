@@ -329,20 +329,23 @@ const PubSubcard = ({ data }) => {
  * @param {Object} p
  * @param {Object} p.dataValue pvChartData.value Which are split by breakdown: os, adid,
  */
-const BreakdownCard = ({ baseFilters }) => {
+const BreakdownCard = ({ baseFilters, probNum }) => {
 	// Faster initial loading - fetch the default tech breakdown
-	const techValue = getCarbon({
+	const pvTechValue = getCarbon({
 		...baseFilters,
 		breakdown: ['total{"emissions":"sum"}'],
-		prob: '88',
-	})?.value?.sampling;
+		prob: probNum ? probNum.toString() : null
+	});
+	const techValue = probNum ? pvTechValue.value?.sampling : pvTechValue.value;
 
 	// NB: breakdown: "emissions":"sum" is a hack that the backend turns into count(aka impressions) + co2 + co2-bits
-	const dataValue = getCarbon({
+	const pvDataValue = getCarbon({
 		...baseFilters,
 		breakdown: ['os{"emissions":"sum"}', 'adid{"emissions":"sum"}', 'domain{"emissions":"sum"}', 'format{"emissions":"sum"}'],
-		prob: '88',
-	})?.value?.sampling;
+		prob: probNum ? probNum.toString() : null
+	})
+
+	const dataValue = probNum ? pvDataValue.value?.sampling : pvDataValue.value
 
 	const loading = <Misc.Loading text="Fetching your data..." />;
 

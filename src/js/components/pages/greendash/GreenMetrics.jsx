@@ -10,7 +10,7 @@ import Misc from '../../../base/components/Misc';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import ErrAlert from '../../../base/components/ErrAlert';
 
-import { GreenCard, periodFromUrl, printPeriod } from './dashutils';
+import { GreenCard, periodFromUrl, printPeriod, probFromUrl } from './dashutils';
 import { getCampaigns, getCarbon, getSumColumn } from './emissionscalc';
 
 import GreenDashboardFilters from './GreenDashboardFilters';
@@ -41,11 +41,12 @@ export const isPer1000 = () => {
 };
 
 
-const OverviewWidget = ({ period, data }) => {
+const OverviewWidget = ({ period, data, prob }) => {
 	let imps;
 	if (data?.length > 0) {
 		const total = getSumColumn(data, 'count');
-		imps = printer.prettyInt(total);
+		const [upper, lower] = [total*1.01, total*0.99]
+		imps = !prob || (prob && prob == 1) ? printer.prettyInt(total) : `${printer.prettyInt(lower)} to ${printer.prettyInt(upper)}`;
 	} else if (!data) {
 		imps = 'Fetching data...';
 	} else {
@@ -60,6 +61,9 @@ const OverviewWidget = ({ period, data }) => {
 				<span className="impressions">
 					Impressions served: <span className="impressions-count">{imps}</span>
 				</span>
+				{prob && <span className='probability ml-5'>
+					Probability: {prob}
+				</span>}
 			</Col>
 		</Row>
 	);
@@ -176,12 +180,18 @@ const GreenMetrics2 = ({}) => {
 		end: period.end.toISOString(),
 	};
 
+	const probNum = probFromUrl();
+
 	/**
 	 * Inital load of total
 	 */
-	const pvChartTotal = getCarbon({...baseFilters, breakdown: ['total{"count":"sum"}'], prob: "88"})
+	const pvChartTotal = getCarbon({...baseFilters, breakdown: ['total{"count":"sum"}'], prob: probNum ? probNum.toString() : null})
+	
+	const pvChartTotalValue = probNum ? pvChartTotal.value?.sampling : pvChartTotal.value;
 
-	let noData = pvChartTotal.value && !pvChartTotal.value.sampling?.allCount;
+	const samplingProb = pvChartTotalValue?.probability;
+
+	let noData = pvChartTotalValue && !pvChartTotalValue?.allCount;
 	// TODO Fall back to filterMode methods to get campaigns when table is empty
 	
 	if (!pvChartTotal.resolved) {
@@ -194,9 +204,9 @@ const GreenMetrics2 = ({}) => {
 	// HACK: Tell JourneyCard we had an empty table & so couldn't get campaigns (but nothing is "loading")
 	// TODO We CAN get campaigns but it'd take more of a rewrite than we want to do just now.
 	// not working?? How does this compare to noData
-	const emptyTable = pvChartTotal.resolved && (!pvChartTotal?.value?.sampling?.allCount || pvChartTotal.value.sampling.by_total.buckets.length === 0);
+	const emptyTable = pvChartTotal.resolved && (!pvChartTotalValue?.allCount || pvChartTotalValue.by_total.buckets.length === 0);
 	
-	const commonProps = { period, baseFilters, per1000: isPer1000() };
+	const commonProps = { period, baseFilters, per1000: isPer1000(), probNum };
 	// Removed (temp?): brands, campaigns, tags
 	
 	const pvChartData = getCarbon({
@@ -210,10 +220,12 @@ const GreenMetrics2 = ({}) => {
 			// 'campaign{"emissions":"sum"}', do campaign breakdowns later with more security logic
 		],
 		name: 'lotsa-chartdata',
-		prob: '88'
+		prob: probNum ? probNum.toString() : null
 	});
 
-	let pvCampaigns = getCampaigns(pvChartData.value?.sampling?.by_adid.buckets);
+	const pvChartDatalValue = probNum ? pvChartData.value?.sampling : pvChartData.value;
+
+	let pvCampaigns = getCampaigns(pvChartDatalValue?.by_adid.buckets);
 	if (pvCampaigns && PromiseValue.isa(pvCampaigns.value)) {
 		// HACK unwrap nested PV
 		pvCampaigns = pvCampaigns.value;
@@ -221,7 +233,7 @@ const GreenMetrics2 = ({}) => {
 
 	return (
 		<>
-			<OverviewWidget period={period} data={pvChartTotal.value?.sampling?.by_total.buckets} />
+			<OverviewWidget period={period} data={pvChartTotalValue?.by_total.buckets} prob={samplingProb} />
 			{false && <PropControl inline
 				type="toggle" prop="emode" dflt="total" label="Show emissions:"
 				left={{label: 'Total', value: 'total', colour: 'primary'}}
@@ -229,7 +241,7 @@ const GreenMetrics2 = ({}) => {
 			/>}
 			<Row className="card-row">
 				<Col xs="12" sm="8" className="flex-column">
-					<TimeSeriesCard {...commonProps} data={pvChartData.value?.sampling?.by_time.buckets} noData={noData} />
+					<TimeSeriesCard {...commonProps} data={pvChartDatalValue?.by_time.buckets} noData={noData} />
 				</Col>
 				<Col xs="12" sm="4" className="flex-column">
 					<JourneyCard
