@@ -31,7 +31,7 @@ const baseOptions = (unit = 'kg') => ({
 });
 
 
-const QuartersCard = ({baseFilters, probNum}) => {
+const QuartersCard = ({baseFilters}) => {
 	// Set up base chart data object
 	const chartProps = {
 		data: {
@@ -59,7 +59,6 @@ const QuartersCard = ({baseFilters, probNum}) => {
 		start: isoDate(quarter.start),
 		end: isoDate(quarter.end),
 		breakdown: 'total{"co2":"sum"}',
-		prob: probNum ? probNum.toString() : null
 	}));
 	// add it into chartProps
 	pvsBuckets.forEach((pvBuckets, i) => {
@@ -69,7 +68,7 @@ const QuartersCard = ({baseFilters, probNum}) => {
 		let quarter = quarters[i];
 		chartProps.data.labels[i] = printPeriod(quarter, true);
 
-		let buckets = probNum ? pvBuckets.value.sampling.by_total.buckets : pvBuckets.value.by_total.buckets;
+		let buckets = baseFilters.prob ? pvBuckets.value.sampling.by_total.buckets : pvBuckets.value.by_total.buckets;
 		if (!buckets || !buckets.length) {
 			return; // no data for this quarter
 		}
@@ -107,16 +106,15 @@ const QuartersCard = ({baseFilters, probNum}) => {
 };
 
 
-const CampaignCard = ({baseFilters, probNum}) => {
+const CampaignCard = ({baseFilters}) => {
 	const pvChartData = getCarbon({
 		...baseFilters,
 		breakdown: [
 			'campaign{"co2":"sum"}',
 		],
 		name:"campaign-chartdata",
-		prob: probNum ? probNum.toString() : null
 	});
-	let dataValue = probNum ? pvChartData.value?.sampling : pvChartData.value;
+	let dataValue = baseFilters.prob ? pvChartData.value?.sampling : pvChartData.value;
 
 	let vbyx = {};
 	if (dataValue) {

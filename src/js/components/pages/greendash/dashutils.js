@@ -80,7 +80,7 @@ export const periodFromUrl = () => {
 };
 
 /**
- * Read URL params and extract a prob number if one is present 
+ * Read URL params and extract a probability number if one is present 
  * @returns {number | null}
  */
 export const probFromUrl = () => {
@@ -91,6 +91,11 @@ export const probFromUrl = () => {
 		console.log('Failed to read prob from url', e);
 		return null;
 	}
+}
+
+export const noCacheFromUrl = () => {
+	const nocache = DataStore.getUrlValue('nocache')
+	return !!nocache;
 }
 
 /** Convert a name to a period object

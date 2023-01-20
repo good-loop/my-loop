@@ -10,7 +10,7 @@ import Misc from '../../../base/components/Misc';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import ErrAlert from '../../../base/components/ErrAlert';
 
-import { GreenCard, periodFromUrl, printPeriod, probFromUrl } from './dashutils';
+import { GreenCard, periodFromUrl, printPeriod, probFromUrl, noCacheFromUrl } from './dashutils';
 import { getCampaigns, getCarbon, getSumColumn } from './emissionscalc';
 
 import GreenDashboardFilters from './GreenDashboardFilters';
@@ -174,20 +174,24 @@ const GreenMetrics2 = ({}) => {
 		}
 	}
 
+	const probNum = probFromUrl();
+	const nocache = noCacheFromUrl();
+
 	const baseFilters = {
 		q,
 		start: period.start.toISOString(),
 		end: period.end.toISOString(),
+		prob: probNum ? probNum.toString() : null, 
+		nocache: nocache ? true : null,
 	};
 
-	const probNum = probFromUrl();
 
 	/**
 	 * Inital load of total
 	 */
-	const pvChartTotal = getCarbon({...baseFilters, breakdown: ['total{"count":"sum"}'], prob: probNum ? probNum.toString() : null})
+	const pvChartTotal = getCarbon({...baseFilters, breakdown: ['total{"count":"sum"}']})
 	
-	const pvChartTotalValue = probNum ? pvChartTotal.value?.sampling : pvChartTotal.value;
+	const pvChartTotalValue = baseFilters.prob ? pvChartTotal.value?.sampling : pvChartTotal.value;
 
 	const samplingProb = pvChartTotalValue?.probability;
 
@@ -206,7 +210,7 @@ const GreenMetrics2 = ({}) => {
 	// not working?? How does this compare to noData
 	const emptyTable = pvChartTotal.resolved && (!pvChartTotalValue?.allCount || pvChartTotalValue.by_total.buckets.length === 0);
 	
-	const commonProps = { period, baseFilters, per1000: isPer1000(), probNum };
+	const commonProps = { period, baseFilters, per1000: isPer1000() };
 	// Removed (temp?): brands, campaigns, tags
 	
 	const pvChartData = getCarbon({
@@ -220,10 +224,9 @@ const GreenMetrics2 = ({}) => {
 			// 'campaign{"emissions":"sum"}', do campaign breakdowns later with more security logic
 		],
 		name: 'lotsa-chartdata',
-		prob: probNum ? probNum.toString() : null
 	});
 
-	const pvChartDatalValue = probNum ? pvChartData.value?.sampling : pvChartData.value;
+	const pvChartDatalValue = baseFilters.prob ? pvChartData.value?.sampling : pvChartData.value;
 
 	let pvCampaigns = getCampaigns(pvChartDatalValue?.by_adid.buckets);
 	if (pvCampaigns && PromiseValue.isa(pvCampaigns.value)) {
