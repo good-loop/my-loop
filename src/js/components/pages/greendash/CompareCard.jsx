@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
+import PromiseValue from '../../../base/promise-value';
 
 import { ButtonGroup } from 'reactstrap';
 import NewChartWidget from '../../../base/components/NewChartWidget';
-import { getId } from '../../../base/data/DataClass';
+import { getId, getName } from '../../../base/data/DataClass';
 import KStatus from '../../../base/data/KStatus';
 import { getDataList } from '../../../base/plumbing/Crud';
 import DataStore from '../../../base/plumbing/DataStore';
@@ -11,9 +12,10 @@ import SearchQuery from '../../../base/searchquery';
 import { isoDate } from '../../../base/utils/miscutils';
 import C from '../../../C';
 import { dataColours, getPeriodQuarter, GreenCard, GreenCardAbout, ModeButton, printPeriod, TONNES_THRESHOLD } from './dashutils';
-import { emissionsPerImpressions, getCarbon, getCompressedBreakdown, getSumColumn } from './emissionscalc';
+import { emissionsPerImpressions, campaignIDToCampaignName, getCarbon, getCompressedBreakdown, getSumColumn } from './emissionscalc';
 
 import { isPer1000 } from './GreenMetrics';
+import { assert } from '../../../base/utils/assert';
 
 
 /**
@@ -29,6 +31,39 @@ const baseOptions = (unit = 'kg') => ({
 		tooltip: { callbacks: { label: ctx => `${printer.prettyNumber(ctx.raw)} ${unit} CO2` } },
 	},
 });
+
+/**
+ * 
+ * @param {String[]} labels
+ * @param {?String} unit kg|tons
+ * @param {?Integer} nCharacters number of characters to show
+ * @param {?String} suffix what to append if string is shortened
+ * @returns {String} "Example" -> (3, "...") -> "Exa..."
+ * 
+ * Shortens chart labels to size 'minLength', appending 'suffix' if shortened
+ * On hovering, show entire label
+ */
+const minLengthLabelOptions = ({labels, unit = 'kg', nCharacters = 6, suffix = "..."}) => ({
+		indexAxis: 'y',
+		scales: { 	x: { ticks: { 	callback: v => v+' '+unit, precision: 2,
+								} 
+					},
+					y: {ticks : { callback: function(t) {
+						if (labels[t].length > nCharacters) return labels[t].substr(0, nCharacters) + suffix;
+						else return labels[t];
+					}}}
+				},
+		plugins: {
+			legend: { display: false },
+			tooltip: { callbacks: {
+				label: ctx => `${printer.prettyNumber(ctx.raw)} ${unit} CO2` } },
+		},
+		tooltips : { callbacks : {
+			title: function(t, d) {
+				return d.labels[t[0].index];
+		 	},
+		}}
+	});
 
 
 const QuartersCard = ({baseFilters}) => {
@@ -114,9 +149,13 @@ const CampaignCard = ({baseFilters}) => {
 		],
 		name:"campaign-chartdata",
 	});
+
 	let dataValue = baseFilters.prob ? pvChartData.value?.sampling : pvChartData.value;
 
 	let vbyx = {};
+	let labels = [];
+	let values = [];
+
 	if (dataValue) {
 		let buckets = dataValue.by_campaign.buckets;
 		if (isPer1000()) {
@@ -125,18 +164,48 @@ const CampaignCard = ({baseFilters}) => {
 
 		let breakdownByX = {};
 		buckets.forEach(row => breakdownByX[row.key] = row.co2);
+
 		vbyx = getCompressedBreakdown({breakdownByX});	
+		
+		// reformat ids we want to find names of into a bucket format (remove 'other' too)
+		const idsToNames = Object.keys(vbyx).filter(key => key != "Other");
+		
+		let pvCampaigns = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUB_OR_DRAFT, ids: idsToNames });
+
+		if (pvCampaigns && PromiseValue.isa(pvCampaigns.value)) {
+			// HACK unwrap nested PV
+			pvCampaigns = pvCampaigns.value;
+		}
+
+		let mapping = []
+		if(pvCampaigns?.value){
+			let campaigns = pvCampaigns?.value.hits
+			// create object of just names & ids
+			mapping = campaigns.reduce((acc, val) => 
+				[...acc, {name:val.name, id:val.id}], 
+				[{name:"Other", id:"Other"}])
+		}
+
+		// if error occured with names OR no campaigns were found...
+		if(mapping.length != Object.keys(vbyx).length){
+			// default to using IDs & Co2
+			labels = Object.keys(vbyx)
+			values = Object.values(vbyx);
+		} else {
+			// directly map 'name' to 'co2'
+			let nameToCo2 = {}
+			mapping.forEach(row => nameToCo2[row.name] = vbyx[row.id])
+			labels = Object.keys(nameToCo2)
+			values = Object.values(nameToCo2)
+		}
 	}
-	
-	let bucketValues = Object.values(vbyx);
-	const labels = Object.keys(vbyx);
 
 	const chartProps = {
 		data: {
 			labels,
-			datasets: [{ data:bucketValues }]
+			datasets: [{ data:values }]
 		},
-		options: baseOptions(),
+		options: minLengthLabelOptions({labels:labels, nCharacters : 8}),
 	};
 
 	// Assign bar colours
