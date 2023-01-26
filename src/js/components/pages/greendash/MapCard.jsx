@@ -228,7 +228,7 @@ const MapCard = ({ baseFilters, per1000 }) => {
 	const locationField = isWorld ? 'country' : subLocationForCountry(focusRegion);
 
 	// Augment base filters with extra query/breakdown params as necessary
-	const filters = { ...baseFilters, breakdown: [locationField + '{"emissions":"sum"}'] };
+	const filters = { ...baseFilters, breakdown: [locationField + '{"emissions":"sum"}']};
 
 	// Are we looking at one country, or the whole world map?
 	if (!isWorld) {
@@ -250,7 +250,7 @@ const MapCard = ({ baseFilters, per1000 }) => {
 		if (!mapDefs || !mapDefsReady) return;
 
 		// Country or sub-location breakdown?
-		let locnBuckets = pvChartData.value['by_' + locationField].buckets;
+		let locnBuckets = baseFilters.prob ? pvChartData.value.sampling['by_' + locationField].buckets : pvChartData.value['by_' + locationField].buckets;
 
 		// Rename locations with no corresponding map entry to OTHER
 		// convert old non-namespaced sublocations e.g. 'CA' => 'US-CA'

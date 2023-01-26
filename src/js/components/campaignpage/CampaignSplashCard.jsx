@@ -55,7 +55,7 @@ const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationVa
 	return (<>
 		<div className="impact-hub-splash position-relative">
 			<div className="splash-decoration">
-				<DynImg src={campaignPage.bg ? campaignPage.bg : "/img/lightcurve.svg"} className={space("w-100", campaignPage.bg ? "splash-img" : "splash-curve")} alt="splash" />
+				<DynImg src={campaignPage.bg ? campaignPage.bg : "/img/lightcurve.svg"} className={campaignPage.bg ? "w-100 splash-img" : "splash-curve"} alt="splash" />
 				<div className="dark-overlay" />
 				<img src="/img/redcurve.svg" className="splash-curve curve-border" alt="dark border to curve" />
 				<img src="/img/redcurve.svg" className="splash-curve" alt="curve" />

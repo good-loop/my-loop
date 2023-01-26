@@ -400,10 +400,6 @@ const SmallPrintInfo = ({ads, charities, campaign, pvTopItem}) => {
 	}
 
 	let totalBudget = campaign.maxDntn;
-	if (!totalBudget) {
-		let amounts = ads.map(ad => Advert.budget(ad) && Advert.budget(ad).total);
-		totalBudget = Money.total(amounts);
-	}
 
 	// Did we use an impact model?
 	const impactModels = charities.map(c => c.simpleImpact).filter(m => m);

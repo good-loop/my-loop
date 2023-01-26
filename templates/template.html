@@ -42,6 +42,8 @@
 			
 			let filename = isDebug ? 'bundle-debug.js' : 'bundle.js';
 			filename += "?ord=$cachebuster"; // see MetaHtmlServlet NB: ord is arbitrary but its the parameter name suggested by DoubleClick
+			// The cachebuster comes from version.properties info on the last git commit. That is made by bob when building the java code.
+			// so run `bob` to update it outside of a normal build.
 			document.write('<script src="/build/js/' + filename + '"/><\/script>');
 		</script>
 
