@@ -36,7 +36,7 @@ class ShareLoginTest(unittest.TestCase):
         self.assertIn("Impressions", impressions.text, "Logged in and see impressions")
 
         # Get share links
-        driver.find_element(By.ID, 'share-btn').click()
+        driver.find_element(By.ID, 'dashboard-share-btn').click()
         time.sleep(1)
         driver.find_element(By.ID, 'copy-share-dashboard-link').click()
         time.sleep(1)
