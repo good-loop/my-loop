@@ -1,1 +1,0 @@
-../../../logins/sogive-app/puppeteer.credentials.js
