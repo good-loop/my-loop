@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardBody, CardImg, CardText, CardTitle, Col, Container, Row } from 'reactstrap';
 import { useSpring } from 'react-spring';
 
@@ -44,6 +44,7 @@ const HomePage = ({ spring }) => {
 		<div className="HomePage widepage">
 			<MyLandingSection />
 			<LogoBanner />
+			<CTA_gl_bar />
 			<FindOutMoreSection />
 			<LogoBanner logoList={['img/LandingBrand/H&M-Logo.png', 'img/LandingBrand/toms-shoes-logo.png', 'img/LandingBrand/universal-music-group-logo.png', 'img/LandingBrand/Logo_NIKE.png', 'img/LandingBrand/Unilever-logo.png']} />
 			<SlideCardsSection />
@@ -359,5 +360,25 @@ const JoinOurMovement = () => <>
 		</div>
 	</PageCard>
 </>;
+
+/*
+CTA bar that appears at top of landing page just below navbar
+Directs users interested in partnering to our main good loop website
+*/
+const CTA_gl_bar = () => {
+
+	// store ref to CTA container to let users close the bar
+	const ctaRef = useRef(null)	
+
+	return (
+		<div id="CTA-gl-bar" ref={ctaRef} >
+			<p>Turn your browsing into a force for good. Visit <a href="https://my.good-loop.com">My.Good-Loop</a> for more info.</p>
+			<button onClick={() => ctaRef.current.style.display = "None"}>
+				<img src="img/icons/Icon_Cross.png"/>
+			</button>
+		</div>
+	)
+}
+
 
 export default HomePage;

@@ -1,0 +1,56 @@
+#CTA-gl-bar {
+    // put at top of screen just below navbar
+    top: 60px;
+    position: absolute;
+    z-index: 2; // above most of page except for logo which should slightly overlap 
+
+    width: 100%;
+    height: 50px;
+
+    background-color: rgb(231, 239, 242);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+
+    // Looking to turn your personal browsing ...
+    p {
+        display: inline-block;
+
+        width: 100%;    // since we don't show this cta on small screens, the text should never cover the button to close the cta
+        text-align: center;
+
+        margin: 0 !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        
+        padding-top: 15px;
+        font-size: large;
+    }
+
+    a {
+        text-decoration: underline;
+    }
+
+    // close button (contains X user can click)
+    button {
+        // center 
+        height: 60%;
+        top: 12.5px;
+
+        // moved just off the right side of page
+        position: absolute;
+        right: 2.5%;
+
+        // aesthetics
+        background: none;
+        border: none;
+    }
+
+    // the actual X that the user can see
+    img {
+        // positioning
+        height: 20px;
+
+        // aesthetics
+        opacity: 0.45;
+    }
+}
