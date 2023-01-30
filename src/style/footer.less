@@ -1,3 +1,6 @@
+@import "../js/base/style/colours.less";
+
+
 footer {
 	font-family: "Tajawal", sans-serif;
 	background-color: @dark0;
@@ -6,6 +9,7 @@ footer {
 	a {
 		color: white;
     }
+
     a:hover {
 		color: white !important;
     }
@@ -100,3 +104,70 @@ footer {
 	}
 
 } // ./my-loop-footer
+
+// navigation to other sites copied from main website 
+#footer-nav-container {
+	background-color: @gl-dark-turquoise !important;
+
+	padding-left: 5%;
+	padding-right: 5%;
+	padding-top: 20px;
+
+	color: @light0;
+
+	a {
+		text-decoration: none !important;
+	}
+
+    a:hover {
+		color: white !important;
+    }
+    h5 {
+		text-transform: uppercase;
+		font-family: 'Montserrat';
+		font-weight: bold;
+    }
+    .btn {
+		font-family: 'Montserrat';
+	}
+	hr {
+		color: white;
+		background-color: white;
+		margin: 50px 0px;
+	}
+
+	.flex-column>* {
+		margin: 0;
+	}
+
+	@media @md-min {
+		.footer-links {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: flex-start;
+		}
+	}
+
+	.footer-logos-portrait {
+		max-width: 4em;
+	}
+	.footer-logos-landscape {
+		max-width: 6em;
+		&.extra-wide {
+			max-width: 16em; // UN Sustainable Development Goals logo is extremely wide
+		}
+	}
+
+
+}
+
+#footer-bCorp-carbonNegative-logos {
+	.row{
+		// move to just off the right side of screen 	
+		flex-direction: row-reverse; 
+		padding-right: 25px;
+
+		padding-bottom: 20px;	// make sure website doesn't end abrubtly at the very bottom of the images
+	}
+}

@@ -79,28 +79,6 @@ const MyLoopFooter = ({ page }) => {
 						</C.A>
 					</Col>
 				</Row>
-				<Row className="mt-5 footer-links text-center small mx-auto">
-					<Col>
-						<C.A href="https://doc.good-loop.com/policy/privacy-policy.html">
-							<p>Privacy policy</p>
-						</C.A>
-					</Col>
-					<Col>
-						<C.A href="https://doc.good-loop.com/policy/cookie-policy.html">
-							<p>Cookie policy</p>
-						</C.A>
-					</Col>
-					<Col>
-						<C.A href="https://doc.good-loop.com/terms/terms-of-use.html">
-							<p>Terms of use</p>
-						</C.A>
-					</Col>
-					<Col>
-						<C.A href="https://doc.good-loop.com/policy/brand-safety-policy.html">
-							<p>Brand safety policy</p>
-						</C.A>
-					</Col>
-				</Row>
 				{isPortraitMobile() &&
 					<Col md={6} className="d-flex justify-content-center pt-5 mt-5">
 						<div className="stamps d-flex flex-row align-items-end py-1 px-3">
@@ -167,31 +145,75 @@ const MyLoopFooterSummer2022 = ({ page }) => {
 
 		</div>
 
-		<div className="bg-gl-dark-turquoise px-3 pt-5 footer-links text-center small d-flex justify-content-between">
-			<C.A href="https://doc.good-loop.com/policy/privacy-policy.html">
-				<p>Privacy policy</p>
-			</C.A>
-			<C.A href="https://doc.good-loop.com/policy/cookie-policy.html">
-				<p>Cookie policy</p>
-			</C.A>
-			<C.A href="https://doc.good-loop.com/terms/terms-of-use.html">
-				<p>Terms of use</p>
-			</C.A>
-			<C.A href="https://doc.good-loop.com/policy/brand-safety-policy.html">
-				<p>Brand safety policy</p>
-			</C.A>
-			<div className="stamps d-none d-md-flex justify-content-center position-absolute" style={{bottom:'8em',right:0}}>
+
+		<FooterNavigation />
+
+		<div className="bg-gl-dark-turquoise" id="footer-bCorp-carbonNegative-logos">
+			<Row>
 				<img src="/img/footer/Net-carbon-negative.svg" className="logo-lg" />
 				<img src="/img/footer/B-corp.svg" className="logo-lg" />
+			</Row>
+		</div>
+	</Container>;
+}
+
+const FooterNavigation = () => {
+	return (
+		<div class="fluid" id="footer-nav-container">
+			<div class='row justify-content-between'>
+				<div class='col-6 col-md font-weight-bold footer-links'>
+					<div class="d-inline-block">
+						<h5><a href='/products.html'>Products</a></h5>
+						<h5><a href='/case-study/index.html'>Case Studies</a></h5>
+						<h5><a href='/good-news/index.html'>Good News</a></h5>
+						<h5><a href='/podcast/index.html'>Podcast</a></h5>
+						<h5><a href='/contact.html'>Contact</a></h5>
+					</div>
+				</div>
+				<div class='col-6 col-md footer-links'>
+					<div class="d-inline-block">
+						<h5>Who We Work With</h5>
+						<a href='/brands.html'>Brands and agencies</a><br />
+						<a href='/charities.html'>Charities</a><br />
+						<a href='/publishers.html'>Publishers</a><br />
+						<a href='/the-public.html'>The Public</a><br />
+					</div>
+				</div>
+				<div class='col-6 col-md mt-5 mt-md-0 footer-links'>
+					<div class="d-inline-block">
+						<h5>About</h5>
+						<a href='/our-story.html'>Our story</a><br />
+						<a href='/donations-report.html'>Our impact</a><br />
+						<a href='/press-and-awards.html'>Press and awards</a><br />
+						<a href='/jobs/index.html'>Careers</a><br />
+					</div>
+				</div>
+				<div class='col-6 col-md mt-5 mt-md-0 footer-links'>
+					<div class="d-inline-block">
+						<h5>More</h5>
+						<a href='https://doc.good-loop.com/policy/privacy-policy.html'>Privacy policy</a><br />
+						<a href='https://doc.good-loop.com/policy/job-applicant-privacy-notice.html'>Job applicant privacy policy</a><br />
+						<a href='https://doc.good-loop.com/policy/cookie-policy.html'>Cookie policy</a><br />
+						<a href="#" class="ch2-open-settings-btn">Cookie settings</a><br />
+						<a href='https://doc.good-loop.com/terms/terms-of-use.html'>Terms of use</a><br />
+						<a href='https://doc.good-loop.com'>Documentation</a><br />
+						<a href='/resources'>Resources</a><br />
+						<a href='https://doc.good-loop.com/policy/brand-safety-policy.html'>Brand Safety Policy</a><br />
+					</div>
+				</div>
+				<div class='col-6 col-md mt-5 mt-md-0 footer-links'>
+					<div class="d-inline-block">
+					<h5>For business</h5>
+					<a href="https://good-loop.com/what-we-do">What We Do</a><br />
+					<a href="https://good-loop.com/products">Products</a><br />
+					<a href="https://good-loop.com/brands">Brands And Agencies</a><br />
+					<a href="https://good-loop.com/charities">Charities</a><br />
+					<a href="https://good-loop.com/case-study/index">Case Studies</a><br />
+					</div>
+				</div>
 			</div>
 		</div>
-
-		<div className="stamps bg-gl-dark-turquoise d-flex d-md-none justify-content-center pt-3 pb-5">
-			<img src="/img/footer/Net-carbon-negative.svg" className="logo-lg" />
-			<img src="/img/footer/B-corp.svg" className="logo-lg" />
-		</div>
-
-	</Container>;
+	)
 }
 
 export default MyLoopFooterSummer2022;
