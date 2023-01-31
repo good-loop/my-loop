@@ -501,6 +501,8 @@ const fetchDonationTotalMonday = ({ charity }) => {
 			)
 	);
 	if (pvTotalForCharityMonday && pvTotalForCharityMonday.value) {
+		// Temporary null check for locked down DataServlet
+		if (!pvTotalForCharityMonday.value.examples) return null;
 		if (pvTotalForCharityMonday.value.examples.length === 0) return null;
 		const arrayTotal = pvTotalForCharityMonday.value.examples[0]._source.props;
 		const mapTotal = arrayTotal.reduce((map, obj) => {
