@@ -21,7 +21,7 @@ export const GLHorizontal = ({collapse, className, style, children}) => {
 	return <Row noGutters className={space("glhorizontal", collapse?"glhorizontal-"+collapse:"", className)} style={style}>
 		{children.map((child, i) => {
 			// Special case for overlays - they must not interfere with layout, so make no wrapper
-			if (child.type === GLOverlayCard) return child;
+			if (child.type === GLModalCard) return child;
 			return <Col key={i} style={{flexBasis:child.props.basis + "%", flexGrow:child.props.basis ? 0 : 1}}>{child}</Col>
 		})}
 	</Row>
@@ -31,7 +31,7 @@ export const GLVertical = ({className, children, ...props}) => {
 	return <div className={space("glvertical", className)} {...props}>
 		{children.map((child, i) => {
 			// Special case for overlays - they must not interfere with layout, so make no wrapper
-			if (child.type === GLOverlayCard) return child;
+			if (child.type === GLModalCard) return child;
 			return <div key={i} style={{flexBasis:child.props.basis + "%", flexGrow:child.props.basis ? 0 : 1}}>{child}</div>
 		})}
 	</div>;
@@ -56,7 +56,7 @@ export const GLCard = ({noPadding, className, style, modalContent, modalTitle, m
 	</div>;
 }
 
-export const GLOverlayCard = ({className, id}) => {
+export const GLModalCard = ({className, id}) => {
 
 	const path = MODAL_PATH.concat(id);
 	const open = DataStore.getValue(path.concat("open"));
@@ -70,8 +70,8 @@ export const GLOverlayCard = ({className, id}) => {
 	const title = DataStore.getValue(path.concat("title"));
 
 	return open ? <>
-		<div onClick={toggle} className='gloverlay-backdrop'/>
-		<div className='gloverlay'>
+		<div onClick={toggle} className='glmodal-backdrop'/>
+		<div className='glmodal'>
 			<GLCard noPadding>
 				<CardHeader>
 					<CloseButton onClick={toggle}/>

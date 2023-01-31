@@ -11,7 +11,7 @@ import { getLogo, space, stopEvent, uniq } from '../../base/utils/miscutils';
 import { modifyPage } from '../../base/plumbing/glrouter';
 import DynImg from '../../base/components/DynImg';
 import SideNavBar from './SideNavBar';
-import { GLCard, GLHorizontal, GLVertical, GLOverlayCard } from './GLCards';
+import { GLCard, GLHorizontal, GLVertical, GLModalCard } from './GLCards';
 
 
 export class ImpactFilters {
@@ -72,6 +72,8 @@ const ImpactOverviewPage = () => {
 							<h2>This ad does good</h2>
 						</GLCard>
 					</GLHorizontal>
+
+					<GLModalCard id="filter-menu"/>
 				</GLVertical>
 
 				{/* second grid half */}
@@ -113,7 +115,7 @@ const ImpactOverviewPage = () => {
 						<h1>LOOK! AN AD!</h1>
 					</GLCard>
 
-					<GLOverlayCard id="half-page"/>
+					<GLModalCard id="half-page"/>
 				</GLVertical>
 
 			</GLHorizontal>
