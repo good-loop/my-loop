@@ -1,9 +1,13 @@
 import React, { useEffect } from 'react';
-import {Row, Col, Container, Card} from 'reactstrap';
+import {Row, Col, Container, Card, CardHeader, CardBody} from 'reactstrap';
 import { space } from '../../base/utils/miscutils';
 import { assert } from '../../base/utils/assert';
+import DataStore from '../../base/plumbing/DataStore'
+import CloseButton from '../../base/components/CloseButton';
 
-export const GLHorizontal = ({className, style, children}) => {
+const MODAL_PATH = ['widget', 'HalfPageWidget'];
+
+export const GLHorizontal = ({collapse, className, style, children}) => {
 
     /*let uneatenSpace = 100;
     let notSpecifiedChildCount = 0;
@@ -14,61 +18,70 @@ export const GLHorizontal = ({className, style, children}) => {
 
     const autoSpacedSize = uneatenSpace / notSpecifiedChildCount;*/
 
-	return <Row noGutters className={space("glhorizontal", className)} style={style}>
-		{children.map((child, i) => <Col key={i} style={{flexBasis:child.props.basis + "%", flexGrow:child.props.basis ? 0 : 1}}>{child}</Col>)}
+	return <Row noGutters className={space("glhorizontal", collapse?"glhorizontal-"+collapse:"", className)} style={style}>
+		{children.map((child, i) => {
+			// Special case for overlays - they must not interfere with layout, so make no wrapper
+			if (child.type === GLOverlayCard) return child;
+			return <Col key={i} style={{flexBasis:child.props.basis + "%", flexGrow:child.props.basis ? 0 : 1}}>{child}</Col>
+		})}
 	</Row>
 }
 
 export const GLVertical = ({className, children, ...props}) => {
 	return <div className={space("glvertical", className)} {...props}>
-		{children.map((child, i) => <div key={i} style={{flexBasis:child.props.basis + "%", flexGrow:child.props.basis ? 0 : 1}}>{child}</div>)}
+		{children.map((child, i) => {
+			// Special case for overlays - they must not interfere with layout, so make no wrapper
+			if (child.type === GLOverlayCard) return child;
+			return <div key={i} style={{flexBasis:child.props.basis + "%", flexGrow:child.props.basis ? 0 : 1}}>{child}</div>
+		})}
 	</div>;
 }
 
-/**
- * A 4x4 grid layout with adjustable divisions
- * Takes 4 children of any type and arranges them accordingly
- * 
- * @param v vertical division line position as percentage from top
- * @param h horizontal division line position as percentage from left
- */
-export const GLGrid = ({v, h, className, style, children}) => {
-	assert(children.length && children.length === 4, "GLGrid expects 4 children!");
+export const GLCard = ({noPadding, className, style, modalContent, modalTitle, modalId, children, ...props}) => {
 
-	// Vertical division default to 50
-	let vTop = v || v === 0 ? v : 50;
-	let vBottom = 100 - vTop;
-	vTop += "%";
-	vBottom += "%";
+	const openModal = () => {
+		assert(modalId, "No ID specified for which overlay modal to use!");
+		DataStore.setValue(MODAL_PATH.concat(modalId), {
+			open: true,
+			content: modalContent, 
+			title: modalTitle
+		});
+	}
 
-	// Horizontal division default to flexbox default
-	let hLeft = h || h === 0 ? h : null;
-	hLeft += "%";
-	let hRight = h || h === 0 ? (100 - h) : null;;
-	hRight += "%";
-
-	return <Container fluid className={space("glgrid", className)} style={style}>
-		<Row noGutters style={{height:vTop}} className="glgrid-row">
-			<Col style={{flexBasis:hLeft}} className="glgrid-col">
-				{children[0]}
-			</Col>
-			<Col style={{flexBasis:hRight}} className="glgrid-col">
-				{children[1]}
-			</Col>
-		</Row>
-		<Row noGutters style={{height:vBottom}} className="glgrid-row">
-			<Col style={{flexBasis:hLeft}} className="glgrid-col">
-				{children[2]}
-			</Col>
-			<Col style={{flexBasis:hRight}} className="glgrid-col">
-				{children[3]}
-			</Col>
-		</Row>
-	</Container>
+	return <div className="glcard-outer" style={style}>
+		<Card className={space("glcard m-2", modalContent?"glcardmodal":"", className)} onClick={modalContent && openModal} {...props}>
+			{noPadding? children
+			: <CardBody>{children}</CardBody>}
+		</Card>
+	</div>;
 }
 
-export const GLCard = ({className, children, ...props}) => {
-	return <div className="glcard-outer">
-		<Card className={space("glcard m-2", className)} {...props}>{children}</Card>
-	</div>
-}
+export const GLOverlayCard = ({className, id}) => {
+
+	const path = MODAL_PATH.concat(id);
+	const open = DataStore.getValue(path.concat("open"));
+	const toggle = () => {
+		DataStore.setValue(path.concat("open"), !open);
+		// clear content if about to close
+		if (open) DataStore.setValue(path.concat("content"), null);
+	}
+
+	const content = DataStore.getValue(path.concat("content"));
+	const title = DataStore.getValue(path.concat("title"));
+
+	return open ? <>
+		<div onClick={toggle} className='gloverlay-backdrop'/>
+		<div className='gloverlay'>
+			<GLCard noPadding>
+				<CardHeader>
+					<CloseButton onClick={toggle}/>
+					<h4>{title}</h4>
+				</CardHeader>
+				<CardBody>
+					{content}
+				</CardBody>
+			</GLCard>
+		</div>
+	</>: null;
+
+};

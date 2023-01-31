@@ -26,6 +26,10 @@ const SideNavBar = ({active}) => {
 	const [isOpen, setIsOpen] = useState(false)
 	const toggle = () => setIsOpen(!isOpen);
 
+	//DEBUG
+	if (isMobile()) return null;
+	//END DEBUG
+
 	// We don't use the standard <Collapse> pattern here because that doesn't support an always-horizontal navbar
 
 	return (<>

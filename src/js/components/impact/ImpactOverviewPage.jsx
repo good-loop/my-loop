@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import PromiseValue from '../../base/promise-value';
 import { setWindowTitle } from '../../base/plumbing/Crud';
 import DataStore from '../../base/plumbing/DataStore';
-import { Button, Col, Container, InputGroup, Row, Card } from 'reactstrap';
+import { Button, Col, Container, InputGroup, Row, Card, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import PropControl from '../../base/components/PropControl';
 import Circle from '../../base/components/Circle';
 import BG from '../../base/components/BG';
@@ -11,7 +11,7 @@ import { getLogo, space, stopEvent, uniq } from '../../base/utils/miscutils';
 import { modifyPage } from '../../base/plumbing/glrouter';
 import DynImg from '../../base/components/DynImg';
 import SideNavBar from './SideNavBar';
-import { GLGrid, GLCard, GLHorizontal, GLVertical } from './GLCards';
+import { GLCard, GLHorizontal, GLVertical, GLOverlayCard } from './GLCards';
 
 
 export class ImpactFilters {
@@ -51,86 +51,76 @@ const ImpactOverviewPage = () => {
 
 	return <div className="d-flex flex-row justify-content-between">
 		<SideNavBar/>
-		<Container fluid style={{height: "100vh"}}>
+		<Container fluid className='iview-container'>
 
-			<GLGrid v={60}>
-				<GLCard>
-					<h2>NESTLE DONATED</h2>
-					<h1>£A BAJILLION</h1>
-				</GLCard>
+			<GLHorizontal>
 
-				<GLHorizontal>
-					<GLVertical>
-						<GLHorizontal>
-							<GLCard>
-								<p>9 BRANDS</p>
-							</GLCard>
-							<GLCard>
-								<p>18 CHARITIES</p>
-							</GLCard>
-						</GLHorizontal>
-						<GLCard basis={10}>
-							<h2>16 CAMPAIGNS</h2>
-						</GLCard>
-						<GLCard basis={10}>
-							<h2>6.5M VIEWS | 5 COUNTRIES</h2>
+				{/* first grid half */}
+				<GLVertical>
+					{/* top left corner - both top corners with basis 60 to line up into grid pattern*/}
+					<GLCard basis={60}>
+						<h2>NESTLE DONATED</h2>
+						<h1>£A BAJILLION</h1>
+					</GLCard>
+
+					{/* bottom left corner */}
+					<GLHorizontal>
+						<GLCard>
+							<h2>Watch to donate</h2>
 						</GLCard>
 						<GLCard>
-							<h2>8.69T CO2E OFFSET</h2>
+							<h2>This ad does good</h2>
 						</GLCard>
-					</GLVertical>
-					<GLCard>
-						<h2>Ads for good by Good Loop</h2>
-						<p>Hello</p>
-						<p>Hello</p>
-						<p>Hello</p>
-						<p>Hello</p>
-						<p>Hello</p>
-					</GLCard>
-				</GLHorizontal>
+					</GLHorizontal>
+				</GLVertical>
 
-				<GLHorizontal>
-					<GLCard>
-						<h2>Watch to donate</h2>
-					</GLCard>
-					<GLCard basis={70}>
-						<h2>This ad does good</h2>
-					</GLCard>
-				</GLHorizontal>
-				
-				<GLCard>
-					<h1>LOOK! AN AD!</h1>
-				</GLCard>
-			</GLGrid>
+				{/* second grid half */}
+				<GLVertical>
 
-			{/*<GLCardsLayout>
-				<GLRow>
-					<GLCol>
-						<Card body>
-							<h1>DONATIONS</h1>
-						</Card>
-						<GLRow>
-							<GLCol xs="6">
-								<Card body>
-									<h2>Watch to Donate</h2>
-								</Card>
-							</GLCol>
-							<GLCol xs="6">
-								<Card body>
-									<h2>This Ad Does Good</h2>
-								</Card>
-							</GLCol>
-						</GLRow>
-					</GLCol>
-					<GLCol xs="6">
-					</GLCol>
-				</GLRow>
-			</GLCardsLayout>*/}
+					{/* top right corner */}
+					<GLHorizontal collapse="md" basis={60}>
+						<GLVertical>
+							<GLHorizontal>
+								<GLCard modalContent={<p>9 brands!! wow!!</p>} modalTitle="9 Brands" modalId="half-page">
+									<p>9 BRANDS</p>
+								</GLCard>
+								<GLCard modalContent={<p>18 charities!! golly!!</p>} modalTitle="18 charities" modalId="half-page">
+									<p>18 CHARITIES</p>
+								</GLCard>
+							</GLHorizontal>
+							<GLCard basis={10}>
+								<h2>16 CAMPAIGNS</h2>
+							</GLCard>
+							<GLCard basis={10}>
+								<h2>6.5M VIEWS | 5 COUNTRIES</h2>
+							</GLCard>
+							<GLCard>
+								<h2>8.69T CO2E OFFSET</h2>
+							</GLCard>
+						</GLVertical>
+						<GLCard>
+							<h2>Ads for good by Good Loop</h2>
+							<p>Hello</p>
+							<p>Hello</p>
+							<p>Hello</p>
+							<p>Hello</p>
+							<p>Hello</p>
+						</GLCard>
+					</GLHorizontal>
+					
+					{/* bottom right corner */}
+					<GLCard>
+						<h1>LOOK! AN AD!</h1>
+					</GLCard>
+
+					<GLOverlayCard id="half-page"/>
+				</GLVertical>
+
+			</GLHorizontal>
+
 		</Container>
 	</div>;
 };
-
-
 
 
 const ItemButton = ({ item }) => {
