@@ -11,7 +11,7 @@ import { getLogo, space, stopEvent, uniq } from '../../base/utils/miscutils';
 import { modifyPage } from '../../base/plumbing/glrouter';
 import DynImg from '../../base/components/DynImg';
 import SideNavBar from './SideNavBar';
-import { GLCard, GLHorizontal, GLVertical, GLModalCard } from './GLCards';
+import { GLCard, GLHorizontal, GLVertical, GLModalCard, GLModalBackdrop } from './GLCards';
 
 
 export class ImpactFilters {
@@ -111,16 +111,19 @@ const ImpactOverviewPage = () => {
 					</GLHorizontal>
 					
 					{/* bottom right corner */}
-					<GLCard>
+					<GLCard modalContent={<p>ADSSSSSSS</p>} modalTitle="Ads" modalId="full-page">
 						<h1>LOOK! AN AD!</h1>
 					</GLCard>
 
 					<GLModalCard id="half-page"/>
 				</GLVertical>
 
+				<GLModalCard id="full-page"/>
 			</GLHorizontal>
 
 		</Container>
+
+		<GLModalBackdrop/>
 	</div>;
 };
 

@@ -5,7 +5,9 @@ import { assert } from '../../base/utils/assert';
 import DataStore from '../../base/plumbing/DataStore'
 import CloseButton from '../../base/components/CloseButton';
 
-const MODAL_PATH = ['widget', 'HalfPageWidget'];
+const MODAL_PATH = ['widget', 'GLModalCards'];
+const MODAL_LIST_PATH = MODAL_PATH.concat("list");
+const MODAL_BACKDROP_PATH = MODAL_PATH.concat("backdrop");
 
 export const GLHorizontal = ({collapse, className, style, children}) => {
 
@@ -41,7 +43,7 @@ export const GLCard = ({noPadding, className, style, modalContent, modalTitle, m
 
 	const openModal = () => {
 		assert(modalId, "No ID specified for which overlay modal to use!");
-		DataStore.setValue(MODAL_PATH.concat(modalId), {
+		DataStore.setValue(MODAL_LIST_PATH.concat(modalId), {
 			open: true,
 			content: modalContent, 
 			title: modalTitle
@@ -56,25 +58,46 @@ export const GLCard = ({noPadding, className, style, modalContent, modalTitle, m
 	</div>;
 }
 
+const modalToggle = (id) => {
+	if (id) {
+		// Toggle specific modal
+		const path = MODAL_LIST_PATH.concat(id);
+		const open = DataStore.getValue(path.concat("open"));
+		DataStore.setValue(path.concat("open"), !open);
+
+		// Check if any modals are still open, and if not close the backdrop
+		let modalObjs = DataStore.getValue(MODAL_LIST_PATH) || {};
+		const anyModalOpen = Object.values(modalObjs).map(obj => obj.open).reduce((prev, cur) => prev || cur);
+		DataStore.setValue(MODAL_BACKDROP_PATH, anyModalOpen);
+	} else {
+		// If none specified, that means the backdrop has been clicked - so close everything
+		let modalObjs = DataStore.getValue(MODAL_LIST_PATH) || {};
+		const modalIds = Object.keys(modalObjs);
+		modalIds.forEach(id => {
+			modalObjs[id].open = false;
+		});
+		DataStore.setValue(MODAL_LIST_PATH, modalObjs);
+		DataStore.setValue(MODAL_BACKDROP_PATH, false);
+	}
+}
+
 export const GLModalCard = ({className, id}) => {
 
-	const path = MODAL_PATH.concat(id);
+	const path = MODAL_LIST_PATH.concat(id);
 	const open = DataStore.getValue(path.concat("open"));
-	const toggle = () => {
-		DataStore.setValue(path.concat("open"), !open);
-		// clear content if about to close
-		if (open) DataStore.setValue(path.concat("content"), null);
-	}
 
 	const content = DataStore.getValue(path.concat("content"));
 	const title = DataStore.getValue(path.concat("title"));
 
+	useEffect(() => {
+		DataStore.setValue(MODAL_LIST_PATH.concat(id), {open:false});
+	}, [id]);
+
 	return open ? <>
-		<div onClick={toggle} className='glmodal-backdrop'/>
 		<div className='glmodal'>
 			<GLCard noPadding>
 				<CardHeader>
-					<CloseButton onClick={toggle}/>
+					<CloseButton onClick={() => modalToggle(id)}/>
 					<h4>{title}</h4>
 				</CardHeader>
 				<CardBody>
@@ -85,3 +108,8 @@ export const GLModalCard = ({className, id}) => {
 	</>: null;
 
 };
+
+export const GLModalBackdrop = ({className}) => {
+	const open = DataStore.getValue(MODAL_BACKDROP_PATH);
+	return open ? <div onClick={() => modalToggle()} className='glmodal-backdrop'/> : null;
+}
