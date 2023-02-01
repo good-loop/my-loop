@@ -10,7 +10,7 @@ import BG from '../../base/components/BG';
 import { getLogo, space, stopEvent, uniq } from '../../base/utils/miscutils';
 import { modifyPage } from '../../base/plumbing/glrouter';
 import DynImg from '../../base/components/DynImg';
-import SideNavBar from './SideNavBar';
+import NavBars from './ImpactNavBars';
 import { GLGrid, GLCard, GLHorizontal, GLVertical } from './GLCards';
 
 
@@ -49,8 +49,9 @@ const ImpactOverviewPage = () => {
 		setWindowTitle(windowTitle);
 	}, []);
 
-	return <div className="d-flex flex-row justify-content-between">
-		<SideNavBar/>
+	// on widescreens the container is a flex-row, on small it's a
+	return <div className="d-flex flex-row justify-content-between" id="impact-overview-container">
+		<NavBars active={"overview"}/>
 		<Container fluid style={{height: "100vh"}}>
 
 			<GLGrid v={60}>
