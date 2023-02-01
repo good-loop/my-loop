@@ -73,7 +73,7 @@ const ImpactOverviewPage = () => {
 						</GLCard>
 					</GLHorizontal>
 
-					<GLModalCard id="filter-menu"/>
+					<GLModalCard id="left-half"/>
 				</GLVertical>
 
 				{/* second grid half */}
@@ -83,10 +83,10 @@ const ImpactOverviewPage = () => {
 					<GLHorizontal collapse="md" basis={60}>
 						<GLVertical>
 							<GLHorizontal>
-								<GLCard modalContent={<p>9 brands!! wow!!</p>} modalTitle="9 Brands" modalId="half-page">
+								<GLCard modalContent={<p>9 brands!! wow!!</p>} modalTitle="9 Brands" modalId="right-half">
 									<p>9 BRANDS</p>
 								</GLCard>
-								<GLCard modalContent={<p>18 charities!! golly!!</p>} modalTitle="18 charities" modalId="half-page">
+								<GLCard modalContent={<CharityList/>} modalTitle="18 charities" modalId="right-half">
 									<p>18 CHARITIES</p>
 								</GLCard>
 							</GLHorizontal>
@@ -115,7 +115,7 @@ const ImpactOverviewPage = () => {
 						<h1>LOOK! AN AD!</h1>
 					</GLCard>
 
-					<GLModalCard id="half-page"/>
+					<GLModalCard id="right-half"/>
 				</GLVertical>
 
 				<GLModalCard id="full-page"/>
@@ -126,6 +126,24 @@ const ImpactOverviewPage = () => {
 		<GLModalBackdrop/>
 	</div>;
 };
+
+
+const CharityList = () => {
+	
+	const charities = ["charity","charity","charity","charity","charity","charity","charity","charity"];
+
+	return <Row>
+		{charities.map((charity, i) => <Col md={4} className="mt-3">
+			<GLCard noMargin modalContent={<CharityInfo cid={i}/>} modalTitle={charity} modalId="left-half">
+				{charity}
+			</GLCard>
+		</Col>)}
+	</Row>;
+}
+
+const CharityInfo = ({cid}) => {
+	return <h1>This is a charity!! {cid}</h1>
+}
 
 
 const ItemButton = ({ item }) => {

@@ -9,6 +9,11 @@ const MODAL_PATH = ['widget', 'GLModalCards'];
 const MODAL_LIST_PATH = MODAL_PATH.concat("list");
 const MODAL_BACKDROP_PATH = MODAL_PATH.concat("backdrop");
 
+/**
+ * Wraps everything into a horizontal flow. Any child with a "basis" prop will be given that priority as a percentage, e.g. basis={50}
+ * 
+ * @param {String} collapse the bootstrap breakpoint to break flow on
+ */
 export const GLHorizontal = ({collapse, className, style, children}) => {
 
     /*let uneatenSpace = 100;
@@ -29,6 +34,10 @@ export const GLHorizontal = ({collapse, className, style, children}) => {
 	</Row>
 }
 
+/**
+ * Wraps everything into a vertical flow. Any child with a "basis" prop will be given that priority as a percentage, e.g. basis={50}
+ * 
+ */
 export const GLVertical = ({className, children, ...props}) => {
 	return <div className={space("glvertical", className)} {...props}>
 		{children.map((child, i) => {
@@ -39,25 +48,46 @@ export const GLVertical = ({className, children, ...props}) => {
 	</div>;
 }
 
-export const GLCard = ({noPadding, className, style, modalContent, modalTitle, modalId, children, ...props}) => {
+/**
+ * A card content wrapper, with configurable behaviour for opening modals.
+ * 
+ * @param {Boolean} noPadding remove padding from the card content
+ * @param {Boolean} noMargin remove margin wrapper from outside the card
+ * @param {*} modalContent if specified, will make card clickable to display this content in the GLModalCard specified (see below)
+ * @param {*} modalTitle the title to put in the modal header
+ * @param {String} modalId the ID of the GLModalCard to use in displaying
+ * @param {Boolean} modalPrioritize if this GLModalCard is opened while others are already open, force close them (they remain open by default)
+ */
+export const GLCard = ({noPadding, noMargin, className, style, modalContent, modalTitle, modalId, modalPrioritize, children, ...props}) => {
 
 	const openModal = () => {
 		assert(modalId, "No ID specified for which overlay modal to use!");
+		
 		DataStore.setValue(MODAL_LIST_PATH.concat(modalId), {
-			open: true,
 			content: modalContent, 
 			title: modalTitle
 		});
+
+		// manually close all other modals if prioritized first
+		if (modalPrioritize) modalToggle();
+		modalToggle(modalId);
 	}
 
-	return <div className="glcard-outer" style={style}>
-		<Card className={space("glcard m-2", modalContent?"glcardmodal":"", className)} onClick={modalContent && openModal} {...props}>
-			{noPadding? children
-			: <CardBody>{children}</CardBody>}
-		</Card>
+	const cardContents = <Card className={space("glcard", !noMargin?"m-2":"", modalContent?"glcardmodal":"", className)} onClick={modalContent && openModal} {...props}>
+		{noPadding? children
+		: <CardBody>{children}</CardBody>}
+	</Card>;
+
+	return noMargin ? cardContents
+	: <div className="glcard-outer" style={style}>
+		{cardContents}	
 	</div>;
 }
 
+/**
+ * Opens and closes modals. If given an ID, will toggle that modal. If not, it will force close all modals.
+ * @param {String} id 
+ */
 const modalToggle = (id) => {
 	if (id) {
 		// Toggle specific modal
@@ -81,6 +111,11 @@ const modalToggle = (id) => {
 	}
 }
 
+/**
+ * A modal form of GLCard. Will not be visible and change nothing in the layout, but when opened will occupy the space it is assigned to as if it was in the layout, while remaining on top.
+ * 
+ * @param {String} id 
+ */
 export const GLModalCard = ({className, id}) => {
 
 	const path = MODAL_LIST_PATH.concat(id);
@@ -109,6 +144,10 @@ export const GLModalCard = ({className, id}) => {
 
 };
 
+/**
+ * Backdrop for all GLModalCards on a page. Closes all modals on click.
+ *  
+ */
 export const GLModalBackdrop = ({className}) => {
 	const open = DataStore.getValue(MODAL_BACKDROP_PATH);
 	return open ? <div onClick={() => modalToggle()} className='glmodal-backdrop'/> : null;
