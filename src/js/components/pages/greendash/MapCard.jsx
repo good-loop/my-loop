@@ -117,9 +117,12 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 	// Add suffix for carbon-per-mille?
 	if (per1000) unit += '/1000';
 
+	let tempMapLables = []
+	let totalCarbon = 0;
 	Object.entries(mapDefs.regions).forEach(([id, props]) => {
 		let { carbon = 0, colour = zeroFill } = data?.[id] || {};
 		carbon /= divisor; // If we're displaying tonnes, convert from kg
+		totalCarbon += carbon
 
 		// Don't modify base map with applied fill/stroke!
 		props = { ...props, fill: colour, stroke: '#fff', strokeWidth: mapDefs.svgAttributes.fontSize / 10 };
@@ -160,23 +163,35 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 			</path>
 		);
 
-		// Place label <text> elements. Skip regions with less than 100g carbon output. Harsh, I know
+		// Store temp label <text> elements. Skip regions with less than 100g carbon output. Harsh, I know
 		if (showLabels && carbon > 0.1 && pathCentres[pathId]) {
 			let { cx, cy } = { ...pathCentres[pathId], ...props };
 			const transY = mapDefs.svgAttributes.fontSize / 2;
 
-			labels.push(
-				<g key={`label-${id}`}>
-					<text className="map-label-name" x={cx} y={cy} textAnchor="middle" transform={`translate(0 ${-transY})`} fontWeight="600">
-						{props.name}
-					</text>
-					<text className="map-label-carbon" x={cx} y={cy} textAnchor="middle" transform={`translate(0 ${transY})`}>
-						{carbon.toFixed(2)} {unit}
-					</text>
-				</g>
-			);
+			tempMapLables.push({
+				carbon:carbon, 
+				label:(
+					<g key={`label-${id}`}>
+						<text className="map-label-name" x={cx} y={cy} textAnchor="middle" transform={`translate(0 ${-transY})`} fontWeight="600" style={{pointerEvents:"none"}}>
+							{props.name}
+						</text>
+						<text className="map-label-carbon" x={cx} y={cy} textAnchor="middle" transform={`translate(0 ${transY})`} style={{pointerEvents:"none"}}>
+							{carbon.toFixed(2)} {unit}
+						</text>
+					</g>
+				)}
+			)
 		}
 	});
+
+	if(showLabels){
+		// for each label we stored, only place the label if that region is responsible for more than 1% of emissions
+		tempMapLables.forEach((region) => {
+			if(region.carbon > totalCarbon / divisor / 100){
+				labels.push(region.label)
+			}
+		})
+	}
 
 	return (
 		<div className="map-container text-center">
@@ -228,7 +243,7 @@ const MapCard = ({ baseFilters, per1000 }) => {
 	const locationField = isWorld ? 'country' : subLocationForCountry(focusRegion);
 
 	// Augment base filters with extra query/breakdown params as necessary
-	const filters = { ...baseFilters, breakdown: [locationField + '{"emissions":"sum"}']};
+	const filters = { ...baseFilters, breakdown: [locationField + '{"emissions":"sum"}'] };
 
 	// Are we looking at one country, or the whole world map?
 	if (!isWorld) {
@@ -250,7 +265,7 @@ const MapCard = ({ baseFilters, per1000 }) => {
 		if (!mapDefs || !mapDefsReady) return;
 
 		// Country or sub-location breakdown?
-		let locnBuckets = baseFilters.prob ? pvChartData.value.sampling['by_' + locationField].buckets : pvChartData.value['by_' + locationField].buckets;
+		let locnBuckets = pvChartData.value['by_' + locationField].buckets;
 
 		// Rename locations with no corresponding map entry to OTHER
 		// convert old non-namespaced sublocations e.g. 'CA' => 'US-CA'
