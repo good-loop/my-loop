@@ -145,7 +145,6 @@ const MyLoopFooterSummer2022 = ({ page }) => {
 
 		</div>
 
-
 		<FooterNavigation />
 
 		<div className="bg-gl-dark-turquoise" id="footer-bCorp-carbonNegative-logos">
@@ -161,54 +160,23 @@ const FooterNavigation = () => {
 	return (
 		<div class="fluid" id="footer-nav-container">
 			<div class='row justify-content-between'>
-				<div class='col-6 col-md font-weight-bold footer-links'>
-					<div class="d-inline-block">
-						<h5><a href='/products.html'>Products</a></h5>
-						<h5><a href='/case-study/index.html'>Case Studies</a></h5>
-						<h5><a href='/good-news/index.html'>Good News</a></h5>
-						<h5><a href='/podcast/index.html'>Podcast</a></h5>
-						<h5><a href='/contact.html'>Contact</a></h5>
-					</div>
-				</div>
-				<div class='col-6 col-md footer-links'>
-					<div class="d-inline-block">
-						<h5>Who We Work With</h5>
-						<a href='/brands.html'>Brands and agencies</a><br />
-						<a href='/charities.html'>Charities</a><br />
-						<a href='/publishers.html'>Publishers</a><br />
-						<a href='/the-public.html'>The Public</a><br />
-					</div>
-				</div>
-				<div class='col-6 col-md mt-5 mt-md-0 footer-links'>
-					<div class="d-inline-block">
-						<h5>About</h5>
-						<a href='/our-story.html'>Our story</a><br />
-						<a href='/donations-report.html'>Our impact</a><br />
-						<a href='/press-and-awards.html'>Press and awards</a><br />
-						<a href='/jobs/index.html'>Careers</a><br />
-					</div>
-				</div>
 				<div class='col-6 col-md mt-5 mt-md-0 footer-links'>
 					<div class="d-inline-block">
 						<h5>More</h5>
 						<a href='https://doc.good-loop.com/policy/privacy-policy.html'>Privacy policy</a><br />
-						<a href='https://doc.good-loop.com/policy/job-applicant-privacy-notice.html'>Job applicant privacy policy</a><br />
 						<a href='https://doc.good-loop.com/policy/cookie-policy.html'>Cookie policy</a><br />
-						<a href="#" class="ch2-open-settings-btn">Cookie settings</a><br />
 						<a href='https://doc.good-loop.com/terms/terms-of-use.html'>Terms of use</a><br />
-						<a href='https://doc.good-loop.com'>Documentation</a><br />
-						<a href='/resources'>Resources</a><br />
 						<a href='https://doc.good-loop.com/policy/brand-safety-policy.html'>Brand Safety Policy</a><br />
 					</div>
 				</div>
 				<div class='col-6 col-md mt-5 mt-md-0 footer-links'>
 					<div class="d-inline-block">
-					<h5>For business</h5>
-					<a href="https://good-loop.com/what-we-do">What We Do</a><br />
-					<a href="https://good-loop.com/products">Products</a><br />
-					<a href="https://good-loop.com/brands">Brands And Agencies</a><br />
-					<a href="https://good-loop.com/charities">Charities</a><br />
-					<a href="https://good-loop.com/case-study/index">Case Studies</a><br />
+						<h5>For business</h5>
+						<a href="https://good-loop.com/what-we-do">What We Do</a><br />
+						<a href="https://good-loop.com/products">Products</a><br />
+						<a href="https://good-loop.com/brands">Brands And Agencies</a><br />
+						<a href="https://good-loop.com/charities">Charities</a><br />
+						<a href="https://good-loop.com/case-study/index">Case Studies</a><br />
 					</div>
 				</div>
 			</div>
