@@ -10,7 +10,7 @@ import { getDataItem } from '../../../base/plumbing/Crud';
 import Roles from '../../../base/Roles';
 import DataStore from '../../../base/plumbing/DataStore';
 
-import { encURI, isMobile, space } from '../../../base/utils/miscutils';
+import { encURI, isMobile, space, toTitleCase } from '../../../base/utils/miscutils';
 import C from '../../../C';
 import ServerIO from '../../../plumbing/ServerIO';
 const A = C.A;
@@ -42,12 +42,13 @@ const GreenNavBar = ({active}) => {
 	let pvCampaign = campaignId? getDataItem({type:C.TYPES.Campaign, id:campaignId,status:KStatus.PUB_OR_DRAFT, swallow:true}) : {};
 	let impactUrl = pvCampaign.value? '/green/'+encURI(pvCampaign.value.id) : '/green';
 
-	const debug = DataStore.getUrlValue("debug") || DataStore.getUrlValue("gl.debug");
+	const showShareables = DataStore.getUrlValue("shareables");
+	const showFlags = DataStore.getUrlValue("debug") || DataStore.getUrlValue("gl.debug") || showShareables;
 
 	// We don't use the standard <Collapse> pattern here because that doesn't support an always-horizontal navbar
 
 	return (<>
-		{(Roles.isDev() || debug) && <AccountMenu className="float-left" noNav />}
+		{(Roles.isDev() || showFlags) && <AccountMenu className="float-left" noNav/>}
 	<Navbar dark expand="md" id="green-navbar" className={space('flex-column', 'justify-content-start', isOpen && 'mobile-open')}>
 		<NavbarToggler onClick={toggle} />
 		<Nav navbar vertical>

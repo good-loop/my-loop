@@ -373,6 +373,24 @@ export const dataColours = (series, maxColour = dfltMaxColour, minColour = dfltM
 	});
 };
 
+/**
+ * 
+ * @returns {{filterMode:filterMode, filterId:string}}
+ */
+export const getFilterModeId = () => {
+	const brandId = DataStore.getUrlValue('brand');
+	const agencyId = DataStore.getUrlValue('agency');
+	const campaignId = DataStore.getUrlValue('campaign');
+	const tagId = DataStore.getUrlValue('tag');
+
+	// What are we going to filter on? ("adid" rather than "tag" because that's what we'll search for in DataLog)
+	// ??shouldn't brand be vertiser??
+	const filterMode = campaignId ? 'campaign' : brandId ? 'brand' : agencyId ? 'agency' : tagId ? 'adid' : null;
+	// Get the ID for the object we're filtering for
+	const filterId = { campaign: campaignId, brand: brandId, agency: agencyId, adid: tagId }[filterMode];
+	return {filterMode, filterId};
+};
+
 /** Minimum kg value where we should switch to displaying tonnes instead */
 export const TONNES_THRESHOLD = 1000;
 
