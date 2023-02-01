@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import PromiseValue from '../../base/promise-value';
 import { setWindowTitle } from '../../base/plumbing/Crud';
 import DataStore from '../../base/plumbing/DataStore';
-import { Button, Col, Container, InputGroup, Row, Card } from 'reactstrap';
+import { Button, Col, Container, InputGroup, Row, Card, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import PropControl from '../../base/components/PropControl';
 import Circle from '../../base/components/Circle';
 import BG from '../../base/components/BG';
@@ -11,7 +11,7 @@ import { getLogo, space, stopEvent, uniq } from '../../base/utils/miscutils';
 import { modifyPage } from '../../base/plumbing/glrouter';
 import DynImg from '../../base/components/DynImg';
 import NavBars from './ImpactNavBars';
-import { GLGrid, GLCard, GLHorizontal, GLVertical } from './GLCards';
+import { GLCard, GLHorizontal, GLVertical, GLModalCard, GLModalBackdrop } from './GLCards';
 
 
 export class ImpactFilters {
@@ -49,89 +49,101 @@ const ImpactOverviewPage = () => {
 		setWindowTitle(windowTitle);
 	}, []);
 
-	// on widescreens the container is a flex-row, on small it's a
-	return <div className="d-flex flex-row justify-content-between" id="impact-overview-container">
+	return <div className="d-flex flex-row justify-content-between"  id="impact-overview-container">
 		<NavBars active={"overview"}/>
-		<Container fluid style={{height: "100vh"}}>
+		<Container fluid className='iview-container'>
 
-			<GLGrid v={60}>
-				<GLCard>
-					<h2>NESTLE DONATED</h2>
-					<h1>£A BAJILLION</h1>
-				</GLCard>
+			<GLHorizontal>
 
-				<GLHorizontal>
-					<GLVertical>
-						<GLHorizontal>
-							<GLCard>
-								<p>9 BRANDS</p>
-							</GLCard>
-							<GLCard>
-								<p>18 CHARITIES</p>
-							</GLCard>
-						</GLHorizontal>
-						<GLCard basis={10}>
-							<h2>16 CAMPAIGNS</h2>
-						</GLCard>
-						<GLCard basis={10}>
-							<h2>6.5M VIEWS | 5 COUNTRIES</h2>
+				{/* first grid half */}
+				<GLVertical>
+					{/* top left corner - both top corners with basis 60 to line up into grid pattern*/}
+					<GLCard basis={60}>
+						<h2>NESTLE DONATED</h2>
+						<h1>£A BAJILLION</h1>
+					</GLCard>
+
+					{/* bottom left corner */}
+					<GLHorizontal>
+						<GLCard>
+							<h2>Watch to donate</h2>
 						</GLCard>
 						<GLCard>
-							<h2>8.69T CO2E OFFSET</h2>
+							<h2>This ad does good</h2>
 						</GLCard>
-					</GLVertical>
-					<GLCard>
-						<h2>Ads for good by Good Loop</h2>
-						<p>Hello</p>
-						<p>Hello</p>
-						<p>Hello</p>
-						<p>Hello</p>
-						<p>Hello</p>
-					</GLCard>
-				</GLHorizontal>
+					</GLHorizontal>
 
-				<GLHorizontal>
-					<GLCard>
-						<h2>Watch to donate</h2>
-					</GLCard>
-					<GLCard basis={70}>
-						<h2>This ad does good</h2>
-					</GLCard>
-				</GLHorizontal>
-				
-				<GLCard>
-					<h1>LOOK! AN AD!</h1>
-				</GLCard>
-			</GLGrid>
+					<GLModalCard id="left-half"/>
+				</GLVertical>
 
-			{/*<GLCardsLayout>
-				<GLRow>
-					<GLCol>
-						<Card body>
-							<h1>DONATIONS</h1>
-						</Card>
-						<GLRow>
-							<GLCol xs="6">
-								<Card body>
-									<h2>Watch to Donate</h2>
-								</Card>
-							</GLCol>
-							<GLCol xs="6">
-								<Card body>
-									<h2>This Ad Does Good</h2>
-								</Card>
-							</GLCol>
-						</GLRow>
-					</GLCol>
-					<GLCol xs="6">
-					</GLCol>
-				</GLRow>
-			</GLCardsLayout>*/}
+				{/* second grid half */}
+				<GLVertical>
+
+					{/* top right corner */}
+					<GLHorizontal collapse="md" basis={60}>
+						<GLVertical>
+							<GLHorizontal>
+								<GLCard modalContent={<p>9 brands!! wow!!</p>} modalTitle="9 Brands" modalId="right-half">
+									<p>9 BRANDS</p>
+								</GLCard>
+								<GLCard modalContent={<CharityList/>} modalTitle="18 charities" modalId="right-half">
+									<p>18 CHARITIES</p>
+								</GLCard>
+							</GLHorizontal>
+							<GLCard basis={10}>
+								<h2>16 CAMPAIGNS</h2>
+							</GLCard>
+							<GLCard basis={10}>
+								<h2>6.5M VIEWS | 5 COUNTRIES</h2>
+							</GLCard>
+							<GLCard>
+								<h2>8.69T CO2E OFFSET</h2>
+							</GLCard>
+						</GLVertical>
+						<GLCard>
+							<h2>Ads for good by Good Loop</h2>
+							<p>Hello</p>
+							<p>Hello</p>
+							<p>Hello</p>
+							<p>Hello</p>
+							<p>Hello</p>
+						</GLCard>
+					</GLHorizontal>
+					
+					{/* bottom right corner */}
+					<GLCard modalContent={<p>ADSSSSSSS</p>} modalTitle="Ads" modalId="full-page">
+						<h1>LOOK! AN AD!</h1>
+					</GLCard>
+
+					<GLModalCard id="right-half"/>
+				</GLVertical>
+
+				<GLModalCard id="full-page"/>
+			</GLHorizontal>
+
 		</Container>
+
+		<GLModalBackdrop/>
 	</div>;
 };
 
 
+const CharityList = () => {
+	
+	const charities = ["charity","charity","charity","charity","charity","charity","charity","charity"];
+
+	return <Row>
+		{charities.map((charity, i) => <Col md={4} className="mt-3">
+			<GLCard noMargin modalContent={<CharityInfo cid={i}/>} modalTitle={charity} modalId="left-half">
+				{charity}
+			</GLCard>
+		</Col>)}
+	</Row>;
+}
+
+const CharityInfo = ({cid}) => {
+	return <h1>This is a charity!! {cid}</h1>
+}
 
 
 const ItemButton = ({ item }) => {
