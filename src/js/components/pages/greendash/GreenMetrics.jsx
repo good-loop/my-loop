@@ -10,7 +10,9 @@ import Misc from '../../../base/components/Misc';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import ErrAlert from '../../../base/components/ErrAlert';
 
-import { GreenCard, periodFromUrl, printPeriod, probFromUrl, noCacheFromUrl } from './dashutils';
+import { GreenCard, periodFromUrl, printPeriod, probFromUrl, noCacheFromUrl, getFilterModeId } from './dashutils';
+
+import ShareWidget, { shareThingId } from '../../../base/components/ShareWidget';
 import { getCampaigns, getCarbon, getSumColumn } from './emissionscalc';
 
 import GreenDashboardFilters from './GreenDashboardFilters';
@@ -31,7 +33,6 @@ import Login from '../../../base/youagain';
 
 import { isDebug, toTitleCase, yessy } from '../../../base/utils/miscutils';
 import PropControl from '../../../base/components/PropControl';
-import ShareWidget, { shareThingId } from '../../../base/components/ShareWidget';
 import Roles from '../../../base/Roles';
 
 
@@ -87,24 +88,23 @@ const CTACard = ({}) => {
 	);
 };
 
-/**
- * 
- * @returns {{filterMode:filterMode, filterId:string}}
- */
-const getFilterModeId = () => {
-	const brandId = DataStore.getUrlValue('brand');
-	const agencyId = DataStore.getUrlValue('agency');
-	const campaignId = DataStore.getUrlValue('campaign');
-	const tagId = DataStore.getUrlValue('tag');
-
-	// What are we going to filter on? ("adid" rather than "tag" because that's what we'll search for in DataLog)
-	// ??shouldn't brand be vertiser??
-	const filterMode = campaignId ? 'campaign' : brandId ? 'brand' : agencyId ? 'agency' : tagId ? 'adid' : null;
-	// Get the ID for the object we're filtering for
-	const filterId = { campaign: campaignId, brand: brandId, agency: agencyId, adid: tagId }[filterMode];
-	return {filterMode, filterId};
-};
-
+// ONLY SHOWS EMAIL LIST WITH "listemails" FLAG SET
+// ONLY APPEARS WITH "shareables" OR DEBUG FLAG SET
+const ShareDash = () => {
+	if ( ! Roles.isDev() && ! DataStore.getUrlValue("shareables") && ! DataStore.getUrlValue("debug") && ! DataStore.getUrlValue("gl.debug")) {
+		return null; // dev only for now TODO for all
+	}
+	let {filterMode, filterId} = getFilterModeId();
+	if ( ! filterMode || ! filterId) {
+		return null;
+	}
+	let type = {brand:"Advertiser",adid:"GreenTag"}[filterMode] || toTitleCase(filterMode);
+	let shareId = shareThingId(type, filterId);
+	let pvItem = getDataItem({type, id:filterId, status:KStatus.PUBLISHED});
+	let shareName = filterMode+" "+((pvItem.value && pvItem.value.name) || filterId);
+	const showEmails = DataStore.getUrlValue("listemails");
+	return <ShareWidget className="dev-link" hasButton name={"Dashboard for "+shareName} shareId={shareId} hasLink noEmails={!showEmails} />;
+}
 
 const GreenMetrics2 = ({}) => {
 	// Default to current quarter, all brands, all campaigns
@@ -324,27 +324,12 @@ const GreenMetrics = ({}) => {
 			<Container fluid>
 				{agencyIds ? <>
 					<GreenDashboardFilters />
-					<ShareDash />
+					<ShareDash/>
 					<GreenMetrics2 />
 				</> : <Misc.Loading text="Checking your access..." />}
 			</Container>
 		</div>
 	);
 };
-
-const ShareDash = () => {
-	if ( ! Roles.isDev()) {
-		return null; // dev only for now TODO for all
-	}
-	let {filterMode, filterId} = getFilterModeId();
-	if ( ! filterMode || ! filterId) {
-		return null;
-	}
-	let type = {brand:"Advertiser",adid:"GreenTag"}[filterMode] || toTitleCase(filterMode);
-	let shareId = shareThingId(type, filterId);
-	let pvItem = getDataItem({type, id:filterId, status:KStatus.PUBLISHED});
-	let shareName = filterMode+" "+((pvItem.value && pvItem.value.name) || filterId);
-	return <ShareWidget className="dev-link" hasButton name={"Dashboard for "+shareName} shareId={shareId} hasLink />;
-}
 
 export default GreenMetrics;
