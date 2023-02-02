@@ -110,7 +110,7 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 	// Do we display kg or tonnes?
 	let unit = 'kg';
 	let divisor = 1;
-	if (Math.max(Object.values(data).map(v => v.carbon)) >= 1000) {
+	if (Math.max(...Object.values(data).map(v => v.carbon)) >= 1000) {
 		unit = 't';
 		divisor = 1000;
 	}
@@ -162,9 +162,9 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 				{title}
 			</path>
 		);
-
-		// Store temp label <text> elements. Skip regions with less than 100g carbon output. Harsh, I know
-		if (showLabels && carbon > 0.1 && pathCentres[pathId]) {
+		// Store temp label <text> elements. Skip regions with less than 100g carbon output. Harsh, I know  
+		// if we're in tonnes, convert carbon into Kg to still ensure the minimum 100g rule
+		if (showLabels && (carbon * divisor) > 0.1 && pathCentres[pathId]) {
 			let { cx, cy } = { ...pathCentres[pathId], ...props };
 			const transY = mapDefs.svgAttributes.fontSize / 2;
 
@@ -187,7 +187,8 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 	if(showLabels){
 		// for each label we stored, only place the label if that region is responsible for more than 1% of emissions
 		tempMapLables.forEach((region) => {
-			if(region.carbon > totalCarbon / divisor / 100){
+			// only show labels for regions responsible for more than 1% of all emissions
+			if(region.carbon > totalCarbon * 0.01){
 				labels.push(region.label)
 			}
 		})
