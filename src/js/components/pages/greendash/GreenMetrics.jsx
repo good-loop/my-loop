@@ -10,7 +10,9 @@ import Misc from '../../../base/components/Misc';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import ErrAlert from '../../../base/components/ErrAlert';
 
-import { GreenCard, periodFromUrl, printPeriod } from './dashutils';
+import { GreenCard, periodFromUrl, printPeriod, probFromUrl, noCacheFromUrl, getFilterModeId } from './dashutils';
+
+import ShareWidget, { shareThingId } from '../../../base/components/ShareWidget';
 import { getCampaigns, getCarbon, getSumColumn } from './emissionscalc';
 
 import GreenDashboardFilters from './GreenDashboardFilters';
@@ -31,7 +33,6 @@ import Login from '../../../base/youagain';
 
 import { isDebug, toTitleCase, yessy } from '../../../base/utils/miscutils';
 import PropControl from '../../../base/components/PropControl';
-import ShareWidget, { shareThingId } from '../../../base/components/ShareWidget';
 import Roles from '../../../base/Roles';
 
 
@@ -41,11 +42,12 @@ export const isPer1000 = () => {
 };
 
 
-const OverviewWidget = ({ period, data }) => {
+const OverviewWidget = ({ period, data, prob }) => {
 	let imps;
 	if (data?.length > 0) {
 		const total = getSumColumn(data, 'count');
-		imps = printer.prettyInt(total);
+		const [upper, lower] = [total*1.01, total*0.99]
+		imps = !prob || (prob && prob == 1) ? printer.prettyInt(total) : `${printer.prettyInt(lower)} to ${printer.prettyInt(upper)}`;
 	} else if (!data) {
 		imps = 'Fetching data...';
 	} else {
@@ -57,9 +59,12 @@ const OverviewWidget = ({ period, data }) => {
 		<Row className="greendash-overview mb-2">
 			<Col xs="12">
 				<span className="period mr-4">{printPeriod(period)}</span>
-				<span className="impressions">
+				<span id='impressions-span' className="impressions">
 					Impressions served: <span className="impressions-count">{imps}</span>
 				</span>
+				{prob && <span className='probability ml-5'>
+					Probability: {prob}
+				</span>}
 			</Col>
 		</Row>
 	);
@@ -83,24 +88,23 @@ const CTACard = ({}) => {
 	);
 };
 
-/**
- * 
- * @returns {{filterMode:filterMode, filterId:string}}
- */
-const getFilterModeId = () => {
-	const brandId = DataStore.getUrlValue('brand');
-	const agencyId = DataStore.getUrlValue('agency');
-	const campaignId = DataStore.getUrlValue('campaign');
-	const tagId = DataStore.getUrlValue('tag');
-
-	// What are we going to filter on? ("adid" rather than "tag" because that's what we'll search for in DataLog)
-	// ??shouldn't brand be vertiser??
-	const filterMode = campaignId ? 'campaign' : brandId ? 'brand' : agencyId ? 'agency' : tagId ? 'adid' : null;
-	// Get the ID for the object we're filtering for
-	const filterId = { campaign: campaignId, brand: brandId, agency: agencyId, adid: tagId }[filterMode];
-	return {filterMode, filterId};
-};
-
+// ONLY SHOWS EMAIL LIST WITH "listemails" FLAG SET
+// ONLY APPEARS WITH "shareables" OR DEBUG FLAG SET
+const ShareDash = () => {
+	if ( ! Roles.isDev() && ! DataStore.getUrlValue("shareables") && ! DataStore.getUrlValue("debug") && ! DataStore.getUrlValue("gl.debug")) {
+		return null; // dev only for now TODO for all
+	}
+	let {filterMode, filterId} = getFilterModeId();
+	if ( ! filterMode || ! filterId) {
+		return null;
+	}
+	let type = {brand:"Advertiser",adid:"GreenTag"}[filterMode] || toTitleCase(filterMode);
+	let shareId = shareThingId(type, filterId);
+	let pvItem = getDataItem({type, id:filterId, status:KStatus.PUBLISHED});
+	let shareName = filterMode+" "+((pvItem.value && pvItem.value.name) || filterId);
+	const showEmails = DataStore.getUrlValue("listemails");
+	return <ShareWidget className="dev-link" hasButton name={"Dashboard for "+shareName} shareId={shareId} hasLink noEmails={!showEmails} />;
+}
 
 const GreenMetrics2 = ({}) => {
 	// Default to current quarter, all brands, all campaigns
@@ -170,18 +174,28 @@ const GreenMetrics2 = ({}) => {
 		}
 	}
 
+	const probNum = probFromUrl();
+	const nocache = noCacheFromUrl();
+
 	const baseFilters = {
 		q,
 		start: period.start.toISOString(),
 		end: period.end.toISOString(),
+		prob: probNum ? probNum.toString() : null, 
+		nocache: nocache ? true : null,
 	};
+
 
 	/**
 	 * Inital load of total
 	 */
 	const pvChartTotal = getCarbon({...baseFilters, breakdown: ['total{"count":"sum"}']})
+	
+	const pvChartTotalValue = baseFilters.prob ? pvChartTotal.value?.sampling : pvChartTotal.value;
 
-	let noData = pvChartTotal.value && !pvChartTotal.value.allCount;
+	const samplingProb = pvChartTotalValue?.probability;
+
+	let noData = pvChartTotalValue && !pvChartTotalValue?.allCount;
 	// TODO Fall back to filterMode methods to get campaigns when table is empty
 	
 	if (!pvChartTotal.resolved) {
@@ -194,7 +208,7 @@ const GreenMetrics2 = ({}) => {
 	// HACK: Tell JourneyCard we had an empty table & so couldn't get campaigns (but nothing is "loading")
 	// TODO We CAN get campaigns but it'd take more of a rewrite than we want to do just now.
 	// not working?? How does this compare to noData
-	const emptyTable = pvChartTotal.resolved && (!pvChartTotal?.value?.allCount || pvChartTotal.value.by_total.buckets.length === 0);
+	const emptyTable = pvChartTotal.resolved && (!pvChartTotalValue?.allCount || pvChartTotalValue.by_total.buckets.length === 0);
 	
 	const commonProps = { period, baseFilters, per1000: isPer1000() };
 	// Removed (temp?): brands, campaigns, tags
@@ -209,10 +223,12 @@ const GreenMetrics2 = ({}) => {
 			// 'domain{"emissions":"sum"}',
 			// 'campaign{"emissions":"sum"}', do campaign breakdowns later with more security logic
 		],
-		name: 'lotsa-chartdata'
+		name: 'lotsa-chartdata',
 	});
 
-	let pvCampaigns = getCampaigns(pvChartData.value?.by_adid.buckets);
+	const pvChartDatalValue = baseFilters.prob ? pvChartData.value?.sampling : pvChartData.value;
+
+	let pvCampaigns = getCampaigns(pvChartDatalValue?.by_adid.buckets);
 	if (pvCampaigns && PromiseValue.isa(pvCampaigns.value)) {
 		// HACK unwrap nested PV
 		pvCampaigns = pvCampaigns.value;
@@ -220,7 +236,7 @@ const GreenMetrics2 = ({}) => {
 
 	return (
 		<>
-			<OverviewWidget period={period} data={pvChartTotal.value?.by_total.buckets} />
+			<OverviewWidget period={period} data={pvChartTotalValue?.by_total.buckets} prob={samplingProb} />
 			{false && <PropControl inline
 				type="toggle" prop="emode" dflt="total" label="Show emissions:"
 				left={{label: 'Total', value: 'total', colour: 'primary'}}
@@ -228,7 +244,7 @@ const GreenMetrics2 = ({}) => {
 			/>}
 			<Row className="card-row">
 				<Col xs="12" sm="8" className="flex-column">
-					<TimeSeriesCard {...commonProps} data={pvChartData.value?.by_time.buckets} noData={noData} />
+					<TimeSeriesCard {...commonProps} data={pvChartDatalValue?.by_time.buckets} noData={noData} />
 				</Col>
 				<Col xs="12" sm="4" className="flex-column">
 					<JourneyCard
@@ -308,27 +324,12 @@ const GreenMetrics = ({}) => {
 			<Container fluid>
 				{agencyIds ? <>
 					<GreenDashboardFilters />
-					<ShareDash />
+					<ShareDash/>
 					<GreenMetrics2 />
 				</> : <Misc.Loading text="Checking your access..." />}
 			</Container>
 		</div>
 	);
 };
-
-const ShareDash = () => {
-	if ( ! Roles.isDev()) {
-		return null; // dev only for now TODO for all
-	}
-	let {filterMode, filterId} = getFilterModeId();
-	if ( ! filterMode || ! filterId) {
-		return null;
-	}
-	let type = {brand:"Advertiser",adid:"GreenTag"}[filterMode] || toTitleCase(filterMode);
-	let shareId = shareThingId(type, filterId);
-	let pvItem = getDataItem({type, id:filterId, status:KStatus.PUBLISHED});
-	let shareName = filterMode+" "+((pvItem.value && pvItem.value.name) || filterId);
-	return <ShareWidget className="dev-link" hasButton name={"Dashboard for "+shareName} shareId={shareId} hasLink />;
-}
 
 export default GreenMetrics;

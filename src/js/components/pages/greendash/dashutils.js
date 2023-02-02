@@ -79,6 +79,25 @@ export const periodFromUrl = () => {
 	return null;
 };
 
+/**
+ * Read URL params and extract a probability number if one is present 
+ * @returns {number | null}
+ */
+export const probFromUrl = () => {
+	const probName = DataStore.getUrlValue('prob')
+	try {
+		return Number.parseInt(probName);
+	} catch (e) {
+		console.log('Failed to read prob from url', e);
+		return null;
+	}
+}
+
+export const noCacheFromUrl = () => {
+	const nocache = DataStore.getUrlValue('nocache')
+	return !!nocache;
+}
+
 /** Convert a name to a period object
  * @returns {?Object} {start:Date end:Date}
 */
@@ -352,6 +371,24 @@ export const dataColours = (series, maxColour = dfltMaxColour, minColour = dfltM
 		const quotient = (val - min) / range;
 		return `hsl(${Math.round(minH + (quotient * dH))} ${Math.round(minS + (quotient * dS))}% ${Math.round(minL + (quotient * dL))}%)`
 	});
+};
+
+/**
+ * 
+ * @returns {{filterMode:filterMode, filterId:string}}
+ */
+export const getFilterModeId = () => {
+	const brandId = DataStore.getUrlValue('brand');
+	const agencyId = DataStore.getUrlValue('agency');
+	const campaignId = DataStore.getUrlValue('campaign');
+	const tagId = DataStore.getUrlValue('tag');
+
+	// What are we going to filter on? ("adid" rather than "tag" because that's what we'll search for in DataLog)
+	// ??shouldn't brand be vertiser??
+	const filterMode = campaignId ? 'campaign' : brandId ? 'brand' : agencyId ? 'agency' : tagId ? 'adid' : null;
+	// Get the ID for the object we're filtering for
+	const filterId = { campaign: campaignId, brand: brandId, agency: agencyId, adid: tagId }[filterMode];
+	return {filterMode, filterId};
 };
 
 /** Minimum kg value where we should switch to displaying tonnes instead */
