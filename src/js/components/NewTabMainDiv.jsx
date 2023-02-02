@@ -179,7 +179,7 @@ const WebtopPage = () => {
 				setRand(Math.floor(Math.random()*backdropImages.length))
 		else
 				setRand(Math.round(Math.random() * 9) + 1);
-	}, [backdropImages]);
+	}, []);
 
 	const customBG = backdropImages && rand < backdropImages.length ? backdropImages[rand].contentUrl || backdropImages[rand] : null;
 
