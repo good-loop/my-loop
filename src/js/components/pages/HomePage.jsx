@@ -360,6 +360,4 @@ const JoinOurMovement = () => <>
 	</PageCard>
 </>;
 
-
-
 export default HomePage;

@@ -1,6 +1,5 @@
 @import "../js/base/style/colours.less";
 
-
 footer {
 	font-family: "Tajawal", sans-serif;
 	background-color: @dark0;
@@ -130,44 +129,25 @@ footer {
     .btn {
 		font-family: 'Montserrat';
 	}
-	hr {
-		color: white;
-		background-color: white;
-		margin: 50px 0px;
-	}
 
 	.flex-column>* {
 		margin: 0;
 	}
 
-	@media @md-min {
-		.footer-links {
+	.footer-links {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
 			justify-content: flex-start;
 		}
-	}
-
-	.footer-logos-portrait {
-		max-width: 4em;
-	}
-	.footer-logos-landscape {
-		max-width: 6em;
-		&.extra-wide {
-			max-width: 16em; // UN Sustainable Development Goals logo is extremely wide
-		}
-	}
-
-
 }
 
 #footer-bCorp-carbonNegative-logos {
 	.row{
 		// move to just off the right side of screen 	
-		flex-direction: row-reverse; 
+		flex-direction: row; 
 		padding-right: 25px;
-
+		justify-content: center;
 		padding-bottom: 20px;	// make sure website doesn't end abrubtly at the very bottom of the images
 	}
 }
