@@ -10,6 +10,7 @@ import { assert } from '../../../base/utils/assert';
 import { sum } from '../../../base/utils/miscutils';
 import C from '../../../C';
 import { periodFromUrl } from './dashutils';
+import { getDataLogData } from '../../../base/plumbing/DataLog';
 
 
 /**
@@ -22,6 +23,8 @@ import { periodFromUrl } from './dashutils';
  * @returns {} ??doc??
  */
 export const getCarbon = ({ q = '', start = '1 month ago', end = 'now', breakdown, ...rest }) => {
+  // TODO refactor to use getDataLogData()
+
   // assert(!q?.includes('brand:'), q);
   const data = {
     dataspace: 'emissions',
