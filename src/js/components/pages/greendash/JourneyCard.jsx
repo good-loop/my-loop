@@ -133,7 +133,7 @@ const JourneyCard = ({ campaigns, baseFilters, period, emptyTable }) => {
 		</GreenCard>
 	);
 
-	if (!campaigns?.length) return (
+	if ( ! campaigns) return (
 		<GreenCard title="Your journey so far" className="carbon-journey" downloadable={false}>
 			<Misc.Loading text="Fetching your campaign data..." />
 		</GreenCard>
