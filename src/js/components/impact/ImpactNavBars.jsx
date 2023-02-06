@@ -36,24 +36,23 @@ const SideNavBar = ({active, isOpen, navToggleAnimation, toggle}) => {
 				<animated.p className='logo-name flex-column' style={{opacity: navToggleAnimation.opacity}}>GOOD-LOOP</animated.p>
 				<br/><br/>
 				<NavItem>
-					
 					<A href={window.location}>
 						<div className={active === 'overview' ? 'active navbar-link' : 'navbar-link'}> 
-							<div className="impact-nav-icon metrics-icon" /><animated.div class="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Overview</animated.div> 
+							<div className="impact-nav-icon overview-icon" /><animated.div class="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Overview</animated.div> 
 						</div>
 					</A>
 				</NavItem>
 				<NavItem>
 					<A href={`${ServerIO.PORTAL_ENDPOINT}/#green`}>
 						<div className={active === 'impact' ? 'active navbar-link' : 'navbar-link'}> 
-							<div className="impact-nav-icon tags-icon" /> <animated.div class="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Impact</animated.div> 
+							<div className="impact-nav-icon impact-icon" /> <animated.div class="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Impact</animated.div> 
 						</div>
 					</A>
 				</NavItem>
 				<NavItem>
 					<A>
 						<div className={active === 'analysis' ? 'active navbar-link' : 'navbar-link'}> 
-							<div className="impact-nav-icon impact-icon" /> <animated.div class="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Analysis</animated.div> 
+							<div className="impact-nav-icon analysis-icon" /> <animated.div class="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Analysis</animated.div> 
 						</div>
 					</A>
 				</NavItem>

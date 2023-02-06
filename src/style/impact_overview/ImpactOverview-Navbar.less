@@ -80,35 +80,41 @@
             // padding of 1rem taken from inital implemtation of navbar though moved here when ensuring 
             padding: 5px 0 5px 1rem;
             position: relative;
+            height: 100%;
+
             &.active{
                 background-color: #a76157;
             }
 
             // icons for navigation options, placeholder images rn 
             .impact-nav-icon {
+                // center the icon vertically
                 position: relative;
                 display: inline-block !important;
+                top: 50%;
+                transform: translateY(-50%);
+
+                // ensure size is constant - important for keeping the sliding animation fron screwing up
                 width: 3em;
                 height: 3em;
                 min-width: 3em;
                 min-height: 3em;
-                border-radius: 50%;
-                background-color: white;
+
                 margin-right: 1em;
-                &.metrics-icon {
-                    background-image: url("/img/green/dashboard/metrics-button.svg");
-                }
-                &.tags-icon {
-                    background-image: url("/img/green/dashboard/tags-button.svg");
-                }
-                &.optimisation-icon {
-                    background-image: url("/img/green/dashboard/optim-button.svg");
+
+                border-radius: 50%; // turn into circle
+
+                background-color: white;
+                background-size: contain; // icons are too big by default, resize them
+
+                &.overview-icon {
+                    background-image: url("/img/icons/HEART ICON.png");
                 }
                 &.impact-icon {
-                    background-image: url("/img/green/dashboard/impact-button.svg");
+                    background-image: url("/img/icons/search icon.png");
                 }
-                &.profile-icon {
-                    background-image: url("/img/green/dashboard/profile-button.svg");
+                &.analysis-icon {
+                    background-image: url("/img/icons/graph icon.png");
                 }
             }
 
