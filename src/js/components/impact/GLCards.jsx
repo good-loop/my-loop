@@ -88,7 +88,7 @@ export const GLCard = ({noPadding, noMargin, className, style, modalContent, mod
  * Opens and closes modals. If given an ID, will toggle that modal. If not, it will force close all modals.
  * @param {String} id 
  */
-const modalToggle = (id) => {
+export const modalToggle = (id) => {
 	if (id) {
 		// Toggle specific modal
 		const path = MODAL_LIST_PATH.concat(id);
@@ -109,6 +109,14 @@ const modalToggle = (id) => {
 		DataStore.setValue(MODAL_LIST_PATH, modalObjs);
 		DataStore.setValue(MODAL_BACKDROP_PATH, false);
 	}
+}
+
+export const openAndPopulateModal = ({id, content, title, prioritized}) => {
+	assert(id, "Must be given a modal ID to open!");
+	// Force close other modals first
+	if (prioritized) modalToggle();
+	DataStore.setValue(MODAL_LIST_PATH.concat(modalId), {content, title});
+	modalToggle(id);
 }
 
 /**
