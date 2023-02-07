@@ -51,22 +51,32 @@ export const GLVertical = ({className, children, ...props}) => {
 /**
  * A card content wrapper, with configurable behaviour for opening modals.
  * 
- * @param {Boolean} noPadding remove padding from the card content
- * @param {Boolean} noMargin remove margin wrapper from outside the card
- * @param {*} modalContent if specified, will make card clickable to display this content in the GLModalCard specified (see below)
- * @param {*} modalTitle the title to put in the modal header
- * @param {String} modalId the ID of the GLModalCard to use in displaying
- * @param {Boolean} modalPrioritize if this GLModalCard is opened while others are already open, force close them (they remain open by default)
+ * @param {?Boolean} noPadding remove padding from the card content
+ * @param {?Boolean} noMargin remove margin wrapper from outside the card
+ * @param {?*} modalContent if specified, will make card clickable to display this content in the GLModalCard specified (see below)
+ * @param {?*} modalTitle the title to put in the modal header
+ * @param {?*} modalHeader content to put in the modal header
+ * @param {?*} modalHeaderImg background image for the modal header
+ * @param {?*} modalClassName className for modal
+ * @param {?Object} modal package object for all the above parameters
+ * @param {?String} modalId the ID of the GLModalCard to use in displaying
+ * @param {?Boolean} modalPrioritize if this GLModalCard is opened while others are already open, force close them (they remain open by default)
  */
-export const GLCard = ({noPadding, noMargin, className, style, modalContent, modalTitle, modalId, modalPrioritize, children, ...props}) => {
+export const GLCard = ({noPadding, noMargin, className, style, modalContent, modalTitle, modalId, modalHeader, modalHeaderImg, modalPrioritize, modalClassName, modal, children, ...props}) => {
+
+	const modalObj = {
+		content: modalContent, 
+		title: modalTitle,
+		header: modalHeader,
+		headerImg: modalHeaderImg,
+		className: modalClassName,
+		...modal
+	};
 
 	const openModal = () => {
 		assert(modalId, "No ID specified for which overlay modal to use!");
 		
-		DataStore.setValue(MODAL_LIST_PATH.concat(modalId), {
-			content: modalContent, 
-			title: modalTitle
-		});
+		DataStore.setValue(MODAL_LIST_PATH.concat(modalId), modalObj);
 
 		// manually close all other modals if prioritized first
 		if (modalPrioritize) modalToggle();
@@ -111,11 +121,11 @@ export const modalToggle = (id) => {
 	}
 }
 
-export const openAndPopulateModal = ({id, content, title, prioritized}) => {
+export const openAndPopulateModal = ({id, content, title, header, headerImg, className, prioritized}) => {
 	assert(id, "Must be given a modal ID to open!");
 	// Force close other modals first
 	if (prioritized) modalToggle();
-	DataStore.setValue(MODAL_LIST_PATH.concat(modalId), {content, title});
+	DataStore.setValue(MODAL_LIST_PATH.concat(modalId), {content, title, header, headerImg, className});
 	modalToggle(id);
 }
 
@@ -131,19 +141,28 @@ export const GLModalCard = ({className, id}) => {
 
 	const content = DataStore.getValue(path.concat("content"));
 	const title = DataStore.getValue(path.concat("title"));
+	const header = DataStore.getValue(path.concat("header"));
+	const headerImg = DataStore.getValue(path.concat("headerImg"));
+	const storedClassName = DataStore.getValue(path.concat("className"));
 
 	useEffect(() => {
 		DataStore.setValue(MODAL_LIST_PATH.concat(id), {open:false});
 	}, [id]);
 
+	const headerStyle = headerImg && {
+		backgroundImage: "url('"+headerImg+"')",
+		backgroundPosition: "center"
+	};
+
 	return open ? <>
-		<div className='glmodal'>
+		<div className={space('glmodal', storedClassName, className)} id={id}>
 			<GLCard noPadding>
-				<CardHeader>
-					<CloseButton onClick={() => modalToggle(id)}/>
-					<h4>{title}</h4>
+				<CardHeader style={headerStyle} className="glmodal-header">
+					<CloseButton className={headerImg&&"white-circle-bg"} onClick={() => modalToggle(id)}/>
+					{header}
+					{title && <h4>{title}</h4>}
 				</CardHeader>
-				<CardBody>
+				<CardBody className="glmodal-body">
 					{content}
 				</CardBody>
 			</GLCard>

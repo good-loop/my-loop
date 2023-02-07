@@ -1,5 +1,130 @@
 .page-iview {
 
+    h2 {
+        color: @gl-red;
+        text-transform: uppercase;
+        text-align: center;
+    }
+
+    h3 {
+        color: @gl-red;
+        font-size: 1.2rem;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    h5 {
+        color: #707070;
+        text-align: center;
+    }
+
+    .white-circle {
+        background-color: white;
+        border-radius: 50%;
+    }
+
+    .glcard {
+
+        &.center-number {
+            .card-body {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+        
+        &.preview {
+            .card-body {
+                padding: 0.5rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+            &.campaign {
+                .card-body {
+                    padding: 0.5rem;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+            }
+        }
+    }
+
+    .hero-card {
+        background: url("/img/Impact/world-image-cropped.png");
+        background-position: center;
+        background-size: cover;
+        position: relative;
+        
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            .white-circle {
+                height: 90%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                aspect-ratio: 1/1;
+
+                .content {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                }
+            }
+        }
+    }
+
+    .glmodal {
+
+        &.list-modal {
+            .glmodal-body {
+                background-color: @gl-background-default;
+                .glcard {
+                    background-color: white;
+                }
+            }
+        }
+
+        &.charity-info {
+            .card-header {
+                height: 10rem;
+                .white-circle {
+                    width: 10rem;
+                    height: 10rem;
+                    position: absolute;
+                    top: 5rem;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    overflow: hidden;
+                    .logo {
+                        width: 100%;
+                    }
+                }
+            }
+            .charity-body {
+                margin-top: 5rem;
+            }
+        }
+    }
+
 }
 
 .iview-container {

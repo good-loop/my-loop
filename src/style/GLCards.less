@@ -53,6 +53,10 @@ The GLCards layout is a layout for modular cards which are designed to expand an
     &.glcardmodal:hover {
         cursor: pointer;
     }
+
+    .card-body {
+        overflow: auto;
+    }
 }
 
 .glmodal {
@@ -76,6 +80,13 @@ The GLCards layout is a layout for modular cards which are designed to expand an
             float: left;
             font-size: 2.5rem;
             font-weight: normal;
+            &.white-circle-bg {
+                border-radius: 50%;
+                width: 2.8rem;
+                height: 2.8rem;
+                background-color: white;
+                overflow: hidden;
+            }
         }
         h4 {
             text-align: center;
