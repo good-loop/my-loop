@@ -1,3 +1,5 @@
+@import "../js/base/style/colours.less";
+
 footer {
 	font-family: "Tajawal", sans-serif;
 	background-color: @dark0;
@@ -6,6 +8,7 @@ footer {
 	a {
 		color: white;
     }
+
     a:hover {
 		color: white !important;
     }
@@ -100,3 +103,51 @@ footer {
 	}
 
 } // ./my-loop-footer
+
+// navigation to other sites copied from main website 
+#footer-nav-container {
+	background-color: @gl-dark-turquoise !important;
+
+	padding-left: 5%;
+	padding-right: 5%;
+	padding-top: 3rem;
+
+	color: @light0;
+
+	a {
+		text-decoration: none !important;
+	}
+
+    a:hover {
+		color: white !important;
+    }
+    h5 {
+		text-transform: uppercase;
+		font-family: 'Montserrat';
+		font-weight: bold;
+    }
+    .btn {
+		font-family: 'Montserrat';
+	}
+
+	.flex-column>* {
+		margin: 0;
+	}
+
+	.footer-links {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: flex-start;
+		}
+}
+
+#footer-bCorp-carbonNegative-logos {
+	.row{
+		// move to just off the right side of screen 	
+		flex-direction: row; 
+		padding-right: 25px;
+		justify-content: center;
+		padding-bottom: 20px;	// make sure website doesn't end abrubtly at the very bottom of the images
+	}
+}
