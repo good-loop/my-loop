@@ -13,6 +13,19 @@ import DynImg from '../../base/components/DynImg';
 import NavBars from './ImpactNavBars';
 import { GLCard, GLHorizontal, GLVertical, GLModalCard, GLModalBackdrop } from './GLCards';
 import FilterAndAccountTopBar from './FilterAndAccountTopBar'
+import { fetchCharity } from '../pages/MyCharitiesPage'
+import NGO from '../../base/data/NGO';
+import CharityLogo from '../CharityLogo';
+import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
+import ActionMan from '../../plumbing/ActionMan';
+import C from '../../C';
+import NGOImage from '../../base/components/NGOImage';
+
+/**
+ * DEBUG OBJECTS
+ */
+
+ import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIGN, TEST_CAMPAIGN_OBJ} from './TestValues';
 
 export class ImpactFilters {
 	agency;
@@ -62,9 +75,19 @@ const ImpactOverviewPage = () => {
 				{/* first grid half */}
 				<GLVertical>
 					{/* top left corner - both top corners with basis 60 to line up into grid pattern*/}
-					<GLCard basis={60}>
-						<h2>NESTLE DONATED</h2>
-						<h1>£A BAJILLION</h1>
+					<GLCard basis={60} className="hero-card">
+						<div className='white-circle'>
+							<div className='content'>
+								<img className='logo' src={TEST_BRAND_OBJ.branding.logo}/>
+								<br/>
+								<h1>£A BAJILLION</h1>
+								<h2>Donated</h2>
+								<br/>
+								<h5>With</h5>
+								<br/>
+								<img className='w-50' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+							</div>
+						</div>
 					</GLCard>
 
 					{/* bottom left corner */}
@@ -87,21 +110,23 @@ const ImpactOverviewPage = () => {
 					<GLHorizontal collapse="md" basis={60}>
 						<GLVertical>
 							<GLHorizontal>
-								<GLCard modalContent={<p>9 brands!! wow!!</p>} modalTitle="9 Brands" modalId="right-half">
-									<p>9 BRANDS</p>
+								<GLCard modalContent={<p>9 brands!! wow!!</p>} modalTitle="9 Brands" modalId="right-half" modalClassName="list-modal" className="center-number">
+									<h2>9</h2>
+									<h3>Brands</h3>
 								</GLCard>
-								<GLCard modalContent={<CharityList/>} modalTitle="18 charities" modalId="right-half">
-									<p>18 CHARITIES</p>
+								<GLCard modalContent={<CharityList/>} modalTitle="18 charities" modalId="right-half" modalClassName="list-modal" className="center-number">
+									<h2>18</h2>
+									<h3>Charities</h3>
 								</GLCard>
 							</GLHorizontal>
-							<GLCard basis={10}>
-								<h2>16 CAMPAIGNS</h2>
+							<GLCard basis={10} modalContent={<CampaignList/>} modalTitle="16 Campaigns" modalClassName="list-modal" modalId="right-half">
+								<h3>16 CAMPAIGNS</h3>
 							</GLCard>
 							<GLCard basis={10}>
-								<h2>6.5M VIEWS | 5 COUNTRIES</h2>
+								<h3>6.5M VIEWS | 5 COUNTRIES</h3>
 							</GLCard>
 							<GLCard>
-								<h2>8.69T CO2E OFFSET</h2>
+								<h3>8.69T CO2E OFFSET</h3>
 							</GLCard>
 						</GLVertical>
 						<GLCard>
@@ -136,22 +161,85 @@ const ImpactOverviewPage = () => {
 
 const CharityList = () => {
 	
-	const charities = ["charity","charity","charity","charity","charity","charity","charity","charity"];
+	// DUMMY DATA
+	const charity = TEST_CHARITY_OBJ;
+	let charities = [];
+	for (let i = 0; i < 20; i++) charities.push(charity);
+	// END DUMMY DATA
 
-	return <Row>
-		{charities.map((charity, i) => <Col md={4} className="mt-3">
-			<GLCard noMargin modalContent={<CharityInfo cid={i}/>} modalTitle={charity} modalId="left-half">
-				{charity}
-			</GLCard>
-		</Col>)}
-	</Row>;
+	return <>
+		<br/>
+		<h5>Charities supported via Good-Loop Ads</h5>
+		<p className='color-gl-red text-center'>{TEST_BRAND_OBJ.name} - All Campaigns</p>
+		<br/>
+		<Row>
+			{charities.map((charity, i) => <Col key={i} md={4} className="mt-3">
+				<GLCard className="preview" noMargin
+					modalContent={<CharityInfo charity={charity}/>}
+					modalHeader={<CharityHeader charity={charity}/>}
+					modalHeaderImg={charity.images}
+					modalClassName="charity-info"
+					modalId="left-half">
+					
+					{charity && <CharityLogo charity={charity}/>}
+					<p className='text-center'>{NGO.displayName(charity)}</p>
+				</GLCard>
+			</Col>)}
+		</Row>
+	</>;
 }
 
-const CharityInfo = ({cid}) => {
-	return <h1>This is a charity!! {cid}</h1>
+const CharityHeader = ({charity}) => {
+	return <div className='w-100 position-relative'>
+		<div className="white-circle">
+			<CharityLogo charity={charity}/>
+		</div>
+	</div>
+}
+
+const CharityInfo = ({charity}) => {
+	return <div className='d-flex flex-column justify-content-center align-items-center charity-body'>
+		<h3>{NGO.displayName(charity)}</h3>
+		<img className='w-25' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+		<br/>
+		<p className='p-5'>
+			{NGO.extendedDescription(charity) || NGO.anyDescription(charity)}
+		</p>
+	</div>;
 }
 
 
+const CampaignList = () => {
+
+	// DUMMY DATA
+	const campaign = TEST_CAMPAIGN_OBJ;
+	let campaigns = [];
+	for (let i = 0; i < 20; i++) campaigns.push(campaign);
+	// END DUMMY DATA
+
+	return <>
+		<br/>
+		<h5>Campaigns run via Good-Loop Ads</h5>
+		<p className='color-gl-red text-center'>{TEST_BRAND_OBJ.name} - All Campaigns</p>
+		<br/>
+		<GLVertical>
+			{campaigns.map((campaign, i) => <GLCard className="preview campaign mt-3" noMargin>
+				<div className='campaign-details'>
+					<p className='text-left m-0'>
+						<b>{campaign.vertiserName}</b>
+						<br/>
+						{campaign.name}
+					</p>
+				</div>
+				{campaign && <img className="logo" src={TEST_BRAND_OBJ.branding.logo}/>}
+			</GLCard>)}
+		</GLVertical>
+	</>;
+	
+};
+
+
+/*
 const ItemButton = ({ item }) => {
 	let key = getType(item).toLowerCase(); // e.g. advertiser or ngo
 	let value = getId(item);
@@ -202,6 +290,6 @@ const PhotoWall = ({ filters }) => {
 	let images = impactdebits ? impactdebits.map(i => i.impact?.img).filter(x => x) : [];
 	images = images.slice(0, 3);
 	return images.map(img => <DynImg key={img.contentUrl || img} image={img} className="w-100" />);
-};
+};*/
 
 export default ImpactOverviewPage;
