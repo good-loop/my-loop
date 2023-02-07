@@ -12,7 +12,7 @@ import { modifyPage } from '../../base/plumbing/glrouter';
 import DynImg from '../../base/components/DynImg';
 import NavBars from './ImpactNavBars';
 import { GLCard, GLHorizontal, GLVertical, GLModalCard, GLModalBackdrop } from './GLCards';
-
+import FilterAndAccountTopBar from './FilterAndAccountTopBar'
 
 export class ImpactFilters {
 	agency;
@@ -49,10 +49,14 @@ const ImpactOverviewPage = () => {
 		setWindowTitle(windowTitle);
 	}, []);
 
-	return <div className="d-flex flex-row justify-content-between"  id="impact-overview-container">
+	return (
+	<div className="d-flex flex-column justify-content-between"  id="impact-overview-container">
+	<FilterAndAccountTopBar size="mobile"/>  {/*mobile topbar*/}	
+		<div className="d-flex flex-row justify-content-between"  id="impact-overview-container">
 		<NavBars active={"overview"}/>
 		<Container fluid className='iview-container'>
-
+			<div className='d-flex flex-column justify-content-between'>
+			<FilterAndAccountTopBar size="desktop"/>  {/*widescreen topbar*/}
 			<GLHorizontal>
 
 				{/* first grid half */}
@@ -120,11 +124,13 @@ const ImpactOverviewPage = () => {
 
 				<GLModalCard id="full-page"/>
 			</GLHorizontal>
-
+			</div>
 		</Container>
 
 		<GLModalBackdrop/>
-	</div>;
+	</div>
+	</div>
+	);
 };
 
 

@@ -115,7 +115,7 @@ export const openAndPopulateModal = ({id, content, title, prioritized}) => {
 	assert(id, "Must be given a modal ID to open!");
 	// Force close other modals first
 	if (prioritized) modalToggle();
-	DataStore.setValue(MODAL_LIST_PATH.concat(modalId), {content, title});
+	DataStore.setValue(MODAL_LIST_PATH.concat(id), {content, title});
 	modalToggle(id);
 }
 
@@ -143,7 +143,7 @@ export const GLModalCard = ({className, id}) => {
 					<CloseButton onClick={() => modalToggle(id)}/>
 					<h4>{title}</h4>
 				</CardHeader>
-				<CardBody>
+				<CardBody style={{overflowY: "auto"}}>
 					{content}
 				</CardBody>
 			</GLCard>
