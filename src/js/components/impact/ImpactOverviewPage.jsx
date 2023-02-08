@@ -64,9 +64,11 @@ const ImpactOverviewPage = () => {
 
 	return (
 	<>
-		<FilterAndAccountTopBar size="mobile"/>  {/*mobile topbar*/}
-		<FilterAndAccountTopBar size="desktop"/>  {/*widescreen topbar*/}
-		<NavBars active={"overview"}/>
+		<div className="navbars-overlay">
+			<NavBars active={"overview"}/>
+			<FilterAndAccountTopBar size="mobile"/>  {/*mobile topbar*/}
+			<FilterAndAccountTopBar size="desktop"/>  {/*widescreen topbar*/}
+		</div>
 		<Container fluid className='iview-container'>
 			<GLHorizontal>
 
