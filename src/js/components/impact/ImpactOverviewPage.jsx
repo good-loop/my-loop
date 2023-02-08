@@ -63,13 +63,11 @@ const ImpactOverviewPage = () => {
 	}, []);
 
 	return (
-	<div className="d-flex flex-column justify-content-between"  id="impact-overview-container">
-	<FilterAndAccountTopBar size="mobile"/>  {/*mobile topbar*/}	
-		<div className="d-flex flex-row justify-content-between"  id="impact-overview-container">
+	<>
+		<FilterAndAccountTopBar size="mobile"/>  {/*mobile topbar*/}
+		<FilterAndAccountTopBar size="desktop"/>  {/*widescreen topbar*/}
 		<NavBars active={"overview"}/>
 		<Container fluid className='iview-container'>
-			<div className='d-flex flex-column justify-content-between'>
-			<FilterAndAccountTopBar size="desktop"/>  {/*widescreen topbar*/}
 			<GLHorizontal>
 
 				{/* first grid half */}
@@ -149,12 +147,10 @@ const ImpactOverviewPage = () => {
 
 				<GLModalCard id="full-page"/>
 			</GLHorizontal>
-			</div>
 		</Container>
 
 		<GLModalBackdrop/>
-	</div>
-	</div>
+	</>
 	);
 };
 
