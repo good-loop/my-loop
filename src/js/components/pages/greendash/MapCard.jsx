@@ -120,12 +120,9 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 	let tempMapLables = []
 	let totalCarbon = 0;
 	Object.entries(mapDefs.regions).forEach(([id, props]) => {
-		let { impressions = 0, carbon = 0, colour = zeroFill } = data?.[id] || {};
-		// If we're displaying tonnes, convert from kg
-		carbon /= divisor;
-
-		// if per1000 is on, convert back into just total carbon emission
-		totalCarbon += (per1000 ? (carbon * (impressions / 1000)) : carbon)
+		let { carbon = 0, colour = zeroFill } = data?.[id] || {};
+		carbon /= divisor; // If we're displaying tonnes, convert from kg
+		totalCarbon += carbon
 
 		// Don't modify base map with applied fill/stroke!
 		props = { ...props, fill: colour, stroke: '#fff', strokeWidth: mapDefs.svgAttributes.fontSize / 10 };
@@ -165,18 +162,14 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 				{title}
 			</path>
 		);
-
-		// if we're in tonnes, convert carbon into Kg to still ensure the below minimum 100g rule
-		// if per1000 is on, convert back into total carbon emissions
-		let carbonOutput = per1000 ? (carbon * (impressions / 1000)) : carbon * divisor
-
 		// Store temp label <text> elements. Skip regions with less than 100g carbon output. Harsh, I know  
-		if (showLabels && carbonOutput > 0.1 && pathCentres[pathId]) {
+		// if we're in tonnes, convert carbon into Kg to still ensure the minimum 100g rule
+		if (showLabels && (carbon * divisor) > 0.1 && pathCentres[pathId]) {
 			let { cx, cy } = { ...pathCentres[pathId], ...props };
 			const transY = mapDefs.svgAttributes.fontSize / 2;
+
 			tempMapLables.push({
-				carbon:carbon,
-				impressions: impressions, 
+				carbon:carbon, 
 				label:(
 					<g key={`label-${id}`}>
 						<text className="map-label-name" x={cx} y={cy} textAnchor="middle" transform={`translate(0 ${-transY})`} fontWeight="600" style={{pointerEvents:"none"}}>
@@ -194,10 +187,8 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 	if(showLabels){
 		// for each label we stored, only place the label if that region is responsible for more than 1% of emissions
 		tempMapLables.forEach((region) => {
-			// if per1000 is on, convert total 'carbon / 1000 impressions' back into just total 'carbon'
-			let regionCarbon = per1000 ? (region.carbon * (region.impressions / 1000)) : region.carbon
 			// only show labels for regions responsible for more than 1% of all emissions
-			if(regionCarbon > totalCarbon * 0.01){
+			if(region.carbon > totalCarbon * 0.01){
 				labels.push(region.label)
 			}
 		})
