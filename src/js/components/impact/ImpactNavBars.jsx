@@ -90,7 +90,7 @@ const TopNavBar = ({active}) => {
 
 const NavBars = ({active, setIsNavbarOpen}) => {
 
-	const [isOpen, setIsOpen] = useState(true)
+	const [isOpen, setIsOpen] = useState(false)
 
 	const navToggleAnimation = useSpring({
 		width : isOpen ? "15rem" : "5rem",	// shrink navbar

@@ -52,6 +52,29 @@
                 }
             }
         }
+
+        &.offset-card {
+            //d-flex flex-row justify-content-center align-items-stretch
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: stretch;
+            overflow: hidden;
+
+            .offset-number {
+                flex-basis: 50%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .carbon-neutral {
+                flex-basis: 50%;
+                background-image: url("/img/Impact/curves-background.svg");
+                background-size: cover;
+            }
+        }
     }
 
     .hero-card {

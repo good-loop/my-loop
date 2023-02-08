@@ -130,11 +130,16 @@ const ImpactOverviewPage = () => {
 								<GLCard basis={10}>
 									<h3>6.5M VIEWS | 5 COUNTRIES</h3>
 								</GLCard>
-								<GLCard>
-									<h3>8.69T CO2E OFFSET</h3>
+								<GLCard noPadding className="offset-card" basis={0}>
+									<div className='offset-number'>
+										<h3>8.69T CO2E OFFSET</h3>
+									</div>
+									<div className='carbon-neutral px-4 py-2'>
+										<img src="/img/Impact/Good-Loop_CarbonNeutralAd_Logo_Final-05.svg" className='w-100'/>
+									</div>
 								</GLCard>
 							</GLVertical>
-							<GLCard>
+							<GLCard modalId="right-half" modalTitle="Ads for good" modalContent={<AdsForGoodCTA/>}>
 								<h2>Ads for good by Good Loop</h2>
 								<p>Hello</p>
 								<p>Hello</p>
@@ -162,6 +167,16 @@ const ImpactOverviewPage = () => {
 	);
 };
 
+const AdsForGoodCTA = () => {
+	const vertiser = TEST_BRAND_OBJ;
+	
+	return <div className='d-flex flex-column align-items-center justify-content-between h-100'>
+		<img src={vertiser.branding.logo} className="logo"/>
+		<img className='w-25' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+		<h3>Discover our products and fund even more good causes</h3>
+		<Button color="primary">Get in touch</Button>
+	</div>
+}
 
 const CharityList = () => {
 	
