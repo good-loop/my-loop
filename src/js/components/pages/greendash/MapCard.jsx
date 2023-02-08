@@ -153,7 +153,7 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 		// Tooltip on hover
 		const title = loading ? null : (
 			<title>
-				{props.name}: {carbon.toFixed(2)} {unit} CO2e, {impressions} impressions 
+				{props.name}: {carbon.toFixed(2)} {unit} CO2e
 			</title>
 		);
 
