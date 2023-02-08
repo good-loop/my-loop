@@ -11,5 +11,6 @@ const protocol = (cluster === 'local') ? 'http' : 'https';
 module.exports = {
 	ServerIOOverrides: {
 		GREENCALC_ENDPOINT: `https://testportal.good-loop.com/greencalc?server=production`,
+        PROFILER_ENDPOINT: 'https://testprofiler.good-loop.com'
 	}
 };

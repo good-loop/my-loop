@@ -110,16 +110,19 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 	// Do we display kg or tonnes?
 	let unit = 'kg';
 	let divisor = 1;
-	if (Math.max(Object.values(data).map(v => v.carbon)) >= 1000) {
+	if (Math.max(...Object.values(data).map(v => v.carbon)) >= 1000) {
 		unit = 't';
 		divisor = 1000;
 	}
 	// Add suffix for carbon-per-mille?
 	if (per1000) unit += '/1000';
 
+	let tempMapLables = []
+	let totalCarbon = 0;
 	Object.entries(mapDefs.regions).forEach(([id, props]) => {
 		let { carbon = 0, colour = zeroFill } = data?.[id] || {};
 		carbon /= divisor; // If we're displaying tonnes, convert from kg
+		totalCarbon += carbon
 
 		// Don't modify base map with applied fill/stroke!
 		props = { ...props, fill: colour, stroke: '#fff', strokeWidth: mapDefs.svgAttributes.fontSize / 10 };
@@ -159,24 +162,37 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 				{title}
 			</path>
 		);
-
-		// Place label <text> elements. Skip regions with less than 100g carbon output. Harsh, I know
-		if (showLabels && carbon > 0.1 && pathCentres[pathId]) {
+		// Store temp label <text> elements. Skip regions with less than 100g carbon output. Harsh, I know  
+		// if we're in tonnes, convert carbon into Kg to still ensure the minimum 100g rule
+		if (showLabels && (carbon * divisor) > 0.1 && pathCentres[pathId]) {
 			let { cx, cy } = { ...pathCentres[pathId], ...props };
 			const transY = mapDefs.svgAttributes.fontSize / 2;
 
-			labels.push(
-				<g key={`label-${id}`}>
-					<text className="map-label-name" x={cx} y={cy} textAnchor="middle" transform={`translate(0 ${-transY})`} fontWeight="600">
-						{props.name}
-					</text>
-					<text className="map-label-carbon" x={cx} y={cy} textAnchor="middle" transform={`translate(0 ${transY})`}>
-						{carbon.toFixed(2)} {unit}
-					</text>
-				</g>
-			);
+			tempMapLables.push({
+				carbon:carbon, 
+				label:(
+					<g key={`label-${id}`}>
+						<text className="map-label-name" x={cx} y={cy} textAnchor="middle" transform={`translate(0 ${-transY})`} fontWeight="600" style={{pointerEvents:"none"}}>
+							{props.name}
+						</text>
+						<text className="map-label-carbon" x={cx} y={cy} textAnchor="middle" transform={`translate(0 ${transY})`} style={{pointerEvents:"none"}}>
+							{carbon.toFixed(2)} {unit}
+						</text>
+					</g>
+				)}
+			)
 		}
 	});
+
+	if(showLabels){
+		// for each label we stored, only place the label if that region is responsible for more than 1% of emissions
+		tempMapLables.forEach((region) => {
+			// only show labels for regions responsible for more than 1% of all emissions
+			if(region.carbon > totalCarbon * 0.01){
+				labels.push(region.label)
+			}
+		})
+	}
 
 	return (
 		<div className="map-container text-center">

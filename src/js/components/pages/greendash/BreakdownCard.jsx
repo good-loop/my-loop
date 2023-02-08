@@ -361,8 +361,8 @@ const BreakdownCard = ({ baseFilters }) => {
 
 	// Are we in carbon-per-mille mode?
 	if (isPer1000()) {
-		data = emissionsPerImpressions(data);
-		techData = emissionsPerImpressions(techData);
+		if (data) data = emissionsPerImpressions(data);
+		if (techData) techData = emissionsPerImpressions(techData);
 	}
 
 	let subcard;

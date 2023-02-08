@@ -23,101 +23,6 @@ const pageBGs = {
 	'ourstory': 'bg-gl-desat-blue',
 };
 
-/**
- * @deprecated old footer
- */
-const MyLoopFooter = ({ page }) => {
-	// Some pages take custom background colours above the curve
-	const bgColour = pageBGs[page] || null;
-
-	// Allow inner pages to modify className for styling
-	let dsClassName = getFooterClassName();
-	const fullClassName = space('my-loop-footer', bgColour, dsClassName);
-	return <Container fluid className={fullClassName}>
-		<svg className="w-100 footer-curve color-gl-dark-turquoise" viewBox="0 0 2560 593" version="1.1" xmlns="http://www.w3.org/2000/svg">
-			<path d="m 0.003,-0.001 c 0,0 356.72,665.074 1297.3,296.564 940.58,-368.51 1468.515,280.543 1468.515,280.543 v 221.17 H 0.003 Z" fill="currentColor" />
-		</svg>
-		<Row>
-			<DynImg src="/img/homepage/Turtle.png" className="turtle" />
-			<div className="bg-gl-dark-turquoise w-100 p-5" style={{ marginTop: -1 }}>
-				<Row>
-					<Col md={6}>
-						<SubscriptionForm label={"Sign up to our Newsletter for some Good News :)"} thankYouTextcolour="white" />
-					</Col>
-					{!isPortraitMobile() &&
-						<Col md={6} className="d-flex justify-content-end">
-							<div className="stamps d-flex flex-row align-items-end p-3">
-								<div>
-									<img src="/img/footer/Net-carbon-negative.svg" className="logo-lg" />
-								</div>
-								<div>
-									<img src="/img/footer/B-corp.svg" className="logo-lg" />
-								</div>
-							</div>
-						</Col>
-					}
-				</Row>
-				<Row className="social-icons mx-auto pt-5 mt-5">
-					<Col xs={3}>
-						<C.A href="https://twitter.com/goodloophq">
-							<img src="/img/footer/twitter_icon.200w.png" className="w-100" />
-						</C.A>
-					</Col>
-					<Col xs={3}>
-						<C.A href="https://www.facebook.com/the.good.loop/">
-							<img src="/img/footer/facebook_icon.200w.png" className="w-100" />
-						</C.A>
-					</Col>
-					<Col xs={3}>
-						<C.A href="https://www.instagram.com/goodloophq/">
-							<img src="/img/footer/insta_icon.200w.png" className="w-100" />
-						</C.A>
-					</Col>
-					<Col xs={3}>
-						<C.A href="https://www.linkedin.com/company/good.loop?trk=biz-companies-cym">
-							<img src="/img/footer/linkedin_icon.200w.png" className="w-100" />
-						</C.A>
-					</Col>
-				</Row>
-				<Row className="mt-5 footer-links text-center small mx-auto">
-					<Col>
-						<C.A href="https://doc.good-loop.com/policy/privacy-policy.html">
-							<p>Privacy policy</p>
-						</C.A>
-					</Col>
-					<Col>
-						<C.A href="https://doc.good-loop.com/policy/cookie-policy.html">
-							<p>Cookie policy</p>
-						</C.A>
-					</Col>
-					<Col>
-						<C.A href="https://doc.good-loop.com/terms/terms-of-use.html">
-							<p>Terms of use</p>
-						</C.A>
-					</Col>
-					<Col>
-						<C.A href="https://doc.good-loop.com/policy/brand-safety-policy.html">
-							<p>Brand safety policy</p>
-						</C.A>
-					</Col>
-				</Row>
-				{isPortraitMobile() &&
-					<Col md={6} className="d-flex justify-content-center pt-5 mt-5">
-						<div className="stamps d-flex flex-row align-items-end py-1 px-3">
-							<div>
-								<img src="/img/footer/Net-carbon-negative.svg" className="logo-lg" />
-							</div>
-							<div>
-								<img src="/img/footer/B-corp.svg" className="logo-lg" />
-							</div>
-						</div>
-					</Col>
-				}
-			</div>
-		</Row>
-	</Container>;
-}
-
 const MyLoopFooterSummer2022 = ({ page }) => {
 	// Some pages take custom background colours above the curve
 	const bgColour = pageBGs[page] || null;
@@ -167,31 +72,43 @@ const MyLoopFooterSummer2022 = ({ page }) => {
 
 		</div>
 
-		<div className="bg-gl-dark-turquoise px-3 pt-5 footer-links text-center small d-flex justify-content-between">
-			<C.A href="https://doc.good-loop.com/policy/privacy-policy.html">
-				<p>Privacy policy</p>
-			</C.A>
-			<C.A href="https://doc.good-loop.com/policy/cookie-policy.html">
-				<p>Cookie policy</p>
-			</C.A>
-			<C.A href="https://doc.good-loop.com/terms/terms-of-use.html">
-				<p>Terms of use</p>
-			</C.A>
-			<C.A href="https://doc.good-loop.com/policy/brand-safety-policy.html">
-				<p>Brand safety policy</p>
-			</C.A>
-			<div className="stamps d-none d-md-flex justify-content-center position-absolute" style={{bottom:'8em',right:0}}>
-				<img src="/img/footer/Net-carbon-negative.svg" className="logo-lg" />
+		<FooterNavigation />
+
+		<div className="bg-gl-dark-turquoise" id="footer-bCorp-carbonNegative-logos">
+			<Row>
 				<img src="/img/footer/B-corp.svg" className="logo-lg" />
+				<img src="/img/footer/Net-carbon-negative.svg" className="logo-lg" />
+			</Row>
+		</div>
+	</Container>;
+}
+
+const FooterNavigation = () => {
+	return (
+		<div class="fluid" id="footer-nav-container">
+			<div class='row justify-content-between'>
+				<div class='col-6 col-md mt-5 mt-md-0 footer-links'>
+					<div class="d-inline-block">
+						<h5>More</h5>
+						<a href='https://doc.good-loop.com/policy/privacy-policy.html'>Privacy policy</a><br />
+						<a href='https://doc.good-loop.com/policy/cookie-policy.html'>Cookie policy</a><br />
+						<a href='https://doc.good-loop.com/terms/terms-of-use.html'>Terms of use</a><br />
+						<a href='https://doc.good-loop.com/policy/brand-safety-policy.html'>Brand Safety Policy</a><br />
+					</div>
+				</div>
+				<div class='col-6 col-md mt-5 mt-md-0 footer-links'>
+					<div class="d-inline-block">
+						<h5>For business</h5>
+						<a href="https://good-loop.com/what-we-do">What We Do</a><br />
+						<a href="https://good-loop.com/products">Products</a><br />
+						<a href="https://good-loop.com/brands">Brands And Agencies</a><br />
+						<a href="https://good-loop.com/charities">Charities</a><br />
+						<a href="https://good-loop.com/case-study/index">Case Studies</a><br />
+					</div>
+				</div>
 			</div>
 		</div>
-
-		<div className="stamps bg-gl-dark-turquoise d-flex d-md-none justify-content-center pt-3 pb-5">
-			<img src="/img/footer/Net-carbon-negative.svg" className="logo-lg" />
-			<img src="/img/footer/B-corp.svg" className="logo-lg" />
-		</div>
-
-	</Container>;
+	)
 }
 
 export default MyLoopFooterSummer2022;

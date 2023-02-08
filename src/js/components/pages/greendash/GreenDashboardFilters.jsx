@@ -72,6 +72,7 @@ const filtersChanged = ({filterMode, period, ...nextFilters}) => {
 	let prevFilters = {};
 	['agency', 'brand', 'campaign', 'tag'].every(filter => {
 		prevFilters[filter] = DataStore.getUrlValue(filter);
+		if (nextFilters[filter] == null) return true;
 		changed = (nextFilters[filter] !== prevFilters[filter]);
 		return changed;
 	});

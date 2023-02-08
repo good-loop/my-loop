@@ -68,10 +68,10 @@ const TreesSection = ({ treesPlanted, coralPlanted }) => {
 };
 
 
-const csvBreakdown = 'country/pub/mbl/os/adid/time{"emissions":"sum"}';
+const csvBreakdown = 'country/domain/mbl/os/adid/time{"emissions":"sum"}';
 const csvCols = [
 	{Header: 'Country', accessor: 'country'},
-	{Header: 'Domain', accessor: 'pub'},
+	{Header: 'Domain', accessor: 'domain'},
 	{Header: 'Mobile?', accessor: 'mbl'},
 	{Header: 'OS', accessor: 'os'},
 	{Header: 'Tag ID', accessor: 'adid'},
@@ -90,6 +90,7 @@ const CSVExport = ({baseFilters}) => {
 	if (!isTester()) return null;
 	const [csvSpec, setCsvSpec] = useState(null); // Spec of the last generated CSV export
 	const [tableData, setTableData] = useState(null); // Table data for CSV export
+	const [error, setError] = useState(null); // Error on last requested table
 
 	useEffect(() => {
 		if (!csvSpec) return; // No CSV requested - nothing to do.
@@ -99,17 +100,26 @@ const CSVExport = ({baseFilters}) => {
 		if (!isEqual(csvSpec, baseFilters)) {
 			setTableData(null);
 			setCsvSpec(null);
+			setError(null);
 			return null;
 		}
 
 		// New CSV spec - get table data for it & prepare CSV download.
 		getCarbon({...baseFilters, breakdown: [csvBreakdown]}).promise.then(res => {
 			setTableData(pivotDataLogToRows(res, csvBreakdown));
+		}).catch(xhr => {
+			// TODO Recover by breaking down request?
+			if (xhr.responseText.match('too_many_buckets_exception')) {
+				setError('CSV export too large to generate in one piece - try a shorter time period.');
+			}
 		});
 	}, [baseFilters, csvSpec]);
 
 	// When "Generate" button clicked - register request to generate a CSV for current filter spec
 	const getTable = () => setCsvSpec({...baseFilters});
+
+	// Error on last CSV generate operation
+	if (error) return <span className="text-danger">{error}</span>;
 
 	// No CSV requested - show "Generate" button
 	if (!csvSpec) return <Button className="mt-1" size="xs" color="default" onClick={getTable}>Generate CSV export</Button>;
@@ -133,7 +143,7 @@ const JourneyCard = ({ campaigns, baseFilters, period, emptyTable }) => {
 		</GreenCard>
 	);
 
-	if (!campaigns?.length) return (
+	if ( ! campaigns) return (
 		<GreenCard title="Your journey so far" className="carbon-journey" downloadable={false}>
 			<Misc.Loading text="Fetching your campaign data..." />
 		</GreenCard>
