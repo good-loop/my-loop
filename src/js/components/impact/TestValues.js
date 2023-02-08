@@ -1,4 +1,51 @@
 
+export const TEST_IMPACTDEBIT = {
+    "@class": "com.goodloop.data.ImpactDebit",
+    "impact": {
+      "@class": "com.goodloop.data.charity.Impact",
+      "category": "human services",
+      "subcategory": "Food Banks and Food Distribution",
+      "unsdg": 6,
+      "charity": "wateraid",
+      "name": "pump(s)",
+      "amount": {
+        "@class": "com.goodloop.data.Money",
+        "year": 0,
+        "currency": "GBP",
+        "value100p": 10000000,
+        "value": "1000",
+        "name": ""
+      },
+      "n": 10,
+      "description": "We made some taps and pumps which will help the village.",
+      "location": {
+        "@class": "com.winterwell.jgeoplanet.SimplePlace",
+        "country": "EG"
+      },
+      "quote": {
+        "@class": "com.goodloop.data.Quotation",
+        "author": {
+          "@class": "com.winterwell.data.PersonLite",
+          "name": "Alice Smith"
+        },
+        "text": "Thank you for your help :)",
+        "created": "2023-02-08T11:13:16Z"
+      },
+      "img": {
+        "@class": "com.goodloop.data.MediaObject",
+        "contentUrl": "https://media.good-loop.com/uploads/raw/download_1-7419706471229897968.jpeg",
+        "created": "2023-02-08T11:13:04Z"
+      },
+      "url": "https://wateraid.co.uk"
+    },
+    "vertiser": "q44DhUNr",
+    "created": "2023-02-08T11:09:58Z",
+    "lastModified": "2023-02-08T11:14:05Z",
+    "name": "TEST DUMMY Nespresso Impact",
+    "id": "Y07NvcZa",
+    "status": "MODIFIED"
+  };
+
 export const TEST_CHARITY_OBJ = {
     "scotlandCharityRegNum": "SC039479",
     "circleCrop": 90,
