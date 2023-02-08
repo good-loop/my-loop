@@ -1,5 +1,5 @@
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { useTransition, animated, useSpring } from 'react-spring';
 import PromiseValue from '../../base/promise-value';
 import { setWindowTitle } from '../../base/plumbing/Crud';
 import DataStore from '../../base/plumbing/DataStore';
@@ -20,7 +20,6 @@ import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
 import ActionMan from '../../plumbing/ActionMan';
 import C from '../../C';
 import NGOImage from '../../base/components/NGOImage';
-
 /**
  * DEBUG OBJECTS
  */
@@ -62,93 +61,100 @@ const ImpactOverviewPage = () => {
 		setWindowTitle(windowTitle);
 	}, []);
 
+	let [isNavbarOpen, setIsNavbarOpen] = useState(true)
+
+	const navToggleAnimation = useSpring({
+		width : isNavbarOpen ? "270px" : "90px",	// shrink navbar
+	})
+
 	return (
 	<>
 		<div className="navbars-overlay">
-			<NavBars active={"overview"}/>
+			<NavBars active={"overview"} setIsNavbarOpen={setIsNavbarOpen}/>
 			<FilterAndAccountTopBar size="mobile"/>  {/*mobile topbar*/}
-			<FilterAndAccountTopBar size="desktop"/>  {/*widescreen topbar*/}
+			<FilterAndAccountTopBar size="desktop" setIsNavbarOpen={setIsNavbarOpen}/>  {/*widescreen topbar*/}
 		</div>
 		<Container fluid className='iview-container'>
-			<GLHorizontal>
-
-				{/* first grid half */}
-				<GLVertical>
-					{/* top left corner - both top corners with basis 60 to line up into grid pattern*/}
-					<GLCard basis={60} className="hero-card">
-						<div className='white-circle'>
-							<div className='content'>
-								<img className='logo' src={TEST_BRAND_OBJ.branding.logo}/>
-								<br/>
-								<h1>£A BAJILLION</h1>
-								<h2>Donated</h2>
-								<br/>
-								<h5>With</h5>
-								<br/>
-								<img className='w-50' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+			<animated.div id='in-flow-navbar' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}>heyyy</animated.div>
+				<GLHorizontal>
+					{/* first grid half */}
+					<GLVertical>
+						{/* top left corner - both top corners with basis 60 to line up into grid pattern*/}
+						<GLCard basis={60} className="hero-card">
+							<div className='white-circle'>
+								<div className='content'>
+									<img className='logo' src={TEST_BRAND_OBJ.branding.logo}/>
+									<br/>
+									<h1>£A BAJILLION</h1>
+									<h2>Donated</h2>
+									<br/>
+									<h5>With</h5>
+									<br/>
+									<img className='w-50' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+								</div>
 							</div>
-						</div>
-					</GLCard>
-
-					{/* bottom left corner */}
-					<GLHorizontal>
-						<GLCard>
-							<h2>Watch to donate</h2>
 						</GLCard>
-						<GLCard>
-							<h2>This ad does good</h2>
-						</GLCard>
-					</GLHorizontal>
 
-					<GLModalCard id="left-half"/>
-				</GLVertical>
-
-				{/* second grid half */}
-				<GLVertical>
-
-					{/* top right corner */}
-					<GLHorizontal collapse="md" basis={60}>
-						<GLVertical>
-							<GLHorizontal>
-								<GLCard modalContent={<p>9 brands!! wow!!</p>} modalTitle="9 Brands" modalId="right-half" modalClassName="list-modal" className="center-number">
-									<h2>9</h2>
-									<h3>Brands</h3>
-								</GLCard>
-								<GLCard modalContent={<CharityList/>} modalTitle="18 charities" modalId="right-half" modalClassName="list-modal" className="center-number">
-									<h2>18</h2>
-									<h3>Charities</h3>
-								</GLCard>
-							</GLHorizontal>
-							<GLCard basis={10} modalContent={<CampaignList/>} modalTitle="16 Campaigns" modalClassName="list-modal" modalId="right-half">
-								<h3>16 CAMPAIGNS</h3>
-							</GLCard>
-							<GLCard basis={10}>
-								<h3>6.5M VIEWS | 5 COUNTRIES</h3>
+						{/* bottom left corner */}
+						<GLHorizontal>
+							<GLCard>
+								<h2>Watch to donate</h2>
 							</GLCard>
 							<GLCard>
-								<h3>8.69T CO2E OFFSET</h3>
+								<h2>This ad does good</h2>
 							</GLCard>
-						</GLVertical>
-						<GLCard>
-							<h2>Ads for good by Good Loop</h2>
-							<p>Hello</p>
-							<p>Hello</p>
-							<p>Hello</p>
-							<p>Hello</p>
-							<p>Hello</p>
+						</GLHorizontal>
+
+						<GLModalCard id="left-half"/>
+					</GLVertical>
+
+					{/* second grid half */}
+					<GLVertical>
+
+						{/* top right corner */}
+						<GLHorizontal collapse="md" basis={60}>
+							<GLVertical>
+								<GLHorizontal>
+									<GLCard modalContent={<p>9 brands!! wow!!</p>} modalTitle="9 Brands" modalId="right-half" modalClassName="list-modal" className="center-number">
+										<h2>9</h2>
+										<h3>Brands</h3>
+									</GLCard>
+									<GLCard modalContent={<CharityList/>} modalTitle="18 charities" modalId="right-half" modalClassName="list-modal" className="center-number">
+										<h2>18</h2>
+										<h3>Charities</h3>
+									</GLCard>
+								</GLHorizontal>
+								<GLCard basis={10} modalContent={<CampaignList/>} modalTitle="16 Campaigns" modalClassName="list-modal" modalId="right-half">
+									<h3>16 CAMPAIGNS</h3>
+								</GLCard>
+								<GLCard basis={10}>
+									<h3>6.5M VIEWS | 5 COUNTRIES</h3>
+								</GLCard>
+								<GLCard>
+									<h3>8.69T CO2E OFFSET</h3>
+								</GLCard>
+							</GLVertical>
+							<GLCard>
+								<h2>Ads for good by Good Loop</h2>
+								<p>Hello</p>
+								<p>Hello</p>
+								<p>Hello</p>
+								<p>Hello</p>
+								<p>Hello</p>
+							</GLCard>
+						</GLHorizontal>
+						
+						{/* bottom right corner */}
+						<GLCard modalContent={<p>ADSSSSSSS</p>} modalTitle="Ads" modalId="full-page">
+							<h1>LOOK! AN AD!</h1>
 						</GLCard>
-					</GLHorizontal>
-					
-					{/* bottom right corner */}
-					<GLCard modalContent={<p>ADSSSSSSS</p>} modalTitle="Ads" modalId="full-page">
-						<h1>LOOK! AN AD!</h1>
-					</GLCard>
 
-					<GLModalCard id="right-half"/>
-				</GLVertical>
+						<GLModalCard id="right-half"/>
+					</GLVertical>
 
-				<GLModalCard id="full-page"/>
-			</GLHorizontal>
+					<GLModalCard id="full-page"/>
+				</GLHorizontal>
+
 		</Container>
 
 		<GLModalBackdrop/>

@@ -88,7 +88,7 @@ const TopNavBar = ({active}) => {
 		</Navbar></>)
 }
 
-const NavBars = ({active}) => {
+const NavBars = ({active, setIsNavbarOpen}) => {
 
 	const [isOpen, setIsOpen] = useState(true)
 
@@ -102,6 +102,7 @@ const NavBars = ({active}) => {
 
 	const toggle = () => {
 		setIsOpen(!isOpen)
+		setIsNavbarOpen(!isOpen) // inFlow empty div used in main page content, required as fixed navbars can't affect flex when opening
 	}
 
 	return (
