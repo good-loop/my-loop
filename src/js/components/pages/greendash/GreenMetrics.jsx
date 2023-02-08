@@ -41,12 +41,24 @@ export const isPer1000 = () => {
 	return emissionsMode === 'per1000';
 };
 
+/**
+ * @param {number} int 
+ * @returns {number}
+ */
+const getIntLength = (int) => {
+	return (Math.log(int) * Math.LOG10E + 1 | 0);
+}
+
 
 const OverviewWidget = ({ period, data, prob }) => {
 	let imps;
+	let rounding;
+	let plusMunus;
 	if (data?.length > 0) {
 		const total = getSumColumn(data, 'count');
-		const [upper, lower] = [total*1.01, total*0.99]
+		const [upper, lower] = [total*1.01, total*0.99];
+		rounding = printer.prettyNumber(total, 3);
+		plusMunus = printer.prettyNumber(total * 0.01);
 		imps = !prob || (prob && prob == 1) ? printer.prettyInt(total) : `${printer.prettyInt(lower)} to ${printer.prettyInt(upper)}`;
 	} else if (!data) {
 		imps = 'Fetching data...';
@@ -63,7 +75,8 @@ const OverviewWidget = ({ period, data, prob }) => {
 					Impressions served: <span className="impressions-count">{imps}</span>
 				</span>
 				{prob && <span className='probability ml-5'>
-					Probability: {prob}
+					Rounding: <span>{rounding}</span> ± {plusMunus} <tr/>
+					Probability: {prob} 
 				</span>}
 			</Col>
 		</Row>
