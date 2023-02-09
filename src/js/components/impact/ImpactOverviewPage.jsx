@@ -66,7 +66,7 @@ const ImpactOverviewPage = () => {
 		setWindowTitle(windowTitle);
 	}, []);
 
-	let [isNavbarOpen, setIsNavbarOpen] = useState(true)
+	let [isNavbarOpen, setIsNavbarOpen] = useState(false)
 
 	const navToggleAnimation = useSpring({
 		width : isNavbarOpen ? "270px" : "90px",	// shrink navbar
@@ -80,7 +80,7 @@ const ImpactOverviewPage = () => {
 			<FilterAndAccountTopBar size="desktop" setIsNavbarOpen={setIsNavbarOpen}/>  {/*widescreen topbar*/}
 		</div>
 		<Container fluid className='iview-container pr-md-5'>
-			<animated.div id='in-flow-navbar' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}>heyyy</animated.div>
+			<animated.div id='in-flow-navbar' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}></animated.div>
 				<GLHorizontal>
 					{/* first grid half */}
 					<GLVertical>
