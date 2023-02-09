@@ -171,7 +171,7 @@ const Filters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurC
 
 		const classes = space("brand-button ListItem btn-default btn btn-outline-secondary", KStatus.PUBLISHED, 'btn-space')
 
-		let modalContent = (
+		let modalContent = () => (
 			<div className='' id="filter-modal-container">
 				{/* master brand & its campaigns */}
 				<ListLoad status={KStatus.PUBLISHED} hideTotal type="Advertiser"
