@@ -139,9 +139,9 @@ export const GLModalCard = ({className, id}) => {
 	const path = MODAL_LIST_PATH.concat(id);
 	const open = DataStore.getValue(path.concat("open"));
 
-	const content = DataStore.getValue(path.concat("content"));
+	const Content = DataStore.getValue(path.concat("content"));
 	const title = DataStore.getValue(path.concat("title"));
-	const header = DataStore.getValue(path.concat("header"));
+	const Header = DataStore.getValue(path.concat("header"));
 	const headerImg = DataStore.getValue(path.concat("headerImg"));
 	const storedClassName = DataStore.getValue(path.concat("className"));
 
@@ -159,11 +159,11 @@ export const GLModalCard = ({className, id}) => {
 			<GLCard noPadding>
 				<CardHeader style={headerStyle} className="glmodal-header">
 					<CloseButton className={headerImg&&"white-circle-bg"} onClick={() => modalToggle(id)}/>
-					{header}
+					{Header && <Header/>}
 					{title && <h4>{title}</h4>}
 				</CardHeader>
 				<CardBody>
-					{content}
+					<Content/>
 				</CardBody>
 			</GLCard>
 		</div>

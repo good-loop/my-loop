@@ -79,7 +79,7 @@ const ImpactOverviewPage = () => {
 			<FilterAndAccountTopBar size="mobile"/>  {/*mobile topbar*/}
 			<FilterAndAccountTopBar size="desktop" setIsNavbarOpen={setIsNavbarOpen}/>  {/*widescreen topbar*/}
 		</div>
-		<Container fluid className='iview-container'>
+		<Container fluid className='iview-container pr-md-5'>
 			<animated.div id='in-flow-navbar' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}>heyyy</animated.div>
 				<GLHorizontal>
 					{/* first grid half */}
@@ -120,16 +120,16 @@ const ImpactOverviewPage = () => {
 						<GLHorizontal collapse="md" basis={60}>
 							<GLVertical>
 								<GLHorizontal>
-									<GLCard modalContent={<p>9 brands!! wow!!</p>} modalTitle="9 Brands" modalId="right-half" modalClassName="list-modal" className="center-number">
+									<GLCard>
 										<h2>9</h2>
 										<h3>Brands</h3>
 									</GLCard>
-									<GLCard modalContent={<CharityList/>} modalTitle="18 charities" modalId="right-half" modalClassName="list-modal" className="center-number">
+									<GLCard modalContent={CharityList} modalTitle="18 charities" modalId="right-half" modalClassName="list-modal" className="center-number">
 										<h2>18</h2>
 										<h3>Charities</h3>
 									</GLCard>
 								</GLHorizontal>
-								<GLCard basis={10} modalContent={<CampaignList/>} modalTitle="16 Campaigns" modalClassName="list-modal" modalId="right-half">
+								<GLCard basis={10} modalContent={CampaignList} modalTitle="16 Campaigns" modalClassName="list-modal" modalId="right-half">
 									<h3>16 CAMPAIGNS</h3>
 								</GLCard>
 								<GLCard basis={10}>
@@ -139,12 +139,12 @@ const ImpactOverviewPage = () => {
 									<div className='offset-number'>
 										<h3>8.69T CO2E OFFSET</h3>
 									</div>
-									<div className='carbon-neutral px-4 py-2'>
+									<div className='carbon-neutral px-5 py-2'>
 										<img src="/img/Impact/Good-Loop_CarbonNeutralAd_Logo_Final-05.svg" className='w-100'/>
 									</div>
 								</GLCard>
 							</GLVertical>
-							<GLCard modalId="right-half" modalTitle="Ads for good" modalContent={<AdsForGoodCTA/>}>
+							<GLCard modalId="right-half" modalTitle="Ads for good" modalContent={AdsForGoodCTA}>
 								<h2>Ads for good by Good Loop</h2>
 								<p>Hello</p>
 								<p>Hello</p>
@@ -155,7 +155,7 @@ const ImpactOverviewPage = () => {
 						</GLHorizontal>
 						
 						{/* bottom right corner */}
-						<GLCard modalContent={<AdsCatalogueModal/>} modalTitle="Ads" modalId="full-page">
+						<GLCard modalContent={AdsCatalogueModal} modalTitle="Ads" modalId="full-page">
 							{/*<AdsCatalogueModal/>*/}
 						</GLCard>
 
@@ -217,8 +217,8 @@ const CharityList = () => {
 		<Row>
 			{charities.map((charity, i) => <Col key={i} md={4} className="mt-3">
 				<GLCard className="preview" noMargin
-					modalContent={<CharityInfo charity={charity}/>}
-					modalHeader={<CharityHeader charity={charity}/>}
+					modalContent={() => <CharityInfo charity={charity}/>}
+					modalHeader={() => <CharityHeader charity={charity}/>}
 					modalHeaderImg={charity.images}
 					modalClassName="charity-info"
 					modalId="left-half">
