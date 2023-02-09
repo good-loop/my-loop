@@ -41,7 +41,7 @@ const AdvertsCatalogue = ({ campaign, ads, canonicalAds }) => {
 	const [animating, setAnimating] = useState(false);
 
 	if (showAds.length === 1) {
-		return (<Container className="py-5">
+		return (<Container>
 			<AdvertCard
 				ad={showAds[0]}
 				active
@@ -81,7 +81,7 @@ const AdvertsCatalogue = ({ campaign, ads, canonicalAds }) => {
 	};
 
 	return (<>
-		<Container className="py-5">
+		<Container className='ads-catalogue'>
 			<Carousel
 				activeIndex={activeIndex}
 				next={next}
@@ -100,9 +100,6 @@ const AdvertsCatalogue = ({ campaign, ads, canonicalAds }) => {
 			<br />
 			<br />
 			<AdPreviewCarousel ads={showAds} setSelected={goToIndex} selectedIndex={activeIndex} />
-			<button className="cta-modal-btn btn btn-primary text-uppercase" style={{marginTop:"50px"}}onClick={e => {console.log(testooo); setCtaModalOpen(true)}}>
-				want to raise even more?
-			</button>
 		</Container>
 	</>);
 };
@@ -191,26 +188,6 @@ const AdPreviewCarousel = ({ ads, selectedIndex, setSelected }) => {
 	</div>;
 }
 
-// Support portrait ads
-const IPhoneMockup = ({ size }) => {
-	if (size == 'portrait') {
-		return (
-			<div>
-				<img src="/img/LandingBackground/iphone-mockup-portrait.svg" className="w-100 invisible" />
-				<img src="/img/LandingBackground/iphone-mockup-portrait.svg" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "49.8%", width: "35%", top: "18%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }} />
-			</div>
-		);
-	}
-	return (
-		<div>
-			<img src="/img/LandingBackground/iphone-mockup-landscape.svg" className="w-100 invisible" />
-			{/*<img src="/img/redcurve.svg" className="position-absolute tv-ad-player" style={{height: "80%"}} />*/}
-			<img src="/img/LandingBackground/iphone-mockup-landscape.svg" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "49.8%", width: "67%", top: "50%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }} />
-		</div>
-	);
-
-};
-
 // If social is null (not specific) or false, it will fall back to landscape ads
 const AdvertCard = ({ ad, active }) => {
 	const social = ad.format === "social";
@@ -234,19 +211,16 @@ const AdvertCard = ({ ad, active }) => {
 			setHasShown(true);
 		}, 100);
 	}
-
+ 
 	return (
-		<div className="position-relative" style={{ minHeight: "100px", maxHeight: "750px" }}>
-			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{ position: "absolute", zIndex: 999 }}>Advert Editor ({ad.id})</DevLink>
-			<div className="position-relative ad-card">
-				<IPhoneMockup size={size} />
-				<div className={"position-absolute theunit-" + size} >
-					{hasShown ? (
-						<GoodLoopUnit vertId={ad.id} size={size} extraParams={extraParams} style={{zIndex:2}}/>
-					) : (
-						<div style={{ background: "black", width: "100%", height: "100%" }}></div>
-					)}
-				</div>
+		<div className="position-relative main-ad" style={{ minHeight: "100px", maxHeight: "400px" }}>
+			{/*<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{ position: "absolute", zIndex: 999 }}>Advert Editor ({ad.id})</DevLink>*/}
+			<div className="position-relative">
+				{hasShown ? (
+					<GoodLoopUnit vertId={ad.id} size={size} extraParams={extraParams} style={{zIndex:2, maxWidth:"50%", margin:"auto"}}/>
+				) : (
+					<div style={{ background: "black", width: "100%", height: "100%" }}></div>
+				)}
 				<Button className="position-absolute" style={{bottom:0, left:"50%", transform:"translate(-50%,0)"}} color="primary" onClick={reloadAdUnit}>
 					Reload the ad
 				</Button>
@@ -283,9 +257,6 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
 						<div style={{ background: "black", width: "100%", height: "100%" }}></div>
 					)}
 				</div>
-			</div>
-			<div>
-				<Misc.DateDuration startDate={ad.start} endDate={ad.end} invisOnEmpty />
 			</div>
 		</div>
 	);

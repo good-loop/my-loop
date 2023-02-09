@@ -146,6 +146,39 @@
                 margin-top: 5rem;
             }
         }
+
+        &.ads-catalogue-modal {
+            
+            .glcard {
+                background-color: #252A2F;
+
+                .ads-catalogue {
+                    height: 100%;
+                    max-height: 100%;
+
+                    .pointer-wrapper {
+                        cursor: pointer;
+                
+                        .ad-prev {
+                            pointer-events: none;
+                            overflow: hidden;
+                            border: 5px solid transparent;
+                            transition: 0.2s;
+                        }
+                
+                        &.selected {
+                            cursor: default;
+                
+                            .ad-prev {
+                                border-radius: 5px;
+                                border: 5px solid red;
+                                transition: 0.2s;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }

@@ -24,6 +24,7 @@ import AdvertsCatalogue from '../campaignpage/AdvertsCatalogue';
 import { getDataItem } from '../../base/plumbing/Crud';
 import KStatus from '../../base/data/KStatus';
 import Misc from '../../base/components/Misc';
+import List from '../../base/data/List';
 
 /**
  * DEBUG OBJECTS
@@ -155,7 +156,7 @@ const ImpactOverviewPage = () => {
 						</GLHorizontal>
 						
 						{/* bottom right corner */}
-						<GLCard modalContent={AdsCatalogueModal} modalTitle="Ads" modalId="full-page">
+						<GLCard modalContent={AdsCatalogueModal} modalId="full-page" modalClassName="ads-catalogue-modal">
 							{/*<AdsCatalogueModal/>*/}
 						</GLCard>
 
@@ -180,11 +181,13 @@ const AdsCatalogueModal = () => {
 	const pvAds = Campaign.pvAds({campaign: pvCampaign.value, status});
 	if (!pvAds.value) return <Misc.Loading/>
 
+	const ads = List.hits(pvAds.value) || [];
+
 	return <>
 		<AdvertsCatalogue
 			campaign={pvCampaign.value}
-			ads={pvAds.value}
-			canonicalAds={pvAds.value} // maybe wrong should be all ads
+			ads={ads}
+			canonicalAds={ads} // maybe wrong should be all ads
 		/>
 	</>;
 
