@@ -40,7 +40,7 @@ import ModalCTA from './CampaignModalTFG';
 /**
  * @returns fetches for all the data: `{pvTopCampaign, pvAgencies, pvAds, pvAdvertisers}`
  */
- const fetchIHubData = () => {
+const fetchIHubData = () => {
 	const path = DataStore.getValue(['location', 'path']);
 	let topCampaignId = path[1];
 	// What adverts should we look at?

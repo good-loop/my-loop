@@ -20,6 +20,11 @@ import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
 import ActionMan from '../../plumbing/ActionMan';
 import C from '../../C';
 import NGOImage from '../../base/components/NGOImage';
+import AdvertsCatalogue from '../campaignpage/AdvertsCatalogue';
+import { getDataItem } from '../../base/plumbing/Crud';
+import KStatus from '../../base/data/KStatus';
+import Misc from '../../base/components/Misc';
+
 /**
  * DEBUG OBJECTS
  */
@@ -150,8 +155,8 @@ const ImpactOverviewPage = () => {
 						</GLHorizontal>
 						
 						{/* bottom right corner */}
-						<GLCard modalContent={<p>ADSSSSSSS</p>} modalTitle="Ads" modalId="full-page">
-							<h1>LOOK! AN AD!</h1>
+						<GLCard modalContent={<AdsCatalogueModal/>} modalTitle="Ads" modalId="full-page">
+							{/*<AdsCatalogueModal/>*/}
 						</GLCard>
 
 						<GLModalCard id="right-half"/>
@@ -166,6 +171,24 @@ const ImpactOverviewPage = () => {
 	</>
 	);
 };
+
+const AdsCatalogueModal = () => {
+
+	const status = KStatus.PUB_OR_ARC;
+	const pvCampaign = getDataItem({type:C.TYPES.Campaign,status,id:TEST_CAMPAIGN});
+	if (!pvCampaign.value) return <Misc.Loading/>
+	const pvAds = Campaign.pvAds({campaign: pvCampaign.value, status});
+	if (!pvAds.value) return <Misc.Loading/>
+
+	return <>
+		<AdvertsCatalogue
+			campaign={pvCampaign.value}
+			ads={pvAds.value}
+			canonicalAds={pvAds.value} // maybe wrong should be all ads
+		/>
+	</>;
+
+}
 
 const AdsForGoodCTA = () => {
 	const vertiser = TEST_BRAND_OBJ;
