@@ -75,26 +75,54 @@
 // the actual content when the filter is open
 #filter-modal-container {
 
-    ul {
-        list-style: none;
+    // button containing brand and its campaings
+    .filter-button {
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        background-color: rgb(212, 212, 212);
     }
 
-    li { 
+    // container div within the above button
+    .brand-campaign-set {
+        width: 100%;
     }
 
-    .filter-set {
-    
-        .filter-image {
-            width: 50px !important;
-            height: 50px !important;
-            margin: 5px;
-            margin-right: 30px;
-        }
-        .filter-blank-image {
-            background-color: gainsboro;
-            display: inline-block;
-        }
+    // unindented brand
+    .brand-button{
+        width: 100%;
+        border-radius: 1%;
+        border: none;
+        box-shadow: none;
     }
+
+    // indented campaign
+    .campaign-button {
+        width: 75%;
+        border-top: solid 1px rgb(205, 205, 205) !important;
+        background-color: rgb(217, 217, 217) !important;
+    }
+
+    .placeholder-thumbnail {
+        width: 75px;
+        height: 75px;
+        background-color: darkgray;
+        display: inline-flex;
+    }
+    .img-thumbnail {
+        width: 75px !important;
+        height: 75px !important;
+        display: inline-flex !important;
+    }
+    .info {
+        display: inline-flex;
+    }
+
+    .closed {
+        display: none;;
+    }
+
 }
 
 #navbars-overlay {

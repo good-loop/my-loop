@@ -10,6 +10,10 @@ import KStatus from '../../base/data/KStatus';
 import { getDataItem } from '../../base/plumbing/Crud';
 import Roles from '../../base/Roles';
 import SearchQuery from '../../base/searchquery';
+import { getId } from '../../base/data/DataClass';
+import AThing from '../../base/data/AThing';
+
+import Misc from '../../base/components/Misc';
 
 import { encURI, is, isMobile, space } from '../../base/utils/miscutils';
 import C from '../../C';
@@ -21,6 +25,7 @@ import ActionMan from '../../plumbing/ActionMan';
 import { assert } from '../../base/utils/assert';
 import { openAndPopulateModal } from './GLCards';
 import Tree from '../../base/data/Tree';
+import ListLoad from '../../base/components/ListLoad';
 
 const A = C.A;
 
@@ -89,13 +94,94 @@ const Filters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurC
 			</ul>
 		)
 	}
+
+
+		/**
+	* These can be clicked or control-clicked
+	*
+	* @param servlet
+	* @param navpage -- How/why/when does this differ from servlet??
+	* @param nameFn {Function} Is there a non-standard way to extract the item's display name?
+	* 	TODO If it's of a data type which has getName(), default to that
+	* @param extraDetail {Element} e.g. used on AdvertPage to add a marker to active ads
+	*/
+	const CampaignListItem = ({ type, item, checkboxes, canDelete, nameFn, extraDetail, button}) => {
+		const id = getId(item);
+		// let checkedPath = ['widget', 'ListLoad', type, 'checked'];
+		let name = nameFn ? nameFn(item, id) : item.name || item.text || id || '';
+		if (name.length > 280) name = name.slice(0, 280);
+		const status = item.status || "";
+		
+		let thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='placeholder-thumbnail' />
+		
+		return <>
+			<div className='brand-campaign-set'>
+				{thumbnail}
+				<div className="info">
+					<div className="name">{name}</div>
+					{button || ''}
+				</div>
+			</div>
+		</>;
+   }
+
 	
+	/**
+	* These can be clicked or control-clicked
+	*
+	* @param servlet
+	* @param navpage -- How/why/when does this differ from servlet??
+	* @param nameFn {Function} Is there a non-standard way to extract the item's display name?
+	* 	TODO If it's of a data type which has getName(), default to that
+	* @param extraDetail {Element} e.g. used on AdvertPage to add a marker to active ads
+	*/
+	const FilterListItem = ({ type, item, checkboxes, canDelete, nameFn, extraDetail, button}) => {
+		const id = getId(item);
+		// let checkedPath = ['widget', 'ListLoad', type, 'checked'];
+		let name = nameFn ? nameFn(item, id) : item.name || item.text || id || '';
+		if (name.length > 280) name = name.slice(0, 280);
+		const status = item.status || "";
+		
+		const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+
+		const campaignClasses = space("filter-button campaign-button ListItem btn-default btn btn-outline-secondary", KStatus.PUBLISHED, 'btn-space')
+		const campaignsListItem = (<div id={"campaigns-"+item.id} className={ + isDropdownOpen ? "open" : "closed"}><ListLoad hideTotal status={status} type="Campaign" q={SearchQuery.setProp(null, "vertiser", id).query}  onClickItem={(item) => console.log("clicked...", item)} itemClassName={campaignClasses} ListItem={CampaignListItem}/></div>)
+
+		let thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='placeholder-thumbnail' />
+		
+		
+		button = <button className={'dropdown-button'} onClick={() => setIsDropdownOpen(!isDropdownOpen)}>X</button>
+
+		return <>
+			<div className='brand-campaign-set'>
+				<div className="info">
+					{thumbnail}
+					<div className="name">{name}</div>
+					{button || ''}
+				</div>
+				{campaignsListItem}
+			</div>
+		</>;
+   }
 
 	const openFilters = () => {
-		console.log("AHHHHHHHHHHHHH FUCK OFF")
+
+		
+		const nestle = "VAcnHLcz"
+
+		const classes = space("brand-button ListItem btn-default btn btn-outline-secondary", KStatus.PUBLISHED, 'btn-space')
+
 		let modalContent = (
 			<div className='' id="filter-modal-container">
-				{TreeToListJSX({tree:brandTree})}
+				{/* master brand & its campaigns */}
+				<ListLoad status={KStatus.PUBLISHED} hideTotal type="Advertiser"
+					q={SearchQuery.setProp(null, "id", nestle).query} 
+					ListItem={FilterListItem} itemClassName={classes}/>
+
+				{/* sub brands & their campaigns */}
+				<ListLoad status={KStatus.PUBLISHED} hideTotal type="Advertiser" 
+            		q={SearchQuery.setProp(null, "parentId", nestle).query} 
+					ListItem={FilterListItem} itemClassName={classes}/>
 			</div>
 		)
 		openAndPopulateModal({id:"left-half", content:modalContent, title:"(still need red bar here)", prioritized:true})
