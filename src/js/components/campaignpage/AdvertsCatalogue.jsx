@@ -116,7 +116,7 @@ const AdPreviewCarousel = ({ ads, selectedIndex, setSelected }) => {
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [animating, setAnimating] = useState(false);
 
-	const slidesNum = Math.ceil(ads.length / 3);
+	const slidesNum = Math.ceil(ads.length / 6);
 
 	const next = () => {
 		if (animating) return;
@@ -137,7 +137,7 @@ const AdPreviewCarousel = ({ ads, selectedIndex, setSelected }) => {
 
 	let carouselSlides = [];
 	for (let i = 0; i < slidesNum; i++) {
-		const adIndex = i * 3;
+		const adIndex = i * 6;
 		carouselSlides.push(
 			<CarouselItem
 				onExiting={() => setAnimating(true)}
@@ -164,6 +164,27 @@ const AdPreviewCarousel = ({ ads, selectedIndex, setSelected }) => {
 						ad={ads[adIndex + 2]}
 						selected={selectedIndex === adIndex + 2}
 						handleClick={() => setSelected(adIndex + 2)}
+						active={activeIndex === i}
+					/>
+					<AdvertPreviewCard
+						key={adIndex + 3}
+						ad={ads[adIndex + 3]}
+						selected={selectedIndex === adIndex + 3}
+						handleClick={() => setSelected(adIndex + 3)}
+						active={activeIndex === i}
+					/>
+					<AdvertPreviewCard
+						key={adIndex + 4}
+						ad={ads[adIndex + 4]}
+						selected={selectedIndex === adIndex + 4}
+						handleClick={() => setSelected(adIndex + 4)}
+						active={activeIndex === i}
+					/>
+					<AdvertPreviewCard
+						key={adIndex + 5}
+						ad={ads[adIndex + 5]}
+						selected={selectedIndex === adIndex + 5}
+						handleClick={() => setSelected(adIndex + 5)}
 						active={activeIndex === i}
 					/>
 				</div>
@@ -213,17 +234,14 @@ const AdvertCard = ({ ad, active }) => {
 	}
  
 	return (
-		<div className="position-relative main-ad" style={{ minHeight: "100px", maxHeight: "400px" }}>
+		<div className="position-relative main-ad" style={{ minHeight: "100px", maxHeight: "600px" }}>
 			{/*<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{ position: "absolute", zIndex: 999 }}>Advert Editor ({ad.id})</DevLink>*/}
-			<div className="position-relative">
+			<div className="position-relative ad-unit-outer">
 				{hasShown ? (
 					<GoodLoopUnit vertId={ad.id} size={size} extraParams={extraParams} style={{zIndex:2, maxWidth:"50%", margin:"auto"}}/>
 				) : (
 					<div style={{ background: "black", width: "100%", height: "100%" }}></div>
 				)}
-				<Button className="position-absolute" style={{bottom:0, left:"50%", transform:"translate(-50%,0)"}} color="primary" onClick={reloadAdUnit}>
-					Reload the ad
-				</Button>
 			</div>
 			{/*<span className="position-absolute" style={{ left: "50%", top: "50%", transform: "translate(-50%, -50%)", zIndex: 0 }}>If you're seeing this, you likely have ad-blocker enabled. Please disable ad-blocker to see the demo!</span>*/}
 		</div>
@@ -248,7 +266,7 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
 	if (active && !hasShown) setHasShown(true);
 
 	return (
-		<div className={"col-6 	" + (social ? "col-md-2" : "col-md-4")}>
+		<div className={"col-6 col-md-2"}>
 			<div onClick={e => { e.preventDefault(); handleClick(); }} className={"d-flex justify-content-center pointer-wrapper" + (selected ? " selected" : "")}>
 				<div className="ad-prev shadow">
 					{hasShown ? (

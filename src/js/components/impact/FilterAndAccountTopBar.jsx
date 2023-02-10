@@ -27,6 +27,12 @@ import { openAndPopulateModal } from './GLCards';
 import Tree from '../../base/data/Tree';
 import ListLoad from '../../base/components/ListLoad';
 
+/**
+ * DEBUG OBJECTS
+ */
+
+import { TEST_BRAND } from './TestValues';
+
 const A = C.A;
 
 
@@ -145,7 +151,14 @@ const Filters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurC
 		const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
 		const campaignClasses = space("filter-button campaign-button ListItem btn-default btn btn-outline-secondary", KStatus.PUBLISHED, 'btn-space')
-		const campaignsListItem = (<div id={"campaigns-"+item.id} className={ + isDropdownOpen ? "open" : "closed"}><ListLoad hideTotal status={status} type="Campaign" q={SearchQuery.setProp(null, "vertiser", id).query}  onClickItem={(item) => console.log("clicked...", item)} itemClassName={campaignClasses} ListItem={CampaignListItem}/></div>)
+		const campaignsListItem = (<div id={"campaigns-"+item.id} className={ + isDropdownOpen ? "open" : "closed"}>
+			<ListLoad hideTotal status={status}
+				type={C.TYPES.Campaign}
+				q={SearchQuery.setProp(null, "vertiser", id).query}
+				onClickItem={(item) => console.log("clicked...", item)}
+				itemClassName={campaignClasses}
+				ListItem={CampaignListItem}/>
+		</div>)
 
 		let thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='placeholder-thumbnail' />
 		
@@ -167,20 +180,20 @@ const Filters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurC
 	const openFilters = () => {
 
 		
-		const nestle = "VAcnHLcz"
+		const vertiser = TEST_BRAND;
 
 		const classes = space("brand-button ListItem btn-default btn btn-outline-secondary", KStatus.PUBLISHED, 'btn-space')
 
 		let modalContent = () => (
 			<div className='' id="filter-modal-container">
 				{/* master brand & its campaigns */}
-				<ListLoad status={KStatus.PUBLISHED} hideTotal type="Advertiser"
-					q={SearchQuery.setProp(null, "id", nestle).query} 
+				<ListLoad status={KStatus.PUBLISHED} hideTotal type={C.TYPES.Advertiser}
+					q={SearchQuery.setProp(null, "id", vertiser).query} 
 					ListItem={FilterListItem} itemClassName={classes}/>
 
 				{/* sub brands & their campaigns */}
-				<ListLoad status={KStatus.PUBLISHED} hideTotal type="Advertiser" 
-            		q={SearchQuery.setProp(null, "parentId", nestle).query} 
+				<ListLoad status={KStatus.PUBLISHED} hideTotal type={C.TYPES.Advertiser}
+            		q={SearchQuery.setProp(null, "parentId", vertiser).query} 
 					ListItem={FilterListItem} itemClassName={classes}/>
 			</div>
 		)
