@@ -72,6 +72,21 @@ The GLCards layout is a layout for modular cards which are designed to expand an
         margin: 2rem;
     }
 
+    &.no-header-padding {
+        .card-header {
+            padding: 0;
+            .glmodal-title {
+                padding-top: 1rem;
+            }
+        }
+    }
+
+    &.no-padding {
+        .card-body {
+            padding: 0;
+        }
+    }
+
     .card-header {
         background-color: rgba(0,0,0,0);
         border: none;

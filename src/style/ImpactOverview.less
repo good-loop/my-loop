@@ -1,13 +1,17 @@
 .page-iview {
 
+    h1 {
+        color: @gl-impact-red;
+    }
+
     h2 {
-        color: @gl-red;
+        color: @gl-impact-red;
         text-transform: uppercase;
         text-align: center;
     }
 
     h3 {
-        color: @gl-red;
+        color: @gl-impact-red;
         font-size: 1.2rem;
         font-weight: 600;
         text-align: center;
@@ -73,6 +77,7 @@
                 flex-basis: 50%;
                 background-image: url("/img/Impact/curves-background.svg");
                 background-size: cover;
+                background-position: center;
             }
         }
     }
@@ -147,10 +152,24 @@
             }
         }
 
+        &.co2-offset {
+            .bg-co2-offset {
+                background-image: url("/img/Impact/curves-background.svg");
+                background-size: cover;
+                background-position: center;
+            }
+            .header-overlay {
+                position: absolute;
+                bottom: 0;
+                left: 2rem;
+                width: 25%;
+            }
+        }
+
         &.ads-catalogue-modal {
             
             .glcard {
-                background-color: #252A2F;
+                background-color: @gl-impact-dark;
 
                 .goodLoopContainer {
                     background-color: black;

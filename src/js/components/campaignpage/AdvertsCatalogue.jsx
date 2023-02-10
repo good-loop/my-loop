@@ -25,8 +25,9 @@ import { assert } from '../../base/utils/assert';
  * @param {Campaign} p.campaign
  * @param {Advert[]} p.ads filtered list of ads to show
  * @param {Advert[]} p.canonicalAds All ads, unfiltered by the filtering query parameter
+ * @param {?Boolean} p.noPreviews remove preview carousel
  */
-const AdvertsCatalogue = ({ campaign, ads, canonicalAds }) => {
+const AdvertsCatalogue = ({ campaign, ads, canonicalAds, noPreviews }) => {
 	assert(canonicalAds);
 	let ongoing = Campaign.isOngoing(campaign);
 
@@ -97,9 +98,11 @@ const AdvertsCatalogue = ({ campaign, ads, canonicalAds }) => {
 					<CarouselControl direction="next" directionText="Next" onClickHandler={next} />
 				</div>
 			</Carousel>
-			<br />
-			<br />
-			<AdPreviewCarousel ads={showAds} setSelected={goToIndex} selectedIndex={activeIndex} />
+			{!noPreviews && <>
+				<br />
+				<br />
+				<AdPreviewCarousel ads={showAds} setSelected={goToIndex} selectedIndex={activeIndex} />
+			</>}
 		</Container>
 	</>);
 };
@@ -235,7 +238,7 @@ const AdvertCard = ({ ad, active }) => {
  
 	return (
 		<div className="position-relative main-ad" style={{ minHeight: "100px", maxHeight: "600px" }}>
-			{/*<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{ position: "absolute", zIndex: 999 }}>Advert Editor ({ad.id})</DevLink>*/}
+			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{ position: "absolute", zIndex: 999 }}>Advert Editor ({ad.id})</DevLink>
 			<div className="position-relative ad-unit-outer">
 				{hasShown ? (
 					<GoodLoopUnit vertId={ad.id} size={size} extraParams={extraParams} style={{zIndex:2, maxWidth:"50%", margin:"auto"}}/>

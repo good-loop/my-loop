@@ -136,7 +136,7 @@ const ImpactOverviewPage = () => {
 								<GLCard basis={10}>
 									<h3>6.5M VIEWS | 5 COUNTRIES</h3>
 								</GLCard>
-								<GLCard noPadding className="offset-card" basis={0}>
+								<GLCard noPadding className="offset-card" basis={0} modalId="right-half" modalTitle="8.69T CO2E Offset" modalHeader={CO2OffsetInfoHeader} modalContent={CO2OffsetInfo} modalClassName="no-header-padding co2-offset">
 									<div className='offset-number'>
 										<h3>8.69T CO2E OFFSET</h3>
 									</div>
@@ -145,19 +145,17 @@ const ImpactOverviewPage = () => {
 									</div>
 								</GLCard>
 							</GLVertical>
-							<GLCard modalId="right-half" modalTitle="Ads for good" modalContent={AdsForGoodCTA}>
-								<h2>Ads for good by Good Loop</h2>
-								<p>Hello</p>
-								<p>Hello</p>
-								<p>Hello</p>
-								<p>Hello</p>
-								<p>Hello</p>
+							<GLCard modalId="right-half" modalTitle="Ads for good" modalHeader={AdsForGoodCTAHeader} modalContent={AdsForGoodCTA} modalClassName="no-header-padding">
+								<div className='d-flex flex-column align-items-stretch justify-content-between h-100'>
+									<img className='w-75 align-self-center mb-3' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+									<ContentList/>
+								</div>
 							</GLCard>
 						</GLHorizontal>
 						
 						{/* bottom right corner */}
 						<GLCard modalContent={AdsCatalogueModal} modalId="full-page" modalClassName="ads-catalogue-modal">
-							{/*<AdsCatalogueModal/>*/}
+							<AdsCatalogueModal noPreviews/>
 						</GLCard>
 
 						<GLModalCard id="right-half"/>
@@ -173,7 +171,31 @@ const ImpactOverviewPage = () => {
 	);
 };
 
-const AdsCatalogueModal = () => {
+const ContentList = () => {
+
+	const content = {
+		"Watch To Donate": true,
+		"This Ad Does Good": true,
+		"Green Ad Tag": true,
+		"Engage To Donate": false,
+		"This Ad Supports Local": false
+	};
+
+	const contentRenderable = Object.keys(content).map(title => { return {title, tick:content[title]}})
+
+	return <>
+		{contentRenderable.map(c => <Row>
+			<Col xs={3}>
+				<img src={"/img/mydata/" + (c.tick ? "circle-tick.svg" : "circle-no-tick.svg")} className='logo'/>
+			</Col>
+			<Col xs={9} className="d-flex flex-column align-items-start justify-content-center">
+				<h5 className='text-left'>{c.title}</h5>
+			</Col>
+		</Row>)}
+	</>;
+}
+
+const AdsCatalogueModal = ({noPreviews}) => {
 
 	const status = KStatus.PUB_OR_ARC;
 	const pvCampaign = getDataItem({type:C.TYPES.Campaign,status,id:TEST_CAMPAIGN});
@@ -188,10 +210,17 @@ const AdsCatalogueModal = () => {
 			campaign={pvCampaign.value}
 			ads={ads}
 			canonicalAds={ads} // maybe wrong should be all ads
+			noPreviews={noPreviews}
 		/>
 	</>;
 
-}
+};
+
+const AdsForGoodCTAHeader = () => {
+	return <div className='bg-gl-impact-red pt-5'>
+		<img src="/img/curves/curve-white.svg" className='w-100'/>
+	</div>;
+};
 
 const AdsForGoodCTA = () => {
 	const vertiser = TEST_BRAND_OBJ;
@@ -201,6 +230,26 @@ const AdsForGoodCTA = () => {
 		<img className='w-25' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 		<h3>Discover our products and fund even more good causes</h3>
 		<Button color="primary">Get in touch</Button>
+	</div>
+};
+
+const CO2OffsetInfoHeader = () => {
+	return <div className='bg-co2-offset pt-5 position-relative'>
+		<img src="/img/curves/curve-white.svg" className='w-100'/>
+		<img src="/img/green/hummingbird.png" className='header-overlay'/>
+	</div>;
+};
+
+const CO2OffsetInfo = () => {
+	const vertiser = TEST_BRAND_OBJ;
+
+	return <div className='d-flex flex-column align-items-center justify-content-between h-100'>
+		<img src={vertiser.branding.logo} className="logo"/>
+		<img className='w-25' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+		<h4>Info about Green Ad Tag</h4>
+		<h4>Info about Offset Project</h4>
+		<h4>Cost of Offset - it only cost £X to offset</h4>
+		<Button color="primary">Download offset certificate</Button>
 	</div>
 }
 

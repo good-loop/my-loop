@@ -3,7 +3,7 @@
    viewBox="0 0 2560 593"
    version="1.1"
    id="svg7576"
-   sodipodi:docname="curve-dark-turquoise.svg"
+   sodipodi:docname="curve-impact-red.svg"
    inkscape:version="1.2.2 (732a01da63, 2022-12-09, custom)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -32,6 +32,6 @@
      inkscape:current-layer="svg7576" />
   <path
      d="m 0.003,-0.001 c 0,0 356.72,665.074 1297.3,296.564 940.58,-368.51 1468.515,280.543 1468.515,280.543 v 221.17 H 0.003 Z"
-     style="fill:#286984"
+     style="fill:#a12e1b;fill-opacity:1"
      id="path7574" />
 </svg>

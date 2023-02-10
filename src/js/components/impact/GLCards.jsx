@@ -159,8 +159,8 @@ export const GLModalCard = ({className, id}) => {
 			<GLCard noPadding>
 				<CardHeader style={headerStyle} className="glmodal-header">
 					<CloseButton className="white-circle-bg" onClick={() => modalToggle(id)}/>
+					{title && <h4 className='glmodal-title'>{title}</h4>}
 					{Header && <Header/>}
-					{title && <h4>{title}</h4>}
 				</CardHeader>
 				<CardBody>
 					<Content/>
