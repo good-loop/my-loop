@@ -25,6 +25,7 @@ import { getDataItem } from '../../base/plumbing/Crud';
 import KStatus from '../../base/data/KStatus';
 import Misc from '../../base/components/Misc';
 import List from '../../base/data/List';
+import ListLoad from '../../base/components/ListLoad';
 
 /**
  * DEBUG OBJECTS
@@ -106,7 +107,7 @@ const ImpactOverviewPage = () => {
 							<GLCard>
 								<h2>Watch to donate</h2>
 							</GLCard>
-							<GLCard>
+							<GLCard modalContent={ThisAdDoesGoodModal} modalTitle="This Ad Does Good" modalId="full-page" modalClassName="no-padding">
 								<h2>This ad does good</h2>
 							</GLCard>
 						</GLHorizontal>
@@ -121,7 +122,7 @@ const ImpactOverviewPage = () => {
 						<GLHorizontal collapse="md" basis={60}>
 							<GLVertical>
 								<GLHorizontal>
-									<GLCard>
+									<GLCard modalContent={BrandList} modalTitle="9 Brands" modalId="right-half" modalClassName="list-modal">
 										<h2>9</h2>
 										<h3>Brands</h3>
 									</GLCard>
@@ -145,7 +146,7 @@ const ImpactOverviewPage = () => {
 									</div>
 								</GLCard>
 							</GLVertical>
-							<GLCard modalId="right-half" modalTitle="Ads for good" modalHeader={AdsForGoodCTAHeader} modalContent={AdsForGoodCTA} modalClassName="no-header-padding">
+							<GLCard modalId="right-half" modalTitle="Ads for good" modalHeader={AdsForGoodCTAHeader} modalContent={AdsForGoodCTA} modalClassName="no-header-padding ads-for-good">
 								<div className='d-flex flex-column align-items-stretch justify-content-between h-100'>
 									<img className='w-75 align-self-center mb-3' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 									<ContentList/>
@@ -170,6 +171,13 @@ const ImpactOverviewPage = () => {
 	</>
 	);
 };
+
+const ThisAdDoesGoodModal = () => {
+	return <div className="bg-gl-background-default h-100">
+		<GLCard className="m-5">
+		</GLCard>
+	</div>;
+}
 
 const ContentList = () => {
 
@@ -217,8 +225,9 @@ const AdsCatalogueModal = ({noPreviews}) => {
 };
 
 const AdsForGoodCTAHeader = () => {
-	return <div className='bg-gl-impact-red pt-5'>
+	return <div className='bg-gl-impact-red pt-5 position-relative'>
 		<img src="/img/curves/curve-white.svg" className='w-100'/>
+		<img src="/img/Impact/images-combined.png" className='header-overlay'/>
 	</div>;
 };
 
@@ -253,6 +262,35 @@ const CO2OffsetInfo = () => {
 	</div>
 }
 
+const BrandListItem = ({ type, item, checkboxes, canDelete, nameFn, extraDetail, button}) => {
+
+	console.log(item);
+
+	return <Col md={4} className="mt-3">
+		<GLCard className="preview h-100" noMargin>
+			
+			{item && item.branding?.logo && <img src={item.branding.logo} className="logo"/>}
+			<p className='text-center'>{item.name}</p>
+		</GLCard>
+	</Col>;
+
+}
+
+const BrandList = () => {
+
+	const vertiser = TEST_BRAND;
+
+	return <>
+		<br/>
+		<h5>Brands donating via Good-Loop Ads</h5>
+		<p className='color-gl-red text-center'>{TEST_BRAND_OBJ.name} - All Campaigns</p>
+		<br/>
+		<ListLoad status={KStatus.PUBLISHED} hideTotal type={C.TYPES.Advertiser}
+				q={SearchQuery.setProp(null, "parentId", vertiser).query}
+				ListItem={BrandListItem} unwrapped className="row"/>
+	</>;
+};
+
 const CharityList = () => {
 	
 	// DUMMY DATA
@@ -268,7 +306,7 @@ const CharityList = () => {
 		<br/>
 		<Row>
 			{charities.map((charity, i) => <Col key={i} md={4} className="mt-3">
-				<GLCard className="preview" noMargin
+				<GLCard className="preview h-100" noMargin
 					modalContent={() => <CharityInfo charity={charity}/>}
 					modalHeader={() => <CharityHeader charity={charity}/>}
 					modalHeaderImg={charity.images}
@@ -331,59 +369,5 @@ const CampaignList = () => {
 	</>;
 	
 };
-
-
-/*
-const ItemButton = ({ item }) => {
-	let key = getType(item).toLowerCase(); // e.g. advertiser or ngo
-	let value = getId(item);
-	let logo = getLogo(item);
-	// NB: tried putting dev-only PortalLinks here but it was fugly
-	return <Button className="btn-tile m-2" color="outline-dark"
-		onClick={e => stopEvent(e) && modifyPage(["istory"], { [key]: value })} >
-		{logo && <img src={logo} className={space('rounded logo logo-lg')} />}<p>{item.name}</p>
-	</Button>;
-};
-
-export const HeadlineDonationCard = ({ brand, impactdebit, charity, filters }) => {
-	if (!brand) {
-		return <Misc.Loading />
-	}
-	let logo = getLogo(brand);
-	if (!logo) {
-		logo = getLogo(impactdebit);
-	}
-	if (!logo && charity) {
-		logo = getLogo(charity);
-		if (!logo) {
-			let images = NGO.images(charity);
-			logo = images[0];
-		}
-	}
-	let branding = Branding.get(brand);
-	let image = branding?.backgroundImage || impactdebit?.impact?.img || "/img/ihub/world-hand.png";
-
-	let pvImpactDebits = getImpactDebits({ filters });
-	let moneys = pvImpactDebits.value && List.hits(pvImpactDebits.value).map(item => Impact.amount(item.impact)).filter(x => x);
-	let totalMoney = moneys && Money.total(moneys, "GBP");
-
-	return (<BG style={{ height: '30vh', width: '30vh', margin: "auto" }} image={image} color="#3488AB" >
-		<Circle color="white" width="100%" height="100%" center>
-			{logo ? <img className="logo logo-xl center m-auto" src={logo} /> : <h3>{brand?.name}</h3>}
-			<h2 style={{ textAlign: "center" }}>{totalMoney && <Misc.Money amount={totalMoney} />} Donated</h2>
-			<PortalLink item={brand} size="small" devOnly />
-		</Circle>
-	</BG>);
-};
-
-const PhotoWall = ({ filters }) => {
-	let pvImpactDebits = getImpactDebits({ filters });
-	if (!pvImpactDebits.resolved) return <Misc.Loading />
-	let impactdebits = List.hits(pvImpactDebits.value);
-	console.log("IMPACT DEBITS", pvImpactDebits)
-	let images = impactdebits ? impactdebits.map(i => i.impact?.img).filter(x => x) : [];
-	images = images.slice(0, 3);
-	return images.map(img => <DynImg key={img.contentUrl || img} image={img} className="w-100" />);
-};*/
 
 export default ImpactOverviewPage;
