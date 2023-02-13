@@ -91,9 +91,13 @@ const CTACard = ({}) => {
 // ONLY SHOWS EMAIL LIST WITH "listemails" FLAG SET
 // ONLY APPEARS WITH "shareables" OR DEBUG FLAG SET
 const ShareDash = () => {
-	if ( ! Roles.isDev() && ! DataStore.getUrlValue("shareables") && ! DataStore.getUrlValue("debug") && ! DataStore.getUrlValue("gl.debug")) {
-		return null; // dev only for now TODO for all
+	// not-logged in cant share and pseudo users can't reshare
+	if ( ! Login.getId() || Login.getId().endsWith("pseudo")) {
+		return null;
 	}
+	// if ( ! Roles.isDev() && ! DataStore.getUrlValue("shareables") && ! DataStore.getUrlValue("debug") && ! DataStore.getUrlValue("gl.debug")) {
+	// 	return null; // dev only for now TODO for all
+	// }
 	let {filterMode, filterId} = getFilterModeId();
 	if ( ! filterMode || ! filterId) {
 		return null;
