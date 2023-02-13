@@ -48,17 +48,6 @@ export class ImpactFilters {
 	q;
 }
 
-/*<LeftSidebar>
-			<div>
-				<C.A href={modifyPage(["ihub"], null, true)}>Overview</C.A>
-			</div>
-			<div>
-			<C.A href={modifyPage(["istory"], null, true)}>Story</C.A>
-			</div>
-			<div>
-			<C.A href={modifyPage(["istat"], null, true)}>Stats</C.A>
-			</div>
-		</LeftSidebar>*/
 
 const ImpactOverviewPage = () => {
 
@@ -83,7 +72,7 @@ const ImpactOverviewPage = () => {
 		</div>
 		<Container fluid className='iview-container pr-md-5'>
 			<animated.div id='in-flow-navbar' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}></animated.div>
-				<GLHorizontal>
+				<GLHorizontal collapse="md" className="iview-grid">
 					{/* first grid half */}
 					<GLVertical>
 						{/* top left corner - both top corners with basis 60 to line up into grid pattern*/}
@@ -107,7 +96,7 @@ const ImpactOverviewPage = () => {
 							<GLCard>
 								<h2>Watch to donate</h2>
 							</GLCard>
-							<GLCard modalContent={ThisAdDoesGoodModal} modalTitle="This Ad Does Good" modalId="full-page" modalClassName="no-padding">
+							<GLCard modalContent={ThisAdDoesGoodModal} modalTitle="This Ad Does Good" modalId="full-page" modalClassName="no-padding this-ad-does-good">
 								<h2>This ad does good</h2>
 							</GLCard>
 						</GLHorizontal>
@@ -138,7 +127,7 @@ const ImpactOverviewPage = () => {
 									<h3>6.5M VIEWS | 5 COUNTRIES</h3>
 								</GLCard>
 								<GLCard noPadding className="offset-card" basis={0} modalId="right-half" modalTitle="8.69T CO2E Offset" modalHeader={CO2OffsetInfoHeader} modalContent={CO2OffsetInfo} modalClassName="no-header-padding co2-offset">
-									<div className='offset-number'>
+									<div className='offset-number px-3'>
 										<h3>8.69T CO2E OFFSET</h3>
 									</div>
 									<div className='carbon-neutral px-5 py-2'>
@@ -174,7 +163,34 @@ const ImpactOverviewPage = () => {
 
 const ThisAdDoesGoodModal = () => {
 	return <div className="bg-gl-background-default h-100">
-		<GLCard className="m-5">
+		<GLCard className="m-5 overflow-hidden" noPadding >
+			<BG src="/img/Impact/curves-background.svg" className="py-5">
+				<h3 className='text-white'>1 This Ad Does Good Campaign</h3>
+				<br/>
+				<AdsCatalogueModal noPreviews />
+				<br/>
+				<Row className='text-center rates'>
+					<Col xs={4}>
+						<p>
+							<b>XX%</b>
+						</p>
+						<p>Viewability rate</p>
+					</Col>
+					<Col xs={4}>
+						<p>
+							<b>XX%</b>
+						</p>
+						<p>Click through rate</p>
+					</Col>
+					<Col xs={4}>
+						<p>
+							<b>XX%</b>
+						</p>
+						<p>Completed view rate</p>
+					</Col>
+				</Row>
+			</BG>
+			<h3>136,283 Trees Planted</h3>
 		</GLCard>
 	</div>;
 }

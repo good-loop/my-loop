@@ -39,7 +39,7 @@
         }
         
         &.preview {
-            
+
             .card-body {
                 padding: 0.5rem;
                 display: flex;
@@ -83,11 +83,22 @@
         }
     }
 
+    .iview-grid {
+        @media @width-mobile {
+            background-color: @gl-impact-red;
+        }
+    }
+
     .hero-card {
         background: url("/img/Impact/world-image-cropped.png");
         background-position: center;
         background-size: cover;
         position: relative;
+
+        @media @width-mobile {
+            margin: 0 !important;
+            border-radius: 0;
+        }
         
         .card-body {
             display: flex;
@@ -103,6 +114,11 @@
                 align-items: center;
                 position: relative;
                 aspect-ratio: 1/1;
+
+                @media @width-mobile {
+                    height: unset;
+                    width: 95%;
+                }
 
                 .content {
                     position: absolute;
@@ -176,6 +192,21 @@
             }
         }
 
+        &.this-ad-does-good {
+            h3 {
+                font-weight: bolder;
+                color: @greenmedia-darkcyan;
+            }
+            .rates {
+                width: 50%;
+                @media @width-mobile {
+                    width: 100%;
+                }
+                margin: auto;
+                color: white;
+            }
+        }
+
         &.ads-catalogue-modal {
             
             .glcard {
@@ -236,23 +267,24 @@
 }
 
 .iview-container {
+    margin-top:60px;
+    margin-left: 0 !important;
+    width: 100% !important;
+
     @media @md-min {
         display: flex;
         height: 90vh;
         width: 100%;
         margin-top: 10vh;
     }
+    @media @width-mobile {
+        padding: 0;
+    }
 }
 
 #navbars-overlay {
     position: fixed;
     display: flex;
-}
-
-#iview-container {
-    margin-top:60px;
-    margin-left: 0 !important;
-    width: 100% !important;
 }
 
 

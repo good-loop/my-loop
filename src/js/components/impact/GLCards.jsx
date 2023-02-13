@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import {Row, Col, Container, Card, CardHeader, CardBody} from 'reactstrap';
-import { space } from '../../base/utils/miscutils';
+import { space, isPortraitMobile } from '../../base/utils/miscutils';
 import { assert } from '../../base/utils/assert';
 import DataStore from '../../base/plumbing/DataStore'
 import CloseButton from '../../base/components/CloseButton';
@@ -79,7 +79,8 @@ export const GLCard = ({noPadding, noMargin, className, style, modalContent, mod
 		DataStore.setValue(MODAL_LIST_PATH.concat(modalId), modalObj);
 
 		// manually close all other modals if prioritized first
-		if (modalPrioritize) modalToggle();
+		// Only space for one modal on mobile, so always close
+		if (modalPrioritize || isPortraitMobile()) modalToggle();
 		modalToggle(modalId);
 	}
 
@@ -156,7 +157,7 @@ export const GLModalCard = ({className, id}) => {
 
 	return open ? <>
 		<div className={space('glmodal', storedClassName, className)} id={id}>
-			<GLCard noPadding>
+			<GLCard noPadding className="glmodal-inner">
 				<CardHeader style={headerStyle} className="glmodal-header">
 					<CloseButton className="white-circle-bg" onClick={() => modalToggle(id)}/>
 					{title && <h4 className='glmodal-title'>{title}</h4>}
