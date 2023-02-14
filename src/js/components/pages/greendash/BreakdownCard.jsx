@@ -13,7 +13,6 @@ import { isPer1000 } from './GreenMetrics';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import '../../../../style/greendash-breakdown-card.less';
 
-
 /** Classify OS strings seen in our data
  *
  * {raw-value: {type:desktop|mobile, group, name} }
@@ -46,8 +45,6 @@ const osTypes = {
 	hisense: { type: 'smart', group: 'Smart TV', name: 'Hisense TV' },
 	panasonic: { type: 'smart', group: 'Smart TV', name: 'Hisense TV' },
 };
-
-
 
 const pieOptions = (totalCO2, minimumPercentLabeled) => ({
 	layout: { autoPadding: true, padding: 5 },
@@ -83,11 +80,12 @@ const pieOptions = (totalCO2, minimumPercentLabeled) => ({
 	},
 });
 
-
-const FormatSubcard = ({ data, minimumPercentLabeled = 1}) => {
+const FormatSubcard = ({ data, minimumPercentLabeled = 1, chartType = 'pie' }) => {
 	if (!yessy(data)) return NOEMISSIONS;
 
-	const [chartProps, setChartProps] = useState();
+	const [pieChartProps, setPieChartProps] = useState();
+	const [barChartProps, setBarChartProps] = useState();
+
 	useEffect(() => {
 		const pvTags = getTags(data);
 		const tags = List.hits(pvTags.value) || [];
@@ -101,7 +99,7 @@ const FormatSubcard = ({ data, minimumPercentLabeled = 1}) => {
 		// map tagIDs to co2
 		const tagEm = data.reduce((acc, row) => {
 			acc[row.key] = row.co2;
-			return acc
+			return acc;
 		}, {});
 
 		// group tagIDs by format & sum their co2
@@ -127,28 +125,53 @@ const FormatSubcard = ({ data, minimumPercentLabeled = 1}) => {
 			totalCO2 /= 1000;
 		}
 
-		setChartProps({
+		setPieChartProps({
 			data: {
 				labels: Object.keys(formatToCarbon),
-				datasets: [{
-					label: 'Kg CO2',
-					backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
-					data: Object.values(formatToCarbon),
-				}],
+				datasets: [
+					{
+						label: 'Kg CO2',
+						backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
+						data: Object.values(formatToCarbon),
+					},
+				],
 			},
 			options: pieOptions(totalCO2, minimumPercentLabeled),
 		});
+
+		setBarChartProps({
+			data: {
+				labels: Object.keys(formatToCarbon),
+				datasets: [
+					{
+						label: 'Kg CO2',
+						backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
+						data: Object.values(formatToCarbon),
+					},
+				],
+			},
+			options: {
+				indexAxis: 'y',
+				plugins: {
+					legend: { display: false },
+					tooltip: { callbacks: { label: (ctx) => `${printer.prettyNumber(ctx.raw)} ${unit} CO2` } },
+				},
+				scales: { x: { ticks: { callback: (v) => `${Math.round(v)} ${unitShort}` } } },
+			},
+		});
 	}, []);
 
-	if (!chartProps) return null;
-	if (chartProps?.isEmpty) return NOEMISSIONS;
+	if (!pieChartProps) return null;
+	if (pieChartProps?.isEmpty) return NOEMISSIONS;
 
-	return <>
-		<p>{CO2e} emissions by advert format:</p>
-		<NewChartWidget type="pie" {...chartProps} datalabels />
-	</>;
+	return (
+		<>
+			<p>{CO2e} emissions by advert format:</p>
+			{chartType === 'pie' && <NewChartWidget type='pie' {...pieChartProps} datalabels />}
+			{chartType === 'bar' && <NewChartWidget type='bar' {...barChartProps} />}
+		</>
+	);
 };
-
 
 /**
  *
@@ -158,46 +181,79 @@ const FormatSubcard = ({ data, minimumPercentLabeled = 1}) => {
  * @param {Number} minimumPercentLabeled the minimum percentage to include a data label for
  * @returns
  */
-const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1 }) => {
+const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1, chartType = 'pie' }) => {
 	if (!yessy(osBuckets)) return NOEMISSIONS;
 
-	const [chartProps, setChartProps] = useState();
+	const [pieChartProps, setPieChartProps] = useState();
+	const [barChartProps, setBarChartProps] = useState();
 
 	useEffect(() => {
 		let media = getSumColumn(osBuckets, 'co2creative');
 		let publisher = getSumColumn(osBuckets, 'co2base');
 		let dsp = getSumColumn(osBuckets, 'co2supplypath');
 
-		const totalCO2 = media + dsp + publisher;
+		let totalCO2 = media + dsp + publisher;
 
 		if (totalCO2 === 0) {
-			setChartProps({ isEmpty: true });
+			setPieChartProps({ isEmpty: true });
+			setBarChartProps({ isEmpty: true });
 			return;
 		}
 
-		setChartProps({
-			data: {
-				labels: ['Creative', 'Publisher', 'Supply path'],
-				datasets: [{
+		// Tonnes or kg?
+		let unit = 'kg';
+		let unitShort = 'kg';
+		if (Math.max(media, publisher, dsp) > TONNES_THRESHOLD) {
+			unit = 'tonnes';
+			unitShort = 't';
+			totalCO2 = totalCO2 / 1000;
+			media = media / 1000;
+			publisher = publisher / 1000;
+			dsp = dsp / 1000;
+		}
+
+		const chartData = {
+			labels: ['Creative', 'Publisher', 'Supply path'],
+			datasets: [
+				{
 					label: 'Kg CO2',
 					backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
 					data: [media, publisher, dsp],
-				}],
-			},
+				},
+			],
+		};
+
+		setPieChartProps({
+			data: chartData,
 			options: pieOptions(totalCO2, minimumPercentLabeled),
+		});
+
+		setBarChartProps({
+			data: chartData,
+			options: {
+				indexAxis: 'y',
+				plugins: {
+					legend: { display: false },
+					tooltip: { callbacks: { label: (ctx) => `${printer.prettyNumber(ctx.raw)} ${unit} CO2` } },
+				},
+				scales: { x: { ticks: { callback: (v) => `${Math.round(v)} ${unitShort}` } } },
+			},
 		});
 	}, [osBuckets]);
 
-	if (!chartProps) return null;
-	if (chartProps?.isEmpty) return NOEMISSIONS;
+	if (!pieChartProps) return null;
+	if (pieChartProps?.isEmpty) return NOEMISSIONS;
 
-	return <>
-		<p>{CO2e} emissions due to...</p>
-		<NewChartWidget type="pie" {...chartProps} datalabels />
-		<small className="text-center">The Green Ad Tag per-impression overhead is measured, but too small to display in this chart.</small>
-	</>;
+	return (
+		<>
+			<p>{CO2e} emissions due to...</p>
+			{/* Options will clash between pie and bar, seperate the two chart would be easier to control */}
+			{chartType === 'pie' && <NewChartWidget type='pie' {...pieChartProps} datalabels />}
+			{chartType === 'bar' && <NewChartWidget type='bar' {...barChartProps} />}
+			<small className='text-center'>The Green Ad Tag per-impression overhead is measured, but too small to display in this chart.</small>
+		</>
+	);
 };
-
 
 /**
  * desktop vs mobile and different OS
@@ -256,13 +312,11 @@ const DeviceSubcard = ({ data: osTable }) => {
 	if (!chartProps) return null;
 	if (chartProps?.isEmpty) return NOEMISSIONS;
 
-	return <NewChartWidget type="bar" {...chartProps} />;
+	return <NewChartWidget type='bar' {...chartProps} />;
 }; // ./DeviceSubCard
 
-
 /** A table cell with a title/tooltip for cases where the value is likely to display truncated */
-const CellWithTitle = (value) => <span title="value">{value}</span>;
-
+const CellWithTitle = (value) => <span title='value'>{value}</span>;
 
 /**
  * Table of impressions and carbon per tag
@@ -285,22 +339,23 @@ const TagSubcard = ({ data }) => {
 		new Column({ Header: 'CO2e (kg)', accessor: (row) => row.co2 }),
 	];
 
-	return <>
-		<p className="small">
-			Emissions breakdown by Green Ad Tags.
-			<br />
-			You can track any aspect of media buying by generating different tags, then using them in your buying.
-		</p>
-		<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className="tag-table" tableName="carbon-by-tag" />
-	</>;
+	return (
+		<>
+			<p className='small'>
+				Emissions breakdown by Green Ad Tags.
+				<br />
+				You can track any aspect of media buying by generating different tags, then using them in your buying.
+			</p>
+			<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className='tag-table' tableName='carbon-by-tag' />
+		</>
+	);
 };
 
-
 /**
- * 
+ *
  * @param {Object} p
  * @param {??} p.data
- * @returns 
+ * @returns
  */
 const PubSubcard = ({ data }) => {
 	if (!yessy(data)) return NOEMISSIONS;
@@ -314,15 +369,16 @@ const PubSubcard = ({ data }) => {
 	// skip unset
 	data = data.filter((row) => row.key !== 'unset');
 
-	return <>
-		<p className="small">
-			Emissions breakdown by publisher/domain.
-			<br />
-		</p>
-		<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className="domain-table" tableName="carbon-by-publishers" />
-	</>;
+	return (
+		<>
+			<p className='small'>
+				Emissions breakdown by publisher/domain.
+				<br />
+			</p>
+			<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className='domain-table' tableName='carbon-by-publishers' />
+		</>
+	);
 };
-
 
 /**
  *
@@ -341,17 +397,18 @@ const BreakdownCard = ({ baseFilters }) => {
 	const pvDataValue = getCarbon({
 		...baseFilters,
 		breakdown: ['os{"emissions":"sum"}', 'adid{"emissions":"sum"}', 'domain{"emissions":"sum"}', 'format{"emissions":"sum"}'],
-	})
+	});
 
-	const dataValue = baseFilters.prob ? pvDataValue.value?.sampling : pvDataValue.value
+	const dataValue = baseFilters.prob ? pvDataValue.value?.sampling : pvDataValue.value;
 
-	const loading = <Misc.Loading text="Fetching your data..." />;
+	const loading = <Misc.Loading text='Fetching your data...' />;
 
-	if (!techValue) return (
-		<GreenCard title="What is the breakdown of your emissions?" className="carbon-breakdown">
-			{loading}
-		</GreenCard>
-	);
+	if (!techValue)
+		return (
+			<GreenCard title='What is the breakdown of your emissions?' className='carbon-breakdown'>
+				{loading}
+			</GreenCard>
+		);
 
 	const [mode, setMode] = useState('tech');
 
@@ -368,7 +425,7 @@ const BreakdownCard = ({ baseFilters }) => {
 	let subcard;
 	switch (mode) {
 		case 'tech':
-			subcard = <TechSubcard data={techData} minimumPercentLabeled={10} />;
+			subcard = <TechSubcard data={techData} minimumPercentLabeled={10} chartType={isPer1000() ? 'bar' : 'pie'} />;
 			break;
 		case 'device':
 			subcard = dataValue ? <DeviceSubcard data={data} /> : loading;
@@ -380,25 +437,25 @@ const BreakdownCard = ({ baseFilters }) => {
 			subcard = dataValue ? <PubSubcard data={data} /> : loading;
 			break;
 		case 'format':
-			subcard = dataValue ? <FormatSubcard data={data} minimumPercentLabeled={10} /> : loading;
+			subcard = dataValue ? <FormatSubcard data={data} minimumPercentLabeled={10} chartType={isPer1000() ? 'bar' : 'pie'} /> : loading;
 	}
 
 	return (
-		<GreenCard title="What is the breakdown of your emissions?" className="carbon-breakdown">
-			<ButtonGroup className="mb-2 subcard-switch">
-				<ModeButton name="tech" mode={mode} setMode={setMode}>
+		<GreenCard title='What is the breakdown of your emissions?' className='carbon-breakdown'>
+			<ButtonGroup className='mb-2 subcard-switch'>
+				<ModeButton name='tech' mode={mode} setMode={setMode}>
 					Ad Tech
 				</ModeButton>
-				<ModeButton name="device" mode={mode} setMode={setMode}>
+				<ModeButton name='device' mode={mode} setMode={setMode}>
 					Device Type
 				</ModeButton>
-				<ModeButton name="tag" mode={mode} setMode={setMode}>
+				<ModeButton name='tag' mode={mode} setMode={setMode}>
 					Tag
 				</ModeButton>
-				<ModeButton name="domain" mode={mode} setMode={setMode}>
+				<ModeButton name='domain' mode={mode} setMode={setMode}>
 					Domain
 				</ModeButton>
-				<ModeButton name="format" mode={mode} setMode={setMode}>
+				<ModeButton name='format' mode={mode} setMode={setMode}>
 					Format
 				</ModeButton>
 			</ButtonGroup>
