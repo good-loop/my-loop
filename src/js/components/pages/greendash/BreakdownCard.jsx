@@ -80,10 +80,12 @@ const pieOptions = (totalCO2, minimumPercentLabeled) => ({
 	},
 });
 
-const FormatSubcard = ({ data, minimumPercentLabeled = 1 }) => {
+const FormatSubcard = ({ data, minimumPercentLabeled = 1, chartType = 'pie' }) => {
 	if (!yessy(data)) return NOEMISSIONS;
 
-	const [chartProps, setChartProps] = useState();
+	const [pieChartProps, setPieChartProps] = useState();
+	const [barChartProps, setBarChartProps] = useState();
+
 	useEffect(() => {
 		const pvTags = getTags(data);
 		const tags = List.hits(pvTags.value) || [];
@@ -123,7 +125,7 @@ const FormatSubcard = ({ data, minimumPercentLabeled = 1 }) => {
 			totalCO2 /= 1000;
 		}
 
-		setChartProps({
+		setPieChartProps({
 			data: {
 				labels: Object.keys(formatToCarbon),
 				datasets: [
@@ -136,15 +138,37 @@ const FormatSubcard = ({ data, minimumPercentLabeled = 1 }) => {
 			},
 			options: pieOptions(totalCO2, minimumPercentLabeled),
 		});
+
+		setBarChartProps({
+			data: {
+				labels: Object.keys(formatToCarbon),
+				datasets: [
+					{
+						label: 'Kg CO2',
+						backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
+						data: Object.values(formatToCarbon),
+					},
+				],
+			},
+			options: {
+				indexAxis: 'y',
+				plugins: {
+					legend: { display: false },
+					tooltip: { callbacks: { label: (ctx) => `${printer.prettyNumber(ctx.raw)} ${unit} CO2` } },
+				},
+				scales: { x: { ticks: { callback: (v) => `${Math.round(v)} ${unitShort}` } } },
+			},
+		});
 	}, []);
 
-	if (!chartProps) return null;
-	if (chartProps?.isEmpty) return NOEMISSIONS;
+	if (!pieChartProps) return null;
+	if (pieChartProps?.isEmpty) return NOEMISSIONS;
 
 	return (
 		<>
 			<p>{CO2e} emissions by advert format:</p>
-			<NewChartWidget type='pie' {...chartProps} datalabels />
+			{chartType === 'pie' && <NewChartWidget type='pie' {...pieChartProps} datalabels />}
+			{chartType === 'bar' && <NewChartWidget type='bar' {...barChartProps} />}
 		</>
 	);
 };
@@ -168,12 +192,24 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1, chartType = '
 		let publisher = getSumColumn(osBuckets, 'co2base');
 		let dsp = getSumColumn(osBuckets, 'co2supplypath');
 
-		const totalCO2 = media + dsp + publisher;
+		let totalCO2 = media + dsp + publisher;
 
 		if (totalCO2 === 0) {
 			setPieChartProps({ isEmpty: true });
 			setBarChartProps({ isEmpty: true });
 			return;
+		}
+
+		// Tonnes or kg?
+		let unit = 'kg';
+		let unitShort = 'kg';
+		if (Math.max(media, publisher, dsp) > TONNES_THRESHOLD) {
+			unit = 'tonnes';
+			unitShort = 't';
+			totalCO2 = totalCO2 / 1000;
+			media = media / 1000;
+			publisher = publisher / 1000;
+			dsp = dsp / 1000;
 		}
 
 		const chartData = {
@@ -198,9 +234,9 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1, chartType = '
 				indexAxis: 'y',
 				plugins: {
 					legend: { display: false },
-					// tooltip: { callbacks: { label: (ctx) => `${printer.prettyNumber(ctx.raw)} ${unit} CO2` } },
+					tooltip: { callbacks: { label: (ctx) => `${printer.prettyNumber(ctx.raw)} ${unit} CO2` } },
 				},
-				// scales: { x: { ticks: { callback: (v) => `${Math.round(v)} ${unitShort}` } } },
+				scales: { x: { ticks: { callback: (v) => `${Math.round(v)} ${unitShort}` } } },
 			},
 		});
 	}, [osBuckets]);
@@ -401,7 +437,7 @@ const BreakdownCard = ({ baseFilters }) => {
 			subcard = dataValue ? <PubSubcard data={data} /> : loading;
 			break;
 		case 'format':
-			subcard = dataValue ? <FormatSubcard data={data} minimumPercentLabeled={10} /> : loading;
+			subcard = dataValue ? <FormatSubcard data={data} minimumPercentLabeled={10} chartType={isPer1000() ? 'bar' : 'pie'} /> : loading;
 	}
 
 	return (
