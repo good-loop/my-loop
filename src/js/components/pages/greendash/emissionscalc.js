@@ -273,16 +273,17 @@ export const getOffsetsByType = ({ campaign, status, period }) => {
 /**
  * @param {Object[]} buckets A DataLog breakdown of carbon emissions. e.g. [{key, co2, count}]
  * @param {Number} perN e.g. 1000 for "carbon per 1000 impressions"
+ * @param {Number} filterLessThan Filter out data will too low count
  * @returns The same breakdown, but with every "co2*" value in each bucket divided by (bucketcount / perN)
  */
-export const emissionsPerImpressions = (buckets, perN = 1000) => (
+export const emissionsPerImpressions = (buckets, filterLessThan = 0, perN = 1000) => (
   buckets.map(bkt => {
     const newBkt = {...bkt}; // Start with a copy
 
     if ('count' in bkt) { // Simple breakdown
       Object.entries(bkt).forEach(([k, v]) => {
         // Carbon entries => carbon per N impressions; others unchanged
-        newBkt[k] = (k.match(/^co2/)) ? v / (bkt.count / perN) : v;
+        if (bkt.count >= filterLessThan) newBkt[k] = (k.match(/^co2/)) ? v / (bkt.count / perN) : v;
       });
     } else { // Cross-breakdown (probably)
       const xbdKey = Object.keys(bkt).find(k => k.match(/^by_/));
