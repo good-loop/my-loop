@@ -81,6 +81,30 @@
                 background-position: center;
             }
         }
+
+        &.vertical .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+
+            .text-bold {
+                font-weight: bolder;
+            }
+
+            .question-icon {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                aspect-ratio: 1/1;
+                border-radius: 50%;
+                background-color: @gl-impact-red;
+                color: white;
+                width: 1.5rem;
+                text-align: center;
+            }
+        }
     }
 
     .iview-grid {
@@ -192,10 +216,13 @@
             }
         }
 
-        &.this-ad-does-good {
-            h3 {
-                font-weight: bolder;
-                color: @greenmedia-darkcyan;
+        .inmodal-wrapper {
+            .glcard-outer {
+                display: block;
+            }
+            .img-bg {
+                border-top-right-radius: 10px;
+                border-top-left-radius: 10px;
             }
             .rates {
                 width: 50%;
@@ -204,6 +231,15 @@
                 }
                 margin: auto;
                 color: white;
+            }
+            h3 {
+                font-weight: bolder;
+            }
+        }
+
+        &.this-ad-does-good {
+            h3 {
+                color: @greenmedia-darkcyan;
             }
         }
 

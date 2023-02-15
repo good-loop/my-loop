@@ -93,11 +93,18 @@ const ImpactOverviewPage = () => {
 
 						{/* bottom left corner */}
 						<GLHorizontal>
-							<GLCard>
-								<h2>Watch to donate</h2>
+							<GLCard className="vertical" modalContent={WatchToDonateModal} modalTitle="Watch To Donate" modalId="full-page" modalClassName="no-padding watch-to-donate">
+								<h3>Watch to donate</h3>
+								<QuestionIcon/>
 							</GLCard>
-							<GLCard modalContent={ThisAdDoesGoodModal} modalTitle="This Ad Does Good" modalId="full-page" modalClassName="no-padding this-ad-does-good">
-								<h2>This ad does good</h2>
+							<GLCard className="vertical" modalContent={ThisAdDoesGoodModal} modalTitle="This Ad Does Good" modalId="full-page" modalClassName="no-padding this-ad-does-good">
+								<h3 className="color-greenmedia-darkcyan">This ad does good</h3>
+								<h2 className="color-greenmedia-darkcyan">136,580</h2>
+								<h3 className="color-greenmedia-darkcyan text-bold">Trees planted...</h3>
+
+								<img src={TEST_BRAND_OBJ.branding.logo} className="logo"/>
+								<CharityLogo charity={TEST_CHARITY_OBJ}/>
+								<QuestionIcon/>
 							</GLCard>
 						</GLHorizontal>
 
@@ -161,10 +168,20 @@ const ImpactOverviewPage = () => {
 	);
 };
 
+const QuestionIcon = () => {
+	return <div className='question-icon'>
+		?
+	</div>
+}
+
 const ThisAdDoesGoodModal = () => {
-	return <div className="bg-gl-background-default h-100">
-		<GLCard className="m-5 overflow-hidden" noPadding >
-			<BG src="/img/Impact/curves-background.svg" className="py-5">
+
+	const vertiser = TEST_BRAND_OBJ;
+	const charity = TEST_CHARITY_OBJ;
+
+	return <div className="bg-gl-background-default inmodal-wrapper p-5">
+		<GLCard className="inmodal-content" noPadding >
+			<BG src="/img/Impact/curves-background.svg" className="py-5 img-bg">
 				<h3 className='text-white'>1 This Ad Does Good Campaign</h3>
 				<br/>
 				<AdsCatalogueModal noPreviews />
@@ -190,10 +207,79 @@ const ThisAdDoesGoodModal = () => {
 					</Col>
 				</Row>
 			</BG>
+			<br/>
 			<h3>136,283 Trees Planted</h3>
+			<br/>
+			<h5>SUPPORTING</h5>
+			<br/><br/>
+			<p className='text-center'>Reforestation projects in Madagascar, Kenya, and Mozambique</p>
+			<br/>
+			<Row className='w-50 mx-auto'>
+				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
+					<img src={vertiser.branding.logo} className="logo"/>
+				</Col>
+				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
+					<CharityLogo charity={charity}/>
+				</Col>
+			</Row>
+			<br/>
 		</GLCard>
 	</div>;
 }
+
+const WatchToDonateModal = () => {
+
+	const vertiser = TEST_BRAND_OBJ;
+	const charity = TEST_CHARITY_OBJ;
+
+	return <div className="bg-gl-background-default inmodal-wrapper p-5">
+		<GLCard className="inmodal-content" noPadding >
+			<BG src="/img/Impact/curves-background.svg" className="py-5 img-bg">
+				<h3 className='text-white'>15 Watch To Donate Campaigns</h3>
+				<br/>
+				<AdsCatalogueModal noPreviews />
+				<br/>
+				<Row className='text-center rates'>
+					<Col xs={4}>
+						<p>
+							<b>XX%</b>
+						</p>
+						<p>Viewability rate</p>
+					</Col>
+					<Col xs={4}>
+						<p>
+							<b>XX%</b>
+						</p>
+						<p>Click through rate</p>
+					</Col>
+					<Col xs={4}>
+						<p>
+							<b>XX%</b>
+						</p>
+						<p>Completed view rate</p>
+					</Col>
+				</Row>
+			</BG>
+			<br/>
+			<h3>£136,283 Donated</h3>
+			<br/>
+			<h5>INCLUDING</h5>
+			<br/><br/>
+			<p className='text-center'>Reforestation projects in Madagascar, Kenya, and Mozambique</p>
+			<br/>
+			<Row className='w-50 mx-auto'>
+				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
+					<img src={vertiser.branding.logo} className="logo"/>
+				</Col>
+				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
+					<CharityLogo charity={charity}/>
+				</Col>
+			</Row>
+			<br/>
+		</GLCard>
+	</div>;
+}
+
 
 const ContentList = () => {
 
