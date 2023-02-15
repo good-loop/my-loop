@@ -266,7 +266,7 @@ const GreenMetrics2 = ({}) => {
 					<BreakdownCard {...commonProps} />
 				</Col>
 				<Col xs="12" sm="4" className="flex-column">
-					{!isPer1000() && <TimeOfDayCard {...commonProps} />}
+					{false && <TimeOfDayCard {...commonProps} />}
 					<MapCard {...commonProps} />
 					{/* <CTACard /> "interested to know more" */}
 				</Col>
