@@ -221,7 +221,7 @@ const GreenMetrics2 = ({}) => {
 		...baseFilters,
 		breakdown: [
 			// 'total',
-			'time{"co2":"sum"}',
+			'time{"countco2":"sum"}',
 			'adid{"count":"sum"}',
 			// 'os{"emissions":"sum"}',
 			// 'domain{"emissions":"sum"}',
