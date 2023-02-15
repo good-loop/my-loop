@@ -283,7 +283,11 @@ export const emissionsPerImpressions = (buckets, filterLessThan = 0, perN = 1000
     if ('count' in bkt) { // Simple breakdown
       Object.entries(bkt).forEach(([k, v]) => {
         // Carbon entries => carbon per N impressions; others unchanged
-        if (bkt.count >= filterLessThan) newBkt[k] = (k.match(/^co2/)) ? v / (bkt.count / perN) : v;
+        if (bkt.count > filterLessThan) {
+          newBkt[k] = (k.match(/^co2/)) ? v / (bkt.count / perN) : v;
+        } else {
+          delete newBkt[k];
+        }
       });
     } else { // Cross-breakdown (probably)
       const xbdKey = Object.keys(bkt).find(k => k.match(/^by_/));
@@ -293,5 +297,5 @@ export const emissionsPerImpressions = (buckets, filterLessThan = 0, perN = 1000
     }
 
     return newBkt;
-  })
+  }).filter(obj => Object.keys(obj).length > 0)
 );
