@@ -292,74 +292,74 @@ const GreenDashboardFilters = ({ brandOnly }) => {
 		filterItemLabel = `Select a${filterMode?.match(/^[aieou]/i) ? 'n' : ''} ${filterMode}`;
 	}
 
+	const FilterDiv = <>
+	{/* ??Seeing layout bugs that can block use -- refactoring to use a PropControl might be best*/}
+	<UncontrolledDropdown className='filter-dropdown'>
+		<DropdownToggle className='pl-0' caret>
+			{periodLabel}
+		</DropdownToggle>
+		<DropdownMenu>
+			<QuarterButtons period={period} setNamedPeriod={setNamedPeriod} />
+			<DropdownItem onClick={() => setNamedPeriod('all')}>
+				All Time
+				{period.name === 'all' ? selectedMarker : null}
+			</DropdownItem>
+			<DropdownItem toggle={false} onClick={() => displayCustomRange()}>
+				Custom
+				{!period.name && (period.start || period.end) ? selectedMarker : null}
+			</DropdownItem>
+			{showCustomRange ? (
+				<>
+					<DropdownItem divider />
+					<DateRangeWidget dflt={period} onChange={setPeriod} />
+					<DropdownItem tag='div'>
+						<Button color='primary' onClick={doCommit}>
+							Apply custom timeframe
+						</Button>
+					</DropdownItem>
+				</>
+			) : null}
+		</DropdownMenu>
+	</UncontrolledDropdown>
+
+	<UncontrolledDropdown className='filter-dropdown ml-2'>
+		<DropdownToggle caret>Filter by: {filterMode || ''}</DropdownToggle>
+		<DropdownMenu>
+			{['agency', 'brand', 'campaign', 'tag'].map((m, i) => (
+				<DropdownItem key={i} onClick={() => setFilterMode(m)}>
+					{m === filterMode ? selectedMarker : null} {m}
+				</DropdownItem>
+			))}
+		</DropdownMenu>
+	</UncontrolledDropdown>
+
+	{filterMode && (
+		<UncontrolledDropdown className='filter-dropdown ml-2'>
+			<DropdownToggle caret>{filterItemLabel}</DropdownToggle>
+			<DropdownMenu style={longMenuStyle}>
+				{filterItems.map((item, i) => (
+					<DropdownItem key={i} onClick={() => setFilterItem(item.id)}>
+						{{ campaign, brand, agency, tag }[filterMode] === item.id ? selectedMarker : null}
+						{item.name}
+					</DropdownItem>
+				))}
+			</DropdownMenu>
+		</UncontrolledDropdown>
+	)}
+
+	{filtersChanged({ period, filterMode, agency, brand, campaign, tag }) ? (
+		<Button color='primary' className='ml-2' onClick={doCommit} size='sm'>
+			Apply new filters
+		</Button>
+	) : null}
+</>
+
 	return (
 		<Row className='greendash-filters my-2'>
 			<Col xs='12'>
 				<Form inline>
 					<Logo className='mr-2' style={{ width: 'auto', maxWidth: '8em' }} item={brandItem || campaignItem} />
-					{!brandOnly && (
-						<>
-							{/* ??Seeing layout bugs that can block use -- refactoring to use a PropControl might be best*/}
-							<UncontrolledDropdown className='filter-dropdown'>
-								<DropdownToggle className='pl-0' caret>
-									{periodLabel}
-								</DropdownToggle>
-								<DropdownMenu>
-									<QuarterButtons period={period} setNamedPeriod={setNamedPeriod} />
-									<DropdownItem onClick={() => setNamedPeriod('all')}>
-										All Time
-										{period.name === 'all' ? selectedMarker : null}
-									</DropdownItem>
-									<DropdownItem toggle={false} onClick={() => displayCustomRange()}>
-										Custom
-										{!period.name && (period.start || period.end) ? selectedMarker : null}
-									</DropdownItem>
-									{showCustomRange ? (
-										<>
-											<DropdownItem divider />
-											<DateRangeWidget dflt={period} onChange={setPeriod} />
-											<DropdownItem tag='div'>
-												<Button color='primary' onClick={doCommit}>
-													Apply custom timeframe
-												</Button>
-											</DropdownItem>
-										</>
-									) : null}
-								</DropdownMenu>
-							</UncontrolledDropdown>
-
-							<UncontrolledDropdown className='filter-dropdown ml-2'>
-								<DropdownToggle caret>Filter by: {filterMode || ''}</DropdownToggle>
-								<DropdownMenu>
-									{['agency', 'brand', 'campaign', 'tag'].map((m, i) => (
-										<DropdownItem key={i} onClick={() => setFilterMode(m)}>
-											{m === filterMode ? selectedMarker : null} {m}
-										</DropdownItem>
-									))}
-								</DropdownMenu>
-							</UncontrolledDropdown>
-
-							{filterMode && (
-								<UncontrolledDropdown className='filter-dropdown ml-2'>
-									<DropdownToggle caret>{filterItemLabel}</DropdownToggle>
-									<DropdownMenu style={longMenuStyle}>
-										{filterItems.map((item, i) => (
-											<DropdownItem key={i} onClick={() => setFilterItem(item.id)}>
-												{{ campaign, brand, agency, tag }[filterMode] === item.id ? selectedMarker : null}
-												{item.name}
-											</DropdownItem>
-										))}
-									</DropdownMenu>
-								</UncontrolledDropdown>
-							)}
-
-							{filtersChanged({ period, filterMode, agency, brand, campaign, tag }) ? (
-								<Button color='primary' className='ml-2' onClick={doCommit} size='sm'>
-									Apply new filters
-								</Button>
-							) : null}
-						</>
-					)}
+					{!brandOnly && FilterDiv}
 				</Form>
 			</Col>
 		</Row>
