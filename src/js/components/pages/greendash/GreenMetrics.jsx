@@ -266,7 +266,7 @@ const GreenMetrics2 = ({}) => {
 					<BreakdownCard {...commonProps} />
 				</Col>
 				<Col xs="12" sm="4" className="flex-column">
-					{!isPer1000() && <TimeOfDayCard {...commonProps} />}
+					{false && <TimeOfDayCard {...commonProps} />}
 					<MapCard {...commonProps} />
 					{/* <CTACard /> "interested to know more" */}
 				</Col>
@@ -279,10 +279,14 @@ const GreenMetrics = ({}) => {
 	const [agencyIds, setAgencyIds] = useState();
 	let agencyId = DataStore.getUrlValue('agency');
 	if (!agencyId && agencyIds?.length === 1) agencyId = agencyIds[0];
+	const [pseudoUser, setPseudoUser] = useState(false);
 
 	// All our filters etc are based user having at most access to one agency ??how so?
 	// Group M users will have multiple, so start by selecting one.
 	useEffect(() => {
+		const userId = Login.getId();
+		if (userId && userId.endsWith('@pseudo')) setPseudoUser(true);
+
 		Login.getSharedWith().then((res) => {
 			if (!res?.cargo) {
 				setAgencyIds([]);
@@ -327,7 +331,7 @@ const GreenMetrics = ({}) => {
 		<div className="green-subpage green-metrics">			
 			<Container fluid>
 				{agencyIds ? <>
-					<GreenDashboardFilters />
+					<GreenDashboardFilters brandOnly={pseudoUser} />
 					<ShareDash/>
 					<GreenMetrics2 />
 				</> : <Misc.Loading text="Checking your access..." />}
