@@ -159,7 +159,7 @@ const FormatSubcard = ({ data, minimumPercentLabeled = 1, chartType = 'pie' }) =
 				scales: { x: { ticks: { callback: (v) => `${Math.round(v)} ${unitShort}` } } },
 			},
 		});
-	}, []);
+	}, [data]);
 
 	if (!pieChartProps) return null;
 	if (pieChartProps?.isEmpty) return NOEMISSIONS;
