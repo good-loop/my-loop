@@ -51,17 +51,6 @@ export class ImpactFilters {
 	q;
 }
 
-/*<LeftSidebar>
-			<div>
-				<C.A href={modifyPage(["ihub"], null, true)}>Overview</C.A>
-			</div>
-			<div>
-			<C.A href={modifyPage(["istory"], null, true)}>Story</C.A>
-			</div>
-			<div>
-			<C.A href={modifyPage(["istat"], null, true)}>Stats</C.A>
-			</div>
-		</LeftSidebar>*/
 
 const ImpactOverviewPage = () => {
 
@@ -93,9 +82,10 @@ const ImpactOverviewPage = () => {
 			<FilterAndAccountTopBar size="mobile"/>  {/*mobile topbar*/}
 			<FilterAndAccountTopBar size="desktop" setIsNavbarOpen={setIsNavbarOpen}/>  {/*widescreen topbar*/}
 		</div>
-		<Container fluid className='iview-container pr-md-5'>
-			<animated.div id='in-flow-navbar' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}></animated.div>
-				<GLHorizontal>
+		<div className='iview-positioner pr-md-5'>
+			<Container fluid className='iview-container'>
+				<animated.div id='in-flow-navbar' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}></animated.div>
+				<GLHorizontal collapse="md" className="iview-grid">
 					{/* first grid half */}
 					<GLVertical>
 						{/* top left corner - both top corners with basis 60 to line up into grid pattern*/}
@@ -117,11 +107,29 @@ const ImpactOverviewPage = () => {
 
 						{/* bottom left corner */}
 						<GLHorizontal>
-							<GLCard>
-								<h2>Watch to donate</h2>
+							<GLCard className="ad-boast" modalContent={WatchToDonateModal} modalTitle="Watch To Donate" modalId="full-page" modalClassName="no-padding watch-to-donate">
+								<h3>Watch to donate</h3>
+								<h2>£333,203</h2>
+								<h3 className="text-bold">Donated...</h3>
+
+								<h5>INCLUDING</h5>
+
+								<h4>15,000 Trees Planted</h4>
+								<CharityLogo charity={TEST_CHARITY_OBJ}/>
+
+								<h4>10,012 Children's Meals</h4>
+								<CharityLogo charity={TEST_CHARITY_OBJ}/>
+
+								<QuestionIcon/>
 							</GLCard>
-							<GLCard modalContent={ThisAdDoesGoodModal} modalTitle="This Ad Does Good" modalId="full-page" modalClassName="no-padding">
-								<h2>This ad does good</h2>
+							<GLCard className="ad-boast" modalContent={ThisAdDoesGoodModal} modalTitle="This Ad Does Good" modalId="full-page" modalClassName="no-padding this-ad-does-good">
+								<h3 className="color-greenmedia-darkcyan">This ad does good</h3>
+								<h2 className="color-greenmedia-darkcyan">136,580</h2>
+								<h3 className="color-greenmedia-darkcyan text-bold">Trees planted...</h3>
+
+								<img src={TEST_BRAND_OBJ.branding.logo} className="logo"/>
+								<CharityLogo charity={TEST_CHARITY_OBJ}/>
+								<QuestionIcon/>
 							</GLCard>
 						</GLHorizontal>
 
@@ -151,7 +159,7 @@ const ImpactOverviewPage = () => {
 									<h3>6.5M VIEWS | 5 COUNTRIES</h3>
 								</GLCard>
 								<GLCard noPadding className="offset-card" basis={0} modalId="right-half" modalTitle="8.69T CO2E Offset" modalHeader={CO2OffsetInfoHeader} modalContent={CO2OffsetInfo} modalClassName="no-header-padding co2-offset">
-									<div className='offset-number'>
+									<div className='offset-number px-3'>
 										<h3>8.69T CO2E OFFSET</h3>
 									</div>
 									<div className='carbon-neutral px-5 py-2'>
@@ -179,19 +187,156 @@ const ImpactOverviewPage = () => {
 					<GLModalCard id="full-page"/>
 				</GLHorizontal>
 
-		</Container>
+			</Container>
+
+			<GLCard className="logos-display">
+				<LogosDisplay/>
+			</GLCard>
+
+		</div>
 
 		<GLModalBackdrop/>
 	</>
 	);
 };
 
+const LogosDisplay = () => {
+
+	const BrandLogo = ({type, item, checkboxes, canDelete, nameFn, extraDetail, button}) => {
+		return <Col md={1} xs={7} className="text-center">
+			{item.branding?.logo ? <img src={item.branding.logo}/> : <p>{item.name}</p>}
+		</Col>
+	}
+
+	const vertiserId = TEST_BRAND;
+	const vertiser = TEST_BRAND_OBJ;
+
+	return <>
+		<h3>Advertising that's a force for good</h3>
+		<br/><br/>
+		<img src={vertiser.branding.logo} className="logo"/>
+		<br/><br/>
+		<img className='a4glogo' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+		<br/><br/><br/>
+		<ListLoad status={KStatus.PUBLISHED} hideTotal type={C.TYPES.Advertiser}
+				q={SearchQuery.setProp(null, "parentId", vertiserId).query}
+				ListItem={BrandLogo} unwrapped className="row justify-content-center w-100"/>
+	</>;
+
+};
+
+const QuestionIcon = () => {
+	return <div className='question-icon'>
+		?
+	</div>
+}
+
 const ThisAdDoesGoodModal = () => {
-	return <div className="bg-gl-background-default h-100">
-		<GLCard className="m-5">
+
+	const vertiser = TEST_BRAND_OBJ;
+	const charity = TEST_CHARITY_OBJ;
+
+	return <div className="bg-gl-background-default inmodal-wrapper p-5">
+		<GLCard className="inmodal-content" noPadding >
+			<BG src="/img/Impact/curves-background.svg" className="py-5 img-bg">
+				<h3 className='text-white'>1 This Ad Does Good Campaign</h3>
+				<br/>
+				<AdsCatalogueModal noPreviews />
+				<br/>
+				<Row className='text-center rates'>
+					<Col xs={4}>
+						<p>
+							<b>XX%</b>
+						</p>
+						<p>Viewability rate</p>
+					</Col>
+					<Col xs={4}>
+						<p>
+							<b>XX%</b>
+						</p>
+						<p>Click through rate</p>
+					</Col>
+					<Col xs={4}>
+						<p>
+							<b>XX%</b>
+						</p>
+						<p>Completed view rate</p>
+					</Col>
+				</Row>
+			</BG>
+			<br/>
+			<h3>136,283 Trees Planted</h3>
+			<br/>
+			<h5>SUPPORTING</h5>
+			<br/><br/>
+			<p className='text-center'>Reforestation projects in Madagascar, Kenya, and Mozambique</p>
+			<br/>
+			<Row className='w-50 mx-auto'>
+				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
+					<img src={vertiser.branding.logo} className="logo"/>
+				</Col>
+				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
+					<CharityLogo charity={charity}/>
+				</Col>
+			</Row>
+			<br/>
 		</GLCard>
 	</div>;
 }
+
+const WatchToDonateModal = () => {
+
+	const vertiser = TEST_BRAND_OBJ;
+	const charity = TEST_CHARITY_OBJ;
+
+	return <div className="bg-gl-background-default inmodal-wrapper p-5">
+		<GLCard className="inmodal-content" noPadding >
+			<BG src="/img/Impact/curves-background.svg" className="py-5 img-bg">
+				<h3 className='text-white'>15 Watch To Donate Campaigns</h3>
+				<br/>
+				<AdsCatalogueModal noPreviews />
+				<br/>
+				<Row className='text-center rates'>
+					<Col xs={4}>
+						<p>
+							<b>XX%</b>
+						</p>
+						<p>Viewability rate</p>
+					</Col>
+					<Col xs={4}>
+						<p>
+							<b>XX%</b>
+						</p>
+						<p>Click through rate</p>
+					</Col>
+					<Col xs={4}>
+						<p>
+							<b>XX%</b>
+						</p>
+						<p>Completed view rate</p>
+					</Col>
+				</Row>
+			</BG>
+			<br/>
+			<h3>£136,283 Donated</h3>
+			<br/>
+			<h5>INCLUDING</h5>
+			<br/><br/>
+			<p className='text-center'>Reforestation projects in Madagascar, Kenya, and Mozambique</p>
+			<br/>
+			<Row className='w-50 mx-auto'>
+				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
+					<img src={vertiser.branding.logo} className="logo"/>
+				</Col>
+				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
+					<CharityLogo charity={charity}/>
+				</Col>
+			</Row>
+			<br/>
+		</GLCard>
+	</div>;
+}
+
 
 const ContentList = () => {
 
@@ -276,21 +421,17 @@ const CO2OffsetInfo = () => {
 	</div>
 }
 
-const BrandListItem = ({ type, item, checkboxes, canDelete, nameFn, extraDetail, button}) => {
-
-	console.log(item);
-
-	return <Col md={4} className="mt-3">
-		<GLCard className="preview h-100" noMargin>
-			
-			{item && item.branding?.logo && <img src={item.branding.logo} className="logo"/>}
-			<p className='text-center'>{item.name}</p>
-		</GLCard>
-	</Col>;
-
-}
-
 const BrandList = () => {
+
+	const BrandListItem = ({ type, item, checkboxes, canDelete, nameFn, extraDetail, button}) => {
+		return <Col md={4} className="mt-3">
+			<GLCard className="preview h-100" noMargin>
+				
+				{item && item.branding?.logo && <img src={item.branding.logo} className="logo"/>}
+				<p className='text-center'>{item.name}</p>
+			</GLCard>
+		</Col>;
+	}
 
 	const vertiser = TEST_BRAND;
 

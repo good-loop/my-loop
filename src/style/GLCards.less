@@ -69,7 +69,11 @@ The GLCards layout is a layout for modular cards which are designed to expand an
 
     @media @width-mobile {
         position: fixed;
-        margin: 2rem;
+        margin: 0;
+
+        &>.glcard-outer {
+            padding: 1rem;
+        }
     }
 
     &.no-header-padding {

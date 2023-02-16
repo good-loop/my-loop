@@ -39,7 +39,7 @@
         }
         
         &.preview {
-            
+
             .card-body {
                 padding: 0.5rem;
                 display: flex;
@@ -81,6 +81,67 @@
                 background-position: center;
             }
         }
+
+        &.ad-boast .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            
+            h1,h2,h3,h4,h5 {
+                margin: 0;
+            }
+
+            h2 {
+                font-size: 1.4rem;
+            }
+            h3 {
+                font-size: 1rem;
+            }
+            h4 {
+                font-size: 0.8rem;
+            }
+            h5 {
+                font-size: 0.6rem;
+            }
+
+            .text-bold {
+                font-weight: bolder;
+            }
+
+            .question-icon {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                aspect-ratio: 1/1;
+                border-radius: 50%;
+                background-color: @gl-impact-red;
+                color: white;
+                width: 1.5rem;
+                text-align: center;
+                font-size: 1rem;
+            }
+        }
+
+        &.logos-display {
+            .card-body {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+
+                .a4glogo {
+                    width: 10rem;
+                }
+            }
+        }
+    }
+
+    .iview-grid {
+        @media @width-mobile {
+            background-color: @gl-impact-red;
+        }
     }
 
     .hero-card {
@@ -88,6 +149,11 @@
         background-position: center;
         background-size: cover;
         position: relative;
+
+        @media @width-mobile {
+            margin: 0 !important;
+            border-radius: 0;
+        }
         
         .card-body {
             display: flex;
@@ -103,6 +169,11 @@
                 align-items: center;
                 position: relative;
                 aspect-ratio: 1/1;
+
+                @media @width-mobile {
+                    height: unset;
+                    width: 95%;
+                }
 
                 .content {
                     position: absolute;
@@ -176,6 +247,33 @@
             }
         }
 
+        .inmodal-wrapper {
+            .glcard-outer {
+                display: block;
+            }
+            .img-bg {
+                border-top-right-radius: 10px;
+                border-top-left-radius: 10px;
+            }
+            .rates {
+                width: 50%;
+                @media @width-mobile {
+                    width: 100%;
+                }
+                margin: auto;
+                color: white;
+            }
+            h3 {
+                font-weight: bolder;
+            }
+        }
+
+        &.this-ad-does-good {
+            h3 {
+                color: @greenmedia-darkcyan;
+            }
+        }
+
         &.ads-catalogue-modal {
             
             .glcard {
@@ -236,25 +334,24 @@
 }
 
 .iview-container {
+    margin-top:60px;
+    margin-left: 0 !important;
+    width: 100% !important;
+
     @media @md-min {
         display: flex;
         height: 90vh;
         width: 100%;
         margin-top: 10vh;
     }
-
-    padding-right: 1rem !important; // otherwise set to 3rem by some default bootstrap setting
+    @media @width-mobile {
+        padding: 0;
+    }
 }
 
 #navbars-overlay {
     position: fixed;
     display: flex;
-}
-
-#iview-container {
-    margin-top:60px;
-    margin-left: 0 !important;
-    width: 100% !important;
 }
 
 
