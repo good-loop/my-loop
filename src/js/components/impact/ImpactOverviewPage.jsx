@@ -70,8 +70,9 @@ const ImpactOverviewPage = () => {
 			<FilterAndAccountTopBar size="mobile"/>  {/*mobile topbar*/}
 			<FilterAndAccountTopBar size="desktop" setIsNavbarOpen={setIsNavbarOpen}/>  {/*widescreen topbar*/}
 		</div>
-		<Container fluid className='iview-container pr-md-5'>
-			<animated.div id='in-flow-navbar' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}></animated.div>
+		<div className='iview-positioner pr-md-5'>
+			<Container fluid className='iview-container'>
+				<animated.div id='in-flow-navbar' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}></animated.div>
 				<GLHorizontal collapse="md" className="iview-grid">
 					{/* first grid half */}
 					<GLVertical>
@@ -93,11 +94,22 @@ const ImpactOverviewPage = () => {
 
 						{/* bottom left corner */}
 						<GLHorizontal>
-							<GLCard className="vertical" modalContent={WatchToDonateModal} modalTitle="Watch To Donate" modalId="full-page" modalClassName="no-padding watch-to-donate">
+							<GLCard className="ad-boast" modalContent={WatchToDonateModal} modalTitle="Watch To Donate" modalId="full-page" modalClassName="no-padding watch-to-donate">
 								<h3>Watch to donate</h3>
+								<h2>£333,203</h2>
+								<h3 className="text-bold">Donated...</h3>
+
+								<h5>INCLUDING</h5>
+
+								<h4>15,000 Trees Planted</h4>
+								<CharityLogo charity={TEST_CHARITY_OBJ}/>
+
+								<h4>10,012 Children's Meals</h4>
+								<CharityLogo charity={TEST_CHARITY_OBJ}/>
+
 								<QuestionIcon/>
 							</GLCard>
-							<GLCard className="vertical" modalContent={ThisAdDoesGoodModal} modalTitle="This Ad Does Good" modalId="full-page" modalClassName="no-padding this-ad-does-good">
+							<GLCard className="ad-boast" modalContent={ThisAdDoesGoodModal} modalTitle="This Ad Does Good" modalId="full-page" modalClassName="no-padding this-ad-does-good">
 								<h3 className="color-greenmedia-darkcyan">This ad does good</h3>
 								<h2 className="color-greenmedia-darkcyan">136,580</h2>
 								<h3 className="color-greenmedia-darkcyan text-bold">Trees planted...</h3>
@@ -161,11 +173,42 @@ const ImpactOverviewPage = () => {
 					<GLModalCard id="full-page"/>
 				</GLHorizontal>
 
-		</Container>
+			</Container>
+
+			<GLCard className="logos-display">
+				<LogosDisplay/>
+			</GLCard>
+
+		</div>
 
 		<GLModalBackdrop/>
 	</>
 	);
+};
+
+const LogosDisplay = () => {
+
+	const BrandLogo = ({type, item, checkboxes, canDelete, nameFn, extraDetail, button}) => {
+		return <Col md={1} xs={7} className="text-center">
+			{item.branding?.logo ? <img src={item.branding.logo}/> : <p>{item.name}</p>}
+		</Col>
+	}
+
+	const vertiserId = TEST_BRAND;
+	const vertiser = TEST_BRAND_OBJ;
+
+	return <>
+		<h3>Advertising that's a force for good</h3>
+		<br/><br/>
+		<img src={vertiser.branding.logo} className="logo"/>
+		<br/><br/>
+		<img className='a4glogo' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+		<br/><br/><br/>
+		<ListLoad status={KStatus.PUBLISHED} hideTotal type={C.TYPES.Advertiser}
+				q={SearchQuery.setProp(null, "parentId", vertiserId).query}
+				ListItem={BrandLogo} unwrapped className="row justify-content-center w-100"/>
+	</>;
+
 };
 
 const QuestionIcon = () => {
@@ -364,21 +407,17 @@ const CO2OffsetInfo = () => {
 	</div>
 }
 
-const BrandListItem = ({ type, item, checkboxes, canDelete, nameFn, extraDetail, button}) => {
-
-	console.log(item);
-
-	return <Col md={4} className="mt-3">
-		<GLCard className="preview h-100" noMargin>
-			
-			{item && item.branding?.logo && <img src={item.branding.logo} className="logo"/>}
-			<p className='text-center'>{item.name}</p>
-		</GLCard>
-	</Col>;
-
-}
-
 const BrandList = () => {
+
+	const BrandListItem = ({ type, item, checkboxes, canDelete, nameFn, extraDetail, button}) => {
+		return <Col md={4} className="mt-3">
+			<GLCard className="preview h-100" noMargin>
+				
+				{item && item.branding?.logo && <img src={item.branding.logo} className="logo"/>}
+				<p className='text-center'>{item.name}</p>
+			</GLCard>
+		</Col>;
+	}
 
 	const vertiser = TEST_BRAND;
 
