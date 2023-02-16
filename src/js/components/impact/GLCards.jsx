@@ -121,11 +121,11 @@ export const modalToggle = (id) => {
 	}
 }
 
-export const openAndPopulateModal = ({id, content, title, header, headerImg, className, prioritized}) => {
+export const openAndPopulateModal = ({id, content, title, header, headerImg, headerClassName, className, prioritized}) => {
 	assert(id, "Must be given a modal ID to open!");
 	// Force close other modals first
 	if (prioritized) modalToggle();
-	DataStore.setValue(MODAL_LIST_PATH.concat(id), {content, title, header, headerImg, className});
+	DataStore.setValue(MODAL_LIST_PATH.concat(id), {content, title, header, headerImg, headerClassName, className});
 	modalToggle(id);
 }
 
@@ -143,6 +143,7 @@ export const GLModalCard = ({className, id}) => {
 	const title = DataStore.getValue(path.concat("title"));
 	const Header = DataStore.getValue(path.concat("header"));
 	const headerImg = DataStore.getValue(path.concat("headerImg"));
+	const headerClassName = DataStore.getValue(path.concat("headerClassName"));
 	const storedClassName = DataStore.getValue(path.concat("className"));
 
 	useEffect(() => {
@@ -157,7 +158,7 @@ export const GLModalCard = ({className, id}) => {
 	return open ? <>
 		<div className={space('glmodal', storedClassName, className)} id={id}>
 			<GLCard noPadding>
-				<CardHeader style={headerStyle} className="glmodal-header">
+				<CardHeader style={headerStyle} className={"glmodal-header " + headerClassName}>
 					<CloseButton className="white-circle-bg" onClick={() => modalToggle(id)}/>
 					{title && <h4 className='glmodal-title'>{title}</h4>}
 					{Header && <Header/>}

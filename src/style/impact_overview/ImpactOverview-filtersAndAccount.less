@@ -5,7 +5,7 @@
     flex-grow: 1;
     background-color: white;
 
-    #filters {
+    #filters, #date-filters {
         position: relative;
         display: flex;
         padding-left: 15px;
@@ -22,11 +22,20 @@
         }
 
         .filter-down-arrow {
-            background-image: url("/img/icons/HEART ICON.png");
+            background-image: url("/img/icons/down-arrow.svg");
+            // keep icon to a good relative size
+            width: 2rem;
+            height: 2rem;
+            background-size: contain;
+            
+            // keep it vertically centered in breadcrump trail
+            position: relative;
+            transform: translateY(-50%);
+            top: 50%;
         }
     }
 
-    #impact-overview-accounts {
+    #impact-overview-accounts { 
         position: relative;
         display: flex;
 
@@ -47,15 +56,33 @@
             position: relative;
             top: 50%;
             transform: translateY(-50%);
+        }
 
-            &.account-icon {
-                background-image: url("/img/icons/HEART ICON.png");
-            }
-            &.back-icon{
-                background-image: url("/img/icons/HEART ICON.png");
-            }
+        #account-icon, #share-icon {
+            width: 3em;
+            height: 3em;
+            min-width: 3em;
+            min-height: 3em;
+            margin-right: 1em;
+            border-radius: 50%; // turn into circle
+            background-color: white;
+            background-size: contain; // icons are too big by default, resize them
+            align-self: center;
+        }
+        #account-icon {
+            background-image: "/img/icons/empty icon.png";
+            margin-right: 3rem;
+        }
+        #share-icon {
+            background-image: "/img/icons/empty icon.png";
         }
     }
+
+    #date-filters {
+        flex:auto;
+        margin-left:3rem;
+    }
+    
 }
 
 // hide "in-page" filters when on mobile
@@ -104,17 +131,19 @@
         background-color: rgb(217, 217, 217) !important;
     }
 
-    .placeholder-thumbnail {
-        width: 75px;
-        height: 75px;
-        background-color: darkgray;
-        display: inline-flex;
-    }
     .img-thumbnail {
         width: 75px !important;
         height: 75px !important;
         display: inline-flex !important;
     }
+
+    .impact-link-placeholder-thumbnail {
+        width: 75px;
+        height: 75px;
+        background-color: darkgray;
+        display: inline-flex;
+    }
+
     .info {
         display: inline-flex;
     }
@@ -139,4 +168,36 @@
 
 #in-flow-navbar {
     height: 30px;
+}
+
+
+#impact-account-container {
+    text-align: center;
+
+    .img-thumbnail, .impact-link-placeholder-thumbnail {
+        width: 50px !important;
+        height: 50px !important;
+        display: inline-flex !important;
+    }
+
+    .impact-link-placeholder-thumbnail {
+        background-color: lightgray;
+        margin-right: 1rem;
+    }
+
+    .active {
+        font-weight: 600;
+    }
+
+    span {
+        font-family: 'Montserrat';
+        align-self: center;
+    }
+    
+    a {
+        padding: 1rem;
+        .flex-row {
+            justify-content: center;
+        }
+    }
 }

@@ -1,30 +1,14 @@
-import React, { useState } from 'react';
-import { Collapse, Nav, Navbar, NavbarToggler, NavItem } from 'reactstrap';
-import { useTransition, animated, useSpring } from 'react-spring';
-import AccountMenu from '../../base/components/AccountMenu';
-import Icon from '../../base/components/Icon';
-import LinkOut from '../../base/components/LinkOut';
-import Logo from '../../base/components/Logo';
-import Campaign from '../../base/data/Campaign';
+import React, { useState, useEffect } from 'react';
+import BasicAccountPage from '../../base/components/AccountPageWidgets';
 import KStatus from '../../base/data/KStatus';
-import { getDataItem } from '../../base/plumbing/Crud';
-import Roles from '../../base/Roles';
 import SearchQuery from '../../base/searchquery';
 import { getId } from '../../base/data/DataClass';
-import AThing from '../../base/data/AThing';
-
 import Misc from '../../base/components/Misc';
-
-import { encURI, is, isMobile, space } from '../../base/utils/miscutils';
+import Login from '../../base/youagain';
+import {LoginLink, RegisterLink, LogoutLink} from '../../base/components/LoginWidget';
 import C from '../../C';
-import ServerIO from '../../plumbing/ServerIO';
-import { isPer1000 } from '../pages/greendash/GreenMetrics';
-
-import DataStore from '../../base/plumbing/DataStore';
-import ActionMan from '../../plumbing/ActionMan';
-import { assert } from '../../base/utils/assert';
+import PropControlPeriod from '../../base/components/PropControls/PropControlPeriod'
 import { openAndPopulateModal } from './GLCards';
-import Tree from '../../base/data/Tree';
 import ListLoad from '../../base/components/ListLoad';
 
 /**
@@ -32,6 +16,8 @@ import ListLoad from '../../base/components/ListLoad';
  */
 
 import { TEST_BRAND } from './TestValues';
+import AccountMenu from '../../base/components/AccountMenu';
+import { assert } from '../../base/utils/assert';
 
 const A = C.A;
 
@@ -39,86 +25,57 @@ const A = C.A;
 
 
 /**
- * Left hand nav bar + top-right account menu
+ * container for breadcrumb filter + top-right account options
  * 
  * @param {Object} p
  * @param {?string} p.active
  * @returns 
  */
-const Filters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurCampaign, brandTree, toggleLeftModal, filters}) => {
+const Filters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurCampaign}) => {
 	
-	const FilterOptionRow = ({name, url}) => {
-		if(url == "") {
-			return <><div className="filter-image filter-blank-image" /><span>{name}</span></>
-		}
-		else {
-			return <><img className="filter-image" src={url}></img><span>{name}</span></>
-		}
-	}
+	console.log("?????? filters starting to be defined...")
 
-	const filterChange = (node) => {
-		console.log("changing to node: ", node)
-		if(node.type == "brand"){
+	/**
+	 * 
+	 * @param {object} item the object filter the user has just selected
+	 * @param {object} wrapperItem if item is a campaign, also pass in the brand associated with it
+	 * @returns 
+	 */
+	// change breadcrumb trail to reflect filters selected
+	const filterChange = (item, wrapperItem) => {
+
+		// only master brands have the 'charities' prop
+		if(item.charities) {
 			setCurSubBrand(null)
 			setCurCampaign(null)
-		}
-		else if(node.type == "subbrand") {
-			setCurSubBrand(node)
-			setCurCampaign(null)
-		}
-		else if(node.type == "campaign") {
-			setCurSubBrand(node.parent)
-			setCurCampaign(node)
-		}
-		else {
-			throw new Error ("no valid type found for filter selection")
-		}
-
-		// as far as I understand it, this should change let users set filters???
-		filters.brand2 = curSubBrand
-		filters.campaign = curCampaign
-		DataStore.setValue(['location','params'], filters);
-		
-	}
-	
-	const TreeToListJSX = ({tree, listClass=""}) => {
-		if(tree.children.length == 0){
 			return
 		}
-
-		return(
-			<ul className={"filter-set"+(listClass)}>
-				{tree.children.map(node => {
-					let campaigns = TreeToListJSX({tree:node, listClass:"-nestedRow"})
-					return (
-						<>
-							<a onClick={(event) => filterChange(node)}><li> <FilterOptionRow name={node.name} url={node.img} /> </li></a>
-							{campaigns}
-						</>
-					)
-				})}
-			</ul>
-		)
+		// if it's brand but not a master brand, it will have a parentId 
+		else if(item.parentId){
+			item.type = C.TYPES.vertiser
+			setCurSubBrand(item)
+			setCurCampaign(null)
+			return
+		}
+		// if it's none of the above, it must be a campaign
+		wrapperItem.type = C.TYPES.vertiser
+		item.type = C.TYPES.Campaign
+		setCurSubBrand(wrapperItem)
+		setCurCampaign(item)
 	}
 
-
-		/**
-	* These can be clicked or control-clicked
-	*
-	* @param servlet
-	* @param navpage -- How/why/when does this differ from servlet??
-	* @param nameFn {Function} Is there a non-standard way to extract the item's display name?
-	* 	TODO If it's of a data type which has getName(), default to that
-	* @param extraDetail {Element} e.g. used on AdvertPage to add a marker to active ads
+	/**
+	*	ListItem of Campaigns for use in ListLoad
+	* 	Same as default except for: 
+	*		- if item doesn't have branding (logo/thumbnail), use a placeholder thumbrail
 	*/
-	const CampaignListItem = ({ type, item, checkboxes, canDelete, nameFn, extraDetail, button}) => {
+	const CampaignListItem = ({ item, nameFn, button}) => {
 		const id = getId(item);
-		// let checkedPath = ['widget', 'ListLoad', type, 'checked'];
 		let name = nameFn ? nameFn(item, id) : item.name || item.text || id || '';
 		if (name.length > 280) name = name.slice(0, 280);
 		const status = item.status || "";
 		
-		let thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='placeholder-thumbnail' />
+		let thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='impact-link-placeholder-thumbnail' />
 		
 		return <>
 			<div className='brand-campaign-set'>
@@ -133,36 +90,34 @@ const Filters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurC
 
 	
 	/**
-	* These can be clicked or control-clicked
-	*
-	* @param servlet
-	* @param navpage -- How/why/when does this differ from servlet??
-	* @param nameFn {Function} Is there a non-standard way to extract the item's display name?
-	* 	TODO If it's of a data type which has getName(), default to that
-	* @param extraDetail {Element} e.g. used on AdvertPage to add a marker to active ads
+	*	ListItem of Brands for use in a ListLoad
+	* 	Same as default except for: 
+	*		- if item doesn't have branding (logo/thumbnail), use a placeholder thumbrail
+	*		- if Brand has campaigns, nest a ListLoad of those campaigns within a dropdown inside the Brand ListItem 
 	*/
-	const FilterListItem = ({ type, item, checkboxes, canDelete, nameFn, extraDetail, button}) => {
+	const FilterListItem = ({ item, nameFn, button}) => {
 		const id = getId(item);
-		// let checkedPath = ['widget', 'ListLoad', type, 'checked'];
 		let name = nameFn ? nameFn(item, id) : item.name || item.text || id || '';
 		if (name.length > 280) name = name.slice(0, 280);
 		const status = item.status || "";
 		
 		const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
-		const campaignClasses = space("filter-button campaign-button ListItem btn-default btn btn-outline-secondary", KStatus.PUBLISHED, 'btn-space')
+		// campaigns that belong to this current brand
+		const campaignClasses = `filter-button campaign-button ListItem btn-default btn btn-outline-secondary ${KStatus.PUBLISHED} btn-space`
 		const campaignsListItem = (<div id={"campaigns-"+item.id} className={ + isDropdownOpen ? "open" : "closed"}>
 			<ListLoad hideTotal status={status}
 				type={C.TYPES.Campaign}
 				q={SearchQuery.setProp(null, "vertiser", id).query}
-				onClickItem={(item) => console.log("clicked...", item)}
+				onClickWrapper={(event, innerItem) => filterChange(innerItem, item)}
 				itemClassName={campaignClasses}
-				ListItem={CampaignListItem}/>
+				ListItem={CampaignListItem}
+				 />
 		</div>)
 
-		let thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='placeholder-thumbnail' />
+		let thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='impact-link-placeholder-thumbnail' />
 		
-		
+		// dropdown toggle of above campaign ListLoad
 		button = <button className={'dropdown-button'} onClick={() => setIsDropdownOpen(!isDropdownOpen)}>X</button>
 
 		return <>
@@ -178,52 +133,47 @@ const Filters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurC
    }
 
 	const openFilters = () => {
-
 		
 		const vertiser = TEST_BRAND;
 
-		const classes = space("brand-button ListItem btn-default btn btn-outline-secondary", KStatus.PUBLISHED, 'btn-space')
+		const classes = `brand-button ListItem btn-default btn btn-outline-secondary ${KStatus.PUBLISHED} btn-space`
 
 		let modalContent = () => (
 			<div className='' id="filter-modal-container">
 				{/* master brand & its campaigns */}
 				<ListLoad status={KStatus.PUBLISHED} hideTotal type={C.TYPES.Advertiser}
 					q={SearchQuery.setProp(null, "id", vertiser).query} 
+					onClickWrapper={(event, item) => filterChange(item)}
 					ListItem={FilterListItem} itemClassName={classes}/>
 
 				{/* sub brands & their campaigns */}
 				<ListLoad status={KStatus.PUBLISHED} hideTotal type={C.TYPES.Advertiser}
             		q={SearchQuery.setProp(null, "parentId", vertiser).query} 
-					ListItem={FilterListItem} itemClassName={classes}/>
+					ListItem={FilterListItem} itemClassName={classes}
+					onClickWrapper={(event, item) => filterChange(item)}/>
 			</div>
 		)
-		openAndPopulateModal({id:"left-half", content:modalContent, title:"(still need red bar here)", prioritized:true})
+		openAndPopulateModal({id:"left-half", content:modalContent, title:"(my header should have a unique class)", prioritized:true, headerClassName:"oofowmybones"})
 	}
-
-
-	// CHECK THIS IS TRUE, ITS ASSUMED AS THATS WHAT NESTLE IS LIKE BUT THIS MIGHT NOT BE UNIVERSAL
-	//if(curCampaign) assert(curSubBrand)	// as campaigns are ran by subbrands, ensure there's not a break in the relation 
-	//assert(masterBrand.name)
 
 	// helper JSX elements
 	const FilterButton = ({content, id, className}) => <button className="filter-row filter-text" onClick={() => openFilters()}>{content}</button>
 	const RightArrow = () => <button className='filter-row' onClick={() => openFilters()}> &#62; </button> // &#62; is the number for '>'
 	const DropDownIcon = () => <button className='filter-row filter-down-arrow' onClick={() => openFilters()} />
 
-	// only vertiser is selected
-	console.log("-----", masterBrand, curSubBrand, curCampaign)
+	// no filters / only master brand filtered
 	if(!curSubBrand){
 		return (
 			<div id="filters">
 				<FilterButton content={masterBrand.name} />
-				<RightArrow />
+				<RightArrow /> 	
 				<FilterButton content={"All brands"} />
 				<DropDownIcon />
 			</div>
 		)
 	}
 
-	// only veriser and brand are selected 
+	// master brand and brand are filtered 
 	if(!curCampaign){
 		return (
 			<div id="filters">
@@ -235,7 +185,7 @@ const Filters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurC
 		)
 	}
 
-	// all are selected
+	// master brand, brand and campaign are filtered
 	return (
 		<div id="filters">
 				<FilterButton content={masterBrand.name} />
@@ -248,15 +198,62 @@ const Filters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurC
 
 }
 
-const Account = () => {
+
+const DateFilter = ({}) => {
+	let content = () => (<div><PropControlPeriod calendarFormat/></div>)
+	let onClick = () => openAndPopulateModal({id:"hero-card-modal", content:content, title:"(still need red bar here)", prioritized:true})
+	return (
+	<div id="date-filters">
+		<button className="filter-row filter-text" onClick={onClick}>Date</button>
+		<button className='filter-row filter-down-arrow' onClick={onClick}/>
+	</div>
+	)
+}
+
+const Account = ({curMaster, curSubBrand, curCampaign, customLogin}) => {
+
+	let [loggedIn, setIsLoggedIn] = useState(Login.isLoggedIn())
+	console.log("oh shit 1. ", loggedIn)
+	let type = curCampaign ? "campaign" : "brand"
+	let id = curCampaign ? curCampaign.id : (curSubBrand ? curSubBrand.id : curMaster.id)
+	let greenUrl = `https://my.good-loop.com/greendash?${type}=${id}` // add period later
+	
+
+	// was having issues with this modal updating until 
+	useEffect(() => {
+		setIsLoggedIn(Login.isLoggedIn());
+	}, [Login.isLoggedIn()])
+
+	let logoutButton = <a href='#' className="LogoutLink" onClick={() => {Login.logout(); setIsLoggedIn(false); }}>Log out</a>
+	let accountContent = <AccountMenu/>
+	
+	
+	// makes use of a temp href for Impact Dash as I'm currently not sure where the
+	const accountModalContent = () => (
+		<div id="impact-account-container" className="flex-collumn">
+			<a><div className='flex-row'><div className='impact-link-placeholder-thumbnail' /><span className="active">Impact Dashboard</span></div></a>
+			<a href={greenUrl}><div className='flex-row'><div className='impact-link-placeholder-thumbnail' /><span href={greenUrl} >Green Dashboard</span></div></a>
+			{accountContent}
+		</div>
+	)
+	
+	const accountOnClick = () => openAndPopulateModal({id:"ads-for-good-modal", content:accountModalContent, title:"(still need red bar here)", prioritized:true})
+	
 	return (
 		<div id="impact-overview-accounts">
-			<div className="impact-topbar-icon account-icon" />
-			<div className="impact-topbar-icon account-icon" />
+			<button id='share-icon' onClick={accountOnClick} />
+			<button id='account-icon' onClick={accountOnClick} />
 		</div>
 	)
 }
 
+/** For the given URL params, what filter mode should the user be in? */
+const defaultFilterMode = ({masterBrand, brand, campaign}) => {
+	if (campaign) return 'campaign';
+	if (brand) return 'brand';
+	if (masterBrand) return 'master';
+	throw new Error("no values for any of Impact-Overview filters found")
+}
 
 /**
  * 
@@ -265,98 +262,16 @@ const Account = () => {
  */
 const FilterAndAccountTopBar = ({size}) => {
 
-	const [isOpen, setIsOpen] = useState(true)
-	let filters = DataStore.getValue('location','params');
-
-	// rough structure of brands, figure out how to find root
-	// TODO: delete this later, this is just a very rough assumed data structure 
-	const brandTree = {
-		name: "Nestle",
-		img: "img/icons/Heart.svg",
-		children : 
-			[
-				{
-					name: "Sub brand 1",
-					img: "",
-					children : [],
-					type: "subbrand"
-				},
-				{
-					name: "Sub brand 2",
-					img: "/img/icons/HEART ICON.png",
-					children : [],
-					type: "subbrand"
-				},
-				{
-					name: "Sub brand 3",
-					img: "",
-					children : 
-						[
-							{
-								name: "camp 3.1",
-								img: "img/blog/header.png",
-								children : [],
-								type: "campaign",
-								parent: {name: "Sub brand 3"}
-							},
-							{
-								name: "camp 3.1",
-								img: "",
-								children : [],
-								type: "campaign",
-								parent: {name: "Sub brand 3"}
-							}
-						],
-						type: "subbrand"
-				},
-				{
-					name: "Sub brand 4",
-					img: "/img/icons/HEART ICON.png",
-					children : 
-					[						
-						{
-							name: "camp 4.1",
-							img: "img/ourstory/part-of-earth.png",
-							children : [],
-							type: "campaign",
-							parent: {name: "Sub brand 4"}
-						},
-						{
-							name: "camp 4.2",
-							img: "",
-							children : [],
-							type: "campaign",
-							parent: {name: "Sub brand 4"}
-						},
-						{
-							name: "camp 4.3",
-							img: "/img/icons/HEART ICON.png",
-							children : [],
-							type: "campaign",
-							parent: {name: "Sub brand 4"}
-						}
-					],
-					type: "subbrand"
-				},
-				{
-					name: "Sub brand 5",
-					img: "",
-					children : [],
-					type: "subbrand"
-				}
-			],
-		type: "brand"
-	}
-
-	// is this the correct naming scheme? eg "Nestle" -> "Nespreso UK" -> "Nespresso Connoisseurship..."
-	const masterBrand = {name:"Nestle", subBrands:brandTree.children}	// get this manually later? Unsure of how much I should add in plumbing
-	const [curSubBrand, setCurSubBrand] = useState(filters.brand2)
-	const [curCampaign, setCurCampaign] = useState(filters.campaign) 
+	const [curMaster, setCurMaster] = useState({id:TEST_BRAND, name:"Nestle"})	// assume master brand is passed in from page - FIX THIS LATER
+	const [curSubBrand, setCurSubBrand] = useState(null)
+	const [curCampaign, setCurCampaign] = useState(null)
+	const [curPeriod, setCurPeriod] = useState(null)
 	
 	return (		
 		<div className='flex-row impactOverview-filters-and-account' id={"impactOverview-filters-and-account-"+size}>
-			<Filters masterBrand={masterBrand} curSubBrand={curSubBrand} setCurSubBrand={setCurSubBrand} curCampaign={curCampaign} setCurCampaign={setCurCampaign} brandTree={brandTree} filters={filters}/>
-			<Account />
+			<Filters masterBrand={curMaster} curSubBrand={curSubBrand} setCurSubBrand={setCurSubBrand} curCampaign={curCampaign} setCurCampaign={setCurCampaign}/>
+			<DateFilter />
+			<Account curMaster={curMaster} curSubBrand={curSubBrand} curCampaign={curCampaign} />
 		</div>
 	)
 }

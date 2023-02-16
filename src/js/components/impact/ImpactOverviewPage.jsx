@@ -11,6 +11,7 @@ import { getLogo, space, stopEvent, uniq } from '../../base/utils/miscutils';
 import { modifyPage } from '../../base/plumbing/glrouter';
 import DynImg from '../../base/components/DynImg';
 import NavBars from './ImpactNavBars';
+import ImpactLoginCard from './ImpactLogin';
 import { GLCard, GLHorizontal, GLVertical, GLModalCard, GLModalBackdrop } from './GLCards';
 import FilterAndAccountTopBar from './FilterAndAccountTopBar'
 import { fetchCharity } from '../pages/MyCharitiesPage'
@@ -32,6 +33,8 @@ import ListLoad from '../../base/components/ListLoad';
  */
 
  import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIGN, TEST_CAMPAIGN_OBJ} from './TestValues';
+import Login from '../../base/youagain';
+import AccountMenu from '../../base/components/AccountMenu';
 
 export class ImpactFilters {
 	agency;
@@ -74,6 +77,15 @@ const ImpactOverviewPage = () => {
 		width : isNavbarOpen ? "270px" : "90px",	// shrink navbar
 	})
 
+
+	// if not logged in, use may select GreenDash instead.
+	// set to true to avoid this choice being made on page refresh if logged in 
+	let [impactChosen, setImpactChosen] = useState(true)
+	// if not logged in AND impact hasn't been chosen yet...
+	if(!Login.isLoggedIn() || !impactChosen) {
+		return <ImpactLoginCard choice={impactChosen} setChoice={setImpactChosen} masterBrand={TEST_BRAND_OBJ}/>
+	}
+
 	return (
 	<>
 		<div className="navbars-overlay">
@@ -100,6 +112,7 @@ const ImpactOverviewPage = () => {
 									<img className='w-50' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 								</div>
 							</div>
+							<GLModalCard id="hero-card-modal" />
 						</GLCard>
 
 						{/* bottom left corner */}
@@ -152,6 +165,7 @@ const ImpactOverviewPage = () => {
 									<ContentList/>
 								</div>
 							</GLCard>
+							<GLModalCard id="ads-for-good-modal" />
 						</GLHorizontal>
 						
 						{/* bottom right corner */}
