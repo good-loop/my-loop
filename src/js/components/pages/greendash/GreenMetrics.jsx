@@ -107,7 +107,7 @@ const ShareDash = () => {
 	let pvItem = getDataItem({type, id:filterId, status:KStatus.PUBLISHED});
 	let shareName = filterMode+" "+((pvItem.value && pvItem.value.name) || filterId);
 	const showEmails = DataStore.getUrlValue("listemails");
-	return <ShareWidget className="dev-link" hasButton name={"Dashboard for "+shareName} shareId={shareId} hasLink noEmails={!showEmails} />;
+	return <ShareWidget className="position-absolute" style={{zIndex:10, right:'1.5em', top:'1.5em'}} hasButton name={"Dashboard for "+shareName} shareId={shareId} hasLink noEmails={!showEmails} />;
 }
 
 const GreenMetrics2 = ({}) => {

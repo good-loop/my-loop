@@ -93,7 +93,7 @@ const QuartersCard = ({baseFilters}) => {
 		...baseFilters,
 		start: isoDate(quarter.start),
 		end: isoDate(quarter.end),
-		breakdown: 'total{"co2":"sum"}',
+		breakdown: 'total{"countco2":"sum"}',
 	}));
 	// add it into chartProps
 	pvsBuckets.forEach((pvBuckets, i) => {
@@ -108,7 +108,9 @@ const QuartersCard = ({baseFilters}) => {
 			return; // no data for this quarter
 		}
 		// Are we in carbon-per-mille mode?
-		if (isPer1000()) buckets = emissionsPerImpressions(buckets);
+		if (isPer1000()) {
+			buckets = emissionsPerImpressions(buckets);
+		}
 
 		// Display kg or tonnes?
 		let thisCarbon = getSumColumn(buckets, 'co2');
@@ -145,7 +147,7 @@ const CampaignCard = ({baseFilters}) => {
 	const pvChartData = getCarbon({
 		...baseFilters,
 		breakdown: [
-			'campaign{"co2":"sum"}',
+			'campaign{"countco2":"sum"}',
 		],
 		name:"campaign-chartdata",
 	});
@@ -155,10 +157,12 @@ const CampaignCard = ({baseFilters}) => {
 	let vbyx = {};
 	let labels = [];
 	let values = [];
+	
+	const per1000 = isPer1000();
 
 	if (dataValue) {
 		let buckets = dataValue.by_campaign.buckets;
-		if (isPer1000()) {
+		if (per1000) {
 			buckets = emissionsPerImpressions(buckets);
 		}
 
@@ -185,9 +189,8 @@ const CampaignCard = ({baseFilters}) => {
 				[...acc, {name:val.name, id:val.id}], 
 				[{name:"Other", id:"Other"}])
 		}
-
 		// if error occured with names OR no campaigns were found...
-		if(mapping.length != Object.keys(vbyx).length){
+		if(mapping.length != Object.keys(vbyx).length && !per1000){
 			// default to using IDs & Co2
 			labels = Object.keys(vbyx)
 			values = Object.values(vbyx);
