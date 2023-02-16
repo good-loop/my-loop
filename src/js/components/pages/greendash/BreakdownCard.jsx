@@ -156,7 +156,8 @@ const FormatSubcard = ({ data, minimumPercentLabeled = 1, chartType = 'pie' }) =
 					legend: { display: false },
 					tooltip: { callbacks: { label: (ctx) => `${printer.prettyNumber(ctx.raw)} ${unit} CO2` } },
 				},
-				scales: { x: { ticks: { callback: (v) => `${Math.round(v)} ${unitShort}` } } },
+				// scales: { x: { ticks: { callback: (v) => `${Math.round(v)} ${unitShort}` } } },
+				scales: { x: { ticks: { callback: v => v+' '+unitShort, precision: 2 } } },
 			},
 		});
 	}, [data]);
@@ -236,7 +237,8 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1, chartType = '
 					legend: { display: false },
 					tooltip: { callbacks: { label: (ctx) => `${printer.prettyNumber(ctx.raw)} ${unit} CO2` } },
 				},
-				scales: { x: { ticks: { callback: (v) => `${Math.round(v)} ${unitShort}` } } },
+				// scales: { x: { ticks: { callback: (v) => `${Math.round(v)} ${unitShort}` } } },
+				scales: { x: { ticks: { callback: v => v+' '+unitShort, precision: 2 } } },
 			},
 		});
 	}, [osBuckets]);
@@ -304,7 +306,8 @@ const DeviceSubcard = ({ data: osTable }) => {
 					legend: { display: false },
 					tooltip: { callbacks: { label: (ctx) => `${printer.prettyNumber(ctx.raw)} ${unit} CO2` } },
 				},
-				scales: { x: { ticks: { callback: (v) => `${Math.round(v)} ${unitShort}` } } },
+				// scales: { x: { ticks: { callback: (v) => `${Math.round(v)} ${unitShort}` } } },
+				scales: { x: { ticks: { callback: v => v+' '+unitShort, precision: 2 } } },
 			},
 		});
 	}, [osTable]);
