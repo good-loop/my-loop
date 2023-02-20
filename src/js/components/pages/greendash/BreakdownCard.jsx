@@ -319,7 +319,7 @@ const DeviceSubcard = ({ data: osTable }) => {
 }; // ./DeviceSubCard
 
 /** A table cell with a title/tooltip for cases where the value is likely to display truncated */
-const CellWithTitle = (value) => <span title='value'>{value}</span>;
+const CellWithTitle = (value) => <span title={value}>{value}</span>;
 
 /**
  * Table of impressions and carbon per tag
@@ -333,6 +333,7 @@ const TagSubcard = ({ data }) => {
 	const tags = List.hits(pvTags.value) || [];
 	const tag4id = {};
 	tags.forEach((tag) => (tag4id[tag.id] = tag));
+	console.log('tag4id',tag4id);
 
 	// {adid, count, totalEmissions, baseEmissions, 'creativeEmissions', 'supplyPathEmissions'}
 	let columns = [
@@ -421,8 +422,8 @@ const BreakdownCard = ({ baseFilters }) => {
 
 	// Are we in carbon-per-mille mode?
 	if (isPer1000()) {
-		if (data) data = emissionsPerImpressions(data, 500);
-		if (techData) techData = emissionsPerImpressions(techData, 500);
+		if (data) data = emissionsPerImpressions(data, -1);
+		if (techData) techData = emissionsPerImpressions(techData, -1);
 	}
 
 	let subcard;

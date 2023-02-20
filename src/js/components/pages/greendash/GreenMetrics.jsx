@@ -90,7 +90,7 @@ const CTACard = ({}) => {
 
 // ONLY SHOWS EMAIL LIST WITH "listemails" FLAG SET
 // ONLY APPEARS WITH "shareables" OR DEBUG FLAG SET
-const ShareDash = () => {
+export const ShareDash = ({style, className}) => {
 	// not-logged in cant share and pseudo users can't reshare
 	if ( ! Login.getId() || Login.getId().endsWith("pseudo")) {
 		return null;
@@ -107,7 +107,7 @@ const ShareDash = () => {
 	let pvItem = getDataItem({type, id:filterId, status:KStatus.PUBLISHED});
 	let shareName = filterMode+" "+((pvItem.value && pvItem.value.name) || filterId);
 	const showEmails = DataStore.getUrlValue("listemails");
-	return <ShareWidget className="position-absolute" style={{zIndex:10, right:'1.5em', top:'1.5em'}} hasButton name={"Dashboard for "+shareName} shareId={shareId} hasLink noEmails={!showEmails} />;
+	return <ShareWidget className={className} style={style} hasButton name={"Dashboard for "+shareName} shareId={shareId} hasLink noEmails={!showEmails} />;
 }
 
 const GreenMetrics2 = ({}) => {
@@ -241,11 +241,11 @@ const GreenMetrics2 = ({}) => {
 	return (
 		<>
 			<OverviewWidget period={period} data={pvChartTotalValue?.by_total.buckets} prob={samplingProb} />
-			{<PropControl inline
+			<PropControl inline
 				type="toggle" prop="emode" dflt="total" label="Show emissions:"
 				left={{label: 'Total', value: 'total', colour: 'primary'}}
 				right={{label: 'Per 1000 impressions', value: 'per1000', colour: 'primary'}}
-			/>}
+			/>
 			<Row className="card-row">
 				<Col xs="12" sm="8" className="flex-column">
 					<TimeSeriesCard {...commonProps} data={pvChartDatalValue?.by_time.buckets} noData={noData} />
@@ -332,7 +332,6 @@ const GreenMetrics = ({}) => {
 			<Container fluid>
 				{agencyIds ? <>
 					<GreenDashboardFilters brandOnly={pseudoUser} />
-					<ShareDash/>
 					<GreenMetrics2 />
 				</> : <Misc.Loading text="Checking your access..." />}
 			</Container>
