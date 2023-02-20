@@ -107,12 +107,22 @@ const FormatSubcard = ({ data, minimumPercentLabeled = 1, chartType = 'pie' }) =
 		const formatToCarbon = Object.keys(tagFormats).reduce((mapping, id) => {
 			const format = tagFormats[id] || 'Unset';
 			if (mapping.hasOwnProperty(format)) {
-				mapping[format] += tagEm[id];
+				mapping[format] = { co2: mapping[format].co2 + tagEm[id], occurs: mapping[format].occurs + 1 };
 			} else {
-				mapping[format] = tagEm[id];
+				mapping[format] = { co2: tagEm[id], occurs: 1 };
 			}
 			return mapping;
 		}, {});
+
+		const formatToCarbonSum = {};
+		Object.entries(formatToCarbon).forEach(([k, v]) => {
+			formatToCarbonSum[k] = v.co2;
+		});
+
+		const formatToCarbonAverage = {};
+		Object.entries(formatToCarbon).forEach(([k, v]) => {
+			formatToCarbonAverage[k] = v.co2 / v.occurs;
+		});
 
 		// begin defining chart
 		let unit = 'kg';
@@ -128,12 +138,12 @@ const FormatSubcard = ({ data, minimumPercentLabeled = 1, chartType = 'pie' }) =
 
 		setPieChartProps({
 			data: {
-				labels: Object.keys(formatToCarbon),
+				labels: Object.keys(formatToCarbonSum),
 				datasets: [
 					{
 						label: 'Kg CO2',
 						backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
-						data: Object.values(formatToCarbon),
+						data: Object.values(formatToCarbonSum),
 					},
 				],
 			},
@@ -142,12 +152,12 @@ const FormatSubcard = ({ data, minimumPercentLabeled = 1, chartType = 'pie' }) =
 
 		setBarChartProps({
 			data: {
-				labels: Object.keys(formatToCarbon),
+				labels: Object.keys(formatToCarbonAverage),
 				datasets: [
 					{
 						label: 'Kg CO2',
 						backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
-						data: Object.values(formatToCarbon),
+						data: Object.values(formatToCarbonAverage),
 					},
 				],
 			},
@@ -158,7 +168,7 @@ const FormatSubcard = ({ data, minimumPercentLabeled = 1, chartType = 'pie' }) =
 					tooltip: { callbacks: { label: (ctx) => `${printer.prettyNumber(ctx.raw)} ${unit} CO2` } },
 				},
 				// scales: { x: { ticks: { callback: (v) => `${Math.round(v)} ${unitShort}` } } },
-				scales: { x: { ticks: { callback: v => v+' '+unitShort, precision: 2 } } },
+				scales: { x: { ticks: { callback: (v) => v + ' ' + unitShort, precision: 2 } } },
 			},
 		});
 	}, [data]);
@@ -239,7 +249,7 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1, chartType = '
 					tooltip: { callbacks: { label: (ctx) => `${printer.prettyNumber(ctx.raw)} ${unit} CO2` } },
 				},
 				// scales: { x: { ticks: { callback: (v) => `${Math.round(v)} ${unitShort}` } } },
-				scales: { x: { ticks: { callback: v => v+' '+unitShort, precision: 2 } } },
+				scales: { x: { ticks: { callback: (v) => v + ' ' + unitShort, precision: 2 } } },
 			},
 		});
 	}, [osBuckets]);
@@ -269,7 +279,6 @@ const DeviceSubcard = ({ data: osTable }) => {
 
 	useEffect(() => {
 		// TODO refactor to share code with CompareCardEmissions.jsx
-		console.log('osTable', osTable);
 		const breakdownByOS = getBreakdownByWithCount(osTable, ['co2', 'count'], 'os');
 		const totalCO2 = Object.values(breakdownByOS).reduce((acc, v) => acc + v, 0);
 
@@ -309,7 +318,7 @@ const DeviceSubcard = ({ data: osTable }) => {
 					tooltip: { callbacks: { label: (ctx) => `${printer.prettyNumber(ctx.raw)} ${unit} CO2` } },
 				},
 				// scales: { x: { ticks: { callback: (v) => `${Math.round(v)} ${unitShort}` } } },
-				scales: { x: { ticks: { callback: v => v+' '+unitShort, precision: 2 } } },
+				scales: { x: { ticks: { callback: (v) => v + ' ' + unitShort, precision: 2 } } },
 			},
 		});
 	}, [osTable]);
@@ -335,7 +344,6 @@ const TagSubcard = ({ data }) => {
 	const tags = List.hits(pvTags.value) || [];
 	const tag4id = {};
 	tags.forEach((tag) => (tag4id[tag.id] = tag));
-	console.log('tag4id',tag4id);
 
 	// {adid, count, totalEmissions, baseEmissions, 'creativeEmissions', 'supplyPathEmissions'}
 	let columns = [

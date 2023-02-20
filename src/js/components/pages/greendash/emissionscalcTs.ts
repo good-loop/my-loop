@@ -8,10 +8,13 @@ type BreakdownByX = {
 	[key: string]: {
 		count: number;
 		co2: number;
-		repeat?: number;
+		occurs?: number;
 	};
 };
 
+/**
+ * Compress small rows into other by count instead of co2
+ */
 export const getCompressedBreakdownWithCount = ({
 	breakdownByX,
 	minFraction = 0.05,
@@ -42,14 +45,14 @@ export const getCompressedBreakdownWithCount = ({
 		breakdownByOSGroup2[k] = {
 			count: (breakdownByOSGroup2[k]?.count || 0) + v.count,
 			co2: (breakdownByOSGroup2[k]?.co2 || 0) + v.co2,
-			repeat: (breakdownByOSGroup2[k]?.repeat || 0) + 1,
+			occurs: (breakdownByOSGroup2[k]?.occurs || 0) + 1,
 		};
 	});
 	console.log('breakdownByOSGroup2', breakdownByOSGroup2);
 	// get average of repeated keys
 	let breakdownByOSGroupOutput: { [key: string]: number } = {};
 	Object.entries(breakdownByOSGroup2).forEach(([k, v]) => {
-		breakdownByOSGroupOutput[k] = v.co2 / v.repeat!;
+		breakdownByOSGroupOutput[k] = v.co2 / v.occurs!;
 	});
 
 	return breakdownByOSGroupOutput;
