@@ -6,6 +6,8 @@ import Misc from '../../base/components/Misc';
 import C from '../../C';
 import { openAndPopulateModal } from './GLCards';
 import ListLoad from '../../base/components/ListLoad';
+import DataStore from '../../base/plumbing/DataStore';
+import { goto } from '../../base/plumbing/glrouter';
 
 /**
  * DEBUG OBJECTS
@@ -31,26 +33,13 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 	 * @returns 
 	 */
 	// change breadcrumb trail to reflect filters selected
-	const filterChange = (item, wrapperItem) => {
+	const filterChange = ({brand, campaign}) => {
 
-		// only master brands have the 'charities' prop
-		if(item.charities) {
-			setCurSubBrand(null)
-			setCurCampaign(null)
-			return
+		if (campaign) {
+			goto("/iview/campaign/" + campaign.id);
+		} else if (brand) {
+			goto("/iview/brand/" + brand.id)
 		}
-		// if it's brand but not a master brand, it will have a parentId 
-		else if(item.parentId){
-			item.type = C.TYPES.vertiser
-			setCurSubBrand(item)
-			setCurCampaign(null)
-			return
-		}
-		// if it's none of the above, it must be a campaign
-		wrapperItem.type = C.TYPES.vertiser
-		item.type = C.TYPES.Campaign
-		setCurSubBrand(wrapperItem)
-		setCurCampaign(item)
 	}
 
 	/**
@@ -66,7 +55,7 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 		let thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='impact-link-placeholder-thumbnail' />
 		
 		return <>
-			<div className='brand-campaign-set'>
+			<div className='brand-campaign-set' onClick={() => filterChange({campaign:item})}>
 				{thumbnail}
 				<div className="info">
 					<div className="name">{name}</div>
@@ -101,8 +90,7 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 			<ListLoad hideTotal status={status}
 				type={C.TYPES.Campaign}
 				q={SearchQuery.setProp(null, "vertiser", id).query}
-				// also pass in current brand when user clicks nested campaign
-				onClickWrapper={(event, innerItem) => filterChange(innerItem, item)}
+				unwrapped
 				itemClassName={campaignClasses}
 				ListItem={CampaignListItem}
 				 />
@@ -116,7 +104,7 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 
 		return <>
 			<div className='brand-campaign-set'>
-				<div className="info">
+				<div className="info" onClick={() => filterChange({brand:item})}>
 					{thumbnail}
 					<div className="name">{name}</div>
 					{button || ''}
@@ -136,15 +124,15 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 			<div className='' id="filter-modal-container">
 				{/* master brand & its campaigns */}
 				<ListLoad status={KStatus.PUBLISHED} hideTotal type={C.TYPES.Advertiser}
+					unwrapped
 					q={SearchQuery.setProp(null, "id", vertiser).query} 
-					onClickWrapper={(event, item) => filterChange(item)}
 					ListItem={FilterListItem} itemClassName={classes}/>
 
 				{/* sub brands & their campaigns */}
 				<ListLoad status={KStatus.PUBLISHED} hideTotal type={C.TYPES.Advertiser}
+					unwrapped
             		q={SearchQuery.setProp(null, "parentId", vertiser).query} 
-					ListItem={FilterListItem} itemClassName={classes}
-					onClickWrapper={(event, item) => filterChange(item)}/>
+					ListItem={FilterListItem} itemClassName={classes}/>
 			</div>
 		)
 		openAndPopulateModal({id:"left-half", content:modalContent, title:"(my header should have a unique class)", prioritized:true, headerClassName:"oofowmybones"})
