@@ -298,7 +298,7 @@ const MapCard = ({ baseFilters, per1000 }) => {
 		);
 		// Are we in carbon-per-mille mode?
 		if (per1000) {
-			cleanedLocnBuckets = emissionsPerImpressions(cleanedLocnBuckets)
+			cleanedLocnBuckets = emissionsPerImpressions(cleanedLocnBuckets, -1)
 		}
 
 		// assign colours

@@ -241,11 +241,11 @@ const GreenMetrics2 = ({}) => {
 	return (
 		<>
 			<OverviewWidget period={period} data={pvChartTotalValue?.by_total.buckets} prob={samplingProb} />
-			{<PropControl inline
+			<PropControl inline
 				type="toggle" prop="emode" dflt="total" label="Show emissions:"
 				left={{label: 'Total', value: 'total', colour: 'primary'}}
 				right={{label: 'Per 1000 impressions', value: 'per1000', colour: 'primary'}}
-			/>}
+			/>
 			<Row className="card-row">
 				<Col xs="12" sm="8" className="flex-column">
 					<TimeSeriesCard {...commonProps} data={pvChartDatalValue?.by_time.buckets} noData={noData} />
