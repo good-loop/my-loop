@@ -1,14 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Collapse, Nav, Navbar, NavbarToggler, NavItem } from 'reactstrap';
 import AccountMenu from '../../../base/components/AccountMenu';
-import Icon from '../../../base/components/Icon';
-import LinkOut from '../../../base/components/LinkOut';
-import Logo from '../../../base/components/Logo';
-import Campaign from '../../../base/data/Campaign';
 import KStatus from '../../../base/data/KStatus';
 import { getDataItem } from '../../../base/plumbing/Crud';
 import Roles from '../../../base/Roles';
 import DataStore from '../../../base/plumbing/DataStore';
+import Login from '../../../base/youagain';
 
 import { encURI, isMobile, space, toTitleCase } from '../../../base/utils/miscutils';
 import C from '../../../C';
@@ -25,7 +22,13 @@ const A = C.A;
  */
 const GreenNavBar = ({active}) => {
 	const [isOpen, setIsOpen] = useState(false)
+	const [pseudoUser, setPseudoUser] = useState(false);
 	const toggle = () => setIsOpen(!isOpen);
+
+	useEffect(() => {
+		const userId = Login.getId();
+		if (userId && userId.endsWith('@pseudo')) setPseudoUser(true);
+	}, [])
 
 	// HACK: a (master) campaign?
 	let campaignId = DataStore.getUrlValue('campaign');
@@ -52,7 +55,9 @@ const GreenNavBar = ({active}) => {
 	<Navbar dark expand="md" id="green-navbar" className={space('flex-column', 'justify-content-start', isOpen && 'mobile-open')}>
 		<NavbarToggler onClick={toggle} />
 		<Nav navbar vertical>
-			<img className="logo" src="/img/logo-green-dashboard.svg" />
+			<a href={pseudoUser ? '/' : '/greendash'}>
+				<img className="logo" src="/img/logo-green-dashboard.svg" />
+			</a>
 			<span className="boosted text-center">
 				BOOSTED BY <img src="/img/gl-logo/external/scope3-logo.wb.svg" className="scope3-logo ml-1" />
 			</span>
