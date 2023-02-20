@@ -12,7 +12,8 @@ import SearchQuery from '../../../base/searchquery';
 import { isoDate } from '../../../base/utils/miscutils';
 import C from '../../../C';
 import { dataColours, getPeriodQuarter, GreenCard, GreenCardAbout, ModeButton, printPeriod, TONNES_THRESHOLD } from './dashutils';
-import { emissionsPerImpressions, campaignIDToCampaignName, getCarbon, getCompressedBreakdown, getSumColumn, getCompressedBreakdownWithCount } from './emissionscalc';
+import { emissionsPerImpressions, campaignIDToCampaignName, getCarbon, getCompressedBreakdown, getSumColumn } from './emissionscalc';
+import { getCompressedBreakdownWithCount } from './emissionscalcTs';
 
 import { isPer1000 } from './GreenMetrics';
 import { assert } from '../../../base/utils/assert';
@@ -163,16 +164,13 @@ const CampaignCard = ({baseFilters}) => {
 	if (dataValue) {
 		let buckets = dataValue.by_campaign.buckets;
 		if (per1000) {
-			console.log('before', buckets);
 			buckets = emissionsPerImpressions(buckets);
-			console.log('after', buckets);
 		}
 
 		let breakdownByX = {};
 		buckets.forEach(row => breakdownByX[row.key] = {'co2': row.co2, 'count': row.count});
 
 		vbyx = getCompressedBreakdownWithCount({breakdownByX});
-		console.log('vbyx', per1000, vbyx);
 		
 		// reformat ids we want to find names of into a bucket format (remove 'other' too)
 		const idsToNames = Object.keys(vbyx).filter(key => key != "Other");

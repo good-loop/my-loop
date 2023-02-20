@@ -328,10 +328,10 @@ const GreenMetrics = ({}) => {
 	);
 
 	return (
-		<div className="green-subpage green-metrics">			
+		<div className="green-subpage green-metrics">
 			<Container fluid>
 				{agencyIds ? <>
-					<GreenDashboardFilters brandOnly={pseudoUser} />
+					<GreenDashboardFilters pseudoUser={pseudoUser} />
 					<GreenMetrics2 />
 				</> : <Misc.Loading text="Checking your access..." />}
 			</Container>
