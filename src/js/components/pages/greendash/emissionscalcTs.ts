@@ -24,7 +24,6 @@ export const getCompressedBreakdownWithCount = ({
 	minFraction: number;
 	osTypes: any | null;
 }): { [key: string]: number } => {
-	console.log('breakdownByX', breakdownByX);
 	let breakdownByOSGroup1: BreakdownByX = {} as BreakdownByX;
 	const total = sum(Object.values(breakdownByX).map((val) => val.count));
 	Object.entries(breakdownByX).forEach(([k, v]) => {
@@ -35,7 +34,6 @@ export const getCompressedBreakdownWithCount = ({
 			count: (breakdownByOSGroup1[group]?.count || 0) + v.count,
 		};
 	});
-	console.log('breakdownByOSGroup1', breakdownByOSGroup1);
 	// compress small rows into other
 	let breakdownByOSGroup2: BreakdownByX = {} as BreakdownByX;
 	Object.entries(breakdownByOSGroup1).forEach(([k, v]) => {
@@ -48,7 +46,6 @@ export const getCompressedBreakdownWithCount = ({
 			occurs: (breakdownByOSGroup2[k]?.occurs || 0) + 1,
 		};
 	});
-	console.log('breakdownByOSGroup2', breakdownByOSGroup2);
 	// get average of repeated keys
 	let breakdownByOSGroupOutput: { [key: string]: number } = {};
 	Object.entries(breakdownByOSGroup2).forEach(([k, v]) => {
@@ -81,7 +78,6 @@ export const getBreakdownByWithCount = (buckets: Object[], keyNamesToSum: string
 	let totalByX: { [key: string]: Object } = {};
 	for (let i = 0; i < buckets.length; i++) {
 		const row: BreakdownRow = buckets[i];
-		console.log('row', row);
 		const breakdownKey = row[bi];
 		if (!breakdownKey) continue;
 		keyNamesToSum.forEach((keyName) => {
@@ -90,8 +86,8 @@ export const getBreakdownByWithCount = (buckets: Object[], keyNamesToSum: string
 				return;
 			}
 		});
-		totalByX[breakdownKey] = keyNamesToSum.reduce((acc: {[key: string]: any}, cur) => {
-			acc[cur] = {...row}[cur];
+		totalByX[breakdownKey] = keyNamesToSum.reduce((acc: { [key: string]: any }, cur) => {
+			acc[cur] = { ...row }[cur];
 			return acc;
 		}, {});
 	}
