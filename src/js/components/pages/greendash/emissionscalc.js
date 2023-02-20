@@ -88,6 +88,35 @@ export const getCompressedBreakdown = ({ breakdownByX, minFraction = 0.05, osTyp
 };
 
 /**
+ * Merge same-key rows and compress small rows into "Other". Just like getCompressedBreakdown but will handle count instead of just co2.
+ * @param {Object} p
+ * @param {{'count': number, 'co2': number}} p.breakdownByX
+ * @param {?number} p.minFraction
+ * @returns {Object} {key: number}
+ */
+export const getCompressedBreakdownWithCount = ({ breakdownByX, minFraction = 0.05, osTypes }) => {
+	let breakdownByOSGroup1 = {};
+	const total = sum(Object.values(breakdownByX).map((val) => val.count));
+	Object.entries(breakdownByX).forEach(([k, v]) => {
+		let osType = osTypes && osTypes[k];
+		let group = osType?.name || k;
+		breakdownByOSGroup1[group] = {
+			co2: (breakdownByOSGroup1[group]?.co2 || 0) + v.co2,
+			count: (breakdownByOSGroup1[group]?.count || 0) + v.count,
+		};
+	});
+	// compress small rows into other
+	let breakdownByOSGroup2 = {};
+	Object.entries(breakdownByOSGroup1).forEach(([k, v]) => {
+		if (v.count / total < minFraction) {
+			k = 'Other';
+		}
+		breakdownByOSGroup2[k] = (breakdownByOSGroup2[k] || 0) + v.co2;
+	});
+	return breakdownByOSGroup2;
+};
+
+/**
  *
  * @param {Object[][]} buckets
  * @returns {Object} {breakdown-key: sum-for-key}
