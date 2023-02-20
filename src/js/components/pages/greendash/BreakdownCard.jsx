@@ -12,6 +12,7 @@ import { emissionsPerImpressions, getBreakdownBy, getCompressedBreakdown, getSum
 import { isPer1000 } from './GreenMetrics';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import '../../../../style/greendash-breakdown-card.less';
+import { getBreakdownByWithCount, getCompressedBreakdownWithCount } from './emissionscalcTs';
 
 /** Classify OS strings seen in our data
  *
@@ -268,7 +269,8 @@ const DeviceSubcard = ({ data: osTable }) => {
 
 	useEffect(() => {
 		// TODO refactor to share code with CompareCardEmissions.jsx
-		const breakdownByOS = getBreakdownBy(osTable, 'co2', 'os');
+		console.log('osTable', osTable);
+		const breakdownByOS = getBreakdownByWithCount(osTable, ['co2', 'count'], 'os');
 		const totalCO2 = Object.values(breakdownByOS).reduce((acc, v) => acc + v, 0);
 
 		if (totalCO2 === 0) {
@@ -277,7 +279,7 @@ const DeviceSubcard = ({ data: osTable }) => {
 		}
 
 		// compress by OS group
-		const breakdownByOS2 = getCompressedBreakdown({ breakdownByX: breakdownByOS, osTypes });
+		const breakdownByOS2 = getCompressedBreakdownWithCount({ breakdownByX: breakdownByOS, osTypes });
 		let data = Object.values(breakdownByOS2);
 		const labels = Object.keys(breakdownByOS2); // ["Windows", "Mac"];
 
@@ -422,8 +424,8 @@ const BreakdownCard = ({ baseFilters }) => {
 
 	// Are we in carbon-per-mille mode?
 	if (isPer1000()) {
-		if (data) data = emissionsPerImpressions(data, -1);
-		if (techData) techData = emissionsPerImpressions(techData, -1);
+		if (data) data = emissionsPerImpressions(data);
+		if (techData) techData = emissionsPerImpressions(techData);
 	}
 
 	let subcard;
