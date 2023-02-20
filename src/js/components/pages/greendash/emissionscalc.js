@@ -214,6 +214,8 @@ export const getCampaigns = (buckets) => {
 
 
 /**
+ * @deprecated Shift to ImpactDebits
+ * 
  * @param {Object} p
  * @param {!Campaign} p.campaign If `campaign` is a master, then this function WILL look up sub-campaigns and include them.
  * @param {?Object} p.period {start, end}
