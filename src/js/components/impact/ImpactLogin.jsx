@@ -11,7 +11,7 @@ import { modifyPage } from '../../base/plumbing/glrouter';
 import DynImg from '../../base/components/DynImg';
 import NavBars from './ImpactNavBars';
 import { GLCard, GLHorizontal, GLVertical, GLModalCard, GLModalBackdrop } from './GLCards';
-import FilterAndAccountTopBar from './FilterAndAccountTopBar'
+import FilterAndAccountTopBar from './ImpactFilterOptions'
 import { fetchCharity } from '../pages/MyCharitiesPage'
 import NGO from '../../base/data/NGO';
 import CharityLogo from '../CharityLogo';

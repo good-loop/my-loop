@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import BasicAccountPage from '../../base/components/AccountPageWidgets';
 import KStatus from '../../base/data/KStatus';
 import SearchQuery from '../../base/searchquery';
 import { getId } from '../../base/data/DataClass';
 import Misc from '../../base/components/Misc';
-import Login from '../../base/youagain';
-import {LoginLink, RegisterLink, LogoutLink} from '../../base/components/LoginWidget';
 import C from '../../C';
-import PropControlPeriod from '../../base/components/PropControls/PropControlPeriod'
 import { openAndPopulateModal } from './GLCards';
 import ListLoad from '../../base/components/ListLoad';
 
@@ -16,25 +12,18 @@ import ListLoad from '../../base/components/ListLoad';
  */
 
 import { TEST_BRAND } from './TestValues';
-import AccountMenu from '../../base/components/AccountMenu';
-import { assert } from '../../base/utils/assert';
 
 const A = C.A;
 
-
-
-
 /**
- * container for breadcrumb filter + top-right account options
+ * container for breadcrumb filter 
  * 
  * @param {Object} p
  * @param {?string} p.active
  * @returns 
  */
-const Filters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurCampaign}) => {
+const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurCampaign}) => {
 	
-	console.log("?????? filters starting to be defined...")
-
 	/**
 	 * 
 	 * @param {object} item the object filter the user has just selected
@@ -73,7 +62,6 @@ const Filters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurC
 		const id = getId(item);
 		let name = nameFn ? nameFn(item, id) : item.name || item.text || id || '';
 		if (name.length > 280) name = name.slice(0, 280);
-		const status = item.status || "";
 		
 		let thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='impact-link-placeholder-thumbnail' />
 		
@@ -101,20 +89,26 @@ const Filters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurC
 		if (name.length > 280) name = name.slice(0, 280);
 		const status = item.status || "";
 		
+		// is the current brands campaign dropdown expanded or closed?
 		const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
-		// campaigns that belong to this current brand
+		// classes of campaigns that belong to this current brand
 		const campaignClasses = `filter-button campaign-button ListItem btn-default btn btn-outline-secondary ${KStatus.PUBLISHED} btn-space`
-		const campaignsListItem = (<div id={"campaigns-"+item.id} className={ + isDropdownOpen ? "open" : "closed"}>
+		
+		// brand item with dropdowns into campaigns
+		const campaignsListItem = (
+		<div id={"campaigns-"+item.id} className={ + isDropdownOpen ? "open" : "closed"}>
 			<ListLoad hideTotal status={status}
 				type={C.TYPES.Campaign}
 				q={SearchQuery.setProp(null, "vertiser", id).query}
+				// also pass in current brand when user clicks nested campaign
 				onClickWrapper={(event, innerItem) => filterChange(innerItem, item)}
 				itemClassName={campaignClasses}
 				ListItem={CampaignListItem}
 				 />
 		</div>)
 
+		// get brands logo or get placeholder
 		let thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='impact-link-placeholder-thumbnail' />
 		
 		// dropdown toggle of above campaign ListLoad
@@ -167,7 +161,7 @@ const Filters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurC
 			<div id="filters">
 				<FilterButton content={masterBrand.name} />
 				<RightArrow /> 	
-				<FilterButton content={"All brands"} />
+				<FilterButton content={"All Brands"} />
 				<DropDownIcon />
 			</div>
 		)
@@ -195,85 +189,7 @@ const Filters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurC
 				<FilterButton content={curCampaign.name} />
 		</div>
 	)
-
 }
 
 
-const DateFilter = ({}) => {
-	let content = () => (<div><PropControlPeriod calendarFormat/></div>)
-	let onClick = () => openAndPopulateModal({id:"hero-card-modal", content:content, title:"(still need red bar here)", prioritized:true})
-	return (
-	<div id="date-filters">
-		<button className="filter-row filter-text" onClick={onClick}>Date</button>
-		<button className='filter-row filter-down-arrow' onClick={onClick}/>
-	</div>
-	)
-}
-
-const Account = ({curMaster, curSubBrand, curCampaign, customLogin}) => {
-
-	let [loggedIn, setIsLoggedIn] = useState(Login.isLoggedIn())
-	console.log("oh shit 1. ", loggedIn)
-	let type = curCampaign ? "campaign" : "brand"
-	let id = curCampaign ? curCampaign.id : (curSubBrand ? curSubBrand.id : curMaster.id)
-	let greenUrl = `https://my.good-loop.com/greendash?${type}=${id}` // add period later
-	
-
-	// was having issues with this modal updating until 
-	useEffect(() => {
-		setIsLoggedIn(Login.isLoggedIn());
-	}, [Login.isLoggedIn()])
-
-	let logoutButton = <a href='#' className="LogoutLink" onClick={() => {Login.logout(); setIsLoggedIn(false); }}>Log out</a>
-	let accountContent = <AccountMenu/>
-	
-	
-	// makes use of a temp href for Impact Dash as I'm currently not sure where the
-	const accountModalContent = () => (
-		<div id="impact-account-container" className="flex-collumn">
-			<a><div className='flex-row'><div className='impact-link-placeholder-thumbnail' /><span className="active">Impact Dashboard</span></div></a>
-			<a href={greenUrl}><div className='flex-row'><div className='impact-link-placeholder-thumbnail' /><span href={greenUrl} >Green Dashboard</span></div></a>
-			{accountContent}
-		</div>
-	)
-	
-	const accountOnClick = () => openAndPopulateModal({id:"ads-for-good-modal", content:accountModalContent, title:"(still need red bar here)", prioritized:true})
-	
-	return (
-		<div id="impact-overview-accounts">
-			<button id='share-icon' onClick={accountOnClick} />
-			<button id='account-icon' onClick={accountOnClick} />
-		</div>
-	)
-}
-
-/** For the given URL params, what filter mode should the user be in? */
-const defaultFilterMode = ({masterBrand, brand, campaign}) => {
-	if (campaign) return 'campaign';
-	if (brand) return 'brand';
-	if (masterBrand) return 'master';
-	throw new Error("no values for any of Impact-Overview filters found")
-}
-
-/**
- * 
- * @param {size} string on what page size to draw this element, currently "mobile" and "desktop" are the only expected values
- * @returns 
- */
-const FilterAndAccountTopBar = ({size}) => {
-
-	const [curMaster, setCurMaster] = useState({id:TEST_BRAND, name:"Nestle"})	// assume master brand is passed in from page - FIX THIS LATER
-	const [curSubBrand, setCurSubBrand] = useState(null)
-	const [curCampaign, setCurCampaign] = useState(null)
-	const [curPeriod, setCurPeriod] = useState(null)
-	
-	return (		
-		<div className='flex-row impactOverview-filters-and-account' id={"impactOverview-filters-and-account-"+size}>
-			<Filters masterBrand={curMaster} curSubBrand={curSubBrand} setCurSubBrand={setCurSubBrand} curCampaign={curCampaign} setCurCampaign={setCurCampaign}/>
-			<DateFilter />
-			<Account curMaster={curMaster} curSubBrand={curSubBrand} curCampaign={curCampaign} />
-		</div>
-	)
-}
-
-export default FilterAndAccountTopBar;
+export default ImpactBrandFilters;

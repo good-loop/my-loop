@@ -13,7 +13,7 @@ import DynImg from '../../base/components/DynImg';
 import NavBars from './ImpactNavBars';
 import ImpactLoginCard from './ImpactLogin';
 import { GLCard, GLHorizontal, GLVertical, GLModalCard, GLModalBackdrop } from './GLCards';
-import FilterAndAccountTopBar from './FilterAndAccountTopBar'
+import ImpactFilterOptions from './ImpactFilterOptions'
 import { fetchCharity } from '../pages/MyCharitiesPage'
 import NGO from '../../base/data/NGO';
 import CharityLogo from '../CharityLogo';
@@ -78,9 +78,9 @@ const ImpactOverviewPage = () => {
 	return (
 	<>
 		<div className="navbars-overlay">
+			{/*<ImpactFilterOptions size="thin"/>  {/*mobile horizontal filters topbar*/}
 			<NavBars active={"overview"} setIsNavbarOpen={setIsNavbarOpen}/>
-			<FilterAndAccountTopBar size="mobile"/>  {/*mobile topbar*/}
-			<FilterAndAccountTopBar size="desktop" setIsNavbarOpen={setIsNavbarOpen}/>  {/*widescreen topbar*/}
+			<ImpactFilterOptions size="wide" setIsNavbarOpen={setIsNavbarOpen}/>  {/*widescreen vertical filters topbar*/}
 		</div>
 		<div className='iview-positioner pr-md-5'>
 			<Container fluid className='iview-container'>

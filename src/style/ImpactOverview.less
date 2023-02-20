@@ -349,12 +349,36 @@
     }
 }
 
-#navbars-overlay {
-    position: fixed;
-    display: flex;
+// fixed navbar and filters on layer above page content
+.navbars-overlay {
+    @media (max-width: 768px) {
+        flex-direction: column;
+        justify-content: initial;
+
+        .impactOverview-filters-and-account {
+            flex-grow: unset;
+        }
+
+        #impact-overview-navbar-smallscreen{
+            padding: 0;
+
+            ul {
+                width: 100%;
+                justify-content: space-evenly;
+                background-color: white;
+            }
+
+            li {
+                width: 33%;
+            }
+        }
+    }
+
 }
 
 
 #in-flow-navbar {
     height: 30px;
 }
+
+

@@ -18,15 +18,15 @@ const A = C.A;
 
 
 /**
- * Left hand nav bar + top-right account menu
+ * Verical navbar found on wide sreens
  * 
- * @param {Object} p
- * @param {?string} p.active
+ * @param {active} String className of active page
+ * @param {isOpen} boolean is the navbar currently expanded or not?
+ * @param {navToggleAnimation} AnimatedValue mapping of CSS style states that animations will move between - defined within NavBars
+ * @param {function} toggle toggles the state of isOpen AND isNavbarOpen, a state used to mainain flow even with fixed navbars
  * @returns 
  */
 const SideNavBar = ({active, isOpen, navToggleAnimation, toggle}) => {
-
-	console.log("!!!", active)
 	return (		
 	<animated.div id='impact-overview-navbar-widescreen' className='navAnimationContainer' style = {{width: navToggleAnimation.width}}> 
 		<Navbar dark expand="md" id="impact-navbar" className={space('flex-column', 'justify-content-start', isOpen && 'mobile-open')} style={{width: navToggleAnimation.width}}>
@@ -64,9 +64,15 @@ const SideNavBar = ({active, isOpen, navToggleAnimation, toggle}) => {
 	</animated.div>);
 };
 
+
+/**
+ * Horizontal navbar found on small (phones likely) screens
+ * 
+ * @param {active} String className of active page
+ * @returns 
+ */
 const TopNavBar = ({active}) => {
 	return (<>
-
 		<Navbar dark expand="md" id="impact-overview-navbar-smallscreen" className={space('flex-column', 'justify-content-start')}>
 			<Nav horizontal>
 				<NavItem>
@@ -90,8 +96,9 @@ const TopNavBar = ({active}) => {
 
 const NavBars = ({active, setIsNavbarOpen}) => {
 
-	const [isOpen, setIsOpen] = useState(false)
+	const [isOpen, setIsOpen] = useState(false) // the navbar expanded or not?
 
+	// on change of isOpen, these values define CSS animations
 	const navToggleAnimation = useSpring({
 		width : isOpen ? "15rem" : "5rem",	// shrink navbar
 		display : isOpen ? "inline-block" : "none", // hide text
@@ -106,11 +113,9 @@ const NavBars = ({active, setIsNavbarOpen}) => {
 	}
 
 	return (
-		// animating the NavBar would throw errors, I believe due to NavBar loading after 'animated' expects an object
-		// wrapping the navbar in an overall div that we can animate fixed the issue
 		<>
 		<SideNavBar active={active} isOpen={isOpen} toggle={toggle} navToggleAnimation={navToggleAnimation}/>
-		<TopNavBar /> 
+		<TopNavBar active={active}/> 
 		</>
 	)
 }
