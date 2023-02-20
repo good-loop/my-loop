@@ -90,7 +90,7 @@ const CTACard = ({}) => {
 
 // ONLY SHOWS EMAIL LIST WITH "listemails" FLAG SET
 // ONLY APPEARS WITH "shareables" OR DEBUG FLAG SET
-const ShareDash = () => {
+export const ShareDash = ({style, className}) => {
 	// not-logged in cant share and pseudo users can't reshare
 	if ( ! Login.getId() || Login.getId().endsWith("pseudo")) {
 		return null;
@@ -107,7 +107,7 @@ const ShareDash = () => {
 	let pvItem = getDataItem({type, id:filterId, status:KStatus.PUBLISHED});
 	let shareName = filterMode+" "+((pvItem.value && pvItem.value.name) || filterId);
 	const showEmails = DataStore.getUrlValue("listemails");
-	return <ShareWidget className="position-absolute" style={{zIndex:10, right:'1.5em', top:'1.5em'}} hasButton name={"Dashboard for "+shareName} shareId={shareId} hasLink noEmails={!showEmails} />;
+	return <ShareWidget className={className} style={style} hasButton name={"Dashboard for "+shareName} shareId={shareId} hasLink noEmails={!showEmails} />;
 }
 
 const GreenMetrics2 = ({}) => {
@@ -332,7 +332,6 @@ const GreenMetrics = ({}) => {
 			<Container fluid>
 				{agencyIds ? <>
 					<GreenDashboardFilters brandOnly={pseudoUser} />
-					<ShareDash/>
 					<GreenMetrics2 />
 				</> : <Misc.Loading text="Checking your access..." />}
 			</Container>
