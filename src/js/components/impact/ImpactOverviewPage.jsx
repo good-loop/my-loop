@@ -60,10 +60,10 @@ const ImpactOverviewPage = () => {
 		setWindowTitle(windowTitle);
 	}, []);
 
+	// shrinking / expanding navbar animation values
 	let [isNavbarOpen, setIsNavbarOpen] = useState(false)
-
 	const navToggleAnimation = useSpring({
-		width : isNavbarOpen ? "270px" : "90px",	// shrink navbar
+		width : isNavbarOpen ? "270px" : "90px",	
 	})
 
 
@@ -82,116 +82,121 @@ const ImpactOverviewPage = () => {
 			<NavBars active={"overview"} setIsNavbarOpen={setIsNavbarOpen}/>
 			<ImpactFilterOptions size="wide" setIsNavbarOpen={setIsNavbarOpen}/>  {/*widescreen vertical filters topbar*/}
 		</div>
-		<div className='iview-positioner pr-md-5'>
+		<div className='iview-positioner pr-md-1'>
 			<Container fluid className='iview-container'>
 				<animated.div id='in-flow-navbar' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}></animated.div>
-				<GLHorizontal collapse="md" className="iview-grid">
-					{/* first grid half */}
-					<GLVertical>
-						{/* top left corner - both top corners with basis 60 to line up into grid pattern*/}
-						<GLCard basis={60} className="hero-card">
-							<div className='white-circle'>
-								<div className='content'>
-									<img className='logo' src={TEST_BRAND_OBJ.branding.logo}/>
-									<br/>
-									<h1>£A BAJILLION</h1>
-									<h2>Donated</h2>
-									<br/>
-									<h5>With</h5>
-									<br/>
-									<img className='w-50' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
-								</div>
-							</div>
-							<GLModalCard id="hero-card-modal" />
-						</GLCard>
-
-						{/* bottom left corner */}
-						<GLHorizontal>
-							<GLCard className="ad-boast" modalContent={WatchToDonateModal} modalTitle="Watch To Donate" modalId="full-page" modalClassName="no-padding watch-to-donate">
-								<h3>Watch to donate</h3>
-								<h2>£333,203</h2>
-								<h3 className="text-bold">Donated...</h3>
-
-								<h5>INCLUDING</h5>
-
-								<h4>15,000 Trees Planted</h4>
-								<CharityLogo charity={TEST_CHARITY_OBJ}/>
-
-								<h4>10,012 Children's Meals</h4>
-								<CharityLogo charity={TEST_CHARITY_OBJ}/>
-
-								<QuestionIcon/>
-							</GLCard>
-							<GLCard className="ad-boast" modalContent={ThisAdDoesGoodModal} modalTitle="This Ad Does Good" modalId="full-page" modalClassName="no-padding this-ad-does-good">
-								<h3 className="color-greenmedia-darkcyan">This ad does good</h3>
-								<h2 className="color-greenmedia-darkcyan">136,580</h2>
-								<h3 className="color-greenmedia-darkcyan text-bold">Trees planted...</h3>
-
-								<img src={TEST_BRAND_OBJ.branding.logo} className="logo"/>
-								<CharityLogo charity={TEST_CHARITY_OBJ}/>
-								<QuestionIcon/>
-							</GLCard>
-						</GLHorizontal>
-
-						<GLModalCard id="left-half"/>
-					</GLVertical>
-
-					{/* second grid half */}
-					<GLVertical>
-
-						{/* top right corner */}
-						<GLHorizontal collapse="md" basis={60}>
-							<GLVertical>
-								<GLHorizontal>
-									<GLCard modalContent={BrandList} modalTitle="9 Brands" modalId="right-half" modalClassName="list-modal">
-										<h2>9</h2>
-										<h3>Brands</h3>
-									</GLCard>
-									<GLCard modalContent={CharityList} modalTitle="18 charities" modalId="right-half" modalClassName="list-modal" className="center-number">
-										<h2>18</h2>
-										<h3>Charities</h3>
-									</GLCard>
-								</GLHorizontal>
-								<GLCard basis={10} modalContent={CampaignList} modalTitle="16 Campaigns" modalClassName="list-modal" modalId="right-half">
-									<h3>16 CAMPAIGNS</h3>
-								</GLCard>
-								<GLCard basis={10}>
-									<h3>6.5M VIEWS | 5 COUNTRIES</h3>
-								</GLCard>
-								<GLCard noPadding className="offset-card" basis={0} modalId="right-half" modalTitle="8.69T CO2E Offset" modalHeader={CO2OffsetInfoHeader} modalContent={CO2OffsetInfo} modalClassName="no-header-padding co2-offset">
-									<div className='offset-number px-3'>
-										<h3>8.69T CO2E OFFSET</h3>
+				<GLVertical>
+					<GLHorizontal collapse="md" className="iview-grid">
+						{/* first grid half */}
+						<GLVertical>
+							{/* top left corner - both top corners with basis 60 to line up into grid pattern*/}
+							<GLCard basis={60} className="hero-card">
+								<div className='white-circle'>
+									<div className='content'>
+										<img className='logo' src={TEST_BRAND_OBJ.branding.logo}/>
+										<br/>
+										<h1>£A BAJILLION</h1>
+										<h2>Donated</h2>
+										<br/>
+										<h5>With</h5>
+										<br/>
+										<img className='w-50' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 									</div>
-									<div className='carbon-neutral px-5 py-2'>
-										<img src="/img/Impact/Good-Loop_CarbonNeutralAd_Logo_Final-05.svg" className='w-100'/>
-									</div>
-								</GLCard>
-							</GLVertical>
-							<GLCard modalId="right-half" modalTitle="Ads for good" modalHeader={AdsForGoodCTAHeader} modalContent={AdsForGoodCTA} modalClassName="no-header-padding ads-for-good">
-								<div className='d-flex flex-column align-items-stretch justify-content-between h-100'>
-									<img className='w-75 align-self-center mb-3' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
-									<ContentList/>
 								</div>
+								<GLModalCard id="hero-card-modal" />
 							</GLCard>
-							<GLModalCard id="ads-for-good-modal" />
-						</GLHorizontal>
-						
-						{/* bottom right corner */}
-						<GLCard modalContent={AdsCatalogueModal} modalId="full-page" modalClassName="ads-catalogue-modal">
-							<AdsCatalogueModal noPreviews/>
-						</GLCard>
 
-						<GLModalCard id="right-half"/>
-					</GLVertical>
+							{/* bottom left corner */}
+							<GLHorizontal>
+								<GLCard className="ad-boast" modalContent={WatchToDonateModal} modalTitle="Watch To Donate" modalId="full-page" modalClassName="no-padding watch-to-donate">
+									<h3>Watch to donate</h3>
+									<h2>£333,203</h2>
+									<h3 className="text-bold">Donated...</h3>
 
-					<GLModalCard id="full-page"/>
-				</GLHorizontal>
+									<h5>INCLUDING</h5>
 
+									<h4>15,000 Trees Planted</h4>
+									<CharityLogo charity={TEST_CHARITY_OBJ}/>
+
+									<h4>10,012 Children's Meals</h4>
+									<CharityLogo charity={TEST_CHARITY_OBJ}/>
+
+									<QuestionIcon/>
+								</GLCard>
+								<GLCard className="ad-boast" modalContent={ThisAdDoesGoodModal} modalTitle="This Ad Does Good" modalId="full-page" modalClassName="no-padding this-ad-does-good">
+									<h3 className="color-greenmedia-darkcyan">This ad does good</h3>
+									<h2 className="color-greenmedia-darkcyan">136,580</h2>
+									<h3 className="color-greenmedia-darkcyan text-bold">Trees planted...</h3>
+
+									<img src={TEST_BRAND_OBJ.branding.logo} className="logo"/>
+									<CharityLogo charity={TEST_CHARITY_OBJ}/>
+									<QuestionIcon/>
+								</GLCard>
+							</GLHorizontal>
+
+							<GLModalCard id="left-half"/>
+						</GLVertical>
+
+						{/* second grid half */}
+						<GLVertical>
+
+							{/* top right corner */}
+							<GLHorizontal collapse="md" basis={60}>
+								<GLVertical>
+									<GLHorizontal>
+										<GLCard modalContent={BrandList} modalTitle="9 Brands" modalId="right-half" modalClassName="list-modal">
+											<h2>9</h2>
+											<h3>Brands</h3>
+										</GLCard>
+										<GLCard modalContent={CharityList} modalTitle="18 charities" modalId="right-half" modalClassName="list-modal" className="center-number">
+											<h2>18</h2>
+											<h3>Charities</h3>
+										</GLCard>
+									</GLHorizontal>
+									<GLCard basis={10} modalContent={CampaignList} modalTitle="16 Campaigns" modalClassName="list-modal" modalId="right-half">
+										<h3>16 CAMPAIGNS</h3>
+									</GLCard>
+									<GLCard basis={10}>
+										<h3>6.5M VIEWS | 5 COUNTRIES</h3>
+									</GLCard>
+									<GLCard noPadding className="offset-card" basis={0} modalId="right-half" modalTitle="8.69T CO2E Offset" modalHeader={CO2OffsetInfoHeader} modalContent={CO2OffsetInfo} modalClassName="no-header-padding co2-offset">
+										<div className='offset-number px-3'>
+											<h3>8.69T CO2E OFFSET</h3>
+										</div>
+										<div className='carbon-neutral px-5 py-2'>
+											<img src="/img/Impact/Good-Loop_CarbonNeutralAd_Logo_Final-05.svg" className='w-100'/>
+										</div>
+									</GLCard>
+								</GLVertical>
+								<div>
+									<GLCard modalId="right-half" modalTitle="Ads for good" modalHeader={AdsForGoodCTAHeader} modalContent={AdsForGoodCTA} modalClassName="no-header-padding ads-for-good">
+										<div className='d-flex flex-column align-items-stretch justify-content-between h-100'>
+											<img className='w-75 align-self-center mb-3' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+											<ContentList/>
+										</div>
+									</GLCard>
+									<GLModalCard id="ads-for-good-modal" />
+								</div>
+
+							</GLHorizontal>
+							
+							{/* bottom right corner */}
+							<GLCard modalContent={AdsCatalogueModal} modalId="full-page" modalClassName="ads-catalogue-modal">
+								<AdsCatalogueModal noPreviews/>
+							</GLCard>
+
+							<GLModalCard id="right-half"/>
+						</GLVertical>
+
+						<GLModalCard id="full-page"/>
+					</GLHorizontal>
+
+					<GLCard className="logos-display">
+						<LogosDisplay/>
+					</GLCard>
+				</GLVertical>
 			</Container>
 
-			<GLCard className="logos-display">
-				<LogosDisplay/>
-			</GLCard>
 
 		</div>
 
