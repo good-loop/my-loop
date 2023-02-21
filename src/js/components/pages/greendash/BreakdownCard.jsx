@@ -12,7 +12,7 @@ import { emissionsPerImpressions, getBreakdownBy, getCompressedBreakdown, getSum
 import { isPer1000 } from './GreenMetrics';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import '../../../../style/greendash-breakdown-card.less';
-import { getBreakdownByWithCount, getCompressedBreakdownWithCount } from './emissionscalcTs';
+import { getBreakdownByWithCount, getCompressedBreakdownWithCount, filterByCount } from './emissionscalcTs';
 
 /** Classify OS strings seen in our data
  *
@@ -99,20 +99,26 @@ const FormatSubcard = ({ data, minimumPercentLabeled = 1, chartType = 'pie' }) =
 
 		// map tagIDs to co2
 		const tagEm = data.reduce((acc, row) => {
-			acc[row.key] = row.co2;
+			acc[row.key] = { co2: row.co2, count: row.count };
 			return acc;
 		}, {});
 
 		// group tagIDs by format & sum their co2
-		const formatToCarbon = Object.keys(tagFormats).reduce((mapping, id) => {
+		let formatToCarbon = Object.keys(tagFormats).reduce((mapping, id) => {
 			const format = tagFormats[id] || 'Unset';
 			if (mapping.hasOwnProperty(format)) {
-				mapping[format] = { co2: mapping[format].co2 + tagEm[id], occurs: mapping[format].occurs + 1 };
+				mapping[format] = {
+					co2: mapping[format].co2 + tagEm[id].co2,
+					count: mapping[format].count + tagEm[id].count,
+					occurs: mapping[format].occurs + 1,
+				};
 			} else {
-				mapping[format] = { co2: tagEm[id], occurs: 1 };
+				mapping[format] = { co2: tagEm[id].co2, count: tagEm[id].count, occurs: 1 };
 			}
 			return mapping;
 		}, {});
+
+		formatToCarbon = filterByCount(formatToCarbon);
 
 		const formatToCarbonSum = {};
 		Object.entries(formatToCarbon).forEach(([k, v]) => {
@@ -410,7 +416,7 @@ const BreakdownCard = ({ baseFilters }) => {
 	// NB: breakdown: "emissions":"sum" is a hack that the backend turns into count(aka impressions) + co2 + co2-bits
 	const pvDataValue = getCarbon({
 		...baseFilters,
-		breakdown: ['os{"emissions":"sum"}', 'adid{"emissions":"sum"}', 'domain{"emissions":"sum"}', 'format{"emissions":"sum"}'],
+		breakdown: ['os{"countco2":"sum"}', 'adid{"countco2":"sum"}', 'domain{"countco2":"sum"}', 'format{"countco2":"sum"}'],
 	});
 
 	const dataValue = baseFilters.prob ? pvDataValue.value?.sampling : pvDataValue.value;
