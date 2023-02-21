@@ -14,6 +14,7 @@ import { goto } from '../../base/plumbing/glrouter';
  */
 
 import { TEST_BRAND } from './TestValues';
+import { retrurnProfile } from '../pages/TabsForGoodSettings';
 
 const A = C.A;
 
@@ -97,14 +98,20 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 		</div>)
 
 		// get brands logo or get placeholder
-		let thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='impact-link-placeholder-thumbnail' />
+		const thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='impact-link-placeholder-thumbnail' />
 		
 		// dropdown toggle of above campaign ListLoad
-		button = <button className={'dropdown-button'} onClick={() => setIsDropdownOpen(!isDropdownOpen)}>X</button>
+		button = <button className={'dropdown-button'} onClick={(event) => {event.preventDefault(); setIsDropdownOpen(!isDropdownOpen)}} />
+	
+		// clicking the brands dropdown button to reveal its campaings would cause a state change, this stops that 
+		const brandItemOnClick = (event) => {
+			if(event.target.className == 'dropdown-button') return;
+			filterChange({brand:item});
+		}
 
 		return <>
 			<div className='brand-campaign-set'>
-				<div className="info brand-item" onClick={() => filterChange({brand:item})}>
+				<div className="info brand-item" onClick={brandItemOnClick}>
 					{thumbnail}
 					<div className="name">{name}</div>
 					{button || ''}

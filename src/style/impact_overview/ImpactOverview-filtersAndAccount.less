@@ -21,6 +21,10 @@
             outline: none !important;
         }
 
+        .underlined { 
+            text-decoration: underline !important;
+        }
+
         .filter-down-arrow {
             background-image: url("/img/icons/down-arrow.svg");
             // keep icon to a good relative size
@@ -39,43 +43,11 @@
         position: relative;
         display: flex;
 
-        .impact-topbar-icon {
-            // ensure size is constant - important for keeping the sliding animation fron screwing up
-            width: 3.5em;
-            height: 3.5em;
-            min-width: 3.5em;
-            min-height: 3.5em;
-            margin-right: 1em;
-    
-            border-radius: 50%; // turn into circle
-    
-            background-color: white;
-            background-size: contain; // icons are too big by default, resize them
-    
-            // vertically center
-            position: relative;
-            top: 50%;
-            transform: translateY(-50%);
+        .account-menu {
+            justify-content: center;
+            
         }
-
-        #account-icon, #share-icon {
-            width: 3em;
-            height: 3em;
-            min-width: 3em;
-            min-height: 3em;
-            margin-right: 1em;
-            border-radius: 50%; // turn into circle
-            background-color: white;
-            background-size: contain; // icons are too big by default, resize them
-            align-self: center;
-        }
-        #account-icon {
-            background-image: "/img/icons/empty icon.png";
-            margin-right: 3rem;
-        }
-        #share-icon {
-            background-image: "/img/icons/empty icon.png";
-        }
+        
     }
 
     #date-filters {
@@ -86,14 +58,17 @@
 }
 
 // hide "in-page" filters when on mobile
-#impactOverview-filters-and-account-mobile {
+#impactOverview-filters-and-account-thin {
     @media @md-min {
         display: none !important;
+        ul {
+            text-align: center;
+        }
     }
 }
 
 // hide above navbar filters when on desktop
-#impactOverview-filters-and-account-desktop {
+#impactOverview-filters-and-account-wide {
     @media (max-width: 768px) {
         display: none !important;
     }
@@ -114,9 +89,6 @@
     // container div within the above button
     .brand-campaign-set {
         width: 100%;
-        .campaign-item, .brand-item {
-            cursor: pointer;
-        }
     }
 
     // unindented brand
@@ -132,6 +104,14 @@
         width: 75%;
         border-top: solid 1px rgb(205, 205, 205) !important;
         background-color: rgb(217, 217, 217) !important;
+    }
+
+    .dropdown-button {
+        background-image: url("/img/icons/down-arrow.svg");
+        width: 2rem;
+        height: 2rem;
+        border: none;
+        background-size: contain;
     }
 
     .img-thumbnail {

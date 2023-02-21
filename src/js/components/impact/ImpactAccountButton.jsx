@@ -8,7 +8,7 @@ import Login from '../../base/youagain';
 import {LoginLink, RegisterLink, LogoutLink} from '../../base/components/LoginWidget';
 import C from '../../C';
 import PropControlPeriod from '../../base/components/PropControls/PropControlPeriod'
-import { openAndPopulateModal } from './GLCards';
+import { modalToggle, openAndPopulateModal } from './GLCards';
 import ListLoad from '../../base/components/ListLoad';
 
 /**
@@ -21,10 +21,12 @@ import { assert } from '../../base/utils/assert';
 
 const A = C.A;
 
+
+
+
 const ImpactAccountButton = ({curMaster, curSubBrand, curCampaign, customLogin}) => {
 
 	let [loggedIn, setIsLoggedIn] = useState(Login.isLoggedIn())
-	console.log("oh shit 1. ", loggedIn)
 	let type = curCampaign ? "campaign" : "brand"
 	let id = curCampaign ? curCampaign.id : (curSubBrand ? curSubBrand.id : curMaster.id)
 	let greenUrl = `https://my.good-loop.com/greendash?${type}=${id}` // add period later
@@ -46,7 +48,15 @@ const ImpactAccountButton = ({curMaster, curSubBrand, curCampaign, customLogin})
 		</div>
 	)
 	
-	let accountContent = () => {return (<AccountMenu children={accountModalContent}/>)}
+	let accountContent = () => {
+		return (
+		<div id="impact-account-container" className="flex-collumn">
+			<a><div className='flex-row'><div className='impact-link-placeholder-thumbnail' /><span className="active">Impact Dashboard</span></div></a>
+			<a href={greenUrl}><div className='flex-row'><div className='impact-link-placeholder-thumbnail' /><span href={greenUrl} >Green Dashboard</span></div></a>
+			<a href={'#'} className="LogoutLink" onClick={() => {modalToggle(); Login.logout()}}>Log out</a>
+		</div>
+		)
+	}
 
 	// makes use of a temp href for Impact Dash as I'm currently not sure where the
 
@@ -56,7 +66,7 @@ const ImpactAccountButton = ({curMaster, curSubBrand, curCampaign, customLogin})
 	return (
 		<div id="impact-overview-accounts">
 			<AccountMenu children={accountModalContent}/>
-			{/*<button id='account-icon' onClick={accountOnClick} />*/}
+			<button id='account-icon' onClick={accountOnClick}>placeholder butt</button>
 		</div>
 	)
 }
