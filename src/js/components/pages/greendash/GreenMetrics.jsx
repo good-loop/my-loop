@@ -88,28 +88,6 @@ const CTACard = ({}) => {
 	);
 };
 
-// ONLY SHOWS EMAIL LIST WITH "listemails" FLAG SET
-// ONLY APPEARS WITH "shareables" OR DEBUG FLAG SET
-export const ShareDash = ({style, className}) => {
-	// not-logged in cant share and pseudo users can't reshare
-	if ( ! Login.getId() || Login.getId().endsWith("pseudo")) {
-		return null;
-	}
-	// if ( ! Roles.isDev() && ! DataStore.getUrlValue("shareables") && ! DataStore.getUrlValue("debug") && ! DataStore.getUrlValue("gl.debug")) {
-	// 	return null; // dev only for now TODO for all
-	// }
-	let {filterMode, filterId} = getFilterModeId();
-	if ( ! filterMode || ! filterId) {
-		return null;
-	}
-	let type = {brand:"Advertiser",adid:"GreenTag"}[filterMode] || toTitleCase(filterMode);
-	let shareId = shareThingId(type, filterId);
-	let pvItem = getDataItem({type, id:filterId, status:KStatus.PUBLISHED});
-	let shareName = filterMode+" "+((pvItem.value && pvItem.value.name) || filterId);
-	const showEmails = DataStore.getUrlValue("listemails");
-	return <ShareWidget className={className} style={style} hasButton name={"Dashboard for "+shareName} shareId={shareId} hasLink noEmails={!showEmails} />;
-}
-
 const GreenMetrics2 = ({}) => {
 	// Default to current quarter, all brands, all campaigns
 	const period = periodFromUrl();

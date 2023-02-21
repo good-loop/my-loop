@@ -10,8 +10,33 @@ import Login from '../../../base/youagain';
 import { encURI, isMobile, space, toTitleCase } from '../../../base/utils/miscutils';
 import C from '../../../C';
 import ServerIO from '../../../plumbing/ServerIO';
+
+import { getFilterModeId } from './dashutils';
+import ShareWidget, { shareThingId } from '../../../base/components/ShareWidget';
+
 const A = C.A;
 
+// ONLY SHOWS EMAIL LIST WITH "listemails" FLAG SET
+// ONLY APPEARS WITH "shareables" OR DEBUG FLAG SET
+const ShareDash = ({style, className}) => {
+	// not-logged in cant share and pseudo users can't reshare
+	if ( ! Login.getId() || Login.getId().endsWith("pseudo")) {
+		return null;
+	}
+	// if ( ! Roles.isDev() && ! DataStore.getUrlValue("shareables") && ! DataStore.getUrlValue("debug") && ! DataStore.getUrlValue("gl.debug")) {
+	// 	return null; // dev only for now TODO for all
+	// }
+	let {filterMode, filterId} = getFilterModeId();
+	if ( ! filterMode || ! filterId) {
+		return null;
+	}
+	let type = {brand:"Advertiser",adid:"GreenTag"}[filterMode] || toTitleCase(filterMode);
+	let shareId = shareThingId(type, filterId);
+	let pvItem = getDataItem({type, id:filterId, status:KStatus.PUBLISHED});
+	let shareName = filterMode+" "+((pvItem.value && pvItem.value.name) || filterId);
+	const showEmails = DataStore.getUrlValue("listemails");
+	return <ShareWidget className={className} style={style} hasButton name={"Dashboard for "+shareName} shareId={shareId} hasLink noEmails={!showEmails} />;
+}
 
 /**
  * Left hand nav bar + top-right account menu
@@ -51,7 +76,7 @@ const GreenNavBar = ({active}) => {
 	// We don't use the standard <Collapse> pattern here because that doesn't support an always-horizontal navbar
 
 	return (<>
-		{(Roles.isDev() || showFlags) && <AccountMenu className="float-left" noNav/>}
+		{(Roles.isDev() || showFlags) && <AccountMenu className="float-left" noNav shareWidget={<ShareDash className='m-auto' />}/>}
 	<Navbar dark expand="md" id="green-navbar" className={space('flex-column', 'justify-content-start', isOpen && 'mobile-open')}>
 		<NavbarToggler onClick={toggle} />
 		<Nav navbar vertical>

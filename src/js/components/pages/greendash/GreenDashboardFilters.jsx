@@ -15,8 +15,6 @@ import PropControl from '../../../base/components/PropControl';
 import Logo from '../../../base/components/Logo';
 import C from '../../../C';
 
-import { ShareDash } from './GreenMetrics';
-
 /** Tick mark which appears in drop-downs next to currently selected option */
 const selectedMarker = <span className='selected-marker' />;
 
@@ -362,7 +360,6 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 							) : null}
 						</>
 					</Form>
-					<ShareDash className='my-auto mx-5' style={{ zIndex: '10' }} />
 				</div>
 			</Col>
 		</Row>
