@@ -60,6 +60,13 @@ const ImpactOverviewPage = () => {
 		setWindowTitle(windowTitle);
 	}, []);
 
+	const path = DataStore.getValue(['location', 'path']);
+
+	if (path.length < 3) return <h1>Invalid URL!</h1> // TODO better page
+
+	const itemId = path[2];
+	const itemType = path[1];
+
 	let [isNavbarOpen, setIsNavbarOpen] = useState(false)
 
 	const navToggleAnimation = useSpring({
