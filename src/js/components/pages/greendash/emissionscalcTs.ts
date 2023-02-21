@@ -2,6 +2,7 @@
  * Rewrite functions from emissionscalc.js into typescript.
  */
 
+import { number } from 'yargs';
 import { sum } from '../../../base/utils/miscutils';
 
 type BreakdownByX = {
@@ -92,4 +93,20 @@ export const getBreakdownByWithCount = (buckets: Object[], keyNamesToSum: string
 		}, {});
 	}
 	return totalByX;
+};
+
+/**
+ * Simply filter out insignificant data to clean up dashboard view
+ * @param minFraction percentage to filter
+ */
+export const filterByCount = (data: { [key: string]: { co2: number; count: number; occurs: number } }, minFraction: number = 0.05) => {
+	let total: number = 0;
+	Object.values(data).forEach((val) => (total += val.count));
+	let outputData: { [key: string]: { co2: number; count: number; occurs: number } } = {};
+	Object.entries(data).forEach(([k, v]) => {
+		if (v.count > total * minFraction) {
+			outputData[k] = v;
+		}
+	});
+	return outputData;
 };
