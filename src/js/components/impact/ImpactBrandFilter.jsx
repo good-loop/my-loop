@@ -55,7 +55,7 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 		let thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='impact-link-placeholder-thumbnail' />
 		
 		return <>
-			<div className='brand-campaign-set' onClick={() => filterChange({campaign:item})}>
+			<div className='brand-campaign-set campaign-item' onClick={() => filterChange({campaign:item})}>
 				{thumbnail}
 				<div className="info">
 					<div className="name">{name}</div>
@@ -104,7 +104,7 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 
 		return <>
 			<div className='brand-campaign-set'>
-				<div className="info" onClick={() => filterChange({brand:item})}>
+				<div className="info brand-item" onClick={() => filterChange({brand:item})}>
 					{thumbnail}
 					<div className="name">{name}</div>
 					{button || ''}
