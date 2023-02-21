@@ -55,7 +55,7 @@ const GreenNavBar = ({active}) => {
 	<Navbar dark expand="md" id="green-navbar" className={space('flex-column', 'justify-content-start', isOpen && 'mobile-open')}>
 		<NavbarToggler onClick={toggle} />
 		<Nav navbar vertical>
-			<a href={pseudoUser ? '/' : '/greendash'}>
+			<a href={true ? 'https://www.good-loop.com' : '/greendash'}>
 				<img className="logo" src="/img/logo-green-dashboard.svg" />
 			</a>
 			<span className="boosted text-center">
