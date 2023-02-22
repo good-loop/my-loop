@@ -28,6 +28,7 @@ import KStatus from '../../base/data/KStatus';
 import Misc from '../../base/components/Misc';
 import List from '../../base/data/List';
 import ListLoad from '../../base/components/ListLoad';
+import Campaign from '../../base/data/Campaign';
 
 /**
  * DEBUG OBJECTS
@@ -67,6 +68,7 @@ const fetchBaseObjects = () => {
 	let pvBrand, brand, brandId;
 	let pvMasterBrand, masterBrand;
 	let pvSubBrands, subBrands;
+	let pvSubCampaigns, subCampaigns;
 
 	// Fetch campaign object if specified
 	if (itemType === "campaign") {
@@ -96,10 +98,17 @@ const fetchBaseObjects = () => {
 		pvSubBrands = ActionMan.list({type: C.TYPES.Advertiser, status:KStatus.PUBLISHED, q:sq.query});
 		subBrands = pvSubBrands.value && List.hits(pvSubBrands.value);
 		if (pvSubBrands.error) throw pvSubBrands.error;
+		// Don't look for subCampaigns if this is a campaign
+		if (!campaign) {
+			// Find all related campaigns to this brand
+			pvSubCampaigns = Campaign.fetchForAdvertiser(brandId, status);
+			subCampaigns = pvSubCampaigns.value && List.hits(pvSubCampaigns.value);
+		}
 	}
 
 	// Simplifies having to add null checks for subBrands everywhere
 	if (!subBrands) subBrands = [];
+	if (!subCampaigns) subCampaigns = [];
 
 	// If we've looked for both brand and campaign and found nothing, we have a 404
 	if (pvCampaign && pvCampaign.resolved && !campaign
@@ -110,9 +119,10 @@ const fetchBaseObjects = () => {
 	const resolved = (!pvCampaign || pvCampaign.resolved) &&
 					(!pvBrand || pvBrand.resolved) &&
 					(!pvMasterBrand || pvMasterBrand.resolved) &&
-					(!pvSubBrands || pvSubBrands.resolved);
+					(!pvSubBrands || pvSubBrands.resolved) &&
+					(!pvSubCampaigns || pvSubCampaigns.resolved);
 
-	return {campaign, brand, masterBrand, subBrands, resolved};
+	return {campaign, brand, masterBrand, subBrands, subCampaigns, resolved};
 }
 
 
@@ -142,7 +152,7 @@ const ImpactOverviewPage = () => {
 		return <ErrorDisplay e={e}/>
 	}
 
-	const {campaign, brand, masterBrand, subBrands} = baseObjects;
+	const {campaign, brand, masterBrand, subBrands, subCampaigns} = baseObjects;
 
 	// if not logged in AND impact hasn't been chosen yet...
 	if(!Login.isLoggedIn() || !impactChosen) {
@@ -167,7 +177,7 @@ const ImpactOverviewPage = () => {
 							<GLCard basis={60} className="hero-card">
 								<div className='white-circle'>
 									<div className='content'>
-										<img className='logo' src={TEST_BRAND_OBJ.branding.logo}/>
+										<img className='logo' src={(brand?.branding)?.logo}/>
 										<br/>
 										<h1>£A BAJILLION</h1>
 										<h2>Donated</h2>
@@ -218,7 +228,7 @@ const ImpactOverviewPage = () => {
 							<GLHorizontal collapse="md" basis={60}>
 								<GLVertical>
 									<GLHorizontal>
-										{subBrands.length ? <GLCard modalContent={BrandList} modalTitle="9 Brands" modalId="right-half" modalClassName="list-modal">
+										{subBrands.length ? <GLCard modalContent={BrandList} modalTitle="9 Brands" modalId="right-half" modalClassName="list-modal" className="center-number">
 											<h2>{subBrands.length}</h2>
 											<h3>Brands</h3>
 										</GLCard> : null}
@@ -227,9 +237,9 @@ const ImpactOverviewPage = () => {
 											<h3>Charities</h3>
 										</GLCard>
 									</GLHorizontal>
-									<GLCard basis={10} modalContent={CampaignList} modalTitle="16 Campaigns" modalClassName="list-modal" modalId="right-half">
-										<h3>16 CAMPAIGNS</h3>
-									</GLCard>
+									{subCampaigns.length ? <GLCard basis={10} modalContent={() => <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaigns}/>} modalTitle="16 Campaigns" modalClassName="list-modal" modalId="right-half">
+										<h3>{subCampaigns.length} CAMPAIGNS</h3>
+									</GLCard> : null}
 									<GLCard basis={10}>
 										<h3>6.5M VIEWS | 5 COUNTRIES</h3>
 									</GLCard>
@@ -596,30 +606,33 @@ const CharityInfo = ({charity}) => {
 }
 
 
-const CampaignList = () => {
+const CampaignList = ({campaigns, brand, subBrands, status}) => {
 
-	// DUMMY DATA
-	const campaign = TEST_CAMPAIGN_OBJ;
-	let campaigns = [];
-	for (let i = 0; i < 20; i++) campaigns.push(campaign);
-	// END DUMMY DATA
+	const allBrandList = [brand, ...subBrands];
+	const allBrands = {};
+	allBrandList.forEach(b => {
+		allBrands[b.id] = b;
+	});
 
 	return <>
 		<br/>
 		<h5>Campaigns run via Good-Loop Ads</h5>
-		<p className='color-gl-red text-center'>{TEST_BRAND_OBJ.name} - All Campaigns</p>
+		<p className='color-gl-red text-center'>{brand.name} - All Campaigns</p>
 		<br/>
 		<GLVertical>
-			{campaigns.map((campaign, i) => <GLCard className="preview campaign mt-3" noMargin>
-				<div className='campaign-details'>
-					<p className='text-left m-0'>
-						<b>{campaign.vertiserName}</b>
-						<br/>
-						{campaign.name}
-					</p>
-				</div>
-				{campaign && <img className="logo" src={TEST_BRAND_OBJ.branding.logo}/>}
-			</GLCard>)}
+			{campaigns.map((campaign, i) => {
+				const myBrand = allBrands[campaign.vertiser];
+				return <GLCard className="preview campaign mt-3" noMargin>
+					<div className='campaign-details'>
+						<p className='text-left m-0'>
+							<b>{campaign.vertiserName}</b>
+							<br/>
+							{campaign.name}
+						</p>
+					</div>
+					{campaign && <img className="logo" src={myBrand?.branding?.logo}/>}
+				</GLCard>
+			})}
 		</GLVertical>
 	</>;
 	
