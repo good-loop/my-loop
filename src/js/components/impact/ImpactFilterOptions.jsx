@@ -18,14 +18,16 @@ const A = C.A;
  * @param {size} string on what page size to draw this element, currently "mobile" and "desktop" are the only expected values
  * @returns 
  */
-const ImpactFilterOptions = ({size}) => {
+const ImpactFilterOptions = ({size, masterBrand, brand, campaign}) => {
 
 	assert (size == "wide" || size == "thin")
 
-	const [curMaster, setCurMaster] = useState({id:TEST_BRAND, name:"Nestle"})
-	const [curSubBrand, setCurSubBrand] = useState(null)
-	const [curCampaign, setCurCampaign] = useState(null)
-	
+	console.log(masterBrand, brand, campaign)
+
+	const [curMaster, setCurMaster] = useState(masterBrand ? masterBrand : brand)
+	const [curSubBrand, setCurSubBrand] = useState((masterBrand || campaign) ? brand : null)
+	const [curCampaign, setCurCampaign] = useState((brand && campaign) ? campaign : null)
+
 
 	if(size == "wide") return (		
 		<div className='flex-row impactOverview-filters-and-account' id={"impactOverview-filters-and-account-"+size}>
