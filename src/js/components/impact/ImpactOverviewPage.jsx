@@ -232,7 +232,7 @@ const ImpactOverviewPage = () => {
 							<GLHorizontal collapse="md" basis={60}>
 								<GLVertical>
 									<GLHorizontal>
-										{subBrands.length ? <GLCard modalContent={BrandList} modalTitle="9 Brands" modalId="right-half" modalClassName="list-modal" className="center-number">
+										{subBrands.length ? <GLCard modalContent={() => <BrandList brand={brand}/>} modalTitle={subBrands.length + " Brands"} modalId="right-half" modalClassName="list-modal" className="center-number">
 											<h2>{subBrands.length}</h2>
 											<h3>Brands</h3>
 										</GLCard> : null}
@@ -241,7 +241,7 @@ const ImpactOverviewPage = () => {
 											<h3>Charities</h3>
 										</GLCard>
 									</GLHorizontal>
-									{subCampaigns.length ? <GLCard basis={10} modalContent={() => <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaigns}/>} modalTitle="16 Campaigns" modalClassName="list-modal" modalId="right-half">
+									{subCampaigns.length ? <GLCard basis={10} modalContent={() => <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaigns}/>} modalTitle={subCampaigns.length + " Campaigns"} modalClassName="list-modal" modalId="right-half">
 										<h3>{subCampaigns.length} CAMPAIGNS</h3>
 									</GLCard> : null}
 									<GLCard basis={10}>
