@@ -107,10 +107,21 @@ The GLCards layout is a layout for modular cards which are designed to expand an
                 overflow: hidden;
             }
         }
+
         h4 {
             text-align: center;
             color: @gl-red;
             text-transform: uppercase;
+        }
+
+        &.noClose {
+            .close {
+                display: none;
+            }
+        }
+
+        &.red-top-border {
+            border-top: solid @gl-red 5px;
         }
     }
 }
