@@ -28,7 +28,7 @@ export const GLHorizontal = ({collapse, className, style, children}) => {
 	return <Row noGutters className={space("glhorizontal", collapse?"glhorizontal-"+collapse:"", className)} style={style}>
 		{children.map((child, i) => {
 			// Special case for overlays - they must not interfere with layout, so make no wrapper
-			if (child.type === GLModalCard) return child;
+			if (!child || child.type === GLModalCard) return child;
 			return <Col key={i} style={{flexBasis:child.props.basis + "%", flexGrow:child.props.basis ? 0 : 1}}>{child}</Col>
 		})}
 	</Row>
@@ -42,7 +42,7 @@ export const GLVertical = ({className, children, ...props}) => {
 	return <div className={space("glvertical", className)} {...props}>
 		{children.map((child, i) => {
 			// Special case for overlays - they must not interfere with layout, so make no wrapper
-			if (child.type === GLModalCard) return child;
+			if (!child || child.type === GLModalCard) return child;
 			return <div key={i} style={{flexBasis:child.props.basis + "%", flexGrow:child.props.basis ? 0 : 1}}>{child}</div>
 		})}
 	</div>;

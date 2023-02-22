@@ -52,6 +52,54 @@ export class ImpactFilters {
 }
 
 
+const fetchBaseObjects = () => {
+	const path = DataStore.getValue(['location', 'path']);
+
+	if (path.length < 3) return null;
+
+	const status = DataStore.getUrlValue('gl.status') || DataStore.getUrlValue('status') || KStatus.PUBLISHED;
+
+	const itemId = path[2];
+	const itemType = path[1];
+
+	let pvCampaign, campaign;
+	let pvBrand, brand, brandId;
+	let pvMasterBrand, masterBrand;
+	let pvSubBrands, subBrands;
+
+	// Fetch campaign object if specified
+	if (itemType === "campaign") {
+		pvCampaign = getDataItem({type: C.TYPES.Campaign, status, id:itemId});
+		campaign = pvCampaign.value;
+		// If we have a campaign, use it to find the brand
+		brandId = campaign?.vertiser;
+	} else if (itemType === "brand") {
+		// Otherwise use the URL
+		brandId = itemId;
+	}
+
+	if (brandId) {
+		// Find the specified brand
+		pvBrand = getDataItem({type: C.TYPES.Advertiser, status, id:brandId});
+		brand = pvBrand.value;
+		if (brand && brand.parentId) {
+			// If this brand has a parent, get it
+			pvMasterBrand = getDataItem({type: C.TYPES.Advertiser, status, id:brand.parentId});
+			masterBrand = pvMasterBrand.value;
+		}
+		// Find any subBrands of this brand (technically brands should only have a parent OR children - but might be handy to make longer brand trees in future)
+		let sq = SearchQuery.setProp(null, "parentId", brandId);
+		pvSubBrands = ActionMan.list({type: C.TYPES.Advertiser, status:KStatus.PUBLISHED, q:sq.query});
+		subBrands = pvSubBrands.value && List.hits(pvSubBrands.value);
+	}
+
+	// Simplifies having to add null checks for subBrands everywhere
+	if (!subBrands) subBrands = [];
+
+	return {campaign, brand, masterBrand, subBrands};
+}
+
+
 const ImpactOverviewPage = () => {
 
 	useEffect (() => {
@@ -60,19 +108,13 @@ const ImpactOverviewPage = () => {
 		setWindowTitle(windowTitle);
 	}, []);
 
-	const path = DataStore.getValue(['location', 'path']);
-
-	if (path.length < 3) return <h1>Invalid URL!</h1> // TODO better page
-
-	const itemId = path[2];
-	const itemType = path[1];
-
 	// shrinking / expanding navbar animation values
 	let [isNavbarOpen, setIsNavbarOpen] = useState(false)
 	const navToggleAnimation = useSpring({
 		width : isNavbarOpen ? "270px" : "90px",	
 	})
 
+	const {campaign, brand, masterBrand, subBrands} = fetchBaseObjects();
 
 	// if not logged in, use may select GreenDash instead.
 	// set to true to avoid this choice being made on page refresh if logged in 
@@ -151,10 +193,10 @@ const ImpactOverviewPage = () => {
 							<GLHorizontal collapse="md" basis={60}>
 								<GLVertical>
 									<GLHorizontal>
-										<GLCard modalContent={BrandList} modalTitle="9 Brands" modalId="right-half" modalClassName="list-modal">
-											<h2>9</h2>
+										{subBrands.length ? <GLCard modalContent={BrandList} modalTitle="9 Brands" modalId="right-half" modalClassName="list-modal">
+											<h2>{subBrands.length}</h2>
 											<h3>Brands</h3>
-										</GLCard>
+										</GLCard> : null}
 										<GLCard modalContent={CharityList} modalTitle="18 charities" modalId="right-half" modalClassName="list-modal" className="center-number">
 											<h2>18</h2>
 											<h3>Charities</h3>
