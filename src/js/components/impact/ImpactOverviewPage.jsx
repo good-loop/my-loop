@@ -4,6 +4,7 @@ import PromiseValue from '../../base/promise-value';
 import { setWindowTitle } from '../../base/plumbing/Crud';
 import DataStore from '../../base/plumbing/DataStore';
 import { Button, Col, Container, InputGroup, Row, Card, Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { Card as CardCollapse } from '../../base/components/CardAccordion';
 import PropControl from '../../base/components/PropControl';
 import Circle from '../../base/components/Circle';
 import BG from '../../base/components/BG';
@@ -55,7 +56,7 @@ export class ImpactFilters {
 const fetchBaseObjects = () => {
 	const path = DataStore.getValue(['location', 'path']);
 
-	if (path.length < 3) return null;
+	if (path.length < 3) throw new Error("Invalid URL");
 
 	const status = DataStore.getUrlValue('gl.status') || DataStore.getUrlValue('status') || KStatus.PUBLISHED;
 
@@ -71,6 +72,7 @@ const fetchBaseObjects = () => {
 	if (itemType === "campaign") {
 		pvCampaign = getDataItem({type: C.TYPES.Campaign, status, id:itemId});
 		campaign = pvCampaign.value;
+		if (pvCampaign.error) throw pvCampaign.error;
 		// If we have a campaign, use it to find the brand
 		brandId = campaign?.vertiser;
 	} else if (itemType === "brand") {
@@ -82,19 +84,28 @@ const fetchBaseObjects = () => {
 		// Find the specified brand
 		pvBrand = getDataItem({type: C.TYPES.Advertiser, status, id:brandId});
 		brand = pvBrand.value;
+		if (pvBrand.error) throw pvBrand.error;
 		if (brand && brand.parentId) {
 			// If this brand has a parent, get it
 			pvMasterBrand = getDataItem({type: C.TYPES.Advertiser, status, id:brand.parentId});
 			masterBrand = pvMasterBrand.value;
+			if (pvMasterBrand.error) throw pvMasterBrand.error;
 		}
 		// Find any subBrands of this brand (technically brands should only have a parent OR children - but might be handy to make longer brand trees in future)
 		let sq = SearchQuery.setProp(null, "parentId", brandId);
 		pvSubBrands = ActionMan.list({type: C.TYPES.Advertiser, status:KStatus.PUBLISHED, q:sq.query});
 		subBrands = pvSubBrands.value && List.hits(pvSubBrands.value);
+		if (pvSubBrands.error) throw pvSubBrands.error;
 	}
 
 	// Simplifies having to add null checks for subBrands everywhere
 	if (!subBrands) subBrands = [];
+
+	// If we've looked for both brand and campaign and found nothing, we have a 404
+	if (pvCampaign && pvCampaign.resolved && !campaign
+		&& pvBrand && pvBrand.resolved && !brand) {
+		throw new Error("404 Not Found");
+	}
 
 	return {campaign, brand, masterBrand, subBrands};
 }
@@ -113,12 +124,21 @@ const ImpactOverviewPage = () => {
 	const navToggleAnimation = useSpring({
 		width : isNavbarOpen ? "270px" : "90px",	
 	})
-
-	const {campaign, brand, masterBrand, subBrands} = fetchBaseObjects();
-
 	// if not logged in, use may select GreenDash instead.
 	// set to true to avoid this choice being made on page refresh if logged in 
 	let [impactChosen, setImpactChosen] = useState(true)
+
+	let baseObjects;
+
+	try {
+		baseObjects = fetchBaseObjects();
+	} catch (e) {
+		console.error(e)
+		return <ErrorDisplay e={e}/>
+	}
+
+	const {campaign, brand, masterBrand, subBrands} = baseObjects;
+
 	// if not logged in AND impact hasn't been chosen yet...
 	if(!Login.isLoggedIn() || !impactChosen) {
 		return <ImpactLoginCard choice={impactChosen} setChoice={setImpactChosen} masterBrand={TEST_BRAND_OBJ}/>
@@ -253,6 +273,25 @@ const ImpactOverviewPage = () => {
 	</>
 	);
 };
+
+const ErrorDisplay = ({e}) => {
+
+	const [showError, setShowError] = useState(false);
+
+	return <Container>
+		<h1>Sorry, we couldn't load that!</h1>
+		<p>
+			Something went wrong :(
+			<br/>
+			Check you have the correct URL. If you think this is a bug, please report it to support@good-loop.com
+		</p>
+		<CardCollapse title="Error" collapse={!showError} onHeaderClick={() => setShowError(!showError)}>
+			<code>
+				{e.message}
+			</code>
+		</CardCollapse>
+	</Container>;
+}
 
 const LogosDisplay = () => {
 
