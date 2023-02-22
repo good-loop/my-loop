@@ -104,10 +104,15 @@ const fetchBaseObjects = () => {
 	// If we've looked for both brand and campaign and found nothing, we have a 404
 	if (pvCampaign && pvCampaign.resolved && !campaign
 		&& pvBrand && pvBrand.resolved && !brand) {
-		throw new Error("404 Not Found");
+		throw new Error("404: Not found");
 	}
 
-	return {campaign, brand, masterBrand, subBrands};
+	const resolved = (!pvCampaign || pvCampaign.resolved) &&
+					(!pvBrand || pvBrand.resolved) &&
+					(!pvMasterBrand || pvMasterBrand.resolved) &&
+					(!pvSubBrands || pvSubBrands.resolved);
+
+	return {campaign, brand, masterBrand, subBrands, resolved};
 }
 
 
@@ -122,7 +127,7 @@ const ImpactOverviewPage = () => {
 	// shrinking / expanding navbar animation values
 	let [isNavbarOpen, setIsNavbarOpen] = useState(false)
 	const navToggleAnimation = useSpring({
-		width : isNavbarOpen ? "270px" : "90px",	
+		width : isNavbarOpen ? "270px" : "90px",
 	})
 	// if not logged in, use may select GreenDash instead.
 	// set to true to avoid this choice being made on page refresh if logged in 
@@ -278,11 +283,13 @@ const ErrorDisplay = ({e}) => {
 
 	const [showError, setShowError] = useState(false);
 
-	return <Container>
-		<h1>Sorry, we couldn't load that!</h1>
+	let errorTitle = "Sorry, something went wrong :(";
+
+	if (e.message.includes("404: Not found")) errorTitle = "404: We couldn't find that!"
+
+	return <Container className='mt-5'>
+		<h1>{errorTitle}</h1>
 		<p>
-			Something went wrong :(
-			<br/>
 			Check you have the correct URL. If you think this is a bug, please report it to support@good-loop.com
 		</p>
 		<CardCollapse title="Error" collapse={!showError} onHeaderClick={() => setShowError(!showError)}>
