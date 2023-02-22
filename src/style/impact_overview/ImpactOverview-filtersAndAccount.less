@@ -89,6 +89,7 @@
     // container div within the above button
     .brand-campaign-set {
         width: 100%;
+        align-items: center;
     }
 
     // unindented brand
@@ -100,35 +101,48 @@
     }
 
     // indented campaign
-    .campaign-button {
+    .campaign-item {
         width: 75%;
-        border-top: solid 1px rgb(205, 205, 205) !important;
-        background-color: rgb(217, 217, 217) !important;
+        margin-left: 90px;
+        padding: 10px;
     }
 
-    .dropdown-button {
-        background-image: url("/img/icons/down-arrow.svg");
-        width: 2rem;
-        height: 2rem;
-        border: none;
-        background-size: contain;
-    }
 
-    .img-thumbnail {
+    .img-thumbnail, .impact-link-placeholder-thumbnail {
         width: 75px !important;
         height: 75px !important;
         display: inline-flex !important;
+        border: none;
+        margin-right: 2rem;
     }
 
     .impact-link-placeholder-thumbnail {
-        width: 75px;
-        height: 75px;
-        background-color: darkgray;
-        display: inline-flex;
+        background-color: lightgrey;
     }
 
+    // logo, text and expand campaigns button
     .info {
         display: inline-flex;
+        align-items: center;
+        width: 100%;
+        padding: 10px;
+        border-bottom: solid 1px lightgrey;
+        
+
+        .name {
+            margin-right: 1rem;
+            font-family: "Montserrat", sans-serif;
+            font-size: large;
+        }
+
+        .dropdown-button {
+            background-image: url("/img/icons/down-arrow.svg");
+            background-color: transparent;
+            background-size: contain;   
+            width: 2rem;
+            height: 2rem;
+            border: none;
+        }
     }
 
     .closed {

@@ -4,7 +4,7 @@ import SearchQuery from '../../base/searchquery';
 import { getId } from '../../base/data/DataClass';
 import Misc from '../../base/components/Misc';
 import C from '../../C';
-import { openAndPopulateModal } from './GLCards';
+import { openAndPopulateModal, modalToggle } from './GLCards';
 import ListLoad from '../../base/components/ListLoad';
 import DataStore from '../../base/plumbing/DataStore';
 import { goto } from '../../base/plumbing/glrouter';
@@ -49,6 +49,8 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 			// only set subBrand if it's not a masterbrand (masterBrands won't have parentIds)
 			brand.parentId ? setCurSubBrand(brand) : setCurSubBrand(null)
 		}
+
+		modalToggle()
 	}
 
 	/**
@@ -84,8 +86,8 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 		
 		return <>
 			<div className='brand-campaign-set campaign-item' onClick={() => filterChange({brand:parentItem, campaign:item})}>
-				{thumbnail}
 				<div className="info">
+					{thumbnail}
 					<div className="name">{name}</div>
 					{button || ''}
 				</div>
@@ -135,7 +137,7 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 			if(event.target.className == 'dropdown-button') return;
 			filterChange({brand:item});
 		}
-
+		
 		return <>
 			<div className='brand-campaign-set'>
 				<div className="info brand-item" onClick={brandItemOnClick}>
@@ -155,7 +157,7 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 	*/
 	const openFilters = () => {
 		
-		const vertiser = TEST_BRAND;
+		const vertiser = masterBrand.id
 
 		const classes = `brand-button ListItem btn-default btn btn-outline-secondary ${KStatus.PUBLISHED} btn-space`
 
@@ -174,7 +176,7 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 					ListItem={FilterListItem} itemClassName={classes}/>
 			</div>
 		)
-		openAndPopulateModal({id:"left-half", content:modalContent, title:"(my header should have a unique class)", prioritized:true, headerClassName:"oofowmybones"})
+		openAndPopulateModal({id:"left-half", content:modalContent, prioritized:true, headerClassName:"red-top-border noClose"})
 	}
 	
 	// helper JSX elements
