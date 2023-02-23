@@ -29,6 +29,7 @@ import Misc from '../../base/components/Misc';
 import List from '../../base/data/List';
 import ListLoad from '../../base/components/ListLoad';
 import Campaign from '../../base/data/Campaign';
+import Advertiser from '../../base/data/Advertiser';
 
 /**
  * DEBUG OBJECTS
@@ -56,7 +57,7 @@ export class ImpactFilters {
 const fetchBaseObjects = () => {
 	const path = DataStore.getValue(['location', 'path']);
 
-	if (path.length < 3) return {error: "Invalid URL"};
+	if (path.length < 3) return {error: new Error("Invalid URL")};
 
 	const status = DataStore.getUrlValue('gl.status') || DataStore.getUrlValue('status') || KStatus.PUBLISHED;
 
@@ -100,8 +101,7 @@ const fetchBaseObjects2 = async ({itemId, itemType, status}) => {
 		//if (pvMasterBrand.error) throw pvMasterBrand.error;
 	}
 	// Find any subBrands of this brand (technically brands should only have a parent OR children - but might be handy to make longer brand trees in future)
-	let sq = SearchQuery.setProp(null, "parentId", brandId);
-	pvSubBrands = ActionMan.list({type: C.TYPES.Advertiser, status:KStatus.PUBLISHED, q:sq.query});
+	pvSubBrands = Advertiser.getChildren(brand.id);
 	subBrands = List.hits(await pvSubBrands.promise);
 	//if (pvSubBrands.error) throw pvSubBrands.error;
 	// Don't look for subCampaigns if this is a campaign
@@ -141,20 +141,20 @@ const ImpactOverviewPage = () => {
 	// set to true to avoid this choice being made on page refresh if logged in 
 	let [impactChosen, setImpactChosen] = useState(true)
 
-	let pvBaseObjects = fetchBaseObjects();
-
-	if (pvBaseObjects.error) return <ErrorDisplay e={pvBaseObjects.error} />
-
-	if(! pvBaseObjects.resolved) {
-		return <p> loading screen goes here soon hopefully</p>
-	}
-
-	const {campaign, brand, masterBrand, subBrands, subCampaigns} = pvBaseObjects.value || {};
-
 	// if not logged in AND impact hasn't been chosen yet...
 	if(!Login.isLoggedIn() || !impactChosen) {
 		return <ImpactLoginCard choice={impactChosen} setChoice={setImpactChosen} masterBrand={TEST_BRAND_OBJ}/>
 	}
+
+	// Fetch and prepare base data
+	let pvBaseObjects = fetchBaseObjects();
+	if (pvBaseObjects.error) return <ErrorDisplay e={pvBaseObjects.error} />
+	if(! pvBaseObjects.resolved) {
+		return <p> loading screen goes here soon hopefully</p>
+	}
+	const {campaign, brand, masterBrand, subBrands, subCampaigns} = pvBaseObjects.value || {};
+	// Use campaign specific logo if given
+	const mainLogo = campaign?.branding?.logo || brand?.branding?.logo;
 
 	return (
 	<>
@@ -174,7 +174,7 @@ const ImpactOverviewPage = () => {
 							<GLCard basis={60} className="hero-card">
 								<div className='white-circle'>
 									<div className='content'>
-										<img className='logo' src={(brand?.branding)?.logo}/>
+										<img className='logo' src={mainLogo}/>
 										<br/>
 										<h1>£A BAJILLION</h1>
 										<h2>Donated</h2>
@@ -188,42 +188,7 @@ const ImpactOverviewPage = () => {
 							</GLCard>
 
 							{/* bottom left corner */}
-							<GLHorizontal>
-								<GLCard
-									className="ad-boast"
-									modalContent={WatchToDonateModal}
-									modalTitle="Watch To Donate"
-									modalId="full-page"
-									modalClassName="no-padding watch-to-donate">
-										<h3>Watch to donate</h3>
-										<h2>£333,203</h2>
-										<h3 className="text-bold">Donated...</h3>
-
-										<h5>INCLUDING</h5>
-
-										<h4>15,000 Trees Planted</h4>
-										<CharityLogo charity={TEST_CHARITY_OBJ}/>
-
-										<h4>10,012 Children's Meals</h4>
-										<CharityLogo charity={TEST_CHARITY_OBJ}/>
-
-										<QuestionIcon/>
-								</GLCard>
-								<GLCard
-									className="ad-boast"
-									modalContent={ThisAdDoesGoodModal}
-									modalTitle="This Ad Does Good"
-									modalId="full-page"
-									modalClassName="no-padding this-ad-does-good">
-										<h3 className="color-greenmedia-darkcyan">This ad does good</h3>
-										<h2 className="color-greenmedia-darkcyan">136,580</h2>
-										<h3 className="color-greenmedia-darkcyan text-bold">Trees planted...</h3>
-
-										<img src={TEST_BRAND_OBJ.branding.logo} className="logo"/>
-										<CharityLogo charity={TEST_CHARITY_OBJ}/>
-										<QuestionIcon/>
-								</GLCard>
-							</GLHorizontal>
+							<BrandDonationInfo brand={brand}/>
 
 							<GLModalCard id="left-half"/>
 						</GLVertical>
@@ -315,7 +280,7 @@ const ImpactOverviewPage = () => {
 					</GLHorizontal>
 
 					<GLCard className="logos-display">
-						<LogosDisplay/>
+						<LogosDisplay brand={brand} subBrands={subBrands}/>
 					</GLCard>
 				</GLVertical>
 			</Container>
@@ -328,6 +293,45 @@ const ImpactOverviewPage = () => {
 	);
 };
 
+const BrandDonationInfo = ({brand}) => {
+	return <GLHorizontal>
+		<GLCard
+			className="ad-boast"
+			modalContent={() => <WatchToDonateModal brand={brand}/>}
+			modalTitle="Watch To Donate"
+			modalId="full-page"
+			modalClassName="no-padding watch-to-donate">
+				<h3>Watch to donate</h3>
+				<h2>£333,203</h2>
+				<h3 className="text-bold">Donated...</h3>
+
+				<h5>INCLUDING</h5>
+
+				<h4>15,000 Trees Planted</h4>
+				<CharityLogo charity={TEST_CHARITY_OBJ}/>
+
+				<h4>10,012 Children's Meals</h4>
+				<CharityLogo charity={TEST_CHARITY_OBJ}/>
+
+				<QuestionIcon/>
+		</GLCard>
+		<GLCard
+			className="ad-boast"
+			modalContent={() => <ThisAdDoesGoodModal brand={brand}/>}
+			modalTitle="This Ad Does Good"
+			modalId="full-page"
+			modalClassName="no-padding this-ad-does-good">
+				<h3 className="color-greenmedia-darkcyan">This ad does good</h3>
+				<h2 className="color-greenmedia-darkcyan">136,580</h2>
+				<h3 className="color-greenmedia-darkcyan text-bold">Trees planted...</h3>
+
+				<img src={brand?.branding?.logo} className="logo"/>
+				<CharityLogo charity={TEST_CHARITY_OBJ}/>
+				<QuestionIcon/>
+		</GLCard>
+	</GLHorizontal>;
+}
+
 const ErrorDisplay = ({e}) => {
 
 	const [showError, setShowError] = useState(false);
@@ -335,6 +339,7 @@ const ErrorDisplay = ({e}) => {
 	let errorTitle = "Sorry, something went wrong :(";
 
 	if (e.message.includes("404: Not found")) errorTitle = "404: We couldn't find that!"
+	if (e.message.includes("Invalid URL")) errorTitle = "Sorry, that's not a valid page!"
 
 	return <Container className='mt-5'>
 		<h1>{errorTitle}</h1>
@@ -349,27 +354,24 @@ const ErrorDisplay = ({e}) => {
 	</Container>;
 }
 
-const LogosDisplay = () => {
+const LogosDisplay = ({brand, subBrands}) => {
 
-	const BrandLogo = ({type, item, checkboxes, canDelete, nameFn, extraDetail, button}) => {
+	const BrandLogo = ({item}) => {
 		return <Col md={1} xs={7} className="text-center">
 			{item.branding?.logo ? <img src={item.branding.logo}/> : <p>{item.name}</p>}
 		</Col>
 	}
 
-	const vertiserId = TEST_BRAND;
-	const vertiser = TEST_BRAND_OBJ;
-
 	return <>
 		<h3>Advertising that's a force for good</h3>
 		<br/><br/>
-		<img src={vertiser.branding.logo} className="logo"/>
+		<img src={brand?.branding?.logo} className="logo"/>
 		<br/><br/>
 		<img className='a4glogo' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 		<br/><br/><br/>
-		<ListLoad status={KStatus.PUBLISHED} hideTotal type={C.TYPES.Advertiser}
-				q={SearchQuery.setProp(null, "parentId", vertiserId).query}
-				ListItem={BrandLogo} unwrapped className="row justify-content-center w-100"/>
+		<Row className='justify-content-center w-100'>
+			{subBrands.map(b => <BrandLogo item={b} key={b.id}/>)}
+		</Row>
 	</>;
 
 };
@@ -380,9 +382,8 @@ const QuestionIcon = () => {
 	</div>
 }
 
-const ThisAdDoesGoodModal = () => {
+const ThisAdDoesGoodModal = ({brand}) => {
 
-	const vertiser = TEST_BRAND_OBJ;
 	const charity = TEST_CHARITY_OBJ;
 
 	return <div className="bg-gl-background-default inmodal-wrapper p-5">
@@ -422,7 +423,7 @@ const ThisAdDoesGoodModal = () => {
 			<br/>
 			<Row className='w-50 mx-auto'>
 				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
-					<img src={vertiser.branding.logo} className="logo"/>
+					<img src={brand.branding?.logo} className="logo"/>
 				</Col>
 				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
 					<CharityLogo charity={charity}/>
@@ -433,9 +434,8 @@ const ThisAdDoesGoodModal = () => {
 	</div>;
 }
 
-const WatchToDonateModal = () => {
+const WatchToDonateModal = ({brand}) => {
 
-	const vertiser = TEST_BRAND_OBJ;
 	const charity = TEST_CHARITY_OBJ;
 
 	return <div className="bg-gl-background-default inmodal-wrapper p-5">
@@ -475,7 +475,7 @@ const WatchToDonateModal = () => {
 			<br/>
 			<Row className='w-50 mx-auto'>
 				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
-					<img src={vertiser.branding.logo} className="logo"/>
+					<img src={brand.branding?.logo} className="logo"/>
 				</Col>
 				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
 					<CharityLogo charity={charity}/>
@@ -500,7 +500,7 @@ const ContentList = () => {
 	const contentRenderable = Object.keys(content).map(title => { return {title, tick:content[title]}})
 
 	return <>
-		{contentRenderable.map(c => <Row>
+		{contentRenderable.map(c => <Row key={c}>
 			<Col xs={3}>
 				<img src={"/img/mydata/" + (c.tick ? "circle-tick.svg" : "circle-no-tick.svg")} className='logo'/>
 			</Col>
@@ -588,7 +588,7 @@ const BrandList = ({brand, subBrands}) => {
 		<p className='color-gl-red text-center'>{brand.name} - All Campaigns</p>
 		<br/>
 		<Row>
-			{subBrands.map(brand => <BrandListItem item={brand}/> )}
+			{subBrands.map(b => <BrandListItem item={b} key={b.id}/> )}
 		</Row>
 	</>;
 };
@@ -657,9 +657,9 @@ const CampaignList = ({campaigns, brand, subBrands, status}) => {
 		<p className='color-gl-red text-center'>{brand.name} - All Campaigns</p>
 		<br/>
 		<GLVertical>
-			{campaigns.map((campaign, i) => {
+			{campaigns.map(campaign => {
 				const myBrand = allBrands[campaign.vertiser];
-				return <GLCard className="preview campaign mt-3" noMargin>
+				return <GLCard className="preview campaign mt-3" noMargin key={campaign.id}>
 					<div className='campaign-details'>
 						<p className='text-left m-0'>
 							<b>{campaign.vertiserName}</b>
