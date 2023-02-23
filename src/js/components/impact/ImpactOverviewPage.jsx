@@ -166,7 +166,7 @@ const ImpactOverviewPage = () => {
 		<div className='iview-positioner pr-md-1'>
 			<Container fluid className='iview-container'>
 				<animated.div id='in-flow-navbar' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}></animated.div>
-				<GLVertical>
+				<GLVertical id='overview-first-card'>
 					<GLHorizontal collapse="md" className="iview-grid">
 						{/* first grid half */}
 						<GLVertical>

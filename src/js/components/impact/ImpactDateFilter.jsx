@@ -12,7 +12,7 @@ const A = C.A;
 
 const ImpactDateFilter = ({}) => {
 	let content = () => (<div><PropControlPeriod calendarFormat/></div>)
-	let onClick = () => openAndPopulateModal({id:"hero-card-modal", content:content, title:"(still need red bar here)", prioritized:true})
+	let onClick = () => openAndPopulateModal({id:"hero-card-modal", content:content, prioritized:true, headerClassName:"red-top-border noClose"})
 	return (
 	<div id="date-filters">
 		<button className="filter-row filter-text" onClick={onClick}>Date</button>

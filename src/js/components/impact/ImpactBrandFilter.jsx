@@ -229,7 +229,7 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 	return (
 		<div id="filters">
 				<StepBackFiltersButton content={masterBrand.name} rightArrow/>
-				<StepBackFiltersButton content={curSubBrand.name} clearOnlyCamapign rightArrow/>
+				{curSubBrand.id != masterBrand.id && <StepBackFiltersButton content={curSubBrand.name} clearOnlyCamapign rightArrow/>}
 				<OpenFiltersButton content={curCampaign.name} underlined/>
 		</div>
 	)
