@@ -196,29 +196,39 @@ const ImpactOverviewPage = () => {
 
 							{/* bottom left corner */}
 							<GLHorizontal>
-								<GLCard className="ad-boast" modalContent={WatchToDonateModal} modalTitle="Watch To Donate" modalId="full-page" modalClassName="no-padding watch-to-donate">
-									<h3>Watch to donate</h3>
-									<h2>£333,203</h2>
-									<h3 className="text-bold">Donated...</h3>
+								<GLCard
+									className="ad-boast"
+									modalContent={WatchToDonateModal}
+									modalTitle="Watch To Donate"
+									modalId="full-page"
+									modalClassName="no-padding watch-to-donate">
+										<h3>Watch to donate</h3>
+										<h2>£333,203</h2>
+										<h3 className="text-bold">Donated...</h3>
 
-									<h5>INCLUDING</h5>
+										<h5>INCLUDING</h5>
 
-									<h4>15,000 Trees Planted</h4>
-									<CharityLogo charity={TEST_CHARITY_OBJ}/>
+										<h4>15,000 Trees Planted</h4>
+										<CharityLogo charity={TEST_CHARITY_OBJ}/>
 
-									<h4>10,012 Children's Meals</h4>
-									<CharityLogo charity={TEST_CHARITY_OBJ}/>
+										<h4>10,012 Children's Meals</h4>
+										<CharityLogo charity={TEST_CHARITY_OBJ}/>
 
-									<QuestionIcon/>
+										<QuestionIcon/>
 								</GLCard>
-								<GLCard className="ad-boast" modalContent={ThisAdDoesGoodModal} modalTitle="This Ad Does Good" modalId="full-page" modalClassName="no-padding this-ad-does-good">
-									<h3 className="color-greenmedia-darkcyan">This ad does good</h3>
-									<h2 className="color-greenmedia-darkcyan">136,580</h2>
-									<h3 className="color-greenmedia-darkcyan text-bold">Trees planted...</h3>
+								<GLCard
+									className="ad-boast"
+									modalContent={ThisAdDoesGoodModal}
+									modalTitle="This Ad Does Good"
+									modalId="full-page"
+									modalClassName="no-padding this-ad-does-good">
+										<h3 className="color-greenmedia-darkcyan">This ad does good</h3>
+										<h2 className="color-greenmedia-darkcyan">136,580</h2>
+										<h3 className="color-greenmedia-darkcyan text-bold">Trees planted...</h3>
 
-									<img src={TEST_BRAND_OBJ.branding.logo} className="logo"/>
-									<CharityLogo charity={TEST_CHARITY_OBJ}/>
-									<QuestionIcon/>
+										<img src={TEST_BRAND_OBJ.branding.logo} className="logo"/>
+										<CharityLogo charity={TEST_CHARITY_OBJ}/>
+										<QuestionIcon/>
 								</GLCard>
 							</GLHorizontal>
 
@@ -232,36 +242,65 @@ const ImpactOverviewPage = () => {
 							<GLHorizontal collapse="md" basis={60}>
 								<GLVertical>
 									<GLHorizontal>
-										{subBrands.length ? <GLCard modalContent={() => <BrandList brand={brand}/>} modalTitle={subBrands.length + " Brands"} modalId="right-half" modalClassName="list-modal" className="center-number">
-											<h2>{subBrands.length}</h2>
-											<h3>Brands</h3>
-										</GLCard> : null}
-										<GLCard modalContent={CharityList} modalTitle="18 charities" modalId="right-half" modalClassName="list-modal" className="center-number">
-											<h2>18</h2>
-											<h3>Charities</h3>
+										{subBrands.length ?
+											<GLCard
+												modalContent={() => <BrandList brand={brand} subBrands={subBrands}/>}
+												modalTitle={subBrands.length + " Brands"}
+												modalId="right-half"
+												modalClassName="list-modal"
+												className="center-number">
+													<h2>{subBrands.length}</h2>
+													<h3>Brands</h3>
+											</GLCard> : null}
+										<GLCard
+											modalContent={CharityList}
+											modalTitle="18 charities"
+											modalId="right-half"
+											modalClassName="list-modal"
+											className="center-number">
+												<h2>18</h2>
+												<h3>Charities</h3>
 										</GLCard>
 									</GLHorizontal>
-									{subCampaigns.length ? <GLCard basis={10} modalContent={() => <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaigns}/>} modalTitle={subCampaigns.length + " Campaigns"} modalClassName="list-modal" modalId="right-half">
-										<h3>{subCampaigns.length} CAMPAIGNS</h3>
-									</GLCard> : null}
+									{subCampaigns.length ?
+										<GLCard 
+											basis={10}
+											modalContent={() => <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaigns}/>}
+											modalTitle={subCampaigns.length + " Campaigns"}
+											modalClassName="list-modal"
+											modalId="right-half">
+												<h3>{subCampaigns.length} CAMPAIGNS</h3>
+										</GLCard> : null}
 									<GLCard basis={10}>
 										<h3>6.5M VIEWS | 5 COUNTRIES</h3>
 									</GLCard>
-									<GLCard noPadding className="offset-card" basis={0} modalId="right-half" modalTitle="8.69T CO2E Offset" modalHeader={CO2OffsetInfoHeader} modalContent={CO2OffsetInfo} modalClassName="no-header-padding co2-offset">
-										<div className='offset-number px-3'>
-											<h3>8.69T CO2E OFFSET</h3>
-										</div>
-										<div className='carbon-neutral px-5 py-2'>
-											<img src="/img/Impact/Good-Loop_CarbonNeutralAd_Logo_Final-05.svg" className='w-100'/>
-										</div>
+									<GLCard
+										noPadding
+										className="offset-card"
+										basis={0} modalId="right-half"
+										modalTitle="8.69T CO2E Offset"
+										modalHeader={CO2OffsetInfoHeader}
+										modalContent={CO2OffsetInfo}
+										modalClassName="no-header-padding co2-offset">
+											<div className='offset-number px-3'>
+												<h3>8.69T CO2E OFFSET</h3>
+											</div>
+											<div className='carbon-neutral px-5 py-2'>
+												<img src="/img/Impact/Good-Loop_CarbonNeutralAd_Logo_Final-05.svg" className='w-100'/>
+											</div>
 									</GLCard>
 								</GLVertical>
 								<div>
-									<GLCard modalId="right-half" modalTitle="Ads for good" modalHeader={AdsForGoodCTAHeader} modalContent={AdsForGoodCTA} modalClassName="no-header-padding ads-for-good">
-										<div className='d-flex flex-column align-items-stretch justify-content-between h-100'>
-											<img className='w-75 align-self-center mb-3' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
-											<ContentList/>
-										</div>
+									<GLCard
+										modalId="right-half"
+										modalTitle="Ads for good"
+										modalHeader={AdsForGoodCTAHeader}
+										modalContent={AdsForGoodCTA}
+										modalClassName="no-header-padding ads-for-good">
+											<div className='d-flex flex-column align-items-stretch justify-content-between h-100'>
+												<img className='w-75 align-self-center mb-3' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+												<ContentList/>
+											</div>
 									</GLCard>
 									<GLModalCard id="ads-for-good-modal" />
 								</div>
@@ -269,8 +308,11 @@ const ImpactOverviewPage = () => {
 							</GLHorizontal>
 							
 							{/* bottom right corner */}
-							<GLCard modalContent={AdsCatalogueModal} modalId="full-page" modalClassName="ads-catalogue-modal">
-								<AdsCatalogueModal noPreviews/>
+							<GLCard
+								modalContent={AdsCatalogueModal}
+								modalId="full-page"
+								modalClassName="ads-catalogue-modal">
+									<AdsCatalogueModal noPreviews/>
 							</GLCard>
 
 							<GLModalCard id="right-half"/>
@@ -535,9 +577,9 @@ const CO2OffsetInfo = () => {
 	</div>
 }
 
-const BrandList = () => {
+const BrandList = ({brand, subBrands}) => {
 
-	const BrandListItem = ({ type, item, checkboxes, canDelete, nameFn, extraDetail, button}) => {
+	const BrandListItem = ({item}) => {
 		return <Col md={4} className="mt-3">
 			<GLCard className="preview h-100" noMargin>
 				
@@ -547,16 +589,14 @@ const BrandList = () => {
 		</Col>;
 	}
 
-	const vertiser = TEST_BRAND;
-
 	return <>
 		<br/>
 		<h5>Brands donating via Good-Loop Ads</h5>
-		<p className='color-gl-red text-center'>{TEST_BRAND_OBJ.name} - All Campaigns</p>
+		<p className='color-gl-red text-center'>{brand.name} - All Campaigns</p>
 		<br/>
-		<ListLoad status={KStatus.PUBLISHED} hideTotal type={C.TYPES.Advertiser}
-				q={SearchQuery.setProp(null, "parentId", vertiser).query}
-				ListItem={BrandListItem} unwrapped className="row"/>
+		<Row>
+			{subBrands.map(brand => <BrandListItem item={brand}/> )}
+		</Row>
 	</>;
 };
 
