@@ -53,16 +53,23 @@ export class ImpactFilters {
 	q;
 }
 
-
 const fetchBaseObjects = () => {
 	const path = DataStore.getValue(['location', 'path']);
 
-	if (path.length < 3) throw new Error("Invalid URL");
+	if (path.length < 3) return {error: "Invalid URL"};
 
 	const status = DataStore.getUrlValue('gl.status') || DataStore.getUrlValue('status') || KStatus.PUBLISHED;
 
 	const itemId = path[2];
 	const itemType = path[1];
+
+	let pv = DataStore.fetch(['misc','impactBaseObjects',itemType,status,'all',itemId], () => {
+		return fetchBaseObjects2({itemId, itemType, status});
+	});
+	return pv;
+}
+
+const fetchBaseObjects2 = async ({itemId, itemType, status}) => {
 
 	let pvCampaign, campaign;
 	let pvBrand, brand, brandId;
@@ -73,8 +80,8 @@ const fetchBaseObjects = () => {
 	// Fetch campaign object if specified
 	if (itemType === "campaign") {
 		pvCampaign = getDataItem({type: C.TYPES.Campaign, status, id:itemId});
-		campaign = pvCampaign.value;
-		if (pvCampaign.error) throw pvCampaign.error;
+		campaign = await pvCampaign.promise;
+		//if (pvCampaign.error) throw pvCampaign.error;
 		// If we have a campaign, use it to find the brand
 		brandId = campaign?.vertiser;
 	} else if (itemType === "brand") {
@@ -82,28 +89,26 @@ const fetchBaseObjects = () => {
 		brandId = itemId;
 	}
 
-	if (brandId) {
-		// Find the specified brand
-		pvBrand = getDataItem({type: C.TYPES.Advertiser, status, id:brandId});
-		brand = pvBrand.value;
-		if (pvBrand.error) throw pvBrand.error;
-		if (brand && brand.parentId) {
-			// If this brand has a parent, get it
-			pvMasterBrand = getDataItem({type: C.TYPES.Advertiser, status, id:brand.parentId});
-			masterBrand = pvMasterBrand.value;
-			if (pvMasterBrand.error) throw pvMasterBrand.error;
-		}
-		// Find any subBrands of this brand (technically brands should only have a parent OR children - but might be handy to make longer brand trees in future)
-		let sq = SearchQuery.setProp(null, "parentId", brandId);
-		pvSubBrands = ActionMan.list({type: C.TYPES.Advertiser, status:KStatus.PUBLISHED, q:sq.query});
-		subBrands = pvSubBrands.value && List.hits(pvSubBrands.value);
-		if (pvSubBrands.error) throw pvSubBrands.error;
-		// Don't look for subCampaigns if this is a campaign
-		if (!campaign) {
-			// Find all related campaigns to this brand
-			pvSubCampaigns = Campaign.fetchForAdvertiser(brandId, status);
-			subCampaigns = pvSubCampaigns.value && List.hits(pvSubCampaigns.value);
-		}
+	// Find the specified brand
+	pvBrand = getDataItem({type: C.TYPES.Advertiser, status, id:brandId});
+	brand = await pvBrand.promise;
+	//if (pvBrand.error) throw pvBrand.error;
+	if (brand.parentId) {
+		// If this brand has a parent, get it
+		pvMasterBrand = getDataItem({type: C.TYPES.Advertiser, status, id:brand.parentId});
+		masterBrand = await pvMasterBrand.promise;
+		//if (pvMasterBrand.error) throw pvMasterBrand.error;
+	}
+	// Find any subBrands of this brand (technically brands should only have a parent OR children - but might be handy to make longer brand trees in future)
+	let sq = SearchQuery.setProp(null, "parentId", brandId);
+	pvSubBrands = ActionMan.list({type: C.TYPES.Advertiser, status:KStatus.PUBLISHED, q:sq.query});
+	subBrands = List.hits(await pvSubBrands.promise);
+	//if (pvSubBrands.error) throw pvSubBrands.error;
+	// Don't look for subCampaigns if this is a campaign
+	if (!campaign) {
+		// Find all related campaigns to this brand
+		pvSubCampaigns = Campaign.fetchForAdvertiser(brandId, status);
+		subCampaigns = List.hits(await pvSubCampaigns.promise);
 	}
 
 	// Simplifies having to add null checks for subBrands everywhere
@@ -111,18 +116,11 @@ const fetchBaseObjects = () => {
 	if (!subCampaigns) subCampaigns = [];
 
 	// If we've looked for both brand and campaign and found nothing, we have a 404
-	if (pvCampaign && pvCampaign.resolved && !campaign
-		&& pvBrand && pvBrand.resolved && !brand) {
+	if (!campaign && !brand) {
 		throw new Error("404: Not found");
 	}
 
-	const resolved = (!pvCampaign || pvCampaign.resolved) &&
-					(!pvBrand || pvBrand.resolved) &&
-					(!pvMasterBrand || pvMasterBrand.resolved) &&
-					(!pvSubBrands || pvSubBrands.resolved) &&
-					(!pvSubCampaigns || pvSubCampaigns.resolved);
-
-	return {campaign, brand, masterBrand, subBrands, subCampaigns, resolved};
+	return {campaign, brand, masterBrand, subBrands, subCampaigns};
 }
 
 
@@ -143,20 +141,15 @@ const ImpactOverviewPage = () => {
 	// set to true to avoid this choice being made on page refresh if logged in 
 	let [impactChosen, setImpactChosen] = useState(true)
 
-	let baseObjects;
+	let pvBaseObjects = fetchBaseObjects();
 
-	try {
-		baseObjects = fetchBaseObjects();
-	} catch (e) {
-		console.error(e)
-		return <ErrorDisplay e={e}/>
-	}
+	if (pvBaseObjects.error) return <ErrorDisplay e={pvBaseObjects.error} />
 
-	const {campaign, brand, masterBrand, subBrands, subCampaigns, resolved} = baseObjects;
-	
-	if(! resolved) {
+	if(! pvBaseObjects.resolved) {
 		return <p> loading screen goes here soon hopefully</p>
 	}
+
+	const {campaign, brand, masterBrand, subBrands, subCampaigns} = pvBaseObjects.value || {};
 
 	// if not logged in AND impact hasn't been chosen yet...
 	if(!Login.isLoggedIn() || !impactChosen) {
