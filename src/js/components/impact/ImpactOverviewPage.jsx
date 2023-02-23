@@ -13,7 +13,7 @@ import { modifyPage } from '../../base/plumbing/glrouter';
 import DynImg from '../../base/components/DynImg';
 import NavBars from './ImpactNavBars';
 import ImpactLoginCard from './ImpactLogin';
-import { GLCard, GLHorizontal, GLVertical, GLModalCard, GLModalBackdrop } from './GLCards';
+import { GLCard, GLHorizontal, GLVertical, GLModalCard, GLModalBackdrop, markPageLoaded } from './GLCards';
 import ImpactFilterOptions from './ImpactFilterOptions'
 import { fetchCharity } from '../pages/MyCharitiesPage'
 import NGO from '../../base/data/NGO';
@@ -150,7 +150,10 @@ const ImpactOverviewPage = () => {
 	let pvBaseObjects = fetchBaseObjects();
 	if (pvBaseObjects.error) return <ErrorDisplay e={pvBaseObjects.error} />
 	if(! pvBaseObjects.resolved) {
+		markPageLoaded(false);
 		return <p> loading screen goes here soon hopefully</p>
+	} else {
+		markPageLoaded(true);
 	}
 	const {campaign, brand, masterBrand, subBrands, subCampaigns} = pvBaseObjects.value || {};
 	// Use campaign specific logo if given
