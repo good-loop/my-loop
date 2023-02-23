@@ -39,15 +39,27 @@
         }
     }
 
+    // account container inside navbar
     #impact-overview-accounts { 
         position: relative;
         display: flex;
+        margin-right: 2rem;
 
-        .account-menu {
-            justify-content: center;
-            
+        // account button inside navbar
+        #account-icon, #share-icon {
+            background-color: transparent;
+            border: none;
+            outline: none;
+            :focus {
+                border: none;
+                outline: none;
+            }
+            text-decoration: underline;
         }
-        
+
+        #share-icon {
+            margin-right: 1rem;
+        }
     }
 
     #date-filters {
@@ -86,10 +98,18 @@
         background-color: rgb(212, 212, 212);
     }
 
+    .ListLoad {
+        margin: 0;
+    }
+
     // container div within the above button
     .brand-campaign-set {
         width: 100%;
         align-items: center;
+
+        .ListLoad {
+            margin-top: 0.5rem; // all but first items have this style, apply it to the first as well 
+        }
     }
 
     // unindented brand
@@ -142,13 +162,32 @@
             width: 2rem;
             height: 2rem;
             border: none;
+            outline: none;
+            &.open {
+                transform: rotate(180deg);
+            }
+            :focus {
+                outline: none;
+                border: none;
+            }
         }
+    }
+
+    .campaign-item {
+        padding: 10px;
+        padding-top: 0;
+        margin-left: 10%;
+        width: 90%;
     }
 
     .closed {
         @media @md-min {
             display: none;
         }
+    }
+
+    .selected-filter {
+        font-weight: 600;
     }
 
 }
@@ -169,34 +208,51 @@
     height: 30px;
 }
 
-
+// overall container for account modal content
 #impact-account-container {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
 
-    .img-thumbnail, .impact-link-placeholder-thumbnail {
-        width: 50px !important;
-        height: 50px !important;
-        display: inline-flex !important;
+    // container for each option
+    .account-menu-option {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        text-decoration: none;
     }
 
-    .impact-link-placeholder-thumbnail {
-        background-color: lightgray;
+    // image for each option
+    .impact-icon{
+        width: 75px !important;
+        height: 75px !important;
+        display: inline-block !important;
         margin-right: 1rem;
     }
+    // if none supplied use this placeholder
+    .placeholder-thumbnail {
+        background-color: lightgray;
+    }
 
+    // page you're currently on
     .active {
         font-weight: 600;
     }
 
-    span {
+    // link contents
+    .link-text {
         font-family: 'Montserrat';
         align-self: center;
     }
-    
-    a {
-        padding: 1rem;
-        .flex-row {
-            justify-content: center;
-        }
+
+    .LogoutLink {
+        position: absolute;
+        bottom: 1rem;
+        left: 0;
+        right: 0;
+        margin: auto;
     }
+
 }
