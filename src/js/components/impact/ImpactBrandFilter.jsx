@@ -16,6 +16,8 @@ import { goto } from '../../base/plumbing/glrouter';
 import { TEST_BRAND } from './TestValues';
 import { retrurnProfile } from '../pages/TabsForGoodSettings';
 import { assert } from '../../base/utils/assert';
+import { space } from '../../base/utils/miscutils';
+import { unstable_renderSubtreeIntoContainer } from 'react-dom';
 
 const A = C.A;
 
@@ -83,12 +85,12 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 		if (name.length > 280) name = name.slice(0, 280);
 		
 		let thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='impact-link-placeholder-thumbnail' />
-		
+		let isSelected = curCampaign && curCampaign.id == item.id 
 		return <>
-			<div className='brand-campaign-set campaign-item' onClick={() => filterChange({brand:parentItem, campaign:item})}>
-				<div className="info">
+			<div className='brand-campaign-set' onClick={() => filterChange({brand:parentItem, campaign:item})}>
+				<div className="info campaign-item">
 					{thumbnail}
-					<div className="name">{name}</div>
+					<div className={space("name", (isSelected && "selected-filter"))}>{name}</div>
 					{button || ''}
 				</div>
 			</div>
@@ -102,14 +104,18 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 	*		- if item doesn't have branding (logo/thumbnail), use a placeholder thumbrail
 	*		- if Brand has campaigns, nest a ListLoad of those campaigns within a dropdown inside the Brand ListItem 
 	*/
-	const FilterListItem = ({ item, nameFn, button}) => {
+	const FilterListItem = ({ item, nameFn, button, isMaster=false}) => {
 		const id = getId(item);
 		let name = nameFn ? nameFn(item, id) : item.name || item.text || id || '';
-		if (name.length > 280) name = name.slice(0, 280);
+		if (name.length > 260) name = name.slice(0, 260);
+		if(isMaster) name += " - All Brands"
 		const status = item.status || "";
 		
+		
+
 		// is the current brands campaign dropdown expanded or closed?
-		const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+		// if a campaign is selected, start with that subbrands dropdown open
+		const [isDropdownOpen, setIsDropdownOpen] = useState(curCampaign && curSubBrand.id == item.id)
 
 		// classes of campaigns that belong to this current brand
 		const campaignClasses = `filter-button campaign-button ListItem btn-default btn btn-outline-secondary ${KStatus.PUBLISHED} btn-space`
@@ -130,19 +136,21 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 		const thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='impact-link-placeholder-thumbnail' />
 		
 		// dropdown toggle of above campaign ListLoad
-		button = <button className={'dropdown-button'} onClick={(event) => {event.preventDefault(); setIsDropdownOpen(!isDropdownOpen)}} />
+		button = <button className={space('dropdown-button', (isDropdownOpen && "open"))} onClick={(event) => {event.preventDefault(); setIsDropdownOpen(!isDropdownOpen)}} />
 	
 		// clicking the brands dropdown button to reveal its campaings would cause a state change, this stops that 
 		const brandItemOnClick = (event) => {
-			if(event.target.className == 'dropdown-button') return;
+			if(event.target.className.includes('dropdown-button')) return;
 			filterChange({brand:item});
 		}
 		
+		let isSelected = (curSubBrand && item.id == curSubBrand.id) || (isMaster && curSubBrand == null)
+
 		return <>
 			<div className='brand-campaign-set'>
 				<div className="info brand-item" onClick={brandItemOnClick}>
 					{thumbnail}
-					<div className="name">{name}</div>
+					<div className={space("name", (isSelected && "selected-filter"))}>{name}</div>
 					{button || ''}
 				</div>
 				{campaignsListItem}
@@ -167,7 +175,7 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 				<ListLoad status={KStatus.PUBLISHED} hideTotal type={C.TYPES.Advertiser}
 					unwrapped
 					q={SearchQuery.setProp(null, "id", vertiser).query} 
-					ListItem={FilterListItem} itemClassName={classes}/>
+					ListItem={(itemProps) => <FilterListItem {...itemProps} isMaster/>} itemClassName={classes}/>
 
 				{/* sub brands & their campaigns */}
 				<ListLoad status={KStatus.PUBLISHED} hideTotal type={C.TYPES.Advertiser}
@@ -180,8 +188,19 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 	}
 	
 	// helper JSX elements
-	const StepBackFiltersButton = ({content, clearOnlyCamapign, rightArrow}) => <button className="filter-row filter-text" onClick={() => filterClear(clearOnlyCamapign)}>{content} {rightArrow && ">"}</button>
-	const OpenFiltersButton = ({content, rightArrow}) => <button className="filter-row filter-text" onClick={() => openFilters()}>{content} {rightArrow && ">"}</button>
+	const StepBackFiltersButton = ({content, clearOnlyCamapign, rightArrow, underlined}) => (
+		<button className={space("filter-row", "filter-text", (underlined && "underlined"))}
+	 			onClick={() => filterClear(clearOnlyCamapign)}>
+				{content} {rightArrow && ">"}
+		</button>
+	)
+
+	const OpenFiltersButton = ({content, rightArrow, underlined}) => (
+		<button className={space("filter-row", "filter-text", (underlined && "underlined"))}
+			onClick={() => openFilters()}>{content} {rightArrow && ">"}
+		</button>
+	)
+
 	const DropDownIcon = () => <button className='filter-row filter-down-arrow' onClick={() => openFilters()} />
 
 	// no filters / only master brand filtered
@@ -200,7 +219,7 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 		return (
 			<div id="filters">
 				<StepBackFiltersButton content={masterBrand.name} rightArrow/>
-				<OpenFiltersButton content={curSubBrand.name} />
+				<OpenFiltersButton content={curSubBrand.name} underlined/>
 				<DropDownIcon />
 			</div>
 		)
@@ -211,7 +230,7 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 		<div id="filters">
 				<StepBackFiltersButton content={masterBrand.name} rightArrow/>
 				<StepBackFiltersButton content={curSubBrand.name} clearOnlyCamapign rightArrow/>
-				<OpenFiltersButton content={curCampaign.name} />
+				<OpenFiltersButton content={curCampaign.name} underlined/>
 		</div>
 	)
 }

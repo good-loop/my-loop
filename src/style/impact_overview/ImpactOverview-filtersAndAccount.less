@@ -86,10 +86,18 @@
         background-color: rgb(212, 212, 212);
     }
 
+    .ListLoad {
+        margin: 0;
+    }
+
     // container div within the above button
     .brand-campaign-set {
         width: 100%;
         align-items: center;
+
+        .ListLoad {
+            margin-top: 0.5rem; // all but first items have this style, apply it to the first as well 
+        }
     }
 
     // unindented brand
@@ -142,11 +150,30 @@
             width: 2rem;
             height: 2rem;
             border: none;
+            outline: none;
+            &.open {
+                transform: rotate(180deg);
+            }
+            :focus {
+                outline: none;
+                border: none;
+            }
         }
+    }
+
+    .campaign-item {
+        padding: 10px;
+        padding-top: 0;
+        margin-left: 10%;
+        width: 90%;
     }
 
     .closed {
         display: none;;
+    }
+
+    .selected-filter {
+        font-weight: 600;
     }
 
 }

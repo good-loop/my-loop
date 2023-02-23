@@ -94,9 +94,9 @@ const TopNavBar = ({active}) => {
 		</Navbar></>)
 }
 
-const NavBars = ({active, setIsNavbarOpen}) => {
+const NavBars = ({active, isNavbarOpen, setIsNavbarOpen}) => {
 
-	const [isOpen, setIsOpen] = useState(false) // the navbar expanded or not?
+	const [isOpen, setIsOpen] = useState(isNavbarOpen) // the navbar expanded or not?
 
 	// on change of isOpen, these values define CSS animations
 	const navToggleAnimation = useSpring({

@@ -160,7 +160,7 @@ const ImpactOverviewPage = () => {
 	<>
 		<div className="navbars-overlay">
 			{/*<ImpactFilterOptions size="thin"/>  {/*mobile horizontal filters topbar*/}
-			<NavBars active={"overview"} setIsNavbarOpen={setIsNavbarOpen}/>
+			<NavBars active={"overview"} isNavbarOpen={isNavbarOpen} setIsNavbarOpen={setIsNavbarOpen}/>
 			<ImpactFilterOptions size="wide" setIsNavbarOpen={setIsNavbarOpen} masterBrand={masterBrand} brand={brand} campaign={campaign}/>  {/*widescreen vertical filters topbar*/}
 		</div>
 		<div className='iview-positioner pr-md-1'>
