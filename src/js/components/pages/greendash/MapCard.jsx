@@ -302,7 +302,7 @@ const MapCard = ({ baseFilters, per1000 }) => {
 		}
 
 		// assign colours
-		const colours = dataColours(cleanedLocnBuckets.map((row) => row.co2));
+		const colours = dataColours(cleanedLocnBuckets.map((row) => row.count));
 		// zip colours, states, carbon together for the map
 		setMapData(
 			cleanedLocnBuckets.reduce((acc, row, i) => {

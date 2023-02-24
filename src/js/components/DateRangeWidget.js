@@ -204,7 +204,7 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 	// Set period to "X days ago" --> "last midnight (ie 00:00:00 today)"
 	const setDaysBack = (offset) => {
 		// tommorow (end is non-inclusive)
-		const newEnd = tomorrow(new Date());
+		const newEnd = new Date();
 		newEnd.setHours(0, 0, 0, 0);
 		const newStart = new Date(newEnd);
 		if (offset) newStart.setDate(newStart.getDate() + offset);

@@ -88,28 +88,6 @@ const CTACard = ({}) => {
 	);
 };
 
-// ONLY SHOWS EMAIL LIST WITH "listemails" FLAG SET
-// ONLY APPEARS WITH "shareables" OR DEBUG FLAG SET
-const ShareDash = () => {
-	// not-logged in cant share and pseudo users can't reshare
-	if ( ! Login.getId() || Login.getId().endsWith("pseudo")) {
-		return null;
-	}
-	// if ( ! Roles.isDev() && ! DataStore.getUrlValue("shareables") && ! DataStore.getUrlValue("debug") && ! DataStore.getUrlValue("gl.debug")) {
-	// 	return null; // dev only for now TODO for all
-	// }
-	let {filterMode, filterId} = getFilterModeId();
-	if ( ! filterMode || ! filterId) {
-		return null;
-	}
-	let type = {brand:"Advertiser",adid:"GreenTag"}[filterMode] || toTitleCase(filterMode);
-	let shareId = shareThingId(type, filterId);
-	let pvItem = getDataItem({type, id:filterId, status:KStatus.PUBLISHED});
-	let shareName = filterMode+" "+((pvItem.value && pvItem.value.name) || filterId);
-	const showEmails = DataStore.getUrlValue("listemails");
-	return <ShareWidget className="dev-link" hasButton name={"Dashboard for "+shareName} shareId={shareId} hasLink noEmails={!showEmails} />;
-}
-
 const GreenMetrics2 = ({}) => {
 	// Default to current quarter, all brands, all campaigns
 	const period = periodFromUrl();
@@ -221,7 +199,7 @@ const GreenMetrics2 = ({}) => {
 		...baseFilters,
 		breakdown: [
 			// 'total',
-			'time{"co2":"sum"}',
+			'time{"countco2":"sum"}',
 			'adid{"count":"sum"}',
 			// 'os{"emissions":"sum"}',
 			// 'domain{"emissions":"sum"}',
@@ -241,11 +219,11 @@ const GreenMetrics2 = ({}) => {
 	return (
 		<>
 			<OverviewWidget period={period} data={pvChartTotalValue?.by_total.buckets} prob={samplingProb} />
-			{false && <PropControl inline
+			<PropControl inline
 				type="toggle" prop="emode" dflt="total" label="Show emissions:"
 				left={{label: 'Total', value: 'total', colour: 'primary'}}
 				right={{label: 'Per 1000 impressions', value: 'per1000', colour: 'primary'}}
-			/>}
+			/>
 			<Row className="card-row">
 				<Col xs="12" sm="8" className="flex-column">
 					<TimeSeriesCard {...commonProps} data={pvChartDatalValue?.by_time.buckets} noData={noData} />
@@ -266,7 +244,7 @@ const GreenMetrics2 = ({}) => {
 					<BreakdownCard {...commonProps} />
 				</Col>
 				<Col xs="12" sm="4" className="flex-column">
-					<TimeOfDayCard {...commonProps} />
+					{false && <TimeOfDayCard {...commonProps} />}
 					<MapCard {...commonProps} />
 					{/* <CTACard /> "interested to know more" */}
 				</Col>
@@ -279,10 +257,14 @@ const GreenMetrics = ({}) => {
 	const [agencyIds, setAgencyIds] = useState();
 	let agencyId = DataStore.getUrlValue('agency');
 	if (!agencyId && agencyIds?.length === 1) agencyId = agencyIds[0];
+	const [pseudoUser, setPseudoUser] = useState(false);
 
 	// All our filters etc are based user having at most access to one agency ??how so?
 	// Group M users will have multiple, so start by selecting one.
 	useEffect(() => {
+		const userId = Login.getId();
+		if (userId && userId.endsWith('@pseudo')) setPseudoUser(true);
+
 		Login.getSharedWith().then((res) => {
 			if (!res?.cargo) {
 				setAgencyIds([]);
@@ -324,11 +306,10 @@ const GreenMetrics = ({}) => {
 	);
 
 	return (
-		<div className="green-subpage green-metrics">			
+		<div className="green-subpage green-metrics">
 			<Container fluid>
 				{agencyIds ? <>
-					<GreenDashboardFilters />
-					<ShareDash/>
+					<GreenDashboardFilters pseudoUser={pseudoUser} />
 					<GreenMetrics2 />
 				</> : <Misc.Loading text="Checking your access..." />}
 			</Container>
