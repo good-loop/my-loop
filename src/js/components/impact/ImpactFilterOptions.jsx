@@ -18,7 +18,7 @@ const A = C.A;
  * @param {size} string on what page size to draw this element, currently "mobile" and "desktop" are the only expected values
  * @returns 
  */
-const ImpactFilterOptions = ({size, masterBrand, brand, campaign}) => {
+const ImpactFilterOptions = ({size, masterBrand, brand, campaign, setForcedReload}) => {
 
 	assert (size == "wide" || size == "thin")
 
@@ -31,7 +31,7 @@ const ImpactFilterOptions = ({size, masterBrand, brand, campaign}) => {
 
 	if(size == "wide") return (		
 		<div className='flex-row impactOverview-filters-and-account' id={"impactOverview-filters-and-account-"+size}>
-			<ImpactBrandFilters masterBrand={curMaster} curSubBrand={curSubBrand} setCurSubBrand={setCurSubBrand} curCampaign={curCampaign} setCurCampaign={setCurCampaign}/>
+			<ImpactBrandFilters masterBrand={curMaster} curSubBrand={curSubBrand} setCurSubBrand={setCurSubBrand} curCampaign={curCampaign} setCurCampaign={setCurCampaign} setForcedReload={setForcedReload} size={size}/>
 			<ImpactDateFilter />
 			<ImpactAccountButton curMaster={curMaster} curSubBrand={curSubBrand} curCampaign={curCampaign} />
 		</div>
@@ -39,8 +39,8 @@ const ImpactFilterOptions = ({size, masterBrand, brand, campaign}) => {
 
 	if(size == "thin") return (		
 		<div className='flex-row impactOverview-filters-and-account' id={"impactOverview-filters-and-account-"+size}>
-			<ImpactBrandFilters masterBrand={curMaster} curSubBrand={curSubBrand} setCurSubBrand={setCurSubBrand} curCampaign={curCampaign} setCurCampaign={setCurCampaign}/>
-			<ImpactAccountButton curMaster={curMaster} curSubBrand={curSubBrand} curCampaign={curCampaign} />
+			<ImpactBrandFilters masterBrand={curMaster} curSubBrand={curSubBrand} setCurSubBrand={setCurSubBrand} curCampaign={curCampaign} setCurCampaign={setCurCampaign} setForcedReload={setForcedReload} size={size}/>
+			<ImpactAccountButton curMaster={curMaster} curSubBrand={curSubBrand} curCampaign={curCampaign} noShare/>
 		</div>
 	)
 }

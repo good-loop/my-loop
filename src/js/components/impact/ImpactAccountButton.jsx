@@ -26,8 +26,7 @@ const A = C.A;
 
 
 
-const ImpactAccountButton = ({curMaster, curSubBrand, curCampaign, customLogin}) => {
-
+const ImpactAccountButton = ({curMaster, curSubBrand, curCampaign, noShare}) => {
 	let [loggedIn, setIsLoggedIn] = useState(Login.isLoggedIn())
 	let type = curCampaign ? "campaign" : "brand"
 	let id = curCampaign ? curCampaign.id : (curSubBrand ? curSubBrand.id : curMaster.id)
@@ -84,7 +83,7 @@ const ImpactAccountButton = ({curMaster, curSubBrand, curCampaign, customLogin})
 
 	return (
 		<div id="impact-overview-accounts">
-			<button id="share-icon" onClick={shareOnClick}>Share</button>
+			{!noShare && <button id="share-icon" onClick={shareOnClick}>Share</button>}
 			<button id='account-icon' onClick={accountOnClick}>{Login.user.name}</button>
 		</div>
 	)

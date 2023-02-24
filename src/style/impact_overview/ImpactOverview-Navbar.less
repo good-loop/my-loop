@@ -137,4 +137,31 @@
         display: none !important;
     }
     width: 100%;
+    padding: 0;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: large;
+    font-weight: 600;
+
+    ul {
+        width: 100%;
+        justify-content: space-evenly;
+        background-color: white;
+    }
+
+    li {
+        width: 33%;
+        a {
+            text-decoration: none;
+            color: @gl-impact-dark;
+        }
+
+        &.active {
+            border-bottom: solid 5px @gl-impact-red;
+            a {
+                color: @gl-impact-red;
+
+            }
+        }
+    }
 }

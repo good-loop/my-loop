@@ -75,18 +75,18 @@ const TopNavBar = ({active}) => {
 	return (<>
 		<Navbar dark expand="md" id="impact-overview-navbar-smallscreen" className={space('flex-column', 'justify-content-start')}>
 			<Nav horizontal>
-				<NavItem>
-					<A className={active === 'metrics' ? 'active' : ''} href={window.location}>
+				<NavItem className={active === 'overview' ? 'active' : ''}>
+					<A href={window.location}>
 						<div class="impact-navbar-text">Overview</div> 
 					</A>
 				</NavItem>
-				<NavItem>
-					<A className={active === 'tags' ? 'active' : ''} href={`${ServerIO.PORTAL_ENDPOINT}/#green`}>
+				<NavItem className={active === 'impact' ? 'active' : ''}>
+					<A href={`${ServerIO.PORTAL_ENDPOINT}/#green`}>
 					<div class="impact-navbar-text">Impact</div> 
 					</A>
 				</NavItem>
-				<NavItem>
-					<A className={active === 'impact' ? 'active' : ''}>
+				<NavItem className={active === 'analysis' ? 'active' : ''}>
+					<A>
 					<div class="impact-navbar-text">Analysis</div> 
 					</A>
 				</NavItem>

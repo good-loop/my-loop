@@ -30,6 +30,7 @@ import List from '../../base/data/List';
 import ListLoad from '../../base/components/ListLoad';
 import Campaign from '../../base/data/Campaign';
 import Advertiser from '../../base/data/Advertiser';
+import ImpactLoadingScreen from './ImpactLoadingScreen'
 
 /**
  * DEBUG OBJECTS
@@ -147,30 +148,32 @@ const ImpactOverviewPage = () => {
 	// set to true to avoid this choice being made on page refresh if logged in 
 	let [impactChosen, setImpactChosen] = useState(true)
 
-	// if not logged in AND impact hasn't been chosen yet...
+	// on filter changes, even if content is loaded, force a load for feedback
+	// kept as a state outside so components can easily access it, set it to true to force a 'reload'
+	const [forcedReload, setForcedReload] = useState(false)
+
+	let pvBaseObjects = fetchBaseObjects();
+	if (pvBaseObjects.error) return <ErrorDisplay e={pvBaseObjects.error} />
+
+	const {campaign, brand, masterBrand, subBrands, subCampaigns} = pvBaseObjects.value || {};
+
+	// Use campaign specific logo if given
+	const mainLogo = campaign?.branding?.logo || brand?.branding?.logo;
+
+	// if not logged in OR impact hasn't been chosen yet...
 	if(!Login.isLoggedIn() || !impactChosen) {
 		return <ImpactLoginCard choice={impactChosen} setChoice={setImpactChosen} masterBrand={TEST_BRAND_OBJ}/>
 	}
 
-	// Fetch and prepare base data
-	let pvBaseObjects = fetchBaseObjects();
-	if (pvBaseObjects.error) return <ErrorDisplay e={pvBaseObjects.error} />
-	if(! pvBaseObjects.resolved) {
-		markPageLoaded(false);
-		return <p> loading screen goes here soon hopefully</p>
-	} else {
-		markPageLoaded(true);
-	}
-	const {campaign, brand, masterBrand, subBrands, subCampaigns} = pvBaseObjects.value || {};
-	// Use campaign specific logo if given
-	const mainLogo = campaign?.branding?.logo || brand?.branding?.logo;
-
 	return (
 	<>
+		<ImpactLoadingScreen baseObj={pvBaseObjects} forcedReload={forcedReload} setForcedReload={setForcedReload}/>
+		{/* loading screen will play above the rest of the page while the page itself loads*/}
+		{pvBaseObjects.resolved && <>
 		<div className="navbars-overlay">
-			{/*<ImpactFilterOptions size="thin"/>  {/*mobile horizontal filters topbar*/}
+			<ImpactFilterOptions size="thin" setIsNavbarOpen={setIsNavbarOpen} masterBrand={masterBrand} brand={brand} campaign={campaign} setForcedReload={setForcedReload}/>  {/*mobile horizontal filters topbar*/}
 			<NavBars active={"overview"} isNavbarOpen={isNavbarOpen} setIsNavbarOpen={setIsNavbarOpen}/>
-			<ImpactFilterOptions size="wide" setIsNavbarOpen={setIsNavbarOpen} masterBrand={masterBrand} brand={brand} campaign={campaign}/>  {/*widescreen vertical filters topbar*/}
+			<ImpactFilterOptions size="wide" setIsNavbarOpen={setIsNavbarOpen} masterBrand={masterBrand} brand={brand} campaign={campaign} setForcedReload={setForcedReload}/>  {/*widescreen vertical filters topbar*/}
 		</div>
 		<div className='iview-positioner pr-md-1'>
 			<Container fluid className='iview-container'>
@@ -241,6 +244,7 @@ const ImpactOverviewPage = () => {
 									<GLCard basis={10}>
 										<h3>6.5M VIEWS | 5 COUNTRIES</h3>
 									</GLCard>
+									{/* as of 22/02/2023, this card is being discussed if it should be kept or not
 									<GLCard
 										noPadding
 										className="offset-card"
@@ -256,6 +260,7 @@ const ImpactOverviewPage = () => {
 												<img src="/img/Impact/Good-Loop_CarbonNeutralAd_Logo_Final-05.svg" className='w-100'/>
 											</div>
 									</GLCard>
+									*/}
 								</GLVertical>
 								<div>
 									<GLCard
@@ -296,7 +301,7 @@ const ImpactOverviewPage = () => {
 
 
 		</div>
-
+		</>}
 		<GLModalBackdrop/>
 	</>
 	);
@@ -367,7 +372,7 @@ const LogosDisplay = ({brand, subBrands}) => {
 
 	const BrandLogo = ({item}) => {
 		return <Col md={1} xs={7} className="text-center">
-			{item.branding?.logo ? <img src={item.branding.logo}/> : <p>{item.name}</p>}
+			{item.branding?.logo ? <img src={item.branding.logo} className="logo"/> : <p>{item.name}</p>}
 		</Col>
 	}
 

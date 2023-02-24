@@ -36,9 +36,9 @@ class ShareLoginTest(unittest.TestCase):
         self.assertIn("Impressions", impressions.text, "Logged in and see impressions")
 
         # Get share links
-        driver.find_element(By.ID, 'dashboard-share-btn').click()
+        driver.find_element(By.ID, 'share-widget-btn').click()
         time.sleep(1)
-        driver.find_element(By.ID, 'copy-share-dashboard-link').click()
+        driver.find_element(By.ID, 'copy-share-widget-link').click()
         time.sleep(1)
         for log in driver.get_log('browser'): 
             if log['level'] == 'SEVERE' and log['message'].startswith('https://youagain.good-loop.com/youagain.json'):

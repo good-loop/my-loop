@@ -1,0 +1,104 @@
+@keyframes impactWavesLoad {
+            from {scale: 0; top: 100%;}
+            to { scale: 5; top:0%}
+}
+
+@keyframes planetSpin {
+    from {transform: translateX(-10px);}
+    to {transform: translateX(-50px);}
+}
+
+@keyframes fadeOutLoading {
+    from {opacity: 1}
+    to {opacity: 0}
+}
+
+#impact-loading-screen {
+    z-index: 999999;
+    background-color: white;
+    position: fixed;
+    top: 0;
+    left:0;
+    width: 100vw;
+    height: 100vh;
+
+    animation: fadeOutLoading;
+    animation-duration: 0.25s;
+    animation-delay:2.1s; 
+    animation-fill-mode: forwards;
+
+    .true-center {
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        margin: auto;
+        position: absolute;
+    }
+
+
+    .earth-circle{
+        z-index: 10;
+        overflow: hidden;
+        height: 25vw;
+        width: 25vw;
+        min-height: 30vh;
+        min-width: 30vh;
+        border: none !important
+
+    }
+
+    .earth-map{
+        z-index: 30;
+        height: 25vw;
+        width: 25vw;
+        min-height: 30vh;
+        min-width: 30vh;
+        margin-right: 3rem;
+        scale: 3;
+
+        animation: planetSpin;
+        animation-duration: 4s;
+        animation-delay: 0s;
+        animation-fill-mode: forwards; 
+    }
+
+    .waves {
+        z-index: 20;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top:100%;
+        width: 100%;
+        margin: auto;
+        animation: impactWavesLoad;
+        animation-duration: 2s;
+        animation-delay: 0s;
+        animation-fill-mode: forwards; 
+    }
+
+    .loading-dashboard-name {
+        left:0;
+        right:0;
+        text-align: center;
+        margin: auto;
+        position: absolute;
+        bottom: 15%;
+
+        font-family: 'Monsterrat', sans-serif;
+        font-size: large;
+        font-weight: 600;
+    }
+
+    .loading-dashboard-logo {
+        left:0;
+        right:0;
+        margin: auto;
+        position: absolute;
+        top: 5%;
+
+        outline: none;
+        border: none;
+    }
+    
+}

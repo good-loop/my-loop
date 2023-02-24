@@ -6,7 +6,6 @@ import GreenProfile from './greendash/GreenProfile';
 import GreenTable from './greendash/GreenTable';
 import StyleBlock from '../../base/components/StyleBlock';
 import GreenMetrics from './greendash/GreenMetrics';
-import AccountMenu from '../../base/components/AccountMenu';
 
 const subpages = {
 	table: GreenTable, // NOT implemented yet
