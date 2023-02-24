@@ -31,7 +31,7 @@ const A = C.A;
  * @param {Function} setCurCampaign setter function for curCampaign
  * @returns {JSX} breadcrumb trail of brand/campaign filters that can open up into a modal  for other filters
  */
-const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurCampaign}) => {
+const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurCampaign, setForcedReload, size}) => {
 	
 	/**
 	 * after user selects the brand / campaign they want to filter, update the breadcrumb & url slugs to reflect the choice
@@ -51,8 +51,8 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 			// only set subBrand if it's not a masterbrand (masterBrands won't have parentIds)
 			brand.parentId ? setCurSubBrand(brand) : setCurSubBrand(null)
 		}
-
 		modalToggle()
+		setForcedReload(true)
 	}
 
 	/**
@@ -71,6 +71,7 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 			setCurCampaign(null)
 			setCurSubBrand(null)
 		}
+		setForcedReload(true)
 	}
 
 	/**
@@ -86,11 +87,14 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 		
 		let thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='impact-link-placeholder-thumbnail' />
 		let isSelected = curCampaign && curCampaign.id == item.id 
+		if (size == "thin") name = name.replace(/_/g, " ") // allows for linebreaks in names to save horizontal space
 		return <>
 			<div className='brand-campaign-set' onClick={() => filterChange({brand:parentItem, campaign:item})}>
 				<div className="info campaign-item">
 					{thumbnail}
-					<div className={space("name", (isSelected && "selected-filter"))}>{name}</div>
+					<div className={space("name", (isSelected && "selected-filter"))}>
+						{name}
+					</div>
 					{button || ''}
 				</div>
 			</div>
@@ -184,7 +188,7 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 					ListItem={FilterListItem} itemClassName={classes}/>
 			</div>
 		)
-		openAndPopulateModal({id:"left-half", content:modalContent, prioritized:true, headerClassName:"red-top-border noClose"})
+		openAndPopulateModal({id:"left-half", content:modalContent, prioritized:true, headerClassName:"red-top-border noClose", className:"impact-brand-modal"})
 	}
 	
 	// helper JSX elements
@@ -219,7 +223,7 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 		return (
 			<div id="filters">
 				<StepBackFiltersButton content={masterBrand.name} rightArrow/>
-				<OpenFiltersButton content={curSubBrand.name} underlined/>
+				<OpenFiltersButton content={(size == "thin" && curSubBrand.name.length > 25) ? (curSubBrand.name.substring(0,24)+"...") : curSubBrand.name} underlined/>
 				<DropDownIcon />
 			</div>
 		)
@@ -229,8 +233,8 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 	return (
 		<div id="filters">
 				<StepBackFiltersButton content={masterBrand.name} rightArrow/>
-				{curSubBrand.id != masterBrand.id && <StepBackFiltersButton content={curSubBrand.name} clearOnlyCamapign rightArrow/>}
-				<OpenFiltersButton content={curCampaign.name} underlined/>
+				{curSubBrand.id != masterBrand.id && <StepBackFiltersButton content={(size == "thin" && curSubBrand.name.length > 10) ? (curSubBrand.name.substring(0,9)+"...") : curSubBrand.name} clearOnlyCamapign rightArrow/>}
+				<OpenFiltersButton content={(size == "thin" && curCampaign.name.length > 10) ? (curCampaign.name.substring(0,9)+"...") : curCampaign.name} underlined/>
 		</div>
 	)
 }
