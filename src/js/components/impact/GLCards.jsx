@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {Row, Col, Container, Card, CardHeader, CardBody} from 'reactstrap';
 import { space, isPortraitMobile } from '../../base/utils/miscutils';
 import { assert } from '../../base/utils/assert';
@@ -8,6 +8,7 @@ import CloseButton from '../../base/components/CloseButton';
 const MODAL_PATH = ['widget', 'GLModalCards'];
 const MODAL_LIST_PATH = MODAL_PATH.concat("list");
 const MODAL_BACKDROP_PATH = MODAL_PATH.concat("backdrop");
+const LOADED_PATH = MODAL_PATH.concat("loaded");
 
 /**
  * Wraps everything into a horizontal flow. Any child with a "basis" prop will be given that priority as a percentage, e.g. basis={50}
@@ -84,6 +85,8 @@ export const GLCard = ({noPadding, noMargin, className, style, modalContent, mod
 		modalToggle(modalId);
 	}
 
+	const loaded = DataStore.getValue(LOADED_PATH);
+
 	const cardContents = <Card className={space("glcard", !noMargin?"m-2":"", modalContent?"glcardmodal":"", className)} onClick={modalContent && openModal} {...props}>
 		{noPadding? children
 		: <CardBody>{children}</CardBody>}
@@ -128,6 +131,10 @@ export const openAndPopulateModal = ({id, content, title, header, headerImg, hea
 	if (prioritized) modalToggle();
 	DataStore.setValue(MODAL_LIST_PATH.concat(id), {content, title, header, headerImg, headerClassName, className});
 	modalToggle(id);
+}
+
+export const markPageLoaded = (loaded) => {
+	DataStore.setValue(LOADED_PATH, loaded);
 }
 
 /**
