@@ -115,6 +115,12 @@ const fetchBaseObjects2 = async ({itemId, itemType, status}) => {
 	if (!subBrands) subBrands = [];
 	if (!subCampaigns) subCampaigns = [];
 
+	// If we aren't looking at a campaign, but this brand only has one - just pretend we are
+	if (subCampaigns.length === 1) {
+		campaign = subCampaigns[0];
+		subCampaigns = [];
+	}
+
 	// If we've looked for both brand and campaign and found nothing, we have a 404
 	if (!campaign && !brand) {
 		throw new Error("404: Not found");
