@@ -70,7 +70,6 @@ const ImpactLoadingScreen = ({baseObj, forcedReload, setForcedReload}) => {
 		if (isPageReady) setIsPageReady(false)
 	}
 
-	if(baseObj.resolved) console.log("bean", baseObj)
 	if(isPageReady) {
 		return (<></>)
 	} else {	

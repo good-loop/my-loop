@@ -13,6 +13,11 @@
     to {opacity: 0}
 }
 
+@keyframes fadeInLogo {
+    from {opacity: 0}
+    to {opacity: 1}
+}
+
 #impact-loading-screen {
     z-index: 999999;
     background-color: white;
@@ -99,6 +104,11 @@
 
         outline: none;
         border: none;
+
+        opacity: 0;
+        animation: fadeInLogo;
+        animation-duration: 1s;
+        animation-fill-mode: forwards; 
     }
     
 }
