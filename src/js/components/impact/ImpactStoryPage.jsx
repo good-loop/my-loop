@@ -18,7 +18,7 @@ import Branding from '../../base/data/Branding';
 import Impact from '../../base/data/Impact';
 import Money from '../../base/data/Money';
 import { OTHER_CONSENT } from '../../base/data/Claim';
-import { fetchImpactItems, FilterBar, getImpactDebits, HeadlineDonationCard, ImpactFilters } from './ImpactOverviewPage';
+import { fetchImpactItems, FilterBar, HeadlineDonationCard, ImpactFilters } from './ImpactOverviewPage';
 import NGO from '../../base/data/NGO';
 import LinkOut from '../../base/components/LinkOut';
 import ServerIO from '../../plumbing/ServerIO';
@@ -26,6 +26,7 @@ import { getId, getType } from '../../base/data/DataClass';
 import DynImg from '../../base/components/DynImg';
 import { setNavProps } from '../../base/components/NavBar';
 import PortalLink from '../../base/components/PortalLink';
+import { getImpactDebits } from './impactdata';
 
 
 const ImpactStoryPage = () => {

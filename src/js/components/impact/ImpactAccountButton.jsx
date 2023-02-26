@@ -7,7 +7,6 @@ import Misc from '../../base/components/Misc';
 import Login from '../../base/youagain';
 import {LoginLink, RegisterLink, LogoutLink} from '../../base/components/LoginWidget';
 import C from '../../C';
-import PropControlPeriod from '../../base/components/PropControls/PropControlPeriod'
 import { modalToggle, openAndPopulateModal } from './GLCards';
 import ListLoad from '../../base/components/ListLoad';
 import  { PNGDownloadButton } from '../../base/components/PNGDownloadButton'

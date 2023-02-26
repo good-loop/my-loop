@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import C from '../../C';
-import PropControlPeriod from '../../base/components/PropControls/PropControlPeriod'
+import PropControlPeriod from '../../base/components/propcontrols/PropControlPeriod'
 import { openAndPopulateModal } from './GLCards';
 
 /**
