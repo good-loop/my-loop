@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Row, Col } from 'reactstrap';
 import Misc from '../base/components/Misc';
-import UserClaimControl, { getCharityObject, setPersonSetting } from '../base/components/PropControls/UserClaimControl';
+import UserClaimControl, { getCharityObject, setPersonSetting } from '../base/components/propcontrols/UserClaimControl';
 import { getClaimValue, getProfile } from '../base/data/Person';
 import T4GTheme from '../base/data/T4GTheme';
 import { mapNew } from '../base/utils/miscutils';

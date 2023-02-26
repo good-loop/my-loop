@@ -4,7 +4,7 @@ import Person, { getAllXIds, getEmail, getProfile, getPVClaim, hasConsent, PURPO
 import DataStore from '../../base/plumbing/DataStore';
 import Login from '../../base/youagain';
 import {MyDataSignUpButton, MyDataSignUpModal, showMyDataSignUpModal} from './MyDataSignUp';
-import { getPersonSetting, getCharityObject } from '../../base/components/PropControls/UserClaimControl';
+import { getPersonSetting, getCharityObject } from '../../base/components/propcontrols/UserClaimControl';
 import classnames from 'classnames';
 import MyDataDashboardHomeTab from './MyDataDashboardHomeTab';
 import MyDataDashboardProfileTab from './MyDataDashboardProfileTab';

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Button, Form, Alert } from 'reactstrap';
 import { ProfileDot, ProfileDotRow, getThisWeeksAd, hasWatchedThisWeeksAd, MyDataCard, hasRegisteredForMyData } from './MyDataCommonComponents';
-import { getCharityObject, getEmail, getPersonSetting } from '../../base/components/PropControls/UserClaimControl';
+import { getCharityObject, getEmail, getPersonSetting } from '../../base/components/propcontrols/UserClaimControl';
 import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import ServerIO from '../../plumbing/ServerIO'
 import TickerTotal from '../TickerTotal';

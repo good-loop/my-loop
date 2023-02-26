@@ -50,7 +50,7 @@ import NGO from '../base/data/NGO';
 import Roles, { isTester } from '../base/Roles';
 import Claim from '../base/data/Claim';
 import { accountMenuItems } from './pages/CommonComponents';
-import { getCharityObject, getPersonSetting } from '../base/components/PropControls/UserClaimControl';
+import { getCharityObject, getPersonSetting } from '../base/components/propcontrols/UserClaimControl';
 import NGOImage from '../base/components/NGOImage';
 import { hasRegisteredForMyData, ProfileCreationSteps } from './mydata/MyDataCommonComponents';
 import {getThemeBackground} from './NewTabThemes'
