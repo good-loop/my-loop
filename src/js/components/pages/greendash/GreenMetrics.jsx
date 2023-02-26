@@ -10,7 +10,7 @@ import Misc from '../../../base/components/Misc';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import ErrAlert from '../../../base/components/ErrAlert';
 
-import { GreenCard, periodFromUrl, printPeriod, probFromUrl, noCacheFromUrl, getFilterModeId } from './dashutils';
+import { GreenCard, periodFromUrl, printPeriod, noCacheFromUrl, getFilterModeId, numParamFromUrl } from './dashutils';
 
 import ShareWidget, { shareThingId } from '../../../base/components/ShareWidget';
 import { getCampaigns, getCarbon, getSumColumn } from './emissionscalc';
@@ -46,8 +46,9 @@ const OverviewWidget = ({ period, data, prob }) => {
 	let imps;
 	if (data?.length > 0) {
 		const total = getSumColumn(data, 'count');
-		const [upper, lower] = [total*1.01, total*0.99]
-		imps = !prob || (prob && prob == 1) ? printer.prettyInt(total) : `${printer.prettyInt(lower)} to ${printer.prettyInt(upper)}`;
+		// const [upper, lower] = [total*1.01, total*0.99]
+		// imps = !prob || (prob && prob == 1) ? printer.prettyInt(total) : `${printer.prettyInt(lower)} to ${printer.prettyInt(upper)}`;
+		imps = printer.prettyInt(total);
 	} else if (!data) {
 		imps = 'Fetching data...';
 	} else {
@@ -156,7 +157,8 @@ const GreenMetrics2 = ({}) => {
 		}
 	}
 
-	const probNum = probFromUrl();
+	const probNum = numParamFromUrl('prob');
+	const sigfigNum = numParamFromUrl('sigfig');
 	const nocache = noCacheFromUrl();
 
 	const baseFilters = {
@@ -164,6 +166,7 @@ const GreenMetrics2 = ({}) => {
 		start: period.start.toISOString(),
 		end: period.end.toISOString(),
 		prob: probNum ? probNum.toString() : null, 
+		sigfig: sigfigNum ? sigfigNum.toString() : null,
 		nocache: nocache ? true : null,
 	};
 

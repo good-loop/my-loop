@@ -1,7 +1,7 @@
 import React from 'react';
 import { PERSON_PATH, VERB_PATH } from '../../base/components/LoginWidget';
 import { MyDataCard, ProfileCreationSteps, SkipNextBtn } from './MyDataCommonComponents';
-import UserClaimControl, { getEmail } from '../../base/components/PropControls/UserClaimControl';
+import UserClaimControl, { getEmail } from '../../base/components/propcontrols/UserClaimControl';
 import { FormGroup, Button } from 'reactstrap';
 import { Help } from '../../base/components/PropControl';
 import { nextSignupPage } from './MyDataSignUp';

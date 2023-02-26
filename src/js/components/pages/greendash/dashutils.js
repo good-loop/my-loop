@@ -80,11 +80,11 @@ export const periodFromUrl = () => {
 };
 
 /**
- * Read URL params and extract a probability number if one is present 
- * @returns {number | null}
+ * Read URL params and of number
+ * @param {string} key, e.g. prob, sigfig
  */
-export const probFromUrl = () => {
-	const probName = DataStore.getUrlValue('prob')
+export const numParamFromUrl = (key) => {
+	const probName = DataStore.getUrlValue(key);
 	try {
 		return Number.parseInt(probName);
 	} catch (e) {

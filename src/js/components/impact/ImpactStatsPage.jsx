@@ -8,7 +8,7 @@ import { getDataItem, getDataList, setWindowTitle } from '../../base/plumbing/Cr
 import C from '../../C';
 import DataStore from '../../base/plumbing/DataStore';
 import SearchQuery from '../../base/searchquery';
-import PropControlDataItem from '../../base/components/PropControlDataItem';
+import PropControlDataItem from '../../base/components/propcontrols/PropControlDataItem';
 import { Button, Col, Container, InputGroup, Row } from 'reactstrap';
 import PropControl from '../../base/components/PropControl';
 import { Card } from '../../base/components/CardAccordion';

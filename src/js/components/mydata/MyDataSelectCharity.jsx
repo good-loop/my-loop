@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropControl from '../../base/components/PropControl';
 import { CharitySelectCard } from './MyDataCommonComponents';
-import { getCharityObject } from '../../base/components/PropControls/UserClaimControl';
+import { getCharityObject } from '../../base/components/propcontrols/UserClaimControl';
 import { getDataItem } from '../../base/plumbing/Crud';
 import { getListPath } from '../../base/plumbing/DataStore';
 import KStatus from '../../base/data/KStatus';

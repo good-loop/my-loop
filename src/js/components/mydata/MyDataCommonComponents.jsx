@@ -6,7 +6,7 @@ import { Help } from '../../base/components/PropControl';
 import CharityLogo from '../CharityLogo';
 import { getDataItem, getDataList } from '../../base/plumbing/Crud';
 import NGOImage from '../../base/components/NGOImage';
-import { setPersonSetting, getCharityObject } from '../../base/components/PropControls/UserClaimControl';
+import { setPersonSetting, getCharityObject } from '../../base/components/propcontrols/UserClaimControl';
 import { assert, assMatch } from '../../base/utils/assert';
 import Login from '../../base/youagain';
 import NGO from '../../base/data/NGO';

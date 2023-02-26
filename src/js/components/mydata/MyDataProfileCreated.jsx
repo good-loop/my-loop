@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Row, Col, Button } from 'reactstrap';
-import { getPersonSetting, getCharityObject } from '../../base/components/PropControls/UserClaimControl';
+import { getPersonSetting, getCharityObject } from '../../base/components/propcontrols/UserClaimControl';
 import { MyDataCard, SkipNextBtn, ProfileCreationSteps } from './MyDataCommonComponents';
 import BSCarousel from '../../base/components/BSCarousel';
 import { countryListAlpha2 } from '../../base/data/CountryRegion';

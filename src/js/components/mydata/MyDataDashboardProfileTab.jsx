@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Collapse, FormGroup, Progress } from 'reactstrap';
 import { Help } from '../../base/components/PropControl';
 import { CollapseableCard, isEmail } from './MyDataCommonComponents';
-import UserClaimControl, { getCharityObject, getEmail, causesMap, adstypeMap, setPersonSetting } from '../../base/components/PropControls/UserClaimControl';
+import UserClaimControl, { getCharityObject, getEmail, causesMap, adstypeMap, setPersonSetting } from '../../base/components/propcontrols/UserClaimControl';
 import CharityLogo from '../CharityLogo';
 import { MyDataCard } from './MyDataCommonComponents';
 import { countryListAlpha2 } from '../../base/data/CountryRegion';
