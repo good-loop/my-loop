@@ -185,7 +185,7 @@ const FormatSubcard = ({ data, minimumPercentLabeled = 1, chartType = 'pie' }) =
 	return (
 		<>
 			<p>{CO2e} emissions by advert format:</p>
-			{chartType === 'pie' && <NewChartWidget type='pie' {...pieChartProps} datalabels />}
+			{chartType === 'pie' && <NewChartWidget type='pie' {...pieChartProps} datalabels legend />}
 			{chartType === 'bar' && <NewChartWidget type='bar' {...barChartProps} />}
 		</>
 	);
@@ -232,19 +232,17 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1, chartType = '
 
 		const chartData = {
 			labels: ['Creative', 'Publisher', 'Supply path'],
-			datasets: [
-				{
-					label: 'Kg CO2',
-					backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
-					data: [media, publisher, dsp],
-				},
-			],
+			datasets: [{
+				label: 'Kg CO2',
+				backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
+				data: [media, publisher, dsp],
+			}],
 		};
 
 		setPieChartProps({
 			data: chartData,
 			options: pieOptions(totalCO2, minimumPercentLabeled),
-		});
+		}, [osBuckets]);
 
 		setBarChartProps({
 			data: chartData,
@@ -267,7 +265,7 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1, chartType = '
 		<>
 			<p>{CO2e} emissions due to...</p>
 			{/* Options will clash between pie and bar, seperate the two chart would be easier to control */}
-			{chartType === 'pie' && <NewChartWidget type='pie' {...pieChartProps} datalabels />}
+			{chartType === 'pie' && <NewChartWidget type='pie' {...pieChartProps} datalabels legend />}
 			{chartType === 'bar' && <NewChartWidget type='bar' {...barChartProps} />}
 			<small className='text-center'>The Green Ad Tag per-impression overhead is measured, but too small to display in this chart.</small>
 		</>
