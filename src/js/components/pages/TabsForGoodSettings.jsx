@@ -18,7 +18,6 @@ import C from '../../C';
 import LinkOut from '../../base/components/LinkOut';
 import NGO from '../../base/data/NGO';
 import List from '../../base/data/List';
-import { getCharityObject } from '../../base/components/propcontrols/UserClaimControl';
 import { T4GLayoutPicker, T4GLayoutSelector, T4GThemePicker } from '../NewTabLayouts';
 
 
