@@ -38,7 +38,6 @@ const subLocationForCountry = (country) =>
  * should be the same colour as regions with value 0*/
 const zeroFill = dataColours([0, 1])[0];
 
-
 /**
  * For positioning labels on an SVG map.
  * @param {Path} path An SVG <path> element.
@@ -46,21 +45,21 @@ const zeroFill = dataColours([0, 1])[0];
  */
 const bbCentre = (path) => {
 	const bbox = path.getBBox();
-	return ({ cx: bbox.x + bbox.width / 2, cy: bbox.y + bbox.height / 2 })
+	return { cx: bbox.x + bbox.width / 2, cy: bbox.y + bbox.height / 2 };
 };
 
-
 /** OS-independent download (downward arrow in in-tray) icon */
-const downloadIcon = <svg viewBox="0 0 100 100" className="icon download-icon">
-	<path d="m5 70v25h90v-25h-5v20h-80v-20z"/>
-	<path d="m45 10v50h-10l15 15 15-15h-10v-50h-10z"/>
-</svg>;
-
+const downloadIcon = (
+	<svg viewBox='0 0 100 100' className='icon download-icon'>
+		<path d='m5 70v25h90v-25h-5v20h-80v-20z' />
+		<path d='m45 10v50h-10l15 15 15-15h-10v-50h-10z' />
+	</svg>
+);
 
 /**
  * Provide CSV and SVG download links for the data shown on the map.
  */
-const MapDownloader = ({data, svgEl, mapDefs, focusRegion}) => {
+const MapDownloader = ({ data, svgEl, mapDefs, focusRegion }) => {
 	if (!data || !svgEl || !mapDefs) return null;
 
 	const cols = [
@@ -72,10 +71,10 @@ const MapDownloader = ({data, svgEl, mapDefs, focusRegion}) => {
 
 	// The table to download as .CSV
 	const tableData = Object.entries(data)
-	.map(([id, { impressions, carbon }]) => {
-		return { name: mapDefs.regions[id]?.name || 'unknown', id, impressions, carbon };
-	})
-	.sort((a, b) => (a.name || '').localeCompare(b.name));
+		.map(([id, { impressions, carbon }]) => {
+			return { name: mapDefs.regions[id]?.name || 'unknown', id, impressions, carbon };
+		})
+		.sort((a, b) => (a.name || '').localeCompare(b.name));
 
 	// Rather than try to induce React to regenerate the link when the SVG contents change,
 	// let's just lazy-read the SVG on click, so the download is definitely up-to-date.
@@ -90,13 +89,19 @@ const MapDownloader = ({data, svgEl, mapDefs, focusRegion}) => {
 		document.body.removeChild(link);
 	};
 
-	return <div className="map-downloader">
-		{downloadIcon}{' '}
-		<a onClick={downloadSvg} href="#">Map</a>{' / '}
-		<DownloadCSVLink columns={cols} data={tableData}>.CSV</DownloadCSVLink>
-	</div>
+	return (
+		<div className='map-downloader'>
+			{downloadIcon}{' '}
+			<a onClick={downloadSvg} href='#'>
+				Map
+			</a>
+			{' / '}
+			<DownloadCSVLink columns={cols} data={tableData}>
+				.CSV
+			</DownloadCSVLink>
+		</div>
+	);
 };
-
 
 const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) => {
 	const [pathCentres, setPathCentres] = useState({}); // Estimate region centres from bounding boxes to place text labels
@@ -110,14 +115,14 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 	// Do we display kg or tonnes?
 	let unit = 'kg';
 	let divisor = 1;
-	if (Math.max(...Object.values(data).map(v => v.carbon)) >= 1000) {
+	if (Math.max(...Object.values(data).map((v) => v.carbon)) >= 1000) {
 		unit = 't';
 		divisor = 1000;
 	}
 	// Add suffix for carbon-per-mille?
 	if (per1000) unit += '/1000';
 
-	let tempMapLables = []
+	let tempMapLables = [];
 	let totalCarbon = 0;
 	Object.entries(mapDefs.regions).forEach(([id, props]) => {
 		let { impressions = 0, carbon = 0, colour = zeroFill } = data?.[id] || {};
@@ -125,7 +130,7 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 		carbon /= divisor;
 
 		// if per1000 is on, convert back into just total carbon emission
-		totalCarbon += (per1000 ? (carbon * (impressions / 1000)) : carbon)
+		totalCarbon += per1000 ? carbon * (impressions / 1000) : carbon;
 
 		// Don't modify base map with applied fill/stroke!
 		props = { ...props, fill: colour, stroke: '#fff', strokeWidth: mapDefs.svgAttributes.fontSize / 10 };
@@ -145,18 +150,20 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 		const pathId = `${mapDefs.id}-${id}`;
 
 		// Once path is drawn, find the centre of the region's bounding box to position a text label on the bigger map
-		const pathRef = showLabels ? (path) => {
-			if (!path) return;
-			setPathCentres((prev) => {
-				if (prev[pathId]) return prev;
-				return { ...prev, [pathId]: bbCentre(path) };
-			});
-		} : null;
+		const pathRef = showLabels
+			? (path) => {
+					if (!path) return;
+					setPathCentres((prev) => {
+						if (prev[pathId]) return prev;
+						return { ...prev, [pathId]: bbCentre(path) };
+					});
+			  }
+			: null;
 
 		// Tooltip on hover
 		const title = loading ? null : (
 			<title>
-				{props.name}: {carbon.toFixed(2)} {unit} CO2e, {impressions} impressions 
+				{props.name}: {carbon.toFixed(2)} {unit} CO2e, {impressions} impressions
 			</title>
 		);
 
@@ -168,44 +175,52 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 
 		// if we're in tonnes, convert carbon into Kg to still ensure the below minimum 100g rule
 		// if per1000 is on, convert back into total carbon emissions
-		let carbonOutput = per1000 ? (carbon * (impressions / 1000)) : carbon * divisor
+		let carbonOutput = per1000 ? carbon * (impressions / 1000) : carbon * divisor;
 
-		// Store temp label <text> elements. Skip regions with less than 100g carbon output. Harsh, I know  
+		// Store temp label <text> elements. Skip regions with less than 100g carbon output. Harsh, I know
 		if (showLabels && carbonOutput > 0.1 && pathCentres[pathId]) {
 			let { cx, cy } = { ...pathCentres[pathId], ...props };
 			const transY = mapDefs.svgAttributes.fontSize / 2;
 			tempMapLables.push({
-				carbon:carbon,
-				impressions: impressions, 
-				label:(
+				carbon: carbon,
+				impressions: impressions,
+				label: (
 					<g key={`label-${id}`}>
-						<text className="map-label-name" x={cx} y={cy} textAnchor="middle" transform={`translate(0 ${-transY})`} fontWeight="600" style={{pointerEvents:"none"}}>
+						<text
+							className='map-label-name'
+							x={cx}
+							y={cy}
+							textAnchor='middle'
+							transform={`translate(0 ${-transY})`}
+							fontWeight='600'
+							style={{ pointerEvents: 'none' }}
+						>
 							{props.name}
 						</text>
-						<text className="map-label-carbon" x={cx} y={cy} textAnchor="middle" transform={`translate(0 ${transY})`} style={{pointerEvents:"none"}}>
+						<text className='map-label-carbon' x={cx} y={cy} textAnchor='middle' transform={`translate(0 ${transY})`} style={{ pointerEvents: 'none' }}>
 							{carbon.toFixed(2)} {unit}
 						</text>
 					</g>
-				)}
-			)
+				),
+			});
 		}
 	});
 
-	if(showLabels){
+	if (showLabels) {
 		// for each label we stored, only place the label if that region is responsible for more than 1% of emissions
 		tempMapLables.forEach((region) => {
 			// if per1000 is on, convert total 'carbon / 1000 impressions' back into just total 'carbon'
-			let regionCarbon = per1000 ? (region.carbon * (region.impressions / 1000)) : region.carbon
+			let regionCarbon = per1000 ? region.carbon * (region.impressions / 1000) : region.carbon;
 			// only show labels for regions responsible for more than 1% of all emissions
-			if(regionCarbon > totalCarbon * 0.01){
-				labels.push(region.label)
+			if (regionCarbon > totalCarbon * 0.01) {
+				labels.push(region.label);
 			}
-		})
+		});
 	}
 
 	return (
-		<div className="map-container text-center">
-			<svg className="map-svg" version="1.1" {...mapDefs.svgAttributes} xmlns="http://www.w3.org/2000/svg" ref={svgRef}>
+		<div className='map-container text-center'>
+			<svg className='map-svg' version='1.1' {...mapDefs.svgAttributes} xmlns='http://www.w3.org/2000/svg' ref={svgRef}>
 				{regions}
 				{labels}
 			</svg>
@@ -253,7 +268,7 @@ const MapCard = ({ baseFilters, per1000 }) => {
 	const locationField = isWorld ? 'country' : subLocationForCountry(focusRegion);
 
 	// Augment base filters with extra query/breakdown params as necessary
-	const filters = { ...baseFilters, breakdown: [locationField + '{"emissions":"sum"}']};
+	const filters = { ...baseFilters, breakdown: [locationField + '{"emissions":"sum"}'] };
 
 	// Are we looking at one country, or the whole world map?
 	if (!isWorld) {
@@ -282,27 +297,30 @@ const MapCard = ({ baseFilters, per1000 }) => {
 		// combine data with same key to cleanedLocnBuckets
 		let cleanedLocnBuckets = Object.values(
 			locnBuckets.reduce((acc, val) => {
-				const k = (mapDefs.id !== 'world' && !mapDefs.regions[val.key]) ? `${focusRegion}-${val.key}` : val.key;
+				const k = mapDefs.id !== 'world' && !mapDefs.regions[val.key] ? `${focusRegion}-${val.key}` : val.key;
 
-				acc[k] = acc[k] ? ({
-					key: k,
-					count: acc[k].count + val.count,
-					doc_count: acc[k].doc_count + val.doc_count,
-					co2: acc[k].co2 + val.co2,
-					co2base: acc[k].co2base + val.co2base,
-					co2creative: acc[k].co2creative + val.co2creative,
-					co2supplypath: acc[k].co2supplypath + val.co2supplypath,
-				}) : val;
-				return {...acc};
+				acc[k] = acc[k]
+					? {
+							key: k,
+							count: acc[k].count + val.count,
+							doc_count: acc[k].doc_count + val.doc_count,
+							co2: acc[k].co2 + val.co2,
+							co2base: acc[k].co2base + val.co2base,
+							co2creative: acc[k].co2creative + val.co2creative,
+							co2supplypath: acc[k].co2supplypath + val.co2supplypath,
+					  }
+					: val;
+				return { ...acc };
 			}, {})
 		);
 		// Are we in carbon-per-mille mode?
 		if (per1000) {
-			cleanedLocnBuckets = emissionsPerImpressions(cleanedLocnBuckets)
+			cleanedLocnBuckets = emissionsPerImpressions(cleanedLocnBuckets);
 		}
 
 		// assign colours
-		const colours = dataColours(cleanedLocnBuckets.map((row) => row.count));
+		const impressionsMax = Math.max(...cleanedLocnBuckets.map((row) => row.count))
+		const colours = dataColours(cleanedLocnBuckets.filter((row) => row.count > impressionsMax * 0.0005).map((row) => row.co2));
 		// zip colours, states, carbon together for the map
 		setMapData(
 			cleanedLocnBuckets.reduce((acc, row, i) => {
@@ -319,41 +337,47 @@ const MapCard = ({ baseFilters, per1000 }) => {
 			stopEvent(e);
 			setFocusRegion('world');
 		};
-		focusPrompt = <Button color="secondary" size="sm" onClick={returnToWorld}>Back</Button>;
+		focusPrompt = (
+			<Button color='secondary' size='sm' onClick={returnToWorld}>
+				Back
+			</Button>
+		);
 	}
 
 	// Receive reference to the SVG to pass down to the downloader
 	const svgRef = (element) => element && setSvgEl(element);
 
-	const cardContents = <>
-		<div className="mb-2 text-center">
-			<strong>{mapDefs?.name}</strong>
-		</div>
-		<SVGMap setFocusRegion={isWorld && setFocusRegion} mapDefs={mapDefs} data={mapData} loading={!mapData} showLabels={popOut} svgRef={svgRef} per1000={per1000} />
-		<div className="mt-2 map-controls">
-			<span className="pull-left">
-				{error ? (
-					<small>{error}</small>
-				) : (
-					<MapDownloader data={mapData} {...{svgEl, mapDefs, focusRegion}} />
-				)}
-			</span>
-			<span className="pull-right">
-				{focusPrompt}
-			</span>
-		</div>
-	</>;
+	const cardContents = (
+		<>
+			<div className='mb-2 text-center'>
+				<strong>{mapDefs?.name}</strong>
+			</div>
+			<SVGMap
+				setFocusRegion={isWorld && setFocusRegion}
+				mapDefs={mapDefs}
+				data={mapData}
+				loading={!mapData}
+				showLabels={popOut}
+				svgRef={svgRef}
+				per1000={per1000}
+			/>
+			<div className='mt-2 map-controls'>
+				<span className='pull-left'>{error ? <small>{error}</small> : <MapDownloader data={mapData} {...{ svgEl, mapDefs, focusRegion }} />}</span>
+				<span className='pull-right'>{focusPrompt}</span>
+			</div>
+		</>
+	);
 
 	// Per-1000 mode: No TOD card above, so the map can have more vertical space.
 	const className = space('carbon-map flex-column', isPer1000() && 'taller-map');
 
 	return (
-		<GreenCard title="Where are your emissions produced?" className={className} downloadable={false}>
-			<div role="button" className="pop-out-button" onClick={() => setPopOut(true)} title="Click for larger map">
+		<GreenCard title='Where are your emissions produced?' className={className} downloadable={false}>
+			<div role='button' className='pop-out-button' onClick={() => setPopOut(true)} title='Click for larger map'>
 				⇱
 			</div>
 			{!popOut && cardContents}
-			<Modal className="carbon-map" isOpen={popOut} toggle={() => setPopOut(!popOut)} size="xl">
+			<Modal className='carbon-map' isOpen={popOut} toggle={() => setPopOut(!popOut)} size='xl'>
 				<ModalBody>{popOut && cardContents}</ModalBody>
 			</Modal>
 		</GreenCard>
