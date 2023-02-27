@@ -31,6 +31,8 @@ import ListLoad from '../../base/components/ListLoad';
 import Campaign from '../../base/data/Campaign';
 import Advertiser from '../../base/data/Advertiser';
 import ImpactLoadingScreen from './ImpactLoadingScreen'
+import Money from '../../base/data/Money';
+import SearchQuery from '../../base/searchquery';
 
 /**
  * DEBUG OBJECTS
@@ -78,6 +80,8 @@ const fetchBaseObjects2 = async ({itemId, itemType, status}) => {
 	let pvMasterBrand, masterBrand;
 	let pvSubBrands, subBrands;
 	let pvSubCampaigns, subCampaigns;
+	let pvImpactDebits, impactDebits;
+	let pvCharities, charities;
 
 	// Fetch campaign object if specified
 	if (itemType === "campaign") {
@@ -110,11 +114,33 @@ const fetchBaseObjects2 = async ({itemId, itemType, status}) => {
 		// Find all related campaigns to this brand
 		pvSubCampaigns = Campaign.fetchForAdvertiser(brandId, status);
 		subCampaigns = List.hits(await pvSubCampaigns.promise);
+
+		// Look for vertiser wide debits
+		pvImpactDebits = Advertiser.getImpactDebits({vertiser:brand, status});
+		impactDebits = List.hits(await pvImpactDebits.promise);
+		console.log("Got debits from brand!", impactDebits);
+	} else {
+		// Get only campaign debits
+		pvImpactDebits = Campaign.getImpactDebits({campaign, status});
+		impactDebits = List.hits(await pvImpactDebits.promise);
+		console.log("Got debits from campaign!", impactDebits);
 	}
 
 	// Simplifies having to add null checks for subBrands everywhere
 	if (!subBrands) subBrands = [];
 	if (!subCampaigns) subCampaigns = [];
+	if (!impactDebits) impactDebits = [];
+
+	// Fetch charity objects from debits
+	const charityIds = impactDebits.map(debit => debit?.impact?.charity).filter(x=>x);
+	
+	if (charityIds.length) {
+		let charitySq = SearchQuery.setPropOr(null, "id", charityIds);
+		pvCharities = ActionMan.list({type: C.TYPES.NGO, status, q:charitySq.query});
+		charities = List.hits(await pvCharities.promise);
+	}
+
+	if (!charities) charities = [];
 
 	// If we aren't looking at a campaign, but this brand only has one - just pretend we are
 	if (subCampaigns.length === 1) {
@@ -127,7 +153,7 @@ const fetchBaseObjects2 = async ({itemId, itemType, status}) => {
 		throw new Error("404: Not found");
 	}
 
-	return {campaign, brand, masterBrand, subBrands, subCampaigns};
+	return {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits, charities};
 }
 
 
@@ -155,10 +181,17 @@ const ImpactOverviewPage = () => {
 	let pvBaseObjects = fetchBaseObjects();
 	if (pvBaseObjects.error) return <ErrorDisplay e={pvBaseObjects.error} />
 
-	const {campaign, brand, masterBrand, subBrands, subCampaigns} = pvBaseObjects.value || {};
+	const {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits=[], charities=[]} = pvBaseObjects.value || {};
 
 	// Use campaign specific logo if given
 	const mainLogo = campaign?.branding?.logo || brand?.branding?.logo;
+
+	const totalDonation = Money.total(impactDebits.map(debit => debit?.impact?.amount || new Money(0)));
+
+	const addNumberCommas = (x) => {
+		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	}
+	const totalString = Money.CURRENCY[totalDonation.currency] + addNumberCommas(Math.round(totalDonation.value));
 
 	// if not logged in OR impact hasn't been chosen yet...
 	if(!Login.isLoggedIn() || !impactChosen) {
@@ -188,7 +221,7 @@ const ImpactOverviewPage = () => {
 									<div className='content'>
 										<img className='logo' src={mainLogo}/>
 										<br/>
-										<h1>£A BAJILLION</h1>
+										<h1>{totalString}</h1>
 										<h2>Donated</h2>
 										<br/>
 										<h5>With</h5>
@@ -223,12 +256,12 @@ const ImpactOverviewPage = () => {
 													<h3>Brands</h3>
 											</GLCard> : null}
 										<GLCard
-											modalContent={CharityList}
-											modalTitle="18 charities"
+											modalContent={() => <CharityList charities={charities}/>}
+											modalTitle={charities.length + " charities"}
 											modalId="right-half"
 											modalClassName="list-modal"
 											className="center-number">
-												<h2>18</h2>
+												<h2>{charities.length}</h2>
 												<h3>Charities</h3>
 										</GLCard>
 									</GLHorizontal>
@@ -607,13 +640,7 @@ const BrandList = ({brand, subBrands}) => {
 	</>;
 };
 
-const CharityList = () => {
-	
-	// DUMMY DATA
-	const charity = TEST_CHARITY_OBJ;
-	let charities = [];
-	for (let i = 0; i < 20; i++) charities.push(charity);
-	// END DUMMY DATA
+const CharityList = ({charities}) => {
 
 	return <>
 		<br/>
