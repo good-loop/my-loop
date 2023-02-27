@@ -140,6 +140,7 @@
         width: 100%;
         align-items: center;
 
+
         .ListLoad {
             margin-top: 0.5rem; // all but first items have this style, apply it to the first as well 
         }
@@ -178,9 +179,20 @@
         display: inline-flex;
         align-items: center;
         width: 100%;
-        padding: 10px;
         border-bottom: solid 1px lightgrey;
         
+        .display {
+            display: inline-flex;
+            align-items: center;
+            background-color: rgba(0,0,0,0);
+            transition: background-color 0.2s;
+            padding: 10px;
+
+            &:hover {
+                background-color: rgba(0,0,0,0.2);
+                cursor: pointer;
+            }
+        }
 
         .name {
             margin-right: 1rem;

@@ -91,9 +91,11 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 		return <>
 			<div className='brand-campaign-set' onClick={() => filterChange({brand:parentItem, campaign:item})}>
 				<div className="info campaign-item">
-					{thumbnail}
-					<div className={space("name", (isSelected && "selected-filter"))}>
-						{name}
+					<div className='display'>
+						{thumbnail}
+						<div className={space("name", (isSelected && "selected-filter"))}>
+							{name}
+						</div>
 					</div>
 					{button || ''}
 				</div>
@@ -153,8 +155,10 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 		return <>
 			<div className='brand-campaign-set'>
 				<div className="info brand-item" onClick={brandItemOnClick}>
-					{thumbnail}
-					<div className={space("name", (isSelected && "selected-filter"))}>{name}</div>
+					<div className="display">
+						{thumbnail}
+						<div className={space("name", (isSelected && "selected-filter"))}>{name}</div>
+					</div>
 					{button || ''}
 				</div>
 				{campaignsListItem}
