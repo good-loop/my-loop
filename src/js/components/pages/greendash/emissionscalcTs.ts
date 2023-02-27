@@ -2,16 +2,16 @@
  * Rewrite functions from emissionscalc.js into typescript.
  */
 
-import { number } from 'yargs';
 import { sum } from '../../../base/utils/miscutils';
 
-type BreakdownByX = {
-	[key: string]: {
+type BreakdownByX = Record<
+	string,
+	{
 		count: number;
 		co2: number;
 		occurs?: number;
-	};
-};
+	}
+>;
 
 /**
  * Compress small rows into other by count instead of co2
@@ -69,14 +69,14 @@ type BreakdownRow = {
 /**
  * Can have multi keyNameToSum
  */
-export const getBreakdownByWithCount = (buckets: Object[], keyNamesToSum: string[], keyNameToBreakdown: string): Object => {
+export const getBreakdownByWithCount = (buckets: BreakdownRow[], keyNamesToSum: string[], keyNameToBreakdown: string): Object => {
 	if (!buckets?.length) {
 		return {}; // no data
 	}
 
 	const bi = keyNameToBreakdown === 'time' ? 'key_as_string' : 'key';
 
-	let totalByX: { [key: string]: Object } = {};
+	let totalByX: Record<string, Object> = {};
 	for (let i = 0; i < buckets.length; i++) {
 		const row: BreakdownRow = buckets[i];
 		const breakdownKey = row[bi];
