@@ -214,6 +214,10 @@ export const calculateDynamicOffset = ({ campaign, offset, period }) => {
  * @returns {Object} {isLoading:boolean, carbon: [], carbonTotal: Number, trees: [], treesTotal:Number, coral: [], pvAllCampaigns }
  */
 export const getOffsetsByType = ({ campaign, status, period }) => {
+	if (true) {
+		console.error("FIXME!", new Error());
+		return {};
+	}
 	// console.warn('getOffsetsByType', campaign, status, period);
 	// Is this a master campaign?
 	let pvAllCampaigns = Campaign.pvSubCampaigns({ campaign, status });
