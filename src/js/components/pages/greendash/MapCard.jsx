@@ -4,7 +4,8 @@ import { DownloadCSVLink } from '../../../base/components/SimpleTable';
 import { space, stopEvent } from '../../../base/utils/miscutils';
 import Misc from '../../../MiscOverrides';
 import { dataColours, GreenCard } from './dashutils';
-import { emissionsPerImpressions, getCarbon } from './emissionscalc';
+import { emissionsPerImpressions } from './emissionscalc';
+import { getCarbon } from './emissionscalcTs';
 import { isPer1000 } from './GreenMetrics';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import CSS from '../../../../style/green-map-card.less';

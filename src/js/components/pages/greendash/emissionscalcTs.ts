@@ -3,6 +3,12 @@
  */
 
 import { sum } from '../../../base/utils/miscutils';
+import DataStore from '../../../base/plumbing/DataStore';
+import ServerIO from '../../../plumbing/ServerIO';
+import { getDataList } from '../../../base/plumbing/Crud';
+import C from '../../../C';
+import KStatus from '../../../base/data/KStatus';
+import md5 from 'md5';
 
 type BreakdownByX = Record<
 	string,
@@ -12,6 +18,39 @@ type BreakdownByX = Record<
 		occurs?: number;
 	}
 >;
+
+type GreenBuckets = Record<string, string | number>[];
+
+export const getCarbon = ({
+	q = '',
+	start = '1 month ago',
+	end = 'now',
+	breakdown,
+	...rest
+}: {
+	q: string;
+	start: string;
+	end: string;
+	breakdown: string[];
+}) => {
+	const data = {
+		dataspace: 'emissions',
+		q,
+		start,
+		end,
+		breakdown,
+		...rest,
+	};
+
+	return DataStore.fetch(
+		['misc', 'DataLog', 'green', md5(JSON.stringify(data))],
+		() => {
+			return ServerIO.load(ServerIO.DATALOG_ENDPOINT, { data, swallow: true });
+		},
+		null,
+		null
+	);
+};
 
 /**
  * Compress small rows into other by count instead of co2
