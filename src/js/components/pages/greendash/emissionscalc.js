@@ -211,17 +211,12 @@ export const calculateDynamicOffset = ({ campaign, offset, period }) => {
  * @param {Object} p
  * @param {!Campaign} p.campaign If `campaign` is a master, then this function WILL look up sub-campaigns and include them.
  * @param {?Object} p.period {start, end}
- * @returns {Object} {isLoading:boolean, carbon: [], carbonTotal: Number, trees: [], treesTotal:Number, coral: [], pvAllCampaigns }
+ * @returns {Object} {isLoading:boolean, carbon: Impact[], carbonTotal: Number, trees: Impact[], treesTotal:Number, coral: [], pvAllCampaigns }
  */
 export const getOffsetsByType = ({ campaign, status, period }) => {
-	if (true) {
-		console.error("FIXME!", new Error());
-		return {};
-	}
-	// console.warn('getOffsetsByType', campaign, status, period);
 	// Is this a master campaign?
 	let pvAllCampaigns = Campaign.pvSubCampaigns({ campaign, status });
-
+	let isLoading = ! pvAllCampaigns.resolved;	
 	const allFixedOffsets = [];
 	if (pvAllCampaigns.value) {
 		// for each campaign:
@@ -229,16 +224,22 @@ export const getOffsetsByType = ({ campaign, status, period }) => {
 		// - Fixed or dynamic offsets? If dynamic, get impressions
 		// - future TODO did it fund eco charities? include those here
 		List.hits(pvAllCampaigns.value).forEach((campaign) => {
-			let offsets = Campaign.offsets(campaign);
-			let fixedOffsets = offsets.map((offset) =>
-				Impact.isDynamic(offset) ? calculateDynamicOffset({ campaign, offset, period }) : offset
-			);
-			allFixedOffsets.push(...fixedOffsets);
+			let pvImpactDebitsList = Campaign.getImpactDebits({campaign, status:KStatus.PUBLISHED});
+			if (pvImpactDebitsList.value) {
+				let impactDebits = List.hits(pvImpactDebitsList.value);
+				let offsets = impactDebits.map(imp => imp.impact);
+				let fixedOffsets = offsets.map((offset) =>
+					Impact.isDynamic(offset) ? calculateDynamicOffset({ campaign, offset, period }) : offset
+				);
+				allFixedOffsets.push(...fixedOffsets);
+			} else {
+				isLoading = false;
+			}
 		});
 		// console.log('allFixedOffsets', allFixedOffsets);
 	}
 	const offsets4type = {};
-	// HACK - return this too
+	// HACK - return this too (why??)
 	offsets4type.pvAllCampaigns = pvAllCampaigns;
 	// kgs of CO2
 	let co2 = campaign.co2; // manually set for this campaign?
@@ -262,7 +263,6 @@ export const getOffsetsByType = ({ campaign, status, period }) => {
 	offsets4type.coral = allFixedOffsets.filter((o) => o?.name?.substring(0, 4) === 'coral');
 	offsets4type.coralTotal = offsets4type.coral.reduce((x, offset) => x + offset.n, 0);
 
-	let isLoading = !pvAllCampaigns.resolved || allFixedOffsets.includes(null);
 	offsets4type.isLoading = isLoading;
 	return offsets4type;
 };
