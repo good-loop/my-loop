@@ -69,7 +69,7 @@ const pieOptions = (totalCO2, minimumPercentLabeled) => ({
 					font: (ctx) => ({
 						family: 'Montserrat',
 						weight: 'bold',
-						size: Math.round(Math.min(ctx.chart.chartArea.width, ctx.chart.chartArea.height) / 7),
+						size: Math.round(Math.min(ctx.chart.chartArea.width, ctx.chart.chartArea.height) / 10),
 					}),
 					formatter: (value = 0) => {
 						const percentage = Math.round((value * 100) / totalCO2);
