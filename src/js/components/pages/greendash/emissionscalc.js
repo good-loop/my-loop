@@ -13,7 +13,7 @@ import { periodFromUrl } from './dashutils';
 import { getDataLogData } from '../../../base/plumbing/DataLog';
 
 /**
- *
+ * @deprecated replaced by getCarbon in emissionscalcTs.ts
  * @param {Object} p
  * @param {string} p.q
  * @param {string} p.start
@@ -63,6 +63,7 @@ export const getSumColumn = (buckets, keyName) => {
 
 /**
  * Merge same-key rows and compress small rows into "Other"
+ * @deprecated replaced by getCompressedBreakdownWithCount in emissionscalcTs.ts
  * @param {Object} p
  * @param {Object} p.breakdownByX {key: number}
  * @param {?number} p.minFraction
@@ -88,7 +89,7 @@ export const getCompressedBreakdown = ({ breakdownByX, minFraction = 0.05, osTyp
 };
 
 /**
- *
+ * @deprecated replaced by getBreakdownByWithCount in emissionscalcTs.ts
  * @param {Object[][]} buckets
  * @returns {Object} {breakdown-key: sum-for-key}
  */

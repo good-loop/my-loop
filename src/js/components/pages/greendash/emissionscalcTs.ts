@@ -9,6 +9,7 @@ import { getDataList } from '../../../base/plumbing/Crud';
 import C from '../../../C';
 import KStatus from '../../../base/data/KStatus';
 import md5 from 'md5';
+import PromiseValue from '../../../base/promise-value';
 
 type BreakdownByX = Record<
 	string,
@@ -148,4 +149,33 @@ export const filterByCount = (data: BreakdownByX, minFraction: number = 0.05) =>
 		}
 	});
 	return outputData;
+};
+
+/**
+ * Get the GreenTags referenced by the buckets
+ */
+export const getTags = (buckets: GreenBuckets): PromiseValue | null => {
+	if (!buckets || !buckets.length) {
+		return null;
+	}
+
+	const tagIdSet: Record<string, boolean> = {};
+	const adIdKey = 'key';
+	buckets.forEach((row, i) => {
+		let adid: string = row[adIdKey] as string;
+		// HACK CaptifyOldMout data is polluted with impressions for adids like `ODCTC5Tu"style="position:absolute;` due to mangled pixels
+		if (adid.match(/[^"]+/)) adid = adid.match(/[^"]+/)!.toString(); // Fairly safe to assume " won't be found in a normal adid
+		if (adid && adid !== 'unset') {
+			tagIdSet[adid] = true;
+		}
+	});
+
+	const ids = Object.keys(tagIdSet);
+	if (!ids.length) return null;
+
+	// ??does PUB_OR_DRAFT work properly for `ids`??
+
+	let pvTags = getDataList({ type: C.TYPES.GreenTag, status: KStatus.PUB_OR_DRAFT, ids, q: null, sort: null, start: null, end: null });
+
+	return pvTags;
 };
