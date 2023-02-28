@@ -186,7 +186,9 @@ const ImpactOverviewPage = () => {
 	// Use campaign specific logo if given
 	const mainLogo = campaign?.branding?.logo || brand?.branding?.logo;
 
-	const totalDonation = Money.total(impactDebits.map(debit => debit?.impact?.amount || new Money(0)));
+	let totalDonation = Money.total(impactDebits.map(debit => debit?.impact?.amount || new Money(0)));
+	// Returns NaN if impactDebits is an empty array
+	if (isNaN(totalDonation.value)) totalDonation = new Money(0);
 
 	const addNumberCommas = (x) => {
 		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -547,7 +549,7 @@ const ContentList = () => {
 	const contentRenderable = Object.keys(content).map(title => { return {title, tick:content[title]}})
 
 	return <>
-		{contentRenderable.map(c => <Row key={c}>
+		{contentRenderable.map((c, i) => <Row key={i}>
 			<Col xs={3}>
 				<img src={"/img/mydata/" + (c.tick ? "circle-tick.svg" : "circle-no-tick.svg")} className='logo'/>
 			</Col>
@@ -621,7 +623,7 @@ const BrandList = ({brand, subBrands}) => {
 
 	const BrandListItem = ({item}) => {
 		return <Col md={4} className="mt-3">
-			<GLCard className="preview h-100" noMargin>
+			<GLCard className="preview h-100" noMargin href={"/iview/brand/"+item.id}>
 				
 				{item && item.branding?.logo && <img src={item.branding.logo} className="logo"/>}
 				<p className='text-center'>{item.name}</p>
@@ -700,7 +702,7 @@ const CampaignList = ({campaigns, brand, subBrands, status}) => {
 		<GLVertical>
 			{campaigns.map(campaign => {
 				const myBrand = allBrands[campaign.vertiser];
-				return <GLCard className="preview campaign mt-3" noMargin key={campaign.id}>
+				return <GLCard className="preview campaign mt-3" noMargin key={campaign.id} href={"/iview/campaign/" + campaign.id}>
 					<div className='campaign-details'>
 						<p className='text-left m-0'>
 							<b>{campaign.vertiserName}</b>

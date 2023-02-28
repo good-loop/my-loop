@@ -4,6 +4,7 @@ import { space, isPortraitMobile } from '../../base/utils/miscutils';
 import { assert } from '../../base/utils/assert';
 import DataStore from '../../base/plumbing/DataStore'
 import CloseButton from '../../base/components/CloseButton';
+import C from '../../C';
 
 const MODAL_PATH = ['widget', 'GLModalCards'];
 const MODAL_LIST_PATH = MODAL_PATH.concat("list");
@@ -62,8 +63,9 @@ export const GLVertical = ({className, children, ...props}) => {
  * @param {?Object} modal package object for all the above parameters
  * @param {?String} modalId the ID of the GLModalCard to use in displaying
  * @param {?Boolean} modalPrioritize if this GLModalCard is opened while others are already open, force close them (they remain open by default)
+ * @param {?String} href make this card a link
  */
-export const GLCard = ({noPadding, noMargin, className, style, modalContent, modalTitle, modalId, modalHeader, modalHeaderImg, modalPrioritize, modalClassName, modal, children, ...props}) => {
+export const GLCard = ({noPadding, noMargin, className, style, modalContent, modalTitle, modalId, modalHeader, modalHeaderImg, modalPrioritize, modalClassName, modal, children, href, ...props}) => {
 
 	const modalObj = {
 		content: modalContent, 
@@ -87,10 +89,14 @@ export const GLCard = ({noPadding, noMargin, className, style, modalContent, mod
 
 	const loaded = DataStore.getValue(LOADED_PATH);
 
-	const cardContents = <Card className={space("glcard", !noMargin?"m-2":"", modalContent?"glcardmodal":"", className)} onClick={modalContent && openModal} {...props}>
+	let cardContents = <Card className={space("glcard", !noMargin?"m-2":"", modalContent?"glcardmodal":"", className)} onClick={modalContent && openModal} {...props}>
 		{noPadding? children
 		: <CardBody>{children}</CardBody>}
 	</Card>;
+
+	if (href) {
+		cardContents = <C.A className="glcard-link" href={href} onClick={() => modalToggle()}>{cardContents}</C.A>
+	}
 
 	return noMargin ? cardContents
 	: <div className="glcard-outer" style={style}>
