@@ -155,6 +155,7 @@ const JourneyCard = ({ campaigns, baseFilters, period, emptyTable }) => {
 
 	let offsets = {}; // HACK will include carbonTotal etc too
 	offsetTypes.forEach((ot) => (offsets[ot + 'Total'] = 0));
+	// TODO could be more efficient -- load ImpactDebits rather than loop over campaigns
 	campaigns.forEach((campaign) => {
 		const offsets4type = getOffsetsByType({ campaign, period });
 		offsetTypes.forEach((ot) => (offsets[ot + 'Total'] += offsets4type[ot + 'Total'] || 0));
