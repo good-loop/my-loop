@@ -8,6 +8,7 @@ import ServerIO from '../../../plumbing/ServerIO';
 import { getDataList } from '../../../base/plumbing/Crud';
 import C from '../../../C';
 import KStatus from '../../../base/data/KStatus';
+import List from '../../../base/data/List';
 import md5 from 'md5';
 import PromiseValue from '../../../base/promise-value';
 
@@ -178,4 +179,25 @@ export const getTags = (buckets: GreenBuckets): PromiseValue | null => {
 	let pvTags = getDataList({ type: C.TYPES.GreenTag, status: KStatus.PUB_OR_DRAFT, ids, q: null, sort: null, start: null, end: null });
 
 	return pvTags;
+};
+
+export const getCampaigns = (buckets: GreenBuckets) => {
+	let pvTags = getTags(buckets);
+	if (!pvTags) {
+		return null;
+	}
+
+	// TODO tags is GreenTag[]
+	return PromiseValue.then(pvTags, (tags: List) => {
+		let cidSet: Record<string, boolean> = {};
+		List.hits(tags)?.forEach((tag: Record<string, any>) => {
+			if (tag && tag.campaign) {
+				cidSet[tag.campaign] = true;
+			}
+		});
+		let cids = Object.keys(cidSet);
+		let pvcs = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUB_OR_DRAFT, ids: cids, q: null, sort: null, start: null, end: null });
+		// TODO have PromiseValue.then() unwrap nested PromiseValue
+		return pvcs;
+	}, null);
 };
