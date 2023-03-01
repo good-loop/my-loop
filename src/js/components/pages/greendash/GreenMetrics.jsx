@@ -13,8 +13,8 @@ import ErrAlert from '../../../base/components/ErrAlert';
 import { GreenCard, periodFromUrl, printPeriod, noCacheFromUrl, getFilterModeId, numParamFromUrl } from './dashutils';
 
 import ShareWidget, { shareThingId } from '../../../base/components/ShareWidget';
-import { getCampaigns, getSumColumn } from './emissionscalc';
-import { getCarbon } from './emissionscalcTs';
+import { getSumColumn } from './emissionscalc';
+import { getCarbon, getCampaigns } from './emissionscalcTs';
 
 import GreenDashboardFilters from './GreenDashboardFilters';
 import TimeSeriesCard from './TimeSeriesCard';
