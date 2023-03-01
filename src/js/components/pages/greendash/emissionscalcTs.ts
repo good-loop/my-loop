@@ -21,6 +21,9 @@ type BreakdownByX = Record<
 	}
 >;
 
+/**
+ * An array of Records
+ */
 type GreenBuckets = Record<string, string | number>[];
 
 export const getCarbon = ({
@@ -188,16 +191,64 @@ export const getCampaigns = (buckets: GreenBuckets) => {
 	}
 
 	// TODO tags is GreenTag[]
-	return PromiseValue.then(pvTags, (tags: List) => {
-		let cidSet: Record<string, boolean> = {};
-		List.hits(tags)?.forEach((tag: Record<string, any>) => {
-			if (tag && tag.campaign) {
-				cidSet[tag.campaign] = true;
+	return PromiseValue.then(
+		pvTags,
+		(tags: List) => {
+			let cidSet: Record<string, boolean> = {};
+			List.hits(tags)?.forEach((tag: Record<string, any>) => {
+				if (tag && tag.campaign) {
+					cidSet[tag.campaign] = true;
+				}
+			});
+			let cids = Object.keys(cidSet);
+			let pvcs = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUB_OR_DRAFT, ids: cids, q: null, sort: null, start: null, end: null });
+			// TODO have PromiseValue.then() unwrap nested PromiseValue
+			return pvcs;
+		},
+		null
+	);
+};
+
+/**
+ * @param buckets A DataLog breakdown of carbon emissions. e.g. [{key, co2, count}]
+ * @param perN e.g. 1000 for "carbon per 1000 impressions"
+ * @param filterLessThan Filter out data will too low count. Filter out less than 1% of the largest count if set to -1.
+ * @returns The same breakdown, but with every "co2*" value in each bucket divided by (bucketcount / perN)
+ */
+export const emissionsPerImpressions = (buckets: GreenBuckets, filterLessThan: number = 0, perN: number = 1000): GreenBuckets => {
+	// Auto filter amount
+	if (filterLessThan === -1) {
+		const largest = Math.max(...buckets.map((val) => val.count as number));
+		filterLessThan = largest ? largest * 0.01 : 0;
+	}
+
+	return buckets
+		.map((bkt) => {
+			const newBkt: Record<string, string | number> = { ...bkt }; // Start with a copy
+
+			if ('count' in bkt) {
+				// Simple breakdown
+				Object.entries(bkt).forEach(([k, v]) => {
+					// Carbon entries => carbon per N impressions; others unchanged
+					if (bkt.count > filterLessThan) {
+						newBkt[k] = k.match(/^co2/) ? (v as number) / ((bkt.count as number) / perN) : v;
+					} else {
+						delete newBkt[k];
+					}
+				});
+			} else {
+				// Cross-breakdown (probably)
+				const xbdKey = Object.keys(bkt).find((k) => k.match(/^by_/)) as string;
+				// Recurse in to process the next breakdown level.
+				if (xbdKey) {
+					let crossBkt = newBkt[xbdKey] as unknown as GreenBuckets;
+					crossBkt = emissionsPerImpressions(crossBkt, filterLessThan, perN);
+				}
+				// if (xbdKey) newBkt[xbdKey] = emissionsPerImpressions(bkt[xbdKey], filterLessThan, perN);
+				// if (!xbdKey) -- No count - but also no by_x sub-breakdown? Strange, but we can skip it.
 			}
-		});
-		let cids = Object.keys(cidSet);
-		let pvcs = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUB_OR_DRAFT, ids: cids, q: null, sort: null, start: null, end: null });
-		// TODO have PromiseValue.then() unwrap nested PromiseValue
-		return pvcs;
-	}, null);
+
+			return newBkt;
+		})
+		.filter((obj) => Object.keys(obj).length > 0);
 };
