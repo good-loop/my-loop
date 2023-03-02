@@ -11,6 +11,7 @@ import KStatus from '../../../base/data/KStatus';
 import List from '../../../base/data/List';
 import md5 from 'md5';
 import PromiseValue from '../../../base/promise-value';
+import { number } from 'yargs';
 
 type BreakdownByX = Record<
 	string,
@@ -55,6 +56,22 @@ export const getCarbon = ({
 		null,
 		null
 	);
+};
+
+export const getSumColumn = (buckets: GreenBuckets, keyName: string) => {
+	if (!buckets?.length) {
+		console.warn('getSumColumn - no data', buckets, keyName);
+		return 0; // no data
+	}
+	let total = 0;
+	for (let i = 0; i < buckets.length; i++) {
+		const row = buckets[i];
+		if (typeof row[keyName] != 'number') continue;
+		const n: number = row[keyName] as number;
+		if (!n) continue;
+		total += 1.0 * n;
+	}
+	return total;
 };
 
 /**

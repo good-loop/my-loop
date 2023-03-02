@@ -41,7 +41,7 @@ export const getCarbon = ({ q = '', start = '1 month ago', end = 'now', breakdow
 };
 
 /**
- *
+ * @deprecated replaced by emissionscalcTs.ts
  * @param {Object[][]} buckets
  * @param {!string} keyName
  * @returns {!number}
