@@ -227,18 +227,17 @@ export const getOffsetsByType = ({ campaign, status, period }) => {
 		// - future TODO did it fund eco charities? include those here
 		List.hits(pvAllCampaigns.value).forEach((campaign) => {
 			let pvImpactDebitsList = Campaign.getImpactDebits({campaign, status:KStatus.PUBLISHED});
-			if (pvImpactDebitsList.value) {
-				let impactDebits = List.hits(pvImpactDebitsList.value);
-				let offsets = impactDebits.map(imp => imp.impact);
-				let fixedOffsets = offsets.map((offset) =>
-					Impact.isDynamic(offset) ? calculateDynamicOffset({ campaign, offset, period }) : offset
-				);
-				allFixedOffsets.push(...fixedOffsets);
-			} else {
-				isLoading = false;
+			if ( ! pvImpactDebitsList.value) {
+				isLoading = true;
+				return;
 			}
+			let impactDebits = List.hits(pvImpactDebitsList.value);
+			let offsets = impactDebits.map(imp => imp.impact);
+			let fixedOffsets = offsets.map((offset) =>
+				Impact.isDynamic(offset) ? calculateDynamicOffset({ campaign, offset, period }) : offset
+			);
+			allFixedOffsets.push(...fixedOffsets);
 		});
-		// console.log('allFixedOffsets', allFixedOffsets);
 	}
 	const offsets4type = {};
 	// HACK - return this too (why??)
