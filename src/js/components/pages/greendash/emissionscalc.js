@@ -114,7 +114,7 @@ export const getBreakdownBy = (buckets, keyNameToSum, keyNameToBreakdown) => {
 };
 
 /**
- * @deprecate replaced by emissionscalcTs.ts
+ * @deprecated replaced by emissionscalcTs.ts
  * Get the GreenTags referenced by the buckets
  * @param {?Object[][]} buckets
  * @returns {?PromiseValue} PV of a List of GreenTags
@@ -146,7 +146,7 @@ export const getTags = (buckets) => {
 };
 
 /**
- * @deprecate replaced by emissionscalcTs.ts
+ * @deprecated replaced by emissionscalcTs.ts
  * @param {Object[][]} buckets
  * @returns {?PromiseValue} PV of a List of Campaigns
  */
@@ -270,7 +270,7 @@ export const getOffsetsByType = ({ campaign, status, period }) => {
 };
 
 /**
- * @deprecate replaced by emissionscalcTs.ts
+ * @deprecated replaced by emissionscalcTs.ts
  * @param {Object[]} buckets A DataLog breakdown of carbon emissions. e.g. [{key, co2, count}]
  * @param {Number} perN e.g. 1000 for "carbon per 1000 impressions"
  * @param {Number} filterLessThan Filter out data will too low count. Filter out less than 1% of the largest count if set to -1.

@@ -240,9 +240,10 @@ export const emissionsPerImpressions = (buckets: GreenBuckets, filterLessThan: n
 				// Cross-breakdown (probably)
 				const xbdKey = Object.keys(bkt).find((k) => k.match(/^by_/)) as string;
 				// Recurse in to process the next breakdown level.
+				// This is not safe, but we will allow it anyway
 				if (xbdKey) {
-					let crossBkt = newBkt[xbdKey] as unknown as GreenBuckets;
-					crossBkt = emissionsPerImpressions(crossBkt, filterLessThan, perN);
+					const crossBkt = newBkt[xbdKey] as unknown as GreenBuckets;
+					newBkt[xbdKey] = emissionsPerImpressions(crossBkt, filterLessThan, perN) as any;
 				}
 				// if (!xbdKey) -- No count - but also no by_x sub-breakdown? Strange, but we can skip it.
 			}
