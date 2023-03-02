@@ -225,9 +225,7 @@ const ImpactOverviewPage = () => {
 										<br/>
 										<h1>{totalString}</h1>
 										<h2>Donated</h2>
-										<br/>
 										<h5>With</h5>
-										<br/>
 										<img className='w-50' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 									</div>
 								</div>
