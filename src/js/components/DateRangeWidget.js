@@ -168,7 +168,7 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 
 	// initial focus
 	useEffect(() => {
-		focusPeriod(dflt.start, dflt.end);
+		focusPeriod(dflt.start, dflt.end, dflt.name);
 	}, []);
 
 	const setPeriod = (name, start, end) => {
@@ -185,7 +185,12 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 		setEnd(end);
 	};
 
-	const focusPeriod = (start, end) => {
+	const focusPeriod = (start, end, name) => {
+		if (name === "all") {
+			const today = new Date();
+			setFocusDate(today);
+			return;
+		}
 		if (start && end) {
 			const middleDate = new Date((start.getTime() + end.getTime()) / 2);
 			setFocusDate(middleDate);
@@ -275,7 +280,7 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 			<Button className="preset" size="sm" onClick={setLast30Days}>Last 30 days</Button>
 			<Button className="preset" size="sm" onClick={setThisMonth}>This month</Button>
 			<Button className="preset" size="sm" onClick={setLastMonth}>Last month</Button>
-			<Button className="preset" size="sm" color="primary" onClick={() => focusPeriod(start, end)}>Recenter</Button>
+			<Button className="preset" size="sm" color="primary" onClick={() => focusPeriod(start, end, name)}>Recenter</Button>
 		</div>
 	</div>
 };

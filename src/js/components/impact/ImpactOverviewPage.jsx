@@ -115,6 +115,8 @@ const fetchBaseObjects2 = async ({itemId, itemType, status}) => {
 		pvSubCampaigns = Campaign.fetchForAdvertiser(brandId, status);
 		subCampaigns = List.hits(await pvSubCampaigns.promise);
 
+		subCampaigns = subCampaigns.filter(c => !Campaign.isMaster(c));
+
 		// Look for vertiser wide debits
 		pvImpactDebits = Advertiser.getImpactDebits({vertiser:brand, status});
 		impactDebits = List.hits(await pvImpactDebits.promise);

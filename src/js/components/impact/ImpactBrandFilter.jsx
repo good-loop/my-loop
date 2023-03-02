@@ -116,8 +116,6 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 		if (name.length > 260) name = name.slice(0, 260);
 		if(isMaster) name += " - All Brands"
 		const status = item.status || "";
-		
-		
 
 		// is the current brands campaign dropdown expanded or closed?
 		// if a campaign is selected, start with that subbrands dropdown open
@@ -125,13 +123,15 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 
 		// classes of campaigns that belong to this current brand
 		const campaignClasses = `filter-button campaign-button ListItem btn-default btn btn-outline-secondary ${KStatus.PUBLISHED} btn-space`
+
+		let q = SearchQuery.setProp(null, "vertiser", id);
 		
 		// brand item with dropdowns into campaigns
 		const campaignsListItem = (
 		<div id={"campaigns-"+item.id} className={ + isDropdownOpen ? "open" : "closed"}>
 			<ListLoad hideTotal status={status}
 				type={C.TYPES.Campaign}
-				q={SearchQuery.setProp(null, "vertiser", id).query}
+				q={q.query}
 				unwrapped
 				itemClassName={campaignClasses}
 				ListItem={(itemProps) => <CampaignListItem {...itemProps} parentItem={item}/>}
