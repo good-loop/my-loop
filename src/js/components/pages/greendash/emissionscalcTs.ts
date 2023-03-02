@@ -244,7 +244,6 @@ export const emissionsPerImpressions = (buckets: GreenBuckets, filterLessThan: n
 					let crossBkt = newBkt[xbdKey] as unknown as GreenBuckets;
 					crossBkt = emissionsPerImpressions(crossBkt, filterLessThan, perN);
 				}
-				// if (xbdKey) newBkt[xbdKey] = emissionsPerImpressions(bkt[xbdKey], filterLessThan, perN);
 				// if (!xbdKey) -- No count - but also no by_x sub-breakdown? Strange, but we can skip it.
 			}
 
