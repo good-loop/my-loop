@@ -4,18 +4,19 @@ import C from '../../C';
 import PropControlPeriod from '../../base/components/propcontrols/PropControlPeriod'
 import { openAndPopulateModal } from './GLCards';
 import DateRangeWidget from '../DateRangeWidget';
-import { getPeriodQuarter, getPeriodMonth, periodFromUrl, periodToParams, printPeriod } from '../pages/greendash/dashutils';
+import { getPeriodQuarter, getPeriodMonth, periodFromUrl, periodToParams, printPeriod, periodFromName } from '../pages/greendash/dashutils';
 import { modifyPage } from '../../base/plumbing/glrouter';
 import { nonce } from '../../base/data/DataClass';
 import DataStore from '../../base/plumbing/DataStore';
 import { modalToggle } from './GLCards';
 
-/** Extract the time period filter from URL params if present - if not, apply "current quarter" by default */
-const initPeriod = () => {
+/** Extract the time period filter from URL params if present - if not, apply "all" by default */
+export const initPeriod = () => {
 	let period = periodFromUrl();
 	if (!period) {
-		period = getPeriodQuarter();
-		modifyPage(null, { period: period.name });
+		period = periodFromName("all");
+		//no need to add defaults to URL
+		//modifyPage(null, { period: period.name });
 	}
 	return period;
 };
