@@ -5,8 +5,7 @@ import { space, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import NewChartWidget from '../../../base/components/NewChartWidget';
 import { GreenCard, printPeriod, printDate, printDateShort, TONNES_THRESHOLD, GreenCardAbout, Mass, NOEMISSIONS, CO2e } from './dashutils';
-import { getBreakdownBy } from './emissionscalc';
-import { emissionsPerImpressions } from './emissionscalcTs';
+import { emissionsPerImpressions, getBreakdownByWithCount } from './emissionscalcTs';
 import Icon from '../../../base/components/Icon';
 import { nonce } from '../../../base/data/DataClass';
 import LinkOut from '../../../base/components/LinkOut';
@@ -159,13 +158,13 @@ const TimeSeriesCard = ({ period, data: timeTable, per1000, noData }) => {
 		if (per1000) {
 			timeTable = emissionsPerImpressions(timeTable);
 		}
-
+		
 		// Sum total emissions for each date across all other factors, sort, and unzip to labels/data arrays
-		Object.entries(getBreakdownBy(timeTable, 'co2', 'time')).sort(
+		Object.entries(getBreakdownByWithCount(timeTable, ['co2'], 'time')).sort(
 			([ta], [tb]) => new Date(ta).getTime() - new Date(tb).getTime()
 		).forEach(([time, kg]) => {
 			labels.push(labelFn(time));
-			data.push(kg);
+			data.push(kg.co2);
 		});
 
 		let totalCO2 = data.reduce((acc, d) => acc + d, 0);
