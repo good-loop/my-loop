@@ -49,7 +49,6 @@ const TimeOfDayCard2 = ({ baseFilters, tags }) => {
 					labels.push(`${((i + 11) % 12) + 1} ${i < 12 ? 'am' : 'pm'}`);
 					data.push(0);
 				}
-				console.log('hoursBreakdown[i]', hoursBreakdown[i]);
 				data[group] += hoursBreakdown[i]?.co2 || 0;
 			}
 

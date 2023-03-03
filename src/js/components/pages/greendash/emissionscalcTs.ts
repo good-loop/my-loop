@@ -11,7 +11,6 @@ import KStatus from '../../../base/data/KStatus';
 import List from '../../../base/data/List';
 import md5 from 'md5';
 import PromiseValue from '../../../base/promise-value';
-import { number } from 'yargs';
 
 /**
  * An array of Records
