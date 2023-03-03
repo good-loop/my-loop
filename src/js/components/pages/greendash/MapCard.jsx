@@ -323,7 +323,6 @@ const MapCard = ({ baseFilters, per1000 }) => {
 		const CUTOFF_RATE = 0.01;
 		const impressionsCutoff = Math.max(...cleanedLocnBuckets.map((row) => row.count)) * CUTOFF_RATE;
 		let colours = dataColours(cleanedLocnBuckets.filter((row) => row.count > impressionsCutoff).map((row) => row.co2), [192, 33, 48], [186, 34, 84]);
-		console.log(colours)
 		// zip colours, states, carbon together for the map
 		setMapData(
 			cleanedLocnBuckets.reduce((acc, row, i) => {
