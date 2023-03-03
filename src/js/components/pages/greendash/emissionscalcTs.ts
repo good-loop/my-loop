@@ -13,6 +13,11 @@ import md5 from 'md5';
 import PromiseValue from '../../../base/promise-value';
 import { number } from 'yargs';
 
+/**
+ * An array of Records
+ */
+type GreenBuckets = Record<string, string | number>[];
+
 type BreakdownByX = Record<
 	string,
 	{
@@ -22,10 +27,15 @@ type BreakdownByX = Record<
 	}
 >;
 
-/**
- * An array of Records
- */
-type GreenBuckets = Record<string, string | number>[];
+type BreakdownRow = {
+	key?: string;
+	key_as_string?: string;
+	co2?: number;
+	count?: number;
+	co2base?: number;
+	co2creative?: number;
+	co2supplypath?: number;
+};
 
 export const getCarbon = ({
 	q = '',
@@ -117,20 +127,10 @@ export const getCompressedBreakdownWithCount = ({
 	return breakdownByOSGroupOutput;
 };
 
-type BreakdownRow = {
-	key?: string;
-	key_as_string?: string;
-	co2?: number;
-	count?: number;
-	co2base?: number;
-	co2creative?: number;
-	co2supplypath?: number;
-};
-
 /**
  * Can have multi keyNameToSum
  */
-export const getBreakdownByWithCount = (buckets: BreakdownRow[], keyNamesToSum: string[], keyNameToBreakdown: string): Object => {
+export const getBreakdownByWithCount = (buckets: GreenBuckets, keyNamesToSum: string[], keyNameToBreakdown: string): Object => {
 	if (!buckets?.length) {
 		return {}; // no data
 	}
