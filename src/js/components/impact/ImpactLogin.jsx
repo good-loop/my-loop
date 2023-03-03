@@ -41,6 +41,7 @@ import { nonce } from '../../base/data/DataClass';
 
 const ImpactLoginCard = ({choice, setChoice, masterBrand}) => {
 	setChoice(false)
+	console.log("cunt are we in?", Login.isLoggedIn())
 	let content = null
 	if(Login.isLoggedIn()) {
 		let user = Login.getUser();

@@ -33,8 +33,6 @@ import Advertiser from '../../base/data/Advertiser';
 import ImpactLoadingScreen from './ImpactLoadingScreen'
 import Money from '../../base/data/Money';
 import SearchQuery from '../../base/searchquery';
-import { periodKey } from '../pages/greendash/dashutils';
-import { initPeriod } from './ImpactDateFilter';
 
 /**
  * DEBUG OBJECTS
@@ -69,15 +67,13 @@ const fetchBaseObjects = () => {
 	const itemId = path[2];
 	const itemType = path[1];
 
-	let period = initPeriod();
-
-	let pv = DataStore.fetch(['misc','impactBaseObjects',itemType,status,periodKey(period),itemId], () => {
-		return fetchBaseObjects2({itemId, itemType, status, period});
+	let pv = DataStore.fetch(['misc','impactBaseObjects',itemType,status,'all',itemId], () => {
+		return fetchBaseObjects2({itemId, itemType, status});
 	});
 	return pv;
 }
 
-const fetchBaseObjects2 = async ({itemId, itemType, status, period}) => {
+const fetchBaseObjects2 = async ({itemId, itemType, status}) => {
 
 	let pvCampaign, campaign;
 	let pvBrand, brand, brandId;
@@ -203,7 +199,7 @@ const ImpactOverviewPage = () => {
 
 	// if not logged in OR impact hasn't been chosen yet...
 	if(!Login.isLoggedIn() || !impactChosen) {
-		return <ImpactLoginCard choice={impactChosen} setChoice={setImpactChosen} masterBrand={masterBrand || brand}/>
+		return <ImpactLoginCard choice={impactChosen} setChoice={setImpactChosen} masterBrand={TEST_BRAND_OBJ}/>
 	}
 
 	return (
