@@ -322,8 +322,8 @@ const MapCard = ({ baseFilters, per1000 }) => {
 		/** If the impressions is lower than this percentage from the highest one in the bucket, it will not count in colouring */
 		const CUTOFF_RATE = 0.01;
 		const impressionsCutoff = Math.max(...cleanedLocnBuckets.map((row) => row.count)) * CUTOFF_RATE;
-		const colours = dataColours(cleanedLocnBuckets.filter((row) => row.count > impressionsCutoff).map((row) => row.co2));
-		console.log('impressionsCutoff', impressionsCutoff);
+		let colours = dataColours(cleanedLocnBuckets.filter((row) => row.count > impressionsCutoff).map((row) => row.co2), [192, 33, 48], [186, 34, 84]);
+		console.log(colours)
 		// zip colours, states, carbon together for the map
 		setMapData(
 			cleanedLocnBuckets.reduce((acc, row, i) => {
