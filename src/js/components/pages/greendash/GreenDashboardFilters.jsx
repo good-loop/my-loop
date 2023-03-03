@@ -243,7 +243,7 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 			{
 				[filterMode]: { brand, agency, campaign, tag }[filterMode],
 				...periodToParams(period),
-				emode: params.emode,
+				emode: params.emode ? params.emode : 'total',
 			},
 			false,
 			true
