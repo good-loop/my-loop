@@ -319,8 +319,10 @@ const MapCard = ({ baseFilters, per1000 }) => {
 		}
 
 		// assign colours
-		const impressionsMax = Math.max(...cleanedLocnBuckets.map((row) => row.count))
-		const colours = dataColours(cleanedLocnBuckets.filter((row) => row.count > impressionsMax * 0.0005).map((row) => row.co2));
+		/** If the impressions is lower than this percentage from the highest one in the bucket, it will not count in colouring */
+		const CUTOFF_RATE = 0.01;
+		const impressionsCutoff = Math.max(...cleanedLocnBuckets.map((row) => row.count)) * CUTOFF_RATE;
+		let colours = dataColours(cleanedLocnBuckets.filter((row) => row.count > impressionsCutoff).map((row) => row.co2), [192, 33, 48], [186, 34, 84]);
 		// zip colours, states, carbon together for the map
 		setMapData(
 			cleanedLocnBuckets.reduce((acc, row, i) => {

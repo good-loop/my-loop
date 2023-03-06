@@ -280,6 +280,12 @@ const GreenMetrics = ({}) => {
 				.filter((a) => a);
 			setAgencyIds(_agencyIds);
 		});
+
+		// Make sure emode is not messed up
+		if (!(DataStore.getUrlValue('emode') === 'total' || DataStore.getUrlValue('emode') === 'per1000')) {
+			DataStore.setUrlValue('emode', 'total')
+		}
+		
 	}, [Login.getId()]);
 
 	// Only for logged-in users!
