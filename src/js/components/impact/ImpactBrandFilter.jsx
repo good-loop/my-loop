@@ -31,8 +31,11 @@ const A = C.A;
  * @param {Function} setCurCampaign setter function for curCampaign
  * @returns {JSX} breadcrumb trail of brand/campaign filters that can open up into a modal  for other filters
  */
-const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurCampaign, setForcedReload, size}) => {
+const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurCampaign, setForcedReload, size, dropdown}) => {
 	
+
+	const [filtersOpen, setFiltersOpen] = useState(false)
+
 	/**
 	 * after user selects the brand / campaign they want to filter, update the breadcrumb & url slugs to reflect the choice
 	 * @param {object} brand required, either master brand or subbrand we want to filter
@@ -46,11 +49,11 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 			setCurSubBrand(brand)
 		} else if (brand) {
 			goto("/iview/brand/" + brand.id)
-
 			setCurCampaign(null)
 			// only set subBrand if it's not a masterbrand (masterBrands won't have parentIds)
 			brand.parentId ? setCurSubBrand(brand) : setCurSubBrand(null)
 		}
+		setFiltersOpen(false)
 		modalToggle()
 		setForcedReload(true)
 	}
@@ -71,6 +74,8 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 			setCurCampaign(null)
 			setCurSubBrand(null)
 		}
+		modalToggle()
+		setFiltersOpen(false)
 		setForcedReload(true)
 	}
 
@@ -119,7 +124,7 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 
 		// is the current brands campaign dropdown expanded or closed?
 		// if a campaign is selected, start with that subbrands dropdown open
-		const [isDropdownOpen, setIsDropdownOpen] = useState(curCampaign && curSubBrand.id == item.id)
+		const [isDropdownOpen, setIsDropdownOpen] = useState( (!dropdown) || (curCampaign && curSubBrand.id == item.id) )
 
 		// classes of campaigns that belong to this current brand
 		const campaignClasses = `filter-button campaign-button ListItem btn-default btn btn-outline-secondary ${KStatus.PUBLISHED} btn-space`
@@ -128,7 +133,7 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 		
 		// brand item with dropdowns into campaigns
 		const campaignsListItem = (
-		<div id={"campaigns-"+item.id} className={ + isDropdownOpen ? "open" : "closed"}>
+		<div id={"campaigns-"+item.id} className={ + (!dropdown || isDropdownOpen) ? "open" : "closed"}>
 			<ListLoad hideTotal status={status}
 				type={C.TYPES.Campaign}
 				q={q.query}
@@ -159,7 +164,7 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 						{thumbnail}
 						<div className={space("name", (isSelected && "selected-filter"))}>{name}</div>
 					</div>
-					{button || ''}
+					{dropdown && button || ''}
 				</div>
 				{campaignsListItem}
 			</div>
@@ -172,9 +177,11 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 	* inside each ListLoad, if a brand is found to have campaigns we then run another ListLoad over them 
 	*/
 	const openFilters = () => {
-		
-		const vertiser = masterBrand.id
+		// if mobile user clicks the filter dropdown while they're open, close the filter menu
+		if(filtersOpen) {modalToggle(); setFiltersOpen(false); return null}
+		setFiltersOpen(true);
 
+		const vertiser = masterBrand.id
 		const classes = `brand-button ListItem btn-default btn btn-outline-secondary ${KStatus.PUBLISHED} btn-space`
 
 		let modalContent = () => (
@@ -192,20 +199,19 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 					ListItem={FilterListItem} itemClassName={classes}/>
 			</div>
 		)
-		openAndPopulateModal({id:"left-half", content:modalContent, prioritized:true, headerClassName:"red-top-border noClose", className:"impact-brand-modal"})
+		openAndPopulateModal({id:"left-half", content:modalContent, prioritized:true, headerClassName:"red-top-border noClose noPadding", className:"impact-brand-modal"})
 	}
 	
 	// helper JSX elements
 	const StepBackFiltersButton = ({content, clearOnlyCamapign, rightArrow, underlined}) => (
-		<button className={space("filter-row", "filter-text", (underlined && "underlined"))}
-	 			onClick={() => filterClear(clearOnlyCamapign)}>
-				{content} {rightArrow && ">"}
+		<button className={space("filter-row", "filter-text", (underlined && "underlined"))}onClick={() => filterClear(clearOnlyCamapign)}>
+			{content} {rightArrow && ">"}
 		</button>
 	)
 
 	const OpenFiltersButton = ({content, rightArrow, underlined}) => (
-		<button className={space("filter-row", "filter-text", (underlined && "underlined"))}
-			onClick={() => openFilters()}>{content} {rightArrow && ">"}
+		<button className={space("filter-row", "filter-text", (underlined && "underlined"))} onClick={() => openFilters()}>
+			{content} {rightArrow && ">"}
 		</button>
 	)
 

@@ -225,12 +225,12 @@ const ImpactOverviewPage = () => {
 							<GLCard basis={60} className="hero-card">
 								<div className='white-circle'>
 									<div className='content'>
-										<img className='logo' src={mainLogo}/>
+										<img crossorigin className='logo' src={mainLogo} />
 										<br/>
 										<h1>{totalString}</h1>
 										<h2>Donated</h2>
 										<h5>With</h5>
-										<img className='w-50' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+										<img crossorigin className='w-50' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 									</div>
 								</div>
 								<GLModalCard id="hero-card-modal" />
@@ -294,7 +294,7 @@ const ImpactOverviewPage = () => {
 												<h3>8.69T CO2E OFFSET</h3>
 											</div>
 											<div className='carbon-neutral px-5 py-2'>
-												<img src="/img/Impact/Good-Loop_CarbonNeutralAd_Logo_Final-05.svg" className='w-100'/>
+												<img crossorigin src="/img/Impact/Good-Loop_CarbonNeutralAd_Logo_Final-05.svg" className='w-100'/>
 											</div>
 									</GLCard>
 									*/}
@@ -307,7 +307,7 @@ const ImpactOverviewPage = () => {
 										modalContent={AdsForGoodCTA}
 										modalClassName="no-header-padding ads-for-good">
 											<div className='d-flex flex-column align-items-stretch justify-content-between h-100'>
-												<img className='w-75 align-self-center mb-3' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+												<img crossorigin className='w-75 align-self-center mb-3' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 												<ContentList/>
 											</div>
 									</GLCard>
@@ -376,7 +376,7 @@ const BrandDonationInfo = ({brand}) => {
 				<h2 className="color-greenmedia-darkcyan">136,580</h2>
 				<h3 className="color-greenmedia-darkcyan text-bold">Trees planted...</h3>
 
-				<img src={brand?.branding?.logo} className="logo"/>
+				<img crossorigin src={brand?.branding?.logo} className="logo"/>
 				<CharityLogo charity={TEST_CHARITY_OBJ}/>
 				<QuestionIcon/>
 		</GLCard>
@@ -409,16 +409,16 @@ const LogosDisplay = ({brand, subBrands}) => {
 
 	const BrandLogo = ({item}) => {
 		return <Col md={1} xs={7} className="text-center">
-			{item.branding?.logo ? <img src={item.branding.logo} className="logo"/> : <p>{item.name}</p>}
+			{item.branding?.logo ? <img crossorigin src={item.branding.logo} className="logo"/> : <p>{item.name}</p>}
 		</Col>
 	}
 
 	return <>
 		<h3>Advertising that's a force for good</h3>
 		<br/><br/>
-		<img src={brand?.branding?.logo} className="logo"/>
+		<img crossorigin src={brand?.branding?.logo} className="logo"/>
 		<br/><br/>
-		<img className='a4glogo' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+		<img crossorigin className='a4glogo' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 		<br/><br/><br/>
 		<Row className='justify-content-center w-100'>
 			{subBrands.map(b => <BrandLogo item={b} key={b.id}/>)}
@@ -474,7 +474,7 @@ const ThisAdDoesGoodModal = ({brand}) => {
 			<br/>
 			<Row className='w-50 mx-auto'>
 				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
-					<img src={brand.branding?.logo} className="logo"/>
+					<img crossorigin src={brand.branding?.logo} className="logo"/>
 				</Col>
 				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
 					<CharityLogo charity={charity}/>
@@ -526,7 +526,7 @@ const WatchToDonateModal = ({brand}) => {
 			<br/>
 			<Row className='w-50 mx-auto'>
 				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
-					<img src={brand.branding?.logo} className="logo"/>
+					<img crossorigin src={brand.branding?.logo} className="logo"/>
 				</Col>
 				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
 					<CharityLogo charity={charity}/>
@@ -553,7 +553,7 @@ const ContentList = () => {
 	return <>
 		{contentRenderable.map((c, i) => <Row key={i}>
 			<Col xs={3}>
-				<img src={"/img/mydata/" + (c.tick ? "circle-tick.svg" : "circle-no-tick.svg")} className='logo'/>
+				<img crossorigin src={"/img/mydata/" + (c.tick ? "circle-tick.svg" : "circle-no-tick.svg")} className='logo'/>
 			</Col>
 			<Col xs={9} className="d-flex flex-column align-items-start justify-content-center">
 				<h5 className='text-left'>{c.title}</h5>
@@ -585,8 +585,8 @@ const AdsCatalogueModal = ({noPreviews}) => {
 
 const AdsForGoodCTAHeader = () => {
 	return <div className='bg-gl-impact-red pt-5 position-relative'>
-		<img src="/img/curves/curve-white.svg" className='w-100'/>
-		<img src="/img/Impact/images-combined.png" className='header-overlay'/>
+		<img crossorigin src="/img/curves/curve-white.svg" className='w-100'/>
+		<img crossorigin src="/img/Impact/images-combined.png" className='header-overlay'/>
 	</div>;
 };
 
@@ -594,8 +594,8 @@ const AdsForGoodCTA = () => {
 	const vertiser = TEST_BRAND_OBJ;
 	
 	return <div className='d-flex flex-column align-items-center justify-content-between h-100'>
-		<img src={vertiser.branding.logo} className="logo"/>
-		<img className='w-25' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+		<img crossorigin src={vertiser.branding.logo} className="logo"/>
+		<img crossorigin className='w-25' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 		<h3>Discover our products and fund even more good causes</h3>
 		<Button color="primary">Get in touch</Button>
 	</div>
@@ -603,8 +603,8 @@ const AdsForGoodCTA = () => {
 
 const CO2OffsetInfoHeader = () => {
 	return <div className='bg-co2-offset pt-5 position-relative'>
-		<img src="/img/curves/curve-white.svg" className='w-100'/>
-		<img src="/img/green/hummingbird.png" className='header-overlay'/>
+		<img crossorigin src="/img/curves/curve-white.svg" className='w-100'/>
+		<img crossorigin src="/img/green/hummingbird.png" className='header-overlay'/>
 	</div>;
 };
 
@@ -612,8 +612,8 @@ const CO2OffsetInfo = () => {
 	const vertiser = TEST_BRAND_OBJ;
 
 	return <div className='d-flex flex-column align-items-center justify-content-between h-100'>
-		<img src={vertiser.branding.logo} className="logo"/>
-		<img className='w-25' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+		<img crossorigin src={vertiser.branding.logo} className="logo"/>
+		<img crossorigin className='w-25' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 		<h4>Info about Green Ad Tag</h4>
 		<h4>Info about Offset Project</h4>
 		<h4>Cost of Offset - it only cost £X to offset</h4>
@@ -627,7 +627,7 @@ const BrandList = ({brand, subBrands}) => {
 		return <Col md={4} className="mt-3">
 			<GLCard className="preview h-100" noMargin href={"/iview/brand/"+item.id}>
 				
-				{item && item.branding?.logo && <img src={item.branding.logo} className="logo"/>}
+				{item && item.branding?.logo && <img crossorigin src={item.branding.logo} className="logo"/>}
 				<p className='text-center'>{item.name}</p>
 			</GLCard>
 		</Col>;
@@ -679,7 +679,7 @@ const CharityHeader = ({charity}) => {
 const CharityInfo = ({charity}) => {
 	return <div className='d-flex flex-column justify-content-center align-items-center charity-body'>
 		<h3>{NGO.displayName(charity)}</h3>
-		<img className='w-25' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+		<img crossorigin className='w-25' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 		<br/>
 		<p className='p-5'>
 			{NGO.extendedDescription(charity) || NGO.anyDescription(charity)}
@@ -712,7 +712,7 @@ const CampaignList = ({campaigns, brand, subBrands, status}) => {
 							{campaign.name}
 						</p>
 					</div>
-					{campaign && <img className="logo" src={myBrand?.branding?.logo}/>}
+					{campaign && <img crossorigin className="logo" src={myBrand?.branding?.logo}/>}
 				</GLCard>
 			})}
 		</GLVertical>

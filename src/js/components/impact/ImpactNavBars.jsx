@@ -33,7 +33,7 @@ const SideNavBar = ({active, isOpen, navToggleAnimation, toggle}) => {
 			<NavbarToggler onClick={toggle} />
 			<Nav navbar vertical>
 				<a href="https://good-loop.com/">
-					<img className="logo flex-column" src="/img/logo-white.svg" />
+					<img crossorigin className="logo flex-column" src="/img/logo-white.svg"/>
 					<animated.p className='logo-name flex-column' style={{opacity: navToggleAnimation.opacity}}>GOOD-LOOP</animated.p>
 				</a>
 				<br/><br/>

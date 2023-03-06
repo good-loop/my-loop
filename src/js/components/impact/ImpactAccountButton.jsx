@@ -10,6 +10,9 @@ import C from '../../C';
 import { modalToggle, openAndPopulateModal } from './GLCards';
 import ListLoad from '../../base/components/ListLoad';
 import  { PNGDownloadButton } from '../../base/components/PNGDownloadButton'
+import { shareThingId } from '../../base/Shares';
+import { getDataItem } from '../../base/plumbing/Crud';
+import ShareWidget from '../../base/components/ShareWidget';
 /**
  * DEBUG OBJECTS
  */
@@ -21,6 +24,29 @@ import { space } from '../../base/utils/miscutils';
 import html2canvas from 'html2canvas';
 
 const A = C.A;
+
+// ONLY SHOWS EMAIL LIST WITH "listemails" FLAG SET
+// ONLY APPEARS WITH "shareables" OR DEBUG FLAG SET
+const ImpactShareLine =  ({style, className, brand, campaign}) => {
+	// not-logged in cant share and pseudo users can't reshare
+	if ( ! Login.getId() || Login.getId().endsWith("pseudo")) {
+		return null;
+	}
+	
+	let [filterMode, filterId, type] = campaign ? ["Campaign", campaign.id, C.TYPES.Campaign] : brand ? ["Brand", brand.id, C.TYPES.Advertiser] : null;
+	if ( ! filterMode || ! filterId) {
+		return null;
+	}
+
+	console.log("filter: ", filterMode, filterId, type)
+
+	let shareId = shareThingId(type, filterId);
+	let pvItem = getDataItem({type, id:filterId, status:KStatus.PUBLISHED});
+	let shareName = filterMode+" "+((pvItem.value && pvItem.value.name) || filterId);
+	const showEmails = DataStore.getUrlValue("listemails");
+	console.log("... we haven't crashed yet?")
+	return <ShareWidget className={className} style={style} hasButton name={"Dashboard for "+shareName} shareId={shareId} hasLink noEmails={!showEmails} />;
+}
 
 
 
@@ -55,25 +81,35 @@ const ImpactAccountButton = ({curMaster, curSubBrand, curCampaign, noShare}) => 
 	let shareContent = () => {
 		return (
 			<>
-				<p> do it </p>
+				<ImpactShareLine brand={curSubBrand} campaign={curCampaign}/>
 				<button onClick={ () => {
 					modalToggle()
 					window.scrollTo(0, 0);
 					html2canvas(document.getElementById("overview-first-card"), {
-						allowTaint: true,
-					  }).then((canvas) => {
+						allowTaint: false
+					}).then((canvas) => {
 						console.log(canvas.toDataURL("image/jpeg", 0.9));
+						console.log("WE SHOULD BE DONE NOW???")
 					})
 
 				}
 				}>CLICK ME</button>
 
 			<PNGDownloadButton
-			querySelector={`#overview-first-card`}
-			title="Click to download this card as a .PNG"
-			opts={{scale: 1.25, allowTaint: true}}
-			
-		/>
+				querySelector={'.iview-container'}
+				fileName={"title"}
+				onClick={() => modalToggle()}
+				title="Click to download this card as a .PNG"
+				opts={{scale: 1.25}}
+				onCloneFn={(document) => {
+					// remove the navbar flow to give content full width
+					document.querySelector('.impact-navbar-flow').style.display = "none";
+
+					// html2canvas doesn't support box-shadow, add a border to still show card edges
+					document.querySelectorAll('.glcard').forEach((el) => el.style.border = "solid 1px #770f00");
+
+				}}
+			/>
 			</>
 		)
 	}		

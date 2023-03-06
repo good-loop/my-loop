@@ -31,16 +31,16 @@ const ImpactFilterOptions = ({size, masterBrand, brand, campaign, setForcedReloa
 
 	if(size == "wide") return (		
 		<div className='flex-row impactOverview-filters-and-account' id={"impactOverview-filters-and-account-"+size}>
-			<ImpactBrandFilters masterBrand={curMaster} curSubBrand={curSubBrand} setCurSubBrand={setCurSubBrand} curCampaign={curCampaign} setCurCampaign={setCurCampaign} setForcedReload={setForcedReload} size={size}/>
+			<ImpactBrandFilters masterBrand={curMaster} curSubBrand={curSubBrand} setCurSubBrand={setCurSubBrand} curCampaign={curCampaign} setCurCampaign={setCurCampaign} setForcedReload={setForcedReload} size={size} dropdown/>
 			<ImpactDateFilter setForcedReload={setForcedReload} />
-			<ImpactAccountButton curMaster={curMaster} curSubBrand={curSubBrand} curCampaign={curCampaign} />
+			<ImpactAccountButton curMaster={masterBrand} curSubBrand={brand} curCampaign={campaign} />
 		</div>
 	)
 
 	if(size == "thin") return (		
 		<div className='flex-row impactOverview-filters-and-account' id={"impactOverview-filters-and-account-"+size}>
 			<ImpactBrandFilters masterBrand={curMaster} curSubBrand={curSubBrand} setCurSubBrand={setCurSubBrand} curCampaign={curCampaign} setCurCampaign={setCurCampaign} setForcedReload={setForcedReload} size={size}/>
-			<ImpactAccountButton curMaster={curMaster} curSubBrand={curSubBrand} curCampaign={curCampaign} noShare/>
+			<ImpactAccountButton curMaster={masterBrand} curSubBrand={brand} curCampaign={campaign} noShare/>
 		</div>
 	)
 }

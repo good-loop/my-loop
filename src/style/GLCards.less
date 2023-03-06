@@ -146,6 +146,10 @@ The GLCards layout is a layout for modular cards which are designed to expand an
         &.red-top-border {
             border-top: solid @gl-red 5px;
         }
+
+        &.noPadding {
+            padding: 0;
+        }
     }
 }
 
@@ -162,4 +166,7 @@ The GLCards layout is a layout for modular cards which are designed to expand an
     animation-name: fade-in;
     animation-duration: 0.2s;
     animation-fill-mode: forwards;
+    @media @width-mobile {
+        z-index: 10; // puts navbar above the darkened area
+    }
 }
