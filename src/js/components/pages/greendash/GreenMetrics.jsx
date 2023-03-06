@@ -92,7 +92,8 @@ const CTACard = ({}) => {
 
 const GreenMetrics2 = ({}) => {
 	// Default to current quarter, all brands, all campaigns
-	const period = periodFromUrl();
+	const urlParams = paramsFromUrl(['period', 'prob', 'sigfig', 'nocache']);
+	const period = urlParams.period;
 	if (!period) return; // Filter widget will set this on first render - allow it to update
 
 	let {filterMode, filterId} = getFilterModeId();
@@ -158,15 +159,13 @@ const GreenMetrics2 = ({}) => {
 		}
 	}
 
-	const urlParams = paramsFromUrl(['prob', 'sigfig', 'nocache']);
-
 	const baseFilters = {
 		q,
 		start: period.start.toISOString(),
 		end: period.end.toISOString(),
-		prob: urlParams.prob?.toString() || null, 
-		sigfig: urlParams.sigfig?.toString() || null,
-		nocache: urlParams.nocache || null,
+		prob: urlParams.prob?.toString(), 
+		sigfig: urlParams.sigfig?.toString(),
+		nocache: urlParams.nocache,
 	};
 
 
