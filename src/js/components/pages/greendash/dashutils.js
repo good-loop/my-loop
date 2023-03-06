@@ -47,6 +47,7 @@ export const getPeriodYear = (date = new Date()) => {
 
 
 /** Read URL params and extract a period object if one is present 
+ * @deprecated (partly) converted to typescript
  * @returns {?Object} {start:Date end:Date}
 */
 export const periodFromUrl = () => {
