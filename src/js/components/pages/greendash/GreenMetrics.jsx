@@ -10,7 +10,8 @@ import Misc from '../../../base/components/Misc';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import ErrAlert from '../../../base/components/ErrAlert';
 
-import { GreenCard, periodFromUrl, printPeriod, noCacheFromUrl, getFilterModeId, numParamFromUrl } from './dashutils';
+import { GreenCard, printPeriod, getFilterModeId, periodFromUrl } from './dashutils';
+import { paramsFromUrl } from './dashUtils';
 
 import ShareWidget, { shareThingId } from '../../../base/components/ShareWidget';
 import { getCarbon, getCampaigns, getSumColumn } from './emissionscalcTs';
@@ -157,17 +158,15 @@ const GreenMetrics2 = ({}) => {
 		}
 	}
 
-	const probNum = numParamFromUrl('prob');
-	const sigfigNum = numParamFromUrl('sigfig');
-	const nocache = noCacheFromUrl();
+	const urlParams = paramsFromUrl(['prob', 'sigfig', 'nocache']);
 
 	const baseFilters = {
 		q,
 		start: period.start.toISOString(),
 		end: period.end.toISOString(),
-		prob: probNum ? probNum.toString() : null, 
-		sigfig: sigfigNum ? sigfigNum.toString() : null,
-		nocache: nocache ? true : null,
+		prob: urlParams.prob?.toString() || null, 
+		sigfig: urlParams.sigfig?.toString() || null,
+		nocache: urlParams.nocache || null,
 	};
 
 

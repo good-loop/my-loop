@@ -81,6 +81,7 @@ export const periodFromUrl = () => {
 
 /**
  * Read URL params and of number
+ * @deprecated converted to typescript
  * @param {string} key, e.g. prob, sigfig
  */
 export const numParamFromUrl = (key) => {
@@ -93,6 +94,9 @@ export const numParamFromUrl = (key) => {
 	}
 }
 
+/**
+ * @deprecated converted to typescript
+ */
 export const noCacheFromUrl = () => {
 	const nocache = DataStore.getUrlValue('nocache')
 	return !!nocache;
