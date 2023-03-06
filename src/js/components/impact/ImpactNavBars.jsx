@@ -32,8 +32,10 @@ const SideNavBar = ({active, isOpen, navToggleAnimation, toggle}) => {
 		<Navbar dark expand="md" id="impact-navbar" className={space('flex-column', 'justify-content-start', isOpen && 'mobile-open')} style={{width: navToggleAnimation.width}}>
 			<NavbarToggler onClick={toggle} />
 			<Nav navbar vertical>
-				<img className="logo flex-column" src="/img/logo-white.svg" />
-				<animated.p className='logo-name flex-column' style={{opacity: navToggleAnimation.opacity}}>GOOD-LOOP</animated.p>
+				<a href="https://good-loop.com/">
+					<img className="logo flex-column" src="/img/logo-white.svg" />
+					<animated.p className='logo-name flex-column' style={{opacity: navToggleAnimation.opacity}}>GOOD-LOOP</animated.p>
+				</a>
 				<br/><br/>
 				<NavItem>
 					<A href={window.location}>
