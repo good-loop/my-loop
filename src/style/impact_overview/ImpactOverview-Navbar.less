@@ -5,6 +5,11 @@
         display: none;
     }
 
+    // keep navbar visible during loading
+    z-index: 100;
+    position: fixed;
+    left: 0;
+
     width: 15rem;
     height: 100vh;
     background-color: #770f00;
@@ -136,6 +141,7 @@
     @media @md-min {
         display: none !important;
     }
+
     width: 100%;
     padding: 0;
     text-align: center;

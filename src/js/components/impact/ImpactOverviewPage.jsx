@@ -204,17 +204,19 @@ const ImpactOverviewPage = () => {
 
 	return (
 	<>
-		<ImpactLoadingScreen baseObj={pvBaseObjects} forcedReload={forcedReload} setForcedReload={setForcedReload}/>
 		{/* loading screen will play above the rest of the page while the page itself loads*/}
-		{pvBaseObjects.resolved && <>
+		
 		<div className="navbars-overlay">
-			<ImpactFilterOptions size="thin" setIsNavbarOpen={setIsNavbarOpen} masterBrand={masterBrand} brand={brand} campaign={campaign} setForcedReload={setForcedReload}/>  {/*mobile horizontal filters topbar*/}
+			<animated.div className='impact-navbar-flow-overlay' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}></animated.div>
+			<ImpactLoadingScreen baseObj={pvBaseObjects} forcedReload={forcedReload} setForcedReload={setForcedReload}/>
+			{pvBaseObjects.resolved && <ImpactFilterOptions size="thin" setIsNavbarOpen={setIsNavbarOpen} masterBrand={masterBrand} brand={brand} campaign={campaign} setForcedReload={setForcedReload}/>}  {/*mobile horizontal filters topbar*/}
 			<NavBars active={"overview"} isNavbarOpen={isNavbarOpen} setIsNavbarOpen={setIsNavbarOpen}/>
-			<ImpactFilterOptions size="wide" setIsNavbarOpen={setIsNavbarOpen} masterBrand={masterBrand} brand={brand} campaign={campaign} setForcedReload={setForcedReload}/>  {/*widescreen vertical filters topbar*/}
+			{pvBaseObjects.resolved && <ImpactFilterOptions size="wide" setIsNavbarOpen={setIsNavbarOpen} masterBrand={masterBrand} brand={brand} campaign={campaign} setForcedReload={setForcedReload}/>}  {/*widescreen vertical filters topbar*/}
 		</div>
-		<div className='iview-positioner pr-md-1'>
+
+		{pvBaseObjects.resolved && <> <div className='iview-positioner pr-md-1'>
 			<Container fluid className='iview-container'>
-				<animated.div id='in-flow-navbar' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}></animated.div>
+				<animated.div className='impact-navbar-flow' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}></animated.div>
 				<GLVertical id='overview-first-card'>
 					<GLHorizontal collapse="md" className="iview-grid">
 						{/* first grid half */}
