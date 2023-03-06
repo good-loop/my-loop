@@ -118,7 +118,7 @@ export const getCompressedBreakdownWithCount = ({
 		};
 	});
 	// get average of repeated keys
-	let breakdownByOSGroupOutput: Record<string, number> = {};
+	let breakdownByOSGroupOutput: {[key: string]: number} = {};
 	Object.entries(breakdownByOSGroup2).forEach(([k, v]) => {
 		breakdownByOSGroupOutput[k] = v.co2 / v.occurs!;
 	});
@@ -136,7 +136,7 @@ export const getBreakdownByWithCount = (buckets: GreenBuckets, keyNamesToSum: st
 
 	const bi = keyNameToBreakdown === 'time' ? 'key_as_string' : 'key';
 
-	let totalByX: Record<string, Object> = {};
+	let totalByX: {[key: string]: Object} = {};
 	for (let i = 0; i < buckets.length; i++) {
 		const row: BreakdownRow = buckets[i];
 		const breakdownKey = row[bi];
@@ -147,7 +147,7 @@ export const getBreakdownByWithCount = (buckets: GreenBuckets, keyNamesToSum: st
 				return;
 			}
 		});
-		totalByX[breakdownKey] = keyNamesToSum.reduce((acc: Record<string, any>, cur) => {
+		totalByX[breakdownKey] = keyNamesToSum.reduce((acc: {[key: string]: any}, cur) => {
 			acc[cur] = { ...row }[cur];
 			return acc;
 		}, {});
@@ -179,7 +179,7 @@ export const getTags = (buckets: GreenBuckets): PromiseValue | null => {
 		return null;
 	}
 
-	const tagIdSet: Record<string, boolean> = {};
+	const tagIdSet: {[key: string]: boolean} = {};
 	const adIdKey = 'key';
 	buckets.forEach((row, i) => {
 		let adid: string = row[adIdKey] as string;
@@ -210,7 +210,7 @@ export const getCampaigns = (buckets: GreenBuckets) => {
 	return PromiseValue.then(
 		pvTags,
 		(tags: List) => {
-			let cidSet: Record<string, boolean> = {};
+			let cidSet: {[key: string]: boolean} = {};
 			List.hits(tags)?.forEach((tag: Record<string, any>) => {
 				if (tag && tag.campaign) {
 					cidSet[tag.campaign] = true;
