@@ -31,7 +31,7 @@ const A = C.A;
  * @param {Function} setCurCampaign setter function for curCampaign
  * @returns {JSX} breadcrumb trail of brand/campaign filters that can open up into a modal  for other filters
  */
-const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurCampaign, setForcedReload, size, dropdown}) => {
+const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampaign, setCurCampaign, setForcedReload, size, dropdown, curPage}) => {
 	
 
 	const [filtersOpen, setFiltersOpen] = useState(false)
@@ -44,11 +44,11 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 	const filterChange = ({brand, campaign}) => {
 		console.log("filterChange\n:", brand, campaign)
 		if (campaign) {
-			goto("/iview/campaign/" + campaign.id)
+			goto(`/impact/${curPage}/campaign/` + campaign.id)
 			setCurCampaign(campaign)
 			setCurSubBrand(brand)
 		} else if (brand) {
-			goto("/iview/brand/" + brand.id)
+			goto(`/impact/${curPage}/brand/` + brand.id)
 			setCurCampaign(null)
 			// only set subBrand if it's not a masterbrand (masterBrands won't have parentIds)
 			brand.parentId ? setCurSubBrand(brand) : setCurSubBrand(null)
@@ -66,11 +66,11 @@ const ImpactBrandFilters = ({masterBrand, curSubBrand, setCurSubBrand, curCampai
 	const filterClear = (onlyCampaign=false) => {
 		if (onlyCampaign) {
 			// if we're clearing campaign, move back to just using brand 
-			goto("/iview/brand/" + curSubBrand.id)
+			goto(`/impact/${curPage}/brand/` + curSubBrand.id)
 			setCurCampaign(null)
 		} else {
 			// if we're clearing brand, move back to just using masterbrand
-			goto("/iview/brand/" + masterBrand.id)
+			goto(`/impact/${curPage}/brand/` + masterBrand.id)
 			setCurCampaign(null)
 			setCurSubBrand(null)
 		}

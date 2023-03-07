@@ -18,7 +18,7 @@ const A = C.A;
  * @param {size} string on what page size to draw this element, currently "mobile" and "desktop" are the only expected values
  * @returns 
  */
-const ImpactFilterOptions = ({size, masterBrand, brand, campaign, setForcedReload}) => {
+const ImpactFilterOptions = ({size, masterBrand, brand, campaign, setForcedReload, curPage}) => {
 
 	assert (size == "wide" || size == "thin")
 
@@ -31,7 +31,7 @@ const ImpactFilterOptions = ({size, masterBrand, brand, campaign, setForcedReloa
 
 	if(size == "wide") return (		
 		<div className='flex-row impactOverview-filters-and-account' id={"impactOverview-filters-and-account-"+size}>
-			<ImpactBrandFilters masterBrand={curMaster} curSubBrand={curSubBrand} setCurSubBrand={setCurSubBrand} curCampaign={curCampaign} setCurCampaign={setCurCampaign} setForcedReload={setForcedReload} size={size} dropdown/>
+			<ImpactBrandFilters masterBrand={curMaster} curSubBrand={curSubBrand} setCurSubBrand={setCurSubBrand} curCampaign={curCampaign} setCurCampaign={setCurCampaign} setForcedReload={setForcedReload} size={size} dropdown curPage={curPage}/>
 			<ImpactDateFilter setForcedReload={setForcedReload} />
 			<ImpactAccountButton curMaster={masterBrand} curSubBrand={brand} curCampaign={campaign} />
 		</div>
@@ -39,7 +39,7 @@ const ImpactFilterOptions = ({size, masterBrand, brand, campaign, setForcedReloa
 
 	if(size == "thin") return (		
 		<div className='flex-row impactOverview-filters-and-account' id={"impactOverview-filters-and-account-"+size}>
-			<ImpactBrandFilters masterBrand={curMaster} curSubBrand={curSubBrand} setCurSubBrand={setCurSubBrand} curCampaign={curCampaign} setCurCampaign={setCurCampaign} setForcedReload={setForcedReload} size={size}/>
+			<ImpactBrandFilters masterBrand={curMaster} curSubBrand={curSubBrand} setCurSubBrand={setCurSubBrand} curCampaign={curCampaign} setCurCampaign={setCurCampaign} setForcedReload={setForcedReload} size={size} curPage={curPage}/>
 			<ImpactAccountButton curMaster={masterBrand} curSubBrand={brand} curCampaign={campaign} noShare/>
 		</div>
 	)

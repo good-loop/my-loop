@@ -43,9 +43,7 @@ import { T4GSignUpButton, T4GSignUpModal } from './T4GSignUp';
 
 import GenerateGreenDemoEvents from './pages/GenerateGreenDemoEvents';
 import LogoutPage from './pages/LogoutPage';
-import ImpactOverviewPage from './impact/ImpactOverviewPage';
-import ImpactStoryPage from './impact/ImpactStoryPage';
-import ImpactStatsPage from './impact/ImpactStatsPage';
+import ImpactPage from './impact/ImpactBrain';
 
 // DataStore
 C.setupDataStore();
@@ -72,10 +70,8 @@ const PAGES = {
 	campaign: CampaignPage,
 	impact: CampaignPage,
 	impactoverview: MyAdCampaignsPage,
-	// TODO newer impact designs
-	iview: ImpactOverviewPage,
-	istat: ImpactStatsPage,
-	istory: ImpactStoryPage,
+	// TODO newer impact design;
+	impact: ImpactPage,
 	// test: TestPage,
 	account: AccountPage,
 	charities: MyCharitiesPage,
@@ -160,7 +156,7 @@ const MainDiv = () => {
 		// navbarLabels={getNavbarLabels}
 		// We want everything to be full width on this site
 		fullWidthPages={Object.keys(PAGES)}
-		undecoratedPages={["welcome", "greendash", "iview", "istats"]}
+		undecoratedPages={["welcome", "greendash", "impact"]}
 		Footer={Footer}
 		canRegister
 		noLoginTitle
