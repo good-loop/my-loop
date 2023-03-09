@@ -536,7 +536,7 @@ const CampaignList = ({campaigns, brand, subBrands, status}) => {
 		<GLVertical>
 			{campaigns.map(campaign => {
 				const myBrand = allBrands[campaign.vertiser];
-				return <GLCard className="preview campaign mt-3" noMargin key={campaign.id} href={"/iview/campaign/" + campaign.id}>
+				return <GLCard className="preview campaign mt-3" noMargin key={campaign.id} href={"/impact/view/campaign/" + campaign.id}>
 					<div className='campaign-details'>
 						<p className='text-left m-0'>
 							<b>{campaign.vertiserName}</b>
