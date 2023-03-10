@@ -10,10 +10,11 @@ import Misc from '../../../base/components/Misc';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import ErrAlert from '../../../base/components/ErrAlert';
 
-import { GreenCard, periodFromUrl, printPeriod, noCacheFromUrl, getFilterModeId, numParamFromUrl } from './dashutils';
+import { GreenCard, printPeriod, getFilterModeId, periodFromUrl } from './dashutils';
+import { paramsFromUrl } from './dashUtils';
 
 import ShareWidget, { shareThingId } from '../../../base/components/ShareWidget';
-import { getCampaigns, getCarbon, getSumColumn } from './emissionscalc';
+import { getCarbon, getCampaigns, getSumColumn } from './emissionscalcTs';
 
 import GreenDashboardFilters from './GreenDashboardFilters';
 import TimeSeriesCard from './TimeSeriesCard';
@@ -91,7 +92,8 @@ const CTACard = ({}) => {
 
 const GreenMetrics2 = ({}) => {
 	// Default to current quarter, all brands, all campaigns
-	const period = periodFromUrl();
+	const urlParams = paramsFromUrl(['period', 'prob', 'sigfig', 'nocache']);
+	const period = urlParams.period;
 	if (!period) return; // Filter widget will set this on first render - allow it to update
 
 	let {filterMode, filterId} = getFilterModeId();
@@ -157,17 +159,13 @@ const GreenMetrics2 = ({}) => {
 		}
 	}
 
-	const probNum = numParamFromUrl('prob');
-	const sigfigNum = numParamFromUrl('sigfig');
-	const nocache = noCacheFromUrl();
-
 	const baseFilters = {
 		q,
 		start: period.start.toISOString(),
 		end: period.end.toISOString(),
-		prob: probNum ? probNum.toString() : null, 
-		sigfig: sigfigNum ? sigfigNum.toString() : null,
-		nocache: nocache ? true : null,
+		prob: urlParams.prob?.toString(), 
+		sigfig: urlParams.sigfig?.toString(),
+		nocache: urlParams.nocache,
 		fixseed: true,
 	};
 

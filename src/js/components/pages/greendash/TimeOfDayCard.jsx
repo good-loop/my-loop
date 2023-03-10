@@ -6,7 +6,7 @@ import DataStore from '../../../base/plumbing/DataStore';
 import Misc from '../../../base/components/Misc';
 import NewChartWidget from '../../../base/components/NewChartWidget';
 import { dataColours, GreenCard, GreenCardAbout, NOEMISSIONS, TONNES_THRESHOLD } from './dashutils';
-import { emissionsPerImpressions, getBreakdownBy, getCarbon } from './emissionscalc';
+import { getCarbon, emissionsPerImpressions, getBreakdownByWithCount } from './emissionscalcTs';
 import { isPer1000 } from './GreenMetrics';
 
 const TimeOfDayCard = (props) => {
@@ -40,7 +40,7 @@ const TimeOfDayCard2 = ({ baseFilters, tags }) => {
 			}
 
 			// construct hourly breakdown and normalise to numeric hours
-			const hoursBreakdown = getBreakdownBy(buckets, 'co2', 'timeofday');
+			const hoursBreakdown = getBreakdownByWithCount(buckets, ['co2'], 'timeofday');
 
 			// group into 3-hour periods and copy to labels/data
 			for (let i = 0; i < 24; i++) {
@@ -49,7 +49,7 @@ const TimeOfDayCard2 = ({ baseFilters, tags }) => {
 					labels.push(`${((i + 11) % 12) + 1} ${i < 12 ? 'am' : 'pm'}`);
 					data.push(0);
 				}
-				data[group] += hoursBreakdown[i] || 0;
+				data[group] += hoursBreakdown[i]?.co2 || 0;
 			}
 
 			let label = 'Kg CO2';
