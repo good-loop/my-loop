@@ -168,6 +168,7 @@ const GreenMetrics2 = ({}) => {
 		prob: probNum ? probNum.toString() : null, 
 		sigfig: sigfigNum ? sigfigNum.toString() : null,
 		nocache: nocache ? true : null,
+		fixseed: true,
 	};
 
 
