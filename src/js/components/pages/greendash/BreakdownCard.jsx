@@ -69,7 +69,7 @@ const pieOptions = (totalCO2, minimumPercentLabeled) => ({
 					font: (ctx) => ({
 						family: 'Montserrat',
 						weight: 'bold',
-						size: Math.round(Math.min(ctx.chart.chartArea.width, ctx.chart.chartArea.height) / 7),
+						size: Math.round(Math.min(ctx.chart.chartArea.width, ctx.chart.chartArea.height) / 10),
 					}),
 					formatter: (value = 0) => {
 						const percentage = Math.round((value * 100) / totalCO2);
@@ -185,7 +185,7 @@ const FormatSubcard = ({ data, minimumPercentLabeled = 1, chartType = 'pie' }) =
 	return (
 		<>
 			<p>{CO2e} emissions by advert format:</p>
-			{chartType === 'pie' && <NewChartWidget type='pie' {...pieChartProps} datalabels />}
+			{chartType === 'pie' && <NewChartWidget type='pie' {...pieChartProps} datalabels legend />}
 			{chartType === 'bar' && <NewChartWidget type='bar' {...barChartProps} />}
 		</>
 	);
@@ -232,19 +232,17 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1, chartType = '
 
 		const chartData = {
 			labels: ['Creative', 'Publisher', 'Supply path'],
-			datasets: [
-				{
-					label: 'Kg CO2',
-					backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
-					data: [media, publisher, dsp],
-				},
-			],
+			datasets: [{
+				label: 'Kg CO2',
+				backgroundColor: ['#4A7B73', '#90AAAF', '#C7D5D7'],
+				data: [media, publisher, dsp],
+			}],
 		};
 
 		setPieChartProps({
 			data: chartData,
 			options: pieOptions(totalCO2, minimumPercentLabeled),
-		});
+		}, [osBuckets]);
 
 		setBarChartProps({
 			data: chartData,
@@ -267,7 +265,7 @@ const TechSubcard = ({ data: osBuckets, minimumPercentLabeled = 1, chartType = '
 		<>
 			<p>{CO2e} emissions due to...</p>
 			{/* Options will clash between pie and bar, seperate the two chart would be easier to control */}
-			{chartType === 'pie' && <NewChartWidget type='pie' {...pieChartProps} datalabels />}
+			{chartType === 'pie' && <NewChartWidget type='pie' {...pieChartProps} datalabels legend />}
 			{chartType === 'bar' && <NewChartWidget type='bar' {...barChartProps} />}
 			<small className='text-center'>The Green Ad Tag per-impression overhead is measured, but too small to display in this chart.</small>
 		</>
@@ -371,6 +369,32 @@ const TagSubcard = ({ data }) => {
 	);
 };
 
+const ADTECH = `adcolony.com
+adnxs.com
+adnxs-simple.com
+aerserv.com
+amazon-adsystem.com
+amazonaws.com
+ampproject.net
+btloader.com
+googlesyndication.com
+googleapis.com
+doubleclick.net
+ampproject.net
+hubvisor.io
+inmobi.com
+inner-active.mobi
+mopub.com
+nexx360.io
+pubmatic.com
+pubfinity.com
+reamedia.com.au
+sizmdx.com
+swm.digital
+taboola.com
+tapjoy.com
+yahoosandbox.com
+yimg.com`.split(/\s/);
 /**
  *
  * @param {Object} p
@@ -388,6 +412,8 @@ const PubSubcard = ({ data }) => {
 
 	// skip unset
 	data = data.filter((row) => row.key !== 'unset');
+	// HACK skip adtech	
+	data = data.filter((row) => ! ADTECH.includes(row.key));
 
 	return (
 		<>

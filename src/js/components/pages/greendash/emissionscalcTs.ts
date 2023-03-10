@@ -24,7 +24,7 @@ export const getCompressedBreakdownWithCount = ({
 	breakdownByX: BreakdownByX;
 	minFraction: number;
 	osTypes: any | null;
-}): { [key: string]: number } => {
+}): Record<string, number> => {
 	let breakdownByOSGroup1: BreakdownByX = {} as BreakdownByX;
 	const total = sum(Object.values(breakdownByX).map((val) => val.count));
 	Object.entries(breakdownByX).forEach(([k, v]) => {
@@ -48,7 +48,7 @@ export const getCompressedBreakdownWithCount = ({
 		};
 	});
 	// get average of repeated keys
-	let breakdownByOSGroupOutput: { [key: string]: number } = {};
+	let breakdownByOSGroupOutput: Record<string, number> = {};
 	Object.entries(breakdownByOSGroup2).forEach(([k, v]) => {
 		breakdownByOSGroupOutput[k] = v.co2 / v.occurs!;
 	});
@@ -87,7 +87,7 @@ export const getBreakdownByWithCount = (buckets: BreakdownRow[], keyNamesToSum: 
 				return;
 			}
 		});
-		totalByX[breakdownKey] = keyNamesToSum.reduce((acc: { [key: string]: any }, cur) => {
+		totalByX[breakdownKey] = keyNamesToSum.reduce((acc: Record<string, any>, cur) => {
 			acc[cur] = { ...row }[cur];
 			return acc;
 		}, {});
@@ -99,10 +99,10 @@ export const getBreakdownByWithCount = (buckets: BreakdownRow[], keyNamesToSum: 
  * Simply filter out insignificant data to clean up dashboard view
  * @param minFraction percentage to filter
  */
-export const filterByCount = (data: { [key: string]: { co2: number; count: number; occurs: number } }, minFraction: number = 0.05) => {
+export const filterByCount = (data: BreakdownByX, minFraction: number = 0.05) => {
 	let total: number = 0;
 	Object.values(data).forEach((val) => (total += val.count));
-	let outputData: { [key: string]: { co2: number; count: number; occurs: number } } = {};
+	let outputData: BreakdownByX = {};
 	Object.entries(data).forEach(([k, v]) => {
 		if (v.count > total * minFraction) {
 			outputData[k] = v;
