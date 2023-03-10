@@ -52,7 +52,7 @@ const ImpactDateFilter = ({setForcedReload}) => {
 	let content = () => (<div>
 		<DateRangeWidget dflt={period} onChange={setPeriod} />
 		<Button color='primary' onClick={doCommit}>
-			Apply custom timeframe
+			Apply
 		</Button>
 	</div>)
 	let onClick = () => openAndPopulateModal({id:"hero-card-modal", content, prioritized:true, headerClassName:"red-top-border noClose", className:"date-modal"})
