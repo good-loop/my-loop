@@ -15,7 +15,7 @@ import PromiseValue from '../../../base/promise-value';
 /**
  * An array of Records
  */
-type GreenBuckets = Record<string, string | number>[];
+export type GreenBuckets = Record<string, string | number>[];
 
 type BreakdownByX = Record<
 	string,
@@ -26,7 +26,7 @@ type BreakdownByX = Record<
 	}
 >;
 
-type BreakdownRow = {
+export type BreakdownRow = {
 	key?: string;
 	key_as_string?: string;
 	co2?: number;
@@ -47,7 +47,7 @@ export const getCarbon = ({
 	start: string;
 	end: string;
 	breakdown: string[];
-}) => {
+}): PromiseValue => {
 	const data = {
 		dataspace: 'emissions',
 		q,
