@@ -32,11 +32,35 @@ const baseFiltersTemp = {
 	fixseed: true,
 };
 
+const RangeSlider = ({ carbonRange }: { carbonRange: { max: number; min: number } }) => {
+	const [minSelected, setMin] = useState<number>(carbonRange.min*100 || 0);
+	const [maxSelected, setMax] = useState<number>(carbonRange.max*1000 || 10);
+
+	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setMin(Number(event.target.value[0]));
+		setMax(Number(event.target.value[1]));
+	};
+
+	return (
+		<div>
+			<input type='range' min={carbonRange.min} max={carbonRange.max} value={[minSelected.toString(), maxSelected.toString()]} onChange={handleChange} />
+			<div>
+				<label>Min: </label>
+				<span>{minSelected}</span>
+			</div>
+			<div>
+				<label>Max: </label>
+				<span>{maxSelected}</span>
+			</div>
+		</div>
+	);
+};
+
 const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX.Element => {
 	if (!baseFilters) baseFilters = baseFiltersTemp;
 
 	const [domainBuckets, setDomainBuckets] = useState<GreenBuckets>();
-	const [carbonRange, setCarbonRange] = useState<{max: number, min: number}>();
+	const [carbonRange, setCarbonRange] = useState<{ max: number; min: number }>();
 	const [domainList, setDomainList] = useState<{ upperDomains: GreenBuckets; lowerDomains: GreenBuckets; midDomains: GreenBuckets }>();
 
 	const pvDataValue: PromiseValue = getCarbon({
@@ -58,7 +82,7 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 		const bucketSize = buckets.length;
 		const maxCo2 = Math.max(...co2s);
 		const minCo2 = Math.min(...co2s);
-		setCarbonRange({max: maxCo2, min: minCo2});
+		setCarbonRange({ max: maxCo2, min: minCo2 });
 
 		const range = maxCo2 - minCo2;
 		const upperQuartile = range * 0.75 + minCo2;
@@ -90,6 +114,7 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 			<Row className='w-100 text-center' style={{ maxHeight: '20em', overflowY: 'scroll' }}>
 				<Col xs={4}>
 					<h3>Upper Domains</h3>
+					<p>Domains in this list: {domainList?.upperDomains.length}</p>
 					<div className='list'>
 						{domainList?.upperDomains &&
 							domainList?.upperDomains.map((row) => (
@@ -101,6 +126,7 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 				</Col>
 				<Col xs={4}>
 					<h3>Mid Domains</h3>
+					<p>Domains in this list: {domainList?.midDomains.length}</p>
 					<div className='list'>
 						{domainList?.midDomains &&
 							domainList?.midDomains.map((row) => (
@@ -112,6 +138,7 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 				</Col>
 				<Col xs={4}>
 					<h3>Lower Domains</h3>
+					<p>Domains in this list: {domainList?.lowerDomains.length}</p>
 					<div className='list'>
 						{domainList?.lowerDomains &&
 							domainList?.lowerDomains.map((row) => (
@@ -124,12 +151,7 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 			</Row>
 
 			<h1>Fun Scroller</h1>
-			<div>
-				<input type='range' id='upper-caron' name='upper-caron' min={carbonRange?.min} max={carbonRange?.max} />
-				<label htmlFor='volume'>Upper Range</label>
-				<input type='range' id='lower-caron' name='lower-caron' min={carbonRange?.min} max={carbonRange?.max} />
-				<label htmlFor='volume'>Lower Range</label>
-			</div>
+			{carbonRange && <RangeSlider carbonRange={carbonRange} />}
 		</Container>
 	);
 };
