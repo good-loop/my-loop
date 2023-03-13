@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Col, Container, Row } from 'reactstrap';
 import PromiseValue from '../../../base/promise-value';
 import { type BreakdownRow, type GreenBuckets, emissionsPerImpressions, getCarbon } from './emissionscalcTs';
 
@@ -34,6 +35,8 @@ const baseFiltersTemp = {
 const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX.Element => {
 	if (!baseFilters) baseFilters = baseFiltersTemp;
 
+	const [domainBuckets, setDomainBuckets] = useState<GreenBuckets>();
+	const [carbonRange, setCarbonRange] = useState<{max: number, min: number}>();
 	const [domainList, setDomainList] = useState<{ upperDomains: GreenBuckets; lowerDomains: GreenBuckets; midDomains: GreenBuckets }>();
 
 	const pvDataValue: PromiseValue = getCarbon({
@@ -49,12 +52,13 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 		if (!byDomainValue) return;
 		const allCount = byDomainValue.allCount;
 		const buckets = emissionsPerImpressions(byDomainValue.by_domain.buckets);
+		setDomainBuckets(buckets);
 		const co2s = buckets.map((row) => row.co2! as number);
 
 		const bucketSize = buckets.length;
 		const maxCo2 = Math.max(...co2s);
 		const minCo2 = Math.min(...co2s);
-		console.log({ allCount, bucketSize, maxCo2, minCo2 });
+		setCarbonRange({max: maxCo2, min: minCo2});
 
 		const range = maxCo2 - minCo2;
 		const upperQuartile = range * 0.75 + minCo2;
@@ -81,9 +85,52 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 	console.log('domainList', domainList);
 
 	return (
-		<>
+		<Container>
 			<h1>Green Recommendations</h1>
-		</>
+			<Row className='w-100 text-center' style={{ maxHeight: '20em', overflowY: 'scroll' }}>
+				<Col xs={4}>
+					<h3>Upper Domains</h3>
+					<div className='list'>
+						{domainList?.upperDomains &&
+							domainList?.upperDomains.map((row) => (
+								<span>
+									{row.key} <tr />
+								</span>
+							))}
+					</div>
+				</Col>
+				<Col xs={4}>
+					<h3>Mid Domains</h3>
+					<div className='list'>
+						{domainList?.midDomains &&
+							domainList?.midDomains.map((row) => (
+								<span>
+									{row.key} <tr />
+								</span>
+							))}
+					</div>
+				</Col>
+				<Col xs={4}>
+					<h3>Lower Domains</h3>
+					<div className='list'>
+						{domainList?.lowerDomains &&
+							domainList?.lowerDomains.map((row) => (
+								<span>
+									{row.key} <tr />
+								</span>
+							))}
+					</div>
+				</Col>
+			</Row>
+
+			<h1>Fun Scroller</h1>
+			<div>
+				<input type='range' id='upper-caron' name='upper-caron' min={carbonRange?.min} max={carbonRange?.max} />
+				<label htmlFor='volume'>Upper Range</label>
+				<input type='range' id='lower-caron' name='lower-caron' min={carbonRange?.min} max={carbonRange?.max} />
+				<label htmlFor='volume'>Lower Range</label>
+			</div>
+		</Container>
 	);
 };
 
