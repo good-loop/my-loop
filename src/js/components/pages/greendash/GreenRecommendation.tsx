@@ -1,3 +1,4 @@
+import { max } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'reactstrap';
 import PromiseValue from '../../../base/promise-value';
@@ -25,32 +26,43 @@ type BaseFilters = {
 };
 
 const baseFiltersTemp = {
-	q: 'campaign:nrxhFNGq OR campaign:iLWiEWO6 OR campaign:sjhhqRsR OR campaign:3mYN5ixz OR campaign:PdJMNhOH OR campaign:9x5iaOdG OR campaign:JCWGRAES OR campaign:B0Ywbe1l',
+	// q: 'campaign:nrxhFNGq OR campaign:iLWiEWO6 OR campaign:sjhhqRsR OR campaign:3mYN5ixz OR campaign:PdJMNhOH OR campaign:9x5iaOdG OR campaign:JCWGRAES OR campaign:B0Ywbe1l',
+	q: 'campaign:iLWiEWO6',
 	start: '2023-01-01T00:00:00.000Z',
 	end: '2023-03-31T23:00:00.000Z',
 	prob: '-1',
 	fixseed: true,
 };
 
-const RangeSlider = ({ carbonRange }: { carbonRange: { max: number; min: number } }) => {
-	const [minSelected, setMin] = useState<number>(carbonRange.min*100 || 0);
-	const [maxSelected, setMax] = useState<number>(carbonRange.max*1000 || 10);
+const RangeSlider = ({ carbonRange, domainBuckets }: { carbonRange: { max: number; min: number }; domainBuckets: GreenBuckets }) => {
+	const [minSelected, setMin] = useState<number>(carbonRange.min * 1000 || 0);
+	const [maxSelected, setMax] = useState<number>(carbonRange.max * 1000 || 10000);
+	const [availableDomains, setAvailableDomains] = useState<GreenBuckets>();
 
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setMin(Number(event.target.value[0]));
-		setMax(Number(event.target.value[1]));
+	useEffect(() => {
+		const availableDomains = domainBuckets.filter((val) => (val.co2 as number) * 1000 >= minSelected && (val.co2 as number) * 1000 <= maxSelected);
+		setAvailableDomains(availableDomains);
+	}, [minSelected, maxSelected]);
+
+	const handleChange = (event: React.ChangeEvent<HTMLInputElement>, setter: { (value: React.SetStateAction<number>): void }) => {
+		setter(Number(event.target.value));
 	};
 
 	return (
 		<div>
-			<input type='range' min={carbonRange.min} max={carbonRange.max} value={[minSelected.toString(), maxSelected.toString()]} onChange={handleChange} />
+			<input type='range' min={carbonRange.min * 1000} max={carbonRange.max * 1000} value={minSelected.toString()} onChange={(e) => handleChange(e, setMin)} />
+			<input type='range' min={carbonRange.min * 1000} max={carbonRange.max * 1000} value={maxSelected.toString()} onChange={(e) => handleChange(e, setMax)} />
 			<div>
 				<label>Min: </label>
-				<span>{minSelected}</span>
+				<span>{Math.round(minSelected)} grams</span>
 			</div>
 			<div>
 				<label>Max: </label>
-				<span>{maxSelected}</span>
+				<span>{Math.round(maxSelected)} grams</span>
+			</div>
+			<div>
+				<label>Numbers of domains in this range: </label>
+				<span>{availableDomains && availableDomains.length}</span>
 			</div>
 		</div>
 	);
@@ -115,43 +127,22 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 				<Col xs={4}>
 					<h3>Upper Domains</h3>
 					<p>Domains in this list: {domainList?.upperDomains.length}</p>
-					<div className='list'>
-						{domainList?.upperDomains &&
-							domainList?.upperDomains.map((row) => (
-								<span>
-									{row.key} <tr />
-								</span>
-							))}
-					</div>
+					<div className='list'>{domainList?.upperDomains && domainList?.upperDomains.map((row, idx) => <p key={idx}>{row.key}</p>)}</div>
 				</Col>
 				<Col xs={4}>
 					<h3>Mid Domains</h3>
 					<p>Domains in this list: {domainList?.midDomains.length}</p>
-					<div className='list'>
-						{domainList?.midDomains &&
-							domainList?.midDomains.map((row) => (
-								<span>
-									{row.key} <tr />
-								</span>
-							))}
-					</div>
+					<div className='list'>{domainList?.midDomains && domainList?.midDomains.map((row, idx) => <p key={idx}>{row.key}</p>)}</div>
 				</Col>
 				<Col xs={4}>
 					<h3>Lower Domains</h3>
 					<p>Domains in this list: {domainList?.lowerDomains.length}</p>
-					<div className='list'>
-						{domainList?.lowerDomains &&
-							domainList?.lowerDomains.map((row) => (
-								<span>
-									{row.key} <tr />
-								</span>
-							))}
-					</div>
+					<div className='list'>{domainList?.lowerDomains && domainList?.lowerDomains.map((row, idx) => <p key={idx}>{row.key}</p>)}</div>
 				</Col>
 			</Row>
 
 			<h1>Fun Scroller</h1>
-			{carbonRange && <RangeSlider carbonRange={carbonRange} />}
+			{carbonRange && domainBuckets && <RangeSlider carbonRange={carbonRange} domainBuckets={domainBuckets} />}
 		</Container>
 	);
 };
