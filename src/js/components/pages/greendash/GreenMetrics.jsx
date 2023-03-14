@@ -166,6 +166,7 @@ const GreenMetrics2 = ({}) => {
 		prob: urlParams.prob?.toString(), 
 		sigfig: urlParams.sigfig?.toString(),
 		nocache: urlParams.nocache,
+		fixseed: true,
 	};
 
 

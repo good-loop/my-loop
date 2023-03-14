@@ -235,6 +235,7 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 		if (!dummy) return;
 		// Remove all URL params pertaining to green dashboard, and re-add the ones we want.
 		const { params } = DataStore.getValue('location');
+		const paramsOld = { ...params };
 		allFilterParams.forEach((p) => {
 			delete params[p];
 		});
@@ -243,7 +244,7 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 			{
 				[filterMode]: { brand, agency, campaign, tag }[filterMode],
 				...periodToParams(period),
-				emode: params.emode || 'total',
+				emode: paramsOld.emode || 'total',
 			},
 			false,
 			true
