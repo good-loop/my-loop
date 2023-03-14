@@ -13,7 +13,7 @@ import { periodFromUrl } from './dashutils';
 import { getDataLogData } from '../../../base/plumbing/DataLog';
 
 /**
- *
+ * @deprecated replaced by getCarbon in emissionscalcTs.ts
  * @param {Object} p
  * @param {string} p.q
  * @param {string} p.start
@@ -41,7 +41,7 @@ export const getCarbon = ({ q = '', start = '1 month ago', end = 'now', breakdow
 };
 
 /**
- *
+ * @deprecated replaced by emissionscalcTs.ts
  * @param {Object[][]} buckets
  * @param {!string} keyName
  * @returns {!number}
@@ -63,6 +63,7 @@ export const getSumColumn = (buckets, keyName) => {
 
 /**
  * Merge same-key rows and compress small rows into "Other"
+ * @deprecated replaced by getCompressedBreakdownWithCount in emissionscalcTs.ts
  * @param {Object} p
  * @param {Object} p.breakdownByX {key: number}
  * @param {?number} p.minFraction
@@ -88,7 +89,7 @@ export const getCompressedBreakdown = ({ breakdownByX, minFraction = 0.05, osTyp
 };
 
 /**
- *
+ * @deprecated replaced by getBreakdownByWithCount in emissionscalcTs.ts
  * @param {Object[][]} buckets
  * @returns {Object} {breakdown-key: sum-for-key}
  */
@@ -113,6 +114,7 @@ export const getBreakdownBy = (buckets, keyNameToSum, keyNameToBreakdown) => {
 };
 
 /**
+ * @deprecated replaced by emissionscalcTs.ts
  * Get the GreenTags referenced by the buckets
  * @param {?Object[][]} buckets
  * @returns {?PromiseValue} PV of a List of GreenTags
@@ -144,7 +146,7 @@ export const getTags = (buckets) => {
 };
 
 /**
- *
+ * @deprecated replaced by emissionscalcTs.ts
  * @param {Object[][]} buckets
  * @returns {?PromiseValue} PV of a List of Campaigns
  */
@@ -267,6 +269,7 @@ export const getOffsetsByType = ({ campaign, status, period }) => {
 };
 
 /**
+ * @deprecated replaced by emissionscalcTs.ts
  * @param {Object[]} buckets A DataLog breakdown of carbon emissions. e.g. [{key, co2, count}]
  * @param {Number} perN e.g. 1000 for "carbon per 1000 impressions"
  * @param {Number} filterLessThan Filter out data will too low count. Filter out less than 1% of the largest count if set to -1.
@@ -275,14 +278,8 @@ export const getOffsetsByType = ({ campaign, status, period }) => {
 export const emissionsPerImpressions = (buckets, filterLessThan = 0, perN = 1000) => {
 	// Auto filter amount
 	if (filterLessThan === -1) {
-		let largest = 0;
-		buckets.forEach((val) => {
-			if ('count' in val && val.count > largest) {
-				largest = val.count;
-			}
-		});
-		if (largest === 0) filterLessThan = 0;
-		else filterLessThan = largest * 0.01;
+		const largest = Math.max(...buckets.map(val => val.count));
+		filterLessThan = largest ? largest * 0.01 : 0;
 	}
 
 	return buckets
@@ -303,7 +300,7 @@ export const emissionsPerImpressions = (buckets, filterLessThan = 0, perN = 1000
 				// Cross-breakdown (probably)
 				const xbdKey = Object.keys(bkt).find((k) => k.match(/^by_/));
 				// Recurse in to process the next breakdown level.
-				if (xbdKey) newBkt[xbdKey] = emissionsPerImpressions(bkt[xbdKey], perN);
+				if (xbdKey) newBkt[xbdKey] = emissionsPerImpressions(bkt[xbdKey], filterLessThan, perN);
 				// if (!xbdKey) -- No count - but also no by_x sub-breakdown? Strange, but we can skip it.
 			}
 
