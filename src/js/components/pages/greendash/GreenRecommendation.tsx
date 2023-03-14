@@ -23,15 +23,16 @@ type BaseFilters = {
 	sigfig?: string;
 	nocache?: boolean;
 	fixseed?: boolean;
+	numRows?: string;
 };
 
 const baseFiltersTemp = {
-	// q: 'campaign:nrxhFNGq OR campaign:iLWiEWO6 OR campaign:sjhhqRsR OR campaign:3mYN5ixz OR campaign:PdJMNhOH OR campaign:9x5iaOdG OR campaign:JCWGRAES OR campaign:B0Ywbe1l',
-	q: 'campaign:iLWiEWO6',
-	start: '2023-01-01T00:00:00.000Z',
+	q: 'campaign:nrxhFNGq OR campaign:iLWiEWO6 OR campaign:sjhhqRsR OR campaign:3mYN5ixz OR campaign:PdJMNhOH OR campaign:9x5iaOdG OR campaign:JCWGRAES OR campaign:B0Ywbe1l',
+	start: '2022-11-01T00%3A00%3A00.000Z',
 	end: '2023-03-31T23:00:00.000Z',
 	prob: '-1',
 	fixseed: true,
+	numRows: '10000',
 };
 
 const RangeSlider = ({ carbonRange, domainBuckets }: { carbonRange: { max: number; min: number }; domainBuckets: GreenBuckets }) => {
@@ -78,6 +79,7 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 	const pvDataValue: PromiseValue = getCarbon({
 		...baseFilters,
 		breakdown: ['domain{"emissions":"sum"}'],
+		// endpoint: 'https://locallg.good-loop.com/data?'
 	});
 
 	// Type hack: If it is resolved value must be an Object

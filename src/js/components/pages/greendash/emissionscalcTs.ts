@@ -37,12 +37,14 @@ export type BreakdownRow = {
 };
 
 export const getCarbon = ({
+	endpoint,
 	q = '',
 	start = '1 month ago',
 	end = 'now',
 	breakdown,
 	...rest
 }: {
+	endpoint?: string,
 	q: string;
 	start: string;
 	end: string;
@@ -60,7 +62,7 @@ export const getCarbon = ({
 	return DataStore.fetch(
 		['misc', 'DataLog', 'green', md5(JSON.stringify(data))],
 		() => {
-			return ServerIO.load(ServerIO.DATALOG_ENDPOINT, { data, swallow: true });
+			return ServerIO.load((endpoint ? endpoint : ServerIO.DATALOG_ENDPOINT), { data, swallow: true });
 		},
 		null,
 		null
