@@ -19,12 +19,15 @@ import Misc from '../../base/components/Misc';
 import List from '../../base/data/List';
 import Campaign from '../../base/data/Campaign';
 import Advertiser from '../../base/data/Advertiser';
-
+import { getCountryImpressionsByCampaign } from './impactdata';
+import printer from '../../base/utils/printer'
 /**
  * DEBUG OBJECTS
  */
 
  import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIGN, TEST_CAMPAIGN_OBJ} from './TestValues';
+import { addAmountSuffixToNumber } from '../../base/utils/miscutils';
+import { dataColours, getCountryFlag, getCountryName } from '../pages/greendash/dashutils';
 
 export class ImpactFilters {
 	agency;
@@ -44,9 +47,12 @@ export class ImpactFilters {
 
 
 const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, brand, subBrands, charities, subCampaigns, mainLogo}) => {
+	if (pvBaseObjects.resolved) console.log("base objs:", pvBaseObjects)
 	return (
 	<>
-		{pvBaseObjects.resolved && <> <div className='iview-positioner pr-md-1'>
+		{pvBaseObjects.resolved && <> 
+		{console.log("imps", getCountryImpressionsByCampaign({baseObjects:pvBaseObjects.value}))}
+		<div className='iview-positioner pr-md-1'>
 			<Container fluid className='iview-container'>
 				<animated.div className='impact-navbar-flow' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}></animated.div>
 				<GLVertical id='overview-first-card'>
@@ -110,9 +116,7 @@ const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, bra
 											modalId="right-half">
 												<h3>{subCampaigns.length} CAMPAIGNS</h3>
 										</GLCard> : null}
-									<GLCard basis={10}>
-										<h3>6.5M VIEWS | 5 COUNTRIES</h3>
-									</GLCard>
+									<CountryViewsGLCard basis={10} baseObjects={pvBaseObjects.value}/>
 									{/* as of 22/02/2023, this card is being discussed if it should be kept or not
 									<GLCard
 										noPadding
@@ -553,5 +557,141 @@ const CampaignList = ({campaigns, brand, subBrands, status}) => {
 	</>;
 	
 };
+
+const CountryViewsGLCard = ({basis, baseObjects}) => {
+	
+	let impressionData = getCountryImpressionsByCampaign({baseObjects:baseObjects})
+
+	// handle Total Impressions
+	// if no impressions found, don't show this element
+	if(!impressionData || Object.keys(impressionData).length === 0) return <></>
+	let totalCountries = Object.keys(impressionData).length
+	let impressions = Object.values(impressionData).reduce((sum, val) => sum + val.impressions, 0)
+	impressions = Number(printer.toNSigFigs(impressions, 3).replace(",", "")) // total to 3 sig figs
+	impressions = addAmountSuffixToNumber(impressions) // reduce to units in thousands, millions or billions
+	
+	let countryWord = (totalCountries > 1) ? "COUNTRIES" : "COUNTRY"
+
+	// assign colours to data object for map 
+	Object.keys(impressionData).forEach((country) => {
+		impressionData[country].colour = "hsl(8, 100%, 23%)"
+	})
+
+	// handle list of campaigns & countries inside modal
+
+	return (
+	<GLCard basis={basis}
+		modalContent={() => <MapCardContent data={impressionData}/> }
+		modalClassName="impact-map"
+		modalId="right-half"
+		>
+		<h3>{impressions} VIEWS | {totalCountries} {countryWord}</h3>
+	</GLCard>
+	)
+}
+
+const MapCardContent = ({data}) => {
+	const [mapData, setMapData] = useState('loading'); // Object mapping region ID to imps + carbon
+	const [focusRegion, setFocusRegion] = useState('v'); // ID of currently focused country
+	const [mapDefs, setMapDefs] = useState(); // JSON object with map paths and meta
+	const [svgEl, setSvgEl] = useState(); // ref to the map SVG to create download button
+	const [error, setError] = useState(); // Problems loading map?
+
+	console.log("found country! ", getCountryName("US"))
+
+	// Fetch the JSON with the map data for the current focus country
+	useEffect(() => {
+		// No mapdefs for this country? Return to world map and tell user
+		const onError = () => {
+			setFocusRegion('world');
+			setError(`No detailed map available for country code "${focusRegion}"`);
+		};
+
+		fetch(`/js-data/mapdefs-${focusRegion}.json`).then((res) => {
+			if (!res.ok) {
+				onError();
+				return;
+			}
+			res
+				.json()
+				.then((json) => {
+					setMapDefs(json);
+					// clear error on successfully loading a country map
+					if (!isWorld) setError(null);
+				})
+				.catch(onError);
+		});
+	}, [focusRegion]);
+
+
+	const isWorld = focusRegion === 'world';
+	const mapDefsReady = mapDefs && mapDefs.id === focusRegion;
+
+	return <SVGMap mapDefs={mapDefs} data={data} setFocusRegion={setFocusRegion} showLabels={false} svgEl={svgEl} setSvgEl={setSvgEl}/>
+}
+
+const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
+
+	const [pathCentres, setPathCentres] = useState({}); // Estimate region centres from bounding boxes to place text labels
+
+	if (!mapDefs) return null;
+	const loading = data === 'loading';
+
+	let regions = [];
+	let labels = [];
+
+	Object.entries(mapDefs.regions).forEach(([id, props]) => {
+		const zeroFill = dataColours([0, 1])[0];
+		let { impressions = 0, colour = zeroFill } = data?.[id] || {};
+		props = { ...props, fill: colour, stroke: '#fff', strokeWidth: mapDefs.svgAttributes.fontSize / 10 };
+
+		// Don't paint misleading colours on a map we don't have data for
+		if (loading) {
+			props.fill = 'none';
+			props.stroke = '#bbb';
+		}
+		
+		// Countries are clickable, sublocations aren't.
+		if (setFocusRegion) {
+			props.style = { cursor: 'pointer' };
+			props.onClick = () => setFocusRegion(id);
+		}
+
+		const pathId = `${mapDefs.id}-${id}`;
+
+		// Once path is drawn, find the centre of the region's bounding box to position a text label on the bigger map
+		const pathRef = showLabels ? (path) => {
+			if (!path) return;
+			setPathCentres((prev) => {
+				if (prev[pathId]) return prev;
+				return { ...prev, [pathId]: bbCentre(path) };
+			});
+		} : null;
+
+		// Tooltip on hover
+		const title = loading ? null : (
+			<title>
+				{props.name}: {impressions} impressions 
+			</title>
+		);
+
+		regions.push(
+			<path key={`path-${id}`} data-id={id} {...props} ref={pathRef}>
+				{title}
+			</path>
+		);
+	})
+	const svgRef = (element) => element && setSvgEl(element);
+
+	return (
+		<div className="map-container text-center">
+			<svg className="map-svg" version="1.1" {...mapDefs.svgAttributes} xmlns="http://www.w3.org/2000/svg" ref={svgRef}>
+				{regions}
+			</svg>
+			{loading && <Misc.Loading text={`Fetching map data for ${mapDefs.name}`} />}
+		</div>
+	);
+
+}
 
 export default ImpactOverviewPage;

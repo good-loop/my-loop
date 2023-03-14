@@ -1,31 +1,15 @@
 
 import KStatus from '../../base/data/KStatus';
 import List from '../../base/data/List';
-import I18N from '../../base/i18n';
 import PromiseValue from '../../base/promise-value';
 import { getDataItem, getDataList, setWindowTitle } from '../../base/plumbing/Crud';
 import C from '../../C';
 import DataStore from '../../base/plumbing/DataStore';
 import SearchQuery from '../../base/searchquery';
-import PropControl from '../../base/components/PropControl';
-import Circle from '../../base/components/Circle';
-import { Card } from '../../base/components/CardAccordion';
-import BG from '../../base/components/BG';
-import Misc from '../../MiscOverrides';
-import { getLogo, space, stopEvent, uniq } from '../../base/utils/miscutils';
-import Branding from '../../base/data/Branding';
-import Impact from '../../base/data/Impact';
-import Money from '../../base/data/Money';
-import { OTHER_CONSENT } from '../../base/data/Claim';
-import { modifyPage } from '../../base/plumbing/glrouter';
-import { getId, getType } from '../../base/data/DataClass';
-import DynImg from '../../base/components/DynImg';
-import PortalLink from '../../base/components/PortalLink';
-import Roles from '../../base/Roles';
+import { space } from '../../base/utils/miscutils';
 import ServerIO from '../../plumbing/ServerIO';
+import md5 from 'md5';
 import Campaign from '../../base/data/Campaign';
-import { setNavProps } from '../../base/components/NavBar';
-import Editor3ColLayout, { LeftSidebar } from '../../base/components/Editor3ColLayout';
 
 /* ------- Data Functions --------- */
 
@@ -101,5 +85,62 @@ const getCharities = ({ filters }) => {
 	// console.group("pvCharities", pvCharities);
 	return pvCharities;
 }
+
+export const getCountryImpressionsByCampaign = ({ baseObjects, start = '', end = 'now', locationField='country', ...rest }) => {
+
+	let {campaign, subCampaigns} = baseObjects
+	// if there's no campaigns to read, hide this card
+	if(!campaign && (!subCampaigns || subCampaigns.length == 0)) return null
+
+	let searchData = campaign ? [campaign] : subCampaigns // if campaign is set, then the user has filtered to a single campaign (no subcampaigns)
+
+	console.log("VIEW COUNT")
+	searchData.forEach((val) =>{
+			console.log(val, Campaign.viewcount({campaign:val, status:KStatus.PUBLISHED}))
+	})
+	console.log("\n")
+
+	// for every campaign we can search through...
+	let campaignViews = searchData.reduce((regionMap, curVal) => {
+
+		// get impressions per country for campaign
+		const data = {
+			dataspace: 'emissions',
+			q: "campaign:"+curVal.id,
+			start,
+			end,
+			breakdown: [locationField + '{"count":"sum"}'],
+			...rest,
+		};
+
+		// TODO, we don't want to just search green tags!
+		let impressions = DataStore.fetch(['misc', 'DataLog', 'green', md5(JSON.stringify(data))], () => {
+			// buckets of impressions by country 
+			return ServerIO.load(ServerIO.DATALOG_ENDPOINT, { data, swallow: true });
+		}).value
+
+		// for each campaign, find the data for the country the campaign was aimed at 
+		// ASSUMPTION: 	afaik, a campaign will have a country it's aimed at that decision is not handled by us.
+		// 				as a result, we don't access to that info. Instead, guess by what country has the most views,
+		//				this is usually higher by several orders of magnitude so it's *usually* a safe bet.
+
+		let regions = impressions?.by_country.buckets
+		if(!regions || regions.length == 0) return regionMap // handle campaign still loading and campaigns with no results 
+		let targetedCountry = regions[0]
+		regions.forEach((region) => {
+		// add the countries data to the map of regions (needed if current object of focus has more than 1 campaign)
+		if(Object.keys(regionMap).includes(region.key)){
+			regionMap[region.key].impressions += region.count
+			regionMap[region.key].campaignsInRegion += 1
+		} else {
+			regionMap[region.key] = {impressions: region.count, campaignsInRegion: 1}
+		}})
+
+		return regionMap
+	},
+	{})
+
+	return campaignViews;
+};
 
 /* ------- End of Data Functions --------- */

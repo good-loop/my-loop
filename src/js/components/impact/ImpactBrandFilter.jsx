@@ -18,6 +18,7 @@ import { retrurnProfile } from '../pages/TabsForGoodSettings';
 import { assert } from '../../base/utils/assert';
 import { space } from '../../base/utils/miscutils';
 import { unstable_renderSubtreeIntoContainer } from 'react-dom';
+import { getCountryImpressionsByCampaign } from './impactdata';
 
 const A = C.A;
 

@@ -391,6 +391,34 @@ export const getFilterModeId = () => {
 	return {filterMode, filterId};
 };
 
+/** WIP
+ *  
+ */
+ export const getCountryFlag = (isoCode) => {
+
+}
+
+export const getCountryName = (isoCode) => {
+	const onError = () => {
+		console.log("getCountry fucked it!")
+	};
+
+	fetch(`/js-data/mapdefs-world.json`).then((res) => {
+		if (!res.ok) {
+			onError();
+			return;
+		}
+		res
+			.json()
+			.then((json) => {
+				return json;
+				// clear error on successfully loading a country map
+			})
+			.catch(onError);
+	});
+}
+
+
 /** Minimum kg value where we should switch to displaying tonnes instead */
 export const TONNES_THRESHOLD = 1000;
 

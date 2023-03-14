@@ -156,7 +156,7 @@ const ImpactPage = () => {
 
 	const path = DataStore.getValue(['location', 'path']);
 
-	if (path.length < 3) return {error: new Error("Invalid URL")};
+	if (path.length < 3) return <ErrorDisplay e={{error:"Invalid URL"}} />
 	const status = DataStore.getUrlValue('gl.status') || DataStore.getUrlValue('status') || KStatus.PUBLISHED;
 	const page = path[1]
 	const itemType = path[2]
@@ -211,7 +211,6 @@ const ImpactPage = () => {
 	if(!Login.isLoggedIn() || !impactChosen) {
 		return <ImpactLoginCard choice={impactChosen} setChoice={setImpactChosen} masterBrand={TEST_BRAND_OBJ}/>
 	}
-	let x= IMPACT_PAGES.view
 
 	return (
 		<>
