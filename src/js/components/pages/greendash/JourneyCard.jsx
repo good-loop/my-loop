@@ -31,18 +31,17 @@ const Cloud = ({ style }) => (
 /** Show mass of CO2 emitted and offset by the campaigns in focus
  *
  * ??Let's rename all co2 variables to be eg "co2OffsetKgs" for clarity
- *
  */
-const CO2Section = ({ co2Offset }) => (
+const CO2Section = ({ co2Offset }) => (	
 	<>
 		<div className="cloud-indicator">
 			<Cloud style={{ fill: '#8bc' }} />
 		</div>
 		<h3 className="carbon-offset-total">
 			{co2Offset !== null ? (
-				<>
+				co2Offset? <>
 					<Mass kg={co2Offset} /> of carbon offset
-				</>
+				</> : null /* hide if ImpactDebits are not setup */
 			) : (
 				'Fetching carbon offset...'
 			)}
@@ -154,6 +153,7 @@ const JourneyCard = ({ campaigns, baseFilters, period, emptyTable }) => {
 
 	let offsets = {}; // HACK will include carbonTotal etc too
 	offsetTypes.forEach((ot) => (offsets[ot + 'Total'] = 0));
+	// TODO could be more efficient -- load ImpactDebits rather than loop over campaigns
 	campaigns.forEach((campaign) => {
 		const offsets4type = getOffsetsByType({ campaign, period });
 		offsetTypes.forEach((ot) => (offsets[ot + 'Total'] += offsets4type[ot + 'Total'] || 0));

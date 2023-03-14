@@ -235,6 +235,7 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 		if (!dummy) return;
 		// Remove all URL params pertaining to green dashboard, and re-add the ones we want.
 		const { params } = DataStore.getValue('location');
+		const paramsOld = { ...params };
 		allFilterParams.forEach((p) => {
 			delete params[p];
 		});
@@ -243,6 +244,7 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 			{
 				[filterMode]: { brand, agency, campaign, tag }[filterMode],
 				...periodToParams(period),
+				emode: paramsOld.emode || 'total',
 			},
 			false,
 			true
@@ -271,16 +273,19 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 	const periodLabel = `Timeframe: ${period.name ? printPeriod(period, true) : 'Custom'}`;
 
 	// label and logo
-	let campaignItem = campaign ? getDataItem({ type: C.TYPES.Campaign, id: campaign, status: KStatus.PUBLISHED }).value : null;
+	let tagItem = (tag && filterMode === "tag") ? getDataItem({ type: C.TYPES.GreenTag, id: tag, status: KStatus.PUB_OR_DRAFT }).value : null;
+	let campaignItem = (campaign && filterMode === "campaign") ? getDataItem({ type: C.TYPES.Campaign, id: campaign, status: KStatus.PUBLISHED }).value : null;
+	
+	// if tag or campaign exist, also grab the brand item as we'll need it for the logo
+	let brandItem =
+		((brand && filterMode === "brand") || (campaignItem && campaignItem.vertiser) || (tagItem && tagItem.vertiser)) 
+			? getDataItem({ type: C.TYPES.Advertiser, id: ((campaignItem && campaignItem.vertiser) || (tagItem && tagItem.vertiser) || brand), status: KStatus.PUBLISHED }).value
+			: null;
+
 	let agencyItem =
-		agency || (campaignItem && campaignItem.agencyId)
+		(agency || (campaignItem && campaignItem.agencyId))
 			? getDataItem({ type: C.TYPES.Agency, id: agency || campaignItem.agencyId, status: KStatus.PUBLISHED }).value
 			: null;
-	let brandItem =
-		brand || (campaignItem && campaignItem.vertiser)
-			? getDataItem({ type: C.TYPES.Advertiser, id: brand || campaignItem.vertiser, status: KStatus.PUBLISHED }).value
-			: null;
-	let tagItem = tag ? getDataItem({ type: C.TYPES.GreenTag, id: tag, status: KStatus.PUB_OR_DRAFT }).value : null;
 
 	let filterItemLabel = {
 		agency: agencyItem?.name || agency,
@@ -292,12 +297,14 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 		filterItemLabel = `Select a${filterMode?.match(/^[aieou]/i) ? 'n' : ''} ${filterMode}`;
 	}
 
+	let itemLogo = (filterMode == "agency") ? agencyItem : brandItem;
+
 	return (
 		<Row className='greendash-filters my-2'>
 			<Col xs='12'>
 				<div className='d-flex'>
 					<Form inline>
-						<Logo className='mr-2' style={{ width: 'auto', maxWidth: '8em' }} item={brandItem || campaignItem} />
+						<Logo className='mr-2' style={{ width: 'auto', maxWidth: '8em' }} item={itemLogo}/>
 						<>
 							{/* ??Seeing layout bugs that can block use -- refactoring to use a PropControl might be best*/}
 							<UncontrolledDropdown className='filter-dropdown'>
