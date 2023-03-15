@@ -10,6 +10,7 @@ import Circle from '../../base/components/Circle';
 import BG from '../../base/components/BG';
 import { GLCard, GLHorizontal, GLVertical, GLModalCard, GLModalBackdrop, markPageLoaded } from './GLCards';
 import NGO from '../../base/data/NGO';
+import Money from '../../base/data/Money';
 import CharityLogo from '../CharityLogo';
 import C from '../../C';
 import AdvertsCatalogue from '../campaignpage/AdvertsCatalogue';
@@ -46,7 +47,7 @@ export class ImpactFilters {
 
 
 
-const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, brand, subBrands, charities, subCampaigns, mainLogo}) => {
+const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, brand, campaign, subBrands, charities, subCampaigns, impactDebits, mainLogo}) => {
 	if (pvBaseObjects.resolved) console.log("base objs:", pvBaseObjects)
 	return (
 	<>
@@ -55,12 +56,12 @@ const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, bra
 		<div className='iview-positioner pr-md-1'>
 			<Container fluid className='iview-container'>
 				<animated.div className='impact-navbar-flow' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}></animated.div>
-				<GLVertical id='overview-first-card'>
+				<GLVertical id='overview-first-card' className="w-100">
 					<GLHorizontal collapse="md" className="iview-grid">
 						{/* first grid half */}
 						<GLVertical>
 							{/* top left corner - both top corners with basis 60 to line up into grid pattern*/}
-							<GLCard basis={60} className="hero-card">
+							<GLCard basis={campaign ? 80 : 60} className="hero-card">
 								<div className='white-circle'>
 									<div className='content'>
 										<img  className='logo' src={mainLogo} />
@@ -75,7 +76,8 @@ const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, bra
 							</GLCard>
 
 							{/* bottom left corner */}
-							<BrandDonationInfo brand={brand}/>
+							{campaign ? <CampaignCharityDisplay charities={charities} impactDebits={impactDebits}/>
+							: <BrandDonationInfo brand={brand}/>}
 
 							<GLModalCard id="left-half"/>
 						</GLVertical>
@@ -84,7 +86,7 @@ const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, bra
 						<GLVertical>
 
 							{/* top right corner */}
-							<GLHorizontal collapse="md" basis={60}>
+							{!campaign && <GLHorizontal collapse="md" basis={60}>
 								<GLVertical>
 									<GLHorizontal>
 										{subBrands.length ?
@@ -150,18 +152,25 @@ const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, bra
 									<GLModalCard id="ads-for-good-modal" />
 								</div>
 
-							</GLHorizontal>
+							</GLHorizontal>}
 							
 							{/* bottom right corner */}
-							<GLCard
-								modalContent={AdsCatalogueModal}
-								modalId="full-page"
-								modalClassName="ads-catalogue-modal"
-								className="ads-catalogue-card"
-								>
-									<AdsCatalogueModal noPreviews/>
-							</GLCard>
-
+							<GLVertical>
+								{campaign && <CountryViewsGLCard basis={10} baseObjects={pvBaseObjects.value}/>}
+								<GLCard
+									modalContent={AdsCatalogueModal}
+									modalId="full-page"
+									modalClassName="ads-catalogue-modal"
+									className="ads-catalogue-card"
+									basis={campaign && 70}
+									>
+										<AdsCatalogueModal noPreviews/>
+								</GLCard>
+								{campaign && <GLCard className="boast" basis={20}>
+									<h2>SUSTAINABLE GOALS</h2>
+								</GLCard>}
+							</GLVertical>
+							
 							<GLModalCard id="right-half"/>
 						</GLVertical>
 
@@ -182,10 +191,36 @@ const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, bra
 	);
 };
 
+const CampaignCharityDisplay = ({charities, impactDebits}) => {
+	// sort debits by charity
+	let debitsByCharity = {};
+	impactDebits.forEach(debit => {
+		if (debit.impact.charity) {
+			debitsByCharity[debit.impact.charity] = debit;
+		}
+	});
+
+	return <GLHorizontal basis={20}>
+		{charities.map(charity => <GLCard key={charity.id}
+			className="boast"
+			modalContent={() => <CharityInfo charity={charity}/>}
+			modalHeader={() => <CharityHeader charity={charity}/>}
+			modalHeaderImg={charity.images}
+			modalClassName="charity-info"
+			modalId="right-half">
+				<img src={charity.logo} style={{width:"7rem"}}/>
+				<br/>
+				{debitsByCharity[charity.id] && <h2>{Money.prettyStr(debitsByCharity[charity.id].impact.amount)} Donated</h2>}
+				<br/>
+				<h4>{NGO.displayName(charity)}</h4>
+		</GLCard>)}
+	</GLHorizontal>;
+}
+
 const BrandDonationInfo = ({brand}) => {
 	return <GLHorizontal>
 		<GLCard
-			className="ad-boast"
+			className="boast"
 			modalContent={() => <WatchToDonateModal brand={brand}/>}
 			modalTitle="Watch To Donate"
 			modalId="full-page"
@@ -205,7 +240,7 @@ const BrandDonationInfo = ({brand}) => {
 				<QuestionIcon/>
 		</GLCard>
 		<GLCard
-			className="ad-boast"
+			className="boast"
 			modalContent={() => <ThisAdDoesGoodModal brand={brand}/>}
 			modalTitle="This Ad Does Good"
 			modalId="full-page"
@@ -538,7 +573,7 @@ const CampaignList = ({campaigns, brand, subBrands, status}) => {
 
 const CountryViewsGLCard = ({basis, baseObjects}) => {
 	
-	let impressionData = getCountryImpressionsByCampaign({baseObjects:baseObjects})
+	/*let impressionData = getCountryImpressionsByCampaign({baseObjects:baseObjects})
 
 	// handle Total Impressions
 	// if no impressions found, don't show this element
@@ -555,15 +590,15 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 		impressionData[country].colour = "hsl(8, 100%, 23%)"
 	})
 
-	// handle list of campaigns & countries inside modal
+	// handle list of campaigns & countries inside modal*/
 
 	return (
 	<GLCard basis={basis}
-		modalContent={() => <MapCardContent data={impressionData}/> }
+		/*modalContent={() => <MapCardContent data={impressionData}/> }
 		modalClassName="impact-map"
-		modalId="right-half"
+		modalId="right-half"*/
 		>
-		<h3>{impressions} VIEWS | {totalCountries} {countryWord}</h3>
+		<h3>1 VIEW | 10 COUNTRIES</h3>
 	</GLCard>
 	)
 }
