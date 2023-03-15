@@ -27,6 +27,8 @@ export const GLHorizontal = ({collapse, className, style, children}) => {
 
     const autoSpacedSize = uneatenSpace / notSpecifiedChildCount;*/
 
+	if (!Array.isArray(children)) children = [children];
+
 	return <Row noGutters className={space("glhorizontal", collapse?"glhorizontal-"+collapse:"", className)} style={style}>
 		{children.map((child, i) => {
 			// Special case for overlays - they must not interfere with layout, so make no wrapper
@@ -41,6 +43,7 @@ export const GLHorizontal = ({collapse, className, style, children}) => {
  * 
  */
 export const GLVertical = ({className, children, ...props}) => {
+	if (!Array.isArray(children)) children = [children];
 	return <div className={space("glvertical", className)} {...props}>
 		{children.map((child, i) => {
 			// Special case for overlays - they must not interfere with layout, so make no wrapper

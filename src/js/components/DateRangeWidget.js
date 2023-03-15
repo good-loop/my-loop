@@ -3,7 +3,7 @@ import { Button } from 'reactstrap';
 import { space } from '../base/utils/miscutils';
 import { periodFromName } from './pages/greendash/dashutils';
 
-import '../../style/DateRangeWidget.less';
+//import '../../style/DateRangeWidget.less';
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];

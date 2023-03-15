@@ -202,10 +202,7 @@ const ImpactPage = () => {
 	// Returns NaN if impactDebits is an empty array
 	if (isNaN(totalDonation.value)) totalDonation = new Money(0);
 
-	const addNumberCommas = (x) => {
-		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-	}
-	const totalString = Money.CURRENCY[totalDonation.currency] + addNumberCommas(Math.round(totalDonation.value));
+	const totalString = Money.prettyStr(totalDonation);
 
 	// if not logged in OR impact hasn't been chosen yet...
 	if(!Login.isLoggedIn() || !impactChosen) {
@@ -221,7 +218,7 @@ const ImpactPage = () => {
 			<NavBars active={"overview"} isNavbarOpen={isNavbarOpen} setIsNavbarOpen={setIsNavbarOpen}/>
 			{pvBaseObjects.resolved && <ImpactFilterOptions size="wide" setIsNavbarOpen={setIsNavbarOpen} masterBrand={masterBrand} brand={brand} campaign={campaign} setForcedReload={setForcedReload}  curPage={page}/>}  {/*widescreen vertical filters topbar*/}
 		</div>
-		<PageContent pvBaseObjects={pvBaseObjects} navToggleAnimation={navToggleAnimation} totalString={totalString} brand={brand} subBrands={subBrands} charities={charities} subCampaigns={subCampaigns} mainLogo={mainLogo}/>
+		<PageContent pvBaseObjects={pvBaseObjects} navToggleAnimation={navToggleAnimation} totalString={totalString} mainLogo={mainLogo} {...pvBaseObjects?.value}/>
 		</>
 	)
 }
