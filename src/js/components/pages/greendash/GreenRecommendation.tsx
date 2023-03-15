@@ -1,6 +1,6 @@
-import { max } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Col, Container, Row } from 'reactstrap';
+import NewChartWidget from '../../../base/components/NewChartWidget';
 import PromiseValue from '../../../base/promise-value';
 import { type BreakdownRow, type GreenBuckets, emissionsPerImpressions, getCarbon } from './emissionscalcTs';
 
@@ -49,6 +49,57 @@ const RangeSlider = ({ carbonRange, domainBuckets }: { carbonRange: { max: numbe
 		setter(Number(event.target.value));
 	};
 
+	const chartData = useMemo(() => {
+		const sortedBuckets = domainBuckets.sort((a, b) => (a.co2 as number) - (b.co2 as number));
+		const dataLabels = sortedBuckets.map((val) => val.key);
+		const dataValues = sortedBuckets.map((val) => (val.co2 as number) * 1000);
+
+		return {
+			type: 'bar',
+			data: {
+				labels: dataLabels,
+				datasets: [
+					{
+						label: 'co2',
+						data: dataValues,
+						backgroundColor: 'green',
+					},
+				],
+			},
+		};
+	}, [domainBuckets]);
+
+	const chartOptions = useMemo(() => {
+		const max = {
+			type: 'line',
+			borderColor: 'red',
+			borderWidth: 1,
+			scaleID: 'y',
+			value: maxSelected,
+		};
+
+		const min = {
+			type: 'line',
+			borderColor: 'blue',
+			borderWidth: 1,
+			scaleID: 'y',
+			value: minSelected,
+		};
+
+		return {
+			responsive: true,
+			tooltips: {
+				mode: 'index',
+				intersect: true,
+			},
+			plugins: {
+				annotation: {
+					annotations: { max, min },
+				},
+			},
+		};
+	}, [minSelected, maxSelected]);
+
 	return (
 		<div>
 			<input type='range' min={carbonRange.min * 1000} max={carbonRange.max * 1000} value={minSelected.toString()} onChange={(e) => handleChange(e, setMin)} />
@@ -65,6 +116,7 @@ const RangeSlider = ({ carbonRange, domainBuckets }: { carbonRange: { max: numbe
 				<label>Numbers of domains in this range: </label>
 				<span>{availableDomains && availableDomains.length}</span>
 			</div>
+			<NewChartWidget options={chartOptions} width={null} height={null} datalabels={null} maxy={null} {...chartData} />
 		</div>
 	);
 };
