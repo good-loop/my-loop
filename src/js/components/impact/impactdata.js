@@ -86,47 +86,43 @@ const getCharities = ({ filters }) => {
 	return pvCharities;
 }
 
-export const getCountryImpressionsByCampaign = ({ baseObjects, start = '', end = 'now', locationField='country', ...rest }) => {
+
+export const getImpressionsByCampaignByCountry = ({ baseObjects, start = '', end = 'now', locationField='country', ...rest }) => {
 
 	let {campaign, subCampaigns} = baseObjects
-	// if there's no campaigns to read, hide this card
-	if(!campaign && (!subCampaigns || subCampaigns.length == 0)) return null
+	if(!campaign && (!subCampaigns || subCampaigns.length == 0)) return []
 
 	let searchData = campaign ? [campaign] : subCampaigns // if campaign is set, then the user has filtered to a single campaign (no subcampaigns)
+	console.log("res campaigns: ", searchData)
+	let campaignImpsByCountry = searchData.map(country => Campaign.viewcountByCountry({campaign: country, status: KStatus.PUBLISHED}))
 
-	console.log("VIEW COUNT")
-	searchData.forEach((val) =>{
-			console.log(val, Campaign.viewcount({campaign:val, status:KStatus.PUBLISHED}))
-	})
-	console.log("\n")
+	console.log("res fin: ", campaignImpsByCountry)
+
+	if(!campaignImpsByCountry || campaignImpsByCountry.length === 0) return []
+
+
 
 	// for every campaign we can search through...
-	let campaignViews = searchData.reduce((regionMap, curVal) => {
+	let campaignViews = campaignImpsByCountry.reduce((regionMap, regions) => {
 
-		// get impressions per country for campaign
-		const data = {
-			dataspace: 'emissions',
-			q: "campaign:"+curVal.id,
-			start,
-			end,
-			breakdown: [locationField + '{"count":"sum"}'],
-			...rest,
-		};
-
-		// TODO, we don't want to just search green tags!
-		let impressions = DataStore.fetch(['misc', 'DataLog', 'green', md5(JSON.stringify(data))], () => {
-			// buckets of impressions by country 
-			return ServerIO.load(ServerIO.DATALOG_ENDPOINT, { data, swallow: true });
-		}).value
 
 		// for each campaign, find the data for the country the campaign was aimed at 
 		// ASSUMPTION: 	afaik, a campaign will have a country it's aimed at that decision is not handled by us.
 		// 				as a result, we don't access to that info. Instead, guess by what country has the most views,
 		//				this is usually higher by several orders of magnitude so it's *usually* a safe bet.
 
-		let regions = impressions?.by_country.buckets
 		if(!regions || regions.length == 0) return regionMap // handle campaign still loading and campaigns with no results 
+		
+		let targetRegion = Object.keys(regions)[0]
+		if(targetRegion !== "unset" && Object.keys(regions).includes("unset")){
+			// handle unset vals
+		}
+		else {
+
+		}
+
 		let targetedCountry = regions[0]
+		return {}
 		regions.forEach((region) => {
 		// add the countries data to the map of regions (needed if current object of focus has more than 1 campaign)
 		if(Object.keys(regionMap).includes(region.key)){

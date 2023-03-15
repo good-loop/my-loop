@@ -19,7 +19,7 @@ import Misc from '../../base/components/Misc';
 import List from '../../base/data/List';
 import Campaign from '../../base/data/Campaign';
 import Advertiser from '../../base/data/Advertiser';
-import { getCountryImpressionsByCampaign } from './impactdata';
+import { getImpressionsByCampaignByCountry } from './impactdata';
 import printer from '../../base/utils/printer'
 /**
  * DEBUG OBJECTS
@@ -51,7 +51,6 @@ const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, bra
 	return (
 	<>
 		{pvBaseObjects.resolved && <> 
-		{console.log("imps", getCountryImpressionsByCampaign({baseObjects:pvBaseObjects.value}))}
 		<div className='iview-positioner pr-md-1'>
 			<Container fluid className='iview-container'>
 				<animated.div className='impact-navbar-flow' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}></animated.div>
@@ -538,8 +537,8 @@ const CampaignList = ({campaigns, brand, subBrands, status}) => {
 
 const CountryViewsGLCard = ({basis, baseObjects}) => {
 	
-	let impressionData = getCountryImpressionsByCampaign({baseObjects:baseObjects})
-
+	let impressionData = getImpressionsByCampaignByCountry({baseObjects:baseObjects})
+	
 	// handle Total Impressions
 	// if no impressions found, don't show this element
 	if(!impressionData || Object.keys(impressionData).length === 0) return <></>
@@ -550,6 +549,7 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 	
 	let countryWord = (totalCountries > 1) ? "COUNTRIES" : "COUNTRY"
 
+	
 	// assign colours to data object for map 
 	Object.keys(impressionData).forEach((country) => {
 		impressionData[country].colour = "hsl(8, 100%, 23%)"
@@ -619,7 +619,7 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 	let labels = [];
 
 	Object.entries(mapDefs.regions).forEach(([id, props]) => {
-		const zeroFill = dataColours([0, 1])[0];
+		const zeroFill = "hsl(204, 27%, 45%)";
 		let { impressions = 0, colour = zeroFill } = data?.[id] || {};
 		props = { ...props, fill: colour, stroke: '#fff', strokeWidth: mapDefs.svgAttributes.fontSize / 10 };
 
