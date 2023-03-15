@@ -70,13 +70,9 @@ const GreenNavBar = ({active}) => {
 	let pvCampaign = campaignId? getDataItem({type:C.TYPES.Campaign, id:campaignId,status:KStatus.PUB_OR_DRAFT, swallow:true}) : {};
 	let impactUrl = pvCampaign.value? '/green/'+encURI(pvCampaign.value.id) : '/green';
 
-	const showShareables = DataStore.getUrlValue("shareables");
-	const showFlags = DataStore.getUrlValue("debug") || DataStore.getUrlValue("gl.debug") || showShareables;
-
 	// We don't use the standard <Collapse> pattern here because that doesn't support an always-horizontal navbar
-
 	return (<>
-		{(Roles.isDev() || showFlags) && <AccountMenu className="float-left" noNav shareWidget={<ShareDash className='m-auto' />}/>}
+	<AccountMenu className="float-left" noNav shareWidget={<ShareDash className='m-auto' />}/>
 	<Navbar dark expand="md" id="green-navbar" className={space('flex-column', 'justify-content-start', isOpen && 'mobile-open')}>
 		<NavbarToggler onClick={toggle} />
 		<Nav navbar vertical>
