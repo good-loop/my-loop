@@ -40,21 +40,21 @@ const SideNavBar = ({active, isOpen, navToggleAnimation, toggle}) => {
 				<NavItem>
 					<A href={window.location}>
 						<div className={active === 'overview' ? 'active navbar-link' : 'navbar-link'}> 
-							<div className="impact-nav-icon overview-icon" /><animated.div class="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Overview</animated.div> 
+							<div className="impact-nav-icon overview-icon" /><animated.div className="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Overview</animated.div> 
 						</div>
 					</A>
 				</NavItem>
 				<NavItem>
 					<A href={`${ServerIO.PORTAL_ENDPOINT}/#green`}>
 						<div className={active === 'impact' ? 'active navbar-link' : 'navbar-link'}> 
-							<div className="impact-nav-icon impact-icon" /> <animated.div class="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Impact</animated.div> 
+							<div className="impact-nav-icon impact-icon" /> <animated.div className="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Impact</animated.div> 
 						</div>
 					</A>
 				</NavItem>
 				<NavItem>
 					<A>
 						<div className={active === 'analysis' ? 'active navbar-link' : 'navbar-link'}> 
-							<div className="impact-nav-icon analysis-icon" /> <animated.div class="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Analysis</animated.div> 
+							<div className="impact-nav-icon analysis-icon" /> <animated.div className="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Analysis</animated.div> 
 						</div>
 					</A>
 				</NavItem>
@@ -79,17 +79,17 @@ const TopNavBar = ({active}) => {
 			<Nav horizontal>
 				<NavItem className={active === 'overview' ? 'active' : ''}>
 					<A href={window.location}>
-						<div class="impact-navbar-text">Overview</div> 
+						<div className="impact-navbar-text">Overview</div> 
 					</A>
 				</NavItem>
 				<NavItem className={active === 'impact' ? 'active' : ''}>
 					<A href={`${ServerIO.PORTAL_ENDPOINT}/#green`}>
-					<div class="impact-navbar-text">Impact</div> 
+					<div className="impact-navbar-text">Impact</div> 
 					</A>
 				</NavItem>
 				<NavItem className={active === 'analysis' ? 'active' : ''}>
 					<A>
-					<div class="impact-navbar-text">Analysis</div> 
+					<div className="impact-navbar-text">Analysis</div> 
 					</A>
 				</NavItem>
 			</Nav>
