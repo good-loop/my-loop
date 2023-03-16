@@ -728,6 +728,7 @@ const Beans = ({data}) => {
 	}
 
 	return regions.map((region) => {
+		if(data[region].impressions === 0) return
 		const impressions = printer.prettyNumber(data[region].impressions, 21) // get a pretty number with no rounding on sigfigs 
 		const countries = data[region].campaignsInRegion
 		const pluralCampaigns = countries > 1 ? "Campaigns" : "Campaign"
