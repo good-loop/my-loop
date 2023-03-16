@@ -589,16 +589,19 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 	Object.keys(impressionData).forEach((country) => {
 		impressionData[country].colour = "hsl(8, 100%, 23%)"
 	})
-
-	// handle list of campaigns & countries inside modal*/
-	let Stuff = (
+	
+	let x = (
 		<>
-		<MapCardContent data={impressionData} />
+			 <MapCardContent data={impressionData}/>
+			 <Beans data={impressionData} />
 		</>
 	)
+
+	// handle list of campaigns & countries inside modal*/
+	
 	return (
 	<GLCard basis={basis}
-		modalContent={() => <Stuff /> }
+		modalContent={() => x}
 		modalClassName="impact-map"
 		modalId="right-half"
 		>
@@ -657,7 +660,6 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 	let regions = [];
 	let labels = [];
 	Object.entries(mapDefs.regions).forEach(([id, props]) => {
-		console.log("res id", id, data)
 		const zeroFill = "hsl(204, 27%, 45%)";
 		
 		// HACK , our labels don't line up nicely with the maps labels, this just brute forces them to work
@@ -716,11 +718,34 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 }
 
 const Beans = ({data}) => {
-	console.log("beans: ", data)
-	let x = data.map((val) => (<p className='fuckoff'>{"beans"}</p>))
-	return (
-		{x}
-	)
+	const regions = Object.keys(data)
+
+	// if data has an unset region, push it to the back so it'll appear at the bottom of the country list
+	let unsetIndex = regions.indexOf("unset")
+	if(unsetIndex !== -1){
+		regions.splice(unsetIndex, 1)
+		regions.push("unset")
+	}
+
+	return regions.map((region) => {
+		const impressions = printer.prettyNumber(data[region].impressions, 21) // get a pretty number with no rounding on sigfigs 
+		const countries = data[region].campaignsInRegion
+		const pluralCampaigns = countries > 1 ? "Campaigns" : "Campaign"
+		const isUnset = region === "unset"
+		return (
+		<div className='country-impression-container'>
+			<div className='country-impression-content'>
+				<div className='flag-cropper'>
+					<img src={"/img/country-flags/"+region.toLowerCase()+".svg"}className='country-flag' alt={("flag for " + region)} />
+				</div>
+				<div className='impression-text'>
+					<p className='impression-header'>{region}</p>
+					<p className='impression-values'>{countries} {pluralCampaigns}{"  |  "}{impressions} Views</p> 
+				</div>
+			</div>
+			{isUnset && <p className='unset-warning'>Geolocation recording was implemented in April 2022. Older ads impressions will not be locatable</p>}
+		</div>)
+})
 }
 
 export default ImpactOverviewPage;
