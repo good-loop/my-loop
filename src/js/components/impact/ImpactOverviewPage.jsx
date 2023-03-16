@@ -573,32 +573,39 @@ const CampaignList = ({campaigns, brand, subBrands, status}) => {
 const CountryViewsGLCard = ({basis, baseObjects}) => {
 	
 	let impressionData = getImpressionsByCampaignByCountry({baseObjects:baseObjects})
-
+	console.log("res impData", impressionData)
 	// handle Total Impressions
 	// if no impressions found, don't show this element
 	if(!impressionData || Object.keys(impressionData).length === 0) return <></>
-	let totalCountries = Object.keys(impressionData).length
-	let impressions = Object.values(impressionData).reduce((sum, val) => sum + val.impressions, 0)
-	impressions = Number(printer.toNSigFigs(impressions, 3).replace(",", "")) // total to 3 sig figs
-	impressions = addAmountSuffixToNumber(impressions) // reduce to units in thousands, millions or billions
-	
-	let countryWord = (totalCountries > 1) ? "COUNTRIES" : "COUNTRY"
+	let totalCountries = Object.keys(impressionData).filter(country => country !== "unset").length
 
+	let impressions = Object.values(impressionData).reduce((sum, val) => sum + val.impressions, 0) // sum impressions over all regions
+	impressions = printer.prettyNumber(impressions, 3).replaceAll(",", "") // round to sig figs
+	impressions = addAmountSuffixToNumber(impressions) // reduce to units in thousands, millions or billions
+
+	let countryWord = (totalCountries > 1) ? "COUNTRIES" : "COUNTRY"
 	
 	// assign colours to data object for map 
 	Object.keys(impressionData).forEach((country) => {
 		impressionData[country].colour = "hsl(8, 100%, 23%)"
 	})
+	
+	let x = (
+		<>
+			 <MapCardContent data={impressionData}/>
+			 <Beans data={impressionData} />
+		</>
+	)
 
 	// handle list of campaigns & countries inside modal*/
-
+	
 	return (
 	<GLCard basis={basis}
-		modalContent={() => <MapCardContent data={impressionData}/> }
+		modalContent={() => x}
 		modalClassName="impact-map"
 		modalId="right-half"
 		>
-		<h3>1 VIEW | 10 COUNTRIES</h3>
+		<h3>{impressions} VIEWS | {totalCountries} {countryWord}</h3>
 	</GLCard>
 	)
 }
@@ -652,12 +659,15 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 
 	let regions = [];
 	let labels = [];
-
 	Object.entries(mapDefs.regions).forEach(([id, props]) => {
 		const zeroFill = "hsl(204, 27%, 45%)";
-		let { impressions = 0, colour = zeroFill } = data?.[id] || {};
-		props = { ...props, fill: colour, stroke: '#fff', strokeWidth: mapDefs.svgAttributes.fontSize / 10 };
+		
+		// HACK , our labels don't line up nicely with the maps labels, this just brute forces them to work
+		// there's no GB label so it shouldn't cause any issues, just it's a stupid fix
+		let { impressions = 0, colour = zeroFill } = (id == "UK") ? data?.["GB"] || {} : data?.[id] || {}
 
+
+		props = { ...props, fill: colour, stroke: '#fff', strokeWidth: mapDefs.svgAttributes.fontSize / 10 };
 		// Don't paint misleading colours on a map we don't have data for
 		if (loading) {
 			props.fill = 'none';
@@ -705,6 +715,37 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 		</div>
 	);
 
+}
+
+const Beans = ({data}) => {
+	const regions = Object.keys(data)
+
+	// if data has an unset region, push it to the back so it'll appear at the bottom of the country list
+	let unsetIndex = regions.indexOf("unset")
+	if(unsetIndex !== -1){
+		regions.splice(unsetIndex, 1)
+		regions.push("unset")
+	}
+
+	return regions.map((region) => {
+		const impressions = printer.prettyNumber(data[region].impressions, 21) // get a pretty number with no rounding on sigfigs 
+		const countries = data[region].campaignsInRegion
+		const pluralCampaigns = countries > 1 ? "Campaigns" : "Campaign"
+		const isUnset = region === "unset"
+		return (
+		<div className='country-impression-container'>
+			<div className='country-impression-content'>
+				<div className='flag-cropper'>
+					<img src={"/img/country-flags/"+region.toLowerCase()+".svg"}className='country-flag' alt={("flag for " + region)} />
+				</div>
+				<div className='impression-text'>
+					<p className='impression-header'>{region}</p>
+					<p className='impression-values'>{countries} {pluralCampaigns}{"  |  "}{impressions} Views</p> 
+				</div>
+			</div>
+			{isUnset && <p className='unset-warning'>Geolocation recording was implemented in April 2022. Older ads impressions will not be locatable</p>}
+		</div>)
+})
 }
 
 export default ImpactOverviewPage;

@@ -314,7 +314,80 @@
                 }
             }
         }
+
+        &.impact-map {
+
+            .map-container {
+                margin-bottom: 3rem; // add a solid gap between map & values
+            }
+
+            .country-impression-container{
+                display: flex;
+                flex-direction: column;
+                place-content: center;
+                margin-bottom: 1rem;
+                font-family: "Montserrat", sans-serif;
+                height: 80px;
+
+                // get image to be a circle
+                .flag-cropper {
+                    width: 40px;
+                    height: 40px;
+                    position: relative;
+                    overflow: hidden;
+                    border-radius: 50%;
+                    margin-right: 3rem;
+                    align-self: center; // verticall center the img
+                }
+
+                // center image witin above circle
+                img {
+                    height: 100%;
+                    width: auto;
+                    position: absolute;
+                    left: 50%;
+                    transform: translateX(-50%);
+                  }
+                
+
+                p {
+                    margin: 0;
+                }
+                
+                // all text for a country
+                .country-impression-content{
+                    display: flex;
+                    flex-direction: row;
+                    width: 100%;
+                    position: relative;
+                    justify-content: center;
+                }
+
+                // only should appear to warn if a country has an unset region
+                .unset-warning {
+                    color: lightgray;
+                    font-size: small;
+                    text-align: center;
+                    place-self: center;
+                    width: 66%;
+                }
+
+                // name of country
+                .impression-header {
+                    font-weight: 600;
+                    text-align: center;
+                }
+
+                .impression-text {
+                    text-align: center;
+                    width: 50%;
+                }
+            }
+
+        }
     }
+
+    
 
 }
 
