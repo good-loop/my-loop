@@ -6,12 +6,14 @@ import GreenProfile from './greendash/GreenProfile';
 import GreenTable from './greendash/GreenTable';
 import StyleBlock from '../../base/components/StyleBlock';
 import GreenMetrics from './greendash/GreenMetrics';
+import GreenRecommendation from './greendash/GreenRecommendation';
 
 const subpages = {
 	table: GreenTable, // NOT implemented yet
 	metrics: GreenMetrics, // the new main dashboard
 	optimisation: GreenOptimisation, // NOT implemented yet
 	profile: GreenProfile, // NOT implemented yet
+	recommendation: GreenRecommendation, // WIP
 };
 
 
