@@ -573,17 +573,17 @@ const CampaignList = ({campaigns, brand, subBrands, status}) => {
 const CountryViewsGLCard = ({basis, baseObjects}) => {
 	
 	let impressionData = getImpressionsByCampaignByCountry({baseObjects:baseObjects})
-
+	console.log("res impData", impressionData)
 	// handle Total Impressions
 	// if no impressions found, don't show this element
 	if(!impressionData || Object.keys(impressionData).length === 0) return <></>
-	let totalCountries = Object.keys(impressionData).length
-	let impressions = Object.values(impressionData).reduce((sum, val) => sum + val.impressions, 0)
-	impressions = Number(printer.toNSigFigs(impressions, 3).replace(",", "")) // total to 3 sig figs
-	impressions = addAmountSuffixToNumber(impressions) // reduce to units in thousands, millions or billions
-	
-	let countryWord = (totalCountries > 1) ? "COUNTRIES" : "COUNTRY"
+	let totalCountries = Object.keys(impressionData).filter(country => country !== "unset").length
 
+	let impressions = Object.values(impressionData).reduce((sum, val) => sum + val.impressions, 0) // sum impressions over all regions
+	impressions = printer.prettyNumber(impressions, 3).replaceAll(",", "") // round to sig figs
+	impressions = addAmountSuffixToNumber(impressions) // reduce to units in thousands, millions or billions
+
+	let countryWord = (totalCountries > 1) ? "COUNTRIES" : "COUNTRY"
 	
 	// assign colours to data object for map 
 	Object.keys(impressionData).forEach((country) => {
@@ -591,14 +591,18 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 	})
 
 	// handle list of campaigns & countries inside modal*/
-
+	let Stuff = (
+		<>
+		<MapCardContent data={impressionData} />
+		</>
+	)
 	return (
 	<GLCard basis={basis}
-		modalContent={() => <MapCardContent data={impressionData}/> }
+		modalContent={() => <Stuff /> }
 		modalClassName="impact-map"
 		modalId="right-half"
 		>
-		<h3>1 VIEW | 10 COUNTRIES</h3>
+		<h3>{impressions} VIEWS | {totalCountries} {countryWord}</h3>
 	</GLCard>
 	)
 }
@@ -652,12 +656,16 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 
 	let regions = [];
 	let labels = [];
-
 	Object.entries(mapDefs.regions).forEach(([id, props]) => {
+		console.log("res id", id, data)
 		const zeroFill = "hsl(204, 27%, 45%)";
-		let { impressions = 0, colour = zeroFill } = data?.[id] || {};
-		props = { ...props, fill: colour, stroke: '#fff', strokeWidth: mapDefs.svgAttributes.fontSize / 10 };
+		
+		// HACK , our labels don't line up nicely with the maps labels, this just brute forces them to work
+		// there's no GB label so it shouldn't cause any issues, just it's a stupid fix
+		let { impressions = 0, colour = zeroFill } = (id == "UK") ? data?.["GB"] || {} : data?.[id] || {}
 
+
+		props = { ...props, fill: colour, stroke: '#fff', strokeWidth: mapDefs.svgAttributes.fontSize / 10 };
 		// Don't paint misleading colours on a map we don't have data for
 		if (loading) {
 			props.fill = 'none';
@@ -705,6 +713,14 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 		</div>
 	);
 
+}
+
+const Beans = ({data}) => {
+	console.log("beans: ", data)
+	let x = data.map((val) => (<p className='fuckoff'>{"beans"}</p>))
+	return (
+		{x}
+	)
 }
 
 export default ImpactOverviewPage;

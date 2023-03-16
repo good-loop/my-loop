@@ -96,45 +96,40 @@ export const getImpressionsByCampaignByCountry = ({ baseObjects, start = '', end
 	console.log("res campaigns: ", searchData)
 	let campaignImpsByCountry = searchData.map(country => Campaign.viewcountByCountry({campaign: country, status: KStatus.PUBLISHED}))
 
-	console.log("res fin: ", campaignImpsByCountry)
 
 	if(!campaignImpsByCountry || campaignImpsByCountry.length === 0) return []
 
-
-
-	// for every campaign we can search through...
+	// for every campaign we can search through, find the viewcount for it's target country & unset countries
 	let campaignViews = campaignImpsByCountry.reduce((regionMap, regions) => {
-
-
-		// for each campaign, find the data for the country the campaign was aimed at 
 		// ASSUMPTION: 	afaik, a campaign will have a country it's aimed at that decision is not handled by us.
 		// 				as a result, we don't access to that info. Instead, guess by what country has the most views,
 		//				this is usually higher by several orders of magnitude so it's *usually* a safe bet.
 
 		if(!regions || regions.length == 0) return regionMap // handle campaign still loading and campaigns with no results 
-		
-		let targetRegion = Object.keys(regions)[0]
-		if(targetRegion !== "unset" && Object.keys(regions).includes("unset")){
-			// handle unset vals
-		}
-		else {
 
-		}
+		let campaignRegions = Object.keys(regions)	// all regions this campaign was in
+		let currentRegion = campaignRegions.find((val) => val !== "unset") // set country with most impressions
+		let targetedRegions = Object.keys(regionMap) // all regions already seen (used if multiple campaigns are being read)
 
-		let targetedCountry = regions[0]
-		return {}
-		regions.forEach((region) => {
-		// add the countries data to the map of regions (needed if current object of focus has more than 1 campaign)
-		if(Object.keys(regionMap).includes(region.key)){
-			regionMap[region.key].impressions += region.count
-			regionMap[region.key].campaignsInRegion += 1
-		} else {
-			regionMap[region.key] = {impressions: region.count, campaignsInRegion: 1}
-		}})
+		if(currentRegion){
+			if(targetedRegions.includes(currentRegion)){
+				regionMap[currentRegion].impressions += regions[currentRegion];
+				regionMap[currentRegion].campaignsInRegion += 1;
+			} else {
+				regionMap[currentRegion] = {impressions: regions[currentRegion], campaignsInRegion: 1}
+			}
+		}		
+
+		// also track unset, needed to describe discrepency in campaigns used before we stored impression locations
+		if (campaignRegions.includes("unset")){
+			regionMap["unset"].impressions += regions["unset"];
+			regionMap["unset"].campaignsInRegion += 1;
+		}
 
 		return regionMap
 	},
-	{})
+		{unset: {impressions: 0, campaignsInRegion: 0}}
+	)
 
 	return campaignViews;
 };
