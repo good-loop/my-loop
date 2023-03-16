@@ -3,10 +3,10 @@ import React from 'react';
 import Money from '../base/data/Money';
 import Ticker from './Ticker';
 
-// snapshot from Nov 2022 https://good-loop.monday.com/boards/2603585504/pulses/3584293596/posts/1836008291
-const amount = new Money("£5867636.62"); // wahoo!
-const startTime = new Date("2022-11-28");
-const rate = 10744.24 / (60*60*24); // £s per second
+// snapshot from March 2023 - 2146208.31 donated in total of 2022 & 6059167.69 raised in total so far
+const amount = new Money("£6059167.69"); // wahoo!
+const startTime = new Date("2022-12-31");
+const rate = 2146208.31 / (60*60*24*365); // £s per second
 
 /**
  * How much money has Good-Loop raised?
