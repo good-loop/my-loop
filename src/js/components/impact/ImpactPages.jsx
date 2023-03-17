@@ -121,8 +121,23 @@ const fetchBaseObjects = async ({itemId, itemType, status}) => {
 	if (!subCampaigns) subCampaigns = [];
 	if (!impactDebits) impactDebits = [];
 
+	// Mark which campaigns and brands have any donations, and which don't
+	impactDebits.forEach(debit => {
+		const value = Money.value(debit.impact.amount);
+		if (debit.campaign) {
+			subCampaigns.forEach(subCampaign => {
+				if (subCampaign.id === debit.campaign) subCampaign.hasDonation = value > 0;
+			});
+		}
+		if (debit.vertiser) {
+			subBrands.forEach(subBrand => {
+				if (subBrand.id === debit.vertiser) subBrand.hasDonation = value > 0;
+			});
+		}
+	});
+
 	// Fetch charity objects from debits
-	const charityIds = impactDebits.map(debit => debit?.impact?.charity).filter(x=>x);
+	const charityIds = impactDebits.map(debit => debit.impact.charity).filter(x=>x);
 	
 	if (charityIds.length) {
 		let charitySq = SearchQuery.setPropOr(null, "id", charityIds);
@@ -206,7 +221,7 @@ const ImpactPage = () => {
 
 	// if not logged in OR impact hasn't been chosen yet...
 	if(!Login.isLoggedIn() || !impactChosen) {
-		return <ImpactLoginCard choice={impactChosen} setChoice={setImpactChosen} masterBrand={TEST_BRAND_OBJ}/>
+		return <ImpactLoginCard choice={impactChosen} setChoice={setImpactChosen} masterBrand={masterBrand || brand}/>
 	}
 
 	return (

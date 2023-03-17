@@ -24,14 +24,10 @@ const ImpactFilterOptions = ({size, masterBrand, brand, campaign, setForcedReloa
 
 	console.log(masterBrand, brand, campaign)
 
-	const [curMaster, setCurMaster] = useState(masterBrand ? masterBrand : brand)
-	const [curSubBrand, setCurSubBrand] = useState((masterBrand || campaign) ? brand : null)
-	const [curCampaign, setCurCampaign] = useState((brand && campaign) ? campaign : null)
-
 
 	if(size == "wide") return (		
 		<div className='flex-row impactOverview-filters-and-account' id={"impactOverview-filters-and-account-"+size}>
-			<ImpactBrandFilters masterBrand={curMaster} curSubBrand={curSubBrand} setCurSubBrand={setCurSubBrand} curCampaign={curCampaign} setCurCampaign={setCurCampaign} setForcedReload={setForcedReload} size={size} dropdown curPage={curPage}/>
+			<ImpactBrandFilters masterBrand={masterBrand} brand={brand} campaign={campaign} setForcedReload={setForcedReload} size={size} dropdown curPage={curPage}/>
 			<ImpactDateFilter setForcedReload={setForcedReload} />
 			<ImpactAccountButton curMaster={masterBrand} curSubBrand={brand} curCampaign={campaign} />
 		</div>
@@ -39,7 +35,7 @@ const ImpactFilterOptions = ({size, masterBrand, brand, campaign, setForcedReloa
 
 	if(size == "thin") return (		
 		<div className='flex-row impactOverview-filters-and-account' id={"impactOverview-filters-and-account-"+size}>
-			<ImpactBrandFilters masterBrand={curMaster} curSubBrand={curSubBrand} setCurSubBrand={setCurSubBrand} curCampaign={curCampaign} setCurCampaign={setCurCampaign} setForcedReload={setForcedReload} size={size} curPage={curPage}/>
+			<ImpactBrandFilters masterBrand={masterBrand} brand={brand} campaign={campaign} setForcedReload={setForcedReload} size={size} dropdown curPage={curPage}/>
 			<ImpactAccountButton curMaster={masterBrand} curSubBrand={brand} curCampaign={campaign} noShare/>
 		</div>
 	)
