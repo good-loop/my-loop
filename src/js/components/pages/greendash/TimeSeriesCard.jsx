@@ -144,6 +144,7 @@ const TimeSeriesCard = ({ period, data: timeTable, per1000, noData }) => {
 	useEffect(() => {
 		if (!yessy(timeTable)) return;
 
+		// TODO refactor to use the timeSeriesChartFromKeyValue function in NewChartWidget
 		// Omit year in labels if the period doesn't span a year boundary
 		const labelFn = (period.start.getYear() === period.end.getYear()) ? (
 			utc => printDateShort(new Date(utc))
