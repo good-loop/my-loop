@@ -202,9 +202,6 @@ const getFilterItems = async ({ filterMode, setFilterItems }) => {
  * This is set/stored in the url (so links can be shared)
  *
  * Refactor to use PropControlDataItem??
- *
- * @param {Object} obj
- * @param {boolean} obj.pseudo
  */
 const GreenDashboardFilters = ({ pseudoUser }) => {
 	const [period, setPeriod] = useState(initPeriod());
