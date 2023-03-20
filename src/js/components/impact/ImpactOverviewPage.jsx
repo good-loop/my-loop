@@ -726,7 +726,7 @@ const Beans = ({data}) => {
 		regions.splice(unsetIndex, 1)
 		regions.push("unset")
 	}
-
+	
 	return regions.map((region) => {
 		const impressions = printer.prettyNumber(data[region].impressions, 21) // get a pretty number with no rounding on sigfigs 
 		const countries = data[region].campaignsInRegion
