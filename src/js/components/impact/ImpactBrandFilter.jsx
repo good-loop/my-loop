@@ -18,10 +18,35 @@ import { retrurnProfile } from '../pages/TabsForGoodSettings';
 import { assert } from '../../base/utils/assert';
 import { space } from '../../base/utils/miscutils';
 import Advertiser from '../../base/data/Advertiser';
+import Campaign from '../../base/data/Campaign';
+import List from '../../base/data/List';
 import { unstable_renderSubtreeIntoContainer } from 'react-dom';
 import { getCountryImpressionsByCampaign } from './impactdata';
 
 const A = C.A;
+
+/**
+ * Unlike fetchBaseObjects which looks at the data only needed for this page, this fetches all associated data
+ * @param {*} masterBrand 
+ * @param {*} brand 
+ * @param {*} campaign 
+ */
+const fetchTopLevelObjects = (masterBrand, brand, campaign) => {
+
+	const fetchFn = async () => {
+		const allImpactDebits = List.hits(await Advertiser.getImpactDebits(masterBrand || brand).promise);
+		const allBrands = [masterBrand, brand, ...List.hits(await Advertiser.getChildren(brand).promise)].filter(x=>x);
+		const allCampaigns = List.hits(await Campaign.fetchForAdvertisers(allBrands.map(b => b.id)).promise);
+
+		return {allImpactDebits, allBrands, allCampaigns};
+	}
+
+	return DataStore.fetch(['misc','impactTopLevelObjects',status,'all',(masterBrand || brand).id], () => {
+		return fetchFn();
+	});
+
+}
+
 
 /**
  * container for breadcrumb filter 
@@ -97,9 +122,6 @@ const ImpactBrandFilters = ({masterBrand, brand, campaign, setForcedReload, size
 			</div>
 		</>;
    }
-
-	// So we can filter out anything with no donations
-	const allImpactDebits = Advertiser.getImpactDebits(masterBrand || brand);
 
 	/**
 	*	ListItem of Brands for use in a ListLoad
