@@ -31,11 +31,12 @@ const A = C.A;
  * @param {*} brand 
  * @param {*} campaign 
  */
-const fetchTopLevelObjects = (masterBrand, brand, campaign) => {
+const fetchTopLevelObjects = ({masterBrand, brand, campaign, status=KStatus.PUBLISHED}) => {
 
 	const fetchFn = async () => {
-		const allImpactDebits = List.hits(await Advertiser.getImpactDebits(masterBrand || brand).promise);
-		const allBrands = [masterBrand, brand, ...List.hits(await Advertiser.getChildren(brand).promise)].filter(x=>x);
+		const allImpactDebits = List.hits(await Advertiser.getImpactDebits({vertiser: masterBrand || brand, status}).promise);
+		const childBrands = brand ? List.hits(await Advertiser.getChildren(brand.id).promise) : [];
+		const allBrands = [masterBrand, brand, ...childBrands].filter(x=>x);
 		const allCampaigns = List.hits(await Campaign.fetchForAdvertisers(allBrands.map(b => b.id)).promise);
 
 		return {allImpactDebits, allBrands, allCampaigns};
@@ -54,10 +55,35 @@ const fetchTopLevelObjects = (masterBrand, brand, campaign) => {
  * @param {object} masterBrand master brand object, eg "Nestle"
  * @returns {JSX} breadcrumb trail of brand/campaign filters that can open up into a modal  for other filters
  */
-const ImpactBrandFilters = ({masterBrand, brand, campaign, setForcedReload, size, dropdown, curPage}) => {
+const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, setForcedReload, size, dropdown, curPage}) => {
 	
 
 	const [filtersOpen, setFiltersOpen] = useState(false)
+	
+	if (loading) return null;
+	const pvTopLevelObjs = fetchTopLevelObjects({masterBrand, brand, campaign, status});
+	if (!pvTopLevelObjs.resolved) return null;
+	if (pvTopLevelObjs.error) {
+		console.error(pvTopLevelObjs.error);
+		return <h1>Error??</h1>; // TODO proper handling
+	}
+
+	const {allImpactDebits, allBrands, allCampaigns} = pvTopLevelObjs.value;
+
+	// Determine which brands/campaigns have donations to show, and which to hide
+	const showAll = DataStore.getUrlValue("showAll");
+	const brandsWithDebits = [];
+	const campaignsWithDebits = [];
+
+	allImpactDebits.forEach(debit => {
+		if (debit.vertiser && !brandsWithDebits.includes(debit.vertiser)) brandsWithDebits.push(debit.vertiser);
+		if (debit.campaign && !campaignsWithDebits.includes(debit.campaign)) campaignsWithDebits.push(debit.campaign);
+	});
+
+	const topBrand = masterBrand || brand; // convert data from context-specific to universal
+
+	const alphabetSort = (item1, item2) => (item1.name || item1.id).localeCompare(item2.name || item2.id);
+	const allSubBrands = allBrands.filter(b => topBrand.id !== b.id).sort((a, b) => alphabetSort(a, b));
 
 	/**
 	 * after user selects the brand / campaign they want to filter, update the breadcrumb & url slugs to reflect the choice
@@ -100,9 +126,9 @@ const ImpactBrandFilters = ({masterBrand, brand, campaign, setForcedReload, size
 	*		- if item doesn't have branding (logo/thumbnail), use a placeholder thumbrail
 	*		- parentItem is expected (will be parent master/brand of campaign)
 	*/
-	const CampaignListItem = ({ item, nameFn, button, parentItem}) => {
+	const CampaignListItem = ({ item, parentItem }) => {
 		const id = getId(item);
-		let name = nameFn ? nameFn(item, id) : item.name || item.text || id || '';
+		let name = item.name || item.text || id || '';
 		if (name.length > 280) name = name.slice(0, 280);
 		
 		let thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='impact-link-placeholder-thumbnail' />
@@ -117,7 +143,6 @@ const ImpactBrandFilters = ({masterBrand, brand, campaign, setForcedReload, size
 							{name}
 						</div>
 					</div>
-					{button || ''}
 				</div>
 			</div>
 		</>;
@@ -129,11 +154,15 @@ const ImpactBrandFilters = ({masterBrand, brand, campaign, setForcedReload, size
 	*		- if item doesn't have branding (logo/thumbnail), use a placeholder thumbrail
 	*		- if Brand has campaigns, nest a ListLoad of those campaigns within a dropdown inside the Brand ListItem 
 	*/
-	const FilterListItem = ({ item, nameFn, button, isMaster=false}) => {
+	const FilterListItem = ({ item, isMaster=false}) => {
 		const id = getId(item);
-		let name = nameFn ? nameFn(item, id) : item.name || item.text || id || '';
+		let name = item.name || item.text || id || '';
 		if (name.length > 260) name = name.slice(0, 260);
+
 		if(isMaster) name += " - All Brands"
+		// Hide any brands with no money that arent master or selected
+		else if (!showAll && !brandsWithDebits.includes(item.id) && brand.id !== item.id) return null;
+		
 		const status = item.status || "";
 
 		// is the current brands campaign dropdown expanded or closed?
@@ -145,23 +174,28 @@ const ImpactBrandFilters = ({masterBrand, brand, campaign, setForcedReload, size
 
 		let q = SearchQuery.setProp(null, "vertiser", id);
 		
+		let myCampaigns = allCampaigns.filter(c => c.vertiser === item.id).sort((a,b) => alphabetSort(a,b));
+		// If we have only 1 campaign, dont bother hiding it as we use it for default view
+		if (myCampaigns.length > 1 && !showAll) myCampaigns = myCampaigns.filter(c => campaignsWithDebits.includes(c) || campaign?.id === c.id)
+
 		// brand item with dropdowns into campaigns
 		const campaignsListItem = (
 		<div id={"campaigns-"+item.id} className={ + (!dropdown || isDropdownOpen) ? "open" : "closed"}>
-			<ListLoad hideTotal status={status}
+			{/*<ListLoad hideTotal status={status}
 				type={C.TYPES.Campaign}
 				q={q.query}
 				unwrapped
 				itemClassName={campaignClasses}
 				ListItem={(itemProps) => <CampaignListItem {...itemProps} parentItem={item}/>}
-				 />
+				/>*/}
+			{myCampaigns.map(c => <CampaignListItem item={c} parentItem={item} forceShow={myCampaigns.length === 1}/>)}
 		</div>)
 
 		// get brands logo or get placeholder
 		const thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='impact-link-placeholder-thumbnail' />
 		
 		// dropdown toggle of above campaign ListLoad
-		button = <button className={space('dropdown-button', (isDropdownOpen && "open"))} onClick={(event) => {event.preventDefault(); setIsDropdownOpen(!isDropdownOpen)}} />
+		let button = <button className={space('dropdown-button', (isDropdownOpen && "open"))} onClick={(event) => {event.preventDefault(); setIsDropdownOpen(!isDropdownOpen)}} />
 	
 		// clicking the brands dropdown button to reveal its campaings would cause a state change, this stops that 
 		const brandItemOnClick = (event) => {
@@ -178,7 +212,7 @@ const ImpactBrandFilters = ({masterBrand, brand, campaign, setForcedReload, size
 						{thumbnail}
 						<div className={space("name", (isSelected && "selected-filter"))}>{name}</div>
 					</div>
-					{dropdown && button || ''}
+					{dropdown && myCampaigns.length > 0 && button || ''}
 				</div>
 				{campaignsListItem}
 			</div>
@@ -200,17 +234,20 @@ const ImpactBrandFilters = ({masterBrand, brand, campaign, setForcedReload, size
 
 		let modalContent = () => (
 			<div className='' id="filter-modal-container">
-				{/* master brand & its campaigns */}
+				{/* master brand & its campaigns
 				<ListLoad status={KStatus.PUBLISHED} hideTotal type={C.TYPES.Advertiser}
 					unwrapped
 					q={SearchQuery.setProp(null, "id", vertiser).query} 
 					ListItem={(itemProps) => <FilterListItem {...itemProps} isMaster/>} itemClassName={classes}/>
 
-				{/* sub brands & their campaigns */}
+				{/* sub brands & their campaigns
 				<ListLoad status={KStatus.PUBLISHED} hideTotal type={C.TYPES.Advertiser}
 					unwrapped
             		q={SearchQuery.setProp(null, "parentId", vertiser).query} 
 					ListItem={FilterListItem} itemClassName={classes}/>
+				*/}
+				<FilterListItem item={topBrand} isMaster />
+				{allSubBrands.map(b => <FilterListItem item={b}/>)}
 			</div>
 		)
 		openAndPopulateModal({id:"left-half", content:modalContent, prioritized:true, headerClassName:"red-top-border noClose noPadding", className:"impact-brand-modal"})
