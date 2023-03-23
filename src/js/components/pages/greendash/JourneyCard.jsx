@@ -11,8 +11,7 @@ import { pivotDataLogToRows } from '../../../base/plumbing/DataLog';
 import { A } from '../../../base/plumbing/glrouter';
 import { encURI } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
-import { getOffsetsByType } from './emissionscalc';
-import { getCarbon } from './emissionscalcTs';
+import { getCarbon, getOffsetsByType } from './emissionscalcTs';
 import { GreenCard, GreenCardAbout, Mass } from './dashutils';
 import { getDataItem } from '../../../base/plumbing/Crud';
 import KStatus from '../../../base/data/KStatus';
@@ -154,11 +153,13 @@ const JourneyCard = ({ campaigns, baseFilters, period, emptyTable }) => {
 
 	let offsets = {}; // HACK will include carbonTotal etc too
 	offsetTypes.forEach((ot) => (offsets[ot + 'Total'] = 0));
+	let allOffsets = []
 	// TODO could be more efficient -- load ImpactDebits rather than loop over campaigns
 	campaigns.forEach((campaign) => {
 		const offsets4type = getOffsetsByType({ campaign, period });
 		offsetTypes.forEach((ot) => (offsets[ot + 'Total'] += offsets4type[ot + 'Total'] || 0));
 		if (offsets4type.isLoading) isLoading = true;
+		allOffsets.push(offsets4type.allFixedOffsets);
 	});
 
 	// Which impact splash page to link to?

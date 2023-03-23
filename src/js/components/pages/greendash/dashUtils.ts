@@ -1,12 +1,16 @@
 import DataStore from '../../../base/plumbing/DataStore';
 import { periodFromName } from './dashutils';
 
+
+export type Period = {start:Date, end:Date};
+
 /**
  * @param keys an array of params you want to get from url
  */
 export const paramsFromUrl = (keys: string[]): Record<string, any> => {
 	const results: Record<string, any> = {};
-	for (const str of keys) {
+	for(let ki=0; ki<keys.length; ki++) {
+		const str = keys[ki];
 		
 		if (str.toString().toLowerCase() === 'period') {
 			const periodName = DataStore.getUrlValue(str);
