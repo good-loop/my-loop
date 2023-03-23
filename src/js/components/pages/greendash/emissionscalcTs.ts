@@ -19,6 +19,7 @@ import { assert } from '../../../base/utils/assert';
 import ImpactDebit from '../../../base/data/ImpactDebit';
 import SearchQuery from '../../../base/searchquery';
 import { Period } from './dashUtils';
+import { getDataLogData } from '../../../base/plumbing/DataLog';
 /**
  * An array of Records
  */
@@ -65,6 +66,8 @@ export const getCarbon = ({
 		breakdown,
 		...rest,
 	};
+
+	// maybe use getDataLogData()??
 
 	return DataStore.fetch(
 		['misc', 'DataLog', 'green', md5(JSON.stringify(data))],
@@ -407,6 +410,13 @@ const getFixedOffsetsForCampaign = (campaign:Campaign, period: Period) => {
 		if (dynamic.length !== 1) {
 			console.warn("Multiple dynamic offsets!", campaign, type, dynamic);
 		}
+		let doffset = dynamic[0].impact;
+		if ( ! fixed.length) {
+			console.warn("mixed but not for type "+type, fixedImpactDebits, "dynamic", dynamic);
+			let do0 = calculateDynamicOffset(campaign, doffset, period);
+			fixedOffsets.push(do0);
+			continue;
+		}
 		// calculate for gaps
 		// ASSUME the fixed patches are a continuous strip, and the dynamic are only start/end pieces
 		// ASSUME fixed offsets have start/end dates set (so startGap and endGap are well defined)
@@ -414,9 +424,12 @@ const getFixedOffsetsForCampaign = (campaign:Campaign, period: Period) => {
 		let fstart = Math.min(...starts);
 		let ends = fixed.map(impd => impd.end && new Date(impd.end).getTime()).filter(x => x);
 		let fend = Math.max(...ends);
+		if ( ! Number.isFinite(fstart) || ! Number.isFinite(fend)) {
+			console.error("Invalid fixed ImpactDebit start/end "+fstart+" "+fend+" impact.name:"+type+" campaign:"+campaign.id);
+			return false;
+		}
 		let startGap = {start:period.start, end:new Date(fstart)};
-		let endGap = {start:new Date(fend), end:period.end};
-		let doffset = dynamic[0].impact;
+		let endGap = {start:new Date(fend), end:period.end};		
 		let do1 = calculateDynamicOffset(campaign, doffset, startGap);
 		let do2 = calculateDynamicOffset(campaign, doffset, endGap);
 		fixedOffsets.push(do1, do2);
