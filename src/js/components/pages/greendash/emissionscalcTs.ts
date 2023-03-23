@@ -336,7 +336,7 @@ export const getOffsetsByType = ({ campaign, status, period }) => {
 	// Is this a master campaign?
 	let pvAllCampaigns = Campaign.pvSubCampaigns({ campaign, status });
 	let isLoading = ! pvAllCampaigns.resolved;	
-	let allFixedOffsets = [];
+	let allFixedOffsets = [] as Impact[];
 	if (pvAllCampaigns.value) {
 		// for each campaign:
 		// - collect offsets
