@@ -2,16 +2,23 @@
  * Rewrite functions from emissionscalc.js into typescript.
  */
 
-import { sum } from '../../../base/utils/miscutils';
+import _ from 'lodash';
+import { sum, uniq } from '../../../base/utils/miscutils';
 import DataStore from '../../../base/plumbing/DataStore';
 import ServerIO from '../../../plumbing/ServerIO';
 import { getDataList } from '../../../base/plumbing/Crud';
 import C from '../../../C';
 import KStatus from '../../../base/data/KStatus';
 import List from '../../../base/data/List';
+import Campaign from '../../../base/data/Campaign';
 import md5 from 'md5';
 import PromiseValue from '../../../base/promise-value';
-
+import Impact from '../../../base/data/Impact';
+import { periodFromUrl } from './dashutils';
+import { assert } from '../../../base/utils/assert';
+import ImpactDebit from '../../../base/data/ImpactDebit';
+import SearchQuery from '../../../base/searchquery';
+import { Period } from './dashUtils';
 /**
  * An array of Records
  */
@@ -62,7 +69,7 @@ export const getCarbon = ({
 	return DataStore.fetch(
 		['misc', 'DataLog', 'green', md5(JSON.stringify(data))],
 		() => {
-			return ServerIO.load((endpoint ? endpoint : ServerIO.DATALOG_ENDPOINT), { data, swallow: true });
+			return ServerIO.load((endpoint || ServerIO.DATALOG_ENDPOINT), { data, swallow: true });
 		},
 		null,
 		null
@@ -161,8 +168,8 @@ export const getBreakdownByWithCount = (buckets: GreenBuckets, keyNamesToSum: st
  * Simply filter out insignificant data to clean up dashboard view
  * @param minFraction percentage to filter
  */
-export const filterByCount = (data: BreakdownByX, minFraction: number = 0.05) => {
-	let total: number = 0;
+export const filterByCount = (data: BreakdownByX, minFraction = 0.05) => {
+	let total = 0;
 	Object.values(data).forEach((val) => (total += val.count));
 	let outputData: BreakdownByX = {};
 	Object.entries(data).forEach(([k, v]) => {
@@ -269,4 +276,154 @@ export const emissionsPerImpressions = (buckets: GreenBuckets, filterLessThan: n
 			return newBkt;
 		})
 		.filter((obj) => Object.keys(obj).length > 0);
+};
+
+/**
+ *
+ * @returns {?Impact} null if loading data
+ */
+export const calculateDynamicOffset = (campaign: Campaign, offset:Impact, period: Period) => {
+	Campaign.assIsa(campaign);
+	if (!Impact.isDynamic(offset)) return offset; // paranoia
+
+	// We either want carbon emissions or impressions count for this campaign/period - this gets both
+	if (!period) period = periodFromUrl();
+	let pvCarbonData = getCarbon({
+		q: SearchQuery.setProp(null, 'campaign', campaign.id).query,
+		start: period?.start.toISOString() || '2022-01-01',
+		end: period?.end.toISOString() || 'now',
+		breakdown: ['total{"emissions":"sum"}'],
+	});
+
+	if (!pvCarbonData.value) return null;
+
+	let n;
+	// HACK: carbon offset?
+	if (Impact.isCarbonOffset(offset)) {
+		n = getSumColumn(pvCarbonData.value.by_total.buckets, 'co2');
+	} else {
+		// check it is per impression
+		if (offset.input) assert(offset.input.substring(0, 'impression'.length) === 'impression', offset);
+		// Impression count * output-per-impression
+		n = pvCarbonData.value.allCount * offset.rate;
+	}
+	// copy and set n
+	let snapshotOffset = new Impact(offset);
+	snapshotOffset.n = n;
+	delete snapshotOffset.rate;
+	delete snapshotOffset.input;
+	delete snapshotOffset.dynamic;
+	snapshotOffset.campaign = campaign.id;
+	snapshotOffset.src = offset; // DEBUG pass on the original
+	snapshotOffset.start = period?.start;
+	snapshotOffset.end = period?.end;
+	return snapshotOffset;
+};
+
+
+type OffSets4Type = {
+	isLoading:boolean, carbon:Impact[], carbonTotal:number, trees:Impact[], treesTotal:number, coral:Impact[], 
+	pvAllCampaigns:PromiseValue, allFixedOffsets:Impact[]
+};
+
+/**
+ * @param {Object} p
+ * @param {!Campaign} p.campaign If `campaign` is a master, then this function WILL look up sub-campaigns and include them.
+ * @param {?Period} p.period {start, end}
+ * @returns {OffSets4Type}
+ */
+export const getOffsetsByType = ({ campaign, status, period }) => {
+	// Is this a master campaign?
+	let pvAllCampaigns = Campaign.pvSubCampaigns({ campaign, status });
+	let isLoading = ! pvAllCampaigns.resolved;	
+	let allFixedOffsets = [];
+	if (pvAllCampaigns.value) {
+		// for each campaign:
+		// - collect offsets
+		// - Fixed or dynamic offsets? If dynamic, get impressions
+		// - future TODO did it fund eco charities? include those here		
+		let fixedOffsets = List.hits(pvAllCampaigns.value).map(c => getFixedOffsetsForCampaign(c, period));
+		if (fixedOffsets.find(x => ! x)) {
+			isLoading = true;
+		}
+		allFixedOffsets = _.flatten(fixedOffsets.filter(x => x));
+	}
+	const offsets4type = {} as OffSets4Type;
+	// HACK - return this too (why??)
+	offsets4type.pvAllCampaigns = pvAllCampaigns;
+	offsets4type.allFixedOffsets = allFixedOffsets; // DEBUG
+	// kgs of CO2
+	let carbonOffsets = allFixedOffsets.filter(Impact.isCarbonOffset);
+	let co2sDEBUG = carbonOffsets.map(co => co.n);
+	let co2 = carbonOffsets.reduce((x, offset) => x + offset.n, 0);
+	offsets4type.carbon = carbonOffsets;
+	offsets4type.carbonTotal = co2;
+
+	// Trees
+	offsets4type.trees = allFixedOffsets.filter((o) => o?.name?.substring(0, 4) === 'tree');
+	offsets4type.treesTotal = offsets4type.trees.reduce((x, offset) => x + offset.n, 0);
+
+	// coral
+	offsets4type.coral = allFixedOffsets.filter((o) => o?.name?.substring(0, 4) === 'coral');
+	offsets4type.coralTotal = offsets4type.coral.reduce((x, offset) => x + offset.n, 0);
+
+	offsets4type.isLoading = isLoading;
+	console.log("offsets4type",offsets4type,"Campaign", campaign,"period",period);
+	return offsets4type;
+};
+
+/**
+ * 
+ * @param campaign 
+ * @returns false if loading
+ */
+const getFixedOffsetsForCampaign = (campaign:Campaign, period: Period) => {
+	let pvImpactDebitsList = Campaign.getImpactDebits({campaign, status:KStatus.PUBLISHED});
+	if ( ! pvImpactDebitsList.value) {
+		return false;
+	}
+	let impactDebits = List.hits(pvImpactDebitsList.value) as ImpactDebit[];
+	// Do we have mixed dynamic/fixed impacts?
+	const dynamicImpactDebits = impactDebits.filter(impd => Impact.isDynamic(impd.impact));
+	const fixedImpactDebits = impactDebits.filter(impd => ! Impact.isDynamic(impd.impact));			
+	if ( ! dynamicImpactDebits.length || ! fixedImpactDebits.length) {
+			// no mix = simples
+		let offsets = impactDebits.map(imp => imp.impact);
+		let fixedOffsets = offsets.map((offset) =>
+			Impact.isDynamic(offset) ? calculateDynamicOffset(campaign, offset, period) : offset
+		);
+		return fixedOffsets;
+	}
+	// What gaps do we have in the fixed impacts?
+	let fixedOffsets = [] as Impact[];
+	// ...type by type
+	let types = uniq(impactDebits.map(impd => impd.impact?.name));
+	for(let ti=0; ti<types.length; ti++) {
+		let type = types[ti];
+		let fixed = fixedImpactDebits.filter(impd => impd.impact.name === type);
+		fixedOffsets.push(...fixed.map(impd => Object.assign({start:impd.start, end:impd.end}, impd.impact))); // NB: add start/end for debug
+		let dynamic = dynamicImpactDebits.filter(impd => impd.impact.name === type);
+		if ( ! dynamic.length) continue;
+		if (dynamic.length !== 1) {
+			console.warn("Multiple dynamic offsets!", campaign, type, dynamic);
+		}
+		// calculate for gaps
+		// ASSUME the fixed patches are a continuous strip, and the dynamic are only start/end pieces
+		// ASSUME fixed offsets have start/end dates set (so startGap and endGap are well defined)
+		let starts = fixed.map(impd => impd.start && new Date(impd.start).getTime()).filter(x => x);
+		let fstart = Math.min(...starts);
+		let ends = fixed.map(impd => impd.end && new Date(impd.end).getTime()).filter(x => x);
+		let fend = Math.max(...ends);
+		let startGap = {start:period.start, end:new Date(fstart)};
+		let endGap = {start:new Date(fend), end:period.end};
+		let doffset = dynamic[0].impact;
+		let do1 = calculateDynamicOffset(campaign, doffset, startGap);
+		let do2 = calculateDynamicOffset(campaign, doffset, endGap);
+		fixedOffsets.push(do1, do2);
+	}
+	if (fixedOffsets.filter(x => ! x).length) {
+		console.log("loading carbon data", fixedOffsets);
+		return false; // still loading data
+	}
+	return fixedOffsets;
 };
