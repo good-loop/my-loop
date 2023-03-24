@@ -229,9 +229,9 @@ const ImpactPage = () => {
 		<div className="navbars-overlay">
 			<animated.div className='impact-navbar-flow-overlay' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}></animated.div>
 			<ImpactLoadingScreen baseObj={pvBaseObjects} forcedReload={forcedReload} setForcedReload={setForcedReload}/>
-			{pvBaseObjects.resolved && <ImpactFilterOptions size="thin" setIsNavbarOpen={setIsNavbarOpen} masterBrand={masterBrand} brand={brand} campaign={campaign} setForcedReload={setForcedReload} curPage={page}/>}  {/*mobile horizontal filters topbar*/}
+			<ImpactFilterOptions size="thin" setIsNavbarOpen={setIsNavbarOpen} pvBaseObjects={pvBaseObjects} setForcedReload={setForcedReload} curPage={page} status={status}/>  {/*mobile horizontal filters topbar*/}
 			<NavBars active={"overview"} isNavbarOpen={isNavbarOpen} setIsNavbarOpen={setIsNavbarOpen}/>
-			{pvBaseObjects.resolved && <ImpactFilterOptions size="wide" setIsNavbarOpen={setIsNavbarOpen} masterBrand={masterBrand} brand={brand} campaign={campaign} setForcedReload={setForcedReload}  curPage={page}/>}  {/*widescreen vertical filters topbar*/}
+			<ImpactFilterOptions size="wide" setIsNavbarOpen={setIsNavbarOpen} pvBaseObjects={pvBaseObjects} setForcedReload={setForcedReload}  curPage={page} status={status}/>  {/*widescreen vertical filters topbar*/}
 		</div>
 		<PageContent pvBaseObjects={pvBaseObjects} navToggleAnimation={navToggleAnimation} totalString={totalString} mainLogo={mainLogo} {...pvBaseObjects?.value}/>
 		</>

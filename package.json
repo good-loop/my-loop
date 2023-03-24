@@ -29,7 +29,7 @@
     "react-chartjs2": "^1.2.1",
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.4.2",
-    "react-markdown": "^8.0.0",
+    "react-markdown": "^8.0.3",
     "react-spring": "^8.0.27",
     "reactstrap": "^8.10.1",
     "rehype-raw": "^6.1.1",
@@ -39,7 +39,6 @@
     "compile": "webpack --config $PWD/webpack.config.js --progress --color && ./gitstamp.sh",
     "compile-watch": "webpack --config $PWD/webpack.config.js --progress --color --watch",
     "compile-watch-fast": "NO_PROD=true webpack --config $PWD/webpack.config.js --progress --color --watch",
-    "test": "jest",
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
@@ -54,12 +53,12 @@
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-react": "^7.16.0",
     "@babel/preset-typescript": "^7.16.0",
+    "@types/md5": "^2.3.2",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
     "@types/reactstrap": "^8.5.1",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
-    "babel-jest": "^27.0.2",
     "babel-loader": "^8.2.3",
     "babel-plugin-const-enum": "^1.2.0",
     "core-js": "^3.19.3",
@@ -73,9 +72,6 @@
     "eslint-plugin-react": "^7.27.1",
     "eslint-plugin-react-hooks": "^4.3.0",
     "intl": "^1.2.5",
-    "jest": "^27.0.4",
-    "jest-environment-puppeteer": "^5.0.4",
-    "jest-puppeteer": "^5.0.4",
     "less": "^4.1.2",
     "less-loader": "^10.2.0",
     "mini-css-extract-plugin": "^2.4.5",
@@ -87,12 +83,5 @@
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1",
     "yargs": "^17.0.1"
-  },
-  "jest": {
-    "preset": "jest-puppeteer",
-    "globals": {
-      "window": {}
-    },
-    "testTimeout": 10000
   }
 }

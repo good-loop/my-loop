@@ -573,7 +573,7 @@ const CampaignList = ({campaigns, brand, subBrands, status}) => {
 const CountryViewsGLCard = ({basis, baseObjects}) => {
 	
 	let impressionData = getImpressionsByCampaignByCountry({baseObjects:baseObjects})
-	console.log("res impData", impressionData)
+
 	// handle Total Impressions
 	// if no impressions found, don't show this element
 	if(!impressionData || Object.keys(impressionData).length === 0) return <></>
@@ -590,10 +590,10 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 		impressionData[country].colour = "hsl(8, 100%, 23%)"
 	})
 	
-	let x = (
+	let modalMapCardContent = (
 		<>
 			 <MapCardContent data={impressionData}/>
-			 <Beans data={impressionData} />
+			 <CampaignCountryList data={impressionData} />
 		</>
 	)
 
@@ -601,7 +601,7 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 	
 	return (
 	<GLCard basis={basis}
-		modalContent={() => x}
+		modalContent={() => modalMapCardContent}
 		modalClassName="impact-map"
 		modalId="right-half"
 		>
@@ -658,7 +658,6 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 	const loading = data === 'loading';
 
 	let regions = [];
-	let labels = [];
 	Object.entries(mapDefs.regions).forEach(([id, props]) => {
 		const zeroFill = "hsl(204, 27%, 45%)";
 		
@@ -717,7 +716,7 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 
 }
 
-const Beans = ({data}) => {
+const CampaignCountryList = ({data}) => {
 	const regions = Object.keys(data)
 
 	// if data has an unset region, push it to the back so it'll appear at the bottom of the country list
@@ -728,6 +727,7 @@ const Beans = ({data}) => {
 	}
 	
 	return regions.map((region) => {
+		if(data[region].impressions === 0) return
 		const impressions = printer.prettyNumber(data[region].impressions, 21) // get a pretty number with no rounding on sigfigs 
 		const countries = data[region].campaignsInRegion
 		const pluralCampaigns = countries > 1 ? "Campaigns" : "Campaign"
