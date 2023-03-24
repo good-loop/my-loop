@@ -93,7 +93,7 @@ export const getImpressionsByCampaignByCountry = ({ baseObjects, start = '', end
 	if(!campaign && (!subCampaigns || subCampaigns.length == 0)) return []
 
 	let searchData = campaign ? [campaign] : subCampaigns // if campaign is set, then the user has filtered to a single campaign (no subcampaigns)
-	console.log("res campaigns: ", searchData)
+
 	let campaignImpsByCountry = searchData.map(country => Campaign.viewcountByCountry({campaign: country, status: KStatus.PUBLISHED}))
 
 

@@ -18,29 +18,26 @@ const A = C.A;
  * @param {size} string on what page size to draw this element, currently "mobile" and "desktop" are the only expected values
  * @returns 
  */
-const ImpactFilterOptions = ({size, masterBrand, brand, campaign, setForcedReload, curPage}) => {
+const ImpactFilterOptions = ({size, pvBaseObjects, status, setForcedReload, curPage}) => {
 
 	assert (size == "wide" || size == "thin")
 
+	const {masterBrand, brand, campaign} = pvBaseObjects.value || {};
 	console.log(masterBrand, brand, campaign)
-
-	const [curMaster, setCurMaster] = useState(masterBrand ? masterBrand : brand)
-	const [curSubBrand, setCurSubBrand] = useState((masterBrand || campaign) ? brand : null)
-	const [curCampaign, setCurCampaign] = useState((brand && campaign) ? campaign : null)
 
 
 	if(size == "wide") return (		
 		<div className='flex-row impactOverview-filters-and-account' id={"impactOverview-filters-and-account-"+size}>
-			<ImpactBrandFilters masterBrand={curMaster} curSubBrand={curSubBrand} setCurSubBrand={setCurSubBrand} curCampaign={curCampaign} setCurCampaign={setCurCampaign} setForcedReload={setForcedReload} size={size} dropdown curPage={curPage}/>
+			<ImpactBrandFilters loading={!pvBaseObjects.resolved} masterBrand={masterBrand} brand={brand} campaign={campaign} setForcedReload={setForcedReload} size={size} dropdown curPage={curPage} status={status}/>
 			<ImpactDateFilter setForcedReload={setForcedReload} />
-			<ImpactAccountButton curMaster={masterBrand} curSubBrand={brand} curCampaign={campaign} />
+			{pvBaseObjects.resolved && <ImpactAccountButton curMaster={masterBrand} curSubBrand={brand} curCampaign={campaign} />}
 		</div>
 	)
 
 	if(size == "thin") return (		
 		<div className='flex-row impactOverview-filters-and-account' id={"impactOverview-filters-and-account-"+size}>
-			<ImpactBrandFilters masterBrand={curMaster} curSubBrand={curSubBrand} setCurSubBrand={setCurSubBrand} curCampaign={curCampaign} setCurCampaign={setCurCampaign} setForcedReload={setForcedReload} size={size} curPage={curPage}/>
-			<ImpactAccountButton curMaster={masterBrand} curSubBrand={brand} curCampaign={campaign} noShare/>
+			<ImpactBrandFilters loading={!pvBaseObjects.resolved} masterBrand={masterBrand} brand={brand} campaign={campaign} setForcedReload={setForcedReload} size={size} dropdown curPage={curPage} status={status}/>
+			{pvBaseObjects.resolved && <ImpactAccountButton curMaster={masterBrand} curSubBrand={brand} curCampaign={campaign} noShare/>}
 		</div>
 	)
 }
