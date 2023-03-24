@@ -12,8 +12,7 @@ import SearchQuery from '../../../base/searchquery';
 import { isoDate } from '../../../base/utils/miscutils';
 import C from '../../../C';
 import { dataColours, getPeriodQuarter, GreenCard, GreenCardAbout, ModeButton, printPeriod, TONNES_THRESHOLD } from './dashutils';
-import { emissionsPerImpressions, campaignIDToCampaignName, getCarbon, getCompressedBreakdown, getSumColumn } from './emissionscalc';
-import { getCompressedBreakdownWithCount } from './emissionscalcTs';
+import { getCompressedBreakdownWithCount, getCarbon, emissionsPerImpressions, getSumColumn } from './emissionscalcTs';
 
 import { isPer1000 } from './GreenMetrics';
 import { assert } from '../../../base/utils/assert';

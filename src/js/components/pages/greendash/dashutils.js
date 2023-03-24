@@ -46,7 +46,10 @@ export const getPeriodYear = (date = new Date()) => {
 };
 
 
-/** Read URL params and extract a period object if one is present 
+
+/** 
+ * Read URL params and extract a period object if one is present. Supports `period` or `start`/`end`.
+ * @deprecated (partly) converted to typescript ??where is the typescript version??
  * @returns {?Object} {start:Date end:Date}
 */
 export const periodFromUrl = () => {
@@ -81,6 +84,7 @@ export const periodFromUrl = () => {
 
 /**
  * Read URL params and of number
+ * @deprecated converted to typescript
  * @param {string} key, e.g. prob, sigfig
  */
 export const numParamFromUrl = (key) => {
@@ -93,6 +97,9 @@ export const numParamFromUrl = (key) => {
 	}
 }
 
+/**
+ * @deprecated converted to typescript
+ */
 export const noCacheFromUrl = () => {
 	const nocache = DataStore.getUrlValue('nocache')
 	return !!nocache;
