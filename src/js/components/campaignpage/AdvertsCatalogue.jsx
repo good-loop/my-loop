@@ -6,7 +6,7 @@ import {
 	CarouselIndicators, CarouselItem, Container
 } from 'reactstrap';
 
-import { uniq } from '../../base/utils/miscutils';
+import { uniq, space } from '../../base/utils/miscutils';
 
 import Misc from '../../base/components/Misc';
 import Advert from '../../base/data/Advert';
@@ -27,7 +27,7 @@ import { assert } from '../../base/utils/assert';
  * @param {Advert[]} p.canonicalAds All ads, unfiltered by the filtering query parameter
  * @param {?Boolean} p.noPreviews remove preview carousel
  */
-const AdvertsCatalogue = ({ campaign, ads, canonicalAds, noPreviews }) => {
+const AdvertsCatalogue = ({ campaign, ads, canonicalAds, noPreviews, className }) => {
 	assert(canonicalAds);
 	let ongoing = Campaign.isOngoing(campaign);
 
@@ -82,7 +82,7 @@ const AdvertsCatalogue = ({ campaign, ads, canonicalAds, noPreviews }) => {
 	};
 
 	return (<>
-		<Container className='ads-catalogue'>
+		<Container className={space('ads-catalogue', className)}>
 			<Carousel
 				activeIndex={activeIndex}
 				next={next}
