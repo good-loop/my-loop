@@ -368,32 +368,6 @@ const TagSubcard = ({ data }) => {
 	);
 };
 
-const ADTECH = `adcolony.com
-adnxs.com
-adnxs-simple.com
-aerserv.com
-amazon-adsystem.com
-amazonaws.com
-ampproject.net
-btloader.com
-googlesyndication.com
-googleapis.com
-doubleclick.net
-ampproject.net
-hubvisor.io
-inmobi.com
-inner-active.mobi
-mopub.com
-nexx360.io
-pubmatic.com
-pubfinity.com
-reamedia.com.au
-sizmdx.com
-swm.digital
-taboola.com
-tapjoy.com
-yahoosandbox.com
-yimg.com`.split(/\s/);
 /**
  *
  * @param {Object} p
@@ -411,8 +385,6 @@ const PubSubcard = ({ data }) => {
 
 	// skip unset
 	data = data.filter((row) => row.key !== 'unset');
-	// HACK skip adtech	
-	data = data.filter((row) => ! ADTECH.includes(row.key));
 
 	return (
 		<>
