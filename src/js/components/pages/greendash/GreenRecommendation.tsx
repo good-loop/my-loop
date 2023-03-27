@@ -21,7 +21,7 @@ interface ResolvedPromise extends ByDomainValue {
 	sampling?: ByDomainValue;
 }
 
-const TICKS_NUM = 150;
+const TICKS_NUM = 100;
 
 const GreenRecommendation2 = (): JSX.Element | null => {
 	const urlParams = paramsFromUrl(['period', 'prob', 'sigfig', 'nocache']);
@@ -73,7 +73,9 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 		const dataLabels = percentageBuckets.map((row) =>
 			row[0]?.co2 ? (row[0].co2 as number).toPrecision(2) : (percentageBuckets.indexOf(row) * steps + minCo2).toPrecision(2)
 		);
-		const dataValues = percentageBuckets.map((row) => row.length);
+		// const dataValues = percentageBuckets.map((row) => row.length);
+		// Weight by impressions, not count of domains
+		const dataValues = percentageBuckets.map((row) => row.reduce((acc: number, curr: any) => acc + curr.count, 0));
 
 		const chartOptions = {
 			responsive: true,
@@ -85,7 +87,7 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 				labels: dataLabels,
 				datasets: [
 					{
-						label: 'Counts of domains',
+						label: 'Impressions',
 						data: dataValues,
 						backgroundColor: 'green',
 					},
