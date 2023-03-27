@@ -8,11 +8,10 @@ import { CO2e, dataColours, GreenCard, GreenCardAbout, ModeButton, NOEMISSIONS, 
 import SimpleTable, { Column } from '../../../base/components/SimpleTable';
 import List from '../../../base/data/List';
 import { ButtonGroup } from 'reactstrap';
-import { getCarbon, getTags, emissionsPerImpressions, getSumColumn } from './emissionscalcTs';
+import { getCarbon, getTags, emissionsPerImpressions, getSumColumn, getBreakdownByWithCount, getCompressedBreakdownWithCount, filterByCount } from './emissionscalcTs';
 import { isPer1000 } from './GreenMetrics';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import '../../../../style/greendash-breakdown-card.less';
-import { getBreakdownByWithCount, getCompressedBreakdownWithCount, filterByCount } from './emissionscalcTs';
 
 /** Classify OS strings seen in our data
  *
@@ -369,32 +368,6 @@ const TagSubcard = ({ data }) => {
 	);
 };
 
-const ADTECH = `adcolony.com
-adnxs.com
-adnxs-simple.com
-aerserv.com
-amazon-adsystem.com
-amazonaws.com
-ampproject.net
-btloader.com
-googlesyndication.com
-googleapis.com
-doubleclick.net
-ampproject.net
-hubvisor.io
-inmobi.com
-inner-active.mobi
-mopub.com
-nexx360.io
-pubmatic.com
-pubfinity.com
-reamedia.com.au
-sizmdx.com
-swm.digital
-taboola.com
-tapjoy.com
-yahoosandbox.com
-yimg.com`.split(/\s/);
 /**
  *
  * @param {Object} p
@@ -412,8 +385,6 @@ const PubSubcard = ({ data }) => {
 
 	// skip unset
 	data = data.filter((row) => row.key !== 'unset');
-	// HACK skip adtech	
-	data = data.filter((row) => ! ADTECH.includes(row.key));
 
 	return (
 		<>
