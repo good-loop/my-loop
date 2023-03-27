@@ -6,7 +6,7 @@ import Login from '../../../base/youagain';
 import Misc from '../../../MiscOverrides';
 import { getFilterModeId } from './dashutils';
 import { paramsFromUrl } from './dashUtils';
-import { type BreakdownRow } from './emissionscalcTs';
+import { type BreakdownRow, type BaseFilters, type BaseFiltersFailed, getBasefilters, getCarbon } from './emissionscalcTs';
 import GreenDashboardFilters from './GreenDashboardFilters';
 
 interface ByDomainValue extends Object {
@@ -20,27 +20,21 @@ interface ResolvedPromise extends ByDomainValue {
 	sampling?: ByDomainValue;
 }
 
-type BaseFilters = {
-	q: string;
-	start: string;
-	end: string;
-	prob?: string;
-	sigfig?: string;
-	nocache?: boolean;
-	fixseed?: boolean;
-	numRows?: string;
-};
-
 const GreenRecommendation2 = (): JSX.Element | null => {
-	// Default to current quarter, all brands, all campaigns
 	const urlParams = paramsFromUrl(['period', 'prob', 'sigfig', 'nocache']);
 	const period = urlParams.period;
 	if (!period) return null; // Filter widget will set this on first render - allow it to update
 
-	let { filterMode, filterId } = getFilterModeId();
+	const baseFilters = getBasefilters(urlParams);
 
-	if (!filterMode) {
-		return <Alert color='info'>Select a brand, campaign, or tag to see data.</Alert>;
+	// BaseFiltersFailed
+	if ('type' in baseFilters && 'message' in baseFilters) {
+		if (baseFilters.type === 'alert') {
+			return <Alert color='info'>{baseFilters.message}</Alert>;
+		}
+		if (baseFilters.type === 'loading') {
+			return <Misc.Loading text={baseFilters.message!} pv={null} inline={null} />;
+		}
 	}
 
 	/**
@@ -51,7 +45,7 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 	return (
 		<>
 			<Row className='card-row'>
-				{filterMode && <p>filterMode: {filterMode.toString()}, {filterId.toString()}</p>}
+
 			</Row>
 		</>
 	);

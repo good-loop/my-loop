@@ -76,7 +76,7 @@ const CTACard = ({}) => {
 	);
 };
 
-const GreenMetrics2 = ({}) => {
+const GreenMetrics2 = () => {
 	const urlParams = paramsFromUrl(['period', 'prob', 'sigfig', 'nocache']);
 	const period = urlParams.period;
 	if (!period) return null; // Filter widget will set this on first render - allow it to update

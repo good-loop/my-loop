@@ -49,18 +49,25 @@ export type BaseFilters = {
 };
 
 export type BaseFiltersFailed = {
-	type: 'alert' | 'loading';
-	message: string;
+	type?: 'alert' | 'loading';
+	message?: string;
 };
 
+/**
+ * Supposedly return a BaseFilters. But when there are exceptions, return a alert or loading message. Catch the message wtih <Alert /> or <Misc.Loading /> div.
+ * Usage examples see GreenMetrics2 in ./GreenMetrics.jsx
+ * @param urlParams fetch using paramsFromUrl in dashUtils.ts
+ */
 export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed => {
 	// Default to current quarter, all brands, all campaigns
 	const period = urlParams.period;
-
 	let { filterMode, filterId } = getFilterModeId();
 
+	let failedObject: BaseFiltersFailed = {};
+
 	if (!filterMode) {
-		return { type: 'alert', message: 'Select a brand, campaign, or tag to see data.' };
+		failedObject = { type: 'alert', message: 'Select a brand, campaign, or tag to see data.' };
+		return failedObject;
 	}
 
 	// Fetch common data for CO2Card and BreakdownCard.
@@ -77,11 +84,13 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 		let sq = SearchQuery.setProp(null, 'vertiser', filterId);
 		const pvAllCampaigns = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUBLISHED, q: sq.query, ids: null, sort: null, start: null, end: null });
 		if (!pvAllCampaigns.resolved) {
-			return { type: 'loading', message: 'Fetching brand campaigns...' };
+			failedObject = { type: 'loading', message: 'Fetching brand campaigns...' };
+			return failedObject;
 		}
 		const campaignIds = List.hits(pvAllCampaigns.value)?.map((c) => c.id);
 		if (!yessy(campaignIds)) {
-			return { type: 'alert', message: `No campaigns for brand id: ${filterId}` };
+			failedObject = { type: 'alert', message: `No campaigns for brand id: ${filterId}` };
+			return failedObject;
 		}
 		q = SearchQuery.setPropOr(null, 'campaign', campaignIds!).query;
 	}
@@ -91,11 +100,13 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 		let sq = SearchQuery.setProp(null, 'agencyId', filterId);
 		const pvAllCampaigns = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUBLISHED, q: sq.query, ids: null, sort: null, start: null, end: null });
 		if (!pvAllCampaigns.resolved) {
-			return { type: 'loading', message: 'Fetching agency campaigns...' };
+			failedObject = { type: 'loading', message: 'Fetching agency campaigns...' };
+			return failedObject;
 		}
 		const campaignIds = List.hits(pvAllCampaigns.value)?.map((c) => c.id);
 		if (!yessy(campaignIds)) {
-			return { type: 'alert', message: `No campaigns for agency id: ${filterId}` };
+			failedObject = { type: 'alert', message: `No campaigns for agency id: ${filterId}` };
+			return failedObject;
 		}
 		q = SearchQuery.setPropOr(null, 'campaign', campaignIds!).query;
 	}
@@ -104,17 +115,20 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 	if (filterMode === 'campaign') {
 		const pvCampaign = getDataItem({ type: C.TYPES.Campaign, id: filterId, status: KStatus.PUB_OR_DRAFT, action: null, swallow: null });
 		if (!pvCampaign.value) {
-			return { type: 'loading', message: 'Fetching campaign...' };
+			failedObject = { type: 'loading', message: 'Fetching campaigns...' };
+			return failedObject;
 		}
 		const campaign = pvCampaign.value;
 		if (Campaign.isMaster(campaign)) {
 			const pvAllCampaigns = Campaign.pvSubCampaigns({ campaign });
 			if (!pvAllCampaigns.resolved) {
-				return { type: 'loading', message: 'Fetching campaign...' };
+				failedObject = { type: 'loading', message: 'Fetching campaigns...' };
+				return failedObject;
 			}
 			const campaignIds = List.hits(pvAllCampaigns.value)!.map((c) => c.id);
 			if (!yessy(campaignIds)) {
-				return { type: 'alert', message: `No campaigns for master campaign id: ${filterId}` };
+				failedObject = { type: 'alert', message: `No campaigns for master campaign id: ${filterId}` };
+				return failedObject;
 			}
 			q = SearchQuery.setPropOr(null, 'campaign', campaignIds).query;
 		}
