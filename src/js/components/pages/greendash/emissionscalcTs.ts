@@ -3,6 +3,7 @@
  */
 
 import _ from 'lodash';
+import md5 from 'md5';
 import Campaign from '../../../base/data/Campaign';
 import Impact from '../../../base/data/Impact';
 import ImpactDebit from '../../../base/data/ImpactDebit';
@@ -51,6 +52,8 @@ export type BaseFilters = {
 	sigfig?: string | number;
 	nocache?: boolean;
 	fixseed?: boolean;
+	numRow?: string | number;
+	num?: string | number;
 };
 
 export type BaseFiltersFailed = {

@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Alert, Card, Col, Container, Row } from 'reactstrap';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
+import NewChartWidget from '../../../base/components/NewChartWidget';
 import DataStore from '../../../base/plumbing/DataStore';
 import Login from '../../../base/youagain';
 import Misc from '../../../MiscOverrides';
 import { getFilterModeId } from './dashutils';
 import { paramsFromUrl } from './dashUtils';
-import { type BreakdownRow, type BaseFilters, type BaseFiltersFailed, getBasefilters, getCarbon } from './emissionscalcTs';
+import { type BreakdownRow, type BaseFilters, getBasefilters, getCarbon, emissionsPerImpressions } from './emissionscalcTs';
 import GreenDashboardFilters from './GreenDashboardFilters';
 
 interface ByDomainValue extends Object {
@@ -25,7 +26,7 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 	const period = urlParams.period;
 	if (!period) return null; // Filter widget will set this on first render - allow it to update
 
-	const baseFilters = getBasefilters(urlParams);
+	let baseFilters = getBasefilters(urlParams);
 
 	// BaseFiltersFailed
 	if ('type' in baseFilters && 'message' in baseFilters) {
@@ -40,12 +41,71 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 	/**
 	 * Inital load of total
 	 */
-	// const pvChartTotal = getCarbon({ ...baseFilters, breakdown: ['total{"count":"sum"}'] });
+	const baseFilterConfirmed = { ...baseFilters, numRows: '10000' } as unknown as BaseFilters;
+
+	const scaledBuckets = useMemo(() => {
+		const pvChartTotal = getCarbon({ ...baseFilterConfirmed, breakdown: ['domain{"countco2":"sum"}'] });
+
+		if (pvChartTotal.resolved) {
+			const pvChartTotalValue = baseFilterConfirmed.prob && baseFilterConfirmed.prob != 0 ? pvChartTotal.value?.sampling : pvChartTotal.value;
+			const bucketsPer1000 = emissionsPerImpressions(pvChartTotalValue.by_domain.buckets);
+
+			const co2s = bucketsPer1000.map((row) => row.co2! as number);
+			const maxCo2 = Math.max(...co2s);
+			const minCo2 = Math.min(...co2s);
+			const steps = (maxCo2 - minCo2) / 100; // How large is a tick
+
+			const scaledBuckets = bucketsPer1000.map((row) => {
+				const percentage = Math.floor(((row.co2 as number) - minCo2) / steps);
+				return { key: row.key, count: row.count, co2: row.co2, percentage };
+			});
+
+			return scaledBuckets;
+		}
+	}, [baseFilterConfirmed]);
+
+
+	const chartData = useMemo(() => {
+		if (!scaledBuckets) return;
+
+		const percentageBuckets: typeof scaledBuckets[] = Array.from({ length: 100 }, () => []);
+		scaledBuckets.forEach((row) => {
+			const percentageKey = Math.max(row.percentage, 1) - 1;
+			percentageBuckets[percentageKey].push(row);
+		})
+
+		console.log('percentageBuckets', percentageBuckets);
+
+		const dataLabels = percentageBuckets.map(row => percentageBuckets.indexOf(row))
+		const dataValues = percentageBuckets.map(row => row.length);
+
+		return {
+			type: 'bar',
+			data: {
+				labels: dataLabels,
+				datasets: [
+					{
+						label: 'Counts of domains',
+						data: dataValues,
+						backgroundColor: 'green',
+					},
+				],
+			},
+		};
+	}, [scaledBuckets]);
+
+	const chartOptions = {
+		responsive: true,
+		tooltips: {
+			mode: 'ticks',
+			intersect: true,
+		},
+	};
 
 	return (
 		<>
 			<Row className='card-row'>
-
+				{chartData && <NewChartWidget options={chartOptions} width={1000} height={null} datalabels={null} maxy={null} {...chartData} />}
 			</Row>
 		</>
 	);
