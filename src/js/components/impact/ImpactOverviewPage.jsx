@@ -145,7 +145,7 @@ const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, bra
 										modalClassName="no-header-padding ads-for-good">
 											<div className='d-flex flex-column align-items-stretch justify-content-between h-100'>
 												<img  className='w-75 align-self-center mb-3' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
-												<ContentList/>
+												<ContentList ads={pvBaseObjects}/>
 											</div>
 									</GLCard>
 									<GLModalCard id="ads-for-good-modal" />
@@ -388,14 +388,13 @@ const WatchToDonateModal = ({brand}) => {
 }
 
 
-const ContentList = () => {
+const ContentList = ({ads}) => {
 
 	const content = {
 		"Watch To Donate": true,
 		"This Ad Does Good": true,
 		"Green Ad Tag": true,
 		"Engage To Donate": false,
-		"This Ad Supports Local": false
 	};
 
 	const contentRenderable = Object.keys(content).map(title => { return {title, tick:content[title]}})
@@ -475,7 +474,7 @@ const BrandList = ({brand, subBrands}) => {
 
 	const BrandListItem = ({item}) => {
 		return <Col md={4} className="mt-3">
-			<GLCard className="preview h-100" noMargin href={"/iview/brand/"+item.id}>
+			<GLCard className="preview h-100" noMargin href={"/impact/view/brand/"+item.id}>
 				
 				{item && item.branding?.logo && <img  src={item.branding.logo} className="logo"/>}
 				<p className='text-center'>{item.name}</p>
@@ -583,7 +582,7 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 	impressions = printer.prettyNumber(impressions, 3).replaceAll(",", "") // round to sig figs
 	impressions = addAmountSuffixToNumber(impressions) // reduce to units in thousands, millions or billions
 
-	let countryWord = (totalCountries > 1) ? "COUNTRIES" : "COUNTRY"
+	let countryWord = (totalCountries === 1) ?  "COUNTRY" : "COUNTRIES";
 	
 	// assign colours to data object for map 
 	Object.keys(impressionData).forEach((country) => {
@@ -616,8 +615,6 @@ const MapCardContent = ({data}) => {
 	const [mapDefs, setMapDefs] = useState(); // JSON object with map paths and meta
 	const [svgEl, setSvgEl] = useState(); // ref to the map SVG to create download button
 	const [error, setError] = useState(); // Problems loading map?
-
-	console.log("found country! ", getCountryName("US"))
 
 	// Fetch the JSON with the map data for the current focus country
 	useEffect(() => {
