@@ -227,17 +227,16 @@ const GreenMetrics2 = ({}) => {
 				right={{label: 'Per 1000 impressions', value: 'per1000', colour: 'primary'}}
 			/>
 			<Row className="card-row">
-				<Col xs="12" sm="12" className="flex-column">
+				<Col xs="12" sm="8" className="flex-column">
 					<TimeSeriesCard {...commonProps} data={pvChartDatalValue?.by_time.buckets} noData={noData} />
 				</Col>
-				{/* TODO: Journeycard temporarily disabled on 27/03. Re-enable before release. */}
-				{/* <Col xs="12" sm="4" className="flex-column">
+				<Col xs="12" sm="4" className="flex-column">
 					<JourneyCard
 						campaigns={List.hits(pvCampaigns?.value)}
 						{...commonProps}
 						emptyTable={emptyTable || noData}
 					/>
-				</Col> */}
+				</Col>
 			</Row>
 			<Row className="card-row">
 				<Col xs="12" sm="4" className="flex-column">
