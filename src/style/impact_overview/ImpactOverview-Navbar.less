@@ -1,0 +1,178 @@
+#impact-overview-navbar-widescreen {
+
+    // don't render this navbar on mobiles, it'll instead render the smallscreen version 
+    @media @width-mobile {
+        display: none;
+    }
+
+    // keep navbar visible during loading
+    z-index: 100;
+    position: fixed;
+    left: 0;
+
+    width: 15rem;
+    height: 100vh;
+    background-color: #770f00;
+
+    // overall navbar container
+    #impact-navbar {
+        padding: 0;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        min-height: 100%; // let navbar use all of its given space (needed to position button)
+    }
+
+    p,
+    a { 
+        color: white !important;
+        text-transform: uppercase !important;
+        text-decoration: none !important;
+        font-family: "Montserrat";
+        font-weight: 600;
+    }
+
+    p {
+        font-size: x-large;
+        font-weight: bold;
+    }
+
+    // navbar goodloop branding, also links back to our main website
+    .logo,
+    .logo-name {
+        place-self: center;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .logo {
+        width: 100%; // required to center logo 
+    }
+
+    .logo-name{
+        min-width: 15rem; // stops name affecting flow when menu closes
+    }
+
+    #toggle-impact-nav-container {
+        position: absolute;
+        bottom: 0;
+
+        // toggle button for changing navbar width
+        #toggle-impact-nav {
+            bottom: 5%;
+            width: 5em;
+            height: 5em;
+            min-width: 5em;
+            min-height: 5em;
+
+            margin-right: 1rem;
+
+            background-size: 5em 5em !important;
+            background: url("/img/mydata/arrow-up-white.svg");
+
+            border: none;
+            &:active,
+            &:focus {
+                border: none !important;
+                outline: none !important;
+            }
+        }
+    }
+
+    // navigation links container
+    .navbar-nav {
+        width: 100%;
+        flex-grow: unset !important; //required else the width changing shoots the nav off screen
+
+        // container inside each nav-item, used to ensure <a> tag takes up full available space
+        .navbar-link {
+            // recenter link & keep links seperate
+            // padding of 1rem taken from inital implemtation of navbar though moved here when ensuring 
+            padding: 5px 0 5px 1rem;
+            position: relative;
+            height: 100%;
+
+            &.active{
+                background-color: #a76157;
+            }
+
+            // icons for navigation options, placeholder images rn 
+            .impact-nav-icon {
+                // center the icon vertically
+                position: relative;
+                display: inline-block !important;
+                top: 50%;
+                transform: translateY(-50%);
+
+                // ensure size is constant - important for keeping the sliding animation fron screwing up
+                width: 3em;
+                height: 3em;
+                min-width: 3em;
+                min-height: 3em;
+
+                margin-right: 1em;
+
+                border-radius: 50%; // turn into circle
+
+                background-color: white;
+                background-size: contain; // icons are too big by default, resize them
+
+                &.overview-icon {
+                    background-image: url("/img/icons/HEART ICON.png");
+                }
+                &.impact-icon {
+                    background-image: url("/img/icons/search icon.png");
+                }
+                &.analysis-icon {
+                    background-image: url("/img/icons/graph icon.png");
+                }
+            }
+
+            // text for navigation options, has to be vertically centered
+            .impact-navbar-text {
+                display: inline-block;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
+
+
+    }    
+}
+
+
+#impact-overview-navbar-smallscreen {
+    @media @md-min {
+        display: none !important;
+    }
+
+    width: 100%;
+    padding: 0;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: large;
+    font-weight: 600;
+
+    ul {
+        width: 100%;
+        justify-content: space-evenly;
+        background-color: white;
+    }
+
+    li {
+        width: 33%;
+        a {
+            text-decoration: none;
+            color: @gl-impact-dark;
+        }
+
+        &.active {
+            border-bottom: solid 5px @gl-impact-red;
+            a {
+                color: @gl-impact-red;
+
+            }
+        }
+    }
+}
