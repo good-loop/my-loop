@@ -6,7 +6,7 @@ const cluster =
 	// 'local';
 	''; // if you want production!
 
-const protocol = (cluster === 'local') ? 'http' : 'https';
+const protocol = 'https';//(cluster === 'local') ? 'http' : 'https';
 
 module.exports = {
 	ServerIOOverrides: {

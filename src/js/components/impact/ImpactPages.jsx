@@ -30,6 +30,7 @@ import List from '../../base/data/List';
 import ListLoad from '../../base/components/ListLoad';
 import Campaign from '../../base/data/Campaign';
 import Advertiser from '../../base/data/Advertiser';
+import Advert from '../../base/data/Advert';
 import ImpactLoadingScreen from './ImpactLoadingScreen'
 import Money from '../../base/data/Money';
 import SearchQuery from '../../base/searchquery';
@@ -61,6 +62,12 @@ export class ImpactFilters {
 	q;
 }
 
+/**
+ * Fetches the contextual data necessary to generate an impact page for the given item
+ * @param {String} itemId
+ * @param {String} itemType
+ * @param {KStatus} status 
+ */
 const fetchBaseObjects = async ({itemId, itemType, status}) => {
 
 	let pvCampaign, campaign;
@@ -70,6 +77,7 @@ const fetchBaseObjects = async ({itemId, itemType, status}) => {
 	let pvSubCampaigns, subCampaigns;
 	let pvImpactDebits, impactDebits;
 	let pvCharities, charities;
+	let ads;
 
 	// Fetch campaign object if specified
 	if (itemType === "campaign") {
@@ -116,10 +124,36 @@ const fetchBaseObjects = async ({itemId, itemType, status}) => {
 		console.log("Got debits from campaign!", impactDebits);
 	}
 
-	// Simplifies having to add null checks for subBrands everywhere
+	// Simplifies having to add null checks everywhere
 	if (!subBrands) subBrands = [];
 	if (!subCampaigns) subCampaigns = [];
 	if (!impactDebits) impactDebits = [];
+
+	// Determine which items to fetch ads for
+	// If were focused on a master brand, all of em
+	// If were focused on a brand, just its children
+	// If were focused on a campaign, just it
+	let brandsToFetchFrom = [];
+	let campaignsToFetchFrom = [];
+	if (!campaign) {
+		brandsToFetchFrom = [brand, ...subBrands];
+		campaignsToFetchFrom = subCampaigns;
+	} else {
+		campaignsToFetchFrom = [campaign];
+	}
+
+	let adsFromBrands = [];
+	if (brandsToFetchFrom.length) {
+		let pvAdsFromBrands = Advert.fetchForAdvertisers({vertiserIds:brandsToFetchFrom.map(b => b.id), status});
+		adsFromBrands = List.hits(await pvAdsFromBrands.promise);
+	}
+	let adsFromCampaigns = [];
+	if (campaignsToFetchFrom.length) {
+		let pvAdsFromCampaigns = Advert.fetchForCampaigns({campaignIds:campaignsToFetchFrom.map(c => c.id), status});
+		adsFromCampaigns = List.hits(await pvAdsFromCampaigns.promise);
+	}
+	ads = [...adsFromBrands, ...adsFromCampaigns];
+	console.log("ADS DATA::", ads, adsFromBrands, adsFromCampaigns);
 
 	// Mark which campaigns and brands have any donations, and which don't
 	impactDebits.forEach(debit => {
@@ -158,7 +192,7 @@ const fetchBaseObjects = async ({itemId, itemType, status}) => {
 		throw new Error("404: Not found");
 	}
 
-	return {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits, charities};
+	return {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits, charities, ads};
 }
 
 const IMPACT_PAGES= {
@@ -208,7 +242,7 @@ const ImpactPage = () => {
 
 	if (pvBaseObjects.error) return <ErrorDisplay e={pvBaseObjects.error} />
 
-	const {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits=[], charities=[]} = pvBaseObjects.value || {};
+	const {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits=[], charities=[], ads=[]} = pvBaseObjects.value || {};
 
 	// Use campaign specific logo if given
 	const mainLogo = campaign?.branding?.logo || brand?.branding?.logo;

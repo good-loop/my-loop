@@ -22,21 +22,14 @@ import { assert } from '../../base/utils/assert';
 /**
  * List of adverts with some info about them (like views, dates)
  * @param {Object} p
- * @param {Campaign} p.campaign
  * @param {Advert[]} p.ads filtered list of ads to show
  * @param {Advert[]} p.canonicalAds All ads, unfiltered by the filtering query parameter
  * @param {?Boolean} p.noPreviews remove preview carousel
  */
-const AdvertsCatalogue = ({ campaign, ads, canonicalAds, noPreviews, className }) => {
+const AdvertsCatalogue = ({ ads, canonicalAds, noPreviews, className }) => {
 	assert(canonicalAds);
-	let ongoing = Campaign.isOngoing(campaign);
 
-	// filter out any hidden ads
-	// NB: done here as the hiding is a shallow cosmetic -- we still want the view and £ donation data included (or if not, there are other controls)
 	let showAds = ads;
-	if (campaign && campaign.hideAdverts) {
-		showAds = ads.filter(ad => ! ad._hidden);
-	}
 
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [animating, setAnimating] = useState(false);

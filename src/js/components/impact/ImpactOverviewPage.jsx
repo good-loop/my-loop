@@ -47,7 +47,7 @@ export class ImpactFilters {
 
 
 
-const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, brand, campaign, subBrands, charities, subCampaigns, impactDebits, mainLogo}) => {
+const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, brand, campaign, subBrands, charities, subCampaigns, impactDebits, ads, mainLogo}) => {
 	if (pvBaseObjects.resolved) console.log("base objs:", pvBaseObjects)
 	return (
 	<>
@@ -157,13 +157,13 @@ const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, bra
 							<GLVertical>
 								{campaign && <CountryViewsGLCard basis={10} baseObjects={pvBaseObjects.value}/>}
 								<GLCard
-									modalContent={AdsCatalogueModal}
+									modalContent={() => <AdsCatalogueModal ads={ads}/>}
 									modalId="full-page"
 									modalClassName="ads-catalogue-modal"
 									className="ads-catalogue-card"
 									basis={campaign && 70}
 									>
-										<AdsCatalogueModal noPreviews/>
+										<AdsCatalogueModal noPreviews ads={ads}/>
 								</GLCard>
 								{campaign && <GLCard className="boast" basis={20}>
 									<h2>SUSTAINABLE GOALS</h2>
@@ -412,19 +412,12 @@ const ContentList = () => {
 	</>;
 }
 
-const AdsCatalogueModal = ({noPreviews}) => {
+const AdsCatalogueModal = ({noPreviews, ads}) => {
 
-	const status = KStatus.PUB_OR_ARC;
-	const pvCampaign = getDataItem({type:C.TYPES.Campaign,status,id:TEST_CAMPAIGN});
-	if (!pvCampaign.value) return <Misc.Loading/>
-	const pvAds = Campaign.pvAds({campaign: pvCampaign.value, status});
-	if (!pvAds.value) return <Misc.Loading/>
-
-	const ads = List.hits(pvAds.value) || [];
+	if (ads.length === 0) return <h3>No ads yet!</h3>;
 
 	return <>
 		<AdvertsCatalogue
-			campaign={pvCampaign.value}
 			ads={ads}
 			canonicalAds={ads} // maybe wrong should be all ads
 			noPreviews={noPreviews}
