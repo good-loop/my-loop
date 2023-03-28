@@ -6,6 +6,7 @@ import DataStore from '../../base/plumbing/DataStore'
 import CloseButton from '../../base/components/CloseButton';
 import C from '../../C';
 
+// TODO it'd be nice to do Modal widgets without global storage
 const MODAL_PATH = ['widget', 'GLModalCards'];
 const MODAL_LIST_PATH = MODAL_PATH.concat("list");
 const MODAL_BACKDROP_PATH = MODAL_PATH.concat("backdrop");
@@ -134,6 +135,9 @@ export const modalToggle = (id) => {
 	}
 }
 
+/**
+ * TODO refactor to more "standard" react. This is a mix of function and tag.
+ */
 export const openAndPopulateModal = ({id, content, title, header, headerImg, headerClassName, className, prioritized}) => {
 	assert(id, "Must be given a modal ID to open!");
 	// Force close other modals first

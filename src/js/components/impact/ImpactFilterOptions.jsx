@@ -8,14 +8,13 @@ import ImpactAccountButton from './ImpactAccountButton';
  * DEBUG OBJECTS
  */
 
-import { TEST_BRAND } from './TestValues';
 import { assert } from '../../base/utils/assert';
 const A = C.A;
 
 
 /**
  * 
- * @param {size} string on what page size to draw this element, currently "mobile" and "desktop" are the only expected values
+ * @param {string} size wide|thin on what page size to draw this element, thin="mobile" wide="desktop" are the only expected values
  * @returns 
  */
 const ImpactFilterOptions = ({size, pvBaseObjects, status, setForcedReload, curPage}) => {

@@ -34,7 +34,7 @@ import ImpactLoadingScreen from './ImpactLoadingScreen'
 import Money from '../../base/data/Money';
 import SearchQuery from '../../base/searchquery';
 
-import ImpactOverviewPage from './ImpactOverviewPage';
+import ImpactOverviewPage, {ImpactFilters} from './ImpactOverviewPage';
 import ImpactStatsPage from './ImpactStatsPage';
 import ImpactStoryPage from './ImpactStoryPage';
 
@@ -42,25 +42,13 @@ import ImpactStoryPage from './ImpactStoryPage';
  * DEBUG OBJECTS
  */
 
- import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIGN, TEST_CAMPAIGN_OBJ} from './TestValues';
 import Login from '../../base/youagain';
-import AccountMenu from '../../base/components/AccountMenu';
 
-export class ImpactFilters {
-	agency;
-	brand;
-	brand2;
-	campaign;
-	cid;
-	/** charity ID */
-	ngo;
-	impactdebit;
-	start;
-	end;
-	status;
-	q;
-}
-
+/**
+ * 
+ * @param {*} param0 
+ * @returns {Object} {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits, charities}
+ */
 const fetchBaseObjects = async ({itemId, itemType, status}) => {
 
 	let pvCampaign, campaign;

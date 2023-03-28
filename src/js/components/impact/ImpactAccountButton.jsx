@@ -17,7 +17,6 @@ import ShareWidget from '../../base/components/ShareWidget';
  * DEBUG OBJECTS
  */
 
-import { TEST_BRAND } from './TestValues';
 import AccountMenu from '../../base/components/AccountMenu';
 import { assert } from '../../base/utils/assert';
 import { space } from '../../base/utils/miscutils';
