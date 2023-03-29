@@ -161,7 +161,7 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 	const steps = (maxCo2 - minCo2) / TICKS_NUM; // How large is a tick
 	const silderProps: RangeSliderProps = { min: minCo2 * 1, max: maxCo2 * 1, step: steps, defaultValue: middleCo2, onChange: setSelectedCo2 };
 
-	function downloadCSV(data: string[]) {
+	const downloadCSV = (data: string[]) => {
 		const csv = data.join('\n');
 		const blob = new Blob([csv], { type: 'text/csv' });
 		const url = URL.createObjectURL(blob);
@@ -172,7 +172,7 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 		a.click();
 		document.body.removeChild(a);
 		URL.revokeObjectURL(url);
-	}
+	};
 
 	const DomainList = ({ buckets }: { buckets?: string[] }): JSX.Element => {
 		return (
