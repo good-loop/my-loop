@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Card, Col, Container, Row } from 'reactstrap';
+import { Alert, Button, Card, Col, Container, Row } from 'reactstrap';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import NewChartWidget from '../../../base/components/NewChartWidget';
 import DataStore from '../../../base/plumbing/DataStore';
@@ -123,8 +123,8 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 
 	useEffect(() => {
 		if (!selectedCo2) return;
-		setLeftDomains(bucketsPer1000.filter((val) => val.co2 as number <= selectedCo2).map((val) => val.key as string));
-		setRightDomains(bucketsPer1000.filter((val) => val.co2 as number > selectedCo2).map((val) => val.key as string));
+		setLeftDomains(bucketsPer1000.filter((val) => (val.co2 as number) <= selectedCo2).map((val) => val.key as string));
+		setRightDomains(bucketsPer1000.filter((val) => (val.co2 as number) > selectedCo2).map((val) => val.key as string));
 	}, [selectedCo2]);
 
 	const urlParams = paramsFromUrl(['period', 'prob', 'sigfig', 'nocache']);
@@ -161,16 +161,50 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 	const steps = (maxCo2 - minCo2) / TICKS_NUM; // How large is a tick
 	const silderProps: RangeSliderProps = { min: minCo2 * 1, max: maxCo2 * 1, step: steps, defaultValue: middleCo2, onChange: setSelectedCo2 };
 
+	function downloadCSV(data: string[]) {
+		const csv = data.join('\n');
+		const blob = new Blob([csv], { type: 'text/csv' });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = 'data.csv';
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+		URL.revokeObjectURL(url);
+	}
+
+	const DomainList = ({ buckets }: { buckets?: string[] }): JSX.Element => {
+		return (
+			<>
+				<p>Domains X: {buckets?.length}</p>
+				<div style={{ maxHeight: '20em', overflowY: 'scroll' }}>
+					{leftDomains?.map((val, index) => (
+						<span key={index}>
+							{val}
+							<br />
+						</span>
+					))}
+				</div>
+				<Button onClick={() => downloadCSV(buckets)}>Download CSV</Button>
+			</>
+		);
+	};
+
 	return (
 		<div>
 			<Row>
-				<Col xs={2}><p>Domains X: {leftDomains?.length}</p></Col>
+				<Col xs={2}>
+					<DomainList buckets={leftDomains} />
+				</Col>
 				<Col xs={8}>
 					<div className='w-100'>
 						<RecommendationChart bucketsPer1000={bucketsPer1000} />
 					</div>
 				</Col>
-				<Col xs={2}><p>Domains X: {rightDomains?.length}</p></Col>
+				<Col xs={2}>
+					<DomainList buckets={rightDomains} />
+				</Col>
 			</Row>
 			<RangeSlider {...silderProps} />
 		</div>
