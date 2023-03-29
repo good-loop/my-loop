@@ -13,6 +13,7 @@ import ServerIO from '../../../plumbing/ServerIO';
 
 import { getFilterModeId } from './dashutils';
 import ShareWidget, { shareThingId } from '../../../base/components/ShareWidget';
+import { modifyPage } from '../../../base/plumbing/glrouter';
 
 const A = C.A;
 
@@ -69,6 +70,8 @@ const GreenNavBar = ({active}) => {
 	}
 	let pvCampaign = campaignId? getDataItem({type:C.TYPES.Campaign, id:campaignId,status:KStatus.PUB_OR_DRAFT, swallow:true}) : {};
 	let impactUrl = pvCampaign.value? '/green/'+encURI(pvCampaign.value.id) : '/green';
+	let metricsUrl = modifyPage(["greendash", "metrics"], null, true);
+	let recUrl = modifyPage(["greendash", "recommendation"], null, true);
 
 	// We don't use the standard <Collapse> pattern here because that doesn't support an always-horizontal navbar
 	return (<>
@@ -79,11 +82,8 @@ const GreenNavBar = ({active}) => {
 			<a href={pseudoUser ? 'https://www.good-loop.com' : '/greendash'}>
 				<img className="logo" src="/img/logo-green-dashboard.svg" />
 			</a>
-			<span className="boosted text-center">
-				BOOSTED BY <img src="/img/gl-logo/external/scope3-logo.wb.svg" className="scope3-logo ml-1" />
-			</span>
 			<NavItem>
-				<A className={active === 'metrics' ? 'active' : ''} href={window.location}>
+				<A className={active === 'metrics' ? 'active' : ''} href={metricsUrl}>
 					<div className="green-nav-icon metrics-icon" /> Metrics
 				</A>
 			</NavItem>
@@ -92,13 +92,11 @@ const GreenNavBar = ({active}) => {
 					<div className="green-nav-icon tags-icon" /> Manage<br/>Tags
 				</A>
 			</NavItem>
-			{/*
-			<NavItem>
-				<A className={space('nav-item', active === 'optimisation' && 'active')} href="/greendash/optimisation">
-					<div className="green-nav-icon optimisation-icon" /> Optimisation<br/>Tips
+			{Roles.isDev() && <NavItem>			
+				<A className={space('nav-item', active === 'recommendation' && 'active')} href={recUrl}>
+					<div className="green-nav-icon optimisation-icon" /> Reduce
 				</A>
-			</NavItem>
-			*/}
+			</NavItem>}
 			<NavItem>
 				<A className={active === 'impact' ? 'active' : ''} href={impactUrl}>
 					<div className="green-nav-icon impact-icon" /> Impact<br/>Overview
