@@ -37,7 +37,7 @@ export class ImpactFilters {
 	brand2;
 	campaign;
 	cid;
-	/** charity ID */
+	/** @type {String} charity ID */
 	ngo;
 	impactdebit;
 	start;
@@ -48,10 +48,8 @@ export class ImpactFilters {
 
 
 /**
- * TODO make totalString here
  * 
- * @param {*} param0 
- * @returns 
+ * @param {Object} p
  */
 const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, brand, campaign, subBrands, charities, subCampaigns, impactDebits, mainLogo}) => {
 	if (pvBaseObjects.resolved) console.log("base objs:", pvBaseObjects)
@@ -494,7 +492,7 @@ const BrandList = ({brand, subBrands}) => {
 
 	const BrandListItem = ({item}) => {
 		return <Col md={4} className="mt-3">
-			<GLCard className="preview h-100" noMargin href={"/iview/brand/"+item.id}>
+			<GLCard className="preview h-100" noMargin href={"/impact/view/brand/"+item.id}>
 				
 				{item && item.branding?.logo && <img  src={item.branding.logo} className="logo"/>}
 				<p className='text-center'>{item.name}</p>
