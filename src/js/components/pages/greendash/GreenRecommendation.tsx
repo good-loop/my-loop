@@ -180,7 +180,7 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 			<>
 				<p>Domains X: {buckets?.length}</p>
 				<div style={{ maxHeight:'15em', overflowY: 'scroll' }}>
-					{leftDomains?.map((val, index) => (
+					{buckets?.map((val, index) => (
 						<span key={index}>
 							{val}
 							<br />
