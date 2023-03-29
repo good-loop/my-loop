@@ -1,8 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Col, Container, Row } from 'reactstrap';
+import React, { useEffect, useState } from 'react';
+import { Alert, Button, Card, Col, Container, Row } from 'reactstrap';
+import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import NewChartWidget from '../../../base/components/NewChartWidget';
-import PromiseValue from '../../../base/promise-value';
-import { type BreakdownRow, type GreenBuckets, emissionsPerImpressions, getCarbon } from './emissionscalcTs';
+import DataStore from '../../../base/plumbing/DataStore';
+import Login from '../../../base/youagain';
+import Misc from '../../../MiscOverrides';
+import { paramsFromUrl } from './dashUtils';
+import { emissionsPerImpressions, getBasefilters, getCarbon, GreenBuckets, type BaseFilters, type BreakdownRow } from './emissionscalcTs';
+import GreenDashboardFilters from './GreenDashboardFilters';
 
 interface ByDomainValue extends Object {
 	allCount: number;
@@ -15,189 +20,265 @@ interface ResolvedPromise extends ByDomainValue {
 	sampling?: ByDomainValue;
 }
 
-type BaseFilters = {
-	q: string;
-	start: string;
-	end: string;
-	prob?: string;
-	sigfig?: string;
-	nocache?: boolean;
-	fixseed?: boolean;
-	numRows?: string;
-};
+const TICKS_NUM = 100;
 
-const baseFiltersTemp = {
-	q: 'campaign:nrxhFNGq OR campaign:iLWiEWO6 OR campaign:sjhhqRsR OR campaign:3mYN5ixz OR campaign:PdJMNhOH OR campaign:9x5iaOdG OR campaign:JCWGRAES OR campaign:B0Ywbe1l',
-	start: '2022-11-01T00%3A00%3A00.000Z',
-	end: '2023-03-31T23:00:00.000Z',
-	prob: '-1',
-	fixseed: true,
-	numRows: '10000',
-};
+interface RangeSliderProps {
+	min: number;
+	max: number;
+	step?: number;
+	defaultValue: number;
+	onChange?: (value: number) => void;
+}
 
-const RangeSlider = ({ carbonRange, domainBuckets }: { carbonRange: { max: number; min: number }; domainBuckets: GreenBuckets }) => {
-	const [minSelected, setMin] = useState<number>(carbonRange.min * 1000 || 0);
-	const [maxSelected, setMax] = useState<number>(carbonRange.max * 1000 || 10000);
-	const [availableDomains, setAvailableDomains] = useState<GreenBuckets>();
-
+const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, defaultValue, onChange }) => {
 	useEffect(() => {
-		const availableDomains = domainBuckets.filter((val) => (val.co2 as number) * 1000 >= minSelected && (val.co2 as number) * 1000 <= maxSelected);
-		setAvailableDomains(availableDomains);
-	}, [minSelected, maxSelected]);
+		if (onChange) {
+			onChange(defaultValue);
+		}
+	}, []);
 
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>, setter: { (value: React.SetStateAction<number>): void }) => {
-		setter(Number(event.target.value));
+	const [value, setValue] = useState(defaultValue);
+
+	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const newValue = parseFloat(event.target.value);
+		setValue(newValue);
+
+		if (onChange) {
+			onChange(newValue);
+		}
 	};
 
-	const chartData = useMemo(() => {
-		const sortedBuckets = domainBuckets.sort((a, b) => (a.co2 as number) - (b.co2 as number));
-		const dataLabels = sortedBuckets.map((val) => val.key);
-		const dataValues = sortedBuckets.map((val) => (val.co2 as number) * 1000);
+	return (
+		<Row>
+			<Col xs={2}>{min.toPrecision(3)}</Col>
+			<Col xs={8} className='text-center'>
+				<input className='w-100' type='range' min={min} max={max} step={step} value={value} onChange={handleChange} />
+				{value.toPrecision(3)}
+			</Col>
+			<Col xs={2}>{max.toPrecision(3)}</Col>
+		</Row>
+	);
+};
 
-		return {
+const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets }): JSX.Element | null => {
+	const [chartData, setChartData] = useState<any>();
+
+	useEffect(() => {
+		const co2s = bucketsPer1000.map((row) => row.co2! as number);
+		const maxCo2 = Math.max(...co2s);
+		const minCo2 = Math.min(...co2s);
+		const steps = (maxCo2 - minCo2) / TICKS_NUM; // How large is a tick
+
+		const scaledBuckets = bucketsPer1000.map((row) => {
+			const percentage = Math.floor(((row.co2 as number) - minCo2) / steps);
+			return { key: row.key, count: row.count, co2: row.co2, percentage };
+		});
+
+		if (!scaledBuckets) return;
+
+		const percentageBuckets: typeof scaledBuckets[] = Array.from({ length: TICKS_NUM }, () => []);
+		scaledBuckets.forEach((row) => {
+			const percentageKey = Math.max(row.percentage, 1) - 1;
+			percentageBuckets[percentageKey].push(row);
+		});
+
+		const dataLabels = percentageBuckets.map((row) =>
+			row[0]?.co2 ? (row[0].co2 as number).toPrecision(2) : (percentageBuckets.indexOf(row) * steps + minCo2).toPrecision(2)
+		);
+		// const dataValues = percentageBuckets.map((row) => row.length);
+		// Weight by impressions, not count of domains
+		const dataValues = percentageBuckets.map((row) => row.reduce((acc: number, curr: any) => acc + curr.count, 0));
+
+		const chartOptions = {
+			responsive: true,
+		};
+
+		setChartData({
 			type: 'bar',
 			data: {
 				labels: dataLabels,
 				datasets: [
 					{
-						label: 'co2',
+						label: 'Impressions',
 						data: dataValues,
 						backgroundColor: 'green',
 					},
 				],
 			},
-		};
-	}, [domainBuckets]);
+			options: chartOptions,
+		});
+	}, [bucketsPer1000]);
 
-	const chartOptions = useMemo(() => {
-		const max = {
-			type: 'line',
-			borderColor: 'red',
-			borderWidth: 1,
-			scaleID: 'y',
-			value: maxSelected,
-		};
+	return chartData ? (
+		<NewChartWidget width={null} height={280} datalabels={null} maxy={null} {...chartData} />
+	) : (
+		<Misc.Loading text={null} pv={null} inline={null} />
+	);
+};
 
-		const min = {
-			type: 'line',
-			borderColor: 'blue',
-			borderWidth: 1,
-			scaleID: 'y',
-			value: minSelected,
-		};
+const GreenRecommendation2 = (): JSX.Element | null => {
+	const [selectedCo2, setSelectedCo2] = useState<number>();
+	const [leftDomains, setLeftDomains] = useState<string[]>();
+	const [rightDomains, setRightDomains] = useState<string[]>();
 
-		return {
-			responsive: true,
-			tooltips: {
-				mode: 'index',
-				intersect: true,
-			},
-			plugins: {
-				annotation: {
-					annotations: { max, min },
-				},
-			},
-		};
-	}, [minSelected, maxSelected]);
+	useEffect(() => {
+		if (!selectedCo2) return;
+		setLeftDomains(bucketsPer1000.filter((val) => (val.co2 as number) <= selectedCo2).map((val) => val.key as string));
+		setRightDomains(bucketsPer1000.filter((val) => (val.co2 as number) > selectedCo2).map((val) => val.key as string));
+	}, [selectedCo2]);
+
+	const urlParams = paramsFromUrl(['period', 'prob', 'sigfig', 'nocache']);
+	const period = urlParams.period;
+	if (!period) return null; // Filter widget will set this on first render - allow it to update
+
+	let baseFilters = getBasefilters(urlParams);
+
+	// BaseFiltersFailed
+	if ('type' in baseFilters && 'message' in baseFilters) {
+		if (baseFilters.type === 'alert') {
+			return <Alert color='info'>{baseFilters.message}</Alert>;
+		}
+		if (baseFilters.type === 'loading') {
+			return <Misc.Loading text={baseFilters.message!} pv={null} inline={null} />;
+		}
+	}
+
+	/**
+	 * Inital load of total
+	 */
+	const baseFilterConfirmed = { ...baseFilters, numRows: '10000' } as unknown as BaseFilters;
+
+	const pvChartTotal = getCarbon({ ...baseFilterConfirmed, breakdown: ['domain{"countco2":"sum"}'] });
+	if (!pvChartTotal.resolved) return <Misc.Loading text={null} pv={null} inline={null} />;
+
+	const pvChartTotalValue = baseFilterConfirmed.prob && baseFilterConfirmed.prob != 0 ? pvChartTotal.value?.sampling : pvChartTotal.value;
+	const bucketsPer1000 = emissionsPerImpressions(pvChartTotalValue.by_domain.buckets);
+
+	const co2s = bucketsPer1000.map((row) => row.co2! as number);
+	const maxCo2 = Math.max(...co2s);
+	const minCo2 = Math.min(...co2s);
+	const middleCo2 = ((maxCo2 - minCo2) * 1) / 2;
+	const steps = (maxCo2 - minCo2) / TICKS_NUM; // How large is a tick
+	const silderProps: RangeSliderProps = { min: minCo2 * 1, max: maxCo2 * 1, step: steps, defaultValue: middleCo2, onChange: setSelectedCo2 };
+
+	const downloadCSV = (data?: string[]) => {
+		if (!data) return;
+		const csv = data.join('\n');
+		const blob = new Blob([csv], { type: 'text/csv' });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = 'data.csv';
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+		URL.revokeObjectURL(url);
+	};
+
+	const DomainList = ({ buckets }: { buckets?: string[] }): JSX.Element => {
+		return (
+			<>
+				<p>Domains X: {buckets?.length}</p>
+				<div style={{ maxHeight:'15em', overflowY: 'scroll' }}>
+					{buckets?.map((val, index) => (
+						<span key={index}>
+							{val}
+							<br />
+						</span>
+					))}
+				</div>
+				<Button onClick={() => downloadCSV(buckets)}>Download CSV</Button>
+			</>
+		);
+	};
 
 	return (
 		<div>
-			<input type='range' min={carbonRange.min * 1000} max={carbonRange.max * 1000} value={minSelected.toString()} onChange={(e) => handleChange(e, setMin)} />
-			<input type='range' min={carbonRange.min * 1000} max={carbonRange.max * 1000} value={maxSelected.toString()} onChange={(e) => handleChange(e, setMax)} />
-			<div>
-				<label>Min: </label>
-				<span>{Math.round(minSelected)} grams</span>
-			</div>
-			<div>
-				<label>Max: </label>
-				<span>{Math.round(maxSelected)} grams</span>
-			</div>
-			<div>
-				<label>Numbers of domains in this range: </label>
-				<span>{availableDomains && availableDomains.length}</span>
-			</div>
-			<NewChartWidget options={chartOptions} width={null} height={null} datalabels={null} maxy={null} {...chartData} />
+			<Row style={{height:'20em'}}>
+				<Col xs={2}>
+					<DomainList buckets={leftDomains} />
+				</Col>
+				<Col xs={8}>
+					<div className='w-100 h-100'>
+						<RecommendationChart bucketsPer1000={bucketsPer1000} />
+					</div>
+				</Col>
+				<Col xs={2}>
+					<DomainList buckets={rightDomains} />
+				</Col>
+			</Row>
+			<RangeSlider {...silderProps} />
 		</div>
 	);
 };
 
 const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX.Element => {
-	if (!baseFilters) baseFilters = baseFiltersTemp;
+	const [agencyIds, setAgencyIds] = useState<any[]>();
+	let agencyId = DataStore.getUrlValue('agency');
+	if (!agencyId && agencyIds?.length === 1) agencyId = agencyIds[0];
+	const [pseudoUser, setPseudoUser] = useState<boolean>(false);
 
-	const [domainBuckets, setDomainBuckets] = useState<GreenBuckets>();
-	const [carbonRange, setCarbonRange] = useState<{ max: number; min: number }>();
-	const [domainList, setDomainList] = useState<{ upperDomains: GreenBuckets; lowerDomains: GreenBuckets; midDomains: GreenBuckets }>();
-
-	const pvDataValue: PromiseValue = getCarbon({
-		...baseFilters,
-		breakdown: ['domain{"emissions":"sum"}'],
-		// endpoint: 'https://locallg.good-loop.com/data?'
-	});
-
-	// Type hack: If it is resolved value must be an Object
-	const resolvedValue = pvDataValue.resolved ? (pvDataValue.value as ResolvedPromise) : null;
-	const byDomainValue = resolvedValue && (resolvedValue.sampling ? resolvedValue.sampling : resolvedValue);
-
+	// All our filters etc are based user having at most access to one agency ??how so?
+	// Group M users will have multiple, so start by selecting one.
 	useEffect(() => {
-		if (!byDomainValue) return;
-		const allCount = byDomainValue.allCount;
-		const buckets = emissionsPerImpressions(byDomainValue.by_domain.buckets);
-		setDomainBuckets(buckets);
-		const co2s = buckets.map((row) => row.co2! as number);
+		const userId = Login.getId(null);
+		if (userId && userId.endsWith('@pseudo')) setPseudoUser(true);
 
-		const bucketSize = buckets.length;
-		const maxCo2 = Math.max(...co2s);
-		const minCo2 = Math.min(...co2s);
-		setCarbonRange({ max: maxCo2, min: minCo2 });
-
-		const range = maxCo2 - minCo2;
-		const upperQuartile = range * 0.75 + minCo2;
-		// const midPoint = range * 0.5 + minCo2;
-		const lowerQuartile = range * 0.25 + minCo2;
-
-		const upperDomains: GreenBuckets = [];
-		const lowerDomains: GreenBuckets = [];
-		const midDomains: GreenBuckets = [];
-
-		buckets.forEach((row) => {
-			if (row.co2 > upperQuartile) {
-				upperDomains.push(row);
-			} else if (row.co2 < lowerQuartile) {
-				lowerDomains.push(row);
-			} else {
-				midDomains.push(row);
+		Login.getSharedWith().then((res: any) => {
+			if (!res?.cargo) {
+				setAgencyIds([]);
+				return;
 			}
+			const _agencyIds = res.cargo
+				.map((share: any) => {
+					const matches = share.item.match(/^Agency:(\w+)$/);
+					if (!matches) return null;
+					return matches[1];
+				})
+				.filter((a: any) => a);
+			setAgencyIds(_agencyIds);
 		});
+	}, [Login.getId(null)]);
 
-		setDomainList({ upperDomains, lowerDomains, midDomains });
-	}, [byDomainValue]);
-
-	console.log('domainList', domainList);
+	// Only for logged-in users!
+	if (!Login.isLoggedIn())
+		return (
+			<Container>
+				<Card body id='green-login-card' className='m-4'>
+					<Container>
+						<Row>
+							<Col className='decoration flex-center' xs='12' sm='4'>
+								<img className='stamp' src='/img/green/gl-carbon-neutral.svg' />
+							</Col>
+							<Col className='form' xs='12' sm='8'>
+								<img className='gl-logo my-4' src='/img/gl-logo/rectangle/logo-name.svg' />
+								<p className='text-center my-4'>
+									Understand the carbon footprint of your advertising and
+									<br />
+									discover your offsetting and climate-positive successes
+								</p>
+								<LoginWidgetEmbed verb='login' canRegister={false} services={null} onLogin={null} onRegister={null} />
+							</Col>
+						</Row>
+					</Container>
+				</Card>
+			</Container>
+		);
 
 	return (
-		<Container>
-			<h1>Green Recommendations</h1>
-			<Row className='w-100 text-center' style={{ maxHeight: '20em', overflowY: 'scroll' }}>
-				<Col xs={4}>
-					<h3>Upper Domains</h3>
-					<p>Domains in this list: {domainList?.upperDomains.length}</p>
-					<div className='list'>{domainList?.upperDomains && domainList?.upperDomains.map((row, idx) => <p key={idx}>{row.key}</p>)}</div>
-				</Col>
-				<Col xs={4}>
-					<h3>Mid Domains</h3>
-					<p>Domains in this list: {domainList?.midDomains.length}</p>
-					<div className='list'>{domainList?.midDomains && domainList?.midDomains.map((row, idx) => <p key={idx}>{row.key}</p>)}</div>
-				</Col>
-				<Col xs={4}>
-					<h3>Lower Domains</h3>
-					<p>Domains in this list: {domainList?.lowerDomains.length}</p>
-					<div className='list'>{domainList?.lowerDomains && domainList?.lowerDomains.map((row, idx) => <p key={idx}>{row.key}</p>)}</div>
-				</Col>
-			</Row>
-
-			<h1>Fun Scroller</h1>
-			{carbonRange && domainBuckets && <RangeSlider carbonRange={carbonRange} domainBuckets={domainBuckets} />}
-		</Container>
+		<div className='green-subpage green-metrics'>
+			<Container fluid>
+				{agencyIds ? (
+					<>
+						<GreenDashboardFilters pseudoUser={pseudoUser} />
+						<h1>Green Recommendations</h1>
+						<GreenRecommendation2 />
+					</>
+				) : (
+					<Misc.Loading text='Checking your access...' pv={null} inline={false} />
+				)}
+			</Container>
+		</div>
 	);
 };
 

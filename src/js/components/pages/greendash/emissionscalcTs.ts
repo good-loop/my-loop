@@ -3,23 +3,23 @@
  */
 
 import _ from 'lodash';
-import { sum, uniq } from '../../../base/utils/miscutils';
-import DataStore from '../../../base/plumbing/DataStore';
-import ServerIO from '../../../plumbing/ServerIO';
-import { getDataList } from '../../../base/plumbing/Crud';
-import C from '../../../C';
+import md5 from 'md5';
+import Campaign from '../../../base/data/Campaign';
+import Impact from '../../../base/data/Impact';
+import ImpactDebit from '../../../base/data/ImpactDebit';
 import KStatus from '../../../base/data/KStatus';
 import List from '../../../base/data/List';
-import Campaign from '../../../base/data/Campaign';
-import md5 from 'md5';
+import { getDataItem, getDataList } from '../../../base/plumbing/Crud';
+import DataStore from '../../../base/plumbing/DataStore';
 import PromiseValue from '../../../base/promise-value';
-import Impact from '../../../base/data/Impact';
-import { periodFromUrl } from './dashutils';
-import { assert } from '../../../base/utils/assert';
-import ImpactDebit from '../../../base/data/ImpactDebit';
 import SearchQuery from '../../../base/searchquery';
+import { assert } from '../../../base/utils/assert';
+import { sum, uniq, yessy } from '../../../base/utils/miscutils';
+import C from '../../../C';
+import ServerIO from '../../../plumbing/ServerIO';
+import { getFilterModeId, periodFromUrl } from './dashutils';
 import { Period } from './dashUtils';
-import { getDataLogData } from '../../../base/plumbing/DataLog';
+
 /**
  * An array of Records
  */
@@ -44,6 +44,117 @@ export type BreakdownRow = {
 	co2supplypath?: number;
 };
 
+export type BaseFilters = {
+	q: string;
+	start: string;
+	end: string;
+	prob?: string | number;
+	sigfig?: string | number;
+	nocache?: boolean;
+	fixseed?: boolean;
+	numRow?: string | number;
+	num?: string | number;
+};
+
+export type BaseFiltersFailed = {
+	type?: 'alert' | 'loading';
+	message?: string;
+};
+
+/**
+ * Supposedly return a BaseFilters. But when there are exceptions, return a alert or loading message. Catch the message wtih <Alert /> or <Misc.Loading /> div.
+ * Usage examples see GreenMetrics2 in ./GreenMetrics.jsx
+ * @param urlParams fetch using paramsFromUrl in dashUtils.ts
+ */
+export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed => {
+	// Default to current quarter, all brands, all campaigns
+	const period = urlParams.period;
+	let { filterMode, filterId } = getFilterModeId();
+
+	let failedObject: BaseFiltersFailed = {};
+
+	if (!filterMode) {
+		failedObject = { type: 'alert', message: 'Select a brand, campaign, or tag to see data.' };
+		return failedObject;
+	}
+
+	// Fetch common data for CO2Card and BreakdownCard.
+	// CompareCard sets its own time periods & TimeOfDayCard sets the timeofday flag, so both need to fetch their own data
+	// ...but give them the basic filter spec so they stay in sync otherwise
+
+	// Query filter e.g. which brand, campaign, or tag?
+	let q = `${filterMode}:${filterId}`;
+
+	// HACK: filterMode=brand is twice wrong: the data uses vertiser, and some tags dont carry brand info :(
+	// So do it by an OR over campaign-ids instead.
+	if (filterMode === 'brand') {
+		// get the campaigns
+		let sq = SearchQuery.setProp(null, 'vertiser', filterId);
+		const pvAllCampaigns = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUBLISHED, q: sq.query, ids: null, sort: null, start: null, end: null });
+		if (!pvAllCampaigns.resolved) {
+			failedObject = { type: 'loading', message: 'Fetching brand campaigns...' };
+			return failedObject;
+		}
+		const campaignIds = List.hits(pvAllCampaigns.value)?.map((c) => c.id);
+		if (!yessy(campaignIds)) {
+			failedObject = { type: 'alert', message: `No campaigns for brand id: ${filterId}` };
+			return failedObject;
+		}
+		q = SearchQuery.setPropOr(null, 'campaign', campaignIds!).query;
+	}
+	if (filterMode === 'agency') {
+		// copy pasta of brand above
+		// get the campaigns
+		let sq = SearchQuery.setProp(null, 'agencyId', filterId);
+		const pvAllCampaigns = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUBLISHED, q: sq.query, ids: null, sort: null, start: null, end: null });
+		if (!pvAllCampaigns.resolved) {
+			failedObject = { type: 'loading', message: 'Fetching agency campaigns...' };
+			return failedObject;
+		}
+		const campaignIds = List.hits(pvAllCampaigns.value)?.map((c) => c.id);
+		if (!yessy(campaignIds)) {
+			failedObject = { type: 'alert', message: `No campaigns for agency id: ${filterId}` };
+			return failedObject;
+		}
+		q = SearchQuery.setPropOr(null, 'campaign', campaignIds!).query;
+	}
+
+	// HACK: Is this a master campaign? Do we need to cover sub-campaigns?
+	if (filterMode === 'campaign') {
+		const pvCampaign = getDataItem({ type: C.TYPES.Campaign, id: filterId, status: KStatus.PUB_OR_DRAFT, action: null, swallow: null });
+		if (!pvCampaign.value) {
+			failedObject = { type: 'loading', message: 'Fetching campaigns...' };
+			return failedObject;
+		}
+		const campaign = pvCampaign.value;
+		if (Campaign.isMaster(campaign)) {
+			const pvAllCampaigns = Campaign.pvSubCampaigns({ campaign });
+			if (!pvAllCampaigns.resolved) {
+				failedObject = { type: 'loading', message: 'Fetching campaigns...' };
+				return failedObject;
+			}
+			const campaignIds = List.hits(pvAllCampaigns.value)!.map((c) => c.id);
+			if (!yessy(campaignIds)) {
+				failedObject = { type: 'alert', message: `No campaigns for master campaign id: ${filterId}` };
+				return failedObject;
+			}
+			q = SearchQuery.setPropOr(null, 'campaign', campaignIds).query;
+		}
+	}
+
+	const baseFilters: BaseFilters = {
+		q,
+		start: period.start.toISOString(),
+		end: period.end.toISOString(),
+		prob: urlParams.prob?.toString(),
+		sigfig: urlParams.sigfig?.toString(),
+		nocache: urlParams.nocache,
+		fixseed: true,
+	};
+
+	return baseFilters;
+};
+
 export const getCarbon = ({
 	endpoint,
 	q = '',
@@ -52,7 +163,7 @@ export const getCarbon = ({
 	breakdown,
 	...rest
 }: {
-	endpoint?: string,
+	endpoint?: string;
 	q: string;
 	start: string;
 	end: string;
@@ -72,7 +183,7 @@ export const getCarbon = ({
 	return DataStore.fetch(
 		['misc', 'DataLog', 'green', md5(JSON.stringify(data))],
 		() => {
-			return ServerIO.load((endpoint || ServerIO.DATALOG_ENDPOINT), { data, swallow: true });
+			return ServerIO.load((endpoint ? endpoint : ServerIO.DATALOG_ENDPOINT), { data, swallow: true });
 		},
 		null,
 		null
@@ -130,7 +241,7 @@ export const getCompressedBreakdownWithCount = ({
 		};
 	});
 	// get average of repeated keys
-	let breakdownByOSGroupOutput: {[key: string]: number} = {};
+	let breakdownByOSGroupOutput: { [key: string]: number } = {};
 	Object.entries(breakdownByOSGroup2).forEach(([k, v]) => {
 		breakdownByOSGroupOutput[k] = v.co2 / v.occurs!;
 	});
@@ -148,7 +259,7 @@ export const getBreakdownByWithCount = (buckets: GreenBuckets, keyNamesToSum: st
 
 	const bi = keyNameToBreakdown === 'time' ? 'key_as_string' : 'key';
 
-	let totalByX: {[key: string]: Object} = {};
+	let totalByX: { [key: string]: Object } = {};
 	for (let i = 0; i < buckets.length; i++) {
 		const row: BreakdownRow = buckets[i];
 		const breakdownKey = row[bi];
@@ -159,7 +270,7 @@ export const getBreakdownByWithCount = (buckets: GreenBuckets, keyNamesToSum: st
 				return;
 			}
 		});
-		totalByX[breakdownKey] = keyNamesToSum.reduce((acc: {[key: string]: any}, cur) => {
+		totalByX[breakdownKey] = keyNamesToSum.reduce((acc: { [key: string]: any }, cur) => {
 			acc[cur] = { ...row }[cur];
 			return acc;
 		}, {});
@@ -191,7 +302,7 @@ export const getTags = (buckets: GreenBuckets): PromiseValue | null => {
 		return null;
 	}
 
-	const tagIdSet: {[key: string]: boolean} = {};
+	const tagIdSet: { [key: string]: boolean } = {};
 	const adIdKey = 'key';
 	buckets.forEach((row, i) => {
 		let adid: string = row[adIdKey] as string;
@@ -222,7 +333,7 @@ export const getCampaigns = (buckets: GreenBuckets) => {
 	return PromiseValue.then(
 		pvTags,
 		(tags: List) => {
-			let cidSet: {[key: string]: boolean} = {};
+			let cidSet: { [key: string]: boolean } = {};
 			List.hits(tags)?.forEach((tag: Record<string, any>) => {
 				if (tag && tag.campaign) {
 					cidSet[tag.campaign] = true;
