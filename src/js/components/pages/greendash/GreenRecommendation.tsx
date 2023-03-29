@@ -3,11 +3,14 @@ import { Alert, Button, Card, Col, Container, Row } from 'reactstrap';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import NewChartWidget from '../../../base/components/NewChartWidget';
 import DataStore from '../../../base/plumbing/DataStore';
+import { asNum } from '../../../base/utils/miscutils';
+import printer from '../../../base/utils/printer';
 import Login from '../../../base/youagain';
 import Misc from '../../../MiscOverrides';
 import { paramsFromUrl } from './dashUtils';
 import { emissionsPerImpressions, getBasefilters, getCarbon, GreenBuckets, type BaseFilters, type BreakdownRow } from './emissionscalcTs';
 import GreenDashboardFilters from './GreenDashboardFilters';
+import { GLCard } from '../../impact/GLCards';
 
 interface ByDomainValue extends Object {
 	allCount: number;
@@ -50,21 +53,27 @@ const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, defaultValue,
 
 	return (
 		<Row>
-			<Col xs={2}>{min.toPrecision(3)}</Col>
-			<Col xs={8} className='text-center'>
+			{min && <Col xs={1}>{min.toPrecision(3)}</Col> /* don't show 0 */}
+			<Col xs={10} className='text-center'>
 				<input className='w-100' type='range' min={min} max={max} step={step} value={value} onChange={handleChange} />
 				{value.toPrecision(3)}
 			</Col>
-			<Col xs={2}>{max.toPrecision(3)}</Col>
+			<Col xs={1}>{max.toPrecision(3)}</Col>
 		</Row>
 	);
 };
 
+/**
+ * 
+ * @param {Object} p
+ * @param {GreenBuckets} p.bucketsPer1000 A DataLog breakdown of carbon emissions. e.g. [{key, co2, count}]
+ * @returns 
+ */
 const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets }): JSX.Element | null => {
 	const [chartData, setChartData] = useState<any>();
 
 	useEffect(() => {
-		const co2s = bucketsPer1000.map((row) => row.co2! as number);
+		const co2s = bucketsPer1000.map((row) => row.co2 as number);
 		const maxCo2 = Math.max(...co2s);
 		const minCo2 = Math.min(...co2s);
 		const steps = (maxCo2 - minCo2) / TICKS_NUM; // How large is a tick
@@ -91,6 +100,24 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 
 		const chartOptions = {
 			responsive: true,
+			// see https://www.chartjs.org/docs/latest/samples/scale-options/titles.html
+			scales: {
+				x: {
+					display: true,
+					title: {
+						display: true,
+						text: 'grams CO2e per impression',
+					}
+				},
+				y: {
+					display: true,
+					type: 'logarithmic',
+					title: {
+						display: true,
+						text: 'Impressions',
+					}					
+				}
+			}
 		};
 
 		setChartData({
@@ -116,15 +143,23 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 	);
 };
 
+/**
+ * Publisher lists
+ * @returns 
+ */
 const GreenRecommendation2 = (): JSX.Element | null => {
+	// CO2 per impression grams??
 	const [selectedCo2, setSelectedCo2] = useState<number>();
-	const [leftDomains, setLeftDomains] = useState<string[]>();
-	const [rightDomains, setRightDomains] = useState<string[]>();
+	const [lowBuckets, setLowBuckets] = useState();
+	const [highBuckets, setHighBuckets] = useState();
 
+	// sort into two lists using bucketsPer1000 below
 	useEffect(() => {
 		if (!selectedCo2) return;
-		setLeftDomains(bucketsPer1000.filter((val) => (val.co2 as number) <= selectedCo2).map((val) => val.key as string));
-		setRightDomains(bucketsPer1000.filter((val) => (val.co2 as number) > selectedCo2).map((val) => val.key as string));
+		let lowBuckets = bucketsPer1000.filter((val) => (val.co2 as number) <= selectedCo2);
+		setLowBuckets(lowBuckets);
+		let highBuckets = bucketsPer1000.filter((val) => (val.co2 as number) > selectedCo2);
+		setHighBuckets(highBuckets);		
 	}, [selectedCo2]);
 
 	const urlParams = paramsFromUrl(['period', 'prob', 'sigfig', 'nocache']);
@@ -154,6 +189,20 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 	const pvChartTotalValue = baseFilterConfirmed.prob && baseFilterConfirmed.prob != 0 ? pvChartTotal.value?.sampling : pvChartTotal.value;
 	const bucketsPer1000 = emissionsPerImpressions(pvChartTotalValue.by_domain.buckets);
 
+	let leftDomains = lowBuckets && lowBuckets.map(val => val.key);
+	let rightDomains = highBuckets && highBuckets.map(val => val.key);
+	// what weight of impressions is included?
+	let lowImps = 0, highImps = 0, lowWeightedAvg = 0, highWeightedAvg = 0;
+	if (lowBuckets) {		
+		lowBuckets.forEach(bucket => { lowImps += bucket.count; lowWeightedAvg += bucket.count*bucket.co2; });
+		highBuckets.forEach(bucket => { highImps += bucket.count; highWeightedAvg += bucket.count*bucket.co2; });
+		lowWeightedAvg = lowWeightedAvg / lowImps;
+		highWeightedAvg = highWeightedAvg / highImps;
+	}
+	let totalImps = 0, weightedAvg = 0;
+	bucketsPer1000.map(bucket => { weightedAvg += bucket.count*bucket.co2; totalImps+=bucket.count; });
+	weightedAvg = weightedAvg / totalImps;
+
 	const co2s = bucketsPer1000.map((row) => row.co2! as number);
 	const maxCo2 = Math.max(...co2s);
 	const minCo2 = Math.min(...co2s);
@@ -175,40 +224,48 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 		URL.revokeObjectURL(url);
 	};
 
-	const DomainList = ({ buckets }: { buckets?: string[] }): JSX.Element => {
+	const DomainList = ({ low, buckets, avg }: { low?: boolean, buckets?: string[] }): JSX.Element => {
 		return (
 			<>
-				<p>Domains X: {buckets?.length}</p>
-				<div style={{ maxHeight:'15em', overflowY: 'scroll' }}>
-					{buckets?.map((val, index) => (
-						<span key={index}>
-							{val}
-							<br />
-						</span>
-					))}
-				</div>
+				<h4>{low ? "Low" : "High"}-Carbon</h4>
+				<div>{buckets?.length || '-'} domains</div>
+				<div>{lowImps+highImps? printer.prettyNumber((low?lowImps:highImps)*100/(lowImps+highImps), 2)+'%' : null} by volume</div>
+				<div>Average: {printer.prettyNumber(avg)} grams CO2e</div>
+				<div style={{ maxHeight: '15em', overflowY: 'scroll', overflowX: 'clip' }}>
+					<ul>
+						{buckets?.map((val, index) => <li key={index}>{val}</li>)}
+					</ul>
+				</div>				
 				<Button onClick={() => downloadCSV(buckets)}>Download CSV</Button>
+				<div>Then use as {low? 'an allow' : 'a block'}-list in your DSP</div>
 			</>
 		);
 	};
 
 	return (
-		<div>
-			<Row style={{height:'20em'}}>
-				<Col xs={2}>
-					<DomainList buckets={leftDomains} />
+		<GLCard>
+			<h3 className='mx-auto'>Use Publisher Lists to Reduce Carbon</h3>
+			<Row style={{}}>
+				<Col xs={3}>
+					<DomainList buckets={leftDomains} low avg={lowWeightedAvg} />
 				</Col>
-				<Col xs={8}>
+				<Col xs={6}>
 					<div className='w-100 h-100'>
 						<RecommendationChart bucketsPer1000={bucketsPer1000} />
+						<RangeSlider {...silderProps} />
+						<h4>Estimated Reduction: {printer.prettyNumber(100*(weightedAvg - lowWeightedAvg) / weightedAvg, 2)}%</h4>
 					</div>
 				</Col>
-				<Col xs={2}>
-					<DomainList buckets={rightDomains} />
+				<Col xs={3}>
+					<DomainList buckets={rightDomains} avg={highWeightedAvg} />
 				</Col>
 			</Row>
-			<RangeSlider {...silderProps} />
-		</div>
+			<p className='mt-2'>
+				These lists are based on observed data within the current filters. 
+				We also have general publisher lists available for use. 
+				Please contact <a href='mailto:support@good-loop.com?subject=Carbon%20reducttion%20publisher%20lists'>support@good-loop.com</a> for information.
+			</p>
+		</GLCard>
 	);
 };
 

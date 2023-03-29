@@ -21,7 +21,8 @@ import { getFilterModeId, periodFromUrl } from './dashutils';
 import { Period } from './dashUtils';
 
 /**
- * An array of Records
+ * An array of Records ??what are the keys/values??
+ * ??can be [{key, co2, count}]
  */
 export type GreenBuckets = Record<string, string | number>[];
 
