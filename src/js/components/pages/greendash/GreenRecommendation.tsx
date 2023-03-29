@@ -1,13 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, Card, Col, Container, Row } from 'reactstrap';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import NewChartWidget from '../../../base/components/NewChartWidget';
 import DataStore from '../../../base/plumbing/DataStore';
 import Login from '../../../base/youagain';
 import Misc from '../../../MiscOverrides';
-import { getFilterModeId } from './dashutils';
 import { paramsFromUrl } from './dashUtils';
-import { type BreakdownRow, type BaseFilters, getBasefilters, getCarbon, emissionsPerImpressions } from './emissionscalcTs';
+import { emissionsPerImpressions, getBasefilters, getCarbon, GreenBuckets, type BaseFilters, type BreakdownRow } from './emissionscalcTs';
 import GreenDashboardFilters from './GreenDashboardFilters';
 
 interface ByDomainValue extends Object {
@@ -23,35 +22,48 @@ interface ResolvedPromise extends ByDomainValue {
 
 const TICKS_NUM = 100;
 
-const GreenRecommendation2 = (): JSX.Element | null => {
-	const urlParams = paramsFromUrl(['period', 'prob', 'sigfig', 'nocache']);
-	const period = urlParams.period;
-	if (!period) return null; // Filter widget will set this on first render - allow it to update
+interface RangeSliderProps {
+	min: number;
+	max: number;
+	step?: number;
+	defaultValue: number;
+	onChange?: (value: number) => void;
+}
 
-	let baseFilters = getBasefilters(urlParams);
-
-	// BaseFiltersFailed
-	if ('type' in baseFilters && 'message' in baseFilters) {
-		if (baseFilters.type === 'alert') {
-			return <Alert color='info'>{baseFilters.message}</Alert>;
+const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, defaultValue, onChange }) => {
+	useEffect(() => {
+		if (onChange) {
+			onChange(defaultValue);
 		}
-		if (baseFilters.type === 'loading') {
-			return <Misc.Loading text={baseFilters.message!} pv={null} inline={null} />;
+	}, []);
+
+	const [value, setValue] = useState(defaultValue);
+
+	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const newValue = parseFloat(event.target.value);
+		setValue(newValue);
+
+		if (onChange) {
+			onChange(newValue);
 		}
-	}
+	};
 
-	/**
-	 * Inital load of total
-	 */
-	const baseFilterConfirmed = { ...baseFilters, numRows: '10000' } as unknown as BaseFilters;
+	return (
+		<Row>
+			<Col xs={2}>{min.toPrecision(3)}</Col>
+			<Col xs={8} className='text-center'>
+				<input className='w-100' type='range' min={min} max={max} step={step} value={value} onChange={handleChange} />
+				{value.toPrecision(3)}
+			</Col>
+			<Col xs={2}>{max.toPrecision(3)}</Col>
+		</Row>
+	);
+};
 
-	const chartData = useMemo(() => {
-		const pvChartTotal = getCarbon({ ...baseFilterConfirmed, breakdown: ['domain{"countco2":"sum"}'] });
-		if (!pvChartTotal.resolved) return;
+const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets }): JSX.Element | null => {
+	const [chartData, setChartData] = useState<any>();
 
-		const pvChartTotalValue = baseFilterConfirmed.prob && baseFilterConfirmed.prob != 0 ? pvChartTotal.value?.sampling : pvChartTotal.value;
-		const bucketsPer1000 = emissionsPerImpressions(pvChartTotalValue.by_domain.buckets);
-
+	useEffect(() => {
 		const co2s = bucketsPer1000.map((row) => row.co2! as number);
 		const maxCo2 = Math.max(...co2s);
 		const minCo2 = Math.min(...co2s);
@@ -81,7 +93,7 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 			responsive: true,
 		};
 
-		return {
+		setChartData({
 			type: 'bar',
 			data: {
 				labels: dataLabels,
@@ -94,27 +106,73 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 				],
 			},
 			options: chartOptions,
-		};
-	}, [baseFilterConfirmed]);
+		});
+	}, [bucketsPer1000]);
 
-	const [range, setRange] = useState<[number, number]>();
+	return chartData ? (
+		<NewChartWidget width={null} height={null} datalabels={null} maxy={null} {...chartData} />
+	) : (
+		<Misc.Loading text={null} pv={null} inline={null} />
+	);
+};
+
+const GreenRecommendation2 = (): JSX.Element | null => {
+	const [selectedCo2, setSelectedCo2] = useState<number>();
+	const [leftDomains, setLeftDomains] = useState<string[]>();
+	const [rightDomains, setRightDomains] = useState<string[]>();
+
+	useEffect(() => {
+		if (!selectedCo2) return;
+		setLeftDomains(bucketsPer1000.filter((val) => val.co2 as number <= selectedCo2).map((val) => val.key as string));
+		setRightDomains(bucketsPer1000.filter((val) => val.co2 as number > selectedCo2).map((val) => val.key as string));
+	}, [selectedCo2]);
+
+	const urlParams = paramsFromUrl(['period', 'prob', 'sigfig', 'nocache']);
+	const period = urlParams.period;
+	if (!period) return null; // Filter widget will set this on first render - allow it to update
+
+	let baseFilters = getBasefilters(urlParams);
+
+	// BaseFiltersFailed
+	if ('type' in baseFilters && 'message' in baseFilters) {
+		if (baseFilters.type === 'alert') {
+			return <Alert color='info'>{baseFilters.message}</Alert>;
+		}
+		if (baseFilters.type === 'loading') {
+			return <Misc.Loading text={baseFilters.message!} pv={null} inline={null} />;
+		}
+	}
+
+	/**
+	 * Inital load of total
+	 */
+	const baseFilterConfirmed = { ...baseFilters, numRows: '10000' } as unknown as BaseFilters;
+
+	const pvChartTotal = getCarbon({ ...baseFilterConfirmed, breakdown: ['domain{"countco2":"sum"}'] });
+	if (!pvChartTotal.resolved) return <Misc.Loading text={null} pv={null} inline={null} />;
+
+	const pvChartTotalValue = baseFilterConfirmed.prob && baseFilterConfirmed.prob != 0 ? pvChartTotal.value?.sampling : pvChartTotal.value;
+	const bucketsPer1000 = emissionsPerImpressions(pvChartTotalValue.by_domain.buckets);
+
+	const co2s = bucketsPer1000.map((row) => row.co2! as number);
+	const maxCo2 = Math.max(...co2s);
+	const minCo2 = Math.min(...co2s);
+	const middleCo2 = ((maxCo2 - minCo2) * 1) / 2;
+	const steps = (maxCo2 - minCo2) / TICKS_NUM; // How large is a tick
+	const silderProps: RangeSliderProps = { min: minCo2 * 1, max: maxCo2 * 1, step: steps, defaultValue: middleCo2, onChange: setSelectedCo2 };
 
 	return (
 		<div>
 			<Row>
-				<Col xs={2}>X Domains</Col>
+				<Col xs={2}><p>Domains X: {leftDomains?.length}</p></Col>
 				<Col xs={8}>
 					<div className='w-100'>
-						{!chartData ? (
-							<Misc.Loading pv={null} inline={null} text={null} />
-						) : (
-							<NewChartWidget width={null} height={null} datalabels={null} maxy={null} {...chartData} />
-						)}
+						<RecommendationChart bucketsPer1000={bucketsPer1000} />
 					</div>
 				</Col>
-				<Col xs={2}>Y Domains</Col>
+				<Col xs={2}><p>Domains X: {rightDomains?.length}</p></Col>
 			</Row>
-			<Row>Sliders</Row>
+			<RangeSlider {...silderProps} />
 		</div>
 	);
 };
