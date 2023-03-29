@@ -110,7 +110,7 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 	}, [bucketsPer1000]);
 
 	return chartData ? (
-		<NewChartWidget width={null} height={null} datalabels={null} maxy={null} {...chartData} />
+		<NewChartWidget width={null} height={280} datalabels={null} maxy={null} {...chartData} />
 	) : (
 		<Misc.Loading text={null} pv={null} inline={null} />
 	);
@@ -161,7 +161,8 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 	const steps = (maxCo2 - minCo2) / TICKS_NUM; // How large is a tick
 	const silderProps: RangeSliderProps = { min: minCo2 * 1, max: maxCo2 * 1, step: steps, defaultValue: middleCo2, onChange: setSelectedCo2 };
 
-	const downloadCSV = (data: string[]) => {
+	const downloadCSV = (data?: string[]) => {
+		if (!data) return;
 		const csv = data.join('\n');
 		const blob = new Blob([csv], { type: 'text/csv' });
 		const url = URL.createObjectURL(blob);
@@ -178,7 +179,7 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 		return (
 			<>
 				<p>Domains X: {buckets?.length}</p>
-				<div style={{ maxHeight: '20em', overflowY: 'scroll' }}>
+				<div style={{ maxHeight:'15em', overflowY: 'scroll' }}>
 					{leftDomains?.map((val, index) => (
 						<span key={index}>
 							{val}
@@ -193,12 +194,12 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 
 	return (
 		<div>
-			<Row>
+			<Row style={{height:'20em'}}>
 				<Col xs={2}>
 					<DomainList buckets={leftDomains} />
 				</Col>
 				<Col xs={8}>
-					<div className='w-100'>
+					<div className='w-100 h-100'>
 						<RecommendationChart bucketsPer1000={bucketsPer1000} />
 					</div>
 				</Col>
