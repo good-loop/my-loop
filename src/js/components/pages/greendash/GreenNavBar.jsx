@@ -79,9 +79,6 @@ const GreenNavBar = ({active}) => {
 			<a href={pseudoUser ? 'https://www.good-loop.com' : '/greendash'}>
 				<img className="logo" src="/img/logo-green-dashboard.svg" />
 			</a>
-			<span className="boosted text-center">
-				BOOSTED BY <img src="/img/gl-logo/external/scope3-logo.wb.svg" className="scope3-logo ml-1" />
-			</span>
 			<NavItem>
 				<A className={active === 'metrics' ? 'active' : ''} href={window.location}>
 					<div className="green-nav-icon metrics-icon" /> Metrics
