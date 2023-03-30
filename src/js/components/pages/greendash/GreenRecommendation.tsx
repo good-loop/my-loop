@@ -64,10 +64,10 @@ const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, defaultValue,
 };
 
 /**
- * 
+ *
  * @param {Object} p
  * @param {GreenBuckets} p.bucketsPer1000 A DataLog breakdown of carbon emissions. e.g. [{key, co2, count}]
- * @returns 
+ * @returns
  */
 const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets }): JSX.Element | null => {
 	const [chartData, setChartData] = useState<any>();
@@ -107,7 +107,7 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 					title: {
 						display: true,
 						text: 'grams CO2e per impression',
-					}
+					},
 				},
 				y: {
 					display: true,
@@ -115,9 +115,9 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 					title: {
 						display: true,
 						text: 'Impressions',
-					}					
-				}
-			}
+					},
+				},
+			},
 		};
 
 		setChartData({
@@ -145,13 +145,13 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 
 /**
  * Publisher lists
- * @returns 
+ * @returns
  */
 const GreenRecommendation2 = (): JSX.Element | null => {
 	// CO2 per impression grams??
 	const [selectedCo2, setSelectedCo2] = useState<number>();
-	const [lowBuckets, setLowBuckets] = useState();
-	const [highBuckets, setHighBuckets] = useState();
+	const [lowBuckets, setLowBuckets] = useState<GreenBuckets>();
+	const [highBuckets, setHighBuckets] = useState<GreenBuckets>();
 
 	// sort into two lists using bucketsPer1000 below
 	useEffect(() => {
@@ -159,7 +159,7 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 		let lowBuckets = bucketsPer1000.filter((val) => (val.co2 as number) <= selectedCo2);
 		setLowBuckets(lowBuckets);
 		let highBuckets = bucketsPer1000.filter((val) => (val.co2 as number) > selectedCo2);
-		setHighBuckets(highBuckets);		
+		setHighBuckets(highBuckets);
 	}, [selectedCo2]);
 
 	const urlParams = paramsFromUrl(['period', 'prob', 'sigfig', 'nocache']);
@@ -189,18 +189,31 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 	const pvChartTotalValue = baseFilterConfirmed.prob && baseFilterConfirmed.prob != 0 ? pvChartTotal.value?.sampling : pvChartTotal.value;
 	const bucketsPer1000 = emissionsPerImpressions(pvChartTotalValue.by_domain.buckets);
 
-	let leftDomains = lowBuckets && lowBuckets.map(val => val.key);
-	let rightDomains = highBuckets && highBuckets.map(val => val.key);
+	let leftDomains = lowBuckets && lowBuckets!.map((val) => val.key as string);
+	let rightDomains = highBuckets && highBuckets!.map((val) => val.key as string);
 	// what weight of impressions is included?
-	let lowImps = 0, highImps = 0, lowWeightedAvg = 0, highWeightedAvg = 0;
-	if (lowBuckets) {		
-		lowBuckets.forEach(bucket => { lowImps += bucket.count; lowWeightedAvg += bucket.count*bucket.co2; });
-		highBuckets.forEach(bucket => { highImps += bucket.count; highWeightedAvg += bucket.count*bucket.co2; });
+	let lowImps = 0,
+		highImps = 0,
+		lowWeightedAvg = 0,
+		highWeightedAvg = 0;
+	if (lowBuckets && highBuckets) {
+		lowBuckets.forEach((bucket) => {
+			lowImps += bucket.count as number;
+			lowWeightedAvg += (bucket.count as number) * (bucket.co2 as number);
+		});
+		highBuckets.forEach((bucket) => {
+			highImps += bucket.count as number;
+			highWeightedAvg += (bucket.count as number) * (bucket.co2 as number);
+		});
 		lowWeightedAvg = lowWeightedAvg / lowImps;
 		highWeightedAvg = highWeightedAvg / highImps;
 	}
-	let totalImps = 0, weightedAvg = 0;
-	bucketsPer1000.map(bucket => { weightedAvg += bucket.count*bucket.co2; totalImps+=bucket.count; });
+	let totalImps = 0,
+		weightedAvg = 0;
+	bucketsPer1000.map((bucket) => {
+		weightedAvg += (bucket.count as number) * (bucket.co2 as number);
+		totalImps += bucket.count as number;
+	});
 	weightedAvg = weightedAvg / totalImps;
 
 	const co2s = bucketsPer1000.map((row) => row.co2! as number);
@@ -224,26 +237,28 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 		URL.revokeObjectURL(url);
 	};
 
-	const DomainList = ({ low, buckets, avg }: { low?: boolean, buckets?: string[] }): JSX.Element => {
+	const DomainList = ({ low, buckets, avg }: { low?: boolean; buckets?: string[]; avg: number }): JSX.Element => {
 		return (
 			<>
-				<h4>{low ? "Low" : "High"}-Carbon</h4>
+				<h4>{low ? 'Low' : 'High'}-Carbon</h4>
 				<div>{buckets?.length || '-'} domains</div>
-				<div>{lowImps+highImps? printer.prettyNumber((low?lowImps:highImps)*100/(lowImps+highImps), 2)+'%' : null} by volume</div>
-				<div>Average: {printer.prettyNumber(avg)} grams CO2e</div>
+				<div>{lowImps + highImps ? printer.prettyNumber(((low ? lowImps : highImps) * 100) / (lowImps + highImps), 2, 3) + '%' : null} by volume</div>
+				<div>Average: {printer.prettyNumber(avg, 3, null)} grams CO2e</div>
 				<div style={{ maxHeight: '15em', overflowY: 'scroll', overflowX: 'clip' }}>
 					<ul>
-						{buckets?.map((val, index) => <li key={index}>{val}</li>)}
+						{buckets?.map((val, index) => (
+							<li key={index}>{val}</li>
+						))}
 					</ul>
-				</div>				
+				</div>
 				<Button onClick={() => downloadCSV(buckets)}>Download CSV</Button>
-				<div>Then use as {low? 'an allow' : 'a block'}-list in your DSP</div>
+				<div>Then use as {low ? 'an allow' : 'a block'}-list in your DSP</div>
 			</>
 		);
 	};
 
 	return (
-		<GLCard>
+		<GLCard noPadding={null} noMargin={null} modalContent={undefined} modalTitle={undefined} modalHeader={undefined} modalHeaderImg={undefined} modalClassName={undefined} modal={null} modalId={null} modalPrioritize={null} href={null} >
 			<h3 className='mx-auto'>Use Publisher Lists to Reduce Carbon</h3>
 			<Row style={{}}>
 				<Col xs={3}>
@@ -253,7 +268,7 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 					<div className='w-100 h-100'>
 						<RecommendationChart bucketsPer1000={bucketsPer1000} />
 						<RangeSlider {...silderProps} />
-						<h4>Estimated Reduction: {printer.prettyNumber(100*(weightedAvg - lowWeightedAvg) / weightedAvg, 2)}%</h4>
+						<h4>Estimated Reduction: {printer.prettyNumber((100 * (weightedAvg - lowWeightedAvg)) / weightedAvg, 2, null)}%</h4>
 					</div>
 				</Col>
 				<Col xs={3}>
@@ -261,9 +276,8 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 				</Col>
 			</Row>
 			<p className='mt-2'>
-				These lists are based on observed data within the current filters. 
-				We also have general publisher lists available for use. 
-				Please contact <a href='mailto:support@good-loop.com?subject=Carbon%20reducttion%20publisher%20lists'>support@good-loop.com</a> for information.
+				These lists are based on observed data within the current filters. We also have general publisher lists available for use. Please contact{' '}
+				<a href='mailto:support@good-loop.com?subject=Carbon%20reducttion%20publisher%20lists'>support@good-loop.com</a> for information.
 			</p>
 		</GLCard>
 	);

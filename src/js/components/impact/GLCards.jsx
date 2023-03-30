@@ -57,17 +57,19 @@ export const GLVertical = ({className, children, ...props}) => {
 /**
  * A card content wrapper, with configurable behaviour for opening modals.
  * 
- * @param {?Boolean} noPadding remove padding from the card content
- * @param {?Boolean} noMargin remove margin wrapper from outside the card
- * @param {?*} modalContent if specified, will make card clickable to display this content in the GLModalCard specified (see below)
- * @param {?*} modalTitle the title to put in the modal header
- * @param {?*} modalHeader content to put in the modal header
- * @param {?*} modalHeaderImg background image for the modal header
- * @param {?*} modalClassName className for modal
- * @param {?Object} modal package object for all the above parameters
- * @param {?String} modalId the ID of the GLModalCard to use in displaying
- * @param {?Boolean} modalPrioritize if this GLModalCard is opened while others are already open, force close them (they remain open by default)
- * @param {?String} href make this card a link
+ * @param {Object} obj
+ * @param {?Boolean} obj.noPadding remove padding from the card content
+ * @param {?Boolean} obj.noMargin remove margin wrapper from outside the card
+ * @param {?*} obj.modalContent if specified, will make card clickable to display this content in the GLModalCard specified (see below)
+ * @param {?*} obj.modalTitle the title to put in the modal header
+ * @param {?*} obj.modalHeader content to put in the modal header
+ * @param {?*} obj.modalHeaderImg background image for the modal header
+ * @param {?*} obj.modalClassName className for modal
+ * @param {?Object} obj.modal package object for all the above parameters
+ * @param {?String} obj.modalId the ID of the GLModalCard to use in displaying
+ * @param {?Boolean} obj.modalPrioritize if this GLModalCard is opened while others are already open, force close them (they remain open by default)
+ * @param {?String} obj.href make this card a link
+ * @param {?} obj.children
  */
 export const GLCard = ({noPadding, noMargin, className, style, modalContent, modalTitle, modalId, modalHeader, modalHeaderImg, modalPrioritize, modalClassName, modal, children, href, ...props}) => {
 
