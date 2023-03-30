@@ -33,7 +33,6 @@ import XId from '../../base/data/XId';
  * DEBUG OBJECTS
  */
 
- import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIGN, TEST_CAMPAIGN_OBJ} from './TestValues';
 import Login from '../../base/youagain';
 import AccountMenu from '../../base/components/AccountMenu';
 import { nonce } from '../../base/data/DataClass';
@@ -52,10 +51,10 @@ const ImpactLoginCard = ({choice, setChoice, masterBrand}) => {
 			<>
 					<Col className="decoration flex-center bg-gl-red impact-login-left-image" xs="12" sm="7">
 						<Circle className="circle" width={"90%"} border="none">
-							{masterBrand.branding && masterBrand.branding.logo ? <img src={masterBrand.branding.logo} id='impact-welcome-logo' className='logo'/> : <></>}
+							{masterBrand?.branding?.logo && <img src={masterBrand.branding.logo} id='impact-welcome-logo' className='logo'/>}
 							<h3 className='color-good-loop'>Welcome {name}!</h3>
-							<h3 className='color-good-loop'>{masterBrand.name} Brands Have So Far Raised</h3>
-							<h2 className='color-good-loop'>£{tempTotal}</h2>
+							<h3 className='color-good-loop'>{masterBrand?.name} <TODO>Brands</TODO> Have So Far Raised</h3>
+							<h2 className='color-good-loop'><TODO>£{tempTotal}</TODO></h2>
 							<p className='grey'>WITH</p>
 							<img className="gl-logo my-4" src="/img/gl-logo/AdsForGood/AdsForGood.svg" />
 						</Circle>

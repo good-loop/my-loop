@@ -66,6 +66,7 @@ The GLCards layout is a layout for modular cards which are designed to expand an
     }
 
     .card-body {
+        // FIXME this can create unwanted scroll bars (seen on the main headline card)
         overflow: auto;
     }
 }
@@ -151,7 +152,7 @@ The GLCards layout is a layout for modular cards which are designed to expand an
             padding: 0;
         }
     }
-}
+} // ./glmodal
 
 .glmodal-backdrop {
     position: fixed;

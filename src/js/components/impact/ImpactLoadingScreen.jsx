@@ -32,8 +32,6 @@ import XId from '../../base/data/XId';
 /**
  * DEBUG OBJECTS
  */
-
- import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIGN, TEST_CAMPAIGN_OBJ} from './TestValues';
 import Login from '../../base/youagain';
 import AccountMenu from '../../base/components/AccountMenu';
 import { nonce } from '../../base/data/DataClass';
