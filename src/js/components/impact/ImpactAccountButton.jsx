@@ -37,13 +37,10 @@ const ImpactShareLine =  ({style, className, brand, campaign}) => {
 		return null;
 	}
 
-	console.log("filter: ", filterMode, filterId, type)
-
 	let shareId = shareThingId(type, filterId);
 	let pvItem = getDataItem({type, id:filterId, status:KStatus.PUBLISHED});
 	let shareName = filterMode+" "+((pvItem.value && pvItem.value.name) || filterId);
 	const showEmails = DataStore.getUrlValue("listemails");
-	console.log("... we haven't crashed yet?")
 	return <ShareWidget className={className} style={style} hasButton name={"Dashboard for "+shareName} shareId={shareId} hasLink noEmails={!showEmails} />;
 }
 

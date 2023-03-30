@@ -52,7 +52,6 @@ export class ImpactFilters {
  * @param {Object} p
  */
 const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, brand, campaign, subBrands, charities, subCampaigns, impactDebits, ads, mainLogo}) => {
-	if (pvBaseObjects.resolved) console.log("base objs:", pvBaseObjects)
 	// TODO refactor to break the code block below into shorter chunks so it's easier to see and edit
 	return (
 	<>
@@ -627,8 +626,6 @@ const MapCardContent = ({data}) => {
 	const [mapDefs, setMapDefs] = useState(); // JSON object with map paths and meta
 	const [svgEl, setSvgEl] = useState(); // ref to the map SVG to create download button
 	const [error, setError] = useState(); // Problems loading map?
-
-	console.log("found country! ", getCountryName("US"))
 
 	// Fetch the JSON with the map data for the current focus country
 	useEffect(() => {

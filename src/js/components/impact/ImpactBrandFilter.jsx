@@ -89,7 +89,6 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, setF
 	 * @param {object} campaign campaign we want to filter, must be passed in with its brand
 	 */
 	const filterChange = ({brand, campaign}) => {
-		console.log("filterChange\n:", brand, campaign)
 		if (campaign) {
 			goto(`/impact/${curPage}/campaign/` + campaign.id)
 		} else if (brand) {
