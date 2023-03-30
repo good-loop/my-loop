@@ -1,47 +1,35 @@
 import React, { useEffect, useState } from 'react';
+import { Alert, Button, Card, Col, Container, Row } from 'reactstrap';
 import PromiseValue from '../../../base/promise-value';
-import { Alert, Button, Col, Container, Row, Card } from 'reactstrap';
 
 // import ChartWidget from '../../../base/components/ChartWidget';
+import ErrAlert from '../../../base/components/ErrAlert';
+import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
+import Misc from '../../../base/components/Misc';
+import List from '../../../base/data/List';
 import DataStore from '../../../base/plumbing/DataStore';
 import printer from '../../../base/utils/printer';
-import List from '../../../base/data/List';
-import Misc from '../../../base/components/Misc';
-import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
-import ErrAlert from '../../../base/components/ErrAlert';
 
-import { GreenCard, printPeriod, getFilterModeId, periodFromUrl } from './dashutils';
+import { GreenCard, printPeriod } from './dashutils';
 import { paramsFromUrl } from './dashUtils';
+import { getBasefilters, getCampaigns, getCarbon, getSumColumn } from './emissionscalcTs';
 
-import ShareWidget, { shareThingId } from '../../../base/components/ShareWidget';
-import { getCarbon, getCampaigns, getSumColumn } from './emissionscalcTs';
-
-import GreenDashboardFilters from './GreenDashboardFilters';
-import TimeSeriesCard from './TimeSeriesCard';
-import JourneyCard from './JourneyCard';
-import CompareCard from './CompareCard';
 import BreakdownCard from './BreakdownCard';
-import TimeOfDayCard from './TimeOfDayCard';
+import CompareCard from './CompareCard';
+import GreenDashboardFilters from './GreenDashboardFilters';
+import JourneyCard from './JourneyCard';
 import MapCard from './MapCard';
+import TimeOfDayCard from './TimeOfDayCard';
+import TimeSeriesCard from './TimeSeriesCard';
 
-import { getDataItem, getDataList } from '../../../base/plumbing/Crud';
-import C from '../../../C';
-
-import KStatus from '../../../base/data/KStatus';
-import SearchQuery from '../../../base/searchquery';
-import Campaign from '../../../base/data/Campaign';
 import Login from '../../../base/youagain';
 
-import { isDebug, toTitleCase, yessy } from '../../../base/utils/miscutils';
 import PropControl from '../../../base/components/PropControl';
-import Roles from '../../../base/Roles';
-
 
 export const isPer1000 = () => {
 	const emissionsMode = DataStore.getUrlValue('emode');
 	return emissionsMode === 'per1000';
 };
-
 
 const OverviewWidget = ({ period, data, prob }) => {
 	let imps;
@@ -58,15 +46,13 @@ const OverviewWidget = ({ period, data, prob }) => {
 	}
 
 	return (
-		<Row className="greendash-overview mb-2">
-			<Col xs="12">
-				<span className="period mr-4">{printPeriod(period)}</span>
-				<span id='impressions-span' className="impressions">
-					Impressions served: <span className="impressions-count">{imps}</span>
+		<Row className='greendash-overview mb-2'>
+			<Col xs='12'>
+				<span className='period mr-4'>{printPeriod(period)}</span>
+				<span id='impressions-span' className='impressions'>
+					Impressions served: <span className='impressions-count'>{imps}</span>
 				</span>
-				{prob && <span className='probability ml-5'>
-					Probability: {prob}
-				</span>}
+				{prob && <span className='probability ml-5'>Probability: {prob}</span>}
 			</Col>
 		</Row>
 	);
@@ -74,15 +60,15 @@ const OverviewWidget = ({ period, data, prob }) => {
 
 const CTACard = ({}) => {
 	return (
-		<GreenCard className="carbon-cta flex-column" downloadable={false}>
-			<div className="cta-card-decoration">
-				<img className="tree-side" src="/img/green/tree-light.svg" />
-				<img className="tree-centre" src="/img/green/tree-light.svg" />
-				<img className="tree-side" src="/img/green/tree-light.svg" />
+		<GreenCard className='carbon-cta flex-column' downloadable={false}>
+			<div className='cta-card-decoration'>
+				<img className='tree-side' src='/img/green/tree-light.svg' />
+				<img className='tree-centre' src='/img/green/tree-light.svg' />
+				<img className='tree-side' src='/img/green/tree-light.svg' />
 			</div>
-			<p className="mb-2">Interested to know more about climate positive advertising?</p>
-			<a className="get-in-touch pull-right text-right" href="https://www.good-loop.com/contact" target="_blank">
-				<Button color="primary" size="md">
+			<p className='mb-2'>Interested to know more about climate positive advertising?</p>
+			<a className='get-in-touch pull-right text-right' href='https://www.good-loop.com/contact' target='_blank'>
+				<Button color='primary' size='md'>
 					Get In Touch
 				</Button>
 			</a>
@@ -90,113 +76,50 @@ const CTACard = ({}) => {
 	);
 };
 
-const GreenMetrics2 = ({}) => {
-	// Default to current quarter, all brands, all campaigns
+const GreenMetrics2 = () => {
 	const urlParams = paramsFromUrl(['period', 'prob', 'sigfig', 'nocache']);
 	const period = urlParams.period;
-	if (!period) return; // Filter widget will set this on first render - allow it to update
+	if (!period) return null; // Filter widget will set this on first render - allow it to update
 
-	let {filterMode, filterId} = getFilterModeId();
+	const baseFilters = getBasefilters(urlParams);
 
-	if (!filterMode) {
-		return <Alert color="info">Select a brand, campaign, or tag to see data.</Alert>;
-	}
-
-	// Fetch common data for CO2Card and BreakdownCard.
-	// CompareCard sets its own time periods & TimeOfDayCard sets the timeofday flag, so both need to fetch their own data
-	// ...but give them the basic filter spec so they stay in sync otherwise
-
-	// Query filter e.g. which brand, campaign, or tag?
-	let q = `${filterMode}:${filterId}`;
-
-	// HACK: filterMode=brand is twice wrong: the data uses vertiser, and some tags dont carry brand info :(
-	// So do it by an OR over campaign-ids instead.
-	if (filterMode === 'brand') {
-		// get the campaigns
-		let sq = SearchQuery.setProp(null, 'vertiser', filterId);
-		const pvAllCampaigns = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUBLISHED, q: sq.query });
-		if (!pvAllCampaigns.resolved) {
-			return <Misc.Loading text="Fetching brand campaigns..." />;
+	// BaseFiltersFailed
+	if (baseFilters.type && baseFilters.message) {
+		if (baseFilters.type === 'alert') {
+			return <Alert color='info'>{baseFilters.message}</Alert>;
 		}
-		const campaignIds = List.hits(pvAllCampaigns.value).map((c) => c.id);
-		if (!yessy(campaignIds)) {
-			return <Alert color="info">No campaigns for brand id: {filterId}</Alert>;
-		}
-		q = SearchQuery.setPropOr(null, 'campaign', campaignIds).query;
-	}
-	if (filterMode === 'agency') {
-		// copy pasta of brand above
-		// get the campaigns
-		let sq = SearchQuery.setProp(null, 'agencyId', filterId);
-		const pvAllCampaigns = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUBLISHED, q: sq.query });
-		if (!pvAllCampaigns.resolved) {
-			return <Misc.Loading text="Fetching agency campaigns..." />;
-		}
-		const campaignIds = List.hits(pvAllCampaigns.value).map((c) => c.id);
-		if (!yessy(campaignIds)) {
-			return <Alert color="info">No campaigns for agency id: {filterId}</Alert>;
-		}
-		q = SearchQuery.setPropOr(null, 'campaign', campaignIds).query;
-	}
-
-	// HACK: Is this a master campaign? Do we need to cover sub-campaigns?
-	if (filterMode === 'campaign') {
-		const pvCampaign = getDataItem({ type: C.TYPES.Campaign, id: filterId, status: KStatus.PUB_OR_DRAFT });
-		if (!pvCampaign.value) {
-			return <Misc.Loading text="Fetching campaign..." />;
-		}
-		const campaign = pvCampaign.value;
-		if (Campaign.isMaster(campaign)) {
-			const pvAllCampaigns = Campaign.pvSubCampaigns({ campaign });
-			if (!pvAllCampaigns.resolved) {
-				return <Misc.Loading text="Fetching campaigns..." />;
-			}
-			const campaignIds = List.hits(pvAllCampaigns.value).map((c) => c.id);
-			if (!yessy(campaignIds)) {
-				return <Alert color="info">No campaigns for master campaign id: {filterId}</Alert>;
-			}
-			q = SearchQuery.setPropOr(null, 'campaign', campaignIds).query;
+		if (baseFilters.type === 'loading') {
+			return <Misc.Loading text={baseFilters.message} />;
 		}
 	}
-
-	const baseFilters = {
-		q,
-		start: period.start.toISOString(),
-		end: period.end.toISOString(),
-		prob: urlParams.prob?.toString(), 
-		sigfig: urlParams.sigfig?.toString(),
-		nocache: urlParams.nocache,
-		fixseed: true,
-	};
-
 
 	/**
 	 * Inital load of total
 	 */
-	const pvChartTotal = getCarbon({...baseFilters, breakdown: ['total{"count":"sum"}']})
-	
+	const pvChartTotal = getCarbon({ ...baseFilters, breakdown: ['total{"count":"sum"}'] });
+
 	const pvChartTotalValue = baseFilters.prob ? pvChartTotal.value?.sampling : pvChartTotal.value;
 
 	const samplingProb = pvChartTotalValue?.probability;
 
 	let noData = pvChartTotalValue && !pvChartTotalValue?.allCount;
 	// TODO Fall back to filterMode methods to get campaigns when table is empty
-	
+
 	if (!pvChartTotal.resolved) {
-		return <Misc.Loading text="Fetching campaign lifetime data..." />;
+		return <Misc.Loading text='Fetching campaign lifetime data...' />;
 	}
 	if (!pvChartTotal.value) {
-		return <ErrAlert error={pvChartTotal.error} color="danger" />;
+		return <ErrAlert error={pvChartTotal.error} color='danger' />;
 	}
-	
+
 	// HACK: Tell JourneyCard we had an empty table & so couldn't get campaigns (but nothing is "loading")
 	// TODO We CAN get campaigns but it'd take more of a rewrite than we want to do just now.
 	// not working?? How does this compare to noData
 	const emptyTable = pvChartTotal.resolved && (!pvChartTotalValue?.allCount || pvChartTotalValue.by_total.buckets.length === 0);
-	
+
 	const commonProps = { period, baseFilters, per1000: isPer1000() };
 	// Removed (temp?): brands, campaigns, tags
-	
+
 	const pvChartData = getCarbon({
 		...baseFilters,
 		breakdown: [
@@ -221,31 +144,31 @@ const GreenMetrics2 = ({}) => {
 	return (
 		<>
 			<OverviewWidget period={period} data={pvChartTotalValue?.by_total.buckets} prob={samplingProb} />
-			<PropControl inline
-				type="toggle" prop="emode" dflt="total" label="Show emissions:"
-				left={{label: 'Total', value: 'total', colour: 'primary'}}
-				right={{label: 'Per 1000 impressions', value: 'per1000', colour: 'primary'}}
+			<PropControl
+				inline
+				type='toggle'
+				prop='emode'
+				dflt='total'
+				label='Show emissions:'
+				left={{ label: 'Total', value: 'total', colour: 'primary' }}
+				right={{ label: 'Per 1000 impressions', value: 'per1000', colour: 'primary' }}
 			/>
-			<Row className="card-row">
-				<Col xs="12" sm="8" className="flex-column">
+			<Row className='card-row'>
+				<Col xs='12' sm='8' className='flex-column'>
 					<TimeSeriesCard {...commonProps} data={pvChartDatalValue?.by_time.buckets} noData={noData} />
 				</Col>
-				<Col xs="12" sm="4" className="flex-column">
-					<JourneyCard
-						campaigns={List.hits(pvCampaigns?.value)}
-						{...commonProps}
-						emptyTable={emptyTable || noData}
-					/>
+				<Col xs='12' sm='4' className='flex-column'>
+					<JourneyCard campaigns={List.hits(pvCampaigns?.value)} {...commonProps} emptyTable={emptyTable || noData} />
 				</Col>
 			</Row>
-			<Row className="card-row">
-				<Col xs="12" sm="4" className="flex-column">
+			<Row className='card-row'>
+				<Col xs='12' sm='4' className='flex-column'>
 					<CompareCard {...commonProps} />
 				</Col>
-				<Col xs="12" sm="4" className="flex-column">
+				<Col xs='12' sm='4' className='flex-column'>
 					<BreakdownCard {...commonProps} />
 				</Col>
-				<Col xs="12" sm="4" className="flex-column">
+				<Col xs='12' sm='4' className='flex-column'>
 					{false && <TimeOfDayCard {...commonProps} />}
 					<MapCard {...commonProps} />
 					{/* <CTACard /> "interested to know more" */}
@@ -284,42 +207,46 @@ const GreenMetrics = ({}) => {
 
 		// Make sure emode is not messed up
 		if (!(DataStore.getUrlValue('emode') === 'total' || DataStore.getUrlValue('emode') === 'per1000')) {
-			DataStore.setUrlValue('emode', 'total')
+			DataStore.setUrlValue('emode', 'total');
 		}
-		
 	}, [Login.getId()]);
 
 	// Only for logged-in users!
-	if (!Login.isLoggedIn()) return (
-		<Container>
-			<Card body id="green-login-card" className="m-4">
-				<Container>
-					<Row>
-						<Col className="decoration flex-center" xs="12" sm="4">
-							<img className="stamp" src="/img/green/gl-carbon-neutral.svg" />
-						</Col>
-						<Col className="form" xs="12" sm="8">
-							<img className="gl-logo my-4" src="/img/gl-logo/rectangle/logo-name.svg" />
-							<p className="text-center my-4">
-								Understand the carbon footprint of your advertising and
-								<br />
-								discover your offsetting and climate-positive successes
-							</p>
-							<LoginWidgetEmbed verb="login" canRegister={false} />
-						</Col>
-					</Row>
-				</Container>
-			</Card>
-		</Container>
-	);
+	if (!Login.isLoggedIn())
+		return (
+			<Container>
+				<Card body id='green-login-card' className='m-4'>
+					<Container>
+						<Row>
+							<Col className='decoration flex-center' xs='12' sm='4'>
+								<img className='stamp' src='/img/green/gl-carbon-neutral.svg' />
+							</Col>
+							<Col className='form' xs='12' sm='8'>
+								<img className='gl-logo my-4' src='/img/gl-logo/rectangle/logo-name.svg' />
+								<p className='text-center my-4'>
+									Understand the carbon footprint of your advertising and
+									<br />
+									discover your offsetting and climate-positive successes
+								</p>
+								<LoginWidgetEmbed verb='login' canRegister={false} />
+							</Col>
+						</Row>
+					</Container>
+				</Card>
+			</Container>
+		);
 
 	return (
-		<div className="green-subpage green-metrics">
+		<div className='green-subpage green-metrics'>
 			<Container fluid>
-				{agencyIds ? <>
-					<GreenDashboardFilters pseudoUser={pseudoUser} />
-					<GreenMetrics2 />
-				</> : <Misc.Loading text="Checking your access..." />}
+				{agencyIds ? (
+					<>
+						<GreenDashboardFilters pseudoUser={pseudoUser} />
+						<GreenMetrics2 />
+					</>
+				) : (
+					<Misc.Loading text='Checking your access...' />
+				)}
 			</Container>
 		</div>
 	);

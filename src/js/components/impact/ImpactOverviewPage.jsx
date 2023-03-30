@@ -4,6 +4,7 @@ import PromiseValue from '../../base/promise-value';
 import { setWindowTitle } from '../../base/plumbing/Crud';
 import DataStore from '../../base/plumbing/DataStore';
 import { Card as CardCollapse } from '../../base/components/CardAccordion';
+import TODO from '../../base/components/TODO';
 import { Button, Col, Container, InputGroup, Row } from 'reactstrap';
 import PropControl from '../../base/components/PropControl';
 import Circle from '../../base/components/Circle';
@@ -26,7 +27,7 @@ import printer from '../../base/utils/printer'
  * DEBUG OBJECTS
  */
 
- import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIGN, TEST_CAMPAIGN_OBJ} from './TestValues';
+import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIGN, TEST_CAMPAIGN_OBJ} from './TestValues';
 import { addAmountSuffixToNumber } from '../../base/utils/miscutils';
 import { dataColours, getCountryFlag, getCountryName } from '../pages/greendash/dashutils';
 
@@ -36,7 +37,7 @@ export class ImpactFilters {
 	brand2;
 	campaign;
 	cid;
-	/** charity ID */
+	/** @type {String} charity ID */
 	ngo;
 	impactdebit;
 	start;
@@ -46,9 +47,13 @@ export class ImpactFilters {
 }
 
 
-
+/**
+ * 
+ * @param {Object} p
+ */
 const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, brand, campaign, subBrands, charities, subCampaigns, impactDebits, ads, mainLogo}) => {
 	if (pvBaseObjects.resolved) console.log("base objs:", pvBaseObjects)
+	// TODO refactor to break the code block below into shorter chunks so it's easier to see and edit
 	return (
 	<>
 		{pvBaseObjects.resolved && <> 
@@ -217,6 +222,7 @@ const CampaignCharityDisplay = ({charities, impactDebits}) => {
 }
 
 const BrandDonationInfo = ({brand}) => {
+	let charity = TEST_CHARITY_OBJ; 
 	return <GLHorizontal>
 		<GLCard
 			className="boast"
@@ -225,16 +231,17 @@ const BrandDonationInfo = ({brand}) => {
 			modalId="full-page"
 			modalClassName="no-padding watch-to-donate">
 				<h3>Watch to donate</h3>
-				<h2>£333,203</h2>
+				<h2><TODO>£333,203</TODO></h2>
 				<h3 className="text-bold">Donated...</h3>
 
 				<h5>INCLUDING</h5>
 
-				<h4>15,000 Trees Planted</h4>
-				<CharityLogo charity={TEST_CHARITY_OBJ}/>
+				<h4><TODO>15,000 Trees Planted</TODO></h4>
+				<CharityLogo charity={charity}/>
 
-				<h4>10,012 Children's Meals</h4>
-				<CharityLogo charity={TEST_CHARITY_OBJ}/>
+				<h4><TODO>10,012 Children's Meals</TODO></h4>
+				<TODO>charity load</TODO>
+				<CharityLogo charity={charity}/>
 
 				<QuestionIcon/>
 		</GLCard>
@@ -245,11 +252,11 @@ const BrandDonationInfo = ({brand}) => {
 			modalId="full-page"
 			modalClassName="no-padding this-ad-does-good">
 				<h3 className="color-greenmedia-darkcyan">This ad does good</h3>
-				<h2 className="color-greenmedia-darkcyan">136,580</h2>
+				<h2 className="color-greenmedia-darkcyan"><TODO>136,580</TODO></h2>
 				<h3 className="color-greenmedia-darkcyan text-bold">Trees planted...</h3>
 
 				<img  src={brand?.branding?.logo} className="logo"/>
-				<CharityLogo charity={TEST_CHARITY_OBJ}/>
+				<CharityLogo charity={charity}/>
 				<QuestionIcon/>
 		</GLCard>
 	</GLHorizontal>;
@@ -297,7 +304,7 @@ const ThisAdDoesGoodModal = ({brand}) => {
 				<Row className='text-center rates'>
 					<Col xs={4}>
 						<p>
-							<b>XX%</b>
+							<TODO><b>XX%</b></TODO>
 						</p>
 						<p>Viewability rate</p>
 					</Col>
@@ -316,7 +323,7 @@ const ThisAdDoesGoodModal = ({brand}) => {
 				</Row>
 			</BG>
 			<br/>
-			<h3>136,283 Trees Planted</h3>
+			<h3><TODO>136,283 Trees Planted</TODO></h3>
 			<br/>
 			<h5>SUPPORTING</h5>
 			<br/><br/>
@@ -327,6 +334,7 @@ const ThisAdDoesGoodModal = ({brand}) => {
 					<img  src={brand.branding?.logo} className="logo"/>
 				</Col>
 				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
+					<TODO>which charity</TODO>
 					<CharityLogo charity={charity}/>
 				</Col>
 			</Row>
@@ -335,6 +343,11 @@ const ThisAdDoesGoodModal = ({brand}) => {
 	</div>;
 }
 
+/**
+ * TODO refactor to share code with ThisAdDoesGoodModal and BrandDonationInfo
+ * @param {*} param0 
+ * @returns 
+ */
 const WatchToDonateModal = ({brand}) => {
 
 	const charity = TEST_CHARITY_OBJ;
@@ -342,14 +355,14 @@ const WatchToDonateModal = ({brand}) => {
 	return <div className="bg-gl-background-default inmodal-wrapper p-5">
 		<GLCard className="inmodal-content" noPadding >
 			<BG src="/img/Impact/curves-background.svg" className="py-5 img-bg">
-				<h3 className='text-white'>15 Watch To Donate Campaigns</h3>
+				<h3 className='text-white'><TODO>15</TODO> Watch To Donate Campaigns</h3>
 				<br/>
 				<AdsCatalogueModal noPreviews />
 				<br/>
 				<Row className='text-center rates'>
 					<Col xs={4}>
 						<p>
-							<b>XX%</b>
+							<b><TODO>XX%</TODO></b>
 						</p>
 						<p>Viewability rate</p>
 					</Col>
@@ -368,17 +381,18 @@ const WatchToDonateModal = ({brand}) => {
 				</Row>
 			</BG>
 			<br/>
-			<h3>£136,283 Donated</h3>
+			<h3><TODO>£136,283 Donated</TODO></h3>
 			<br/>
 			<h5>INCLUDING</h5>
 			<br/><br/>
-			<p className='text-center'>Reforestation projects in Madagascar, Kenya, and Mozambique</p>
+			<p className='text-center'><TODO>Reforestation projects in Madagascar, Kenya, and Mozambique</TODO></p>
 			<br/>
 			<Row className='w-50 mx-auto'>
 				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
 					<img  src={brand.branding?.logo} className="logo"/>
 				</Col>
 				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
+					<TODO>charity load</TODO>
 					<CharityLogo charity={charity}/>
 				</Col>
 			</Row>
@@ -417,6 +431,7 @@ const AdsCatalogueModal = ({noPreviews, ads}) => {
 	if (ads.length === 0) return <h3>No ads yet!</h3>;
 
 	return <>
+		<TODO>which campaign</TODO>
 		<AdvertsCatalogue
 			ads={ads}
 			canonicalAds={ads} // maybe wrong should be all ads
@@ -438,6 +453,7 @@ const AdsForGoodCTA = () => {
 	
 	return <div className='d-flex flex-column align-items-center justify-content-between h-100'>
 		<img  src={vertiser.branding.logo} className="logo"/>
+		<TODO>which brand</TODO>
 		<img  className='w-25' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 		<h3>Discover our products and fund even more good causes</h3>
 		<Button color="primary">Get in touch</Button>
@@ -456,10 +472,11 @@ const CO2OffsetInfo = () => {
 
 	return <div className='d-flex flex-column align-items-center justify-content-between h-100'>
 		<img  src={vertiser.branding.logo} className="logo"/>
+		<TODO>which brand</TODO>
 		<img  className='w-25' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
-		<h4>Info about Green Ad Tag</h4>
-		<h4>Info about Offset Project</h4>
-		<h4>Cost of Offset - it only cost £X to offset</h4>
+		<h4><TODO>Info about Green Ad Tag</TODO></h4>
+		<h4><TODO>Info about Offset Project</TODO></h4>
+		<h4><TODO>Cost of Offset - it only cost £X to offset</TODO></h4>
 		<Button color="primary">Download offset certificate</Button>
 	</div>
 }
@@ -468,7 +485,7 @@ const BrandList = ({brand, subBrands}) => {
 
 	const BrandListItem = ({item}) => {
 		return <Col md={4} className="mt-3">
-			<GLCard className="preview h-100" noMargin href={"/iview/brand/"+item.id}>
+			<GLCard className="preview h-100" noMargin href={"/impact/view/brand/"+item.id}>
 				
 				{item && item.branding?.logo && <img  src={item.branding.logo} className="logo"/>}
 				<p className='text-center'>{item.name}</p>
@@ -603,6 +620,7 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 	)
 }
 
+// TODO map widget in its own file
 const MapCardContent = ({data}) => {
 	const [mapData, setMapData] = useState('loading'); // Object mapping region ID to imps + carbon
 	const [focusRegion, setFocusRegion] = useState('v'); // ID of currently focused country
