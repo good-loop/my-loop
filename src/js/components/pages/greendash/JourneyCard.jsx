@@ -155,8 +155,8 @@ const JourneyCard = ({ campaigns, baseFilters, period, emptyTable }) => {
 	offsetTypes.forEach((ot) => (offsets[ot + 'Total'] = 0));
 	let allOffsets = []
 	// TODO could be more efficient -- load ImpactDebits rather than loop over campaigns
-	campaigns.forEach((campaign) => {
-		const offsets4type = getOffsetsByType({ campaign, period });
+	campaigns.forEach(async (campaign) => {
+		const offsets4type = await getOffsetsByType({ campaign, period });
 		offsetTypes.forEach((ot) => (offsets[ot + 'Total'] += offsets4type[ot + 'Total'] || 0));
 		if (offsets4type.isLoading) isLoading = true;
 		allOffsets.push(offsets4type.allFixedOffsets);

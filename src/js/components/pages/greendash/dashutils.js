@@ -49,7 +49,7 @@ export const getPeriodYear = (date = new Date()) => {
 
 /** 
  * Read URL params and extract a period object if one is present. Supports `period` or `start`/`end`.
- * @deprecated (partly) converted to typescript ??where is the typescript version??
+ * @deprecated (partly) converted to typescript dashUtils.ts
  * @returns {?Object} {start:Date end:Date}
 */
 export const periodFromUrl = () => {
