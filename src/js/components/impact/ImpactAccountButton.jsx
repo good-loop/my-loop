@@ -81,19 +81,7 @@ const ImpactAccountButton = ({curMaster, curSubBrand, curCampaign, noShare}) => 
 		return (
 			<>
 				<ImpactShareLine brand={curSubBrand} campaign={curCampaign}/>
-				<button onClick={ () => {
-					modalToggle()
-					window.scrollTo(0, 0);
-					html2canvas(document.getElementById("overview-first-card"), {
-						allowTaint: false
-					}).then((canvas) => {
-						console.log(canvas.toDataURL("image/jpeg", 0.9));
-						console.log("WE SHOULD BE DONE NOW???")
-					})
-
-				}
-				}>CLICK ME</button>
-
+			{/* Investigating not using html2canvas due to tainted canvas errors & lacking various styling features, currently disabled this button until decision is made
 			<PNGDownloadButton
 				querySelector={'.iview-container'}
 				fileName={"title"}
@@ -108,7 +96,7 @@ const ImpactAccountButton = ({curMaster, curSubBrand, curCampaign, noShare}) => 
 					document.querySelectorAll('.glcard').forEach((el) => el.style.border = "solid 1px #770f00");
 
 				}}
-			/>
+			/>*/}
 			</>
 		)
 	}		
