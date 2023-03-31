@@ -483,7 +483,6 @@ export const getOffsetsByType = ({ campaign, status, period }) => {
 	offsets4type.coralTotal = offsets4type.coral.reduce((x, offset) => x + offset.n, 0);
 
 	offsets4type.isLoading = isLoading;
-	console.log("offsets4type",offsets4type,"Campaign", campaign,"period",period);
 	return offsets4type;
 };
 
@@ -547,7 +546,6 @@ const getFixedOffsetsForCampaign = (campaign:Campaign, period: Period) => {
 		fixedOffsets.push(do1, do2);
 	}
 	if (fixedOffsets.filter(x => ! x).length) {
-		console.log("loading carbon data", fixedOffsets);
 		return false; // still loading data
 	}
 	return fixedOffsets;
