@@ -168,6 +168,7 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 	if ( ! period) {
 		return null; // Filter widget will set this on first render - allow it to update
 	}
+	urlParams.period = period;
 
 	let baseFilters = getBasefilters(urlParams);
 

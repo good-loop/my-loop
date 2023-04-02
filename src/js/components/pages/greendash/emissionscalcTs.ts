@@ -14,10 +14,10 @@ import DataStore from '../../../base/plumbing/DataStore';
 import PromiseValue from '../../../base/promise-value';
 import SearchQuery from '../../../base/searchquery';
 import { assert } from '../../../base/utils/assert';
-import { sum, uniq, yessy } from '../../../base/utils/miscutils';
+import { getUrlVars, sum, uniq, yessy } from '../../../base/utils/miscutils';
 import C from '../../../C';
 import ServerIO from '../../../plumbing/ServerIO';
-import { periodFromUrl, Period } from '../../../base/utils/date-utils';
+import { Period, getPeriodFromUrlParams } from '../../../base/utils/date-utils';
 import { getFilterModeId } from './dashUtils';
 
 /**
@@ -62,15 +62,17 @@ export type BaseFiltersFailed = {
 	message?: string;
 };
 
-??
 /**
  * Supposedly return a BaseFilters. But when there are exceptions, return a alert or loading message. Catch the message wtih <Alert /> or <Misc.Loading /> div.
  * Usage examples see GreenMetrics2 in ./GreenMetrics.jsx
- * @param urlParams 
+ * @param urlParams use getUrlVars() then getPeriodFromUrlParams() then add period!
  */
 export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed => {
 	// Default to current quarter, all brands, all campaigns
 	const period = urlParams.period;
+	if ( ! period) {
+		console.warn("use getUrlVars() then getPeriodFromUrlParams() then add period!");
+	}
 	let { filterMode, filterId } = getFilterModeId();
 
 	let failedObject: BaseFiltersFailed = {};
@@ -403,7 +405,9 @@ export const calculateDynamicOffset = (campaign: Campaign, offset:Impact, period
 	if (!Impact.isDynamic(offset)) return offset; // paranoia
 
 	// We either want carbon emissions or impressions count for this campaign/period - this gets both
-	if (!period) period = periodFromUrl();
+	if (!period) {		
+		period = getPeriodFromUrlParams();
+	}
 	let pvCarbonData = getCarbon({
 		q: SearchQuery.setProp(null, 'campaign', campaign.id).query,
 		start: period?.start.toISOString() || '2022-01-01',

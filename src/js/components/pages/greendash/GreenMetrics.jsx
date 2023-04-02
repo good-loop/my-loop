@@ -9,7 +9,7 @@ import Misc from '../../../base/components/Misc';
 import List from '../../../base/data/List';
 import DataStore from '../../../base/plumbing/DataStore';
 import printer from '../../../base/utils/printer';
-import { printPeriod } from '../../../base/utils/date-utils';
+import { getPeriodFromUrlParams, printPeriod } from '../../../base/utils/date-utils';
 
 import { GreenCard } from './GreenDashUtils';
 import { getBasefilters, getCampaigns, getCarbon, getSumColumn } from './emissionscalcTs';
@@ -19,7 +19,7 @@ import CompareCard from './CompareCard';
 import GreenDashboardFilters from './GreenDashboardFilters';
 import JourneyCard from './JourneyCard';
 import MapCard from './MapCard';
-import TimeOfDayCard from './TimeOfDayCard';NOEM
+import TimeOfDayCard from './TimeOfDayCard';
 import TimeSeriesCard from './TimeSeriesCard';
 
 import Login from '../../../base/youagain';
@@ -84,6 +84,7 @@ const GreenMetrics2 = () => {
 	if ( ! period) {
 		return null; // Filter widget will set this on first render - allow it to update
 	}
+	urlParams.period = period;
 	const baseFilters = getBasefilters(urlParams);
 
 	// BaseFiltersFailed
