@@ -62,10 +62,11 @@ export type BaseFiltersFailed = {
 	message?: string;
 };
 
+??
 /**
  * Supposedly return a BaseFilters. But when there are exceptions, return a alert or loading message. Catch the message wtih <Alert /> or <Misc.Loading /> div.
  * Usage examples see GreenMetrics2 in ./GreenMetrics.jsx
- * @param urlParams fetch using paramsFromUrl in dashUtils.ts
+ * @param urlParams 
  */
 export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed => {
 	// Default to current quarter, all brands, all campaigns

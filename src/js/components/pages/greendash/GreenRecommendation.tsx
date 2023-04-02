@@ -3,15 +3,15 @@ import { Alert, Button, Card, Col, Container, Row } from 'reactstrap';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import NewChartWidget from '../../../base/components/NewChartWidget';
 import DataStore from '../../../base/plumbing/DataStore';
-import { asNum } from '../../../base/utils/miscutils';
+import { asNum, getUrlVars } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import Login from '../../../base/youagain';
 import Misc from '../../../MiscOverrides';
-import { paramsFromUrl } from './dashUtils';
 import { emissionsPerImpressions, getBasefilters, getCarbon, GreenBuckets, type BaseFilters, type BreakdownRow } from './emissionscalcTs';
 import GreenDashboardFilters from './GreenDashboardFilters';
 import { GLCard } from '../../impact/GLCards';
 import ServerIO from '../../../plumbing/ServerIO';
+import { getPeriodFromUrlParams } from '../../../base/utils/date-utils';
 
 interface ByDomainValue extends Object {
 	allCount: number;
@@ -163,9 +163,11 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 		setHighBuckets(highBuckets);
 	}, [selectedCo2]);
 
-	const urlParams = paramsFromUrl(['period', 'prob', 'sigfig', 'nocache']);
-	const period = urlParams.period;
-	if (!period) return null; // Filter widget will set this on first render - allow it to update
+	const urlParams = getUrlVars();	
+	const period = getPeriodFromUrlParams(urlParams);
+	if ( ! period) {
+		return null; // Filter widget will set this on first render - allow it to update
+	}
 
 	let baseFilters = getBasefilters(urlParams);
 

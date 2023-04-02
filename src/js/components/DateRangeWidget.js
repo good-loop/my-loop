@@ -173,7 +173,8 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 			const periodObj = periodFromName(name);
 			if (periodObj) {
 				setStart(periodObj.start);
-				setEnd(periodObj.end);!sameDate(start, dflt.start) 
+				setEnd(periodObj.end);
+				// !sameDate(start, dflt.start)  ??
 				return;
 			}
 		}
