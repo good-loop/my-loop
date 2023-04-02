@@ -11,7 +11,7 @@ import { encURI, isMobile, space, toTitleCase } from '../../../base/utils/miscut
 import C from '../../../C';
 import ServerIO from '../../../plumbing/ServerIO';
 
-import { getFilterModeId } from './dashutils';
+import { getFilterModeId } from './dashUtils';
 import ShareWidget, { shareThingId } from '../../../base/components/ShareWidget';
 import { modifyPage } from '../../../base/plumbing/glrouter';
 

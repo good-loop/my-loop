@@ -12,7 +12,7 @@ import { getDataLogData } from '../../base/plumbing/DataLog';
 import DataStore, { getPath } from '../../base/plumbing/DataStore';
 import { encURI, space, uniq, yessy } from '../../base/utils/miscutils';
 import C from '../../C';
-import { Mass } from './greendash/dashutils';
+import { Mass } from './greendash/GreenDashUtils';
 import GreenMap from './greendash/GreenMap';
 import Impact from '../../base/data/Impact';
 import { isTester } from '../../base/Roles';

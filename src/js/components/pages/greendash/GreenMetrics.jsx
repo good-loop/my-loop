@@ -9,8 +9,9 @@ import Misc from '../../../base/components/Misc';
 import List from '../../../base/data/List';
 import DataStore from '../../../base/plumbing/DataStore';
 import printer from '../../../base/utils/printer';
+import { printPeriod } from '../../../base/utils/date-utils';
 
-import { GreenCard, printPeriod } from './dashutils';
+import { GreenCard } from './GreenDashUtils';
 import { paramsFromUrl } from './dashUtils';
 import { getBasefilters, getCampaigns, getCarbon, getSumColumn } from './emissionscalcTs';
 
@@ -30,6 +31,7 @@ export const isPer1000 = () => {
 	const emissionsMode = DataStore.getUrlValue('emode');
 	return emissionsMode === 'per1000';
 };
+
 
 const OverviewWidget = ({ period, data, prob }) => {
 	let imps;

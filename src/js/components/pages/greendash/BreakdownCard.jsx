@@ -4,7 +4,7 @@ import Misc from '../../../base/components/Misc';
 import { yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import NewChartWidget from '../../../base/components/NewChartWidget';
-import { CO2e, dataColours, GreenCard, GreenCardAbout, ModeButton, NOEMISSIONS, TONNES_THRESHOLD } from './dashutils';
+import { dataColours, TONNES_THRESHOLD } from './dashUtils';
 import SimpleTable, { Column } from '../../../base/components/SimpleTable';
 import List from '../../../base/data/List';
 import { ButtonGroup } from 'reactstrap';
@@ -12,6 +12,7 @@ import { getCarbon, getTags, emissionsPerImpressions, getSumColumn, getBreakdown
 import { isPer1000 } from './GreenMetrics';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import '../../../../style/greendash-breakdown-card.less';
+import {  CO2e, NOEMISSIONS, GreenCard, GreenCardAbout, ModeButton} from './GreenDashUtils';
 
 /** Classify OS strings seen in our data
  *

@@ -12,7 +12,7 @@ import { A } from '../../../base/plumbing/glrouter';
 import { encURI } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import { getCarbon, getOffsetsByType } from './emissionscalcTs';
-import { GreenCard, GreenCardAbout, Mass } from './dashutils';
+import { Mass, GreenCard, GreenCardAbout} from './GreenDashUtils';
 import { getDataItem } from '../../../base/plumbing/Crud';
 import KStatus from '../../../base/data/KStatus';
 import { isTester } from '../../../base/Roles';

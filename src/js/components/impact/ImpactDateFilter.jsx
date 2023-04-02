@@ -4,7 +4,7 @@ import C from '../../C';
 import PropControlPeriod from '../../base/components/propcontrols/PropControlPeriod'
 import { openAndPopulateModal } from './GLCards';
 import DateRangeWidget from '../DateRangeWidget';
-import { getPeriodQuarter, getPeriodMonth, periodFromUrl, periodToParams, printPeriod } from '../pages/greendash/dashutils';
+import { getPeriodQuarter, periodFromUrl, periodToParams } from '../../base/utils/date-utils';
 import { modifyPage } from '../../base/plumbing/glrouter';
 import { nonce } from '../../base/data/DataClass';
 import DataStore from '../../base/plumbing/DataStore';

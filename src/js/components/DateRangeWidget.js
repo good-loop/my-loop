@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'reactstrap';
 import { space } from '../base/utils/miscutils';
-import { periodFromName } from './pages/greendash/dashutils';
+import { MONTHS, WEEKDAYS_FROM_MONDAY, periodFromName } from '../base/utils/date-utils';
 
-//import '../../style/DateRangeWidget.less';
-
-const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 /** Are these two Dates on the same day? */
 const sameDate = (d1, d2) => {
@@ -112,12 +108,12 @@ const Month = ({year, month, start, end, setPeriod, hoverStart, hoverEnd, onDayC
 
 	return <div className={space('month text-center', className)}>
 		<a onClick={clickMonth} className="month-name">
-			{months[month]} {year}
+			{MONTHS[month]} {year}
 		</a>
 		<table>
 			<thead>
 				<tr className="day-names">
-					{weekdays.map(name => <th className="day" key={name}>{name.substring(0, 2)}</th>)}
+					{WEEKDAYS_FROM_MONDAY.map(name => <th className="day" key={name}>{name.substring(0, 2)}</th>)}
 				</tr>
 			</thead>
 			<tbody>
