@@ -373,10 +373,10 @@ export const emissionsPerImpressions = (buckets: GreenBuckets, filterLessThan: n
 				// Simple breakdown
 				Object.entries(bkt).forEach(([k, v]) => {
 					// Carbon entries => carbon per N impressions; others unchanged
-					if (bkt.count > filterLessThan) {
+					if (bkt.count as number > filterLessThan) {
 						newBkt[k] = k.match(/^co2/) ? (v as number) / ((bkt.count as number) / perN) : v;
 					} else {
-						delete newBkt[k];
+						newBkt[k] = k.match(/^co2/) ? 0 : v;
 					}
 				});
 			} else {
