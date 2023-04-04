@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Col as div, Container, Row, Tooltip } from 'reactstrap';
-import Misc from '../../../base/components/Misc';
-import { space, yessy } from '../../../base/utils/miscutils';
-import { dateStr, printDateShort, printPeriod } from '../../../base/utils/date-utils';
-import printer from '../../../base/utils/printer';
-import NewChartWidget from '../../../base/components/NewChartWidget';
-import { TONNES_THRESHOLD } from './dashUtils';
-import { Mass, NOEMISSIONS, CO2e, GreenCard, GreenCardAbout} from './GreenDashUtils';
-import { emissionsPerImpressions, getBreakdownByWithCount } from './emissionscalcTs';
+import { Tooltip } from 'reactstrap';
 import Icon from '../../../base/components/Icon';
+import Misc from '../../../base/components/Misc';
+import NewChartWidget from '../../../base/components/NewChartWidget';
 import { nonce } from '../../../base/data/DataClass';
-import LinkOut from '../../../base/components/LinkOut';
+import { dateStr, printDateShort, printPeriod } from '../../../base/utils/date-utils';
+import { space, yessy } from '../../../base/utils/miscutils';
+import printer from '../../../base/utils/printer';
+import { CO2e, GreenCard, GreenCardAbout, Mass, NOEMISSIONS } from './GreenDashUtils';
 import { isPer1000 } from './GreenMetrics';
+import { TONNES_THRESHOLD } from './dashUtils';
+import { emissionsPerImpressions, getBreakdownByWithCount } from './emissionscalcTs';
 
 
 const icons = {
@@ -156,10 +155,12 @@ const TimeSeriesCard = ({ period, data: timeTable, per1000, noData }) => {
 		const labels = [];
 		const data = [];
 
+		console.log('before', timeTable);
 		// Is the "show normalised emissions vs impressions" toggle set?
 		if (per1000) {
-			timeTable = emissionsPerImpressions(timeTable);
+			timeTable = emissionsPerImpressions(timeTable, -1);
 		}
+		console.log('after', timeTable);
 		
 		// Sum total emissions for each date across all other factors, sort, and unzip to labels/data arrays
 		Object.entries(getBreakdownByWithCount(timeTable, ['co2'], 'time')).sort(
