@@ -35,14 +35,17 @@ const icons = {
 
 // Miles driven in a car: https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator
 gives car-miles-per-ton: 2,482
-// Further sources for a long haul flight: https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2017 
+
+// Further sources for a long haul flight: 
+https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022 
+
 @returns {mode: {factor:units-per-kg, desc, icon}}
  */
 const co2ImpactSpecs = {
 	flights: {
 		src: "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2017",
 		srcDesc: "Flights from London to New York (including radiative forcing)",
-		factor: 1 / (0.19745 * 5585), // CO2 per km (including radiative forcing) * London <> New York
+		factor: 1 / (0.19309 * 5585), // CO2 per km (including radiative forcing) * London <> New York
 		desc: 'long haul flights', //flights from London to New York
 		icon: icons.flights,
 	},
