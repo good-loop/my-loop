@@ -5,7 +5,8 @@ import _ from 'lodash';
 import DataStore from '../../../base/plumbing/DataStore';
 import Misc from '../../../base/components/Misc';
 import NewChartWidget from '../../../base/components/NewChartWidget';
-import { dataColours, GreenCard, GreenCardAbout, NOEMISSIONS, TONNES_THRESHOLD } from './dashutils';
+import { dataColours, TONNES_THRESHOLD } from './dashUtils';
+import { NOEMISSIONS, GreenCard} from './GreenDashUtils';
 import { getCarbon, emissionsPerImpressions, getBreakdownByWithCount } from './emissionscalcTs';
 import { isPer1000 } from './GreenMetrics';
 

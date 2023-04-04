@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Col as div, Container, Row, Tooltip } from 'reactstrap';
 import Misc from '../../../base/components/Misc';
 import { space, yessy } from '../../../base/utils/miscutils';
+import { dateStr, printDateShort, printPeriod } from '../../../base/utils/date-utils';
 import printer from '../../../base/utils/printer';
 import NewChartWidget from '../../../base/components/NewChartWidget';
-import { GreenCard, printPeriod, printDate, printDateShort, TONNES_THRESHOLD, GreenCardAbout, Mass, NOEMISSIONS, CO2e } from './dashutils';
+import { TONNES_THRESHOLD } from './dashUtils';
+import { Mass, NOEMISSIONS, CO2e, GreenCard, GreenCardAbout} from './GreenDashUtils';
 import { emissionsPerImpressions, getBreakdownByWithCount } from './emissionscalcTs';
 import Icon from '../../../base/components/Icon';
 import { nonce } from '../../../base/data/DataClass';
@@ -148,7 +150,7 @@ const TimeSeriesCard = ({ period, data: timeTable, per1000, noData }) => {
 		const labelFn = (period.start.getYear() === period.end.getYear()) ? (
 			utc => printDateShort(new Date(utc))
 		) : (
-			utc => printDate(new Date(utc))
+			utc => dateStr(new Date(utc))
 		);
 
 		const labels = [];

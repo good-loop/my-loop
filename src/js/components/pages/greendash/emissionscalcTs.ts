@@ -14,11 +14,11 @@ import DataStore from '../../../base/plumbing/DataStore';
 import PromiseValue from '../../../base/promise-value';
 import SearchQuery from '../../../base/searchquery';
 import { assert } from '../../../base/utils/assert';
-import { sum, uniq, yessy } from '../../../base/utils/miscutils';
+import { getUrlVars, sum, uniq, yessy } from '../../../base/utils/miscutils';
 import C from '../../../C';
 import ServerIO from '../../../plumbing/ServerIO';
-import { getFilterModeId, periodFromUrl } from './dashutils';
-import { Period } from './dashUtils';
+import { Period, getPeriodFromUrlParams } from '../../../base/utils/date-utils';
+import { getFilterModeId } from './dashUtils';
 
 /**
  * An array of Records ??what are the keys/values??
@@ -65,11 +65,14 @@ export type BaseFiltersFailed = {
 /**
  * Supposedly return a BaseFilters. But when there are exceptions, return a alert or loading message. Catch the message wtih <Alert /> or <Misc.Loading /> div.
  * Usage examples see GreenMetrics2 in ./GreenMetrics.jsx
- * @param urlParams fetch using paramsFromUrl in dashUtils.ts
+ * @param urlParams use getUrlVars() then getPeriodFromUrlParams() then add period!
  */
 export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed => {
 	// Default to current quarter, all brands, all campaigns
 	const period = urlParams.period;
+	if ( ! period) {
+		console.warn("use getUrlVars() then getPeriodFromUrlParams() then add period!");
+	}
 	let { filterMode, filterId } = getFilterModeId();
 
 	let failedObject: BaseFiltersFailed = {};
@@ -403,7 +406,9 @@ export const calculateDynamicOffset = (campaign: Campaign, offset: Impact, perio
 	if (!Impact.isDynamic(offset)) return offset; // paranoia
 
 	// We either want carbon emissions or impressions count for this campaign/period - this gets both
-	if (!period) period = periodFromUrl() as Period;
+	if (!period) {		
+		period = getPeriodFromUrlParams();
+	}
 	let pvCarbonData = getCarbon({
 		q: SearchQuery.setProp(null, 'campaign', campaign.id).query,
 		start: period?.start.toISOString() || '2022-01-01',
@@ -529,7 +534,6 @@ export const getOffsetsByType = ({ campaign, status, period }: { campaign: Campa
 	offsets4type.coralTotal = offsets4type.coral.reduce((x, offset) => x + offset.n, 0);
 
 	offsets4type.isLoading = isLoading;
-	console.log('offsets4type', offsets4type, 'Campaign', campaign, 'period', period);
 	return offsets4type;
 };
 
@@ -590,8 +594,7 @@ const getFixedOffsetsForCampaign = (campaign: Campaign, period: Period): Impact[
 		let do2 = calculateDynamicOffset(campaign, doffset, endGap) as Impact;
 		fixedOffsets.push(do1, do2);
 	}
-	if (fixedOffsets.filter((x) => !x).length) {
-		console.log('loading carbon data', fixedOffsets);
+	if (fixedOffsets.filter(x => ! x).length) {
 		return false; // still loading data
 	}
 	return fixedOffsets;

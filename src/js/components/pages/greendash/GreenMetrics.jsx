@@ -9,9 +9,9 @@ import Misc from '../../../base/components/Misc';
 import List from '../../../base/data/List';
 import DataStore from '../../../base/plumbing/DataStore';
 import printer from '../../../base/utils/printer';
+import { getPeriodFromUrlParams, printPeriod } from '../../../base/utils/date-utils';
 
-import { GreenCard, printPeriod } from './dashutils';
-import { paramsFromUrl } from './dashUtils';
+import { GreenCard } from './GreenDashUtils';
 import { getBasefilters, getCampaigns, getCarbon, getSumColumn } from './emissionscalcTs';
 
 import BreakdownCard from './BreakdownCard';
@@ -25,11 +25,13 @@ import TimeSeriesCard from './TimeSeriesCard';
 import Login from '../../../base/youagain';
 
 import PropControl from '../../../base/components/PropControl';
+import { getUrlVars } from '../../../base/utils/miscutils';
 
 export const isPer1000 = () => {
 	const emissionsMode = DataStore.getUrlValue('emode');
 	return emissionsMode === 'per1000';
 };
+
 
 const OverviewWidget = ({ period, data, prob }) => {
 	let imps;
@@ -77,10 +79,12 @@ const CTACard = ({}) => {
 };
 
 const GreenMetrics2 = () => {
-	const urlParams = paramsFromUrl(['period', 'prob', 'sigfig', 'nocache']);
-	const period = urlParams.period;
-	if (!period) return null; // Filter widget will set this on first render - allow it to update
-
+	const urlParams = getUrlVars();
+	const period = getPeriodFromUrlParams(urlParams);
+	if ( ! period) {
+		return null; // Filter widget will set this on first render - allow it to update
+	}
+	urlParams.period = period;
 	const baseFilters = getBasefilters(urlParams);
 
 	// BaseFiltersFailed

@@ -5,7 +5,7 @@ import KStatus from '../../../base/data/KStatus';
 import DataStore from '../../../base/plumbing/DataStore';
 import { nonce } from '../../../base/data/DataClass';
 import { getDataItem, getDataList } from '../../../base/plumbing/Crud';
-import { getPeriodQuarter, getPeriodMonth, periodFromUrl, periodToParams, printPeriod } from './dashutils';
+import { getPeriodQuarter, getPeriodMonth, periodToParams, printPeriod, getPeriodFromUrlParams } from '../../../base/utils/date-utils';
 
 import DateRangeWidget from '../../DateRangeWidget';
 import { modifyPage } from '../../../base/plumbing/glrouter';
@@ -57,10 +57,11 @@ const periodChanged = (periodA, periodB) => {
 	return false; // Unchanged!
 };
 
+
 /** Should we show the "Apply New Filters" button - ie have they changed? */
 const filtersChanged = ({ filterMode, period, ...nextFilters }) => {
-	// Time period?
-	if (periodChanged(periodFromUrl(), period)) return true;
+	// Time period?	
+	if (periodChanged(getPeriodFromUrlParams(), period)) return true;
 	// Focused item?
 	let changed = false;
 	let prevFilters = {};
@@ -75,9 +76,10 @@ const filtersChanged = ({ filterMode, period, ...nextFilters }) => {
 	return filterMode !== defaultFilterMode(prevFilters);
 };
 
+
 /** Extract the time period filter from URL params if present - if not, apply "current quarter" by default */
 const initPeriod = () => {
-	let period = periodFromUrl();
+	let period = getPeriodFromUrlParams();
 	if (!period) {
 		period = getPeriodQuarter();
 		modifyPage(null, { period: period.name });

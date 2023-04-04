@@ -3,7 +3,8 @@ import { Button, Modal, ModalBody } from 'reactstrap';
 import { DownloadCSVLink } from '../../../base/components/SimpleTable';
 import { space, stopEvent } from '../../../base/utils/miscutils';
 import Misc from '../../../MiscOverrides';
-import { dataColours, GreenCard } from './dashutils';
+import { dataColours} from './dashUtils';
+import { GreenCard } from './GreenDashUtils';
 import { getCarbon, emissionsPerImpressions } from './emissionscalcTs';
 import { isPer1000 } from './GreenMetrics';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS

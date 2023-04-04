@@ -3,14 +3,15 @@ import { Alert, Button, Card, Col, Container, Row } from 'reactstrap';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import NewChartWidget from '../../../base/components/NewChartWidget';
 import DataStore from '../../../base/plumbing/DataStore';
-import { asNum } from '../../../base/utils/miscutils';
+import { asNum, getUrlVars } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import Login from '../../../base/youagain';
 import Misc from '../../../MiscOverrides';
-import { paramsFromUrl } from './dashUtils';
 import { emissionsPerImpressions, getBasefilters, getCarbon, GreenBuckets, type BaseFilters, type BreakdownRow } from './emissionscalcTs';
 import GreenDashboardFilters from './GreenDashboardFilters';
 import { GLCard } from '../../impact/GLCards';
+import ServerIO from '../../../plumbing/ServerIO';
+import { getPeriodFromUrlParams } from '../../../base/utils/date-utils';
 
 interface ByDomainValue extends Object {
 	allCount: number;
@@ -147,7 +148,7 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
  * Publisher lists
  * @returns
  */
-const GreenRecommendation2 = (): JSX.Element | null => {
+const PublisherListRecommendations = (): JSX.Element | null => {
 	// CO2 per impression grams??
 	const [selectedCo2, setSelectedCo2] = useState<number>();
 	const [lowBuckets, setLowBuckets] = useState<GreenBuckets>();
@@ -162,9 +163,12 @@ const GreenRecommendation2 = (): JSX.Element | null => {
 		setHighBuckets(highBuckets);
 	}, [selectedCo2]);
 
-	const urlParams = paramsFromUrl(['period', 'prob', 'sigfig', 'nocache']);
-	const period = urlParams.period;
-	if (!period) return null; // Filter widget will set this on first render - allow it to update
+	const urlParams = getUrlVars();	
+	const period = getPeriodFromUrlParams(urlParams);
+	if ( ! period) {
+		return null; // Filter widget will set this on first render - allow it to update
+	}
+	urlParams.period = period;
 
 	let baseFilters = getBasefilters(urlParams);
 
@@ -343,7 +347,8 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 					<>
 						<GreenDashboardFilters pseudoUser={pseudoUser} />
 						<h1>Green Recommendations</h1>
-						<GreenRecommendation2 />
+						<PublisherListRecommendations />
+						<CreativeRecommendations />
 					</>
 				) : (
 					<Misc.Loading text='Checking your access...' pv={null} inline={false} />
@@ -352,5 +357,26 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 		</div>
 	);
 };
+
+function CreativeRecommendations() {
+	return (<GLCard >
+			<h3 className='mx-auto'>Optimise Creative Files to Reduce Carbon</h3>
+			<h4>Tips</h4>
+			<p>
+				These tips can require special tools to apply. 
+				We are working on automated self-service web tools to make this easy.
+				Meanwhile - email us and we can help.
+			</p>
+			<ul>
+				<li>Use .webp format instead of .png. webp is a more modern format which can do compression and transparency.</li>
+				<li>Optimise fonts. Often a whole font will be included when just a few letters are needed.</li>
+				<li>Sometimes replacing a font with an svg can further reduce the creative weight.</li>
+				<li>Use .webm format for videos. It can get better compression.</li>
+				<li>Replace GIFs. Embedded video (e.g. .webm or .mp4) is better for animations, and .webp is better for static images.</li>
+				<li>Strip down large javascript libraries. Often a whole animation library is included when only a snippet is used.</li>
+			</ul>
+			<p className='dev-only'>We are developing a tool for analysing ads: the <a href={'https://portal.good-loop.com/#measure'}>Low Carbon Creative Tool</a></p>
+	</GLCard>);
+}
 
 export default GreenRecommendation;
