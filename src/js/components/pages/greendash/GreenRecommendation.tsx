@@ -220,7 +220,7 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 		lowImps += bucket.count as number;
 		lowWeightedAvg += (bucket.count as number) * (bucket.co2 as number);
 	});
-	lowWeightedAvg = lowWeightedAvg / lowImps;
+	lowWeightedAvg = lowImps ? lowWeightedAvg / lowImps : 0;
 	const weightedAvg = bucketsPer1000.reduce((acc, bucket) => acc + (bucket.count as number) * (bucket.co2 as number), 0) / totalCounts;
 
 	const downloadCSV = (data?: string[]) => {
