@@ -11,7 +11,7 @@ import { emissionsPerImpressions, getBasefilters, getCarbon, GreenBuckets, type 
 import GreenDashboardFilters from './GreenDashboardFilters';
 import { GLCard } from '../../impact/GLCards';
 import ServerIO from '../../../plumbing/ServerIO';
-import { getPeriodFromUrlParams } from '../../../base/utils/date-utils';
+import { Period, getPeriodFromUrlParams } from '../../../base/utils/date-utils';
 
 interface ByDomainValue extends Object {
 	allCount: number;
@@ -53,14 +53,22 @@ const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, defaultValue,
 	};
 
 	return (
-		<Row>
-			{min && <Col xs={1}>{min.toPrecision(3)}</Col> /* don't show 0 */}
-			<Col xs={10} className='text-center'>
-				<input className='w-100' type='range' min={min} max={max} step={step} value={value} onChange={handleChange} />
-				{value.toPrecision(3)}
-			</Col>
-			<Col xs={1}>{max.toPrecision(3)}</Col>
-		</Row>
+		<>
+			<Row>
+				<Col className='text-center' style={{ marginLeft: '6em' }}>
+					<input className='w-100' type='range' min={min} max={max} step={step} value={value} onChange={handleChange} />
+					<span className='text-nowrap'>{value.toPrecision(3)}</span>
+				</Col>
+			</Row>
+			{/* <Row className='text-nowrap'>
+				<Col xs={1}>
+					<span>{min.toPrecision(3)}</span>
+				</Col>
+				<Col xs={1}>
+					<span>{max.toPrecision(3)}</span>
+				</Col>
+			</Row> */}
+		</>
 	);
 };
 
@@ -149,6 +157,10 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
  * @returns
  */
 const PublisherListRecommendations = (): JSX.Element | null => {
+	interface UrlParams extends Object {
+		period?: Period;
+	}
+
 	// CO2 per impression grams??
 	const [selectedCo2, setSelectedCo2] = useState<number>();
 	const [lowBuckets, setLowBuckets] = useState<GreenBuckets>();
@@ -163,9 +175,9 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 		setHighBuckets(highBuckets);
 	}, [selectedCo2]);
 
-	const urlParams = getUrlVars();	
+	const urlParams: UrlParams = getUrlVars(null, null);
 	const period = getPeriodFromUrlParams(urlParams);
-	if ( ! period) {
+	if (!period) {
 		return null; // Filter widget will set this on first render - allow it to update
 	}
 	urlParams.period = period;
@@ -193,39 +205,23 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 	const pvChartTotalValue = baseFilterConfirmed.prob && baseFilterConfirmed.prob != 0 ? pvChartTotal.value?.sampling : pvChartTotal.value;
 	const bucketsPer1000 = emissionsPerImpressions(pvChartTotalValue.by_domain.buckets);
 
-	let leftDomains = lowBuckets && lowBuckets!.map((val) => val.key as string);
-	let rightDomains = highBuckets && highBuckets!.map((val) => val.key as string);
-	// what weight of impressions is included?
-	let lowImps = 0,
-		highImps = 0,
-		lowWeightedAvg = 0,
-		highWeightedAvg = 0;
-	if (lowBuckets && highBuckets) {
-		lowBuckets.forEach((bucket) => {
-			lowImps += bucket.count as number;
-			lowWeightedAvg += (bucket.count as number) * (bucket.co2 as number);
-		});
-		highBuckets.forEach((bucket) => {
-			highImps += bucket.count as number;
-			highWeightedAvg += (bucket.count as number) * (bucket.co2 as number);
-		});
-		lowWeightedAvg = lowWeightedAvg / lowImps;
-		highWeightedAvg = highWeightedAvg / highImps;
-	}
-	let totalImps = 0,
-		weightedAvg = 0;
-	bucketsPer1000.map((bucket) => {
-		weightedAvg += (bucket.count as number) * (bucket.co2 as number);
-		totalImps += bucket.count as number;
-	});
-	weightedAvg = weightedAvg / totalImps;
-
 	const co2s = bucketsPer1000.map((row) => row.co2! as number);
+	const totalCounts = bucketsPer1000.reduce((acc, cur) => acc + (cur.count as number), 0);
 	const maxCo2 = Math.max(...co2s);
 	const minCo2 = Math.min(...co2s);
 	const middleCo2 = ((maxCo2 - minCo2) * 1) / 2;
 	const steps = (maxCo2 - minCo2) / TICKS_NUM; // How large is a tick
 	const silderProps: RangeSliderProps = { min: minCo2 * 1, max: maxCo2 * 1, step: steps, defaultValue: middleCo2, onChange: setSelectedCo2 };
+
+	// what weight of impressions is included?
+	let lowImps = 0,
+		lowWeightedAvg = 0;
+	lowBuckets?.forEach((bucket) => {
+		lowImps += bucket.count as number;
+		lowWeightedAvg += (bucket.count as number) * (bucket.co2 as number);
+	});
+	lowWeightedAvg = lowImps ? lowWeightedAvg / lowImps : 0;
+	const weightedAvg = bucketsPer1000.reduce((acc, bucket) => acc + (bucket.count as number) * (bucket.co2 as number), 0) / totalCounts;
 
 	const downloadCSV = (data?: string[]) => {
 		if (!data) return;
@@ -241,46 +237,65 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 		URL.revokeObjectURL(url);
 	};
 
-	const DomainList = ({ low, buckets, avg }: { low?: boolean; buckets?: string[]; avg: number }): JSX.Element => {
+	const DomainList = ({ low, buckets, totalCounts }: { low?: boolean; buckets?: GreenBuckets; totalCounts: number }): JSX.Element => {
+		if (!buckets) return <></>;
+		const domainsList = buckets.map((val) => val.key as string);
+		const totalImpressions = buckets.reduce((acc, cur) => acc + (cur.count as number), 0);
+		const totalCo2 = buckets.reduce((acc, cur) => acc + (cur.co2 as number), 0);
+		const avgCo2 = totalCo2 / domainsList.length;
+		const volumePercentage = (totalImpressions / totalCounts) * 100;
 		return (
 			<>
 				<h4>{low ? 'Low' : 'High'}-Carbon</h4>
-				<div>{buckets?.length || '-'} domains</div>
-				<div>{lowImps + highImps ? printer.prettyNumber(((low ? lowImps : highImps) * 100) / (lowImps + highImps), 2, 3) + '%' : null} by volume</div>
-				<div>Average: {printer.prettyNumber(avg, 3, null)} grams CO2e</div>
+				<div>{domainsList.length || '-'} domains</div>
+				<div>{printer.prettyNumber(volumePercentage, 2, null)}% by volume</div>
+				<div>Average: {printer.prettyNumber(avgCo2, 3, null)} grams CO2e</div>
 				<div style={{ maxHeight: '15em', overflowY: 'scroll', overflowX: 'clip' }}>
 					<ul>
-						{buckets?.map((val, index) => (
+						{domainsList.map((val, index) => (
 							<li key={index}>{val}</li>
 						))}
 					</ul>
 				</div>
-				<Button onClick={() => downloadCSV(buckets)}>Download CSV</Button>
-				<div>Then use as {low ? 'an allow' : 'a block'}-list in your DSP</div>
+				<Button onClick={() => downloadCSV(domainsList)}>Download CSV</Button>
+				<div>Use as {low ? 'an allow' : 'a block'}-list in your DSP</div>
 			</>
 		);
 	};
 
 	return (
-		<GLCard noPadding={null} noMargin={null} modalContent={undefined} modalTitle={undefined} modalHeader={undefined} modalHeaderImg={undefined} modalClassName={undefined} modal={null} modalId={null} modalPrioritize={null} href={null} >
-			<h3 className='mx-auto'>Use Publisher Lists to Reduce Carbon</h3>
+		<GLCard
+			noPadding={null}
+			noMargin={null}
+			modalContent={undefined}
+			modalTitle={undefined}
+			modalHeader={undefined}
+			modalHeaderImg={undefined}
+			modalClassName={undefined}
+			modal={null}
+			modalId={null}
+			modalPrioritize={null}
+			href={null}
+		>
+			<h3 className='mx-auto'>Use this slider tool to generate block and allow lists based on publisher generated CO2e</h3>
 			<Row style={{}}>
 				<Col xs={3}>
-					<DomainList buckets={leftDomains} low avg={lowWeightedAvg} />
+					<DomainList buckets={lowBuckets} low totalCounts={totalCounts} />
 				</Col>
 				<Col xs={6}>
-					<div className='w-100 h-100'>
+					<div className='d-flex flex-column'>
 						<RecommendationChart bucketsPer1000={bucketsPer1000} />
 						<RangeSlider {...silderProps} />
 						<h4>Estimated Reduction: {printer.prettyNumber((100 * (weightedAvg - lowWeightedAvg)) / weightedAvg, 2, null)}%</h4>
 					</div>
 				</Col>
 				<Col xs={3}>
-					<DomainList buckets={rightDomains} avg={highWeightedAvg} />
+					<DomainList buckets={highBuckets} totalCounts={totalCounts} />
 				</Col>
 			</Row>
 			<p className='mt-2'>
-				These lists are based on observed data within the current filters. We also have general publisher lists available for use. Please contact{' '}
+				These lists are based on observed data within the current filters. <br />
+				We also have general publisher lists available for use. Please contact{' '}
 				<a href='mailto:support@good-loop.com?subject=Carbon%20reducttion%20publisher%20lists'>support@good-loop.com</a> for information.
 			</p>
 		</GLCard>
@@ -346,7 +361,7 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 				{agencyIds ? (
 					<>
 						<GreenDashboardFilters pseudoUser={pseudoUser} />
-						<h1>Green Recommendations</h1>
+						<h1 className='text-left'>How can I start reducing emissions?</h1>
 						<PublisherListRecommendations />
 						<CreativeRecommendations />
 					</>
@@ -359,13 +374,25 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 };
 
 function CreativeRecommendations() {
-	return (<GLCard >
+	return (
+		<GLCard
+			noPadding={null}
+			noMargin={null}
+			modalContent={undefined}
+			modalTitle={undefined}
+			modalHeader={undefined}
+			modalHeaderImg={undefined}
+			modalClassName={undefined}
+			modal={null}
+			modalId={null}
+			modalPrioritize={null}
+			href={null}
+		>
 			<h3 className='mx-auto'>Optimise Creative Files to Reduce Carbon</h3>
 			<h4>Tips</h4>
 			<p>
-				These tips can require special tools to apply. 
-				We are working on automated self-service web tools to make this easy.
-				Meanwhile - email us and we can help.
+				These tips can require special tools to apply. We are working on automated self-service web tools to make this easy. Meanwhile - email us and we can
+				help.
 			</p>
 			<ul>
 				<li>Use .webp format instead of .png. webp is a more modern format which can do compression and transparency.</li>
@@ -375,8 +402,11 @@ function CreativeRecommendations() {
 				<li>Replace GIFs. Embedded video (e.g. .webm or .mp4) is better for animations, and .webp is better for static images.</li>
 				<li>Strip down large javascript libraries. Often a whole animation library is included when only a snippet is used.</li>
 			</ul>
-			<p className='dev-only'>We are developing a tool for analysing ads: the <a href={'https://portal.good-loop.com/#measure'}>Low Carbon Creative Tool</a></p>
-	</GLCard>);
+			<p className='dev-only'>
+				We are developing a tool for analysing ads: the <a href={'https://portal.good-loop.com/#measure'}>Low Carbon Creative Tool</a>
+			</p>
+		</GLCard>
+	);
 }
 
 export default GreenRecommendation;
