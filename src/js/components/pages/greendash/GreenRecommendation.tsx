@@ -11,7 +11,7 @@ import { emissionsPerImpressions, getBasefilters, getCarbon, GreenBuckets, type 
 import GreenDashboardFilters from './GreenDashboardFilters';
 import { GLCard } from '../../impact/GLCards';
 import ServerIO from '../../../plumbing/ServerIO';
-import { getPeriodFromUrlParams } from '../../../base/utils/date-utils';
+import { Period, getPeriodFromUrlParams } from '../../../base/utils/date-utils';
 
 interface ByDomainValue extends Object {
 	allCount: number;
@@ -149,6 +149,10 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
  * @returns
  */
 const PublisherListRecommendations = (): JSX.Element | null => {
+	interface UrlParams extends Object {
+		period?: Period;
+	}
+
 	// CO2 per impression grams??
 	const [selectedCo2, setSelectedCo2] = useState<number>();
 	const [lowBuckets, setLowBuckets] = useState<GreenBuckets>();
@@ -163,9 +167,9 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 		setHighBuckets(highBuckets);
 	}, [selectedCo2]);
 
-	const urlParams = getUrlVars();	
+	const urlParams: UrlParams = getUrlVars(null, null);
 	const period = getPeriodFromUrlParams(urlParams);
-	if ( ! period) {
+	if (!period) {
 		return null; // Filter widget will set this on first render - allow it to update
 	}
 	urlParams.period = period;
@@ -262,7 +266,19 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 	};
 
 	return (
-		<GLCard noPadding={null} noMargin={null} modalContent={undefined} modalTitle={undefined} modalHeader={undefined} modalHeaderImg={undefined} modalClassName={undefined} modal={null} modalId={null} modalPrioritize={null} href={null} >
+		<GLCard
+			noPadding={null}
+			noMargin={null}
+			modalContent={undefined}
+			modalTitle={undefined}
+			modalHeader={undefined}
+			modalHeaderImg={undefined}
+			modalClassName={undefined}
+			modal={null}
+			modalId={null}
+			modalPrioritize={null}
+			href={null}
+		>
 			<h3 className='mx-auto'>Use Publisher Lists to Reduce Carbon</h3>
 			<Row style={{}}>
 				<Col xs={3}>
@@ -359,13 +375,25 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 };
 
 function CreativeRecommendations() {
-	return (<GLCard >
+	return (
+		<GLCard
+			noPadding={null}
+			noMargin={null}
+			modalContent={undefined}
+			modalTitle={undefined}
+			modalHeader={undefined}
+			modalHeaderImg={undefined}
+			modalClassName={undefined}
+			modal={null}
+			modalId={null}
+			modalPrioritize={null}
+			href={null}
+		>
 			<h3 className='mx-auto'>Optimise Creative Files to Reduce Carbon</h3>
 			<h4>Tips</h4>
 			<p>
-				These tips can require special tools to apply. 
-				We are working on automated self-service web tools to make this easy.
-				Meanwhile - email us and we can help.
+				These tips can require special tools to apply. We are working on automated self-service web tools to make this easy. Meanwhile - email us and we can
+				help.
 			</p>
 			<ul>
 				<li>Use .webp format instead of .png. webp is a more modern format which can do compression and transparency.</li>
@@ -375,8 +403,11 @@ function CreativeRecommendations() {
 				<li>Replace GIFs. Embedded video (e.g. .webm or .mp4) is better for animations, and .webp is better for static images.</li>
 				<li>Strip down large javascript libraries. Often a whole animation library is included when only a snippet is used.</li>
 			</ul>
-			<p className='dev-only'>We are developing a tool for analysing ads: the <a href={'https://portal.good-loop.com/#measure'}>Low Carbon Creative Tool</a></p>
-	</GLCard>);
+			<p className='dev-only'>
+				We are developing a tool for analysing ads: the <a href={'https://portal.good-loop.com/#measure'}>Low Carbon Creative Tool</a>
+			</p>
+		</GLCard>
+	);
 }
 
 export default GreenRecommendation;
