@@ -53,14 +53,22 @@ const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, defaultValue,
 	};
 
 	return (
-		<Row>
-			{min && <Col xs={1} className='text-nowrap'><span>{min.toPrecision(3)}</span></Col> /* don't show 0 */}
-			<Col xs={10} className='text-center'>
-				<input className='w-100' type='range' min={min} max={max} step={step} value={value} onChange={handleChange} />
-				<span>{value.toPrecision(3)}</span>
-			</Col>
-			<Col xs={1} className='text-nowrap'><span>{max.toPrecision(3)}</span></Col>
-		</Row>
+		<>
+			<Row>
+				<Col className='text-center' style={{ marginLeft: '6em' }}>
+					<input className='w-100' type='range' min={min} max={max} step={step} value={value} onChange={handleChange} />
+					<span className='text-nowrap'>{value.toPrecision(3)}</span>
+				</Col>
+			</Row>
+			{/* <Row className='text-nowrap'>
+				<Col xs={1}>
+					<span>{min.toPrecision(3)}</span>
+				</Col>
+				<Col xs={1}>
+					<span>{max.toPrecision(3)}</span>
+				</Col>
+			</Row> */}
+		</>
 	);
 };
 
@@ -250,7 +258,7 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 			<>
 				<h4>{low ? 'Low' : 'High'}-Carbon</h4>
 				<div>{buckets?.length || '-'} domains</div>
-				<div>{lowImps + highImps ? printer.prettyNumber(((low ? lowImps : highImps) * 100) / (lowImps + highImps), 2, 3) + '%' : null} by volume</div>
+				{/* <div>{lowImps + highImps ? printer.prettyNumber(((low ? lowImps : highImps) * 100) / (lowImps + highImps), 2, 3) + '%' : null} by volume</div> */}
 				<div>Average: {printer.prettyNumber(avg, 3, null)} grams CO2e</div>
 				<div style={{ maxHeight: '15em', overflowY: 'scroll', overflowX: 'clip' }}>
 					<ul>
@@ -259,7 +267,7 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 						))}
 					</ul>
 				</div>
-				<Button onClick={() => downloadCSV(buckets)}>Download CSV</Button>
+				<Button onClick={() => downloadCSV(buckets as unknown as string[])}>Download CSV</Button>
 				<div>Use as {low ? 'an allow' : 'a block'}-list in your DSP</div>
 			</>
 		);
@@ -285,7 +293,7 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 					<DomainList buckets={leftDomains} low avg={lowWeightedAvg} />
 				</Col>
 				<Col xs={6}>
-					<div className='w-100 h-100'>
+					<div className='d-flex flex-column'>
 						<RecommendationChart bucketsPer1000={bucketsPer1000} />
 						<RangeSlider {...silderProps} />
 						<h4>Estimated Reduction: {printer.prettyNumber((100 * (weightedAvg - lowWeightedAvg)) / weightedAvg, 2, null)}%</h4>
@@ -296,7 +304,8 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 				</Col>
 			</Row>
 			<p className='mt-2'>
-				These lists are based on observed data within the current filters. <br/>We also have general publisher lists available for use. Please contact{' '}
+				These lists are based on observed data within the current filters. <br />
+				We also have general publisher lists available for use. Please contact{' '}
 				<a href='mailto:support@good-loop.com?subject=Carbon%20reducttion%20publisher%20lists'>support@good-loop.com</a> for information.
 			</p>
 		</GLCard>
