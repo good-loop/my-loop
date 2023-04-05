@@ -39,146 +39,15 @@ import ImpactOverviewPage, {ImpactFilters} from './ImpactOverviewPage';
 import ImpactStatsPage from './ImpactStatsPage';
 import ImpactStoryPage from './ImpactStoryPage';
 
+import { fetchImpactBaseObjects } from '../../base/data/ImpactPageData';
+
 /**
  * DEBUG OBJECTS
  */
 
 import Login from '../../base/youagain';
 
-/**
- * Fetches the contextual data necessary to generate an impact page for the given item
- * @param {Object} p
- * @param {String} p.itemId
- * @param {String} p.itemType
- * @param {KStatus} p.status 
- * @returns {Object} {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits, charities}
- */
-const fetchBaseObjects = async ({itemId, itemType, status}) => {
 
-	let pvCampaign, campaign;
-	let pvBrand, brand, brandId;
-	let pvMasterBrand, masterBrand;
-	let pvSubBrands, subBrands;
-	let pvSubCampaigns, subCampaigns;
-	let pvImpactDebits, impactDebits;
-	let pvCharities, charities;
-	let ads;
-
-	// Fetch campaign object if specified
-	if (itemType === "campaign") {
-		pvCampaign = getDataItem({type: C.TYPES.Campaign, status, id:itemId});
-		campaign = await pvCampaign.promise;
-		//if (pvCampaign.error) throw pvCampaign.error;
-		// If we have a campaign, use it to find the brand
-		brandId = campaign?.vertiser;
-	} else if (itemType === "brand") {
-		// Otherwise use the URL
-		brandId = itemId;
-	}
-
-	// Find the specified brand
-	pvBrand = getDataItem({type: C.TYPES.Advertiser, status, id:brandId});
-	brand = await pvBrand.promise;
-	//if (pvBrand.error) throw pvBrand.error;
-	if (brand.parentId) {
-		// If this brand has a parent, get it
-		pvMasterBrand = getDataItem({type: C.TYPES.Advertiser, status, id:brand.parentId});
-		masterBrand = await pvMasterBrand.promise;
-		//if (pvMasterBrand.error) throw pvMasterBrand.error;
-	}
-	// Find any subBrands of this brand (technically brands should only have a parent OR children - but might be handy to make longer brand trees in future)
-	pvSubBrands = Advertiser.getChildren(brand.id);
-	subBrands = List.hits(await pvSubBrands.promise);
-	//if (pvSubBrands.error) throw pvSubBrands.error;
-	// Don't look for subCampaigns if this is a campaign
-	if (!campaign) {
-		// Find all related campaigns to this brand
-		pvSubCampaigns = Campaign.fetchForAdvertiser(brandId, status);
-		subCampaigns = List.hits(await pvSubCampaigns.promise);
-
-		subCampaigns = subCampaigns.filter(c => !Campaign.isMaster(c));
-
-		// Look for vertiser wide debits
-		pvImpactDebits = Advertiser.getImpactDebits({vertiser:brand, status});
-		impactDebits = List.hits(await pvImpactDebits.promise);
-		console.log("Got debits from brand!", impactDebits);
-	} else {
-		// Get only campaign debits
-		pvImpactDebits = Campaign.getImpactDebits({campaign, status});
-		impactDebits = List.hits(await pvImpactDebits.promise);
-		console.log("Got debits from campaign!", impactDebits);
-	}
-
-	// Simplifies having to add null checks everywhere
-	if (!subBrands) subBrands = [];
-	if (!subCampaigns) subCampaigns = [];
-	if (!impactDebits) impactDebits = [];
-
-	// Determine which items to fetch ads for
-	// If were focused on a master brand, all of em
-	// If were focused on a brand, just its children
-	// If were focused on a campaign, just it
-	let brandsToFetchFrom = [];
-	let campaignsToFetchFrom = [];
-	if (!campaign) {
-		brandsToFetchFrom = [brand, ...subBrands];
-		campaignsToFetchFrom = subCampaigns;
-	} else {
-		campaignsToFetchFrom = [campaign];
-	}
-
-	let adsFromBrands = [];
-	if (brandsToFetchFrom.length) {
-		let pvAdsFromBrands = Advert.fetchForAdvertisers({vertiserIds:brandsToFetchFrom.map(b => b.id), status});
-		adsFromBrands = List.hits(await pvAdsFromBrands.promise);
-	}
-	let adsFromCampaigns = [];
-	if (campaignsToFetchFrom.length) {
-		let pvAdsFromCampaigns = Advert.fetchForCampaigns({campaignIds:campaignsToFetchFrom.map(c => c.id), status});
-		adsFromCampaigns = List.hits(await pvAdsFromCampaigns.promise);
-	}
-	ads = [...adsFromBrands, ...adsFromCampaigns];
-	console.log("ADS DATA::", ads, adsFromBrands, adsFromCampaigns);
-
-	// Mark which campaigns and brands have any donations, and which don't
-	impactDebits.forEach(debit => {
-		const value = Money.value(debit.impact.amount);
-		if (debit.campaign) {
-			subCampaigns.forEach(subCampaign => {
-				if (subCampaign.id === debit.campaign) subCampaign.hasDonation = value > 0;
-			});
-		}
-		if (debit.vertiser) {
-			subBrands.forEach(subBrand => {
-				if (subBrand.id === debit.vertiser) subBrand.hasDonation = value > 0;
-			});
-		}
-	});
-
-	// Fetch charity objects from debits
-	const charityIds = impactDebits.map(debit => debit.impact.charity).filter(x=>x);
-	
-	if (charityIds.length) {
-		let charitySq = SearchQuery.setPropOr(null, "id", charityIds);
-		pvCharities = ActionMan.list({type: C.TYPES.NGO, status, q:charitySq.query});
-		charities = List.hits(await pvCharities.promise);
-	}
-
-	if (!charities) charities = [];
-
-	// If we aren't looking at a campaign, but this brand only has one - just pretend we are
-	if (subCampaigns.length === 1) {
-		campaign = subCampaigns[0];
-		subCampaigns = [];
-	}
-
-	// If we've looked for both brand and campaign and found nothing, we have a 404
-	if (!campaign && !brand) {
-		throw new Error("404: Not found");
-	}
-
-	return {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits, charities, ads};
-}
 
 const IMPACT_PAGES= {
 	view: ImpactOverviewPage,
@@ -195,9 +64,7 @@ const ImpactPage = () => {
 	const page = path[1]
 	const itemType = path[2]
 	const itemId = path[3]
-	let pvBaseObjects = DataStore.fetch(['misc','impactBaseObjects',itemType,status,'all',itemId], () => {
-		return fetchBaseObjects({itemId, itemType, status});
-	});
+	let pvBaseObjects = fetchImpactBaseObjects({itemId, itemType, status});
 
 	const [pageName, PageContent] = ({
 		view: ["Overview", IMPACT_PAGES.view], 

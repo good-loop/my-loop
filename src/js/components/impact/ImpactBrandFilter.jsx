@@ -19,7 +19,6 @@ import { space } from '../../base/utils/miscutils';
 import Advertiser from '../../base/data/Advertiser';
 import Campaign from '../../base/data/Campaign';
 import List from '../../base/data/List';
-import { getCountryImpressionsByCampaign } from './impactdata';
 
 const A = C.A;
 

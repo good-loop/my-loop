@@ -21,7 +21,8 @@ import Misc from '../../base/components/Misc';
 import List from '../../base/data/List';
 import Campaign from '../../base/data/Campaign';
 import Advertiser from '../../base/data/Advertiser';
-import { getImpressionsByCampaignByCountry } from './impactdata';
+import Advert from '../../base/data/Advert';
+import { getImpressionsByCampaignByCountry } from '../../base/data/ImpactPageData';
 import printer from '../../base/utils/printer'
 /**
  * DEBUG OBJECTS
@@ -427,13 +428,12 @@ const ContentList = () => {
 
 const AdsCatalogueModal = ({noPreviews, ads}) => {
 
-	if (ads.length === 0) return <h3>No ads yet!</h3>;
+	let showAds = ads.filter(ad => !Advert.hideFromShowcase(ad));
+	if (showAds.length === 0) return <h3>No ads yet!</h3>;
 
 	return <>
-		<TODO>which campaign</TODO>
 		<AdvertsCatalogue
-			ads={ads}
-			canonicalAds={ads} // maybe wrong should be all ads
+			ads={showAds}
 			noPreviews={noPreviews}
 		/>
 	</>;

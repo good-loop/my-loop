@@ -26,7 +26,6 @@ import { getId, getType } from '../../base/data/DataClass';
 import DynImg from '../../base/components/DynImg';
 import { setNavProps } from '../../base/components/NavBar';
 import PortalLink from '../../base/components/PortalLink';
-import { getImpactDebits } from './impactdata';
 
 
 const ImpactStoryPage = () => {
