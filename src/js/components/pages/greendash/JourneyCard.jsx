@@ -155,12 +155,13 @@ const JourneyCard = ({ campaigns, baseFilters, period, emptyTable }) => {
 	offsetTypes.forEach((ot) => (offsets[ot + 'Total'] = 0));
 	let allOffsets = []
 	// TODO could be more efficient -- load ImpactDebits rather than loop over campaigns
-	campaigns.forEach(async (campaign) => {
-		const offsets4type = await getOffsetsByType({ campaign, period });
+	for(let i=0; i<campaigns.length; i++) {
+		let campaign = campaigns[i];
+		const offsets4type = getOffsetsByType({ campaign, period });
 		offsetTypes.forEach((ot) => (offsets[ot + 'Total'] += offsets4type[ot + 'Total'] || 0));
 		if (offsets4type.isLoading) isLoading = true;
 		allOffsets.push(offsets4type.allFixedOffsets);
-	});
+	};
 
 	// Which impact splash page to link to?
 	// TODO test for an agency

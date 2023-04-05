@@ -187,7 +187,7 @@ export const getCarbon = ({
 	return DataStore.fetch(
 		['misc', 'DataLog', 'green', md5(JSON.stringify(data))],
 		() => {
-			return ServerIO.load(endpoint ? endpoint : ServerIO.DATALOG_ENDPOINT, { data, swallow: true });
+			return ServerIO.load(endpoint || ServerIO.DATALOG_ENDPOINT, { data, swallow: true, method:"POST" });
 		},
 		null,
 		null
@@ -401,9 +401,9 @@ export const emissionsPerImpressions = (buckets: GreenBuckets, filterLessThan: n
  * Possbile refactor @see {@link calculateDynamicOffsetAsync} (Need more testing)
  * @returns null if loading data
  */
-export const calculateDynamicOffset = (campaign: Campaign, offset: Impact, period: Period): Impact | null => {
+export const calculateDynamicOffset = (campaign: Campaign, offset: Impact, period: Period|null): Impact | null => {
 	Campaign.assIsa(campaign, null);
-	if (!Impact.isDynamic(offset)) return offset; // paranoia
+	assert(Impact.isDynamic(offset), campaign); // paranoia
 
 	// We either want carbon emissions or impressions count for this campaign/period - this gets both
 	if (!period) {		
@@ -441,50 +441,41 @@ export const calculateDynamicOffset = (campaign: Campaign, offset: Impact, perio
 	return snapshotOffset;
 };
 
-// const calculateDynamicOffsetAsync = async (campaign: Campaign, offset: Impact, period: Period): Promise<Impact> => {
-// 	Campaign.assIsa(campaign, null);
-// 	if (!Impact.isDynamic(offset)) return offset; // paranoia
 
-// 	// We either want carbon emissions or impressions count for this campaign/period - this gets both
-// 	if (!period) period = periodFromUrl() as Period;
-// 	let pvCarbonData = await getCarbon({
-// 		q: SearchQuery.setProp(null, 'campaign', campaign.id).query,
-// 		start: period?.start.toISOString() || '2022-01-01',
-// 		end: period?.end.toISOString() || 'now',
-// 		breakdown: ['total{"emissions":"sum"}'],
-// 	});
 
-// 	// HACK: Wait for the non async data
-// 	if (pvCarbonData.value === null) {
-// 		return await new Promise((resolve) => {
-// 			setTimeout(() => {
-// 				resolve(calculateDynamicOffsetAsync(campaign, offset, period));
-// 			}, 100);
-// 		});
-// 	}
-
-// 	let n;
-// 	// HACK: carbon offset?
-// 	if (Impact.isCarbonOffset(offset)) {
-// 		n = getSumColumn(pvCarbonData.value.by_total.buckets, 'co2');
-// 	} else {
-// 		// check it is per impression
-// 		if (offset.input) assert(offset.input.substring(0, 'impression'.length) === 'impression', offset);
-// 		// Impression count * output-per-impression
-// 		n = pvCarbonData.value.allCount * offset.rate;
-// 	}
-// 	// copy and set n
-// 	let snapshotOffset = new Impact(offset);
-// 	snapshotOffset.n = n;
-// 	delete snapshotOffset.rate;
-// 	delete snapshotOffset.input;
-// 	delete snapshotOffset.dynamic;
-// 	snapshotOffset.campaign = campaign.id;
-// 	snapshotOffset.src = offset; // DEBUG pass on the original
-// 	snapshotOffset.start = period?.start;
-// 	snapshotOffset.end = period?.end;
-// 	return snapshotOffset;
-// };
+/**
+ * fraction by period, or all
+ */
+export const calculateFixedOffset = (impactDebit: ImpactDebit, period: Period|null): Impact | null => {
+	ImpactDebit.assIsa(impactDebit);
+	// We either want carbon emissions or impressions count for this campaign/period - this gets both
+	if ( ! period) {		
+		period = getPeriodFromUrlParams();
+	}
+	// fraction of period
+	let fraction;
+	if (period && impactDebit.start && impactDebit.end) {
+		let period2 = {start:new Date(impactDebit.start), end:new Date(impactDebit.end)} as Period;
+		let overlapStartMsecs = Math.max(period.start.getTime(), period2.start.getTime());
+		let overlapEndMsecs = Math.min(period.end.getTime(), period2.end.getTime());
+		fraction = (overlapEndMsecs - overlapStartMsecs) / (period.end.getTime() - period.start.getTime());
+		if (fraction<0) {
+			fraction = 0;
+		}
+	} else {
+		fraction = 1;
+	}
+	// copy and set n
+	let snapshotOffset = new Impact(impactDebit.impact);
+	snapshotOffset.n = impactDebit.impact.n*fraction;
+	delete snapshotOffset.rate;
+	delete snapshotOffset.input;
+	delete snapshotOffset.dynamic;
+	snapshotOffset.src = impactDebit.impact; // DEBUG pass on the original
+	snapshotOffset.start = period?.start;
+	snapshotOffset.end = period?.end;
+	return snapshotOffset;
+};
 
 type OffSets4Type = {
 	isLoading: boolean;
@@ -553,8 +544,9 @@ const getFixedOffsetsForCampaign = (campaign: Campaign, period: Period): Impact[
 	const fixedImpactDebits = impactDebits.filter((impd) => !Impact.isDynamic(impd.impact));
 	if (!dynamicImpactDebits.length || !fixedImpactDebits.length) {
 		// no mix = simples
-		let offsets = impactDebits.map((imp) => imp.impact);
-		let fixedOffsets = offsets.map((offset) => (Impact.isDynamic(offset) ? calculateDynamicOffset(campaign, offset, period) : offset)) as Impact[];
+		let fixedOffsets = impactDebits.map(imp => Impact.isDynamic(imp.impact)? 
+			calculateDynamicOffset(campaign, imp.impact, period) 
+			: calculateFixedOffset(imp, period));
 		return fixedOffsets;
 	}
 	// What gaps do we have in the fixed impacts?
@@ -564,7 +556,10 @@ const getFixedOffsetsForCampaign = (campaign: Campaign, period: Period): Impact[
 	for (let ti = 0; ti < types.length; ti++) {
 		let type = types[ti];
 		let fixed = fixedImpactDebits.filter((impd) => impd.impact.name === type);
-		fixedOffsets.push(...fixed.map((impd) => Object.assign({ start: impd.start, end: impd.end }, impd.impact))); // NB: add start/end for debug
+		for(let i=0; i<fixed.length; i++) {
+			let fo = calculateFixedOffset(fixed[i], period);			
+			fixedOffsets.push(fo);
+		}		
 		let dynamic = dynamicImpactDebits.filter((impd) => impd.impact.name === type);
 		if (!dynamic.length) continue;
 		if (dynamic.length !== 1) {
@@ -588,88 +583,20 @@ const getFixedOffsetsForCampaign = (campaign: Campaign, period: Period): Impact[
 			console.error('Invalid fixed ImpactDebit start/end ' + fstart + ' ' + fend + ' impact.name:' + type + ' campaign:' + campaign.id);
 			return false;
 		}
-		let startGap = { start: period.start, end: new Date(fstart) };
-		let endGap = { start: new Date(fend), end: period.end };
-		let do1 = calculateDynamicOffset(campaign, doffset, startGap) as Impact;
-		let do2 = calculateDynamicOffset(campaign, doffset, endGap) as Impact;
-		fixedOffsets.push(do1, do2);
+		let startGap = { start: period.start, end: new Date(fstart) } as Period;
+		let endGap = { start: new Date(fend), end: period.end } as Period;
+		// avoid bad/empty periods where start is after end
+		if (startGap.start.getTime() < startGap.end.getTime()) {
+			let do1 = calculateDynamicOffset(campaign, doffset, startGap) as Impact;
+			fixedOffsets.push(do1);
+		}
+		if (endGap.start.getTime() < endGap.end.getTime()) {
+			let do2 = calculateDynamicOffset(campaign, doffset, endGap) as Impact;
+			fixedOffsets.push(do2);
+		}
 	}
 	if (fixedOffsets.filter(x => ! x).length) {
 		return false; // still loading data
 	}
 	return fixedOffsets;
 };
-
-// const getFixedOffsetsForCampaignAsync = async (campaign: Campaign, period: Period): Promise<Impact[]> => {
-// 	const pvImpactDebitsListValue = await Campaign.getImpactDebits({ campaign, status: KStatus.PUBLISHED }).value;
-// 	if (!pvImpactDebitsListValue) return Promise.reject(new Error(`Failed to get Impact Debits from ${campaign}.`));
-
-// 	let impactDebits = List.hits(pvImpactDebitsListValue) as unknown as ImpactDebit[];
-
-// 	// Do we have mixed dynamic/fixed impacts?
-// 	const dynamicImpactDebits = impactDebits.filter((impd) => Impact.isDynamic(impd.impact));
-// 	const fixedImpactDebits = impactDebits.filter((impd) => !Impact.isDynamic(impd.impact));
-// 	if (!dynamicImpactDebits.length || !fixedImpactDebits.length) {
-// 		// no mix = simples
-// 		let offsets = impactDebits.map((imp) => imp.impact);
-// 		let fixedOffsets: Impact[] = await Promise.all(
-// 			offsets.map(async (offset) => {
-// 				if (Impact.isDynamic(offset)) {
-// 					const dynmaicOffset = await calculateDynamicOffsetAsync(campaign, offset, period);
-// 					return dynmaicOffset;
-// 				} else {
-// 					return offset;
-// 				}
-// 			})
-// 		);
-// 		return fixedOffsets;
-// 	}
-
-// 	// What gaps do we have in the fixed impacts?
-// 	let fixedOffsets = [] as Impact[];
-// 	// ...type by type
-// 	let types = uniq(impactDebits.map((impd) => impd.impact?.name));
-// 	for (let ti = 0; ti < types.length; ti++) {
-// 		let type = types[ti];
-// 		let fixed = fixedImpactDebits.filter((impd) => impd.impact.name === type);
-// 		fixedOffsets.push(...fixed.map((impd) => Object.assign({ start: impd.start, end: impd.end }, impd.impact))); // NB: add start/end for debug
-// 		let dynamic = dynamicImpactDebits.filter((impd) => impd.impact.name === type);
-// 		if (!dynamic.length) continue;
-// 		if (dynamic.length !== 1) {
-// 			console.warn('Multiple dynamic offsets!', campaign, type, dynamic);
-// 		}
-// 		let doffset = dynamic[0].impact;
-// 		if (!fixed.length) {
-// 			console.warn('mixed but not for type ' + type, fixedImpactDebits, 'dynamic', dynamic);
-// 			let do0 = await calculateDynamicOffsetAsync(campaign, doffset, period);
-// 			fixedOffsets.push(do0);
-// 			continue;
-// 		}
-// 		// calculate for gaps
-// 		// ASSUME the fixed patches are a continuous strip, and the dynamic are only start/end pieces
-// 		// ASSUME fixed offsets have start/end dates set (so startGap and endGap are well defined)
-// 		let starts = fixed.map((impd) => impd.start && new Date(impd.start).getTime()).filter((x) => x) as number[];
-// 		let fstart = Math.min(...starts);
-// 		let ends = fixed.map((impd) => impd.end && new Date(impd.end).getTime()).filter((x) => x) as number[];
-// 		let fend = Math.max(...ends);
-// 		if (!Number.isFinite(fstart) || !Number.isFinite(fend)) {
-// 			return Promise.reject('Invalid fixed ImpactDebit start/end ' + fstart + ' ' + fend + ' impact.name:' + type + ' campaign:' + campaign.id);
-// 		}
-// 		let startGap = { start: period.start, end: new Date(fstart) };
-// 		let endGap = { start: new Date(fend), end: period.end };
-// 		let do1 = await calculateDynamicOffsetAsync(campaign, doffset, startGap);
-// 		let do2 = await calculateDynamicOffsetAsync(campaign, doffset, endGap);
-// 		fixedOffsets.push(do1, do2);
-// 	}
-
-// 	if (fixedOffsets.filter((x) => !x).length) {
-// 		console.log('loading carbon data', fixedOffsets);
-// 		return await new Promise((resolve) => {
-// 			setTimeout(() => {
-// 				resolve(getFixedOffsetsForCampaignAsync(campaign, period));
-// 			}, 100);
-// 		});
-// 	}
-
-// 	return fixedOffsets;
-// };
