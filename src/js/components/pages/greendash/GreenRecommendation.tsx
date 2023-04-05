@@ -205,39 +205,25 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 	const pvChartTotalValue = baseFilterConfirmed.prob && baseFilterConfirmed.prob != 0 ? pvChartTotal.value?.sampling : pvChartTotal.value;
 	const bucketsPer1000 = emissionsPerImpressions(pvChartTotalValue.by_domain.buckets);
 
-	let leftDomains = lowBuckets && lowBuckets!.map((val) => val.key as string);
-	let rightDomains = highBuckets && highBuckets!.map((val) => val.key as string);
-	// what weight of impressions is included?
-	let lowImps = 0,
-		highImps = 0,
-		lowWeightedAvg = 0,
-		highWeightedAvg = 0;
-	if (lowBuckets && highBuckets) {
-		lowBuckets.forEach((bucket) => {
-			lowImps += bucket.count as number;
-			lowWeightedAvg += (bucket.count as number) * (bucket.co2 as number);
-		});
-		highBuckets.forEach((bucket) => {
-			highImps += bucket.count as number;
-			highWeightedAvg += (bucket.count as number) * (bucket.co2 as number);
-		});
-		lowWeightedAvg = lowWeightedAvg / lowImps;
-		highWeightedAvg = highWeightedAvg / highImps;
-	}
-	let totalImps = 0,
-		weightedAvg = 0;
-	bucketsPer1000.map((bucket) => {
-		weightedAvg += (bucket.count as number) * (bucket.co2 as number);
-		totalImps += bucket.count as number;
-	});
-	weightedAvg = weightedAvg / totalImps;
-
 	const co2s = bucketsPer1000.map((row) => row.co2! as number);
+	const totalCounts = bucketsPer1000.reduce((acc, cur) => acc + (cur.count as number), 0);
 	const maxCo2 = Math.max(...co2s);
 	const minCo2 = Math.min(...co2s);
 	const middleCo2 = ((maxCo2 - minCo2) * 1) / 2;
 	const steps = (maxCo2 - minCo2) / TICKS_NUM; // How large is a tick
 	const silderProps: RangeSliderProps = { min: minCo2 * 1, max: maxCo2 * 1, step: steps, defaultValue: middleCo2, onChange: setSelectedCo2 };
+
+	// what weight of impressions is included?
+	let lowImps = 0,
+		lowWeightedAvg = 0;
+	lowBuckets?.forEach((bucket) => {
+		lowImps += bucket.count as number;
+		lowWeightedAvg += (bucket.count as number) * (bucket.co2 as number);
+	});
+	lowWeightedAvg = lowWeightedAvg / lowImps;
+	const weightedAvg =
+		bucketsPer1000.reduce((acc, bucket) => acc + (bucket.count as number) * (bucket.co2 as number), 0) /
+		bucketsPer1000.reduce((acc, bucket) => acc + (bucket.count as number), 0);
 
 	const downloadCSV = (data?: string[]) => {
 		if (!data) return;
@@ -253,21 +239,27 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 		URL.revokeObjectURL(url);
 	};
 
-	const DomainList = ({ low, buckets, avg }: { low?: boolean; buckets?: string[]; avg: number }): JSX.Element => {
+	const DomainList = ({ low, buckets, totalCounts }: { low?: boolean; buckets?: GreenBuckets; totalCounts: number }): JSX.Element => {
+		if (!buckets) return <></>;
+		const domainsList = buckets.map((val) => val.key as string);
+		const totalImpressions = buckets.reduce((acc, cur) => acc + (cur.count as number), 0);
+		const totalCo2 = buckets.reduce((acc, cur) => acc + (cur.co2 as number), 0);
+		const avgCo2 = totalCo2 / domainsList.length;
+		const volumePercentage = (totalImpressions / totalCounts) * 100;
 		return (
 			<>
 				<h4>{low ? 'Low' : 'High'}-Carbon</h4>
-				<div>{buckets?.length || '-'} domains</div>
-				{/* <div>{lowImps + highImps ? printer.prettyNumber(((low ? lowImps : highImps) * 100) / (lowImps + highImps), 2, 3) + '%' : null} by volume</div> */}
-				<div>Average: {printer.prettyNumber(avg, 3, null)} grams CO2e</div>
+				<div>{domainsList.length || '-'} domains</div>
+				<div>{printer.prettyNumber(volumePercentage, 2, null)}% by volume</div>
+				<div>Average: {printer.prettyNumber(avgCo2, 3, null)} grams CO2e</div>
 				<div style={{ maxHeight: '15em', overflowY: 'scroll', overflowX: 'clip' }}>
 					<ul>
-						{buckets?.map((val, index) => (
+						{domainsList.map((val, index) => (
 							<li key={index}>{val}</li>
 						))}
 					</ul>
 				</div>
-				<Button onClick={() => downloadCSV(buckets as unknown as string[])}>Download CSV</Button>
+				<Button onClick={() => downloadCSV(domainsList)}>Download CSV</Button>
 				<div>Use as {low ? 'an allow' : 'a block'}-list in your DSP</div>
 			</>
 		);
@@ -290,7 +282,7 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 			<h3 className='mx-auto'>Use this slider tool to generate block and allow lists based on publisher generated CO2e</h3>
 			<Row style={{}}>
 				<Col xs={3}>
-					<DomainList buckets={leftDomains} low avg={lowWeightedAvg} />
+					<DomainList buckets={lowBuckets} low totalCounts={totalCounts} />
 				</Col>
 				<Col xs={6}>
 					<div className='d-flex flex-column'>
@@ -300,7 +292,7 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 					</div>
 				</Col>
 				<Col xs={3}>
-					<DomainList buckets={rightDomains} avg={highWeightedAvg} />
+					<DomainList buckets={highBuckets} totalCounts={totalCounts} />
 				</Col>
 			</Row>
 			<p className='mt-2'>
