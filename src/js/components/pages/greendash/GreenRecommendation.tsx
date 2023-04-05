@@ -54,12 +54,12 @@ const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, defaultValue,
 
 	return (
 		<Row>
-			{min && <Col xs={1}>{min.toPrecision(3)}</Col> /* don't show 0 */}
+			{min && <Col xs={1} className='text-nowrap'><span>{min.toPrecision(3)}</span></Col> /* don't show 0 */}
 			<Col xs={10} className='text-center'>
 				<input className='w-100' type='range' min={min} max={max} step={step} value={value} onChange={handleChange} />
-				{value.toPrecision(3)}
+				<span>{value.toPrecision(3)}</span>
 			</Col>
-			<Col xs={1}>{max.toPrecision(3)}</Col>
+			<Col xs={1} className='text-nowrap'><span>{max.toPrecision(3)}</span></Col>
 		</Row>
 	);
 };
@@ -260,7 +260,7 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 					</ul>
 				</div>
 				<Button onClick={() => downloadCSV(buckets)}>Download CSV</Button>
-				<div>Then use as {low ? 'an allow' : 'a block'}-list in your DSP</div>
+				<div>Use as {low ? 'an allow' : 'a block'}-list in your DSP</div>
 			</>
 		);
 	};
@@ -279,7 +279,7 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 			modalPrioritize={null}
 			href={null}
 		>
-			<h3 className='mx-auto'>Use Publisher Lists to Reduce Carbon</h3>
+			<h3 className='mx-auto'>Use this slider tool to generate block and allow lists based on publisher generated CO2e</h3>
 			<Row style={{}}>
 				<Col xs={3}>
 					<DomainList buckets={leftDomains} low avg={lowWeightedAvg} />
@@ -296,7 +296,7 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 				</Col>
 			</Row>
 			<p className='mt-2'>
-				These lists are based on observed data within the current filters. We also have general publisher lists available for use. Please contact{' '}
+				These lists are based on observed data within the current filters. <br/>We also have general publisher lists available for use. Please contact{' '}
 				<a href='mailto:support@good-loop.com?subject=Carbon%20reducttion%20publisher%20lists'>support@good-loop.com</a> for information.
 			</p>
 		</GLCard>
@@ -362,7 +362,7 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 				{agencyIds ? (
 					<>
 						<GreenDashboardFilters pseudoUser={pseudoUser} />
-						<h1>Green Recommendations</h1>
+						<h1 className='text-left'>How can I start reducing emissions?</h1>
 						<PublisherListRecommendations />
 						<CreativeRecommendations />
 					</>
