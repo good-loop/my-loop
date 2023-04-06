@@ -5,7 +5,7 @@ import KStatus from '../../../base/data/KStatus';
 import DataStore from '../../../base/plumbing/DataStore';
 import { nonce } from '../../../base/data/DataClass';
 import { getDataItem, getDataList } from '../../../base/plumbing/Crud';
-import { getPeriodQuarter, getPeriodMonth, periodToParams, printPeriod, getPeriodFromUrlParams } from '../../../base/utils/date-utils';
+import { getPeriodQuarter, getPeriodMonth, printPeriod, getPeriodFromUrlParams } from '../../../base/utils/date-utils';
 
 import DateRangeWidget from '../../DateRangeWidget';
 import { modifyPage } from '../../../base/plumbing/glrouter';
@@ -242,7 +242,7 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 			null,
 			{
 				[filterMode]: { brand, agency, campaign, tag }[filterMode],
-				...periodToParams(period),
+				...period,
 				emode: paramsOld.emode || 'total',
 			},
 			false,
