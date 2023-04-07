@@ -385,7 +385,7 @@ const PubSubcard = ({ data }) => {
 	];
 
 	// skip unset
-	data = data.filter((row) => row.key !== 'unset');
+	// data = data.filter((row) => row.key !== 'unset');
 
 	return (
 		<>

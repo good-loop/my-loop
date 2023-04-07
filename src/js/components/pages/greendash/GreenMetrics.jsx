@@ -32,7 +32,11 @@ export const isPer1000 = () => {
 	return emissionsMode === 'per1000';
 };
 
-
+/**
+ * @param {Object} obj 
+ * @param {Period} obj.period
+ * @returns 
+ */
 const OverviewWidget = ({ period, data, prob }) => {
 	let imps;
 	if (data?.length > 0) {
