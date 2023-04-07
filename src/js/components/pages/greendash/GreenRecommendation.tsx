@@ -11,7 +11,7 @@ import { emissionsPerImpressions, getBasefilters, getCarbon, GreenBuckets, type 
 import GreenDashboardFilters from './GreenDashboardFilters';
 import { GLCard } from '../../impact/GLCards';
 import ServerIO from '../../../plumbing/ServerIO';
-import { Period, getPeriodFromUrlParams } from '../../../base/utils/date-utils';
+import { Period, getPeriodFromUrlParams, type UrlParamPeriod } from '../../../base/utils/date-utils';
 
 interface ByDomainValue extends Object {
 	allCount: number;
@@ -24,7 +24,7 @@ interface ResolvedPromise extends ByDomainValue {
 	sampling?: ByDomainValue;
 }
 
-const TICKS_NUM = 100;
+const TICKS_NUM = 600;
 
 interface RangeSliderProps {
 	min: number;
@@ -55,19 +55,11 @@ const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, defaultValue,
 	return (
 		<>
 			<Row>
-				<Col className='text-center' style={{ marginLeft: '6em' }}>
+				<Col className='text-center' style={{ marginLeft: '7em' }}>
 					<input className='w-100' type='range' min={min} max={max} step={step} value={value} onChange={handleChange} />
-					<span className='text-nowrap'>{value.toPrecision(3)}</span>
+					<span className='text-nowrap'>{value.toPrecision(4)}</span>
 				</Col>
 			</Row>
-			{/* <Row className='text-nowrap'>
-				<Col xs={1}>
-					<span>{min.toPrecision(3)}</span>
-				</Col>
-				<Col xs={1}>
-					<span>{max.toPrecision(3)}</span>
-				</Col>
-			</Row> */}
 		</>
 	);
 };
@@ -85,7 +77,7 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 		const co2s = bucketsPer1000.map((row) => row.co2 as number);
 		const maxCo2 = Math.max(...co2s);
 		const minCo2 = Math.min(...co2s);
-		const steps = (maxCo2 - minCo2) / TICKS_NUM; // How large is a tick
+		const steps = (maxCo2 - minCo2) / (TICKS_NUM / 3); // How large is a tick
 
 		const scaledBuckets = bucketsPer1000.map((row) => {
 			const percentage = Math.floor(((row.co2 as number) - minCo2) / steps);
@@ -94,7 +86,7 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 
 		if (!scaledBuckets) return;
 
-		const percentageBuckets: typeof scaledBuckets[] = Array.from({ length: TICKS_NUM }, () => []);
+		const percentageBuckets: typeof scaledBuckets[] = Array.from({ length: (TICKS_NUM / 3 ) }, () => []);
 		scaledBuckets.forEach((row) => {
 			const percentageKey = Math.max(row.percentage, 1) - 1;
 			percentageBuckets[percentageKey].push(row);
@@ -157,10 +149,6 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
  * @returns
  */
 const PublisherListRecommendations = (): JSX.Element | null => {
-	interface UrlParams extends Object {
-		period?: Period;
-	}
-
 	// CO2 per impression grams??
 	const [selectedCo2, setSelectedCo2] = useState<number>();
 	const [lowBuckets, setLowBuckets] = useState<GreenBuckets>();
@@ -175,7 +163,7 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 		setHighBuckets(highBuckets);
 	}, [selectedCo2]);
 
-	const urlParams: UrlParams = getUrlVars(null, null);
+	const urlParams: UrlParamPeriod = getUrlVars(null, null);
 	const period = getPeriodFromUrlParams(urlParams);
 	if (!period) {
 		return null; // Filter widget will set this on first render - allow it to update
