@@ -11,6 +11,7 @@ import Login from '../../../base/youagain';
 import { GLCard } from '../../impact/GLCards';
 import GreenDashboardFilters from './GreenDashboardFilters';
 import { GreenBuckets, emissionsPerImpressions, getBasefilters, getCarbon, type BaseFilters, type BreakdownRow } from './emissionscalcTs';
+import PropControl from '../../../base/components/PropControl';
 
 interface ByDomainValue extends Object {
 	allCount: number;
@@ -98,7 +99,7 @@ const RecommendationChart = ({ bucketsPer1000, logarithmic }: { bucketsPer1000: 
 		// Weight by impressions, not count of domains
 		const dataValues = percentageBuckets.map((row) => row.reduce((acc: number, curr: any) => acc + curr.count, 0));
 
-		const chartOptions = {
+		let chartOptions: any = {
 			responsive: true,
 			// see https://www.chartjs.org/docs/latest/samples/scale-options/titles.html
 			scales: {
@@ -119,6 +120,10 @@ const RecommendationChart = ({ bucketsPer1000, logarithmic }: { bucketsPer1000: 
 			},
 		};
 
+		if (logarithmic) {
+			chartOptions.scales.y.type = 'logarithmic';
+		}
+
 		setChartData({
 			type: 'bar',
 			data: {
@@ -131,9 +136,9 @@ const RecommendationChart = ({ bucketsPer1000, logarithmic }: { bucketsPer1000: 
 					},
 				],
 			},
-			options: logarithmic ? { ...chartOptions, scales: { y: { type: 'logarithmic' } } } : chartOptions,
+			options: chartOptions,
 		});
-	}, [bucketsPer1000]);
+	}, [bucketsPer1000, logarithmic]);
 
 	return chartData ? (
 		<NewChartWidget width={null} height={280} datalabels={null} maxy={null} {...chartData} />
@@ -249,6 +254,8 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 		);
 	};
 
+	const log = urlParams['scale'];
+
 	return (
 		<GLCard
 			noPadding={null}
@@ -264,13 +271,23 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 			href={null}
 		>
 			<h3 className='mx-auto'>Use this slider tool to generate block and allow lists based on publisher generated CO2e</h3>
-			<Row style={{}}>
+			{/* @ts-ignore */}
+			<PropControl
+				inline
+				type='toggle'
+				prop='scale'
+				dflt='logarithmic'
+				label='Chart Scale:'
+				left={{ label: 'Logarithmic', value: 'logarithmic', colour: 'primary' }}
+				right={{ label: 'Linear', value: 'linear', colour: 'primary' }}
+			/>
+			<Row>
 				<Col xs={3}>
 					<DomainList buckets={lowBuckets} low totalCounts={totalCounts} />
 				</Col>
 				<Col xs={6}>
 					<div className='d-flex flex-column'>
-						<RecommendationChart bucketsPer1000={bucketsPer1000} logarithmic={false} />
+						<RecommendationChart bucketsPer1000={bucketsPer1000} logarithmic={urlParams.scale === 'logarithmic'} />
 						<RangeSlider {...silderProps} />
 						<h4>Estimated Reduction: {printer.prettyNumber((100 * (weightedAvg - lowWeightedAvg)) / weightedAvg, 2, null)}%</h4>
 					</div>
