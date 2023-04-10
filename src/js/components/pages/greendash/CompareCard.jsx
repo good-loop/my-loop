@@ -15,7 +15,7 @@ import { dataColours, TONNES_THRESHOLD } from './dashUtils';
 import { isoDate, getPeriodQuarter, printPeriod } from '../../../base/utils/date-utils';
 import { getCompressedBreakdownWithCount, getCarbon, emissionsPerImpressions, getSumColumn } from './emissionscalcTs';
 
-import { isPer1000 } from './GreenMetrics';
+import { isPer1000, isRandomSampling } from './GreenMetrics';
 import { assert } from '../../../base/utils/assert';
 
 
@@ -104,8 +104,7 @@ const QuartersCard = ({baseFilters}) => {
 		let quarter = quarters[i];
 		chartProps.data.labels[i] = printPeriod(quarter, true);
 
-		// baseFilters.prob is string not number so have to use == not === here
-		let buckets = (baseFilters.prob == -1 || baseFilters.prob > 1) ? pvBuckets.value.sampling.by_total.buckets : pvBuckets.value.by_total.buckets;
+		let buckets = isRandomSampling(baseFilters) ? pvBuckets.value.sampling.by_total.buckets : pvBuckets.value.by_total.buckets;
 		if (!buckets || !buckets.length) {
 			return; // no data for this quarter
 		}
@@ -154,7 +153,7 @@ const CampaignCard = ({baseFilters}) => {
 		name:"campaign-chartdata",
 	});
 
-	let dataValue = baseFilters.prob ? pvChartData.value?.sampling : pvChartData.value;
+	let dataValue = isRandomSampling(baseFilters) ? pvChartData.value?.sampling : pvChartData.value;
 
 	let vbyx = {};
 	let labels = [];

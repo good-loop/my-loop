@@ -32,10 +32,16 @@ export const isPer1000 = () => {
 	return emissionsMode === 'per1000';
 };
 
+/** baseFilters.prob is string not number so have to use == */
+export const isRandomSampling = (baseFilters) => {
+	if (baseFilters.prob == -1 || baseFilters.prob > 1) return true;
+	return false;
+};
+
 /**
- * @param {Object} obj 
+ * @param {Object} obj
  * @param {Period} obj.period
- * @returns 
+ * @returns
  */
 const OverviewWidget = ({ period, data, prob }) => {
 	let imps;
@@ -85,7 +91,7 @@ const CTACard = ({}) => {
 const GreenMetrics2 = () => {
 	const urlParams = getUrlVars();
 	const period = getPeriodFromUrlParams(urlParams);
-	if ( ! period) {
+	if (!period) {
 		return null; // Filter widget will set this on first render - allow it to update
 	}
 	urlParams.period = period;
@@ -106,7 +112,7 @@ const GreenMetrics2 = () => {
 	 */
 	const pvChartTotal = getCarbon({ ...baseFilters, breakdown: ['total{"count":"sum"}'] });
 
-	const pvChartTotalValue = baseFilters.prob ? pvChartTotal.value?.sampling : pvChartTotal.value;
+	const pvChartTotalValue = isRandomSampling(baseFilters) ? pvChartTotal.value?.sampling : pvChartTotal.value;
 
 	const samplingProb = pvChartTotalValue?.probability;
 
@@ -141,7 +147,7 @@ const GreenMetrics2 = () => {
 		name: 'lotsa-chartdata',
 	});
 
-	const pvChartDatalValue = baseFilters.prob ? pvChartData.value?.sampling : pvChartData.value;
+	const pvChartDatalValue = isRandomSampling(baseFilters) ? pvChartData.value?.sampling : pvChartData.value;
 
 	let pvCampaigns = getCampaigns(pvChartDatalValue?.by_adid.buckets);
 	if (pvCampaigns && PromiseValue.isa(pvCampaigns.value)) {

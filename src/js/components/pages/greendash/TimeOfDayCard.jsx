@@ -27,7 +27,7 @@ const TimeOfDayCard2 = ({ baseFilters, tags }) => {
 	useEffect(() => {
 		const pvCarbon = getCarbon({ ...baseFilters, timeofday: true, breakdown: 'timeofday{"co2":"sum"}'});
 		pvCarbon.promise.then((res) => {
-			const resValue = baseFilters.prob ? res.sampling : res;
+			const resValue = isRandomSampling(prob) ? res.sampling : res;
 			if (!resValue.by_timeofday.buckets.length) {
 				setChartProps({ isEmpty: true });
 				return;
