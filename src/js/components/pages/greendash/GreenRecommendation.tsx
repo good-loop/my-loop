@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Button, Card, Col, Container, Row } from 'reactstrap';
+import Misc from '../../../MiscOverrides';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import NewChartWidget from '../../../base/components/NewChartWidget';
 import DataStore from '../../../base/plumbing/DataStore';
-import { asNum, getUrlVars } from '../../../base/utils/miscutils';
+import { getPeriodFromUrlParams, type UrlParamPeriod } from '../../../base/utils/date-utils';
+import { getUrlVars } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import Login from '../../../base/youagain';
-import Misc from '../../../MiscOverrides';
-import { emissionsPerImpressions, getBasefilters, getCarbon, GreenBuckets, type BaseFilters, type BreakdownRow } from './emissionscalcTs';
-import GreenDashboardFilters from './GreenDashboardFilters';
 import { GLCard } from '../../impact/GLCards';
-import ServerIO from '../../../plumbing/ServerIO';
-import { Period, getPeriodFromUrlParams, type UrlParamPeriod } from '../../../base/utils/date-utils';
+import GreenDashboardFilters from './GreenDashboardFilters';
+import { GreenBuckets, emissionsPerImpressions, getBasefilters, getCarbon, type BaseFilters, type BreakdownRow } from './emissionscalcTs';
+import PropControl from '../../../base/components/PropControl';
 
 interface ByDomainValue extends Object {
 	allCount: number;
@@ -70,7 +70,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, defaultValue,
  * @param {GreenBuckets} p.bucketsPer1000 A DataLog breakdown of carbon emissions. e.g. [{key, co2, count}]
  * @returns
  */
-const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets }): JSX.Element | null => {
+const RecommendationChart = ({ bucketsPer1000, logarithmic }: { bucketsPer1000: GreenBuckets; logarithmic: boolean }): JSX.Element | null => {
 	const [chartData, setChartData] = useState<any>();
 
 	useEffect(() => {
@@ -86,7 +86,7 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 
 		if (!scaledBuckets) return;
 
-		const percentageBuckets: typeof scaledBuckets[] = Array.from({ length: (TICKS_NUM / 3 ) }, () => []);
+		const percentageBuckets: typeof scaledBuckets[] = Array.from({ length: TICKS_NUM / 3 }, () => []);
 		scaledBuckets.forEach((row) => {
 			const percentageKey = Math.max(row.percentage, 1) - 1;
 			percentageBuckets[percentageKey].push(row);
@@ -99,7 +99,7 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 		// Weight by impressions, not count of domains
 		const dataValues = percentageBuckets.map((row) => row.reduce((acc: number, curr: any) => acc + curr.count, 0));
 
-		const chartOptions = {
+		let chartOptions: any = {
 			responsive: true,
 			// see https://www.chartjs.org/docs/latest/samples/scale-options/titles.html
 			scales: {
@@ -112,7 +112,6 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 				},
 				y: {
 					display: true,
-					type: 'logarithmic',
 					title: {
 						display: true,
 						text: 'Impressions',
@@ -120,6 +119,10 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 				},
 			},
 		};
+
+		if (logarithmic) {
+			chartOptions.scales.y.type = 'logarithmic';
+		}
 
 		setChartData({
 			type: 'bar',
@@ -135,7 +138,7 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 			},
 			options: chartOptions,
 		});
-	}, [bucketsPer1000]);
+	}, [bucketsPer1000, logarithmic]);
 
 	return chartData ? (
 		<NewChartWidget width={null} height={280} datalabels={null} maxy={null} {...chartData} />
@@ -251,6 +254,8 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 		);
 	};
 
+	const log = urlParams['scale'];
+
 	return (
 		<GLCard
 			noPadding={null}
@@ -266,13 +271,23 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 			href={null}
 		>
 			<h3 className='mx-auto'>Use this slider tool to generate block and allow lists based on publisher generated CO2e</h3>
-			<Row style={{}}>
+			{/* @ts-ignore */}
+			<PropControl
+				inline
+				type='toggle'
+				prop='scale'
+				dflt='logarithmic'
+				label='Chart Scale:'
+				left={{ label: 'Logarithmic', value: 'logarithmic', colour: 'primary' }}
+				right={{ label: 'Linear', value: 'linear', colour: 'primary' }}
+			/>
+			<Row>
 				<Col xs={3}>
 					<DomainList buckets={lowBuckets} low totalCounts={totalCounts} />
 				</Col>
 				<Col xs={6}>
 					<div className='d-flex flex-column'>
-						<RecommendationChart bucketsPer1000={bucketsPer1000} />
+						<RecommendationChart bucketsPer1000={bucketsPer1000} logarithmic={urlParams.scale === 'logarithmic'} />
 						<RangeSlider {...silderProps} />
 						<h4>Estimated Reduction: {printer.prettyNumber((100 * (weightedAvg - lowWeightedAvg)) / weightedAvg, 2, null)}%</h4>
 					</div>
