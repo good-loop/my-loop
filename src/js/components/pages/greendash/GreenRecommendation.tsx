@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Button, Card, Col, Container, Row } from 'reactstrap';
+import Misc from '../../../MiscOverrides';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import NewChartWidget from '../../../base/components/NewChartWidget';
 import DataStore from '../../../base/plumbing/DataStore';
-import { asNum, getUrlVars } from '../../../base/utils/miscutils';
+import { getPeriodFromUrlParams, type UrlParamPeriod } from '../../../base/utils/date-utils';
+import { getUrlVars } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import Login from '../../../base/youagain';
-import Misc from '../../../MiscOverrides';
-import { emissionsPerImpressions, getBasefilters, getCarbon, GreenBuckets, type BaseFilters, type BreakdownRow } from './emissionscalcTs';
-import GreenDashboardFilters from './GreenDashboardFilters';
 import { GLCard } from '../../impact/GLCards';
-import ServerIO from '../../../plumbing/ServerIO';
-import { Period, getPeriodFromUrlParams, type UrlParamPeriod } from '../../../base/utils/date-utils';
+import GreenDashboardFilters from './GreenDashboardFilters';
+import { GreenBuckets, emissionsPerImpressions, getBasefilters, getCarbon, type BaseFilters, type BreakdownRow } from './emissionscalcTs';
 
 interface ByDomainValue extends Object {
 	allCount: number;
@@ -70,7 +69,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, defaultValue,
  * @param {GreenBuckets} p.bucketsPer1000 A DataLog breakdown of carbon emissions. e.g. [{key, co2, count}]
  * @returns
  */
-const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets }): JSX.Element | null => {
+const RecommendationChart = ({ bucketsPer1000, logarithmic }: { bucketsPer1000: GreenBuckets; logarithmic: boolean }): JSX.Element | null => {
 	const [chartData, setChartData] = useState<any>();
 
 	useEffect(() => {
@@ -86,7 +85,7 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 
 		if (!scaledBuckets) return;
 
-		const percentageBuckets: typeof scaledBuckets[] = Array.from({ length: (TICKS_NUM / 3 ) }, () => []);
+		const percentageBuckets: typeof scaledBuckets[] = Array.from({ length: TICKS_NUM / 3 }, () => []);
 		scaledBuckets.forEach((row) => {
 			const percentageKey = Math.max(row.percentage, 1) - 1;
 			percentageBuckets[percentageKey].push(row);
@@ -112,7 +111,6 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 				},
 				y: {
 					display: true,
-					type: 'logarithmic',
 					title: {
 						display: true,
 						text: 'Impressions',
@@ -133,7 +131,7 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 					},
 				],
 			},
-			options: chartOptions,
+			options: logarithmic ? { ...chartOptions, scales: { y: { type: 'logarithmic' } } } : chartOptions,
 		});
 	}, [bucketsPer1000]);
 
@@ -272,7 +270,7 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 				</Col>
 				<Col xs={6}>
 					<div className='d-flex flex-column'>
-						<RecommendationChart bucketsPer1000={bucketsPer1000} />
+						<RecommendationChart bucketsPer1000={bucketsPer1000} logarithmic={false} />
 						<RangeSlider {...silderProps} />
 						<h4>Estimated Reduction: {printer.prettyNumber((100 * (weightedAvg - lowWeightedAvg)) / weightedAvg, 2, null)}%</h4>
 					</div>
