@@ -291,7 +291,7 @@ const MapCard = ({ baseFilters, per1000 }) => {
 		if (!mapDefs || !mapDefsReady) return;
 
 		// Country or sub-location breakdown?
-		let locnBuckets = baseFilters.prob ? pvChartData.value.sampling['by_' + locationField].buckets : pvChartData.value['by_' + locationField].buckets;
+		let locnBuckets = baseFilters.prob == -1 || baseFilters.prob > 1 ? pvChartData.value.sampling['by_' + locationField].buckets : pvChartData.value['by_' + locationField].buckets;
 
 		// Rename locations with no corresponding map entry to OTHER
 		// convert old non-namespaced sublocations e.g. 'CA' => 'US-CA'

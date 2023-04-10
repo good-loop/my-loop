@@ -104,7 +104,8 @@ const QuartersCard = ({baseFilters}) => {
 		let quarter = quarters[i];
 		chartProps.data.labels[i] = printPeriod(quarter, true);
 
-		let buckets = baseFilters.prob ? pvBuckets.value.sampling.by_total.buckets : pvBuckets.value.by_total.buckets;
+		// baseFilters.prob is string not number so have to use == not === here
+		let buckets = (baseFilters.prob == -1 || baseFilters.prob > 1) ? pvBuckets.value.sampling.by_total.buckets : pvBuckets.value.by_total.buckets;
 		if (!buckets || !buckets.length) {
 			return; // no data for this quarter
 		}
