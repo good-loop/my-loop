@@ -116,6 +116,10 @@ const RecommendationChart = ({ bucketsPer1000, logarithmic }: { bucketsPer1000: 
 						display: true,
 						text: 'Impressions',
 					},
+					bounds: 'ticks',
+					afterFit: function(scaleInstance: { width: number; }) {
+						scaleInstance.width = 100; // sets the width to 100px
+					}
 				},
 			},
 		};
