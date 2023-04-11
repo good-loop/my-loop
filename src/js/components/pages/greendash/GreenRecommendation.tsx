@@ -55,7 +55,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, defaultValue,
 	return (
 		<>
 			<Row>
-				<Col className='text-center' style={{ marginLeft: '7em' }}>
+				<Col className='text-center p-0' style={{ marginLeft: '8.5em' }}>
 					<input className='w-100' type='range' min={min} max={max} step={step} value={value} onChange={handleChange} />
 					<span className='text-nowrap'>{value.toPrecision(4)}</span>
 				</Col>
@@ -116,6 +116,10 @@ const RecommendationChart = ({ bucketsPer1000, logarithmic }: { bucketsPer1000: 
 						display: true,
 						text: 'Impressions',
 					},
+					bounds: 'ticks',
+					afterFit: (scaleInstance: { width: number; }) => {
+						scaleInstance.width = 100; // sets the width to 100px
+					}
 				},
 			},
 		};
