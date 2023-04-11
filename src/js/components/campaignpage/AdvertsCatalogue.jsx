@@ -39,7 +39,7 @@ const AdvertsCatalogue = ({ campaign, ads, canonicalAds, noPreviews, className }
 	}
 	
 	if (campaign && !campaign.showNonServed) {
-		showAds = ads.filter((ad) => ad.hasServed);
+		showAds = showAds.filter((ad) => ad.hasServed);
 	}
 
 	const [activeIndex, setActiveIndex] = useState(0);
