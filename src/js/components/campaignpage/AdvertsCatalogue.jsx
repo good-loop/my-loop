@@ -37,6 +37,10 @@ const AdvertsCatalogue = ({ campaign, ads, canonicalAds, noPreviews, className }
 	if (campaign && campaign.hideAdverts) {
 		showAds = ads.filter(ad => ! ad._hidden);
 	}
+	
+	if (campaign && !campaign.showNonServed) {
+		showAds = showAds.filter((ad) => ad.hasServed);
+	}
 
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [animating, setAnimating] = useState(false);
