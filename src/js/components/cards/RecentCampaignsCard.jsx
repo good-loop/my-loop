@@ -151,7 +151,7 @@ const TVAdPlayer = ({adid, className, title}) => {
 		<img src="/img/LandingBackground/iphone-mockup-landscape.svg" className="w-100 invisible"/>
 		<img src="/img/LandingBackground/iphone-mockup-landscape.svg" className="position-absolute d-none d-md-block unit-shadow" style={{ left: "49.7%", width: "91.5%", top: "55%", zIndex: 2, pointerEvents: "none", transform: "translate(-50%, -50%)" }}/>
 		<div className="position-absolute tv-ad-player">
-			<GoodLoopUnit vertId={adid} size={size} title={title} useScreenshot="landscape" />
+			<GoodLoopUnit vertId={adid} size={size} title={title} play="onclick" useScreenshot="landscape" />
 		</div>
 	</div>;
 };
