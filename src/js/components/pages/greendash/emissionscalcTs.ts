@@ -69,9 +69,10 @@ export type BaseFiltersFailed = {
  */
 export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed => {
 	// Default to current quarter, all brands, all campaigns
+	if (!urlParams.timezone) urlParams.timezone = 'UTC';
 	const period = urlParams.period;
-	if ( ! period) {
-		console.warn("use getUrlVars() then getPeriodFromUrlParams() then add period!");
+	if (!period) {
+		console.warn('use getUrlVars() then getPeriodFromUrlParams() then add period!');
 	}
 	let { filterMode, filterId } = getFilterModeId();
 
@@ -146,6 +147,9 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 		}
 	}
 
+	console.log('timezone', urlParams.timezone);
+	console.log('period', period, period.start, period.end);
+
 	const baseFilters: BaseFilters = {
 		q,
 		start: period.start.toISOString(),
@@ -187,7 +191,7 @@ export const getCarbon = ({
 	return DataStore.fetch(
 		['misc', 'DataLog', 'green', md5(JSON.stringify(data))],
 		() => {
-			return ServerIO.load(endpoint || ServerIO.DATALOG_ENDPOINT, { data, swallow: true, method:"POST" });
+			return ServerIO.load(endpoint || ServerIO.DATALOG_ENDPOINT, { data, swallow: true, method: 'POST' });
 		},
 		null,
 		null
@@ -373,7 +377,7 @@ export const emissionsPerImpressions = (buckets: GreenBuckets, filterLessThan: n
 				// Simple breakdown
 				Object.entries(bkt).forEach(([k, v]) => {
 					// Carbon entries => carbon per N impressions; others unchanged
-					if (bkt.count as number > filterLessThan) {
+					if ((bkt.count as number) > filterLessThan) {
 						newBkt[k] = k.match(/^co2/) ? (v as number) / ((bkt.count as number) / perN) : v;
 					} else {
 						newBkt[k] = k.match(/^co2/) ? 0 : v;
@@ -401,12 +405,12 @@ export const emissionsPerImpressions = (buckets: GreenBuckets, filterLessThan: n
  * Possbile refactor @see {@link calculateDynamicOffsetAsync} (Need more testing)
  * @returns null if loading data
  */
-export const calculateDynamicOffset = (campaign: Campaign, offset: Impact, period: Period|null): Impact | null => {
+export const calculateDynamicOffset = (campaign: Campaign, offset: Impact, period: Period | null): Impact | null => {
 	Campaign.assIsa(campaign, null);
 	assert(Impact.isDynamic(offset), campaign); // paranoia
 
 	// We either want carbon emissions or impressions count for this campaign/period - this gets both
-	if (!period) {		
+	if (!period) {
 		period = getPeriodFromUrlParams();
 	}
 	let pvCarbonData = getCarbon({
@@ -441,25 +445,23 @@ export const calculateDynamicOffset = (campaign: Campaign, offset: Impact, perio
 	return snapshotOffset;
 };
 
-
-
 /**
  * fraction by period, or all
  */
-export const calculateFixedOffset = (impactDebit: ImpactDebit, period: Period|null): Impact | null => {
+export const calculateFixedOffset = (impactDebit: ImpactDebit, period: Period | null): Impact | null => {
 	ImpactDebit.assIsa(impactDebit);
 	// We either want carbon emissions or impressions count for this campaign/period - this gets both
-	if ( ! period) {		
+	if (!period) {
 		period = getPeriodFromUrlParams();
 	}
 	// fraction of period
 	let fraction;
 	if (period && impactDebit.start && impactDebit.end) {
-		let period2 = {start:new Date(impactDebit.start), end:new Date(impactDebit.end)} as Period;
+		let period2 = { start: new Date(impactDebit.start), end: new Date(impactDebit.end) } as Period;
 		let overlapStartMsecs = Math.max(period.start.getTime(), period2.start.getTime());
 		let overlapEndMsecs = Math.min(period.end.getTime(), period2.end.getTime());
 		fraction = (overlapEndMsecs - overlapStartMsecs) / (period.end.getTime() - period.start.getTime());
-		if (fraction<0) {
+		if (fraction < 0) {
 			fraction = 0;
 		}
 	} else {
@@ -467,7 +469,7 @@ export const calculateFixedOffset = (impactDebit: ImpactDebit, period: Period|nu
 	}
 	// copy and set n
 	let snapshotOffset = new Impact(impactDebit.impact);
-	snapshotOffset.n = impactDebit.impact.n*fraction;
+	snapshotOffset.n = impactDebit.impact.n * fraction;
 	delete snapshotOffset.rate;
 	delete snapshotOffset.input;
 	delete snapshotOffset.dynamic;
@@ -544,9 +546,9 @@ const getFixedOffsetsForCampaign = (campaign: Campaign, period: Period): Impact[
 	const fixedImpactDebits = impactDebits.filter((impd) => !Impact.isDynamic(impd.impact));
 	if (!dynamicImpactDebits.length || !fixedImpactDebits.length) {
 		// no mix = simples
-		let fixedOffsets = impactDebits.map(imp => Impact.isDynamic(imp.impact)? 
-			calculateDynamicOffset(campaign, imp.impact, period) 
-			: calculateFixedOffset(imp, period));
+		let fixedOffsets = impactDebits.map((imp) =>
+			Impact.isDynamic(imp.impact) ? calculateDynamicOffset(campaign, imp.impact, period) : calculateFixedOffset(imp, period)
+		);
 		return fixedOffsets;
 	}
 	// What gaps do we have in the fixed impacts?
@@ -556,10 +558,10 @@ const getFixedOffsetsForCampaign = (campaign: Campaign, period: Period): Impact[
 	for (let ti = 0; ti < types.length; ti++) {
 		let type = types[ti];
 		let fixed = fixedImpactDebits.filter((impd) => impd.impact.name === type);
-		for(let i=0; i<fixed.length; i++) {
-			let fo = calculateFixedOffset(fixed[i], period);			
+		for (let i = 0; i < fixed.length; i++) {
+			let fo = calculateFixedOffset(fixed[i], period);
 			fixedOffsets.push(fo);
-		}		
+		}
 		let dynamic = dynamicImpactDebits.filter((impd) => impd.impact.name === type);
 		if (!dynamic.length) continue;
 		if (dynamic.length !== 1) {
@@ -595,7 +597,7 @@ const getFixedOffsetsForCampaign = (campaign: Campaign, period: Period): Impact[
 			fixedOffsets.push(do2);
 		}
 	}
-	if (fixedOffsets.filter(x => ! x).length) {
+	if (fixedOffsets.filter((x) => !x).length) {
 		return false; // still loading data
 	}
 	return fixedOffsets;

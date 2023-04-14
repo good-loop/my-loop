@@ -4,7 +4,7 @@ import Misc from '../../../MiscOverrides';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import NewChartWidget from '../../../base/components/NewChartWidget';
 import DataStore from '../../../base/plumbing/DataStore';
-import { getPeriodFromUrlParams, type UrlParamPeriod } from '../../../base/utils/date-utils';
+import { getPeriodFromUrlParams, type UrlParams } from '../../../base/utils/date-utils';
 import { getUrlVars } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import Login from '../../../base/youagain';
@@ -170,14 +170,13 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 		setHighBuckets(highBuckets);
 	}, [selectedCo2]);
 
-	const urlParams: UrlParamPeriod = getUrlVars(null, null);
+	const urlParams: UrlParams = getUrlVars(null, null);
 	const period = getPeriodFromUrlParams(urlParams);
 	if (!period) {
 		return null; // Filter widget will set this on first render - allow it to update
 	}
-	urlParams.period = period;
 
-	let baseFilters = getBasefilters(urlParams);
+	let baseFilters = getBasefilters({...urlParams, period});
 
 	// BaseFiltersFailed
 	if ('type' in baseFilters && 'message' in baseFilters) {

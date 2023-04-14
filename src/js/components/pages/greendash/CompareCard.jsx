@@ -85,7 +85,7 @@ const QuartersCard = ({baseFilters}) => {
 	cursorDate.setHours(0, 0, 0, 0);
 	const quarters = [];
 	for (let i = 0; i < 4; i++) {
-		quarters.unshift(getPeriodQuarter(cursorDate));
+		quarters.unshift(getPeriodQuarter(null, cursorDate));
 		cursorDate.setMonth(cursorDate.getMonth() - 3);
 	}
 

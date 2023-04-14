@@ -30,7 +30,7 @@ const QuarterButtons = ({ period, setNamedPeriod }) => {
 	// Starting from now & stepping back 3 months at a time
 	const buttons = [];
 	for (let i = 0; i < 4; i++) {
-		const q = getPeriodQuarter(dateCursor);
+		const q = getPeriodQuarter(null, dateCursor);
 		buttons.push(
 			<DropdownItem onClick={() => setNamedPeriod(q.name)} key={q.name}>
 				{period.name === q.name ? selectedMarker : null} {printPeriod(q)}
