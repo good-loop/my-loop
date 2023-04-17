@@ -54,13 +54,13 @@ const periodChanged = (periodA, periodB) => {
 	if (periodA.name !== periodB.name) return true; // Least-surprise - consider "Q1" and "1 jan - 31 mar" different
 	if (periodA.start?.getTime() !== periodB.start?.getTime()) return true;
 	if (periodA.end?.getTime() !== periodB.end?.getTime()) return true;
+	if (periodA.timezone !== periodB.timezone) return true;
 	return false; // Unchanged!
 };
 
-
 /** Should we show the "Apply New Filters" button - ie have they changed? */
 const filtersChanged = ({ filterMode, period, ...nextFilters }) => {
-	// Time period?	
+	// Time period?
 	if (periodChanged(getPeriodFromUrlParams(), period)) return true;
 	// Focused item?
 	let changed = false;
@@ -76,13 +76,12 @@ const filtersChanged = ({ filterMode, period, ...nextFilters }) => {
 	return filterMode !== defaultFilterMode(prevFilters);
 };
 
-
 /** Extract the time period filter from URL params if present - if not, apply "current quarter" by default */
 const initPeriod = () => {
 	let period = getPeriodFromUrlParams();
 	if (!period) {
 		period = getPeriodQuarter();
-		modifyPage(null, { period: period.name });
+		modifyPage(null, { period: period.name, timezone: period.timezone });
 	}
 	return period;
 };
@@ -243,7 +242,7 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 			{
 				[filterMode]: { brand, agency, campaign, tag }[filterMode],
 				...periodToParams(period),
-				emode: paramsOld.emode || 'total',
+				emode: paramsOld.emode || 'total',	
 			},
 			false,
 			true
@@ -271,18 +270,26 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 
 	const periodLabel = `Timeframe: ${period.name ? printPeriod(period, true) : 'Custom'}`;
 
+	const timezoneLabel = `Timezone: ${period.timezone}`;
+
+	const hardcodedTimezones = 'UTC Europe/London Asia/Hong_Kong'.split(' ');
+
 	// label and logo
-	let tagItem = (tag && filterMode === "tag") ? getDataItem({ type: C.TYPES.GreenTag, id: tag, status: KStatus.PUB_OR_DRAFT }).value : null;
-	let campaignItem = (campaign && filterMode === "campaign") ? getDataItem({ type: C.TYPES.Campaign, id: campaign, status: KStatus.PUBLISHED }).value : null;
-	
+	let tagItem = tag && filterMode === 'tag' ? getDataItem({ type: C.TYPES.GreenTag, id: tag, status: KStatus.PUB_OR_DRAFT }).value : null;
+	let campaignItem = campaign && filterMode === 'campaign' ? getDataItem({ type: C.TYPES.Campaign, id: campaign, status: KStatus.PUBLISHED }).value : null;
+
 	// if tag or campaign exist, also grab the brand item as we'll need it for the logo
 	let brandItem =
-		((brand && filterMode === "brand") || (campaignItem && campaignItem.vertiser) || (tagItem && tagItem.vertiser)) 
-			? getDataItem({ type: C.TYPES.Advertiser, id: ((campaignItem && campaignItem.vertiser) || (tagItem && tagItem.vertiser) || brand), status: KStatus.PUBLISHED }).value
+		(brand && filterMode === 'brand') || (campaignItem && campaignItem.vertiser) || (tagItem && tagItem.vertiser)
+			? getDataItem({
+					type: C.TYPES.Advertiser,
+					id: (campaignItem && campaignItem.vertiser) || (tagItem && tagItem.vertiser) || brand,
+					status: KStatus.PUBLISHED,
+			  }).value
 			: null;
 
 	let agencyItem =
-		(agency || (campaignItem && campaignItem.agencyId))
+		agency || (campaignItem && campaignItem.agencyId)
 			? getDataItem({ type: C.TYPES.Agency, id: agency || campaignItem.agencyId, status: KStatus.PUBLISHED }).value
 			: null;
 
@@ -296,14 +303,14 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 		filterItemLabel = `Select a${filterMode?.match(/^[aieou]/i) ? 'n' : ''} ${filterMode}`;
 	}
 
-	let itemLogo = (filterMode == "agency") ? agencyItem : brandItem;
+	let itemLogo = filterMode == 'agency' ? agencyItem : brandItem;
 
 	return (
 		<Row className='greendash-filters my-2'>
 			<Col xs='12'>
 				<div className='d-flex'>
 					<Form inline>
-						<Logo className='mr-2' style={{ width: 'auto', maxWidth: '8em' }} item={itemLogo}/>
+						<Logo className='mr-2' style={{ width: 'auto', maxWidth: '8em' }} item={itemLogo} />
 						<>
 							{/* ??Seeing layout bugs that can block use -- refactoring to use a PropControl might be best*/}
 							<UncontrolledDropdown className='filter-dropdown'>
@@ -334,16 +341,31 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 								</DropdownMenu>
 							</UncontrolledDropdown>
 
-							{!pseudoUser && <UncontrolledDropdown className='filter-dropdown ml-2'>
-								<DropdownToggle caret>Filter by: {filterMode || ''}</DropdownToggle>
+							<UncontrolledDropdown className='filter-dropdown'>
+								<DropdownToggle className='pl-0' caret>
+									{timezoneLabel}
+								</DropdownToggle>
 								<DropdownMenu>
-									{['agency', 'brand', 'campaign', 'tag'].map((m, i) => (
-										<DropdownItem key={i} onClick={() => setFilterMode(m)}>
-											{m === filterMode ? selectedMarker : null} {m}
+									{hardcodedTimezones.map((tz, i) => (
+										<DropdownItem key={i} onClick={() => setPeriod({ ...period, timezone: tz })}>
+											{tz === period.timezone ? selectedMarker : null} {tz}
 										</DropdownItem>
 									))}
 								</DropdownMenu>
-							</UncontrolledDropdown>}
+							</UncontrolledDropdown>
+
+							{!pseudoUser && (
+								<UncontrolledDropdown className='filter-dropdown ml-2'>
+									<DropdownToggle caret>Filter by: {filterMode || ''}</DropdownToggle>
+									<DropdownMenu>
+										{['agency', 'brand', 'campaign', 'tag'].map((m, i) => (
+											<DropdownItem key={i} onClick={() => setFilterMode(m)}>
+												{m === filterMode ? selectedMarker : null} {m}
+											</DropdownItem>
+										))}
+									</DropdownMenu>
+								</UncontrolledDropdown>
+							)}
 
 							{filterMode && !pseudoUser && (
 								<UncontrolledDropdown className='filter-dropdown ml-2'>

@@ -147,9 +147,6 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 		}
 	}
 
-	console.log('timezone', urlParams.timezone);
-	console.log('period', period, period.start, period.end);
-
 	const baseFilters: BaseFilters = {
 		q,
 		start: period.start.toISOString(),

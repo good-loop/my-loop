@@ -61,6 +61,7 @@ const OverviewWidget = ({ period, data, prob }) => {
 		<Row className='greendash-overview mb-2'>
 			<Col xs='12'>
 				<span className='period mr-4'>{printPeriod(period)}</span>
+				<span className='period mr-4'>({printPeriod({ ...period, timezone: 'UTC' })})</span>
 				<span id='impressions-span' className='impressions'>
 					Impressions served: <span className='impressions-count'>{imps}</span>
 				</span>
@@ -90,7 +91,9 @@ const CTACard = ({}) => {
 
 const GreenMetrics2 = () => {
 	const urlParams = getUrlVars();
+	console.log('urlParams', urlParams);
 	const period = getPeriodFromUrlParams(urlParams);
+	console.log('GM2 period', period);
 	if (!period) {
 		return null; // Filter widget will set this on first render - allow it to update
 	}

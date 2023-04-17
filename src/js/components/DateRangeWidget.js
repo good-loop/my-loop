@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from 'reactstrap';
 import { space } from '../base/utils/miscutils';
 import { MONTHS, WEEKDAYS_FROM_MONDAY, periodFromName } from '../base/utils/date-utils';
-
+import moment from 'moment-timezone';
 
 /** Are these two Dates on the same day? */
 const sameDate = (d1, d2) => {
@@ -41,12 +41,14 @@ const after = (d1, d2) => {
 }
 
 const tomorrow = (date) => {
-	return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+	// return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+	return moment(date).add(1, 'days').toDate();
 }
 
 /** 00:00:00.000 on the same day as the given Date. */
-const dayStart = (date = new Date()) => {
-	return new Date(dayStart.getFullYear(), dayStart.getMonth(), dayStart.getDate());
+const dayStart = (date = new Date(), timezone) => {
+	// return new Date(dayStart.getFullYear(), dayStart.getMonth(), dayStart.getDate());
+	return moment.tz(date, timezone).startOf('day').toDate();
 };
 
 
@@ -62,8 +64,8 @@ const Day = ({date, className, onClick, onHover, ...rest}) => {
 	</td>;
 }
 
-const Month = ({year, month, start, end, setPeriod, hoverStart, hoverEnd, onDayClick, onDayHover, className}) => {
-	const refDate = new Date(year, month, 1);
+const Month = ({year, month, start, end, timezone, setPeriod, hoverStart, hoverEnd, onDayClick, onDayHover, className}) => {
+	const refDate = moment.tz([year, month + 1, 1], 'YYYY-MM-DD', timezone).toDate();
 
 	let currentRow = [];
 	const rows = [currentRow];
@@ -92,11 +94,16 @@ const Month = ({year, month, start, end, setPeriod, hoverStart, hoverEnd, onDayC
 	const hoverDay = onDayHover ? (date => date && onDayHover(date)) : null;
 
 	// Select a full month by clicking the name
-	const clickMonth = () => {
-		const monthStart = new Date(year, month, 1);
-		const monthEnd = new Date(monthStart);
-		monthEnd.setMonth(monthEnd.getMonth() + 1);
-		setPeriod(null, monthStart, monthEnd);
+	const clickMonth = (timezone) => {
+		// const monthStart = new Date(year, month, 1);
+		const monthStart = moment.tz([year, month + 1, 1], 'YYYY-MM-DD', timezone).toDate();
+		// const monthEnd = new Date(monthStart);
+		const monthEnd = moment(monthStart).add(1, 'month').toDate();
+		// monthEnd.setMonth(monthEnd.getMonth() + 1);
+		// monthEnd.setDate(monthEnd.getDate() - 1);
+		console.log('monthEnd after', monthEnd);
+		// TODO DateRange is selecting end date one day more/ less
+		setPeriod(null, monthStart, monthEnd, timezone);
 	};
 
 	// end is exclusive - ie a [start, end) range - so is set to midnight 00:00 on the next day
@@ -107,7 +114,7 @@ const Month = ({year, month, start, end, setPeriod, hoverStart, hoverEnd, onDayC
 	const now = new Date();
 
 	return <div className={space('month text-center', className)}>
-		<a onClick={clickMonth} className="month-name">
+		<a onClick={() => clickMonth(timezone)} className="month-name">
 			{MONTHS[month]} {year}
 		</a>
 		<table>
@@ -154,35 +161,39 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 	const [name, setName] = useState(dflt.name); // Named time periods, eg "2021-Q1", "yesterday"
 	const [start, setStart] = useState(dflt.start);
 	const [end, setEnd] = useState(dflt.end);
+	const [timezone, setTimezone] = useState(dflt.timezone); 
 	const [selDate, setSelDate] = useState(null); // For two-click period selection
 	const [hoverStart, setHoverStart] = useState(null); // For highlighting potential period
 	const [hoverEnd, setHoverEnd] = useState(null);
 
 	useEffect(() => {
-		setPeriod(dflt.name, dflt.start, dflt.end);
+		setPeriod(dflt.name, dflt.start, dflt.end, dflt.timezone);
 	}, [dflt]);
 
 	// initial focus
 	useEffect(() => {
-		focusPeriod(dflt.start, dflt.end, dflt.name);
+		focusPeriod(dflt.start, dflt.end, dflt.name, dflt.timezone);
 	}, []);
 
-	const setPeriod = (name, start, end) => {
+	const setPeriod = (name, start, end, timezone) => {
 		setName(name);
 		if (!start && !end) {
 			const periodObj = periodFromName(name);
 			if (periodObj) {
+				setTimezone(periodObj.timezone);
 				setStart(periodObj.start);
 				setEnd(periodObj.end);
 				// !sameDate(start, dflt.start)  ??
 				return;
 			}
 		}
+		setTimezone(timezone);
 		setStart(start);
+		console.log('setEnd', end);
 		setEnd(end);
 	};
 
-	const focusPeriod = (start, end, name) => {
+	const focusPeriod = (start, end, name, timezone) => {
 		if (name === "all") {
 			const today = new Date();
 			setFocusDate(today);
@@ -197,33 +208,33 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 	// Send changes back to invoking component
 	useEffect(() => {
 		if (start && end && onChange)
-			onChange({start, end, name});
-	}, [start, end, name])
+			onChange({start, end, name, timezone});
+	}, [start, end, name, timezone])
 
 	// The month the 3-month calendar view is focused on (try to put current period in view by default)
 	const [focusDate, setFocusDate] = useState(() => (dflt.end || dflt.start || new Date()));
 
 	// Set period to "X days ago" --> "last midnight (ie 00:00:00 today)"
-	const setDaysBack = (offset) => {
+	const setDaysBack = (offset, name, timezone) => {
 		// tommorow (end is non-inclusive)
 		const newEnd = new Date();
 		newEnd.setHours(0, 0, 0, 0);
 		const newStart = new Date(newEnd);
 		if (offset) newStart.setDate(newStart.getDate() + offset);
-		setPeriod(null, newStart, newEnd);
+		setPeriod(null, newStart, newEnd, timezone);
 	};
 	
 	// Set period to "Calendar month of X months ago"
-	const setCalendarMonth = (offset) => {
+	const setCalendarMonth = (offset, name, timezone) => {
 		const newEnd = new Date();
 		newEnd.setHours(0, 0, 0, 0); // ??
 		newEnd.setMonth(offset + newEnd.getMonth() + 1, 1);
 		const newStart = new Date(newEnd)
 		newStart.setMonth(newStart.getMonth() - 1);
-		setPeriod(null, newStart, newEnd);
+		setPeriod(null, newStart, newEnd, timezone);
 	};
 
-	const selectDate = (date) => {
+	const selectDate = (date, timezone) => {
 		if (!selDate) {
 			setSelDate(date);
 			setHoverStart(date);
@@ -232,7 +243,7 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 			const selDateFirst = before(selDate, date);
 			const d1 = selDateFirst ? selDate : date;
 			const d2 = selDateFirst ? tomorrow(date) : tomorrow(selDate);
-			setPeriod(null, d1, d2);
+			setPeriod(null, d1, d2, timezone);
 			setSelDate(null);
 			setHoverStart(null);
 			setHoverEnd(null);
@@ -251,11 +262,11 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 	}
 
 	// Quick buttons for common ranges (names currently unused)
-	const setYesterday = () => setDaysBack(-1, 'yesterday');
-	const setLast7Days = () => setDaysBack(-7, 'last-7')
-	const setLast30Days = () => setDaysBack(-30, 'last-30');
-	const setThisMonth = () => setCalendarMonth(0, 'this-month');
-	const setLastMonth = () => setCalendarMonth(-1, 'last-month')
+	const setYesterday = () => setDaysBack(-1, 'yesterday', timezone);
+	const setLast7Days = () => setDaysBack(-7, 'last-7', timezone)
+	const setLast30Days = () => setDaysBack(-30, 'last-30', timezone);
+	const setThisMonth = () => setCalendarMonth(0, 'this-month', timezone);
+	const setLastMonth = () => setCalendarMonth(-1, 'last-month', timezone);
 
 	// The months before and after the focused month
 	const prevMonth = new Date(focusDate.getFullYear(), focusDate.getMonth() - 1, 1);
@@ -267,9 +278,9 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 		<div className="months-container">
 			<a className="shift-focus prev" onClick={() => setFocusDate(prevMonth)}>◀</a>
 			<a className="shift-focus next" onClick={() => setFocusDate(nextMonth)}>▶</a>
-			<Month className="prev-month" year={prevMonth.getFullYear()} month={prevMonth.getMonth()} setPeriod={setPeriod} start={start} end={end} hoverStart={hoverStart} hoverEnd={hoverEnd} onDayClick={selectDate} onDayHover={hoverDate} {...monthProps} />
-			<Month className="this-month" year={focusDate.getFullYear()} month={focusDate.getMonth()} setPeriod={setPeriod} start={start} end={end} hoverStart={hoverStart} hoverEnd={hoverEnd} onDayClick={selectDate} onDayHover={hoverDate} {...monthProps} />
-			<Month className="next-month" year={nextMonth.getFullYear()} month={nextMonth.getMonth()} setPeriod={setPeriod} start={start} end={end} hoverStart={hoverStart} hoverEnd={hoverEnd} onDayClick={selectDate} onDayHover={hoverDate} {...monthProps} />
+			<Month className="prev-month" year={prevMonth.getFullYear()} month={prevMonth.getMonth()} timezone={timezone} setPeriod={setPeriod} start={start} end={end} hoverStart={hoverStart} hoverEnd={hoverEnd} onDayClick={(date) => selectDate(date, timezone)} onDayHover={hoverDate} {...monthProps} />
+			<Month className="this-month" year={focusDate.getFullYear()} month={focusDate.getMonth()} timezone={timezone} setPeriod={setPeriod} start={start} end={end} hoverStart={hoverStart} hoverEnd={hoverEnd} onDayClick={(date) => selectDate(date, timezone)} onDayHover={hoverDate} {...monthProps} />
+			<Month className="next-month" year={nextMonth.getFullYear()} month={nextMonth.getMonth()} timezone={timezone} setPeriod={setPeriod} start={start} end={end} hoverStart={hoverStart} hoverEnd={hoverEnd} onDayClick={(date) => selectDate(date, timezone)} onDayHover={hoverDate} {...monthProps} />
 		</div>
 		<div className="presets-container">
 			<Button className="preset" size="sm" onClick={setYesterday}>Yesterday</Button>
