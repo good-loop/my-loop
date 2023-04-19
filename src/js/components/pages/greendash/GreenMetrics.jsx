@@ -61,7 +61,7 @@ const OverviewWidget = ({ period, data, prob }) => {
 		<Row className='greendash-overview mb-2'>
 			<Col xs='12'>
 				<span className='period mr-4'>{printPeriod(period)}</span>
-				<span className='period mr-4'>({printPeriod({ ...period, timezone: 'UTC' })})</span>
+				{/* <span className='period mr-4'>({printPeriod({ ...period, timezone: 'UTC' })})</span> */}
 				<span id='impressions-span' className='impressions'>
 					Impressions served: <span className='impressions-count'>{imps}</span>
 				</span>

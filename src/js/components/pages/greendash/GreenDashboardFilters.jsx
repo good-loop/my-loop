@@ -272,7 +272,7 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 
 	const timezoneLabel = `Timezone: ${period.timezone}`;
 
-	const hardcodedTimezones = 'UTC Europe/London Asia/Hong_Kong'.split(' ');
+	const hardcodedTimezones = 'UTC Europe/London Australia/Sydney America/New_York'.split(' ');
 
 	// label and logo
 	let tagItem = tag && filterMode === 'tag' ? getDataItem({ type: C.TYPES.GreenTag, id: tag, status: KStatus.PUB_OR_DRAFT }).value : null;
