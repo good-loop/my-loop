@@ -189,7 +189,6 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 		}
 		setTimezone(timezone);
 		setStart(start);
-		console.log('setEnd', end);
 		setEnd(end);
 	};
 

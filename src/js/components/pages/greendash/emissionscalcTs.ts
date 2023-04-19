@@ -17,8 +17,9 @@ import { assert } from '../../../base/utils/assert';
 import { getUrlVars, sum, uniq, yessy } from '../../../base/utils/miscutils';
 import C from '../../../C';
 import ServerIO from '../../../plumbing/ServerIO';
-import { Period, getPeriodFromUrlParams } from '../../../base/utils/date-utils';
+import { Period, getPeriodFromUrlParams, padZero } from '../../../base/utils/date-utils';
 import { getFilterModeId } from './dashUtils';
+import moment from 'moment-timezone';
 
 /**
  * An array of Records ??what are the keys/values??
@@ -55,6 +56,8 @@ export type BaseFilters = {
 	fixseed?: boolean;
 	numRow?: string | number;
 	num?: string | number;
+	timezone: string;
+	timezoneString?: string;
 };
 
 export type BaseFiltersFailed = {
@@ -70,6 +73,15 @@ export type BaseFiltersFailed = {
 export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed => {
 	// Default to current quarter, all brands, all campaigns
 	if (!urlParams.timezone) urlParams.timezone = 'UTC';
+
+	const tzOffset = moment().tz(urlParams.timezone).utcOffset();
+	if (tzOffset != 0) {
+		const sign = tzOffset < 0 ? "-" : "";
+		const hours = Math.floor(Math.abs(tzOffset) / 60);
+		const minutes = Math.abs(tzOffset) % 60;
+		urlParams.timezoneString = sign + padZero(hours) + ":" + padZero(minutes);
+	}
+
 	const period = urlParams.period;
 	if (!period) {
 		console.warn('use getUrlVars() then getPeriodFromUrlParams() then add period!');
@@ -155,6 +167,7 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 		sigfig: urlParams.sigfig?.toString(),
 		nocache: urlParams.nocache,
 		fixseed: true,
+		timezone: urlParams.timezoneString,
 	};
 
 	return baseFilters;

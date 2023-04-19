@@ -91,9 +91,7 @@ const CTACard = ({}) => {
 
 const GreenMetrics2 = () => {
 	const urlParams = getUrlVars();
-	console.log('urlParams', urlParams);
 	const period = getPeriodFromUrlParams(urlParams);
-	console.log('GM2 period', period);
 	if (!period) {
 		return null; // Filter widget will set this on first render - allow it to update
 	}
