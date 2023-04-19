@@ -5,7 +5,7 @@ import KStatus from '../../../base/data/KStatus';
 import DataStore from '../../../base/plumbing/DataStore';
 import { nonce } from '../../../base/data/DataClass';
 import { getDataItem, getDataList } from '../../../base/plumbing/Crud';
-import { getPeriodQuarter, getPeriodMonth, periodToParams, printPeriod, getPeriodFromUrlParams } from '../../../base/utils/date-utils';
+import { getPeriodQuarter, getPeriodMonth, periodToParams, printPeriod, getPeriodFromUrlParams, getTimezone } from '../../../base/utils/date-utils';
 
 import DateRangeWidget from '../../DateRangeWidget';
 import { modifyPage } from '../../../base/plumbing/glrouter';
@@ -269,7 +269,7 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 	// - Admin users get an email entry control to "act as" contacts
 	// - When acting as non-admin, their available brands & campaigns populate dropdowns
 
-	const periodLabel = `Timeframe: ${period.name ? printPeriod(period, true) : 'Custom'}`;
+	const periodLabel = `Timeframe: ${period.name ? printPeriod(period, true) : 'Custom'} (${getTimezone()})`;
 
 	// label and logo
 	let tagItem = (tag && filterMode === "tag") ? getDataItem({ type: C.TYPES.GreenTag, id: tag, status: KStatus.PUB_OR_DRAFT }).value : null;

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'reactstrap';
 import { space } from '../base/utils/miscutils';
-import { MONTHS, WEEKDAYS_FROM_MONDAY, periodFromName } from '../base/utils/date-utils';
-
+import { MONTHS, WEEKDAYS_FROM_MONDAY, getTimezone, periodFromName } from '../base/utils/date-utils';
+import PropControlTimezone from '../base/components/propcontrols/PropControlTimezone';
 
 /** Are these two Dates on the same day? */
 const sameDate = (d1, d2) => {
@@ -157,6 +157,8 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 	const [selDate, setSelDate] = useState(null); // For two-click period selection
 	const [hoverStart, setHoverStart] = useState(null); // For highlighting potential period
 	const [hoverEnd, setHoverEnd] = useState(null);
+	
+	let tz = getTimezone();
 
 	useEffect(() => {
 		setPeriod(dflt.name, dflt.start, dflt.end);
@@ -253,7 +255,6 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 	// Quick buttons for common ranges (names currently unused)
 	const setYesterday = () => setDaysBack(-1, 'yesterday');
 	const setLast7Days = () => setDaysBack(-7, 'last-7')
-	const setLast30Days = () => setDaysBack(-30, 'last-30');
 	const setThisMonth = () => setCalendarMonth(0, 'this-month');
 	const setLastMonth = () => setCalendarMonth(-1, 'last-month')
 
@@ -274,10 +275,10 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 		<div className="presets-container">
 			<Button className="preset" size="sm" onClick={setYesterday}>Yesterday</Button>
 			<Button className="preset" size="sm" onClick={setLast7Days}>Last 7 days</Button>
-			<Button className="preset" size="sm" onClick={setLast30Days}>Last 30 days</Button>
 			<Button className="preset" size="sm" onClick={setThisMonth}>This month</Button>
 			<Button className="preset" size="sm" onClick={setLastMonth}>Last month</Button>
 			<Button className="preset" size="sm" color="primary" onClick={() => focusPeriod(start, end, name)}>Recenter</Button>
+			<PropControlTimezone size="sm"  label="Timezone" prop="tz" />
 		</div>
 	</div>
 };
