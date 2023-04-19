@@ -57,7 +57,7 @@ export type BaseFilters = {
 	numRow?: string | number;
 	num?: string | number;
 	timezone: string;
-	timezoneString?: string;
+	timezoneTimestamp?: string;
 };
 
 export type BaseFiltersFailed = {
@@ -79,7 +79,7 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 		const sign = tzOffset < 0 ? "-" : "";
 		const hours = Math.floor(Math.abs(tzOffset) / 60);
 		const minutes = Math.abs(tzOffset) % 60;
-		urlParams.timezoneString = sign + padZero(hours) + ":" + padZero(minutes);
+		urlParams.timezoneTimestamp = sign + padZero(hours) + ":" + padZero(minutes);
 	}
 
 	const period = urlParams.period;
@@ -167,7 +167,7 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 		sigfig: urlParams.sigfig?.toString(),
 		nocache: urlParams.nocache,
 		fixseed: true,
-		timezone: urlParams.timezoneString,
+		timezone: urlParams.timezoneTimestamp,
 	};
 
 	return baseFilters;
