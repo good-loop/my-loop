@@ -1,11 +1,14 @@
+/**
+ * A refactor could probably remove much of the logic here.
+ */
 import React, { useEffect, useState } from 'react';
 import { Button, Col, DropdownItem, DropdownMenu, DropdownToggle, Form, Row, UncontrolledDropdown } from 'reactstrap';
 
 import KStatus from '../../../base/data/KStatus';
-import DataStore from '../../../base/plumbing/DataStore';
+import DataStore, { getUrlValue } from '../../../base/plumbing/DataStore';
 import { nonce } from '../../../base/data/DataClass';
 import { getDataItem, getDataList } from '../../../base/plumbing/Crud';
-import { getPeriodQuarter, getPeriodMonth, periodToParams, printPeriod, getPeriodFromUrlParams, getTimezone } from '../../../base/utils/date-utils';
+import { getPeriodQuarter, getPeriodMonth, periodToParams, printPeriod, getPeriodFromUrlParams, getTimeZone, getTimeZoneShortName, setTimeZone } from '../../../base/utils/date-utils';
 
 import DateRangeWidget from '../../DateRangeWidget';
 import { modifyPage } from '../../../base/plumbing/glrouter';
@@ -13,76 +16,36 @@ import { isTester } from '../../../base/Roles';
 import SearchQuery from '../../../base/searchquery';
 import PropControl from '../../../base/components/PropControl';
 import Logo from '../../../base/components/Logo';
-import C from '../../../C';
+import C, { urlParamForType } from '../../../C';
+import PropControlDate from '../../../base/components/propcontrols/PropControlDate';
+import PropControlPeriod from '../../../base/components/propcontrols/PropControlPeriod';
+import { equals, setUrlParameter } from '../../../base/utils/miscutils';
 
 /** Tick mark which appears in drop-downs next to currently selected option */
 const selectedMarker = <span className='selected-marker' />;
 
 /** All the URL parameters that pertain to the dashboard filters */
-const allFilterParams = ['period', 'start', 'end', 'agency', 'brand', 'campaign', 'tag'];
-
-/** Generate the list of quarter-period shortcuts */
-const QuarterButtons = ({ period, setNamedPeriod }) => {
-	const dateCursor = new Date();
-	dateCursor.setHours(0, 0, 0, 0);
-	dateCursor.setDate(1); // avoid month-length problems
-
-	// Starting from now & stepping back 3 months at a time
-	const buttons = [];
-	for (let i = 0; i < 4; i++) {
-		const q = getPeriodQuarter(dateCursor);
-		buttons.push(
-			<DropdownItem onClick={() => setNamedPeriod(q.name)} key={q.name}>
-				{period.name === q.name ? selectedMarker : null} {printPeriod(q)}
-			</DropdownItem>
-		);
-		dateCursor.setMonth(dateCursor.getMonth() - 3);
-	}
-	return buttons;
-};
+const allFilterParams = ['period', 'start', 'end', 'tz', 'agency', 'brand', 'campaign', 'tag'];
 
 /** For the given URL params, what filter mode should the user be in? */
-const defaultFilterMode = ({ agency, brand, campaign, tag }) => {
-	if (agency && agency !== 'all') return 'agency';
-	if (brand && brand !== 'all') return 'brand';
-	if (campaign && campaign !== 'all') return 'campaign';
-	if (tag && tag !== 'all') return 'tag';
+const defaultFilterType = ({ agency, brand, campaign, tag }) => {
+	if (agency && agency !== 'all') return C.TYPES.Agency;
+	if (brand && brand !== 'all') return C.TYPES.Advertiser;
+	if (campaign && campaign !== 'all') return C.TYPES.Campaign;
+	if (tag && tag !== 'all') return C.TYPES.GreenTag;
 };
-
-/** Are these two period-specs the same - ie do they refer to the same quarter / month / year / custom period? */
-const periodChanged = (periodA, periodB) => {
-	if (periodA.name !== periodB.name) return true; // Least-surprise - consider "Q1" and "1 jan - 31 mar" different
-	if (periodA.start?.getTime() !== periodB.start?.getTime()) return true;
-	if (periodA.end?.getTime() !== periodB.end?.getTime()) return true;
-	return false; // Unchanged!
-};
-
-
-/** Should we show the "Apply New Filters" button - ie have they changed? */
-const filtersChanged = ({ filterMode, period, ...nextFilters }) => {
-	// Time period?	
-	if (periodChanged(getPeriodFromUrlParams(), period)) return true;
-	// Focused item?
-	let changed = false;
-	let prevFilters = {};
-	['agency', 'brand', 'campaign', 'tag'].every((filter) => {
-		prevFilters[filter] = DataStore.getUrlValue(filter);
-		if (nextFilters[filter] == null) return true;
-		changed = nextFilters[filter] !== prevFilters[filter];
-		return changed;
-	});
-	if (changed) return true;
-	// Filter mode? (Will this ever return true after the block above?)
-	return filterMode !== defaultFilterMode(prevFilters);
-};
-
 
 /** Extract the time period filter from URL params if present - if not, apply "current quarter" by default */
 const initPeriod = () => {
 	let period = getPeriodFromUrlParams();
-	if (!period) {
+	if ( ! period) {
 		period = getPeriodQuarter();
-		modifyPage(null, { period: period.name });
+		modifyPage(null, { period: period.name, start: period.start, end: period.end });
+	}
+	// default to UTC timezone
+	if ( ! getUrlValue("tz")) {
+		setTimeZone("UTC");
+		modifyPage(null, { tz:"UTC" });
 	}
 	return period;
 };
@@ -108,18 +71,13 @@ const queryProps = {
 	[C.TYPES.Campaign]: 'campaign',
 };
 
-/** Type enum members corresponding to each filter mode */
-const typeForMode = {
-	agency: C.TYPES.Agency,
-	brand: C.TYPES.Advertiser,
-	campaign: C.TYPES.Campaign,
-	tag: C.TYPES.GreenTag,
-};
-
 /** Sort a list of data-items by name, or by ID if unavailable*/
 const sortDataItems = (list) => list.sort((a, b) => (a.name || a.id || '').localeCompare(b.name || b.id || ''));
 
-/** Get IDs of all items of [type] shared with the logged-in user */
+/** Get IDs of all items of [type] shared with the logged-in user
+ * 
+ * Does PropControlDataItem do this?? Would switching to that be cleaner??
+ */
 const sharesOfType = async (type) => {
 	const { cargo: shareList } = await Login.getSharedWith(Login.getId());
 	if (!shareList) return;
@@ -143,7 +101,8 @@ const mergeHits = (hits, setFilterItems) =>
 
 /**
  * ??Does this duplicate server-side work done by CrudServlet.doList2_securityFilter2_filterByShares()?
- *
+ * Does PropControlDataItem do this?? Would switching to that be cleaner??
+ * 
  * Fetch all items of [type] which are implicitly shared with the user under items of [shareType]
  * (for instance - if a campaign is explicitly shared, the user should see all campaigns under it)
  */
@@ -159,7 +118,8 @@ const getMergeImplicitShares = async ({ shareType, type, setFilterItems }) => {
 
 /**
  * ??Does this duplicate server-side work done by CrudServlet.doList2_securityFilter2_filterByShares()?
- *
+ * Does PropControlDataItem do this?? Would switching to that be cleaner??
+ * 
  * Fetch all items of a type that are explicitly (eg "Campaign: J0zxYqk") shared with a user */
 const getMergeDirectShares = async ({ type, setFilterItems }) => {
 	const ids = await sharesOfType(type);
@@ -169,11 +129,12 @@ const getMergeDirectShares = async ({ type, setFilterItems }) => {
 	mergeHits(hits, setFilterItems);
 };
 
-/** What agencies/brands/campaigns/tags are available for the user to filter on? */
-const getFilterItems = async ({ filterMode, setFilterItems }) => {
-	// For shorthand use in getDataList calls below
-	const type = typeForMode[filterMode];
-
+/** What agencies/brands/campaigns/tags are available for the user to filter on? 
+ * Does PropControlDataItem do this?? Would switching to that be cleaner??
+ * 
+*/
+const getFilterItems = async ({ type, filterMode, setFilterItems }) => {
+	assert( ! filterMode, "use type");
 	// Special behaviour for Good-Loop staff: load all items of type, unfiltered
 	if (isTester()) {
 		const { hits } = await getDataList({ type, status: KStatus.PUBLISHED }).promise;
@@ -188,13 +149,13 @@ const getFilterItems = async ({ filterMode, setFilterItems }) => {
 	getMergeDirectShares({ type, setFilterItems });
 
 	// What items are implicitly shared, e.g. brands under an agency the user can access?
-	if (filterMode === 'agency') return;
+	if (type === C.TYPES.Agency) return;
 	// Brand, campaign, tag can be implicitly shared under an agency
 	getMergeImplicitShares({ shareType: C.TYPES.Agency, type, setFilterItems });
-	if (filterMode === 'brand') return;
+	if (type === C.TYPES.Advertiser) return;
 	// Campaign & tag can be implicitly shared under a brand
 	getMergeImplicitShares({ shareType: C.TYPES.Advertiser, type, setFilterItems });
-	if (filterMode === 'campaign') return;
+	if (type ===  C.TYPES.Campaign) return;
 	// Tag can be implicitly shared under a campaign
 	getMergeImplicitShares({ shareType: C.TYPES.Campaign, type, setFilterItems });
 };
@@ -206,26 +167,21 @@ const getFilterItems = async ({ filterMode, setFilterItems }) => {
  * Refactor to use PropControlDataItem??
  */
 const GreenDashboardFilters = ({ pseudoUser }) => {
-	const [period, setPeriod] = useState(initPeriod());
-	const [agency, setAgency] = useState(() => DataStore.getUrlValue('agency'));
-	const [brand, setBrand] = useState(() => DataStore.getUrlValue('brand'));
-	const [campaign, setCampaign] = useState(() => DataStore.getUrlValue('campaign'));
-	const [tag, setTag] = useState(() => DataStore.getUrlValue('tag'));
+	const urlValues = DataStore.getValue('location','params');
+	let periodObj = initPeriod();
+	const [filters, _setFilters] = useState(Object.assign({}, urlValues));
+	const [filterType, setFilterType] = useState(defaultFilterType({ brand, agency, campaign, tag }));
+	const {period,start,end,tz,brand,campaign,tag,agency} = filters;
+	
+	let filtersChanged = JSON.stringify(filters) !== JSON.stringify(urlValues);
+	console.warn(filtersChanged, JSON.stringify(filters), JSON.stringify(urlValues));
+	const setPeriodFilters = (period) => {
+		filters.start = period.start;
+		filters.end = period.end;
+		filters.period = period.name;
+	}
 
-	const [filterMode, setFilterMode] = useState(defaultFilterMode({ brand, agency, campaign, tag }));
-	const [showCustomRange, setShowCustomRange] = useState(!period?.name);
-
-	const displayCustomRange = () => {
-		// Don't display the All Time 1970-2999 range
-		if (period.name === 'all') {
-			let periodObj = getPeriodMonth();
-			periodObj.name = null;
-			setPeriod(periodObj);
-		}
-		setShowCustomRange(true);
-	};
-
-	// Update this to signal that the new filter values should be applied
+	// Update this to signal that the new filter values should be applied (see useEffect below)
 	const [dummy, setDummy] = useState(false);
 	const doCommit = () => setDummy(nonce());
 
@@ -235,49 +191,49 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 		// Remove all URL params pertaining to green dashboard, and re-add the ones we want.
 		const { params } = DataStore.getValue('location');
 		const paramsOld = { ...params };
+		const paramsNew = { ...params };
+		// remove incumbents (so falsy can be put in place)
 		allFilterParams.forEach((p) => {
-			delete params[p];
+			delete paramsNew[p];
 		});
+		let filterTypeParam = urlParamForType(filterType);
+		paramsNew[filterTypeParam] = { brand, agency, campaign, tag }[filterTypeParam]
+		let pparams = periodToParams(period)
+		console.warn(pparams, period);
+		Object.assign(paramsNew, pparams);
+		paramsNew.tz = paramsOld.tz; // the timezone control modifies the url already, as part of modifying timezone logic
+		paramsNew.emode = paramsOld.emode || 'total';
+		// modify the url
 		modifyPage(
 			null,
-			{
-				[filterMode]: { brand, agency, campaign, tag }[filterMode],
-				...periodToParams(period),
-				emode: paramsOld.emode || 'total',
-			},
+			paramsNew,			
 			false,
-			true
+			true // clear other params -- do we want this??
 		);
 	}, [dummy]);
-
-	// Update the item ID to to focus on
-	const setFilterItem = { agency: setAgency, brand: setBrand, campaign: setCampaign, tag: setTag }[filterMode];
-
-	// Shorthand for a click on one of the "Xth Quarter" buttons
-	const setNamedPeriod = (name) => setPeriod({ name });
 
 	// Items to populate the filter-by-[agency, brand, campaign, tag] dropdown
 	const [filterItems, setFilterItems] = useState([]);
 
 	// Populate the filter-by-item dropdown based on user shares & access level
 	useEffect(() => {
-		if (filterMode) getFilterItems({ filterMode, setFilterItems });
-	}, [Login.getId(), filterMode]);
+		if (filterType) getFilterItems({type: filterType, setFilterItems });
+	}, [Login.getId(), filterType]);
 
 	// TODO "Normal" access control:
 	// - Advertisers & Campaigns will be shared with contacts
 	// - Admin users get an email entry control to "act as" contacts
 	// - When acting as non-admin, their available brands & campaigns populate dropdowns
 
-	const periodLabel = `Timeframe: ${period.name ? printPeriod(period, true) : 'Custom'} (${getTimezone()})`;
+	const periodLabel = `Timeframe: ${period.name ? printPeriod(period, true) : 'Custom'} (${getTimeZoneShortName()})`;
 
 	// label and logo
-	let tagItem = (tag && filterMode === "tag") ? getDataItem({ type: C.TYPES.GreenTag, id: tag, status: KStatus.PUB_OR_DRAFT }).value : null;
-	let campaignItem = (campaign && filterMode === "campaign") ? getDataItem({ type: C.TYPES.Campaign, id: campaign, status: KStatus.PUBLISHED }).value : null;
+	let tagItem = (tag && filterType === C.TYPES.GreenTag) ? getDataItem({ type: C.TYPES.GreenTag, id: tag, status: KStatus.PUB_OR_DRAFT }).value : null;
+	let campaignItem = (campaign && filterType === C.TYPES.Campaign) ? getDataItem({ type: C.TYPES.Campaign, id: campaign, status: KStatus.PUBLISHED }).value : null;
 	
 	// if tag or campaign exist, also grab the brand item as we'll need it for the logo
 	let brandItem =
-		((brand && filterMode === "brand") || (campaignItem && campaignItem.vertiser) || (tagItem && tagItem.vertiser)) 
+		((brand && filterType === C.TYPES.Advertiser) || (campaignItem && campaignItem.vertiser) || (tagItem && tagItem.vertiser)) 
 			? getDataItem({ type: C.TYPES.Advertiser, id: ((campaignItem && campaignItem.vertiser) || (tagItem && tagItem.vertiser) || brand), status: KStatus.PUBLISHED }).value
 			: null;
 
@@ -287,16 +243,21 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 			: null;
 
 	let filterItemLabel = {
-		agency: agencyItem?.name || agency,
-		brand: brandItem?.name || brand,
-		campaign: campaignItem?.name || campaign,
-		tag: tagItem?.name || tag,
-	}[filterMode];
+		Agency: agencyItem?.name || agency,
+		Advertiser: brandItem?.name || brand,
+		Campaign: campaignItem?.name || campaign,
+		GreenTag: tagItem?.name || tag,
+	}[filterType];
 	if (!filterItemLabel) {
-		filterItemLabel = `Select a${filterMode?.match(/^[aieou]/i) ? 'n' : ''} ${filterMode}`;
+		filterItemLabel = `Select a${filterType?.match(/^[aieou]/i) ? 'n' : ''} ${filterType}`;
 	}
 
-	let itemLogo = (filterMode == "agency") ? agencyItem : brandItem;
+	let itemLogo = (filterType == C.TYPES.Agency) ? agencyItem : brandItem;
+
+	const setFilterItem = id => {
+		filters[urlParamForType(filterType)] = id;
+		DataStore.update();
+	};
 
 	return (
 		<Row className='greendash-filters my-2'>
@@ -311,47 +272,30 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 									{periodLabel}
 								</DropdownToggle>
 								<DropdownMenu>
-									<QuarterButtons period={period} setNamedPeriod={setNamedPeriod} />
-									<DropdownItem onClick={() => setNamedPeriod('all')}>
-										All Time
-										{period.name === 'all' ? selectedMarker : null}
-									</DropdownItem>
-									<DropdownItem toggle={false} onClick={() => displayCustomRange()}>
-										Custom
-										{!period.name && (period.start || period.end) ? selectedMarker : null}
-									</DropdownItem>
-									{showCustomRange ? (
-										<>
-											<DropdownItem divider />
-											<DateRangeWidget dflt={period} onChange={setPeriod} />
-											<DropdownItem tag='div'>
-												<Button color='primary' onClick={doCommit}>
-													Apply custom timeframe
-												</Button>
-											</DropdownItem>
-										</>
-									) : null}
+									<DropdownItem divider />
+									<DateRangeWidget dflt={periodObj} onChange={setPeriodFilters} />
+									<PropControlPeriod dflt={periodObj} saveFn={setPeriodFilters} />
 								</DropdownMenu>
 							</UncontrolledDropdown>
 
 							{!pseudoUser && <UncontrolledDropdown className='filter-dropdown ml-2'>
-								<DropdownToggle caret>Filter by: {filterMode || ''}</DropdownToggle>
+								<DropdownToggle caret>Filter by: {urlParamForType(filterType) || ''}</DropdownToggle>
 								<DropdownMenu>
-									{['agency', 'brand', 'campaign', 'tag'].map((m, i) => (
-										<DropdownItem key={i} onClick={() => setFilterMode(m)}>
-											{m === filterMode ? selectedMarker : null} {m}
+									{'Agency Advertiser Campaign GreenTag'.split(" ").map((m, i) => (
+										<DropdownItem key={i} onClick={() => setFilterType(m)}>
+											{m === filterType ? selectedMarker : null} {urlParamForType(m)}
 										</DropdownItem>
 									))}
 								</DropdownMenu>
 							</UncontrolledDropdown>}
 
-							{filterMode && !pseudoUser && (
+							{filterType && !pseudoUser && (
 								<UncontrolledDropdown className='filter-dropdown ml-2'>
 									<DropdownToggle caret>{filterItemLabel}</DropdownToggle>
 									<DropdownMenu style={longMenuStyle}>
 										{filterItems.map((item, i) => (
 											<DropdownItem key={i} onClick={() => setFilterItem(item.id)}>
-												{{ campaign, brand, agency, tag }[filterMode] === item.id ? selectedMarker : null}
+												{{ campaign, brand, agency, tag }[urlParamForType(filterType)] === item.id ? selectedMarker : null}
 												{item.name}
 											</DropdownItem>
 										))}
@@ -359,11 +303,11 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 								</UncontrolledDropdown>
 							)}
 
-							{filtersChanged({ period, filterMode, agency, brand, campaign, tag }) ? (
+							{filtersChanged && 
 								<Button color='primary' className='ml-2' onClick={doCommit} size='sm'>
 									Apply new filters
 								</Button>
-							) : null}
+								}
 						</>
 					</Form>
 				</div>

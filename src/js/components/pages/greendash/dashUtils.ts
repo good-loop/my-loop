@@ -85,7 +85,7 @@ export const getFilterModeId = () => {
  */
 export const getCountryFlag = (isoCode:String) => {
 	console.warn("TODO getCountryFlag");
-}
+};
 
 export const getCountryName = (isoCode:String) => {
 	const onError = () => {
@@ -105,7 +105,7 @@ export const getCountryName = (isoCode:String) => {
 			})
 			.catch(onError);
 	});
-}
+};
 
 
 /** Minimum kg value where we should switch to displaying tonnes instead */

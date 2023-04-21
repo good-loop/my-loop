@@ -26,6 +26,21 @@ C.DONATIONS_TOTAL = "£4,700,000";
 // NB: MonetaryAmount is deprecated - left here for old data
 C.TYPES = new Enum("Publisher NGO Advert Campaign Advertiser Agency ImpactDebit User Person Money MonetaryAmount BlogPost ScheduledContent GreenTag");
 
+/**
+ * What parameter to use in a url?
+ * This is partly an aesthetic choice, and does not always match query ES parameters.
+ * @param {!string} type e.g. Advertiser
+ * @returns {!string} e.g. `brand`
+ */
+export const urlParamForType = type => {
+    if ( ! type) return;
+    switch(type) {
+    case "Advertiser": return "brand";
+    case "GreenTag": return "tag";
+    }
+    return type.toLowerCase();
+};
+
 C.ROLES = new Enum("user admin marketing agency");
 C.CAN = new Enum("view edit admin sudo viewmarketingreports");
 // setup roles
