@@ -41,6 +41,35 @@ export const urlParamForType = type => {
     return type.toLowerCase();
 };
 
+/**
+ * What parameter to use in an ES search quert?
+ * @param {!string} type e.g. Advertiser
+ * @returns {!string} e.g. `vertiser`
+ */
+export const searchParamForType = type => {
+    if ( ! type) return;
+    switch(type) {
+    case "Advertiser": return "vertiser";
+    case "Advert": return "adid";
+    case "Agency": return "agencyId";
+    case "GreenTag": return "adid";
+    }
+    return type.toLowerCase();
+};
+/**
+ * 
+ * @param {?string} type 
+ * @returns {string} e.g. Brand for Advertiser
+ */
+export const nameForType = type => {
+    if ( ! type) return;
+    switch(type) {
+    case "Advertiser": return "Brand";
+    case "GreenTag": return "Tag";
+    }
+    return type;
+};
+
 C.ROLES = new Enum("user admin marketing agency");
 C.CAN = new Enum("view edit admin sudo viewmarketingreports");
 // setup roles

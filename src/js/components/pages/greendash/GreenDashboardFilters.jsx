@@ -16,24 +16,19 @@ import { isTester } from '../../../base/Roles';
 import SearchQuery from '../../../base/searchquery';
 import PropControl from '../../../base/components/PropControl';
 import Logo from '../../../base/components/Logo';
-import C, { urlParamForType } from '../../../C';
+import C, { nameForType, searchParamForType, urlParamForType } from '../../../C';
 import PropControlDate from '../../../base/components/propcontrols/PropControlDate';
 import PropControlPeriod from '../../../base/components/propcontrols/PropControlPeriod';
 import { equals, setUrlParameter } from '../../../base/utils/miscutils';
+import { getFilterTypeId } from './dashUtils';
+import I18N from '../../../base/i18n';
+import { assMatch } from '../../../base/utils/assert';
 
 /** Tick mark which appears in drop-downs next to currently selected option */
 const selectedMarker = <span className='selected-marker' />;
 
 /** All the URL parameters that pertain to the dashboard filters */
 const allFilterParams = ['period', 'start', 'end', 'tz', 'agency', 'brand', 'campaign', 'tag'];
-
-/** For the given URL params, what filter mode should the user be in? */
-const defaultFilterType = ({ agency, brand, campaign, tag }) => {
-	if (agency && agency !== 'all') return C.TYPES.Agency;
-	if (brand && brand !== 'all') return C.TYPES.Advertiser;
-	if (campaign && campaign !== 'all') return C.TYPES.Campaign;
-	if (tag && tag !== 'all') return C.TYPES.GreenTag;
-};
 
 /** Extract the time period filter from URL params if present - if not, apply "current quarter" by default */
 const initPeriod = () => {
@@ -64,12 +59,6 @@ const shareRegexes = {
 	[C.TYPES.GreenTag]: /^Tag:(\w+)/,
 };
 
-/** What property should we use to construct a search query for e.g. "tags whose agency is J0zxYqk"? */
-const queryProps = {
-	[C.TYPES.Agency]: 'agencyId',
-	[C.TYPES.Advertiser]: 'vertiser',
-	[C.TYPES.Campaign]: 'campaign',
-};
 
 /** Sort a list of data-items by name, or by ID if unavailable*/
 const sortDataItems = (list) => list.sort((a, b) => (a.name || a.id || '').localeCompare(b.name || b.id || ''));
@@ -110,7 +99,7 @@ const getMergeImplicitShares = async ({ shareType, type, setFilterItems }) => {
 	const shareIds = await sharesOfType(shareType);
 	if (!shareIds || !shareIds.length) return; // Don't make an unbounded list request!
 
-	const q = SearchQuery.setPropOr(null, queryProps[shareType], shareIds).query;
+	const q = SearchQuery.setPropOr(null, searchParamForType(shareType), shareIds).query;
 
 	const { hits } = await getDataList({ type, status: KStatus.PUBLISHED, q }).promise;
 	mergeHits(hits, setFilterItems);
@@ -133,8 +122,7 @@ const getMergeDirectShares = async ({ type, setFilterItems }) => {
  * Does PropControlDataItem do this?? Would switching to that be cleaner??
  * 
 */
-const getFilterItems = async ({ type, filterMode, setFilterItems }) => {
-	assert( ! filterMode, "use type");
+const getFilterItems = async ({ type, setFilterItems }) => {
 	// Special behaviour for Good-Loop staff: load all items of type, unfiltered
 	if (isTester()) {
 		const { hits } = await getDataList({ type, status: KStatus.PUBLISHED }).promise;
@@ -169,48 +157,24 @@ const getFilterItems = async ({ type, filterMode, setFilterItems }) => {
 const GreenDashboardFilters = ({ pseudoUser }) => {
 	const urlValues = DataStore.getValue('location','params');
 	let periodObj = initPeriod();
-	const [filters, _setFilters] = useState(Object.assign({}, urlValues));
-	const [filterType, setFilterType] = useState(defaultFilterType({ brand, agency, campaign, tag }));
-	const {period,start,end,tz,brand,campaign,tag,agency} = filters;
+	const {filterType, filterId} = getFilterTypeId();
 	
-	let filtersChanged = JSON.stringify(filters) !== JSON.stringify(urlValues);
-	console.warn(filtersChanged, JSON.stringify(filters), JSON.stringify(urlValues));
+	const setFilterType = ft => {
+		// clear the old id setting
+		"brand agency campaign adid".split(" ").forEach(k => DataStore.setUrlValue(k,null,false));
+		DataStore.setUrlValue("ft",ft);
+	};
+	const {period,start,end,tz,brand,campaign,tag,agency} = urlValues;
+	
+	/**
+	 * @param {Period} period 
+	 */
 	const setPeriodFilters = (period) => {
-		filters.start = period.start;
-		filters.end = period.end;
-		filters.period = period.name;
+		console.warn("setPeriodFilters", period);
+		DataStore.setUrlValue("start", period.start);
+		DataStore.setUrlValue("end", period.end);
+		DataStore.setUrlValue("period", period.name);
 	}
-
-	// Update this to signal that the new filter values should be applied (see useEffect below)
-	const [dummy, setDummy] = useState(false);
-	const doCommit = () => setDummy(nonce());
-
-	// On signal - Write updated filter spec back to URL parameters
-	useEffect(() => {
-		if (!dummy) return;
-		// Remove all URL params pertaining to green dashboard, and re-add the ones we want.
-		const { params } = DataStore.getValue('location');
-		const paramsOld = { ...params };
-		const paramsNew = { ...params };
-		// remove incumbents (so falsy can be put in place)
-		allFilterParams.forEach((p) => {
-			delete paramsNew[p];
-		});
-		let filterTypeParam = urlParamForType(filterType);
-		paramsNew[filterTypeParam] = { brand, agency, campaign, tag }[filterTypeParam]
-		let pparams = periodToParams(period)
-		console.warn(pparams, period);
-		Object.assign(paramsNew, pparams);
-		paramsNew.tz = paramsOld.tz; // the timezone control modifies the url already, as part of modifying timezone logic
-		paramsNew.emode = paramsOld.emode || 'total';
-		// modify the url
-		modifyPage(
-			null,
-			paramsNew,			
-			false,
-			true // clear other params -- do we want this??
-		);
-	}, [dummy]);
 
 	// Items to populate the filter-by-[agency, brand, campaign, tag] dropdown
 	const [filterItems, setFilterItems] = useState([]);
@@ -225,10 +189,10 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 	// - Admin users get an email entry control to "act as" contacts
 	// - When acting as non-admin, their available brands & campaigns populate dropdowns
 
-	const periodLabel = `Timeframe: ${period.name ? printPeriod(period, true) : 'Custom'} (${getTimeZoneShortName()})`;
+	const periodLabel = `Timeframe: ${periodObj?.name? printPeriod(periodObj, true) : 'Custom'} (${getTimeZoneShortName()})`;
 
 	// label and logo
-	let tagItem = (tag && filterType === C.TYPES.GreenTag) ? getDataItem({ type: C.TYPES.GreenTag, id: tag, status: KStatus.PUB_OR_DRAFT }).value : null;
+	let tagItem = (tag && filterType === C.TYPES.GreenTag)? getDataItem({ type: C.TYPES.GreenTag, id: tag, status: KStatus.PUB_OR_DRAFT }).value : null;
 	let campaignItem = (campaign && filterType === C.TYPES.Campaign) ? getDataItem({ type: C.TYPES.Campaign, id: campaign, status: KStatus.PUBLISHED }).value : null;
 	
 	// if tag or campaign exist, also grab the brand item as we'll need it for the logo
@@ -238,7 +202,7 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 			: null;
 
 	let agencyItem =
-		(agency || (campaignItem && campaignItem.agencyId))
+		(agency || (campaignItem &&  campaignItem.agencyId))
 			? getDataItem({ type: C.TYPES.Agency, id: agency || campaignItem.agencyId, status: KStatus.PUBLISHED }).value
 			: null;
 
@@ -248,15 +212,19 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 		Campaign: campaignItem?.name || campaign,
 		GreenTag: tagItem?.name || tag,
 	}[filterType];
-	if (!filterItemLabel) {
-		filterItemLabel = `Select a${filterType?.match(/^[aieou]/i) ? 'n' : ''} ${filterType}`;
+	if ( ! filterItemLabel) {
+		filterItemLabel = `Select ${nameForType(filterType)}`;
 	}
 
 	let itemLogo = (filterType == C.TYPES.Agency) ? agencyItem : brandItem;
 
 	const setFilterItem = id => {
-		filters[urlParamForType(filterType)] = id;
-		DataStore.update();
+		DataStore.setUrlValue(urlParamForType(filterType), id);
+	};
+	const setNamedPeriod = pname => {
+		DataStore.setUrlValue("start", null);
+		DataStore.setUrlValue("end", null);
+		DataStore.setUrlValue("period", pname);
 	};
 
 	return (
@@ -265,55 +233,75 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 				<div className='d-flex'>
 					<Form inline>
 						<Logo className='mr-2' style={{ width: 'auto', maxWidth: '8em' }} item={itemLogo}/>
-						<>
-							{/* ??Seeing layout bugs that can block use -- refactoring to use a PropControl might be best*/}
-							<UncontrolledDropdown className='filter-dropdown'>
-								<DropdownToggle className='pl-0' caret>
-									{periodLabel}
-								</DropdownToggle>
-								<DropdownMenu>
-									<DropdownItem divider />
-									<DateRangeWidget dflt={periodObj} onChange={setPeriodFilters} />
-									<PropControlPeriod dflt={periodObj} saveFn={setPeriodFilters} />
-								</DropdownMenu>
-							</UncontrolledDropdown>
+						{/* ??Seeing layout bugs that can block use -- refactoring to use a PropControl might be best*/}
+						<UncontrolledDropdown className='filter-dropdown'>
+							<DropdownToggle className='pl-0' caret>
+								{periodLabel}
+							</DropdownToggle>
+							<DropdownMenu>
+							<QuarterButtons setNamedPeriod={setNamedPeriod} periodObj={periodObj} />
+							<DropdownItem onClick={() => setNamedPeriod('all')}>
+								All Time
+								{periodObj?.name === 'all' ? selectedMarker : null}
+							</DropdownItem>
+								<DropdownItem divider />
+								{/* <DateRangeWidget dflt={periodObj} onChange={setPeriodFilters} /> */}
+								<PropControlPeriod className="p-2" dflt={periodObj} saveFn={setPeriodFilters} 
+									buttons={"yesterday this-month last-month".split(" ")}/>
+							</DropdownMenu>
+						</UncontrolledDropdown>
 
-							{!pseudoUser && <UncontrolledDropdown className='filter-dropdown ml-2'>
-								<DropdownToggle caret>Filter by: {urlParamForType(filterType) || ''}</DropdownToggle>
-								<DropdownMenu>
-									{'Agency Advertiser Campaign GreenTag'.split(" ").map((m, i) => (
-										<DropdownItem key={i} onClick={() => setFilterType(m)}>
-											{m === filterType ? selectedMarker : null} {urlParamForType(m)}
+						{!pseudoUser && <UncontrolledDropdown className='filter-dropdown ml-2'>
+							<DropdownToggle caret>Filter by: {urlParamForType(filterType) || ''}</DropdownToggle>
+							<DropdownMenu>
+								{'Agency Advertiser Campaign GreenTag'.split(" ").map((m, i) => (
+									<DropdownItem key={i} onClick={() => setFilterType(m)}>
+										{m === filterType ? selectedMarker : null} {urlParamForType(m)}
+									</DropdownItem>
+								))}
+							</DropdownMenu>
+						</UncontrolledDropdown>}
+
+						{filterType && !pseudoUser && (
+							<UncontrolledDropdown className='filter-dropdown ml-2'>
+								<DropdownToggle caret>{filterItemLabel}</DropdownToggle>
+								<DropdownMenu style={longMenuStyle}>
+									{filterItems.map((item, i) => (
+										<DropdownItem key={i} onClick={() => setFilterItem(item.id)}>
+											{{ campaign, brand, agency, tag }[urlParamForType(filterType)] === item.id ? selectedMarker : null}
+											{item.name}
 										</DropdownItem>
 									))}
 								</DropdownMenu>
-							</UncontrolledDropdown>}
-
-							{filterType && !pseudoUser && (
-								<UncontrolledDropdown className='filter-dropdown ml-2'>
-									<DropdownToggle caret>{filterItemLabel}</DropdownToggle>
-									<DropdownMenu style={longMenuStyle}>
-										{filterItems.map((item, i) => (
-											<DropdownItem key={i} onClick={() => setFilterItem(item.id)}>
-												{{ campaign, brand, agency, tag }[urlParamForType(filterType)] === item.id ? selectedMarker : null}
-												{item.name}
-											</DropdownItem>
-										))}
-									</DropdownMenu>
-								</UncontrolledDropdown>
-							)}
-
-							{filtersChanged && 
-								<Button color='primary' className='ml-2' onClick={doCommit} size='sm'>
-									Apply new filters
-								</Button>
-								}
-						</>
+							</UncontrolledDropdown>
+						)}
 					</Form>
 				</div>
 			</Col>
 		</Row>
 	);
+};
+
+
+/** Generate the list of quarter-period shortcuts */
+const QuarterButtons = ({periodObj, setNamedPeriod }) => {
+	const dateCursor = new Date();
+	dateCursor.setHours(0, 0, 0, 0);
+	dateCursor.setDate(1); // avoid month-length problems
+
+	// Starting from now & stepping back 3 months at a time
+	const buttons = [];
+	for (let i = 0; i < 4; i++) {
+		const q = getPeriodQuarter(dateCursor);
+		
+		buttons.push(
+			<DropdownItem onClick={() => setNamedPeriod(q.name)} key={q.name}>
+				{periodObj?.name === q.name? selectedMarker : null} {printPeriod(q)}
+			</DropdownItem>
+		);
+		dateCursor.setMonth(dateCursor.getMonth() - 3);
+	}
+	return buttons;
 };
 
 export default GreenDashboardFilters;

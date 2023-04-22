@@ -15,10 +15,10 @@ import PromiseValue from '../../../base/promise-value';
 import SearchQuery from '../../../base/searchquery';
 import { assert } from '../../../base/utils/assert';
 import { getUrlVars, sum, uniq, yessy } from '../../../base/utils/miscutils';
-import C from '../../../C';
+import C, { searchParamForType, urlParamForType } from '../../../C';
 import ServerIO from '../../../plumbing/ServerIO';
 import { Period, getPeriodFromUrlParams } from '../../../base/utils/date-utils';
-import { getFilterModeId } from './dashUtils';
+import { getFilterTypeId } from './dashUtils';
 
 /**
  * An array of Records ??what are the keys/values??
@@ -72,12 +72,12 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 	const period = urlParams.period;
 	if ( ! period) {
 		console.warn("use getUrlVars() then getPeriodFromUrlParams() then add period!");
-	}
-	let { filterMode, filterId } = getFilterModeId();
+	}	
+	let { filterType, filterId } = getFilterTypeId();
 
 	let failedObject: BaseFiltersFailed = {};
 
-	if (!filterMode) {
+	if ( ! filterType || ! filterId) {
 		failedObject = { type: 'alert', message: 'Select a brand, campaign, or tag to see data.' };
 		return failedObject;
 	}
@@ -87,11 +87,11 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 	// ...but give them the basic filter spec so they stay in sync otherwise
 
 	// Query filter e.g. which brand, campaign, or tag?
-	let q = `${filterMode}:${filterId}`;
+	let q = searchParamForType(filterType)+":"+filterId;
 
 	// HACK: filterMode=brand is twice wrong: the data uses vertiser, and some tags dont carry brand info :(
 	// So do it by an OR over campaign-ids instead.
-	if (filterMode === 'brand') {
+	if (filterType === C.TYPES.Advertiser) {
 		// get the campaigns
 		let sq = SearchQuery.setProp(null, 'vertiser', filterId);
 		const pvAllCampaigns = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUBLISHED, q: sq.query, ids: null, sort: null, start: null, end: null });
@@ -106,7 +106,7 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 		}
 		q = SearchQuery.setPropOr(null, 'campaign', campaignIds!).query;
 	}
-	if (filterMode === 'agency') {
+	if (filterType === C.TYPES.Agency) {
 		// copy pasta of brand above
 		// get the campaigns
 		let sq = SearchQuery.setProp(null, 'agencyId', filterId);
@@ -124,7 +124,7 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 	}
 
 	// HACK: Is this a master campaign? Do we need to cover sub-campaigns?
-	if (filterMode === 'campaign') {
+	if (filterType === C.TYPES.Campaign) {
 		const pvCampaign = getDataItem({ type: C.TYPES.Campaign, id: filterId, status: KStatus.PUB_OR_DRAFT, action: null, swallow: null });
 		if (!pvCampaign.value) {
 			failedObject = { type: 'loading', message: 'Fetching campaigns...' };
@@ -158,6 +158,7 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 
 	return baseFilters;
 };
+
 
 export const getCarbon = ({
 	endpoint,
