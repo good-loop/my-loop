@@ -40,10 +40,12 @@
 	}
 }
 
-.btn-sm {
+.btn-sm {	
+	line-height: 1.2; // Make small well, _smaller_
 	font-size: 0.7875rem;
-	padding: .35rem 1.75rem;
-	@media @width-mobile {
+	white-space: nowrap; // makes for more compact buttons
+	padding: .35rem 1.75rem; // this is more padding
+	@media @width-mobile {	// ??
 		padding: 9px 35px;
 		font-size: 0.6125rem;
 		@media (max-height: 568px) {
