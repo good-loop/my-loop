@@ -17,7 +17,7 @@ import { assert } from '../../../base/utils/assert';
 import { getUrlVars, sum, uniq, yessy } from '../../../base/utils/miscutils';
 import C, { searchParamForType, urlParamForType } from '../../../C';
 import ServerIO from '../../../plumbing/ServerIO';
-import { Period, getPeriodFromUrlParams } from '../../../base/utils/date-utils';
+import { Period, getPeriodFromUrlParams, getTimeZone } from '../../../base/utils/date-utils';
 import { getFilterTypeId } from './dashUtils';
 
 /**
@@ -55,6 +55,10 @@ export type BaseFilters = {
 	fixseed?: boolean;
 	numRow?: string | number;
 	num?: string | number;
+	/**
+	 * bucket timezone
+	 */
+	btz?: string;
 };
 
 export type BaseFiltersFailed = {
@@ -87,7 +91,7 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 	// ...but give them the basic filter spec so they stay in sync otherwise
 
 	// Query filter e.g. which brand, campaign, or tag?
-	let q = searchParamForType(filterType)+":"+filterId;
+	let q = SearchQuery.setProp(null, searchParamForType(filterType), filterId).query;
 
 	// HACK: filterMode=brand is twice wrong: the data uses vertiser, and some tags dont carry brand info :(
 	// So do it by an OR over campaign-ids instead.
@@ -154,6 +158,7 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 		sigfig: urlParams.sigfig?.toString(),
 		nocache: urlParams.nocache,
 		fixseed: true,
+		btz: getTimeZone()
 	};
 
 	return baseFilters;
