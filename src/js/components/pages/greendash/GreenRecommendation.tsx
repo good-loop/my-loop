@@ -28,34 +28,19 @@ interface RangeSliderProps {
 }
 
 
-const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, defaultValue, onChange }) => {
-	useEffect(() => {
-		if (onChange) {
-			onChange(defaultValue);
-		}
-	}, []);
-
+const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, defaultValue, onChange = () => {}, ...props }) => {
 	const [value, setValue] = useState(defaultValue);
 
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const newValue = parseFloat(event.target.value);
-		setValue(newValue);
+	useEffect(() => onChange(defaultValue), [value]);
 
-		if (onChange) {
-			onChange(newValue);
-		}
+	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setValue(parseFloat(event.target.value));
 	};
 
-	return (
-		<>
-			<Row>
-				<Col className="co2-cutoff text-center p-0" style={{ marginLeft: '8.5em' }}>
-					<input className="w-100" type="range" min={min} max={max} step={step} value={value} onChange={handleChange} />
-					<span className="text-nowrap">{value.toPrecision(4)}</span>
-				</Col>
-			</Row>
-		</>
-	);
+	return <div className="cutoff-input" {...props}>
+		<input className="w-100" type="range" min={min} max={max} step={step} value={value} onChange={handleChange} />
+		<span className="value-bubble text-nowrap">{value.toPrecision(4)}</span>
+	</div>;
 };
 
 
@@ -105,10 +90,16 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 			scales: {
 				x: {
 					display: true,
+					// max: Math.ceil(maxCo2),
+					min: 0,
 					title: {
 						display: true,
-						text: 'grams CO2e per impression',
+						text: 'Grams CO2e per impression',
 					},
+					ticks: {
+						stepSize: 0.25, // TODO This won't work in a bar chart - labels are chosen from the dataset labels
+						padding: 25, // make room for overlaid slider
+					}
 				},
 				y: {
 					display: true,
@@ -117,6 +108,9 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 						text: 'Impressions',
 					},
 					bounds: 'ticks',
+					ticks: {
+						callback: printer.prettyInt, // No trailing .0 on impression count!
+					},
 					afterFit: (scaleInstance: { width: number; }) => {
 						scaleInstance.width = 100; // sets the width to 100px
 					}
