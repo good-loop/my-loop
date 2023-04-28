@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1824" height="303" viewBox="0 0 1824 303">
+  <defs>
+    <clipPath id="clip-Curved-line">
+      <rect width="1824" height="303"/>
+    </clipPath>
+  </defs>
+  <g id="Curved-line" clip-path="url(#clip-Curved-line)">
+    <path id="Path_3440" data-name="Path 3440" d="M2633.646,17641.18s431.287,346.141,844.55,79.895,840.3,0,840.3,0" transform="translate(-2564.146 -17560.242)" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="10" opacity="0.423"/>
+  </g>
+</svg>
