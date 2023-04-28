@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Button, Card, Col, Container, Row } from 'reactstrap';
 import Misc from '../../../MiscOverrides';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
-import NewChartWidget from '../../../base/components/NewChartWidget';
+import NewChartWidget, { KScale } from '../../../base/components/NewChartWidget';
 import DataStore from '../../../base/plumbing/DataStore';
-import { getPeriodFromUrlParams, type UrlParamPeriod } from '../../../base/utils/date-utils';
+import { getPeriodFromUrlParams, PeriodFromUrlParams } from '../../../base/utils/date-utils';
 import { getUrlVars } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import Login from '../../../base/youagain';
@@ -12,17 +12,6 @@ import { GLCard } from '../../impact/GLCards';
 import GreenDashboardFilters from './GreenDashboardFilters';
 import { GreenBuckets, emissionsPerImpressions, getBasefilters, getCarbon, type BaseFilters, type BreakdownRow } from './emissionscalcTs';
 import PropControl from '../../../base/components/PropControl';
-
-interface ByDomainValue extends Object {
-	allCount: number;
-	by_domain: { buckets: BreakdownRow[] };
-	probability?: number;
-	seed?: number;
-}
-
-interface ResolvedPromise extends ByDomainValue {
-	sampling?: ByDomainValue;
-}
 
 const TICKS_NUM = 600;
 
@@ -65,12 +54,17 @@ const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, defaultValue,
 };
 
 /**
- *
+ * Note: url param yscale=linear|logarithmic
+ * 
  * @param {Object} p
  * @param {GreenBuckets} p.bucketsPer1000 A DataLog breakdown of carbon emissions. e.g. [{key, co2, count}]
  * @returns
  */
-const RecommendationChart = ({ bucketsPer1000, logarithmic }: { bucketsPer1000: GreenBuckets; logarithmic: boolean }): JSX.Element | null => {
+const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets }): JSX.Element | null => {
+	let logarithmic = true;
+	const yscale= DataStore.getUrlValue("yscale");
+	if (yscale) logarithmic = KScale.islogarithmic(yscale);
+
 	const [chartData, setChartData] = useState<any>();
 
 	useEffect(() => {
@@ -170,14 +164,14 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 		setHighBuckets(highBuckets);
 	}, [selectedCo2]);
 
-	const urlParams: UrlParamPeriod = getUrlVars(null, null);
-	const period = getPeriodFromUrlParams(urlParams);
+	const filterUrlParams = getUrlVars(null, null);
+	const period = getPeriodFromUrlParams(filterUrlParams);
 	if (!period) {
 		return null; // Filter widget will set this on first render - allow it to update
 	}
-	urlParams.period = period;
+	filterUrlParams.period = period; // NB: period is a json object, unlike the other params
 
-	let baseFilters = getBasefilters(urlParams);
+	let baseFilters = getBasefilters(filterUrlParams);
 
 	// BaseFiltersFailed
 	if ('type' in baseFilters && 'message' in baseFilters) {
@@ -258,25 +252,11 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 		);
 	};
 
-	const log = urlParams['scale'];
-
 	return (
-		<GLCard
-			noPadding={null}
-			noMargin={null}
-			modalContent={undefined}
-			modalTitle={undefined}
-			modalHeader={undefined}
-			modalHeaderImg={undefined}
-			modalClassName={undefined}
-			modal={null}
-			modalId={null}
-			modalPrioritize={null}
-			href={null}
-		>
+		<GLCard /* Hm: eslint + ts objects if we don't list every parameter, optional or not - but that makes for verbose code, which isn't good (time-consuming, and hides the real code) 
+		How do we get eslint to be quieter for ts? */>
 			<h3 className='mx-auto'>Use this slider tool to generate block and allow lists based on publisher generated CO2e</h3>
-			{/* @ts-ignore */}
-			<PropControl
+			{/* <PropControl We should pick the display that's best for the users.
 				inline
 				type='toggle'
 				prop='scale'
@@ -284,14 +264,14 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 				label='Chart Scale:'
 				left={{ label: 'Logarithmic', value: 'logarithmic', colour: 'primary' }}
 				right={{ label: 'Linear', value: 'linear', colour: 'primary' }}
-			/>
+			/> */}
 			<Row>
 				<Col xs={3}>
 					<DomainList buckets={lowBuckets} low totalCounts={totalCounts} />
 				</Col>
 				<Col xs={6}>
 					<div className='d-flex flex-column'>
-						<RecommendationChart bucketsPer1000={bucketsPer1000} logarithmic={urlParams.scale === 'logarithmic'} />
+						<RecommendationChart bucketsPer1000={bucketsPer1000} />
 						<RangeSlider {...silderProps} />
 						<h4>Estimated Reduction: {printer.prettyNumber((100 * (weightedAvg - lowWeightedAvg)) / weightedAvg, 2, null)}%</h4>
 					</div>
@@ -382,19 +362,7 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 
 function CreativeRecommendations() {
 	return (
-		<GLCard
-			noPadding={null}
-			noMargin={null}
-			modalContent={undefined}
-			modalTitle={undefined}
-			modalHeader={undefined}
-			modalHeaderImg={undefined}
-			modalClassName={undefined}
-			modal={null}
-			modalId={null}
-			modalPrioritize={null}
-			href={null}
-		>
+		<GLCard>
 			<h3 className='mx-auto'>Optimise Creative Files to Reduce Carbon</h3>
 			<h4>Tips</h4>
 			<p>

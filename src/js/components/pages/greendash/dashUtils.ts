@@ -1,5 +1,7 @@
 
+import C from '../../../C';
 import DataStore from '../../../base/plumbing/DataStore';
+import { assert } from '../../../base/utils/assert';
 
 
 const roundFormat = new Intl.NumberFormat('en-GB', {maximumFractionDigits: 0});
@@ -18,7 +20,7 @@ const smartNumber = (x:number) => {
 	if (x > -10 && x < 10) return oneDigitFormat.format(x);
 	else if (x > -100 && x < 100) return twoDigitFormat.format(x);
 	return roundFormat.format(x);
-}
+};
 
 /**
  * Utility: take a mass in kg and pretty-print in kg or tonnes if it's large enough (raw string)
@@ -64,20 +66,25 @@ export const dataColours = (series, maxColour = dfltMaxColour, minColour = dfltM
 
 /**
  * 
- * @returns {{filterMode:filterMode, filterId:string}}
+ * @returns {{filterType, filterId:string}}
  */
-export const getFilterModeId = () => {
+export const getFilterTypeId = () => {
+	let filterType = DataStore.getUrlValue('ft') as string;
+	if (filterType) {
+		assert(C.TYPES.has(filterType), filterType);
+	}
 	const brandId = DataStore.getUrlValue('brand');
 	const agencyId = DataStore.getUrlValue('agency');
-	const campaignId = DataStore.getUrlValue('campaign');
+	const campaign = DataStore.getUrlValue('campaign');
 	const tagId = DataStore.getUrlValue('tag');
 
-	// What are we going to filter on? ("adid" rather than "tag" because that's what we'll search for in DataLog)
-	// ??shouldn't brand be vertiser??
-	const filterMode = campaignId ? 'campaign' : brandId ? 'brand' : agencyId ? 'agency' : tagId ? 'adid' : null;
+	if ( ! filterType) {
+		filterType = campaign? C.TYPES.Campaign : brandId? C.TYPES.Advertiser : agencyId? C.TYPES.Agency : tagId? C.TYPES.GreenTag : null;
+	}
 	// Get the ID for the object we're filtering for
-	const filterId = { campaign: campaignId, brand: brandId, agency: agencyId, adid: tagId }[filterMode];
-	return {filterMode, filterId};
+	const filterId = {Campaign:campaign, Advertiser:brandId, Agency:agencyId, GreenTag:tagId}[filterType];
+	assert(filterId !== "all");
+	return {filterType, filterId};
 };
 
 /** WIP
@@ -85,7 +92,7 @@ export const getFilterModeId = () => {
  */
 export const getCountryFlag = (isoCode:String) => {
 	console.warn("TODO getCountryFlag");
-}
+};
 
 export const getCountryName = (isoCode:String) => {
 	const onError = () => {
@@ -105,7 +112,7 @@ export const getCountryName = (isoCode:String) => {
 			})
 			.catch(onError);
 	});
-}
+};
 
 
 /** Minimum kg value where we should switch to displaying tonnes instead */
