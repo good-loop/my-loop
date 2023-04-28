@@ -406,6 +406,8 @@ const GetInvolvedCard = () => {
 
 const DonationsCard = ({campaign, brand, impactDebits, charities}) => {
     const donations = impactDebits.map((debit, index) => {
+        const getDate = (dateStr) => {dateStr.substr(0, dateStr.findIndex("T")).split("-")}
+
         const charId = debit.impact.charity;
         const charity = charities.find((c) => c.id === charId)
         if (!charity) return;
@@ -414,6 +416,8 @@ const DonationsCard = ({campaign, brand, impactDebits, charities}) => {
         const logo = charity.logo;
         const displayName = charity.displayName;
         const raised = debit.impact.amountGBP;
+        const startDate = getDate(campaign.created);
+        const endDate = campaign.end ? getDate(campaign.end) : "present";
 
         return (
         <div className='impact-debit' key={index}>
@@ -427,9 +431,14 @@ const DonationsCard = ({campaign, brand, impactDebits, charities}) => {
         )
     })
     return (
-        <div id="donation-details">
-            {donations}
+        <div className='flex flex-column'>
+            <h2 className='text header-text'>{brand.name}'s Campaign{impactDebits.length > 1 ? "s" : ""} With Good-Loop</h2>
+            <p className='text dates'>{startDate} - {endDate}</p>
+            <div id="donation-details">
+                {donations}
+            </div>
         </div>
+
     )
 }
 

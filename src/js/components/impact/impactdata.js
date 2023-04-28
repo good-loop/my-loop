@@ -150,6 +150,7 @@ export const getImpressionsByCampaignByCountry = ({ baseObjects, start = '', end
 	let pvSubCampaigns, subCampaigns;
 	let pvImpactDebits, impactDebits;
 	let pvCharities, charities;
+	let pvStories, stories;
 
 	// Fetch campaign object if specified
 	if (itemType === "campaign") {
