@@ -34,7 +34,7 @@ const allFilterParams = ['period', 'start', 'end', 'tz', 'agency', 'brand', 'cam
 const initPeriod = () => {
 	let period = getPeriodFromUrlParams();
 	if ( ! period) {
-		period = getPeriodQuarter();
+		period = getPeriodQuarter(new Date());
 		modifyPage(null, { period: period.name, start: period.start, end: period.end });
 	}
 	// default to UTC timezone
