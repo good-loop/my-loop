@@ -45,7 +45,7 @@ import { nonce } from '../../base/data/DataClass';
  * @param {setForcedReload} function setter for above state, used within ImpactBrandFilter after changing filters
  * @returns 
  */
-const ImpactLoadingScreen = ({baseObj, forcedReload, setForcedReload}) => {
+const ImpactLoadingScreen = ({baseObj, forcedReload=false, setForcedReload=(el) => {}}) => {
 	
 	const [isPageReady, setIsPageReady] = useState(false)
 	const [isTimerOn, setIsTimerOn] = useState(false)

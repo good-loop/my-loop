@@ -44,19 +44,24 @@ const CampaignImpact = () => {
 
 
     if (pvBaseObjects.error) return <ErrorDisplay e={pvBaseObjects.error} />
-    if (! pvBaseObjects.resolved) return <h1>LOADING STUFF</h1>
+    if (! pvBaseObjects.resolved) return <ImpactLoadingScreen baseObj={pvBaseObjects}/>
 	
     let {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits=[], charities=[]} = pvBaseObjects.value || {};
     masterBrand = masterBrand || brand;
+
+	let totalDonation = Money.total(impactDebits.map(debit => debit?.impact?.amount || new Money(0)));
+	// Returns NaN if impactDebits is an empty array
+	if (isNaN(totalDonation.value)) totalDonation = new Money(0);
+	const totalString = Money.prettyStr(totalDonation);
 
     console.log("lewis: ", {campaign, brand, masterBrand, impactDebits, charities});
     const mainLogo = campaign?.branding?.logo || brand?.branding?.logo;
     return (
         <Container id="ImpactB2C-container">
-            <SplashCard masterBrand={masterBrand} impactDebits={impactDebits} charities={charities} />
+            <SplashCard masterBrand={masterBrand} impactDebits={impactDebits} charities={charities} totalString={totalString}/>
             <BrandLogoRows mainLogo={mainLogo} charities={charities} />
             <PoweredByGL />
-            <HowItWorks campaign={campaign} charities={charities}/>
+            <HowItWorks campaign={campaign} charities={charities} totalString={totalString}/>
             <CardSeperator text={`Here's a Look At What You're Helping\nSupport With ${masterBrand.name}`} />
             <CampaignImpactOne campaign={campaign} brand={brand} logo={mainLogo} charities={charities} impactDebits={impactDebits}/>
             <CampaignImpactTwo campaign={campaign} brand={brand} logo={mainLogo} charities={charities} impactDebits={impactDebits}/>
@@ -78,29 +83,11 @@ const CardSeperator = ({text}) => {
 	)
 } 
 
-const SplashCard = ({masterBrand, impactDebits, charities}) => {
-    impactDebits = impactDebits !== [] ? "123456" : "999999"
+const SplashCard = ({masterBrand, impactDebits, charities, totalString}) => {
     charities = charities !== [] ? "Dogs Trust" : "WWE";
 
     return (
-        <div className='story-card' id='i-splash'>
-
-        {/*<video autoplay loop muted playsinline>
-            <source className="splash-video" src="/img/Impact/arms/earth.webm" type="video/webm" />
-            <source className="splash-video" src="/img/Impact/arms/Arm_1.webm" type="video/webm" />
-            <source className="splash-video" src="/img/Impact/arms/Arm_2.webm" type="video/webm" />
-            <source className="splash-video" src="/img/Impact/arms/Arm_3.webm" type="video/webm" />
-            <source className="splash-video" src="/img/Impact/arms/Arm_4.webm" type="video/webm" />
-            <source className="splash-video" src="/img/Impact/arms/Arm_5.webm" type="video/webm" />
-            <source className="splash-video" src="/img/Impact/arms/Arm_6.webm" type="video/webm" />
-            <source className="splash-video" src="/img/Impact/arms/Arm_7.webm" type="video/webm" />
-            <source className="splash-video" src="/img/Impact/arms/Arm_8.webm" type="video/webm" />
-            <source className="splash-video" src="/img/Impact/arms/Arm_9.webm" type="video/webm" />
-            <source className="splash-video" src="/img/Impact/arms/Arm_10.webm" type="video/webm" />
-            <source className="splash-video" src="/img/Impact/arms/Arm_12.webm" type="video/webm" />
-            <source className="splash-video" src="/img/Impact/arms/Arm_13.webm" type="video/webm" />
-        </video>*/}
-        
+        <div className='story-card' id='i-splash'>        
         <div className='top-text-block'>
             <h2 className='white font-weight-bold'>Thank You</h2>
             <h3 className='white'>For Watching {masterBrand.name} Advert And <br /> Supporting {charities} !</h3>
@@ -108,7 +95,7 @@ const SplashCard = ({masterBrand, impactDebits, charities}) => {
 
         <div id='splash-earth'>
             <p>Together We've Raised:</p>
-            <h2>£{impactDebits}</h2>
+            <h2>£{totalString}</h2>
             <p>And Counting</p>
         </div>
     </div>)
@@ -137,11 +124,13 @@ const PoweredByGL = () => {
 }
 
 
-const HowItWorks = ({campaign, charities}) => {
+const HowItWorks = ({campaign, charities, totalString}) => {
 
     const startDate = campaign.created.substr(0, campaign.created.indexOf("T")).split("-"); // in format 2022-12-16T04:52:53, we don't care about anything after T
     const year = startDate[0].substr(2, 4);
     const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][startDate[1] - 1]
+    const viewcount = Campaign.viewcount({campaign: campaign, status: KStatus.PUBLISHED});
+
     return (
         <div id="how-it-works" className='d-flex flex-column'>
             <div>
@@ -155,7 +144,7 @@ const HowItWorks = ({campaign, charities}) => {
                     <div className='white-circle'>
                         <img src="/img/Impact/this-ad-plants-trees.png" className='fill-img'/>
                     </div>
-                    <p>{month} '{year} Camaign Launches</p>
+                    <p>{month}' {year} Camaign Launches</p>
                     <h3 className='white'>X Is Donated</h3>
                     <p className='text white'>For Every View</p>
                 </div>
@@ -166,7 +155,7 @@ const HowItWorks = ({campaign, charities}) => {
                         <img src="/img/Impact/OurStory_PeopleCrossingRoad.jpg" className='fill-img'/>
                     </div>                    
                     <p>Today</p>
-                    <h3 className='white'>+2.9 Million People</h3>
+                    <h3 className='white'>+{viewcount} People</h3>
                     <p className='text white'>Viewed The Advert So Far</p>
                 </div>
 
@@ -176,7 +165,7 @@ const HowItWorks = ({campaign, charities}) => {
                         <img src={charities[0].headerImage} className='fill-img'/>
                     </div>
                     <p>After the Campagin</p>
-                    <h3 className='white'>£22,030+ In Donations</h3>
+                    <h3 className='white'>£{totalString}+ In Donations</h3>
                     <p className='text white'>Funded By The Advert</p>
                 </div>
             </div>
@@ -190,8 +179,7 @@ const CampaignImpactOne = ({campaign, brand, logo, charities, impactDebits}) => 
     // TODO get this to consider non-cash impact, currently we only care for the cold hard cash a campaign raised (no trees)
     const impact = impactDebits.reduce((acc, cur) => {
         return (cur.impact.amountGBP > acc.amountGBP) ? cur : acc;
-    }, {amountGBP: -1})
-    console.log("YIPPEEE", impact)
+    }, {amountGBP: -1, priority: -1})
 
     // if there's no charities, we can't show anything
     if(!charities || charities.length == 0) return <></>
@@ -199,7 +187,8 @@ const CampaignImpactOne = ({campaign, brand, logo, charities, impactDebits}) => 
 
     // no images in the charity OR not enough OR 
     if(!charity || !charity.imageList || charity.imageList.length < 2) return <></>
-    
+    let fact = false || (charity.imageList.length >= 3 && <img src={charity.imageList[2].contentUrl} alt="charity image 2" style={{width:"100%", height:"100%", objectFit:"cover"}}/>)
+ 
 
     return (
         <div id="campaign-impact-one" className='campaign-impact'>
@@ -388,7 +377,7 @@ const GetInvolvedCard = () => {
                     <button>insta</button>
                 </div>
                 <div id="TAG-cta">
-                    <img className='cta-image' src="/img/Impact/gl-beach.jpg"/>
+                    <img className='cta-image' src="/img/Impact/tabs.png"/>
                     <h2 className='color-gl-muddy-blue'>Browse With Us</h2>
                     <p className='text'>Raise money for your favourite charity for<br />free, simply by opening new tabs</p>
                     <button>Find out more</button>
@@ -405,8 +394,18 @@ const GetInvolvedCard = () => {
 }
 
 const DonationsCard = ({campaign, brand, impactDebits, charities}) => {
+    const getDate = (dateStr) => {
+        let tempDate = dateStr.substr(0, dateStr.split("").findIndex((el) => el === "T")).split("-") // parse date 
+        tempDate[1] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][parseInt(tempDate[1]) - 1]
+        return tempDate.reverse().join(" ") // [YYYY,MM,DD] -> "DD MM YYYY"
+    }
+
+    if(!campaign.created) return <></>
+    let startDate = getDate(campaign.created)
+    
+    const endDate = campaign.end ? getDate(campaign.end) : "present";
+
     const donations = impactDebits.map((debit, index) => {
-        const getDate = (dateStr) => {dateStr.substr(0, dateStr.findIndex("T")).split("-")}
 
         const charId = debit.impact.charity;
         const charity = charities.find((c) => c.id === charId)
@@ -416,8 +415,6 @@ const DonationsCard = ({campaign, brand, impactDebits, charities}) => {
         const logo = charity.logo;
         const displayName = charity.displayName;
         const raised = debit.impact.amountGBP;
-        const startDate = getDate(campaign.created);
-        const endDate = campaign.end ? getDate(campaign.end) : "present";
 
         return (
         <div className='impact-debit' key={index}>
