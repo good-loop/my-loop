@@ -30,13 +30,19 @@ import List from '../../base/data/List';
 import ListLoad from '../../base/components/ListLoad';
 import Campaign from '../../base/data/Campaign';
 import Advertiser from '../../base/data/Advertiser';
+import Advert from '../../base/data/Advert';
 import ImpactLoadingScreen from './ImpactLoadingScreen'
 import Money from '../../base/data/Money';
 import SearchQuery from '../../base/searchquery';
+
+// FIXME overlap
 import { fetchBaseObjects } from './impactdata';
+import { fetchImpactBaseObjects } from '../../base/data/ImpactPageData';
+
 import { ErrorDisplay } from './ImpactComponents';
 import ImpactOverviewPage, {ImpactFilters} from './ImpactOverviewPage';
 import ImpactStatsPage from './ImpactStatsPage';
+
 
 /**
  * DEBUG OBJECTS
@@ -62,9 +68,11 @@ const ImpactPage = () => {
 	const itemType = path[2]
 	const itemId = path[3]
 
-	let pvBaseObjects = DataStore.fetch(['misc','impactBaseObjects',itemType,status,'all',itemId], () => {
+	// FIXME overlapping functions -- need to resolve on one.
+	let pvBaseObjects1 = DataStore.fetch(['misc','impactBaseObjects',itemType,status,'all',itemId], () => {
 		return fetchBaseObjects({itemId, itemType, status});
 	});
+	let pvBaseObjects = fetchImpactBaseObjects({itemId, itemType, status});
 
 	let [pageName, PageContent] = ({
 		view: ["Overview", IMPACT_PAGES.view], 
@@ -94,7 +102,7 @@ const ImpactPage = () => {
 
 	if (pvBaseObjects.error) return <ErrorDisplay e={pvBaseObjects.error} />
 
-	const {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits=[], charities=[]} = pvBaseObjects.value || {};
+	const {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits=[], charities=[], ads=[]} = pvBaseObjects.value || {};
 
 	// Use campaign specific logo if given
 	const mainLogo = campaign?.branding?.logo || brand?.branding?.logo;

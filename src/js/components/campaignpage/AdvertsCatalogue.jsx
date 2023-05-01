@@ -22,9 +22,7 @@ import { assert } from '../../base/utils/assert';
 /**
  * List of adverts with some info about them (like views, dates)
  * @param {Object} p
- * @param {Campaign} p.campaign
- * @param {Advert[]} p.ads filtered list of ads to show
- * @param {Advert[]} p.canonicalAds All ads, unfiltered by the filtering query parameter
+ * @param {Advert[]} p.ads
  * @param {?Boolean} p.noPreviews remove preview carousel
  */
 const AdvertsCatalogue = ({ campaign, ads, canonicalAds, noPreviews, className }) => {
@@ -45,16 +43,16 @@ const AdvertsCatalogue = ({ campaign, ads, canonicalAds, noPreviews, className }
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [animating, setAnimating] = useState(false);
 
-	if (showAds.length === 1) {
+	if (ads.length === 1) {
 		return (<Container>
 			<AdvertCard
-				ad={showAds[0]}
+				ad={ads[0]}
 				active
 			/>
 		</Container>);
 	}
 
-	const carouselSlides = showAds.map((ad, i) =>
+	const carouselSlides = ads.map((ad, i) =>
 		<CarouselItem
 			onExiting={() => setAnimating(true)}
 			onExited={() => setAnimating(false)}
@@ -105,7 +103,7 @@ const AdvertsCatalogue = ({ campaign, ads, canonicalAds, noPreviews, className }
 			{!noPreviews && <>
 				<br />
 				<br />
-				<AdPreviewCarousel ads={showAds} setSelected={goToIndex} selectedIndex={activeIndex} />
+				<AdPreviewCarousel ads={ads} setSelected={goToIndex} selectedIndex={activeIndex} />
 			</>}
 		</Container>
 	</>);
@@ -227,7 +225,6 @@ const AdvertCard = ({ ad, active }) => {
 		extraParams.delivery = "app";
 		extraParams.after = "vanish";
 	}
-	console.log("Extra Params", extraParams);
 
 	useEffect(() => { // activate ad unit once
 		if (active && !hasShown) setHasShown(true);

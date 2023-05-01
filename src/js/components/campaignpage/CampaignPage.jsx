@@ -240,9 +240,8 @@ const CampaignPage = () => {
 	}
 	
 	// set NavBar brand
-	let {type, id} = Campaign.masterFor(campaign);
-	if (type && id) {
-		let pvBrandItem = getDataItem({type, id, status});
+	if (campaign.vertiser) {
+		let pvBrandItem = getDataItem({type:"Advertiser", id:campaign.vertiser, status});
 		let brandItem = pvBrandItem.value;
 		if (brandItem) {
 			setNavProps(brandItem);
@@ -310,11 +309,7 @@ const CampaignPage = () => {
 		description: nvertiserNameNoTrail ? "See " + nvertiserNameNoTrail + "'s impact from Good-Loop ethical advertising" : "See our impact from Good-Loop ethical advertising"
 	};
 
-	let windowTitle = !campaign && "Impact Hub";
-	if (!windowTitle) {
-		if (campaign.master) windowTitle = "Advertiser: " + nvertiserName;
-		else windowTitle = "Campaign: " + campaign.name;
-	}
+	let windowTitle = campaign? "Campaign: " + campaign.name : "Impact Hub";
 	setWindowTitle(windowTitle);
 
 	return <>

@@ -21,7 +21,8 @@ import Misc from '../../base/components/Misc';
 import List from '../../base/data/List';
 import Campaign from '../../base/data/Campaign';
 import Advertiser from '../../base/data/Advertiser';
-import { getImpressionsByCampaignByCountry } from './impactdata';
+import Advert from '../../base/data/Advert';
+import { getImpressionsByCampaignByCountry } from '../../base/data/ImpactPageData';
 import printer from '../../base/utils/printer'
 /**
  * DEBUG OBJECTS
@@ -51,8 +52,7 @@ export class ImpactFilters {
  * 
  * @param {Object} p
  */
-const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, brand, campaign, subBrands, charities, subCampaigns, impactDebits, mainLogo}) => {
-	if (pvBaseObjects.resolved) console.log("base objs:", pvBaseObjects)
+const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, brand, campaign, subBrands, charities, subCampaigns, impactDebits, ads, mainLogo}) => {
 	// TODO refactor to break the code block below into shorter chunks so it's easier to see and edit
 	return (
 	<>
@@ -162,13 +162,13 @@ const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, bra
 							<GLVertical>
 								{campaign && <CountryViewsGLCard basis={10} baseObjects={pvBaseObjects.value}/>}
 								<GLCard
-									modalContent={AdsCatalogueModal}
+									modalContent={() => <AdsCatalogueModal ads={ads}/>}
 									modalId="full-page"
 									modalClassName="ads-catalogue-modal"
 									className="ads-catalogue-card"
 									basis={campaign && 70}
 									>
-										<AdsCatalogueModal noPreviews/>
+										<AdsCatalogueModal noPreviews ads={ads}/>
 								</GLCard>
 								{campaign && <GLCard className="boast" basis={20}>
 									<h2>SUSTAINABLE GOALS</h2>
@@ -426,22 +426,14 @@ const ContentList = () => {
 	</>;
 }
 
-const AdsCatalogueModal = ({noPreviews}) => {
+const AdsCatalogueModal = ({noPreviews, ads}) => {
 
-	const status = KStatus.PUB_OR_ARC;
-	const pvCampaign = getDataItem({type:C.TYPES.Campaign,status,id:TEST_CAMPAIGN});
-	if (!pvCampaign.value) return <Misc.Loading/>
-	const pvAds = Campaign.pvAds({campaign: pvCampaign.value, status});
-	if (!pvAds.value) return <Misc.Loading/>
-
-	const ads = List.hits(pvAds.value) || [];
+	let showAds = ads.filter(ad => !Advert.hideFromShowcase(ad));
+	if (showAds.length === 0) return <h3>No ads yet!</h3>;
 
 	return <>
-		<TODO>which campaign</TODO>
 		<AdvertsCatalogue
-			campaign={pvCampaign.value}
-			ads={ads}
-			canonicalAds={ads} // maybe wrong should be all ads
+			ads={showAds}
 			noPreviews={noPreviews}
 		/>
 	</>;
@@ -634,8 +626,6 @@ const MapCardContent = ({data}) => {
 	const [mapDefs, setMapDefs] = useState(); // JSON object with map paths and meta
 	const [svgEl, setSvgEl] = useState(); // ref to the map SVG to create download button
 	const [error, setError] = useState(); // Problems loading map?
-
-	console.log("found country! ", getCountryName("US"))
 
 	// Fetch the JSON with the map data for the current focus country
 	useEffect(() => {

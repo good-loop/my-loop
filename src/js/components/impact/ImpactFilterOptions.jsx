@@ -21,8 +21,10 @@ const ImpactFilterOptions = ({size, pvBaseObjects, status, setForcedReload, curP
 
 	assert (size == "wide" || size == "thin")
 
+	// psuedo users shouldn't be able to change filters or share & don't have an account, so no point showing any of this component to them
+	if( ! Login.getId() || Login.getId().endsWith("pseudo")) return null;
+
 	const {masterBrand, brand, campaign} = pvBaseObjects.value || {};
-	console.log(masterBrand, brand, campaign)
 
 
 	if(size == "wide") return (		
