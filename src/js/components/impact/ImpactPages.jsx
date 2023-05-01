@@ -37,7 +37,6 @@ import SearchQuery from '../../base/searchquery';
 
 // FIXME overlap
 import { fetchBaseObjects } from './impactdata';
-import { fetchImpactBaseObjects } from '../../base/data/ImpactPageData';
 
 import { ErrorDisplay } from './ImpactComponents';
 import ImpactOverviewPage, {ImpactFilters} from './ImpactOverviewPage';
@@ -72,7 +71,6 @@ const ImpactPage = () => {
 	let pvBaseObjects1 = DataStore.fetch(['misc','impactBaseObjects',itemType,status,'all',itemId], () => {
 		return fetchBaseObjects({itemId, itemType, status});
 	});
-	let pvBaseObjects = fetchImpactBaseObjects({itemId, itemType, status});
 
 	let [pageName, PageContent] = ({
 		view: ["Overview", IMPACT_PAGES.view], 

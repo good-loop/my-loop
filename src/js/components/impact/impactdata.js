@@ -137,6 +137,7 @@ export const getImpressionsByCampaignByCountry = ({ baseObjects, start = '', end
 
 
 /**
+ * NB: async - returns a promise
  * 
  * @param {*} param0 
  * @returns {Object} {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits, charities}
