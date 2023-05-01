@@ -183,59 +183,49 @@ const DomainList = ({ low, buckets, totalCounts }: { low?: boolean; buckets?: Gr
 	const cutoffIcon = <div className='cutoff-icon'>{low ? tickSvg : crossSvg}</div>;
 
 	return (
-		<GLCard
-			className={`domain-list ${low ? 'allow' : 'block'}`}
-			noPadding
-			noMargin={null}
-			modalContent={undefined}
-			modalTitle={undefined}
-			modalHeader={undefined}
-			modalHeaderImg={undefined}
-			modalClassName={undefined}
-			modal={null}
-			modalId={null}
-			modalPrioritize={null}
-			href={null}
-		>
-			<CardHeader className='domain-list-title p-2'>
-				<h4 className='m-0'>Suggested {low ? 'Allow' : 'Block'} List</h4>
-			</CardHeader>
-			<CardBody className='flex-column p-0'>
-				<div className='cutoff-header p-4'>
-					<h5 className='cutoff-label'>
-						{/* low ? 'Maximum' : 'Minimum'*/} {CO2e} emissions per impression
-					</h5>
-					<div className='cutoff-value'>
-						{cutoffIcon}
-						<span className='cutoff-number ml-2'>{low ? <>&le;</> : <>&gt;</>}1.182g</span>
+		<>
+			{/* @ts-ignore */}
+			<GLCard className={`domain-list ${low ? 'allow' : 'block'}`} noPadding>
+				<CardHeader className='domain-list-title p-2'>
+					<h4 className='m-0'>Suggested {low ? 'Allow' : 'Block'} List</h4>
+				</CardHeader>
+				<CardBody className='flex-column p-0'>
+					<div className='cutoff-header p-4'>
+						<h5 className='cutoff-label'>
+							{/* low ? 'Maximum' : 'Minimum'*/} {CO2e} emissions per impression
+						</h5>
+						<div className='cutoff-value'>
+							{cutoffIcon}
+							<span className='cutoff-number ml-2'>{low ? <>&le;</> : <>&gt;</>}1.182g</span>
+						</div>
 					</div>
-				</div>
-				<div className='domain-stats flex-row mx-1 p-1'>
-					<div className='domain-stat'>
-						<div className='stat-name'>Domains</div>
-						<div className='stat-value'>{domainsList.length || '-'}</div>
+					<div className='domain-stats flex-row mx-1 p-1'>
+						<div className='domain-stat'>
+							<div className='stat-name'>Domains</div>
+							<div className='stat-value'>{domainsList.length || '-'}</div>
+						</div>
+						<div className='domain-stat'>
+							<div className='stat-name'>Impressions</div>
+							<div className='stat-value'>{printer.prettyNumber(volumePercentage, 2, null)}%</div>
+						</div>
+						<div className='domain-stat'>
+							<div className='stat-name'>{CO2e} per</div>
+							<div className='stat-value'>{printer.prettyNumber(avgCo2, 3, null)}g</div>
+						</div>
 					</div>
-					<div className='domain-stat'>
-						<div className='stat-name'>Impressions</div>
-						<div className='stat-value'>{printer.prettyNumber(volumePercentage, 2, null)}%</div>
-					</div>
-					<div className='domain-stat'>
-						<div className='stat-name'>{CO2e} per</div>
-						<div className='stat-value'>{printer.prettyNumber(avgCo2, 3, null)}g</div>
-					</div>
-				</div>
-				<ul className='domain-list-preview m-0 px-4'>
-					{domainsList.map((val, index) => (
-						<li key={index}>{val}</li>
-					))}
-				</ul>
-			</CardBody>
-			<CardFooter className='csv-block flex-column align-items-center'>
-				{cutoffIcon}
-				Use as {low ? 'an allow' : 'a block'}-list in your DSP
-				<Button onClick={() => downloadCSV(domainsList)}>Download CSV</Button>
-			</CardFooter>
-		</GLCard>
+					<ul className='domain-list-preview m-0 px-4'>
+						{domainsList.map((val, index) => (
+							<li key={index}>{val}</li>
+						))}
+					</ul>
+				</CardBody>
+				<CardFooter className='csv-block flex-column align-items-center'>
+					{cutoffIcon}
+					Use as {low ? 'an allow' : 'a block'}-list in your DSP
+					<Button onClick={() => downloadCSV(domainsList)}>Download CSV</Button>
+				</CardFooter>
+			</GLCard>
+		</>
 	);
 };
 
@@ -259,7 +249,7 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 	}, [selectedCo2]);
 
 	interface FitlerUrlParams extends Object {
-		period?: any
+		period?: any;
 	}
 
 	const filterUrlParams = getUrlVars(null, null) as FitlerUrlParams;
@@ -313,73 +303,49 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 	let reductionPercent = ((100 * (weightedAvg - lowWeightedAvg)) / weightedAvg).toFixed(1);
 
 	return (
-		<GLCard
-			className='publisher-recommendations'
-			noPadding={null}
-			noMargin={null}
-			modalContent={undefined}
-			modalTitle={undefined}
-			modalHeader={undefined}
-			modalHeaderImg={undefined}
-			modalClassName={undefined}
-			modal={null}
-			modalId={null}
-			modalPrioritize={null}
-			href={null}
-		>
-			{/* Hm: eslint + ts objects if we don't list every parameter, optional or not - but that makes for verbose code, which isn't good (time-consuming, and hides the real code) 
-			How do we get eslint to be quieter for ts? */}
-			<h3 className='mx-auto'>
-				Use the slider on the graph below to generate allow and block lists based on publisher generated CO<sub>2</sub>e
-			</h3>
-			<Row>
-				<Col xs={3} className='px-0'>
-					<DomainList buckets={lowBuckets} low totalCounts={totalCounts} />
-				</Col>
-				<Col xs={6} className='px-0'>
-					<GLCard
-						className='generator d-flex flex-column'
-						noPadding
-						noMargin={null}
-						modalContent={undefined}
-						modalTitle={undefined}
-						modalHeader={undefined}
-						modalHeaderImg={undefined}
-						modalClassName={undefined}
-						modal={null}
-						modalId={null}
-						modalPrioritize={null}
-						href={null}
-					>
-						<CardHeader className='generator-title p-2'>
-							<h4 className='m-0'>Allow and Block list generator</h4>
-						</CardHeader>
-						<CardBody>
-							{/* @ts-ignore */}
-							{/* We should pick the display that's best for the users.
+		<>
+			{/* @ts-ignore */}
+			<GLCard className='publisher-recommendations'>
+				<h3 className='mx-auto'>
+					Use the slider on the graph below to generate allow and block lists based on publisher generated CO<sub>2</sub>e
+				</h3>
+				<Row>
+					<Col xs={3} className='px-0'>
+						<DomainList buckets={lowBuckets} low totalCounts={totalCounts} />
+					</Col>
+					<Col xs={6} className='px-0'>
+						{/* @ts-ignore */}
+						<GLCard className='generator d-flex flex-column' noPadding>
+							<CardHeader className='generator-title p-2'>
+								<h4 className='m-0'>Allow and Block list generator</h4>
+							</CardHeader>
+							<CardBody>
+								{/* @ts-ignore */}
+								{/* We should pick the display that's best for the users.
 							<PropControl inline type="toggle" prop="scale" dflt="logarithmic" label="Chart Scale:"
 								left={{ label: 'Logarithmic', value: 'logarithmic', colour: 'primary' }}
 								right={{ label: 'Linear', value: 'linear', colour: 'primary' }}
 							/> */}
-							<RecommendationChart bucketsPer1000={bucketsPer1000} />
-							<RangeSlider {...sliderProps} />
-						</CardBody>
-						<CardFooter>
-							<h4>Estimated Reduction</h4>
-							<h4 className='reduction-number ml-4'>{reductionPercent}%</h4>
-						</CardFooter>
-					</GLCard>
-				</Col>
-				<Col xs={3} className='px-0'>
-					<DomainList buckets={highBuckets} totalCounts={totalCounts} />
-				</Col>
-			</Row>
-			<p className='mt-2'>
-				These lists are based on observed data within the current filters. <br />
-				We also have general publisher lists available for use. Please contact{' '}
-				<a href='mailto:support@good-loop.com?subject=Carbon%20reducttion%20publisher%20lists'>support@good-loop.com</a> for information.
-			</p>
-		</GLCard>
+								<RecommendationChart bucketsPer1000={bucketsPer1000} />
+								<RangeSlider {...sliderProps} />
+							</CardBody>
+							<CardFooter>
+								<h4>Estimated Reduction</h4>
+								<h4 className='reduction-number ml-4'>{reductionPercent}%</h4>
+							</CardFooter>
+						</GLCard>
+					</Col>
+					<Col xs={3} className='px-0'>
+						<DomainList buckets={highBuckets} totalCounts={totalCounts} />
+					</Col>
+				</Row>
+				<p className='mt-2'>
+					These lists are based on observed data within the current filters. <br />
+					We also have general publisher lists available for use. Please contact{' '}
+					<a href='mailto:support@good-loop.com?subject=Carbon%20reducttion%20publisher%20lists'>support@good-loop.com</a> for information.
+				</p>
+			</GLCard>
+		</>
 	);
 };
 
@@ -455,38 +421,28 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 
 function CreativeRecommendations() {
 	return (
-		<GLCard
-			className={null}
-			noPadding={null}
-			noMargin={null}
-			modalContent={undefined}
-			modalTitle={undefined}
-			modalHeader={undefined}
-			modalHeaderImg={undefined}
-			modalClassName={undefined}
-			modal={null}
-			modalId={null}
-			modalPrioritize={null}
-			href={null}
-		>
-			<h3 className='mx-auto'>Optimise Creative Files to Reduce Carbon</h3>
-			<h4>Tips</h4>
-			<p>
-				These tips can require special tools to apply. We are working on automated self-service web tools to make this easy. Meanwhile - email us and we can
-				help.
-			</p>
-			<ul>
-				<li>Use .webp format instead of .png. webp is a more modern format which can do compression and transparency.</li>
-				<li>Optimise fonts. Often a whole font will be included when just a few letters are needed.</li>
-				<li>Sometimes replacing a font with an svg can further reduce the creative weight.</li>
-				<li>Use .webm format for videos. It can get better compression.</li>
-				<li>Replace GIFs. Embedded video (e.g. .webm or .mp4) is better for animations, and .webp is better for static images.</li>
-				<li>Strip down large javascript libraries. Often a whole animation library is included when only a snippet is used.</li>
-			</ul>
-			<p className='dev-only'>
-				We are developing a tool for analysing ads: the <a href={'https://portal.good-loop.com/#measure'}>Low Carbon Creative Tool</a>
-			</p>
-		</GLCard>
+		<>
+			{/* @ts-ignore */}
+			<GLCard>
+				<h3 className='mx-auto'>Optimise Creative Files to Reduce Carbon</h3>
+				<h4>Tips</h4>
+				<p>
+					These tips can require special tools to apply. We are working on automated self-service web tools to make this easy. Meanwhile - email us and we can
+					help.
+				</p>
+				<ul>
+					<li>Use .webp format instead of .png. webp is a more modern format which can do compression and transparency.</li>
+					<li>Optimise fonts. Often a whole font will be included when just a few letters are needed.</li>
+					<li>Sometimes replacing a font with an svg can further reduce the creative weight.</li>
+					<li>Use .webm format for videos. It can get better compression.</li>
+					<li>Replace GIFs. Embedded video (e.g. .webm or .mp4) is better for animations, and .webp is better for static images.</li>
+					<li>Strip down large javascript libraries. Often a whole animation library is included when only a snippet is used.</li>
+				</ul>
+				<p className='dev-only'>
+					We are developing a tool for analysing ads: the <a href={'https://portal.good-loop.com/#measure'}>Low Carbon Creative Tool</a>
+				</p>
+			</GLCard>
+		</>
 	);
 }
 
