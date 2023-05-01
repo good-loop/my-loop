@@ -407,7 +407,7 @@ export const emissionsPerImpressions = (buckets: GreenBuckets, filterLessThan: n
  * Possbile refactor @see {@link calculateDynamicOffsetAsync} (Need more testing)
  * @returns null if loading data
  */
-export const calculateDynamicOffset = (campaign: Campaign, offset: Impact, period: Period|null): Impact | null => {
+const calculateDynamicOffset = (campaign: Campaign, offset: Impact, period: Period|null): Impact | null => {
 	Campaign.assIsa(campaign, null);
 	assert(Impact.isDynamic(offset), campaign); // paranoia
 
@@ -450,9 +450,11 @@ export const calculateDynamicOffset = (campaign: Campaign, offset: Impact, perio
 
 
 /**
+ * How does this relate to getFixedOffsetsForCampaign??
+ * 
  * fraction by period, or all
  */
-export const calculateFixedOffset = (impactDebit: ImpactDebit, period: Period|null): Impact | null => {
+const calculateFixedOffset = (impactDebit: ImpactDebit, period: Period|null): Impact | null => {
 	ImpactDebit.assIsa(impactDebit);
 	// We either want carbon emissions or impressions count for this campaign/period - this gets both
 	if ( ! period) {		
