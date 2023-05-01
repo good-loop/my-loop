@@ -148,6 +148,19 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 const tickSvg = <svg version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="m25 55 13 13 35-38" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="7"/></svg>;
 const crossSvg = <svg version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="7"><path d="m26 26 48 48"/><path d="m74 26-48 48"/></g></svg>;
 
+const downloadCSV = (data?: string[]) => {
+	if (!data) return;
+	const csv = data.join('\n');
+	const blob = new Blob([csv], { type: 'text/csv' });
+	const url = URL.createObjectURL(blob);
+	const a = document.createElement('a');
+	a.href = url;
+	a.download = 'data.csv';
+	document.body.appendChild(a);
+	a.click();
+	document.body.removeChild(a);
+	URL.revokeObjectURL(url);
+};
 
 const DomainList = ({ low, buckets, totalCounts }: { low?: boolean; buckets?: GreenBuckets; totalCounts: number }): JSX.Element => {
 	if (!buckets) return <></>;
@@ -264,20 +277,6 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 	});
 	lowWeightedAvg = lowImps ? lowWeightedAvg / lowImps : 0;
 	const weightedAvg = bucketsPer1000.reduce((acc, bucket) => acc + (bucket.count as number) * (bucket.co2 as number), 0) / totalCounts;
-
-	const downloadCSV = (data?: string[]) => {
-		if (!data) return;
-		const csv = data.join('\n');
-		const blob = new Blob([csv], { type: 'text/csv' });
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement('a');
-		a.href = url;
-		a.download = 'data.csv';
-		document.body.appendChild(a);
-		a.click();
-		document.body.removeChild(a);
-		URL.revokeObjectURL(url);
-	};
 
 	let reductionPercent = ((100 * (weightedAvg - lowWeightedAvg)) / weightedAvg).toFixed(1);
 
