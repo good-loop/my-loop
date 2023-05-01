@@ -166,15 +166,15 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 	};
 	const {period,start,end,tz,brand,campaign,tag,agency} = urlValues;
 	
-	/**
-	 * @param {Period} period 
-	 */
-	const setPeriodFilters = (period) => {
-		console.warn("setPeriodFilters", period);
-		DataStore.setUrlValue("start", period.start);
-		DataStore.setUrlValue("end", period.end);
-		DataStore.setUrlValue("period", period.name);
-	}
+	// /**
+	//  * @param {Period} period 
+	//  */
+	// const setPeriodFilters = (period) => {
+	// 	console.warn("setPeriodFilters", period);
+	// 	DataStore.setUrlValue("start", period.start);
+	// 	DataStore.setUrlValue("end", period.end);
+	// 	DataStore.setUrlValue("period", period.name);
+	// }
 
 	// Items to populate the filter-by-[agency, brand, campaign, tag] dropdown
 	const [filterItems, setFilterItems] = useState([]);
@@ -246,8 +246,7 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 							</DropdownItem>
 								<DropdownItem divider />
 								{/* <DateRangeWidget dflt={periodObj} onChange={setPeriodFilters} /> */}
-								<PropControlPeriod className="p-2" dflt={periodObj} saveFn={setPeriodFilters} 
-									buttons={"yesterday this-month last-month".split(" ")}/>
+								<PropControlPeriod className="p-2" dflt={periodObj} buttons={"yesterday this-month last-month".split(" ")}/>
 							</DropdownMenu>
 						</UncontrolledDropdown>
 
