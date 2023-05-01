@@ -74,7 +74,7 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 		const percentageBuckets: typeof scaledBuckets[] = Array.from({ length: TICKS_NUM / 3 }, () => []);
 		scaledBuckets.forEach((row) => {
 			const percentageKey = Math.max(row.percentage, 1) - 1;
-			percentageBuckets[percentageKey].push(row);
+			if (percentageBuckets && percentageBuckets[percentageKey]) percentageBuckets[percentageKey].push(row);
 		});
 
 		const dataLabels = percentageBuckets.map((row) =>
