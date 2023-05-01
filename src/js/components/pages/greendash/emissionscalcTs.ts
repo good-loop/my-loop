@@ -403,8 +403,10 @@ export const emissionsPerImpressions = (buckets: GreenBuckets, filterLessThan: n
 };
 
 /**
+ * FIXME How does this relate to calculateFixedOffset()??
+ * FIXME How does this relate to getFixedOffsetsForCampaign() in the master branch??
+ * 
  * Why not use Promise? Returing null when loading is very hard to handle.
- * Possbile refactor @see {@link calculateDynamicOffsetAsync} (Need more testing)
  * @returns null if loading data
  */
 export const calculateDynamicOffset = (campaign: Campaign, offset: Impact, period: Period|null): Impact | null => {
@@ -450,6 +452,10 @@ export const calculateDynamicOffset = (campaign: Campaign, offset: Impact, perio
 
 
 /**
+ * 
+ * FIXME How does this relate to calculateFixedOffset()??
+ * FIXME How does this relate to getFixedOffsetsForCampaign() in the master branch??
+ * 
  * fraction by period, or all
  */
 export const calculateFixedOffset = (impactDebit: ImpactDebit, period: Period|null): Impact | null => {
@@ -482,6 +488,7 @@ export const calculateFixedOffset = (impactDebit: ImpactDebit, period: Period|nu
 	snapshotOffset.end = period?.end;
 	return snapshotOffset;
 };
+
 
 type OffSets4Type = {
 	isLoading: boolean;
