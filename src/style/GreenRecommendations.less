@@ -1,0 +1,126 @@
+#greendash .publisher-recommendations {
+
+	@allow-card-color: #7eb58e;
+	@block-card-color: #707070;
+	@generator-card-color: #2f5d64;
+	@footer-color: #eff3f5;
+	
+	// Style the slider to match the chart
+	.co2-cutoff input {
+		// appearance: none;
+	
+	
+	}
+	
+	.co2-cutoff input[type='range']::-webkit-slider-runnable-track, .co2-cutoff input[type='range']::-moz-range-track {
+		background: fuchsia;
+		height: 0.5em;
+		border: 1px solid black;
+	}
+	
+	.co2-cutoff input[type='range']::-webkit-slider-thumb, .co2-cutoff input[type='range']::-moz-range-thumb {
+		// appearance: none;
+		width: 1em;
+		height: 1em;
+		border-radius: 50%;
+		background: fuchsia;
+	}
+
+	/* Common styling for all 3 cards */
+	.domain-list, .generator {
+		.card-header {
+			color: white;
+			text-align: center;
+		}
+		.card-footer {
+			border-top: none;
+			background-color: @footer-color;
+		}
+	}
+
+	/* The centre card with the generator controls */
+	.generator {
+		.card-header {
+			background-color: @generator-card-color;
+		}
+		.card-footer {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.reduction-number {
+			font-size: 300%;
+		}
+	}
+	
+	/* The side cards showing the sets of blocked/allowed domains*/
+	.domain-list {
+		// set up borders etc (block/allow-specific colours set in &.allow and &.block below)
+		.domain-stats {
+			border-top: 0.25rem solid #fff;
+			border-bottom: 0.25rem solid #fff;
+			.domain-stat {
+				padding: 0.5rem 1rem;
+				flex-grow: 1; // fill row
+				line-height: 1.75;
+				&:not(:first-child) {
+					border-left: 2px solid silver;
+				}
+			}
+			.stat-value {
+				font-weight: 600;
+			}
+		}
+	
+		.cutoff-value {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			font-size: 1.5rem;
+			font-weight: 600;
+		}
+		.cutoff-icon {
+			color: white;
+			display: inline-flex;
+			height: 2.5rem;
+			width: 2.5rem;
+			border-radius: 50%;
+		}
+	
+		// The scrollable list of domains
+		.domain-list-preview {
+			max-height: 15em;
+			overflow: clip scroll;
+			list-style-type: none;
+			font-weight: 600;
+			line-height: 1.75;
+			flex-grow: 1; // Expand to fill height if not naturally long enough
+			:last-child {
+				margin-bottom: 0.5em;
+			}
+		}
+		
+		&.allow {
+			.domain-list-title, .cutoff-icon {
+				background-color: @allow-card-color;
+			}
+			.cutoff-number {
+				color: @allow-card-color;
+			}
+			.domain-stats {
+				border-color: @allow-card-color;
+			}
+		}
+		&.block {
+			.domain-list-title, .cutoff-icon {
+				background-color: @block-card-color;
+			}
+			.cutoff-number {
+				color: @block-card-color;
+			}
+			.domain-stats {
+				border-color: @block-card-color;
+			}
+		}
+	}
+}

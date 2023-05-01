@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, Card, Col, Container, Row } from 'reactstrap';
+import { Alert, Button, Card, CardBody, CardFooter, CardHeader, Col, Container, Row } from 'reactstrap';
 import Misc from '../../../MiscOverrides';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import NewChartWidget, { KScale } from '../../../base/components/NewChartWidget';
@@ -13,7 +13,11 @@ import GreenDashboardFilters from './GreenDashboardFilters';
 import { GreenBuckets, emissionsPerImpressions, getBasefilters, getCarbon, type BaseFilters, type BreakdownRow } from './emissionscalcTs';
 import PropControl from '../../../base/components/PropControl';
 
+import '../../../../style/GreenRecommendations.less';
+import { CO2e } from './GreenDashUtils';
+
 const TICKS_NUM = 600;
+
 
 interface RangeSliderProps {
 	min: number;
@@ -23,35 +27,22 @@ interface RangeSliderProps {
 	onChange?: (value: number) => void;
 }
 
-const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, defaultValue, onChange }) => {
-	useEffect(() => {
-		if (onChange) {
-			onChange(defaultValue);
-		}
-	}, []);
 
+const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, defaultValue, onChange = () => {}, ...props }) => {
 	const [value, setValue] = useState(defaultValue);
 
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const newValue = parseFloat(event.target.value);
-		setValue(newValue);
+	useEffect(() => onChange(defaultValue), [value]);
 
-		if (onChange) {
-			onChange(newValue);
-		}
+	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setValue(parseFloat(event.target.value));
 	};
 
-	return (
-		<>
-			<Row>
-				<Col className='text-center p-0' style={{ marginLeft: '8.5em' }}>
-					<input className='w-100' type='range' min={min} max={max} step={step} value={value} onChange={handleChange} />
-					<span className='text-nowrap'>{value.toPrecision(4)}</span>
-				</Col>
-			</Row>
-		</>
-	);
+	return <div className="cutoff-input" {...props}>
+		<input className="w-100" type="range" min={min} max={max} step={step} value={value} onChange={handleChange} />
+		<span className="value-bubble text-nowrap">{value.toPrecision(4)}</span>
+	</div>;
 };
+
 
 /**
  * Note: url param yscale=linear|logarithmic
@@ -99,10 +90,16 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 			scales: {
 				x: {
 					display: true,
+					// max: Math.ceil(maxCo2),
+					min: 0,
 					title: {
 						display: true,
-						text: 'grams CO2e per impression',
+						text: 'Grams CO2e per impression',
 					},
+					ticks: {
+						stepSize: 0.25, // TODO This won't work in a bar chart - labels are chosen from the dataset labels
+						padding: 25, // make room for overlaid slider
+					}
 				},
 				y: {
 					display: true,
@@ -111,6 +108,9 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 						text: 'Impressions',
 					},
 					bounds: 'ticks',
+					ticks: {
+						callback: printer.prettyInt, // No trailing .0 on impression count!
+					},
 					afterFit: (scaleInstance: { width: number; }) => {
 						scaleInstance.width = 100; // sets the width to 100px
 					}
@@ -145,6 +145,60 @@ const RecommendationChart = ({ bucketsPer1000 }: { bucketsPer1000: GreenBuckets 
 	);
 };
 
+const tickSvg = <svg version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="m25 55 13 13 35-38" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="7"/></svg>;
+const crossSvg = <svg version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="7"><path d="m26 26 48 48"/><path d="m74 26-48 48"/></g></svg>;
+
+
+const DomainList = ({ low, buckets, totalCounts }: { low?: boolean; buckets?: GreenBuckets; totalCounts: number }): JSX.Element => {
+	if (!buckets) return <></>;
+	const domainsList = buckets.map((val) => val.key as string);
+	const totalImpressions = buckets.reduce((acc, cur) => acc + (cur.count as number), 0);
+	const totalCo2 = buckets.reduce((acc, cur) => acc + (cur.co2 as number), 0);
+	const avgCo2 = totalCo2 / domainsList.length;
+	const volumePercentage = (totalImpressions / totalCounts) * 100;
+
+	const cutoffIcon = <div className="cutoff-icon">{low ? tickSvg : crossSvg}</div>;
+
+	return (
+		<GLCard className={`domain-list ${low ? 'allow' : 'block'}`} noPadding>
+			<CardHeader className="domain-list-title p-2">
+				<h4 className="m-0">Suggested {low ? 'Allow' : 'Block'} List</h4>
+			</CardHeader>
+			<CardBody className="flex-column p-0">
+				<div className="cutoff-header p-4">
+					<h5 className="cutoff-label">{/* low ? 'Maximum' : 'Minimum'*/} {CO2e} emissions per impression</h5>
+					<div className="cutoff-value">{cutoffIcon}<span className="cutoff-number ml-2">{low ? <>&le;</> : <>&gt;</>}1.182g</span></div>
+				</div>
+				<div className="domain-stats flex-row mx-1 p-1">
+					<div className="domain-stat">
+						<div className="stat-name">Domains</div>
+						<div className="stat-value">{domainsList.length || '-'}</div>
+					</div>
+					<div className="domain-stat">
+						<div className="stat-name">Impressions</div>
+						<div className="stat-value">{printer.prettyNumber(volumePercentage, 2, null)}%</div>
+					</div>
+					<div className="domain-stat">
+						<div className="stat-name">{CO2e} per</div>
+						<div className="stat-value">{printer.prettyNumber(avgCo2, 3, null)}g</div>
+					</div>
+				</div>
+				<ul className="domain-list-preview m-0 px-4">
+					{domainsList.map((val, index) => (
+						<li key={index}>{val}</li>
+					))}
+				</ul>
+			</CardBody>
+			<CardFooter className="csv-block flex-column align-items-center">
+				{cutoffIcon}
+				Use as {low ? 'an allow' : 'a block'}-list in your DSP
+				<Button onClick={() => downloadCSV(domainsList)}>Download CSV</Button>
+			</CardFooter>
+		</GLCard>
+	);
+};
+
+
 /**
  * Publisher lists
  * @returns
@@ -176,7 +230,7 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 	// BaseFiltersFailed
 	if ('type' in baseFilters && 'message' in baseFilters) {
 		if (baseFilters.type === 'alert') {
-			return <Alert color='info'>{baseFilters.message}</Alert>;
+			return <Alert color="info">{baseFilters.message}</Alert>;
 		}
 		if (baseFilters.type === 'loading') {
 			return <Misc.Loading text={baseFilters.message!} pv={null} inline={null} />;
@@ -200,11 +254,10 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 	const minCo2 = Math.min(...co2s);
 	const middleCo2 = ((maxCo2 - minCo2) * 1) / 2;
 	const steps = (maxCo2 - minCo2) / TICKS_NUM; // How large is a tick
-	const silderProps: RangeSliderProps = { min: minCo2 * 1, max: maxCo2 * 1, step: steps, defaultValue: middleCo2, onChange: setSelectedCo2 };
+	const sliderProps: RangeSliderProps = { min: minCo2 * 1, max: maxCo2 * 1, step: steps, defaultValue: middleCo2, onChange: setSelectedCo2 };
 
 	// what weight of impressions is included?
-	let lowImps = 0,
-		lowWeightedAvg = 0;
+	let lowImps = 0, lowWeightedAvg = 0;
 	lowBuckets?.forEach((bucket) => {
 		lowImps += bucket.count as number;
 		lowWeightedAvg += (bucket.count as number) * (bucket.co2 as number);
@@ -226,64 +279,49 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 		URL.revokeObjectURL(url);
 	};
 
-	const DomainList = ({ low, buckets, totalCounts }: { low?: boolean; buckets?: GreenBuckets; totalCounts: number }): JSX.Element => {
-		if (!buckets) return <></>;
-		const domainsList = buckets.map((val) => val.key as string);
-		const totalImpressions = buckets.reduce((acc, cur) => acc + (cur.count as number), 0);
-		const totalCo2 = buckets.reduce((acc, cur) => acc + (cur.co2 as number), 0);
-		const avgCo2 = totalCo2 / domainsList.length;
-		const volumePercentage = (totalImpressions / totalCounts) * 100;
-		return (
-			<>
-				<h4>{low ? 'Low' : 'High'}-Carbon</h4>
-				<div>{domainsList.length || '-'} domains</div>
-				<div>{printer.prettyNumber(volumePercentage, 2, null)}% by volume</div>
-				<div>Average: {printer.prettyNumber(avgCo2, 3, null)} grams CO2e</div>
-				<div style={{ maxHeight: '15em', overflowY: 'scroll', overflowX: 'clip' }}>
-					<ul>
-						{domainsList.map((val, index) => (
-							<li key={index}>{val}</li>
-						))}
-					</ul>
-				</div>
-				<Button onClick={() => downloadCSV(domainsList)}>Download CSV</Button>
-				<div>Use as {low ? 'an allow' : 'a block'}-list in your DSP</div>
-			</>
-		);
-	};
+	let reductionPercent = ((100 * (weightedAvg - lowWeightedAvg)) / weightedAvg).toFixed(1);
+
 
 	return (
-		<GLCard /* Hm: eslint + ts objects if we don't list every parameter, optional or not - but that makes for verbose code, which isn't good (time-consuming, and hides the real code) 
-		How do we get eslint to be quieter for ts? */>
-			<h3 className='mx-auto'>Use this slider tool to generate block and allow lists based on publisher generated CO2e</h3>
-			{/* <PropControl We should pick the display that's best for the users.
-				inline
-				type='toggle'
-				prop='scale'
-				dflt='logarithmic'
-				label='Chart Scale:'
-				left={{ label: 'Logarithmic', value: 'logarithmic', colour: 'primary' }}
-				right={{ label: 'Linear', value: 'linear', colour: 'primary' }}
-			/> */}
+		<GLCard className="publisher-recommendations">
+			{/* Hm: eslint + ts objects if we don't list every parameter, optional or not - but that makes for verbose code, which isn't good (time-consuming, and hides the real code) 
+			How do we get eslint to be quieter for ts? */}
+			<h3 className="mx-auto">Use the slider on the graph below to generate allow and block lists based on publisher generated CO<sub>2</sub>e</h3>
 			<Row>
-				<Col xs={3}>
+				<Col xs={3} className="px-0">
 					<DomainList buckets={lowBuckets} low totalCounts={totalCounts} />
 				</Col>
-				<Col xs={6}>
-					<div className='d-flex flex-column'>
-						<RecommendationChart bucketsPer1000={bucketsPer1000} />
-						<RangeSlider {...silderProps} />
-						<h4>Estimated Reduction: {printer.prettyNumber((100 * (weightedAvg - lowWeightedAvg)) / weightedAvg, 2, null)}%</h4>
-					</div>
+				<Col xs={6} className="px-0">
+					<GLCard className="generator d-flex flex-column" noPadding>
+						<CardHeader className="generator-title p-2">
+							<h4 className="m-0">Allow and Block list generator</h4>
+						</CardHeader>
+						<CardBody>
+							{/* @ts-ignore */}
+							{/* We should pick the display that's best for the users.
+							<PropControl inline type="toggle" prop="scale" dflt="logarithmic" label="Chart Scale:"
+								left={{ label: 'Logarithmic', value: 'logarithmic', colour: 'primary' }}
+								right={{ label: 'Linear', value: 'linear', colour: 'primary' }}
+							/> */}
+							<RecommendationChart bucketsPer1000={bucketsPer1000} />
+							<RangeSlider {...sliderProps} />
+						</CardBody>
+						<CardFooter>
+							<h4>Estimated Reduction</h4>
+							<h4 className="reduction-number ml-4">
+								{reductionPercent}%
+							</h4>
+						</CardFooter>
+					</GLCard>
 				</Col>
-				<Col xs={3}>
+				<Col xs={3} className="px-0">
 					<DomainList buckets={highBuckets} totalCounts={totalCounts} />
 				</Col>
 			</Row>
-			<p className='mt-2'>
+			<p className="mt-2">
 				These lists are based on observed data within the current filters. <br />
 				We also have general publisher lists available for use. Please contact{' '}
-				<a href='mailto:support@good-loop.com?subject=Carbon%20reducttion%20publisher%20lists'>support@good-loop.com</a> for information.
+				<a href="mailto:support@good-loop.com?subject=Carbon%20reducttion%20publisher%20lists">support@good-loop.com</a> for information.
 			</p>
 		</GLCard>
 	);
@@ -321,20 +359,20 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 	if (!Login.isLoggedIn())
 		return (
 			<Container>
-				<Card body id='green-login-card' className='m-4'>
+				<Card body id="green-login-card" className="m-4">
 					<Container>
 						<Row>
-							<Col className='decoration flex-center' xs='12' sm='4'>
-								<img className='stamp' src='/img/green/gl-carbon-neutral.svg' />
+							<Col className="decoration flex-center" xs="12" sm="4">
+								<img className="stamp" src="/img/green/gl-carbon-neutral.svg" />
 							</Col>
-							<Col className='form' xs='12' sm='8'>
-								<img className='gl-logo my-4' src='/img/gl-logo/rectangle/logo-name.svg' />
-								<p className='text-center my-4'>
+							<Col className="form" xs="12" sm="8">
+								<img className="gl-logo my-4" src="/img/gl-logo/rectangle/logo-name.svg" />
+								<p className="text-center my-4">
 									Understand the carbon footprint of your advertising and
 									<br />
 									discover your offsetting and climate-positive successes
 								</p>
-								<LoginWidgetEmbed verb='login' canRegister={false} services={null} onLogin={null} onRegister={null} />
+								<LoginWidgetEmbed verb="login" canRegister={false} services={null} onLogin={null} onRegister={null} />
 							</Col>
 						</Row>
 					</Container>
@@ -343,17 +381,16 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 		);
 
 	return (
-		<div className='green-subpage green-metrics'>
+		<div className="green-subpage green-metrics">
 			<Container fluid>
 				{agencyIds ? (
 					<>
 						<GreenDashboardFilters pseudoUser={pseudoUser} />
-						<h1 className='text-left'>How can I start reducing emissions?</h1>
 						<PublisherListRecommendations />
 						<CreativeRecommendations />
 					</>
 				) : (
-					<Misc.Loading text='Checking your access...' pv={null} inline={false} />
+					<Misc.Loading text="Checking your access..." pv={null} inline={false} />
 				)}
 			</Container>
 		</div>
@@ -363,7 +400,7 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 function CreativeRecommendations() {
 	return (
 		<GLCard>
-			<h3 className='mx-auto'>Optimise Creative Files to Reduce Carbon</h3>
+			<h3 className="mx-auto">Optimise Creative Files to Reduce Carbon</h3>
 			<h4>Tips</h4>
 			<p>
 				These tips can require special tools to apply. We are working on automated self-service web tools to make this easy. Meanwhile - email us and we can
@@ -377,7 +414,7 @@ function CreativeRecommendations() {
 				<li>Replace GIFs. Embedded video (e.g. .webm or .mp4) is better for animations, and .webp is better for static images.</li>
 				<li>Strip down large javascript libraries. Often a whole animation library is included when only a snippet is used.</li>
 			</ul>
-			<p className='dev-only'>
+			<p className="dev-only">
 				We are developing a tool for analysing ads: the <a href={'https://portal.good-loop.com/#measure'}>Low Carbon Creative Tool</a>
 			</p>
 		</GLCard>
