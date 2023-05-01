@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from 'react';
 import { useTransition, animated, useSpring } from 'react-spring';
 import PromiseValue from '../../base/promise-value';
@@ -27,7 +28,9 @@ import { fetchBaseObjects } from './impactdata';
 import { ErrorDisplay } from './ImpactComponents';
 import ImpactLoadingScreen from './ImpactLoadingScreen';
 import { PlaceholderCard } from './ImpactPlaceholderCard';
-import { AccordionCollapse } from 'react-bootstrap';
+import { addScript } from '../../base/utils/miscutils';
+import LinkOut from '../../base/components/LinkOut';
+import Icon from '../../base/components/Icon';
 
 const CampaignImpact = () => {
     const path = DataStore.getValue(['location', 'path']);
@@ -110,19 +113,25 @@ const BrandLogoRows = ({mainLogo, charities}) => {
     </div>)
 }
 
-const PoweredByGL = () => {
+function PoweredByGL() {
     return (
         <div id='powered-by-gl'>
             <p className='text' style={{margin: 0}}>Your Donation Was Powered by Good-Loop</p>
             <img className='align-self-center mb-3' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
             <div className='row'>
-                <button>tictok</button>
-                <button>insta</button>
+                <SocialMediaLinks />
             </div>
       </div> 
-)
+);
 }
 
+function SocialMediaLinks() {
+    return (<>
+        <C.A className="" href={C.app.instagramLink} ><Icon name="instagram" /></C.A>
+        <C.A className="ml-2" href={C.app.facebookLink} ><Icon name="facebook" /></C.A>        
+        <C.A className="ml-2" href={C.app.twitterLink} ><Icon name="twitter" /></C.A>
+    </>);
+}
 
 const HowItWorks = ({campaign, charities, totalString}) => {
 
@@ -162,7 +171,7 @@ const HowItWorks = ({campaign, charities, totalString}) => {
                 <div className='hiw-col'>
                     <h2>3.</h2>
                     <div className='white-circle'>
-                        <img src={charities[0].headerImage} className='fill-img'/>
+                        <img src={charities[0]?.headerImage} className='fill-img'/>
                     </div>
                     <p>After the Campagin</p>
                     <h3 className='white'>£{totalString}+ In Donations</h3>
@@ -301,6 +310,8 @@ const GetInvolvedCard = () => {
 
     // set up the hubspot form for getting a users email
     useEffect(() => {
+        // TODO use this function
+        // addScript()
         const script = document.createElement('script');
         script.src='https://js.hsforms.net/forms/v2.js';
         document.body.appendChild(script);
@@ -373,14 +384,14 @@ const GetInvolvedCard = () => {
                     <img className='cta-image' src="/img/Impact/gl-beach.jpg"/>
                     <h2 className='color-gl-muddy-blue'>Follow Good-Loop</h2>
                     <p className='text'>Keep an eye out for our events, courses and<br />career oppertunities</p>
-                    <button>tictok</button>
-                    <button>insta</button>
+                    <Button>tictok TODO</Button>
+                    <Button>insta TODO</Button>
                 </div>
                 <div id="TAG-cta">
                     <img className='cta-image' src="/img/Impact/tabs.png"/>
                     <h2 className='color-gl-muddy-blue'>Browse With Us</h2>
                     <p className='text'>Raise money for your favourite charity for<br />free, simply by opening new tabs</p>
-                    <button>Find out more</button>
+                    <Button>Find out more TODO</Button>
                 </div>
             </Row>
             <div id="email-cta">
@@ -449,7 +460,7 @@ const LearnMore = () => {
         makeLink("/img/mydata/product-page/tabs.png", "https://my.good-loop.com/tabsforgood", "Tabs For Good")
     ].map((el) => {
         return (
-            <div className='learn-more-box'>
+            <div key={el.link} className='learn-more-box'>
                 <a href={el.link} className='img-link'><img className="link-img" src={el.image} alt={el.linkText + " Image"}/></a>
                 <a href={el.link} className="text-link">{el.linkText}</a>
             </div>
