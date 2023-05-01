@@ -535,9 +535,9 @@ export const getOffsetsByType = ({ campaign, status, period }: { campaign: Campa
 };
 
 /**
- * Why not use Promise? Returing false when loading is very hard to handle.
- * Possbile refactor @see {@link getFixedOffsetsForCampaignAsync} (Need more testing)
- * @returns false if loading
+ * This works across impact types
+ * Why not use Promise?? Returning false when loading is hard to handle.
+ * @returns {?ImpactDebit[]} false if loading
  */
 const getFixedOffsetsForCampaign = (campaign: Campaign, period: Period): Impact[] | false => {
 	let pvImpactDebitsList = Campaign.getImpactDebits({ campaign, status: KStatus.PUBLISHED });

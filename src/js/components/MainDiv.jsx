@@ -68,8 +68,8 @@ const SubscribePage = ({ }) => {
 const PAGES = {
 	blog: BlogPage, // TODO
 	// blogcontent: BlogContent,
-	campaign: CampaignImpact,
-	impact: CampaignImpact,
+	campaign: CampaignPage,
+	// impact: CampaignImpact,
 	impactoverview: MyAdCampaignsPage,
 	// TODO newer impact design;
 	impact: ImpactPage,
