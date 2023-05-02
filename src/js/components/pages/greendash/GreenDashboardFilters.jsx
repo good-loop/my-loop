@@ -23,6 +23,7 @@ import { equals, setUrlParameter } from '../../../base/utils/miscutils';
 import { getFilterTypeId } from './dashUtils';
 import I18N from '../../../base/i18n';
 import { assMatch } from '../../../base/utils/assert';
+import dayjs from 'dayjs';
 
 /** Tick mark which appears in drop-downs next to currently selected option */
 const selectedMarker = <span className='selected-marker' />;
@@ -35,7 +36,7 @@ const initPeriod = () => {
 	let period = getPeriodFromUrlParams();
 	if ( ! period) {
 		period = getPeriodQuarter(new Date());
-		modifyPage(null, { period: period.name, start: period.start, end: period.end });
+		modifyPage(null, { period: period.name, start: dayjs(period.start).format("YYYY-MM-DD"), end: dayjs(period.end).format("YYYY-MM-DD") });
 	}
 	// default to UTC timezone
 	if ( ! getUrlValue("tz")) {
