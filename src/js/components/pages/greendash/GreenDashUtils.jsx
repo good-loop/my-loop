@@ -18,6 +18,14 @@ const screenshotStyle = {
 };
 
 
+/** OS-independent download (downward arrow in in-tray) icon */
+export const downloadIcon = (
+	<svg viewBox='0 0 100 100' className='icon download-icon'>
+		<path d='m5 70v25h90v-25h-5v20h-80v-20z' />
+		<path d='m45 10v50h-10l15 15 15-15h-10v-50h-10z' />
+	</svg>
+);
+
 
 export const CO2 = <span>CO<sub>2</sub>e</span>;
 export const CO2e = <span className="co2e">CO<sub>2</sub>e</span>;

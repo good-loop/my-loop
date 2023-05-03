@@ -23,6 +23,7 @@ import { equals, setUrlParameter } from '../../../base/utils/miscutils';
 import { getFilterTypeId } from './dashUtils';
 import I18N from '../../../base/i18n';
 import { assMatch } from '../../../base/utils/assert';
+import dayjs from 'dayjs';
 
 /** Tick mark which appears in drop-downs next to currently selected option */
 const selectedMarker = <span className='selected-marker' />;
@@ -35,7 +36,7 @@ const initPeriod = () => {
 	let period = getPeriodFromUrlParams();
 	if ( ! period) {
 		period = getPeriodQuarter(new Date());
-		modifyPage(null, { period: period.name, start: period.start, end: period.end });
+		modifyPage(null, { period: period.name, start: dayjs(period.start).format("YYYY-MM-DD"), end: dayjs(period.end).format("YYYY-MM-DD") });
 	}
 	// default to UTC timezone
 	if ( ! getUrlValue("tz")) {
@@ -166,15 +167,15 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 	};
 	const {period,start,end,tz,brand,campaign,tag,agency} = urlValues;
 	
-	/**
-	 * @param {Period} period 
-	 */
-	const setPeriodFilters = (period) => {
-		console.warn("setPeriodFilters", period);
-		DataStore.setUrlValue("start", period.start);
-		DataStore.setUrlValue("end", period.end);
-		DataStore.setUrlValue("period", period.name);
-	}
+	// /**
+	//  * @param {Period} period 
+	//  */
+	// const setPeriodFilters = (period) => {
+	// 	console.warn("setPeriodFilters", period);
+	// 	DataStore.setUrlValue("start", period.start);
+	// 	DataStore.setUrlValue("end", period.end);
+	// 	DataStore.setUrlValue("period", period.name);
+	// }
 
 	// Items to populate the filter-by-[agency, brand, campaign, tag] dropdown
 	const [filterItems, setFilterItems] = useState([]);
@@ -246,8 +247,7 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 							</DropdownItem>
 								<DropdownItem divider />
 								{/* <DateRangeWidget dflt={periodObj} onChange={setPeriodFilters} /> */}
-								<PropControlPeriod className="p-2" dflt={periodObj} saveFn={setPeriodFilters} 
-									buttons={"yesterday this-month last-month".split(" ")}/>
+								<PropControlPeriod className="p-2" dflt={periodObj} buttons={"yesterday this-month last-month".split(" ")}/>
 							</DropdownMenu>
 						</UncontrolledDropdown>
 
