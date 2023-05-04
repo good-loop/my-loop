@@ -315,11 +315,11 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 		setReduction((allWeightedAvg - allowWeightedAvg) / allWeightedAvg);
 	}, [sortedBuckets, co2Cutoff]);
 
-	// Init props for range slider input
+	// Init / update props for range slider input
 	useEffect(() => {
 		if (!sortedBuckets) return;
-		const min = (sortedBuckets[0].co2 as number) - 0.01;
-		const max = (sortedBuckets[sortedBuckets.length - 1].co2 as number) + 0.01;
+		const min = (sortedBuckets[0].co2 as number) - 0.001;
+		const max = (sortedBuckets[sortedBuckets.length - 1].co2 as number) + 0.001;
 		const step = (max - min) / TICKS_NUM;
 		setRangeProps({ min, max, step, defaultValue: (max - min) / 2, onChange: setCO2Cutoff, chartObj });
 	}, [sortedBuckets, chartObj]);
@@ -345,7 +345,7 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 					<DomainList buckets={sortedBuckets} max={co2Cutoff} />
 				</Col>
 				<Col xs={6} className="px-0">
-					<GLCard className="generator d-flex flex-column" noPadding>
+					<GLCard className="generator flex-column" noPadding>
 						<CardHeader className="generator-title p-2">
 							<h4 className="m-0">Allow and Block list generator</h4>
 						</CardHeader>
