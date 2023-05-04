@@ -92,11 +92,11 @@ const GreenNavBar = ({active}) => {
 					<div className="green-nav-icon tags-icon" /> Manage<br/>Tags
 				</A>
 			</NavItem>
-			{Roles.isDev() && <NavItem>			
+			<NavItem>
 				<A className={space('nav-item', active === 'recommendation' && 'active')} href={recUrl}>
 					<div className="green-nav-icon optimisation-icon" /> Reduce
 				</A>
-			</NavItem>}
+			</NavItem>
 			<NavItem>
 				<A className={active === 'impact' ? 'active' : ''} href={impactUrl}>
 					<div className="green-nav-icon impact-icon" /> Impact<br/>Overview
