@@ -7,6 +7,7 @@
 
 	/* Common styling for all 3 cards */
 	.domain-list, .generator {
+		height: 36rem;
 		.card-header {
 			color: white;
 			text-align: center;
@@ -35,10 +36,11 @@
 			align-items: center;
 			justify-content: center;
 		}
-		// Have chart container take up all unused space, and chart canvas fill container
+		// Have chart container take up all unused space...
 		.chart-slider-box {
 			flex-grow: 1;
 		}
+		// ...and chart canvas fill container
 		.publisher-carbon-histogram {
 			height: 100%;
 		}
@@ -77,9 +79,8 @@
 		.reduction-number {
 			font-size: 300%;
 		}
-		
 	}
-	
+
 	/* The side cards showing the sets of blocked/allowed domains*/
 	.domain-list {
 		// set up borders etc (block/allow-specific colours set in &.allow and &.block below)
@@ -98,7 +99,7 @@
 				font-weight: 600;
 			}
 		}
-	
+
 		.cutoff-value {
 			display: flex;
 			justify-content: center;
@@ -113,10 +114,9 @@
 			width: 1.5em;
 			border-radius: 50%;
 		}
-	
+
 		// The scrollable list of domains
 		.domain-list-preview {
-			height: 15rem;
 			overflow: clip scroll;
 			list-style-type: none;
 			font-weight: 600;
@@ -142,7 +142,7 @@
 				fill: currentColor;
 			}
 		}
-		
+
 		&.allow {
 			.domain-list-title, .cutoff-icon {
 				background-color: @allow-card-color;
