@@ -469,9 +469,9 @@ function CreativeRecommendations() {
 				<li>Replace GIFs. Embedded video (e.g. .webm or .mp4) is better for animations, and .webp is better for static images.</li>
 				<li>Strip down large javascript libraries. Often a whole animation library is included when only a snippet is used.</li>
 			</ul>
-			<p className="dev-only">
+			{/* <p className="dev-only">
 				We are developing a tool for analysing ads: the <a href={'https://portal.good-loop.com/#measure'}>Low Carbon Creative Tool</a>
-			</p>
+			</p> */}
 		</GLCard>
 	);
 }

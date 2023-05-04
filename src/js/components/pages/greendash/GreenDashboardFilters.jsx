@@ -35,7 +35,7 @@ const initPeriod = () => {
 	let period = getPeriodFromUrlParams();
 	if ( ! period) {
 		period = getPeriodQuarter(new Date());
-		modifyPage(null, { period: period.name, start: period.start, end: period.end });
+		modifyPage(null, { period: period.name, start: period.start.toISOString(), end: period.end.toISOString() });
 	}
 	// default to UTC timezone
 	if ( ! getUrlValue("tz")) {
