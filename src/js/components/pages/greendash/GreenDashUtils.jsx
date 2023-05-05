@@ -6,9 +6,7 @@ import { PNGDownloadButton } from "../../../base/components/PNGDownloadButton";
 import { Button, Card } from 'reactstrap';
 import { mass } from './dashUtils';
 import { space } from '../../../base/utils/miscutils';
-import { getBaseFilters } from  './emissionscalcTs'
-import { getFilterTypeId } from './dashUtils'
-import DataStore from '../../../base/plumbing/DataStore';
+import { getFilterTypeId } from './dashUtils';
 
 
 
