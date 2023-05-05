@@ -317,7 +317,7 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 
 	// Init / update props for range slider input
 	useEffect(() => {
-		if (!sortedBuckets) return;
+		if (!sortedBuckets || !sortedBuckets.length) return;
 		const min = (sortedBuckets[0].co2 as number) - 0.001;
 		const max = (sortedBuckets[sortedBuckets.length - 1].co2 as number) + 0.001;
 		const step = (max - min) / TICKS_NUM;
