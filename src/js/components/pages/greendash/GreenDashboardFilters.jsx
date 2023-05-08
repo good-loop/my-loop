@@ -8,7 +8,7 @@ import KStatus from '../../../base/data/KStatus';
 import DataStore, { getUrlValue } from '../../../base/plumbing/DataStore';
 import { nonce } from '../../../base/data/DataClass';
 import { getDataItem, getDataList } from '../../../base/plumbing/Crud';
-import { getPeriodQuarter, getPeriodMonth, periodToParams, printPeriod, getPeriodFromUrlParams, getTimeZone, getTimeZoneShortName, setTimeZone } from '../../../base/utils/date-utils';
+import { getPeriodQuarter, newDateTZ, printPeriod, getPeriodFromUrlParams, getTimeZoneShortName, setTimeZone } from '../../../base/utils/date-utils';
 
 import DateRangeWidget from '../../DateRangeWidget';
 import { modifyPage } from '../../../base/plumbing/glrouter';
