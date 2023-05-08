@@ -58,8 +58,9 @@ export const GLVertical = ({className, children, ...props}) => {
  * A card content wrapper, with configurable behaviour for opening modals.
  * 
  * @param {Object} obj
- * @param {?Boolean} obj.noPadding remove padding from the card content
- * @param {?Boolean} obj.noMargin remove margin wrapper from outside the card
+ * @param {?string} obj.className className passthrough
+ * @param {?boolean} obj.noPadding remove padding from the card content
+ * @param {?boolean} obj.noMargin remove margin wrapper from outside the card
  * @param {?*} obj.modalContent if specified, will make card clickable to display this content in the GLModalCard specified (see below)
  * @param {?*} obj.modalTitle the title to put in the modal header
  * @param {?*} obj.modalHeader content to put in the modal header

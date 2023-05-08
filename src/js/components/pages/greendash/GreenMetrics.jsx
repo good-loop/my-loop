@@ -9,9 +9,9 @@ import Misc from '../../../base/components/Misc';
 import List from '../../../base/data/List';
 import DataStore from '../../../base/plumbing/DataStore';
 import printer from '../../../base/utils/printer';
+import { getPeriodFromUrlParams, printPeriod } from '../../../base/utils/date-utils';
 
-import { GreenCard, printPeriod } from './dashutils';
-import { paramsFromUrl } from './dashUtils';
+import { GreenCard } from './GreenDashUtils';
 import { getBasefilters, getCampaigns, getCarbon, getSumColumn } from './emissionscalcTs';
 
 import BreakdownCard from './BreakdownCard';
@@ -25,12 +25,24 @@ import TimeSeriesCard from './TimeSeriesCard';
 import Login from '../../../base/youagain';
 
 import PropControl from '../../../base/components/PropControl';
+import { getUrlVars } from '../../../base/utils/miscutils';
 
 export const isPer1000 = () => {
 	const emissionsMode = DataStore.getUrlValue('emode');
 	return emissionsMode === 'per1000';
 };
 
+/** baseFilters.prob is string not number so have to use == */
+export const isRandomSampling = (baseFilters) => {
+	if (baseFilters.prob == -1 || baseFilters.prob > 1) return true;
+	return false;
+};
+
+/**
+ * @param {Object} obj
+ * @param {Period} obj.period
+ * @returns
+ */
 const OverviewWidget = ({ period, data, prob }) => {
 	let imps;
 	if (data?.length > 0) {
@@ -77,10 +89,12 @@ const CTACard = ({}) => {
 };
 
 const GreenMetrics2 = () => {
-	const urlParams = paramsFromUrl(['period', 'prob', 'sigfig', 'nocache']);
-	const period = urlParams.period;
-	if (!period) return null; // Filter widget will set this on first render - allow it to update
-
+	const urlParams = getUrlVars();
+	const period = getPeriodFromUrlParams(urlParams);
+	if (!period) {
+		return null; // Filter widget will set this on first render - allow it to update
+	}
+	urlParams.period = period;
 	const baseFilters = getBasefilters(urlParams);
 
 	// BaseFiltersFailed
@@ -98,7 +112,7 @@ const GreenMetrics2 = () => {
 	 */
 	const pvChartTotal = getCarbon({ ...baseFilters, breakdown: ['total{"count":"sum"}'] });
 
-	const pvChartTotalValue = baseFilters.prob ? pvChartTotal.value?.sampling : pvChartTotal.value;
+	const pvChartTotalValue = isRandomSampling(baseFilters) ? pvChartTotal.value?.sampling : pvChartTotal.value;
 
 	const samplingProb = pvChartTotalValue?.probability;
 
@@ -115,7 +129,7 @@ const GreenMetrics2 = () => {
 	// HACK: Tell JourneyCard we had an empty table & so couldn't get campaigns (but nothing is "loading")
 	// TODO We CAN get campaigns but it'd take more of a rewrite than we want to do just now.
 	// not working?? How does this compare to noData
-	const emptyTable = pvChartTotal.resolved && (!pvChartTotalValue?.allCount || pvChartTotalValue.by_total.buckets.length === 0);
+	const emptyTable = pvChartTotal.resolved && (!pvChartTotalValue?.allCount || pvChartTotalValue?.by_total.buckets.length === 0);
 
 	const commonProps = { period, baseFilters, per1000: isPer1000() };
 	// Removed (temp?): brands, campaigns, tags
@@ -133,7 +147,7 @@ const GreenMetrics2 = () => {
 		name: 'lotsa-chartdata',
 	});
 
-	const pvChartDatalValue = baseFilters.prob ? pvChartData.value?.sampling : pvChartData.value;
+	const pvChartDatalValue = isRandomSampling(baseFilters) ? pvChartData.value?.sampling : pvChartData.value;
 
 	let pvCampaigns = getCampaigns(pvChartDatalValue?.by_adid.buckets);
 	if (pvCampaigns && PromiseValue.isa(pvCampaigns.value)) {
@@ -154,12 +168,12 @@ const GreenMetrics2 = () => {
 				right={{ label: 'Per 1000 impressions', value: 'per1000', colour: 'primary' }}
 			/>
 			<Row className='card-row'>
-				<Col xs='12' sm='8' className='flex-column'>
+				<Col xs='12' sm='12' className='flex-column'>
 					<TimeSeriesCard {...commonProps} data={pvChartDatalValue?.by_time.buckets} noData={noData} />
 				</Col>
-				<Col xs='12' sm='4' className='flex-column'>
+				{/* <Col xs='12' sm='4' className='flex-column'>
 					<JourneyCard campaigns={List.hits(pvCampaigns?.value)} {...commonProps} emptyTable={emptyTable || noData} />
-				</Col>
+				</Col> */}
 			</Row>
 			<Row className='card-row'>
 				<Col xs='12' sm='4' className='flex-column'>

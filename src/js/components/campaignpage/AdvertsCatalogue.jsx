@@ -230,7 +230,7 @@ const AdvertCard = ({ ad, active }) => {
 			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{ position: "absolute", zIndex: 999 }}>Advert Editor ({ad.id})</DevLink>
 			<div className="position-relative ad-unit-outer">
 				{hasShown ? (
-					<GoodLoopUnit vertId={ad.id} size={size} extraParams={extraParams} style={{zIndex:2, maxWidth:"50%", margin:"auto"}}/>
+					<GoodLoopUnit vertId={ad.id} size={size} extraParams={extraParams} play="onclick" style={{zIndex:2, maxWidth:"50%", margin:"auto"}}/>
 				) : (
 					<div style={{ background: "black", width: "100%", height: "100%" }}></div>
 				)}
@@ -262,7 +262,7 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
 			<div onClick={e => { e.preventDefault(); handleClick(); }} className={"d-flex justify-content-center pointer-wrapper" + (selected ? " selected" : "")}>
 				<div className="ad-prev shadow">
 					{hasShown ? (
-						<GoodLoopUnit vertId={ad.id} size={size} advert={ad} />
+						<GoodLoopUnit vertId={ad.id} size={size} advert={ad} play="onclick" />
 					) : (
 						<div style={{ background: "black", width: "100%", height: "100%" }}></div>
 					)}
