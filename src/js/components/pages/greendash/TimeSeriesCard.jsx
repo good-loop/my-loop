@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Tooltip } from 'reactstrap';
-import Icon from '../../../base/components/Icon';
+import { Col as div, Container, Row, Tooltip } from 'reactstrap';
 import Misc from '../../../base/components/Misc';
-import NewChartWidget from '../../../base/components/NewChartWidget';
-import { nonce } from '../../../base/data/DataClass';
-import { dateStr, printDateShort, printPeriod } from '../../../base/utils/date-utils';
 import { space, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
-import { CO2e, GreenCard, GreenCardAbout, Mass, NOEMISSIONS } from './GreenDashUtils';
-import { isPer1000 } from './GreenMetrics';
-import { TONNES_THRESHOLD } from './dashUtils';
+import NewChartWidget from '../../../base/components/NewChartWidget';
+import { GreenCard, printPeriod, printDate, printDateShort, TONNES_THRESHOLD, GreenCardAbout, Mass, NOEMISSIONS, CO2e } from './dashutils';
 import { emissionsPerImpressions, getBreakdownByWithCount } from './emissionscalcTs';
+import Icon from '../../../base/components/Icon';
+import { nonce } from '../../../base/data/DataClass';
+import LinkOut from '../../../base/components/LinkOut';
+import { isPer1000 } from './GreenMetrics';
 
 
 const icons = {
@@ -35,17 +34,14 @@ const icons = {
 
 // Miles driven in a car: https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator
 gives car-miles-per-ton: 2,482
-
-// Further sources for a long haul flight: 
-https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022 
-
+// Further sources for a long haul flight: https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2017 
 @returns {mode: {factor:units-per-kg, desc, icon}}
  */
 const co2ImpactSpecs = {
 	flights: {
 		src: "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2017",
 		srcDesc: "Flights from London to New York (including radiative forcing)",
-		factor: 1 / (0.19309 * 5585), // CO2 per km (including radiative forcing) * London <> New York
+		factor: 1 / (0.19745 * 5585), // CO2 per km (including radiative forcing) * London <> New York
 		desc: 'long haul flights', //flights from London to New York
 		icon: icons.flights,
 	},
@@ -153,7 +149,7 @@ const TimeSeriesCard = ({ period, data: timeTable, per1000, noData }) => {
 		const labelFn = (period.start.getYear() === period.end.getYear()) ? (
 			utc => printDateShort(new Date(utc))
 		) : (
-			utc => dateStr(new Date(utc))
+			utc => printDate(new Date(utc))
 		);
 
 		const labels = [];
@@ -161,7 +157,7 @@ const TimeSeriesCard = ({ period, data: timeTable, per1000, noData }) => {
 
 		// Is the "show normalised emissions vs impressions" toggle set?
 		if (per1000) {
-			timeTable = emissionsPerImpressions(timeTable, -1);
+			timeTable = emissionsPerImpressions(timeTable);
 		}
 		
 		// Sum total emissions for each date across all other factors, sort, and unzip to labels/data arrays

@@ -4,10 +4,9 @@
 const cluster = 
 	// 'test';
 	// 'local';
-	// 'stage';
 	''; // if you want production!
 
-const protocol = 'https';// (cluster === 'local') ? 'http' : 'https';
+const protocol = (cluster === 'local') ? 'http' : 'https';
 
 module.exports = {
 	ServerIOOverrides: {
@@ -15,10 +14,8 @@ module.exports = {
 		AS_ENDPOINT: `${protocol}://${cluster}as.good-loop.com`,
 		PORTAL_ENDPOINT: `${protocol}://${cluster}portal.good-loop.com`,
 		DEMO_ENDPOINT: `${protocol}://${cluster}demo.good-loop.com`,
-		// DATALOG_ENDPOINT: `${protocol}://${cluster}lg.good-loop.com/data`,
-		DATALOG_ENDPOINT: `https://stagelg.good-loop.com/data`,
+		DATALOG_ENDPOINT: `${protocol}://${cluster}lg.good-loop.com/data`,
 		MEDIA_ENDPOINT: `${protocol}://${cluster}uploads.good-loop.com`,
-		MEASURE_ENDPOINT: `${protocol}://${cluster}measure.good-loop.com`,
 		ANIM_ENDPOINT: `${protocol}://${cluster}portal.good-loop.com/_anim`,
 		CHAT_ENDPOINT: `${protocol}://${cluster}chat.good-loop.com/reply`,
 		// DATALOG_DATASPACE: 'gl',

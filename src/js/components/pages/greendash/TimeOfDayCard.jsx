@@ -5,8 +5,7 @@ import _ from 'lodash';
 import DataStore from '../../../base/plumbing/DataStore';
 import Misc from '../../../base/components/Misc';
 import NewChartWidget from '../../../base/components/NewChartWidget';
-import { dataColours, TONNES_THRESHOLD } from './dashUtils';
-import { NOEMISSIONS, GreenCard} from './GreenDashUtils';
+import { dataColours, GreenCard, GreenCardAbout, NOEMISSIONS, TONNES_THRESHOLD } from './dashutils';
 import { getCarbon, emissionsPerImpressions, getBreakdownByWithCount } from './emissionscalcTs';
 import { isPer1000 } from './GreenMetrics';
 
@@ -27,7 +26,7 @@ const TimeOfDayCard2 = ({ baseFilters, tags }) => {
 	useEffect(() => {
 		const pvCarbon = getCarbon({ ...baseFilters, timeofday: true, breakdown: 'timeofday{"co2":"sum"}'});
 		pvCarbon.promise.then((res) => {
-			const resValue = isRandomSampling(prob) ? res.sampling : res;
+			const resValue = baseFilters.prob ? res.sampling : res;
 			if (!resValue.by_timeofday.buckets.length) {
 				setChartProps({ isEmpty: true });
 				return;

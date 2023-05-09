@@ -4,8 +4,6 @@ The GLCards layout is a layout for modular cards which are designed to expand an
 
 */
 
-@GLCardRadius: 0.75rem;
-
 @keyframes fade-in {
     0% {
         opacity: 0;
@@ -57,7 +55,7 @@ The GLCards layout is a layout for modular cards which are designed to expand an
     flex-basis: 1;
     flex-grow: 1;
     border: none;
-    border-radius: @GLCardRadius;
+    border-radius: 10px;
     position: relative;
 
     /*width: calc(100% - 2rem);
@@ -70,14 +68,6 @@ The GLCards layout is a layout for modular cards which are designed to expand an
     .card-body {
         // FIXME this can create unwanted scroll bars (seen on the main headline card)
         overflow: auto;
-    }
-
-    // Override Bootstrap defaults to match card border-radius
-    .card-header:first-child {
-        border-radius: calc(@GLCardRadius - 1px) calc(@GLCardRadius - 1px) 0 0;
-    }
-    .card-footer:last-child {
-        border-radius: 0 0 calc(@GLCardRadius - 1px) calc(@GLCardRadius - 1px);
     }
 }
 

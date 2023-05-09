@@ -30,7 +30,7 @@ import printer from '../../base/utils/printer'
 
 import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIGN, TEST_CAMPAIGN_OBJ} from './TestValues';
 import { addAmountSuffixToNumber } from '../../base/utils/miscutils';
-import { dataColours, getCountryFlag, getCountryName } from '../pages/greendash/dashUtils';
+import { dataColours, getCountryFlag, getCountryName } from '../pages/greendash/dashutils';
 
 export class ImpactFilters {
 	agency;

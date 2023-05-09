@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'reactstrap';
 import { space } from '../base/utils/miscutils';
-import { MONTHS, WEEKDAYS_FROM_MONDAY, getTimeZone, periodFromName, Period, sameDate, dayStartTZ, dateStr, dateTimeString } from '../base/utils/date-utils';
-import PropControlTimezone from '../base/components/propcontrols/PropControlTimezone';
+import { periodFromName } from './pages/greendash/dashutils';
 
+//import '../../style/DateRangeWidget.less';
+
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+/** Are these two Dates on the same day? */
+const sameDate = (d1, d2) => {
+	if (!d1 || !d2) return false;
+	return (d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate())
+};
 
 
 /** Do the first two dates surround the first? */
@@ -35,11 +44,15 @@ const after = (d1, d2) => {
 	return d1.getTime() < d2.getTime();
 }
 
-const tomorrow = (d) => {
-	let dayStart = dayStartTZ(d);
-	dayStart.setDate(dayStart.getDate() + 1);
-	return dayStart;
+const tomorrow = (date) => {
+	return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
 }
+
+/** 00:00:00.000 on the same day as the given Date. */
+const dayStart = (date = new Date()) => {
+	return new Date(dayStart.getFullYear(), dayStart.getMonth(), dayStart.getDate());
+};
+
 
 const Day = ({date, className, onClick, onHover, ...rest}) => {
 	if (!date) return <td className="day"></td>; // placeholder
@@ -55,7 +68,7 @@ const Day = ({date, className, onClick, onHover, ...rest}) => {
 
 const Month = ({year, month, start, end, setPeriod, hoverStart, hoverEnd, onDayClick, onDayHover, className}) => {
 	const refDate = new Date(year, month, 1);
-	
+
 	let currentRow = [];
 	const rows = [currentRow];
 
@@ -99,12 +112,12 @@ const Month = ({year, month, start, end, setPeriod, hoverStart, hoverEnd, onDayC
 
 	return <div className={space('month text-center', className)}>
 		<a onClick={clickMonth} className="month-name">
-			{MONTHS[month]} {year}
+			{months[month]} {year}
 		</a>
 		<table>
 			<thead>
 				<tr className="day-names">
-					{WEEKDAYS_FROM_MONDAY.map(name => <th className="day" key={name}>{name.substring(0, 2)}</th>)}
+					{weekdays.map(name => <th className="day" key={name}>{name.substring(0, 2)}</th>)}
 				</tr>
 			</thead>
 			<tbody>
@@ -137,7 +150,7 @@ const Month = ({year, month, start, end, setPeriod, hoverStart, hoverEnd, onDayC
 /**
  * 
  * @param p
- * @param {Period} p.dflt A period object which sets the initial range
+ * @param {Object} p.dflt A period object which sets the initial range
  * @param {Function} p.onChange Called with a {start, end, name} object every time the range changes.
  * @returns  
  */
@@ -148,8 +161,6 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 	const [selDate, setSelDate] = useState(null); // For two-click period selection
 	const [hoverStart, setHoverStart] = useState(null); // For highlighting potential period
 	const [hoverEnd, setHoverEnd] = useState(null);
-	
-	let tz = getTimeZone();
 
 	useEffect(() => {
 		setPeriod(dflt.name, dflt.start, dflt.end);
@@ -160,18 +171,13 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 		focusPeriod(dflt.start, dflt.end, dflt.name);
 	}, []);
 
-	/**
-	 * @param {Date} start 
-	 * @param {Date} end 
-	 */
 	const setPeriod = (name, start, end) => {
 		setName(name);
 		if (!start && !end) {
 			const periodObj = periodFromName(name);
 			if (periodObj) {
 				setStart(periodObj.start);
-				setEnd(periodObj.end);
-				// !sameDate(start, dflt.start)  ??
+				setEnd(periodObj.end);!sameDate(start, dflt.start) 
 				return;
 			}
 		}
@@ -202,8 +208,9 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 
 	// Set period to "X days ago" --> "last midnight (ie 00:00:00 today)"
 	const setDaysBack = (offset) => {
-		// end-of-yesterday = midnight today (end is non-inclusive)		
-		let newEnd = dayStartTZ(new Date());
+		// tommorow (end is non-inclusive)
+		const newEnd = new Date();
+		newEnd.setHours(0, 0, 0, 0);
 		const newStart = new Date(newEnd);
 		if (offset) newStart.setDate(newStart.getDate() + offset);
 		setPeriod(null, newStart, newEnd);
@@ -237,16 +244,19 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 
 	const hoverDate = (date) => {
 		if (!selDate) return;
-		const selDateFirst = before(selDate, date);
-		const d1 = selDateFirst ? selDate : date;
-		const d2 = selDateFirst ? tomorrow(date) : tomorrow(selDate);
-		setHoverStart(d1);
-		setHoverEnd(d2);
+		else {
+			const selDateFirst = before(selDate, date);
+			const d1 = selDateFirst ? selDate : date;
+			const d2 = selDateFirst ? tomorrow(date) : tomorrow(selDate);
+			setHoverStart(d1);
+			setHoverEnd(d2);
+		}
 	}
 
 	// Quick buttons for common ranges (names currently unused)
 	const setYesterday = () => setDaysBack(-1, 'yesterday');
 	const setLast7Days = () => setDaysBack(-7, 'last-7')
+	const setLast30Days = () => setDaysBack(-30, 'last-30');
 	const setThisMonth = () => setCalendarMonth(0, 'this-month');
 	const setLastMonth = () => setCalendarMonth(-1, 'last-month')
 
@@ -267,14 +277,10 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 		<div className="presets-container">
 			<Button className="preset" size="sm" onClick={setYesterday}>Yesterday</Button>
 			<Button className="preset" size="sm" onClick={setLast7Days}>Last 7 days</Button>
+			<Button className="preset" size="sm" onClick={setLast30Days}>Last 30 days</Button>
 			<Button className="preset" size="sm" onClick={setThisMonth}>This month</Button>
 			<Button className="preset" size="sm" onClick={setLastMonth}>Last month</Button>
 			<Button className="preset" size="sm" color="primary" onClick={() => focusPeriod(start, end, name)}>Recenter</Button>
-			<PropControlTimezone size="sm" label="Timezone" prop="tz" />
-			<div className="dev-only">
-				Start: {dateTimeString(start)} = {start.toISOString()}
-				End: {dateTimeString(end)} = {end.toISOString()}
-			</div>
 		</div>
 	</div>
 };

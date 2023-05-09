@@ -14,11 +14,11 @@ import DataStore from '../../../base/plumbing/DataStore';
 import PromiseValue from '../../../base/promise-value';
 import SearchQuery from '../../../base/searchquery';
 import { assert } from '../../../base/utils/assert';
-import { getUrlVars, sum, uniq, yessy } from '../../../base/utils/miscutils';
-import C, { searchParamForType, urlParamForType } from '../../../C';
+import { sum, uniq, yessy } from '../../../base/utils/miscutils';
+import C from '../../../C';
 import ServerIO from '../../../plumbing/ServerIO';
-import { Period, getPeriodFromUrlParams, getTimeZone } from '../../../base/utils/date-utils';
-import { getFilterTypeId } from './dashUtils';
+import { getFilterModeId, periodFromUrl } from './dashutils';
+import { Period } from './dashUtils';
 
 /**
  * An array of Records ??what are the keys/values??
@@ -55,10 +55,6 @@ export type BaseFilters = {
 	fixseed?: boolean;
 	numRow?: string | number;
 	num?: string | number;
-	/**
-	 * bucket timezone
-	 */
-	btz?: string;
 };
 
 export type BaseFiltersFailed = {
@@ -69,19 +65,16 @@ export type BaseFiltersFailed = {
 /**
  * Supposedly return a BaseFilters. But when there are exceptions, return a alert or loading message. Catch the message wtih <Alert /> or <Misc.Loading /> div.
  * Usage examples see GreenMetrics2 in ./GreenMetrics.jsx
- * @param urlParams use getUrlVars() then getPeriodFromUrlParams() then add period!
+ * @param urlParams fetch using paramsFromUrl in dashUtils.ts
  */
 export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed => {
 	// Default to current quarter, all brands, all campaigns
 	const period = urlParams.period;
-	if ( ! period) {
-		console.warn("use getUrlVars() then getPeriodFromUrlParams() then add period!");
-	}	
-	let { filterType, filterId } = getFilterTypeId();
+	let { filterMode, filterId } = getFilterModeId();
 
 	let failedObject: BaseFiltersFailed = {};
 
-	if ( ! filterType || ! filterId) {
+	if (!filterMode) {
 		failedObject = { type: 'alert', message: 'Select a brand, campaign, or tag to see data.' };
 		return failedObject;
 	}
@@ -91,11 +84,11 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 	// ...but give them the basic filter spec so they stay in sync otherwise
 
 	// Query filter e.g. which brand, campaign, or tag?
-	let q = SearchQuery.setProp(null, searchParamForType(filterType), filterId).query;
+	let q = `${filterMode}:${filterId}`;
 
 	// HACK: filterMode=brand is twice wrong: the data uses vertiser, and some tags dont carry brand info :(
 	// So do it by an OR over campaign-ids instead.
-	if (filterType === C.TYPES.Advertiser) {
+	if (filterMode === 'brand') {
 		// get the campaigns
 		let sq = SearchQuery.setProp(null, 'vertiser', filterId);
 		const pvAllCampaigns = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUBLISHED, q: sq.query, ids: null, sort: null, start: null, end: null });
@@ -110,12 +103,25 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 		}
 		q = SearchQuery.setPropOr(null, 'campaign', campaignIds!).query;
 	}
-	if (filterType === C.TYPES.Agency) {
-		q = SearchQuery.setProp(null, 'agency', filterId).query;
+	if (filterMode === 'agency') {
+		// copy pasta of brand above
+		// get the campaigns
+		let sq = SearchQuery.setProp(null, 'agencyId', filterId);
+		const pvAllCampaigns = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUBLISHED, q: sq.query, ids: null, sort: null, start: null, end: null });
+		if (!pvAllCampaigns.resolved) {
+			failedObject = { type: 'loading', message: 'Fetching agency campaigns...' };
+			return failedObject;
+		}
+		const campaignIds = List.hits(pvAllCampaigns.value)?.map((c) => c.id);
+		if (!yessy(campaignIds)) {
+			failedObject = { type: 'alert', message: `No campaigns for agency id: ${filterId}` };
+			return failedObject;
+		}
+		q = SearchQuery.setPropOr(null, 'campaign', campaignIds!).query;
 	}
 
 	// HACK: Is this a master campaign? Do we need to cover sub-campaigns?
-	if (filterType === C.TYPES.Campaign) {
+	if (filterMode === 'campaign') {
 		const pvCampaign = getDataItem({ type: C.TYPES.Campaign, id: filterId, status: KStatus.PUB_OR_DRAFT, action: null, swallow: null });
 		if (!pvCampaign.value) {
 			failedObject = { type: 'loading', message: 'Fetching campaigns...' };
@@ -123,7 +129,7 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 		}
 		const campaign = pvCampaign.value;
 		if (Campaign.isMaster(campaign)) {
-			const pvAllCampaigns = Campaign.pvSubCampaigns({ campaign, query: null });
+			const pvAllCampaigns = Campaign.pvSubCampaigns({ campaign });
 			if (!pvAllCampaigns.resolved) {
 				failedObject = { type: 'loading', message: 'Fetching campaigns...' };
 				return failedObject;
@@ -145,12 +151,10 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 		sigfig: urlParams.sigfig?.toString(),
 		nocache: urlParams.nocache,
 		fixseed: true,
-		btz: getTimeZone()
 	};
 
 	return baseFilters;
 };
-
 
 export const getCarbon = ({
 	endpoint,
@@ -180,7 +184,7 @@ export const getCarbon = ({
 	return DataStore.fetch(
 		['misc', 'DataLog', 'green', md5(JSON.stringify(data))],
 		() => {
-			return ServerIO.load(endpoint || ServerIO.DATALOG_ENDPOINT, { data, swallow: true, method:"POST" });
+			return ServerIO.load((endpoint ? endpoint : ServerIO.DATALOG_ENDPOINT), { data, swallow: true });
 		},
 		null,
 		null
@@ -366,10 +370,10 @@ export const emissionsPerImpressions = (buckets: GreenBuckets, filterLessThan: n
 				// Simple breakdown
 				Object.entries(bkt).forEach(([k, v]) => {
 					// Carbon entries => carbon per N impressions; others unchanged
-					if (bkt.count as number > filterLessThan) {
+					if (bkt.count > filterLessThan) {
 						newBkt[k] = k.match(/^co2/) ? (v as number) / ((bkt.count as number) / perN) : v;
 					} else {
-						newBkt[k] = k.match(/^co2/) ? 0 : v;
+						delete newBkt[k];
 					}
 				});
 			} else {
@@ -390,18 +394,15 @@ export const emissionsPerImpressions = (buckets: GreenBuckets, filterLessThan: n
 };
 
 /**
- * Why not use Promise? Returing null when loading is very hard to handle.
- * Possbile refactor @see {@link calculateDynamicOffsetAsync} (Need more testing)
- * @returns null if loading data
+ *
+ * @returns {?Impact} null if loading data
  */
-const calculateDynamicOffset = (campaign: Campaign, offset: Impact, period: Period|null): Impact | null => {
-	Campaign.assIsa(campaign, null);
-	assert(Impact.isDynamic(offset), campaign); // paranoia
+export const calculateDynamicOffset = (campaign: Campaign, offset:Impact, period: Period) => {
+	Campaign.assIsa(campaign);
+	if (!Impact.isDynamic(offset)) return offset; // paranoia
 
 	// We either want carbon emissions or impressions count for this campaign/period - this gets both
-	if (!period) {		
-		period = getPeriodFromUrlParams();
-	}
+	if (!period) period = periodFromUrl();
 	let pvCarbonData = getCarbon({
 		q: SearchQuery.setProp(null, 'campaign', campaign.id).query,
 		start: period?.start.toISOString() || '2022-01-01',
@@ -435,70 +436,32 @@ const calculateDynamicOffset = (campaign: Campaign, offset: Impact, period: Peri
 };
 
 
+type OffSets4Type = {
+	isLoading:boolean, carbon:Impact[], carbonTotal:number, trees:Impact[], treesTotal:number, coral:Impact[], 
+	pvAllCampaigns:PromiseValue, allFixedOffsets:Impact[]
+};
 
 /**
- * How does this relate to getFixedOffsetsForCampaign??
- * 
- * fraction by period, or all
+ * @param {Object} p
+ * @param {!Campaign} p.campaign If `campaign` is a master, then this function WILL look up sub-campaigns and include them.
+ * @param {?Period} p.period {start, end}
+ * @returns {OffSets4Type}
  */
-const calculateFixedOffset = (impactDebit: ImpactDebit, period: Period|null): Impact | null => {
-	ImpactDebit.assIsa(impactDebit);
-	// We either want carbon emissions or impressions count for this campaign/period - this gets both
-	if ( ! period) {		
-		period = getPeriodFromUrlParams();
-	}
-	// fraction of period
-	let fraction;
-	if (period && impactDebit.start && impactDebit.end) {
-		let period2 = {start:new Date(impactDebit.start), end:new Date(impactDebit.end)} as Period;
-		let overlapStartMsecs = Math.max(period.start.getTime(), period2.start.getTime());
-		let overlapEndMsecs = Math.min(period.end.getTime(), period2.end.getTime());
-		fraction = (overlapEndMsecs - overlapStartMsecs) / (period.end.getTime() - period.start.getTime());
-		if (fraction<0) {
-			fraction = 0;
-		}
-	} else {
-		fraction = 1;
-	}
-	// copy and set n
-	let snapshotOffset = new Impact(impactDebit.impact);
-	snapshotOffset.n = impactDebit.impact.n*fraction;
-	delete snapshotOffset.rate;
-	delete snapshotOffset.input;
-	delete snapshotOffset.dynamic;
-	snapshotOffset.src = impactDebit.impact; // DEBUG pass on the original
-	snapshotOffset.start = period?.start;
-	snapshotOffset.end = period?.end;
-	return snapshotOffset;
-};
-
-type OffSets4Type = {
-	isLoading: boolean;
-	carbon: Impact[];
-	carbonTotal: number;
-	trees: Impact[];
-	treesTotal: number;
-	coral: Impact[];
-	coralTotal: number;
-	pvAllCampaigns: PromiseValue;
-	allFixedOffsets: Impact[];
-};
-
-export const getOffsetsByType = ({ campaign, status, period }: { campaign: Campaign; status: any; period: Period }): OffSets4Type => {
+export const getOffsetsByType = ({ campaign, status, period }) => {
 	// Is this a master campaign?
-	let pvAllCampaigns = Campaign.pvSubCampaigns({ campaign, query: status });
-	let isLoading = !pvAllCampaigns.resolved;
+	let pvAllCampaigns = Campaign.pvSubCampaigns({ campaign, status });
+	let isLoading = ! pvAllCampaigns.resolved;	
 	let allFixedOffsets = [] as Impact[];
 	if (pvAllCampaigns.value) {
 		// for each campaign:
 		// - collect offsets
 		// - Fixed or dynamic offsets? If dynamic, get impressions
-		// - future TODO did it fund eco charities? include those here
-		let fixedOffsets = List.hits(pvAllCampaigns.value)!.map((c) => getFixedOffsetsForCampaign(c as unknown as Campaign, period)) as unknown as Impact[];
-		if (fixedOffsets.find((x) => !x)) {
+		// - future TODO did it fund eco charities? include those here		
+		let fixedOffsets = List.hits(pvAllCampaigns.value).map(c => getFixedOffsetsForCampaign(c, period));
+		if (fixedOffsets.find(x => ! x)) {
 			isLoading = true;
 		}
-		allFixedOffsets = _.flatten(fixedOffsets.filter((x) => x));
+		allFixedOffsets = _.flatten(fixedOffsets.filter(x => x));
 	}
 	const offsets4type = {} as OffSets4Type;
 	// HACK - return this too (why??)
@@ -506,7 +469,7 @@ export const getOffsetsByType = ({ campaign, status, period }: { campaign: Campa
 	offsets4type.allFixedOffsets = allFixedOffsets; // DEBUG
 	// kgs of CO2
 	let carbonOffsets = allFixedOffsets.filter(Impact.isCarbonOffset);
-	let co2sDEBUG = carbonOffsets.map((co) => co.n);
+	let co2sDEBUG = carbonOffsets.map(co => co.n);
 	let co2 = carbonOffsets.reduce((x, offset) => x + offset.n, 0);
 	offsets4type.carbon = carbonOffsets;
 	offsets4type.carbonTotal = co2;
@@ -520,77 +483,71 @@ export const getOffsetsByType = ({ campaign, status, period }: { campaign: Campa
 	offsets4type.coralTotal = offsets4type.coral.reduce((x, offset) => x + offset.n, 0);
 
 	offsets4type.isLoading = isLoading;
+	console.log("offsets4type",offsets4type,"Campaign", campaign,"period",period);
 	return offsets4type;
 };
 
 /**
- * Why not use Promise? Returing false when loading is very hard to handle.
- * Possbile refactor @see {@link getFixedOffsetsForCampaignAsync} (Need more testing)
+ * 
+ * @param campaign 
  * @returns false if loading
  */
-const getFixedOffsetsForCampaign = (campaign: Campaign, period: Period): Impact[] | false => {
-	let pvImpactDebitsList = Campaign.getImpactDebits({ campaign, status: KStatus.PUBLISHED });
-	if (!pvImpactDebitsList.value) {
+const getFixedOffsetsForCampaign = (campaign:Campaign, period: Period) => {
+	let pvImpactDebitsList = Campaign.getImpactDebits({campaign, status:KStatus.PUBLISHED});
+	if ( ! pvImpactDebitsList.value) {
 		return false;
 	}
-	let impactDebits = List.hits(pvImpactDebitsList.value) as unknown as ImpactDebit[];
+	let impactDebits = List.hits(pvImpactDebitsList.value) as ImpactDebit[];
 	// Do we have mixed dynamic/fixed impacts?
-	const dynamicImpactDebits = impactDebits.filter((impd) => Impact.isDynamic(impd.impact));
-	const fixedImpactDebits = impactDebits.filter((impd) => !Impact.isDynamic(impd.impact));
-	if (!dynamicImpactDebits.length || !fixedImpactDebits.length) {
-		// no mix = simples
-		let fixedOffsets = impactDebits.map(imp => Impact.isDynamic(imp.impact)? 
-			calculateDynamicOffset(campaign, imp.impact, period) 
-			: calculateFixedOffset(imp, period));
+	const dynamicImpactDebits = impactDebits.filter(impd => Impact.isDynamic(impd.impact));
+	const fixedImpactDebits = impactDebits.filter(impd => ! Impact.isDynamic(impd.impact));			
+	if ( ! dynamicImpactDebits.length || ! fixedImpactDebits.length) {
+			// no mix = simples
+		let offsets = impactDebits.map(imp => imp.impact);
+		let fixedOffsets = offsets.map((offset) =>
+			Impact.isDynamic(offset) ? calculateDynamicOffset(campaign, offset, period) : offset
+		);
 		return fixedOffsets;
 	}
 	// What gaps do we have in the fixed impacts?
 	let fixedOffsets = [] as Impact[];
 	// ...type by type
-	let types = uniq(impactDebits.map((impd) => impd.impact?.name));
-	for (let ti = 0; ti < types.length; ti++) {
+	let types = uniq(impactDebits.map(impd => impd.impact?.name));
+	for(let ti=0; ti<types.length; ti++) {
 		let type = types[ti];
-		let fixed = fixedImpactDebits.filter((impd) => impd.impact.name === type);
-		for(let i=0; i<fixed.length; i++) {
-			let fo = calculateFixedOffset(fixed[i], period);			
-			fixedOffsets.push(fo);
-		}		
-		let dynamic = dynamicImpactDebits.filter((impd) => impd.impact.name === type);
-		if (!dynamic.length) continue;
+		let fixed = fixedImpactDebits.filter(impd => impd.impact.name === type);
+		fixedOffsets.push(...fixed.map(impd => Object.assign({start:impd.start, end:impd.end}, impd.impact))); // NB: add start/end for debug
+		let dynamic = dynamicImpactDebits.filter(impd => impd.impact.name === type);
+		if ( ! dynamic.length) continue;
 		if (dynamic.length !== 1) {
-			console.warn('Multiple dynamic offsets!', campaign, type, dynamic);
+			console.warn("Multiple dynamic offsets!", campaign, type, dynamic);
 		}
 		let doffset = dynamic[0].impact;
-		if (!fixed.length) {
-			console.warn('mixed but not for type ' + type, fixedImpactDebits, 'dynamic', dynamic);
-			let do0 = calculateDynamicOffset(campaign, doffset, period) as Impact;
+		if ( ! fixed.length) {
+			console.warn("mixed but not for type "+type, fixedImpactDebits, "dynamic", dynamic);
+			let do0 = calculateDynamicOffset(campaign, doffset, period);
 			fixedOffsets.push(do0);
 			continue;
 		}
 		// calculate for gaps
 		// ASSUME the fixed patches are a continuous strip, and the dynamic are only start/end pieces
 		// ASSUME fixed offsets have start/end dates set (so startGap and endGap are well defined)
-		let starts = fixed.map((impd) => impd.start && new Date(impd.start).getTime()).filter((x) => x) as number[];
+		let starts = fixed.map(impd => impd.start && new Date(impd.start).getTime()).filter(x => x);
 		let fstart = Math.min(...starts);
-		let ends = fixed.map((impd) => impd.end && new Date(impd.end).getTime()).filter((x) => x) as number[];
+		let ends = fixed.map(impd => impd.end && new Date(impd.end).getTime()).filter(x => x);
 		let fend = Math.max(...ends);
-		if (!Number.isFinite(fstart) || !Number.isFinite(fend)) {
-			console.error('Invalid fixed ImpactDebit start/end ' + fstart + ' ' + fend + ' impact.name:' + type + ' campaign:' + campaign.id);
+		if ( ! Number.isFinite(fstart) || ! Number.isFinite(fend)) {
+			console.error("Invalid fixed ImpactDebit start/end "+fstart+" "+fend+" impact.name:"+type+" campaign:"+campaign.id);
 			return false;
 		}
-		let startGap = { start: period.start, end: new Date(fstart) } as Period;
-		let endGap = { start: new Date(fend), end: period.end } as Period;
-		// avoid bad/empty periods where start is after end
-		if (startGap.start.getTime() < startGap.end.getTime()) {
-			let do1 = calculateDynamicOffset(campaign, doffset, startGap) as Impact;
-			fixedOffsets.push(do1);
-		}
-		if (endGap.start.getTime() < endGap.end.getTime()) {
-			let do2 = calculateDynamicOffset(campaign, doffset, endGap) as Impact;
-			fixedOffsets.push(do2);
-		}
+		let startGap = {start:period.start, end:new Date(fstart)};
+		let endGap = {start:new Date(fend), end:period.end};		
+		let do1 = calculateDynamicOffset(campaign, doffset, startGap);
+		let do2 = calculateDynamicOffset(campaign, doffset, endGap);
+		fixedOffsets.push(do1, do2);
 	}
 	if (fixedOffsets.filter(x => ! x).length) {
+		console.log("loading carbon data", fixedOffsets);
 		return false; // still loading data
 	}
 	return fixedOffsets;

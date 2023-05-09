@@ -3,10 +3,9 @@ import { Button, Modal, ModalBody } from 'reactstrap';
 import { DownloadCSVLink } from '../../../base/components/SimpleTable';
 import { space, stopEvent } from '../../../base/utils/miscutils';
 import Misc from '../../../MiscOverrides';
-import { dataColours} from './dashUtils';
-import { GreenCard, downloadIcon } from './GreenDashUtils';
+import { dataColours, GreenCard } from './dashutils';
 import { getCarbon, emissionsPerImpressions } from './emissionscalcTs';
-import { isPer1000, isRandomSampling } from './GreenMetrics';
+import { isPer1000 } from './GreenMetrics';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import CSS from '../../../../style/green-map-card.less';
 
@@ -49,6 +48,13 @@ const bbCentre = (path) => {
 	return { cx: bbox.x + bbox.width / 2, cy: bbox.y + bbox.height / 2 };
 };
 
+/** OS-independent download (downward arrow in in-tray) icon */
+const downloadIcon = (
+	<svg viewBox='0 0 100 100' className='icon download-icon'>
+		<path d='m5 70v25h90v-25h-5v20h-80v-20z' />
+		<path d='m45 10v50h-10l15 15 15-15h-10v-50h-10z' />
+	</svg>
+);
 
 /**
  * Provide CSV and SVG download links for the data shown on the map.
@@ -284,7 +290,7 @@ const MapCard = ({ baseFilters, per1000 }) => {
 		if (!mapDefs || !mapDefsReady) return;
 
 		// Country or sub-location breakdown?
-		let locnBuckets = isRandomSampling(baseFilters) ? pvChartData.value.sampling['by_' + locationField].buckets : pvChartData.value['by_' + locationField].buckets;
+		let locnBuckets = baseFilters.prob ? pvChartData.value.sampling['by_' + locationField].buckets : pvChartData.value['by_' + locationField].buckets;
 
 		// Rename locations with no corresponding map entry to OTHER
 		// convert old non-namespaced sublocations e.g. 'CA' => 'US-CA'

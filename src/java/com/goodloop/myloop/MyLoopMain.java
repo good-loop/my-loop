@@ -5,12 +5,6 @@ import com.winterwell.web.app.BasicSiteConfig;
 import com.winterwell.web.app.JettyLauncher;
 import com.winterwell.web.app.LogServlet;
 
-/**
- * A very basic server -- my.good-loop.com is nearly a pure front-end web-app.
- * The server-side java generates static responses for SEO / social media bots.
- * @author daniel
- *
- */
 public class MyLoopMain extends AMain<BasicSiteConfig> {
 
 	public MyLoopMain() {

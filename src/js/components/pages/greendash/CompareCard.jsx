@@ -9,13 +9,12 @@ import KStatus from '../../../base/data/KStatus';
 import { getDataList } from '../../../base/plumbing/Crud';
 import DataStore from '../../../base/plumbing/DataStore';
 import SearchQuery from '../../../base/searchquery';
+import { isoDate } from '../../../base/utils/miscutils';
 import C from '../../../C';
-import {GreenCard, GreenCardAbout, ModeButton} from './GreenDashUtils';
-import { dataColours, TONNES_THRESHOLD } from './dashUtils';
-import { isoDate, getPeriodQuarter, printPeriod } from '../../../base/utils/date-utils';
+import { dataColours, getPeriodQuarter, GreenCard, GreenCardAbout, ModeButton, printPeriod, TONNES_THRESHOLD } from './dashutils';
 import { getCompressedBreakdownWithCount, getCarbon, emissionsPerImpressions, getSumColumn } from './emissionscalcTs';
 
-import { isPer1000, isRandomSampling } from './GreenMetrics';
+import { isPer1000 } from './GreenMetrics';
 import { assert } from '../../../base/utils/assert';
 
 
@@ -104,7 +103,7 @@ const QuartersCard = ({baseFilters}) => {
 		let quarter = quarters[i];
 		chartProps.data.labels[i] = printPeriod(quarter, true);
 
-		let buckets = isRandomSampling(baseFilters) ? pvBuckets.value.sampling.by_total.buckets : pvBuckets.value.by_total.buckets;
+		let buckets = baseFilters.prob ? pvBuckets.value.sampling.by_total.buckets : pvBuckets.value.by_total.buckets;
 		if (!buckets || !buckets.length) {
 			return; // no data for this quarter
 		}
@@ -153,7 +152,7 @@ const CampaignCard = ({baseFilters}) => {
 		name:"campaign-chartdata",
 	});
 
-	let dataValue = isRandomSampling(baseFilters) ? pvChartData.value?.sampling : pvChartData.value;
+	let dataValue = baseFilters.prob ? pvChartData.value?.sampling : pvChartData.value;
 
 	let vbyx = {};
 	let labels = [];

@@ -8,10 +8,10 @@ import DataStore from '../../../base/plumbing/DataStore';
 import Login from '../../../base/youagain';
 
 import { encURI, isMobile, space, toTitleCase } from '../../../base/utils/miscutils';
-import C, { urlParamForType } from '../../../C';
+import C from '../../../C';
 import ServerIO from '../../../plumbing/ServerIO';
 
-import { getFilterTypeId } from './dashUtils';
+import { getFilterModeId } from './dashutils';
 import ShareWidget, { shareThingId } from '../../../base/components/ShareWidget';
 import { modifyPage } from '../../../base/plumbing/glrouter';
 
@@ -27,16 +27,16 @@ const ShareDash = ({style, className}) => {
 	// if ( ! Roles.isDev() && ! DataStore.getUrlValue("shareables") && ! DataStore.getUrlValue("debug") && ! DataStore.getUrlValue("gl.debug")) {
 	// 	return null; // dev only for now TODO for all
 	// }
-	let {filterType, filterId} = getFilterTypeId();
-	if ( ! filterType || ! filterId) {
+	let {filterMode, filterId} = getFilterModeId();
+	if ( ! filterMode || ! filterId) {
 		return null;
 	}
-	let shareId = shareThingId(filterType, filterId);
-	let pvItem = getDataItem({type:filterType, id:filterId, status:KStatus.PUBLISHED});
-	let shareName = urlParamForType(filterType)+" "+((pvItem.value && pvItem.value.name) || filterId);
+	let type = {brand:"Advertiser",adid:"GreenTag"}[filterMode] || toTitleCase(filterMode);
+	let shareId = shareThingId(type, filterId);
+	let pvItem = getDataItem({type, id:filterId, status:KStatus.PUBLISHED});
+	let shareName = filterMode+" "+((pvItem.value && pvItem.value.name) || filterId);
 	const showEmails = DataStore.getUrlValue("listemails");
-	return <ShareWidget className={className} style={style} hasButton name={"Dashboard for "+shareName} 
-		shareId={shareId} hasLink noEmails={!showEmails} />;
+	return <ShareWidget className={className} style={style} hasButton name={"Dashboard for "+shareName} shareId={shareId} hasLink noEmails={!showEmails} />;
 }
 
 /**
@@ -92,11 +92,11 @@ const GreenNavBar = ({active}) => {
 					<div className="green-nav-icon tags-icon" /> Manage<br/>Tags
 				</A>
 			</NavItem>
-			<NavItem>
+			{Roles.isDev() && <NavItem>			
 				<A className={space('nav-item', active === 'recommendation' && 'active')} href={recUrl}>
 					<div className="green-nav-icon optimisation-icon" /> Reduce
 				</A>
-			</NavItem>
+			</NavItem>}
 			<NavItem>
 				<A className={active === 'impact' ? 'active' : ''} href={impactUrl}>
 					<div className="green-nav-icon impact-icon" /> Impact<br/>Overview
