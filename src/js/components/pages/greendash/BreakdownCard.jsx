@@ -384,15 +384,14 @@ const PubSubcard = ({ data }) => {
 	];
 
 	// skip unset
-	data = data.filter((row) => row.key !== 'unset');
-
+	// data = data.filter((row) => row.key !== 'unset');
 	return (
 		<>
 			<p className='small'>
 				Emissions breakdown by publisher/domain.
 				<br />
 			</p>
-			<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className='domain-table' tableName='carbon-by-publishers' />
+			<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className='domain-table' tableName='carbon-by-publishers' precision={3} />
 		</>
 	);
 };
