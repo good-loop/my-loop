@@ -9,7 +9,7 @@ import SimpleTable, { Column } from '../../../base/components/SimpleTable';
 import List from '../../../base/data/List';
 import { ButtonGroup } from 'reactstrap';
 import { getCarbon, getTags, emissionsPerImpressions, getSumColumn, getBreakdownByWithCount, getCompressedBreakdownWithCount, filterByCount } from './emissionscalcTs';
-import { isPer1000, isRandomSampling } from './GreenMetrics';
+import { isPer1000 } from './GreenMetrics';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import '../../../../style/greendash-breakdown-card.less';
 import {  CO2e, NOEMISSIONS, GreenCard, GreenCardAbout, ModeButton} from './GreenDashUtils';
@@ -408,7 +408,7 @@ const BreakdownCard = ({ baseFilters }) => {
 		...baseFilters,
 		breakdown: ['total{"emissions":"sum"}'],
 	});
-	const techValue = isRandomSampling(baseFilters) ? pvTechValue.value?.sampling : pvTechValue.value;
+	const techValue = pvTechValue.value?.sampling || pvTechValue.value;
 
 	// NB: breakdown: "emissions":"sum" is a hack that the backend turns into count(aka impressions) + co2 + co2-bits
 	const pvDataValue = getCarbon({
@@ -416,7 +416,7 @@ const BreakdownCard = ({ baseFilters }) => {
 		breakdown: ['os{"countco2":"sum"}', 'adid{"countco2":"sum"}', 'domain{"countco2":"sum"}', 'format{"countco2":"sum"}'],
 	});
 
-	const dataValue = isRandomSampling(baseFilters) ? pvDataValue.value?.sampling : pvDataValue.value;
+	const dataValue = pvDataValue.value?.sampling || pvDataValue.value;
 
 	const loading = <Misc.Loading text='Fetching your data...' />;
 
