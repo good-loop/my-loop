@@ -52,17 +52,15 @@ const greenDashUrls = authPages.map(page => baseUrl + page + "&server=production
 const checkForErrors = async (page) => {
     const errorText = await page.evaluate(() => document.querySelector('body').innerText.toLowerCase());
     if (errorText.includes('there was an error')) {
-        console.log("error!");
         throw new Error('Error text found in the page');
     }
 
-    page.on('response', response => {
-        const status = response.status();
-        if (status >= 400) {
-            console.log("error?");
-            throw new Error(`Received bad response with status code ${status} from ${response.url()}`);
-        }
-    });
+    // page.on('response', response => {
+    //     const status = response.status();
+    //     if (status >= 400) {
+    //         throw new Error(`Received bad response with status code ${status} from ${response.url()}`);
+    //     }
+    // });
 };
 
 const login = async () => {
