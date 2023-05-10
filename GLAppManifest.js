@@ -12,7 +12,7 @@ const GLAppManifest = {
 	privacyPolicy: "https://doc.good-loop.com/privacy-policy.html",
 	tsncs: "https://doc.good-loop.com/terms/terms-of-use.html",
 	instagramLink: "https://www.instagram.com/goodloophq/",
-	facebookLinmk: "https://www.facebook.com/the.good.loop/",
+	facebookLink: "https://www.facebook.com/the.good.loop/",
 	twitterLink: "https://twitter.com/goodloophq",
 };
 

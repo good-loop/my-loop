@@ -68,7 +68,7 @@ const SubscribePage = ({ }) => {
 const PAGES = {
 	blog: BlogPage, // TODO
 	// blogcontent: BlogContent,
-	campaign: CampaignPage,
+	campaign: CampaignImpact, // logic for handling legacy pages is contained within ImpactB2C.jsx's CampaignImpact
 	// impact: CampaignImpact,
 	impactoverview: MyAdCampaignsPage,
 	// TODO newer impact design;

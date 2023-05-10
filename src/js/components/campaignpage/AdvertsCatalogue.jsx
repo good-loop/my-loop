@@ -26,7 +26,7 @@ import { assert } from '../../base/utils/assert';
  * @param {?Boolean} p.noPreviews remove preview carousel
  */
 const AdvertsCatalogue = ({ campaign, ads, canonicalAds, noPreviews, className }) => {
-	assert(canonicalAds);
+	//assert(canonicalAds);
 	let ongoing = Campaign.isOngoing(campaign);
 
 	// filter out any hidden ads
