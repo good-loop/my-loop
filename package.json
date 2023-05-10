@@ -40,7 +40,8 @@
     "compile": "webpack --config $PWD/webpack.config.js --progress --color && ./gitstamp.sh",
     "compile-watch": "webpack --config $PWD/webpack.config.js --progress --color --watch",
     "compile-watch-fast": "NO_PROD=true webpack --config $PWD/webpack.config.js --progress --color --watch",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test": "npx playwright test"
   },
   "devDependencies": {
     "@babel/core": "^7.20.7",
@@ -54,6 +55,7 @@
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-react": "^7.16.0",
     "@babel/preset-typescript": "^7.16.0",
+    "@playwright/test": "^1.33.0",
     "@types/lodash": "^4.14.191",
     "@types/md5": "^2.3.2",
     "@types/react": "^17.0.37",
@@ -78,6 +80,7 @@
     "less-loader": "^10.2.0",
     "mini-css-extract-plugin": "^2.4.5",
     "node-fetch": "^2.6.6",
+    "playwright": "^1.33.0",
     "prismjs": "^1.29.0",
     "puppeteer": "^2.0.0",
     "shelljs": "^0.8.4",
