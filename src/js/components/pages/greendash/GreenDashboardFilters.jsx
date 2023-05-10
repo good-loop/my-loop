@@ -8,7 +8,7 @@ import KStatus from '../../../base/data/KStatus';
 import DataStore, { getUrlValue } from '../../../base/plumbing/DataStore';
 import { nonce } from '../../../base/data/DataClass';
 import { getDataItem, getDataList } from '../../../base/plumbing/Crud';
-import { getPeriodQuarter, getPeriodMonth, periodToParams, printPeriod, getPeriodFromUrlParams, getTimeZone, getTimeZoneShortName, setTimeZone } from '../../../base/utils/date-utils';
+import { getPeriodQuarter, newDateTZ, printPeriod, getPeriodFromUrlParams, getTimeZoneShortName, setTimeZone } from '../../../base/utils/date-utils';
 
 import DateRangeWidget from '../../DateRangeWidget';
 import { modifyPage } from '../../../base/plumbing/glrouter';
@@ -34,8 +34,8 @@ const allFilterParams = ['period', 'start', 'end', 'tz', 'agency', 'brand', 'cam
 const initPeriod = () => {
 	let period = getPeriodFromUrlParams();
 	if ( ! period) {
-		period = getPeriodQuarter();
-		modifyPage(null, { period: period.name, start: period.start, end: period.end });
+		period = getPeriodQuarter(new Date());
+		modifyPage(null, { period: period.name, start: period.start.toISOString(), end: period.end.toISOString() });
 	}
 	// default to UTC timezone
 	if ( ! getUrlValue("tz")) {
@@ -166,15 +166,15 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 	};
 	const {period,start,end,tz,brand,campaign,tag,agency} = urlValues;
 	
-	/**
-	 * @param {Period} period 
-	 */
-	const setPeriodFilters = (period) => {
-		console.warn("setPeriodFilters", period);
-		DataStore.setUrlValue("start", period.start);
-		DataStore.setUrlValue("end", period.end);
-		DataStore.setUrlValue("period", period.name);
-	}
+	// /**
+	//  * @param {Period} period 
+	//  */
+	// const setPeriodFilters = (period) => {
+	// 	console.warn("setPeriodFilters", period);
+	// 	DataStore.setUrlValue("start", period.start);
+	// 	DataStore.setUrlValue("end", period.end);
+	// 	DataStore.setUrlValue("period", period.name);
+	// }
 
 	// Items to populate the filter-by-[agency, brand, campaign, tag] dropdown
 	const [filterItems, setFilterItems] = useState([]);
@@ -246,8 +246,7 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 							</DropdownItem>
 								<DropdownItem divider />
 								{/* <DateRangeWidget dflt={periodObj} onChange={setPeriodFilters} /> */}
-								<PropControlPeriod className="p-2" dflt={periodObj} saveFn={setPeriodFilters} 
-									buttons={"yesterday this-month last-month".split(" ")}/>
+								<PropControlPeriod className="p-2" dflt={periodObj} buttons={"yesterday this-month last-month".split(" ")}/>
 							</DropdownMenu>
 						</UncontrolledDropdown>
 

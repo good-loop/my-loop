@@ -1,12 +1,10 @@
-// Configuration for portal on `gravitas` (RM dev laptop)
-
 // Change to "local", "test" or "" to switch all endpoints together
 const cluster = 
-	//'test';
-	//'local';
-	''; // if you want production!
+	'';
+	// 'local';
+	// ''; // if you want production!
 
-const protocol = 'https';//(cluster === 'local') ? 'http' : 'https';
+const protocol = (cluster === 'local') ? 'http' : 'https';
 
 module.exports = {
 	ServerIOOverrides: {
@@ -15,12 +13,13 @@ module.exports = {
 		PORTAL_ENDPOINT: `${protocol}://${cluster}portal.good-loop.com`,
 		DEMO_ENDPOINT: `${protocol}://${cluster}demo.good-loop.com`,
 		DATALOG_ENDPOINT: `${protocol}://${cluster}lg.good-loop.com/data`,
+		// DATALOG_ENDPOINT: `https://locallg.good-loop.com/data`,
 		MEDIA_ENDPOINT: `${protocol}://${cluster}uploads.good-loop.com`,
 		ANIM_ENDPOINT: `${protocol}://${cluster}portal.good-loop.com/_anim`,
 		CHAT_ENDPOINT: `${protocol}://${cluster}chat.good-loop.com/reply`,
 		PROFILER_ENDPOINT: `${protocol}://${cluster}profiler.good-loop.com`,
 		// DATALOG_DATASPACE: 'gl',
-		ENDPOINT_NGO: 'https://test.sogive.org/charity',
+		ENDPOINT_NGO: 'https://app.sogive.org/charity',
 		// JUICE_ENDPOINT: 'https://localjuice.good-loop.com',
 		// ADRECORDER_ENDPOINT: 'http://localadrecorder.good-loop.com/record',
 	}

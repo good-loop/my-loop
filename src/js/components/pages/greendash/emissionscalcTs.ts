@@ -111,20 +111,7 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 		q = SearchQuery.setPropOr(null, 'campaign', campaignIds!).query;
 	}
 	if (filterType === C.TYPES.Agency) {
-		// copy pasta of brand above
-		// get the campaigns
-		let sq = SearchQuery.setProp(null, 'agencyId', filterId);
-		const pvAllCampaigns = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUBLISHED, q: sq.query, ids: null, sort: null, start: null, end: null });
-		if (!pvAllCampaigns.resolved) {
-			failedObject = { type: 'loading', message: 'Fetching agency campaigns...' };
-			return failedObject;
-		}
-		const campaignIds = List.hits(pvAllCampaigns.value)?.map((c) => c.id);
-		if (!yessy(campaignIds)) {
-			failedObject = { type: 'alert', message: `No campaigns for agency id: ${filterId}` };
-			return failedObject;
-		}
-		q = SearchQuery.setPropOr(null, 'campaign', campaignIds!).query;
+		q = SearchQuery.setProp(null, 'agency', filterId).query;
 	}
 
 	// HACK: Is this a master campaign? Do we need to cover sub-campaigns?
@@ -409,7 +396,7 @@ export const emissionsPerImpressions = (buckets: GreenBuckets, filterLessThan: n
  * Why not use Promise? Returing null when loading is very hard to handle.
  * @returns null if loading data
  */
-export const calculateDynamicOffset = (campaign: Campaign, offset: Impact, period: Period|null): Impact | null => {
+const calculateDynamicOffset = (campaign: Campaign, offset: Impact, period: Period|null): Impact | null => {
 	Campaign.assIsa(campaign, null);
 	assert(Impact.isDynamic(offset), campaign); // paranoia
 
@@ -452,13 +439,12 @@ export const calculateDynamicOffset = (campaign: Campaign, offset: Impact, perio
 
 
 /**
- * 
  * FIXME How does this relate to calculateFixedOffset()??
  * FIXME How does this relate to getFixedOffsetsForCampaign() in the master branch??
- * 
+ * How does this relate to getFixedOffsetsForCampaign??
  * fraction by period, or all
  */
-export const calculateFixedOffset = (impactDebit: ImpactDebit, period: Period|null): Impact | null => {
+const calculateFixedOffset = (impactDebit: ImpactDebit, period: Period|null): Impact | null => {
 	ImpactDebit.assIsa(impactDebit);
 	// We either want carbon emissions or impressions count for this campaign/period - this gets both
 	if ( ! period) {		
