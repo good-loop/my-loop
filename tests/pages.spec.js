@@ -45,7 +45,7 @@ const authPages = [
     'greendash/recommendation?campaign=iLWiEWO6&period=all'
 ]
 
-const baseUrl = process.env.MYLOOP_TEST_URL || 'https://stagemy.good-loop.com/';
+const baseUrl = process.env.TEST_URL || 'https://stagemy.good-loop.com/';
 const guestPageUrls = guestPages.map(page => baseUrl + page + "?server=production");
 const greenDashUrls = authPages.map(page => baseUrl + page + "&server=production");
 
