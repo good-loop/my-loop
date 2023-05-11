@@ -10,7 +10,6 @@ import { Cite } from '../../base/components/LinkOut';
 import Misc from '../../base/components/Misc';
 import StyleBlock from '../../base/components/StyleBlock';
 import Advert from '../../base/data/Advert';
-import Campaign from '../../base/data/Campaign';
 import { getId, getType } from '../../base/data/DataClass';
 import KStatus from '../../base/data/KStatus';
 import List from '../../base/data/List';
@@ -37,6 +36,9 @@ import { setNavContext, setNavProps } from '../../base/components/NavBar';
 import Messaging, { notifyUser } from '../../base/plumbing/Messaging';
 import { PageCard, TriCards } from '../pages/CommonComponents';
 import ModalCTA from './CampaignModalTFG';
+
+// Import from legacy file to initialize it
+import Campaign from '../../base/data/LegacyImpactHubData';
 
 /**
  * @returns fetches for all the data: `{pvTopCampaign, pvAgencies, pvAds, pvAdvertisers}`
@@ -109,7 +111,7 @@ const fetchIHubData = () => {
 	}
 
 	// ads
-	const pvAds = pvTopCampaign.value? Campaign.pvAds({campaign: pvTopCampaign.value, status, query}) : null;
+	const pvAds = pvTopCampaign.value? Campaign.pvAdsLegacy({campaign: pvTopCampaign.value, status, query}) : null;
 	// advertiser
 	if (pvTopCampaign.value && pvTopCampaign.value.vertiser) {
 		const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:pvTopCampaign.value.vertiser});

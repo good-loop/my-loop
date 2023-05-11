@@ -14,7 +14,7 @@ import { modalToggle } from './GLCards';
 const initPeriod = () => {
 	let period = getPeriodFromUrlParams();
 	if (!period) {
-		period = getPeriodQuarter();
+		period = getPeriodQuarter(new Date());
 		modifyPage(null, { period: period.name });
 	}
 	return period;
