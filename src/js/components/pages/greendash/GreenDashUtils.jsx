@@ -6,6 +6,9 @@ import { PNGDownloadButton } from "../../../base/components/PNGDownloadButton";
 import { Button, Card } from 'reactstrap';
 import { mass } from './dashUtils';
 import { space } from '../../../base/utils/miscutils';
+import { getFilterTypeId } from './dashUtils';
+import { getDataItem } from '../../../base/plumbing/Crud';
+import KStatus from '../../../base/data/KStatus';
 
 
 
@@ -54,16 +57,30 @@ export const Mass = ({kg}) => {
 
 /** Boilerplate styling for a subsection of the green dashboard */
 export const GreenCard = ({ title, children, className, row, downloadable = true, ...rest}) => {
+	const { filterType, filterId } = getFilterTypeId();
+	const pvItem = getDataItem({type: filterType, id: filterId, status: KStatus.PUB_OR_DRAFT});
+	const filterItemName = pvItem.value && pvItem.value.name;
+	const fileName = `${filterType}: ${filterItemName} - ${title}`.trim();
+	
 	const downloadButton = downloadable && (
 		<PNGDownloadButton
 			querySelector={`.${className}`}
-			fileName={title}
+			fileName={fileName}
 			title="Click to download this card as a .PNG"
 			opts={{scale: 1.25}}
 			onCloneFn={(document) => {
 				// Larger card headings
 				document.querySelectorAll('.gc-title').forEach(node => {
+					// Apply screenshot-specific CSS overrides to the cart 
 					Object.assign(node.style, screenshotStyle);
+
+					// Create a sub-heading to include the filter type/filter name
+					const subHeading = document.createElement('h3');
+					Object.assign(subHeading.style, screenshotStyle);
+					subHeading.textContent = `${filterType}: ${filterItemName}`;
+					subHeading.style.fontSize = "0.75rem";
+					subHeading.style.color = "#000";
+					node.parentNode.insertBefore(subHeading, node.nextSibling);
 				});
 				// Greencard padding
 				document.querySelector('.gc-body').style.border = 'none';
