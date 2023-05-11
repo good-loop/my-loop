@@ -392,7 +392,7 @@ const PubSubcard = ({ data }) => {
 				Emissions breakdown by publisher/domain.
 				<br />
 			</p>
-			<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className='domain-table' tableName='carbon-by-publishers' precision={3} />
+			<SimpleTable data={data} columns={columns} hasCsv rowsPerPage={6} className='domain-table' tableName='carbon-by-publishers' precision={2} />
 		</>
 	);
 };
