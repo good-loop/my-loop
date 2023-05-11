@@ -1,6 +1,9 @@
 module.exports = {
     testDir: "./tests",
-    reporter: [['html', {outputFolder: 'playwright-report'}]],
+    reporter: [['html', {
+        outputFolder: process.env.PLAYWRIGHT_REPORT_DIRECTORY || 'playwright-report',
+        open: "never"
+    }]],
     retries: 1,
     use: {
         headless: true,

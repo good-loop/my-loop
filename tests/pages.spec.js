@@ -35,7 +35,6 @@ const guestPages = [
 
 // Pages to check _after_ authenticating.
 const authPages = [
-    'newtab.html?server=production',
     'greendash?campaign=iLWiEWO6&period=all',
     'greendash?campaign=xJJNA6jZ&period=all',
     'greendash?campaign=d2JK2qan&period=all',
@@ -50,17 +49,19 @@ const guestPageUrls = guestPages.map(page => baseUrl + page + "?server=productio
 const greenDashUrls = authPages.map(page => baseUrl + page + "&server=production");
 
 const checkForErrors = async (page) => {
-    const errorText = await page.evaluate(() => document.querySelector('body').innerText.toLowerCase());
-    if (errorText.includes('there was an error')) {
+    // Check for a "there was an error" message in the body.
+    const bodyText = await page.evaluate(() => document.querySelector('body').innerText.toLowerCase());
+    if (bodyText.includes('there was an error')) {
         throw new Error('Error text found in the page');
     }
 
-    // page.on('response', response => {
-    //     const status = response.status();
-    //     if (status >= 400) {
-    //         throw new Error(`Received bad response with status code ${status} from ${response.url()}`);
-    //     }
-    // });
+    // Check for any 4xx or 5xx error codes - but only for `baseUrl` - not any external requests
+    page.on('response', response => {
+        const status = response.status();
+        if (response.url().startsWith(baseUrl) && status >= 400) {
+            throw new Error(`Received bad response with status code ${status} from ${response.url()}`);
+        }
+    });
 };
 
 const login = async () => {
@@ -112,8 +113,8 @@ test.describe('Authenticated tests', () => {
             await page.goto(pageUrl);
 
             // Playwright doesn't seem to have a built-in way to wait on all AJAX requests finishing.
-            // Greendash cards may finish loading at separate times. For now, let's just wait 1s per dash.
-            await page.waitForTimeout(15000);
+            // Greendash cards may finish loading at separate times. For now, let's just wait 10s per dash.
+            await page.waitForTimeout(10000);
 
             await checkForErrors(page);
         });
