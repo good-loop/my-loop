@@ -66,13 +66,19 @@ const checkForErrors = async (page) => {
 
 const login = async () => {
     console.info('Logging in');
-    await page.goto(baseUrl + 'home');
-    await page.click('li.login-link');
 
-    await page.fill('#loginByEmail-email', loginEmail);
-    await page.fill('#loginByEmail-password', loginPassword);
+    // For some reason, Playwright would log in fine using the modal on the home page locally,
+    // but not running headlessly on the server. It works fine using the static greendash login page though.
+    await page.goto(baseUrl + 'greendash');
 
-    await page.click('#loginByEmail-submit');
+    await page.waitForSelector('#loginByEmail-email');
+    await page.type('#loginByEmail-email', loginEmail);
+    await page.type('#loginByEmail-password', loginPassword);
+
+    await Promise.all([
+        page.waitForNavigation(),
+        page.click('#loginByEmail-submit')
+    ]);
 };
 
 test.describe('Guest tests', () => {
