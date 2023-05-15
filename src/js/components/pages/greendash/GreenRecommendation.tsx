@@ -70,7 +70,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, defaultValue,
  * @returns
  */
 const RecommendationChart = ({ bucketsPer1000, passBackChart }: { bucketsPer1000: GreenBuckets, passBackChart: Function }): JSX.Element | null => {
-	let logarithmic = false;
+	let logarithmic = true;
 	const yscale = DataStore.getUrlValue('yscale');
 	if (yscale) logarithmic = KScale.islogarithmic(yscale);
 
