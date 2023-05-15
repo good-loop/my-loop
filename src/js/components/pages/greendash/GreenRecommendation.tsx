@@ -70,7 +70,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, defaultValue,
  * @returns
  */
 const RecommendationChart = ({ bucketsPer1000, passBackChart }: { bucketsPer1000: GreenBuckets, passBackChart: Function }): JSX.Element | null => {
-	let logarithmic = true;
+	let logarithmic = false;
 	const yscale = DataStore.getUrlValue('yscale');
 	if (yscale) logarithmic = KScale.islogarithmic(yscale);
 
@@ -126,13 +126,14 @@ const RecommendationChart = ({ bucketsPer1000, passBackChart }: { bucketsPer1000
 						text: 'Impressions',
 					},
 					bounds: 'ticks',
-					ticks: { callback: printer.prettyInt }, // No trailing .0 on impression count!
+					ticks: { callback: Math.floor }, // No trailing .0 on impression count!
 				},
 			},
 		};
 
 		if (logarithmic) {
 			chartOptions.scales.y.type = 'logarithmic';
+			chartOptions.scales.y.ticks = { callback: (t: number) => t.toString().startsWith('1') ? Math.floor(t) : null } // HACK hide minor ticks
 		}
 
 		setChartData({
