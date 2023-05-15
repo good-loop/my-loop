@@ -133,7 +133,9 @@ const RecommendationChart = ({ bucketsPer1000, passBackChart }: { bucketsPer1000
 
 		if (logarithmic) {
 			chartOptions.scales.y.type = 'logarithmic';
-			chartOptions.scales.y.ticks = { callback: (t: number) => t.toString().startsWith('1') ? Math.floor(t) : null } // HACK hide minor ticks
+			// minor labels were default to be hidden, only showing major ticks.
+			// ticks: { callback: Math.floor } will introduce minor labels back. HACK to hide minor labels
+			chartOptions.scales.y.ticks = { callback: (t: number) => t.toString().startsWith('1') ? Math.floor(t) : null } 
 		}
 
 		setChartData({
