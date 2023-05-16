@@ -11,7 +11,7 @@ import Login from '../../../base/youagain';
 import { GLCard } from '../../impact/GLCards';
 import GreenDashboardFilters from './GreenDashboardFilters';
 import { GreenBuckets, emissionsPerImpressions, getBasefilters, getCarbon, type BaseFilters, type BreakdownRow } from './emissionscalcTs';
-import PropControl from '../../../base/components/PropControl';
+import { Tick } from 'chart.js'
 
 import '../../../../style/GreenRecommendations.less';
 import { CO2e, downloadIcon } from './GreenDashUtils';
@@ -126,16 +126,15 @@ const RecommendationChart = ({ bucketsPer1000, passBackChart }: { bucketsPer1000
 						text: 'Impressions',
 					},
 					bounds: 'ticks',
-					ticks: { callback: Math.floor }, // No trailing .0 on impression count!
+					ticks: { callback: (value: any, index: number, ticks: Tick[]) => {
+						return ticks[index].major ? Math.floor(value) : null; // Skip minor ticks & No trailing .0 on impression count!
+					} }, 
 				},
 			},
 		};
 
 		if (logarithmic) {
 			chartOptions.scales.y.type = 'logarithmic';
-			// minor labels were default to be hidden, only showing major ticks.
-			// ticks: { callback: Math.floor } will introduce minor labels back. HACK to hide minor labels
-			chartOptions.scales.y.ticks = { callback: (t: number) => t.toString().startsWith('1') ? Math.floor(t) : null } 
 		}
 
 		setChartData({
