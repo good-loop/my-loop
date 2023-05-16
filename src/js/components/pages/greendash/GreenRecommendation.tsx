@@ -127,7 +127,12 @@ const RecommendationChart = ({ bucketsPer1000, passBackChart }: { bucketsPer1000
 					},
 					bounds: 'ticks',
 					ticks: { callback: (value: any, index: number, ticks: Tick[]) => {
-						return ticks[index].major ? Math.floor(value) : null; // Skip minor ticks & No trailing .0 on impression count!
+						if (logarithmic) {
+							return ticks[index].major ? Math.floor(value) : null; // Skip minor ticks
+						 } 
+						else {
+							return Math.floor(value); // No trailing .0 on impression count!
+						}
 					} }, 
 				},
 			},
