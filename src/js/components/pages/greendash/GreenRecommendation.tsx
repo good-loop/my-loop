@@ -11,7 +11,7 @@ import Login from '../../../base/youagain';
 import { GLCard } from '../../impact/GLCards';
 import GreenDashboardFilters from './GreenDashboardFilters';
 import { GreenBuckets, emissionsPerImpressions, getBasefilters, getCarbon, type BaseFilters, type BreakdownRow } from './emissionscalcTs';
-import PropControl from '../../../base/components/PropControl';
+import { Tick } from 'chart.js'
 
 import '../../../../style/GreenRecommendations.less';
 import { CO2e, downloadIcon } from './GreenDashUtils';
@@ -126,7 +126,14 @@ const RecommendationChart = ({ bucketsPer1000, passBackChart }: { bucketsPer1000
 						text: 'Impressions',
 					},
 					bounds: 'ticks',
-					ticks: { callback: printer.prettyInt }, // No trailing .0 on impression count!
+					ticks: { callback: (value: any, index: number, ticks: Tick[]) => {
+						if (logarithmic) {
+							return ticks[index].major ? Math.floor(value) : null; // Skip minor ticks
+						 } 
+						else {
+							return Math.floor(value); // No trailing .0 on impression count!
+						}
+					} }, 
 				},
 			},
 		};
