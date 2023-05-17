@@ -38,7 +38,7 @@ import { PageCard, TriCards } from '../pages/CommonComponents';
 import ModalCTA from './CampaignModalTFG';
 
 // Import from legacy file to initialize it
-import Campaign from '../../base/data/LegacyImpactHubData';
+import Campaign from '../../base/data/DeprecatedImpactHubData';
 
 /**
  * @returns fetches for all the data: `{pvTopCampaign, pvAgencies, pvAds, pvAdvertisers}`
