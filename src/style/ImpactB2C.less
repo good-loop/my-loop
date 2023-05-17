@@ -2,8 +2,10 @@
 
 /*
  Styling for replacement of impact hub, based of design https://miro.com/app/board/uXjVMaoHMrI=/
-*/
 
+ Styling is structured so each card will have its own section selected via id
+ A few mostly 
+*/
 #ImpactB2C-container {
     // useful global constants that are reliably defaults
     max-width: unset;
@@ -16,13 +18,34 @@
         list-style-type: none !important;
     }
 
+    // The structure of [content] [content] when moved to mobile is converted to [content] \n [content], this class just lets us apply that neatly
+    .flex-mobile-dir {
+        // copy row styling
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin-right: -15px;
+        margin-left: -15px;
+        @media @width-mobile {
+            flex-direction: column;
+            > * { 
+                margin-top: 5%;
+            }
+        }
+    }
+
+    // the page makes extensive use of a logo within a white circle, this class handles that
     .logo-circle {
         position: relative;
+        margin: auto;
         background-color: white;
         border-radius: 50%;
         padding: 3%;
         width: 7vw;
         height: 7vw;
+        @media  @width-mobile{
+            width: 12vh;
+            height: 12vh;
+        }
 
         .logo {
             position: absolute;
@@ -35,6 +58,7 @@
         }
     }
 
+    // the page makes use of several rows of [arm img ->] [sparkle] [logo] [sparkle] [<- arm img]
     .charities-arms-logo {
         display: flex;
         position: relative;
@@ -72,8 +96,12 @@
     .spark {
         position: absolute;
         width: 5%;
+        @media @width-mobile {
+            display: none;
+        }
     }
 
+    // keep each piece of normal text (usually paragraph elements) standardized
     .text {
         font-family: 'Montserrat', sans-serif;
         font-weight: 600;
@@ -81,6 +109,7 @@
         margin-bottom: 0;
     }
 
+    // nearly every image on this page should just fill its container
     .fill-img {
         width: 100%;
         height: 100%;
@@ -151,6 +180,9 @@
 
         .adsForGood {
             max-width: 20%;
+            @media @width-mobile {
+                max-width: 75%;
+            }
             margin: 2%;
         }
 
@@ -184,7 +216,6 @@
     #how-it-works {
         background-color: @gl-impact-blue;
         color: white !important;
-        height: 90vh;
         padding: 5vh;
         justify-content: space-between;
 
@@ -194,6 +225,7 @@
             height: 80%;
             background-image: url("/img/Impact/Curved-line.svg");
             background-repeat: no-repeat;
+            background-size: 100%;
             background-position-y: 25%;
         }
 
@@ -203,8 +235,8 @@
             min-width: 25%;
 
             .white-circle {
-                height: 250px;
-                width: 250px;
+                height: 30vh;
+                width: 30vh;
                 border: 2px solid white;
                 border-radius: 50%;
                 overflow: hidden;
@@ -216,10 +248,10 @@
 
     // rules for both campaign impacts
     .campaign-impact {
-        height: 125vh;
-
+        
         .camp-impact-card {
             height: 45vh;
+            overflow: hidden;
         }
 
         .camp-impact-img {
@@ -229,6 +261,12 @@
         .impact-section {
             display: flex;
             flex-direction: column;
+            
+            // on mobile stop content from being flush with screen edges
+            @media @width-mobile {
+                width: 90%;
+                margin: auto;
+            }
 
             .curve {
                 height: 100%;
@@ -255,6 +293,9 @@
                 place-content: center;
                 text-align: left;
                 padding: 10%;
+                @media @width-mobile {
+                    padding: 5%;
+                }
                 color: white !important;
 
                 .cause {
@@ -315,6 +356,9 @@
                 background-position-y: 0;
                 background-position-x: 70%; // center it a bit more otherwise we're just looking at america 
                 background-color: @gl-impact-blue  !important;
+                @media @width-mobile {
+                    background-image: none;
+                }
 
                 // quote box around dyk fact
                 img {
@@ -375,7 +419,8 @@
         #row-2 {
             // Helping Fund 'Project Here'
             .right {
-                padding: 3% !important;
+                padding: 5% !important;
+
                 text-align: left;
                 position: relative;
 
@@ -390,7 +435,11 @@
                 }
 
                 .project-desc {
-                    font-size: 1vw; // keeps text within the div unless there's a TON of text
+                    font-weight: unset;
+                    font-size: 1vw; // keeps text within the div unless there's a TON of text but...
+                    @media @width-mobile {
+                        font-size: 100%; // ... on mobile it makes it tiny, so fix it there
+                    }
                 }
             }
         }
@@ -455,6 +504,9 @@
             .cta-card {
                 padding-bottom: 5%;
                 width: 49%;
+                @media @width-mobile {
+                    width: unset;
+                }
                 height: 60vh;
                 position: relative;
 
@@ -470,8 +522,12 @@
                 .btn,
                 .row,
                 p,
-                h2 {
+                h2,
+                .social-media-links {
                     margin-top: 5%;
+                    @media @width-mobile {
+                        margin-top: 10%;
+                    }
                 }
             }
 
@@ -635,6 +691,9 @@
 
         .impact-debit {
             flex-basis: 30%; // keep to 3 a row
+            @media @width-mobile {
+                flex-basis: 100%; // on mobile though, 1 per row
+            }
             height: 40vh;
             box-shadow: 0 0 10px black;
             overflow: hidden;
@@ -681,13 +740,13 @@
         display: flex;
         flex-direction: column;
         width: 100%;
-        height: 70vh;
         justify-content: space-evenly;
         align-items: center;
-
+        @media @width-mobile {
+            width: ;
+        }
         .link-row {
             justify-content: space-evenly;
-
         }
 
         .learn-more-box {
@@ -695,12 +754,21 @@
             flex-direction: column;
 
             max-width: 20%;
+            @media @width-mobile {
+                max-width: unset;
+                margin: 5% auto;
+            }
             flex-basis: 20%;
             height: 60%;
 
             .link-img {
                 width: 100%;
                 height: 40vh;
+                @media @width-mobile {
+                    // on mobile, squish the row into a column
+                    height: 35vh;
+                    width: 35vh;
+                }
                 object-fit: cover;
             }
 

@@ -1,40 +1,27 @@
 
-import React, { useEffect, useState, useRef } from 'react';
-import { useTransition, animated, useSpring } from 'react-spring';
-import PromiseValue from '../../base/promise-value';
-import { setWindowTitle } from '../../base/plumbing/Crud';
+import React from 'react';
 import DataStore from '../../base/plumbing/DataStore';
-import { Card as CardCollapse } from '../../base/components/CardAccordion';
-import TODO from '../../base/components/TODO';
-import { Button, Col, Container, InputGroup, Row } from 'reactstrap';
-import PropControl from '../../base/components/PropControl';
+import { Container, Row } from 'reactstrap';
 import Circle from '../../base/components/Circle';
-import BG from '../../base/components/BG';
-import { GLCard, GLHorizontal, GLVertical, GLModalCard, GLModalBackdrop, markPageLoaded } from './GLCards';
 import NGO from '../../base/data/NGO';
 import Money from '../../base/data/Money';
-import CharityLogo from '../CharityLogo';
 import C from '../../C';
-import AdvertsCatalogue from '../campaignpage/AdvertsCatalogue';
-import { getDataItem } from '../../base/plumbing/Crud';
 import KStatus from '../../base/data/KStatus';
-import Misc from '../../base/components/Misc';
-import List from '../../base/data/List';
 import Campaign from '../../base/data/Campaign';
 import Advertiser from '../../base/data/Advertiser';
-import { getImpressionsByCampaignByCountry } from './impactdata';
-import printer from '../../base/utils/printer'
 import {addAmountSuffixToNumber} from '../../base/utils/miscutils'
 import { fetchBaseObjects } from './impactdata';
 import { ErrorDisplay } from './ImpactComponents';
 import ImpactLoadingScreen from './ImpactLoadingScreen';
-import { PlaceholderCard } from './ImpactPlaceholderCard';
 import { addScript } from '../../base/utils/miscutils';
-import LinkOut from '../../base/components/LinkOut';
-import Icon from '../../base/components/Icon';
 import CampaignPage from '../campaignpage/CampaignPage';
 
+/**
+ * Container for the new (as of 5/23) replacement for impact hub
+ * Most up to date design : https://miro.com/app/board/uXjVMaoHMrI=/?share_link_id=8808857536 - specifically the B2C parts
+ */
 const CampaignImpact = () => {
+    // setup page & check we have all the data we need
     const path = DataStore.getValue(['location', 'path']);
 	if (path.length != 2 || path[0] !== "campaign") return <ErrorDisplay e={{error:"Invalid URL"}} />
 
@@ -43,8 +30,9 @@ const CampaignImpact = () => {
 	const itemId = path[1]
 
     // before we fetch the data we need for stories, check to see if it's a legacy impact page
+    // temporary wee hack as of 17/5/23, we can only reach this page if we choose to within the url! 
     const LEGACY_IMPACT_IDS = []
-    if(LEGACY_IMPACT_IDS.includes(itemId)) return <CampaignPage />;
+    if(LEGACY_IMPACT_IDS.includes(itemId) ||  ! DataStore.getUrlValue('newStories')) return <CampaignPage />;
 
     let pvBaseObjects = DataStore.fetch(['misc','impactBaseObjects',itemType,status,'all',itemId], () => {
 		return fetchBaseObjects({itemId, itemType, status});
@@ -57,6 +45,8 @@ const CampaignImpact = () => {
     masterBrand = masterBrand || brand;
 
 	let totalDonation = Money.total(impactDebits.map(debit => debit?.impact?.amount || new Money(0)));
+    if(impactDebits.length == 0) return <ErrorDisplay e={{message: "No impact debits found for this campaign"}} />
+
 	// Returns NaN if impactDebits is an empty array
 	if (isNaN(totalDonation.value)) totalDonation = new Money(0);
 	const totalString = Money.prettyStr(totalDonation);
@@ -66,16 +56,17 @@ const CampaignImpact = () => {
     // sort impact debits, ranking first by priority then by the cash value of the debit
 	// "b - a" is used to invert the sort so [0] is the most impactful impact
 	impactDebits.sort((a, b) => {
-		let result = (b.impact.priority || 0) - (a.impact.priority || 0);
-		if(result === 0) result = (b.impact.amountGBP || 0) - (a.impact.amountGBP || 0);
+		let result = (b.impact.priority || 0) - (a.impact.priority || 0); // sort by priority
+		if(result === 0) result = (b.impact.amountGBP || 0) - (a.impact.amountGBP || 0); // if equal, sort by GBP
+        if(result === 0) result = b.id.CompareTo(a.id); // if equal, sort by id alphabetically 
 		return result;
 	});
-    console.log(impactDebits)
+
     let firstImpact  = impactDebits[0] || null
     let secondImpact = impactDebits[1] || null
-
     const firstCharity = firstImpact && charities.find((char) => char.id === firstImpact.impact.charity) || {};
     const secondaryCharity = secondImpact && charities.find((char) => char.id === secondImpact.impact.charity) || {};
+
     const mainLogo = campaign?.branding?.logo || brand?.branding?.logo;
 
     return (
@@ -86,7 +77,7 @@ const CampaignImpact = () => {
             <HowItWorks campaign={campaign} charities={charities} totalString={totalString}/>
             <CardSeperator text={`Here's a Look At What You're Helping\nSupport With ${masterBrand.name}`} />
             {firstImpact && <CampaignImpactOne campaign={campaign} brand={brand} logo={mainLogo} charity={firstCharity} impactDebit={firstImpact}/>}
-            {firstImpact && <CampaignImpactTwo campaign={campaign} brand={brand} logo={mainLogo} charity={firstCharity} impactDebit={firstImpact}/>}
+            {secondImpact && <CampaignImpactTwo campaign={campaign} brand={brand} logo={mainLogo} charity={secondaryCharity} impactDebit={secondImpact}/>}
             <MakingADifference logo={mainLogo} charities={charities} />
             <CardSeperator text={`Here's How You Can Keep Involved\nWith Good-Loop`} />
             <GetInvolvedCard />
@@ -96,7 +87,11 @@ const CampaignImpact = () => {
     )
 }
 
-
+/**
+ * A thin card that contains just the supplied text,
+ * @param {string} text  
+ * @returns {React.ReactElement} 
+ */
 const CardSeperator = ({text}) => {
 	return (
 	<div className={"cardSeperator"}>
@@ -105,7 +100,15 @@ const CardSeperator = ({text}) => {
 	)
 } 
 
-const SplashCard = ({masterBrand, impact, charity, totalString}) => {
+/**
+ * Splash card for the impact B2C page
+ * This isn't up to date with the design! The animations we got turned out to be a huge pain to work with so will come with the next version
+ * @param {Advertiser} masterBrand 
+ * @param {NGO} charity  what charity received the most 'impact' ? If a brand has > 1 charity donated to it then this won't be reflected here, how should we handle that - Lewis ?
+ * @param {string} totalString  total amount donated in GBP
+ * @returns {React.ReactElement} 
+ */
+const SplashCard = ({masterBrand, charity, totalString}) => {
     return (
         <div className='story-card' id='i-splash'>        
         <div className='top-text-block'>
@@ -122,8 +125,14 @@ const SplashCard = ({masterBrand, impact, charity, totalString}) => {
 
 }
 
+/**
+ * Card just containing {Brand Logo} \n {charity logos in rows}
+ * @param {string} mainLogo charity logo url, falls back to brand logo
+ * @param {Array<NGO>} charities charity logo url, falls back to brand logo
+ * @returns {React.ReactElement} 
+ */
 const BrandLogoRows = ({mainLogo, charities}) => {
-    const CharityLogos = charities.map((c, i) => <li><img key={i} src={c.logo}/></li>)
+    const CharityLogos = charities.map((c, i) => <li key={i}><img src={c.logo}/></li>)
     return (
     <div id='brand-charities' style={{padding: "2%"}}>
         <div className='topRow'><img className='logo' src={mainLogo} style={{width: "100%"}}/></div>
@@ -133,6 +142,10 @@ const BrandLogoRows = ({mainLogo, charities}) => {
     </div>)
 }
 
+/**
+ * Card containing social media CTAs
+ * @returns {React.ReactElement} 
+ */
 function PoweredByGL() {
     return (
         <div id='powered-by-gl'>
@@ -147,24 +160,34 @@ function PoweredByGL() {
 );
 }
 
+/**
+ * Row of social media links
+ * @param {boolean} dark do we want to use the dark logos or not?
+ * @returns {React.ReactElement} 
+ */
 function SocialMediaLinks({dark}) {
     const instagramImg = dark ? "/img/getinvolved/instagram-round.png" : "/img/footer/insta_icon.200w.png"  
     const facebookImg = dark ?  "/img/getinvolved/facebook-round.png" : "/img/footer/facebook_icon.200w.png"
     const twitterImg = dark ?   "/img/getinvolved/twitter-round.png" : "/img/footer/twitter_icon.200w.png"  
 
     return (<>
-        <Row>
+        <div className='flex-mobile-dir social-media-links'>
             <C.A className="" href={C.app.instagramLink}> <img src={instagramImg} alt="instagram logo" className='link-logo' /></C.A>
             <C.A className="ml-2" href={C.app.facebookLink}> <img src={facebookImg} alt="facebook logo" className='link-logo' /></C.A>        
             <C.A className="ml-2" href={C.app.twitterLink}> <img src={twitterImg} alt="twitter logo" className='link-logo' /></C.A>
-        </Row>
+        </div>
     </>);
 }
-
+/**
+ * Card describing to new users how watching ads leads to donations
+ * @param {Campaign} campaign 
+ * @param {Array<NGO>} charities
+ * @param {string} totalString how much have we donated in total
+ */
 const HowItWorks = ({campaign, charities, totalString}) => {
 
     const startDate = campaign.created.substr(0, campaign.created.indexOf("T")).split("-"); // in format 2022-12-16T04:52:53, we don't care about anything after T
-    const year = startDate[0].substr(2, 4);
+    const year = startDate[0].substr(2, 4); // get the decades only, will need patched in ~ 80 years
     const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][startDate[1] - 1]
     // get viewcount and format it into 2 sig figs & unit amount, eg 1,413,512 -> 1.4M
     const viewcount = addAmountSuffixToNumber(Number(Campaign.viewcount({campaign: campaign, status: KStatus.PUBLISHED}).toPrecision(2)));
@@ -174,7 +197,7 @@ const HowItWorks = ({campaign, charities, totalString}) => {
                 <h2>How It Works</h2>
                 <p className='text white'>With Good-Loop</p>
             </div>
-            <div className='hiw-curve'>
+            <div className="hiw-curve flex-mobile-dir">
 
                 <div className='hiw-col'>
                     <h2>1.</h2>
@@ -182,7 +205,7 @@ const HowItWorks = ({campaign, charities, totalString}) => {
                         <img src="/img/Impact/this-ad-plants-trees.png" className='fill-img'/>
                     </div>
                     <p>{month}' {year} Camaign Launches</p>
-                    <h3 className='white'>Every View Is<br />A Donation</h3>
+                    <h3 className='white'>Every View Is<br />A Donation</h3> {/* TODO: figure out something closer to £N / VIEW to use here*/}
                 </div>
 
                 <div className='hiw-col'>
@@ -209,63 +232,99 @@ const HowItWorks = ({campaign, charities, totalString}) => {
     )
 }
 
+/**
+ * Top of impact cards, containing bunch of art & branding
+ * @param {int} i picks between two sets of arm png's
+ * @param {string} logo url for whatever logo we want to display in the middle 
+ * @returns {React.ReactElement} 
+ */
 const CharityArms = (i, logo) => {
     return (
     <div className='charities-arms-logo'>
         <img src="/img/mydata/supporting.png" alt="spark-decoration" className='spark spark-1'/>
         <img src="/img/mydata/supporting.png" alt="spark-decoration" className='spark spark-2'/>
-        <img src={`/img/Impact/arm-${i}-l.png`} className='arm arm-left'/>
-        <img src={`/img/Impact/arm-${i}-r.png`} className='arm arm-right'/>
+        <img src={`/img/Impact/arm-${i%2}-l.png`} className='arm arm-left'/>
+        <img src={`/img/Impact/arm-${i%2}-r.png`} className='arm arm-right'/>
         {circleLogo({logo:logo})}
     </div>)
 }
 
-const CampaignImpactOne = ({campaign, brand, logo, charity, impactDebit}) => {
-    const placeholderText = {
-        cause : "Supporting Food Redistribution",
-        stats : "providing meals for children in need",
-        dyk : "Over 3 million tonnes of the food that goes to waste each year is still edible - enough for 7 billion meals",
-        dyk_source : {name: "The Food Foundation", src:"https://foodfoundation.org.uk/initiatives/food-insecurity-tracking"},
-        projectTitle : "Placeholder Title",
-        projectDesc : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis porttitor semper purus et convallis. Duis mauris tellus, congue a sapien vel, hendrerit maximus magna. Sed eu dolor lacinia, vulputate est sit amet, volutpat tortor. Proin congue nunc sed libero rutrum placerat. Sed vulputate fermentum varius. Donec varius, arcu et finibus aliquet, orci sapien mollis turpis, vitae blandit justo quam ut sem. Duis convallis bibendum mauris quis suscipit. Cras metus neque, mollis sit amet semper vitae, fringilla ut lacus. Vestibulum iaculis ipsum orci, non ultrices sem rutrum et. Nulla facilisi. Proin dapibus blandit bibendum. Nunc et porta nunc.\n\nPraesent nunc ipsum, faucibus non scelerisque a, bibendum eget dolor. Vivamus dignissim, risus et fringilla volutpat, nisi magna interdum risus, sit amet faucibus ligula mauris vel neque. Praesent lacinia pellentesque elit, sit amet molestie nunc molestie ut. Suspendisse potenti. Curabitur a arcu nunc. Aenean vestibulum nisi tempus hendrerit tempus. Suspendisse potenti. In vestibulum leo vel tristique venenatis. Duis ut felis justo. Suspendisse ut accumsan tellus. Quisque sagittis magna urna, ut varius urna pellentesque a. Maecenas vel mollis ligula, at vehicula nisi."
+/**
+ * For the 'most impactful' impact, we show a statistic & either a fact or another image
+ * If the statistic is missing or we don't have enough images on the charity, return an empty element
+ * @param {string} logo url for the logo of the charity 
+ * @param {NGO} charity what charity will this impactDebit donate to?
+ * @param {impactDebit} impactDebit the 'most impactful' impact the campaign has done
+ * @returns {React.ReactElement} 
+ */
+const CampaignImpactOne = ({logo, charity, impactDebit}) => {
+
+    // due to an annoying bug on local setup, we should be using the first 
+    const text = {
+        cause : impactDebit.impact.impactCause || false,
+        stats : impactDebit.impact.impactStats || false,
+        dyk : impactDebit.impact.fact || false,
+        fact : impactDebit.impact.factSource || false,
+        factName : impactDebit.impact.factSourceName || false,
+        factUrl : impactDebit.impact.factSourceUrl || false,
     }
 
-    console.log("Lewis chars", impactDebit, charity)
-    // no images in the charity OR not enough OR 
- 
+    // can't show this without a stat
+    if(!text.cause || !text.stats) return <></>
+    
+    // we can't show the card if we don't have the images to populate it
+    // if we don't have a fact we replace it with another image so that increases the amount required
+    let factPresent = (text.fact && text.factName && text.factUrl);
+    const imgList = NGO.images(charity);
+    if((factPresent && imgList.length < 2) || (! factPresent && imgList.length < 3)) return <></>
 
     return (
         <div id="campaign-impact-one" className='campaign-impact'>
             {CharityArms(1, (charity.logo || logo))}
-
-
             <div className='impact-section'>
-                <Row id="impact-one-toprow" className='impact-row '>
+
+                {/* top row */}
+                <Row id="impact-one-toprow" className='impact-row flex-mobile-dir'>
+
                     <div className='p-2 bg-gl-white left camp-impact-card camp-impact-img'>
-                        <img src={charity.imageList[0].contentUrl} alt="charity image 1" style={{width:"100%", height:"100%", objectFit:"cover"}}/>
+                        <img src={imgList[0].contentUrl || imgList[0]} alt="charity image 1" style={{width:"100%", height:"100%", objectFit:"cover"}}/>
                     </div>
+
                     <div className='p-2 bg-gl-red right camp-impact-card'>
                         <img src="/img/Impact/redcurve.svg" alt="redcurve background" className="curve dark-curve" />
                         <img src="/img/Impact/redcurve.svg" alt="redcurve background" className="curve normal-curve" />
                         <div className='cause-container'>
-                            <p className='cause'>{placeholderText.cause}</p>
-                            <h2 className='description'>{placeholderText.stats}</h2>
+                            <p className='cause'>{text.cause}</p>
+                            <h2 className='description'>{text.stats}</h2>
                             <p className='with-charity'>With {charity.name}</p>
                         </div>
                     </div>
+
                 </Row>
-                <Row id="impact-one-botrow" className='impact-row '>
-                    <div className='p-2 bg-gl-darker-grey left camp-impact-card'>
-                        <img src="/img/Impact/did-you-know.svg" className='quote-box'/>
-                        <div className='dyk-container'>
-                            <p className='dyk'>Did You Know?</p>
-                            <p className='fact'>{placeholderText.dyk}</p>
-                            <p className='source'>Source: <a className="source-link" href={placeholderText.dyk_source.src}>{placeholderText.dyk_source.name}</a></p>
+
+                {/* bottom row */}
+                <Row id="impact-one-botrow" className='impact-row flex-mobile-dir'>
+
+                    {factPresent && 
+                        <div className='p-2 bg-gl-darker-grey left camp-impact-card'>
+                            <img src="/img/Impact/did-you-know.svg" className='quote-box'/>
+                            <div className='dyk-container'>
+                                <p className='dyk'>Did You Know?</p>
+                                <p className='fact'>{text.fact}</p>
+                                <p className='source'>Source: <a className="source-link" href={text.factUrl}>{text.factName}</a></p>
+                            </div>
                         </div>
-                    </div>
+                    }
+                    {!factPresent && 
+                        <div className='p-2 bg-gl-white left camp-impact-card camp-impact-img'>
+                            <img src={imgList[2].contentUrl || imgList[2]} alt="charity image 2" style={{width:"100%", height:"100%", objectFit:"cover"}}/>
+                        </div>
+                    }
+
                     <div className='p-2 bg-gl-white right camp-impact-card camp-impact-img'>
                         <img src={charity.imageList[1].contentUrl} alt="charity image 2" style={{width:"100%", height:"100%", objectFit:"cover"}}/>
                     </div>
+
                 </Row>
             </div>
 
@@ -273,50 +332,69 @@ const CampaignImpactOne = ({campaign, brand, logo, charity, impactDebit}) => {
     )
 }
 
-const CampaignImpactTwo = ({campaign, brand, logo, impactDebit, charity}) => {
+/**
+ * For the second 'second most impactful' impact, we show a statistic & a testimonial
+ * If we don't have a testimonial, default to the charities description
+ * If the statistic or both the testimonial & description are missing, return an empty element
+ * @param {string} logo url for the logo of the charity 
+ * @param {NGO} charity what charity will this impactDebit donate to?
+ * @param {impactDebit} impactDebit the 'second most impactful' impact the campaign has done
+ * @returns {React.ReactElement} 
+ */
+const CampaignImpactTwo = ({logo, impactDebit, charity}) => {
     // this card needs to make use of a second impact, if it doesn't exist we can't use it!
 
-    const placeholderText = {
-        cause : "Supporting Food Banks",
-        stats : "providing families with food from their local food bank",
-        dyk : "Over 3 million tonnes of the food that goes to waste each year is still edible - enough for 7 billion meals",
-        dyk_source : {name: "The Trussel Trust", src:"https://foodfoundation.org.uk/initiatives/food-insecurity-tracking"},
-        projectTitle : "Placeholder Title",
-        projectDesc : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis porttitor semper purus et convallis. Duis mauris tellus, congue a sapien vel, hendrerit maximus magna. Sed eu dolor lacinia, vulputate est sit amet, volutpat tortor. Proin congue nunc sed libero rutrum placerat. Sed vulputate fermentum varius. Donec varius, arcu et finibus aliquet, orci sapien mollis turpis, vitae blandit justo quam ut sem. Duis convallis bibendum mauris quis suscipit. Cras metus neque, mollis sit amet semper vitae, fringilla ut lacus. Vestibulum iaculis ipsum orci, non ultrices sem rutrum et. Nulla facilisi. Proin dapibus blandit bibendum. Nunc et porta nunc.\n\nPraesent nunc ipsum, faucibus non scelerisque a, bibendum eget dolor. Vivamus dignissim, risus et fringilla volutpat, nisi magna interdum risus, sit amet faucibus ligula mauris vel neque. Praesent lacinia pellentesque elit, sit amet molestie nunc molestie ut. Suspendisse potenti. Curabitur a arcu nunc. Aenean vestibulum nisi tempus hendrerit tempus. Suspendisse potenti. In vestibulum leo vel tristique venenatis. Duis ut felis justo. Suspendisse ut accumsan tellus. Quisque sagittis magna urna, ut varius urna pellentesque a. Maecenas vel mollis ligula, at vehicula nisi."
+    // due to an annoying bug on local setup, we should be using the first 
+    const text = {
+        cause : impactDebit.impact.impactCause || false,
+        stats : impactDebit.impact.impactStats || false,
+
+        testimonialQuote : impactDebit.impact.testimonialQuote || "",
+        testimonialHeader : impactDebit.impact.testimonialHeader || "",
+        testimonialJob : impactDebit.impact.testimonialJob || "",
+        testimonialPerson : impactDebit.impact.testimonialPerson || ""
     }
 
-    console.log("Lewis chars", impactDebit, charity)
-    // no images in the charity OR not enough OR 
- 
+    // can't show this without a stat
+    if(!text.cause || !text.stats) return <></>
+    
+    // if we're missing the quote, try to use the charities description instead
+    // if that's missing, we can't show the card
+    if(!text.testimonialQuote) text.testimonialQuote = charity.description;
+    if(!text.testimonialQuote) return <></>
 
+    // if we can't show the images, we can't show the card
+    const imgList = NGO.images(charity);
+    if(imgList.length < 2) return <></>
+    
     return (
         <div id="campaign-impact-two" className='campaign-impact'>
 
             {CharityArms(2, (charity.logo || logo))}
 
             <div className='impact-section'>
-                <Row className='impact-row' id="row-1">
+                <Row className='impact-row flex-mobile-dir' id="row-1">
                     <div className='p-2 bg-gl-red right camp-impact-card' style={{position:"relative"}}>
                         <img src="/img/Impact/redcurve.svg" alt="redcurve background" className="curve dark-curve" />
                         <img src="/img/Impact/redcurve.svg" alt="redcurve background" className="curve normal-curve" />
                         <div className='cause-container'>
-                            <p className='cause'>{placeholderText.cause}</p>
-                            <h2 className='description'>{placeholderText.stats}</h2>
-                            <p className='with-charity'>With {charity.name}</p>
+                            <p className='cause'>{text.cause}</p>
+                            <h2 className='description'>{text.stats}</h2>
+                            <p className='with-charity'>With {charity.name || charity.id}</p>
                         </div>
                     </div>
                     <div className='p-2 bg-gl-white left camp-impact-card camp-impact-img'>
-                        <img src={charity.images} alt="charity image 1" style={{width:"100%", height:"100%", objectFit:"cover"}}/>
+                        <img src={imgList[0].contentUrl || imgList[0]} alt="charity image 1" style={{width:"100%", height:"100%", objectFit:"cover"}}/>
                     </div>
                 </Row>
-                <Row className='impact-row' id="row-2">
+                <Row className='impact-row flex-mobile-dir' id="row-2">
                     <div className='p-2 bg-gl-white left camp-impact-card camp-impact-img'>
-                        <img src={charity.imageList[3].contentUrl} alt="charity image 1" style={{width:"100%", height:"100%", objectFit:"cover"}}/>
+                        <img src={imgList[1].contentUrl || imgList[1]} alt="charity image 1" style={{width:"100%", height:"100%", objectFit:"cover"}}/>
                     </div>
                     <div className='p-2 bg-gl-light-pink right camp-impact-card camp-impact-img'>
                         <img src="/img/Impact/heart.png" className="heart-bg" />
-                        <h2 className='color-gl-light-red mb-4'>Helping Fund Project Title</h2>
-                        <p className='project-desc'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis porttitor semper purus et convallis. Duis mauris tellus, congue a sapien vel, hendrerit maximus magna. Sed eu dolor lacinia, vulputate est sit amet, volutpat tortor. Proin congue nunc sed libero rutrum placerat. Sed vulputate fermentum varius. Donec varius, arcu et finibus aliquet, orci sapien mollis turpis, vitae blandit justo quam ut sem. Duis convallis bibendum mauris quis suscipit.<br /> Vestibulum iaculis ipsum orci, non ultrices sem rutrum et. Nulla facilisi. Proin dapibus blandit bibendum. Nunc et porta nunc.\n\nPraesent nunc ipsum, faucibus non scelerisque a, bibendum eget. </p>
+                        <h2 className='color-gl-light-red mb-4'>{text.testimonialHeader}</h2>
+                        <p className='project-desc text'>{text.testimonialQuote}</p>
                     </div>
                 </Row>
             </div>
@@ -325,17 +403,21 @@ const CampaignImpactTwo = ({campaign, brand, logo, impactDebit, charity}) => {
     )
 }
 
+/**
+ * Another card to advertise ourselves
+ * TODO the styling we were sent to be used was in an awful format - more sparkles & stuff to come in v2 (17/05/23 - lewis)
+ * @param {string} logo url for brand logo
+ * @param {Array<NGO>} charities  
+ * @returns {React.ReactElement} 
+ */
 const MakingADifference = ({logo, charities}) => {
-    console.log("chars", charities)
     
     const CharityLogos = charities.map((c, i) => <li><img key={i} src={c.logo}/></li>)
     
-
-    console.log(CharityLogos)
     return (
         <div id="impact-making-a-diff">
             <div id="together-we-can-make-a-diff">
-                <h2 className="color-gl-light-red" >Together we can make a difference -<br />brands, consumers and charities</h2>
+                <h2 className="color-gl-light-red" style={{margin: "0 10% 0 10%"}}>Together we can make a difference -<br />brands, consumers and charities</h2>
                 <img className="brandlogo" src={logo} />
                 <ul>
                     {CharityLogos}
@@ -349,6 +431,10 @@ const MakingADifference = ({logo, charities}) => {
     )
 }
 
+/**
+ * Hubspot form to let users sign up via email 
+ * @returns {React.ReactElement} 
+ */
 const GetInvolvedCard = () => {
 
     // set up the hubspot form for getting a users email
@@ -387,7 +473,6 @@ const GetInvolvedCard = () => {
             }
             })
 
-        console.log("test: ", window.hbspt.forms);
         const _ = setTimeout(() => {
             const hbsptId = "0e8c944d-211b-4249-b63e-7bbad428afe5"
             let form = document.getElementById("hsForm_"+hbsptId)
@@ -416,7 +501,7 @@ const GetInvolvedCard = () => {
 
     return (
         <div id="get-involved">
-            <Row id="social-TAG-row">
+            <Row id="social-TAG-row" className='flex-mobile-dir'>
                 <div id="socials-cta" className="cta-card">
                     <img className='cta-image' src="/img/Impact/gl-beach.jpg"/>
                     <h2 className='color-gl-muddy-blue'>Follow Good-Loop</h2>
@@ -440,6 +525,15 @@ const GetInvolvedCard = () => {
     )
 }
 
+/**
+ * For each impact debit, show its impact
+ * TODO make each donation element into a modal that shows all the actual proof of the donation
+ * @param {Campaign} campaign
+ * @param {Advertiser} brand 
+ * @param {Array<impactDebit>} impactDebits 
+ * @param {Array<NGO>} charities
+ * @returns {React.ReactElement} 
+ */
 const DonationsCard = ({campaign, brand, impactDebits, charities}) => {
     const getDate = (dateStr) => {
         let tempDate = dateStr.substr(0, dateStr.split("").findIndex((el) => el === "T")).split("-") // parse date 
@@ -476,9 +570,9 @@ const DonationsCard = ({campaign, brand, impactDebits, charities}) => {
     })
     return (
         <div className='flex flex-column'>
-            <h2 className='text header-text'>{brand.name}'s Campaign{impactDebits.length > 1 ? "s" : ""} With Good-Loop</h2>
+            <h2 className='text header-text' style={{margin: "0 5%"}}>{brand.name}'s Campaign{impactDebits.length > 1 ? "s" : ""} With Good-Loop</h2>
             <p className='text dates'>{startDate} - {endDate}</p>
-            <div id="donation-details">
+            <div id="donation-details" className='flex-mobile-dir'>
                 {donations}
             </div>
         </div>
@@ -486,6 +580,10 @@ const DonationsCard = ({campaign, brand, impactDebits, charities}) => {
     )
 }
 
+/**
+ * Good Loop focused CTAs 
+ * @returns {React.ReactElement} 
+ */
 const LearnMore = () => {
 
     const makeLink = (img, link, linkText) => {return {image:img, link:link, linkText:linkText} }
@@ -505,14 +603,19 @@ const LearnMore = () => {
 
     return (
         <div id="learn-more">
-            <h2 id="learn-more-text text">Learn More</h2>
-            <Row className='link-row'>
+            <h2 id="learn-more-text text" style={{margin: "0 0 2.5% 0"}}>Learn More</h2>
+            <div className='d-flex flex-mobile-dir link-row'>
                 {links}
-            </Row>
+            </div>
         </div>
     )
 }
 
+/**
+ * Puts a logo inside a white circle 
+ * @param {string} logo url of the logo we want to show
+ * @returns {React.ReactElement} 
+ */
 const circleLogo = ({logo}) => {
     return (
         <div className='logo-circle'>
