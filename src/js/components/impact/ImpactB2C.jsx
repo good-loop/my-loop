@@ -23,7 +23,8 @@ import CampaignPage from '../campaignpage/CampaignPage';
 const CampaignImpact = () => {
     // setup page & check we have all the data we need
     const path = DataStore.getValue(['location', 'path']);
-	if (path.length != 2 || path[0] !== "campaign") return <ErrorDisplay e={{error:"Invalid URL"}} />
+    const glVertiser = DataStore.getUrlValue('gl.vertiser');
+	if ((path.length != 2 && !glVertiser) || path[0] !== "campaign") return <ErrorDisplay e={{error:"Invalid URL"}} />
 
 	const status = DataStore.getUrlValue('gl.status') || DataStore.getUrlValue('status') || KStatus.PUBLISHED;
     const itemType = "campaign"
@@ -32,7 +33,7 @@ const CampaignImpact = () => {
     // before we fetch the data we need for stories, check to see if it's a legacy impact page
     // temporary wee hack as of 17/5/23, we can only reach this page if we choose to within the url! 
     const LEGACY_IMPACT_IDS = []
-    if(LEGACY_IMPACT_IDS.includes(itemId) ||  ! DataStore.getUrlValue('newStories')) return <CampaignPage />;
+    if(glVertiser || LEGACY_IMPACT_IDS.includes(itemId) ||  ! DataStore.getUrlValue('newStories')) return <CampaignPage />;
 
     let pvBaseObjects = DataStore.fetch(['misc','impactBaseObjects',itemType,status,'all',itemId], () => {
 		return fetchBaseObjects({itemId, itemType, status});
