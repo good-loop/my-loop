@@ -1,6 +1,3 @@
-/*
- * 
- */
 import _ from 'lodash';
 import PromiseValue from '../../base/promise-value';
 import React, {useState} from 'react';
@@ -20,7 +17,7 @@ import DataStore from '../../base/plumbing/DataStore';
 import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
 import SearchQuery from '../../base/searchquery';
 import { assert, assMatch } from '../../base/utils/assert';
-import { asDate, ellipsize, encURI, getUrlVars, is, isMobile, mapkv, space, sum, uniq, uniqById, yessy } from '../../base/utils/miscutils';
+import { ellipsize, encURI, getUrlVars, is, isMobile, mapkv, space, sum, uniq, uniqById, yessy } from '../../base/utils/miscutils';
 import C from '../../C';
 import ActionMan from '../../plumbing/ActionMan';
 import ServerIO from '../../plumbing/ServerIO';
