@@ -32,12 +32,6 @@ export const isPer1000 = () => {
 	return emissionsMode === 'per1000';
 };
 
-/** baseFilters.prob is string not number so have to use == */
-export const isRandomSampling = (baseFilters) => {
-	if (baseFilters.prob == -1 || baseFilters.prob > 1) return true;
-	return false;
-};
-
 /**
  * @param {Object} obj
  * @param {Period} obj.period
@@ -112,7 +106,7 @@ const GreenMetrics2 = () => {
 	 */
 	const pvChartTotal = getCarbon({ ...baseFilters, breakdown: ['total{"count":"sum"}'] });
 
-	const pvChartTotalValue = isRandomSampling(baseFilters) ? pvChartTotal.value?.sampling : pvChartTotal.value;
+	const pvChartTotalValue = pvChartTotal.value?.sampling || pvChartTotal.value;
 
 	const samplingProb = pvChartTotalValue?.probability;
 
@@ -147,7 +141,7 @@ const GreenMetrics2 = () => {
 		name: 'lotsa-chartdata',
 	});
 
-	const pvChartDatalValue = isRandomSampling(baseFilters) ? pvChartData.value?.sampling : pvChartData.value;
+	const pvChartDatalValue = pvChartData.value?.sampling || pvChartData.value;
 
 	let pvCampaigns = getCampaigns(pvChartDatalValue?.by_adid.buckets);
 	if (pvCampaigns && PromiseValue.isa(pvCampaigns.value)) {

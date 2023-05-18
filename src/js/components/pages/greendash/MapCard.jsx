@@ -6,7 +6,7 @@ import Misc from '../../../MiscOverrides';
 import { dataColours} from './dashUtils';
 import { GreenCard, downloadIcon } from './GreenDashUtils';
 import { getCarbon, emissionsPerImpressions } from './emissionscalcTs';
-import { isPer1000, isRandomSampling } from './GreenMetrics';
+import { isPer1000 } from './GreenMetrics';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import CSS from '../../../../style/green-map-card.less';
 
@@ -284,7 +284,7 @@ const MapCard = ({ baseFilters, per1000 }) => {
 		if (!mapDefs || !mapDefsReady) return;
 
 		// Country or sub-location breakdown?
-		let locnBuckets = isRandomSampling(baseFilters) ? pvChartData.value.sampling['by_' + locationField].buckets : pvChartData.value['by_' + locationField].buckets;
+		let locnBuckets = pvChartData.value?.sampling?.['by_' + locationField].buckets || pvChartData.value['by_' + locationField].buckets;
 
 		// Rename locations with no corresponding map entry to OTHER
 		// convert old non-namespaced sublocations e.g. 'CA' => 'US-CA'
