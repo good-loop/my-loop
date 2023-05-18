@@ -309,6 +309,8 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 		setSortedBuckets(bucketsPer1000.slice().sort((a, b) => ((a.co2 as number) - (b.co2 as number))));
 	}, [pvChartTotal?.value]);
 
+	// TODO generic domains design TBC
+	// TODO Do we want to move this into ES and refactor this into emissionscalcTs.ts using DataStore?
 	useEffect(() => {
 		if (!filterUrlParams.generic) return;
 		console.log("Fetching generic domain emissions...");
