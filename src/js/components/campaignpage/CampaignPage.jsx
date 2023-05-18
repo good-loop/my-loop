@@ -1,6 +1,3 @@
-/*
- * 
- */
 import _ from 'lodash';
 import PromiseValue from '../../base/promise-value';
 import React, {useState} from 'react';
@@ -10,7 +7,6 @@ import { Cite } from '../../base/components/LinkOut';
 import Misc from '../../base/components/Misc';
 import StyleBlock from '../../base/components/StyleBlock';
 import Advert from '../../base/data/Advert';
-import Campaign from '../../base/data/Campaign';
 import { getId, getType } from '../../base/data/DataClass';
 import KStatus from '../../base/data/KStatus';
 import List from '../../base/data/List';
@@ -22,7 +18,6 @@ import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
 import SearchQuery from '../../base/searchquery';
 import { assert, assMatch } from '../../base/utils/assert';
 import { ellipsize, encURI, getUrlVars, is, isMobile, mapkv, space, sum, uniq, uniqById, yessy } from '../../base/utils/miscutils';
-import { asDate } from '../../base/utils/date-utils';
 import C from '../../C';
 import ActionMan from '../../plumbing/ActionMan';
 import ServerIO from '../../plumbing/ServerIO';
@@ -37,6 +32,10 @@ import { setNavContext, setNavProps } from '../../base/components/NavBar';
 import Messaging, { notifyUser } from '../../base/plumbing/Messaging';
 import { PageCard, TriCards } from '../pages/CommonComponents';
 import ModalCTA from './CampaignModalTFG';
+import ImpactDebit from '../../base/data/ImpactDebit';
+
+// Import from legacy file to initialize it
+import Campaign from '../../base/data/DeprecatedImpactHubData';
 
 /**
  * @returns fetches for all the data: `{pvTopCampaign, pvAgencies, pvAds, pvAdvertisers}`
@@ -109,7 +108,7 @@ const fetchIHubData = () => {
 	}
 
 	// ads
-	const pvAds = pvTopCampaign.value? Campaign.pvAds({campaign: pvTopCampaign.value, status, query}) : null;
+	const pvAds = pvTopCampaign.value? Campaign.pvAdsLegacy({campaign: pvTopCampaign.value, status, query}) : null;
 	// advertiser
 	if (pvTopCampaign.value && pvTopCampaign.value.vertiser) {
 		const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:pvTopCampaign.value.vertiser});
@@ -240,9 +239,8 @@ const CampaignPage = () => {
 	}
 	
 	// set NavBar brand
-	let {type, id} = Campaign.masterFor(campaign);
-	if (type && id) {
-		let pvBrandItem = getDataItem({type, id, status});
+	if (campaign.vertiser) {
+		let pvBrandItem = getDataItem({type:"Advertiser", id:campaign.vertiser, status});
 		let brandItem = pvBrandItem.value;
 		if (brandItem) {
 			setNavProps(brandItem);
@@ -310,11 +308,7 @@ const CampaignPage = () => {
 		description: nvertiserNameNoTrail ? "See " + nvertiserNameNoTrail + "'s impact from Good-Loop ethical advertising" : "See our impact from Good-Loop ethical advertising"
 	};
 
-	let windowTitle = !campaign && "Impact Hub";
-	if (!windowTitle) {
-		if (campaign.master) windowTitle = "Advertiser: " + nvertiserName;
-		else windowTitle = "Campaign: " + campaign.name;
-	}
+	let windowTitle = campaign? "Campaign: " + campaign.name : "Impact Hub";
 	setWindowTitle(windowTitle);
 
 	return <>
@@ -504,3 +498,56 @@ const Page404 = () => <div className="widepage CampaignPage gl-btns">
 
 export default CampaignPage;
 export { hackCorrectedDonations };
+
+
+/**
+ * fetches dynamic data.
+ * @deprecated
+ 
+ * @param {!Campaign} campaign 
+*  @param {?boolean} isSub set in recursive calls
+ * @returns {!Object} {cid: Money} Values may change as data loads
+ */
+Campaign.dntn4charity = (campaign) => {
+	let impds = getFixedOffsetsForCampaign(campaign);
+	if ( ! impds) {
+		return {}; // ??
+	}
+	// assert( ! isSub || isSub===true, isSub);
+	Campaign.assIsa(campaign);
+	
+	let d4c = {};
+	impds.forEach(impd => {
+		let cid = impd.impact.charity;
+		let money = impd.impact.amount || impd.impact.amountGBP;
+		if ( ! money) return;
+		let moreMoney = d4c[charity]? Money.add(d4c[charity], money) : money;
+		d4c[charity] = moreMoney;
+	});
+
+	// OLD hard set values?
+	d4c = Object.assign(d4c, campaign.dntn4charity); // defensive copy, never null
+
+	return d4c
+}
+	// // Master - recurse - sum leaf campaigns
+	// if ( ! isDntn4CharityEmpty(campaign.dntn4charity)) {
+	// 	console.warn("Ignoring master.dntn4charity - it should not be set for masters 'cos it can confuse sums for e.g. reporting by-charity in T4G", campaign);
+	// }
+	// let pvSubs = Campaign.pvSubCampaigns({campaign});
+	// if ( ! pvSubs.value) {
+	// 	return {};
+	// }
+	// let subs = List.hits(pvSubs.value);
+	// let dntn4charitys = subs.map(sub => Campaign.dntn4charity(sub, true));
+	// // merge + sum subs
+	// let subtotal4c = {};
+	// for(let i=0; i<dntn4charitys.length; i++) {
+	// 	const subd4c = dntn4charitys[i];
+	// 	mapkv(subd4c, (k,v) => {
+	// 		let old = subtotal4c[k];
+	// 		subtotal4c[k] = old? Money.add(old, v) : v;
+	// 	});
+	// }
+	// return subtotal4c;
+

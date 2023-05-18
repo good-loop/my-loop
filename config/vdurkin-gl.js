@@ -3,10 +3,10 @@
 // Change to "local", "test" or "" to switch all endpoints together
 const cluster = 
 	//'test';
-	// 'local';
+	//'local';
 	''; // if you want production!
 
-const protocol = (cluster === 'local') ? 'http' : 'https';
+const protocol = 'https';//(cluster === 'local') ? 'http' : 'https';
 
 module.exports = {
 	ServerIOOverrides: {

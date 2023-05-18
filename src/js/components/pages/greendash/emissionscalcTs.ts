@@ -390,8 +390,10 @@ export const emissionsPerImpressions = (buckets: GreenBuckets, filterLessThan: n
 };
 
 /**
+ * FIXME How does this relate to calculateFixedOffset()??
+ * FIXME How does this relate to getFixedOffsetsForCampaign() in the master branch??
+ * 
  * Why not use Promise? Returing null when loading is very hard to handle.
- * Possbile refactor @see {@link calculateDynamicOffsetAsync} (Need more testing)
  * @returns null if loading data
  */
 const calculateDynamicOffset = (campaign: Campaign, offset: Impact, period: Period|null): Impact | null => {
@@ -437,8 +439,9 @@ const calculateDynamicOffset = (campaign: Campaign, offset: Impact, period: Peri
 
 
 /**
+ * FIXME How does this relate to calculateFixedOffset()??
+ * FIXME How does this relate to getFixedOffsetsForCampaign() in the master branch??
  * How does this relate to getFixedOffsetsForCampaign??
- * 
  * fraction by period, or all
  */
 const calculateFixedOffset = (impactDebit: ImpactDebit, period: Period|null): Impact | null => {
@@ -471,6 +474,7 @@ const calculateFixedOffset = (impactDebit: ImpactDebit, period: Period|null): Im
 	snapshotOffset.end = period?.end;
 	return snapshotOffset;
 };
+
 
 type OffSets4Type = {
 	isLoading: boolean;
@@ -524,9 +528,9 @@ export const getOffsetsByType = ({ campaign, status, period }: { campaign: Campa
 };
 
 /**
- * Why not use Promise? Returing false when loading is very hard to handle.
- * Possbile refactor @see {@link getFixedOffsetsForCampaignAsync} (Need more testing)
- * @returns false if loading
+ * This works across impact types
+ * Why not use Promise?? Returning false when loading is hard to handle.
+ * @returns {?ImpactDebit[]} false if loading
  */
 const getFixedOffsetsForCampaign = (campaign: Campaign, period: Period): Impact[] | false => {
 	let pvImpactDebitsList = Campaign.getImpactDebits({ campaign, status: KStatus.PUBLISHED });

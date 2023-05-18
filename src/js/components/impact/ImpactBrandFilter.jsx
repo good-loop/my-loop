@@ -8,18 +8,12 @@ import { openAndPopulateModal, modalToggle } from './GLCards';
 import ListLoad from '../../base/components/ListLoad';
 import DataStore from '../../base/plumbing/DataStore';
 import { goto } from '../../base/plumbing/glrouter';
-
-/**
- * DEBUG OBJECTS
- */
-
 import { retrurnProfile } from '../pages/TabsForGoodSettings';
 import { assert } from '../../base/utils/assert';
-import { space } from '../../base/utils/miscutils';
+import { space, alphabetSort } from '../../base/utils/miscutils';
 import Advertiser from '../../base/data/Advertiser';
 import Campaign from '../../base/data/Campaign';
 import List from '../../base/data/List';
-import { getCountryImpressionsByCampaign } from './impactdata';
 
 const A = C.A;
 
@@ -80,7 +74,6 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, setF
 
 	const topBrand = masterBrand || brand; // convert data from context-specific to universal
 
-	const alphabetSort = (item1, item2) => (item1.name || item1.id).localeCompare(item2.name || item2.id);
 	const allSubBrands = allBrands.filter(b => topBrand.id !== b.id).sort((a, b) => alphabetSort(a, b));
 
 	/**
@@ -89,7 +82,6 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, setF
 	 * @param {object} campaign campaign we want to filter, must be passed in with its brand
 	 */
 	const filterChange = ({brand, campaign}) => {
-		console.log("filterChange\n:", brand, campaign)
 		if (campaign) {
 			goto(`/impact/${curPage}/campaign/` + campaign.id)
 		} else if (brand) {

@@ -85,10 +85,10 @@ const MyLoopFooterSummer2022 = ({ page }) => {
 
 const FooterNavigation = () => {
 	return (
-		<div class="fluid" id="footer-nav-container">
-			<div class='row justify-content-between'>
-				<div class='col-6 col-md mt-5 mt-md-0 footer-links'>
-					<div class="d-inline-block">
+		<div className="fluid" id="footer-nav-container">
+			<div className='row justify-content-between'>
+				<div className='col-6 col-md mt-5 mt-md-0 footer-links'>
+					<div className="d-inline-block">
 						<h5>More</h5>
 						<a href='https://doc.good-loop.com/policy/privacy-policy.html'>Privacy policy</a><br />
 						<a href='https://doc.good-loop.com/policy/cookie-policy.html'>Cookie policy</a><br />
@@ -96,8 +96,8 @@ const FooterNavigation = () => {
 						<a href='https://doc.good-loop.com/policy/brand-safety-policy.html'>Brand Safety Policy</a><br />
 					</div>
 				</div>
-				<div class='col-6 col-md mt-5 mt-md-0 footer-links'>
-					<div class="d-inline-block">
+				<div className='col-6 col-md mt-5 mt-md-0 footer-links'>
+					<div className="d-inline-block">
 						<h5>For business</h5>
 						<a href="https://good-loop.com/what-we-do">What We Do</a><br />
 						<a href="https://good-loop.com/products">Products</a><br />
