@@ -4,14 +4,14 @@ import Misc from '../../../MiscOverrides';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import NewChartWidget, { KScale } from '../../../base/components/NewChartWidget';
 import DataStore from '../../../base/plumbing/DataStore';
-import { getPeriodFromUrlParams, Period, PeriodFromUrlParams } from '../../../base/utils/date-utils';
+import { getPeriodFromUrlParams } from '../../../base/utils/date-utils';
 import { getUrlVars, space } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 import Login from '../../../base/youagain';
 import { GLCard } from '../../impact/GLCards';
 import GreenDashboardFilters from './GreenDashboardFilters';
-import { GreenBuckets, emissionsPerImpressions, getBasefilters, getCarbon, type BaseFilters, type BreakdownRow } from './emissionscalcTs';
-import { Tick } from 'chart.js'
+import { GreenBuckets, emissionsPerImpressions, getBasefilters, getCarbon, type BaseFilters } from './emissionscalcTs';
+import { Tick } from 'chart.js';
 import { CO2e, downloadIcon } from './GreenDashUtils';
 import '../../../../style/GreenRecommendations.less';
 
@@ -23,8 +23,10 @@ interface RangeSliderProps {
 	max: number;
 	step?: number;
 	defaultValue: number;
-	onChange?: (value: number) => void;
-	chartArea: Object;
+	onChange?: Function;
+	chartObj?: {
+		chartArea: { left: number; right: number; width: number; height: number };
+	} & Object;
 }
 
 
@@ -32,7 +34,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, defaultValue,
 	const [value, setValue] = useState(defaultValue);
 	useEffect(() => onChange(value), [value]); // Update value when it changes
 
-	if (!chartObj) return '';
+	if (!chartObj) return <></>;
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setValue(parseFloat(event.target.value));
@@ -209,6 +211,7 @@ const DomainList = ({ buckets, min, max }: { buckets?: GreenBuckets; min?: numbe
 	const cutoffIcon = <div className="cutoff-icon">{max ? tickSvg : crossSvg}</div>;
 
 	return (
+		// @ts-ignore
 		<GLCard className={`domain-list ${max ? 'allow' : 'block'}`} noPadding>
 			<CardHeader className="domain-list-title p-2">
 				<h4 className="m-0">Suggested {max ? 'Allow' : 'Block'} List</h4>
@@ -263,9 +266,9 @@ const DomainList = ({ buckets, min, max }: { buckets?: GreenBuckets; min?: numbe
 const PublisherListRecommendations = (): JSX.Element | null => {
 	const [co2Cutoff, setCO2Cutoff] = useState<number>(0); // CO2 grams per impression to divide allow and block list
 	const [sortedBuckets, setSortedBuckets] = useState<GreenBuckets>(); // Publisher buckets, sorted low -> high CO2
-	const [rangeProps, setRangeProps] = useState(); // Props object for the range input
+	const [rangeProps, setRangeProps] = useState<RangeSliderProps>(); // Props object for the range input
 	const [reduction, setReduction] = useState<number>(0); // Reduction effect of allow/block list (fractional, ie 0.1 for 10%)
-	const [chartObj, setChartObj] = useState();
+	const [chartObj, setChartObj] = useState<RangeSliderProps['chartObj']>();
 
 	/* Read / set up filters */
 	interface FitlerUrlParams extends Object {
@@ -358,6 +361,7 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 
 	return <>
 		<h6>Can you reduce your publisher-generated {CO2e} emissions?</h6>
+		{/* @ts-ignore */}
 		<GLCard className="publisher-recommendations">
 			{/* Hm: eslint + ts objects if we don't list every parameter, optional or not - but that makes for verbose code, which isn't good (time-consuming, and hides the real code) 
 			How do we get eslint to be quieter for ts? */}
@@ -371,12 +375,12 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 					<DomainList buckets={sortedBuckets} max={co2Cutoff} />
 				</Col>
 				<Col xs={6} className="px-0">
+					{/* @ts-ignore */}
 					<GLCard className="generator flex-column" noPadding>
 						<CardHeader className="generator-title p-2">
 							<h4 className="m-0">Allow and Block list generator</h4>
 						</CardHeader>
 						<CardBody className="flex-column">
-							{/* @ts-ignore */}
 							{/* We should pick the display that's best for the users.
 							<PropControl inline type="toggle" prop="scale" dflt="logarithmic" label="Chart Scale:"
 								left={{ label: 'Logarithmic', value: 'logarithmic', colour: 'primary' }}
@@ -480,6 +484,7 @@ const GreenRecommendation = ({ baseFilters }: { baseFilters: BaseFilters }): JSX
 
 function CreativeRecommendations() {
 	return (
+		<>{/* @ts-ignore */}
 		<GLCard>
 			<h3 className="mx-auto">Optimise Creative Files to Reduce Carbon</h3>
 			<h4>Tips</h4>
@@ -499,6 +504,7 @@ function CreativeRecommendations() {
 				We are developing a tool for analysing ads: the <a href={'https://portal.good-loop.com/#measure'}>Low Carbon Creative Tool</a>
 			</p> */}
 		</GLCard>
+		</>
 	);
 }
 
