@@ -12,9 +12,8 @@ import { GLCard } from '../../impact/GLCards';
 import GreenDashboardFilters from './GreenDashboardFilters';
 import { GreenBuckets, emissionsPerImpressions, getBasefilters, getCarbon, type BaseFilters, type BreakdownRow } from './emissionscalcTs';
 import { Tick } from 'chart.js'
-
-import '../../../../style/GreenRecommendations.less';
 import { CO2e, downloadIcon } from './GreenDashUtils';
+import '../../../../style/GreenRecommendations.less';
 
 const TICKS_NUM = 600;
 
@@ -105,7 +104,7 @@ const RecommendationChart = ({ bucketsPer1000, passBackChart }: { bucketsPer1000
 		let chartOptions: any = {
 			title: 'Volume of publisher impressions by CO₂e emitted per impression',
 			responsive: true,
-			animation: { onComplete: ({chart}) => passBackChart(chart) },
+			animation: { onComplete: ({chart}: {chart: any}) => passBackChart(chart) },
 			// see https://www.chartjs.org/docs/latest/samples/scale-options/titles.html
 			scales: {
 				x: {
@@ -196,7 +195,7 @@ const DomainList = ({ buckets, min, max }: { buckets?: GreenBuckets; min?: numbe
 	useEffect(() => {
 		// Apply high/low CO2 cutoff to publisher list, then sort by name
 		const filteredBuckets = buckets.filter(bkt => (
-			(max ? (bkt.co2 <= max) : (bkt.co2 > min))
+			(max ? (bkt.co2 as number <= max) : (bkt.co2 as number > min!))
 		)).sort((a, b) => a.key > b.key ? 1 : -1);
 		setDomains(filteredBuckets.map(bkt => bkt.key as string));
 		// Calculate how many impressions the filtered publisher list contains
@@ -271,6 +270,7 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 	/* Read / set up filters */
 	interface FitlerUrlParams extends Object {
 		period?: any;
+		generic?: boolean;
 	}
 	const filterUrlParams = getUrlVars(null, null) as FitlerUrlParams;
 	const period = getPeriodFromUrlParams(filterUrlParams);
@@ -297,14 +297,33 @@ const PublisherListRecommendations = (): JSX.Element | null => {
 		getCarbon({ ...baseFilterConfirmed, breakdown: ['domain{"countco2":"sum"}'] })
 	) : null; // - but not until base filters are ready
 
+	console.log('filterUrlParams.generic', filterUrlParams.generic, filterUrlParams);
+
 	// Sort publisher buckets low -> high CO2
 	useEffect(() => {
+		if (filterUrlParams.generic) return;
 		if (!baseFilterConfirmed || !pvChartTotal?.resolved) return;
 		const useSampling = baseFilterConfirmed.prob && baseFilterConfirmed.prob != 0;
 		const pvChartTotalValue = useSampling ? pvChartTotal.value?.sampling : pvChartTotal.value;
 		const bucketsPer1000 = emissionsPerImpressions(pvChartTotalValue.by_domain.buckets);
 		setSortedBuckets(bucketsPer1000.slice().sort((a, b) => ((a.co2 as number) - (b.co2 as number))));
 	}, [pvChartTotal?.value]);
+
+	// TODO generic domains design TBC
+	// TODO Do we want to move this into ES and refactor this into emissionscalcTs.ts using DataStore?
+	useEffect(() => {
+		if (!filterUrlParams.generic) return;
+		console.log("Fetching generic domain emissions...");
+		fetch("../js-data/generic-domain-emissions.json")
+			.then((response) => response.json())
+			.then((data) => {
+				const jsonData = data as GreenBuckets;
+				setSortedBuckets(jsonData.slice().sort((a, b) => ((a.co2 as number) - (b.co2 as number))));
+			})
+			.catch((error) => {
+				console.error("Error:", error);
+			});
+	}, []);
 
 	// Calculate CO2 reduction effect of chosen CO2 cutoff
 	useEffect(() => {
