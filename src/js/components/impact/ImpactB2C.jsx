@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import DataStore from '../../base/plumbing/DataStore';
 import { Container, Row } from 'reactstrap';
 import Circle from '../../base/components/Circle';
@@ -15,7 +15,7 @@ import { ErrorDisplay } from './ImpactComponents';
 import ImpactLoadingScreen from './ImpactLoadingScreen';
 import { addScript } from '../../base/utils/miscutils';
 import CampaignPage from '../campaignpage/CampaignPage';
-
+import ImpactCertificate from './ImpactCertificate'
 /**
  * Container for the new (as of 5/23) replacement for impact hub
  * Most up to date design : https://miro.com/app/board/uXjVMaoHMrI=/?share_link_id=8808857536 - specifically the B2C parts
@@ -556,16 +556,20 @@ const DonationsCard = ({campaign, brand, impactDebits, charities}) => {
         const logo = charity.logo;
         const displayName = charity.displayName;
         const raised = debit.impact.amountGBP;
-
+        const [open, setOpen] = useState(true);
+        let donationModal = <ImpactCertificate brand={brand} impactDebit={debit} charity={charity} campaign={campaign} open={open} setOpen={setOpen}/>
         return (
-        <div className='impact-debit' key={index}>
-            <img className="debit-header" src={img} alt={displayName + " header image"}/>
-            <div className='debit-content'>
-                <p className='debit-name'>{displayName}</p>
-                <p className='debit-amount'>£{raised} RAISED...</p>
-                <img className="debit-logo" src={logo} alt={displayName + " logo"} />
+        <button onClick={() => setOpen(!open)} style={{border: "none", backgroundColor:"none"}}>
+            <div className='impact-debit' key={index}>
+                {donationModal}
+                <img className="debit-header" src={img} alt={displayName + " header image"}/>
+                <div className='debit-content'>
+                    <p className='debit-name'>{displayName}</p>
+                    <p className='debit-amount'>£{raised} RAISED...</p>
+                    <img className="debit-logo" src={logo} alt={displayName + " logo"} />
+                </div>
             </div>
-        </div>
+        </button>
         )
     })
     return (
