@@ -12,21 +12,21 @@ const MODAL_LIST_PATH = MODAL_PATH.concat("list");
 const MODAL_BACKDROP_PATH = MODAL_PATH.concat("backdrop");
 const LOADED_PATH = MODAL_PATH.concat("loaded");
 
+
 /**
  * Wraps everything into a horizontal flow. Any child with a "basis" prop will be given that priority as a percentage, e.g. basis={50}
  * 
  * @param {String} collapse the bootstrap breakpoint to break flow on
  */
 export const GLHorizontal = ({collapse, className, style, children}) => {
+	/*let uneatenSpace = 100;
+	let notSpecifiedChildCount = 0;
+	children.forEach(child => {
+		if (child.props.basis) uneatenSpace -= child.props.basis;
+		else notSpecifiedChildCount++;
+	});
 
-    /*let uneatenSpace = 100;
-    let notSpecifiedChildCount = 0;
-    children.forEach(child => {
-        if (child.props.basis) uneatenSpace -= child.props.basis;
-        else notSpecifiedChildCount++;
-    });
-
-    const autoSpacedSize = uneatenSpace / notSpecifiedChildCount;*/
+	const autoSpacedSize = uneatenSpace / notSpecifiedChildCount;*/
 
 	if (!Array.isArray(children)) children = [children];
 
@@ -39,9 +39,9 @@ export const GLHorizontal = ({collapse, className, style, children}) => {
 	</Row>
 }
 
+
 /**
  * Wraps everything into a vertical flow. Any child with a "basis" prop will be given that priority as a percentage, e.g. basis={50}
- * 
  */
 export const GLVertical = ({className, children, ...props}) => {
 	if (!Array.isArray(children)) children = [children];
@@ -54,28 +54,28 @@ export const GLVertical = ({className, children, ...props}) => {
 	</div>;
 }
 
+
 /**
  * A card content wrapper, with configurable behaviour for opening modals.
  * 
- * @param {Object} obj
- * @param {?string} obj.className className passthrough
- * @param {?boolean} obj.noPadding remove padding from the card content
- * @param {?boolean} obj.noMargin remove margin wrapper from outside the card
- * @param {?*} obj.modalContent if specified, will make card clickable to display this content in the GLModalCard specified (see below)
- * @param {?*} obj.modalTitle the title to put in the modal header
- * @param {?*} obj.modalHeader content to put in the modal header
- * @param {?*} obj.modalHeaderImg background image for the modal header
- * @param {?*} obj.modalClassName className for modal
- * @param {?Object} obj.modal package object for all the above parameters
- * @param {?String} obj.modalId the ID of the GLModalCard to use in displaying
- * @param {?Boolean} obj.modalPrioritize if this GLModalCard is opened while others are already open, force close them (they remain open by default)
- * @param {?String} obj.href make this card a link
- * @param {?} obj.children
+ * @param {object} obj
+ * @param {string} [obj.className] className passthrough
+ * @param {boolean} [obj.noPadding] remove padding from the card content
+ * @param {boolean} [obj.noMargin] remove margin wrapper from outside the card
+ * @param {*} [obj.modalContent] if specified, will make card clickable to display this content in the GLModalCard specified (see below)
+ * @param {*} [obj.modalTitle] the title to put in the modal header
+ * @param {*} [obj.modalHeader] content to put in the modal header
+ * @param {*} [obj.modalHeaderImg] background image for the modal header
+ * @param {*} [obj.modalClassName] className for modal
+ * @param {object} [obj.modal] package object for all the above parameters
+ * @param {string} [obj.modalId] the ID of the GLModalCard to use in displaying
+ * @param {boolean} [obj.modalPrioritize] if this GLModalCard is opened while others are already open, force close them (they remain open by default)
+ * @param {String} [obj.href] make this card a link
+ * @param {?} [obj.children]
  */
-export const GLCard = ({noPadding, noMargin, className, style, modalContent, modalTitle, modalId, modalHeader, modalHeaderImg, modalPrioritize, modalClassName, modal, children, href, ...props}) => {
-
+export const GLCard = ({noPadding, noMargin, className, style, modalContent, modalTitle, modalId, modalHeader, modalHeaderImg, modalPrioritize, modalClassName, modal, children, href, onClick, ...props}) => {
 	const modalObj = {
-		content: modalContent, 
+		content: modalContent,
 		title: modalTitle,
 		header: modalHeader,
 		headerImg: modalHeaderImg,
@@ -83,33 +83,38 @@ export const GLCard = ({noPadding, noMargin, className, style, modalContent, mod
 		...modal
 	};
 
-	const openModal = () => {
-		assert(modalId, "No ID specified for which overlay modal to use!");
-		
-		DataStore.setValue(MODAL_LIST_PATH.concat(modalId), modalObj);
+	const onClickCard = e => {
+		onClick && onClick(e);
+		if (modalContent) {
+			assert(modalId, "No ID specified for which overlay modal to use!");
 
-		// manually close all other modals if prioritized first
-		// Only space for one modal on mobile, so always close
-		if (modalPrioritize || isPortraitMobile()) modalToggle();
-		modalToggle(modalId);
+			DataStore.setValue(MODAL_LIST_PATH.concat(modalId), modalObj);
+			// manually close all other modals if prioritized first
+			// Only space for one modal on mobile, so always close
+			if (modalPrioritize || isPortraitMobile()) modalToggle();
+			modalToggle(modalId);
+		}
 	}
 
-	const loaded = DataStore.getValue(LOADED_PATH);
+	// const loaded = DataStore.getValue(LOADED_PATH);
 
-	let cardContents = <Card className={space("glcard", !noMargin?"m-2":"", modalContent?"glcardmodal":"", className)} onClick={modalContent && openModal} {...props}>
-		{noPadding? children
-		: <CardBody>{children}</CardBody>}
-	</Card>;
+	let cardContents = (
+		<Card className={space('glcard', !noMargin && 'm-2', modalContent && 'glcardmodal', className)} onClick={onClickCard} {...props}>
+			{noPadding ? children : <CardBody>{children}</CardBody>}
+		</Card>
+	);
 
 	if (href) {
 		cardContents = <C.A className="glcard-link" href={href} onClick={() => modalToggle()}>{cardContents}</C.A>
 	}
 
-	return noMargin ? cardContents
-	: <div className="glcard-outer" style={style}>
-		{cardContents}	
-	</div>;
+	return noMargin ? cardContents : (
+		<div className="glcard-outer" style={style}>
+			{cardContents}
+		</div>
+	);
 }
+
 
 /**
  * Opens and closes modals. If given an ID, will toggle that modal. If not, it will force close all modals.
@@ -159,7 +164,6 @@ export const markPageLoaded = (loaded) => {
  * @param {String} id 
  */
 export const GLModalCard = ({className, id}) => {
-
 	const path = MODAL_LIST_PATH.concat(id);
 	const open = DataStore.getValue(path.concat("open"));
 
@@ -192,8 +196,7 @@ export const GLModalCard = ({className, id}) => {
 				</CardBody>
 			</GLCard>
 		</div>
-	</>: null;
-
+	</> : null;
 };
 
 /**
