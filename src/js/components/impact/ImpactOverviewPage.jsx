@@ -24,6 +24,7 @@ import Advertiser from '../../base/data/Advertiser';
 import Advert from '../../base/data/Advert';
 import { getImpressionsByCampaignByCountry } from '../../base/data/ImpactPageData';
 import printer from '../../base/utils/printer'
+import { getId } from '../../base/data/DataClass';
 /**
  * DEBUG OBJECTS
  */
@@ -52,7 +53,7 @@ export class ImpactFilters {
  * 
  * @param {Object} p
  */
-const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, brand, campaign, subBrands, charities, subCampaigns, impactDebits, ads, mainLogo}) => {
+const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, brand, campaign, subBrands, charities, subCampaigns, impactDebits, ads, subCampaignsWithDebits, subBrandsWithDebits, mainLogo}) => {
 	// TODO refactor to break the code block below into shorter chunks so it's easier to see and edit
 	return (
 	<>
@@ -93,14 +94,14 @@ const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, bra
 							{!campaign && <GLHorizontal collapse="md" basis={60}>
 								<GLVertical>
 									<GLHorizontal>
-										{subBrands.length ?
+										{subBrandsWithDebits.length ?
 											<GLCard
-												modalContent={() => <BrandList brand={brand} subBrands={subBrands}/>}
-												modalTitle={subBrands.length + " Brands"}
+												modalContent={() => <BrandList brand={brand} subBrands={subBrandsWithDebits}/>}
+												modalTitle={subBrandsWithDebits.length + " Brands"}
 												modalId="right-half"
 												modalClassName="list-modal"
 												className="center-number">
-													<h2>{subBrands.length}</h2>
+													<h2>{subBrandsWithDebits.length}</h2>
 													<h3>Brands</h3>
 											</GLCard> : null}
 										<GLCard
@@ -113,14 +114,14 @@ const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, totalString, bra
 												<h3>Charities</h3>
 										</GLCard>
 									</GLHorizontal>
-									{subCampaigns.length ?
+									{subCampaignsWithDebits.length ?
 										<GLCard 
 											basis={10}
-											modalContent={() => <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaigns}/>}
-											modalTitle={subCampaigns.length + " Campaigns"}
+											modalContent={() => <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaignsWithDebits} impactDebits={impactDebits}/>}
+											modalTitle={subCampaignsWithDebits.length + " Campaigns"}
 											modalClassName="list-modal"
 											modalId="right-half">
-												<h3>{subCampaigns.length} CAMPAIGNS</h3>
+												<h3>{subCampaignsWithDebits.length} CAMPAIGNS</h3>
 										</GLCard> : null}
 									<CountryViewsGLCard basis={10} baseObjects={pvBaseObjects.value}/>
 									{/* as of 22/02/2023, this card is being discussed if it should be kept or not
