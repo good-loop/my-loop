@@ -52,7 +52,7 @@ import { ImpactStoriesPage } from './ImpactStoriesPage';
 const IMPACT_PAGES= {
 	view: ImpactOverviewPage,
 	story: ImpactStoriesPage,
-	stat: ImpactOverviewPage,
+	stat: ImpactStatsPage,
 }
 
 const ImpactPage = () => {
