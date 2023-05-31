@@ -59,7 +59,9 @@ const ImpactPage = () => {
 
 	const path = DataStore.getValue(['location', 'path']);
 
-	if (path.length < 3) return <ErrorDisplay e={{error:"Invalid URL"}} />
+	if (path.length < 3) {
+		return <ErrorDisplay e={{message:"Invalid URL: Not enough details in path - expected e.g. /brand/acme "}} />
+	}
 	const status = DataStore.getUrlValue('gl.status') || DataStore.getUrlValue('status') || KStatus.PUBLISHED;
 	const page = path[1]
 	const itemType = path[2]
