@@ -13,6 +13,8 @@ import ActionMan from '../../../plumbing/ActionMan';
 import Misc from '../../../MiscOverrides';
 import ServerIO from '../../../plumbing/ServerIO';
 import _ from 'lodash';
+import PageRecommendations from '../../../base/components/PageRecommendations';
+import { storedManifestForTag } from '../../../base/utils/pageAnalysisUtils';
 
 
 const getCreative = (): string | null => DataStore.getValue(['location', 'path'])[3];
@@ -48,7 +50,7 @@ function CreativeList() {
 }
 
 
-function CreativeSizeOverview({ tag }) {
+function CreativeSizeOverview({ tag, manifest }) {
 	return (
 		<GLCard noPadding noMargin className="creative-size-card">
 			<CardHeader>Your Creative Measurement</CardHeader>
@@ -66,14 +68,17 @@ function CreativeSizeOverview({ tag }) {
 						<a role="button" onClick={() => {}}>View Breakdown</a>
 					</div>
 				</div>
-				<p>TODO thumbnail here</p>
+				<img src={manifest.screenshot} className="w-100" />
 			</CardBody>
 		</GLCard>
 	);
 }
 
 
-function CreativeOptimisationOverview({ tag }) {
+function CreativeOptimisationOverview({ tag, manifest }) {
+
+	const recsList = PageRecommendations({manifest}).map(rec => <Col xs="6">{rec}</Col>);
+
 	return (
 		<GLCard noPadding noMargin className="creative-opt-overview-card">
 			<CardHeader>Optimisation Recommendations</CardHeader>
@@ -83,9 +88,11 @@ function CreativeOptimisationOverview({ tag }) {
 					Reduce {CO2e} by
 					<div className="number">up to XX%</div>
 				</div>
-				<div className="recs-list">
-					TODO Import recommendations generator from portal analysis page
-				</div>
+				<Container className="recs-list">
+					<Row>
+						{recsList}
+					</Row>
+				</Container>
 			</CardBody>
 			<CardFooter>
 				Share
@@ -109,7 +116,7 @@ function AnalysePrompt({ tag }): JSX.Element {
 	if (analysisState === 'loading') return <Misc.Loading text="Analysis in progress..." />;
 
 	const doIt = () => {
-		ServerIO.load(`${ServerIO.MEASURE_ENDPOINT}/measure`, { data: { tagId: tag.id, url: tag.creativeURL } }).then(res => {
+		ServerIO.load(`${ServerIO.MEASURE_ENDPOINT}`, { data: { tagId: tag.id, url: tag.creativeURL } }).then(res => {
 			// Store results where CreativeView will find them
 			if (!res.error) DataStore.setValue(['widget', 'saved-tag-measurement', tag.id], res.cargo);
 		});
@@ -135,10 +142,14 @@ function CreativeView({ showList, setShowList }: {showList: boolean, setShowList
 	const tag = pvTag.value;
 
 	const pvManifest = DataStore.fetch(['widget', 'saved-tag-measurement', tagId], () => (
-		ServerIO.load(`${ServerIO.MEASURE_ENDPOINT}/persist/greentag_${tagId}/results.json`, { swallow: true })
+		ServerIO.load(storedManifestForTag(tagId), { swallow: true })
 	));
 
 	if (!pvManifest.resolved) return <Misc.Loading text="Checking for saved creative manifest..." />;
+
+	// Normal MeasureServlet response is a list of manifests as multiple URLs can be analysed.
+	// Just pull out the first, as green tags should only have one.
+	const manifest = pvManifest.value?.[0] || null;
 
 	return <>
 		<CardHeader>
@@ -146,14 +157,14 @@ function CreativeView({ showList, setShowList }: {showList: boolean, setShowList
 			{tag.name}
 		</CardHeader>
 		<CardBody>
-			{pvManifest.value ? (
+			{manifest ? (
 				<Container>
 					<Row>
 						<Col xs="4">
-							<CreativeSizeOverview tag={tag} manifest={pvManifest.value} />
+							<CreativeSizeOverview tag={tag} manifest={manifest} />
 						</Col>
 						<Col xs="8">
-							<CreativeOptimisationOverview tag={tag} manifest={pvManifest.value} />
+							<CreativeOptimisationOverview tag={tag} manifest={manifest} />
 						</Col>
 					</Row>
 				</Container>
