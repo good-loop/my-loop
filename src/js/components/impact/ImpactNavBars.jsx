@@ -130,10 +130,13 @@ const NavBars = ({active, isNavbarOpen, setIsNavbarOpen}) => {
 		setIsNavbarOpen(!isOpen) // inFlow empty div used in main page content, required as fixed navbars can't affect flex when opening
 	}
 
+	// HACK what to put on the url to keep the same brand/time filter settings
+	const urlFilters = window.location.pathname.replace(/\/impact\/\w+/, "") + window.location.search;
+
 	return (
 		<>
-		<SideNavBar active={active} isOpen={isOpen} toggle={toggle} navToggleAnimation={navToggleAnimation}/>
-		<TopNavBar active={active}/> 
+		<SideNavBar active={active} isOpen={isOpen} toggle={toggle} navToggleAnimation={navToggleAnimation} urlFilters={urlFilters} />
+		<TopNavBar active={active} urlFilters={urlFilters} /> 
 		</>
 	)
 }

@@ -72,8 +72,8 @@ const ImpactPage = () => {
 
 	let [pageName, PageContent] = ({
 		view: ["Overview", IMPACT_PAGES.view], 
-		stories: ["Stories", IMPACT_PAGES.story], 
-		stats: ["Statistics", IMPACT_PAGES.stat]
+		story: ["Stories", IMPACT_PAGES.story], 
+		stat: ["Statistics", IMPACT_PAGES.stat]
 	})[page]
 
 	useEffect (() => {
