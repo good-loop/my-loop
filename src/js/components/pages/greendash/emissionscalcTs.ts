@@ -122,7 +122,9 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 			return failedObject;
 		}
 		const campaign = pvCampaign.value;
+		// @ts-ignore
 		if (Campaign.isMaster(campaign)) {
+			// @ts-ignore
 			const pvAllCampaigns = Campaign.pvSubCampaigns({ campaign, query: null });
 			if (!pvAllCampaigns.resolved) {
 				failedObject = { type: 'loading', message: 'Fetching campaigns...' };
@@ -406,8 +408,8 @@ const calculateDynamicOffset = (campaign: Campaign, offset: Impact, period: Peri
 	}
 	let pvCarbonData = getCarbon({
 		q: SearchQuery.setProp(null, 'campaign', campaign.id).query,
-		start: period?.start.toISOString() || '2022-01-01',
-		end: period?.end.toISOString() || 'now',
+		start: period?.start?.toISOString() || '2022-01-01',
+		end: period?.end?.toISOString() || 'now',
 		breakdown: ['total{"emissions":"sum"}'],
 	});
 
@@ -445,7 +447,7 @@ const calculateDynamicOffset = (campaign: Campaign, offset: Impact, period: Peri
  * fraction by period, or all
  */
 const calculateFixedOffset = (impactDebit: ImpactDebit, period: Period|null): Impact | null => {
-	ImpactDebit.assIsa(impactDebit);
+	ImpactDebit.assIsa(impactDebit, null);
 	// We either want carbon emissions or impressions count for this campaign/period - this gets both
 	if ( ! period) {		
 		period = getPeriodFromUrlParams();
@@ -454,9 +456,9 @@ const calculateFixedOffset = (impactDebit: ImpactDebit, period: Period|null): Im
 	let fraction;
 	if (period && impactDebit.start && impactDebit.end) {
 		let period2 = {start:new Date(impactDebit.start), end:new Date(impactDebit.end)} as Period;
-		let overlapStartMsecs = Math.max(period.start.getTime(), period2.start.getTime());
-		let overlapEndMsecs = Math.min(period.end.getTime(), period2.end.getTime());
-		fraction = (overlapEndMsecs - overlapStartMsecs) / (period.end.getTime() - period.start.getTime());
+		let overlapStartMsecs = Math.max(period.start!.getTime(), period2.start!.getTime());
+		let overlapEndMsecs = Math.min(period.end!.getTime(), period2.end!.getTime());
+		fraction = (overlapEndMsecs - overlapStartMsecs) / (period.end!.getTime() - period.start!.getTime());
 		if (fraction<0) {
 			fraction = 0;
 		}
@@ -488,9 +490,11 @@ type OffSets4Type = {
 	allFixedOffsets: Impact[];
 };
 
+// NB: Tried refactor getOffsetsByType into Promise with async. Causing an infinite loop in GreenLanding2.
 export const getOffsetsByType = ({ campaign, status, period }: { campaign: Campaign; status: any; period: Period }): OffSets4Type => {
 	// Is this a master campaign?
-	let pvAllCampaigns = Campaign.pvSubCampaigns({ campaign, query: status });
+	// @ts-ignore
+	let pvAllCampaigns = Campaign.pvSubCampaigns({ campaign, query: status }) as PromiseValue;
 	let isLoading = !pvAllCampaigns.resolved;
 	let allFixedOffsets = [] as Impact[];
 	if (pvAllCampaigns.value) {
@@ -532,7 +536,7 @@ export const getOffsetsByType = ({ campaign, status, period }: { campaign: Campa
  * Why not use Promise?? Returning false when loading is hard to handle.
  * @returns {?ImpactDebit[]} false if loading
  */
-const getFixedOffsetsForCampaign = (campaign: Campaign, period: Period): Impact[] | false => {
+const getFixedOffsetsForCampaign = (campaign: Campaign, period: Period): (Impact | null)[] | false => {
 	let pvImpactDebitsList = Campaign.getImpactDebits({ campaign, status: KStatus.PUBLISHED });
 	if (!pvImpactDebitsList.value) {
 		return false;
@@ -557,7 +561,7 @@ const getFixedOffsetsForCampaign = (campaign: Campaign, period: Period): Impact[
 		let fixed = fixedImpactDebits.filter((impd) => impd.impact.name === type);
 		for(let i=0; i<fixed.length; i++) {
 			let fo = calculateFixedOffset(fixed[i], period);			
-			fixedOffsets.push(fo);
+			if (fo) fixedOffsets.push(fo);
 		}		
 		let dynamic = dynamicImpactDebits.filter((impd) => impd.impact.name === type);
 		if (!dynamic.length) continue;
@@ -585,11 +589,11 @@ const getFixedOffsetsForCampaign = (campaign: Campaign, period: Period): Impact[
 		let startGap = { start: period.start, end: new Date(fstart) } as Period;
 		let endGap = { start: new Date(fend), end: period.end } as Period;
 		// avoid bad/empty periods where start is after end
-		if (startGap.start.getTime() < startGap.end.getTime()) {
+		if (startGap.start!.getTime() < startGap.end!.getTime()) {
 			let do1 = calculateDynamicOffset(campaign, doffset, startGap) as Impact;
 			fixedOffsets.push(do1);
 		}
-		if (endGap.start.getTime() < endGap.end.getTime()) {
+		if (endGap.start!.getTime() < endGap.end!.getTime()) {
 			let do2 = calculateDynamicOffset(campaign, doffset, endGap) as Impact;
 			fixedOffsets.push(do2);
 		}
