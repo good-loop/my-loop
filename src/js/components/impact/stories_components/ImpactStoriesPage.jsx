@@ -10,7 +10,7 @@ import ImpactLoadingScreen from '../ImpactLoadingScreen';
 import TODO from '../../../base/components/TODO';
 import Money from '../../../base/data/Money';
 import AdvertsCatalogue from '../../campaignpage/AdvertsCatalogue';
-import Campaign from '../../../base/data/Campaign';
+import Advert from '../../../base/data/Advert';
 /**
  * 
  * @param {Object} p
@@ -31,8 +31,6 @@ export const ImpactStoriesPage = ({pvBaseObjects, navToggleAnimation, totalStrin
 	
 	if(impactDebits.length == 0) return <ErrorDisplay e={{message: "No impact debits found for this campaign"}} />
 
-    console.log("lewis: ", {campaign, brand, impactDebits, charities});
-
     // sort impact debits, ranking first by priority then by the cash value of the debit
 	// "b - a" is used to invert the sort so [0] is the most impactful impact
 	impactDebits.sort((a, b) => {
@@ -51,7 +49,6 @@ export const ImpactStoriesPage = ({pvBaseObjects, navToggleAnimation, totalStrin
 	if (pvBaseObjects.resolved) console.log("base objs:", pvBaseObjects)
 	// TODO refactor to break the code block below into shorter chunks so it's easier to see and edit
 	// let mode = campaign ? 'campaign' : (mast)
-	console.log("Lewis", mainLogo)
 
 	return (
 	<>
@@ -103,13 +100,12 @@ const SplashCard = ({brand, mainLogo}) => {
 }
 
 const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) => {
-	//console.log("campSpot", impact, charity, campaigns);
 
 	if(!campaign) campaign = subCampaigns.find(c => (c.jobNumber == impact.jobNumber))
-	let pvAds = Campaign.pvAds({campaign:campaign, status:status})
+
+	let pvAds = Advert.fetchForCampaigns({campaignIds:[campaign.id], status:status});
 	if(! pvAds.resolved) return <></>
 	
-	console.log("Found the ads!", pvAds.value.hits)
     const startDate = impact.created.substr(0, impact.created.indexOf("T")).split("-"); // in format 2022-12-16T04:52:53, we don't care about anything after T
     const startYear = startDate[0]; // get the decades only, will need patched in ~ 80 years
     const startMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][startDate[1] - 1]

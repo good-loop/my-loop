@@ -52,14 +52,16 @@ import { ImpactStoriesPage } from './stories_components/ImpactStoriesPage';
 const IMPACT_PAGES= {
 	view: ImpactOverviewPage,
 	story: ImpactStoriesPage,
-	stat: ImpactOverviewPage,
+	stat: ImpactStatsPage,
 }
 
 const ImpactPage = () => {
 
 	const path = DataStore.getValue(['location', 'path']);
 
-	if (path.length < 3) return <ErrorDisplay e={{error:"Invalid URL"}} />
+	if (path.length < 3) {
+		return <ErrorDisplay e={{message:"Invalid URL: Not enough details in path - expected e.g. /brand/acme "}} />
+	}
 	const status = DataStore.getUrlValue('gl.status') || DataStore.getUrlValue('status') || KStatus.PUBLISHED;
 	const page = path[1]
 	const itemType = path[2]
@@ -70,8 +72,8 @@ const ImpactPage = () => {
 
 	let [pageName, PageContent] = ({
 		view: ["Overview", IMPACT_PAGES.view], 
-		stories: ["Stories", IMPACT_PAGES.story], 
-		stats: ["Statistics", IMPACT_PAGES.stat]
+		story: ["Stories", IMPACT_PAGES.story], 
+		stat: ["Statistics", IMPACT_PAGES.stat]
 	})[page]
 
 	useEffect (() => {

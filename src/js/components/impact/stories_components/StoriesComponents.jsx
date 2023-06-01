@@ -257,7 +257,6 @@ export const HowItWorks = ({campaign, subCampaigns, charities, totalString}) => 
  * @returns {React.ReactElement} 
  */
 export const DonationsCard = ({campaign, subCampaigns, brand, impactDebits, charities}) => {
-    console.log("doncard", campaign, subCampaigns)
     const getDate = (dateStr) => {
         let tempDate = dateStr.substr(0, dateStr.split("").findIndex((el) => el === "T")).split("-") // parse date 
         tempDate[1] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][parseInt(tempDate[1]) - 1]

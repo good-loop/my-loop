@@ -27,7 +27,7 @@ const fetchTopLevelObjects = ({masterBrand, brand, campaign, status=KStatus.PUBL
 
 	const fetchFn = async () => {
 		const allImpactDebits = List.hits(await Advertiser.getImpactDebits({vertiser: masterBrand || brand, status}).promise);
-		const childBrands = brand ? List.hits(await Advertiser.getChildren(brand.id).promise) : [];
+		const childBrands = List.hits(await Advertiser.getChildren((masterBrand || brand).id).promise);
 		const allBrands = [masterBrand, brand, ...childBrands].filter(x=>x);
 		const allCampaigns = List.hits(await Campaign.fetchForAdvertisers(allBrands.map(b => b.id)).promise);
 
