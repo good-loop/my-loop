@@ -42,7 +42,7 @@ import ImpactStatsPage from './ImpactStatsPage';
  */
 
 import Login from '../../base/youagain';
-import { ImpactStoriesPage } from './ImpactStoriesPage';
+import { ImpactStoriesPage } from './stories_components/ImpactStoriesPage';
 
 
 

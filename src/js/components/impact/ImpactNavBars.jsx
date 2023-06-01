@@ -14,6 +14,7 @@ import { encURI, is, isMobile, space } from '../../base/utils/miscutils';
 import C from '../../C';
 import ServerIO from '../../plumbing/ServerIO';
 import { isPer1000 } from '../pages/greendash/GreenMetrics';
+import DataStore from '../../base/plumbing/DataStore';
 const A = C.A;
 
 
@@ -27,6 +28,19 @@ const A = C.A;
  * @returns 
  */
 const SideNavBar = ({active, isOpen, navToggleAnimation, toggle}) => {
+	const page = DataStore.getValue(['location', 'path']);
+
+	const params = DataStore.getValue(['location', 'params'])
+	const paramsStr = Object.keys(params).map((key) => {
+		return "?"+key+"="+params[key];
+	});
+	
+	/*
+
+`/impact/view/${page[2]}/${page[3]}${paramsStr}`
+
+	console.log("lewis, ", page);
+	*/
 	return (		
 	<animated.div id='impact-overview-navbar-widescreen' className='navAnimationContainer' style = {{width: navToggleAnimation.width}}> 
 		<Navbar dark expand="md" id="impact-navbar" className={space('flex-column', 'justify-content-start', isOpen && 'mobile-open')} style={{width: navToggleAnimation.width}}>
@@ -38,16 +52,16 @@ const SideNavBar = ({active, isOpen, navToggleAnimation, toggle}) => {
 				</a>
 				<br/><br/>
 				<NavItem>
-					<A href={window.location}>
-						<div className={active === 'overview' ? 'active navbar-link' : 'navbar-link'}> 
+					<A href={active === "Overview" ? window.location : `/impact/view/${page[2]}/${page[3]}`}>
+						<div className={active === 'Overview' ? 'active navbar-link' : 'navbar-link'}> 
 							<div className="impact-nav-icon overview-icon" /><animated.div className="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Overview</animated.div> 
 						</div>
 					</A>
 				</NavItem>
 				<NavItem>
-					<A href={`${ServerIO.PORTAL_ENDPOINT}/#green`}>
-						<div className={active === 'impact' ? 'active navbar-link' : 'navbar-link'}> 
-							<div className="impact-nav-icon impact-icon" /> <animated.div className="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Impact</animated.div> 
+					<A href={active === "Stories" ? window.location : `/impact/stories/${page[2]}/${page[3]}`}>
+						<div className={active === 'Stories' ? 'active navbar-link' : 'navbar-link'}> 
+							<div className="impact-nav-icon impact-icon" /> <animated.div className="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Stories</animated.div> 
 						</div>
 					</A>
 				</NavItem>

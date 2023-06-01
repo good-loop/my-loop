@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="807" height="897" viewBox="0 0 807 897">
+  <defs>
+    <clipPath id="clip-splash-curve">
+      <rect width="807" height="897"/>
+    </clipPath>
+  </defs>
+  <g id="splash-curve" clip-path="url(#clip-splash-curve)">
+    <path id="back-curve" d="M1291,1201h800V297s-15.4.127-16.495,0c-20.148-.114-163.372,4.163-339.893,392.165S1291,1201,1291,1201Z" transform="translate(-1283 -297)" fill="#6da2b3" opacity="0.6"/>
+    <path id="front-curve" d="M1291,1210h770.863V297s-14.77.006-15.826-.122c-19.415-.115-157.49,4.326-327.581,396.191S1291,1210,1291,1210Z" transform="translate(-1254.863 -297)" fill="#5d838f" opacity=".6"/>
+  </g>
+</svg>

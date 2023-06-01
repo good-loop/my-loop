@@ -46,7 +46,7 @@ import ImpactStatsPage from './ImpactStatsPage';
  */
 
 import Login from '../../base/youagain';
-import { ImpactStoriesPage } from './ImpactStoriesPage';
+import { ImpactStoriesPage } from './stories_components/ImpactStoriesPage';
 
 
 const IMPACT_PAGES= {
@@ -118,7 +118,7 @@ const ImpactPage = () => {
 			<animated.div className='impact-navbar-flow-overlay' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}></animated.div>
 			<ImpactLoadingScreen baseObj={pvBaseObjects} forcedReload={forcedReload} setForcedReload={setForcedReload}/>
 			<ImpactFilterOptions size="thin" setIsNavbarOpen={setIsNavbarOpen} pvBaseObjects={pvBaseObjects} setForcedReload={setForcedReload} curPage={page} status={status}/>  {/*mobile horizontal filters topbar*/}
-			<NavBars active={"overview"} isNavbarOpen={isNavbarOpen} setIsNavbarOpen={setIsNavbarOpen}/>
+			<NavBars active={pageName} isNavbarOpen={isNavbarOpen} setIsNavbarOpen={setIsNavbarOpen}/>
 			<ImpactFilterOptions size="wide" setIsNavbarOpen={setIsNavbarOpen} pvBaseObjects={pvBaseObjects} setForcedReload={setForcedReload}  curPage={page} status={status}/>  {/*widescreen vertical filters topbar*/}
 		</div>
 		<PageContent pvBaseObjects={pvBaseObjects} navToggleAnimation={navToggleAnimation} totalString={totalString} mainLogo={mainLogo} {...pvBaseObjects?.value}/>

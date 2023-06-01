@@ -780,4 +780,107 @@
             }
         }
     }
+
+    // only the Impact Hubs container
+
+    // impact hub
+    .splash-curve {
+        height: 100%;
+        z-index: 1;
+        width: fit-content;
+        position: relative;
+    }
+
+    #stories-splash {
+        margin-top: 7%; // move past header
+        height: 90vh;
+        .padding-div { 
+            flex-basis: 15%;
+        }
+
+        #splash-content{
+            color: white !important;
+            padding: 6% 10% 6% 0; // pushed to center left of div
+            align-self: center;
+            height: 100%;
+            // since the curve is made of two slightly opaque colors, the resulting 'inner' color can be found by adding them
+            background-color: rgba(97.148, 139.037, 152.333, 0.84); // formula used: https://stackoverflow.com/questions/726549/algorithm-for-additive-color-mixing-for-rgb-values
+            // position within the col neatly
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            place-content: space-between;
+
+            .logo-circle {
+                width: 13vw;
+                height: 13vw;
+                margin: unset;
+            }
+            .adsForGood {
+                width: 50%;
+            }
+        }
+    }
+
+    #campaign-spotlight {
+        height: 80vh;
+        position: relative;
+
+        #spotlight-bg {
+            z-index: 0;
+            background-image: url("/img/Impact/world.svg");
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            #spotlight-bg-padding {
+                flex-basis: 15%;
+            }
+            #spotlight-bg-color {
+                // since the curve is made of two slightly opaque colors, the resulting 'inner' color can be found by adding them
+                background-color: rgba(97.148, 139.037, 152.333, 0.84); // formula used: https://stackoverflow.com/questions/726549/algorithm-for-additive-color-mixing-for-rgb-values
+            }
+        }
+
+        #spotlight-content {
+            height: 100%;
+            z-index: 1;
+
+            #campaign-info {
+                flex-basis: 25%;
+                place-self: center;
+                text-align: left;
+                text-align-last: left;
+                padding-left: 10%;
+
+                h1 { // total raised
+                    font-size: 400%;
+                    letter-spacing: 1px;
+                }
+
+                h2 {
+                    text-transform: unset;
+                    font-size: 200%;
+                    letter-spacing: 1px;
+                }
+
+                h4 {
+                    margin: 5% 0;
+                }
+
+                p {
+                    margin-bottom: 0 !important;
+                }
+            }
+
+            #spotlight-ads {
+                align-self: center;
+            }
+
+        }
+
+
+
+        
+
+    }
 }

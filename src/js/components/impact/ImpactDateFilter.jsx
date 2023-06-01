@@ -12,7 +12,7 @@ import { modalToggle } from './GLCards';
 
 /** Extract the time period filter from URL params if present - if not, apply "current quarter" by default */
 const initPeriod = () => {
-	let period = getPeriodFromUrlParams();
+	let period = null || getPeriodFromUrlParams(); // TODO fix this, recent date-utils changes broke this!
 	if (!period) {
 		period = getPeriodQuarter(new Date());
 		modifyPage(null, { period: period.name });

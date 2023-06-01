@@ -44,7 +44,7 @@ import { T4GSignUpButton, T4GSignUpModal } from './T4GSignUp';
 import GenerateGreenDemoEvents from './pages/GenerateGreenDemoEvents';
 import LogoutPage from './pages/LogoutPage';
 import ImpactPage from './impact/ImpactPages';
-import CampaignImpact from './impact/ImpactB2C';
+import CampaignImpact from './impact/stories_components/ImpactB2C';
 
 // DataStore
 C.setupDataStore();
