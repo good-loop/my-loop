@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Button, Card, CardBody, CardFooter, CardHeader, Col, Container, Row } from 'reactstrap';
+
+
 import { GLCard } from '../../impact/GLCards';
 import { CO2e, tickSvg } from './GreenDashUtils';
 
@@ -12,7 +14,7 @@ import { modifyPage } from '../../../base/plumbing/glrouter';
 import ActionMan from '../../../plumbing/ActionMan';
 import Misc from '../../../MiscOverrides';
 import ServerIO from '../../../plumbing/ServerIO';
-import _ from 'lodash';
+
 import PageRecommendations from '../../../base/components/PageRecommendations';
 import { storedManifestForTag } from '../../../base/utils/pageAnalysisUtils';
 
@@ -76,9 +78,6 @@ function CreativeSizeOverview({ tag, manifest }) {
 
 
 function CreativeOptimisationOverview({ tag, manifest }) {
-
-	const recsList = PageRecommendations({manifest}).map(rec => <Col xs="6">{rec}</Col>);
-
 	return (
 		<GLCard noPadding noMargin className="creative-opt-overview-card">
 			<CardHeader>Optimisation Recommendations</CardHeader>
@@ -90,7 +89,7 @@ function CreativeOptimisationOverview({ tag, manifest }) {
 				</div>
 				<Container className="recs-list">
 					<Row>
-						{recsList}
+						{PageRecommendations({manifest}).map(rec => <Col xs="6">{rec}</Col>)}
 					</Row>
 				</Container>
 			</CardBody>
@@ -99,11 +98,6 @@ function CreativeOptimisationOverview({ tag, manifest }) {
 			</CardFooter>
 		</GLCard>
 	);
-}
-
-// don't mind me, just learning typescript
-type Setter<T> = {
-	(val: T): void;
 }
 
 
@@ -128,6 +122,12 @@ function AnalysePrompt({ tag }): JSX.Element {
 		
 		<Button onClick={doIt}>Analyse</Button>
 	</div>;
+}
+
+
+// don't mind me, just learning typescript
+type Setter<T> = {
+	(val: T): void;
 }
 
 
@@ -176,7 +176,10 @@ function CreativeView({ showList, setShowList }: {showList: boolean, setShowList
 }
 
 
-function GreenRecsCreative({}) {
+/**
+ * 
+ */
+function GreenRecsCreative() {
 	const [showList, setShowList] = useState(true);
 
 	return (
@@ -195,22 +198,25 @@ function GreenRecsCreative({}) {
 	);
 }
 
-const fart = <>
-	<h3 className="mx-auto">Optimise Creative Files to Reduce Carbon</h3>
-	<h4>Tips</h4>
-	<p>
-		These tips can require special tools to apply. We are working on automated self-service web tools to make this easy. Meanwhile - email us and we can
-		help.
-	</p>
-	<ul>
-		<li>Use .webp format instead of .png. webp is a more modern format which can do compression and transparency.</li>
-		<li>Optimise fonts. Often a whole font will be included when just a few letters are needed.</li>
-		<li>Sometimes replacing a font with an svg can further reduce the creative weight.</li>
-		<li>Use .webm format for videos. It can get better compression.</li>
-		<li>Replace GIFs. Embedded video (e.g. .webm or .mp4) is better for animations, and .webp is better for static images.</li>
-		<li>Strip down large javascript libraries. Often a whole animation library is included when only a snippet is used.</li>
-	</ul>
-</>;
+
+export function CreativeRecsPlaceholder() {
+	return <>
+		<h3 className="mx-auto">Optimise Creative Files to Reduce Carbon</h3>
+		<h4>Tips</h4>
+		<p>
+			These tips can require special tools to apply. We are working on automated self-service web tools to make this easy. Meanwhile - email us and we can
+			help.
+		</p>
+		<ul>
+			<li>Use .webp format instead of .png. webp is a more modern format which can do compression and transparency.</li>
+			<li>Optimise fonts. Often a whole font will be included when just a few letters are needed.</li>
+			<li>Sometimes replacing a font with an svg can further reduce the creative weight.</li>
+			<li>Use .webm format for videos. It can get better compression.</li>
+			<li>Replace GIFs. Embedded video (e.g. .webm or .mp4) is better for animations, and .webp is better for static images.</li>
+			<li>Strip down large javascript libraries. Often a whole animation library is included when only a snippet is used.</li>
+		</ul>
+	</>;
+}
 
 
 export default GreenRecsCreative;

@@ -10,19 +10,22 @@ import { type BaseFilters } from './emissionscalcTs';
 
 import '../../../../style/GreenRecommendations.less';
 import GreenRecsPublisher from './GreenRecsPublisher';
-import GreenRecsCreative from './GreenRecsCreative';
+import GreenRecsCreative, { CreativeRecsPlaceholder } from './GreenRecsCreative';
 import { space } from '../../../base/utils/miscutils';
 import { modifyPage } from '../../../base/plumbing/glrouter';
 
 
 export const greenRecsPath = ['widget', 'greenRecs'];
-const modePath = [...greenRecsPath, 'mode'];
-const DEFAULT_MODE = 'creative'; // vs 'publisher'
-const getOptMode = () => DataStore.getValue('location', 'path')[2];
-const setOptMode = mode => {
-	const newPath = [...DataStore.getValue(['location', 'path'])];
-	newPath[2] = mode;
-	modifyPage(newPath);
+
+const DEFAULT_MODE = 'publisher'; // vs 'creative'
+
+function getOptMode():string {
+	return DataStore.getValue('location', 'path')[2];
+}
+
+const setOptMode = (mode: string) => {
+	if (mode === getOptMode()) return;
+	modifyPage(['greendash', 'recommendation', mode]);
 }
 
 
@@ -52,7 +55,22 @@ function NotLoggedIn({}) {
 }
 
 
-function ModeLink({mode, children}) {
+type ReactChildren = (string|JSX.Element|JSX.Element[]);
+
+type ModeLinkProps = {
+	mode: string;
+	onlyCurrent: boolean;
+	children: ReactChildren;
+};
+
+
+/** A link which switches the recommendation mode. TODO remove onlyCurrent */
+function ModeLink({mode, onlyCurrent, children}: ModeLinkProps): JSX.Element|null {
+	if (onlyCurrent) {
+		if (getOptMode() !== mode) return null;
+		return <div className="mode-link">{children}</div>
+	}
+
 	return (
 		<a className={space('mode-link', (getOptMode() === mode) && 'active')} role="button" onClick={() => setOptMode(mode)}>
 			{children}
@@ -61,22 +79,26 @@ function ModeLink({mode, children}) {
 }
 
 
-function ModeSelect() {
+/**
+ * Link bar to switch between publisher and creative optimisation mode
+ * TODO remove onlyCurrent once release-ready
+ * @param {boolean} [onlyCurrent] Only indicate the currently active mode, don't show switcher
+ */
+function ModeSelect({onlyCurrent}: {onlyCurrent: boolean}): JSX.Element {
 	let mode = getOptMode();
 	useEffect(() => {
 		if (!mode) setOptMode(DEFAULT_MODE);
 	}, []);
-	if (!mode) mode = DEFAULT_MODE;
 
 	return <div className="optimisation-mode-select">
-		<ModeLink mode="publisher">Publisher Optimisations</ModeLink>
-		<ModeLink mode="creative">Creative Optimisations</ModeLink>
+		<ModeLink mode="publisher" onlyCurrent={onlyCurrent}>Publisher Optimisations</ModeLink>
+		<ModeLink mode="creative" onlyCurrent={onlyCurrent}>Creative Optimisations</ModeLink>
 	</div>;
 }
 
 
 const GreenRecommendation = ({ baseFilters, ...props }: { baseFilters: BaseFilters }): JSX.Element => {
-	const [agencyIds, setAgencyIds] = useState<any[]>();
+	const [agencyIds, setAgencyIds] = useState<string[]>();
 	let agencyId = DataStore.getUrlValue('agency');
 	if (!agencyId && agencyIds?.length === 1) agencyId = agencyIds[0];
 	const [pseudoUser, setPseudoUser] = useState<boolean>(false);
@@ -88,7 +110,7 @@ const GreenRecommendation = ({ baseFilters, ...props }: { baseFilters: BaseFilte
 		if (userId && userId.endsWith('@pseudo')) setPseudoUser(true);
 
 		Login.getSharedWith().then((res: any) => {
-			const nextAgencyIds = [];
+			const nextAgencyIds: string[] = [];
 			res?.cargo.forEach((share: any) => {
 				const matches = share.item.match(/^Agency:(\w+)$/);
 				if (matches) nextAgencyIds.push(matches[1]);
@@ -100,17 +122,20 @@ const GreenRecommendation = ({ baseFilters, ...props }: { baseFilters: BaseFilte
 	// Only for logged-in users!
 	if (!Login.isLoggedIn()) return <NotLoggedIn />;
 
+	const showModeSelect = DataStore.getUrlValue('testCreativeRecs');
+
 	return (
 		<div className="green-subpage green-metrics">
 			<Container fluid>
 				{agencyIds ? (
 					<>
 						<GreenDashboardFilters pseudoUser={pseudoUser} />
-						<ModeSelect />
-						{(getOptMode() === 'publisher') ? <GreenRecsPublisher /> : <GreenRecsCreative />}
+						<ModeSelect onlyCurrent={!showModeSelect} />
+						{(getOptMode() === 'creative') ? <GreenRecsCreative /> : <GreenRecsPublisher />}
+						{showModeSelect ? null : <CreativeRecsPlaceholder />}
 					</>
 				) : (
-					<Misc.Loading text="Checking your access..." pv={null} inline={false} />
+					<Misc.Loading text="Checking your access..." />
 				)}
 			</Container>
 		</div>
