@@ -109,7 +109,7 @@ const fetchIHubData = () => {
 	}
 
 	// ads
-	const pvAds = pvTopCampaign.value? Campaign.pvAdsLegacy({campaign: pvTopCampaign.value, status, query}) : null;
+	const pvAds = pvTopCampaign.value? Advert.fetchForCampaign({campaignId:pvTopCampaign.value.id, status, q:query}) : null;//Campaign.pvAdsLegacy({campaign: pvTopCampaign.value, status, query}) : null;
 	// advertiser
 	if (pvTopCampaign.value && pvTopCampaign.value.vertiser) {
 		const pvAdvertiser = getDataItem({type:C.TYPES.Advertiser,status,id:pvTopCampaign.value.vertiser});
