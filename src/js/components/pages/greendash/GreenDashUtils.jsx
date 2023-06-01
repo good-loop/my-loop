@@ -29,6 +29,20 @@ export const downloadIcon = (
 	</svg>
 );
 
+/** Tick graphic used in various places on recommendations page */
+export const tickSvg = (
+	<svg viewBox="0 0 100 100">
+		<path d="m25 55 13 13 35-38" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="7"/>
+	</svg>
+);
+
+/** X graphic used in various places on recommendations page */
+export const crossSvg = (
+	<svg viewBox="0 0 100 100">
+		<g fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="7"><path d="m26 26 48 48"/><path d="m74 26-48 48"/></g>
+	</svg>
+);
+
 
 export const CO2 = <span>CO<sub>2</sub>e</span>;
 export const CO2e = <span className="co2e">CO<sub>2</sub>e</span>;
