@@ -1,10 +1,29 @@
+@gat-light-green: #7eb58e;
+@gat-deep-green: #2f5d64;
+@gat-grey: #707070;
+@gat-palebg: #eff3f5;
+@gat-palerbg: #f6f8f9;
+
+#greendash .optimisation-mode-select {
+	font-size: 1.25rem;
+	border-bottom: 1px solid silver;
+	margin-bottom: 0.5em;
+	.mode-link {
+		padding: 0.25em;
+		display: inline-block;
+		&:not(:last-child) {
+			margin-right: 2em;
+		}
+		&.active {
+			font-weight: 600;
+			color: @gat-deep-green;
+			border-bottom: 0.25em solid currentColor;
+		}
+	}
+}
+
+
 #greendash .publisher-recommendations {
-
-	@allow-card-color: #7eb58e;
-	@block-card-color: #707070;
-	@generator-card-color: #2f5d64;
-	@footer-color: #eff3f5;
-
 	/* Common styling for all 3 cards */
 	.domain-list, .generator {
 		height: 36rem;
@@ -17,7 +36,7 @@
 		}
 		.card-footer {
 			border-top: none;
-			background-color: @footer-color;
+			background-color: @gat-palebg;
 			height: 8rem;
 		}
 	}
@@ -25,11 +44,11 @@
 	/* The centre card with the generator controls */
 	.generator-expl {
 		line-height: 1.5;
-		color: @generator-card-color;
+		color: @gat-deep-green;
 	}
 	.generator {
 		.card-header {
-			background-color: @generator-card-color;
+			background-color: @gat-deep-green;
 		}
 		.card-footer {
 			display: flex;
@@ -52,19 +71,15 @@
 				// Display a bubble with exact value next to the slider
 				.value-bubble {
 					position: absolute;
-					background-color: @footer-color;
+					background-color: @gat-palebg;
 					border: 1px solid silver;
 					border-radius: 0.5rem;
 					padding: 0.5rem 0.75rem;
 					margin-left: 0.75rem;
+					margin-right: 0.75rem;
 					margin-top: -0.75rem;
 					white-space: nowrap;
 					font-weight: 600;
-					// Flip to left if close to right edge
-					&.to-left {
-						margin-left: -0.75rem;
-						transform: translateX(-100%);
-					}
 				}
 				// Because the distance between the left and right extremes of the slider centre is smaller than the overall track size,
 				// we have to adjust the range over which the slider-value bubble travels left to right
@@ -145,24 +160,121 @@
 
 		&.allow {
 			.domain-list-title, .cutoff-icon {
-				background-color: @allow-card-color;
+				background-color: @gat-light-green;
 			}
 			.cutoff-number, .csv-desc, .csv-button {
-				color: @allow-card-color !important; // important needed to override button rules
+				color: @gat-light-green !important; // important needed to override button rules
 			}
 			.domain-stats, .csv-button {
-				border-color: @allow-card-color;
+				border-color: @gat-light-green;
 			}
 		}
 		&.block {
 			.domain-list-title, .cutoff-icon {
-				background-color: @block-card-color;
+				background-color: @gat-grey;
 			}
 			.cutoff-number, .csv-desc, .csv-button {
-				color: @block-card-color !important; // important needed to override button rules
+				color: @gat-grey !important; // important needed to override button rules
 			}
 			.domain-stats, .csv-button {
-				border-color: @block-card-color;
+				border-color: @gat-grey;
+			}
+		}
+	}
+}
+
+#greendash .creative-recommendations {
+	.creative-list {
+		background-color: @gat-palebg;
+		.creative-item {
+			background-color: @gat-palerbg;
+			.card-body {
+				display: flex;
+				justify-content: space-between;
+			}
+			
+			.selected-indicator {
+				display: inline-block;
+				width: 2em;
+				height: 2em;
+				border: 1px solid silver;
+				border-radius: 50%;
+			}
+
+			&.active {
+				.selected-indicator {
+					border: none;
+					color: white;
+					background-color: @gat-deep-green;
+				}
+			}
+		}
+	}
+
+	.view-creative {
+		.card-header {
+			font-weight: 600;
+		}
+		> .card-header {
+			background-color: @gat-palebg;
+			font-size: 125%;
+			text-align: center;
+		}
+		.expand-button {
+			font-size: 175%;
+			line-height: 1;
+		}
+		.creative-size-card {
+			color: @gat-deep-green;
+			> .card-header {
+				background-color: @gat-deep-green;
+				color: white;
+				text-transform: uppercase;
+				text-align: center;
+			}
+			.carbon-per-impression {
+				text-align: center;
+				.number {
+					font-size: 175%;
+					font-weight: 600;
+				}
+			}
+			.size-info {
+				padding: 0.5em 0;
+				display: flex;
+				border: 0.25em solid @gat-deep-green;
+				border-left: none;
+				border-right: none;
+				> * {
+					flex-basis: 50%;
+					padding: 0.25em;
+				}
+				.bytes {
+					border-right: 1px solid silver;
+					.number {
+						color: black;
+					}
+				}
+			}
+		}
+		.creative-opt-overview-card {
+			color: @gat-deep-green;
+			> .card-header {
+				text-transform: uppercase;
+				text-align: center;
+			}
+			.card-header {
+				background-color: @gat-light-green;
+				color: white;
+			}
+			.reduction {
+				text-align: center;
+				color: @gat-light-green;
+				font-weight: 600;
+				font-size: 150%;
+				.number {
+					font-size: 200%;
+				}
 			}
 		}
 	}
