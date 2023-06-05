@@ -522,12 +522,6 @@ const NewTabCharityCard = ({ cid, loading }) => {
 	const returnLink = encURI('/newtab.html#webtop?tutOpen=true&tutPage=2');
 	//const params = isInTutorialHighlight ? "&task=return&link=" + returnLink : "";
 
-	let pvTotalForCharity = cid
-		? DataStore.fetch(['misc', 'donations', cid], () =>
-				ServerIO.getDonationsData({ q: 'cid:' + cid })
-			)
-		: {};
-
 	const donationTotalMonday = charity && fetchDonationTotalMonday({ charity });
 
 	// HACK we want to show the total going up as tabs are opened. But we only reconcile on a quarterly basis.

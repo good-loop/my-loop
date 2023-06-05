@@ -222,7 +222,7 @@ const CampaignPage = () => {
 
 	const ads = List.hits(pvAds.value) || [];
 
-	let totalViewCount = Campaign.viewcount({campaign, status});
+	let totalViewCount = Campaign.viewcountDeprecated({campaign, status});
 
 
 	// Combine branding

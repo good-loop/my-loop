@@ -14,6 +14,7 @@ import ServerIO from '../../../plumbing/ServerIO';
 import { getFilterTypeId } from './dashUtils';
 import ShareWidget, { shareThingId } from '../../../base/components/ShareWidget';
 import { modifyPage } from '../../../base/plumbing/glrouter';
+import { CO2e } from './GreenDashUtils';
 
 const A = C.A;
 
@@ -94,7 +95,7 @@ const GreenNavBar = ({active}) => {
 			</NavItem>
 			<NavItem>
 				<A className={space('nav-item', active === 'recommendation' && 'active')} href={recUrl}>
-					<div className="green-nav-icon optimisation-icon" /> Reduce
+					<div className="green-nav-icon optimisation-icon" /> <span>Reduce<br/>{CO2e}</span>
 				</A>
 			</NavItem>
 			<NavItem>
