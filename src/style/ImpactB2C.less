@@ -25,9 +25,11 @@
         flex-wrap: wrap;
         margin-right: -15px;
         margin-left: -15px;
+
         @media @width-mobile {
             flex-direction: column;
-            > * { 
+
+            >* {
                 margin-top: 5%;
             }
         }
@@ -42,7 +44,8 @@
         padding: 3%;
         width: 7vw;
         height: 7vw;
-        @media  @width-mobile{
+
+        @media @width-mobile {
             width: 12vh;
             height: 12vh;
         }
@@ -82,11 +85,11 @@
             top: 20%;
             height: 100%;
         }
-    
+
         .arm-left {
             left: 0;
         }
-    
+
         .arm-right {
             right: 0;
         }
@@ -96,6 +99,7 @@
     .spark {
         position: absolute;
         width: 5%;
+
         @media @width-mobile {
             display: none;
         }
@@ -138,7 +142,7 @@
             background-position: center;
             background-size: cover;
             background-position-x: 60%; // center it a bit more otherwise we're just looking at america 
-            background-color: @gl-impact-blue  !important;
+            background-color: @gl-impact-blue !important;
 
             height: 60%;
             aspect-ratio: 1;
@@ -180,9 +184,11 @@
 
         .adsForGood {
             max-width: 20%;
+
             @media @width-mobile {
                 max-width: 75%;
             }
+
             margin: 2%;
         }
 
@@ -248,7 +254,7 @@
 
     // rules for both campaign impacts
     .campaign-impact {
-        
+
         .camp-impact-card {
             height: 45vh;
             overflow: hidden;
@@ -261,7 +267,7 @@
         .impact-section {
             display: flex;
             flex-direction: column;
-            
+
             // on mobile stop content from being flush with screen edges
             @media @width-mobile {
                 width: 90%;
@@ -293,9 +299,11 @@
                 place-content: center;
                 text-align: left;
                 padding: 10%;
+
                 @media @width-mobile {
                     padding: 5%;
                 }
+
                 color: white !important;
 
                 .cause {
@@ -355,7 +363,8 @@
                 background-repeat: no-repeat;
                 background-position-y: 0;
                 background-position-x: 70%; // center it a bit more otherwise we're just looking at america 
-                background-color: @gl-impact-blue  !important;
+                background-color: @gl-impact-blue !important;
+
                 @media @width-mobile {
                     background-image: none;
                 }
@@ -410,6 +419,7 @@
         background-color: @gl-lighter-blue;
 
         .impact-row {
+
             .left,
             .right {
                 flex-basis: 45%;
@@ -417,6 +427,7 @@
         }
 
         #row-2 {
+
             // Helping Fund 'Project Here'
             .right {
                 padding: 5% !important;
@@ -437,6 +448,7 @@
                 .project-desc {
                     font-weight: unset;
                     font-size: 1vw; // keeps text within the div unless there's a TON of text but...
+
                     @media @width-mobile {
                         font-size: 100%; // ... on mobile it makes it tiny, so fix it there
                     }
@@ -504,9 +516,11 @@
             .cta-card {
                 padding-bottom: 5%;
                 width: 49%;
+
                 @media @width-mobile {
                     width: unset;
                 }
+
                 height: 60vh;
                 position: relative;
 
@@ -525,6 +539,7 @@
                 h2,
                 .social-media-links {
                     margin-top: 5%;
+
                     @media @width-mobile {
                         margin-top: 10%;
                     }
@@ -691,9 +706,11 @@
 
         .impact-debit {
             flex-basis: 30%; // keep to 3 a row
+
             @media @width-mobile {
                 flex-basis: 100%; // on mobile though, 1 per row
             }
+
             height: 40vh;
             box-shadow: 0 0 10px black;
             overflow: hidden;
@@ -742,9 +759,11 @@
         width: 100%;
         justify-content: space-evenly;
         align-items: center;
+
         @media @width-mobile {
             width: ;
         }
+
         .link-row {
             justify-content: space-evenly;
         }
@@ -754,21 +773,25 @@
             flex-direction: column;
 
             max-width: 20%;
+
             @media @width-mobile {
                 max-width: unset;
                 margin: 5% auto;
             }
+
             flex-basis: 20%;
             height: 60%;
 
             .link-img {
                 width: 100%;
                 height: 40vh;
+
                 @media @width-mobile {
                     // on mobile, squish the row into a column
                     height: 35vh;
                     width: 35vh;
                 }
+
                 object-fit: cover;
             }
 
@@ -794,11 +817,12 @@
     #stories-splash {
         margin-top: 7%; // move past header
         height: 90vh;
-        .padding-div { 
+
+        .padding-div {
             flex-basis: 15%;
         }
 
-        #splash-content{
+        #splash-content {
             color: white !important;
             padding: 6% 10% 6% 0; // pushed to center left of div
             align-self: center;
@@ -816,6 +840,7 @@
                 height: 13vw;
                 margin: unset;
             }
+
             .adsForGood {
                 width: 50%;
             }
@@ -832,9 +857,11 @@
             position: absolute;
             width: 100%;
             height: 100%;
+
             #spotlight-bg-padding {
                 flex-basis: 15%;
             }
+
             #spotlight-bg-color {
                 // since the curve is made of two slightly opaque colors, the resulting 'inner' color can be found by adding them
                 background-color: rgba(97.148, 139.037, 152.333, 0.84); // formula used: https://stackoverflow.com/questions/726549/algorithm-for-additive-color-mixing-for-rgb-values
@@ -852,7 +879,8 @@
                 text-align-last: left;
                 padding-left: 10%;
 
-                h1 { // total raised
+                h1 {
+                    // total raised
                     font-size: 400%;
                     letter-spacing: 1px;
                 }
@@ -880,8 +908,55 @@
         .ads-catalogue {
             // ad doesn't resize correctly when navbar expands/shrinks, so it's taken out of flow
             position: absolute;
-            top:30%;
-            right:0;
+            top: 30%;
+            right: 0;
         }
     }
+
+
+    #impact-footer-container {
+        position: relative;
+        height: 80vh;
+
+        #stories-footer {
+            padding: 20% 0 5% 0;
+            margin: auto;
+            height: 100%;
+            width: 55vw; // found from 100vw - (absolute images widths)
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            place-content: space-between;
+
+            ul {
+                display: flex;
+                flex-direction: row;
+            }
+
+            p {
+                font-size: larger;
+            }
+
+            .topRow, .adsForGood, ul {
+                height: 20%;
+            }
+        }
+
+        #images-combined {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 30vw;
+        }
+
+        #holding-world {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 15vw;
+            transform: scaleX(-1);
+        }
+    }
+
+
 }

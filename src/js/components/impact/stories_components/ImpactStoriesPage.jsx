@@ -68,6 +68,7 @@ export const ImpactStoriesPage = ({pvBaseObjects, navToggleAnimation, totalStrin
 						{firstImpact && <CardSeperator text={`Here's How You Can Keep Involved\nWith Good-Loop`} />}
 						{firstImpact && <DonationsCard campaign={campaign} subCampaigns={subCampaigns} brand={brand} impactDebits={impactDebits} charities={charities} />}
 						<LearnMore />
+						<Footer charities={charities} mainLogo={mainLogo}/>
 					</Col>
 				</Row>
 			</Container>
@@ -131,6 +132,25 @@ const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) =>
 				</Col>
 			</Row>
 			<AdvertsCatalogue ads={pvAds.value.hits} noPreviews className='ads-catalogue' captions={false}/>
+		</div>
+	)
+}
+
+const Footer = ({charities, mainLogo}) => {
+    const CharityLogos = charities.map((c, i) => <li style={{width:"15vh", alignSelf:"center"}} key={i}><img style={{width:"100%"}} src={c.logo}/></li>)
+
+	return (
+		<div id="impact-footer-container">
+			<Col id='stories-footer' className='impact-footer'>
+				<p className='text'>Advertising That's A Force For Good</p>
+				<div className='topRow'><img className='logo' src={mainLogo} style={{width: "100%"}}/></div>
+				<img className="adsForGood" src="/img/Impact/AdsForGood.svg" style={{width:"15vw"}}/>
+				<ul style={{listStyleType: "none"}}>
+					{CharityLogos}
+				</ul>
+			</Col>
+			<img src="/img/Impact/images-combined.png" id="images-combined"/>
+			<img src="/img/Impact/world-card.png" id="holding-world" />
 		</div>
 	)
 }
