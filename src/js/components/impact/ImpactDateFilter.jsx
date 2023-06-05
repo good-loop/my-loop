@@ -55,7 +55,7 @@ const ImpactDateFilter = ({setForcedReload}) => {
 			Apply
 		</Button>
 	</div>)
-	let onClick = () => openAndPopulateModal({id:"hero-card-modal", content, prioritized:true, headerClassName:"red-top-border noClose", className:"date-modal"})
+	let onClick = () => openAndPopulateModal({id:"filter-display", content, prioritized:true, headerClassName:"red-top-border noClose", className:"date-modal"})
 	return (
 	<div id="date-filters">
 		<button className="filter-row filter-text" onClick={onClick}>Date</button>

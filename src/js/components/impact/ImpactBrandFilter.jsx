@@ -10,7 +10,7 @@ import DataStore from '../../base/plumbing/DataStore';
 import { goto } from '../../base/plumbing/glrouter';
 import { retrurnProfile } from '../pages/TabsForGoodSettings';
 import { assert } from '../../base/utils/assert';
-import { space, alphabetSort } from '../../base/utils/miscutils';
+import { space, alphabetSort, isPortraitMobile } from '../../base/utils/miscutils';
 import Advertiser from '../../base/data/Advertiser';
 import Campaign from '../../base/data/Campaign';
 import List from '../../base/data/List';
@@ -216,7 +216,7 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, setF
 	*/
 	const openFilters = () => {
 		// if mobile user clicks the filter dropdown while they're open, close the filter menu
-		if(filtersOpen) {modalToggle(); setFiltersOpen(false); return null}
+		if(isPortraitMobile() && filtersOpen) {modalToggle(); setFiltersOpen(false); return null}
 		setFiltersOpen(true);
 
 		const vertiser = (masterBrand || brand).id
@@ -240,7 +240,7 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, setF
 				{allSubBrands.map(b => <FilterListItem item={b}/>)}
 			</div>
 		)
-		openAndPopulateModal({id:"left-half", content:modalContent, prioritized:true, headerClassName:"red-top-border noClose noPadding", className:"impact-brand-modal"})
+		openAndPopulateModal({id:"filter-display", content:modalContent, prioritized:true, headerClassName:"red-top-border noClose noPadding", className:"impact-brand-modal"})
 	}
 	
 	// helper JSX elements

@@ -104,23 +104,6 @@
 
 }
 
-// a nasty bunch of rules to turn the existing modal into a mobile version
-// this should be redone later and preferably a modal just for mobile brand selection can be made 
-.impact-brand-modal {
-    @media (max-width: 768px) {
-        height: 100% !important;
-        top: 6vh !important;
-        // make modal fill width
-        .glcard-outer {
-            padding: 0 !important;
-            .glcard {
-                margin: 0 !important;
-            }
-        }
-    }
-
-}
-
 // hide above navbar filters when on desktop
 #impactOverview-filters-and-account-wide {
     @media (max-width: 768px) {
@@ -330,6 +313,39 @@
         left: 0;
         right: 0;
         margin: auto;
+    }
+
+}
+
+#filter-display {
+    position:fixed;
+    z-index: 1000;
+    margin-top: 5rem;
+    margin-left: 5rem;
+    // a nasty bunch of rules to turn the existing modal into a mobile version
+    // this should be redone later and preferably a modal just for mobile brand selection can be made 
+    &.impact-brand-modal {
+        width: 40rem;
+        height: 100%;
+        @media (max-width: 768px) {
+            height: 100% !important;
+            top: 6vh !important;
+            // make modal fill width
+            .glcard-outer {
+                padding: 0 !important;
+                .glcard {
+                    margin: 0 !important;
+                }
+            }
+        }
+    }
+
+    &.date-modal {
+        width: 60rem;
+        height: unset;
+        @media (max-width: 768px) {
+            width: unset;
+        }
     }
 
 }

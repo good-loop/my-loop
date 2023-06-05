@@ -3,6 +3,7 @@ import C from '../../C';
 import ImpactBrandFilters from './ImpactBrandFilter';
 import ImpactDateFilter from './ImpactDateFilter';
 import ImpactAccountButton from './ImpactAccountButton';
+import { GLModalCard } from './GLCards';
 
 /**
  * DEBUG OBJECTS
@@ -25,9 +26,9 @@ const ImpactFilterOptions = ({size, pvBaseObjects, status, setForcedReload, curP
 	if( ! Login.getId() || Login.getId().endsWith("pseudo")) return null;
 
 	const {masterBrand, brand, campaign} = pvBaseObjects.value || {};
+	let content = null;
 
-
-	if(size == "wide") return (		
+	if(size == "wide") content = (		
 		<div className='flex-row impactOverview-filters-and-account' id={"impactOverview-filters-and-account-"+size}>
 			<ImpactBrandFilters loading={!pvBaseObjects.resolved} masterBrand={masterBrand} brand={brand} campaign={campaign} setForcedReload={setForcedReload} size={size} dropdown curPage={curPage} status={status}/>
 			<ImpactDateFilter setForcedReload={setForcedReload} />
@@ -35,12 +36,18 @@ const ImpactFilterOptions = ({size, pvBaseObjects, status, setForcedReload, curP
 		</div>
 	)
 
-	if(size == "thin") return (		
+	if(size == "thin") content = (		
 		<div className='flex-row impactOverview-filters-and-account' id={"impactOverview-filters-and-account-"+size}>
 			<ImpactBrandFilters loading={!pvBaseObjects.resolved} masterBrand={masterBrand} brand={brand} campaign={campaign} setForcedReload={setForcedReload} size={size} dropdown curPage={curPage} status={status}/>
 			{pvBaseObjects.resolved && <ImpactAccountButton curMaster={masterBrand} curSubBrand={brand} curCampaign={campaign} noShare/>}
 		</div>
 	)
+
+	return <>
+		{content}
+		<GLModalCard className='filter-display' id="filter-display" useOwnBackdrop >
+		</GLModalCard>
+	</>;
 }
 
 export default ImpactFilterOptions;
