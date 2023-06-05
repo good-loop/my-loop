@@ -25,7 +25,7 @@ import { assert } from '../../base/utils/assert';
  * @param {Advert[]} p.ads
  * @param {?Boolean} p.noPreviews remove preview carousel
  */
-const AdvertsCatalogue = ({ ads, noPreviews, className }) => {
+const AdvertsCatalogue = ({ ads, noPreviews, className, captions=true}) => {
 	assert(ads);
 
 	const [activeIndex, setActiveIndex] = useState(0);
@@ -50,7 +50,7 @@ const AdvertsCatalogue = ({ ads, noPreviews, className }) => {
 				ad={ad}
 				active={activeIndex === i}
 			/>
-			<CarouselCaption captionText={<Misc.DateDuration startDate={ad.start} endDate={ad.end} />} />
+			{captions && <CarouselCaption captionText={<Misc.DateDuration startDate={ad.start} endDate={ad.end} />} />}
 		</CarouselItem>
 	);
 

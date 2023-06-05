@@ -436,6 +436,7 @@ const AdsCatalogueModal = ({noPreviews, ads}) => {
 		<AdvertsCatalogue
 			ads={showAds}
 			noPreviews={noPreviews}
+			captions={false} // ?? A ton of ads were throwing warnings as they didn't seem to have start or end dates, do we need captions? ??
 		/>
 	</>;
 

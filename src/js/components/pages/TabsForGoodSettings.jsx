@@ -139,7 +139,6 @@ const CharitySelectBox = ({ item, className }) => {
 		let baseThemes = ['.dark', '.light', '.default', '.nature']	// TODO: this should be a list somewhere we import here
 		let themeSetting = getClaimValue(({ person, key: "theme" }))
 		if(baseThemes.every(theme => theme !== themeSetting)){	// if user has not chosen a non-charity theme (theme is a charity or unset)
-			console.log("WHAT THE    FUCK???", baseThemes, themeSetting)
 			setPersonSetting("theme", getId(item));				// apply charity theme 
 			window.localStorage.setItem('theme', getId(item))
 		}

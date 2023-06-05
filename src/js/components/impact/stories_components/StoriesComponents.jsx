@@ -376,10 +376,10 @@ export const CharityArms = (i, logo) => {
  * @returns {React.ReactElement} 
  */
 export const BrandLogoRows = ({mainLogo, charities, row}) => {
-    const CharityLogos = charities.map((c, i) => <li style={{width:"15vh"}} key={i}><img style={{width:"100%"}} src={c.logo}/></li>)
+    const CharityLogos = charities.map((c, i) => <li style={{width:"15vh", alignSelf:"center"}} key={i}><img style={{width:"100%"}} src={c.logo}/></li>)
     
     if(row) {
-        CharityLogos.unshift(<li style={{width:"15vh"}} key={CharityLogos.length}><img style={{width:"100%"}} src={mainLogo}/></li>)
+        CharityLogos.unshift(<li style={{width:"15vh", alignSelf:"center"}} key={CharityLogos.length}><img style={{width:"100%"}} src={mainLogo}/></li>)
         return (
             <Row id='brand-charities' style={{padding: "2%", placeContent:"center"}}>
             <ul style={{listStyleType: "none"}}>

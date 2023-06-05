@@ -875,12 +875,13 @@
             #spotlight-ads {
                 align-self: center;
             }
-
         }
 
-
-
-        
-
+        .ads-catalogue {
+            // ad doesn't resize correctly when navbar expands/shrinks, so it's taken out of flow
+            position: absolute;
+            top:30%;
+            right:0;
+        }
     }
 }

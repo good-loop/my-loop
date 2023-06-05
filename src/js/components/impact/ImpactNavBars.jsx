@@ -27,7 +27,7 @@ const A = C.A;
  * @param {function} toggle toggles the state of isOpen AND isNavbarOpen, a state used to mainain flow even with fixed navbars
  * @returns 
  */
-const SideNavBar = ({urlFilters="", active, isOpen, navToggleAnimation, toggle}) => {
+const SideNavBar = ({urlFilters="", active, isOpen, navToggleAnimation, toggle, setForcedReload}) => {
 	return (		
 	<animated.div id='impact-overview-navbar-widescreen' className='navAnimationContainer' style = {{width: navToggleAnimation.width}}> 
 		<Navbar dark expand="md" id="impact-navbar" className={space('flex-column', 'justify-content-start', isOpen && 'mobile-open')} style={{width: navToggleAnimation.width}}>
@@ -39,15 +39,15 @@ const SideNavBar = ({urlFilters="", active, isOpen, navToggleAnimation, toggle})
 				</a>
 				<br/><br/>
 				<NavItem>
-					<A href={'/impact/view'+urlFilters}>
-						<div className={active === 'overview' ? 'active navbar-link' : 'navbar-link'}> 
+					<A href={'/impact/view'+urlFilters} onClick={() => {setForcedReload(true)}}>
+						<div className={active === 'Overview' ? 'active navbar-link' : 'navbar-link'}> 
 							<div className="impact-nav-icon overview-icon" /><animated.div className="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Overview</animated.div> 
 						</div>
 					</A>
 				</NavItem>
 				<NavItem>
-					<A href={'/impact/story'+urlFilters}>
-						<div className={active === 'impact' ? 'active navbar-link' : 'navbar-link'}> 
+					<A href={'/impact/stories'+urlFilters} onClick={() => {setForcedReload(true)}}>
+						<div className={active === 'Stories' ? 'active navbar-link' : 'navbar-link'}> 
 							<div className="impact-nav-icon impact-icon" /> <animated.div className="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Impact</animated.div> 
 						</div>
 					</A>
@@ -112,7 +112,7 @@ const TopNavBar = ({urlFilters="", active}) => {
 		</Navbar></>)
 }
 
-const NavBars = ({active, isNavbarOpen, setIsNavbarOpen}) => {
+const NavBars = ({active, isNavbarOpen, setIsNavbarOpen, setForcedReload}) => {
 
 	const [isOpen, setIsOpen] = useState(isNavbarOpen) // the navbar expanded or not?
 
@@ -135,7 +135,7 @@ const NavBars = ({active, isNavbarOpen, setIsNavbarOpen}) => {
 
 	return (
 		<>
-		<SideNavBar active={active} isOpen={isOpen} toggle={toggle} navToggleAnimation={navToggleAnimation} urlFilters={urlFilters} />
+		<SideNavBar active={active} isOpen={isOpen} toggle={toggle} navToggleAnimation={navToggleAnimation} urlFilters={urlFilters} setForcedReload={setForcedReload}/>
 		<TopNavBar active={active} urlFilters={urlFilters} /> 
 		</>
 	)

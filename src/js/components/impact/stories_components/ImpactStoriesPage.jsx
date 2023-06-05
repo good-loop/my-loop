@@ -16,8 +16,6 @@ import Advert from '../../../base/data/Advert';
  * @param {Object} p
  */
 export const ImpactStoriesPage = ({pvBaseObjects, navToggleAnimation, totalString, brand, campaign, subBrands, charities, subCampaigns, impactDebits, mainLogo}) => {
-	
-	
 	const path = DataStore.getValue(['location', 'path']);
     const glVertiser = DataStore.getUrlValue('gl.vertiser');
 	//if ((path.length != 2 && !glVertiser) || path[0] !== "campaign") return <ErrorDisplay e={{error:"Invalid URL"}} />
@@ -78,7 +76,7 @@ export const ImpactStoriesPage = ({pvBaseObjects, navToggleAnimation, totalStrin
 		<GLModalBackdrop/>
 	</>
 	);
-};
+	};
 
 const SplashCard = ({brand, mainLogo}) => {
 	const logoCircle = circleLogo({logo:mainLogo});
@@ -129,9 +127,10 @@ const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) =>
 					</TODO>
 				</Col>
 				<Col id="spotlight-ads">
-					<AdvertsCatalogue ads={pvAds.value.hits} noPreviews className='ads'/>
+					{/* ads taken out of flow due to huge performance & styling issues when the navbar expands */}
 				</Col>
 			</Row>
+			<AdvertsCatalogue ads={pvAds.value.hits} noPreviews className='ads-catalogue' captions={false}/>
 		</div>
 	)
 }
