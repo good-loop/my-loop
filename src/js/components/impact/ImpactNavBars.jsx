@@ -84,22 +84,22 @@ const SideNavBar = ({urlFilters="", active, isOpen, navToggleAnimation, toggle, 
  * @param {active} String className of active page
  * @returns 
  */
-const TopNavBar = ({urlFilters="", active}) => {
+const TopNavBar = ({urlFilters="", active, setForcedReload}) => {
 	return (<>
 		<Navbar dark expand="md" id="impact-overview-navbar-smallscreen" className={space('flex-column', 'justify-content-start')}>
 			<Nav horizontal>
-				<NavItem className={active === 'overview' ? 'active' : ''}>
-					<A href={'/impact/view'+urlFilters}>
+				<NavItem className={active === 'Overview' ? 'active' : ''}>
+					<A href={'/impact/view'+urlFilters} onClick={() => {setForcedReload(true)}}>
 						<div className="impact-navbar-text">Overview</div> 
 					</A>
 				</NavItem>
-				<NavItem className={active === 'impact' ? 'active' : ''}>
-					<A href={'/impact/story'+urlFilters}>					
+				<NavItem className={active === 'Stories' ? 'active' : ''}>
+					<A href={'/impact/stories'+urlFilters}  onClick={() => {setForcedReload(true)}}>					
 						<div className="impact-navbar-text">Impact</div> 
 					</A>
 				</NavItem>
-				<NavItem className={active === 'analysis' ? 'active' : ''}>
-					<A href={'/impact/stat'+urlFilters}>
+				<NavItem className={active === 'analysis' ? 'active' : ''} >
+					<A href={'/impact/stat'+urlFilters} onClick={() => {setForcedReload(true)}}>
 						<div className="impact-navbar-text">Analysis</div> 
 					</A>
 				</NavItem>
@@ -136,7 +136,7 @@ const NavBars = ({active, isNavbarOpen, setIsNavbarOpen, setForcedReload}) => {
 	return (
 		<>
 		<SideNavBar active={active} isOpen={isOpen} toggle={toggle} navToggleAnimation={navToggleAnimation} urlFilters={urlFilters} setForcedReload={setForcedReload}/>
-		<TopNavBar active={active} urlFilters={urlFilters} /> 
+		<TopNavBar active={active} urlFilters={urlFilters} setForcedReload={setForcedReload}/> 
 		</>
 	)
 }

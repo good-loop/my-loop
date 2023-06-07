@@ -219,7 +219,7 @@ export const HowItWorks = ({campaign, subCampaigns, charities, totalString}) => 
                     <div className='white-circle'>
                         <img src="/img/Impact/this-ad-plants-trees.png" className='fill-img'/>
                     </div>
-                    <p>{month}' {year} Campaign{subCampaigns ? "s" : ""} Launch{subCampaigns ? "" : "es"}</p>
+                    <p>{month}' {year} - Campaign{subCampaigns ? "s" : ""} Launch{subCampaigns ? "" : "es"}</p>
                     <h3 className='color-gl-white'>Every View Is<br />A Donation</h3> {/* TODO: figure out something closer to £N / VIEW to use here*/}
                 </div>
 

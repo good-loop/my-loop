@@ -11,6 +11,8 @@ import TODO from '../../../base/components/TODO';
 import Money from '../../../base/data/Money';
 import AdvertsCatalogue from '../../campaignpage/AdvertsCatalogue';
 import Advert from '../../../base/data/Advert';
+import { is, isMobile } from "../../../base/utils/miscutils"
+
 /**
  * 
  * @param {Object} p
@@ -44,10 +46,6 @@ export const ImpactStoriesPage = ({pvBaseObjects, navToggleAnimation, totalStrin
     const firstCharity = firstImpact && charities.find((char) => char.id === firstImpact.impact.charity) || {};
     const secondaryCharity = secondImpact && charities.find((char) => char.id === secondImpact.impact.charity) || {};
 	
-	if (pvBaseObjects.resolved) console.log("base objs:", pvBaseObjects)
-	// TODO refactor to break the code block below into shorter chunks so it's easier to see and edit
-	// let mode = campaign ? 'campaign' : (mast)
-
 	return (
 	<>
 		{pvBaseObjects.resolved &&
@@ -65,7 +63,6 @@ export const ImpactStoriesPage = ({pvBaseObjects, navToggleAnimation, totalStrin
 						{firstImpact && <CardSeperator text={`Here's a Look At What You're Helping\nSupport With ${brand.name}`} />}
 						{firstImpact && <CampaignImpactOne campaign={campaign} brand={brand} logo={mainLogo} charity={firstCharity} impactDebit={firstImpact}/>}
 						{secondImpact && <CampaignImpactTwo campaign={campaign} brand={brand} logo={mainLogo} charity={secondaryCharity} impactDebit={secondImpact}/>}
-						{firstImpact && <CardSeperator text={`Here's How You Can Keep Involved\nWith Good-Loop`} />}
 						{firstImpact && <DonationsCard campaign={campaign} subCampaigns={subCampaigns} brand={brand} impactDebits={impactDebits} charities={charities} />}
 						<LearnMore />
 						<Footer charities={charities} mainLogo={mainLogo}/>
@@ -93,6 +90,8 @@ const SplashCard = ({brand, mainLogo}) => {
 					<p className="text">Powered By Good-Loop</p>
 					<img className="adsForGood" src="/img/Impact/AdsForGood.svg"/>
 				</Col>
+				<img src="/img/Impact/curve-desat-blue.svg" className='splash-curve-mobile' id="splash-curve-mobile-1"/>
+				<img src="/img/Impact/curve-desat-blue.svg" className='splash-curve-mobile' id="splash-curve-mobile-2"/>
 			</Row>
 		</div>
 	)
@@ -109,6 +108,7 @@ const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) =>
     const startYear = startDate[0]; // get the decades only, will need patched in ~ 80 years
     const startMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][startDate[1] - 1]
 	const startDay = startDate[2]
+	const ads = pvAds.value.hits
 
 	return (
 		<div id="campaign-spotlight">
@@ -119,19 +119,22 @@ const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) =>
 			</Row>
 			<Row id="spotlight-content">
 				<Col id='campaign-info'>
-					<h1>£{Money.prettyString({amount: impact.impact.amountGBP})}</h1>
-					<h2>Raised</h2>
-					<h4 className='font'>Supporting {charity.displayName}</h4>
-					<p className='font' id="spotlight-name">{impact.name}</p>
-					<TODO>Check how we can actually tell a campaign is over
-					<p className='font' id="spotlight-date">{startDay} {startMonth} {startMonth} - Present</p>
-					</TODO>
+					<div className='campaign-grouped-content'>
+						<h1>£{Money.prettyString({amount: impact.impact.amountGBP})}</h1>
+						<h2>Raised</h2>
+						<h4 className='font'>Supporting {charity.displayName}</h4>
+					</div>
+						{isMobile() && <AdvertsCatalogue ads={[ads[0]]} noPreviews className='ads-catalogue' captions={false}/>}
+					<div className='campaign-grouped-content'>
+						<p className='font' id="spotlight-name">{impact.name}</p>
+						<p className='font' id="spotlight-date">{startDay} {startMonth} {startMonth} - Present</p>
+					</div>
 				</Col>
 				<Col id="spotlight-ads">
 					{/* ads taken out of flow due to huge performance & styling issues when the navbar expands */}
 				</Col>
 			</Row>
-			<AdvertsCatalogue ads={pvAds.value.hits} noPreviews className='ads-catalogue' captions={false}/>
+			{!isMobile() && <AdvertsCatalogue ads={ads} noPreviews className='ads-catalogue' captions={false}/>}
 		</div>
 	)
 }
