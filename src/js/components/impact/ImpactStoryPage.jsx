@@ -39,7 +39,7 @@ const ImpactStoryPage = () => {
 	setNavProps(focusItem);
 	let windowTitle = space("Impact Page", focusItem && "for "+focusItem.name);
 	setWindowTitle(windowTitle);
-	
+
 	let pvDebits = getImpactDebits({filters});
 	let debits = pvDebits.value;
 	// 1st description
