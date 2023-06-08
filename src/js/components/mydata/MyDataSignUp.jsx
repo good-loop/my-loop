@@ -31,7 +31,6 @@ export const showMyDataSignUpModal = (s=true) => {
  * A button to start the MyData sign-up flow.
  */
  export const MyDataSignUpButton = ({className,children,style}) => {
-	
 	const gotmydata = hasRegisteredForMyData();
 	const content = gotmydata ?  "Go to My.Data" : "Sign Up for My.Data";
 
@@ -90,7 +89,7 @@ const SignUpForm = () => {
 		setPersonSetting({key:"name", value:name});
 		setPersonSetting({key: "emailperms", value: emailperms}); // TODO do this as set-consent-on-email // No need to do callback
 	}
-	
+
 	// const SignedInDiv = () => {
 	// 	return <div className="text-center">
 	// 		<hr/>
@@ -148,7 +147,6 @@ export const nextSignupPage = () => {
 };
 
 const MyDataSignUp = () => {
-	
 	const page = DataStore.getUrlValue("page") || DataStore.getValue(PAGE_PATH) || 0;
 	if (page >= PAGES.length) {
 		// done!
@@ -157,7 +155,7 @@ const MyDataSignUp = () => {
 		showMyDataSignUpModal(false);
 		return null;
 	}
-	
+
 	const PageComponent = PAGES[page];
 
 	return <div className="mydata-signup">

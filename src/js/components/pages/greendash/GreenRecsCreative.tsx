@@ -116,10 +116,9 @@ function AnalysePrompt({ tag }): JSX.Element {
 		});
 		setAnalysisState('loading');
 	};
-	
+
 	return <div>
 		This creative has not yet been analysed. Do it now?<br/>
-		
 		<Button onClick={doIt}>Analyse</Button>
 	</div>;
 }

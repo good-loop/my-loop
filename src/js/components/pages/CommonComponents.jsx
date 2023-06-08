@@ -142,7 +142,7 @@ const MyLandingBackgroundImage = ({bgImg, ngo, children}) => {
  */
 const MyLandingSectionOld = ({ngo, title, text, bgImg, shiftLeft, t4g=true, mydata=true}) => {
 	const name = NGO.displayName(ngo);
-	
+
 	if ( ! title) {
 		title = `Turn your web browsing into ${(ngo && "cash for " + name) || "charity donations"}. For free.`;
 	}
@@ -195,7 +195,7 @@ const MyDataButton = ({className}) => {
 
 const MyLandingSection = ({title, bgImg, noProducts}) => {
 	const fontSizeCTA = isMobile() ? '.8rem' : '1rem';
-	
+
 	if ( ! title) {
 		title = `Raise Money For The Causes You Care Most About. For free.`;
 	}
@@ -224,7 +224,7 @@ const MyLandingSection = ({title, bgImg, noProducts}) => {
 	{/* {window.isDebug && <div className="debug position-absolute" onClick={(e) => {stopEvent(e); showMyDataSignUpModal()}}>
 		*MyData Debug*
 	</div>} */}
-	
+
 	{/* 17 June 2022 Remove the Duo Cta in new design */}
 	{/* <Container fluid className="landing-duo-cta bg-gl-light-pink d-flex justify-content-center py-3 px-1">
 		<a onClick={myDataOnClick} 
@@ -604,7 +604,7 @@ const WatchVideoSection = () => {
 				<T4GSignUpButton className="mx-5 mt-5" dUnset />
 				{/* <p className="our-story black m-5 pb-5">Want to learn more? Check out <a href="#">OUR STORY</a></p> */}
 			</div>
-			
+
 		</div>
 	</PageCard>
 	</>

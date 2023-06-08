@@ -224,7 +224,7 @@ const AdvertCard = ({ ad, active }) => {
 			setHasShown(true);
 		}, 100);
 	}
- 
+
 	return (
 		<div className="position-relative main-ad" style={{ minHeight: "100px", maxHeight: "600px" }}>
 			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{ position: "absolute", zIndex: 999 }}>Advert Editor ({ad.id})</DevLink>

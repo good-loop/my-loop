@@ -1,405 +1,403 @@
 #getmydata {
-    .blue-gradient {
-        background: linear-gradient(180deg, @gl-white-blue 0%, @gl-lighter-blue 100%);
-    }
+	.blue-gradient {
+		background: linear-gradient(180deg, @gl-white-blue 0%, @gl-lighter-blue 100%);
+	}
 }
 
 #tabsforgood {
-    .blue-gradient {
-        background: @gl-pale-orange;
-    }
+	.blue-gradient {
+		background: @gl-pale-orange;
+	}
 }
 
 #getmydata, #tabsforgood {
 
-    h1 {
-        font-size: 1.3rem;
-    }
-    h2,h4,.miniheader {
-        color: @gl-dark-turquoise;
-    }
-    h3 {
-        font-size: 1.1rem;
-        font-weight: 600;
-        text-transform: capitalize;
-        text-align: center;
-    }
-    h5 {
-        color: white;
-        text-transform: uppercase;
-        font-size: 0.9rem;
-    }
-    
-    .product-container {
-        @media @width-mobile {
-            padding: 0;
-        }
-    }
+	h1 {
+		font-size: 1.3rem;
+	}
+	h2,h4,.miniheader {
+		color: @gl-dark-turquoise;
+	}
+	h3 {
+		font-size: 1.1rem;
+		font-weight: 600;
+		text-transform: capitalize;
+		text-align: center;
+	}
+	h5 {
+		color: white;
+		text-transform: uppercase;
+		font-size: 0.9rem;
+	}
 
-    .landing {
-        .mydata-topimg {
-            @media @width-mobile {
-                background: linear-gradient(180deg, white 0%, @gl-light-blue 150%);
-            }
-            position: relative;
-            .topimg-curve {
-                width: 100%;
-                position: absolute;
-                bottom: 0;
-                z-index: 1;
-            }
-            .topimg-graphic {
-                position: relative;
-                z-index: 0;
-                transform: translateY(-20%);
-                @media @width-mobile {
-                    z-index: 2;
-                    transform: none;
-                }
-            }
-        }
-        .landing-contents {
-            position: relative;
-            @media @md-min {
-                background: url("/img/mydata/product-page/mydata-background.svg");
-                background-position: center;
-                background-size: cover;
-                background-repeat: no-repeat;
-                padding: 6rem 2rem;
-            }
-            .padlocks {
-                position: absolute;
-                width: 20%;
-                transform: translateY(-50%);
-            }
-            .padlock-left {
-                left: 0;
-                top: 50%;
-            }
-            .padlock-right {
-                right: 0;
-                top: 30%;
-            }
-            // .subtext {
-            //     @media @md-min {
-            //         width: 50%;
-            //         margin: auto;
-            //     }
-            // }
-        }
-        h1 {
-            font-size: 1.8rem;
-        }
-        p {
-            color: @gl-dark-turquoise;
-            text-align: center;
-            padding: 0 2rem;
-        }
-        a:not(.btn) {
-            text-decoration: underline;
-            color: @gl-red;
-            font-weight: 600;
-        }
-    }
+	.product-container {
+		@media @width-mobile {
+			padding: 0;
+		}
+	}
 
-    .bubble-container {
-        position: relative;
-        .photo-bubbles {
-            position: relative;
-            width: 125%;
-            @media @md-min {
-                width: 100%;
-                margin-bottom: 50px;
-            }
-            top: 50%;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-    }
+	.landing {
+		.mydata-topimg {
+			@media @width-mobile {
+				background: linear-gradient(180deg, white 0%, @gl-light-blue 150%);
+			}
+			position: relative;
+			.topimg-curve {
+				width: 100%;
+				position: absolute;
+				bottom: 0;
+				z-index: 1;
+			}
+			.topimg-graphic {
+				position: relative;
+				z-index: 0;
+				transform: translateY(-20%);
+				@media @width-mobile {
+					z-index: 2;
+					transform: none;
+				}
+			}
+		}
+		.landing-contents {
+			position: relative;
+			@media @md-min {
+				background: url("/img/mydata/product-page/mydata-background.svg");
+				background-position: center;
+				background-size: cover;
+				background-repeat: no-repeat;
+				padding: 6rem 2rem;
+			}
+			.padlocks {
+				position: absolute;
+				width: 20%;
+				transform: translateY(-50%);
+			}
+			.padlock-left {
+				left: 0;
+				top: 50%;
+			}
+			.padlock-right {
+				right: 0;
+				top: 30%;
+			}
+			// .subtext {
+			//     @media @md-min {
+			//         width: 50%;
+			//         margin: auto;
+			//     }
+			// }
+		}
+		h1 {
+			font-size: 1.8rem;
+		}
+		p {
+			color: @gl-dark-turquoise;
+			text-align: center;
+			padding: 0 2rem;
+		}
+		a:not(.btn) {
+			text-decoration: underline;
+			color: @gl-red;
+			font-weight: 600;
+		}
+	}
 
-    .stars {
-        width: 10%;
-    }
-    
-    .community-impact {
-        h1 {
-            font-size: 2.7rem;
-        }
-        .stars-left {
-            position: absolute;
-            bottom: -30%;
-            left: 5%;
-        }
-        .stars-right {
-            position: absolute;
-            top: -40%;
-            right: 10%;
-        }
-        .stars-faded-left {
-            position: absolute;
-            opacity: 0.5;
-            bottom: 10%;
-            left: 0;
-        }
-        .stars-faded-right {
-            position: absolute;
-            opacity: 0.5;
-            top: 0;
-            right: 0;
-        }
-    }
+	.bubble-container {
+		position: relative;
+		.photo-bubbles {
+			position: relative;
+			width: 125%;
+			@media @md-min {
+				width: 100%;
+				margin-bottom: 50px;
+			}
+			top: 50%;
+			left: 50%;
+			transform: translateX(-50%);
+		}
+	}
 
-    .inner {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: stretch;
-        text-align: center;
-        background: white;
-        border-radius: 10px;
-        position: relative;
-    }
+	.stars {
+		width: 10%;
+	}
 
-    #how-it-works {
+	.community-impact {
+		h1 {
+			font-size: 2.7rem;
+		}
+		.stars-left {
+			position: absolute;
+			bottom: -30%;
+			left: 5%;
+		}
+		.stars-right {
+			position: absolute;
+			top: -40%;
+			right: 10%;
+		}
+		.stars-faded-left {
+			position: absolute;
+			opacity: 0.5;
+			bottom: 10%;
+			left: 0;
+		}
+		.stars-faded-right {
+			position: absolute;
+			opacity: 0.5;
+			top: 0;
+			right: 0;
+		}
+	}
 
-        padding: 1rem;
-        padding-bottom: 50px;
-        
-        .container-lg {
-            @media @md-min {
-                width: 80%;
-                max-width: 80%;
-            }
-        }
+	.inner {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: stretch;
+		text-align: center;
+		background: white;
+		border-radius: 10px;
+		position: relative;
+	}
 
-        .control-your-data-small {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            margin-top: -5rem;
-            .padlocks {
-                width: 30%;
-                @media @width-mobile {
-                    width: 75%;
-                }
-            }
-            h4, p {
-                text-align: center;
-            }
-            p.miniheader {
-                text-transform: capitalize;
-            }
-            h4 {
-                color: @gl-red;
-            }
-            p.miniheader {
-                color: @gl-red;
-            }
-            p.subtext {
-                @media @md-min {
-                    width: 50%;
-                }
-            }
-            .star {
-                width: 10%;
-                @media @md-min {
-                    width: 5%;
-                }
-            }
-        }
+	#how-it-works {
+		padding: 1rem;
+		padding-bottom: 50px;
 
-        .how-it-works-section {
-            position: relative;
-            
-            // yes this is a sin but i can't find any other way to fit this text in the background blob images on MDPI/HiDPI laptop screens - vera
-            @media (max-width:1500px) {
-                @media (min-width: 1200px) {
-                    font-size: 0.8rem;
-                    h2 {
-                        font-size: 1.1rem;
-                    }
-                    .contents {
-                        padding: 0 !important;
-                    }
-                }
-            }
+		.container-lg {
+			@media @md-min {
+				width: 80%;
+				max-width: 80%;
+			}
+		}
 
-            .contents {
-                padding: 0 1.2rem;
-                max-width: 350px;
-                margin: auto;
+		.control-your-data-small {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			position: relative;
+			margin-top: -5rem;
+			.padlocks {
+				width: 30%;
+				@media @width-mobile {
+					width: 75%;
+				}
+			}
+			h4, p {
+				text-align: center;
+			}
+			p.miniheader {
+				text-transform: capitalize;
+			}
+			h4 {
+				color: @gl-red;
+			}
+			p.miniheader {
+				color: @gl-red;
+			}
+			p.subtext {
+				@media @md-min {
+					width: 50%;
+				}
+			}
+			.star {
+				width: 10%;
+				@media @md-min {
+					width: 5%;
+				}
+			}
+		}
 
-            }
-            
-            .bubble {
-                position: absolute;
-                width: 20%;
-                @media @width-mobile {
-                    width: 40%;
-                }
+		.how-it-works-section {
+			position: relative;
 
-                &.bubble-right {
-                    top: -10%;
-                    right: -22%;
-                }
-                &.bubble-left {
-                    top: -10%;
-                    left: -15%;
-                }
-            }
-        }
+			// yes this is a sin but i can't find any other way to fit this text in the background blob images on MDPI/HiDPI laptop screens - vera
+			@media (max-width:1500px) {
+				@media (min-width: 1200px) {
+					font-size: 0.8rem;
+					h2 {
+						font-size: 1.1rem;
+					}
+					.contents {
+						padding: 0 !important;
+					}
+				}
+			}
 
-    }
+			.contents {
+				padding: 0 1.2rem;
+				max-width: 350px;
+				margin: auto;
+			}
 
-    .control-your-data {
-        text-align: center;
-        //background: @gl-lighter-blue;
-        .blob {
-            position: relative;
-            p {
-                color: @gl-dark-turquoise;
-            }
-            // .blob-quote {
-            //     position: absolute;
-            //     width: 15%;
-            //     top: 15%;
-            //     left: 10%;
-            // }
-        }
-        h3 {
-            font-weight: 600;
-        }
-        .phone-display {
-            width: 100%;
-            @media @width-mobile {
-                width: 75%;
-            }
-        }
-        .laptop-display {
-            width: 100%;
-        }
-        // .under-curve {
-        //     background: @gl-desat-blue;
-        //     @media @md-min {
-        //         margin-top: -120px;
-        //     }
-        // }
-    }
+			.bubble {
+				position: absolute;
+				width: 20%;
+				@media @width-mobile {
+					width: 40%;
+				}
 
-    .earn-data-badge {
-        .product-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .data-badge {
-            width: 60%;
-            @media @width-mobile {
-                width: 100%;
-            }
-        }
-    }
+				&.bubble-right {
+					top: -10%;
+					right: -22%;
+				}
+				&.bubble-left {
+					top: -10%;
+					left: -15%;
+				}
+			}
+		}
 
-    .transform-your-data {
-        position: relative;
-        .bubble-container {
-            margin-top: -50px;
-        }
-        .bubbles-header-lg {
-            width: 75%;
-            position: absolute;
-            left: 50%;
-            top: 8%;
-            transform: translateX(-50%);
-        }
-        .overlap-up {
-            @media @width-mobile {
-                margin-top: -100px;
-            }
-        }
-        .faqs {
-            padding: 1rem;
-            position: relative;
-            .star-top {
-                position: absolute;
-                top: -50px;
-                left: 50%;
-                transform: translate(-50%, 0);
-                width: 5%;
-                z-index: 1;
-                @media @width-mobile {
-                    top: -5px;
-                    width: 10%;
-                }
-            }
-            .collapseable-card {
-                box-shadow: none;
-                border-radius: 0;
-                border-top: 1px solid rgba(0,0,0,0.2);
-                padding: 2rem 0;
-                margin: 0 !important;
-                h5 {
-                    color: @gl-dark-turquoise;
-                }
-            }
-            .faq {
-                li {
-                    margin-top: 1rem;
-                    &::marker {
-                        font-size: 3rem;
-                    }
-                }
-            }
-            .faq-1 {
-                h1 {
-                    color: @gl-dark-turquoise;
-                }
-                li::marker {
-                    color: @gl-dark-turquoise;
-                }
-                a {
-                    font-weight: bold;
-                    color: @gl-dark-turquoise;
-                }
-            }
-            .faq-2 {
-                h1 {
-                    color: @gl-red;
-                }
-                li::marker {
-                    color: @gl-red;
-                }
-            }
-            .faq-3 {
-                h1 {
-                    color: @gl-light-blue;
-                }
-                li::marker {
-                    color: @gl-light-blue;
-                }
-            }
-            .card-content {
-                padding: 0;
-            }
-        }
-    }
+	}
 
-    .discover-more {
-        font-weight: bold;
-        color: grey;
-        padding: 1rem;
-        a {
-            color: @gl-dark-turquoise;
-        }
-        .link-circle {
-            width: 50%;
-            @media @width-mobile {
-                width: 100%;
-            }
-        }
-    }
+	.control-your-data {
+		text-align: center;
+		//background: @gl-lighter-blue;
+		.blob {
+			position: relative;
+			p {
+				color: @gl-dark-turquoise;
+			}
+			// .blob-quote {
+			//     position: absolute;
+			//     width: 15%;
+			//     top: 15%;
+			//     left: 10%;
+			// }
+		}
+		h3 {
+			font-weight: 600;
+		}
+		.phone-display {
+			width: 100%;
+			@media @width-mobile {
+				width: 75%;
+			}
+		}
+		.laptop-display {
+			width: 100%;
+		}
+		// .under-curve {
+		//     background: @gl-desat-blue;
+		//     @media @md-min {
+		//         margin-top: -120px;
+		//     }
+		// }
+	}
+
+	.earn-data-badge {
+		.product-container {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+		}
+		.data-badge {
+			width: 60%;
+			@media @width-mobile {
+				width: 100%;
+			}
+		}
+	}
+
+	.transform-your-data {
+		position: relative;
+		.bubble-container {
+			margin-top: -50px;
+		}
+		.bubbles-header-lg {
+			width: 75%;
+			position: absolute;
+			left: 50%;
+			top: 8%;
+			transform: translateX(-50%);
+		}
+		.overlap-up {
+			@media @width-mobile {
+				margin-top: -100px;
+			}
+		}
+		.faqs {
+			padding: 1rem;
+			position: relative;
+			.star-top {
+				position: absolute;
+				top: -50px;
+				left: 50%;
+				transform: translate(-50%, 0);
+				width: 5%;
+				z-index: 1;
+				@media @width-mobile {
+					top: -5px;
+					width: 10%;
+				}
+			}
+			.collapseable-card {
+				box-shadow: none;
+				border-radius: 0;
+				border-top: 1px solid rgba(0,0,0,0.2);
+				padding: 2rem 0;
+				margin: 0 !important;
+				h5 {
+					color: @gl-dark-turquoise;
+				}
+			}
+			.faq {
+				li {
+					margin-top: 1rem;
+					&::marker {
+						font-size: 3rem;
+					}
+				}
+			}
+			.faq-1 {
+				h1 {
+					color: @gl-dark-turquoise;
+				}
+				li::marker {
+					color: @gl-dark-turquoise;
+				}
+				a {
+					font-weight: bold;
+					color: @gl-dark-turquoise;
+				}
+			}
+			.faq-2 {
+				h1 {
+					color: @gl-red;
+				}
+				li::marker {
+					color: @gl-red;
+				}
+			}
+			.faq-3 {
+				h1 {
+					color: @gl-light-blue;
+				}
+				li::marker {
+					color: @gl-light-blue;
+				}
+			}
+			.card-content {
+				padding: 0;
+			}
+		}
+	}
+
+	.discover-more {
+		font-weight: bold;
+		color: grey;
+		padding: 1rem;
+		a {
+			color: @gl-dark-turquoise;
+		}
+		.link-circle {
+			width: 50%;
+			@media @width-mobile {
+				width: 100%;
+			}
+		}
+	}
 
 }

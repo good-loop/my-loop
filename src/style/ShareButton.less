@@ -1,35 +1,35 @@
 .share-popup {
-    z-index: 5;
-    width: 200px;
-    &:not(.menu-only) {
-        position: absolute;
-        left: 105%;
-        top: 0;
-        z-index: 5;
-        width: 200px;
-        @media @width-mobile {
-            top: 105%;
-            left: 50%;
-            transform: translateX(-50%);
-            .bubble {
-                transform: scaleX(-1);
-            }
-        }
-    }
-    &.menu-only {
-        position: relative;
-        display: none;
-    }
-    .popup-btns {
-        position: absolute;
-        top: 0;
-        left: 0;
-        padding: 5px;
-        padding-left: 20px;
-        z-index: 6;
-        @media @width-mobile {
-            padding-left: 5px;
-            padding-right: 20px;
-        }
-    }
+	z-index: 5;
+	width: 200px;
+	&:not(.menu-only) {
+		position: absolute;
+		left: 105%;
+		top: 0;
+		z-index: 5;
+		width: 200px;
+		@media @width-mobile {
+			top: 105%;
+			left: 50%;
+			transform: translateX(-50%);
+			.bubble {
+				transform: scaleX(-1);
+			}
+		}
+	}
+	&.menu-only {
+		position: relative;
+		display: none;
+	}
+	.popup-btns {
+		position: absolute;
+		top: 0;
+		left: 0;
+		padding: 5px;
+		padding-left: 20px;
+		z-index: 6;
+		@media @width-mobile {
+			padding-left: 5px;
+			padding-right: 20px;
+		}
+	}
 }

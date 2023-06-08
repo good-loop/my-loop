@@ -19,7 +19,6 @@ import C from '../C';
  * @param {Boolean} menuOnly renders the button menu with no button if true
  */
 const ShareButton = ({url, meta, title, image, description, tweep, card, absolute, className, style, children, onShare, menuOnly}) => {
-
 	const [showing, setShowing] = useState(false);
 
 	// Generate ShareServlet sharing url
@@ -36,15 +35,14 @@ const ShareButton = ({url, meta, title, image, description, tweep, card, absolut
 	// //console.log("ShareServlet generated URL: " + url);
 	// shareUrl = encURI(shareUrl.href);
 
-	
 	// NB: theres no unicode character for share
 	// c.f. https://stackoverflow.com/questions/23358594/is-there-a-unicode-character-for-the-share-icon
 	// (which includes a css hack for making .<: look like it)
-	
+
 	// Deprecate ShareServlet sharing url
 	let shareUrl = new URL(window.location.href);
 	shareUrl = encURI(shareUrl.href);
-	
+
 	const ShareMenu = () => <div className={space("share-popup", menuOnly ? space("menu-only", className) : "")}>
 		<img src="/img/share/ShareBubble.svg" className="w-100 bubble" alt="share icon"/>
 		<Row className="popup-btns no-gutters w-100">
@@ -55,15 +53,13 @@ const ShareButton = ({url, meta, title, image, description, tweep, card, absolut
 		</Row>
 	</div>;
 
-	return (!menuOnly ?
+	return menuOnly ? (
+		<ShareMenu/>
+	) :(
 		<div className={space(absolute ? "position-absolute" : "position-relative", "d-inline-block share-btn")} style={style}>
 			<div className={space("btn", className)} onClick={() => setShowing(!showing)}><i className="fas fa-share-alt mr-2" />{children}</div>
-			{showing &&
-				<ShareMenu/>
-			}
+			{showing && <ShareMenu/>}
 		</div>
-		:
-		<ShareMenu/>
 	);
 };
 

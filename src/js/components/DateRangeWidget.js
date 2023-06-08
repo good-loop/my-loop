@@ -55,7 +55,7 @@ const Day = ({date, className, onClick, onHover, ...rest}) => {
 
 const Month = ({year, month, start, end, setPeriod, hoverStart, hoverEnd, onDayClick, onDayHover, className}) => {
 	const refDate = new Date(year, month, 1);
-	
+
 	let currentRow = [];
 	const rows = [currentRow];
 
@@ -148,7 +148,7 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 	const [selDate, setSelDate] = useState(null); // For two-click period selection
 	const [hoverStart, setHoverStart] = useState(null); // For highlighting potential period
 	const [hoverEnd, setHoverEnd] = useState(null);
-	
+
 	let tz = getTimeZone();
 
 	useEffect(() => {
@@ -190,7 +190,7 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 			setFocusDate(middleDate);
 		} else if (start) setFocusDate(start);
 	}
-	
+
 	// Send changes back to invoking component
 	useEffect(() => {
 		if (start && end && onChange)
@@ -208,7 +208,7 @@ const DateRangeWidget = ({dflt, className, onChange}) => {
 		if (offset) newStart.setDate(newStart.getDate() + offset);
 		setPeriod(null, newStart, newEnd);
 	};
-	
+
 	// Set period to "Calendar month of X months ago"
 	const setCalendarMonth = (offset) => {
 		const newEnd = new Date();

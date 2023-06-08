@@ -173,7 +173,7 @@ const GreenMap = () => {
 	const projectMarkers = mapProjects.map((project, index) => (
 		<ProjectMarker key={index} project={project} active={activeProject === index} index={index} setActive={setActiveProject} />
 	));
-	
+
 	return <>
 		<div className="projects-map">
 			{/* TODO Transition curves should SOMEWHAT overlap the map image*/}

@@ -74,9 +74,9 @@ export type BaseFiltersFailed = {
 export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed => {
 	// Default to current quarter, all brands, all campaigns
 	const period = urlParams.period;
-	if ( ! period) {
+	if (!period) {
 		console.warn("use getUrlVars() then getPeriodFromUrlParams() then add period!");
-	}	
+	}
 	let { filterType, filterId } = getFilterTypeId();
 
 	let failedObject: BaseFiltersFailed = {};

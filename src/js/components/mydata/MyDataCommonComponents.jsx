@@ -194,7 +194,7 @@ export const CollapseableCard = ({ title, defaultCollapse, headerIMG, className,
 	else if (arrowPosition === "bottom") flexDirection = "column";
 	else if (arrowPosition === "top") flexDirection = "column-reverse";
 	flexDirection = "flex-" + flexDirection;
-	
+
 	return (
 		<MyDataCard
 			className={space("my-3 collapseable-card", className)}
@@ -267,7 +267,7 @@ export const hasWatchedThisWeeksAd = (adid) => {
 	sq = SearchQuery.setProp(sq, "user", Login.getId());
 	let q = sq.query;
 	const pvData = getDataLogData({dataspace:"gl",q, start:"3 months ago",end:"now",name:"watched-this-weeks",});
-	
+
 	return !!(pvData.value && pvData.value.allCount);
 }
 

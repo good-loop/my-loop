@@ -30,7 +30,7 @@ const smartNumber = (x:number) => {
 export const mass = (kg:number) : String => {
 	const number = smartNumber(kg >= 1000 ? kg / 1000 : kg, true);
 	const unit = kg < 1000 ? 'kg' : `tonne${kg !== 1 ? 's' : ''}`;
-	return `${number} ${unit}`;	
+	return `${number} ${unit}`;
 };
 
 

@@ -77,7 +77,7 @@ const AllowlistUs = () => {
 			setHasAdblock(false);
 		}
 	}, [pvHasAdBlock.resolved]);
-	
+
 	return guts;
 };
 

@@ -238,7 +238,7 @@ const CampaignPage = () => {
 	if (campaign.branding) {
 		Object.assign(branding, campaign.branding);
 	}
-	
+
 	// set NavBar brand
 	if (campaign.vertiser) {
 		let pvBrandItem = getDataItem({type:"Advertiser", id:campaign.vertiser, status});
@@ -247,7 +247,7 @@ const CampaignPage = () => {
 			setNavProps(brandItem);
 		}
 	}
-	
+
 	// initial donation record
 	let donation4charity = Campaign.dntn4charity(campaign);
 	// individual charity data, attaching ad ID
@@ -260,7 +260,7 @@ const CampaignPage = () => {
 
 	// filter charities by low £s and campaign.hideCharities
 	charities = Campaign.filterLowDonations({charities, campaign, donationTotal, donation4charity});
-	
+
 	// HACK: ersatz campaign? grab charities from advert (NB: unfiltered by low £s)
 	if (campaign.id==="DUMMY"&&pvAds&&pvAds.value) {
 		charities = Advert.charityList(List.first(pvAds.value));
@@ -278,7 +278,7 @@ const CampaignPage = () => {
 			...ad
 		};
 	});
-    
+
 	// Get ad viewing data
 	let sqe = new SearchQuery("evt:minview");
 	let sqads = ads.length && SearchQuery.setPropOr(null, "vert", ads.map(ad => ad.id));
@@ -318,9 +318,7 @@ const CampaignPage = () => {
 		<ModalCTA modalOpen={ctaModalOpen} setModalOpen={setCtaModalOpen} branding={branding} nvertiserName={nvertiserName}/>
 
 		<div className="widepage CampaignPage gl-btns">
-			
 			<div className="text-center">
-				
 				<CampaignSplashCard branding={branding} shareMeta={shareButtonMeta} pdf={pdf} campaignPage={campaign}
 					donationValue={donationTotal} charities={charities}
 					totalViewCount={totalViewCount} landing={isLanding} status={status} nvertiserName={nvertiserName}
