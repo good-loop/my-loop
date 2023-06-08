@@ -175,7 +175,7 @@ export const GLModalCard = ({className, id}) => {
 	const path = [...MODAL_LIST_PATH, id];
 	const props = DataStore.getValue(path);
 	useEffect(() => {
-		DataStore.setValue(path, {open: false});
+		DataStore.setValue(path, {open: false}, false);
 	}, [id]);
 	if (!props) return null;
 
