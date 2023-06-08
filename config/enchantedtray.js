@@ -18,7 +18,7 @@ module.exports = {
 		// DATALOG_ENDPOINT: `${protocol}://${cluster}lg.good-loop.com/data`,
 		DATALOG_ENDPOINT: `https://stagelg.good-loop.com/data`,
 		MEDIA_ENDPOINT: `${protocol}://${cluster}uploads.good-loop.com`,
-		MEASURE_ENDPOINT: `${protocol}://${cluster}measure.good-loop.com`,
+		MEASURE_ENDPOINT: `${protocol}://${cluster}measure.good-loop.com/measure`,
 		ANIM_ENDPOINT: `${protocol}://${cluster}portal.good-loop.com/_anim`,
 		CHAT_ENDPOINT: `${protocol}://${cluster}chat.good-loop.com/reply`,
 		// DATALOG_DATASPACE: 'gl',
