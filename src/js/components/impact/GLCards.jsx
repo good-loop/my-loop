@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { Children, useEffect, useMemo } from 'react';
 import {Row, Col, Container, Card, CardHeader, CardBody} from 'reactstrap';
 import { space, isPortraitMobile } from '../../base/utils/miscutils';
 import { assert } from '../../base/utils/assert';
@@ -75,11 +75,11 @@ export const GLVertical = ({className, children, ...props}) => {
  */
 export const GLCard = ({noPadding, noMargin, className, style, modalContent, modalTitle, modalId, modalHeader, modalHeaderImg, modalPrioritize, modalClassName, modal, children, href, onClick, ...props}) => {
 	const modalObj = {
-		content: modalContent,
+		Content: modalContent,
 		title: modalTitle,
-		header: modalHeader,
+		Header: modalHeader,
 		headerImg: modalHeaderImg,
-		className: modalClassName,
+		storedClassName: modalClassName,
 		...modal
 	};
 
@@ -158,29 +158,32 @@ export const markPageLoaded = (loaded) => {
 	DataStore.setValue(LOADED_PATH, loaded);
 }
 
+
+/** Executes components, leaves objects (ie executed but not hydrated components) unmodified */
+const resolve = Thing => (typeof Thing === 'function') ? <Thing /> : Thing;
+
+/** Allow modals to tolerate content/header provided as <Component /> or  () => <Component /> */
+const Resolver = ({children}) => (Children.map(children, resolve) || null);
+
+
 /**
  * A modal form of GLCard. Will not be visible and change nothing in the layout, but when opened will occupy the space it is assigned to as if it was in the layout, while remaining on top.
  * 
  * @param {String} id 
  */
 export const GLModalCard = ({className, id}) => {
-	const path = MODAL_LIST_PATH.concat(id);
-	const open = DataStore.getValue(path.concat("open"));
-
-	const Content = DataStore.getValue(path.concat("content"));
-	const title = DataStore.getValue(path.concat("title"));
-	const Header = DataStore.getValue(path.concat("header"));
-	const headerImg = DataStore.getValue(path.concat("headerImg"));
-	const headerClassName = DataStore.getValue(path.concat("headerClassName"));
-	const storedClassName = DataStore.getValue(path.concat("className"));
-
+	const path = [...MODAL_LIST_PATH, id];
+	const props = DataStore.getValue(path);
 	useEffect(() => {
-		DataStore.setValue(MODAL_LIST_PATH.concat(id), {open:false});
+		DataStore.setValue(path, {open: false});
 	}, [id]);
+	if (!props) return null;
+
+	const { open, Content, title, Header, headerImg, headerClassName, storedClassName } = props;
 
 	const headerStyle = headerImg && {
-		backgroundImage: "url('"+headerImg+"')",
-		backgroundPosition: "center"
+		backgroundImage: `url("${headerImg}")`,
+		backgroundPosition: 'center'
 	};
 
 	return open ? <>
@@ -189,10 +192,10 @@ export const GLModalCard = ({className, id}) => {
 				<CardHeader style={headerStyle} className={"glmodal-header " + headerClassName}>
 					<CloseButton className="white-circle-bg" onClick={() => modalToggle(id)}/>
 					{title && <h4 className='glmodal-title'>{title}</h4>}
-					{Header && <Header/>}
+					<Resolver>{Header}</Resolver>
 				</CardHeader>
 				<CardBody>
-					<Content/>
+					<Resolver>{Content}</Resolver>
 				</CardBody>
 			</GLCard>
 		</div>
@@ -201,9 +204,8 @@ export const GLModalCard = ({className, id}) => {
 
 /**
  * Backdrop for all GLModalCards on a page. Closes all modals on click.
- *  
  */
 export const GLModalBackdrop = ({className}) => {
 	const open = DataStore.getValue(MODAL_BACKDROP_PATH);
 	return open ? <div onClick={() => modalToggle()} className='glmodal-backdrop'/> : null;
-}
+};

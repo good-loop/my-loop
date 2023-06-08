@@ -28,13 +28,13 @@ const A = C.A;
  * @returns 
  */
 const SideNavBar = ({urlFilters="", active, isOpen, navToggleAnimation, toggle, setForcedReload}) => {
-	return (		
-	<animated.div id='impact-overview-navbar-widescreen' className='navAnimationContainer' style = {{width: navToggleAnimation.width}}> 
+	return (
+	<animated.div id='impact-overview-navbar-widescreen' className='navAnimationContainer' style = {{width: navToggleAnimation.width}}>
 		<Navbar dark expand="md" id="impact-navbar" className={space('flex-column', 'justify-content-start', isOpen && 'mobile-open')} style={{width: navToggleAnimation.width}}>
 			<NavbarToggler onClick={toggle} />
 			<Nav navbar vertical>
 				<a href="https://good-loop.com/">
-					<img crossorigin className="logo flex-column" src="/img/logo-white.svg"/>
+					<img className="logo flex-column" src="/img/logo-white.svg"/>
 					<animated.p className='logo-name flex-column' style={{opacity: navToggleAnimation.opacity}}>GOOD-LOOP</animated.p>
 				</a>
 				<br/><br/>
@@ -87,7 +87,7 @@ const SideNavBar = ({urlFilters="", active, isOpen, navToggleAnimation, toggle, 
 const TopNavBar = ({urlFilters="", active, setForcedReload}) => {
 	return (<>
 		<Navbar dark expand="md" id="impact-overview-navbar-smallscreen" className={space('flex-column', 'justify-content-start')}>
-			<Nav horizontal>
+			<Nav horizontal="start">
 				<NavItem className={active === 'Overview' ? 'active' : ''}>
 					<A href={'/impact/view'+urlFilters} onClick={() => {setForcedReload(true)}}>
 						<div className="impact-navbar-text">Overview</div> 
@@ -113,7 +113,6 @@ const TopNavBar = ({urlFilters="", active, setForcedReload}) => {
 }
 
 const NavBars = ({active, isNavbarOpen, setIsNavbarOpen, setForcedReload}) => {
-
 	const [isOpen, setIsOpen] = useState(isNavbarOpen) // the navbar expanded or not?
 
 	// on change of isOpen, these values define CSS animations
