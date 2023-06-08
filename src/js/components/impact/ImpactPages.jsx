@@ -46,7 +46,7 @@ import ImpactStatsPage from './ImpactStatsPage';
  */
 
 import Login from '../../base/youagain';
-import { ImpactStoriesPage } from './ImpactStoriesPage';
+import ImpactStoriesPage from './ImpactStoriesPage';
 
 
 const IMPACT_PAGES= {
@@ -60,7 +60,7 @@ const ImpactPage = () => {
 	const path = DataStore.getValue(['location', 'path']);
 
 	if (path.length < 3) {
-		return <ErrorDisplay e={{message:"Invalid URL: Not enough details in path - expected e.g. /brand/acme "}} />
+		return <ErrorDisplay e={{message: '"Invalid URL: Not enough details in path - expected e.g. /brand/acme'}} />
 	}
 	const status = DataStore.getUrlValue('gl.status') || DataStore.getUrlValue('status') || KStatus.PUBLISHED;
 	const page = path[1]
@@ -71,14 +71,14 @@ const ImpactPage = () => {
 	let pvBaseObjects = fetchImpactBaseObjects({itemId, itemType, status});
 
 	let [pageName, PageContent] = ({
-		view: ["Overview", IMPACT_PAGES.view], 
-		story: ["Stories", IMPACT_PAGES.story], 
-		stat: ["Statistics", IMPACT_PAGES.stat]
+		view: ['Overview', IMPACT_PAGES.view],
+		story: ['Stories', IMPACT_PAGES.story],
+		stat: ['Statistics', IMPACT_PAGES.stat]
 	})[page]
 
 	useEffect (() => {
 		//setNavProps(focusItem)
-		let windowTitle = space("Impact " + pageName);
+		let windowTitle = `Impact ${pageName}`;
 		setWindowTitle(windowTitle);
 	}, []);
 
@@ -110,22 +110,20 @@ const ImpactPage = () => {
 	const totalString = Money.prettyStr(totalDonation);
 
 	// if not logged in OR impact hasn't been chosen yet...
-	if(!Login.isLoggedIn() || !impactChosen) {
+	if (!Login.isLoggedIn() || !impactChosen) {
 		return <ImpactLoginCard choice={impactChosen} setChoice={setImpactChosen} masterBrand={masterBrand || brand}/>
 	}
 
-	return (
-		<>
+	return <>
 		<div className="navbars-overlay">
-			<animated.div className='impact-navbar-flow-overlay' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}></animated.div>
-			<ImpactLoadingScreen baseObj={pvBaseObjects} forcedReload={forcedReload} setForcedReload={setForcedReload}/>
-			<ImpactFilterOptions size="thin" setIsNavbarOpen={setIsNavbarOpen} pvBaseObjects={pvBaseObjects} setForcedReload={setForcedReload} curPage={page} status={status}/>  {/*mobile horizontal filters topbar*/}
-			<NavBars active={"overview"} isNavbarOpen={isNavbarOpen} setIsNavbarOpen={setIsNavbarOpen}/>
-			<ImpactFilterOptions size="wide" setIsNavbarOpen={setIsNavbarOpen} pvBaseObjects={pvBaseObjects} setForcedReload={setForcedReload}  curPage={page} status={status}/>  {/*widescreen vertical filters topbar*/}
+			<animated.div className='impact-navbar-flow-overlay' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}} />
+			<ImpactLoadingScreen baseObj={pvBaseObjects} forcedReload={forcedReload} setForcedReload={setForcedReload} />
+			<ImpactFilterOptions size="thin" setIsNavbarOpen={setIsNavbarOpen} pvBaseObjects={pvBaseObjects} setForcedReload={setForcedReload} curPage={page} status={status}/> {/*mobile horizontal filters topbar*/}
+			<NavBars active={pageName} isNavbarOpen={isNavbarOpen} setIsNavbarOpen={setIsNavbarOpen} setForcedReload={setForcedReload} />
+			<ImpactFilterOptions size="wide" setIsNavbarOpen={setIsNavbarOpen} pvBaseObjects={pvBaseObjects} setForcedReload={setForcedReload}  curPage={page} status={status}/> {/*widescreen vertical filters topbar*/}
 		</div>
-		<PageContent pvBaseObjects={pvBaseObjects} navToggleAnimation={navToggleAnimation} totalString={totalString} mainLogo={mainLogo} {...pvBaseObjects?.value}/>
-		</>
-	)
+		<PageContent pvBaseObjects={pvBaseObjects} navToggleAnimation={navToggleAnimation} totalString={totalString} mainLogo={mainLogo} />
+	</>;
 }
 
 export default ImpactPage;
