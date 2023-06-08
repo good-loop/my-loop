@@ -268,7 +268,7 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 									{filterItems.map((item, i) => (
 										<DropdownItem key={i} onClick={() => setFilterItem(item.id)}>
 											{{ campaign, brand, agency, tag }[urlParamForType(filterType)] === item.id ? selectedMarker : null}
-											{item.name}
+											{item.name || `[ ${item.id} ]`}
 										</DropdownItem>
 									))}
 								</DropdownMenu>
