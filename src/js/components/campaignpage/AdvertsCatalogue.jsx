@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-	Button,
 	Carousel,
 	CarouselCaption, CarouselControl,
 	CarouselIndicators, CarouselItem, Container
@@ -79,9 +78,7 @@ const AdvertsCatalogue = ({ ads, noPreviews, className, captions=true}) => {
 				previous={previous}
 				interval={false}
 			>
-				<div className="d-block d-md-none">
-					<CarouselIndicators items={carouselSlides} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{ backgroundColor: "#000" }} />
-				</div>
+				<CarouselIndicators className="d-block d-md-none" items={carouselSlides} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{ backgroundColor: "#000" }} />
 				{carouselSlides}
 				<div className="d-none d-md-block">
 					<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
@@ -127,7 +124,7 @@ const AdPreviewCarousel = ({ ads, selectedIndex, setSelected }) => {
 		setActiveIndex(newIndex);
 	};
 
-	let carouselSlides = [];
+	const carouselSlides = [];
 	for (let i = 0; i < slidesNum; i++) {
 		const adIndex = i * 6;
 
