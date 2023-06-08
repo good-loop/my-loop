@@ -557,7 +557,7 @@ const AdsForGoodCTAHeader = () => {
 
 const AdsForGoodCTA = () => {
 	const vertiser = TEST_BRAND_OBJ;
-	
+
 	return <div className='d-flex flex-column align-items-center justify-content-between h-100'>
 		<img  src={vertiser.branding.logo} className="logo"/>
 		<TODO>which brand</TODO>
@@ -595,7 +595,6 @@ const BrandList = ({brand, subBrands}) => {
 	const BrandListItem = ({item}) => {
 		return <Col md={4} className="mt-3">
 			<GLCard className="preview h-100" noMargin href={"/impact/view/brand/"+item.id}>
-				
 				{item && item.branding?.logo && <img  src={item.branding.logo} className="logo"/>}
 				<p className='text-center'>{item.name}</p>
 			</GLCard>
@@ -626,8 +625,8 @@ const CharityList = ({charities}) => {
 					modalHeader={<CharityHeader charity={charity}/>}
 					modalHeaderImg={charity.images}
 					modalClassName="charity-info"
-					modalId="left-half">
-					
+					modalId="left-half"
+				>
 					{charity && <CharityLogo charity={charity}/>}
 					<p className='text-center'>{NGO.displayName(charity)}</p>
 				</GLCard>
@@ -700,20 +699,20 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 	impressions = printer.prettyNumber(impressions, 3).replaceAll(",", "") // round to sig figs
 	impressions = addAmountSuffixToNumber(impressions) // reduce to units in thousands, millions or billions
 
-	let countryWord = (totalCountries > 1) ? "COUNTRIES" : "COUNTRY"
-	
+	let countryWord = (totalCountries === 1) ? 'COUNTRY' : 'COUNTRIES';
+
 	// assign colours to data object for map 
 	Object.keys(impressionData).forEach((country) => {
-		impressionData[country].colour = "hsl(8, 100%, 23%)"
-	})
-	
+		impressionData[country].colour = 'hsl(8, 100%, 23%)';
+	});
+
 	const modalMapCardContent = <>
 		<MapCardContent data={impressionData}/>
 		<CampaignCountryList data={impressionData} />
 	</>;
 
 	// handle list of campaigns & countries inside modal
-	
+
 	return (
 	<GLCard
 		basis={basis}
@@ -726,10 +725,11 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 	)
 }
 
+
 // TODO map widget in its own file
 const MapCardContent = ({data}) => {
 	const [mapData, setMapData] = useState('loading'); // Object mapping region ID to imps + carbon
-	const [focusRegion, setFocusRegion] = useState('v'); // ID of currently focused country
+	const [focusRegion, setFocusRegion] = useState('world'); // ID of currently focused country
 	const [mapDefs, setMapDefs] = useState(); // JSON object with map paths and meta
 	const [svgEl, setSvgEl] = useState(); // ref to the map SVG to create download button
 	const [error, setError] = useState(); // Problems loading map?
@@ -747,25 +747,22 @@ const MapCardContent = ({data}) => {
 				onError();
 				return;
 			}
-			res
-				.json()
-				.then((json) => {
-					setMapDefs(json);
-					// clear error on successfully loading a country map
-					if (!isWorld) setError(null);
-				})
-				.catch(onError);
+			res.json().then((json) => {
+				setMapDefs(json);
+				// clear error on successfully loading a country map
+				if (!isWorld) setError(null);
+			}).catch(onError);
 		});
 	}, [focusRegion]);
 
 
 	const isWorld = (focusRegion === 'world');
 
-	return <SVGMap mapDefs={mapDefs} data={data} setFocusRegion={setFocusRegion} showLabels={false} svgEl={svgEl} setSvgEl={setSvgEl}/>
+	return <SVGMap mapDefs={mapDefs} data={data} setFocusRegion={setFocusRegion} showLabels={false} svgEl={svgEl} setSvgEl={setSvgEl} />;
 }
 
-const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 
+const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 	const [pathCentres, setPathCentres] = useState({}); // Estimate region centres from bounding boxes to place text labels
 
 	if (!mapDefs) return null;
@@ -774,7 +771,7 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 	let regions = [];
 	Object.entries(mapDefs.regions).forEach(([id, props]) => {
 		const zeroFill = "hsl(204, 27%, 45%)";
-		
+
 		// HACK , our labels don't line up nicely with the maps labels, this just brute forces them to work
 		// there's no GB label so it shouldn't cause any issues, just it's a stupid fix
 		let { impressions = 0, colour = zeroFill } = (id == "UK") ? data?.["GB"] || {} : data?.[id] || {}
@@ -786,7 +783,7 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 			props.fill = 'none';
 			props.stroke = '#bbb';
 		}
-		
+
 		// Countries are clickable, sublocations aren't.
 		if (setFocusRegion) {
 			props.style = { cursor: 'pointer' };
@@ -838,27 +835,35 @@ const CampaignCountryList = ({data}) => {
 		regions.splice(unsetIndex, 1)
 		regions.push("unset")
 	}
-	
+
 	return regions.map((region) => {
-		if(data[region].impressions === 0) return
-		const impressions = printer.prettyNumber(data[region].impressions, 21) // get a pretty number with no rounding on sigfigs 
-		const countries = data[region].campaignsInRegion
-		const pluralCampaigns = countries > 1 ? "Campaigns" : "Campaign"
-		const isUnset = region === "unset"
+		if (data[region].impressions === 0) return
+		const { impressions, campaignsInRegion } = data[region];
+		const pluralCampaigns = campaignsInRegion > 1 ? 'Campaigns' : 'Campaign';
+		const isUnset = (region === 'unset');
+
 		return (
-		<div className='country-impression-container'>
-			<div className='country-impression-content'>
-				<div className='flag-cropper'>
-					<img src={"/img/country-flags/"+region.toLowerCase()+".svg"}className='country-flag' alt={("flag for " + region)} />
+			<div className="country-impression-container" key={region}>
+				<div className="country-impression-content">
+					<div className="row-header">
+						<img src={`/img/country-flags/${region.toLowerCase()}.svg`} className="country-flag" alt={`flag for ${region}`} />
+						<span className="region-code">{region}</span>
+					</div>
+					<div className="row-body">
+						<div className="count campaign-count">
+							Campaigns
+							<div className="number">{campaignsInRegion}</div>
+						</div>
+						<div className="count impression-count">
+							Views
+							<div className="number">{printer.prettyNumber(impressions, 0)}</div>
+						</div>
+					</div>
 				</div>
-				<div className='impression-text'>
-					<p className='impression-header'>{region}</p>
-					<p className='impression-values'>{countries} {pluralCampaigns}{"  |  "}{impressions} Views</p> 
-				</div>
+				{isUnset && <p className="unset-warning">Geolocation recording was implemented in April 2022. Older impressions will not be locatable.</p>}
 			</div>
-			{isUnset && <p className='unset-warning'>Geolocation recording was implemented in April 2022. Older ads impressions will not be locatable</p>}
-		</div>)
-})
+		);
+	});
 }
 
 export default ImpactOverviewPage;
