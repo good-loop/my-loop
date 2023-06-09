@@ -186,8 +186,6 @@ export const GLModalCard = ({className, id, useOwnBackdrop}) => {
 		backgroundImage: "url('"+headerImg+"')",
 		backgroundPosition: "center"
 	} : null;
-	
-	console.log("HEADER STYLE", headerStyle);
 
 	return open ? <>
 		{useOwnBackdrop ? <GLModalBackdrop manual show={open} id={id}/> : null}
