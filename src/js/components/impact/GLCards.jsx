@@ -182,10 +182,12 @@ export const GLModalCard = ({className, id, useOwnBackdrop}) => {
 		DataStore.setValue(MODAL_LIST_PATH.concat(id), {open:false, usesOwnBackdrop:useOwnBackdrop});
 	}, [id]);
 
-	const headerStyle = headerImg && {
+	const headerStyle = headerImg && headerImg !== "" ? {
 		backgroundImage: "url('"+headerImg+"')",
 		backgroundPosition: "center"
-	};
+	} : null;
+	
+	console.log("HEADER STYLE", headerStyle);
 
 	return open ? <>
 		{useOwnBackdrop ? <GLModalBackdrop manual show={open} id={id}/> : null}

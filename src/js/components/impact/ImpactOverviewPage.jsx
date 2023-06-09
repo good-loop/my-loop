@@ -92,7 +92,7 @@ function SubBrandsCard({ brand, subBrandsWithDebits }) {
 
 	const cardProps = {
 		className: 'center-number',
-		modalContent: <BrandList brand={brand} subBrands={subBrandsWithDebits} />,
+		modalContent: () => <BrandList brand={brand} subBrands={subBrandsWithDebits} />,
 		modalTitle: `${subBrandsWithDebits.length} Brands`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
@@ -115,7 +115,7 @@ function SubBrandsCard({ brand, subBrandsWithDebits }) {
 function CharitiesCard({ charities }) {
 	const cardProps = {
 		className: 'center-number',
-		modalContent: <CharityList charities={charities}/>,
+		modalContent: () => <CharityList charities={charities}/>,
 		modalTitle: `${charities.length} Charities`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
@@ -143,7 +143,7 @@ function SubCampaignsCard({ brand, subBrands, subBrandsWithDebits, subCampaignsW
 
 	const cardProps = {
 		basis: 10,
-		modalContent: <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaignsWithDebits} impactDebits={impactDebits}/>,
+		modalContent: () => <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaignsWithDebits} impactDebits={impactDebits}/>,
 		modalTitle: `${subCampaignsWithDebits.length} Campaigns`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
@@ -205,7 +205,7 @@ function AdsCatalogueCard({ ads, campaign, noPreviews, unwrap }) {
 		basis: (campaign && 70),
 		className: 'ads-catalogue-card',
 		modalId: 'full-page',
-		modalContent: <AdsCatalogueCard ads={ads} unwrap />,
+		modalContent: () => <AdsCatalogueCard ads={ads} unwrap />,
 		modalClassName: 'ads-catalogue-modal',
 	};
 
@@ -250,8 +250,8 @@ const IOPSecondHalf = (baseObjects) => {
 
 		{/* bottom right corner */}
 		<GLVertical>
-			{campaign && <CountryViewsGLCard basis={10} {...baseObjects}/>}
-			<AdsCatalogueCard ads={ads} />
+			{campaign && <CountryViewsGLCard basis={10} baseObjects={baseObjects}cd />}
+			<AdsCatalogueCard ads={ads} noPreviews />
 			{campaign && <GLCard className="boast" basis={20}>
 				<h2>SUSTAINABLE GOALS</h2>
 			</GLCard>}
@@ -514,16 +514,7 @@ const ContentListCard = ({ ads, greenTags, charities }) => {
 		setActiveTypes(getActiveTypes({ ads, greenTags }));
 	}, []);
 
-	const cardProps = {
-		modalContent: <CharityList charities={charities}/>,
-		modalTitle: `Ads For Good`,
-		modalId: 'right-half',
-		modalClassName: 'no-header-padding ads-for-good',
-		modalHeader: AdsForGoodCTAHeader,
-		modalContent: AdsForGoodCTA,
-	};
-
-	return <GLCard {...cardProps}>
+	return <GLCard>
 		<div className="d-flex flex-column align-items-stretch justify-content-between h-100">
 			<img className="w-75 align-self-center mb-3" src="/img/gl-logo/AdsForGood/AdsForGood.svg" />
 			{Object.entries(activeTypes).map(([k, active], i) => (

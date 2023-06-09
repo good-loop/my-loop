@@ -248,7 +248,7 @@ const AdvertCard = ({ ad, active }) => {
  */
 const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
 	if (!ad) {
-		console.warn("AdvertPreviewCard - NO ad?!");
+		//console.warn("AdvertPreviewCard - NO ad?!");
 		return null;
 	}
 	const social = ad.format === "social";
