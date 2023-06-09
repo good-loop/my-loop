@@ -18,9 +18,9 @@ import printer from '../../base/utils/printer'
  */
 
 import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIGN, TEST_CAMPAIGN_OBJ} from './TestValues';
-import { addAmountSuffixToNumber } from '../../base/utils/miscutils';
+import { addAmountSuffixToNumber, space } from '../../base/utils/miscutils';
 import { dataColours, getCountryFlag, getCountryName } from '../pages/greendash/dashUtils';
-import { isEmpty } from 'lodash';
+import { isEmpty, sumBy } from 'lodash';
 
 export class ImpactFilters {
 	agency;
@@ -686,20 +686,19 @@ const CampaignList = ({campaigns, brand, subBrands, status}) => {
 };
 
 
+/** Round number to 3 significant figures and shorten with K/M/B suffix */
+const shortNumber = (number) => (
+	addAmountSuffixToNumber(printer.prettyNumber(number).replaceAll(',', ''))
+);
+
+
 const CountryViewsGLCard = ({basis, baseObjects}) => {
-	// TODO This is a pretty expensive call to make on every render. Should really use useState & async set impressionsData when ready.
-	// Unfortunately getImpressionsEtc doesn't expose a promise & doing so is a BIG refactor.
 	let impressionData = getImpressionsByCampaignByCountry({baseObjects})
-	if (isEmpty(impressionData)) return <></>;
 
-	// handle Total Impressions
-	let totalCountries = Object.keys(impressionData).filter(country => country !== "unset").length;
-
-	let impressions = Object.values(impressionData).reduce((sum, val) => sum + val.impressions, 0) // sum impressions over all regions
-	impressions = printer.prettyNumber(impressions, 3).replaceAll(",", "") // round to sig figs
-	impressions = addAmountSuffixToNumber(impressions) // reduce to units in thousands, millions or billions
-
-	let countryWord = (totalCountries === 1) ? 'COUNTRY' : 'COUNTRIES';
+	// Prepare data for non-modal view - total impressions and countries
+	const totalCountries = Object.keys(impressionData).filter(country => country !== "unset").length;
+	const impressions = sumBy(Object.values(impressionData), 'impressions') // sum impressions over all regions
+	const countryWord = (totalCountries === 1) ? 'COUNTRY' : 'COUNTRIES';
 
 	// assign colours to data object for map 
 	Object.keys(impressionData).forEach((country) => {
@@ -720,7 +719,7 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 		modalClassName="impact-map"
 		modalId="right-half"
 	>
-		<h3>{impressions} VIEWS | {totalCountries} {countryWord}</h3>
+		<h3>{shortNumber(impressions)} VIEWS | {totalCountries} {countryWord}</h3>
 	</GLCard>
 	)
 }
@@ -826,42 +825,61 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 	);
 }
 
+function UnsetCountryWarning() {
+	return <div className="row-aux unset-warning">
+		Geolocation recording was implemented in April 2022.<br/>
+		Older impressions will not be locatable.
+	</div>;
+}
+
+// comparator for sorting the weird-shaped Object.entries() data we work with in CampaignCountryList
+const countryListComparator = ([,a], [,b]) => (b.impressions - a.impressions);
+
 const CampaignCountryList = ({data}) => {
-	const regions = Object.keys(data)
+	const regions = Object.entries(data);
+	regions.sort(countryListComparator);
 
 	// if data has an unset region, push it to the back so it'll appear at the bottom of the country list
-	let unsetIndex = regions.indexOf("unset")
-	if(unsetIndex !== -1){
-		regions.splice(unsetIndex, 1)
-		regions.push("unset")
+	const unsetIndex = regions.findIndex(([k, v]) => k === 'unset');
+	if (unsetIndex >= 0){
+		const [unsetKV] = regions.splice(unsetIndex, 1);
+		regions.push(unsetKV);
 	}
 
-	return regions.map((region) => {
-		if (data[region].impressions === 0) return
-		const { impressions, campaignsInRegion } = data[region];
-		const pluralCampaigns = campaignsInRegion > 1 ? 'Campaigns' : 'Campaign';
-		const isUnset = (region === 'unset');
+	// [['a', {x: 1, y: 2}], ['b', {x: 3, y: 4}], ['c', {x: 5, y: 6}]].map(([first, {x, y}]) => console.log(first, x, y))
+
+	return regions.map(([regionCode, {impressions, campaignsInRegion}]) => {
+		if (impressions === 0) return;
+
+		let isUnset = false;
+		let flag = null;
+		if (regionCode === 'unset') {
+			isUnset = true;
+			regionCode = 'Unknown';
+		} else {
+			flag = <img src={`/img/country-flags/${regionCode.toLowerCase()}.svg`} className="country-flag" alt={`flag for ${regionCode}`} />
+		}
 
 		return (
-			<div className="country-impression-container" key={region}>
-				<div className="country-impression-content">
-					<div className="row-header">
-						<img src={`/img/country-flags/${region.toLowerCase()}.svg`} className="country-flag" alt={`flag for ${region}`} />
-						<span className="region-code">{region}</span>
+			<GLCard className={space('country-impressions p-2', isUnset && 'country-unset')} key={regionCode} noMargin noPadding>
+				<div className="row-main">
+					<div className="row-id">
+						<span className="region-code">{regionCode}</span>
+						{flag}
 					</div>
-					<div className="row-body">
+					<div className="counts">
 						<div className="count campaign-count">
-							Campaigns
+							<div className="label">Campaigns</div>
 							<div className="number">{campaignsInRegion}</div>
 						</div>
 						<div className="count impression-count">
-							Views
-							<div className="number">{printer.prettyNumber(impressions, 0)}</div>
+							<div className="label">Views</div>
+							<div className="number">{printer.prettyNumber(impressions, 21)}</div>
 						</div>
 					</div>
 				</div>
-				{isUnset && <p className="unset-warning">Geolocation recording was implemented in April 2022. Older impressions will not be locatable.</p>}
-			</div>
+				{isUnset && <UnsetCountryWarning />}
+			</GLCard>
 		);
 	});
 }

@@ -1,452 +1,459 @@
 .page-impact {
 
-    h1 {
-        color: @gl-impact-red;
-    }
+	h1 {
+		color: @gl-impact-red;
+	}
 
-    h2 {
-        color: @gl-impact-red;
-        text-transform: uppercase;
-        text-align: center;
-    }
+	h2 {
+		color: @gl-impact-red;
+		text-transform: uppercase;
+		text-align: center;
+	}
 
-    h3 {
-        color: @gl-impact-red;
-        font-size: 1.2rem;
-        font-weight: 600;
-        text-align: center;
-    }
+	h3 {
+		color: @gl-impact-red;
+		font-size: 1.2rem;
+		font-weight: 600;
+		text-align: center;
+	}
 
-    h5 {
-        color: #707070;
-        text-align: center;
-    }
+	h5 {
+		color: #707070;
+		text-align: center;
+	}
 
-    .white-circle {
-        background-color: white;
-        border-radius: 50%;
-    }
+	.white-circle {
+		background-color: white;
+		border-radius: 50%;
+	}
 
-    .glcard {
+	.glcard {
 
-        &.center-number {
-            .card-body {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-            }
-        }
-        
-        &.preview {
+		&.center-number {
+			.card-body {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+			}
+		}
+		
+		&.preview {
+			.card-body {
+				padding: 0.5rem;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+			}
+			&.campaign {
+				.card-body {
+					padding: 0.5rem;
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					justify-content: space-between;
+				}
+			}
+		}
 
-            .card-body {
-                padding: 0.5rem;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-            }
-            &.campaign {
-                .card-body {
-                    padding: 0.5rem;
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-                    justify-content: space-between;
-                }
-            }
-        }
+		&.offset-card {
+			//d-flex flex-row justify-content-center align-items-stretch
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: stretch;
+			overflow: hidden;
 
-        &.offset-card {
-            //d-flex flex-row justify-content-center align-items-stretch
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: stretch;
-            overflow: hidden;
+			.offset-number {
+				flex-basis: 50%;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+			}
 
-            .offset-number {
-                flex-basis: 50%;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-            }
+			.carbon-neutral {
+				flex-basis: 50%;
+				background-image: url("/img/Impact/curves-background.svg");
+				background-size: cover;
+				background-position: center;
+			}
+		}
 
-            .carbon-neutral {
-                flex-basis: 50%;
-                background-image: url("/img/Impact/curves-background.svg");
-                background-size: cover;
-                background-position: center;
-            }
-        }
+		&.boast .card-body {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			position: relative;
+			
+			h1,h2,h3,h4,h5 {
+				margin: 0;
+			}
 
-        &.boast .card-body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            
-            h1,h2,h3,h4,h5 {
-                margin: 0;
-            }
+			h2 {
+				font-size: 1.4rem;
+			}
+			h3 {
+				font-size: 1rem;
+			}
+			h4 {
+				font-size: 0.8rem;
+			}
+			h5 {
+				font-size: 0.6rem;
+			}
 
-            h2 {
-                font-size: 1.4rem;
-            }
-            h3 {
-                font-size: 1rem;
-            }
-            h4 {
-                font-size: 0.8rem;
-            }
-            h5 {
-                font-size: 0.6rem;
-            }
+			.text-bold {
+				font-weight: bolder;
+			}
 
-            .text-bold {
-                font-weight: bolder;
-            }
+			.question-icon {
+				position: absolute;
+				top: 10px;
+				right: 10px;
+				aspect-ratio: 1/1;
+				border-radius: 50%;
+				background-color: @gl-impact-red;
+				color: white;
+				width: 1.5rem;
+				text-align: center;
+				font-size: 1rem;
+			}
+		}
 
-            .question-icon {
-                position: absolute;
-                top: 10px;
-                right: 10px;
-                aspect-ratio: 1/1;
-                border-radius: 50%;
-                background-color: @gl-impact-red;
-                color: white;
-                width: 1.5rem;
-                text-align: center;
-                font-size: 1rem;
-            }
-        }
+		&.logos-display {
+			.card-body {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
 
-        &.logos-display {
-            .card-body {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
+				.a4glogo {
+					width: 10rem;
+				}
+			}
+		}
+	}
 
-                .a4glogo {
-                    width: 10rem;
-                }
-            }
-        }
-    }
+	.iview-grid {
+		@media @width-mobile {
+			background-color: @gl-impact-red;
+		}
+	}
 
-    .iview-grid {
-        @media @width-mobile {
-            background-color: @gl-impact-red;
-        }
-    }
+	.hero-card {
+		background: url("/img/Impact/world-image-cropped.png");
+		background-position: center;
+		background-size: cover;
 
-    .hero-card {
-        background: url("/img/Impact/world-image-cropped.png");
-        background-position: center;
-        background-size: cover;
+		@media @width-mobile {
+			margin: 0 !important;
+			border-radius: 0;
+		}
+		
+		.card-body {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
 
-        @media @width-mobile {
-            margin: 0 !important;
-            border-radius: 0;
-        }
-        
-        .card-body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+			.white-circle {
+				height: 100%;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				position: relative;
+				aspect-ratio: 1/1;
 
-            .white-circle {
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                position: relative;
-                aspect-ratio: 1/1;
+				@media @width-mobile {
+					height: unset;
+					width: 95%;
+				}
 
-                @media @width-mobile {
-                    height: unset;
-                    width: 95%;
-                }
+				.content {
+					position: absolute;
+					width: 100%;
+					height: 100%;
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					align-items: center;
+				}
+			}
+		}
+	}
 
-                .content {
-                    position: absolute;
-                    width: 100%;
-                    height: 100%;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                }
-            }
-        }
-    }
+	.glmodal {
 
-    .glmodal {
+		&.date-modal {
+			width: unset;
+			height: unset;
+		}
 
-        &.date-modal {
-            width: unset;
-            height: unset;
-        }
+		&.list-modal {
+			.glmodal-body {
+				background-color: @gl-background-default;
+				.glcard {
+					background-color: white;
+				}
+			}
+		}
 
-        &.list-modal {
-            .glmodal-body {
-                background-color: @gl-background-default;
-                .glcard {
-                    background-color: white;
-                }
-            }
-        }
+		&.charity-info {
+			.card-header {
+				height: 10rem;
+				.white-circle {
+					width: 10rem;
+					height: 10rem;
+					position: absolute;
+					top: 5rem;
+					left: 50%;
+					transform: translateX(-50%);
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: center;
+					overflow: hidden;
+					.logo {
+						width: 100%;
+					}
+				}
+			}
+			.charity-body {
+				margin-top: 5rem;
+			}
+		}
 
-        &.charity-info {
-            .card-header {
-                height: 10rem;
-                .white-circle {
-                    width: 10rem;
-                    height: 10rem;
-                    position: absolute;
-                    top: 5rem;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    overflow: hidden;
-                    .logo {
-                        width: 100%;
-                    }
-                }
-            }
-            .charity-body {
-                margin-top: 5rem;
-            }
-        }
+		&.co2-offset {
+			.bg-co2-offset {
+				background-image: url("/img/Impact/curves-background.svg");
+				background-size: cover;
+				background-position: center;
+			}
+			.header-overlay {
+				position: absolute;
+				bottom: 0;
+				left: 2rem;
+				width: 25%;
+			}
+		}
 
-        &.co2-offset {
-            .bg-co2-offset {
-                background-image: url("/img/Impact/curves-background.svg");
-                background-size: cover;
-                background-position: center;
-            }
-            .header-overlay {
-                position: absolute;
-                bottom: 0;
-                left: 2rem;
-                width: 25%;
-            }
-        }
+		&.ads-for-good {
+			.header-overlay {
+				position: absolute;
+				bottom: -4rem;
+				left: 0;
+				width: 40%;
+			}
+		}
 
-        &.ads-for-good {
-            .header-overlay {
-                position: absolute;
-                bottom: -4rem;
-                left: 0;
-                width: 40%;
-            }
-        }
+		.inmodal-wrapper {
+			.glcard-outer {
+				display: block;
+			}
+			.img-bg {
+				border-top-right-radius: 10px;
+				border-top-left-radius: 10px;
+			}
+			.rates {
+				width: 50%;
+				@media @width-mobile {
+					width: 100%;
+				}
+				margin: auto;
+				color: white;
+			}
+			h3 {
+				font-weight: bolder;
+			}
+		}
 
-        .inmodal-wrapper {
-            .glcard-outer {
-                display: block;
-            }
-            .img-bg {
-                border-top-right-radius: 10px;
-                border-top-left-radius: 10px;
-            }
-            .rates {
-                width: 50%;
-                @media @width-mobile {
-                    width: 100%;
-                }
-                margin: auto;
-                color: white;
-            }
-            h3 {
-                font-weight: bolder;
-            }
-        }
+		&.this-ad-does-good {
+			h3 {
+				color: @greenmedia-darkcyan;
+			}
+		}
 
-        &.this-ad-does-good {
-            h3 {
-                color: @greenmedia-darkcyan;
-            }
-        }
+		&.ads-catalogue-modal {
+			
+			.glcard {
+				background-color: @gl-impact-dark;
 
-        &.ads-catalogue-modal {
-            
-            .glcard {
-                background-color: @gl-impact-dark;
+				.goodLoopContainer {
+					background-color: black;
+				}
+				
+				.ads-catalogue {
+					height: 100%;
+					max-height: 100%;
 
-                .goodLoopContainer {
-                    background-color: black;
-                }
-                
-                .ads-catalogue {
-                    height: 100%;
-                    max-height: 100%;
+					.pointer-wrapper {
+						cursor: pointer;
+				
+						.ad-prev {
+							pointer-events: none;
+							overflow: hidden;
+							border: 5px solid transparent;
+							transition: 0.2s;
+						}
+				
+						&.selected {
+							cursor: default;
+				
+							.ad-prev {
+								border-radius: 5px;
+								border: 5px solid red;
+								transition: 0.2s;
+							}
+						}
+					}
+				}
+			}
+		}
 
-                    .pointer-wrapper {
-                        cursor: pointer;
-                
-                        .ad-prev {
-                            pointer-events: none;
-                            overflow: hidden;
-                            border: 5px solid transparent;
-                            transition: 0.2s;
-                        }
-                
-                        &.selected {
-                            cursor: default;
-                
-                            .ad-prev {
-                                border-radius: 5px;
-                                border: 5px solid red;
-                                transition: 0.2s;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+		&.impact-map {
+			.card-body {
+				text-align: center;
+			}
 
-        &.impact-map {
+			.map-container {
+				margin-bottom: 3rem; // add a solid gap between map & values
+			}
 
-            .map-container {
-                margin-bottom: 3rem; // add a solid gap between map & values
-            }
+			// Per-country subcards
+			.country-impressions {
+				margin-bottom: 1rem;
+				display: inline-flex;
 
-            .country-impression-container{
-                display: flex;
-                flex-direction: column;
-                place-content: center;
-                margin-bottom: 1rem;
-                font-family: "Montserrat", sans-serif;
-                height: 80px;
+				// main info - country, campaign, impressions
+				.row-main {
+					display: flex;
+					flex-direction: row;
+					justify-content: center;
+					font-family: "Montserrat", sans-serif;
+				}
+				// auxiliary info, eg explanation for unset row - align to .counts
+				.row-aux {
+					padding-left: 7.5rem;
+				}
+				// Explanatory text for unset regions
+				.unset-warning {
+					color: grey;
+					font-size: small;
+					text-align: center;
+				}
+				// Flag and country ID wrapper - constant width
+				.row-id {
+					width: 7.5em;
+					display: flex;
+					justify-content: space-around;
+					align-items: center;
+				}
 
-                // get image to be a circle
-                .flag-cropper {
-                    width: 40px;
-                    height: 40px;
-                    position: relative;
-                    overflow: hidden;
-                    border-radius: 50%;
-                    margin-right: 3rem;
-                    align-self: center; // verticall center the img
-                }
+				// Flag in circle
+				img.country-flag {
+					width: 2.5rem;
+					height: 2.5rem;
+					object-fit: cover;
+					object-position: center;
+					position: relative;
+					overflow: hidden;
+					border-radius: 50%;
+				}
 
-                // center image witin above circle
-                img {
-                    height: 100%;
-                    width: auto;
-                    position: absolute;
-                    left: 50%;
-                    transform: translateX(-50%);
-                  }
-                
+				// 2-letter country code
+				.region-code {
+					font-size: 125%;
+					font-weight: 800;
+					margin: auto 1rem;
+				}
+				&.country-unset .region-code {
+					font-size: 100%;
+					font-weight: normal;
+				}
 
-                p {
-                    margin: 0;
-                }
-                
-                // all text for a country
-                .country-impression-content{
-                    display: flex;
-                    flex-direction: row;
-                    width: 100%;
-                    position: relative;
-                    justify-content: center;
-                }
-
-                // only should appear to warn if a country has an unset region
-                .unset-warning {
-                    color: lightgray;
-                    font-size: small;
-                    text-align: center;
-                    place-self: center;
-                    width: 66%;
-                }
-
-                // name of country
-                .impression-header {
-                    font-weight: 600;
-                    text-align: center;
-                }
-
-                .impression-text {
-                    text-align: center;
-                    width: 50%;
-                }
-            }
-
-        }
-    }
-
-    
-
+				// Box containing impression/campaign counts + labels
+				.counts {
+					width: 20rem;
+					display: flex;
+					flex-direction: row;
+					justify-content: space-between;
+					// box for one number + label
+					.count {
+						text-transform: uppercase;
+						text-align: center;
+						flex-basis: 50%;
+						font-size: 0.8rem;
+					}
+					.number {
+						font-size: 150%;
+						font-weight: 600;
+					}
+				}
+			}
+		}
+	}
 }
 
 .navbars-overlay {
-    //position-fixed d-flex flex-row justify-content-center align-items-start
-    position: fixed;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    z-index: 50;
-    pointer-events: none;
+	//position-fixed d-flex flex-row justify-content-center align-items-start
+	position: fixed;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: flex-start;
+	width: 100vw;
+	height: 100vh;
+	top: 0;
+	left: 0;
+	z-index: 50;
+	pointer-events: none;
 
-    * {
-        pointer-events: auto;
-    }
+	* {
+		pointer-events: auto;
+	}
 }
 
 .iview-container {
-    margin-top:60px;
-    margin-left: 0 !important;
-    width: 100% !important;
+	margin-top:60px;
+	margin-left: 0 !important;
+	width: 100% !important;
 
-    @media @md-min {
-        display: flex;
-        margin-top: 10vh;
-    }
+	@media @md-min {
+		display: flex;
+		margin-top: 10vh;
+	}
 
-    .iview-grid {
-        @media @md-min {
-            display: flex;
-            height: 90vh;
-            width: 100%;
-        }
-    }
+	.iview-grid {
+		@media @md-min {
+			display: flex;
+			height: 90vh;
+			width: 100%;
+		}
+	}
 
-    @media @width-mobile {
-        padding: 0;
-    }
+	@media @width-mobile {
+		padding: 0;
+	}
 }
 
 // fixed navbar and filters on layer above page content
 .navbars-overlay {
-    @media (max-width: 768px) {
-        flex-direction: column;
-        justify-content: initial;
+	@media (max-width: 768px) {
+		flex-direction: column;
+		justify-content: initial;
 
-        .impactOverview-filters-and-account {
-            flex-grow: unset;
-        }
-    }
+		.impactOverview-filters-and-account {
+			flex-grow: unset;
+		}
+	}
 
 }
 
 #in-flow-navbar {
-    height: 30px;
+	height: 30px;
 }
 
