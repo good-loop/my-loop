@@ -27,27 +27,27 @@ const A = C.A;
  * @param {function} toggle toggles the state of isOpen AND isNavbarOpen, a state used to mainain flow even with fixed navbars
  * @returns 
  */
-const SideNavBar = ({urlFilters="", active, isOpen, navToggleAnimation, toggle}) => {
-	return (		
-	<animated.div id='impact-overview-navbar-widescreen' className='navAnimationContainer' style = {{width: navToggleAnimation.width}}> 
+const SideNavBar = ({urlFilters="", active, isOpen, navToggleAnimation, toggle, setForcedReload}) => {
+	return (
+	<animated.div id='impact-overview-navbar-widescreen' className='navAnimationContainer' style = {{width: navToggleAnimation.width}}>
 		<Navbar dark expand="md" id="impact-navbar" className={space('flex-column', 'justify-content-start', isOpen && 'mobile-open')} style={{width: navToggleAnimation.width}}>
 			<NavbarToggler onClick={toggle} />
 			<Nav navbar vertical>
 				<a href="https://good-loop.com/">
-					<img crossorigin className="logo flex-column" src="/img/logo-white.svg"/>
+					<img className="logo flex-column" src="/img/logo-white.svg"/>
 					<animated.p className='logo-name flex-column' style={{opacity: navToggleAnimation.opacity}}>GOOD-LOOP</animated.p>
 				</a>
 				<br/><br/>
 				<NavItem>
-					<A href={'/impact/view'+urlFilters}>
-						<div className={active === 'overview' ? 'active navbar-link' : 'navbar-link'}> 
+					<A href={'/impact/view'+urlFilters} onClick={() => {setForcedReload(true)}}>
+						<div className={active === 'Overview' ? 'active navbar-link' : 'navbar-link'}> 
 							<div className="impact-nav-icon overview-icon" /><animated.div className="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Overview</animated.div> 
 						</div>
 					</A>
 				</NavItem>
 				<NavItem>
-					<A href={'/impact/story'+urlFilters}>
-						<div className={active === 'impact' ? 'active navbar-link' : 'navbar-link'}> 
+					<A href={'/impact/stories'+urlFilters} onClick={() => {setForcedReload(true)}}>
+						<div className={active === 'Stories' ? 'active navbar-link' : 'navbar-link'}> 
 							<div className="impact-nav-icon impact-icon" /> <animated.div className="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Impact</animated.div> 
 						</div>
 					</A>
@@ -84,22 +84,22 @@ const SideNavBar = ({urlFilters="", active, isOpen, navToggleAnimation, toggle})
  * @param {active} String className of active page
  * @returns 
  */
-const TopNavBar = ({urlFilters="", active}) => {
+const TopNavBar = ({urlFilters="", active, setForcedReload}) => {
 	return (<>
 		<Navbar dark expand="md" id="impact-overview-navbar-smallscreen" className={space('flex-column', 'justify-content-start')}>
-			<Nav horizontal>
-				<NavItem className={active === 'overview' ? 'active' : ''}>
-					<A href={'/impact/view'+urlFilters}>
+			<Nav horizontal="start">
+				<NavItem className={active === 'Overview' ? 'active' : ''}>
+					<A href={'/impact/view'+urlFilters} onClick={() => {setForcedReload(true)}}>
 						<div className="impact-navbar-text">Overview</div> 
 					</A>
 				</NavItem>
-				<NavItem className={active === 'impact' ? 'active' : ''}>
-					<A href={'/impact/story'+urlFilters}>					
+				<NavItem className={active === 'Stories' ? 'active' : ''}>
+					<A href={'/impact/stories'+urlFilters}  onClick={() => {setForcedReload(true)}}>					
 						<div className="impact-navbar-text">Impact</div> 
 					</A>
 				</NavItem>
-				<NavItem className={active === 'analysis' ? 'active' : ''}>
-					<A href={'/impact/stat'+urlFilters}>
+				<NavItem className={active === 'analysis' ? 'active' : ''} >
+					<A href={'/impact/stat'+urlFilters} onClick={() => {setForcedReload(true)}}>
 						<div className="impact-navbar-text">Analysis</div> 
 					</A>
 				</NavItem>
@@ -112,8 +112,7 @@ const TopNavBar = ({urlFilters="", active}) => {
 		</Navbar></>)
 }
 
-const NavBars = ({active, isNavbarOpen, setIsNavbarOpen}) => {
-
+const NavBars = ({active, isNavbarOpen, setIsNavbarOpen, setForcedReload}) => {
 	const [isOpen, setIsOpen] = useState(isNavbarOpen) // the navbar expanded or not?
 
 	// on change of isOpen, these values define CSS animations
@@ -135,8 +134,8 @@ const NavBars = ({active, isNavbarOpen, setIsNavbarOpen}) => {
 
 	return (
 		<>
-		<SideNavBar active={active} isOpen={isOpen} toggle={toggle} navToggleAnimation={navToggleAnimation} urlFilters={urlFilters} />
-		<TopNavBar active={active} urlFilters={urlFilters} /> 
+		<SideNavBar active={active} isOpen={isOpen} toggle={toggle} navToggleAnimation={navToggleAnimation} urlFilters={urlFilters} setForcedReload={setForcedReload}/>
+		<TopNavBar active={active} urlFilters={urlFilters} setForcedReload={setForcedReload}/> 
 		</>
 	)
 }

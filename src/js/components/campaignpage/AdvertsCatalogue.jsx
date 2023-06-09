@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-	Button,
 	Carousel,
 	CarouselCaption, CarouselControl,
 	CarouselIndicators, CarouselItem, Container
@@ -25,7 +24,7 @@ import { assert } from '../../base/utils/assert';
  * @param {Advert[]} p.ads
  * @param {?Boolean} p.noPreviews remove preview carousel
  */
-const AdvertsCatalogue = ({ ads, noPreviews, className }) => {
+const AdvertsCatalogue = ({ ads, noPreviews, className, captions=true}) => {
 	assert(ads);
 
 	const [activeIndex, setActiveIndex] = useState(0);
@@ -50,7 +49,7 @@ const AdvertsCatalogue = ({ ads, noPreviews, className }) => {
 				ad={ad}
 				active={activeIndex === i}
 			/>
-			<CarouselCaption captionText={<Misc.DateDuration startDate={ad.start} endDate={ad.end} />} />
+			{captions && <CarouselCaption captionText={<Misc.DateDuration startDate={ad.start} endDate={ad.end} />} />}
 		</CarouselItem>
 	);
 
@@ -79,9 +78,7 @@ const AdvertsCatalogue = ({ ads, noPreviews, className }) => {
 				previous={previous}
 				interval={false}
 			>
-				<div className="d-block d-md-none">
-					<CarouselIndicators items={carouselSlides} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{ backgroundColor: "#000" }} />
-				</div>
+				<CarouselIndicators className="d-block d-md-none" items={carouselSlides} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{ backgroundColor: "#000" }} />
 				{carouselSlides}
 				<div className="d-none d-md-block">
 					<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
@@ -105,7 +102,6 @@ const AdvertsCatalogue = ({ ads, noPreviews, className }) => {
 const AdvertiserName = ({ name }) => <span className="advertiser-name"><span>{name}</span></span>;
 
 const AdPreviewCarousel = ({ ads, selectedIndex, setSelected }) => {
-
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [animating, setAnimating] = useState(false);
 
@@ -128,58 +124,26 @@ const AdPreviewCarousel = ({ ads, selectedIndex, setSelected }) => {
 		setActiveIndex(newIndex);
 	};
 
-	let carouselSlides = [];
+	const carouselSlides = [];
 	for (let i = 0; i < slidesNum; i++) {
 		const adIndex = i * 6;
+
+		const previews = [0, 1, 2, 3, 4, 5].map(j => {
+			const offsetIndex = adIndex + j;
+			if (offsetIndex > ads.length - 1) return null;
+			return <AdvertPreviewCard
+				key={offsetIndex}
+				ad={ads[offsetIndex]}
+				selected={selectedIndex == offsetIndex}
+				handleClick={() => setSelected(offsetIndex)}
+				active={activeIndex === i}
+			/>;
+		}).filter(a => !!a);
+
 		carouselSlides.push(
-			<CarouselItem
-				onExiting={() => setAnimating(true)}
-				onExited={() => setAnimating(false)}
-				key={i}
-			>
+			<CarouselItem onExiting={() => setAnimating(true)} onExited={() => setAnimating(false)} key={i} >
 				<div className="row justify-content-center mt-5">
-					<AdvertPreviewCard
-						key={adIndex}
-						ad={ads[adIndex]}
-						selected={selectedIndex == adIndex}
-						handleClick={() => setSelected(adIndex)}
-						active={activeIndex === i}
-					/>
-					<AdvertPreviewCard
-						key={adIndex + 1}
-						ad={ads[adIndex + 1]}
-						selected={selectedIndex == adIndex + 1}
-						handleClick={() => setSelected(adIndex + 1)}
-						active={activeIndex === i}
-					/>
-					<AdvertPreviewCard
-						key={adIndex + 2}
-						ad={ads[adIndex + 2]}
-						selected={selectedIndex === adIndex + 2}
-						handleClick={() => setSelected(adIndex + 2)}
-						active={activeIndex === i}
-					/>
-					<AdvertPreviewCard
-						key={adIndex + 3}
-						ad={ads[adIndex + 3]}
-						selected={selectedIndex === adIndex + 3}
-						handleClick={() => setSelected(adIndex + 3)}
-						active={activeIndex === i}
-					/>
-					<AdvertPreviewCard
-						key={adIndex + 4}
-						ad={ads[adIndex + 4]}
-						selected={selectedIndex === adIndex + 4}
-						handleClick={() => setSelected(adIndex + 4)}
-						active={activeIndex === i}
-					/>
-					<AdvertPreviewCard
-						key={adIndex + 5}
-						ad={ads[adIndex + 5]}
-						selected={selectedIndex === adIndex + 5}
-						handleClick={() => setSelected(adIndex + 5)}
-						active={activeIndex === i}
-					/>
+					{previews}
 				</div>
 			</CarouselItem>
 		);
@@ -230,7 +194,7 @@ const AdvertCard = ({ ad, active }) => {
 			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{ position: "absolute", zIndex: 999 }}>Advert Editor ({ad.id})</DevLink>
 			<div className="position-relative ad-unit-outer">
 				{hasShown ? (
-					<GoodLoopUnit vertId={ad.id} size={size} extraParams={extraParams} play="onclick" style={{zIndex:2, maxWidth:"50%", margin:"auto"}}/>
+					<GoodLoopUnit vertId={ad.id} size={size} extraParams={extraParams} play="onclick" style={{zIndex:2, maxWidth:"50%", margin:"auto"}} shouldDebug={false} />
 				) : (
 					<div style={{ background: "black", width: "100%", height: "100%" }}></div>
 				)}
@@ -262,7 +226,7 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
 			<div onClick={e => { e.preventDefault(); handleClick(); }} className={"d-flex justify-content-center pointer-wrapper" + (selected ? " selected" : "")}>
 				<div className="ad-prev shadow">
 					{hasShown ? (
-						<GoodLoopUnit vertId={ad.id} size={size} advert={ad} play="onclick" />
+						<GoodLoopUnit vertId={ad.id} size={size} advert={ad} play="onclick" shouldDebug={false} />
 					) : (
 						<div style={{ background: "black", width: "100%", height: "100%" }}></div>
 					)}

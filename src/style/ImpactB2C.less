@@ -25,9 +25,11 @@
         flex-wrap: wrap;
         margin-right: -15px;
         margin-left: -15px;
+
         @media @width-mobile {
             flex-direction: column;
-            > * { 
+
+            >* {
                 margin-top: 5%;
             }
         }
@@ -42,7 +44,8 @@
         padding: 3%;
         width: 7vw;
         height: 7vw;
-        @media  @width-mobile{
+
+        @media @width-mobile {
             width: 12vh;
             height: 12vh;
         }
@@ -82,11 +85,11 @@
             top: 20%;
             height: 100%;
         }
-    
+
         .arm-left {
             left: 0;
         }
-    
+
         .arm-right {
             right: 0;
         }
@@ -96,6 +99,7 @@
     .spark {
         position: absolute;
         width: 5%;
+
         @media @width-mobile {
             display: none;
         }
@@ -138,7 +142,7 @@
             background-position: center;
             background-size: cover;
             background-position-x: 60%; // center it a bit more otherwise we're just looking at america 
-            background-color: @gl-impact-blue  !important;
+            background-color: @gl-impact-blue !important;
 
             height: 60%;
             aspect-ratio: 1;
@@ -165,7 +169,9 @@
             flex-wrap: wrap;
             place-content: center;
             margin-bottom: 0;
-
+            @media @width-mobile {
+                padding: 5% 0 !important;
+            }
             li {
                 padding: 2%;
             }
@@ -180,9 +186,11 @@
 
         .adsForGood {
             max-width: 20%;
+
             @media @width-mobile {
                 max-width: 75%;
             }
+
             margin: 2%;
         }
 
@@ -248,7 +256,7 @@
 
     // rules for both campaign impacts
     .campaign-impact {
-        
+
         .camp-impact-card {
             height: 45vh;
             overflow: hidden;
@@ -261,7 +269,7 @@
         .impact-section {
             display: flex;
             flex-direction: column;
-            
+
             // on mobile stop content from being flush with screen edges
             @media @width-mobile {
                 width: 90%;
@@ -293,9 +301,11 @@
                 place-content: center;
                 text-align: left;
                 padding: 10%;
+
                 @media @width-mobile {
                     padding: 5%;
                 }
+
                 color: white !important;
 
                 .cause {
@@ -355,7 +365,8 @@
                 background-repeat: no-repeat;
                 background-position-y: 0;
                 background-position-x: 70%; // center it a bit more otherwise we're just looking at america 
-                background-color: @gl-impact-blue  !important;
+                background-color: @gl-impact-blue !important;
+
                 @media @width-mobile {
                     background-image: none;
                 }
@@ -410,6 +421,7 @@
         background-color: @gl-lighter-blue;
 
         .impact-row {
+
             .left,
             .right {
                 flex-basis: 45%;
@@ -417,6 +429,7 @@
         }
 
         #row-2 {
+
             // Helping Fund 'Project Here'
             .right {
                 padding: 5% !important;
@@ -437,6 +450,7 @@
                 .project-desc {
                     font-weight: unset;
                     font-size: 1vw; // keeps text within the div unless there's a TON of text but...
+
                     @media @width-mobile {
                         font-size: 100%; // ... on mobile it makes it tiny, so fix it there
                     }
@@ -504,9 +518,11 @@
             .cta-card {
                 padding-bottom: 5%;
                 width: 49%;
+
                 @media @width-mobile {
                     width: unset;
                 }
+
                 height: 60vh;
                 position: relative;
 
@@ -525,6 +541,7 @@
                 h2,
                 .social-media-links {
                     margin-top: 5%;
+
                     @media @width-mobile {
                         margin-top: 10%;
                     }
@@ -689,51 +706,71 @@
         flex-wrap: wrap;
         justify-content: space-evenly;
 
-        .impact-debit {
-            flex-basis: 30%; // keep to 3 a row
+        .impact-debit-container {
+            .impact-debit {
+                flex-basis: 30%; // keep to 3 a row
+    
+                @media @width-mobile {
+                    flex-basis: 100%; // on mobile though, 1 per row
+                }
+    
+                height: 40vh;
+                box-shadow: 0 0 10px black;
+                overflow: hidden;
+                border-radius: 2.5%;
+                margin-bottom: 2.5%;
+    
+                .debit-content {
+                    width: 100%;
+                    padding: 2.5%;
+                    padding-left: 5%;
+                    text-align: left;
+                    position: relative;
+                }
+    
+                .debit-header {
+                    width: 100%;
+                    height: 60%;
+                    object-fit: cover;
+                }
+    
+                .debit-logo {
+                    position: absolute;
+                    right: 5%;
+                    bottom: 5%;
+                    width: 20%;
+                }
+    
+                .debit-name {
+                    color: @gl-blue;
+                    font-size: larger;
+                    opacity: 0.5;
+                    margin-bottom: 5%;
+                }
+    
+                .debit-amount {
+                    color: @gl-impact-red;
+                    font-size: x-large;
+                    font-weight: 600;
+                }
+            }
+            // 3 to a row & space them out
+            flex-basis: 30%;
+            margin: 1% 1%;
+            background: none;
             @media @width-mobile {
-                flex-basis: 100%; // on mobile though, 1 per row
-            }
-            height: 40vh;
-            box-shadow: 0 0 10px black;
-            overflow: hidden;
-            border-radius: 2.5%;
-            margin-bottom: 2.5%;
-
-            .debit-content {
-                width: 100%;
-                padding: 2.5%;
-                padding-left: 5%;
-                text-align: left;
-                position: relative;
-            }
-
-            .debit-header {
-                width: 100%;
-                height: 60%;
-                object-fit: cover;
-            }
-
-            .debit-logo {
-                position: absolute;
-                right: 5%;
-                bottom: 5%;
-                width: 20%;
-            }
-
-            .debit-name {
-                color: @gl-blue;
-                font-size: larger;
-                opacity: 0.5;
-                margin-bottom: 5%;
-            }
-
-            .debit-amount {
-                color: @gl-impact-red;
-                font-size: x-large;
-                font-weight: 600;
+                flex-basis: 100%;
+                margin-left: 0;
+                padding: 2.5% 5%;
             }
         }
+
+        @media @width-mobile {
+            // on mobile there's a tiny bit of extra padding that squishes the components, this fixes
+            margin-left: 0;
+            padding: 0;
+        }
+
     }
 
     #learn-more {
@@ -742,9 +779,11 @@
         width: 100%;
         justify-content: space-evenly;
         align-items: center;
+
         @media @width-mobile {
             width: ;
         }
+
         .link-row {
             justify-content: space-evenly;
         }
@@ -754,21 +793,25 @@
             flex-direction: column;
 
             max-width: 20%;
+
             @media @width-mobile {
                 max-width: unset;
                 margin: 5% auto;
             }
+
             flex-basis: 20%;
             height: 60%;
 
             .link-img {
                 width: 100%;
                 height: 40vh;
+
                 @media @width-mobile {
                     // on mobile, squish the row into a column
                     height: 35vh;
                     width: 35vh;
                 }
+
                 object-fit: cover;
             }
 
@@ -778,6 +821,322 @@
                 padding: 5%;
                 color: @gl-red;
             }
+        }
+    }
+
+    // only the Impact Hubs container
+
+    // impact hub
+    .splash-curve {
+        height: 100%;
+        z-index: 1;
+        width: fit-content;
+        position: relative;
+
+        @media @width-mobile {
+            display: none;
+        }
+    }
+
+    // splash card, split into [padding div, curve, content]
+    #stories-splash {
+        margin-top: 10vh; // move past header
+        height: 90vh;
+
+        .padding-div {
+            flex-basis: 15%;
+        }
+
+        .splash-curve-mobile {
+            display: none;
+        }
+
+        @media @width-mobile {
+            height: 97vh;
+
+            .splash-curve-mobile {
+                display: block;
+                position: absolute;
+                bottom: 50%;
+                width: 100%;
+            }
+
+            #splash-curve-mobile-1 {
+                bottom: 51%;
+                filter: brightness(1.2);
+            }
+
+            .padding-div {
+                display: none;
+            }
+        }
+
+        #splash-content {
+            color: white !important;
+            padding: 10% 10% 10% 0; // pushed to center left of div
+            align-self: center;
+            height: 100%;
+            // since the curve is made of two slightly opaque colors, the resulting 'inner' color can be found by adding them
+            background-color: rgba(97.148, 139.037, 152.333, 0.84); // formula used: https://stackoverflow.com/questions/726549/algorithm-for-additive-color-mixing-for-rgb-values
+            // position within the col neatly
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            place-content: space-between;
+
+            @media @width-mobile {
+                padding: 0 0 10% 0;
+                height: 50%;
+                background-color: rgb(66, 119, 135);
+                position: absolute;
+                bottom: 0;
+
+                h1 {
+                    font-size: x-large;
+                    padding: 0 10%;
+                }
+
+                .logo-circle{
+                    width: 30vw !important;
+                    height: 30vw !important;
+                }
+            }
+
+            .logo-circle {
+                width: 13vw;
+                height: 13vw;
+                margin: unset;
+            }
+
+            .adsForGood {
+                width: 50%;
+            }
+        }
+    }
+
+    #campaign-spotlight {
+        height: 80vh;
+        position: relative;
+
+        #spotlight-bg {
+            z-index: 0;
+            background-image: url("/img/Impact/world.svg");
+            position: absolute;
+            width: 100%;
+            height: 100%;
+
+            @media @width-mobile {
+                display: none;
+            }
+
+            #spotlight-bg-padding {
+                flex-basis: 15%;
+            }
+
+            #spotlight-bg-color {
+                // since the curve is made of two slightly opaque colors, the resulting 'inner' color can be found by adding them
+                background-color: rgba(97.148, 139.037, 152.333, 0.84); // formula used: https://stackoverflow.com/questions/726549/algorithm-for-additive-color-mixing-for-rgb-values
+            }
+        }
+
+        #spotlight-content {
+            height: 100%;
+            z-index: 1;
+            @media @width-mobile { // undoes Row default styling
+                display: block !important;
+            }
+
+            #campaign-info {
+                flex-basis: 25%;
+                place-self: center;
+                text-align: left;
+                text-align-last: left;
+                padding-left: 10%;
+
+                h1 {
+                    // total raised
+                    font-size: 400%;
+                    letter-spacing: 1px;
+                }
+
+                h2 {
+                    // 'Raised....'
+                    text-transform: unset;
+                    font-size: 200%;
+                    letter-spacing: 1px;
+                }
+
+                h4 {
+                    // Supporting 'Charity here'
+                    margin: 5% 0;
+                }
+
+                p {
+                    // Campaign name + dates
+                    margin-bottom: 0 !important;
+                }
+
+                @media @width-mobile {
+                    display: flex;
+                    flex-direction: column;
+                    height: 100%;
+                    place-content: space-between;
+                    padding: 0 !important;
+                    align-items: center;
+                    text-align-last: center;
+                    text-align: center;
+
+                    // let the preview ad take up more space
+                    .container {
+                        height: 30% !important;
+                        padding: 0;
+                        .goodLoopContainer {
+                            max-width: 80% !important;
+                        }
+                    }
+
+                    #spotlight-name {
+                        font-size: large;
+                        font-weight: bold;
+                    }
+
+                }
+            }
+
+            #spotlight-ads {
+                align-self: center;
+            }
+        }
+
+        .ads-catalogue {
+            // ad doesn't resize correctly when navbar expands/shrinks, so it's taken out of flow
+            position: absolute;
+            top: 30%;
+            right: 0;
+            @media @width-mobile {
+                position: unset;
+                padding: 0;
+                height: 40%;
+            }
+        }
+
+        @media @width-mobile {
+            background: white;
+            padding: 10%;
+        }
+    }
+
+
+    #impact-footer-container {
+        position: relative;
+        height: 80vh;
+
+        #stories-footer {
+            padding: 20% 0 5% 0;
+            margin: auto;
+            height: 100%;
+            width: 55vw; // found from 100vw - (absolute images widths)
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            place-content: space-around;
+
+            ul {
+                display: flex;
+                flex-direction: row;
+            }
+
+            p {
+                font-size: larger;
+            }
+
+            .topRow,
+            .adsForGood,
+            ul {
+                height: 20%;
+            }
+        }
+
+        #images-combined {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 30vw;
+        }
+
+        #holding-world {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 15vw;
+            transform: scaleX(-1);
+        }
+    }
+
+
+}
+
+#impact-cert-modal {
+    font-family: 'Montserrat', sans-serif;
+    p {
+        margin-bottom: 0 !important;
+    }
+    .light-bold {
+        font-weight: 600;
+    }
+
+    @media (min-width: 768px) {
+        max-width: 80vw;
+    }
+
+    .brand-ngo-logos {
+        
+        // text + border lines
+        .logo-text-top, .logo-text-bot {
+            width: 60%;
+            height: 100%;
+            align-content: center;
+            padding-left: 5%;
+            border-left: solid 1px lightgray;
+            p {
+                margin-bottom: 0 !important;
+                font-weight: bold;
+            }
+        }
+        .logo-text-top {
+            border-bottom: solid 1px lightgray;
+        }
+        
+
+        .cert-logo-row {
+            .logo-container {
+                width: 30%;
+                height: 100%;
+                // center img
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-evenly;
+                img {
+                    max-height: 100%;
+                    max-width: 90%;
+                    object-fit: contain;
+                }
+            }
+        }
+    }
+
+    #donation-details {
+        font-size: 75%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        margin: 2.5%;
+
+        #offset-details, #offset-status, #offset-links {
+            background-color: white;
+            padding: 2.5% 1%;
         }
     }
 }

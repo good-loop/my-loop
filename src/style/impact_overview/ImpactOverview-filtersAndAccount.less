@@ -1,104 +1,103 @@
 @keyframes quick-fade-in {
-    0% {opacity: 0;}
-    100% {opacity: 1;}
+	0% {opacity: 0;}
+	100% {opacity: 1;}
 }
 
 .impactOverview-filters-and-account{
-    display: flex;
-    justify-content: space-between;
-    height: 10vh; // manually set, design shows bottom of this bar should align with bottom of logo which is at a constant static height.
-    flex-grow: 1;
-    background-color: white;
+	display: flex;
+	justify-content: space-between;
+	height: 10vh; // manually set, design shows bottom of this bar should align with bottom of logo which is at a constant static height.
+	flex-grow: 1;
+	background-color: white;
 
-    #filters, #date-filters {
-        position: relative;
-        display: flex;
-        padding-left: 15px;
-        opacity: 0%;
-        animation-name: quick-fade-in;
-        animation-duration: 0.2s;
-        animation-fill-mode: forwards;
+	#filters, #date-filters {
+		position: relative;
+		display: flex;
+		padding-left: 15px;
+		opacity: 0%;
+		animation-name: quick-fade-in;
+		animation-duration: 0.2s;
+		animation-fill-mode: forwards;
 
-        .filter-row {
-            background: none;
-            border: none;
+		.filter-row {
+			background: none;
+			border: none;
 
-            font-weight: 600;
-            font-family: 'Montserrat';
-            font-size: x-large;
-            color: rgb(64, 64, 64); // colour taken directly from design
-            outline: none !important;
-        }
+			font-weight: 600;
+			font-family: 'Montserrat';
+			font-size: x-large;
+			color: rgb(64, 64, 64); // colour taken directly from design
+			outline: none !important;
+		}
 
-        .underlined { 
-            text-decoration: underline !important;
-        }
+		.underlined { 
+			text-decoration: underline !important;
+		}
 
-        .filter-down-arrow {
-            background-image: url("/img/icons/down-arrow.svg");
-            // keep icon to a good relative size
-            width: 2rem;
-            height: 2rem;
-            @media @width-mobile {
-                width: 1.5rem !important;
-                height: 1.5rem !important; 
-            }
+		.filter-down-arrow {
+			background-image: url("/img/icons/down-arrow.svg");
+			// keep icon to a good relative size
+			width: 2rem;
+			height: 2rem;
+			@media @width-mobile {
+				width: 1.5rem !important;
+				height: 1.5rem !important; 
+			}
 
-            background-size: contain;
-            
-            // keep it vertically centered in breadcrump trail
-            position: relative;
-            transform: translateY(-50%);
-            top: 50%;
-        }
-    }
+			background-size: contain;
 
-    // account container inside navbar
-    #impact-overview-accounts { 
-        position: relative;
-        display: flex;
-        margin-right: 2rem;
+			// keep it vertically centered in breadcrump trail
+			position: relative;
+			transform: translateY(-50%);
+			top: 50%;
+		}
+	}
 
-        // account button inside navbar
-        #account-icon, #share-icon {
-            background-color: transparent;
-            border: none;
-            outline: none;
-            :focus {
-                border: none;
-                outline: none;
-            }
-            text-decoration: underline;
-        }
+	// account container inside navbar
+	#impact-overview-accounts { 
+		position: relative;
+		display: flex;
+		margin-right: 2rem;
 
-        #share-icon {
-            margin-right: 1rem;
-        }
-    }
+		// account button inside navbar
+		#account-icon, #share-icon {
+			background-color: transparent;
+			border: none;
+			outline: none;
+			:focus {
+				border: none;
+				outline: none;
+			}
+			text-decoration: underline;
+		}
 
-    #date-filters {
-        flex:auto;
-        margin-left:3rem;
-    }
-    
+		#share-icon {
+			margin-right: 1rem;
+		}
+	}
+
+	#date-filters {
+		flex:auto;
+		margin-left:3rem;
+	}
 }
 
 // hide "in-page" filters when on mobile
 #impactOverview-filters-and-account-thin {
-    @media @md-min {
-        display: none !important;
-        ul {
-            text-align: center;
-        }
-    }
+	@media @md-min {
+		display: none !important;
+		ul {
+			text-align: center;
+		}
+	}
 
-    width: 100%;
-    height: 7vh;
+	width: 100%;
+	height: 7vh;
 
-    .filter-text {
-        font-size: 1rem !important;
-        padding: 2px;
-    }
+	.filter-text {
+		font-size: 1rem !important;
+		padding: 2px;
+	}
 
 
 
@@ -106,215 +105,214 @@
 
 // hide above navbar filters when on desktop
 #impactOverview-filters-and-account-wide {
-    @media (max-width: 768px) {
-        display: none !important;
-    }
+	@media (max-width: 768px) {
+		display: none !important;
+	}
 }
 
 // the actual content when the filter is open
 #filter-modal-container {
 
-    // button containing brand and its campaings
-    .filter-button {
-        border-radius: 0;
-        border: none;
-        box-shadow: none;
-        padding: 0;
-        background-color: rgb(212, 212, 212);
-    }
+	// button containing brand and its campaings
+	.filter-button {
+		border-radius: 0;
+		border: none;
+		box-shadow: none;
+		padding: 0;
+		background-color: rgb(212, 212, 212);
+	}
 
-    .ListLoad {
-        margin: 0;
-    }
+	.ListLoad {
+		margin: 0;
+	}
 
-    // container div within the above button
-    .brand-campaign-set {
-        width: 100%;
-        align-items: center;
+	// container div within the above button
+	.brand-campaign-set {
+		width: 100%;
+		align-items: center;
 
-        .ListLoad {
-            margin-top: 0.5rem; // all but first items have this style, apply it to the first as well 
-        }
-    }
+		.ListLoad {
+			margin-top: 0.5rem; // all but first items have this style, apply it to the first as well 
+		}
+	}
 
-    // unindented brand
-    .brand-button{
-        width: 100%;
-        border-radius: 1%;
-        border: none;
-        box-shadow: none;
-    }
+	// unindented brand
+	.brand-button{
+		width: 100%;
+		border-radius: 1%;
+		border: none;
+		box-shadow: none;
+	}
 
-    // indented campaign
-    .campaign-item {
-        width: 75%;
-        margin-left: 90px;
-        padding: 10px;
-        @media (max-width: 768px) {
-            width: 100% !important;
-            padding-left: 0 !important;
-            margin-left: 0 !important;
-            font-size: 1rem !important;
-        }
+	// indented campaign
+	.campaign-item {
+		width: 75%;
+		margin-left: 90px;
+		padding: 10px;
+		@media (max-width: 768px) {
+			width: 100% !important;
+			padding-left: 0 !important;
+			margin-left: 0 !important;
+			font-size: 1rem !important;
+		}
 
-    }
+	}
 
 
-    .img-thumbnail, .impact-link-placeholder-thumbnail {
-        width: 75px !important;
-        height: 75px !important;
-        display: inline-flex !important;
-        border: none;
-        margin-right: 2rem;
-        @media @width-mobile {
-            width: 50px !important;
-            height: 50px !important;
-            min-width: 50px !important;
-            min-height: 50px !important;
+	.img-thumbnail, .impact-link-placeholder-thumbnail {
+		width: 75px !important;
+		height: 75px !important;
+		display: inline-flex !important;
+		border: none;
+		margin-right: 2rem;
+		@media @width-mobile {
+			width: 50px !important;
+			height: 50px !important;
+			min-width: 50px !important;
+			min-height: 50px !important;
 
-        }
-    }
+		}
+	}
 
-    .impact-link-placeholder-thumbnail {
-        background-color: lightgrey;
-    }
+	.impact-link-placeholder-thumbnail {
+		background-color: lightgrey;
+	}
 
-    // logo, text and expand campaigns button
-    .info {
-        display: inline-flex;
-        align-items: center;
-        width: 100%;
-        border-bottom: solid 1px lightgrey;
-        
-        .display {
-            display: inline-flex;
-            align-items: center;
-            background-color: rgba(0,0,0,0);
-            transition: background-color 0.2s;
-            padding: 10px;
+	// logo, text and expand campaigns button
+	.info {
+		display: inline-flex;
+		align-items: center;
+		width: 100%;
+		border-bottom: solid 1px lightgrey;
 
-            &:hover {
-                background-color: rgba(0,0,0,0.2);
-                cursor: pointer;
-            }
-        }
+		.display {
+			display: inline-flex;
+			align-items: center;
+			background-color: rgba(0,0,0,0);
+			transition: background-color 0.2s;
+			padding: 10px;
 
-        .name {
-            margin-right: 1rem;
-            font-family: "Montserrat", sans-serif;
-            @media @width-mobile {
-                font-size: 1rem !important;
-            }
-            font-size: large;
-        }
+			&:hover {
+				background-color: rgba(0,0,0,0.2);
+				cursor: pointer;
+			}
+		}
 
-        .dropdown-button {
-            background-image: url("/img/icons/down-arrow.svg");
-            background-color: transparent;
-            background-size: contain;   
-            width: 2rem;
-            height: 2rem;
-            border: none;
-            outline: none;
-            &.open {
-                transform: rotate(180deg);
-            }
-            :focus {
-                outline: none;
-                border: none;
-            }
-        }
-    }
+		.name {
+			margin-right: 1rem;
+			font-family: "Montserrat", sans-serif;
+			@media @width-mobile {
+				font-size: 1rem !important;
+			}
+			font-size: large;
+		}
 
-    .campaign-item {
-        padding: 10px;
-        padding-top: 0;
-        margin-left: 10%;
-        width: 90%;
-    }
+		.dropdown-button {
+			background-image: url("/img/icons/down-arrow.svg");
+			background-color: transparent;
+			background-size: contain;   
+			width: 2rem;
+			height: 2rem;
+			border: none;
+			outline: none;
+			&.open {
+				transform: rotate(180deg);
+			}
+			:focus {
+				outline: none;
+				border: none;
+			}
+		}
+	}
 
-    .closed {
-        @media @md-min {
-            display: none;
-        }
-    }
+	.campaign-item {
+		padding: 10px;
+		padding-top: 0;
+		margin-left: 10%;
+		width: 90%;
+	}
 
-    .selected-filter {
-        font-weight: 600;
-    }
+	.closed {
+		@media @md-min {
+			display: none;
+		}
+	}
+
+	.selected-filter {
+		font-weight: 600;
+	}
 
 }
 
 #navbars-overlay {
-    position: fixed;
-    display: flex;
+	position: fixed;
+	display: flex;
 }
 
 #iview-container {
-    margin-top:60px;
-    margin-left: 0 !important;
-    width: 100% !important;
+	margin-top:60px;
+	margin-left: 0 !important;
+	width: 100% !important;
 }
 
 
 .impact-navbar-flow {
-    height: 30px;
+	height: 30px;
 }
 
 .impact-navbar-flow-overlay {
-    height: 30px;
-    @media @width-mobile {
-        display: none;
-    }
+	height: 30px;
+	@media @width-mobile {
+		display: none;
+	}
 }
 
 // overall container for account modal content
 #impact-account-container {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    text-decoration: none;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	text-decoration: none;
 
-    // container for each option
-    .account-menu-option {
-        display: flex;
-        align-items: center;
-        padding: 10px;
-        text-decoration: none;
-    }
+	// container for each option
+	.account-menu-option {
+		display: flex;
+		align-items: center;
+		padding: 10px;
+		text-decoration: none;
+	}
 
-    // image for each option
-    .impact-icon{
-        width: 75px !important;
-        height: 75px !important;
-        display: inline-block !important;
-        margin-right: 1rem;
-    }
-    // if none supplied use this placeholder
-    .placeholder-thumbnail {
-        background-color: lightgray;
-    }
+	// image for each option
+	.impact-icon {
+		width: 75px !important;
+		height: 75px !important;
+		display: inline-block !important;
+		margin-right: 1rem;
+	}
+	// if none supplied use this placeholder
+	.placeholder-thumbnail {
+		background-color: lightgray;
+	}
 
-    // page you're currently on
-    .active {
-        font-weight: 600;
-    }
+	// page you're currently on
+	.active {
+		font-weight: 600;
+	}
 
-    // link contents
-    .link-text {
-        font-family: 'Montserrat';
-        align-self: center;
-    }
+	// link contents
+	.link-text {
+		font-family: 'Montserrat';
+		align-self: center;
+	}
 
-    .LogoutLink {
-        position: absolute;
-        bottom: 1rem;
-        left: 0;
-        right: 0;
-        margin: auto;
-    }
-
+	.LogoutLink {
+		position: absolute;
+		bottom: 1rem;
+		left: 0;
+		right: 0;
+		margin: auto;
+	}
 }
 
 #filter-display {

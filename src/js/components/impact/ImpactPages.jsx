@@ -1,43 +1,18 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useTransition, animated, useSpring } from 'react-spring';
-import PromiseValue from '../../base/promise-value';
+import React, { useEffect, useState } from 'react';
+import { animated, useSpring } from 'react-spring';
 import { setWindowTitle } from '../../base/plumbing/Crud';
 import DataStore from '../../base/plumbing/DataStore';
-import { Card as CardCollapse } from '../../base/components/CardAccordion';
-import { Button, Col, Container, InputGroup, Row } from 'reactstrap';
-import PropControl from '../../base/components/PropControl';
-import Circle from '../../base/components/Circle';
-import BG from '../../base/components/BG';
-import { getLogo, space, stopEvent, uniq } from '../../base/utils/miscutils';
-import { modifyPage } from '../../base/plumbing/glrouter';
-import DynImg from '../../base/components/DynImg';
 import NavBars from './ImpactNavBars';
 import ImpactLoginCard from './ImpactLogin';
-import { GLCard, GLHorizontal, GLVertical, GLModalCard, GLModalBackdrop, markPageLoaded } from './GLCards';
 import ImpactFilterOptions from './ImpactFilterOptions'
-import { fetchCharity } from '../pages/MyCharitiesPage'
-import NGO from '../../base/data/NGO';
-import CharityLogo from '../CharityLogo';
-import { normaliseSogiveId } from '../../base/plumbing/ServerIOBase';
-import ActionMan from '../../plumbing/ActionMan';
-import C from '../../C';
-import NGOImage from '../../base/components/NGOImage';
-import AdvertsCatalogue from '../campaignpage/AdvertsCatalogue';
-import { getDataItem } from '../../base/plumbing/Crud';
 import KStatus from '../../base/data/KStatus';
-import Misc from '../../base/components/Misc';
-import List from '../../base/data/List';
-import ListLoad from '../../base/components/ListLoad';
-import Campaign from '../../base/data/Campaign';
-import Advertiser from '../../base/data/Advertiser';
-import Advert from '../../base/data/Advert';
 import ImpactLoadingScreen from './ImpactLoadingScreen'
 import Money from '../../base/data/Money';
-import SearchQuery from '../../base/searchquery';
 import { fetchImpactBaseObjects } from '../../base/data/ImpactPageData';
 
 import { ErrorDisplay } from './ImpactComponents';
-import ImpactOverviewPage, {ImpactFilters} from './ImpactOverviewPage';
+import ImpactOverviewPage from './ImpactOverviewPage';
+import ImpactStoriesPage from './stories_components/ImpactStoriesPage';
 import ImpactStatsPage from './ImpactStatsPage';
 
 
@@ -46,21 +21,20 @@ import ImpactStatsPage from './ImpactStatsPage';
  */
 
 import Login from '../../base/youagain';
-import ImpactStoriesPage from './ImpactStoriesPage';
 
 
-const IMPACT_PAGES= {
+const IMPACT_PAGES = {
 	view: ImpactOverviewPage,
-	story: ImpactStoriesPage,
+	stories: ImpactStoriesPage,
 	stat: ImpactStatsPage,
 }
 
-const ImpactPage = () => {
 
+const ImpactPage = () => {
 	const path = DataStore.getValue(['location', 'path']);
 
 	if (path.length < 3) {
-		return <ErrorDisplay e={{message: '"Invalid URL: Not enough details in path - expected e.g. /brand/acme'}} />
+		return <ErrorDisplay e={{message: 'Invalid URL: Not enough details in path - expected e.g. /brand/acme'}} />
 	}
 	const status = DataStore.getUrlValue('gl.status') || DataStore.getUrlValue('status') || KStatus.PUBLISHED;
 	const page = path[1]
@@ -72,7 +46,7 @@ const ImpactPage = () => {
 
 	let [pageName, PageContent] = ({
 		view: ['Overview', IMPACT_PAGES.view],
-		story: ['Stories', IMPACT_PAGES.story],
+		stories: ['Stories', IMPACT_PAGES.stories],
 		stat: ['Statistics', IMPACT_PAGES.stat]
 	})[page]
 

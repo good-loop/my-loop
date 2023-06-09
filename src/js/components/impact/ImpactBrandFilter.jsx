@@ -24,7 +24,6 @@ const A = C.A;
  * @param {*} campaign 
  */
 const fetchTopLevelObjects = ({masterBrand, brand, campaign, status=KStatus.PUBLISHED}) => {
-
 	const fetchFn = async () => {
 		const allImpactDebits = List.hits(await Advertiser.getImpactDebits({vertiser: masterBrand || brand, status}).promise);
 		const childBrands = List.hits(await Advertiser.getChildren((masterBrand || brand).id).promise);
@@ -48,10 +47,8 @@ const fetchTopLevelObjects = ({masterBrand, brand, campaign, status=KStatus.PUBL
  * @returns {JSX} breadcrumb trail of brand/campaign filters that can open up into a modal  for other filters
  */
 const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, setForcedReload, size, dropdown, curPage}) => {
-	
+	const [filtersOpen, setFiltersOpen] = useState(false);
 
-	const [filtersOpen, setFiltersOpen] = useState(false)
-	
 	if (loading) return null;
 	const pvTopLevelObjs = fetchTopLevelObjects({masterBrand, brand, campaign, status});
 	if (!pvTopLevelObjs.resolved) return null;
@@ -109,7 +106,7 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, setF
 		setFiltersOpen(false)
 		setForcedReload(true)
 	}
-	
+
 	/**
 	*	ListItem of Campaigns for use in ListLoad
 	* 	Same as default except for: 
@@ -120,10 +117,10 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, setF
 		const id = getId(item);
 		let name = item.name || item.text || id || '';
 		if (name.length > 280) name = name.slice(0, 280);
-		
-		let thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='impact-link-placeholder-thumbnail' />
-		let isSelected = campaign && campaign.id == item.id 
-		if (size == "thin") name = name.replace(/_/g, " ") // allows for linebreaks in names to save horizontal space
+
+		let thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='impact-link-placeholder-thumbnail' />;
+		let isSelected = campaign && (campaign.id === item.id);
+		if (size == "thin") name = name.replace(/_/g, " "); // allows for linebreaks in names to save horizontal space
 		return <>
 			<div className='brand-campaign-set' onClick={() => filterChange({brand:parentItem, campaign:item})}>
 				<div className="info campaign-item">
@@ -136,7 +133,7 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, setF
 				</div>
 			</div>
 		</>;
-   }
+	};
 
 	/**
 	*	ListItem of Brands for use in a ListLoad
@@ -149,50 +146,52 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, setF
 		let name = item.name || item.text || id || '';
 		if (name.length > 260) name = name.slice(0, 260);
 
-		if(isMaster) name += " - All Brands"
+		if (isMaster) name += " - All Brands";
 		// Hide any brands with no money that arent master or selected
-		else if (!showAll && !brandsWithDebits.includes(item.id) && brand.id !== item.id) return null;
-		
+		else if (!showAll && !brandsWithDebits.includes(item.id) && (brand.id !== item.id)) return null;
+
 		const status = item.status || "";
 
 		// is the current brands campaign dropdown expanded or closed?
 		// if a campaign is selected, start with that subbrands dropdown open
-		const [isDropdownOpen, setIsDropdownOpen] = useState( (!dropdown) || (campaign && brand.id == item.id) )
+		const [isDropdownOpen, setIsDropdownOpen] = useState(!dropdown || (campaign && brand.id == item.id));
 
 		// classes of campaigns that belong to this current brand
-		const campaignClasses = `filter-button campaign-button ListItem btn-default btn btn-outline-secondary ${KStatus.PUBLISHED} btn-space`
+		const campaignClasses = `filter-button campaign-button ListItem btn-default btn btn-outline-secondary ${KStatus.PUBLISHED} btn-space`;
 
 		let q = SearchQuery.setProp(null, "vertiser", id);
-		
+
 		let myCampaigns = allCampaigns.filter(c => c.vertiser === item.id).sort((a,b) => alphabetSort(a,b));
 		// If we have only 1 campaign, dont bother hiding it as we use it for default view
-		if (myCampaigns.length > 1 && !showAll) myCampaigns = myCampaigns.filter(c => campaignsWithDebits.includes(c) || campaign?.id === c.id)
+		if (myCampaigns.length > 1 && !showAll) myCampaigns = myCampaigns.filter(c => campaignsWithDebits.includes(c) || campaign?.id === c.id);
 
 		// brand item with dropdowns into campaigns
 		const campaignsListItem = (
 		<div id={"campaigns-"+item.id} className={ + (!dropdown || isDropdownOpen) ? "open" : "closed"}>
-			{/*<ListLoad hideTotal status={status}
+			{/*
+			<ListLoad hideTotal status={status}
 				type={C.TYPES.Campaign}
 				q={q.query}
 				unwrapped
 				itemClassName={campaignClasses}
 				ListItem={(itemProps) => <CampaignListItem {...itemProps} parentItem={item}/>}
-				/>*/}
+			/>
+			*/}
 			{myCampaigns.map(c => <CampaignListItem item={c} parentItem={item} forceShow={myCampaigns.length === 1}/>)}
 		</div>)
 
 		// get brands logo or get placeholder
 		const thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className='impact-link-placeholder-thumbnail' />
-		
+
 		// dropdown toggle of above campaign ListLoad
 		let button = <button className={space('dropdown-button', (isDropdownOpen && "open"))} onClick={(event) => {event.preventDefault(); setIsDropdownOpen(!isDropdownOpen)}} />
-	
+
 		// clicking the brands dropdown button to reveal its campaings would cause a state change, this stops that 
 		const brandItemOnClick = (event) => {
 			if(event.target.className.includes('dropdown-button')) return;
 			filterChange({brand:item});
 		}
-		
+
 		let isSelected = (brand && item.id == brand.id) || (isMaster && brand == null)
 
 		return <>
@@ -233,7 +232,7 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, setF
 				{/* sub brands & their campaigns
 				<ListLoad status={KStatus.PUBLISHED} hideTotal type={C.TYPES.Advertiser}
 					unwrapped
-            		q={SearchQuery.setProp(null, "parentId", vertiser).query} 
+					q={SearchQuery.setProp(null, "parentId", vertiser).query} 
 					ListItem={FilterListItem} itemClassName={classes}/>
 				*/}
 				<FilterListItem item={topBrand} isMaster />
@@ -242,42 +241,42 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, setF
 		)
 		openAndPopulateModal({id:"filter-display", content:modalContent, prioritized:true, headerClassName:"red-top-border noClose noPadding", className:"impact-brand-modal"})
 	}
-	
+
 	// helper JSX elements
 	const StepBackFiltersButton = ({content, clearOnlyCamapign, rightArrow, underlined}) => (
 		<button className={space("filter-row", "filter-text", (underlined && "underlined"))}onClick={() => filterClear(clearOnlyCamapign)}>
 			{content} {rightArrow && ">"}
 		</button>
-	)
+	);
 
 	const OpenFiltersButton = ({content, rightArrow, underlined}) => (
 		<button className={space("filter-row", "filter-text", (underlined && "underlined"))} onClick={() => openFilters()}>
 			{content} {rightArrow && ">"}
 		</button>
-	)
+	);
 
-	const DropDownIcon = () => <button className='filter-row filter-down-arrow' onClick={() => openFilters()} />
+	const DropDownIcon = () => <button className='filter-row filter-down-arrow' onClick={() => openFilters()} />;
 
 	// no filters / only master brand filtered (no master brand set = no parent for this brand)
-	if(!masterBrand && !campaign){
+	if (!masterBrand && !campaign) {
 		return (
 			<div id="filters">
 				<OpenFiltersButton content={brand.name} rightArrow/>
 				<OpenFiltersButton content={"All Brands"} />
 				<DropDownIcon />
 			</div>
-		)
+		);
 	}
 
 	// master brand and brand are filtered 
-	if(!campaign){
+	if (!campaign) {
 		return (
 			<div id="filters">
 				<StepBackFiltersButton content={masterBrand.name} rightArrow/>
 				<OpenFiltersButton content={(size == "thin" && brand.name.length > 25) ? (brand.name.substring(0,24)+"...") : brand.name} underlined/>
 				<DropDownIcon />
 			</div>
-		)
+		);
 	}
 
 	// master brand, brand and campaign are filtered
@@ -287,7 +286,7 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, setF
 				<StepBackFiltersButton content={(size == "thin" && brand.name.length > 10) ? (brand.name.substring(0,9)+"...") : brand.name} clearOnlyCamapign rightArrow/>
 				<OpenFiltersButton content={(size == "thin" && campaign.name.length > 10) ? (campaign.name.substring(0,9)+"...") : campaign.name} underlined/>
 		</div>
-	)
+	);
 }
 
 
