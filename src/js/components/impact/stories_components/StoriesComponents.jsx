@@ -1,7 +1,7 @@
 
-import React from 'react';
+import React, {useState} from 'react';
 import DataStore from '../../../base/plumbing/DataStore';
-import { Container, Row } from 'reactstrap';
+import { Container, Row, Col } from 'reactstrap';
 import Circle from '../../../base/components/Circle';
 import NGO from '../../../base/data/NGO';
 import Money from '../../../base/data/Money';
@@ -14,8 +14,7 @@ import { fetchBaseObjects } from '../impactdata';
 import { ErrorDisplay } from '../ImpactComponents';
 import { addScript } from '../../../base/utils/miscutils';
 import CampaignPage from '../../campaignpage/CampaignPage';
-
-
+import {Modal, ModalBody} from 'reactstrap';
 /**
  * A thin card that contains just the supplied text,
  * @param {string} text  
@@ -272,27 +271,44 @@ export const DonationsCard = ({campaign, subCampaigns, brand, impactDebits, char
     
     // this isn't accurate?
     const endDate = campaign.end ? getDate(campaign.end) : "present";``
+    console.log("????", impactDebits)
+
+    // if we have multiple donations to the same charity, avoid using the same image over and over again
+    let charityCounter = {}
 
     const donations = impactDebits.map((debit, index) => {
 
         const charId = debit.impact.charity;
+        if(Object.keys(charityCounter).includes(charId)) {
+            charityCounter[charId] += 1
+        } else {
+            charityCounter[charId] = 1
+        }
         const charity = charities.find((c) => c.id === charId)
         if (!charity) return;
+        const imgList = NGO.images(charity) || [""] 
 
-        const img = charity.headerImage || "";
+        // get new image, if we have more impacts than images just loop the list
+        const img = imgList[(charityCounter[charId] - 1) % imgList.length];
+
+        console.log("aaahhHHHH", charId, imgList.length, imgList)
         const logo = charity.logo;
         const displayName = charity.displayName;
         const raised = debit.impact.amountGBP;
-
+        const [open, setOpen] = useState(false);
+        let donationModal = <ImpactCertificate brand={brand} impactDebit={debit} charity={charity} campaign={campaign} open={open} setOpen={setOpen}/>
         return (
-        <div className='impact-debit' key={index}>
-            <img className="debit-header" src={img} alt={displayName + " header image"}/>
-            <div className='debit-content'>
-                <p className='debit-name'>{displayName}</p>
-                <p className='debit-amount'>£{raised} RAISED...</p>
-                <img className="debit-logo" src={logo} alt={displayName + " logo"} />
+        <button onClick={() => setOpen(!open)} style={{border: "none", backgroundColor:"none"}} className='impact-debit-container'>
+            <div className='impact-debit' key={index}>
+                {donationModal}
+                <img className="debit-header" src={img} alt={displayName + " header image"}/>
+                <div className='debit-content'>
+                    <p className='debit-name'>{displayName}</p>
+                    <p className='debit-amount'>£{raised} RAISED...</p>
+                    <img className="debit-logo" src={logo} alt={displayName + " logo"} />
+                </div>
             </div>
-        </div>
+        </button>
         )
     })
 
@@ -396,5 +412,191 @@ export const BrandLogoRows = ({mainLogo, charities, row}) => {
                 {CharityLogos}
             </ul>
         </div>
+    )
+}
+
+const ImpactCertificate= ({brand, impactDebit, campaign, charity, open, setOpen}) => {
+    let charityName = charity.displayName || charity.name || charity.id;
+    let charityDesc = charity.summaryDescription || charity.description
+    let campaignName = campaign.name || brand.name || campaign.id;
+
+    const charityUN_SDGS = [1, 4, 9]
+
+    const impactType = true ? "Donation" : "Offset"
+    
+    // where do we find these?
+    // no matter the type, each certificate follows an identical structure
+    // only differences are the values and the names of fields
+    const details = {
+        "Donation" : {
+            // donation details
+            amountType : "Donation",
+            detailsAmount : "£XX.XX",
+            breakdownHeader : "Breakdown",
+            breakdownText : "£0.XX donated per (x) completed views",
+            creditsName : "Impact",
+            creditsValue : "1234 Trees Planted",
+            byGoodLoop : "Powered by Good-Loop",
+            goodLoopImg : "/img/Impact/AdsForGood.svg",
+
+            // donation status
+            statusTitles : [
+                "Campaign Launched",
+                "Campaign Completed",
+                "Donation Processing",
+                "Donation Made"
+            ],
+            statusCompleted : [
+                true,
+                true,
+                false,
+                false
+            ],
+            statusDates : [
+                "DD/MM/YY",
+                "DD/MM/YY",
+                "DD/MM/YY",
+                "DD/MM/YY"
+            ],
+            
+            // Links
+            links : [
+                {url : "www.google.com", icon:"", linkText:"Donation Receipt"},
+                {url : "www.google.com", icon:"", linkText:"Tree Planting Certificate"}
+            ]
+        },
+
+        "Offset" : {
+            // donation details
+            amountType : "CO2e Offset",
+            detailsAmount : "XX.XXT",
+            breakdownHeader : "Offset Cost",
+            breakdownText : "£XXX",
+            creditsName : "Credits",
+            creditsValue : "180",
+            byGoodLoop : "Managed by Good-Loop",
+            goodLoopImg : "/img/Impact/AdsForGood.svg",
+
+            // donation status
+            statusTitles : [
+                "Measurement Period Commenced",
+                "Measurement Period Completed",
+                "Offset Processing",
+                "Offset Actioned"
+            ],
+            statusCompleted : [
+                true,
+                true,
+                true,
+                false
+            ],
+            statusDates : [
+                "DD/MM/YY",
+                "DD/MM/YY",
+                "DD/MM/YY",
+                "DD/MM/YY"
+            ],
+            
+            // Links
+            links : [
+                {url : "www.google.com", icon:"", linkText:"Donation Receipt"},
+                {url : "www.google.com", icon:"", linkText:"Tree Planting Certificate"}
+            ]
+        },
+    }[impactType]
+
+    return (
+        <Modal isOpen={open} id="impact-cert-modal" className='impact-cert' toggle={() => setOpen(!open)} size="xl">
+            <ModalBody className='d-flex flex-row' style={{padding:0, height:"90vh"}}>
+                {/* Col 1 on desktop, top row on mobile*/}
+                <div className='flex-column cert-col left justify-content-between' style={{padding:"2.5%", flexBasis:"50%"}}>
+                    <div className='charity-description justify-content-between'>
+                        <img style={{maxWidth:"40%"}} src={charity.logo} />
+                        <h4 className='mt-5 charity-name'>{charityName}</h4>
+                        <p className='text mt-4'>{charityDesc}</p>
+                        {charity.url && <p className='text mt-4'>Find out more: <a href={charity.url}>{charityName}</a></p>}
+                    </div>
+                    <div className='charity-SDG mt-5'>
+                        <p className='text'>Primary UN SDG supported by {charityName}</p>
+                    </div>
+                    <div className='charity-numbers mt-5 p-3'>
+                        <p className='text small-header'>{charityName} Projects</p>
+                        <p className='text mt-1'>Registered charity number: ????????? </p>
+                        <p className='text mt-1'>Company Number: ????????? </p>
+                    </div>
+                </div>
+
+                {/* Col 2 on desktop, bot row on mobile*/}
+                <div className='flex-column cert-col right' style={{background:"aliceblue", flexBasis:"50%"}}>
+                    <div className='brand-ngo-logos' style={{background:"white", padding:"5% 2.5% 5% 1.25%"}}>
+                        <Row className="cert-logo-row" style={{height:"10vh", margin:0}}>
+                            <div className="logo-container">
+                                <img src={brand.branding.logo}/>
+                            </div>
+                            <div className='logo-text-top' style={{display:"flex", alignItems:"center"}}>
+                                <p className='text'>{campaignName}</p>
+                            </div>
+                        </Row>
+                        <Row className="cert-logo-row" style={{height:"10vh", margin:0}}>
+                            <div className="logo-container" style={{width:"30%"}}>
+                               <img src={charity.logo || charity.altlogo}/>
+                            </div>
+                            <div className='logo-text-bot' style={{display:"flex", alignItems:"center"}}>
+                                <p className='text'>{charityName}</p>
+                            </div>
+                        </Row>
+                    </div>
+
+                    <div id='donation-details' style={{display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
+                        
+                        <div>
+                            <p className='text offset-header'>{impactType.toUpperCase()} DETAILS</p>
+                            <div id="offset-details">
+                                <Row class="offset-content" style={{margin:0}}>
+                                    <Col style={{borderRight: "solid 1px lightgray"}}>
+                                        <p className='text light-bold'>{details.amountType}</p>
+                                        <h2 className='color-gl-red'>{details.detailsAmount}</h2>
+                                    </Col>
+                                    <Col style={{borderRight: "solid 1px lightgray", padding:0}}>
+                                        <div style={{borderBottom: "solid 1px lightgray", padding:"0 5% 10%"}}>
+                                            <p className='text light-bold'>{details.breakdownHeader}</p>
+                                            <p className='color-gl-red'>{details.breakdownText}</p>
+                                        </div>
+                                        <div style={{padding:"10% 5%"}}>
+                                            <p className='text light-bold'>{details.creditsName}</p>
+                                            <p className='color-gl-red'>{details.creditsValue}</p>
+                                        </div>
+                                    </Col>
+                                    <Col style={{display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
+                                        <p className='text light-bold'>{details.byGoodLoop}</p>
+                                        <img src={details.goodLoopImg} style={{width:"100%"}}/>
+                                        <p className='small-legal-text'>small legal stuff text</p>
+                                    </Col>
+                                </Row>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p className='text offset-header'>{impactType.toUpperCase()} STATUS</p>
+                            <div id="offset-status">
+                                <Row class="offset-content" style={{margin:0}}>
+                                    offset status
+                                </Row>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p className='text offset-header'>LINKS</p>
+                            <div id="offset-links">
+                                <Row class="offset-content" style={{margin:0}}>
+                                    offset links
+                                </Row>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </ModalBody>
+        </Modal>
     )
 }

@@ -16,10 +16,9 @@ import { isMobile } from "../../../base/utils/miscutils"
 const impactDebitComparator = (a, b) => {
 	// sort impact debits, ranking first by priority then by the cash value of the debit
 	// "b - a" is used to invert the sort so [0] is the most impactful impact
-	return 0;
 	let result = (b.impact.priority || 0) - (a.impact.priority || 0); // sort by priority
 	if(result === 0) result = (b.impact.amountGBP || 0) - (a.impact.amountGBP || 0); // if equal, sort by GBP
-	if(result === 0) result = b.id.CompareTo(a.id); // if equal, sort by id alphabetically
+	if(result === 0) result = (b.id || "").localeCompare(a.id || ""); // if equal, sort by id alphabetically
 	return result;
 };
 
