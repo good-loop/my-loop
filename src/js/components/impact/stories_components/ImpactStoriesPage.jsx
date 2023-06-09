@@ -53,7 +53,7 @@ const ImpactStoriesPage = ({pvBaseObjects, navToggleAnimation, totalString, main
 	const [firstImpact = null, secondImpact = null] = impactDebits;
 	const firstCharity = charityForImpact(charities, firstImpact);
 	const secondCharity = charityForImpact(charities, secondImpact);
-	
+
 	return <>
 		<div className="iview-positioner pr-md-1">
 			<Container id="ImpactB2C-container" className="stories-container">
@@ -107,7 +107,7 @@ const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) =>
 
 	let pvAds = Advert.fetchForCampaigns({campaignIds:[campaign.id], status:status});
 	if(! pvAds.resolved) return <></>
-	
+
 	const startDate = impact.created.substr(0, impact.created.indexOf("T")).split("-"); // in format 2022-12-16T04:52:53, we don't care about anything after T
 	const startYear = startDate[0]; // get the decades only, will need patched in ~ 80 years
 	const startMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][startDate[1] - 1]

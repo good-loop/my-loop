@@ -22,8 +22,7 @@ import C from '../../C';
 import NGOImage from '../../base/components/NGOImage';
 
 const AdsCatalogue = () => {
-    const pvAds = pvTopCampaign.value? Campaign.pvAds({campaign: pvTopCampaign.value, status, query}) : null;
-    
+	const pvAds = pvTopCampaign.value? Campaign.pvAds({campaign: pvTopCampaign.value, status, query}) : null;
 }
 
 export default AdsCatalogue;

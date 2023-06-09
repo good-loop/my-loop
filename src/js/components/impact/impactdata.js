@@ -220,7 +220,7 @@ export const getImpressionsByCampaignByCountry = ({ baseObjects, start = '', end
 
 	// Fetch charity objects from debits
 	const charityIds = impactDebits.map(debit => debit.impact.charity).filter(x=>x);
-	
+
 	if (charityIds.length) {
 		let charitySq = SearchQuery.setPropOr(null, "id", charityIds);
 		pvCharities = ActionMan.list({type: C.TYPES.NGO, status, q:charitySq.query});
