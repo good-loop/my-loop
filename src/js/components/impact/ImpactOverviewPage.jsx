@@ -327,7 +327,7 @@ const CampaignCharityDisplay = ({charities, impactDebits}) => {
 function WTDCard({ads, brand}) {
 	return <GLCard
 		className="boast wtd"
-		modalContent={<WatchToDonateModal ads={ads} brand={brand}/>}
+		modalContent={() => <WatchToDonateModal ads={ads} brand={brand}/>}
 		modalTitle="Watch To Donate"
 		modalId="full-page"
 		modalClassName="no-padding watch-to-donate"
@@ -350,7 +350,7 @@ function WTDCard({ads, brand}) {
 function TADGCard({ads, brand}) {
 	return <GLCard
 		className="boast tadg"
-		modalContent={<ThisAdDoesGoodModal ads={ads} brand={brand}/>}
+		modalContent={() => <ThisAdDoesGoodModal ads={ads} brand={brand}/>}
 		modalTitle="This Ad Does Good"
 		modalId="full-page"
 		modalClassName="no-padding this-ad-does-good"
@@ -515,12 +515,11 @@ const ContentListCard = ({ ads, greenTags, charities }) => {
 	}, []);
 
 	const cardProps = {
-		modalContent: <CharityList charities={charities}/>,
 		modalTitle: `Ads For Good`,
 		modalId: 'right-half',
 		modalClassName: 'no-header-padding ads-for-good',
-		modalHeader: AdsForGoodCTAHeader,
-		modalContent: AdsForGoodCTA,
+		modalHeader: () => AdsForGoodCTAHeader,
+		modalContent:() => AdsForGoodCTA,
 	};
 
 	return <GLCard {...cardProps}>

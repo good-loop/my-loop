@@ -161,13 +161,7 @@ export const markPageLoaded = (loaded) => {
 	DataStore.setValue(LOADED_PATH, loaded);
 }
 
-
-/** Executes components, leaves objects (ie executed but not hydrated components) unmodified */
-const resolve = Thing => (typeof Thing === 'function') ? <Thing /> : Thing;
-
-/** Allow modals to tolerate content/header provided as <Component /> or  () => <Component /> */
-const Resolver = ({children}) => (Children.map(children, resolve) || null);
-
+const noop = () => null;
 
 /**
  * A modal form of GLCard. Will not be visible and change nothing in the layout, but when opened will occupy the space it is assigned to as if it was in the layout, while remaining on top.
@@ -179,11 +173,11 @@ export const GLModalCard = ({className, id, useOwnBackdrop}) => {
 	const path = [...MODAL_LIST_PATH, id];
 	const props = DataStore.getValue(path);
 	useEffect(() => {
-		DataStore.setValue(path, {open: false, usesOwnBackdrop:useOwnBackdrop}, false);
+		DataStore.setValue(path, {open: false, usesOwnBackdrop: useOwnBackdrop}, false);
 	}, [id]);
 	if (!props) return null;
 
-	const { open, Content, title, Header, headerImg, headerClassName, storedClassName } = props;
+	const { open, Content = noop, title, Header = noop, headerImg, headerClassName, storedClassName } = props;
 
 	const headerStyle = headerImg && {
 		backgroundImage: `url("${headerImg}")`,
@@ -197,10 +191,10 @@ export const GLModalCard = ({className, id, useOwnBackdrop}) => {
 				<CardHeader style={headerStyle} className={"glmodal-header " + headerClassName}>
 					<CloseButton className="white-circle-bg" onClick={() => modalToggle(id)}/>
 					{title && <h4 className='glmodal-title'>{title}</h4>}
-					<Resolver>{Header}</Resolver>
+					<Header />
 				</CardHeader>
 				<CardBody>
-					<Resolver>{Content}</Resolver>
+					<Content />
 				</CardBody>
 			</GLCard>
 		</div>
