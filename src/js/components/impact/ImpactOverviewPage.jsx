@@ -21,6 +21,7 @@ import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIG
 import { addAmountSuffixToNumber, space } from '../../base/utils/miscutils';
 import { dataColours, getCountryFlag, getCountryName } from '../pages/greendash/dashUtils';
 import { isEmpty, sumBy } from 'lodash';
+import Logo from '../../base/components/Logo';
 
 export class ImpactFilters {
 	agency;
@@ -664,14 +665,12 @@ const CampaignList = ({campaigns, brand, subBrands, status}) => {
 			{campaigns.map(campaign => {
 				const myBrand = allBrands[campaign.vertiser];
 				return <GLCard className="preview campaign mt-3" noMargin key={campaign.id} href={"/impact/view/campaign/" + campaign.id}>
-					<div className='campaign-details'>
-						<p className='text-left m-0'>
-							<b>{campaign.vertiserName}</b>
-							<br/>
-							{campaign.name}
-						</p>
-					</div>
-					{campaign && <img  className="logo" src={myBrand?.branding?.logo}/>}
+					<p className='w-75 text-left m-0'>
+						<b>{myBrand.name || campaign.vertiserName}</b>
+						<br/>
+						{campaign.name}
+					</p>
+					<Logo item={myBrand} />
 				</GLCard>
 			})}
 		</GLVertical>
