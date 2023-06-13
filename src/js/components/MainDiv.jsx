@@ -88,7 +88,7 @@ const PAGES = {
 	forcharity: ForCharityPage,
 	greendash: GreenDashboard,
 	green: GreenLanding,
-	home: HomePage,	
+	home: HomePage,
 	ourstory: OurStoryPage,
 	safari: SafariPage,
 	//getmydata: MyDataProductPage,
@@ -140,7 +140,7 @@ const MainDiv = () => {
 				"home": [],
 				"our-impact": ['ourimpact', 'impactoverview', 'charities', Roles.isTester() && 'green'],
 				"ourstory": [],
-				'tabsforgood' : [],
+				'tabsforgood': [],
 				//'get-involved':['getinvolved', 'tabsforgood', 'getmydata'],
 				//"home#mydata-cta": [],
 				//"blog":Roles.isTester()

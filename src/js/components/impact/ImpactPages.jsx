@@ -12,7 +12,7 @@ import { fetchImpactBaseObjects } from '../../base/data/ImpactPageData';
 
 import { ErrorDisplay } from './ImpactComponents';
 import ImpactOverviewPage from './ImpactOverviewPage';
-import ImpactStoriesPage from './stories_components/ImpactStoriesPage';
+import {ImpactStoriesB2B} from './stories_components/ImpactB2B';
 import ImpactStatsPage from './ImpactStatsPage';
 
 
@@ -25,7 +25,7 @@ import Login from '../../base/youagain';
 
 const IMPACT_PAGES = {
 	view: ImpactOverviewPage,
-	stories: ImpactStoriesPage,
+	stories: ImpactStoriesB2B,
 	stat: ImpactStatsPage,
 }
 

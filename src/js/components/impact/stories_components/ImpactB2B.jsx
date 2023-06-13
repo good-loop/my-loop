@@ -28,10 +28,10 @@ const charityForImpact = (charities, {impact}) => {
 	return charities.find(({id}) => id === impact.charity) || {};
 }
 /**
- * 
- * @param {Object} p
+ * the B2B pages is used between the impact hub & the public myloop page, /impact/stories/... & /campaign/... respectively
+ * This component is just the page content and is used by both. Required to be split to allow impact hubs extra features
  */
-const ImpactStoriesPage = ({pvBaseObjects, navToggleAnimation, totalString, mainLogo}) => {
+const ImpactB2BContent = ({pvBaseObjects, totalString, mainLogo, footer}) => {
 	if (!pvBaseObjects.resolved) return <ImpactLoadingScreen baseObj={pvBaseObjects}/>
 	if (pvBaseObjects.error) return <ErrorDisplay e={pvBaseObjects.error} />
 
@@ -53,31 +53,46 @@ const ImpactStoriesPage = ({pvBaseObjects, navToggleAnimation, totalString, main
 	const [firstImpact = null, secondImpact = null] = impactDebits;
 	const firstCharity = charityForImpact(charities, firstImpact);
 	const secondCharity = charityForImpact(charities, secondImpact);
-
-	return <>
-		<div className="iview-positioner pr-md-1">
-			<Container id="ImpactB2C-container" className="stories-container">
-				<Row>
-					<animated.div className="impact-navbar-flow" style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}} />
-					<Col style={{paddingRight: 0, overflow: 'hidden'}}>
-						<SplashCard {...baseObjects} mainLogo={mainLogo} />
-						<BrandLogoRows {...baseObjects} mainLogo={mainLogo} row />
-						{firstImpact && <CardSeperator text={`Campaign Spotlight: ${firstImpact.name}`} />}
-						{firstImpact && <CampaignSpotlight {...baseObjects} impact={firstImpact} charity={firstCharity} status={status} />}
-						<HowItWorks {...baseObjects} totalString={totalString} />
-						{firstImpact && <CardSeperator text={`Here's a Look At What You're Helping\nSupport With ${brand.name}`} />}
-						{firstImpact && <CampaignImpactOne {...baseObjects} logo={mainLogo} charity={firstCharity} impactDebit={firstImpact} />}
-						{secondImpact && <CampaignImpactTwo {...baseObjects} logo={mainLogo} charity={secondCharity} impactDebit={secondImpact} />}
-						{firstImpact && <DonationsCard {...baseObjects} />}
-						<LearnMore />
-						<Footer charities={charities} mainLogo={mainLogo} />
-					</Col>
-				</Row>
-			</Container>
-		</div>
-		<GLModalBackdrop/>
-	</>;
+	return (
+		<Col style={{paddingRight: 0, overflow: 'hidden'}}>
+			<SplashCard {...baseObjects} mainLogo={mainLogo} />
+			<BrandLogoRows {...baseObjects} mainLogo={mainLogo} row />
+			{firstImpact && <CardSeperator text={`Campaign Spotlight: ${firstImpact.name}`} />}
+			{firstImpact && <CampaignSpotlight {...baseObjects} impact={firstImpact} charity={firstCharity} status={status} />}
+			<HowItWorks {...baseObjects} totalString={totalString} />
+			{firstImpact && <CardSeperator text={`Here's a Look At What You're Helping\nSupport With ${brand.name}`} />}
+			{firstImpact && <CampaignImpactOne {...baseObjects} logo={mainLogo} charity={firstCharity} impactDebit={firstImpact} />}
+			{secondImpact && <CampaignImpactTwo {...baseObjects} logo={mainLogo} charity={secondCharity} impactDebit={secondImpact} />}
+			{firstImpact && <DonationsCard {...baseObjects} />}
+			<LearnMore />
+			{footer && <Footer charities={charities} mainLogo={mainLogo} />}
+		</Col>
+	)
 };
+
+export const ImpactB2B = ({pvBaseObjects, totalString, mainLogo, footer=false}) => {
+	return (
+		<div id="ImpactB2C-container" className='stories-container'>
+			{ImpactB2BContent({pvBaseObjects, totalString, mainLogo, footer})}
+		</div>
+	)
+}
+
+export const ImpactStoriesB2B = ({pvBaseObjects, navToggleAnimation, totalString, mainLogo, footer=true}) => {
+	return(
+		<>
+			<div className="iview-positioner pr-md-1">
+				<Container id="ImpactB2C-container" className="stories-container">
+					<Row>
+						<animated.div className="impact-navbar-flow" style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}} />
+						{ImpactB2BContent({pvBaseObjects, totalString, mainLogo, footer})}
+					</Row>
+				</Container>
+			</div>
+			<GLModalBackdrop/>
+		</>
+	)
+}
 
 
 const SplashCard = ({brand, mainLogo}) => {
@@ -104,7 +119,6 @@ const SplashCard = ({brand, mainLogo}) => {
 
 const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) => {
 	if(!campaign) campaign = subCampaigns.find(c => (c.jobNumber == impact.jobNumber))
-
 	let pvAds = Advert.fetchForCampaigns({campaignIds:[campaign.id], status:status});
 	if(! pvAds.resolved) return <></>
 
@@ -162,6 +176,3 @@ const Footer = ({charities, mainLogo}) => {
 		</div>
 	);
 };
-
-
-export default ImpactStoriesPage;

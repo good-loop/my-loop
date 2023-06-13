@@ -1,0 +1,143 @@
+@import "../../js/base/style/colours.less";
+
+/*
+ * For each impact debit, we want to show actual evidence of the impact
+*/
+#impact-cert-modal {
+	font-size: 85%;
+	font-family: 'Montserrat', sans-serif;
+
+	p {
+		// remove the infuriating automatic margins
+		margin-bottom: 0 !important;
+	}
+
+	.modal-body {
+		flex-direction: row;
+		@media @width-mobile {
+			flex-direction: column;
+		}
+	}
+
+	// utility class used for most headers in the modal
+	.light-bold {
+		font-weight: 600;
+	}
+
+	// let the modal take up more space (overwrites bootstrap defaults)
+	@media (min-width: 768px) {
+		max-width: 80vw;
+	}
+
+	.charity-numbers,  .right{
+		background-color: @gl-lighter-blue;
+	}
+
+	// Brand Logos beside name, top of right hand side of modal (on desktop)
+	.brand-ngo-logos {
+		// the logos took up far too much space on mobile
+		@media @width-mobile {
+			display: none;
+		}
+
+		// text + border lines
+		.logo-text-top, .logo-text-bot {
+			width: 60%;
+			height: 100%;
+			align-content: center;
+			padding-left: 5%;
+			border-left: solid 1px lightgray;
+			p {
+				font-weight: bold;
+			}
+		}
+		.logo-text-top {
+			border-bottom: solid 1px lightgray;
+		}
+		
+
+		.cert-logo-row {
+			.logo-container {
+				width: 30%;
+				height: 100%;
+				// center img
+				text-align: center;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-evenly;
+				img {
+					max-height: 100%;
+					max-width: 90%;
+					object-fit: contain;
+				}
+			}
+		}
+	}
+
+	// the detail parts of the modal, found on the RHS of the modal
+	#donation-details {
+		font-size: 75%;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		margin: 2.5%;
+		height: 100%;
+
+		@media @width-mobile {
+			height: 75vh;
+		}
+
+		// title headers for each detail section
+		.offset-header {
+			margin-bottom: 1%;
+		}
+
+		// make the actual content stand out a bit
+		#offset-details, #offset-status, #offset-links {
+			background-color: white;
+			padding: 2.5% 1%;
+		}
+
+		// important dates for the impact (start, end, processing & completion)
+		#offset-status {
+			.row {
+				position: relative;
+				width: 100%;
+				margin: 2% 0 0;
+				padding: 2% 0 0;
+				border-top: solid 1px lightgray;
+
+				.donation-status {
+					z-index: 1;
+					flex-basis: 20%;
+					text-align: center;
+					img {
+						margin: 5% 0;
+					}
+				}
+
+				#status-line {
+					position: absolute;
+					border-bottom: solid 1px lightgray;
+					top: -2%; // offsets the parents margin
+					left: 0;
+					width: 100%;
+					height: 50%;
+					z-index: 0;
+				}
+			}
+		}
+
+		#offset-links {
+			.donation-link {
+				display: flex;
+				align-items: center;
+				
+				img {
+					height: 80%;
+					margin-right: 2.5%;
+				}
+			}
+		}
+	}
+}

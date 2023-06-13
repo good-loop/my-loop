@@ -7,1136 +7,1068 @@
  A few mostly 
 */
 #ImpactB2C-container {
-    // useful global constants that are reliably defaults
-    max-width: unset;
-    padding: 0;
-    text-align: center;
-    background-color: @gl-white-blue;
-
-    // we never want bullet points on lists
-    ul {
-        list-style-type: none !important;
-    }
-
-    // The structure of [content] [content] when moved to mobile is converted to [content] \n [content], this class just lets us apply that neatly
-    .flex-mobile-dir {
-        // copy row styling
-        flex-direction: row;
-        flex-wrap: wrap;
-        margin-right: -15px;
-        margin-left: -15px;
-
-        @media @width-mobile {
-            flex-direction: column;
-
-            >* {
-                margin-top: 5%;
-            }
-        }
-    }
-
-    // the page makes extensive use of a logo within a white circle, this class handles that
-    .logo-circle {
-        position: relative;
-        margin: auto;
-        background-color: white;
-        border-radius: 50%;
-        padding: 3%;
-        width: 7vw;
-        height: 7vw;
-
-        @media @width-mobile {
-            width: 12vh;
-            height: 12vh;
-        }
-
-        .logo {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            margin: auto;
-            width: 80% !important;
-        }
-    }
-
-    // the page makes use of several rows of [arm img ->] [sparkle] [logo] [sparkle] [<- arm img]
-    .charities-arms-logo {
-        display: flex;
-        position: relative;
-        width: 100%;
-        height: 15vh;
-        place-content: center;
-        padding-top: 1%;
-
-        .spark-1 {
-            top: 40%;
-            right: 25%;
-        }
-
-        .spark-2 {
-            top: 25%;
-            left: 30%
-        }
-
-        .arm {
-            position: absolute;
-            top: 20%;
-            height: 100%;
-        }
-
-        .arm-left {
-            left: 0;
-        }
-
-        .arm-right {
-            right: 0;
-        }
-    }
-
-    .bubble-spark,
-    .spark {
-        position: absolute;
-        width: 5%;
-
-        @media @width-mobile {
-            display: none;
-        }
-    }
-
-    // keep each piece of normal text (usually paragraph elements) standardized
-    .text {
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 600;
-        white-space: pre-wrap;
-        margin-bottom: 0;
-    }
-
-    // nearly every image on this page should just fill its container
-    .fill-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    // splash card
-    #i-splash {
-        color: white;
-        background-color: @gl-dark-blue;
-        justify-content: space-between;
-        padding: 2.5%;
-
-        h2 {
-            font-size: xxx-large;
-        }
-
-        h3 {
-            text-transform: unset; // stops uppercase default
-            font-size: larger;
-        }
-
-        .splash-earth {
-            overflow: hidden;
-            background-image: url("/img/Impact/map-loading-screen.svg");
-            background-position: center;
-            background-size: cover;
-            background-position-x: 60%; // center it a bit more otherwise we're just looking at america 
-            background-color: @gl-impact-blue !important;
-
-            height: 60%;
-            aspect-ratio: 1;
-
-            text-align: -webkit-center;
-            border: none !important;
-
-            p {
-                font-size: 150%;
-                font-weight: 600;
-            }
-
-            h2 {
-                font-size: 250%;
-            }
-        }
-    }
-
-    // Brand logo above a row of charity logos
-    #brand-charities {
-        ul {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            place-content: center;
-            margin-bottom: 0;
-            @media @width-mobile {
-                padding: 5% 0 !important;
-            }
-            li {
-                padding: 2%;
-            }
-        }
-    }
-
-    // Powered by gl card
-    #powered-by-gl {
-        padding: 2.5%;
-        background-color: @gl-lighter-blue;
-        position: relative;
-
-        .adsForGood {
-            max-width: 20%;
-
-            @media @width-mobile {
-                max-width: 75%;
-            }
-
-            margin: 2%;
-        }
-
-        .row {
-            place-content: center;
-
-            img {
-                height: 10vh;
-            }
-
-            a {
-                margin: 2%;
-            }
-        }
-
-        .spark {
-            width: 20%;
-        }
-
-        .spark-1 {
-            top: 60%;
-            right: 25%;
-        }
-
-        .spark-2 {
-            top: 25%;
-            left: 30%
-        }
-    }
-
-    #how-it-works {
-        background-color: @gl-impact-blue;
-        color: white !important;
-        padding: 5vh;
-        justify-content: space-between;
-
-        .hiw-curve {
-            display: flex;
-            justify-content: space-evenly;
-            height: 80%;
-            background-image: url("/img/Impact/Curved-line.svg");
-            background-repeat: no-repeat;
-            background-size: 100%;
-            background-position-y: 25%;
-        }
-
-        .hiw-col {
-            display: flex;
-            flex-direction: column;
-            min-width: 25%;
-
-            .white-circle {
-                height: 30vh;
-                width: 30vh;
-                border: 2px solid white;
-                border-radius: 50%;
-                overflow: hidden;
-                place-self: center;
-                margin: 10%;
-            }
-        }
-    }
-
-    // rules for both campaign impacts
-    .campaign-impact {
-
-        .camp-impact-card {
-            height: 45vh;
-            overflow: hidden;
-        }
-
-        .camp-impact-img {
-            padding: 0 !important;
-        }
-
-        .impact-section {
-            display: flex;
-            flex-direction: column;
-
-            // on mobile stop content from being flush with screen edges
-            @media @width-mobile {
-                width: 90%;
-                margin: auto;
-            }
-
-            .curve {
-                height: 100%;
-                position: absolute;
-                top: 0;
-                right: 0;
-            }
-
-            .normal-curve {
-                filter: brightness(0.8);
-            }
-
-            .dark-curve {
-                right: 2%;
-                filter: brightness(0.5);
-            }
-
-            .cause-container {
-                position: relative;
-                z-index: 10;
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-                place-content: center;
-                text-align: left;
-                padding: 10%;
-
-                @media @width-mobile {
-                    padding: 5%;
-                }
-
-                color: white !important;
-
-                .cause {
-                    font-weight: 600;
-                    font-size: larger;
-                }
-
-                .description {
-                    font-size: xx-large;
-                }
-
-                h2 {
-                    margin-bottom: 1rem;
-                }
-            }
-        }
-
-        .impact-row {
-            justify-content: space-evenly;
-            padding: 2.5%;
-        }
-
-    }
-
-    #campaign-impact-one {
-        background-color: @gl-dark-desat-blue;
-        font-family: 'Montserrat', sans-serif;
-
-        #impact-one-toprow {
-            padding-bottom: 0;
-
-            .camp-impact-card {
-                height: 50vh;
-            }
-
-            .left,
-            .right {
-                flex-basis: 45%;
-                position: relative;
-                overflow: hidden;
-
-            }
-
-            .right {
-                background-color: rgb(83, 10, 1);
-            }
-        }
-
-        #impact-one-botrow {
-            .left {
-                flex-basis: 30%;
-                position: relative;
-                // earth background
-                background-image: url("/img/Impact/map-loading-screen.svg");
-                background-position: center;
-                background-size: 200%;
-                background-repeat: no-repeat;
-                background-position-y: 0;
-                background-position-x: 70%; // center it a bit more otherwise we're just looking at america 
-                background-color: @gl-impact-blue !important;
-
-                @media @width-mobile {
-                    background-image: none;
-                }
-
-                // quote box around dyk fact
-                img {
-                    // img otherwise blocks links
-                    pointer-events: none;
-
-                    position: absolute;
-                    left: 0;
-                    max-height: 100%;
-                    width: 100%;
-                    // vertically center
-                    top: 0;
-                    bottom: 0;
-                    margin: auto;
-                }
-
-                .dyk-container {
-                    font display: flex;
-                    flex-direction: column;
-                    place-content: center;
-                    text-align: left;
-                    height: 100%;
-                    padding: 15%;
-                    color: white !important;
-
-                    .dyk {
-                        font-weight: bold;
-                    }
-
-                    .fact {
-                        font-weight: 800;
-                        font-size: larger;
-                    }
-
-                    a {
-                        color: white !important;
-                    }
-                }
-
-            }
-
-            .right {
-                flex-basis: 60%;
-            }
-        }
-    }
-
-    #campaign-impact-two {
-        background-color: @gl-lighter-blue;
-
-        .impact-row {
-
-            .left,
-            .right {
-                flex-basis: 45%;
-            }
-        }
-
-        #row-2 {
-
-            // Helping Fund 'Project Here'
-            .right {
-                padding: 5% !important;
-
-                text-align: left;
-                position: relative;
-
-                .heart-bg {
-                    position: absolute;
-                    // turn red heart into light pink heart
-                    opacity: 0.1;
-                    filter: saturate(2);
-                    width: 40%;
-                    right: 20%;
-
-                }
-
-                .project-desc {
-                    font-weight: unset;
-                    font-size: 1vw; // keeps text within the div unless there's a TON of text but...
-
-                    @media @width-mobile {
-                        font-size: 100%; // ... on mobile it makes it tiny, so fix it there
-                    }
-                }
-            }
-        }
-
-
-    }
-
-    #impact-making-a-diff {
-        height: 90vh;
-
-        #together-we-can-make-a-diff {
-            height: 50%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-evenly;
-            align-items: center;
-
-            .brandlogo {
-                width: 15%;
-            }
-
-            ul {
-                list-style: none;
-            }
-        }
-
-        #diff-powered-by-gl {
-            height: 50%;
-            background-image: url("/img/Impact/map-loading-screen.svg");
-            background-color: @gl-lighter-blue;
-            background-position-x: 80%;
-            background-position-y: 20%;
-            background-size: 150%;
-            padding: 2.5%;
-
-            .img-adsforgood {
-                width: 20%;
-                padding: 2.5%;
-            }
-        }
-    }
-
-    #get-involved {
-        display: flex;
-        flex-direction: column;
-        padding: 2.5%;
-
-        #social-TAG-row {
-            place-content: center;
-            width: 100%;
-            // override Row default styling
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-            margin-bottom: 2%;
-
-            .cta-image {
-                width: 100%;
-                height: 40%;
-                object-fit: cover;
-            }
-
-            .cta-card {
-                padding-bottom: 5%;
-                width: 49%;
-
-                @media @width-mobile {
-                    width: unset;
-                }
-
-                height: 60vh;
-                position: relative;
-
-                .link-logo {
-                    height: 10vh;
-                }
-
-                .row {
-                    justify-content: center;
-                    margin-bottom: 5%;
-                }
-
-                .btn,
-                .row,
-                p,
-                h2,
-                .social-media-links {
-                    margin-top: 5%;
-
-                    @media @width-mobile {
-                        margin-top: 10%;
-                    }
-                }
-            }
-
-            #socials-cta {
-                margin-right: 1%;
-                background-color: white;
-            }
-
-            #TAG-cta {
-                margin-left: 1%;
-                background-color: @gl-dark-desat-blue;
-                color: white !important;
-
-                h2 {
-                    color: white !important;
-                }
-            }
-        }
-
-        #email-cta {
-            height: 65vh;
-            background-color: white;
-            display: flex;
-            position: relative;
-            place-content: center;
-            justify-content: space-evenly;
-            flex-direction: column;
-            text-align: -webkit-center;
-
-            // input labels
-            label {
-                color: @gl-grey;
-                width: 100%;
-                text-align: left;
-                margin-bottom: 0;
-            }
-
-            .hs-input {
-                color: lightgrey;
-
-            }
-
-            .input:focus-visible {
-                color: @gl-grey;
-            }
-
-            // input text div
-            .hs-fieldtype-text {
-                width: 35%;
-                padding-top: 2.5%; // make sure there's enough space for the "Please complete this required field." error message to pop up beneath
-
-                @media (max-width: 767px) {
-                    // stops the text from narrowing & messing up spaces on phones
-                    width: 80% !important;
-                }
-
-                .hs_error_rollup {
-                    display: none;
-                }
-
-
-                // checkbox input
-                .legal-consent-container {
-                    width: 35%;
-                    margin: auto;
-                    margin-top: 20px;
-
-                    .inputs-list {
-                        padding-left: 0;
-                    }
-
-                    @media (max-width: 767px) {
-                        // stops the text from narrowing & messing up spaces on phones
-                        width: 80% !important;
-                    }
-
-                    // center the checkbox vertically with its text
-                    label {
-                        display: flex;
-
-                        input {
-                            align-items: center;
-                            transform: translateY(-1rem); // centering it has a wee bit of offset, this fixes that
-                        }
-                    }
-
-                }
-
-
-                // input element
-                .hs-input {
-                    border: 1px solid gray;
-                    font-size: 1.3rem; // couldn't find an already defined large normal text 
-                    border-radius: 5px;
-                    padding: 10px 5px 5px 5px; // shift text slightly down to better center it in the input
-                    width: 100%;
-                }
-
-            }
-
-            // warning that pops up if user tries to submit with empty field
-            .hs-error-msgs {
-                padding-left: 0; // shift label to match with the start of the input field
-                margin-bottom: 0;
-            }
-
-            // "please complete all required fields" is unnecessary as both text fields already warn
-            .hs_error_rollup {
-                display: none;
-            }
-
-
-            // checkbox input
-            .legal-consent-container {
-                width: 35%;
-                margin: auto;
-                margin-top: 20px;
-
-                .inputs-list {
-                    padding-left: 0;
-                }
-
-                @media (max-width: 767px) {
-                    // stops the text from narrowing & messing up spaces on phones
-                    width: 80% !important;
-                }
-
-                // center the checkbox vertically with its text
-                label {
-                    display: flex;
-
-                    input {
-                        align-items: center;
-                        transform: translateY(-1rem); // centering it has a wee bit of offset, this fixes that
-                    }
-                }
-
-            }
-
-            .hs_submit {
-                .actions {
-                    align-items: center;
-                    display: flex;
-                    flex-flow: column wrap;
-                }
-            }
-        }
-    }
-
-    #donation-details {
-        display: flex;
-        background-color: white;
-        margin-left: 10%;
-        margin-right: 10%;
-        min-height: 40vh;
-        margin: 2.5%;
-        padding: 2.5%;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: space-evenly;
-
-        .impact-debit-container {
-            .impact-debit {
-                flex-basis: 30%; // keep to 3 a row
-    
-                @media @width-mobile {
-                    flex-basis: 100%; // on mobile though, 1 per row
-                }
-    
-                height: 40vh;
-                box-shadow: 0 0 10px black;
-                overflow: hidden;
-                border-radius: 2.5%;
-                margin-bottom: 2.5%;
-    
-                .debit-content {
-                    width: 100%;
-                    padding: 2.5%;
-                    padding-left: 5%;
-                    text-align: left;
-                    position: relative;
-                }
-    
-                .debit-header {
-                    width: 100%;
-                    height: 60%;
-                    object-fit: cover;
-                }
-    
-                .debit-logo {
-                    position: absolute;
-                    right: 5%;
-                    bottom: 5%;
-                    width: 20%;
-                }
-    
-                .debit-name {
-                    color: @gl-blue;
-                    font-size: larger;
-                    opacity: 0.5;
-                    margin-bottom: 5%;
-                }
-    
-                .debit-amount {
-                    color: @gl-impact-red;
-                    font-size: x-large;
-                    font-weight: 600;
-                }
-            }
-            // 3 to a row & space them out
-            flex-basis: 30%;
-            margin: 1% 1%;
-            background: none;
-            @media @width-mobile {
-                flex-basis: 100%;
-                margin-left: 0;
-                padding: 2.5% 5%;
-            }
-        }
-
-        @media @width-mobile {
-            // on mobile there's a tiny bit of extra padding that squishes the components, this fixes
-            margin-left: 0;
-            padding: 0;
-        }
-
-    }
-
-    #learn-more {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        justify-content: space-evenly;
-        align-items: center;
-
-        @media @width-mobile {
-            width: ;
-        }
-
-        .link-row {
-            justify-content: space-evenly;
-        }
-
-        .learn-more-box {
-            display: flex;
-            flex-direction: column;
-
-            max-width: 20%;
-
-            @media @width-mobile {
-                max-width: unset;
-                margin: 5% auto;
-            }
-
-            flex-basis: 20%;
-            height: 60%;
-
-            .link-img {
-                width: 100%;
-                height: 40vh;
-
-                @media @width-mobile {
-                    // on mobile, squish the row into a column
-                    height: 35vh;
-                    width: 35vh;
-                }
-
-                object-fit: cover;
-            }
-
-            .text-link {
-                font-size: 115%;
-                font-weight: 700;
-                padding: 5%;
-                color: @gl-red;
-            }
-        }
-    }
-
-    // only the Impact Hubs container
-
-    // impact hub
-    .splash-curve {
-        height: 100%;
-        z-index: 1;
-        width: fit-content;
-        position: relative;
-
-        @media @width-mobile {
-            display: none;
-        }
-    }
-
-    // splash card, split into [padding div, curve, content]
-    #stories-splash {
-        margin-top: 10vh; // move past header
-        height: 90vh;
-
-        .padding-div {
-            flex-basis: 15%;
-        }
-
-        .splash-curve-mobile {
-            display: none;
-        }
-
-        @media @width-mobile {
-            height: 97vh;
-
-            .splash-curve-mobile {
-                display: block;
-                position: absolute;
-                bottom: 50%;
-                width: 100%;
-            }
-
-            #splash-curve-mobile-1 {
-                bottom: 51%;
-                filter: brightness(1.2);
-            }
-
-            .padding-div {
-                display: none;
-            }
-        }
-
-        #splash-content {
-            color: white !important;
-            padding: 10% 10% 10% 0; // pushed to center left of div
-            align-self: center;
-            height: 100%;
-            // since the curve is made of two slightly opaque colors, the resulting 'inner' color can be found by adding them
-            background-color: rgba(97.148, 139.037, 152.333, 0.84); // formula used: https://stackoverflow.com/questions/726549/algorithm-for-additive-color-mixing-for-rgb-values
-            // position within the col neatly
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            place-content: space-between;
-
-            @media @width-mobile {
-                padding: 0 0 10% 0;
-                height: 50%;
-                background-color: rgb(66, 119, 135);
-                position: absolute;
-                bottom: 0;
-
-                h1 {
-                    font-size: x-large;
-                    padding: 0 10%;
-                }
-
-                .logo-circle{
-                    width: 30vw !important;
-                    height: 30vw !important;
-                }
-            }
-
-            .logo-circle {
-                width: 13vw;
-                height: 13vw;
-                margin: unset;
-            }
-
-            .adsForGood {
-                width: 50%;
-            }
-        }
-    }
-
-    #campaign-spotlight {
-        height: 80vh;
-        position: relative;
-
-        #spotlight-bg {
-            z-index: 0;
-            background-image: url("/img/Impact/world.svg");
-            position: absolute;
-            width: 100%;
-            height: 100%;
-
-            @media @width-mobile {
-                display: none;
-            }
-
-            #spotlight-bg-padding {
-                flex-basis: 15%;
-            }
-
-            #spotlight-bg-color {
-                // since the curve is made of two slightly opaque colors, the resulting 'inner' color can be found by adding them
-                background-color: rgba(97.148, 139.037, 152.333, 0.84); // formula used: https://stackoverflow.com/questions/726549/algorithm-for-additive-color-mixing-for-rgb-values
-            }
-        }
-
-        #spotlight-content {
-            height: 100%;
-            z-index: 1;
-            @media @width-mobile { // undoes Row default styling
-                display: block !important;
-            }
-
-            #campaign-info {
-                flex-basis: 25%;
-                place-self: center;
-                text-align: left;
-                text-align-last: left;
-                padding-left: 10%;
-
-                h1 {
-                    // total raised
-                    font-size: 400%;
-                    letter-spacing: 1px;
-                }
-
-                h2 {
-                    // 'Raised....'
-                    text-transform: unset;
-                    font-size: 200%;
-                    letter-spacing: 1px;
-                }
-
-                h4 {
-                    // Supporting 'Charity here'
-                    margin: 5% 0;
-                }
-
-                p {
-                    // Campaign name + dates
-                    margin-bottom: 0 !important;
-                }
-
-                @media @width-mobile {
-                    display: flex;
-                    flex-direction: column;
-                    height: 100%;
-                    place-content: space-between;
-                    padding: 0 !important;
-                    align-items: center;
-                    text-align-last: center;
-                    text-align: center;
-
-                    // let the preview ad take up more space
-                    .container {
-                        height: 30% !important;
-                        padding: 0;
-                        .goodLoopContainer {
-                            max-width: 80% !important;
-                        }
-                    }
-
-                    #spotlight-name {
-                        font-size: large;
-                        font-weight: bold;
-                    }
-
-                }
-            }
-
-            #spotlight-ads {
-                align-self: center;
-            }
-        }
-
-        .ads-catalogue {
-            // ad doesn't resize correctly when navbar expands/shrinks, so it's taken out of flow
-            position: absolute;
-            top: 30%;
-            right: 0;
-            @media @width-mobile {
-                position: unset;
-                padding: 0;
-                height: 40%;
-            }
-        }
-
-        @media @width-mobile {
-            background: white;
-            padding: 10%;
-        }
-    }
-
-
-    #impact-footer-container {
-        position: relative;
-        height: 80vh;
-
-        #stories-footer {
-            padding: 20% 0 5% 0;
-            margin: auto;
-            height: 100%;
-            width: 55vw; // found from 100vw - (absolute images widths)
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            place-content: space-around;
-
-            ul {
-                display: flex;
-                flex-direction: row;
-            }
-
-            p {
-                font-size: larger;
-            }
-
-            .topRow,
-            .adsForGood,
-            ul {
-                height: 20%;
-            }
-        }
-
-        #images-combined {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 30vw;
-        }
-
-        #holding-world {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 15vw;
-            transform: scaleX(-1);
-        }
-    }
-
-
-}
-
-#impact-cert-modal {
-    font-family: 'Montserrat', sans-serif;
-    p {
-        margin-bottom: 0 !important;
-    }
-    .light-bold {
-        font-weight: 600;
-    }
-
-    @media (min-width: 768px) {
-        max-width: 80vw;
-    }
-
-    .brand-ngo-logos {
-        
-        // text + border lines
-        .logo-text-top, .logo-text-bot {
-            width: 60%;
-            height: 100%;
-            align-content: center;
-            padding-left: 5%;
-            border-left: solid 1px lightgray;
-            p {
-                margin-bottom: 0 !important;
-                font-weight: bold;
-            }
-        }
-        .logo-text-top {
-            border-bottom: solid 1px lightgray;
-        }
-        
-
-        .cert-logo-row {
-            .logo-container {
-                width: 30%;
-                height: 100%;
-                // center img
-                text-align: center;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-evenly;
-                img {
-                    max-height: 100%;
-                    max-width: 90%;
-                    object-fit: contain;
-                }
-            }
-        }
-    }
-
-    #donation-details {
-        font-size: 75%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        height: 100%;
-        margin: 2.5%;
-
-        #offset-details, #offset-status, #offset-links {
-            background-color: white;
-            padding: 2.5% 1%;
-        }
-    }
+	// useful global constants that are reliably defaults
+	max-width: unset;
+	padding: 0;
+	text-align: center;
+	background-color: @gl-white-blue;
+
+	// we never want bullet points on lists
+	ul {
+		list-style-type: none !important;
+	}
+
+	// The structure of [content] [content] when moved to mobile is converted to [content] \n [content], this class just lets us apply that neatly
+	.flex-mobile-dir {
+		// copy row styling
+		flex-direction: row;
+		flex-wrap: wrap;
+		margin-right: -15px;
+		margin-left: -15px;
+
+		@media @width-mobile {
+			flex-direction: column;
+
+			>* {
+				margin-top: 5%;
+			}
+		}
+	}
+
+	// the page makes extensive use of a logo within a white circle, this class handles that
+	.logo-circle {
+		position: relative;
+		margin: auto;
+		background-color: white;
+		border-radius: 50%;
+		padding: 3%;
+		width: 7vw;
+		height: 7vw;
+
+		@media @width-mobile {
+			width: 12vh;
+			height: 12vh;
+		}
+
+		.logo {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			margin: auto;
+			width: 80% !important;
+		}
+	}
+
+	// the page makes use of several rows of [arm img ->] [sparkle] [logo] [sparkle] [<- arm img]
+	.charities-arms-logo {
+		display: flex;
+		position: relative;
+		width: 100%;
+		height: 15vh;
+		place-content: center;
+		padding-top: 1%;
+
+		.spark-1 {
+			top: 40%;
+			right: 25%;
+		}
+
+		.spark-2 {
+			top: 25%;
+			left: 30%
+		}
+
+		.arm {
+			position: absolute;
+			top: 20%;
+			height: 100%;
+		}
+
+		.arm-left {
+			left: 0;
+		}
+
+		.arm-right {
+			right: 0;
+		}
+	}
+
+	.bubble-spark,
+	.spark {
+		position: absolute;
+		width: 5%;
+
+		@media @width-mobile {
+			display: none;
+		}
+	}
+
+	// keep each piece of normal text (usually paragraph elements) standardized
+	.text {
+		font-family: 'Montserrat', sans-serif;
+		font-weight: 600;
+		white-space: pre-wrap;
+		margin-bottom: 0;
+	}
+
+	// nearly every image on this page should just fill its container
+	.fill-img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	// splash card
+	#i-splash {
+		color: white;
+		background-color: @gl-dark-blue;
+		justify-content: space-between;
+		padding: 2.5%;
+
+		h2 {
+			font-size: xxx-large;
+		}
+
+		h3 {
+			text-transform: unset; // stops uppercase default
+			font-size: larger;
+		}
+
+		.splash-earth {
+			overflow: hidden;
+			background-image: url("/img/Impact/map-loading-screen.svg");
+			background-position: center;
+			background-size: cover;
+			background-position-x: 60%; // center it a bit more otherwise we're just looking at america 
+			background-color: @gl-impact-blue !important;
+
+			height: 60%;
+			aspect-ratio: 1;
+
+			text-align: -webkit-center;
+			border: none !important;
+
+			p {
+				font-size: 150%;
+				font-weight: 600;
+			}
+
+			h2 {
+				font-size: 250%;
+			}
+		}
+	}
+
+	// Brand logo above a row of charity logos
+	#brand-charities {
+		ul {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			place-content: center;
+			margin-bottom: 0;
+			@media @width-mobile {
+				padding: 5% 0 !important;
+			}
+			li {
+				padding: 2%;
+			}
+		}
+	}
+
+	// Powered by gl card
+	#powered-by-gl {
+		padding: 2.5%;
+		background-color: @gl-lighter-blue;
+		position: relative;
+
+		.adsForGood {
+			max-width: 20%;
+
+			@media @width-mobile {
+				max-width: 75%;
+			}
+
+			margin: 2%;
+		}
+
+		.row {
+			place-content: center;
+
+			img {
+				height: 10vh;
+			}
+
+			a {
+				margin: 2%;
+			}
+		}
+
+		.spark {
+			width: 20%;
+		}
+
+		.spark-1 {
+			top: 60%;
+			right: 25%;
+		}
+
+		.spark-2 {
+			top: 25%;
+			left: 30%
+		}
+	}
+
+	#how-it-works {
+		background-color: @gl-impact-blue;
+		color: white !important;
+		padding: 5vh;
+		justify-content: space-between;
+
+		.hiw-curve {
+			display: flex;
+			justify-content: space-evenly;
+			height: 80%;
+			background-image: url("/img/Impact/Curved-line.svg");
+			background-repeat: no-repeat;
+			background-size: 100%;
+			background-position-y: 25%;
+		}
+
+		.hiw-col {
+			display: flex;
+			flex-direction: column;
+			min-width: 25%;
+
+			.white-circle {
+				height: 30vh;
+				width: 30vh;
+				border: 2px solid white;
+				border-radius: 50%;
+				overflow: hidden;
+				place-self: center;
+				margin: 10%;
+			}
+		}
+	}
+
+	// rules for both campaign impacts
+	.campaign-impact {
+
+		.camp-impact-card {
+			height: 45vh;
+			overflow: hidden;
+		}
+
+		.camp-impact-img {
+			padding: 0 !important;
+		}
+
+		.impact-section {
+			display: flex;
+			flex-direction: column;
+
+			// on mobile stop content from being flush with screen edges
+			@media @width-mobile {
+				width: 90%;
+				margin: auto;
+			}
+
+			.curve {
+				height: 100%;
+				position: absolute;
+				top: 0;
+				right: 0;
+			}
+
+			.normal-curve {
+				filter: brightness(0.8);
+			}
+
+			.dark-curve {
+				right: 2%;
+				filter: brightness(0.5);
+			}
+
+			.cause-container {
+				position: relative;
+				z-index: 10;
+				height: 100%;
+				display: flex;
+				flex-direction: column;
+				place-content: center;
+				text-align: left;
+				padding: 10%;
+
+				@media @width-mobile {
+					padding: 5%;
+				}
+
+				color: white !important;
+
+				.cause {
+					font-weight: 600;
+					font-size: larger;
+				}
+
+				.description {
+					font-size: xx-large;
+				}
+
+				h2 {
+					margin-bottom: 1rem;
+				}
+			}
+		}
+
+		.impact-row {
+			justify-content: space-evenly;
+			padding: 2.5%;
+		}
+
+	}
+
+	#campaign-impact-one {
+		background-color: @gl-dark-desat-blue;
+		font-family: 'Montserrat', sans-serif;
+
+		#impact-one-toprow {
+			padding-bottom: 0;
+
+			.camp-impact-card {
+				height: 50vh;
+			}
+
+			.left,
+			.right {
+				flex-basis: 45%;
+				position: relative;
+				overflow: hidden;
+
+			}
+
+			.right {
+				background-color: rgb(83, 10, 1);
+			}
+		}
+
+		#impact-one-botrow {
+			.left {
+				flex-basis: 30%;
+				position: relative;
+				// earth background
+				background-image: url("/img/Impact/map-loading-screen.svg");
+				background-position: center;
+				background-size: 200%;
+				background-repeat: no-repeat;
+				background-position-y: 0;
+				background-position-x: 70%; // center it a bit more otherwise we're just looking at america 
+				background-color: @gl-impact-blue !important;
+
+				@media @width-mobile {
+					background-image: none;
+				}
+
+				// quote box around dyk fact
+				img {
+					// img otherwise blocks links
+					pointer-events: none;
+
+					position: absolute;
+					left: 0;
+					max-height: 100%;
+					width: 100%;
+					// vertically center
+					top: 0;
+					bottom: 0;
+					margin: auto;
+				}
+
+				.dyk-container {
+					font display: flex;
+					flex-direction: column;
+					place-content: center;
+					text-align: left;
+					height: 100%;
+					padding: 15%;
+					color: white !important;
+
+					.dyk {
+						font-weight: bold;
+					}
+
+					.fact {
+						font-weight: 800;
+						font-size: larger;
+					}
+
+					a {
+						color: white !important;
+					}
+				}
+
+			}
+
+			.right {
+				flex-basis: 60%;
+			}
+		}
+	}
+
+	#campaign-impact-two {
+		background-color: @gl-lighter-blue;
+
+		.impact-row {
+
+			.left,
+			.right {
+				flex-basis: 45%;
+			}
+		}
+
+		#row-2 {
+
+			// Helping Fund 'Project Here'
+			.right {
+				padding: 5% !important;
+
+				text-align: left;
+				position: relative;
+
+				.heart-bg {
+					position: absolute;
+					// turn red heart into light pink heart
+					opacity: 0.1;
+					filter: saturate(2);
+					width: 40%;
+					right: 20%;
+
+				}
+
+				.project-desc {
+					font-weight: unset;
+					font-size: 1vw; // keeps text within the div unless there's a TON of text but...
+
+					@media @width-mobile {
+						font-size: 100%; // ... on mobile it makes it tiny, so fix it there
+					}
+				}
+			}
+		}
+
+
+	}
+
+	#impact-making-a-diff {
+		height: 90vh;
+
+		#together-we-can-make-a-diff {
+			height: 50%;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-evenly;
+			align-items: center;
+
+			.brandlogo {
+				width: 15%;
+			}
+
+			ul {
+				list-style: none;
+			}
+		}
+
+		#diff-powered-by-gl {
+			height: 50%;
+			background-image: url("/img/Impact/map-loading-screen.svg");
+			background-color: @gl-lighter-blue;
+			background-position-x: 80%;
+			background-position-y: 20%;
+			background-size: 150%;
+			padding: 2.5%;
+
+			.img-adsforgood {
+				width: 20%;
+				padding: 2.5%;
+			}
+		}
+	}
+
+	#get-involved {
+		display: flex;
+		flex-direction: column;
+		padding: 2.5%;
+
+		#social-TAG-row {
+			place-content: center;
+			width: 100%;
+			// override Row default styling
+			margin-left: 0 !important;
+			margin-right: 0 !important;
+			margin-bottom: 2%;
+
+			.cta-image {
+				width: 100%;
+				height: 40%;
+				object-fit: cover;
+			}
+
+			.cta-card {
+				padding-bottom: 5%;
+				width: 49%;
+
+				@media @width-mobile {
+					width: unset;
+				}
+
+				height: 60vh;
+				position: relative;
+
+				.link-logo {
+					height: 10vh;
+				}
+
+				.row {
+					justify-content: center;
+					margin-bottom: 5%;
+				}
+
+				.btn,
+				.row,
+				p,
+				h2,
+				.social-media-links {
+					margin-top: 5%;
+
+					@media @width-mobile {
+						margin-top: 10%;
+					}
+				}
+			}
+
+			#socials-cta {
+				margin-right: 1%;
+				background-color: white;
+			}
+
+			#TAG-cta {
+				margin-left: 1%;
+				background-color: @gl-dark-desat-blue;
+				color: white !important;
+
+				h2 {
+					color: white !important;
+				}
+			}
+		}
+
+		#email-cta {
+			height: 65vh;
+			background-color: white;
+			display: flex;
+			position: relative;
+			place-content: center;
+			justify-content: space-evenly;
+			flex-direction: column;
+			text-align: -webkit-center;
+
+			// input labels
+			label {
+				color: @gl-grey;
+				width: 100%;
+				text-align: left;
+				margin-bottom: 0;
+			}
+
+			.hs-input {
+				color: lightgrey;
+
+			}
+
+			.input:focus-visible {
+				color: @gl-grey;
+			}
+
+			// input text div
+			.hs-fieldtype-text {
+				width: 35%;
+				padding-top: 2.5%; // make sure there's enough space for the "Please complete this required field." error message to pop up beneath
+
+				@media (max-width: 767px) {
+					// stops the text from narrowing & messing up spaces on phones
+					width: 80% !important;
+				}
+
+				.hs_error_rollup {
+					display: none;
+				}
+
+
+				// checkbox input
+				.legal-consent-container {
+					width: 35%;
+					margin: auto;
+					margin-top: 20px;
+
+					.inputs-list {
+						padding-left: 0;
+					}
+
+					@media (max-width: 767px) {
+						// stops the text from narrowing & messing up spaces on phones
+						width: 80% !important;
+					}
+
+					// center the checkbox vertically with its text
+					label {
+						display: flex;
+
+						input {
+							align-items: center;
+							transform: translateY(-1rem); // centering it has a wee bit of offset, this fixes that
+						}
+					}
+
+				}
+
+
+				// input element
+				.hs-input {
+					border: 1px solid gray;
+					font-size: 1.3rem; // couldn't find an already defined large normal text 
+					border-radius: 5px;
+					padding: 10px 5px 5px 5px; // shift text slightly down to better center it in the input
+					width: 100%;
+				}
+
+			}
+
+			// warning that pops up if user tries to submit with empty field
+			.hs-error-msgs {
+				padding-left: 0; // shift label to match with the start of the input field
+				margin-bottom: 0;
+			}
+
+			// "please complete all required fields" is unnecessary as both text fields already warn
+			.hs_error_rollup {
+				display: none;
+			}
+
+
+			// checkbox input
+			.legal-consent-container {
+				width: 35%;
+				margin: auto;
+				margin-top: 20px;
+
+				.inputs-list {
+					padding-left: 0;
+				}
+
+				@media (max-width: 767px) {
+					// stops the text from narrowing & messing up spaces on phones
+					width: 80% !important;
+				}
+
+				// center the checkbox vertically with its text
+				label {
+					display: flex;
+
+					input {
+						align-items: center;
+						transform: translateY(-1rem); // centering it has a wee bit of offset, this fixes that
+					}
+				}
+
+			}
+
+			.hs_submit {
+				.actions {
+					align-items: center;
+					display: flex;
+					flex-flow: column wrap;
+				}
+			}
+		}
+	}
+
+	#donation-details {
+		display: flex;
+		background-color: white;
+		margin-left: 10%;
+		margin-right: 10%;
+		min-height: 40vh;
+		margin: 2.5%;
+		padding: 2.5%;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: space-evenly;
+
+		.impact-debit-container {
+			.impact-debit {
+				flex-basis: 30%; // keep to 3 a row
+	
+				@media @width-mobile {
+					flex-basis: 100%; // on mobile though, 1 per row
+				}
+	
+				height: 40vh;
+				box-shadow: 0 0 10px black;
+				overflow: hidden;
+				border-radius: 2.5%;
+				margin-bottom: 2.5%;
+	
+				.debit-content {
+					width: 100%;
+					padding: 2.5%;
+					padding-left: 5%;
+					text-align: left;
+					position: relative;
+				}
+	
+				.debit-header {
+					width: 100%;
+					height: 60%;
+					object-fit: cover;
+				}
+	
+				.debit-logo {
+					position: absolute;
+					right: 5%;
+					bottom: 5%;
+					width: 20%;
+				}
+	
+				.debit-name {
+					color: @gl-blue;
+					font-size: larger;
+					opacity: 0.5;
+					margin-bottom: 5%;
+				}
+	
+				.debit-amount {
+					color: @gl-impact-red;
+					font-size: x-large;
+					font-weight: 600;
+				}
+			}
+			// 3 to a row & space them out
+			flex-basis: 30%;
+			margin: 1% 1%;
+			background: none;
+			@media @width-mobile {
+				flex-basis: 100%;
+				margin-left: 0;
+				padding: 2.5% 5%;
+			}
+		}
+
+		@media @width-mobile {
+			// on mobile there's a tiny bit of extra padding that squishes the components, this fixes
+			margin-left: 0;
+			padding: 0;
+		}
+
+	}
+
+	#learn-more {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		justify-content: space-evenly;
+		align-items: center;
+
+		@media @width-mobile {
+			width: ;
+		}
+
+		.link-row {
+			justify-content: space-evenly;
+		}
+
+		.learn-more-box {
+			display: flex;
+			flex-direction: column;
+
+			max-width: 20%;
+
+			@media @width-mobile {
+				max-width: unset;
+				margin: 5% auto;
+			}
+
+			flex-basis: 20%;
+			height: 60%;
+
+			.link-img {
+				width: 100%;
+				height: 40vh;
+
+				@media @width-mobile {
+					// on mobile, squish the row into a column
+					height: 35vh;
+					width: 35vh;
+				}
+
+				object-fit: cover;
+			}
+
+			.text-link {
+				font-size: 115%;
+				font-weight: 700;
+				padding: 5%;
+				color: @gl-red;
+			}
+		}
+	}
+
+	// only the Impact Hubs container
+
+	// impact hub
+	.splash-curve {
+		height: 100%;
+		z-index: 1;
+		width: fit-content;
+		position: relative;
+
+		@media @width-mobile {
+			display: none;
+		}
+	}
+
+	// splash card, split into [padding div, curve, content]
+	#stories-splash {
+		margin-top: 10vh; // move past header
+		height: 90vh;
+
+		.padding-div {
+			flex-basis: 15%;
+		}
+
+		.splash-curve-mobile {
+			display: none;
+		}
+
+		@media @width-mobile {
+			.splash-curve-mobile {
+				display: block;
+				position: absolute;
+				bottom: 50%;
+				width: 100%;
+			}
+
+			#splash-curve-mobile-1 {
+				bottom: 51%;
+				filter: brightness(1.2);
+			}
+
+			.padding-div {
+				display: none;
+			}
+		}
+
+		#splash-content {
+			color: white !important;
+			padding: 10% 10% 10% 0; // pushed to center left of div
+			align-self: center;
+			height: 100%;
+			// since the curve is made of two slightly opaque colors, the resulting 'inner' color can be found by adding them
+			background-color: rgba(97.148, 139.037, 152.333, 0.84); // formula used: https://stackoverflow.com/questions/726549/algorithm-for-additive-color-mixing-for-rgb-values
+			// position within the col neatly
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			place-content: space-between;
+
+			@media @width-mobile {
+				padding: 0 0 10% 0;
+				height: 50%;
+				background-color: rgb(66, 119, 135);
+				position: absolute;
+				bottom: 0;
+
+				h1 {
+					font-size: x-large;
+					padding: 0 10%;
+				}
+
+				.logo-circle{
+					width: 30vw !important;
+					height: 30vw !important;
+				}
+			}
+
+			.logo-circle {
+				width: 20vh;
+				height: 20vh;
+				margin: unset;
+			}
+
+			.adsForGood {
+				width: 50%;
+			}
+		}
+	}
+
+	#campaign-spotlight {
+		height: 80vh;
+		position: relative;
+
+		#spotlight-bg {
+			z-index: 0;
+			background-image: url("/img/Impact/world.svg");
+			position: absolute;
+			width: 101%;
+			height: 100%;
+
+			@media @width-mobile {
+				display: none;
+			}
+
+			#spotlight-bg-padding {
+				flex-basis: 15%;
+			}
+
+			#spotlight-bg-color {
+				// since the curve is made of two slightly opaque colors, the resulting 'inner' color can be found by adding them
+				background-color: rgba(97.148, 139.037, 152.333, 0.84); // formula used: https://stackoverflow.com/questions/726549/algorithm-for-additive-color-mixing-for-rgb-values
+			}
+		}
+
+		#spotlight-content {
+			height: 100%;
+			z-index: 1;
+			@media @width-mobile { // undoes Row default styling
+				display: block !important;
+			}
+
+			#campaign-info {
+				flex-basis: 25%;
+				place-self: center;
+				text-align: left;
+				text-align-last: left;
+				padding-left: 10%;
+
+				h1 {
+					// total raised
+					font-size: 400%;
+					letter-spacing: 1px;
+				}
+
+				h2 {
+					// 'Raised....'
+					text-transform: unset;
+					font-size: 200%;
+					letter-spacing: 1px;
+				}
+
+				h4 {
+					// Supporting 'Charity here'
+					margin: 5% 0;
+				}
+
+				p {
+					// Campaign name + dates
+					margin-bottom: 0 !important;
+				}
+
+				@media @width-mobile {
+					display: flex;
+					flex-direction: column;
+					height: 100%;
+					place-content: space-between;
+					padding: 0 !important;
+					align-items: center;
+					text-align-last: center;
+					text-align: center;
+
+					// let the preview ad take up more space
+					.container {
+						height: 30% !important;
+						padding: 0;
+						.goodLoopContainer {
+							max-width: 80% !important;
+						}
+					}
+
+					#spotlight-name {
+						font-size: large;
+						font-weight: bold;
+					}
+
+				}
+			}
+
+			#spotlight-ads {
+				align-self: center;
+			}
+		}
+
+		// ads catalogue container
+		.container {
+			// ad doesn't resize correctly when navbar expands/shrinks, so it's taken out of flow
+			position: absolute;
+			top: 30%;
+			right: 0;
+			@media @width-mobile {
+				position: unset;
+				padding: 0;
+				height: 40%;
+			}
+		}
+
+		@media @width-mobile {
+			background: white;
+			padding: 10%;
+		}
+	}
+
+
+	#impact-footer-container {
+		position: relative;
+		height: 80vh;
+
+		#stories-footer {
+			padding: 20% 0 5% 0;
+			margin: auto;
+			height: 100%;
+			width: 55vw; // found from 100vw - (absolute images widths)
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			place-content: space-around;
+
+			ul {
+				display: flex;
+				flex-direction: row;
+			}
+
+			p {
+				font-size: larger;
+			}
+
+			.topRow,
+			.adsForGood,
+			ul {
+				height: 20%;
+			}
+		}
+
+		#images-combined {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 30vw;
+		}
+
+		#holding-world {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			width: 15vw;
+			transform: scaleX(-1);
+		}
+	}
 }
