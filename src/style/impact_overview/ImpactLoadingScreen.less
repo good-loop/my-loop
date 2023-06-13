@@ -1,21 +1,21 @@
 @keyframes impactWavesLoad {
-	from {scale: 0; top: 100%;}
-	to { scale: 5; top:0%}
+	from { width: 100%; left: 0; bottom: -100%; }
+	to { width: 300%; left: -200%; bottom: 0; }
 }
 
 @keyframes planetSpin {
-	from {transform: translateX(-10px);}
-	to {transform: translateX(-50px);}
+	from { transform: translateX(-40%); }
+	to { transform: translateX(-30%); }
 }
 
 @keyframes fadeOutLoading {
-	from {opacity: 1}
-	to {opacity: 0}
+	from { opacity: 1; }
+	to { opacity: 0; }
 }
 
 @keyframes fadeInLogo {
-	from {opacity: 0}
-	to {opacity: 1}
+	from { opacity: 0; }
+	to { opacity: 1; }
 }
 
 #impact-loading-screen {
@@ -29,7 +29,7 @@
 
 	animation: fadeOutLoading;
 	animation-duration: 0.25s;
-	animation-delay:2.1s; 
+	animation-delay: 2.1s;
 	animation-fill-mode: forwards;
 
 	.true-center {
@@ -53,16 +53,11 @@
 
 	}
 
-	.earth-map{
+	.earth-map {
 		z-index: 30;
-		height: 25vw;
-		width: 25vw;
-		min-height: 30vh;
-		min-width: 30vh;
-		margin-right: 3rem;
-		scale: 3;
-
+		height: 100%;
 		animation: planetSpin;
+		animation-timing-function: linear;
 		animation-duration: 4s;
 		animation-delay: 0s;
 		animation-fill-mode: forwards; 
@@ -71,10 +66,9 @@
 	.waves {
 		z-index: 20;
 		position: absolute;
-		left: 0;
-		right: 0;
-		top:100%;
-		width: 100%;
+		left: -200%;
+		bottom: 0;
+		// width: 100%;
 		margin: auto;
 		animation: impactWavesLoad;
 		animation-duration: 2s;
