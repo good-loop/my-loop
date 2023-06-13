@@ -685,6 +685,10 @@ const shortNumber = (number) => (
 
 
 const CountryViewsGLCard = ({basis, baseObjects}) => {
+	if ( ! baseObjects) {
+		console.warn("CountryViewsGLCard - no baseObjects");
+		return null;
+	}
 	let impressionData = getImpressionsByCampaignByCountry({baseObjects})
 
 	// Prepare data for non-modal view - total impressions and countries
