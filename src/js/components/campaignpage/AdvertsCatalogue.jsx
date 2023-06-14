@@ -86,8 +86,7 @@ const AdvertsCatalogue = ({ ads, noPreviews, className, captions=true}) => {
 				</div>
 			</Carousel>
 			{!noPreviews && <>
-				<br />
-				<br />
+				{/* <br /><br /> reduce the whitespace - Dan, Jun 2023 */}
 				<AdPreviewCarousel ads={ads} setSelected={goToIndex} selectedIndex={activeIndex} />
 			</>}
 		</Container>
@@ -188,7 +187,7 @@ const AdvertCard = ({ ad, active }) => {
 			setHasShown(true);
 		}, 100);
 	}
- 
+
 	return (
 		<div className="position-relative main-ad" style={{ minHeight: "100px", maxHeight: "600px" }}>
 			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{ position: "absolute", zIndex: 999 }}>Advert Editor ({ad.id})</DevLink>
@@ -212,7 +211,7 @@ const AdvertCard = ({ ad, active }) => {
  */
 const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
 	if (!ad) {
-		console.warn("AdvertPreviewCard - NO ad?!");
+		//console.warn("AdvertPreviewCard - NO ad?!");
 		return null;
 	}
 	const social = ad.format === "social";

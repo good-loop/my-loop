@@ -158,14 +158,14 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 	const urlValues = DataStore.getValue('location','params');
 	let periodObj = initPeriod();
 	const {filterType, filterId} = getFilterTypeId();
-	
+
 	const setFilterType = ft => {
 		// clear the old id setting
 		"brand agency campaign adid".split(" ").forEach(k => DataStore.setUrlValue(k,null,false));
 		DataStore.setUrlValue("ft",ft);
 	};
 	const {period,start,end,tz,brand,campaign,tag,agency} = urlValues;
-	
+
 	// /**
 	//  * @param {Period} period 
 	//  */
@@ -194,7 +194,7 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 	// label and logo
 	let tagItem = (tag && filterType === C.TYPES.GreenTag)? getDataItem({ type: C.TYPES.GreenTag, id: tag, status: KStatus.PUB_OR_DRAFT }).value : null;
 	let campaignItem = (campaign && filterType === C.TYPES.Campaign) ? getDataItem({ type: C.TYPES.Campaign, id: campaign, status: KStatus.PUBLISHED }).value : null;
-	
+
 	// if tag or campaign exist, also grab the brand item as we'll need it for the logo
 	let brandItem =
 		((brand && filterType === C.TYPES.Advertiser) || (campaignItem && campaignItem.vertiser) || (tagItem && tagItem.vertiser)) 
@@ -268,7 +268,7 @@ const GreenDashboardFilters = ({ pseudoUser }) => {
 									{filterItems.map((item, i) => (
 										<DropdownItem key={i} onClick={() => setFilterItem(item.id)}>
 											{{ campaign, brand, agency, tag }[urlParamForType(filterType)] === item.id ? selectedMarker : null}
-											{item.name}
+											{item.name || `[ ${item.id} ]`}
 										</DropdownItem>
 									))}
 								</DropdownMenu>
@@ -292,7 +292,7 @@ const QuarterButtons = ({periodObj, setNamedPeriod }) => {
 	const buttons = [];
 	for (let i = 0; i < 4; i++) {
 		const q = getPeriodQuarter(dateCursor);
-		
+
 		buttons.push(
 			<DropdownItem onClick={() => setNamedPeriod(q.name)} key={q.name}>
 				{periodObj?.name === q.name? selectedMarker : null} {printPeriod(q)}

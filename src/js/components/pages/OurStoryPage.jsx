@@ -121,7 +121,7 @@ const MyGetInvolvedSection = () =>{
 	{/* <PageCard className="text-center register-card">
 		<p className="leader-text">We're developing exciting new products that will help us all make the internet a more positive place. Register below to get exlusive access to future product launches and join the Good-Loop movement.</p>
 		<SubscriptionForm textCenter purpose="preregister" buttonText="REGISTER" />
-		
+
 		<img src="/img/signup/hand-globe-coins.png" className="hand-globe-coins d-none d-md-block" />
 	</PageCard> */}
 	</>) 

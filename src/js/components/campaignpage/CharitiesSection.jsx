@@ -206,7 +206,7 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
 const Impact = ({ charity, donationValue }) => {
 	const impact = charity.simpleImpact;
 	if (!impact || !impact.name || !impact.costPerBeneficiary || !donationValue) return null;
-	
+
 	let impactDesc = impact.name;
 	let donationsMoney = new Money(donationValue);
 	const impactCount = Math.round(Money.divide(donationsMoney, impact.costPerBeneficiary));

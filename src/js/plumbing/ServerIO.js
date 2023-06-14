@@ -116,11 +116,11 @@ ServerIO.mixPanelTrack = ({mixPanelTag, data = {}}) => {
 	const path = C.TRACKPATH.concat(mixPanelTag);
 	const alreadyTracked = DataStore.getValue(path);
 	const userId = Login.getId();
-	
+
 	if( userId ) {
 		data.user = userId;
 	}
-	
+
 	if(mixpanel && !alreadyTracked) {
 		try {
 			mixpanel.track(mixPanelTag, data);

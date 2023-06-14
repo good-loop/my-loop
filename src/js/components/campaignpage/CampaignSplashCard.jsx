@@ -22,7 +22,6 @@ import C from '../../C';
  * 
  */
 const CampaignSplashCard = ({ branding, shareMeta, pdf, campaignPage, donationValue, totalViewCount, charities, status, nvertiserName, setCtaModalOpen }) => {
-	
 	let ongoing = Campaign.isOngoing(campaignPage);
 
 	let numPeople = printer.prettyNumber(Math.round(totalViewCount), 10);

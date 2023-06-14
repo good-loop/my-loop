@@ -36,7 +36,7 @@ import { nonce } from '../../base/data/DataClass';
 */
 var createInterpolant = function(xs, ys) {
 	var i, length = xs.length;
-	
+
 	// Deal with length issues
 	if (length != ys.length) { throw 'Need an equal count of xs and ys.'; }
 	if (length === 0) { return function(x) { return 0; }; }
@@ -46,7 +46,7 @@ var createInterpolant = function(xs, ys) {
 		var result = +ys[0];
 		return function(x) { return result; };
 	}
-	
+
 	// Rearrange xs and ys so that xs is sorted
 	var indexes = [];
 	for (i = 0; i < length; i++) { indexes.push(i); }
@@ -56,14 +56,14 @@ var createInterpolant = function(xs, ys) {
 	xs = []; ys = [];
 	// Impl: Unary plus properly converts values to numbers
 	for (i = 0; i < length; i++) { xs.push(+oldXs[indexes[i]]); ys.push(+oldYs[indexes[i]]); }
-	
+
 	// Get consecutive differences and slopes
 	var dys = [], dxs = [], ms = [];
 	for (i = 0; i < length - 1; i++) {
 		var dx = xs[i + 1] - xs[i], dy = ys[i + 1] - ys[i];
 		dxs.push(dx); dys.push(dy); ms.push(dy/dx);
 	}
-	
+
 	// Get degree-1 coefficients
 	var c1s = [ms[0]];
 	for (i = 0; i < dxs.length - 1; i++) {
@@ -76,20 +76,20 @@ var createInterpolant = function(xs, ys) {
 		}
 	}
 	c1s.push(ms[ms.length - 1]);
-	
+
 	// Get degree-2 and degree-3 coefficients
 	var c2s = [], c3s = [];
 	for (i = 0; i < c1s.length - 1; i++) {
 		var c1 = c1s[i], m_ = ms[i], invDx = 1/dxs[i], common_ = c1 + c1s[i + 1] - m_ - m_;
 		c2s.push((m_ - c1 - common_)*invDx); c3s.push(common_*invDx*invDx);
 	}
-	
+
 	// Return interpolant function
 	return function(x) {
 		// The rightmost point in the dataset should give an exact result
 		var i = xs.length - 1;
 		if (x == xs[i]) { return ys[i]; }
-		
+
 		// Search for the interval x is in, returning the corresponding y if x is one of the original xs
 		var low = 0, mid, high = c3s.length - 1;
 		while (low <= high) {
@@ -100,7 +100,7 @@ var createInterpolant = function(xs, ys) {
 			else { return ys[mid]; }
 		}
 		i = Math.max(0, high);
-		
+
 		// Interpolate
 		var diff = x - xs[i], diffSq = diff*diff;
 		return ys[i] + c1s[i]*diff + c2s[i]*diffSq + c3s[i]*diff*diffSq;
@@ -160,23 +160,23 @@ const generateData = (startDate, endDate, totalImps, adid, campaign, vertiser) =
 	// Generate a shaping curve with data points 2 days apart...
 	const lowFreqXs = [];
 	const lowFreqYs = [];
-	
+
 	while (cursor.getTime() < endDate.getTime()) {
 		let hour = Math.floor(cursor.getTime() / 3600000);
 		lowFreqXs.push(hour);
 		lowFreqYs.push(Math.random());
 		cursor.setDate(cursor.getDate() + 2);
 	}
-	
+
 	// Interpolate shaping curve to data points 4 hours apart (so time-of-day chart looks OK)
 	const data = [];
 	const labels = [];
 	const timestamps = [];
-	
+
 	const interpolant = createInterpolant(lowFreqXs, lowFreqYs);
 	cursor = new Date(startDate);
 	cursor.setHours(0, 0, 0, 0);
-	
+
 	while (cursor.getTime() < endDate.getTime()) {
 		let hour = Math.floor(cursor.getTime() / 3600000);
 		let val = interpolant(hour);
@@ -215,7 +215,7 @@ const generateData = (startDate, endDate, totalImps, adid, campaign, vertiser) =
 	let oss = {};
 	let domains = {};
 	let locns = {};
-	
+
 	// Generate a set of impression blocks for each point in time that covers various locations, domains, devices
 	data.forEach((val, i) => {
 		const time = timestamps[i];
@@ -324,7 +324,7 @@ const commitEvents = (evts, setGeneratedData) => {
 	const todoEvts = [...evts];
 	const doneEvts = [];
 	const failedEvts = [];
-	
+
 	// Check for free slots every 100ms and try to publish another event
 	const commitInterval = window.setInterval(() => {
 		if (openConns >= slots) return;
@@ -357,7 +357,7 @@ const GenerateGreenDemoEvents = ({}) => {
 	if (false && (!Login.isLoggedIn() || !Roles.isDev())) {
 		return 'Only for devs';
 	}
-	
+
 	const [{evts, imps, browsers, oss, domains, locns, done, inProgress, processedCount, failedCount}, setGeneratedData] = useState({});
 	const [campaignId, setCampaignId] = useState();
 	const [vertiserId, setVertiserId] = useState();
@@ -380,7 +380,7 @@ const GenerateGreenDemoEvents = ({}) => {
 		const start2022 = new Date('2022-01-01');
 		// Sanity check, as new Date() will accept some extremely silly inputs eg "2" --> "1 Feb 2001"
 		if (startDate.getTime() < start2022.getTime() || endDate.getTime() < start2022.getTime()) return;
-		
+
 		// OK, we have reasonable props: generate the events
 		const gd = generateData(startDate, endDate, evtCount, tagId, campaignId, vertiserId);
 
@@ -451,7 +451,7 @@ const GenerateGreenDemoEvents = ({}) => {
 				{preview}
 			</Col>
 		</Row>
-		
+
 	</Container>;
 };
 

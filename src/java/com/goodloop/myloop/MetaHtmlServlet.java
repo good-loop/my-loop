@@ -19,6 +19,7 @@ import com.google.common.cache.CacheBuilder;
 import com.winterwell.data.AThing;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Utils;
+import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.time.Time;
@@ -279,7 +280,7 @@ public class MetaHtmlServlet implements IServlet {
 			BuildJerbilPage bjp = new BuildJerbilPage(src, "", template, out);
 
 			// TODO fill in the SEO and social stuff from file or API
-			Map vars = new HashMap();
+			Map<String,String> vars = new HashMap();
 			// Always replace $contents and $title placeholder in HTML
 			vars.put("contents", "");
 			vars.put("title", "Good-Loop");
@@ -291,13 +292,14 @@ public class MetaHtmlServlet implements IServlet {
 			} catch (WebEx.E40X e) {
 				// swallow it, more or less. Probably a 404
 				Log.w("MetaHtml", e+" from "+state);
-			} finally {
-				// Jerbil it!
-				String pageHtml = bjp.run2_render(false, srcText, templateHtml, vars);
-				// cache it
-				html = pageHtml;
-				html4slug.put(slug, html);
 			}
+			// sanitise inputs against attack
+			Map safeVars = Containers.applyToValues(s -> WebUtils2.stripScripts(s), vars);
+			// Jerbil it!
+			String pageHtml = bjp.run2_render(false, srcText, templateHtml, safeVars);
+			// cache it
+			html = pageHtml;
+			html4slug.put(slug, html);
 		}
 		// send it back
 		WebUtils2.sendHtml(html, state.getResponse());

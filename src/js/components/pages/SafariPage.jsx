@@ -10,28 +10,28 @@ export const SafariPage = () => {
 	const SafariCarousel = ({className, hasIndicators, light, children, nextButton}) => {
 		const [animating, setAnimating] = useState(false);
 		const [index, setIndex] = useState(0);
-	
+
 		// no nulls
 		children = children.filter(x => x);
-	
+
 		const next = () => {
 			if (animating) return;
 			const nextIndex = index === children.length - 1 ? 0 : index + 1;
 			setIndex(nextIndex);
 		}
-	
+
 		const previous = () => {
 			if (animating) return;
 			const nextIndex = index === 0 ? children.length - 1 : index - 1;
 			setIndex(nextIndex);
 		}
-	
+
 		// For Dots/Indicators
 		const goToIndex = (newIndex) => {
 			if (animating) return;
 			setIndex(newIndex);
 		};
-	
+
 		const Steps = ({step}) => {
 			let circle1 = step == 0 ? "circle circle-active" : "circle";
 			let circle2 = step == 1 ? "circle circle-active" : "circle";
@@ -59,7 +59,7 @@ export const SafariPage = () => {
 				<span id="circle-step-7">All Done</span>
 			</>)
 		}
-	
+
 		return (<Carousel className={space(className,'BSCarousel')}
 			activeIndex={index}
 			next={next}
@@ -83,7 +83,7 @@ export const SafariPage = () => {
 			{hasIndicators && <div className="d-block">
 				<CarouselIndicators items={children} activeIndex={index} onClickHandler={goToIndex} />
 			</div>}
-	
+
 			{!nextButton && 
 			<div className={light&&"text-dark"}>
 				<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />

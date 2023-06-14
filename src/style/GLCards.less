@@ -7,177 +7,177 @@ The GLCards layout is a layout for modular cards which are designed to expand an
 @GLCardRadius: 0.75rem;
 
 @keyframes fade-in {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
 }
 
 .glcard-outer {
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: stretch;
-    position: relative;
+	height: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: stretch;
+	position: relative;
 }
 
 .glhorizontal {
-    height: 100%;
-    align-items: stretch;
-    position: relative;
+	height: 100%;
+	align-items: stretch;
+	position: relative;
 
-    &.glhorizontal-md>.col {
-        @media @width-mobile {
-            flex-basis: 100%;
-        }
-    }
+	&.glhorizontal-md>.col {
+		@media @width-mobile {
+			flex-basis: 100%;
+		}
+	}
 
-    &.glhorizontal-lg>.col {
-        @media @lg-max {
-            flex-basis: 100%;
-        }
-    }
+	&.glhorizontal-lg>.col {
+		@media @lg-max {
+			flex-basis: 100%;
+		}
+	}
 }
 
 .glvertical {
-    //d-flex flex-column justify-content-between align-items-stretch
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: stretch;
-    height: 100%;
-    position: relative;
+	//d-flex flex-column justify-content-between align-items-stretch
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: stretch;
+	height: 100%;
+	position: relative;
 }
 
 .glcard {
-    box-shadow: 0px 2px 5px rgba(0,0,0,0.3);
-    flex-basis: 1;
-    flex-grow: 1;
-    border: none;
-    border-radius: @GLCardRadius;
-    position: relative;
+	box-shadow: 0px 2px 5px rgba(0,0,0,0.3);
+	flex-basis: 1;
+	flex-grow: 1;
+	border: none;
+	border-radius: @GLCardRadius;
+	position: relative;
 
-    /*width: calc(100% - 2rem);
-    height: calc(100% - 2rem);
-    margin: 1rem;*/
-    &.glcardmodal:hover {
-        cursor: pointer;
-    }
+	/*width: calc(100% - 2rem);
+	height: calc(100% - 2rem);
+	margin: 1rem;*/
+	&.glcardmodal:hover {
+		cursor: pointer;
+	}
 
-    .card-body {
-        // FIXME this can create unwanted scroll bars (seen on the main headline card)
-        overflow: auto;
-    }
+	.card-body {
+		// FIXME this can create unwanted scroll bars (seen on the main headline card)
+		overflow: auto;
+	}
 
-    // Override Bootstrap defaults to match card border-radius
-    .card-header:first-child {
-        border-radius: calc(@GLCardRadius - 1px) calc(@GLCardRadius - 1px) 0 0;
-    }
-    .card-footer:last-child {
-        border-radius: 0 0 calc(@GLCardRadius - 1px) calc(@GLCardRadius - 1px);
-    }
+	// Override Bootstrap defaults to match card border-radius
+	.card-header:first-child {
+		border-radius: calc(@GLCardRadius - 1px) calc(@GLCardRadius - 1px) 0 0;
+	}
+	.card-footer:last-child {
+		border-radius: 0 0 calc(@GLCardRadius - 1px) calc(@GLCardRadius - 1px);
+	}
 }
 
 .glcard-link {
-    text-decoration: none;
-    &:hover {
-        text-decoration: none;
-    }
+	text-decoration: none;
+	&:hover {
+		text-decoration: none;
+	}
 }
 
 .glmodal {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1000;
-    opacity: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1000;
+	opacity: 0;
 
-    animation-name: fade-in;
-    animation-duration: 0.2s;
-    animation-fill-mode: forwards;
+	animation-name: fade-in;
+	animation-duration: 0.2s;
+	animation-fill-mode: forwards;
 
-    @media @width-mobile {
-        position: fixed;
-        margin: 0;
+	@media @width-mobile {
+		position: fixed;
+		margin: 0;
 
-        &>.glcard-outer {
-            padding: 1rem;
-        }
-    }
+		&>.glcard-outer {
+			padding: 1rem;
+		}
+	}
 
-    &.no-header-padding {
-        .card-header {
-            padding: 0;
-            .glmodal-title {
-                padding-top: 1rem;
-            }
-        }
-    }
+	&.no-header-padding {
+		.card-header {
+			padding: 0;
+			.glmodal-title {
+				padding-top: 1rem;
+			}
+		}
+	}
 
-    &.no-padding {
-        .card-body {
-            padding: 0;
-        }
-    }
+	&.no-padding {
+		.card-body {
+			padding: 0;
+		}
+	}
 
-    .card-header {
-        background-color: rgba(0,0,0,0);
-        border: none;
+	.card-header {
+		background-color: rgba(0,0,0,0);
+		border: none;
 
-        .close {
-            float: left;
-            font-size: 2.5rem;
-            font-weight: normal;
-            &.white-circle-bg {
-                border-radius: 50%;
-                width: 2.8rem;
-                height: 2.8rem;
-                background-color: white;
-                overflow: hidden;
-            }
-        }
+		.close {
+			float: left;
+			font-size: 2.5rem;
+			font-weight: normal;
+			&.white-circle-bg {
+				border-radius: 50%;
+				width: 2.8rem;
+				height: 2.8rem;
+				background-color: white;
+				overflow: hidden;
+			}
+		}
 
-        h4 {
-            text-align: center;
-            color: @gl-red;
-            text-transform: uppercase;
-        }
+		h4 {
+			text-align: center;
+			color: @gl-red;
+			text-transform: uppercase;
+		}
 
-        &.noClose {
-            .close {
-                display: none;
-            }
-        }
+		&.noClose {
+			.close {
+				display: none;
+			}
+		}
 
-        &.red-top-border {
-            border-top: solid @gl-red 5px;
-        }
+		&.red-top-border {
+			border-top: solid @gl-red 5px;
+		}
 
-        &.noPadding {
-            padding: 0;
-        }
-    }
+		&.noPadding {
+			padding: 0;
+		}
+	}
 } // ./glmodal
 
 .glmodal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 999;
-    background-color: rgba(0,0,0,0.3);
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: 999;
+	background-color: rgba(0,0,0,0.3);
 
-    opacity: 0;
-    animation-name: fade-in;
-    animation-duration: 0.2s;
-    animation-fill-mode: forwards;
-    @media @width-mobile {
-        z-index: 10; // puts navbar above the darkened area
-    }
+	opacity: 0;
+	animation-name: fade-in;
+	animation-duration: 0.2s;
+	animation-fill-mode: forwards;
+	@media @width-mobile {
+		z-index: 10; // puts navbar above the darkened area
+	}
 }

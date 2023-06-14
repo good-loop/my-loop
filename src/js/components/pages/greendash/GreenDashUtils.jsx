@@ -64,7 +64,6 @@ export const Mass = ({kg}) => {
 	return (<span className="mass">
 		<span className="number">{n_u[0]}</span> <span className="unit">{n_u[1]}</span>
 	</span>);
-	
 };
 
 
@@ -75,7 +74,7 @@ export const GreenCard = ({ title, children, className, row, downloadable = true
 	const pvItem = getDataItem({type: filterType, id: filterId, status: KStatus.PUB_OR_DRAFT});
 	const filterItemName = pvItem.value && pvItem.value.name;
 	const fileName = `${filterType}: ${filterItemName} - ${title}`.trim();
-	
+
 	const downloadButton = downloadable && (
 		<PNGDownloadButton
 			querySelector={`.${className}`}

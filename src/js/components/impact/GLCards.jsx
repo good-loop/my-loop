@@ -1,4 +1,5 @@
 import React, { Children, useEffect, useMemo } from 'react';
+import _ from 'lodash';
 import {Row, Col, Container, Card, CardHeader, CardBody} from 'reactstrap';
 import { space, isPortraitMobile } from '../../base/utils/miscutils';
 import { assert } from '../../base/utils/assert';
@@ -125,12 +126,13 @@ export const modalToggle = (id) => {
 		// Toggle specific modal
 		const path = MODAL_LIST_PATH.concat(id);
 		const open = DataStore.getValue(path.concat("open"));
+		const usesOwnBackdrop = DataStore.getValue(path.concat("usesOwnBackdrop"));
 		DataStore.setValue(path.concat("open"), !open);
 
 		// Check if any modals are still open, and if not close the backdrop
 		let modalObjs = DataStore.getValue(MODAL_LIST_PATH) || {};
 		const anyModalOpen = Object.values(modalObjs).map(obj => obj.open).reduce((prev, cur) => prev || cur);
-		DataStore.setValue(MODAL_BACKDROP_PATH, anyModalOpen);
+		if (!usesOwnBackdrop) DataStore.setValue(MODAL_BACKDROP_PATH, anyModalOpen);
 	} else {
 		// If none specified, that means the backdrop has been clicked - so close everything
 		let modalObjs = DataStore.getValue(MODAL_LIST_PATH) || {};
@@ -150,7 +152,11 @@ export const openAndPopulateModal = ({id, content, title, header, headerImg, hea
 	assert(id, "Must be given a modal ID to open!");
 	// Force close other modals first
 	if (prioritized) modalToggle();
-	DataStore.setValue(MODAL_LIST_PATH.concat(id), {content, title, header, headerImg, headerClassName, className});
+	// Preserve static properties
+	const usesOwnBackdrop = DataStore.getValue(MODAL_LIST_PATH.concat(id, "usesOwnBackdrop"));
+	const modalObj = {content, title, header, headerImg, headerClassName, className, usesOwnBackdrop};
+	//console.log("MODAL OBJ", modalObj);
+	DataStore.setValue(MODAL_LIST_PATH.concat(id), modalObj);
 	modalToggle(id);
 }
 
@@ -159,27 +165,26 @@ export const markPageLoaded = (loaded) => {
 }
 
 
-/** Executes components, leaves objects (ie executed but not hydrated components) unmodified */
-const resolve = Thing => (typeof Thing === 'function') ? <Thing /> : Thing;
-
-/** Allow modals to tolerate content/header provided as <Component /> or  () => <Component /> */
-const Resolver = ({children}) => (Children.map(children, resolve) || null);
-
-
 /**
  * A modal form of GLCard. Will not be visible and change nothing in the layout, but when opened will occupy the space it is assigned to as if it was in the layout, while remaining on top.
  * 
  * @param {String} id 
+ * @param {?Boolean} useOwnBackdrop create and use a new backdrop instead of using the global one
  */
-export const GLModalCard = ({className, id}) => {
+export const GLModalCard = ({className, id, useOwnBackdrop}) => {
 	const path = [...MODAL_LIST_PATH, id];
 	const props = DataStore.getValue(path);
+	//console.log("MODAL PROPS", props);
 	useEffect(() => {
-		DataStore.setValue(path, {open: false}, false);
+		DataStore.setValue(path, {open: false, usesOwnBackdrop: useOwnBackdrop}, false);
 	}, [id]);
 	if (!props) return null;
 
-	const { open, Content, title, Header, headerImg, headerClassName, storedClassName } = props;
+	const { open, title, headerImg, headerClassName } = props;
+	// Manually pull out props with mismatching names
+	const Content = props.content || props.Content;
+	const Header = props.header || props.Header;
+	const storedClassName = props.className;
 
 	const headerStyle = headerImg && {
 		backgroundImage: `url("${headerImg}")`,
@@ -187,15 +192,16 @@ export const GLModalCard = ({className, id}) => {
 	};
 
 	return open ? <>
+		{useOwnBackdrop ? <GLModalBackdrop manual show={open} id={id}/> : null}
 		<div className={space('glmodal', storedClassName, className)} id={id}>
 			<GLCard noPadding className="glmodal-inner">
 				<CardHeader style={headerStyle} className={"glmodal-header " + headerClassName}>
 					<CloseButton className="white-circle-bg" onClick={() => modalToggle(id)}/>
 					{title && <h4 className='glmodal-title'>{title}</h4>}
-					<Resolver>{Header}</Resolver>
+					{_.isFunction(Header) ? <Header/> : Header}
 				</CardHeader>
 				<CardBody>
-					<Resolver>{Content}</Resolver>
+					{_.isFunction(Content) ? <Content/> : Content}
 				</CardBody>
 			</GLCard>
 		</div>
@@ -205,7 +211,7 @@ export const GLModalCard = ({className, id}) => {
 /**
  * Backdrop for all GLModalCards on a page. Closes all modals on click.
  */
-export const GLModalBackdrop = ({className}) => {
-	const open = DataStore.getValue(MODAL_BACKDROP_PATH);
-	return open ? <div onClick={() => modalToggle()} className='glmodal-backdrop'/> : null;
+export const GLModalBackdrop = ({className, manual, show, id}) => {
+	const open = manual ? show : DataStore.getValue(MODAL_BACKDROP_PATH);
+	return open ? <div onClick={() => modalToggle(id)} className='glmodal-backdrop'/> : null;
 };

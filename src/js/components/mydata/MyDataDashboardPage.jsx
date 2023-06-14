@@ -108,11 +108,10 @@ const MyDataDashboardPage = () => {
 	let user = Login.getUser();
 	let name = getPersonSetting({key:'name'}) || user.name || user.xid;
 
-	
 	const pvNgo = getCharityObject();
 	let ngo = null;
 	if (pvNgo) ngo = pvNgo.value || pvNgo.interim;
-	
+
 	let joinedDate = getJoinedDate();
 	let locationCountryCode = getPersonSetting({key:"country"});
 	let locationCountry = countryListAlpha2[locationCountryCode];
@@ -126,7 +125,7 @@ const MyDataDashboardPage = () => {
 			setShowBadgeInfo(badge);
 		}
 	};
-	
+
 	// const toggleShowInfoTabs = () => {
 	// 	setShowInfoTabs(!showInfoTabs);
 	// 	// hide any others
@@ -160,7 +159,7 @@ const MyDataDashboardPage = () => {
 		<br/>
 		{/*
 		Deprecated as of 12/09/2022 - pause of my-data means these are irrelevant
-		
+
 		<Container id="badges" className="d-flex justify-content-between">
 			<MyDataBadge badgeName="Data" progress={getDataProgress()} backgroundImage="img/mydata/data-badge.png" 
 				// notification={1}  multi-level?? not in this release
@@ -170,7 +169,7 @@ const MyDataDashboardPage = () => {
 			<MyDataBadge badgeName="Ads" progress={+hasWatchedThisWeeksAd()} backgroundImage="img/mydata/ads-badge.png" 
 				toggle={() => toggleShowBadgeInfo("ads")} />
 		</Container>
-		
+
 		<Collapse isOpen={showBadgeInfo==="data"}>
 			<div className="speech-bubble bubble-left">
 				<p>The Data-Hero badge: Add to your data profile to earn more and collect this badge.</p>

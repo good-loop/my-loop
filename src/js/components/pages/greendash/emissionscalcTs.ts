@@ -74,9 +74,9 @@ export type BaseFiltersFailed = {
 export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed => {
 	// Default to current quarter, all brands, all campaigns
 	const period = urlParams.period;
-	if ( ! period) {
+	if (!period) {
 		console.warn("use getUrlVars() then getPeriodFromUrlParams() then add period!");
-	}	
+	}
 	let { filterType, filterId } = getFilterTypeId();
 
 	let failedObject: BaseFiltersFailed = {};
@@ -183,9 +183,7 @@ export const getCarbon = ({
 		['misc', 'DataLog', 'green', md5(JSON.stringify(data))],
 		() => {
 			return ServerIO.load(endpoint || ServerIO.DATALOG_ENDPOINT, { data, swallow: true, method:"POST" });
-		},
-		null,
-		null
+		}
 	);
 };
 

@@ -16,7 +16,9 @@ import Login from '../../base/youagain';
 import { modifyPage } from '../../base/plumbing/glrouter';
 import { CompleteDataCTA } from './MyDataDashboardPage';
 import C from '../../C';
-// Prase list of strings into individual spans if the input is a list of strings
+
+
+// Parse list of strings into individual spans if the input is a list of strings
 const parseList = (value) => {
 	const valueMap = {...causesMap, ...adstypeMap};
 
@@ -36,7 +38,6 @@ const parseList = (value) => {
 
 
 const HowItWordsGuide = () => {
-
 	const PrivacyCard = ({ iconIMG, title, content }) => {
 		const [smallCardCollapse, setSmallCardCollapse] = useState(false);
 		const smallCardToggle = () => setSmallCardCollapse(!smallCardCollapse);
@@ -49,8 +50,8 @@ const HowItWordsGuide = () => {
 			<Collapse isOpen={smallCardCollapse}>
 				<div className="small-card-content text-left p-3">{content}</div>
 			</Collapse>
-		</div>)
-	}
+		</div>);
+	};
 
 	const [cardCollapse, setCardCollapse] = useState(false);
 	const cardToggle = () => setCardCollapse(!cardCollapse);
@@ -74,7 +75,7 @@ const HowItWordsGuide = () => {
 					content="This means your data will not be shared or used to raise money for charity. We will only use it to display your info within My.Data." />
 			</Collapse>
 		</div>
-	</Container>)
+	</Container>);
 };
 
 const SupportingCard = () => {
@@ -95,7 +96,7 @@ const SupportingCard = () => {
 		</>}
 
 		<hr/>
-	</Container>)
+	</Container>);
 }
 
 const DataSharedProgressBar = () => {
@@ -175,12 +176,13 @@ const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
 		if (displayValue) {
 			console.log("ATTEMPTING TO PARSE LIST:",displayValue);
 			displayValue = parseList(displayValue);
-		}
-		else 
+		} else {
 			displayValue = <a onClick={editModeToggle}>Add+</a>;
-		
-		if (itemKey == "adstype" || itemKey == "causes") 
+		}
+
+		if (itemKey == "adstype" || itemKey == "causes") {
 			displayValue = <><div className="pill-container">{displayValue}</div></>
+		}
 	}
 
 
@@ -208,7 +210,6 @@ const SettingItem = ({ description, itemKey, type = "text", ...props }) => {
 
 
 const DataProfile = () => {
-
 	const email = getEmail();
 
 	useEffect(() => {

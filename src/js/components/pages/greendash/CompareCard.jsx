@@ -158,7 +158,7 @@ const CampaignCard = ({baseFilters}) => {
 	let vbyx = {};
 	let labels = [];
 	let values = [];
-	
+
 	const per1000 = isPer1000();
 
 	if (dataValue) {
@@ -171,10 +171,10 @@ const CampaignCard = ({baseFilters}) => {
 		buckets.forEach(row => breakdownByX[row.key] = {'co2': row.co2, 'count': row.count});
 
 		vbyx = getCompressedBreakdownWithCount({breakdownByX});
-		
+
 		// reformat ids we want to find names of into a bucket format (remove 'other' too)
 		const idsToNames = Object.keys(vbyx).filter(key => key != "Other");
-		
+
 		let pvCampaigns = getDataList({ type: C.TYPES.Campaign, status: KStatus.PUB_OR_DRAFT, ids: idsToNames });
 
 		if (pvCampaigns && PromiseValue.isa(pvCampaigns.value)) {

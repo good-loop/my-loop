@@ -44,7 +44,8 @@ const osTypes = {
 	tvos: { type: 'smart', group: 'Smart TV', name: 'Apple TV' },
 	sony: { type: 'smart', group: 'Smart TV', name: 'Sony TV' },
 	hisense: { type: 'smart', group: 'Smart TV', name: 'Hisense TV' },
-	panasonic: { type: 'smart', group: 'Smart TV', name: 'Hisense TV' },
+	panasonic: { type: 'smart', group: 'Smart TV', name: 'Panasonic TV' },
+	tcl: { type: 'smart', group: 'Smart TV', name: 'Panasonic TV' },
 };
 
 const pieOptions = (totalCO2, minimumPercentLabeled) => ({

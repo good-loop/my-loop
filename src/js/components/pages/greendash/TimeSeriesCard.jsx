@@ -163,7 +163,7 @@ const TimeSeriesCard = ({ period, data: timeTable, per1000, noData }) => {
 		if (per1000) {
 			timeTable = emissionsPerImpressions(timeTable, -1);
 		}
-		
+
 		// Sum total emissions for each date across all other factors, sort, and unzip to labels/data arrays
 		Object.entries(getBreakdownByWithCount(timeTable, ['co2'], 'time')).sort(
 			([ta], [tb]) => new Date(ta).getTime() - new Date(tb).getTime()

@@ -41,7 +41,10 @@ const authPages = [
     'greendash?tag=Y4XafmRH&period=all',
     'greendash?campaign=Coq3BZst&period=all',
     'greendash?tag=F0GXDusO&period=all',
-    'greendash/recommendation?campaign=iLWiEWO6&period=all'
+    'greendash/recommendation?campaign=iLWiEWO6&period=all',
+
+    // A bug seen after Jun 23 release
+    'greendash/metrics?start=2023-04-30T14%3A00%3A00.000Z&end=2023-05-31T14%3A00%3A00.000Z&emode=total&tz=Australia/Sydney&period=last-month&ft=Agency&agency=IGX8mWqY'
 ]
 
 const baseUrl = process.env.TEST_URL || 'https://stagemy.good-loop.com/';
