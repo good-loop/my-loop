@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { animated } from 'react-spring';
 import TODO from '../../base/components/TODO';
+import DevOnly from '../../base/components/DevOnly';
 import { Button, Col, Container, Row } from 'reactstrap';
 import BG from '../../base/components/BG';
 import { GLCard, GLHorizontal, GLVertical, GLModalCard, GLModalBackdrop } from './GLCards';
@@ -688,15 +689,15 @@ const CO2OffsetInfo = () => {
 }
 
 const BrandList = ({brand, subBrands}) => {
-	console.log('BrandList executing');
-	debugger;
 	const BrandListItem = ({item}) => {
-		return <Col md={4} className="mt-3">
-			<GLCard className="preview h-100" noMargin href={"/impact/view/brand/"+item.id}>
+		const contents = <Col md={4} className="mt-3">
+			<GLCard className={space("preview h-100", item._shouldHide && "bg-gl-light-red")} noMargin href={"/impact/view/brand/"+item.id}>
 				{item && item.branding?.logo && <img  src={item.branding.logo} className="logo"/>}
+				{item._shouldHide && <p className='text-white'>Normally hidden</p>}
 				<p className='text-center'>{item.name}</p>
 			</GLCard>
 		</Col>;
+		return item._shouldHide ? <DevOnly>{contents}</DevOnly> : contents;
 	}
 
 	return <>
@@ -760,8 +761,6 @@ const CampaignList = ({campaigns, brand, subBrands, status}) => {
 		allBrands[b.id] = b;
 	});
 
-	console.log("TIHS IS A TEST");
-
 	return <>
 		<br/>
 		<h5>Campaigns run via Good-Loop Ads</h5>
@@ -770,14 +769,16 @@ const CampaignList = ({campaigns, brand, subBrands, status}) => {
 		<GLVertical>
 			{campaigns.map(campaign => {
 				const myBrand = allBrands[campaign.vertiser];
-				return <GLCard className="preview campaign mt-3" noMargin key={campaign.id} href={"/impact/view/campaign/" + campaign.id}>
+				const contents = <GLCard className={space("preview campaign mt-3", campaign._shouldHide && "bg-gl-light-red")} noMargin key={campaign.id} href={"/impact/view/campaign/" + campaign.id}>
 					<p className='w-75 text-left m-0'>
 						<b>{myBrand.name || campaign.vertiserName}</b>
 						<br/>
 						{campaign.name}
 					</p>
+					{campaign._shouldHide && <p className='text-white'>Normally Hidden</p>}
 					<Logo item={myBrand} />
-				</GLCard>
+				</GLCard>;
+				return campaign._shouldHide ? <DevOnly>{contents}</DevOnly> : contents;
 			})}
 		</GLVertical>
 	</>;
