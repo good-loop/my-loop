@@ -183,9 +183,7 @@ export const getCarbon = ({
 		['misc', 'DataLog', 'green', md5(JSON.stringify(data))],
 		() => {
 			return ServerIO.load(endpoint || ServerIO.DATALOG_ENDPOINT, { data, swallow: true, method:"POST" });
-		},
-		null,
-		null
+		}
 	);
 };
 

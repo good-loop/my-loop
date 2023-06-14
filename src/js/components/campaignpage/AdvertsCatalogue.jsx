@@ -86,8 +86,7 @@ const AdvertsCatalogue = ({ ads, noPreviews, className, captions=true}) => {
 				</div>
 			</Carousel>
 			{!noPreviews && <>
-				<br />
-				<br />
+				{/* <br /><br /> reduce the whitespace - Dan, Jun 2023 */}
 				<AdPreviewCarousel ads={ads} setSelected={goToIndex} selectedIndex={activeIndex} />
 			</>}
 		</Container>
