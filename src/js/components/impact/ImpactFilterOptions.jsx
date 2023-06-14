@@ -46,6 +46,7 @@ const ImpactFilterOptions = ({size, pvBaseObjects, status, setForcedReload, curP
 	return <>
 		{content}
 		<GLModalCard className='filter-display' id="filter-display" useOwnBackdrop >
+			{/* This gets filled in elsewhere by openAndPopulateModal() id:"filter-display" */}
 		</GLModalCard>
 	</>;
 }
