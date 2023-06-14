@@ -1,4 +1,5 @@
 import React, { Children, useEffect, useMemo } from 'react';
+import _ from 'lodash';
 import {Row, Col, Container, Card, CardHeader, CardBody} from 'reactstrap';
 import { space, isPortraitMobile } from '../../base/utils/miscutils';
 import { assert } from '../../base/utils/assert';
@@ -153,7 +154,9 @@ export const openAndPopulateModal = ({id, content, title, header, headerImg, hea
 	if (prioritized) modalToggle();
 	// Preserve static properties
 	const usesOwnBackdrop = DataStore.getValue(MODAL_LIST_PATH.concat(id, "usesOwnBackdrop"));
-	DataStore.setValue(MODAL_LIST_PATH.concat(id), {content, title, header, headerImg, headerClassName, className, usesOwnBackdrop});
+	const modalObj = {content, title, header, headerImg, headerClassName, className, usesOwnBackdrop};
+	//console.log("MODAL OBJ", modalObj);
+	DataStore.setValue(MODAL_LIST_PATH.concat(id), modalObj);
 	modalToggle(id);
 }
 
@@ -171,12 +174,17 @@ export const markPageLoaded = (loaded) => {
 export const GLModalCard = ({className, id, useOwnBackdrop}) => {
 	const path = [...MODAL_LIST_PATH, id];
 	const props = DataStore.getValue(path);
+	//console.log("MODAL PROPS", props);
 	useEffect(() => {
 		DataStore.setValue(path, {open: false, usesOwnBackdrop: useOwnBackdrop}, false);
 	}, [id]);
 	if (!props) return null;
 
-	const { open, Content, title, Header, headerImg, headerClassName, storedClassName } = props;
+	const { open, title, headerImg, headerClassName } = props;
+	// Manually pull out props with mismatching names
+	const Content = props.content;
+	const Header = props.header;
+	const storedClassName = props.className;
 
 	const headerStyle = headerImg && {
 		backgroundImage: `url("${headerImg}")`,
@@ -190,10 +198,10 @@ export const GLModalCard = ({className, id, useOwnBackdrop}) => {
 				<CardHeader style={headerStyle} className={"glmodal-header " + headerClassName}>
 					<CloseButton className="white-circle-bg" onClick={() => modalToggle(id)}/>
 					{title && <h4 className='glmodal-title'>{title}</h4>}
-					{Header}
+					{_.isFunction(Header) ? <Header/> : Header}
 				</CardHeader>
 				<CardBody>
-					{Content}
+					{_.isFunction(Content) ? <Content/> : Content}
 				</CardBody>
 			</GLCard>
 		</div>
