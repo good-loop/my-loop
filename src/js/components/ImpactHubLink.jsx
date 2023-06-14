@@ -3,6 +3,7 @@ import React from 'react';
 import C from '../C';
 import { space } from '../base/utils/miscutils';
 import { getId, getType } from '../base/data/DataClass';
+import Logo from '../base/components/Logo';
 
 
 /**
@@ -14,12 +15,12 @@ import { getId, getType } from '../base/data/DataClass';
  * @param {Object} p
  * @param {?boolean} devOnly
  */
-const ImpactHubLink = ({item,title,size,className}) => {
+const ImpactHubLink = ({item,title,size,className,logo}) => {
 	let href = getImpactHubLink(item);
 	if ( ! href) {
 		return null;
 	}
-	return <C.A className={space(size,className)} href={href}>{title || item.name}</C.A>;
+	return <C.A className={space(size,className)} href={href}>{logo? <Logo size="sm" item={item}/> : (title || item.name)}</C.A>;
 };
 
 /**

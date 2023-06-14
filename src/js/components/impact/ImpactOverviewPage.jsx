@@ -458,8 +458,8 @@ function CharitiesCardSet({charities, impactDebits}) {
 			<CharityCard id={getId(charity)} charity={charity} impactDebits={impactDebits} />
 		)}
 		{charitiesAugmented.length > 3 && 
-			<GLCard>Plus: {charitiesAugmented.slice(3).map(
-				charity => <ImpactHubLink className="mr-2" item={charity} title={NGO.displayName(charity)} />)}
+			<GLCard>Plus {charitiesAugmented.length-3} more: {charitiesAugmented.slice(3).map(
+				charity => <ImpactHubLink className="mr-2" item={charity} logo title={NGO.displayName(charity)} />)}
 			</GLCard>
 		}
 	</Row>
