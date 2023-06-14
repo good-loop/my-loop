@@ -23,6 +23,11 @@ import { addAmountSuffixToNumber, space } from '../../base/utils/miscutils';
 import { dataColours, getCountryFlag, getCountryName } from '../pages/greendash/dashUtils';
 import { isEmpty, keyBy, sumBy } from 'lodash';
 import Logo from '../../base/components/Logo';
+import DevOnly from '../../base/components/DevOnly';
+import PortalLink from '../../base/components/PortalLink';
+import { getMainItem } from './ImpactPages';
+import ImpactSettings from '../../base/data/ImpactSettings';
+import MDText from '../../base/components/MDText';
 
 export class ImpactFilters {
 	agency;
@@ -59,6 +64,7 @@ function IOPFirstHalf({ wtdAds, tadgAds, brand, campaign, charities, impactDebit
 			<div className='white-circle'>
 				<div className='content'>
 					<img  className='logo' src={mainLogo} />
+					<DevOnly><PortalLink item={brand} /></DevOnly>
 					<br/>
 					<h1>{totalString}</h1>
 					<h2>Donated</h2>
@@ -236,7 +242,10 @@ function AdsCatalogueCard({ ads, campaign, unwrap }) {
 const IOPSecondHalf = (baseObjects) => {
 	const { campaign, ads } = baseObjects;
 
+	const mainItem = getMainItem(baseObjects);
+
 	return <GLVertical>
+		{mainItem && mainItem.impactSettings.csrHtml && <GLCard><MDText source={mainItem.impactSettings.csrHtml} /></GLCard>}
 		{/* top right corner */}
 		{!campaign && <GLHorizontal collapse="md" basis={60}>
 			<GLVertical>

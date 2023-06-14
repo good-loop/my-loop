@@ -6,6 +6,7 @@ import NavBars from './ImpactNavBars';
 import ImpactLoginCard from './ImpactLogin';
 import ImpactFilterOptions from './ImpactFilterOptions'
 import KStatus from '../../base/data/KStatus';
+import ImpactSettings from '../../base/data/ImpactSettings';
 import ImpactLoadingScreen from './ImpactLoadingScreen'
 import Money from '../../base/data/Money';
 import { fetchImpactBaseObjects } from '../../base/data/ImpactPageData';
@@ -21,6 +22,8 @@ import ImpactStatsPage from './ImpactStatsPage';
  */
 
 import Login from '../../base/youagain';
+import StyleBlock from '../../base/components/StyleBlock';
+import DataClass from '../../base/data/DataClass';
 
 
 const IMPACT_PAGES = {
@@ -29,6 +32,17 @@ const IMPACT_PAGES = {
 	stat: ImpactStatsPage,
 }
 
+/**
+ * HACK what is the main item this page is about?
+ * @param {} baseObjects {campaign, brand, masterBrand}
+ * @returns {?DataClass}
+ */
+export function getMainItem(baseObjects) {
+	// TODO look at the url!
+	if ( ! baseObjects) return null;
+	let {campaign, brand, masterBrand} = baseObjects;
+	return campaign || brand || masterBrand;
+};
 
 const ImpactPage = () => {
 	const path = DataStore.getValue(['location', 'path']);
@@ -79,6 +93,8 @@ const ImpactPage = () => {
 
 	const {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits=[], charities=[], ads=[]} = pvBaseObjects.value || {};
 
+	// main item
+	let mainItem = getMainItem(pvBaseObjects.value); // TODO what is the url pointing at??
 	// Use campaign specific logo if given
 	const mainLogo = campaign?.branding?.logo || brand?.branding?.logo;
 
@@ -93,7 +109,11 @@ const ImpactPage = () => {
 		return <ImpactLoginCard choice={impactChosen} setChoice={setImpactChosen} masterBrand={masterBrand || brand}/>
 	}
 
+	const impactSettings = ImpactSettings.get(mainItem);
+
 	return <>
+		{impactSettings?.customCss && <StyleBlock>{impactSettings.customCss}</StyleBlock>}		
+		{impactSettings?.customHtml && <HTML>{impactSettings.customHtml}</HTML>}		
 		<div className="navbars-overlay">
 			<animated.div className='impact-navbar-flow-overlay' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}} />
 			<ImpactLoadingScreen baseObj={pvBaseObjects} forcedReload={forcedReload} setForcedReload={setForcedReload} />
