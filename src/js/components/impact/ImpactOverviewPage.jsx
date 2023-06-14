@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { animated } from 'react-spring';
 import TODO from '../../base/components/TODO';
+import DevOnly from '../../base/components/DevOnly';
 import { Button, Col, Container, Row } from 'reactstrap';
 import BG from '../../base/components/BG';
 import { GLCard, GLHorizontal, GLVertical, GLModalCard, GLModalBackdrop } from './GLCards';
@@ -25,6 +26,10 @@ import Logo from '../../base/components/Logo';
 import { getId } from '../../base/data/DataClass';
 import DevOnly from '../../base/components/DevOnly';
 import ImpactHubLink from '../ImpactHubLink';
+import PortalLink from '../../base/components/PortalLink';
+import { getMainItem } from './ImpactPages';
+import ImpactSettings from '../../base/data/ImpactSettings';
+import MDText from '../../base/components/MDText';
 
 export class ImpactFilters {
 	agency;
@@ -61,6 +66,7 @@ function IOPFirstHalf({ wtdAds, tadgAds, brand, campaign, charities, impactDebit
 			<div className='white-circle'>
 				<div className='content'>
 					<img  className='logo' src={mainLogo} />
+					<DevOnly><PortalLink item={brand} /></DevOnly>
 					<br/>
 					<h1>{totalString}</h1>
 					<h2>Donated</h2>
@@ -90,23 +96,23 @@ function IOPFirstHalf({ wtdAds, tadgAds, brand, campaign, charities, impactDebit
  * Expanded: List of campaigns
  * @param {obect} p
  * @param {object[]} p.brand Currently focused brand
- * @param {object[]} p.subBrandsWithDebits List of brands under the current focus which have impact debits attached
+ * @param {object[]} p.subBrandsDisplayable List of brands under the current focus which have impact debits attached
  * 
  * @returns {JSX.Element}
  */
-function SubBrandsCard({ brand, subBrandsWithDebits }) {
-	if (!subBrandsWithDebits.length) return null;
+function SubBrandsCard({ brand, subBrandsDisplayable }) {
+	if (!subBrandsDisplayable.length) return null;
 
 	const cardProps = {
 		className: 'center-number',
-		modalContent: <BrandList brand={brand} subBrands={subBrandsWithDebits} />,
-		modalTitle: `${subBrandsWithDebits.length} Brands`,
+		modalContent: <BrandList brand={brand} subBrands={subBrandsDisplayable} />,
+		modalTitle: `${subBrandsDisplayable.length} Brands`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
 	};
 
 	return <GLCard {...cardProps}>
-		<h2>{subBrandsWithDebits.length}</h2>
+		<h2>{subBrandsDisplayable.length}</h2>
 		<h3>Brands</h3>
 	</GLCard>;
 }
@@ -139,25 +145,25 @@ function CharitiesCard({ charities }) {
  * Collapsed: Count of campaigns/sub-campaigns under the current focus
  * Expanded: List of campaigns
  * @param {obect} p
- * @param {object[]} p.subCampaignsWithDebits List of campaigns under the current focus which have impact debits attached
+ * @param {object[]} p.subCampaignsDisplayable List of campaigns under the current focus which have impact debits attached
  * @param {object[]} p.brand Currently focused brand
  * @param {object[]} p.subBrands List of sub-brands under the current focus
  * @param {object[]} p.impactDebits ImpactDebits associated with campaigns under the current focus
  * @returns {JSX.Element}
  */
-function SubCampaignsCard({ brand, subBrands, subCampaignsWithDebits, impactDebits}) {
-	if (!subCampaignsWithDebits.length) return null;
+function SubCampaignsCard({ brand, subBrands, subCampaignsDisplayable, impactDebits}) {
+	if (!subCampaignsDisplayable.length) return null;
 
 	const cardProps = {
 		basis: 10,
-		modalContent: <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaignsWithDebits} impactDebits={impactDebits}/>,
-		modalTitle: `${subCampaignsWithDebits.length} Campaigns`,
+		modalContent: () => <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaignsDisplayable} impactDebits={impactDebits}/>,
+		modalTitle: `${subCampaignsDisplayable.length} Campaigns`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
 	};
 
 	return <GLCard {...cardProps}>
-		<h3>{subCampaignsWithDebits.length} CAMPAIGNS</h3>
+		<h3>{subCampaignsDisplayable.length} CAMPAIGNS</h3>
 	</GLCard>;
 }
 
@@ -238,7 +244,10 @@ function AdsCatalogueCard({ ads, campaign, unwrap }) {
 const IOPSecondHalf = (baseObjects) => {
 	const { campaign, ads } = baseObjects;
 
+	const mainItem = getMainItem(baseObjects);
+
 	return <GLVertical>
+		{mainItem && mainItem.impactSettings?.csrHtml && <GLCard><MDText source={mainItem.impactSettings?.csrHtml} /></GLCard>}
 		{/* top right corner */}
 		{!campaign && <GLHorizontal collapse="md" basis={60}>
 			<GLVertical>
@@ -698,15 +707,15 @@ const CO2OffsetInfo = () => {
 }
 
 const BrandList = ({brand, subBrands}) => {
-	console.log('BrandList executing');
-	debugger;
 	const BrandListItem = ({item}) => {
-		return <Col md={4} className="mt-3">
-			<GLCard className="preview h-100" noMargin href={"/impact/view/brand/"+item.id}>
+		const contents = <Col md={4} className="mt-3">
+			<GLCard className={space("preview h-100", item._shouldHide && "bg-gl-light-red")} noMargin href={"/impact/view/brand/"+item.id}>
 				{item && item.branding?.logo && <img  src={item.branding.logo} className="logo"/>}
+				{item._shouldHide && <p className='text-white'>Normally hidden</p>}
 				<p className='text-center'>{item.name}</p>
 			</GLCard>
 		</Col>;
+		return item._shouldHide ? <DevOnly>{contents}</DevOnly> : contents;
 	}
 
 	return <>
@@ -778,14 +787,16 @@ const CampaignList = ({campaigns, brand, subBrands, status}) => {
 		<GLVertical>
 			{campaigns.map(campaign => {
 				const myBrand = allBrands[campaign.vertiser];
-				return <GLCard className="preview campaign mt-3" noMargin key={campaign.id} href={"/impact/view/campaign/" + campaign.id}>
+				const contents = <GLCard className={space("preview campaign mt-3", campaign._shouldHide && "bg-gl-light-red")} noMargin key={campaign.id} href={"/impact/view/campaign/" + campaign.id}>
 					<p className='w-75 text-left m-0'>
 						<b>{myBrand.name || campaign.vertiserName}</b>
 						<br/>
 						{campaign.name}
 					</p>
+					{campaign._shouldHide && <p className='text-white'>Normally Hidden</p>}
 					<Logo item={myBrand} />
-				</GLCard>
+				</GLCard>;
+				return campaign._shouldHide ? <DevOnly>{contents}</DevOnly> : contents;
 			})}
 		</GLVertical>
 	</>;
