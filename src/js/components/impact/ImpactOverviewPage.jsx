@@ -244,7 +244,7 @@ const IOPSecondHalf = (baseObjects) => {
 	const mainItem = getMainItem(baseObjects);
 
 	return <GLVertical>
-		{mainItem && mainItem.impactSettings.csrHtml && <GLCard><MDText source={mainItem.impactSettings.csrHtml} /></GLCard>}
+		{mainItem && mainItem.impactSettings?.csrHtml && <GLCard><MDText source={mainItem.impactSettings?.csrHtml} /></GLCard>}
 		{/* top right corner */}
 		{!campaign && <GLHorizontal collapse="md" basis={60}>
 			<GLVertical>
