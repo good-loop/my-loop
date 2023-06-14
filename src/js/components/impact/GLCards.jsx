@@ -182,8 +182,8 @@ export const GLModalCard = ({className, id, useOwnBackdrop}) => {
 
 	const { open, title, headerImg, headerClassName } = props;
 	// Manually pull out props with mismatching names
-	const Content = props.content;
-	const Header = props.header;
+	const Content = props.content || props.Content;
+	const Header = props.header || props.Header;
 	const storedClassName = props.className;
 
 	const headerStyle = headerImg && {

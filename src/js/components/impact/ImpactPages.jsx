@@ -46,9 +46,6 @@ const ImpactPage = () => {
 	const itemType = path[2]
 	const itemId = path[3]
 
-	console.log("START", start);
-	console.log("END", end);
-
 	// FIXME overlapping functions -- need to resolve on one.
 	let pvBaseObjects = fetchImpactBaseObjects({itemId, itemType, status, start, end});
 

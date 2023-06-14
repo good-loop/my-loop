@@ -87,23 +87,23 @@ function IOPFirstHalf({ wtdAds, tadgAds, brand, campaign, charities, impactDebit
  * Expanded: List of campaigns
  * @param {obect} p
  * @param {object[]} p.brand Currently focused brand
- * @param {object[]} p.subBrandsWithDebits List of brands under the current focus which have impact debits attached
+ * @param {object[]} p.subBrandsDisplayable List of brands under the current focus which have impact debits attached
  * 
  * @returns {JSX.Element}
  */
-function SubBrandsCard({ brand, subBrandsWithDebits }) {
-	if (!subBrandsWithDebits.length) return null;
+function SubBrandsCard({ brand, subBrandsDisplayable }) {
+	if (!subBrandsDisplayable.length) return null;
 
 	const cardProps = {
 		className: 'center-number',
-		modalContent: <BrandList brand={brand} subBrands={subBrandsWithDebits} />,
-		modalTitle: `${subBrandsWithDebits.length} Brands`,
+		modalContent: <BrandList brand={brand} subBrands={subBrandsDisplayable} />,
+		modalTitle: `${subBrandsDisplayable.length} Brands`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
 	};
 
 	return <GLCard {...cardProps}>
-		<h2>{subBrandsWithDebits.length}</h2>
+		<h2>{subBrandsDisplayable.length}</h2>
 		<h3>Brands</h3>
 	</GLCard>;
 }
@@ -136,25 +136,25 @@ function CharitiesCard({ charities }) {
  * Collapsed: Count of campaigns/sub-campaigns under the current focus
  * Expanded: List of campaigns
  * @param {obect} p
- * @param {object[]} p.subCampaignsWithDebits List of campaigns under the current focus which have impact debits attached
+ * @param {object[]} p.subCampaignsDisplayable List of campaigns under the current focus which have impact debits attached
  * @param {object[]} p.brand Currently focused brand
  * @param {object[]} p.subBrands List of sub-brands under the current focus
  * @param {object[]} p.impactDebits ImpactDebits associated with campaigns under the current focus
  * @returns {JSX.Element}
  */
-function SubCampaignsCard({ brand, subBrands, subCampaignsWithDebits, impactDebits}) {
-	if (!subCampaignsWithDebits.length) return null;
+function SubCampaignsCard({ brand, subBrands, subCampaignsDisplayable, impactDebits}) {
+	if (!subCampaignsDisplayable.length) return null;
 
 	const cardProps = {
 		basis: 10,
-		modalContent: <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaignsWithDebits} impactDebits={impactDebits}/>,
-		modalTitle: `${subCampaignsWithDebits.length} Campaigns`,
+		modalContent: () => <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaignsDisplayable} impactDebits={impactDebits}/>,
+		modalTitle: `${subCampaignsDisplayable.length} Campaigns`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
 	};
 
 	return <GLCard {...cardProps}>
-		<h3>{subCampaignsWithDebits.length} CAMPAIGNS</h3>
+		<h3>{subCampaignsDisplayable.length} CAMPAIGNS</h3>
 	</GLCard>;
 }
 
@@ -758,6 +758,8 @@ const CampaignList = ({campaigns, brand, subBrands, status}) => {
 	allBrandList.forEach(b => {
 		allBrands[b.id] = b;
 	});
+
+	console.log("TIHS IS A TEST");
 
 	return <>
 		<br/>
