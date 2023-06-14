@@ -9,7 +9,7 @@ import KStatus from '../../base/data/KStatus';
 import ImpactLoadingScreen from './ImpactLoadingScreen'
 import Money from '../../base/data/Money';
 import { fetchImpactBaseObjects } from '../../base/data/ImpactPageData';
-
+import { isoDate } from '../../base/utils/date-utils';
 import { ErrorDisplay } from './ImpactComponents';
 import ImpactOverviewPage from './ImpactOverviewPage';
 import ImpactStoriesPage from './stories_components/ImpactStoriesPage';
@@ -37,12 +37,20 @@ const ImpactPage = () => {
 		return <ErrorDisplay e={{message: 'Invalid URL: Not enough details in path - expected e.g. /brand/acme'}} />
 	}
 	const status = DataStore.getUrlValue('gl.status') || DataStore.getUrlValue('status') || KStatus.PUBLISHED;
+	// DEBUG
+	const usePeriod = DataStore.getUrlValue('usePeriod');
+	// END DEBUG
+	const start = usePeriod && isoDate(DataStore.getUrlValue('start'));
+	const end = usePeriod && isoDate(DataStore.getUrlValue('end'));
 	const page = path[1]
 	const itemType = path[2]
 	const itemId = path[3]
 
+	console.log("START", start);
+	console.log("END", end);
+
 	// FIXME overlapping functions -- need to resolve on one.
-	let pvBaseObjects = fetchImpactBaseObjects({itemId, itemType, status});
+	let pvBaseObjects = fetchImpactBaseObjects({itemId, itemType, status, start, end});
 
 	let [pageName, PageContent] = ({
 		view: ['Overview', IMPACT_PAGES.view],
