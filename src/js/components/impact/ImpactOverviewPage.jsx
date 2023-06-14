@@ -22,6 +22,9 @@ import { addAmountSuffixToNumber, space } from '../../base/utils/miscutils';
 import { dataColours, getCountryFlag, getCountryName } from '../pages/greendash/dashUtils';
 import { isEmpty, keyBy, sumBy } from 'lodash';
 import Logo from '../../base/components/Logo';
+import { getId } from '../../base/data/DataClass';
+import DevOnly from '../../base/components/DevOnly';
+import ImpactHubLink from '../ImpactHubLink';
 
 export class ImpactFilters {
 	agency;
@@ -425,8 +428,12 @@ const augCharityComparator = (a, b) => {
 function CharitiesCardSet({charities, impactDebits}) {
 	const [charitiesAugmented, setCharitiesAugmented] = useState([]);
 
+	if ( !charities?.length) {		
+		return <DevOnly>No charities</DevOnly>;	
+	};
+
 	useEffect(() => {
-		if (!charities?.length) return;
+		assert(charities);
 		// Attach donation total (sum of monetary ImpactDebits) to each charity & sort highest-first
 		const nextCharitiesAugmented = charities.map(charity => {
 			const cid = NGO.id(charity);
@@ -443,17 +450,20 @@ function CharitiesCardSet({charities, impactDebits}) {
 		setCharitiesAugmented(nextCharitiesAugmented);
 	}, [charities, impactDebits]);
 
-	const content = charitiesAugmented.length ? (
-		charitiesAugmented.slice(0, 3).map(charity => (
-			<CharityCard charity={charity} impactDebits={impactDebits} />
-		))
-	) : (
-		<Misc.Loading text="Fetching donation data..." />
-	);
-
-	return <GLHorizontal>
-		{content}
-	</GLHorizontal>;
+	if ( ! charitiesAugmented.length) {
+		return <Misc.Loading text="Fetching donation data..." />;
+	}
+	return <><Row>
+		{charitiesAugmented.slice(0, 3).map(charity => 
+			<CharityCard id={getId(charity)} charity={charity} impactDebits={impactDebits} />
+		)}
+		{charitiesAugmented.length > 3 && 
+			<GLCard>Plus: {charitiesAugmented.slice(3).map(
+				charity => <ImpactHubLink className="mr-2" item={charity} title={NGO.displayName(charity)} />)}
+			</GLCard>
+		}
+	</Row>
+	</>;
 };
 
 
@@ -461,7 +471,7 @@ function CharitiesCardSet({charities, impactDebits}) {
  * #
 */
 function CharityCard({charity}) {
-	return <GLCard className="charity-card" noPadding>
+	return <GLCard className="charity-card">
 		<img alt={charity.name} src={charity.logo} className="charity-logo" />
 		<h2 className="donation-total">
 			{Money.prettyStr(charity.dntnTotal)}
