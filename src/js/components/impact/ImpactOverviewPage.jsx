@@ -191,13 +191,13 @@ function OffsetsCard() {
  * 
  * @returns {JSX.Element}
  */
-function AdsCatalogueCard({ ads, campaign, noPreviews, unwrap }) {
+function AdsCatalogueCard({ ads, campaign, unwrap }) {
 	let showAds = ads.filter(ad => !Advert.hideFromShowcase(ad));
 
 	const content = showAds.length ? (
 		<AdvertsCatalogue
 			ads={showAds}
-			noPreviews={noPreviews}
+			noPreviews
 		/>
 	) : (
 		<h3>No ads yet!</h3>
@@ -215,7 +215,7 @@ function AdsCatalogueCard({ ads, campaign, noPreviews, unwrap }) {
 
 	return <GLCard {...cardProps}>
 		{content}
-</GLCard>
+	</GLCard>
 }
 
 
