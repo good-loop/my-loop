@@ -24,7 +24,6 @@ import { dataColours, getCountryFlag, getCountryName } from '../pages/greendash/
 import { isEmpty, keyBy, sumBy } from 'lodash';
 import Logo from '../../base/components/Logo';
 import { getId } from '../../base/data/DataClass';
-import DevOnly from '../../base/components/DevOnly';
 import ImpactHubLink from '../ImpactHubLink';
 import PortalLink from '../../base/components/PortalLink';
 import { getMainItem } from './ImpactPages';
@@ -247,7 +246,7 @@ const IOPSecondHalf = (baseObjects) => {
 	const mainItem = getMainItem(baseObjects);
 
 	return <GLVertical>
-		{mainItem && mainItem.impactSettings?.csrHtml && <GLCard><MDText source={mainItem.impactSettings?.csrHtml} /></GLCard>}
+		{mainItem?.impactSettings?.csrHtml && <GLCard><MDText source={mainItem.impactSettings.csrHtml} /></GLCard>}
 		{/* top right corner */}
 		{!campaign && <GLHorizontal collapse="md" basis={60}>
 			<GLVertical>
@@ -821,11 +820,6 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 	const impressions = sumBy(Object.values(impressionData), 'impressions') // sum impressions over all regions
 	const countryWord = (totalCountries === 1) ? 'COUNTRY' : 'COUNTRIES';
 
-	// assign colours to data object for map 
-	Object.keys(impressionData).forEach((country) => {
-		impressionData[country].colour = 'hsl(8, 100%, 23%)';
-	});
-
 	const modalMapCardContent = <>
 		<MapCardContent data={impressionData}/>
 		<CampaignCountryList data={impressionData} />
@@ -890,18 +884,14 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 
 	let regions = [];
 	Object.entries(mapDefs.regions).forEach(([id, props]) => {
-		const zeroFill = "hsl(204, 27%, 45%)";
+		// Removed some code here which tried to normalise map entry key "UK" to ISO "GB" - seems the map has been fixed.
+		let { impressions = 0, } = data?.[id] || {};
 
-		// HACK , our labels don't line up nicely with the maps labels, this just brute forces them to work
-		// there's no GB label so it shouldn't cause any issues, just it's a stupid fix
-		let { impressions = 0, colour = zeroFill } = (id == "UK") ? data?.["GB"] || {} : data?.[id] || {}
-
-
-		props = { ...props, fill: colour, stroke: '#fff', strokeWidth: mapDefs.svgAttributes.fontSize / 10 };
+		props = { ...props, stroke: '#fff', strokeWidth: mapDefs.svgAttributes.fontSize / 10 };
 		// Don't paint misleading colours on a map we don't have data for
-		if (loading) {
-			props.fill = 'none';
-			props.stroke = '#bbb';
+		if (!loading) {
+			// Define colours in CSS instead of code
+			props.className = `region-path ${impressions ? 'impressions' : 'no-impressions'}`
 		}
 
 		// Countries are clickable, sublocations aren't.
@@ -923,9 +913,7 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 
 		// Tooltip on hover
 		const title = loading ? null : (
-			<title>
-				{props.name}: {impressions} impressions 
-			</title>
+			<title>{props.name}: {impressions} views</title>
 		);
 
 		regions.push(
@@ -937,7 +925,7 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 	const svgRef = (element) => element && setSvgEl(element);
 
 	return (
-		<div className="map-container text-center">
+		<div className={space('map-container text-center', loading && 'loading')}>
 			<svg className="map-svg" version="1.1" {...mapDefs.svgAttributes} xmlns="http://www.w3.org/2000/svg" ref={svgRef}>
 				{regions}
 			</svg>
