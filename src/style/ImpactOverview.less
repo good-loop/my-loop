@@ -186,6 +186,19 @@
 		}
 	}
 
+	.charity-card {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		.charity-logo {
+			width: 10rem;
+			height: 10rem;
+			object-fit: contain;
+			margin-bottom: 1rem;
+		}
+	}
+
 	.glmodal {
 
 		&.date-modal {
@@ -416,19 +429,19 @@
 }
 
 .iview-container {
-	margin-top:60px;
+	margin-top: 60px;
 	margin-left: 0 !important;
 	width: 100% !important;
 
 	@media @md-min {
 		display: flex;
-		margin-top: 10vh;
+		margin-top: 5rem;
 	}
 
 	.iview-grid {
 		@media @md-min {
 			display: flex;
-			height: 90vh;
+			min-height: calc(100vh - 5rem);
 			width: 100%;
 		}
 	}

@@ -161,7 +161,6 @@ export const markPageLoaded = (loaded) => {
 	DataStore.setValue(LOADED_PATH, loaded);
 }
 
-const noop = () => null;
 
 /**
  * A modal form of GLCard. Will not be visible and change nothing in the layout, but when opened will occupy the space it is assigned to as if it was in the layout, while remaining on top.
@@ -177,7 +176,7 @@ export const GLModalCard = ({className, id, useOwnBackdrop}) => {
 	}, [id]);
 	if (!props) return null;
 
-	const { open, Content = noop, title, Header = noop, headerImg, headerClassName, storedClassName } = props;
+	const { open, Content, title, Header, headerImg, headerClassName, storedClassName } = props;
 
 	const headerStyle = headerImg && {
 		backgroundImage: `url("${headerImg}")`,
@@ -191,10 +190,10 @@ export const GLModalCard = ({className, id, useOwnBackdrop}) => {
 				<CardHeader style={headerStyle} className={"glmodal-header " + headerClassName}>
 					<CloseButton className="white-circle-bg" onClick={() => modalToggle(id)}/>
 					{title && <h4 className='glmodal-title'>{title}</h4>}
-					<Header />
+					{Header}
 				</CardHeader>
 				<CardBody>
-					<Content />
+					{Content}
 				</CardBody>
 			</GLCard>
 		</div>

@@ -20,7 +20,7 @@ import printer from '../../base/utils/printer'
 import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIGN, TEST_CAMPAIGN_OBJ} from './TestValues';
 import { addAmountSuffixToNumber, space } from '../../base/utils/miscutils';
 import { dataColours, getCountryFlag, getCountryName } from '../pages/greendash/dashUtils';
-import { isEmpty, sumBy } from 'lodash';
+import { isEmpty, keyBy, sumBy } from 'lodash';
 import Logo from '../../base/components/Logo';
 
 export class ImpactFilters {
@@ -51,7 +51,7 @@ export class ImpactFilters {
  * 
  * @returns {JSX.Element}
  */
-function IOPFirstHalf({ ads, brand, campaign, charities, impactDebits, totalString, mainLogo }) {
+function IOPFirstHalf({ wtdAds, tadgAds, brand, campaign, charities, impactDebits, totalString, mainLogo }) {
 	return <GLVertical>
 		{/* top left corner - both top corners with basis 60 to line up into grid pattern */}
 		<GLCard basis={campaign ? 80 : 60} className="hero-card">
@@ -73,8 +73,9 @@ function IOPFirstHalf({ ads, brand, campaign, charities, impactDebits, totalStri
 			<CampaignCharityDisplay charities={charities} impactDebits={impactDebits}/>
 		) : (
 			<GLHorizontal>
-				<WTDCard ads={ads} brand={brand} />
-				<TADGCard ads={ads} brand={brand} />
+				{/*<WTDCard ads={wtdAds} brand={brand} charities={charities} impactDebits={impactDebits} />*/}
+				{/*<TADGCard ads={tadgAds} brand={brand} charities={charities} impactDebits={impactDebits} />*/}
+				<CharitiesCardSet charities={charities} impactDebits={impactDebits} />
 			</GLHorizontal>
 		)}
 		<GLModalCard id="left-half" />
@@ -95,7 +96,7 @@ function SubBrandsCard({ brand, subBrandsWithDebits }) {
 
 	const cardProps = {
 		className: 'center-number',
-		modalContent: () => <BrandList brand={brand} subBrands={subBrandsWithDebits} />,
+		modalContent: <BrandList brand={brand} subBrands={subBrandsWithDebits} />,
 		modalTitle: `${subBrandsWithDebits.length} Brands`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
@@ -118,7 +119,7 @@ function SubBrandsCard({ brand, subBrandsWithDebits }) {
 function CharitiesCard({ charities }) {
 	const cardProps = {
 		className: 'center-number',
-		modalContent: () => <CharityList charities={charities}/>,
+		modalContent: <CharityList charities={charities}/>,
 		modalTitle: `${charities.length} Charities`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
@@ -146,7 +147,7 @@ function SubCampaignsCard({ brand, subBrands, subCampaignsWithDebits, impactDebi
 
 	const cardProps = {
 		basis: 10,
-		modalContent: () => <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaignsWithDebits} impactDebits={impactDebits}/>,
+		modalContent: <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaignsWithDebits} impactDebits={impactDebits}/>,
 		modalTitle: `${subCampaignsWithDebits.length} Campaigns`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
@@ -168,8 +169,8 @@ function OffsetsCard() {
 		basis={0}
 		modalId="right-half"
 		modalTitle="8.69T CO2E Offset"
-		modalHeader={CO2OffsetInfoHeader}
-		modalContent={CO2OffsetInfo}
+		modalHeader={<CO2OffsetInfoHeader />}
+		modalContent={<CO2OffsetInfo />}
 		modalClassName="no-header-padding co2-offset"
 	>
 		<div className="offset-number px-3">
@@ -208,7 +209,7 @@ function AdsCatalogueCard({ ads, campaign, unwrap }) {
 		basis: (campaign && 70),
 		className: 'ads-catalogue-card',
 		modalId: 'full-page',
-		modalContent: () => <AdsCatalogueCard ads={ads} unwrap />,
+		modalContent: <AdsCatalogueCard ads={ads} unwrap />,
 		modalClassName: 'ads-catalogue-modal',
 	};
 
@@ -254,7 +255,7 @@ const IOPSecondHalf = (baseObjects) => {
 
 		{/* bottom right corner */}
 		<GLVertical>
-			{campaign && <CountryViewsGLCard basis={10} {...baseObjects}/>}
+			{campaign && <CountryViewsGLCard basis={10} baseObjects={baseObjects}/>}
 			<AdsCatalogueCard ads={ads} />
 			{campaign && <GLCard className="boast" basis={20}>
 				<h2>SUSTAINABLE GOALS</h2>
@@ -307,28 +308,48 @@ const CampaignCharityDisplay = ({charities, impactDebits}) => {
 	});
 
 	return <GLHorizontal basis={20}>
-		{charities.map(charity => <GLCard key={charity.id}
-			className="boast"
-			modalContent={() => <CharityInfo charity={charity}/>}
-			modalHeader={() => <CharityHeader charity={charity}/>}
-			modalHeaderImg={charity.images}
-			modalClassName="charity-info"
-			modalId="right-half"
-		>
-			<img src={charity.logo} style={{width: '7rem'}}/>
-			<br/>
-			{debitsByCharity[charity.id] && <h2>{Money.prettyStr(debitsByCharity[charity.id].impact.amount)} Donated</h2>}
-			<br/>
-			<h4>{NGO.displayName(charity)}</h4>
-		</GLCard>)}
+		{charities.map(charity => {
+			const cid = NGO.id(charity);
+			<GLCard key={charity.id}
+				className="boast"
+				modalContent={<CharityInfo charity={charity}/>}
+				modalHeader={<CharityHeader charity={charity}/>}
+				modalHeaderImg={charity.images}
+				modalClassName="charity-info"
+				modalId="right-half"
+			>
+				<img src={charity.logo} style={{width: '7rem'}}/>
+				<br/>
+				{debitsByCharity[cid] && <h2>{Money.prettyStr(debitsByCharity[cid].impact.amount)} Donated</h2>}
+				<br/>
+				<h4>{NGO.displayName(charity)}</h4>
+			</GLCard>
+		})}
 	</GLHorizontal>;
 }
 
 
-function WTDCard({ads, brand}) {
+function WTDCard({ads, brand, charities, impactDebits}) {
+	// Which ImpactDebits are attached to the same campaign as at least one ad in the list?
+	const [matchedDebits, setMatchedDebits] = useState();
+
+	useEffect(() => {
+		impactDebits.filter(id => (
+			ads.find(ad => ad.campaign = id.campaign)
+		)).forEach(id => {
+			const charity4id = charities.find(c => NGO.id(c) === id.impact.charity);
+			// console.log('************* MATCHEDDEBITS', id.impact);
+			// console.log('************* CHARITY FOR DEBIT: ' + NGO.id(charity4id));
+		});
+		
+		setMatchedDebits(impactDebits.filter(id => (
+			ads.find(ad => ad.campaign = id.campaign)
+		)));
+	}, [ads, charities, impactDebits]);
+
 	return <GLCard
 		className="boast wtd"
-		modalContent={() => <WatchToDonateModal ads={ads} brand={brand}/>}
+		modalContent={<WatchToDonateModal ads={ads} brand={brand}/>}
 		modalTitle="Watch To Donate"
 		modalId="full-page"
 		modalClassName="no-padding watch-to-donate"
@@ -348,10 +369,29 @@ function WTDCard({ads, brand}) {
 };
 
 
-function TADGCard({ads, brand}) {
+function TADGCard({ads, brand, charities, impactDebits}) {
+	// Which ImpactDebits are attached to the same campaign as at least one ad in the list?
+	const [matchedDebits, setMatchedDebits] = useState();
+
+	useEffect(() => {
+		impactDebits.filter(id => (
+			ads.find(ad => ad.campaign = id.campaign)
+		)).forEach(id => {
+			const charity4id = charities.find(c => NGO.id(c) === id.impact.charity);
+			// console.log('************* MATCHEDDEBITS', id.impact);
+			// console.log('************* CHARITY FOR DEBIT: ' + NGO.id(charity4id));
+		});
+
+		console.log('************* ADS', ads);
+		
+		setMatchedDebits(impactDebits.filter(id => (
+			ads.find(ad => ad.campaign = id.campaign)
+		)));
+	}, [ads, charities, impactDebits]);
+	
 	return <GLCard
 		className="boast tadg"
-		modalContent={() => <ThisAdDoesGoodModal ads={ads} brand={brand}/>}
+		modalContent={<ThisAdDoesGoodModal ads={ads} brand={brand}/>}
 		modalTitle="This Ad Does Good"
 		modalId="full-page"
 		modalClassName="no-padding this-ad-does-good"
@@ -366,6 +406,69 @@ function TADGCard({ads, brand}) {
 		<QuestionIcon/>
 	</GLCard>;
 }
+
+
+const augCharityComparator = (a, b) => {
+	if (a.dntnTotal && b.dntnTotal) return Money.sub(b.dntnTotal, a.dntnTotal).value;
+	if (a.dntnTotal) return 1;
+	if (b.dntnTotal) return -1;
+	return 0;
+};
+
+/**
+ * One, two or three charity cards (depending on donations found) to display below the hero splash
+ * @param {object} p
+ * @param {NGO[]} p.charities Charities donated to by the campaigns in scope.
+ * @param {ImpactDebit[]} p.impactDebits The ImpactDebit objects representing in-scope donations.
+ */
+function CharitiesCardSet({charities, impactDebits}) {
+	const [charitiesAugmented, setCharitiesAugmented] = useState([]);
+
+	useEffect(() => {
+		if (!charities?.length) return;
+		// Attach donation total (sum of monetary ImpactDebits) to each charity & sort highest-first
+		const nextCharitiesAugmented = charities.map(charity => {
+			const cid = NGO.id(charity);
+			const dntnTotal = impactDebits
+				.filter(idObj => idObj?.impact?.charity === cid)
+				.reduce((acc, idObj) => {
+					const thisAmt = idObj?.impact?.amount;
+					if (!acc) return thisAmt;
+					if (!Money.isa(thisAmt)) return acc;
+					return Money.add(acc, thisAmt);
+				}, null);
+			return {...charity, dntnTotal};
+		}).sort(augCharityComparator);
+		setCharitiesAugmented(nextCharitiesAugmented);
+	}, [charities, impactDebits]);
+
+	const content = charitiesAugmented.length ? (
+		charitiesAugmented.slice(0, 3).map(charity => (
+			<CharityCard charity={charity} impactDebits={impactDebits} />
+		))
+	) : (
+		<Misc.Loading text="Fetching donation data..." />
+	);
+
+	return <GLHorizontal>
+		{content}
+	</GLHorizontal>;
+};
+
+
+/**
+ * #
+*/
+function CharityCard({charity}) {
+	return <GLCard className="charity-card" noPadding>
+		<img alt={charity.name} src={charity.logo} className="charity-logo" />
+		<h2 className="donation-total">
+			{Money.prettyStr(charity.dntnTotal)}
+		</h2>
+		<h3>raised</h3>
+	</GLCard>;
+};
+
 
 
 const BrandLogo = ({item}) => {
@@ -500,42 +603,41 @@ const WatchToDonateModal = ({ads, brand}) => {
 }
 
 
+// Keys matched to members of baseObjects
 const contentTypes = {
-	wtd: 'Watch To Donate',
-	tadg: 'This Ad Does Good',
-	gat: 'Green Ad Tag',
-	etd: 'Engage To Donate',
-	tasl: 'This Ad Supports Local'
+	wtdAds: 'Watch To Donate',
+	tadgAds: 'This Ad Does Good',
+	etdAds: 'Engage To Donate',
+	greenTags: 'Green Ad Tag',
+	// tasl: 'This Ad Supports Local'
 };
 
-const ContentListCard = ({ ads, greenTags, charities }) => {
-	const [activeTypes, setActiveTypes] = useState({});
 
-	useEffect(() => {
-		setActiveTypes(getActiveTypes({ ads, greenTags }));
-	}, []);
+const ContentListCard = (baseObjects) => {
+	const activeTypes = Object.entries(contentTypes).map(([type, name]) => {
+		const active = baseObjects[type]?.length; // ie true if there are entries in the "wtdAds" list etc
+		return <Row key={type}>
+			<Col xs={3}>
+				<img src={`/img/mydata/circle${active ? '' : '-no'}-tick.svg`} className="logo" />
+			</Col>
+			<Col xs={9} className="d-flex flex-column align-items-start justify-content-center">
+				<h5 className="text-left">{name}</h5>
+			</Col>
+		</Row>;
+	});
 
 	const cardProps = {
 		modalTitle: `Ads For Good`,
 		modalId: 'right-half',
 		modalClassName: 'no-header-padding ads-for-good',
-		modalHeader: () => AdsForGoodCTAHeader,
-		modalContent:() => AdsForGoodCTA,
+		modalHeader: <AdsForGoodCTAHeader />,
+		modalContent: <AdsForGoodCTA />,
 	};
 
 	return <GLCard {...cardProps}>
 		<div className="d-flex flex-column align-items-stretch justify-content-between h-100">
 			<img className="w-75 align-self-center mb-3" src="/img/gl-logo/AdsForGood/AdsForGood.svg" />
-			{Object.entries(activeTypes).map(([k, active], i) => (
-				<Row key={i}>
-					<Col xs={3}>
-						<img src={`/img/mydata/circle${active ? '' : '-no'}-tick.svg`} className="logo" />
-					</Col>
-					<Col xs={9} className="d-flex flex-column align-items-start justify-content-center">
-						<h5 className='text-left'>{contentTypes[k]}</h5>
-					</Col>
-				</Row>
-			))}
+			{activeTypes}
 		</div>
 	</GLCard>;
 }
@@ -585,7 +687,8 @@ const CO2OffsetInfo = () => {
 }
 
 const BrandList = ({brand, subBrands}) => {
-
+	console.log('BrandList executing');
+	debugger;
 	const BrandListItem = ({item}) => {
 		return <Col md={4} className="mt-3">
 			<GLCard className="preview h-100" noMargin href={"/impact/view/brand/"+item.id}>
@@ -615,8 +718,8 @@ const CharityList = ({charities}) => {
 		<Row>
 			{charities.map((charity, i) => <Col key={i} md={4} className="mt-3">
 				<GLCard className="preview h-100" noMargin
-					modalContent={() => <CharityInfo charity={charity}/>}
-					modalHeader={() => <CharityHeader charity={charity}/>}
+					modalContent={<CharityInfo charity={charity}/>}
+					modalHeader={<CharityHeader charity={charity}/>}
 					modalHeaderImg={charity.images}
 					modalClassName="charity-info"
 					modalId="left-half"
@@ -711,7 +814,7 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 	return (
 	<GLCard
 		basis={basis}
-		modalContent={() => modalMapCardContent}
+		modalContent={modalMapCardContent}
 		modalClassName="impact-map"
 		modalId="right-half"
 	>
