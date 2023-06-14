@@ -200,9 +200,11 @@ export const HowItWorks = ({campaign, subCampaigns, charities, totalString}) => 
 	if(!subCampaigns) subCampaigns = [campaign] 
 
 	const viewcount = addAmountSuffixToNumber(
-		subCampaigns.reduce((sum, cur) => {
-			return sum + Number(Campaign.viewcount({campaign: campaign, status: KStatus.PUBLISHED}).toPrecision(2))
-		}, 0)
+		subCampaigns.reduce((sum, curCampaign) => {
+			let count = Campaign.viewcount({campaign: curCampaign, status: KStatus.PUBLISHED})
+			if(typeof count !== 'number') count = 0
+			return sum + Number(count)
+		}, 0).toPrecision(2)
 	)
 
 	return (
@@ -271,7 +273,6 @@ export const DonationsCard = ({campaign, subCampaigns, brand, impactDebits, char
 	
 	// this isn't accurate?
 	const endDate = campaign.end ? getDate(campaign.end) : "present";``
-	console.log("????", impactDebits)
 
 	// if we have multiple donations to the same charity, avoid using the same image over and over again
 	let charityCounter = {}
@@ -291,7 +292,6 @@ export const DonationsCard = ({campaign, subCampaigns, brand, impactDebits, char
 		// get new image, if we have more impacts than images just loop the list
 		const img = imgList[(charityCounter[charId] - 1) % imgList.length];
 
-		console.log("aaahhHHHH", charId, imgList.length, imgList)
 		const logo = charity.logo;
 		const displayName = charity.displayName;
 		const raised = debit.impact.amountGBP;
@@ -523,7 +523,6 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity, open, setOpen}
 		</a>)
 	})
 
-	console.log("ismobile???" , isMobile())
 	const modalClasses = `${isMobile() ? "flex-column" : "flex-row"} d-flex`
 	return (
 		<Modal isOpen={open} id="impact-cert-modal" className='impact-cert' toggle={() => setOpen(!open)} size="xl">

@@ -36,7 +36,7 @@ const ImpactB2BContent = ({pvBaseObjects, totalString, mainLogo, footer}) => {
 	if (pvBaseObjects.error) return <ErrorDisplay e={pvBaseObjects.error} />
 
 	const baseObjects = pvBaseObjects.value;
-	const { brand, charities, impactDebits } = baseObjects;
+	let { brand, charities, impactDebits } = baseObjects;
 
 	if (!impactDebits.length) return <ErrorDisplay e={{message: 'No impact debits found for this campaign'}} />
 
@@ -48,7 +48,7 @@ const ImpactB2BContent = ({pvBaseObjects, totalString, mainLogo, footer}) => {
 	const itemType = "campaign"
 	const itemId = path[1]
 
-	impactDebits.sort(impactDebitComparator);
+	impactDebits = impactDebits.sort(impactDebitComparator);
 
 	const [firstImpact = null, secondImpact = null] = impactDebits;
 	const firstCharity = charityForImpact(charities, firstImpact);
@@ -118,6 +118,7 @@ const SplashCard = ({brand, mainLogo}) => {
 }
 
 const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) => {
+	if(!campaign) campaign = subCampaigns.find(c => (c.jobNumber == impact.campaign))
 	if(!campaign) campaign = subCampaigns.find(c => (c.jobNumber == impact.jobNumber))
 	let pvAds = Advert.fetchForCampaigns({campaignIds:[campaign.id], status:status});
 	if(! pvAds.resolved) return <></>

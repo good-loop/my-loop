@@ -190,12 +190,10 @@ export const getImpressionsByCampaignByCountry = ({ baseObjects, start = '', end
 		// Look for vertiser wide debits
 		pvImpactDebits = Advertiser.getImpactDebits({vertiser:brand, status});
 		impactDebits = List.hits(await pvImpactDebits.promise);
-		console.log("Got debits from brand!", impactDebits);
 	} else {
 		// Get only campaign debits
 		pvImpactDebits = Campaign.getImpactDebits({campaign, status});
 		impactDebits = List.hits(await pvImpactDebits.promise);
-		console.log("Got debits from campaign!", impactDebits);
 	}
 
 	// Simplifies having to add null checks for subBrands everywhere
