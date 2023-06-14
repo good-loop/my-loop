@@ -108,6 +108,7 @@ const ImpactPage = () => {
 
 	return <>
 		{impactSettings?.customCss && <StyleBlock>{impactSettings.customCss}</StyleBlock>}		
+		{impactSettings?.customHtml && <HTML>{impactSettings.customHtml}</HTML>}		
 		<div className="navbars-overlay">
 			<animated.div className='impact-navbar-flow-overlay' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}} />
 			<ImpactLoadingScreen baseObj={pvBaseObjects} forcedReload={forcedReload} setForcedReload={setForcedReload} />
