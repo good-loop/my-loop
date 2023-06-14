@@ -23,6 +23,7 @@ import ImpactStatsPage from './ImpactStatsPage';
 
 import Login from '../../base/youagain';
 import StyleBlock from '../../base/components/StyleBlock';
+import DataClass from '../../base/data/DataClass';
 
 
 const IMPACT_PAGES = {
@@ -31,6 +32,17 @@ const IMPACT_PAGES = {
 	stat: ImpactStatsPage,
 }
 
+/**
+ * HACK what is the main item this page is about?
+ * @param {} baseObjects {campaign, brand, masterBrand}
+ * @returns {?DataClass}
+ */
+export function getMainItem(baseObjects) {
+	// TODO look at the url!
+	if ( ! baseObjects) return null;
+	let {campaign, brand, masterBrand} = baseObjects;
+	return campaign || brand || masterBrand;
+};
 
 const ImpactPage = () => {
 	const path = DataStore.getValue(['location', 'path']);
@@ -77,7 +89,7 @@ const ImpactPage = () => {
 	const {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits=[], charities=[], ads=[]} = pvBaseObjects.value || {};
 
 	// main item
-	let mainItem = campaign || brand || masterBrand; // TODO what is the url pointing at??
+	let mainItem = getMainItem(pvBaseObjects.value); // TODO what is the url pointing at??
 	// Use campaign specific logo if given
 	const mainLogo = campaign?.branding?.logo || brand?.branding?.logo;
 

@@ -24,6 +24,8 @@ import { isEmpty, keyBy, sumBy } from 'lodash';
 import Logo from '../../base/components/Logo';
 import DevOnly from '../../base/components/DevOnly';
 import PortalLink from '../../base/components/PortalLink';
+import { getMainItem } from './ImpactPages';
+import ImpactSettings from '../../base/data/ImpactSettings';
 
 export class ImpactFilters {
 	agency;
@@ -238,7 +240,10 @@ function AdsCatalogueCard({ ads, campaign, unwrap }) {
 const IOPSecondHalf = (baseObjects) => {
 	const { campaign, ads } = baseObjects;
 
+	const mainItem = getMainItem(baseObjects);
+
 	return <GLVertical>
+		{mainItem && mainItem.impactSettings.csrHtml && <GLCard>{mainItem.impactSettings.csrHtml}</GLCard>}
 		{/* top right corner */}
 		{!campaign && <GLHorizontal collapse="md" basis={60}>
 			<GLVertical>
