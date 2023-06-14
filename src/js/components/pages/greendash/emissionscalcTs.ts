@@ -614,7 +614,7 @@ export const splitTizenOS = (buckets: GreenBuckets, baseFilters: BaseFilters) =>
 	const pvTizenMblValue = getCarbon(tizenFilters);
 
 	if (pvTizenMblValue.resolved && pvTizenMblValue.value["by_mbl"].buckets) {
-		let mblBuckets = JSON.parse(JSON.stringify(pvTizenMblValue.value["by_mbl"].buckets)); // Deep copy
+		let mblBuckets = _.cloneDeep(pvTizenMblValue.value["by_mbl"].buckets);
 		mblBuckets = mblBuckets.map((record: Record<string, string | number>) => {
 			if (record.key === "false") {
 				record.key = "samsung tv";
