@@ -601,3 +601,28 @@ const getFixedOffsetsForCampaign = (campaign: Campaign, period: Period): (Impact
 	}
 	return fixedOffsets;
 };
+
+/** Tizen could mean Samsung mobile or Samsung TV, split them */
+export const splitTizenOS = (buckets: GreenBuckets, baseFilters: BaseFilters) => {
+	// Escape if no tizen were found
+	if (!buckets.some((record) => record.hasOwnProperty("key") && record.key === "tizen")) {
+		return buckets;
+	}
+
+	const filteredData = buckets.filter((record) => !(record.hasOwnProperty("key") && record.key === "tizen"));
+	const tizenFilters = { ...baseFilters, q: `(${baseFilters.q}) AND os:tizen`, breakdown: ['mbl{"countco2":"sum"}'] };
+	const pvTizenMblValue = getCarbon(tizenFilters);
+
+	if (pvTizenMblValue.resolved && pvTizenMblValue.value["by_mbl"].buckets) {
+		let mblBuckets = JSON.parse(JSON.stringify(pvTizenMblValue.value["by_mbl"].buckets)); // Deep copy
+		mblBuckets = mblBuckets.map((record: Record<string, string | number>) => {
+			if (record.key === "false") {
+				record.key = "samsung tv";
+			} else {
+				record.key = "tizen mobile";
+			}
+			return record;
+		});
+		return filteredData.concat(mblBuckets);
+	}
+};
