@@ -26,6 +26,7 @@ import DevOnly from '../../base/components/DevOnly';
 import PortalLink from '../../base/components/PortalLink';
 import { getMainItem } from './ImpactPages';
 import ImpactSettings from '../../base/data/ImpactSettings';
+import MDText from '../../base/components/MDText';
 
 export class ImpactFilters {
 	agency;
@@ -243,7 +244,7 @@ const IOPSecondHalf = (baseObjects) => {
 	const mainItem = getMainItem(baseObjects);
 
 	return <GLVertical>
-		{mainItem && mainItem.impactSettings.csrHtml && <GLCard>{mainItem.impactSettings.csrHtml}</GLCard>}
+		{mainItem && mainItem.impactSettings.csrHtml && <GLCard><MDText source={mainItem.impactSettings.csrHtml} /></GLCard>}
 		{/* top right corner */}
 		{!campaign && <GLHorizontal collapse="md" basis={60}>
 			<GLVertical>
