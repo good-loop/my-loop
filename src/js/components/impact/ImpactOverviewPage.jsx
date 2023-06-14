@@ -23,7 +23,6 @@ import { addAmountSuffixToNumber, space } from '../../base/utils/miscutils';
 import { dataColours, getCountryFlag, getCountryName } from '../pages/greendash/dashUtils';
 import { isEmpty, keyBy, sumBy } from 'lodash';
 import Logo from '../../base/components/Logo';
-import DevOnly from '../../base/components/DevOnly';
 import PortalLink from '../../base/components/PortalLink';
 import { getMainItem } from './ImpactPages';
 import ImpactSettings from '../../base/data/ImpactSettings';
