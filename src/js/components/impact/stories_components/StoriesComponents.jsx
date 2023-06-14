@@ -237,7 +237,7 @@ export const HowItWorks = ({campaign, subCampaigns, charities, totalString}) => 
 				<div className='hiw-col'>
 					<h2 className='color-gl-white'>3.</h2>
 					<div className='white-circle'>
-						<img src={charities[0]?.headerImage} className='fill-img'/>
+						<img src={NGO.images(charities[0])[0]} className='fill-img'/>
 					</div>
 					<p>After the Campagin</p>
 					<h3 className='color-gl-white'>{totalString}+ In Donations</h3>
