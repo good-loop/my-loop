@@ -18,7 +18,7 @@ const A = C.A;
  * @param {string} size wide|thin on what page size to draw this element, thin="mobile" wide="desktop" are the only expected values
  * @returns 
  */
-const ImpactFilterOptions = ({size, pvBaseObjects, status, setForcedReload, curPage}) => {
+const ImpactFilterOptions = ({size, pvBaseObjects, status, doReload, curPage}) => {
 	assert({wide: true, thin: true}[size]);
 
 	// Anonymous and pseudo-users can't change filters or share
@@ -30,8 +30,8 @@ const ImpactFilterOptions = ({size, pvBaseObjects, status, setForcedReload, curP
 
 	return <>
 		<div className="flex-row impactOverview-filters-and-account" id={`impactOverview-filters-and-account-${size}`}>
-			<ImpactBrandFilters loading={!pvBaseObjects.resolved} masterBrand={masterBrand} brand={brand} campaign={campaign} setForcedReload={setForcedReload} size={size} dropdown curPage={curPage} status={status}/>
-			{isWide && <ImpactDateFilter setForcedReload={setForcedReload} />}
+			<ImpactBrandFilters loading={!pvBaseObjects.resolved} masterBrand={masterBrand} brand={brand} campaign={campaign} doReload={doReload} size={size} dropdown curPage={curPage} status={status}/>
+			{isWide && <ImpactDateFilter doReload={doReload} />}
 			{pvBaseObjects.resolved && (
 				<ImpactAccountButton curMaster={masterBrand} curSubBrand={brand} curCampaign={campaign} noShare={!isWide} />
 			)}

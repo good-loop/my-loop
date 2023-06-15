@@ -83,9 +83,9 @@ const ImpactPage = () => {
 	// set to true to avoid this choice being made on page refresh if logged in 
 	let [impactChosen, setImpactChosen] = useState(true)
 
-	// on filter changes, even if content is loaded, force a load for feedback
-	// kept as a state outside so components can easily access it, set it to true to force a 'reload'
-	const [forcedReload, setForcedReload] = useState(false)
+	// On filter changes, even if content is loaded, force a "reload" (ie show loading screen) for feedback
+	const [reload, setReload] = useState(false)
+	const doReload = () => setReload(prev => !prev);
 
 	if (pvBaseObjects.error) return <ErrorDisplay e={pvBaseObjects.error} />
 
@@ -113,7 +113,7 @@ const ImpactPage = () => {
 		isNavbarOpen,
 		setIsNavbarOpen,
 		pvBaseObjects,
-		setForcedReload,
+		doReload,
 		curPage: page,
 		status
 	};
@@ -123,7 +123,7 @@ const ImpactPage = () => {
 		{impactSettings?.customHtml && <HTML>{impactSettings.customHtml}</HTML>}
 		<div className="navbars-overlay">
 			<animated.div className="impact-navbar-flow-overlay" style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}} />
-			<ImpactLoadingScreen pvBaseObj={pvBaseObjects} forcedReload={forcedReload} setForcedReload={setForcedReload} />
+			<ImpactLoadingScreen pvBaseObj={pvBaseObjects} reload={reload} />
 			<ImpactFilterOptions size="thin" {...navProps} /> {/*mobile horizontal filters topbar*/}
 			<NavBars active={name} {...navProps} />
 			<ImpactFilterOptions size="wide" {...navProps} /> {/*widescreen vertical filters topbar*/}

@@ -26,7 +26,7 @@ const initPeriod = () => {
 const allFilterParams = ['period', 'start', 'end'];
 
 
-const ImpactDateFilter = ({setForcedReload}) => {
+const ImpactDateFilter = ({doReload}) => {
 	const [period, setPeriod] = useState(initPeriod());
 
 	// Update this to signal that the new filter values should be applied
@@ -46,9 +46,9 @@ const ImpactDateFilter = ({setForcedReload}) => {
 			periodToParams(period),
 			false,
 			true,
-			{replaceState:true} // dont break the back buttonq
+			{replaceState:true} // don't break the back button
 		);
-		setForcedReload(true);
+		doReload();
 		modalToggle();
 	}, [dummy]);
 

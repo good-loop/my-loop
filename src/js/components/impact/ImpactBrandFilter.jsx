@@ -46,7 +46,7 @@ const fetchTopLevelObjects = ({masterBrand, brand, campaign, status=KStatus.PUBL
  * @param {object} masterBrand master brand object, eg "Nestle"
  * @returns {JSX} breadcrumb trail of brand/campaign filters that can open up into a modal  for other filters
  */
-const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, setForcedReload, size, dropdown, curPage}) => {
+const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, doReload, size, dropdown, curPage}) => {
 	const [filtersOpen, setFiltersOpen] = useState(false);
 
 	if (loading) return null;
@@ -86,7 +86,7 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, setF
 		}
 		setFiltersOpen(false)
 		modalToggle();
-		setForcedReload(true);
+		doReload();
 	}
 
 	/**
@@ -104,7 +104,7 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, setF
 		}
 		modalToggle();
 		setFiltersOpen(false)
-		setForcedReload(true);
+		doReload();
 	}
 
 	/**
@@ -287,8 +287,8 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, setF
 	return (
 		<div id="filters">
 				{masterBrand && <StepBackFiltersButton content={masterBrand.name} rightArrow/>}
-				<StepBackFiltersButton content={(size === "thin" && brand.name.length > 10) ? (brand.name.substring(0,9)+"...") : brand.name} clearOnlyCamapign rightArrow/>
-				<OpenFiltersButton content={(size === "thin" && campaign.name.length > 10) ? (campaign.name.substring(0,9)+"...") : campaign.name} underlined/>
+				<StepBackFiltersButton content={(size === 'thin' && brand.name.length > 10) ? (brand.name.substring(0,9)+"...") : brand.name} clearOnlyCamapign rightArrow/>
+				<OpenFiltersButton content={(size === 'thin' && campaign.name.length > 10) ? (campaign.name.substring(0,9)+"...") : campaign.name} underlined/>
 		</div>
 	);
 }
