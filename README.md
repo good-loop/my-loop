@@ -3,6 +3,10 @@
 This is the https://my.good-loop.com web-app for the public to see their Good-Loop activity, and take control of their data.
 It also includes the Impact Hub micro-sites.
 
+## Docs
+
+Auto-generated JS docs can be found at: https://js-doc.good-loop.com/my-loop/
+
 ## Impact Hub: Current and Future
 
 ### Impact Hub Revamp
