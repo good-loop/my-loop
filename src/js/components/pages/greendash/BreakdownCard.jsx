@@ -8,7 +8,7 @@ import { dataColours, TONNES_THRESHOLD } from './dashUtils';
 import SimpleTable, { Column } from '../../../base/components/SimpleTable';
 import List from '../../../base/data/List';
 import { ButtonGroup } from 'reactstrap';
-import { getCarbon, getTags, emissionsPerImpressions, getSumColumn, getBreakdownByWithCount, getCompressedBreakdownWithCount, filterByCount } from './emissionscalcTs';
+import { getCarbon, getTags, emissionsPerImpressions, getSumColumn, getBreakdownByWithCount, getCompressedBreakdownWithCount, filterByCount, splitTizenOS } from './emissionscalcTs';
 import { isPer1000 } from './GreenMetrics';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import '../../../../style/greendash-breakdown-card.less';
@@ -35,7 +35,8 @@ const osTypes = {
 	'blackberry os': { type: 'mobile', group: 'Other Mobile', name: 'BlackBerry' },
 	'firefox os': { type: 'mobile', group: 'Other Mobile', name: 'FireFox' },
 	chromecast: { type: 'smart', group: 'Smart TV', name: 'Chromecast' },
-	tizen: { type: 'smart', group: 'Smart TV', name: 'Samsung TV' },
+	'samsung tv': { type: 'smart', group: 'Smart TV', name: 'Samsung TV' },
+	'tizen mobile': { type: 'mobile', group: 'Tizen', name: 'Tizen' },
 	webos: { type: 'smart', group: 'Smart TV', name: 'WebOS' },
 	web0s: { type: 'smart', group: 'Smart TV', name: 'WebOS' },
 	roku: { type: 'smart', group: 'Smart TV', name: 'Roku' },
@@ -435,6 +436,9 @@ const BreakdownCard = ({ baseFilters }) => {
 	let techData = techValue.by_total?.buckets;
 	let data = dataValue && dataValue[datakey]?.buckets;
 
+	// Tizen hack
+	const deviceBuckets = dataValue && splitTizenOS(dataValue['by_os']?.buckets, baseFilters)
+
 	// Are we in carbon-per-mille mode?
 	if (isPer1000()) {
 		if (data) data = emissionsPerImpressions(data);
@@ -447,7 +451,7 @@ const BreakdownCard = ({ baseFilters }) => {
 			subcard = <TechSubcard data={techData} minimumPercentLabeled={10} chartType={isPer1000() ? 'bar' : 'pie'} />;
 			break;
 		case 'device':
-			subcard = dataValue ? <DeviceSubcard data={data} /> : loading;
+			subcard = dataValue ? <DeviceSubcard data={deviceBuckets} /> : loading;
 			break;
 		case 'tag':
 			subcard = dataValue ? <TagSubcard data={data} /> : loading;

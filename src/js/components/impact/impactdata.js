@@ -87,55 +87,6 @@ const getCharities = ({ filters }) => {
 	return pvCharities;
 }
 
-
-export const getImpressionsByCampaignByCountry = ({ baseObjects, start = '', end = 'now', locationField='country', ...rest }) => {
-
-	let {campaign, subCampaigns} = baseObjects
-	if(!campaign && (!subCampaigns || subCampaigns.length == 0)) return []
-
-	let searchData = campaign ? [campaign] : subCampaigns // if campaign is set, then the user has filtered to a single campaign (no subcampaigns)
-
-	let campaignImpsByCountry = searchData.map(country => Campaign.viewcountByCountry({campaign: country, status: KStatus.PUBLISHED}))
-
-
-	if(!campaignImpsByCountry || campaignImpsByCountry.length === 0) return []
-
-	// for every campaign we can search through, find the viewcount for it's target country & unset countries
-	let campaignViews = campaignImpsByCountry.reduce((regionMap, regions) => {
-		// ASSUMPTION: 	afaik, a campaign will have a country it's aimed at that decision is not handled by us.
-		// 				as a result, we don't access to that info. Instead, guess by what country has the most views,
-		//				this is usually higher by several orders of magnitude so it's *usually* a safe bet.
-
-		if(!regions || regions.length == 0) return regionMap // handle campaign still loading and campaigns with no results 
-
-		let campaignRegions = Object.keys(regions)	// all regions this campaign was in
-		let currentRegion = campaignRegions.find((val) => val !== "unset") // set country with most impressions
-		let targetedRegions = Object.keys(regionMap) // all regions already seen (used if multiple campaigns are being read)
-
-		if(currentRegion){
-			if(targetedRegions.includes(currentRegion)){
-				regionMap[currentRegion].impressions += regions[currentRegion];
-				regionMap[currentRegion].campaignsInRegion += 1;
-			} else {
-				regionMap[currentRegion] = {impressions: regions[currentRegion], campaignsInRegion: 1}
-			}
-		}		
-
-		// also track unset, needed to describe discrepency in campaigns used before we stored impression locations
-		if (campaignRegions.includes("unset")){
-			regionMap["unset"].impressions += regions["unset"];
-			regionMap["unset"].campaignsInRegion += 1;
-		}
-
-		return regionMap
-	},
-		{unset: {impressions: 0, campaignsInRegion: 0}}
-	)
-
-	return campaignViews;
-};
-
-
 /**
  * NB: async - returns a promise
  * 

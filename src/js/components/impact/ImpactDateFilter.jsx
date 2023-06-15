@@ -15,7 +15,7 @@ const initPeriod = () => {
 	let period = null || getPeriodFromUrlParams(); // TODO fix this, recent date-utils changes broke this!
 	if (!period) {
 		period = getPeriodQuarter(new Date());
-		modifyPage(null, { period: period.name });
+		modifyPage(null, { period: period.name }, false, false, {replaceState:true});
 	}
 	return period;
 };
@@ -43,7 +43,8 @@ const ImpactDateFilter = ({setForcedReload}) => {
 			null,
 			periodToParams(period),
 			false,
-			true
+			true,
+			{replaceState:true} // dont break the back button
 		);
 		setForcedReload(true);
 		modalToggle();

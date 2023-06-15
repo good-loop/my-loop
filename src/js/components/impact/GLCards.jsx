@@ -7,11 +7,34 @@ import DataStore from '../../base/plumbing/DataStore'
 import CloseButton from '../../base/components/CloseButton';
 import C from '../../C';
 
+
 // TODO it'd be nice to do Modal widgets without global storage
 const MODAL_PATH = ['widget', 'GLModalCards'];
-const MODAL_LIST_PATH = MODAL_PATH.concat("list");
-const MODAL_BACKDROP_PATH = MODAL_PATH.concat("backdrop");
-const LOADED_PATH = MODAL_PATH.concat("loaded");
+const MODAL_LIST_PATH = [...MODAL_PATH, 'list'];
+const MODAL_BACKDROP_PATH = [...MODAL_PATH, 'backdrop'];
+const LOADED_PATH = [...MODAL_PATH, 'loaded'];
+
+
+/**
+ * Common code for HDivision and VDivision.
+ */
+function CommonDivision({child, i, Tag}) {
+	// Special case for overlays - they must not interfere with layout, so make no wrapper
+	if (!child || child.type === GLModalCard) return child;
+	const style = {
+		flexBasis: `${child.props.basis}%`,
+		flexGrow: child.props.basis ? 0 : 1,
+	};
+	return <Tag key={i} style={style}>{child}</Tag>;
+}
+
+
+/** Child element of GLHorizontal */
+const HDivision = props => <CommonDivision {...props} Tag={Col} />
+
+
+/** Child element of GLVertical */
+const VDivision = props => <CommonDivision {...props} Tag="div" />
 
 
 /**
@@ -19,41 +42,21 @@ const LOADED_PATH = MODAL_PATH.concat("loaded");
  * 
  * @param {String} collapse the bootstrap breakpoint to break flow on
  */
-export const GLHorizontal = ({collapse, className, style, children}) => {
-	/*let uneatenSpace = 100;
-	let notSpecifiedChildCount = 0;
-	children.forEach(child => {
-		if (child.props.basis) uneatenSpace -= child.props.basis;
-		else notSpecifiedChildCount++;
-	});
-
-	const autoSpacedSize = uneatenSpace / notSpecifiedChildCount;*/
-
-	if (!Array.isArray(children)) children = [children];
-
-	return <Row noGutters className={space("glhorizontal", collapse?"glhorizontal-"+collapse:"", className)} style={style}>
-		{children.map((child, i) => {
-			// Special case for overlays - they must not interfere with layout, so make no wrapper
-			if (!child || child.type === GLModalCard) return child;
-			return <Col key={i} style={{flexBasis:child.props.basis + "%", flexGrow:child.props.basis ? 0 : 1}}>{child}</Col>
-		})}
+export const GLHorizontal = ({collapse, className, style, children}) => (
+	<Row noGutters className={space('glhorizontal', collapse && `glhorizontal-${collapse}`, className)} style={style}>
+		{Children.map(children, (child, i) => <HDivision i={i} child={child} />)}
 	</Row>
-}
+);
 
 
 /**
  * Wraps everything into a vertical flow. Any child with a "basis" prop will be given that priority as a percentage, e.g. basis={50}
  */
-export const GLVertical = ({className, children, ...props}) => {
-	if (!Array.isArray(children)) children = [children];
-	return <div className={space("glvertical", className)} {...props}>
-		{children.map((child, i) => {
-			// Special case for overlays - they must not interfere with layout, so make no wrapper
-			if (!child || child.type === GLModalCard) return child;
-			return <div key={i} style={{flexBasis:child.props.basis + "%", flexGrow:child.props.basis ? 0 : 1}}>{child}</div>
-		})}
-	</div>;
-}
+export const GLVertical = ({className, children, ...props}) => (
+	<div className={space('glvertical', className)} {...props}>
+		{Children.map(children, (child, i) => <VDivision i={i} child={child} />)}
+	</div>
+);
 
 
 /**
@@ -96,8 +99,6 @@ export const GLCard = ({noPadding, noMargin, className, style, modalContent, mod
 			modalToggle(modalId);
 		}
 	}
-
-	// const loaded = DataStore.getValue(LOADED_PATH);
 
 	let cardContents = (
 		<Card className={space('glcard', !noMargin && 'm-2', modalContent && 'glcardmodal', className)} onClick={onClickCard} {...props}>
@@ -145,6 +146,7 @@ export const modalToggle = (id) => {
 	}
 }
 
+
 /**
  * TODO refactor to more "standard" react. This is a mix of function and tag.
  */
@@ -154,15 +156,14 @@ export const openAndPopulateModal = ({id, content, title, header, headerImg, hea
 	if (prioritized) modalToggle();
 	// Preserve static properties
 	const usesOwnBackdrop = DataStore.getValue(MODAL_LIST_PATH.concat(id, "usesOwnBackdrop"));
-	const modalObj = {content, title, header, headerImg, headerClassName, className, usesOwnBackdrop};
+	const modalProps = {content, title, header, headerImg, headerClassName, className, usesOwnBackdrop};
 	//console.log("MODAL OBJ", modalObj);
-	DataStore.setValue(MODAL_LIST_PATH.concat(id), modalObj);
+	DataStore.setValue(MODAL_LIST_PATH.concat(id), modalProps);
 	modalToggle(id);
 }
 
-export const markPageLoaded = (loaded) => {
-	DataStore.setValue(LOADED_PATH, loaded);
-}
+
+export const markPageLoaded = loaded => DataStore.setValue(LOADED_PATH, loaded);
 
 
 /**
@@ -171,47 +172,54 @@ export const markPageLoaded = (loaded) => {
  * @param {String} id 
  * @param {?Boolean} useOwnBackdrop create and use a new backdrop instead of using the global one
  */
-export const GLModalCard = ({className, id, useOwnBackdrop}) => {
+export const GLModalCard = ({id, useOwnBackdrop, ...props}) => {
 	const path = [...MODAL_LIST_PATH, id];
-	const props = DataStore.getValue(path);
-	//console.log("MODAL PROPS", props);
-	useEffect(() => {
-		DataStore.setValue(path, {open: false, usesOwnBackdrop: useOwnBackdrop}, false);
-	}, [id]);
-	if (!props) return null;
+	const storeProps = DataStore.getValue(path);
 
-	const { open, title, headerImg, headerClassName } = props;
-	// Manually pull out props with mismatching names
-	const Content = props.content || props.Content;
-	const Header = props.header || props.Header;
-	const storedClassName = props.className;
+	useEffect(() => {
+		DataStore.setValue(path, {open: false, useOwnBackdrop}, false);
+	}, [id]);
+	if (!storeProps?.open) return null;
+
+	return <ModalCardOpen {...storeProps} {...props} />;
+};
+
+
+function ModalCardOpen({ id, title, Content, Header, storedClassName, className, headerImg, headerClassName, useOwnBackdrop }) {
+	// Register listener to catch ESC keypress and close
+	useEffect(() => {
+		const keyListener = e => (e?.key === 'Escape' && modalToggle(id));
+		document.addEventListener('keydown', keyListener);
+		return () => document.removeEventListener('keydown', keyListener);
+	}, []);
 
 	const headerStyle = headerImg && {
 		backgroundImage: `url("${headerImg}")`,
 		backgroundPosition: 'center'
 	};
 
-	return open ? <>
-		{useOwnBackdrop ? <GLModalBackdrop manual show={open} id={id}/> : null}
+	return <>
+		{useOwnBackdrop ? <GLModalBackdrop forceShow id={id}/> : null}
 		<div className={space('glmodal', storedClassName, className)} id={id}>
 			<GLCard noPadding className="glmodal-inner">
-				<CardHeader style={headerStyle} className={"glmodal-header " + headerClassName}>
+				<CardHeader style={headerStyle} className={space('glmodal-header', headerClassName)}>
 					<CloseButton className="white-circle-bg" onClick={() => modalToggle(id)}/>
 					{title && <h4 className='glmodal-title'>{title}</h4>}
-					{_.isFunction(Header) ? <Header/> : Header}
+					{Header}
 				</CardHeader>
 				<CardBody>
-					{_.isFunction(Content) ? <Content/> : Content}
+					{Content}
 				</CardBody>
 			</GLCard>
 		</div>
-	</> : null;
-};
+	</>;
+}
+
 
 /**
  * Backdrop for all GLModalCards on a page. Closes all modals on click.
  */
-export const GLModalBackdrop = ({className, manual, show, id}) => {
-	const open = manual ? show : DataStore.getValue(MODAL_BACKDROP_PATH);
-	return open ? <div onClick={() => modalToggle(id)} className='glmodal-backdrop'/> : null;
+export const GLModalBackdrop = ({className, forceShow, id}) => {
+	const open = forceShow || DataStore.getValue(MODAL_BACKDROP_PATH);
+	return open ? <div onClick={() => modalToggle(id)} className="glmodal-backdrop" /> : null;
 };

@@ -208,21 +208,25 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, setF
 		</>;
    }
 
-   /**
+/**
 	* opens the modal containing master brand + brands, and both their respective campaigns
 	* uses individual ListLoads for master and its subbrands
 	* inside each ListLoad, if a brand is found to have campaigns we then run another ListLoad over them 
 	*/
 	const openFilters = () => {
 		// if mobile user clicks the filter dropdown while they're open, close the filter menu
-		if(isPortraitMobile() && filtersOpen) {modalToggle(); setFiltersOpen(false); return null}
+		if (isPortraitMobile() && filtersOpen) {
+			modalToggle();
+			setFiltersOpen(false);
+			return null;
+		}
 		setFiltersOpen(true);
 
 		const vertiser = (masterBrand || brand).id
 		const classes = `brand-button ListItem btn-default btn btn-outline-secondary ${KStatus.PUBLISHED} btn-space`
 
-		let modalContent = () => (
-			<div className='' id="filter-modal-container">
+		const modalContent = (
+			<div className="" id="filter-modal-container">
 				{/* master brand & its campaigns
 				<ListLoad status={KStatus.PUBLISHED} hideTotal type={C.TYPES.Advertiser}
 					unwrapped
@@ -238,9 +242,9 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, setF
 				<FilterListItem item={topBrand} isMaster />
 				{allSubBrands.map(b => <FilterListItem item={b}/>)}
 			</div>
-		)
-		openAndPopulateModal({id:"filter-display", content:modalContent, prioritized:true, headerClassName:"red-top-border noClose noPadding", className:"impact-brand-modal"})
-	}
+		);
+		openAndPopulateModal({id: 'filter-display', content: modalContent, prioritized: true, headerClassName: 'red-top-border noClose noPadding', className: 'impact-brand-modal'})
+	};
 
 	// helper JSX elements
 	const StepBackFiltersButton = ({content, clearOnlyCamapign, rightArrow, underlined}) => (

@@ -186,6 +186,18 @@
 		}
 	}
 
+	.charity-cards {
+		.more-charities {
+			justify-content: space-between;
+			align-items: center;
+			.charity-logo {
+				.logo {
+					width: unset;
+				}
+			}
+		}
+	}
+
 	.charity-card {
 		display: flex;
 		flex-direction: column;
@@ -332,6 +344,25 @@
 
 			.map-container {
 				margin-bottom: 3rem; // add a solid gap between map & values
+			}
+
+			.map-svg {
+				// previous colours: hsl(8, 100%, 23%) for impressions, hsl(204, 27%, 45%) for none;
+				// @country-fill: hsl(8, 100%, 23%);
+				@country-fill: hsl(204, 27%, 45%);
+				.region-path {
+					fill: currentColor;
+					stroke: #fff;
+					color: @country-fill;
+					&.no-impressions {
+						color: tint(@country-fill, 60%);
+					}
+				}
+				&.loading {
+					.region-path {
+						color: white;
+					}
+				}
 			}
 
 			// Per-country subcards

@@ -23,6 +23,8 @@ import { addAmountSuffixToNumber, space } from '../../base/utils/miscutils';
 import { dataColours, getCountryFlag, getCountryName } from '../pages/greendash/dashUtils';
 import { isEmpty, keyBy, sumBy } from 'lodash';
 import Logo from '../../base/components/Logo';
+import { getId } from '../../base/data/DataClass';
+import ImpactHubLink from '../ImpactHubLink';
 import PortalLink from '../../base/components/PortalLink';
 import { getMainItem } from './ImpactPages';
 import ImpactSettings from '../../base/data/ImpactSettings';
@@ -78,11 +80,11 @@ function IOPFirstHalf({ wtdAds, tadgAds, brand, campaign, charities, impactDebit
 		{campaign ? (
 			<CampaignCharityDisplay charities={charities} impactDebits={impactDebits}/>
 		) : (
-			<GLHorizontal>
-				{/*<WTDCard ads={wtdAds} brand={brand} charities={charities} impactDebits={impactDebits} />*/}
-				{/*<TADGCard ads={tadgAds} brand={brand} charities={charities} impactDebits={impactDebits} />*/}
-				<CharitiesCardSet charities={charities} impactDebits={impactDebits} />
-			</GLHorizontal>
+			/*<GLHorizontal>
+				<WTDCard ads={wtdAds} brand={brand} charities={charities} impactDebits={impactDebits} />
+				<TADGCard ads={tadgAds} brand={brand} charities={charities} impactDebits={impactDebits} />
+			</GLHorizontal>*/
+			<CharitiesCardSet charities={charities} impactDebits={impactDebits} />
 		)}
 		<GLModalCard id="left-half" />
 	</GLVertical>;
@@ -153,7 +155,7 @@ function SubCampaignsCard({ brand, subBrands, subCampaignsDisplayable, impactDeb
 
 	const cardProps = {
 		basis: 10,
-		modalContent: () => <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaignsDisplayable} impactDebits={impactDebits}/>,
+		modalContent: <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaignsDisplayable} impactDebits={impactDebits}/>,
 		modalTitle: `${subCampaignsDisplayable.length} Campaigns`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
@@ -244,7 +246,7 @@ const IOPSecondHalf = (baseObjects) => {
 	const mainItem = getMainItem(baseObjects);
 
 	return <GLVertical>
-		{mainItem && mainItem.impactSettings?.csrHtml && <GLCard><MDText source={mainItem.impactSettings?.csrHtml} /></GLCard>}
+		{mainItem?.impactSettings?.csrHtml && <GLCard><MDText source={mainItem.impactSettings.csrHtml} /></GLCard>}
 		{/* top right corner */}
 		{!campaign && <GLHorizontal collapse="md" basis={60}>
 			<GLVertical>
@@ -303,7 +305,7 @@ const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, ...props}) => {
 				</GLVertical>
 			</Container>
 		</div>
-		<GLModalBackdrop/>
+		<GLModalBackdrop />
 	</>;
 };
 
@@ -336,7 +338,7 @@ const CampaignCharityDisplay = ({charities, impactDebits}) => {
 			</GLCard>
 		})}
 	</GLHorizontal>;
-}
+};
 
 
 function WTDCard({ads, brand, charities, impactDebits}) {
@@ -344,14 +346,6 @@ function WTDCard({ads, brand, charities, impactDebits}) {
 	const [matchedDebits, setMatchedDebits] = useState();
 
 	useEffect(() => {
-		impactDebits.filter(id => (
-			ads.find(ad => ad.campaign = id.campaign)
-		)).forEach(id => {
-			const charity4id = charities.find(c => NGO.id(c) === id.impact.charity);
-			// console.log('************* MATCHEDDEBITS', id.impact);
-			// console.log('************* CHARITY FOR DEBIT: ' + NGO.id(charity4id));
-		});
-		
 		setMatchedDebits(impactDebits.filter(id => (
 			ads.find(ad => ad.campaign = id.campaign)
 		)));
@@ -384,16 +378,6 @@ function TADGCard({ads, brand, charities, impactDebits}) {
 	const [matchedDebits, setMatchedDebits] = useState();
 
 	useEffect(() => {
-		impactDebits.filter(id => (
-			ads.find(ad => ad.campaign = id.campaign)
-		)).forEach(id => {
-			const charity4id = charities.find(c => NGO.id(c) === id.impact.charity);
-			// console.log('************* MATCHEDDEBITS', id.impact);
-			// console.log('************* CHARITY FOR DEBIT: ' + NGO.id(charity4id));
-		});
-
-		console.log('************* ADS', ads);
-		
 		setMatchedDebits(impactDebits.filter(id => (
 			ads.find(ad => ad.campaign = id.campaign)
 		)));
@@ -434,8 +418,12 @@ const augCharityComparator = (a, b) => {
 function CharitiesCardSet({charities, impactDebits}) {
 	const [charitiesAugmented, setCharitiesAugmented] = useState([]);
 
+	if (!charities?.length) {
+		return <DevOnly>No charities</DevOnly>;
+	};
+
 	useEffect(() => {
-		if (!charities?.length) return;
+		assert(charities);
 		// Attach donation total (sum of monetary ImpactDebits) to each charity & sort highest-first
 		const nextCharitiesAugmented = charities.map(charity => {
 			const cid = NGO.id(charity);
@@ -452,17 +440,27 @@ function CharitiesCardSet({charities, impactDebits}) {
 		setCharitiesAugmented(nextCharitiesAugmented);
 	}, [charities, impactDebits]);
 
-	const content = charitiesAugmented.length ? (
-		charitiesAugmented.slice(0, 3).map(charity => (
-			<CharityCard charity={charity} impactDebits={impactDebits} />
-		))
-	) : (
-		<Misc.Loading text="Fetching donation data..." />
-	);
+	if (!charitiesAugmented.length) {
+		return <Misc.Loading text="Fetching donation data..." />;
+	}
 
-	return <GLHorizontal>
-		{content}
+	const topCharities = <GLHorizontal className="top-charities">
+		{charitiesAugmented.slice(0, 3).map(charity => 
+			<CharityCard id={getId(charity)} charity={charity} impactDebits={impactDebits} />
+		)}
 	</GLHorizontal>;
+
+	if (charitiesAugmented.length <= 3) return topCharities;
+
+	return <GLVertical className="charity-cards">
+		{topCharities}
+		<GLCard className="more-charities card-body flex-row" noPadding>
+			<span>Plus {charitiesAugmented.length-3} more:</span>
+			{charitiesAugmented.slice(3).map(
+				charity => <ImpactHubLink className="charity-logo" item={charity} logo title={NGO.displayName(charity)} />
+			)}
+		</GLCard>
+	</GLVertical>;
 };
 
 
@@ -470,7 +468,7 @@ function CharitiesCardSet({charities, impactDebits}) {
  * #
 */
 function CharityCard({charity}) {
-	return <GLCard className="charity-card" noPadding>
+	return <GLCard className="charity-card">
 		<img alt={charity.name} src={charity.logo} className="charity-logo" />
 		<h2 className="donation-total">
 			{Money.prettyStr(charity.dntnTotal)}
@@ -636,15 +634,7 @@ const ContentListCard = (baseObjects) => {
 		</Row>;
 	});
 
-	const cardProps = {
-		modalTitle: `Ads For Good`,
-		modalId: 'right-half',
-		modalClassName: 'no-header-padding ads-for-good',
-		modalHeader: <AdsForGoodCTAHeader />,
-		modalContent: <AdsForGoodCTA />,
-	};
-
-	return <GLCard {...cardProps}>
+	return <GLCard>
 		<div className="d-flex flex-column align-items-stretch justify-content-between h-100">
 			<img className="w-75 align-self-center mb-3" src="/img/gl-logo/AdsForGood/AdsForGood.svg" />
 			{activeTypes}
@@ -800,7 +790,7 @@ const shortNumber = (number) => (
 
 
 const CountryViewsGLCard = ({basis, baseObjects}) => {
-	if ( ! baseObjects) {
+	if (!baseObjects) {
 		console.warn("CountryViewsGLCard - no baseObjects");
 		return null;
 	}
@@ -810,11 +800,6 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 	const totalCountries = Object.keys(impressionData).filter(country => country !== "unset").length;
 	const impressions = sumBy(Object.values(impressionData), 'impressions') // sum impressions over all regions
 	const countryWord = (totalCountries === 1) ? 'COUNTRY' : 'COUNTRIES';
-
-	// assign colours to data object for map 
-	Object.keys(impressionData).forEach((country) => {
-		impressionData[country].colour = 'hsl(8, 100%, 23%)';
-	});
 
 	const modalMapCardContent = <>
 		<MapCardContent data={impressionData}/>
@@ -880,18 +865,14 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 
 	let regions = [];
 	Object.entries(mapDefs.regions).forEach(([id, props]) => {
-		const zeroFill = "hsl(204, 27%, 45%)";
+		// Removed some code here which tried to normalise map entry key "UK" to ISO "GB" - seems the map has been fixed.
+		let { impressions = 0, } = data?.[id] || {};
 
-		// HACK , our labels don't line up nicely with the maps labels, this just brute forces them to work
-		// there's no GB label so it shouldn't cause any issues, just it's a stupid fix
-		let { impressions = 0, colour = zeroFill } = (id == "UK") ? data?.["GB"] || {} : data?.[id] || {}
-
-
-		props = { ...props, fill: colour, stroke: '#fff', strokeWidth: mapDefs.svgAttributes.fontSize / 10 };
+		props = { ...props, stroke: '#fff', strokeWidth: mapDefs.svgAttributes.fontSize / 10 };
 		// Don't paint misleading colours on a map we don't have data for
-		if (loading) {
-			props.fill = 'none';
-			props.stroke = '#bbb';
+		if (!loading) {
+			// Define colours in CSS instead of code
+			props.className = `region-path ${impressions ? 'impressions' : 'no-impressions'}`
 		}
 
 		// Countries are clickable, sublocations aren't.
@@ -913,9 +894,7 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 
 		// Tooltip on hover
 		const title = loading ? null : (
-			<title>
-				{props.name}: {impressions} impressions 
-			</title>
+			<title>{props.name}: {impressions} views</title>
 		);
 
 		regions.push(
@@ -927,7 +906,7 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, showLabels, setSvgEl}) => {
 	const svgRef = (element) => element && setSvgEl(element);
 
 	return (
-		<div className="map-container text-center">
+		<div className={space('map-container text-center', loading && 'loading')}>
 			<svg className="map-svg" version="1.1" {...mapDefs.svgAttributes} xmlns="http://www.w3.org/2000/svg" ref={svgRef}>
 				{regions}
 			</svg>

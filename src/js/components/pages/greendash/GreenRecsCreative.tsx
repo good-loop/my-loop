@@ -46,7 +46,7 @@ function CreativeList() {
 		<GLCard className="creative-list">
 			<div>Select a creative to view optimisation recommendations</div>
 			<div>Sort By</div>
-			<ListLoad type={C.TYPES.GreenTag} status={KStatus.PUBLISHED} hideTotal unwrapped notALink ListItem={CreativeListItem} />
+			<ListLoad type={C.TYPES.GreenTag} status={KStatus.PUBLISHED} hideTotal unwrapped notALink ListItem={CreativeListItem} pageSize={10} />
 		</GLCard>
 	);
 }
