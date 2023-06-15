@@ -155,7 +155,7 @@ function SubCampaignsCard({ brand, subBrands, subCampaignsDisplayable, impactDeb
 
 	const cardProps = {
 		basis: 10,
-		modalContent: () => <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaignsDisplayable} impactDebits={impactDebits}/>,
+		modalContent: <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaignsDisplayable} impactDebits={impactDebits}/>,
 		modalTitle: `${subCampaignsDisplayable.length} Campaigns`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
@@ -809,7 +809,7 @@ const shortNumber = (number) => (
 
 
 const CountryViewsGLCard = ({basis, baseObjects}) => {
-	if ( ! baseObjects) {
+	if (!baseObjects) {
 		console.warn("CountryViewsGLCard - no baseObjects");
 		return null;
 	}
