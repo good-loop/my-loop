@@ -10,22 +10,24 @@ import { nonce } from '../../base/data/DataClass';
 import DataStore from '../../base/plumbing/DataStore';
 import { modalToggle } from './GLCards';
 
+
 /** Extract the time period filter from URL params if present - if not, apply "current quarter" by default */
 const initPeriod = () => {
 	let period = null || getPeriodFromUrlParams(); // TODO fix this, recent date-utils changes broke this!
 	if (!period) {
 		period = getPeriodQuarter(new Date());
-		modifyPage(null, { period: period.name }, false, false, {replaceState:true});
+		modifyPage(null, { period: period.name }, false, false, {replaceState: true});
 	}
 	return period;
 };
 
+
 /** All the URL parameters that pertain to the dashboard filters */
 const allFilterParams = ['period', 'start', 'end'];
 
-const ImpactDateFilter = ({setForcedReload}) => {
 
-	let [period, setPeriod] = useState(initPeriod());
+const ImpactDateFilter = ({setForcedReload}) => {
+	const [period, setPeriod] = useState(initPeriod());
 
 	// Update this to signal that the new filter values should be applied
 	const [dummy, setDummy] = useState(false);
@@ -44,23 +46,31 @@ const ImpactDateFilter = ({setForcedReload}) => {
 			periodToParams(period),
 			false,
 			true,
-			{replaceState:true} // dont break the back button
+			{replaceState:true} // dont break the back buttonq
 		);
 		setForcedReload(true);
 		modalToggle();
 	}, [dummy]);
 
-	let content = () => (<div>
+	const Content = <div>
 		<DateRangeWidget dflt={period} onChange={setPeriod} />
 		<Button color='primary' onClick={doCommit}>
 			Apply
 		</Button>
-	</div>)
-	let onClick = () => openAndPopulateModal({id:"filter-display", content, prioritized:true, headerClassName:"red-top-border noClose", className:"date-modal"})
+	</div>;
+
+	const onClick = () => openAndPopulateModal({
+		id: 'filter-display',
+		Content,
+		prioritized:true,
+		className: 'date-modal',
+		headerClassName: 'red-top-border noClose'
+	});
+
 	return (
 	<div id="date-filters">
 		<button className="filter-row filter-text" onClick={onClick}>Date</button>
-		<button className='filter-row filter-down-arrow' onClick={onClick}/>
+		<button className='filter-row filter-down-arrow' onClick={onClick} />
 	</div>
 	)
 }

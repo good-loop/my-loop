@@ -19,35 +19,25 @@ const A = C.A;
  * @returns 
  */
 const ImpactFilterOptions = ({size, pvBaseObjects, status, setForcedReload, curPage}) => {
+	assert({wide: true, thin: true}[size]);
 
-	assert (size == "wide" || size == "thin")
+	// Anonymous and pseudo-users can't change filters or share
+	if (!Login.getId() || Login.getId().endsWith('pseudo')) return null;
 
-	// psuedo users shouldn't be able to change filters or share & don't have an account, so no point showing any of this component to them
-	if( ! Login.getId() || Login.getId().endsWith("pseudo")) return null;
+	const { masterBrand, brand, campaign } = pvBaseObjects.value || {};
 
-	const {masterBrand, brand, campaign} = pvBaseObjects.value || {};
-	let content = null;
-
-	if(size == "wide") content = (		
-		<div className='flex-row impactOverview-filters-and-account' id={"impactOverview-filters-and-account-"+size}>
-			<ImpactBrandFilters loading={!pvBaseObjects.resolved} masterBrand={masterBrand} brand={brand} campaign={campaign} setForcedReload={setForcedReload} size={size} dropdown curPage={curPage} status={status}/>
-			<ImpactDateFilter setForcedReload={setForcedReload} />
-			{pvBaseObjects.resolved && <ImpactAccountButton curMaster={masterBrand} curSubBrand={brand} curCampaign={campaign} />}
-		</div>
-	)
-
-	if(size == "thin") content = (		
-		<div className='flex-row impactOverview-filters-and-account' id={"impactOverview-filters-and-account-"+size}>
-			<ImpactBrandFilters loading={!pvBaseObjects.resolved} masterBrand={masterBrand} brand={brand} campaign={campaign} setForcedReload={setForcedReload} size={size} dropdown curPage={curPage} status={status}/>
-			{pvBaseObjects.resolved && <ImpactAccountButton curMaster={masterBrand} curSubBrand={brand} curCampaign={campaign} noShare/>}
-		</div>
-	)
+	const isWide = (size === 'wide');
 
 	return <>
-		{content}
-		<GLModalCard className='filter-display' id="filter-display" useOwnBackdrop >
-			{/* This gets filled in elsewhere by openAndPopulateModal() id:"filter-display" */}
-		</GLModalCard>
+		<div className="flex-row impactOverview-filters-and-account" id={`impactOverview-filters-and-account-${size}`}>
+			<ImpactBrandFilters loading={!pvBaseObjects.resolved} masterBrand={masterBrand} brand={brand} campaign={campaign} setForcedReload={setForcedReload} size={size} dropdown curPage={curPage} status={status}/>
+			{isWide && <ImpactDateFilter setForcedReload={setForcedReload} />}
+			{pvBaseObjects.resolved && (
+				<ImpactAccountButton curMaster={masterBrand} curSubBrand={brand} curCampaign={campaign} noShare={!isWide} />
+			)}
+		</div>
+		{/* Modal content is filled in elsewhere by openAndPopulateModal({id: 'filter-display'}) */}
+		<GLModalCard className="filter-display" id="filter-display" useOwnBackdrop />
 	</>;
 }
 

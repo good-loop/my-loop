@@ -150,13 +150,13 @@ export const modalToggle = (id) => {
 /**
  * TODO refactor to more "standard" react. This is a mix of function and tag.
  */
-export const openAndPopulateModal = ({id, content, title, header, headerImg, headerClassName, className, prioritized}) => {
+export const openAndPopulateModal = ({id, Content, title, Header, headerImg, headerClassName, className, prioritized}) => {
 	assert(id, "Must be given a modal ID to open!");
 	// Force close other modals first
 	if (prioritized) modalToggle();
 	// Preserve static properties
 	const usesOwnBackdrop = DataStore.getValue(MODAL_LIST_PATH.concat(id, "usesOwnBackdrop"));
-	const modalProps = {content, title, header, headerImg, headerClassName, className, usesOwnBackdrop};
+	const modalProps = {Content, title, Header, headerImg, headerClassName, className, usesOwnBackdrop};
 	//console.log("MODAL OBJ", modalObj);
 	DataStore.setValue(MODAL_LIST_PATH.concat(id), modalProps);
 	modalToggle(id);
