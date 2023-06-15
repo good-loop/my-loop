@@ -16,6 +16,7 @@ import ImpactLoadingScreen from '../ImpactLoadingScreen';
 import { addScript } from '../../../base/utils/miscutils';
 import CampaignPage from '../../campaignpage/CampaignPage';
 import {CardSeperator, CampaignImpactOne, CampaignImpactTwo, HowItWorks, DonationsCard, circleLogo, LearnMore, CharityArms, BrandLogoRows} from './StoriesComponents';
+import {ImpactB2B} from './ImpactB2B'
 
 /**
  * Container for the new (as of 5/23) replacement for impact hub
@@ -25,20 +26,28 @@ const CampaignImpact = () => {
 	// setup page & check we have all the data we need
 	const path = DataStore.getValue(['location', 'path']);
 	const glVertiser = DataStore.getUrlValue('gl.vertiser');
+	const b2b = DataStore.getUrlValue('b2b');
 	if ((path.length != 2 && !glVertiser) || path[0] !== "campaign") return <ErrorDisplay e={{error:"Invalid URL"}} />
-
 	const status = DataStore.getUrlValue('gl.status') || DataStore.getUrlValue('status') || KStatus.PUBLISHED;
-	const itemType = "campaign"
-	const itemId = path[1]
+	let itemType = "campaign"
+	let itemId = path[1]
 
 	// before we fetch the data we need for stories, check to see if it's a legacy impact page
 	// temporary wee hack as of 17/5/23, we can only reach this page if we choose to within the url! 
 	const LEGACY_IMPACT_IDS = []
-	if(glVertiser || LEGACY_IMPACT_IDS.includes(itemId) ||  ! DataStore.getUrlValue('newStories')) return <CampaignPage />;
+	const newStories = DataStore.getUrlValue('newStories');
+
+	// return old impact hub
+	if(LEGACY_IMPACT_IDS.includes(itemId) ||  !newStories) return <CampaignPage />;
+	
+	if(glVertiser) {
+		itemType = "brand"
+		itemId = glVertiser
+	}
 
 	let pvBaseObjects = DataStore.fetch(['misc','impactBaseObjects',itemType,status,'all',itemId], () => {
 		return fetchBaseObjects({itemId, itemType, status});
-	});
+	})
 
 	if (pvBaseObjects.error) return <ErrorDisplay e={pvBaseObjects.error} />
 	if (! pvBaseObjects.resolved) return <ImpactLoadingScreen baseObj={pvBaseObjects}/>
@@ -48,17 +57,16 @@ const CampaignImpact = () => {
 
 	let totalDonation = Money.total(impactDebits.map(debit => debit?.impact?.amount || new Money(0)));
 	if(impactDebits.length == 0) return <ErrorDisplay e={{message: "No impact debits found for this campaign"}} />
-
 	// Returns NaN if impactDebits is an empty array
 	if (isNaN(totalDonation.value)) totalDonation = new Money(0);
 	const totalString = Money.prettyStr(totalDonation);
-
 	// sort impact debits, ranking first by priority then by the cash value of the debit
 	// "b - a" is used to invert the sort so [0] is the most impactful impact
 	impactDebits.sort((a, b) => {
 		let result = (b.impact.priority || 0) - (a.impact.priority || 0); // sort by priority
 		if(result === 0) result = (b.impact.amountGBP || 0) - (a.impact.amountGBP || 0); // if equal, sort by GBP
-		if(result === 0) result = b.id.CompareTo(a.id); // if equal, sort by id alphabetically 
+		return result;
+		if(result === 0) result = b.id.localCompare(a.id); // if equal, sort by id alphabetically 
 		return result;
 	});
 
@@ -69,19 +77,21 @@ const CampaignImpact = () => {
 
 	const mainLogo = campaign?.branding?.logo || brand?.branding?.logo;
 
+	if(b2b) return ImpactB2B({pvBaseObjects, totalString, mainLogo, footer:false})
+
 	return (
 		<Container fluid id="ImpactB2C-container">
 			<SplashCard masterBrand={masterBrand} impact={firstImpact} charity={firstCharity} totalString={totalString}/>
 			<BrandLogoRows mainLogo={mainLogo} charities={charities} />
 			<PoweredByGL />
-			<HowItWorks campaign={campaign} charities={charities} totalString={totalString}/>
+			<HowItWorks campaign={campaign} subCampaigns={subCampaigns} charities={charities} totalString={totalString}/>
 			<CardSeperator text={`Here's a Look At What You're Helping\nSupport With ${masterBrand.name}`} />
 			{firstImpact && <CampaignImpactOne campaign={campaign} brand={brand} logo={mainLogo} charity={firstCharity} impactDebit={firstImpact}/>}
 			{secondImpact && <CampaignImpactTwo campaign={campaign} brand={brand} logo={mainLogo} charity={secondaryCharity} impactDebit={secondImpact}/>}
 			<MakingADifference logo={mainLogo} charities={charities} />
 			<CardSeperator text={`Here's How You Can Keep Involved\nWith Good-Loop`} />
 			<GetInvolvedCard />
-			<DonationsCard campaign={campaign} brand={brand} impactDebits={impactDebits} charities={charities} />
+			<DonationsCard campaign={campaign} subCampaigns={subCampaigns} brand={brand} impactDebits={impactDebits} charities={charities} />
 			<LearnMore />
 		</Container>
 	)

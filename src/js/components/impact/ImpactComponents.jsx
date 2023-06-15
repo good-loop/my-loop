@@ -8,9 +8,6 @@ import { Container } from 'reactstrap';
  */
 
 import Login from '../../base/youagain';
-import { ImpactStoriesPage } from './stories_components/ImpactStoriesPage';
-
-
 
 export const ErrorDisplay = ({e}) => {
 	const [showError, setShowError] = useState(false);

@@ -9,7 +9,7 @@ import C from '../../../C';
 import KStatus from '../../../base/data/KStatus';
 import Campaign from '../../../base/data/Campaign';
 import Advertiser from '../../../base/data/Advertiser';
-import {addAmountSuffixToNumber} from '../../../base/utils/miscutils'
+import {addAmountSuffixToNumber, isMobile} from '../../../base/utils/miscutils'
 import { fetchBaseObjects } from '../impactdata';
 import { ErrorDisplay } from '../ImpactComponents';
 import { addScript } from '../../../base/utils/miscutils';
@@ -200,9 +200,11 @@ export const HowItWorks = ({campaign, subCampaigns, charities, totalString}) => 
 	if(!subCampaigns) subCampaigns = [campaign] 
 
 	const viewcount = addAmountSuffixToNumber(
-		subCampaigns.reduce((sum, cur) => {
-			return sum + Number(Campaign.viewcount({campaign: campaign, status: KStatus.PUBLISHED}).toPrecision(2))
-		}, 0)
+		subCampaigns.reduce((sum, curCampaign) => {
+			let count = Campaign.viewcount({campaign: curCampaign, status: KStatus.PUBLISHED})
+			if(typeof count !== 'number') count = 0
+			return sum + Number(count)
+		}, 0).toPrecision(2)
 	)
 
 	return (
@@ -226,7 +228,7 @@ export const HowItWorks = ({campaign, subCampaigns, charities, totalString}) => 
 					<h2 className='color-gl-white'>2.</h2>
 					<div className='white-circle'>
 						<img src="/img/Impact/OurStory_PeopleCrossingRoad.jpg" className='fill-img'/>
-					</div>                    
+					</div>
 					<p>Today</p>
 					<h3 className='color-gl-white'>+{viewcount} People</h3>
 					<p className='text white'>Viewed The Advert{subCampaigns ? "s" : ""} So Far</p>
@@ -235,7 +237,7 @@ export const HowItWorks = ({campaign, subCampaigns, charities, totalString}) => 
 				<div className='hiw-col'>
 					<h2 className='color-gl-white'>3.</h2>
 					<div className='white-circle'>
-						<img src={charities[0]?.headerImage} className='fill-img'/>
+						<img src={NGO.images(charities[0])[0]} className='fill-img'/>
 					</div>
 					<p>After the Campagin</p>
 					<h3 className='color-gl-white'>{totalString}+ In Donations</h3>
@@ -271,7 +273,6 @@ export const DonationsCard = ({campaign, subCampaigns, brand, impactDebits, char
 	
 	// this isn't accurate?
 	const endDate = campaign.end ? getDate(campaign.end) : "present";``
-	console.log("????", impactDebits)
 
 	// if we have multiple donations to the same charity, avoid using the same image over and over again
 	let charityCounter = {}
@@ -291,7 +292,6 @@ export const DonationsCard = ({campaign, subCampaigns, brand, impactDebits, char
 		// get new image, if we have more impacts than images just loop the list
 		const img = imgList[(charityCounter[charId] - 1) % imgList.length];
 
-		console.log("aaahhHHHH", charId, imgList.length, imgList)
 		const logo = charity.logo;
 		const displayName = charity.displayName;
 		const raised = debit.impact.amountGBP;
@@ -441,10 +441,10 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity, open, setOpen}
 
 			// donation status
 			statusTitles : [
-				"Campaign Launched",
-				"Campaign Completed",
-				"Donation Processing",
-				"Donation Made"
+				"Campaign\nLaunched",
+				"Campaign\nCompleted",
+				"Donation\nProcessing",
+				"Donation\nMade"
 			],
 			statusCompleted : [
 				true,
@@ -461,8 +461,8 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity, open, setOpen}
 			
 			// Links
 			links : [
-				{url : "www.google.com", icon:"", linkText:"Donation Receipt"},
-				{url : "www.google.com", icon:"", linkText:"Tree Planting Certificate"}
+				{url : "www.google.com", icon:"", linkText:"Donation Receipt", linkImg:"/img/Impact/donation-icon.svg"},
+				{url : "www.google.com", icon:"", linkText:"Tree Planting Certificate", linkImg:"/img/Impact/donation-icon.svg"}
 			]
 		},
 
@@ -505,11 +505,30 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity, open, setOpen}
 		},
 	}[impactType]
 
+	let donationStatus = details.statusDates.map((_, i) => {
+		return (
+		<div className="donation-status">
+			<p>{details.statusDates[i]}</p>
+			{details.statusCompleted[i] && <img src="/img/Impact/tick-circle.svg" className='donation-tick'/>}
+			{! details.statusCompleted[i] && <img src="/img/Impact/blank-tick.svg" className='donation-tick'/>}
+			<p className='light-bold'>{details.statusTitles[i]}</p>
+		</div>)
+	}) 
+
+	let donationLinks = details.links.map((link, i) => {
+		return (
+		<a className="donation-link" href={link.url}>
+			<img src={link.linkImg} />
+			<p className='light-bold'>{link.linkText}</p>
+		</a>)
+	})
+
+	const modalClasses = `${isMobile() ? "flex-column" : "flex-row"} d-flex`
 	return (
 		<Modal isOpen={open} id="impact-cert-modal" className='impact-cert' toggle={() => setOpen(!open)} size="xl">
-			<ModalBody className='d-flex flex-row' style={{padding:0, height:"90vh"}}>
+			<ModalBody className="d-flex modal-body" style={{padding:0, height:"90vh"}}>
 				{/* Col 1 on desktop, top row on mobile*/}
-				<div className='flex-column cert-col left justify-content-between' style={{padding:"2.5%", flexBasis:"50%"}}>
+				<div className='flex-column cert-col left justify-content-between' style={{padding:"5%", flexBasis:"50%"}}>
 					<div className='charity-description justify-content-between'>
 						<img style={{maxWidth:"40%"}} src={charity.logo} />
 						<h4 className='mt-5 charity-name'>{charityName}</h4>
@@ -519,16 +538,16 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity, open, setOpen}
 					<div className='charity-SDG mt-5'>
 						<p className='text'>Primary UN SDG supported by {charityName}</p>
 					</div>
-					<div className='charity-numbers mt-5 p-3'>
-						<p className='text small-header'>{charityName} Projects</p>
+					<div className='charity-numbers mt-5 p-3' style={{background:"@gl-lighter-blue"}}>
+						<p className='text small-header light-bold'>{charityName} Projects</p>
 						<p className='text mt-1'>Registered charity number: ????????? </p>
 						<p className='text mt-1'>Company Number: ????????? </p>
 					</div>
 				</div>
 
 				{/* Col 2 on desktop, bot row on mobile*/}
-				<div className='flex-column cert-col right' style={{background:"aliceblue", flexBasis:"50%"}}>
-					<div className='brand-ngo-logos' style={{background:"white", padding:"5% 2.5% 5% 1.25%"}}>
+				<div className='flex-column cert-col right' style={{background:"@gl-lighter-blue", flexBasis:"50%"}}>
+					<div className='brand-ngo-logos' style={{background:"white", padding:"1% 2.5% 1% 1.25%"}}>
 						<Row className="cert-logo-row" style={{height:"10vh", margin:0}}>
 							<div className="logo-container">
 								<img src={brand.branding.logo}/>
@@ -579,17 +598,24 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity, open, setOpen}
 						<div>
 							<p className='text offset-header'>{impactType.toUpperCase()} STATUS</p>
 							<div id="offset-status">
-								<Row class="offset-content" style={{margin:0}}>
-									offset status
-								</Row>
+								<Col class="offset-content" style={{margin:0}}>
+									<p className="light-bold">Tracking ID: XXXX</p>
+									<Row style={{justifyContent:"space-around"}}>
+										<div id='status-line' />
+										{donationStatus[0]}
+										{donationStatus[1]}
+										{donationStatus[2]}
+										{donationStatus[3]}
+									</Row>
+								</Col>
 							</div>
 						</div>
 
 						<div>
 							<p className='text offset-header'>LINKS</p>
 							<div id="offset-links">
-								<Row class="offset-content" style={{margin:0}}>
-									offset links
+								<Row class="offset-content" style={{margin:0,placeContent:'space-around'}}>
+									{donationLinks}
 								</Row>
 							</div>
 						</div>

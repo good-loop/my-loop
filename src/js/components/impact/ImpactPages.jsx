@@ -13,7 +13,7 @@ import { fetchImpactBaseObjects } from '../../base/data/ImpactPageData';
 import { isoDate } from '../../base/utils/date-utils';
 import { ErrorDisplay } from './ImpactComponents';
 import ImpactOverviewPage from './ImpactOverviewPage';
-import ImpactStoriesPage from './stories_components/ImpactStoriesPage';
+import {ImpactStoriesB2B} from './stories_components/ImpactB2B';
 import ImpactStatsPage from './ImpactStatsPage';
 
 
@@ -28,7 +28,7 @@ import DataClass from '../../base/data/DataClass';
 
 const IMPACT_PAGES = {
 	view: ImpactOverviewPage,
-	stories: ImpactStoriesPage,
+	stories: ImpactStoriesB2B,
 	stat: ImpactStatsPage,
 }
 
