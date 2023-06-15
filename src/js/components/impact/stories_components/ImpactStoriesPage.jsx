@@ -75,7 +75,7 @@ const ImpactStoriesPage = ({pvBaseObjects, navToggleAnimation, totalString, main
 				</Row>
 			</Container>
 		</div>
-		<GLModalBackdrop/>
+		<GLModalBackdrop />
 	</>;
 };
 
