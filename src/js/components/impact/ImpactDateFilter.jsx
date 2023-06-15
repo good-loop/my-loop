@@ -11,12 +11,17 @@ import DataStore from '../../base/plumbing/DataStore';
 import { modalToggle } from './GLCards';
 
 
+/** Set the URL params for time period. Overwrite last history entry so the back button doesn't get clogged with spam */
+const setURLPeriod = (period, clearParams) => {
+	modifyPage(null, period, false, clearParams, {replaceState: true});
+};
+
 /** Extract the time period filter from URL params if present - if not, apply "current quarter" by default */
 const initPeriod = () => {
 	let period = null || getPeriodFromUrlParams(); // TODO fix this, recent date-utils changes broke this!
 	if (!period) {
 		period = getPeriodQuarter(new Date());
-		modifyPage(null, { period: period.name }, false, false, {replaceState: true});
+		setURLPeriod({ period: period.name }, false);
 	}
 	return period;
 };
@@ -41,13 +46,7 @@ const ImpactDateFilter = ({doReload}) => {
 		allFilterParams.forEach((p) => {
 			delete params[p];
 		});
-		modifyPage(
-			null,
-			periodToParams(period),
-			false,
-			true,
-			{replaceState:true} // don't break the back button
-		);
+		setURLPeriod(periodToParams(period), true);
 		doReload();
 		modalToggle();
 	}, [dummy]);

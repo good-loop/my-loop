@@ -18,6 +18,43 @@ import { isPer1000 } from '../pages/greendash/GreenMetrics';
 const A = C.A;
 
 
+const NavEntryCommon = ({name, pageKey, href, devOnly, urlFilters, doReload, opacity, active, top}) => {
+	const activeClass = (active === pageKey) ? 'active' : '';
+	if (!href) href = `/impact/${pageKey}${urlFilters}`;
+
+	const item = top ? (
+		<NavItem className={activeClass}>
+			<A href={href} onClick={doReload}>
+				<div className="impact-navbar-text">{name}</div>
+			</A>
+		</NavItem>
+	) : (
+		<NavItem>
+			<A href={href} onClick={doReload}>
+				<div className={space('navbar-link', activeClass)}>
+					<div className={`impact-nav-icon ${pageKey}-icon`} />
+					<animated.div className="impact-navbar-text" style={{opacity}}>{name}</animated.div>
+				</div>
+			</A>
+		</NavItem>
+	);
+
+	return devOnly ? <DevOnly>{item}</DevOnly> : item;
+};
+
+
+const NavEntrySide = (props) => <NavEntryCommon {...props} />;
+const NavEntryTop = (props) => <NavEntryCommon top {...props} />;
+
+
+const navEntries = [
+	{ pageKey: 'view', name: 'Overview' },
+	{ pageKey: 'stories', name: 'Impact' },
+	{pageKey: 'stat', name: 'Analysis' },
+	{ pageKey: 'impact', name: 'Green Tags', href: `${ServerIO.PORTAL_ENDPOINT}/#green`, devOnly: true }
+];
+
+
 /**
  * Verical navbar found on wide sreens
  * 
@@ -28,51 +65,30 @@ const A = C.A;
  * @returns 
  */
 const SideNavBar = ({urlFilters="", active, isOpen, navToggleAnimation, toggle, doReload}) => {
+	const { width, opacity, rotate: transform, alignSelf } = navToggleAnimation;
+	const navProps = { opacity, urlFilters, doReload, active };
+
 	return (
-	<animated.div id='impact-overview-navbar-widescreen' className='navAnimationContainer' style = {{width: navToggleAnimation.width}}>
-		<Navbar dark expand="md" id="impact-navbar" className={space('flex-column', 'justify-content-start', isOpen && 'mobile-open')} style={{width: navToggleAnimation.width}}>
-			<NavbarToggler onClick={toggle} />
-			<Nav navbar vertical>
-				<a href="https://good-loop.com/">
-					<img className="logo flex-column" src="/img/logo-white.svg"/>
-					<animated.p className='logo-name flex-column' style={{opacity: navToggleAnimation.opacity}}>GOOD-LOOP</animated.p>
-				</a>
-				<br/><br/>
-				<NavItem>
-					<A href={'/impact/view'+urlFilters} onClick={doReload}>
-						<div className={active === 'Overview' ? 'active navbar-link' : 'navbar-link'}> 
-							<div className="impact-nav-icon overview-icon" /><animated.div className="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Overview</animated.div> 
-						</div>
-					</A>
-				</NavItem>
-				<NavItem>
-					<A href={'/impact/stories'+urlFilters} onClick={doReload}>
-						<div className={active === 'Stories' ? 'active navbar-link' : 'navbar-link'}> 
-							<div className="impact-nav-icon impact-icon" /> <animated.div className="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Impact</animated.div> 
-						</div>
-					</A>
-				</NavItem>
-				<NavItem>
-					<A href={'/impact/stat'+urlFilters}>
-						<div className={active === 'analysis' ? 'active navbar-link' : 'navbar-link'}> 
-							<div className="impact-nav-icon analysis-icon" /> <animated.div className="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Analysis</animated.div> 
-						</div>
-					</A>
-				</NavItem>
-				<DevOnly><NavItem>
-					<A href={`${ServerIO.PORTAL_ENDPOINT}/#green`}>
-						<div className={active === 'impact' ? 'active navbar-link' : 'navbar-link'}> 
-							<div className="impact-nav-icon impact-icon" /> <animated.div className="impact-navbar-text" style={{opacity: navToggleAnimation.opacity}}>Green Tags</animated.div> 
-						</div>
-					</A>
-				</NavItem></DevOnly>
-				{/* open/close draw toggle */}
-				<div className='flex-column align items center w-100' id="toggle-impact-nav-container">
-					<animated.button onClick={toggle} id="toggle-impact-nav" className={isOpen ? "open" : "closed"} style={{transform: navToggleAnimation.rotate, alignSelf: navToggleAnimation.alignSelf}}></animated.button>
-				</div> 
-			</Nav>
-		</Navbar>
-	</animated.div>);
+		<animated.div id="impact-overview-navbar-widescreen" className="navAnimationContainer" style={{width}}>
+			<Navbar dark expand="md" id="impact-navbar" className={space('flex-column', 'justify-content-start', isOpen && 'mobile-open')} style={{width}}>
+				<NavbarToggler onClick={toggle} />
+				<Nav navbar vertical>
+					<a href="https://good-loop.com/">
+						<img className="logo flex-column" src="/img/logo-white.svg"/>
+						<animated.p className='logo-name flex-column' style={{opacity: navToggleAnimation.opacity}}>GOOD-LOOP</animated.p>
+					</a>
+					<br/><br/>
+					{navEntries.map(entryProps => (
+						<NavEntrySide {...entryProps} {...navProps} />
+					))}
+					{/* open/close draw toggle */}
+					<div className="flex-column align items center w-100" id="toggle-impact-nav-container">
+						<animated.button onClick={toggle} id="toggle-impact-nav" className={isOpen ? 'open' : 'closed'} style={{transform, alignSelf}} />
+					</div>
+				</Nav>
+			</Navbar>
+		</animated.div>
+	);
 };
 
 
@@ -85,58 +101,41 @@ const SideNavBar = ({urlFilters="", active, isOpen, navToggleAnimation, toggle, 
  * @returns 
  */
 const TopNavBar = ({urlFilters = '', active, doReload}) => {
-	return (<>
-		<Navbar dark expand="md" id="impact-overview-navbar-smallscreen" className={space('flex-column', 'justify-content-start')}>
+	const navProps = {urlFilters, doReload, active };
+	return (
+		<Navbar dark expand="md" id="impact-overview-navbar-smallscreen" className="flex-column justify-content-start">
 			<Nav horizontal="start">
-				<NavItem className={active === 'Overview' ? 'active' : ''}>
-					<A href={'/impact/view'+urlFilters} onClick={doReload}>
-						<div className="impact-navbar-text">Overview</div> 
-					</A>
-				</NavItem>
-				<NavItem className={active === 'Stories' ? 'active' : ''}>
-					<A href={'/impact/stories'+urlFilters} onClick={doReload}>
-						<div className="impact-navbar-text">Impact</div> 
-					</A>
-				</NavItem>
-				<NavItem className={active === 'analysis' ? 'active' : ''} >
-					<A href={'/impact/stat'+urlFilters} onClick={doReload}>
-						<div className="impact-navbar-text">Analysis</div> 
-					</A>
-				</NavItem>
-				<DevOnly><NavItem className={active === 'impact' ? 'active' : ''}>
-					<A href={`${ServerIO.PORTAL_ENDPOINT}/#green`}>
-						<div className="impact-navbar-text">Green Tags</div> 
-					</A>
-				</NavItem></DevOnly>
+				{navEntries.map(entryProps => (
+					<NavEntryTop {...entryProps} {...navProps} />
+				))}
 			</Nav>
 		</Navbar>
-	</>);
+	);
 };
 
 
+// Parameters passed to Spring to animate side navbar opening/closing
+const navAnimationState = isOpen => isOpen ? (
+	{ width: '15rem', display: 'inline-block', opacity: 1.0, rotate: 'rotate(-90deg)', alignSelf: 'end' }
+) : (
+	{ width: '5rem', display: 'none', opacity: 0.0, rotate: 'rotate(90deg)', alignSelf: 'center' }
+);
+
+
 const NavBars = ({active, isNavbarOpen, setIsNavbarOpen, doReload}) => {
-	const [isOpen, setIsOpen] = useState(isNavbarOpen) // the navbar expanded or not?
+	const navToggleAnimation = useSpring(navAnimationState(isNavbarOpen));
 
-	// on change of isOpen, these values define CSS animations
-	const navToggleAnimation = useSpring({
-		width : isOpen ? "15rem" : "5rem",	// shrink navbar
-		display : isOpen ? "inline-block" : "none", // hide text
-		opacity : isOpen ? 1.0 : 0.0,	// fade text out
-		rotate : isOpen ? "rotate(-90deg)" : "rotate(90deg)", // rotate icon (negative to make it rotate counter clockwise from open -> closed)
-		alignSelf : isOpen ? "end" : "center" // move toggle button from right when open to center when closed
-	})
-
-	const toggle = () => {
-		setIsOpen(!isOpen)
-		setIsNavbarOpen(!isOpen) // inFlow empty div used in main page content, required as fixed navbars can't affect flex when opening
-	}
+	// Open/closed is stored back on ImpactPages because it also controls an in-flow spacer div which is used to push content out of the way
+	const toggle = () => setIsNavbarOpen(!isNavbarOpen);
 
 	// HACK what to put on the url to keep the same brand/time filter settings
 	const urlFilters = window.location.pathname.replace(/\/impact\/\w+/, "") + window.location.search;
 
+	const navBarProps = { active, isOpen: isNavbarOpen, toggle, navToggleAnimation, urlFilters, doReload };
+
 	return <>
-		<SideNavBar active={active} isOpen={isOpen} toggle={toggle} navToggleAnimation={navToggleAnimation} urlFilters={urlFilters} doReload={doReload} />
-		<TopNavBar active={active} urlFilters={urlFilters} doReload={doReload} />
+		<SideNavBar {...navBarProps} />
+		<TopNavBar {...navBarProps} />
 	</>;
 };
 

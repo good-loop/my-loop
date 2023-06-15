@@ -125,7 +125,7 @@ const ImpactPage = () => {
 			<animated.div className="impact-navbar-flow-overlay" style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}} />
 			<ImpactLoadingScreen pvBaseObj={pvBaseObjects} reload={reload} />
 			<ImpactFilterOptions size="thin" {...navProps} /> {/*mobile horizontal filters topbar*/}
-			<NavBars active={name} {...navProps} />
+			<NavBars active={page} {...navProps} />
 			<ImpactFilterOptions size="wide" {...navProps} /> {/*widescreen vertical filters topbar*/}
 		</div>
 		<PageComponent pvBaseObjects={pvBaseObjects} navToggleAnimation={navToggleAnimation} totalString={totalString} mainLogo={mainLogo} />
