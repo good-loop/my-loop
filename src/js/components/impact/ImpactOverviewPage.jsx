@@ -99,20 +99,22 @@ function IOPFirstHalf({ wtdAds, tadgAds, brand, campaign, charities, impactDebit
  * 
  * @returns {JSX.Element}
  */
-function SubBrandsCard({ brand, subBrandsDisplayable }) {
-	if (!subBrandsDisplayable.length) return null;
+function SubBrandsCard({ brand, subBrandsDisplayable: subBrands }) {
+	if (!subBrands.length) return null;
 
 	const cardProps = {
 		className: 'center-number',
-		modalContent: <BrandList brand={brand} subBrands={subBrandsDisplayable} />,
-		modalTitle: `${subBrandsDisplayable.length} Brands`,
+		modalContent: <BrandList brand={brand} subBrands={subBrands} />,
+		modalTitle: `${subBrands.length} Brands`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
 	};
 
+	const noun = (subBrands.length === 1) ? 'Brand' : 'Brands';
+
 	return <GLCard {...cardProps}>
-		<h2>{subBrandsDisplayable.length}</h2>
-		<h3>Brands</h3>
+		<h2>{subBrands.length}</h2>
+		<h3>{noun}</h3>
 	</GLCard>;
 }
 
@@ -133,9 +135,11 @@ function CharitiesCard({ charities }) {
 		modalClassName: 'list-modal'
 	};
 
+	const noun = (charities.length === 1) ? 'Charity' : 'Charities';
+
 	return <GLCard {...cardProps}>
 		<h2>{charities.length}</h2>
-		<h3>Charities</h3>
+		<h3>{noun}</h3>
 	</GLCard>;
 }
 
@@ -150,19 +154,22 @@ function CharitiesCard({ charities }) {
  * @param {object[]} p.impactDebits ImpactDebits associated with campaigns under the current focus
  * @returns {JSX.Element}
  */
-function SubCampaignsCard({ brand, subBrands, subCampaignsDisplayable, impactDebits}) {
-	if (!subCampaignsDisplayable.length) return null;
+function SubCampaignsCard({ brand, subBrands, subCampaignsDisplayable: campaigns, impactDebits}) {
+	if (!campaigns.length) return null;
 
 	const cardProps = {
 		basis: 10,
-		modalContent: <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaignsDisplayable} impactDebits={impactDebits}/>,
-		modalTitle: `${subCampaignsDisplayable.length} Campaigns`,
+		modalContent: <CampaignList brand={brand} subBrands={subBrands} campaigns={campaigns} impactDebits={impactDebits}/>,
+		modalTitle: `${campaigns.length} Campaigns`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
 	};
 
+	const noun = (campaigns.length === 1) ? 'Campaign' : 'Campaigns';
+
 	return <GLCard {...cardProps}>
-		<h3>{subCampaignsDisplayable.length} CAMPAIGNS</h3>
+		<h2>{campaigns.length}</h2>
+		<h3>{noun}</h3>
 	</GLCard>;
 }
 
@@ -445,9 +452,10 @@ function CharitiesCardSet({charities, impactDebits}) {
 	}
 
 	const topCharities = <GLHorizontal className="top-charities">
-		{charitiesAugmented.slice(0, 3).map(charity => 
-			<CharityCard id={getId(charity)} charity={charity} impactDebits={impactDebits} />
-		)}
+		{charitiesAugmented.slice(0, 3).map(charity => {
+			const cid = getId(charity);
+			return <CharityCard id={cid} key={cid} charity={charity} impactDebits={impactDebits} />;
+		})}
 	</GLHorizontal>;
 
 	if (charitiesAugmented.length <= 3) return topCharities;
@@ -456,9 +464,11 @@ function CharitiesCardSet({charities, impactDebits}) {
 		{topCharities}
 		<GLCard className="more-charities card-body flex-row" noPadding>
 			<span>Plus {charitiesAugmented.length-3} more:</span>
-			{charitiesAugmented.slice(3).map(
-				charity => <ImpactHubLink className="charity-logo" item={charity} logo title={NGO.displayName(charity)} />
-			)}
+			{charitiesAugmented.slice(3).map(charity => {
+				const cid = getId(charity);
+				const cname = NGO.displayName(charity);
+				return <ImpactHubLink className="charity-link" key={cid} item={charity} logo title={cname} />;
+			})}
 		</GLCard>
 	</GLVertical>;
 };
@@ -760,20 +770,17 @@ const CampaignList = ({campaigns, brand, subBrands, status}) => {
 	});
 
 	return <>
-		<br/>
 		<h5>Campaigns run via Good-Loop Ads</h5>
-		<p className='color-gl-red text-center'>{brand.name} - All Campaigns</p>
-		<br/>
+		<p className="color-gl-red text-center">{brand.name} - All Campaigns</p>
 		<GLVertical>
 			{campaigns.map(campaign => {
 				const myBrand = allBrands[campaign.vertiser];
-				const contents = <GLCard className={space("preview campaign mt-3", campaign._shouldHide && "bg-gl-light-red")} noMargin key={campaign.id} href={"/impact/view/campaign/" + campaign.id}>
-					<p className='w-75 text-left m-0'>
-						<b>{myBrand.name || campaign.vertiserName}</b>
-						<br/>
-						{campaign.name}
+				const contents = <GLCard className={space('preview campaign mt-3', campaign._shouldHide && 'bg-gl-light-red')} noMargin key={campaign.id} href={"/impact/view/campaign/" + campaign.id}>
+					<p className="w-75 text-left m-0">
+						<div className="brand-name">{myBrand.name || campaign.vertiserName}</div>
+						<div className="campaign-name">{campaign.name}</div>
 					</p>
-					{campaign._shouldHide && <p className='text-white'>Normally Hidden</p>}
+					{campaign._shouldHide && <p className="text-white">Normally Hidden</p>}
 					<Logo item={myBrand} />
 				</GLCard>;
 				return campaign._shouldHide ? <DevOnly>{contents}</DevOnly> : contents;
