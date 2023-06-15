@@ -190,9 +190,12 @@
 		.more-charities {
 			justify-content: space-between;
 			align-items: center;
-			.charity-logo {
+			flex-wrap: wrap; // Spill over onto extra lines, eg on mobile
+			line-height: 3em; // vertical spacing between wrapped lines
+			.charity-link {
+				margin: 0 0.5em;
 				.logo {
-					width: unset;
+					width: unset; // Let wide logos expand
 				}
 			}
 		}
