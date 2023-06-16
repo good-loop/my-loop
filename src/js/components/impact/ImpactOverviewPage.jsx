@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { animated } from 'react-spring';
 import TODO from '../../base/components/TODO';
 import DevOnly from '../../base/components/DevOnly';
-import { Button, Col, Container, Row } from 'reactstrap';
+import { Button, Col, Container, Modal, ModalBody, ModalHeader, Row } from 'reactstrap';
 import BG from '../../base/components/BG';
 import { GLCard, GLHorizontal, GLVertical, GLModalCard, GLModalBackdrop } from './GLCards';
 import NGO from '../../base/data/NGO';
@@ -10,6 +10,9 @@ import Money from '../../base/data/Money';
 import CharityLogo from '../CharityLogo';
 import AdvertsCatalogue from '../campaignpage/AdvertsCatalogue';
 import Misc from '../../base/components/Misc';
+import Circle from '../../base/components/Circle';
+import Center from '../../base/components/Center';
+
 import Advert from '../../base/data/Advert';
 import { getActiveTypes, getImpressionsByCampaignByCountry } from '../../base/data/ImpactPageData';
 import printer from '../../base/utils/printer'
@@ -19,7 +22,7 @@ import printer from '../../base/utils/printer'
  */
 
 // import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIGN, TEST_CAMPAIGN_OBJ} from './TestValues';
-import { addAmountSuffixToNumber, space } from '../../base/utils/miscutils';
+import { addAmountSuffixToNumber, space, stopEvent } from '../../base/utils/miscutils';
 import { dataColours, getCountryFlag, getCountryName } from '../pages/greendash/dashUtils';
 import { isEmpty, keyBy, sumBy } from 'lodash';
 import Logo from '../../base/components/Logo';
@@ -450,11 +453,40 @@ function CharitiesCardSet({charities, impactDebits}) {
 
 
 /**
- * #
+ * 
 */
 function CharityCard({charity}) {
+	let [show,setShow] = useState();
+	let headerStyle = charity.images? {
+		backgroundImage: "url("+charity.images+")",
+		backgroundPosition: 'center'
+	} : null;
+
 	return <GLCard className="charity-card">
-		<img alt={charity.name} src={charity.logo} className="charity-logo" />
+		<a href="dummy"  onClick={e => stopEvent(e) && setShow(true)}><img alt={charity.name} src={charity.logo} className="charity-logo"/></a>
+		{/* This modal is similar (though not quite as well styled) as the one in the charity list on-click.
+		Advantage: this uses vanilla bootstrap and is simpler.
+		To Do: refactor to use vanilla bootstrap modals elsewhere. */}
+		<Modal isOpen={show} toggle={() => setShow(!show)}
+			// size="lg"
+		>
+			<div style={headerStyle}>
+			<ModalHeader toggle={() => setShow(!show)}>
+				{/* argh: modal-title is not filling the width so not centering */}
+				<Center>
+					<Circle padding="1rem" center>
+						<CharityLogo charity={charity}/>
+					</Circle>
+				</Center>
+				{/* <Misc.Logo service={C.app.id} url={logo} transparent={false} className="pull-left mr-1" />
+				{' '}{title}
+				{subtitle && <p className='my-4 login-subtitle'>{subtitle}</p>} */}
+			</ModalHeader>
+			</div>
+			<ModalBody>
+				<CharityInfo charity={charity}/>
+			</ModalBody>
+		</Modal>
 		<h2 className="donation-total">
 			{Money.prettyStr(charity.dntnTotal)}
 		</h2>
