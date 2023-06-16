@@ -84,7 +84,9 @@ function IOPFirstHalf({ wtdAds, tadgAds, brand, campaign, charities, impactDebit
 				<WTDCard ads={wtdAds} brand={brand} charities={charities} impactDebits={impactDebits} />
 				<TADGCard ads={tadgAds} brand={brand} charities={charities} impactDebits={impactDebits} />
 			</GLHorizontal>*/
-			<CharitiesCardSet charities={charities} impactDebits={impactDebits} />
+			// Can't have in set - or CommonDivision wrapper messes up. Can't think of fix so just shove contents here for now
+			<CharitiesCardSet charities={charities} impactDebits={impactDebits} glCardPassThru={true} />
+			
 		)}
 		<GLModalCard id="left-half" />
 	</GLVertical>;
@@ -265,10 +267,8 @@ const IOPSecondHalf = (baseObjects) => {
 				<CountryViewsGLCard basis={10} baseObjects={baseObjects} />
 				<OffsetsCard />
 			</GLVertical>
-			<div>
-				<ContentListCard {...baseObjects } />
-				<GLModalCard id="ads-for-good-modal" />
-			</div>
+			<ContentListCard {...baseObjects } />
+			<GLModalCard id="ads-for-good-modal" />
 		</GLHorizontal>}
 
 		{/* bottom right corner */}
@@ -408,14 +408,6 @@ function TADGCard({ads, brand, charities, impactDebits}) {
 	</GLCard>;
 }
 
-
-const augCharityComparator = (a, b) => {
-	if (a.dntnTotal && b.dntnTotal) return Money.sub(b.dntnTotal, a.dntnTotal).value;
-	if (a.dntnTotal) return 1;
-	if (b.dntnTotal) return -1;
-	return 0;
-};
-
 /**
  * One, two or three charity cards (depending on donations found) to display below the hero splash
  * @param {object} p
@@ -423,52 +415,35 @@ const augCharityComparator = (a, b) => {
  * @param {ImpactDebit[]} p.impactDebits The ImpactDebit objects representing in-scope donations.
  */
 function CharitiesCardSet({charities, impactDebits}) {
-	const [charitiesAugmented, setCharitiesAugmented] = useState([]);
 
 	if (!charities?.length) {
 		return <DevOnly>No charities</DevOnly>;
 	};
 
-	useEffect(() => {
-		assert(charities);
-		// Attach donation total (sum of monetary ImpactDebits) to each charity & sort highest-first
-		const nextCharitiesAugmented = charities.map(charity => {
-			const cid = NGO.id(charity);
-			const dntnTotal = impactDebits
-				.filter(idObj => idObj?.impact?.charity === cid)
-				.reduce((acc, idObj) => {
-					const thisAmt = idObj?.impact?.amount;
-					if (!acc) return thisAmt;
-					if (!Money.isa(thisAmt)) return acc;
-					return Money.add(acc, thisAmt);
-				}, null);
-			return {...charity, dntnTotal};
-		}).sort(augCharityComparator);
-		setCharitiesAugmented(nextCharitiesAugmented);
-	}, [charities, impactDebits]);
-
-	if (!charitiesAugmented.length) {
+	if (!charities.length) {
 		return <Misc.Loading text="Fetching donation data..." />;
 	}
 
 	const topCharities = <GLHorizontal className="top-charities">
-		{charitiesAugmented.slice(0, 3).map(charity => {
+		{charities.slice(0, 3).map(charity => {
 			const cid = getId(charity);
 			return <CharityCard id={cid} key={cid} charity={charity} impactDebits={impactDebits} />;
 		})}
 	</GLHorizontal>;
 
-	if (charitiesAugmented.length <= 3) return topCharities;
+	if (charities.length <= 3) return topCharities;
 
-	return <GLVertical className="charity-cards">
+	return <GLVertical>
 		{topCharities}
-		<GLCard className="more-charities card-body flex-row" noPadding>
-			<span>Plus {charitiesAugmented.length-3} more:</span>
-			{charitiesAugmented.slice(3).map(charity => {
-				const cid = getId(charity);
-				const cname = NGO.displayName(charity);
-				return <ImpactHubLink className="charity-link" key={cid} item={charity} logo title={cname} />;
-			})}
+		<GLCard className="more-charities card-body" noPadding>
+			<h5>Plus {charities.length-3} more</h5>
+			<div className='flex-row'>
+				{charities.slice(3).map(charity => {
+					const cid = getId(charity);
+					const cname = NGO.displayName(charity);
+					return <ImpactHubLink className="charity-link" key={cid} item={charity} logo title={cname} />;
+				})}
+			</div>
 		</GLCard>
 	</GLVertical>;
 };

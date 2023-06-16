@@ -186,31 +186,34 @@
 		}
 	}
 
-	.charity-cards {
-		.more-charities {
-			justify-content: space-between;
-			align-items: center;
-			flex-wrap: wrap; // Spill over onto extra lines, eg on mobile
-			line-height: 3em; // vertical spacing between wrapped lines
-			.charity-link {
-				margin: 0 0.5em;
-				.logo {
-					width: unset; // Let wide logos expand
-				}
+	.top-charities {
+		height: unset;
+	}
+
+	.more-charities .flex-row {
+		justify-content: center;
+		align-items: center;
+		flex-wrap: wrap; // Spill over onto extra lines, eg on mobile
+		.charity-link {
+			margin: 0 0.3rem;
+			margin-bottom: 1rem;
+			.logo {
+				width: unset; // Let wide logos expand
 			}
 		}
 	}
 
 	.charity-card {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		.charity-logo {
-			width: 10rem;
-			height: 10rem;
-			object-fit: contain;
-			margin-bottom: 1rem;
+		.card-body {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			.charity-logo {
+				width: 5rem;
+				height: 5rem;
+				object-fit: contain;
+			}
 		}
 	}
 

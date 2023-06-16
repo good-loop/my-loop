@@ -150,13 +150,13 @@ export const modalToggle = (id) => {
 /**
  * TODO refactor to more "standard" react. This is a mix of function and tag.
  */
-export const openAndPopulateModal = ({id, Content, title, Header, headerImg, headerClassName, className, prioritized}) => {
+export const openAndPopulateModal = ({id, Content, title, Header, headerImg, headerClassName, storedClassName, prioritized}) => {
 	assert(id, "Must be given a modal ID to open!");
 	// Force close other modals first
 	if (prioritized) modalToggle();
 	// Preserve static properties
 	const usesOwnBackdrop = DataStore.getValue(MODAL_LIST_PATH.concat(id, "usesOwnBackdrop"));
-	const modalProps = {Content, title, Header, headerImg, headerClassName, className, usesOwnBackdrop};
+	const modalProps = {Content, title, Header, headerImg, headerClassName, storedClassName, usesOwnBackdrop};
 	//console.log("MODAL OBJ", modalObj);
 	DataStore.setValue(MODAL_LIST_PATH.concat(id), modalProps);
 	modalToggle(id);
@@ -177,15 +177,17 @@ export const GLModalCard = ({id, useOwnBackdrop, ...props}) => {
 	const storeProps = DataStore.getValue(path);
 
 	useEffect(() => {
-		DataStore.setValue(path, {open: false, useOwnBackdrop}, false);
+		DataStore.setValue(path, {open: false, usesOwnBackdrop:useOwnBackdrop}, false);
 	}, [id]);
 	if (!storeProps?.open) return null;
 
-	return <ModalCardOpen {...storeProps} {...props} />;
+	console.log("STORE PROPS", storeProps);
+
+	return <ModalCardOpen {...storeProps} {...props} id={id} />;
 };
 
 
-function ModalCardOpen({ id, title, Content, Header, storedClassName, className, headerImg, headerClassName, useOwnBackdrop }) {
+function ModalCardOpen({ id, title, Content, Header, storedClassName, className, headerImg, headerClassName, usesOwnBackdrop }) {
 	// Register listener to catch ESC keypress and close
 	useEffect(() => {
 		const keyListener = e => (e?.key === 'Escape' && modalToggle(id));
@@ -199,7 +201,7 @@ function ModalCardOpen({ id, title, Content, Header, storedClassName, className,
 	};
 
 	return <>
-		{useOwnBackdrop ? <GLModalBackdrop forceShow id={id}/> : null}
+		{usesOwnBackdrop ? <GLModalBackdrop forceShow id={id}/> : null}
 		<div className={space('glmodal', storedClassName, className)} id={id}>
 			<GLCard noPadding className="glmodal-inner">
 				<CardHeader style={headerStyle} className={space('glmodal-header', headerClassName)}>
