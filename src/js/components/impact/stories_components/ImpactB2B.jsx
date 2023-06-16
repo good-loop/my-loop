@@ -11,6 +11,11 @@ import Money from '../../../base/data/Money';
 import AdvertsCatalogue from '../../campaignpage/AdvertsCatalogue';
 import Advert from '../../../base/data/Advert';
 import { isMobile } from "../../../base/utils/miscutils"
+import DevOnly from '../../../base/components/DevOnly';
+import PortalLink from '../../../base/components/PortalLink';
+import ImpactDebit from '../../../base/data/ImpactDebit';
+import Misc from '../../../MiscOverrides';
+import { getId } from '../../../base/data/DataClass';
 
 /** Sort function for ImpactDebit objects (currently no-op) */
 const impactDebitComparator = (a, b) => {
@@ -23,9 +28,19 @@ const impactDebitComparator = (a, b) => {
 };
 
 
+/** 
+ * @param {NGO[]} charities
+ * @param {ImpactDebit} 
+ * @returns {?NGO}
+*/
 const charityForImpact = (charities, {impact}) => {
-	if (!impact) return {};
-	return charities.find(({id}) => id === impact.charity) || {};
+	assert(charities, impact);
+	if ( ! impact) return null;
+	let charity = charities.find(charity => getId(charity) === impact.charity);
+	if ( ! charity) {
+		console.warn("Could not find charity "+impact.charity+" in ",charities);
+	}
+	return charity;
 }
 /**
  * the B2B pages is used between the impact hub & the public myloop page, /impact/stories/... & /campaign/... respectively
@@ -117,16 +132,27 @@ const SplashCard = ({brand, mainLogo}) => {
 	)
 }
 
+/**
+ * 
+ * @param {Object} p
+ * @param {ImpactDebit} p.impact 
+ * @returns 
+ */
 const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) => {
+	if ( ! charity) console.warn("no charity?! ",campaign,impact);
 	if(!campaign) campaign = subCampaigns.find(c => (c.jobNumber == impact.campaign))
 	if(!campaign) campaign = subCampaigns.find(c => (c.jobNumber == impact.jobNumber))
 	let pvAds = Advert.fetchForCampaigns({campaignIds:[campaign.id], status:status});
 	if(! pvAds.resolved) return <></>
 
-	const startDate = impact.created.substr(0, impact.created.indexOf("T")).split("-"); // in format 2022-12-16T04:52:53, we don't care about anything after T
-	const startYear = startDate[0]; // get the decades only, will need patched in ~ 80 years
-	const startMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][startDate[1] - 1]
-	const startDay = startDate[2]
+	// dates (often not set)
+	const start = impact.start;
+	const end = impact.end;
+	const date = impact.impact.date;
+	// const startDate = impact.created.substr(0, impact.created.indexOf("T")).split("-"); // in format 2022-12-16T04:52:53, we don't care about anything after T
+	// const startYear = startDate[0]; // get the decades only, will need patched in ~ 80 years
+	// const startMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][startDate[1] - 1]
+	// const startDay = startDate[2]
 	const ads = pvAds.value.hits
 
 	return (
@@ -141,13 +167,19 @@ const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) =>
 					<div className='campaign-grouped-content'>
 						<h1>£{Money.prettyString({amount: impact.impact.amountGBP})}</h1>
 						<h2>Raised</h2>
-						<h4 className='font'>Supporting {charity.displayName}</h4>
+						{charity && <h4 className='font'>Supporting {NGO.displayName(charity)}</h4>}
+						<DevOnly><PortalLink item={charity} /></DevOnly>
+						<ImpactInfo impact={impact.impact} />
 					</div>
 						{isMobile() && <AdvertsCatalogue ads={[ads[0]]} noPreviews className='ads-catalogue' captions={false}/>}
-					<div className='campaign-grouped-content'>
-						<p className='font' id="spotlight-name">{impact.name}</p>
-						<p className='font' id="spotlight-date">{startDay} {startMonth} {startMonth} - Present</p>
+					<div className='campaign-grouped-content'>						
+						<p>
+							<Misc.RoughDate date={start} />
+							{start && (end || date) && " - "}
+							<Misc.RoughDate date={end || date} />
+						</p>
 					</div>
+					<DevOnly><PortalLink item={impact} /></DevOnly>
 				</Col>
 				<Col id="spotlight-ads">
 					{/* ads taken out of flow due to huge performance & styling issues when the navbar expands */}
@@ -156,6 +188,21 @@ const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) =>
 			{!isMobile() && <AdvertsCatalogue ads={ads} noPreviews className='ads-catalogue' captions={false}/>}
 		</div>
 	);
+};
+
+
+/**
+ * Can we say e.g. "10 trees planted"?
+ * @param {*} param0 
+ */
+const ImpactInfo = ({impact}) => {
+	if (impact.name && impact.n) {
+		return <p>{impact.n} {impact.name}</p>
+	}
+	if (impact.name) {
+		return <p>{impact.name}</p>
+	}
+	return null;
 };
 
 

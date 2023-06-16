@@ -351,66 +351,6 @@ const CampaignCharityDisplay = ({charities, impactDebits}) => {
 };
 
 
-function WTDCard({ads, brand, charities, impactDebits}) {
-	// Which ImpactDebits are attached to the same campaign as at least one ad in the list?
-	const [matchedDebits, setMatchedDebits] = useState();
-
-	useEffect(() => {
-		setMatchedDebits(impactDebits.filter(id => (
-			ads.find(ad => ad.campaign = id.campaign)
-		)));
-	}, [ads, charities, impactDebits]);
-
-	return <GLCard
-		className="boast wtd"
-		modalContent={<WatchToDonateModal ads={ads} brand={brand}/>}
-		modalTitle="Watch To Donate"
-		modalId="full-page"
-		modalClassName="no-padding watch-to-donate"
-	>
-		<h3>Watch to donate</h3>
-		<h2><TODO>£333,203</TODO></h2>
-		<h3 className="text-bold">Donated</h3>
-
-		<h5>including</h5>
-		<TODO>(charity load)</TODO>
-		<h4><TODO>15,000 Trees Planted</TODO></h4>
-		<CharityLogo charity={TEST_CHARITY_OBJ}/>
-		<h4><TODO>10,012 Children's Meals</TODO></h4>
-		<CharityLogo charity={TEST_CHARITY_OBJ}/>
-		<QuestionIcon />
-	</GLCard>;
-};
-
-
-function TADGCard({ads, brand, charities, impactDebits}) {
-	// Which ImpactDebits are attached to the same campaign as at least one ad in the list?
-	const [matchedDebits, setMatchedDebits] = useState();
-
-	useEffect(() => {
-		setMatchedDebits(impactDebits.filter(id => (
-			ads.find(ad => ad.campaign = id.campaign)
-		)));
-	}, [ads, charities, impactDebits]);
-	
-	return <GLCard
-		className="boast tadg"
-		modalContent={<ThisAdDoesGoodModal ads={ads} brand={brand}/>}
-		modalTitle="This Ad Does Good"
-		modalId="full-page"
-		modalClassName="no-padding this-ad-does-good"
-	>
-		<h3 className="color-greenmedia-darkcyan">This ad does good</h3>
-		<h2 className="color-greenmedia-darkcyan"><TODO>136,580</TODO></h2>
-		<h3 className="color-greenmedia-darkcyan text-bold">Trees planted</h3>
-
-		<img src={brand?.branding?.logo} className="logo" />
-		<TODO>(charity load)</TODO>
-		<CharityLogo charity={TEST_CHARITY_OBJ}/>
-		<QuestionIcon/>
-	</GLCard>;
-}
-
 /**
  * One, two or three charity cards (depending on donations found) to display below the hero splash
  * @param {object} p

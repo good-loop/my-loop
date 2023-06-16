@@ -78,8 +78,8 @@ const SideNavBar = ({urlFilters="", active, isOpen, navToggleAnimation, toggle, 
 						<animated.p className='logo-name flex-column' style={{opacity: navToggleAnimation.opacity}}>GOOD-LOOP</animated.p>
 					</a>
 					<br/><br/>
-					{navEntries.map(entryProps => (
-						<NavEntrySide {...entryProps} {...navProps} />
+					{navEntries.map((entryProps,i) => (
+						<NavEntrySide key={i} {...entryProps} {...navProps} />
 					))}
 					{/* open/close draw toggle */}
 					<div className="flex-column align items center w-100" id="toggle-impact-nav-container">
@@ -105,8 +105,8 @@ const TopNavBar = ({urlFilters = '', active, doReload}) => {
 	return (
 		<Navbar dark expand="md" id="impact-overview-navbar-smallscreen" className="flex-column justify-content-start">
 			<Nav horizontal="start">
-				{navEntries.map(entryProps => (
-					<NavEntryTop {...entryProps} {...navProps} />
+				{navEntries.map((entryProps,i) => (
+					<NavEntryTop key={i} {...entryProps} {...navProps} />
 				))}
 			</Nav>
 		</Navbar>
