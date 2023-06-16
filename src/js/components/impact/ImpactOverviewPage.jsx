@@ -18,7 +18,7 @@ import printer from '../../base/utils/printer'
  * DEBUG OBJECTS
  */
 
-import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIGN, TEST_CAMPAIGN_OBJ} from './TestValues';
+// import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIGN, TEST_CAMPAIGN_OBJ} from './TestValues';
 import { addAmountSuffixToNumber, space } from '../../base/utils/miscutils';
 import { dataColours, getCountryFlag, getCountryName } from '../pages/greendash/dashUtils';
 import { isEmpty, keyBy, sumBy } from 'lodash';
@@ -126,10 +126,10 @@ function SubBrandsCard({ brand, subBrandsDisplayable: subBrands }) {
  * @param {object[]} p.charities List of charity objects associated with ads under the current focus
  * @returns {JSX.Element}
  */
-function CharitiesCard({ charities }) {
+function CharitiesCard({mainItem, charities }) {
 	const cardProps = {
 		className: 'center-number',
-		modalContent: <CharityList charities={charities}/>,
+		modalContent: <CharityList mainItem={mainItem} charities={charities}/>,
 		modalTitle: `${charities.length} Charities`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
@@ -259,7 +259,7 @@ const IOPSecondHalf = (baseObjects) => {
 			<GLVertical>
 				<GLHorizontal>
 					<SubBrandsCard {...baseObjects} />
-					<CharitiesCard {...baseObjects} />
+					<CharitiesCard mainItem={mainItem} {...baseObjects} />
 				</GLHorizontal>
 				<SubCampaignsCard {...baseObjects} />
 				<CountryViewsGLCard basis={10} baseObjects={baseObjects} />
@@ -719,11 +719,10 @@ const BrandList = ({brand, subBrands}) => {
 	</>;
 };
 
-const CharityList = ({charities}) => {
+const CharityList = ({mainItem, charities}) => {
 	return <>
 		<br/>
-		<h5>Charities supported via Good-Loop Ads</h5>
-		<p className='color-gl-red text-center'>{TEST_BRAND_OBJ.name} - All Campaigns</p>
+		<h5>Charities supported by <span className='color-gl-red'>{mainItem?.name}</span> via Good-Loop Ads</h5>		
 		<br/>
 		<Row>
 			{charities.map((charity, i) => <Col key={i} md={4} className="mt-3">
