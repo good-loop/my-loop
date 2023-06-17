@@ -15,6 +15,7 @@ import { encURI, is, isMobile, space } from '../../base/utils/miscutils';
 import C from '../../C';
 import ServerIO from '../../plumbing/ServerIO';
 import { isPer1000 } from '../pages/greendash/GreenMetrics';
+import { ShareDash } from '../pages/greendash/GreenNavBar';
 const A = C.A;
 
 
@@ -93,6 +94,8 @@ const SideNavBar = ({urlFilters="", active, isOpen, navToggleAnimation, toggle, 
 
 
 /**
+ * ??How does this interact with the ImpactFilterOptions navbar??
+ * 
  * Horizontal navbar found on small (phones likely) screens.
  * 
  * ??can we refactor to share code with SideNavBar??
@@ -102,6 +105,7 @@ const SideNavBar = ({urlFilters="", active, isOpen, navToggleAnimation, toggle, 
  */
 const TopNavBar = ({urlFilters = '', active, doReload}) => {
 	const navProps = {urlFilters, doReload, active };
+
 	return (
 		<Navbar dark expand="md" id="impact-overview-navbar-smallscreen" className="flex-column justify-content-start">
 			<Nav horizontal="start">
@@ -122,6 +126,10 @@ const navAnimationState = isOpen => isOpen ? (
 );
 
 
+/**
+ * refactor to unify with GreenNavBar??
+ * @param {Object} p
+ */
 const NavBars = ({active, isNavbarOpen, setIsNavbarOpen, doReload}) => {
 	const navToggleAnimation = useSpring(navAnimationState(isNavbarOpen));
 
