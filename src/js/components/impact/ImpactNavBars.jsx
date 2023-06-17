@@ -50,7 +50,7 @@ const NavEntryTop = (props) => <NavEntryCommon top {...props} />;
 const navEntries = [
 	{ pageKey: 'view', name: 'Overview' },
 	{ pageKey: 'stories', name: 'Impact' },
-	{pageKey: 'stat', name: 'Analysis' },
+	{pageKey: 'stat', name: 'Analysis', devOnly: true },
 	{ pageKey: 'impact', name: 'Green Tags', href: `${ServerIO.PORTAL_ENDPOINT}/#green`, devOnly: true }
 ];
 
