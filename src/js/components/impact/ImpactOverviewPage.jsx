@@ -573,7 +573,7 @@ const contentTypes = {
 	wtdAds: 'Watch To Donate',
 	tadgAds: 'This Ad Does Good',
 	etdAds: 'Engage To Donate',
-	greenTags: 'Green Ad Tag',
+	// greenTags: 'Green Ad Tag',
 	// tasl: 'This Ad Supports Local'
 };
 
