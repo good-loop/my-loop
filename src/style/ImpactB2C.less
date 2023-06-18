@@ -57,7 +57,9 @@
 			right: 0;
 			bottom: 0;
 			margin: auto;
-			width: 80% !important;
+			height: 50% !important;
+			width: unset;
+			max-width: 80%;
 		}
 	}
 
@@ -338,7 +340,7 @@
 			padding-bottom: 0;
 
 			.camp-impact-card {
-				height: 50vh;
+				height: 40vh;
 			}
 
 			.left,
@@ -824,28 +826,39 @@
 		}
 	}
 
-	// only the Impact Hubs container
-
-	// impact hub
-	.splash-curve {
-		height: 100%;
-		z-index: 1;
-		width: fit-content;
-		position: relative;
-
-		@media @width-mobile {
-			display: none;
-		}
-	}
-
 	// splash card, split into [padding div, curve, content]
 	#stories-splash {
 		margin-top: 10vh; // move past header
 		height: 90vh;
 
-		.padding-div {
-			flex-basis: 15%;
+		#splash-bg {
+			width: 100%;
+			height:100%;
+			filter: opacity(0.8);
+			position:absolute;
+
+			.padding-div, .splash-bgColor{
+				flex: 1;
+				height: 100%;
+			}
+
+			.splash-curve {
+				flex-basis: fit-content;
+				height: 100%;
+			}
+
+			.splash-bgColor {
+				background-color: #5d838f;
+			}
+
+			@media @width-mobile {
+				.padding-div{
+					display: none;
+				}
+			}
 		}
+
+
 
 		.splash-curve-mobile {
 			display: none;
@@ -870,17 +883,33 @@
 		}
 
 		#splash-content {
-			color: white !important;
-			padding: 10% 10% 10% 0; // pushed to center left of div
+			// aim to align content within the coloured parts of the splash (rhs of page)
+			padding: 5% 2.5% 5% 5%; // slightly moved to the right of container
+			position: absolute;
+			right: 0;
 			align-self: center;
 			height: 100%;
-			// since the curve is made of two slightly opaque colors, the resulting 'inner' color can be found by adding them
-			background-color: rgba(97.148, 139.037, 152.333, 0.84); // formula used: https://stackoverflow.com/questions/726549/algorithm-for-additive-color-mixing-for-rgb-values
+			width: 50%;			
 			// position within the col neatly
+			color: white !important;
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-			place-content: space-between;
+			place-content: space-around;
+
+			h1 {
+				font-size: 250%;
+			}
+
+			.logo-circle {
+				width: 25vh;
+				height: 25vh;
+				margin: unset;
+			}
+
+			.adsForGood {
+				width: 50%;
+			}
 
 			@media @width-mobile {
 				padding: 0 0 10% 0;
@@ -899,42 +928,19 @@
 					height: 30vw !important;
 				}
 			}
-
-			.logo-circle {
-				width: 20vh;
-				height: 20vh;
-				margin: unset;
-			}
-
-			.adsForGood {
-				width: 50%;
-			}
 		}
 	}
 
 	#campaign-spotlight {
 		height: 80vh;
 		position: relative;
+		overflow: hidden;
 
 		#spotlight-bg {
-			z-index: 0;
-			background-image: url("/img/Impact/world.svg");
 			position: absolute;
-			width: 101%;
-			height: 100%;
-
-			@media @width-mobile {
-				display: none;
-			}
-
-			#spotlight-bg-padding {
-				flex-basis: 15%;
-			}
-
-			#spotlight-bg-color {
-				// since the curve is made of two slightly opaque colors, the resulting 'inner' color can be found by adding them
-				background-color: rgba(97.148, 139.037, 152.333, 0.84); // formula used: https://stackoverflow.com/questions/726549/algorithm-for-additive-color-mixing-for-rgb-values
-			}
+			right: 0;
+			top: 0;
+			height: 100vh;
 		}
 
 		#spotlight-content {

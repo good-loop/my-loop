@@ -91,7 +91,7 @@ const ImpactPage = () => {
 
 	if (pvBaseObjects.error) return <ErrorDisplay e={pvBaseObjects.error} />
 
-	const {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits=[], charities=[], ads=[]} = pvBaseObjects.value || {};
+	const {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits=[], unparsedCharities=[], ads=[]} = pvBaseObjects.value || {};
 
 	// main item
 	let mainItem = getMainItem(pvBaseObjects.value); // TODO what is the url pointing at??

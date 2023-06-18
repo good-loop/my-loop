@@ -103,6 +103,7 @@ const getCharities = ({ filters }) => {
 	let pvImpactDebits, impactDebits;
 	let pvCharities, charities;
 	let pvStories, stories;
+	let pvCredits, credits;
 
 	// Fetch campaign object if specified
 	if (itemType === "campaign") {

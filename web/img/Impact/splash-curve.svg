@@ -1,11 +1,69 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="807" height="897" viewBox="0 0 807 897">
-  <defs>
-    <clipPath id="clip-splash-curve">
-      <rect width="807" height="897"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="777.2326"
+   height="906.46838"
+   viewBox="0 0 777.2326 906.46838"
+   version="1.1"
+   id="svg27"
+   sodipodi:docname="Green Overlay.svg"
+   inkscape:export-filename="../81e2b94e/sssssssss.svg"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview29"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="1.3504346"
+     inkscape:cx="455.40896"
+     inkscape:cy="396.53902"
+     inkscape:window-width="1920"
+     inkscape:window-height="946"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg27" />
+  <defs
+     id="defs21">
+    <clipPath
+       id="clip-Green_Overlay">
+      <rect
+         width="1920"
+         height="875"
+         id="rect18"
+         x="0"
+         y="0" />
     </clipPath>
   </defs>
-  <g id="splash-curve" clip-path="url(#clip-splash-curve)">
-    <path id="back-curve" d="M1291,1201h800V297s-15.4.127-16.495,0c-20.148-.114-163.372,4.163-339.893,392.165S1291,1201,1291,1201Z" transform="translate(-1283 -297)" fill="#6da2b3" opacity="0.6"/>
-    <path id="front-curve" d="M1291,1210h770.863V297s-14.77.006-15.826-.122c-19.415-.115-157.49,4.326-327.581,396.191S1291,1210,1291,1210Z" transform="translate(-1254.863 -297)" fill="#5d838f" opacity=".6"/>
+  <g
+     id="Green_Overlay"
+     clip-path="url(#clip-Green_Overlay)"
+     transform="matrix(1,0,0,1.0370572,-473.988,0.21157659)">
+    <g
+       id="Group_1801"
+       transform="translate(10.161,-2984)">
+      <path
+         id="Union_278"
+         d="m 909,-2228.5 c 0,0 268.9,-124.819 449.721,-510.336 180.821,-385.517 317,-365.486 317,-365.486 l 38.7448,-8.6616 2.0672,-1.8973 -13.5873,0.5555 -26.0616,893.5737 34.4617,-1.4829 -2.4142,-1.3811 z"
+         transform="translate(-446.322,6088.432)"
+         fill="#6da2b3"
+         sodipodi:nodetypes="cscccccccc" />
+      <path
+         id="Union_279"
+         d="m 909,-2228.5 c 0,0 259.9,-124.819 434.664,-510.336 174.764,-385.517 333.6387,-379.8228 333.6387,-379.8228 l 8.9299,-14.6538 -18.2615,12.6482 3.6463,-6.1864 -0.7524,897.4713 -2.9393,2.5353 4.6249,-1.1633 z"
+         transform="translate(-401.173,6088.676)"
+         fill="#5d838f"
+         sodipodi:nodetypes="cscccccccc" />
+    </g>
   </g>
 </svg>
