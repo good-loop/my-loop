@@ -599,24 +599,24 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 							<div id="offset-details">
 								<Row class="offset-content" style={{margin:0}}>
 									<Col style={{borderRight: "solid 1px lightgray"}}>
-										<p className='text light-bold'>{details.amountType}</p>
+										<p className='text light-bold'><TODO>{details.amountType}</TODO></p>
 										<h2 className='color-gl-red'><Misc.Money amount={impactDebit.impact.amount} /></h2>
 										<DevOnly><PortalLink item={impactDebit} /></DevOnly>
 									</Col>
 									<Col style={{borderRight: "solid 1px lightgray", padding:0}}>
 										<div style={{borderBottom: "solid 1px lightgray", padding:"0 5% 10%"}}>
-											<p className='text light-bold'>{details.breakdownHeader}</p>
-											<p className='color-gl-red'>{details.breakdownText}</p>
+											<p className='text light-bold'><TODO>{details.breakdownHeader}</TODO></p>
+											<p className='color-gl-red'><TODO>{details.breakdownText}</TODO></p>
 										</div>
 										<div style={{padding:"10% 5%"}}>
-											<p className='text light-bold'>{details.creditsName}</p>
-											<p className='color-gl-red'>{details.creditsValue}</p>
+											<p className='text light-bold'><TODO>{details.creditsName}</TODO></p>
+											<p className='color-gl-red'><TODO>{details.creditsValue}</TODO></p>
 										</div>
 									</Col>
 									<Col style={{display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
 										<p className='text light-bold'>{details.byGoodLoop}</p>
 										<img src={details.goodLoopImg} style={{width:"100%"}}/>
-										<p className='small-legal-text'>small legal stuff text</p>
+										<p className='small-legal-text'><TODO>small legal stuff text</TODO></p>
 									</Col>
 								</Row>
 							</div>
@@ -629,10 +629,10 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 									<p className="light-bold">Tracking ID: {impactDebit.donationId || impactDebit.id}</p>
 									<Row style={{justifyContent:"space-around"}}>
 										<div id='status-line' />
-										{donationStatus[0]}
-										{donationStatus[1]}
-										{donationStatus[2]}
-										{donationStatus[3]}
+										<TODO>{donationStatus[0]}</TODO>
+										<TODO>{donationStatus[1]}</TODO>
+										<TODO>{donationStatus[2]}</TODO>
+										<TODO>{donationStatus[3]}</TODO>
 									</Row>
 								</Col>
 							</div>
@@ -642,7 +642,7 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 							<p className='text offset-header'>LINKS</p>
 							<div id="offset-links">
 								<Row class="offset-content" style={{margin:0,placeContent:'space-around'}}>
-									{donationLinks}
+									<TODO>{donationLinks}</TODO>
 								</Row>
 							</div>
 						</div>
