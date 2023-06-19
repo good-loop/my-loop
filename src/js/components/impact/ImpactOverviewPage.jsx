@@ -89,7 +89,6 @@ function IOPFirstHalf({ wtdAds, tadgAds, brand, campaign, charities, impactDebit
 			</GLHorizontal>*/
 			// Can't have in set - or CommonDivision wrapper messes up. Can't think of fix so just shove contents here for now
 			<CharitiesCardSet charities={charities} impactDebits={impactDebits} glCardPassThru={true} />
-			
 		)}
 		<GLModalCard id="left-half" />
 	</GLVertical>;
@@ -320,19 +319,12 @@ const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, ...props}) => {
 };
 
 
-const CampaignCharityDisplay = ({charities, impactDebits}) => {
-	// sort debits by charity
-	let debitsByCharity = {};
-	impactDebits.forEach(debit => {
-		if (debit.impact.charity) {
-			debitsByCharity[debit.impact.charity] = debit;
-		}
-	});
+const CampaignCharityDisplay = ({charities}) => {
+
 
 	return <GLHorizontal basis={20}>
 		{charities.map(charity => {
-			const cid = NGO.id(charity);
-			<GLCard key={charity.id}
+			return <GLCard key={charity.id}
 				className="boast"
 				modalContent={<CharityInfo charity={charity}/>}
 				modalHeader={<CharityHeader charity={charity}/>}
@@ -342,7 +334,7 @@ const CampaignCharityDisplay = ({charities, impactDebits}) => {
 			>
 				<img src={charity.logo} style={{width: '7rem'}}/>
 				<br/>
-				{debitsByCharity[cid] && <h2>{Money.prettyStr(debitsByCharity[cid].impact.amount)} Donated</h2>}
+				<h2>{Money.prettyStr(charity.dntnTotal)} Donated</h2>
 				<br/>
 				<h4>{NGO.displayName(charity)}</h4>
 			</GLCard>
@@ -762,7 +754,7 @@ const CharityInfo = ({charity}) => {
 		<img  className='w-25' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 		<br/>
 		<p className='p-5'>
-			{NGO.extendedDescription(charity) || NGO.anyDescription(charity)}
+			<MDText source={NGO.extendedDescription(charity) || NGO.anyDescription(charity)}/>
 		</p>
 	</div>;
 }
