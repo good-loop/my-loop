@@ -22,7 +22,7 @@ import printer from '../../base/utils/printer'
  */
 
 // import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIGN, TEST_CAMPAIGN_OBJ} from './TestValues';
-import { addAmountSuffixToNumber, space, stopEvent } from '../../base/utils/miscutils';
+import { addAmountSuffixToNumber, space, stopEvent, uniq } from '../../base/utils/miscutils';
 import { dataColours, getCountryFlag, getCountryName } from '../pages/greendash/dashUtils';
 import { isEmpty, keyBy, sumBy } from 'lodash';
 import Logo from '../../base/components/Logo';
@@ -277,16 +277,31 @@ const IOPSecondHalf = (baseObjects) => {
 		<GLVertical>
 			{campaign && <CountryViewsGLCard basis={10} baseObjects={baseObjects}/>}
 			<AdsCatalogueCard ads={ads} />
-			{campaign && <GLCard className="boast" basis={20}>
-				<h2>SUSTAINABLE GOALS</h2>
-				<TODO>??</TODO>
-			</GLCard>}
+			{campaign && <SustainableGoalsCard basis={20} baseObjects={baseObjects}/>}
 		</GLVertical>
 
 		<GLModalCard id="right-half"/>
 	</GLVertical>;
 };
 
+const SustainableGoalsCard = ({baseObjects}) => {
+
+	const charities = baseObjects.charities;
+	const unsdgs = charities ? uniq(charities.map(c => c.unsdg).filter(x=>x)) : []; // no null entries or 0s
+
+	if (!unsdgs) return null;
+
+	return <GLCard className="boast">
+		<div className='d-flex justify-content-center mb-2'>
+			<img src="/img/unsdg/unsdg.png" className='w-50'/>
+		</div>
+		<div className='justify-content-center d-flex align-items-center flex-wrap'>
+			{unsdgs.map(goal => {
+				return <img src={"/img/unsdg/goal-" + (goal - 1) + ".jpg"} className='goal-logo'/>
+			})}
+		</div>
+	</GLCard>
+};
 
 /**
  * @param {Object} p
