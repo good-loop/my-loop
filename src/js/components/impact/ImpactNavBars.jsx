@@ -15,6 +15,7 @@ import { encURI, is, isMobile, space } from '../../base/utils/miscutils';
 import C from '../../C';
 import ServerIO from '../../plumbing/ServerIO';
 import { isPer1000 } from '../pages/greendash/GreenMetrics';
+import { ShareDash } from '../pages/greendash/GreenNavBar';
 const A = C.A;
 
 
@@ -50,7 +51,7 @@ const NavEntryTop = (props) => <NavEntryCommon top {...props} />;
 const navEntries = [
 	{ pageKey: 'view', name: 'Overview' },
 	{ pageKey: 'stories', name: 'Impact' },
-	{pageKey: 'stat', name: 'Analysis' },
+	{pageKey: 'stat', name: 'Analysis', devOnly: true },
 	{ pageKey: 'impact', name: 'Green Tags', href: `${ServerIO.PORTAL_ENDPOINT}/#green`, devOnly: true }
 ];
 
@@ -78,8 +79,8 @@ const SideNavBar = ({urlFilters="", active, isOpen, navToggleAnimation, toggle, 
 						<animated.p className='logo-name flex-column' style={{opacity: navToggleAnimation.opacity}}>GOOD-LOOP</animated.p>
 					</a>
 					<br/><br/>
-					{navEntries.map(entryProps => (
-						<NavEntrySide {...entryProps} {...navProps} />
+					{navEntries.map((entryProps,i) => (
+						<NavEntrySide key={i} {...entryProps} {...navProps} />
 					))}
 					{/* open/close draw toggle */}
 					<div className="flex-column align items center w-100" id="toggle-impact-nav-container">
@@ -93,6 +94,8 @@ const SideNavBar = ({urlFilters="", active, isOpen, navToggleAnimation, toggle, 
 
 
 /**
+ * ??How does this interact with the ImpactFilterOptions navbar??
+ * 
  * Horizontal navbar found on small (phones likely) screens.
  * 
  * ??can we refactor to share code with SideNavBar??
@@ -102,11 +105,12 @@ const SideNavBar = ({urlFilters="", active, isOpen, navToggleAnimation, toggle, 
  */
 const TopNavBar = ({urlFilters = '', active, doReload}) => {
 	const navProps = {urlFilters, doReload, active };
+
 	return (
 		<Navbar dark expand="md" id="impact-overview-navbar-smallscreen" className="flex-column justify-content-start">
 			<Nav horizontal="start">
-				{navEntries.map(entryProps => (
-					<NavEntryTop {...entryProps} {...navProps} />
+				{navEntries.map((entryProps,i) => (
+					<NavEntryTop key={i} {...entryProps} {...navProps} />
 				))}
 			</Nav>
 		</Navbar>
@@ -122,6 +126,10 @@ const navAnimationState = isOpen => isOpen ? (
 );
 
 
+/**
+ * refactor to unify with GreenNavBar??
+ * @param {Object} p
+ */
 const NavBars = ({active, isNavbarOpen, setIsNavbarOpen, doReload}) => {
 	const navToggleAnimation = useSpring(navAnimationState(isNavbarOpen));
 

@@ -193,7 +193,8 @@ const AdvertCard = ({ ad, active }) => {
 			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{ position: "absolute", zIndex: 999 }}>Advert Editor ({ad.id})</DevLink>
 			<div className="position-relative ad-unit-outer">
 				{hasShown ? (
-					<GoodLoopUnit vertId={ad.id} size={size} extraParams={extraParams} play="onclick" style={{zIndex:2, maxWidth:"50%", margin:"auto"}} shouldDebug={false} />
+					<GoodLoopUnit vertId={ad.id} size={size} extraParams={extraParams} play="onclick" 
+						style={{zIndex:2, maxWidth:"90%", margin:"auto"}} shouldDebug={false} />
 				) : (
 					<div style={{ background: "black", width: "100%", height: "100%" }}></div>
 				)}

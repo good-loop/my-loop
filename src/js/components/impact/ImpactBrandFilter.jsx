@@ -108,38 +108,9 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, doRe
 	}
 
 	/**
-	*	ListItem of Campaigns for use in ListLoad
-	* 	Same as default except for: 
-	*		- if item doesn't have branding (logo/thumbnail), use a placeholder thumbrail
-	*		- parentItem is expected (will be parent master/brand of campaign)
-	*/
-	const CampaignListItem = ({ item, parentItem }) => {
-		const id = getId(item);
-		let name = item.name || item.text || id || '';
-		if (name.length > 280) name = name.slice(0, 280);
-
-		let thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className="impact-link-placeholder-thumbnail" />;
-		let isSelected = campaign && (campaign.id === item.id);
-		if (size == "thin") name = name.replace(/_/g, " "); // allows for linebreaks in names to save horizontal space
-		return <>
-			<div className="brand-campaign-set" onClick={() => filterChange({brand:parentItem, campaign:item})}>
-				<div className="info campaign-item">
-					<div className="display">
-						{thumbnail}
-						<div className={space("name", (isSelected && "selected-filter"))}>
-							{name}
-						</div>
-					</div>
-				</div>
-			</div>
-		</>;
-	};
-
-	/**
 	*	ListItem of Brands for use in a ListLoad
 	* 	Same as default except for: 
 	*		- if item doesn't have branding (logo/thumbnail), use a placeholder thumbrail
-	*		- if Brand has campaigns, nest a ListLoad of those campaigns within a dropdown inside the Brand ListItem 
 	*/
 	const FilterListItem = ({ item, isMaster = false}) => {
 		const id = getId(item);
@@ -165,30 +136,30 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, doRe
 		// If we have only 1 campaign, dont bother hiding it as we use it for default view
 		if (myCampaigns.length > 1 && !showAll) myCampaigns = myCampaigns.filter(c => campaignsWithDebits.includes(c) || campaign?.id === c.id);
 
-		// brand item with dropdowns into campaigns
-		const campaignsListItem = (
-		<div id={`campaigns-${item.id}`} className={(!dropdown || isDropdownOpen) ? "open" : "closed"}>
-			{/*
-			<ListLoad hideTotal status={status}
-				type={C.TYPES.Campaign}
-				q={q.query}
-				unwrapped
-				itemClassName={campaignClasses}
-				ListItem={(itemProps) => <CampaignListItem {...itemProps} parentItem={item}/>}
-			/>
-			*/}
-			{myCampaigns.map(c => <CampaignListItem item={c} parentItem={item} forceShow={myCampaigns.length === 1}/>)}
-		</div>)
+		// // off - brands-only is more intuitive for the user in a "Brands" list - brand item with dropdowns into campaigns
+		// const campaignsListItem = (
+		// <div id={`campaigns-${item.id}`} className={(!dropdown || isDropdownOpen) ? "open" : "closed"}>
+		// 	{/*
+		// 	<ListLoad hideTotal status={status}
+		// 		type={C.TYPES.Campaign}
+		// 		q={q.query}
+		// 		unwrapped
+		// 		itemClassName={campaignClasses}
+		// 		ListItem={(itemProps) => <CampaignListItem {...itemProps} parentItem={item}/>}
+		// 	/>
+		// 	*/}
+		// 	{/* {myCampaigns.map(c => <CampaignListItem item={c} parentItem={item} forceShow={myCampaigns.length === 1}/>)} */}
+		// </div>)
 
 		// get brands logo or get placeholder
 		const thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className="impact-link-placeholder-thumbnail" />
 
-		// dropdown toggle of above campaign ListLoad
-		let button = <button className={space('dropdown-button', (isDropdownOpen && 'open'))} onClick={(event) => {event.preventDefault(); setIsDropdownOpen(!isDropdownOpen)}} />
+		// // dropdown toggle of above campaign ListLoad
+		// let button = <button className={space('dropdown-button', (isDropdownOpen && 'open'))} onClick={(event) => {event.preventDefault(); setIsDropdownOpen(!isDropdownOpen)}} />
 
-		// clicking the brands dropdown button to reveal its campaings would cause a state change, this stops that 
 		const brandItemOnClick = (event) => {
-			if(event.target.className.includes('dropdown-button')) return;
+			// // clicking the brands dropdown button to reveal its campaings would cause a state change, this stops that 
+			// if(event.target.className.includes('dropdown-button')) return;
 			filterChange({brand:item});
 		}
 
@@ -201,9 +172,9 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, doRe
 						{thumbnail}
 						<div className={space('name', (isSelected && 'selected-filter'))}>{name}</div>
 					</div>
-					{dropdown && myCampaigns.length > 0 && button || ''}
+					{/* {dropdown && myCampaigns.length > 0 && button || ''} */}
 				</div>
-				{campaignsListItem}
+				{/* {campaignsListItem} */}
 			</div>
 		</>;
 	}

@@ -3,7 +3,6 @@ import { animated, useSpring } from 'react-spring';
 import { setWindowTitle } from '../../base/plumbing/Crud';
 import DataStore from '../../base/plumbing/DataStore';
 import NavBars from './ImpactNavBars';
-import ImpactLoginCard from './ImpactLogin';
 import ImpactFilterOptions from './ImpactFilterOptions'
 import KStatus from '../../base/data/KStatus';
 import ImpactSettings from '../../base/data/ImpactSettings';
@@ -15,12 +14,8 @@ import { ErrorDisplay } from './ImpactComponents';
 import ImpactOverviewPage from './ImpactOverviewPage';
 import {ImpactStoriesB2B} from './stories_components/ImpactB2B';
 import ImpactStatsPage from './ImpactStatsPage';
-
-
-/**
- * DEBUG OBJECTS
- */
-
+import E404Page from '../../base/components/E404Page';
+import E401Page from '../../base/components/E401Page';
 import Login from '../../base/youagain';
 import StyleBlock from '../../base/components/StyleBlock';
 import DataClass from '../../base/data/DataClass';
@@ -102,9 +97,12 @@ const ImpactPage = () => {
 
 	const totalString = Money.prettyStr(totalDonation);
 
-	// if not logged in OR impact hasn't been chosen yet...
-	if (!Login.isLoggedIn() || !impactChosen) {
-		return <ImpactLoginCard choice={impactChosen} setChoice={setImpactChosen} masterBrand={masterBrand || brand}/>
+	// No impact??
+	if ( ! impactChosen) {
+		return <E404Page />;
+	}
+	if ( ! Login.isLoggedIn()) {
+		return <E401Page />;
 	}
 
 	const impactSettings = ImpactSettings.get(mainItem);
@@ -124,9 +122,9 @@ const ImpactPage = () => {
 		<div className="navbars-overlay">
 			<animated.div className="impact-navbar-flow-overlay" style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}} />
 			<ImpactLoadingScreen pvBaseObj={pvBaseObjects} reload={reload} />
-			<ImpactFilterOptions size="thin" {...navProps} /> {/*mobile horizontal filters topbar*/}
+			<ImpactFilterOptions size="thin" {...navProps} /> {/*mobile horizontal filters topbar NB:one of thin|wide gets hidden ??Could we decide here and avoid rendering the html twice?? */}
 			<NavBars active={page} {...navProps} />
-			<ImpactFilterOptions size="wide" {...navProps} /> {/*widescreen vertical filters topbar*/}
+			<ImpactFilterOptions size="wide" {...navProps} /> {/*widescreen vertical filters topbar NB:one of thin|wide gets hidden*/}
 		</div>
 		<PageComponent pvBaseObjects={pvBaseObjects} navToggleAnimation={navToggleAnimation} totalString={totalString} mainLogo={mainLogo} />
 	</>;

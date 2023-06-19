@@ -1,70 +1,70 @@
-import React from 'react';
-import Circle from '../../base/components/Circle';
-import TODO from '../../base/components/TODO';
-import { Col, Container, Row, Card } from 'reactstrap';
-import { LoginWidgetEmbed } from '../../base/components/LoginWidget';
-import XId from '../../base/data/XId';
+// import React from 'react';
+// import Circle from '../../base/components/Circle';
+// import TODO from '../../base/components/TODO';
+// import { Col, Container, Row, Card } from 'reactstrap';
+// import { LoginWidgetEmbed } from '../../base/components/LoginWidget';
+// import XId from '../../base/data/XId';
 
-/**
- * DEBUG OBJECTS
- */
+// /**
+//  * DEBUG OBJECTS
+//  */
 
-import Login from '../../base/youagain';
-import AccountMenu from '../../base/components/AccountMenu';
-import { nonce } from '../../base/data/DataClass';
+// import Login from '../../base/youagain';
+// import AccountMenu from '../../base/components/AccountMenu';
+// import { nonce } from '../../base/data/DataClass';
 
+// Status: Not ready for use
+// const ImpactLoginCard = ({choice, setChoice, masterBrand}) => {
+// 	setChoice(false);
+// 	let content = null;
+// 	if (Login.isLoggedIn()) {
+// 		let user = Login.getUser();
+// 		const name = (user.name || XId.prettyName(user.xid));
 
-const ImpactLoginCard = ({choice, setChoice, masterBrand}) => {
-	setChoice(false);
-	let content = null;
-	if (Login.isLoggedIn()) {
-		let user = Login.getUser();
-		const name = (user.name || XId.prettyName(user.xid));
+// 		const tempTotal = 12345;
 
-		const tempTotal = 12345;
+// 		content = <>
+// 			<Col className="decoration flex-center bg-gl-red impact-login-left-image" xs="12" sm="7">
+// 				<Circle className="circle" width={"90%"} border="none">
+// 					{masterBrand?.branding?.logo && <img src={masterBrand.branding.logo} id='impact-welcome-logo' className='logo'/>}
+// 					<h3 className='color-good-loop'>Welcome {name}!</h3>
+// 					<h3 className='color-good-loop'>{masterBrand?.name} <TODO>Brands</TODO> Have So Far Raised</h3>
+// 					<h2 className='color-good-loop'><TODO>£{tempTotal}</TODO></h2>
+// 					<p className='grey'>WITH</p>
+// 					<img className="gl-logo my-4" src="/img/gl-logo/AdsForGood/AdsForGood.svg" />
+// 				</Circle>
+// 			</Col>
+// 			<Col className="form" xs="12" sm="5">
+// 				<a href="#" onClick={(event) => {setChoice(true)}}><div className='impact-login-page-options'><div className="logo" id="impact-login-overview-logo" />Impact Overview</div></a>
+// 				<a href="#"><div className='impact-login-page-options'><div className="logo" id="impact-login-green-logo" />Impact Overview</div></a>
+// 			</Col>
+// 		</>;
+// 	} else {
+// 		content = <>
+// 			<Col className="decoration flex-center bg-gl-red impact-login-left-image" xs="12" sm="4">
+// 				<img className="gl-logo my-4 stamp" src="/img/gl-logo/AdsForGood/AdsForGood.svg" />
+// 			</Col>
+// 			<Col className="form" xs="12" sm="8">
+// 				<img className="gl-logo my-4" src="/img/gl-logo/rectangle/logo-name.svg" />
+// 				<LoginWidgetEmbed verb="login" canRegister={false} />
+// 			</Col>
+// 		</>;
+// 	}
 
-		content = <>
-			<Col className="decoration flex-center bg-gl-red impact-login-left-image" xs="12" sm="7">
-				<Circle className="circle" width={"90%"} border="none">
-					{masterBrand?.branding?.logo && <img src={masterBrand.branding.logo} id='impact-welcome-logo' className='logo'/>}
-					<h3 className='color-good-loop'>Welcome {name}!</h3>
-					<h3 className='color-good-loop'>{masterBrand?.name} <TODO>Brands</TODO> Have So Far Raised</h3>
-					<h2 className='color-good-loop'><TODO>£{tempTotal}</TODO></h2>
-					<p className='grey'>WITH</p>
-					<img className="gl-logo my-4" src="/img/gl-logo/AdsForGood/AdsForGood.svg" />
-				</Circle>
-			</Col>
-			<Col className="form" xs="12" sm="5">
-				<a href="#" onClick={(event) => {setChoice(true)}}><div className='impact-login-page-options'><div className="logo" id="impact-login-overview-logo" />Impact Overview</div></a>
-				<a href="#"><div className='impact-login-page-options'><div className="logo" id="impact-login-green-logo" />Impact Overview</div></a>
-			</Col>
-		</>;
-	} else {
-		content = <>
-			<Col className="decoration flex-center bg-gl-red impact-login-left-image" xs="12" sm="4">
-				<img className="gl-logo my-4 stamp" src="/img/gl-logo/AdsForGood/AdsForGood.svg" />
-			</Col>
-			<Col className="form" xs="12" sm="8">
-				<img className="gl-logo my-4" src="/img/gl-logo/rectangle/logo-name.svg" />
-				<LoginWidgetEmbed verb="login" canRegister={false} />
-			</Col>
-		</>;
-	}
+// 	return <Container>
+// 		<Card body id="impact-login-card" className="m-4">
+// 			<Container>
+// 				<Row>
+// 					{content}
+// 				</Row>
+// 			</Container>
+// 		</Card>
+// 	</Container>;
 
-	return <Container>
-		<Card body id="impact-login-card" className="m-4">
-			<Container>
-				<Row>
-					{content}
-				</Row>
-			</Container>
-		</Card>
-	</Container>;
+// 	return <>
+// 		<AccountMenu />
+// 		<button onClick={() => setChoice(true)}>{choice ? "True" : "False"}</button>
+// 	</>;
+// };
 
-	return <>
-		<AccountMenu />
-		<button onClick={() => setChoice(true)}>{choice ? "True" : "False"}</button>
-	</>;
-};
-
-export default ImpactLoginCard;
+// export default ImpactLoginCard;

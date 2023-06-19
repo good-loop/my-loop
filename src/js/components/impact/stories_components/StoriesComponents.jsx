@@ -1,6 +1,6 @@
 
 import React, {useState} from 'react';
-import DataStore from '../../../base/plumbing/DataStore';
+import DataStore, { getUrlValue, setUrlValue } from '../../../base/plumbing/DataStore';
 import { Container, Row, Col } from 'reactstrap';
 import Circle from '../../../base/components/Circle';
 import NGO from '../../../base/data/NGO';
@@ -9,12 +9,18 @@ import C from '../../../C';
 import KStatus from '../../../base/data/KStatus';
 import Campaign from '../../../base/data/Campaign';
 import Advertiser from '../../../base/data/Advertiser';
-import {addAmountSuffixToNumber, isMobile} from '../../../base/utils/miscutils'
+import {addAmountSuffixToNumber, isMobile, setUrlParameter} from '../../../base/utils/miscutils'
 import { fetchBaseObjects } from '../impactdata';
 import { ErrorDisplay } from '../ImpactComponents';
 import { addScript } from '../../../base/utils/miscutils';
 import CampaignPage from '../../campaignpage/CampaignPage';
 import {Modal, ModalBody} from 'reactstrap';
+import Misc from '../../../MiscOverrides';
+import DevOnly from '../../../base/components/DevOnly';
+import PortalLink from '../../../base/components/PortalLink';
+import Logo from '../../../base/components/Logo';
+import { getId } from '../../../base/data/DataClass';
+import TODO from '../../../base/components/TODO';
 /**
  * A thin card that contains just the supplied text,
  * @param {string} text  
@@ -248,6 +254,16 @@ export const HowItWorks = ({campaign, subCampaigns, charities, totalString}) => 
 	)
 }
 
+function findCharity(cid, charities) {
+	let charity = charities.find(c => getId(c) === cid);
+	if (charity) return charity;
+	if (cid==="Gold Standard") { // HACK where are the duff IDs coming from??
+		console.warn("bad ID "+cid);
+		charity = charities.find(c => getId(c) === "gold-standard");		
+	}
+	return charity;
+}
+
 /**
  * For each impact debit, show its impact
  * TODO make each donation element into a modal that shows all the actual proof of the donation
@@ -285,26 +301,28 @@ export const DonationsCard = ({campaign, subCampaigns, brand, impactDebits, char
 		} else {
 			charityCounter[charId] = 1
 		}
-		const charity = charities.find((c) => c.id === charId)
-		if (!charity) return;
+		const charity = findCharity(charId, charities);
+		if (!charity) {
+			console.warn("(skip) No charity for "+charId, debit, charities);
+			return;
+		}
 		const imgList = NGO.images(charity) || [""] 
 
 		// get new image, if we have more impacts than images just loop the list
 		const img = imgList[(charityCounter[charId] - 1) % imgList.length];
 
 		const logo = charity.logo;
-		const displayName = charity.displayName;
-		const raised = debit.impact.amountGBP;
-		const [open, setOpen] = useState(false);
-		let donationModal = <ImpactCertificate brand={brand} impactDebit={debit} charity={charity} campaign={campaign} open={open} setOpen={setOpen}/>
+		const displayName = NGO.displayName(charity);
+		const moneyRaised = debit.impact.amount;		
+		let donationModal = <ImpactCertificate brand={brand} impactDebit={debit} charity={charity} campaign={campaign} />
 		return (
-		<button onClick={() => setOpen(!open)} style={{border: "none", backgroundColor:"none"}} className='impact-debit-container'>
+		<button onClick={() => setUrlValue("open", debit.id)} style={{border: "none", backgroundColor:"none"}} className='impact-debit-container'>
 			<div className='impact-debit' key={index}>
 				{donationModal}
 				<img className="debit-header" src={img} alt={displayName + " header image"}/>
 				<div className='debit-content'>
 					<p className='debit-name'>{displayName}</p>
-					<p className='debit-amount'>£{raised} RAISED...</p>
+					<p className='debit-amount'><Misc.Money amount={moneyRaised} /> RAISED</p>
 					<img className="debit-logo" src={logo} alt={displayName + " logo"} />
 				</div>
 			</div>
@@ -415,23 +433,28 @@ export const BrandLogoRows = ({mainLogo, charities, row}) => {
 	)
 }
 
-const ImpactCertificate= ({brand, impactDebit, campaign, charity, open, setOpen}) => {
-	let charityName = charity.displayName || charity.name || charity.id;
-	let charityDesc = charity.summaryDescription || charity.description
+/**
+ * 
+ * @param {Object} p
+ * @param {NGO} p.charity
+ * @returns 
+ */
+const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
+	let charityName = NGO.displayName(charity);
+	let charityDesc = charity.summaryDescription || charity.description;
 	let campaignName = campaign.name || brand.name || campaign.id;
 
-	const charityUN_SDGS = [1, 4, 9]
+	let unsdg = impactDebit.impact.unsdg || charity.unsdg;
 
 	const impactType = true ? "Donation" : "Offset"
 	
-	// where do we find these?
+	// TODO where do we find these?
 	// no matter the type, each certificate follows an identical structure
 	// only differences are the values and the names of fields
 	const details = {
 		"Donation" : {
 			// donation details
 			amountType : "Donation",
-			detailsAmount : "£XX.XX",
 			breakdownHeader : "Breakdown",
 			breakdownText : "£0.XX donated per (x) completed views",
 			creditsName : "Impact",
@@ -524,8 +547,10 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity, open, setOpen}
 	})
 
 	const modalClasses = `${isMobile() ? "flex-column" : "flex-row"} d-flex`
+	// Use a url parameter so people can link to a certificate
+	const openId = getUrlValue("open");
 	return (
-		<Modal isOpen={open} id="impact-cert-modal" className='impact-cert' toggle={() => setOpen(!open)} size="xl">
+		<Modal isOpen={openId === impactDebit.id} id="impact-cert-modal" className='impact-cert' toggle={() => setUrlValue("open", false)} size="xl">
 			<ModalBody className="d-flex modal-body" style={{padding:0, height:"90vh"}}>
 				{/* Col 1 on desktop, top row on mobile*/}
 				<div className='flex-column cert-col left justify-content-between' style={{padding:"5%", flexBasis:"50%"}}>
@@ -536,13 +561,14 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity, open, setOpen}
 						{charity.url && <p className='text mt-4'>Find out more: <a href={charity.url}>{charityName}</a></p>}
 					</div>
 					<div className='charity-SDG mt-5'>
-						<p className='text'>Primary UN SDG supported by {charityName}</p>
+						{unsdg? <p className='text'>Primary UN SDG supported: {NGO.UNSDGs[unsdg]}
+						</p> : <TODO>set UN SDG for this charity</TODO>}
 					</div>
 					<div className='charity-numbers mt-5 p-3' style={{background:"@gl-lighter-blue"}}>
-						<p className='text small-header light-bold'>{charityName} Projects</p>
-						<p className='text mt-1'>Registered charity number: ????????? </p>
-						<p className='text mt-1'>Company Number: ????????? </p>
+						<p className='text small-header light-bold'>{charityName}</p>						
+						{NGO.regs(charity).map(reg => <p className='text mt-1'>{reg.organisation} registration number: {reg.id}</p>)}
 					</div>
+					<DevOnly>Charity: <PortalLink item={charity} /></DevOnly>
 				</div>
 
 				{/* Col 2 on desktop, bot row on mobile*/}
@@ -550,7 +576,7 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity, open, setOpen}
 					<div className='brand-ngo-logos' style={{background:"white", padding:"1% 2.5% 1% 1.25%"}}>
 						<Row className="cert-logo-row" style={{height:"10vh", margin:0}}>
 							<div className="logo-container">
-								<img src={brand.branding.logo}/>
+								<Logo item={brand}/>
 							</div>
 							<div className='logo-text-top' style={{display:"flex", alignItems:"center"}}>
 								<p className='text'>{campaignName}</p>
@@ -573,23 +599,24 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity, open, setOpen}
 							<div id="offset-details">
 								<Row class="offset-content" style={{margin:0}}>
 									<Col style={{borderRight: "solid 1px lightgray"}}>
-										<p className='text light-bold'>{details.amountType}</p>
-										<h2 className='color-gl-red'>{details.detailsAmount}</h2>
+										<p className='text light-bold'><TODO>{details.amountType}</TODO></p>
+										<h2 className='color-gl-red'><Misc.Money amount={impactDebit.impact.amount} /></h2>
+										<DevOnly><PortalLink item={impactDebit} /></DevOnly>
 									</Col>
 									<Col style={{borderRight: "solid 1px lightgray", padding:0}}>
 										<div style={{borderBottom: "solid 1px lightgray", padding:"0 5% 10%"}}>
-											<p className='text light-bold'>{details.breakdownHeader}</p>
-											<p className='color-gl-red'>{details.breakdownText}</p>
+											<p className='text light-bold'><TODO>{details.breakdownHeader}</TODO></p>
+											<p className='color-gl-red'><TODO>{details.breakdownText}</TODO></p>
 										</div>
 										<div style={{padding:"10% 5%"}}>
-											<p className='text light-bold'>{details.creditsName}</p>
-											<p className='color-gl-red'>{details.creditsValue}</p>
+											<p className='text light-bold'><TODO>{details.creditsName}</TODO></p>
+											<p className='color-gl-red'><TODO>{details.creditsValue}</TODO></p>
 										</div>
 									</Col>
 									<Col style={{display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
 										<p className='text light-bold'>{details.byGoodLoop}</p>
 										<img src={details.goodLoopImg} style={{width:"100%"}}/>
-										<p className='small-legal-text'>small legal stuff text</p>
+										<p className='small-legal-text'><TODO>small legal stuff text</TODO></p>
 									</Col>
 								</Row>
 							</div>
@@ -599,13 +626,13 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity, open, setOpen}
 							<p className='text offset-header'>{impactType.toUpperCase()} STATUS</p>
 							<div id="offset-status">
 								<Col class="offset-content" style={{margin:0}}>
-									<p className="light-bold">Tracking ID: XXXX</p>
+									<p className="light-bold">Tracking ID: {impactDebit.donationId || impactDebit.id}</p>
 									<Row style={{justifyContent:"space-around"}}>
 										<div id='status-line' />
-										{donationStatus[0]}
-										{donationStatus[1]}
-										{donationStatus[2]}
-										{donationStatus[3]}
+										<TODO>{donationStatus[0]}</TODO>
+										<TODO>{donationStatus[1]}</TODO>
+										<TODO>{donationStatus[2]}</TODO>
+										<TODO>{donationStatus[3]}</TODO>
 									</Row>
 								</Col>
 							</div>
@@ -615,7 +642,7 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity, open, setOpen}
 							<p className='text offset-header'>LINKS</p>
 							<div id="offset-links">
 								<Row class="offset-content" style={{margin:0,placeContent:'space-around'}}>
-									{donationLinks}
+									<TODO>{donationLinks}</TODO>
 								</Row>
 							</div>
 						</div>
