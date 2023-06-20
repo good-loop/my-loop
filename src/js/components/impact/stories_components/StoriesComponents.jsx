@@ -47,12 +47,12 @@ export const CardSeperator = ({text}) => {
  */
 export const CampaignImpactOne = ({logo, charity, impactDebit}) => {
 	const text = {
-		cause : impactDebit.storiesContent.impactCause || false,
-		stats : impactDebit.storiesContent.impactStats || false,
-		dyk : impactDebit.storiesContent.fact || false,
-		fact : impactDebit.storiesContent.factSource || false,
-		factName : impactDebit.storiesContent.factSourceName || false,
-		factUrl : impactDebit.storiesContent.factSourceUrl || false,
+		cause : impactDebit.storiesContent?.impactCause || false,
+		stats : impactDebit.storiesContent?.impactStats || false,
+		dyk : impactDebit.storiesContent?.fact || false,
+		fact : impactDebit.storiesContent?.factSource || false,
+		factName : impactDebit.storiesContent?.factSourceName || false,
+		factUrl : impactDebit.storiesContent?.factSourceUrl || false,
 	}
 	
 	let hideComponent = false;
