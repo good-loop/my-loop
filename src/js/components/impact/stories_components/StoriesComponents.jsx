@@ -654,15 +654,16 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 					</div>					
 					<DevOnly>Charity: <PortalLink item={charity} /></DevOnly>
 					<div className='small'>
-						{"TODO" || donationModel}
+{ ! isOffset && <TODO> Which donation model was this on??
 50% of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies. 
 Good-Loop and the advertising exchange make a small commission. The donations depend on viewers watching the adverts.
+</TODO>}
 
 { ! isOffset && impact.name && <div>Impacts such as "{impact.name}" are representative. 
 We don't ring-fence funding, as the charity can better assess the best use of funds. 
 Cost/impact figures are as reported by the charity or by the impact assessor SoGive.</div>}
 
-<div>Donations are provided without conditions. The charities are not recommending or endorsing the products in return. 
+<div>{isOffset? "Offsets" : "Donations"} are provided without conditions. The charities are not recommending or endorsing the products in return. 
 They're just doing good — which we are glad to support.</div>
 <div>Amounts for campaigns that are in progress or recently finished are estimates and may be subject to audit.</div>
 <div>This information follows the guidelines of the New York Attorney General for best practice in cause marketing,<Cite href="https://www.charitiesnys.com/cause_marketing.html"/> 
