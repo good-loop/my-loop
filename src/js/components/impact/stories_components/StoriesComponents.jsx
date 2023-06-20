@@ -391,14 +391,14 @@ export const DonationsCard = ({campaign, subCampaigns, brand, impactDebits, char
 			<h2 className='text header-text' style={{margin: "0 5%"}}>{brand.name}'s Campaign{impactDebits.length > 1 ? "s" : ""} With Good-Loop</h2>
 			<p className='text dates'>{startDate} - {endDate}</p>
 			<div id="donation-details" className='flex-mobile-dir'>
-				{impactDebits.map(debit => <DonationCard debit={debit} charityCounter={charityCounter} charities={charities} />)}
+				{impactDebits.map(debit => <DonationCard key={debit.id} debit={debit} brand={brand} campaign={campaign} charityCounter={charityCounter} charities={charities} />)}
 			</div>
 		</div>
 	);
 }
 
 
-function DonationCard({debit, charityCounter, charities}) {
+function DonationCard({debit, brand, campaign, charityCounter, charities}) {
 		const charId = debit.impact.charity;
 		if(Object.keys(charityCounter).includes(charId)) {
 			charityCounter[charId] += 1
@@ -421,7 +421,7 @@ function DonationCard({debit, charityCounter, charities}) {
 		let donationModal = <ImpactCertificate brand={brand} impactDebit={debit} charity={charity} campaign={campaign} />
 		return (
 		<button onClick={() => setUrlValue("open", debit.id)} style={{border: "none", backgroundColor:"none"}} className='impact-debit-container'>
-			<div className='impact-debit' key={index}>
+			<div className='impact-debit'>
 				{donationModal}
 				<img className="debit-header" src={img} alt={displayName + " header image"}/>
 				<div className='debit-content'>
