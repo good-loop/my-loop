@@ -50,11 +50,12 @@ export const CardSeperator = ({text}) => {
  * @returns {React.ReactElement} 
  */
 export const CampaignImpactOne = ({logo, charity, impactDebit}) => {
+
 	const text = {
 		cause : impactDebit.storiesContent?.impactCause || false,
 		stats : impactDebit.storiesContent?.impactStats || false,
-		dyk : impactDebit.storiesContent?.fact || false,
-		fact : impactDebit.storiesContent?.factSource || false,
+
+		fact : impactDebit.storiesContent?.fact || false,
 		factName : impactDebit.storiesContent?.factSourceName || false,
 		factUrl : impactDebit.storiesContent?.factSourceUrl || false,
 	}
@@ -180,18 +181,18 @@ export const CampaignImpactOne = ({logo, charity, impactDebit}) => {
  */
 export const CampaignImpactTwo = ({logo, impactDebit, charity}) => {
 	// this card needs to make use of a second impact, if it doesn't exist we can't use it!
-	
-	// due to an annoying bug on local setup, we should be using the first 
-	const text = {
-		cause : impactDebit.impact.impactCause || false,
-		stats : impactDebit.impact.impactStats || false,
 
-		testimonialQuote : impactDebit.impact.testimonialQuote || "",
-		testimonialHeader : impactDebit.impact.testimonialHeader || "",
-		testimonialJob : impactDebit.impact.testimonialJob || "",
-		testimonialPerson : impactDebit.impact.testimonialPerson || ""
+	const text = {
+		cause : impactDebit.storiesContent?.impactCause || false,
+		stats : impactDebit.storiesContent?.impactStats || false,
+
+		testimonialQuote : impactDebit.storiesContent?.testimonialQuote || "",
+		testimonialHeader : impactDebit.storiesContent?.testimonialHeader || "",
+		testimonialJob : impactDebit.storiesContent?.testimonialJob || "",
+		testimonialPerson : impactDebit.storiesContent?.testimonialPerson || ""
 	}
 
+	console.log("huh?", impactDebit.storiesContent, text)
 	let hideComponent = false;
 
 
@@ -230,7 +231,7 @@ export const CampaignImpactTwo = ({logo, impactDebit, charity}) => {
 				<div className="mb-3 p-3 bg-light card">
 					<h3>Impact Cause</h3>
 					<PropControl type="textarea" label="Impact Cause" prop="impactCause" path={storiesPath} help="In format 'Supporting {Impact cause}' For example, 'Supporting Food Redistribution'"/>
-					<PropControl type="textarea" label="Impact Stat" prop="impactDesc" path={storiesPath} help="What good did the brand do to support the above cause? For example, 'Providing meals for children in need'"/>
+					<PropControl type="textarea" label="Impact Stat" prop="impactStats" path={storiesPath} help="What good did the brand do to support the above cause? For example, 'Providing meals for children in need'"/>
 				</div>
 				<div className='mb-3 p-3 bg-light card'>
 					<h3>Testimonial</h3>
