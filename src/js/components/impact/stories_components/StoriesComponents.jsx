@@ -25,6 +25,7 @@ import PortalLink from '../../../base/components/PortalLink';
 import Logo from '../../../base/components/Logo';
 import TODO from '../../../base/components/TODO';
 import { getId } from '../../../base/data/DataClass';
+import { getDataItem } from '../../../base/plumbing/Crud';
 /*
  * A thin card that contains just the supplied text,
  * @param {string} text  
@@ -352,7 +353,7 @@ function findCharity(cid, charities) {
 	if (charity) return charity;
 	if (cid==="Gold Standard") { // HACK where are the duff IDs coming from??
 		console.warn("bad ID "+cid);
-		charity = charities.find(c => getId(id) === "gold-standard");		
+		charity = charities.find(c => getId(c) === "gold-standard");		
 	}
 	return charity;
 }
@@ -542,6 +543,9 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 	const impactType = true ? "Donation" : "Offset"
 	const impact = impactDebit.impact;
 
+	// Can we find a certificate?
+	const pvCredit = impactDebit.creditId? getDataItem({type:C.TYPES.ImpactCredit, id:impactDebit.creditId, status:KStatus.PUBLISHED}) : {};
+
 	// where do we find these?
 	// no matter the type, each certificate follows an identical structure
 	// only differences are the values and the names of fields
@@ -692,7 +696,7 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 						<div>
 							<p className='text offset-header'>{impactType.toUpperCase()} DETAILS</p>
 							<div id="offset-details">
-								<Row class="offset-content" style={{margin:0}}>
+								<Row className="offset-content" style={{margin:0}}>
 									<Col style={{borderRight: "solid 1px lightgray"}}>
 										<p className='text light-bold'><TODO>{details.amountType}</TODO></p>
 										<h2 className='color-gl-red'><Misc.Money amount={impactDebit.impact.amount} /></h2>
@@ -720,7 +724,7 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 						<div>
 							<p className='text offset-header'>{impactType.toUpperCase()} STATUS</p>
 							<div id="offset-status">
-								<Col class="offset-content" style={{margin:0}}>
+								<Col className="offset-content" style={{margin:0}}>
 									<p className="light-bold">Tracking ID: {impactDebit.donationId || impactDebit.id}</p>
 									<Row style={{justifyContent:"space-around"}}>
 										<div id='status-line' />
@@ -728,6 +732,7 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 										<TODO>{donationStatus[1]}</TODO>
 										<TODO>{donationStatus[2]}</TODO>
 										<TODO>{donationStatus[3]}</TODO>
+										{JSON.stringify(pvCredit.value)}
 									</Row>
 								</Col>
 							</div>
@@ -736,7 +741,7 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 						<div>
 							<p className='text offset-header'>LINKS</p>
 							<div id="offset-links">
-								<Row class="offset-content" style={{margin:0,placeContent:'space-around'}}>
+								<Row className="offset-content" style={{margin:0,placeContent:'space-around'}}>
 									<TODO>{donationLinks}</TODO>
 								</Row>
 							</div>
