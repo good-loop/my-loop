@@ -203,7 +203,7 @@ const CharityCard = ({ charity, donationValue, showImpact, campaign}) => {
  * @param {Output} impact
  * @param {Money} donationValue
  */
-const Impact = ({ charity, donationValue }) => {
+export const Impact = ({ charity, donationValue }) => {
 	const impact = charity.simpleImpact;
 	if (!impact || !impact.name || !impact.costPerBeneficiary || !donationValue) return null;
 

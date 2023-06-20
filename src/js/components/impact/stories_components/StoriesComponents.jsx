@@ -1,33 +1,27 @@
 
-import React, {useState} from 'react';
-import DataStore, { getUrlValue, setUrlValue } from '../../../base/plumbing/DataStore';
-import { Container, Row, Col, Modal, ModalBody  } from 'reactstrap';
-import Circle from '../../../base/components/Circle';
-import NGO from '../../../base/data/NGO';
-import Money from '../../../base/data/Money';
+import React, { useState } from 'react';
+import { Col, Modal, ModalBody, Row } from 'reactstrap';
 import C from '../../../C';
-import KStatus from '../../../base/data/KStatus';
-import Campaign from '../../../base/data/Campaign';
-import Advertiser from '../../../base/data/Advertiser';
-import {addAmountSuffixToNumber, isMobile, setUrlParameter} from '../../../base/utils/miscutils'
-import { fetchBaseObjects } from '../impactdata';
-import { ErrorDisplay } from '../ImpactComponents';
-import { addScript } from '../../../base/utils/miscutils';
-import CampaignPage from '../../campaignpage/CampaignPage';
+import Misc from '../../../MiscOverrides';
 import { isDev } from '../../../base/Roles';
-import DevLink from '../../campaignpage/DevLink';
-import { Chart } from 'react-chartjs-2';
 import DevOnly from '../../../base/components/DevOnly';
+import { Cite } from '../../../base/components/LinkOut';
+import Logo from '../../../base/components/Logo';
+import PortalLink from '../../../base/components/PortalLink';
 import PropControl from '../../../base/components/PropControl';
 import SavePublishDeleteEtc from '../../../base/components/SavePublishDeleteEtc';
-import Misc from '../../../MiscOverrides';
-import PortalLink from '../../../base/components/PortalLink';
-import Logo from '../../../base/components/Logo';
 import TODO from '../../../base/components/TODO';
+import Advertiser from '../../../base/data/Advertiser';
+import Campaign from '../../../base/data/Campaign';
 import { getId } from '../../../base/data/DataClass';
+import Impact from '../../../base/data/Impact';
+import KStatus from '../../../base/data/KStatus';
+import Money from '../../../base/data/Money';
+import NGO from '../../../base/data/NGO';
 import { getDataItem } from '../../../base/plumbing/Crud';
+import { getUrlValue, setUrlValue } from '../../../base/plumbing/DataStore';
 import { asDate } from '../../../base/utils/date-utils';
-import { Cite } from '../../../base/components/LinkOut';
+import { addAmountSuffixToNumber } from '../../../base/utils/miscutils';
 /*
  * A thin card that contains just the supplied text,
  * @param {string} text  
@@ -711,11 +705,13 @@ and the Better Business Bureau's standard for donations in marketing.</div>
 									<Col style={{borderRight: "solid 1px lightgray", padding:0}}>
 										<div style={{borderBottom: "solid 1px lightgray", padding:"0 5% 10%"}}>
 											<p className='text light-bold'><TODO>{details.breakdownHeader}</TODO></p>
-											<p className='color-gl-red'><TODO>{details.breakdownText}</TODO></p>
+											<p className='color-gl-red'><TODO>{details.breakdownText}</TODO>
+											<TODO>??upto a limit of: <Misc.Money amount={null} /></TODO>
+											</p>
 										</div>
 										<div style={{padding:"10% 5%"}}>
-											<p className='text light-bold'><TODO>{details.creditsName}</TODO></p>
-											<p className='color-gl-red'><TODO>{details.creditsValue}</TODO></p>
+											<p className='text light-bold'>{isOffset? "Credits" : "Impact"}</p>
+											<p className='color-gl-red'>{Impact.str(impact)}</p>
 										</div>
 									</Col>
 									<Col style={{display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
