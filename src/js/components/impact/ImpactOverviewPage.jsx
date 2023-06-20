@@ -166,7 +166,8 @@ function SubCampaignsCard({ brand, subBrands, subCampaignsDisplayable: campaigns
 		modalContent: <CampaignList brand={brand} subBrands={subBrands} campaigns={campaigns} impactDebits={impactDebits}/>,
 		modalTitle: `${campaigns.length} Campaigns`,
 		modalId: 'right-half',
-		modalClassName: 'list-modal'
+		modalClassName: 'list-modal',
+		className:"center-number"
 	};
 
 	const noun = (campaigns.length === 1) ? 'Campaign' : 'Campaigns';
@@ -210,7 +211,7 @@ function OffsetsCard() {
  * 
  * @returns {JSX.Element}
  */
-function AdsCatalogueCard({ ads, campaign, unwrap }) {
+function AdsCatalogueCard({ ads, campaign, unwrap, noPreviews }) {
 	let showAds = ads.filter(ad => !Advert.hideFromShowcase(ad));
 
 	const content = showAds.length ? (
@@ -228,7 +229,7 @@ function AdsCatalogueCard({ ads, campaign, unwrap }) {
 		basis: (campaign && 70),
 		className: 'ads-catalogue-card',
 		modalId: 'full-page',
-		modalContent: <AdsCatalogueCard ads={ads} unwrap />,
+		modalContent: <AdvertsCatalogue ads={showAds} unwrap />,
 		modalClassName: 'ads-catalogue-modal',
 	};
 
@@ -262,7 +263,7 @@ const IOPSecondHalf = (baseObjects) => {
 		{!campaign && <GLHorizontal collapse="md" basis={60}>
 			<GLVertical>
 				<GLHorizontal>
-					<SubBrandsCard {...baseObjects} />
+					{baseObjects.subBrandsDisplayable?.length ? <SubBrandsCard {...baseObjects} /> : null}
 					<CharitiesCard mainItem={mainItem} {...baseObjects} />
 				</GLHorizontal>
 				<SubCampaignsCard {...baseObjects} />
@@ -403,23 +404,31 @@ function CharitiesCardSet({charities, impactDebits}) {
  * 
 */
 function CharityCard({charity}) {
-	let [show,setShow] = useState();
 	let headerStyle = charity.images? {
 		backgroundImage: "url("+charity.images+")",
 		backgroundPosition: 'center'
 	} : null;
 
-	return <GLCard className="charity-card">
-		<a href="dummy"  onClick={e => stopEvent(e) && setShow(true)}><img alt={charity.name} src={charity.logo} className="charity-logo"/></a>
+	const cardProps = {
+		modalContent:<CharityInfo charity={charity}/>,
+		modalHeader:<CharityHeader charity={charity}/>,
+		modalHeaderImg:charity.images,
+		modalClassName:"charity-info",
+		modalId:"right-half"
+	};
+
+	return <GLCard className="charity-card" {...cardProps}>
+		<img alt={charity.name} src={charity.logo} className="charity-logo"/>
 		{/* This modal is similar (though not quite as well styled) as the one in the charity list on-click.
 		Advantage: this uses vanilla bootstrap and is simpler.
-		To Do: refactor to use vanilla bootstrap modals elsewhere. */}
+		Disadvantage: Cannot be positioned easily. The GLCard modals allow modals to remain in flow with the page.
+		To Do?: refactor to use vanilla bootstrap modals elsewhere.
 		<Modal isOpen={show} toggle={() => setShow(!show)}
 			// size="lg"
 		>
 			<div style={headerStyle}>
 			<ModalHeader toggle={() => setShow(!show)}>
-				{/* argh: modal-title is not filling the width so not centering */}
+				{/* argh: modal-title is not filling the width so not centering
 				<Center>
 					<Circle padding="1rem" center>
 						<CharityLogo charity={charity}/>
@@ -427,13 +436,13 @@ function CharityCard({charity}) {
 				</Center>
 				{/* <Misc.Logo service={C.app.id} url={logo} transparent={false} className="pull-left mr-1" />
 				{' '}{title}
-				{subtitle && <p className='my-4 login-subtitle'>{subtitle}</p>} */}
+				{subtitle && <p className='my-4 login-subtitle'>{subtitle}</p>}
 			</ModalHeader>
 			</div>
 			<ModalBody>
 				<CharityInfo charity={charity}/>
 			</ModalBody>
-		</Modal>
+		</Modal>*/}
 		<h2 className="donation-total">
 			{Money.prettyStr(charity.dntnTotal)}
 		</h2>
@@ -725,20 +734,18 @@ const CampaignList = ({campaigns, brand, subBrands, status}) => {
 	return <>
 		<h5>Campaigns run via Good-Loop Ads</h5>
 		<p className="color-gl-red text-center">{brand.name} - All Campaigns</p>
-		<GLVertical>
-			{campaigns.map(campaign => {
-				const myBrand = allBrands[campaign.vertiser];
-				const contents = <GLCard className={space('preview campaign mt-3', campaign._shouldHide && 'bg-gl-light-red')} noMargin key={campaign.id} href={"/impact/view/campaign/" + campaign.id}>
-					<p className="w-75 text-left m-0">
-						<div className="brand-name">{myBrand.name || campaign.vertiserName}</div>
-						<div className="campaign-name">{campaign.name}</div>
-					</p>
-					{campaign._shouldHide && <p className="text-white">Normally Hidden</p>}
-					<Logo item={myBrand} />
-				</GLCard>;
-				return campaign._shouldHide ? <DevOnly>{contents}</DevOnly> : contents;
-			})}
-		</GLVertical>
+		{campaigns.map(campaign => {
+			const myBrand = allBrands[campaign.vertiser];
+			const contents = <GLCard className={space('preview campaign mt-3', campaign._shouldHide && 'bg-gl-light-red')} noMargin key={campaign.id} href={"/impact/view/campaign/" + campaign.id}>
+				<p className="w-75 text-left m-0">
+					<div className="brand-name">{myBrand.name || campaign.vertiserName}</div>
+					<div className="campaign-name">{campaign.name}</div>
+				</p>
+				{campaign._shouldHide && <p className="text-white">Normally Hidden</p>}
+				<Logo item={myBrand} />
+			</GLCard>;
+			return campaign._shouldHide ? <DevOnly>{contents}</DevOnly> : contents;
+		})}
 	</>;
 };
 

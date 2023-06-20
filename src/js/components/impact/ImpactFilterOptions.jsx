@@ -44,9 +44,10 @@ const ImpactFilterOptions = ({size, pvBaseObjects, status, doReload, curPage}) =
 	return <>
 		<div className="flex-row impactOverview-filters-and-account" id={`impactOverview-filters-and-account-${size}`}>
 			<ImpactBrandFilters loading={!pvBaseObjects.resolved} masterBrand={masterBrand} brand={brand} campaign={campaign} doReload={doReload} size={size} dropdown curPage={curPage} status={status}/>
+			{/* Remove for demo
 			<DevOnly>
 				<ImpactDateFilter doReload={doReload} />
-			</DevOnly>
+			</DevOnly>*/}
 			<AccountMenu className="float-left" noNav shareWidget={<ShareDash className='m-auto' />}/>
 		</div>
 		{/* Modal content is filled in elsewhere by openAndPopulateModal({id: 'filter-display'}) */}
