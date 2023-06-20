@@ -119,10 +119,11 @@ const TopNavBar = ({urlFilters = '', active, doReload}) => {
 
 
 // Parameters passed to Spring to animate side navbar opening/closing
+// sizing changed from rem to px to better handle tablets
 const navAnimationState = isOpen => isOpen ? (
-	{ width: '15rem', display: 'inline-block', opacity: 1.0, rotate: 'rotate(-90deg)', alignSelf: 'end' }
+	{ width: '270px', display: 'inline-block', opacity: 1.0, rotate: 'rotate(-90deg)', alignSelf: 'end' }
 ) : (
-	{ width: '5rem', display: 'none', opacity: 0.0, rotate: 'rotate(90deg)', alignSelf: 'center' }
+	{ width: '90px', display: 'none', opacity: 0.0, rotate: 'rotate(90deg)', alignSelf: 'center' }
 );
 
 

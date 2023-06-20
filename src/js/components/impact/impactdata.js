@@ -103,6 +103,7 @@ const getCharities = ({ filters }) => {
 	let pvImpactDebits, impactDebits;
 	let pvCharities, charities;
 	let pvStories, stories;
+	let pvCredits, credits;
 
 	// Fetch campaign object if specified
 	if (itemType === "campaign") {
@@ -119,6 +120,7 @@ const getCharities = ({ filters }) => {
 	// Find the specified brand
 	pvBrand = getDataItem({type: C.TYPES.Advertiser, status, id:brandId});
 	brand = await pvBrand.promise;
+	
 	//if (pvBrand.error) throw pvBrand.error;
 	if (brand.parentId) {
 		// If this brand has a parent, get it
@@ -151,7 +153,6 @@ const getCharities = ({ filters }) => {
 	if (!subBrands) subBrands = [];
 	if (!subCampaigns) subCampaigns = [];
 	if (!impactDebits) impactDebits = [];
-
 	// Mark which campaigns and brands have any donations, and which don't
 	impactDebits.forEach(debit => {
 		const value = Money.value(debit.impact.amount);
@@ -165,6 +166,7 @@ const getCharities = ({ filters }) => {
 				if (subBrand.id === debit.vertiser) subBrand.hasDonation = value > 0;
 			});
 		}
+		
 	});
 
 	// Fetch charity objects from debits

@@ -22,7 +22,7 @@ import printer from '../../base/utils/printer'
  */
 
 // import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIGN, TEST_CAMPAIGN_OBJ} from './TestValues';
-import { addAmountSuffixToNumber, space, stopEvent, uniq } from '../../base/utils/miscutils';
+import { addAmountSuffixToNumber, space, stopEvent, uniq, isMobile } from '../../base/utils/miscutils';
 import { dataColours, getCountryFlag, getCountryName } from '../pages/greendash/dashUtils';
 import { isEmpty, keyBy, sumBy } from 'lodash';
 import Logo from '../../base/components/Logo';
@@ -67,10 +67,10 @@ function IOPFirstHalf({ wtdAds, tadgAds, brand, campaign, charities, impactDebit
 		<GLCard basis={campaign ? 80 : 60} className="hero-card">
 			<div className='white-circle'>
 				<div className='content'>
-					<img  className='logo' src={mainLogo} />
+					<img  className='logo' src={mainLogo} style={{width:'6em', height:'6em'}}/>
 					<DevOnly><PortalLink item={brand} /></DevOnly>
 					<br/>
-					<h1>{totalString}</h1>
+					<h1 style={{marginBottom:0}}>{totalString}</h1>
 					<h2>Donated</h2>
 					<h5>With</h5>
 					<img  className='w-50' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>

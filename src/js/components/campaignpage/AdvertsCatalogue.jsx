@@ -24,7 +24,7 @@ import { assert } from '../../base/utils/assert';
  * @param {Advert[]} p.ads
  * @param {?Boolean} p.noPreviews remove preview carousel
  */
-const AdvertsCatalogue = ({ ads, noPreviews, className, captions=true}) => {
+const AdvertsCatalogue = ({ ads, noPreviews, className, captions=true, ...props}) => {
 	assert(ads);
 
 	const [activeIndex, setActiveIndex] = useState(0);
@@ -166,7 +166,7 @@ const AdPreviewCarousel = ({ ads, selectedIndex, setSelected }) => {
 }
 
 // If social is null (not specific) or false, it will fall back to landscape ads
-const AdvertCard = ({ ad, active }) => {
+const AdvertCard = ({ ad, active, decoration }) => {
 	const social = ad.format === "social";
 	let size = 'landscape';
 	const [hasShown, setHasShown] = useState(false);

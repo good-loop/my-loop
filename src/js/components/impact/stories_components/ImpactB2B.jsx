@@ -10,7 +10,6 @@ import ImpactLoadingScreen from '../ImpactLoadingScreen';
 import Money from '../../../base/data/Money';
 import AdvertsCatalogue from '../../campaignpage/AdvertsCatalogue';
 import Advert from '../../../base/data/Advert';
-import { isMobile } from "../../../base/utils/miscutils"
 import DevOnly from '../../../base/components/DevOnly';
 import PortalLink from '../../../base/components/PortalLink';
 import ImpactDebit from '../../../base/data/ImpactDebit';
@@ -70,12 +69,12 @@ const ImpactB2BContent = ({pvBaseObjects, totalString, mainLogo, footer}) => {
 
 	const [firstImpact = null, secondImpact = null] = impactDebits;
 	const firstCharity = charityForImpact(charities, firstImpact);
-	const secondCharity = charityForImpact(charities, secondImpact);
+	const secondCharity = secondImpact && charityForImpact(charities, secondImpact);	
 	return (
 		<Col style={{paddingRight: 0, overflow: 'hidden'}}>
 			<SplashCard {...baseObjects} mainLogo={mainLogo} />
 			<BrandLogoRows {...baseObjects} mainLogo={mainLogo} row />
-			{firstImpact && <CardSeperator text={`Campaign Spotlight: ${firstImpact.name}`} />}
+			{firstImpact && <CardSeperator text={`Here's What: ${brand.name}'s Campaign\nWith Good-Loop Has Achieved...`} />}
 			{firstImpact && <CampaignSpotlight {...baseObjects} impact={firstImpact} charity={firstCharity} status={status} />}
 			<HowItWorks {...baseObjects} totalString={totalString} />
 			{firstImpact && <CardSeperator text={`Here's a Look At What You're Helping\nSupport With ${brand.name}`} />}
@@ -119,14 +118,17 @@ const SplashCard = ({brand, mainLogo}) => {
 	return (
 		<div id='stories-splash'>
 			<Row style={{height:"100%", position:"relative"}}>
-				<img src={brand.branding?.backgroundImage || "/img/Impact/waves.svg"} style={{position:"absolute", height: "100%", width: "100%", overflow:"hidden", objectFit:"cover", zIndex:0}}/>
-				<div className='padding-div'/>
-				<img className="splash-curve" src="/img/Impact/splash-curve.svg" /> 
+				<img id="splash-bg" src={brand.branding?.backgroundImage || "/img/Impact/waves.svg"}/>
+				<Row id="splash-curves" style={{height:"100%", position:"absolute"}}>
+					<div className='padding-div'/>
+					<img className="splash-curve" src="/img/Impact/splash-curve.svg" />
+					<div className="splash-bgColor" />
+				</Row>
 				<Col id='splash-content'>
-					{logoCircle}
-					<h1 className='color-gl-white' >Turning our advertising into a force for good</h1>
-					<p className="text">Powered By Good-Loop</p>
-					<img className="adsForGood" src="/img/Impact/AdsForGood.svg"/>
+						{logoCircle}
+						<h1 className='color-gl-white' >Turning our advertising into a force for good</h1>
+						<p className="text">Powered By Good-Loop</p>
+						<img className="adsForGood" src="/img/Impact/AdsForGood.svg"/>
 				</Col>
 				<img src="/img/Impact/curve-desat-blue.svg" className='splash-curve-mobile' id="splash-curve-mobile-1"/>
 				<img src="/img/Impact/curve-desat-blue.svg" className='splash-curve-mobile' id="splash-curve-mobile-2"/>
@@ -143,8 +145,9 @@ const SplashCard = ({brand, mainLogo}) => {
  */
 const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) => {
 	if ( ! charity) console.warn("no charity?! ",campaign,impact);
-	if(!campaign) campaign = subCampaigns.find(c => (c.jobNumber == impact.campaign))
-	if(!campaign) campaign = subCampaigns.find(c => (c.jobNumber == impact.jobNumber))
+	if(!campaign) campaign = subCampaigns.find(c => 
+		(c.id == impact.campaign) || (c.jobNumber == impact.campaign) || (c.jobNumber == impact.jobNumber)
+	)
 	let pvAds = Advert.fetchForCampaigns({campaignIds:[campaign.id], status:status});
 	if(! pvAds.resolved) return <></>
 
@@ -158,13 +161,30 @@ const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) =>
 	// const startDay = startDate[2]
 	const ads = pvAds.value.hits
 
+	const isMobile = () => {
+		return window.innerWidth < 768;
+	}
+
+	const adWithDecoration = ({ads, classNames}) => {
+		return (
+		<div className={`ad-deco-cont ${classNames}`}>
+			<div className='spotlight-ad'>
+				<AdvertsCatalogue ads={ads} noPreviews className='ads-catalogue' captions={false}/>
+				<img className='phone-container' src="/img/Impact/iphone-frame-16-9-padded-notch.svg" />
+			</div>
+			<div className='spotlight-decoration'>
+				<img className='decoration leaves leaves-1' src='/img/Impact/tadg-leaves.png'/>
+				<img className='decoration leaves leaves-2' src='/img/Impact/tadg-leaves.png'/>
+				<img className='decoration leaves leaves-3' src='/img/Impact/tadg-leaves.png'/>
+				<img className='decoration leaves sparkle' src='/img/Impact/sparkle.png'/>
+			</div>
+		</div>
+		)
+	}
+
 	return (
 		<div id="campaign-spotlight">
-			<Row id="spotlight-bg">
-				<div id="spotlight-bg-padding" />
-				<img className="splash-curve" src="/img/Impact/splash-curve.svg" />
-				<Col id="spotlight-bg-color" />
-			</Row>
+			<img id="spotlight-bg" className="splash-curve" src="/img/Impact/earth-curve.png" />
 			<Row id="spotlight-content">
 				<Col id='campaign-info'>
 					<div className='campaign-grouped-content'>
@@ -174,7 +194,7 @@ const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) =>
 						<DevOnly><PortalLink item={charity} /></DevOnly>
 						<ImpactInfo impact={impact.impact} />
 					</div>
-						{isMobile() && <AdvertsCatalogue ads={[ads[0]]} noPreviews className='ads-catalogue' captions={false}/>}
+					{isMobile() && adWithDecoration({ads:[ads[0]], classNames:'mobile'})}
 					<div className='campaign-grouped-content'>						
 						<p>
 							<Misc.RoughDate date={start} />
@@ -188,7 +208,8 @@ const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) =>
 					{/* ads taken out of flow due to huge performance & styling issues when the navbar expands */}
 				</Col>
 			</Row>
-			{!isMobile() && <AdvertsCatalogue ads={ads} noPreviews className='ads-catalogue' captions={false}/>}
+			{!isMobile() && adWithDecoration({ads})}
+
 		</div>
 	);
 };

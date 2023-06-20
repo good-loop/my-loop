@@ -14,7 +14,7 @@ import { ErrorDisplay } from './ImpactComponents';
 import ImpactOverviewPage from './ImpactOverviewPage';
 import {ImpactStoriesB2B} from './stories_components/ImpactB2B';
 import ImpactStatsPage from './ImpactStatsPage';
-import E404Page, {E401Page} from '../../base/components/E404Page';
+import E404Page from '../../base/components/E404Page';
 import Login from '../../base/youagain';
 import StyleBlock from '../../base/components/StyleBlock';
 import DataClass from '../../base/data/DataClass';
@@ -83,7 +83,7 @@ const ImpactPage = () => {
 
 	if (pvBaseObjects.error) return <ErrorDisplay e={pvBaseObjects.error} />
 
-	const {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits=[], charities=[], ads=[]} = pvBaseObjects.value || {};
+	const {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits=[], unparsedCharities=[], ads=[]} = pvBaseObjects.value || {};
 
 	// main item
 	let mainItem = getMainItem(pvBaseObjects.value); // TODO what is the url pointing at??
