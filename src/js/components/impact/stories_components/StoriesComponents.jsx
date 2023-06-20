@@ -26,6 +26,8 @@ import Logo from '../../../base/components/Logo';
 import TODO from '../../../base/components/TODO';
 import { getId } from '../../../base/data/DataClass';
 import { getDataItem } from '../../../base/plumbing/Crud';
+import { asDate } from '../../../base/utils/date-utils';
+import { Cite } from '../../../base/components/LinkOut';
 /*
  * A thin card that contains just the supplied text,
  * @param {string} text  
@@ -540,8 +542,9 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 
 	let unsdg = impactDebit.impact.unsdg || charity.unsdg;
 
-	const impactType = true ? "Donation" : "Offset"
 	const impact = impactDebit.impact;
+	const isOffset = Impact.isCarbonOffset(impact);
+	const impactType = isOffset? "Offset" : "Donation";
 
 	// Can we find a certificate?
 	const pvCredit = impactDebit.creditId? getDataItem({type:C.TYPES.ImpactCredit, id:impactDebit.creditId, status:KStatus.PUBLISHED}) : {};
@@ -559,28 +562,7 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 			creditsName : "Impact",
 			creditsValue : "1234 Trees Planted",
 			byGoodLoop : "Powered by Good-Loop",
-			goodLoopImg : "/img/Impact/AdsForGood.svg",
-
-			// donation status
-			statusTitles : [
-				"Campaign\nLaunched",
-				"Campaign\nCompleted",
-				"Donation\nProcessing",
-				"Donation\nMade"
-			],
-			statusCompleted : [
-				true,
-				true,
-				false,
-				false
-			],
-			statusDates : [
-				"DD/MM/YY",
-				"DD/MM/YY",
-				"DD/MM/YY",
-				"DD/MM/YY"
-			],
-			
+			goodLoopImg : "/img/Impact/AdsForGood.svg",			
 			// Links
 			links : [
 				{url : "www.google.com", icon:"", linkText:"Donation Receipt", linkImg:"/img/Impact/donation-icon.svg"},
@@ -597,28 +579,7 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 			creditsName : "Credits",
 			creditsValue : "180",
 			byGoodLoop : "Managed by Good-Loop",
-			goodLoopImg : "/img/Impact/AdsForGood.svg",
-
-			// donation status
-			statusTitles : [
-				"Measurement Period Commenced",
-				"Measurement Period Completed",
-				"Offset Processing",
-				"Offset Actioned"
-			],
-			statusCompleted : [
-				true,
-				true,
-				true,
-				false
-			],
-			statusDates : [
-				"DD/MM/YY",
-				"DD/MM/YY",
-				"DD/MM/YY",
-				"DD/MM/YY"
-			],
-			
+			goodLoopImg : "/img/Impact/AdsForGood.svg",			
 			// Links
 			links : [
 				{url : "www.google.com", icon:"", linkText:"Donation Receipt"},
@@ -627,15 +588,38 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 		},
 	}[impactType]
 
-	let donationStatus = details.statusDates.map((_, i) => {
+	let statusTitles = isOffset? [
+		"Measurement Period Commenced",
+		"Measurement Period Completed",
+		"Offset Processing",
+		"Offset Actioned"
+	] : [
+		"Campaign\nLaunched",
+		"Campaign\nCompleted",
+		"Donation\nProcessing",
+		"Donation\nMade"
+	];
+	let statusCompleted = [];
+	let statusDates = [campaign?.topLineItem?.start, campaign?.topLineItem?.end];
+	if (statusDates[0] && asDate(statusDates[0])?.getTime() < new Date().getTime()) {
+		statusCompleted[0] = true;
+	}
+	if (statusDates[1] && asDate(statusDates[1])?.getTime() < new Date().getTime()) {
+		statusCompleted[1] = true;
+	}
+	if (pvCredit.value?.paid || impactDebit.stage === "PROJECT_DONE" || impactDebit.stage === "CHARITY_PAID") {
+		statusCompleted = [true,true,true,true];
+		statusDates[3] = pvCredit.value?.paid;
+	}
+	let donationStatus = statusTitles.map((statusTitle, i) => {
 		return (
 		<div className="donation-status">
-			<p>{details.statusDates[i]}</p>
-			{details.statusCompleted[i] && <img src="/img/Impact/tick-circle.svg" className='donation-tick'/>}
-			{! details.statusCompleted[i] && <img src="/img/Impact/blank-tick.svg" className='donation-tick'/>}
-			<p className='light-bold'>{details.statusTitles[i]}</p>
+			<p>{statusDates[i]? <Misc.DateTag date={statusDates[i]} /> : (statusCompleted[i]? <span>&nbsp;</span> : "...")}</p>
+			<img src={statusCompleted[i]? "/img/Impact/tick-circle.svg" : "/img/Impact/blank-tick.svg"} className='donation-tick'/>
+			<p className='light-bold'>{statusTitle}</p>
 		</div>)
 	}) 
+
 
 	let donationLinks = details.links.map((link, i) => {
 		return (
@@ -666,9 +650,29 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 					<div className='charity-numbers mt-5 p-3' style={{background:"@gl-lighter-blue"}}>
 						<p className='text small-header light-bold'>{charityName}</p>						
 						{NGO.regs(charity).map(reg => <p className='text mt-1'>{reg.organisation} registration number: {reg.id}</p>)}
-					</div>
+					</div>					
 					<DevOnly>Charity: <PortalLink item={charity} /></DevOnly>
-				</div>
+					<div className='small'>
+						{"TODO" || donationModel}
+50% of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies. 
+Good-Loop and the advertising exchange make a small commission. The donations depend on viewers watching the adverts.
+
+{ ! isOffset && impact.name && <div>Impacts such as "{impact.name}" are representative. 
+We don't ring-fence funding, as the charity can better assess the best use of funds. 
+Cost/impact figures are as reported by the charity or by the impact assessor SoGive.</div>}
+
+<div>Donations are provided without conditions. The charities are not recommending or endorsing the products in return. 
+They're just doing good — which we are glad to support.</div>
+<div>Amounts for campaigns that are in progress or recently finished are estimates and may be subject to audit.</div>
+<div>This information follows the guidelines of the New York Attorney General for best practice in cause marketing,<Cite href="https://www.charitiesnys.com/cause_marketing.html"/> 
+and the Better Business Bureau's standard for donations in marketing.</div>
+						{campaign.smallPrint &&	<div>
+									<span className="small">
+										{campaign.smallPrint}
+									</span>
+								</div>}
+					</div>
+				</div>{/* ./ col 1 */}
 
 				{/* Col 2 on desktop, bot row on mobile*/}
 				<div className='flex-column cert-col right' style={{background:"@gl-lighter-blue", flexBasis:"50%"}}>
@@ -698,7 +702,7 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 							<div id="offset-details">
 								<Row className="offset-content" style={{margin:0}}>
 									<Col style={{borderRight: "solid 1px lightgray"}}>
-										<p className='text light-bold'><TODO>{details.amountType}</TODO></p>
+										<p className='text light-bold'>{isOffset? "Carbon Offset" : "Donation"}</p>
 										<h2 className='color-gl-red'><Misc.Money amount={impactDebit.impact.amount} /></h2>
 										<DevOnly><PortalLink item={impactDebit} /></DevOnly>
 									</Col>
@@ -715,7 +719,7 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 									<Col style={{display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
 										<p className='text light-bold'>{details.byGoodLoop}</p>
 										<img src={details.goodLoopImg} style={{width:"100%"}}/>
-										<p className='small-legal-text'><TODO>small legal stuff text</TODO></p>
+										<p className='small-legal-text'>Registered UK company: SC548356</p>
 									</Col>
 								</Row>
 							</div>
@@ -725,27 +729,26 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 							<p className='text offset-header'>{impactType.toUpperCase()} STATUS</p>
 							<div id="offset-status">
 								<Col className="offset-content" style={{margin:0}}>
-									<p className="light-bold">Tracking ID: {impactDebit.donationId || impactDebit.id}</p>
+									<DevOnly><PortalLink item={campaign} /></DevOnly>
 									<Row style={{justifyContent:"space-around"}}>
 										<div id='status-line' />
-										<TODO>{donationStatus[0]}</TODO>
-										<TODO>{donationStatus[1]}</TODO>
-										<TODO>{donationStatus[2]}</TODO>
-										<TODO>{donationStatus[3]}</TODO>
-										{JSON.stringify(pvCredit.value)}
+										{/* ticks and dates for launched ... paid */}
+										{donationStatus}
 									</Row>
+									<p className="">Tracking IDs: {[impactDebit.donationId || impactDebit.id, campaign.id, campaign.xref].join(", ")}
+									</p>
 								</Col>
 							</div>
 						</div>
 
-						<div>
+						{donationLinks.length && <div>
 							<p className='text offset-header'>LINKS</p>
 							<div id="offset-links">
 								<Row className="offset-content" style={{margin:0,placeContent:'space-around'}}>
-									<TODO>{donationLinks}</TODO>
+									{donationLinks}
 								</Row>
 							</div>
-						</div>
+						</div>}
 
 					</div>
 				</div>
