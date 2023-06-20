@@ -24,6 +24,7 @@ import Misc from '../../../MiscOverrides';
 import PortalLink from '../../../base/components/PortalLink';
 import Logo from '../../../base/components/Logo';
 import TODO from '../../../base/components/TODO';
+import { getId } from '../../../base/data/DataClass';
 /*
  * A thin card that contains just the supplied text,
  * @param {string} text  
@@ -347,11 +348,11 @@ export const HowItWorks = ({campaign, subCampaigns, charities, totalString}) => 
 }
 
 function findCharity(cid, charities) {
-	let charity = charities.find(c => c.id === cid);
+	let charity = charities.find(c => getId(c) === cid); // NB: this MUST use getId() to handle SoGive ids
 	if (charity) return charity;
 	if (cid==="Gold Standard") { // HACK where are the duff IDs coming from??
 		console.warn("bad ID "+cid);
-		charity = charities.find(c => c.id === "gold-standard");		
+		charity = charities.find(c => getId(id) === "gold-standard");		
 	}
 	return charity;
 }
@@ -385,8 +386,19 @@ export const DonationsCard = ({campaign, subCampaigns, brand, impactDebits, char
 	// if we have multiple donations to the same charity, avoid using the same image over and over again
 	let charityCounter = {}
 
-	const donations = impactDebits.map((debit, index) => {
+	return (
+		<div className='flex flex-column pt-5'>
+			<h2 className='text header-text' style={{margin: "0 5%"}}>{brand.name}'s Campaign{impactDebits.length > 1 ? "s" : ""} With Good-Loop</h2>
+			<p className='text dates'>{startDate} - {endDate}</p>
+			<div id="donation-details" className='flex-mobile-dir'>
+				{impactDebits.map(debit => <DonationCard debit={debit} charityCounter={charityCounter} charities={charities} />)}
+			</div>
+		</div>
+	);
+}
 
+
+function DonationCard({debit, charityCounter, charities}) {
 		const charId = debit.impact.charity;
 		if(Object.keys(charityCounter).includes(charId)) {
 			charityCounter[charId] += 1
@@ -396,7 +408,7 @@ export const DonationsCard = ({campaign, subCampaigns, brand, impactDebits, char
 		const charity = findCharity(charId, charities);
 		if (!charity) {
 			console.warn("(skip) No charity for "+charId, debit, charities);
-			return;
+			return <div>No Charity for {charId}</div>;
 		}
 		const imgList = NGO.images(charity) || [""] 
 
@@ -419,20 +431,9 @@ export const DonationsCard = ({campaign, subCampaigns, brand, impactDebits, char
 				</div>
 			</div>
 		</button>
-		)
-	})
-
-	return (
-		<div className='flex flex-column pt-5'>
-			<h2 className='text header-text' style={{margin: "0 5%"}}>{brand.name}'s Campaign{impactDebits.length > 1 ? "s" : ""} With Good-Loop</h2>
-			<p className='text dates'>{startDate} - {endDate}</p>
-			<div id="donation-details" className='flex-mobile-dir'>
-				{donations}
-			</div>
-		</div>
-
-	)
+		);
 }
+
 
 /**
  * Puts a logo inside a white circle 
