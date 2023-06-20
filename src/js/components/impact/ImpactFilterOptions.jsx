@@ -11,6 +11,7 @@ import { GLModalCard } from './GLCards';
 import { assert } from '../../base/utils/assert';
 import AccountMenu from '../../base/components/AccountMenu';
 import { ShareDash } from '../pages/greendash/GreenNavBar';
+import DevOnly from '../../base/components/DevOnly';
 const A = C.A;
 
 
@@ -26,7 +27,11 @@ const ImpactFilterOptions = ({size, pvBaseObjects, status, doReload, curPage}) =
 	assert({wide: true, thin: true}[size]);
 
 	// Anonymous and pseudo-users can't change filters or share
-	if (!Login.getId() || Login.getId().endsWith('pseudo')) return null;
+	if ( !Login.getId()) return null;
+	const pseudoUser = userId && userId.endsWith('@pseudo');
+	if (pseudoUser) {
+		return <LogoutLink className="nav-link">Logout</LogoutLink>;
+	}
 
 	const { masterBrand, brand, campaign } = pvBaseObjects.value || {};
 
@@ -34,13 +39,15 @@ const ImpactFilterOptions = ({size, pvBaseObjects, status, doReload, curPage}) =
 
 	// NB: see GreenNavBar.jsx
 	const userId = Login.getId();
-	const pseudoUser = userId && userId.endsWith('@pseudo');
+
 
 	return <>
 		<div className="flex-row impactOverview-filters-and-account" id={`impactOverview-filters-and-account-${size}`}>
 			<ImpactBrandFilters loading={!pvBaseObjects.resolved} masterBrand={masterBrand} brand={brand} campaign={campaign} doReload={doReload} size={size} dropdown curPage={curPage} status={status}/>
-			{isWide && <ImpactDateFilter doReload={doReload} />}
-			{ ! pseudoUser && <AccountMenu className="float-left" noNav shareWidget={<ShareDash className='m-auto' />}/>}
+			<DevOnly>
+				<ImpactDateFilter doReload={doReload} />
+			</DevOnly>
+			<AccountMenu className="float-left" noNav shareWidget={<ShareDash className='m-auto' />}/>
 		</div>
 		{/* Modal content is filled in elsewhere by openAndPopulateModal({id: 'filter-display'}) */}
 		<GLModalCard className="filter-display" id="filter-display" useOwnBackdrop />

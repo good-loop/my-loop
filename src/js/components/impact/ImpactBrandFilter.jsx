@@ -108,34 +108,6 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, doRe
 	}
 
 	/**
-	*	ListItem of Campaigns for use in ListLoad
-	* 	Same as default except for: 
-	*		- if item doesn't have branding (logo/thumbnail), use a placeholder thumbrail
-	*		- parentItem is expected (will be parent master/brand of campaign)
-	*/
-	const CampaignListItem = ({ item, parentItem }) => {
-		const id = getId(item);
-		let name = item.name || item.text || id || '';
-		if (name.length > 280) name = name.slice(0, 280);
-
-		let thumbnail = (item.branding) ? <Misc.Thumbnail item={item} /> : <div className="impact-link-placeholder-thumbnail" />;
-		let isSelected = campaign && (campaign.id === item.id);
-		if (size == "thin") name = name.replace(/_/g, " "); // allows for linebreaks in names to save horizontal space
-		return <>
-			<div className="brand-campaign-set" onClick={() => filterChange({brand:parentItem, campaign:item})}>
-				<div className="info campaign-item">
-					<div className="display">
-						{thumbnail}
-						<div className={space("name", (isSelected && "selected-filter"))}>
-							{name}
-						</div>
-					</div>
-				</div>
-			</div>
-		</>;
-	};
-
-	/**
 	*	ListItem of Brands for use in a ListLoad
 	* 	Same as default except for: 
 	*		- if item doesn't have branding (logo/thumbnail), use a placeholder thumbrail

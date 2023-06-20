@@ -71,7 +71,7 @@ export const dataColours = (series, maxColour = dfltMaxColour, minColour = dfltM
  */
 export const getFilterTypeId = () => {
 	// Impact Hub version e.g. /brand/foo
-	const m = window.location.pathname.match(/(brand|agency|campaign|ngo)\/(\w+)/);
+	const m = window.location.pathname.match(/(brand|agency|campaign|ngo)\/([^\\?\\&\\/]+)/);
 	if (m) {
 		let filterType = toTitleCase(m[1]);
 		if (filterType==="Brand") filterType="Advertiser";

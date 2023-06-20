@@ -32,9 +32,12 @@ const impactDebitComparator = (a, b) => {
  * @param {ImpactDebit} 
  * @returns {?NGO}
 */
-const charityForImpact = (charities, {impact}) => {
-	assert(charities, impact);
-	if ( ! impact) return null;
+const charityForImpact = (charities, impactDebit) => {
+	assert(charities);
+	let impact = impactDebit?.impact;
+	if ( ! impact) {
+		return null;
+	}
 	let charity = charities.find(charity => getId(charity) === impact.charity);
 	if ( ! charity) {
 		console.warn("Could not find charity "+impact.charity+" in ",charities);

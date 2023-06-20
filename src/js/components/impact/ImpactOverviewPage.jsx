@@ -22,7 +22,7 @@ import printer from '../../base/utils/printer'
  */
 
 // import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIGN, TEST_CAMPAIGN_OBJ} from './TestValues';
-import { addAmountSuffixToNumber, isMobile, space, stopEvent } from '../../base/utils/miscutils';
+import { addAmountSuffixToNumber, space, stopEvent, uniq, isMobile } from '../../base/utils/miscutils';
 import { dataColours, getCountryFlag, getCountryName } from '../pages/greendash/dashUtils';
 import { isEmpty, keyBy, sumBy } from 'lodash';
 import Logo from '../../base/components/Logo';
@@ -89,7 +89,6 @@ function IOPFirstHalf({ wtdAds, tadgAds, brand, campaign, charities, impactDebit
 			</GLHorizontal>*/
 			// Can't have in set - or CommonDivision wrapper messes up. Can't think of fix so just shove contents here for now
 			<CharitiesCardSet charities={charities} impactDebits={impactDebits} glCardPassThru={true} />
-			
 		)}
 		<GLModalCard id="left-half" />
 	</GLVertical>;
@@ -278,16 +277,31 @@ const IOPSecondHalf = (baseObjects) => {
 		<GLVertical>
 			{campaign && <CountryViewsGLCard basis={10} baseObjects={baseObjects}/>}
 			<AdsCatalogueCard ads={ads} />
-			{campaign && <GLCard className="boast" basis={20}>
-				<h2>SUSTAINABLE GOALS</h2>
-				<TODO>??</TODO>
-			</GLCard>}
+			{campaign && <SustainableGoalsCard basis={20} baseObjects={baseObjects}/>}
 		</GLVertical>
 
 		<GLModalCard id="right-half"/>
 	</GLVertical>;
 };
 
+const SustainableGoalsCard = ({baseObjects}) => {
+
+	const charities = baseObjects.charities;
+	const unsdgs = charities ? uniq(charities.map(c => c.unsdg).filter(x=>x)) : []; // no null entries or 0s
+
+	if (!unsdgs) return null;
+
+	return <GLCard className="boast">
+		<div className='d-flex justify-content-center mb-2'>
+			<img src="/img/unsdg/unsdg.png" className='w-50'/>
+		</div>
+		<div className='justify-content-center d-flex align-items-center flex-wrap'>
+			{unsdgs.map(goal => {
+				return <img src={"/img/unsdg/goal-" + (goal - 1) + ".jpg"} className='goal-logo'/>
+			})}
+		</div>
+	</GLCard>
+};
 
 /**
  * @param {Object} p
@@ -320,19 +334,12 @@ const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, ...props}) => {
 };
 
 
-const CampaignCharityDisplay = ({charities, impactDebits}) => {
-	// sort debits by charity
-	let debitsByCharity = {};
-	impactDebits.forEach(debit => {
-		if (debit.impact.charity) {
-			debitsByCharity[debit.impact.charity] = debit;
-		}
-	});
+const CampaignCharityDisplay = ({charities}) => {
+
 
 	return <GLHorizontal basis={20}>
 		{charities.map(charity => {
-			const cid = NGO.id(charity);
-			<GLCard key={charity.id}
+			return <GLCard key={charity.id}
 				className="boast"
 				modalContent={<CharityInfo charity={charity}/>}
 				modalHeader={<CharityHeader charity={charity}/>}
@@ -342,7 +349,7 @@ const CampaignCharityDisplay = ({charities, impactDebits}) => {
 			>
 				<img src={charity.logo} style={{width: '7rem'}}/>
 				<br/>
-				{debitsByCharity[cid] && <h2>{Money.prettyStr(debitsByCharity[cid].impact.amount)} Donated</h2>}
+				<h2>{Money.prettyStr(charity.dntnTotal)} Donated</h2>
 				<br/>
 				<h4>{NGO.displayName(charity)}</h4>
 			</GLCard>
@@ -573,7 +580,7 @@ const contentTypes = {
 	wtdAds: 'Watch To Donate',
 	tadgAds: 'This Ad Does Good',
 	etdAds: 'Engage To Donate',
-	greenTags: 'Green Ad Tag',
+	// greenTags: 'Green Ad Tag',
 	// tasl: 'This Ad Supports Local'
 };
 
@@ -702,7 +709,7 @@ const CharityInfo = ({charity}) => {
 		<img  className='w-25' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 		<br/>
 		<p className='p-5'>
-			{NGO.extendedDescription(charity) || NGO.anyDescription(charity)}
+			<MDText source={NGO.extendedDescription(charity) || NGO.anyDescription(charity)}/>
 		</p>
 	</div>;
 }
