@@ -49,8 +49,7 @@ export const CampaignImpactOne = ({logo, charity, impactDebit}) => {
 	const text = {
 		cause : impactDebit.storiesContent.impactCause || false,
 		stats : impactDebit.storiesContent.impactStats || false,
-		dyk : impactDebit.storiesContent.fact || false,
-		fact : impactDebit.storiesContent.factSource || false,
+		fact : impactDebit.storiesContent.fact || false,
 		factName : impactDebit.storiesContent.factSourceName || false,
 		factUrl : impactDebit.storiesContent.factSourceUrl || false,
 	}
@@ -176,7 +175,7 @@ export const CampaignImpactOne = ({logo, charity, impactDebit}) => {
  */
 export const CampaignImpactTwo = ({logo, impactDebit, charity}) => {
 	// this card needs to make use of a second impact, if it doesn't exist we can't use it!
-	
+
 	// due to an annoying bug on local setup, we should be using the first 
 	const text = {
 		cause : impactDebit.impact.impactCause || false,
