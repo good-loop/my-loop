@@ -20,7 +20,7 @@ const A = C.A;
 
 // ONLY SHOWS EMAIL LIST WITH "listemails" FLAG SET
 // ONLY APPEARS WITH "shareables" OR DEBUG FLAG SET
-const ShareDash = ({style, className}) => {
+export const ShareDash = ({style, className}) => {
 	// not-logged in cant share and pseudo users can't reshare
 	if ( ! Login.getId() || Login.getId().endsWith("pseudo")) {
 		return null;

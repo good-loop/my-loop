@@ -27,10 +27,11 @@ import DataClass from '../../base/data/DataClass';
 
 
 const IMPACT_PAGES = {
-	view: ImpactOverviewPage,
-	stories: ImpactStoriesB2B,
-	stat: ImpactStatsPage,
-}
+	view: { name: 'Overview', PageComponent: ImpactOverviewPage },
+	stories: { name: 'Stories', PageComponent: ImpactStoriesB2B },
+	stat: { name: 'Statistics', PageComponent: ImpactStatsPage },
+};
+
 
 /**
  * HACK what is the main item this page is about?
@@ -39,10 +40,11 @@ const IMPACT_PAGES = {
  */
 export function getMainItem(baseObjects) {
 	// TODO look at the url!
-	if ( ! baseObjects) return null;
-	let {campaign, brand, masterBrand} = baseObjects;
+	if (!baseObjects) return null;
+	let { campaign, brand, masterBrand } = baseObjects;
 	return campaign || brand || masterBrand;
 };
+
 
 const ImpactPage = () => {
 	const path = DataStore.getValue(['location', 'path']);
@@ -63,15 +65,11 @@ const ImpactPage = () => {
 	// FIXME overlapping functions -- need to resolve on one.
 	let pvBaseObjects = fetchImpactBaseObjects({itemId, itemType, status, start, end});
 
-	let [pageName, PageContent] = ({
-		view: ['Overview', IMPACT_PAGES.view],
-		stories: ['Stories', IMPACT_PAGES.stories],
-		stat: ['Statistics', IMPACT_PAGES.stat]
-	})[page]
+	const { name, PageComponent } = IMPACT_PAGES[page];
 
 	useEffect (() => {
 		//setNavProps(focusItem)
-		let windowTitle = `Impact ${pageName}`;
+		let windowTitle = `Impact ${name}`;
 		setWindowTitle(windowTitle);
 	}, []);
 
@@ -79,15 +77,15 @@ const ImpactPage = () => {
 	let [isNavbarOpen, setIsNavbarOpen] = useState(false)
 	const navToggleAnimation = useSpring({
 		width : isNavbarOpen ? "270px" : "90px",
-	})
+	});
 
 	// if not logged in, use may select GreenDash instead.
 	// set to true to avoid this choice being made on page refresh if logged in 
 	let [impactChosen, setImpactChosen] = useState(true)
 
-	// on filter changes, even if content is loaded, force a load for feedback
-	// kept as a state outside so components can easily access it, set it to true to force a 'reload'
-	const [forcedReload, setForcedReload] = useState(false)
+	// On filter changes, even if content is loaded, force a "reload" (ie show loading screen) for feedback
+	const [reload, setReload] = useState(false)
+	const doReload = () => setReload(prev => !prev);
 
 	if (pvBaseObjects.error) return <ErrorDisplay e={pvBaseObjects.error} />
 
@@ -111,17 +109,26 @@ const ImpactPage = () => {
 
 	const impactSettings = ImpactSettings.get(mainItem);
 
+	const navProps = {
+		isNavbarOpen,
+		setIsNavbarOpen,
+		pvBaseObjects,
+		doReload,
+		curPage: page,
+		status
+	};
+
 	return <>
-		{impactSettings?.customCss && <StyleBlock>{impactSettings.customCss}</StyleBlock>}		
-		{impactSettings?.customHtml && <HTML>{impactSettings.customHtml}</HTML>}		
+		{impactSettings?.customCss && <StyleBlock>{impactSettings.customCss}</StyleBlock>}
+		{impactSettings?.customHtml && <HTML>{impactSettings.customHtml}</HTML>}
 		<div className="navbars-overlay">
-			<animated.div className='impact-navbar-flow-overlay' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}} />
-			<ImpactLoadingScreen baseObj={pvBaseObjects} forcedReload={forcedReload} setForcedReload={setForcedReload} />
-			<ImpactFilterOptions size="thin" setIsNavbarOpen={setIsNavbarOpen} pvBaseObjects={pvBaseObjects} setForcedReload={setForcedReload} curPage={page} status={status}/> {/*mobile horizontal filters topbar*/}
-			<NavBars active={pageName} isNavbarOpen={isNavbarOpen} setIsNavbarOpen={setIsNavbarOpen} setForcedReload={setForcedReload} />
-			<ImpactFilterOptions size="wide" setIsNavbarOpen={setIsNavbarOpen} pvBaseObjects={pvBaseObjects} setForcedReload={setForcedReload}  curPage={page} status={status}/> {/*widescreen vertical filters topbar*/}
+			<animated.div className="impact-navbar-flow-overlay" style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}} />
+			<ImpactLoadingScreen pvBaseObj={pvBaseObjects} reload={reload} />
+			<ImpactFilterOptions size="thin" {...navProps} /> {/*mobile horizontal filters topbar NB:one of thin|wide gets hidden ??Could we decide here and avoid rendering the html twice?? */}
+			<NavBars active={page} {...navProps} />
+			<ImpactFilterOptions size="wide" {...navProps} /> {/*widescreen vertical filters topbar NB:one of thin|wide gets hidden*/}
 		</div>
-		<PageContent pvBaseObjects={pvBaseObjects} navToggleAnimation={navToggleAnimation} totalString={totalString} mainLogo={mainLogo} />
+		<PageComponent pvBaseObjects={pvBaseObjects} navToggleAnimation={navToggleAnimation} totalString={totalString} mainLogo={mainLogo} />
 	</>;
 }
 

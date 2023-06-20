@@ -1,7 +1,7 @@
 
 import React, {useState} from 'react';
-import DataStore from '../../../base/plumbing/DataStore';
-import { Container, Row, Col, Modal, ModalBody } from 'reactstrap';
+import DataStore, { getUrlValue, setUrlValue } from '../../../base/plumbing/DataStore';
+import { Container, Row, Col, Modal, ModalBody  } from 'reactstrap';
 import Circle from '../../../base/components/Circle';
 import NGO from '../../../base/data/NGO';
 import Money from '../../../base/data/Money';
@@ -9,7 +9,7 @@ import C from '../../../C';
 import KStatus from '../../../base/data/KStatus';
 import Campaign from '../../../base/data/Campaign';
 import Advertiser from '../../../base/data/Advertiser';
-import {addAmountSuffixToNumber, isMobile} from '../../../base/utils/miscutils'
+import {addAmountSuffixToNumber, isMobile, setUrlParameter} from '../../../base/utils/miscutils'
 import { fetchBaseObjects } from '../impactdata';
 import { ErrorDisplay } from '../ImpactComponents';
 import { addScript } from '../../../base/utils/miscutils';
@@ -20,7 +20,10 @@ import { Chart } from 'react-chartjs-2';
 import DevOnly from '../../../base/components/DevOnly';
 import PropControl from '../../../base/components/PropControl';
 import SavePublishDeleteEtc from '../../../base/components/SavePublishDeleteEtc';
-
+import Misc from '../../../MiscOverrides';
+import PortalLink from '../../../base/components/PortalLink';
+import Logo from '../../../base/components/Logo';
+import TODO from '../../../base/components/TODO';
 /*
  * A thin card that contains just the supplied text,
  * @param {string} text  
@@ -44,12 +47,12 @@ export const CardSeperator = ({text}) => {
  */
 export const CampaignImpactOne = ({logo, charity, impactDebit}) => {
 	const text = {
-		cause : impactDebit.impact.impactCause || false,
-		stats : impactDebit.impact.impactStats || false,
-		dyk : impactDebit.impact.fact || false,
-		fact : impactDebit.impact.factSource || false,
-		factName : impactDebit.impact.factSourceName || false,
-		factUrl : impactDebit.impact.factSourceUrl || false,
+		cause : impactDebit.storiesContent.impactCause || false,
+		stats : impactDebit.storiesContent.impactStats || false,
+		dyk : impactDebit.storiesContent.fact || false,
+		fact : impactDebit.storiesContent.factSource || false,
+		factName : impactDebit.storiesContent.factSourceName || false,
+		factUrl : impactDebit.storiesContent.factSourceUrl || false,
 	}
 	
 	let hideComponent = false;
@@ -82,8 +85,9 @@ export const CampaignImpactOne = ({logo, charity, impactDebit}) => {
 			<ModalBody className="d-flex modal-body">
 				<Col>
 				<h2>Props for Impact Stories</h2>
-				<h4>Impact #1: name: {impactDebit.name || "MISSING"}, id {impactDebit.id || "MISSING"}</h4>
-				<h4>Charity: name: {charity.name || "MISSING"}, id {charity.id || "MISSING"}, </h4>
+				<h4>Impact #1:<br />	Name: {impactDebit.name || "MISSING"}<br />	ID: {impactDebit.id || "MISSING"}</h4>
+				<br />
+				<h4>Charity:<br />	Name: {charity.name || "MISSING"}<br />	ID: {charity.id || "MISSING"}, </h4>
 				<PropControl type="number" prop="priority" path={path} label="Priority" className="font-weight-bold"/>
 				<PropControl type="number" prop="amountGBP" path={path} label="Amount In GBP" readOnly/>
 				<div className="mb-3 p-3 bg-light card">
@@ -171,9 +175,8 @@ export const CampaignImpactOne = ({logo, charity, impactDebit}) => {
  * @returns {React.ReactElement} 
  */
 export const CampaignImpactTwo = ({logo, impactDebit, charity}) => {
-	console.log("are we even here???")
 	// this card needs to make use of a second impact, if it doesn't exist we can't use it!
-
+	
 	// due to an annoying bug on local setup, we should be using the first 
 	const text = {
 		cause : impactDebit.impact.impactCause || false,
@@ -215,8 +218,9 @@ export const CampaignImpactTwo = ({logo, impactDebit, charity}) => {
 			<ModalBody className="d-flex modal-body">
 				<Col>
 				<h2>Props for Impact Stories</h2>
-				<h4>Impact #1: name: {impactDebit.name || "MISSING"}, id {impactDebit.id || "MISSING"}</h4>
-				<h4>Charity: name: {charity.name || "MISSING"}, id {charity.id || "MISSING"}, </h4>
+				<h4>Impact #2:<br />	Name: {impactDebit.name || "MISSING"}<br />	ID: {impactDebit.id || "MISSING"}</h4>
+				<br />
+				<h4>Charity:<br />	Name: {charity.name || "MISSING"}<br />	ID: {charity.id || "MISSING"}, </h4>
 				<PropControl type="number" prop="priority" path={path} label="Priority" className="font-weight-bold"/>
 				<PropControl type="number" prop="amountGBP" path={path} label="Amount In GBP" readOnly/>
 				<div className="mb-3 p-3 bg-light card">
@@ -342,6 +346,16 @@ export const HowItWorks = ({campaign, subCampaigns, charities, totalString}) => 
 	)
 }
 
+function findCharity(cid, charities) {
+	let charity = charities.find(c => c.id === cid);
+	if (charity) return charity;
+	if (cid==="Gold Standard") { // HACK where are the duff IDs coming from??
+		console.warn("bad ID "+cid);
+		charity = charities.find(c => c.id === "gold-standard");		
+	}
+	return charity;
+}
+
 /**
  * For each impact debit, show its impact
  * TODO make each donation element into a modal that shows all the actual proof of the donation
@@ -379,26 +393,28 @@ export const DonationsCard = ({campaign, subCampaigns, brand, impactDebits, char
 		} else {
 			charityCounter[charId] = 1
 		}
-		const charity = charities.find((c) => c.id === charId)
-		if (!charity) return;
+		const charity = findCharity(charId, charities);
+		if (!charity) {
+			console.warn("(skip) No charity for "+charId, debit, charities);
+			return;
+		}
 		const imgList = NGO.images(charity) || [""] 
 
 		// get new image, if we have more impacts than images just loop the list
 		const img = imgList[(charityCounter[charId] - 1) % imgList.length];
 
 		const logo = charity.logo;
-		const displayName = charity.displayName;
-		const raised = debit.impact.amountGBP;
-		const [open, setOpen] = useState(false);
-		let donationModal = <ImpactCertificate brand={brand} impactDebit={debit} charity={charity} campaign={campaign} open={open} setOpen={setOpen}/>
+		const displayName = NGO.displayName(charity);
+		const moneyRaised = debit.impact.amount;		
+		let donationModal = <ImpactCertificate brand={brand} impactDebit={debit} charity={charity} campaign={campaign} />
 		return (
-		<button onClick={() => setOpen(!open)} style={{border: "none", backgroundColor:"none"}} className='impact-debit-container'>
+		<button onClick={() => setUrlValue("open", debit.id)} style={{border: "none", backgroundColor:"none"}} className='impact-debit-container'>
 			<div className='impact-debit' key={index}>
 				{donationModal}
 				<img className="debit-header" src={img} alt={displayName + " header image"}/>
 				<div className='debit-content'>
 					<p className='debit-name'>{displayName}</p>
-					<p className='debit-amount'>£{raised} RAISED...</p>
+					<p className='debit-amount'><Misc.Money amount={moneyRaised} /> RAISED</p>
 					<img className="debit-logo" src={logo} alt={displayName + " logo"} />
 				</div>
 			</div>
@@ -509,12 +525,18 @@ export const BrandLogoRows = ({mainLogo, charities, row}) => {
 	)
 }
 
-const ImpactCertificate= ({brand, impactDebit, campaign, charity, open, setOpen}) => {
-	let charityName = charity.displayName || charity.name || charity.id;
-	let charityDesc = charity.summaryDescription || charity.description
+/**
+ * 
+ * @param {Object} p
+ * @param {NGO} p.charity
+ * @returns 
+ */
+const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
+	let charityName = NGO.displayName(charity);
+	let charityDesc = charity.summaryDescription || charity.description;
 	let campaignName = campaign.name || brand.name || campaign.id;
 
-	const charityUN_SDGS = [1, 4, 9]
+	let unsdg = impactDebit.impact.unsdg || charity.unsdg;
 
 	const impactType = true ? "Donation" : "Offset"
 	const impact = impactDebit.impact;
@@ -618,28 +640,29 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity, open, setOpen}
 		</a>)
 	})
 
-	const modalClasses = `${isMobile() ? "flex-column" : "flex-row"} d-flex`
+	// Use a url parameter so people can link to a certificate
+	const openId = getUrlValue("open");
 	return (
-		<Modal isOpen={open} id="impact-cert-modal" className='impact-cert' toggle={() => setOpen(!open)} size="xl">
+		<Modal isOpen={openId === impactDebit.id} id="impact-cert-modal" className='impact-cert' toggle={() => setUrlValue("open", false)} size="xl">
 			<ModalBody className="d-flex modal-body" style={{padding:0, height:"90vh"}}>
 				{/* Col 1 on desktop, top row on mobile*/}
 				<div className='flex-column cert-col left justify-content-between' style={{padding:"5%", flexBasis:"50%"}}>
 					<div className='charity-description justify-content-between'>
-						<img style={{maxWidth:"40%"}} src={charity.logo} />
+						<img style={{maxWidth:"30%"}} src={charity.logo} />
 						<h4 className='mt-5 charity-name'>{charityName}</h4>
 						<p className='text mt-4'>{charityDesc}</p>
 						{charity.url && <p className='text mt-4'>Find out more: <a href={charity.url}>{charityName}</a></p>}
 					</div>
 					<div className='charity-SDG mt-5'>
-						<p className='text'>Primary UN SDG supported by {charityName}</p>
+						{unsdg ? <p className='text'>Primary UN SDG supported: {NGO.UNSDGs[unsdg]}
+						</p> : <TODO>set UN SDG for this charity</TODO>}
+						{unsdg && <img src={`/img/Impact/UN_Goals/${unsdg}.png`} style={{width:'15%', marginTop:'2%'}} alt='SDG Logo'/>}
 					</div>
 					<div className='charity-numbers mt-5 p-3' style={{background:"@gl-lighter-blue"}}>
-						<p className='text small-header light-bold'>{charityName} Projects</p>
-						<DevOnly>Assumption: Registered charity number is from charity.englandWalesCharityRegNum</DevOnly>
-						<p className='text mt-1'>Registered charity number: {charity.englandWalesCharityRegNum} </p>
-						<DevOnly>Assumption: Not sure where Company Number is</DevOnly>
-						<p className='text mt-1'>Company Number: ????????? </p>
+						<p className='text small-header light-bold'>{charityName}</p>						
+						{NGO.regs(charity).map(reg => <p className='text mt-1'>{reg.organisation} registration number: {reg.id}</p>)}
 					</div>
+					<DevOnly>Charity: <PortalLink item={charity} /></DevOnly>
 				</div>
 
 				{/* Col 2 on desktop, bot row on mobile*/}
@@ -647,7 +670,7 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity, open, setOpen}
 					<div className='brand-ngo-logos' style={{background:"white", padding:"1% 2.5% 1% 1.25%"}}>
 						<Row className="cert-logo-row" style={{height:"10vh", margin:0}}>
 							<div className="logo-container">
-								<img src={brand.branding.logo}/>
+								<Logo item={brand}/>
 							</div>
 							<div className='logo-text-top' style={{display:"flex", alignItems:"center"}}>
 								<p className='text'>{campaignName}</p>
@@ -671,7 +694,8 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity, open, setOpen}
 								<Row class="offset-content" style={{margin:0}}>
 									<Col style={{borderRight: "solid 1px lightgray"}}>
 										<p className='text light-bold'>{details.amountType}</p>
-										<h2 className='color-gl-red'>{details.detailsAmount}</h2>
+										<h2 className='color-gl-red'><Misc.Money amount={impactDebit.impact.amount} /></h2>
+										<DevOnly><PortalLink item={impactDebit} /></DevOnly>
 									</Col>
 									<Col style={{borderRight: "solid 1px lightgray", padding:0}}>
 										<div style={{borderBottom: "solid 1px lightgray", padding:"0 5% 10%"}}>
@@ -696,7 +720,7 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity, open, setOpen}
 							<p className='text offset-header'>{impactType.toUpperCase()} STATUS</p>
 							<div id="offset-status">
 								<Col class="offset-content" style={{margin:0}}>
-									<p className="light-bold">Tracking ID: XXXX</p>
+									<p className="light-bold">Tracking ID: {impactDebit.donationId || impactDebit.id}</p>
 									<Row style={{justifyContent:"space-around"}}>
 										<div id='status-line' />
 										{donationStatus[0]}

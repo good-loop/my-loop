@@ -53,28 +53,28 @@
 		}
 	}
 
-	// account container inside navbar
-	#impact-overview-accounts { 
-		position: relative;
-		display: flex;
-		margin-right: 2rem;
+	// // account container inside navbar
+	// #impact-overview-accounts { 
+	// 	position: relative;
+	// 	display: flex;
+	// 	margin-right: 2rem;
 
-		// account button inside navbar
-		#account-icon, #share-icon {
-			background-color: transparent;
-			border: none;
-			outline: none;
-			:focus {
-				border: none;
-				outline: none;
-			}
-			text-decoration: underline;
-		}
+	// 	// account button inside navbar
+	// 	#account-icon, #share-icon {
+	// 		background-color: transparent;
+	// 		border: none;
+	// 		outline: none;
+	// 		:focus {
+	// 			border: none;
+	// 			outline: none;
+	// 		}
+	// 		text-decoration: underline;
+	// 	}
 
-		#share-icon {
-			margin-right: 1rem;
-		}
-	}
+	// 	#share-icon {
+	// 		margin-right: 1rem;
+	// 	}
+	// }
 
 	#date-filters {
 		flex:auto;
@@ -85,7 +85,7 @@
 // hide "in-page" filters when on mobile
 #impactOverview-filters-and-account-thin {
 	@media @md-min {
-		display: none !important;
+		display: none !important; // ??why not leave the jsx out??
 		ul {
 			text-align: center;
 		}
@@ -257,10 +257,6 @@
 
 
 .impact-navbar-flow {
-	height: 30px;
-}
-
-.impact-navbar-flow-overlay {
 	height: 30px;
 	@media @width-mobile {
 		display: none;

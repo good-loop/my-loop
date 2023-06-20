@@ -28,6 +28,8 @@
 
 		@media @width-mobile {
 			flex-direction: column;
+			width: 100%;
+			align-self: center;
 
 			>* {
 				margin-top: 5%;
@@ -243,6 +245,9 @@
 			display: flex;
 			flex-direction: column;
 			min-width: 25%;
+			@media @width-mobile {
+				margin-top: 15%;
+			}
 
 			.white-circle {
 				height: 30vh;
@@ -252,6 +257,9 @@
 				overflow: hidden;
 				place-self: center;
 				margin: 10%;
+				@media @width-mobile {
+					margin: 2%;
+				}
 			}
 		}
 	}
@@ -271,13 +279,9 @@
 		.impact-section {
 			display: flex;
 			flex-direction: column;
-
-			// on mobile stop content from being flush with screen edges
 			@media @width-mobile {
-				width: 90%;
-				margin: auto;
+				width: 100vw !important;
 			}
-
 			.curve {
 				height: 100%;
 				position: absolute;
@@ -830,13 +834,27 @@
 	#stories-splash {
 		margin-top: 10vh; // move past header
 		height: 90vh;
-
+		
 		#splash-bg {
+			position:absolute;
+			height:100%;
+			width:100%;
+			overflow:hidden;
+			object-fit:cover;
+			z-index: 0;
+			@media (max-width: 820px) {
+				height: 60%;
+			}
+		}
+
+		#splash-curves {
 			width: 100%;
 			height:100%;
 			filter: opacity(0.8);
 			position:absolute;
-
+			@media (max-width: 820px){
+				display: none;
+			}
 			.padding-div, .splash-bgColor{
 				flex: 1;
 				height: 100%;
@@ -850,12 +868,6 @@
 			.splash-bgColor {
 				background-color: #5d838f;
 			}
-
-			@media @width-mobile {
-				.padding-div{
-					display: none;
-				}
-			}
 		}
 
 
@@ -864,7 +876,7 @@
 			display: none;
 		}
 
-		@media @width-mobile {
+		@media (max-width: 820px) {
 			.splash-curve-mobile {
 				display: block;
 				position: absolute;
@@ -911,9 +923,10 @@
 				width: 50%;
 			}
 
-			@media @width-mobile {
+			@media (max-width: 820px) {
 				padding: 0 0 10% 0;
 				height: 50%;
+				width: 100%;
 				background-color: rgb(66, 119, 135);
 				position: absolute;
 				bottom: 0;
@@ -935,6 +948,131 @@
 		height: 80vh;
 		position: relative;
 		overflow: hidden;
+
+		.ad-deco-cont {
+			position: absolute;
+			height: fit-content;
+			width: 35vw;
+			right: 10vw;
+			top: 20vh;
+			@media (max-width: 820px) {
+				width: 95vw;
+				right: unset;
+				top: unset;
+				position: relative;
+				margin: 20% 0;
+			}
+
+			.spotlight-ad {
+				position: relative;
+				padding: 1%;
+				border-radius: 10%;
+				background-color: black;
+				z-index: 10;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-around;
+				@media (max-width: 820px) {
+					height: unset !important	;
+					position: relative !important;
+					top: 0 !important;
+				}
+				
+				.container {
+					position: absolute;
+					display: flex;
+					flex-direction: column;
+					justify-content: space-evenly;
+					z-index: 5;
+					@media (max-width: 820px) {
+						height: 100%;
+					}
+				}
+
+				.phone-container {
+					position: relative;
+					z-index: 10;
+				}
+				@media (max-width: 820px) {
+					position: absolute;
+					left: 2.5%;
+					top: 40%;
+					padding: 0;
+					height: 30%;
+					padding-top: 1%;
+					width: 90%;
+				}
+			}
+			
+			.spotlight-decoration {
+				background: unset;
+				position: absolute;
+				top: 0;
+				padding: 1%;
+				width: 100%;
+				height: 100%;// let the preview ad take up more space
+				.container {
+					height: 30% !important;
+					@media (max-width:820px) {
+						height: 100% !important;
+					}
+					padding: 0;
+					.goodLoopContainer {
+						max-width: 80% !important;
+					}
+				}
+				.decoration {
+					position: absolute;
+				}
+				.leaves {
+					width: 35%;
+				}
+				.leaves-1 {
+					top: -40%;
+					left: -10%;
+				}
+				.leaves-2 {
+					bottom: -40%;
+					right: -10%;
+					rotate: 180deg;
+				}
+				.leaves-3 {
+					top: 40%;
+					right: -20%;
+					rotate: 70deg;
+					transform: scaleX(-1);
+				}
+				.sparkle{
+					width: 10%;
+					top: -25%;
+					left: 0%;
+				}
+	
+				@media (max-width:820px){
+					.leaves {
+						width: 35%;
+					}
+					.leaves-1 {
+						top: -35%;
+						left: -5%;
+					}
+					.leaves-2 {
+						right: 0;
+						bottom: -40%;
+					}
+					.leaves-3 {
+						top: 40%;
+						right: -5%;
+					}
+					.sparkle{
+						width: 15% !important;
+						top: -25%;
+					}
+					
+				}
+			}
+		}
+
 
 		#spotlight-bg {
 			position: absolute;
@@ -990,15 +1128,6 @@
 					text-align-last: center;
 					text-align: center;
 
-					// let the preview ad take up more space
-					.container {
-						height: 30% !important;
-						padding: 0;
-						.goodLoopContainer {
-							max-width: 80% !important;
-						}
-					}
-
 					#spotlight-name {
 						font-size: large;
 						font-weight: bold;
@@ -1009,19 +1138,6 @@
 
 			#spotlight-ads {
 				align-self: center;
-			}
-		}
-
-		// ads catalogue container
-		.container {
-			// ad doesn't resize correctly when navbar expands/shrinks, so it's taken out of flow
-			position: absolute;
-			top: 30%;
-			right: 0;
-			@media @width-mobile {
-				position: unset;
-				padding: 0;
-				height: 40%;
 			}
 		}
 

@@ -2,6 +2,7 @@
 import C from '../../../C';
 import DataStore from '../../../base/plumbing/DataStore';
 import { assert } from '../../../base/utils/assert';
+import { toTitleCase } from '../../../base/utils/miscutils';
 
 
 const roundFormat = new Intl.NumberFormat('en-GB', {maximumFractionDigits: 0});
@@ -69,6 +70,16 @@ export const dataColours = (series, maxColour = dfltMaxColour, minColour = dfltM
  * @returns {{filterType, filterId:string}}
  */
 export const getFilterTypeId = () => {
+	// Impact Hub version e.g. /brand/foo
+	const m = window.location.pathname.match(/(brand|agency|campaign|ngo)\/(\w+)/);
+	if (m) {
+		let filterType = toTitleCase(m[1]);
+		if (filterType==="Brand") filterType="Advertiser";
+		if (filterType==="Ngo") filterType="NGO";
+		return {filterType, filterId:m[2]};
+	}
+
+	// Green Dash url params version
 	let filterType = DataStore.getUrlValue('ft') as string;
 	if (filterType) {
 		assert(C.TYPES.has(filterType), filterType);
@@ -80,7 +91,7 @@ export const getFilterTypeId = () => {
 
 	if ( ! filterType) {
 		filterType = campaign? C.TYPES.Campaign : brandId? C.TYPES.Advertiser : agencyId? C.TYPES.Agency : tagId? C.TYPES.GreenTag : null;
-	}
+	}	
 	// Get the ID for the object we're filtering for
 	const filterId = {Campaign:campaign, Advertiser:brandId, Agency:agencyId, GreenTag:tagId}[filterType];
 	assert(filterId !== "all");

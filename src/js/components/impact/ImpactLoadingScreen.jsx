@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Circle from '../../base/components/Circle';
 import Misc from '../../base/components/Misc';
 
@@ -12,43 +12,46 @@ import { nonce } from '../../base/data/DataClass';
 
 
 /**
- * 
- * @param {baseObj} PromiseValue set of brands we're trying to load from the server, mostly just used to check if loading has finsihed or not
- * @param {forcedReload} boolean true if we're trying to force a reload, false if not. Reset to false within this function. 
- * @param {setForcedReload} function setter for above state, used within ImpactBrandFilter after changing filters
+ * @param {Object} p
+ * @param {PromiseValue} baseObj Set of brands we're loading for this page - "loaded" is when it resolves.
+ * @param {boolean} reload Toggles when another component wants to provoke a reload (eg filters changed) - when it changes, show loading screen
  * @returns 
  */
-const ImpactLoadingScreen = ({baseObj, forcedReload = false, setForcedReload}) => {
-	const [isPageReady, setIsPageReady] = useState(false);
-	const [isTimerOn, setIsTimerOn] = useState(false);
+const ImpactLoadingScreen = ({pvBaseObj, reload}) => {
+	const [hideTimer, setHideTimer] = useState(false);
 
-	if (forcedReload && isPageReady) setIsPageReady(false)
+	// Show the loading screen; hide after 2350ms (sum of animation durations in ImpactLoadingScreen.less)
+	const show = () => {
+		if (hideTimer) return;
+		const htTimeout = setTimeout(() => setHideTimer(false), 2350)
+		setHideTimer(htTimeout);
+	};
 
-	// if we've loaded (just after initial page start) or forcing a reload (on all filter changes)...
-	if (baseObj.resolved || forcedReload) {
-		if (!isTimerOn && !isPageReady){ //... and we're not either already inside this timeout or already finished it ...
-			setForcedReload(false);
-			setIsTimerOn(true);
+	// Every time a new pvBaseObj resolves, show loading screen.
+	useEffect(() => {
+		if (pvBaseObj?.resolved) show();
+	}, [pvBaseObj?.resolved]);
 
-			setTimeout(() => { // ... wait until animation will have finished and then hide the loading screen
-				setIsPageReady(true);
-				setIsTimerOn(false);
-			}, 2350) // timeout value taken from ImpactLoadingScreen.less
-		}
-	} else {
-		// we're now loading something new
-		if (isPageReady) setIsPageReady(false);
-	}
+	// Every time the "reload" value flips, show loading screen.
+	useEffect(() => {
+		show();
+	}, [reload]);
 
-	if (isPageReady) return <></>;
+	if (!hideTimer) return null;
 
-	return <div id='impact-loading-screen'>
-		{baseObj.resolved && baseObj.value.brand.branding && <Misc.Thumbnail item={baseObj.value.brand} className="loading-dashboard-logo"/>}
-		<Circle className = "earth-circle true-center">
-			<img src="/img/Impact/map-loading-screen.svg" className='earth-map true-center'/>
-			<img src="/img/Impact/waves.svg" className='waves'/>
+	// Pull some info in the focus objects out of pvBaseObj to customise the loading screen
+	const baseObj = pvBaseObj?.resolved && pvBaseObj.value;
+	const { brand, campaign } = (baseObj || {});
+
+	return <div id="impact-loading-screen">
+		{brand?.branding && <Misc.Thumbnail item={brand} className="loading-dashboard-logo" />}
+		<Circle className="earth-circle true-center">
+			<img src="/img/Impact/map-loading-screen.svg" className="earth-map true-center" />
+			<img src="/img/Impact/waves.svg" className="waves" />
 		</Circle>
-		{baseObj.resolved && <p className='loading-dashboard-name'>{(baseObj.value.campaign && baseObj.value.campaign.name) || baseObj.value.brand.name}</p>}
+		{baseObj && <p className="loading-dashboard-name">
+			{campaign?.name || brand?.name}
+		</p>}
 	</div>;
 };
 

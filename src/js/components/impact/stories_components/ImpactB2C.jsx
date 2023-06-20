@@ -23,8 +23,6 @@ import {ImpactB2B} from './ImpactB2B'
  * Most up to date design : https://miro.com/app/board/uXjVMaoHMrI=/?share_link_id=8808857536 - specifically the B2C parts
  */
 const CampaignImpact = () => {
-	console.log("???")
-
 	// setup page & check we have all the data we need
 	const path = DataStore.getValue(['location', 'path']);
 	const glVertiser = DataStore.getUrlValue('gl.vertiser');
@@ -39,7 +37,6 @@ const CampaignImpact = () => {
 	const LEGACY_IMPACT_IDS = []
 	const newStories = DataStore.getUrlValue('newStories');
 
-	console.log("???")
 	// return old impact hub
 	if(LEGACY_IMPACT_IDS.includes(itemId) ||  !newStories) return <CampaignPage />;
 	

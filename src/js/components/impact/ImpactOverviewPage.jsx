@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { animated } from 'react-spring';
 import TODO from '../../base/components/TODO';
 import DevOnly from '../../base/components/DevOnly';
-import { Button, Col, Container, Row } from 'reactstrap';
+import { Button, Col, Container, Modal, ModalBody, ModalHeader, Row } from 'reactstrap';
 import BG from '../../base/components/BG';
 import { GLCard, GLHorizontal, GLVertical, GLModalCard, GLModalBackdrop } from './GLCards';
 import NGO from '../../base/data/NGO';
@@ -10,6 +10,9 @@ import Money from '../../base/data/Money';
 import CharityLogo from '../CharityLogo';
 import AdvertsCatalogue from '../campaignpage/AdvertsCatalogue';
 import Misc from '../../base/components/Misc';
+import Circle from '../../base/components/Circle';
+import Center from '../../base/components/Center';
+
 import Advert from '../../base/data/Advert';
 import { getActiveTypes, getImpressionsByCampaignByCountry } from '../../base/data/ImpactPageData';
 import printer from '../../base/utils/printer'
@@ -18,8 +21,8 @@ import printer from '../../base/utils/printer'
  * DEBUG OBJECTS
  */
 
-import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIGN, TEST_CAMPAIGN_OBJ} from './TestValues';
-import { addAmountSuffixToNumber, space } from '../../base/utils/miscutils';
+// import {TEST_CHARITY, TEST_CHARITY_OBJ, TEST_BRAND, TEST_BRAND_OBJ, TEST_CAMPAIGN, TEST_CAMPAIGN_OBJ} from './TestValues';
+import { addAmountSuffixToNumber, isMobile, space, stopEvent } from '../../base/utils/miscutils';
 import { dataColours, getCountryFlag, getCountryName } from '../pages/greendash/dashUtils';
 import { isEmpty, keyBy, sumBy } from 'lodash';
 import Logo from '../../base/components/Logo';
@@ -64,10 +67,10 @@ function IOPFirstHalf({ wtdAds, tadgAds, brand, campaign, charities, impactDebit
 		<GLCard basis={campaign ? 80 : 60} className="hero-card">
 			<div className='white-circle'>
 				<div className='content'>
-					<img  className='logo' src={mainLogo} />
+					<img  className='logo' src={mainLogo} style={{width:'6em', height:'6em'}}/>
 					<DevOnly><PortalLink item={brand} /></DevOnly>
 					<br/>
-					<h1>{totalString}</h1>
+					<h1 style={{marginBottom:0}}>{totalString}</h1>
 					<h2>Donated</h2>
 					<h5>With</h5>
 					<img  className='w-50' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
@@ -84,7 +87,9 @@ function IOPFirstHalf({ wtdAds, tadgAds, brand, campaign, charities, impactDebit
 				<WTDCard ads={wtdAds} brand={brand} charities={charities} impactDebits={impactDebits} />
 				<TADGCard ads={tadgAds} brand={brand} charities={charities} impactDebits={impactDebits} />
 			</GLHorizontal>*/
-			<CharitiesCardSet charities={charities} impactDebits={impactDebits} />
+			// Can't have in set - or CommonDivision wrapper messes up. Can't think of fix so just shove contents here for now
+			<CharitiesCardSet charities={charities} impactDebits={impactDebits} glCardPassThru={true} />
+			
 		)}
 		<GLModalCard id="left-half" />
 	</GLVertical>;
@@ -99,20 +104,22 @@ function IOPFirstHalf({ wtdAds, tadgAds, brand, campaign, charities, impactDebit
  * 
  * @returns {JSX.Element}
  */
-function SubBrandsCard({ brand, subBrandsDisplayable }) {
-	if (!subBrandsDisplayable.length) return null;
+function SubBrandsCard({ brand, subBrandsDisplayable: subBrands }) {
+	if (!subBrands.length) return null;
 
 	const cardProps = {
 		className: 'center-number',
-		modalContent: <BrandList brand={brand} subBrands={subBrandsDisplayable} />,
-		modalTitle: `${subBrandsDisplayable.length} Brands`,
+		modalContent: <BrandList brand={brand} subBrands={subBrands} />,
+		modalTitle: `${subBrands.length} Brands`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
 	};
 
+	const noun = (subBrands.length === 1) ? 'Brand' : 'Brands';
+
 	return <GLCard {...cardProps}>
-		<h2>{subBrandsDisplayable.length}</h2>
-		<h3>Brands</h3>
+		<h2>{subBrands.length}</h2>
+		<h3>{noun}</h3>
 	</GLCard>;
 }
 
@@ -124,18 +131,20 @@ function SubBrandsCard({ brand, subBrandsDisplayable }) {
  * @param {object[]} p.charities List of charity objects associated with ads under the current focus
  * @returns {JSX.Element}
  */
-function CharitiesCard({ charities }) {
+function CharitiesCard({mainItem, charities }) {
 	const cardProps = {
 		className: 'center-number',
-		modalContent: <CharityList charities={charities}/>,
+		modalContent: <CharityList mainItem={mainItem} charities={charities}/>,
 		modalTitle: `${charities.length} Charities`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
 	};
 
+	const noun = (charities.length === 1) ? 'Charity' : 'Charities';
+
 	return <GLCard {...cardProps}>
 		<h2>{charities.length}</h2>
-		<h3>Charities</h3>
+		<h3>{noun}</h3>
 	</GLCard>;
 }
 
@@ -150,19 +159,22 @@ function CharitiesCard({ charities }) {
  * @param {object[]} p.impactDebits ImpactDebits associated with campaigns under the current focus
  * @returns {JSX.Element}
  */
-function SubCampaignsCard({ brand, subBrands, subCampaignsDisplayable, impactDebits}) {
-	if (!subCampaignsDisplayable.length) return null;
+function SubCampaignsCard({ brand, subBrands, subCampaignsDisplayable: campaigns, impactDebits}) {
+	if (!campaigns.length) return null;
 
 	const cardProps = {
 		basis: 10,
-		modalContent: <CampaignList brand={brand} subBrands={subBrands} campaigns={subCampaignsDisplayable} impactDebits={impactDebits}/>,
-		modalTitle: `${subCampaignsDisplayable.length} Campaigns`,
+		modalContent: <CampaignList brand={brand} subBrands={subBrands} campaigns={campaigns} impactDebits={impactDebits}/>,
+		modalTitle: `${campaigns.length} Campaigns`,
 		modalId: 'right-half',
 		modalClassName: 'list-modal'
 	};
 
+	const noun = (campaigns.length === 1) ? 'Campaign' : 'Campaigns';
+
 	return <GLCard {...cardProps}>
-		<h3>{subCampaignsDisplayable.length} CAMPAIGNS</h3>
+		<h2>{campaigns.length}</h2>
+		<h3>{noun}</h3>
 	</GLCard>;
 }
 
@@ -252,16 +264,14 @@ const IOPSecondHalf = (baseObjects) => {
 			<GLVertical>
 				<GLHorizontal>
 					<SubBrandsCard {...baseObjects} />
-					<CharitiesCard {...baseObjects} />
+					<CharitiesCard mainItem={mainItem} {...baseObjects} />
 				</GLHorizontal>
 				<SubCampaignsCard {...baseObjects} />
 				<CountryViewsGLCard basis={10} baseObjects={baseObjects} />
 				<OffsetsCard />
 			</GLVertical>
-			<div>
-				<ContentListCard {...baseObjects } />
-				<GLModalCard id="ads-for-good-modal" />
-			</div>
+			<ContentListCard {...baseObjects } />
+			<GLModalCard id="ads-for-good-modal" />
 		</GLHorizontal>}
 
 		{/* bottom right corner */}
@@ -341,74 +351,6 @@ const CampaignCharityDisplay = ({charities, impactDebits}) => {
 };
 
 
-function WTDCard({ads, brand, charities, impactDebits}) {
-	// Which ImpactDebits are attached to the same campaign as at least one ad in the list?
-	const [matchedDebits, setMatchedDebits] = useState();
-
-	useEffect(() => {
-		setMatchedDebits(impactDebits.filter(id => (
-			ads.find(ad => ad.campaign = id.campaign)
-		)));
-	}, [ads, charities, impactDebits]);
-
-	return <GLCard
-		className="boast wtd"
-		modalContent={<WatchToDonateModal ads={ads} brand={brand}/>}
-		modalTitle="Watch To Donate"
-		modalId="full-page"
-		modalClassName="no-padding watch-to-donate"
-	>
-		<h3>Watch to donate</h3>
-		<h2><TODO>£333,203</TODO></h2>
-		<h3 className="text-bold">Donated</h3>
-
-		<h5>including</h5>
-		<TODO>(charity load)</TODO>
-		<h4><TODO>15,000 Trees Planted</TODO></h4>
-		<CharityLogo charity={TEST_CHARITY_OBJ}/>
-		<h4><TODO>10,012 Children's Meals</TODO></h4>
-		<CharityLogo charity={TEST_CHARITY_OBJ}/>
-		<QuestionIcon />
-	</GLCard>;
-};
-
-
-function TADGCard({ads, brand, charities, impactDebits}) {
-	// Which ImpactDebits are attached to the same campaign as at least one ad in the list?
-	const [matchedDebits, setMatchedDebits] = useState();
-
-	useEffect(() => {
-		setMatchedDebits(impactDebits.filter(id => (
-			ads.find(ad => ad.campaign = id.campaign)
-		)));
-	}, [ads, charities, impactDebits]);
-	
-	return <GLCard
-		className="boast tadg"
-		modalContent={<ThisAdDoesGoodModal ads={ads} brand={brand}/>}
-		modalTitle="This Ad Does Good"
-		modalId="full-page"
-		modalClassName="no-padding this-ad-does-good"
-	>
-		<h3 className="color-greenmedia-darkcyan">This ad does good</h3>
-		<h2 className="color-greenmedia-darkcyan"><TODO>136,580</TODO></h2>
-		<h3 className="color-greenmedia-darkcyan text-bold">Trees planted</h3>
-
-		<img src={brand?.branding?.logo} className="logo" />
-		<TODO>(charity load)</TODO>
-		<CharityLogo charity={TEST_CHARITY_OBJ}/>
-		<QuestionIcon/>
-	</GLCard>;
-}
-
-
-const augCharityComparator = (a, b) => {
-	if (a.dntnTotal && b.dntnTotal) return Money.sub(b.dntnTotal, a.dntnTotal).value;
-	if (a.dntnTotal) return 1;
-	if (b.dntnTotal) return -1;
-	return 0;
-};
-
 /**
  * One, two or three charity cards (depending on donations found) to display below the hero splash
  * @param {object} p
@@ -416,60 +358,75 @@ const augCharityComparator = (a, b) => {
  * @param {ImpactDebit[]} p.impactDebits The ImpactDebit objects representing in-scope donations.
  */
 function CharitiesCardSet({charities, impactDebits}) {
-	const [charitiesAugmented, setCharitiesAugmented] = useState([]);
 
 	if (!charities?.length) {
 		return <DevOnly>No charities</DevOnly>;
 	};
 
-	useEffect(() => {
-		assert(charities);
-		// Attach donation total (sum of monetary ImpactDebits) to each charity & sort highest-first
-		const nextCharitiesAugmented = charities.map(charity => {
-			const cid = NGO.id(charity);
-			const dntnTotal = impactDebits
-				.filter(idObj => idObj?.impact?.charity === cid)
-				.reduce((acc, idObj) => {
-					const thisAmt = idObj?.impact?.amount;
-					if (!acc) return thisAmt;
-					if (!Money.isa(thisAmt)) return acc;
-					return Money.add(acc, thisAmt);
-				}, null);
-			return {...charity, dntnTotal};
-		}).sort(augCharityComparator);
-		setCharitiesAugmented(nextCharitiesAugmented);
-	}, [charities, impactDebits]);
-
-	if (!charitiesAugmented.length) {
+	if (!charities.length) {
 		return <Misc.Loading text="Fetching donation data..." />;
 	}
 
 	const topCharities = <GLHorizontal className="top-charities">
-		{charitiesAugmented.slice(0, 3).map(charity => 
-			<CharityCard id={getId(charity)} charity={charity} impactDebits={impactDebits} />
-		)}
+		{charities.slice(0, 3).map(charity => {
+			const cid = getId(charity);
+			return <CharityCard id={cid} key={cid} charity={charity} impactDebits={impactDebits} />;
+		})}
 	</GLHorizontal>;
 
-	if (charitiesAugmented.length <= 3) return topCharities;
+	if (charities.length <= 3) return topCharities;
 
-	return <GLVertical className="charity-cards">
+	return <GLVertical>
 		{topCharities}
-		<GLCard className="more-charities card-body flex-row" noPadding>
-			<span>Plus {charitiesAugmented.length-3} more:</span>
-			{charitiesAugmented.slice(3).map(
-				charity => <ImpactHubLink className="charity-logo" item={charity} logo title={NGO.displayName(charity)} />
-			)}
+		<GLCard className="more-charities card-body" noPadding>
+			<h5>Plus {charities.length-3} more</h5>
+			<div className='flex-row'>
+				{charities.slice(3).map(charity => {
+					const cid = getId(charity);
+					const cname = NGO.displayName(charity);
+					return <ImpactHubLink className="charity-link" key={cid} item={charity} logo title={cname} />;
+				})}
+			</div>
 		</GLCard>
 	</GLVertical>;
 };
 
 
 /**
- * #
+ * 
 */
 function CharityCard({charity}) {
+	let [show,setShow] = useState();
+	let headerStyle = charity.images? {
+		backgroundImage: "url("+charity.images+")",
+		backgroundPosition: 'center'
+	} : null;
+
 	return <GLCard className="charity-card">
-		<img alt={charity.name} src={charity.logo} className="charity-logo" />
+		<a href="dummy"  onClick={e => stopEvent(e) && setShow(true)}><img alt={charity.name} src={charity.logo} className="charity-logo"/></a>
+		{/* This modal is similar (though not quite as well styled) as the one in the charity list on-click.
+		Advantage: this uses vanilla bootstrap and is simpler.
+		To Do: refactor to use vanilla bootstrap modals elsewhere. */}
+		<Modal isOpen={show} toggle={() => setShow(!show)}
+			// size="lg"
+		>
+			<div style={headerStyle}>
+			<ModalHeader toggle={() => setShow(!show)}>
+				{/* argh: modal-title is not filling the width so not centering */}
+				<Center>
+					<Circle padding="1rem" center>
+						<CharityLogo charity={charity}/>
+					</Circle>
+				</Center>
+				{/* <Misc.Logo service={C.app.id} url={logo} transparent={false} className="pull-left mr-1" />
+				{' '}{title}
+				{subtitle && <p className='my-4 login-subtitle'>{subtitle}</p>} */}
+			</ModalHeader>
+			</div>
+			<ModalBody>
+				<CharityInfo charity={charity}/>
+			</ModalBody>
+		</Modal>
 		<h2 className="donation-total">
 			{Money.prettyStr(charity.dntnTotal)}
 		</h2>
@@ -709,11 +666,10 @@ const BrandList = ({brand, subBrands}) => {
 	</>;
 };
 
-const CharityList = ({charities}) => {
+const CharityList = ({mainItem, charities}) => {
 	return <>
 		<br/>
-		<h5>Charities supported via Good-Loop Ads</h5>
-		<p className='color-gl-red text-center'>{TEST_BRAND_OBJ.name} - All Campaigns</p>
+		<h5>Charities supported by <span className='color-gl-red'>{mainItem?.name}</span> via Good-Loop Ads</h5>		
 		<br/>
 		<Row>
 			{charities.map((charity, i) => <Col key={i} md={4} className="mt-3">
@@ -760,20 +716,17 @@ const CampaignList = ({campaigns, brand, subBrands, status}) => {
 	});
 
 	return <>
-		<br/>
 		<h5>Campaigns run via Good-Loop Ads</h5>
-		<p className='color-gl-red text-center'>{brand.name} - All Campaigns</p>
-		<br/>
+		<p className="color-gl-red text-center">{brand.name} - All Campaigns</p>
 		<GLVertical>
 			{campaigns.map(campaign => {
 				const myBrand = allBrands[campaign.vertiser];
-				const contents = <GLCard className={space("preview campaign mt-3", campaign._shouldHide && "bg-gl-light-red")} noMargin key={campaign.id} href={"/impact/view/campaign/" + campaign.id}>
-					<p className='w-75 text-left m-0'>
-						<b>{myBrand.name || campaign.vertiserName}</b>
-						<br/>
-						{campaign.name}
+				const contents = <GLCard className={space('preview campaign mt-3', campaign._shouldHide && 'bg-gl-light-red')} noMargin key={campaign.id} href={"/impact/view/campaign/" + campaign.id}>
+					<p className="w-75 text-left m-0">
+						<div className="brand-name">{myBrand.name || campaign.vertiserName}</div>
+						<div className="campaign-name">{campaign.name}</div>
 					</p>
-					{campaign._shouldHide && <p className='text-white'>Normally Hidden</p>}
+					{campaign._shouldHide && <p className="text-white">Normally Hidden</p>}
 					<Logo item={myBrand} />
 				</GLCard>;
 				return campaign._shouldHide ? <DevOnly>{contents}</DevOnly> : contents;
