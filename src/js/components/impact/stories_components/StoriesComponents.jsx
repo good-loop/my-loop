@@ -24,6 +24,8 @@ import Misc from '../../../MiscOverrides';
 import PortalLink from '../../../base/components/PortalLink';
 import Logo from '../../../base/components/Logo';
 import TODO from '../../../base/components/TODO';
+import { getId } from '../../../base/data/DataClass';
+import { getDataItem } from '../../../base/plumbing/Crud';
 /*
  * A thin card that contains just the supplied text,
  * @param {string} text  
@@ -47,11 +49,11 @@ export const CardSeperator = ({text}) => {
  */
 export const CampaignImpactOne = ({logo, charity, impactDebit}) => {
 	const text = {
-		cause : impactDebit.storiesContent.impactCause || false,
-		stats : impactDebit.storiesContent.impactStats || false,
-		fact : impactDebit.storiesContent.fact || false,
-		factName : impactDebit.storiesContent.factSourceName || false,
-		factUrl : impactDebit.storiesContent.factSourceUrl || false,
+		cause : impactDebit.storiesContent?.impactCause || false,
+		stats : impactDebit.storiesContent?.impactStats || false,
+		fact : impactDebit.storiesContent?.fact || false,
+		factName : impactDebit.storiesContent?.factSourceName || false,
+		factUrl : impactDebit.storiesContent?.factSourceUrl || false,
 	}
 	
 	let hideComponent = false;
@@ -346,11 +348,11 @@ export const HowItWorks = ({campaign, subCampaigns, charities, totalString}) => 
 }
 
 function findCharity(cid, charities) {
-	let charity = charities.find(c => c.id === cid);
+	let charity = charities.find(c => getId(c) === cid); // NB: this MUST use getId() to handle SoGive ids
 	if (charity) return charity;
 	if (cid==="Gold Standard") { // HACK where are the duff IDs coming from??
 		console.warn("bad ID "+cid);
-		charity = charities.find(c => c.id === "gold-standard");		
+		charity = charities.find(c => getId(c) === "gold-standard");		
 	}
 	return charity;
 }
@@ -384,8 +386,19 @@ export const DonationsCard = ({campaign, subCampaigns, brand, impactDebits, char
 	// if we have multiple donations to the same charity, avoid using the same image over and over again
 	let charityCounter = {}
 
-	const donations = impactDebits.map((debit, index) => {
+	return (
+		<div className='flex flex-column pt-5'>
+			<h2 className='text header-text' style={{margin: "0 5%"}}>{brand.name}'s Campaign{impactDebits.length > 1 ? "s" : ""} With Good-Loop</h2>
+			<p className='text dates'>{startDate} - {endDate}</p>
+			<div id="donation-details" className='flex-mobile-dir'>
+				{impactDebits.map(debit => <DonationCard key={debit.id} debit={debit} brand={brand} campaign={campaign} charityCounter={charityCounter} charities={charities} />)}
+			</div>
+		</div>
+	);
+}
 
+
+function DonationCard({debit, brand, campaign, charityCounter, charities}) {
 		const charId = debit.impact.charity;
 		if(Object.keys(charityCounter).includes(charId)) {
 			charityCounter[charId] += 1
@@ -395,7 +408,7 @@ export const DonationsCard = ({campaign, subCampaigns, brand, impactDebits, char
 		const charity = findCharity(charId, charities);
 		if (!charity) {
 			console.warn("(skip) No charity for "+charId, debit, charities);
-			return;
+			return <div>No Charity for {charId}</div>;
 		}
 		const imgList = NGO.images(charity) || [""] 
 
@@ -408,7 +421,7 @@ export const DonationsCard = ({campaign, subCampaigns, brand, impactDebits, char
 		let donationModal = <ImpactCertificate brand={brand} impactDebit={debit} charity={charity} campaign={campaign} />
 		return (
 		<button onClick={() => setUrlValue("open", debit.id)} style={{border: "none", backgroundColor:"none"}} className='impact-debit-container'>
-			<div className='impact-debit' key={index}>
+			<div className='impact-debit'>
 				{donationModal}
 				<img className="debit-header" src={img} alt={displayName + " header image"}/>
 				<div className='debit-content'>
@@ -418,20 +431,9 @@ export const DonationsCard = ({campaign, subCampaigns, brand, impactDebits, char
 				</div>
 			</div>
 		</button>
-		)
-	})
-
-	return (
-		<div className='flex flex-column pt-5'>
-			<h2 className='text header-text' style={{margin: "0 5%"}}>{brand.name}'s Campaign{impactDebits.length > 1 ? "s" : ""} With Good-Loop</h2>
-			<p className='text dates'>{startDate} - {endDate}</p>
-			<div id="donation-details" className='flex-mobile-dir'>
-				{donations}
-			</div>
-		</div>
-
-	)
+		);
 }
+
 
 /**
  * Puts a logo inside a white circle 
@@ -539,6 +541,9 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 
 	const impactType = true ? "Donation" : "Offset"
 	const impact = impactDebit.impact;
+
+	// Can we find a certificate?
+	const pvCredit = impactDebit.creditId? getDataItem({type:C.TYPES.ImpactCredit, id:impactDebit.creditId, status:KStatus.PUBLISHED}) : {};
 
 	// where do we find these?
 	// no matter the type, each certificate follows an identical structure
@@ -690,7 +695,7 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 						<div>
 							<p className='text offset-header'>{impactType.toUpperCase()} DETAILS</p>
 							<div id="offset-details">
-								<Row class="offset-content" style={{margin:0}}>
+								<Row className="offset-content" style={{margin:0}}>
 									<Col style={{borderRight: "solid 1px lightgray"}}>
 										<p className='text light-bold'><TODO>{details.amountType}</TODO></p>
 										<h2 className='color-gl-red'><Misc.Money amount={impactDebit.impact.amount} /></h2>
@@ -718,7 +723,7 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 						<div>
 							<p className='text offset-header'>{impactType.toUpperCase()} STATUS</p>
 							<div id="offset-status">
-								<Col class="offset-content" style={{margin:0}}>
+								<Col className="offset-content" style={{margin:0}}>
 									<p className="light-bold">Tracking ID: {impactDebit.donationId || impactDebit.id}</p>
 									<Row style={{justifyContent:"space-around"}}>
 										<div id='status-line' />
@@ -726,6 +731,7 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 										<TODO>{donationStatus[1]}</TODO>
 										<TODO>{donationStatus[2]}</TODO>
 										<TODO>{donationStatus[3]}</TODO>
+										{JSON.stringify(pvCredit.value)}
 									</Row>
 								</Col>
 							</div>
@@ -734,7 +740,7 @@ const ImpactCertificate= ({brand, impactDebit, campaign, charity}) => {
 						<div>
 							<p className='text offset-header'>LINKS</p>
 							<div id="offset-links">
-								<Row class="offset-content" style={{margin:0,placeContent:'space-around'}}>
+								<Row className="offset-content" style={{margin:0,placeContent:'space-around'}}>
 									<TODO>{donationLinks}</TODO>
 								</Row>
 							</div>

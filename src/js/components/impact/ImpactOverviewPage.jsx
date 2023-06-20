@@ -297,7 +297,7 @@ const SustainableGoalsCard = ({baseObjects}) => {
 		</div>
 		<div className='justify-content-center d-flex align-items-center flex-wrap'>
 			{unsdgs.map(goal => {
-				return <img src={"/img/unsdg/goal-" + (goal - 1) + ".jpg"} className='goal-logo'/>
+				return <img key={goal} src={"/img/unsdg/goal-" + (goal - 1) + ".jpg"} className='goal-logo'/>
 			})}
 		</div>
 	</GLCard>

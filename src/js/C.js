@@ -24,7 +24,7 @@ C.T4G = "Tabs for Good";
 C.DONATIONS_TOTAL = "£4,700,000";
 
 // NB: MonetaryAmount is deprecated - left here for old data
-C.TYPES = new Enum("Publisher NGO Advert Campaign Advertiser Agency ImpactDebit User Person Money MonetaryAmount BlogPost ScheduledContent GreenTag");
+C.TYPES = new Enum("Publisher NGO Advert Campaign Advertiser Agency ImpactDebit ImpactCredit User Person Money MonetaryAmount BlogPost ScheduledContent GreenTag");
 
 /**
  * What parameter to use in a url?
