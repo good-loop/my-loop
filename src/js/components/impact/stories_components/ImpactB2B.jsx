@@ -4,7 +4,7 @@ import { animated } from 'react-spring';
 import { Col, Container, Row } from 'reactstrap';
 import { GLModalBackdrop } from '../GLCards';
 import KStatus from '../../../base/data/KStatus';
-import {CardSeperator, CampaignImpact, CampaignImpactTwo, HowItWorks, DonationsCard, circleLogo, LearnMore, BrandLogoRows} from './StoriesComponents';
+import { CardSeparator, CampaignImpact, CampaignImpactTwo, HowItWorks, DonationsCard, circleLogo, LearnMore, BrandLogoRows } from './StoriesComponents';
 import { ErrorDisplay } from '../ImpactComponents';
 import ImpactLoadingScreen from '../ImpactLoadingScreen';
 import Money from '../../../base/data/Money';
@@ -15,6 +15,7 @@ import PortalLink from '../../../base/components/PortalLink';
 import ImpactDebit from '../../../base/data/ImpactDebit';
 import Misc from '../../../MiscOverrides';
 import { getId } from '../../../base/data/DataClass';
+import { space } from '../../../base/utils/miscutils';
 
 /** Sort function for ImpactDebit objects (currently no-op) */
 const impactDebitComparator = (a, b) => {
@@ -74,10 +75,10 @@ const ImpactB2BContent = ({pvBaseObjects, totalString, mainLogo, footer}) => {
 		<Col style={{paddingRight: 0, overflow: 'hidden'}}>
 			<SplashCard {...baseObjects} mainLogo={mainLogo} />
 			<BrandLogoRows {...baseObjects} mainLogo={mainLogo} row />
-			{firstImpact && <CardSeperator text={`Here's What ${brand.name}'s Campaign\nWith Good-Loop Has Achieved...`} />}
+			{firstImpact && <CardSeparator text={<>Here's what {brand.name}'s campaign<br/>with Good-Loop has achieved...</>} />}
 			{firstImpact && <CampaignSpotlight {...baseObjects} impact={firstImpact} charity={firstCharity} status={status} />}
 			<HowItWorks {...baseObjects} totalString={totalString} />
-			{firstImpact && <CardSeperator text={`Here's a Look At What You're Helping\nSupport With ${brand.name}`} />}
+			{firstImpact && <CardSeparator text={<>Here's a look at what you're helping<br/>support with {brand.name}</>} />}
 			{firstImpact && <CampaignImpact i={1} {...baseObjects} logo={mainLogo} charity={firstCharity} impactDebit={firstImpact} />}
 			{secondImpact && <CampaignImpactTwo {...baseObjects} logo={mainLogo} charity={secondCharity} impactDebit={secondImpact} />}
 			{firstImpact && <DonationsCard {...baseObjects} />}
@@ -126,7 +127,7 @@ const SplashCard = ({brand, mainLogo}) => {
 				<div id="splash-content">
 						{logoCircle}
 						<h1 className="color-gl-white">Turning our advertising into a force for good</h1>
-						<p className="text">Powered By Good-Loop</p>
+						<p className="text">Powered by Good-Loop</p>
 						<img className="adsForGood" src="/img/Impact/AdsForGood.svg"/>
 						<DevOnly><PortalLink item={brand} /></DevOnly>
 				</div>
@@ -136,6 +137,28 @@ const SplashCard = ({brand, mainLogo}) => {
 	)
 }
 
+
+/** Ad preview in phone frame with leaves etc around*/
+const AdWithDecoration = ({ads, className}) => {
+	return (
+	<div className={space('ad-deco-cont', className)}>
+		<div className="spotlight-ad">
+			<div className="phone-screen">
+				<AdvertsCatalogue ads={ads} unwrap noPreviews className="ads-catalogue" captions={false}/>
+			</div>
+			<img className="phone-container" src="/img/Impact/iphone-frame-16-9-padded-notch.svg" />
+		</div>
+		<div className="spotlight-decoration">
+			<img className="decoration leaves leaves-1" src="/img/Impact/tadg-leaves.png"/>
+			<img className="decoration leaves leaves-2" src="/img/Impact/tadg-leaves.png"/>
+			<img className="decoration leaves leaves-3" src="/img/Impact/tadg-leaves.png"/>
+			<img className="decoration sparkle" src="/img/Impact/sparkle.png"/>
+		</div>
+	</div>
+	)
+};
+
+
 /**
  * 
  * @param {Object} p
@@ -143,10 +166,10 @@ const SplashCard = ({brand, mainLogo}) => {
  * @returns 
  */
 const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) => {
-	if ( ! charity) console.warn("no charity?! ",campaign,impact);
-	if(!campaign) campaign = subCampaigns.find(c => 
-		(c.id == impact.campaign) || (c.jobNumber == impact.campaign) || (c.jobNumber == impact.jobNumber)
-	)
+	if (!charity) console.warn('no charity?!', campaign, impact);
+	if (!campaign) campaign = subCampaigns.find(c => (
+		(c.id === impact.campaign) || (c.jobNumber === impact.campaign) || (c.jobNumber == impact.jobNumber)
+	))
 	let pvAds = Advert.fetchForCampaigns({campaignIds:[campaign.id], status:status});
 	if(! pvAds.resolved) return <></>
 
@@ -160,55 +183,32 @@ const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) =>
 	// const startDay = startDate[2]
 	const ads = pvAds.value.hits
 
-	const isMobile = () => {
-		return window.innerWidth < 768;
-	}
+	const isMobile = window.innerWidth < 768;
 
-	const adWithDecoration = ({ads, classNames}) => {
-		return (
-		<div className={`ad-deco-cont ${classNames}`}>
-			<div className='spotlight-ad'>
-				<AdvertsCatalogue ads={[ads[0]]} noPreviews className='ads-catalogue' captions={false}/>
-				<img className='phone-container' src="/img/Impact/iphone-frame-16-9-padded-notch.svg" />
-			</div>
-			<div className='spotlight-decoration'>
-				<img className='decoration leaves leaves-1' src='/img/Impact/tadg-leaves.png'/>
-				<img className='decoration leaves leaves-2' src='/img/Impact/tadg-leaves.png'/>
-				<img className='decoration leaves leaves-3' src='/img/Impact/tadg-leaves.png'/>
-				<img className='decoration leaves sparkle' src='/img/Impact/sparkle.png'/>
-			</div>
-		</div>
-		)
-	}
+	const adsForPreview = isMobile ? ads.slice(0, 1) : ads;
 
 	return (
 		<div id="campaign-spotlight">
-			<img id="spotlight-bg" className="splash-curve" src="/img/Impact/earth-curve.png" />
-			<Row id="spotlight-content">
-				<Col id='campaign-info'>
-					<div className='campaign-grouped-content'>
-						<h1>£{Money.prettyString({amount: impact.impact.amountGBP})}</h1>
-						<h2>Raised</h2>
-						{charity && <h4 className='font'>Supporting {NGO.displayName(charity)}</h4>}
-						<DevOnly><PortalLink item={charity} /></DevOnly>
-						<ImpactInfo impact={impact.impact} />
-					</div>
-					{isMobile() && adWithDecoration({ads, classNames:'mobile'})}
-					<div className='campaign-grouped-content'>						
-						<p>
-							<Misc.RoughDate date={start} />
-							{start && (end || date) && " - "}
-							<Misc.RoughDate date={end || date} />
-						</p>
-					</div>
-					<DevOnly><PortalLink item={impact} /></DevOnly>
-				</Col>
-				<Col id="spotlight-ads">
-					{/* ads taken out of flow due to huge performance & styling issues when the navbar expands */}
-				</Col>
-			</Row>
-			{!isMobile() && adWithDecoration({ads})}
-
+			<div id="campaign-info">
+				<div className="campaign-grouped-content above">
+					<h1>£{Money.prettyString({amount: impact.impact.amountGBP})}</h1>
+					<h2>Raised</h2>
+					{charity && <h4 className="font">Supporting {NGO.displayName(charity)}</h4>}
+					<DevOnly><PortalLink item={charity} /></DevOnly>
+					<ImpactInfo impact={impact.impact} />
+				</div>
+				<div className="campaign-grouped-content below">
+					<p>
+						<Misc.RoughDate date={start} />
+						{start && (end || date) && " - "}
+						<Misc.RoughDate date={end || date} />
+					</p>
+				</div>
+				<DevOnly><PortalLink item={impact} /></DevOnly>
+			</div>
+			<div id="spotlight-ads">
+				<AdWithDecoration ads={adsForPreview} />
+			</div>
 		</div>
 	);
 };
@@ -235,7 +235,7 @@ const Footer = ({charities, mainLogo}) => {
 	return (
 		<div id="impact-footer-container">
 			<Col id='stories-footer' className='impact-footer'>
-				<p className='text'>Advertising That's A Force For Good</p>
+				<p className='text'>Advertising that's a force for good</p>
 				<div className='topRow'><img className='logo' src={mainLogo} style={{width: '15vh', height: '15vh'}}/></div>
 				<img className="adsForGood" src="/img/Impact/AdsForGood.svg" style={{width:'25vw'}}/>
 				<ul style={{listStyleType: "none"}}>

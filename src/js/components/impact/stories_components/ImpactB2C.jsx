@@ -7,15 +7,13 @@ import NGO from '../../../base/data/NGO';
 import Money from '../../../base/data/Money';
 import C from '../../../C';
 import KStatus from '../../../base/data/KStatus';
-import Campaign from '../../../base/data/Campaign';
 import Advertiser from '../../../base/data/Advertiser';
-import {addAmountSuffixToNumber} from '../../../base/utils/miscutils'
 import { fetchBaseObjects } from '../impactdata';
 import { ErrorDisplay } from '../ImpactComponents';
 import ImpactLoadingScreen from '../ImpactLoadingScreen';
 import { addScript } from '../../../base/utils/miscutils';
 import CampaignPage from '../../campaignpage/CampaignPage';
-import {CardSeperator, CampaignImpact, CampaignImpactTwo, HowItWorks, DonationsCard, circleLogo, LearnMore, CharityArms, BrandLogoRows} from './StoriesComponents';
+import { CardSeparator, CampaignImpact, CampaignImpactTwo, HowItWorks, DonationsCard, circleLogo, LearnMore, CharityArms, BrandLogoRows } from './StoriesComponents';
 import {ImpactB2B} from './ImpactB2B'
 
 /**
@@ -38,7 +36,7 @@ function CampaignImpactPage() {
 	const newStories = DataStore.getUrlValue('newStories');
 
 	// return old impact hub
-	if(LEGACY_IMPACT_IDS.includes(itemId) ||  !newStories) return <CampaignPage />;
+	if(LEGACY_IMPACT_IDS.includes(itemId) || !newStories) return <CampaignPage />;
 	
 	if(glVertiser) {
 		itemType = "brand"
@@ -70,7 +68,7 @@ function CampaignImpactPage() {
 		return result;
 	});
 
-	let firstImpact  = impactDebits[0] || null
+	let firstImpact = impactDebits[0] || null
 	let secondImpact = impactDebits[1] || null
 	const firstCharity = firstImpact && charities.find((char) => char.id === firstImpact.impact.charity) || {};
 	const secondaryCharity = secondImpact && charities.find((char) => char.id === secondImpact.impact.charity) || {};
@@ -85,11 +83,11 @@ function CampaignImpactPage() {
 			<BrandLogoRows mainLogo={mainLogo} charities={charities} />
 			<PoweredByGL />
 			<HowItWorks campaign={campaign} subCampaigns={subCampaigns} charities={charities} totalString={totalString}/>
-			<CardSeperator text={`Here's a Look At What You're Helping\nSupport With ${masterBrand.name}`} />
+			<CardSeparator text={<>Here's a look at what you're helping<br/>support With {masterBrand.name}</>} />
 			{firstImpact && <CampaignImpact i={1} campaign={campaign} brand={brand} logo={mainLogo} charity={firstCharity} impactDebit={firstImpact}/>}
 			{secondImpact && <CampaignImpactTwo campaign={campaign} brand={brand} logo={mainLogo} charity={secondaryCharity} impactDebit={secondImpact}/>}
 			<MakingADifference logo={mainLogo} charities={charities} />
-			<CardSeperator text={`Here's How You Can Keep Involved\nWith Good-Loop`} />
+			<CardSeparator text={<>Here's how you can keep involved<br/>with Good-Loop</>} />
 			<GetInvolvedCard />
 			<DonationsCard campaign={campaign} subCampaigns={subCampaigns} brand={brand} impactDebits={impactDebits} charities={charities} />
 			<LearnMore />
@@ -101,8 +99,8 @@ function CampaignImpactPage() {
  * Splash card for the impact B2C page
  * This isn't up to date with the design! The animations we got turned out to be a huge pain to work with so will come with the next version
  * @param {Advertiser} masterBrand 
- * @param {NGO} charity  what charity received the most 'impact' ? If a brand has > 1 charity donated to it then this won't be reflected here, how should we handle that - Lewis ?
- * @param {string} totalString  total amount donated in GBP
+ * @param {NGO} charity what charity received the most 'impact' ? If a brand has > 1 charity donated to it then this won't be reflected here, how should we handle that - Lewis ?
+ * @param {string} totalString total amount donated in GBP
  * @returns {React.ReactElement} 
  */
 const SplashCard = ({masterBrand, charity, totalString}) => {
@@ -131,12 +129,12 @@ function PoweredByGL() {
 		<div id='powered-by-gl'>
 			<img src="/img/homepage/bubble-spark.png" alt="spark-decoration" className='bubble-spark spark-1'/>
 			<img src="/img/homepage/bubble-spark.png" alt="spark-decoration" className='bubble-spark spark-2'/>
-			<p className='text' style={{margin: 0}}>Your Donation Was Powered by Good-Loop</p>
-			<img className='adsForGood align-self-center mb-3' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
-			<div className='row'>
+			<p className="text" style={{margin: 0}}>Your Donation Was Powered by Good-Loop</p>
+			<img className="adsForGood align-self-center mb-3" src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+			<div className="row">
 				<SocialMediaLinks />
 			</div>
-	  </div> 
+	</div> 
 );
 }
 
@@ -146,15 +144,15 @@ function PoweredByGL() {
  * @returns {React.ReactElement} 
  */
 function SocialMediaLinks({dark}) {
-	const instagramImg = dark ? "/img/getinvolved/instagram-round.png" : "/img/footer/insta_icon.200w.png"  
-	const facebookImg = dark ?  "/img/getinvolved/facebook-round.png" : "/img/footer/facebook_icon.200w.png"
-	const twitterImg = dark ?   "/img/getinvolved/twitter-round.png" : "/img/footer/twitter_icon.200w.png"  
+	const instagramImg = dark ? "/img/getinvolved/instagram-round.png" : "/img/footer/insta_icon.200w.png";
+	const facebookImg = dark ? "/img/getinvolved/facebook-round.png" : "/img/footer/facebook_icon.200w.png";
+	const twitterImg = dark ? "/img/getinvolved/twitter-round.png" : "/img/footer/twitter_icon.200w.png";
 
 	return (<>
-		<div className='flex-mobile-dir social-media-links'>
-			<C.A className="" href={C.app.instagramLink}> <img src={instagramImg} alt="instagram logo" className='link-logo' /></C.A>
-			<C.A className="ml-2" href={C.app.facebookLink}> <img src={facebookImg} alt="facebook logo" className='link-logo' /></C.A>
-			<C.A className="ml-2" href={C.app.twitterLink}> <img src={twitterImg} alt="twitter logo" className='link-logo' /></C.A>
+		<div className="flex-mobile-dir social-media-links">
+			<C.A className="" href={C.app.instagramLink}> <img src={instagramImg} alt="instagram logo" className="link-logo" /></C.A>
+			<C.A className="ml-2" href={C.app.facebookLink}> <img src={facebookImg} alt="facebook logo" className="link-logo" /></C.A>
+			<C.A className="ml-2" href={C.app.twitterLink}> <img src={twitterImg} alt="twitter logo" className="link-logo" /></C.A>
 		</div>
 	</>);
 }
@@ -179,8 +177,8 @@ const MakingADifference = ({logo, charities}) => {
 				</ul>
 			</div>
 			<div id="diff-powered-by-gl">
-				<p className='text'>Powered By Good-Loop</p>
-				<img className='align-self-center mb-3 img-adsforgood' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+				<p className="text">Powered by Good-Loop</p>
+				<img className="align-self-center mb-3 img-adsforgood" src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 			</div>
 		</div>
 	)

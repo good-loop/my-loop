@@ -23,18 +23,21 @@ import { getUrlValue, setUrlValue } from '../../../base/plumbing/DataStore';
 import { asDate, dateStr, printPeriod } from '../../../base/utils/date-utils';
 import { addAmountSuffixToNumber, space, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
-/*
+
+
+/**
  * A thin card that contains just the supplied text,
- * @param {string} text  
+ * @param {string} text
  * @returns {React.ReactElement} 
  */
-export const CardSeperator = ({ text }) => {
+export const CardSeparator = ({ text }) => {
 	return (
-		<div className={"cardSeperator"}>
-			<p className='text'>{text}</p>
+		<div className="cardSeparator">
+			<p className="text">{text}</p>
 		</div>
 	)
 }
+
 
 /**
  * For the 'most impactful' impact, we show a statistic & either a fact or another image
@@ -50,10 +53,10 @@ export const CampaignImpact = ({i, logo, charity, impactDebit }) => {
 	const text = Object.assign({}, impactDebit.storiesContent);
 
 	let hideComponent = false;
-	if ( ! charity) {
+	if (!charity) {
 		return null;
 	}
-	if ( ! text.cause) {
+	if (!text.cause) {
 
 	}
 	
@@ -151,10 +154,14 @@ export const CampaignImpact = ({i, logo, charity, impactDebit }) => {
 				(imgList[1] && ((text.fact) || (text.cause && text.stats && NGO.summaryDescription(charity)))) // || imgList[2]
 				 && <Row id="impact-one-botrow" className='impact-row flex-mobile-dir'>
 					{text.fact &&
-						<div className='p-2 bg-gl-darker-grey left camp-impact-card'>
-							<img src="/img/Impact/did-you-know.svg" className='quote-box' />
+						<div className='p-2 bg-gl-darker-grey left camp-impact-card dyk-card'>
+							<div className="quote-flex-bg">
+								<img src="/img/Impact/did-you-know.svg" className='quote-box top' />
+								<img src="/img/Impact/did-you-know.svg" className='quote-box middle' />
+								<img src="/img/Impact/did-you-know.svg" className='quote-box bottom' />
+							</div>
 							<div className='dyk-container'>
-								<p className='dyk'>Did You Know?</p>
+								<p className='dyk'>Did you know?</p>
 								<p className='fact'>{text.fact}</p>
 								{text.factUrl && <p className='source'>Source: <LinkOut href={text.factUrl}>{text.factName}</LinkOut></p>}
 							</div>
@@ -173,7 +180,7 @@ export const CampaignImpact = ({i, logo, charity, impactDebit }) => {
 						</div>
 					} */}
 					<div className='p-2 bg-gl-white right camp-impact-card camp-impact-img'>
-						<img src={imgList[imgList.length - 1]} alt="charity image 2" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+						<img src={imgList[Math.min(1, imgList.length - 1)]} alt="charity image 2" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
 					</div>
 
 				</Row>}
@@ -182,8 +189,6 @@ export const CampaignImpact = ({i, logo, charity, impactDebit }) => {
 		</div>
 	)
 }
-
-
 
 
 /**
@@ -281,7 +286,7 @@ export const CampaignImpactTwo = ({ logo, impactDebit, charity }) => {
 						<div className='cause-container'>
 							<p className='cause'>{text.cause}</p>
 							<h2 className='description'>{text.stats}</h2>
-							<p className='with-charity'>With {charity.name || charity.id}</p>
+							<p className='with-charity'>with {charity.name || charity.id}</p>
 						</div>
 					</div>
 					<div className='p-2 bg-gl-white left camp-impact-card camp-impact-img'>
@@ -312,7 +317,7 @@ export const CampaignImpactTwo = ({ logo, impactDebit, charity }) => {
 /**
  * Card describing to new users how watching ads leads to donations
  * @param {Campaign} campaign 
- * @param {Array<NGO>} charities
+ * @param {NGO[]} charities
  * @param {string} totalString how much have we donated in total
  */
 export const HowItWorks = ({ campaign, subCampaigns, charities, totalString }) => {
@@ -324,7 +329,7 @@ export const HowItWorks = ({ campaign, subCampaigns, charities, totalString }) =
 	const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][startDate[1] - 1]
 	// get viewcount and format it into 2 sig figs & unit amount, eg 1,413,512 -> 1.4M
 
-	if ( ! yessy(subCampaigns)) subCampaigns = [campaign]
+	if (!yessy(subCampaigns)) subCampaigns = [campaign]
 
 	const views = subCampaigns.reduce((sum, curCampaign) => {
 		let count = Campaign.viewcount({ campaign: curCampaign, status: KStatus.PUBLISHED })
@@ -333,11 +338,13 @@ export const HowItWorks = ({ campaign, subCampaigns, charities, totalString }) =
 	}, 0);
 	const viewcount = addAmountSuffixToNumber(views.toPrecision(3));
 
+	const advertPlural = subCampaigns ? 'adverts' : 'advert';
+
 	return (
 		<div id="how-it-works" className='d-flex flex-column'>
 			<div>
 				<h2 className='color-gl-white'>How It Works</h2>
-				<p className='text white'>With Good-Loop</p>
+				<p className='text white'>with Good-Loop</p>
 			</div>
 			<div className="hiw-curve flex-mobile-dir">
 
@@ -347,7 +354,7 @@ export const HowItWorks = ({ campaign, subCampaigns, charities, totalString }) =
 						<img src="/img/Impact/this-ad-plants-trees.png" className='fill-img' />
 					</div>
 					<p>{month}' {year} - Campaign{subCampaigns ? "s" : ""} Launch{subCampaigns ? "" : "es"}</p>
-					<h3 className='color-gl-white'>Every View Is<br />A Donation</h3> {/* TODO: figure out something closer to £N / VIEW to use here*/}
+					<h3 className='color-gl-white'>Every view is<br />a donation</h3> {/* TODO: figure out something closer to £N / VIEW to use here*/}
 				</div>
 
 				<div className='hiw-col'>
@@ -356,8 +363,8 @@ export const HowItWorks = ({ campaign, subCampaigns, charities, totalString }) =
 						<img src="/img/Impact/OurStory_PeopleCrossingRoad.jpg" className='fill-img' />
 					</div>
 					<p>Today</p>
-					<h3 className='color-gl-white'>{viewcount} People</h3>
-					<p className='text white'>Viewed The Advert{subCampaigns ? "s" : ""} {viewcount<1000 && "So Far"}</p>
+					<h3 className='color-gl-white'>{viewcount}+ people</h3>
+					<p className='text white'>viewed the {advertPlural} so far</p>
 				</div>
 
 				<div className='hiw-col'>
@@ -366,13 +373,14 @@ export const HowItWorks = ({ campaign, subCampaigns, charities, totalString }) =
 						<img src={NGO.images(charities[0])[0]} className='fill-img' />
 					</div>
 					<p>After the Campagin</p>
-					<h3 className='color-gl-white'>{totalString} In Donations</h3>
-					<p className='text white'>Funded By The Advert{subCampaigns ? "s" : ""}</p>
+					<h3 className='color-gl-white'>{totalString}+ in donations</h3>
+					<p className='text white'>funded by the {advertPlural}</p>
 				</div>
 			</div>
 		</div>
 	)
 }
+
 
 function findCharity(cid, charities) {
 	let charity = charities.find(c => getId(c) === cid); // NB: this MUST use getId() to handle SoGive ids
@@ -383,6 +391,7 @@ function findCharity(cid, charities) {
 	}
 	return charity;
 }
+
 
 /**
  * For each impact debit, show its impact

@@ -384,19 +384,32 @@
 					background-image: none;
 				}
 
-				// quote box around dyk fact
-				img {
-					// img otherwise blocks links
-					pointer-events: none;
-
+				// quote box around dyk fact: top/middle/bottom <img> elements stretch it as needed without deforming
+				.quote-flex-bg {
+					pointer-events: none; // don't block clicks
 					position: absolute;
-					left: 0;
-					max-height: 100%;
-					width: 100%;
-					// vertically center
+					z-index: 0;
 					top: 0;
+					left: 0;
 					bottom: 0;
-					margin: auto;
+					right: 0;
+					.quote-box {
+						width: 100%;
+						object-fit: cover;
+						display: block;
+						&.top {
+							height: 45%;
+							object-position: center top;
+						}
+						&.middle {
+							height: 10%;
+							object-position: center;
+						}
+						&.bottom {
+							height: 45%;
+							object-position: center bottom;
+						}
+					}
 				}
 
 				.dyk-container {
@@ -666,7 +679,7 @@
 				// input element
 				.hs-input {
 					border: 1px solid gray;
-					font-size: 1.3rem; // couldn't find an already defined large normal text 
+					font-size: 1.3rem; // couldn't find an already defined large normal text
 					border-radius: 5px;
 					padding: 10px 5px 5px 5px; // shift text slightly down to better center it in the input
 					width: 100%;
@@ -812,10 +825,6 @@
 		justify-content: space-evenly;
 		align-items: center;
 
-		@media @width-mobile {
-			width: ;
-		}
-
 		.link-row {
 			justify-content: space-evenly;
 		}
@@ -880,7 +889,7 @@
 			height: 100%;
 			filter: opacity(0.8);
 			position: absolute;
-			@media (max-width: 820px){
+			@media (max-width: 820px) {
 				display: none;
 			}
 			.padding-div, .splash-bgColor {
@@ -976,204 +985,148 @@
 	}
 
 	#campaign-spotlight {
-		height: 80vh;
-		position: relative;
+		// Arrange text and ad-preview side-by-side on wide screens, stack up on narrower ones
+		min-height: 80vh;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+		align-items: center;
+		flex-wrap: wrap;
 		overflow: hidden;
 
-		.ad-deco-cont {
-			position: absolute;
-			height: fit-content;
-			width: 35vw;
-			right: 10vw;
-			top: 20vh;
-			@media (max-width: 820px) {
-				width: 95vw;
-				right: unset;
-				top: unset;
-				position: relative;
-				margin: 20% 0;
+		background-image: url("/img/Impact/earth-curve.png");
+		background-size: cover;
+		background-position: center;
+
+		#campaign-info {
+			text-align: left;
+
+			h1 {
+				// total raised
+				font-size: 400%;
 			}
+
+			h2 {
+				// 'Raised....'
+				text-align: left; // override default .page-impact .h2 alignment
+				text-transform: unset;
+				font-size: 200%;
+			}
+			// base paragraph text somewhat small for period line
+			.campaign-grouped-content.below {
+				font-size: 125%;
+			}
+		}
+
+		.ad-deco-cont {
+			position: relative;
+			height: fit-content;
+			width: 100em; // Define width as always being 100em & size children in em to maintain proportions...
+			font-size: 0.45vw; // ...and set font size to change overall size
+
 
 			.spotlight-ad {
 				position: relative;
-				padding: 1%;
-				border-radius: 10%;
-				background-color: black;
 				z-index: 10;
-				display: flex;
-				flex-direction: column;
-				justify-content: space-around;
-				@media (max-width: 820px) {
-					height: unset !important	;
-					position: relative !important;
-					top: 0 !important;
-				}
-				
-				.container {
+
+				// Black background for screen & sizer for ad content
+				.phone-screen {
+					pointer-events: none; // sorted in front of adunit, shouldn't catch clicks/taps
 					position: absolute;
-					display: flex;
-					flex-direction: column;
-					justify-content: space-evenly;
-					z-index: 5;
-					height: 100%;
+					background: black;
+					top: 3.5em;
+					bottom: 3.5em;
+					left: 3.3em;
+					right: 3.3em;
+					padding: 1em; // push content in to keep clear notch and round corners
 				}
 
+				// Override carousel / GoodLoopUnit defaults (TODO ads carousel should not do this)
+				.main-ad {
+					max-width: unset !important;
+					width: 100%;
+					height: 100%;
+				}
+				.ad-unit-outer {
+					height: 100%;
+					margin: auto; // centre block element horizontally
+					aspect-ratio: calc(16/9);
+				}
+				.goodLoopContainer {
+					max-width: unset !important;
+					height: 100% !important;
+				}
+				// /Override carousel defaults
+				
 				.phone-container {
 					position: relative;
 					z-index: 10;
-					pointer-events: none;
-				}
-				@media (max-width: 820px) {
-					position: absolute;
-					left: 2.5%;
-					top: 40%;
-					padding: 0;
-					height: 30%;
-					padding-top: 1%;
-					width: 90%;
 				}
 			}
-			
+
 			.spotlight-decoration {
-				background: unset;
 				position: absolute;
 				top: 0;
-				padding: 1%;
-				width: 100%;
-				height: 100%;// let the preview ad take up more space
-				.container {
-					height: 30% !important;
-					@media (max-width:820px) {
-						height: 100% !important;
-					}
-					padding: 0;
-					.goodLoopContainer {
-						max-width: 80% !important;
-					}
-				}
+				bottom: 0;
+				left: 0;
+				right: 0;
 				.decoration {
 					position: absolute;
 				}
 				.leaves {
-					width: 35%;
+					width: 38em;
 				}
 				.leaves-1 {
-					top: -40%;
-					left: -10%;
+					top: -22em;
+					left: -9em;
 				}
 				.leaves-2 {
-					bottom: -40%;
-					right: -10%;
+					bottom: -22em;
+					right: -9em;
 					rotate: 180deg;
 				}
 				.leaves-3 {
-					top: 40%;
-					right: -20%;
+					top: 22em;
+					right: -18em;
 					rotate: 70deg;
 					transform: scaleX(-1);
 				}
-				.sparkle{
-					width: 10%;
-					top: -25%;
-					left: 0%;
-				}
-	
-				@media (max-width:820px){
-					.leaves {
-						width: 35%;
-					}
-					.leaves-1 {
-						top: -35%;
-						left: -5%;
-					}
-					.leaves-2 {
-						right: 0;
-						bottom: -40%;
-					}
-					.leaves-3 {
-						top: 40%;
-						right: -5%;
-					}
-					.sparkle{
-						width: 15% !important;
-						top: -25%;
-					}
-					
+				.sparkle {
+					width: 12em;
+					top: -15em;
+					left: 0;
 				}
 			}
 		}
 
-
-		#spotlight-bg {
-			position: absolute;
-			right: 0;
-			top: 0;
-			height: 100vh;
-		}
-
-		#spotlight-content {
-			height: 100%;
-			z-index: 1;
-			@media @width-mobile { // undoes Row default styling
-				display: block !important;
-			}
-
+		// Narrower than e.g. small laptop screens = stack desc + ad preview vertically
+		@media (max-width: 1080px) {
+			display: block; // vertical arrangement = no flex needed
+			min-height: unset; // natural height is fine in this layout
+			// centre text
 			#campaign-info {
-				flex-basis: 25%;
-				place-self: center;
-				text-align: left;
-				text-align-last: left;
-				padding-left: 10%;
-
-				h1 {
-					// total raised
-					font-size: 400%;
-					letter-spacing: 1px;
-				}
-
+				text-align: center;
+				margin-top: 1em;
 				h2 {
-					// 'Raised....'
-					text-transform: unset;
-					font-size: 200%;
-					letter-spacing: 1px;
-				}
-
-				h4 {
-					// Supporting 'Charity here'
-					margin: 5% 0;
-				}
-
-				p {
-					// Campaign name + dates
-					margin-bottom: 0 !important;
-				}
-
-				@media @width-mobile {
-					display: flex;
-					flex-direction: column;
-					height: 100%;
-					place-content: space-between;
-					padding: 0 !important;
-					align-items: center;
-					text-align-last: center;
 					text-align: center;
-
-					#spotlight-name {
-						font-size: large;
-						font-weight: bold;
-					}
-
 				}
 			}
-
-			#spotlight-ads {
-				align-self: center;
+			.ad-deco-cont {
+				font-size: 0.7vw; // = 70vw overall width
+				margin: auto; // self centre
+				margin-bottom: 12vw; // breathing room for decorations
 			}
-		}
-
-		@media @width-mobile {
-			background: white;
-			padding: 10%;
+			// push the period line below the ad preview
+			.campaign-grouped-content.below {
+				position: relative;
+				top: 45vw;
+				margin-bottom: -1em;
+			}
+			// move the top-left leaf away from the text above
+			.leaves-1 {
+				transform: rotate(-30deg);
+				left: -12em;
+			}
 		}
 	}
 
