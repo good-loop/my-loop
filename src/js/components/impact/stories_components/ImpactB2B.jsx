@@ -116,23 +116,21 @@ const SplashCard = ({brand, mainLogo}) => {
 	const logoCircle = circleLogo({logo: mainLogo});
 
 	return (
-		<div id='stories-splash'>
-			<Row style={{height:"100%", position:"relative"}}>
+		<div id="stories-splash">
 				<img id="splash-bg" src={brand.branding?.backgroundImage || "/img/Impact/waves.svg"}/>
-				<Row id="splash-curves" style={{height:"100%", position:"absolute"}}>
-					<div className='padding-div'/>
+				<div id="splash-curves" className="flex-row">
+					<div className="padding-div"/>
 					<img className="splash-curve" src="/img/Impact/splash-curve.svg" />
 					<div className="splash-bgColor" />
-				</Row>
-				<Col id='splash-content'>
+				</div>
+				<div id="splash-content">
 						{logoCircle}
-						<h1 className='color-gl-white' >Turning our advertising into a force for good</h1>
+						<h1 className="color-gl-white">Turning our advertising into a force for good</h1>
 						<p className="text">Powered By Good-Loop</p>
 						<img className="adsForGood" src="/img/Impact/AdsForGood.svg"/>
-				</Col>
+				</div>
 				<img src="/img/Impact/curve-desat-blue.svg" className='splash-curve-mobile' id="splash-curve-mobile-1"/>
 				<img src="/img/Impact/curve-desat-blue.svg" className='splash-curve-mobile' id="splash-curve-mobile-2"/>
-			</Row>
 		</div>
 	)
 }
