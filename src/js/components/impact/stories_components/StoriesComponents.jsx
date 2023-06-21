@@ -85,7 +85,7 @@ export const CampaignImpactOne = ({ logo, charity, impactDebit }) => {
 			<ModalBody className="d-flex modal-body">
 				<Col>
 					<h2>Props for Impact Stories</h2>
-					<h4>Impact #1:<br />	Name: {impactDebit.name || "MISSING"}<br />	ID: {impactDebit.id || "MISSING"}</h4>
+					<h4>Impact #1: <PortalLink item={impactDebit} /></h4>
 					<br />
 					<h4>Charity:<br />	Name: {charity.name || "MISSING"}<br />	ID: {charity.id || "MISSING"}, </h4>
 					<PropControl type="number" prop="priority" path={path} label="Priority" className="font-weight-bold" />
@@ -158,125 +158,6 @@ export const CampaignImpactOne = ({ logo, charity, impactDebit }) => {
 						<img src={imgList[Math.min(1, imgList.length - 1)]} alt="charity image 2" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
 					</div>
 
-				</Row>
-			</div>
-
-		</div>
-	)
-}
-
-/**
- * For the second 'second most impactful' impact, we show a statistic & a testimonial
- * If we don't have a testimonial, default to the charities description
- * If the statistic or both the testimonial & description are missing, return an empty element
- * @param {string} logo url for the logo of the charity 
- * @param {NGO} charity what charity will this impactDebit donate to?
- * @param {impactDebit} impactDebit the 'second most impactful' impact the campaign has done
- * @returns {React.ReactElement} 
- */
-export const CampaignImpactTwo = ({ logo, impactDebit, charity }) => {
-	// this card needs to make use of a second impact, if it doesn't exist we can't use it!
-
-	const text = {
-		cause: impactDebit.storiesContent?.impactCause || false,
-		stats: impactDebit.storiesContent?.impactStats || false,
-
-		testimonialQuote: impactDebit.storiesContent?.testimonialQuote || "",
-		testimonialHeader: impactDebit.storiesContent?.testimonialHeader || "",
-		testimonialJob: impactDebit.storiesContent?.testimonialJob || "",
-		testimonialPerson: impactDebit.storiesContent?.testimonialPerson || ""
-	}
-
-	console.log("huh?", impactDebit.storiesContent, text)
-	let hideComponent = false;
-
-
-	// can't show this without a stat
-	if (!text.cause || !text.stats) hideComponent = true;
-
-	// if we're missing the quote, try to use the charities description instead
-	// if that's missing, we can't show the card
-	if (!text.testimonialQuote) text.testimonialQuote = charity.description;
-	if (!text.testimonialQuote) hideComponent = true;
-
-	// if we can't show the images, we can't show the card
-	const imgList = NGO.images(charity);
-	if (imgList.length < 2) hideComponent = true;
-
-	if (hideComponent && !isDev()) return <></>
-	if (hideComponent) {
-		Object.keys(text).forEach((key) => {
-			if (!text[key]) text[key] = "<MISSING DATA>"
-		})
-	}
-	// if in dev mode, let users edit page content
-	const [open, setOpen] = useState(false);
-	const path = ['draft', 'ImpactDebit', impactDebit.id];
-	const storiesPath = ['draft', 'ImpactDebit', impactDebit.id, "storiesContent"];
-	let devModal = (
-		<Modal isOpen={open} id="impact-cert-modal" className='impact-cert' toggle={() => setOpen(!open)} size="xl">
-			<ModalBody className="d-flex modal-body">
-				<Col>
-					<h2>Props for Impact Stories</h2>
-					<h4>Impact #2:<br />	Name: {impactDebit.name || "MISSING"}<br />	ID: {impactDebit.id || "MISSING"}</h4>
-					<br />
-					<h4>Charity:<br />	Name: {charity.name || "MISSING"}<br />	ID: {charity.id || "MISSING"}, </h4>
-					<PropControl type="number" prop="priority" path={path} label="Priority" className="font-weight-bold" />
-					<PropControl type="number" prop="amountGBP" path={path} label="Amount In GBP" readOnly />
-					<div className="mb-3 p-3 bg-light card">
-						<h3>Impact Cause</h3>
-						<PropControl type="textarea" label="Impact Cause" prop="impactCause" path={storiesPath} help="In format 'Supporting {Impact cause}' For example, 'Supporting Food Redistribution'" />
-						<PropControl type="textarea" label="Impact Stat" prop="impactStats" path={storiesPath} help="What good did the brand do to support the above cause? For example, 'Providing meals for children in need'" />
-					</div>
-					<div className='mb-3 p-3 bg-light card'>
-						<h3>Testimonial</h3>
-						<p>Defaults to description of charity if testimonial itself is left empty</p>
-						<PropControl type="textarea" label="Testimonial Title" prop="testimonialHeader" path={storiesPath} help="Header of testimonial card" />
-						<PropControl type="textarea" label="Testimonial" prop="testimonialQuote" path={storiesPath} />
-						<PropControl type="textarea" label="Testimonial Source Role" prop="testimonialJob" path={storiesPath} help="Role of whoever said the testimonial" />
-						<PropControl type="textarea" label="Testimonial Source" prop="testimonialPerson" path={storiesPath} help="Name of whoever said the testimonial" />
-					</div>
-				</Col>
-				<SavePublishDeleteEtc type={C.TYPES.ImpactDebit} id={impactDebit.id} sendDiff />
-			</ModalBody>
-		</Modal>
-	)
-
-	return (
-		<div id="campaign-impact-two" className='campaign-impact'>
-			<div style={{ width: "100%", height: "fit-content", padding: "2% 0 0" }}>{circleLogo({ logo: charity.logo })}</div>
-			<DevOnly>
-				<button style={{ height: "5vh" }} onClick={() => setOpen(true)}>Edit Content</button>
-				{devModal}
-			</DevOnly>
-			<div className='impact-section'>
-				<Row className='impact-row flex-mobile-dir' id="row-1">
-					<div className='p-2 bg-gl-red right camp-impact-card' style={{ position: "relative" }}>
-						<img src="/img/Impact/redcurve.svg" alt="redcurve background" className="curve dark-curve" />
-						<img src="/img/Impact/redcurve.svg" alt="redcurve background" className="curve normal-curve" />
-						<div className='cause-container'>
-							<p className='cause'>{text.cause}</p>
-							<h2 className='description'>{text.stats}</h2>
-							<p className='with-charity'>With {charity.name || charity.id}</p>
-						</div>
-					</div>
-					<div className='p-2 bg-gl-white left camp-impact-card camp-impact-img'>
-						<img src={imgList[0]} alt="charity image 1" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-					</div>
-				</Row>
-				<Row className='impact-row flex-mobile-dir' id="row-2">
-					<div className='p-2 bg-gl-white left camp-impact-card camp-impact-img'>
-						<img src={imgList[Math.min(1, imgList.length - 1)]} alt="charity image 1" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-					</div>
-					<div className='p-2 bg-gl-light-pink right camp-impact-card camp-impact-img'>
-						<img src='/img/Impact/heart.png' className='heart-bg' />
-						<h2 className='color-gl-light-red mb-4'>{text.testimonialHeader}</h2>
-						<p className='project-desc text'>{text.testimonialQuote}</p>
-						<div className='testimonial-source'>
-							<p>{text.testimonialPerson}</p>
-							<p>{text.testimonialJob}</p>
-						</div>
-					</div>
 				</Row>
 			</div>
 

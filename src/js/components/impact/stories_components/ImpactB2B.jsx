@@ -128,6 +128,7 @@ const SplashCard = ({brand, mainLogo}) => {
 						<h1 className="color-gl-white">Turning our advertising into a force for good</h1>
 						<p className="text">Powered By Good-Loop</p>
 						<img className="adsForGood" src="/img/Impact/AdsForGood.svg"/>
+						<DevOnly><PortalLink item={brand} /></DevOnly>
 				</div>
 				<img src="/img/Impact/curve-desat-blue.svg" className='splash-curve-mobile' id="splash-curve-mobile-1"/>
 				<img src="/img/Impact/curve-desat-blue.svg" className='splash-curve-mobile' id="splash-curve-mobile-2"/>
@@ -240,6 +241,7 @@ const Footer = ({charities, mainLogo}) => {
 				<ul style={{listStyleType: "none"}}>
 					{CharityLogos}
 				</ul>
+				{/* TODO include legal small print here too */}
 			</Col>
 			<img src="/img/Impact/images-combined.png" id="images-combined"/>
 		</div>
