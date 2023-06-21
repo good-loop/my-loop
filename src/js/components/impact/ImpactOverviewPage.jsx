@@ -602,14 +602,14 @@ const ContentListCard = (baseObjects) => {
 				<img src={`/img/mydata/circle${active ? '' : '-no'}-tick.svg`} className="logo" />
 			</Col>
 			<Col xs={9} className="d-flex flex-column align-items-start justify-content-center">
-				<h5 className="text-left">{name}</h5>
+				<h5 className="text-left" style={{fontSize:"1.5rem"}}>{name}</h5>
 			</Col>
 		</Row>;
 	});
 
 	return <GLCard>
 		<div className="d-flex flex-column align-items-stretch justify-content-between h-100">
-			<img className="w-75 align-self-center mb-3" src="/img/gl-logo/AdsForGood/AdsForGood.svg" />
+			<img className="w-75 align-self-center my-3" src="/img/gl-logo/AdsForGood/AdsForGood.svg" />
 			{activeTypes}
 		</div>
 	</GLCard>;
