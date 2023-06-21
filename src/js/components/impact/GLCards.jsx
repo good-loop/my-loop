@@ -1,4 +1,4 @@
-import React, { Children, useEffect, useMemo } from 'react';
+import React, { Children, useEffect, useState, useMemo } from 'react';
 import _ from 'lodash';
 import {Row, Col, Container, Card, CardHeader, CardBody} from 'reactstrap';
 import { space, isPortraitMobile } from '../../base/utils/miscutils';
@@ -107,10 +107,13 @@ export const GLCard = ({noPadding, noMargin, className, style, background,
 			modalToggle(modalId);
 		}
 	}
+
+	const [n, setNonce] = useState(nonce()); // prevent changing every re-render
+
 	// HACK we cant set style or backgroun on a reactstrap Card - and doing it on an inside div loses the corners. So set it by class.
 	let backgroundClass;
 	if (background) {
-		backgroundClass = "bg"+nonce();		
+		backgroundClass = "bg"+n;
 	}
 
 	let cardContents = (
