@@ -110,7 +110,7 @@ export const GLCard = ({noPadding, noMargin, className, style, background,
 
 	const [n, setNonce] = useState(nonce()); // prevent changing every re-render
 
-	// HACK we cant set style or backgroun on a reactstrap Card - and doing it on an inside div loses the corners. So set it by class.
+	// HACK we cant set style or background on a reactstrap Card - and doing it on an inside div loses the corners. So set it by class.
 	let backgroundClass;
 	if (background) {
 		backgroundClass = "bg"+n;
@@ -217,7 +217,8 @@ function ModalCardOpen({ id, title, Content, Header, storedClassName, className,
 
 	const headerStyle = headerImg ? {
 		backgroundImage: `url("${headerImg}")`,
-		backgroundPosition: 'center'
+		backgroundPosition: 'center',
+		backgroundSize: 'cover'
 	} : null;
 
 	return <>
