@@ -61,10 +61,10 @@ export class ImpactFilters {
  * 
  * @returns {JSX.Element}
  */
-function IOPFirstHalf({ wtdAds, tadgAds, brand, campaign, charities, impactDebits, totalString, mainLogo }) {
+function IOPFirstHalf({ mainItem, wtdAds, tadgAds, brand, campaign, charities, impactDebits, totalString, mainLogo }) {
 	return <GLVertical>
 		{/* top left corner - both top corners with basis 60 to line up into grid pattern */}
-		<GLCard basis={campaign ? 80 : 60} className="hero-card">
+		<GLCard basis={campaign ? 80 : 55} enforceBasis className="hero-card">
 			<div className='white-circle'>
 				<div className='content'>
 					<img  className='logo' src={mainLogo} style={{width:'6em', height:'6em'}}/>
@@ -88,7 +88,7 @@ function IOPFirstHalf({ wtdAds, tadgAds, brand, campaign, charities, impactDebit
 				<TADGCard ads={tadgAds} brand={brand} charities={charities} impactDebits={impactDebits} />
 			</GLHorizontal>*/
 			// Can't have in set - or CommonDivision wrapper messes up. Can't think of fix so just shove contents here for now
-			<CharitiesCardSet charities={charities} impactDebits={impactDebits} glCardPassThru={true} />
+			<CharitiesCardSet charities={charities} impactDebits={impactDebits} mainItem={mainItem}/>
 		)}
 		<GLModalCard id="left-half" />
 	</GLVertical>;
@@ -252,14 +252,12 @@ function AdsCatalogueCard({ ads, campaign, unwrap, noPreviews }) {
  * 
  * @returns {JSX.Element}
  */
-const IOPSecondHalf = (baseObjects) => {
+const IOPSecondHalf = ({mainItem, ...baseObjects}) => {
 	const { campaign, ads } = baseObjects;
 
-	const mainItem = getMainItem(baseObjects);
-
 	return <GLVertical>
-		{mainItem?.impactSettings?.csrHtml && <GLCard><MDText source={mainItem.impactSettings.csrHtml} /></GLCard>}
 		{/* top right corner */}
+		{mainItem?.impactSettings?.csrHtml && <WiderCSR mainItem={mainItem} />}
 		{!campaign && <GLHorizontal collapse="md" basis={60}>
 			<GLVertical>
 				<GLHorizontal>
@@ -267,7 +265,7 @@ const IOPSecondHalf = (baseObjects) => {
 					<CharitiesCard mainItem={mainItem} {...baseObjects} />
 				</GLHorizontal>
 				<SubCampaignsCard {...baseObjects} />
-				<CountryViewsGLCard basis={10} baseObjects={baseObjects} />
+				<CountryViewsGLCard baseObjects={baseObjects} />
 				<OffsetsCard />
 			</GLVertical>
 			<ContentListCard {...baseObjects } />
@@ -284,6 +282,22 @@ const IOPSecondHalf = (baseObjects) => {
 		<GLModalCard id="right-half"/>
 	</GLVertical>;
 };
+
+
+function WiderCSR({mainItem}) {
+	if ( ! mainItem?.impactSettings?.csrHtml) {
+		return null;
+	}
+	// HACK! extract e.g. background: url("https://example.com/myimage.jpg") cover
+	let html = mainItem.impactSettings.csrHtml;
+	let background;	
+	let m = html.match(/background:(.+)$/m);
+	if (m) {
+		background = "linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 40%, rgba(255,255,255,0) 100%), " + m[1].trim();
+		html = html.substring(m[0].length).trim();
+	}
+	return <GLCard background={background}><MDText source={html} style={{maxWidth:"40%"}} className="d-flex flex-column justify-contents-center align-items-center" /></GLCard>;
+}
 
 const SustainableGoalsCard = ({baseObjects}) => {
 
@@ -314,14 +328,16 @@ const ImpactOverviewPage = ({pvBaseObjects, navToggleAnimation, ...props}) => {
 	if (!pvBaseObjects.resolved) return <Misc.Loading text="Fetching impact data..." />;
 	const baseObjects = pvBaseObjects.value;
 
+	const mainItem = getMainItem(baseObjects);
+
 	return <>
 		<div className='iview-positioner pr-md-1'>
 			<Container fluid className='iview-container'>
 				<animated.div className='impact-navbar-flow' style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}}></animated.div>
 				<GLVertical id='overview-first-card' className="w-100">
 					<GLHorizontal collapse="md" className="iview-grid">
-						<IOPFirstHalf {...baseObjects} {...props} />
-						<IOPSecondHalf {...baseObjects} {...props} />
+						<IOPFirstHalf mainItem={mainItem} {...baseObjects} {...props} />
+						<IOPSecondHalf mainItem={mainItem} {...baseObjects} {...props} />
 						<GLModalCard id="full-page"/>
 					</GLHorizontal>
 					<GLCard className="logos-display">
@@ -365,7 +381,7 @@ const CampaignCharityDisplay = ({charities}) => {
  * @param {NGO[]} p.charities Charities donated to by the campaigns in scope.
  * @param {ImpactDebit[]} p.impactDebits The ImpactDebit objects representing in-scope donations.
  */
-function CharitiesCardSet({charities, impactDebits}) {
+function CharitiesCardSet({mainItem, charities, impactDebits}) {
 
 	if (!charities?.length) {
 		return <DevOnly>No charities</DevOnly>;
@@ -384,15 +400,22 @@ function CharitiesCardSet({charities, impactDebits}) {
 
 	if (charities.length <= 3) return topCharities;
 
+	const cardSetProps = {
+		modalContent: <CharityList mainItem={mainItem} charities={charities}/>,
+		modalTitle: `${charities.length} Charities`,
+		modalId: 'right-half',
+		modalClassName: 'list-modal'
+	};
+
 	return <GLVertical>
 		{topCharities}
-		<GLCard className="more-charities card-body" noPadding>
+		<GLCard className="more-charities card-body" noPadding noGrow {...cardSetProps}>
 			<h5>Plus {charities.length-3} more</h5>
 			<div className='flex-row'>
-				{charities.slice(3).map(charity => {
+				{charities.slice(3).splice(0, 6).map(charity => { // only show 6 charities = one row, to fit on page
 					const cid = getId(charity);
 					const cname = NGO.displayName(charity);
-					return <ImpactHubLink className="charity-link" key={cid} item={charity} logo title={cname} />;
+					return <img className="charity-link logo" key={cid} src={charity?.logo} title={cname} />;
 				})}
 			</div>
 		</GLCard>
@@ -720,6 +743,7 @@ const CharityInfo = ({charity}) => {
 		<p className='p-5'>
 			<MDText source={NGO.extendedDescription(charity) || NGO.anyDescription(charity)}/>
 		</p>
+		{charity.url && <Button color="primary" href={charity.url} target="_blank">Visit site</Button>}
 	</div>;
 }
 
@@ -780,6 +804,7 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 		modalContent={modalMapCardContent}
 		modalClassName="impact-map"
 		modalId="right-half"
+		className='center-number'
 	>
 		<h3>{shortNumber(impressions)} VIEWS | {totalCountries} {countryWord}</h3>
 	</GLCard>
