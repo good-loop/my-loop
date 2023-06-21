@@ -256,7 +256,7 @@ const IOPSecondHalf = ({mainItem, ...baseObjects}) => {
 	const { campaign, ads } = baseObjects;
 
 	return <GLVertical>
-		{mainItem?.impactSettings?.csrHtml && <GLCard><MDText source={mainItem.impactSettings.csrHtml} /></GLCard>}
+		<WiderCSR mainItem={mainItem} />		
 		{/* top right corner */}
 		{!campaign && <GLHorizontal collapse="md" basis={60}>
 			<GLVertical>
@@ -282,6 +282,22 @@ const IOPSecondHalf = ({mainItem, ...baseObjects}) => {
 		<GLModalCard id="right-half"/>
 	</GLVertical>;
 };
+
+
+function WiderCSR({mainItem}) {
+	if ( ! mainItem?.impactSettings?.csrHtml) {
+		return null;
+	}
+	// HACK! extract e.g. background: url("https://example.com/myimage.jpg") cover
+	let html = mainItem.impactSettings.csrHtml;
+	let background;	
+	let m = html.match(/background:(.+)$/m);
+	if (m) {
+		background = m[1].trim();
+		html = html.substring(m[0].length).trim();
+	}
+	return <GLCard background={background}><MDText source={html} /></GLCard>;
+}
 
 const SustainableGoalsCard = ({baseObjects}) => {
 
