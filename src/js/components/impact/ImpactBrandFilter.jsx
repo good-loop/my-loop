@@ -33,7 +33,7 @@ const fetchTopLevelObjects = ({masterBrand, brand, campaign, status=KStatus.PUBL
 		return {allImpactDebits, allBrands, allCampaigns};
 	}
 
-	return DataStore.fetch(['misc','impactTopLevelObjects',status,'all',(masterBrand || brand).id], () => {
+	return DataStore.fetch(['misc', 'impactTopLevelObjects', status, 'all', (masterBrand || brand).id], () => {
 		return fetchFn();
 	});
 
@@ -44,7 +44,7 @@ const fetchTopLevelObjects = ({masterBrand, brand, campaign, status=KStatus.PUBL
  * container for breadcrumb filter 
  * 
  * @param {object} masterBrand master brand object, eg "Nestle"
- * @returns {JSX} breadcrumb trail of brand/campaign filters that can open up into a modal  for other filters
+ * @returns {JSX} breadcrumb trail of brand/campaign filters that can open up into a modal for other filters
  */
 const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, doReload, size, dropdown, curPage}) => {
 	const [filtersOpen, setFiltersOpen] = useState(false);
@@ -73,39 +73,37 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, doRe
 
 	const allSubBrands = allBrands.filter(b => topBrand.id !== b.id).sort((a, b) => alphabetSort(a, b));
 
+
+	// Common code for filterChange/filterClear
+	const filterChangeCommon = (target) => {
+		const changedPath = ('/' + DataStore.getValue('location', 'path').join('/') !== target);
+		modalToggle();
+		setFiltersOpen(false);
+		if (!changedPath) return; // No loading screen or goto for no-op navigation
+		doReload();
+		goto(target);
+	}
+
+
 	/**
 	 * after user selects the brand / campaign they want to filter, update the breadcrumb & url slugs to reflect the choice
 	 * @param {object} brand required, either master brand or subbrand we want to filter
 	 * @param {object} campaign campaign we want to filter, must be passed in with its brand
 	 */
 	const filterChange = ({brand, campaign}) => {
-		if (campaign) {
-			goto(`/impact/${curPage}/campaign/` + campaign.id)
-		} else if (brand) {
-			goto(`/impact/${curPage}/brand/` + brand.id)
-		}
-		setFiltersOpen(false)
-		modalToggle();
-		doReload();
+		assert(brand || campaign, 'filterChange called with no brand or campaign');
+		filterChangeCommon(campaign ? `/impact/${curPage}/campaign/${campaign.id}` : `/impact/${curPage}/brand/${brand.id}`);
 	}
+
 
 	/**
 	 * after user selects the brand / campaign they want to filter, update the breadcrumb & url slugs to reflect the choice
-	 * @param {object} brand if 
-	 * @param {object} campaign campaign we want to filter, must be passed in with its brand
+	 * @param {boolean} [onlyCampaign] True = leave campaign, return to focus brand; False = leave campaign, return to master brand
 	 */
-	const filterClear = (onlyCampaign=false) => {
-		if (onlyCampaign) {
-			// if we're clearing campaign, move back to just using brand 
-			goto(`/impact/${curPage}/brand/` + brand.id)
-		} else {
-			// if we're clearing brand, move back to just using masterbrand
-			goto(`/impact/${curPage}/brand/` + masterBrand.id)
-		}
-		modalToggle();
-		setFiltersOpen(false)
-		doReload();
+	const filterClear = (onlyCampaign = false) => {
+		filterChangeCommon(`/impact/${curPage}/brand/${onlyCampaign ? brand.id : masterBrand.id}`);
 	}
+
 
 	/**
 	*	ListItem of Brands for use in a ListLoad
