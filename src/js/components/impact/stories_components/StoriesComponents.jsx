@@ -21,7 +21,7 @@ import NGO from '../../../base/data/NGO';
 import { getDataItem } from '../../../base/plumbing/Crud';
 import { getUrlValue, setUrlValue } from '../../../base/plumbing/DataStore';
 import { asDate, dateStr, printPeriod } from '../../../base/utils/date-utils';
-import { addAmountSuffixToNumber, space } from '../../../base/utils/miscutils';
+import { addAmountSuffixToNumber, space, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 /*
  * A thin card that contains just the supplied text,
@@ -324,15 +324,14 @@ export const HowItWorks = ({ campaign, subCampaigns, charities, totalString }) =
 	const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][startDate[1] - 1]
 	// get viewcount and format it into 2 sig figs & unit amount, eg 1,413,512 -> 1.4M
 
-	if (!subCampaigns) subCampaigns = [campaign]
+	if ( ! yessy(subCampaigns)) subCampaigns = [campaign]
 
-	const viewcount = addAmountSuffixToNumber(
-		subCampaigns.reduce((sum, curCampaign) => {
-			let count = Campaign.viewcount({ campaign: curCampaign, status: KStatus.PUBLISHED })
-			if (typeof count !== 'number') count = 0
-			return sum + Number(count)
-		}, 0).toPrecision(2)
-	)
+	const views = subCampaigns.reduce((sum, curCampaign) => {
+		let count = Campaign.viewcount({ campaign: curCampaign, status: KStatus.PUBLISHED })
+		if (typeof count !== 'number') count = 0
+		return sum + Number(count)
+	}, 0);
+	const viewcount = addAmountSuffixToNumber(views.toPrecision(3));
 
 	return (
 		<div id="how-it-works" className='d-flex flex-column'>
@@ -357,8 +356,8 @@ export const HowItWorks = ({ campaign, subCampaigns, charities, totalString }) =
 						<img src="/img/Impact/OurStory_PeopleCrossingRoad.jpg" className='fill-img' />
 					</div>
 					<p>Today</p>
-					<h3 className='color-gl-white'>+{viewcount} People</h3>
-					<p className='text white'>Viewed The Advert{subCampaigns ? "s" : ""} So Far</p>
+					<h3 className='color-gl-white'>{viewcount} People</h3>
+					<p className='text white'>Viewed The Advert{subCampaigns ? "s" : ""} {viewcount<1000 && "So Far"}</p>
 				</div>
 
 				<div className='hiw-col'>
@@ -367,7 +366,7 @@ export const HowItWorks = ({ campaign, subCampaigns, charities, totalString }) =
 						<img src={NGO.images(charities[0])[0]} className='fill-img' />
 					</div>
 					<p>After the Campagin</p>
-					<h3 className='color-gl-white'>{totalString}+ In Donations</h3>
+					<h3 className='color-gl-white'>{totalString} In Donations</h3>
 					<p className='text white'>Funded By The Advert{subCampaigns ? "s" : ""}</p>
 				</div>
 			</div>
