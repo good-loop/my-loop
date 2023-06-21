@@ -77,12 +77,12 @@ const AdvertsCatalogue = ({ ads, noPreviews, className, captions=true, unwrap, .
 			previous={previous}
 			interval={false}
 		>
-			<CarouselIndicators className="d-block d-md-none" items={carouselSlides} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{ backgroundColor: "#000" }} />
+			{!noPreviews && <CarouselIndicators className="d-block d-md-none" items={carouselSlides} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{ backgroundColor: "#000" }} />}
 			{carouselSlides}
-			<div className="d-none d-md-block">
+			{!noPreviews && <div className="d-none d-md-block">
 				<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
 				<CarouselControl direction="next" directionText="Next" onClickHandler={next} />
-			</div>
+			</div>}
 		</Carousel>
 		{!noPreviews && <>
 			{/* <br /><br /> reduce the whitespace - Dan, Jun 2023 */}
@@ -190,7 +190,7 @@ const AdvertCard = ({ ad, active, decoration }) => {
 	}
 
 	return (
-		<div className="position-relative main-ad" style={{ minHeight: "100px", maxWidth:"2000px", margin:"auto" }}>
+		<div className="position-relative main-ad" style={{ minHeight: "100px", maxWidth:"50%", margin:"auto" }}>
 			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{ position: "absolute", zIndex: 999 }}>Advert Editor ({ad.id})</DevLink>
 			<div className="position-relative ad-unit-outer">
 				{hasShown ? (
