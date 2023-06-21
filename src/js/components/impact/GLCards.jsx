@@ -195,10 +195,10 @@ function ModalCardOpen({ id, title, Content, Header, storedClassName, className,
 		return () => document.removeEventListener('keydown', keyListener);
 	}, []);
 
-	const headerStyle = headerImg && {
+	const headerStyle = headerImg ? {
 		backgroundImage: `url("${headerImg}")`,
 		backgroundPosition: 'center'
-	};
+	} : null;
 
 	return <>
 		{usesOwnBackdrop ? <GLModalBackdrop forceShow id={id}/> : null}

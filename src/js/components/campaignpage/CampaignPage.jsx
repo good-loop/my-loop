@@ -367,6 +367,7 @@ const CampaignPage = () => {
 
 
 /**
+ * @deprecated Moving to StoriesComponents.jsx DonationSmallPrint
  * Charity details + campaign details
  * @param {Object} p
  * @param {Campaign} p.campaign

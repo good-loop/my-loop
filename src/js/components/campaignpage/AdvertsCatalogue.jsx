@@ -24,7 +24,7 @@ import { assert } from '../../base/utils/assert';
  * @param {Advert[]} p.ads
  * @param {?Boolean} p.noPreviews remove preview carousel
  */
-const AdvertsCatalogue = ({ ads, noPreviews, className, captions=true, ...props}) => {
+const AdvertsCatalogue = ({ ads, noPreviews, className, captions=true, unwrap, ...props}) => {
 	assert(ads);
 
 	const [activeIndex, setActiveIndex] = useState(0);
@@ -70,27 +70,27 @@ const AdvertsCatalogue = ({ ads, noPreviews, className, captions=true, ...props}
 		setActiveIndex(newIndex);
 	};
 
-	return (<>
-		<Container className={space('ads-catalogue', className)}>
-			<Carousel
-				activeIndex={activeIndex}
-				next={next}
-				previous={previous}
-				interval={false}
-			>
-				<CarouselIndicators className="d-block d-md-none" items={carouselSlides} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{ backgroundColor: "#000" }} />
-				{carouselSlides}
-				<div className="d-none d-md-block">
-					<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
-					<CarouselControl direction="next" directionText="Next" onClickHandler={next} />
-				</div>
-			</Carousel>
-			{!noPreviews && <>
-				{/* <br /><br /> reduce the whitespace - Dan, Jun 2023 */}
-				<AdPreviewCarousel ads={ads} setSelected={goToIndex} selectedIndex={activeIndex} />
-			</>}
-		</Container>
+	const contents = (<>
+		<Carousel
+			activeIndex={activeIndex}
+			next={next}
+			previous={previous}
+			interval={false}
+		>
+			<CarouselIndicators className="d-block d-md-none" items={carouselSlides} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{ backgroundColor: "#000" }} />
+			{carouselSlides}
+			<div className="d-none d-md-block">
+				<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
+				<CarouselControl direction="next" directionText="Next" onClickHandler={next} />
+			</div>
+		</Carousel>
+		{!noPreviews && <>
+			{/* <br /><br /> reduce the whitespace - Dan, Jun 2023 */}
+			<AdPreviewCarousel ads={ads} setSelected={goToIndex} selectedIndex={activeIndex} />
+		</>}
 	</>);
+
+	return unwrap ? <>{contents}</> : <Container className={space('ads-catalogue', className)}>{contents}</Container>;
 };
 
 /**
@@ -104,7 +104,7 @@ const AdPreviewCarousel = ({ ads, selectedIndex, setSelected }) => {
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [animating, setAnimating] = useState(false);
 
-	const slidesNum = Math.ceil(ads.length / 6);
+	const slidesNum = Math.ceil(ads.length / 4);
 
 	const next = () => {
 		if (animating) return;
@@ -125,9 +125,9 @@ const AdPreviewCarousel = ({ ads, selectedIndex, setSelected }) => {
 
 	const carouselSlides = [];
 	for (let i = 0; i < slidesNum; i++) {
-		const adIndex = i * 6;
+		const adIndex = i * 4;
 
-		const previews = [0, 1, 2, 3, 4, 5].map(j => {
+		const previews = [0, 1, 2, 3].map(j => {
 			const offsetIndex = adIndex + j;
 			if (offsetIndex > ads.length - 1) return null;
 			return <AdvertPreviewCard
@@ -154,6 +154,7 @@ const AdPreviewCarousel = ({ ads, selectedIndex, setSelected }) => {
 			next={next}
 			previous={previous}
 			interval={false}
+			className="preview-carousel"
 		>
 			<CarouselIndicators items={carouselSlides} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{ backgroundColor: "#000" }} />
 			{carouselSlides}
@@ -189,7 +190,7 @@ const AdvertCard = ({ ad, active, decoration }) => {
 	}
 
 	return (
-		<div className="position-relative main-ad" style={{ minHeight: "100px", maxHeight: "600px" }}>
+		<div className="position-relative main-ad" style={{ minHeight: "100px", maxWidth:"2000px", margin:"auto" }}>
 			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{ position: "absolute", zIndex: 999 }}>Advert Editor ({ad.id})</DevLink>
 			<div className="position-relative ad-unit-outer">
 				{hasShown ? (
@@ -224,7 +225,7 @@ const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
 	return (
 		<div className={"col-6 col-md-2"}>
 			<div onClick={e => { e.preventDefault(); handleClick(); }} className={"d-flex justify-content-center pointer-wrapper" + (selected ? " selected" : "")}>
-				<div className="ad-prev shadow">
+				<div className="ad-prev shadow" style={{pointerEvents:"none"}}>
 					{hasShown ? (
 						<GoodLoopUnit vertId={ad.id} size={size} advert={ad} play="onclick" shouldDebug={false} />
 					) : (
