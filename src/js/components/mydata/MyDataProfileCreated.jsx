@@ -70,7 +70,7 @@ const ExplainPrivacy3 = () => {
 		<div className="profile-creation-step">
 			<img src="/img/mydata/onboarding-3.png" className="w-75"/>
 			<h1>Data Made Easy</h1>
-			<p>We've set you up with  our recommended privacy settings but you can change them any time to suit you.</p>
+			<p>We've set you up with our recommended privacy settings but you can change them any time to suit you.</p>
 			<PrivacyOnboardingSteps step={3} />
 			<div className="button-container">
 				<Button color="primary" onClick={nextSignupPage}>Next</Button>

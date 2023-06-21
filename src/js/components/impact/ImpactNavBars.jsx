@@ -65,7 +65,7 @@ const navEntries = [
  * @param {function} toggle toggles the state of isOpen AND isNavbarOpen, a state used to mainain flow even with fixed navbars
  * @returns 
  */
-const SideNavBar = ({urlFilters="", active, isOpen, navToggleAnimation, toggle, doReload}) => {
+const SideNavBar = ({urlFilters = '', active, isOpen, navToggleAnimation, toggle, doReload}) => {
 	const { width, opacity, rotate: transform, alignSelf } = navToggleAnimation;
 	const navProps = { opacity, urlFilters, doReload, active };
 
@@ -76,7 +76,7 @@ const SideNavBar = ({urlFilters="", active, isOpen, navToggleAnimation, toggle, 
 				<Nav navbar vertical>
 					<a href="https://good-loop.com/">
 						<img className="logo flex-column" src="/img/logo-white.svg"/>
-						<animated.p className='logo-name flex-column' style={{opacity: navToggleAnimation.opacity}}>GOOD-LOOP</animated.p>
+						<animated.p className="logo-name flex-column" style={{opacity: navToggleAnimation.opacity}}>GOOD-LOOP</animated.p>
 					</a>
 					<br/><br/>
 					{navEntries.map((entryProps,i) => (

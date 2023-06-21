@@ -144,22 +144,18 @@ const SVGMap = ({ mapDefs, data, setFocusRegion, svgRef, showLabels, per1000 }) 
 		const pathId = `${mapDefs.id}-${id}`;
 
 		// Once path is drawn, find the centre of the region's bounding box to position a text label on the bigger map
-		const pathRef = showLabels
-			? (path) => {
-					if (!path) return;
-					setPathCentres((prev) => {
-						if (prev[pathId]) return prev;
-						return { ...prev, [pathId]: bbCentre(path) };
-					});
-			  }
-			: null;
+		const pathRef = showLabels ? (path) => {
+			if (!path) return;
+			setPathCentres((prev) => {
+				if (prev[pathId]) return prev;
+				return { ...prev, [pathId]: bbCentre(path) };
+			});
+		} : null;
 
 		// Tooltip on hover
-		const title = loading ? null : (
-			<title>
-				{props.name}: {carbon.toFixed(2)} {unit} CO2e, {impressions} impressions
-			</title>
-		);
+		const title = loading ? null : <title>
+			{props.name}: {carbon.toFixed(2)} {unit} CO2e, {impressions} impressions
+		</title>;
 
 		regions.push(
 			<path key={`path-${id}`} data-id={id} {...props} ref={pathRef}>
@@ -293,17 +289,15 @@ const MapCard = ({ baseFilters, per1000 }) => {
 			locnBuckets.reduce((acc, val) => {
 				const k = mapDefs.id !== 'world' && !mapDefs.regions[val.key] ? `${focusRegion}-${val.key}` : val.key;
 
-				acc[k] = acc[k]
-					? {
-							key: k,
-							count: acc[k].count + val.count,
-							doc_count: acc[k].doc_count + val.doc_count,
-							co2: acc[k].co2 + val.co2,
-							co2base: acc[k].co2base + val.co2base,
-							co2creative: acc[k].co2creative + val.co2creative,
-							co2supplypath: acc[k].co2supplypath + val.co2supplypath,
-					  }
-					: val;
+				acc[k] = acc[k] ? {
+						key: k,
+						count: acc[k].count + val.count,
+						doc_count: acc[k].doc_count + val.doc_count,
+						co2: acc[k].co2 + val.co2,
+						co2base: acc[k].co2base + val.co2base,
+						co2creative: acc[k].co2creative + val.co2creative,
+						co2supplypath: acc[k].co2supplypath + val.co2supplypath,
+				} : val;
 				return { ...acc };
 			}, {})
 		);

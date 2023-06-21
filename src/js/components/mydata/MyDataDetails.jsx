@@ -31,7 +31,7 @@ const DetailsCard = ({title, prop, options, labels, ...props}) => {
 			<UserClaimControl prop="location-region" type="text" label="City or Region" 
 				help="Used to pick local charities and local adverts. Not shared with anyone (unless you explicitly tell us to)." />
 			<UserClaimControl prop="dob" type="date" label="Date of birth" 
-				help="Used for your approximate age, which affects what adverts you see (e.g. drinks ads can only be shown to over 18s). Not shared  with anyone (unless you explicitly tell us to)." />
+				help="Used for your approximate age, which affects what adverts you see (e.g. drinks ads can only be shown to over 18s). Not shared with anyone (unless you explicitly tell us to)." />
 			<UserClaimControl prop="gender" type="gender" label="Gender" 
 				help="Used to pick relevant adverts. Not shared with anyone (unless you explicitly tell us to). Since many ads request male or female, this raises more money for your charity." />
 

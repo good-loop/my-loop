@@ -12,7 +12,7 @@ import { getCarbon, getTags, emissionsPerImpressions, getSumColumn, getBreakdown
 import { isPer1000 } from './GreenMetrics';
 // Doesn't need to be used, just imported so MiniCSSExtractPlugin finds the LESS
 import '../../../../style/greendash-breakdown-card.less';
-import {  CO2e, NOEMISSIONS, GreenCard, GreenCardAbout, ModeButton} from './GreenDashUtils';
+import {CO2e, NOEMISSIONS, GreenCard, GreenCardAbout, ModeButton} from './GreenDashUtils';
 
 /** Classify OS strings seen in our data
  *

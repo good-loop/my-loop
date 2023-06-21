@@ -32,7 +32,7 @@ export const showMyDataSignUpModal = (s=true) => {
  */
  export const MyDataSignUpButton = ({className,children,style}) => {
 	const gotmydata = hasRegisteredForMyData();
-	const content = gotmydata ?  "Go to My.Data" : "Sign Up for My.Data";
+	const content = gotmydata ? "Go to My.Data" : "Sign Up for My.Data";
 
 	return (
 		<a className={`${space("btn btn-primary", className)} mydata-signup-button`} href={gotmydata ? "/account" : window.location} style={style}

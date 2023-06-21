@@ -99,8 +99,8 @@ export const getFilterTypeId = () => {
 	return {filterType, filterId};
 };
 
-/** WIP
- *  
+/**
+ * WIP
  */
 export const getCountryFlag = (isoCode:String) => {
 	console.warn("TODO getCountryFlag");

@@ -64,16 +64,16 @@ export class ImpactFilters {
 function IOPFirstHalf({ mainItem, wtdAds, tadgAds, brand, campaign, charities, impactDebits, totalString, mainLogo }) {
 	return <GLVertical>
 		{/* top left corner - both top corners with basis 60 to line up into grid pattern */}
-		<GLCard basis={campaign ? 80 : 55} enforceBasis className="hero-card">
-			<div className='white-circle'>
-				<div className='content'>
-					<img  className='logo' src={mainLogo} style={{width:'6em', height:'6em'}}/>
+		<GLCard basis={campaign ? 80 : 60} className="hero-card">
+			<div className="white-circle">
+				<div className="content">
+					<img className="logo" src={mainLogo} style={{ width: '6em', height: '6em'}}/>
 					<DevOnly><PortalLink item={brand} /></DevOnly>
 					<br/>
 					<h1 style={{marginBottom:0}}>{totalString}</h1>
 					<h2>Donated</h2>
 					<h5>With</h5>
-					<img  className='w-50' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+					<img className="w-50" src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 				</div>
 			</div>
 			<GLModalCard id="hero-card-modal" />
@@ -197,7 +197,7 @@ function OffsetsCard() {
 			<h3>8.69T CO2E OFFSET</h3>
 		</div>
 		<div className="carbon-neutral px-5 py-2">
-			<img  src="/img/Impact/Good-Loop_CarbonNeutralAd_Logo_Final-05.svg" className="w-100" />
+			<img src="/img/Impact/Good-Loop_CarbonNeutralAd_Logo_Final-05.svg" className="w-100" />
 		</div>
 	</GLCard>;
 }
@@ -486,9 +486,9 @@ const LogosDisplay = ({brand, subBrands}) => {
 	return <>
 		<h3>Advertising that's a force for good</h3>
 		<br/><br/>
-		<img  src={brand?.branding?.logo} className="logo"/>
+		<img src={brand?.branding?.logo} className="logo"/>
 		<br/><br/>
-		<img  className='a4glogo' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+		<img className="a4glogo" src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 		<br/><br/><br/>
 		<Row className='justify-content-center w-100'>
 			{subBrands.map(b => <BrandLogo item={b} key={b.id}/>)}
@@ -537,7 +537,7 @@ const ThisAdDoesGoodModal = ({ads, brand}) => {
 			<br/>
 			<Row className='w-50 mx-auto'>
 				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
-					<img  src={brand.branding?.logo} className="logo"/>
+					<img src={brand.branding?.logo} className="logo"/>
 				</Col>
 				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
 					<TODO>which charity</TODO>
@@ -594,7 +594,7 @@ const WatchToDonateModal = ({ads, brand}) => {
 			<br/>
 			<Row className='w-50 mx-auto'>
 				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
-					<img  src={brand.branding?.logo} className="logo"/>
+					<img src={brand.branding?.logo} className="logo"/>
 				</Col>
 				<Col xs={6} className="d-flex flex-row align-items-center justify-content-center">
 					<TODO>charity load</TODO>
@@ -641,8 +641,8 @@ const ContentListCard = (baseObjects) => {
 
 const AdsForGoodCTAHeader = () => {
 	return <div className='bg-gl-impact-red pt-5 position-relative'>
-		<img  src="/img/curves/curve-white.svg" className='w-100'/>
-		<img  src="/img/Impact/images-combined.png" className='header-overlay'/>
+		<img src="/img/curves/curve-white.svg" className='w-100'/>
+		<img src="/img/Impact/images-combined.png" className='header-overlay'/>
 	</div>;
 };
 
@@ -650,10 +650,10 @@ const AdsForGoodCTAHeader = () => {
 const AdsForGoodCTA = () => {
 	const vertiser = TEST_BRAND_OBJ;
 
-	return <div className='d-flex flex-column align-items-center justify-content-between h-100'>
-		<img  src={vertiser.branding.logo} className="logo"/>
+	return <div className="d-flex flex-column align-items-center justify-content-between h-100">
+		<img src={vertiser.branding.logo} className="logo"/>
 		<TODO>which brand</TODO>
-		<img  className='w-25' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+		<img className="w-25" src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 		<h3>Discover our products and fund even more good causes</h3>
 		<Button color="primary">Get in touch</Button>
 	</div>
@@ -661,9 +661,9 @@ const AdsForGoodCTA = () => {
 
 
 const CO2OffsetInfoHeader = () => {
-	return <div className='bg-co2-offset pt-5 position-relative'>
-		<img  src="/img/curves/curve-white.svg" className='w-100'/>
-		<img  src="/img/green/hummingbird.png" className='header-overlay'/>
+	return <div className="bg-co2-offset pt-5 position-relative">
+		<img src="/img/curves/curve-white.svg" className='w-100'/>
+		<img src="/img/green/hummingbird.png" className='header-overlay'/>
 	</div>;
 };
 
@@ -671,10 +671,10 @@ const CO2OffsetInfoHeader = () => {
 const CO2OffsetInfo = () => {
 	const vertiser = TEST_BRAND_OBJ;
 
-	return <div className='d-flex flex-column align-items-center justify-content-between h-100'>
-		<img  src={vertiser.branding.logo} className="logo"/>
+	return <div className="d-flex flex-column align-items-center justify-content-between h-100">
+		<img src={vertiser.branding.logo} className="logo"/>
 		<TODO>which brand</TODO>
-		<img  className='w-25' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+		<img className="w-25" src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 		<h4><TODO>Info about Green Ad Tag</TODO></h4>
 		<h4><TODO>Info about Offset Project</TODO></h4>
 		<h4><TODO>Cost of Offset - it only cost £X to offset</TODO></h4>
@@ -685,10 +685,10 @@ const CO2OffsetInfo = () => {
 const BrandList = ({brand, subBrands}) => {
 	const BrandListItem = ({item}) => {
 		const contents = <Col md={4} className="mt-3">
-			<GLCard className={space("preview h-100", item._shouldHide && "bg-gl-light-red")} noMargin href={"/impact/view/brand/"+item.id}>
-				{item && item.branding?.logo && <img  src={item.branding.logo} className="logo"/>}
-				{item._shouldHide && <p className='text-white'>Normally hidden</p>}
-				<p className='text-center'>{item.name}</p>
+			<GLCard className={space('preview h-100', item._shouldHide && 'g-gl-light-red')} noMargin href={'/impact/view/brand/'+item.id}>
+				{item && item.branding?.logo && <img src={item.branding.logo} className="logo"/>}
+				{item._shouldHide && <p className="text-white">Normally hidden</p>}
+				<p className="text-center">{item.name}</p>
 			</GLCard>
 		</Col>;
 		return item._shouldHide ? <DevOnly>{contents}</DevOnly> : contents;
@@ -697,7 +697,7 @@ const BrandList = ({brand, subBrands}) => {
 	return <>
 		<br/>
 		<h5>Brands donating via Good-Loop Ads</h5>
-		<p className='color-gl-red text-center'>{brand.name} - All Campaigns</p>
+		<p className="color-gl-red text-center">{brand.name} - All Campaigns</p>
 		<br/>
 		<Row>
 			{subBrands.map(b => <BrandListItem item={b} key={b.id}/> )}
@@ -708,7 +708,7 @@ const BrandList = ({brand, subBrands}) => {
 const CharityList = ({mainItem, charities}) => {
 	return <>
 		<br/>
-		<h5>Charities supported by <span className='color-gl-red'>{mainItem?.name}</span> via Good-Loop Ads</h5>		
+		<h5>Charities supported by <span className="color-gl-red">{mainItem?.name}</span> via Good-Loop Ads</h5>		
 		<br/>
 		<Row>
 			{charities.map((charity, i) => <Col key={i} md={4} className="mt-3">
@@ -728,7 +728,7 @@ const CharityList = ({mainItem, charities}) => {
 }
 
 const CharityHeader = ({charity}) => {
-	return <div className='w-100 position-relative'>
+	return <div className="w-100 position-relative">
 		<div className="white-circle">
 			<CharityLogo charity={charity}/>
 		</div>
@@ -736,11 +736,11 @@ const CharityHeader = ({charity}) => {
 }
 
 const CharityInfo = ({charity}) => {
-	return <div className='d-flex flex-column justify-content-center align-items-center charity-body'>
+	return <div className="d-flex flex-column justify-content-center align-items-center charity-body">
 		<h3>{NGO.displayName(charity)}</h3>
-		<img  className='w-25' src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
+		<img className="w-25" src="/img/gl-logo/AdsForGood/AdsForGood.svg"/>
 		<br/>
-		<p className='p-5'>
+		<p className="p-5">
 			<MDText source={NGO.extendedDescription(charity) || NGO.anyDescription(charity)}/>
 		</p>
 		{charity.url && <Button color="primary" href={charity.url} target="_blank">Visit site</Button>}
@@ -782,12 +782,12 @@ const shortNumber = (number) => (
 
 const CountryViewsGLCard = ({basis, baseObjects}) => {
 	if (!baseObjects) {
-		console.warn("CountryViewsGLCard - no baseObjects");
+		console.warn('CountryViewsGLCard - no baseObjects');
 		return null;
 	}
 	let impressionData = getImpressionsByCampaignByCountry({baseObjects, cutoff:0.01})
 	// Prepare data for non-modal view - total impressions and countries
-	const totalCountries = Object.keys(impressionData).filter(country => country !== "unset").length;
+	const totalCountries = Object.keys(impressionData).filter(country => country !== 'unset').length;
 	const impressions = sumBy(Object.values(impressionData), 'impressions') // sum impressions over all regions
 	const countryWord = (totalCountries === 1) ? 'COUNTRY' : 'COUNTRIES';
 
@@ -804,7 +804,7 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 		modalContent={modalMapCardContent}
 		modalClassName="impact-map"
 		modalId="right-half"
-		className='center-number'
+		className="center-number"
 	>
 		<h3>{shortNumber(impressions)} VIEWS | {totalCountries} {countryWord}</h3>
 	</GLCard>

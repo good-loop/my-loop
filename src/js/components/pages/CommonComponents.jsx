@@ -15,7 +15,7 @@ import Roles from '../../base/Roles';
 import { A } from '../../base/plumbing/glrouter';
 import NGOImage from '../../base/components/NGOImage';
 import NGO from '../../base/data/NGO';
-import { MyDataSignUpButton, MyDataSignUpModal, showMyDataSignUpModal }  from '../mydata/MyDataSignUp';
+import { MyDataSignUpButton, MyDataSignUpModal, showMyDataSignUpModal } from '../mydata/MyDataSignUp';
 import { hasRegisteredForMyData } from '../mydata/MyDataCommonComponents';
 
 export const accountMenuItems = [
@@ -705,7 +705,7 @@ const WhatIsTabsForGood	= ({ngo}) => {
 
 const ArrowLink = ({className, link, children}) => {
 	if (!link) link = "#";
-	return (<a className={space("text-decoration-none mt-3", className)}  href={link}>
+	return (<a className={space("text-decoration-none mt-3", className)} href={link}>
 		<span style={{textDecoration:"underline"}}>{children}</span> →
 	</a>);
 }

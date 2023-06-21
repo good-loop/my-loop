@@ -143,7 +143,7 @@ const getFilterItems = async ({ type, setFilterItems }) => {
 	if (type === C.TYPES.Advertiser) return;
 	// Campaign & tag can be implicitly shared under a brand
 	getMergeImplicitShares({ shareType: C.TYPES.Advertiser, type, setFilterItems });
-	if (type ===  C.TYPES.Campaign) return;
+	if (type === C.TYPES.Campaign) return;
 	// Tag can be implicitly shared under a campaign
 	getMergeImplicitShares({ shareType: C.TYPES.Campaign, type, setFilterItems });
 };
