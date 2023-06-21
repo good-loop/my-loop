@@ -88,7 +88,7 @@ function IOPFirstHalf({ mainItem, wtdAds, tadgAds, brand, campaign, charities, i
 				<TADGCard ads={tadgAds} brand={brand} charities={charities} impactDebits={impactDebits} />
 			</GLHorizontal>*/
 			// Can't have in set - or CommonDivision wrapper messes up. Can't think of fix so just shove contents here for now
-			<CharitiesCardSet charities={charities} impactDebits={impactDebits} mainItem={mainItem} />
+			<CharitiesCardSet charities={charities} impactDebits={impactDebits} mainItem={mainItem}/>
 		)}
 		<GLModalCard id="left-half" />
 	</GLVertical>;
@@ -393,10 +393,10 @@ function CharitiesCardSet({mainItem, charities, impactDebits}) {
 
 	return <GLVertical>
 		{topCharities}
-		<GLCard className="more-charities card-body" noPadding {...cardSetProps}>
+		<GLCard className="more-charities card-body" noPadding noGrow {...cardSetProps}>
 			<h5>Plus {charities.length-3} more</h5>
 			<div className='flex-row'>
-				{charities.slice(3).map(charity => {
+				{charities.slice(3).splice(0, 6).map(charity => { // only show 6 charities = one row, to fit on page
 					const cid = getId(charity);
 					const cname = NGO.displayName(charity);
 					return <img className="charity-link logo" key={cid} src={charity?.logo} title={cname} />;

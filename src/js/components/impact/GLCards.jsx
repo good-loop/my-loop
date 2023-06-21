@@ -21,11 +21,12 @@ const LOADED_PATH = [...MODAL_PATH, 'loaded'];
 function CommonDivision({child, i, basisCss, Tag}) {
 	// Special case for overlays - they must not interfere with layout, so make no wrapper
 	if (!child || child.type === GLModalCard) return child;
+	let basis = child.props.basis ? (_.isNumber(child.props.basis) ? `${child.props.basis}%` : child.props.basis) : null;
 	const style = {
-		flexBasis: `${child.props.basis}%`,
-		flexGrow: child.props.basis ? 0 : 1,
+		flexBasis: basis,
+		flexGrow: basis || child.props.noGrow ? 0 : 1,
 	};
-	if (child.props.enforceBasis) style[basisCss] = `${child.props.basis}%`
+	if (child.props.enforceBasis) style[basisCss] = basis;
 	return <Tag key={i} style={style}>{child}</Tag>;
 }
 
