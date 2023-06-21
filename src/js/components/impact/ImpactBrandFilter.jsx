@@ -216,25 +216,31 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, doRe
 	};
 
 	// helper JSX elements
-	const StepBackFiltersButton = ({content, clearOnlyCamapign, rightArrow, underlined}) => (
+	const StepBackFiltersButton = ({content, clearOnlyCamapign, rightArrow, underlined}) => <>
 		<button className={space('filter-row', 'filter-text', (underlined && 'underlined'))}onClick={() => filterClear(clearOnlyCamapign)}>
-			{content} {rightArrow && '>'}
+			{content}
+		</button>
+		{rightArrow && <img className="filter-right-arrow" src="/img/icons/down-arrow.svg" />}
+	</>;
+
+	const OpenFiltersButton = ({content, rightArrow, underlined}) => <>
+		<button className={space('filter-row', 'filter-text', (underlined && 'underlined'))} onClick={openFilters}>
+			{content}
+		</button>
+		{rightArrow && <img className="filter-right-arrow" src="/img/icons/down-arrow.svg" />}
+	</>;
+
+	const DropDownIcon = () => (
+		<button className="filter-row" onClick={openFilters} >
+			<img src="/img/icons/down-arrow.svg" />
 		</button>
 	);
-
-	const OpenFiltersButton = ({content, rightArrow, underlined}) => (
-		<button className={space('filter-row', 'filter-text', (underlined && 'underlined'))} onClick={() => openFilters()}>
-			{content} {rightArrow && '>'}
-		</button>
-	);
-
-	const DropDownIcon = () => <button className="filter-row filter-down-arrow" onClick={() => openFilters()} />;
 
 	// no filters / only master brand filtered (no master brand set = no parent for this brand)
 	if (!masterBrand && !campaign) {
 		return (
 			<div id="filters">
-				<OpenFiltersButton content={brand.name} rightArrow/>
+				<OpenFiltersButton content={brand.name} rightArrow />
 				<OpenFiltersButton content={"All Brands"} />
 				<DropDownIcon />
 			</div>

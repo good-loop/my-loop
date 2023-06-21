@@ -34,23 +34,16 @@
 			text-decoration: underline !important;
 		}
 
-		.filter-down-arrow {
-			background-image: url("/img/icons/down-arrow.svg");
-			background-repeat: none;
+		.filter-down-arrow, .filter-right-arrow {
+			padding: 0;
 			// keep icon to a good relative size
 			width: 2rem;
-			height: 2rem;
 			@media @width-mobile {
 				width: 1.5rem !important;
-				height: 1.5rem !important; 
 			}
-
-			background-size: contain;
-			background-position: center;
-			// keep it vertically centered in breadcrump trail
-			position: relative;
-			transform: translateY(-50%);
-			top: 50%;
+		}
+		.filter-right-arrow {
+			transform: rotate(-90deg);
 		}
 	}
 
@@ -113,7 +106,8 @@
 
 // the actual content when the filter is open
 #filter-modal-container {
-	margin-bottom: 10%; // if there's a ton of brands, stops the bottom one from being cut off
+	// removed because I think it was a shim for a deeper issue that's probably fixed - RM
+	// margin-bottom: 10%; // if there's a ton of brands, stops the bottom one from being cut off
 
 	// button containing brand and its campaings
 	.filter-button {
@@ -182,13 +176,10 @@
 
 	// logo, text and expand campaigns button
 	.info {
-		display: inline-flex;
-		align-items: center;
-		width: 100%;
 		border-bottom: solid 1px lightgrey;
 
 		.display {
-			display: inline-flex;
+			display: flex;
 			align-items: center;
 			background-color: rgba(0,0,0,0);
 			transition: background-color 0.2s;
@@ -212,7 +203,7 @@
 		.dropdown-button {
 			background-image: url("/img/icons/down-arrow.svg");
 			background-color: transparent;
-			background-size: contain;   
+			background-size: contain;
 			width: 2rem;
 			height: 2rem;
 			border: none;
@@ -313,35 +304,36 @@
 	}
 }
 
+@filter-indent: 5rem;
+
 #filter-display {
-    position:fixed;
-    z-index: 1000;
-    margin-top: 5rem;
-    margin-left: 5rem;
-    // a nasty bunch of rules to turn the existing modal into a mobile version
-    // this should be redone later and preferably a modal just for mobile brand selection can be made 
-    &.impact-brand-modal {
-        width: 40rem;
-        height: 100%;
-        @media (max-width: 768px) {
-            height: 100% !important;
-            top: 6vh !important;
-            // make modal fill width
-            .glcard-outer {
-                padding: 0 !important;
-                .glcard {
-                    margin: 0 !important;
-                }
-            }
-        }
-    }
+	position:fixed;
+	z-index: 1000;
+	margin-top: @filter-indent;
+	margin-left: @filter-indent;
+	// a nasty bunch of rules to turn the existing modal into a mobile version
+	// this should be redone later and preferably a modal just for mobile brand selection can be made 
+	&.impact-brand-modal {
+		width: 40rem;
+		height: calc(100% - @filter-indent);
+		@media (max-width: 768px) {
+			height: 100% !important;
+			top: 6vh !important;
+			// make modal fill width
+			.glcard-outer {
+				padding: 0 !important;
+				.glcard {
+					margin: 0 !important;
+				}
+			}
+		}
+	}
 
-    &.date-modal {
-        width: 60rem;
-        height: unset;
-        @media (max-width: 768px) {
-            width: unset;
-        }
-    }
-
+	&.date-modal {
+		width: 60rem;
+		height: unset;
+		@media (max-width: 768px) {
+			width: unset;
+		}
+	}
 }

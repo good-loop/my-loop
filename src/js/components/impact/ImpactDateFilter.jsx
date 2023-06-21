@@ -68,8 +68,9 @@ const ImpactDateFilter = ({doReload}) => {
 
 	return (
 	<div id="date-filters">
-		<button className="filter-row filter-text" onClick={onClick}>Date</button>
-		<button className='filter-row filter-down-arrow' onClick={onClick} />
+		<button className="filter-row" onClick={onClick}>
+			Date <img src="/img/icons/down-arrow.svg" />
+		</button>
 	</div>
 	)
 }
