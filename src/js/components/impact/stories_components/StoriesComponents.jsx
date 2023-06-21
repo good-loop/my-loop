@@ -20,7 +20,7 @@ import Money from '../../../base/data/Money';
 import NGO from '../../../base/data/NGO';
 import { getDataItem } from '../../../base/plumbing/Crud';
 import { getUrlValue, setUrlValue } from '../../../base/plumbing/DataStore';
-import { asDate } from '../../../base/utils/date-utils';
+import { asDate, dateStr, printPeriod } from '../../../base/utils/date-utils';
 import { addAmountSuffixToNumber, space } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 /*
@@ -370,21 +370,32 @@ function findCharity(cid, charities) {
  * @returns {React.ReactElement} 
  */
 export const DonationsCard = ({ campaign, subCampaigns, brand, impactDebits, charities }) => {
+	console.log("DonationsCard", "campaign", campaign, "subCampaigns", subCampaigns);
+	// ?? do we have something in date-utils for this??
 	const getDate = (dateStr) => {
 		let tempDate = dateStr.substr(0, dateStr.split("").findIndex((el) => el === "T")).split("-") // parse date 
 		tempDate[1] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][parseInt(tempDate[1]) - 1]
 		return tempDate.reverse().join(" ") // [YYYY,MM,DD] -> "DD MM YYYY"
 	}
 
-	// find earliest date if we expect a list
-	if (!campaign) campaign = subCampaigns.sort((a, b) => {
-		return b - a
-	})[0];
+	// // find earliest date if we expect a list
+	// if (!campaign) campaign = subCampaigns.sort((a, b) => {
+	// 	return b - a
+	// })[0];
 
-	let startDate = getDate(campaign.created)
+	let allCampaigns = [campaign].concat(subCampaigns).filter(x => x);
 
-	// this isn't accurate?
-	const endDate = campaign.end ? getDate(campaign.end) : "present"; ``
+	const getCampaign4Debit = debit => {
+		let campaign4debit = allCampaigns.find(c => debit.campaign === c.id || debit.jobNumber === C.id || debit.jobNumber === c.jobNumber);
+		return campaign4debit;
+	};
+
+	let starts = allCampaigns.map(c => Campaign.start(c) || c.created).filter(x => x);
+	starts.sort();
+	let startDate = starts[0]; //getDate(campaign.created)
+	let ends = allCampaigns.map(c => Campaign.end(c) || c.created).filter(x => x);
+	ends.sort();
+	let endDate = ends[ends.length-1];
 
 	// if we have multiple donations to the same charity, avoid using the same image over and over again
 	let charityCounter = {}
@@ -392,9 +403,11 @@ export const DonationsCard = ({ campaign, subCampaigns, brand, impactDebits, cha
 	return (
 		<div className='flex flex-column pt-5'>
 			<h2 className='text header-text' style={{ margin: "0 5%" }}>{brand.name}'s Campaign{impactDebits.length > 1 ? "s" : ""} With Good-Loop</h2>
-			<p className='text dates'>{startDate} - {endDate}</p>
+			<p className='text dates'>{dateStr(asDate(startDate))} - {dateStr(asDate(endDate))}</p>
 			<div id="donation-details" className='flex-mobile-dir'>
-				{impactDebits.map(debit => <DonationCard key={debit.id} debit={debit} brand={brand} campaign={campaign} charityCounter={charityCounter} charities={charities} />)}
+				{impactDebits.map(debit => 
+					<DonationCard key={debit.id} debit={debit} brand={brand} campaign={getCampaign4Debit(debit)} charityCounter={charityCounter} charities={charities} />
+				)}
 			</div>
 		</div>
 	);
