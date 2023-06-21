@@ -168,7 +168,7 @@ const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) =>
 		return (
 		<div className={`ad-deco-cont ${classNames}`}>
 			<div className='spotlight-ad'>
-				<AdvertsCatalogue ads={ads} noPreviews className='ads-catalogue' captions={false}/>
+				<AdvertsCatalogue ads={[ads[0]]} noPreviews className='ads-catalogue' captions={false}/>
 				<img className='phone-container' src="/img/Impact/iphone-frame-16-9-padded-notch.svg" />
 			</div>
 			<div className='spotlight-decoration'>
@@ -193,7 +193,7 @@ const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) =>
 						<DevOnly><PortalLink item={charity} /></DevOnly>
 						<ImpactInfo impact={impact.impact} />
 					</div>
-					{isMobile() && adWithDecoration({ads:[ads[0]], classNames:'mobile'})}
+					{isMobile() && adWithDecoration({ads, classNames:'mobile'})}
 					<div className='campaign-grouped-content'>						
 						<p>
 							<Misc.RoughDate date={start} />

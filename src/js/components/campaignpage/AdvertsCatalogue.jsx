@@ -189,8 +189,9 @@ const AdvertCard = ({ ad, active, decoration }) => {
 		}, 100);
 	}
 
+	//maxWidth:"50%" this made for a (bad looking) mini advert
 	return (
-		<div className="position-relative main-ad" style={{ minHeight: "100px", maxWidth:"50%", margin:"auto" }}>
+		<div className="position-relative main-ad" style={{ minHeight: "100px", margin:"auto" }}>
 			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{ position: "absolute", zIndex: 999 }}>Advert Editor ({ad.id})</DevLink>
 			<div className="position-relative ad-unit-outer">
 				{hasShown ? (
