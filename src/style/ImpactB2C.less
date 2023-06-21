@@ -320,7 +320,9 @@
 				}
 
 				.description {
-					font-size: xx-large;
+					font-size: xxx-large;
+					color: white !important;
+					text-align: unset !important;
 				}
 
 				h2 {
@@ -393,13 +395,19 @@
 				}
 
 				.dyk-container {
-					font display: flex;
 					flex-direction: column;
 					place-content: center;
 					text-align: left;
 					height: 100%;
 					padding: 15%;
 					color: white !important;
+					@media @ipad-max {
+						padding: 25% 10% !important;
+					}
+
+					@media (max-width: 1180px) {
+						padding: 25% 10% !important;
+					}
 
 					.dyk {
 						font-weight: bold;
@@ -438,8 +446,8 @@
 
 			// Helping Fund 'Project Here'
 			.right {
+				font-family: 'Montserrat', sans-serif;
 				padding: 5% !important;
-
 				text-align: left;
 				position: relative;
 
@@ -455,10 +463,20 @@
 
 				.project-desc {
 					font-weight: unset;
-					font-size: 1vw; // keeps text within the div unless there's a TON of text but...
+					font-size: small;
 
 					@media @width-mobile {
 						font-size: 100%; // ... on mobile it makes it tiny, so fix it there
+					}
+				}
+				.testimonial-source {
+					position: absolute;
+					bottom: 10%;
+					text-transform: uppercase;
+					font-size: small;
+					font-weight: 600;
+					p {
+						margin-bottom: 0;
 					}
 				}
 			}
@@ -715,6 +733,8 @@
 		.impact-debit-container {
 			.impact-debit {
 				flex-basis: 30%; // keep to 3 a row
+				display: flex;
+				flex-direction: column;
 	
 				@media @width-mobile {
 					flex-basis: 100%; // on mobile though, 1 per row
@@ -727,6 +747,7 @@
 				margin-bottom: 2.5%;
 	
 				.debit-content {
+					flex: 1;
 					width: 100%;
 					padding: 2.5%;
 					padding-left: 5%;
@@ -857,11 +878,13 @@
 			}
 			.padding-div, .splash-bgColor{
 				flex: 1;
+				-webkit-flex: 1;
 				height: 100%;
 			}
 
 			.splash-curve {
 				flex-basis: fit-content;
+				-webkit-flex-basis: fit-content;
 				height: 100%;
 			}
 
