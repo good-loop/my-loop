@@ -2,7 +2,7 @@
 import C from '../../../C';
 import DataStore from '../../../base/plumbing/DataStore';
 import { assert } from '../../../base/utils/assert';
-import { toTitleCase } from '../../../base/utils/miscutils';
+import { decURI, toTitleCase } from '../../../base/utils/miscutils';
 
 
 const roundFormat = new Intl.NumberFormat('en-GB', {maximumFractionDigits: 0});
@@ -76,7 +76,8 @@ export const getFilterTypeId = () => {
 		let filterType = toTitleCase(m[1]);
 		if (filterType==="Brand") filterType="Advertiser";
 		if (filterType==="Ngo") filterType="NGO";
-		return {filterType, filterId:m[2]};
+		let filterId = decURI(m[2]);
+		return {filterType, filterId};
 	}
 
 	// Green Dash url params version

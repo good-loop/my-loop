@@ -201,7 +201,7 @@
 		flex-wrap: wrap; // Spill over onto extra lines, eg on mobile
 		.charity-link {
 			margin: 0 0.3rem;
-			margin-bottom: 1rem;
+			margin-bottom: 0.3rem;
 			.logo {
 				width: unset; // Let wide logos expand
 			}
@@ -213,8 +213,31 @@
 		margin: 0 1rem;
 	}
 
-	.ads-catalogue-card .ad-unit-outer {
-		pointer-events: none;
+	.ads-catalogue-card {
+		.ad-unit-outer {
+			pointer-events: none;
+		}
+		// HACK some ugly brute force to make the ad fill the space its given
+		.ads-catalogue {
+			height: 100%;
+			.carousel {
+				height: 100%;
+				.carousel-inner {
+					height: 100%;
+					.carousel-item {
+						height: 100%;
+						.main-ad {
+							height: 100%;
+							max-width: 80% !important;
+							display: flex;
+							flex-direction: column;
+							justify-content: center;
+							align-items: stretch;
+						}
+					}
+				}
+			}
+		}
 	}
 
 	.charity-card {

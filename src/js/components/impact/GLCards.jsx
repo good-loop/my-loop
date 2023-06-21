@@ -18,23 +18,24 @@ const LOADED_PATH = [...MODAL_PATH, 'loaded'];
 /**
  * Common code for HDivision and VDivision.
  */
-function CommonDivision({child, i, Tag}) {
+function CommonDivision({child, i, basisCss, Tag}) {
 	// Special case for overlays - they must not interfere with layout, so make no wrapper
 	if (!child || child.type === GLModalCard) return child;
 	const style = {
 		flexBasis: `${child.props.basis}%`,
 		flexGrow: child.props.basis ? 0 : 1,
 	};
+	if (child.props.enforceBasis) style[basisCss] = `${child.props.basis}%`
 	return <Tag key={i} style={style}>{child}</Tag>;
 }
 
 
 /** Child element of GLHorizontal */
-const HDivision = props => <CommonDivision {...props} Tag={Col} />
+const HDivision = props => <CommonDivision {...props} basisCss="minWidth" Tag={Col} />
 
 
 /** Child element of GLVertical */
-const VDivision = props => <CommonDivision {...props} Tag="div" />
+const VDivision = props => <CommonDivision {...props} basisCss="minHeight" Tag="div" />
 
 
 /**
