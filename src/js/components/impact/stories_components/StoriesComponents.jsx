@@ -268,9 +268,13 @@ export const CampaignImpactTwo = ({ logo, impactDebit, charity }) => {
 						<img src={imgList[Math.min(1, imgList.length - 1)]} alt="charity image 1" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
 					</div>
 					<div className='p-2 bg-gl-light-pink right camp-impact-card camp-impact-img'>
-						<img src="/img/Impact/heart.png" className="heart-bg" />
+						<img src='/img/Impact/heart.png' className='heart-bg' />
 						<h2 className='color-gl-light-red mb-4'>{text.testimonialHeader}</h2>
 						<p className='project-desc text'>{text.testimonialQuote}</p>
+						<div className='testimonial-source'>
+							<p>{text.testimonialPerson}</p>
+							<p>{text.testimonialJob}</p>
+						</div>
 					</div>
 				</Row>
 			</div>
