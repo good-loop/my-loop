@@ -789,6 +789,7 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 		modalContent={modalMapCardContent}
 		modalClassName="impact-map"
 		modalId="right-half"
+		className='center-number'
 	>
 		<h3>{shortNumber(impressions)} VIEWS | {totalCountries} {countryWord}</h3>
 	</GLCard>
