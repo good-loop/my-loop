@@ -256,8 +256,8 @@ const IOPSecondHalf = ({mainItem, ...baseObjects}) => {
 	const { campaign, ads } = baseObjects;
 
 	return <GLVertical>
-		<WiderCSR mainItem={mainItem} />		
 		{/* top right corner */}
+		{mainItem?.impactSettings?.csrHtml && <WiderCSR mainItem={mainItem} />}
 		{!campaign && <GLHorizontal collapse="md" basis={60}>
 			<GLVertical>
 				<GLHorizontal>
