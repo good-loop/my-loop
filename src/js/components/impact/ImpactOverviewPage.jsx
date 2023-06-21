@@ -785,7 +785,7 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 		console.warn("CountryViewsGLCard - no baseObjects");
 		return null;
 	}
-	let impressionData = getImpressionsByCampaignByCountry({baseObjects, cutoff:0.5})
+	let impressionData = getImpressionsByCampaignByCountry({baseObjects, cutoff:0.01})
 	// Prepare data for non-modal view - total impressions and countries
 	const totalCountries = Object.keys(impressionData).filter(country => country !== "unset").length;
 	const impressions = sumBy(Object.values(impressionData), 'impressions') // sum impressions over all regions
