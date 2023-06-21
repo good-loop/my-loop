@@ -559,8 +559,6 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 			detailsAmount: `£${Money.prettyString({ amount: impact.amountGBP || 0 })}`,
 			creditsName: "Impact",
 			creditsValue: "1234 Trees Planted",
-			byGoodLoop: "Powered by Good-Loop",
-			goodLoopImg: "/img/Impact/AdsForGood.svg",
 			// Links
 			links: [
 				{ url: "www.google.com", icon: "", linkText: "Donation Receipt", linkImg: "/img/Impact/donation-icon.svg" },
@@ -574,8 +572,6 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 			detailsAmount: "XX.XXT",
 			creditsName: "Credits",
 			creditsValue: "180",
-			byGoodLoop: "Managed by Good-Loop",
-			goodLoopImg: "/img/Impact/AdsForGood.svg",
 			// Links
 			links: [
 				{ url: "www.google.com", icon: "", linkText: "Donation Receipt" },
