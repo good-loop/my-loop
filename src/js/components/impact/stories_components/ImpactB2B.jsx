@@ -4,7 +4,7 @@ import { animated } from 'react-spring';
 import { Col, Container, Row } from 'reactstrap';
 import { GLModalBackdrop } from '../GLCards';
 import KStatus from '../../../base/data/KStatus';
-import {CardSeperator, CampaignImpactOne, CampaignImpactTwo, HowItWorks, DonationsCard, circleLogo, LearnMore, BrandLogoRows} from './StoriesComponents';
+import {CardSeperator, CampaignImpact, CampaignImpactTwo, HowItWorks, DonationsCard, circleLogo, LearnMore, BrandLogoRows} from './StoriesComponents';
 import { ErrorDisplay } from '../ImpactComponents';
 import ImpactLoadingScreen from '../ImpactLoadingScreen';
 import Money from '../../../base/data/Money';
@@ -78,7 +78,7 @@ const ImpactB2BContent = ({pvBaseObjects, totalString, mainLogo, footer}) => {
 			{firstImpact && <CampaignSpotlight {...baseObjects} impact={firstImpact} charity={firstCharity} status={status} />}
 			<HowItWorks {...baseObjects} totalString={totalString} />
 			{firstImpact && <CardSeperator text={`Here's a Look At What You're Helping\nSupport With ${brand.name}`} />}
-			{firstImpact && <CampaignImpactOne {...baseObjects} logo={mainLogo} charity={firstCharity} impactDebit={firstImpact} />}
+			{firstImpact && <CampaignImpact i={1} {...baseObjects} logo={mainLogo} charity={firstCharity} impactDebit={firstImpact} />}
 			{secondImpact && <CampaignImpactTwo {...baseObjects} logo={mainLogo} charity={secondCharity} impactDebit={secondImpact} />}
 			{firstImpact && <DonationsCard {...baseObjects} />}
 			<LearnMore />

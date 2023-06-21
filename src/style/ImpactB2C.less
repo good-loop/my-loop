@@ -338,12 +338,17 @@
 
 	}
 
-	#campaign-impact-one {
+	/* TODO refactor -1 and -2 to share code */
+	#campaign-impact-1 {
 		background-color: @gl-dark-desat-blue;
 		font-family: 'Montserrat', sans-serif;
+		padding-bottom: 2.5%; /* pad the row tops and the section bottom for even padding */
+
+		.impact-row {
+			padding-bottom: 0;
+		}
 
 		#impact-one-toprow {
-			padding-bottom: 0;
 
 			.camp-impact-card {
 				height: 40vh;
@@ -428,10 +433,10 @@
 			.right {
 				flex-basis: 60%;
 			}
-		}
-	}
+		} /* /#impact-one-botrow */
+	} /* /.campaign-impact-1 */
 
-	#campaign-impact-two {
+	#campaign-impact-2 {
 		background-color: @gl-lighter-blue;
 
 		.impact-row {
