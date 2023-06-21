@@ -74,7 +74,7 @@ const ImpactB2BContent = ({pvBaseObjects, totalString, mainLogo, footer}) => {
 		<Col style={{paddingRight: 0, overflow: 'hidden'}}>
 			<SplashCard {...baseObjects} mainLogo={mainLogo} />
 			<BrandLogoRows {...baseObjects} mainLogo={mainLogo} row />
-			{firstImpact && <CardSeperator text={`Here's What: ${brand.name}'s Campaign\nWith Good-Loop Has Achieved...`} />}
+			{firstImpact && <CardSeperator text={`Here's What ${brand.name}'s Campaign\nWith Good-Loop Has Achieved...`} />}
 			{firstImpact && <CampaignSpotlight {...baseObjects} impact={firstImpact} charity={firstCharity} status={status} />}
 			<HowItWorks {...baseObjects} totalString={totalString} />
 			{firstImpact && <CardSeperator text={`Here's a Look At What You're Helping\nSupport With ${brand.name}`} />}
@@ -235,14 +235,13 @@ const Footer = ({charities, mainLogo}) => {
 		<div id="impact-footer-container">
 			<Col id='stories-footer' className='impact-footer'>
 				<p className='text'>Advertising That's A Force For Good</p>
-				<div className='topRow'><img className='logo' src={mainLogo} style={{width: "100%"}}/></div>
-				<img className="adsForGood" src="/img/Impact/AdsForGood.svg" style={{width:"15vw"}}/>
+				<div className='topRow'><img className='logo' src={mainLogo} style={{width: '15vh', height: '15vh'}}/></div>
+				<img className="adsForGood" src="/img/Impact/AdsForGood.svg" style={{width:'25vw'}}/>
 				<ul style={{listStyleType: "none"}}>
 					{CharityLogos}
 				</ul>
 			</Col>
 			<img src="/img/Impact/images-combined.png" id="images-combined"/>
-			<img src="/img/Impact/world-card.png" id="holding-world" />
 		</div>
 	);
 };

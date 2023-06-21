@@ -256,8 +256,8 @@ const IOPSecondHalf = ({mainItem, ...baseObjects}) => {
 	const { campaign, ads } = baseObjects;
 
 	return <GLVertical>
-		<WiderCSR mainItem={mainItem} />		
 		{/* top right corner */}
+		{mainItem?.impactSettings?.csrHtml && <WiderCSR mainItem={mainItem} />}
 		{!campaign && <GLHorizontal collapse="md" basis={60}>
 			<GLVertical>
 				<GLHorizontal>
@@ -265,7 +265,7 @@ const IOPSecondHalf = ({mainItem, ...baseObjects}) => {
 					<CharitiesCard mainItem={mainItem} {...baseObjects} />
 				</GLHorizontal>
 				<SubCampaignsCard {...baseObjects} />
-				<CountryViewsGLCard basis={10} baseObjects={baseObjects} />
+				<CountryViewsGLCard baseObjects={baseObjects} />
 				<OffsetsCard />
 			</GLVertical>
 			<ContentListCard {...baseObjects } />
@@ -293,10 +293,10 @@ function WiderCSR({mainItem}) {
 	let background;	
 	let m = html.match(/background:(.+)$/m);
 	if (m) {
-		background = m[1].trim();
+		background = "linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 40%, rgba(255,255,255,0) 100%), " + m[1].trim();
 		html = html.substring(m[0].length).trim();
 	}
-	return <GLCard background={background}><MDText source={html} /></GLCard>;
+	return <GLCard background={background}><MDText source={html} style={{maxWidth:"40%"}} className="d-flex flex-column justify-contents-center align-items-center" /></GLCard>;
 }
 
 const SustainableGoalsCard = ({baseObjects}) => {
@@ -785,8 +785,7 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 		console.warn("CountryViewsGLCard - no baseObjects");
 		return null;
 	}
-	let impressionData = getImpressionsByCampaignByCountry({baseObjects})
-
+	let impressionData = getImpressionsByCampaignByCountry({baseObjects, cutoff:0.01})
 	// Prepare data for non-modal view - total impressions and countries
 	const totalCountries = Object.keys(impressionData).filter(country => country !== "unset").length;
 	const impressions = sumBy(Object.values(impressionData), 'impressions') // sum impressions over all regions
