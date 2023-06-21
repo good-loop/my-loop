@@ -21,7 +21,7 @@ import NGO from '../../../base/data/NGO';
 import { getDataItem } from '../../../base/plumbing/Crud';
 import { getUrlValue, setUrlValue } from '../../../base/plumbing/DataStore';
 import { asDate } from '../../../base/utils/date-utils';
-import { addAmountSuffixToNumber } from '../../../base/utils/miscutils';
+import { addAmountSuffixToNumber, space } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 /*
  * A thin card that contains just the supplied text,
@@ -557,8 +557,6 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 			// donation details
 			amountType: "Donation",
 			detailsAmount: `£${Money.prettyString({ amount: impact.amountGBP || 0 })}`,
-			breakdownHeader: "Breakdown",
-			breakdownText: "£0.XX donated per (x) completed views",
 			creditsName: "Impact",
 			creditsValue: "1234 Trees Planted",
 			byGoodLoop: "Powered by Good-Loop",
@@ -574,8 +572,6 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 			// donation details
 			amountType: "CO2e Offset",
 			detailsAmount: "XX.XXT",
-			breakdownHeader: "Offset Cost",
-			breakdownText: "£XXX",
 			creditsName: "Credits",
 			creditsValue: "180",
 			byGoodLoop: "Managed by Good-Loop",
@@ -613,7 +609,7 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 	}
 	let donationStatus = statusTitles.map((statusTitle, i) => {
 		return (
-			<div className="donation-status">
+			<div key={statusTitle} className="donation-status">
 				<p>{statusDates[i] ? <Misc.DateTag date={statusDates[i]} /> : (statusCompleted[i] ? <span>&nbsp;</span> : "...")}</p>
 				<img src={statusCompleted[i] ? "/img/Impact/tick-circle.svg" : "/img/Impact/blank-tick.svg"} className='donation-tick' />
 				<p className='light-bold'>{statusTitle}</p>
@@ -623,7 +619,7 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 
 	let donationLinks = details.links.map((link, i) => {
 		return (
-			<a className="donation-link" href={link.url}>
+			<a key={i} className="donation-link" href={link.url}>
 				<img src={link.linkImg} />
 				<p className='light-bold'>{link.linkText}</p>
 			</a>)
@@ -633,12 +629,14 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 	const openId = getUrlValue("open");
 	return (
 		<Modal isOpen={openId === impactDebit.id} id="impact-cert-modal" className='impact-cert' toggle={() => setUrlValue("open", false)} size="xl">
-			<ModalBody className="d-flex modal-body" style={{ padding: 0, height: "90vh" }}>
+			<ModalBody className="d-flex modal-body" style={{ padding: 0, minHeight: "90vh" }}>
 				{/* Col 1 on desktop, top row on mobile*/}
 				<div className='flex-column cert-col left justify-content-between' style={{ padding: "5%", flexBasis: "50%" }}>
 					<div className='charity-description justify-content-between'>
-						<img style={{ maxWidth: "30%" }} src={charity.logo} />
-						<h4 className='mt-5 charity-name'>{charityName}</h4>
+						<Row>
+							<Col><Logo size="xl" item={charity} /></Col>
+							<Col><h4 className='mt-5 charity-name'>{charityName}</h4></Col>
+						</Row>
 						<p className='text mt-4'>{charityDesc}</p>
 						{charity.url && <p className='text mt-4'>Find out more: <a href={charity.url}>{charityName}</a></p>}
 					</div>
@@ -648,11 +646,11 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 						{unsdg && <img src={`/img/Impact/UN_Goals/${unsdg}.png`} style={{ width: '15%', marginTop: '2%' }} alt='SDG Logo' />}
 					</div>
 					<div className='charity-numbers mt-5 p-3' style={{ background: "@gl-lighter-blue" }}>
-						<p className='text small-header light-bold'>{charityName}</p>
-						{NGO.regs(charity).map(reg => <p className='text mt-1'>{reg.organisation} registration number: {reg.id}</p>)}
+						<p className='text small-header light-bold'>{charity.name}</p>
+						{NGO.regs(charity).map(reg => <p key={reg.id} className='text mt-1'>{reg.organisation} registration number: {reg.id}</p>)}
 					</div>
 					<DevOnly>Charity: <PortalLink item={charity} /></DevOnly>
-					<DonationSmallPrint isDone={statusCompleted[4]} campaign={campaign} impact={impact} brand={brand} impactDebit={impactDebit} />
+					{/* <DonationSmallPrint isDone={statusCompleted[4]} campaign={campaign} impact={impact} brand={brand} impactDebit={impactDebit} /> */}
 				</div>{/* ./ col 1 */}
 
 				{/* Col 2 on desktop, bot row on mobile*/}
@@ -663,36 +661,35 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 								<Logo item={brand} />
 							</div>
 							<div className='logo-text-top' style={{ display: "flex", alignItems: "center" }}>
-								<p className='text'>{campaignName}</p>
+								<p className='text'>{campaignName && "Campaign: "+campaignName}</p>
 							</div>
 						</Row>
-						<Row className="cert-logo-row" style={{ height: "10vh", margin: 0 }}>
+						{/* no need to dupe the charity logo <Row className="cert-logo-row" style={{ height: "10vh", margin: 0 }}>
 							<div className="logo-container" style={{ width: "30%" }}>
 								<img src={charity.logo || charity.altlogo} />
 							</div>
 							<div className='logo-text-bot' style={{ display: "flex", alignItems: "center" }}>
 								<p className='text'>{charityName}</p>
 							</div>
-						</Row>
+						</Row> */}
 					</div>
 
 					<div id='donation-details' style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-
 						<div>
-							<p className='text offset-header'>{impactType.toUpperCase()} DETAILS</p>
+							<p className='text offset-header'>{impactType.toUpperCase()}</p>
 							<div id="offset-details">
 								<Row className="offset-content" style={{ margin: 0 }}>
 									<Col style={{ borderRight: "solid 1px lightgray" }}>
 										<p className='text light-bold'>{isOffset ? "Carbon Offset" : "Donation"}</p>
 										<h2 className='color-gl-red'><Misc.Money amount={impactDebit.impact.amount} /></h2>
-										<DevOnly><PortalLink item={impactDebit} /></DevOnly>
+										<DevOnly>ImpactDebit: <PortalLink item={impactDebit} /></DevOnly>
 									</Col>
 									<Col style={{ borderRight: "solid 1px lightgray", padding: 0 }}>
 										<div style={{ borderBottom: "solid 1px lightgray", padding: "0 5% 10%" }}>
-											<p className='text light-bold'><TODO>{details.breakdownHeader}</TODO></p>
-											<p className='color-gl-red'><TODO>{details.breakdownText}</TODO>
-												<TODO>??upto a limit of: <Misc.Money amount={null} /></TODO>
-											</p>
+											<p className='text light-bold'>Breakdown</p>
+											<div className='color-gl-red'>
+												<DonationModelInfo campaign={campaign} />
+											</div>
 										</div>
 										<div style={{ padding: "10% 5%" }}>
 											<p className='text light-bold'>{isOffset ? "Credits" : "Impact"}</p>
@@ -700,8 +697,8 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 										</div>
 									</Col>
 									<Col style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-										<p className='text light-bold'>{details.byGoodLoop}</p>
-										<img src={details.goodLoopImg} style={{ width: "100%" }} />
+										<p className='text light-bold'>{isOffset? "Managed":"Powered"} by Good-Loop</p>
+										<img src="/img/Impact/AdsForGood.svg" style={{ width: "100%" }} />
 										<p className='small-legal-text'>Registered UK company: SC548356</p>
 									</Col>
 								</Row>
@@ -712,13 +709,13 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 							<p className='text offset-header'>{impactType.toUpperCase()} STATUS</p>
 							<div id="offset-status">
 								<Col className="offset-content" style={{ margin: 0 }}>
-									<DevOnly><PortalLink item={campaign} /></DevOnly>
+									<DevOnly>Campaign: <PortalLink item={campaign} /></DevOnly>
 									<Row style={{ justifyContent: "space-around" }}>
 										<div id='status-line' />
 										{/* ticks and dates for launched ... paid */}
 										{donationStatus}
 									</Row>
-									<p className="">Tracking IDs: {[impactDebit.donationId || impactDebit.id, campaign.id, campaign.xref].join(", ")}
+									<p className="">Tracking IDs: {[impactDebit.donationId || impactDebit.id, campaign.id, campaign.xref].filter(x => x).join(", ")}
 									</p>
 								</Col>
 							</div>
@@ -733,6 +730,13 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 							</div>
 						</div>}
 
+						<div>
+							<p className='text offset-header'>DETAILS</p>
+							<Row className="offset-content" style={{ margin: 0, placeContent: 'space-around' }}>
+							<DonationSmallPrint isDone={statusCompleted[4]} campaign={campaign} impact={impact} brand={brand} impactDebit={impactDebit} />
+							</Row>
+						</div>
+
 					</div>
 				</div>
 			</ModalBody>
@@ -740,24 +744,28 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 	)
 }
 
+const DonationModelInfo = ({campaign}) => {
+	// {dntnModel.input==="CPA" && <span>One donation {dntnModel.perInput && <span>of <Misc.Money amount={dntnModel.perInput}/></span>} per user is made when the user engages.</span>}
+	// {dntnModel.fraction? printer.prettyNumber(100*dntnModel.fraction, 2)+"%" : "A fraction"} of the advertising cost is donated. Most of the rest goes to pay the publisher and related companies. Good-Loop and the advertising exchange make a small commission. The donations depend on viewers seeing the adverts.
+	return <>
+		{campaign.dntnModel?.perInput && <span><Misc.Money amount={campaign.dntnModel.perInput} /> per </span>}
+		{/* {campaign.maxDntn && <span>Upto a limit of: <Misc.Money amount={campaign.maxDntn} /></span>} done in Details */}
+	</>
+}
 
 function DonationSmallPrint({ campaign, impact, isDone }) {
 	let isOffset = Impact.isCarbonOffset(impact);
 	if (isOffset) {
-		return (<div className='small'>
+		campaign.dntnModel
+		return (<div className=''>
 			The offset organisations are not recommending or endorsing the products in return.
 			We are simply glad to support the good work they do.
 			{!isDone && <div>Amounts for campaigns that are in progress or recently finished are estimates and may be subject to audit.</div>}
 		</div>);
 	}
 	let dntnModel = campaign?.dntnModel || {};
-	return (<div className='small'>
-		<TODO>
-			{JSON.stringify(Campaign.budget(campaign))}
-			{JSON.stringify(campaign?.maxDntn)}
-			{JSON.stringify(campaign?.dntnModel)}
-		</TODO>
-		{dntnModel.input==="CPA" && "One donation per user is made when the user engages."}
+	return (<div className=''>
+		{dntnModel.input==="CPA" && <span>One donation {dntnModel.perInput && <span>of <Misc.Money amount={dntnModel.perInput}/></span>} per user is made when the user engages.</span>}
 		{dntnModel.fraction? printer.prettyNumber(100*dntnModel.fraction, 2)+"%" : "A fraction"} of the advertising cost is donated. Most of the rest goes to pay the publisher and related companies. Good-Loop and the advertising exchange make a small commission. The donations depend on viewers seeing the adverts.
 		{campaign?.maxDntn && <span>The maximum that can be donated from this campaign is <Misc.Money amount={campaign.maxDntn} /></span>}
 
@@ -767,13 +775,11 @@ function DonationSmallPrint({ campaign, impact, isDone }) {
 
 		<div>Donations are provided without conditions. The charities are not recommending or endorsing the products in return.
 			They're just doing good — which we are glad to support.</div>
+
 		{!isDone && <div>Amounts for campaigns that are in progress or recently finished are estimates and may be subject to audit.</div>}
-		<div>This information follows the guidelines of the New York Attorney General for best practice in cause marketing,<Cite href="https://www.charitiesnys.com/cause_marketing.html" />
-			and the Better Business Bureau's standard for donations in marketing.</div>
-		{campaign.smallPrint && <div>
-			<span className="small">
-				{campaign.smallPrint}
-			</span>
-		</div>}
+
+		<div>This information follows the guidelines of the New York Attorney General for best practice in cause marketing,<Cite href="https://www.charitiesnys.com/cause_marketing.html" /> and the Better Business Bureau's standard for donations in marketing.</div>
+		
+		{campaign.smallPrint && <div>{campaign.smallPrint}</div>}
 	</div>);
 }
