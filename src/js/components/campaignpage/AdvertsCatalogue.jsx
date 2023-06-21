@@ -191,9 +191,9 @@ const AdvertCard = ({ ad, active, decoration }) => {
 
 	//maxWidth:"50%" this made for a (bad looking) mini advert
 	return (
-		<div className="position-relative main-ad" style={{ minHeight: "100px", margin:"auto" }}>
+		<div className="position-relative main-ad" style={{ minHeight: "max(100px,80%)", /*margin:"auto" causes a small ad*/ }}>
 			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{ position: "absolute", zIndex: 999 }}>Advert Editor ({ad.id})</DevLink>
-			<div className="position-relative ad-unit-outer">
+			<div className="position-relative ad-unit-outer h-100">
 				{hasShown ? (
 					<GoodLoopUnit vertId={ad.id} size={size} extraParams={extraParams} play="onclick" 
 						style={{zIndex:2, maxWidth:"90%", margin:"auto"}} shouldDebug={false} />
