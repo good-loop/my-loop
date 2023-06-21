@@ -22,6 +22,7 @@ import { getDataItem } from '../../../base/plumbing/Crud';
 import { getUrlValue, setUrlValue } from '../../../base/plumbing/DataStore';
 import { asDate } from '../../../base/utils/date-utils';
 import { addAmountSuffixToNumber } from '../../../base/utils/miscutils';
+import printer from '../../../base/utils/printer';
 /*
  * A thin card that contains just the supplied text,
  * @param {string} text  
@@ -749,14 +750,16 @@ function DonationSmallPrint({ campaign, impact, isDone }) {
 			{!isDone && <div>Amounts for campaigns that are in progress or recently finished are estimates and may be subject to audit.</div>}
 		</div>);
 	}
+	let dntnModel = campaign?.dntnModel || {};
 	return (<div className='small'>
-		<TODO> Which donation model was this on?? 
+		<TODO>
 			{JSON.stringify(Campaign.budget(campaign))}
 			{JSON.stringify(campaign?.maxDntn)}
 			{JSON.stringify(campaign?.dntnModel)}
-			50% of the advertising cost for each advert is donated. Most of the rest goes to pay the publisher and related companies.
-			Good-Loop and the advertising exchange make a small commission. The donations depend on viewers watching the adverts.
 		</TODO>
+		{dntnModel.input==="CPA" && "One donation per user is made when the user engages."}
+		{dntnModel.fraction? printer.prettyNumber(100*dntnModel.fraction, 2)+"%" : "A fraction"} of the advertising cost is donated. Most of the rest goes to pay the publisher and related companies. Good-Loop and the advertising exchange make a small commission. The donations depend on viewers seeing the adverts.
+		{campaign?.maxDntn && <span>The maximum that can be donated from this campaign is <Misc.Money amount={campaign.maxDntn} /></span>}
 
 		{impact.name && <div>Impacts such as "{I18N.tr(impact.name)}" are representative.
 			We don't ring-fence funding, as the charity can better assess the best use of funds.
