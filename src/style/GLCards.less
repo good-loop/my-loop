@@ -132,7 +132,8 @@ The GLCards layout is a layout for modular cards which are designed to expand an
 		.close {
 			float: left;
 			font-size: 2.5rem;
-			font-weight: normal;			
+			font-weight: normal;
+			line-height: 1.25; // better centring until I replace &times; with SVG --RM
 			&.white-circle-bg {
 				border-radius: 50%;
 				width: 2.8rem;
@@ -154,14 +155,25 @@ The GLCards layout is a layout for modular cards which are designed to expand an
 			}
 		}
 
-		&.red-top-border {
-			border-top: solid @gl-red 5px;
-		}
-
 		&.noPadding {
 			padding: 0;
 		}
 	}
+	&.red-top {
+		.glcard:before {
+			content: '';
+			height: 1.5rem;
+			width: 100%;
+			background-color: @gl-red;
+			display: block;
+			z-index: -1;
+			position: absolute;
+			top: -5px;
+			border-top-left-radius: @GLCardRadius;
+			border-top-right-radius: @GLCardRadius;
+		}
+	}
+
 } // ./glmodal
 
 .glmodal-backdrop {

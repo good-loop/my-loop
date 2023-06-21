@@ -62,8 +62,8 @@ const ImpactDateFilter = ({doReload}) => {
 		id: 'filter-display',
 		Content,
 		prioritized:true,
-		storedClassName: 'date-modal',
-		headerClassName: 'red-top-border noClose'
+		storedClassName: 'date-modal red-top',
+		headerClassName: 'noClose'
 	});
 
 	return (

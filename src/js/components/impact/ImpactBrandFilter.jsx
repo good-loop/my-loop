@@ -212,7 +212,7 @@ const ImpactBrandFilters = ({loading, masterBrand, brand, campaign, status, doRe
 				{allSubBrands.map(b => <FilterListItem item={b}/>)}
 			</div>
 		);
-		openAndPopulateModal({id: 'filter-display', Content: modalContent, prioritized: true, headerClassName: 'red-top-border noClose noPadding', storedClassName: 'impact-brand-modal'})
+		openAndPopulateModal({id: 'filter-display', Content: modalContent, prioritized: true, headerClassName: 'noClose noPadding', storedClassName: 'impact-brand-modal red-top'})
 	};
 
 	// helper JSX elements
