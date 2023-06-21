@@ -31,12 +31,8 @@ const AdvertsCatalogue = ({ ads, noPreviews, className, captions=true, unwrap, .
 	const [animating, setAnimating] = useState(false);
 
 	if (ads.length === 1) {
-		return (<Container>
-			<AdvertCard
-				ad={ads[0]}
-				active
-			/>
-		</Container>);
+		const content = <AdvertCard ad={ads[0]} active />
+		return unwrap ? content : <Container>{content}</Container>;
 	}
 
 	const carouselSlides = ads.map((ad, i) =>
@@ -45,10 +41,7 @@ const AdvertsCatalogue = ({ ads, noPreviews, className, captions=true, unwrap, .
 			onExited={() => setAnimating(false)}
 			key={i}
 		>
-			<AdvertCard
-				ad={ad}
-				active={activeIndex === i}
-			/>
+			<AdvertCard ad={ad} active={activeIndex === i} />
 			{captions && <CarouselCaption captionText={<Misc.DateDuration startDate={ad.start} endDate={ad.end} />} />}
 		</CarouselItem>
 	);
@@ -70,7 +63,7 @@ const AdvertsCatalogue = ({ ads, noPreviews, className, captions=true, unwrap, .
 		setActiveIndex(newIndex);
 	};
 
-	const contents = (<>
+	const contents = <>
 		<Carousel
 			activeIndex={activeIndex}
 			next={next}
@@ -88,9 +81,9 @@ const AdvertsCatalogue = ({ ads, noPreviews, className, captions=true, unwrap, .
 			{/* <br /><br /> reduce the whitespace - Dan, Jun 2023 */}
 			<AdPreviewCarousel ads={ads} setSelected={goToIndex} selectedIndex={activeIndex} />
 		</>}
-	</>);
+	</>;
 
-	return unwrap ? <>{contents}</> : <Container className={space('ads-catalogue', className)}>{contents}</Container>;
+	return unwrap ? contents : <Container className={space('ads-catalogue', className)}>{contents}</Container>;
 };
 
 /**
