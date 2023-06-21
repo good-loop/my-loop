@@ -265,7 +265,7 @@ const IOPSecondHalf = ({mainItem, ...baseObjects}) => {
 					<CharitiesCard mainItem={mainItem} {...baseObjects} />
 				</GLHorizontal>
 				<SubCampaignsCard {...baseObjects} />
-				<CountryViewsGLCard basis={10} baseObjects={baseObjects} />
+				<CountryViewsGLCard baseObjects={baseObjects} />
 				<OffsetsCard />
 			</GLVertical>
 			<ContentListCard {...baseObjects } />
