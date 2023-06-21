@@ -1,4 +1,4 @@
-import React, { Children, useEffect, useMemo } from 'react';
+import React, { Children, useEffect, useState, useMemo } from 'react';
 import _ from 'lodash';
 import {Row, Col, Container, Card, CardHeader, CardBody} from 'reactstrap';
 import { space, isPortraitMobile } from '../../base/utils/miscutils';
@@ -6,6 +6,9 @@ import { assert } from '../../base/utils/assert';
 import DataStore from '../../base/plumbing/DataStore'
 import CloseButton from '../../base/components/CloseButton';
 import C from '../../C';
+import BG from '../../base/components/BG';
+import { nonce } from '../../base/data/DataClass';
+import StyleBlock from '../../base/components/StyleBlock';
 
 
 // TODO it'd be nice to do Modal widgets without global storage
@@ -21,11 +24,12 @@ const LOADED_PATH = [...MODAL_PATH, 'loaded'];
 function CommonDivision({child, i, basisCss, Tag}) {
 	// Special case for overlays - they must not interfere with layout, so make no wrapper
 	if (!child || child.type === GLModalCard) return child;
+	let basis = child.props.basis ? (_.isNumber(child.props.basis) ? `${child.props.basis}%` : child.props.basis) : null;
 	const style = {
-		flexBasis: `${child.props.basis}%`,
-		flexGrow: child.props.basis ? 0 : 1,
+		flexBasis: basis,
+		flexGrow: basis || child.props.noGrow ? 0 : 1,
 	};
-	if (child.props.enforceBasis) style[basisCss] = `${child.props.basis}%`
+	if (child.props.enforceBasis) style[basisCss] = basis;
 	return <Tag key={i} style={style}>{child}</Tag>;
 }
 
@@ -78,7 +82,10 @@ export const GLVertical = ({className, children, ...props}) => (
  * @param {String} [obj.href] make this card a link
  * @param {?} [obj.children]
  */
-export const GLCard = ({noPadding, noMargin, className, style, modalContent, modalTitle, modalId, modalHeader, modalHeaderImg, modalPrioritize, modalClassName, modal, children, href, onClick, ...props}) => {
+export const GLCard = ({noPadding, noMargin, className, style, background,
+	modalContent, modalTitle, modalId, modalHeader, modalHeaderImg, modalPrioritize, modalClassName, modal, 
+	children, href, onClick, ...props
+}) => {
 	const modalObj = {
 		Content: modalContent,
 		title: modalTitle,
@@ -101,14 +108,26 @@ export const GLCard = ({noPadding, noMargin, className, style, modalContent, mod
 		}
 	}
 
+	const [n, setNonce] = useState(nonce()); // prevent changing every re-render
+
+	// HACK we cant set style or background on a reactstrap Card - and doing it on an inside div loses the corners. So set it by class.
+	let backgroundClass;
+	if (background) {
+		backgroundClass = "bg"+n;
+	}
+
 	let cardContents = (
-		<Card className={space('glcard', !noMargin && 'm-2', modalContent && 'glcardmodal', className)} onClick={onClickCard} {...props}>
+		<Card className={space('glcard', backgroundClass, !noMargin && 'm-2', modalContent && 'glcardmodal', className)} onClick={onClickCard} {...props}>
 			{noPadding ? children : <CardBody>{children}</CardBody>}
 		</Card>
 	);
 
 	if (href) {
 		cardContents = <C.A className="glcard-link" href={href} onClick={() => modalToggle()}>{cardContents}</C.A>
+	}
+	
+	if (background) {
+		cardContents = <><StyleBlock>{`.${backgroundClass} {background: ${background}; background-size:cover;}`}</StyleBlock>{cardContents}</>;
 	}
 
 	return noMargin ? cardContents : (
@@ -198,7 +217,8 @@ function ModalCardOpen({ id, title, Content, Header, storedClassName, className,
 
 	const headerStyle = headerImg ? {
 		backgroundImage: `url("${headerImg}")`,
-		backgroundPosition: 'center'
+		backgroundPosition: 'center',
+		backgroundSize: 'cover'
 	} : null;
 
 	return <>

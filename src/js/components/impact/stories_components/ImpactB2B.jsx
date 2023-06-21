@@ -4,7 +4,7 @@ import { animated } from 'react-spring';
 import { Col, Container, Row } from 'reactstrap';
 import { GLModalBackdrop } from '../GLCards';
 import KStatus from '../../../base/data/KStatus';
-import {CardSeperator, CampaignImpactOne, CampaignImpactTwo, HowItWorks, DonationsCard, circleLogo, LearnMore, BrandLogoRows} from './StoriesComponents';
+import {CardSeperator, CampaignImpact, CampaignImpactTwo, HowItWorks, DonationsCard, circleLogo, LearnMore, BrandLogoRows} from './StoriesComponents';
 import { ErrorDisplay } from '../ImpactComponents';
 import ImpactLoadingScreen from '../ImpactLoadingScreen';
 import Money from '../../../base/data/Money';
@@ -74,11 +74,11 @@ const ImpactB2BContent = ({pvBaseObjects, totalString, mainLogo, footer}) => {
 		<Col style={{paddingRight: 0, overflow: 'hidden'}}>
 			<SplashCard {...baseObjects} mainLogo={mainLogo} />
 			<BrandLogoRows {...baseObjects} mainLogo={mainLogo} row />
-			{firstImpact && <CardSeperator text={`Here's What: ${brand.name}'s Campaign\nWith Good-Loop Has Achieved...`} />}
+			{firstImpact && <CardSeperator text={`Here's What ${brand.name}'s Campaign\nWith Good-Loop Has Achieved...`} />}
 			{firstImpact && <CampaignSpotlight {...baseObjects} impact={firstImpact} charity={firstCharity} status={status} />}
 			<HowItWorks {...baseObjects} totalString={totalString} />
 			{firstImpact && <CardSeperator text={`Here's a Look At What You're Helping\nSupport With ${brand.name}`} />}
-			{firstImpact && <CampaignImpactOne {...baseObjects} logo={mainLogo} charity={firstCharity} impactDebit={firstImpact} />}
+			{firstImpact && <CampaignImpact i={1} {...baseObjects} logo={mainLogo} charity={firstCharity} impactDebit={firstImpact} />}
 			{secondImpact && <CampaignImpactTwo {...baseObjects} logo={mainLogo} charity={secondCharity} impactDebit={secondImpact} />}
 			{firstImpact && <DonationsCard {...baseObjects} />}
 			<LearnMore />
@@ -128,6 +128,7 @@ const SplashCard = ({brand, mainLogo}) => {
 						<h1 className="color-gl-white">Turning our advertising into a force for good</h1>
 						<p className="text">Powered By Good-Loop</p>
 						<img className="adsForGood" src="/img/Impact/AdsForGood.svg"/>
+						<DevOnly><PortalLink item={brand} /></DevOnly>
 				</div>
 				<img src="/img/Impact/curve-desat-blue.svg" className='splash-curve-mobile' id="splash-curve-mobile-1"/>
 				<img src="/img/Impact/curve-desat-blue.svg" className='splash-curve-mobile' id="splash-curve-mobile-2"/>
@@ -167,7 +168,7 @@ const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) =>
 		return (
 		<div className={`ad-deco-cont ${classNames}`}>
 			<div className='spotlight-ad'>
-				<AdvertsCatalogue ads={ads} noPreviews className='ads-catalogue' captions={false}/>
+				<AdvertsCatalogue ads={[ads[0]]} noPreviews className='ads-catalogue' captions={false}/>
 				<img className='phone-container' src="/img/Impact/iphone-frame-16-9-padded-notch.svg" />
 			</div>
 			<div className='spotlight-decoration'>
@@ -192,7 +193,7 @@ const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) =>
 						<DevOnly><PortalLink item={charity} /></DevOnly>
 						<ImpactInfo impact={impact.impact} />
 					</div>
-					{isMobile() && adWithDecoration({ads:[ads[0]], classNames:'mobile'})}
+					{isMobile() && adWithDecoration({ads, classNames:'mobile'})}
 					<div className='campaign-grouped-content'>						
 						<p>
 							<Misc.RoughDate date={start} />
@@ -235,14 +236,14 @@ const Footer = ({charities, mainLogo}) => {
 		<div id="impact-footer-container">
 			<Col id='stories-footer' className='impact-footer'>
 				<p className='text'>Advertising That's A Force For Good</p>
-				<div className='topRow'><img className='logo' src={mainLogo} style={{width: "100%"}}/></div>
-				<img className="adsForGood" src="/img/Impact/AdsForGood.svg" style={{width:"15vw"}}/>
+				<div className='topRow'><img className='logo' src={mainLogo} style={{width: '15vh', height: '15vh'}}/></div>
+				<img className="adsForGood" src="/img/Impact/AdsForGood.svg" style={{width:'25vw'}}/>
 				<ul style={{listStyleType: "none"}}>
 					{CharityLogos}
 				</ul>
+				{/* TODO include legal small print here too */}
 			</Col>
 			<img src="/img/Impact/images-combined.png" id="images-combined"/>
-			<img src="/img/Impact/world-card.png" id="holding-world" />
 		</div>
 	);
 };

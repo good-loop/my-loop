@@ -88,7 +88,7 @@ function IOPFirstHalf({ mainItem, wtdAds, tadgAds, brand, campaign, charities, i
 				<TADGCard ads={tadgAds} brand={brand} charities={charities} impactDebits={impactDebits} />
 			</GLHorizontal>*/
 			// Can't have in set - or CommonDivision wrapper messes up. Can't think of fix so just shove contents here for now
-			<CharitiesCardSet charities={charities} impactDebits={impactDebits} mainItem={mainItem} />
+			<CharitiesCardSet charities={charities} impactDebits={impactDebits} mainItem={mainItem}/>
 		)}
 		<GLModalCard id="left-half" />
 	</GLVertical>;
@@ -256,8 +256,8 @@ const IOPSecondHalf = ({mainItem, ...baseObjects}) => {
 	const { campaign, ads } = baseObjects;
 
 	return <GLVertical>
-		{mainItem?.impactSettings?.csrHtml && <GLCard><MDText source={mainItem.impactSettings.csrHtml} /></GLCard>}
 		{/* top right corner */}
+		{mainItem?.impactSettings?.csrHtml && <WiderCSR mainItem={mainItem} />}
 		{!campaign && <GLHorizontal collapse="md" basis={60}>
 			<GLVertical>
 				<GLHorizontal>
@@ -265,7 +265,7 @@ const IOPSecondHalf = ({mainItem, ...baseObjects}) => {
 					<CharitiesCard mainItem={mainItem} {...baseObjects} />
 				</GLHorizontal>
 				<SubCampaignsCard {...baseObjects} />
-				<CountryViewsGLCard basis={10} baseObjects={baseObjects} />
+				<CountryViewsGLCard baseObjects={baseObjects} />
 				<OffsetsCard />
 			</GLVertical>
 			<ContentListCard {...baseObjects } />
@@ -282,6 +282,22 @@ const IOPSecondHalf = ({mainItem, ...baseObjects}) => {
 		<GLModalCard id="right-half"/>
 	</GLVertical>;
 };
+
+
+function WiderCSR({mainItem}) {
+	if ( ! mainItem?.impactSettings?.csrHtml) {
+		return null;
+	}
+	// HACK! extract e.g. background: url("https://example.com/myimage.jpg") cover
+	let html = mainItem.impactSettings.csrHtml;
+	let background;	
+	let m = html.match(/background:(.+)$/m);
+	if (m) {
+		background = "linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 40%, rgba(255,255,255,0) 100%), " + m[1].trim();
+		html = html.substring(m[0].length).trim();
+	}
+	return <GLCard background={background}><MDText source={html} style={{maxWidth:"40%"}} className="d-flex flex-column justify-contents-center align-items-center" /></GLCard>;
+}
 
 const SustainableGoalsCard = ({baseObjects}) => {
 
@@ -393,10 +409,10 @@ function CharitiesCardSet({mainItem, charities, impactDebits}) {
 
 	return <GLVertical>
 		{topCharities}
-		<GLCard className="more-charities card-body" noPadding {...cardSetProps}>
+		<GLCard className="more-charities card-body" noPadding noGrow {...cardSetProps}>
 			<h5>Plus {charities.length-3} more</h5>
 			<div className='flex-row'>
-				{charities.slice(3).map(charity => {
+				{charities.slice(3).splice(0, 6).map(charity => { // only show 6 charities = one row, to fit on page
 					const cid = getId(charity);
 					const cname = NGO.displayName(charity);
 					return <img className="charity-link logo" key={cid} src={charity?.logo} title={cname} />;
@@ -769,8 +785,7 @@ const CountryViewsGLCard = ({basis, baseObjects}) => {
 		console.warn("CountryViewsGLCard - no baseObjects");
 		return null;
 	}
-	let impressionData = getImpressionsByCampaignByCountry({baseObjects})
-
+	let impressionData = getImpressionsByCampaignByCountry({baseObjects, cutoff:0.01})
 	// Prepare data for non-modal view - total impressions and countries
 	const totalCountries = Object.keys(impressionData).filter(country => country !== "unset").length;
 	const impressions = sumBy(Object.values(impressionData), 'impressions') // sum impressions over all regions

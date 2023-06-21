@@ -15,14 +15,14 @@ import { ErrorDisplay } from '../ImpactComponents';
 import ImpactLoadingScreen from '../ImpactLoadingScreen';
 import { addScript } from '../../../base/utils/miscutils';
 import CampaignPage from '../../campaignpage/CampaignPage';
-import {CardSeperator, CampaignImpactOne, CampaignImpactTwo, HowItWorks, DonationsCard, circleLogo, LearnMore, CharityArms, BrandLogoRows} from './StoriesComponents';
+import {CardSeperator, CampaignImpact, CampaignImpactTwo, HowItWorks, DonationsCard, circleLogo, LearnMore, CharityArms, BrandLogoRows} from './StoriesComponents';
 import {ImpactB2B} from './ImpactB2B'
 
 /**
  * Container for the new (as of 5/23) replacement for impact hub
  * Most up to date design : https://miro.com/app/board/uXjVMaoHMrI=/?share_link_id=8808857536 - specifically the B2C parts
  */
-const CampaignImpact = () => {
+function CampaignImpactPage() {
 	// setup page & check we have all the data we need
 	const path = DataStore.getValue(['location', 'path']);
 	const glVertiser = DataStore.getUrlValue('gl.vertiser');
@@ -86,7 +86,7 @@ const CampaignImpact = () => {
 			<PoweredByGL />
 			<HowItWorks campaign={campaign} subCampaigns={subCampaigns} charities={charities} totalString={totalString}/>
 			<CardSeperator text={`Here's a Look At What You're Helping\nSupport With ${masterBrand.name}`} />
-			{firstImpact && <CampaignImpactOne campaign={campaign} brand={brand} logo={mainLogo} charity={firstCharity} impactDebit={firstImpact}/>}
+			{firstImpact && <CampaignImpact i={1} campaign={campaign} brand={brand} logo={mainLogo} charity={firstCharity} impactDebit={firstImpact}/>}
 			{secondImpact && <CampaignImpactTwo campaign={campaign} brand={brand} logo={mainLogo} charity={secondaryCharity} impactDebit={secondImpact}/>}
 			<MakingADifference logo={mainLogo} charities={charities} />
 			<CardSeperator text={`Here's How You Can Keep Involved\nWith Good-Loop`} />
@@ -276,4 +276,4 @@ const GetInvolvedCard = () => {
 	)
 }
 
-export default CampaignImpact;
+export default CampaignImpactPage;

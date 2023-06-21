@@ -5,7 +5,7 @@ import C from '../../../C';
 import Misc from '../../../MiscOverrides';
 import { isDev } from '../../../base/Roles';
 import DevOnly from '../../../base/components/DevOnly';
-import { Cite } from '../../../base/components/LinkOut';
+import LinkOut, { Cite } from '../../../base/components/LinkOut';
 import Logo from '../../../base/components/Logo';
 import PortalLink from '../../../base/components/PortalLink';
 import PropControl from '../../../base/components/PropControl';
@@ -20,8 +20,8 @@ import Money from '../../../base/data/Money';
 import NGO from '../../../base/data/NGO';
 import { getDataItem } from '../../../base/plumbing/Crud';
 import { getUrlValue, setUrlValue } from '../../../base/plumbing/DataStore';
-import { asDate } from '../../../base/utils/date-utils';
-import { addAmountSuffixToNumber, space } from '../../../base/utils/miscutils';
+import { asDate, dateStr, printPeriod } from '../../../base/utils/date-utils';
+import { addAmountSuffixToNumber, space, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
 /*
  * A thin card that contains just the supplied text,
@@ -39,24 +39,24 @@ export const CardSeperator = ({ text }) => {
 /**
  * For the 'most impactful' impact, we show a statistic & either a fact or another image
  * If the statistic is missing or we don't have enough images on the charity, return an empty element
+ * @param {number} p.i 1 or 2
  * @param {string} logo url for the logo of the charity 
  * @param {NGO} charity what charity will this impactDebit donate to?
  * @param {impactDebit} impactDebit the 'most impactful' impact the campaign has done
  * @returns {React.ReactElement} 
  */
-export const CampaignImpactOne = ({ logo, charity, impactDebit }) => {
-
-	const text = {
-		cause: impactDebit.storiesContent?.impactCause || false,
-		stats: impactDebit.storiesContent?.impactStats || false,
-
-		fact: impactDebit.storiesContent?.fact || false,
-		factName: impactDebit.storiesContent?.factSourceName || false,
-		factUrl: impactDebit.storiesContent?.factSourceUrl || false,
-	}
+export const CampaignImpact = ({i, logo, charity, impactDebit }) => {
+	// copy to allow local edits
+	const text = Object.assign({}, impactDebit.storiesContent);
 
 	let hideComponent = false;
+	if ( ! charity) {
+		return null;
+	}
+	if ( ! text.cause) {
 
+	}
+	
 	// can't show this without stats or without a charity attatched
 	if (!text.cause || !text.stats || !charity) hideComponent = true;
 
@@ -85,7 +85,7 @@ export const CampaignImpactOne = ({ logo, charity, impactDebit }) => {
 			<ModalBody className="d-flex modal-body">
 				<Col>
 					<h2>Props for Impact Stories</h2>
-					<h4>Impact #1:<br />	Name: {impactDebit.name || "MISSING"}<br />	ID: {impactDebit.id || "MISSING"}</h4>
+					<h4>Impact #{i}: <PortalLink item={impactDebit} /></h4>
 					<br />
 					<h4>Charity:<br />	Name: {charity.name || "MISSING"}<br />	ID: {charity.id || "MISSING"}, </h4>
 					<PropControl type="number" prop="priority" path={path} label="Priority" className="font-weight-bold" />
@@ -96,20 +96,28 @@ export const CampaignImpactOne = ({ logo, charity, impactDebit }) => {
 						<PropControl type="textarea" label="Impact Stat" prop="impactStats" path={storiesPath} help="What good did the brand do to support the above cause? For example, 'Providing meals for children in need'" />
 					</div>
 					<div className="mb-3 p-3 bg-light card">
-						<h3>Bitesize fact</h3>
+						{i==1? <><h3>Bitesize fact</h3>
 						<p>Replaced by image if empty</p>
 						<PropControl type="textarea" label="Did-You-Know Fact" prop="fact" path={storiesPath} />
 						<PropControl type="textarea" label="Sources Name" prop="factSourceName" path={storiesPath} />
 						<PropControl type="textarea" label="Source URL" prop="factSourceUrl" path={storiesPath} />
+						</> : <>
+						<h3>Testimonial</h3>
+						<p>Defaults to description of charity if testimonial itself is left empty</p>
+						<PropControl type="textarea" label="Testimonial Title" prop="testimonialHeader" path={storiesPath} help="Header of testimonial card" />
+						<PropControl type="textarea" label="Testimonial" prop="testimonialQuote" path={storiesPath} />
+						<PropControl type="textarea" label="Testimonial Source Role" prop="testimonialJob" path={storiesPath} help="Role of whoever said the testimonial" />
+						<PropControl type="textarea" label="Testimonial Source" prop="testimonialPerson" path={storiesPath} help="Name of whoever said the testimonial" />
+						</>}
 					</div>
 				</Col>
 				<SavePublishDeleteEtc type={C.TYPES.ImpactDebit} id={impactDebit.id} sendDiff />
 			</ModalBody>
 		</Modal>
-	)
+	); // ./devModal
 
 	return (
-		<div id="campaign-impact-one" className='campaign-impact'>
+		<div id={"campaign-impact-"+i} className='campaign-impact'>
 			<div style={{ width: "100%", height: "fit-content", padding: "2% 0 0" }}>{circleLogo({ logo: charity.logo })}</div>
 			<DevOnly>
 				<button style={{ height: "5vh" }} onClick={() => setOpen(true)}>Edit Content</button>
@@ -117,7 +125,7 @@ export const CampaignImpactOne = ({ logo, charity, impactDebit }) => {
 			</DevOnly>
 			<div className='impact-section'>
 				{/* top row */}
-				<Row id="impact-one-toprow" className='impact-row flex-mobile-dir'>
+				{imgList[0] && <Row className='impact-row flex-mobile-dir' id="impact-one-toprow" >
 
 					<div className='p-2 bg-gl-white left camp-impact-card camp-impact-img'>
 						<img src={imgList[0]} alt="charity image 1" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -127,45 +135,60 @@ export const CampaignImpactOne = ({ logo, charity, impactDebit }) => {
 						<img src="/img/Impact/redcurve.svg" alt="redcurve background" className="curve dark-curve" />
 						<img src="/img/Impact/redcurve.svg" alt="redcurve background" className="curve normal-curve" />
 						<div className='cause-container'>
-							<p className='cause'>{text.cause}</p>
-							<h2 className='description'>{text.stats}</h2>
-							<p className='with-charity'>With {charity.name}</p>
+							{text.cause && text.stats? <>
+								<p className='cause'>{text.cause}</p>
+								<h2 className='description'>{text.stats}</h2>
+								<p className='with-charity'>With {charity.name}</p>
+							</> : <>
+								<p className='cause'>{NGO.summaryDescription(charity)}</p>
+							</>}
 						</div>
 					</div>
 
-				</Row>
+				</Row>}
 
-				{/* bottom row */}
-				<Row id="impact-one-botrow" className='impact-row flex-mobile-dir'>
-
-					{factPresent &&
+				{/* bottom row, if we have stuff */
+				(imgList[1] && ((text.fact) || (text.cause && text.stats && NGO.summaryDescription(charity)))) // || imgList[2]
+				 && <Row id="impact-one-botrow" className='impact-row flex-mobile-dir'>
+					{text.fact &&
 						<div className='p-2 bg-gl-darker-grey left camp-impact-card'>
 							<img src="/img/Impact/did-you-know.svg" className='quote-box' />
 							<div className='dyk-container'>
 								<p className='dyk'>Did You Know?</p>
 								<p className='fact'>{text.fact}</p>
-								<p className='source'>Source: <a className="source-link" href={text.factUrl}>{text.factName}</a></p>
+								{text.factUrl && <p className='source'>Source: <LinkOut href={text.factUrl}>{text.factName}</LinkOut></p>}
 							</div>
 						</div>
 					}
-					{!factPresent &&
+					{ ! text.fact && (text.cause && text.stats) && NGO.summaryDescription(charity) &&
+						<div className='p-2 bg-gl-darker-grey left camp-impact-card'>
+							<div className='dyk-container'>
+								<p className='fact'>{NGO.summaryDescription(charity)}</p>
+							</div>
+						</div>
+					}
+					{/* TODO 2 images row option { ! text.fact && 
 						<div className='p-2 bg-gl-white left camp-impact-card camp-impact-img'>
 							<img src={imgList[Math.min(2, imgList.length - 1)]} alt="charity image 2" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
 						</div>
-					}
-
+					} */}
 					<div className='p-2 bg-gl-white right camp-impact-card camp-impact-img'>
-						<img src={imgList[Math.min(1, imgList.length - 1)]} alt="charity image 2" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+						<img src={imgList[imgList.length - 1]} alt="charity image 2" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
 					</div>
 
-				</Row>
+				</Row>}
 			</div>
 
 		</div>
 	)
 }
 
+
+
+
 /**
+ * TODO refactor to use CampaignImpact
+ * 
  * For the second 'second most impactful' impact, we show a statistic & a testimonial
  * If we don't have a testimonial, default to the charities description
  * If the statistic or both the testimonial & description are missing, return an empty element
@@ -213,6 +236,7 @@ export const CampaignImpactTwo = ({ logo, impactDebit, charity }) => {
 	const [open, setOpen] = useState(false);
 	const path = ['draft', 'ImpactDebit', impactDebit.id];
 	const storiesPath = ['draft', 'ImpactDebit', impactDebit.id, "storiesContent"];
+	// TODO refactor to share code with the Campaign One editor
 	let devModal = (
 		<Modal isOpen={open} id="impact-cert-modal" className='impact-cert' toggle={() => setOpen(!open)} size="xl">
 			<ModalBody className="d-flex modal-body">
@@ -243,14 +267,14 @@ export const CampaignImpactTwo = ({ logo, impactDebit, charity }) => {
 	)
 
 	return (
-		<div id="campaign-impact-two" className='campaign-impact'>
+		<div id="campaign-impact-2" className='campaign-impact'>
 			<div style={{ width: "100%", height: "fit-content", padding: "2% 0 0" }}>{circleLogo({ logo: charity.logo })}</div>
 			<DevOnly>
 				<button style={{ height: "5vh" }} onClick={() => setOpen(true)}>Edit Content</button>
 				{devModal}
 			</DevOnly>
 			<div className='impact-section'>
-				<Row className='impact-row flex-mobile-dir' id="row-1">
+				<Row className='impact-row flex-mobile-dir'>
 					<div className='p-2 bg-gl-red right camp-impact-card' style={{ position: "relative" }}>
 						<img src="/img/Impact/redcurve.svg" alt="redcurve background" className="curve dark-curve" />
 						<img src="/img/Impact/redcurve.svg" alt="redcurve background" className="curve normal-curve" />
@@ -284,6 +308,7 @@ export const CampaignImpactTwo = ({ logo, impactDebit, charity }) => {
 	)
 }
 
+
 /**
  * Card describing to new users how watching ads leads to donations
  * @param {Campaign} campaign 
@@ -299,15 +324,14 @@ export const HowItWorks = ({ campaign, subCampaigns, charities, totalString }) =
 	const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][startDate[1] - 1]
 	// get viewcount and format it into 2 sig figs & unit amount, eg 1,413,512 -> 1.4M
 
-	if (!subCampaigns) subCampaigns = [campaign]
+	if ( ! yessy(subCampaigns)) subCampaigns = [campaign]
 
-	const viewcount = addAmountSuffixToNumber(
-		subCampaigns.reduce((sum, curCampaign) => {
-			let count = Campaign.viewcount({ campaign: curCampaign, status: KStatus.PUBLISHED })
-			if (typeof count !== 'number') count = 0
-			return sum + Number(count)
-		}, 0).toPrecision(2)
-	)
+	const views = subCampaigns.reduce((sum, curCampaign) => {
+		let count = Campaign.viewcount({ campaign: curCampaign, status: KStatus.PUBLISHED })
+		if (typeof count !== 'number') count = 0
+		return sum + Number(count)
+	}, 0);
+	const viewcount = addAmountSuffixToNumber(views.toPrecision(3));
 
 	return (
 		<div id="how-it-works" className='d-flex flex-column'>
@@ -332,8 +356,8 @@ export const HowItWorks = ({ campaign, subCampaigns, charities, totalString }) =
 						<img src="/img/Impact/OurStory_PeopleCrossingRoad.jpg" className='fill-img' />
 					</div>
 					<p>Today</p>
-					<h3 className='color-gl-white'>+{viewcount} People</h3>
-					<p className='text white'>Viewed The Advert{subCampaigns ? "s" : ""} So Far</p>
+					<h3 className='color-gl-white'>{viewcount} People</h3>
+					<p className='text white'>Viewed The Advert{subCampaigns ? "s" : ""} {viewcount<1000 && "So Far"}</p>
 				</div>
 
 				<div className='hiw-col'>
@@ -342,7 +366,7 @@ export const HowItWorks = ({ campaign, subCampaigns, charities, totalString }) =
 						<img src={NGO.images(charities[0])[0]} className='fill-img' />
 					</div>
 					<p>After the Campagin</p>
-					<h3 className='color-gl-white'>{totalString}+ In Donations</h3>
+					<h3 className='color-gl-white'>{totalString} In Donations</h3>
 					<p className='text white'>Funded By The Advert{subCampaigns ? "s" : ""}</p>
 				</div>
 			</div>
@@ -370,21 +394,32 @@ function findCharity(cid, charities) {
  * @returns {React.ReactElement} 
  */
 export const DonationsCard = ({ campaign, subCampaigns, brand, impactDebits, charities }) => {
+	console.log("DonationsCard", "campaign", campaign, "subCampaigns", subCampaigns);
+	// ?? do we have something in date-utils for this??
 	const getDate = (dateStr) => {
 		let tempDate = dateStr.substr(0, dateStr.split("").findIndex((el) => el === "T")).split("-") // parse date 
 		tempDate[1] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][parseInt(tempDate[1]) - 1]
 		return tempDate.reverse().join(" ") // [YYYY,MM,DD] -> "DD MM YYYY"
 	}
 
-	// find earliest date if we expect a list
-	if (!campaign) campaign = subCampaigns.sort((a, b) => {
-		return b - a
-	})[0];
+	// // find earliest date if we expect a list
+	// if (!campaign) campaign = subCampaigns.sort((a, b) => {
+	// 	return b - a
+	// })[0];
 
-	let startDate = getDate(campaign.created)
+	let allCampaigns = [campaign].concat(subCampaigns).filter(x => x);
 
-	// this isn't accurate?
-	const endDate = campaign.end ? getDate(campaign.end) : "present"; ``
+	const getCampaign4Debit = debit => {
+		let campaign4debit = allCampaigns.find(c => debit.campaign === c.id || debit.jobNumber === C.id || debit.jobNumber === c.jobNumber);
+		return campaign4debit;
+	};
+
+	let starts = allCampaigns.map(c => Campaign.start(c) || c.created).filter(x => x);
+	starts.sort();
+	let startDate = starts[0]; //getDate(campaign.created)
+	let ends = allCampaigns.map(c => Campaign.end(c) || c.created).filter(x => x);
+	ends.sort();
+	let endDate = ends[ends.length-1];
 
 	// if we have multiple donations to the same charity, avoid using the same image over and over again
 	let charityCounter = {}
@@ -392,9 +427,11 @@ export const DonationsCard = ({ campaign, subCampaigns, brand, impactDebits, cha
 	return (
 		<div className='flex flex-column pt-5'>
 			<h2 className='text header-text' style={{ margin: "0 5%" }}>{brand.name}'s Campaign{impactDebits.length > 1 ? "s" : ""} With Good-Loop</h2>
-			<p className='text dates'>{startDate} - {endDate}</p>
+			<p className='text dates'>{dateStr(asDate(startDate))} - {dateStr(asDate(endDate))}</p>
 			<div id="donation-details" className='flex-mobile-dir'>
-				{impactDebits.map(debit => <DonationCard key={debit.id} debit={debit} brand={brand} campaign={campaign} charityCounter={charityCounter} charities={charities} />)}
+				{impactDebits.map(debit => 
+					<DonationCard key={debit.id} debit={debit} brand={brand} campaign={getCampaign4Debit(debit)} charityCounter={charityCounter} charities={charities} />
+				)}
 			</div>
 		</div>
 	);
@@ -559,8 +596,6 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 			detailsAmount: `£${Money.prettyString({ amount: impact.amountGBP || 0 })}`,
 			creditsName: "Impact",
 			creditsValue: "1234 Trees Planted",
-			byGoodLoop: "Powered by Good-Loop",
-			goodLoopImg: "/img/Impact/AdsForGood.svg",
 			// Links
 			links: [
 				{ url: "www.google.com", icon: "", linkText: "Donation Receipt", linkImg: "/img/Impact/donation-icon.svg" },
@@ -574,8 +609,6 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 			detailsAmount: "XX.XXT",
 			creditsName: "Credits",
 			creditsValue: "180",
-			byGoodLoop: "Managed by Good-Loop",
-			goodLoopImg: "/img/Impact/AdsForGood.svg",
 			// Links
 			links: [
 				{ url: "www.google.com", icon: "", linkText: "Donation Receipt" },

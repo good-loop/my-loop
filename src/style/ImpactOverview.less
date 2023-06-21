@@ -199,6 +199,7 @@
 		justify-content: center;
 		align-items: center;
 		flex-wrap: wrap; // Spill over onto extra lines, eg on mobile
+		overflow-y: hidden; // hide spill so it fits in the page
 		.charity-link {
 			margin: 0 0.3rem;
 			margin-bottom: 0.3rem;
@@ -250,6 +251,9 @@
 				width: 4rem;
 				height: 4rem;
 				object-fit: contain;
+			}
+			h2, h3 {
+				margin: 0;
 			}
 		}
 	}

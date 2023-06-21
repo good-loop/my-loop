@@ -338,12 +338,17 @@
 
 	}
 
-	#campaign-impact-one {
+	/* TODO refactor -1 and -2 to share code */
+	#campaign-impact-1 {
 		background-color: @gl-dark-desat-blue;
 		font-family: 'Montserrat', sans-serif;
+		padding-bottom: 2.5%; /* pad the row tops and the section bottom for even padding */
+
+		.impact-row {
+			padding-bottom: 0;
+		}
 
 		#impact-one-toprow {
-			padding-bottom: 0;
 
 			.camp-impact-card {
 				height: 40vh;
@@ -428,10 +433,10 @@
 			.right {
 				flex-basis: 60%;
 			}
-		}
-	}
+		} /* /#impact-one-botrow */
+	} /* /.campaign-impact-1 */
 
-	#campaign-impact-two {
+	#campaign-impact-2 {
 		background-color: @gl-lighter-blue;
 
 		.impact-row {
@@ -1010,14 +1015,13 @@
 					flex-direction: column;
 					justify-content: space-evenly;
 					z-index: 5;
-					@media (max-width: 820px) {
-						height: 100%;
-					}
+					height: 100%;
 				}
 
 				.phone-container {
 					position: relative;
 					z-index: 10;
+					pointer-events: none;
 				}
 				@media (max-width: 820px) {
 					position: absolute;
@@ -1176,13 +1180,14 @@
 
 	#impact-footer-container {
 		position: relative;
-		height: 80vh;
+		min-height: 80vh;
+		height: fit-content;
 
 		#stories-footer {
-			padding: 20% 0 5% 0;
 			margin: auto;
 			height: 100%;
-			width: 55vw; // found from 100vw - (absolute images widths)
+			width: 100%;
+			position: absolute;
 			display: flex;
 			flex-direction: column;
 			align-items: center;
@@ -1200,7 +1205,15 @@
 			.topRow,
 			.adsForGood,
 			ul {
-				height: 20%;
+				height: fit-content;
+				width: 100%;
+				flex-wrap: wrap;
+				place-content: center;
+				padding: 0 5%;
+				
+				li {
+					padding: 1%;
+				}
 			}
 		}
 
@@ -1209,14 +1222,6 @@
 			top: 0;
 			left: 0;
 			width: 30vw;
-		}
-
-		#holding-world {
-			position: absolute;
-			bottom: 0;
-			right: 0;
-			width: 15vw;
-			transform: scaleX(-1);
 		}
 	}
 }

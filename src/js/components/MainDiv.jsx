@@ -44,7 +44,7 @@ import { T4GSignUpButton, T4GSignUpModal } from './T4GSignUp';
 import GenerateGreenDemoEvents from './pages/GenerateGreenDemoEvents';
 import LogoutPage from './pages/LogoutPage';
 import ImpactPage from './impact/ImpactPages';
-import CampaignImpact from './impact/stories_components/ImpactB2C';
+import CampaignImpactPage from './impact/stories_components/ImpactB2C';
 
 // DataStore
 C.setupDataStore();
@@ -68,7 +68,7 @@ const SubscribePage = ({ }) => {
 const PAGES = {
 	blog: BlogPage, // TODO
 	// blogcontent: BlogContent,
-	campaign: CampaignImpact, // logic for handling legacy pages is contained within ImpactB2C.jsx's CampaignImpact
+	campaign: CampaignImpactPage, // logic for handling legacy pages is contained within ImpactB2C.jsx's CampaignImpact
 	// impact: CampaignImpact,
 	impactoverview: MyAdCampaignsPage,
 	// TODO newer impact design;
