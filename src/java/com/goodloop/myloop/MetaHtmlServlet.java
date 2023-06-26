@@ -287,12 +287,12 @@ public class MetaHtmlServlet implements IServlet {
 
 			try {
 				getPageSettings(state, vars);
-				// cachebuster		
-				vars.put("cachebuster", cachebuster());
-			} catch (WebEx.E40X e) {
+			} catch (Throwable e) {
 				// swallow it, more or less. Probably a 404
 				Log.w("MetaHtml", e+" from "+state);
 			}
+			// cachebuster		
+			vars.put("cachebuster", cachebuster());
 			// sanitise inputs against attack
 			Map safeVars = Containers.applyToValues(s -> WebUtils2.stripScripts(s), vars);
 			// Jerbil it!
