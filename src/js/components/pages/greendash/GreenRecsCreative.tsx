@@ -110,9 +110,12 @@ function AnalysePrompt({ tag }): JSX.Element {
 	if (analysisState === 'loading') return <Misc.Loading text="Analysis in progress..." />;
 
 	const doIt = () => {
-		ServerIO.load(`${ServerIO.MEASURE_ENDPOINT}`, { data: { tagId: tag.id, url: tag.creativeURL } }).then(res => {
+		const data = { tagId: tag.id };
+		if (tag.creativeURL) data.url = tag.creativeURL;
+		if (tag.creativeHtml) data.tag = tag.creativeHtml;
+		ServerIO.load(`${ServerIO.MEASURE_ENDPOINT}`, { data }).then(res => {
 			// Store results where CreativeView will find them
-			if (!res.error) DataStore.setValue(['widget', 'saved-tag-measurement', tag.id], res.cargo);
+			if (!res.error) DataStore.setValue(['widget', 'saved-tag-measurement', tag.id], res.data);
 		});
 		setAnalysisState('loading');
 	};
