@@ -177,30 +177,32 @@ function DomainList({ buckets, min, max }: { buckets?: GreenBuckets; min?: numbe
 
 	const cutoffIcon = <div className="cutoff-icon">{max ? tickSvg : crossSvg}</div>;
 
-	return ( //@ts-ignore
-		<GLCard className={`domain-list ${max ? 'allow' : 'block'}`} noPadding>
+	return (
+		<GLCard className={`domain-list ${max ? "allow" : "block"}`} noPadding>
 			<CardHeader className="domain-list-title p-2">
-				<h4 className="m-0">Suggested {max ? 'Allow' : 'Block'} List</h4>
+				<h4 className="m-0">Suggested {max ? "Allow" : "Block"} List</h4>
 			</CardHeader>
 			<CardBody className="flex-column p-0">
 				<div className="cutoff-header p-3">
-					<h5 className="cutoff-label">{/* low ? 'Maximum' : 'Minimum'*/} {CO2e} emissions per impression</h5>
+					<h5 className="cutoff-label">
+						{/* low ? 'Maximum' : 'Minimum'*/} {CO2e} emissions per impression
+					</h5>
 					<div className="cutoff-value">
 						{cutoffIcon}
 						<span className="cutoff-number ml-3">
 							{max ? <>&le;</> : <>&gt;</>}
-							{printer.prettyNumber((max || min || 0), 3, null)} g
+							{printer.prettyNumber(max || min || 0, 3, null)} g
 						</span>
 					</div>
 				</div>
 				<div className="domain-stats flex-row mx-1 p-1">
 					<div className="domain-stat">
 						<div className="stat-name">Domains</div>
-						<div className="stat-value">{domains.length || '-'}</div>
+						<div className="stat-value">{domains.length || "-"}</div>
 					</div>
 					<div className="domain-stat">
 						<div className="stat-name">Impressions</div>
-						<div className="stat-value">{printer.prettyNumber((volumeFraction * 100), 2, null)}%</div>
+						<div className="stat-value">{printer.prettyNumber(volumeFraction * 100, 2, null)}%</div>
 					</div>
 					<div className="domain-stat">
 						<div className="stat-name">{CO2e} per</div>
@@ -215,10 +217,10 @@ function DomainList({ buckets, min, max }: { buckets?: GreenBuckets; min?: numbe
 			</CardBody>
 			<CardFooter className="csv-block flex-column align-items-center">
 				{cutoffIcon}
-				<div className="csv-desc my-2">
-					Use as {max ? 'an allow-list' : 'a block-list'} in your DSP
-				</div>
-				<Button className="csv-button px-3 py-1" onClick={() => downloadCSV(domains)}>Download CSV {downloadIcon}</Button>
+				<div className="csv-desc my-2">Use as {max ? "an allow-list" : "a block-list"} in your DSP</div>
+				<Button className="csv-button px-3 py-1" onClick={() => downloadCSV(domains)}>
+					Download CSV {downloadIcon}
+				</Button>
 			</CardFooter>
 		</GLCard>
 	);
@@ -230,10 +232,10 @@ function DomainList({ buckets, min, max }: { buckets?: GreenBuckets; min?: numbe
  * @returns
  */
 function GreenRecsPublisher(): JSX.Element | null {
-	const [co2Cutoff, setCO2Cutoff] = useState<number>(0); // CO2 grams per impression to divide allow and block list
+	const [co2Cutoff, setCO2Cutoff] = useState<number>(); // CO2 grams per impression to divide allow and block list
 	const [sortedBuckets, setSortedBuckets] = useState<GreenBuckets>(); // Publisher buckets, sorted low -> high CO2
 	const [rangeProps, setRangeProps] = useState(); // Props object for the range input
-	const [reduction, setReduction] = useState<number>(0); // Reduction effect of allow/block list (fractional, ie 0.1 for 10%)
+	const [reduction, setReduction] = useState<number>(); // Reduction effect of allow/block list (fractional, ie 0.1 for 10%)
 	const [chartObj, setChartObj] = useState();
 
 	/* Read / set up filters */
@@ -275,7 +277,10 @@ function GreenRecsPublisher(): JSX.Element | null {
 		const useSampling = baseFilterConfirmed.prob && baseFilterConfirmed.prob != 0;
 		const pvChartTotalValue = useSampling ? pvChartTotal.value?.sampling : pvChartTotal.value;
 		const bucketsPer1000 = emissionsPerImpressions(pvChartTotalValue.by_domain.buckets);
-		setSortedBuckets(bucketsPer1000.slice().sort((a, b) => ((a.co2 as number) - (b.co2 as number))));
+		const initSortedBuckets = bucketsPer1000.slice().sort((a, b) => ((a.co2 as number) - (b.co2 as number)))
+		setSortedBuckets(initSortedBuckets);
+		const initCO2Cutoff = ((initSortedBuckets[initSortedBuckets.length - 1].co2 as number) - (initSortedBuckets[0].co2 as number)) / 2
+		setCO2Cutoff(initCO2Cutoff);
 	}, [pvChartTotal?.value]);
 
 	// TODO generic domains design TBC
@@ -298,7 +303,7 @@ function GreenRecsPublisher(): JSX.Element | null {
 	// Calculate CO2 reduction effect of chosen CO2 cutoff
 	useEffect(() => {
 		if (!sortedBuckets) return;
-		const allowBuckets = sortedBuckets.filter(bkt => bkt.co2 as number <= co2Cutoff);
+		const allowBuckets = sortedBuckets.filter(bkt => bkt.co2 as number <= co2Cutoff!);
 		const allowImps = allowBuckets.reduce((acc, bkt) => acc + (bkt.count as number), 0);
 		let allowWeightedAvg = allowBuckets.reduce((acc, bkt) => acc + (bkt.count as number) * (bkt.co2 as number), 0);
 		allowWeightedAvg = (allowImps > 0) ? (allowWeightedAvg / allowImps) : 0;
@@ -332,7 +337,6 @@ function GreenRecsPublisher(): JSX.Element | null {
 
 	return <>
 		<h6>Can you reduce your publisher-generated {CO2e} emissions?</h6>
-		{/* @ts-ignore */}
 		<GLCard className="publisher-recommendations">
 			{/* Hm: eslint + ts objects if we don't list every parameter, optional or not - but that makes for verbose code, which isn't good (time-consuming, and hides the real code) 
 			How do we get eslint to be quieter for ts? */}
@@ -346,7 +350,6 @@ function GreenRecsPublisher(): JSX.Element | null {
 					<DomainList buckets={sortedBuckets} max={co2Cutoff} />
 				</Col>
 				<Col xs={6} className="px-0">
-					{/* @ts-ignore */}
 					<GLCard className="generator flex-column" noPadding>
 						<CardHeader className="generator-title p-2">
 							<h4 className="m-0">Allow and Block list generator</h4>
