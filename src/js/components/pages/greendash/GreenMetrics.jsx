@@ -170,13 +170,13 @@ const GreenMetrics2 = () => {
 				</Col> */}
 			</Row>
 			<Row className='card-row'>
-				<Col xs='12' sm='4' className='flex-column'>
+				<Col xs='12' xl='4' className='flex-column'>
 					<CompareCard {...commonProps} />
 				</Col>
-				<Col xs='12' sm='4' className='flex-column'>
+				<Col xs='12' xl='4' className='flex-column'>
 					<BreakdownCard {...commonProps} />
 				</Col>
-				<Col xs='12' sm='4' className='flex-column'>
+				<Col xs='12' xl='4' className='flex-column'>
 					{false && <TimeOfDayCard {...commonProps} />}
 					<MapCard {...commonProps} />
 					{/* <CTACard /> "interested to know more" */}
