@@ -77,7 +77,7 @@ const GreenNavBar = ({active}) => {
 	// We don't use the standard <Collapse> pattern here because that doesn't support an always-horizontal navbar
 	return (<>
 	{!pseudoUser && <AccountMenu className="float-left" noNav shareWidget={<ShareDash className='m-auto' />}/>}
-	<Navbar dark expand="md" id="green-navbar" className={space('flex-column', 'justify-content-start', isOpen && 'mobile-open')}>
+	<Navbar dark expand="xl" id="green-navbar" className={space('flex-column', 'justify-content-start', isOpen && 'mobile-open')}>
 		<NavbarToggler onClick={toggle} />
 		<Nav navbar vertical>
 			<a href={pseudoUser ? 'https://www.good-loop.com' : '/greendash'}>
