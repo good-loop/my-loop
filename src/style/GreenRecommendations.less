@@ -199,6 +199,7 @@
 				height: 2em;
 				border: 1px solid silver;
 				border-radius: 50%;
+				flex-shrink: 0; // stay round!
 			}
 
 			&.active {
@@ -224,6 +225,8 @@
 			font-size: 175%;
 			line-height: 1;
 		}
+
+		// Card with screenshot and overall size
 		.creative-size-card {
 			color: @gat-deep-green;
 			> .card-header {
@@ -257,6 +260,8 @@
 				}
 			}
 		}
+
+		// Card with "Potential reduction" heading and optimisation list
 		.creative-opt-overview-card {
 			color: @gat-deep-green;
 			> .card-header {
@@ -275,6 +280,14 @@
 				.number {
 					font-size: 200%;
 				}
+			}
+		}
+
+		// One optimisation recommendation subcard
+		.opt-rec {
+			.img-preview {
+				object-fit: contain;
+				max-height: 10rem; // Don't let tall images stretch layout
 			}
 		}
 	}

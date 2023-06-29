@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, Button, Card, CardBody, CardFooter, CardHeader, Col, Container, Row } from 'reactstrap';
+import React, { useState } from 'react';
+import { Alert, Button, CardBody, CardFooter, CardHeader, Col, Container, Row } from 'reactstrap';
 
 
 import { GLCard } from '../../impact/GLCards';
@@ -53,6 +53,8 @@ function CreativeList() {
 
 
 function CreativeSizeOverview({ tag, manifest }) {
+	let weight = tag.weight || (manifest.reqHeaders + manifest.reqBody + manifest.resBody + manifest.resHeaders);
+
 	return (
 		<GLCard noPadding noMargin className="creative-size-card">
 			<CardHeader>Your Creative Measurement</CardHeader>
@@ -64,7 +66,10 @@ function CreativeSizeOverview({ tag, manifest }) {
 				<div className="size-info">
 					<div className="bytes">
 						Creative size
-						<div className="number">{tag.weight || 999999} bytes</div>
+						<div className="number">
+							{weight} bytes
+							{!tag.weight && <span title="Size not yet manually confirmed">*</span>}
+						</div>
 					</div>
 					<div className="breakdown">
 						<a role="button" onClick={() => {}}>View Breakdown</a>
@@ -89,7 +94,7 @@ function CreativeOptimisationOverview({ tag, manifest }) {
 				</div>
 				<Container className="recs-list">
 					<Row>
-						{PageRecommendations({manifest}).map(rec => <Col xs="6">{rec}</Col>)}
+						{PageRecommendations({manifest}).map(rec => <Col xs="6" key={rec.url} >{rec}</Col>)}
 					</Row>
 				</Container>
 			</CardBody>
