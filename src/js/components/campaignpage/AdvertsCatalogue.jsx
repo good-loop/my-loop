@@ -190,15 +190,13 @@ const AdCard = ({ ad, active, isMain, onClick: _onClick, selected = false }) => 
 	// Record the aspect ratio of the maximum available size
 	useEffect(() => {
 		if (!active) return; // Inactive items have contents hidden, don't try to measure
-		if (maxAspect) { // sizer changed, invalidate previous recording
-			setMaxAspect(null);
+		if (!sizer) {
+			if (maxAspect) setMaxAspect(null); // sizer changed, invalidate previous measurement
 			return;
 		}
-		if (!sizer) return;
 		const { width, height } = sizer.getBoundingClientRect();
 		setMaxAspect(width / height);
 	}, [sizer, keepLive]);
-	// preview cards: check size first time they flip to "active"
 
 	// Main cards revert to placeholders when they become inactive, so running ads get stopped
 	// Preview cards stick, so they don't have to reload again on every scroll
@@ -226,7 +224,7 @@ const AdCard = ({ ad, active, isMain, onClick: _onClick, selected = false }) => 
 
 	return <div className={space('ad-sizer', ...sizerClasses)} onClick={onClick} ref={setSizer}>
 		{isMain ? <AdPortalLink ad={ad} /> : null}
-		{(active || keepLive) ? <GoodLoopUnit {...unitProps} /> : placeholder}
+		{keepLive ? <GoodLoopUnit {...unitProps} /> : placeholder}
 		{/* onClick && <div className="click-catcher" onClick={e => {stopEvent(e); onClick(e);}} /> */}
 	</div>;
 };
