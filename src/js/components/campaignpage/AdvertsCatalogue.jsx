@@ -53,18 +53,20 @@ const AdvertsCatalogue = ({ ads, noPreviews, className, captions = true }) => {
 	// Multiple ads, previews OK = show preview row
 	const multiple = ads.length > 1;
 	const showPreviews = multiple && !noPreviews;
+	// If preview carousel is being rendered, conditionally hide the individual-ad indicator buttons.
+	const indicatorClasses = showPreviews && 'd-flex d-md-none';
 
 	return (
 		<div className={space('ads-catalogue', showPreviews && 'has-previews', multiple && 'multiple', className)}>
 			<Carousel
+				className="main-carousel"
 				activeIndex={activeIndex}
 				next={next}
 				previous={previous}
 				interval={false}
-				className="main-carousel"
 			>
 				{multiple && <CarouselIndicators
-					className="d-flex d-md-none"
+					className={space('single-ad-indicators', indicatorClasses)}
 					items={carouselSlides}
 					activeIndex={activeIndex}
 					onClickHandler={goToIndex}
@@ -89,17 +91,7 @@ const AdPreviewCarousel = ({ ads, selectedIndex, setSelected }) => {
 	const [page, setPage] = useState(0);
 	const [animating, setAnimating] = useState(false);
 
-	const pages = Math.ceil(ads.length / PAGE_SIZE);
 
-	// Back/forward functions
-	const goToPage = (newPage) => {
-		if (animating) return;
-		newPage = newPage % pages;
-		if (newPage < 0) newPage += pages;
-		setPage(newPage);
-	};
-	const next = () => goToPage(page + 1);
-	const previous = () => goToPage(page - 1);
 
 	// Keep previews page synced with selected advert (eg if user uses upper arrows to go off end of page)
 	useEffect(() => {
@@ -117,28 +109,41 @@ const AdPreviewCarousel = ({ ads, selectedIndex, setSelected }) => {
 		/>
 	));
 
-	// ...and distribute them across the pages
+	// ...and distribute them across the pages.
 	const pageProps = { onExiting: () => setAnimating(true), onExited: () => setAnimating(false), className: 'preview-page' };
 	const carouselSlides = range(0, ads.length, PAGE_SIZE).map(pageStart => (
-		 <CarouselItem key={pageStart} {...pageProps}>
+		<CarouselItem key={pageStart} {...pageProps}>
 				<div className="preview-card-positioner">
 					{adPreviews.slice(pageStart, pageStart + PAGE_SIZE)}
 				</div>
 		</CarouselItem>
 	));
 
-	// Leave out controls if there's only one page
+	// How many pages, after processing all ads?
+	const pages = carouselSlides.length;
+	// Leave out controls if there's only one page.
 	const multiple = pages > 1;
+
+	// Back/forward functions
+	const goToPage = (newPage) => {
+		if (animating) return;
+		newPage = newPage % pages;
+		if (newPage < 0) newPage += pages;
+		setPage(newPage);
+	};
+	const next = () => goToPage(page + 1);
+	const previous = () => goToPage(page - 1);
 
 	return (
 		<Carousel
+			className="preview-carousel d-md-block d-none"
 			activeIndex={page}
 			next={next}
 			previous={previous}
 			interval={false}
-			className="preview-carousel d-md-block d-none"
 		>
 			{multiple && <CarouselIndicators
+				className="ad-page-indicators"
 				items={carouselSlides}
 				activeIndex={page}
 				onClickHandler={goToPage}
