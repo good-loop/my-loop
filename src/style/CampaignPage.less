@@ -567,9 +567,17 @@
 				}
 			}
 		}
-	}
+	} // ./impact-hub-splash
 
-	// ./impact-hub-splash
+	// Advert catalogue: give explicit but viewport-limited height so dynamic sizing of ads can work
+	.ads-catalogue {
+		height: 35rem;
+		max-height: 65vh;
+		// white background = dark highlight on selected preview
+		.preview-ad.selected {
+			outline-color: rgba(0, 0, 0, 0.75);
+		}
+	}
 
 	h1,
 	h2 {
@@ -697,27 +705,6 @@
 		@media (max-width:768px) {
 			//margin-left: -30px;
 			//margin-right: -30px;
-		}
-	}
-
-	.pointer-wrapper {
-		cursor: pointer;
-
-		.ad-prev {
-			pointer-events: none;
-			overflow: hidden;
-			border: 5px solid transparent;
-			transition: 0.2s;
-		}
-
-		&.selected {
-			cursor: default;
-
-			.ad-prev {
-				border-radius: 5px;
-				border: 5px solid red;
-				transition: 0.2s;
-			}
 		}
 	}
 

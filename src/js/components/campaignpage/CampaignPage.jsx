@@ -328,7 +328,7 @@ const CampaignPage = () => {
 					setCtaModalOpen={setCtaModalOpen}
 					/>
 
-				{isLanding ? null : (<>
+				{!isLanding && <Container>
 					<AdvertsCatalogue
 						campaign={campaign}
 						ads={ads}
@@ -340,7 +340,7 @@ const CampaignPage = () => {
 						setCtaModalOpen={setCtaModalOpen}
 						className="my-5"
 					/>
-				</>)}
+				</Container>}
 
 				{charities.length !== 0 && 
 					<CharitiesSection charities={charities} donation4charity={donation4charity} campaign={campaign} setCtaModalOpen={setCtaModalOpen}/>

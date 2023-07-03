@@ -1,0 +1,136 @@
+.ads-catalogue {
+	position: relative; // Enable as height reference for main/preview carousels
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	// Position dev link out of the way-ish
+	.main-ad {
+		position: relative;
+		.dev-link {
+			position: absolute;
+			top: 0;
+			right: 0;
+			z-index: 999;
+		}
+	}
+
+	.main-carousel {
+		width: 100%;
+	}
+
+	.preview-carousel {
+		width: 100%;
+		height: 12.5%;
+		.carousel-inner {
+			padding: 0.25em 0; // Leave room for the outline on the selected preview-item
+		}
+	}
+
+	// Distribute height between main and preview...
+	&.multiple .main-carousel {
+		max-height: 90%; // Leave room for page indicator
+	}
+	
+	&.has-previews .main-carousel {
+		max-height: 80%; // Leave room for previews if present
+		margin-bottom: 1%;
+	}
+
+
+
+	// Leave some side room for buttons
+
+	&.multiple {
+		.main-carousel, .preview-carousel {
+			// Shrink inner, not outer, as we want the buttons to use the extra room at the sides
+			.carousel-inner {
+				max-width: 85%;
+				margin: auto;
+			}
+		}
+	}
+
+	// Cascade height down from .carousel to .carousel-inner to .carousel-item
+	// Relative heights on .carousel-item are basically impossible due to the number of ancestors with position: relative acting as false references
+	.carousel-inner, .carousel-item {
+		height: 100%;
+	}
+
+	// Arrange the ads in preview rows
+	.preview-card-positioner {
+		display: flex;
+		justify-content: center;
+		height: 100%;
+	}
+
+	// Clicks should ignore ads inside preview cards & just get caught by card's onClick
+	.preview-ad {
+		cursor: pointer; // signal clickable
+		.goodLoopContainer {
+			pointer-events: none;
+		}
+		border-radius: 0.25em;
+		transition: outline 0.2s linear;
+		&.selected {
+			outline: 0.2em solid white;
+			// border-color: rgba(255, 255, 255, 0.85);
+		}
+	}
+
+	// Adunits need to receive clicks, so controls shouldn't overlap them
+	.carousel-control-next, .carousel-control-prev {
+		width: 7.5%; // half of BS standard, complements max-width 85% for carousels
+	}
+
+	// The fixed-aspect boxes which hold the GL units
+	.ad-sizer {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		
+		width: 100%;
+		height: 100%;
+		// currently probing available size, don't show children
+		&.hide-contents > * {
+			display: none;
+		}
+		&.fix-width {
+			height: unset;
+		}
+		&.fix-height {
+			width: unset;
+		}
+		&.main-ad {
+			margin: auto; // centre in full-width .carousel-item
+		}
+		&.preview-ad {
+			&:not(:first-child) {
+				margin-left: 5%;
+			}
+		}
+		&.landscape {
+			aspect-ratio: 16/9;
+		}
+		&.portrait {
+			aspect-ratio: 9/16;
+		}
+	}
+	
+	// Don't overlap the indicators with the clickable previews
+	.carousel-indicators {
+		bottom: unset;
+		top: 100%;
+	}
+
+	// Invisible element to stop "jump to this" clicks on previews also interacting with the ad inside
+	.click-catcher {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		cursor: pointer;
+	}
+}
