@@ -5,230 +5,225 @@ import {
 	CarouselIndicators, CarouselItem, Container
 } from 'reactstrap';
 
-import { uniq, space } from '../../base/utils/miscutils';
-
+import { space, stopEvent } from '../../base/utils/miscutils';
 import Misc from '../../base/components/Misc';
 import Advert from '../../base/data/Advert';
-import Campaign from '../../base/data/Campaign';
-import Money from '../../base/data/Money';
-import Counter from '../../base/components/Counter';
 import GoodLoopUnit from '../../base/components/GoodLoopUnit';
 import DevLink from './DevLink';
-import DataStore from '../../base/plumbing/DataStore';
-import printer from '../../base/utils/printer';
 import { assert } from '../../base/utils/assert';
+import { range } from 'lodash';
+
+import '../../../style/AdvertsCatalogue.less';
+
+// Ads per page on the mini preview row
+// TODO Do an initial render with just 1 and measure available size
+const PAGE_SIZE = 4;
+
 
 /**
- * List of adverts with some info about them (like views, dates)
+ * A carousel allowing a user to flip between ad previews & see some basic information about them (run dates etc)
  * @param {Object} p
  * @param {Advert[]} p.ads
  * @param {?Boolean} p.noPreviews remove preview carousel
  */
-const AdvertsCatalogue = ({ ads, noPreviews, className, captions=true, unwrap, ...props}) => {
+const AdvertsCatalogue = ({ ads, noPreviews, className, captions = true }) => {
 	assert(ads);
 
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [animating, setAnimating] = useState(false);
 
-	if (ads.length === 1) {
-		const content = <AdvertCard ad={ads[0]} active />
-		return unwrap ? content : <Container>{content}</Container>;
-	}
-
+	const slideProps = { onExiting: () => setAnimating(true), onExited: () => setAnimating(false), className: 'advert-slide' };
 	const carouselSlides = ads.map((ad, i) =>
-		<CarouselItem
-			onExiting={() => setAnimating(true)}
-			onExited={() => setAnimating(false)}
-			key={i}
-		>
-			<AdvertCard ad={ad} active={activeIndex === i} />
+		<CarouselItem key={i} {...slideProps} >
+			<AdCard ad={ad} active={activeIndex === i} isMain />
 			{captions && <CarouselCaption captionText={<Misc.DateDuration startDate={ad.start} endDate={ad.end} />} />}
 		</CarouselItem>
 	);
 
-	const next = () => {
+	// Nav functions
+	const goToIndex = (i) => {
 		if (animating) return;
-		const nextIndex = activeIndex === carouselSlides.length - 1 ? 0 : activeIndex + 1;
-		setActiveIndex(nextIndex);
+		i = i % ads.length;
+		if (i < 0) i += ads.length;
+		setActiveIndex(i);
 	};
+	const next = () => goToIndex(activeIndex + 1);
+	const previous = () => goToIndex(activeIndex - 1);
 
-	const previous = () => {
-		if (animating) return;
-		const nextIndex = activeIndex === 0 ? carouselSlides.length - 1 : activeIndex - 1;
-		setActiveIndex(nextIndex);
-	};
+	// Multiple ads, previews OK = show preview row
+	const multiple = ads.length > 1;
+	const showPreviews = multiple && !noPreviews;
 
-	const goToIndex = (newIndex) => {
-		if (animating) return;
-		setActiveIndex(newIndex);
-	};
-
-	const contents = <>
-		<Carousel
-			activeIndex={activeIndex}
-			next={next}
-			previous={previous}
-			interval={false}
-		>
-			{!noPreviews && <CarouselIndicators className="d-block d-md-none" items={carouselSlides} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{ backgroundColor: "#000" }} />}
-			{carouselSlides}
-			{!noPreviews && <div className="d-none d-md-block">
-				<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
-				<CarouselControl direction="next" directionText="Next" onClickHandler={next} />
-			</div>}
-		</Carousel>
-		{!noPreviews && <>
-			{/* <br /><br /> reduce the whitespace - Dan, Jun 2023 */}
-			<AdPreviewCarousel ads={ads} setSelected={goToIndex} selectedIndex={activeIndex} />
-		</>}
-	</>;
-
-	return unwrap ? contents : <Container className={space('ads-catalogue', className)}>{contents}</Container>;
+	return (
+		<div className={space('ads-catalogue', showPreviews && 'has-previews', multiple && 'multiple', className)}>
+			<Carousel
+				activeIndex={activeIndex}
+				next={next}
+				previous={previous}
+				interval={false}
+				className="main-carousel"
+			>
+				{multiple && <CarouselIndicators
+					className="d-flex d-md-none"
+					items={carouselSlides}
+					activeIndex={activeIndex}
+					onClickHandler={goToIndex}
+					cssModule={{ backgroundColor: "#000" }}
+				/>}
+				{carouselSlides}
+				{multiple && <>
+						<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
+						<CarouselControl direction="next" directionText="Next" onClickHandler={next} />
+				</>}
+			</Carousel>
+			{showPreviews && <AdPreviewCarousel ads={ads} setSelected={goToIndex} selectedIndex={activeIndex} />}
+		</div>
+	);
 };
 
-/**
- * NB: wrapped in span x2 to allow custom css to target it. e.g.
- * 
- * 
- */
-const AdvertiserName = ({ name }) => <span className="advertiser-name"><span>{name}</span></span>;
 
+/**
+ * Secondary carousel, showing multiple ads at a glance.
+ */
 const AdPreviewCarousel = ({ ads, selectedIndex, setSelected }) => {
-	const [activeIndex, setActiveIndex] = useState(0);
+	const [page, setPage] = useState(0);
 	const [animating, setAnimating] = useState(false);
 
-	const slidesNum = Math.ceil(ads.length / 4);
+	const pages = Math.ceil(ads.length / PAGE_SIZE);
 
-	const next = () => {
+	// Back/forward functions
+	const goToPage = (newPage) => {
 		if (animating) return;
-		const nextIndex = activeIndex === carouselSlides.length - 1 ? 0 : activeIndex + 1;
-		setActiveIndex(nextIndex);
+		newPage = newPage % pages;
+		if (newPage < 0) newPage += pages;
+		setPage(newPage);
 	};
+	const next = () => goToPage(page + 1);
+	const previous = () => goToPage(page - 1);
 
-	const previous = () => {
-		if (animating) return;
-		const nextIndex = activeIndex === 0 ? carouselSlides.length - 1 : activeIndex - 1;
-		setActiveIndex(nextIndex);
-	};
+	// Keep previews page synced with selected advert (eg if user uses upper arrows to go off end of page)
+	useEffect(() => {
+		const pageForSelected = Math.floor(selectedIndex / PAGE_SIZE);
+		if (pageForSelected !== page) goToPage(pageForSelected);
+	}, [selectedIndex]);
 
-	const goToIndex = (newIndex) => {
-		if (animating) return;
-		setActiveIndex(newIndex);
-	};
+	// Generate an AdvertPreviewCard for each ad...
+	const adPreviews = ads.map((ad, i) => (
+		<AdCard
+			key={i} ad={ad}
+			selected={selectedIndex === i}
+			onClick={() => setSelected(i)} 
+			active={page === Math.floor(i / PAGE_SIZE)}
+		/>
+	));
 
-	const carouselSlides = [];
-	for (let i = 0; i < slidesNum; i++) {
-		const adIndex = i * 4;
-
-		const previews = [0, 1, 2, 3].map(j => {
-			const offsetIndex = adIndex + j;
-			if (offsetIndex > ads.length - 1) return null;
-			return <AdvertPreviewCard
-				key={offsetIndex}
-				ad={ads[offsetIndex]}
-				selected={selectedIndex == offsetIndex}
-				handleClick={() => setSelected(offsetIndex)}
-				active={activeIndex === i}
-			/>;
-		}).filter(a => !!a);
-
-		carouselSlides.push(
-			<CarouselItem onExiting={() => setAnimating(true)} onExited={() => setAnimating(false)} key={i} >
-				<div className="row justify-content-center mt-5">
-					{previews}
+	// ...and distribute them across the pages
+	const pageProps = { onExiting: () => setAnimating(true), onExited: () => setAnimating(false), className: 'preview-page' };
+	const carouselSlides = range(0, ads.length, PAGE_SIZE).map(pageStart => (
+		 <CarouselItem key={pageStart} {...pageProps}>
+				<div className="preview-card-positioner">
+					{adPreviews.slice(pageStart, pageStart + PAGE_SIZE)}
 				</div>
-			</CarouselItem>
-		);
-	}
+		</CarouselItem>
+	));
 
-	return <div className="d-md-block d-none">
+	// Leave out controls if there's only one page
+	const multiple = pages > 1;
+
+	return (
 		<Carousel
-			activeIndex={activeIndex}
+			activeIndex={page}
 			next={next}
 			previous={previous}
 			interval={false}
-			className="preview-carousel"
+			className="preview-carousel d-md-block d-none"
 		>
-			<CarouselIndicators items={carouselSlides} activeIndex={activeIndex} onClickHandler={goToIndex} cssModule={{ backgroundColor: "#000" }} />
+			{multiple && <CarouselIndicators
+				items={carouselSlides}
+				activeIndex={page}
+				onClickHandler={goToPage}
+				cssModule={{ backgroundColor: "#000" }}
+			/>}
 			{carouselSlides}
-			<div className="wide-controls">
+			{multiple && <>
 				<CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
 				<CarouselControl direction="next" directionText="Next" onClickHandler={next} />
-			</div>
+			</>}
 		</Carousel>
-	</div>;
+	);
 }
 
-// If social is null (not specific) or false, it will fall back to landscape ads
-const AdvertCard = ({ ad, active, decoration }) => {
-	const social = ad.format === "social";
-	let size = 'landscape';
-	const [hasShown, setHasShown] = useState(false);
-	const extraParams = {};
-	if (social) {
-		size = "portrait";
-		extraParams.delivery = "app";
-		extraParams.after = "vanish";
-	}
 
-	useEffect(() => { // activate ad unit once
-		if (active && !hasShown) setHasShown(true);
-	}, [active]);
+/** Display instead of ad cards that haven't scrolled into view yet */
+const placeholder = <div className="ad-placeholder" />;
 
-	const reloadAdUnit = () => {
-		setHasShown(false);
-		setTimeout(() => {
-			setHasShown(true);
-		}, 100);
-	}
 
-	//maxWidth:"50%" this made for a (bad looking) mini advert
-	return (
-		<div className="position-relative main-ad" style={{ minHeight: "max(100px,80%)", /*margin:"auto" causes a small ad*/ }}>
-			<DevLink href={'https://portal.good-loop.com/#advert/' + escape(ad.id)} target="_portal" style={{ position: "absolute", zIndex: 999 }}>Advert Editor ({ad.id})</DevLink>
-			<div className="position-relative ad-unit-outer h-100">
-				{hasShown ? (
-					<GoodLoopUnit vertId={ad.id} size={size} extraParams={extraParams} play="onclick" 
-						style={{zIndex:2, maxWidth:"90%", margin:"auto"}} shouldDebug={false} />
-				) : (
-					<div style={{ background: "black", width: "100%", height: "100%" }}></div>
-				)}
-			</div>
-			{/*<span className="position-absolute" style={{ left: "50%", top: "50%", transform: "translate(-50%, -50%)", zIndex: 0 }}>If you're seeing this, you likely have ad-blocker enabled. Please disable ad-blocker to see the demo!</span>*/}
-		</div>
-	);
-};
+/** Link to the portal page for an ad */
+const AdPortalLink = ({ad}) => (
+	<DevLink href={`https://portal.good-loop.com/#advert/${escape(ad.id)}`} target="_portal">
+		Advert Editor ({ad.id})
+	</DevLink>
+);
+
 
 /**
- * How does this relate to AdvertCard?? Could they share code??
+ * A single ad in either of the carousels
  * @param {Object} p
- * @param {Advert} p.ad
+ * @param {Advert} p.ad Advert to show in this card
+ * @param {boolean} [active] True if currently on-screen and the ad should render
+ * @param {boolean} [isMain] True for big main-carousel ads, falsy for mini previews
+ * @param {function} [onClick] Generally "jump to this item"
+ * @param {boolean} [selected] This is a preview for the ad currently shown in the main view
  * @returns
  */
-const AdvertPreviewCard = ({ ad, handleClick, selected = false, active }) => {
-	if (!ad) {
-		//console.warn("AdvertPreviewCard - NO ad?!");
-		return null;
-	}
-	const social = ad.format === "social";
-	let size = 'landscape';
-	if (social) { size = "portrait"; }
-	const [hasShown, setHasShown] = useState(false);
-	if (active && !hasShown) setHasShown(true);
+const AdCard = ({ ad, active, isMain, onClick: _onClick, selected = false }) => {
+	if (!ad) return null; // Weird but not a showstopper
+	const [keepLive, setKeepLive] = useState(false);
+	const [sizer, setSizer] = useState(); // Outer div ref
+	const [maxAspect, setMaxAspect] = useState(); // The sizer's aspect ratio at 100% width and height
 
-	return (
-		<div className={"col-6 col-md-2"}>
-			<div onClick={e => { e.preventDefault(); handleClick(); }} className={"d-flex justify-content-center pointer-wrapper" + (selected ? " selected" : "")}>
-				<div className="ad-prev shadow" style={{pointerEvents:"none"}}>
-					{hasShown ? (
-						<GoodLoopUnit vertId={ad.id} size={size} advert={ad} play="onclick" shouldDebug={false} />
-					) : (
-						<div style={{ background: "black", width: "100%", height: "100%" }}></div>
-					)}
-				</div>
-			</div>
-		</div>
-	);
+	// Record the aspect ratio of the maximum available size
+	useEffect(() => {
+		if (!active) return; // Inactive items have contents hidden, don't try to measure
+		if (maxAspect) { // sizer changed, invalidate previous recording
+			setMaxAspect(null);
+			return;
+		}
+		if (!sizer) return;
+		const { width, height } = sizer.getBoundingClientRect();
+		setMaxAspect(width / height);
+	}, [sizer, keepLive]);
+	// preview cards: check size first time they flip to "active"
+
+	// Main cards revert to placeholders when they become inactive, so running ads get stopped
+	// Preview cards stick, so they don't have to reload again on every scroll
+	useEffect(() => {
+		if (active || isMain) setKeepLive(active);
+	}, [active]);
+
+	// Set up props for GoodLoopUnit
+	const social = (ad.format === 'social');
+	const size = social ? 'portrait' : 'landscape';
+	const extraParams = social ? { delivery: 'app', after: 'vanish' } : null;
+	const unitProps = { vertId: ad.id, size, extraParams, play: 'onclick', shouldDebug: false };
+
+	const onClick = (!selected && _onClick) ? (e => { stopEvent(e); _onClick(e); }) : null;
+	const sizerClasses = [isMain ? 'main-ad' : 'preview-ad', selected && 'selected'];
+
+	// Fix either width or height, depending on whether the ad aspect is wider or taller than the maximum envelope.
+	if (maxAspect) {
+		const adAspect = { landscape: 16/9, portrait: 9/16 }[size];
+		sizerClasses.push((adAspect > maxAspect) ? 'fix-width' : 'fix-height');
+		sizerClasses.push(unitProps.size);
+	} else {
+		sizerClasses.push('hide-contents'); // Not probed available size yet
+	}
+
+	return <div className={space('ad-sizer', ...sizerClasses)} onClick={onClick} ref={setSizer}>
+		{isMain ? <AdPortalLink ad={ad} /> : null}
+		{(active || keepLive) ? <GoodLoopUnit {...unitProps} /> : placeholder}
+		{/* onClick && <div className="click-catcher" onClick={e => {stopEvent(e); onClick(e);}} /> */}
+	</div>;
 };
 
 export default AdvertsCatalogue;

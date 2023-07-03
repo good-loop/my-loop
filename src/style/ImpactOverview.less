@@ -215,30 +215,13 @@
 	}
 
 	.ads-catalogue-card {
-		.ad-unit-outer {
-			pointer-events: none;
-		}
-		// HACK some ugly brute force to make the ad fill the space its given
+		height: 15rem; // 
 		.ads-catalogue {
+			pointer-events: none; // Contents not clickable - click will show modal
+		}
+		.ads-catalogue, .main-carousel {
 			height: 100%;
-			padding: 0;
-			.carousel {
-				height: 100%;
-				.carousel-inner {
-					height: 100%;
-					.carousel-item {
-						height: 100%;
-						.main-ad {
-							height: 100%;
-							max-width: 100% !important;
-							display: flex;
-							flex-direction: column;
-							justify-content: center;
-							align-items: stretch;
-						}
-					}
-				}
-			}
+			width: 100%;
 		}
 	}
 
@@ -352,9 +335,20 @@
 		}
 
 		&.ads-catalogue-modal {
-
-			.preview-carousel {
-				height: 20rem;
+			max-height: calc(100vh - 5rem); // no scrolling, even if main card layout scrolls
+			// Let carousel overlap header for space...
+			.card-header {
+				position: absolute;
+				z-index: 2;
+			}
+			// ...but make sure the X button stays in front
+			.card-body {
+				z-index: 1;
+			}
+			
+			// Have catalogue explicitly fill card height
+			.ads-catalogue {
+				height: 100%;
 			}
 
 			.glcard {
@@ -362,26 +356,6 @@
 
 				.goodLoopContainer {
 					background-color: black;
-				}
-
-				.pointer-wrapper {
-					cursor: pointer;
-			
-					.ad-prev {
-						pointer-events: none;
-						overflow: hidden;
-						border: 5px solid transparent;
-						transition: 0.2s;
-					}
-			
-					&.selected {
-						cursor: default;
-						.ad-prev {
-							border-radius: 5px;
-							border: 5px solid red;
-							transition: 0.2s;
-						}
-					}
 				}
 			}
 		}

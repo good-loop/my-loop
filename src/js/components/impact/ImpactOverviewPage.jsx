@@ -61,7 +61,7 @@ export class ImpactFilters {
  * 
  * @returns {JSX.Element}
  */
-function IOPFirstHalf({ mainItem, wtdAds, tadgAds, brand, campaign, charities, impactDebits, totalString, mainLogo }) {
+function IOPFirstHalf({ mainItem, brand, campaign, charities, impactDebits, totalString, mainLogo }) {
 	return <GLVertical>
 		{/* top left corner - both top corners with basis 60 to line up into grid pattern */}
 		<GLCard basis={campaign ? 80 : 60} className="hero-card">
@@ -83,10 +83,6 @@ function IOPFirstHalf({ mainItem, wtdAds, tadgAds, brand, campaign, charities, i
 		{campaign ? (
 			<CampaignCharityDisplay charities={charities} impactDebits={impactDebits}/>
 		) : (
-			/*<GLHorizontal>
-				<WTDCard ads={wtdAds} brand={brand} charities={charities} impactDebits={impactDebits} />
-				<TADGCard ads={tadgAds} brand={brand} charities={charities} impactDebits={impactDebits} />
-			</GLHorizontal>*/
 			// Can't have in set - or CommonDivision wrapper messes up. Can't think of fix so just shove contents here for now
 			<CharitiesCardSet charities={charities} impactDebits={impactDebits} mainItem={mainItem}/>
 		)}
@@ -211,14 +207,12 @@ function OffsetsCard() {
  * 
  * @returns {JSX.Element}
  */
-function AdsCatalogueCard({ ads, campaign, unwrap, noPreviews }) {
+function AdsCatalogueCard({ ads, campaign, unwrap }) {
 	let showAds = ads.filter(ad => !Advert.hideFromShowcase(ad));
 
+	// Just show the first ad - no controls etc needed, as clicking will open the modal
 	const content = showAds.length ? (
-		<AdvertsCatalogue
-			ads={showAds}
-			noPreviews
-		/>
+		<AdvertsCatalogue ads={[showAds[0]]} noPreviews />
 	) : (
 		<h3>No ads yet!</h3>
 	);
@@ -229,7 +223,7 @@ function AdsCatalogueCard({ ads, campaign, unwrap, noPreviews }) {
 		basis: (campaign && 70),
 		className: 'ads-catalogue-card',
 		modalId: 'full-page',
-		modalContent: <AdvertsCatalogue ads={showAds} unwrap />,
+		modalContent: <AdvertsCatalogue ads={showAds} />,
 		modalClassName: 'ads-catalogue-modal',
 	};
 

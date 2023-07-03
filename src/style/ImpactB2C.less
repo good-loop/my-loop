@@ -1018,12 +1018,12 @@
 			}
 		}
 
+		// The ad preview container - phone frame with leaves
 		.ad-deco-cont {
 			position: relative;
 			height: fit-content;
 			width: 100em; // Define width as always being 100em & size children in em to maintain proportions...
 			font-size: 0.45vw; // ...and set font size to change overall size
-
 
 			.spotlight-ad {
 				position: relative;
@@ -1031,36 +1031,28 @@
 
 				// Black background for screen & sizer for ad content
 				.phone-screen {
-					pointer-events: none; // sorted in front of adunit, shouldn't catch clicks/taps
 					position: absolute;
 					background: black;
 					top: 3.5em;
 					bottom: 3.5em;
 					left: 3.3em;
 					right: 3.3em;
-					padding: 1em; // push content in to keep clear notch and round corners
 				}
-
-				// Override carousel / GoodLoopUnit defaults (TODO ads carousel should not do this)
-				.main-ad {
-					max-width: unset !important;
-					width: 100%;
-					height: 100%;
-				}
-				.ad-unit-outer {
-					height: 100%;
-					margin: auto; // centre block element horizontally
-					aspect-ratio: calc(16/9);
-				}
-				.goodLoopContainer {
-					max-width: unset !important;
-					height: 100% !important;
-				}
-				// /Override carousel defaults
 				
 				.phone-container {
+					pointer-events: none; // sorted in front of adunit, shouldn't catch clicks/taps
 					position: relative;
 					z-index: 10;
+					// Minor hack: ensure frame image has correct size before it loads,
+					// so carousel inside can correctly measure available space
+					width: 100%;
+					aspect-ratio: 265/150; // px sizing of phone frame SVG
+				}
+				.ads-catalogue {
+					height: 100%; // so contents will be vertically centred in phone frame
+				}
+				.main-carousel {
+					width: 90%; // don't let corners/edges get cut off by screen rounding or notch
 				}
 			}
 
@@ -1097,7 +1089,7 @@
 					left: 0;
 				}
 			}
-		}
+		} // /.ad-deco-cont
 
 		// Narrower than e.g. small laptop screens = stack desc + ad preview vertically
 		@media (max-width: 1080px) {
