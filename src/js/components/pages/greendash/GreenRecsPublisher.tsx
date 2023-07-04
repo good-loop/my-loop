@@ -130,11 +130,13 @@ function RecommendationChart({ bucketsPer1000, passBackChart }: { bucketsPer1000
 		});
 	}, [bucketsPer1000, logarithmic]);
 
-	return chartData ? (
-		<NewChartWidget className="publisher-carbon-histogram" width={null} height={null} datalabels={null} maxy={null} {...chartData} />
-	) : (
-		<Misc.Loading text={null} pv={null} inline={null} />
-	);
+	// Chart data not generated yet = still waiting on buckets.
+	if (!chartData) return <Misc.Loading text={null} pv={null} inline={null} />;
+	// Chart data generated from empty buckets array = meaningless data, don't try to chart it.
+	if (!bucketsPer1000.length) return <div>No domain data for the current filters.</div>;
+
+	// All good!
+	return <NewChartWidget className="publisher-carbon-histogram" width={null} height={null} datalabels={null} maxy={null} {...chartData} />;
 }
 
 
@@ -153,6 +155,15 @@ const downloadCSV = (data?: string[]) => {
 };
 
 
+/** Domains / Impressions / CO2e Per Impression number + header */
+function DomainStat({title, valid, value }: {title: String|JSX.Element, valid: boolean, value: String|JSX.Element}) {
+	return <div className="domain-stat">
+		<div className="stat-name">{title}</div>
+		<div className="stat-value">{valid ? value : '-'}</div>
+	</div>;
+}
+
+
 function DomainList({ buckets, min, max }: { buckets?: GreenBuckets; min?: number; max?: number; }): JSX.Element {
 	if (!buckets) return <></>;
 
@@ -160,11 +171,14 @@ function DomainList({ buckets, min, max }: { buckets?: GreenBuckets; min?: numbe
 	const [volumeFraction, setVolumeFraction] = useState<number>(0); // Fraction of all impressions which ran through the filtered domains
 	const [avgCO2, setAvgCO2] = useState<number>(0);
 
+	// Max may be 0 in degenerate cases - don't let that turn allow card into a second block card
+	const allow = (max !== undefined);
+
 	// Apply cutoffs to publisher list and generate some stats on the result
 	useEffect(() => {
 		// Apply high/low CO2 cutoff to publisher list, then sort by name
 		const filteredBuckets = buckets.filter(bkt => (
-			(max ? (bkt.co2 as number <= max) : (bkt.co2 as number > min!))
+			(allow ? (bkt.co2 as number <= max) : (bkt.co2 as number > min!))
 		)).sort((a, b) => a.key > b.key ? 1 : -1);
 		setDomains(filteredBuckets.map(bkt => bkt.key as string));
 		// Calculate how many impressions the filtered publisher list contains
@@ -175,39 +189,33 @@ function DomainList({ buckets, min, max }: { buckets?: GreenBuckets; min?: numbe
 		setAvgCO2(filteredBuckets.reduce((acc, bkt) => acc + (bkt.co2 as number), 0) / filteredBuckets.length);
 	}, [buckets, min, max]);
 
-	const cutoffIcon = <div className="cutoff-icon">{max ? tickSvg : crossSvg}</div>;
+	const cutoffIcon = <div className="cutoff-icon">{allow ? tickSvg : crossSvg}</div>;
+
+	// Empty list means most of the card is meaningless.
+	const valid = !!domains.length;
 
 	return (
-		<GLCard className={`domain-list ${max ? "allow" : "block"}`} noPadding>
+		<GLCard className={`domain-list ${allow ? "allow" : "block"}`} noPadding>
 			<CardHeader className="domain-list-title p-2">
-				<h4 className="m-0">Suggested {max ? "Allow" : "Block"} List</h4>
+				<h4 className="m-0">Suggested {allow ? "Allow" : "Block"} List</h4>
 			</CardHeader>
 			<CardBody className="flex-column p-0">
 				<div className="cutoff-header p-3">
-					<h5 className="cutoff-label">
-						{/* low ? 'Maximum' : 'Minimum'*/} {CO2e} emissions per impression
-					</h5>
-					<div className="cutoff-value">
-						{cutoffIcon}
-						<span className="cutoff-number ml-3">
-							{max ? <>&le;</> : <>&gt;</>}
-							{printer.prettyNumber(max || min || 0, 3, null)} g
-						</span>
-					</div>
+					{valid ? <>
+						<h5 className="cutoff-label">{CO2e} emissions per impression</h5>
+						<div className="cutoff-value">
+							{cutoffIcon}
+							<span className="cutoff-number ml-3">
+								{allow ? <>&le;</> : <>&gt;</>}
+								{printer.prettyNumber(max || min || 0, 3, null)} g
+							</span>
+						</div>
+					</> : <h5 className="cutoff-label">No domains in list</h5>}
 				</div>
 				<div className="domain-stats flex-row mx-1 p-1">
-					<div className="domain-stat">
-						<div className="stat-name">Domains</div>
-						<div className="stat-value">{domains.length || "-"}</div>
-					</div>
-					<div className="domain-stat">
-						<div className="stat-name">Impressions</div>
-						<div className="stat-value">{printer.prettyNumber(volumeFraction * 100, 2, null)}%</div>
-					</div>
-					<div className="domain-stat">
-						<div className="stat-name">{CO2e} per</div>
-						<div className="stat-value">{printer.prettyNumber(avgCO2, 3, null)}g</div>
-					</div>
+					<DomainStat title="Domains" valid={valid} value={new String(domains.length)} />
+					<DomainStat title="Impressions" valid={valid} value={printer.prettyNumber(volumeFraction * 100, 2, null) + '%'} />
+					<DomainStat title={<>{CO2e} per</>} valid={valid} value={printer.prettyNumber(avgCO2, 3, null) + 'g'} />
 				</div>
 				<ul className="domain-list-preview m-0 px-4">
 					{domains.map((domain, index) => (
@@ -216,11 +224,13 @@ function DomainList({ buckets, min, max }: { buckets?: GreenBuckets; min?: numbe
 				</ul>
 			</CardBody>
 			<CardFooter className="csv-block flex-column align-items-center">
-				{cutoffIcon}
-				<div className="csv-desc my-2">Use as {max ? "an allow-list" : "a block-list"} in your DSP</div>
-				<Button className="csv-button px-3 py-1" onClick={() => downloadCSV(domains)}>
-					Download CSV {downloadIcon}
-				</Button>
+				{valid && <>
+					{cutoffIcon}
+					<div className="csv-desc my-2">Use as {allow ? "an allow-list" : "a block-list"} in your DSP</div>
+					<Button className="csv-button px-3 py-1" onClick={() => downloadCSV(domains)}>
+						Download CSV {downloadIcon}
+					</Button>
+				</>}
 			</CardFooter>
 		</GLCard>
 	);
@@ -235,7 +245,7 @@ function GreenRecsPublisher(): JSX.Element | null {
 	const [co2Cutoff, setCO2Cutoff] = useState<number>(); // CO2 grams per impression to divide allow and block list
 	const [sortedBuckets, setSortedBuckets] = useState<GreenBuckets>(); // Publisher buckets, sorted low -> high CO2
 	const [rangeProps, setRangeProps] = useState(); // Props object for the range input
-	const [reduction, setReduction] = useState<number>(); // Reduction effect of allow/block list (fractional, ie 0.1 for 10%)
+	const [reduction, setReduction] = useState<number>(0); // Reduction effect of allow/block list (fractional, ie 0.1 for 10%)
 	const [chartObj, setChartObj] = useState();
 
 	/* Read / set up filters */
@@ -268,34 +278,37 @@ function GreenRecsPublisher(): JSX.Element | null {
 		getCarbon({ ...baseFilterConfirmed, breakdown: ['domain{"countco2":"sum"}'] })
 	) : null; // - but not until base filters are ready
 
-	console.log('filterUrlParams.generic', filterUrlParams.generic, filterUrlParams);
 
-	// Sort publisher buckets low -> high CO2
+	// Receive and process chart data
 	useEffect(() => {
 		if (filterUrlParams.generic) return;
 		if (!baseFilterConfirmed || !pvChartTotal?.resolved) return;
 		const useSampling = baseFilterConfirmed.prob && baseFilterConfirmed.prob != 0;
-		const pvChartTotalValue = useSampling ? pvChartTotal.value?.sampling : pvChartTotal.value;
-		const bucketsPer1000 = emissionsPerImpressions(pvChartTotalValue.by_domain.buckets);
-		const initSortedBuckets = bucketsPer1000.slice().sort((a, b) => ((a.co2 as number) - (b.co2 as number)))
-		setSortedBuckets(initSortedBuckets);
-		const initCO2Cutoff = ((initSortedBuckets[initSortedBuckets.length - 1].co2 as number) - (initSortedBuckets[0].co2 as number)) / 2
-		setCO2Cutoff(initCO2Cutoff);
+		const chartTotalValue = useSampling ? pvChartTotal.value?.sampling : pvChartTotal.value;
+		// Sort domains in order of CO2-per-impression (omitting "unset" as it's meaningless in the "generate block/allow list" context)
+		const rawBuckets = chartTotalValue.by_domain.buckets.filter(({key}) => key !== 'unset');
+		const buckets = emissionsPerImpressions(rawBuckets).slice().sort((a, b) => ((a.co2 as number) - (b.co2 as number)));
+		setSortedBuckets(buckets);
+		// Set a default cutoff value arbitrarily in the middle of the chart
+		const initialCO2Cutoff = buckets.length ? (
+			((buckets[buckets.length - 1].co2 as number) - (buckets[0].co2 as number)) / 2
+		) : 0;
+		setCO2Cutoff(initialCO2Cutoff);
 	}, [pvChartTotal?.value]);
 
 	// TODO generic domains design TBC
 	// TODO Do we want to move this into ES and refactor this into emissionscalcTs.ts using DataStore?
 	useEffect(() => {
 		if (!filterUrlParams.generic) return;
-		console.log("Fetching generic domain emissions...");
-		fetch("../js-data/generic-domain-emissions.json")
+		console.log('Fetching generic domain emissions...');
+		fetch('../js-data/generic-domain-emissions.json')
 			.then((response) => response.json())
 			.then((data) => {
 				const jsonData = data as GreenBuckets;
 				setSortedBuckets(jsonData.slice().sort((a, b) => ((a.co2 as number) - (b.co2 as number))));
 			})
 			.catch((error) => {
-				console.error("Error:", error);
+				console.error('Error:', error);
 			});
 	}, []);
 
@@ -303,6 +316,10 @@ function GreenRecsPublisher(): JSX.Element | null {
 	// Calculate CO2 reduction effect of chosen CO2 cutoff
 	useEffect(() => {
 		if (!sortedBuckets) return;
+		if (!sortedBuckets.length) {
+			setReduction(0);
+			return;
+		}
 		const allowBuckets = sortedBuckets.filter(bkt => bkt.co2 as number <= co2Cutoff!);
 		const allowImps = allowBuckets.reduce((acc, bkt) => acc + (bkt.count as number), 0);
 		let allowWeightedAvg = allowBuckets.reduce((acc, bkt) => acc + (bkt.count as number) * (bkt.co2 as number), 0);
@@ -318,12 +335,15 @@ function GreenRecsPublisher(): JSX.Element | null {
 
 	// Init / update props for range slider input
 	useEffect(() => {
-		if (!sortedBuckets || !sortedBuckets.length) return;
+		if (!sortedBuckets) return;
+		if (!sortedBuckets.length) {
+			setRangeProps(null); // Clear out slider if we're viewing data with an empty domain list
+			return;
+		}
 		const min = (sortedBuckets[0].co2 as number) - 0.001;
 		const max = (sortedBuckets[sortedBuckets.length - 1].co2 as number) + 0.001;
 		const step = (max - min) / TICKS_NUM;
 		const onChangeInstant = (event: InputEvent) => {
-			console.log('slider moved', new Date().getTime() % 1000);
 			setCO2Cutoff(event.target.value);
 		};
 		setRangeProps({ min, max, step, dflt: (max - min) / 2, onChangeInstant, chartObj });
