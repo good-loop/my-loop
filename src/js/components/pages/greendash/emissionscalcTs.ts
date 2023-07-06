@@ -519,7 +519,7 @@ export const getOffsetsByType = ({ campaign, status, period }: { campaign: Campa
  * @param period
  * 
  * Refactored to no longer return offsets for Campaign + SubCampaigns and instead all campaigns passed in
- * @returns 
+ * @returns {OffSets4Type}
  */
 // NB: Tried refactor getOffsetsByType into Promise with async. Causing an infinite loop in GreenLanding2.
 export const getOffsetsByType2 = ({ pvAllCampaigns, status, period }: { pvAllCampaigns: PromiseValue; status: any; period: Period }): OffSets4Type => {
