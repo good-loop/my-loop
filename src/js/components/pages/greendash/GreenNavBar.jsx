@@ -70,7 +70,10 @@ const GreenNavBar = ({active}) => {
 		}
 	}
 	let pvCampaign = campaignId? getDataItem({type:C.TYPES.Campaign, id:campaignId,status:KStatus.PUB_OR_DRAFT, swallow:true}) : {};
-	let impactUrl = pvCampaign.value? '/green/'+encURI(pvCampaign.value.id) : '/green';
+	// impact url directs to agency if available, then available brand, then just default 
+	let impactUrl = agencyId ? ('/green/agency='+agencyId) : (brandId ? '/green?brand='+brandId : '/green');
+	console.log(pvCampaign);
+	if(!(agencyId || brandId) && pvCampaign.value) impactUrl = '/green?brand='+pvCampaign.value.vertiser;
 	let metricsUrl = modifyPage(["greendash", "metrics"], null, true);
 	let recUrl = modifyPage(["greendash", "recommendation"], null, true);
 

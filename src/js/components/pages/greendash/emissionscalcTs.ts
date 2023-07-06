@@ -488,11 +488,43 @@ type OffSets4Type = {
 	allFixedOffsets: Impact[];
 };
 
-// NB: Tried refactor getOffsetsByType into Promise with async. Causing an infinite loop in GreenLanding2.
+/** For a given list of campaigns, return their offsets
+ * 
+ * @param campaigns {[Campaign]} List of campaigns we want offsets for
+ * @param status
+ * @param period
+*/ 
+export const getCampaignsOffsetsByType = ({ campaigns, status, period }: { campaigns: [Campaign]; status: any; period: Period }): OffSets4Type => {
+	// getOffsetsByType2 requires a promiseValue, just pass in the values to give us an already resolved PV
+	return getOffsetsByType2({pvAllCampaigns: new PromiseValue({hits : campaigns}), status, period});
+};
+
+/** For a given campaign, find all of its subcampaigns and their offsets
+ * 
+ * @param campaign {Campaign} The master campaign we want to find offsets for
+ * @param status
+ * @param period
+*/ 
 export const getOffsetsByType = ({ campaign, status, period }: { campaign: Campaign; status: any; period: Period }): OffSets4Type => {
 	// Is this a master campaign?
 	// @ts-ignore
 	let pvAllCampaigns = Campaign.pvSubCampaigns({ campaign, query: status }) as PromiseValue;
+	return getOffsetsByType2({pvAllCampaigns: pvAllCampaigns, status, period});
+};
+
+/**
+ * 
+ * @param campaign {PromiseValue} A promiseValue that resolves into list of campaigns 
+ * @param status
+ * @param period
+ * 
+ * Refactored to no longer return offsets for Campaign + SubCampaigns and instead all campaigns passed in
+ * @returns 
+ */
+// NB: Tried refactor getOffsetsByType into Promise with async. Causing an infinite loop in GreenLanding2.
+export const getOffsetsByType2 = ({ pvAllCampaigns, status, period }: { pvAllCampaigns: PromiseValue; status: any; period: Period }): OffSets4Type => {
+	// Is this a master campaign?
+	// @ts-ignore
 	let isLoading = !pvAllCampaigns.resolved;
 	let allFixedOffsets = [] as Impact[];
 	if (pvAllCampaigns.value) {
