@@ -613,7 +613,7 @@ export const splitTizenOS = (buckets: GreenBuckets, baseFilters: BaseFilters) =>
 	const tizenFilters = { ...baseFilters, q: `(${baseFilters.q}) AND os:tizen`, breakdown: ['mbl{"countco2":"sum"}'] };
 	const pvTizenMblValue = getCarbon(tizenFilters);
 
-	if (pvTizenMblValue.resolved && pvTizenMblValue.value["by_mbl"].buckets) {
+	if (pvTizenMblValue.resolved && pvTizenMblValue.value["by_mbl"]?.buckets) {
 		let mblBuckets = _.cloneDeep(pvTizenMblValue.value["by_mbl"].buckets);
 		mblBuckets = mblBuckets.map((record: Record<string, string | number>) => {
 			if (record.key === "false") {
