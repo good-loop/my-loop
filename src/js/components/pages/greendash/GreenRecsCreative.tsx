@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Alert, Button, CardBody, CardFooter, CardHeader, Col, Container, Row } from 'reactstrap';
+import React, { useEffect, useState } from 'react';
+import { Alert, Button, Card, CardBody, CardFooter, CardHeader, Col, Container, Modal, ModalBody, ModalHeader, Row } from 'reactstrap';
 
 
 import { GLCard } from '../../impact/GLCards';
@@ -9,94 +9,201 @@ import C from '../../../C';
 import KStatus from '../../../base/data/KStatus';
 import ListLoad from '../../../base/components/ListLoad';
 import DataStore from '../../../base/plumbing/DataStore';
-import { space } from '../../../base/utils/miscutils';
+import { Bytes, space } from '../../../base/utils/miscutils';
 import { modifyPage } from '../../../base/plumbing/glrouter';
 import ActionMan from '../../../plumbing/ActionMan';
 import Misc from '../../../MiscOverrides';
 import ServerIO from '../../../plumbing/ServerIO';
 
-import PageRecommendations from '../../../base/components/PageRecommendations';
-import { storedManifestForTag } from '../../../base/utils/pageAnalysisUtils';
+import { Recommendation, TypeBreakdown } from '../../../base/components/PageRecommendations';
+import { EMBED_ENDPOINT, storedManifestForTag } from '../../../base/utils/pageAnalysisUtils';
+import { RECS_OPTIONS_PATH, generateRecommendations, processedRecsPath, savedManifestPath } from '../../../base/components/creative-recommendations/recommendation-utils';
+import PropControl from '../../../base/components/PropControl';
 
 
 const getCreative = (): string | null => DataStore.getValue(['location', 'path'])[3];
-const setCreative = (id: string): void => {
-	const newPath = [...DataStore.getValue(['location', 'path'])];
-	newPath[3] = id;
-	modifyPage(newPath);
-};
 
 
 function CreativeListItem({item}) {
 	const active = (item.id === getCreative());
-	const setActive = () => setCreative(item.id);
+	const linkPath = [...DataStore.getValue(['location', 'path'])];
+	linkPath[3] = item.id;
 
 	return (
-		<GLCard className={space('creative-item', active && 'active')} noMargin onClick={setActive}>
+		<Card body tag={C.A} href={modifyPage(linkPath, null, true)} className={space('creative-item my-2', active && 'active')}>
 			<Misc.ImgThumbnail />
 			{item.name}
 			<div className="selected-indicator">{active && tickSvg}</div>
-		</GLCard>
+		</Card>
 	);
 }
+
+const creativeListProps = {
+	type: C.TYPES.GreenTag,
+	status: KStatus.PUBLISHED,
+	hideTotal: true,
+	unwrapped: true,
+	ListItem: CreativeListItem,
+	pageSize: 10,
+	selected: item => (item.id === getCreative()),
+};
 
 
 function CreativeList() {
 	return (
-		<GLCard className="creative-list">
-			<div>Select a creative to view optimisation recommendations</div>
-			<div>Sort By</div>
-			<ListLoad type={C.TYPES.GreenTag} status={KStatus.PUBLISHED} hideTotal unwrapped notALink ListItem={CreativeListItem} pageSize={10} />
-		</GLCard>
-	);
-}
-
-
-function CreativeSizeOverview({ tag, manifest }) {
-	let weight = tag.weight || (manifest.reqHeaders + manifest.reqBody + manifest.resBody + manifest.resHeaders);
-
-	return (
-		<GLCard noPadding noMargin className="creative-size-card">
-			<CardHeader>Your Creative Measurement</CardHeader>
+		<GLCard noPadding className="creative-list">
+			<CardHeader>Select a creative to optimise</CardHeader>
 			<CardBody>
-				<div className="carbon-per-impression">
-					{CO2e} per impression based on creative size
-					<div className="number">1.1825g {CO2e}</div>
-				</div>
-				<div className="size-info">
-					<div className="bytes">
-						Creative size
-						<div className="number">
-							{weight} bytes
-							{!tag.weight && <span title="Size not yet manually confirmed">*</span>}
-						</div>
-					</div>
-					<div className="breakdown">
-						<a role="button" onClick={() => {}}>View Breakdown</a>
-					</div>
-				</div>
-				<img src={manifest.screenshot} className="w-100" />
+				{/*<div>Sort By</div>*/}
+				<ListLoad {...creativeListProps} />
 			</CardBody>
 		</GLCard>
 	);
 }
 
 
-function CreativeOptimisationOverview({ tag, manifest }) {
+/**
+ * @param {object} p
+ * @param {object} p.manifest PageManifest
+ * @returns {JSX.Element}
+ */
+function CreativeSizeBreakdown({ manifest }) {
+	const [open, setOpen] = useState(false);
+	const toggle = () => setOpen(a => !a);
+
+	return <>
+		<Button onClick={toggle}>Show Breakdown</Button>
+		<Modal isOpen={open} className="type-breakdown-modal" toggle={toggle}>
+			<ModalHeader toggle={toggle}>Data Type Breakdown</ModalHeader>
+			<ModalBody>
+					<TypeBreakdown manifest={manifest} />
+			</ModalBody>
+		</Modal>
+	</>;
+}
+
+
+function CreativeSizeOverview({ tag, manifest }) {
+	let weight = tag.weight;
+	if (!weight && manifest) weight = manifest.reqHeaders + manifest.reqBody + manifest.resBody + manifest.resHeaders;
+
+	// Provide an easy link to see the creative - either URL as given or HTML snippet/tag wrapped in a page
+	let testLink;
+	if (tag.creativeURL) {
+		testLink = tag.creativeURL;
+	} else if (tag.creativeHtml) {
+		testLink = `${EMBED_ENDPOINT}?tag=${encodeURIComponent(tag.creativeHtml)}&why=measure-tag`;
+	}
+
+	return (
+		<GLCard noPadding noMargin className="creative-size-card">
+			<CardHeader>Your Creative</CardHeader>
+			<CardBody>
+				{manifest && (
+					<img className="creative-screenshot w-100" src={manifest.screenshot} />
+				)}
+				<h4 className="text-center my-2">
+					<C.A href={testLink} target="_blank">Creative Test Link</C.A>
+				</h4>
+				<div className="carbon-per-impression">
+					{CO2e} per impression<br/>
+					based on creative size
+					<div className="number">1.1825g {CO2e}</div>
+				</div>
+				<div className="size-info">
+					<div className="bytes">
+						Creative size
+						<div className="number">
+							{weight ? <Bytes b={weight} /> : '-'}
+							{weight && !tag.weight && <span title="Size not yet manually confirmed">*</span>}
+						</div>
+					</div>
+					<div className="breakdown">
+						<CreativeSizeBreakdown manifest={manifest} />
+					</div>
+				</div>
+				
+			</CardBody>
+		</GLCard>
+	);
+}
+
+
+/**
+ * How much can the suggested optimisations reduce creative size?
+ * @param {Object} p
+ * @param {Object} recommendations List of all transfers augmented with recompressed / substitute items
+ */
+function Reduction({ manifest, recommendations }) {
+	if (!manifest || !recommendations) return null;
+	// How much can the suggested optimisations reduce the overall creative size?
+	const [totalReduction, setTotalReduction] = useState(0);
+
+	useEffect(() => {
+		const newTotal = recommendations.reduce((acc, { bytes, optBytes }) => (
+			acc + Math.max(0, bytes - optBytes)
+		), 0);
+		setTotalReduction(newTotal);
+	}, [recommendations.length]);
+
+	const percent = 100 * (totalReduction / manifest.totalDataTransfer);
+
+	return (
+		<div className="reduction">
+			Reduce creative size by up to
+			<div className="number">{percent.toFixed(1)}% <wbr /> (<Bytes b={totalReduction} />)</div>
+		</div>
+	);
+}
+
+
+function CreativeOptimisationControls() {
+	return <div className="flex-row optimisation-options">
+		<PropControl className="control-webp" type="checkbox" path={RECS_OPTIONS_PATH} prop="noWebp" label="Can't use .webp"
+			help="Use this option to avoid generating .webp recommendations if your DSP doesn't support it."
+		/>
+		<PropControl className="control-retina" type="radio" path={RECS_OPTIONS_PATH} prop="retinaMultiplier" label="Resolution"
+			options={[1, 1.5, 2]} labels={{1: 'Standard', 1.5: 'Compromise', 2: 'Retina'}}
+			help="Retina mode scales images 2x larger to look best on ultra-high-density screens. Compromise mode scales to 1.5x to balance sharpness and file size."
+		/>
+	</div>;
+};
+
+
+function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
+	const path = processedRecsPath(tag, manifest);
+	const recommendations = DataStore.getValue(path);
+
+	const regenerate = () => generateRecommendations(manifest, path);
+
+	// Hard-set initial values for options and force an update
+	useEffect(() => DataStore.setValue(RECS_OPTIONS_PATH, { noWebp: false, retinaMultiplier: 1 }), []);
+
+	// If there was no recommendations list in DataStore for the current tag/manifest combo, generate now.
+	useEffect(() => {
+		if (!DataStore.getValue(RECS_OPTIONS_PATH)) return; // Don't generate until default options are set
+		if (manifest && !recommendations) regenerate();
+	}, [recommendations, ...path]);
+
+	const recCards = recommendations?.filter(spec => spec.optBytes < spec.bytes)
+	.map(spec => (
+		<Col className="mb-2" xs="4" key={spec.url} >
+			<Recommendation spec={spec} />
+		</Col>
+	));
+
 	return (
 		<GLCard noPadding noMargin className="creative-opt-overview-card">
 			<CardHeader>Optimisation Recommendations</CardHeader>
 			<CardBody>
-				<p>Potential reduction in your creative's {CO2e}</p>
-				<div className="reduction">
-					Reduce {CO2e} by
-					<div className="number">up to XX%</div>
-				</div>
-				<Container className="recs-list">
-					<Row>
-						{PageRecommendations({manifest}).map(rec => <Col xs="6" key={rec.url} >{rec}</Col>)}
-					</Row>
-				</Container>
+				<AnalysePrompt tag={tag} manifest={manifest} />
+				{recommendations && <>
+					<Reduction manifest={manifest} recommendations={recommendations} />
+					<CreativeOptimisationControls />
+					<Container className="recs-list">
+						<Row>{recCards}</Row>
+					</Container>
+				</>}
 			</CardBody>
 			<CardFooter>
 				Share
@@ -107,28 +214,46 @@ function CreativeOptimisationOverview({ tag, manifest }) {
 
 
 /**
- * Initiate analysis of 
+ * Prompt and button to initiate / redo analysis of a single Green Ad Tag creative.
+ * @param {object} p
+ * @param {object} tag Currently-focused Green Ad Tag
+ * @param {object} manifest Any existing page manifest for the focused GAT
  */
-function AnalysePrompt({ tag }): JSX.Element {
+function AnalysePrompt({ tag, manifest }): JSX.Element {
 	const [analysisState, setAnalysisState] = useState<string>();
 
 	if (analysisState === 'loading') return <Misc.Loading text="Analysis in progress..." />;
 
+	// Call MeasureServlet and analyse / re-analyse the GAT creative.
 	const doIt = () => {
+		if (!tag?.id) return;
+		// Remove any previously-stored analysis
+		DataStore.setValue(savedManifestPath(tag), null);
 		const data = { tagId: tag.id };
 		if (tag.creativeURL) data.url = tag.creativeURL;
 		if (tag.creativeHtml) data.tag = tag.creativeHtml;
 		ServerIO.load(`${ServerIO.MEASURE_ENDPOINT}`, { data }).then(res => {
 			// Store results where CreativeView will find them
-			if (!res.error) DataStore.setValue(['widget', 'saved-tag-measurement', tag.id], res.data);
+			if (!res.error) DataStore.setValue(savedManifestPath(tag), res.data);
+			setAnalysisState('ready');
 		});
 		setAnalysisState('loading');
 	};
 
-	return <div>
-		This creative has not yet been analysed. Do it now?<br/>
-		<Button onClick={doIt}>Analyse</Button>
-	</div>;
+	// Already analysed? Show a less-prominent prompt to redo.
+	if (manifest) {
+		return <h5 className="text-center pull-right">
+			{(!manifest.timestamp) ? <>Previously analysed.</> : (
+				<>Last analysed <Misc.RelativeDate date={new Date(manifest.timestamp)} />.</>
+			)}<br/>
+			<Button className="my-2" onClick={doIt}>Re-Analyse</Button>
+		</h5>;
+	}
+
+	return <h4 className="text-center">
+		This creative has not yet been analysed.
+		<Button className="mx-2" onClick={doIt} size="lg">Analyse Now</Button>
+	</h4>;
 }
 
 
@@ -148,15 +273,15 @@ function CreativeView({ showList, setShowList }: {showList: boolean, setShowList
 	if (!pvTag.value) return <Alert color="danger">Couldn't find a creative with ID <code>{tagId}</code>.</Alert>;
 	const tag = pvTag.value;
 
-	const pvManifest = DataStore.fetch(['widget', 'saved-tag-measurement', tagId], () => (
-		ServerIO.load(storedManifestForTag(tagId), { swallow: true })
+	const pvManifest = DataStore.fetch(savedManifestPath(tag), () => (
+		ServerIO.load(storedManifestForTag(tag), { swallow: true })
 	));
 
 	if (!pvManifest.resolved) return <Misc.Loading text="Checking for saved creative manifest..." />;
 
-	// Normal MeasureServlet response is a list of manifests as multiple URLs can be analysed.
-	// Just pull out the first, as green tags should only have one.
-	const manifest = pvManifest.value?.[0] || null;
+	// Minor hack: do a direct getValue() because AnalysePrompt overwrites the address, but not the fetch PV
+	// MeasureServlet response is an array - but should only have one PageManifest in this context
+	const manifest = DataStore.getValue(savedManifestPath(tag))?.[0] || null;
 
 	return <>
 		<CardHeader>
@@ -164,20 +289,16 @@ function CreativeView({ showList, setShowList }: {showList: boolean, setShowList
 			{tag.name}
 		</CardHeader>
 		<CardBody>
-			{manifest ? (
-				<Container>
-					<Row>
-						<Col xs="4">
-							<CreativeSizeOverview tag={tag} manifest={manifest} />
-						</Col>
-						<Col xs="8">
-							<CreativeOptimisationOverview tag={tag} manifest={manifest} />
-						</Col>
-					</Row>
-				</Container>
-			) : (
-				<AnalysePrompt tag={tag} />
-			)}
+			<Container fluid>
+				<Row>
+					<Col xs="4">
+						<CreativeSizeOverview tag={tag} manifest={manifest} />
+					</Col>
+					<Col xs="8">
+						<CreativeOptimisationOverview tag={tag} manifest={manifest} />
+					</Col>
+				</Row>
+			</Container>
 		</CardBody>
 	</>;
 }
@@ -190,24 +311,24 @@ function GreenRecsCreative() {
 	const [showList, setShowList] = useState(true);
 
 	return (
-			<Container fluid className="creative-recommendations">
-				<Row>
-					{showList ? (
-						<Col xs="3"><CreativeList /></Col>
-					) : null}
-					<Col xs={showList ? '9' : 12}>
-						<GLCard className="view-creative" noPadding>
-							<CreativeView showList={showList} setShowList={setShowList}/>
-						</GLCard>
-					</Col>
-				</Row>
-			</Container>
+		<Container fluid className="creative-recommendations">
+			<Row>
+				{showList ? (
+					<Col xs="3"><CreativeList /></Col>
+				) : null}
+				<Col xs={showList ? '9' : '12'}>
+					<GLCard className="view-creative" noPadding>
+						<CreativeView showList={showList} setShowList={setShowList}/>
+					</GLCard>
+				</Col>
+			</Row>
+		</Container>
 	);
 }
 
 
 export function CreativeRecsPlaceholder() {
-	return <>
+	return <>{/*
 		<h3 className="mx-auto">Optimise Creative Files to Reduce Carbon</h3>
 		<h4>Tips</h4>
 		<p>
@@ -222,7 +343,7 @@ export function CreativeRecsPlaceholder() {
 			<li>Replace GIFs. Embedded video (e.g. .webm or .mp4) is better for animations, and .webp is better for static images.</li>
 			<li>Strip down large javascript libraries. Often a whole animation library is included when only a snippet is used.</li>
 		</ul>
-	</>;
+	*/}</>;
 }
 
 
