@@ -432,12 +432,15 @@ const BreakdownCard = ({ baseFilters }) => {
 
 	const [mode, setMode] = useState('tech');
 
-	const datakey = { device: 'by_os', tag: 'by_adid', domain: 'by_domain', format: 'by_adid' }[mode];
+	const datakey = { device: "by_os", tag: "by_adid", domain: "by_domain", format: "by_adid" }[mode];
 	let techData = techValue.by_total?.buckets;
-	let data = dataValue && dataValue[datakey]?.buckets;
-
-	// Tizen hack
-	const deviceBuckets = dataValue && splitTizenOS(dataValue['by_os']?.buckets, baseFilters)
+	let data;
+	if (datakey == "by_os") {
+		// Tizen Hack
+		data = dataValue && splitTizenOS(dataValue["by_os"]?.buckets, baseFilters);
+	} else {
+		data = dataValue && dataValue[datakey]?.buckets;
+	}
 
 	// Are we in carbon-per-mille mode?
 	if (isPer1000()) {
@@ -451,7 +454,7 @@ const BreakdownCard = ({ baseFilters }) => {
 			subcard = <TechSubcard data={techData} minimumPercentLabeled={10} chartType={isPer1000() ? 'bar' : 'pie'} />;
 			break;
 		case 'device':
-			subcard = dataValue ? <DeviceSubcard data={deviceBuckets} /> : loading;
+			subcard = dataValue ? <DeviceSubcard data={data} /> : loading;
 			break;
 		case 'tag':
 			subcard = dataValue ? <TagSubcard data={data} /> : loading;

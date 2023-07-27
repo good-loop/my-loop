@@ -641,7 +641,7 @@ export const splitTizenOS = (buckets: GreenBuckets, baseFilters: BaseFilters) =>
 		return buckets;
 	}
 
-	const filteredData = buckets.filter((record) => !(record.hasOwnProperty("key") && record.key === "tizen"));
+	const filteredData: GreenBuckets = buckets.filter((record) => !(record.hasOwnProperty("key") && record.key === "tizen"));
 	const tizenFilters = { ...baseFilters, q: `(${baseFilters.q}) AND os:tizen`, breakdown: ['mbl{"countco2":"sum"}'] };
 	const pvTizenMblValue = getCarbon(tizenFilters);
 
