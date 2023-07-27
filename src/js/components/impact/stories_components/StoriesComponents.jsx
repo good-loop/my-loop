@@ -669,6 +669,9 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 
 	// Use a url parameter so people can link to a certificate
 	const openId = getUrlValue("open");
+
+	const regNums = NGO.regNums(charity);
+
 	return (
 		<Modal isOpen={openId === impactDebit.id} id="impact-cert-modal" className='impact-cert' toggle={() => setUrlValue("open", false)} size="xl">
 			<ModalBody className="d-flex modal-body" style={{ padding: 0, minHeight: "90vh" }}>
@@ -689,7 +692,7 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 					</div>
 					<div className='charity-numbers mt-5 p-3' style={{ background: "@gl-lighter-blue" }}>
 						<p className='text small-header light-bold'>{charity.name}</p>
-						{NGO.regs(charity).map(reg => <p key={reg.id} className='text mt-1'>{reg.organisation} registration number: {reg.id}</p>)}
+						{Object.keys(regNums).map(regBody => <p key={regNums[regBody]} className='text mt-1'>{regBody} registration number: {regNums[regBody]}</p>)}
 					</div>
 					<DevOnly>Charity: <PortalLink item={charity} /></DevOnly>
 					{/* <DonationSmallPrint isDone={statusCompleted[4]} campaign={campaign} impact={impact} brand={brand} impactDebit={impactDebit} /> */}
