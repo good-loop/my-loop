@@ -204,12 +204,31 @@
 			display: flex;
 			flex-direction: row;
 			justify-content: space-between;
+			align-items: center;
 			text-decoration: none; // <a> but no underline on label
+			padding: 0.5rem;
+
+			.brand-logo {
+				max-height: 3rem;
+				width: 4rem;
+				object-fit: contain;
+				margin-right: 1rem;
+			}
+
+			.description {
+				flex-grow: 1;
+				.tag-name {
+					font-weight: 600;
+				}
+				.brand-name, .tag-name {
+					overflow-wrap: break-word; // force breaking VERY_LONG_UNDERSCORE_ONLY_TAG_NAMES
+				}
+			}
 
 			.selected-indicator {
 				display: inline-block;
-				width: 2em;
-				height: 2em;
+				width: 1.5rem;
+				height: 1.5rem;
 				border: 1px solid silver;
 				border-radius: 50%;
 				flex-shrink: 0; // stay round!
