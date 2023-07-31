@@ -164,7 +164,7 @@ const GreenLanding2 = ({pvItem, itemId, status, period, pvCampaigns, type}) => {
 					with <img className="carbon-neutral-logo" src="/img/green/gl-carbon-neutral.svg" />
 				</div>
 				<a className="btn splash-explore" onClick={scrollToMap}>EXPLORE OUR IMPACT</a>
-				{(isShared || isTester()) && <a href={`/greendash/metrics?period=all&${type}=` + encURI(itemId)} className="btn splash-explore mt-2">📊 REPORT DASHBOARD</a>}
+				{(isShared || isTester()) && <a href={`/greendash/metrics/${type.toLowerCase()}/?period=all&${type.toLowerCase()}=` + encURI(itemId)} className="btn splash-explore mt-2">📊 REPORT DASHBOARD</a>}
 			</div>
 		</div>
 		{isTester() && pvAllCampaigns.value && // handy links for GL staff
