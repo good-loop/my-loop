@@ -5,6 +5,7 @@ import RecentCampaignsCard from '../cards/RecentCampaignsCard';
 import DynImg from '../../base/components/DynImg';
 import C from '../../C';
 import BG from '../../base/components/BG';
+import TickerTotal from '../TickerTotal';
 
 /**
  * Showcase of impact pages / campaigns
@@ -17,7 +18,7 @@ const MyAdCampaignsPage = () => {
 			</BG>
 			<PageCard className="pt-0 content" color="white">
 				<h1 className="text-uppercase">Ad campaigns</h1>
-				<p className="leader-text text-center mb-5">See how we've helped these brands raise over {C.DONATIONS_TOTAL} for charity. 
+				<p className="leader-text text-center mb-5">See how we've helped these brands raise over <TickerTotal /> for charity. 
 				All thanks to you.</p>
 				<RecentCampaignsCard/>
 			</PageCard>
