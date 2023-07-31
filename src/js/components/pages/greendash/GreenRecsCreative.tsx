@@ -17,11 +17,16 @@ import ServerIO from '../../../plumbing/ServerIO';
 
 import { Recommendation, TypeBreakdown } from '../../../base/components/PageRecommendations';
 import { EMBED_ENDPOINT, storedManifestForTag } from '../../../base/utils/pageAnalysisUtils';
-import { RECS_OPTIONS_PATH, generateRecommendations, processedRecsPath, savedManifestPath } from '../../../base/components/creative-recommendations/recommendation-utils';
+import { RECS_OPTIONS_PATH, generateRecommendations, processedRecsPath, savedManifestPath, startAnalysis } from '../../../base/components/creative-recommendations/recommendation-utils';
 import PropControl from '../../../base/components/PropControl';
+import ShareWidget from '../../../base/components/ShareWidget';
+import Login from '../../../base/youagain';
+import { getDataItem } from '../../../base/plumbing/Crud';
 
 
 const getCreative = (): string | null => DataStore.getValue(['location', 'path'])[3];
+
+const isPseudo = () => Login.getUser().service === 'pseudo';
 
 
 function CreativeListItem({item}) {
@@ -29,10 +34,19 @@ function CreativeListItem({item}) {
 	const linkPath = [...DataStore.getValue(['location', 'path'])];
 	linkPath[3] = item.id;
 
+	const { vertiser: brandId } = item;
+	const brand = getDataItem({type: C.TYPES.Advertiser, id: brandId}).value;
+
+	const logo = brand?.branding?.logo;
+
 	return (
 		<Card body tag={C.A} href={modifyPage(linkPath, null, true)} className={space('creative-item my-2', active && 'active')}>
-			<Misc.ImgThumbnail />
-			{item.name}
+			{logo && <img src={logo} className="brand-logo" />}
+			<div className="description">
+				<div className="tag-name"><Misc.FixBreak text={item.name} /></div>
+				{brand && <div className="brand-name"><Misc.FixBreak text={brand.name} /></div>}
+			</div>
+			
 			<div className="selected-indicator">{active && tickSvg}</div>
 		</Card>
 	);
@@ -171,7 +185,7 @@ function CreativeOptimisationControls() {
 
 
 function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
-	const path = processedRecsPath(tag, manifest);
+	const path = processedRecsPath({tag}, manifest);
 	const recommendations = DataStore.getValue(path);
 
 	const regenerate = () => generateRecommendations(manifest, path);
@@ -196,7 +210,7 @@ function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
 		<GLCard noPadding noMargin className="creative-opt-overview-card">
 			<CardHeader>Optimisation Recommendations</CardHeader>
 			<CardBody>
-				<AnalysePrompt tag={tag} manifest={manifest} />
+				<AnalyseTagPrompt tag={tag} manifest={manifest} />
 				{recommendations && <>
 					<Reduction manifest={manifest} recommendations={recommendations} />
 					<CreativeOptimisationControls />
@@ -205,9 +219,9 @@ function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
 					</Container>
 				</>}
 			</CardBody>
-			<CardFooter>
-				Share
-			</CardFooter>
+			{!isPseudo() && <CardFooter>
+				<ShareWidget item={tag} hasButton noEmails hasLink>Share this page</ShareWidget>
+			</CardFooter>}
 		</GLCard>
 	);
 }
@@ -219,25 +233,18 @@ function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
  * @param {object} tag Currently-focused Green Ad Tag
  * @param {object} manifest Any existing page manifest for the focused GAT
  */
-function AnalysePrompt({ tag, manifest }): JSX.Element {
-	const [analysisState, setAnalysisState] = useState<string>();
+function AnalyseTagPrompt({ tag, manifest }): JSX.Element {
+	const [analysisState, setAnalysisState] = useState<string|object>({});
 
 	if (analysisState === 'loading') return <Misc.Loading text="Analysis in progress..." />;
 
 	// Call MeasureServlet and analyse / re-analyse the GAT creative.
 	const doIt = () => {
-		if (!tag?.id) return;
-		// Remove any previously-stored analysis
-		DataStore.setValue(savedManifestPath(tag), null);
-		const data = { tagId: tag.id };
-		if (tag.creativeURL) data.url = tag.creativeURL;
-		if (tag.creativeHtml) data.tag = tag.creativeHtml;
-		ServerIO.load(`${ServerIO.MEASURE_ENDPOINT}`, { data }).then(res => {
-			// Store results where CreativeView will find them
-			if (!res.error) DataStore.setValue(savedManifestPath(tag), res.data);
-			setAnalysisState('ready');
-		});
 		setAnalysisState('loading');
+		startAnalysis({tag}).then(
+			() => setAnalysisState('ready'),
+			error => setAnalysisState({error})
+		);
 	};
 
 	// Already analysed? Show a less-prominent prompt to redo.
@@ -251,7 +258,11 @@ function AnalysePrompt({ tag, manifest }): JSX.Element {
 	}
 
 	return <h4 className="text-center">
-		This creative has not yet been analysed.
+		{analysisState.error ? <>
+			Analysis failed with error &quot;{analysisState.error}&quot;. Retry?
+		</> : <>
+			This creative has not yet been analysed.
+		</>}
 		<Button className="mx-2" onClick={doIt} size="lg">Analyse Now</Button>
 	</h4>;
 }
@@ -263,7 +274,7 @@ type Setter<T> = {
 }
 
 
-function CreativeView({ showList, setShowList }: {showList: boolean, setShowList: Setter<boolean>}): JSX.Element {
+function CreativeView({ showList, setShowList }: {showList: boolean, setShowList: Setter<boolean>|null}): JSX.Element {
 	const tagId = getCreative();
 	if (!tagId) return <div>Select a creative from the list to get started.</div>;
 
@@ -273,7 +284,7 @@ function CreativeView({ showList, setShowList }: {showList: boolean, setShowList
 	if (!pvTag.value) return <Alert color="danger">Couldn't find a creative with ID <code>{tagId}</code>.</Alert>;
 	const tag = pvTag.value;
 
-	const pvManifest = DataStore.fetch(savedManifestPath(tag), () => (
+	const pvManifest = DataStore.fetch(savedManifestPath({tag}), () => (
 		ServerIO.load(storedManifestForTag(tag), { swallow: true })
 	));
 
@@ -281,12 +292,14 @@ function CreativeView({ showList, setShowList }: {showList: boolean, setShowList
 
 	// Minor hack: do a direct getValue() because AnalysePrompt overwrites the address, but not the fetch PV
 	// MeasureServlet response is an array - but should only have one PageManifest in this context
-	const manifest = DataStore.getValue(savedManifestPath(tag))?.[0] || null;
+	const manifest = DataStore.getValue(savedManifestPath({tag}))?.[0] || null;
 
 	return <>
 		<CardHeader>
-			<a className="pull-left expand-button" role="button" onClick={() => setShowList(!showList)}>{showList ? '⇱' : '⇲'}</a>
-			{tag.name}
+			{setShowList && <a className="pull-left expand-button" role="button" onClick={() => setShowList(!showList)}>
+				{showList ? '⇱' : '⇲'}
+			</a>}
+			Creative analysis: {tag.name}
 		</CardHeader>
 		<CardBody>
 			<Container fluid>
@@ -308,12 +321,17 @@ function CreativeView({ showList, setShowList }: {showList: boolean, setShowList
  * 
  */
 function GreenRecsCreative() {
-	const [showList, setShowList] = useState(true);
+	let [showList, setShowList] = useState(true);
+
+	if (isPseudo()) {
+		showList = false;
+		setShowList = null;
+	}
 
 	return (
 		<Container fluid className="creative-recommendations">
 			<Row>
-				{showList ? (
+				{showList && !isPseudo() ? (
 					<Col xs="3"><CreativeList /></Col>
 				) : null}
 				<Col xs={showList ? '9' : '12'}>

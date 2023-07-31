@@ -83,6 +83,8 @@ function ModeSelect(): JSX.Element {
 		if (!mode) setOptMode(DEFAULT_MODE);
 	}, []);
 
+	if (Login.getUser().service === 'pseudo') return null;
+
 	return <div className="optimisation-mode-select">
 		<ModeLink mode="publisher">Publisher Optimisations</ModeLink>
 		<ModeLink mode="creative">Creative Optimisations</ModeLink>
