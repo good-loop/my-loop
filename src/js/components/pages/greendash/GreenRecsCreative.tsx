@@ -52,16 +52,6 @@ function CreativeListItem({item}) {
 	);
 }
 
-const creativeListProps = {
-	type: C.TYPES.GreenTag,
-	status: KStatus.PUBLISHED,
-	hideTotal: true,
-	unwrapped: true,
-	ListItem: CreativeListItem,
-	pageSize: 10,
-	selected: item => (item.id === getCreative()),
-};
-
 
 function CreativeList() {
 	return (
@@ -69,7 +59,14 @@ function CreativeList() {
 			<CardHeader>Select a creative to optimise</CardHeader>
 			<CardBody>
 				{/*<div>Sort By</div>*/}
-				<ListLoad {...creativeListProps} />
+				<ListLoad
+					canFilter filterLocally /* filter local on json (server side filtering would be more complex) */
+					type={C.TYPES.GreenTag} status={KStatus.PUBLISHED}
+					hideTotal unwrapped
+					ListItem={CreativeListItem}
+					pageSize={10}
+					selected={item => (item.id === getCreative())}				
+				/>
 			</CardBody>
 		</GLCard>
 	);
