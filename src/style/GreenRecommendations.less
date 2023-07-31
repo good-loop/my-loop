@@ -414,6 +414,9 @@
 
 	.font-preview {
 		font-size: 200%;
+		// TODO Rework font optimisation to be aware of families & details modal to separate preview and filenames
+		// (so the preview can be something that doesn't need to wrap & be shown in entirety)
+		overflow-wrap: break-word;
 	}
 	.character-set {
 		font-family: monospace;
