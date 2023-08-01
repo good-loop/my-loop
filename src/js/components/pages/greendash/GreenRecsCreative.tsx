@@ -116,17 +116,17 @@ function CreativeSizeOverview({ tag, manifest }) {
 				<h4 className="text-center my-2">
 					<C.A href={testLink} target="_blank">Creative Test Link</C.A>
 				</h4>
-				<div className="carbon-per-impression">
+				{/* TODO calculate this (country specific or global average??) <div className="carbon-per-impression">
 					{CO2e} per impression<br/>
 					based on creative size
-					<div className="number">1.1825g {CO2e}</div>
-				</div>
+					<div className="number">{perAdCO2}g {CO2e}</div>
+				</div> */}
 				<div className="size-info">
 					<div className="bytes">
 						Creative size
 						<div className="number">
-							{weight ? <Bytes b={weight} /> : '-'}
-							{weight && !tag.weight && <span title="Size not yet manually confirmed">*</span>}
+							{weight ? Bytes({b:weight}) : '-'}
+							{weight && !tag.weight && <span title="Size not yet confirmed">*</span>}
 						</div>
 					</div>
 					<div className="breakdown">
