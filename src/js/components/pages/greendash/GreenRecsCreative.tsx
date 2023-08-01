@@ -5,7 +5,7 @@ import { Alert, Button, Card, CardBody, CardFooter, CardHeader, Col, Container, 
 import { GLCard } from '../../impact/GLCards';
 import { CO2e, tickSvg } from './GreenDashUtils';
 
-import C from '../../../C';
+import C, { searchParamForType } from '../../../C';
 import KStatus from '../../../base/data/KStatus';
 import ListLoad from '../../../base/components/ListLoad';
 import DataStore from '../../../base/plumbing/DataStore';
@@ -22,6 +22,8 @@ import PropControl from '../../../base/components/PropControl';
 import ShareWidget from '../../../base/components/ShareWidget';
 import Login from '../../../base/youagain';
 import { getDataItem } from '../../../base/plumbing/Crud';
+import { getFilterTypeId } from './dashUtils';
+import SearchQuery from '../../../base/searchquery';
 
 
 const getCreative = (): string | null => DataStore.getValue(['location', 'path'])[3];
@@ -34,8 +36,7 @@ function CreativeListItem({item}) {
 	const linkPath = [...DataStore.getValue(['location', 'path'])];
 	linkPath[3] = item.id;
 
-	const { vertiser: brandId } = item;
-	const brand = getDataItem({type: C.TYPES.Advertiser, id: brandId}).value;
+	const brand = item.vertiser && getDataItem({type: C.TYPES.Advertiser, id: item.vertiser}).value;
 
 	const logo = brand?.branding?.logo;
 
@@ -54,13 +55,31 @@ function CreativeListItem({item}) {
 
 
 function CreativeList() {
+	// filter by eg agency?
+	let q = null;
+	const {filterType, filterId} = getFilterTypeId();
+	if (filterType && filterId) {
+		const k = searchParamForType(filterType);
+		let sq = SearchQuery.setProp(null, k, filterId);
+		q = sq.query;
+	}
+	let keyword = DataStore.getUrlValue("qkw")?.toLowerCase();
+	const filterFn = (item,_index,_array) => {
+		if ( ! keyword) return true;
+		const brand = item?.vertiser && getDataItem({type: C.TYPES.Advertiser, id: item.vertiser}).value;
+		let s = JSON.stringify(item)+" "+brand?.name;
+		s = s.toLowerCase();
+		return s.includes(keyword);
+	};
 	return (
 		<GLCard noPadding className="creative-list">
 			<CardHeader>Select a creative to optimise</CardHeader>
 			<CardBody>
 				{/*<div>Sort By</div>*/}
+				<PropControl prop="qkw" label="Filter" inline />
 				<ListLoad
-					canFilter filterLocally /* filter local on json (server side filtering would be more complex) */
+					filter={q}
+					filterFn={filterFn} /* filter local on json (server side keyword filtering would be more complex because: id vs name) */
 					type={C.TYPES.GreenTag} status={KStatus.PUBLISHED}
 					hideTotal unwrapped
 					ListItem={CreativeListItem}

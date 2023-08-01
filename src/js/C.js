@@ -42,7 +42,7 @@ export const urlParamForType = type => {
 };
 
 /**
- * What parameter to use in an ES search quert?
+ * What parameter to use in an ES search query?
  * @param {!string} type e.g. Advertiser
  * @returns {!string} e.g. `vertiser`
  */
