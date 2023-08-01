@@ -148,7 +148,7 @@ function CreativeSizeOverview({ tag, manifest }) {
 function Reduction({ manifest, recommendations }) {
 	if (!manifest || !recommendations) return null;
 	// NB: caching the value with useEffect was leading to a stale-value bug
-	let allbytes = recommendations.map({ bytes, optBytes } => Math.max(0, bytes - optBytes));
+	let allbytes = recommendations.map(({ bytes, optBytes }) => Math.max(0, bytes - optBytes));
 	let totalReduction = sum(allbytes);
 
 	const percent = 100 * (totalReduction / manifest.totalDataTransfer);
