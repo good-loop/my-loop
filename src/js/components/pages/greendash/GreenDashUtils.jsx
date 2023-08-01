@@ -43,10 +43,12 @@ export const crossSvg = (
 	</svg>
 );
 
-
+/**
+ * @deprecated use CO2e
+ */
 export const CO2 = <span>CO<sub>2</sub>e</span>;
-export const CO2e = <span className="co2e">CO<sub>2</sub>e</span>;
-export const NOEMISSIONS = <div>No {CO2} emissions for this period</div>;
+export const CO2e = <span title='carbon dioxide equivalent' className="co2e">CO<sub>2</sub>e</span>;
+export const NOEMISSIONS = <div>No {CO2e} emissions for this period</div>;
 
 
 export const ModeButton = ({ children, name, mode, setMode, size = 'sm', ...rest}) => {
