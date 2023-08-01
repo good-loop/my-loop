@@ -9,7 +9,7 @@ import C from '../../../C';
 import KStatus from '../../../base/data/KStatus';
 import ListLoad from '../../../base/components/ListLoad';
 import DataStore from '../../../base/plumbing/DataStore';
-import { Bytes, space } from '../../../base/utils/miscutils';
+import { Bytes, space, sum } from '../../../base/utils/miscutils';
 import { modifyPage } from '../../../base/plumbing/glrouter';
 import ActionMan from '../../../plumbing/ActionMan';
 import Misc from '../../../MiscOverrides';
@@ -143,26 +143,20 @@ function CreativeSizeOverview({ tag, manifest }) {
 /**
  * How much can the suggested optimisations reduce creative size?
  * @param {Object} p
- * @param {Object} recommendations List of all transfers augmented with recompressed / substitute items
+ * @param {Object what is the data type??} recommendations List of all transfers augmented with recompressed / substitute items.
  */
 function Reduction({ manifest, recommendations }) {
 	if (!manifest || !recommendations) return null;
-	// How much can the suggested optimisations reduce the overall creative size?
-	const [totalReduction, setTotalReduction] = useState(0);
-
-	useEffect(() => {
-		const newTotal = recommendations.reduce((acc, { bytes, optBytes }) => (
-			acc + Math.max(0, bytes - optBytes)
-		), 0);
-		setTotalReduction(newTotal);
-	}, [recommendations.length]);
+	// NB: caching the value with useEffect was leading to a stale-value bug
+	let allbytes = recommendations.map({ bytes, optBytes } => Math.max(0, bytes - optBytes));
+	let totalReduction = sum(allbytes);
 
 	const percent = 100 * (totalReduction / manifest.totalDataTransfer);
 
 	return (
 		<div className="reduction">
 			Reduce creative size by up to
-			<div className="number">{percent.toFixed(1)}% <wbr /> (<Bytes b={totalReduction} />)</div>
+			<div className="number">{percent.toFixed(1)}% <wbr /> ({Bytes({b:totalReduction})})</div>
 		</div>
 	);
 }
@@ -183,6 +177,7 @@ function CreativeOptimisationControls() {
 
 function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
 	const path = processedRecsPath({tag}, manifest);
+	// ??what data "type" is recommendations??
 	const recommendations = DataStore.getValue(path);
 
 	const regenerate = () => generateRecommendations(manifest, path);
