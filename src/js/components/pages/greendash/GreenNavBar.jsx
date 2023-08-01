@@ -63,7 +63,7 @@ const GreenNavBar = ({active}) => {
 	const [isOpen, setIsOpen] = useState(false)
 	const toggle = () => setIsOpen(!isOpen);
 
-	const pseudoUser = Login.getUser().service === 'pseudo';
+	const pseudoUser = Login.getUser()?.service === 'pseudo';
 
 	// HACK: a (master) campaign?
 	let campaignId = DataStore.getUrlValue('campaign');
