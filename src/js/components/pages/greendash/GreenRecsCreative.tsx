@@ -25,19 +25,26 @@ import { getDataItem } from '../../../base/plumbing/Crud';
 import { getFilterTypeId } from './dashUtils';
 import SearchQuery from '../../../base/searchquery';
 
+/** Convenience wrapper on getDataItem */
+function getBrandForItem(item, brandKey = 'vertiser') {
+	if (!item || !item[brandKey]) return null;
+	return getDataItem({type: C.TYPES.Advertiser, id: item.vertiser, status: KStatus.PUB_OR_DRAFT, swallow: true}).value;
+}
+
 /**
  * Uses ft=GreenTag, tag=id, as used elsewhere in GreenDash
  * OR /tagid as set by ListLoad
  */
 const getCreative = (): string | null => {
-	let tagId = DataStore.getUrlValue("tag");
+	let tagId = DataStore.getUrlValue('tag');
 	if (tagId) {
-		if (DataStore.getUrlValue("ft") !== "GreenTag") console.warn("tag set but filter-type is not GreenTag?!", tagId, DataStore.getUrlValue("ft"));
+		const ft = DataStore.getUrlValue('ft');
+		if (ft !== 'GreenTag') console.warn('tag set but filter-type is not GreenTag?!', tagId, ft);
 		return tagId;
 	}
-	// HACK this is what ListLoad sets - alter the url for compatability with the publisher recommendations tab
+	// HACK this is what ListLoad sets - alter the url for compatibility with the publisher recommendations tab
 	tagId = DataStore.getValue(['location', 'path'])[3];
-	if ( ! tagId) return null;
+	if (!tagId) return null;
 	// Don't change the url -- ListLoad selection should leave the list alone. (see thread "Green Recommendations - navigation issue - Changing tab loses the selected creative state")
 	// modifyPage(null, {tag:tagId, ft:"GreenTag"}, false, false, {replaceState:true});
 	return tagId;
@@ -51,8 +58,7 @@ function CreativeListItem({item}) {
 	const linkPath = [...DataStore.getValue(['location', 'path'])];
 	linkPath[3] = item.id;
 
-	const brand = item.vertiser && getDataItem({type: C.TYPES.Advertiser, id: item.vertiser, swallow:true}).value;
-
+	const brand = getBrandForItem(item);
 	const logo = brand?.branding?.logo;
 
 	return (
@@ -73,19 +79,20 @@ function CreativeList() {
 	// filter by eg agency?
 	let q = null;
 	const {filterType, filterId} = getFilterTypeId();
+
 	if (filterType && filterId) {
 		const k = searchParamForType(filterType);
 		let sq = SearchQuery.setProp(null, k, filterId);
 		q = sq.query;
 	}
-	let keyword = DataStore.getUrlValue("qkw")?.toLowerCase();
-	const filterFn = (item,_index,_array) => {
-		if ( ! keyword) return true;
-		const brand = item?.vertiser && getDataItem({type: C.TYPES.Advertiser, id: item.vertiser}).value;
-		let s = JSON.stringify(item)+" "+brand?.name;
-		s = s.toLowerCase();
-		return s.includes(keyword);
+
+	let keyword = DataStore.getUrlValue('qkw')?.toLowerCase();
+	const filterFn = item => {
+		if (!keyword) return true;
+		const brand = getBrandForItem(item);
+		return `${item.name} ${brand?.name}`.toLowerCase().includes(keyword);
 	};
+
 	return (
 		<GLCard noPadding className="creative-list">
 			<CardHeader>Select a creative to optimise</CardHeader>
@@ -99,7 +106,7 @@ function CreativeList() {
 					hideTotal unwrapped
 					ListItem={CreativeListItem}
 					pageSize={10}
-					selected={item => (item.id === getCreative())}				
+					selected={item => (item.id === getCreative())}
 				/>
 			</CardBody>
 		</GLCard>
