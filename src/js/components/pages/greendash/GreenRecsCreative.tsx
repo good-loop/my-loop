@@ -36,7 +36,7 @@ function CreativeListItem({item}) {
 	const linkPath = [...DataStore.getValue(['location', 'path'])];
 	linkPath[3] = item.id;
 
-	const brand = item.vertiser && getDataItem({type: C.TYPES.Advertiser, id: item.vertiser}).value;
+	const brand = item.vertiser && getDataItem({type: C.TYPES.Advertiser, id: item.vertiser, swallow:true}).value;
 
 	const logo = brand?.branding?.logo;
 
