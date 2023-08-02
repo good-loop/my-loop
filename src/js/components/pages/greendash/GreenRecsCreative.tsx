@@ -167,7 +167,6 @@ function CreativeSizeOverview({ tag, manifest }) {
 						<CreativeSizeBreakdown manifest={manifest} />
 					</div>
 				</div>
-				
 			</CardBody>
 		</GLCard>
 	);
@@ -181,6 +180,9 @@ function CreativeSizeOverview({ tag, manifest }) {
  */
 function Reduction({ manifest, recommendations }) {
 	if (!manifest || !recommendations) return null;
+
+	if (recommendations.processing) return <Misc.Loading text="Generating recommendations..." />;
+
 	// NB: caching the value with useEffect was leading to a stale-value bug
 	let allbytes = recommendations.map(({ bytes, optBytes }) => Math.max(0, bytes - optBytes));
 	let totalReduction = sum(allbytes);
@@ -209,27 +211,35 @@ function CreativeOptimisationControls() {
 };
 
 
-function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
-	// Get the recommendations list - this is an array of Transfer objects augmented with replacement candidates
-	// eg recommendations[0] = { url: "https://etc", bytes: 150000, optUrl: "[recompressed file]", optBytes: 75000 }
-	const prPath = processedRecsPath({tag}, manifest);
-	const recommendations = DataStore.getValue(prPath);
+const recOptionsString = () => JSON.stringify(DataStore.getValue(RECS_OPTIONS_PATH));
 
+
+function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
 	// Hard-set initial values for options and force an update
 	useEffect(() => DataStore.setValue(RECS_OPTIONS_PATH, { noWebp: false, retinaMultiplier: '1' }), []);
 
-	// If there was no recommendations list in DataStore for the current tag/manifest/options combo, generate now.
+	// Time to generate a new recommendations list?
 	useEffect(() => {
-		if (!DataStore.getValue(RECS_OPTIONS_PATH)) return; // Don't generate until default options are set
-		if (manifest && !recommendations) generateRecommendations(manifest, prPath);
-	}, [recommendations, prPath]);
+		// Is there a list - or a "currently processing" placeholder -
+		// already in DataStore for the current manifest + options combo?
+		const prPath = processedRecsPath({tag}, manifest);
+		if (!manifest || DataStore.getValue(prPath)) return;
+		// Nothing there, nothing processing. Generate now.
+		generateRecommendations(manifest, prPath);
+	}, [manifest?.url, manifest?.timestamp, recOptionsString()]);
 
-	const recCards = recommendations?.filter(spec => spec.optBytes < spec.bytes)
-	.map(spec => (
-		<Col className="mb-2" xs="4" key={spec.url} >
-			<Recommendation spec={spec} />
-		</Col>
-	));
+	// Get any existing recommendations list - this is an array of Transfer objects augmented with replacement candidates
+	// eg recommendations[0] = { url: "https://etc", bytes: 150000, optUrl: "[recompressed file]", optBytes: 75000 }
+	const recommendations = DataStore.getValue(processedRecsPath({tag}, manifest));
+
+	let recCards = [];
+	if (recommendations && !recommendations.processing) {
+		recCards = recommendations.map(augTransfer => (
+			<Col className="mb-2" xs="4" key={augTransfer.url} >
+				<Recommendation spec={augTransfer} />
+			</Col>
+		));
+	}
 
 	return (
 		<GLCard noPadding noMargin className="creative-opt-overview-card">
@@ -301,7 +311,7 @@ type Setter<T> = {
 
 function CreativeView({ showList, setShowList }: {showList: boolean, setShowList: Setter<boolean>|null}): JSX.Element {
 	const tagId = getCreative();
-	if (!tagId) return <div className='p-2'>Select a creative from the list to get started.</div>;
+	if (!tagId) return <div className="p-2">Select a creative from the list to get started.</div>;
 
 	const pvTag = ActionMan.getDataItem({type: C.TYPES.GreenTag, status: KStatus.PUBLISHED, id: tagId});
 
