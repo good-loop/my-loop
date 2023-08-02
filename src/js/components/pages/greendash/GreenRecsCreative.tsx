@@ -38,7 +38,8 @@ const getCreative = (): string | null => {
 	// HACK this is what ListLoad sets - alter the url for compatability with the publisher recommendations tab
 	tagId = DataStore.getValue(['location', 'path'])[3];
 	if ( ! tagId) return null;
-	modifyPage(null, {tag:tagId, ft:"GreenTag"}, false, false, {replaceState:true});
+	// Don't change the url -- ListLoad selection should leave the list alone. (see thread "Green Recommendations - navigation issue - Changing tab loses the selected creative state")
+	// modifyPage(null, {tag:tagId, ft:"GreenTag"}, false, false, {replaceState:true});
 	return tagId;
 };
 
