@@ -68,7 +68,7 @@ function IOPFirstHalf({ mainItem, brand, campaign, charities, impactDebits, tota
 			<div className="white-circle">
 				<div className="content">
 					<img className="logo" src={mainLogo} style={{ width: '6em', height: '6em'}}/>
-					<DevOnly><PortalLink item={brand} /></DevOnly>
+					{brand && <DevOnly><PortalLink item={brand} /></DevOnly>}
 					<br/>
 					<h1 style={{marginBottom:0}}>{totalString}</h1>
 					<h2>Donated</h2>
