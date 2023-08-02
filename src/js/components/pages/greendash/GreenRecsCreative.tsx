@@ -28,7 +28,7 @@ import SearchQuery from '../../../base/searchquery';
 /** Convenience wrapper on getDataItem */
 function getBrandForItem(item, brandKey = 'vertiser') {
 	if (!item || !item[brandKey]) return null;
-	return getDataItem({type: C.TYPES.Advertiser, id: item.vertiser, swallow: true}).value;
+	return getDataItem({type: C.TYPES.Advertiser, id: item.vertiser, status: KStatus.PUB_OR_DRAFT, swallow: true}).value;
 }
 
 /**
