@@ -25,8 +25,22 @@ import { getDataItem } from '../../../base/plumbing/Crud';
 import { getFilterTypeId } from './dashUtils';
 import SearchQuery from '../../../base/searchquery';
 
-
-const getCreative = (): string | null => DataStore.getValue(['location', 'path'])[3];
+/**
+ * Uses ft=GreenTag, tag=id, as used elsewhere in GreenDash
+ * OR /tagid as set by ListLoad
+ */
+const getCreative = (): string | null => {
+	let tagId = DataStore.getUrlValue("tag");
+	if (tagId) {
+		if (DataStore.getUrlValue("ft") !== "GreenTag") console.warn("tag set but filter-type is not GreenTag?!", tagId, DataStore.getUrlValue("ft"));
+		return tagId;
+	}
+	// HACK this is what ListLoad sets - alter the url for compatability with the publisher recommendations tab
+	tagId = DataStore.getValue(['location', 'path'])[3];
+	if ( ! tagId) return null;
+	modifyPage(null, {tag:tagId, ft:"GreenTag"}, false, false, {replaceState:true});
+	return tagId;
+};
 
 const isPseudo = () => Login.getUser().service === 'pseudo';
 
@@ -287,7 +301,7 @@ type Setter<T> = {
 
 function CreativeView({ showList, setShowList }: {showList: boolean, setShowList: Setter<boolean>|null}): JSX.Element {
 	const tagId = getCreative();
-	if (!tagId) return <div>Select a creative from the list to get started.</div>;
+	if (!tagId) return <div className='p-2'>Select a creative from the list to get started.</div>;
 
 	const pvTag = ActionMan.getDataItem({type: C.TYPES.GreenTag, status: KStatus.PUBLISHED, id: tagId});
 
