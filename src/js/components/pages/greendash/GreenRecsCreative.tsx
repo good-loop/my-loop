@@ -195,20 +195,19 @@ function CreativeOptimisationControls() {
 
 
 function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
-	const path = processedRecsPath({tag}, manifest);
-	// ??what data "type" is recommendations??
-	const recommendations = DataStore.getValue(path);
-
-	const regenerate = () => generateRecommendations(manifest, path);
+	// Get the recommendations list - this is an array of Transfer objects augmented with replacement candidates
+	// eg recommendations[0] = { url: "https://etc", bytes: 150000, optUrl: "[recompressed file]", optBytes: 75000 }
+	const prPath = processedRecsPath({tag}, manifest);
+	const recommendations = DataStore.getValue(prPath);
 
 	// Hard-set initial values for options and force an update
-	useEffect(() => DataStore.setValue(RECS_OPTIONS_PATH, { noWebp: false, retinaMultiplier: 1 }), []);
+	useEffect(() => DataStore.setValue(RECS_OPTIONS_PATH, { noWebp: false, retinaMultiplier: '1' }), []);
 
-	// If there was no recommendations list in DataStore for the current tag/manifest combo, generate now.
+	// If there was no recommendations list in DataStore for the current tag/manifest/options combo, generate now.
 	useEffect(() => {
 		if (!DataStore.getValue(RECS_OPTIONS_PATH)) return; // Don't generate until default options are set
-		if (manifest && !recommendations) regenerate();
-	}, [recommendations, ...path]);
+		if (manifest && !recommendations) generateRecommendations(manifest, prPath);
+	}, [recommendations, prPath]);
 
 	const recCards = recommendations?.filter(spec => spec.optBytes < spec.bytes)
 	.map(spec => (
