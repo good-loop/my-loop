@@ -48,9 +48,9 @@ const authPages = [
     'greendash/metrics?start=2023-04-30T14%3A00%3A00.000Z&end=2023-05-31T14%3A00%3A00.000Z&emode=total&tz=Australia/Sydney&period=last-month&ft=Agency&agency=IGX8mWqY',
 
     // Creatives recs (TODO - click analyse)
-    'greendash/recommendation/creative/qg47jOFp',
-    'greendash/recommendation/creative/ctKDBLaY',
-    'greendash/recommendation/creative/KkiISwe1'
+    'greendash/recommendation/creative/qg47jOFp?',
+    'greendash/recommendation/creative/ctKDBLaY?',
+    'greendash/recommendation/creative/KkiISwe1?'
 ]
 
 const guestPageUrls = guestPages.map(page => baseUrl + page + "?server=production");
