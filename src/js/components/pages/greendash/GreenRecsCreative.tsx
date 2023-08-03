@@ -17,13 +17,14 @@ import ServerIO from '../../../plumbing/ServerIO';
 
 import { Recommendation, TypeBreakdown } from '../../../base/components/PageRecommendations';
 import { EMBED_ENDPOINT, storedManifestForTag } from '../../../base/utils/pageAnalysisUtils';
-import { RECS_OPTIONS_PATH, generateRecommendations, processedRecsPath, savedManifestPath, startAnalysis } from '../../../base/components/creative-recommendations/recommendation-utils';
+import { RECS_OPTIONS_PATH, badSite, generateRecommendations, processedRecsPath, savedManifestPath, startAnalysis } from '../../../base/components/creative-recommendations/recommendation-utils';
 import PropControl from '../../../base/components/PropControl';
 import ShareWidget from '../../../base/components/ShareWidget';
 import Login from '../../../base/youagain';
 import { getDataItem } from '../../../base/plumbing/Crud';
 import { getFilterTypeId } from './dashUtils';
 import SearchQuery from '../../../base/searchquery';
+import Roles from '../../../base/Roles';
 
 /** Convenience wrapper on getDataItem */
 function getBrandForItem(item, brandKey = 'vertiser') {
@@ -124,10 +125,11 @@ function CreativeSizeBreakdown({ manifest }) {
 	const toggle = () => setOpen(a => !a);
 
 	return <>
-		<Button onClick={toggle}>Show Breakdown</Button>
+		{manifest || true ? <Button onClick={toggle}>Show Data Breakdown</Button> : 'Analyse to view data breakdown'}
 		<Modal isOpen={open} className="type-breakdown-modal" toggle={toggle}>
-			<ModalHeader toggle={toggle}>Data Type Breakdown</ModalHeader>
+			<ModalHeader toggle={toggle}>Breakdown of Creative Data</ModalHeader>
 			<ModalBody>
+					<h4>By Type</h4>
 					<TypeBreakdown manifest={manifest} />
 			</ModalBody>
 		</Modal>
@@ -248,12 +250,24 @@ function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
 		));
 	}
 
+	// Website we can't currently analyse? Don't show the Analyse button (general users) or show a warning (GL users)
+	const badSiteName = badSite(tag.creativeURL);
+	const canAnalyse = !badSiteName || Roles.isTester();
+
 	return (
 		<GLCard noPadding noMargin className="creative-opt-overview-card">
 			<CardHeader>Optimisation Recommendations</CardHeader>
 			<CardBody>
-				<AnalyseTagPrompt tag={tag} manifest={manifest} />
-				{recommendations && <>
+				{badSiteName && <div className="text-center">
+					Creative previews on {badSiteName}
+					{canAnalyse ? (
+						' are known to confuse the analysis engine: expect bad results.'
+					) : (
+						' cannot currently be analysed.'
+					)}
+				</div>}
+				{canAnalyse && <AnalyseTagPrompt tag={tag} manifest={manifest} />}
+				{canAnalyse && recommendations && <>
 					<Reduction manifest={manifest} recommendations={recommendations} />
 					<CreativeOptimisationControls />
 					<Container className="recs-list">
