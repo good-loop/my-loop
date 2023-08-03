@@ -13,7 +13,6 @@ import Logo from '../base/components/Logo';
  * 
  * An internal link
  * @param {Object} p
- * @param {?boolean} devOnly
  */
 const ImpactHubLink = ({item,title,size,className,logo}) => {
 	let href = getImpactHubLink(item);

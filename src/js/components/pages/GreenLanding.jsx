@@ -158,7 +158,7 @@ const GreenLanding2 = ({pvItem, itemId, status, period, pvCampaigns, type}) => {
 				<div className="branding">{branding?.logo ? <img src={branding.logo} alt="brand logo" /> : name}</div>
 				{!!co2 && <><div className="big-number tonnes"><Mass kg={co2} /></div> carbon offset</>}
 				{type !== C.TYPES.Agency && <DevOnly>{!!co2 && <><div className="big-number tonnes"><Mass kg={offsets4type.carbonTotal} /></div> offsets4type carbon</>}</DevOnly>}
-				<DevOnly>{!!trees && <><div className="big-number trees">{printer.prettyInt(trees)}</div> trees</>}</DevOnly>
+				{!!trees && <DevOnly><><div className="big-number trees">{printer.prettyInt(trees)}</div> trees</></DevOnly>}
 				{isLoading && <Misc.Loading text="Fetching data..."/>}
 				<div className="carbon-neutral-container">
 					with <img className="carbon-neutral-logo" src="/img/green/gl-carbon-neutral.svg" />

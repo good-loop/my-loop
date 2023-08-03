@@ -17,16 +17,39 @@ import ServerIO from '../../../plumbing/ServerIO';
 
 import { Recommendation, TypeBreakdown } from '../../../base/components/PageRecommendations';
 import { EMBED_ENDPOINT, storedManifestForTag } from '../../../base/utils/pageAnalysisUtils';
-import { RECS_OPTIONS_PATH, generateRecommendations, processedRecsPath, savedManifestPath, startAnalysis } from '../../../base/components/creative-recommendations/recommendation-utils';
+import { RECS_OPTIONS_PATH, badSite, generateRecommendations, processedRecsPath, savedManifestPath, startAnalysis } from '../../../base/components/creative-recommendations/recommendation-utils';
 import PropControl from '../../../base/components/PropControl';
 import ShareWidget from '../../../base/components/ShareWidget';
 import Login from '../../../base/youagain';
 import { getDataItem } from '../../../base/plumbing/Crud';
 import { getFilterTypeId } from './dashUtils';
 import SearchQuery from '../../../base/searchquery';
+import Roles from '../../../base/Roles';
 
+/** Convenience wrapper on getDataItem */
+function getBrandForItem(item, brandKey = 'vertiser') {
+	if (!item || !item[brandKey]) return null;
+	return getDataItem({type: C.TYPES.Advertiser, id: item.vertiser, status: KStatus.PUB_OR_DRAFT, swallow: true}).value;
+}
 
-const getCreative = (): string | null => DataStore.getValue(['location', 'path'])[3];
+/**
+ * Uses ft=GreenTag, tag=id, as used elsewhere in GreenDash
+ * OR /tagid as set by ListLoad
+ */
+const getCreative = (): string | null => {
+	let tagId = DataStore.getUrlValue('tag');
+	if (tagId) {
+		const ft = DataStore.getUrlValue('ft');
+		if (ft !== 'GreenTag') console.warn('tag set but filter-type is not GreenTag?!', tagId, ft);
+		return tagId;
+	}
+	// HACK this is what ListLoad sets - alter the url for compatibility with the publisher recommendations tab
+	tagId = DataStore.getValue(['location', 'path'])[3];
+	if (!tagId) return null;
+	// Don't change the url -- ListLoad selection should leave the list alone. (see thread "Green Recommendations - navigation issue - Changing tab loses the selected creative state")
+	// modifyPage(null, {tag:tagId, ft:"GreenTag"}, false, false, {replaceState:true});
+	return tagId;
+};
 
 const isPseudo = () => Login.getUser().service === 'pseudo';
 
@@ -36,8 +59,7 @@ function CreativeListItem({item}) {
 	const linkPath = [...DataStore.getValue(['location', 'path'])];
 	linkPath[3] = item.id;
 
-	const brand = item.vertiser && getDataItem({type: C.TYPES.Advertiser, id: item.vertiser}).value;
-
+	const brand = getBrandForItem(item);
 	const logo = brand?.branding?.logo;
 
 	return (
@@ -58,19 +80,20 @@ function CreativeList() {
 	// filter by eg agency?
 	let q = null;
 	const {filterType, filterId} = getFilterTypeId();
+
 	if (filterType && filterId) {
 		const k = searchParamForType(filterType);
 		let sq = SearchQuery.setProp(null, k, filterId);
 		q = sq.query;
 	}
-	let keyword = DataStore.getUrlValue("qkw")?.toLowerCase();
-	const filterFn = (item,_index,_array) => {
-		if ( ! keyword) return true;
-		const brand = item?.vertiser && getDataItem({type: C.TYPES.Advertiser, id: item.vertiser}).value;
-		let s = JSON.stringify(item)+" "+brand?.name;
-		s = s.toLowerCase();
-		return s.includes(keyword);
+
+	let keyword = DataStore.getUrlValue('qkw')?.toLowerCase();
+	const filterFn = item => {
+		if (!keyword) return true;
+		const brand = getBrandForItem(item);
+		return `${item.name} ${brand?.name}`.toLowerCase().includes(keyword);
 	};
+
 	return (
 		<GLCard noPadding className="creative-list">
 			<CardHeader>Select a creative to optimise</CardHeader>
@@ -84,7 +107,7 @@ function CreativeList() {
 					hideTotal unwrapped
 					ListItem={CreativeListItem}
 					pageSize={10}
-					selected={item => (item.id === getCreative())}				
+					selected={item => (item.id === getCreative())}
 				/>
 			</CardBody>
 		</GLCard>
@@ -102,10 +125,11 @@ function CreativeSizeBreakdown({ manifest }) {
 	const toggle = () => setOpen(a => !a);
 
 	return <>
-		<Button onClick={toggle}>Show Breakdown</Button>
+		{manifest || true ? <Button onClick={toggle}>Show Data Breakdown</Button> : 'Analyse to view data breakdown'}
 		<Modal isOpen={open} className="type-breakdown-modal" toggle={toggle}>
-			<ModalHeader toggle={toggle}>Data Type Breakdown</ModalHeader>
+			<ModalHeader toggle={toggle}>Breakdown of Creative Data</ModalHeader>
 			<ModalBody>
+					<h4>By Type</h4>
 					<TypeBreakdown manifest={manifest} />
 			</ModalBody>
 		</Modal>
@@ -152,7 +176,6 @@ function CreativeSizeOverview({ tag, manifest }) {
 						<CreativeSizeBreakdown manifest={manifest} />
 					</div>
 				</div>
-				
 			</CardBody>
 		</GLCard>
 	);
@@ -166,6 +189,9 @@ function CreativeSizeOverview({ tag, manifest }) {
  */
 function Reduction({ manifest, recommendations }) {
 	if (!manifest || !recommendations) return null;
+
+	if (recommendations.processing) return <Misc.Loading text="Generating recommendations..." />;
+
 	// NB: caching the value with useEffect was leading to a stale-value bug
 	let allbytes = recommendations.map(({ bytes, optBytes }) => Math.max(0, bytes - optBytes));
 	let totalReduction = sum(allbytes);
@@ -194,35 +220,54 @@ function CreativeOptimisationControls() {
 };
 
 
+const recOptionsString = () => JSON.stringify(DataStore.getValue(RECS_OPTIONS_PATH));
+
+
 function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
-	const path = processedRecsPath({tag}, manifest);
-	// ??what data "type" is recommendations??
-	const recommendations = DataStore.getValue(path);
-
-	const regenerate = () => generateRecommendations(manifest, path);
-
 	// Hard-set initial values for options and force an update
-	useEffect(() => DataStore.setValue(RECS_OPTIONS_PATH, { noWebp: false, retinaMultiplier: 1 }), []);
+	useEffect(() => DataStore.setValue(RECS_OPTIONS_PATH, { noWebp: false, retinaMultiplier: '1' }), []);
 
-	// If there was no recommendations list in DataStore for the current tag/manifest combo, generate now.
+	// Time to generate a new recommendations list?
 	useEffect(() => {
-		if (!DataStore.getValue(RECS_OPTIONS_PATH)) return; // Don't generate until default options are set
-		if (manifest && !recommendations) regenerate();
-	}, [recommendations, ...path]);
+		// Is there a list - or a "currently processing" placeholder -
+		// already in DataStore for the current manifest + options combo?
+		const prPath = processedRecsPath({tag}, manifest);
+		if (!manifest || DataStore.getValue(prPath)) return;
+		// Nothing there, nothing processing. Generate now.
+		generateRecommendations(manifest, prPath);
+	}, [manifest?.url, manifest?.timestamp, recOptionsString()]);
 
-	const recCards = recommendations?.filter(spec => spec.optBytes < spec.bytes)
-	.map(spec => (
-		<Col className="mb-2" xs="4" key={spec.url} >
-			<Recommendation spec={spec} />
-		</Col>
-	));
+	// Get any existing recommendations list - this is an array of Transfer objects augmented with replacement candidates
+	// eg recommendations[0] = { url: "https://etc", bytes: 150000, optUrl: "[recompressed file]", optBytes: 75000 }
+	const recommendations = DataStore.getValue(processedRecsPath({tag}, manifest));
+
+	let recCards = [];
+	if (recommendations && !recommendations.processing) {
+		recCards = recommendations.map(augTransfer => (
+			<Col className="mb-2" xs="4" key={augTransfer.url} >
+				<Recommendation spec={augTransfer} />
+			</Col>
+		));
+	}
+
+	// Website we can't currently analyse? Don't show the Analyse button (general users) or show a warning (GL users)
+	const badSiteName = badSite(tag.creativeURL);
+	const canAnalyse = !badSiteName || Roles.isTester();
 
 	return (
 		<GLCard noPadding noMargin className="creative-opt-overview-card">
 			<CardHeader>Optimisation Recommendations</CardHeader>
 			<CardBody>
-				<AnalyseTagPrompt tag={tag} manifest={manifest} />
-				{recommendations && <>
+				{badSiteName && <div className="text-center">
+					Creative previews on {badSiteName}
+					{canAnalyse ? (
+						' are known to confuse the analysis engine: expect bad results.'
+					) : (
+						' cannot currently be analysed.'
+					)}
+				</div>}
+				{canAnalyse && <AnalyseTagPrompt tag={tag} manifest={manifest} />}
+				{canAnalyse && recommendations && <>
 					<Reduction manifest={manifest} recommendations={recommendations} />
 					<CreativeOptimisationControls />
 					<Container className="recs-list">
@@ -287,7 +332,7 @@ type Setter<T> = {
 
 function CreativeView({ showList, setShowList }: {showList: boolean, setShowList: Setter<boolean>|null}): JSX.Element {
 	const tagId = getCreative();
-	if (!tagId) return <div>Select a creative from the list to get started.</div>;
+	if (!tagId) return <div className="p-2">Select a creative from the list to get started.</div>;
 
 	const pvTag = ActionMan.getDataItem({type: C.TYPES.GreenTag, status: KStatus.PUBLISHED, id: tagId});
 
