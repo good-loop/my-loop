@@ -9,7 +9,7 @@ import C, { searchParamForType } from '../../../C';
 import KStatus from '../../../base/data/KStatus';
 import ListLoad from '../../../base/components/ListLoad';
 import DataStore from '../../../base/plumbing/DataStore';
-import { Bytes, space, sum } from '../../../base/utils/miscutils';
+import { bytes, space, sum } from '../../../base/utils/miscutils';
 import { modifyPage } from '../../../base/plumbing/glrouter';
 import ActionMan from '../../../plumbing/ActionMan';
 import Misc from '../../../MiscOverrides';
@@ -138,8 +138,10 @@ function CreativeSizeBreakdown({ manifest }) {
 
 
 function CreativeSizeOverview({ tag, manifest }) {
-	let weight = tag.weight;
-	if (!weight && manifest) weight = manifest.reqHeaders + manifest.reqBody + manifest.resBody + manifest.resHeaders;
+	let manifestWeight = manifest && (manifest.reqHeaders + manifest.reqBody + manifest.resBody + manifest.resHeaders);
+	let weight = manifestWeight || tag.weight;
+	// do the two weights differ enough to flag a warning? 
+	let isConflict = tag.weight && Math.abs((weight - tag.weight)/tag.weight) > 0.25; // below 25% difference isn't worth flagging
 
 	// Provide an easy link to see the creative - either URL as given or HTML snippet/tag wrapped in a page
 	let testLink;
@@ -154,7 +156,7 @@ function CreativeSizeOverview({ tag, manifest }) {
 			<CardHeader>Your Creative</CardHeader>
 			<CardBody>
 				{manifest && (
-					<img className="creative-screenshot w-100" src={manifest.screenshot} />
+					<img className="creative-screenshot w-100" src={manifest.screenshot} alt="creative screenshot" />
 				)}
 				<h4 className="text-center my-2">
 					<C.A href={testLink} target="_blank">Creative Test Link</C.A>
@@ -168,8 +170,8 @@ function CreativeSizeOverview({ tag, manifest }) {
 					<div className="bytes">
 						Creative size
 						<div className="number">
-							{weight ? Bytes({b:weight}) : '-'}
-							{weight && !tag.weight && <span title="Size not yet confirmed">*</span>}
+							{weight? bytes(weight) : '-'}
+							{isConflict && <p className='text-warning' title='The measured weight and the weight that was entered in the Green Tag Generator are quite different.'>Manually set weight: {bytes(tag.weight)}</p>}
 						</div>
 					</div>
 					<div className="breakdown">
@@ -193,15 +195,18 @@ function Reduction({ manifest, recommendations }) {
 	if (recommendations.processing) return <Misc.Loading text="Generating recommendations..." />;
 
 	// NB: caching the value with useEffect was leading to a stale-value bug
-	let allbytes = recommendations.map(({ bytes, optBytes }) => Math.max(0, bytes - optBytes));
-	let totalReduction = sum(allbytes);
+	let reduceBytes = recommendations.map(rec => {
+		if ( ! rec.significantReduction) return 0; // i.e. zero reduction if we're not recommending a file replacement 
+		return Math.max(0, rec.bytes - rec.optBytes);
+	});
+	let totalReduction = sum(reduceBytes);
 
 	const percent = 100 * (totalReduction / manifest.totalDataTransfer);
 
 	return (
 		<div className="reduction">
 			Reduce creative size by up to
-			<div className="number">{percent.toFixed(1)}% <wbr /> ({Bytes({b:totalReduction})})</div>
+			<div className="number">{percent.toFixed(1)}% <wbr /> ({bytes(totalReduction)})</div>
 		</div>
 	);
 }
