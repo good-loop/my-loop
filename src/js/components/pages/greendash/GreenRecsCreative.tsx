@@ -251,7 +251,7 @@ function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
 	}
 
 	// Website we can't currently analyse? Don't show the Analyse button (general users) or show a warning (GL users)
-	const badSiteName = badSite(tag.creativeURL);
+	const badSiteName = tag.creativeURL? badSite(tag.creativeURL) : "creative url unset";
 	const canAnalyse = !badSiteName || Roles.isTester();
 
 	return (
