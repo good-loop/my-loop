@@ -304,7 +304,7 @@ function AnalyseTagPrompt({ tag, manifest }): JSX.Element {
 		setAnalysisState('loading');
 		startAnalysis({tag}).then(
 			() => setAnalysisState('ready'),
-			error => setAnalysisState({error: error.responseText || 'Couldn\'t connect to analysis server.'})
+			error => setAnalysisState({error: error.responseText || error.statusText || 'Couldn\'t connect to analysis server.'})
 		);
 	};
 

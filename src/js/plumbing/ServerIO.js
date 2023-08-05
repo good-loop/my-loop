@@ -30,6 +30,8 @@ ServerIO.PORTAL_ENDPOINT =
 	//'https://testportal.good-loop.com';
 	// 'https://localportal.good-loop.com';
 
+// ServerIO.MEASURE_ENDPOINT = 'https://localmeasure.good-loop.com/measure';
+
 ServerIO.MEDIA_ENDPOINT = 'https://uploads.good-loop.com';
 
 // Useful where relative links can not be used (eg inline-CSS 'url' image links, in the plugin)
