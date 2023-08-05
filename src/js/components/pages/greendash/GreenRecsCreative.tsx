@@ -171,7 +171,7 @@ function CreativeSizeOverview({ tag, manifest }) {
 						Creative size
 						<div className="number">
 							{weight? bytes(weight) : '-'}
-							{isConflict && <p className='text-warning' title='The measured weight and the weight that was entered in the Green Tag Generator are quite different.'>Manually set weight: {bytes(tag.weight)}</p>}
+							{isConflict && <p className="text-warning" title="The measured weight and the weight that was entered in the Green Tag Generator are quite different.">Manually set weight: {bytes(tag.weight)}</p>}
 						</div>
 					</div>
 					<div className="breakdown">
@@ -304,7 +304,7 @@ function AnalyseTagPrompt({ tag, manifest }): JSX.Element {
 		setAnalysisState('loading');
 		startAnalysis({tag}).then(
 			() => setAnalysisState('ready'),
-			error => setAnalysisState({error: error.statusText || "error"})
+			error => setAnalysisState({error: error.responseText || error.statusText || 'Couldn\'t connect to analysis server.'})
 		);
 	};
 
@@ -320,7 +320,7 @@ function AnalyseTagPrompt({ tag, manifest }): JSX.Element {
 
 	return <h4 className="text-center">
 		{analysisState.error ? <>
-			Analysis failed with error &quot;{analysisState.error}&quot;. Retry?
+			Analysis failed with error &quot;{analysisState.error.split('\n')[0]}&quot;. Retry?
 		</> : <>
 			This creative has not yet been analysed.
 		</>}
