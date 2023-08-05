@@ -240,7 +240,7 @@ function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
 		if (!manifest || DataStore.getValue(prPath)) return;
 		// Nothing there, nothing processing. Generate now.
 		generateRecommendations(manifest, prPath);
-	}, [manifest?.url, manifest?.timestamp, recOptionsString()]);
+	}, [manifest?.url, manifest?.timestamp, recOptionsString(), /* HACK allow poking to redo */ window.location.search]);
 
 	// Get any existing recommendations list - this is an array of Transfer objects augmented with replacement candidates
 	// eg recommendations[0] = { url: "https://etc", bytes: 150000, optUrl: "[recompressed file]", optBytes: 75000 }
