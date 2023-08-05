@@ -304,7 +304,7 @@ function AnalyseTagPrompt({ tag, manifest }): JSX.Element {
 		setAnalysisState('loading');
 		startAnalysis({tag}).then(
 			() => setAnalysisState('ready'),
-			error => setAnalysisState({error})
+			error => setAnalysisState({error: error.statusText || "error"})
 		);
 	};
 
