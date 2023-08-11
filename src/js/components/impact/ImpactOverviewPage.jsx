@@ -461,7 +461,7 @@ function CharityCard({charity}) {
 			</ModalBody>
 		</Modal>*/}
 		<h2 className="donation-total">
-			{Money.prettyStr(charity.dntnTotal)}
+			{Money.prettyStr(charity.dntnTotal || 0)}
 		</h2>
 		<h3>raised</h3>
 	</GLCard>;
