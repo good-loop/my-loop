@@ -56,12 +56,9 @@ export const CampaignImpact = ({i, logo, charity, impactDebit }) => {
 	if (!charity) {
 		return null;
 	}
-	if (!text.cause) {
 
-	}
-	
 	// can't show this without stats or without a charity attatched
-	if (!text.cause || !text.stats || !charity) hideComponent = true;
+	if (!text.impactCause || !text.impactStats || !charity) hideComponent = true;
 
 	// we can't show the card if we don't have the images to populate it
 	// if we don't have a fact we replace it with another image so that increases the amount required
@@ -92,7 +89,7 @@ export const CampaignImpact = ({i, logo, charity, impactDebit }) => {
 					<br />
 					<h4>Charity:<br />	Name: {charity.name || "MISSING"}<br />	ID: {charity.id || "MISSING"}, </h4>
 					<PropControl type="number" prop="priority" path={path} label="Priority" className="font-weight-bold" />
-					<PropControl type="number" prop="amountGBP" path={path} label="Amount In GBP" readOnly />
+					<PropControl type="number" prop="amountGBP" path={[...path, "impact"]} label="Amount In GBP" readOnly />
 					<div className="mb-3 p-3 bg-light card">
 						<h3>Impact Cause</h3>
 						<PropControl type="textarea" label="Impact Cause" prop="impactCause" path={storiesPath} help="In format 'Supporting {Impact cause}' For example, 'Supporting Food Redistribution'" />
@@ -118,7 +115,6 @@ export const CampaignImpact = ({i, logo, charity, impactDebit }) => {
 			</ModalBody>
 		</Modal>
 	); // ./devModal
-
 	return (
 		<div id={"campaign-impact-"+i} className='campaign-impact'>
 			<div style={{ width: "100%", height: "fit-content", padding: "2% 0 0" }}>{circleLogo({ logo: charity.logo })}</div>
@@ -128,7 +124,7 @@ export const CampaignImpact = ({i, logo, charity, impactDebit }) => {
 			</DevOnly>
 			<div className='impact-section'>
 				{/* top row */}
-				{imgList[0] && <Row className='impact-row flex-mobile-dir' id="impact-one-toprow" >
+				{imgList[0 % imgList.length] && <Row className='impact-row flex-mobile-dir' id="impact-one-toprow" >
 
 					<div className='p-2 bg-gl-white left camp-impact-card camp-impact-img'>
 						<img src={imgList[0]} alt="charity image 1" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -138,9 +134,9 @@ export const CampaignImpact = ({i, logo, charity, impactDebit }) => {
 						<img src="/img/Impact/redcurve.svg" alt="redcurve background" className="curve dark-curve" />
 						<img src="/img/Impact/redcurve.svg" alt="redcurve background" className="curve normal-curve" />
 						<div className='cause-container'>
-							{text.cause && text.stats? <>
-								<p className='cause'>{text.cause}</p>
-								<h2 className='description'>{text.stats}</h2>
+							{text.impactCause && text.impactStats? <>
+								<p className='cause'>{text.impactCause}</p>
+								<h2 className='description'>{text.impactStats}</h2>
 								<p className='with-charity'>With {charity.name}</p>
 							</> : <>
 								<p className='cause'>{NGO.summaryDescription(charity)}</p>
@@ -151,7 +147,7 @@ export const CampaignImpact = ({i, logo, charity, impactDebit }) => {
 				</Row>}
 
 				{/* bottom row, if we have stuff */
-				(imgList[1] && ((text.fact) || (text.cause && text.stats && NGO.summaryDescription(charity)))) // || imgList[2]
+				(imgList[1 % imgList.length] && ((text.fact) || (text.impactCause && text.impactStats && NGO.summaryDescription(charity)))) // || imgList[2]
 				 && <Row id="impact-one-botrow" className='impact-row flex-mobile-dir'>
 					{text.fact &&
 						<div className='p-2 bg-gl-darker-grey left camp-impact-card dyk-card'>
@@ -167,7 +163,7 @@ export const CampaignImpact = ({i, logo, charity, impactDebit }) => {
 							</div>
 						</div>
 					}
-					{ ! text.fact && (text.cause && text.stats) && NGO.summaryDescription(charity) &&
+					{ ! text.fact && (text.impactCause && text.impactStats) && NGO.summaryDescription(charity) &&
 						<div className='p-2 bg-gl-darker-grey left camp-impact-card'>
 							<div className='dyk-container'>
 								<p className='fact'>{NGO.summaryDescription(charity)}</p>
@@ -215,12 +211,11 @@ export const CampaignImpactTwo = ({ logo, impactDebit, charity }) => {
 		testimonialPerson: impactDebit.storiesContent?.testimonialPerson || ""
 	}
 
-	console.log("huh?", impactDebit.storiesContent, text)
 	let hideComponent = false;
 
 
 	// can't show this without a stat
-	if (!text.cause || !text.stats) hideComponent = true;
+	if (!text.impactCause || !text.stats) hideComponent = true;
 
 	// if we're missing the quote, try to use the charities description instead
 	// if that's missing, we can't show the card
@@ -251,7 +246,7 @@ export const CampaignImpactTwo = ({ logo, impactDebit, charity }) => {
 					<br />
 					<h4>Charity:<br />	Name: {charity.name || "MISSING"}<br />	ID: {charity.id || "MISSING"}, </h4>
 					<PropControl type="number" prop="priority" path={path} label="Priority" className="font-weight-bold" />
-					<PropControl type="number" prop="amountGBP" path={path} label="Amount In GBP" readOnly />
+					<PropControl type="number" prop="amountGBP" path={[...path, "impact"]} label="Amount In GBP" readOnly />
 					<div className="mb-3 p-3 bg-light card">
 						<h3>Impact Cause</h3>
 						<PropControl type="textarea" label="Impact Cause" prop="impactCause" path={storiesPath} help="In format 'Supporting {Impact cause}' For example, 'Supporting Food Redistribution'" />
@@ -284,7 +279,7 @@ export const CampaignImpactTwo = ({ logo, impactDebit, charity }) => {
 						<img src="/img/Impact/redcurve.svg" alt="redcurve background" className="curve dark-curve" />
 						<img src="/img/Impact/redcurve.svg" alt="redcurve background" className="curve normal-curve" />
 						<div className='cause-container'>
-							<p className='cause'>{text.cause}</p>
+							<p className='cause'>{text.impactCause}</p>
 							<h2 className='description'>{text.stats}</h2>
 							<p className='with-charity'>with {charity.name || charity.id}</p>
 						</div>
@@ -555,9 +550,9 @@ export const BrandLogoRows = ({ mainLogo, charities, row }) => {
 	const CharityLogos = charities.map((c, i) => <li style={{ width: "15vh", alignSelf: "center" }} key={i}><img style={{ width: "100%" }} src={c.logo} /></li>)
 
 	if (row) {
-		CharityLogos.unshift(<li style={{ width: "15vh", alignSelf: "center" }} key={CharityLogos.length}><img style={{ width: "100%" }} src={mainLogo} /></li>)
+		CharityLogos.unshift(<li style={{ width: "15vh", alignSelf: "center" }} key={CharityLogos.length}><img style={{ width: "15vh" }} src={mainLogo} /></li>)
 		return (
-			<Row id='brand-charities' style={{ padding: "2%", placeContent: "center" }}>
+			<Row id='brand-charities' style={{ margin: "2%", placeContent: "center" }}>
 				<ul style={{ listStyleType: "none" }}>
 					{CharityLogos}
 				</ul>
@@ -567,7 +562,7 @@ export const BrandLogoRows = ({ mainLogo, charities, row }) => {
 
 	return (
 		<div id='brand-charities' style={{ padding: "2%" }}>
-			<div className='topRow'><img className='logo' src={mainLogo} style={{ width: "100%" }} /></div>
+			<div className='topRow'><img className='logo' src={mainLogo} style={{ width: "20vh", height: "20vh" }} /></div>
 			<ul style={{ listStyleType: "none" }}>
 				{CharityLogos}
 			</ul>
@@ -582,6 +577,7 @@ export const BrandLogoRows = ({ mainLogo, charities, row }) => {
  * @returns 
  */
 const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
+	if(!brand || !impactDebit || !campaign || !charity) return <DevOnly>ImpactCertificate is missing data!!!</DevOnly>;
 	let charityName = NGO.displayName(charity);
 	let charityDesc = charity.summaryDescription || charity.description;
 	let campaignName = campaign.name || brand.name || campaign.id;
@@ -602,7 +598,7 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 		"Donation": {
 			// donation details
 			amountType: "Donation",
-			detailsAmount: `£${Money.prettyString({ amount: impact.amountGBP || 0 })}`,
+			detailsAmount: `£${Money.prettyString({ amount: impact.amount || 0 })}`,
 			creditsName: "Impact",
 			creditsValue: "1234 Trees Planted",
 			// Links
@@ -689,7 +685,8 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 					</div>
 					<div className='charity-numbers mt-5 p-3' style={{ background: "@gl-lighter-blue" }}>
 						<p className='text small-header light-bold'>{charity.name}</p>
-						{NGO.regs(charity).map(reg => <p key={reg.id} className='text mt-1'>{reg.organisation} registration number: {reg.id}</p>)}
+						{console.log("fuckoff!!", NGO.regNums(charity))}
+						{NGO.regNums(charity).map(reg => <p key={reg.id} className='text mt-1'>{reg.organisation} registration number: {reg.id}</p>)}
 					</div>
 					<DevOnly>Charity: <PortalLink item={charity} /></DevOnly>
 					{/* <DonationSmallPrint isDone={statusCompleted[4]} campaign={campaign} impact={impact} brand={brand} impactDebit={impactDebit} /> */}
