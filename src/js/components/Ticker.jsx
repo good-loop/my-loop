@@ -12,15 +12,16 @@ import Money from '../base/data/Money';
 /**
  * Alternate version of Counter that ticks number up from the initial value at a steady rate
  * NB: Removed sigFigs - including sigFig rounding would heavily obscure the tick effect
- * 
- * @param {Number} value Initial value to display
- * @param {String} currencySymbol
- * @param {Money} amount - Convenient way to set value + currencySymbol
- * @param {Number} rate - amount added per tickTime
- * @param {Number} tickTime - time between ticks in milliseconds
- * @param {Boolean} preservePennies Preserves 2 digits on the pennies count. This overrides sigFigs. True by default for money.
- * @param {Boolean} centerText Centers the text when counting up in the animation.
- * @param {Date} startTime Calculates the start value based on a start time so the ticker updates on refreshes
+ * @param {Object} p
+ * @param {Number} p.value Initial value to display
+ * @param {String} p.currencySymbol
+ * @param {Money} p.amount - Convenient way to set value + currencySymbol
+ * @param {Number} p.rate - amount added per tickTime
+ * @param {Number} p.tickTime - time between ticks in milliseconds
+ * @param {Boolean} p.preservePennies Preserves 2 digits on the pennies count. This overrides sigFigs. True by default for money.
+ * @param {Boolean} p.noPennies Just the pounds
+ * @param {Boolean} p.centerText Centers the text when counting up in the animation.
+ * @param {Date} p.startTime Calculates the start value based on a start time so the ticker updates on refreshes
  */
 const Ticker = ({value, amount, rate, tickTime=1000, currencySymbol = '', pretty = true, preservePennies, noPennies, centerText=false, startTime}) =>
 {

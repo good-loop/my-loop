@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Collapse, Nav, Navbar, NavbarToggler, NavItem } from 'reactstrap';
+import { Collapse, Nav, Navbar, NavbarToggler, NavItem as BSNavItem } from 'reactstrap';
 import AccountMenu from '../../../base/components/AccountMenu';
 import KStatus from '../../../base/data/KStatus';
 import { getDataItem } from '../../../base/plumbing/Crud';
@@ -40,6 +40,18 @@ export const ShareDash = ({style, className}) => {
 		shareId={shareId} hasLink noEmails={!showEmails} />;
 }
 
+
+function NavItem({name, active, href, children}) {
+	const isActive = (active === name);
+
+	return <BSNavItem>
+		<A className={space(active && 'active')} href={href}>
+			<div className={`green-nav-icon ${name}-icon`} /> {children}
+		</A>
+	</BSNavItem>;
+}
+
+
 /**
  * Left hand nav bar + top-right account menu
  * 
@@ -49,13 +61,9 @@ export const ShareDash = ({style, className}) => {
  */
 const GreenNavBar = ({active}) => {
 	const [isOpen, setIsOpen] = useState(false)
-	const [pseudoUser, setPseudoUser] = useState(false);
 	const toggle = () => setIsOpen(!isOpen);
 
-	useEffect(() => {
-		const userId = Login.getId();
-		if (userId && userId.endsWith('@pseudo')) setPseudoUser(true);
-	}, [])
+	const pseudoUser = Login.getUser()?.service === 'pseudo';
 
 	// HACK: a (master) campaign?
 	let campaignId = DataStore.getUrlValue('campaign');
@@ -70,7 +78,9 @@ const GreenNavBar = ({active}) => {
 		}
 	}
 	let pvCampaign = campaignId? getDataItem({type:C.TYPES.Campaign, id:campaignId,status:KStatus.PUB_OR_DRAFT, swallow:true}) : {};
-	let impactUrl = pvCampaign.value? '/green/'+encURI(pvCampaign.value.id) : '/green';
+	// impact url directs to agency if available, then available brand, then just default 
+	let impactUrl = agencyId ? ('/green/agency='+agencyId) : (brandId ? '/green?brand='+brandId : '/green');
+	if(!(agencyId || brandId) && pvCampaign.value) impactUrl = '/green?brand='+pvCampaign.value.vertiser;
 	let metricsUrl = modifyPage(["greendash", "metrics"], null, true);
 	let recUrl = modifyPage(["greendash", "recommendation"], null, true);
 
@@ -83,26 +93,10 @@ const GreenNavBar = ({active}) => {
 			<a href={pseudoUser ? 'https://www.good-loop.com' : '/greendash'}>
 				<img className="logo" src="/img/logo-green-dashboard.svg" />
 			</a>
-			<NavItem>
-				<A className={active === 'metrics' ? 'active' : ''} href={metricsUrl}>
-					<div className="green-nav-icon metrics-icon" /> Metrics
-				</A>
-			</NavItem>
-			<NavItem>
-				<A className={active === 'tags' ? 'active' : ''} href={`${ServerIO.PORTAL_ENDPOINT}/#green`}>
-					<div className="green-nav-icon tags-icon" /> Manage<br/>Tags
-				</A>
-			</NavItem>
-			<NavItem>
-				<A className={space('nav-item', active === 'recommendation' && 'active')} href={recUrl}>
-					<div className="green-nav-icon optimisation-icon" /> <span>Reduce<br/>{CO2e}</span>
-				</A>
-			</NavItem>
-			<NavItem>
-				<A className={active === 'impact' ? 'active' : ''} href={impactUrl}>
-					<div className="green-nav-icon impact-icon" /> Impact<br/>Overview
-				</A>
-			</NavItem>
+			<NavItem name="metrics" href={metricsUrl}>Metrics</NavItem>
+			{!pseudoUser && <NavItem name="tags" href={`${ServerIO.PORTAL_ENDPOINT}/#green`}>Manage<br/>Tags</NavItem>}
+			<NavItem name="recommendation" href={recUrl}><span>Reduce<br/>{CO2e}</span></NavItem>
+			<NavItem name="impact" href={impactUrl}>Impact<br/>Overview</NavItem>
 			{/* <NavItem>
 				<A className={active === 'profile' ? 'active' : ''} href="/greendash/profile">
 					<div className="green-nav-icon profile-icon" /> Profile

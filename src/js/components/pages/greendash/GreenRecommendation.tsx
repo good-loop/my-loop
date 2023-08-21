@@ -4,9 +4,7 @@ import Misc from '../../../MiscOverrides';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import DataStore from '../../../base/plumbing/DataStore';
 import Login from '../../../base/youagain';
-import { GLCard } from '../../impact/GLCards';
 import GreenDashboardFilters from './GreenDashboardFilters';
-import { type BaseFilters } from './emissionscalcTs';
 
 import '../../../../style/GreenRecommendations.less';
 import GreenRecsPublisher from './GreenRecsPublisher';
@@ -19,14 +17,15 @@ export const greenRecsPath = ['widget', 'greenRecs'];
 
 const DEFAULT_MODE = 'publisher'; // vs 'creative'
 
-function getOptMode():string {
+
+const getOptMode = (): string|null => {
 	return DataStore.getValue('location', 'path')[2];
-}
+};
 
 const setOptMode = (mode: string) => {
 	if (mode === getOptMode()) return;
 	modifyPage(['greendash', 'recommendation', mode]);
-}
+};
 
 
 function NotLoggedIn({}) {
@@ -59,18 +58,12 @@ type ReactChildren = (string|JSX.Element|JSX.Element[]);
 
 type ModeLinkProps = {
 	mode: string;
-	onlyCurrent: boolean;
 	children: ReactChildren;
 };
 
 
-/** A link which switches the recommendation mode. TODO remove onlyCurrent */
-function ModeLink({mode, onlyCurrent, children}: ModeLinkProps): JSX.Element|null {
-	if (onlyCurrent) {
-		if (getOptMode() !== mode) return null;
-		return <div className="mode-link">{children}</div>
-	}
-
+/** A link which switches the recommendation mode. */
+function ModeLink({mode, children}: ModeLinkProps): JSX.Element {
 	return (
 		<a className={space('mode-link', (getOptMode() === mode) && 'active')} role="button" onClick={() => setOptMode(mode)}>
 			{children}
@@ -84,20 +77,22 @@ function ModeLink({mode, onlyCurrent, children}: ModeLinkProps): JSX.Element|nul
  * TODO remove onlyCurrent once release-ready
  * @param {boolean} [onlyCurrent] Only indicate the currently active mode, don't show switcher
  */
-function ModeSelect({onlyCurrent}: {onlyCurrent: boolean}): JSX.Element {
+function ModeSelect(): JSX.Element {
 	let mode = getOptMode();
 	useEffect(() => {
 		if (!mode) setOptMode(DEFAULT_MODE);
 	}, []);
 
+	if (Login.getUser().service === 'pseudo') return null;
+
 	return <div className="optimisation-mode-select">
-		<ModeLink mode="publisher" onlyCurrent={onlyCurrent}>Publisher Optimisations</ModeLink>
-		<ModeLink mode="creative" onlyCurrent={onlyCurrent}>Creative Optimisations</ModeLink>
+		<ModeLink mode="publisher">Publisher Optimisations</ModeLink>
+		<ModeLink mode="creative">Creative Optimisations</ModeLink>
 	</div>;
 }
 
 
-const GreenRecommendation = ({ baseFilters, ...props }: { baseFilters: BaseFilters }): JSX.Element => {
+function GreenRecommendation(): JSX.Element {
 	const [agencyIds, setAgencyIds] = useState<string[]>();
 	let agencyId = DataStore.getUrlValue('agency');
 	if (!agencyId && agencyIds?.length === 1) agencyId = agencyIds[0];
@@ -127,20 +122,18 @@ const GreenRecommendation = ({ baseFilters, ...props }: { baseFilters: BaseFilte
 	return (
 		<div className="green-subpage green-metrics">
 			<Container fluid>
-				{agencyIds ? (
-					<>
-						<GreenDashboardFilters pseudoUser={pseudoUser} />
-						<ModeSelect onlyCurrent={!showModeSelect} />
-						{(getOptMode() === 'creative') ? <GreenRecsCreative /> : <GreenRecsPublisher />}
-						{showModeSelect ? null : <CreativeRecsPlaceholder />}
-					</>
-				) : (
+				{agencyIds ? <>
+					<GreenDashboardFilters pseudoUser={pseudoUser} />
+					<ModeSelect />
+					{(getOptMode() === 'creative') ? <GreenRecsCreative /> : <GreenRecsPublisher />}
+					{showModeSelect ? null : <CreativeRecsPlaceholder />}
+				</> : (
 					<Misc.Loading text="Checking your access..." />
 				)}
 			</Container>
 		</div>
 	);
-};
+}
 
 
 export default GreenRecommendation;

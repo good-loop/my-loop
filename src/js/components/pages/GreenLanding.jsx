@@ -21,8 +21,12 @@ import ServerIO from '../../plumbing/ServerIO';
 import DataItemBadge from '../../base/components/DataItemBadge';
 import Login from '../../base/youagain';
 import printer from '../../base/utils/printer';
-import { getOffsetsByType } from './greendash/emissionscalcTs';
-
+import { getOffsetsByType, getCampaignsOffsetsByType } from './greendash/emissionscalcTs';
+import Advertiser from '../../base/data/Advertiser';
+import { getCarbon } from './greendash/emissionscalcTs';
+import { TONNES_THRESHOLD } from './greendash/dashUtils';
+import Agency from '../../base/data/Agency';
+import DevOnly from '../../base/components/DevOnly';
 
 // TODO Design! and Content!
 // Latest Layout Design: https://miro.com/app/board/o9J_lxO4FyI=/?moveToWidget=3458764516138790976&cot=14
@@ -32,50 +36,75 @@ import { getOffsetsByType } from './greendash/emissionscalcTs';
 const GreenLanding = ({ }) => {
 	// like CampaignPage, this would prefer to run by a campaign id -- which should be the Brand's master campaign
 	const path = DataStore.getValue("location", "path");
+	
 	const status = DataStore.getUrlValue("status") || DataStore.getUrlValue("gl.status") || KStatus.PUBLISHED;
-	let cid = path[1];
-	if (!cid) {
-		// fetch the master campaign for ...?
-		let pvItem = null;
-		let brandId = DataStore.getUrlValue('brand');
-		if (brandId) {
-			pvItem = getDataItem({ type: C.TYPES.Advertiser, id: brandId, status, swallow: true });
-		} else if (DataStore.getUrlValue('agency')) {
-			pvItem = getDataItem({ type: C.TYPES.Agency, id: DataStore.getUrlValue('agency'), status, swallow: true });
-		}
-		if (pvItem?.value) {
-			cid = pvItem.value.campaign;
-			if (!cid) {
-				return (<div className="GreenLandingPage widepage">
-					<div className="landing-splash bg-greenmedia-seagreen">
-						<img className="hummingbird" src="/img/green/hummingbird.png" />
-						<div className="splash-circle">
-							<Alert color="info">This brand does not have its overview page setup yet.
-								Please contact support@good-loop.com with the code: <code>{pvItem.value.id}</code></Alert>
-						</div>
-					</div>
-				</div>
-				);
-			}
-			// assert(cid, "No campaign for "+getType(pvItem.value)+" "+pvItem.value.id, pvItem.value);
-		}
-		if (!cid && !pvItem) {
-			cid = Campaign.TOTAL_IMPACT; // TODO not whilst loading; oh well
-		}
+	
+	const brandId = DataStore.getUrlValue('brand');
+	const agencyId = DataStore.getUrlValue('agency')
+	const defaultId = Campaign.TOTAL_IMPACT;
+
+	let itemId;
+	let type;
+	let pvCampaigns;
+	if(brandId) {
+		itemId = brandId;
+		type = C.TYPES.Advertiser;
+		pvCampaigns = Campaign.fetchForAdvertiser(itemId, KStatus.PUBLISHED);
 	}
+	else if(agencyId) {
+		itemId = agencyId;
+		type = C.TYPES.Agency;
+		pvCampaigns = Campaign.fetchForAgency(itemId, KStatus.PUBLISHED)
+	} else {
+		itemId = defaultId;
+		type = C.TYPES.Campaign;
+		pvCampaigns = Campaign.fetchForAdvertiser(itemId, KStatus.PUBLISHED);
+	}
+	let pvItem = getDataItem({type, id:itemId, status:KStatus.PUB_OR_DRAFT, swallow: true});
+
+	const end = new Date();
+	end.setHours(end.getHours(), 0, 0, 0); // avoid thrashing with an ever changing date
+	let period = {start:new Date(2000,1,1), end};
 
 	return <div className="GreenLandingPage widepage">
-		{cid? <GreenLanding2 cid={cid} status={status} /> : "TODO"}
+		<GreenLanding2 pvItem={pvItem} itemId={itemId} status={status} pvCampaigns={pvCampaigns} period={period} type={type}/>
 	</div>;
 };
 
+const GreenLanding2 = ({pvItem, itemId, status, period, pvCampaigns, type}) => {
 
-const GreenLanding2 = ({cid, status}) => {
-	const end = new Date();
-	end.setHours(end.getHours(), 0, 0, 0); // avoid thrashing with an ever changing date
-	let period = {start:new Date(2022,1,1), end};
-	const pvCampaign = getDataItem({ type: C.TYPES.Campaign, id: cid, status });
-	const isTotal = cid === Campaign.TOTAL_IMPACT;
+	if (!pvCampaigns.value || !pvItem.value) return <Misc.Loading text="Fetching campaigns..."/>
+	
+	const campaigns = List.hits(pvCampaigns.value);
+	// getCarbon over all campaigns returns a different value from getOffsetsByType, while this is the case just use getCarbon since it's far
+	// faster + is what greendash uses normally.
+	const pvChartData = getCarbon({
+		start: "1970-01-01T00:00:00.000Z",
+		end: "3000-01-01T00:00:00.000Z",
+		// campaigns to 'campaign:id#1 OR campaign: id#2 OR ...'
+		q:campaigns.reduce((query, curCamp, index) => {
+			query += curCamp.id;;
+			if(index !== campaigns.length - 1) query += " OR campaign:";
+			return query;
+		}, "campaign:"),
+		breakdown: [
+			// 'total',
+			'adid{"countco2":"sum"}',
+			// 'os{"emissions":"sum"}',
+			// 'domain{"emissions":"sum"}',
+			// 'campaign{"emissions":"sum"}', do campaign breakdowns later with more security logic
+		],
+		name: 'lotsa-chartdata',
+	});
+	if(!pvChartData.value) return <Misc.Loading text="Fetching carbon data..."/>
+	let co2ChartData = pvChartData.value.by_adid.buckets 
+	let totalCo2 = co2ChartData.reduce((sum, cur) => {
+		return sum + cur.co2
+	}, 0)
+
+	// agencies are currently unfeasible to get the offsets for. The 1-N relationships of Agency -> Brand -> Campaign -> Impacts quickly explodes and takes far too long to return.
+	// HACK: the logic is all there for this to work when the offsets can be found, so until then if it's an agency we just hide the values
+	let offsets4type = (type === C.TYPES.Agency) ? getCampaignsOffsetsByType({campaigns: [campaigns[0]], status, period}) : getCampaignsOffsetsByType({ campaigns, status, period});
 
 	// Green Ad Tags carry t=pixel d=green campaign=X adid=Y
 	// Pixel etc views
@@ -87,28 +116,21 @@ const GreenLanding2 = ({cid, status}) => {
 	// let pvData = getDataLogData({q,dataspace:"green",start:"2021-10-01",breakdowns:[]});
 
 	// TODO Fetch dntnblock info
-
-	if (!pvCampaign.value) {
-		return <Misc.Loading />
-	}
-	const campaign = pvCampaign.value;		
-	let offsets4type = getOffsetsByType({ campaign, status, period});
 	let isLoading = offsets4type.isLoading;
 	let pvAllCampaigns = offsets4type.pvAllCampaigns;
 	// load the charities
 	const carbonOffsets = offsets4type.carbon || [];
-	let co2 = offsets4type.carbonTotal;
+	let co2 = totalCo2 || offsets4type.carbonTotal;
 	const carbonCharityIds = uniq(carbonOffsets.map(offset => offset?.charity));
 	let carbonCharities = carbonCharityIds.map(cid => getDataItem({ type: "NGO", id: cid, status: KStatus.PUBLISHED }).value).filter(x => x);
-
 	let trees = offsets4type.treesTotal;
 
 	// Branding
 	// NB: copy pasta + edits from CampaignPage.jsx
-	let { type, id } = Campaign.masterFor(campaign);
-	const pvBrandItem = (type && id) ? getDataItem({ type, id, status: KStatus.PUB_OR_DRAFT }) : {};
+	const pvBrandItem = (type && itemId) ? getDataItem({ type, id:itemId, status: KStatus.PUB_OR_DRAFT }) : {};
+	if(!pvBrandItem.resolved) return <Misc.Loading text="Fetching brand information..."/>
 	let brandItem = pvBrandItem.value;
-	let branding = Object.assign({}, campaign.branding, brandItem ? brandItem.branding : {});
+	let branding = brandItem.branding;
 	let name = brandItem ? brandItem.name : campaign.name;
 	// set NavBar brand
 	if (brandItem) {
@@ -124,34 +146,34 @@ const GreenLanding2 = ({cid, status}) => {
 		window.scrollTo({ top: targetY, behavior: 'smooth' });
 	};
 
-	let pvShare = DataStore.fetch(['misc', 'share', campaign.id], () => Login.checkShare("Campaign:" + campaign.id));
-	let pvShare2 = DataStore.fetch(['misc', 'share', campaign.id], () => Login.checkShare("Advertiser:" + campaign.vertiser));
-	let isShared = (pvShare.value && pvShare.value.read) || (pvShare2.value && pvShare2.value.read)
-	console.warn("share", pvShare, pvShare2);
-
+	
+	let pvShare = DataStore.fetch(['misc', 'share', itemId], () => Login.checkShare((type === C.TYPES.Advertiser ? "Advertiser:" : "Agency:")+ itemId));
+	let isShared = (pvShare.value && pvShare.value.read) 
+	console.warn("share", pvShare);
+	
 	return (<>
 		<div className="landing-splash bg-greenmedia-seagreen">
 			<img className="hummingbird" src="/img/green/hummingbird.png" />
 			<div className="splash-circle">
-				<div className="branding">{branding.logo ? <img src={branding.logo} alt="brand logo" /> : name}</div>
+				<div className="branding">{branding?.logo ? <img src={branding.logo} alt="brand logo" /> : name}</div>
 				{!!co2 && <><div className="big-number tonnes"><Mass kg={co2} /></div> carbon offset</>}
-				{!!trees && <><div className="big-number trees">{printer.prettyInt(trees)}</div> trees</>}
-				{isLoading && <Misc.Loading />}
+				{type !== C.TYPES.Agency && <DevOnly>{!!co2 && <><div className="big-number tonnes"><Mass kg={offsets4type.carbonTotal} /></div> offsets4type carbon</>}</DevOnly>}
+				{!!trees && <DevOnly><><div className="big-number trees">{printer.prettyInt(trees)}</div> trees</></DevOnly>}
+				{isLoading && <Misc.Loading text="Fetching data..."/>}
 				<div className="carbon-neutral-container">
 					with <img className="carbon-neutral-logo" src="/img/green/gl-carbon-neutral.svg" />
 				</div>
 				<a className="btn splash-explore" onClick={scrollToMap}>EXPLORE OUR IMPACT</a>
-				{(isShared || isTester()) &&
-					<a href={"/greendash/metrics?period=all&campaign=" + encURI(campaign.id)} className="btn splash-explore mt-2">📊 REPORT DASHBOARD</a>}
-				{isTester() && pvAllCampaigns.value && // handy links for GL staff
-					<div>{List.hits(pvAllCampaigns.value).map(campaign =>
-						<LinkOut key={campaign.id} href={ServerIO.PORTAL_ENDPOINT + '/#campaign/' + encURI(campaign.id)}>
-							<Badge className="mr-2">{campaign.name || campaign.id}</Badge>
-						</LinkOut>
-					)}</div>
-				}
+				{(isShared || isTester()) && <a href={`/greendash/metrics/${type.toLowerCase()}/?period=all&${type.toLowerCase()}=` + encURI(itemId)} className="btn splash-explore mt-2">📊 REPORT DASHBOARD</a>}
 			</div>
 		</div>
+		{isTester() && pvAllCampaigns.value && // handy links for GL staff
+			<div>{campaigns.map(campaign =>
+				<LinkOut key={campaign.id} href={ServerIO.PORTAL_ENDPOINT + '/#campaign/' + encURI(campaign.id)}>
+					<Badge className="mr-2">{campaign.name || campaign.id}</Badge>
+				</LinkOut>
+			)}</div>
+		}
 		<div className="mission py-4">
 			<Container>
 				<h2 className="mb-4">HELPING BRANDS GO GREEN WITH GOOD-LOOP</h2>

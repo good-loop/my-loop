@@ -121,7 +121,6 @@ const ImpactPage = () => {
 		{impactSettings?.customHtml && <HTML>{impactSettings.customHtml}</HTML>}
 		<div className="navbars-overlay">
 			<animated.div className="impact-navbar-flow-overlay" style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}} />
-			<ImpactLoadingScreen pvBaseObj={pvBaseObjects} reload={reload} />
 			<ImpactFilterOptions size="thin" {...navProps} /> {/*mobile horizontal filters topbar NB:one of thin|wide gets hidden ??Could we decide here and avoid rendering the html twice?? */}
 			<NavBars active={page} {...navProps} />
 			<ImpactFilterOptions size="wide" {...navProps} /> {/*widescreen vertical filters topbar NB:one of thin|wide gets hidden*/}

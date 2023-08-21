@@ -67,7 +67,7 @@ export const dataColours = (series, maxColour = dfltMaxColour, minColour = dfltM
 
 /**
  * 
- * @returns {{filterType, filterId:string}}
+ * @returns {{filterType:C.TYPES, filterId:string}}
  */
 export const getFilterTypeId = () => {
 	// Impact Hub version e.g. /brand/foo

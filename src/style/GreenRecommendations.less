@@ -183,20 +183,52 @@
 	}
 }
 
+// TODO Fix incorrect use of ".green-metrics" for other subpages so this can be folded into the block below
+#greendash .green-metrics .creative-recommendations { // extra-specific selector to override style from GreenMetrics.less
+	.loader-box {
+		flex-direction: row;
+		.spinner-box {
+			width: 2rem;
+			height: 2rem;
+			margin-right: 0.5rem;
+			flex-shrink: 0; // don't squeeze to non-square!
+		}
+	}
+}
+
 #greendash .creative-recommendations {
 	.creative-list {
-		background-color: @gat-palebg;
+		// background-color: @gat-palebg;
 		.creative-item {
-			background-color: @gat-palerbg;
-			.card-body {
-				display: flex;
-				justify-content: space-between;
+			background-color: @gat-palebg;
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			text-decoration: none; // <a> but no underline on label
+			padding: 0.5rem;
+
+			.brand-logo {
+				max-height: 3rem;
+				width: 4rem;
+				object-fit: contain;
+				margin-right: 1rem;
+			}
+
+			.description {
+				flex-grow: 1;
+				.tag-name {
+					font-weight: 600;
+				}
+				.brand-name, .tag-name {
+					overflow-wrap: break-word; // force breaking VERY_LONG_UNDERSCORE_ONLY_TAG_NAMES
+				}
 			}
 
 			.selected-indicator {
 				display: inline-block;
-				width: 2em;
-				height: 2em;
+				width: 1.5rem;
+				height: 1.5rem;
 				border: 1px solid silver;
 				border-radius: 50%;
 				flex-shrink: 0; // stay round!
@@ -212,7 +244,7 @@
 		}
 	}
 
-	.view-creative {
+	.creative-list, .view-creative {
 		.card-header {
 			font-weight: 600;
 		}
@@ -221,6 +253,9 @@
 			font-size: 125%;
 			text-align: center;
 		}
+	}
+
+	.view-creative {
 		.expand-button {
 			font-size: 175%;
 			line-height: 1;
@@ -272,6 +307,9 @@
 				background-color: @gat-light-green;
 				color: white;
 			}
+			.no-rec .card-header {
+				background-color: silver; // "No reduction" cards should be muted
+			}
 			.reduction {
 				text-align: center;
 				color: @gat-light-green;
@@ -281,13 +319,182 @@
 					font-size: 200%;
 				}
 			}
+			.optimisation-options {
+				.control-webp {
+					flex-basis: 30%;
+				}
+				.control-retina {
+					flex-basis: 70%;
+					display: flex;
+					.form-check {
+						display: inline-block;
+						margin-left: 0.5em;
+					}
+				}
+			}
 		}
 
 		// One optimisation recommendation subcard
 		.opt-rec {
+			// allow transparency-exposing background but only within image extents = image needs centring flex container
+			.img-preview-container {
+				display: flex;
+				justify-content: center;
+			}
 			.img-preview {
 				object-fit: contain;
 				max-height: 10rem; // Don't let tall images stretch layout
+				max-width: 100%;
+				// checkerboard background for transparency
+				background: repeating-conic-gradient(#777 0% 25%, #ddd 0% 50%) 50%/12px 12px;
+			}
+			.font-preview {
+				font-size: 1.25rem;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				overflow: hidden;
+			}
+			// not-quite-table for comparing original and optimised file size
+			.comparison-row {
+				display: flex;
+				justify-content: space-between;
+			}
+			.improvement {
+				text-align: right; // place under the sizes
+				.percent {
+					font-weight: 600;
+				}
+			}
+			// compact "Details" button to show modal
+			.details-btn {
+				padding: 0.25em 0.75em;
+				text-transform: none;
+			}
+		}
+	}
+}
+
+// Extra details - image comparison, extra options etc
+.recommendation-details-modal {
+	font-size: 125%;
+	&.image-details {
+		max-width: 60vw;
+	}
+
+	.img-comparison-container {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		min-height: 10rem; // make room so very smallest images aren't obscured by controls/indicators
+		.version-indicator {
+			position: absolute;
+			top: 0.5rem;
+			width: 100%;
+			text-align: center;
+			color: white;
+			font-weight: 600;
+			font-size: 125%;
+			text-shadow: 0 0 3px black; // Keep visible against light/transparent images
+			z-index: 2; // keep in front of preview images
+		}
+		.preview-toggle {
+			position: absolute;
+			bottom: 0.5rem;
+			width: 100%;
+			text-align: center;
+			z-index: 2; // keep in front of preview images
+		}
+	}
+
+	.img-comparison {
+		position: relative;
+		img {
+			width: 100%;
+			max-height: 60vh;
+			// checkerboard background for transparency
+			background: repeating-conic-gradient(#777 0% 25%, #ddd 0% 50%) 50%/12px 12px;
+		}
+		// Original should be out-of-flow & can have its aspect adjusted minutely to match optimised version pixel-for-pixel
+		// ...because we want the optimised version to look as good as possible & to avoid a 1px rounding-error jiggle
+		// when switching between original and optimised
+		.original {
+			z-index: 0;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: fill;
+		}
+		.optimised {
+			position: relative;
+			z-index: 1;
+			object-fit: contain;
+		}
+	}
+
+	.font-preview {
+		font-size: 200%;
+		// TODO Rework font optimisation to be aware of families & details modal to separate preview and filenames
+		// (so the preview can be something that doesn't need to wrap & be shown in entirety)
+		overflow-wrap: break-word;
+	}
+	.character-set {
+		font-family: monospace;
+		text-align: center;
+		border: 1px solid #ddd;
+		display: inline-block;
+		.char {
+			padding: 0 0.1em;
+			&.unused {
+				color: #aaa;
+				position: relative;
+				&::after {
+					content: '\\';
+					padding: 0 0.1em;
+					color: #a00;
+					position: absolute;
+					top: 0;
+					left: 0;
+				}
+			}
+		}
+	}
+}
+
+
+.type-breakdown-modal {
+	font-size: 150%;
+	.type-breakdown {
+		display: flex; // allow bar and table side by side
+		// Vertical bar
+		.breakdown-bar {
+			position: relative; // size ref for segments
+			display: flex;
+			flex-direction: column;
+			width: 3rem;
+			border: 1px solid black;
+
+			.bar-segment {
+				width: 100%;
+				display: block;
+				margin: 0;
+				min-height: 2px;
+				&:not(:last-child) {
+					margin-bottom: 1px;
+				}
+			}
+		}
+		// Table beside bar
+		.breakdown-table {
+			width: calc(100% - 3.5rem); // 3em occupied by bar to left + margin
+			margin-left: 0.5rem;
+			.breakdown-key {
+				position: relative;
+				display: block;
+				width: 2em;
+				height: 1.5em;
 			}
 		}
 	}

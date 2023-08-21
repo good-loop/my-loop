@@ -89,7 +89,7 @@
 		&.tags-icon {
 			background-image: url("/img/green/dashboard/tags-button.svg");
 		}
-		&.optimisation-icon {
+		&.recommendation-icon {
 			background-image: url("/img/green/dashboard/optim-button.svg");
 		}
 		&.impact-icon {
@@ -210,7 +210,6 @@
 	font-family: "Montserrat";
 	color: white;
 	position: relative; // See .landing-behind-footer below - overall page div needs to be a position reference
-
 	.landing-splash {
 		background-image: url("/img/green/dashboard-background.svg");
 		background-position: bottom;
@@ -248,9 +247,11 @@
 			border-radius: 2em;
 			color: @gl-dark-turquoise;
 			background-color: white;
+			max-width: 65%;
 			img {
 				position: relative;
 				height: 3em;
+				width: 100%;
 			}
 		}
 		.big-number {
@@ -275,6 +276,10 @@
 	.mission {
 		background-color: @greenmedia-seagreen;
 		text-align: center;
+	}
+
+	.loader-box {
+		background-color: #52727a; // same as top of footer curve
 	}
 
 	// The world map
