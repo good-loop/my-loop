@@ -10,6 +10,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 // Needed to check hostname & try to load local config file
 const os = require('os');
 const fs = require('fs');
+// Needed IF you want to run git commands & get current branch
+// const { execSync } = require('child_process');
 
 const webDir = process.env.OUTPUT_WEB_DIR || 'web';
 
@@ -76,11 +78,13 @@ const baseConfig = {
 						// loose: true specified to silence warnings about mismatch with preset-env loose setting
 						['@babel/plugin-proposal-class-properties', { loose: true }],
 						['@babel/plugin-proposal-private-methods', { loose: true }],
-						['@babel/plugin-proposal-private-property-in-object', { loose: true }]
+						['@babel/plugin-proposal-private-property-in-object', { loose: true }],
 					]
 				}
 			}, {
 				test: /\.less$/,
+				// If we use css-loader with default options it will try to inline any url('/img/whatever.png') rules it finds.
+				// We don't want this (plus the URLs don't resolve correctly, throwing an error on compile) so {url: false} disables it.
 				use: [MiniCssExtractPlugin.loader, {loader: 'css-loader', options: {url: false}}, 'less-loader'],
 			}
 		],
@@ -88,14 +92,14 @@ const baseConfig = {
 	plugins: [
 		new MiniCssExtractPlugin({ filename: 'style/main.css' }),
 		new webpack.DefinePlugin({
-			'process.env': { SERVERIO_OVERRIDES }
+			'process.env': { SERVERIO_OVERRIDES },
 		}),
 	]
 };
 
 
 /**
-* Copy and fill out the baseConfig object with
+* Copy and fill out the baseConfig object with:
 * @param {!string} filename Set the bundle output.filename
 * @param {?string} mode "production" or "development", determines if JS will be minified
 * @param {?string} entry (unusual) Compile a different entry-point file instead of app.jsx
