@@ -4,6 +4,7 @@ ssh winterwell@baker.good-loop.com bash <<EOF
 BUILD_TYPE="CI" \
 PROJECT_NAME="my-loop" \
 NAME_OF_SERVICE="my-loop" \
+BOB_BUILD_PROJECT_NAME="BuildMyLoop" \
 GIT_REPO_URL="github.com:good-loop/my-loop" \
 PROJECT_ROOT_ON_SERVER="/home/winterwell/my-loop" \
 PROJECT_USES_BOB="yes" \
