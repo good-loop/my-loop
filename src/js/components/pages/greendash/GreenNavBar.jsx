@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Collapse, Nav, Navbar, NavbarToggler, NavItem as BSNavItem } from 'reactstrap';
+import { Collapse, Nav, Navbar, NavbarToggler, NavItem as BSNavItem, Tag } from 'reactstrap';
 import AccountMenu from '../../../base/components/AccountMenu';
 import KStatus from '../../../base/data/KStatus';
 import { getDataItem } from '../../../base/plumbing/Crud';
@@ -7,7 +7,7 @@ import Roles from '../../../base/Roles';
 import DataStore from '../../../base/plumbing/DataStore';
 import Login from '../../../base/youagain';
 
-import { encURI, isMobile, space, toTitleCase } from '../../../base/utils/miscutils';
+import { encURI, isMobile, setUrlParameter, space, toTitleCase } from '../../../base/utils/miscutils';
 import C, { urlParamForType } from '../../../C';
 import ServerIO from '../../../plumbing/ServerIO';
 
@@ -69,6 +69,7 @@ const GreenNavBar = ({active}) => {
 	let campaignId = DataStore.getUrlValue('campaign');
 	const brandId = DataStore.getUrlValue('brand');	
 	const agencyId = DataStore.getUrlValue('agency');
+	const tagId = DataStore.getUrlValue("tag");
 	if ( ! campaignId && (brandId || agencyId)) {
 		const id = brandId || agencyId;
 		const type = brandId? C.TYPES.Advertiser : C.TYPES.Agency;
@@ -77,10 +78,39 @@ const GreenNavBar = ({active}) => {
 			campaignId = pvThing.value.campaign;
 		}
 	}
-	let pvCampaign = campaignId? getDataItem({type:C.TYPES.Campaign, id:campaignId,status:KStatus.PUB_OR_DRAFT, swallow:true}) : {};
-	// impact url directs to agency if available, then available brand, then just default 
-	let impactUrl = agencyId ? ('/green/agency='+agencyId) : (brandId ? '/green?brand='+brandId : '/green');
-	if(!(agencyId || brandId) && pvCampaign.value) impactUrl = '/green?brand='+pvCampaign.value.vertiser;
+
+	let impactUrl = "/green";
+	switch(DataStore.getUrlValue("ft")) {
+		case "Agency":
+			if(agencyId) impactUrl += `?agency=${agencyId}`
+			break;
+		case "Advertiser":
+			if(brandId) impactUrl += `?brand=${brandId}`			
+			break;
+		case "GreenTag":
+			// tags should direct to agencies with fallback being brands
+			if(!tagId) break;
+			let pvTag = tagId? getDataItem({type:C.TYPES.GreenTag, id:tagId, status:KStatus.PUB_OR_DRAFT, swallow:true}) : {};
+			if(!pvTag.resolved) break;
+			let tag = pvTag.value;
+
+			if(!(tag.agencyId || tag.vertiser)) break;
+			impactUrl += tag.agencyId ? `?agency=${tag.agencyId}` : `?brand=${tag.vertiser}`	
+			break;
+		case "Campaign":
+			if(!campaignId) break;
+			let pvCampaign = getDataItem({type:C.TYPES.Campaign, id:campaignId,status:KStatus.PUB_OR_DRAFT, swallow:true});
+			if(!pvCampaign.resolved) break;
+			let campaign = pvCampaign.value;
+			console.log()
+			impactUrl += campaign.vertiser ? `?brand=${campaign.vertiser}` : "";
+			break;
+		default: 
+			// filter type has been chosen but brand/agency/... has not been chosen yet
+			break;
+	}
+	console.log(impactUrl);
+	
 	let metricsUrl = modifyPage(["greendash", "metrics"], null, true);
 	let recUrl = modifyPage(["greendash", "recommendation"], null, true);
 
