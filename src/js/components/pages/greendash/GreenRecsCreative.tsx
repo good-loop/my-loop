@@ -125,7 +125,7 @@ function CreativeSizeBreakdown({ manifest }) {
 	const toggle = () => setOpen(a => !a);
 
 	return <>
-		{manifest || true ? <Button onClick={toggle}>Show Data Breakdown</Button> : 'Analyse to view data breakdown'}
+		{manifest ? <Button onClick={toggle}>Show Data Breakdown</Button> : 'Analyse to view data breakdown'}
 		<Modal isOpen={open} className="type-breakdown-modal" toggle={toggle}>
 			<ModalHeader toggle={toggle}>Breakdown of Creative Data</ModalHeader>
 			<ModalBody>
