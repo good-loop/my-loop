@@ -102,14 +102,12 @@ const GreenNavBar = ({active}) => {
 			let pvCampaign = getDataItem({type:C.TYPES.Campaign, id:campaignId,status:KStatus.PUB_OR_DRAFT, swallow:true});
 			if(!pvCampaign.resolved) break;
 			let campaign = pvCampaign.value;
-			console.log()
 			impactUrl += campaign.vertiser ? `?brand=${campaign.vertiser}` : "";
 			break;
 		default: 
 			// filter type has been chosen but brand/agency/... has not been chosen yet
 			break;
 	}
-	console.log(impactUrl);
 	
 	let metricsUrl = modifyPage(["greendash", "metrics"], null, true);
 	let recUrl = modifyPage(["greendash", "recommendation"], null, true);
