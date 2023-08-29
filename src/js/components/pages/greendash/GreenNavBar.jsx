@@ -102,6 +102,7 @@ const GreenNavBar = ({active}) => {
 			let pvCampaign = getDataItem({type:C.TYPES.Campaign, id:campaignId,status:KStatus.PUB_OR_DRAFT, swallow:true});
 			if(!pvCampaign.resolved) break;
 			let campaign = pvCampaign.value;
+			
 			impactUrl += campaign.vertiser ? `?brand=${campaign.vertiser}` : "";
 			break;
 		default: 
