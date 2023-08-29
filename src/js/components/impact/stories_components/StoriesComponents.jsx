@@ -110,8 +110,8 @@ export const CampaignImpact = ({i, logo, charity, impactDebit }) => {
 						<PropControl type="textarea" label="Testimonial Source" prop="testimonialPerson" path={storiesPath} help="Name of whoever said the testimonial" />
 						</>}
 					</div>
+					<SavePublishDeleteEtc position="relative" oneButton type={C.TYPES.ImpactDebit} id={impactDebit.id} sendDiff />
 				</Col>
-				<SavePublishDeleteEtc type={C.TYPES.ImpactDebit} id={impactDebit.id} sendDiff />
 			</ModalBody>
 		</Modal>
 	); // ./devModal
