@@ -229,6 +229,8 @@ const recOptionsString = () => JSON.stringify(DataStore.getValue(RECS_OPTIONS_PA
 
 
 function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
+
+
 	// Hard-set initial values for options and force an update
 	useEffect(() => DataStore.setValue(RECS_OPTIONS_PATH, { noWebp: false, retinaMultiplier: '1' }), []);
 
@@ -260,6 +262,25 @@ function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
 	const badSiteName = tag.creativeURL? badSite(tag.creativeURL) : (tag.creativeHtml? null : "creative url unset");
 	const canAnalyse = !badSiteName || tag.creativeHtml || Roles.isTester();
 
+	// We have the manifest, but also want loading status (hack in CreativeView means we can't just pass pvManifest)
+	const pvManifest = DataStore.fetch(savedManifestPath({tag}));
+
+	let content;
+	if (pvManifest.resolved) {
+		content = <>
+			{canAnalyse && <AnalyseTagPrompt tag={tag} manifest={manifest} />}
+			{canAnalyse && recommendations && <>
+				<Reduction manifest={manifest} recommendations={recommendations} />
+				<CreativeOptimisationControls />
+				<Container className="recs-list">
+					<Row>{recCards}</Row>
+				</Container>
+			</>}
+		</>;
+	} else {
+		content = <Misc.Loading text="Checking for previous analysis report..." />;
+	}
+
 	return (
 		<GLCard noPadding noMargin className="creative-opt-overview-card">
 			<CardHeader>Optimisation Recommendations</CardHeader>
@@ -272,14 +293,7 @@ function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
 						' cannot currently be analysed.'
 					)}
 				</div>}
-				{canAnalyse && <AnalyseTagPrompt tag={tag} manifest={manifest} />}
-				{canAnalyse && recommendations && <>
-					<Reduction manifest={manifest} recommendations={recommendations} />
-					<CreativeOptimisationControls />
-					<Container className="recs-list">
-						<Row>{recCards}</Row>
-					</Container>
-				</>}
+				{content}
 			</CardBody>
 			{!isPseudo() && <CardFooter>
 				<ShareWidget item={tag} hasButton noEmails hasLink>Share this page</ShareWidget>
@@ -349,8 +363,6 @@ function CreativeView({ showList, setShowList }: {showList: boolean, setShowList
 	const pvManifest = DataStore.fetch(savedManifestPath({tag}), () => (
 		ServerIO.load(storedManifestForTag(tag), { swallow: true })
 	));
-
-	if (!pvManifest.resolved) return <Misc.Loading text="Checking for saved creative manifest..." />;
 
 	// Minor hack: do a direct getValue() because AnalysePrompt overwrites the address, but not the fetch PV
 	// MeasureServlet response is an array - but should only have one PageManifest in this context
