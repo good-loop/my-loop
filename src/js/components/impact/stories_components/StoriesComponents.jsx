@@ -732,7 +732,7 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 										</div>
 										<div style={{ padding: "10% 5%" }}>
 											<p className='text light-bold'>{isOffset ? "Credits" : "Impact"}</p>
-											<p className='color-gl-red'>{Impact.str(impact)}</p>
+											<p className='color-gl-red'>{Impact.str(impact) || "N/A"}</p>
 										</div>
 									</Col>
 									<Col style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
@@ -789,7 +789,7 @@ const DonationModelInfo = ({campaign}) => {
 	// {dntnModel.input==="CPA" && <span>One donation {dntnModel.perInput && <span>of <Misc.Money amount={dntnModel.perInput}/></span>} per user is made when the user engages.</span>}
 	// {dntnModel.fraction? printer.prettyNumber(100*dntnModel.fraction, 2)+"%" : "A fraction"} of the advertising cost is donated. Most of the rest goes to pay the publisher and related companies. Good-Loop and the advertising exchange make a small commission. The donations depend on viewers seeing the adverts.
 	return <>
-		{campaign.dntnModel?.perInput && <span><Misc.Money amount={campaign.dntnModel.perInput} /> per </span>}
+		{campaign.dntnModel?.perInput && <span><Misc.Money amount={campaign.dntnModel.perInput} /> per </span> || "N/A"}
 		{/* {campaign.maxDntn && <span>Upto a limit of: <Misc.Money amount={campaign.maxDntn} /></span>} done in Details */}
 	</>
 }
