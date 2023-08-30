@@ -327,7 +327,7 @@ function AnalyseTagPrompt({ tag, manifest }): JSX.Element {
 	if (manifest) {
 		return <h5 className="text-center pull-right">
 			{(!manifest.timestamp) ? <>Previously analysed.</> : (
-				<>Last analysed <Misc.RelativeDate date={new Date(manifest.timestamp)} />.</>
+				<>Last analysed <Misc.RelativeDate date={Math.min(new Date().getTime(), manifest.timestamp)} />.</>
 			)}<br/>
 			<Button className="my-2" onClick={doIt}>Re-Analyse</Button>
 		</h5>;
