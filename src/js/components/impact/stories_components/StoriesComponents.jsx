@@ -725,13 +725,13 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 									</Col>
 									<Col style={{ borderRight: "solid 1px lightgray", padding: 0 }}>
 										<div style={{ borderBottom: "solid 1px lightgray", padding: "0 5% 10%" }}>
-											<p className='text light-bold'>Breakdown</p>
+											<p className='text light-bold'>{campaign.dntnModel?.perInput && "Breakdown"}</p>
 											<div className='color-gl-red'>
 												<DonationModelInfo campaign={campaign} />
 											</div>
 										</div>
 										<div style={{ padding: "10% 5%" }}>
-											<p className='text light-bold'>{isOffset ? "Credits" : "Impact"}</p>
+											<p className='text light-bold'>{impact? (isOffset ? "Credits" : "Impact") : null}</p>
 											<p className='color-gl-red'>{Impact.str(impact)}</p>
 										</div>
 									</Col>
