@@ -15,6 +15,7 @@ public class MyLoopMain extends AMain<BasicSiteConfig> {
 
 	public MyLoopMain() {
 		super("myloop", BasicSiteConfig.class);
+		localDatalog = false;
 	}
 	
 	public static void main(String[] args) {

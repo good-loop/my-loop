@@ -172,9 +172,10 @@ const TimeSeriesCard = ({ period, data: timeTable, per1000, noData }) => {
 			data.push(kg.co2);
 		});
 
+		const nonZeroDays = data.filter(num => num !== 0);
 		let totalCO2 = data.reduce((acc, d) => acc + d, 0);
 		let maxCO2 = Math.max(...data);
-		let avgCO2 = totalCO2 / labels.length;
+		let avgCO2 = totalCO2 / nonZeroDays.length;
 
 		setAggCO2({ avg: avgCO2, max: maxCO2, total: totalCO2 });
 

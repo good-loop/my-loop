@@ -110,8 +110,8 @@ export const CampaignImpact = ({i, logo, charity, impactDebit }) => {
 						<PropControl type="textarea" label="Testimonial Source" prop="testimonialPerson" path={storiesPath} help="Name of whoever said the testimonial" />
 						</>}
 					</div>
+					<SavePublishDeleteEtc position="relative" oneButton type={C.TYPES.ImpactDebit} id={impactDebit.id} sendDiff />
 				</Col>
-				<SavePublishDeleteEtc type={C.TYPES.ImpactDebit} id={impactDebit.id} sendDiff />
 			</ModalBody>
 		</Modal>
 	); // ./devModal
@@ -397,9 +397,7 @@ function findCharity(cid, charities) {
  * @param {Array<NGO>} charities
  * @returns {React.ReactElement} 
  */
-export const DonationsCard = ({ campaign, subCampaigns, brand, impactDebits, charities }) => {
-	console.log("DonationsCard", "campaign", campaign, "subCampaigns", subCampaigns);
-	// ?? do we have something in date-utils for this??
+export const DonationsCard = ({ campaign, subCampaigns, brand, impactDebits, charities }) => {	// ?? do we have something in date-utils for this??
 	const getDate = (dateStr) => {
 		let tempDate = dateStr.substr(0, dateStr.split("").findIndex((el) => el === "T")).split("-") // parse date 
 		tempDate[1] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][parseInt(tempDate[1]) - 1]
@@ -452,7 +450,7 @@ function DonationCard({ debit, brand, campaign, charityCounter, charities }) {
 	const charity = findCharity(charId, charities);
 	if (!charity) {
 		console.warn("(skip) No charity for " + charId, debit, charities);
-		return <div>No Charity for {charId}</div>;
+		return <DevOnly><div>No Charity for {charId}</div></DevOnly>;
 	}
 	const imgList = NGO.images(charity) || [""]
 
@@ -727,13 +725,13 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 									</Col>
 									<Col style={{ borderRight: "solid 1px lightgray", padding: 0 }}>
 										<div style={{ borderBottom: "solid 1px lightgray", padding: "0 5% 10%" }}>
-											<p className='text light-bold'>Breakdown</p>
+											<p className='text light-bold'>{campaign.dntnModel?.perInput && "Breakdown"}</p>
 											<div className='color-gl-red'>
 												<DonationModelInfo campaign={campaign} />
 											</div>
 										</div>
 										<div style={{ padding: "10% 5%" }}>
-											<p className='text light-bold'>{isOffset ? "Credits" : "Impact"}</p>
+											<p className='text light-bold'>{impact? (isOffset ? "Credits" : "Impact") : null}</p>
 											<p className='color-gl-red'>{Impact.str(impact)}</p>
 										</div>
 									</Col>
@@ -761,16 +759,18 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 								</Col>
 							</div>
 						</div>
-
-						{donationLinks.length && <div>
-							<p className='text offset-header'>LINKS</p>
-							<div id="offset-links">
-								<Row className="offset-content" style={{ margin: 0, placeContent: 'space-around' }}>
-									{donationLinks}
-								</Row>
-							</div>
-						</div>}
-
+						<DevOnly>
+						{donationLinks.length && 
+							<div>
+								<TODO>Where do we store these / do these exist yet?</TODO>
+								<p className='text offset-header'>LINKS</p>
+								<div id="offset-links">
+									<Row className="offset-content" style={{ margin: 0, placeContent: 'space-around' }}>
+										{donationLinks}
+									</Row>
+								</div>
+							</div>}
+						</DevOnly>
 						<div>
 							<p className='text offset-header'>DETAILS</p>
 							<Row className="offset-content" style={{ margin: 0, placeContent: 'space-around' }}>

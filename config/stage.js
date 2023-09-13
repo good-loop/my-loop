@@ -1,16 +1,9 @@
-// Configuration for portal on `gravitas` (RM dev laptop)
+// Front-end configuration for `stage` (staging server)
 
-// Change to "local", "test" or "" to switch all endpoints together
-const cluster = 
-	'stage';
-	// 'local';
-	// ''; // if you want production!
+const cluster = 'stage';
+const protocol = 'https';
 
-const protocol = (cluster === 'local') ? 'http' : 'https';
-
-module.exports = {
-	ServerIOOverrides: {
-		GREENCALC_ENDPOINT: `https://stageportal.good-loop.com/greencalc?server=production`,
-        PROFILER_ENDPOINT: 'https://stageprofiler.good-loop.com'
-	}
+export const ServerIOOverrides = {
+	GREENCALC_ENDPOINT: `${protocol}://${cluster}portal.good-loop.com/greencalc?server=production`,
+	PROFILER_ENDPOINT: `${protocol}://${cluster}profiler.good-loop.com`
 };

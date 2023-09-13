@@ -10,17 +10,24 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 // Needed to check hostname & try to load local config file
 const os = require('os');
 const fs = require('fs');
+// Uncomment if this project needs to run git commands - e.g. to get current branch
+// const { execSync } = require('child_process');
+
 
 const webDir = process.env.OUTPUT_WEB_DIR || 'web';
 
-// Check for file "config/$HOSTNAME.js" and look for ServerIO overrides in it
-let SERVERIO_OVERRIDES = JSON.stringify({});
-const configFile = './config/' + os.hostname() + '.js';
-if (fs.existsSync(configFile)) {
-	/* eslint-disable-next-line global-require, import/no-dynamic-require */
-	let hostConfig = require(configFile);
-	if (hostConfig.ServerIOOverrides) SERVERIO_OVERRIDES = JSON.stringify(hostConfig.ServerIOOverrides);
+
+// Check for file "config/$HOSTNAME.js" so it can be require()d to pull in host-specific overrides.
+let CONFIG_FILE = './config/' + os.hostname() + '.js';
+if (fs.existsSync(CONFIG_FILE)) {
+	console.log('Using host-specific config file:', CONFIG_FILE);
+	CONFIG_FILE = CONFIG_FILE.replace(/^\./, ''); // strip initial . and treat as project-absolute path
+} else {
+	console.log('No host-specific config file found, using defaults.');
+	CONFIG_FILE = null;
 }
+CONFIG_FILE = JSON.stringify(CONFIG_FILE);
+
 
 const baseConfig = {
 	// NB When editing keep the "our code" entry point last in this list - makeConfig override depends on this position.
@@ -36,7 +43,7 @@ const baseConfig = {
 		alias: {
 			querystring: 'querystring-es3',
 			util: 'util'
-		}
+		},
 	},
 	module: {
 		rules: [
@@ -76,11 +83,13 @@ const baseConfig = {
 						// loose: true specified to silence warnings about mismatch with preset-env loose setting
 						['@babel/plugin-proposal-class-properties', { loose: true }],
 						['@babel/plugin-proposal-private-methods', { loose: true }],
-						['@babel/plugin-proposal-private-property-in-object', { loose: true }]
+						['@babel/plugin-proposal-private-property-in-object', { loose: true }],
 					]
 				}
 			}, {
 				test: /\.less$/,
+				// If we use css-loader with default options it will try to inline any url('/img/whatever.png') rules it finds.
+				// We don't want this (plus the URLs don't resolve correctly, throwing an error on compile) so {url: false} disables it.
 				use: [MiniCssExtractPlugin.loader, {loader: 'css-loader', options: {url: false}}, 'less-loader'],
 			}
 		],
@@ -88,14 +97,14 @@ const baseConfig = {
 	plugins: [
 		new MiniCssExtractPlugin({ filename: 'style/main.css' }),
 		new webpack.DefinePlugin({
-			'process.env': { SERVERIO_OVERRIDES }
+			'process.env': { CONFIG_FILE }
 		}),
 	]
 };
 
 
 /**
-* Copy and fill out the baseConfig object with
+* Copy and fill out the baseConfig object with:
 * @param {!string} filename Set the bundle output.filename
 * @param {?string} mode "production" or "development", determines if JS will be minified
 * @param {?string} entry (unusual) Compile a different entry-point file instead of app.jsx

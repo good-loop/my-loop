@@ -1,26 +1,25 @@
-# copy this to nginx sites-available, also modify etc/hosts
+# Symlink this to nginx sites-available dir, also modify etc/hosts
 
 map $sent_http_content_type $expires {
-    default                         off;
-    text/html                       epoch;
-    text/css                        epoch;
-    application/javascript          epoch;
-    ~image/                         epoch;
+	default                         off;
+	text/html                       epoch;
+	text/css                        epoch;
+	application/javascript          epoch;
+	~image/                         epoch;
 }
 
 server {
+	server_name ~(local|test)?my.good-loop.com;
 	listen   80; ## listen for ipv4; this line is default and implied
 	listen [::]:80;
-	
-	server_name localmy.good-loop.com;
 	rewrite ^ https://$server_name$request_uri? permanent;
 }
 
 server {
+	server_name ~(local|test)?my.good-loop.com;
+
 	listen 443 ssl http2;
 	listen [::]:443 ssl http2;
-
-	server_name localmy.good-loop.com;
 
 	ssl_certificate /home/winterwell/ssl-certs/wildcard.good-loop.com/fullchain1.pem;
 	ssl_certificate_key /home/winterwell/ssl-certs/wildcard.good-loop.com/privkey1.pem;
@@ -31,7 +30,7 @@ server {
 
 	large_client_header_buffers 4 32k;
 
-#	add_header X-Frame-Options SAMEORIGIN always;
+	add_header X-Frame-Options SAMEORIGIN always;
 
 	root /home/winterwell/my-loop/web;
 	index index.html;
@@ -39,15 +38,16 @@ server {
 	expires $expires;
 
 	location / {
-		try_files $uri $uri.html @backend;
+		try_files $uri $uri/ index @backend;
 		add_header 'Access-Control-Allow-Origin' "$http_origin";
 		add_header 'Access-Control-Allow-Credentials' 'true';
 		add_header 'Cache-Control' 'no-cache';
 	}
+
 	location @backend {
-		proxy_pass		http://localhost:8733;
-		proxy_set_header	X-Real-IP $remote_addr;
-		proxy_set_header	X-Forwarded-For $proxy_add_x_forwarded_for;
-		proxy_set_header	Host $http_host;
+		proxy_pass http://localhost:8733;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header Host $http_host;
 	}
 }

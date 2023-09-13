@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 /**
  * Rewrite functions from emissionscalc.js into typescript.
  */
@@ -14,8 +16,8 @@ import DataStore from '../../../base/plumbing/DataStore';
 import PromiseValue from '../../../base/promise-value';
 import SearchQuery from '../../../base/searchquery';
 import { assert } from '../../../base/utils/assert';
-import { getUrlVars, sum, uniq, yessy } from '../../../base/utils/miscutils';
-import C, { searchParamForType, urlParamForType } from '../../../C';
+import { sum, uniq, yessy } from '../../../base/utils/miscutils';
+import C, { searchParamForType } from '../../../C';
 import ServerIO from '../../../plumbing/ServerIO';
 import { Period, getPeriodFromUrlParams, getTimeZone } from '../../../base/utils/date-utils';
 import { getFilterTypeId } from './dashUtils';
@@ -104,11 +106,11 @@ export const getBasefilters = (urlParams: any): BaseFilters | BaseFiltersFailed 
 			return failedObject;
 		}
 		const campaignIds = List.hits(pvAllCampaigns.value)?.map((c) => c.id);
-		if (!yessy(campaignIds)) {
+		if (!campaignIds || !yessy(campaignIds)) {
 			failedObject = { type: 'alert', message: `No campaigns for brand id: ${filterId}` };
 			return failedObject;
 		}
-		q = SearchQuery.setPropOr(null, 'campaign', campaignIds!).query;
+		q = SearchQuery.setPropOr(null, 'campaign', campaignIds).query;
 	}
 	if (filterType === C.TYPES.Agency) {
 		q = SearchQuery.setProp(null, 'agency', filterId).query;
@@ -637,16 +639,16 @@ const getFixedOffsetsForCampaign = (campaign: Campaign, period: Period): (Impact
 /** Tizen could mean Samsung mobile or Samsung TV, split them */
 export const splitTizenOS = (buckets: GreenBuckets, baseFilters: BaseFilters) => {
 	// Escape if no tizen were found
-	if (!buckets.some((record) => record.hasOwnProperty("key") && record.key === "tizen")) {
+	if (!buckets.some((record) => Object.prototype.hasOwnProperty.call(record, "key") && record.key === "tizen")) {
 		return buckets;
 	}
 
-	const filteredData: GreenBuckets = buckets.filter((record) => !(record.hasOwnProperty("key") && record.key === "tizen"));
+	const filteredData: GreenBuckets = buckets.filter((record) => !(Object.prototype.hasOwnProperty.call(record, "key") && record.key === "tizen"));
 	const tizenFilters = { ...baseFilters, q: `(${baseFilters.q}) AND os:tizen`, breakdown: ['mbl{"countco2":"sum"}'] };
 	const pvTizenMblValue = getCarbon(tizenFilters);
 
-	if (pvTizenMblValue.resolved && pvTizenMblValue.value["by_mbl"]?.buckets) {
-		let mblBuckets = _.cloneDeep(pvTizenMblValue.value["by_mbl"].buckets);
+	if (pvTizenMblValue.resolved && pvTizenMblValue.value.by_mbl?.buckets) {
+		let mblBuckets = _.cloneDeep(pvTizenMblValue.value.by_mbl.buckets);
 		mblBuckets = mblBuckets.map((record: Record<string, string | number>) => {
 			if (record.key === "false") {
 				record.key = "samsung tv";
