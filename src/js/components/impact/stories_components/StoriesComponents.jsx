@@ -23,7 +23,7 @@ import { getUrlValue, setUrlValue } from '../../../base/plumbing/DataStore';
 import { asDate, dateStr, printPeriod } from '../../../base/utils/date-utils';
 import { addAmountSuffixToNumber, space, yessy } from '../../../base/utils/miscutils';
 import printer from '../../../base/utils/printer';
-
+import I18N from '../../../base/i18n'
 
 /**
  * A thin card that contains just the supplied text,
@@ -665,7 +665,6 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 	const openId = getUrlValue("open");
 
 	const regNums = NGO.regNums(charity);
-
 	return (
 		<Modal isOpen={openId === impactDebit.id} id="impact-cert-modal" className='impact-cert' toggle={() => setUrlValue("open", false)} size="xl">
 			<ModalBody className="d-flex modal-body" style={{ padding: 0, minHeight: "90vh" }}>
@@ -723,8 +722,10 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 										<h2 className='color-gl-red'><Misc.Money amount={impactDebit.impact.amount} /></h2>
 										<DevOnly>ImpactDebit: <PortalLink item={impactDebit} /></DevOnly>
 									</Col>
+
+									{impact.n && impact.name && campaign.dntnModel?.perInput && 
 									<Col style={{ borderRight: "solid 1px lightgray", padding: 0 }}>
-										<div style={{ borderBottom: "solid 1px lightgray", padding: "0 5% 10%" }}>
+										 <div style={{ borderBottom: "solid 1px lightgray", padding: "0 5% 10%" }}>
 											<p className='text light-bold'>{campaign.dntnModel?.perInput && "Breakdown"}</p>
 											<div className='color-gl-red'>
 												<DonationModelInfo campaign={campaign} />
@@ -734,7 +735,8 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 											<p className='text light-bold'>{impact? (isOffset ? "Credits" : "Impact") : null}</p>
 											<p className='color-gl-red'>{Impact.str(impact)}</p>
 										</div>
-									</Col>
+									</Col>}
+
 									<Col style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
 										<p className='text light-bold'>{isOffset? "Managed":"Powered"} by Good-Loop</p>
 										<img src="/img/Impact/AdsForGood.svg" style={{ width: "100%" }} />
@@ -760,9 +762,9 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 							</div>
 						</div>
 						<DevOnly>
-						{donationLinks.length && 
+						{donationLinks.length && isDev() &&  // remove isDev() when these links exist 
 							<div>
-								<TODO>Where do we store these / do these exist yet?</TODO>
+								<TODO>Where do we store these / do these exist yet? Currently hidden & only shown to devs</TODO>
 								<p className='text offset-header'>LINKS</p>
 								<div id="offset-links">
 									<Row className="offset-content" style={{ margin: 0, placeContent: 'space-around' }}>

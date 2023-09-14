@@ -127,40 +127,94 @@
 	// splash card
 	#i-splash {
 		color: white;
-		background-color: @gl-dark-blue;
+		background: rgb(238,205,174);
+		background: linear-gradient(0deg, rgba(238,205,174,1) 0%, rgba(148,187,233,1) 100%);
 		justify-content: space-between;
+		position: relative;
 		padding: 2.5%;
-
-		h2 {
-			font-size: xxx-large;
-		}
+		text-align: -webkit-center;
 
 		h3 {
-			text-transform: unset; // stops uppercase default
-			font-size: larger;
+			z-index: 2;
 		}
-
-		.splash-earth {
-			overflow: hidden;
-			background-image: url("/img/Impact/map-loading-screen.svg");
-			background-position: center;
-			background-size: cover;
-			background-position-x: 60%; // center it a bit more otherwise we're just looking at america 
-			background-color: @gl-impact-blue !important;
-
-			height: 60%;
-			aspect-ratio: 1;
-
-			text-align: -webkit-center;
-			border: none !important;
+		
+		#splash-raised {
+			z-index: 2;
+			position: absolute;
+			top: 32.5%;
 
 			p {
-				font-size: 150%;
+				font-size: xx-large;
 				font-weight: 600;
+				margin-bottom: -5% !important;
 			}
 
 			h2 {
-				font-size: 250%;
+				font-size: 500%;
+			}
+		}
+
+		#splash-earth-gif {
+			z-index: 1;
+			position: absolute;
+			max-width: 70vh;
+			top: 10%;
+		}
+		
+		.arm-gif {
+			position: absolute;
+			max-width: 15vw;
+			&#arm-1{
+				top: 40%;
+				left: 0;
+			}
+			&#arm-2{
+				top: 60%;
+				left: 0;
+			}
+			&#arm-3{
+				bottom: 0;
+				left: 10%;
+			}
+			&#arm-4{
+				bottom: 0;
+				left: 20%;
+			}
+			&#arm-5{
+				bottom: 0;
+				left: 30%;
+			}
+			&#arm-6{
+				bottom: 0;
+				left: 40%;
+			}
+			&#arm-7{
+				bottom: 0;
+				left: 50%;
+			}
+			&#arm-8{
+				bottom: 0;
+				left: 60%;
+			}
+			&#arm-9{
+				bottom: 0;
+				left: 70%;
+			}
+			&#arm-10{
+				bottom: 0;
+				left: 80%;
+			}
+			&#arm-11{
+				right: 0;
+				top: 60%;
+			}
+			&#arm-12{
+				right: 0;
+				top: 45%;
+			}
+			&#arm-13{
+				right: 0;
+				top: 35%;
 			}
 		}
 	}
@@ -177,7 +231,7 @@
 				padding: 5% 0 !important;
 			}
 			li {
-				padding: 2%;
+				margin: 2%;
 			}
 		}
 	}

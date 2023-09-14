@@ -170,6 +170,7 @@ const CampaignSpotlight = ({impact, charity, campaign, subCampaigns, status}) =>
 	if (!campaign) campaign = subCampaigns.find(c => (
 		(c.id === impact.campaign) || (c.jobNumber === impact.campaign) || (c.jobNumber == impact.jobNumber)
 	))
+	if(!campaign) return <DevOnly>We're missing a campaign to spotlight???</DevOnly>
 	let pvAds = Advert.fetchForCampaigns({campaignIds:[campaign.id], status:status});
 	if(! pvAds.resolved) return <></>
 

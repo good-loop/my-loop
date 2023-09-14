@@ -1,7 +1,7 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import DataStore from '../../../base/plumbing/DataStore';
-import { Container, Row } from 'reactstrap';
+import { Container, Row, Col } from 'reactstrap';
 import Circle from '../../../base/components/Circle';
 import NGO from '../../../base/data/NGO';
 import Money from '../../../base/data/Money';
@@ -15,6 +15,7 @@ import { addScript } from '../../../base/utils/miscutils';
 import CampaignPage from '../../campaignpage/CampaignPage';
 import { CardSeparator, CampaignImpact, CampaignImpactTwo, HowItWorks, DonationsCard, circleLogo, LearnMore, CharityArms, BrandLogoRows } from './StoriesComponents';
 import {ImpactB2B} from './ImpactB2B'
+import { range } from 'lodash';
 
 /**
  * Container for the new (as of 5/23) replacement for impact hub
@@ -48,51 +49,59 @@ function CampaignImpactPage() {
 	})
 
 	if (pvBaseObjects.error) return <ErrorDisplay e={pvBaseObjects.error} />
-	if (! pvBaseObjects.resolved) return <ImpactLoadingScreen baseObj={pvBaseObjects}/>
 
-	let {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits=[], charities=[]} = pvBaseObjects.value || {};
-	masterBrand = masterBrand || brand;
-
-	let totalDonation = Money.total(impactDebits.map(debit => debit?.impact?.amount || new Money(0)));
-	if(impactDebits.length == 0) return <ErrorDisplay e={{message: "No impact debits found for this campaign"}} />
-	// Returns NaN if impactDebits is an empty array
-	if (isNaN(totalDonation.value)) totalDonation = new Money(0);
-	const totalString = Money.prettyStr(totalDonation);
-	// sort impact debits, ranking first by priority then by the cash value of the debit
-	// "b - a" is used to invert the sort so [0] is the most impactful impact
-	impactDebits.sort((a, b) => {
-		let result = (b.impact.priority || 0) - (a.impact.priority || 0); // sort by priority
-		if(result === 0) result = (b.impact.amountGBP || 0) - (a.impact.amountGBP || 0); // if equal, sort by GBP
-		return result;
-		if(result === 0) result = b.id.localCompare(a.id); // if equal, sort by id alphabetically 
-		return result;
-	});
-
-	let firstImpact = impactDebits[0] || null
-	let secondImpact = impactDebits[1] || null
-	const firstCharity = firstImpact && charities.find((char) => char.id === firstImpact.impact.charity) || {};
-	const secondaryCharity = secondImpact && charities.find((char) => char.id === secondImpact.impact.charity) || {};
-
-	const mainLogo = campaign?.branding?.logo || brand?.branding?.logo;
-
-	if(b2b) return ImpactB2B({pvBaseObjects, totalString, mainLogo, footer:false})
+	// to make sure loading screen fades into the page content, we only want one loading screen component loaded
+	// done via content component behind the loading screen & then later populating it
+	let pageContent = <></>
+	if(pvBaseObjects.resolved) {
+		let {campaign, brand, masterBrand, subBrands, subCampaigns, impactDebits=[], charities=[]} = pvBaseObjects.value || {};
+		masterBrand = masterBrand || brand;
+	
+		let totalDonation = Money.total(impactDebits.map(debit => debit?.impact?.amount || new Money(0)));
+		if(impactDebits.length == 0) return <ErrorDisplay e={{message: "No impact debits found for this campaign"}} />
+		// Returns NaN if impactDebits is an empty array
+		if (isNaN(totalDonation.value)) totalDonation = new Money(0);
+		const totalString = Money.prettyStr(totalDonation);
+		// sort impact debits, ranking first by priority then by the cash value of the debit
+		// "b - a" is used to invert the sort so [0] is the most impactful impact
+		impactDebits.sort((a, b) => {
+			let result = (b.impact.priority || 0) - (a.impact.priority || 0); // sort by priority
+			if(result === 0) result = (b.impact.amountGBP || 0) - (a.impact.amountGBP || 0); // if equal, sort by GBP
+			return result;
+			if(result === 0) result = b.id.localCompare(a.id); // if equal, sort by id alphabetically 
+			return result;
+		});
+	
+		let firstImpact = impactDebits[0] || null
+		let secondImpact = impactDebits[1] || null
+		const firstCharity = firstImpact && charities.find((char) => char.id === firstImpact.impact.charity) || {};
+		const secondaryCharity = secondImpact && charities.find((char) => char.id === secondImpact.impact.charity) || {};
+	
+		const mainLogo = campaign?.branding?.logo || brand?.branding?.logo;
+		if(b2b) return ImpactB2B({pvBaseObjects, totalString, mainLogo, footer:false})
+		pageContent = (<Container fluid id="ImpactB2C-container">
+		<SplashCard masterBrand={masterBrand} impact={firstImpact} charity={firstCharity} totalString={totalString}/>
+		<BrandLogoRows mainLogo={mainLogo} charities={charities} />
+		<PoweredByGL />
+		<HowItWorks campaign={campaign} subCampaigns={subCampaigns} charities={charities} totalString={totalString}/>
+		<CardSeparator text={<>Here's a look at what you're helping<br/>support With {masterBrand.name}</>} />
+		{firstImpact && <CampaignImpact i={1} campaign={campaign} brand={brand} logo={mainLogo} charity={firstCharity} impactDebit={firstImpact}/>}
+		{secondImpact && <CampaignImpactTwo campaign={campaign} brand={brand} logo={mainLogo} charity={secondaryCharity} impactDebit={secondImpact}/>}
+		<MakingADifference logo={mainLogo} charities={charities} />
+		<CardSeparator text={<>Here's how you can keep involved<br/>with Good-Loop</>} />
+		<GetInvolvedCard />
+		{/*<DonationsCard campaign={campaign} subCampaigns={subCampaigns} brand={brand} impactDebits={impactDebits} charities={charities} /> */}
+		<LearnMore />
+	</Container>)
+	}
 
 	return (
-		<Container fluid id="ImpactB2C-container">
-			<SplashCard masterBrand={masterBrand} impact={firstImpact} charity={firstCharity} totalString={totalString}/>
-			<BrandLogoRows mainLogo={mainLogo} charities={charities} />
-			<PoweredByGL />
-			<HowItWorks campaign={campaign} subCampaigns={subCampaigns} charities={charities} totalString={totalString}/>
-			<CardSeparator text={<>Here's a look at what you're helping<br/>support With {masterBrand.name}</>} />
-			{firstImpact && <CampaignImpact i={1} campaign={campaign} brand={brand} logo={mainLogo} charity={firstCharity} impactDebit={firstImpact}/>}
-			{secondImpact && <CampaignImpactTwo campaign={campaign} brand={brand} logo={mainLogo} charity={secondaryCharity} impactDebit={secondImpact}/>}
-			<MakingADifference logo={mainLogo} charities={charities} />
-			<CardSeparator text={<>Here's how you can keep involved<br/>with Good-Loop</>} />
-			<GetInvolvedCard />
-			<DonationsCard campaign={campaign} subCampaigns={subCampaigns} brand={brand} impactDebits={impactDebits} charities={charities} />
-			<LearnMore />
-		</Container>
+		<>
+		<ImpactLoadingScreen baseObj={pvBaseObjects}/>
+		{pageContent}
+		</>	
 	)
+	
 }
 
 /**
@@ -106,15 +115,20 @@ function CampaignImpactPage() {
 const SplashCard = ({masterBrand, charity, totalString}) => {
 	return (
 		<div className='story-card' id='i-splash'>
-		<div className='top-text-block'>
-			<h2 className='white font-weight-bold'>Thank You</h2>
-			<h3 className='white'>For Watching {masterBrand.name} Advert And <br /> Supporting {charity.displayName}!</h3>
-		</div>
-		<Circle className = "splash-earth true-center" center>
-			<p>Together We've Raised:</p>
-			<h2>{totalString}</h2>
-			<p>And Counting</p>
-		</Circle>
+			<h3 className='white'>Thank You For Helping {masterBrand.name} <br /> Support {charity.displayName}!</h3>
+			<video autoPlay loop muted playsInline id="splash-earth-gif" preload='auto'>
+					<source src={`/img/Impact/arms/GLOBE.webm`} type='video/webm' />
+			</video>
+			<div id="splash-raised">
+				<p>Together we raised</p>
+				<h2>{totalString}</h2>
+			</div>
+			{/*<img src="/img/Impact/arms/Arm_1.mp4" className='arm-gif' id="arm-1"/>*/}
+			{range(1,14).map(i => 
+				<video autoPlay loop muted playsInline className='arm-gif' id={`arm-${i}`} preload='auto'>
+					<source src={`/img/Impact/arms/Arm_${i}.webm#t=${i%4}`} type='video/webm' />
+				</video>
+			)}
 		<div>{/* this div is here just to trick flexbox into centering the above circle*/}</div>
 	</div>)
 
@@ -164,7 +178,7 @@ function SocialMediaLinks({dark}) {
  * @param {Array<NGO>} charities 
  * @returns {React.ReactElement} 
  */
-const MakingADifference = ({logo, charities}) => {
+const MakingADifference2 = ({logo, charities}) => {
 	const CharityLogos = charities.map((c, i) => <li><img key={i} src={c.logo}/></li>)
 
 	return (
@@ -183,6 +197,23 @@ const MakingADifference = ({logo, charities}) => {
 		</div>
 	)
 }
+
+const MakingADifference = ({charities, logo}) => {
+	const CharityLogos = charities.map((c, i) => <li style={{width:"20vh", alignSelf:"center"}} key={i}><img style={{width:"100%"}} src={c.logo}/></li>)
+	return (
+		<div id="impact-footer-container" style={{minHeight: "60vh"}}>
+			<Col id='stories-footer' className='impact-footer'>
+				<h2 className="color-gl-light-red" style={{margin: "0 10% 0 10%"}}>Together we can make a difference -<br />brands, consumers and charities</h2>
+				<div className='topRow'><img className='logo' src={logo} style={{width: '20vh', height: '20vh'}}/></div>
+				<ul style={{listStyleType: "none"}}>
+					{CharityLogos}
+				</ul>
+				{/* TODO include legal small print here too */}
+			</Col>
+			<img src="/img/Impact/images-combined.png" id="images-combined"/>
+		</div>
+	);
+};
 
 /**
  * Hubspot form to let users sign up via email 
@@ -243,10 +274,10 @@ const GetInvolvedCard = () => {
 					return
 				}
 			}) 
-		}, 5000); // this is real dumb, but I can't seem to find what the trigger we want to hook onto. TODO stop this from being stupid
+		}, 2000); // this is real dumb, but I can't seem to find what the trigger we want to hook onto. TODO stop this from being stupid
 	}}
 
-	addScript({src: scriptUrl, onload})
+	addScript({src: scriptUrl, onload:onLoad})
 
 	return (
 		<div id="get-involved">

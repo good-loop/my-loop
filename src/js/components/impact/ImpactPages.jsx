@@ -80,7 +80,7 @@ const ImpactPage = () => {
 
 	// On filter changes, even if content is loaded, force a "reload" (ie show loading screen) for feedback
 	const [reload, setReload] = useState(false)
-	const doReload = () => setReload(prev => !prev);
+	const doReload = () => setReload(prev => {console.log("reloading...", prev); return !prev});
 
 	if (pvBaseObjects.error) return <ErrorDisplay e={pvBaseObjects.error} />
 
@@ -119,9 +119,9 @@ const ImpactPage = () => {
 	return <>
 		{impactSettings?.customCss && <StyleBlock>{impactSettings.customCss}</StyleBlock>}
 		{impactSettings?.customHtml && <HTML>{impactSettings.customHtml}</HTML>}
+		<ImpactLoadingScreen pvBaseObj={pvBaseObjects} reload={reload} />
 		<div className="navbars-overlay">
 			<animated.div className="impact-navbar-flow-overlay" style={{width: navToggleAnimation.width, minWidth: navToggleAnimation.width}} />
-			<ImpactLoadingScreen pvBaseObj={pvBaseObjects} reload={reload} />
 			<ImpactFilterOptions size="thin" {...navProps} /> {/*mobile horizontal filters topbar NB:one of thin|wide gets hidden ??Could we decide here and avoid rendering the html twice?? */}
 			<NavBars active={page} {...navProps} />
 			<ImpactFilterOptions size="wide" {...navProps} /> {/*widescreen vertical filters topbar NB:one of thin|wide gets hidden*/}
