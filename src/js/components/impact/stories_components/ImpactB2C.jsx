@@ -78,7 +78,6 @@ function CampaignImpactPage() {
 		const secondaryCharity = secondImpact && charities.find((char) => char.id === secondImpact.impact.charity) || {};
 	
 		const mainLogo = campaign?.branding?.logo || brand?.branding?.logo;
-	
 		if(b2b) return ImpactB2B({pvBaseObjects, totalString, mainLogo, footer:false})
 		pageContent = (<Container fluid id="ImpactB2C-container">
 		<SplashCard masterBrand={masterBrand} impact={firstImpact} charity={firstCharity} totalString={totalString}/>
