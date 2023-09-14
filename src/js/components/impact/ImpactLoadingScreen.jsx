@@ -23,7 +23,7 @@ const ImpactLoadingScreen = ({pvBaseObj, reload}) => {
 	// Show the loading screen; hide after 2350ms (sum of animation durations in ImpactLoadingScreen.less)
 	const show = () => {
 		if (hideTimer) return;
-		const htTimeout = setTimeout(() => setHideTimer(false), 1350)
+		const htTimeout = setTimeout(() => setHideTimer(false), 2350)
 		setHideTimer(htTimeout);
 	};
 
@@ -37,7 +37,7 @@ const ImpactLoadingScreen = ({pvBaseObj, reload}) => {
 		show();
 	}, [reload]);
 
-	//if (!hideTimer) return null;
+	if (!hideTimer) return null;
 
 	// Pull some info in the focus objects out of pvBaseObj to customise the loading screen
 	const baseObj = pvBaseObj?.resolved && pvBaseObj.value;

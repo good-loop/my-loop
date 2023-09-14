@@ -665,7 +665,6 @@ const ImpactCertificate = ({ brand, impactDebit, campaign, charity }) => {
 	const openId = getUrlValue("open");
 
 	const regNums = NGO.regNums(charity);
-	console.log("what in the goddam", impact);
 	return (
 		<Modal isOpen={openId === impactDebit.id} id="impact-cert-modal" className='impact-cert' toggle={() => setUrlValue("open", false)} size="xl">
 			<ModalBody className="d-flex modal-body" style={{ padding: 0, minHeight: "90vh" }}>
