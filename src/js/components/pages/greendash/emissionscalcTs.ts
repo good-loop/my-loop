@@ -4,7 +4,7 @@
  * Rewrite functions from emissionscalc.js into typescript.
  */
 
-import _ from 'lodash';
+import _, { remove } from 'lodash';
 import md5 from 'md5';
 import Campaign from '../../../base/data/Campaign';
 import Impact from '../../../base/data/Impact';
@@ -642,6 +642,9 @@ export const splitTizenOS = (buckets: GreenBuckets, baseFilters: BaseFilters) =>
 	if (!buckets.some((record) => Object.prototype.hasOwnProperty.call(record, "key") && record.key === "tizen")) {
 		return buckets;
 	}
+
+	// This won't work well with prob setting
+	baseFilters = {...baseFilters, prob: undefined};
 
 	const filteredData: GreenBuckets = buckets.filter((record) => !(Object.prototype.hasOwnProperty.call(record, "key") && record.key === "tizen"));
 	const tizenFilters = { ...baseFilters, q: `(${baseFilters.q}) AND os:tizen`, breakdown: ['mbl{"countco2":"sum"}'] };
