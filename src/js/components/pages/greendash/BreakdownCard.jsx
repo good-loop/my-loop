@@ -426,12 +426,13 @@ const BreakdownCard = ({ baseFilters }) => {
 
 	const loading = <Misc.Loading text='Fetching your data...' />;
 
-	if (!techValue)
+	if (!techValue) {
 		return (
 			<GreenCard title='What is the breakdown of your emissions?' className='carbon-breakdown'>
 				{loading}
 			</GreenCard>
 		);
+	}
 
 	const [mode, setMode] = useState('tech');
 
@@ -439,9 +440,9 @@ const BreakdownCard = ({ baseFilters }) => {
 	let techData = techValue.by_total?.buckets;
 	let fomartData = formatValue && formatValue[datakey]?.buckets;
 	let data;
-	if (datakey == "by_os") {
+	if (datakey === "by_os") {
 		// Tizen Hack
-		data = dataValue && splitTizenOS(dataValue["by_os"]?.buckets, baseFilters);
+		data = dataValue && splitTizenOS(dataValue.by_os?.buckets, baseFilters);
 	} else {
 		data = dataValue && dataValue[datakey]?.buckets;
 	}
