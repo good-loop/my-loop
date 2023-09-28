@@ -10,14 +10,19 @@
         "strictNullChecks": true,   // enable strict null checks as a best practice
         "module": "commonjs",            // specify module code generation
         "jsx": "react",             // use typescript to transpile jsx to js
-		"target": "es5",            // specify ECMAScript target version
+        "target": "es5",            // specify ECMAScript target version
         "moduleResolution": "node",
         "resolveJsonModule": true,
-		"noEmit": true,
-		"allowJs": true,             // allow a partial TypeScript and JavaScript codebase
-		"strict": true,
-		"esModuleInterop": true
-
+        "noEmit": true,
+        "allowJs": true,             // allow a partial TypeScript and JavaScript codebase
+        "strict": true,
+        "esModuleInterop": true,
+        "plugins": [
+            {
+              "name": "ts-silence-diagnostics",
+              "ignoredCodes": [2531, 7006]
+            }
+          ]
     },
     "include": [
         "src"

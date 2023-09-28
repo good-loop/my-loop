@@ -220,29 +220,30 @@ const GreenMetrics = ({}) => {
 	}, [Login.getId()]);
 
 	// Only for logged-in users!
-	if (!Login.isLoggedIn())
+	if (!Login.isLoggedIn()) {
 		return (
 			<Container>
-				<Card body id='green-login-card' className='m-4'>
+				<Card body id="green-login-card" className="m-4">
 					<Container>
 						<Row>
-							<Col className='decoration flex-center' xs='12' sm='4'>
-								<img className='stamp' src='/img/green/gl-carbon-neutral.svg' />
+							<Col className="decoration flex-center" xs="12" sm="4">
+								<img className="stamp" src="/img/green/gl-carbon-neutral.svg" />
 							</Col>
-							<Col className='form' xs='12' sm='8'>
-								<img className='gl-logo my-4' src='/img/gl-logo/rectangle/logo-name.svg' />
-								<p className='text-center my-4'>
+							<Col className="form" xs="12" sm="8">
+								<img className="gl-logo my-4" src="/img/gl-logo/rectangle/logo-name.svg" />
+								<p className="text-center my-4">
 									Understand the carbon footprint of your advertising and
 									<br />
 									discover your offsetting and climate-positive successes
 								</p>
-								<LoginWidgetEmbed verb='login' canRegister={false} />
+								<LoginWidgetEmbed verb="login" canRegister={false} />
 							</Col>
 						</Row>
 					</Container>
 				</Card>
 			</Container>
 		);
+	}
 
 	return (
 		<div className='green-subpage green-metrics'>
