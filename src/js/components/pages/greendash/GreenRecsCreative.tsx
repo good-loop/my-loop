@@ -196,7 +196,7 @@ function Reduction({ manifest, recommendations }) {
 
 	// NB: caching the value with useEffect was leading to a stale-value bug
 	let reduceBytes = recommendations.map(rec => {
-		if ( ! rec.significantReduction) return 0; // i.e. zero reduction if we're not recommending a file replacement 
+		if (!rec.significantReduction) return 0; // i.e. zero reduction if we're not recommending a file replacement
 		return Math.max(0, rec.bytes - rec.optBytes);
 	});
 	let totalReduction = sum(reduceBytes);
@@ -215,7 +215,7 @@ function Reduction({ manifest, recommendations }) {
 function CreativeOptimisationControls() {
 	return <div className="flex-row optimisation-options">
 		<PropControl className="control-webp" type="checkbox" path={RECS_OPTIONS_PATH} prop="noWebp" label="Can't use .webp"
-			help="Use this option to avoid generating .webp recommendations if your DSP doesn't support it."
+			help="Uncheck if your target DSP allows use of .webp images, which can be significantly smaller than both .png and .jpg"
 		/>
 		<PropControl className="control-retina" type="radio" path={RECS_OPTIONS_PATH} prop="retinaMultiplier" label="Resolution"
 			options={[1, 1.5, 2]} labels={{1: 'Standard', 1.5: 'Compromise', 2: 'Retina'}}
@@ -229,10 +229,8 @@ const recOptionsString = () => JSON.stringify(DataStore.getValue(RECS_OPTIONS_PA
 
 
 function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
-
-
 	// Hard-set initial values for options and force an update
-	useEffect(() => DataStore.setValue(RECS_OPTIONS_PATH, { noWebp: false, retinaMultiplier: '1' }), []);
+	useEffect(() => DataStore.setValue(RECS_OPTIONS_PATH, { noWebp: true, retinaMultiplier: '1' }), []);
 
 	// Time to generate a new recommendations list?
 	useEffect(() => {
