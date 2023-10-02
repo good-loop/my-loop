@@ -17,7 +17,7 @@ import ServerIO from '../../../plumbing/ServerIO';
 
 import { Recommendation, TypeBreakdown } from '../../../base/components/PageRecommendations';
 import { EMBED_ENDPOINT, storedManifestForTag } from '../../../base/utils/pageAnalysisUtils';
-import { RECS_OPTIONS_PATH, badSite, generateRecommendations, processedRecsPath, savedManifestPath, startAnalysis } from '../../../base/components/creative-recommendations/recommendation-utils';
+import { RECS_OPTIONS_PATH, badSite, generateRecommendations, getBestRecompression, processedRecsPath, savedManifestPath, startAnalysis } from '../../../base/components/creative-recommendations/recommendation-utils';
 import PropControl from '../../../base/components/PropControl';
 import ShareWidget from '../../../base/components/ShareWidget';
 import Login from '../../../base/youagain';
@@ -187,7 +187,8 @@ function CreativeSizeOverview({ tag, manifest }) {
 /**
  * How much can the suggested optimisations reduce creative size?
  * @param {Object} p
- * @param {Object what is the data type??} recommendations List of all transfers augmented with recompressed / substitute items.
+ * @param {Object} p.manifest
+ * @param {Object[] what is the data type??} p.recommendations List of all transfers augmented with recompressed / substitute items.
  */
 function Reduction({ manifest, recommendations }) {
 	if (!manifest || !recommendations) return null;
@@ -195,9 +196,10 @@ function Reduction({ manifest, recommendations }) {
 	if (recommendations.processing) return <Misc.Loading text="Generating recommendations..." />;
 
 	// NB: caching the value with useEffect was leading to a stale-value bug
-	let reduceBytes = recommendations.map(rec => {
-		if (!rec.significantReduction) return 0; // i.e. zero reduction if we're not recommending a file replacement
-		return Math.max(0, rec.bytes - rec.optBytes);
+	let reduceBytes = recommendations.map(transfer => {
+		if (!transfer.significantReduction) return 0; // i.e. zero reduction if we're not recommending a file replacement
+		const bestRec = getBestRecompression(transfer);
+		return Math.max(0, transfer.bytes - bestRec?.bytes);
 	});
 	let totalReduction = sum(reduceBytes);
 
@@ -222,7 +224,7 @@ function CreativeOptimisationControls() {
 			help="Retina mode scales images 2x larger to look best on ultra-high-density screens. Compromise mode scales to 1.5x to balance sharpness and file size."
 		/>
 	</div>;
-};
+}
 
 
 const recOptionsString = () => JSON.stringify(DataStore.getValue(RECS_OPTIONS_PATH));
@@ -414,26 +416,6 @@ function GreenRecsCreative() {
 			</Row>
 		</Container>
 	);
-}
-
-
-export function CreativeRecsPlaceholder() {
-	return <>{/*
-		<h3 className="mx-auto">Optimise Creative Files to Reduce Carbon</h3>
-		<h4>Tips</h4>
-		<p>
-			These tips can require special tools to apply. We are working on automated self-service web tools to make this easy. Meanwhile - email us and we can
-			help.
-		</p>
-		<ul>
-			<li>Use .webp format instead of .png. webp is a more modern format which can do compression and transparency.</li>
-			<li>Optimise fonts. Often a whole font will be included when just a few letters are needed.</li>
-			<li>Sometimes replacing a font with an svg can further reduce the creative weight.</li>
-			<li>Use .webm format for videos. It can get better compression.</li>
-			<li>Replace GIFs. Embedded video (e.g. .webm or .mp4) is better for animations, and .webp is better for static images.</li>
-			<li>Strip down large javascript libraries. Often a whole animation library is included when only a snippet is used.</li>
-		</ul>
-	*/}</>;
 }
 
 
