@@ -8,7 +8,7 @@ import GreenDashboardFilters from './GreenDashboardFilters';
 
 import '../../../../style/GreenRecommendations.less';
 import GreenRecsPublisher from './GreenRecsPublisher';
-import GreenRecsCreative, { CreativeRecsPlaceholder } from './GreenRecsCreative';
+import GreenRecsCreative from './GreenRecsCreative';
 import { space } from '../../../base/utils/miscutils';
 import { modifyPage } from '../../../base/plumbing/glrouter';
 
@@ -117,8 +117,6 @@ function GreenRecommendation(): JSX.Element {
 	// Only for logged-in users!
 	if (!Login.isLoggedIn()) return <NotLoggedIn />;
 
-	const showModeSelect = DataStore.getUrlValue('testCreativeRecs');
-
 	return (
 		<div className="green-subpage green-metrics">
 			<Container fluid>
@@ -126,7 +124,6 @@ function GreenRecommendation(): JSX.Element {
 					<GreenDashboardFilters pseudoUser={pseudoUser} />
 					<ModeSelect />
 					{(getOptMode() === 'creative') ? <GreenRecsCreative /> : <GreenRecsPublisher />}
-					{showModeSelect ? null : <CreativeRecsPlaceholder />}
 				</> : (
 					<Misc.Loading text="Checking your access..." />
 				)}
