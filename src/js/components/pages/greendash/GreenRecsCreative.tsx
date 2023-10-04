@@ -199,6 +199,7 @@ function Reduction({ manifest, recommendations }) {
 	let reduceBytes = recommendations.map(transfer => {
 		if (!transfer.significantReduction) return 0; // i.e. zero reduction if we're not recommending a file replacement
 		const bestRec = getBestRecompression(transfer);
+		if (!bestRec) return 0; // No currently-usable recommendations = zero reduction
 		return Math.max(0, transfer.bytes - bestRec?.bytes);
 	});
 	let totalReduction = sum(reduceBytes);
