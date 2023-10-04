@@ -85,12 +85,13 @@ const pieOptions = (totalCO2, minimumPercentLabeled) => ({
 
 const FormatSubcard = ({ data, minimumPercentLabeled = 1, chartType = 'pie' }) => {
 	if (!yessy(data)) return NOEMISSIONS;
-
+	console.log('data', data);
 	const [pieChartProps, setPieChartProps] = useState();
 	const [barChartProps, setBarChartProps] = useState();
 
 	useEffect(() => {
 		const pvTags = getTags(data);
+		console.log('pvTags', pvTags);
 		const tags = List.hits(pvTags.value) || [];
 
 		// map tagIDs to formats
@@ -415,13 +416,11 @@ const BreakdownCard = ({ baseFilters }) => {
 
 	
 	// NB: breakdown: "emissions":"sum" is a hack that the backend turns into count(aka impressions) + co2 + co2-bits
-	const pvFormatValue = getCarbon({ ...baseFilters, breakdown: ['format{"countco2":"sum"}'] });
 	const pvDataValue = getCarbon({
 		...baseFilters,
-		breakdown: ['os{"countco2":"sum"}', 'adid{"countco2":"sum"}', 'domain{"countco2":"sum"}'],
+		breakdown: ['os{"countco2":"sum"}', 'adid{"countco2":"sum"}', 'domain{"countco2":"sum"}', 'format{"countco2":"sum"}'],
 	});
 
-	const formatValue = pvFormatValue.value?.sampling || pvFormatValue.value;
 	const dataValue = pvDataValue.value?.sampling || pvDataValue.value;
 
 	const loading = <Misc.Loading text='Fetching your data...' />;
@@ -438,7 +437,6 @@ const BreakdownCard = ({ baseFilters }) => {
 
 	const datakey = { device: "by_os", tag: "by_adid", domain: "by_domain", format: "by_adid" }[mode];
 	let techData = techValue.by_total?.buckets;
-	let fomartData = formatValue && formatValue[datakey]?.buckets;
 	let data;
 	if (datakey === "by_os") {
 		// Tizen Hack
@@ -468,7 +466,7 @@ const BreakdownCard = ({ baseFilters }) => {
 			subcard = dataValue ? <PubSubcard data={data} /> : loading;
 			break;
 		case 'format':
-			subcard = dataValue ? <FormatSubcard data={fomartData} minimumPercentLabeled={10} chartType={isPer1000() ? 'bar' : 'pie'} /> : loading;
+			subcard = dataValue ? <FormatSubcard data={data} minimumPercentLabeled={10} chartType={isPer1000() ? 'bar' : 'pie'} /> : loading;
 	}
 
 	return (
