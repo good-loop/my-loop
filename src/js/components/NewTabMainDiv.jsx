@@ -460,18 +460,18 @@ const NormalTabCenter = ({style, customLogo}) => {
 					<div className="tab-search-container mx-auto">
 						<Search
 							onSubmit={(e) => doSearch(e, searchEngine)}
-							placeholder={'Search with ' + engineData.title}
+							placeholder={'Search with ' + engineData?.title}
 							icon={
 								<C.A
 									href="/?tab=tabsForGood"
 									title="click here to change the search engine"
 								>
 									<img
-										src={engineData.logo}
+										src={engineData?.logo}
 										alt="search icon"
 										style={{
-											width: engineData.size.width,
-											height: engineData.size.height,
+											width: engineData?.size?.width,
+											height: engineData?.size?.height,
 										}}
 									/>
 								</C.A>
