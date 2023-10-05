@@ -445,7 +445,6 @@ const NormalTabCenter = ({style, customLogo}) => {
 	const engineData = ENGINES[searchEngine];
 
 	return (
-		<>
 			<div className="flex-column unset-margins align-items-center tab-center mb-1" style={style}>
 				<TutorialComponent page={5} className="py-3 t4g-logo">
 					<a href={ServerIO.MYLOOP_ENDPOINT}>
@@ -480,7 +479,6 @@ const NormalTabCenter = ({style, customLogo}) => {
 					</div>
 				</div>
 			</div>
-		</>
 	);
 };
 
