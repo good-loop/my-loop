@@ -25,13 +25,13 @@ const NavEntryCommon = ({name, pageKey, href, devOnly, urlFilters, doReload, opa
 
 	const item = top ? (
 		<NavItem className={activeClass}>
-			<A href={href} onClick={doReload}>
+			<A href={href} onClick={doReload} alt={name}>
 				<div className="impact-navbar-text">{name}</div>
 			</A>
 		</NavItem>
 	) : (
 		<NavItem>
-			<A href={href} onClick={doReload}>
+			<A href={href} onClick={doReload} alt={name}>
 				<div className={space('navbar-link', activeClass)}>
 					<div className={`impact-nav-icon ${pageKey}-icon`} />
 					<animated.div className="impact-navbar-text" style={{opacity}}>{name}</animated.div>
