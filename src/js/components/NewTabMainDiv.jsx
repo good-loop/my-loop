@@ -445,7 +445,6 @@ const NormalTabCenter = ({style, customLogo}) => {
 	const engineData = ENGINES[searchEngine];
 
 	return (
-		<>
 			<div className="flex-column unset-margins align-items-center tab-center mb-1" style={style}>
 				<TutorialComponent page={5} className="py-3 t4g-logo">
 					<a href={ServerIO.MYLOOP_ENDPOINT}>
@@ -460,18 +459,18 @@ const NormalTabCenter = ({style, customLogo}) => {
 					<div className="tab-search-container mx-auto">
 						<Search
 							onSubmit={(e) => doSearch(e, searchEngine)}
-							placeholder={'Search with ' + engineData.title}
+							placeholder={'Search with ' + engineData?.title}
 							icon={
 								<C.A
 									href="/?tab=tabsForGood"
 									title="click here to change the search engine"
 								>
 									<img
-										src={engineData.logo}
+										src={engineData?.logo}
 										alt="search icon"
 										style={{
-											width: engineData.size.width,
-											height: engineData.size.height,
+											width: engineData?.size?.width,
+											height: engineData?.size?.height,
 										}}
 									/>
 								</C.A>
@@ -480,7 +479,6 @@ const NormalTabCenter = ({style, customLogo}) => {
 					</div>
 				</div>
 			</div>
-		</>
 	);
 };
 
