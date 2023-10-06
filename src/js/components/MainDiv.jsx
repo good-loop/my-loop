@@ -166,7 +166,15 @@ const MainDiv = () => {
 		noSocials
 		loginChildren={() => <div className="text-center"><T4GSignUpButton>Not got an account? Sign up and get Tabs for Good</T4GSignUpButton></div>}
 		LoginGuts={MyLoginWidgetGuts}
+		Persistent={MobileLandscapeHider}
 	></MainDivBase>);
+};
+
+const MobileLandscapeHider = () => {
+	return <div className='mobile-landscape-hider'>
+		<img src="/img/gl-logo/LogoMark/logo.512.png" className='w-50'/>
+		<p>Please view in portrait for the best experience!</p>
+	</div>;
 };
 
 export default MainDiv;

@@ -288,3 +288,15 @@ body.modal-open[style] {
 	max-width: 412px;
 	margin: 0 auto;
 }
+
+.mobile-landscape-hider {
+	display: none;
+	@media (max-width: 1000px) and (orientation: landscape) {
+		display: inline-block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+	}
+}
