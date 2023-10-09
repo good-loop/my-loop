@@ -240,7 +240,7 @@ function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
 		// Is there a list - or a "currently processing" placeholder -
 		// already in DataStore for the current manifest + options combo?
 		const prPath = processedRecsPath({tag}, manifest);
-		if (!manifest || DataStore.getValue(prPath)) return;
+		if (!prPath || !manifest || DataStore.getValue(prPath)) return;
 		// Nothing there, nothing processing. Generate now.
 		generateRecommendations(manifest, prPath);
 		}, [manifest?.url, manifest?.timestamp, recOptionsString()] // debug HACK - add this to the list to allow poking to trigger a redo: window.location.search
@@ -248,7 +248,8 @@ function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
 
 	// Get any existing recommendations list - this is an array of Transfer objects augmented with replacement candidates
 	// eg recommendations[0] = { url: "https://etc", bytes: 150000, optUrl: "[recompressed file]", optBytes: 75000 }
-	const recommendations = DataStore.getValue(processedRecsPath({tag}, manifest));
+	const prPath = processedRecsPath({tag}, manifest);
+	const recommendations = prPath && DataStore.getValue(prPath);
 
 	let recCards = [];
 	if (recommendations && !recommendations.processing) {
