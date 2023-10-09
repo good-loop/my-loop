@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, Card, CardBody, CardFooter, CardHeader, Col, Container, Modal, ModalBody, ModalHeader, Row } from 'reactstrap';
+import { Alert, Badge, Button, Card, CardBody, CardFooter, CardHeader, Col, Container, Modal, ModalBody, ModalHeader, Row } from 'reactstrap';
 
 
 import { GLCard } from '../../impact/GLCards';
@@ -17,7 +17,7 @@ import ServerIO from '../../../plumbing/ServerIO';
 
 import { Recommendation, TypeBreakdown } from '../../../base/components/PageRecommendations';
 import { EMBED_ENDPOINT, storedManifestForTag } from '../../../base/utils/pageAnalysisUtils';
-import { RECS_OPTIONS_PATH, badSite, generateRecommendations, getBestRecompression, processedRecsPath, savedManifestPath, startAnalysis } from '../../../base/components/creative-recommendations/recommendation-utils';
+import { RECS_OPTIONS_PATH, badSite, fetchSavedManifest, generateRecommendations, getBestRecompression, processedRecsPath, savedManifestPath, startAnalysis } from '../../../base/components/creative-recommendations/recommendation-utils';
 import PropControl from '../../../base/components/PropControl';
 import ShareWidget from '../../../base/components/ShareWidget';
 import Login from '../../../base/youagain';
@@ -137,11 +137,21 @@ function CreativeSizeBreakdown({ manifest }) {
 }
 
 
+/**
+ * Check the auto-measured weight from a PageManifest and the presumably-manual weight attached to a
+ * Green Ad Tag, flag large discrepancies (>25%), and pick a weight - prioritising the manual measurement.
+ * @returns {Object} of form {isConflict, weight}
+ */
+const compareWeights = (autoWeight, manualWeight) => {
+	const isConflict = autoWeight && manualWeight && Math.abs((autoWeight - manualWeight) / manualWeight) > 0.25;
+	return { isConflict, weight: manualWeight || autoWeight };
+};
+
+
 function CreativeSizeOverview({ tag, manifest }) {
-	let manifestWeight = manifest && (manifest.reqHeaders + manifest.reqBody + manifest.resBody + manifest.resHeaders);
-	let weight = manifestWeight || tag.weight;
-	// do the two weights differ enough to flag a warning? 
-	let isConflict = tag.weight && Math.abs((weight - tag.weight)/tag.weight) > 0.25; // below 25% difference isn't worth flagging
+	const autoWeight = manifest?.totalDataTransfer;
+	const manualWeight = tag?.weight;
+	const { isConflict, weight } = compareWeights(autoWeight, manualWeight);
 
 	// Provide an easy link to see the creative - either URL as given or HTML snippet/tag wrapped in a page
 	let testLink;
@@ -169,10 +179,11 @@ function CreativeSizeOverview({ tag, manifest }) {
 				<div className="size-info">
 					<div className="bytes">
 						Creative size
-						<div className="number">
-							{weight? bytes(weight) : '-'}
-							{isConflict && <p className="text-warning" title="The measured weight and the weight that was entered in the Green Tag Generator are quite different.">Manually set weight: {bytes(tag.weight)}</p>}
-						</div>
+						<div className="number">{weight ? bytes(weight) : '-'}</div>
+						{isConflict && <div title="The automatically measured size and the size that was entered in the Green Tag Generator are quite different.">
+							Measured <Badge color="warning">!</Badge>
+							<div className="number">{bytes(autoWeight)}</div>
+						</div>}
 					</div>
 					<div className="breakdown">
 						<CreativeSizeBreakdown manifest={manifest} />
@@ -190,7 +201,7 @@ function CreativeSizeOverview({ tag, manifest }) {
  * @param {Object} p.manifest
  * @param {Object[] what is the data type??} p.recommendations List of all transfers augmented with recompressed / substitute items.
  */
-function Reduction({ manifest, recommendations }) {
+function Reduction({ tag, manifest, recommendations }) {
 	if (!manifest || !recommendations) return null;
 
 	if (recommendations.processing) return <Misc.Loading text="Generating recommendations..." />;
@@ -204,7 +215,9 @@ function Reduction({ manifest, recommendations }) {
 	});
 	let totalReduction = sum(reduceBytes);
 
-	const percent = 100 * (totalReduction / manifest.totalDataTransfer);
+	// Same logic as size overview: use manual over automatic weight, if it's available.
+	const { weight } = compareWeights(manifest.totalDataTransfer, tag.weight);
+	const percent = 100 * (totalReduction / weight);
 
 	return (
 		<div className="reduction">
@@ -272,7 +285,7 @@ function CreativeOptimisationOverview({ tag, manifest }): JSX.Element {
 		content = <>
 			{canAnalyse && <AnalyseTagPrompt tag={tag} manifest={manifest} />}
 			{canAnalyse && recommendations && <>
-				<Reduction manifest={manifest} recommendations={recommendations} />
+				<Reduction tag={tag} manifest={manifest} recommendations={recommendations} />
 				<CreativeOptimisationControls />
 				<Container className="recs-list">
 					<Row>{recCards}</Row>
@@ -362,13 +375,13 @@ function CreativeView({ showList, setShowList }: {showList: boolean, setShowList
 	if (!pvTag.value) return <Alert color="danger">Couldn't find a creative with ID <code>{tagId}</code>.</Alert>;
 	const tag = pvTag.value;
 
-	const pvManifest = DataStore.fetch(savedManifestPath({tag}), () => (
-		ServerIO.load(storedManifestForTag(tag), { swallow: true })
-	));
+	const pvManifest = fetchSavedManifest(tag);
 
-	// Minor hack: do a direct getValue() because AnalysePrompt overwrites the address, but not the fetch PV
+	// Minor hack: do a direct getValue() because AnalysePrompt overwrites the address, but not the fetch PV.
 	// MeasureServlet response is an array - but should only have one PageManifest in this context
 	const manifest = DataStore.getValue(savedManifestPath({tag}))?.[0] || null;
+
+	console.warn(`pvManifest.value ${pvManifest.value?.[0] === manifest ? '===' : '!=='} manifest`);
 
 	return <>
 		<CardHeader>
