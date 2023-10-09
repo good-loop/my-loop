@@ -1,21 +1,13 @@
-import React, { useState } from 'react';
-import { Collapse, Nav, Navbar, NavbarToggler, NavItem } from 'reactstrap';
-import { useTransition, animated, useSpring } from 'react-spring';
-import AccountMenu from '../../base/components/AccountMenu';
-import Icon from '../../base/components/Icon';
-import LinkOut from '../../base/components/LinkOut';
-import DevOnly from '../../base/components/DevOnly';
-import Logo from '../../base/components/Logo';
-import Campaign from '../../base/data/Campaign';
-import KStatus from '../../base/data/KStatus';
-import { getDataItem } from '../../base/plumbing/Crud';
-import Roles from '../../base/Roles';
+import React from 'react';
+import { Nav, Navbar, NavbarToggler, NavItem } from 'reactstrap';
+import { animated, useSpring } from 'react-spring';
 
-import { encURI, is, isMobile, space } from '../../base/utils/miscutils';
+import DevOnly from '../../base/components/DevOnly';
+import { space } from '../../base/utils/miscutils';
 import C from '../../C';
 import ServerIO from '../../plumbing/ServerIO';
-import { isPer1000 } from '../pages/greendash/GreenMetrics';
-import { ShareDash } from '../pages/greendash/GreenNavBar';
+
+
 const A = C.A;
 
 
@@ -25,13 +17,13 @@ const NavEntryCommon = ({name, pageKey, href, devOnly, urlFilters, doReload, opa
 
 	const item = top ? (
 		<NavItem className={activeClass}>
-			<A href={href} onClick={doReload} alt={name}>
+			<A href={href} onClick={doReload} title={name}>
 				<div className="impact-navbar-text">{name}</div>
 			</A>
 		</NavItem>
 	) : (
 		<NavItem>
-			<A href={href} onClick={doReload} alt={name}>
+			<A href={href} onClick={doReload} title={name}>
 				<div className={space('navbar-link', activeClass)}>
 					<div className={`impact-nav-icon ${pageKey}-icon`} />
 					<animated.div className="impact-navbar-text" style={{opacity}}>{name}</animated.div>
