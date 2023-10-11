@@ -13,7 +13,7 @@ import C from "../../../C";
 import { GreenCard, GreenCardAbout, ModeButton } from "./GreenDashUtils";
 import { dataColours, TONNES_THRESHOLD } from "./dashUtils";
 import { isoDate, getPeriodQuarter, printPeriod } from "../../../base/utils/date-utils";
-import { getCompressedBreakdownWithCount, getCarbon, emissionsPerImpressions, getSumColumn, isPer1000 } from "./emissionscalcTs";
+import { getCompressedBreakdownWithCount, getCarbon, emissionsPerImpressions, getSumColumn, isPer1000, BaseFilters } from "./emissionscalcTs";
 import { printer } from "../../../base/utils/printer";
 
 /**
@@ -224,12 +224,38 @@ const CampaignCard = ({ baseFilters }) => {
 	return <NewChartWidget type="bar" {...chartProps} />;
 };
 
+/**
+ * @param {Object} obj
+ * @param {BaseFilters} obj.baseFilters
+ * @returns {JSX.Element}
+ */
+const BenchmarksCard = ({ baseFilters }) => {
+	return <></>;
+};
+
+/**
+ * @param {Object} obj
+ * @param {string} obj.mode 
+ * @param {BaseFilters} obj.props
+ * @returns {JSX.Element}
+ */
+const SwitchCard = ({mode, props}) => {
+	switch (mode) {
+		case "quarter":
+			return <QuartersCard {...props} />;
+		case "campaign":
+			return <CampaignCard {...props} />;
+		case "benchmarks":
+			return <BenchmarksCard {...props} />;
+		default:
+			return <QuartersCard {...props} />;
+	}
+};
+
 const CompareCard = ({ ...props }) => {
 	const [mode, setMode] = useState("quarter");
 	// TODO don't offer campaign biew if we're focuding on one campaign
 	const campaignModeDisabled = !!DataStore.getUrlValue("campaign");
-
-	const subcard = mode === "quarter" ? <QuartersCard {...props} /> : <CampaignCard {...props} />;
 
 	return (
 		<GreenCard title="How do your ad emissions compare?" className="carbon-compare">
@@ -241,9 +267,12 @@ const CompareCard = ({ ...props }) => {
 					<ModeButton name="campaign" mode={mode} setMode={setMode} disabled={campaignModeDisabled}>
 						Campaign
 					</ModeButton>
+					<ModeButton name="benchmarks" mode={mode} setMode={setMode} disabled={!isPer1000()}>
+						Benchmarks
+					</ModeButton>
 				</ButtonGroup>
 			</div>
-			{subcard}
+			<SwitchCard mode={mode} props={{...props}} />
 			<GreenCardAbout>
 				<p>Explanation of quarterly and per-campaign emissions comparisons</p>
 			</GreenCardAbout>

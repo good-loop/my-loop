@@ -6,10 +6,9 @@ import PromiseValue from '../../../base/promise-value';
 import ErrAlert from '../../../base/components/ErrAlert';
 import { LoginWidgetEmbed } from '../../../base/components/LoginWidget';
 import Misc from '../../../base/components/Misc';
-import List from '../../../base/data/List';
 import DataStore from '../../../base/plumbing/DataStore';
-import printer from '../../../base/utils/printer';
 import { getPeriodFromUrlParams, printPeriod } from '../../../base/utils/date-utils';
+import printer from '../../../base/utils/printer';
 
 import { GreenCard } from './GreenDashUtils';
 import { getBasefilters, getCampaigns, getCarbon, getSumColumn, isPer1000 } from './emissionscalcTs';
@@ -17,7 +16,6 @@ import { getBasefilters, getCampaigns, getCarbon, getSumColumn, isPer1000 } from
 import BreakdownCard from './BreakdownCard';
 import CompareCard from './CompareCard';
 import GreenDashboardFilters from './GreenDashboardFilters';
-import JourneyCard from './JourneyCard';
 import MapCard from './MapCard';
 import TimeOfDayCard from './TimeOfDayCard';
 import TimeSeriesCard from './TimeSeriesCard';
