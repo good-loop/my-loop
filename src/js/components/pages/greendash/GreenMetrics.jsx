@@ -59,7 +59,7 @@ const OverviewWidget = ({ period, data, prob }) => {
 	);
 };
 
-const CTACard = ({}) => {
+const CTACard = () => {
 	return (
 		<GreenCard className='carbon-cta flex-column' downloadable={false}>
 			<div className='cta-card-decoration'>
@@ -181,7 +181,7 @@ const GreenMetrics2 = () => {
 	);
 };
 
-const GreenMetrics = ({}) => {
+const GreenMetrics = () => {
 	const [agencyIds, setAgencyIds] = useState();
 	let agencyId = DataStore.getUrlValue('agency');
 	if (!agencyId && agencyIds?.length === 1) agencyId = agencyIds[0];
